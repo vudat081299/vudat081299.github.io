@@ -1,14 +1,50 @@
+/* MARK: - Import Blast text animation */
+@import url("https://fonts.googleapis.com/css?family=Titillium+Web:300,400,600");
+@import url("https://fonts.googleapis.com/css?family=La+Belle+Aurore");
+@import url("https://fonts.googleapis.com/css?family=Exo:700,800");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css");
+
+/* MARK: - Side bar */
+/* Import Google Font Link */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+
+/* MARK: - Custom */
 body {
+  /* gradient horizon */
+  /* gradient 2 color */
+  /* background-image: linear-gradient(to bottom right, red, yellow); */
+
+  /* gradient 3 color */
+  background:linear-gradient(to right, #355C7D 0, #6C5B7B 50%, #C06C84 100%);
+  width: 100%;
+  height:64px;
+
+  /* gradient 6 color */
+  /* background:linear-gradient(to right, #c4d7e6 0, #c4d7e6 33%, #66a5ad 33%, #66a5ad 66%, #ff0000 66%, #ff0000 100%);
+  width: 100%;
+  height:64px; */
+}
+
+/* MARK: - Test */
+.anime-text{
+  position: absolute;
+  left: 200px;
+  top: 200px;
+}
+
+
+/* MARK: - Particles on Canvas */
+body{
   width: 100vw;
   height: 100vh;
 }
-#canvas {
+#canvas{
   display: block;
   width: 100%;
   height: 100%;
 }
-
-.main-content {
+.main-content{
   position: absolute;
   left: 200px;
   top:100px;
@@ -16,15 +52,21 @@ body {
 }
 
 
+/* MARK: - Side bar */
 /* Google Font Link */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
-*{
+.sidebar > *{
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: "Poppins" , sans-serif;
 }
 .sidebar{
+
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins" , sans-serif;
+
   position: fixed;
   left: 0;
   top: 0;
@@ -268,8 +310,126 @@ body {
   }
 }
 
-.anime-text {
+
+/* MARK: - Blast text animation */
+body {
+  /* background-color: #0b2535; */
+  font-family: "Titillium Web", sans-serif;
+}
+body ::selection {
+  /* background: #d8be68; */
+}
+
+.page {
+  display: block;
+  width: 100%;
+  height: 100%;
   position: absolute;
-  left: 200px;
-  top: 200px;
+}
+
+.container {
+  width: 100%;
+  height: 90%;
+  min-height: 566px;
+  position: absolute;
+  top: 5%;
+  margin: 0 auto;
+  z-index: 1;
+  -webkit-transform-style: preserve-3d;
+  -moz-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+}
+
+.tags {
+  color: #10364e;
+  position: absolute;
+  bottom: 0;
+  left: 90px;
+  font-size: 20px;
+  font-family: "La Belle Aurore", cursive;
+}
+
+.top-tags {
+  bottom: auto;
+  top: 70px;
+}
+
+.home-page .text-zone {
+  position: absolute;
+  left: 10%;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  width: 40%;
+  max-height: 90%;
+}
+.home-page .text-zone img {
+  width: 25px;
+}
+.home-page .text-zone a {
+  font-weight: 300;
+}
+.home-page h1 {
+  color: #10364e;
+  font-size: 53px;
+  line-height: 48px;
+  margin: 0;
+  font-family: "Exo", sans-serif;
+  font-weight: normal;
+}
+.home-page h1::before {
+  content: "<h1>";
+  font-family: "La Belle Aurore", cursive;
+  color: #10364e;
+  font-size: 18px;
+  position: absolute;
+  margin-top: -35px;
+}
+.home-page h1::after {
+  content: "<h1/>";
+  font-family: "La Belle Aurore", cursive;
+  color: #10364e;
+  font-size: 18px;
+  position: absolute;
+  margin-top: 18px;
+  margin-left: 20px;
+  -webkit-animation: myanim2 1s 3s backwards;
+  animation: myanim2 1s 3s backwards;
+}
+.home-page h2 {
+  color: #d8be68;
+  margin-top: 9px;
+  font-weight: 400;
+  font-size: 11px;
+  font-family: "Titillium Web", sans-serif;
+  letter-spacing: 3px;
+  -webkit-animation: myanim2 1s 2.5s backwards;
+  animation: myanim2 1s 2.5s backwards;
+}
+.home-page .flat-button {
+  color: #d8be68;
+  font-size: 11px;
+  letter-spacing: 3px;
+  font-family: "Open Sans", sans-serif;
+  text-decoration: none;
+  padding: 6px 10px;
+  border: 1px solid #d8be68;
+  margin-top: 40px;
+  float: left;
+  border-radius: 4px;
+  opacity: 0;
+}
+.home-page .flat-button:hover {
+  background: #d8be68;
+  color: #0b2535;
+}
+.home-page .blast {
+  opacity: 0;
+  display: inline-block;
+  -webkit-transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out;
+}
+.home-page .blast:hover {
+  color: #d8be68;
 }

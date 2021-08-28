@@ -5,6 +5,7 @@
   <meta name="description" content="particles.js is a lightweight JavaScript library for creating particles.">
   <meta name="author" content="Vincent Garreau" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
   <title>particles.js</title>
 
@@ -15,6 +16,7 @@
 </head>
 <body>
 
+  <!-- MARK: - Side bar component -->
   <div class="sidebar">
     <div class="logo-details">
       <i class='bx bxl-c-plus-plus icon'></i>
@@ -100,35 +102,39 @@
   </section> -->
   <!-- <header-component></header-component> -->
 
-  <div class="anime-text">vudat81299</div>
+	<div id="page">
+		<div class="container home-page">
+			<span class="tags top-tags"> &lt;html&gt;<br> &nbsp;&nbsp;&nbsp;&lt;body&gt; </span>
+			<div class="text-zone">
+				<h1 aria-label=" Hi, I’m ulamabbas,web developer." class="blast-root">
+					Hi, <br> I'm 
+					<img src="https://gmawji.com/wp-content/themes/_gmawji/images/g_logo.png" alt="G" class="animated rotateIn">ulamabbas,
+					<br>
+					web developer.
+				</h1>
+				<h2>Front End Developer / React / Angular</h2>
+				<a rel="contact" href="#contact" class="flat-button" style="opacity: 1;">CONTACT ME</a>
+			</div>
+			<span class="tags bottom-tags"> &nbsp;&nbsp;&nbsp;&lt;/body&gt;<br> &lt;/html&gt; </span>
+		</div>
+	</div>
+
+  <!-- MARK: - Test -->
+  <!-- <div class="anime-text">Test text animation by gsap!</div> -->
+
+  <!-- MARK: - Canvas -->
   <canvas id="canvas"></canvas>
+
+  <!-- MARK: - Script -->
   <!-- GSAP -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.2.4/gsap.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" ></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.5.0/velocity.min.js" ></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.5.0/velocity.ui.min.js" ></script>
+
   <script src="main.js" ></script>
-
   <script>
-    let sidebar = document.querySelector(".sidebar");
-    let closeBtn = document.querySelector("#btn");
-    let searchBtn = document.querySelector(".bx-search");
-
-    closeBtn.addEventListener("click", ()=>{
-      sidebar.classList.toggle("open");
-      menuBtnChange();//calling the function(optional)
-    });
-
-    searchBtn.addEventListener("click", ()=>{ // Sidebar open when you click on the search iocn
-      sidebar.classList.toggle("open");
-      menuBtnChange(); //calling the function(optional)
-    });
-
-    // following are the code to change sidebar button(optional)
-    function menuBtnChange() {
-      if (sidebar.classList.contains("open")) {
-        closeBtn.classList.replace("bx-menu", "bx-menu-alt-right");//replacing the iocns class
-      } else {
-        closeBtn.classList.replace("bx-menu-alt-right","bx-menu");//replacing the iocns class
-      }
-    }
   </script>
 </body>
 </html>
