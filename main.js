@@ -67,7 +67,7 @@ class Visual {
     const x = isRecreate ? -radius - random(0, this.canvasWidth) : random(0, this.canvasWidth);
     let y = random(this.canvasHeight / 2 - 150, this.canvasHeight / 2 + 150);
     y += random(-100, 100);
-    const alpha = random(0.05, 0.75);
+    const alpha = random(0.05, 0.9);
 
     return {
       id: id,
@@ -79,7 +79,8 @@ class Visual {
       startAngle: 0,
       endAngle: Math.PI * 2,
       alpha: alpha,
-      color: { r: random(150, 200), g: random(150, 200), b: 230 },
+      // color: { r: random(150, 200), g: random(150, 200), b: 230 },
+      color: { r: 255, g: random(150, 200), b: random(150, 200) },
       speed: alpha + 1,
       amplitude: random(50, 200),
       isBurst: false
@@ -111,7 +112,7 @@ class Visual {
       const distance = Math.hypot(particle.x - clientX, particle.y - clientY);
 
       if (distance <= 100) {
-        const scaling = (100 - distance) / 1.5;
+        const scaling = (100 - distance) / 3;
         TweenMax.to(particle, 0.5, {
           radius: particle.defaultRadius + scaling,
           ease: Power2.easeOut
@@ -126,13 +127,15 @@ class Visual {
   }
 
   burstParticle(clientX, clientY) {
+    var audio = new Audio('Components/mixkit-liquid-bubble-3000.mp3');
+    audio.play();
     this.particles.forEach(particle => {
       const distance = Math.hypot(particle.x - clientX, particle.y - clientY);
 
       if (distance <= 100) {
         particle.isBurst = true;
-        TweenMax.to(particle, 0.5, {
-          radius: particle.defaultRadius + 200,
+        TweenMax.to(particle, 1, {
+          radius: particle.defaultRadius + 100,
           alpha: 0,
           ease: Power2.easeOut,
           onComplete: () => {
@@ -162,31 +165,6 @@ class Visual {
 }
 
 new Visual();
-
-
-// MARK: - Side bar.
-let sidebar = document.querySelector(".sidebar");
-let closeBtn = document.querySelector("#btn");
-let searchBtn = document.querySelector(".bx-search");
-
-closeBtn.addEventListener("click", ()=>{
-  sidebar.classList.toggle("open");
-  menuBtnChange();//calling the function(optional)
-});
-
-searchBtn.addEventListener("click", ()=>{ // Sidebar open when you click on the search iocn
-  sidebar.classList.toggle("open");
-  menuBtnChange(); //calling the function(optional)
-});
-
-// following are the code to change sidebar button(optional)
-function menuBtnChange() {
-  if (sidebar.classList.contains("open")) {
-    closeBtn.classList.replace("bx-menu", "bx-menu-alt-right");//replacing the iocns class
-  } else {
-    closeBtn.classList.replace("bx-menu-alt-right","bx-menu");//replacing the iocns class
-  }
-}
 
 
 // MARK: - Text Animation by gsap.
@@ -296,3 +274,36 @@ $(".home-page .flat-button").mouseenter(function() {
     }
   );
 });
+
+
+// MARK: - Change cursor.
+(function () {
+  const cursor = document.querySelector('.cursor');
+  const circle = document.querySelector('.circle');
+  const links = document.querySelectorAll('.link');
+  const editPosCursor = (e) => {
+      const { clientX: x, clientY: y } = e;
+      cursor.style.left = x + 'px';
+      cursor.style.top = y + 'px';
+      circle.style.left = x + 'px';
+      circle.style.top = y + 'px';
+  }
+  const animateit = function(e) {
+      const span = this.querySelector('span');
+      const { offsetX: x, offsetY: y } = e,
+          { offsetWidth: width, offsetHeight: height } = this,
+          move = 25,
+          xMove = x / width * (move * 2) - move,
+          yMove = y / height * (move * 2) - move;
+      
+      span.style.transform = `translate(${xMove}px, ${yMove}px)`;
+      circle.classList.add('hover');
+      if (e.type === 'mouseleave') {
+          circle.classList.remove('hover');
+          span.style.transform = '';
+      }
+  }
+  window.addEventListener('mousemove', editPosCursor);
+  links.forEach(link => link.addEventListener('mousemove', animateit));
+  links.forEach(link => link.addEventListener('mouseleave', animateit));
+})();
