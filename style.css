@@ -39,20 +39,14 @@ body {
 
 
 /* MARK: - Particles on Canvas */
-body{
+/* body{
   width: 100vw;
   height: 100vh;
-}
+} */
 #canvas{
   display: block;
   width: 100%;
   height: 100%;
-}
-.main-content{
-  position: absolute;
-  left: 200px;
-  top:100px;
-  z-index: 999;
 }
 
 
