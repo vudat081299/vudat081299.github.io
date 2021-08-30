@@ -127,13 +127,13 @@ class Visual {
   }
 
   burstParticle(clientX, clientY) {
-    var audio = new Audio('Components/mixkit-liquid-bubble-3000.mp3');
-    audio.play();
+    var i = 0;
     this.particles.forEach(particle => {
       const distance = Math.hypot(particle.x - clientX, particle.y - clientY);
 
       if (distance <= 100) {
         particle.isBurst = true;
+        i += 1;
         TweenMax.to(particle, 1, {
           radius: particle.defaultRadius + 100,
           alpha: 0,
@@ -144,6 +144,14 @@ class Visual {
         });
       }
     });
+    console.log(i);
+    if (i > 10) {
+      var audio = new Audio('Components/mixkit-water-bubble-1317.wav');
+      audio.play();
+    } else {
+      var audio = new Audio('Components/mixkit-liquid-bubble-3000.mp3');
+      audio.play();
+    }
   }
 
   render() {
