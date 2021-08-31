@@ -145,7 +145,7 @@ class Visual {
       }
     });
     console.log(i);
-    if (i > 10) {
+    if (i > 7) {
       var audio = new Audio('Components/mixkit-water-bubble-1317.wav');
       audio.play();
     } else {
