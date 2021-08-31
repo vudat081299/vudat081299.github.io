@@ -154,7 +154,8 @@ body ::selection {
   animation: myanim2 1s 3s backwards;
 }
 .home-page h2 {
-  color: #4274ff;
+  /* color: #4274ff; */
+  color: #4a4a4a;
   margin-top: 9px;
   font-weight: 400;
   font-size: 11px;
@@ -164,21 +165,23 @@ body ::selection {
   animation: myanim2 1s 2.5s backwards;
 }
 .home-page .flat-button {
-  color: #4274ff;
+  /* color: #4274ff; */
+  color: #4a4a4a;
   font-size: 11px;
   letter-spacing: 3px;
   font-family: "Open Sans", sans-serif;
   text-decoration: none;
   padding: 6px 10px;
-  border: 1px solid #4274ff;
+  /* border: 1px solid #4274ff; */
+  border: 1px solid #4a4a4a;
   margin-top: 40px;
   float: left;
   border-radius: 4px;
   opacity: 0;
 }
 .home-page .flat-button:hover {
-  /* background: #4274ff;
-  color: #0b2535; */
+  background: #161515;
+  color: #DFE9F2;
 }
 .home-page .blast {
   opacity: 0;
@@ -187,6 +190,7 @@ body ::selection {
   transition: all 0.3s ease-out;
 }
 .home-page .blast:hover {
+  /* color: #4274ff; */
   color: #4274ff;
 }
 
@@ -460,7 +464,7 @@ img{
   bottom: -5%;
   right: -25%;
   background: linear-gradient(130deg,
-              rgba(0, 102, 255, 0.8),
+              rgba(255, 187, 0, 0.8),
               rgba(255,255,255,.2));
 }
 

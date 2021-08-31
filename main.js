@@ -80,7 +80,7 @@ class Visual {
       endAngle: Math.PI * 2,
       alpha: alpha,
       // color: { r: random(150, 200), g: random(150, 200), b: 230 },
-      color: { r: 255, g: random(150, 200), b: random(150, 200) },
+      color: { r: random(100, 150), g: random(100, 150), b: 240 },
       speed: alpha + 1,
       amplitude: random(50, 200),
       isBurst: false
