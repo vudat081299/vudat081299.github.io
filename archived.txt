@@ -1,0 +1,79 @@
+<div class="col d-flex align-items-start">
+            <div class="icon-square bg-light text-dark flex-shrink-0 me-3">
+              <svg class="bi" width="1em" height="1em"><use xlink:href="#toggles2"/></svg>
+            </div>
+            <div>
+              <a href="#" class="text-dark text-decoration-none">
+                <h4 class="fw-bold mt-2">Featured title</h4>
+                <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+              </a>
+              <!-- <a href="#" class="btn btn-primary">
+                Primary button
+              </a> -->
+              <!-- <a href="#" class="icon-link">
+                Jump to
+                <svg class="bi" width="1em" height="1em"><use xlink:href="#chevron-right"/></svg>
+              </a> -->
+            </div>
+          </div>
+          <div class="col d-flex align-items-start">
+            <div class="icon-square bg-light text-dark flex-shrink-0 me-3">
+              <svg class="bi" width="1em" height="1em"><use xlink:href="#cpu-fill"/></svg>
+            </div>
+            <div>
+              <h4 class="fw-bold mt-2">Featured title</h4>
+              <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+              <!-- <a href="#" class="btn btn-primary">
+                Primary button
+              </a> -->
+            </div>
+          </div>
+          <div class="col d-flex align-items-start">
+            <div class="icon-square bg-light text-dark flex-shrink-0 me-3">
+              <svg class="bi" width="1em" height="1em"><use xlink:href="#tools"/></svg>
+            </div>
+            <div>
+              <h4 class="fw-bold mt-2">Featured title</h4>
+              <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+              <!-- <a href="#" class="btn btn-primary">
+                Primary button
+              </a> -->
+            </div>
+          </div>
+          <div class="col d-flex align-items-start">
+            <div class="icon-square bg-light text-dark flex-shrink-0 me-3">
+              <svg class="bi" width="1em" height="1em"><use xlink:href="#chevron-right"/></svg>
+            </div>
+            <div>
+              <h4 class="fw-bold mt-2">Featured title</h4>
+              <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+              <!-- <a href="#" class="btn btn-primary">
+                Primary button
+              </a> -->
+            </div>
+          </div>
+          <div class="col d-flex align-items-start">
+            <div class="icon-square bg-light text-dark flex-shrink-0 me-3">
+              <svg class="bi" width="1em" height="1em"><use xlink:href="#tools"/></svg>
+            </div>
+            <div>
+              <h4 class="fw-bold mt-2">Featured title</h4>
+              <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+              <!-- <a href="#" class="btn btn-primary">
+                Primary button
+              </a> -->
+            </div>
+          </div>
+          
+          <div class="col d-flex align-items-start">
+            <div class="icon-square bg-light text-dark flex-shrink-0 me-3">
+              <svg class="bi" width="1em" height="1em"><use xlink:href="#bootstrap"/></svg>
+            </div>
+            <div>
+              <h4 class="fw-bold mt-2">Featured title</h4>
+              <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+              <!-- <a href="#" class="btn btn-primary">
+                Primary button
+              </a> -->
+            </div>
+          </div>
