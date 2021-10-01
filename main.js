@@ -106,10 +106,6 @@ function reloadWithData(value) {
       "</h4><p>" +
       item.description +
       "</p></a></div>";
-    // console.log(
-    //   '<div class="icon-square bg-light text-dark flex-shrink-0 me-3"><i class="bi-'item.type + ' me-2" width="1em" height="1em"></i></div><div><a href="posts-of-tag-page.html" class="text-dark text-decoration-none"><h4 class="fw-bold mt-2">' +
-    //   item.tag +"</h4><p>" + item.description +
-    //   "</p></a></div>");
     list.appendChild(element);
   });
 }
