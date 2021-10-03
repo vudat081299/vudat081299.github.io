@@ -68,15 +68,30 @@ function searchTags(value) {
     return;
   }
   const listMatchs = [];
-  mountedData.forEach((item) => {
-    if (item.tag.toLowerCase().includes(value.toLowerCase())) {
-      listMatchs[listMatchs.length] = item;
-    }
+  const listSimilarityPrices = [];
+  const mapPriceToIndex = [];
+  mountedData.forEach((item, index) => {
+    // if (item.tag.toLowerCase().includes(value.toLowerCase())) {
+    //   listMatchs[listMatchs.length] = item;
+    // }
+
+    let priceWithTag = 1 - compareTwoStrings(item.tag.toLowerCase(), value.toLowerCase()); // lower value better match
+    let priceWithDescription = compareTwoStrings(item.description.toLowerCase(), value.toLowerCase());
+    let FixedPriceWithDescription = priceWithDescription > 0.5 ? priceWithDescription : priceWithDescription / 3;
+
+    let price = priceWithTag > 0.5 ? priceWithTag : priceWithDescription;
+    let sortedIndex = getIndexCompatible(listSimilarityPrices, price);
+    listSimilarityPrices.splice(sortedIndex, 0, price);
+    mapPriceToIndex.splice(sortedIndex, 0, index);
+  });
+  // console.log(listSimilarityPrices);
+  // console.log(mapPriceToIndex);
+  mapPriceToIndex.forEach((item, index) => {
+    listMatchs[index] = mountedData[item];
   });
 
   let list = document.getElementById("tagsList");
   list.innerHTML = "";
-  console.log(listMatchs.length);
   reloadWithData(listMatchs);
 }
 
@@ -108,4 +123,77 @@ function reloadWithData(value) {
       "</p></a></div>";
     list.appendChild(element);
   });
+}
+
+// Measure 2 String similarity.
+function compareTwoStrings(first, second) {
+	first = first.replace(/\s+/g, '')
+	second = second.replace(/\s+/g, '')
+
+	if (first === second) return 1; // identical or empty
+	if (first.length < 2 || second.length < 2) return 0; // if either is a 0-letter or 1-letter string
+
+	let firstBigrams = new Map();
+	for (let i = 0; i < first.length - 1; i++) {
+		const bigram = first.substring(i, i + 2);
+		const count = firstBigrams.has(bigram)
+			? firstBigrams.get(bigram) + 1
+			: 1;
+
+		firstBigrams.set(bigram, count);
+	};
+
+	let intersectionSize = 0;
+	for (let i = 0; i < second.length - 1; i++) {
+		const bigram = second.substring(i, i + 2);
+		const count = firstBigrams.has(bigram)
+			? firstBigrams.get(bigram)
+			: 0;
+
+		if (count > 0) {
+			firstBigrams.set(bigram, count - 1);
+			intersectionSize++;
+		}
+	}
+
+	return (2.0 * intersectionSize) / (first.length + second.length - 2);
+}
+
+function findBestMatch(mainString, targetStrings) {
+	if (!areArgsValid(mainString, targetStrings)) throw new Error('Bad arguments: First argument should be a string, second should be an array of strings');
+	
+	const ratings = [];
+	let bestMatchIndex = 0;
+
+	for (let i = 0; i < targetStrings.length; i++) {
+		const currentTargetString = targetStrings[i];
+		const currentRating = compareTwoStrings(mainString, currentTargetString)
+		ratings.push({target: currentTargetString, rating: currentRating})
+		if (currentRating > ratings[bestMatchIndex].rating) {
+			bestMatchIndex = i
+		}
+	}
+	
+	
+	const bestMatch = ratings[bestMatchIndex]
+	
+	return { ratings: ratings, bestMatch: bestMatch, bestMatchIndex: bestMatchIndex };
+}
+
+// usecase: want to find index when add an element into a sorted array.
+// function: if it take an equal value to compare, it return a lower index.
+// Parameters:
+//  - value: [Object] // Structure: { tag: String, type: String, description: String }
+// Return: Int //
+// Complexity:
+function getIndexCompatible(array, value) {
+	var low = 0,
+		high = array.length;
+
+	while (low < high) {
+		var mid = low + high >>> 1;
+		if (array[mid] < value) low = mid + 1;
+		else high = mid;
+	}
+	return low;
 }
