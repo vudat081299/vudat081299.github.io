@@ -74,24 +74,18 @@ function searchTags(value) {
     // if (item.tag.toLowerCase().includes(value.toLowerCase())) {
     //   listMatchs[listMatchs.length] = item;
     // }
-
     let priceWithTag = 1 - compareTwoStrings(item.tag.toLowerCase(), value.toLowerCase()); // lower value better match
-    let priceWithDescription = compareTwoStrings(item.description.toLowerCase(), value.toLowerCase());
-    let FixedPriceWithDescription = priceWithDescription > 0.5 ? priceWithDescription : priceWithDescription / 3;
-
-    let price = priceWithTag > 0.5 ? priceWithTag : priceWithDescription;
+    let priceWithDescription = 1 - compareTwoStrings(item.description.toLowerCase(), value.toLowerCase()); // lower value better match
+    // let FixedPriceWithDescription = priceWithDescription > 0.5 ? priceWithDescription : priceWithDescription / 3;
+    let price = priceWithTag < priceWithDescription ? priceWithTag : priceWithDescription;
     let sortedIndex = getIndexCompatible(listSimilarityPrices, price);
     listSimilarityPrices.splice(sortedIndex, 0, price);
     mapPriceToIndex.splice(sortedIndex, 0, index);
   });
-  // console.log(listSimilarityPrices);
-  // console.log(mapPriceToIndex);
   mapPriceToIndex.forEach((item, index) => {
     listMatchs[index] = mountedData[item];
   });
 
-  let list = document.getElementById("tagsList");
-  list.innerHTML = "";
   reloadWithData(listMatchs);
 }
 
@@ -108,7 +102,9 @@ function reloadWithData(value) {
     data = value;
   }
   let list = document.getElementById("tagsList");
+  list.innerHTML = "";
   data.forEach((item) => {
+    console.log("-");
     let element = document.createElement("div");
     element.classList.add("col");
     element.classList.add("d-flex");

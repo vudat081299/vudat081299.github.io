@@ -6,22 +6,37 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.88.1">
-    <title>Features · Bootstrap v5.1</title>
+    <title>Offcanvas navbar template · Bootstrap v5.1</title>
 
-    <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/features/">
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/offcanvas-navbar/">
 
     <!-- Bootstrap core CSS -->
-    <link href="./assets/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Icon -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
     <!-- Custom styles for this template -->
     <link href="tags-page.css" rel="stylesheet">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+
+    <!-- Custom styles for this template -->
     <link href="posts-of-tag-page.css" rel="stylesheet">
   </head>
-  <body>
-    
+  <body class="bg-light">
+
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
       <symbol id="bootstrap" viewBox="0 0 118 94">
         <title>Bootstrap</title>
@@ -79,32 +94,23 @@
       <symbol id="geo-fill" viewBox="0 0 16 16">
         <path fill-rule="evenodd" d="M4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999zm2.493 8.574a.5.5 0 0 1-.411.575c-.712.118-1.28.295-1.655.493a1.319 1.319 0 0 0-.37.265.301.301 0 0 0-.057.09V14l.002.008a.147.147 0 0 0 .016.033.617.617 0 0 0 .145.15c.165.13.435.27.813.395.751.25 1.82.414 3.024.414s2.273-.163 3.024-.414c.378-.126.648-.265.813-.395a.619.619 0 0 0 .146-.15.148.148 0 0 0 .015-.033L12 14v-.004a.301.301 0 0 0-.057-.09 1.318 1.318 0 0 0-.37-.264c-.376-.198-.943-.375-1.655-.493a.5.5 0 1 1 .164-.986c.77.127 1.452.328 1.957.594C12.5 13 13 13.4 13 14c0 .426-.26.752-.544.977-.29.228-.68.413-1.116.558-.878.293-2.059.465-3.34.465-1.281 0-2.462-.172-3.34-.465-.436-.145-.826-.33-1.116-.558C3.26 14.752 3 14.426 3 14c0-.599.5-1 .961-1.243.505-.266 1.187-.467 1.957-.594a.5.5 0 0 1 .575.411z"/>
       </symbol>
-      <symbol id="swift-fill" viewBox="20 20 20 20">
-        <path fill-rule="evenodd" d="M49.489 13.708a68.72 68.72 0 0 0-.022-1.493c-.03-1.084-.093-2.178-.286-3.25a10.962 10.962 0 0 0-1.019-3.091A10.387 10.387 0 0 0 43.62 1.33a10.97 10.97 0 0 0-3.09-1.018C39.456.119 38.362.055 37.278.026c-.499-.014-.996-.02-1.494-.023C35.193 0 34.602 0 34.01 0H15.482c-.592 0-1.182 0-1.773.003-.498.004-.996.01-1.494.023-.271.007-.543.017-.815.03-.815.039-1.632.111-2.437.256a11.31 11.31 0 0 0-2.342.674 10.42 10.42 0 0 0-3.379 2.256A10.383 10.383 0 0 0 1.33 5.873C.826 6.863.507 7.875.312 8.964c-.193 1.073-.257 2.167-.286 3.25-.014.5-.02.997-.023 1.494C0 14.3 0 14.891 0 15.482V34.01c0 .592 0 1.183.003 1.774.004.498.01.996.023 1.493.03 1.085.093 2.179.286 3.25A10.97 10.97 0 0 0 1.33 43.62a10.381 10.381 0 0 0 4.544 4.544c.989.503 2.001.822 3.09 1.018 1.072.193 2.167.257 3.251.286.498.013.996.019 1.494.022.59.004 1.181.003 1.773.003H34.01c.59 0 1.182.001 1.773-.003.498-.003.995-.009 1.493-.022 1.085-.03 2.18-.093 3.252-.286a10.97 10.97 0 0 0 3.09-1.018 10.384 10.384 0 0 0 4.543-4.544c.504-.99.823-2.003 1.019-3.091.193-1.072.257-2.166.286-3.251.013-.497.019-.995.022-1.493.004-.591.003-1.182.003-1.774V15.482c0-.591 0-1.182-.003-1.774z" fill="#f05138"/><path d="M39.217 30.55l-.003-.003c.054-.187.11-.372.159-.563 2.054-8.184-2.96-17.86-11.443-22.954 3.718 5.04 5.361 11.144 3.9 16.482-.13.477-.286.934-.459 1.378a11.353 11.353 0 0 0-.742-.439s-8.44-5.21-17.586-14.427c-.24-.242 4.877 7.314 10.685 13.45-2.736-1.535-10.362-7.084-15.189-11.502.593.99 1.299 1.942 2.074 2.859 4.031 5.112 9.289 11.42 15.587 16.264-4.425 2.708-10.678 2.918-16.904.003a25.539 25.539 0 0 1-4.328-2.582 25.92 25.92 0 0 0 11.634 9.975c5.892 2.532 11.75 2.36 16.113.042l-.003.005c.02-.013.045-.026.066-.04.179-.095.357-.194.53-.297 2.097-1.088 6.238-2.192 8.46 2.132.545 1.059 1.702-4.55-2.55-9.782z" fill="#fff"/><path d="M68.275 32.119c.387 3.433 3.662 5.684 8.21 5.684 4.321 0 7.437-2.25 7.437-5.366 0-2.683-1.888-4.321-6.232-5.412l-4.207-1.07c-6.049-1.5-8.778-4.23-8.778-8.732 0-5.549 4.844-9.392 11.735-9.392 6.685 0 11.438 3.866 11.598 9.438h-4.435c-.341-3.412-3.116-5.504-7.277-5.504-4.117 0-6.982 2.115-6.982 5.207 0 2.41 1.774 3.844 6.14 4.958l3.503.91c6.777 1.66 9.551 4.298 9.551 9.051 0 6.05-4.799 9.847-12.44 9.847-7.095 0-11.939-3.775-12.303-9.62h4.48zm48.432 9.073h-4.457l-5.208-18.147h-.09l-5.186 18.147H97.31l-6.595-23.765h4.32l4.594 19.08h.091l5.185-19.08h4.185l5.23 19.08h.091l4.594-19.08h4.275zm9.45-30.155c0-1.432 1.184-2.592 2.616-2.592 1.456 0 2.638 1.16 2.638 2.592 0 1.433-1.182 2.615-2.638 2.615a2.63 2.63 0 0 1-2.615-2.615zm.456 6.39h4.343v23.765h-4.343zm32.708 3.503v-3.503h-4.593v-5.685h-4.322v5.685h-8.302v-2.092c.022-2.115.84-3.002 2.797-3.002.636 0 1.273.069 1.796.16V9.08a15.16 15.16 0 0 0-2.296-.182c-4.64 0-6.596 1.934-6.596 6.368v2.16h-3.32v3.503h3.32v20.262h4.321V20"/>
-      </symbol>
     </svg>
-
+    
     <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark" aria-label="Main navigation">
       <div class="container-fluid">
-        <a class="navbar-brand" href="index.html"><i class="bi-toggles2 me-2" width="1em" height="1em"></i> Swifty Community</a>
+        <a class="navbar-brand" href="index.html"><svg class="bi me-2" width="1em" height="1em"><use xlink:href="#toggles2"/></svg> Swifty Community</a>
         <button class="navbar-toggler p-0 border-0" type="button" id="navbarSideCollapse" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
+    
         <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="posts-of-tag-page.html">All posts</a>
+              <a class="nav-link active" aria-current="page" href="tags-page.html">All tags</a>
             </li>
           </ul>
         </div>
-        <div class="d-flex">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="posts-of-tag-page.html">All posts</a>
-            </li>
-          </ul>
-        </div>
-    
+
         <!-- <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
@@ -138,7 +144,7 @@
 
     <div class="nav-scroller bg-body shadow-sm">
       <nav class="nav nav-underline" aria-label="Secondary navigation">
-        <!-- <a class="nav-link active" aria-current="page" href="#">All posts</a> -->
+        <!-- <a class="nav-link active" aria-current="page" href="features.html">All tags</a> -->
         <!-- <a class="nav-link" href="#">
           Friends
           <span class="badge bg-light text-dark rounded-pill align-text-bottom">27</span>
@@ -152,27 +158,26 @@
     </div>
 
     <main class="container">
-      <!-- <h1 class="visually-hidden">Features examples</h1> -->
-      <div class="container px-4 py-4" id="hanging-icons">
-        <!-- <h2 class="pb-2 border-bottom">Hanging icons</h2> -->
-        <div class="p-2 row justify-content-center">
-          <div class="col-sm-10">
+      <div class="p-3 my-4 text-white bg-dark rounded shadow-sm">
+        <div class="row justify-content-center">
+          <div class="col-sm-12">
             <div class="row justify-content-between">
               <div class="col-sm-6 col-xs-12">
-                <a href="#" class="d-flex align-items-center text-dark text-decoration-none">
-                  <!-- <svg xmlns="http://www.w3.org/2000/svg" width="40" height="32" class="me-2" viewBox="0 0 118 94" role="img"><title>Bootstrap</title><path fill-rule="evenodd" clip-rule="evenodd" d="M24.509 0c-6.733 0-11.715 5.893-11.492 12.284.214 6.14-.064 14.092-2.066 20.577C8.943 39.365 5.547 43.485 0 44.014v5.972c5.547.529 8.943 4.649 10.951 11.153 2.002 6.485 2.28 14.437 2.066 20.577C12.794 88.106 17.776 94 24.51 94H93.5c6.733 0 11.714-5.893 11.491-12.284-.214-6.14.064-14.092 2.066-20.577 2.009-6.504 5.396-10.624 10.943-11.153v-5.972c-5.547-.529-8.934-4.649-10.943-11.153-2.002-6.484-2.28-14.437-2.066-20.577C105.214 5.894 100.233 0 93.5 0H24.508zM80 57.863C80 66.663 73.436 72 62.543 72H44a2 2 0 01-2-2V24a2 2 0 012-2h18.437c9.083 0 15.044 4.92 15.044 12.474 0 5.302-4.01 10.049-9.119 10.88v.277C75.317 46.394 80 51.21 80 57.863zM60.521 28.34H49.948v14.934h8.905c6.884 0 10.68-2.772 10.68-7.727 0-4.643-3.264-7.207-9.012-7.207zM49.948 49.2v16.458H60.91c7.167 0 10.964-2.876 10.964-8.281 0-5.406-3.903-8.178-11.425-8.178H49.948z" fill="currentColor"></path></svg> -->
-                  <i class="bi bi-tags me-2"></i>
-                  <!-- <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#swift-fill"/></svg> -->
-                  <span class="fs-4">List of tags</span>
-                </a>
+                <div class="d-flex align-items-center">
+                  <img class="me-3" src="./assets/brand/bootstrap-logo-white.svg" alt="" width="48" height="38">
+                  <div class="lh-1">
+                    <h1 class="h6 mb-0 text-white lh-1">Tag name</h1>
+                    <!-- <small>Since 2011</small> -->
+                  </div>
+                </div>
               </div>
               <div class="col-sm-6 col-xs-12">
                 <form class="">
                   <div class="input-group">
-                    <span class="input-group-text" id="basic-addon1">@</span>
+                    <span class="input-group-text bg-dark text-white" id="basic-addon1">@</span>
                     <input type="text" 
-                      class="form-control" 
-                      placeholder="find-your-tag" 
+                      class="form-control bg-dark text-white" 
+                      placeholder="find-your-post" 
                       aria-label="Username" 
                       aria-describedby="basic-addon1" 
                       oninput="searchTags(this.value)">
@@ -182,20 +187,129 @@
             </div>
           </div>
         </div>
+      </div>
 
-        <div id="tagsList" class="row g-4 py-4 row-cols-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-3">
-        </div>
+      <div class="mb-4 row">
+          <!-- <div class="p-3 rounded col-md-3 col-lg-3 order-md-last"> -->
+          <!-- <div class="btn-group-vertical" role="group" aria-label="Basic checkbox toggle button group">
+            <input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off">
+            <label class="btn btn-outline-primary" for="btncheck1">Checkbox 1</label>
+          
+            <input type="checkbox" class="btn-check" id="btncheck2" autocomplete="off">
+            <label class="btn btn-outline-primary" for="btncheck2">Checkbox 2</label>
+          
+            <input type="checkbox" class="btn-check" id="btncheck3" autocomplete="off">
+            <label class="btn btn-outline-primary" for="btncheck3">Checkbox 3</label>
+          </div> -->
+          <!-- <div class="body widget">
+            <ul class="list-unstyled categories-clouds m-b-0">
+                <li><a href="javascript:void(0);">eCommerce</a></li>
+                <li><a href="javascript:void(0);">Microsoft Technologies</a></li>
+                <li><a href="javascript:void(0);">Creative UX</a></li>
+                <li><a href="javascript:void(0);">Wordpress</a></li>
+                <li><a href="javascript:void(0);">Angular JS</a></li>
+                <li><a href="javascript:void(0);">Enterprise Mobility</a></li>
+                <li><a href="javascript:void(0);">Website Design</a></li>
+                <li><a href="javascript:void(0);">HTML5</a></li>
+                <li><a href="javascript:void(0);">Infographics</a></li>
+                <li><a href="javascript:void(0);">Wordpress Development</a></li>
+            </ul>
+        </div> -->
+          <!-- </div> -->
+
+          <!-- <div class="p-3 rounded col-md-3 col-lg-3 order-md-last">
+            <div class="bd-toc mt-4 mb-5 my-md-0 ps-xl-3 mb-lg-5 text-muted">
+              <strong class="d-block h6 my-2 pb-2 border-bottom">On this page</strong>
+              <nav id="TableOfContents">
+                <ul>
+                  <li><a href="#how-it-works">How it works</a></li>
+                  <li><a href="#example-in-navbar">Example in navbar</a></li>
+                  <li><a href="#example-with-nested-nav">Example with nested nav</a></li>
+                  <li><a href="#example-with-list-group">Example with list-group</a></li>
+                  <li><a href="#usage">Usage</a>
+                    <ul>
+                      <li><a href="#via-data-attributes">Via data attributes</a></li>
+                      <li><a href="#via-javascript">Via JavaScript</a></li>
+                      <li><a href="#methods">Methods</a>
+                        <ul>
+                          <li><a href="#refresh">refresh</a></li>
+                          <li><a href="#dispose">dispose</a></li>
+                          <li><a href="#getinstance">getInstance</a></li>
+                          <li><a href="#getorcreateinstance">getOrCreateInstance</a></li>
+                        </ul>
+                      </li>
+                      <li><a href="#options">Options</a></li>
+                      <li><a href="#events">Events</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div> -->
+          <div id="myList" class="p-3 bg-body rounded shadow-sm col-md-12 col-lg-12">
+            <h6 class="border-bottom pb-2 mb-0">Recent update posts</h6>
+
+            <div class="d-flex text-muted pt-3">
+              <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="40" height="40" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"/><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
+
+              <p class="pb-3 mb-0 small lh-sm border-bottom">
+                <strong class="d-block text-gray-dark">@title <span class="badge bg-dark text-white rounded-pill align-text-bottom">27</span></strong>
+                Some representative placeholder content, with some information about this user. Imagine this being some sort of status update, perhaps?
+              </p>
+            </div>
+            <!-- <div class="d-flex text-muted pt-3">
+              <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#e83e8c"/><text x="50%" y="50%" fill="#e83e8c" dy=".3em">32x32</text></svg>
+
+              <p class="pb-3 mb-0 small lh-sm border-bottom">
+                <strong class="d-block text-gray-dark">@username <span class="badge bg-dark text-white rounded-pill align-text-bottom">27</span></strong>
+                Some more representative placeholder content, related to this other user. Another status update, perhaps.
+              </p>
+            </div>
+
+            
+            <div class="d-flex text-muted pt-3">
+              <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#6f42c1"/><text x="50%" y="50%" fill="#6f42c1" dy=".3em">32x32</text></svg>
+
+              <p class="pb-3 mb-0 small lh-sm border-bottom">
+                <strong class="d-block text-gray-dark">@username <span class="badge bg-dark text-white rounded-pill align-text-bottom">27</span></strong>
+                This user also gets some representative placeholder content. Maybe they did something interesting, and you really want to highlight this in the recent updates.
+                This user also gets some representative placeholder content. Maybe they did something interesting, and you really want to highlight this in the recent updates.
+                This user also gets some representative placeholder content. Maybe they did something interesting, and you really want to highlight this in the recent updates.
+                This user also gets some representative placeholder content. Maybe they did something interesting, and you really want to highlight this in the recent updates.
+              </p>
+            </div> -->
+            <!-- <small class="d-block text-end mt-3">
+              <a href="#">All updates</a>
+            </small> -->
+          </div>
+
+          <!-- <div class="col-md-1"></div> -->
+
+
       </div>
     </main>
 
-    <script src="./assets/dist/js/bootstrap.bundle.min.js"></script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     <script src="posts-of-tag-page.js"></script>
-    <script src="main.js"></script>
-    <script>
-      mount();
-console.log(compareTwoStrings("An asynchronous function or asynchronous method is a special kind of function or method that can be suspended while it’s partway through execution.", "An asous method is a specialtion."));
 
+    <script>
+      let data = ["a","b","c","d","d","d","d","d","d","d","d"];
+    
+      let list = document.getElementById("myList");
+      
+      data.forEach((item) => {
+        let div1 = document.createElement("div");
+        div1.classList.add("d-flex");
+        div1.classList.add("text-muted");
+        div1.classList.add("pt-3");
+
+        div1.innerHTML = '<svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="40" height="40" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#e84b55"/><text x="50%" y="50%" fill="#e84b55" dy=".3em">32x32</text></svg><p class="pb-3 mb-0 small lh-sm border-bottom"><strong class="d-block text-gray-dark">@username <span class="badge bg-dark text-white rounded-pill align-text-bottom">27</span></strong>This user also gets some representative placeholder content. Maybe they did something interesting, and you really want to highlight this in the recent updates.</p>';
+
+        list.appendChild(div1);
+      });
     </script>
   </body>
 </html>
+
+
+

@@ -1,0 +1,846 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.88.1">
+    <title>Dashboard Template · Bootstrap v5.1</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/dashboard/">
+
+    <!-- Bootstrap core CSS -->
+    <!-- <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+
+    <!-- Custom styles for this template -->
+    <link href="style.css" rel="stylesheet">
+  </head>
+  <body 
+    class="logged-out env-production page-responsive body-fluid" 
+    style="word-wrap: break-word; 
+      font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Segoe UI Emoji;
+      background-color:#0d1116; 
+      color:#cad1d8;"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+      <symbol id="bootstrap" viewBox="0 0 118 94">
+        <title>Bootstrap</title>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M24.509 0c-6.733 0-11.715 5.893-11.492 12.284.214 6.14-.064 14.092-2.066 20.577C8.943 39.365 5.547 43.485 0 44.014v5.972c5.547.529 8.943 4.649 10.951 11.153 2.002 6.485 2.28 14.437 2.066 20.577C12.794 88.106 17.776 94 24.51 94H93.5c6.733 0 11.714-5.893 11.491-12.284-.214-6.14.064-14.092 2.066-20.577 2.009-6.504 5.396-10.624 10.943-11.153v-5.972c-5.547-.529-8.934-4.649-10.943-11.153-2.002-6.484-2.28-14.437-2.066-20.577C105.214 5.894 100.233 0 93.5 0H24.508zM80 57.863C80 66.663 73.436 72 62.543 72H44a2 2 0 01-2-2V24a2 2 0 012-2h18.437c9.083 0 15.044 4.92 15.044 12.474 0 5.302-4.01 10.049-9.119 10.88v.277C75.317 46.394 80 51.21 80 57.863zM60.521 28.34H49.948v14.934h8.905c6.884 0 10.68-2.772 10.68-7.727 0-4.643-3.264-7.207-9.012-7.207zM49.948 49.2v16.458H60.91c7.167 0 10.964-2.876 10.964-8.281 0-5.406-3.903-8.178-11.425-8.178H49.948z"></path>
+      </symbol>
+      <symbol id="facebook" viewBox="0 0 16 16">
+        <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z"/>
+      </symbol>
+      <symbol id="instagram" viewBox="0 0 16 16">
+          <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z"/>
+      </symbol>
+      <symbol id="twitter" viewBox="0 0 16 16">
+        <path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z"/>
+      </symbol>
+    </svg>
+    
+    <header class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+      <a class="navbar-brand col-12 me-0 px-3 align-items-center" href="tags-page.html#all-posts">
+        <!-- <a class="navbar-brand col-md-12 col-lg-12 me-0 px-3 align-items-center" href="#"> -->
+        <img src="swift-brands-white.svg" alt="Bootstrap" ... width="30px" height="30px" class="text-white">
+        <span class="ms-2"><span class="text-secondary fw-bold">Swift Docs</span> Factory</span>
+      </a>
+      <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <!-- <input class="form-control form-control-dark w-100 invisible" type="text" placeholder="Search" aria-label="Search" disabled>
+      <div class="navbar-nav">
+        <div class="nav-item text-nowrap">
+          <a class="nav-link px-3" href="#">Sign out</a>
+        </div>
+      </div> -->
+    </header>
+
+    <div class="container-fluid">
+      <div class="row">
+
+        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse"> 
+          <div class="flex-shrink-0 p-3 bg-white position-sticky">
+            <a href="/" class="d-flex align-items-center py-3 mb-3 link-dark text-decoration-none border-bottom text-center">
+              <!-- <svg class="bi me-2" width="30" height="24"><use xlink:href="#bootstrap"/></svg> -->
+              <span class="fs-5 fw-semibold">Swift docs Factory</span>
+            </a>
+
+            <ul class="list-unstyled ps-0">
+              <li class="mb-1">
+                <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+                  Home
+                </button>
+                <div class="collapse show" id="home-collapse">
+                  <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                    <li><a href="#" class="link-dark rounded">Overview</a></li>
+                    <li><a href="#" class="link-dark rounded">Updates</a></li>
+                    <li><a href="#" class="link-dark rounded">Reports</a></li>
+                  </ul>
+                </div>
+              </li>
+              <li class="mb-1">
+                <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+                  Dashboard
+                </button>
+                <div class="collapse" id="dashboard-collapse">
+                  <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                    <li><a href="#" class="link-dark rounded">Overview</a></li>
+                    <li><a href="#" class="link-dark rounded">Weekly</a></li>
+                    <li><a href="#" class="link-dark rounded">Monthly</a></li>
+                    <li><a href="#" class="link-dark rounded">Annually</a></li>
+                  </ul>
+                </div>
+              </li>
+              <li class="mb-1">
+                <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
+                  Orders
+                </button>
+                <div class="collapse" id="orders-collapse">
+                  <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                    <li><a href="#" class="link-dark rounded">New</a></li>
+                    <li><a href="#" class="link-dark rounded">Processed</a></li>
+                    <li><a href="#" class="link-dark rounded">Shipped</a></li>
+                    <li><a href="#" class="link-dark rounded">Returned</a></li>
+                  </ul>
+                </div>
+              </li>
+              <li class="border-top my-3"></li>
+              <li class="mb-1">
+                <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
+                  Account
+                </button>
+                <div class="collapse" id="account-collapse">
+                  <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                    <li><a href="#" class="link-dark rounded">New...</a></li>
+                    <li><a href="#" class="link-dark rounded">Profile</a></li>
+                    <li><a href="#" class="link-dark rounded">Settings</a></li>
+                    <li><a href="#" class="link-dark rounded">Sign out</a></li>
+                  </ul>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </nav>
+
+        <main class="col-md-6 mx-sm-auto col-lg-8 px-md-4">
+          
+          <article class="contents">
+            <section>
+              <h1 id="recordfastproject-ios">RecordFastProject iOS</h1>
+              <h3 align="center">
+                <img width="200px" src="https://user-images.githubusercontent.com/55421234/110569031-80b6da80-8186-11eb-8a8a-5eef2a5e22a2.gif">
+                <img width="200px" src="https://cdn.dribbble.com/users/45617/screenshots/12910101/media/c170a9a4d64ad4dff24bac58529d26bb.png">
+              </h3>
+              
+              <h1 id="when-use-">When use?</h1>
+              <ul>
+              <li><strong>For iOS developer reference purpose only. (learning how to make a recorder app, and config the output)</strong></li>
+              <li>This project help you record superfast by my custom and support text you will record show on screen with .csv file.</li>
+              <li>Using to making data to train model.</li>
+              </ul>
+              <h1 id="feature">Feature</h1>
+              <ul>
+              <li>Record into .wav extension by default (custom output extension in source).</li>
+              <li>Some specification are set for Audio format in this project <strong>(you can config output type as anything you want - add, remove, fix value of any specification for a Audio format in source)</strong>:<blockquote>
+              <p>AVFormatIDKey: Int(kAudioFormatLinearPCM)
+              AVSampleRateKey: 16000
+              AVNumberOfChannelsKey: 1
+              AVEncoderAudioQualityKey: AVAudioQuality.max.rawValue
+              AVLinearPCMBitDepthKey: 32</p>
+              </blockquote>
+              </li>
+              <li>Record with low latency.</li>
+              <li>Show text to read. Change content in .csv file.</li>
+              <li>Auto increment name output file.</li>
+              <li>Just for fast record so cannot play recorded file, access the file manager on iphone to play your record.</li>
+              </ul>
+              <h1 id="how-fast-">How fast?</h1>
+              <blockquote>
+              <p>Tested <strong>record and save 10 .wav file</strong> with <strong>12-15 word</strong> per file in just <strong>1 minute</strong>.
+              No crash, low latency.</p>
+              </blockquote>
+              <h1 id="prerequisite">Prerequisite</h1>
+              <blockquote>
+              <ul>
+              <li>A iOS developer to understand and custom this.</li>
+              </ul>
+              </blockquote>
+              <h1 id="how-to-build-">How to build?</h1>
+              <ol>
+              <li>Clone project and open.</li>
+              <li>Switch to your account development in xcode.</li>
+              <li>Add content to record in csv file.</li>
+              <li>Build and run.</li>
+              </ol>
+              <h1 id="where-output-saved-">Where output saved?</h1>
+              <blockquote>
+              <ul>
+              <li>Output is saved in document folder of this app in file manager on iPhone.<h1 id="how-to-take-data-">How to take data?</h1>
+              </li>
+              <li>Method 1: Connect to a MacOS PC.</li>
+              <li>Method 2: Access file manager on iPhone and upload to anywhere you want.</li>
+              </ul>
+              </blockquote>
+              <h1 id="config-output-quality">Config output quality</h1>
+              <blockquote>
+              <ul>
+              <li>This project record and extract .wav file.</li>
+              <li>Depend on your required output, config quality or type of output in code. <strong>You control your output</strong>, remmember that!</li>
+              </ul>
+              </blockquote>
+              <p> <code>MarkdownParser</code></p>
+              <pre><code class="lang-swift"><span class="hljs-selector-class">.target</span>(
+                  <span class="hljs-attribute">name</span>: <span class="hljs-string">"App"</span>,
+                  <span class="hljs-attribute">dependencies</span>: [
+                      <span class="hljs-comment">// ...</span>
+                      <span class="hljs-string">"LeafMarkdown"</span>
+                  ],
+                  <span class="hljs-comment">// ...</span>
+              )
+              </code></pre>
+              <p align="center">
+                  <a href="http://www.raywenderlich.com/">
+                      <img src="https://user-images.githubusercontent.com/9938337/51800584-21591300-2229-11e9-85f6-33d1203ee095.png" width="200" alt="raywenderlich.com">
+                  </a>
+                  <br>
+                  <br>
+                  <img src="https://user-images.githubusercontent.com/9938337/38052269-98e07e8c-32c8-11e8-9f63-7cec8cee742e.png" alt="TIL Application">
+              </p>
+              
+              <h1 id="vapor-til">Vapor TIL</h1>
+              <p>This is the Vapor TIL (Today I Learned) application that is used throughout the <a href="https://store.raywenderlich.com/products/server-side-swift-with-vapor">Server Side Swift with Vapor</a> book. The first sections of the book take you through everything you need to know to get started with Vapor. This application is deployed to Vapor Cloud, Heroku, Docker and AWS, using this repository!</p>
+              <p>In the book, you&#39;ll learn how to build routes and use Fluent to interact with a database. You&#39;ll learn how to create dynamic websites with Leaf and authenticate APIs, websites and validate fields. The 2nd half of the book goes into more advanced topics, including WebSockets, caching and microservices.</p>
+              <h2 id="like-what-you-see-">Like what you see?</h2>
+              <p align="center">
+                <a href="https://store.raywenderlich.com/products/server-side-swift-with-vapor">
+                  <img src="https://koenig-media.raywenderlich.com/uploads/2018/02/cover-vapor.png" alt="Server Side Swift with Vapor Book">
+                </a>
+              </p>
+              
+              <p>The book is available on the <a href="https://store.raywenderlich.com/products/server-side-swift-with-vapor">raywenderlich.com store</a>.</p>
+              <h2 id="video-course">Video Course</h2>
+              <p align="center">
+                <a href="https://videos.raywenderlich.com/courses/115-server-side-swift-with-vapor/lessons/1">
+                  <img src="https://koenig-media.raywenderlich.com/uploads/2018/02/Vapor_Screenshot_1-650x366.jpg" alt="Video Course">
+                </a>
+              </p>
+              
+              <p>The video course is available to raywenderlich.com subscribers, which can be <a href="https://videos.raywenderlich.com/courses/115-server-side-swift-with-vapor/lessons/1">watched here</a>.</p>
+              <p>There are 30 videos covering:</p>
+              <ul>
+              <li>Getting Started</li>
+              <li>Using Fluent</li>
+              <li>Controllers</li>
+              <li>Configuring Databases with MySQL</li>
+              <li>Templating with Leaf</li>
+              <li>API Authentication</li>
+              <li>Web Authentication</li>
+              </ul>
+              <h1 id="leaf-markdown">Leaf Markdown</h1>
+              <p><a href="http://swift.org"><img src="https://img.shields.io/badge/Swift-5.2-brightgreen.svg" alt="Language"></a>
+              <a href="https://github.com/vapor-community/leaf-markdown/actions"><img src="https://github.com/vapor-community/leaf-markdown/workflows/CI/badge.svg?branch=main" alt="Build Status"></a>
+              <a href="https://codecov.io/gh/vapor-community/leaf-markdown"><img src="https://codecov.io/gh/vapor-community/leaf-markdown/branch/main/graph/badge.svg" alt="codecov"></a>
+              <a href="https://raw.githubusercontent.com/vapor-community/leaf-markdown/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="GitHub license"></a></p>
+              <p>A Markdown renderer for Vapor and Leaf. This uses the <a href="https://github.com/vapor/markdown">Vapor Markdown</a> package to wrap <a href="https://github.com/github/cmark-gfm">cmark</a> (though a <a href="https://github.com/brokenhandsio/cmark-gfm">fork</a> is used to make it work with Swift PM), so it understands <a href="http://commonmark.org">Common Mark</a>. A quick reference guide for Common Mark can be found <a href="http://commonmark.org/help/">here</a>. It also supports <a href="https://guides.github.com/features/mastering-markdown/">Github Flavored Markdown</a>.</p>
+              <h2 id="usage">Usage</h2>
+              <p>Once set up, you can use it in your Leaf template files like any other tag:</p>
+              <pre><code class="lang-swift"><span class="hljs-selector-id">#markdown</span>(myMarkdown)
+              </code></pre>
+              <p>Where you have passed <code>myMarkdown</code> into the view as something like:</p>
+              <pre><code class="lang-markdown"><span class="hljs-comment"># Hey #</span>
+              
+              Check out <span class="hljs-keyword">my</span> *awesome* markdown! It <span class="hljs-keyword">is</span> easy <span class="hljs-keyword">to</span> use <span class="hljs-keyword">in</span> `tags`
+              </code></pre>
+              <h2 id="setup">Setup</h2>
+              <h3 id="add-as-dependency">Add as dependency</h3>
+              <p>Add Leaf Markdown as a dependency in your <code>Package.swift</code> file:</p>
+              <pre><code class="lang-swift"><span class="hljs-symbol">    dependencies:</span> [
+                      ...,
+                      .<span class="hljs-keyword">package</span>(<span class="hljs-string">name:</span> <span class="hljs-string">"LeafMarkdown"</span>, <span class="hljs-string">url:</span> <span class="hljs-string">"https://github.com/vapor-community/leaf-markdown.git"</span>, .upToNextMajor(<span class="hljs-string">from:</span> <span class="hljs-string">"3.0.0"</span>)),
+                  ]
+              </code></pre>
+              <p>Then add the dependency to your target:</p>
+              <pre><code class="lang-swift"><span class="hljs-selector-class">.target</span>(
+                  <span class="hljs-attribute">name</span>: <span class="hljs-string">"App"</span>,
+                  <span class="hljs-attribute">dependencies</span>: [
+                      <span class="hljs-comment">// ...</span>
+                      <span class="hljs-string">"LeafMarkdown"</span>
+                  ],
+                  <span class="hljs-comment">// ...</span>
+              )
+              </code></pre>
+              <h3 id="register-with-leaf">Register with Leaf</h3>
+              <p>Register the tag with Leaf so Leaf knows about it:</p>
+              <pre><code class="lang-swift">app<span class="hljs-selector-class">.leaf</span><span class="hljs-selector-class">.tags</span>[<span class="hljs-string">"markdown"</span>] = Markdown()
+              </code></pre>
+              <p>Don&#39;t forget to import LeafMarkdown in the file you register the tag with <code>import LeafMarkdown</code>.</p>
+              <p align="center">
+                  <img src="Logo.png" width="278" max-width="90%" alt=“Ink” />
+              </p>
+              
+              <p align="center">
+                  <img src="https://img.shields.io/badge/Swift-5.1-orange.svg" />
+                  <a href="https://swift.org/package-manager">
+                      <img src="https://img.shields.io/badge/swiftpm-compatible-brightgreen.svg?style=flat" alt="Swift Package Manager" />
+                  </a>
+                  <img src="https://img.shields.io/badge/platforms-mac+linux-brightgreen.svg?style=flat" alt="Mac + Linux" />
+                  <a href="https://twitter.com/johnsundell">
+                      <img src="https://img.shields.io/badge/twitter-@johnsundell-blue.svg?style=flat" alt="Twitter: @johnsundell" />
+                  </a>
+              </p>
+              
+              <blockquote>
+              <p>Welcome to <strong>Ink</strong>, a fast and flexible Markdown parser written in Swift. It can be used to convert Markdown-formatted strings into HTML, and also supports metadata parsing, as well as powerful customization options for fine-grained post-processing. It was built with a focus on Swift-based web development and other HTML-centered workflows.</p>
+              <p>Ink is used to render all articles on ## <a href="https://swiftbysundell.com">swiftbysundell.com</a>.</p>
+              <p>```swift
+              import Ink</p>
+              </blockquote>
+              <p>let markdown: String = ...
+              let parser = MarkdownParser()
+              let html = parser.html(from: markdown)</p>
+              <pre><code>
+              <span class="hljs-meta">## Converting Markdown into HTML</span>
+              
+              <span class="hljs-keyword">To</span> <span class="hljs-keyword">get</span> started <span class="hljs-keyword">with</span> Ink, all you have <span class="hljs-keyword">to</span> <span class="hljs-keyword">do</span> <span class="hljs-keyword">is</span> <span class="hljs-keyword">to</span> import it, <span class="hljs-keyword">and</span> use its `MarkdownParser` type <span class="hljs-keyword">to</span> convert any Markdown <span class="hljs-built_in">string</span> <span class="hljs-keyword">into</span> efficiently rendered HTML:
+              
+              ```swift
+              import Ink
+              
+              <span class="hljs-keyword">let</span> markdown: <span class="hljs-built_in">String</span> = ...
+              <span class="hljs-keyword">let</span> parser = MarkdownParser()
+              <span class="hljs-keyword">let</span> html = parser.html(<span class="hljs-keyword">from</span>: markdown)
+              </code></pre><blockquote>
+              <p>That’s it! The resulting HTML can then be displayed as-is, or embedded into some other context — and if that’s all you need Ink for, then no more code is required.</p>
+              </blockquote>
+              <h2 id="automatic-metadata-parsing">Automatic metadata parsing</h2>
+              <p>Ink also comes with metadata support built-in, meaning that you can define key/value pairs at the top of any Markdown document, which will then be automatically parsed into a Swift dictionary.</p>
+              <p>To take advantage of that feature, call the <code>parse</code> method on <code>MarkdownParser</code>, which gives you a <code>Markdown</code> value that both contains any metadata found within the parsed Markdown string, as well as its HTML representation:</p>
+              <pre><code class="lang-swift">&lt;p <span class="hljs-attr">style="color:red;"&gt;let&lt;/p&gt;</span> markdown: <span class="hljs-attr">String</span> = ...
+              <span class="hljs-keyword">let</span> <span class="hljs-attr">parser</span> = MarkdownParser()
+              <span class="hljs-keyword">let</span> <span class="hljs-attr">result</span> = parser.parse(markdown)
+              
+              <span class="hljs-keyword">let</span> <span class="hljs-attr">dateString</span> = result.metadata[<span class="hljs-string">"date"</span>]
+              <span class="hljs-keyword">let</span> <span class="hljs-attr">html</span> = result.html
+              </code></pre>
+              <p><span><span style="color:red;">let</span> markdown: String = ...</span>
+              let parser = MarkdownParser()
+              let result = parser.parse(markdown)</p>
+              <p>let dateString = result.metadata[&quot;date&quot;]
+              let html = result.html</p>
+              <h2 id="to-define-metadata-values-within-a-markdown-document-use-the-following-syntax-">To define metadata values within a Markdown document, use the following syntax:</h2>
+              <pre><code><span class="hljs-meta">---</span>
+              <span class="hljs-attr">keyA:</span> valueA
+              <span class="hljs-attr">keyB:</span> valueB
+              <span class="hljs-meta">---</span>
+              
+              Markdown text...
+              </code></pre><p>The above format is also supported by many different Markdown editors and other tools, even though it’s not part of the <a href="https://daringfireball.net/projects/markdown">original Markdown spec</a>.</p>
+              <h2 id="powerful-customization">Powerful customization</h2>
+              <p>Besides its <a href="#markdown-syntax-supported">built-in parsing rules</a>, which aims to cover the most common features found in the various flavors of Markdown, you can also customize how Ink performs its parsing through the use of <em>modifiers</em>.</p>
+              <p>A modifier is defined using the <code>Modifier</code> type, and is associated with a given <code>Target</code>, which determines the kind of Markdown fragments that it will be used for. For example, here’s how an H3 tag could be added before each code block:</p>
+              <pre><code class="lang-swift"><span class="hljs-selector-tag">var</span> parser = MarkdownParser()
+              
+              let modifier = Modifier(target: .codeBlocks) { <span class="hljs-selector-tag">html</span>, markdown <span class="hljs-keyword">in</span>
+                  return <span class="hljs-string">"&lt;h3&gt;This is a code block:&lt;/h3&gt;"</span> + <span class="hljs-selector-tag">html</span>
+              }
+              
+              parser.addModifier(modifier)
+              
+              let markdown: String = ...
+              let <span class="hljs-selector-tag">html</span> = parser.html(from: markdown)
+              </code></pre>
+              <p>Modifiers are passed both the HTML that Ink generated for the given fragment, and its raw Markdown representation as well — both of which can be used to determine how each fragment should be customized.</p>
+              <h2 id="performance-built-in">Performance built-in</h2>
+              <p>Ink was designed to be as fast and efficient as possible, to enable hundreds of full-length Markdown articles to be parsed in a matter of seconds, while still offering a fully customizable API as well. Two key characteristics make this possible:</p>
+              <ol>
+              <li>Ink aims to get as close to <code>O(N)</code> complexity as possible, by minimizing the amount of times it needs to read the Markdown strings that are passed to it, and by optimizing its HTML rendering to be completely linear. While <em>true</em> <code>O(N)</code> complexity is impossible to achieve when it comes to Markdown parsing, because of its very flexible syntax, the goal is to come as close to that target as possible.</li>
+              <li>A high degree of memory efficiency is achieved thanks to Swift’s powerful <code>String</code> API, which Ink makes full use of — by using string indexes, ranges and substrings, rather than performing unnecessary string copying between its various operations.</li>
+              </ol>
+              <h2 id="installation">Installation</h2>
+              <p>Ink is distributed using the <a href="https://swift.org/package-manager">Swift Package Manager</a>. To install it into a project, simply add it as a dependency within your <code>Package.swift</code> manifest:</p>
+              <pre><code class="lang-swift">let <span class="hljs-keyword">package</span> = <span class="hljs-keyword">Package</span>(
+                  ...
+                  <span class="hljs-keyword">dependencies</span>: [
+                      .<span class="hljs-keyword">package</span>(url: <span class="hljs-string">"https://github.com/johnsundell/ink.git"</span>, <span class="hljs-keyword">from</span>: <span class="hljs-string">"0.1.0"</span>)
+                  ],
+                  ...
+              )
+              </code></pre>
+              <p>Then import Ink wherever you’d like to use it:</p>
+              <pre><code class="lang-swift"><span class="hljs-keyword">import</span> Ink
+              </code></pre>
+              <p>For more information on how to use the Swift Package Manager, check out <a href="https://www.swiftbysundell.com/articles/managing-dependencies-using-the-swift-package-manager">this article</a>, or <a href="https://github.com/apple/swift-package-manager/tree/master/Documentation">its official documentation</a>.</p>
+              <h2 id="command-line-tool">Command line tool</h2>
+              <p>Ink also ships with a simple but useful command line tool that lets you convert Markdown to HTML directly from the command line.</p>
+              <p>To install it, clone the project and run <code>make</code>:</p>
+              <pre><code><span class="hljs-symbol">$</span> git clone https:<span class="hljs-comment">//github.com/johnsundell/Ink.git</span>
+              <span class="hljs-symbol">$</span> cd Ink
+              <span class="hljs-symbol">$</span> make
+              </code></pre><p>The command line tool will be installed as <code>ink</code>, and can be passed Markdown text for conversion into HTML in several ways.</p>
+              <p>Calling it without arguments will start reading from <code>stdin</code> until terminated with <code>Ctrl+D</code>:</p>
+              <pre><code><span class="hljs-variable">$ </span>ink
+              </code></pre><p>Markdown text can be piped in when <code>ink</code> is called without arguments:</p>
+              <pre><code>$ echo <span class="hljs-string">"*Hello World*"</span> <span class="hljs-string">| ink</span>
+              </code></pre><p>A single argument is treated as a filename, and the corresponding file will be parsed:</p>
+              <pre><code><span class="hljs-symbol">$</span> ink <span class="hljs-keyword">file</span>.md
+              </code></pre><p>A Markdown string can be passed directly using the <code>-m</code> or <code>--markdown</code> flag:</p>
+              <pre><code><span class="hljs-variable">$ </span>ink -m <span class="hljs-string">"*Hello World*"</span>
+              </code></pre><p>You can of course also build your own command line tools that utilizes Ink in more advanced ways by importing it as a package.</p>
+              <h2 id="markdown-syntax-supported">Markdown syntax supported</h2>
+              <p>Ink supports the following Markdown features:</p>
+              <ul>
+              <li>Headings (H1 - H6), using leading pound signs, for example <code>## H2</code>.</li>
+              <li>Italic text, by surrounding a piece of text with either an asterisk (<code>*</code>), or an underscore (<code>_</code>). For example <code>*Italic text*</code>.</li>
+              <li>Bold text, by surrounding a piece of text with either two asterisks (<code>**</code>), or two underscores (<code>__</code>). For example <code>**Bold text**</code>.</li>
+              <li>Text strikethrough, by surrounding a piece of text with two tildes (<code>~~</code>), for example <code>~~Strikethrough text~~</code>.</li>
+              <li>Inline code, marked with a backtick on either site of the code.</li>
+              <li>Code blocks, marked with three or more backticks both above and below the block.</li>
+              <li>Links, using the following syntax: <code>[Title](url)</code>.</li>
+              <li>Images, using the following syntax: <code>![Alt text](image-url)</code>.</li>
+              <li>Both images and links can also use reference URLs, which can be defined anywhere in a Markdown document using this syntax: <code>[referenceName]: url</code>.</li>
+              <li>Both ordered lists (using numbers followed by a period (<code>.</code>) or right parenthesis (<code>)</code>) as bullets) and unordered lists (using either a dash (<code>-</code>), plus (<code>+</code>), or asterisk (<code>*</code>) as bullets) are supported.</li>
+              <li>Ordered lists start from the index of the first entry</li>
+              <li>Nested lists are supported as well, by indenting any part of a list that should be nested within its parent.</li>
+              <li>Horizontal lines can be placed using either three asterisks (<code>***</code>) or three dashes (<code>---</code>) on a new line.</li>
+              <li>HTML can be inlined both at the root level, and within text paragraphs.</li>
+              <li>Blockquotes can be created by placing a greater-than arrow at the start of a line, like this: <code>&gt; This is a blockquote</code>.</li>
+              <li>Tables can be created using the following syntax (the line consisting of dashes (<code>-</code>) can be omitted to create a table without a header row):<pre><code>|<span class="hljs-string"> Header </span>|<span class="hljs-string"> Header 2 </span>|
+              |<span class="hljs-string"> ------ </span>|<span class="hljs-string"> -------- </span>|
+              |<span class="hljs-string"> Row 1  </span>|<span class="hljs-string"> Cell 1   </span>|
+              |<span class="hljs-string"> Row 2  </span>|<span class="hljs-string"> Cell 2   </span>|
+              </code></pre></li>
+              </ul>
+              <p>Please note that, being a very young implementation, Ink does not fully support all Markdown specs, such as <a href="https://commonmark.org">CommonMark</a>. Ink definitely aims to cover as much ground as possible, and to include support for the most commonly used Markdown features, but if complete CommonMark compatibility is what you’re looking for — then you might want to check out tools like <a href="https://github.com/commonmark/cmark">CMark</a>.</p>
+              <h2 id="internal-architecture">Internal architecture</h2>
+              <p>Ink uses a highly modular <a href="https://www.swiftbysundell.com/articles/rule-based-logic-in-swift">rule-based</a> internal architecture, to enable new rules and formatting options to be added without impacting the system as a whole.</p>
+              <p>Each Markdown fragment is individually parsed and rendered by a type conforming to the internal <code>Readable</code> and <code>HTMLConvertible</code> protocols — such as <code>FormattedText</code>, <code>List</code>, and <code>Image</code>.</p>
+              <p>To parse a part of a Markdown document, each fragment type uses a <code>Reader</code> instance to read the Markdown string, and to make assertions about its structure. Errors are <a href="https://www.swiftbysundell.com/articles/using-errors-as-control-flow-in-swift">used as control flow</a> to signal whether a parsing operation was successful or not, which in turn enables the parent context to decide whether to advance the current <code>Reader</code> instance, or whether to rewind it.</p>
+              <p>A good place to start exploring Ink’s implementation is to look at the main <code>MarkdownParser</code> type’s <code>parse</code> method, and to then dive deeper into the various <code>Fragment</code> implementations, and the <code>Reader</code> type.</p>
+              <h2 id="credits">Credits</h2>
+              <p>Ink was originally written by <a href="https://twitter.com/johnsundell">John Sundell</a> as part of the Publish suite of static site generation tools, which is used to build and generate <a href="https://swiftbysundell.com">Swift by Sundell</a>. The other tools that make up the Publish suite will also be open sourced soon.</p>
+              <p>The Markdown format was created by <a href="https://twitter.com/gruber">John Gruber</a>. You can find <a href="https://daringfireball.net/projects/markdown">more information about it here</a>.</p>
+              <h2 id="contributions-and-support">Contributions and support</h2>
+              <p>Ink is developed completely in the open, and your contributions are more than welcome.</p>
+              <p>Before you start using Ink in any of your projects, it’s highly recommended that you spend a few minutes familiarizing yourself with its documentation and internal implementation, so that you’ll be ready to tackle any issues or edge cases that you might encounter.</p>
+              <p>Since this is a very young project, it’s likely to have many limitations and missing features, which is something that can really only be discovered and addressed as more people start using it. While Ink is used in production to render all of <a href="https://swiftbysundell.com">Swift by Sundell</a>, it’s recommended that you first try it out for your specific use case, to make sure it supports the features that you need.</p>
+              <p>This project does not come with GitHub Issues-based support, and users are instead encouraged to become active participants in its continued development — by fixing any bugs that they encounter, or by improving the documentation wherever it’s found to be lacking.</p>
+              <p>If you wish to make a change, <a href="https://github.com/JohnSundell/Ink/pull/new">open a Pull Request</a> — even if it just contains a draft of the changes you’re planning, or a test that reproduces an issue — and we can discuss it further from there.</p>
+              <p>Hope you’ll enjoy using <strong>Ink</strong>!</p>
+            </section>
+
+            <section id="title">
+              <h1 id="title" class="">Fatority engine</h1>
+              <div class="table-responsive">
+                <table class="table table-borderless">
+                  <thead class="table-light">
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Header</th>
+                      <th scope="col">Header</th>
+                      <th scope="col">Header</th>
+                      <th scope="col">Header</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>1,001</td>
+                      <td>random</td>
+                      <td>data</td>
+                      <td>placeholder</td>
+                      <td>text</td>
+                    </tr>
+                    <tr>
+                      <td>1,002</td>
+                      <td>placeholder</td>
+                      <td>irrelevant</td>
+                      <td>visual</td>
+                      <td>layout</td>
+                    </tr>
+                    <tr>
+                      <td>1,003</td>
+                      <td>data</td>
+                      <td>rich</td>
+                      <td>dashboard</td>
+                      <td>tabular</td>
+                    </tr>
+                    <tr>
+                      <td>1,003</td>
+                      <td>information</td>
+                      <td>placeholder</td>
+                      <td>illustrative</td>
+                      <td>data</td>
+                    </tr>
+                    <tr>
+                      <td>1,004</td>
+                      <td>text</td>
+                      <td>random</td>
+                      <td>layout</td>
+                      <td>dashboard</td>
+                    </tr>
+                    <tr>
+                      <td>1,005</td>
+                      <td>dashboard</td>
+                      <td>irrelevant</td>
+                      <td>text</td>
+                      <td>placeholder</td>
+                    </tr>
+                    <tr>
+                      <td>1,006</td>
+                      <td>dashboard</td>
+                      <td>illustrative</td>
+                      <td>rich</td>
+                      <td>data</td>
+                    </tr>
+                    <tr>
+                      <td>1,007</td>
+                      <td>placeholder</td>
+                      <td>tabular</td>
+                      <td>information</td>
+                      <td>irrelevant</td>
+                    </tr>
+                    <tr>
+                      <td>1,008</td>
+                      <td>random</td>
+                      <td>data</td>
+                      <td>placeholder</td>
+                      <td>text</td>
+                    </tr>
+                    <tr>
+                      <td>1,009</td>
+                      <td>placeholder</td>
+                      <td>irrelevant</td>
+                      <td>visual</td>
+                      <td>layout</td>
+                    </tr>
+                    <tr>
+                      <td>1,010</td>
+                      <td>data</td>
+                      <td>rich</td>
+                      <td>dashboard</td>
+                      <td>tabular</td>
+                    </tr>
+                    <tr>
+                      <td>1,011</td>
+                      <td>information</td>
+                      <td>placeholder</td>
+                      <td>illustrative</td>
+                      <td>data</td>
+                    </tr>
+                    <tr>
+                      <td>1,012</td>
+                      <td>text</td>
+                      <td>placeholder</td>
+                      <td>layout</td>
+                      <td>dashboard</td>
+                    </tr>
+                    <tr>
+                      <td>1,013</td>
+                      <td>dashboard</td>
+                      <td>irrelevant</td>
+                      <td>text</td>
+                      <td>visual</td>
+                    </tr>
+                    <tr>
+                      <td>1,014</td>
+                      <td>dashboard</td>
+                      <td>illustrative</td>
+                      <td>rich</td>
+                      <td>data</td>
+                    </tr>
+                    <tr>
+                      <td>1,015</td>
+                      <td>random</td>
+                      <td>tabular</td>
+                      <td>information</td>
+                      <td>text</td>
+                    </tr>
+                  </tbody>
+                </table>
+    
+                <table class="table line-table">
+                  <thead class="table-light">
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">First</th>
+                      <th scope="col">Last</th>
+                      <th scope="col">Handle</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">1</th>
+                      <td>Mark</td>
+                      <td>Otto</td>
+                      <td>@mdo</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">2</th>
+                      <td>Jacob</td>
+                      <td>Thornton</td>
+                      <td>@fat</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">3</th>
+                      <td colspan="2">Larry the Bird</td>
+                      <td>@twitter</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <section id="quick-start">
+              <h1 id="quick-start" class="border-bottom">Quick start</h1>
+              <p>Looking to quickly add Bootstrap to your project? Use jsDelivr, a free open source CDN. Using a package manager or need to download the source files? <a href="/docs/5.1/getting-started/download/">Head to the downloads page</a>.</p>
+            </section>
+            
+            <section id="css">
+              <h1 id="js" class="border-bottom">CSS</h1>
+              <p>Copy-paste the stylesheet <code>&lt;link&gt;</code> into your <code>&lt;head&gt;</code> before all other stylesheets to load our CSS.</p>
+              <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">link</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css&#34;</span> <span class="na">rel</span><span class="o">=</span><span class="s">&#34;stylesheet&#34;</span> <span class="na">integrity</span><span class="o">=</span><span class="s">&#34;sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3&#34;</span> <span class="na">crossorigin</span><span class="o">=</span><span class="s">&#34;anonymous&#34;</span><span class="p">&gt;</span></code></pre></div>
+            </section>
+
+            <section id="js">
+              <h1 id="js" class="border-bottom">JS</h1>
+              <p>Many of our components require the use of JavaScript to function. Specifically, they require our own JavaScript plugins and <a href="https://popper.js.org/">Popper</a>. Place <strong>one of the following <code>&lt;script&gt;</code>s</strong> near the end of your pages, right before the closing <code>&lt;/body&gt;</code> tag, to enable them.</p>
+            </section>
+
+            <section id="bundle">
+              <h1 id="bundle" class="border-bottom">Bundle</h1>
+              <p>Include every Bootstrap JavaScript plugin and dependency with one of our two bundles. Both <code>bootstrap.bundle.js</code> and <code>bootstrap.bundle.min.js</code> include <a href="https://popper.js.org/">Popper</a> for our tooltips and popovers. For more information about what&rsquo;s included in Bootstrap, please see our <a href="/docs/5.1/getting-started/contents/#precompiled-bootstrap">contents</a> section.</p>
+              <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js&#34;</span> <span class="na">integrity</span><span class="o">=</span><span class="s">&#34;sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p&#34;</span> <span class="na">crossorigin</span><span class="o">=</span><span class="s">&#34;anonymous&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span></code></pre></div>
+            </section>
+
+            <section id="separate">
+              <h1 id="separate" class="border-bottom">Separate</h1>
+              <p>If you decide to go with the separate scripts solution, Popper must come first (if you&rsquo;re using tooltips or popovers), and then our JavaScript plugins.</p>
+              <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js&#34;</span> <span class="na">integrity</span><span class="o">=</span><span class="s">&#34;sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB&#34;</span> <span class="na">crossorigin</span><span class="o">=</span><span class="s">&#34;anonymous&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+              <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js&#34;</span> <span class="na">integrity</span><span class="o">=</span><span class="s">&#34;sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13&#34;</span> <span class="na">crossorigin</span><span class="o">=</span><span class="s">&#34;anonymous&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+              </code></pre></div>
+            </section>
+
+            <section id="modules">
+              <h1 id="modules" class="border-bottom">Modules</h1>
+              <p>If you use <code>&lt;script type=&quot;module&quot;&gt;</code>, please refer to our <a href="/docs/5.1/getting-started/javascript/#using-bootstrap-as-a-module">using Bootstrap as a module</a> section.</p>
+            </section>
+
+            <section id="components">
+              <h1 id="components" class="border-bottom">Components</h1>
+              <p>Curious which components explicitly require our JavaScript and Popper? Click the show components link below. If you&rsquo;re at all unsure about the general page structure, keep reading for an example page template.</p>
+              <details>
+                <summary class="text-primary mb-3">Show components requiring JavaScript</summary>
+                <ul>
+                  <li>Alerts for dismissing</li>
+                  <li>Buttons for toggling states and checkbox/radio functionality</li>
+                  <li>Carousel for all slide behaviors, controls, and indicators</li>
+                  <li>Collapse for toggling visibility of content</li>
+                  <li>Dropdowns for displaying and positioning (also requires <a href="https://popper.js.org/">Popper</a>)</li>
+                  <li>Modals for displaying, positioning, and scroll behavior</li>
+                  <li>Navbar for extending our Collapse plugin to implement responsive behavior</li>
+                  <li>Offcanvases for displaying, positioning, and scroll behavior</li>
+                  <li>Toasts for displaying and dismissing</li>
+                  <li>Tooltips and popovers for displaying and positioning (also requires <a href="https://popper.js.org/">Popper</a>)</li>
+                  <li>Scrollspy for scroll behavior and navigation updates</li>
+                </ul>
+              </details>
+            </section>
+
+            <section id="starter-template">
+              <h1 id="starter-template" class="border-bottom">Starter template</h1>
+              <p>Be sure to have your pages set up with the latest design and development standards. That means using an HTML5 doctype and including a viewport meta tag for proper responsive behaviors. Put it all together and your pages should look like this:</p>
+              <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="cp">&lt;!doctype html&gt;</span>
+              <span class="p">&lt;</span><span class="nt">html</span> <span class="na">lang</span><span class="o">=</span><span class="s">&#34;en&#34;</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+                  <span class="c">&lt;!-- Required meta tags --&gt;</span>
+                  <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">&#34;utf-8&#34;</span><span class="p">&gt;</span>
+                  <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">name</span><span class="o">=</span><span class="s">&#34;viewport&#34;</span> <span class="na">content</span><span class="o">=</span><span class="s">&#34;width=device-width, initial-scale=1&#34;</span><span class="p">&gt;</span>
+
+                  <span class="c">&lt;!-- Bootstrap CSS --&gt;</span>
+                  <span class="p">&lt;</span><span class="nt">link</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css&#34;</span> <span class="na">rel</span><span class="o">=</span><span class="s">&#34;stylesheet&#34;</span> <span class="na">integrity</span><span class="o">=</span><span class="s">&#34;sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3&#34;</span> <span class="na">crossorigin</span><span class="o">=</span><span class="s">&#34;anonymous&#34;</span><span class="p">&gt;</span>
+
+                  <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>Hello, world!<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+                <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+                  <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>Hello, world!<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+
+                  <span class="c">&lt;!-- Optional JavaScript; choose one of the two! --&gt;</span>
+
+                  <span class="c">&lt;!-- Option 1: Bootstrap Bundle with Popper --&gt;</span>
+                  <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js&#34;</span> <span class="na">integrity</span><span class="o">=</span><span class="s">&#34;sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p&#34;</span> <span class="na">crossorigin</span><span class="o">=</span><span class="s">&#34;anonymous&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+
+                  <span class="c">&lt;!-- Option 2: Separate Popper and Bootstrap JS --&gt;</span>
+                  <span class="c">&lt;!--
+              </span><span class="c">    &lt;script src=&#34;https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js&#34; integrity=&#34;sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB&#34; crossorigin=&#34;anonymous&#34;&gt;&lt;/script&gt;
+              </span><span class="c">    &lt;script src=&#34;https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js&#34; integrity=&#34;sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13&#34; crossorigin=&#34;anonymous&#34;&gt;&lt;/script&gt;
+              </span><span class="c">    --&gt;</span>
+                <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+              <span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+              </code></pre></div><p>For next steps, visit the <a href="/docs/5.1/layout/grid/">Layout docs</a> or <a href="/docs/5.1/examples/">our official examples</a> to start laying out your site&rsquo;s content and components.</p>
+            </section>
+
+            <section id="important-globals">
+              <h1 id="important-globals" class="border-bottom">Important globals</h1>
+              <p>Bootstrap employs a handful of important global styles and settings that you&rsquo;ll need to be aware of when using it, all of which are almost exclusively geared towards the <em>normalization</em> of cross browser styles. Let&rsquo;s dive in.</p>      
+            </section>
+
+            <section id="html5-doctype">
+              <h1 id="html5-doctype" class="border-bottom">HTML5 doctype</h1>
+              <p>Bootstrap requires the use of the HTML5 doctype. Without it, you&rsquo;ll see some funky incomplete styling, but including it shouldn&rsquo;t cause any considerable hiccups.</p>
+              <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="cp">&lt;!doctype html&gt;</span>
+              <span class="p">&lt;</span><span class="nt">html</span> <span class="na">lang</span><span class="o">=</span><span class="s">&#34;en&#34;</span><span class="p">&gt;</span>
+                ...
+              <span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+              </code></pre></div>
+            </section>
+
+            <section id="responsive-meta-tag">
+              <h1 id="responsive-meta-tag" class="border-bottom">Responsive meta tag</h1>
+              <p>Bootstrap is developed <em>mobile first</em>, a strategy in which we optimize code for mobile devices first and then scale up components as necessary using CSS media queries. To ensure proper rendering and touch zooming for all devices, <strong>add the responsive viewport meta tag</strong> to your <code>&lt;head&gt;</code>.</p>
+              <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">meta</span> <span class="na">name</span><span class="o">=</span><span class="s">&#34;viewport&#34;</span> <span class="na">content</span><span class="o">=</span><span class="s">&#34;width=device-width, initial-scale=1&#34;</span><span class="p">&gt;</span>
+              </code></pre></div><p>You can see an example of this in action in the <a href="#starter-template">starter template</a>.</p>
+            </section>
+
+            <section id="box-sizing">
+              <h1 id="box-sizing" class="border-bottom">Box-sizing</h1>
+              <p>For more straightforward sizing in CSS, we switch the global <code>box-sizing</code> value from <code>content-box</code> to <code>border-box</code>. This ensures <code>padding</code> does not affect the final computed width of an element, but it can cause problems with some third-party software like Google Maps and Google Custom Search Engine.</p>
+              <p>On the rare occasion you need to override it, use something like the following:</p>
+              <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="p">.</span><span class="nc">selector-for-some-widget</span> <span class="p">{</span>
+                <span class="k">box-sizing</span><span class="p">:</span> <span class="kc">content-box</span><span class="p">;</span>
+              <span class="p">}</span>
+              </code></pre></div><p>With the above snippet, nested elements—including generated content via <code>::before</code> and <code>::after</code>—will all inherit the specified <code>box-sizing</code> for that <code>.selector-for-some-widget</code>.</p>
+              <p>Learn more about <a href="https://css-tricks.com/box-sizing/">box model and sizing at CSS Tricks</a>.</p>
+            </section>
+
+            <section id="reboot">
+              <h1 id="reboot" class="border-bottom">Reboot</h1>
+              <p>For improved cross-browser rendering, we use <a href="/docs/5.1/content/reboot/">Reboot</a> to correct inconsistencies across browsers and devices while providing slightly more opinionated resets to common HTML elements.</p>
+            </section>
+
+            <section id="community">
+              <h1 id="community" class="border-bottom">Community</h1>
+              <p>Stay up to date on the development of Bootstrap and reach out to the community with these helpful resources.</p>
+              <ul>
+              <li>Read and subscribe to <a href="https://blog.getbootstrap.com/">The Official Bootstrap Blog</a>.</li>
+              <li>Join <a href="https://bootstrap-slack.herokuapp.com/">the official Slack room</a>.</li>
+              <li>Chat with fellow Bootstrappers in IRC. On the <code>irc.libera.chat</code> server, in the <code>#bootstrap</code> channel.</li>
+              <li>Implementation help may be found at Stack Overflow (tagged <a href="https://stackoverflow.com/questions/tagged/bootstrap-5"><code>bootstrap-5</code></a>).</li>
+              <li>Developers should use the keyword <code>bootstrap</code> on packages that modify or add to the functionality of Bootstrap when distributing through <a href="https://www.npmjs.com/search?q=keywords:bootstrap">npm</a> or similar delivery mechanisms for maximum discoverability.</li>
+              </ul>
+              <p>You can also follow <a href="https://twitter.com/getbootstrap">@getbootstrap on Twitter</a> for the latest gossip and awesome music videos.</p>   
+            </section>
+          </article>
+          
+          <div class="container mt-5 pt-5">
+            <footer class="py-5">
+              <div class="row">
+                <div class="col">
+                  <a href="/" class="d-flex align-items-center mb-3 link-dark text-decoration-none">
+                  <img src="swift-brands-white.svg" alt="Bootstrap" ... width="60px" height="60px" class="text-white">
+                  </a>
+                  <p class="text-muted">&copy; 2021</p>
+                </div>
+
+                <div class="col">
+                  <h5>Section</h5>
+                  <ul class="nav flex-column">
+                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Home</a></li>
+                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Features</a></li>
+                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Pricing</a></li>
+                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">FAQs</a></li>
+                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">About</a></li>
+                  </ul>
+                </div>
+
+                <div class="col">
+                  <h5>Section</h5>
+                  <ul class="nav flex-column">
+                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Home</a></li>
+                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Features</a></li>
+                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Pricing</a></li>
+                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">FAQs</a></li>
+                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">About</a></li>
+                  </ul>
+                </div>
+
+                <div class="col-4 offset-1">
+                  <form>
+                    <h5>Subscribe to our newsletter</h5>
+                    <p>Monthly digest of whats new and exciting from us.</p>
+                    <div class="d-flex w-100 gap-2">
+                      <label for="newsletter1" class="visually-hidden">Email address</label>
+                      <input id="newsletter1" type="text" class="form-control" placeholder="Email address">
+                      <button class="btn btn-primary" type="button">Subscribe</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between py-4 my-4 border-top">
+                <p>&copy; 2021 Company, Inc. All rights reserved.</p>
+                <ul class="list-unstyled d-flex">
+                  <li class="ms-3"><a class="link-dark" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#twitter"/></svg></a></li>
+                  <li class="ms-3"><a class="link-dark" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#instagram"/></svg></a></li>
+                  <li class="ms-3"><a class="link-dark" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#facebook"/></svg></a></li>
+                </ul>
+              </div>
+            </footer>
+          </div>
+
+        </main>
+
+        <nav id="" class="toc col-md-3 col-lg-2 d-none d-sm-none d-md-block right-sidebar">
+          <div class="flex-shrink-0 p-3 bg-white position-sticky">
+            <a href="/" class="d-flex align-items-center py-3 mb-3 link-dark text-decoration-none border-bottom">
+              <!-- <svg class="bi me-2" width="30" height="24"><use xlink:href="#bootstrap"/></svg> -->
+              <span class="fs-5 fw-semibold">Table of contents</span>
+            </a>
+            <ul class="list-unstyled ps-0">
+              <li><a class="link-dark rounded" href="#title">Factory engine</a></li>
+              <li><a class="link-dark rounded" href="#quick-start">Quick start</a></li>
+              <li><a class="link-dark rounded" href="#css">CSS</a></li>
+              <li><a class="link-dark rounded" href="#js">JS</a></li>
+              <li><a class="link-dark rounded" href="#bundle">Bundle</a></li>
+              <li><a class="link-dark rounded" href="#separate">Separate</a></li>
+              <li><a class="link-dark rounded" href="#modules">Modules</a></li>
+              <li><a class="link-dark rounded" href="#starter-template">Starter template</a></li>
+              <li><a class="link-dark rounded" href="#important-globals">Important globals</a></li>
+              <li><a class="link-dark rounded" href="#html5-doctype">HTML5 doctype</a></li>
+              <li><a class="link-dark rounded" href="#responsive-meta-tag">Responsive meta tag</a></li>
+              <li><a class="link-dark rounded" href="#box-sizing">Box-sizing</a></li>
+              <li><a class="link-dark rounded" href="#reboot">Reboot</a></li>
+              <li><a class="link-dark rounded" href="#community">Community</a></li>
+            </ul>
+
+            <svg class="toc-marker" width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+              <path stroke="#444" stroke-width="3" fill="transparent" stroke-dasharray="0, 0, 0, 1000" stroke-linecap="round" stroke-linejoin="round" transform="translate(-0.5, -0.5)" />
+            </svg>
+          </div>
+        </nav>
+
+      </div>
+    </div>
+
+    <script src="https://use.fontawesome.com/2b8182392f.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="main.js"></script>
+  </body>
+</html>
