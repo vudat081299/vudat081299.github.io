@@ -46,7 +46,7 @@ function searchString(value) {
     mapPriceToIndex.splice(sortedIndex, 0, index);
   });
   mapPriceToIndex.forEach((item, index) => {
-    if (index > 9) return
+    if (index > 19) return
     let passingIndex = item
     if (passingIndex % 2 == 1) {
       passingIndex -= 1
