@@ -1,4 +1,6 @@
 let mountedData = [];
+let name = "Truyen Kieu";
+let styleOfVerse = 2;
 
 // function:
 // Parameters:
@@ -164,8 +166,10 @@ function getIndexCompatible(array, value) {
 	return low;
 }
 
-function mount() {
-  let data = 
+function mount(name) {
+  let data;
+
+  let truyenKieu = 
   ["1. Trăm năm trong cõi người ta,",
     "Chữ tài chữ mệnh khéo là ghét nhau.",
     "Trải qua một cuộc bể dâu,",
@@ -3420,6 +3424,110 @@ function mount() {
     "Chữ tâm kia mới bằng ba chữ tài.",
     "Lời quê chắp nhặt dông dài,",
     "Mua vui cũng được một vài trống canh."];
+  let canhNhan =
+  ["Một mai, một cuốc, một cần câu",
+    "Thơ thẩn dầu ai vui thú nào",
+    "Ta dại ta tìm nơi vắng vẻ",
+    "Người khôn người đến chốn lao xao",
+    "Thu ăn măng trúc đông ăn giá",
+    "Xuân tắm hồ sen, hạ tắm ao",
+    "Rượu đến cội cây ta sẽ uống",
+    "Nhìn xem phú quý tựa chiêm bao"];
+  let banDenChoiNha =
+  ["Đã bấy lâu nay bác tới nhà.",
+    "Trẻ thời đi vắng, chợ thời xa.",
+    "Ao sâu nước cả, khôn chài cá,",
+    "Vườn rộng rào thưa, khó đuổi gà.",
+    "Cải chửa ra cây, cà mới nụ,",
+    "Bầu vừa rụng rốn, mướp đương hoa.",
+    "Đầu trò tiếp khách, trầu không có,",
+    "Bác đến chơi đây ta với ta."];
+  let khocDuongKhue =
+  ["Dịch từ bài: Vãn đồng niên Vân Đình tiến sĩ Dương thượng thư:",
+    "",
+    "Bác Dương thôi đã thôi rồi,",
+    "Nước mây man mác ngậm ngùi lòng ta.",
+    "Nhớ từ thuở đăng khoa ngày trước,",
+    "Vẫn sớm hôm tôi bác cùng nhau;",
+    "Kính yêu từ trước đến sau,",
+    "Trong khi gặp gỡ khác đâu duyên trời?",
+    "Cũng có lúc chơi nơi dặm khách,",
+    "Tiếng suối nghe róc rách lưng đèo;",
+    "Có khi tầng gác cheo leo,",
+    "Thú vui con hát lựa chiều cầm xoang;",
+    "Cũng có lúc rượu ngon cùng nhắp,",
+    "Chén quỳnh tương ăm ắp bầu xuân.",
+    "Có khi bàn soạn câu văn,",
+    "Biết bao đông bích, điển phần trước sau.",
+    "Buổi dương cửu cùng nhau hoạn nạn,",
+    "Phận đấu thăng chẳng dám tham trời;",
+    "Bác già, tôi cũng già rồi,",
+    "Biết thôi, thôi thế thì thôi mới là!",
+    "Muốn đi lại tuổi già thêm nhác,",
+    "Trước ba năm gặp bác một lần;",
+    "Cầm tay hỏi hết xa gần,",
+    "Mừng rằng bác vẫn tinh thần chưa can,",
+    "Kể tuổi tôi còn hơn tuổi bác,",
+    "Tôi lại đau trước bác mấy ngày;",
+    "Làm sao bác vội về ngay,",
+    "Chợt nghe, tôi bỗng chân tay rụng rời.",
+    "Ai chẳng biết chán đời là phải,",
+    "Vội vàng sao đã mải lên tiên;",
+    "Rượu ngon không có bạn hiền,",
+    "Không mua không phải không tiền không mua.",
+    "Câu thơ nghĩ đắn đo không viết,",
+    "Viết đưa ai, ai biết mà đưa;",
+    "Giường kia treo những hững hờ,",
+    "Đàn kia gẩy cũng ngẩn ngơ tiếng đàn.",
+    "Bác chẳng ở dẫu van chẳng ở,",
+    "Tôi tuy thương, lấy nhớ làm thương;",
+    "Tuổi già hạt lệ như sương,",
+    "Hơi đâu ép lấy hai hàng chứa chan!"];
+  let thuDieu =
+  ["Ao thu lạnh lẽo nước trong veo,",
+    "Một chiếc thuyền câu bé tẻo teo.",
+    "Sóng biếc theo làn hơi gợn tí,",
+    "Lá vàng trước gió sẽ đưa vèo.",
+    "Tầng mây lơ lửng trời xanh ngắt,",
+    "Ngõ trúc quanh co khách vắng teo.",
+    "Tựa gối, ôm cần lâu chẳng được,",
+    "Cá đâu đớp động dưới chân bèo."];
+  let thuAm =
+  ["Năm gian nhà cỏ thấp le te,",
+    "Ngõ tối đêm sâu đóm lập loè.",
+    "Lưng giậu phất phơ màu khói nhạt,",
+    "Làn ao lóng lánh bóng trăng loe.",
+    "Da trời ai nhuộm mà xanh ngắt?",
+    "Mắt lão không vầy cũng đỏ hoe.",
+    "Rượu tiếng rằng hay, hay chẳng mấy.",
+    "Độ năm ba chén đã say nhè."];
+  let thuVinh =
+  ["Trời thu xanh ngắt mấy tầng cao,",
+    "Cần trúc lơ phơ gió hắt hiu.",
+    "Nước biếc trông như tầng khói phủ,",
+    "Song thưa để mặc bóng trăng vào.",
+    "Mấy chùm trước giậu hoa năm ngoái,",
+    "Một tiếng trên không ngỗng nước nào?",
+    "Nhân hứng cũng vừa toan cất bút,",
+    "Nghĩ ra lại thẹn với ông Đào."]
+
+    if (name === "Truyen Kieu") {
+      data = truyenKieu
+    } else if (name === "Canh Nhan") {
+      data = canhNhan
+    } else if (name === "Ban Den Choi Nha") {
+      data = banDenChoiNha
+    } else if (name === "Khoc Duong Khue") {
+      data = khocDuongKhue
+    } else if (name === "Thu Dieu") {
+      data = thuDieu
+    } else if (name === "Thu Am") {
+      data = thuAm
+    } else if (name === "Thu Vinh") {
+      data = thuVinh
+    } 
+    
+
   mountedData = data;
   reloadWithData(mountedData);
 }
