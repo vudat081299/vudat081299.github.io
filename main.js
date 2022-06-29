@@ -81,13 +81,19 @@ function reloadWithData(value) {
       element.classList.add("d-flex");
       element.classList.add("align-items-start");
       element.innerHTML =
-        "<div class='fw-bold'><p class='mb-0'>" +
+        "<div class='fw-bold double-line-verse'><p class='mb-0' style='position: relative;'>" +
+        "<span class='index-of-verse'>" +
+        (index + 1) +
+        "</span>" +
         item +
         "</p>" +
-        "<p>" +
+        "<p style='position: relative;'>" +
+        "<span class='index-of-verse'>" +
+        (index + 2) +
+        "</span>" +
         data[index + 1] +
         "</p>" +
-        "</a></div>";
+        "</div>";
       list.appendChild(element);
     }
   });

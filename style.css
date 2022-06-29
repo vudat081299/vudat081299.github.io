@@ -803,3 +803,30 @@ body {
 
 .fw-semibold { font-weight: 600; }
 .lh-tight { line-height: 1.25; }
+
+
+
+
+
+
+
+
+
+
+
+/* CSS line verse */
+.index-of-verse {
+  position: absolute;
+  color: #226ee3;
+  opacity: 0;
+  left: -60px;
+  top: 0px;
+  width: 50px;
+  text-align: right;
+  transition-property: opacity;
+  transition-duration: .2s;
+}
+
+.double-line-verse:hover .index-of-verse, .double-line-verse:hover .index-of-verse {
+  opacity: 0.6;
+}
