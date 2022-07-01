@@ -817,16 +817,16 @@ body {
 /* CSS line verse */
 .index-of-verse {
   position: absolute;
-  color: #226ee3;
+  /* color: #226ee3; */
   opacity: 0;
   left: -60px;
   top: 0px;
   width: 50px;
   text-align: right;
   transition-property: opacity;
-  transition-duration: .2s;
+  transition-duration: .4s;
 }
 
 .double-line-verse:hover .index-of-verse, .double-line-verse:hover .index-of-verse {
-  opacity: 0.6;
+  opacity: 0.2;
 }

@@ -97,9 +97,9 @@ function reloadWithData(value, isSearching) {
           item.verse +
           "</p>" +
           "<p style='position: relative;'>" +
-          "<span class='index-of-verse'>" +
-          (data[index + 1].index + 2) +
-          "</span>" +
+          // "<span class='index-of-verse'>" +
+          // (data[index + 1].index + 2) +
+          // "</span>" +
           data[index + 1].verse +
           "</p>" +
           "</div>";
@@ -123,9 +123,9 @@ function reloadWithData(value, isSearching) {
         item +
         "</p>" +
         "<p style='position: relative;'>" +
-        "<span class='index-of-verse'>" +
-        (index + 2) +
-        "</span>" +
+        // "<span class='index-of-verse'>" +
+        // (index + 2) +
+        // "</span>" +
         data[index + 1] +
         "</p>" +
         "</div>";
@@ -340,8 +340,8 @@ function mount(name) {
     "Hữu tình ta lại gặp ta,",
     "Chớ nề u hiển mới là chị em.",
     "Đã lòng hiển hiện cho xem,",
-    "Tạ lòng nàng lại nối thêm vài lời.",
-    "130. Lòng thơ lai láng bồi hồi,",
+    "130. Tạ lòng nàng lại nối thêm vài lời.",
+    "Lòng thơ lai láng bồi hồi,",
     "Gốc cây lại vạch một bài cổ thi.",
     "Dùng dằng nửa ở nửa về,",
     "Nhạc vàng đâu đã tiếng nghe gần gần.",
