@@ -12,7 +12,7 @@ let styleOfVerse = 2;
 function searchTags(value) {
   let index = parseInt(value, 10);
   if (value == null || value == "") {
-    reloadWithData(mountedData)
+    reloadWithData(mountedData, false)
     return
   }
   if (isNaN(index)) {
@@ -30,12 +30,12 @@ function searchTags(value) {
     index -= 1
   }
   index -= 1
-  reloadWithData([mountedData[index], mountedData[index + 1]]);
+  reloadWithData([mountedData[index], mountedData[index + 1]], false);
 }
 
 function searchString(value) {
   if (value == null || value == "") {
-    reloadWithData(mountedData);
+    reloadWithData(mountedData, false);
     return;
   }
   const listMatchs = [];
@@ -53,11 +53,19 @@ function searchString(value) {
     if (passingIndex % 2 == 1) {
       passingIndex -= 1
     }
-    listMatchs[index * 2] = mountedData[passingIndex];
-    listMatchs[index * 2 + 1] = mountedData[passingIndex + 1];
+    const verse = {
+      index: passingIndex,
+      verse: mountedData[passingIndex]
+    };
+    const nextVerse = {
+      index: passingIndex,
+      verse: mountedData[passingIndex + 1]
+    };
+    listMatchs[index * 2] = verse
+    listMatchs[index * 2 + 1] = nextVerse;
   });
 
-  reloadWithData(listMatchs);
+  reloadWithData(listMatchs, true);
 }
 
 // function: if value is null this function reload with fetched data
@@ -65,7 +73,7 @@ function searchString(value) {
 //  - value: [Object] // Structure: { tag: String, type: String, description: String }
 // Return: Void
 // Complexity:
-function reloadWithData(value) {
+function reloadWithData(value, isSearching) {
   let data = [];
   if (value == null) {
     data = mountedData == null ? [] : mountedData;
@@ -74,6 +82,33 @@ function reloadWithData(value) {
   }
   let list = document.getElementById("tagsList");
   list.innerHTML = "";
+  if (isSearching) {
+    data.forEach((item, index) => {
+      if (index % 2 == 0) {
+        let element = document.createElement("div");
+        element.classList.add("col");
+        element.classList.add("d-flex");
+        element.classList.add("align-items-start");
+        element.innerHTML =
+          "<div class='fw-bold double-line-verse'><p class='mb-0' style='position: relative;'>" +
+          "<span class='index-of-verse'>" +
+          (item.index + 1) +
+          "</span>" +
+          item.verse +
+          "</p>" +
+          "<p style='position: relative;'>" +
+          "<span class='index-of-verse'>" +
+          (data[index + 1].index + 2) +
+          "</span>" +
+          data[index + 1].verse +
+          "</p>" +
+          "</div>";
+        list.appendChild(element);
+      }
+    });
+    return;
+  }
+
   data.forEach((item, index) => {
     if (index % 2 == 0) {
       let element = document.createElement("div");
@@ -3535,5 +3570,5 @@ function mount(name) {
     
 
   mountedData = data;
-  reloadWithData(mountedData);
+  reloadWithData(mountedData, false);
 }
