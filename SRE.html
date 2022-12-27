@@ -35,8 +35,24 @@
       /* width: 100px; */
     }
 
-    .highlight-letter {
+    .highlight-letter-0 {
       color: rgb(255, 142, 36);
+    }
+
+    .highlight-letter-1 {
+      color: rgb(56, 125, 255);
+    }
+
+    .highlight-letter-2 {
+      color: rgb(255, 87, 65);
+    }
+
+    .highlight-letter-3 {
+      color: rgb(116, 255, 135);
+    }
+
+    .invisible-char {
+      color: #333;
     }
 
     /*
@@ -164,8 +180,8 @@
           <form class="">
             <div class="input-group">
               <span class="input-group-text" id="basic-addon1">@</span>
-              <input type="text" class="form-control" placeholder="how fast" aria-label="Username"
-                aria-describedby="basic-addon1" oninput="speedUpdate(this.value)">
+              <input type="text" class="form-control" placeholder="word per min" aria-label="Username"
+                aria-describedby="basic-addon1" oninput="readingSpeedUpdate(this.value)">
             </div>
           </form>
         </div>
@@ -182,8 +198,8 @@
     </header>
 
     <main role="main" class="inner cover">
-<!--       <div class="word-container text-center"> -->
-        <div class="word-container text-left">
+      <div class="word-container text-center">
+        <!-- <div class="word-container text-left"> -->
         <div class="word-wrap mx-auto">
           <h1 id="injection-word" class="cover-heading"></h1>
         </div>
@@ -192,51 +208,76 @@
 
     <footer class="mastfoot mt-auto text-center">
       <div class="inner">
-        <p>Swift Reading Engine 
+        <p>Swift Reading Engine
           <!-- <a href="https://getbootstrap.com/">Bootstrap</a> -->
-          , by <a
-            href="https://github.com/vudat081299">@Dat Vu</a>.</p>
+          , by <a href="https://github.com/vudat081299">@Dat Vu</a>.
+        </p>
       </div>
     </footer>
   </div>
 
   <script>
+    // MARK: - input updating
     let wpm = 300
-    function speedUpdate(value) {
-      if (value != null && value > 50 && value < 1000) {
-        console.log(value)
-        wpm = value ?? 300
+    function readingSpeedUpdate(newReadingSpeed) {
+      if (newReadingSpeed != null) {
+        wpm = newReadingSpeed ?? 300
+      }
+      if (newReadingSpeed < 50) {
+        wpm = 50
+      }
+      if (newReadingSpeed > 1000) {
+        wpm = 1000
       }
     }
 
     var readingContent = ''
     var readingWords = []
-    var isContentChange = false
-    function contentUpdate(value) {
-      isContentChange = true
-      readingContent = value.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/g, '');
+    var isJustUpdateContent = false
+    async function contentUpdate(newContent) {
+      isJustUpdateContent = true
+      prepareData(newContent)
+      await sleep(1000)
+      isJustUpdateContent = false
       main()
     }
 
-    async function main() {
-      isolateWord()
-      for (let word of readingWords) {
-        await sleep(60000 / wpm)
-        wordInjection(word)
-      }
+    // MARK: - Preparing
+    function prepareData(newContent) {
+      readingContent = newContent.replace(/[`~!@#$%^&*()_|+\–\,\.\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
+      readingContent = newContent.replace(/\s\s+/g, ' ');
+      isolateContent()
     }
 
-    function isolateWord() {
+    function isolateContent() {
       readingWords = readingContent.split(' ');
     }
 
+    // MARK: - Main
+    async function main() {
+      for (let word of readingWords) {
+        await sleep(60000 / wpm)
+        if (isJustUpdateContent) { break }
+        let trimmedWord = untrimming(word)
+        wordInjection(trimmedWord)
+      }
+    }
+
+    // MARK: - Injection handler
     function colorWordInjection(value) {
       let result = '';
       let letters = [];
       letters = value.split('')
+      let positioningBias = Math.floor(Math.random() * 2);
+      let highlightColorBias = Math.floor(Math.random() * 4);
+      let highlightBias = Math.floor(Math.random() * 10);
       for (var i = 0; i < letters.length; i++) {
-        if (i == Math.floor(letters.length / 2)) {
-          result += "<span class='highlight-letter'>" + letters[i] + "</span>"
+        if (i == Math.floor(letters.length / 2) - positioningBias) {
+          if (highlightBias > 1) {
+            result += "<span class=\"highlight-letter-" + highlightColorBias + "\">" + letters[i] + "</span>"
+          } else {
+            result += letters[i]
+          }
         } else {
           result += letters[i]
         }
@@ -255,8 +296,33 @@
       return new Promise(resolve => setTimeout(resolve, ms));
     }
 
+    let trimmingChar = ' '
+    let supposedMaxLengthWord = 20
+    function untrimming(word) {
+      let wordLength = word.length
+      let trimmingWord = word
+      if (wordLength < supposedMaxLengthWord) {
+        trimmingWord = untrimmingFromPrefix(trimmingWord, wordLength)
+        trimmingWord = untrimmingFromSubfix(trimmingWord, wordLength)
+      }
+      return trimmingWord
+    }
+    function untrimmingFromPrefix(word, wordLength) {
+      let trimmingCharCount = Math.round((supposedMaxLengthWord - wordLength) / 2)
+      let trimmingWord = word
+      for (let i = 0; i < trimmingCharCount; i++) {
+        trimmingWord = trimmingChar + trimmingWord
+      }
+      return trimmingWord
+    }
+    function untrimmingFromSubfix(word, wordLength) {
+      let trimmingCharCount = Math.floor((supposedMaxLengthWord - wordLength) / 2)
+      let trimmingWord = word
+      for (let i = 0; i < trimmingCharCount; i++) {
+        trimmingWord = trimmingWord + trimmingChar
+      }
+      return trimmingWord
+    }
   </script>
-
 </body>
-
 </html>
