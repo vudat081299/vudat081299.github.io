@@ -119,20 +119,44 @@ Một chiến lược **không hợp lệ** ở ngày *t* nếu thiếu lịch s
 
 ---
 
-## 4. Thiết lập thí nghiệm (experimental setup)
+## 4. Thiết lập, điều khiển & đầu ra (cách dùng tab)
+
+### 4.1 Tham số mặc định
 
 | Tham số | Mặc định | Ghi chú |
 |---------|----------|---------|
 | Khoảng kiểm thử | 365 ngày gần nhất | nút nhanh 180N / 1 năm / 2 năm / 5 năm; hoặc chọn Từ–Đến |
 | Chiến lược | cả 6 | bật/tắt từng cái |
 | `cost`, `pay` | 23, 80 | đồng bộ mô hình EV của tab Thống kê |
-| N_max | 40 | trục *n* của biểu đồ 1 |
+| N_max | 40 | trục *n* của biểu đồ 1 & biên thanh trượt biểu đồ 2 |
 | Đối chứng | `RND` | seed tất định theo `ti` (xem Phụ lục C) |
 
-Hai biểu đồ đầu ra:
+### 4.2 Điều khiển (inputs trên giao diện)
 
-- **Biểu đồ 1 — "Chọn *n* tối ưu":** trục ngang *n*, mỗi đường một chiến lược; chuyển đổi độ đo **Tỉ lệ lỗ / ROI / Tỉ lệ trúng**. Ở chế độ ROI có **đường tham chiếu lợi thế nhà cái**. Điểm tối ưu mỗi đường được khoanh (min tỉ lệ lỗ / max ROI / max tỉ lệ trúng).
-- **Biểu đồ 2 — "So sánh giữa các ngày":** cố định *n* (thanh trượt), vẽ **lãi/lỗ tích luỹ** theo từng ngày kiểm thử cho mỗi chiến lược trên cùng tập ngày. Kèm **bảng tổng hợp** tại đúng *n* đó.
+- **Kiểm thử từ … đến …** + nút nhanh **180N / 1 năm / 2 năm / 5 năm** — chọn khoảng các ngày *t* để backtest.
+- **Giá 1 điểm** (`cost`) và **Ăn / nháy** (`pay`) — tham số kinh tế; đổi để thử kèo khác (vd 1 ăn 99).
+- **Chiến lược** — 6 ô bật/tắt (30/60/100 ngày, cùng ngày các năm, 60 ngày + mùa vụ, ngẫu nhiên). Tắt bớt để biểu đồ gọn hoặc để nới "tập ngày hợp lệ chung" (xem 3.6).
+- **▶ Chạy thí nghiệm** — chạy lại toàn bộ. Thí nghiệm **cũng tự chạy** khi: mở tab lần đầu, đổi bất kỳ điều khiển nào ở trên, hoặc đổi nguồn dữ liệu rồi quay lại tab.
+- **Dòng trạng thái** (ngay dưới thanh điều khiển): *"Đã chạy trên N ngày · M ngày hợp lệ chung · K chiến lược · cược cost/điểm, ăn pay/nháy"*, kèm cảnh báo nếu có chiến lược bị **loại do thiếu dữ liệu**.
+
+### 4.3 Đầu ra (outputs)
+
+**Bốn thẻ KPI** (tổng hợp nhanh):
+
+| Thẻ | Ý nghĩa |
+|-----|---------|
+| **n ít lỗ nhất** | giá trị *n* cho **tỉ lệ lỗ thấp nhất** (xét các chiến lược ≠ ngẫu nhiên), kèm tên chiến lược & % ngày vẫn lỗ |
+| **ROI cao nhất (1 cấu hình)** | ROI lớn nhất trong **mọi** ô (chiến lược × *n*) — cố tình phơi bày **nhiễu do dò nhiều cấu hình**, không phải lợi thế thật |
+| **Lợi thế nhà cái (lý thuyết)** | `ROI_trần = (0.27·pay − cost)/cost` — mốc mọi chiến lược hội tụ về |
+| **Tốt nhất vs ngẫu nhiên** | chênh **ROI trung bình** (lấy trung bình theo mọi *n*) giữa chiến lược tốt nhất (≠ RND) và `RND` — kỳ vọng ≈ 0, nằm trong khoảng nhiễu |
+
+**Biểu đồ 1 — "Chọn *n* tối ưu":** trục ngang *n* = 1…N_max, mỗi đường một chiến lược. Công tắc **độ đo: Tỉ lệ lỗ / ROI / Tỉ lệ trúng** (đơn vị %). Ở chế độ **ROI** có **đường tham chiếu đứt nét "nhà cái −X%"**; điểm tối ưu mỗi đường được **khoanh tròn** (min tỉ lệ lỗ / max ROI / max tỉ lệ trúng tuỳ độ đo).
+
+**Biểu đồ 2 — "So sánh giữa các ngày":** **thanh trượt *n*** (1…N_max) cố định số con đánh; vẽ **lãi/lỗ tích luỹ** theo từng ngày kiểm thử (trục ngang: ngày, cũ→mới; trục dọc: tiền k/tr; có đường 0) cho mỗi chiến lược **trên cùng tập ngày hợp lệ chung**. Đường đi xuống ⇒ càng chơi càng lỗ.
+
+**Bảng tổng hợp** (tại đúng *n* của thanh trượt) — mỗi dòng một chiến lược, cột: **Ngày** (số ngày hợp lệ) · **ROI** · **Tỉ lệ lỗ** · **Ngày có lãi** · **Tỉ lệ trúng** · **Tổng lãi/lỗ**. ROI/Tổng lãi-lỗ âm tô đỏ, dương tô xanh.
+
+**Khối "Kết luận thí nghiệm"** — đoạn văn **tự sinh theo số liệu lần chạy**: ROI trung bình mọi chiến lược ≈ lợi thế nhà cái; chênh so với ngẫu nhiên nằm trong nhiễu; phân tích *n* (tỉ lệ lỗ thấp nhất ở *n** nhưng do payout, không do dự đoán); cảnh báo *data snooping* (nếu có ô ROI dương); và kết luận chung.
 
 ---
 
