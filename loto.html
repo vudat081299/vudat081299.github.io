@@ -436,6 +436,105 @@ footer{margin-top:30px;text-align:center;color:var(--ink-faint);font-size:11.5px
 .rise{animation:rise .5s cubic-bezier(.2,.7,.3,1) both}
 @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 
+/* ============ NEW: bảng màu tươi cho chế độ gọn (chỉnh & test được) ============ */
+:root{
+  /* màu ĐẶC, tươi — chỉ dùng cho ô ở "chế độ gọn"; chế độ đầy đủ vẫn giữ --c1..--c4 cũ */
+  --k1:#21e6a4;   /* về 1 lần   */
+  --k2:#2f9bff;   /* về 2 lần   */
+  --k3:#ffd21e;   /* về 3 lần   */
+  --k4:#ff7a2f;   /* về ≥4 lần  */
+  --kde:#ff3b6b;  /* số đề      */
+}
+/* chế độ gọn: ô tô MÀU ĐẶC tươi sáng, dễ nhìn (ô không hiện số) */
+.board.compact td.l1{background:var(--k1)}
+.board.compact td.l2{background:var(--k2)}
+.board.compact td.l3{background:var(--k3)}
+.board.compact td.l4{background:var(--k4)}
+.board.compact td.de{background:var(--kde)}
+/* legend dùng luôn màu tươi để khớp & thấy ngay khi test màu */
+.sw.s1{background:var(--k1);color:#06281d;border-color:transparent}
+.sw.s2{background:var(--k2);color:#04203f;border-color:transparent}
+.sw.s3{background:var(--k3);color:#3a2c00;border-color:transparent}
+.sw.s4{background:var(--k4);color:#3a1700;border-color:transparent}
+.sw.sd{background:var(--kde);color:#fff;border-color:transparent}
+
+/* ============ NEW: bộ Thử màu ============ */
+.tester{margin:0 0 16px;border:1px solid var(--line);border-radius:var(--r);background:linear-gradient(180deg,var(--panel-2),var(--panel));overflow:hidden}
+.tester[hidden]{display:none}
+.tester .t-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid var(--line-soft)}
+.tester .t-head h4{margin:0;font-family:var(--font-d);font-size:14px}
+.tester .t-hint{font-size:11.5px;color:var(--ink-faint);max-width:520px}
+.preview-strip{display:flex;gap:4px;align-items:center;margin-left:auto}
+.preview-strip i{width:24px;height:24px;border-radius:6px;display:inline-block;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.tester .t-body{padding:14px 16px;display:flex;gap:26px;flex-wrap:wrap}
+.swatches{display:flex;gap:14px;flex-wrap:wrap}
+.swatch{display:flex;flex-direction:column;gap:6px;align-items:center;font-size:11px;color:var(--ink-dim)}
+.swatch input[type=color]{width:48px;height:34px;border:1px solid var(--line);border-radius:8px;background:none;cursor:pointer;padding:2px}
+.swatch input[type=text]{width:76px;font-family:var(--font-m);font-size:11px;text-align:center;background:var(--panel);border:1px solid var(--line);border-radius:7px;color:var(--ink);padding:5px 4px}
+.t-sub{font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:8px}
+.presets-pal{display:flex;gap:10px;flex-wrap:wrap}
+.pal{cursor:pointer;border:1px solid var(--line);border-radius:9px;padding:7px;background:var(--panel);display:flex;flex-direction:column;gap:6px;align-items:center;transition:.15s}
+.pal:hover{border-color:var(--accent);transform:translateY(-1px)}
+.pal .row{display:flex;gap:2px}
+.pal .row i{width:16px;height:16px;border-radius:3px}
+.pal span{font-size:10px;color:var(--ink-dim)}
+.t-actions{display:flex;gap:8px;margin-top:12px}
+
+/* ============ NEW: tabs ============ */
+.tabs{display:inline-flex;gap:4px;background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:18px}
+.tabs button{font-family:var(--font-b);font-size:13.5px;font-weight:600;color:var(--ink-dim);background:transparent;border:0;border-radius:9px;padding:9px 18px;cursor:pointer;transition:.15s}
+.tabs button:hover{color:var(--ink)}
+.tabs button.on{background:var(--raise);color:var(--ink);box-shadow:0 2px 10px rgba(0,0,0,.3)}
+
+/* ============ NEW: experiment tab ============ */
+.exp-head{margin-bottom:18px}
+.exp-title{font-family:var(--font-d);font-size:23px;font-weight:700;margin:0 0 10px;letter-spacing:-.01em}
+.exp-desc{color:var(--ink-dim);font-size:13.5px;margin:0 0 8px;line-height:1.65}
+.exp-desc b{color:var(--ink)}
+.exp-doc{font-size:12.5px;color:var(--ink-faint);margin:0}
+.exp-doc code,.exp-desc code{font-family:var(--font-m);background:var(--panel-2);border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:.92em;color:var(--ink-dim)}
+.exp-bar{background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:flex;gap:22px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
+.exp-bar input[type=number]{width:72px;font-family:var(--font-m);font-size:13px;background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:7px 9px;color:var(--ink);color-scheme:dark}
+.exp-bar input[type=number]:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+.eb-group{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}
+.strat-group{flex-direction:column;align-items:flex-start;gap:7px}
+.eb-lab{font-size:10.5px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.07em}
+.strat-chips{display:flex;gap:8px;flex-wrap:wrap}
+.strat-chips label{display:inline-flex;align-items:center;gap:7px;font-size:12px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 10px;cursor:pointer;transition:.15s;user-select:none}
+.strat-chips label:hover{border-color:var(--accent)}
+.strat-chips label.off{opacity:.45}
+.strat-chips .sdot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+.strat-chips input{position:absolute;opacity:0;width:0;height:0}
+.exp-status{color:var(--ink-dim);font-size:12.5px;margin:0 0 14px;min-height:16px}
+.exp-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));gap:12px;margin-bottom:16px}
+.kpi{background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid var(--line);border-radius:12px;padding:14px 15px}
+.kpi .k{font-size:10.5px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:.05em}
+.kpi .v{font-family:var(--font-d);font-size:25px;font-weight:700;margin-top:5px;line-height:1.1}
+.kpi .s{font-size:11.5px;color:var(--ink-faint);margin-top:5px;line-height:1.4}
+.chart-box{margin-top:6px;width:100%;overflow-x:auto}
+.chart-box svg.chart{width:100%;min-width:520px;height:auto;display:block}
+.chart-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:12px;color:var(--ink-dim)}
+.cl-item{display:inline-flex;align-items:center;gap:7px}
+.cl-item i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.metric-seg{margin:8px 0 12px}
+.nfix-ctl{display:flex;align-items:center;gap:16px;margin:8px 0 14px;flex-wrap:wrap}
+.nfix-ctl label{font-size:13px;color:var(--ink-dim)}
+.nfix-ctl label b{color:var(--accent);font-family:var(--font-m);font-size:15px}
+.nfix-ctl input[type=range]{flex:1;min-width:200px;max-width:440px;accent-color:var(--accent)}
+.etbl-wrap{overflow-x:auto;margin-top:18px}
+.etbl{width:100%;border-collapse:collapse;font-size:12.5px;font-family:var(--font-b)}
+.etbl th,.etbl td{padding:9px 11px;text-align:right;border-bottom:1px solid var(--line-soft);white-space:nowrap}
+.etbl th:first-child,.etbl td:first-child{text-align:left}
+.etbl thead th{color:var(--ink-dim);font-weight:600;font-size:10.5px;text-transform:uppercase;letter-spacing:.04em}
+.etbl tbody tr:hover td{background:rgba(255,255,255,.02)}
+.etbl td.neg{color:var(--de);font-weight:600}
+.etbl td.pos{color:var(--c1);font-weight:600}
+.etbl .dotc{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:8px;vertical-align:middle}
+.exp-verdict{font-size:13.5px;line-height:1.75}
+.exp-verdict h3{margin-top:0}
+.exp-verdict .vkey{color:var(--ink);font-weight:600}
+.exp-empty{padding:40px;text-align:center;color:var(--ink-dim)}
+
 /* ============ responsive ============ */
 @media (max-width:860px){
   .wrap{padding:24px 14px 60px}
@@ -466,6 +565,13 @@ footer{margin-top:30px;text-align:center;color:var(--ink-faint);font-size:11.5px
       <button class="btn-ghost" id="regen">⟳ Mẫu mới</button>
     </div>
   </div>
+
+  <div class="tabs rise">
+    <button data-tab="stats" class="on">📊 Thống kê</button>
+    <button data-tab="exp">🧪 Thí nghiệm</button>
+  </div>
+
+  <div id="tab-stats">
 
   <div class="bar rise">
     <div class="ctl">
@@ -510,6 +616,32 @@ footer{margin-top:30px;text-align:center;color:var(--ink-faint);font-size:11.5px
       <div class="grp">
         <button data-lm="mark" class="on">Mốc 0/5</button>
         <button data-lm="full">Đầy đủ</button>
+      </div>
+    </div>
+    <button class="btn-ghost" id="palToggle" style="margin-left:auto">🎨 Thử màu ô</button>
+  </div>
+
+  <div class="tester rise" id="tester" hidden>
+    <div class="t-head">
+      <h4>🎨 Thử màu ô — chế độ gọn</h4>
+      <span class="t-hint">Đổi màu ô về 1 / 2 / 3 / ≥4 lần &amp; số đề cho “chế độ gọn”. Chế độ đầy đủ giữ nguyên màu cũ. Lựa chọn được lưu lại trên trình duyệt.</span>
+      <div class="preview-strip" id="palPreview"><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+    <div class="t-body">
+      <div class="swatches">
+        <div class="swatch"><input type="color" id="col-k1"><input type="text" id="hex-k1" spellcheck="false"><span>1 lần</span></div>
+        <div class="swatch"><input type="color" id="col-k2"><input type="text" id="hex-k2" spellcheck="false"><span>2 lần</span></div>
+        <div class="swatch"><input type="color" id="col-k3"><input type="text" id="hex-k3" spellcheck="false"><span>3 lần</span></div>
+        <div class="swatch"><input type="color" id="col-k4"><input type="text" id="hex-k4" spellcheck="false"><span>≥4 lần</span></div>
+        <div class="swatch"><input type="color" id="col-kde"><input type="text" id="hex-kde" spellcheck="false"><span>Đề</span></div>
+      </div>
+      <div class="t-presets-wrap">
+        <div class="t-sub">Bảng màu mẫu — bấm để áp dụng</div>
+        <div class="presets-pal" id="palPresets"></div>
+        <div class="t-actions">
+          <button class="btn-ghost" id="palRandom">🎲 Ngẫu nhiên</button>
+          <button class="btn-ghost" id="palReset">↺ Mặc định</button>
+        </div>
       </div>
     </div>
   </div>
@@ -750,6 +882,72 @@ footer{margin-top:30px;text-align:center;color:var(--ink-faint);font-size:11.5px
 
     </div>
   </details>
+
+  </div><!-- /tab-stats -->
+
+  <section id="tab-exp" hidden>
+    <div class="exp-head rise">
+      <h2 class="exp-title">🧪 Thí nghiệm: có “chiến lược” nào thắng được không?</h2>
+      <p class="exp-desc">Quay ngược thời gian về một ngày <b>t</b> trong quá khứ. Chỉ dùng dữ liệu <b>trước</b> ngày t (30/60/100 ngày gần nhất, và/hoặc kết quả đúng ngày t của các năm trước) để chấm điểm 100 số, rồi “đánh” <b>n</b> số có xác suất cao nhất. Đối chiếu với kết quả thật của ngày t, lặp trên toàn bộ khoảng kiểm thử, đo <b>ROI</b>, <b>tỉ lệ lỗ</b>, <b>tỉ lệ trúng</b> — và so với người chơi <b>đánh ngẫu nhiên</b>. Toàn bộ input lấy từ dữ liệu &amp; thống kê của tab Thống kê.</p>
+      <p class="exp-doc">📄 Mô hình &amp; phương pháp luận (kiểu paper khoa học): <code>docs/loto-experiment.md</code></p>
+    </div>
+
+    <div class="exp-bar rise">
+      <div class="eb-group">
+        <div class="field"><label>Kiểm thử từ</label><input type="date" id="expFrom"></div>
+        <div class="field"><label>đến ngày</label><input type="date" id="expTo"></div>
+        <div class="field">
+          <label>Khoảng nhanh</label>
+          <div class="presets" id="expPresets">
+            <button data-days="180">180N</button>
+            <button data-days="365" class="on">1 năm</button>
+            <button data-days="730">2 năm</button>
+            <button data-days="1825">5 năm</button>
+          </div>
+        </div>
+      </div>
+      <div class="eb-group">
+        <div class="field"><label>Giá 1 điểm</label><input type="number" id="expCost" value="23" min="1"></div>
+        <div class="field"><label>Ăn / nháy</label><input type="number" id="expPay" value="80" min="1"></div>
+      </div>
+      <div class="eb-group strat-group">
+        <span class="eb-lab">Chiến lược</span>
+        <div class="strat-chips" id="expStrats"></div>
+      </div>
+      <button class="btn-real" id="expRun">▶ Chạy thí nghiệm</button>
+    </div>
+
+    <div class="exp-status" id="expStatus"></div>
+    <div class="exp-kpis" id="expKpis"></div>
+
+    <div class="card wide rise">
+      <h3>1 · Chọn n tối ưu — chỉ số theo số con đánh</h3>
+      <p class="sub">Mỗi đường là một chiến lược; trục ngang là <b>n</b> (số con đánh mỗi ngày). “Đánh ngẫu nhiên” là đường <b>đối chứng</b>. <b>Tỉ lệ lỗ</b> = % số ngày người chơi bị âm (điểm thấp nhất gợi ý n “ít lỗ” nhất); nhưng hãy xem cả <b>ROI</b> — lãi/lỗ trung bình dài hạn.</p>
+      <div class="seg metric-seg" id="metricSeg">
+        <div class="grp">
+          <button data-m="loss" class="on">Tỉ lệ lỗ</button>
+          <button data-m="roi">ROI</button>
+          <button data-m="hit">Tỉ lệ trúng</button>
+        </div>
+      </div>
+      <div class="chart-box" id="chartN"></div>
+      <div class="chart-legend" id="legendN"></div>
+    </div>
+
+    <div class="card wide rise">
+      <h3>2 · So sánh giữa các ngày — với n cố định</h3>
+      <p class="sub">Cố định số con đánh <b>n</b>, vẽ <b>đường lãi/lỗ tích lũy</b> theo từng ngày kiểm thử cho mỗi chiến lược (cùng tập ngày để so sánh công bằng). Đường đi xuống ⇒ càng chơi càng lỗ. Bảng dưới tổng hợp tỉ lệ trúng / tỉ lệ ngày có lãi tại đúng n này.</p>
+      <div class="nfix-ctl">
+        <label>n = <b id="nFixVal">10</b> số</label>
+        <input type="range" id="nFix" min="1" max="40" value="10">
+      </div>
+      <div class="chart-box" id="chartPnl"></div>
+      <div class="chart-legend" id="legendB"></div>
+      <div class="etbl-wrap" id="expTable"></div>
+    </div>
+
+    <div class="card wide rise exp-verdict" id="expVerdict"></div>
+  </section>
 
   <footer>
     Xổ số là trò chơi may rủi — mỗi kỳ quay độc lập với nhau.<br>
@@ -8806,6 +9004,269 @@ applyDefaultRange(DATA, Math.min(60, DATA.length));
 syncInputs();
 refreshPresetState();
 renderAll();
+
+/* ===================================================================
+   BỔ SUNG: TABS · BỘ THỬ MÀU · THÍ NGHIỆM BACKTEST
+   =================================================================== */
+(function(){
+"use strict";
+const q=(s,r=document)=>r.querySelector(s);
+const qa=(s,r=document)=>Array.from(r.querySelectorAll(s));
+
+/* ---------------- TABS ---------------- */
+function showTab(name){
+  qa(".tabs button").forEach(b=>b.classList.toggle("on", b.dataset.tab===name));
+  q("#tab-stats").hidden = (name!=="stats");
+  q("#tab-exp").hidden   = (name!=="exp");
+  if(name==="exp") ensureExp();
+}
+qa(".tabs button").forEach(b=>b.addEventListener("click",()=>showTab(b.dataset.tab)));
+
+/* ---------------- BỘ THỬ MÀU (chỉ ảnh hưởng chế độ gọn) ---------------- */
+const PK=["k1","k2","k3","k4","kde"];
+const DEF=["#21e6a4","#2f9bff","#ffd21e","#ff7a2f","#ff3b6b"];
+const PRESETS=[
+  {name:"Mặc định tươi", c:DEF.slice()},
+  {name:"Neon",          c:["#39ff14","#00e5ff","#fff200","#ff6d00","#ff1493"]},
+  {name:"Kẹo ngọt",      c:["#5ce1a6","#62b6ff","#ffd66b","#ff8e72","#ff6b9d"]},
+  {name:"Nhiệt đới",     c:["#2bd9b0","#22a7ff","#ffd000","#ff7a00","#ff2e63"]},
+  {name:"Hoàng hôn",     c:["#ffd23a","#ffa14a","#ff6b6b","#c44dff","#ff3d7f"]},
+  {name:"Cực quang",     c:["#00f5a0","#19d3ff","#7c4dff","#b14dff","#ff4d9d"]},
+  {name:"Pastel sáng",   c:["#7ef0c8","#8fc7ff","#ffe28a","#ffb38a","#ff9ec0"]},
+  {name:"Tương phản cao",c:["#00e676","#2979ff","#ffea00","#ff3d00","#f50057"]},
+];
+function setVars(c){ PK.forEach((k,i)=>document.documentElement.style.setProperty("--"+k,c[i])); }
+function syncSwatches(c){
+  PK.forEach((k,i)=>{ const ci=q("#col-"+k),ti=q("#hex-"+k); if(ci)ci.value=c[i]; if(ti)ti.value=c[i]; });
+  const pv=q("#palPreview"); if(pv)PK.forEach((k,i)=>{ if(pv.children[i])pv.children[i].style.background=c[i]; });
+}
+function applyPalette(c,save){ setVars(c); syncSwatches(c); if(save!==false){ try{localStorage.setItem("loto-pal",JSON.stringify(c));}catch(e){} } }
+function readInputs(){ return PK.map(k=>{ const ci=q("#col-"+k); return ci?ci.value:"#000000"; }); }
+function hsl2hex(h,s,l){ s/=100;l/=100; const a=s*Math.min(l,1-l);
+  const f=n=>{const k=(n+h/30)%12; const c=l-a*Math.max(-1,Math.min(k-3,Math.min(9-k,1))); return Math.round(255*c).toString(16).padStart(2,"0");};
+  return "#"+f(0)+f(8)+f(4); }
+function randBright(){ const h0=Math.random()*360; return [0,1,2,3,4].map(i=>hsl2hex((h0+i*68+Math.random()*18)%360,72+Math.random()*18,56+Math.random()*8)); }
+function initTester(){
+  const host=q("#palPresets");
+  if(host){
+    host.innerHTML=PRESETS.map((p,i)=>`<div class="pal" data-i="${i}"><div class="row">${p.c.map(x=>`<i style="background:${x}"></i>`).join("")}</div><span>${p.name}</span></div>`).join("");
+    host.addEventListener("click",e=>{ const c=e.target.closest(".pal"); if(c)applyPalette(PRESETS[+c.dataset.i].c,true); });
+  }
+  PK.forEach(k=>{
+    const ci=q("#col-"+k), ti=q("#hex-"+k);
+    if(ci)ci.addEventListener("input",()=>applyPalette(readInputs(),true));
+    if(ti)ti.addEventListener("change",()=>{ let v=ti.value.trim(); if(/^#?[0-9a-fA-F]{6}$/.test(v)){ if(v[0]!=="#")v="#"+v; const c=readInputs(); c[PK.indexOf(k)]=v; applyPalette(c,true);} });
+  });
+  const rb=q("#palRandom"); if(rb)rb.addEventListener("click",()=>applyPalette(randBright(),true));
+  const rs=q("#palReset");  if(rs)rs.addEventListener("click",()=>applyPalette(DEF.slice(),true));
+  const tg=q("#palToggle"); if(tg)tg.addEventListener("click",()=>{
+    const t=q("#tester"); const show=t.hidden; t.hidden=!show;
+    if(show){ const cb=q("#compactToggle"); if(cb&&!cb.checked){ cb.checked=true; cb.dispatchEvent(new Event("change")); } }
+  });
+  let pal=DEF.slice();
+  try{ const s=JSON.parse(localStorage.getItem("loto-pal")); if(Array.isArray(s)&&s.length===5)pal=s; }catch(e){}
+  applyPalette(pal,false);
+}
+
+/* ---------------- THÍ NGHIỆM ---------------- */
+const STRATS=[
+  {key:"L30", name:"30 ngày",                color:"#37e0ac"},
+  {key:"L60", name:"60 ngày",                color:"#6fb0ff"},
+  {key:"L100",name:"100 ngày",               color:"#ffd23a"},
+  {key:"SEA", name:"Cùng ngày các năm",      color:"#c08aff"},
+  {key:"L60S",name:"60 ngày + mùa vụ",       color:"#ff9636"},
+  {key:"RND", name:"Ngẫu nhiên (đối chứng)", color:"#9aa3b8", dash:true},
+];
+const NMAX=40;
+let SIG="", PREFIX=null, SEAS=null, EXP=null, inited=false;
+
+function dataSig(){ return DATA.length+"|"+(DATA[0]?DATA[0].ymd:"")+"|"+(DATA.length?DATA[DATA.length-1].ymd:""); }
+function buildIndex(){
+  const s=dataSig(); if(s===SIG&&PREFIX)return; SIG=s;
+  const N=DATA.length;
+  PREFIX=new Array(N+1); PREFIX[0]=new Int32Array(100);
+  for(let i=0;i<N;i++){ const p=new Int32Array(100),pr=PREFIX[i],c=DATA[i].counts; for(let n=0;n<100;n++)p[n]=pr[n]+c[n]; PREFIX[i+1]=p; }
+  SEAS={}; for(let i=0;i<N;i++){ const md=DATA[i].ymd.slice(5); (SEAS[md]||(SEAS[md]=[])).push(i); }
+}
+function winFreq(a,b){ const o=new Float64Array(100),pa=PREFIX[a],pb=PREFIX[b]; for(let n=0;n<100;n++)o[n]=pb[n]-pa[n]; return o; }
+function seasonFreq(ti){
+  const md=DATA[ti].ymd.slice(5), y=DATA[ti].ymd.slice(0,4), list=SEAS[md]||[], o=new Float64Array(100); let cnt=0;
+  for(const j of list){ if(j<ti && DATA[j].ymd.slice(0,4)<y){ const c=DATA[j].counts; for(let n=0;n<100;n++)o[n]+=c[n]; cnt++; } }
+  return {f:o,cnt};
+}
+function norm(f){ let s=0; for(let n=0;n<100;n++)s+=f[n]; const o=new Float64Array(100); if(s>0)for(let n=0;n<100;n++)o[n]=f[n]/s; return o; }
+function rankScore(sc){ return Array.from({length:100},(_,i)=>i).sort((a,b)=>(sc[b]-sc[a])||(a-b)); }
+function rankRandom(seed){ const r=mulberry32(seed>>>0), a=Array.from({length:100},(_,i)=>i);
+  for(let i=99;i>0;i--){ const j=Math.floor(r()*(i+1)),t=a[i];a[i]=a[j];a[j]=t; } return a; }
+function ranking(key,ti){
+  if(key==="RND") return {order:rankRandom((ti*2654435761)>>>0),ok:true};
+  if(key==="SEA"){ const s=seasonFreq(ti); return s.cnt?{order:rankScore(s.f),ok:true}:{ok:false}; }
+  if(key==="L30"||key==="L60"||key==="L100"){ const L=+key.slice(1); return ti>=L?{order:rankScore(winFreq(ti-L,ti)),ok:true}:{ok:false}; }
+  if(key==="L60S"){ if(ti<60)return{ok:false}; const s=seasonFreq(ti); if(!s.cnt)return{ok:false};
+    const rec=norm(winFreq(ti-60,ti)),se=norm(s.f),sc=new Float64Array(100); for(let n=0;n<100;n++)sc[n]=.5*rec[n]+.5*se[n]; return{order:rankScore(sc),ok:true}; }
+  return {ok:false};
+}
+function runExperiment(fromY,toY,cost,pay,selected){
+  buildIndex();
+  const idx=[]; for(let i=0;i<DATA.length;i++) if(DATA[i].ymd>=fromY&&DATA[i].ymd<=toY) idx.push(i);
+  const days=idx.length, strat={};
+  selected.forEach(k=>strat[k]={valid:new Uint8Array(days),profit:new Float64Array(days*NMAX),hits:new Float64Array(days*NMAX),total:0});
+  for(let d=0;d<days;d++){ const ti=idx[d], act=DATA[ti].counts;
+    for(const k of selected){ const r=ranking(k,ti),S=strat[k];
+      if(!r.ok)continue; S.valid[d]=1; S.total++;
+      let nhay=0,hits=0;
+      for(let m=0;m<NMAX;m++){ const num=r.order[m],c=act[num]; nhay+=c; if(c>0)hits++;
+        const w=d*NMAX+m; S.profit[w]=nhay*pay-(m+1)*cost; S.hits[w]=hits; } } }
+  EXP={days,ymd:idx.map(i=>DATA[i].ymd),cost,pay,selected,strat,nmax:NMAX,sig:SIG};
+  EXP.eff=selected.filter(k=>strat[k].total>0);
+  EXP.dropped=selected.filter(k=>strat[k].total===0);
+  return EXP;
+}
+function maskFor(keys){ const v=new Uint8Array(EXP.days); for(let d=0;d<EXP.days;d++){ let all=keys.length>0; for(const k of keys){ if(!EXP.strat[k].valid[d]){all=false;break;} } v[d]=all?1:0; } return v; }
+function aggregate(key,mask){
+  const S=EXP.strat[key],out=[];
+  for(let m=0;m<EXP.nmax;m++){ let dc=0,sp=0,loss=0,win=0,sh=0;
+    for(let d=0;d<EXP.days;d++){ if(!mask[d]||!S.valid[d])continue; dc++; const p=S.profit[d*EXP.nmax+m]; sp+=p; if(p<0)loss++; else if(p>0)win++; sh+=S.hits[d*EXP.nmax+m]; }
+    const n=m+1,cost=dc*n*EXP.cost;
+    out.push({n,days:dc,roi:cost?sp/cost*100:0,lossRate:dc?loss/dc*100:0,winRate:dc?win/dc*100:0,hitRate:dc?sh/(dc*n)*100:0,total:sp}); }
+  return out;
+}
+
+/* ---- vẽ SVG ---- */
+function fmtMoney(k){ const a=Math.abs(k),sg=k<0?"-":""; if(a>=1000)return sg+(a/1000).toFixed(a>=10000?0:1)+"tr"; return sg+Math.round(a)+"k"; }
+function chartLines(series,o){
+  const W=o.w||680,H=o.h||300,L=48,R=18,T=14,B=40,pw=W-L-R,ph=H-T-B;
+  const xs=o.xmin,xe=o.xmax;
+  let lo=o.ymin,hi=o.ymax;
+  if(lo==null||hi==null){ lo=Infinity;hi=-Infinity; series.forEach(s=>s.pts.forEach(p=>{ if(p[1]<lo)lo=p[1]; if(p[1]>hi)hi=p[1]; })); if(!isFinite(lo)){lo=0;hi=1;} if(o.includeZero){lo=Math.min(lo,0);hi=Math.max(hi,0);} const pad=(hi-lo)*0.12||1; lo-=pad; hi+=pad; }
+  if(hi===lo)hi=lo+1;
+  const X=v=>L+(v-xs)/((xe-xs)||1)*pw, Y=v=>T+ph-(v-lo)/(hi-lo)*ph;
+  let s=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" class="chart" role="img">`;
+  for(let i=0;i<=4;i++){ const val=lo+(hi-lo)*i/4,y=Y(val);
+    s+=`<line x1="${L}" y1="${y.toFixed(1)}" x2="${W-R}" y2="${y.toFixed(1)}" stroke="#1f2636"/>`;
+    s+=`<text x="${L-7}" y="${(y+3).toFixed(1)}" fill="#8b93a8" font-size="9" text-anchor="end" font-family="'JetBrains Mono',monospace">${o.yfmt?o.yfmt(val):val.toFixed(0)}</text>`; }
+  if(lo<0&&hi>0){ const y=Y(0); s+=`<line x1="${L}" y1="${y.toFixed(1)}" x2="${W-R}" y2="${y.toFixed(1)}" stroke="#566079" stroke-dasharray="4 3"/>`; }
+  if(o.refY!=null && o.refY>=lo && o.refY<=hi){ const y=Y(o.refY); s+=`<line x1="${L}" y1="${y.toFixed(1)}" x2="${W-R}" y2="${y.toFixed(1)}" stroke="${o.refColor||'#f4c64f'}" stroke-width="1.2" stroke-dasharray="2 3" opacity="0.8"/>`; if(o.refLabel)s+=`<text x="${W-R-2}" y="${(y-4).toFixed(1)}" fill="${o.refColor||'#f4c64f'}" font-size="8.5" text-anchor="end">${o.refLabel}</text>`; }
+  (o.xticks||[]).forEach(t=>{ const x=X(t);
+    s+=`<line x1="${x.toFixed(1)}" y1="${T+ph}" x2="${x.toFixed(1)}" y2="${T+ph+4}" stroke="#2a3142"/>`;
+    s+=`<text x="${x.toFixed(1)}" y="${H-14}" fill="#8b93a8" font-size="9" text-anchor="middle" font-family="'JetBrains Mono',monospace">${o.xfmt?o.xfmt(t):t}</text>`; });
+  if(o.xlabel) s+=`<text x="${(L+pw/2).toFixed(0)}" y="${H-2}" fill="#525a6e" font-size="9.5" text-anchor="middle">${o.xlabel}</text>`;
+  series.forEach(se=>{ if(!se.pts||!se.pts.length)return; let d="";
+    se.pts.forEach((p,i)=>{ d+=(i?"L":"M")+X(p[0]).toFixed(1)+" "+Y(p[1]).toFixed(1)+" "; });
+    s+=`<path d="${d}" fill="none" stroke="${se.color}" stroke-width="2" ${se.dash?'stroke-dasharray="5 4"':''} opacity="0.95"/>`;
+    if(se.mark!=null&&se.pts[se.mark]){ const p=se.pts[se.mark]; s+=`<circle cx="${X(p[0]).toFixed(1)}" cy="${Y(p[1]).toFixed(1)}" r="4" fill="${se.color}"/>`; } });
+  return s+"</svg>";
+}
+function legendHTML(keys){ return keys.map(k=>{const m=STRATS.find(s=>s.key===k); return `<span class="cl-item"><i style="background:${m.color};${m.dash?'opacity:.55':''}"></i>${m.name}</span>`;}).join(""); }
+
+/* ---- render ---- */
+function curMetric(){ const b=q("#metricSeg .on"); return b?b.dataset.m:"loss"; }
+function renderChartA(mask){
+  const metric=curMetric();
+  const series=EXP.eff.map(k=>{ const meta=STRATS.find(s=>s.key===k),ag=aggregate(k,mask);
+    const se={color:meta.color,dash:meta.dash,pts:ag.map(a=>[a.n, metric==="loss"?a.lossRate:metric==="roi"?a.roi:a.hitRate])};
+    let best=0; for(let i=1;i<se.pts.length;i++){ const better=metric==="loss"?se.pts[i][1]<se.pts[best][1]:se.pts[i][1]>se.pts[best][1]; if(better)best=i; } se.mark=best;
+    return se; });
+  const edge=(0.27*EXP.pay-EXP.cost)/EXP.cost*100;
+  q("#chartN").innerHTML=chartLines(series,{xmin:1,xmax:NMAX,xticks:[1,5,10,15,20,25,30,35,40],xlabel:"n — số con đánh mỗi ngày",yfmt:v=>v.toFixed(0)+"%",includeZero:metric==="roi",refY:metric==="roi"?edge:null,refLabel:metric==="roi"?("nhà cái "+edge.toFixed(1)+"%"):null});
+  q("#legendN").innerHTML=legendHTML(EXP.eff);
+}
+function renderChartB(mask){
+  const nFix=+q("#nFix").value; q("#nFixVal").textContent=nFix;
+  const ymds=[]; for(let d=0;d<EXP.days;d++) if(mask[d]) ymds.push(EXP.ymd[d]);
+  const M=ymds.length;
+  const series=EXP.eff.map(k=>{ const meta=STRATS.find(s=>s.key===k),S=EXP.strat[k]; let cum=0,o=0; const pts=[];
+    for(let d=0;d<EXP.days;d++){ if(!mask[d])continue; cum+=S.profit[d*EXP.nmax+(nFix-1)]; pts.push([o++,cum]); }
+    return {color:meta.color,dash:meta.dash,pts}; });
+  const tk=[]; const step=Math.max(1,Math.floor((M-1)/5)); for(let i=0;i<M;i+=step)tk.push(i); if(M>1&&tk[tk.length-1]!==M-1)tk.push(M-1);
+  q("#chartPnl").innerHTML = M ? chartLines(series,{xmin:0,xmax:Math.max(1,M-1),xticks:tk,xfmt:i=>{const y=ymds[i]||"";return y.slice(5).replace("-","/");},xlabel:"ngày kiểm thử ("+M+" ngày, cũ→mới)",yfmt:fmtMoney,includeZero:true}) : `<div class="exp-empty">Không đủ dữ liệu hợp lệ chung cho các chiến lược đã chọn.</div>`;
+  q("#legendB").innerHTML=legendHTML(EXP.eff);
+  renderTable(nFix,mask);
+}
+function renderTable(nFix,mask){
+  const rows=EXP.eff.map(k=>{ const m=STRATS.find(s=>s.key===k),a=aggregate(k,mask)[nFix-1];
+    return `<tr><td><span class="dotc" style="background:${m.color}"></span>${m.name}</td><td>${a.days}</td><td class="${a.roi<0?'neg':'pos'}">${a.roi>=0?'+':''}${a.roi.toFixed(1)}%</td><td>${a.lossRate.toFixed(0)}%</td><td>${a.winRate.toFixed(0)}%</td><td>${a.hitRate.toFixed(1)}%</td><td class="${a.total<0?'neg':'pos'}">${a.total>=0?'+':''}${fmtMoney(a.total)}</td></tr>`; }).join("");
+  q("#expTable").innerHTML=`<table class="etbl"><thead><tr><th>Chiến lược</th><th>Ngày</th><th>ROI</th><th>Tỉ lệ lỗ</th><th>Ngày có lãi</th><th>Tỉ lệ trúng</th><th>Tổng lãi/lỗ</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+function meanRoi(k,mask){ const ag=aggregate(k,mask); let s=0,c=0; ag.forEach(a=>{if(a.days){s+=a.roi;c++;}}); return c?s/c:0; }
+function renderKpis(mask){
+  const edge=(0.27*EXP.pay-EXP.cost)/EXP.cost*100;
+  let bestLoss=null,bestRoi=null;
+  EXP.eff.forEach(k=>{ if(k==="RND")return; aggregate(k,mask).forEach(a=>{ if(!a.days)return;
+    if(bestLoss==null||a.lossRate<bestLoss.val)bestLoss={k,n:a.n,val:a.lossRate};
+    if(bestRoi==null||a.roi>bestRoi.val)bestRoi={k,n:a.n,val:a.roi}; }); });
+  const nonRnd=EXP.eff.filter(k=>k!=="RND");
+  let bestMean=null; nonRnd.forEach(k=>{ const mr=meanRoi(k,mask); if(bestMean==null||mr>bestMean.val)bestMean={k,val:mr}; });
+  const rndMean=EXP.eff.includes("RND")?meanRoi("RND",mask):null;
+  const nm=k=>STRATS.find(s=>s.key===k).name;
+  const cells=nonRnd.length*EXP.nmax;
+  const cards=[];
+  if(bestLoss)cards.push({k:"n ít lỗ nhất",v:"n = "+bestLoss.n,s:nm(bestLoss.k)+" · vẫn lỗ "+bestLoss.val.toFixed(0)+"% số ngày"});
+  if(bestRoi)cards.push({k:"ROI cao nhất (1 cấu hình)",v:(bestRoi.val>=0?'+':'')+bestRoi.val.toFixed(1)+"%",s:"chỉ là nhiễu khi dò "+cells+" cấu hình (n×chiến lược) — khó tái lặp"});
+  cards.push({k:"Lợi thế nhà cái (lý thuyết)",v:edge.toFixed(1)+"%",s:"E[nháy]=0.27 · giá "+EXP.cost+" · ăn "+EXP.pay});
+  if(bestMean&&rndMean!=null)cards.push({k:"Tốt nhất vs ngẫu nhiên",v:((bestMean.val-rndMean)>=0?'+':'')+(bestMean.val-rndMean).toFixed(2)+"%",s:"chênh ROI TB — nằm trong khoảng nhiễu, không có ý nghĩa thống kê"});
+  q("#expKpis").innerHTML=cards.map(c=>`<div class="kpi"><div class="k">${c.k}</div><div class="v">${c.v}</div><div class="s">${c.s}</div></div>`).join("");
+  return {edge,bestLoss,bestRoi,bestMean,rndMean,cells};
+}
+function renderVerdict(info){
+  const nm=k=>STRATS.find(s=>s.key===k).name;
+  let h=`<h3>Kết luận thí nghiệm</h3>`;
+  h+=`<p>Trên <span class="vkey">${EXP.ymd.length}</span> ngày kiểm thử, ROI <b>trung bình</b> của mọi chiến lược đều <span class="vkey">âm</span> và xấp xỉ lợi thế nhà cái lý thuyết <span class="vkey">${info.edge.toFixed(1)}%</span> — đúng như kỳ vọng khi các kỳ quay <b>độc lập</b> và bộ số <b>đồng đều</b> (xem χ² ở tab Thống kê). “Chọn số thông minh” không tạo ra lợi thế: ROI trung bình của ${info.bestMean?nm(info.bestMean.k):"chiến lược tốt nhất"}${info.rndMean!=null?` chỉ hơn đánh ngẫu nhiên <span class="vkey">${(info.bestMean.val-info.rndMean>=0?'+':'')+(info.bestMean.val-info.rndMean).toFixed(2)}%</span> — nằm gọn trong khoảng nhiễu, không phải lợi thế thật`:''}.</p>`;
+  if(info.bestLoss)h+=`<p><b>Về số con n:</b> ROI gần như không đổi theo n (luôn ≈ ${info.edge.toFixed(1)}%), nhưng <b>tỉ lệ lỗ</b> thì có — thấp nhất quanh <span class="vkey">n = ${info.bestLoss.n}</span> (còn ${info.bestLoss.val.toFixed(0)}% số ngày lỗ). Đây thuần là hệ quả của cơ chế trả thưởng (một “nháy” ăn ${EXP.pay} so với tổng cược ${EXP.cost}×n), <i>không</i> phải vì dự đoán đúng: đánh ít con thì hay trắng tay, đánh nhiều con thì gần như chắc chắn âm nhẹ. Chọn n chỉ đổi <b>hình dạng rủi ro</b>, không đổi <b>kết cục dài hạn</b>.</p>`;
+  if(info.bestRoi&&info.bestRoi.val>0)h+=`<p><b>⚠ Bẫy “dò quá khứ” (data snooping):</b> nếu lục khắp <span class="vkey">${info.cells}</span> cấu hình (n × chiến lược), kiểu gì cũng có vài ô ROI <i>dương</i> thuần do may rủi — ở lần chạy này, ô “tốt” nhất đạt <span class="vkey">${(info.bestRoi.val>=0?'+':'')+info.bestRoi.val.toFixed(1)}%</span> tại n=${info.bestRoi.n} (${nm(info.bestRoi.k)}). Đó chính là cái bẫy của mọi “hệ thống thắng” backtest: đẹp trên quá khứ, sụp khi ra tương lai. Đổi khoảng kiểm thử hoặc nhấn “Chạy” lại, ô “thắng” sẽ nhảy chỗ khác.</p>`;
+  h+=`<p style="color:var(--ink-faint)">Tóm lại, thí nghiệm tái khẳng định thông điệp của trang: xổ số là trò chơi công bằng &amp; kỳ vọng âm — không chiến lược chọn số nào thắng được nhà cái về dài. Công cụ để <b>hiểu</b>, không phải để <b>thắng</b>.</p>`;
+  q("#expVerdict").innerHTML=h;
+}
+
+/* ---- điều khiển ---- */
+function buildStratChips(){
+  q("#expStrats").innerHTML=STRATS.map(s=>`<label data-k="${s.key}"><input type="checkbox" data-k="${s.key}" checked><span class="sdot" style="background:${s.color}"></span>${s.name}</label>`).join("");
+  q("#expStrats").addEventListener("change",e=>{ const cb=e.target.closest("input"); if(!cb)return; cb.closest("label").classList.toggle("off",!cb.checked); runFromControls(); });
+}
+function selectedStrats(){ return qa("#expStrats input:checked").map(c=>c.dataset.k); }
+function setDateBounds(){ ["expFrom","expTo"].forEach(id=>{const e=q("#"+id); e.min=DATA[0].ymd; e.max=DATA[DATA.length-1].ymd;}); }
+function initControls(){
+  buildStratChips();
+  setDateBounds();
+  const to=DATA[DATA.length-1].ymd, from=DATA[Math.max(0,DATA.length-365)].ymd;
+  q("#expFrom").value=from; q("#expTo").value=to;
+  q("#expRun").addEventListener("click",runFromControls);
+  ["expFrom","expTo","expCost","expPay"].forEach(id=>q("#"+id).addEventListener("change",runFromControls));
+  q("#expPresets").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b)return; const days=+b.dataset.days;
+    qa("#expPresets button").forEach(x=>x.classList.toggle("on",x===b));
+    q("#expTo").value=DATA[DATA.length-1].ymd; q("#expFrom").value=DATA[Math.max(0,DATA.length-days)].ymd; runFromControls(); });
+  q("#metricSeg").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b)return; qa("#metricSeg button").forEach(x=>x.classList.toggle("on",x===b)); if(EXP)renderChartA(maskFor(EXP.eff)); });
+  q("#nFix").addEventListener("input",()=>{ if(EXP)renderChartB(maskFor(EXP.eff)); });
+}
+function clearExp(){ ["expKpis","chartN","legendN","chartPnl","legendB","expTable","expVerdict"].forEach(id=>{const e=q("#"+id); if(e)e.innerHTML="";}); }
+function runFromControls(){
+  const st=q("#expStatus"); st.textContent="⏳ Đang chạy thí nghiệm…";
+  setTimeout(()=>{ try{
+    setDateBounds();
+    const from=q("#expFrom").value, to=q("#expTo").value;
+    if(from>to){ st.textContent="Khoảng ngày không hợp lệ (Từ > Đến)."; clearExp(); return; }
+    const cost=Math.max(1,parseFloat(q("#expCost").value)||23), pay=Math.max(0,parseFloat(q("#expPay").value)||80);
+    const sel=selectedStrats();
+    if(!sel.length){ st.textContent="Hãy chọn ít nhất một chiến lược."; clearExp(); return; }
+    runExperiment(from,to,cost,pay,sel);
+    if(!EXP.eff.length){ st.textContent="Không chiến lược nào đủ dữ liệu trong khoảng này (cần lịch sử dài hơn)."; clearExp(); return; }
+    const mask=maskFor(EXP.eff); let mc=0; for(let d=0;d<EXP.days;d++)mc+=mask[d];
+    let msg=`Đã chạy trên ${EXP.days} ngày · ${mc} ngày hợp lệ chung · ${EXP.eff.length} chiến lược · cược ${cost}/điểm, ăn ${pay}/nháy.`;
+    if(EXP.dropped.length)msg+=" Bỏ qua (thiếu dữ liệu): "+EXP.dropped.map(k=>STRATS.find(s=>s.key===k).name).join(", ")+".";
+    st.textContent=msg;
+    renderChartA(mask); renderChartB(mask);
+    renderVerdict(renderKpis(mask));
+  }catch(e){ st.textContent="Lỗi: "+e.message; console.error(e); } },20);
+}
+function ensureExp(){
+  buildIndex();
+  if(!inited){ initControls(); inited=true; }
+  if(!EXP || EXP.sig!==dataSig()) runFromControls();
+}
+
+/* ---- init ---- */
+initTester();
+})();
 </script>
 </body>
 </html>

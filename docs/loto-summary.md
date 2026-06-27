@@ -28,10 +28,11 @@
 ## 3. Bố cục UI (từ trên xuống)
 
 1. **Header:** logo + tên "Lô·Tô"; chấm trạng thái + nhãn nguồn ("XSMB nhúng sẵn · N ngày" hoặc "Dữ liệu của bạn"); nút **⟳ Cập nhật mới nhất**; nút **⟳ Mẫu mới** (sinh dữ liệu ngẫu nhiên để xem giao diện).
+   - **Thanh chuyển tab** (ngay dưới header): **📊 Thống kê** (toàn bộ nội dung mô tả dưới đây) và **🧪 Thí nghiệm** (backtest chiến lược chọn số — mô hình & phương pháp luận ở [`loto-experiment.md`](./loto-experiment.md)).
 2. **Thanh điều khiển (toolbar):** ô **Từ ngày / Đến ngày** (chọn khoảng bất kỳ trong ~20 năm); nút **khoảng nhanh 7N/30N/60N/100N**; và 4 ô **KPI** (Ngày, Lượt lô, Gan nhất, Nóng nhất). Mặc định hiển thị 60 ngày gần nhất.
 3. **Chú thích màu (legend):** xanh lá = về 1 lần, xanh dương = 2 lần, vàng = 3 lần, cam = ≥4 lần, đỏ = số đề, chấm mờ = chưa về.
 4. **Dải "Đề gần đây":** các số đề của những ngày gần nhất (chip đỏ).
-5. **Điều khiển chế độ xem:** công tắc **Chế độ gọn** (on/off); khi bật hiện thêm bộ chọn **nhãn cột số: "Mốc 0/5" hoặc "Đầy đủ"**.
+5. **Điều khiển chế độ xem:** công tắc **Chế độ gọn** (on/off); khi bật hiện thêm bộ chọn **nhãn cột số: "Mốc 0/5" hoặc "Đầy đủ"**; nút **🎨 Thử màu ô** mở bảng chỉnh màu cho chế độ gọn (5 ô màu 1/2/3/≥4 lần + đề, 8 bảng màu mẫu bấm-để-áp-dụng, nút ngẫu nhiên/mặc định; xem trực tiếp trên bảng nhiệt, lưu vào `localStorage`). Mở bảng này tự bật chế độ gọn để xem hiệu ứng.
 6. **Bảng nhiệt (heatmap)** — phần trung tâm (xem mục 4).
 7. **Lưới các thẻ thống kê** (xem mục 5).
 8. **"Cách đọc các biểu đồ"** — mục hướng dẫn (mở sẵn) giải thích từng biểu đồ.
@@ -44,7 +45,7 @@
 - **Mã màu ô** (theo `counts[n]` của ngày đó): xanh lá #37e0ac = 1 lần, xanh dương #6fb0ff = 2 lần, vàng #ffd23a = 3 lần, cam #ff9636 = ≥4 lần, đỏ #ff5560 = **số đề** (ô đề ở chế độ đầy đủ ghi chữ "Đ", không đếm). Ô không về chỉ là chấm mờ. Ở chế độ đầy đủ ô hiện luôn con số đếm.
 - **Hàng tô vạch vàng bên trái** = các số đang **gan nhất** (top lâu chưa về), để dò nhanh vị trí trên lưới (liên kết với thẻ "Lô gan").
 - **Tooltip:** rê vào ô hiện "**Số NN · DD/MM · trạng thái**" (chưa về / về k lần / ⬩ Đề). Dữ liệu gắn trực tiếp trên từng ô nên luôn khớp đúng ô dưới con trỏ.
-- **Chế độ gọn:** hàng mỏng lại (~6px) và ô **chỉ còn màu, bỏ số**, để xem được nhiều ngày; **các hàng mốc 00,10,20,…,90 giữ dày (~18px)** làm "thước" định vị; bảng **bỏ giới hạn chiều cao để hiện đủ cả 100 số** (không cuộn dọc trong khung). Màu ô giữ giống chế độ đầy đủ.
+- **Chế độ gọn:** hàng mỏng lại (~6px) và ô **chỉ còn màu, bỏ số**, để xem được nhiều ngày; **các hàng mốc 00,10,20,…,90 giữ dày (~18px)** làm "thước" định vị; bảng **bỏ giới hạn chiều cao để hiện đủ cả 100 số** (không cuộn dọc trong khung). Ô dùng **màu đặc, tươi sáng** (biến CSS `--k1..--k4,--kde`, mặc định xanh lá/xanh dương/vàng/cam/đỏ-hồng rực) để dễ nhìn — **chỉnh được** qua bộ "🎨 Thử màu ô"; còn **chế độ đầy đủ giữ nguyên** màu tinted nhạt cũ (`--c1..--c4`).
 - **Hiệu năng:** khoảng cực dài (vài năm) thì bảng nhiệt chỉ vẽ tối đa **750 cột gần nhất** cho mượt, nhưng **mọi bảng thống kê vẫn tính trên toàn bộ khoảng đã chọn**.
 
 ## 5. Các biểu đồ / phương pháp thống kê (mỗi mục: là gì + đọc thế nào + ý nghĩa)
@@ -87,7 +88,15 @@
 
 Ba kết quả định lượng trong trang **hội tụ về một kết luận**: (1) kiểm định χ² **không** phát hiện bộ số bị lệch, (2) kết quả các kỳ **độc lập** (hôm nay không báo trước hôm sau), (3) kỳ vọng **âm** (lợi thế thuộc nhà cái). Vì vậy **không có mẫu hình để khai thác**, và về dài người chơi lỗ. Các bảng "gan/nóng/cặp…" hấp dẫn để **quan sát quá khứ và hiểu trò chơi**, nhưng xét về xác suất chúng không nâng cơ hội ở kỳ tới. Trang web do đó được thiết kế như một **công cụ phân tích trung thực** — đẹp, dark mode, nhiều góc nhìn — nhằm giúp người xem *hiểu* xổ số đúng bản chất, chứ không phải để *thắng* nó.
 
-## 8. Gợi ý mở rộng (nếu cần phát triển tiếp)
+## 8. Tab Thí nghiệm (backtest chiến lược)
+
+Tab **🧪 Thí nghiệm** (UI switch trong cùng `loto.html`) kiểm định định lượng: *có chiến lược chọn số nào thắng được nhà cái không?* Với mỗi ngày *t* trong khoảng kiểm thử, mô hình **chỉ dùng dữ liệu trước *t*** (30/60/100 ngày gần nhất; kết quả cùng ngày-tháng các năm trước; hoặc trộn) để chấm điểm 100 số, "đánh" *n* số điểm cao nhất, đối chiếu kết quả thật của *t*, lặp trên toàn khoảng và tổng hợp **ROI / tỉ lệ lỗ / tỉ lệ trúng / tỉ lệ ngày có lãi**, so với một **đường đối chứng ngẫu nhiên**. Input hoàn toàn là `DATA` & thống kê của tab Thống kê.
+
+- **Hai biểu đồ:** (1) chỉ số theo *n* để chọn *n* tối ưu (kèm đường tham chiếu "lợi thế nhà cái"); (2) lãi/lỗ tích luỹ giữa các ngày tại *n* cố định + bảng tổng hợp.
+- **Kết quả kỳ vọng:** mọi chiến lược ROI âm ≈ lợi thế nhà cái, không vượt ngẫu nhiên; "tối ưu *n*" chỉ đổi *hình dạng rủi ro*, không đổi kết cục; mọi "ô thắng" lẻ là tạo tác *data snooping*. Củng cố thông điệp χ²/độc lập/EV của trang.
+- **Tài liệu kiểu paper đầy đủ** (câu hỏi nghiên cứu, dữ liệu, phương pháp, độ đo, kết quả, hạn chế, công thức, mã giả, tái lập): [`loto-experiment.md`](./loto-experiment.md).
+
+## 9. Gợi ý mở rộng (nếu cần phát triển tiếp)
 
 - Tự chủ nguồn cập nhật: dựng backend nhỏ (vd Vapor/Node) crawl KQXSMB, serve JSON có CORS, rồi trỏ URL vào mục "Nguồn dữ liệu → 2".
 - Có thể thêm các phương pháp khác (chu kỳ/gap theo phân phối hình học, theo thứ trong tuần…) nhưng các phương pháp dân gian thuần (bóng số, dàn đề, cầu chạm…) không có giá trị thống kê.
