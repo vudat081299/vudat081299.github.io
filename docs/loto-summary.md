@@ -45,6 +45,7 @@
 - **Mã màu ô** (theo `counts[n]` của ngày đó): xanh lá #37e0ac = 1 lần, xanh dương #6fb0ff = 2 lần, vàng #ffd23a = 3 lần, cam #ff9636 = ≥4 lần, đỏ #ff5560 = **số đề** (ô đề ở chế độ đầy đủ ghi chữ "Đ", không đếm). Ô không về chỉ là chấm mờ. Ở chế độ đầy đủ ô hiện luôn con số đếm.
 - **Hàng tô vạch vàng bên trái** = các số đang **gan nhất** (top lâu chưa về), để dò nhanh vị trí trên lưới (liên kết với thẻ "Lô gan").
 - **Tooltip:** rê vào ô hiện "**Số NN · DD/MM · trạng thái**" (chưa về / về k lần / ⬩ Đề). Dữ liệu gắn trực tiếp trên từng ô nên luôn khớp đúng ô dưới con trỏ.
+- **Trỏ vào một hàng (số):** hàng đang trỏ **giữ nguyên màu**, còn **mọi hàng khác mờ đi như "chưa về"** (nền trong suốt + chấm mờ) — để soi nhanh lịch sử "về" của đúng một số qua các ngày. Thuần CSS, áp dụng cho cả chế độ đầy đủ lẫn gọn.
 - **Chế độ gọn:** hàng mỏng lại (~6px) và ô **chỉ còn màu, bỏ số**, để xem được nhiều ngày; **các hàng mốc 00,10,20,…,90 giữ dày (~18px)** làm "thước" định vị; bảng **bỏ giới hạn chiều cao để hiện đủ cả 100 số** (không cuộn dọc trong khung). Ô dùng **màu đặc, tươi sáng** (biến CSS `--k1..--k4,--kde`, mặc định xanh lá/xanh dương/vàng/cam/đỏ-hồng rực) để dễ nhìn — **chỉnh được** qua bộ "🎨 Thử màu ô"; còn **chế độ đầy đủ giữ nguyên** màu tinted nhạt cũ (`--c1..--c4`).
 - **Hiệu năng:** khoảng cực dài (vài năm) thì bảng nhiệt chỉ vẽ tối đa **750 cột gần nhất** cho mượt, nhưng **mọi bảng thống kê vẫn tính trên toàn bộ khoảng đã chọn**.
 
