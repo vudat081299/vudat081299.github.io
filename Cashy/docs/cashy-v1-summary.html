@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cashy v1.0 — Implementation Spec Summary</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --paper:        #f6f4ee;
+    --paper-2:      #efece4;
+    --ink:          #111111;
+    --ink-soft:     #2a2a28;
+    --ink-mute:     #6b6a64;
+    --ink-fade:     #a5a39b;
+    --rule:         #1c1c1a;
+    --rule-soft:    #d8d4c8;
+    --accent:       #1f6f43;
+    --accent-warm:  #b54420;
+    --accent-blue:  #2a4d8f;
+    --accent-amber: #c08a1f;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Manrope', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    letter-spacing: -0.005em;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+      radial-gradient(rgba(17,17,17,0.025) 1px, transparent 1px),
+      radial-gradient(rgba(17,17,17,0.015) 1px, transparent 1px);
+    background-size: 3px 3px, 7px 7px;
+    background-position: 0 0, 1px 1px;
+    mix-blend-mode: multiply;
+  }
+  .wrap { position: relative; z-index: 1; }
+
+  .serif { font-family: 'Instrument Serif', 'Times New Roman', serif; font-weight: 400; }
+  .mono  { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+  em { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; font-size: 1.08em; letter-spacing: 0; }
+
+  /* masthead */
+  header.masthead {
+    border-bottom: 1px solid var(--rule);
+    padding: 18px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 24px;
+    background: var(--paper);
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: blur(8px);
+  }
+  .masthead .logo { font-family: 'Instrument Serif', serif; font-size: 28px; letter-spacing: -0.02em; }
+  .masthead .logo span { font-style: italic; color: var(--accent); }
+  .masthead .meta {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--ink-mute);
+    display: flex;
+    gap: 22px;
+    align-items: baseline;
+  }
+  .masthead .meta b { color: var(--ink); font-weight: 600; }
+
+  /* hero */
+  .hero {
+    padding: 100px 40px 70px;
+    border-bottom: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 80px;
+    align-items: end;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .hero .eyebrow {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--ink-mute);
+    margin-bottom: 36px;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+  .hero .eyebrow::before { content: ""; width: 32px; height: 1px; background: var(--ink); }
+  .hero h1 {
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-size: clamp(48px, 7vw, 96px);
+    line-height: 0.98;
+    letter-spacing: -0.025em;
+  }
+  .hero h1 i { color: var(--accent); }
+  .hero .lede {
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 380px;
+    border-left: 1px solid var(--rule);
+    padding-left: 22px;
+  }
+  .hero .lede strong { font-weight: 600; }
+  .hero .lede em { color: var(--accent); }
+  .hero .lede code { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: var(--paper-2); padding: 1px 5px; border-radius: 3px; }
+
+  /* quick facts strip */
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-bottom: 1px solid var(--rule);
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .facts > div { padding: 28px 32px; border-right: 1px solid var(--rule-soft); }
+  .facts > div:last-child { border-right: none; }
+  .facts .k {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--ink-mute);
+    margin-bottom: 10px;
+  }
+  .facts .v {
+    font-family: 'Instrument Serif', serif;
+    font-size: 34px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .facts .v small { font-size: 14px; color: var(--ink-mute); margin-left: 4px; }
+  .facts .v i { color: var(--accent); }
+
+  /* folio */
+  .folio {
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+    padding: 70px 40px 28px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .folio .num { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink-mute); letter-spacing: 0.1em; }
+  .folio .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.24em; color: var(--ink); font-weight: 600; }
+  .folio .rule { flex: 1; height: 1px; background: var(--ink); }
+
+  .section { max-width: 1400px; margin: 0 auto; padding: 0 40px 40px; }
+  .section h2 {
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-size: clamp(36px, 4.5vw, 56px);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    margin-bottom: 30px;
+    max-width: 16ch;
+  }
+  .section h2 i { color: var(--accent); }
+  .section p.intro {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 64ch;
+    margin-bottom: 36px;
+  }
+
+  /* use cases */
+  .uc-wrap { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; }
+  .uc-group h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--ink-mute);
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--ink);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .uc-group h3 .count {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 2px 8px;
+    border-radius: 99px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+  .uc-list { list-style: none; padding: 0; }
+  .uc-list li {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 12px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--rule-soft);
+    font-size: 14.5px;
+    line-height: 1.45;
+  }
+  .uc-list li:last-child { border-bottom: none; }
+  .uc-list .code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 600;
+    padding-top: 2px;
+  }
+  .uc-list .desc { color: var(--ink-soft); }
+  .uc-list .desc i { color: var(--accent-amber); font-style: normal; font-size: 12.5px; font-family: 'JetBrains Mono', monospace; }
+
+  /* screens */
+  .screens {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--rule-soft);
+    border: 1px solid var(--rule-soft);
+  }
+  .screen { background: var(--paper); padding: 30px 22px; }
+  .screen .n {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 36px;
+    color: var(--ink-fade);
+    line-height: 1;
+    margin-bottom: 22px;
+    letter-spacing: -0.02em;
+  }
+  .screen h4 {
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-size: 23px;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin-bottom: 10px;
+  }
+  .screen p { font-size: 13.5px; color: var(--ink-mute); line-height: 1.55; }
+  .screen p b { color: var(--ink-soft); font-weight: 600; }
+
+  /* auth */
+  .auth-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1px;
+    background: var(--rule-soft);
+    border: 1px solid var(--rule-soft);
+  }
+  .auth-box { background: var(--paper); padding: 26px 22px; }
+  .auth-box .icon {
+    width: 36px; height: 36px;
+    border: 1px solid var(--ink);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    margin-bottom: 18px;
+    font-weight: 600;
+  }
+  .auth-box.accent .icon { background: var(--ink); color: var(--paper); }
+  .auth-box h4 {
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-size: 22px;
+    margin-bottom: 10px;
+  }
+  .auth-box p { font-size: 13.5px; color: var(--ink-mute); line-height: 1.55; }
+  .auth-box .tech { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 5px; }
+  .chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    padding: 3px 8px;
+    background: var(--paper-2);
+    border-radius: 4px;
+    color: var(--ink-soft);
+    border: 1px solid var(--rule-soft);
+  }
+  .recovery {
+    margin-top: 24px;
+    padding: 18px 22px;
+    background: rgba(181,68,32,0.05);
+    border-left: 3px solid var(--accent-warm);
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+  }
+  .recovery b { color: var(--accent-warm); font-weight: 700; }
+
+  /* tech stack */
+  .stack-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .stack-table th {
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--ink-mute);
+    font-weight: 500;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--ink);
+  }
+  .stack-table td {
+    padding: 13px 14px;
+    border-bottom: 1px solid var(--rule-soft);
+    vertical-align: top;
+  }
+  .stack-table tr:last-child td { border-bottom: 1px solid var(--ink); }
+  .stack-table .concern { color: var(--ink-mute); width: 30%; }
+  .stack-table .choice { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--ink); font-weight: 500; }
+
+  .reject-list { margin-top: 36px; border-top: 1px solid var(--ink); padding-top: 18px; }
+  .reject-list .head {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--accent-warm);
+    margin-bottom: 6px;
+  }
+  .reject-list .sub { font-size: 13.5px; color: var(--ink-mute); margin-bottom: 18px; font-style: italic; }
+  .reject-row {
+    display: grid;
+    grid-template-columns: 1fr 24px 1fr;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--rule-soft);
+    font-size: 14px;
+    gap: 14px;
+  }
+  .reject-row .x {
+    color: var(--accent-warm);
+    text-decoration: line-through;
+    text-decoration-thickness: 1px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+  }
+  .reject-row .arrow { color: var(--ink-fade); text-align: center; font-family: 'JetBrains Mono', monospace; }
+  .reject-row .v { color: var(--accent); font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; }
+
+  /* architecture */
+  .arch {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 50px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .arch::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(246,244,238,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(246,244,238,0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
+    pointer-events: none;
+  }
+  .arch-inner { position: relative; }
+  .arch h3 {
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-size: 34px;
+    margin-bottom: 8px;
+  }
+  .arch h3 i { color: #6ec48e; }
+  .arch .sub {
+    font-size: 13px;
+    color: rgba(246,244,238,0.55);
+    margin-bottom: 36px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .layers { display: flex; flex-direction: column; gap: 14px; max-width: 720px; margin: 0 auto; }
+  .layer {
+    background: rgba(246,244,238,0.06);
+    border: 1px solid rgba(246,244,238,0.15);
+    padding: 22px 28px;
+    border-radius: 6px;
+    display: grid;
+    grid-template-columns: 130px 1fr auto;
+    align-items: center;
+    gap: 24px;
+  }
+  .layer .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: rgba(246,244,238,0.6);
+  }
+  .layer .body { font-family: 'Instrument Serif', serif; font-size: 22px; letter-spacing: -0.01em; }
+  .layer .body small {
+    display: block;
+    font-family: 'Manrope', sans-serif;
+    font-size: 12.5px;
+    color: rgba(246,244,238,0.5);
+    margin-top: 4px;
+  }
+  .layer.domain { background: rgba(110,196,142,0.1); border-color: rgba(110,196,142,0.4); }
+  .layer.domain .label { color: #6ec48e; }
+  .layer .deps {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: rgba(246,244,238,0.5);
+    text-align: right;
+  }
+  .arrow-row { display: flex; justify-content: center; color: rgba(246,244,238,0.3); font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+  .tca-note {
+    margin-top: 32px;
+    padding: 18px 22px;
+    background: rgba(110,196,142,0.05);
+    border-left: 3px solid var(--accent);
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+  .tca-note b { color: var(--accent); font-weight: 700; }
+  .tca-note code { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; background: var(--paper-2); padding: 1px 5px; border-radius: 3px; }
+
+  /* DATA MODEL - hierarchy + M:N visuals */
+  .demo-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--rule-soft);
+    border: 1px solid var(--rule-soft);
+    margin-bottom: 40px;
+  }
+  .demo-box {
+    background: var(--paper);
+    padding: 26px 24px 30px;
+  }
+  .demo-box .demo-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--ink-mute);
+    margin-bottom: 20px;
+  }
+  .demo-box .demo-label b { color: var(--accent); font-weight: 700; }
+
+  /* tree visual */
+  .tree { display: flex; flex-direction: column; align-items: flex-start; }
+  .tree .tree-node {
+    background: var(--paper-2);
+    border: 1px solid var(--rule-soft);
+    padding: 9px 16px;
+    border-radius: 6px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--ink);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+  .tree .tree-node.root {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+  .tree .tree-node.root .meta { color: rgba(246,244,238,0.55); }
+  .tree .tree-node .meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    font-weight: 400;
+    color: var(--accent-warm);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .tree .tree-node .icon-bullet {
+    width: 18px; height: 18px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+  }
+  .tree .tree-children {
+    margin-left: 28px;
+    margin-top: 8px;
+    border-left: 1px dashed var(--ink-fade);
+    padding-left: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+  }
+  .tree .tree-children .tree-node {
+    position: relative;
+  }
+  .tree .tree-children .tree-node::before {
+    content: "";
+    position: absolute;
+    left: -18px;
+    top: 50%;
+    width: 14px;
+    height: 1px;
+    background: var(--ink-fade);
+  }
+  .demo-note {
+    margin-top: 18px;
+    font-size: 12.5px;
+    color: var(--ink-mute);
+    line-height: 1.6;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .demo-note code { color: var(--ink-soft); background: var(--paper-2); padding: 1px 5px; border-radius: 3px; }
+
+  /* multi-tag tx demo */
+  .tx-card {
+    background: var(--paper-2);
+    border: 1px solid var(--rule-soft);
+    padding: 18px 20px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+  }
+  .tx-card .tx-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 14px;
+  }
+  .tx-card .tx-name {
+    font-family: 'Instrument Serif', serif;
+    font-size: 18px;
+  }
+  .tx-card .tx-amount {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--accent-warm);
+    font-variant-numeric: tabular-nums;
+  }
+  .tx-card .tx-amount.income { color: var(--accent); }
+  .tx-card .tx-type-badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    padding: 2px 6px;
+    background: rgba(181,68,32,0.12);
+    color: var(--accent-warm);
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-right: 6px;
+    font-weight: 600;
+  }
+  .tx-card .tx-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .tx-card .tag {
+    font-family: 'Manrope', sans-serif;
+    font-size: 11.5px;
+    padding: 3px 9px;
+    background: var(--paper);
+    border: 1px solid var(--rule-soft);
+    border-radius: 99px;
+    color: var(--ink-soft);
+    font-weight: 500;
+  }
+  .tx-card .tag.parent { border-color: var(--ink); color: var(--ink); }
+  .tx-card .tag.pending {
+    background: rgba(192,138,31,0.1);
+    border-color: var(--accent-amber);
+    color: var(--accent-amber);
+    font-style: italic;
+  }
+
+  /* entity grid */
+  .data-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--rule-soft);
+    border: 1px solid var(--rule-soft);
+  }
+  .entity { background: var(--paper); padding: 22px 20px; }
+  .entity .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--ink);
+  }
+  .entity .name { font-family: 'Instrument Serif', serif; font-size: 22px; }
+  .entity .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    padding: 2px 7px;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 99px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .entity.future .tag { background: var(--paper); color: var(--ink-mute); border: 1px solid var(--rule); }
+  .entity.future .name { color: var(--ink-mute); font-style: italic; }
+  .entity ul {
+    list-style: none;
+    padding: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: var(--ink-soft);
+  }
+  .entity ul li { padding: 4px 0; border-bottom: 1px dashed var(--rule-soft); display: flex; gap: 8px; }
+  .entity ul li:last-child { border-bottom: none; }
+  .entity ul li .k { color: var(--ink-mute); width: 100px; flex-shrink: 0; }
+  .entity ul li.pk .k::before { content: "🔑 "; }
+  .entity ul li.fk .k::before { content: "→ "; color: var(--accent-blue); }
+  .entity ul li.new { background: rgba(31,111,67,0.08); margin: 0 -6px; padding: 4px 6px; border-radius: 3px; }
+  .entity ul li.new .k::after { content: " ✱"; color: var(--accent); }
+
+  /* pending callout */
+  .pending-callout {
+    margin-top: 40px;
+    padding: 32px 36px;
+    background: rgba(192,138,31,0.07);
+    border-left: 4px solid var(--accent-amber);
+    border-radius: 0 6px 6px 0;
+  }
+  .pending-callout h3 {
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-size: 32px;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .pending-callout h3 i { color: var(--accent-amber); }
+  .pending-callout .sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--accent-amber);
+    margin-bottom: 22px;
+  }
+  .pending-callout .roles {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 20px;
+  }
+  .pending-callout .role-card {
+    background: var(--paper);
+    padding: 22px 24px;
+    border-radius: 6px;
+    border: 1px solid rgba(192,138,31,0.25);
+  }
+  .pending-callout .role-card .role-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--accent-amber);
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  .pending-callout .role-card .role-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    line-height: 1.15;
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+  }
+  .pending-callout .role-card p { font-size: 13.5px; color: var(--ink-soft); line-height: 1.6; }
+  .pending-callout .role-card p code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: var(--paper-2);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+
+  /* mixed-type note */
+  .mixed-note {
+    margin-top: 28px;
+    padding: 18px 22px;
+    background: rgba(42,77,143,0.05);
+    border-left: 3px solid var(--accent-blue);
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+  .mixed-note b { color: var(--accent-blue); font-weight: 700; }
+  .mixed-note code { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; background: var(--paper-2); padding: 1px 5px; border-radius: 3px; }
+
+  /* stats */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+  }
+  .stat { padding: 28px 22px; border-right: 1px solid var(--rule-soft); }
+  .stat:last-child { border-right: none; }
+  .stat .v {
+    font-family: 'Instrument Serif', serif;
+    font-size: 48px;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    margin-bottom: 10px;
+  }
+  .stat .v small { font-size: 18px; color: var(--ink-mute); margin-left: 4px; }
+  .stat .v i { color: var(--accent); }
+  .stat .k {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--ink-mute);
+  }
+
+  /* do / don't */
+  .rules { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--ink); }
+  .rules > div { padding: 32px 28px; }
+  .rules .do { border-right: 1px solid var(--ink); background: rgba(31,111,67,0.04); }
+  .rules .dont { background: rgba(181,68,32,0.04); }
+  .rules h3 { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 32px; margin-bottom: 4px; }
+  .rules .do h3 i { color: var(--accent); }
+  .rules .dont h3 i { color: var(--accent-warm); }
+  .rules .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--ink-mute);
+    margin-bottom: 22px;
+    display: block;
+  }
+  .rules ul { list-style: none; padding: 0; }
+  .rules ul li {
+    padding: 11px 0 11px 24px;
+    border-top: 1px solid var(--rule-soft);
+    font-size: 14.5px;
+    line-height: 1.5;
+    position: relative;
+  }
+  .rules ul li::before {
+    position: absolute;
+    left: 0; top: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .rules .do ul li::before { content: "+"; color: var(--accent); }
+  .rules .dont ul li::before { content: "×"; color: var(--accent-warm); }
+  .rules ul li:first-child { border-top: 1px solid var(--ink); }
+  .rules ul li code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    background: var(--paper-2);
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+
+  .vision-ref {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 28px 40px;
+    border-top: 1px solid var(--rule-soft);
+    font-size: 13.5px;
+    color: var(--ink-mute);
+    line-height: 1.6;
+    font-style: italic;
+  }
+  .vision-ref b { font-style: normal; color: var(--ink); font-weight: 600; }
+  .vision-ref code {
+    font-family: 'JetBrains Mono', monospace;
+    font-style: normal;
+    font-size: 12.5px;
+    background: var(--paper-2);
+    padding: 1px 6px;
+    border-radius: 3px;
+    color: var(--ink-soft);
+  }
+
+  /* footer */
+  footer { padding: 60px 40px 40px; text-align: center; background: var(--ink); color: var(--paper); }
+  footer .mark { font-family: 'Instrument Serif', serif; font-size: 56px; letter-spacing: -0.03em; margin-bottom: 14px; }
+  footer .mark i { color: #6ec48e; }
+  footer .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: rgba(246,244,238,0.55);
+  }
+  footer .colophon {
+    margin-top: 36px;
+    font-size: 12px;
+    color: rgba(246,244,238,0.45);
+    max-width: 600px;
+    margin-left: auto; margin-right: auto;
+    line-height: 1.7;
+  }
+  footer code { font-family: 'JetBrains Mono', monospace; color: rgba(246,244,238,0.7); }
+
+  /* responsive */
+  @media (max-width: 1024px) {
+    .hero { grid-template-columns: 1fr; gap: 40px; padding: 70px 32px 60px; }
+    .facts, .auth-grid, .data-grid, .stats, .demo-row, .pending-callout .roles { grid-template-columns: repeat(2, 1fr); }
+    .uc-wrap { grid-template-columns: 1fr; }
+    .screens { grid-template-columns: repeat(2, 1fr); }
+    .section, .folio, .vision-ref { padding-left: 32px; padding-right: 32px; }
+  }
+  @media (max-width: 640px) {
+    body { font-size: 15px; }
+    header.masthead { padding: 14px 20px; flex-wrap: wrap; gap: 12px; }
+    .masthead .meta { gap: 12px; font-size: 10px; }
+    .facts, .auth-grid, .data-grid, .stats, .screens, .rules, .demo-row, .pending-callout .roles { grid-template-columns: 1fr; }
+    .rules .do { border-right: none; border-bottom: 1px solid var(--ink); }
+    .layer { grid-template-columns: 1fr; gap: 8px; }
+    .layer .deps { text-align: left; }
+    .section, .folio, .hero, .vision-ref { padding-left: 20px; padding-right: 20px; }
+    .hero { padding-top: 50px; padding-bottom: 40px; }
+    .reject-row { grid-template-columns: 1fr; gap: 4px; }
+    .reject-row .arrow { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="masthead">
+  <div class="logo">Cashy<span>.</span></div>
+  <div class="meta">
+    <span><b>v1.0</b> Implementation Spec</span>
+    <span>iOS 18.4+</span>
+    <span>Solo · Đạt</span>
+    <span>2026</span>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <div class="eyebrow">Bản tóm tắt spec · v1.0</div>
+    <h1>Implementation<br/><i>Spec</i> tóm tắt.</h1>
+  </div>
+  <p class="lede">
+    Spec triển khai cho v1.0 — <strong>21 use cases · 6 màn hình · Modular layered + MVVM</strong>. Tài liệu này version-specific. Tư tưởng dài hạn xem <code>cashy-vision.md</code> — <em>phải đọc trước file này</em>. Khi spec và vision mâu thuẫn, vision thắng.
+  </p>
+</section>
+
+<!-- QUICK FACTS -->
+<div class="facts">
+  <div><div class="k">Use cases</div><div class="v"><i>21</i></div></div>
+  <div><div class="k">Màn hình chính</div><div class="v"><i>6</i></div></div>
+  <div><div class="k">Min iOS</div><div class="v">18.4<small>+</small></div></div>
+  <div><div class="k">Language</div><div class="v">Swift<small>&nbsp;6.2</small></div></div>
+</div>
+
+<!-- USE CASES -->
+<div class="folio">
+  <span class="num">§ 01</span>
+  <span class="label">Scope · 21 use cases</span>
+  <span class="rule"></span>
+</div>
+<section class="section">
+  <h2>Đúng <i>21 thứ</i> và không hơn.</h2>
+
+  <div class="uc-wrap">
+    <div class="uc-group">
+      <h3>Authentication &amp; Security <span class="count">6</span></h3>
+      <ul class="uc-list">
+        <li><span class="code">UC-01</span><span class="desc">Đăng nhập qua Apple</span></li>
+        <li><span class="code">UC-02</span><span class="desc">Đăng nhập qua Google</span></li>
+        <li><span class="code">UC-03</span><span class="desc">Đăng nhập Email + Password (local, không server)</span></li>
+        <li><span class="code">UC-04</span><span class="desc">Set / Change PIN (4 hoặc 6 chữ số)</span></li>
+        <li><span class="code">UC-05</span><span class="desc">Quick unlock app bằng PIN</span></li>
+        <li><span class="code">UC-06</span><span class="desc">Quick unlock bằng Face ID / Touch ID</span></li>
+      </ul>
+    </div>
+
+    <div class="uc-group">
+      <h3>Transaction <span class="count">4</span></h3>
+      <ul class="uc-list">
+        <li><span class="code">UC-07</span><span class="desc">Thêm transaction (type, amount, multi-categories, note) <br><i>quick-entry: chỉ amount + type → categories = [Pending]</i></span></li>
+        <li><span class="code">UC-08</span><span class="desc">Sửa transaction</span></li>
+        <li><span class="code">UC-09</span><span class="desc">Xóa transaction</span></li>
+        <li><span class="code">UC-10</span><span class="desc">Xem detail transaction</span></li>
+      </ul>
+    </div>
+
+    <div class="uc-group">
+      <h3>Category <span class="count">3</span></h3>
+      <ul class="uc-list">
+        <li><span class="code">UC-11</span><span class="desc">Thêm category (tùy chọn parent — nil = root)</span></li>
+        <li><span class="code">UC-12</span><span class="desc">Sửa category (có thể move parent)</span></li>
+        <li><span class="code">UC-13</span><span class="desc">Xóa custom category — cascade children <br><i>orphan transactions → fallback Pending</i></span></li>
+      </ul>
+    </div>
+
+    <div class="uc-group">
+      <h3>Query <span class="count">2</span></h3>
+      <ul class="uc-list">
+        <li><span class="code">UC-14</span><span class="desc">Query transactions (filter: period, type, category, sort) <br><i>category filter có 2 mode: roll-up / strict</i></span></li>
+        <li><span class="code">UC-15</span><span class="desc">Query categories (filter: type, root-only/all)</span></li>
+      </ul>
+    </div>
+
+    <div class="uc-group" style="grid-column: 1 / -1;">
+      <h3>Settings <span class="count">6</span></h3>
+      <ul class="uc-list" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 40px;">
+        <li><span class="code">UC-16</span><span class="desc">Đổi profile (avatar, display name)</span></li>
+        <li><span class="code">UC-17</span><span class="desc">Đổi theme (dark / light / system)</span></li>
+        <li><span class="code">UC-18</span><span class="desc">Toggle Face ID lock</span></li>
+        <li><span class="code">UC-19</span><span class="desc">Export CSV (multi-category → pipe-separated)</span></li>
+        <li><span class="code">UC-20</span><span class="desc">Logout</span></li>
+        <li><span class="code">UC-21</span><span class="desc">Delete account (Guideline 5.1.1v)</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 4 SCREENS -->
+<div class="folio">
+  <span class="num">§ 02</span>
+  <span class="label">6 màn hình chính</span>
+  <span class="rule"></span>
+</div>
+<section class="section">
+  <h2>Sáu màn hình <i>chính</i>.</h2>
+
+  <div class="screens">
+    <div class="screen">
+      <div class="n">01</div>
+      <h4>Đăng nhập</h4>
+      <p>Entry khi chưa có session. 3 options: <b>Apple</b> (Tier 2, primary per Guideline 4.8), <b>Google</b>, và form <b>Email + Password</b>. Link "Đăng ký" cho user chưa có account.</p>
+    </div>
+    <div class="screen">
+      <div class="n">02</div>
+      <h4>Đăng ký</h4>
+      <p>Chỉ cho email + password flow. Apple/Google auto-create account khi sign in lần đầu. Fields: email, password, confirm password, displayName. Sau đó → <b>PIN setup embedded</b> → Tổng quan.</p>
+    </div>
+    <div class="screen">
+      <div class="n">03</div>
+      <h4>Tổng quan / Statistics</h4>
+      <p>Dashboard chính. Balance, charts spending, top categories, trend. Filter linh hoạt theo period/type/category. <b>Toggle Roll-up / Strict</b> khi filter theo parent category.</p>
+    </div>
+    <div class="screen">
+      <div class="n">04</div>
+      <h4>Settings</h4>
+      <p>Profile, theme, security (Face ID, change PIN), export CSV, logout, delete account, about &amp; privacy policy.</p>
+    </div>
+    <div class="screen">
+      <div class="n">05</div>
+      <h4>Add / Edit Transaction</h4>
+      <p><b>Type (income/expense)</b> chọn trước (Tier 1 button), amount (Decimal), <b>multi-select categories</b> (hierarchy picker — expand parent thấy children), occurredAt, note.</p>
+    </div>
+    <div class="screen">
+      <div class="n">06</div>
+      <h4>Add / Edit Category</h4>
+      <p>Name, type (income/expense), icon (SF Symbol/emoji), color, <b>parent (optional — nil cho root)</b>. System categories không xóa được.</p>
+    </div>
+  </div>
+</section>
+
+<!-- AUTH & SECURITY -->
+<div class="folio">
+  <span class="num">§ 03</span>
+  <span class="label">Authentication &amp; Security</span>
+  <span class="rule"></span>
+</div>
+<section class="section">
+  <h2>Ba lớp <i>bảo mật</i>.</h2>
+
+  <div class="auth-grid">
+    <div class="auth-box accent">
+      <div class="icon">A</div>
+      <h4>Providers</h4>
+      <p>Sign in with Apple bắt buộc per Guideline 4.8. Email + Password local — không server, password lưu Keychain với <code class="mono">.userPresence</code>.</p>
+      <div class="tech">
+        <span class="chip">AuthenticationServices</span>
+        <span class="chip">GoogleSignIn 7.x</span>
+        <span class="chip">Keychain</span>
+      </div>
+    </div>
+    <div class="auth-box">
+      <div class="icon">P</div>
+      <h4>PIN</h4>
+      <p>4 hoặc 6 chữ số (user chọn). Hash SHA-256 + per-install salt, lưu Keychain. Gắn với account. Change yêu cầu verify old PIN.</p>
+      <div class="tech">
+        <span class="chip">CryptoKit</span>
+        <span class="chip">SHA-256</span>
+        <span class="chip">Keychain</span>
+      </div>
+    </div>
+    <div class="auth-box">
+      <div class="icon">B</div>
+      <h4>Face ID / Touch ID</h4>
+      <p>Qua LocalAuthentication. Gắn với app, không gắn account. Device-level verify, fallback PIN nếu fail.</p>
+      <div class="tech">
+        <span class="chip">LocalAuthentication</span>
+        <span class="chip">Per-app</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="recovery">
+    <b>Password recovery:</b> v1 không hỗ trợ. User quên password → (a) dùng Apple/Google làm alternative, hoặc (b) delete + reinstall (mất data). Có thể reconsider ở v2+.
+  </div>
+</section>
+
+<!-- TECH STACK -->
+<div class="folio">
+  <span class="num">§ 04</span>
+  <span class="label">Tech Stack v1</span>
+  <span class="rule"></span>
+</div>
+<section class="section">
+  <h2>Core <i>stack</i>.</h2>
+
+  <table class="stack-table">
+    <thead><tr><th>Concern</th><th>Choice</th></tr></thead>
+    <tbody>
+      <tr><td class="concern">Minimum iOS</td><td class="choice">iOS 18.4</td></tr>
+      <tr><td class="concern">Language</td><td class="choice">Swift 6.2 (strict concurrency)</td></tr>
+      <tr><td class="concern">UI</td><td class="choice">SwiftUI + @Observable</td></tr>
+      <tr><td class="concern">Local persistence</td><td class="choice">SwiftData + @ModelActor</td></tr>
+      <tr><td class="concern">Secure storage</td><td class="choice">Keychain (Security.framework)</td></tr>
+      <tr><td class="concern">Crypto</td><td class="choice">CryptoKit — SHA-256 + salt</td></tr>
+      <tr><td class="concern">Charts</td><td class="choice">Swift Charts</td></tr>
+      <tr><td class="concern">Auth providers</td><td class="choice">AuthenticationServices · GoogleSignIn 7.x · Keychain</td></tr>
+      <tr><td class="concern">Biometric</td><td class="choice">LocalAuthentication</td></tr>
+      <tr><td class="concern">DI</td><td class="choice">AppContainer + @Environment</td></tr>
+      <tr><td class="concern">Localization</td><td class="choice">String Catalog (.xcstrings)</td></tr>
+      <tr><td class="concern">Testing</td><td class="choice">Swift Testing + InMemory adapter</td></tr>
+      <tr><td class="concern">Crash reporting</td><td class="choice">Sentry (opt-in)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="reject-list">
+    <div class="head">Vision rejection list → cụ thể trong v1</div>
+    <div class="sub">Vision đã reject các stack/lib này — đây là cách v1 thay thế.</div>
+    <div class="reject-row"><span class="x">Combine</span><span class="arrow">→</span><span class="v">async/await</span></div>
+    <div class="reject-row"><span class="x">CoreData</span><span class="arrow">→</span><span class="v">SwiftData (iOS 18.4+)</span></div>
+    <div class="reject-row"><span class="x">ObservableObject</span><span class="arrow">→</span><span class="v">@Observable</span></div>
+    <div class="reject-row"><span class="x">UIKit</span><span class="arrow">→</span><span class="v">SwiftUI only</span></div>
+    <div class="reject-row"><span class="x">Factory / Resolver</span><span class="arrow">→</span><span class="v">@Environment + AppContainer</span></div>
+    <div class="reject-row"><span class="x">CryptoSwift / Argon2id / bcrypt</span><span class="arrow">→</span><span class="v">CryptoKit + Keychain HW-backed</span></div>
+    <div class="reject-row"><span class="x">DGCharts</span><span class="arrow">→</span><span class="v">Swift Charts</span></div>
+    <div class="reject-row"><span class="x">PBKDF2</span><span class="arrow">→</span><span class="v">Keychain HW-backed đã encrypt</span></div>
+  </div>
+</section>
+
+<!-- ARCHITECTURE -->
+<div class="folio">
+  <span class="num">§ 05</span>
+  <span class="label">Architecture v1</span>
+  <span class="rule"></span>
+</div>
+<section class="section">
+  <h2>Modular layered <i>+</i> MVVM.</h2>
+  <p class="intro">MVVM first cho mọi feature (per vision §3 code principle), trong khung Modular layered architecture với 3 layer Presentation / Domain / Data. Refactor lên TCA khi feature explosion — 21 UC + 6 màn hình chưa đủ phức tạp.</p>
+
+  <div class="arch">
+    <div class="arch-inner">
+      <h3>Dependencies <i>point inward</i>.</h3>
+      <div class="sub">Domain ở trung tâm — pure Swift, không phụ thuộc framework.</div>
+
+      <div class="layers">
+        <div class="layer">
+          <div class="label">Layer 01</div>
+          <div class="body">Presentation
+            <small>SwiftUI Views + ViewModels (@Observable). Gọi qua Domain protocol, không touch Data layer trực tiếp.</small>
+          </div>
+          <div class="deps">depends on<br/>Domain</div>
+        </div>
+        <div class="arrow-row">▼</div>
+        <div class="layer domain">
+          <div class="label">Layer 02 · Core</div>
+          <div class="body">Domain
+            <small>Entities · Business logic · Repository protocols. Chỉ Foundation + stdlib. KHÔNG import SwiftData/Keychain.</small>
+          </div>
+          <div class="deps">depended on by<br/>Presentation &amp; Data</div>
+        </div>
+        <div class="arrow-row">▲</div>
+        <div class="layer">
+          <div class="label">Layer 03</div>
+          <div class="body">Data
+            <small>Repository impl · SwiftData · Keychain · CryptoKit · Auth. Implement Domain protocols.</small>
+          </div>
+          <div class="deps">depends on<br/>Domain</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tca-note">
+    <b>Path upgrade lên TCA:</b> khi scale đủ lớn, Domain logic → TCA Reducers (logic giữ nguyên, wrap lại). <code>@Observable</code> ViewModels → TCA Stores. Repository protocols giữ nguyên. Migration là <em>wrap lại</em>, không phải rewrite — đây là lý do chọn Modular layered + MVVM cho v1.
+  </div>
+</section>
+
+<!-- DATA MODEL -->
+<div class="folio">
+  <span class="num">§ 06</span>
+  <span class="label">Data Model</span>
+  <span class="rule"></span>
+</div>
+<section class="section">
+  <h2>Categories lồng nhau, transactions <i>multi-tag</i>.</h2>
+  <p class="intro">Category có tree hierarchy qua <code class="mono">parentId</code> self-ref. Transaction gắn nhiều categories (M:N) ở bất kỳ level. <code class="mono">Transaction.type</code> explicit (income/expense) — source of truth cho hướng dòng tiền.</p>
+
+  <!-- HIERARCHY + M:N VISUAL -->
+  <div class="demo-row">
+    <div class="demo-box">
+      <div class="demo-label">Hierarchy · <b>Category.parentId</b> self-ref</div>
+      <div class="tree">
+        <div class="tree-node root">Sức khỏe <span class="meta">expense</span></div>
+        <div class="tree-children">
+          <div class="tree-node">Thể thao</div>
+          <div class="tree-node">Khám sức khỏe</div>
+          <div class="tree-node">Thuốc &amp; vitamins</div>
+        </div>
+      </div>
+      <div class="demo-note">
+        <code>parentId = nil</code> → root.<br/>
+        <code>parentId → Category</code> → child.<br/>
+        Unlimited depth ở schema (UX soft-limit ≤ 3 nếu cần).
+      </div>
+    </div>
+
+    <div class="demo-box">
+      <div class="demo-label">Multi-tag · <b>Transaction.categories[]</b></div>
+      <div class="tx-card">
+        <div class="tx-line">
+          <span class="tx-name">Mua giày chạy bộ</span>
+          <span class="tx-amount"><span class="tx-type-badge">Expense</span>− 1.250.000 đ</span>
+        </div>
+        <div class="tx-tags">
+          <span class="tag parent">Sức khỏe</span>
+          <span class="tag">Thể thao</span>
+          <span class="tag">Mua sắm</span>
+        </div>
+      </div>
+      <div class="tx-card">
+        <div class="tx-line">
+          <span class="tx-name">Mới chỉ nhập amount</span>
+          <span class="tx-amount"><span class="tx-type-badge">Expense</span>− 30.000 đ</span>
+        </div>
+        <div class="tx-tags">
+          <span class="tag pending">Chưa phân loại</span>
+        </div>
+      </div>
+      <div class="demo-note">
+        Một transaction gắn ≥ 1 categories, ở bất kỳ level.<br/>
+        Quick-entry không chọn → fallback <code>Pending</code>.
+      </div>
+    </div>
+  </div>
+
+  <!-- ENTITY CARDS -->
+  <div class="data-grid">
+    <div class="entity">
+      <div class="head"><span class="name">User</span><span class="tag">active</span></div>
+      <ul>
+        <li class="pk"><span class="k">id</span><span>UUID</span></li>
+        <li><span class="k">email?</span><span>String?</span></li>
+        <li><span class="k">passwordHash?</span><span>String?</span></li>
+        <li><span class="k">pinHash?</span><span>String?</span></li>
+        <li><span class="k">authProvider</span><span>enum</span></li>
+        <li><span class="k">displayName</span><span>String</span></li>
+        <li><span class="k">currency</span><span>String</span></li>
+        <li><span class="k">avatarPath?</span><span>String?</span></li>
+        <li><span class="k">createdAt</span><span>Date</span></li>
+      </ul>
+    </div>
+
+    <div class="entity">
+      <div class="head"><span class="name">Category</span><span class="tag">active · tree</span></div>
+      <ul>
+        <li class="pk"><span class="k">id</span><span>UUID</span></li>
+        <li class="fk"><span class="k">userId</span><span>User</span></li>
+        <li class="fk new"><span class="k">parentId?</span><span>Category</span></li>
+        <li><span class="k">name</span><span>String</span></li>
+        <li><span class="k">type</span><span>income/expense</span></li>
+        <li><span class="k">iconName</span><span>SF Symbol</span></li>
+        <li><span class="k">colorHex</span><span>String</span></li>
+        <li><span class="k">isSystem</span><span>Bool</span></li>
+      </ul>
+    </div>
+
+    <div class="entity">
+      <div class="head"><span class="name">Transaction</span><span class="tag">active · M:N</span></div>
+      <ul>
+        <li class="pk"><span class="k">id</span><span>UUID</span></li>
+        <li class="fk"><span class="k">userId</span><span>User</span></li>
+        <li class="new"><span class="k">type</span><span>income/expense</span></li>
+        <li><span class="k">amount</span><span>Decimal +</span></li>
+        <li><span class="k">occurredAt</span><span>Date</span></li>
+        <li><span class="k">note?</span><span>String?</span></li>
+        <li class="fk new"><span class="k">categories[]</span><span>[Category]</span></li>
+      </ul>
+    </div>
+
+    <div class="entity future">
+      <div class="head"><span class="name">Budget</span><span class="tag">v1.1 ready</span></div>
+      <ul>
+        <li class="pk"><span class="k">id</span><span>UUID</span></li>
+        <li class="fk"><span class="k">categoryId</span><span>Category</span></li>
+        <li><span class="k">limitAmount</span><span>Decimal</span></li>
+        <li><span class="k">period</span><span>monthly/weekly</span></li>
+        <li><span class="k">startDate</span><span>Date</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PENDING CALLOUT -->
+  <div class="pending-callout">
+    <div class="sub">System fallback category</div>
+    <h3>"Pending" — <i>Chưa phân loại</i>.</h3>
+    <p style="font-size: 15px; color: var(--ink-soft); max-width: 70ch;">
+      Một system category đặc biệt (<code class="mono" style="font-size:13px;background:var(--paper-2);padding:1px 5px;border-radius:3px;">isSystem: true</code>, name "Chưa phân loại", icon <code class="mono" style="font-size:13px;background:var(--paper-2);padding:1px 5px;border-radius:3px;">questionmark.circle</code>, color gray) seed cho mọi user lúc account tạo. Không xóa được. Có hai vai trò:
+    </p>
+
+    <div class="roles">
+      <div class="role-card">
+        <div class="role-label">Role 01 · Quick-entry default</div>
+        <div class="role-title">Nhập nhanh, hoàn tất sau.</div>
+        <p>User mở app, tap "+", nhập amount + type, lưu nhanh (chưa chọn category) → transaction tự gán <code>categories = [Pending]</code>. Tối về nhà, user mở lại để gán category thật.</p>
+      </div>
+      <div class="role-card">
+        <div class="role-label">Role 02 · Orphan fallback</div>
+        <div class="role-title">Invariant: transaction luôn có ≥ 1 category.</div>
+        <p>Khi user xóa category, SwiftData M:N tự remove khỏi <code>transaction.categories</code>. Nếu sau cleanup <code>categories.isEmpty</code> → repository tự thêm Pending. Transactions không bao giờ mồ côi.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MIXED-TYPE NOTE -->
+  <div class="mixed-note">
+    <b>Mixed-type categories:</b> vì <code>Transaction.type</code> explicit và <code>Category.type</code> chỉ để classify UI, một transaction có thể gắn categories có type khác nhau. Stats dùng <code>Transaction.type</code> là source of truth. Open question (defer v2): có nên cho phép mix tự do hay restrict — revisit khi có data thực tế.
+  </div>
+</section>
+
+<!-- CONSTRAINTS -->
+<div class="folio">
+  <span class="num">§ 07</span>
+  <span class="label">Constraint kỹ thuật v1</span>
+  <span class="rule"></span>
+</div>
+<section class="section">
+  <h2>Số cứng <i>không thỏa hiệp</i>.</h2>
+
+  <div class="stats">
+    <div class="stat"><div class="v">18.4<small>+</small></div><div class="k">iOS minimum</div></div>
+    <div class="stat"><div class="v">&lt; <i>50</i><small>MB</small></div><div class="k">App size</div></div>
+    <div class="stat"><div class="v">&lt; <i>2</i><small>s</small></div><div class="k">Cold start</div></div>
+    <div class="stat"><div class="v"><i>0</i></div><div class="k">Backend v1</div></div>
+  </div>
+
+  <p class="intro" style="margin-top: 36px;">
+    <strong>Target devices:</strong> iPhone (iPad scaled, không tối ưu).
+    <br/><br/>
+    <strong>Offline-first:</strong> bắt buộc — mọi tính năng phải hoạt động không cần network.
+    <br/><br/>
+    <strong>Currency v1:</strong> <em>VND only</em>, không thập phân. Format <code class="mono">1.000.000 đ</code> (VN locale), dùng <code class="mono">Decimal</code>. Schema giữ field <code class="mono">User.currency</code> (default <code class="mono">"VND"</code>) để future-proof — UI không expose lựa chọn ở v1. Multi-currency và các currency khác defer cho version sau.
+  </p>
+</section>
+
+<!-- DO / DON'T -->
+<div class="folio">
+  <span class="num">§ 08</span>
+  <span class="label">Appendix · DO / DON'T cho v1</span>
+  <span class="rule"></span>
+</div>
+<section class="section" style="padding-bottom: 50px;">
+  <h2>Khi <i>code</i> Cashy v1.</h2>
+
+  <div class="rules">
+    <div class="do">
+      <h3><i>Do</i></h3>
+      <span class="tag">Luôn áp dụng</span>
+      <ul>
+        <li>Dùng <code>SwiftUI</code> + <code>SwiftData</code> + <code>@Observable</code> + Swift 6.2 strict concurrency</li>
+        <li>Tuân thủ <b>Modular layered + MVVM</b>: Presentation ↔ Domain ↔ Data, dependency point inward</li>
+        <li>Repository pattern qua protocol — không bao giờ gọi SwiftData/Keychain trực tiếp từ Presentation</li>
+        <li>Password → Keychain trực tiếp (HW-backed). PIN → SHA-256 + salt rồi lưu Keychain</li>
+        <li>Face ID qua LocalAuthentication, gắn với app</li>
+        <li>SwiftData operations qua <code>@ModelActor</code> cho concurrency safety</li>
+        <li>Money = <code>Decimal</code>, không Double</li>
+        <li><b>Transaction.type explicit</b> (income/expense) — không derive từ Category.type</li>
+        <li><b>Quick-entry default</b> → <code>categories = [Pending]</code> nếu user không chọn</li>
+        <li><b>Invariant:</b> transaction luôn có ≥ 1 category; cleanup <code>isEmpty</code> → tự gán Pending</li>
+        <li><b>Cascade delete</b> parent category → children (SwiftData <code>@Relationship(deleteRule: .cascade)</code>)</li>
+        <li><b>Stats roll-up toggle</b> trong UI — default ON khi filter parent category</li>
+        <li>Async/await thay vì closure</li>
+      </ul>
+    </div>
+    <div class="dont">
+      <h3><i>Don't</i></h3>
+      <span class="tag">Không bao giờ</span>
+      <ul>
+        <li>Không import <code>SwiftData</code>/<code>Keychain</code> trong Domain layer</li>
+        <li>Không dùng <code>Combine</code>, <code>ObservableObject</code></li>
+        <li>Không dùng UIKit khi có thể dùng SwiftUI</li>
+        <li>Không thêm feature ngoài 21 UC mà chưa thảo luận</li>
+        <li>Không kết nối network mặc định</li>
+        <li>Không add analytics, ads, tracking</li>
+        <li>Không dùng external crypto lib</li>
+        <li>Không tự xử lý password recovery — v1 không support</li>
+        <li><b>Không cho xóa Pending</b> (cũng như mọi <code>isSystem</code> category)</li>
+        <li><b>Không derive Transaction.type từ categories</b> — luôn dùng explicit field</li>
+        <li><b>Không hardcode depth limit</b> trong schema — soft limit ở UI nếu cần</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- VISION REFERENCE -->
+<div class="vision-ref">
+  <b>Standards chung</b> (Accessibility, Language, Data integrity, Compliance, Data portability) → xem <code>cashy-vision.md §4</code>. <b>Code principles</b> (Modular layered, Repository pattern, Component-First Composition, OOP + SOLID, Simple/clean code, MVVM-first) → xem <code>cashy-vision.md §3 + §5</code>. Spec này chỉ chứa <em>version-specific content</em> cho v1.
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="mark">Cashy<i>.</i></div>
+  <div class="tag">v1.0 Spec Summary · iOS 18.4+ · 2026</div>
+  <div class="colophon">
+    Bản tóm tắt từ <code>cashy-v1-spec.md</code>. Khi spec và vision mâu thuẫn, vision thắng. Khi có doubt: đọc lại <code>cashy-vision.md</code> §3 Principles + §4 Standards, check 21 UC scope, hỏi user thay vì đoán.
+  </div>
+</footer>
+
+</div>
+</body>
+</html>

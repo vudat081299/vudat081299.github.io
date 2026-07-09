@@ -1,0 +1,1673 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="description" content="Cashy — Quản lý & thống kê chi tiêu cá nhân. Offline-first, dữ liệu ở trên máy bạn." />
+<meta name="theme-color" content="#ffffff" />
+<title>Cashy — Quản lý chi tiêu cá nhân</title>
+<style>
+/* =========================================================================
+   Cashy Web — Design tokens
+   Aligned với cashy-vision.md: minimalism, trắng/đen chủ đạo, semantic colors
+   (income→green, expense→red, action→blue), tabular numbers, dark/light polish.
+   Notion-inspired surface & typography.
+   ========================================================================= */
+:root {
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "SF Pro Text", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-mono: "SF Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --r-sm: 6px;  --r-md: 8px;  --r-lg: 12px;  --r-xl: 16px;  --r-full: 999px;
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 20px; --sp-6: 24px; --sp-8: 32px; --sp-10: 40px;
+
+  --dur: .16s;
+  --ease: cubic-bezier(.22,.61,.36,1);
+  --shadow-sm: 0 1px 2px rgba(15,15,15,.06), 0 1px 3px rgba(15,15,15,.05);
+  --shadow-md: 0 4px 12px rgba(15,15,15,.10), 0 2px 4px rgba(15,15,15,.06);
+  --shadow-lg: 0 12px 32px rgba(15,15,15,.16), 0 4px 10px rgba(15,15,15,.08);
+}
+
+/* ---- Light theme (Notion paper) ---- */
+:root, [data-theme="light"] {
+  color-scheme: light;
+  --bg: #ffffff;
+  --bg-elev: #ffffff;
+  --bg-sidebar: #fbfbfa;
+  --bg-inset: #f7f7f5;
+  --bg-hover: rgba(55,53,47,.055);
+  --bg-active: rgba(55,53,47,.09);
+  --border: rgba(55,53,47,.10);
+  --border-strong: rgba(55,53,47,.18);
+  --text: #37352f;
+  --text-2: #6b6a64;
+  --text-3: #9b9a97;
+  --accent: #2383e2;
+  --accent-soft: rgba(35,131,226,.12);
+  --income: #1a8f6b;
+  --income-soft: rgba(26,143,107,.13);
+  --expense: #e0483d;
+  --expense-soft: rgba(224,72,61,.12);
+  --amber: #cb8a14;
+  --overlay: rgba(15,15,15,.35);
+}
+
+/* ---- Dark theme (Notion dark) ---- */
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #1f1f1f;
+  --bg-elev: #262626;
+  --bg-sidebar: #1a1a1a;
+  --bg-inset: #2a2a2a;
+  --bg-hover: rgba(255,255,255,.055);
+  --bg-active: rgba(255,255,255,.10);
+  --border: rgba(255,255,255,.10);
+  --border-strong: rgba(255,255,255,.18);
+  --text: #e9e9e7;
+  --text-2: #a6a6a2;
+  --text-3: #757571;
+  --accent: #529cca;
+  --accent-soft: rgba(82,156,202,.18);
+  --income: #4dab8f;
+  --income-soft: rgba(77,171,143,.16);
+  --expense: #ff7369;
+  --expense-soft: rgba(255,115,105,.16);
+  --amber: #e0b23c;
+  --overlay: rgba(0,0,0,.55);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+}
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; background: none; border: none; }
+a { color: var(--accent); text-decoration: none; }
+::selection { background: var(--accent-soft); }
+.num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
+.mono { font-family: var(--font-mono); }
+
+/* scrollbars */
+* { scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 999px; border: 3px solid transparent; background-clip: content-box; }
+*::-webkit-scrollbar-thumb:hover { background: var(--text-3); background-clip: content-box; }
+
+/* =========================================================================
+   Layout
+   ========================================================================= */
+.layout { display: flex; height: 100vh; height: 100dvh; overflow: hidden; }
+
+.sidebar {
+  width: 248px; flex: 0 0 248px;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  transition: transform var(--dur) var(--ease);
+  z-index: 40;
+}
+.sidebar__head { padding: var(--sp-3) var(--sp-3) var(--sp-2); position: relative; }
+.workspace {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px; border-radius: var(--r-md);
+  transition: background var(--dur);
+}
+.workspace:hover { background: var(--bg-hover); }
+.workspace__avatar {
+  width: 30px; height: 30px; border-radius: 7px; flex: 0 0 30px;
+  display: grid; place-items: center; color: #fff; font-weight: 600; font-size: 14px;
+}
+.workspace__meta { min-width: 0; flex: 1; }
+.workspace__name { font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.workspace__sub { font-size: 12px; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.workspace__chev { color: var(--text-3); flex: 0 0 auto; }
+
+.nav { padding: var(--sp-2) var(--sp-2); flex: 1; overflow-y: auto; }
+.nav__label { font-size: 11px; font-weight: 600; letter-spacing: .04em; color: var(--text-3); padding: 10px 8px 4px; text-transform: uppercase; }
+.nav__item {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%; padding: 7px 8px; border-radius: var(--r-md);
+  color: var(--text-2); font-size: 14px; font-weight: 500; text-align: left;
+  transition: background var(--dur), color var(--dur);
+}
+.nav__item:hover { background: var(--bg-hover); color: var(--text); }
+.nav__item.is-active { background: var(--bg-active); color: var(--text); }
+.nav__item svg { flex: 0 0 18px; color: var(--text-3); }
+.nav__item.is-active svg { color: var(--text); }
+.nav__item .nav__count { margin-left: auto; font-size: 12px; color: var(--text-3); font-variant-numeric: tabular-nums; }
+
+.sidebar__foot { padding: var(--sp-2); border-top: 1px solid var(--border); display: flex; gap: 6px; align-items: center; }
+
+.main { flex: 1; min-width: 0; display: flex; flex-direction: column; overflow: hidden; background: var(--bg); }
+.topbar {
+  height: 52px; flex: 0 0 52px;
+  display: flex; align-items: center; gap: 12px;
+  padding: 0 var(--sp-5); border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: saturate(160%) blur(8px);
+}
+.topbar__title { font-size: 15px; font-weight: 600; }
+.topbar__spacer { flex: 1; }
+.icon-btn {
+  display: grid; place-items: center;
+  width: 30px; height: 30px; border-radius: var(--r-md);
+  color: var(--text-2); transition: background var(--dur), color var(--dur);
+}
+.icon-btn:hover { background: var(--bg-hover); color: var(--text); }
+.menu-btn { display: none; }
+
+.content { flex: 1; overflow-y: auto; overflow-x: hidden; }
+.page { max-width: 1080px; margin: 0 auto; padding: var(--sp-8) var(--sp-6) 96px; }
+.page--wide { max-width: 1180px; }
+.page__header { display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: var(--sp-6); }
+.page__title { font-size: 28px; font-weight: 700; letter-spacing: -.02em; }
+.page__subtitle { color: var(--text-3); font-size: 14px; margin-top: 2px; }
+.page__actions { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+
+/* =========================================================================
+   Buttons & controls
+   ========================================================================= */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  height: 34px; padding: 0 14px; border-radius: var(--r-md);
+  font-size: 14px; font-weight: 500; white-space: nowrap;
+  border: 1px solid var(--border-strong); background: var(--bg-elev); color: var(--text);
+  transition: background var(--dur), border-color var(--dur), transform var(--dur), opacity var(--dur);
+}
+.btn:hover { background: var(--bg-hover); }
+.btn:active { transform: translateY(1px); }
+.btn svg { flex: 0 0 auto; }
+.btn--primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn--primary:hover { background: color-mix(in srgb, var(--accent) 88%, #000); }
+.btn--ghost { border-color: transparent; background: transparent; color: var(--text-2); }
+.btn--ghost:hover { background: var(--bg-hover); color: var(--text); }
+.btn--danger { color: var(--expense); border-color: var(--border-strong); }
+.btn--danger:hover { background: var(--expense-soft); border-color: var(--expense); }
+.btn--sm { height: 30px; padding: 0 10px; font-size: 13px; }
+.btn--icon { width: 34px; padding: 0; }
+.btn:disabled { opacity: .5; pointer-events: none; }
+
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field__label { font-size: 13px; font-weight: 500; color: var(--text-2); }
+.field__hint { font-size: 12px; color: var(--text-3); }
+.input, .select, .textarea {
+  width: 100%; height: 38px; padding: 0 12px;
+  background: var(--bg-inset); border: 1px solid transparent; border-radius: var(--r-md);
+  color: var(--text); font-size: 14px; transition: border-color var(--dur), background var(--dur), box-shadow var(--dur);
+}
+.textarea { height: auto; padding: 10px 12px; resize: vertical; min-height: 72px; line-height: 1.5; }
+.input:focus, .select:focus, .textarea:focus { outline: none; border-color: var(--accent); background: var(--bg-elev); box-shadow: 0 0 0 3px var(--accent-soft); }
+.input::placeholder, .textarea::placeholder { color: var(--text-3); }
+.select { appearance: none; -webkit-appearance: none; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239b9a97' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center; padding-right: 32px; }
+
+.segmented { display: inline-flex; background: var(--bg-inset); border-radius: var(--r-md); padding: 3px; gap: 3px; }
+.segmented button {
+  height: 30px; padding: 0 14px; border-radius: 6px; font-size: 13px; font-weight: 500; color: var(--text-2);
+  transition: background var(--dur), color var(--dur), box-shadow var(--dur);
+}
+.segmented button:hover { color: var(--text); }
+.segmented button.is-active { background: var(--bg-elev); color: var(--text); box-shadow: var(--shadow-sm); }
+.segmented button.is-active[data-tone="income"] { color: var(--income); }
+.segmented button.is-active[data-tone="expense"] { color: var(--expense); }
+
+.chip {
+  display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px;
+  border-radius: var(--r-full); background: var(--bg-inset); border: 1px solid transparent;
+  font-size: 13px; color: var(--text-2); transition: background var(--dur), color var(--dur), border-color var(--dur);
+}
+.chip:hover { background: var(--bg-hover); color: var(--text); }
+.chip.is-active { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+.chip__dot { width: 9px; height: 9px; border-radius: 50%; flex: 0 0 auto; }
+.chip__x { display: grid; place-items: center; width: 16px; height: 16px; border-radius: 50%; color: currentColor; opacity: .7; }
+.chip__x:hover { opacity: 1; background: rgba(0,0,0,.08); }
+
+.switch { position: relative; width: 36px; height: 20px; flex: 0 0 auto; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.switch__track { position: absolute; inset: 0; background: var(--border-strong); border-radius: 999px; transition: background var(--dur); }
+.switch__track::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; background: #fff; border-radius: 50%; transition: transform var(--dur) var(--ease); box-shadow: var(--shadow-sm); }
+.switch input:checked + .switch__track { background: var(--accent); }
+.switch input:checked + .switch__track::after { transform: translateX(16px); }
+
+/* =========================================================================
+   Cards / surfaces
+   ========================================================================= */
+.card { background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--r-lg); }
+.card--pad { padding: var(--sp-5); }
+
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-bottom: var(--sp-6); }
+.kpi { background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 16px 18px; min-width: 0; }
+.kpi__label { font-size: 12.5px; color: var(--text-3); font-weight: 500; display: flex; align-items: center; gap: 6px; min-width: 0; }
+.kpi__label span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kpi__value { font-size: 24px; font-weight: 700; letter-spacing: -.02em; margin-top: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kpi__delta { font-size: 12.5px; margin-top: 6px; display: inline-flex; align-items: center; gap: 4px; color: var(--text-3); }
+.up { color: var(--income); } .down { color: var(--expense); }
+.text-income { color: var(--income); } .text-expense { color: var(--expense); }
+
+.grid-2 { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 16px; }
+.section-title { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
+.section-sub { font-size: 12.5px; color: var(--text-3); }
+
+/* donut */
+.donut-wrap { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.donut { position: relative; flex: 0 0 auto; }
+.donut__center { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+.donut__center small { color: var(--text-3); font-size: 11px; display: block; }
+.donut__center b { font-size: 17px; font-weight: 700; }
+.legend { flex: 1; min-width: 148px; display: flex; flex-direction: column; gap: 2px; }
+.legend__row { display: flex; align-items: center; gap: 10px; padding: 6px 6px; border-radius: 6px; font-size: 13.5px; }
+.legend__row:hover { background: var(--bg-hover); }
+.legend__dot { width: 10px; height: 10px; border-radius: 3px; flex: 0 0 auto; }
+.legend__name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.legend__val { color: var(--text-2); font-variant-numeric: tabular-nums; }
+.legend__pct { color: var(--text-3); font-size: 12px; width: 42px; text-align: right; font-variant-numeric: tabular-nums; }
+
+/* bars */
+.bars { display: flex; align-items: flex-end; gap: 10px; height: 180px; padding-top: 10px; }
+.bars__col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; height: 100%; justify-content: flex-end; }
+.bars__stack { width: 100%; max-width: 46px; display: flex; flex-direction: column-reverse; gap: 3px; }
+.bars__bar { width: 100%; border-radius: 4px 4px 0 0; min-height: 2px; transition: height var(--dur) var(--ease); }
+.bars__label { font-size: 11px; color: var(--text-3); white-space: nowrap; }
+
+/* =========================================================================
+   Transactions list
+   ========================================================================= */
+.txgroup { margin-bottom: 8px; }
+.txgroup__head { display: flex; align-items: baseline; justify-content: space-between; padding: 14px 8px 6px; position: sticky; top: 0; background: var(--bg); z-index: 1; }
+.txgroup__date { font-size: 12.5px; font-weight: 600; color: var(--text-2); }
+.txgroup__sum { font-size: 12.5px; color: var(--text-3); font-variant-numeric: tabular-nums; }
+.tx {
+  display: flex; align-items: center; gap: 12px; padding: 11px 8px; border-radius: var(--r-md);
+  cursor: pointer; transition: background var(--dur);
+}
+.tx:hover { background: var(--bg-hover); }
+.tx__icon { width: 38px; height: 38px; border-radius: 9px; flex: 0 0 38px; display: grid; place-items: center; font-size: 18px; }
+.tx__body { flex: 1; min-width: 0; }
+.tx__cats { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.tx__cat { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tx__more { font-size: 12px; color: var(--text-3); }
+.tx__note { font-size: 12.5px; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px; }
+.tx__amount { font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 14.5px; }
+.badge-pending { font-size: 11px; padding: 1px 7px; border-radius: 999px; background: var(--bg-active); color: var(--text-2); font-weight: 500; }
+
+/* category tree */
+.cat-row { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: var(--r-md); transition: background var(--dur); }
+.cat-row:hover { background: var(--bg-hover); }
+.cat-row__icon { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; font-size: 15px; flex: 0 0 30px; }
+.cat-row__name { font-weight: 500; }
+.cat-row__type { font-size: 11px; padding: 1px 8px; border-radius: 999px; }
+.cat-row__actions { margin-left: auto; display: flex; gap: 2px; opacity: 0; transition: opacity var(--dur); }
+.cat-row:hover .cat-row__actions { opacity: 1; }
+.type-pill-income { background: var(--income-soft); color: var(--income); }
+.type-pill-expense { background: var(--expense-soft); color: var(--expense); }
+
+/* =========================================================================
+   Filter bar
+   ========================================================================= */
+.filterbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 18px; }
+.search { position: relative; flex: 1; min-width: 200px; max-width: 340px; }
+.search svg { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-3); pointer-events: none; }
+.search .input { padding-left: 34px; height: 34px; }
+.filter-pop { position: relative; }
+.dropdown {
+  position: absolute; z-index: 60; margin-top: 6px; min-width: 240px;
+  background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg); padding: 6px; max-height: 60vh; overflow: auto;
+}
+.dropdown--right { right: 0; }
+.dropdown__item { display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 10px; border-radius: var(--r-md); font-size: 14px; text-align: left; color: var(--text); transition: background var(--dur); }
+.dropdown__item:hover { background: var(--bg-hover); }
+.dropdown__item.is-active { color: var(--accent); }
+.dropdown__sep { height: 1px; background: var(--border); margin: 6px 4px; }
+.dropdown__label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--text-3); padding: 8px 10px 4px; }
+
+.checkline { display: flex; align-items: center; gap: 10px; padding: 7px 8px; border-radius: var(--r-md); cursor: pointer; transition: background var(--dur); }
+.checkline:hover { background: var(--bg-hover); }
+.checkbox { width: 18px; height: 18px; border-radius: 5px; border: 1.5px solid var(--border-strong); flex: 0 0 auto; display: grid; place-items: center; transition: background var(--dur), border-color var(--dur); }
+.checkbox.is-checked { background: var(--accent); border-color: var(--accent); color: #fff; }
+.checkbox svg { width: 12px; height: 12px; opacity: 0; }
+.checkbox.is-checked svg { opacity: 1; }
+
+/* =========================================================================
+   Modal / dialog
+   ========================================================================= */
+.overlay {
+  position: fixed; inset: 0; background: var(--overlay); z-index: 100;
+  display: grid; place-items: start center; padding: 40px 16px; overflow-y: auto;
+  animation: fade var(--dur) var(--ease);
+}
+@keyframes fade { from { opacity: 0; } }
+@keyframes pop { from { opacity: 0; transform: translateY(8px) scale(.98); } }
+.modal {
+  width: 100%; max-width: 480px; background: var(--bg-elev); border: 1px solid var(--border);
+  border-radius: var(--r-xl); box-shadow: var(--shadow-lg); animation: pop var(--dur) var(--ease);
+  margin: auto 0;
+}
+.modal--lg { max-width: 560px; }
+.modal__head { display: flex; align-items: center; gap: 12px; padding: 18px 20px; border-bottom: 1px solid var(--border); }
+.modal__title { font-size: 16px; font-weight: 600; flex: 1; }
+.modal__body { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+.modal__foot { padding: 14px 20px; border-top: 1px solid var(--border); display: flex; gap: 8px; justify-content: flex-end; }
+.modal__foot .spacer { flex: 1; }
+
+.amount-input { display: flex; align-items: baseline; gap: 8px; background: var(--bg-inset); border: 1px solid transparent; border-radius: var(--r-lg); padding: 14px 16px; transition: border-color var(--dur), box-shadow var(--dur); }
+.amount-input:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.amount-input input { flex: 1; background: none; border: none; outline: none; font-size: 30px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -.02em; min-width: 0; }
+.amount-input input::placeholder { color: var(--text-3); }
+.amount-input .cur { font-size: 18px; font-weight: 600; color: var(--text-3); }
+
+.picker { border: 1px solid var(--border); border-radius: var(--r-md); overflow: hidden; }
+.picker__search { border-bottom: 1px solid var(--border); }
+.picker__search .input { border-radius: 0; background: transparent; }
+.picker__search .input:focus { box-shadow: none; }
+.picker__list { max-height: 240px; overflow-y: auto; padding: 4px; }
+.picker__selected { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+
+/* =========================================================================
+   Misc
+   ========================================================================= */
+.empty { text-align: center; padding: 64px 20px; color: var(--text-3); }
+.empty__icon { width: 56px; height: 56px; border-radius: 16px; background: var(--bg-inset); display: grid; place-items: center; margin: 0 auto 16px; color: var(--text-3); }
+.empty__title { font-size: 16px; font-weight: 600; color: var(--text-2); }
+.empty p { margin-top: 6px; font-size: 14px; }
+
+.fab {
+  position: fixed; right: 26px; bottom: 26px; z-index: 50;
+  width: 52px; height: 52px; border-radius: var(--r-full);
+  background: var(--accent); color: #fff; display: grid; place-items: center;
+  box-shadow: var(--shadow-lg); transition: transform var(--dur) var(--ease), background var(--dur);
+}
+.fab:hover { transform: scale(1.06); }
+.fab:active { transform: scale(.96); }
+
+.toast-wrap { position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%); z-index: 200; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; }
+.toast {
+  background: var(--text); color: var(--bg); padding: 10px 16px; border-radius: var(--r-md);
+  font-size: 13.5px; font-weight: 500; box-shadow: var(--shadow-lg); animation: pop var(--dur) var(--ease);
+  display: flex; align-items: center; gap: 8px; max-width: 90vw;
+}
+.toast--danger { background: var(--expense); color: #fff; }
+
+.divider { height: 1px; background: var(--border); margin: 4px 0; }
+.settings-group { margin-bottom: 28px; }
+.settings-row { display: flex; align-items: center; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--border); }
+.settings-row:last-child { border-bottom: none; }
+.settings-row__main { flex: 1; min-width: 0; }
+.settings-row__title { font-weight: 500; font-size: 14.5px; }
+.settings-row__desc { font-size: 13px; color: var(--text-3); margin-top: 2px; }
+
+/* onboarding */
+.onboard { display: grid; place-items: center; height: 100vh; height: 100dvh; padding: 24px; overflow-y: auto; }
+.onboard__card { width: 100%; max-width: 420px; text-align: center; }
+.onboard__logo { width: 60px; height: 60px; border-radius: 16px; background: var(--accent); color: #fff; display: grid; place-items: center; margin: 0 auto 22px; box-shadow: var(--shadow-md); }
+.onboard__logo svg { width: 32px; height: 32px; }
+.onboard h1 { font-size: 27px; font-weight: 700; letter-spacing: -.02em; }
+.onboard__tag { color: var(--text-3); margin-top: 8px; font-size: 14.5px; }
+.onboard__form { margin-top: 28px; display: flex; flex-direction: column; gap: 12px; text-align: left; }
+.onboard__accounts { margin-top: 24px; text-align: left; }
+.account-row { display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px 12px; border-radius: var(--r-md); transition: background var(--dur); border: 1px solid var(--border); margin-top: 8px; }
+.account-row:hover { background: var(--bg-hover); }
+
+.hier-indent { display: inline-block; }
+.color-swatches { display: flex; flex-wrap: wrap; gap: 8px; }
+.swatch { width: 28px; height: 28px; border-radius: 8px; cursor: pointer; position: relative; transition: transform var(--dur); }
+.swatch:hover { transform: scale(1.1); }
+.swatch.is-active::after { content: ""; position: absolute; inset: -3px; border: 2px solid var(--text); border-radius: 10px; }
+.emoji-grid { display: flex; flex-wrap: wrap; gap: 4px; }
+.emoji-btn { width: 34px; height: 34px; border-radius: 8px; display: grid; place-items: center; font-size: 18px; transition: background var(--dur); }
+.emoji-btn:hover { background: var(--bg-hover); }
+.emoji-btn.is-active { background: var(--accent-soft); }
+
+@media (max-width: 860px) {
+  .grid-2 { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 720px) {
+  .sidebar { position: fixed; inset: 0 auto 0 0; transform: translateX(-100%); box-shadow: var(--shadow-lg); }
+  .sidebar.is-open { transform: translateX(0); }
+  .menu-btn { display: grid; }
+  .sidebar-scrim { position: fixed; inset: 0; background: var(--overlay); z-index: 39; }
+  .page { padding: var(--sp-5) var(--sp-4) 96px; }
+  .page__title { font-size: 23px; }
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="toast-wrap" id="toasts"></div>
+<script>
+"use strict";
+/* =========================================================================
+   Cashy Web (v1 prototype)
+   Single-file, no dependencies, offline-first. Data lives in localStorage.
+   Architecture is layered in spirit (Store/Domain/UI) per cashy-vision.md.
+   ========================================================================= */
+(function () {
+
+/* ---------------------------------------------------------------- helpers */
+const $ = (sel, root = document) => root.querySelector(sel);
+const uid = () => (crypto.randomUUID ? crypto.randomUUID() : 'id-' + Date.now() + '-' + Math.random().toString(16).slice(2));
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
+
+// Create element from HTML string
+function h(html) {
+  const t = document.createElement('template');
+  t.innerHTML = html.trim();
+  return t.content.firstElementChild;
+}
+function frag(html) {
+  const t = document.createElement('template');
+  t.innerHTML = html.trim();
+  return t.content;
+}
+
+/* --------------------------------------------------------------- icons */
+const I = {
+  logo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
+  dashboard: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>',
+  list: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3.5" y1="6" x2="3.51" y2="6"/><line x1="3.5" y1="12" x2="3.51" y2="12"/><line x1="3.5" y1="18" x2="3.51" y2="18"/></svg>',
+  tags: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H4a1 1 0 0 0-1 1v5l8.5 8.5a2 2 0 0 0 2.8 0l4.7-4.7a2 2 0 0 0 0-2.8L11 3.5"/><circle cx="7" cy="9" r="1.2" fill="currentColor" stroke="none"/></svg>',
+  settings: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
+  plus: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
+  search: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
+  x: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+  check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+  edit: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>',
+  trash: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
+  menu: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>',
+  sun: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v2M12 20.5v2M4 4l1.5 1.5M18.5 18.5 20 20M1.5 12h2M20.5 12h2M4 20l1.5-1.5M18.5 5.5 20 4"/></svg>',
+  moon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>',
+  chevDown: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>',
+  chevRight: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>',
+  download: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>',
+  upload: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>',
+  wallet: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2z"/><path d="M16 12h.01"/><path d="M2 9V6a2 2 0 0 1 2-2h12"/></svg>',
+  arrowDown: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>',
+  arrowUp: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>',
+  filter: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>',
+};
+
+/* ---------------------------------------------------------------- money (VND, integer — Decimal-safe, never float) */
+const Money = {
+  format(n) { return new Intl.NumberFormat('vi-VN').format(Math.round(n || 0)) + ' đ'; },
+  formatShort(n) {
+    n = Math.round(n || 0); const a = Math.abs(n);
+    const s = a >= 1e9 ? (n / 1e9).toFixed(a % 1e9 === 0 ? 0 : 1) + ' tỷ'
+      : a >= 1e6 ? (n / 1e6).toFixed(a % 1e6 === 0 ? 0 : 1) + ' tr'
+      : a >= 1e3 ? (n / 1e3).toFixed(0) + 'k' : String(n);
+    return s + ' đ';
+  },
+  grouped(n) { return new Intl.NumberFormat('vi-VN').format(Math.round(n || 0)); },
+  parse(str) { const d = String(str).replace(/[^\d]/g, ''); return d ? parseInt(d, 10) : 0; },
+  signed(n, type) { const v = Money.format(n); return type === 'income' ? '+' + v : '-' + v; },
+};
+
+/* ---------------------------------------------------------------- dates */
+const DAY = 86400000;
+function pad(n) { return String(n).padStart(2, '0'); }
+function ymd(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+function todayYMD() { return ymd(new Date()); }
+function parseYMD(s) { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); }
+function addDays(s, n) { const d = parseYMD(s); d.setDate(d.getDate() + n); return ymd(d); }
+const VN_MONTHS = ['thg 1','thg 2','thg 3','thg 4','thg 5','thg 6','thg 7','thg 8','thg 9','thg 10','thg 11','thg 12'];
+const VN_WD = ['CN','T2','T3','T4','T5','T6','T7'];
+function fmtDate(s) { const d = parseYMD(s); return d.getDate() + ' ' + VN_MONTHS[d.getMonth()] + ', ' + d.getFullYear(); }
+function fmtDateShort(s) { const d = parseYMD(s); return pad(d.getDate()) + '/' + pad(d.getMonth() + 1) + '/' + d.getFullYear(); }
+function relativeDateHead(s) {
+  const t = todayYMD();
+  if (s === t) return 'Hôm nay';
+  if (s === addDays(t, -1)) return 'Hôm qua';
+  const d = parseYMD(s);
+  return VN_WD[d.getDay()] + ', ' + fmtDate(s);
+}
+
+// period presets -> { start (inclusive ymd), end (exclusive ymd), label }
+function periodRange(preset, custom) {
+  const now = new Date(); const y = now.getFullYear(), m = now.getMonth();
+  const startNext = () => ymd(new Date(y, m + 1, 1));
+  switch (preset) {
+    case 'thisMonth': return { start: ymd(new Date(y, m, 1)), end: startNext(), label: 'Tháng này' };
+    case 'lastMonth': return { start: ymd(new Date(y, m - 1, 1)), end: ymd(new Date(y, m, 1)), label: 'Tháng trước' };
+    case 'last30': return { start: addDays(todayYMD(), -29), end: addDays(todayYMD(), 1), label: '30 ngày qua' };
+    case 'thisQuarter': { const q = Math.floor(m / 3) * 3; return { start: ymd(new Date(y, q, 1)), end: ymd(new Date(y, q + 3, 1)), label: 'Quý này' }; }
+    case 'thisYear': return { start: ymd(new Date(y, 0, 1)), end: ymd(new Date(y + 1, 0, 1)), label: 'Năm nay' };
+    case 'all': return { start: '0000-01-01', end: '9999-12-31', label: 'Tất cả' };
+    case 'custom': return { start: custom?.start || todayYMD(), end: addDays(custom?.end || todayYMD(), 1), label: 'Tùy chỉnh', rawEnd: custom?.end };
+    default: return periodRange('thisMonth');
+  }
+}
+function prevRange(r) {
+  if (r.start === '0000-01-01') return null;
+  const s = parseYMD(r.start), e = parseYMD(r.end);
+  const len = Math.round((e - s) / DAY);
+  return { start: ymd(new Date(s.getTime() - len * DAY)), end: r.start };
+}
+
+/* ================================================================= STORE */
+// Single localStorage key holds everything (small data volumes for v1).
+const KEY = 'cashy_state_v1';
+const PENDING_NAME = 'Chưa phân loại';
+
+const Store = {
+  state: null,
+
+  load() {
+    try { this.state = JSON.parse(localStorage.getItem(KEY)) || null; }
+    catch (e) { this.state = null; }
+    if (!this.state) this.state = { users: [], activeUserId: null, theme: 'system', data: {} };
+    if (!this.state.data) this.state.data = {};
+    return this.state;
+  },
+  persist() { localStorage.setItem(KEY, JSON.stringify(this.state)); },
+
+  // theme
+  getTheme() { return this.state.theme || 'system'; },
+  setTheme(t) { this.state.theme = t; this.persist(); applyTheme(); },
+
+  // users
+  users() { return this.state.users; },
+  activeUser() { return this.state.users.find(u => u.id === this.state.activeUserId) || null; },
+  createUser(name) {
+    const colors = ['#e0483d','#d9730d','#cb8a14','#1a8f6b','#2383e2','#6940a5','#ad1a72','#64473a'];
+    const u = { id: uid(), displayName: name.trim(), currency: 'VND',
+      avatarColor: colors[this.state.users.length % colors.length], createdAt: new Date().toISOString() };
+    this.state.users.push(u);
+    this.state.data[u.id] = { categories: seedCategories(), transactions: [] };
+    this.state.activeUserId = u.id;
+    this.persist();
+    return u;
+  },
+  switchUser(id) { this.state.activeUserId = id; this.persist(); },
+  logout() { this.state.activeUserId = null; this.persist(); },
+  updateUser(patch) { Object.assign(this.activeUser(), patch); this.persist(); },
+  deleteUser(id) {
+    this.state.users = this.state.users.filter(u => u.id !== id);
+    delete this.state.data[id];
+    if (this.state.activeUserId === id) this.state.activeUserId = null;
+    this.persist();
+  },
+
+  data() { return this.state.data[this.state.activeUserId]; },
+
+  // categories
+  categories() { return this.data().categories; },
+  category(id) { return this.categories().find(c => c.id === id); },
+  pendingCategory() { return this.categories().find(c => c.isSystem && c.name === PENDING_NAME); },
+  addCategory(cat) { const c = { id: uid(), isSystem: false, ...cat }; this.data().categories.push(c); this.persist(); return c; },
+  updateCategory(id, patch) { Object.assign(this.category(id), patch); this.persist(); },
+  deleteCategory(id) {
+    const cat = this.category(id);
+    if (!cat || cat.isSystem) return false;
+    // cascade: collect id + all descendants
+    const toDelete = new Set([id]);
+    let changed = true;
+    while (changed) {
+      changed = false;
+      for (const c of this.categories()) if (c.parentId && toDelete.has(c.parentId) && !toDelete.has(c.id)) { toDelete.add(c.id); changed = true; }
+    }
+    this.data().categories = this.categories().filter(c => !toDelete.has(c.id));
+    // orphan fallback -> Pending (invariant: every tx has >=1 category)
+    const pid = this.pendingCategory().id;
+    for (const t of this.transactions()) {
+      t.categoryIds = t.categoryIds.filter(cid => !toDelete.has(cid));
+      if (t.categoryIds.length === 0) t.categoryIds = [pid];
+    }
+    this.persist();
+    return true;
+  },
+
+  // transactions
+  transactions() { return this.data().transactions; },
+  transaction(id) { return this.transactions().find(t => t.id === id); },
+  saveTransaction(tx) {
+    // enforce invariant: >= 1 category, fallback Pending
+    let cats = (tx.categoryIds || []).filter(id => this.category(id));
+    if (cats.length === 0) cats = [this.pendingCategory().id];
+    if (tx.id) {
+      const t = this.transaction(tx.id);
+      Object.assign(t, { type: tx.type, amount: tx.amount, occurredAt: tx.occurredAt, note: tx.note, categoryIds: cats });
+    } else {
+      this.transactions().push({ id: uid(), type: tx.type, amount: tx.amount, occurredAt: tx.occurredAt, note: tx.note || '', categoryIds: cats, createdAt: new Date().toISOString() });
+    }
+    this.persist();
+  },
+  deleteTransaction(id) { this.data().transactions = this.transactions().filter(t => t.id !== id); this.persist(); },
+};
+
+/* seed default categories (Vietnamese) — incl. system "Pending" */
+function seedCategories() {
+  const mk = (name, type, icon, color, parentId = null, isSystem = false) => ({ id: uid(), name, type, icon, colorHex: color, parentId, isSystem });
+  const cats = [];
+  const push = (c) => { cats.push(c); return c; };
+  push(mk(PENDING_NAME, 'expense', '❓', '#9b9a97', null, true));
+  // expense
+  const food = push(mk('Ăn uống', 'expense', '🍜', '#e0483d'));
+  push(mk('Cà phê', 'expense', '☕', '#e0483d', food.id));
+  push(mk('Nhà hàng', 'expense', '🍽️', '#e0483d', food.id));
+  const move = push(mk('Đi lại', 'expense', '🚕', '#d9730d'));
+  push(mk('Xăng xe', 'expense', '⛽', '#d9730d', move.id));
+  push(mk('Grab / Taxi', 'expense', '🚗', '#d9730d', move.id));
+  push(mk('Mua sắm', 'expense', '🛍️', '#ad1a72'));
+  const bill = push(mk('Hóa đơn', 'expense', '🧾', '#0b6e99'));
+  push(mk('Điện', 'expense', '💡', '#0b6e99', bill.id));
+  push(mk('Nước', 'expense', '🚿', '#0b6e99', bill.id));
+  push(mk('Internet', 'expense', '🌐', '#0b6e99', bill.id));
+  const health = push(mk('Sức khỏe', 'expense', '🏥', '#1a8f6b'));
+  push(mk('Thể thao', 'expense', '🏃', '#1a8f6b', health.id));
+  push(mk('Giải trí', 'expense', '🎬', '#6940a5'));
+  push(mk('Nhà cửa', 'expense', '🏠', '#64473a'));
+  push(mk('Giáo dục', 'expense', '📚', '#9f6b53'));
+  // income
+  push(mk('Lương', 'income', '💰', '#1a8f6b'));
+  push(mk('Thưởng', 'income', '🎁', '#d9730d'));
+  push(mk('Đầu tư', 'income', '📈', '#0b6e99'));
+  push(mk('Thu khác', 'income', '💵', '#787774'));
+  return cats;
+}
+
+/* =============================================================== DOMAIN */
+const Domain = {
+  // build ordered flat list with depth, parents first (tree order)
+  orderedCategories(type = null) {
+    const all = Store.categories();
+    const roots = all.filter(c => !c.parentId);
+    const out = [];
+    const walk = (c, depth) => {
+      out.push({ cat: c, depth });
+      all.filter(x => x.parentId === c.id).sort(byName).forEach(ch => walk(ch, depth + 1));
+    };
+    roots.sort((a, b) => (a.isSystem ? 1 : 0) - (b.isSystem ? 1 : 0) || byName(a, b)).forEach(r => walk(r, 0));
+    return type ? out.filter(o => o.cat.type === type || o.cat.isSystem) : out;
+  },
+  descendantIds(id) {
+    const all = Store.categories(); const set = new Set([id]); let changed = true;
+    while (changed) { changed = false; for (const c of all) if (c.parentId && set.has(c.parentId) && !set.has(c.id)) { set.add(c.id); changed = true; } }
+    return set;
+  },
+  rootOf(id) { let c = Store.category(id); while (c && c.parentId) c = Store.category(c.parentId); return c; },
+
+  // filter transactions -> array
+  filter(opts) {
+    const { period, custom, type, categoryIds, rollup, search, sort } = opts;
+    const r = periodRange(period, custom);
+    let expand = new Set();
+    if (categoryIds && categoryIds.length) {
+      categoryIds.forEach(id => { if (rollup) Domain.descendantIds(id).forEach(x => expand.add(x)); else expand.add(id); });
+    }
+    const q = (search || '').trim().toLowerCase();
+    let list = Store.transactions().filter(t => {
+      if (t.occurredAt < r.start || t.occurredAt >= r.end) return false;
+      if (type && type !== 'all' && t.type !== type) return false;
+      if (expand.size && !t.categoryIds.some(id => expand.has(id))) return false;
+      if (q) {
+        const cats = t.categoryIds.map(id => (Store.category(id)?.name || '')).join(' ').toLowerCase();
+        if (!(t.note || '').toLowerCase().includes(q) && !cats.includes(q) && !String(t.amount).includes(q)) return false;
+      }
+      return true;
+    });
+    const cmp = {
+      'date-desc': (a, b) => b.occurredAt.localeCompare(a.occurredAt) || (b.createdAt || '').localeCompare(a.createdAt || ''),
+      'date-asc': (a, b) => a.occurredAt.localeCompare(b.occurredAt),
+      'amount-desc': (a, b) => b.amount - a.amount,
+      'amount-asc': (a, b) => a.amount - b.amount,
+    }[sort || 'date-desc'];
+    return list.sort(cmp);
+  },
+
+  totals(list) {
+    let income = 0, expense = 0;
+    for (const t of list) { if (t.type === 'income') income += t.amount; else expense += t.amount; }
+    return { income, expense, net: income - expense, count: list.length };
+  },
+  balanceAllTime() { return Domain.totals(Store.transactions()).net; },
+
+  // breakdown by ROOT category (attribute each tx to first category's root -> clean part-to-whole)
+  breakdown(list, type) {
+    const map = new Map();
+    for (const t of list) {
+      if (t.type !== type) continue;
+      const root = Domain.rootOf(t.categoryIds[0]) || Store.pendingCategory();
+      const e = map.get(root.id) || { cat: root, value: 0, count: 0 };
+      e.value += t.amount; e.count++; map.set(root.id, e);
+    }
+    return [...map.values()].sort((a, b) => b.value - a.value);
+  },
+
+  // time buckets for chart: by day if <= 62 days else by month
+  timeSeries(list, range) {
+    const start = parseYMD(range.start === '0000-01-01' ? (list.reduce((m, t) => t.occurredAt < m ? t.occurredAt : m, todayYMD())) : range.start);
+    const end = range.end === '9999-12-31' ? new Date() : parseYMD(range.end);
+    const days = clamp(Math.round((end - start) / DAY), 1, 3660);
+    const byMonth = days > 62;
+    const buckets = new Map();
+    const keyOf = (s) => byMonth ? s.slice(0, 7) : s;
+    for (const t of list) { const k = keyOf(t.occurredAt); const b = buckets.get(k) || { income: 0, expense: 0 }; b[t.type] += t.amount; buckets.set(k, b); }
+    // build ordered keys
+    const keys = [];
+    if (byMonth) { let d = new Date(start.getFullYear(), start.getMonth(), 1); while (d <= end && keys.length < 24) { keys.push(ymd(d).slice(0, 7)); d.setMonth(d.getMonth() + 1); } }
+    else { let d = new Date(start); while (d < end && keys.length < 62) { keys.push(ymd(d)); d.setDate(d.getDate() + 1); } }
+    return keys.map(k => ({ key: k, label: byMonth ? ('T' + Number(k.slice(5, 7))) : String(Number(k.slice(8, 10))), ...(buckets.get(k) || { income: 0, expense: 0 }) }));
+  },
+};
+function byName(a, b) { return a.name.localeCompare(b.name, 'vi'); }
+
+/* ================================================================= THEME */
+function applyTheme() {
+  const t = Store.getTheme();
+  const resolved = t === 'system' ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : t;
+  document.documentElement.setAttribute('data-theme', resolved);
+  const meta = document.querySelector('meta[name=theme-color]');
+  if (meta) meta.content = resolved === 'dark' ? '#1a1a1a' : '#ffffff';
+}
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { if (Store.getTheme() === 'system') applyTheme(); });
+
+/* ================================================================= TOAST */
+function toast(msg, tone) {
+  const el = h(`<div class="toast ${tone === 'danger' ? 'toast--danger' : ''}">${esc(msg)}</div>`);
+  $('#toasts').appendChild(el);
+  setTimeout(() => { el.style.transition = 'opacity .2s, transform .2s'; el.style.opacity = '0'; el.style.transform = 'translateY(6px)'; setTimeout(() => el.remove(), 220); }, 2200);
+}
+
+/* ================================================================= MODAL */
+function openModal(node, opts = {}) {
+  const overlay = h('<div class="overlay"></div>');
+  overlay.appendChild(node);
+  overlay.addEventListener('mousedown', (e) => { if (e.target === overlay && !opts.persistent) close(); });
+  function onKey(e) { if (e.key === 'Escape') close(); }
+  function close() { document.removeEventListener('keydown', onKey); overlay.style.animation = 'fade .15s reverse'; setTimeout(() => overlay.remove(), 130); opts.onClose && opts.onClose(); }
+  document.addEventListener('keydown', onKey);
+  document.body.appendChild(overlay);
+  overlay._close = close;
+  const inp = node.querySelector('input,textarea,select'); if (inp && opts.autofocus !== false) setTimeout(() => inp.focus(), 40);
+  return { close, overlay };
+}
+function confirmDialog({ title, message, confirmText = 'Xác nhận', danger }) {
+  return new Promise((resolve) => {
+    const node = h(`<div class="modal" style="max-width:400px">
+      <div class="modal__body">
+        <div style="font-size:16px;font-weight:600">${esc(title)}</div>
+        <div style="color:var(--text-2);font-size:14px;line-height:1.55">${esc(message)}</div>
+      </div>
+      <div class="modal__foot">
+        <button class="btn btn--ghost" data-act="cancel">Hủy</button>
+        <button class="btn ${danger ? 'btn--danger' : 'btn--primary'}" data-act="ok">${esc(confirmText)}</button>
+      </div>
+    </div>`);
+    const m = openModal(node);
+    node.querySelector('[data-act=cancel]').onclick = () => { m.close(); resolve(false); };
+    node.querySelector('[data-act=ok]').onclick = () => { m.close(); resolve(true); };
+  });
+}
+
+/* ============================================================ dropdown */
+function attachDropdown(triggerBtn, buildContent, opts = {}) {
+  let dd = null;
+  function open() {
+    close();
+    dd = h(`<div class="dropdown ${opts.right ? 'dropdown--right' : ''}"></div>`);
+    buildContent(dd, close);
+    triggerBtn.parentElement.appendChild(dd);
+    setTimeout(() => document.addEventListener('mousedown', outside), 0);
+  }
+  function outside(e) { if (dd && !dd.contains(e.target) && e.target !== triggerBtn && !triggerBtn.contains(e.target)) close(); }
+  function close() { if (dd) { dd.remove(); dd = null; document.removeEventListener('mousedown', outside); } }
+  triggerBtn.addEventListener('click', (e) => { e.stopPropagation(); dd ? close() : open(); });
+  return { close };
+}
+
+/* =============================================== category chip / avatar */
+function catChipHTML(cat, opts = {}) {
+  return `<span class="chip" ${opts.attr || ''}><span class="chip__dot" style="background:${cat.colorHex}"></span>${cat.icon} ${esc(cat.name)}</span>`;
+}
+function tinted(color) { return { bg: color + '22', fg: color }; }
+
+/* =============================================================== ROUTER */
+function currentRoute() { return (location.hash.replace('#/', '') || 'dashboard'); }
+function navigate(name) { location.hash = '#/' + name; }
+window.addEventListener('hashchange', renderApp);
+
+let sidebarOpen = false;
+
+function renderApp() {
+  applyTheme();
+  const app = $('#app');
+  const NS = window.__cashy;
+  if (!Store.activeUser()) { app.innerHTML = ''; app.appendChild(NS.OnboardingView()); return; }
+  const rname = currentRoute();
+  const render = NS.routes[rname] || NS.routes.dashboard;
+
+  app.innerHTML = '';
+  const layout = h(`<div class="layout"></div>`);
+  layout.appendChild(Sidebar(rname));
+  if (sidebarOpen && innerWidth <= 720) {
+    const scrim = h('<div class="sidebar-scrim"></div>');
+    scrim.onclick = () => { sidebarOpen = false; renderApp(); };
+    layout.appendChild(scrim);
+  }
+  const main = h(`<div class="main"></div>`);
+  const meta = NAV.find(n => n.id === rname) || NAV[0];
+  const topbar = h(`<div class="topbar">
+      <button class="icon-btn menu-btn" title="Menu">${I.menu}</button>
+      <div class="topbar__title">${esc(meta.title)}</div>
+      <div class="topbar__spacer"></div>
+    </div>`);
+  topbar.querySelector('.menu-btn').onclick = () => { sidebarOpen = !sidebarOpen; renderApp(); };
+  const quick = h(`<button class="btn btn--primary btn--sm">${I.plus}<span>Thêm giao dịch</span></button>`);
+  quick.onclick = () => NS.openTxModal();
+  topbar.appendChild(quick);
+  main.appendChild(topbar);
+  const content = h(`<div class="content"></div>`);
+  content.appendChild(render());
+  main.appendChild(content);
+  layout.appendChild(main);
+  app.appendChild(layout);
+
+  // FAB (mobile)
+  const fab = h(`<button class="fab" title="Thêm giao dịch (n)">${I.plus}</button>`);
+  fab.onclick = () => NS.openTxModal();
+  app.appendChild(fab);
+}
+
+const NAV = [
+  { id: 'dashboard', title: 'Tổng quan', icon: I.dashboard },
+  { id: 'transactions', title: 'Giao dịch', icon: I.list },
+  { id: 'categories', title: 'Danh mục', icon: I.tags },
+  { id: 'settings', title: 'Cài đặt', icon: I.settings },
+];
+
+function Sidebar(active) {
+  const u = Store.activeUser();
+  const el = h(`<aside class="sidebar ${sidebarOpen ? 'is-open' : ''}">
+    <div class="sidebar__head">
+      <button class="workspace" title="Tài khoản">
+        <span class="workspace__avatar" style="background:${u.avatarColor}">${esc((u.displayName[0] || 'C').toUpperCase())}</span>
+        <span class="workspace__meta">
+          <span class="workspace__name">${esc(u.displayName)}</span>
+          <span class="workspace__sub">Cashy · VND</span>
+        </span>
+        <span class="workspace__chev">${I.chevDown}</span>
+      </button>
+    </div>
+    <nav class="nav"></nav>
+    <div class="sidebar__foot">
+      <button class="icon-btn" data-theme-toggle title="Đổi giao diện"></button>
+      <span style="font-size:12px;color:var(--text-3);margin-left:4px">Cashy v1 · web</span>
+    </div>
+  </aside>`);
+
+  const nav = el.querySelector('.nav');
+  const txCount = Store.transactions().length;
+  NAV.forEach(item => {
+    const btn = h(`<button class="nav__item ${item.id === active ? 'is-active' : ''}">${item.icon}<span>${esc(item.title)}</span>${item.id === 'transactions' && txCount ? `<span class="nav__count">${txCount}</span>` : ''}</button>`);
+    btn.onclick = () => { sidebarOpen = false; navigate(item.id); };
+    nav.appendChild(btn);
+  });
+
+  // theme toggle button
+  const tt = el.querySelector('[data-theme-toggle]');
+  const resolved = document.documentElement.getAttribute('data-theme');
+  tt.innerHTML = resolved === 'dark' ? I.sun : I.moon;
+  tt.onclick = () => { Store.setTheme(resolved === 'dark' ? 'light' : 'dark'); renderApp(); };
+
+  // workspace menu
+  attachDropdown(el.querySelector('.workspace'), (dd, close) => {
+    dd.style.left = '12px'; dd.style.top = '56px'; dd.style.minWidth = '220px';
+    dd.appendChild(h(`<div class="dropdown__label">Tài khoản trên máy này</div>`));
+    Store.users().forEach(user => {
+      const row = h(`<button class="dropdown__item ${user.id === u.id ? 'is-active' : ''}">
+        <span class="workspace__avatar" style="width:24px;height:24px;font-size:12px;border-radius:6px;background:${user.avatarColor}">${esc((user.displayName[0]||'C').toUpperCase())}</span>
+        <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(user.displayName)}</span>
+        ${user.id === u.id ? I.check : ''}</button>`);
+      row.onclick = () => { Store.switchUser(user.id); close(); renderApp(); };
+      dd.appendChild(row);
+    });
+    dd.appendChild(h('<div class="dropdown__sep"></div>'));
+    const add = h(`<button class="dropdown__item">${I.plus} Thêm tài khoản</button>`);
+    add.onclick = () => { close(); Store.logout(); renderApp(); };
+    dd.appendChild(add);
+    const out = h(`<button class="dropdown__item" style="color:var(--text-2)">${I.wallet} Đăng xuất</button>`);
+    out.onclick = () => { close(); Store.logout(); renderApp(); };
+    dd.appendChild(out);
+  });
+
+  return el;
+}
+
+/* boot */
+Store.load();
+applyTheme();
+window.addEventListener('keydown', (e) => {
+  if ((e.key === 'n' || e.key === 'N') && Store.activeUser() && !/input|textarea|select/i.test(document.activeElement.tagName) && !document.querySelector('.overlay')) {
+    e.preventDefault(); window.__cashy.openTxModal();
+  }
+});
+
+// expose for later view modules attached below
+window.__cashy = { Store, Domain, Money, renderApp, navigate, openModal, confirmDialog, attachDropdown, toast, h, frag, esc, uid, I, ymd, todayYMD, fmtDate, fmtDateShort, relativeDateHead, periodRange, prevRange, parseYMD, addDays, byName, catChipHTML, clamp, PENDING_NAME };
+
+/* Views are defined in the second script block for readability. */
+})();
+</script>
+<script>
+"use strict";
+/* =========================================================================
+   Cashy Web — Views (dashboard, transactions, categories, settings,
+   onboarding) + transaction modal + category modal + charts + pickers.
+   ========================================================================= */
+(function () {
+const C = window.__cashy;
+const { Store, Domain, Money, renderApp, navigate, openModal, confirmDialog, attachDropdown, toast, h, esc, uid, I, ymd, todayYMD, fmtDate, fmtDateShort, relativeDateHead, periodRange, prevRange, parseYMD, byName, clamp, PENDING_NAME } = C;
+const $ = (s, r = document) => r.querySelector(s);
+
+/* ------------------------------------------------------------- charts */
+function donutSVG(segments, size = 150) {
+  const stroke = 22, r = (size - stroke) / 2, cx = size / 2, C2 = 2 * Math.PI * r;
+  const total = segments.reduce((s, x) => s + x.value, 0) || 1;
+  let acc = 0;
+  const arcs = segments.map(s => {
+    const len = s.value / total * C2;
+    const el = `<circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="${s.color}" stroke-width="${stroke}" stroke-dasharray="${len} ${C2 - len}" stroke-dashoffset="${-acc}" transform="rotate(-90 ${cx} ${cx})" stroke-linecap="butt"/>`;
+    acc += len; return el;
+  }).join('');
+  const track = `<circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="var(--bg-inset)" stroke-width="${stroke}"/>`;
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${track}${arcs}</svg>`;
+}
+
+function barsChart(series, height = 180) {
+  if (!series.length) return '<div class="empty" style="padding:30px">Chưa có dữ liệu</div>';
+  const max = Math.max(1, ...series.map(s => Math.max(s.income, s.expense)));
+  const cols = series.map(s => {
+    const ih = Math.round(s.income / max * (height - 24));
+    const eh = Math.round(s.expense / max * (height - 24));
+    return `<div class="bars__col" title="${s.label}: +${Money.formatShort(s.income)} / -${Money.formatShort(s.expense)}">
+      <div class="bars__stack" style="height:${height - 24}px;flex-direction:row;gap:3px;align-items:flex-end">
+        <div class="bars__bar" style="height:${ih}px;background:var(--income);flex:1"></div>
+        <div class="bars__bar" style="height:${eh}px;background:var(--expense);flex:1"></div>
+      </div>
+      <div class="bars__label">${esc(s.label)}</div>
+    </div>`;
+  }).join('');
+  return `<div class="bars" style="height:${height}px">${cols}</div>`;
+}
+
+/* ============================================================ ONBOARDING */
+function OnboardingView() {
+  const users = Store.users();
+  const el = h(`<div class="onboard"><div class="onboard__card">
+    <div class="onboard__logo">${I.logo}</div>
+    <h1>Chào mừng đến Cashy</h1>
+    <div class="onboard__tag">Quản lý &amp; thống kê chi tiêu cá nhân. Dữ liệu ở ngay trên máy bạn — không gửi đi đâu.</div>
+    <form class="onboard__form">
+      <div class="field">
+        <label class="field__label">Tên của bạn</label>
+        <input class="input" name="name" placeholder="VD: Đạt" autocomplete="off" maxlength="40" style="height:44px" />
+        <span class="field__hint">Chỉ cần một cái tên là bắt đầu được. Có thể đổi trong Cài đặt.</span>
+      </div>
+      <button class="btn btn--primary" type="submit" style="height:44px">Tạo tài khoản &amp; bắt đầu</button>
+    </form>
+    <div class="onboard__accounts"></div>
+  </div></div>`);
+
+  const form = el.querySelector('form');
+  const nameInput = form.querySelector('input[name="name"]');
+  const submitOnboarding = (e) => {
+    if (e) e.preventDefault();
+    const name = nameInput.value.trim();
+    if (!name) { nameInput.focus(); toast('Nhập tên của bạn để bắt đầu nhé', 'danger'); return; }
+    Store.createUser(name);
+    navigate('dashboard'); renderApp();
+    toast('Đã tạo tài khoản. Chào ' + name + '! 👋');
+  };
+  form.onsubmit = submitOnboarding;
+
+  const acc = el.querySelector('.onboard__accounts');
+  if (users.length) {
+    acc.appendChild(h(`<div class="field__label" style="margin-bottom:2px">Hoặc tiếp tục với tài khoản đã có</div>`));
+    users.forEach(u => {
+      const row = h(`<button type="button" class="account-row">
+        <span class="workspace__avatar" style="background:${u.avatarColor}">${esc((u.displayName[0]||'C').toUpperCase())}</span>
+        <span style="flex:1;text-align:left"><div style="font-weight:600">${esc(u.displayName)}</div>
+        <div style="font-size:12px;color:var(--text-3)">${Store.state.data[u.id]?.transactions.length || 0} giao dịch</div></span>
+        ${I.chevRight}</button>`);
+      row.onclick = () => { Store.switchUser(u.id); navigate('dashboard'); renderApp(); };
+      acc.appendChild(row);
+    });
+  }
+  return el;
+}
+
+/* ============================================================= DASHBOARD */
+const dashState = { period: 'thisMonth', custom: { start: todayYMD(), end: todayYMD() } };
+
+function DashboardView() {
+  const page = h(`<div class="page page--wide"></div>`);
+  const range = periodRange(dashState.period, dashState.custom);
+  const list = Domain.filter({ period: dashState.period, custom: dashState.custom, type: 'all', sort: 'date-desc' });
+  const t = Domain.totals(list);
+  const balance = Domain.balanceAllTime();
+
+  // header
+  const header = h(`<div class="page__header">
+    <div><div class="page__title">Tổng quan</div><div class="page__subtitle">${esc(range.label)}${range.rawEnd ? '' : ''} · ${t.count} giao dịch</div></div>
+    <div class="page__actions"></div>
+  </div>`);
+  header.querySelector('.page__actions').appendChild(periodPicker(dashState.period, dashState.custom, () => renderInto()));
+  page.appendChild(header);
+
+  // KPIs
+  const prev = prevRange(range);
+  const prevList = prev ? Store.transactions().filter(x => x.occurredAt >= prev.start && x.occurredAt < prev.end) : [];
+  const pt = Domain.totals(prevList);
+  const delta = (cur, old) => { if (!old || old <= 0) return null; return Math.round((cur - old) / old * 100); };
+  const kpis = h(`<div class="kpis">
+    ${kpiCard('Số dư (tất cả)', Money.format(balance), null, balance >= 0 ? 'up' : 'down', I.wallet)}
+    ${kpiCard('Thu nhập', Money.format(t.income), delta(t.income, pt.income), 'income')}
+    ${kpiCard('Chi tiêu', Money.format(t.expense), delta(t.expense, pt.expense), 'expense', null, true)}
+    ${kpiCard('Chênh lệch kỳ này', (t.net >= 0 ? '+' : '') + Money.format(t.net), delta(t.net, pt.net), t.net >= 0 ? 'up' : 'down')}
+  </div>`);
+  page.appendChild(kpis);
+
+  // charts row
+  const grid = h(`<div class="grid-2"></div>`);
+  // trend bars
+  const series = Domain.timeSeries(list, range);
+  const trend = h(`<div class="card card--pad">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+      <div><div class="section-title">Thu / Chi theo thời gian</div><div class="section-sub">Xanh: thu nhập · Đỏ: chi tiêu</div></div>
+    </div></div>`);
+  trend.appendChild(h(barsChart(series)));
+  grid.appendChild(trend);
+
+  // expense donut
+  const bd = Domain.breakdown(list, 'expense');
+  const segs = bd.slice(0, 6).map(x => ({ color: x.cat.colorHex, value: x.value }));
+  if (bd.length > 6) segs.push({ color: 'var(--text-3)', value: bd.slice(6).reduce((s, x) => s + x.value, 0) });
+  const donut = h(`<div class="card card--pad">
+    <div class="section-title" style="margin-bottom:14px">Chi tiêu theo danh mục</div>
+    <div class="donut-wrap"></div></div>`);
+  const dw = donut.querySelector('.donut-wrap');
+  if (t.expense === 0) { dw.appendChild(h('<div class="empty" style="padding:20px 0;width:100%"><div class="empty__title">Chưa có chi tiêu</div></div>')); }
+  else {
+    const dEl = h(`<div class="donut">${donutSVG(segs, 140)}<div class="donut__center"><small>Tổng chi</small><b>${Money.formatShort(t.expense)}</b></div></div>`);
+    dw.appendChild(dEl);
+    const legend = h('<div class="legend"></div>');
+    bd.slice(0, 6).forEach(x => {
+      legend.appendChild(h(`<div class="legend__row"><span class="legend__dot" style="background:${x.cat.colorHex}"></span>
+        <span class="legend__name">${x.cat.icon} ${esc(x.cat.name)}</span>
+        <span class="legend__val num">${Money.formatShort(x.value)}</span>
+        <span class="legend__pct">${Math.round(x.value / t.expense * 100)}%</span></div>`));
+    });
+    if (bd.length > 6) legend.appendChild(h(`<div class="legend__row"><span class="legend__dot" style="background:var(--text-3)"></span><span class="legend__name">Khác</span><span class="legend__pct">${Math.round(segs[segs.length-1].value / t.expense * 100)}%</span></div>`));
+    dw.appendChild(legend);
+  }
+  grid.appendChild(donut);
+  page.appendChild(grid);
+
+  // recent transactions
+  const recentWrap = h(`<div class="card card--pad" style="margin-top:16px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <div class="section-title">Giao dịch gần đây</div>
+      <button class="btn btn--ghost btn--sm" data-all>Xem tất cả ${I.chevRight}</button>
+    </div><div data-recent></div></div>`);
+  recentWrap.querySelector('[data-all]').onclick = () => navigate('transactions');
+  const rec = recentWrap.querySelector('[data-recent]');
+  if (!list.length) rec.appendChild(emptyState('Chưa có giao dịch nào trong kỳ này', 'Nhấn “Thêm giao dịch” để bắt đầu ghi chép.'));
+  else list.slice(0, 6).forEach(tx => rec.appendChild(txRow(tx, renderInto)));
+  page.appendChild(recentWrap);
+
+  function renderInto() { const parent = page.parentElement; if (parent) { parent.replaceChild(DashboardView(), page); } }
+  return page;
+}
+
+function kpiCard(label, value, delta, tone, icon, invertDelta) {
+  let d = '';
+  if (delta !== null && delta !== undefined && isFinite(delta)) {
+    const good = invertDelta ? delta <= 0 : delta >= 0;
+    d = `<div class="kpi__delta ${good ? 'up' : 'down'}">${delta >= 0 ? I.arrowUp : I.arrowDown} ${Math.abs(delta)}% so với kỳ trước</div>`;
+  }
+  const valClass = tone === 'income' ? 'text-income' : tone === 'expense' ? 'text-expense' : '';
+  return `<div class="kpi"><div class="kpi__label">${icon ? icon : ''}${esc(label)}</div>
+    <div class="kpi__value num ${valClass}">${value}</div>${d}</div>`;
+}
+
+/* -------------------------------------------------- period picker */
+function periodPicker(cur, custom, onChange) {
+  const presets = [['thisMonth','Tháng này'],['lastMonth','Tháng trước'],['last30','30 ngày qua'],['thisQuarter','Quý này'],['thisYear','Năm nay'],['all','Tất cả']];
+  const label = periodRange(cur, custom).label;
+  const btn = h(`<button class="btn btn--sm">${I.filter}<span>${esc(label)}</span>${I.chevDown}</button>`);
+  const wrap = h('<div class="filter-pop"></div>'); wrap.appendChild(btn);
+  attachDropdown(btn, (dd, close) => {
+    dd.style.right = '0'; dd.classList.add('dropdown--right'); dd.style.minWidth = '220px';
+    presets.forEach(([id, lbl]) => {
+      const it = h(`<button class="dropdown__item ${id === cur ? 'is-active' : ''}">${lbl}${id === cur ? I.check : ''}</button>`);
+      it.onclick = () => { dashState.period = id; close(); onChange(); };
+      dd.appendChild(it);
+    });
+    dd.appendChild(h('<div class="dropdown__sep"></div>'));
+    const cwrap = h(`<div style="padding:6px 8px">
+      <div class="dropdown__label" style="padding:2px 2px 6px">Khoảng tùy chỉnh</div>
+      <div style="display:flex;gap:6px;align-items:center">
+        <input type="date" class="input" value="${custom.start}" data-s style="height:32px">
+        <span style="color:var(--text-3)">→</span>
+        <input type="date" class="input" value="${custom.end}" data-e style="height:32px">
+      </div>
+      <button class="btn btn--sm btn--primary" style="width:100%;margin-top:8px" data-apply>Áp dụng</button>
+    </div>`);
+    cwrap.querySelector('[data-apply]').onclick = () => {
+      dashState.custom = { start: cwrap.querySelector('[data-s]').value, end: cwrap.querySelector('[data-e]').value };
+      dashState.period = 'custom'; close(); onChange();
+    };
+    dd.appendChild(cwrap);
+  }, { right: true });
+  return wrap;
+}
+
+/* ---------------------------------------------------- transaction row */
+function txRow(tx, refresh) {
+  const cats = tx.categoryIds.map(id => Store.category(id)).filter(Boolean);
+  const first = cats[0] || Store.pendingCategory();
+  const isPending = cats.length === 1 && first.isSystem;
+  const tint = first.colorHex;
+  const row = h(`<div class="tx">
+    <div class="tx__icon" style="background:${tint}22">${first.icon}</div>
+    <div class="tx__body">
+      <div class="tx__cats">
+        <span class="tx__cat">${esc(first.name)}</span>
+        ${cats.length > 1 ? `<span class="tx__more">+${cats.length - 1}</span>` : ''}
+        ${isPending ? '<span class="badge-pending">Chưa phân loại</span>' : ''}
+      </div>
+      ${tx.note ? `<div class="tx__note">${esc(tx.note)}</div>` : ''}
+    </div>
+    <div class="tx__amount ${tx.type === 'income' ? 'text-income' : 'text-expense'}">${Money.signed(tx.amount, tx.type)}</div>
+  </div>`);
+  row.onclick = () => openTxModal(tx, refresh);
+  return row;
+}
+
+/* ============================================================ TRANSACTIONS */
+const txFilter = { period: 'thisMonth', custom: { start: todayYMD(), end: todayYMD() }, type: 'all', categoryIds: [], rollup: true, search: '', sort: 'date-desc' };
+
+function TransactionsView() {
+  const page = h(`<div class="page"></div>`);
+  const header = h(`<div class="page__header">
+    <div><div class="page__title">Giao dịch</div><div class="page__subtitle" data-sub></div></div>
+  </div>`);
+  page.appendChild(header);
+
+  // filter bar
+  const fb = h('<div class="filterbar"></div>');
+  // search
+  const search = h(`<div class="search">${I.search}<input class="input" placeholder="Tìm theo ghi chú, danh mục, số tiền…" value="${esc(txFilter.search)}"></div>`);
+  let searchTimer;
+  search.querySelector('input').oninput = (e) => { clearTimeout(searchTimer); const v = e.target.value; searchTimer = setTimeout(() => { txFilter.search = v; refreshList(); }, 180); };
+  fb.appendChild(search);
+  // type segmented
+  const typeSeg = h(`<div class="segmented">
+    <button data-t="all" class="${txFilter.type==='all'?'is-active':''}">Tất cả</button>
+    <button data-t="income" data-tone="income" class="${txFilter.type==='income'?'is-active':''}">Thu</button>
+    <button data-t="expense" data-tone="expense" class="${txFilter.type==='expense'?'is-active':''}">Chi</button>
+  </div>`);
+  typeSeg.querySelectorAll('button').forEach(b => b.onclick = () => { txFilter.type = b.dataset.t; renderFull(); });
+  fb.appendChild(typeSeg);
+  // period
+  fb.appendChild(txPeriodPicker(() => renderFull()));
+  // category filter (multi-select stays open; just refreshes the list)
+  fb.appendChild(categoryFilterPicker(refreshList));
+  // sort
+  fb.appendChild(sortPicker(() => refreshList()));
+  page.appendChild(fb);
+
+  const listWrap = h('<div data-list></div>');
+  page.appendChild(listWrap);
+
+  function computeList() { return Domain.filter(txFilter); }
+  function refreshList() {
+    const list = computeList();
+    const t = Domain.totals(list);
+    header.querySelector('[data-sub]').textContent = `${t.count} giao dịch · Thu ${Money.formatShort(t.income)} · Chi ${Money.formatShort(t.expense)}`;
+    listWrap.innerHTML = '';
+    if (!list.length) { listWrap.appendChild(emptyState('Không có giao dịch khớp bộ lọc', 'Thử đổi khoảng thời gian hoặc xóa bớt điều kiện lọc.')); return; }
+    // group by date
+    const groups = {};
+    list.forEach(tx => { (groups[tx.occurredAt] = groups[tx.occurredAt] || []).push(tx); });
+    Object.keys(groups).sort((a, b) => txFilter.sort === 'date-asc' ? a.localeCompare(b) : b.localeCompare(a)).forEach(date => {
+      const g = groups[date];
+      const dayNet = g.reduce((s, x) => s + (x.type === 'income' ? x.amount : -x.amount), 0);
+      const gEl = h(`<div class="txgroup"><div class="txgroup__head">
+        <span class="txgroup__date">${esc(relativeDateHead(date))}</span>
+        <span class="txgroup__sum num">${(dayNet>=0?'+':'')}${Money.format(dayNet)}</span></div></div>`);
+      g.forEach(tx => gEl.appendChild(txRow(tx, refreshList)));
+      listWrap.appendChild(gEl);
+    });
+  }
+  function renderFull() { const parent = page.parentElement; if (parent) parent.replaceChild(TransactionsView(), page); }
+  refreshList();
+  return page;
+}
+
+function txPeriodPicker(onChange) {
+  const presets = [['thisMonth','Tháng này'],['lastMonth','Tháng trước'],['last30','30 ngày qua'],['thisQuarter','Quý này'],['thisYear','Năm nay'],['all','Tất cả']];
+  const label = periodRange(txFilter.period, txFilter.custom).label;
+  const btn = h(`<button class="chip ${txFilter.period!=='thisMonth'?'is-active':''}">${I.filter}<span>${esc(label)}</span></button>`);
+  const wrap = h('<div class="filter-pop"></div>'); wrap.appendChild(btn);
+  attachDropdown(btn, (dd, close) => {
+    dd.style.minWidth = '210px';
+    presets.forEach(([id, lbl]) => { const it = h(`<button class="dropdown__item ${id===txFilter.period?'is-active':''}">${lbl}${id===txFilter.period?I.check:''}</button>`); it.onclick = () => { txFilter.period = id; close(); onChange(); }; dd.appendChild(it); });
+    dd.appendChild(h('<div class="dropdown__sep"></div>'));
+    const cwrap = h(`<div style="padding:2px 8px 6px"><div class="dropdown__label" style="padding:2px">Tùy chỉnh</div>
+      <div style="display:flex;gap:6px;align-items:center"><input type="date" class="input" value="${txFilter.custom.start}" data-s style="height:32px"><span>→</span><input type="date" class="input" value="${txFilter.custom.end}" data-e style="height:32px"></div>
+      <button class="btn btn--sm btn--primary" style="width:100%;margin-top:8px" data-apply>Áp dụng</button></div>`);
+    cwrap.querySelector('[data-apply]').onclick = () => { txFilter.custom = { start: cwrap.querySelector('[data-s]').value, end: cwrap.querySelector('[data-e]').value }; txFilter.period = 'custom'; close(); onChange(); };
+    dd.appendChild(cwrap);
+  });
+  return wrap;
+}
+
+function categoryFilterPicker(refreshList) {
+  const btn = h(`<button class="chip"><span style="display:inline-flex;align-items:center;gap:6px">${I.tags}<span data-lbl></span></span></button>`);
+  function syncBtn() { const n = txFilter.categoryIds.length; btn.classList.toggle('is-active', !!n); btn.querySelector('[data-lbl]').textContent = n ? `${n} danh mục` : 'Danh mục'; }
+  syncBtn();
+  const wrap = h('<div class="filter-pop"></div>'); wrap.appendChild(btn);
+  attachDropdown(btn, (dd, close) => {
+    dd.style.minWidth = '280px';
+    const rt = h(`<label class="checkline" style="justify-content:space-between"><span style="font-size:13px">Gồm cả danh mục con <span style="color:var(--text-3)">(roll-up)</span></span><span class="switch"><input type="checkbox" ${txFilter.rollup?'checked':''}><span class="switch__track"></span></span></label>`);
+    rt.querySelector('input').onchange = (e) => { txFilter.rollup = e.target.checked; refreshList(); };
+    dd.appendChild(rt);
+    dd.appendChild(h('<div class="dropdown__sep"></div>'));
+    Domain.orderedCategories().forEach(({ cat, depth }) => {
+      const line = h(`<div class="checkline"><span class="checkbox ${txFilter.categoryIds.includes(cat.id)?'is-checked':''}">${I.check}</span>
+        <span class="chip__dot" style="background:${cat.colorHex}"></span>
+        <span style="padding-left:${depth*14}px;flex:1">${cat.icon} ${esc(cat.name)}</span></div>`);
+      line.onclick = () => {
+        const idx = txFilter.categoryIds.indexOf(cat.id);
+        if (idx >= 0) txFilter.categoryIds.splice(idx, 1); else txFilter.categoryIds.push(cat.id);
+        line.querySelector('.checkbox').classList.toggle('is-checked');
+        syncBtn(); refreshList();
+      };
+      dd.appendChild(line);
+    });
+    dd.appendChild(h('<div class="dropdown__sep"></div>'));
+    const clr = h('<button class="dropdown__item" style="color:var(--text-2)">Xóa lọc danh mục</button>');
+    clr.onclick = () => { txFilter.categoryIds = []; syncBtn(); close(); refreshList(); };
+    dd.appendChild(clr);
+  });
+  return wrap;
+}
+
+function sortPicker(onChange) {
+  const opts = [['date-desc','Mới nhất'],['date-asc','Cũ nhất'],['amount-desc','Số tiền cao'],['amount-asc','Số tiền thấp']];
+  const label = (opts.find(o => o[0] === txFilter.sort) || opts[0])[1];
+  const btn = h(`<button class="chip" style="margin-left:auto">${esc(label)} ${I.chevDown}</button>`);
+  const wrap = h('<div class="filter-pop" style="margin-left:auto"></div>'); wrap.appendChild(btn);
+  attachDropdown(btn, (dd, close) => { dd.classList.add('dropdown--right'); dd.style.right = '0'; dd.style.minWidth = '160px';
+    opts.forEach(([id, lbl]) => { const it = h(`<button class="dropdown__item ${id===txFilter.sort?'is-active':''}">${lbl}${id===txFilter.sort?I.check:''}</button>`); it.onclick = () => { txFilter.sort = id; close(); onChange(); }; dd.appendChild(it); });
+  }, { right: true });
+  return wrap;
+}
+
+/* ------------------------------------------------- transaction modal */
+function openTxModal(existing, onSaved) {
+  const editing = !!existing;
+  const draft = existing
+    ? { id: existing.id, type: existing.type, amount: existing.amount, occurredAt: existing.occurredAt, note: existing.note, categoryIds: [...existing.categoryIds] }
+    : { type: 'expense', amount: 0, occurredAt: todayYMD(), note: '', categoryIds: [] };
+
+  const node = h(`<div class="modal">
+    <div class="modal__head">
+      <div class="segmented" data-type>
+        <button data-t="expense" data-tone="expense" class="${draft.type==='expense'?'is-active':''}">Chi tiền</button>
+        <button data-t="income" data-tone="income" class="${draft.type==='income'?'is-active':''}">Thu tiền</button>
+      </div>
+      <div style="flex:1"></div>
+      <button class="icon-btn" data-close>${I.x}</button>
+    </div>
+    <div class="modal__body">
+      <div class="amount-input">
+        <input inputmode="numeric" data-amount placeholder="0" value="${draft.amount?Money.grouped(draft.amount):''}">
+        <span class="cur">đ</span>
+      </div>
+      <div class="field">
+        <label class="field__label">Danh mục <span style="color:var(--text-3);font-weight:400">· chọn nhiều được</span></label>
+        <div data-picker></div>
+      </div>
+      <div style="display:flex;gap:12px">
+        <div class="field" style="flex:1"><label class="field__label">Ngày</label><input type="date" class="input" data-date value="${draft.occurredAt}"></div>
+      </div>
+      <div class="field"><label class="field__label">Ghi chú</label><textarea class="textarea" data-note placeholder="Không bắt buộc…">${esc(draft.note)}</textarea></div>
+    </div>
+    <div class="modal__foot">
+      ${editing ? '<button class="btn btn--danger" data-delete>'+I.trash+' Xóa</button>' : ''}
+      <div class="spacer"></div>
+      <button class="btn btn--ghost" data-close>Hủy</button>
+      <button class="btn btn--primary" data-save>${editing?'Lưu':'Thêm giao dịch'}</button>
+    </div>
+  </div>`);
+
+  const m = openModal(node, { onClose: () => {} });
+  node.querySelectorAll('[data-close]').forEach(b => b.onclick = () => m.close());
+
+  // type toggle
+  node.querySelectorAll('[data-type] button').forEach(b => b.onclick = () => {
+    draft.type = b.dataset.t;
+    node.querySelectorAll('[data-type] button').forEach(x => x.classList.toggle('is-active', x === b));
+  });
+
+  // amount formatting
+  const amountEl = node.querySelector('[data-amount]');
+  amountEl.oninput = () => { const v = Money.parse(amountEl.value); draft.amount = v; amountEl.value = v ? Money.grouped(v) : ''; };
+  if (!editing) setTimeout(() => amountEl.focus(), 50);
+
+  // category picker
+  const picker = buildCategoryPicker(draft.categoryIds, (ids) => { draft.categoryIds = ids; });
+  node.querySelector('[data-picker]').appendChild(picker);
+
+  node.querySelector('[data-date]').onchange = (e) => draft.occurredAt = e.target.value;
+  node.querySelector('[data-note]').oninput = (e) => draft.note = e.target.value;
+
+  node.querySelector('[data-save]').onclick = () => {
+    if (!draft.amount || draft.amount <= 0) { toast('Nhập số tiền đã nhé', 'danger'); amountEl.focus(); return; }
+    draft.note = node.querySelector('[data-note]').value;
+    Store.saveTransaction(draft);
+    m.close();
+    toast(editing ? 'Đã lưu thay đổi' : 'Đã thêm giao dịch ' + Money.signed(draft.amount, draft.type));
+    if (onSaved) onSaved(); else renderApp();
+  };
+  if (editing) node.querySelector('[data-delete]').onclick = async () => {
+    if (await confirmDialog({ title: 'Xóa giao dịch?', message: 'Giao dịch này sẽ bị xóa vĩnh viễn.', confirmText: 'Xóa', danger: true })) {
+      Store.deleteTransaction(existing.id); m.close(); toast('Đã xóa giao dịch'); if (onSaved) onSaved(); else renderApp();
+    }
+  };
+  return m;
+}
+
+// hierarchical multi-select picker used inside tx modal
+function buildCategoryPicker(selectedIds, onChange) {
+  const sel = new Set(selectedIds);
+  const wrap = h(`<div class="picker">
+    <div class="picker__search">${''}<input class="input" placeholder="Tìm danh mục…"></div>
+    <div class="picker__list"></div>
+  </div>`);
+  const selectedWrap = h('<div class="picker__selected"></div>');
+  const listEl = wrap.querySelector('.picker__list');
+  const searchEl = wrap.querySelector('input');
+
+  function emit() { onChange([...sel]); renderSelected(); }
+  function renderList(q) {
+    listEl.innerHTML = '';
+    const items = Domain.orderedCategories().filter(({ cat }) => !q || cat.name.toLowerCase().includes(q.toLowerCase()));
+    if (!items.length) { listEl.appendChild(h('<div style="padding:14px;text-align:center;color:var(--text-3);font-size:13px">Không tìm thấy</div>')); return; }
+    items.forEach(({ cat, depth }) => {
+      const checked = sel.has(cat.id);
+      const line = h(`<div class="checkline"><span class="checkbox ${checked?'is-checked':''}">${I.check}</span>
+        <span class="chip__dot" style="background:${cat.colorHex}"></span>
+        <span style="padding-left:${(q?0:depth*14)}px;flex:1">${cat.icon} ${esc(cat.name)}${cat.isSystem?' <span style="color:var(--text-3);font-size:12px">(hệ thống)</span>':''}</span></div>`);
+      line.onclick = () => { if (sel.has(cat.id)) sel.delete(cat.id); else sel.add(cat.id); renderList(searchEl.value); emit(); };
+      listEl.appendChild(line);
+    });
+  }
+  function renderSelected() {
+    selectedWrap.innerHTML = '';
+    if (!sel.size) { selectedWrap.appendChild(h(`<span style="font-size:12.5px;color:var(--text-3)">Chưa chọn — sẽ tự gán “${PENDING_NAME}”.</span>`)); return; }
+    [...sel].map(id => Store.category(id)).filter(Boolean).forEach(cat => {
+      const chip = h(`<span class="chip is-active"><span class="chip__dot" style="background:${cat.colorHex}"></span>${cat.icon} ${esc(cat.name)}<span class="chip__x">${I.x}</span></span>`);
+      chip.querySelector('.chip__x').onclick = () => { sel.delete(cat.id); renderList(searchEl.value); emit(); };
+      selectedWrap.appendChild(chip);
+    });
+  }
+  searchEl.oninput = () => renderList(searchEl.value);
+  renderList(''); renderSelected();
+  const container = h('<div></div>'); container.appendChild(wrap); container.appendChild(selectedWrap);
+  return container;
+}
+
+/* ============================================================= CATEGORIES */
+function CategoriesView() {
+  const page = h(`<div class="page"></div>`);
+  const header = h(`<div class="page__header">
+    <div><div class="page__title">Danh mục</div><div class="page__subtitle">Phân loại thu chi. Kéo theo cây cha–con, gắn nhiều danh mục cho một giao dịch.</div></div>
+    <div class="page__actions"><button class="btn btn--primary btn--sm" data-add>${I.plus} Thêm danh mục</button></div>
+  </div>`);
+  header.querySelector('[data-add]').onclick = () => openCategoryModal(null, () => rerender());
+  page.appendChild(header);
+
+  ['expense', 'income'].forEach(type => {
+    const roots = Store.categories().filter(c => c.type === type && !c.parentId).sort((a,b)=> (a.isSystem?1:0)-(b.isSystem?1:0) || byName(a,b));
+    if (!roots.length) return;
+    const sec = h(`<div style="margin-bottom:24px"><div class="section-title" style="margin-bottom:8px;display:flex;align-items:center;gap:8px"><span class="type-pill-${type} cat-row__type">${type==='expense'?'Chi tiêu':'Thu nhập'}</span></div><div class="card"></div></div>`);
+    const card = sec.querySelector('.card');
+    const walk = (cat, depth) => {
+      card.appendChild(catManageRow(cat, depth, () => rerender()));
+      Store.categories().filter(c => c.parentId === cat.id).sort(byName).forEach(ch => walk(ch, depth + 1));
+    };
+    roots.forEach(r => walk(r, 0));
+    page.appendChild(sec);
+  });
+
+  function rerender() { const parent = page.parentElement; if (parent) parent.replaceChild(CategoriesView(), page); }
+  return page;
+}
+
+function catManageRow(cat, depth, refresh) {
+  const count = Store.transactions().filter(t => t.categoryIds.includes(cat.id)).length;
+  const row = h(`<div class="cat-row" style="padding-left:${10 + depth * 24}px">
+    ${depth ? '<span style="color:var(--text-3);margin-right:-4px">'+I.chevRight+'</span>' : ''}
+    <span class="cat-row__icon" style="background:${cat.colorHex}22">${cat.icon}</span>
+    <span class="cat-row__name">${esc(cat.name)}</span>
+    ${cat.isSystem ? '<span class="cat-row__type" style="background:var(--bg-active);color:var(--text-3)">hệ thống</span>' : ''}
+    <span style="color:var(--text-3);font-size:12.5px;margin-left:4px">${count} giao dịch</span>
+    <span class="cat-row__actions"></span>
+  </div>`);
+  const actions = row.querySelector('.cat-row__actions');
+  if (!cat.isSystem) {
+    const edit = h(`<button class="icon-btn" title="Sửa">${I.edit}</button>`); edit.onclick = () => openCategoryModal(cat, refresh);
+    const del = h(`<button class="icon-btn" title="Xóa">${I.trash}</button>`);
+    del.onclick = async () => {
+      const kids = Domain.descendantIds(cat.id).size - 1;
+      const msg = `Xóa “${cat.name}”${kids ? ` và ${kids} danh mục con` : ''}? Giao dịch đang gắn sẽ chuyển về “${PENDING_NAME}” nếu không còn danh mục nào.`;
+      if (await confirmDialog({ title: 'Xóa danh mục?', message: msg, confirmText: 'Xóa', danger: true })) { Store.deleteCategory(cat.id); toast('Đã xóa danh mục'); refresh(); }
+    };
+    actions.appendChild(edit); actions.appendChild(del);
+  }
+  return row;
+}
+
+const SWATCHES = ['#e0483d','#d9730d','#cb8a14','#1a8f6b','#0b6e99','#2383e2','#6940a5','#ad1a72','#64473a','#787774'];
+const EMOJIS = ['🍜','☕','🍽️','🛒','🛍️','🚕','⛽','🚗','✈️','🏠','💡','🚿','🌐','📱','🏥','🏃','💊','🎬','🎮','🎁','📚','💰','💵','📈','💳','🐶','👕','💇','🎓','⚽','🍺','🎵'];
+
+function openCategoryModal(existing, onSaved) {
+  const editing = !!existing;
+  const draft = existing ? { ...existing } : { name: '', type: 'expense', icon: '📦', colorHex: '#2383e2', parentId: null };
+  const node = h(`<div class="modal modal--lg">
+    <div class="modal__head"><div class="modal__title">${editing?'Sửa danh mục':'Thêm danh mục'}</div><button class="icon-btn" data-close>${I.x}</button></div>
+    <div class="modal__body">
+      <div style="display:flex;gap:12px;align-items:flex-end">
+        <div style="width:56px;height:56px;border-radius:14px;display:grid;place-items:center;font-size:26px;flex:0 0 auto" data-preview>${draft.icon}</div>
+        <div class="field" style="flex:1"><label class="field__label">Tên danh mục</label><input class="input" data-name value="${esc(draft.name)}" placeholder="VD: Ăn uống" maxlength="30"></div>
+      </div>
+      <div class="field"><label class="field__label">Loại</label>
+        <div class="segmented" data-type>
+          <button data-t="expense" data-tone="expense" class="${draft.type==='expense'?'is-active':''}">Chi tiêu</button>
+          <button data-t="income" data-tone="income" class="${draft.type==='income'?'is-active':''}">Thu nhập</button>
+        </div>
+      </div>
+      <div class="field"><label class="field__label">Danh mục cha <span style="color:var(--text-3);font-weight:400">· để trống nếu là cấp gốc</span></label>
+        <select class="select" data-parent></select></div>
+      <div class="field"><label class="field__label">Biểu tượng</label><div class="emoji-grid" data-emojis></div></div>
+      <div class="field"><label class="field__label">Màu</label><div class="color-swatches" data-colors></div></div>
+    </div>
+    <div class="modal__foot"><div class="spacer"></div><button class="btn btn--ghost" data-close>Hủy</button><button class="btn btn--primary" data-save>${editing?'Lưu':'Thêm'}</button></div>
+  </div>`);
+  const m = openModal(node);
+  node.querySelectorAll('[data-close]').forEach(b => b.onclick = () => m.close());
+  const preview = node.querySelector('[data-preview]');
+  const updatePreview = () => { preview.style.background = draft.colorHex + '22'; preview.textContent = draft.icon; };
+  updatePreview();
+
+  node.querySelector('[data-name]').oninput = (e) => draft.name = e.target.value;
+  node.querySelectorAll('[data-type] button').forEach(b => b.onclick = () => { draft.type = b.dataset.t; node.querySelectorAll('[data-type] button').forEach(x => x.classList.toggle('is-active', x === b)); buildParent(); });
+
+  const parentSel = node.querySelector('[data-parent]');
+  function buildParent() {
+    parentSel.innerHTML = '<option value="">— Không (cấp gốc) —</option>';
+    const banned = editing ? Domain.descendantIds(existing.id) : new Set();
+    Domain.orderedCategories(draft.type).forEach(({ cat, depth }) => {
+      if (cat.isSystem || banned.has(cat.id)) return;
+      const o = document.createElement('option'); o.value = cat.id; o.textContent = ' '.repeat(depth * 2) + cat.icon + ' ' + cat.name;
+      if (cat.id === draft.parentId) o.selected = true; parentSel.appendChild(o);
+    });
+  }
+  buildParent();
+  parentSel.onchange = (e) => draft.parentId = e.target.value || null;
+
+  const emojiWrap = node.querySelector('[data-emojis]');
+  EMOJIS.forEach(em => { const b = h(`<button class="emoji-btn ${em===draft.icon?'is-active':''}">${em}</button>`); b.onclick = () => { draft.icon = em; emojiWrap.querySelectorAll('.emoji-btn').forEach(x => x.classList.toggle('is-active', x.textContent === em)); updatePreview(); }; emojiWrap.appendChild(b); });
+  const colorWrap = node.querySelector('[data-colors]');
+  SWATCHES.forEach(col => { const b = h(`<button class="swatch ${col===draft.colorHex?'is-active':''}" style="background:${col}"></button>`); b.onclick = () => { draft.colorHex = col; colorWrap.querySelectorAll('.swatch').forEach(x => x.classList.remove('is-active')); b.classList.add('is-active'); updatePreview(); }; colorWrap.appendChild(b); });
+
+  node.querySelector('[data-save]').onclick = () => {
+    if (!draft.name.trim()) { toast('Nhập tên danh mục', 'danger'); return; }
+    if (editing) Store.updateCategory(existing.id, { name: draft.name.trim(), type: draft.type, icon: draft.icon, colorHex: draft.colorHex, parentId: draft.parentId });
+    else Store.addCategory({ name: draft.name.trim(), type: draft.type, icon: draft.icon, colorHex: draft.colorHex, parentId: draft.parentId });
+    m.close(); toast(editing ? 'Đã lưu danh mục' : 'Đã thêm danh mục'); onSaved && onSaved();
+  };
+  return m;
+}
+
+/* ============================================================== SETTINGS */
+function SettingsView() {
+  const u = Store.activeUser();
+  const page = h(`<div class="page" style="max-width:720px"></div>`);
+  page.appendChild(h(`<div class="page__header"><div><div class="page__title">Cài đặt</div></div></div>`));
+
+  // profile
+  const profile = settingsGroup('Hồ sơ');
+  const nameRow = settingsRow('Tên hiển thị', 'Hiển thị trên thanh bên.');
+  const nameInput = h(`<input class="input" value="${esc(u.displayName)}" style="max-width:220px" maxlength="40">`);
+  nameInput.onchange = () => { if (nameInput.value.trim()) { Store.updateUser({ displayName: nameInput.value.trim() }); toast('Đã cập nhật tên'); renderApp(); } };
+  nameRow.querySelector('.settings-row__ctrl').appendChild(nameInput);
+  profile.appendChild(nameRow);
+  const curRow = settingsRow('Tiền tệ', 'v1 chỉ hỗ trợ VND (đồng).');
+  curRow.querySelector('.settings-row__ctrl').appendChild(h('<span class="chip">₫ VND</span>'));
+  profile.appendChild(curRow);
+  page.appendChild(profile);
+
+  // appearance
+  const appearance = settingsGroup('Giao diện');
+  const themeRow = settingsRow('Chủ đề', 'Sáng, tối, hoặc theo hệ thống.');
+  const seg = h(`<div class="segmented">
+    <button data-th="light">Sáng</button><button data-th="dark">Tối</button><button data-th="system">Hệ thống</button></div>`);
+  const syncSeg = () => seg.querySelectorAll('button').forEach(b => b.classList.toggle('is-active', b.dataset.th === Store.getTheme()));
+  seg.querySelectorAll('button').forEach(b => b.onclick = () => { Store.setTheme(b.dataset.th); syncSeg(); renderApp(); });
+  syncSeg();
+  themeRow.querySelector('.settings-row__ctrl').appendChild(seg);
+  appearance.appendChild(themeRow);
+  page.appendChild(appearance);
+
+  // data
+  const data = settingsGroup('Dữ liệu');
+  const d = Store.data();
+  const stat = settingsRow('Dữ liệu của bạn', `${d.transactions.length} giao dịch · ${d.categories.length} danh mục. Lưu cục bộ trên trình duyệt này.`);
+  data.appendChild(stat);
+  const expRow = settingsRow('Sao lưu & xuất', 'Xuất toàn bộ ra JSON (khôi phục được) hoặc CSV (mở bằng Excel).');
+  const expCtrl = expRow.querySelector('.settings-row__ctrl');
+  const bj = h(`<button class="btn btn--sm">${I.download} JSON</button>`); bj.onclick = exportJSON;
+  const bc = h(`<button class="btn btn--sm">${I.download} CSV</button>`); bc.onclick = exportCSV;
+  expCtrl.style.gap = '8px'; expCtrl.appendChild(bj); expCtrl.appendChild(bc);
+  data.appendChild(expRow);
+  const impRow = settingsRow('Nhập từ tệp', 'Khôi phục từ tệp JSON đã xuất trước đó (ghi đè dữ liệu hiện tại).');
+  const bi = h(`<button class="btn btn--sm">${I.upload} Nhập JSON</button>`); bi.onclick = importJSON;
+  impRow.querySelector('.settings-row__ctrl').appendChild(bi);
+  data.appendChild(impRow);
+  page.appendChild(data);
+
+  // danger
+  const danger = settingsGroup('Vùng nguy hiểm');
+  const delRow = settingsRow('Xóa tài khoản', 'Xóa vĩnh viễn tài khoản này cùng toàn bộ giao dịch & danh mục trên máy.');
+  const bd2 = h(`<button class="btn btn--sm btn--danger">${I.trash} Xóa tài khoản</button>`);
+  bd2.onclick = async () => {
+    if (await confirmDialog({ title: 'Xóa tài khoản?', message: `Toàn bộ dữ liệu của “${u.displayName}” sẽ bị xóa và không thể khôi phục.`, confirmText: 'Xóa vĩnh viễn', danger: true })) {
+      Store.deleteUser(u.id); toast('Đã xóa tài khoản'); renderApp();
+    }
+  };
+  delRow.querySelector('.settings-row__ctrl').appendChild(bd2);
+  danger.appendChild(delRow);
+  page.appendChild(danger);
+
+  page.appendChild(h(`<div style="text-align:center;color:var(--text-3);font-size:12.5px;padding:20px 0">Cashy · bản web v1 (prototype). Offline-first — dữ liệu ở trên máy bạn.</div>`));
+  return page;
+}
+function settingsGroup(title) { const g = h(`<div class="settings-group"><div class="section-title" style="margin-bottom:4px">${esc(title)}</div></div>`); return g; }
+function settingsRow(title, desc) {
+  return h(`<div class="settings-row"><div class="settings-row__main"><div class="settings-row__title">${esc(title)}</div><div class="settings-row__desc">${esc(desc)}</div></div><div class="settings-row__ctrl" style="display:flex;align-items:center"></div></div>`);
+}
+
+/* ------------------------------------------------ export / import */
+function download(filename, text, mime) {
+  const blob = new Blob([text], { type: mime || 'text/plain;charset=utf-8' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = filename;
+  document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 100);
+}
+function exportJSON() {
+  const u = Store.activeUser();
+  const payload = { app: 'cashy', version: 1, exportedAt: new Date().toISOString(), user: { displayName: u.displayName, currency: u.currency, avatarColor: u.avatarColor }, categories: Store.categories(), transactions: Store.transactions() };
+  download(`cashy-${u.displayName}-${todayYMD()}.json`, JSON.stringify(payload, null, 2), 'application/json');
+  toast('Đã xuất JSON');
+}
+function csvCell(v) { const s = String(v ?? ''); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }
+function exportCSV() {
+  const rows = [['id','loai','so_tien','ngay','ghi_chu','danh_muc']];
+  Store.transactions().slice().sort((a,b)=>a.occurredAt.localeCompare(b.occurredAt)).forEach(t => {
+    const cats = t.categoryIds.map(id => Store.category(id)?.name).filter(Boolean).join('|');
+    rows.push([t.id, t.type === 'income' ? 'thu' : 'chi', t.amount, t.occurredAt, t.note || '', cats]);
+  });
+  const csv = '﻿' + rows.map(r => r.map(csvCell).join(',')).join('\r\n');
+  download(`cashy-${Store.activeUser().displayName}-${todayYMD()}.csv`, csv, 'text/csv;charset=utf-8');
+  toast('Đã xuất CSV');
+}
+function importJSON() {
+  const input = document.createElement('input'); input.type = 'file'; input.accept = 'application/json,.json';
+  input.onchange = () => {
+    const file = input.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async () => {
+      try {
+        const data = JSON.parse(reader.result);
+        if (!data || !Array.isArray(data.categories) || !Array.isArray(data.transactions)) throw new Error('bad');
+        if (await confirmDialog({ title: 'Nhập dữ liệu?', message: `Sẽ thay thế dữ liệu hiện tại bằng tệp sao lưu (${data.transactions.length} giao dịch).`, confirmText: 'Nhập & ghi đè', danger: true })) {
+          const d = Store.data(); d.categories = data.categories; d.transactions = data.transactions;
+          if (data.user?.displayName) Store.updateUser({ displayName: data.user.displayName });
+          Store.persist(); toast('Đã nhập dữ liệu'); renderApp();
+        }
+      } catch (e) { toast('Tệp không hợp lệ', 'danger'); }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+/* ---------------------------------------------------- shared empty state */
+function emptyState(title, sub) {
+  return h(`<div class="empty"><div class="empty__icon">${I.wallet}</div><div class="empty__title">${esc(title)}</div><p>${esc(sub || '')}</p></div>`);
+}
+
+/* register views into the shared namespace so the core router can find them */
+window.__cashy.OnboardingView = OnboardingView;
+window.__cashy.routes = { dashboard: DashboardView, transactions: TransactionsView, categories: CategoriesView, settings: SettingsView };
+window.__cashy.openTxModal = openTxModal;
+})();
+</script>
+<script>
+"use strict";
+/* First render — core + views are wired via window.__cashy. */
+window.__cashy.renderApp();
+</script>
+</body>
+</html>
