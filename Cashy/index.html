@@ -30,7 +30,7 @@
   --font-sans: var(--font-body);
 
   /* ---- radii / spacing ---- */
-  --r-sm: 6px; --r-md: 10px; --r-lg: 14px; --r-xl: 18px; --r-full: 9999px; --r-pill: 9999px;
+  --r-sm: 4px; --r-md: 6px; --r-lg: 9px; --r-xl: 12px; --r-full: 9999px; --r-pill: 9999px;
   --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 20px; --sp-6: 24px; --sp-8: 32px; --sp-10: 40px;
 
   /* ---- motion ---- */
@@ -38,63 +38,64 @@
   --ease: cubic-bezier(.16,1,.3,1); --ease-out: cubic-bezier(.16,1,.3,1);
 }
 
-/* ================= DARK (default) ================= */
-:root, [data-theme="dark"] {
-  color-scheme: dark;
-  --bg:#0a0a0f;        --bg-rgb:10 10 15;
-  --surface:#111118;   --surface-rgb:17 17 24;
-  --card:#16161f;      --card-rgb:22 22 31;
-  --line:#20202c;      --line-rgb:32 32 44;
-  --border:#2a2a3a;    --border-rgb:42 42 58;
+/* ================= LIGHT (default · Notion, trung tính ấm) ================= */
+:root, [data-theme="light"] {
+  color-scheme: light;
+  --bg:#ffffff;        --bg-rgb:255 255 255;
+  --surface:#f7f6f4;   --surface-rgb:247 246 244;
+  --card:#ffffff;      --card-rgb:255 255 255;
+  --line:#efeeec;      --line-rgb:239 238 236;
+  --border:#e8e7e3;    --border-rgb:232 231 227;
 
-  --text-primary:#f0f0f8; --text-secondary:#a8a8c0; --text-muted:#8888a8; --text-dim:#5a5a78;
-  --text-primary-rgb:240 240 248;
+  --text-primary:#37352f; --text-secondary:#73726e; --text-muted:#9b9a97; --text-dim:#b8b7b3;
+  --text-primary-rgb:55 53 47;
 
-  --accent-green:#00e5a0;  --accent-green-rgb:0 229 160;
-  --accent-cyan:#22d3ee;   --accent-cyan-rgb:34 211 238;
-  --accent-blue:#4d8dff;   --accent-blue-rgb:77 141 255;
-  --accent-yellow:#f5c518; --accent-yellow-rgb:245 197 24;
-  --accent-purple:#c084fc; --accent-purple-rgb:192 132 252;
-  --accent-red:#ff4d67;    --accent-red-rgb:255 77 103;
+  --accent-green:#4a8a68;  --accent-green-rgb:74 138 104;
+  --accent-cyan:#3a7d8c;   --accent-cyan-rgb:58 125 140;
+  --accent-blue:#3878a8;   --accent-blue-rgb:56 120 168;
+  --accent-yellow:#b8892b; --accent-yellow-rgb:184 137 43;
+  --accent-purple:#8a5cb0; --accent-purple-rgb:138 92 176;
+  --accent-red:#c0433c;    --accent-red-rgb:192 67 60;
 
-  --hover: rgba(255,255,255,.055);
-  --active: rgba(255,255,255,.09);
-  --overlay: rgba(3,3,8,.62);
-  --shadow-sm: 0 1px 2px rgba(0,0,0,.4);
-  --shadow-md: 0 6px 20px rgba(0,0,0,.45);
-  --shadow-lg: 0 18px 48px rgba(0,0,0,.6), 0 6px 16px rgba(0,0,0,.4);
-  /* action = monochrome (đen/trắng theo nền); dark → nút trắng, chữ+icon đen */
-  --action:#f2f2f8;    --action-rgb:242 242 248;  --action-ink:#0a0a0f;  --action-hover:#ffffff;
-  --ring: 0 0 0 3px rgb(var(--action-rgb) / .30);
+  --hover: rgba(55,53,47,.055);
+  --active: rgba(55,53,47,.09);
+  --overlay: rgba(15,15,15,.28);
+  --shadow-sm: 0 1px 2px rgba(15,15,15,.04);
+  --shadow-md: 0 0 0 1px rgba(15,15,15,.04), 0 4px 12px rgba(15,15,15,.10);
+  --shadow-lg: 0 0 0 1px rgba(15,15,15,.05), 0 8px 28px rgba(15,15,15,.16), 0 2px 8px rgba(15,15,15,.08);
+  /* action = monochrome; light → nút gần-đen, chữ+icon trắng (như primary của Notion) */
+  --action:#37352f;    --action-rgb:55 53 47;  --action-ink:#ffffff;  --action-hover:#2a2925;
+  --ring: 0 0 0 3px rgb(var(--action-rgb) / .16);
 }
 
-/* ================= LIGHT (redefined accents, đậm hơn cho AA) ================= */
-[data-theme="light"] {
-  color-scheme: light;
-  --bg:#fbfbfc;        --bg-rgb:251 251 252;
-  --surface:#f2f2f5;   --surface-rgb:242 242 245;
-  --card:#ffffff;      --card-rgb:255 255 255;
-  --line:#ececf0;      --line-rgb:236 236 240;
-  --border:#dcdce3;    --border-rgb:220 220 227;
+/* ================= DARK (Notion dark) ================= */
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg:#191919;        --bg-rgb:25 25 25;
+  --surface:#202020;   --surface-rgb:32 32 32;
+  --card:#242423;      --card-rgb:36 36 35;
+  --line:#2d2d2c;      --line-rgb:45 45 44;
+  --border:#37373455;  --border-rgb:55 55 52;
 
-  --text-primary:#111119; --text-secondary:#4a4a5a; --text-muted:#71718a; --text-dim:#a0a0b4;
-  --text-primary-rgb:17 17 25;
+  --text-primary:#e9e9e6; --text-secondary:#9b9b98; --text-muted:#7a7a76; --text-dim:#5c5c58;
+  --text-primary-rgb:233 233 230;
 
-  --accent-green:#00875a;  --accent-green-rgb:0 135 90;
-  --accent-cyan:#0e7490;   --accent-cyan-rgb:14 116 144;
-  --accent-blue:#2563eb;   --accent-blue-rgb:37 99 235;
-  --accent-yellow:#946400; --accent-yellow-rgb:148 100 0;
-  --accent-purple:#7c3aed; --accent-purple-rgb:124 58 237;
-  --accent-red:#d11f3d;    --accent-red-rgb:209 31 61;
+  --accent-green:#4faf8e;  --accent-green-rgb:79 175 142;
+  --accent-cyan:#4aa8bd;   --accent-cyan-rgb:74 168 189;
+  --accent-blue:#5a9bd4;   --accent-blue-rgb:90 155 212;
+  --accent-yellow:#e0b23f; --accent-yellow-rgb:224 178 63;
+  --accent-purple:#b18ad4; --accent-purple-rgb:177 138 212;
+  --accent-red:#f0736a;    --accent-red-rgb:240 115 106;
 
-  --hover: rgba(17,17,25,.045);
-  --active: rgba(17,17,25,.07);
-  --overlay: rgba(20,20,30,.32);
-  --shadow-sm: 0 1px 2px rgba(17,17,25,.06);
-  --shadow-md: 0 6px 20px rgba(17,17,25,.10);
-  --shadow-lg: 0 18px 44px rgba(17,17,25,.16), 0 4px 12px rgba(17,17,25,.08);
-  /* action = monochrome; light → nút đen, chữ+icon trắng */
-  --action:#15151d;    --action-rgb:21 21 29;  --action-ink:#ffffff;  --action-hover:#000000;
+  --hover: rgba(255,255,255,.055);
+  --active: rgba(255,255,255,.085);
+  --overlay: rgba(0,0,0,.55);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.3);
+  --shadow-md: 0 0 0 1px rgba(0,0,0,.2), 0 4px 12px rgba(0,0,0,.4);
+  --shadow-lg: 0 0 0 1px rgba(0,0,0,.2), 0 8px 28px rgba(0,0,0,.5), 0 2px 8px rgba(0,0,0,.4);
+  /* action = monochrome; dark → nút trắng, chữ+icon gần-đen */
+  --action:#e9e9e6;    --action-rgb:233 233 230;  --action-ink:#191919;  --action-hover:#ffffff;
+  --ring: 0 0 0 3px rgb(var(--action-rgb) / .28);
 }
 
 /* ---- legacy aliases (giữ inline styles trong JS chạy đúng, tự theo theme) ---- */
@@ -145,7 +146,7 @@ a { color: var(--text-primary); text-decoration: underline; text-underline-offse
 
 /* uppercase mono eyebrow labels */
 .kpi__label, .nav__label, .dropdown__label {
-  font-family: var(--font-mono); text-transform: uppercase; letter-spacing: .12em;
+  font-family: var(--font-body); text-transform: none; letter-spacing: normal;
 }
 
 /* scrollbars */
@@ -290,12 +291,9 @@ a { color: var(--text-primary); text-decoration: underline; text-underline-offse
 .card--pad { padding: var(--sp-5); }
 
 .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-bottom: var(--sp-6); }
-.kpi { background: var(--card); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 16px 18px; min-width: 0; position: relative; overflow: hidden; }
-.kpi::before { content: ""; position: absolute; left: 0; top: 14px; bottom: 14px; width: 3px; border-radius: 0 3px 3px 0; background: var(--text-dim); opacity: .5; }
-.kpi[data-tone="income"]::before { background: var(--accent-green); opacity: 1; }
-.kpi[data-tone="expense"]::before { background: var(--accent-red); opacity: 1; }
-.kpi[data-tone="accent"]::before { background: var(--text-primary); opacity: 1; }
-.kpi__label { font-size: 10.5px; color: var(--text-muted); font-weight: 600; display: flex; align-items: center; gap: 6px; min-width: 0; }
+.kpi { background: var(--card); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 16px 18px; min-width: 0; position: relative; }
+.kpi::before { display: none; }
+.kpi__label { font-size: 12px; color: var(--text-secondary); font-weight: 500; display: flex; align-items: center; gap: 6px; min-width: 0; }
 .kpi__label svg { color: var(--text-dim); }
 .kpi__label span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .kpi__value { font-size: 24px; font-weight: 700; letter-spacing: -.02em; margin-top: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -329,7 +327,7 @@ a { color: var(--text-primary); text-decoration: underline; text-underline-offse
 /* callout box archetype (info notes / privacy) */
 .box { margin: var(--sp-4) 0; padding: var(--sp-4) var(--sp-5); border-left: 3px solid var(--accent-cyan);
   background: rgb(var(--accent-cyan-rgb) / .06); border-radius: 0 var(--r-md) var(--r-md) 0; }
-.box .label { display: inline-block; margin-bottom: 6px; font-family: var(--font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-cyan); }
+.box .label { display: inline-block; margin-bottom: 6px; font-family: var(--font-body); font-size: 12px; font-weight: 600; letter-spacing: normal; text-transform: none; color: var(--text-secondary); }
 .box p { color: var(--text-secondary); font-size: 13px; }
 
 /* =========================================================================
@@ -337,11 +335,11 @@ a { color: var(--text-primary); text-decoration: underline; text-underline-offse
    ========================================================================= */
 .txgroup { margin-bottom: 6px; }
 .txgroup__head { display: flex; align-items: baseline; justify-content: space-between; padding: 16px 8px 6px; position: sticky; top: 0; background: var(--bg); z-index: 1; }
-.txgroup__date { font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--text-muted); }
+.txgroup__date { font-family: var(--font-body); font-size: 12.5px; font-weight: 600; letter-spacing: normal; text-transform: none; color: var(--text-secondary); }
 .txgroup__sum { font-size: 12px; color: var(--text-dim); }
 .tx { display: flex; align-items: center; gap: 13px; padding: 11px 8px; border-radius: var(--r-md); cursor: pointer; transition: background var(--dur); }
 .tx:hover { background: var(--hover); }
-.tx__icon { width: 40px; height: 40px; border-radius: 11px; flex: 0 0 40px; display: grid; place-items: center; font-size: 18px; }
+.tx__icon { width: 38px; height: 38px; border-radius: 8px; flex: 0 0 38px; display: grid; place-items: center; font-size: 18px; }
 .tx__body { flex: 1; min-width: 0; }
 .tx__cats { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
 .tx__cat { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -605,7 +603,7 @@ const Store = {
   load() {
     try { this.state = JSON.parse(localStorage.getItem(KEY)) || null; }
     catch (e) { this.state = null; }
-    if (!this.state) this.state = { users: [], activeUserId: null, theme: 'system', data: {} };
+    if (!this.state) this.state = { users: [], activeUserId: null, theme: 'light', data: {} };
     if (!this.state.data) this.state.data = {};
     return this.state;
   },
