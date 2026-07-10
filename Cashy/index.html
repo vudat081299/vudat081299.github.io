@@ -837,14 +837,12 @@ function confirmDialog({ title, message, confirmText = 'Xác nhận', danger }) 
         <div style="font-size:16px;font-weight:600">${esc(title)}</div>
         <div style="color:var(--text-2);font-size:14px;line-height:1.55">${esc(message)}</div>
       </div>
-      <div class="modal__foot">
-        <button class="btn btn--ghost" data-act="cancel">Hủy</button>
-        <button class="btn ${danger ? 'btn--danger' : 'btn--primary'}" data-act="ok">${esc(confirmText)}</button>
-      </div>
+      <div class="modal__foot"></div>
     </div>`);
     const m = openModal(node);
-    node.querySelector('[data-act=cancel]').onclick = () => { m.close(); resolve(false); };
-    node.querySelector('[data-act=ok]').onclick = () => { m.close(); resolve(true); };
+    const foot = node.querySelector('.modal__foot');
+    foot.appendChild(UI.btn({ variant: 'ghost', label: 'Hủy', onClick: () => { m.close(); resolve(false); } }));
+    foot.appendChild(UI.btn({ variant: danger ? 'danger' : 'primary', label: confirmText, onClick: () => { m.close(); resolve(true); } }));
   });
 }
 
@@ -869,6 +867,140 @@ function catChipHTML(cat, opts = {}) {
   return `<span class="chip" ${opts.attr || ''}><span class="chip__dot" style="background:${cat.colorHex}"></span>${cat.icon} ${esc(cat.name)}</span>`;
 }
 function tinted(color) { return { bg: color + '22', fg: color }; }
+
+/* =========================================================================
+   UI — reusable component library (composition over copy-pasted markup).
+   Every visual primitive is built here ONCE, so classes, sizing and behavior
+   stay consistent. Factories return a DOM node; *HTML helpers return a string
+   for embedding inside a parent template. Icons ALWAYS get an explicit size.
+   ========================================================================= */
+const UI = {
+  /* icon: force width/height so no icon can render oversized (single source) */
+  iconHTML(name, size = 16) {
+    const raw = I[name] || '';
+    return raw.replace(/^<svg([^>]*)>/, (_, a) => `<svg width="${size}" height="${size}"${a.replace(/\s(?:width|height)="[^"]*"/g, '')}>`);
+  },
+  icon(name, size = 16) { return h(`<span class="ico" style="display:inline-flex">${UI.iconHTML(name, size)}</span>`); },
+
+  /* button: variant = primary|ghost|danger; size = sm; icon/iconRight by name */
+  btn(o = {}) {
+    const c = ['btn'];
+    if (o.variant) c.push('btn--' + o.variant);
+    if (o.size) c.push('btn--' + o.size);
+    if (o.class) c.push(o.class);
+    const b = h(`<button class="${c.join(' ')}" type="${o.type || 'button'}"${o.title ? ` title="${esc(o.title)}"` : ''}${o.style ? ` style="${o.style}"` : ''}>`
+      + (o.icon ? UI.iconHTML(o.icon, o.iconSize || 16) : '')
+      + (o.label != null ? `<span>${esc(o.label)}</span>` : '')
+      + (o.iconRight ? UI.iconHTML(o.iconRight, 14) : '')
+      + `</button>`);
+    if (o.data) for (const k in o.data) b.dataset[k] = o.data[k];
+    if (o.onClick) b.onclick = o.onClick;
+    return b;
+  },
+  iconBtn(o = {}) {
+    const b = h(`<button class="icon-btn"${o.title ? ` title="${esc(o.title)}"` : ''}${o.style ? ` style="${o.style}"` : ''}>${UI.iconHTML(o.icon, o.size || 18)}</button>`);
+    if (o.onClick) b.onclick = o.onClick;
+    return b;
+  },
+
+  /* filter/tag chip (interactive button) */
+  chip(o = {}) {
+    const b = h(`<button class="chip${o.active ? ' is-active' : ''}"${o.style ? ` style="${o.style}"` : ''}>`
+      + (o.dot ? `<span class="chip__dot" style="background:${o.dot}"></span>` : '')
+      + (o.icon ? UI.iconHTML(o.icon, 15) : '')
+      + (o.label != null ? `<span data-lbl>${esc(o.label)}</span>` : '')
+      + (o.iconRight ? UI.iconHTML(o.iconRight, 14) : '')
+      + `</button>`);
+    if (o.onClick) b.onclick = o.onClick;
+    return b;
+  },
+
+  /* form field wrapper (label may contain trusted HTML sub-note) */
+  fieldHTML(o = {}) {
+    return `<div class="field"${o.style ? ` style="${o.style}"` : ''}>`
+      + (o.label ? `<label class="field__label">${o.label}</label>` : '')
+      + (o.control || '')
+      + (o.hint ? `<span class="field__hint">${esc(o.hint)}</span>` : '')
+      + `</div>`;
+  },
+  inputHTML(o = {}) {
+    const a = [`class="input${o.class ? ' ' + o.class : ''}"`];
+    if (o.type) a.push(`type="${o.type}"`);
+    if (o.name) a.push(`name="${o.name}"`);
+    if (o.placeholder != null) a.push(`placeholder="${esc(o.placeholder)}"`);
+    if (o.value != null) a.push(`value="${esc(o.value)}"`);
+    if (o.attrs) a.push(o.attrs);
+    if (o.style) a.push(`style="${o.style}"`);
+    return `<input ${a.join(' ')}>`;
+  },
+  textareaHTML(o = {}) {
+    return `<textarea class="textarea"${o.placeholder != null ? ` placeholder="${esc(o.placeholder)}"` : ''}${o.attrs ? ' ' + o.attrs : ''}${o.style ? ` style="${o.style}"` : ''}>${esc(o.value || '')}</textarea>`;
+  },
+
+  /* segmented control: options=[{value,label,tone}] */
+  segmented(o = {}) {
+    const seg = h(`<div class="segmented">` + o.options.map(op =>
+      `<button data-v="${esc(op.value)}"${op.tone ? ` data-tone="${op.tone}"` : ''} class="${op.value === o.value ? 'is-active' : ''}">${esc(op.label)}</button>`).join('') + `</div>`);
+    seg.querySelectorAll('button').forEach(b => b.onclick = () => {
+      seg.querySelectorAll('button').forEach(x => x.classList.toggle('is-active', x === b));
+      o.onChange && o.onChange(b.dataset.v, b);
+    });
+    return seg;
+  },
+
+  /* dropdown/menu item */
+  menuItem(o = {}) {
+    const b = h(`<button class="dropdown__item${o.active ? ' is-active' : ''}"${o.style ? ` style="${o.style}"` : ''}>`
+      + (o.icon ? UI.iconHTML(o.icon, 16) : '')
+      + `<span${o.grow ? ' style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"' : ''}>${o.labelHTML || esc(o.label)}</span>`
+      + (o.active && o.check !== false ? UI.iconHTML('check', 16) : '')
+      + `</button>`);
+    if (o.onClick) b.onclick = o.onClick;
+    return b;
+  },
+
+  switchHTML(checked) { return `<span class="switch"><input type="checkbox"${checked ? ' checked' : ''}><span class="switch__track"></span></span>`; },
+  checkboxHTML(checked) { return `<span class="checkbox${checked ? ' is-checked' : ''}">${UI.iconHTML('check', 12)}</span>`; },
+
+  avatarHTML(o = {}) {
+    const sz = o.size || 32;
+    return `<span class="workspace__avatar" style="width:${sz}px;height:${sz}px;font-size:${Math.round(sz * .44)}px;border-radius:${Math.round(sz * .28)}px;background:${o.color}">${esc((o.name?.[0] || 'C').toUpperCase())}</span>`;
+  },
+  badgeHTML(o = {}) { return `<span class="badge-pending"${o.style ? ` style="${o.style}"` : ''}>${esc(o.label)}</span>`; },
+
+  /* card: title/sub/actions optional; body is a node appended after build */
+  card(o = {}) {
+    const c = ['card']; if (o.pad !== false) c.push('card--pad'); if (o.class) c.push(o.class);
+    const card = h(`<div class="${c.join(' ')}"${o.style ? ` style="${o.style}"` : ''}></div>`);
+    if (o.title || o.actions) {
+      const head = h(`<div style="display:flex;justify-content:space-between;align-items:${o.sub ? 'baseline' : 'center'};margin-bottom:6px"></div>`);
+      head.appendChild(h(`<div><div class="section-title">${esc(o.title || '')}</div>${o.sub ? `<div class="section-sub">${esc(o.sub)}</div>` : ''}</div>`));
+      if (o.actions) head.appendChild(o.actions);
+      card.appendChild(head);
+    }
+    if (o.body) card.appendChild(o.body);
+    return card;
+  },
+
+  /* empty state */
+  empty(o = {}) {
+    const el = h(`<div class="empty"><div class="empty__icon">${UI.iconHTML(o.icon || 'wallet', 24)}</div><div class="empty__title">${esc(o.title)}</div>${o.sub ? `<p>${esc(o.sub)}</p>` : ''}</div>`);
+    if (o.action) el.appendChild(o.action);
+    return el;
+  },
+
+  /* modal shell: returns the .modal node with .modal__body ready; caller fills */
+  modal(o = {}) {
+    const node = h(`<div class="modal${o.size ? ' modal--' + o.size : ''}"${o.style ? ` style="${o.style}"` : ''}>
+      <div class="modal__head">${o.headHTML || (o.title ? `<div class="modal__title">${esc(o.title)}</div>` : '')}<div style="flex:1"></div><button class="icon-btn" data-close>${UI.iconHTML('x', 18)}</button></div>
+      <div class="modal__body"></div>
+      <div class="modal__foot"></div>
+    </div>`);
+    return node;
+  },
+
+  sectionTitleHTML(title, sub) { return `<div class="section-title">${esc(title)}</div>${sub ? `<div class="section-sub">${esc(sub)}</div>` : ''}`; },
+};
 
 /* =============================================================== ROUTER */
 function currentRoute() { return (location.hash.replace('#/', '') || 'dashboard'); }
@@ -896,14 +1028,12 @@ function renderApp() {
   const main = h(`<div class="main"></div>`);
   const meta = NAV.find(n => n.id === rname) || NAV[0];
   const topbar = h(`<div class="topbar">
-      <button class="icon-btn menu-btn" title="Menu">${I.menu}</button>
+      <button class="icon-btn menu-btn" title="Menu">${UI.iconHTML('menu', 20)}</button>
       <div class="topbar__title">${esc(meta.title)}</div>
       <div class="topbar__spacer"></div>
     </div>`);
   topbar.querySelector('.menu-btn').onclick = () => { sidebarOpen = !sidebarOpen; renderApp(); };
-  const quick = h(`<button class="btn btn--primary btn--sm">${I.plus}<span>Thêm giao dịch</span></button>`);
-  quick.onclick = () => NS.openTxModal();
-  topbar.appendChild(quick);
+  topbar.appendChild(UI.btn({ variant: 'primary', size: 'sm', icon: 'plus', label: 'Thêm giao dịch', onClick: () => NS.openTxModal() }));
   main.appendChild(topbar);
   const content = h(`<div class="content"></div>`);
   content.appendChild(render());
@@ -912,16 +1042,16 @@ function renderApp() {
   app.appendChild(layout);
 
   // FAB (mobile)
-  const fab = h(`<button class="fab" title="Thêm giao dịch (n)">${I.plus}</button>`);
+  const fab = h(`<button class="fab" title="Thêm giao dịch (n)">${UI.iconHTML('plus', 22)}</button>`);
   fab.onclick = () => NS.openTxModal();
   app.appendChild(fab);
 }
 
 const NAV = [
-  { id: 'dashboard', title: 'Tổng quan', icon: I.dashboard },
-  { id: 'transactions', title: 'Giao dịch', icon: I.list },
-  { id: 'categories', title: 'Danh mục', icon: I.tags },
-  { id: 'settings', title: 'Cài đặt', icon: I.settings },
+  { id: 'dashboard', title: 'Tổng quan', icon: 'dashboard' },
+  { id: 'transactions', title: 'Giao dịch', icon: 'list' },
+  { id: 'categories', title: 'Danh mục', icon: 'tags' },
+  { id: 'settings', title: 'Cài đặt', icon: 'settings' },
 ];
 
 function Sidebar(active) {
@@ -929,12 +1059,12 @@ function Sidebar(active) {
   const el = h(`<aside class="sidebar ${sidebarOpen ? 'is-open' : ''}">
     <div class="sidebar__head">
       <button class="workspace" title="Tài khoản">
-        <span class="workspace__avatar" style="background:${u.avatarColor}">${esc((u.displayName[0] || 'C').toUpperCase())}</span>
+        ${UI.avatarHTML({ name: u.displayName, color: u.avatarColor, size: 32 })}
         <span class="workspace__meta">
           <span class="workspace__name">${esc(u.displayName)}</span>
           <span class="workspace__sub">Cashy · VND</span>
         </span>
-        <span class="workspace__chev">${I.chevDown}</span>
+        <span class="workspace__chev">${UI.iconHTML('chevDown', 14)}</span>
       </button>
     </div>
     <nav class="nav"></nav>
@@ -947,7 +1077,7 @@ function Sidebar(active) {
   const nav = el.querySelector('.nav');
   const txCount = Store.transactions().length;
   NAV.forEach(item => {
-    const btn = h(`<button class="nav__item ${item.id === active ? 'is-active' : ''}">${item.icon}<span>${esc(item.title)}</span>${item.id === 'transactions' && txCount ? `<span class="nav__count">${txCount}</span>` : ''}</button>`);
+    const btn = h(`<button class="nav__item ${item.id === active ? 'is-active' : ''}">${UI.iconHTML(item.icon, 18)}<span>${esc(item.title)}</span>${item.id === 'transactions' && txCount ? `<span class="nav__count">${txCount}</span>` : ''}</button>`);
     btn.onclick = () => { sidebarOpen = false; navigate(item.id); };
     nav.appendChild(btn);
   });
@@ -955,7 +1085,7 @@ function Sidebar(active) {
   // theme toggle button
   const tt = el.querySelector('[data-theme-toggle]');
   const resolved = document.documentElement.getAttribute('data-theme');
-  tt.innerHTML = resolved === 'dark' ? I.sun : I.moon;
+  tt.innerHTML = resolved === 'dark' ? UI.iconHTML('sun', 18) : UI.iconHTML('moon', 18);
   tt.onclick = () => { Store.setTheme(resolved === 'dark' ? 'light' : 'dark'); renderApp(); };
 
   // workspace menu
@@ -964,19 +1094,15 @@ function Sidebar(active) {
     dd.appendChild(h(`<div class="dropdown__label">Tài khoản trên máy này</div>`));
     Store.users().forEach(user => {
       const row = h(`<button class="dropdown__item ${user.id === u.id ? 'is-active' : ''}">
-        <span class="workspace__avatar" style="width:24px;height:24px;font-size:12px;border-radius:6px;background:${user.avatarColor}">${esc((user.displayName[0]||'C').toUpperCase())}</span>
+        ${UI.avatarHTML({ name: user.displayName, color: user.avatarColor, size: 24 })}
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(user.displayName)}</span>
-        ${user.id === u.id ? I.check : ''}</button>`);
+        ${user.id === u.id ? UI.iconHTML('check', 16) : ''}</button>`);
       row.onclick = () => { Store.switchUser(user.id); close(); renderApp(); };
       dd.appendChild(row);
     });
     dd.appendChild(h('<div class="dropdown__sep"></div>'));
-    const add = h(`<button class="dropdown__item">${I.plus} Thêm tài khoản</button>`);
-    add.onclick = () => { close(); Store.logout(); renderApp(); };
-    dd.appendChild(add);
-    const out = h(`<button class="dropdown__item" style="color:var(--text-2)">${I.wallet} Đăng xuất</button>`);
-    out.onclick = () => { close(); Store.logout(); renderApp(); };
-    dd.appendChild(out);
+    dd.appendChild(UI.menuItem({ icon: 'plus', label: 'Thêm tài khoản', onClick: () => { close(); Store.logout(); renderApp(); } }));
+    dd.appendChild(UI.menuItem({ icon: 'wallet', label: 'Đăng xuất', style: 'color:var(--text-2)', onClick: () => { close(); Store.logout(); renderApp(); } }));
   });
 
   return el;
@@ -992,7 +1118,7 @@ window.addEventListener('keydown', (e) => {
 });
 
 // expose for later view modules attached below
-window.__cashy = { Store, Domain, Money, renderApp, navigate, openModal, confirmDialog, attachDropdown, toast, h, frag, esc, uid, I, ymd, todayYMD, fmtDate, fmtDateShort, relativeDateHead, periodRange, prevRange, parseYMD, addDays, byName, catChipHTML, clamp, PENDING_NAME };
+window.__cashy = { Store, Domain, Money, UI, renderApp, navigate, openModal, confirmDialog, attachDropdown, toast, h, frag, esc, uid, I, ymd, todayYMD, fmtDate, fmtDateShort, relativeDateHead, periodRange, prevRange, parseYMD, addDays, byName, catChipHTML, clamp, PENDING_NAME };
 
 /* Views are defined in the second script block for readability. */
 })();
@@ -1005,7 +1131,7 @@ window.__cashy = { Store, Domain, Money, renderApp, navigate, openModal, confirm
    ========================================================================= */
 (function () {
 const C = window.__cashy;
-const { Store, Domain, Money, renderApp, navigate, openModal, confirmDialog, attachDropdown, toast, h, esc, uid, I, ymd, todayYMD, fmtDate, fmtDateShort, relativeDateHead, periodRange, prevRange, parseYMD, byName, clamp, PENDING_NAME } = C;
+const { Store, Domain, Money, UI, renderApp, navigate, openModal, confirmDialog, attachDropdown, toast, h, esc, uid, I, ymd, todayYMD, fmtDate, fmtDateShort, relativeDateHead, periodRange, prevRange, parseYMD, byName, clamp, PENDING_NAME } = C;
 const $ = (s, r = document) => r.querySelector(s);
 
 /* ------------------------------------------------------------- charts */
@@ -1043,21 +1169,17 @@ function barsChart(series, height = 180) {
 function OnboardingView() {
   const users = Store.users();
   const el = h(`<div class="onboard"><div class="onboard__card">
-    <div class="onboard__logo">${I.logo}</div>
+    <div class="onboard__logo">${UI.iconHTML('logo', 32)}</div>
     <h1>Chào mừng đến Cashy</h1>
     <div class="onboard__tag">Quản lý &amp; thống kê chi tiêu cá nhân. Dữ liệu ở ngay trên máy bạn — không gửi đi đâu.</div>
     <form class="onboard__form">
-      <div class="field">
-        <label class="field__label">Tên của bạn</label>
-        <input class="input" name="name" placeholder="VD: Đạt" autocomplete="off" maxlength="40" style="height:44px" />
-        <span class="field__hint">Chỉ cần một cái tên là bắt đầu được. Có thể đổi trong Cài đặt.</span>
-      </div>
-      <button class="btn btn--primary" type="submit" style="height:44px">Tạo tài khoản &amp; bắt đầu</button>
+      ${UI.fieldHTML({ label: 'Tên của bạn', control: UI.inputHTML({ name: 'name', placeholder: 'VD: Đạt', attrs: 'autocomplete="off" maxlength="40"', style: 'height:44px' }), hint: 'Chỉ cần một cái tên là bắt đầu được. Có thể đổi trong Cài đặt.' })}
     </form>
     <div class="onboard__accounts"></div>
   </div></div>`);
 
   const form = el.querySelector('form');
+  form.appendChild(UI.btn({ variant: 'primary', type: 'submit', label: 'Tạo tài khoản & bắt đầu', style: 'height:44px' }));
   const nameInput = form.querySelector('input[name="name"]');
   const submitOnboarding = (e) => {
     if (e) e.preventDefault();
@@ -1077,7 +1199,7 @@ function OnboardingView() {
         <span class="workspace__avatar" style="background:${u.avatarColor}">${esc((u.displayName[0]||'C').toUpperCase())}</span>
         <span style="flex:1;text-align:left"><div style="font-weight:600">${esc(u.displayName)}</div>
         <div style="font-size:12px;color:var(--text-3)">${Store.state.data[u.id]?.transactions.length || 0} giao dịch</div></span>
-        ${I.chevRight}</button>`);
+        ${UI.iconHTML('chevRight', 16)}</button>`);
       row.onclick = () => { Store.switchUser(u.id); navigate('dashboard'); renderApp(); };
       acc.appendChild(row);
     });
@@ -1109,7 +1231,7 @@ function DashboardView() {
   const pt = Domain.totals(prevList);
   const delta = (cur, old) => { if (!old || old <= 0) return null; return Math.round((cur - old) / old * 100); };
   const kpis = h(`<div class="kpis">
-    ${kpiCard('Số dư (tất cả)', Money.format(balance), null, balance >= 0 ? 'up' : 'down', I.wallet)}
+    ${kpiCard('Số dư (tất cả)', Money.format(balance), null, balance >= 0 ? 'up' : 'down', 'wallet')}
     ${kpiCard('Thu nhập', Money.format(t.income), delta(t.income, pt.income), 'income')}
     ${kpiCard('Chi tiêu', Money.format(t.expense), delta(t.expense, pt.expense), 'expense', null, true)}
     ${kpiCard('Chênh lệch kỳ này', (t.net >= 0 ? '+' : '') + Money.format(t.net), delta(t.net, pt.net), t.net >= 0 ? 'up' : 'down')}
@@ -1156,7 +1278,7 @@ function DashboardView() {
   const recentWrap = h(`<div class="card card--pad" style="margin-top:16px">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
       <div class="section-title">Giao dịch gần đây</div>
-      <button class="btn btn--ghost btn--sm" data-all>Xem tất cả ${I.chevRight}</button>
+      <button class="btn btn--ghost btn--sm" data-all>Xem tất cả ${UI.iconHTML('chevRight', 14)}</button>
     </div><div data-recent></div></div>`);
   recentWrap.querySelector('[data-all]').onclick = () => navigate('transactions');
   const rec = recentWrap.querySelector('[data-recent]');
@@ -1172,11 +1294,11 @@ function kpiCard(label, value, delta, tone, icon, invertDelta) {
   let d = '';
   if (delta !== null && delta !== undefined && isFinite(delta)) {
     const good = invertDelta ? delta <= 0 : delta >= 0;
-    d = `<div class="kpi__delta ${good ? 'up' : 'down'}">${delta >= 0 ? I.arrowUp : I.arrowDown} ${Math.abs(delta)}% so với kỳ trước</div>`;
+    d = `<div class="kpi__delta ${good ? 'up' : 'down'}">${UI.iconHTML(delta >= 0 ? 'arrowUp' : 'arrowDown', 13)} ${Math.abs(delta)}% so với kỳ trước</div>`;
   }
   const valClass = tone === 'income' ? 'text-income' : tone === 'expense' ? 'text-expense' : '';
   const barTone = (tone === 'income' || tone === 'expense') ? tone : 'accent';
-  return `<div class="kpi" data-tone="${barTone}"><div class="kpi__label">${icon ? icon : ''}<span>${esc(label)}</span></div>
+  return `<div class="kpi" data-tone="${barTone}"><div class="kpi__label">${icon ? UI.iconHTML(icon, 15) : ''}<span>${esc(label)}</span></div>
     <div class="kpi__value num ${valClass}">${value}</div>${d}</div>`;
 }
 
@@ -1184,29 +1306,23 @@ function kpiCard(label, value, delta, tone, icon, invertDelta) {
 function periodPicker(cur, custom, onChange) {
   const presets = [['thisMonth','Tháng này'],['lastMonth','Tháng trước'],['last30','30 ngày qua'],['thisQuarter','Quý này'],['thisYear','Năm nay'],['all','Tất cả']];
   const label = periodRange(cur, custom).label;
-  const btn = h(`<button class="btn btn--sm">${I.filter}<span>${esc(label)}</span>${I.chevDown}</button>`);
+  const btn = UI.btn({ size: 'sm', icon: 'filter', label, iconRight: 'chevDown' });
   const wrap = h('<div class="filter-pop"></div>'); wrap.appendChild(btn);
   attachDropdown(btn, (dd, close) => {
     dd.style.right = '0'; dd.classList.add('dropdown--right'); dd.style.minWidth = '220px';
-    presets.forEach(([id, lbl]) => {
-      const it = h(`<button class="dropdown__item ${id === cur ? 'is-active' : ''}">${lbl}${id === cur ? I.check : ''}</button>`);
-      it.onclick = () => { dashState.period = id; close(); onChange(); };
-      dd.appendChild(it);
-    });
+    presets.forEach(([id, lbl]) => dd.appendChild(UI.menuItem({ label: lbl, active: id === cur, onClick: () => { dashState.period = id; close(); onChange(); } })));
     dd.appendChild(h('<div class="dropdown__sep"></div>'));
     const cwrap = h(`<div style="padding:6px 8px">
       <div class="dropdown__label" style="padding:2px 2px 6px">Khoảng tùy chỉnh</div>
       <div style="display:flex;gap:6px;align-items:center">
-        <input type="date" class="input" value="${custom.start}" data-s style="height:32px">
+        ${UI.inputHTML({ type: 'date', value: custom.start, attrs: 'data-s', style: 'height:32px' })}
         <span style="color:var(--text-3)">→</span>
-        <input type="date" class="input" value="${custom.end}" data-e style="height:32px">
+        ${UI.inputHTML({ type: 'date', value: custom.end, attrs: 'data-e', style: 'height:32px' })}
       </div>
-      <button class="btn btn--sm btn--primary" style="width:100%;margin-top:8px" data-apply>Áp dụng</button>
     </div>`);
-    cwrap.querySelector('[data-apply]').onclick = () => {
-      dashState.custom = { start: cwrap.querySelector('[data-s]').value, end: cwrap.querySelector('[data-e]').value };
-      dashState.period = 'custom'; close(); onChange();
-    };
+    const apply = UI.btn({ variant: 'primary', size: 'sm', label: 'Áp dụng', style: 'width:100%;margin-top:8px' });
+    apply.onclick = () => { dashState.custom = { start: cwrap.querySelector('[data-s]').value, end: cwrap.querySelector('[data-e]').value }; dashState.period = 'custom'; close(); onChange(); };
+    cwrap.appendChild(apply);
     dd.appendChild(cwrap);
   }, { right: true });
   return wrap;
@@ -1247,18 +1363,16 @@ function TransactionsView() {
   // filter bar
   const fb = h('<div class="filterbar"></div>');
   // search
-  const search = h(`<div class="search">${I.search}<input class="input" placeholder="Tìm theo ghi chú, danh mục, số tiền…" value="${esc(txFilter.search)}"></div>`);
+  const search = h(`<div class="search">${UI.iconHTML('search', 16)}${UI.inputHTML({ placeholder: 'Tìm theo ghi chú, danh mục, số tiền…', value: txFilter.search })}</div>`);
   let searchTimer;
   search.querySelector('input').oninput = (e) => { clearTimeout(searchTimer); const v = e.target.value; searchTimer = setTimeout(() => { txFilter.search = v; refreshList(); }, 180); };
   fb.appendChild(search);
   // type segmented
-  const typeSeg = h(`<div class="segmented">
-    <button data-t="all" class="${txFilter.type==='all'?'is-active':''}">Tất cả</button>
-    <button data-t="income" data-tone="income" class="${txFilter.type==='income'?'is-active':''}">Thu</button>
-    <button data-t="expense" data-tone="expense" class="${txFilter.type==='expense'?'is-active':''}">Chi</button>
-  </div>`);
-  typeSeg.querySelectorAll('button').forEach(b => b.onclick = () => { txFilter.type = b.dataset.t; renderFull(); });
-  fb.appendChild(typeSeg);
+  fb.appendChild(UI.segmented({
+    value: txFilter.type,
+    options: [{ value: 'all', label: 'Tất cả' }, { value: 'income', label: 'Thu', tone: 'income' }, { value: 'expense', label: 'Chi', tone: 'expense' }],
+    onChange: (v) => { txFilter.type = v; renderFull(); },
+  }));
   // period
   fb.appendChild(txPeriodPicker(() => renderFull()));
   // category filter (multi-select stays open; just refreshes the list)
@@ -1298,34 +1412,35 @@ function TransactionsView() {
 function txPeriodPicker(onChange) {
   const presets = [['thisMonth','Tháng này'],['lastMonth','Tháng trước'],['last30','30 ngày qua'],['thisQuarter','Quý này'],['thisYear','Năm nay'],['all','Tất cả']];
   const label = periodRange(txFilter.period, txFilter.custom).label;
-  const btn = h(`<button class="chip ${txFilter.period!=='thisMonth'?'is-active':''}">${I.filter}<span>${esc(label)}</span></button>`);
+  const btn = UI.chip({ icon: 'filter', label, active: txFilter.period !== 'thisMonth' });
   const wrap = h('<div class="filter-pop"></div>'); wrap.appendChild(btn);
   attachDropdown(btn, (dd, close) => {
     dd.style.minWidth = '210px';
-    presets.forEach(([id, lbl]) => { const it = h(`<button class="dropdown__item ${id===txFilter.period?'is-active':''}">${lbl}${id===txFilter.period?I.check:''}</button>`); it.onclick = () => { txFilter.period = id; close(); onChange(); }; dd.appendChild(it); });
+    presets.forEach(([id, lbl]) => dd.appendChild(UI.menuItem({ label: lbl, active: id === txFilter.period, onClick: () => { txFilter.period = id; close(); onChange(); } })));
     dd.appendChild(h('<div class="dropdown__sep"></div>'));
     const cwrap = h(`<div style="padding:2px 8px 6px"><div class="dropdown__label" style="padding:2px">Tùy chỉnh</div>
-      <div style="display:flex;gap:6px;align-items:center"><input type="date" class="input" value="${txFilter.custom.start}" data-s style="height:32px"><span>→</span><input type="date" class="input" value="${txFilter.custom.end}" data-e style="height:32px"></div>
-      <button class="btn btn--sm btn--primary" style="width:100%;margin-top:8px" data-apply>Áp dụng</button></div>`);
-    cwrap.querySelector('[data-apply]').onclick = () => { txFilter.custom = { start: cwrap.querySelector('[data-s]').value, end: cwrap.querySelector('[data-e]').value }; txFilter.period = 'custom'; close(); onChange(); };
+      <div style="display:flex;gap:6px;align-items:center">${UI.inputHTML({ type: 'date', value: txFilter.custom.start, attrs: 'data-s', style: 'height:32px' })}<span>→</span>${UI.inputHTML({ type: 'date', value: txFilter.custom.end, attrs: 'data-e', style: 'height:32px' })}</div></div>`);
+    const apply = UI.btn({ variant: 'primary', size: 'sm', label: 'Áp dụng', style: 'width:100%;margin-top:8px' });
+    apply.onclick = () => { txFilter.custom = { start: cwrap.querySelector('[data-s]').value, end: cwrap.querySelector('[data-e]').value }; txFilter.period = 'custom'; close(); onChange(); };
+    cwrap.appendChild(apply);
     dd.appendChild(cwrap);
   });
   return wrap;
 }
 
 function categoryFilterPicker(refreshList) {
-  const btn = h(`<button class="chip"><span style="display:inline-flex;align-items:center;gap:6px">${I.tags}<span data-lbl></span></span></button>`);
+  const btn = UI.chip({ icon: 'tags', label: '' });
   function syncBtn() { const n = txFilter.categoryIds.length; btn.classList.toggle('is-active', !!n); btn.querySelector('[data-lbl]').textContent = n ? `${n} danh mục` : 'Danh mục'; }
   syncBtn();
   const wrap = h('<div class="filter-pop"></div>'); wrap.appendChild(btn);
   attachDropdown(btn, (dd, close) => {
     dd.style.minWidth = '280px';
-    const rt = h(`<label class="checkline" style="justify-content:space-between"><span style="font-size:13px">Gồm cả danh mục con <span style="color:var(--text-3)">(roll-up)</span></span><span class="switch"><input type="checkbox" ${txFilter.rollup?'checked':''}><span class="switch__track"></span></span></label>`);
+    const rt = h(`<label class="checkline" style="justify-content:space-between"><span style="font-size:13px">Gồm cả danh mục con <span style="color:var(--text-3)">(roll-up)</span></span>${UI.switchHTML(txFilter.rollup)}</label>`);
     rt.querySelector('input').onchange = (e) => { txFilter.rollup = e.target.checked; refreshList(); };
     dd.appendChild(rt);
     dd.appendChild(h('<div class="dropdown__sep"></div>'));
     Domain.orderedCategories().forEach(({ cat, depth }) => {
-      const line = h(`<div class="checkline"><span class="checkbox ${txFilter.categoryIds.includes(cat.id)?'is-checked':''}">${I.check}</span>
+      const line = h(`<div class="checkline">${UI.checkboxHTML(txFilter.categoryIds.includes(cat.id))}
         <span class="chip__dot" style="background:${cat.colorHex}"></span>
         <span style="padding-left:${depth*14}px;flex:1">${cat.icon} ${esc(cat.name)}</span></div>`);
       line.onclick = () => {
@@ -1337,9 +1452,7 @@ function categoryFilterPicker(refreshList) {
       dd.appendChild(line);
     });
     dd.appendChild(h('<div class="dropdown__sep"></div>'));
-    const clr = h('<button class="dropdown__item" style="color:var(--text-2)">Xóa lọc danh mục</button>');
-    clr.onclick = () => { txFilter.categoryIds = []; syncBtn(); close(); refreshList(); };
-    dd.appendChild(clr);
+    dd.appendChild(UI.menuItem({ label: 'Xóa lọc danh mục', style: 'color:var(--text-2)', onClick: () => { txFilter.categoryIds = []; syncBtn(); close(); refreshList(); } }));
   });
   return wrap;
 }
@@ -1347,10 +1460,10 @@ function categoryFilterPicker(refreshList) {
 function sortPicker(onChange) {
   const opts = [['date-desc','Mới nhất'],['date-asc','Cũ nhất'],['amount-desc','Số tiền cao'],['amount-asc','Số tiền thấp']];
   const label = (opts.find(o => o[0] === txFilter.sort) || opts[0])[1];
-  const btn = h(`<button class="chip" style="margin-left:auto">${esc(label)} ${I.chevDown}</button>`);
+  const btn = UI.chip({ label, iconRight: 'chevDown', style: 'margin-left:auto' });
   const wrap = h('<div class="filter-pop" style="margin-left:auto"></div>'); wrap.appendChild(btn);
   attachDropdown(btn, (dd, close) => { dd.classList.add('dropdown--right'); dd.style.right = '0'; dd.style.minWidth = '160px';
-    opts.forEach(([id, lbl]) => { const it = h(`<button class="dropdown__item ${id===txFilter.sort?'is-active':''}">${lbl}${id===txFilter.sort?I.check:''}</button>`); it.onclick = () => { txFilter.sort = id; close(); onChange(); }; dd.appendChild(it); });
+    opts.forEach(([id, lbl]) => dd.appendChild(UI.menuItem({ label: lbl, active: id === txFilter.sort, onClick: () => { txFilter.sort = id; close(); onChange(); } })));
   }, { right: true });
   return wrap;
 }
@@ -1362,45 +1475,35 @@ function openTxModal(existing, onSaved) {
     ? { id: existing.id, type: existing.type, amount: existing.amount, occurredAt: existing.occurredAt, note: existing.note, categoryIds: [...existing.categoryIds] }
     : { type: 'expense', amount: 0, occurredAt: todayYMD(), note: '', categoryIds: [] };
 
-  const node = h(`<div class="modal">
-    <div class="modal__head">
-      <div class="segmented" data-type>
-        <button data-t="expense" data-tone="expense" class="${draft.type==='expense'?'is-active':''}">Chi tiền</button>
-        <button data-t="income" data-tone="income" class="${draft.type==='income'?'is-active':''}">Thu tiền</button>
-      </div>
-      <div style="flex:1"></div>
-      <button class="icon-btn" data-close>${I.x}</button>
-    </div>
-    <div class="modal__body">
+  const node = UI.modal({ headHTML: '<div data-type></div>' });
+  node.querySelector('.modal__body').innerHTML = `
       <div class="amount-input">
         <input inputmode="numeric" data-amount placeholder="0" value="${draft.amount?Money.grouped(draft.amount):''}">
         <span class="cur">đ</span>
       </div>
-      <div class="field">
-        <label class="field__label">Danh mục <span style="color:var(--text-3);font-weight:400">· chọn nhiều được</span></label>
-        <div data-picker></div>
-      </div>
+      ${UI.fieldHTML({ label: 'Danh mục <span style="color:var(--text-3);font-weight:400">· chọn nhiều được</span>', control: '<div data-picker></div>' })}
       <div style="display:flex;gap:12px">
-        <div class="field" style="flex:1"><label class="field__label">Ngày</label><input type="date" class="input" data-date value="${draft.occurredAt}"></div>
+        ${UI.fieldHTML({ style: 'flex:1', label: 'Ngày', control: UI.inputHTML({ type: 'date', attrs: 'data-date', value: draft.occurredAt }) })}
       </div>
-      <div class="field"><label class="field__label">Ghi chú</label><textarea class="textarea" data-note placeholder="Không bắt buộc…">${esc(draft.note)}</textarea></div>
-    </div>
-    <div class="modal__foot">
-      ${editing ? '<button class="btn btn--danger" data-delete>'+I.trash+' Xóa</button>' : ''}
-      <div class="spacer"></div>
-      <button class="btn btn--ghost" data-close>Hủy</button>
-      <button class="btn btn--primary" data-save>${editing?'Lưu':'Thêm giao dịch'}</button>
-    </div>
-  </div>`);
+      ${UI.fieldHTML({ label: 'Ghi chú', control: UI.textareaHTML({ attrs: 'data-note', placeholder: 'Không bắt buộc…', value: draft.note }) })}`;
+
+  // type toggle (segmented component)
+  node.querySelector('[data-type]').replaceWith(UI.segmented({
+    value: draft.type,
+    options: [{ value: 'expense', label: 'Chi tiền', tone: 'expense' }, { value: 'income', label: 'Thu tiền', tone: 'income' }],
+    onChange: (v) => { draft.type = v; },
+  }));
+
+  // footer actions
+  const foot = node.querySelector('.modal__foot');
+  if (editing) foot.appendChild(UI.btn({ variant: 'danger', icon: 'trash', label: 'Xóa', data: { delete: '1' } }));
+  foot.appendChild(h('<div class="spacer"></div>'));
+  foot.appendChild(UI.btn({ variant: 'ghost', label: 'Hủy', data: { close: '1' } }));
+  const saveBtn = UI.btn({ variant: 'primary', label: editing ? 'Lưu' : 'Thêm giao dịch' });
+  foot.appendChild(saveBtn);
 
   const m = openModal(node, { onClose: () => {} });
   node.querySelectorAll('[data-close]').forEach(b => b.onclick = () => m.close());
-
-  // type toggle
-  node.querySelectorAll('[data-type] button').forEach(b => b.onclick = () => {
-    draft.type = b.dataset.t;
-    node.querySelectorAll('[data-type] button').forEach(x => x.classList.toggle('is-active', x === b));
-  });
 
   // amount formatting
   const amountEl = node.querySelector('[data-amount]');
@@ -1414,7 +1517,7 @@ function openTxModal(existing, onSaved) {
   node.querySelector('[data-date]').onchange = (e) => draft.occurredAt = e.target.value;
   node.querySelector('[data-note]').oninput = (e) => draft.note = e.target.value;
 
-  node.querySelector('[data-save]').onclick = () => {
+  saveBtn.onclick = () => {
     if (!draft.amount || draft.amount <= 0) { toast('Nhập số tiền đã nhé', 'danger'); amountEl.focus(); return; }
     draft.note = node.querySelector('[data-note]').value;
     Store.saveTransaction(draft);
@@ -1448,7 +1551,7 @@ function buildCategoryPicker(selectedIds, onChange) {
     if (!items.length) { listEl.appendChild(h('<div style="padding:14px;text-align:center;color:var(--text-3);font-size:13px">Không tìm thấy</div>')); return; }
     items.forEach(({ cat, depth }) => {
       const checked = sel.has(cat.id);
-      const line = h(`<div class="checkline"><span class="checkbox ${checked?'is-checked':''}">${I.check}</span>
+      const line = h(`<div class="checkline">${UI.checkboxHTML(checked)}
         <span class="chip__dot" style="background:${cat.colorHex}"></span>
         <span style="padding-left:${(q?0:depth*14)}px;flex:1">${cat.icon} ${esc(cat.name)}${cat.isSystem?' <span style="color:var(--text-3);font-size:12px">(hệ thống)</span>':''}</span></div>`);
       line.onclick = () => { if (sel.has(cat.id)) sel.delete(cat.id); else sel.add(cat.id); renderList(searchEl.value); emit(); };
@@ -1459,7 +1562,7 @@ function buildCategoryPicker(selectedIds, onChange) {
     selectedWrap.innerHTML = '';
     if (!sel.size) { selectedWrap.appendChild(h(`<span style="font-size:12.5px;color:var(--text-3)">Chưa chọn — sẽ tự gán “${PENDING_NAME}”.</span>`)); return; }
     [...sel].map(id => Store.category(id)).filter(Boolean).forEach(cat => {
-      const chip = h(`<span class="chip is-active"><span class="chip__dot" style="background:${cat.colorHex}"></span>${cat.icon} ${esc(cat.name)}<span class="chip__x">${I.x}</span></span>`);
+      const chip = h(`<span class="chip is-active"><span class="chip__dot" style="background:${cat.colorHex}"></span>${cat.icon} ${esc(cat.name)}<span class="chip__x">${UI.iconHTML('x', 14)}</span></span>`);
       chip.querySelector('.chip__x').onclick = () => { sel.delete(cat.id); renderList(searchEl.value); emit(); };
       selectedWrap.appendChild(chip);
     });
@@ -1475,9 +1578,9 @@ function CategoriesView() {
   const page = h(`<div class="page"></div>`);
   const header = h(`<div class="page__header">
     <div><div class="page__title">Danh mục</div><div class="page__subtitle">Phân loại thu chi. Kéo theo cây cha–con, gắn nhiều danh mục cho một giao dịch.</div></div>
-    <div class="page__actions"><button class="btn btn--primary btn--sm" data-add>${I.plus} Thêm danh mục</button></div>
+    <div class="page__actions"></div>
   </div>`);
-  header.querySelector('[data-add]').onclick = () => openCategoryModal(null, () => rerender());
+  header.querySelector('.page__actions').appendChild(UI.btn({ variant: 'primary', size: 'sm', icon: 'plus', label: 'Thêm danh mục', onClick: () => openCategoryModal(null, () => rerender()) }));
   page.appendChild(header);
 
   ['expense', 'income'].forEach(type => {
@@ -1500,7 +1603,7 @@ function CategoriesView() {
 function catManageRow(cat, depth, refresh) {
   const count = Store.transactions().filter(t => t.categoryIds.includes(cat.id)).length;
   const row = h(`<div class="cat-row" style="padding-left:${10 + depth * 24}px">
-    ${depth ? '<span style="color:var(--text-3);margin-right:-4px">'+I.chevRight+'</span>' : ''}
+    ${depth ? '<span style="color:var(--text-3);margin-right:-4px">'+UI.iconHTML('chevRight', 14)+'</span>' : ''}
     <span class="cat-row__icon" style="background:${cat.colorHex}22">${cat.icon}</span>
     <span class="cat-row__name">${esc(cat.name)}</span>
     ${cat.isSystem ? '<span class="cat-row__type" style="background:var(--bg-active);color:var(--text-3)">hệ thống</span>' : ''}
@@ -1509,8 +1612,8 @@ function catManageRow(cat, depth, refresh) {
   </div>`);
   const actions = row.querySelector('.cat-row__actions');
   if (!cat.isSystem) {
-    const edit = h(`<button class="icon-btn" title="Sửa">${I.edit}</button>`); edit.onclick = () => openCategoryModal(cat, refresh);
-    const del = h(`<button class="icon-btn" title="Xóa">${I.trash}</button>`);
+    const edit = UI.iconBtn({ icon: 'edit', title: 'Sửa', size: 16, onClick: () => openCategoryModal(cat, refresh) });
+    const del = UI.iconBtn({ icon: 'trash', title: 'Xóa', size: 16 });
     del.onclick = async () => {
       const kids = Domain.descendantIds(cat.id).size - 1;
       const msg = `Xóa “${cat.name}”${kids ? ` và ${kids} danh mục con` : ''}? Giao dịch đang gắn sẽ chuyển về “${PENDING_NAME}” nếu không còn danh mục nào.`;
@@ -1527,26 +1630,27 @@ const EMOJIS = ['🍜','☕','🍽️','🛒','🛍️','🚕','⛽','🚗','✈
 function openCategoryModal(existing, onSaved) {
   const editing = !!existing;
   const draft = existing ? { ...existing } : { name: '', type: 'expense', icon: '📦', colorHex: '#2383e2', parentId: null };
-  const node = h(`<div class="modal modal--lg">
-    <div class="modal__head"><div class="modal__title">${editing?'Sửa danh mục':'Thêm danh mục'}</div><button class="icon-btn" data-close>${I.x}</button></div>
-    <div class="modal__body">
+  const node = UI.modal({ title: editing ? 'Sửa danh mục' : 'Thêm danh mục', size: 'lg' });
+  node.querySelector('.modal__body').innerHTML = `
       <div style="display:flex;gap:12px;align-items:flex-end">
         <div style="width:56px;height:56px;border-radius:14px;display:grid;place-items:center;font-size:26px;flex:0 0 auto" data-preview>${draft.icon}</div>
-        <div class="field" style="flex:1"><label class="field__label">Tên danh mục</label><input class="input" data-name value="${esc(draft.name)}" placeholder="VD: Ăn uống" maxlength="30"></div>
+        ${UI.fieldHTML({ style: 'flex:1', label: 'Tên danh mục', control: UI.inputHTML({ attrs: 'data-name maxlength="30"', value: draft.name, placeholder: 'VD: Ăn uống' }) })}
       </div>
-      <div class="field"><label class="field__label">Loại</label>
-        <div class="segmented" data-type>
-          <button data-t="expense" data-tone="expense" class="${draft.type==='expense'?'is-active':''}">Chi tiêu</button>
-          <button data-t="income" data-tone="income" class="${draft.type==='income'?'is-active':''}">Thu nhập</button>
-        </div>
-      </div>
-      <div class="field"><label class="field__label">Danh mục cha <span style="color:var(--text-3);font-weight:400">· để trống nếu là cấp gốc</span></label>
-        <select class="select" data-parent></select></div>
-      <div class="field"><label class="field__label">Biểu tượng</label><div class="emoji-grid" data-emojis></div></div>
-      <div class="field"><label class="field__label">Màu</label><div class="color-swatches" data-colors></div></div>
-    </div>
-    <div class="modal__foot"><div class="spacer"></div><button class="btn btn--ghost" data-close>Hủy</button><button class="btn btn--primary" data-save>${editing?'Lưu':'Thêm'}</button></div>
-  </div>`);
+      ${UI.fieldHTML({ label: 'Loại', control: '<div data-type></div>' })}
+      ${UI.fieldHTML({ label: 'Danh mục cha <span style="color:var(--text-3);font-weight:400">· để trống nếu là cấp gốc</span>', control: '<select class="select" data-parent></select>' })}
+      ${UI.fieldHTML({ label: 'Biểu tượng', control: '<div class="emoji-grid" data-emojis></div>' })}
+      ${UI.fieldHTML({ label: 'Màu', control: '<div class="color-swatches" data-colors></div>' })}`;
+  node.querySelector('[data-type]').replaceWith(UI.segmented({
+    value: draft.type,
+    options: [{ value: 'expense', label: 'Chi tiêu', tone: 'expense' }, { value: 'income', label: 'Thu nhập', tone: 'income' }],
+    onChange: (v) => { draft.type = v; buildParent(); },
+  }));
+  const foot = node.querySelector('.modal__foot');
+  foot.appendChild(h('<div class="spacer"></div>'));
+  foot.appendChild(UI.btn({ variant: 'ghost', label: 'Hủy', data: { close: '1' } }));
+  const saveBtn = UI.btn({ variant: 'primary', label: editing ? 'Lưu' : 'Thêm' });
+  foot.appendChild(saveBtn);
+
   const m = openModal(node);
   node.querySelectorAll('[data-close]').forEach(b => b.onclick = () => m.close());
   const preview = node.querySelector('[data-preview]');
@@ -1554,7 +1658,6 @@ function openCategoryModal(existing, onSaved) {
   updatePreview();
 
   node.querySelector('[data-name]').oninput = (e) => draft.name = e.target.value;
-  node.querySelectorAll('[data-type] button').forEach(b => b.onclick = () => { draft.type = b.dataset.t; node.querySelectorAll('[data-type] button').forEach(x => x.classList.toggle('is-active', x === b)); buildParent(); });
 
   const parentSel = node.querySelector('[data-parent]');
   function buildParent() {
@@ -1574,7 +1677,7 @@ function openCategoryModal(existing, onSaved) {
   const colorWrap = node.querySelector('[data-colors]');
   SWATCHES.forEach(col => { const b = h(`<button class="swatch ${col===draft.colorHex?'is-active':''}" style="background:${col}"></button>`); b.onclick = () => { draft.colorHex = col; colorWrap.querySelectorAll('.swatch').forEach(x => x.classList.remove('is-active')); b.classList.add('is-active'); updatePreview(); }; colorWrap.appendChild(b); });
 
-  node.querySelector('[data-save]').onclick = () => {
+  saveBtn.onclick = () => {
     if (!draft.name.trim()) { toast('Nhập tên danh mục', 'danger'); return; }
     if (editing) Store.updateCategory(existing.id, { name: draft.name.trim(), type: draft.type, icon: draft.icon, colorHex: draft.colorHex, parentId: draft.parentId });
     else Store.addCategory({ name: draft.name.trim(), type: draft.type, icon: draft.icon, colorHex: draft.colorHex, parentId: draft.parentId });
@@ -1604,11 +1707,11 @@ function SettingsView() {
   // appearance
   const appearance = settingsGroup('Giao diện');
   const themeRow = settingsRow('Chủ đề', 'Sáng, tối, hoặc theo hệ thống.');
-  const seg = h(`<div class="segmented">
-    <button data-th="light">Sáng</button><button data-th="dark">Tối</button><button data-th="system">Hệ thống</button></div>`);
-  const syncSeg = () => seg.querySelectorAll('button').forEach(b => b.classList.toggle('is-active', b.dataset.th === Store.getTheme()));
-  seg.querySelectorAll('button').forEach(b => b.onclick = () => { Store.setTheme(b.dataset.th); syncSeg(); renderApp(); });
-  syncSeg();
+  const seg = UI.segmented({
+    value: Store.getTheme(),
+    options: [{ value: 'light', label: 'Sáng' }, { value: 'dark', label: 'Tối' }, { value: 'system', label: 'Hệ thống' }],
+    onChange: (v) => { Store.setTheme(v); renderApp(); },
+  });
   themeRow.querySelector('.settings-row__ctrl').appendChild(seg);
   appearance.appendChild(themeRow);
   page.appendChild(appearance);
@@ -1620,12 +1723,12 @@ function SettingsView() {
   data.appendChild(stat);
   const expRow = settingsRow('Sao lưu & xuất', 'Xuất toàn bộ ra JSON (khôi phục được) hoặc CSV (mở bằng Excel).');
   const expCtrl = expRow.querySelector('.settings-row__ctrl');
-  const bj = h(`<button class="btn btn--sm">${I.download} JSON</button>`); bj.onclick = exportJSON;
-  const bc = h(`<button class="btn btn--sm">${I.download} CSV</button>`); bc.onclick = exportCSV;
+  const bj = UI.btn({ size: 'sm', icon: 'download', label: 'JSON', onClick: exportJSON });
+  const bc = UI.btn({ size: 'sm', icon: 'download', label: 'CSV', onClick: exportCSV });
   expCtrl.style.gap = '8px'; expCtrl.appendChild(bj); expCtrl.appendChild(bc);
   data.appendChild(expRow);
   const impRow = settingsRow('Nhập từ tệp', 'Khôi phục từ tệp JSON đã xuất trước đó (ghi đè dữ liệu hiện tại).');
-  const bi = h(`<button class="btn btn--sm">${I.upload} Nhập JSON</button>`); bi.onclick = importJSON;
+  const bi = UI.btn({ size: 'sm', icon: 'upload', label: 'Nhập JSON', onClick: importJSON });
   impRow.querySelector('.settings-row__ctrl').appendChild(bi);
   data.appendChild(impRow);
   page.appendChild(data);
@@ -1633,7 +1736,7 @@ function SettingsView() {
   // danger
   const danger = settingsGroup('Vùng nguy hiểm');
   const delRow = settingsRow('Xóa tài khoản', 'Xóa vĩnh viễn tài khoản này cùng toàn bộ giao dịch & danh mục trên máy.');
-  const bd2 = h(`<button class="btn btn--sm btn--danger">${I.trash} Xóa tài khoản</button>`);
+  const bd2 = UI.btn({ size: 'sm', variant: 'danger', icon: 'trash', label: 'Xóa tài khoản' });
   bd2.onclick = async () => {
     if (await confirmDialog({ title: 'Xóa tài khoản?', message: `Toàn bộ dữ liệu của “${u.displayName}” sẽ bị xóa và không thể khôi phục.`, confirmText: 'Xóa vĩnh viễn', danger: true })) {
       Store.deleteUser(u.id); toast('Đã xóa tài khoản'); renderApp();
@@ -1696,9 +1799,7 @@ function importJSON() {
 }
 
 /* ---------------------------------------------------- shared empty state */
-function emptyState(title, sub) {
-  return h(`<div class="empty"><div class="empty__icon">${I.wallet}</div><div class="empty__title">${esc(title)}</div><p>${esc(sub || '')}</p></div>`);
-}
+function emptyState(title, sub) { return UI.empty({ icon: 'wallet', title, sub }); }
 
 /* register views into the shared namespace so the core router can find them */
 window.__cashy.OnboardingView = OnboardingView;
