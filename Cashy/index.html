@@ -352,13 +352,25 @@ a { color: var(--text-primary); text-decoration: underline; text-underline-offse
   background: rgb(var(--accent-yellow-rgb) / .14); color: var(--accent-yellow); }
 
 /* category tree */
-.cat-row { display: flex; align-items: center; gap: 11px; padding: 10px; border-radius: var(--r-md); transition: background var(--dur); }
+.cat-row { display: flex; align-items: center; gap: 11px; padding: 10px; border-radius: var(--r-md); transition: background var(--dur); position: relative; }
 .cat-row:hover { background: var(--hover); }
 .cat-row__icon { width: 30px; height: 30px; border-radius: 6px; display: grid; place-items: center; font-size: 15px; flex: 0 0 30px; }
 .cat-row__name { font-weight: 600; }
 .cat-row__type { font-size: 11.5px; font-weight: 500; padding: 1px 9px; border-radius: var(--r-sm); }
 .cat-row__actions { margin-left: auto; display: flex; gap: 2px; opacity: 0; transition: opacity var(--dur); }
 .cat-row:hover .cat-row__actions { opacity: 1; }
+/* drag & drop to arrange the tree */
+.cat-grip { display: inline-grid; place-items: center; width: 16px; flex: 0 0 16px; margin: 0 -3px 0 -2px; color: var(--text-dim); cursor: grab; opacity: .28; touch-action: none; transition: opacity var(--dur); }
+.cat-row:hover .cat-grip { opacity: .75; }
+.cat-grip:active { cursor: grabbing; }
+.cat-grip.is-off { visibility: hidden; }
+.cat-row.is-dragging { opacity: .35; }
+.cat-drag-clone { position: fixed; z-index: 9999; pointer-events: none; background: var(--card); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: var(--shadow-lg); }
+.cat-row.drop-into { background: rgb(var(--action-rgb) / .10); box-shadow: inset 0 0 0 1.5px var(--action); }
+.cat-row.drop-before::after, .cat-row.drop-after::after { content: ""; position: absolute; left: 8px; right: 10px; height: 2px; background: var(--action); border-radius: 2px; pointer-events: none; }
+.cat-row.drop-before::after { top: -1px; }
+.cat-row.drop-after::after { bottom: -1px; }
+body.is-dragging-cat, body.is-dragging-cat * { cursor: grabbing !important; user-select: none !important; }
 .type-pill-income { background: rgb(var(--accent-green-rgb) / .13); color: var(--accent-green); border: 1px solid rgb(var(--accent-green-rgb) / .26); }
 .type-pill-expense { background: rgb(var(--accent-red-rgb) / .12); color: var(--accent-red); border: 1px solid rgb(var(--accent-red-rgb) / .26); }
 
@@ -530,6 +542,7 @@ const I = {
   moon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>',
   chevDown: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>',
   chevRight: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>',
+  grip: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg>',
   download: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>',
   upload: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>',
   wallet: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2z"/><path d="M16 12h.01"/><path d="M2 9V6a2 2 0 0 1 2-2h12"/></svg>',
@@ -644,7 +657,14 @@ const Store = {
   categories() { return this.data().categories; },
   category(id) { return this.categories().find(c => c.id === id); },
   pendingCategory() { return this.categories().find(c => c.isSystem && c.name === PENDING_NAME); },
-  addCategory(cat) { const c = { id: uid(), isSystem: false, ...cat }; this.data().categories.push(c); this.persist(); return c; },
+  addCategory(cat) {
+    const c = { id: uid(), isSystem: false, ...cat };
+    if (c.order == null) {
+      const sibs = this.data().categories.filter(x => (x.parentId || null) === (c.parentId || null));
+      c.order = sibs.reduce((m, x) => Math.max(m, x.order ?? -1), -1) + 1;
+    }
+    this.data().categories.push(c); this.persist(); return c;
+  },
   updateCategory(id, patch) { Object.assign(this.category(id), patch); this.persist(); },
   deleteCategory(id) {
     const cat = this.category(id);
@@ -663,6 +683,25 @@ const Store = {
       t.categoryIds = t.categoryIds.filter(cid => !toDelete.has(cid));
       if (t.categoryIds.length === 0) t.categoryIds = [pid];
     }
+    this.persist();
+    return true;
+  },
+
+  // move/re-parent a category in the tree, keeping sibling order (drag & drop)
+  reorderCategory(dragId, newParentId, refId, after) {
+    const cats = this.categories();
+    const drag = cats.find(c => c.id === dragId);
+    if (!drag) return false;
+    newParentId = newParentId || null;
+    // guard against cycles: can't move a category under itself or its own descendant
+    if (newParentId && Domain.descendantIds(dragId).has(newParentId)) return false;
+    drag.parentId = newParentId;
+    const sibs = cats.filter(c => c.id !== dragId && (c.parentId || null) === newParentId).sort(byOrder);
+    let idx;
+    if (!refId) idx = sibs.length;
+    else { idx = sibs.findIndex(c => c.id === refId); if (idx < 0) idx = sibs.length; else if (after) idx += 1; }
+    sibs.splice(idx, 0, drag);
+    sibs.forEach((c, i) => c.order = i);
     this.persist();
     return true;
   },
@@ -713,6 +752,9 @@ function seedCategories() {
   push(mk('Thưởng', 'income', '🎁', '#d9730d'));
   push(mk('Đầu tư', 'income', '📈', '#0b6e99'));
   push(mk('Thu khác', 'income', '💵', '#787774'));
+  // sequential order within each parent group (insertion order)
+  const seen = {};
+  cats.forEach(c => { const k = c.parentId || 'root'; seen[k] = (seen[k] ?? -1) + 1; c.order = seen[k]; });
   return cats;
 }
 
@@ -725,9 +767,9 @@ const Domain = {
     const out = [];
     const walk = (c, depth) => {
       out.push({ cat: c, depth });
-      all.filter(x => x.parentId === c.id).sort(byName).forEach(ch => walk(ch, depth + 1));
+      all.filter(x => x.parentId === c.id).sort(byOrder).forEach(ch => walk(ch, depth + 1));
     };
-    roots.sort((a, b) => (a.isSystem ? 1 : 0) - (b.isSystem ? 1 : 0) || byName(a, b)).forEach(r => walk(r, 0));
+    roots.sort((a, b) => (a.isSystem ? 1 : 0) - (b.isSystem ? 1 : 0) || byOrder(a, b)).forEach(r => walk(r, 0));
     return type ? out.filter(o => o.cat.type === type || o.cat.isSystem) : out;
   },
   descendantIds(id) {
@@ -801,6 +843,7 @@ const Domain = {
   },
 };
 function byName(a, b) { return a.name.localeCompare(b.name, 'vi'); }
+function byOrder(a, b) { return ((a.order ?? 1e9) - (b.order ?? 1e9)) || byName(a, b); }
 
 /* ================================================================= THEME */
 function applyTheme() {
@@ -1120,7 +1163,7 @@ window.addEventListener('keydown', (e) => {
 });
 
 // expose for later view modules attached below
-window.__cashy = { Store, Domain, Money, UI, renderApp, navigate, openModal, confirmDialog, attachDropdown, toast, h, frag, esc, uid, I, ymd, todayYMD, fmtDate, fmtDateShort, relativeDateHead, periodRange, prevRange, parseYMD, addDays, byName, catChipHTML, clamp, PENDING_NAME };
+window.__cashy = { Store, Domain, Money, UI, renderApp, navigate, openModal, confirmDialog, attachDropdown, toast, h, frag, esc, uid, I, ymd, todayYMD, fmtDate, fmtDateShort, relativeDateHead, periodRange, prevRange, parseYMD, addDays, byName, byOrder, catChipHTML, clamp, PENDING_NAME };
 
 /* Views are defined in the second script block for readability. */
 })();
@@ -1133,7 +1176,7 @@ window.__cashy = { Store, Domain, Money, UI, renderApp, navigate, openModal, con
    ========================================================================= */
 (function () {
 const C = window.__cashy;
-const { Store, Domain, Money, UI, renderApp, navigate, openModal, confirmDialog, attachDropdown, toast, h, esc, uid, I, ymd, todayYMD, fmtDate, fmtDateShort, relativeDateHead, periodRange, prevRange, parseYMD, byName, clamp, PENDING_NAME } = C;
+const { Store, Domain, Money, UI, renderApp, navigate, openModal, confirmDialog, attachDropdown, toast, h, esc, uid, I, ymd, todayYMD, fmtDate, fmtDateShort, relativeDateHead, periodRange, prevRange, parseYMD, byName, byOrder, clamp, PENDING_NAME } = C;
 const $ = (s, r = document) => r.querySelector(s);
 
 /* ------------------------------------------------------------- charts */
@@ -1576,22 +1619,23 @@ function buildCategoryPicker(selectedIds, onChange) {
 function CategoriesView() {
   const page = h(`<div class="page"></div>`);
   const header = h(`<div class="page__header">
-    <div><div class="page__title">Danh mục</div><div class="page__subtitle">Phân loại thu chi. Kéo theo cây cha–con, gắn nhiều danh mục cho một giao dịch.</div></div>
+    <div><div class="page__title">Danh mục</div><div class="page__subtitle">Phân loại thu chi. Kéo tay cầm bên trái để đổi thứ tự, hoặc thả vào giữa một danh mục để lồng vào nhau — cây sâu tùy ý.</div></div>
     <div class="page__actions"></div>
   </div>`);
   header.querySelector('.page__actions').appendChild(UI.btn({ variant: 'primary', size: 'sm', icon: 'plus', label: 'Thêm danh mục', onClick: () => openCategoryModal(null, () => rerender()) }));
   page.appendChild(header);
 
   ['expense', 'income'].forEach(type => {
-    const roots = Store.categories().filter(c => c.type === type && !c.parentId).sort((a,b)=> (a.isSystem?1:0)-(b.isSystem?1:0) || byName(a,b));
+    const roots = Store.categories().filter(c => c.type === type && !c.parentId).sort((a,b)=> (a.isSystem?1:0)-(b.isSystem?1:0) || byOrder(a,b));
     if (!roots.length) return;
     const sec = h(`<div style="margin-bottom:24px"><div class="section-title" style="margin-bottom:8px;display:flex;align-items:center;gap:8px"><span class="type-pill-${type} cat-row__type">${type==='expense'?'Chi tiêu':'Thu nhập'}</span></div><div class="card"></div></div>`);
     const card = sec.querySelector('.card');
     const walk = (cat, depth) => {
       card.appendChild(catManageRow(cat, depth, () => rerender()));
-      Store.categories().filter(c => c.parentId === cat.id).sort(byName).forEach(ch => walk(ch, depth + 1));
+      Store.categories().filter(c => c.parentId === cat.id).sort(byOrder).forEach(ch => walk(ch, depth + 1));
     };
     roots.forEach(r => walk(r, 0));
+    enableCatDnD(card, () => rerender());
     page.appendChild(sec);
   });
 
@@ -1599,9 +1643,72 @@ function CategoriesView() {
   return page;
 }
 
+/* drag & drop: reorder / re-parent categories within a type section (mouse + touch via Pointer Events) */
+function enableCatDnD(container, refresh) {
+  let st = null, drag = null, tgt = null;
+  const clearInd = () => container.querySelectorAll('.drop-before,.drop-after,.drop-into').forEach(r => r.classList.remove('drop-before', 'drop-after', 'drop-into'));
+
+  const begin = (e) => {
+    const row = st.row, r = row.getBoundingClientRect();
+    const clone = row.cloneNode(true);
+    clone.classList.add('cat-drag-clone');
+    clone.style.width = r.width + 'px'; clone.style.left = r.left + 'px'; clone.style.top = r.top + 'px';
+    document.body.appendChild(clone);
+    document.body.classList.add('is-dragging-cat');
+    row.classList.add('is-dragging');
+    drag = { id: st.id, el: row, clone, dx: e.clientX - r.left, dy: e.clientY - r.top };
+  };
+
+  const onMove = (e) => {
+    if (!drag) { if (Math.hypot(e.clientX - st.x, e.clientY - st.y) < 5) return; begin(e); }
+    e.preventDefault();
+    drag.clone.style.left = (e.clientX - drag.dx) + 'px';
+    drag.clone.style.top = (e.clientY - drag.dy) + 'px';
+    clearInd(); tgt = null;
+    const el = document.elementFromPoint(e.clientX, e.clientY);
+    const row = el && el.closest('[data-cat-id]');
+    if (!row || !container.contains(row) || row === drag.el) return;
+    const tid = row.dataset.catId;
+    if (Domain.descendantIds(drag.id).has(tid)) return; // never into own subtree
+    const r = row.getBoundingClientRect();
+    const rel = (e.clientY - r.top) / r.height;
+    let pos = rel < 0.28 ? 'before' : rel > 0.72 ? 'after' : 'into';
+    if (pos === 'into' && row.dataset.system === '1') pos = 'after'; // don't nest under a system category
+    row.classList.add('drop-' + pos);
+    tgt = { id: tid, pos, parentId: row.dataset.parent || null };
+  };
+
+  const onUp = () => {
+    window.removeEventListener('pointermove', onMove);
+    window.removeEventListener('pointerup', onUp);
+    window.removeEventListener('pointercancel', onUp);
+    const d = drag, t = tgt;
+    if (d) { d.clone.remove(); d.el.classList.remove('is-dragging'); document.body.classList.remove('is-dragging-cat'); clearInd(); }
+    st = null; drag = null; tgt = null;
+    if (d && t) {
+      if (t.pos === 'into') Store.reorderCategory(d.id, t.id, null, false);
+      else Store.reorderCategory(d.id, t.parentId, t.id, t.pos === 'after');
+      refresh();
+    }
+  };
+
+  container.addEventListener('pointerdown', (e) => {
+    if (e.button != null && e.button > 0) return;
+    const grip = e.target.closest('.cat-grip');
+    if (!grip || grip.classList.contains('is-off')) return;
+    const row = grip.closest('[data-cat-id]');
+    if (!row || row.dataset.system === '1') return;
+    st = { x: e.clientX, y: e.clientY, row, id: row.dataset.catId };
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
+    window.addEventListener('pointercancel', onUp);
+  });
+}
+
 function catManageRow(cat, depth, refresh) {
   const count = Store.transactions().filter(t => t.categoryIds.includes(cat.id)).length;
-  const row = h(`<div class="cat-row" style="padding-left:${10 + depth * 24}px">
+  const row = h(`<div class="cat-row" data-cat-id="${cat.id}" data-parent="${cat.parentId || ''}" data-system="${cat.isSystem ? 1 : 0}" style="padding-left:${10 + depth * 24}px">
+    <span class="cat-grip ${cat.isSystem ? 'is-off' : ''}" title="Kéo để sắp xếp">${UI.iconHTML('grip', 14)}</span>
     ${depth ? '<span style="color:var(--text-3);margin-right:-4px">'+UI.iconHTML('chevRight', 14)+'</span>' : ''}
     <span class="cat-row__icon" style="background:${cat.colorHex}22">${cat.icon}</span>
     <span class="cat-row__name">${esc(cat.name)}</span>
