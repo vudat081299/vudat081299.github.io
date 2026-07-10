@@ -321,8 +321,8 @@ a { color: var(--text-primary); text-decoration: underline; text-underline-offse
 .bars__col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 0; height: 100%; justify-content: flex-end; }
 .bars__stack { display: flex; flex-direction: row; align-items: flex-end; justify-content: center; gap: 2px; width: 100%; }
 .bars__bar { flex: 1; max-width: 12px; border-radius: 2px 2px 0 0; }
-.bars__bar.is-income { background: color-mix(in srgb, var(--income) 68%, var(--card)); }
-.bars__bar.is-expense { background: color-mix(in srgb, var(--expense) 68%, var(--card)); }
+.bars__bar.is-income { background: var(--income); }
+.bars__bar.is-expense { background: var(--expense); }
 .bars__bar.is-empty { background: transparent; }
 .bars__label { font-size: 10.5px; color: var(--text-dim); white-space: nowrap; }
 
@@ -1180,17 +1180,13 @@ const { Store, Domain, Money, UI, renderApp, navigate, openModal, confirmDialog,
 const $ = (s, r = document) => r.querySelector(s);
 
 /* ------------------------------------------------------------- charts */
-// vivid palette is for text/small marks only; when a color fills an AREA, blend it
-// toward the theme background (black/dark or white) so it reads soft, not neon.
-function chartFill(color, ratio = 58) { return `color-mix(in srgb, ${color} ${ratio}%, var(--card))`; }
-
 function donutSVG(segments, size = 150) {
   const stroke = 22, r = (size - stroke) / 2, cx = size / 2, C2 = 2 * Math.PI * r;
   const total = segments.reduce((s, x) => s + x.value, 0) || 1;
   let acc = 0;
   const arcs = segments.map(s => {
     const len = s.value / total * C2;
-    const el = `<circle cx="${cx}" cy="${cx}" r="${r}" fill="none" style="stroke:${chartFill(s.color)}" stroke-width="${stroke}" stroke-dasharray="${len} ${C2 - len}" stroke-dashoffset="${-acc}" transform="rotate(-90 ${cx} ${cx})" stroke-linecap="butt"/>`;
+    const el = `<circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="${s.color}" stroke-width="${stroke}" stroke-dasharray="${len} ${C2 - len}" stroke-dashoffset="${-acc}" transform="rotate(-90 ${cx} ${cx})" stroke-linecap="butt"/>`;
     acc += len; return el;
   }).join('');
   const track = `<circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="var(--bg-inset)" stroke-width="${stroke}"/>`;
@@ -1309,12 +1305,12 @@ function DashboardView() {
     dw.appendChild(dEl);
     const legend = h('<div class="legend"></div>');
     bd.slice(0, 6).forEach(x => {
-      legend.appendChild(h(`<div class="legend__row"><span class="legend__dot" style="background:${chartFill(x.cat.colorHex)}"></span>
+      legend.appendChild(h(`<div class="legend__row"><span class="legend__dot" style="background:${x.cat.colorHex}"></span>
         <span class="legend__name">${x.cat.icon} ${esc(x.cat.name)}</span>
         <span class="legend__val num">${Money.formatShort(x.value)}</span>
         <span class="legend__pct">${Math.round(x.value / t.expense * 100)}%</span></div>`));
     });
-    if (bd.length > 6) legend.appendChild(h(`<div class="legend__row"><span class="legend__dot" style="background:${chartFill('var(--text-3)')}"></span><span class="legend__name">Khác</span><span class="legend__pct">${Math.round(segs[segs.length-1].value / t.expense * 100)}%</span></div>`));
+    if (bd.length > 6) legend.appendChild(h(`<div class="legend__row"><span class="legend__dot" style="background:var(--text-3)"></span><span class="legend__name">Khác</span><span class="legend__pct">${Math.round(segs[segs.length-1].value / t.expense * 100)}%</span></div>`));
     dw.appendChild(legend);
   }
   grid.appendChild(donut);
