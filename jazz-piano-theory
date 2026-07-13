@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<title>Nhạc lý → Piano → Jazz · trọn bộ</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#0a0a0f; --surface:#111118; --card:#16161f; --border:#2a2a3a; --hairline:rgba(255,255,255,0.04);
+  --text-primary:#f0f0f8; --text-secondary:#a8a8c0; --text-muted:#8888a8; --text-dim:#5a5a78;
+  --accent-green:#00e5a0; --accent-green-rgb:0 229 160;
+  --accent-blue:#3b82f6; --accent-blue-rgb:59 130 246;
+  --accent-yellow:#f5d000; --accent-yellow-rgb:245 208 0;
+  --accent-red:#ff4560; --accent-red-rgb:255 69 96;
+  --accent-purple:#c084fc; --accent-purple-rgb:192 132 252;
+  --accent-cyan:#22d3ee; --accent-cyan-rgb:34 211 238;
+  --accent-identity:var(--accent-purple); --accent-identity-rgb:var(--accent-purple-rgb);
+  --font-display:'Bebas Neue','Oswald','Arial Narrow',sans-serif;
+  --font-body:'DM Sans',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono','Fira Code','SF Mono',monospace;
+  --fs-hero:clamp(40px,8vw,92px); --fs-h1:clamp(30px,5vw,52px); --fs-h2:clamp(24px,3.4vw,34px);
+  --fs-h3:20px; --fs-lg:18px; --fs-base:15px; --fs-sm:13px; --fs-xs:12px; --fs-label:11px; --fs-micro:10px;
+  --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:20px; --sp-6:24px; --sp-8:32px; --sp-10:40px; --sp-12:48px; --sp-16:64px; --sp-20:80px;
+  --r-xs:3px; --r-sm:6px; --r-md:10px; --r-lg:12px; --r-xl:16px; --r-pill:9999px;
+  --dur-fast:150ms; --dur-base:250ms; --dur-entry:650ms; --ease-out:cubic-bezier(0.16,1,0.3,1);
+  --sbw:270px;
+}
+[data-theme="light"]{
+  --bg:#faf9fc; --surface:#f1eff6; --card:#ffffff; --border:#dcd7e6; --hairline:rgba(0,0,0,0.05);
+  --text-primary:#14101f; --text-secondary:#3a3450; --text-muted:#6a6480; --text-dim:#9a94ae;
+  --accent-green:#008060; --accent-green-rgb:0 128 96;
+  --accent-blue:#1d4ed8; --accent-blue-rgb:29 78 216;
+  --accent-yellow:#936a00; --accent-yellow-rgb:147 106 0;
+  --accent-red:#c41e3a; --accent-red-rgb:196 30 58;
+  --accent-purple:#7c3aed; --accent-purple-rgb:124 58 237;
+  --accent-cyan:#0e7490; --accent-cyan-rgb:14 116 144;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%; scroll-behavior:smooth}
+body{margin:0; background:var(--bg); color:var(--text-primary); font-family:var(--font-body); font-size:var(--fs-base); line-height:1.6; min-height:100vh; -webkit-font-smoothing:antialiased;
+  transition:background var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out);}
+body::before{content:''; position:fixed; inset:0; background-image:
+  repeating-linear-gradient(0deg,transparent 0 43px,var(--hairline) 43px 44px),
+  repeating-linear-gradient(90deg,transparent 0 43px,var(--hairline) 43px 44px);
+  z-index:0; pointer-events:none;}
+.numeric,table td,table th,.mono,code,pre,input[type=number]{font-variant-numeric:tabular-nums lining-nums}
+a{color:var(--accent-cyan); text-decoration:none} a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--accent-identity); outline-offset:2px; border-radius:var(--r-xs)}
+h2,h3{scroll-margin-top:var(--sp-10)}
+
+.reading-progress{position:fixed; top:0; left:0; right:0; height:3px; background:transparent; z-index:1200; pointer-events:none}
+.reading-progress-fill{height:100%; width:0%; background:linear-gradient(90deg,var(--accent-identity),var(--accent-cyan)); transition:width 60ms linear}
+
+.sb-toggle{position:fixed; top:14px; left:14px; z-index:1150; width:44px; height:44px; display:grid; place-items:center;
+  background:var(--card); border:1px solid var(--border); border-radius:var(--r-sm); cursor:pointer; color:var(--text-primary);
+  transition:border-color var(--dur-fast), background var(--dur-fast)}
+.sb-toggle:hover{border-color:var(--accent-identity)}
+.sb-toggle svg{width:20px; height:20px}
+.sidebar{position:fixed; top:0; left:0; bottom:0; width:var(--sbw); background:var(--surface); border-right:1px solid var(--border);
+  z-index:1140; transform:translateX(-100%); transition:transform var(--dur-base) var(--ease-out); display:flex; flex-direction:column; overflow:hidden}
+body.nav-open .sidebar{transform:translateX(0)}
+.sb-head{padding:18px 20px 14px; border-bottom:1px solid var(--border)}
+.sb-brand{font-family:var(--font-display); font-size:22px; letter-spacing:.04em; line-height:1; display:flex; align-items:center; gap:10px}
+.sb-brand .mk{display:grid; place-items:center; width:26px; height:26px; background:var(--accent-identity); color:var(--bg); border-radius:var(--r-sm); font-size:16px}
+.sb-brand span{color:var(--accent-identity)}
+.sb-prog{margin-top:12px; font-family:var(--font-mono); font-size:var(--fs-micro); letter-spacing:.14em; text-transform:uppercase; color:var(--text-dim); display:flex; justify-content:space-between; align-items:center}
+.sb-prog b{color:var(--accent-identity); font-weight:500}
+.sb-bar{height:4px; background:var(--card); border-radius:var(--r-pill); overflow:hidden; margin-top:6px}
+.sb-bar i{display:block; height:100%; width:0%; background:var(--accent-identity); transition:width 80ms linear}
+.sb-nav{flex:1; overflow-y:auto; padding:10px 10px 24px}
+.sb-link{display:flex; gap:11px; align-items:baseline; padding:9px 11px; border-radius:var(--r-sm); color:var(--text-muted);
+  border-left:2px solid transparent; margin-bottom:2px; cursor:pointer; transition:color var(--dur-fast), background var(--dur-fast), border-color var(--dur-fast); font-size:var(--fs-sm)}
+.sb-link .k{font-family:var(--font-mono); font-size:var(--fs-xs); color:var(--text-dim); min-width:18px}
+.sb-link:hover{color:var(--text-primary); background:var(--hairline)}
+.sb-link.active{color:var(--text-primary); background:rgba(var(--accent-identity-rgb),.10); border-left-color:var(--accent-identity)}
+.sb-link.active .k{color:var(--accent-identity)}
+.sb-link.done .k::after{content:' ✓'; color:var(--accent-green)}
+.sb-foot{padding:12px 20px; border-top:1px solid var(--border); display:flex; gap:8px}
+.backdrop{position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:1130; opacity:0; visibility:hidden; transition:opacity var(--dur-base)}
+body.nav-open .backdrop{opacity:1; visibility:visible}
+@media(min-width:1025px){
+  body.nav-open .backdrop{display:none}
+  body.nav-open .page{margin-left:var(--sbw)}
+  .page{transition:margin-left var(--dur-base) var(--ease-out)}
+}
+
+.page{position:relative; z-index:1}
+.container{width:100%; max-width:1000px; margin-inline:auto; padding-inline:clamp(var(--sp-4),4vw,var(--sp-10))}
+.page-head{padding:var(--sp-20) 0 var(--sp-10)}
+.eyebrow{font-family:var(--font-mono); font-size:var(--fs-label); letter-spacing:.22em; color:var(--accent-identity); text-transform:uppercase}
+.title{font-family:var(--font-display); font-size:var(--fs-hero); line-height:.92; margin:.18em 0 .12em; letter-spacing:.01em}
+.title span{color:var(--accent-identity)}
+.subtitle{font-weight:300; font-size:var(--fs-lg); color:var(--text-secondary); max-width:60ch; line-height:1.65}
+.subtitle b{color:var(--text-primary); font-weight:500}
+.meta{font-family:var(--font-mono); font-size:var(--fs-label); color:var(--text-dim); letter-spacing:.1em; text-transform:uppercase; margin-top:var(--sp-5)}
+.meta b{color:var(--accent-yellow); font-weight:400}
+
+.audio-cta{display:flex; flex-wrap:wrap; align-items:center; gap:14px; margin-top:var(--sp-8); padding:16px 20px;
+  background:rgba(var(--accent-identity-rgb),.06); border:1px solid rgba(var(--accent-identity-rgb),.22); border-radius:var(--r-md)}
+.audio-cta .ico{font-size:22px}
+.audio-cta p{margin:0; font-size:var(--fs-sm); color:var(--text-secondary); max-width:none}
+.audio-cta.on{background:rgba(var(--accent-green-rgb),.06); border-color:rgba(var(--accent-green-rgb),.22)}
+
+section.concept{padding:var(--sp-12) 0; border-top:1px solid var(--border)}
+.sec-eyebrow{font-family:var(--font-mono); font-size:var(--fs-label); letter-spacing:.18em; text-transform:uppercase; color:var(--accent-identity)}
+h2{font-family:var(--font-display); font-size:var(--fs-h2); letter-spacing:.02em; margin:.25em 0 .5em; line-height:1.05; font-weight:400}
+h3{font-family:var(--font-body); font-size:var(--fs-h3); font-weight:600; margin:var(--sp-8) 0 var(--sp-3)}
+.lead{font-size:var(--fs-lg); color:var(--text-secondary); max-width:64ch; line-height:1.7}
+p{max-width:68ch}
+strong,b{color:var(--text-primary); font-weight:600}
+em{color:var(--accent-identity); font-style:normal}
+.muted{color:var(--text-muted)}
+
+.overview{padding:var(--sp-8) 0 var(--sp-4)}
+.overview-map{list-style:none; padding:0; margin:var(--sp-6) 0 0; display:grid; gap:var(--sp-2); grid-template-columns:1fr 1fr}
+@media(max-width:640px){.overview-map{grid-template-columns:1fr}}
+.overview-map a{display:flex; gap:12px; align-items:baseline; padding:10px 12px; border-left:2px solid transparent; color:var(--text-muted); border-radius:var(--r-sm); transition:.15s}
+.overview-map a:hover{color:var(--text-primary); border-left-color:var(--accent-identity); background:rgba(var(--accent-identity-rgb),.06); text-decoration:none}
+.overview-map .mk{font-family:var(--font-mono); font-size:var(--fs-sm); color:var(--accent-identity); min-width:2em}
+
+.card{background:var(--card); border:1px solid var(--border); border-radius:var(--r-md); padding:var(--sp-6)}
+.demo{background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); padding:var(--sp-6); margin:var(--sp-6) 0}
+.demo-label{font-family:var(--font-mono); font-size:var(--fs-label); letter-spacing:.14em; text-transform:uppercase; color:var(--text-dim); display:flex; align-items:center; gap:8px; margin-bottom:var(--sp-5)}
+.demo-label::before{content:'▸'; color:var(--accent-identity)}
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:var(--sp-4)}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}}
+
+.note-box{border-left:3px solid var(--accent-blue); background:rgba(var(--accent-blue-rgb),.06); padding:14px 18px; border-radius:0 var(--r-sm) var(--r-sm) 0; margin:var(--sp-5) 0}
+.warning{border-left:3px solid var(--accent-yellow); background:rgba(var(--accent-yellow-rgb),.07); padding:14px 18px; border-radius:0 var(--r-sm) var(--r-sm) 0; margin:var(--sp-5) 0}
+.warning .tag,.note-box .tag{font-family:var(--font-mono); font-size:var(--fs-label); letter-spacing:.12em; text-transform:uppercase; display:block; margin-bottom:4px}
+.warning .tag{color:var(--accent-yellow)} .note-box .tag{color:var(--accent-blue)}
+.warning p,.note-box p{margin:0; font-size:var(--fs-sm); color:var(--text-secondary); max-width:none}
+
+.key-def{border:1px solid rgba(var(--accent-green-rgb),.25); background:rgba(var(--accent-green-rgb),.05); border-radius:var(--r-md); padding:16px 18px; margin:var(--sp-5) 0}
+.key-def .tag{font-family:var(--font-mono); font-size:var(--fs-label); letter-spacing:.12em; text-transform:uppercase; color:var(--accent-green); display:block; margin-bottom:6px}
+
+.formula{font-family:var(--font-mono); background:var(--card); border:1px solid var(--border); border-radius:var(--r-sm); padding:12px 16px; margin:var(--sp-4) 0; font-size:var(--fs-base); color:var(--text-primary); overflow-x:auto; max-width:none}
+.formula .op{color:var(--accent-identity)}
+
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; font-family:var(--font-body); font-weight:500; font-size:var(--fs-sm);
+  padding:10px 16px; min-height:40px; border-radius:var(--r-sm); border:1px solid var(--border); background:var(--card); color:var(--text-primary); cursor:pointer;
+  transition:.15s; user-select:none}
+.btn:hover{border-color:var(--accent-identity); color:var(--accent-identity)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--accent-identity); color:var(--bg); border-color:var(--accent-identity)}
+.btn.primary:hover{filter:brightness(1.08); color:var(--bg)}
+.btn.sm{min-height:32px; padding:6px 12px; font-size:var(--fs-xs)}
+.btn svg{width:15px; height:15px}
+.btn.playing{background:var(--accent-red); border-color:var(--accent-red); color:#fff}
+.btn-row{display:flex; flex-wrap:wrap; gap:8px; margin:var(--sp-4) 0}
+
+.seg{display:inline-flex; background:var(--card); border:1px solid var(--border); border-radius:var(--r-sm); padding:3px; gap:2px}
+.seg button{border:0; background:transparent; color:var(--text-muted); font-family:var(--font-mono); font-size:var(--fs-xs); padding:6px 12px; border-radius:var(--r-xs); cursor:pointer; transition:.12s}
+.seg button.on{background:var(--accent-identity); color:var(--bg)}
+
+.range-row{display:flex; align-items:center; gap:14px; margin:var(--sp-3) 0}
+.range-row label{font-size:var(--fs-sm); color:var(--text-muted); min-width:96px}
+.range-row .rv{font-family:var(--font-mono); font-size:var(--fs-sm); color:var(--text-primary); background:var(--card); border:1px solid var(--border); padding:2px 10px; border-radius:var(--r-sm); min-width:64px; text-align:center}
+input[type=range]{-webkit-appearance:none; appearance:none; flex:1; height:4px; border-radius:4px; background:var(--border); outline:none; cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; width:16px; height:16px; border-radius:50%; background:var(--accent-identity); border:3px solid var(--bg); box-shadow:0 0 0 1px var(--accent-identity)}
+input[type=range]::-moz-range-thumb{width:13px; height:13px; border-radius:50%; background:var(--accent-identity); border:3px solid var(--bg)}
+
+table{width:100%; border-collapse:collapse; margin:var(--sp-5) 0; font-size:var(--fs-sm)}
+th,td{text-align:left; padding:9px 12px; border-bottom:1px solid var(--border)}
+th{font-family:var(--font-mono); font-size:var(--fs-xs); letter-spacing:.06em; text-transform:uppercase; color:var(--text-muted); font-weight:500}
+td{color:var(--text-secondary)}
+td b{color:var(--text-primary)}
+tr:hover td{background:var(--hairline)}
+.table-wrap{overflow-x:auto; border:1px solid var(--border); border-radius:var(--r-md)}
+.table-wrap table{margin:0}
+.table-wrap th,.table-wrap td:first-child{white-space:nowrap}
+
+details{border:1px solid var(--border); border-radius:var(--r-sm); margin:var(--sp-4) 0; background:var(--card); overflow:hidden}
+details summary{cursor:pointer; padding:12px 16px; font-family:var(--font-mono); font-size:var(--fs-sm); color:var(--accent-identity); list-style:none; display:flex; align-items:center; gap:10px; user-select:none}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:'+'; font-size:16px; width:16px; color:var(--accent-identity)}
+details[open] summary::before{content:'–'}
+details summary:hover{background:var(--hairline)}
+.details-body{padding:2px 18px 18px; font-size:var(--fs-sm); color:var(--text-secondary); border-top:1px solid var(--border)}
+.details-body p{max-width:none}
+
+.piano-wrap{overflow-x:auto; padding-bottom:6px}
+.piano{position:relative; display:flex; height:170px; min-width:560px; user-select:none; touch-action:manipulation}
+.wkey{position:relative; flex:1; background:linear-gradient(180deg,#f6f6fb,#dcdce6); border:1px solid #23232e; border-top:none; border-radius:0 0 6px 6px; cursor:pointer; display:flex; align-items:flex-end; justify-content:center; padding-bottom:8px; transition:background .05s}
+.wkey:active,.wkey.down{background:linear-gradient(180deg,#c9b8ff,#a988f0)}
+.wkey .lbl{font-family:var(--font-mono); font-size:10px; color:#33333f; text-align:center; line-height:1.2; pointer-events:none}
+.wkey .lbl .vn{display:block; font-size:9px; color:#6a6a7a}
+.bkey{position:absolute; top:0; height:62%; background:linear-gradient(180deg,#2a2a38,#0e0e16); border:1px solid #000; border-radius:0 0 5px 5px; z-index:3; cursor:pointer; transform:translateX(-50%)}
+.bkey:active,.bkey.down{background:linear-gradient(180deg,#8f6fe0,#6a4bc0)}
+.bkey .lbl{position:absolute; bottom:6px; left:0; right:0; font-family:var(--font-mono); font-size:8px; color:#c9c9d6; text-align:center; pointer-events:none}
+
+.staff-box{display:flex; align-items:center; gap:16px; flex-wrap:wrap}
+.staff{background:var(--card); border:1px solid var(--border); border-radius:var(--r-sm); padding:10px}
+.now-note{font-family:var(--font-display); font-size:40px; color:var(--accent-identity); line-height:1; min-width:120px}
+.now-note small{display:block; font-family:var(--font-mono); font-size:12px; color:var(--text-muted); margin-top:4px}
+
+.readout{font-family:var(--font-mono); font-size:var(--fs-sm); color:var(--text-secondary); background:var(--card); border:1px solid var(--border); border-radius:var(--r-sm); padding:10px 14px; margin-top:12px; min-height:44px; max-width:none}
+.readout b{color:var(--accent-identity)}
+
+.seq-grid{display:grid; gap:4px; margin-top:12px}
+.seq-row{display:grid; grid-template-columns:64px 1fr; gap:8px; align-items:center}
+.seq-row .rl{font-family:var(--font-mono); font-size:var(--fs-xs); color:var(--text-muted)}
+.seq-cells{display:grid; gap:3px}
+.cell{height:20px; border-radius:3px; background:var(--card); border:1px solid var(--border)}
+.cell.beat{border-color:#3a3a4e}
+.cell.on-k{background:var(--accent-red)} .cell.on-s{background:var(--accent-yellow)} .cell.on-h{background:var(--accent-cyan)} .cell.on-b{background:var(--accent-green)} .cell.on-c{background:var(--accent-identity)}
+.cell.play{outline:2px solid #fff; outline-offset:-1px}
+.seq-legend{display:flex; gap:14px; flex-wrap:wrap; font-family:var(--font-mono); font-size:var(--fs-xs); color:var(--text-muted); margin-top:10px}
+.seq-legend i{display:inline-block; width:11px; height:11px; border-radius:2px; margin-right:5px; vertical-align:-1px}
+
+.pulse-row{display:flex; gap:8px; margin:14px 0}
+.pdot{flex:1; height:46px; border-radius:var(--r-sm); background:var(--card); border:1px solid var(--border); display:grid; place-items:center; font-family:var(--font-mono); font-size:var(--fs-sm); color:var(--text-muted); transition:background .05s, color .05s}
+.pdot.strong{border-color:rgba(var(--accent-identity-rgb),.4)}
+.pdot.hit{background:var(--accent-identity); color:var(--bg)}
+.pdot.hit.strong{background:var(--accent-cyan)}
+.tap-btn{width:100%; min-height:90px; font-size:18px; font-family:var(--font-display); letter-spacing:.05em}
+.tap-fb{font-family:var(--font-mono); font-size:var(--fs-sm); margin-top:10px; min-height:44px; display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+.tap-fb .val{padding:3px 10px; border-radius:var(--r-sm); font-weight:600}
+.fb-tight{background:rgba(var(--accent-green-rgb),.15); color:var(--accent-green)}
+.fb-early{background:rgba(var(--accent-cyan-rgb),.15); color:var(--accent-cyan)}
+.fb-late{background:rgba(var(--accent-yellow-rgb),.15); color:var(--accent-yellow)}
+
+.cof-wrap{display:grid; grid-template-columns:1fr 260px; gap:var(--sp-6); align-items:center}
+@media(max-width:720px){.cof-wrap{grid-template-columns:1fr}}
+.cof-svg{width:100%; max-width:360px; margin-inline:auto; display:block}
+.cof-seg{cursor:pointer}
+.cof-seg text{font-family:var(--font-mono); pointer-events:none}
+.cof-info h4{margin:0 0 4px; font-family:var(--font-display); font-size:28px; color:var(--accent-identity); font-weight:400; letter-spacing:.02em}
+.cof-info .row{display:flex; justify-content:space-between; padding:7px 0; border-bottom:1px solid var(--border); font-size:var(--fs-sm)}
+.cof-info .row span:first-child{color:var(--text-muted)} .cof-info .row span:last-child{font-family:var(--font-mono); color:var(--text-primary)}
+
+.quiz{background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); padding:var(--sp-6)}
+.quiz-q{font-size:var(--fs-lg); margin:6px 0 14px}
+.quiz-opts{display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:8px}
+.qopt{padding:12px; border:1px solid var(--border); border-radius:var(--r-sm); background:var(--card); cursor:pointer; text-align:center; font-family:var(--font-mono); font-size:var(--fs-sm); transition:.12s}
+.qopt:hover{border-color:var(--accent-identity)}
+.qopt.correct{background:rgba(var(--accent-green-rgb),.16); border-color:var(--accent-green); color:var(--accent-green)}
+.qopt.wrong{background:rgba(var(--accent-red-rgb),.16); border-color:var(--accent-red); color:var(--accent-red)}
+.quiz-score{font-family:var(--font-mono); font-size:var(--fs-sm); color:var(--text-muted)}
+.quiz-score b{color:var(--accent-identity)}
+.reveal-txt{font-size:var(--fs-sm); color:var(--text-secondary); margin-top:12px; min-height:24px; max-width:none}
+
+footer{border-top:1px solid var(--border); margin-top:var(--sp-16); padding:var(--sp-10) 0 var(--sp-20)}
+footer p{font-family:var(--font-mono); font-size:var(--fs-xs); color:var(--text-dim); line-height:1.8; max-width:76ch}
+footer b{color:var(--text-muted); font-weight:400}
+
+@keyframes enter{from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none}}
+.reveal{opacity:0; animation:enter var(--dur-entry) var(--ease-out) forwards}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important; transition-duration:.01ms!important} html{scroll-behavior:auto}}
+@media print{.sidebar,.sb-toggle,.backdrop,.reading-progress{display:none} details{border:none} details summary{display:none}}
+
+  /* ===== document tabs (merged shell) ===== */
+  .doctabs{display:flex;gap:4px;flex-wrap:wrap;margin:0 0 26px;border-bottom:1px solid var(--border)}
+  .doctab{appearance:none;background:none;border:0;border-bottom:2px solid transparent;color:var(--text-dim);font-family:var(--font-mono);font-size:13px;font-weight:500;padding:12px 16px 13px;cursor:pointer;margin-bottom:-1px;transition:color .15s;display:inline-flex;gap:8px;align-items:baseline;white-space:nowrap}
+  .doctab:hover{color:var(--text-secondary)}
+  .doctab.on{color:var(--text-primary);border-bottom-color:var(--accent-identity)}
+  .doctab .dn{font-size:12px;color:var(--accent-identity);font-weight:700}
+  .doc{display:none}
+  .doc.on{display:block;animation:docfade .32s var(--ease-out,ease)}
+  @keyframes docfade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  @media(prefers-reduced-motion:reduce){.doc.on{animation:none}}
+</style>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"><div class="reading-progress-fill" id="rp"></div></div>
+
+<button class="sb-toggle" id="sbToggle" aria-label="Mở/đóng mục lục">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+</button>
+
+<aside class="sidebar" id="sidebar" aria-label="Mục lục">
+  <div class="sb-head">
+    <div class="sb-brand"><span class="mk">♪</span> NHẠC<span>LÝ</span></div>
+    <div class="sb-prog"><span>Tiến độ đọc</span><b id="progPct">0%</b></div>
+    <div class="sb-bar"><i id="progFill"></i></div>
+  </div>
+  <nav class="sb-nav" id="sbNav"></nav>
+  <div class="sb-foot">
+    <button class="btn sm" id="themeToggle" style="flex:1">🌙 <span id="themeLbl">Tối</span></button>
+  </div>
+</aside>
+<div class="backdrop" id="backdrop"></div>
+
+<div class="page">
+
+  <div class="doctabs" role="tablist" aria-label="Chọn tài liệu">
+    <button class="doctab on" data-doc="doc-intro" role="tab"><span class="dn">✦</span> Nhạc lý cơ bản</button>
+    <button class="doctab" data-doc="doc-d1" role="tab"><span class="dn">①</span> Hòa thanh nâng cao</button>
+  </div>
+
+  <div class="audio-cta reveal" id="audioCta">
+    <span class="ico">🔊</span>
+    <p><b style="color:var(--text-primary)">Bật tiếng để bắt đầu.</b> Bấm nút bên phải một lần để trình duyệt cho phép phát âm thanh. Áp dụng cho <b>cả hai tài liệu</b> — bật một lần là dùng suốt.</p>
+    <button class="btn primary" id="enableAudio" style="margin-left:auto">Bật tiếng</button>
+  </div>
+
+  <main class="container">
+
+    <div class="doc on" id="doc-intro">
+  <header class="page-head">
+    <span class="eyebrow reveal">HỌC LẠI SAU 10 NĂM · KHÁI NIỆM TRƯỚC, NGÓN SAU</span>
+    <h1 class="title reveal">Từ nốt nhạc đến <span>jazz hóa</span> mọi bài hát.</h1>
+    <p class="subtitle reveal">Một trang duy nhất đưa bạn từ 12 nốt cơ bản → nhịp &amp; groove → hợp âm → vòng hòa thanh → và cuối cùng là <b>biến tấu một bài pop bất kỳ theo phong cách jazz</b>. Mọi khái niệm đều <b>bấm nghe được</b> — không cần đàn, không cần mạng.</p>
+    <p class="meta reveal">CÁCH TRÌNH BÀY <b>trực giác → cơ chế → lý thuyết</b> · AUDIO <b>Web Audio tổng hợp</b></p>
+
+    </header>
+
+  <section class="overview reveal" id="overview" data-title="Bức tranh lớn">
+    <span class="sec-eyebrow">BẮT ĐẦU TỪ ĐÂY</span>
+    <h2>Trụ nền — bảng chữ cái của mọi thứ</h2>
+    <p class="lead">Đây là gốc chung mà <b>mọi trụ khác</b> (đệm hát, cổ điển, jazz, cảm âm) đều dựa vào. Bạn đi từ nốt &amp; nhịp, qua quãng, gam, hợp âm &amp; thể đảo, tới vòng hòa thanh — đủ "bảng chữ cái" để đọc và hiểu bất kỳ bản nhạc nào. Nắm chắc đây, các tab kia chỉ là <em>ứng dụng</em> bộ nền này vào từng mục tiêu.</p>
+    <ol class="overview-map" id="ovMap"></ol>
+  </section>
+
+  <section class="concept" id="s-basics" data-title="Nốt, phím & khuông">
+    <span class="sec-eyebrow">PHẦN 01 · ÔN NHANH</span>
+    <h2>Nốt, phím &amp; khuông</h2>
+    <p class="lead">Bạn học rồi nên phần này đi nhanh — nhưng cây <b>piano ảo</b> ở đây sẽ dùng lại xuyên suốt cả trang, nên hãy làm quen với nó.</p>
+    <p><b>Chỉ có 12 nốt.</b> Sau đó mọi thứ lặp lại cao hơn/thấp hơn một <em>quãng tám</em> (octave). Bảy phím trắng là 7 tên nốt "tự nhiên" — C D E F G A B, tức <b>Đô Rê Mi Fa Sol La Si</b>. Năm phím đen chen vào giữa là các nốt thăng/giáng (♯/♭).</p>
+    <div class="key-def">
+      <span class="tag">Điểm dễ quên</span>
+      Giữa <b>E–F</b> và <b>B–C</b> <em>không có phím đen</em>. Đó là hai chỗ hai nốt trắng dính liền nhau (cách nhau đúng nửa cung). Nhìn cụm 2 phím đen và 3 phím đen là biết mình đang ở đâu trên đàn.
+    </div>
+    <div class="demo">
+      <span class="demo-label">Piano tương tác · bấm chuột hoặc gõ phím A S D F G H J K…</span>
+      <div class="piano-wrap"><div class="piano" id="piano"></div></div>
+      <div class="staff-box" style="margin-top:16px">
+        <div class="now-note" id="nowNote">–<small>bấm một phím</small></div>
+        <svg class="staff" id="staff" width="200" height="120" viewBox="0 0 200 120" aria-label="Khuông nhạc"></svg>
+      </div>
+      <p class="muted" style="font-size:var(--fs-sm); margin-top:12px">Nốt bạn bấm sẽ hiện tên (kèm Đô-Rê-Mi) và vị trí trên khuông khóa Sol. Phím đàn <b>C4</b> ở giữa chính là "Đô giữa".</p>
+    </div>
+    <details>
+      <summary>Sâu hơn: khóa Sol vs khóa Fa, và vì sao có dòng kẻ phụ</summary>
+      <div class="details-body">
+        <p><b>Khuông</b> gồm 5 dòng kẻ + 4 khe. Vì đàn có quá nhiều nốt cho 5 dòng, ta dùng <b>khóa</b> để "neo" một nốt mốc:</p>
+        <p>• <b>Khóa Sol</b> (𝄞) cuộn quanh dòng 2 → dòng đó là nốt <b>Sol (G4)</b>. Dùng cho tay phải / nốt cao.<br>
+        • <b>Khóa Fa</b> (𝄢) hai chấm kẹp dòng 4 → dòng đó là <b>Fa (F3)</b>. Dùng cho tay trái / nốt trầm.</p>
+        <p>Nốt ngoài 5 dòng viết trên <b>dòng kẻ phụ</b> (ledger line). Đô giữa (C4) nằm ngay giữa hai khóa nên "lơ lửng" với một gạch phụ. Đây chỉ là quy ước ký hiệu; tai không cần nó.</p>
+      </div>
+    </details>
+  </section>
+
+  <section class="concept" id="s-groove" data-title="Nhịp, phách & groove">
+    <span class="sec-eyebrow">PHẦN 02 · CỐT LÕI SỐ 1</span>
+    <h2>Nhịp, phách &amp; groove — vì sao "đập tay nghe bị rối"</h2>
+    <p class="lead">Đây chính là câu hỏi của bạn. Khi bật một bài rồi gõ tay xuống bàn mà thấy rối, <b>gần như chắc chắn không phải tay bạn dở</b> — mà là bạn chưa khóa vào ba thứ: <em>pulse → subdivision → backbeat</em>. Nắm được ba cái này là nền của mọi kiểu đệm, kể cả jazz.</p>
+    <h3>① Pulse — nhịp đập nền</h3>
+    <p>Mọi bài đều có một "nhịp tim" đều đặn bạn có thể gật đầu theo. Đó là <b>pulse</b> (phách). Việc đầu tiên <em>không phải</em> gõ cho phức tạp, mà là <b>tìm và bám đúng pulse</b>. Gõ lệch pulse thì dù gõ ít cũng nghe sai ngay.</p>
+    <h3>② Nhịp (meter) — gom phách thành ô</h3>
+    <p>Các phách được gom thành <b>ô nhịp</b>, phách đầu ô (phách "1") <b>mạnh</b> hơn. Số chỉ nhịp cho biết mỗi ô có mấy phách:</p>
+    <div class="formula"><b>4/4</b> = 4 phách/ô (pop, rock) &nbsp;·&nbsp; <b>3/4</b> = 3 phách (valse) &nbsp;·&nbsp; <b>6/8</b> = 2 nhịp lớn, mỗi nhịp 3 phách nhỏ (đung đưa)</div>
+    <div class="demo">
+      <span class="demo-label">Nghe từng loại nhịp · phách 1 (mạnh) được tô đậm</span>
+      <div class="btn-row">
+        <div class="seg" id="meterSeg"><button class="on" data-m="4">4/4</button><button data-m="3">3/4</button><button data-m="6">6/8</button></div>
+        <button class="btn primary" id="meterPlay">▶ Phát</button>
+      </div>
+      <div class="range-row"><label>Tempo</label><input type="range" id="meterBpm" min="50" max="160" value="92"><span class="rv" id="meterBpmV">92 BPM</span></div>
+      <div class="pulse-row" id="pulseRow"></div>
+      <p class="muted" style="font-size:var(--fs-sm)">Nghe kỹ: ô nào cũng có một cú "nặng" ở đầu. Tai bạn tự dùng cú nặng đó làm mốc "1". Gõ tay mà không biết đâu là "1" thì mọi cú gõ đều trôi.</p>
+    </div>
+    <h3>③ Subdivision — chia nhỏ phách</h3>
+    <p>Giữa hai phách còn có mốc nhỏ hơn: chia đôi (1 &amp; 2 &amp; …), chia tư (1 e &amp; a). Đây là <b>lưới</b> để đặt cú gõ. "Rối" thường vì bạn gõ vào <em>khoảng giữa ngẫu nhiên</em> thay vì rơi đúng vào một mốc của lưới.</p>
+    <div class="warning">
+      <span class="tag">⚠ Lỗi kinh điển</span>
+      <p>Nghe trống rồi cố "bắt chước cả cụm" bằng tay — não bị quá tải. Cách đúng: <b>bỏ hết, chỉ gõ phách 1</b> cho khớp; vững rồi mới thêm phách 2,3,4; vững nữa mới thêm mốc "&amp;". Xây từ khung ra, đừng chép từ chi tiết vào.</p>
+    </div>
+    <h3>④ Backbeat — bí mật khiến pop "cuốn"</h3>
+    <p>Trong pop/rock 4/4, tiếng <b>trống snare</b> (cú "chát") không rơi vào phách mạnh 1 &amp; 3, mà vào <b>phách 2 &amp; 4</b>. Cú "ngược" đó gọi là <em>backbeat</em> — nó tạo lực đẩy. Đây thường là chỗ tay bạn nên vỗ:</p>
+    <div class="demo">
+      <span class="demo-label">Cùng một beat · đổi chỗ đặt cú vỗ tay</span>
+      <div class="btn-row">
+        <button class="btn" id="clapWrong">▶ Vỗ vào 1 &amp; 3 (nghe "đơ")</button>
+        <button class="btn primary" id="clapRight">▶ Vỗ vào 2 &amp; 4 (backbeat, "cuốn")</button>
+        <button class="btn sm" id="clapStop">■ Dừng</button>
+      </div>
+      <p class="muted" style="font-size:var(--fs-sm)">Cùng kick &amp; hi-hat, chỉ khác chỗ tiếng vỗ tay. Cảm nhận: 2&amp;4 làm bài "nhún" được, 1&amp;3 nghe cứng như hành khúc.</p>
+    </div>
+    <div class="demo">
+      <span class="demo-label">Trainer: gõ theo máy · đo độ khớp của bạn (mili-giây)</span>
+      <div class="btn-row">
+        <button class="btn primary" id="tapStart">▶ Bật máy đếm</button>
+        <button class="btn sm" id="tapStop">■ Dừng</button>
+      </div>
+      <div class="range-row"><label>Tempo</label><input type="range" id="tapBpm" min="50" max="140" value="80"><span class="rv" id="tapBpmV">80 BPM</span></div>
+      <button class="btn tap-btn" id="tapPad">CHẠM / nhấn PHÍM CÁCH đúng nhịp</button>
+      <div class="tap-fb" id="tapFb"><span class="muted">Bật máy rồi gõ theo. Mình sẽ báo bạn sớm hay trễ bao nhiêu ms.</span></div>
+    </div>
+    <div class="key-def">
+      <span class="tag">Chốt phần này</span>
+      Groove = <b>bám pulse</b> → <b>biết phách 1</b> → <b>đặt cú lên lưới subdivision</b> → <b>nhấn backbeat 2&amp;4</b>. Làm chủ 4 bước này thì tay trái/tay phải khi đệm chỉ còn là phân công "ai gõ mốc nào".
+    </div>
+  </section>
+
+  <section class="concept" id="s-interval" data-title="Quãng — đơn vị cảm âm">
+    <span class="sec-eyebrow">PHẦN 03 · NỀN CỦA TAI &amp; HỢP ÂM</span>
+    <h2>Quãng — đơn vị của cảm âm</h2>
+    <p class="lead">Khoảng cách giữa hai nốt gọi là <b>quãng</b>, đo bằng số <em>nửa cung</em> (semitone = phím sát nhau kế tiếp, trắng hay đen). Quãng vừa là <b>viên gạch xây hợp âm</b>, vừa là <b>thứ tai bạn thực sự nhận ra</b> khi luyện cảm âm — chứ không phải tên nốt tuyệt đối.</p>
+    <div class="key-def">
+      <span class="tag">Định nghĩa gốc</span>
+      <b>Nửa cung</b> = khoảng cách nhỏ nhất trên piano (2 phím kề nhau). <b>Nguyên cung</b> = 2 nửa cung. Mọi quãng chỉ là "đếm bao nhiêu nửa cung".
+    </div>
+    <div class="demo">
+      <span class="demo-label">Nghe &amp; so sánh từng quãng (tính từ nốt Đô)</span>
+      <div class="btn-row" id="intervalBtns"></div>
+      <div class="range-row" style="margin-top:4px"><label>Chơi kiểu</label>
+        <div class="seg" id="intModeSeg"><button class="on" data-mode="mel">Lần lượt</button><button data-mode="harm">Cùng lúc</button></div>
+      </div>
+      <div class="readout" id="intReadout">Bấm một quãng để nghe. Mẹo: mỗi quãng có một "bài hát mồi" để nhớ (xem bảng dưới).</div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Quãng</th><th>Nửa cung</th><th>Cảm giác</th><th>Bài hát mồi để nhớ</th></tr></thead>
+        <tbody>
+          <tr><td><b>2 trưởng</b></td><td>2</td><td>bước liền, sáng</td><td>"Happy Birthday" (2 nốt đầu)</td></tr>
+          <tr><td><b>3 thứ</b></td><td>3</td><td>buồn, tối</td><td>"Greensleeves" · nhạc buồn</td></tr>
+          <tr><td><b>3 trưởng</b></td><td>4</td><td>vui, mở</td><td>"Oh When The Saints"</td></tr>
+          <tr><td><b>4 đúng</b></td><td>5</td><td>trang trọng</td><td>"Here Comes The Bride"</td></tr>
+          <tr><td><b>Tritone</b></td><td>6</td><td>căng, chông chênh</td><td>"The Simpsons" (2 nốt đầu)</td></tr>
+          <tr><td><b>5 đúng</b></td><td>7</td><td>rỗng, vững, "hùng"</td><td>"Twinkle Twinkle" (nốt 1→2)</td></tr>
+          <tr><td><b>Quãng 8</b></td><td>12</td><td>cùng tên, cao hơn</td><td>"Over the Rainbow" (2 nốt đầu)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note-box">
+      <span class="tag">Vì sao quan trọng cho jazz</span>
+      <p>Hợp âm jazz = chồng các quãng 3 lên nhau, rồi thêm màu. Nghe ra quãng 3 (thứ/trưởng) và quãng 7 chính là nghe ra "chất" của một hợp âm. Tai quãng tốt ⇒ bạn "dịch" được bài ra hợp âm.</p>
+    </div>
+  </section>
+
+  <section class="concept" id="s-scale" data-title="Gam, giọng & vòng bậc 5">
+    <span class="sec-eyebrow">PHẦN 04 · BẢN ĐỒ CÁC GIỌNG</span>
+    <h2>Gam, giọng &amp; vòng tròn bậc 5</h2>
+    <p class="lead">Một <b>gam</b> (scale) là 7 nốt được chọn theo một công thức khoảng cách cố định. Chọn nốt bắt đầu (chủ âm) + công thức ⇒ ra một <b>giọng</b>. Vòng tròn bậc 5 là tấm bản đồ sắp xếp 12 giọng cho bạn thấy chúng "họ hàng" thế nào.</p>
+    <p>Công thức gam trưởng (major) — thuộc lòng chuỗi nguyên/nửa cung này:</p>
+    <div class="formula"><b>Trưởng:</b> N <span class="op">–</span> N <span class="op">–</span> ½ <span class="op">–</span> N <span class="op">–</span> N <span class="op">–</span> N <span class="op">–</span> ½ &nbsp;&nbsp;(N=nguyên cung, ½=nửa cung)</div>
+    <p>Áp lên Đô: <b>C D E F G A B C</b> — không phím đen nào, nên Đô trưởng là giọng "gốc". Gam thứ (minor) đổi công thức thành N–½–N–N–½–N–N, cho màu buồn hơn.</p>
+    <div class="demo">
+      <span class="demo-label">Vòng tròn bậc 5 · bấm một giọng để nghe gam + xem dấu hóa</span>
+      <div class="cof-wrap">
+        <svg class="cof-svg" id="cof" viewBox="0 0 320 320" aria-label="Vòng tròn bậc 5"></svg>
+        <div class="cof-info" id="cofInfo">
+          <h4 id="cofKey">Đô trưởng</h4>
+          <div class="row"><span>Ký hiệu</span><span id="cofName">C major</span></div>
+          <div class="row"><span>Dấu hóa</span><span id="cofAcc">không</span></div>
+          <div class="row"><span>Giọng thứ song song</span><span id="cofRel">A minor</span></div>
+          <div class="btn-row" style="margin-top:14px">
+            <button class="btn sm primary" id="cofScale">▶ Nghe gam</button>
+            <button class="btn sm" id="cofChord">▶ Nghe hợp âm chủ</button>
+          </div>
+        </div>
+      </div>
+      <p class="muted" style="font-size:var(--fs-sm); margin-top:8px">Đi <b>1 bước theo chiều kim đồng hồ</b> = lên quãng 5 đúng = thêm 1 dấu thăng. Các giọng cạnh nhau chỉ khác 1 nốt ⇒ nghe rất "gần". Đây là lý do vòng ii–V–I (đi ngược chiều kim đồng hồ) nghe cực thuận.</p>
+    </div>
+    <details>
+      <summary>Sâu hơn: dấu hóa của một giọng đến từ đâu</summary>
+      <div class="details-body">
+        <p>Vì công thức trưởng cần đúng mẫu N–N–½–N–N–N–½, khi bắt đầu từ nốt khác Đô, một vài nốt trắng sẽ "sai chỗ" và phải nâng/hạ nửa cung để giữ đúng mẫu. Ví dụ <b>Sol trưởng</b>: G A B C D E <b>F♯</b> G — nốt F phải thành F♯ thì nửa cung mới rơi đúng chỗ (giữa bậc 7 và 8). Vì thế Sol trưởng có <b>1 dấu thăng</b>. Mỗi bước quãng 5 tiếp theo lại thêm đúng 1 dấu thăng — đó chính là trật tự của vòng tròn.</p>
+      </div>
+    </details>
+  </section>
+
+  <section class="concept" id="s-chord" data-title="Hợp âm: triad → jazz">
+    <span class="sec-eyebrow">PHẦN 05 · NGUYÊN LIỆU MÀU SẮC</span>
+    <h2>Hợp âm: từ triad đến hợp âm jazz</h2>
+    <p class="lead">Chồng vài nốt cùng lúc = <b>hợp âm</b>. Cách chồng chuẩn là <em>xếp quãng 3</em>: lấy một nốt, bỏ một nốt, lấy nốt kế… Càng chồng nhiều tầng 3, hợp âm càng "jazz".</p>
+    <h3>Triad — 3 nốt nền tảng</h3>
+    <p>Chồng 2 tầng quãng 3 ⇒ 3 nốt (bậc 1–3–5). Loại nào phụ thuộc quãng 3 dưới là trưởng hay thứ:</p>
+    <div class="formula">Trưởng = 0 <span class="op">·</span> 4 <span class="op">·</span> 7 &nbsp;|&nbsp; thứ = 0 <span class="op">·</span> 3 <span class="op">·</span> 7 &nbsp;|&nbsp; giảm(dim) = 0 <span class="op">·</span> 3 <span class="op">·</span> 6 &nbsp;|&nbsp; tăng(aug) = 0 <span class="op">·</span> 4 <span class="op">·</span> 8 &nbsp;<span class="muted">(nửa cung từ gốc)</span></div>
+    <h3>Hợp âm 7 &amp; mở rộng — "màu jazz"</h3>
+    <p>Thêm 1 tầng 3 nữa ⇒ nốt bậc <b>7</b>. Đây là bước đầu tiên và quan trọng nhất để một hợp âm "nghe jazz". Thêm nữa: bậc 9, 11, 13 (chính là 2, 4, 6 nhưng ở quãng tám trên) cho màu càng dày.</p>
+    <div class="demo">
+      <span class="demo-label">Bấm nghe từng loại hợp âm (gốc = Đô)</span>
+      <div class="btn-row" id="chordBtns"></div>
+      <div class="range-row"><label>Rải hay chặn</label>
+        <div class="seg" id="chordModeSeg"><button data-mode="block" class="on">Chặn (cùng lúc)</button><button data-mode="arp">Rải (arpeggio)</button></div>
+      </div>
+      <div class="readout" id="chordReadout">Bấm một hợp âm. So sánh <b>C</b> (triad) với <b>Cmaj7</b> rồi <b>Cmaj9</b> để nghe "màu jazz" dày dần lên.</div>
+    </div>
+    <div class="warning">
+      <span class="tag">⚠ Nhầm hay gặp</span>
+      <p><b>Cmaj7</b> (Đô trưởng 7) ≠ <b>C7</b> (Đô bảy / dominant 7). Cmaj7 dùng bậc 7 trưởng (B) nghe mơ màng, êm; C7 dùng bậc 7 thứ (B♭) nghe "căng, muốn giải quyết" — chính C7 mới là hợp âm "át" kéo bài về chủ. Nghe kỹ hai nút đó, khác nhau đúng 1 nốt mà tính chất trái ngược.</p>
+    </div>
+    <details>
+      <summary>Sâu hơn: thể đảo (inversion) &amp; vì sao voicing quan trọng</summary>
+      <div class="details-body">
+        <p>Cùng hợp âm C (C-E-G) có thể xếp lại thứ tự: E-G-C (đảo 1), G-C-E (đảo 2). Tai vẫn nghe là "hợp âm Đô" nhưng nốt trầm nhất đổi ⇒ cảm giác &amp; độ mượt khi nối hợp âm đổi theo. Trong jazz, việc chọn xếp nốt nào ở đâu gọi là <b>voicing</b>; dân piano jazz thường bỏ bớt nốt gốc (để bass lo) và giữ lại các nốt "màu" (3, 7, 9, 13). Đây là lý do cùng hợp âm mà nghệ sĩ jazz bấm nghe "sang" hơn hẳn bản triad thô.</p>
+      </div>
+    </details>
+  </section>
+
+  <section class="concept" id="s-progression" data-title="Vòng hòa thanh & chức năng">
+    <span class="sec-eyebrow">PHẦN 06 · LUẬT CHƠI</span>
+    <h2>Vòng hòa thanh &amp; chức năng</h2>
+    <p class="lead">Trong một giọng, mỗi bậc của gam sinh ra một hợp âm, đánh số La Mã <b>I ii iii IV V vi vii°</b> (chữ hoa = trưởng, thường = thứ). Nghĩ theo số bậc thay vì tên nốt giúp bạn <b>nhìn ra bộ khung</b> của mọi bài — và đó là điều kiện để jazz hóa.</p>
+    <p>Trong Đô trưởng, các bậc là:</p>
+    <div class="formula"><b>I</b>=C &nbsp; <b>ii</b>=Dm &nbsp; <b>iii</b>=Em &nbsp; <b>IV</b>=F &nbsp; <b>V</b>=G &nbsp; <b>vi</b>=Am &nbsp; <b>vii°</b>=Bdim</div>
+    <h3>Ba chức năng: nhà · đường đi · lực kéo về</h3>
+    <p>Mỗi hợp âm có một "vai" cảm xúc:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Chức năng</th><th>Bậc</th><th>Cảm giác</th></tr></thead>
+        <tbody>
+          <tr><td><b>Chủ (Tonic)</b></td><td>I, vi</td><td>ổn định, "ở nhà"</td></tr>
+          <tr><td><b>Hạ át (Sub-dom)</b></td><td>ii, IV</td><td>rời nhà, đang đi</td></tr>
+          <tr><td><b>Át (Dominant)</b></td><td>V, vii°</td><td>căng, <em>kéo mạnh về I</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Cảm giác "thuận tai" của một vòng chính là hành trình <b>nhà → đi → căng → về nhà</b>. Vòng pop kinh điển <b>I–V–vi–IV</b> và vòng "quay đầu" của jazz <b>ii–V–I</b> đều là biến thể của hành trình đó.</p>
+    <div class="demo">
+      <span class="demo-label">Nghe các vòng hòa thanh (giọng Đô)</span>
+      <div class="btn-row" id="progBtns"></div>
+      <div class="range-row"><label>Tempo</label><input type="range" id="progBpm" min="60" max="140" value="96"><span class="rv" id="progBpmV">96 BPM</span></div>
+      <div class="readout" id="progReadout">Bấm để nghe. Chú ý cú <b>V→I</b> ở cuối mỗi vòng: đó là khoảnh khắc "căng rồi về nhà".</div>
+    </div>
+    <div class="key-def">
+      <span class="tag">Chìa khóa của jazz</span>
+      <b>ii–V–I</b> là "câu" nền tảng nhất của jazz (Dm7 – G7 – Cmaj7). Gần như mọi thủ thuật jazz hóa ở phần sau đều xoay quanh việc <em>tạo thêm</em> hoặc <em>thay thế</em> các cú ii–V này.
+    </div>
+  </section>
+
+  <section class="concept" id="s-inversion" data-title="Thể đảo & nối hợp âm mượt">
+    <span class="sec-eyebrow">PHẦN 07 · NỐI HỢP ÂM</span>
+    <h2>Thể đảo &amp; voice leading: bí quyết đệm "mượt"</h2>
+    <p class="lead">Cùng một hợp âm có thể xếp nhiều kiểu tùy nốt nào nằm <b>dưới đáy</b> — gọi là <b>thể đảo (inversion)</b>. Đây chính là công cụ để đệm nghe êm: chọn thể đảo sao cho khi đổi hợp âm, tay <b>gần như không phải nhảy</b>.</p>
+    <div class="key-def">
+      <span class="tag">Ba thể của hợp âm ba</span>
+      <b>Thế gốc</b>: nốt gốc ở đáy (C-E-G). <b>Đảo 1</b>: bậc 3 ở đáy (E-G-C). <b>Đảo 2</b>: bậc 5 ở đáy (G-C-E). Vẫn đúng ba nốt đó — chỉ khác nốt dưới cùng và độ cao.
+    </div>
+    <div class="demo">
+      <span class="demo-label">Hợp âm Đô trưởng · nghe ba thể đảo</span>
+      <div class="btn-row" id="invBtns"></div>
+      <div class="readout" id="invReadout">Bấm lần lượt. Cùng C-E-G, nhưng "màu" và độ cao đổi tùy nốt nằm dưới.</div>
+    </div>
+    <h3>Voice leading: di chuyển ít nhất</h3>
+    <p>Khi nối hai hợp âm, hỏi <b>"tay mình dời ít nhất là bao nhiêu?"</b> — giữ nốt chung, chỉ nhích những nốt buộc phải nhích, từng bước nhỏ. Nghe C–F–G–C hai kiểu:</p>
+    <div class="demo">
+      <span class="demo-label">C–F–G–C · thế gốc hết vs chọn thể đảo</span>
+      <div class="btn-row" id="vlBtns"></div>
+      <div class="readout" id="vlReadout">So sánh trực tiếp: bản "thế gốc hết" tay nhảy lên xuống; bản "dùng thể đảo" mỗi nốt chỉ nhích một bước — đúng cảm giác êm, mượt bạn đang tìm.</div>
+    </div>
+    <div class="note-box">
+      <span class="tag">Tip ít người nói</span>
+      <p>① <b>Nốt trên cùng là giai điệu thứ hai</b> — giữ nó mượt, đừng để nhảy lung tung cãi nhau với giọng hát. ② <b>Vùng vàng</b> ≈ quanh Đô giữa: thấp quá thành "bùn", cao quá thành "chói". ③ Khi có ca sĩ, <b>đừng chơi trùng nốt họ đang hát</b> — đệm các nốt xung quanh. Ba mẹo này là nền của cả trụ <em>Đệm hát</em> sắp tới.</p>
+    </div>
+  </section>
+
+  <section class="concept" id="s-next" data-title="Xong nền — đi tiếp đâu?">
+    <span class="sec-eyebrow">TIẾP THEO</span>
+    <h2>Bạn vừa có bộ khung. Rẽ theo mục tiêu.</h2>
+    <p class="lead">Nền nhạc lý này là gốc chung cho mọi thứ. Từ đây, các tab khác dẫn bạn tới từng đích cụ thể:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tab</th><th>Cho mục tiêu</th><th>Khi nào học</th></tr></thead>
+        <tbody>
+          <tr><td><b>Cảm âm</b></td><td>nghe ra nốt/hợp âm, đánh lại giai điệu trong đầu</td><td><b>tập song song ngay từ hôm nay</b></td></tr>
+          <tr><td><b>Đệm hát</b></td><td>đệm bài hát cho êm, đủ điệu — "được việc" nhanh nhất</td><td>khi đã nắm hợp âm &amp; thể đảo</td></tr>
+          <tr><td><b>Nhạc cổ điển</b></td><td>nền kỹ thuật ngón + đọc bản nhạc (dùng cho mọi thứ)</td><td>song song, cần có đàn</td></tr>
+          <tr><td><b>Jazz</b></td><td>hòa thanh nâng cao, ngẫu hứng, jazz hóa một bài</td><td>đỉnh — sau khi vững các trụ trên</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="key-def">
+      <span class="tag">Nhớ một câu</span>
+      Lý thuyết chỉ <b>sống</b> khi bạn <b>nghe</b> nó và (khi có đàn) <b>chơi</b> nó. Đọc hiểu chỉ là bước đầu — hát nhẩm và bấm thử mọi ví dụ mới là học thật.
+    </div>
+  </section>
+
+  <footer>
+    <p><b>Trang minh hoạ để học khái niệm — không thay thầy dạy ngón.</b><br>
+    Âm thanh được tổng hợp bằng Web Audio API ngay trong trình duyệt (dao động + bao hình ADSR), nên nghe "điện tử" hơn piano thật — mục đích là để phân biệt cao độ/tiết tấu, không phải chất lượng phối khí. Cao độ theo hệ điều hòa đều: f = 440 × 2^((n−69)/12), với n là số hiệu MIDI (A4 = 69 = 440 Hz). Các công thức quãng/gam/hợp âm và vòng tròn bậc 5 theo lý thuyết âm nhạc phương Tây tiêu chuẩn. Các mẫu tiết tấu điệu là bản rút gọn để nghe rõ đặc trưng, không phải ký âm đầy đủ.</p>
+  </footer>
+
+    </div>
+
+    <div class="doc" id="doc-d1">
+  <header class="page-head">
+    <span class="eyebrow reveal">TÀI LIỆU ① · HÒA THANH JAZZ NÂNG CAO</span>
+    <h1 class="title reveal">Bộ máy sau <span>mọi lựa chọn hợp âm</span>.</h1>
+    <p class="subtitle reveal">Đây là phần "vì sao" của jazz. Nối tiếp trang nhập môn, tài liệu này cho bạn <b>công cụ để hiểu và tự tạo</b> mọi hợp âm, mọi phép thay thế: guide tones, chord-scale, modes, voicings, tensions, và một <b>kho reharmonization đầy đủ</b>. Mọi thứ vẫn <b>bấm nghe được</b> — hãy nghe trước, hiểu sau.</p>
+    <p class="meta reveal">YÊU CẦU NỀN <b>đã nắm phần 04–06 của trang nhập môn</b> · CÁCH DÙNG <b>nghe → hát theo → mới đọc giải thích</b></p>
+
+    </header>
+
+  <section class="overview reveal" id="overview" data-title="Bức tranh lớn">
+    <span class="sec-eyebrow">BẮT ĐẦU TỪ ĐÂY</span>
+    <h2>Bức tranh lớn</h2>
+    <p class="lead">Jazz hóa không phải "thay đại hợp âm cho lạ tai" — nó là chuỗi quyết định có luật. Tài liệu này xây từ <em>hạt nhân</em> (guide tones: bậc 3 &amp; 7) ra ngoài: hạt nhân quyết định hợp âm là gì → chord-scale &amp; modes cho biết chơi nốt nào trên đó → voicings quyết định cách xếp cho "sang" → tensions thêm màu → và <b>kho reharmonization</b> là tập hợp các nước đi hợp lệ để thay/chèn hợp âm.</p>
+    <div class="note-box">
+      <span class="tag">Kim chỉ nam của cả tài liệu</span>
+      <p>Nếu chỉ nhớ một câu: <b>bậc 3 và bậc 7 là linh hồn của hợp âm; gốc và bậc 5 gần như bỏ được.</b> Mọi kỹ thuật jazz phía dưới đều xoay quanh việc điều khiển cặp 3–7 này.</p>
+    </div>
+    <ol class="overview-map" id="ovMap"></ol>
+  </section>
+
+  <section class="concept" id="s-guide" data-title="Guide tones — hạt nhân">
+    <span class="sec-eyebrow">PHẦN 01 · HẠT NHÂN</span>
+    <h2>Guide tones: bậc 3 &amp; 7 — linh hồn hợp âm</h2>
+    <p class="lead">Một hợp âm 7 có 4 nốt (1–3–5–7), nhưng không phải nốt nào cũng quan trọng như nhau. <b>Bậc 3</b> quyết định trưởng/thứ. <b>Bậc 7</b> quyết định "loại 7" (maj7 êm hay dom7 căng). Hai nốt này gọi là <em>guide tones</em> — chỉ cần chúng, tai đã nhận ra hợp âm.</p>
+    <div class="key-def">
+      <span class="tag">Vì sao gốc &amp; bậc 5 "bỏ được"</span>
+      Nốt <b>gốc</b> thường do người chơi bass lo. <b>Bậc 5</b> gần như không mang màu (trừ khi bị biến âm). Bỏ hai nốt đó đi, pianist jazz rảnh tay để nhồi các nốt màu (3, 7, 9, 13) — đó là bí quyết voicing "sang" ở phần 04.
+    </div>
+    <h3>Guide-tone line: vì sao ii–V–I nghe mượt đến thế</h3>
+    <p>Nối ba hợp âm <b>Dm7 – G7 – Cmaj7</b>, chỉ nhìn cặp 3–7 của từng hợp âm, bạn sẽ thấy chúng gần như <b>không nhảy</b> mà trượt nửa cung sang nhau:</p>
+    <div class="formula">Dm7: bậc7=<b>C</b>, bậc3=F &nbsp;→&nbsp; G7: bậc3=<b>B</b>, bậc7=F &nbsp;→&nbsp; Cmaj7: bậc7=<b>B</b>, bậc3=E<br>Hai đường: <span class="op">C→B→B</span> &nbsp;và&nbsp; <span class="op">F→F→E</span> — toàn bước nhỏ. Đó là "chất keo" của jazz.</div>
+    <div class="demo">
+      <span class="demo-label">Nghe ii–V–I · rồi tách riêng guide tones</span>
+      <div class="btn-row" id="guideBtns"></div>
+      <div class="readout" id="guideReadout">Nghe lần lượt: bản đầy đủ, rồi <b>chỉ guide tones</b> (2 nốt/hợp âm). Chú ý hai đường giai điệu trong chỉ nhích từng bước nhỏ — tai bạn bám vào chính chúng.</div>
+    </div>
+    <div class="warning">
+      <span class="tag">⚠ Đổi tư duy</span>
+      <p>Người mới nghĩ "hợp âm = chồng nốt gốc lên". Dân jazz nghĩ ngược: "hợp âm = một cặp guide tone + màu tùy chọn". Khi reharm, bạn thực chất đang hỏi: <b>cặp 3–7 nào sẽ dẫn mượt tới hợp âm kế?</b></p>
+    </div>
+  </section>
+
+  <section class="concept" id="s-cs" data-title="Chord-scale: mỗi hợp âm một gam">
+    <span class="sec-eyebrow">PHẦN 02 · HỢP ÂM ↔ GAM</span>
+    <h2>Chord-scale: mỗi hợp âm ứng một gam</h2>
+    <p class="lead">Đây là ý tưởng nối hòa thanh với ngẫu hứng. Mỗi hợp âm không chỉ là 4 nốt — nó <b>ngụ ý một gam 7 nốt</b> "hợp tai" khi chơi trên nó. Biết cặp hợp âm–gam này là biết ngay "được phép chơi nốt nào" để solo hay tô điểm.</p>
+    <p>Chìa khóa: các gam này phần lớn chính là <b>7 mode</b> của gam trưởng (phần 03), mỗi mode khớp một bậc của vòng hòa thanh:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Hợp âm</th><th>Gam (chord-scale)</th><th>Nửa cung từ gốc</th><th>Nốt "đặc trưng"</th></tr></thead>
+        <tbody>
+          <tr><td><b>maj7</b> (I)</td><td>Ionian (trưởng)</td><td>0·2·4·5·7·9·11</td><td>bậc 7 trưởng (B)</td></tr>
+          <tr><td><b>maj7</b> (IV)</td><td>Lydian</td><td>0·2·4·<b>6</b>·7·9·11</td><td>#11 (F♯) — sáng, "lơ lửng"</td></tr>
+          <tr><td><b>m7</b> (ii)</td><td>Dorian</td><td>0·2·3·5·7·9·10</td><td>bậc 6 trưởng (A)</td></tr>
+          <tr><td><b>7</b> (V)</td><td>Mixolydian</td><td>0·2·4·5·7·9·10</td><td>bậc 7 thứ (F) — chất "át"</td></tr>
+          <tr><td><b>m7</b> (vi)</td><td>Aeolian (thứ tự nhiên)</td><td>0·2·3·5·7·8·10</td><td>bậc 6 giáng (A♭)</td></tr>
+          <tr><td><b>m7♭5</b> (vii)</td><td>Locrian</td><td>0·1·3·5·6·8·10</td><td>bậc 2 &amp; 5 giáng — tối</td></tr>
+          <tr><td><b>7alt</b></td><td>Altered (từ melodic minor)</td><td>0·1·3·4·6·8·10</td><td>♭9 ♯9 ♯11 ♭13 — căng tối đa</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="demo">
+      <span class="demo-label">Bấm hợp âm → nghe hợp âm rồi nghe gam của nó (từ Đô)</span>
+      <div class="btn-row" id="csBtns"></div>
+      <div class="readout" id="csReadout">Bấm một mục. Nghe kỹ nốt "đặc trưng" của mỗi gam — đó là nốt cho gam đó cá tính riêng dù cùng chủ âm.</div>
+    </div>
+    <div class="note-box">
+      <span class="tag">Dùng để làm gì</span>
+      <p>① Solo: gặp Dm7 → chơi Dorian là "an toàn đúng màu". ② Reharm: muốn hợp âm IV "sáng hơn" → nghĩ Lydian (thêm #11). ③ Làm hợp âm V "căng hết cỡ" trước khi về I → dùng Altered. Bảng này là bản đồ tra cứu suốt đời chơi jazz.</p>
+    </div>
+  </section>
+
+  <section class="concept" id="s-modes" data-title="7 modes của gam trưởng">
+    <span class="sec-eyebrow">PHẦN 03 · MÀU CỦA MODE</span>
+    <h2>7 modes của gam trưởng</h2>
+    <p class="lead">Lấy đúng 7 nốt của một gam trưởng nhưng <b>coi mỗi nốt là chủ âm mới</b> ⇒ ra 7 "mode", mỗi cái một màu cảm xúc khác hẳn dù cùng bộ nốt. Đây là bảng màu để tô lên mỗi hợp âm ở phần trước.</p>
+    <div class="key-def">
+      <span class="tag">Ý tưởng gốc (rất quan trọng)</span>
+      C Ionian, D Dorian, E Phrygian… đều là <b>các nốt trắng C-D-E-F-G-A-B</b> — chỉ khác điểm bắt đầu. Nhưng ở đây ta chơi <b>tất cả từ cùng nốt Đô</b> để tai so sánh trực tiếp màu của từng mode.
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Mode</th><th>Nửa cung (từ gốc)</th><th>Màu / cảm giác</th><th>Nốt đặc trưng</th></tr></thead>
+        <tbody>
+          <tr><td><b>Ionian</b></td><td>0·2·4·5·7·9·11</td><td>trưởng chuẩn, sáng, "ở nhà"</td><td>bậc 7 trưởng</td></tr>
+          <tr><td><b>Dorian</b></td><td>0·2·3·5·7·9·10</td><td>thứ nhưng "cool", jazz/funk</td><td><b>bậc 6 trưởng</b></td></tr>
+          <tr><td><b>Phrygian</b></td><td>0·1·3·5·7·8·10</td><td>thứ, tối, hơi "Tây Ban Nha"</td><td><b>bậc 2 giáng (♭9)</b></td></tr>
+          <tr><td><b>Lydian</b></td><td>0·2·4·6·7·9·11</td><td>trưởng nhưng mơ, "bay"</td><td><b>#11 (bậc 4 thăng)</b></td></tr>
+          <tr><td><b>Mixolydian</b></td><td>0·2·4·5·7·9·10</td><td>trưởng nhưng "bụi", blues/rock</td><td><b>bậc 7 thứ (♭7)</b></td></tr>
+          <tr><td><b>Aeolian</b></td><td>0·2·3·5·7·8·10</td><td>thứ tự nhiên, buồn cổ điển</td><td>bậc 6 giáng</td></tr>
+          <tr><td><b>Locrian</b></td><td>0·1·3·5·6·8·10</td><td>chông chênh, bất ổn</td><td><b>bậc 5 giáng (♭5)</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="demo">
+      <span class="demo-label">Mode explorer · bấm để nghe (có hợp âm nền để màu hiện rõ)</span>
+      <div class="btn-row" id="modeBtns"></div>
+      <div class="readout" id="modeReadout">Bấm một mode. Mình phát một hợp âm nền hợp với mode đó rồi chạy gam — nốt đặc trưng sẽ "nhô" lên tai.</div>
+    </div>
+    <details>
+      <summary>Mẹo nhớ nhanh: sắp mode theo độ "sáng → tối"</summary>
+      <div class="details-body">
+        <p>Xếp theo số dấu thăng/giáng ngầm: <b>Lydian (sáng nhất) → Ionian → Mixolydian → Dorian → Aeolian → Phrygian → Locrian (tối nhất)</b>. Đi từ trái sang phải, mỗi bước "hạ" một nốt xuống nửa cung. Nhớ chuỗi này thì bạn luôn biết mode nào sáng/tối hơn mode nào — cực tiện khi chọn màu để reharm.</p>
+      </div>
+    </details>
+  </section>
+
+  <section class="concept" id="s-mm" data-title="Melodic minor: gia vị jazz">
+    <span class="sec-eyebrow">PHẦN 04 · GAM "GIA VỊ"</span>
+    <h2>Melodic minor &amp; hai mode "quốc dân" của jazz</h2>
+    <p class="lead">Gam trưởng cho các màu "cơ bản". Muốn màu <b>cay, hiện đại</b> đặc-jazz thì nguồn chính là <b>gam thứ giai điệu (melodic minor)</b> và các mode của nó. Chỉ cần hai mode dưới đây là bạn xử được 90% tình huống "dominant nghe pro".</p>
+    <p>Melodic minor = gam trưởng nhưng <b>hạ bậc 3 xuống nửa cung</b> (giữ bậc 6 &amp; 7 trưởng):</p>
+    <div class="formula"><b>C melodic minor:</b> 0·2·<b>3</b>·5·7·9·11 &nbsp;<span class="muted">(chỉ khác C trưởng ở bậc 3)</span></div>
+    <h3>① Altered scale (cho hợp âm "7alt")</h3>
+    <p>Là mode thứ 7 của melodic minor. Chứa <b>tất cả</b> các biến âm của một hợp âm dominant: ♭9, ♯9, ♯11, ♭13. Dùng trên hợp âm <b>V7</b> ngay trước khi về I để tạo lực căng cực đại → giải quyết cực đã.</p>
+    <div class="formula"><b>C altered:</b> 0·1·3·4·6·8·10 &nbsp;=&nbsp; gốc, ♭9, ♯9, bậc3, ♯11, ♭13, ♭7</div>
+    <h3>② Lydian dominant (cho hợp âm "7♯11")</h3>
+    <p>Mode thứ 4 của melodic minor = Mixolydian nhưng nâng bậc 4. Chất "dominant nhưng sáng, lơ lửng" — hoàn hảo cho <b>hợp âm 7 không giải quyết</b> (như hợp âm dạng tritone-sub, hay hợp âm dominant "màu phim").</p>
+    <div class="formula"><b>C lydian dominant:</b> 0·2·4·<b>6</b>·7·9·10 &nbsp;=&nbsp; Mixolydian + #11</div>
+    <div class="demo">
+      <span class="demo-label">So sánh 3 gam trên cùng gốc Đô (đều trên nền hợp âm dominant)</span>
+      <div class="btn-row" id="mmBtns"></div>
+      <div class="readout" id="mmReadout">Bấm để nghe. So sánh cùng một hợp âm C7 khi "phủ" Mixolydian thường vs Lydian dominant vs Altered — độ căng tăng dần rõ rệt.</div>
+    </div>
+    <div class="note-box">
+      <span class="tag">Liên hệ tritone sub (nối sang phần 07)</span>
+      <p>Nhớ ở trang nhập môn: D♭7 thay G7 vì chung cặp guide tone. Thú vị: <b>G altered</b> và <b>D♭ lydian dominant</b> gần như <b>cùng một bộ nốt</b>. Nghĩa là "chơi altered trên G7" và "coi nó là D♭7#11" chỉ là hai cách gọi một âm thanh — đó là lý do sâu xa khiến tritone sub nghe tự nhiên.</p>
+    </div>
+  </section>
+
+  <section class="concept" id="s-voicing" data-title="Voicings: xếp nốt cho 'sang'">
+    <span class="sec-eyebrow">PHẦN 05 · CÁCH XẾP NỐT</span>
+    <h2>Voicings: cùng hợp âm, khác đẳng cấp</h2>
+    <p class="lead">Đây là lý do một pianist jazz bấm Cmaj7 nghe "sang" còn bạn bấm nghe "học sinh". Cùng một hợp âm, cách <b>chọn nốt nào &amp; xếp ở đâu</b> (voicing) đổi hoàn toàn độ mượt và màu. Nguyên tắc vàng: <b>bỏ gốc &amp; bậc 5, giữ 3–7, thêm màu</b>.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Voicing</th><th>Gồm nốt gì</th><th>Chất</th></tr></thead>
+        <tbody>
+          <tr><td><b>Root position</b></td><td>1-3-5-7 xếp thẳng</td><td>thô, "cơ bản", ít dùng</td></tr>
+          <tr><td><b>Shell</b></td><td>chỉ 1 + 3 + 7</td><td>khung xương gọn, chắc</td></tr>
+          <tr><td><b>Rootless A</b></td><td>3-5-7-9 (bỏ gốc)</td><td>Bill Evans, mềm, sang</td></tr>
+          <tr><td><b>Rootless B</b></td><td>7-9-3-5 (bỏ gốc)</td><td>như A, vị trí tay khác để nối mượt</td></tr>
+          <tr><td><b>Drop-2</b></td><td>hạ nốt nhì-từ-trên xuống 1 quãng tám</td><td>rộng, dày, đẹp cho hợp âm dài</td></tr>
+          <tr><td><b>Quartal</b></td><td>chồng các quãng 4</td><td>hiện đại, "mở", McCoy Tyner</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="demo">
+      <span class="demo-label">Cùng hợp âm Cmaj7 · nghe từng kiểu voicing</span>
+      <div class="btn-row" id="voiceBtns"></div>
+      <div class="readout" id="voiceReadout">Bấm lần lượt. Chú ý: bản <b>root position</b> nghe "cứng", còn <b>rootless</b> &amp; <b>quartal</b> nghe thoáng và "người lớn" hơn hẳn — vẫn là Cmaj7.</div>
+    </div>
+    <div class="demo">
+      <span class="demo-label">Sức mạnh thật: nối ii–V–I bằng rootless voicing</span>
+      <div class="btn-row" id="voiceProgBtns"></div>
+      <div class="readout" id="voiceProgReadout">So sánh ii–V–I xếp thô vs xếp rootless. Bản rootless: các ngón gần như <b>không nhấc</b>, chỉ trượt vài nốt — đó chính là guide-tone line ở phần 01 thành hình.</div>
+    </div>
+  </section>
+
+  <section class="concept" id="s-tension" data-title="Tensions & upper structures">
+    <span class="sec-eyebrow">PHẦN 06 · THÊM MÀU</span>
+    <h2>Tensions: 9, 11, 13 &amp; biến âm dominant</h2>
+    <p class="lead">Chồng tiếp tầng 3 lên hợp âm 7 ta được các nốt <b>9, 11, 13</b> (chính là 2, 4, 6 ở quãng tám trên). Chúng là "màu". Nhưng không phải màu nào cũng hợp mọi hợp âm — có <b>nốt nên tránh (avoid note)</b> gây chỏi.</p>
+    <h3>Avoid note: vì sao IV phải là Lydian</h3>
+    <p>Trên <b>Cmaj7</b>, thêm bậc 9 (D) và 13 (A) rất đẹp; nhưng thêm <b>bậc 11 tự nhiên (F)</b> thì F đè lên bậc 3 (E) đúng nửa cung → chỏi. Giải pháp jazz: nâng thành <b>#11 (F♯)</b> ⇒ chính là màu Lydian. Nghe thử:</p>
+    <div class="demo">
+      <span class="demo-label">Cmaj7 + từng tension · nghe cái nào đẹp, cái nào chỏi</span>
+      <div class="btn-row" id="avoidBtns"></div>
+      <div class="readout" id="avoidReadout">Đặc biệt so sánh <b>+11 tự nhiên</b> (chỏi) với <b>#11</b> (đẹp, Lydian). Đây là ví dụ kinh điển của "avoid note".</div>
+    </div>
+    <h3>Biến âm trên dominant: nơi jazz "nêm" nhiều nhất</h3>
+    <p>Hợp âm <b>V7</b> là chỗ được phép làm căng thoải mái vì nó sẽ giải quyết về I. Bốn "gia vị": <b>♭9, ♯9, ♯11, ♭13</b>. Gộp cả bốn = hợp âm <b>7alt</b> (dùng altered scale ở phần 04).</p>
+    <div class="demo">
+      <span class="demo-label">G7 biến âm → giải quyết về Cmaj7 · nghe lực căng/nhả</span>
+      <div class="btn-row" id="altBtns"></div>
+      <div class="readout" id="altReadout">Mỗi nút: phát G7 (đã nêm) rồi về Cmaj7. Nghe độ "muốn về nhà" tăng dần từ ♭9 tới alt đầy đủ.</div>
+    </div>
+    <h3>Upper structure: mẹo tay phải "ăn gian"</h3>
+    <p>Thay vì nghĩ từng nốt biến âm, dân jazz chơi <b>một hợp âm ba trưởng quen thuộc ở tay phải</b> chồng lên shell dominant ở tay trái. Ví dụ <b>hợp âm Rê trưởng (D) đè lên C7</b> tự động cho 9, ♯11, 13 — nghe rất "phim" mà tay phải chỉ bấm một triad dễ.</p>
+    <div class="demo">
+      <span class="demo-label">Upper structure · triad quen tạo màu phức tạp</span>
+      <div class="btn-row" id="usBtns"></div>
+      <div class="readout" id="usReadout">Bấm để nghe. Tay trái giữ khung C7, tay phải chỉ là một hợp âm ba — nhưng tổng thể ra màu dày như hợp âm cao cấp.</div>
+    </div>
+    <div class="warning">
+      <span class="tag">⚠ Đừng nhồi tất cả</span>
+      <p>Có màu không có nghĩa dùng hết. Nhồi cả 9-11-13 + biến âm cùng lúc thường thành "bùn". Nghệ thuật là <b>chọn 1–2 màu</b> cho mỗi hợp âm để nó "nói" một điều rõ ràng. Ít mà đúng chỗ &gt; nhiều mà rối.</p>
+    </div>
+  </section>
+
+  <section class="concept" id="s-reharm" data-title="★ Kho reharmonization">
+    <span class="sec-eyebrow">PHẦN 07 · TRUNG TÂM · NƯỚC ĐI HỢP LỆ</span>
+    <h2>Kho reharmonization đầy đủ</h2>
+    <p class="lead">Đây là phần "để làm" của cả tài liệu. Mỗi kỹ thuật dưới là một <b>nước đi hợp lệ</b> để thay hoặc chèn hợp âm mà vẫn giữ được hướng đi của bài. Với mỗi nút, mình phát <b>bản gốc</b> rồi <b>bản đã reharm</b> — nghe để tai bạn "bắt" được sự khác biệt trước khi đọc lý do.</p>
+    <div class="demo">
+      <span class="demo-label">Nghe TRƯỚC → SAU của từng kỹ thuật (giọng Đô)</span>
+      <div class="btn-row" id="rh1Btns"></div>
+      <div class="range-row"><label>Tempo</label><input type="range" id="rh1Bpm" min="70" max="150" value="100"><span class="rv" id="rh1BpmV">100 BPM</span></div>
+      <div class="readout" id="rh1Readout" style="min-height:72px">Gợi ý nghe theo thứ tự nút. Bắt đầu từ <b>Tritone sub</b> và <b>Secondary dominant</b> — hai nước đi "lời cao" nhất, dùng được ngay.</div>
+    </div>
+
+    <h3>Bảng tra nhanh các nước đi</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Kỹ thuật</th><th>Nước đi</th><th>Dùng khi</th></tr></thead>
+        <tbody>
+          <tr><td><b>Tritone sub</b></td><td>Thay V7 bằng <em>♭II7</em> (G7→D♭7)</td><td>muốn bass trượt nửa cung về I</td></tr>
+          <tr><td><b>Secondary dominant</b></td><td>Chèn <em>V7/x</em> trước hợp âm x (Am→A7→Dm)</td><td>muốn thêm "lực đẩy" tới một hợp âm không phải chủ</td></tr>
+          <tr><td><b>Chèn ii–V</b></td><td>Biến chỗ tĩnh thành <em>ii–V</em> dẫn về đích</td><td>một ô nhịp bị "đứng yên" quá lâu</td></tr>
+          <tr><td><b>Modal interchange</b></td><td>Mượn hợp âm từ giọng <em>cùng tên</em> (IV→iv min)</td><td>muốn một cú "chùng xuống" bất ngờ, đầy cảm xúc</td></tr>
+          <tr><td><b>Backdoor ii–V</b></td><td><em>iv-min ii–V</em> mượn (Fm7–B♭7→C)</td><td>về I qua "cửa sau", màu soul/phim</td></tr>
+          <tr><td><b>Dim passing</b></td><td>Hợp âm <em>giảm</em> nối nửa cung (C→C♯°→Dm)</td><td>làm mượt bước đi lên/xuống giữa 2 hợp âm</td></tr>
+          <tr><td><b>Chromatic approach</b></td><td>Trượt cả hợp âm từ nửa cung (E♭m7→Dm7)</td><td>tiếp cận đích "từ trên/dưới" rất trơn</td></tr>
+          <tr><td><b>Pedal point</b></td><td>Giữ <em>một nốt bass</em>, đổi hợp âm bên trên</td><td>tạo căng thẳng &amp; sự gắn kết, mở/kết bài</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note-box">
+      <span class="tag">Nguyên tắc chọn nước đi</span>
+      <p>Tất cả đều quy về hai câu hỏi từ phần 01: (1) <b>cặp guide tone 3–7</b> có dẫn mượt sang hợp âm kế không? (2) nốt <b>bass</b> có đi thành một đường có lý (từng bước, hoặc vòng quãng 5, hoặc trượt nửa cung) không? Nếu cả hai "có", nước đi gần như luôn nghe hợp lý.</p>
+    </div>
+
+    <details>
+      <summary>Nâng cao: Coltrane changes (chu kỳ quãng 3 trưởng)</summary>
+      <div class="details-body">
+        <p>Thay vì đi vòng quãng 5 quen thuộc, John Coltrane chia quãng tám thành <b>ba chủ âm cách nhau đúng quãng 3 trưởng</b> (ví dụ C → A♭ → E → về C), mỗi bước nối bằng dominant riêng. Kết quả là chuỗi hợp âm chuyển giọng chóng mặt nhưng vẫn logic. Bấm nút <b>"Coltrane (nâng cao)"</b> ở trên để nghe chu kỳ quãng 3 trưởng. Đây là đỉnh của reharm — cần tai và kỹ thuật vững, để dành khi bạn đã thành thạo các nước đi cơ bản phía trên.</p>
+      </div>
+    </details>
+  </section>
+
+  <section class="concept" id="s-forms" data-title="Form: blues & rhythm changes">
+    <span class="sec-eyebrow">PHẦN 08 · HAI KHUNG PHẢI THUỘC</span>
+    <h2>Hai form nền: Jazz Blues &amp; Rhythm Changes</h2>
+    <p class="lead">Jazz có vài "khung hợp âm" mà mọi người chơi đều thuộc nằm lòng — vào jam session, gọi tên là ai cũng chơi được. Hai khung quan trọng nhất: <b>jazz blues</b> (12 ô) và <b>rhythm changes</b> (32 ô, AABA). Thuộc chúng = có "sân chơi chung" với mọi nhạc công.</p>
+    <h3>Jazz blues — blues 12 ô "có ii–V"</h3>
+    <p>Khác blues cơ bản (chỉ I7–IV7–V7), jazz blues nhồi thêm ii–V, hợp âm giảm nối, và secondary dominant để "đi" mượt hơn:</p>
+    <div class="formula">C7 | F7 | C7 | Gm7 C7 | F7 | F♯°7 | C7 | A7 | Dm7 | G7 | C7 A7 | Dm7 G7 ‖</div>
+    <div class="demo">
+      <span class="demo-label">Nghe 12 ô jazz blues (giọng Đô)</span>
+      <div class="btn-row">
+        <button class="btn primary" id="bluesPlay">▶ Jazz blues (C)</button>
+        <button class="btn sm" id="bluesStop">■ Dừng</button>
+      </div>
+      <div class="readout" id="bluesReadout">Nghe cách mỗi ô "dẫn" sang ô sau — đó là các nước đi ở phần 07 áp vào một khung 12 ô. Ô 6 (F♯°7) là dim passing; ô 8 (A7) là secondary dominant tới Dm7.</div>
+    </div>
+    <h3>Rhythm changes — khung AABA 32 ô</h3>
+    <p>Dựa trên vòng <b>I–vi–ii–V</b> lặp lại (câu A) và một <b>cầu</b> (bridge, câu B) là chuỗi dominant vòng quãng 5. Cực nhiều bài jazz mượn đúng khung này.</p>
+    <div class="formula"><b>Câu A:</b> C A7 | Dm7 G7 | Em7 A7 | Dm7 G7 | … &nbsp;&nbsp; <b>Cầu (B):</b> E7 | A7 | D7 | G7 (mỗi hợp âm 2 ô)</div>
+    <div class="demo">
+      <span class="demo-label">Nghe câu A và cầu của rhythm changes</span>
+      <div class="btn-row">
+        <button class="btn" id="rcA">▶ Câu A (8 ô)</button>
+        <button class="btn" id="rcB">▶ Cầu / bridge</button>
+        <button class="btn sm" id="rcStop">■ Dừng</button>
+      </div>
+      <div class="readout" id="rcReadout">Câu A: vòng I–vi–ii–V dày đặc (nghe rất "swing chuẩn"). Cầu: 4 hợp âm dominant nối đuôi nhau theo vòng quãng 5 (E7→A7→D7→G7), kéo căng rồi đổ về câu A cuối.</div>
+    </div>
+    <div class="key-def">
+      <span class="tag">Vì sao phải thuộc form</span>
+      Solo jazz không phải "chơi nốt ngẫu nhiên cho hay" mà là <b>ứng tác trên một khung hợp âm biết trước</b>. Thuộc form ⇒ tai bạn luôn biết "đang ở ô nào, sắp về đâu" ⇒ mới ứng tác có định hướng. Đây là cầu nối sang Tài liệu ③ (ngẫu hứng).
+    </div>
+  </section>
+
+  <section class="concept" id="s-workflow" data-title="Quy trình & cheatsheet">
+    <span class="sec-eyebrow">PHẦN 09 · GÓI GỌN ĐỂ DÙNG</span>
+    <h2>Quy trình reharm &amp; cheatsheet</h2>
+    <p class="lead">Gộp tất cả thành một quy trình bạn có thể áp lên bất kỳ bài nào, và một trang tra cứu để dán cạnh đàn.</p>
+    <h3>Quy trình jazz hóa một bài (bản đầy đủ)</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Bước</th><th>Làm gì</th><th>Công cụ trong tài liệu</th></tr></thead>
+        <tbody>
+          <tr><td><b>1</b></td><td>Dò bài ra <b>bậc La Mã</b> trong giọng của nó</td><td>trang nhập môn · phần 06</td></tr>
+          <tr><td><b>2</b></td><td>Thêm bậc <b>7</b> cho mọi hợp âm; chọn <b>chord-scale</b> cho từng cái</td><td>phần 02</td></tr>
+          <tr><td><b>3</b></td><td>Đổi sang <b>voicing rootless</b>, kiểm tra <b>guide-tone line</b> có mượt</td><td>phần 01, 05</td></tr>
+          <tr><td><b>4</b></td><td>Ở các cú <b>V→I</b>: cân nhắc <b>tritone sub</b> / chèn <b>ii–V</b> / <b>secondary dominant</b></td><td>phần 07</td></tr>
+          <tr><td><b>5</b></td><td>Thêm <b>màu</b> (9/13, biến âm, upper structure) — nhưng tiết chế</td><td>phần 06</td></tr>
+          <tr><td><b>6</b></td><td>Rắc <b>modal interchange / dim passing / chromatic</b> ở vài chỗ cho bất ngờ</td><td>phần 07</td></tr>
+          <tr><td><b>7</b></td><td><b>Nghe lại &amp; hát</b> sau mỗi bước — tai quyết định, không phải lý thuyết</td><td>cả tài liệu</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Luyện tập cho phần hòa thanh (không cần đàn)</h3>
+    <p>① Mỗi ngày dò 1 bài pop ra bậc La Mã. ② Đọc một bài, tìm mọi cú V→I và tự đề xuất một nước reharm cho mỗi cú (viết ra giấy). ③ Khi có đàn: chơi <b>ii–V–I bằng rootless voicing qua cả 12 giọng</b> theo vòng quãng 5 — bài tập số 1 của mọi pianist jazz.</p>
+    <div class="grid2">
+      <div class="card">
+        <h3 style="margin-top:0; font-family:var(--font-mono); font-size:15px; color:var(--accent-identity)">CHORD-SCALE (nhanh)</h3>
+        <p class="mono" style="font-size:var(--fs-sm); color:var(--text-secondary); line-height:2; max-width:none">
+          maj7 (I) → Ionian<br>
+          maj7 (IV) → Lydian (#11)<br>
+          m7 (ii) → Dorian<br>
+          7 (V) → Mixolydian<br>
+          m7♭5 → Locrian<br>
+          7alt → Altered<br>
+          7♯11 → Lydian dominant
+        </p>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0; font-family:var(--font-mono); font-size:15px; color:var(--accent-identity)">NƯỚC ĐI REHARM</h3>
+        <p class="mono" style="font-size:var(--fs-sm); color:var(--text-secondary); line-height:2; max-width:none">
+          V7 → ♭II7 (tritone)<br>
+          x → (V7/x) x (secondary dom)<br>
+          tĩnh → ii–V dẫn về<br>
+          IV → iv min (interchange)<br>
+          →I qua Fm7–B♭7 (backdoor)<br>
+          nối bằng °7 / trượt nửa cung<br>
+          giữ bass = pedal point
+        </p>
+      </div>
+    </div>
+    <div class="key-def">
+      <span class="tag">Bước tiếp theo</span>
+      Nắm chắc tài liệu này là bạn đã có <b>bộ não hòa thanh</b> của jazz. Kế tiếp trong series: <b>Tài liệu ② — Ear training bài bản</b> (để tai bắt kịp cái đầu), rồi <b>③ Ngẫu hứng</b> và <b>④ Kỹ thuật &amp; repertoire</b>. Nhớ: <b>tập ear training song song ngay từ bây giờ</b>, đừng đợi.
+    </div>
+  </section>
+
+  <footer>
+    <p><b>Tài liệu ① trong series "Nhạc lý → Piano → Jazz" — học khái niệm, không thay thầy dạy ngón.</b><br>
+    Âm thanh tổng hợp bằng Web Audio API (dao động + ADSR) nên nghe điện tử; mục đích là phân biệt hòa thanh/màu sắc, không phải chất phối khí. Các công thức mode/chord-scale, cấu trúc voicing, và các nước reharmonization theo lý thuyết jazz phương Tây tiêu chuẩn; các đoạn ví dụ &amp; "licks" đều là bản gốc minh hoạ, không trích tác phẩm có bản quyền. Voicing trong demo được rút gọn cho dễ nghe, đời thực còn nhiều biến thể. Cao độ theo điều hòa đều, A4 = 440 Hz.</p>
+  </footer>
+
+    </div>
+
+  </main>
+</div>
+
+<script>
+"use strict";
+/* ===================== AUDIO ENGINE ===================== */
+let AC=null, master=null, comp=null, noiseBuf=null;
+function audio(){
+  if(!AC){
+    AC=new (window.AudioContext||window.webkitAudioContext)();
+    master=AC.createGain(); master.gain.value=0.85;
+    comp=AC.createDynamicsCompressor();
+    comp.threshold.value=-18; comp.ratio.value=4; comp.attack.value=0.003; comp.release.value=0.25;
+    master.connect(comp); comp.connect(AC.destination);
+  }
+  if(AC.state==='suspended') AC.resume();
+  return AC;
+}
+function markAudioOn(){ const cta=document.getElementById('audioCta'); if(cta&&!cta.classList.contains('on')){ cta.classList.add('on'); const b=document.getElementById('enableAudio'); if(b){ b.textContent='Tiếng đã bật ✓'; b.disabled=true; b.style.opacity=.7; } } }
+function mtof(m){ return 440*Math.pow(2,(m-69)/12); }
+function noise(){ if(!noiseBuf){ const ac=audio(); noiseBuf=ac.createBuffer(1, ac.sampleRate, ac.sampleRate); const d=noiseBuf.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=Math.random()*2-1; } return noiseBuf; }
+function voice(midi,t0,dur,vel){
+  const ac=audio(); vel=vel==null?0.8:vel; const f=mtof(midi);
+  const g=ac.createGain();
+  const peak=0.20*vel, sus=Math.max(0.0001,peak*0.30);
+  g.gain.setValueAtTime(0.0001,t0);
+  g.gain.exponentialRampToValueAtTime(peak,t0+0.006);
+  g.gain.exponentialRampToValueAtTime(sus,t0+0.28);
+  g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+  const lp=ac.createBiquadFilter(); lp.type='lowpass';
+  lp.frequency.setValueAtTime(Math.min(11000,f*7),t0);
+  lp.frequency.exponentialRampToValueAtTime(Math.min(9000,f*3+400),t0+dur);
+  const o1=ac.createOscillator(); o1.type='triangle'; o1.frequency.value=f;
+  const o2=ac.createOscillator(); o2.type='sine'; o2.frequency.value=f*2; const o2g=ac.createGain(); o2g.gain.value=0.32;
+  const o3=ac.createOscillator(); o3.type='sine'; o3.frequency.value=f*0.5; const o3g=ac.createGain(); o3g.gain.value=0.18;
+  o1.connect(lp); o2.connect(o2g); o2g.connect(lp); o3.connect(o3g); o3g.connect(lp); lp.connect(g); g.connect(master);
+  o1.start(t0); o2.start(t0); o3.start(t0);
+  const end=t0+dur+0.06; o1.stop(end); o2.stop(end); o3.stop(end);
+}
+function chord(ms,t0,dur,vel){ ms.forEach(m=>voice(m,t0,dur,vel)); }
+function arp(ms,t0,step,dur,vel){ ms.forEach((m,i)=>voice(m,t0+i*step,dur,vel)); }
+function kick(t0,vel){ const ac=audio(); vel=vel||1; const o=ac.createOscillator(); const g=ac.createGain();
+  o.frequency.setValueAtTime(135,t0); o.frequency.exponentialRampToValueAtTime(45,t0+0.11);
+  g.gain.setValueAtTime(0.9*vel,t0); g.gain.exponentialRampToValueAtTime(0.001,t0+0.26);
+  o.connect(g); g.connect(master); o.start(t0); o.stop(t0+0.28); }
+function snare(t0,vel){ const ac=audio(); vel=vel||1;
+  const s=ac.createBufferSource(); s.buffer=noise(); const hp=ac.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=1400;
+  const g=ac.createGain(); g.gain.setValueAtTime(0.45*vel,t0); g.gain.exponentialRampToValueAtTime(0.001,t0+0.18);
+  s.connect(hp); hp.connect(g); g.connect(master); s.start(t0); s.stop(t0+0.2);
+  const o=ac.createOscillator(); o.type='triangle'; o.frequency.value=190; const g2=ac.createGain();
+  g2.gain.setValueAtTime(0.22*vel,t0); g2.gain.exponentialRampToValueAtTime(0.001,t0+0.12); o.connect(g2); g2.connect(master); o.start(t0); o.stop(t0+0.13); }
+function hat(t0,vel,open){ const ac=audio(); vel=vel||1; const dur=open?0.28:0.045;
+  const s=ac.createBufferSource(); s.buffer=noise(); const hp=ac.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=7000;
+  const g=ac.createGain(); g.gain.setValueAtTime(0.24*vel,t0); g.gain.exponentialRampToValueAtTime(0.001,t0+dur);
+  s.connect(hp); hp.connect(g); g.connect(master); s.start(t0); s.stop(t0+dur+0.02); }
+function clap(t0,vel){ const ac=audio(); vel=vel||1; const s=ac.createBufferSource(); s.buffer=noise();
+  const bp=ac.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=1600; bp.Q.value=1.2;
+  const g=ac.createGain(); g.gain.setValueAtTime(0.5*vel,t0); g.gain.exponentialRampToValueAtTime(0.001,t0+0.15);
+  s.connect(bp); bp.connect(g); g.connect(master); s.start(t0); s.stop(t0+0.16); }
+function click(t0,strong){ const ac=audio(); const o=ac.createOscillator(); const g=ac.createGain();
+  o.frequency.value=strong?1500:1000; g.gain.setValueAtTime(0.0001,t0); g.gain.exponentialRampToValueAtTime(strong?0.5:0.28,t0+0.001);
+  g.gain.exponentialRampToValueAtTime(0.0001,t0+0.05); o.connect(g); g.connect(master); o.start(t0); o.stop(t0+0.06); }
+
+/* ===================== NOTE NAMES ===================== */
+const EN=['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
+const VN=['Đô','Đô♯','Rê','Rê♯','Mi','Fa','Fa♯','Sol','Sol♯','La','La♯','Si'];
+function nmeN(m){ return EN[((m%12)+12)%12]+(Math.floor(m/12)-1); }
+function setPlaying(btn,on){ if(btn) btn.classList.toggle('playing',on); }
+
+/* ===== INTRO document modules ===== */
+
+/* ===================== 1. PIANO ===================== */
+(function(){
+  const piano=document.getElementById('piano'); if(!piano) return;
+  const LO=60, HI=83;
+  const isBlack=m=>[1,3,6,8,10].includes(((m%12)+12)%12);
+  const whites=[]; for(let m=LO;m<=HI;m++) if(!isBlack(m)) whites.push(m);
+  const wEls={};
+  whites.forEach(m=>{
+    const el=document.createElement('div'); el.className='wkey'; el.dataset.midi=m;
+    el.innerHTML='<span class="lbl">'+EN[m%12]+'<span class="vn">'+VN[m%12]+'</span></span>';
+    piano.appendChild(el); wEls[m]=el;
+  });
+  const blackEls={};
+  for(let m=LO;m<=HI;m++){ if(!isBlack(m)) continue;
+    const leftW=m-1, i=whites.indexOf(leftW); if(i<0) continue;
+    const b=document.createElement('div'); b.className='bkey'; b.dataset.midi=m;
+    b.style.left=((i+1)/whites.length*100)+'%'; b.style.width=(100/whites.length*0.62)+'%';
+    b.innerHTML='<span class="lbl">'+EN[m%12]+'</span>';
+    piano.appendChild(b); blackEls[m]=b;
+  }
+  const kmap={'a':60,'w':61,'s':62,'e':63,'d':64,'f':65,'t':66,'g':67,'y':68,'h':69,'u':70,'j':71,'k':72,'o':73,'l':74,'p':75};
+  const staff=document.getElementById('staff'), nowNote=document.getElementById('nowNote');
+  function drawStaff(midi){
+    const x0=40,x1=190,top=30,gap=12; let s='';
+    for(let i=0;i<5;i++){ const y=top+i*gap; s+='<line x1="'+x0+'" y1="'+y+'" x2="'+x1+'" y2="'+y+'" stroke="var(--border)" stroke-width="1"/>'; }
+    s+='<text x="16" y="'+(top+34)+'" font-family="serif" font-size="46" fill="var(--text-muted)">&#119070;</text>';
+    if(midi!=null){
+      const diatonic={0:0,2:1,4:2,5:3,7:4,9:5,11:6};
+      const pc=((midi%12)+12)%12, oct=Math.floor(midi/12)-1;
+      let step, sharp=false; const base=diatonic[pc];
+      if(base!==undefined){ step=base; } else { step=diatonic[pc-1]; sharp=true; }
+      const idx=(oct*7)+step, ref=(4*7)+2;
+      const bottomY=top+4*gap, cy=bottomY-(idx-ref)*(gap/2), cx=120;
+      const topLineY=top, botLineY=top+4*gap;
+      if(cy>botLineY){ for(let yy=botLineY+gap; yy<=cy+0.1; yy+=gap) s+='<line x1="'+(cx-11)+'" y1="'+yy+'" x2="'+(cx+11)+'" y2="'+yy+'" stroke="var(--border)"/>'; }
+      if(cy<topLineY){ for(let yy=topLineY-gap; yy>=cy-0.1; yy-=gap) s+='<line x1="'+(cx-11)+'" y1="'+yy+'" x2="'+(cx+11)+'" y2="'+yy+'" stroke="var(--border)"/>'; }
+      s+='<ellipse cx="'+cx+'" cy="'+cy+'" rx="7.5" ry="5.5" fill="var(--accent-identity)" transform="rotate(-18 '+cx+' '+cy+')"/>';
+      if(sharp) s+='<text x="'+(cx-24)+'" y="'+(cy+5)+'" font-size="16" fill="var(--accent-identity)" font-family="serif">&#9839;</text>';
+    }
+    staff.innerHTML=s;
+  }
+  function hit(midi){
+    voice(midi, audio().currentTime, 1.6, 0.85); markAudioOn();
+    nowNote.innerHTML=EN[midi%12]+'<small>'+VN[midi%12]+' · '+nmeN(midi)+'</small>';
+    drawStaff(midi);
+    const el=wEls[midi]||blackEls[midi]; if(el){ el.classList.add('down'); setTimeout(()=>el.classList.remove('down'),140); }
+  }
+  drawStaff(null);
+  piano.addEventListener('pointerdown',e=>{ const k=e.target.closest('[data-midi]'); if(k){ e.preventDefault(); hit(+k.dataset.midi); } });
+  window.addEventListener('keydown',e=>{
+    if(e.repeat||e.metaKey||e.ctrlKey||e.altKey) return;
+    if(document.activeElement&&/INPUT|TEXTAREA/.test(document.activeElement.tagName)) return;
+    const m=kmap[e.key.toLowerCase()]; if(m!=null){ hit(m); }
+  });
+})();
+
+/* ===================== 2A. METER ===================== */
+(function(){
+  const seg=document.getElementById('meterSeg'), playB=document.getElementById('meterPlay');
+  const bpm=document.getElementById('meterBpm'), bpmV=document.getElementById('meterBpmV'), row=document.getElementById('pulseRow');
+  if(!seg) return; let meter=4, timer=null, playing=false;
+  function build(){ row.innerHTML=''; const beats=meter===6?6:meter; for(let i=0;i<beats;i++){ const d=document.createElement('div'); d.className='pdot'+((i===0||(meter===6&&i===3))?' strong':''); d.textContent=(i+1); row.appendChild(d); } }
+  build();
+  seg.addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; seg.querySelectorAll('button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); meter=+b.dataset.m; build(); });
+  bpm.addEventListener('input',()=>bpmV.textContent=bpm.value+' BPM');
+  function stop(){ playing=false; clearInterval(timer); setPlaying(playB,false); playB.textContent='▶ Phát'; [].forEach.call(row.children,d=>d.classList.remove('hit')); }
+  playB.addEventListener('click',()=>{
+    if(playing){ stop(); return; }
+    audio(); markAudioOn(); playing=true; setPlaying(playB,true); playB.textContent='■ Dừng';
+    const beats=meter===6?6:meter; const spb=60/(+bpm.value)*(meter===6?0.5:1); let i=0;
+    const tick=()=>{ const strong=(i===0||(meter===6&&i===3)); const ac=audio();
+      if(meter===6){ voice(strong?67:60, ac.currentTime,0.12,strong?0.9:0.5); } else { click(ac.currentTime,strong); if(strong) kick(ac.currentTime,0.7); }
+      [].forEach.call(row.children,d=>d.classList.remove('hit')); const d=row.children[i]; if(d) d.classList.add('hit');
+      i=(i+1)%beats; };
+    tick(); timer=setInterval(tick, spb*1000);
+  });
+})();
+
+/* ===================== 2B. CLAP 1&3 vs 2&4 ===================== */
+(function(){
+  const bW=document.getElementById('clapWrong'), bR=document.getElementById('clapRight'), bS=document.getElementById('clapStop');
+  if(!bW) return; let timer=null, step=0, mode=null;
+  function stop(){ clearInterval(timer); timer=null; setPlaying(bW,false); setPlaying(bR,false); }
+  function start(which,btn){ stop(); audio(); markAudioOn(); mode=which; step=0; setPlaying(btn,true);
+    const sp=60/96/2*1000;
+    const tick=()=>{ const ac=audio(); const b=step%8;
+      if(b%2===0) hat(ac.currentTime,0.5);
+      if(b===0||b===4) kick(ac.currentTime,0.9);
+      const beat=b/2;
+      if(Number.isInteger(beat)){
+        if(mode==='wrong' && (beat===0||beat===2)) clap(ac.currentTime,0.9);
+        if(mode==='right' && (beat===1||beat===3)) clap(ac.currentTime,0.9);
+      }
+      step++; };
+    tick(); timer=setInterval(tick,sp);
+  }
+  bW.addEventListener('click',()=>{ if(mode==='wrong'&&timer){stop();mode=null;return;} start('wrong',bW); });
+  bR.addEventListener('click',()=>{ if(mode==='right'&&timer){stop();mode=null;return;} start('right',bR); });
+  bS.addEventListener('click',()=>{ stop(); mode=null; });
+})();
+
+/* ===================== 2C. TAP TRAINER ===================== */
+(function(){
+  const startB=document.getElementById('tapStart'), stopB=document.getElementById('tapStop'), pad=document.getElementById('tapPad');
+  const bpm=document.getElementById('tapBpm'), bpmV=document.getElementById('tapBpmV'), fb=document.getElementById('tapFb');
+  if(!startB) return; let timer=null, running=false, beatTimes=[], spb=0;
+  bpm.addEventListener('input',()=>bpmV.textContent=bpm.value+' BPM');
+  function stop(){ running=false; clearInterval(timer); setPlaying(startB,false); startB.textContent='▶ Bật máy đếm'; }
+  startB.addEventListener('click',()=>{
+    if(running){ stop(); return; }
+    audio(); markAudioOn(); running=true; setPlaying(startB,true); startB.textContent='■ Đang chạy'; beatTimes=[];
+    spb=60/(+bpm.value); let i=0;
+    const tick=()=>{ const t=audio().currentTime; click(t, i%4===0); beatTimes.push(t); if(beatTimes.length>16) beatTimes.shift(); i++; };
+    tick(); timer=setInterval(tick, spb*1000);
+    fb.innerHTML='<span class="muted">Đang đếm… gõ theo tiếng click.</span>';
+  });
+  stopB.addEventListener('click',stop);
+  function tap(){
+    if(!running){ fb.innerHTML='<span class="muted">Bật máy đếm trước đã.</span>'; return; }
+    const t=audio().currentTime; if(!beatTimes.length) return;
+    let ref=beatTimes[beatTimes.length-1]; let err=((t-ref)%spb); if(err>spb/2) err-=spb; if(err<-spb/2) err+=spb;
+    const ms=Math.round(err*1000); const a=Math.abs(ms);
+    let cls,txt; if(a<=45){cls='fb-tight';txt='KHỚP 🎯';} else if(ms<0){cls='fb-early';txt='HƠI SỚM';} else {cls='fb-late';txt='HƠI TRỄ';}
+    fb.innerHTML='<span class="val '+cls+'">'+txt+'</span><span class="muted">lệch '+(ms>0?'+':'')+ms+' ms so với phách gần nhất</span>';
+    pad.style.transform='scale(0.98)'; setTimeout(()=>pad.style.transform='',80);
+  }
+  pad.addEventListener('pointerdown',e=>{e.preventDefault();tap();});
+  window.addEventListener('keydown',e=>{ if(e.code==='Space' && running){ if(document.activeElement&&/INPUT|TEXTAREA/.test(document.activeElement.tagName))return; e.preventDefault(); tap(); } });
+})();
+
+/* ===================== 3. INTERVALS ===================== */
+(function(){
+  const wrap=document.getElementById('intervalBtns'), ro=document.getElementById('intReadout'), seg=document.getElementById('intModeSeg');
+  if(!wrap) return; let mode='mel';
+  const data=[['2 trưởng',2],['3 thứ',3],['3 trưởng',4],['4 đúng',5],['Tritone',6],['5 đúng',7],['6 trưởng',9],['Quãng 8',12]];
+  data.forEach(function(d){ const nm=d[0], semi=d[1]; const b=document.createElement('button'); b.className='btn sm'; b.textContent=nm; b.onclick=function(){
+    audio(); markAudioOn(); const t=audio().currentTime, root=60;
+    if(mode==='mel'){ voice(root,t,0.7,0.85); voice(root+semi,t+0.42,1.0,0.85); } else { voice(root,t,1.3,0.8); voice(root+semi,t,1.3,0.8); }
+    ro.innerHTML='<b>'+nm+'</b> = '+semi+' nửa cung · từ Đô (C) lên '+VN[semi%12]+' ('+EN[semi%12]+(semi===12?' cao':'')+')';
+  }; wrap.appendChild(b); });
+  seg.addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b)return; seg.querySelectorAll('button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); mode=b.dataset.mode; });
+})();
+
+/* ===================== 4. CIRCLE OF FIFTHS ===================== */
+const COF=[
+  {k:'Đô trưởng',en:'C major',root:60,acc:'không',rel:'A minor'},
+  {k:'Sol trưởng',en:'G major',root:67,acc:'1 thăng (F♯)',rel:'E minor'},
+  {k:'Rê trưởng',en:'D major',root:62,acc:'2 thăng',rel:'B minor'},
+  {k:'La trưởng',en:'A major',root:69,acc:'3 thăng',rel:'F♯ minor'},
+  {k:'Mi trưởng',en:'E major',root:64,acc:'4 thăng',rel:'C♯ minor'},
+  {k:'Si trưởng',en:'B major',root:71,acc:'5 thăng',rel:'G♯ minor'},
+  {k:'Fa♯ trưởng',en:'F♯ major',root:66,acc:'6 thăng',rel:'D♯ minor'},
+  {k:'Rê♭ trưởng',en:'D♭ major',root:61,acc:'5 giáng',rel:'B♭ minor'},
+  {k:'La♭ trưởng',en:'A♭ major',root:68,acc:'4 giáng',rel:'F minor'},
+  {k:'Mi♭ trưởng',en:'E♭ major',root:63,acc:'3 giáng',rel:'C minor'},
+  {k:'Si♭ trưởng',en:'B♭ major',root:70,acc:'2 giáng',rel:'G minor'},
+  {k:'Fa trưởng',en:'F major',root:65,acc:'1 giáng (B♭)',rel:'D minor'}
+];
+const MAJOR=[0,2,4,5,7,9,11];
+(function(){
+  const svg=document.getElementById('cof'); if(!svg) return; let sel=0;
+  const cx=160,cy=160,rO=150,rI=104,rT=127;
+  let s='<circle cx="160" cy="160" r="150" fill="none" stroke="var(--border)"/><circle cx="160" cy="160" r="104" fill="none" stroke="var(--border)"/>';
+  const short=['C','G','D','A','E','B','F♯','D♭','A♭','E♭','B♭','F'];
+  for(let i=0;i<12;i++){
+    const a0=(i/12)*2*Math.PI - Math.PI/2 - Math.PI/12, a1=a0+2*Math.PI/12;
+    const px=(r,a)=>[cx+r*Math.cos(a),cy+r*Math.sin(a)];
+    const A=px(rI,a0),B=px(rO,a0),Cc=px(rO,a1),D=px(rI,a1);
+    s+='<g class="cof-seg" data-i="'+i+'">';
+    s+='<path d="M'+A[0]+' '+A[1]+' L'+B[0]+' '+B[1]+' A'+rO+' '+rO+' 0 0 1 '+Cc[0]+' '+Cc[1]+' L'+D[0]+' '+D[1]+' A'+rI+' '+rI+' 0 0 0 '+A[0]+' '+A[1]+' Z" fill="var(--card)" stroke="var(--border)" data-seg="'+i+'"/>';
+    const T=px(rT,(a0+a1)/2);
+    s+='<text x="'+T[0]+'" y="'+(T[1]+5)+'" text-anchor="middle" font-size="15" fill="var(--text-secondary)">'+short[i]+'</text>';
+    s+='</g>';
+  }
+  s+='<text x="160" y="156" text-anchor="middle" font-size="10" fill="var(--text-dim)">VÒNG</text>';
+  s+='<text x="160" y="170" text-anchor="middle" font-size="10" fill="var(--text-dim)">BẬC 5</text>';
+  svg.innerHTML=s;
+  function paint(){ svg.querySelectorAll('path[data-seg]').forEach(p=>{ const on=+p.dataset.seg===sel; p.setAttribute('fill', on?'rgba(192,132,252,0.22)':'var(--card)'); p.setAttribute('stroke', on?'var(--accent-identity)':'var(--border)'); }); }
+  function info(){ const d=COF[sel]; document.getElementById('cofKey').textContent=d.k; document.getElementById('cofName').textContent=d.en; document.getElementById('cofAcc').textContent=d.acc; document.getElementById('cofRel').textContent=d.rel; }
+  function playScale(){ audio(); markAudioOn(); const r=COF[sel].root, t=audio().currentTime; MAJOR.concat([12]).forEach((iv,i)=>voice(r+iv,t+i*0.16,0.32,0.8)); }
+  function playChord(){ audio(); markAudioOn(); const r=COF[sel].root; chord([r,r+4,r+7,r+11],audio().currentTime,1.5,0.75); }
+  svg.addEventListener('click',e=>{ const g=e.target.closest('.cof-seg'); if(!g)return; sel=+g.dataset.i; paint(); info(); playScale(); });
+  document.getElementById('cofScale').onclick=playScale;
+  document.getElementById('cofChord').onclick=playChord;
+  paint(); info();
+})();
+
+/* ===================== 5. CHORDS ===================== */
+(function(){
+  const wrap=document.getElementById('chordBtns'), ro=document.getElementById('chordReadout'), seg=document.getElementById('chordModeSeg');
+  if(!wrap) return; let mode='block';
+  const list=[
+    ['C','Đô trưởng',[0,4,7]],['Cm','Đô thứ',[0,3,7]],['Cdim','giảm',[0,3,6]],['Caug','tăng',[0,4,8]],
+    ['Cmaj7','trưởng 7',[0,4,7,11]],['C7','bảy (át)',[0,4,7,10]],['Cm7','thứ 7',[0,3,7,10]],['Cm7♭5','nửa giảm',[0,3,6,10]],
+    ['Csus4','treo 4',[0,5,7]],['Cmaj9','trưởng 9',[0,4,7,11,14]],['C13','mười ba',[0,4,7,10,14,21]]
+  ];
+  list.forEach(function(it){ const nm=it[0], vn=it[1], iv=it[2]; const b=document.createElement('button'); b.className='btn sm'; b.textContent=nm; b.onclick=function(){
+    audio(); markAudioOn(); const root=60, ns=iv.map(x=>root+x), t=audio().currentTime;
+    if(mode==='block') chord(ns,t,1.6,0.7); else arp(ns,t,0.14,1.4,0.78);
+    ro.innerHTML='<b>'+nm+'</b> ('+vn+') · nốt: '+ns.map(m=>EN[m%12]).join(' – ')+' · nửa cung từ gốc: '+iv.join('·');
+  }; wrap.appendChild(b); });
+  seg.addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b)return; seg.querySelectorAll('button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); mode=b.dataset.mode; });
+})();
+
+/* ===================== 6. PROGRESSIONS ===================== */
+let progTimer=null, progBtnActive=null;
+function stopProg(){ if(progTimer){clearTimeout(progTimer);progTimer=null;} setPlaying(progBtnActive,false); progBtnActive=null; }
+function playProgression(chords, bpm, btn, swing){
+  stopProg(); audio(); markAudioOn(); progBtnActive=btn; setPlaying(btn,true);
+  const spb=60/bpm, beatsPer=2; let i=0;
+  function step(){
+    if(i>=chords.length){ setPlaying(btn,false); progBtnActive=null; progTimer=null; return; }
+    const t=audio().currentTime+0.02, c=chords[i], dur=spb*beatsPer;
+    voice(c[0]-12,t,dur,0.55);
+    chord(c.slice(1),t,dur*0.95,0.55);
+    if(swing){ hat(t,0.4); hat(t+spb*0.66,0.3); hat(t+spb,0.4); hat(t+spb*1.66,0.3); }
+    i++; progTimer=setTimeout(step,dur*1000);
+  }
+  step();
+}
+(function(){
+  const wrap=document.getElementById('progBtns'), ro=document.getElementById('progReadout'), bpm=document.getElementById('progBpm'), bpmV=document.getElementById('progBpmV');
+  if(!wrap) return; bpm.addEventListener('input',()=>bpmV.textContent=bpm.value+' BPM');
+  const C=(r,iv)=>[60+r].concat(iv.map(x=>60+r+x));
+  const progs=[
+    ['I–V–vi–IV (pop)', [C(0,[0,4,7]),C(7,[0,4,7]),C(9,[0,3,7]),C(5,[0,4,7])], 'C – G – Am – F: vòng "4 hợp âm" của hàng nghìn bài pop.'],
+    ['I–vi–ii–V (quay đầu)', [C(0,[0,4,7]),C(9,[0,3,7]),C(2,[0,3,7]),C(7,[0,4,7])], 'C – Am – Dm – G: vòng "turnaround", nền để jazz hóa ở phần 08.'],
+    ['ii–V–I (jazz)', [C(2,[0,3,7,10]),C(7,[0,4,7,10]),C(0,[0,4,7,11]),C(0,[0,4,7,11])], 'Dm7 – G7 – Cmaj7: "câu" nền tảng nhất của jazz. Nghe cú G7→Cmaj7 giải quyết.'],
+    ['12-bar blues (rút gọn)', [C(0,[0,4,7,10]),C(5,[0,4,7,10]),C(0,[0,4,7,10]),C(7,[0,4,7,10])], 'C7 – F7 – C7 – G7: khung blues, mọi hợp âm đều là hợp âm 7 "át".']
+  ];
+  progs.forEach(function(p){ const nm=p[0], ch=p[1], desc=p[2]; const b=document.createElement('button'); b.className='btn sm'; b.textContent='▶ '+nm; b.onclick=function(){
+    if(progBtnActive===b){ stopProg(); return; } playProgression(ch,+bpm.value,b,false); ro.innerHTML=desc;
+  }; wrap.appendChild(b); });
+})();
+
+/* ===== DOC ① (harmony) modules ===== */
+
+/* ===== shared helpers for this doc ===== */
+function scaleUp(root, iv, t0, step, vel){ const arr=iv.concat([12]); for(let i=0;i<arr.length;i++) voice(root+arr[i], t0+i*step, step*0.9, vel==null?0.72:vel); }
+function ivNames(iv){ return iv.map(function(x){ return EN[((x%12)+12)%12]; }).join(' '); }
+function seqPlay(items, step){ const t0=audio().currentTime+0.05; for(let i=0;i<items.length;i++){ const it=items[i], t=t0+i*step; if(it.bass!=null) voice(it.bass,t,step*0.95,0.55); chord(it.notes,t,step*0.92, it.vel==null?0.6:it.vel); } }
+function mkBtns(containerId, defs, onClick){ const w=document.getElementById(containerId); if(!w) return; defs.forEach(function(d,i){ const b=document.createElement('button'); b.className='btn sm'; b.textContent=d.label; b.onclick=function(){ audio(); markAudioOn(); onClick(d,i,b); }; w.appendChild(b); }); }
+
+/* ===== 01. GUIDE TONES ===== */
+(function(){
+  const ro=document.getElementById('guideReadout'); if(!document.getElementById('guideBtns')) return;
+  const full=[{bass:50,notes:[62,65,69,72]},{bass:43,notes:[55,59,62,65]},{bass:48,notes:[60,64,67,71]}];
+  const guide=[{notes:[60,65]},{notes:[59,65]},{notes:[59,64]}];
+  const roots=[{notes:[50,57]},{notes:[43,50]},{notes:[48,55]}];
+  mkBtns('guideBtns',[
+    {label:'▶ ii–V–I đầy đủ'},{label:'▶ Chỉ guide tones (3 & 7)'},{label:'▶ Chỉ gốc & bậc 5 (nghèo màu)'}
+  ],function(d,i){
+    if(i===0){ seqPlay(full,0.85); ro.innerHTML='<b>Dm7 – G7 – Cmaj7</b> đầy đủ. Đây là câu ii–V–I nền tảng nhất của jazz.'; }
+    else if(i===1){ seqPlay(guide,0.85); ro.innerHTML='Chỉ 2 nốt/hợp âm (bậc 3 &amp; 7). Nghe hai đường: <b>F→F→E</b> và <b>C→B→B</b> — gần như đứng yên. Tai bạn bám chính vào đây.'; }
+    else { seqPlay(roots,0.85); ro.innerHTML='Chỉ gốc &amp; bậc 5 — nghe "rỗng, vô hồn", không phân biệt nổi hợp âm. Đó là lý do gốc &amp; 5 được coi là "bỏ được".'; }
+  });
+})();
+
+/* ===== 02. CHORD-SCALE ===== */
+(function(){
+  const ro=document.getElementById('csReadout'); if(!document.getElementById('csBtns')) return;
+  const defs=[
+    {label:'Cmaj7 · Ionian', ch:[60,64,67,71], iv:[0,2,4,5,7,9,11]},
+    {label:'Cmaj7 · Lydian', ch:[60,64,67,71], iv:[0,2,4,6,7,9,11]},
+    {label:'Cm7 · Dorian',   ch:[60,63,67,70], iv:[0,2,3,5,7,9,10]},
+    {label:'C7 · Mixolydian', ch:[60,64,67,70], iv:[0,2,4,5,7,9,10]},
+    {label:'Cm7 · Aeolian',  ch:[60,63,67,70], iv:[0,2,3,5,7,8,10]},
+    {label:'Cm7♭5 · Locrian', ch:[60,63,66,70], iv:[0,1,3,5,6,8,10]},
+    {label:'C7alt · Altered', ch:[60,64,67,70], iv:[0,1,3,4,6,8,10]}
+  ];
+  mkBtns('csBtns',defs,function(d){
+    const t=audio().currentTime+0.05; chord(d.ch,t,1.4,0.7); scaleUp(60,d.iv,t+1.75,0.2,0.75);
+    ro.innerHTML='<b>'+d.label+'</b> · gam: '+ivNames(d.iv)+' — nghe hợp âm trước, rồi gam "hợp" với nó.';
+  });
+})();
+
+/* ===== 03. MODES ===== */
+(function(){
+  const ro=document.getElementById('modeReadout'); if(!document.getElementById('modeBtns')) return;
+  const defs=[
+    {label:'Ionian', iv:[0,2,4,5,7,9,11], dr:[60,64,67,71], t:'trưởng chuẩn, sáng. Nốt đặc trưng: bậc 7 trưởng.'},
+    {label:'Dorian', iv:[0,2,3,5,7,9,10], dr:[60,63,67,70], t:'thứ "cool" kiểu jazz/funk. Đặc trưng: <b>bậc 6 trưởng</b>.'},
+    {label:'Phrygian', iv:[0,1,3,5,7,8,10], dr:[60,63,67,70], t:'thứ tối, hơi Tây Ban Nha. Đặc trưng: <b>♭9</b> (nốt thứ 2 hạ).'},
+    {label:'Lydian', iv:[0,2,4,6,7,9,11], dr:[60,64,67,71], t:'trưởng mơ màng, "bay". Đặc trưng: <b>#11</b>.'},
+    {label:'Mixolydian', iv:[0,2,4,5,7,9,10], dr:[60,64,67,70], t:'trưởng "bụi", chất blues/rock. Đặc trưng: <b>♭7</b>.'},
+    {label:'Aeolian', iv:[0,2,3,5,7,8,10], dr:[60,63,67,70], t:'thứ tự nhiên, buồn cổ điển. Đặc trưng: bậc 6 giáng.'},
+    {label:'Locrian', iv:[0,1,3,5,6,8,10], dr:[60,63,66,70], t:'chông chênh, bất ổn. Đặc trưng: <b>♭5</b>.'}
+  ];
+  mkBtns('modeBtns',defs,function(d){
+    const t=audio().currentTime+0.05; chord(d.dr,t,3.0,0.38); scaleUp(60,d.iv,t+0.35,0.26,0.72);
+    ro.innerHTML='<b>'+d.label+'</b> — '+d.t+' · gam: '+ivNames(d.iv);
+  });
+})();
+
+/* ===== 04. MELODIC MINOR ===== */
+(function(){
+  const ro=document.getElementById('mmReadout'); if(!document.getElementById('mmBtns')) return;
+  const dr=[48,64,70]; // C7 shell (root, 3, b7)
+  const defs=[
+    {label:'C7 · Mixolydian (thường)', iv:[0,2,4,5,7,9,10], t:'dominant "chuẩn", ít căng.'},
+    {label:'C7 · Lydian dominant (#11)', iv:[0,2,4,6,7,9,10], t:'dominant sáng, lơ lửng — hợp hợp âm 7 không giải quyết.'},
+    {label:'C7 · Altered (7alt)', iv:[0,1,3,4,6,8,10], t:'căng tối đa (♭9 ♯9 ♯11 ♭13) — dùng ngay trước khi về I.'}
+  ];
+  mkBtns('mmBtns',defs,function(d){
+    const t=audio().currentTime+0.05; chord(dr,t,3.2,0.36); scaleUp(60,d.iv,t+0.35,0.26,0.74);
+    ro.innerHTML='<b>'+d.label+'</b> — '+d.t+' · gam: '+ivNames(d.iv);
+  });
+})();
+
+/* ===== 05. VOICINGS ===== */
+(function(){
+  const ro=document.getElementById('voiceReadout'); if(document.getElementById('voiceBtns')){
+    const defs=[
+      {label:'Root position', notes:[60,64,67,71], t:'1-3-5-7 thẳng — "cứng", cơ bản.'},
+      {label:'Shell (1-3-7)', notes:[48,64,71], t:'chỉ gốc + 3 + 7 — khung xương gọn, chắc.'},
+      {label:'Rootless A (3-5-7-9)', notes:[64,67,71,74], t:'bỏ gốc, thêm 9 — mềm, sang (Bill Evans).'},
+      {label:'Rootless B (7-9-3-5)', notes:[59,62,64,67], t:'như A, vị trí tay khác để nối mượt.'},
+      {label:'Drop-2', notes:[59,64,67,74], t:'hạ nốt nhì-từ-trên xuống 1 quãng tám — rộng, dày.'},
+      {label:'Quartal (4ths)', notes:[64,69,74,79], t:'chồng quãng 4 — hiện đại, "mở" (McCoy Tyner).'}
+    ];
+    mkBtns('voiceBtns',defs,function(d){ chord(d.notes,audio().currentTime+0.04,1.9,0.6); ro.innerHTML='<b>Cmaj7 · '+d.label+'</b> — '+d.t; });
+  }
+  const ro2=document.getElementById('voiceProgReadout'); if(document.getElementById('voiceProgBtns')){
+    const thick=[{bass:50,notes:[62,65,69,72]},{bass:43,notes:[55,59,62,65]},{bass:48,notes:[60,64,67,71]}];
+    const roots=[{bass:50,notes:[65,69,72,76]},{bass:43,notes:[65,69,71,74]},{bass:48,notes:[64,67,71,74]}];
+    mkBtns('voiceProgBtns',[{label:'▶ ii–V–I xếp thô'},{label:'▶ ii–V–I rootless (mượt)'}],function(d,i){
+      seqPlay(i===0?thick:roots, 0.95);
+      ro2.innerHTML = i===0 ? 'Bản thô: mỗi hợp âm bấm đầy đủ, tay nhảy nhiều, nghe "khối".' : 'Bản rootless: các nốt trên gần như đứng yên, chỉ trượt vài bước — mượt hơn hẳn. Đây là guide-tone line thành hình.';
+    });
+  }
+})();
+
+/* ===== 06. TENSIONS + UPPER STRUCTURES ===== */
+(function(){
+  const roA=document.getElementById('avoidReadout'); if(document.getElementById('avoidBtns')){
+    const defs=[
+      {label:'Cmaj7 (nền)', notes:[60,64,67,71], t:'hợp âm gốc, chưa thêm màu.'},
+      {label:'+9 (đẹp)', notes:[60,64,67,71,74], t:'thêm bậc 9 (D) — sáng, mượt, rất đẹp.'},
+      {label:'+13 (đẹp)', notes:[60,64,67,71,81], t:'thêm bậc 13 (A) — dày, ấm.'},
+      {label:'+11 tự nhiên (chỏi!)', notes:[60,64,65,67,71], t:'F đè lên E đúng nửa cung → "avoid note", nghe chỏi.'},
+      {label:'#11 = Lydian (đẹp)', notes:[60,64,66,67,71], t:'nâng F thành F♯ → hết chỏi, thành màu Lydian bay bổng.'}
+    ];
+    mkBtns('avoidBtns',defs,function(d){ chord(d.notes,audio().currentTime+0.04,1.9,0.58); roA.innerHTML='<b>'+d.label+'</b> — '+d.t; });
+  }
+  const roB=document.getElementById('altReadout'); if(document.getElementById('altBtns')){
+    const C=[48,64,67,71,74];
+    const defs=[
+      {label:'G7♭9 → C', up:[59,65,68], t:'♭9 (A♭) — căng "tối", rất phổ biến.'},
+      {label:'G7♯9 → C', up:[59,65,70], t:'♯9 (A♯) — "Hendrix chord", gắt.'},
+      {label:'G7♯11 → C', up:[59,65,73], t:'♯11 (C♯) — căng "sáng", lơ lửng.'},
+      {label:'G7♭13 → C', up:[59,65,75], t:'♭13 (E♭) — tối, nặng.'},
+      {label:'G7alt → C (đủ)', up:[59,63,65,68], t:'gộp ♭9 &amp; ♭13 (altered) — căng nhất, giải quyết đã nhất.'}
+    ];
+    mkBtns('altBtns',defs,function(d){ seqPlay([{bass:43,notes:d.up},{bass:48,notes:[64,67,71,74]}],1.15); roB.innerHTML='<b>'+d.label+'</b> — '+d.t+' Nghe lực căng rồi nhả về Cmaj7.'; });
+  }
+  const roU=document.getElementById('usReadout'); if(document.getElementById('usBtns')){
+    const defs=[
+      {label:'Rê trưởng / C7', notes:[48,64,70,62,66,69], t:'tay trái C7 (C-E-B♭), tay phải hợp âm Rê trưởng → C13♯11, màu "phim".'},
+      {label:'La♭ trưởng / G7', notes:[43,59,65,56,60,63], t:'tay trái G7, tay phải hợp âm La♭ trưởng → G7 với ♭9/♭13, chất altered.'}
+    ];
+    mkBtns('usBtns',defs,function(d){ chord(d.notes,audio().currentTime+0.04,2.3,0.5); roU.innerHTML='<b>'+d.label+'</b> — '+d.t; });
+  }
+})();
+
+/* ===== 07. REHARMONIZATION CATALOG ===== */
+(function(){
+  const wrap=document.getElementById('rh1Btns'), ro=document.getElementById('rh1Readout'),
+        bpm=document.getElementById('rh1Bpm'), bpmV=document.getElementById('rh1BpmV');
+  if(!wrap) return; if(bpm) bpm.addEventListener('input',()=>bpmV.textContent=bpm.value+' BPM');
+  // voicing library {b: bass, up:[...]}
+  const L={
+    Cmaj7:{b:48,up:[64,67,71,74]}, Dm7:{b:50,up:[60,65,69,72]}, G7:{b:43,up:[59,62,65,67]},
+    Db7:{b:49,up:[65,67,68,71]}, Am7:{b:45,up:[60,64,67,71]}, A7:{b:45,up:[61,64,67,71]},
+    Fmaj7:{b:53,up:[57,60,64,67]}, Fm7:{b:53,up:[56,60,63,67]}, Bb7:{b:46,up:[62,65,68,72]},
+    Cdim:{b:49,up:[52,55,58,61]}, Ebm7:{b:51,up:[54,58,61,65]}, Cmaj7b:{b:48,up:[60,64,67,71]}
+  };
+  const items=[
+    {label:'Tritone sub', before:['Dm7','G7','Cmaj7'], after:['Dm7','Db7','Cmaj7'],
+      desc:'<b>Tritone sub.</b> Thay G7 → D♭7 (cùng cặp guide tone F–B). Bass trượt <b>D♭→C</b> nửa cung, nghe cực trơn.'},
+    {label:'Secondary dominant', before:['Cmaj7','Am7','Dm7','G7'], after:['Cmaj7','A7','Dm7','G7'],
+      desc:'<b>Secondary dominant.</b> Am7 → A7 (= V7 của Dm). Mượn lực kéo tạm tới Dm — vòng "đi" hơn hẳn.'},
+    {label:'Chèn ii–V', before:['Cmaj7','Cmaj7'], after:['Dm7','G7','Cmaj7'],
+      desc:'<b>Chèn ii–V.</b> Một ô Cmaj7 đứng yên → lấp bằng Dm7–G7 dẫn về chính nó. Chỗ tĩnh hoá chỗ "đi".'},
+    {label:'Modal interchange', before:['Cmaj7','Fmaj7','Cmaj7'], after:['Cmaj7','Fm7','Cmaj7'],
+      desc:'<b>Modal interchange.</b> IV (Fmaj7) → iv thứ (Fm7) mượn từ Đô thứ. Cú "chùng xuống" nao lòng — rất hay trong ballad.'},
+    {label:'Backdoor ii–V', before:['Dm7','G7','Cmaj7'], after:['Fm7','Bb7','Cmaj7'],
+      desc:'<b>Backdoor ii–V.</b> Về I qua "cửa sau": Fm7–B♭7 (ii–V mượn của Đô thứ) thay front-door. Màu soul/nhạc phim.'},
+    {label:'Dim passing', before:['Cmaj7b','Dm7'], after:['Cmaj7b','Cdim','Dm7'],
+      desc:'<b>Dim passing.</b> Chèn C♯°7 nối C lên Dm. Bass đi từng bước C–C♯–D, hợp âm giảm làm cầu mượt.'},
+    {label:'Chromatic approach', before:['Cmaj7b','Dm7'], after:['Cmaj7b','Ebm7','Dm7'],
+      desc:'<b>Chromatic approach.</b> E♭m7 (cách Dm7 nửa cung phía trên) rồi trượt xuống — "tiếp cận từ trên", rất jazz.'},
+    {label:'Pedal point', pedal:true,
+      beforeCh:[{b:48,up:[64,67,71]},{b:43,up:[62,65,71]},{b:45,up:[64,67,72]},{b:53,up:[65,69,72]}],
+      afterCh:[{b:48,up:[64,67,71]},{b:48,up:[62,65,71]},{b:48,up:[64,67,72]},{b:48,up:[65,69,72]}],
+      desc:'<b>Pedal point.</b> Cùng chuỗi hợp âm; bản sau <b>giữ nguyên bass Đô</b>. Nghe căng &amp; "dính" vào một trọng tâm — hay dùng mở/kết bài.'},
+    {label:'Coltrane (nâng cao)', seq:[[60,64,67,71],[63,67,70,73],[56,60,63,67],[59,63,66,69],[64,68,71,75],[55,59,62,65],[60,64,67,71]],
+      desc:'<b>Coltrane changes.</b> Chuyển chủ âm theo quãng 3 trưởng (C→A♭→E→C), nối bằng dominant. Đỉnh của reharm — để dành khi đã vững cơ bản.'}
+  ];
+  function playBA(before, after, spb){
+    const t0=audio().currentTime+0.05, bstep=spb*2;
+    for(let i=0;i<before.length;i++){ const c=before[i], t=t0+i*bstep; voice(c.b,t,bstep*0.95,0.5); chord(c.up,t,bstep*0.9,0.58); }
+    const gap=before.length*bstep + spb*1.1;
+    for(let i=0;i<after.length;i++){ const c=after[i], t=t0+gap+i*bstep; voice(c.b,t,bstep*0.95,0.5); chord(c.up,t,bstep*0.9,0.58); }
+  }
+  mkBtns('rh1Btns', items, function(it){
+    const spb=60/(+bpm.value);
+    if(it.seq){ const t0=audio().currentTime+0.05; for(let i=0;i<it.seq.length;i++){ const t=t0+i*spb*1.1; voice(it.seq[i][0]-12,t,spb*1.05,0.45); chord(it.seq[i],t,spb*1.0,0.55); } ro.innerHTML=it.desc; return; }
+    let before, after;
+    if(it.pedal){ before=it.beforeCh; after=it.afterCh; }
+    else { before=it.before.map(function(n){return L[n];}); after=it.after.map(function(n){return L[n];}); }
+    playBA(before, after, spb);
+    ro.innerHTML='🔻 TRƯỚC → SAU · '+it.desc;
+  });
+})();
+
+/* ===== 08. FORMS: JAZZ BLUES + RHYTHM CHANGES ===== */
+(function(){
+  const V={
+    C7:{b:48,up:[64,67,70]}, F7:{b:41,up:[57,60,63]}, Gm7:{b:43,up:[58,62,65]},
+    Fs0:{b:42,up:[54,57,60,63]}, A7:{b:45,up:[61,64,67]}, Dm7:{b:50,up:[60,65,69]}, G7:{b:43,up:[59,62,65]},
+    Cmaj7:{b:48,up:[64,67,71]}, C6:{b:48,up:[64,67,69]}, Em7:{b:52,up:[55,59,62,66]}, Fmaj7:{b:53,up:[57,60,64]}, Fm7:{b:53,up:[56,60,63]},
+    E7:{b:52,up:[56,59,62,66]}, D7:{b:50,up:[54,57,60,64]}, A7b:{b:45,up:[61,64,67,71]}, G7b:{b:43,up:[59,62,65,69]}
+  };
+  const blues=[['C7',2],['F7',2],['C7',2],['Gm7',1],['C7',1],['F7',2],['Fs0',2],['C7',2],['A7',2],['Dm7',2],['G7',2],['C7',1],['A7',1],['Dm7',1],['G7',1]];
+  const rcA=[['C6',1],['A7',1],['Dm7',1],['G7',1],['Em7',1],['A7',1],['Dm7',1],['G7',1],['C7',1],['C7',1],['Fmaj7',1],['Fm7',1],['Cmaj7',1],['A7',1],['Dm7',1],['G7',1]];
+  const rcB=[['E7',4],['A7b',4],['D7',4],['G7b',4]];
+  let timers=[], curBtn=null;
+  function stop(){ timers.forEach(clearTimeout); timers=[]; if(curBtn){setPlaying(curBtn,false);curBtn=null;} }
+  function play(list, bpm, btn){
+    stop(); audio(); markAudioOn(); curBtn=btn; setPlaying(btn,true);
+    const spb=60/bpm; let acc=0;
+    list.forEach(function(item){ const ch=V[item[0]], beats=item[1], delay=acc*spb*1000;
+      timers.push(setTimeout(function(){ const t=audio().currentTime+0.02; voice(ch.b,t,beats*spb*0.95,0.5); chord(ch.up,t,beats*spb*0.9,0.56); }, delay));
+      acc+=beats;
+    });
+    timers.push(setTimeout(function(){ setPlaying(btn,false); curBtn=null; }, acc*spb*1000+200));
+  }
+  const bp=document.getElementById('bluesPlay'), bs=document.getElementById('bluesStop');
+  if(bp){ bp.addEventListener('click',function(){ if(curBtn===bp){stop();return;} play(blues,120,bp); }); bs.addEventListener('click',stop); }
+  const a=document.getElementById('rcA'), b=document.getElementById('rcB'), s=document.getElementById('rcStop');
+  if(a){ a.addEventListener('click',function(){ if(curBtn===a){stop();return;} play(rcA,140,a); });
+    b.addEventListener('click',function(){ if(curBtn===b){stop();return;} play(rcB,140,b); }); s.addEventListener('click',stop); }
+})();
+
+/* ===================== INVERSIONS & VOICE LEADING (basic theory) ===================== */
+(function(){
+  const invRo=document.getElementById('invReadout');
+  if(document.getElementById('invBtns')){
+    const defs=[
+      {label:'Thế gốc (C-E-G)', notes:[60,64,67], t:'nốt gốc Đô ở đáy.'},
+      {label:'Đảo 1 (E-G-C)', notes:[64,67,72], t:'bậc 3 (Mi) ở đáy.'},
+      {label:'Đảo 2 (G-C-E)', notes:[67,72,76], t:'bậc 5 (Sol) ở đáy.'}
+    ];
+    mkBtns('invBtns',defs,function(d){ chord(d.notes,audio().currentTime+0.04,1.6,0.6); invRo.innerHTML='<b>Đô trưởng · '+d.label+'</b> — '+d.t+' Vẫn đúng ba nốt C-E-G, chỉ khác nốt nằm dưới cùng.'; });
+  }
+  const vlRo=document.getElementById('vlReadout');
+  if(document.getElementById('vlBtns')){
+    const jump=[{notes:[60,64,67]},{notes:[65,69,72]},{notes:[67,71,74]},{notes:[60,64,67]}];
+    const smooth=[{notes:[60,64,67]},{notes:[60,65,69]},{notes:[62,67,71]},{notes:[64,67,72]}];
+    mkBtns('vlBtns',[{label:'▶ Thế gốc hết (tay nhảy)'},{label:'▶ Dùng thể đảo (mượt)'}],function(d,i){
+      seqPlay(i===0?jump:smooth, 0.9);
+      vlRo.innerHTML = i===0 ? 'C–F–G–C toàn thế gốc: bàn tay <b>nhảy</b> lên xuống rõ rệt.' : 'Cùng C–F–G–C, chọn thể đảo để mỗi nốt chỉ <b>nhích một bước</b>, tay gần như đứng yên — chính là "mượt, êm".';
+    });
+  }
+})();
+
+/* ===================== DOC TABS · NAV · PROGRESS · THEME (merged, per-document) ===================== */
+(function(){
+  const tabs=[].slice.call(document.querySelectorAll('.doctab'));
+  const docs=[].slice.call(document.querySelectorAll('.doc'));
+  const nav=document.getElementById('sbNav');
+  function activeDoc(){ return document.querySelector('.doc.on') || docs[0]; }
+
+  function buildNav(docEl){
+    if(!nav||!docEl) return;
+    nav.innerHTML='';
+    const secs=[].slice.call(docEl.querySelectorAll('section[data-title]'));
+    const ov=docEl.querySelector('.overview-map'); if(ov) ov.innerHTML='';
+    secs.forEach(function(s,i){
+      const k=String(i).padStart(2,'0'), title=s.getAttribute('data-title');
+      const a=document.createElement('a'); a.className='sb-link'; a.href='#';
+      a.innerHTML='<span class="k">'+k+'</span><span>'+title+'</span>';
+      a.addEventListener('click',function(e){ e.preventDefault(); s.scrollIntoView({behavior:'smooth',block:'start'});
+        if(!window.matchMedia('(min-width:1025px)').matches) document.body.classList.remove('nav-open'); });
+      nav.appendChild(a); s._navlink=a;
+      if(ov && !s.classList.contains('overview')){ const li=document.createElement('li'); const oa=document.createElement('a'); oa.href='#';
+        oa.innerHTML='<span class="mk">'+k+'</span><span>'+title+'</span>';
+        oa.addEventListener('click',function(e){ e.preventDefault(); s.scrollIntoView({behavior:'smooth',block:'start'}); });
+        li.appendChild(oa); ov.appendChild(li); }
+    });
+  }
+
+  const rp=document.getElementById('rp'), fill=document.getElementById('progFill'), pct=document.getElementById('progPct');
+  let ticking=false;
+  function update(){
+    ticking=false;
+    const st=window.pageYOffset||document.documentElement.scrollTop;
+    const docH=(document.documentElement.scrollHeight-window.innerHeight)||1;
+    const p=Math.max(0,Math.min(1,st/docH)); const pStr=Math.round(p*100)+'%';
+    if(rp) rp.style.width=pStr; if(fill) fill.style.width=pStr; if(pct) pct.textContent=pStr;
+    const docEl=activeDoc(); if(!docEl) return;
+    const secs=[].slice.call(docEl.querySelectorAll('section[data-title]'));
+    let activeSec=secs.length?secs[0]:null;
+    secs.forEach(function(s){ const r=s.getBoundingClientRect(); if(r.top<=150) activeSec=s; });
+    secs.forEach(function(s){ const a=s._navlink; if(!a) return; const r=s.getBoundingClientRect();
+      a.classList.toggle('active', s===activeSec);
+      a.classList.toggle('done', r.bottom<150 && s!==activeSec); });
+  }
+  function onScroll(){ if(!ticking){ ticking=true; requestAnimationFrame(update); } }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  window.addEventListener('resize',onScroll);
+
+  function switchDoc(id){
+    docs.forEach(function(d){ d.classList.toggle('on', d.id===id); });
+    tabs.forEach(function(t){ t.classList.toggle('on', t.getAttribute('data-doc')===id); });
+    buildNav(document.getElementById(id));
+    window.scrollTo(0,0); update();
+  }
+  tabs.forEach(function(t){ t.addEventListener('click',function(){ switchDoc(t.getAttribute('data-doc')); }); });
+
+  const toggle=document.getElementById('sbToggle'), backdrop=document.getElementById('backdrop');
+  if(toggle) toggle.addEventListener('click',function(){ document.body.classList.toggle('nav-open'); });
+  if(backdrop) backdrop.addEventListener('click',function(){ document.body.classList.remove('nav-open'); });
+  if(window.matchMedia('(min-width:1025px)').matches) document.body.classList.add('nav-open');
+
+  const tBtn=document.getElementById('themeToggle'), tLbl=document.getElementById('themeLbl');
+  function applyTheme(mode){ document.documentElement.setAttribute('data-theme',mode);
+    if(tLbl) tLbl.textContent=(mode==='dark')?'Tối':'Sáng';
+    if(tBtn) tBtn.firstChild.textContent=(mode==='dark')?'🌙 ':'☀️ '; }
+  try{ const saved=localStorage.getItem('nlp-theme'); if(saved) applyTheme(saved); else applyTheme('dark'); }catch(e){ applyTheme('dark'); }
+  if(tBtn) tBtn.addEventListener('click',function(){
+    const cur=document.documentElement.getAttribute('data-theme')||'dark';
+    const next=(cur==='dark')?'light':'dark'; applyTheme(next);
+    try{ localStorage.setItem('nlp-theme',next); }catch(e){}
+  });
+
+  buildNav(activeDoc()); update();
+})();
+
+/* enable-audio button wiring (shared) */
+(function(){ var b=document.getElementById('enableAudio'); if(b) b.addEventListener('click',function(){ audio(); markAudioOn(); voice(72,audio().currentTime+0.02,0.28,0.5); }); })();
+</script>
+</body>
+</html>

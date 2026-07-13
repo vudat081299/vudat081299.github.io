@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark" data-accent="chemistry" data-bg="crosshatch">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="supported-color-schemes" content="dark light">
+<title>Bảo dưỡng xe ga — chi tiết máy, mốc km, tuổi thọ</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#0a0a0f; --surface:#111118; --card:#16161f; --border:#2a2a3a; --hairline:rgba(255,255,255,.045);
+  --text-primary:#f0f0f8; --text-secondary:#a8a8c0; --text-muted:#8888a8; --text-dim:#5a5a78;
+  --accent-green:#00e5a0;  --accent-green-rgb:0 229 160;
+  --accent-blue:#3b82f6;   --accent-blue-rgb:59 130 246;
+  --accent-yellow:#f5d000; --accent-yellow-rgb:245 208 0;
+  --accent-red:#ff4560;    --accent-red-rgb:255 69 96;
+  --accent-purple:#c084fc; --accent-purple-rgb:192 132 252;
+  --accent-cyan:#22d3ee;   --accent-cyan-rgb:34 211 238;
+  --accent-identity:var(--accent-green); --accent-identity-rgb:var(--accent-green-rgb);
+  --font-display:'Bebas Neue','Oswald','Arial Narrow',sans-serif;
+  --font-body:'DM Sans',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono','SF Mono',monospace;
+  --fs-hero:clamp(38px,7vw,84px); --fs-h1:clamp(30px,5vw,52px); --fs-h2:clamp(24px,3.4vw,34px);
+  --fs-h3:20px; --fs-lg:18px; --fs-base:14px; --fs-sm:13px; --fs-xs:12px; --fs-code:13px;
+  --fs-label:11px; --fs-micro:10px; --fs-nano:9px;
+  --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:20px; --sp-6:24px;
+  --sp-8:32px; --sp-10:40px; --sp-12:48px; --sp-16:64px; --sp-20:80px;
+  --r-xs:3px; --r-sm:6px; --r-md:10px; --r-lg:12px; --r-xl:16px; --r-pill:9999px;
+  --z-sticky:20; --z-drawer:40; --z-overlay:1000; --z-toast:60;
+  --dur-instant:80ms; --dur-fast:150ms; --dur-base:250ms; --dur-slow:400ms; --dur-entry:600ms;
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  --sidebar-w:274px; --topbar-h:54px;
+}
+[data-accent="chemistry"]{ --accent-identity:#fb923c; --accent-identity-rgb:251 146 60; }
+[data-theme="light"]{
+  --bg:#fafafa; --surface:#f0f0f4; --card:#ffffff; --border:#d7d7df; --hairline:rgba(18,18,40,.035);
+  --text-primary:#0d0d14; --text-secondary:#3a3a4a; --text-muted:#5f5f72; --text-dim:#9a9aae;
+  --accent-green:#008060;  --accent-green-rgb:0 128 96;
+  --accent-blue:#1d4ed8;   --accent-blue-rgb:29 78 216;
+  --accent-yellow:#8a6a00; --accent-yellow-rgb:138 106 0;
+  --accent-red:#c41e3a;    --accent-red-rgb:196 30 58;
+  --accent-purple:#7c3aed; --accent-purple-rgb:124 58 237;
+  --accent-cyan:#0e7490;   --accent-cyan-rgb:14 116 144;
+}
+[data-theme="light"][data-accent="chemistry"]{ --accent-identity:#c2410c; --accent-identity-rgb:196 65 12; }
+
+/* Khoá color-scheme theo toggle của trang — không cho native controls ăn theo hệ điều hành */
+html{ color-scheme: dark; }
+html[data-theme="light"]{ color-scheme: light; }
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%; scroll-behavior:smooth}
+body{margin:0; background:var(--bg); color:var(--text-primary); font-family:var(--font-body); font-size:var(--fs-base); line-height:1.6; min-height:100vh; -webkit-font-smoothing:antialiased; transition:background var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out);}
+body::before{content:''; position:fixed; inset:0; z-index:0; pointer-events:none; background-image:repeating-linear-gradient(45deg, transparent 0 23px, var(--hairline) 23px 24px),repeating-linear-gradient(135deg, transparent 0 23px, var(--hairline) 23px 24px);}
+body>*{position:relative; z-index:1}
+.numeric,table td,.stat-value,code,pre,.mono{font-variant-numeric:tabular-nums lining-nums}
+a{color:var(--accent-identity); text-decoration:none}
+a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--accent-identity); outline-offset:2px; border-radius:var(--r-xs)}
+h2,h3{font-family:var(--font-display); font-weight:400; letter-spacing:.01em; color:var(--text-primary)}
+p{margin:0 0 var(--sp-4)}
+strong{color:var(--text-primary); font-weight:700}
+em{font-style:normal; color:var(--accent-identity)}
+:not(pre)>code{font-family:var(--font-mono); font-size:.9em; padding:1px 5px; background:var(--hairline); border:1px solid var(--border); border-radius:var(--r-xs); color:var(--accent-cyan)}
+.icon{width:1em; height:1em; display:inline-block; vertical-align:-.14em; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round}
+
+.topbar{position:sticky; top:0; height:var(--topbar-h); z-index:var(--z-sticky); background:color-mix(in srgb, var(--bg) 93%, transparent); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:var(--sp-3); padding:0 clamp(var(--sp-3),3vw,var(--sp-6));}
+.topbar-progress{position:absolute; left:0; bottom:-1px; height:2px; width:0%; background:var(--accent-identity); transition:width 80ms linear}
+.icon-btn{display:grid; place-items:center; width:38px; height:38px; flex:none; background:transparent; border:1px solid var(--border); border-radius:var(--r-sm); color:var(--text-primary); cursor:pointer; transition:border-color var(--dur-fast), background var(--dur-fast);}
+.icon-btn:hover{border-color:rgb(var(--accent-identity-rgb)/.5); background:var(--hairline)}
+.icon-btn .icon{width:19px; height:19px; stroke-width:2}
+.brand{display:flex; align-items:center; gap:var(--sp-2); color:var(--text-primary); font-family:var(--font-display); font-size:20px; letter-spacing:.04em}
+.brand .mark{display:grid; place-items:center; width:26px; height:26px; background:var(--accent-identity); color:var(--bg); border-radius:var(--r-sm)}
+.brand .mark .icon{width:17px; height:17px; stroke:var(--bg); stroke-width:2}
+.brand span{color:var(--accent-identity)}
+.topbar-spacer{flex:1}
+.topbar-km{font-family:var(--font-mono); font-size:var(--fs-xs); color:var(--text-muted); letter-spacing:.06em; display:none}
+@media(min-width:640px){.topbar-km{display:inline}}
+.topbar-km b{color:var(--accent-identity); font-weight:500}
+
+.sidebar{position:fixed; top:var(--topbar-h); bottom:0; left:0; width:var(--sidebar-w); z-index:var(--z-drawer); background:var(--surface); border-right:1px solid var(--border); transform:translateX(-100%); transition:transform var(--dur-base) var(--ease-out); display:flex; flex-direction:column; overflow:hidden;}
+body.sb-open .sidebar{transform:translateX(0)}
+.sb-head{padding:var(--sp-5) var(--sp-5) var(--sp-4); border-bottom:1px solid var(--border)}
+.sb-eyebrow{font-family:var(--font-mono); font-size:var(--fs-nano); letter-spacing:.22em; text-transform:uppercase; color:var(--text-dim)}
+.sb-progress-row{display:flex; align-items:baseline; justify-content:space-between; margin-top:var(--sp-2)}
+.sb-progress-row .t{font-family:var(--font-display); font-size:22px; color:var(--text-primary)}
+.sb-progress-row .n{font-family:var(--font-mono); font-size:var(--fs-sm); color:var(--accent-identity)}
+.sb-bar{height:4px; background:var(--border); border-radius:var(--r-pill); margin-top:var(--sp-2); overflow:hidden}
+.sb-bar-fill{height:100%; width:0%; background:var(--accent-identity); border-radius:var(--r-pill); transition:width 90ms linear}
+.sb-nav{flex:1; overflow-y:auto; padding:var(--sp-3) var(--sp-2) var(--sp-6)}
+.sb-link{display:flex; gap:var(--sp-3); align-items:baseline; padding:var(--sp-2) var(--sp-3); border-radius:var(--r-sm); color:var(--text-muted); font-size:var(--fs-sm); line-height:1.35; border-left:2px solid transparent; margin:1px 0; transition:color var(--dur-fast), background var(--dur-fast), border-color var(--dur-fast);}
+.sb-link .num{font-family:var(--font-mono); font-size:var(--fs-xs); color:var(--text-dim); flex:none; width:1.4em}
+.sb-link:hover{color:var(--text-primary); background:var(--hairline); text-decoration:none}
+.sb-link[data-active="true"]{color:var(--accent-identity); background:rgb(var(--accent-identity-rgb)/.06); border-left-color:var(--accent-identity)}
+.sb-link[data-active="true"] .num{color:var(--accent-identity)}
+.backdrop{position:fixed; inset:0; z-index:calc(var(--z-drawer) - 1); background:rgba(5,5,10,.55); opacity:0; visibility:hidden; transition:opacity var(--dur-base), visibility var(--dur-base)}
+body.sb-open .backdrop{opacity:1; visibility:visible}
+@media(min-width:1024px){
+  .backdrop{display:none}
+  body.sb-open .page-wrap{padding-left:var(--sidebar-w)}
+  .page-wrap{transition:padding-left var(--dur-base) var(--ease-out)}
+}
+
+.container{width:100%; max-width:1080px; margin-inline:auto; padding-inline:clamp(var(--sp-4),4vw,var(--sp-10))}
+section[id]{scroll-margin-top:calc(var(--topbar-h) + 12px); padding:var(--sp-12) 0}
+[id]{scroll-margin-top:calc(var(--topbar-h) + 12px)}
+.divider{height:1px; background:var(--border); border:0; margin:0}
+
+.page-head{padding:var(--sp-16) 0 var(--sp-8); display:flex; flex-direction:column; gap:var(--sp-3)}
+.eyebrow{font-family:var(--font-mono); font-size:var(--fs-label); letter-spacing:.2em; text-transform:uppercase; color:var(--accent-identity)}
+.title{font-family:var(--font-display); font-size:var(--fs-hero); line-height:.92; margin:0; letter-spacing:.01em}
+.title span{color:var(--accent-identity)}
+.subtitle{font-weight:300; font-size:var(--fs-lg); color:var(--text-secondary); max-width:60ch; line-height:1.55; margin:0}
+.meta{font-family:var(--font-mono); font-size:var(--fs-label); color:var(--text-dim); letter-spacing:.08em; text-transform:uppercase; margin-top:var(--sp-2)}
+.meta b{color:var(--accent-identity); font-weight:400}
+.sec-eyebrow{font-family:var(--font-mono); font-size:var(--fs-label); letter-spacing:.2em; text-transform:uppercase; color:var(--text-dim); display:flex; align-items:center; gap:var(--sp-2); margin-bottom:var(--sp-2)}
+.sec-eyebrow .k{color:var(--accent-identity)}
+h2.sec-title{font-size:var(--fs-h2); margin:0 0 var(--sp-3); line-height:1.05}
+.sec-intro{color:var(--text-secondary); font-size:var(--fs-base); max-width:74ch; margin:0 0 var(--sp-6)}
+.sec-intro b{color:var(--text-primary)}
+
+.card{background:var(--card); border:1px solid var(--border); border-radius:var(--r-lg); padding:var(--sp-5) var(--sp-6)}
+.pill{display:inline-flex; align-items:center; gap:5px; font-family:var(--font-body); font-weight:500; font-size:var(--fs-xs); padding:2px 10px; border-radius:var(--r-pill); border:1px solid}
+.pill-id{background:rgb(var(--accent-identity-rgb)/.08); color:var(--accent-identity); border-color:rgb(var(--accent-identity-rgb)/.22)}
+.pill-muted{background:var(--hairline); color:var(--text-muted); border-color:var(--border)}
+.badge{display:inline-flex; align-items:center; gap:4px; font-family:var(--font-mono); font-size:var(--fs-nano); letter-spacing:.06em; padding:2px 6px; border-radius:var(--r-xs); border:1px solid; text-transform:uppercase}
+.badge .icon{width:11px; height:11px}
+.badge-ok{background:rgb(var(--accent-green-rgb)/.10); color:var(--accent-green); border-color:rgb(var(--accent-green-rgb)/.25)}
+.badge-soon{background:rgb(var(--accent-yellow-rgb)/.10); color:var(--accent-yellow); border-color:rgb(var(--accent-yellow-rgb)/.25)}
+.badge-due{background:rgb(var(--accent-red-rgb)/.12); color:var(--accent-red); border-color:rgb(var(--accent-red-rgb)/.28)}
+.badge-time{background:rgb(var(--accent-blue-rgb)/.10); color:var(--accent-blue); border-color:rgb(var(--accent-blue-rgb)/.25)}
+.badge-wear{background:rgb(var(--accent-purple-rgb)/.10); color:var(--accent-purple); border-color:rgb(var(--accent-purple-rgb)/.25)}
+
+.box{border:1px solid; border-left-width:3px; border-radius:0 var(--r-md) var(--r-md) 0; padding:var(--sp-4) var(--sp-5); font-size:var(--fs-sm); margin:var(--sp-4) 0}
+.box .box-t{display:flex; align-items:center; gap:var(--sp-2); font-weight:700; margin-bottom:var(--sp-1)}
+.box .box-t .icon{width:16px; height:16px}
+.box p:last-child{margin-bottom:0}
+.box-note{background:rgb(var(--accent-blue-rgb)/.05); border-color:rgb(var(--accent-blue-rgb)/.30)} .box-note .box-t{color:var(--accent-blue)}
+.box-warn{background:rgb(var(--accent-yellow-rgb)/.05); border-color:rgb(var(--accent-yellow-rgb)/.30)} .box-warn .box-t{color:var(--accent-yellow)}
+.box-good{background:rgb(var(--accent-green-rgb)/.05); border-color:rgb(var(--accent-green-rgb)/.30)} .box-good .box-t{color:var(--accent-green)}
+
+.diagram{background:var(--card); border:1px solid var(--border); border-radius:var(--r-lg); padding:var(--sp-5); isolation:isolate; margin:var(--sp-2) 0 var(--sp-4)}
+.diagram svg{width:100%; height:auto; display:block}
+.diagram figcaption{font-family:var(--font-mono); font-size:var(--fs-label); letter-spacing:.06em; text-transform:uppercase; color:var(--text-muted); margin-top:var(--sp-3); text-align:center; line-height:1.6}
+.dg-face{fill:none; stroke:var(--text-dim); stroke-width:2}
+.dg-fill{fill:var(--surface); stroke:var(--text-dim); stroke-width:2}
+.dg-line{stroke:var(--border); stroke-width:1.5}
+.dg-label{font-family:var(--font-mono); font-size:12px; fill:var(--text-muted)}
+.dg-hot{fill:var(--accent-identity); stroke:var(--bg); stroke-width:2; cursor:pointer}
+.dg-hot-lbl{font-family:var(--font-mono); font-size:11.5px; fill:var(--accent-identity); cursor:pointer; font-weight:500}
+.dg-num{font-family:var(--font-mono); font-size:11px; font-weight:700; fill:var(--bg)}
+a.dg-g{text-decoration:none}
+a.dg-g:hover .dg-hot{fill:var(--accent-yellow)} a.dg-g:hover .dg-hot-lbl{fill:var(--accent-yellow)}
+
+.two{display:grid; grid-template-columns:1fr 1fr; gap:var(--sp-4)}
+@media(max-width:720px){.two{grid-template-columns:1fr}}
+.mini{background:var(--card); border:1px solid var(--border); border-radius:var(--r-md); padding:var(--sp-4) var(--sp-5)}
+.mini h4{margin:0 0 var(--sp-2); font-family:var(--font-mono); font-size:var(--fs-xs); letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted)}
+.mini h4.acc-km{color:var(--accent-identity)} .mini h4.acc-sig{color:var(--accent-cyan)}
+.mini p{font-size:var(--fs-sm); color:var(--text-secondary); margin:0}
+
+.parts{display:flex; flex-direction:column; gap:var(--sp-5)}
+.part{background:var(--card); border:1px solid var(--border); border-radius:var(--r-lg); overflow:hidden}
+.part-head{display:flex; align-items:center; gap:var(--sp-3); padding:var(--sp-4) var(--sp-5); border-bottom:1px solid var(--border); flex-wrap:wrap}
+.part-ic{display:grid; place-items:center; width:40px; height:40px; flex:none; border-radius:var(--r-md); background:rgb(var(--accent-identity-rgb)/.09); color:var(--accent-identity); border:1px solid rgb(var(--accent-identity-rgb)/.22)}
+.part-ic .icon{width:22px; height:22px}
+.part-name{font-family:var(--font-display); font-size:24px; line-height:1; color:var(--text-primary); margin-right:auto}
+.part-body{padding:var(--sp-4) var(--sp-5) var(--sp-5); display:grid; grid-template-columns:1fr; gap:var(--sp-3)}
+.layer{display:grid; grid-template-columns:96px 1fr; gap:var(--sp-3); align-items:start}
+@media(max-width:560px){.layer{grid-template-columns:1fr; gap:2px}}
+.layer .lg{font-family:var(--font-mono); font-size:var(--fs-nano); letter-spacing:.12em; text-transform:uppercase; color:var(--text-dim); padding-top:3px}
+.layer .lc{font-size:var(--fs-sm); color:var(--text-secondary)}
+.layer .lc strong{color:var(--text-primary)}
+.layer-1 .lc{font-size:var(--fs-base); color:var(--text-primary)}
+.interval{grid-column:1/-1; margin-top:var(--sp-2); background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md); padding:var(--sp-3) var(--sp-4); display:flex; flex-wrap:wrap; align-items:center; gap:var(--sp-2) var(--sp-4)}
+.interval .kmv{font-family:var(--font-display); font-size:26px; line-height:1; color:var(--accent-identity)}
+.interval .kmu{font-family:var(--font-mono); font-size:var(--fs-xs); color:var(--text-muted); letter-spacing:.06em; text-transform:uppercase}
+.interval .signs{flex:1; min-width:220px; font-size:var(--fs-xs); color:var(--text-muted); line-height:1.55}
+.interval .signs b{color:var(--accent-cyan); font-weight:500}
+
+.sim{background:var(--card); border:1px solid var(--border); border-radius:var(--r-lg); overflow:hidden}
+.sim-top{padding:var(--sp-5) var(--sp-6) var(--sp-4); background:linear-gradient(180deg, rgb(var(--accent-identity-rgb)/.05), transparent)}
+.sim-read{display:flex; align-items:baseline; gap:var(--sp-3); flex-wrap:wrap}
+.sim-read .big{font-family:var(--font-display); font-size:clamp(40px,7vw,64px); line-height:.9; color:var(--text-primary)}
+.sim-read .big .u{font-size:.4em; color:var(--text-muted); margin-left:6px}
+.sim-read .yr{font-family:var(--font-mono); font-size:var(--fs-sm); color:var(--text-muted)}
+.sim-slider{margin:var(--sp-4) 0 var(--sp-2)}
+input[type=range]{-webkit-appearance:none; appearance:none; width:100%; height:5px; border-radius:var(--r-pill); background:var(--border); outline:none; cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; appearance:none; width:20px; height:20px; border-radius:50%; background:var(--accent-identity); border:3px solid var(--bg); box-shadow:0 0 0 1px var(--accent-identity); cursor:grab}
+input[type=range]::-webkit-slider-thumb:active{cursor:grabbing}
+input[type=range]::-moz-range-thumb{width:16px; height:16px; border-radius:50%; background:var(--accent-identity); border:3px solid var(--bg); cursor:grab}
+.sim-scale{display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:var(--fs-nano); color:var(--text-dim); letter-spacing:.04em}
+.sim-summary{display:flex; flex-wrap:wrap; align-items:center; gap:var(--sp-2) var(--sp-4); padding:var(--sp-3) var(--sp-6); border-top:1px solid var(--border); border-bottom:1px solid var(--border); background:var(--surface); font-size:var(--fs-sm); color:var(--text-secondary)}
+.sim-summary b{font-family:var(--font-mono)}
+.legend{display:flex; flex-wrap:wrap; gap:var(--sp-3); margin-left:auto}
+.legend span{display:inline-flex; align-items:center; gap:5px; font-family:var(--font-mono); font-size:var(--fs-nano); color:var(--text-muted)}
+.legend i{width:9px; height:9px; border-radius:2px; display:inline-block}
+.sim-list{padding:var(--sp-3) var(--sp-4) var(--sp-5)}
+.row{display:grid; grid-template-columns:34px 1fr auto; gap:var(--sp-3); align-items:center; padding:var(--sp-3); border-radius:var(--r-md); border:1px solid transparent; transition:background var(--dur-fast), border-color var(--dur-fast)}
+.row+.row{margin-top:2px}
+.row:hover{background:var(--hairline)}
+.row[data-s="due"]{background:rgb(var(--accent-red-rgb)/.05); border-color:rgb(var(--accent-red-rgb)/.18)}
+.row-ic{display:grid; place-items:center; width:34px; height:34px; border-radius:var(--r-sm); background:var(--surface); border:1px solid var(--border); color:var(--text-secondary)}
+.row-ic .icon{width:19px; height:19px}
+.row-main{min-width:0}
+.row-main .nm{font-size:var(--fs-base); color:var(--text-primary); font-weight:500; display:flex; align-items:center; gap:var(--sp-2); flex-wrap:wrap}
+.row-main .sub{font-family:var(--font-mono); font-size:var(--fs-nano); color:var(--text-muted); letter-spacing:.03em; margin-top:2px}
+.row-end{display:flex; align-items:center; gap:var(--sp-3); justify-self:end}
+.row-next{text-align:right; font-family:var(--font-mono); font-size:var(--fs-nano); color:var(--text-dim); line-height:1.3; white-space:nowrap}
+.row-next b{display:block; font-size:var(--fs-sm); color:var(--text-primary); font-weight:500}
+.row-jump{flex:none; color:var(--text-muted); font-family:var(--font-mono); font-size:var(--fs-xs); border:1px solid var(--border); border-radius:var(--r-sm); padding:4px 8px; white-space:nowrap; transition:color var(--dur-fast), border-color var(--dur-fast)}
+.row-jump:hover{color:var(--accent-identity); border-color:rgb(var(--accent-identity-rgb)/.5); text-decoration:none}
+@media(max-width:640px){
+  .row{grid-template-columns:30px 1fr; grid-template-areas:"ic main" "end end"}
+  .row-ic{grid-area:ic} .row-main{grid-area:main} .row-end{grid-area:end; justify-self:stretch; justify-content:space-between; margin-top:var(--sp-1)}
+}
+
+.table-wrap{background:var(--card); border:1px solid var(--border); border-radius:var(--r-lg); overflow:hidden}
+.table-scroll{overflow-x:auto}
+table{width:100%; border-collapse:collapse; font-family:var(--font-body)}
+thead th{background:var(--surface); font-family:var(--font-mono); font-size:var(--fs-micro); letter-spacing:.12em; text-transform:uppercase; color:var(--text-muted); text-align:left; padding:var(--sp-3) var(--sp-4); font-weight:500; white-space:nowrap; border-bottom:1px solid var(--border)}
+thead th.num{text-align:right}
+tbody td{padding:var(--sp-3) var(--sp-4); font-size:var(--fs-sm); color:var(--text-primary); border-bottom:1px solid var(--border); vertical-align:top}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--hairline)}
+td .cyc{font-family:var(--font-mono); font-size:var(--fs-xs); color:var(--text-secondary); white-space:nowrap}
+td.num{font-variant-numeric:tabular-nums; white-space:nowrap; font-family:var(--font-mono); font-size:var(--fs-sm); text-align:right}
+td .gh{font-size:var(--fs-xs); color:var(--text-muted)}
+
+.ck-head{display:flex; align-items:center; gap:var(--sp-3); flex-wrap:wrap; margin-bottom:var(--sp-4)}
+.ck-count{font-family:var(--font-mono); font-size:var(--fs-sm); color:var(--text-muted); margin-right:auto}
+.ck-count b{color:var(--accent-identity)}
+.btn{display:inline-flex; align-items:center; gap:var(--sp-2); font-family:var(--font-body); font-weight:500; font-size:var(--fs-sm); padding:var(--sp-2) var(--sp-4); min-height:38px; border-radius:var(--r-sm); border:1px solid var(--border); background:var(--card); color:var(--text-primary); cursor:pointer; transition:border-color var(--dur-fast), background var(--dur-fast)}
+.btn:hover{border-color:rgb(var(--accent-identity-rgb)/.5); background:var(--surface)}
+.btn .icon{width:16px; height:16px}
+.btn-primary{background:var(--accent-identity); color:var(--bg); border-color:transparent}
+.btn-primary:hover{filter:brightness(1.08); background:var(--accent-identity)}
+.ck-groups{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:var(--sp-4)}
+.ck-group{background:var(--card); border:1px solid var(--border); border-radius:var(--r-md); overflow:hidden}
+.ck-group-h{padding:var(--sp-3) var(--sp-4); background:var(--surface); border-bottom:1px solid var(--border); display:flex; align-items:baseline; justify-content:space-between; gap:var(--sp-2)}
+.ck-group-h .t{font-family:var(--font-mono); font-size:var(--fs-xs); letter-spacing:.08em; text-transform:uppercase; color:var(--accent-identity)}
+.ck-group-h .s{font-size:var(--fs-nano); color:var(--text-dim); font-family:var(--font-mono)}
+.ck-item{display:flex; align-items:flex-start; gap:var(--sp-3); padding:var(--sp-3) var(--sp-4); cursor:pointer; border-bottom:1px solid var(--hairline); font-size:var(--fs-sm)}
+.ck-item:last-child{border-bottom:none}
+.ck-item:hover{background:var(--hairline)}
+.ck-box{flex:none; width:18px; height:18px; margin-top:1px; border:1.5px solid var(--text-dim); border-radius:var(--r-xs); display:grid; place-items:center; transition:border-color var(--dur-fast), background var(--dur-fast)}
+.ck-box .icon{width:12px; height:12px; stroke:var(--bg); stroke-width:3; opacity:0}
+.ck-item.done .ck-box{background:var(--accent-identity); border-color:var(--accent-identity)}
+.ck-item.done .ck-box .icon{opacity:1}
+.ck-txt{flex:1; min-width:0; color:var(--text-secondary); line-height:1.5}
+.ck-txt b{color:var(--text-primary); font-weight:500}
+.ck-item.done .ck-txt{color:var(--text-dim); text-decoration:line-through}
+.ck-item.done .ck-txt b{color:var(--text-dim)}
+
+.ck-cost{flex:none; display:flex; flex-direction:column; align-items:flex-end; gap:1px; text-align:right; white-space:nowrap; padding-left:var(--sp-3)}
+.cc-parts{font-family:var(--font-mono); font-size:var(--fs-xs); color:var(--text-primary); font-weight:500}
+.cc-labor{font-family:var(--font-mono); font-size:var(--fs-nano); color:var(--text-muted)}
+.cc-free{font-family:var(--font-mono); font-size:var(--fs-nano); color:var(--accent-green); letter-spacing:.03em; opacity:.85}
+.ck-item.done .cc-parts{color:var(--text-dim)}
+@media(max-width:520px){
+  .ck-item{flex-wrap:wrap}
+  .ck-cost{width:100%; flex-direction:row; align-items:baseline; gap:var(--sp-2); padding-left:calc(18px + var(--sp-3)); margin-top:3px; text-align:left}
+}
+
+.ck-estimate{background:var(--card); border:1px solid var(--border); border-left:3px solid var(--accent-identity); border-radius:0 var(--r-lg) var(--r-lg) 0; padding:var(--sp-4) var(--sp-5); margin-bottom:var(--sp-4)}
+.cke-head{font-family:var(--font-mono); font-size:var(--fs-xs); letter-spacing:.06em; text-transform:uppercase; color:var(--text-muted); display:flex; align-items:center; gap:var(--sp-2); margin-bottom:var(--sp-3)}
+.cke-head .icon{width:15px; height:15px; color:var(--accent-identity)}
+.cke-head b{color:var(--accent-identity); font-weight:600}
+.cke-rows{display:flex; flex-direction:column}
+.cke-row{display:flex; align-items:baseline; justify-content:space-between; gap:var(--sp-3); padding:var(--sp-2) 0; border-bottom:1px solid var(--hairline)}
+.cke-k{font-size:var(--fs-sm); color:var(--text-secondary)}
+.cke-v{font-family:var(--font-mono); font-size:var(--fs-base); color:var(--text-primary); font-variant-numeric:tabular-nums; text-align:right}
+.cke-sum{border-bottom:none; border-top:1px solid var(--border); margin-top:var(--sp-2); padding-top:var(--sp-3)}
+.cke-sum .cke-k{font-family:var(--font-display); font-size:var(--fs-h3); text-transform:uppercase; letter-spacing:.02em; color:var(--text-primary)}
+.cke-sum .cke-v{font-size:var(--fs-lg); color:var(--accent-identity); font-weight:500}
+.cke-note{font-size:var(--fs-xs); color:var(--text-dim); line-height:1.6; margin:var(--sp-3) 0 0}
+
+.acc{display:flex; flex-direction:column; gap:var(--sp-2)}
+details.col{border:1px solid var(--border); border-left:3px solid rgb(var(--accent-red-rgb)/.5); border-radius:0 var(--r-md) var(--r-md) 0; background:var(--card); overflow:hidden}
+details.col>summary{display:flex; align-items:center; gap:var(--sp-3); padding:var(--sp-4) var(--sp-5); cursor:pointer; list-style:none; user-select:none}
+details.col>summary::-webkit-details-marker{display:none}
+details.col>summary:hover{background:var(--hairline)}
+.col-x{font-family:var(--font-mono); font-weight:700; color:var(--accent-red); flex:none}
+.col-q{font-size:var(--fs-base); color:var(--text-primary); margin-right:auto}
+.col-ic{margin-left:auto; color:var(--text-muted); font-family:var(--font-mono); font-size:var(--fs-lg); transition:transform var(--dur-base) var(--ease-out)}
+details.col[open]>summary .col-ic{transform:rotate(45deg)}
+.col-body{padding:0 var(--sp-5) var(--sp-4); font-size:var(--fs-sm); color:var(--text-secondary)}
+.col-body .ok{color:var(--accent-green); font-weight:700}
+.col-body p{margin:var(--sp-2) 0 0}
+
+footer{margin-top:var(--sp-12); padding:var(--sp-8) 0 var(--sp-16); border-top:1px solid var(--border)}
+.foot-verify{background:rgb(var(--accent-green-rgb)/.05); border:1px solid rgb(var(--accent-green-rgb)/.25); border-radius:var(--r-md); padding:var(--sp-4) var(--sp-5); font-size:var(--fs-sm); color:var(--text-secondary); margin-bottom:var(--sp-5)}
+.foot-verify .vt{color:var(--accent-green); font-weight:700; display:flex; align-items:center; gap:var(--sp-2); margin-bottom:var(--sp-2)}
+.foot-verify .vt .icon{width:16px; height:16px}
+.src{font-family:var(--font-mono); font-size:var(--fs-xs); color:var(--text-muted); line-height:1.9}
+.src a{color:var(--text-secondary)}
+.foot-note{font-family:var(--font-mono); font-size:var(--fs-xs); color:var(--text-dim); line-height:1.8; margin-top:var(--sp-5)}
+.foot-note b{color:var(--text-muted); font-weight:500}
+
+@keyframes enter{from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none}}
+.reveal{opacity:0; animation:enter var(--dur-entry) var(--ease-out) forwards}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important; transition-duration:.01ms!important}
+}
+@media print{
+  :root{--bg:#fff; --surface:#f4f4f4; --card:#fff; --border:#bbb; --text-primary:#000; --text-secondary:#222; --text-muted:#444; --text-dim:#666; --accent-identity:#b45309}
+  body::before{display:none}
+  .topbar,.sidebar,.backdrop{display:none!important}
+  .reveal{opacity:1!important; animation:none!important}
+  body.print-ck .page-head, body.print-ck footer, body.print-ck main>section:not(#s9-checklist){display:none!important}
+  body.print-ck .page-wrap{padding-left:0!important}
+  .ck-head .btn{display:none}
+  .ck-groups{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body class="sb-open">
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.4M12 19.6V22M2 12h2.4M19.6 12H22M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M19.1 4.9l-1.7 1.7M6.6 17.4l-1.7 1.7"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.3 6.3 0 0 0 10.5 10.5z"/></symbol>
+  <symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.5 6.5a3.8 3.8 0 0 0 4.9 4.9l-8 8a2.6 2.6 0 0 1-3.7-3.7z"/><path d="M14.5 6.5 18 3l1.5 1.5L21 6l-3.5 3.5"/></symbol>
+  <symbol id="i-engine" viewBox="0 0 24 24"><path d="M4 10h2V8h5V6h4v2h3l2 2v2h1v3h-1v2h-3l-2 2H9v-2H6v-2H4z"/><path d="M9 12h3"/></symbol>
+  <symbol id="i-oil" viewBox="0 0 24 24"><path d="M12 3s6 6.6 6 10.6A6 6 0 0 1 6 13.6C6 9.6 12 3 12 3z"/></symbol>
+  <symbol id="i-filter" viewBox="0 0 24 24"><path d="M4 5h16l-6 7v6l-4 2v-8z"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-2 8 10-12h-7z"/></symbol>
+  <symbol id="i-valve" viewBox="0 0 24 24"><path d="M12 3v9"/><circle cx="12" cy="18" r="3"/><path d="M8.5 6h7M8.5 9h7"/></symbol>
+  <symbol id="i-belt" viewBox="0 0 24 24"><circle cx="7" cy="12" r="3.5"/><circle cx="17" cy="12" r="5"/><path d="M7 8.5 17 7M7 15.5 17 17"/></symbol>
+  <symbol id="i-roller" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="6.5" r="1.4"/><circle cx="17" cy="14" r="1.4"/><circle cx="7" cy="14" r="1.4"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2 2M16.4 16.4l2 2M18.4 5.6l-2 2M7.6 16.4l-2 2"/></symbol>
+  <symbol id="i-coolant" viewBox="0 0 24 24"><path d="M12 2v20M2 12h20M5 5l14 14M19 5 5 19"/></symbol>
+  <symbol id="i-brake" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.4"/><path d="M12 4v3M12 17v3M4 12h3M17 12h3"/></symbol>
+  <symbol id="i-tire" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></symbol>
+  <symbol id="i-battery" viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="10" rx="1.5"/><path d="M8 8V6M16 8V6M7.5 13h2M15.5 13h2M16.5 12v2"/></symbol>
+  <symbol id="i-gauge" viewBox="0 0 24 24"><path d="M4 17a8 8 0 0 1 16 0"/><path d="M12 17l4-4.5"/><circle cx="12" cy="17" r="1.2"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M4 12.5 9 17.5 20 6.5"/></symbol>
+  <symbol id="i-print" viewBox="0 0 24 24"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="7"/></symbol>
+  <symbol id="i-reset" viewBox="0 0 24 24"><path d="M21 3v6h-6M3 12a9 9 0 0 1 15-6.7L21 8"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3 22 20H2z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></symbol>
+</svg>
+
+<header class="topbar">
+  <button class="icon-btn" id="toggle" aria-label="Ẩn/hiện mục lục" aria-expanded="true"><svg class="icon"><use href="#i-menu"/></svg></button>
+  <div class="brand"><span class="mark"><svg class="icon"><use href="#i-wrench"/></svg></span>XE&nbsp;<span>GA</span>·BẢO&nbsp;DƯỠNG</div>
+  <div class="topbar-spacer"></div>
+  <span class="topbar-km">mô phỏng: <b id="tb-km">12.000 km</b></span>
+  <button class="icon-btn" id="theme" aria-label="Đổi nền sáng/tối"><svg class="icon"><use href="#i-moon" id="theme-ic"/></svg></button>
+  <div class="topbar-progress" id="tp-fill"></div>
+</header>
+
+<aside class="sidebar" aria-label="Mục lục">
+  <div class="sb-head">
+    <div class="sb-eyebrow">Tiến độ đọc</div>
+    <div class="sb-progress-row"><span class="t">Mục lục</span><span class="n" id="sb-pct">0%</span></div>
+    <div class="sb-bar"><div class="sb-bar-fill" id="sb-fill"></div></div>
+  </div>
+  <nav class="sb-nav" id="sb-nav">
+    <a class="sb-link" href="#s1-tongquan"><span class="num">01</span><span>Tổng quan &amp; sơ đồ chi tiết</span></a>
+    <a class="sb-link" href="#s2-slider"><span class="num">02</span><span>Slider km — “tới mốc này làm gì?”</span></a>
+    <a class="sb-link" href="#s3-dongco"><span class="num">03</span><span>Động cơ &amp; bôi trơn</span></a>
+    <a class="sb-link" href="#s4-cvt"><span class="num">04</span><span>Truyền động CVT — nồi &amp; curoa</span></a>
+    <a class="sb-link" href="#s5-lammat"><span class="num">05</span><span>Hệ thống làm mát</span></a>
+    <a class="sb-link" href="#s6-phanhlop"><span class="num">06</span><span>Phanh &amp; lốp</span></a>
+    <a class="sb-link" href="#s7-dien"><span class="num">07</span><span>Điện &amp; hao mòn theo thời gian</span></a>
+    <a class="sb-link" href="#s8-chiphi"><span class="num">08</span><span>Bảng chi phí ước tính</span></a>
+    <a class="sb-link" href="#s9-checklist"><span class="num">09</span><span>Checklist mang đi bảo dưỡng</span></a>
+    <a class="sb-link" href="#s10-loi"><span class="num">10</span><span>Lỗi hay gặp</span></a>
+  </nav>
+</aside>
+<div class="backdrop" id="backdrop"></div>
+
+<div class="page-wrap">
+<main class="container">
+
+  <header class="page-head">
+    <span class="eyebrow reveal">Sổ tay kỹ thuật · xe tay ga (Honda Vision &amp; tương tự)</span>
+    <h1 class="title reveal">Hiểu chiếc xe ga<br>trước khi <span>đi bảo dưỡng</span>.</h1>
+    <p class="subtitle reveal">Mỗi chi tiết máy làm <b>một việc</b>, hao mòn vì <b>một lý do</b>, và có <b>một mốc km</b> nên thay. Nắm được ba điều đó, ra tiệm bạn là người kiểm soát cuộc chơi — biết thứ gì cần thay, thứ gì chưa, và giá bao nhiêu là hợp lý.</p>
+    <p class="meta reveal">CẬP NHẬT <b>07·2026</b> · MỐC KM THEO LỊCH KHUYẾN NGHỊ HONDA · SỐ LIỆU THAM KHẢO</p>
+  </header>
+
+  <hr class="divider">
+
+  <section id="s1-tongquan">
+    <div class="sec-eyebrow"><span class="k">01</span> — Tổng quan</div>
+    <h2 class="sec-title">Xe ga khác xe số ở đâu, và sơ đồ những gì cần chăm</h2>
+    <p class="sec-intro">Xe tay ga chạy hộp số <b>vô cấp CVT</b>: không côn, không số, không nhông–sên–dĩa. Thay vào đó là bộ <b>nồi</b> — hai puly kẹp một <b>dây curoa</b>. Đây vừa là ưu điểm (đi đơn giản) vừa là chỗ phát sinh chi phí bảo dưỡng riêng mà xe số không có. Dưới đây là bản đồ các bộ phận; bấm vào chấm cam để nhảy tới phần chi tiết.</p>
+
+    <figure class="diagram">
+      <svg viewBox="0 0 720 300" role="img" aria-label="Sơ đồ vị trí các bộ phận cần bảo dưỡng trên xe tay ga">
+        <line class="dg-line" x1="40" y1="252" x2="680" y2="252"/>
+        <circle class="dg-fill" cx="150" cy="240" r="46"/><circle class="dg-face" cx="150" cy="240" r="20"/>
+        <circle class="dg-fill" cx="560" cy="240" r="46"/><circle class="dg-face" cx="560" cy="240" r="20"/>
+        <path class="dg-face" d="M120 150 C120 120 150 108 190 108 L300 108 C330 108 345 96 380 96 L470 96 C520 96 560 120 585 168 L600 205 C606 220 596 230 582 230 L540 230 M470 230 L250 230 M188 230 L150 230 M150 194 C150 176 168 168 190 168 L300 168 C300 150 300 140 330 140 L430 140 C470 140 500 150 520 176"/>
+        <path class="dg-face" d="M250 230 L250 200 L470 200 L470 230"/>
+        <path class="dg-face" d="M330 140 L322 96 M322 96 L300 92 M322 96 L344 100"/>
+        <path class="dg-fill" d="M355 118 C365 108 470 108 486 122 C492 132 486 138 470 138 L372 138 C356 138 350 128 355 118 Z"/>
+        <a class="dg-g" href="#s3-dongco"><g><circle class="dg-hot" cx="470" cy="196" r="11"/><text class="dg-num" x="470" y="200" text-anchor="middle">1</text><text class="dg-hot-lbl" x="470" y="176" text-anchor="middle">Động cơ</text></g></a>
+        <a class="dg-g" href="#s4-cvt"><g><circle class="dg-hot" cx="560" cy="240" r="11"/><text class="dg-num" x="560" y="244" text-anchor="middle">2</text><text class="dg-hot-lbl" x="612" y="214" text-anchor="middle">Nồi CVT</text></g></a>
+        <a class="dg-g" href="#s5-lammat"><g><circle class="dg-hot" cx="524" cy="150" r="11"/><text class="dg-num" x="524" y="154" text-anchor="middle">3</text><text class="dg-hot-lbl" x="560" y="138" text-anchor="middle">Két nước</text></g></a>
+        <a class="dg-g" href="#s6-phanhlop"><g><circle class="dg-hot" cx="150" cy="240" r="11"/><text class="dg-num" x="150" y="244" text-anchor="middle">4</text><text class="dg-hot-lbl" x="150" y="300" text-anchor="middle">Phanh · lốp</text></g></a>
+        <a class="dg-g" href="#s7-dien"><g><circle class="dg-hot" cx="360" cy="216" r="11"/><text class="dg-num" x="360" y="220" text-anchor="middle">5</text><text class="dg-hot-lbl" x="360" y="196" text-anchor="middle">Ắc quy</text></g></a>
+      </svg>
+      <figcaption>Sơ đồ minh hoạ — vị trí tương đối, không theo tỷ lệ. ① động cơ (nhớt, bugi, lọc gió, xu-páp) · ② nồi CVT (curoa, bi nồi, nhớt láp) · ③ két nước làm mát · ④ phanh &amp; lốp · ⑤ ắc quy</figcaption>
+    </figure>
+
+    <div class="two">
+      <div class="mini"><h4 class="acc-km">Nhóm thay theo KM</h4><p>Hao mòn tỉ lệ với quãng đường: nhớt máy, lọc gió, bugi, dây curoa, bi nồi, má phanh. Đi càng nhiều, tới hạn càng nhanh. Đồng hồ km nói cho bạn biết khi nào thay.</p></div>
+      <div class="mini"><h4 class="acc-sig">Nhóm theo THỜI GIAN / DẤU HIỆU</h4><p>Xuống cấp kể cả khi xe đắp chiếu: nước làm mát, dầu phanh, ắc quy, cao su lốp lão hoá. Xe đi ít vẫn phải thay theo năm. Với má phanh &amp; lốp, nhìn <b>độ mòn</b> quan trọng hơn con số km.</p></div>
+    </div>
+    <div class="box box-note">
+      <div class="box-t"><svg class="icon"><use href="#i-clock"/></svg> Ý tưởng xuyên suốt trang</div>
+      <p>Đừng học thuộc vẹt con số. Với mỗi bộ phận, hãy nắm <strong>3 lớp</strong>: (1) nó <strong>làm gì</strong>, (2) <strong>vì sao</strong> hỏng, (3) <strong>mốc km / dấu hiệu</strong> phải thay. Hiểu (1)(2) thì con số (3) tự khắc hợp lý — và bạn nhớ được lâu.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section id="s2-slider">
+    <div class="sec-eyebrow"><span class="k">02</span> — Bản đồ tương tác</div>
+    <h2 class="sec-title">Tới mốc km này thì làm gì?</h2>
+    <p class="sec-intro">Kéo thanh trượt tới số km trên đồng hồ xe bạn. Bảng dưới xếp các hạng mục theo mức độ cấp thiết ngay tại mốc đó — <b>đến hạn</b> nổi lên trên. Bấm <b>“chi tiết →”</b> ở mỗi dòng để nhảy xuống phần giải thích tương ứng. Đây là “mục lục sống” cho cả trang.</p>
+
+    <div class="sim">
+      <div class="sim-top">
+        <div class="sim-read">
+          <span class="big"><span id="km-out">12.000</span><span class="u">km</span></span>
+          <span class="yr" id="yr-out"></span>
+        </div>
+        <div class="sim-slider">
+          <input type="range" id="km" min="0" max="60000" step="1000" value="12000" aria-label="Số km trên đồng hồ">
+        </div>
+        <div class="sim-scale"><span>0</span><span>15.000</span><span>30.000</span><span>45.000</span><span>60.000 km</span></div>
+      </div>
+      <div class="sim-summary">
+        <span>Tại mốc này: <b id="n-due" style="color:var(--accent-red)">0</b> đến hạn · <b id="n-soon" style="color:var(--accent-yellow)">0</b> sắp tới</span>
+        <div class="legend">
+          <span><i style="background:var(--accent-red)"></i>đến hạn</span>
+          <span><i style="background:var(--accent-yellow)"></i>sắp tới</span>
+          <span><i style="background:var(--accent-green)"></i>còn sớm</span>
+        </div>
+      </div>
+      <div class="sim-list" id="sim-list"></div>
+    </div>
+    <div class="box box-warn">
+      <div class="box-t"><svg class="icon"><use href="#i-alert"/></svg> Đọc bảng cho đúng</div>
+      <p>Các mốc là <strong>chu kỳ khuyến nghị</strong>, không phải hạn chết. Đi phố bụi, kẹt xe, chở nặng hay leo đèo dốc thì tới hạn <strong>sớm hơn</strong>; đường trường thông thoáng thì trễ hơn. Mục gắn nhãn <span class="badge badge-time"><svg class="icon"><use href="#i-clock"/></svg>năm</span> được quy đổi ra km ở giả định ~12.000 km/năm — nếu bạn đi ít hơn, hãy tính theo <strong>năm</strong>. Cột trạng thái cũng <strong>giả định xe đã được thay đúng lịch ở các mốc trước</strong>, nên nó chỉ mốc kế tiếp; nếu không chắc lần bảo dưỡng gần nhất, cứ coi như đã tới hạn và kiểm tra sớm.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section id="s3-dongco">
+    <div class="sec-eyebrow"><span class="k">03</span> — Động cơ &amp; bôi trơn</div>
+    <h2 class="sec-title">Trái tim máy: nhớt, gió, lửa, xu-páp</h2>
+    <p class="sec-intro">Bốn hạng mục quyết định máy chạy êm, đề ngọt, ăn xăng ít: <b>nhớt máy</b> (bôi trơn), <b>lọc gió</b> (khí sạch), <b>bugi</b> (đánh lửa) và <b>khe hở xu-páp</b> (đóng–mở van đúng nhịp). Ba cái đầu thay định kỳ; cái cuối chủ yếu là kiểm tra &amp; canh chỉnh.</p>
+
+    <div class="parts">
+      <article class="part" id="p-nhotmay">
+        <div class="part-head"><span class="part-ic"><svg class="icon"><use href="#i-oil"/></svg></span><span class="part-name">Nhớt máy (dầu động cơ)</span><span class="pill pill-id">Động cơ</span><span class="badge badge-wear"><svg class="icon"><use href="#i-gauge"/></svg>theo km</span></div>
+        <div class="part-body">
+          <div class="layer layer-1"><span class="lg">Nhiệm vụ</span><span class="lc">Màng dầu mỏng chen giữa các chi tiết kim loại đang trượt lên nhau — <strong>bôi trơn, làm mát, rửa cặn</strong> cho động cơ.</span></div>
+          <div class="layer"><span class="lg">Vì sao hao mòn</span><span class="lc">Nhiệt độ cao và ma sát bào mòn phụ gia; dầu <strong>biến chất, loãng ra, lẫn muội</strong>, mất khả năng tạo màng. Xe ga máy nhỏ, vòng tua cao khi chạy phố nên dầu xuống cấp nhanh.</span></div>
+          <div class="layer"><span class="lg">Dấu hiệu trễ</span><span class="lc">Máy nóng hơn, tiếng máy “khô”, đề ù lì, hao xăng.</span></div>
+          <div class="interval"><span><span class="kmv">2.000–4.000</span> <span class="kmu">km / lần</span></span><span class="signs"><b>Lần đầu ~1.000 km</b> để rửa cặn “chạy rà”. Sau đó: nhớt khoáng ~2.000 km, bán/tổng hợp có thể kéo 3.000–4.000 km. Đây là thứ phải thay <b>thường xuyên nhất</b> trên xe.</span></div>
+        </div>
+      </article>
+
+      <article class="part" id="p-locgio">
+        <div class="part-head"><span class="part-ic"><svg class="icon"><use href="#i-filter"/></svg></span><span class="part-name">Lọc gió</span><span class="pill pill-id">Động cơ</span><span class="badge badge-wear"><svg class="icon"><use href="#i-gauge"/></svg>theo km</span></div>
+        <div class="part-body">
+          <div class="layer layer-1"><span class="lg">Nhiệm vụ</span><span class="lc">“Lá phổi” của xe: lọc bụi khỏi luồng khí trước khi trộn với xăng để đốt.</span></div>
+          <div class="layer"><span class="lg">Vì sao hao mòn</span><span class="lc">Bụi bám dày làm <strong>nghẹt khí</strong>, hỗn hợp quá giàu xăng → đốt không hết → hao xăng, hụt hơi, khói đen. Ở VN nhiều bụi nên bẩn nhanh.</span></div>
+          <div class="layer"><span class="lg">Lưu ý</span><span class="lc">Lọc giấy thường <strong>thay</strong> (không giặt). Kiểm tra mỗi lần thay nhớt.</span></div>
+          <div class="interval"><span><span class="kmv">8.000–10.000</span> <span class="kmu">km / lần</span></span><span class="signs">Đi đường bụi, công trường thì thay <b>sớm hơn</b>. Dấu hiệu: <b>hụt ga, ì máy, tốn xăng</b> dù nhớt còn tốt.</span></div>
+        </div>
+      </article>
+
+      <article class="part" id="p-bugi">
+        <div class="part-head"><span class="part-ic"><svg class="icon"><use href="#i-spark"/></svg></span><span class="part-name">Bugi</span><span class="pill pill-id">Động cơ</span><span class="badge badge-wear"><svg class="icon"><use href="#i-gauge"/></svg>theo km</span></div>
+        <div class="part-body">
+          <div class="layer layer-1"><span class="lg">Nhiệm vụ</span><span class="lc">Tạo tia lửa điện đốt cháy hỗn hợp xăng–gió đúng thời điểm.</span></div>
+          <div class="layer"><span class="lg">Vì sao hao mòn</span><span class="lc">Hai đầu cực <strong>ăn mòn, hở khe</strong> dần → tia lửa yếu, đánh lửa không đều → khó đề, rung giật, tốn xăng, có khi chết máy dọc đường.</span></div>
+          <div class="layer"><span class="lg">Lưu ý</span><span class="lc">Bugi thường (niken) mau mòn hơn bugi iridium/platinum.</span></div>
+          <div class="interval"><span><span class="kmv">8.000–10.000</span> <span class="kmu">km / lần</span></span><span class="signs">Bugi iridium <b>bền hơn</b>. Dấu hiệu: <b>đề khó, nổ không đều, giật khi tăng ga.</b></span></div>
+        </div>
+      </article>
+
+      <article class="part" id="p-xupap">
+        <div class="part-head"><span class="part-ic"><svg class="icon"><use href="#i-valve"/></svg></span><span class="part-name">Khe hở xu-páp (canh chỉnh)</span><span class="pill pill-id">Động cơ</span><span class="badge badge-time"><svg class="icon"><use href="#i-wrench"/></svg>kiểm tra</span></div>
+        <div class="part-body">
+          <div class="layer layer-1"><span class="lg">Nhiệm vụ</span><span class="lc">Van nạp/xả phải hé đúng độ hở để máy “thở” chuẩn — nạp đủ khí, xả sạch.</span></div>
+          <div class="layer"><span class="lg">Vì sao lệch</span><span class="lc">Nhiệt và va đập làm khe hở <strong>rộng hoặc hẹp</strong> theo thời gian. Sai khe → máy kêu lạch cạch (hở rộng) hoặc yếu, nóng, hại van (hở hẹp).</span></div>
+          <div class="layer"><span class="lg">Xử lý</span><span class="lc">Đây là việc <strong>canh chỉnh</strong>, ít khi thay phụ tùng — thợ đo và vặn lại khe cho đúng.</span></div>
+          <div class="interval"><span><span class="kmv">8.000–16.000</span> <span class="kmu">km / kiểm tra</span></span><span class="signs">Con số tuỳ dòng máy — hãy đối chiếu <b>sổ bảo dưỡng xe bạn</b>. Dấu hiệu: <b>tiếng gõ đều ở đầu máy khi nổ.</b></span></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section id="s4-cvt">
+    <div class="sec-eyebrow"><span class="k">04</span> — Truyền động CVT</div>
+    <h2 class="sec-title">Bộ nồi &amp; dây curoa — “hộp số” của xe ga</h2>
+    <p class="sec-intro">Đây là phần xe số <b>không có</b>, nên nhiều người bỏ quên rồi hỏng nặng. Nguyên lý: khi tăng ga, <b>bi nồi</b> (con lăn) văng ra do lực ly tâm, ép puly trước khép lại, kéo <b>dây curoa</b> chạy ở vành lớn hơn → xe tăng tốc. Puly sau và <b>bố nồi (ly hợp)</b> truyền lực ra bánh. Ba thứ này mòn cùng nhau.</p>
+
+    <figure class="diagram">
+      <svg viewBox="0 0 720 236" role="img" aria-label="Sơ đồ nguyên lý bộ nồi CVT">
+        <circle class="dg-fill" cx="185" cy="120" r="70"/><circle class="dg-face" cx="185" cy="120" r="30"/>
+        <path class="dg-face" style="stroke:var(--accent-identity);stroke-width:5;fill:none" d="M185 50 A70 70 0 0 1 185 190 L545 176 A56 56 0 0 0 545 64 Z"/>
+        <circle class="dg-hot" cx="185" cy="74" r="8"/><circle class="dg-hot" cx="222" cy="140" r="8"/><circle class="dg-hot" cx="148" cy="140" r="8"/>
+        <circle class="dg-fill" cx="545" cy="120" r="56"/><circle class="dg-face" cx="545" cy="120" r="26"/>
+        <text class="dg-label" x="185" y="40" text-anchor="middle">bi nồi (con lăn)</text>
+        <text class="dg-label" x="185" y="215" text-anchor="middle">puly trước</text>
+        <text class="dg-hot-lbl" x="365" y="48" text-anchor="middle">dây curoa</text>
+        <text class="dg-label" x="545" y="210" text-anchor="middle">puly sau · bố nồi</text>
+        <text class="dg-label" x="545" y="124" text-anchor="middle" dominant-baseline="middle">ly hợp</text>
+        <path class="dg-face" style="stroke:var(--text-dim)" d="M604 120 H654 M646 112 l10 8 -10 8"/>
+        <text class="dg-label" x="632" y="150" text-anchor="middle">ra bánh</text>
+      </svg>
+      <figcaption>Ga lớn → bi văng ra → curoa leo vành lớn của puly trước → xe tăng tốc. Bố nồi bám chuông nồi để truyền lực ra bánh sau.</figcaption>
+    </figure>
+
+    <div class="parts">
+      <article class="part" id="p-curoa">
+        <div class="part-head"><span class="part-ic"><svg class="icon"><use href="#i-belt"/></svg></span><span class="part-name">Dây curoa</span><span class="pill pill-id">CVT</span><span class="badge badge-wear"><svg class="icon"><use href="#i-gauge"/></svg>theo km</span></div>
+        <div class="part-body">
+          <div class="layer layer-1"><span class="lg">Nhiệm vụ</span><span class="lc">Sợi đai cao su–sợi tổng hợp truyền toàn bộ lực từ máy ra bánh sau.</span></div>
+          <div class="layer"><span class="lg">Vì sao hao mòn</span><span class="lc">Chịu nhiệt, ma sát, uốn liên tục → <strong>nứt chân răng, giãn, mòn cạnh</strong>. Đứt curoa đang chạy là <strong>chết máy tại chỗ</strong>, có thể văng hỏng cả nồi.</span></div>
+          <div class="layer"><span class="lg">Nguyên tắc</span><span class="lc"><strong>Thay trước khi đứt</strong>, đừng đợi hỏng. Khi vệ sinh nồi, thợ sẽ soi curoa.</span></div>
+          <div class="interval"><span><span class="kmv">15.000–20.000</span> <span class="kmu">km / lần</span></span><span class="signs">Dấu hiệu: <b>ì khi tăng ga, tiếng lạch cạch lúc đề</b>, hụt lực. Thấy <b>nứt răng</b> là thay ngay.</span></div>
+        </div>
+      </article>
+
+      <article class="part" id="p-binoi">
+        <div class="part-head"><span class="part-ic"><svg class="icon"><use href="#i-roller"/></svg></span><span class="part-name">Bi nồi / con lăn</span><span class="pill pill-id">CVT</span><span class="badge badge-wear"><svg class="icon"><use href="#i-gauge"/></svg>theo km</span></div>
+        <div class="part-body">
+          <div class="layer layer-1"><span class="lg">Nhiệm vụ</span><span class="lc">Các con lăn văng ra khi tua máy lên, ép puly để đổi tỉ số truyền — chính là “sang số” của xe ga.</span></div>
+          <div class="layer"><span class="lg">Vì sao hao mòn</span><span class="lc">Lăn triệu vòng nên <strong>mòn méo, mất tròn</strong>. Bi mòn → xe <strong>đề bốc giật, tăng tốc chậm</strong>, rung ở dải ga giữa, hao xăng.</span></div>
+          <div class="layer"><span class="lg">Mốc thay</span><span class="lc">Thường thay <strong>chung đợt với curoa hoặc trễ hơn một nhịp</strong> (làm cùng lúc đỡ công tháo nồi).</span></div>
+          <div class="interval"><span><span class="kmv">20.000–30.000</span> <span class="kmu">km / lần</span></span><span class="signs">Dấu hiệu: <b>rung, giật, “oà ga” mà xe không bốc.</b></span></div>
+        </div>
+      </article>
+
+      <article class="part" id="p-nhotlap">
+        <div class="part-head"><span class="part-ic"><svg class="icon"><use href="#i-gear"/></svg></span><span class="part-name">Nhớt láp (nhớt hộp số)</span><span class="pill pill-id">CVT</span><span class="badge badge-wear"><svg class="icon"><use href="#i-gauge"/></svg>theo km</span></div>
+        <div class="part-body">
+          <div class="layer layer-1"><span class="lg">Nhiệm vụ</span><span class="lc">Bôi trơn cụm bánh răng giảm tốc ở cầu sau — <strong>khác hoàn toàn nhớt máy</strong>.</span></div>
+          <div class="layer"><span class="lg">Vì sao hao mòn</span><span class="lc">Nhớt cạn/biến chất làm bánh răng <strong>khô, mòn, kêu “hú láp”</strong> khi chạy. Ít người để ý vì nó không nằm chung với nhớt máy.</span></div>
+          <div class="layer"><span class="lg">Mẹo nhớ</span><span class="lc">Cứ <strong>3 lần thay nhớt máy thì thay nhớt láp 1 lần</strong>. Dùng đúng loại (thường SAE 80W-90).</span></div>
+          <div class="interval"><span><span class="kmv">~8.000</span> <span class="kmu">km / lần (hoặc 1 năm)</span></span><span class="signs">Dấu hiệu: <b>tiếng hú/rít ở bánh sau</b> tăng dần theo tốc độ.</span></div>
+        </div>
+      </article>
+
+      <article class="part" id="p-bonoi">
+        <div class="part-head"><span class="part-ic"><svg class="icon"><use href="#i-brake"/></svg></span><span class="part-name">Bố nồi (guốc ly hợp)</span><span class="pill pill-id">CVT</span><span class="badge badge-time"><svg class="icon"><use href="#i-wrench"/></svg>kiểm tra</span></div>
+        <div class="part-body">
+          <div class="layer layer-1"><span class="lg">Nhiệm vụ</span><span class="lc">Bộ má côn ly tâm ở puly sau, bám vào chuông nồi để truyền lực khi máy đủ tua.</span></div>
+          <div class="layer"><span class="lg">Vì sao hao mòn</span><span class="lc">Ma sát khi bám–nhả làm <strong>mòn lớp bố</strong> và bám <strong>bụi bố</strong>. Mòn nhiều → xe <strong>trượt côn</strong>: rồ ga mà xuất phát ì, hoặc giật cục lúc đề.</span></div>
+          <div class="layer"><span class="lg">Xử lý</span><span class="lc">Không có mốc km cứng — <strong>kiểm tra khi vệ sinh/đại tu nồi</strong>, thay khi lớp bố mỏng.</span></div>
+          <div class="interval"><span><span class="kmv">Kiểm khi làm nồi</span> <span class="kmu">~20–30.000 km</span></span><span class="signs">Dấu hiệu: <b>trượt côn, xuất phát ì dù rồ ga</b>, mùi khét khi tải nặng.</span></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section id="s5-lammat">
+    <div class="sec-eyebrow"><span class="k">05</span> — Hệ thống làm mát</div>
+    <h2 class="sec-title">Nước làm mát — “áo giáp” chống bó máy</h2>
+    <p class="sec-intro">Đa số xe ga đời mới (Vision, Lead, Air Blade, SH…) làm mát bằng <b>dung dịch</b>: nước làm mát tuần hoàn qua máy, hút nhiệt rồi nhả ra <b>két nước</b> có quạt thổi. Đây là nhóm <b>tính theo thời gian</b> — dung dịch tự xuống cấp dù xe đi ít.</p>
+
+    <div class="parts">
+      <article class="part" id="p-nuoclammat">
+        <div class="part-head"><span class="part-ic"><svg class="icon"><use href="#i-coolant"/></svg></span><span class="part-name">Nước làm mát (coolant)</span><span class="pill pill-id">Làm mát</span><span class="badge badge-time"><svg class="icon"><use href="#i-clock"/></svg>theo thời gian</span></div>
+        <div class="part-body">
+          <div class="layer layer-1"><span class="lg">Nhiệm vụ</span><span class="lc">Giữ máy ở nhiệt ổn định (~80–90°C) và <strong>chống ăn mòn</strong> đường ống, lốc nhôm bên trong.</span></div>
+          <div class="layer"><span class="lg">Vì sao hao mòn</span><span class="lc">Phụ gia chống gỉ <strong>cạn dần theo năm</strong>; dung dịch mất khả năng tản nhiệt, bắt đầu đóng cặn. Rò rỉ khiến mực nước tụt. Thiếu coolant → <strong>quá nhiệt → bó máy, vỡ lốc</strong>: sửa rất đắt.</span></div>
+          <div class="layer"><span class="lg">Kiểm tra</span><span class="lc">Xem mực nước ở bình phụ (giữa vạch <em>Lower–Upper</em>) định kỳ; đổ đúng dung dịch chính hãng.</span></div>
+          <div class="interval"><span><span class="kmv">2 năm</span> <span class="kmu">/ lần thay</span></span><span class="signs"><b>Lần đầu ~20.000–24.000 km</b> hoặc 2 năm; sau đó mỗi ~24.000 km / 2 năm. Dấu hiệu gấp: <b>kim nhiệt nhích cao, quạt chạy liên tục, hơi nóng bốc lên.</b></span></div>
+        </div>
+      </article>
+    </div>
+
+    <div class="box box-warn">
+      <div class="box-t"><svg class="icon"><use href="#i-alert"/></svg> Tuyệt đối không đổ nước lã thay coolant</div>
+      <p>Nước thường không có phụ gia chống gỉ và sôi ở nhiệt thấp hơn — đổ vào sẽ <strong>đóng cặn, ăn mòn</strong> hệ thống kim loại. Chỉ dùng dung dịch làm mát chuyên dụng. Khi kẹt đường xa có thể châm tạm, nhưng phải xả và thay lại đúng loại sau đó.</p>
+    </div>
+    <div class="box box-note">
+      <div class="box-t"><svg class="icon"><use href="#i-engine"/></svg> Nếu xe bạn làm mát bằng gió</div>
+      <p>Một số dòng phổ thông/đời cũ làm mát bằng gió (cánh tản nhiệt quanh lốc máy) thì <strong>bỏ qua mục này</strong> — không có nước làm mát để thay. Đổi lại, cần giữ sạch cánh tản nhiệt và không bịt kín gầm máy.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section id="s6-phanhlop">
+    <div class="sec-eyebrow"><span class="k">06</span> — Phanh &amp; lốp</div>
+    <h2 class="sec-title">Nhóm an toàn: nhìn độ mòn, đừng chỉ nhìn km</h2>
+    <p class="sec-intro">Đây là những thứ trực tiếp giữ mạng bạn. Má phanh và lốp <b>mòn theo cách đi</b> nên km chỉ là tham khảo — quan trọng là <b>đo độ dày còn lại</b>. Dầu phanh thì ngược lại: <b>tính theo thời gian</b> vì nó hút ẩm.</p>
+
+    <div class="parts">
+      <article class="part" id="p-maphanh">
+        <div class="part-head"><span class="part-ic"><svg class="icon"><use href="#i-brake"/></svg></span><span class="part-name">Má phanh (bố thắng)</span><span class="pill pill-id">Phanh</span><span class="badge badge-wear"><svg class="icon"><use href="#i-gauge"/></svg>theo độ mòn</span></div>
+        <div class="part-body">
+          <div class="layer layer-1"><span class="lg">Nhiệm vụ</span><span class="lc">Lớp bố ép vào đĩa/tang trống, biến động năng thành nhiệt để xe dừng.</span></div>
+          <div class="layer"><span class="lg">Vì sao hao mòn</span><span class="lc">Ma sát <strong>bào mòn lớp bố</strong> mỗi lần phanh. Đi phố nhiều đèn đỏ, phanh gấp → mòn nhanh. Bố mòn hết → <strong>rít kim loại, ăn mòn cả đĩa</strong> (tốn hơn nhiều).</span></div>
+          <div class="layer"><span class="lg">Mốc thay</span><span class="lc">Xem độ dày bố qua khe; thay khi <strong>mỏng dưới ~2 mm</strong> hoặc chạm vạch báo mòn.</span></div>
+          <div class="interval"><span><span class="kmv">15.000–25.000</span> <span class="kmu">km (tuỳ cách đi)</span></span><span class="signs">Dấu hiệu: <b>phanh kêu rít, bóp sâu mới ăn, tay phanh rung.</b></span></div>
+        </div>
+      </article>
+
+      <article class="part" id="p-dauphanh">
+        <div class="part-head"><span class="part-ic"><svg class="icon"><use href="#i-coolant"/></svg></span><span class="part-name">Dầu phanh</span><span class="pill pill-id">Phanh</span><span class="badge badge-time"><svg class="icon"><use href="#i-clock"/></svg>theo thời gian</span></div>
+        <div class="part-body">
+          <div class="layer layer-1"><span class="lg">Nhiệm vụ</span><span class="lc">Chất lỏng truyền lực từ tay bóp tới piston phanh (phanh đĩa dầu).</span></div>
+          <div class="layer"><span class="lg">Vì sao hao mòn</span><span class="lc">Dầu DOT <strong>hút ẩm theo thời gian</strong>; ngậm nước làm <strong>tụt điểm sôi</strong> → phanh gấp nhiều dễ “<strong>phanh xốp</strong>”, mất lực. Vì vậy phải thay theo năm dù đi ít.</span></div>
+          <div class="layer"><span class="lg">Kiểm tra</span><span class="lc">Dầu ngả màu nâu sẫm là dấu hiệu ngậm nước. Dùng đúng chuẩn DOT ghi trên nắp bình.</span></div>
+          <div class="interval"><span><span class="kmv">~2 năm</span> <span class="kmu">/ ~20–24.000 km</span></span><span class="signs">Honda ô tô ghi chuẩn <b>3 năm</b>; với xe máy phổ biến ~2 năm. Dấu hiệu: <b>tay phanh mềm, hành trình dài bất thường.</b></span></div>
+        </div>
+      </article>
+
+      <article class="part" id="p-lop">
+        <div class="part-head"><span class="part-ic"><svg class="icon"><use href="#i-tire"/></svg></span><span class="part-name">Lốp (vỏ xe)</span><span class="pill pill-id">Lốp</span><span class="badge badge-wear"><svg class="icon"><use href="#i-gauge"/></svg>mòn + thời gian</span></div>
+        <div class="part-body">
+          <div class="layer layer-1"><span class="lg">Nhiệm vụ</span><span class="lc">Điểm tiếp xúc duy nhất với mặt đường — quyết định bám, phanh, ôm cua.</span></div>
+          <div class="layer"><span class="lg">Vì sao hao mòn</span><span class="lc">Gai mòn dần theo km; đồng thời <strong>cao su lão hoá, chai cứng, nứt</strong> theo năm dù đi ít. Lốp mòn/chai → <strong>trượt khi phanh, mất lái lúc đường ướt</strong>.</span></div>
+          <div class="layer"><span class="lg">Mốc thay</span><span class="lc">Thay khi gai mòn tới <strong>vạch báo mòn TWI</strong> (~1,6 mm), hoặc thấy nứt, phồng, vá quá nhiều lần.</span></div>
+          <div class="interval"><span><span class="kmv">15.000–40.000</span> <span class="kmu">km · hoặc 3–5 năm</span></span><span class="signs">Dao động lớn tuỳ tải &amp; cách đi. Nhớ kiểm <b>áp suất lốp</b> định kỳ — non hơi làm mòn nhanh &amp; dễ thủng.</span></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section id="s7-dien">
+    <div class="sec-eyebrow"><span class="k">07</span> — Điện &amp; hao mòn theo thời gian</div>
+    <h2 class="sec-title">Ắc quy &amp; nhóm “đếm theo năm, không theo km”</h2>
+    <p class="sec-intro">Cuối cùng là ắc quy và một lời nhắc quan trọng: có những thứ <b>xe cất trong nhà vẫn hỏng</b>. Với nhóm này, cuốn lịch trên tường nói cho bạn biết khi nào thay — không phải đồng hồ km.</p>
+
+    <div class="parts">
+      <article class="part" id="p-acquy">
+        <div class="part-head"><span class="part-ic"><svg class="icon"><use href="#i-battery"/></svg></span><span class="part-name">Ắc quy (bình điện)</span><span class="pill pill-id">Điện</span><span class="badge badge-time"><svg class="icon"><use href="#i-clock"/></svg>theo thời gian</span></div>
+        <div class="part-body">
+          <div class="layer layer-1"><span class="lg">Nhiệm vụ</span><span class="lc">Trữ điện để đề nổ, chạy đèn/còi/xi-nhan và hệ thống phun xăng điện tử.</span></div>
+          <div class="layer"><span class="lg">Vì sao hao mòn</span><span class="lc">Bản cực <strong>chai theo thời gian</strong>, mất khả năng giữ điện — kể cả không dùng. Xe đắp chiếu lâu càng nhanh yếu. Bình yếu → <strong>đề ù, đèn mờ, phải đạp nổ</strong>.</span></div>
+          <div class="layer"><span class="lg">Lưu ý</span><span class="lc">Ắc quy khô: yếu thì sạc; hết tuổi thì <strong>thay mới</strong>. Không nên để cạn kiệt rồi mới sạc.</span></div>
+          <div class="interval"><span><span class="kmv">2–3 năm</span> <span class="kmu">/ lần thay</span></span><span class="signs">Dấu hiệu: <b>đề yếu buổi sáng, còi nhỏ, đèn tối khi để ga-răng-ti.</b></span></div>
+        </div>
+      </article>
+    </div>
+
+    <div class="card" style="margin-top:var(--sp-4); border-color:rgb(var(--accent-blue-rgb)/.3)">
+      <div class="box-t" style="color:var(--accent-blue); margin-bottom:var(--sp-3); display:flex; align-items:center; gap:var(--sp-2); font-weight:700"><svg class="icon" style="width:16px;height:16px"><use href="#i-clock"/></svg> Nhóm phải tính theo THỜI GIAN</div>
+      <div class="ck-groups" style="gap:var(--sp-3)">
+        <div class="mini"><h4 class="acc-sig">Nước làm mát</h4><p>~2 năm — dù đi ít, phụ gia chống gỉ vẫn cạn.</p></div>
+        <div class="mini"><h4 class="acc-sig">Dầu phanh</h4><p>~2–3 năm — hút ẩm, tụt điểm sôi theo thời gian.</p></div>
+        <div class="mini"><h4 class="acc-sig">Ắc quy</h4><p>~2–3 năm — bản cực chai kể cả không dùng.</p></div>
+        <div class="mini"><h4 class="acc-sig">Cao su lốp</h4><p>~3–5 năm — chai cứng, nứt dù gai chưa mòn hết.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section id="s8-chiphi">
+    <div class="sec-eyebrow"><span class="k">08</span> — Chi phí</div>
+    <h2 class="sec-title">Bảng chi phí ước tính (VNĐ)</h2>
+    <p class="sec-intro">Con số <b>tham khảo</b> cho phụ tùng chính hãng/zin + tiền công tại tiệm phổ thông, mặt bằng 2025–2026. Giá thật đổi theo tiệm, khu vực và loại phụ tùng (zin / OEM / aftermarket). Dùng bảng này để <b>ước lượng và đối chiếu</b>, tránh bị “hét” quá tay.</p>
+
+    <div class="table-wrap"><div class="table-scroll">
+      <table>
+        <thead><tr><th>Hạng mục</th><th>Chu kỳ</th><th class="num">Phụ tùng (zin)</th><th class="num">Tiền công</th><th>Ghi chú</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Nhớt máy</strong></td><td><span class="cyc">2.000–4.000 km</span></td><td class="num">80–140k</td><td class="num">kèm / 0–20k</td><td><span class="gh">Lần đầu ~1.000 km. Nhớt tổng hợp giá cao hơn.</span></td></tr>
+          <tr><td><strong>Nhớt láp</strong></td><td><span class="cyc">~8.000 km</span></td><td class="num">80–150k</td><td class="num">kèm</td><td><span class="gh">Cứ 3 lần nhớt máy / 1 lần.</span></td></tr>
+          <tr><td><strong>Lọc gió</strong></td><td><span class="cyc">8.000–10.000 km</span></td><td class="num">120–200k</td><td class="num">kèm</td><td><span class="gh">Lọc giấy — thay, không giặt.</span></td></tr>
+          <tr><td><strong>Bugi</strong></td><td><span class="cyc">8.000–10.000 km</span></td><td class="num">80–150k</td><td class="num">kèm</td><td><span class="gh">Iridium ~150–250k, bền hơn.</span></td></tr>
+          <tr><td><strong>Canh xu-páp</strong></td><td><span class="cyc">8.000–16.000 km</span></td><td class="num">—</td><td class="num">100–250k</td><td><span class="gh">Chủ yếu tiền công canh chỉnh.</span></td></tr>
+          <tr><td><strong>Dây curoa</strong></td><td><span class="cyc">15.000–20.000 km</span></td><td class="num">150–350k</td><td class="num">80–150k</td><td><span class="gh">Thường làm chung vệ sinh nồi.</span></td></tr>
+          <tr><td><strong>Bi nồi / con lăn</strong></td><td><span class="cyc">20.000–30.000 km</span></td><td class="num">120–300k</td><td class="num">kèm nồi</td><td><span class="gh">Nên làm cùng đợt curoa.</span></td></tr>
+          <tr><td><strong>Bố nồi</strong></td><td><span class="cyc">khi mòn</span></td><td class="num">150–300k</td><td class="num">kèm nồi</td><td><span class="gh">Kiểm khi đại tu nồi.</span></td></tr>
+          <tr><td><strong>Nước làm mát</strong></td><td><span class="cyc">2 năm</span></td><td class="num">100–200k</td><td class="num">kèm</td><td><span class="gh">Dung dịch chính hãng.</span></td></tr>
+          <tr><td><strong>Má phanh</strong></td><td><span class="cyc">15.000–25.000 km</span></td><td class="num">80–200k</td><td class="num">30–80k</td><td><span class="gh">Giá mỗi bố; trước/sau riêng.</span></td></tr>
+          <tr><td><strong>Dầu phanh</strong></td><td><span class="cyc">~2 năm</span></td><td class="num">80–180k</td><td class="num">30–60k</td><td><span class="gh">Đúng chuẩn DOT trên nắp bình.</span></td></tr>
+          <tr><td><strong>Lốp</strong></td><td><span class="cyc">15.000–40.000 km</span></td><td class="num">400–900k</td><td class="num">30–80k</td><td><span class="gh">Mỗi vỏ; tuỳ hãng &amp; size.</span></td></tr>
+          <tr><td><strong>Ắc quy</strong></td><td><span class="cyc">2–3 năm</span></td><td class="num">250–500k</td><td class="num">kèm</td><td><span class="gh">Tuỳ dung lượng bình.</span></td></tr>
+        </tbody>
+      </table>
+    </div></div>
+    <div class="box box-good">
+      <div class="box-t"><svg class="icon"><use href="#i-gauge"/></svg> Mẹo tối ưu chi phí</div>
+      <p>Gộp các việc <strong>phải tháo nồi</strong> (curoa + bi nồi + bố nồi + nhớt láp) vào cùng một lần để chỉ trả tiền công tháo lắp một lượt. Tương tự, các mục <strong>theo thời gian</strong> (nước làm mát, dầu phanh) nên canh làm chung một kỳ bảo dưỡng lớn.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section id="s9-checklist">
+    <div class="sec-eyebrow"><span class="k">09</span> — Checklist</div>
+    <h2 class="sec-title">Checklist mang đi bảo dưỡng</h2>
+    <p class="sec-intro">Bản gọn theo mốc km để tick trước khi ra tiệm — biết mình cần hỏi gì, làm gì. Tick để đánh dấu, bấm <b>In / Lưu PDF</b> để mang theo. (Trạng thái tick chỉ lưu trong phiên xem này.)</p>
+
+    <div class="ck-estimate">
+      <div class="cke-head"><svg class="icon"><use href="#i-gauge"/></svg> Ước tính chi phí · <b id="cke-n">0</b> mục dịch vụ đã chọn</div>
+      <div class="cke-rows">
+        <div class="cke-row"><span class="cke-k">Phụ tùng (min – max)</span><span class="cke-v" id="cke-parts">0đ</span></div>
+        <div class="cke-row"><span class="cke-k">Tiền công (min – max)</span><span class="cke-v" id="cke-labor">0đ</span></div>
+        <div class="cke-row cke-sum"><span class="cke-k">Tổng cộng</span><span class="cke-v" id="cke-all">0đ</span></div>
+      </div>
+      <p class="cke-note">Chỉ cộng các mục có gắn giá; "kiểm tra" tính 0đ. Con số là khoảng ước tính tham khảo (phụ tùng zin + công tiệm phổ thông) — giá thật đổi theo tiệm, khu vực và loại phụ tùng. <b>"Công kèm"</b> nghĩa là tiền công đã gộp trong việc chính (vd khi thay nhớt, hoặc làm chung lúc mở nồi).</p>
+    </div>
+
+    <div class="ck-head">
+      <span class="ck-count">Đã tick <b id="ck-done">0</b>/<span id="ck-total">0</span></span>
+      <button class="btn" id="ck-reset"><svg class="icon"><use href="#i-reset"/></svg> Xoá tick</button>
+      <button class="btn btn-primary" id="ck-print"><svg class="icon"><use href="#i-print"/></svg> In / Lưu PDF</button>
+    </div>
+
+    <div class="ck-groups">
+      <div class="ck-group">
+        <div class="ck-group-h"><span class="t">Mỗi ~3.000 km</span><span class="s">thường xuyên</span></div>
+        <label class="ck-item" data-pmin="80" data-pmax="140" data-lmin="0" data-lmax="20"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Thay nhớt máy</b> (lần đầu ~1.000 km)</span><span class="ck-cost"></span></label>
+        <label class="ck-item" data-note="check"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Kiểm áp suất lốp</b> &amp; nhìn gai mòn</span><span class="ck-cost"></span></label>
+        <label class="ck-item" data-note="check"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Bóp thử phanh</b> — độ ăn, tiếng rít</span><span class="ck-cost"></span></label>
+        <label class="ck-item" data-note="check"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Ngó mực nước làm mát</b> (vạch Lower–Upper)</span><span class="ck-cost"></span></label>
+      </div>
+      <div class="ck-group">
+        <div class="ck-group-h"><span class="t">~8.000–10.000 km</span><span class="s">bảo dưỡng vừa</span></div>
+        <label class="ck-item" data-pmin="120" data-pmax="200" data-note="kem"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Thay lọc gió</b> (không giặt lại)</span><span class="ck-cost"></span></label>
+        <label class="ck-item" data-pmin="80" data-pmax="150" data-note="kem"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Thay bugi</b></span><span class="ck-cost"></span></label>
+        <label class="ck-item" data-pmin="80" data-pmax="150" data-note="kem"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Thay nhớt láp</b> (mỗi 3 lần nhớt máy)</span><span class="ck-cost"></span></label>
+        <label class="ck-item" data-pmin="0" data-pmax="0" data-lmin="50" data-lmax="120"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Vệ sinh nồi</b> + soi dây curoa</span><span class="ck-cost"></span></label>
+        <label class="ck-item" data-pmin="0" data-pmax="0" data-lmin="100" data-lmax="250"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Canh khe xu-páp</b> (theo sổ xe)</span><span class="ck-cost"></span></label>
+      </div>
+      <div class="ck-group">
+        <div class="ck-group-h"><span class="t">~15.000–20.000 km</span><span class="s">tới lượt nồi</span></div>
+        <label class="ck-item" data-pmin="150" data-pmax="350" data-lmin="80" data-lmax="150"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Thay dây curoa</b> (trước khi đứt)</span><span class="ck-cost"></span></label>
+        <label class="ck-item" data-pmin="80" data-pmax="200" data-lmin="30" data-lmax="80"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Kiểm / thay má phanh</b> (mỏng &lt; 2 mm)</span><span class="ck-cost"></span></label>
+        <label class="ck-item" data-note="check"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Đo độ mòn lốp</b> (vạch TWI)</span><span class="ck-cost"></span></label>
+      </div>
+      <div class="ck-group">
+        <div class="ck-group-h"><span class="t">~20.000–30.000 km</span><span class="s">bảo dưỡng lớn</span></div>
+        <label class="ck-item" data-pmin="120" data-pmax="300" data-note="kem"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Thay bi nồi / con lăn</b></span><span class="ck-cost"></span></label>
+        <label class="ck-item" data-note="check"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Kiểm bố nồi</b> (guốc ly hợp)</span><span class="ck-cost"></span></label>
+        <label class="ck-item" data-pmin="100" data-pmax="200" data-note="kem"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Thay nước làm mát lần đầu</b></span><span class="ck-cost"></span></label>
+      </div>
+      <div class="ck-group">
+        <div class="ck-group-h"><span class="t">Theo thời gian · 2–3 năm</span><span class="s">dù đi ít</span></div>
+        <label class="ck-item" data-pmin="100" data-pmax="200" data-note="kem"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Thay nước làm mát</b> (mỗi 2 năm)</span><span class="ck-cost"></span></label>
+        <label class="ck-item" data-pmin="80" data-pmax="180" data-lmin="30" data-lmax="60"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Thay dầu phanh</b> (~2 năm)</span><span class="ck-cost"></span></label>
+        <label class="ck-item" data-pmin="250" data-pmax="500" data-note="kem"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Thay ắc quy</b> khi đề yếu (2–3 năm)</span><span class="ck-cost"></span></label>
+        <label class="ck-item" data-pmin="400" data-pmax="900" data-lmin="30" data-lmax="80"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Cân nhắc thay lốp</b> (cao su 3–5 năm)</span><span class="ck-cost"></span></label>
+      </div>
+      <div class="ck-group">
+        <div class="ck-group-h"><span class="t">Mang theo khi ra tiệm</span><span class="s">giữ thế chủ động</span></div>
+        <label class="ck-item"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Ghi số km hiện tại</b> của xe</span></label>
+        <label class="ck-item"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Hỏi rõ hạng mục &amp; giá</b> trước khi làm</span></label>
+        <label class="ck-item"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Xin xem phụ tùng cũ</b> vừa tháo ra</span></label>
+        <label class="ck-item"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Giữ hoá đơn / ghi sổ</b> để nhớ mốc sau</span></label>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section id="s10-loi">
+    <div class="sec-eyebrow"><span class="k">10</span> — Lỗi hay gặp</div>
+    <h2 class="sec-title">Những lầm tưởng khiến bạn tốn tiền (hoặc hỏng xe)</h2>
+    <p class="sec-intro">Bấm từng dòng để mở lời giải thích. Đây là các niềm tin sai phổ biến — nắm được thì bạn không bị “việt vị” khi ra tiệm.</p>
+
+    <div class="acc">
+      <details class="col" name="loi"><summary><span class="col-x">✕</span><span class="col-q">“Thay nhớt máy là thay luôn nhớt láp.”</span><span class="col-ic">+</span></summary>
+        <div class="col-body"><p><span class="ok">Thực tế:</span> Đây là <strong>hai loại nhớt khác nhau</strong>, ở hai vị trí khác nhau. Nhớt máy thay 2.000–4.000 km; nhớt láp (hộp số) thay ~8.000 km, tức <strong>cứ 3 lần nhớt máy mới 1 lần nhớt láp</strong>. Quên nhớt láp lâu ngày → hú láp, mòn bánh răng cầu sau.</p></div>
+      </details>
+      <details class="col" name="loi"><summary><span class="col-x">✕</span><span class="col-q">“Đợi dây curoa đứt rồi hãy thay.”</span><span class="col-ic">+</span></summary>
+        <div class="col-body"><p><span class="ok">Thực tế:</span> Curoa phải <strong>thay TRƯỚC khi đứt</strong> (15.000–20.000 km). Đứt lúc đang chạy = <strong>chết máy tại chỗ</strong>, mảnh curoa còn có thể văng làm hỏng nồi — sửa đắt hơn nhiều lần so với thay đúng hạn.</p></div>
+      </details>
+      <details class="col" name="loi"><summary><span class="col-x">✕</span><span class="col-q">“Hết nước làm mát thì đổ nước lã cho tiện.”</span><span class="col-ic">+</span></summary>
+        <div class="col-body"><p><span class="ok">Thực tế:</span> <strong>Không.</strong> Nước lã không có phụ gia chống gỉ và sôi ở nhiệt thấp hơn → <strong>đóng cặn, ăn mòn</strong> đường ống và lốc nhôm. Chỉ dùng dung dịch làm mát chuyên dụng; nếu kẹt đường xa mới châm tạm, rồi xả và thay đúng loại.</p></div>
+      </details>
+      <details class="col" name="loi"><summary><span class="col-x">✕</span><span class="col-q">“Cứ 1.000 km thay nhớt một lần cho chắc.”</span><span class="col-ic">+</span></summary>
+        <div class="col-body"><p><span class="ok">Thực tế:</span> Mốc <strong>1.000 km chỉ áp dụng cho LẦN ĐẦU</strong> (rửa cặn giai đoạn chạy rà). Sau đó chu kỳ là 2.000–4.000 km tuỳ loại nhớt — thay quá sớm chỉ tốn tiền chứ không lợi thêm.</p></div>
+      </details>
+      <details class="col" name="loi"><summary><span class="col-x">✕</span><span class="col-q">“Xe đi ít nên khỏi bảo dưỡng.”</span><span class="col-ic">+</span></summary>
+        <div class="col-body"><p><span class="ok">Thực tế:</span> Sai với nhóm <strong>theo thời gian</strong>. Nước làm mát, dầu phanh, ắc quy và cao su lốp vẫn <strong>xuống cấp theo năm</strong> dù xe đắp chiếu. Đây chính là nhóm dễ bị bỏ quên nhất ở xe đi ít.</p></div>
+      </details>
+      <details class="col" name="loi"><summary><span class="col-x">✕</span><span class="col-q">“Lọc gió / bugi cứ giặt lau lại xài tiếp.”</span><span class="col-ic">+</span></summary>
+        <div class="col-body"><p><span class="ok">Thực tế:</span> Lọc gió giấy nên <strong>thay</strong>, giặt sẽ rách sợi và mất khả năng lọc. Bugi mòn cực thì làm sạch chỉ là <strong>chữa cháy tạm</strong> — vẫn nên thay theo mốc để đề ngọt và đỡ hao xăng.</p></div>
+      </details>
+    </div>
+  </section>
+
+  <footer>
+    <div class="foot-verify">
+      <div class="vt"><svg class="icon"><use href="#i-check"/></svg> Đã verify</div>
+      <p>Các mốc km được đối chiếu với lịch bảo dưỡng khuyến nghị của Honda và nhiều HEAD/tiệm xe tại Việt Nam (bài viết 2024–2026). Dải số phản ánh khoảng “<strong>sổ xe ↔ điều kiện phố bụi / tải nặng</strong>”. Riêng <strong>khe hở xu-páp</strong> không tìm được số công bố riêng cho từng dòng Vision nên để dạng dải chung của xe ga — hãy đối chiếu <strong>sổ bảo dưỡng xe bạn</strong>. Bảng chi phí là <strong>ước tính tham khảo</strong>, thay đổi theo tiệm, khu vực và loại phụ tùng (zin/OEM/aftermarket).</p>
+    </div>
+    <div class="src">
+      Nguồn tham khảo:
+      hoabinhminhxemay.com (bảo dưỡng Vision) ·
+      shop2banh.vn (lịch bảo dưỡng &amp; dầu phanh) ·
+      hoangvietmotors.vn (nước làm mát, nhớt hộp số) ·
+      headkhanhan.vn (nước làm mát xe tay ga) ·
+      xeco247.com &amp; autofun.vn (hạng mục Vision) ·
+      xemaynamtien.vn (điểm dễ hỏng).
+    </div>
+    <p class="foot-note"><b>Trang minh hoạ — không thay thế sổ bảo dưỡng chính hãng hay tư vấn của thợ.</b> Mẹo giữ xe bền: mỗi lần thay gì, chụp lại đồng hồ km + ghi ngày vào Ghi chú điện thoại. Lần sau mở ra là biết ngay tới hạn món gì — đúng tinh thần “thay đúng lúc, không thừa không thiếu”.</p>
+  </footer>
+
+</main>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var fmt = function(n){ return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'); };
+  var comma = function(x){ return x.toFixed(1).replace('.', ','); };
+
+  /* ---------- Theme ---------- */
+  var root = document.documentElement;
+  var themeIc = document.getElementById('theme-ic');
+  function setTheme(t){ root.setAttribute('data-theme', t); themeIc.setAttribute('href', t === 'light' ? '#i-sun' : '#i-moon'); }
+  document.getElementById('theme').addEventListener('click', function(){
+    setTheme(root.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+  });
+
+  /* ---------- Sidebar toggle ---------- */
+  var body = document.body, toggleBtn = document.getElementById('toggle'), backdrop = document.getElementById('backdrop');
+  function setSb(open){ body.classList.toggle('sb-open', open); toggleBtn.setAttribute('aria-expanded', open ? 'true' : 'false'); }
+  toggleBtn.addEventListener('click', function(){ setSb(!body.classList.contains('sb-open')); });
+  backdrop.addEventListener('click', function(){ setSb(false); });
+  Array.prototype.forEach.call(document.querySelectorAll('.sb-link'), function(a){
+    a.addEventListener('click', function(){ if (window.innerWidth < 1024) setSb(false); });
+  });
+  setSb(window.innerWidth >= 1024);
+
+  /* ---------- Progress + active section ---------- */
+  var tpFill = document.getElementById('tp-fill'), sbFill = document.getElementById('sb-fill'), sbPct = document.getElementById('sb-pct');
+  function onScroll(){
+    var h = document.documentElement, max = h.scrollHeight - h.clientHeight;
+    var p = max > 0 ? h.scrollTop / max : 0; p = Math.min(Math.max(p, 0), 1);
+    var pct = Math.round(p * 100);
+    tpFill.style.width = pct + '%'; sbFill.style.width = pct + '%'; sbPct.textContent = pct + '%';
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  onScroll();
+
+  var secs = document.querySelectorAll('main section[id]');
+  function linkFor(id){ return document.querySelector('.sb-link[href="#' + id + '"]'); }
+  if ('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting){
+          Array.prototype.forEach.call(document.querySelectorAll('.sb-link'), function(a){ a.removeAttribute('data-active'); });
+          var l = linkFor(e.target.id); if (l) l.setAttribute('data-active', 'true');
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+    Array.prototype.forEach.call(secs, function(s){ io.observe(s); });
+  }
+
+  /* ---------- KM slider (interactive map) ---------- */
+  var ANNUAL_KM = 12000;
+  var ITEMS = [
+    { id:'p-nhotmay',     name:'Nhớt máy',            icon:'i-oil',     type:'first', firstKm:1000, thenKm:3000, disp:'lần đầu ~1.000 km · sau đó 2.000–4.000 km', tag:'km'   },
+    { id:'p-locgio',      name:'Lọc gió',             icon:'i-filter',  type:'every', everyKm:9000,  disp:'~8.000–10.000 km', tag:'km'   },
+    { id:'p-bugi',        name:'Bugi',                icon:'i-spark',   type:'every', everyKm:9000,  disp:'~8.000–10.000 km', tag:'km'   },
+    { id:'p-xupap',       name:'Canh khe xu-páp',     icon:'i-valve',   type:'every', everyKm:12000, disp:'kiểm ~8.000–16.000 km', tag:'check' },
+    { id:'p-nhotlap',     name:'Nhớt láp (hộp số)',   icon:'i-gear',    type:'every', everyKm:8000,  disp:'~8.000 km / 1 năm', tag:'km'   },
+    { id:'p-curoa',       name:'Dây curoa',           icon:'i-belt',    type:'every', everyKm:18000, disp:'~15.000–20.000 km', tag:'km'   },
+    { id:'p-binoi',       name:'Bi nồi / con lăn',    icon:'i-roller',  type:'every', everyKm:25000, disp:'~20.000–30.000 km', tag:'km'   },
+    { id:'p-nuoclammat',  name:'Nước làm mát',        icon:'i-coolant', type:'first', firstKm:22000, thenKm:24000, disp:'lần đầu ~20–24.000 km · rồi 2 năm', tag:'time' },
+    { id:'p-maphanh',     name:'Má phanh',            icon:'i-brake',   type:'every', everyKm:20000, disp:'~15.000–25.000 km', tag:'wear' },
+    { id:'p-dauphanh',    name:'Dầu phanh',           icon:'i-coolant', type:'time',  years:2,       disp:'~2 năm / 24.000 km', tag:'time' },
+    { id:'p-lop',         name:'Lốp',                 icon:'i-tire',    type:'wear',  everyKm:28000, disp:'~15–40.000 km · 3–5 năm', tag:'wear' },
+    { id:'p-acquy',       name:'Ắc quy',              icon:'i-battery', type:'time',  years:2.5,     disp:'~2–3 năm', tag:'time' }
+  ];
+  function periodKm(it){
+    if (it.type === 'time') return Math.round(it.years * ANNUAL_KM);
+    if (it.type === 'first') return it.thenKm;
+    return it.everyKm;
+  }
+  function nextKm(it, M){
+    if (it.type === 'first'){
+      if (M <= it.firstKm) return it.firstKm;
+      return it.firstKm + Math.ceil((M - it.firstKm) / it.thenKm) * it.thenKm;
+    }
+    var P = periodKm(it);
+    if (M <= 0) return P;
+    return Math.ceil(M / P) * P;
+  }
+  var slider = document.getElementById('km'), kmOut = document.getElementById('km-out'),
+      yrOut = document.getElementById('yr-out'), tbKm = document.getElementById('tb-km'),
+      list = document.getElementById('sim-list'), nDueEl = document.getElementById('n-due'), nSoonEl = document.getElementById('n-soon');
+  var LBL = { due:'ĐẾN HẠN', soon:'SẮP TỚI', ok:'CÒN SỚM' };
+  var TAG = {
+    time:  '<span class="badge badge-time"><svg class="icon"><use href="#i-clock"/></svg>năm</span>',
+    wear:  '<span class="badge badge-wear"><svg class="icon"><use href="#i-gauge"/></svg>độ mòn</span>',
+    check: '<span class="badge badge-time"><svg class="icon"><use href="#i-wrench"/></svg>kiểm</span>',
+    km:    ''
+  };
+  function render(){
+    var M = parseFloat(slider.value);
+    kmOut.textContent = fmt(M);
+    yrOut.textContent = '≈ ' + comma(M / ANNUAL_KM) + ' năm ở 12.000 km/năm';
+    tbKm.textContent = fmt(M) + ' km';
+    var rows = ITEMS.map(function(it){
+      var P = periodKm(it), next = nextKm(it, M), toNext = next - M, s;
+      if (toNext <= P * 0.10) s = 'due'; else if (toNext <= P * 0.30) s = 'soon'; else s = 'ok';
+      return { it:it, P:P, next:next, toNext:toNext, s:s };
+    });
+    var order = { due:0, soon:1, ok:2 };
+    rows.sort(function(a, b){ return order[a.s] - order[b.s] || a.toNext - b.toNext; });
+    nDueEl.textContent  = rows.filter(function(r){ return r.s === 'due';  }).length;
+    nSoonEl.textContent = rows.filter(function(r){ return r.s === 'soon'; }).length;
+    list.innerHTML = rows.map(function(r){
+      var it = r.it, nextTxt, subTxt;
+      if (it.tag === 'time'){
+        nextTxt = '~' + comma(r.next / ANNUAL_KM) + ' năm';
+        subTxt  = '≈ mốc ' + fmt(r.next) + ' km';
+      } else {
+        nextTxt = '~' + fmt(r.next) + ' km';
+        subTxt  = r.toNext > 0 ? ('còn ' + fmt(r.toNext) + ' km') : 'ngay bây giờ';
+      }
+      return '<div class="row" data-s="' + r.s + '">'
+        + '<div class="row-ic"><svg class="icon"><use href="#' + it.icon + '"/></svg></div>'
+        + '<div class="row-main"><div class="nm">' + it.name + ' ' + TAG[it.tag] + '</div><div class="sub">' + it.disp + '</div></div>'
+        + '<div class="row-end">'
+          + '<span class="badge badge-' + r.s + '">' + LBL[r.s] + '</span>'
+          + '<div class="row-next"><b>' + nextTxt + '</b>' + subTxt + '</div>'
+          + '<a class="row-jump" href="#' + it.id + '">chi tiết →</a>'
+        + '</div></div>';
+    }).join('');
+  }
+  slider.addEventListener('input', render);
+  render();
+
+  /* ---------- Checklist + cost estimate ---------- */
+  var ckItems = document.querySelectorAll('.ck-item');
+  document.getElementById('ck-total').textContent = ckItems.length;
+
+  function vnd(k){ return k > 0 ? fmt(k * 1000) + 'đ' : '0đ'; }
+  function rng(a, b){ return a === b ? vnd(a) : vnd(a) + ' – ' + vnd(b); }
+
+  // fill per-item cost labels from data attributes
+  Array.prototype.forEach.call(document.querySelectorAll('.ck-cost'), function(cell){
+    var d = cell.closest('.ck-item').dataset;
+    if (d.note === 'check'){ cell.innerHTML = '<span class="cc-free">kiểm tra</span>'; return; }
+    var pmin = +d.pmin || 0, pmax = +d.pmax || 0, lmin = +d.lmin || 0, lmax = +d.lmax || 0, html = '';
+    if (pmax > 0) html += '<span class="cc-parts">' + pmin + '–' + pmax + 'k</span>';
+    if (d.note === 'kem') html += '<span class="cc-labor">công kèm</span>';
+    else if (lmax > 0) html += '<span class="cc-labor">công ' + lmin + '–' + lmax + 'k</span>';
+    cell.innerHTML = html;
+  });
+
+  var ckeN = document.getElementById('cke-n'), ckeP = document.getElementById('cke-parts'),
+      ckeL = document.getElementById('cke-labor'), ckeA = document.getElementById('cke-all');
+  function ckUpdate(){
+    var done = document.querySelectorAll('.ck-item.done');
+    document.getElementById('ck-done').textContent = done.length;
+    var pmin = 0, pmax = 0, lmin = 0, lmax = 0, billable = 0;
+    Array.prototype.forEach.call(done, function(el){
+      var d = el.dataset;
+      pmin += +d.pmin || 0; pmax += +d.pmax || 0; lmin += +d.lmin || 0; lmax += +d.lmax || 0;
+      if (el.querySelector('.ck-cost')) billable++;
+    });
+    ckeN.textContent = billable;
+    ckeP.textContent = rng(pmin, pmax);
+    ckeL.textContent = rng(lmin, lmax);
+    ckeA.textContent = rng(pmin + lmin, pmax + lmax);
+  }
+  Array.prototype.forEach.call(ckItems, function(el){
+    el.addEventListener('click', function(e){ e.preventDefault(); el.classList.toggle('done'); ckUpdate(); });
+  });
+  document.getElementById('ck-reset').addEventListener('click', function(){
+    Array.prototype.forEach.call(ckItems, function(el){ el.classList.remove('done'); }); ckUpdate();
+  });
+  document.getElementById('ck-print').addEventListener('click', function(){ body.classList.add('print-ck'); window.print(); });
+  window.addEventListener('afterprint', function(){ body.classList.remove('print-ck'); });
+  ckUpdate();
+
+  /* ---------- Accordion (exclusive fallback) ---------- */
+  Array.prototype.forEach.call(document.querySelectorAll('details.col'), function(d){
+    d.addEventListener('toggle', function(){
+      if (d.open){
+        Array.prototype.forEach.call(document.querySelectorAll('details.col[name="' + d.getAttribute('name') + '"]'), function(o){
+          if (o !== d) o.open = false;
+        });
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>
