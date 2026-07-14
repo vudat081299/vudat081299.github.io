@@ -32,7 +32,10 @@
     --income: 148 32% 38%;
     --expense: 4 58% 50%;
     --brand: 211 77% 51%;
-    --radius: 6px;
+    --radius: 10px;
+    /* dark top bar — mirrors the site launcher's Bootstrap navbar (#212529) */
+    --navbar: 210 11% 15%;
+    --navbar-foreground: 210 17% 98%;
   }
 
   :root[data-theme="dark"] {
@@ -58,7 +61,9 @@
     --income: 160 40% 52%;
     --expense: 4 84% 69%;
     --brand: 211 62% 64%;
-    --radius: 6px;
+    --radius: 10px;
+    --navbar: 40 4% 16%;
+    --navbar-foreground: 48 12% 94%;
   }
 }
 

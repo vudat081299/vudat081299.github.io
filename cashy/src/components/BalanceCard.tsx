@@ -30,13 +30,13 @@ export function BalanceCard({
   const hasDelta = delta !== undefined && delta !== null && isFinite(delta);
   const up = (delta ?? 0) >= 0;
   return (
-    <div className="flex flex-col gap-2 rounded-lg border bg-card p-3.5">
+    <div className="flex flex-col gap-2 rounded-xl border bg-card p-3.5 shadow-card">
       <div className="flex items-center justify-between gap-2">
         <span className="text-xs font-medium text-muted-foreground">{label}</span>
         {hasDelta && (
           <span
             className={cn(
-              "inline-flex items-center gap-0.5 rounded-[4px] px-1 py-px font-mono text-[11px] tnum",
+              "inline-flex items-center gap-0.5 rounded-[4px] px-1 py-px text-[11px] font-medium tnum",
               up ? "text-income" : "text-expense",
             )}
           >
@@ -47,7 +47,7 @@ export function BalanceCard({
       </div>
       <div
         className={cn(
-          "font-mono text-[22px] font-semibold leading-none tracking-tight tnum",
+          "text-[22px] font-semibold leading-none tracking-tight tnum",
           toneColor[tone],
         )}
       >

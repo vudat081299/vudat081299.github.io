@@ -7,12 +7,18 @@ export default {
   theme: {
     extend: {
       fontFamily: {
+        // system UI stack first (native + Vietnamese-safe), like the launcher;
+        // Plus Jakarta Sans kept as an embedded offline fallback
         sans: [
-          '"Plus Jakarta Sans"',
           "ui-sans-serif",
           "system-ui",
           "-apple-system",
           '"Segoe UI"',
+          "Roboto",
+          '"Helvetica Neue"',
+          "Arial",
+          '"Plus Jakarta Sans"',
+          '"Noto Sans"',
           "sans-serif",
         ],
         mono: [
@@ -57,6 +63,11 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // dark top navbar (launcher-style shell)
+        navbar: {
+          DEFAULT: "hsl(var(--navbar))",
+          foreground: "hsl(var(--navbar-foreground))",
+        },
         // finance semantics (separate from the brand accent)
         income: "hsl(var(--income))",
         expense: "hsl(var(--expense))",
@@ -71,6 +82,13 @@ export default {
         // dense scale — data-forward
         "data-xl": ["1.75rem", { lineHeight: "1.1", letterSpacing: "-0.02em" }],
         "data-lg": ["1.375rem", { lineHeight: "1.15", letterSpacing: "-0.01em" }],
+      },
+      boxShadow: {
+        // Notion-style: a barely-there lift; the hairline is the border itself
+        card: "0 1px 2px 0 rgba(15,15,15,0.03), 0 2px 8px -2px rgba(15,15,15,0.04)",
+        "card-hover":
+          "0 2px 4px 0 rgba(15,15,15,0.04), 0 8px 20px -6px rgba(15,15,15,0.10)",
+        pop: "0 12px 32px rgba(15,15,15,0.06), 0 0 0 1px rgba(15,15,15,0.05)",
       },
       keyframes: {
         "accordion-down": {

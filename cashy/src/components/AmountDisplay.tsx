@@ -3,21 +3,19 @@ import { formatMoney, signedMoney } from "@/lib/money";
 import type { TxType } from "@/types";
 
 /**
- * The single way money is rendered in the UI. Numbers are mono + tabular
- * (they are the hero of this design). Color follows the transaction sign.
+ * The single way money is rendered in the UI. Numbers use the body sans with
+ * tabular figures — Notion keeps one typeface, so no mono. Color follows sign.
  */
 export function AmountDisplay({
   amount,
   type,
   signed = false,
-  mono = true,
   tone = true,
   className,
 }: {
   amount: number;
   type?: TxType;
   signed?: boolean;
-  mono?: boolean;
   tone?: boolean;
   className?: string;
 }) {
@@ -30,8 +28,6 @@ export function AmountDisplay({
         ? "text-expense"
         : undefined;
   return (
-    <span className={cn(mono && "font-mono tnum tracking-tight", color, className)}>
-      {text}
-    </span>
+    <span className={cn("tnum tracking-tight", color, className)}>{text}</span>
   );
 }

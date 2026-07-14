@@ -127,7 +127,7 @@ export function Tags() {
       </div>
 
       {tags.length ? (
-        <div className="divide-y rounded-lg border bg-card">
+        <div className="divide-y rounded-xl border bg-card shadow-card">
           {tags.map((t) => (
             <div key={t.id} className="flex items-center gap-3 px-3 py-2.5">
               <span
@@ -135,7 +135,7 @@ export function Tags() {
                 style={{ background: t.colorHex }}
               />
               <span className="flex-1 truncate text-sm font-medium">{t.name}</span>
-              <span className="font-mono text-xs text-muted-foreground tnum">
+              <span className="text-xs text-muted-foreground tnum">
                 {usage.get(t.id) ?? 0} giao dịch
               </span>
               <Button

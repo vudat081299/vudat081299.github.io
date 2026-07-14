@@ -58,8 +58,8 @@ function TrendChart({
           }}
           labelStyle={{ color: "hsl(var(--muted-foreground))" }}
         />
-        <Bar dataKey="income" fill="hsl(var(--income))" radius={[2, 2, 0, 0]} maxBarSize={22} />
-        <Bar dataKey="expense" fill="hsl(var(--expense))" radius={[2, 2, 0, 0]} maxBarSize={22} />
+        <Bar dataKey="income" fill="hsl(var(--income))" radius={[2, 2, 0, 0]} maxBarSize={22} isAnimationActive={false} />
+        <Bar dataKey="expense" fill="hsl(var(--expense))" radius={[2, 2, 0, 0]} maxBarSize={22} isAnimationActive={false} />
       </BarChart>
     </ResponsiveContainer>
   );
@@ -140,7 +140,7 @@ export function Dashboard() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-3">
-        <div className="rounded-lg border bg-card p-4 lg:col-span-2">
+        <div className="rounded-xl border bg-card p-4 shadow-card lg:col-span-2">
           <div className="mb-3 flex items-center justify-between">
             <h3 className="text-sm font-semibold">Thu / Chi theo thời gian</h3>
             <div className="flex items-center gap-3 text-xs text-muted-foreground">
@@ -161,7 +161,7 @@ export function Dashboard() {
           )}
         </div>
 
-        <div className="rounded-lg border bg-card p-4">
+        <div className="rounded-xl border bg-card p-4 shadow-card">
           <h3 className="mb-3 text-sm font-semibold">Chi tiêu theo danh mục</h3>
           <SpendChart slices={slices} total={t.expense} size={180} />
           <div className="mt-4 space-y-1.5">
@@ -169,7 +169,7 @@ export function Dashboard() {
               <div key={s.id} className="flex items-center gap-2 text-[13px]">
                 <span className="size-2.5 shrink-0 rounded-[3px]" style={{ background: s.colorHex }} />
                 <span className="min-w-0 flex-1 truncate">{s.name}</span>
-                <span className="font-mono text-muted-foreground tnum">
+                <span className="text-muted-foreground tnum">
                   {Math.round(s.pct * 100)}%
                 </span>
               </div>
@@ -181,7 +181,7 @@ export function Dashboard() {
         </div>
       </div>
 
-      <div className="rounded-lg border bg-card">
+      <div className="rounded-xl border bg-card shadow-card">
         <div className="flex items-center justify-between border-b px-4 py-3">
           <h3 className="text-sm font-semibold">Giao dịch gần đây</h3>
           <Button

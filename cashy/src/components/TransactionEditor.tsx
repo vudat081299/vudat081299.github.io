@@ -132,9 +132,9 @@ export function TransactionEditor() {
               value={amountStr}
               onChange={(e) => setAmountStr(e.target.value)}
               placeholder="0"
-              className="font-mono text-lg tnum"
+              className="text-lg tnum"
             />
-            <div className="font-mono text-xs text-muted-foreground tnum">
+            <div className="text-xs text-muted-foreground tnum">
               {formatMoney(amount)}
             </div>
           </div>

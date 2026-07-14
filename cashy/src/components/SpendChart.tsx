@@ -46,7 +46,7 @@ export function SpendChart({
       </ResponsiveContainer>
       <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-0.5">
         <span className="text-[11px] font-medium text-muted-foreground">{label}</span>
-        <span className="font-mono text-lg font-semibold tracking-tight tnum">
+        <span className="text-lg font-semibold tracking-tight tnum">
           {formatMoneyShort(total)}
         </span>
       </div>
