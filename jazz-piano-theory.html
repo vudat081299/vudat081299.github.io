@@ -52,7 +52,7 @@ a{color:var(--accent-cyan); text-decoration:none} a:hover{text-decoration:underl
 h2,h3{scroll-margin-top:var(--sp-10)}
 
 .reading-progress{position:fixed; top:0; left:0; right:0; height:3px; background:transparent; z-index:1200; pointer-events:none}
-.reading-progress-fill{height:100%; width:0%; background:linear-gradient(90deg,var(--accent-identity),var(--accent-cyan)); transition:width 60ms linear}
+.reading-progress-fill{height:100%; width:100%; transform:scaleX(0); transform-origin:left center; background:var(--accent-identity); transition:transform 60ms linear}
 
 .sb-toggle{position:fixed; top:14px; left:14px; z-index:1150; width:44px; height:44px; display:grid; place-items:center;
   background:var(--card); border:1px solid var(--border); border-radius:var(--r-sm); cursor:pointer; color:var(--text-primary);
@@ -69,7 +69,7 @@ body.nav-open .sidebar{transform:translateX(0)}
 .sb-prog{margin-top:12px; font-family:var(--font-mono); font-size:var(--fs-micro); letter-spacing:.14em; text-transform:uppercase; color:var(--text-dim); display:flex; justify-content:space-between; align-items:center}
 .sb-prog b{color:var(--accent-identity); font-weight:500}
 .sb-bar{height:4px; background:var(--card); border-radius:var(--r-pill); overflow:hidden; margin-top:6px}
-.sb-bar i{display:block; height:100%; width:0%; background:var(--accent-identity); transition:width 80ms linear}
+.sb-bar i{display:block; height:100%; width:100%; transform:scaleX(0); transform-origin:left center; background:var(--accent-identity); transition:transform 80ms linear}
 .sb-nav{flex:1; overflow-y:auto; padding:10px 10px 24px}
 .sb-link{display:flex; gap:11px; align-items:baseline; padding:9px 11px; border-radius:var(--r-sm); color:var(--text-muted);
   border-left:2px solid transparent; margin-bottom:2px; cursor:pointer; transition:color var(--dur-fast), background var(--dur-fast), border-color var(--dur-fast); font-size:var(--fs-sm)}
@@ -262,6 +262,15 @@ footer b{color:var(--text-muted); font-weight:400}
   .doc.on{display:block;animation:docfade .32s var(--ease-out,ease)}
   @keyframes docfade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
   @media(prefers-reduced-motion:reduce){.doc.on{animation:none}}
+  /* Lucide SVG icons (thay emoji UI) */
+  svg.licon{width:14px;height:14px;vertical-align:-2px;margin-right:3px;flex-shrink:0;display:inline-block}
+  .sb-brand .mk svg.licon{width:20px;height:20px;vertical-align:-4px;margin-right:0}
+  .audio-cta .ico svg.licon{width:20px;height:20px;vertical-align:-4px;margin-right:0}
+  .tag svg.licon{width:13px;height:13px;vertical-align:-2px;margin-right:4px}
+  #themeToggle .themeIco{display:inline-flex}
+  #themeToggle .themeIco svg.licon{margin-right:0}
+  /* tabular numerals — numeric UI (rule 3) */
+  th, td, code, .sb-prog, #progPct, .sb-link .k, .readout, #quizScore, #earProgScore, #styleBpmV, #rh1BpmV{ font-variant-numeric: tabular-nums; font-feature-settings:"tnum" 1; }
 </style>
 </head>
 <body>
@@ -280,7 +289,7 @@ footer b{color:var(--text-muted); font-weight:400}
   </div>
   <nav class="sb-nav" id="sbNav"></nav>
   <div class="sb-foot">
-    <button class="btn sm" id="themeToggle" style="flex:1">🌙 <span id="themeLbl">Tối</span></button>
+    <button class="btn sm" id="themeToggle" style="flex:1"><span class="themeIco"></span> <span id="themeLbl">Tối</span></button>
   </div>
 </aside>
 <div class="backdrop" id="backdrop"></div>
@@ -288,8 +297,11 @@ footer b{color:var(--text-muted); font-weight:400}
 <div class="page">
 
   <div class="doctabs" role="tablist" aria-label="Chọn tài liệu">
-    <button class="doctab on" data-doc="doc-intro" role="tab"><span class="dn">✦</span> Nhạc lý cơ bản</button>
-    <button class="doctab" data-doc="doc-d1" role="tab"><span class="dn">①</span> Hòa thanh nâng cao</button>
+    <button class="doctab on" data-doc="doc-intro" role="tab"><span class="dn">①</span> Nhạc lý cơ bản</button>
+    <button class="doctab" data-doc="doc-dem" role="tab"><span class="dn">②</span> Đệm hát</button>
+    <button class="doctab" data-doc="doc-ear" role="tab"><span class="dn">③</span> Cảm âm</button>
+    <button class="doctab" data-doc="doc-classical" role="tab"><span class="dn">④</span> Nhạc cổ điển</button>
+    <button class="doctab" data-doc="doc-d1" role="tab"><span class="dn">⑤</span> Jazz</button>
   </div>
 
   <div class="audio-cta reveal" id="audioCta">
@@ -417,12 +429,12 @@ footer b{color:var(--text-muted); font-weight:400}
       <table>
         <thead><tr><th>Quãng</th><th>Nửa cung</th><th>Cảm giác</th><th>Bài hát mồi để nhớ</th></tr></thead>
         <tbody>
-          <tr><td><b>2 trưởng</b></td><td>2</td><td>bước liền, sáng</td><td>"Happy Birthday" (2 nốt đầu)</td></tr>
+          <tr><td><b>2 trưởng</b></td><td>2</td><td>bước liền, sáng</td><td>"Happy Birthday" (nốt 2→3)</td></tr>
           <tr><td><b>3 thứ</b></td><td>3</td><td>buồn, tối</td><td>"Greensleeves" · nhạc buồn</td></tr>
           <tr><td><b>3 trưởng</b></td><td>4</td><td>vui, mở</td><td>"Oh When The Saints"</td></tr>
           <tr><td><b>4 đúng</b></td><td>5</td><td>trang trọng</td><td>"Here Comes The Bride"</td></tr>
           <tr><td><b>Tritone</b></td><td>6</td><td>căng, chông chênh</td><td>"The Simpsons" (2 nốt đầu)</td></tr>
-          <tr><td><b>5 đúng</b></td><td>7</td><td>rỗng, vững, "hùng"</td><td>"Twinkle Twinkle" (nốt 1→2)</td></tr>
+          <tr><td><b>5 đúng</b></td><td>7</td><td>rỗng, vững, "hùng"</td><td>"Twinkle Twinkle" (nốt 2→3)</td></tr>
           <tr><td><b>Quãng 8</b></td><td>12</td><td>cùng tên, cao hơn</td><td>"Over the Rainbow" (2 nốt đầu)</td></tr>
         </tbody>
       </table>
@@ -579,6 +591,556 @@ footer b{color:var(--text-muted); font-weight:400}
 
     </div>
 
+    <div class="doc" id="doc-dem">
+
+  <header class="page-head">
+    <span class="eyebrow reveal">TRỤ #2 · ĐỆM HÁT</span>
+    <h1 class="title reveal">Đỡ giọng hát cho <span>mượt &amp; đúng</span>.</h1>
+    <p class="subtitle reveal">Đây là trụ "được việc" nhanh nhất: chỉ cần biết hợp âm bài, chọn cách bấm gọn, và giữ một điệu là bạn đã đệm được. Mọi thứ vẫn <b>bấm nghe được</b>. Nguyên tắc xuyên suốt: người đệm giỏi làm ca sĩ tỏa sáng — <b>ít mà đúng hơn nhiều mà rối</b>.</p>
+    <p class="meta reveal">YÊU CẦU NỀN <b>hợp âm &amp; thể đảo (trụ Nhạc lý cơ bản)</b> · CÁCH DÙNG <b>bấm nghe → hát nhẩm → tưởng tượng tay mình đang bấm</b></p>
+  </header>
+
+  <section class="overview reveal" id="overview" data-title="Đệm hát là gì">
+    <span class="sec-eyebrow">BẮT ĐẦU TỪ ĐÂY</span>
+    <h2>Đệm là "đỡ", không phải "khoe"</h2>
+    <p class="lead">Đệm hát = đỡ cho giọng hát bằng <b>hợp âm + tiết tấu</b>, sao cho <em>nâng</em> chứ không <em>lấn</em>. Ba việc cụ thể: (1) đọc hợp âm của bài, (2) chọn <b>voicing gọn &amp; mượt</b>, (3) giữ một <b>điệu (groove)</b> hợp bài. Cộng thêm một nghệ thuật ngầm: biết <b>chừa khoảng trống</b> cho ca sĩ.</p>
+    <div class="note-box">
+      <span class="tag">Kim chỉ nam của cả trụ</span>
+      <p>Mục tiêu tối thượng của người đệm là <b>làm ca sĩ tỏa sáng</b>. Khi phân vân "chơi thêm hay bớt", gần như luôn chọn <b>bớt</b>. Một hợp âm đặt đúng chỗ, đúng lúc, gọn gàng — hơn một tràng nốt rối.</p>
+    </div>
+    <ol class="overview-map" id="ovMap"></ol>
+  </section>
+
+  <section class="concept" id="s-dem-read" data-title="Đọc hợp âm & lead sheet">
+    <span class="sec-eyebrow">PHẦN 01 · ĐỌC KÝ HIỆU</span>
+    <h2>Đọc ký hiệu hợp âm &amp; lead sheet</h2>
+    <p class="lead">Đệm hát hiếm khi cần bản nhạc đầy đủ — bạn làm việc với <b>lead sheet</b> (giai điệu + ký hiệu hợp âm ghi phía trên) hoặc chỉ một <b>bảng hợp âm</b>. Bạn tự "dựng" phần đệm từ các ký hiệu đó. Vậy nên đọc trôi ký hiệu là kỹ năng số một.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Ký hiệu</th><th>Nghĩa</th><th>Gồm nốt (ví dụ trên Đô)</th></tr></thead>
+        <tbody>
+          <tr><td><b>C</b></td><td>trưởng</td><td>C E G</td></tr>
+          <tr><td><b>Cm</b> (Cmin, C−)</td><td>thứ</td><td>C E♭ G</td></tr>
+          <tr><td><b>C7</b></td><td>bảy át (dominant)</td><td>C E G B♭</td></tr>
+          <tr><td><b>Cmaj7</b> (CM7, C△)</td><td>bảy trưởng</td><td>C E G B</td></tr>
+          <tr><td><b>Cm7</b></td><td>thứ bảy</td><td>C E♭ G B♭</td></tr>
+          <tr><td><b>Csus4</b></td><td>treo bậc 4 (bỏ bậc 3)</td><td>C F G</td></tr>
+          <tr><td><b>C/E</b></td><td>hợp âm C, <b>bass là E</b></td><td>= thể đảo 1 của C</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="key-def">
+      <span class="tag">Mẹo: "gạch chéo" chính là thể đảo</span>
+      <b>C/E</b> nghĩa là bấm hợp âm Đô nhưng để <b>Mi ở bass</b> — chính là thể đảo 1 mà bạn học ở trụ nền. Người viết bài dùng gạch chéo để <b>vẽ đường bass đi mượt</b> (ví dụ C – C/E – F cho bass C→E→F đi lên từng bước).
+    </div>
+  </section>
+
+  <section class="concept" id="s-dem-voicing" data-title="Voicing để đệm">
+    <span class="sec-eyebrow">PHẦN 02 · BẤM SAO CHO GỌN</span>
+    <h2>Tách hai tay &amp; bấm gọn</h2>
+    <p class="lead">Bí quyết để đệm không "nồi cơm": <b>tách vai hai tay</b>. Tay trái lo <b>bass</b> (nốt gốc, ở quãng thấp). Tay phải lo <b>hợp âm</b> — nhưng chỉ cần <b>3 nốt gọn quanh Đô giữa</b>, không cần đủ 4-5 nốt. Bỏ bậc 5, giữ 3 &amp; 7 (linh hồn), thêm 9/13 nếu muốn màu.</p>
+    <div class="demo">
+      <span class="demo-label">Cùng hợp âm Đô · nghe từ "chồng đầy" tới "gọn &amp; mở"</span>
+      <div class="btn-row" id="demVoiceBtns"></div>
+      <div class="readout" id="demVoiceReadout">Bấm lần lượt. Bản "tách hai tay" nghe <b>mở &amp; sạch</b> hơn hẳn bản chồng đầy — cùng là hợp âm Đô.</div>
+    </div>
+    <div class="warning">
+      <span class="tag">⚠ Lỗi kinh điển</span>
+      <p>Bấm cả 4-5 nốt <b>sát nhau ở quãng thấp</b> (dưới Đô giữa) → âm thanh đục như "bùn". Càng xuống thấp càng phải để <b>thưa</b> (một nốt bass, cùng lắm gốc + quãng 5). Nốt chồng dày để dành cho vùng quanh Đô giữa trở lên.</p>
+    </div>
+  </section>
+
+  <section class="concept" id="s-dem-lh" data-title="Pattern tay trái">
+    <span class="sec-eyebrow">PHẦN 03 · TAY TRÁI GIỮ NHỊP</span>
+    <h2>Các kiểu tay trái</h2>
+    <p class="lead">Tay trái là <b>bộ khung nhịp</b> của phần đệm. Cùng một vòng hợp âm, đổi kiểu tay trái là đổi hẳn cảm giác. Bốn kiểu nền, từ đơn giản tới "điệu" hơn:</p>
+    <div class="demo">
+      <span class="demo-label">Vòng C–Am–F–G · nghe 4 kiểu tay trái</span>
+      <div class="btn-row" id="demLhBtns"></div>
+      <div class="readout" id="demLhReadout">Bấm để nghe. Chú ý: kiểu <b>rải</b> và <b>Alberti</b> làm bài "chảy" hơn; <b>bass–hợp âm</b> (oom-pah) cho cảm giác đung đưa; <b>chồng</b> chắc &amp; đơn giản.</div>
+    </div>
+    <div class="note-box">
+      <span class="tag">Tip ít người nói</span>
+      <p>Tay trái <b>đều là cả bài chắc</b>. Người mới hay để tay trái "lỏng" theo tay phải → bài chông chênh. Tập tay trái <b>một mình với metronome</b> tới khi nó chạy tự động, rồi mới thêm tay phải. Tay trái vững = bạn rảnh đầu lo giai điệu &amp; màu.</p>
+    </div>
+  </section>
+
+  <section class="concept" id="s-styles" data-title="Đệm nhạc & các điệu">
+    <span class="sec-eyebrow">PHẦN 04 · CÁC ĐIỆU (GROOVE)</span>
+    <h2>Đệm nhạc &amp; phân biệt các điệu</h2>
+    <p class="lead">"Điệu" (rhythm style) = một <b>khuôn mẫu tiết tấu</b> quy ước cho biết hai tay đặt nốt vào đâu trong ô nhịp. Cùng một vòng hợp âm, đổi điệu là đổi hẳn không khí bài. Tay trái thường lo <b>bass + nhịp</b>, tay phải lo <b>hợp âm/giai điệu</b>.</p>
+    <div class="demo">
+      <span class="demo-label">Máy đệm · chọn điệu rồi bấm phát (cùng vòng C–Am–F–G)</span>
+      <div class="btn-row">
+        <div class="seg" id="styleSeg" style="flex-wrap:wrap">
+          <button class="on" data-s="ballad">Ballad</button>
+          <button data-s="valse">Valse</button>
+          <button data-s="slowrock">Slow Rock</button>
+          <button data-s="bossa">Bossa Nova</button>
+          <button data-s="swing">Jazz Swing</button>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn primary" id="stylePlay">▶ Phát điệu</button>
+        <button class="btn sm" id="styleStop">■ Dừng</button>
+      </div>
+      <div class="range-row"><label>Tempo</label><input type="range" id="styleBpm" min="60" max="180" value="100"><span class="rv" id="styleBpmV">100 BPM</span></div>
+      <div class="seq-cells" id="seqBeats" style="margin-left:72px; margin-bottom:4px"></div>
+      <div class="seq-grid" id="seqGrid"></div>
+      <div class="seq-legend">
+        <span><i style="background:var(--accent-red)"></i>Kick (trống lớn)</span>
+        <span><i style="background:var(--accent-yellow)"></i>Snare (chát)</span>
+        <span><i style="background:var(--accent-cyan)"></i>Hi-hat</span>
+        <span><i style="background:var(--accent-green)"></i>Bass (tay trái)</span>
+        <span><i style="background:var(--accent-identity)"></i>Chord (tay phải)</span>
+      </div>
+      <div class="readout" id="styleReadout" style="margin-top:14px"></div>
+    </div>
+    <h3>Bảng tra nhanh các điệu</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Điệu</th><th>Nhịp</th><th>Tempo</th><th>Đặc trưng cảm nhận</th><th>Tay trái điển hình</th></tr></thead>
+        <tbody>
+          <tr><td><b>Ballad</b></td><td>4/4</td><td>chậm 60–80</td><td>êm, tình cảm, nhiều khoảng thở</td><td>bass–hợp âm rải nhẹ</td></tr>
+          <tr><td><b>Valse</b> (Boston)</td><td>3/4</td><td>vừa 90–140</td><td>đung đưa "chùm–pah–pah", cổ điển</td><td>bass ở 1, hợp âm ở 2 &amp; 3 (oom-pah-pah)</td></tr>
+          <tr><td><b>Slow Rock</b></td><td>12/8</td><td>chậm 60–76</td><td>lắc lư, chùm 3, cảm xúc dâng</td><td>rải chùm 3 liên tục</td></tr>
+          <tr><td><b>Bossa Nova</b></td><td>4/4</td><td>vừa 100–140</td><td>Brazil, mát, đảo phách tinh tế</td><td>bass 2 nốt (gốc–quãng 5) đều</td></tr>
+          <tr><td><b>Jazz Swing</b></td><td>4/4</td><td>vừa–nhanh</td><td>"đung-đưa" ride, comping ngẫu hứng</td><td>walking bass đi từng phách</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note-box">
+      <span class="tag">Điểm mấu chốt để phân biệt</span>
+      <p>Nghe <b>hai thứ</b>: (1) <b>số phách/ô</b> — 3/4 (valse) đếm 1-2-3 vòng lại, khác hẳn 4/4; (2) <b>cảm giác chia phách</b> — "thẳng" (bossa, pop) hay "đung đưa/chùm 3" (swing, slow rock). Bấm đổi qua lại ở máy trên để tai bắt được đúng hai đặc điểm này.</p>
+    </div>
+  </section>
+
+  <section class="concept" id="s-dem-tail" data-title="Dạo đầu, fill & kết">
+    <span class="sec-eyebrow">PHẦN 05 · MỞ, NỐI, ĐÓNG</span>
+    <h2>Dạo đầu, fill giữa câu &amp; kết</h2>
+    <p class="lead">Ba "gia vị" biến chuỗi hợp âm thành một màn đệm ra dáng: <b>dạo đầu</b> (đưa ca sĩ vào), <b>fill</b> (lấp khoảng trống giữa các câu hát), và <b>kết</b> (báo hiệu bài xong). Nghe ba mẫu:</p>
+    <div class="demo">
+      <span class="demo-label">Nghe ba mẫu (giọng Đô)</span>
+      <div class="btn-row" id="demTailBtns"></div>
+      <div class="readout" id="demTailReadout">Bấm để nghe. <b>Turnaround</b> (I–vi–ii–V) là "chất keo" giúp đoạn lặp nối liền; <b>kết</b> thường là ii–V–I với hợp âm cuối <b>ngân dài</b> để tai biết bài đã dừng.</div>
+    </div>
+    <div class="key-def">
+      <span class="tag">Turnaround — vũ khí bí mật</span>
+      Ở cuối mỗi đoạn (verse/chorus) trước khi lặp lại, chèn <b>I–vi–ii–V</b> (Đô: C–Am–Dm–G). Nó "kéo căng" rồi đổ về đầu đoạn cực mượt — nghe là thấy "pro" ngay. Đây cũng chính là vòng nền của rhythm changes trong jazz.
+    </div>
+  </section>
+
+  <section class="concept" id="s-dem-transpose" data-title="Dịch giọng cho ca sĩ">
+    <span class="sec-eyebrow">PHẦN 06 · VỪA GIỌNG NGƯỜI HÁT</span>
+    <h2>Dịch giọng (transpose)</h2>
+    <p class="lead">Bài gốc ở giọng này nhưng ca sĩ hát không tới nốt cao / xuống không nổi nốt thấp → bạn phải <b>dịch giọng</b>. Dịch giọng = <b>đẩy TẤT CẢ lên/xuống cùng một quãng</b>. Vòng hợp âm giữ nguyên "hình dạng", chỉ đổi tên.</p>
+    <div class="demo">
+      <span class="demo-label">Cùng một câu (giai điệu + I–V–vi–IV) ở hai giọng</span>
+      <div class="btn-row" id="demTransBtns"></div>
+      <div class="readout" id="demTransReadout">Bấm nghe hai giọng. Giai điệu &amp; vòng hợp âm y hệt "hình", chỉ dời cao độ — đó là toàn bộ chuyện dịch giọng.</div>
+    </div>
+    <div class="note-box">
+      <span class="tag">Mẹo: nghĩ theo BẬC, không theo tên nốt</span>
+      <p>Nếu bạn nhớ bài theo <b>bậc La Mã</b> (I–V–vi–IV) thay vì tên hợp âm (C–G–Am–F), thì <b>mọi giọng đều cùng một "hình"</b> — dịch giọng chỉ là chọn "chữ I nằm ở đâu". Trên keyboard có nút <em>transpose</em>, guitar có <em>capo</em> để dịch nhanh; nhưng hiểu theo bậc mới là gốc.</p>
+    </div>
+  </section>
+
+  <section class="concept" id="s-dem-workflow" data-title="Quy trình & cheatsheet">
+    <span class="sec-eyebrow">PHẦN 07 · GÓI GỌN ĐỂ DÙNG</span>
+    <h2>Quy trình đệm một bài &amp; cheatsheet</h2>
+    <p class="lead">Ráp tất cả thành quy trình áp lên bất kỳ bài nào:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Bước</th><th>Làm gì</th><th>Phần</th></tr></thead>
+        <tbody>
+          <tr><td><b>1</b></td><td>Lấy <b>bảng hợp âm</b> của bài (tra hoặc tự dò bằng tai)</td><td>01 · (trụ Cảm âm)</td></tr>
+          <tr><td><b>2</b></td><td>Chọn <b>giọng</b> vừa tầm ca sĩ (dịch nếu cần)</td><td>06</td></tr>
+          <tr><td><b>3</b></td><td>Chọn một <b>điệu (groove)</b> hợp không khí bài</td><td>04</td></tr>
+          <tr><td><b>4</b></td><td>Đặt <b>pattern tay trái</b> giữ nhịp</td><td>03</td></tr>
+          <tr><td><b>5</b></td><td>Tay phải <b>voicing gọn</b> + nối mượt (thể đảo/voice leading)</td><td>02 · trụ nền</td></tr>
+          <tr><td><b>6</b></td><td>Thêm <b>dạo đầu / fill / kết</b>; tiết chế cho ca sĩ thở</td><td>05</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <h3 style="margin-top:0; font-family:var(--font-mono); font-size:15px; color:var(--accent-identity)">3 MẸO "SANG" NGAY</h3>
+        <p class="mono" style="font-size:var(--fs-sm); color:var(--text-secondary); line-height:1.9; max-width:none">
+          • Nốt trên cùng = giai điệu thứ 2 → giữ mượt<br>
+          • Bỏ bậc 5, giữ 3 &amp; 7, thêm 9<br>
+          • Đừng chơi trùng nốt ca sĩ đang hát
+        </p>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0; font-family:var(--font-mono); font-size:15px; color:var(--accent-identity)">TRÁNH 3 LỖI</h3>
+        <p class="mono" style="font-size:var(--fs-sm); color:var(--text-secondary); line-height:1.9; max-width:none">
+          • Chồng dày ở quãng thấp → bùn<br>
+          • Tay trái lỏng, không đều → chông chênh<br>
+          • Chơi quá nhiều → lấn giọng hát
+        </p>
+      </div>
+    </div>
+    <div class="key-def">
+      <span class="tag">Bước tiếp theo</span>
+      Đệm hát cần <b>bảng hợp âm</b> của bài — mà muốn <b>tự dò hợp âm bằng tai</b> (không cần tra mạng) thì đó là việc của trụ <b>Cảm âm</b>. Nhớ: tập tai song song ngay từ bây giờ.
+    </div>
+  </section>
+
+  <footer>
+    <p><b>Trụ #2 · Đệm hát — học cách dựng phần đệm, không thay thầy dạy ngón.</b><br>
+    Âm thanh tổng hợp bằng Web Audio nên nghe điện tử; mục đích là phân biệt kiểu tay/điệu/voicing, không phải chất phối khí. Các pattern &amp; điệu là bản rút gọn để dễ nghe; đời thực còn nhiều biến thể tinh tế hơn (và tùy tay người chơi). Cao độ theo điều hòa đều.</p>
+  </footer>
+
+    </div>
+
+    <div class="doc" id="doc-ear">
+
+  <header class="page-head">
+    <span class="eyebrow reveal">TRỤ #3 · CẢM ÂM</span>
+    <h1 class="title reveal">Lấy lại <span>đôi tai</span> — có hệ thống.</h1>
+    <p class="subtitle reveal">Cảm âm = nghe ra nhạc đang xảy ra (nốt, quãng, hợp âm, vòng) và — đỉnh cao — <b>chép lại được</b>. Nó dựa trên <b>tai tương đối</b>, một kỹ năng luyện được, không phải năng khiếu bẩm sinh. Đây là trụ bạn nên <b>tập song song mỗi ngày</b>, chỉ 5–15 phút.</p>
+    <p class="meta reveal">CÁCH DÙNG <b>bấm "Câu mới", đoán, rồi nghe đáp án</b> · TẦN SUẤT <b>ngắn nhưng đều &gt; dồn một buổi dài</b></p>
+  </header>
+
+  <section class="overview reveal" id="overview" data-title="Cảm âm là gì">
+    <span class="sec-eyebrow">BẮT ĐẦU TỪ ĐÂY</span>
+    <h2>Vì sao trụ này quan trọng bậc nhất với bạn</h2>
+    <p class="lead">Hai mục tiêu bạn từng nói — <em>đánh lại giai điệu nhớ trong đầu</em> và <em>tự dò hợp âm để đệm/jazz hóa</em> — <b>đều bị chặn bởi tai</b>. Không có tai, lý thuyết chỉ nằm trên giấy. Vì vậy đây là trụ duy nhất mình khuyên <b>tập ngay từ hôm nay</b>, song song với mọi trụ khác.</p>
+    <div class="note-box">
+      <span class="tag">Kim chỉ nam của cả trụ</span>
+      <p><b>Chép bài (transcription) là kỹ năng vua.</b> Vì khi chép một đoạn nhạc bằng tai, bạn luyện <em>cùng lúc</em>: cao độ, tiết tấu, hòa thanh, và trí nhớ. Mọi bài tập nhỏ dưới đây rốt cuộc là để phục vụ khả năng chép bài đó.</p>
+    </div>
+    <ol class="overview-map" id="ovMap"></ol>
+  </section>
+
+  <section class="concept" id="s-ear" data-title="Tai tương đối & trainer chính">
+    <span class="sec-eyebrow">PHẦN 01 · TAI TƯƠNG ĐỐI + TRAINER</span>
+    <h2>Tai tương đối &amp; trainer chính</h2>
+    <p class="lead">Bạn nói giờ nghe một nốt cũng chưa đoán ra, ngày xưa thì được. Đây là chuyện bình thường và <b>hoàn toàn lấy lại được</b> — vì đa số cảm âm dựa trên <em>tai tương đối</em>, một kỹ năng luyện được, chứ không phải "tai tuyệt đối" bẩm sinh.</p>
+    <div class="grid2">
+      <div class="card">
+        <h3 style="margin-top:0">Tai tuyệt đối (perfect pitch)</h3>
+        <p class="muted" style="font-size:var(--fs-sm); max-width:none">Nghe 1 nốt lẻ và gọi tên ngay, không cần mốc. Rất hiếm, phần lớn phải học từ nhỏ. <b>Bạn không cần cái này.</b></p>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0">Tai tương đối (relative pitch)</h3>
+        <p class="muted" style="font-size:var(--fs-sm); max-width:none">Cho một nốt mốc, đoán các nốt khác qua <b>quãng</b> so với mốc. Đây là thứ mọi nhạc công dùng, luyện là lên. <b>Mục tiêu của bạn.</b></p>
+      </div>
+    </div>
+    <div class="note-box">
+      <span class="tag">Vì sao bạn "mất"</span>
+      <p>Cảm âm là trí nhớ cơ-thính giác, không dùng thì mờ đi — như ngoại ngữ lâu không nói. Tin tốt: nó phục hồi nhanh hơn học mới, vì lối mòn thần kinh vẫn còn. Chỉ cần <b>nghe có chủ đích mỗi ngày một ít</b> và luôn <b>gắn âm thanh với tên quãng/hợp âm</b>.</p>
+    </div>
+    <h3>Cách luyện có hệ thống (theo thứ tự)</h3>
+    <p>① Thuộc <b>quãng</b> bằng bài hát mồi (chế độ "Quãng"). ② Nghe &amp; phân biệt <b>trưởng vs thứ</b> (vui/buồn). ③ Nhận ra <b>hợp âm</b> (major/minor/7). ④ Nghe ra <b>cú V→I</b> và vòng <b>ii–V–I</b>. Quiz dưới đi đúng thứ tự này:</p>
+    <div class="quiz" id="quiz">
+      <div class="btn-row">
+        <div class="seg" id="quizMode">
+          <button class="on" data-q="note">Nốt</button>
+          <button data-q="interval">Quãng</button>
+          <button data-q="quality">Trưởng/Thứ</button>
+          <button data-q="chord">Hợp âm</button>
+        </div>
+      </div>
+      <p class="quiz-q" id="quizQ">Bấm "Câu mới" để bắt đầu.</p>
+      <div class="btn-row">
+        <button class="btn primary" id="quizNew">🎲 Câu mới</button>
+        <button class="btn sm" id="quizReplay">🔁 Nghe lại</button>
+      </div>
+      <div class="quiz-opts" id="quizOpts"></div>
+      <p class="reveal-txt" id="quizReveal"></p>
+      <p class="quiz-score">Điểm phiên này: <b id="quizScore">0/0</b> · chuỗi đúng: <b id="quizStreak">0</b></p>
+    </div>
+    <div class="warning">
+      <span class="tag">⚠ Bẫy khi luyện</span>
+      <p>Đừng cố "đoán tên nốt tuyệt đối" từ đầu — sẽ nản. Luôn quy về <b>quãng so với một mốc</b>. Và luyện <b>ngắn nhưng đều</b> (5–10 phút/ngày) hơn là dồn một buổi dài rồi bỏ.</p>
+    </div>
+  </section>
+
+  <section class="concept" id="s-ear-prog" data-title="Nhận vòng hòa thanh">
+    <span class="sec-eyebrow">PHẦN 02 · NGHE CẢ VÒNG</span>
+    <h2>Nhận ra vòng hòa thanh</h2>
+    <p class="lead">Sau nốt lẻ và hợp âm lẻ, bậc tiếp theo là nghe ra <b>cả một chuỗi hợp âm</b> — cái "hình" chuyển động quen thuộc. Đây chính là kỹ năng giúp bạn <b>dò hợp âm của một bài</b> nhanh: tai bạn "bắt" được đây là ii–V–I hay vòng pop I–vi–IV–V ngay khi nghe.</p>
+    <div class="quiz" id="earProgQuiz">
+      <p class="quiz-q" id="earProgQ">Bấm "Câu mới" để nghe một vòng hợp âm.</p>
+      <div class="btn-row">
+        <button class="btn primary" id="earProgNew">🎲 Câu mới</button>
+        <button class="btn sm" id="earProgReplay">🔁 Nghe lại</button>
+      </div>
+      <div class="quiz-opts" id="earProgOpts"></div>
+      <p class="reveal-txt" id="earProgReveal"></p>
+      <p class="quiz-score">Điểm phiên này: <b id="earProgScore">0/0</b> · chuỗi đúng: <b id="earProgStreak">0</b></p>
+    </div>
+    <div class="key-def">
+      <span class="tag">Hai "cái kết" cần thuộc tai</span>
+      <b>V→I (authentic)</b>: cảm giác "về nhà" dứt khoát — cái kết mạnh nhất. <b>IV→I (plagal)</b>: cái kết "Amen" nhà thờ, dịu hơn. Nghe ra hai kiểu kết này là bạn đã định vị được "nhà" (chủ âm) của bài — bước đầu của mọi việc dò bài.
+    </div>
+  </section>
+
+  <section class="concept" id="s-ear-transcription" data-title="Chép bài — kỹ năng vua">
+    <span class="sec-eyebrow">PHẦN 03 · KỸ NĂNG VUA</span>
+    <h2>Chép bài (transcription): luyện tất cả cùng lúc</h2>
+    <p class="lead">Chép bài = tự tay tìm ra nốt/hợp âm của một đoạn nhạc <b>chỉ bằng tai</b>. Đây là bài tập lợi hại nhất vì nó ép bạn dùng <em>đồng thời</em> cao độ, tiết tấu, hòa thanh và trí nhớ. Mọi trainer phía trên rốt cuộc là để phục vụ việc này.</p>
+    <h3>Quy trình 5 bước</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Bước</th><th>Làm gì</th></tr></thead>
+        <tbody>
+          <tr><td><b>1</b></td><td>Tìm <b>chủ âm ("nhà")</b>: ngân nga tới nốt nghe "yên" nhất, dò nốt đó trên đàn → biết giọng.</td></tr>
+          <tr><td><b>2</b></td><td>Tìm <b>đường bass / gốc hợp âm</b> (nốt trầm nhất) — thường dễ nghe nhất, cho biết vòng hợp âm.</td></tr>
+          <tr><td><b>3</b></td><td>Tìm <b>giai điệu theo bậc</b> so với chủ âm (nốt này là <em>đô? rê? mi?</em>), không đoán tên tuyệt đối.</td></tr>
+          <tr><td><b>4</b></td><td>Xác định <b>chất hợp âm</b> (trưởng/thứ/7) bằng tai — dùng trainer ở phần 01.</td></tr>
+          <tr><td><b>5</b></td><td><b>Lặp từng mẩu ngắn</b>, chậm lại, nghe đi nghe lại. Đừng ôm cả bài một lúc.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="key-def">
+      <span class="tag">Công cụ</span>
+      Dùng phần mềm <b>chậm hóa</b> (Transcribe!, Amazing Slow Downer) hoặc chỉnh tốc độ <b>0.5×</b> trên YouTube để nghe rõ từng nốt mà không đổi cao độ. Lặp một mẩu 2 giây mười lần còn hơn nghe cả bài một lần.
+    </div>
+    <h3>Thử ngay: chép một câu quen thuộc</h3>
+    <p>Nghe câu dưới (một giai điệu công khai ai cũng biết), thử đoán <b>bậc</b> từng nốt trước, rồi bấm "Hiện bậc" để đối chiếu:</p>
+    <div class="demo">
+      <span class="demo-label">Nghe → tự đoán bậc → đối chiếu</span>
+      <div class="btn-row">
+        <button class="btn primary" id="transPlayBtn">▶ Nghe câu (giọng Đô)</button>
+        <button class="btn sm" id="transRevealBtn">👁 Hiện bậc</button>
+      </div>
+      <div class="readout" id="transReveal">Câu này chỉ dùng các bậc trong gam Đô trưởng. Thử "gọi" từng nốt là đô/rê/mi… trước khi xem đáp án.</div>
+    </div>
+  </section>
+
+  <section class="concept" id="s-ear-routine" data-title="Lịch luyện & thang tiến độ">
+    <span class="sec-eyebrow">PHẦN 04 · GÓI GỌN ĐỂ TẬP</span>
+    <h2>Lịch luyện mỗi ngày &amp; thang tiến độ</h2>
+    <p class="lead">Cảm âm lên bằng <b>đều đặn</b>, không phải bằng buổi dài. Một khuôn 10–15 phút/ngày:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Phút</th><th>Bài tập</th><th>Dùng</th></tr></thead>
+        <tbody>
+          <tr><td>2'</td><td>Khởi động: đoán <b>bậc nốt</b> (functional)</td><td>Trainer · chế độ "Nốt"</td></tr>
+          <tr><td>3'</td><td><b>Quãng</b> (cả lên &amp; xuống)</td><td>Trainer · chế độ "Quãng"</td></tr>
+          <tr><td>3'</td><td><b>Chất hợp âm</b> (major/minor/7)</td><td>Trainer · chế độ "Hợp âm"</td></tr>
+          <tr><td>2'</td><td>Nhận <b>vòng hòa thanh</b></td><td>Phần 02</td></tr>
+          <tr><td>5'</td><td><b>Chép 1 câu ngắn</b> của bài bạn thích</td><td>Phần 03</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Thang tiến độ (tham khảo)</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Mốc</th><th>Đạt được</th></tr></thead>
+        <tbody>
+          <tr><td><b>Tuần 1–2</b></td><td>thuộc các quãng cơ bản; phân biệt chắc trưởng vs thứ</td></tr>
+          <tr><td><b>Tuần 3–4</b></td><td>nhận 4–5 loại hợp âm; nghe ra cú V→I</td></tr>
+          <tr><td><b>Tháng 2</b></td><td>nhận vòng ii–V–I &amp; I–vi–IV–V; chép giai điệu đơn giản</td></tr>
+          <tr><td><b>Tháng 3+</b></td><td>chép đường bass → chép cả bài; bắt đầu nghe ra reharm jazz</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="key-def">
+      <span class="tag">Nối sang trụ khác</span>
+      Tai lên tới đâu, <b>Đệm hát</b> nhàn tới đó (tự dò hợp âm bài, không cần tra) và <b>Jazz</b> mở ra (nghe ra được cái hay để bắt chước). Cảm âm là "bộ khuếch đại" cho mọi trụ còn lại.
+    </div>
+  </section>
+
+  <footer>
+    <p><b>Trụ #3 · Cảm âm — luyện tai, cần bạn tự nghe &amp; đoán mỗi ngày.</b><br>
+    Trainer dùng âm tổng hợp Web Audio; tai thật cần nghe cả nhạc cụ thật &amp; giọng người, nên hãy sớm chuyển sang chép nhạc thật. Bài tập chỉ hiệu quả khi bạn <b>chủ động đoán trước</b> rồi mới xem đáp án — đừng bấm đáp án ngay.</p>
+  </footer>
+
+    </div>
+
+    <div class="doc" id="doc-classical">
+
+  <header class="page-head">
+    <span class="eyebrow reveal">TRỤ #4 · NHẠC CỔ ĐIỂN</span>
+    <h1 class="title reveal">Nền <span>kỹ thuật &amp; đọc bản</span> cho mọi thứ.</h1>
+    <p class="subtitle reveal">Cổ điển không chỉ là "chơi nhạc cũ". Đây là nơi bạn xây <b>ngón tay khỏe &amp; độc lập</b>, <b>đọc trôi bản nhạc</b>, và <b>đôi tai cho sắc thái</b> — ba thứ mà đệm hát lẫn jazz đều mượn về dùng. Học tốt trụ này, mọi trụ khác nhẹ hẳn.</p>
+    <p class="meta reveal">CẦN CÓ <b>đàn thật (phần kỹ thuật)</b> · LƯU Ý <b>tư thế/ngón nên có thầy kèm vài buổi đầu</b></p>
+  </header>
+
+  <section class="overview reveal" id="overview" data-title="Vì sao học cổ điển">
+    <span class="sec-eyebrow">BẮT ĐẦU TỪ ĐÂY</span>
+    <h2>Cổ điển = "phòng gym" của pianist</h2>
+    <p class="lead">Ba thứ cổ điển rèn — <b>đọc bản nhạc, kỹ thuật ngón, và cảm sắc thái (touch)</b> — là <em>vốn dùng chung</em> cho mọi phong cách. Một người đệm hay hay solo jazz giỏi gần như luôn có nền cổ điển vững ở khoản này. Bạn không cần thành nghệ sĩ cổ điển; bạn cần <b>lấy phần nền</b> của nó.</p>
+    <div class="warning">
+      <span class="tag">⚠ Đọc kỹ — trách nhiệm của người thầy</span>
+      <p>Đây là trụ <b>cần đàn thật</b> và là trụ mình phải nói thẳng: <b>tư thế tay &amp; cách dùng ngón rất nên có thầy thật kèm vài buổi đầu</b>. Tài liệu dạy được khái niệm và tai, nhưng thói quen ngón sai (cổ tay căng, ngón bẹt) có thể gây <b>đau/chấn thương</b> lâu dài — thứ chỉ một đôi mắt thầy tại chỗ mới sửa kịp. Đừng tự tập kỹ thuật nặng khi chưa ai chỉnh tư thế.</p>
+    </div>
+    <ol class="overview-map" id="ovMap"></ol>
+  </section>
+
+  <section class="concept" id="s-cl-why" data-title="Cổ điển cho bạn gì">
+    <span class="sec-eyebrow">PHẦN 01 · GIÁ TRỊ CHUYỂN GIAO</span>
+    <h2>Cổ điển khác pop/jazz ở đâu — và cho bạn gì</h2>
+    <p class="lead">Pop/jazz làm việc nhiều với <b>ký hiệu hợp âm</b> và <b>ứng tác</b>; cổ điển làm việc với <b>bản nhạc viết chi tiết</b> mà bạn tái hiện đúng ý tác giả. Chính sự "chi tiết" đó rèn cho bạn những kỹ năng nền:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Cổ điển rèn</th><th>Vì sao đệm hát &amp; jazz cần</th></tr></thead>
+        <tbody>
+          <tr><td><b>Đọc bản nhạc trôi</b> (2 khóa)</td><td>đọc lead sheet, đọc câu nhạc, chép/ghi lại ý tưởng</td></tr>
+          <tr><td><b>Ngón khỏe &amp; độc lập</b></td><td>bấm voicing khó, chạy câu solo, hai tay làm hai việc</td></tr>
+          <tr><td><b>Cảm sắc thái (touch, dynamics)</b></td><td>làm nổi giai điệu, đệm to/nhỏ đúng chỗ, "hát" bằng đàn</td></tr>
+          <tr><td><b>Kỷ luật &amp; phân tích cấu trúc</b></td><td>học bài bài bản, hiểu form, kiên trì luyện chậm</td></tr>
+          <tr><td><b>Pedal &amp; legato</b></td><td>nối âm mượt, tạo không gian, ballad &amp; nhạc phim</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="key-def">
+      <span class="tag">Chiến lược cho bạn</span>
+      Bạn không cần "leo" hết bậc thang cổ điển. Mục tiêu: <b>đọc bản nhạc đủ trôi</b> để không bị chặn, <b>ngón đủ khỏe/đều</b> để chơi được ý mình nghĩ, và <b>tai đủ tinh</b> để chơi có sắc thái. Đó là 3 thứ đáng lấy nhất.
+    </div>
+  </section>
+
+  <section class="concept" id="s-cl-reading" data-title="Đọc bản nhạc">
+    <span class="sec-eyebrow">PHẦN 02 · ĐỌC KHUÔNG</span>
+    <h2>Đọc bản nhạc: khóa, nốt, sắc thái, cách chơi</h2>
+    <p class="lead">Bản nhạc piano dùng <b>hai khuông</b>: khóa <b>Sol</b> (tay phải, âm cao) và khóa <b>Fa</b> (tay trái, âm trầm). Trên đó là nốt (cao độ + trường độ), <b>hóa biểu</b> (giọng), <b>số nhịp</b>, và các ký hiệu về <b>to/nhỏ</b> (dynamics) và <b>cách chơi</b> (articulation).</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Nhóm ký hiệu</th><th>Ý nghĩa</th></tr></thead>
+        <tbody>
+          <tr><td><b>Khóa Sol / Fa</b></td><td>quy định vùng cao (phải) / trầm (trái); mỗi dòng-khe là một tên nốt</td></tr>
+          <tr><td><b>Hóa biểu</b> (# ♭ đầu dòng)</td><td>cho biết giọng — những nốt luôn thăng/giáng cả bài</td></tr>
+          <tr><td><b>Số nhịp</b> (4/4, 3/4, 6/8)</td><td>mỗi ô có mấy phách &amp; phách là nốt gì</td></tr>
+          <tr><td><b>Dynamics</b> (p, mf, f, cresc.)</td><td>to/nhỏ: <i>p</i>=nhẹ, <i>f</i>=mạnh, cresc.=to dần</td></tr>
+          <tr><td><b>Articulation</b> (slur, staccato, accent)</td><td>cách chơi: liền (legato), nảy (staccato), nhấn</td></tr>
+          <tr><td><b>Ornaments</b> (trill, mordent…)</td><td>nốt tô điểm nhanh quanh nốt chính</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="demo">
+      <span class="demo-label">Nghe khác biệt: to/nhỏ &amp; liền/nảy (cùng một câu)</span>
+      <div class="btn-row" id="demReadBtns"></div>
+      <div class="readout" id="demReadReadout">Bấm để nghe cùng một câu 4 kiểu. Đây là điều bản nhạc "ra lệnh" cho bạn — không chỉ nốt nào, mà chơi <b>thế nào</b>.</div>
+    </div>
+    <div class="note-box">
+      <span class="tag">Mẹo đọc nhanh cho người lớn học lại</span>
+      <p>Đừng học thuộc từng nốt kiểu "Em Mi Sол Si Rê" máy móc. Đọc theo <b>quãng &amp; hình</b>: nhận ra "đi lên liền bậc", "nhảy quãng 3", "hợp âm chồng" — mắt bắt <em>hình dạng</em> chứ không dò từng nốt. Nhanh hơn nhiều và đúng cách dân chuyên đọc.</p>
+    </div>
+  </section>
+
+  <section class="concept" id="s-cl-technique" data-title="Kỹ thuật ngón">
+    <span class="sec-eyebrow">PHẦN 03 · NGÓN TAY</span>
+    <h2>Nền kỹ thuật: tư thế, độc lập ngón, scale &amp; pedal</h2>
+    <p class="lead">Kỹ thuật piano = <b>điều khiển từng ngón một cách thả lỏng &amp; chính xác</b>. Bốn viên gạch: tư thế đúng, độc lập ngón, chạy scale/arpeggio làm "vốn cơ", và cảm giác chạm phím (legato/staccato/pedal).</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Viên gạch</th><th>Cốt lõi</th></tr></thead>
+        <tbody>
+          <tr><td><b>Tư thế &amp; bàn tay</b></td><td>vai thả lỏng, cổ tay ngang, ngón <b>cong tự nhiên</b> như cầm quả bóng nhỏ; lực từ cánh tay, không "bấm chết" ngón</td></tr>
+          <tr><td><b>Độc lập ngón</b></td><td>mỗi ngón nhấn được riêng, đều lực — bài tập Hanon/Czerny rèn cái này</td></tr>
+          <tr><td><b>Scale &amp; arpeggio</b></td><td>chạy gam/hợp âm rải mọi giọng = "vốn cơ"; cũng là vốn dùng lại khi solo jazz</td></tr>
+          <tr><td><b>Legato / staccato / pedal</b></td><td>nối liền vs nảy; pedal ngân (đạp <em>sau</em> khi bấm nốt để nối mượt, không nhòe)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="demo">
+      <span class="demo-label">Nghe vài "bài tập cơ" nền (giọng Đô)</span>
+      <div class="btn-row" id="demTechBtns"></div>
+      <div class="readout" id="demTechReadout">Bấm để nghe. Scale &amp; arpeggio là thứ bạn tập mỗi ngày ở mọi giọng — vừa khỏe ngón vừa thành "vốn" để ứng tác sau này.</div>
+    </div>
+    <div class="warning">
+      <span class="tag">⚠ Nhắc lại</span>
+      <p>Nghe để <b>hiểu</b> các bài tập này ra sao thì được; nhưng <b>tập chúng trên đàn thì cần thầy chỉnh tư thế</b> — tập Hanon sai tư thế là con đường nhanh nhất tới đau cổ tay. Chậm, thả lỏng, ít mà đúng.</p>
+    </div>
+  </section>
+
+  <section class="concept" id="s-cl-interpretation" data-title="Diễn tấu & sắc thái">
+    <span class="sec-eyebrow">PHẦN 04 · "HÁT" BẰNG ĐÀN</span>
+    <h2>Diễn tấu: biến nốt đúng thành nhạc hay</h2>
+    <p class="lead">Chơi đúng nốt mới là một nửa. Nửa còn lại — thứ khiến một bản nghe "sống" — là <b>diễn tấu</b>: nhóm nốt thành <b>câu</b>, nắn <b>to/nhỏ</b> theo hình câu, co giãn nhịp (<b>rubato</b>) đúng chỗ, và làm <b>giai điệu nổi</b> trên nền đệm.</p>
+    <div class="demo">
+      <span class="demo-label">Cùng một câu · "phẳng" vs "có hình"</span>
+      <div class="btn-row" id="demInterpBtns"></div>
+      <div class="readout" id="demInterpReadout">So sánh trực tiếp: bản <b>phẳng</b> đúng nốt nhưng vô hồn; bản <b>có hình</b> to dần tới đỉnh câu rồi nhỏ lại, hơi ngân ở đỉnh — cùng nốt mà nghe "biết thở".</div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Thời kỳ</th><th>Tính cách chơi</th></tr></thead>
+        <tbody>
+          <tr><td><b>Baroque</b> (Bach)</td><td>đều, rõ, ít pedal; các bè độc lập ("đối âm")</td></tr>
+          <tr><td><b>Cổ điển</b> (Mozart, Haydn)</td><td>cân đối, sạch, sắc thái tinh tế, câu rõ ràng</td></tr>
+          <tr><td><b>Lãng mạn</b> (Chopin, Schumann)</td><td>tình cảm, rubato nhiều, pedal dày, tương phản mạnh</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="key-def">
+      <span class="tag">Kỹ thuật "làm nổi giai điệu"</span>
+      Khi tay phải bấm nhiều nốt cùng lúc (giai điệu + đệm), <b>nhấn mạnh hơn vào nốt trên cùng</b> (nốt giai điệu) và giữ các nốt đệm nhẹ. Nghe như có một ca sĩ hát trên nền — dù chỉ một tay. Đây là kỹ thuật chuyển thẳng sang đệm hát &amp; solo piano jazz.
+    </div>
+  </section>
+
+  <section class="concept" id="s-cl-repertoire" data-title="Lộ trình repertoire">
+    <span class="sec-eyebrow">PHẦN 05 · CHƠI GÌ</span>
+    <h2>Lộ trình repertoire (bản công khai, theo cấp)</h2>
+    <p class="lead">Học kỹ thuật suông sẽ chán — bạn cần <b>bài để chơi</b>. Dưới là lộ trình tham khảo với các tác phẩm <b>miền công khai</b> (public domain), xếp theo độ khó:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Cấp</th><th>Gợi ý tác phẩm</th></tr></thead>
+        <tbody>
+          <tr><td><b>Sơ cấp</b></td><td>Sổ tay Anna Magdalena Bach (Minuet BWV Anh.114); Burgmüller Op.100 (<i>Arabesque</i>); Schumann <i>Album for the Young</i> Op.68 (Melody, Soldier's March); Clementi Sonatina Op.36 No.1; Beethoven <i>Für Elise</i></td></tr>
+          <tr><td><b>Trung cấp</b></td><td>Bach <i>Two-Part Inventions</i>; Mozart Sonata K.545; Chopin Prelude Op.28 No.7 &amp; No.20; Kuhlau/Clementi sonatinas đầy đủ; Grieg <i>Lyric Pieces</i></td></tr>
+          <tr><td><b>Nâng cao</b></td><td>Bach <i>Well-Tempered Clavier</i>; Beethoven "Pathétique"/"Moonlight"; Chopin Nocturnes &amp; Waltzes; Debussy <i>Clair de Lune</i>, <i>Arabesque No.1</i></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note-box">
+      <span class="tag">Nguyên tắc chọn bài</span>
+      <p>Chọn bản bạn <b>thật sự yêu</b> và <b>hơi khó hơn trình một chút</b> (không quá sức). Bài mình mê thì mới chịu tập đi tập lại trăm lần — mà lặp lại chính là thứ đưa kỹ thuật vào tay. Tải bản nhạc miễn phí ở <b>IMSLP</b> (thư viện nhạc công khai).</p>
+    </div>
+  </section>
+
+  <section class="concept" id="s-cl-workflow" data-title="Cách học một bản & routine">
+    <span class="sec-eyebrow">PHẦN 06 · GÓI GỌN ĐỂ TẬP</span>
+    <h2>Cách học một bản nhạc &amp; lịch tập</h2>
+    <p class="lead">Cách người giỏi học một bản — không phải "chơi từ đầu tới cuối nhiều lần", mà là <b>chia để trị</b>:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Bước</th><th>Làm gì</th></tr></thead>
+        <tbody>
+          <tr><td><b>1</b></td><td>Chia bản thành <b>mẩu nhỏ</b> (2–4 ô nhịp)</td></tr>
+          <tr><td><b>2</b></td><td>Tập <b>từng tay riêng</b>, thật <b>chậm</b>, đúng ngón bấm (fingering)</td></tr>
+          <tr><td><b>3</b></td><td>Ghép hai tay ở tốc độ chậm với <b>metronome</b></td></tr>
+          <tr><td><b>4</b></td><td>Tăng tốc <b>từ từ</b>; chỗ khó tách ra tập riêng nhiều hơn</td></tr>
+          <tr><td><b>5</b></td><td>Nối các mẩu; rồi thêm <b>sắc thái &amp; câu</b> (phần 04)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <h3 style="margin-top:0; font-family:var(--font-mono); font-size:15px; color:var(--accent-identity)">LỊCH 30' MỖI NGÀY</h3>
+        <p class="mono" style="font-size:var(--fs-sm); color:var(--text-secondary); line-height:1.9; max-width:none">
+          5' khởi động: scale/arpeggio<br>
+          5' kỹ thuật: Hanon/Czerny (đúng tư thế)<br>
+          15' học bản đang tập (chia mẩu)<br>
+          5' <b>đọc bản mới</b> (sight-reading)
+        </p>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0; font-family:var(--font-mono); font-size:15px; color:var(--accent-identity)">SIGHT-READING</h3>
+        <p class="mono" style="font-size:var(--fs-sm); color:var(--text-secondary); line-height:1.9; max-width:none">
+          Mỗi ngày đọc bản <b>mới, dễ hơn trình mình</b><br>
+          <b>Không dừng</b> để sửa — chạy tiếp giữ nhịp<br>
+          Mắt nhìn <b>trước</b> một nhịp<br>
+          Đọc theo hình/quãng, không dò từng nốt
+        </p>
+      </div>
+    </div>
+    <div class="key-def">
+      <span class="tag">Nối sang trụ khác</span>
+      Ngón khỏe + đọc trôi + tai sắc từ trụ này chảy thẳng vào <b>Jazz</b> (đủ kỹ thuật chơi voicing khó &amp; solo) và <b>Đệm hát</b> (chơi có sắc thái, làm nổi giai điệu). Cổ điển là nền; các trụ kia là ứng dụng.
+    </div>
+  </section>
+
+  <footer>
+    <p><b>Trụ #4 · Nhạc cổ điển — dạy khái niệm &amp; tai; phần kỹ thuật ngón cần thầy thật.</b><br>
+    Âm thanh tổng hợp Web Audio nên nghe điện tử; sắc thái/pedal thật phong phú hơn nhiều trên đàn cơ. Các bài tập &amp; ví dụ diễn tấu ở đây là bản rút gọn để nghe khác biệt. Danh sách tác phẩm đều thuộc miền công khai; tải bản nhạc ở IMSLP. Cao độ theo điều hòa đều.</p>
+  </footer>
+
+    </div>
+
     <div class="doc" id="doc-d1">
   <header class="page-head">
     <span class="eyebrow reveal">TÀI LIỆU ① · HÒA THANH JAZZ NÂNG CAO</span>
@@ -633,7 +1195,7 @@ footer b{color:var(--text-muted); font-weight:400}
           <tr><td><b>maj7</b> (I)</td><td>Ionian (trưởng)</td><td>0·2·4·5·7·9·11</td><td>bậc 7 trưởng (B)</td></tr>
           <tr><td><b>maj7</b> (IV)</td><td>Lydian</td><td>0·2·4·<b>6</b>·7·9·11</td><td>#11 (F♯) — sáng, "lơ lửng"</td></tr>
           <tr><td><b>m7</b> (ii)</td><td>Dorian</td><td>0·2·3·5·7·9·10</td><td>bậc 6 trưởng (A)</td></tr>
-          <tr><td><b>7</b> (V)</td><td>Mixolydian</td><td>0·2·4·5·7·9·10</td><td>bậc 7 thứ (F) — chất "át"</td></tr>
+          <tr><td><b>7</b> (V)</td><td>Mixolydian</td><td>0·2·4·5·7·9·10</td><td>bậc 7 thứ (B♭) — chất "át"</td></tr>
           <tr><td><b>m7</b> (vi)</td><td>Aeolian (thứ tự nhiên)</td><td>0·2·3·5·7·8·10</td><td>bậc 6 giáng (A♭)</td></tr>
           <tr><td><b>m7♭5</b> (vii)</td><td>Locrian</td><td>0·1·3·5·6·8·10</td><td>bậc 2 &amp; 5 giáng — tối</td></tr>
           <tr><td><b>7alt</b></td><td>Altered (từ melodic minor)</td><td>0·1·3·4·6·8·10</td><td>♭9 ♯9 ♯11 ♭13 — căng tối đa</td></tr>
@@ -892,7 +1454,162 @@ footer b{color:var(--text-muted); font-weight:400}
     </div>
     <div class="key-def">
       <span class="tag">Bước tiếp theo</span>
-      Nắm chắc tài liệu này là bạn đã có <b>bộ não hòa thanh</b> của jazz. Kế tiếp trong series: <b>Tài liệu ② — Ear training bài bản</b> (để tai bắt kịp cái đầu), rồi <b>③ Ngẫu hứng</b> và <b>④ Kỹ thuật &amp; repertoire</b>. Nhớ: <b>tập ear training song song ngay từ bây giờ</b>, đừng đợi.
+      Bạn giờ có đủ 5 trụ: nền lý thuyết (①), đệm hát (②), cảm âm (③), cổ điển (④) và jazz (⑤). Nền hòa thanh này chảy thẳng xuống phần ngẫu hứng &amp; standards phía dưới. Nhớ: tập cảm âm song song mỗi ngày — nó là bộ khuếch đại cho cả bộ.
+    </div>
+  </section>
+
+  <section class="concept" id="s-jz-improv-lang" data-title="Ngẫu hứng là ngôn ngữ">
+    <span class="sec-eyebrow">PHẦN 10 · ĐỔI TƯ DUY</span>
+    <h2>Ngẫu hứng = "nói" một ngôn ngữ, không phải bốc đồng</h2>
+    <p class="lead">Hiểu lầm lớn nhất: ngẫu hứng là "cảm hứng bốc lên chơi nốt bừa cho hay". Sự thật: nó là <b>ghép lại các mảnh đã nằm sẵn trong tay/tai theo thời gian thực</b>. Giống học nói ngoại ngữ — bạn luyện từ vựng &amp; ngữ pháp (lặp), rồi <em>nói</em> trôi chảy; không phát minh từ mới, chỉ tổ hợp từ đã biết.</p>
+    <div class="key-def">
+      <span class="tag">Bộ khung của mọi câu solo</span>
+      Nhớ <b>guide-tone line</b> (bậc 3 &amp; 7) ở phần 01? Đó chính là <b>bộ xương của một câu solo</b>. Câu đơn giản nhất mà vẫn "đúng changes": chỉ cần chạy đường guide-tone. Mọi câu hoa mỹ hơn đều là tô điểm quanh cái khung đó.
+    </div>
+    <div class="note-box">
+      <span class="tag">Hai câu hỏi của một câu solo hay</span>
+      <p>(1) <b>Có vẽ ra được vòng hợp âm không?</b> — rơi vào bậc 3/7 ở phách mạnh để tai nghe rõ hợp âm đang đổi. (2) <b>Có thành một câu (melodic shape) không?</b> — có mở đầu, cao trào, kết, có khoảng lặng. Chạy nốt đúng mà không thành câu thì chỉ là "bài tập", chưa phải nhạc.</p>
+    </div>
+  </section>
+
+  <section class="concept" id="s-jz-vocab" data-title="Vốn câu solo">
+    <span class="sec-eyebrow">PHẦN 11 · "TỪ VỰNG"</span>
+    <h2>Vốn câu: nguyên liệu để "nói"</h2>
+    <p class="lead">Đây là kho "từ" bạn nạp vào tay. Bốn nhóm nguyên liệu, xếp từ chắc-chắn tới hoa-mỹ:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Nguyên liệu</th><th>Là gì</th></tr></thead>
+        <tbody>
+          <tr><td><b>Chord tones / arpeggio</b></td><td>chạy các nốt của chính hợp âm — luôn "đúng", an toàn nhất</td></tr>
+          <tr><td><b>Guide-tone line</b></td><td>đường 3–7 nối các hợp âm — bộ xương của câu</td></tr>
+          <tr><td><b>Chord-scale fragment</b></td><td>mẩu gam hợp với hợp âm (phần 02) — tô màu quanh chord tone</td></tr>
+          <tr><td><b>Approach / enclosure</b></td><td>nốt ngoài "bao vây" một nốt đích rồi giải quyết — chất bebop</td></tr>
+          <tr><td><b>Bebop scale</b></td><td>gam 8 nốt (thêm 1 nốt lướt) để chord tone luôn rơi phách mạnh</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="demo">
+      <span class="demo-label">Nghe từng nguyên liệu trên ii–V–I (Dm7–G7–Cmaj7)</span>
+      <div class="btn-row" id="demJzVocabBtns"></div>
+      <div class="readout" id="demJzVocabReadout">Bấm lần lượt. Chú ý cả 4 kiểu đều "vẽ" ra được vòng ii–V–I — khác nhau ở độ hoa mỹ, giống nhau ở chỗ bám guide tone.</div>
+    </div>
+    <div class="key-def">
+      <span class="tag">Tip vàng: nhắm bậc 3 &amp; 7 vào phách mạnh</span>
+      Chỉ cần <b>rơi vào bậc 3 hoặc 7 của hợp âm ở phách 1</b>, câu của bạn sẽ nghe "đúng changes" ngay cả khi các nốt còn lại rất đơn giản. Đây là bí quyết khiến câu solo của dân pro "dính" vào hợp âm — trong khi người mới chơi đúng gam mà nghe vẫn "trôi".
+    </div>
+  </section>
+
+  <section class="concept" id="s-jz-drill" data-title="Cách drill để ứng tác">
+    <span class="sec-eyebrow">PHẦN 12 · LẶP CÁI GÌ</span>
+    <h2>Drill: lặp đúng thứ để tay tự "nói"</h2>
+    <p class="lead">Bạn từng hỏi: "phải lặp cái gì đó thì mới ngẫu hứng được?" — <b>đúng</b>. Cơ chế: lặp một mảnh tới mức <b>phản xạ</b> → đầu óc được giải phóng khỏi phần cơ học → rảnh để <b>chọn &amp; tổ hợp</b> các mảnh trong lúc chơi. Đó chính là ngẫu hứng. Dưới là những thứ đáng lặp:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Drill</th><th>Vì sao</th></tr></thead>
+        <tbody>
+          <tr><td><b>Scale &amp; arpeggio 12 giọng</b></td><td>bảng chữ cái — phải chạy được ở mọi giọng không cần nghĩ</td></tr>
+          <tr><td><b>Câu ii–V–I 12 giọng</b></td><td>"câu nói" phổ biến nhất — thuộc hàng chục kiểu tới mức tự chảy ra</td></tr>
+          <tr><td><b>Guide-tone line qua vòng</b></td><td>khung câu — nối 3–7 mượt thành phản xạ</td></tr>
+          <tr><td><b>Chép &amp; thuộc câu bậc thầy</b></td><td>học "câu hay" từ bản thu — chép rồi chơi tới khi vào tay</td></tr>
+          <tr><td><b>Chơi cùng backing track</b></td><td>áp vốn lên bài thật (iReal Pro), lặp mãi trên changes</td></tr>
+          <tr><td><b>Phát triển motif</b></td><td>lấy 1 ý ngắn, biến nó chục kiểu — rèn "nói câu" chứ không "xổ nốt"</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="demo">
+      <span class="demo-label">Phát triển motif · một ý → nhiều biến thể</span>
+      <div class="btn-row" id="demMotifBtns"></div>
+      <div class="readout" id="demMotifReadout">Nghe một motif 3 nốt, rồi các biến thể (đổi nhịp, đổi hướng, dịch bậc). Cùng một "ý", nhiều cách "nói" — đây là cách solo có tính câu thay vì chạy gam vô hồn.</div>
+    </div>
+    <div class="note-box">
+      <span class="tag">Hai tip đắt giá</span>
+      <p>① <b>Hát được câu trước khi chơi</b> — hát không ra tức là ngón tay chỉ đang chạy pattern, chưa làm nhạc. ② <b>Drill xong thì "phá"</b>: luyện một lick đủ 12 giọng rồi cố tình đổi phách bắt đầu / đổi tiết tấu / đổi nốt kết — để nó thành đất sét dẻo chứ không phải câu đóng hộp. Và luôn: <b>metronome gõ ở phách 2 &amp; 4</b>, <b>tự thu âm</b> lại để nghe thật ra sao.</p>
+    </div>
+  </section>
+
+  <section class="concept" id="s-jz-feel" data-title="Chất swing & time">
+    <span class="sec-eyebrow">PHẦN 13 · "ĐUNG ĐƯA" & POCKET</span>
+    <h2>Chất swing, comping &amp; cảm nhịp</h2>
+    <p class="lead">Đúng nốt, đúng câu mà <b>sai "feel"</b> thì không ra jazz. Ba thứ làm nên chất: <b>swing 8th</b> (cặp nốt dài–ngắn "đung đưa" thay vì đều), <b>comping có khoảng trống</b> (đừng đánh mọi phách), và <b>cảm nhịp chắc</b> (chơi "in the pocket", có thể hơi "lười" ra sau cho thư giãn).</p>
+    <div class="demo">
+      <span class="demo-label">Nghe khác biệt (cùng câu / cùng hợp âm)</span>
+      <div class="btn-row" id="demFeelBtns"></div>
+      <div class="readout" id="demFeelReadout">So sánh: <b>thẳng</b> đều tăm tắp (chất pop/cổ điển) vs <b>swing</b> cặp nốt dài–ngắn (chất jazz). Và nghe một mẫu <b>comping</b> chỉ điểm vài chỗ, chừa khoảng trống — không lấp đầy.</div>
+    </div>
+    <div class="key-def">
+      <span class="tag">Bí quyết feel</span>
+      <b>Swing sống trong các nốt móc đơn (8th)</b> — cặp nốt chia ~2/3 + 1/3 chứ không 50/50. <b>Comping là "phản ứng"</b> với người solo: để lỗ trống cho họ, đánh xen kẽ (hay dùng tiết tấu Charleston — phách 1 và phách "và" của 2). Và luôn tập với <b>metronome ở phách 2 &amp; 4</b> để nội hoá backbeat.
+    </div>
+  </section>
+
+  <section class="concept" id="s-jz-standards" data-title="Standards & học một bài">
+    <span class="sec-eyebrow">PHẦN 14 · SÂN CHƠI CHUNG</span>
+    <h2>Jazz standards &amp; cách học một bài</h2>
+    <p class="lead">"Standards" = kho bài <b>ai chơi jazz cũng thuộc</b> — vào jam gọi tên là chơi được cùng nhau. Thuộc vài chục standard = có "vốn bài" để thực hành mọi thứ đã học. Một số bài <b>dễ vào</b> để bắt đầu:</p>
+    <div class="note-box">
+      <span class="tag">Danh sách khởi động (tên bài)</span>
+      <p><i>Autumn Leaves</i>, <i>Blue Bossa</i>, <i>Take the "A" Train</i>, <i>All of Me</i>, <i>Fly Me to the Moon</i>, <i>Summertime</i>, <i>So What</i>, <i>Blue Monk</i>, <i>Satin Doll</i>, <i>There Will Never Be Another You</i>, <i>Days of Wine and Roses</i>. Nhiều bài chia sẻ chung khuôn ii–V–I, blues, hoặc rhythm changes (phần 08) — học một bài là hiểu cả "họ" bài.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Bước học một tune</th><th>Làm gì</th></tr></thead>
+        <tbody>
+          <tr><td><b>1 · Giai điệu</b></td><td>hát &amp; chơi được giai điệu bằng tai (dùng trụ Cảm âm)</td></tr>
+          <tr><td><b>2 · Changes</b></td><td>dò/đọc vòng hợp âm; phân tích ra bậc La Mã &amp; các ii–V</td></tr>
+          <tr><td><b>3 · Thuộc</b></td><td>nhớ cả giai điệu &amp; changes <b>không cần nhìn giấy</b></td></tr>
+          <tr><td><b>4 · Comp</b></td><td>đệm được bằng rootless voicing + feel (phần 05, 13)</td></tr>
+          <tr><td><b>5 · Solo</b></td><td>ứng tác trên changes bằng vốn câu (phần 11–12)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="key-def">
+      <span class="tag">Công cụ</span>
+      <b>iReal Pro</b> cho bạn changes + backing track của hàng nghìn standard để tập comp &amp; solo ở mọi tempo/giọng — gần như là "bạn diễn" tại nhà của mọi người học jazz.
+    </div>
+  </section>
+
+  <section class="concept" id="s-jz-listen" data-title="Nghe chủ động">
+    <span class="sec-eyebrow">PHẦN 15 · TAI QUYẾT ĐỊNH</span>
+    <h2>Nghe chủ động: học nhanh nhất mà ít người làm</h2>
+    <p class="lead">Jazz truyền qua <b>tai</b>, không qua sách. Nghe <b>chủ động</b> (không phải để nền) là đòn bẩy lớn nhất: gu, feel, vốn câu, cách "kể chuyện" — phần lớn thấm vào từ việc nghe kỹ người giỏi.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Nghe chủ động = làm gì</th></tr></thead>
+        <tbody>
+          <tr><td>① Bám <b>form</b>: đang ở đoạn A hay cầu? sắp về đâu?</td></tr>
+          <tr><td>② Theo <b>đường solo</b>: người chơi rơi vào nốt nào ở chỗ hợp âm đổi?</td></tr>
+          <tr><td>③ Nghe <b>comping</b>: pianist/guitar để trống chỗ nào, "trả lời" người solo ra sao?</td></tr>
+          <tr><td>④ <b>Hát theo</b> một câu bạn thích → rồi <b>chép</b> nó (trụ Cảm âm)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note-box">
+      <span class="tag">Lộ trình nghe khởi động (tên nghệ sĩ / album)</span>
+      <p>Pianist để "tắm tai": <b>Bill Evans, Oscar Peterson, Thelonious Monk, Wynton Kelly, Red Garland, Herbie Hancock, Keith Jarrett</b>. Album mốc để bắt đầu: Miles Davis — <i>Kind of Blue</i>; Bill Evans — <i>Waltz for Debby</i> &amp; <i>Sunday at the Village Vanguard</i>. Nghe một bài <b>nhiều lần</b>, mỗi lần bám một thứ (lần này nghe bass, lần sau nghe comping…).</p>
+    </div>
+  </section>
+
+  <section class="concept" id="s-jz-routine" data-title="Routine jazz & khép bộ">
+    <span class="sec-eyebrow">PHẦN 16 · GHÉP TẤT CẢ</span>
+    <h2>Routine jazz &amp; cách 5 trụ ghép lại</h2>
+    <p class="lead">Đây là nơi mọi thứ hội tụ về mục tiêu cuối của bạn — <b>jazz hóa &amp; chơi được một bài</b>. Một buổi tập jazz điển hình gói cả năm trụ:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Phút</th><th>Làm gì</th><th>Trụ dùng</th></tr></thead>
+        <tbody>
+          <tr><td>5'</td><td>Khởi động: scale/arpeggio + guide-tone line qua ii–V–I 12 giọng</td><td>④ + ⑤</td></tr>
+          <tr><td>5'</td><td>Cảm âm: nhận vòng &amp; chất hợp âm</td><td>③</td></tr>
+          <tr><td>10'</td><td>Drill vốn câu: 1–2 lick ii–V–I qua vài giọng, rồi "phá" nó</td><td>⑤</td></tr>
+          <tr><td>10'</td><td>Một standard: comp + solo cùng backing track</td><td>② + ⑤</td></tr>
+          <tr><td>5'</td><td>Nghe chủ động 1 bản, hát/chép một câu</td><td>③ + ⑤</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Quy trình "jazz hóa một bài" — bản tổng</h3>
+    <p>Ghép cả bộ: ① dò bài ra bậc La Mã → ⑤ thêm bậc 7, chọn chord-scale, reharm các cú V→I (tritone sub, chèn ii–V, modal interchange) → ② đặt voicing rootless + điệu + feel → ⑤ thêm câu solo/fill trên changes → ③ dùng tai kiểm tra &amp; chỉnh. Nghe lại, hát, sửa. <b>Tai quyết định, không phải lý thuyết.</b></p>
+    <div class="key-def">
+      <span class="tag">Lời cuối của "ông giáo"</span>
+      Bộ 5 trụ này cho bạn <b>cái đầu</b> đủ để hiểu &amp; thiết kế mọi thứ. Nhưng "chơi được" là kỹ năng <b>vận động + tai</b>, mua bằng <b>giờ trên đàn</b>, không mua bằng đọc. Tin tốt: nền phân tích của bạn khiến phần "hiểu" nhanh hơn người thường nhiều — nên một khi có đàn và tập tai đều, bạn sẽ tiến rất nhanh vì luôn biết mình đang làm gì và tại sao. Chúc bạn kiên trì. 🎹</p>
     </div>
   </section>
 
@@ -1440,6 +2157,354 @@ function mkBtns(containerId, defs, onClick){ const w=document.getElementById(con
   }
 })();
 
+/* ===================== DOC #2 · ĐỆM HÁT — modules ===================== */
+
+/* voicing: full vs split-hands vs color */
+(function(){
+  const ro=document.getElementById('demVoiceReadout'); if(!document.getElementById('demVoiceBtns')) return;
+  const defs=[
+    {label:'Chồng đầy, quãng thấp (bùn)', notes:[48,52,55,60,64], t:'5 nốt sát nhau ở quãng thấp — nghe đục, "bùn".'},
+    {label:'Tách tay: bass + 3 nốt (gọn)', notes:[48,64,67,72], t:'bass Đô ở trái, tay phải 3 nốt mở quanh Đô giữa — sạch &amp; mở.'},
+    {label:'Bỏ 5, thêm 7 & 9 (màu)', notes:[48,64,71,74], t:'tay phải giữ 3 &amp; 7, thêm 9 — vẫn gọn mà có màu "người lớn".'}
+  ];
+  mkBtns('demVoiceBtns',defs,function(d){ chord(d.notes,audio().currentTime+0.04,1.9,0.55); ro.innerHTML='<b>'+d.label+'</b> — '+d.t; });
+})();
+
+/* left-hand patterns over C–Am–F–G */
+(function(){
+  const ro=document.getElementById('demLhReadout'); if(!document.getElementById('demLhBtns')) return;
+  const PROG=[{b:48,t:[60,64,67]},{b:45,t:[57,60,64]},{b:41,t:[57,60,65]},{b:43,t:[55,59,62]}]; // C Am F G
+  const spb=0.5;
+  function bar(kind,c,t0){
+    if(kind==='block'){ voice(c.b,t0,spb*4*0.95,0.5); chord(c.t,t0,spb*4*0.9,0.46); }
+    else if(kind==='arp'){ voice(c.b,t0,spb*4*0.9,0.5); const seq=[c.t[0],c.t[1],c.t[2],c.t[0]+12];
+      for(let i=0;i<4;i++) voice(seq[i],t0+i*spb,spb*0.9,0.5); }
+    else if(kind==='alberti'){ voice(c.b,t0,spb*4*0.9,0.45); const pat=[c.t[0],c.t[2],c.t[1],c.t[2],c.t[0],c.t[2],c.t[1],c.t[2]];
+      for(let i=0;i<8;i++) voice(pat[i],t0+i*(spb/2),spb*0.5,0.42); }
+    else if(kind==='oompah'){ voice(c.b,t0,spb*0.9,0.55); voice(c.b,t0+2*spb,spb*0.9,0.5);
+      chord(c.t,t0+spb,spb*0.9,0.42); chord(c.t,t0+3*spb,spb*0.9,0.42); }
+  }
+  function playAll(kind){ const t0=audio().currentTime+0.05; for(let i=0;i<PROG.length;i++) bar(kind,PROG[i],t0+i*4*spb); }
+  mkBtns('demLhBtns',[
+    {label:'Chồng (block)',k:'block',t:'bấm cả bass + hợp âm cùng lúc, giữ nguyên ô — chắc, đơn giản.'},
+    {label:'Rải (arpeggio)',k:'arp',t:'bass rồi rải hợp âm lên — bài "chảy", hợp ballad.'},
+    {label:'Alberti',k:'alberti',t:'kiểu cổ điển: thấp–cao–giữa–cao liên tục — lăn tăn, đều.'},
+    {label:'Bass–hợp âm (oom-pah)',k:'oompah',t:'bass ở phách 1 &amp; 3, hợp âm ở 2 &amp; 4 — đung đưa.'}
+  ],function(d){ playAll(d.k); ro.innerHTML='<b>'+d.label+'</b> — '+d.t; });
+})();
+
+/* intro / turnaround / ending */
+(function(){
+  const ro=document.getElementById('demTailReadout'); if(!document.getElementById('demTailBtns')) return;
+  function vamp(){ const t0=audio().currentTime+0.05; const cm=[60,64,67,71];
+    for(let r=0;r<2;r++){ const t=t0+r*1.4; voice(48,t,1.3,0.5); arp(cm,t+0.1,0.16,1.2,0.5); } }
+  function turnaround(){ seqPlay([{bass:48,notes:[60,64,67]},{bass:45,notes:[57,60,64]},{bass:50,notes:[62,65,69]},{bass:43,notes:[55,59,62]}], 0.7); }
+  function ending(){ const t0=audio().currentTime+0.05;
+    voice(50,t0,0.68,0.5); chord([60,65,69,72],t0,0.66,0.5);            // Dm7
+    voice(43,t0+0.7,0.68,0.5); chord([59,62,65,67],t0+0.7,0.66,0.5);    // G7
+    voice(48,t0+1.4,2.6,0.5); chord([64,67,71,74],t0+1.5,2.4,0.5); }    // Cmaj7 (ngân)
+  mkBtns('demTailBtns',[
+    {label:'▶ Dạo đầu (vamp)',f:vamp,t:'rải Cmaj7 nhẹ vài ô để "mời" ca sĩ vào.'},
+    {label:'▶ Turnaround (I–vi–ii–V)',f:turnaround,t:'C–Am–Dm–G kéo về đầu đoạn — chất keo nối các câu.'},
+    {label:'▶ Kết đẹp (ii–V–I ngân)',f:ending,t:'Dm7–G7–Cmaj7, hợp âm cuối ngân dài — tai biết bài đã dừng.'}
+  ],function(d){ d.f(); ro.innerHTML='<b>'+d.label+'</b> — '+d.t; });
+})();
+
+/* transpose: same shape, two keys */
+(function(){
+  const ro=document.getElementById('demTransReadout'); if(!document.getElementById('demTransBtns')) return;
+  const PROG=[{b:48,t:[60,64,67]},{b:43,t:[59,62,67]},{b:45,t:[57,60,64]},{b:41,t:[57,60,65]}]; // C G Am F
+  const MEL=[72,71,69,72]; const spb=0.55;
+  function playKey(semi){ const t0=audio().currentTime+0.05;
+    for(let i=0;i<PROG.length;i++){ const t=t0+i*2*spb, c=PROG[i];
+      voice(c.b+semi,t,2*spb*0.9,0.5); chord(c.t.map(n=>n+semi),t,2*spb*0.85,0.42);
+      voice(MEL[i]+semi,t,2*spb*0.9,0.62); } }
+  mkBtns('demTransBtns',[
+    {label:'▶ Giọng Đô (C)',s:0,t:'gốc — I–V–vi–IV ở Đô.'},
+    {label:'▶ Giọng Sol (G, +7)',s:7,t:'dời tất cả lên 7 nửa cung: cùng "hình", cao hơn.'}
+  ],function(d){ playKey(d.s); ro.innerHTML='<b>'+d.label+'</b> — '+d.t; });
+})();
+
+/* ===================== 7. STYLES SEQUENCER ===================== */
+(function(){
+  const seg=document.getElementById('styleSeg'), playB=document.getElementById('stylePlay'), stopB=document.getElementById('styleStop');
+  const bpm=document.getElementById('styleBpm'), bpmV=document.getElementById('styleBpmV'), grid=document.getElementById('seqGrid'), beatsEl=document.getElementById('seqBeats'), ro=document.getElementById('styleReadout');
+  if(!seg) return; let style='ballad';
+  bpm.addEventListener('input',()=>bpmV.textContent=bpm.value+' BPM');
+  const CH=[[48,60,64,67],[45,57,60,64],[41,57,60,65],[43,55,59,62]]; // C Am F G : bass + triad
+  const STYLES={
+    ballad:{steps:16,beats:4,desc:'Ballad 4/4 · chậm, êm. Kick ở phách 1, snare nhẹ ở phách 3, hi-hat rải đều; hợp âm rải mềm.',
+      kick:[0],snare:[8],hat:[0,2,4,6,8,10,12,14],bass:[0],chordArp:true,defBpm:72},
+    valse:{steps:12,beats:3,desc:'Valse 3/4 · "chùm–pah–pah": bass tay trái ở phách 1, hợp âm gọn ở phách 2 &amp; 3. Đếm 1-2-3 vòng lại.',
+      kick:[0],snare:[],hat:[0,4,8],bass:[0],chordHits:[4,8],defBpm:120},
+    slowrock:{steps:12,beats:4,perBeat:3,desc:'Slow Rock 12/8 · cảm giác chùm 3 lắc lư. Kick ở phách 1 &amp; 3, snare backbeat, rải chùm 3 liên tục.',
+      kick:[0,6],snare:[6],hat:[0,1,2,3,4,5,6,7,8,9,10,11],bass:[0],chordArp:true,defBpm:66},
+    bossa:{steps:16,beats:4,desc:'Bossa Nova 4/4 · mát, đảo phách. Bass 2 nốt đều (gốc–quãng 5), hi-hat đều, hợp âm rơi lệch phách.',
+      kick:[0,10],snare:[],hat:[0,2,4,6,8,10,12,14],bass:[0,4,8,12],chordHits:[3,6,11,14],bossaBass:true,defBpm:126},
+    swing:{steps:16,beats:4,desc:'Jazz Swing 4/4 · ride "đung-đưa", walking bass đi từng phách, comping hợp âm lệch phách.',
+      kick:[],snare:[],hat:[0,3,4,7,8,11,12,15],bass:[0,4,8,12],chordHits:[6,14],swing:true,walk:true,defBpm:132}
+  };
+  function chordCellsFor(st){ if(st.chordArp){ const a=[]; const pb=st.steps/st.beats; for(let i=0;i<st.steps;i+=pb)a.push(i); return a; } return st.chordHits||[]; }
+  function renderGrid(){
+    const st=STYLES[style], N=st.steps, pb=st.perBeat||(N/st.beats);
+    beatsEl.style.gridTemplateColumns='repeat('+N+',1fr)'; beatsEl.innerHTML='';
+    for(let i=0;i<N;i++){ const c=document.createElement('div'); c.style.height='7px'; c.style.borderRadius='2px'; c.style.background=(i%pb===0)?'var(--text-dim)':'transparent'; beatsEl.appendChild(c); }
+    grid.innerHTML='';
+    const rows=[['K','kick','on-k',st.kick||[]],['S','snare','on-s',st.snare||[]],['H','hat','on-h',st.hat||[]],['B','bass','on-b',st.bass||[]],['C','chord','on-c',chordCellsFor(st)]];
+    rows.forEach(function(r){ const lab=r[0], cls=r[2], hits=r[3];
+      const row=document.createElement('div'); row.className='seq-row';
+      const l=document.createElement('div'); l.className='rl'; l.textContent=lab; row.appendChild(l);
+      const cells=document.createElement('div'); cells.className='seq-cells'; cells.style.gridTemplateColumns='repeat('+N+',1fr)';
+      for(let i=0;i<N;i++){ const c=document.createElement('div'); c.className='cell'+((i%pb===0)?' beat':''); if(hits.indexOf(i)>=0) c.classList.add(cls); cells.appendChild(c); }
+      row.appendChild(cells); grid.appendChild(row);
+    });
+    ro.innerHTML=st.desc;
+  }
+  let timer=null, stepPos=0;
+  function clearPlay(){ grid.querySelectorAll('.cell.play').forEach(c=>c.classList.remove('play')); beatsEl.querySelectorAll('.play').forEach(c=>c.classList.remove('play')); }
+  function stop(){ if(timer){clearInterval(timer);timer=null;} setPlaying(playB,false); clearPlay(); }
+  function play(){
+    stop(); audio(); markAudioOn(); setPlaying(playB,true);
+    const st=STYLES[style], N=st.steps, pb=st.perBeat||(N/st.beats);
+    const stepDur=(60/(+bpm.value))/pb;
+    stepPos=0; let chordIdx=-1;
+    const tick=()=>{
+      const ac=audio(); let t=ac.currentTime+0.01;
+      if(st.swing && (stepPos%2===1)) t+=stepDur*0.34;
+      const s=stepPos%N, beatIdx=Math.floor(s/pb);
+      if(s===0) chordIdx=(chordIdx+1)%CH.length;
+      const ch=CH[chordIdx];
+      if((st.kick||[]).indexOf(s)>=0) kick(t, s===0?1:0.8);
+      if((st.snare||[]).indexOf(s)>=0) snare(t,0.8);
+      if((st.hat||[]).indexOf(s)>=0) hat(t, s%pb===0?0.5:0.3, st.swing&&s%2===0);
+      if((st.bass||[]).indexOf(s)>=0){
+        let bn=ch[0];
+        if(st.bossaBass) bn=(beatIdx%2===0)?ch[0]:ch[0]+7;
+        if(st.walk){ const w=[ch[0],ch[0]+3,ch[0]+5,ch[0]+7]; bn=w[beatIdx%4]; }
+        voice(bn,t,stepDur*pb*0.9,0.6);
+      }
+      if(st.chordArp && s%pb===0) arp(ch.slice(1),t,stepDur*0.5,stepDur*pb,0.5);
+      if((st.chordHits||[]).indexOf(s)>=0) chord(ch.slice(1),t,stepDur*pb*0.8,0.5);
+      clearPlay();
+      grid.querySelectorAll('.seq-cells').forEach(row=>{ const cell=row.children[s]; if(cell) cell.classList.add('play'); });
+      const bc=beatsEl.children[s]; if(bc) bc.classList.add('play');
+      stepPos++;
+    };
+    tick(); timer=setInterval(tick, stepDur*1000);
+  }
+  seg.addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b)return; seg.querySelectorAll('button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); style=b.dataset.s; const was=!!timer; stop(); renderGrid(); if(STYLES[style].defBpm){ bpm.value=STYLES[style].defBpm; bpmV.textContent=bpm.value+' BPM'; } if(was) play(); });
+  playB.addEventListener('click',()=>{ if(timer){stop();return;} play(); });
+  stopB.addEventListener('click',stop);
+  renderGrid();
+})();
+
+/* ===================== DOC #3 · CẢM ÂM — modules ===================== */
+
+/* progression recognition trainer */
+(function(){
+  const qEl=document.getElementById('earProgQ'), optsEl=document.getElementById('earProgOpts'),
+        newB=document.getElementById('earProgNew'), replayB=document.getElementById('earProgReplay'),
+        revEl=document.getElementById('earProgReveal'), scoreEl=document.getElementById('earProgScore'), streakEl=document.getElementById('earProgStreak');
+  if(!newB) return;
+  let cur=null, correct=0,total=0,streak=0,locked=false;
+  const V={ C:{b:48,t:[60,64,67]}, G:{b:43,t:[59,62,67]}, Am:{b:45,t:[57,60,64]}, F:{b:41,t:[57,60,65]}, Dm:{b:50,t:[62,65,69]} };
+  const PROGS=[
+    {name:'I–V–I', ch:['C','G','C'], why:'Cadence chính V→I — cảm giác "về nhà" mạnh nhất.'},
+    {name:'ii–V–I', ch:['Dm','G','C'], why:'Câu nền của jazz: ii dẫn vào V rồi về I.'},
+    {name:'I–vi–IV–V', ch:['C','Am','F','G'], why:'Vòng pop kinh điển ("bốn hợp âm").'},
+    {name:'I–IV–V–I', ch:['C','F','G','C'], why:'Ba hợp âm chính — nền của blues/rock.'},
+    {name:'i–VI–VII (thứ)', ch:['Am','F','G'], why:'Vòng thứ buồn/hùng, hay gặp trong ballad & nhạc phim.'}
+  ];
+  function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const x=a[i];a[i]=a[j];a[j]=x; } return a; }
+  function play(p){ audio(); markAudioOn(); const t0=audio().currentTime+0.05; p.ch.forEach(function(nm,i){ const c=V[nm], t=t0+i*0.72; voice(c.b,t,0.7,0.5); chord(c.t,t,0.66,0.5); }); }
+  function gen(){
+    locked=false; revEl.textContent='';
+    cur=PROGS[Math.floor(Math.random()*PROGS.length)];
+    const names=PROGS.map(function(p){return p.name;});
+    const others=shuffle(names.filter(function(n){return n!==cur.name;})).slice(0,3);
+    const opts=shuffle([cur.name].concat(others));
+    optsEl.innerHTML='';
+    opts.forEach(function(o){ const b=document.createElement('div'); b.className='qopt'; b.textContent=o; b.onclick=function(){ choose(o,b); }; optsEl.appendChild(b); });
+    qEl.innerHTML='Nghe vòng hợp âm. Đó là vòng nào?';
+    play(cur);
+  }
+  function choose(o,el){
+    if(locked) return; locked=true; total++;
+    const ok=(o===cur.name);
+    if(ok){ correct++; streak++; el.classList.add('correct'); }
+    else { streak=0; el.classList.add('wrong'); [].forEach.call(optsEl.children,function(c){ if(c.textContent===cur.name) c.classList.add('correct'); }); }
+    revEl.innerHTML=(ok?'✅ Chính xác! ':'❌ Chưa đúng. ')+'Vòng <b>'+cur.name+'</b> — '+cur.why;
+    scoreEl.textContent=correct+'/'+total; streakEl.textContent=streak;
+  }
+  newB.addEventListener('click',gen);
+  replayB.addEventListener('click',function(){ if(cur) play(cur); });
+})();
+
+/* transcription worked example — Twinkle (public domain) */
+(function(){
+  const playB=document.getElementById('transPlayBtn'), revB=document.getElementById('transRevealBtn'), ro=document.getElementById('transReveal');
+  if(!playB) return;
+  const notes=[60,60,67,67,69,69,67, 65,65,64,64,62,62,60];
+  const durs=[.5,.5,.5,.5,.5,.5,1, .5,.5,.5,.5,.5,.5,1];
+  const degrees='1 1 5 5 6 6 5 · 4 4 3 3 2 2 1';
+  function play(){ audio(); markAudioOn(); let t=audio().currentTime+0.05; for(let i=0;i<notes.length;i++){ voice(notes[i],t,durs[i]*0.9,0.7); t+=durs[i]*0.62; } }
+  playB.addEventListener('click',play);
+  revB.addEventListener('click',function(){ ro.innerHTML='Bậc từng nốt (giọng Đô): <b>'+degrees+'</b>. Câu này chỉ dùng bậc 1-2-3-4-5-6 — tập "gọi" đúng bậc là bước đầu của chép giai điệu.'; });
+})();
+
+/* ===================== 9. EAR TRAINING QUIZ ===================== */
+(function(){
+  const modeSeg=document.getElementById('quizMode'), qEl=document.getElementById('quizQ'), optsEl=document.getElementById('quizOpts'),
+        newB=document.getElementById('quizNew'), replayB=document.getElementById('quizReplay'), revEl=document.getElementById('quizReveal'),
+        scoreEl=document.getElementById('quizScore'), streakEl=document.getElementById('quizStreak');
+  if(!modeSeg) return;
+  let mode='note', cur=null, correct=0, total=0, streak=0, locked=false;
+  const NAT=[0,2,4,5,7,9,11];
+  const INTS=[['2 trưởng',2],['3 thứ',3],['3 trưởng',4],['4 đúng',5],['Tritone',6],['5 đúng',7],['Quãng 8',12]];
+  const CHORDS=[['Trưởng',[0,4,7]],['Thứ',[0,3,7]],['Bảy (7)',[0,4,7,10]],['Trưởng 7',[0,4,7,11]],['Giảm',[0,3,6]]];
+  function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const x=a[i];a[i]=a[j];a[j]=x; } return a; }
+  function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+  function distract(pool,answer,n){ const others=pool.filter(x=>x!==answer); return shuffle(others).slice(0,n); }
+  function gen(){
+    locked=false; revEl.textContent='';
+    if(mode==='note'){
+      const pc=pick(NAT); const ans=VN[pc];
+      const play=()=>{ audio(); markAudioOn(); const t=audio().currentTime; voice(60,t,0.6,0.7); voice(60+pc,t+0.55,1.0,0.85); };
+      const opts=shuffle([ans].concat(distract(NAT.map(x=>VN[x]),ans,3)));
+      cur={ans,opts,play,reveal:'Nốt đó là <b>'+VN[pc]+' ('+EN[pc]+')</b> — cách mốc Đô một quãng '+pc+' nửa cung.'};
+      qEl.innerHTML='Đã cho <b>Đô</b> làm mốc, rồi phát một nốt. Nốt đó là gì?';
+    } else if(mode==='interval'){
+      const it=pick(INTS); const ans=it[0], semi=it[1];
+      const play=()=>{ audio(); markAudioOn(); const t=audio().currentTime; voice(60,t,0.6,0.8); voice(60+semi,t+0.55,1.0,0.85); };
+      const opts=shuffle([ans].concat(distract(INTS.map(x=>x[0]),ans,3)));
+      cur={ans,opts,play,reveal:'Là quãng <b>'+ans+'</b> = '+semi+' nửa cung.'};
+      qEl.innerHTML='Nghe hai nốt (lần lượt). Quãng giữa chúng là gì?';
+    } else if(mode==='quality'){
+      const isMaj=Math.random()<0.5; const root=60+pick([0,2,3,5,7]); const iv=isMaj?[0,4,7]:[0,3,7]; const ans=isMaj?'Trưởng':'Thứ';
+      const play=()=>{ audio(); markAudioOn(); chord(iv.map(x=>root+x),audio().currentTime,1.6,0.72); };
+      cur={ans,opts:['Trưởng','Thứ'],play,reveal:'Đây là hợp âm <b>'+ans+'</b> (quãng 3 dưới '+(isMaj?'trưởng = 4':'thứ = 3')+' nửa cung).'};
+      qEl.innerHTML='Hợp âm này nghe <b>vui (trưởng)</b> hay <b>buồn (thứ)</b>?';
+    } else {
+      const ch=pick(CHORDS); const ans=ch[0], iv=ch[1];
+      const play=()=>{ audio(); markAudioOn(); const t=audio().currentTime; chord(iv.map(x=>60+x),t,1.6,0.72); };
+      const opts=shuffle([ans].concat(distract(CHORDS.map(x=>x[0]),ans,3)));
+      cur={ans,opts,play,reveal:'Là hợp âm <b>'+ans+'</b> · nốt: '+iv.map(x=>EN[x%12]).join(' – ')+'.'};
+      qEl.innerHTML='Loại hợp âm vừa nghe là gì?';
+    }
+    render(); cur.play();
+  }
+  function render(){
+    optsEl.innerHTML='';
+    cur.opts.forEach(function(o){ const b=document.createElement('div'); b.className='qopt'; b.textContent=o; b.onclick=function(){ choose(o,b); }; optsEl.appendChild(b); });
+  }
+  function choose(o,el){
+    if(locked) return; locked=true; total++;
+    const ok=(o===cur.ans);
+    if(ok){ correct++; streak++; el.classList.add('correct'); }
+    else { streak=0; el.classList.add('wrong'); [].forEach.call(optsEl.children,function(c){ if(c.textContent===cur.ans) c.classList.add('correct'); }); }
+    revEl.innerHTML=(ok?'✅ Chính xác! ':'❌ Chưa đúng. ')+cur.reveal;
+    scoreEl.textContent=correct+'/'+total; streakEl.textContent=streak;
+  }
+  newB.addEventListener('click',gen);
+  replayB.addEventListener('click',()=>{ if(cur) cur.play(); });
+  modeSeg.addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b)return; modeSeg.querySelectorAll('button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); mode=b.dataset.q; qEl.textContent='Đã đổi chế độ. Bấm "Câu mới" để bắt đầu.'; optsEl.innerHTML=''; revEl.textContent=''; });
+})();
+
+/* ===================== DOC #4 · NHẠC CỔ ĐIỂN — modules ===================== */
+
+/* reading: dynamics & articulation on one phrase */
+(function(){
+  const ro=document.getElementById('demReadReadout'); if(!document.getElementById('demReadBtns')) return;
+  const mel=[60,62,64,65,67]; const sp=0.42;
+  function play(vel,durf){ const t0=audio().currentTime+0.05; for(let i=0;i<mel.length;i++) voice(mel[i],t0+i*sp,sp*durf,vel); }
+  mkBtns('demReadBtns',[
+    {label:'Nhẹ (piano)',v:0.3,d:0.85,t:'ký hiệu <i>p</i> — chơi nhẹ, dịu.'},
+    {label:'Mạnh (forte)',v:0.9,d:0.85,t:'ký hiệu <i>f</i> — chơi mạnh, đầy.'},
+    {label:'Legato (liền)',v:0.6,d:1.15,t:'slur — các nốt nối liền, mượt, "hát".'},
+    {label:'Staccato (nảy)',v:0.6,d:0.3,t:'chấm trên nốt — ngắn, nảy, tách bạch.'}
+  ],function(x){ play(x.v,x.d); ro.innerHTML='<b>'+x.label+'</b> — '+x.t; });
+})();
+
+/* technique: scale / arpeggio / hanon */
+(function(){
+  const ro=document.getElementById('demTechReadout'); if(!document.getElementById('demTechBtns')) return;
+  function scale(){ const t0=audio().currentTime+0.05; const up=[0,2,4,5,7,9,11,12];
+    for(let i=0;i<up.length;i++) voice(60+up[i],t0+i*0.16,0.15,0.65);
+    const dn=[11,9,7,5,4,2,0]; for(let i=0;i<dn.length;i++) voice(60+dn[i],t0+(up.length+i)*0.16,0.15,0.65); }
+  function arpg(){ const t0=audio().currentTime+0.05; const seq=[60,64,67,72,76,72,67,64,60];
+    for(let i=0;i<seq.length;i++) voice(seq[i],t0+i*0.18,0.17,0.68); }
+  function hanon(){ const t0=audio().currentTime+0.05; const base=[0,2,4,5,4,2]; let k=0;
+    for(let step=0;step<4;step++){ for(let i=0;i<base.length;i++){ voice(60+step+base[i], t0+k*0.13, 0.12, 0.6); k++; } } }
+  mkBtns('demTechBtns',[
+    {label:'Gam Đô (lên–xuống)',f:scale,t:'chạy gam đều lực — nền của mọi ngón.'},
+    {label:'Arpeggio Đô',f:arpg,t:'hợp âm rải — mở rộng tầm tay, vốn cho solo.'},
+    {label:'Hanon mẫu',f:hanon,t:'khuôn lặp rèn độc lập &amp; đều ngón (tập chậm!).'}
+  ],function(x){ x.f(); ro.innerHTML='<b>'+x.label+'</b> — '+x.t; });
+})();
+
+/* interpretation: flat vs shaped */
+(function(){
+  const ro=document.getElementById('demInterpReadout'); if(!document.getElementById('demInterpBtns')) return;
+  const mel=[60,64,67,72,71,67,64,60];
+  function flat(){ const t0=audio().currentTime+0.05; for(let i=0;i<mel.length;i++) voice(mel[i],t0+i*0.4,0.38,0.6); }
+  function shaped(){ const t0=audio().currentTime+0.05;
+    const vel=[.35,.45,.62,.85,.72,.55,.42,.32];
+    const gap=[.36,.36,.4,.52,.44,.42,.46,.7];
+    let t=t0; for(let i=0;i<mel.length;i++){ voice(mel[i],t,gap[i]*1.05,vel[i]); t+=gap[i]; } }
+  mkBtns('demInterpBtns',[
+    {label:'▶ Phẳng (vô hồn)',f:flat,t:'đúng nốt, đều lực, đều nhịp — nghe "máy".'},
+    {label:'▶ Có hình (câu + sắc thái)',f:shaped,t:'to dần tới đỉnh (Đô cao) rồi nhỏ lại, hơi ngân ở đỉnh &amp; cuối câu — cùng nốt mà "biết thở".'}
+  ],function(x){ x.f(); ro.innerHTML='<b>'+x.label+'</b> — '+x.t; });
+})();
+
+/* ===================== DOC ⑤ · JAZZ (improv/feel/standards) — modules ===================== */
+
+/* improv vocabulary over ii–V–I (Dm7 G7 Cmaj7) */
+(function(){
+  const ro=document.getElementById('demJzVocabReadout'); if(!document.getElementById('demJzVocabBtns')) return;
+  const COMP=[{b:50,up:[60,65,69]},{b:43,up:[59,62,65]},{b:48,up:[64,67,71]}];
+  function comp(t0){ for(let i=0;i<3;i++){ const c=COMP[i], t=t0+i*2.0; voice(c.b,t,1.9,0.36); chord(c.up,t,1.85,0.28); } }
+  function line(notes,t0,step){ for(let i=0;i<notes.length;i++) voice(notes[i],t0+i*step,step*0.92,0.72); }
+  const defs=[
+    {label:'Guide-tone line', L:[65,60,59,65,64,59], s:1.0, t:'chỉ đường 3–7 — bộ xương, nghe đã "đúng changes".'},
+    {label:'Target 3 & 7 (arpeggio)', L:[62,65,69,72,55,59,62,65,60,64,67,71], s:0.5, t:'chạy chord tone, rơi 3/7 ở phách mạnh — chắc chắn.'},
+    {label:'Lick ii–V–I (mẫu gốc)', L:[62,65,67,69,70,68,67,65,64,67,71], s:0.46, t:'câu mẫu (gốc): G7 dùng ♯9–♭9 tạo căng rồi giải về Mi–Sol–Si của Cmaj7.'},
+    {label:'Bebop scale (G7→C)', L:[55,57,59,60,62,64,65,66,67], s:0.28, t:'gam 8 nốt (thêm nốt lướt) — chord tone luôn rơi phách mạnh.'}
+  ];
+  mkBtns('demJzVocabBtns',defs,function(d){ const t0=audio().currentTime+0.05; comp(t0); line(d.L,t0,d.s); ro.innerHTML='<b>'+d.label+'</b> — '+d.t; });
+})();
+
+/* motif development */
+(function(){
+  const ro=document.getElementById('demMotifReadout'); if(!document.getElementById('demMotifBtns')) return;
+  function play(notes,times){ const t0=audio().currentTime+0.05; for(let i=0;i<notes.length;i++) voice(notes[i], t0+times[i], 0.4, 0.72); }
+  const defs=[
+    {label:'Motif gốc',N:[64,67,72],T:[0,0.4,0.8],t:'ý gốc: 3 nốt đi lên (Mi–Sol–Đô).'},
+    {label:'Đổi nhịp',N:[64,67,72],T:[0,0.22,0.5],t:'cùng 3 nốt, nhịp khác (nhanh–nhanh–chậm).'},
+    {label:'Đổi hướng',N:[72,67,64],T:[0,0.4,0.8],t:'đảo ngược: cùng nốt, đi xuống.'},
+    {label:'Dịch bậc',N:[62,65,71],T:[0,0.4,0.8],t:'dời "hình" xuống một bậc (sequence).'}
+  ];
+  mkBtns('demMotifBtns',defs,function(d){ play(d.N,d.T); ro.innerHTML='<b>'+d.label+'</b> — '+d.t; });
+})();
+
+/* feel: straight vs swing vs comping */
+(function(){
+  const ro=document.getElementById('demFeelReadout'); if(!document.getElementById('demFeelBtns')) return;
+  const mel=[60,62,64,65,67,65,64,62], pad=[60,64,67,71];
+  function straight(){ const t0=audio().currentTime+0.05; chord(pad,t0,1.7,0.2); for(let i=0;i<8;i++) voice(mel[i],t0+i*0.25,0.24,0.7); }
+  function swing(){ const t0=audio().currentTime+0.05; chord(pad,t0,1.7,0.2);
+    for(let i=0;i<8;i++){ const beat=Math.floor(i/2), within=i%2; const t=t0+beat*0.5+(within?0.33:0); voice(mel[i],t,within?0.16:0.3,0.7); } }
+  function comping(){ const t0=audio().currentTime+0.05; const bass=[48,52,55,58];
+    for(let bar=0;bar<2;bar++){ const bt=t0+bar*2.0;
+      for(let b=0;b<4;b++) voice(bass[b],bt+b*0.5,0.45,0.5);
+      chord([64,67,71],bt,0.5,0.42); chord([64,67,71],bt+0.75,0.5,0.42); } }
+  mkBtns('demFeelBtns',[
+    {label:'Thẳng (straight)',f:straight,t:'8th đều tăm tắp — chất pop/cổ điển.'},
+    {label:'Swing (đung đưa)',f:swing,t:'cặp 8th dài–ngắn (~2/3+1/3) — chất jazz.'},
+    {label:'Comping (Charleston)',f:comping,t:'walking bass + hợp âm điểm ở phách 1 &amp; "và" của 2 — chừa khoảng trống.'}
+  ],function(x){ x.f(); ro.innerHTML='<b>'+x.label+'</b> — '+x.t; });
+})();
+
 /* ===================== DOC TABS · NAV · PROGRESS · THEME (merged, per-document) ===================== */
 (function(){
   const tabs=[].slice.call(document.querySelectorAll('.doctab'));
@@ -1473,7 +2538,7 @@ function mkBtns(containerId, defs, onClick){ const w=document.getElementById(con
     const st=window.pageYOffset||document.documentElement.scrollTop;
     const docH=(document.documentElement.scrollHeight-window.innerHeight)||1;
     const p=Math.max(0,Math.min(1,st/docH)); const pStr=Math.round(p*100)+'%';
-    if(rp) rp.style.width=pStr; if(fill) fill.style.width=pStr; if(pct) pct.textContent=pStr;
+    if(rp) rp.style.transform='scaleX('+p+')'; if(fill) fill.style.transform='scaleX('+p+')'; if(pct) pct.textContent=pStr;
     const docEl=activeDoc(); if(!docEl) return;
     const secs=[].slice.call(docEl.querySelectorAll('section[data-title]'));
     let activeSec=secs.length?secs[0]:null;
@@ -1502,7 +2567,7 @@ function mkBtns(containerId, defs, onClick){ const w=document.getElementById(con
   const tBtn=document.getElementById('themeToggle'), tLbl=document.getElementById('themeLbl');
   function applyTheme(mode){ document.documentElement.setAttribute('data-theme',mode);
     if(tLbl) tLbl.textContent=(mode==='dark')?'Tối':'Sáng';
-    if(tBtn) tBtn.firstChild.textContent=(mode==='dark')?'🌙 ':'☀️ '; }
+    const _ti=document.querySelector('#themeToggle .themeIco'); if(_ti) _ti.innerHTML=(mode==='dark')?"<svg class=\"licon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z\"/></svg>":"<svg class=\"licon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"4\"/><path d=\"M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4\"/></svg>"; }
   try{ const saved=localStorage.getItem('nlp-theme'); if(saved) applyTheme(saved); else applyTheme('dark'); }catch(e){ applyTheme('dark'); }
   if(tBtn) tBtn.addEventListener('click',function(){
     const cur=document.documentElement.getAttribute('data-theme')||'dark';
@@ -1515,6 +2580,27 @@ function mkBtns(containerId, defs, onClick){ const w=document.getElementById(con
 
 /* enable-audio button wiring (shared) */
 (function(){ var b=document.getElementById('enableAudio'); if(b) b.addEventListener('click',function(){ audio(); markAudioOn(); voice(72,audio().currentTime+0.02,0.28,0.5); }); })();
+
+/* ===================== replace emoji UI icons -> Lucide SVG ===================== */
+(function(){
+  function ic(inner){ return '<svg class="licon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+inner+'</svg>'; }
+  const ICON={
+    play:'<path d="M7 4v16l13-8z" fill="currentColor" stroke="none"/>',
+    square:'<rect x="7" y="7" width="10" height="10" rx="1.5" fill="currentColor" stroke="none"/>',
+    shuffle:'<path d="M2 18h2c1.3 0 2.5-.6 3.3-1.7l6.4-8.6C14.5 6.6 15.7 6 17 6h5"/><path d="m18 2 4 4-4 4"/><path d="M2 6h2c1.3 0 2.5.6 3.3 1.7l.7.9"/><path d="M22 18h-5c-1.3 0-2.5-.6-3.3-1.7l-.7-.9"/><path d="m18 14 4 4-4 4"/>',
+    rotate:'<path d="M3 12a9 9 0 1 0 9-9 9.8 9.8 0 0 0-6.7 2.7L3 8"/><path d="M3 3v5h5"/>',
+    volume:'<path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/>',
+    eye:'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>',
+    music:'<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',
+    alert:'<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h16.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/>'
+  };
+  const MAP={'\u25B6':'play','\u25A0':'square','\uD83C\uDFB2':'shuffle','\uD83D\uDD01':'rotate','\uD83D\uDD0A':'volume','\uD83D\uDC41':'eye','\u266A':'music','\u26A0':'alert'};
+  document.querySelectorAll('button, .sb-brand .mk, .audio-cta .ico, .tag').forEach(function(el){
+    let h=el.innerHTML, changed=false;
+    for(const e in MAP){ if(h.indexOf(e)>=0){ h=h.split(e).join(ic(ICON[MAP[e]])); changed=true; } }
+    if(changed) el.innerHTML=h;
+  });
+})();
 </script>
 </body>
 </html>
