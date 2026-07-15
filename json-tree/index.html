@@ -1,0 +1,1830 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JSON Tree — view, search & repair JSON (even broken JSON)</title>
+  <link rel="stylesheet" href="web-builder.css" />
+  <style>
+    /* ---- JSON-tree specific tokens (theme-aware, built on web-builder tokens) ---- */
+    :root {
+      --jt-key:      #4f46e5;   /* indigo — object keys        */
+      --jt-string:   #15803d;   /* green  — string values      */
+      --jt-number:   #b45309;   /* amber  — number values      */
+      --jt-boolean:  #7c3aed;   /* violet — booleans           */
+      --jt-null:     var(--wb-fg-subtle);
+      --jt-index:    var(--wb-fg-subtle);
+      --jt-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+                 "Liberation Mono", "Courier New", monospace;
+    }
+    .dark {
+      --jt-key:     #a5b4fc;
+      --jt-string:  #4ade80;
+      --jt-number:  #fbbf24;
+      --jt-boolean: #c4b5fd;
+    }
+
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background: var(--wb-canvas);
+      color: var(--wb-fg);
+      font-family: var(--wb-font);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .jt-app { padding: 20px 0 64px; --wb-stack-gap: 18px; }
+    .jt-lead { color: var(--wb-fg-muted); font-size: 13.5px; margin: 0; max-width: 78ch; }
+    .jt-lead b { color: var(--wb-fg); font-weight: 600; }
+    .jt-lead code, .jt-lead .jt-kbd { font-family: var(--jt-mono); font-size: 12.5px; background: var(--wb-surface-2);
+      border: 1px solid var(--wb-border); border-radius: 5px; padding: 1px 5px; }
+    .jt-lead .jt-kbd { font-family: var(--wb-font); font-weight: 600; color: var(--wb-fg); }
+
+    /* Card heads: title on the left, controls pushed right, everything vertically
+       centered. (web-builder's default is align-items:flex-start, which is what
+       left the "Structure" title floating above the taller pill tabs.) */
+    .jt-app .wb-card__head { align-items: center; }
+    .jt-app .wb-card__head .wb-card__title { white-space: nowrap; }
+    .jt-app .wb-card__head .jt-card__actions { margin-left: auto; }
+    .jt-app .wb-card__head .wb-tabs--pill { flex: none; }
+
+    /* input | output panels use wb-grid--2 (see markup); the two cards fill it */
+    .jt-main { align-self: stretch; }
+
+    .jt-card__actions { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+
+    /* count badge on the "Inspect" tab */
+    .jt-tab-count {
+      display: inline-block; min-width: 15px; text-align: center;
+      font-size: 10.5px; font-weight: 700; line-height: 1.55;
+      color: var(--wb-danger-text); background: var(--wb-danger-soft);
+      border-radius: 999px; padding: 0 5px; margin-left: 5px;
+    }
+
+    /* editor */
+    .jt-editor {
+      width: 100%; min-height: 380px; box-sizing: border-box;
+      font-family: var(--jt-mono); font-size: 13px; line-height: 1.55;
+      tab-size: 2; white-space: pre; overflow: auto;
+    }
+    @media (max-width: 940px) { .jt-editor { min-height: 220px; } }
+
+    /* "Inspect": the original text, read-only, with every fixed spot marked
+       inline (added text = red, wrong/extra = struck, normalized = amber). */
+    .jt-inspect {
+      min-height: 380px; max-height: 62vh; box-sizing: border-box;
+      overflow: auto; border: 1px solid var(--wb-border);
+      border-radius: var(--wb-input-radius); background: var(--wb-surface-2);
+      padding: 12px 14px;
+    }
+    @media (max-width: 940px) { .jt-inspect { min-height: 220px; } }
+    .jt-inspect-src {
+      margin: 0; font-family: var(--jt-mono); font-size: 13px; line-height: 1.85;
+      white-space: pre-wrap; word-break: break-word; color: var(--wb-fg);
+    }
+    .jt-inspect-msg { color: var(--wb-fg-muted); font-size: 13px; }
+    .jt-inspect-ok  { color: var(--wb-success-text); font-weight: 600; }
+    .jt-inspect-hint {
+      display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center;
+      margin-bottom: 12px; padding-bottom: 11px; font-size: 12px; color: var(--wb-fg-muted);
+      border-bottom: 1px dashed var(--wb-border);
+    }
+    .jt-inspect-hint .jt-legend { display: inline-flex; align-items: center; gap: 5px; }
+    .jt-inspect-hint .jt-swatch { width: 22px; height: 14px; border-radius: 3px; flex: none; }
+    .jt-inspect-notes {
+      margin-top: 14px; padding: 10px 12px; font-size: 12.5px; line-height: 1.55;
+      color: var(--wb-fg-muted); background: var(--wb-surface);
+      border: 1px solid var(--wb-border); border-radius: var(--wb-radius-sm);
+    }
+    .jt-inspect-notes b { color: var(--wb-fg); }
+    .jt-inspect-notes ul { margin: 6px 0 0; padding-left: 18px; }
+    .jt-inspect-notes li { margin: 2px 0; }
+
+    /* the inline annotations — clickable, each pops up its explanation */
+    .jt-ann { border-radius: 3px; cursor: pointer; }
+    .jt-ann--ins {                       /* text the tool ADDED — shown red */
+      color: var(--wb-danger-text); background: var(--wb-danger-soft);
+      font-weight: 700; padding: 0 3px; border-radius: 4px;
+      box-shadow: inset 0 0 0 1px var(--wb-danger-soft);
+    }
+    .jt-ann--ins::before { content: "+"; font-size: .8em; opacity: .65; margin-right: 1px; }
+    .jt-ann--removed {                   /* wrong/extra — kept, struck through, NOT deleted */
+      color: var(--wb-danger-text); background: var(--wb-danger-soft);
+      text-decoration: line-through; text-decoration-color: var(--wb-danger); padding: 0 1px;
+    }
+    .jt-ann--changed {                   /* normalized in place (quotes/bareword/number) */
+      background: var(--wb-warning-soft); box-shadow: inset 0 -2px 0 var(--wb-warning); padding: 0 1px;
+    }
+    .jt-ann:hover { outline: 2px solid var(--wb-border-strong); outline-offset: 1px; }
+    .jt-fix-cap { cursor: pointer; }
+    .jt-fix-cap:hover { filter: brightness(.96); }
+
+    /* explanation popup shown when a marked spot is clicked */
+    .jt-pop {
+      position: fixed; z-index: 60; max-width: 300px;
+      background: var(--wb-surface); border: 1px solid var(--wb-border-strong);
+      border-radius: var(--wb-radius); box-shadow: var(--wb-shadow-md);
+      padding: 10px 12px; font-size: 12.5px; line-height: 1.5;
+    }
+    .jt-pop__tag {
+      display: inline-block; font-size: 10.5px; font-weight: 700; letter-spacing: .02em;
+      border-radius: 999px; padding: 1px 8px; margin-bottom: 6px;
+    }
+    .jt-pop__tag--danger  { color: var(--wb-danger-text);  background: var(--wb-danger-soft); }
+    .jt-pop__tag--warning { color: var(--wb-warning-text); background: var(--wb-warning-soft); }
+    .jt-pop__tag--info    { color: var(--wb-fg-muted);     background: var(--wb-surface-2); }
+    .jt-pop__msg { color: var(--wb-fg); }
+
+    /* sub-toolbar above tree — one cohesive bar; all controls share a height */
+    .jt-tools { display: flex; gap: 8px; align-items: center; margin-bottom: 14px; }
+    .jt-tools .jt-mode { flex: none; width: 132px; }
+    .jt-tools .jt-search { flex: 1 1 auto; min-width: 120px; }
+    .jt-tools .wb-select, .jt-tools .wb-input {
+      height: 36px; padding-top: 0; padding-bottom: 0; font-size: 13.5px;
+    }
+    .jt-tools .wb-input-group__addon { padding: 0 10px; }
+    /* result count lives inside the search field, right-aligned */
+    .jt-search { position: relative; }
+    .jt-search__count {
+      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+      font-size: 12px; font-weight: 600; color: var(--wb-fg-muted);
+      white-space: nowrap; pointer-events: none; background: var(--wb-surface);
+      padding-left: 8px;
+    }
+    .jt-search__count[data-tone="ok"]     { color: var(--wb-success-text); }
+    .jt-search__count[data-tone="warn"]   { color: var(--wb-warning-text); }
+    .jt-search__count[data-tone="danger"] { color: var(--wb-danger-text); }
+    .jt-search input[type="search"] { padding-right: 78px; }   /* room for the count */
+    .jt-search input[type="search"]::-webkit-search-cancel-button { -webkit-appearance: none; display: none; }
+    /* segmented expand/collapse — reads as one control, not stray icons */
+    .jt-seg {
+      display: inline-flex; flex: none; height: 36px; overflow: hidden;
+      border: 1px solid var(--wb-border); border-radius: var(--wb-radius-sm);
+    }
+    .jt-seg__btn {
+      border: 0; background: var(--wb-surface); color: var(--wb-fg-muted);
+      cursor: pointer; padding: 0 9px; display: inline-flex; align-items: center;
+    }
+    .jt-seg__btn:hover { background: var(--wb-surface-2); color: var(--wb-fg); }
+    .jt-seg__btn + .jt-seg__btn { border-left: 1px solid var(--wb-border); }
+
+    /* status caps under the output card head */
+    .jt-status { margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px; }
+    .jt-status:empty { display: none; }
+    .jt-stats { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+
+    /* ---- the tree ---- */
+    .jt-view { max-height: 62vh; min-height: 220px; }
+    .jt-tree { font-family: var(--jt-mono); font-size: 13px; line-height: 1.75; }
+    .jt-json {
+      font-family: var(--jt-mono); font-size: 12.5px; line-height: 1.6;
+      margin: 0; white-space: pre; color: var(--wb-fg);
+    }
+
+    .jt-node { position: relative; }
+    .jt-children {
+      margin-left: 8px; padding-left: 12px;
+      border-left: 1px dashed var(--wb-border);
+    }
+    .jt-row {
+      display: flex; align-items: flex-start; gap: 4px;
+      border-radius: 6px; padding: 1px 26px 1px 4px; position: relative;
+      cursor: default; white-space: pre-wrap; word-break: break-word;
+    }
+    .jt-row:hover { background: var(--wb-surface-2); }
+
+    .jt-toggle {
+      flex: none; width: 18px; height: 20px; padding: 0; margin: 0;
+      display: inline-flex; align-items: center; justify-content: center;
+      border: none; background: none; cursor: pointer; color: var(--wb-fg-subtle);
+    }
+    .jt-toggle .wb-ico { font-size: 18px; transition: transform .12s ease; }
+    .jt-node:not(.is-collapsed) > .jt-row > .jt-toggle .wb-ico { transform: rotate(90deg); }
+    .jt-toggle.is-hidden { visibility: hidden; cursor: default; }
+
+    .jt-key    { color: var(--jt-key); font-weight: 600; }
+    .jt-index  { color: var(--jt-index); }
+    .jt-colon  { color: var(--wb-fg-subtle); margin-right: 2px; }
+    .jt-punc   { color: var(--wb-fg-subtle); }
+    .jt-count  { color: var(--wb-fg-subtle); font-size: 11.5px; margin-left: 6px;
+      background: var(--wb-surface-2); border: 1px solid var(--wb-border);
+      border-radius: 999px; padding: 0 7px; }
+
+    .jt-val { cursor: copy; border-radius: 4px; padding: 0 2px; margin: 0 -2px; }
+    .jt-val:hover { background: var(--wb-surface-hover); }
+    .jt-val--string  { color: var(--jt-string); }
+    .jt-val--number  { color: var(--jt-number); }
+    .jt-val--boolean { color: var(--jt-boolean); font-weight: 600; }
+    .jt-val--null    { color: var(--jt-null); font-style: italic; }
+    .jt-val--lit     { color: var(--wb-warning-text); font-style: italic; font-weight: 600; }
+
+    /* duplicate keys: kept in place but struck through to flag them */
+    .jt-row.jt-dup { opacity: .68; }
+    .jt-row.jt-dup .jt-key,
+    .jt-row.jt-dup .jt-val,
+    .jt-row.jt-dup .jt-index,
+    .jt-row.jt-dup .jt-colon,
+    .jt-row.jt-dup .jt-punc,
+    .jt-row.jt-dup .jt-count { text-decoration: line-through; }
+    .jt-dup-tag {
+      display: inline-block; text-decoration: none !important;
+      font-size: 10.5px; font-weight: 600; line-height: 1.6;
+      color: var(--wb-danger-text); background: var(--wb-danger-soft);
+      border-radius: 999px; padding: 0 7px; margin-left: 4px;
+    }
+
+    /* collapsed preview / inline close */
+    .jt-preview { color: var(--wb-fg-subtle); font-style: italic; }
+    .jt-close-inline { color: var(--wb-fg-subtle); }
+    .jt-close-row { padding-left: 26px; color: var(--wb-fg-subtle); }
+    .jt-node.is-collapsed > .jt-children,
+    .jt-node.is-collapsed > .jt-close-row { display: none; }
+    .jt-node:not(.is-collapsed) > .jt-row .jt-preview,
+    .jt-node:not(.is-collapsed) > .jt-row .jt-close-inline { display: none; }
+
+    /* per-row copy button */
+    .jt-copy {
+      position: absolute; right: 3px; top: 1px; opacity: 0;
+      border: none; background: var(--wb-surface); color: var(--wb-fg-subtle);
+      border-radius: 5px; cursor: pointer; padding: 1px 3px; line-height: 1;
+      transition: opacity .1s ease;
+    }
+    .jt-row:hover .jt-copy { opacity: 1; }
+    .jt-copy:hover { color: var(--wb-fg); background: var(--wb-surface-hover); }
+    .jt-copy .wb-ico { font-size: 15px; }
+
+    /* search-hit highlight — blue, distinct from the amber "repair" colour */
+    :root { --jt-hl-bg: #bfdbfe; --jt-hl-fg: #1e3a8a; --jt-hl-bd: rgba(59,130,246,.55); }
+    .dark { --jt-hl-bg: rgba(59,130,246,.34); --jt-hl-fg: #dbeafe; --jt-hl-bd: rgba(96,165,250,.6); }
+    mark {
+      background: var(--jt-hl-bg); color: var(--jt-hl-fg);
+      border-radius: 3px; padding: 0 2px; box-shadow: 0 0 0 1px var(--jt-hl-bd);
+    }
+    /* path-query hit → tint the whole matched row */
+    .jt-row.jt-hit { background: var(--jt-hl-bg); box-shadow: inset 0 0 0 1px var(--jt-hl-bd); }
+    .jt-row.jt-hit .jt-key, .jt-row.jt-hit .jt-val, .jt-row.jt-hit .jt-index { color: var(--jt-hl-fg); }
+
+    /* ---- layout: history sidebar + main work area (wb-cluster row) ---- */
+    .jt-layout { align-items: flex-start; gap: 16px; }
+    .jt-layout > .jt-history { flex: 0 0 240px; }
+    .jt-layout > .jt-main { flex: 1 1 460px; min-width: 0; }
+    .jt-layout.is-history-hidden > .jt-history { display: none; }
+
+    .jt-history {
+      position: sticky; top: 62px; align-self: start;
+      max-height: calc(100vh - 82px); display: flex; flex-direction: column;
+      background: var(--wb-surface); border: 1px solid var(--wb-border);
+      border-radius: var(--wb-card-radius); box-shadow: var(--wb-shadow-sm); overflow: hidden;
+    }
+    @media (max-width: 940px) { .jt-history { position: static; max-height: 300px; } }
+    .jt-history__head {
+      display: flex; align-items: center; gap: 8px; flex: none;
+      padding: 11px 10px 11px 14px; border-bottom: var(--wb-bw) solid var(--wb-border);
+    }
+    .jt-history__title { display: inline-flex; align-items: center; gap: 7px; font-size: 13.5px; font-weight: 650; }
+    .jt-history__title .wb-ico { color: var(--wb-fg-muted); }
+    .jt-history__head .wb-btn { margin-left: auto; }
+    .jt-history__list { overflow-y: auto; padding: 6px; display: flex; flex-direction: column; gap: 2px; }
+    .jt-history__empty { padding: 22px 16px; text-align: center; color: var(--wb-fg-subtle); font-size: 12.5px; line-height: 1.6; }
+
+    .jt-hist {
+      display: flex; align-items: center; gap: 6px; cursor: pointer;
+      padding: 7px 6px 7px 10px; border-radius: var(--wb-radius-sm);
+    }
+    .jt-hist:hover { background: var(--wb-surface-2); }
+    .jt-hist.is-active { background: var(--wb-surface-hover); box-shadow: inset 0 0 0 1px var(--wb-border-strong); }
+    .jt-hist__body { min-width: 0; flex: 1 1 auto; }
+    .jt-hist__name { font-size: 13px; font-weight: 600; color: var(--wb-fg);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .jt-hist__name.is-untitled { color: var(--wb-fg-subtle); font-weight: 500; font-style: italic; }
+    .jt-hist__time { font-size: 11px; color: var(--wb-fg-subtle); margin-top: 1px; }
+    .jt-hist__actions { display: flex; gap: 1px; flex: none; opacity: 0; transition: opacity .1s ease; }
+    .jt-hist:hover .jt-hist__actions, .jt-hist.is-active .jt-hist__actions { opacity: 1; }
+    .jt-hist__btn { border: none; background: none; cursor: pointer; color: var(--wb-fg-subtle);
+      padding: 3px; border-radius: 4px; line-height: 1; }
+    .jt-hist__btn:hover { color: var(--wb-fg); background: var(--wb-surface-hover); }
+    .jt-hist__btn.is-danger:hover { color: var(--wb-danger-text); background: var(--wb-danger-soft); }
+    .jt-hist__btn .wb-ico { font-size: 16px; }
+    .jt-hist__rename { width: 100%; }
+    .jt-undo { flex: none; white-space: nowrap; }
+
+    /* "saved" confirmation capsule (fades out after a moment) */
+    .jt-saved-cap {
+      display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;
+      font-size: 11.5px; font-weight: 600; color: var(--wb-success-text);
+      background: var(--wb-success-soft); border-radius: 999px; padding: 2px 9px;
+      opacity: 0; transform: translateY(1px); transition: opacity .2s ease, transform .2s ease; pointer-events: none;
+    }
+    .jt-saved-cap.is-show { opacity: 1; transform: none; }
+    .jt-saved-cap .wb-ico { font-size: 14px; }
+
+    /* ---- search help reference (regex + path tables; wb-grid--2 in markup) ---- */
+    .jt-help__body { padding: 4px 16px 18px; }
+    .jt-help__body.wb-grid { gap: 20px 24px; align-items: start; }
+    .jt-help__col h3 { margin: 0 0 8px; font-size: 13px; font-weight: 650; display: flex; align-items: center; gap: 6px; }
+    .jt-help__col h3 .wb-ico { color: var(--wb-fg-muted); font-size: 17px; }
+    .jt-tbl { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+    .jt-tbl th { text-align: left; font-weight: 600; color: var(--wb-fg-muted);
+      border-bottom: var(--wb-bw) solid var(--wb-border); padding: 5px 8px; white-space: nowrap; }
+    .jt-tbl td { border-bottom: var(--wb-bw) solid var(--wb-border); padding: 6px 8px; vertical-align: top; line-height: 1.5; }
+    .jt-tbl tr:last-child td { border-bottom: 0; }
+    .jt-tbl code { font-family: var(--jt-mono); font-size: 11.5px; color: var(--jt-key);
+      background: var(--wb-surface-2); border: 1px solid var(--wb-border); border-radius: 4px; padding: 1px 5px; }
+    .jt-tbl td:first-child { white-space: nowrap; }
+
+    /* sample gallery — collapsed by default, parked at the bottom so it never
+       gets in the way when you're just here to work. */
+    .jt-samples {
+      margin: 0; overflow: hidden;
+      background: var(--wb-surface); border: 1px solid var(--wb-border);
+      border-radius: var(--wb-card-radius); box-shadow: var(--wb-shadow-sm);
+    }
+    .jt-samples > summary {
+      display: flex; align-items: center; gap: 8px; cursor: pointer;
+      padding: 13px 16px; font-size: 13.5px; font-weight: 600; color: var(--wb-fg-muted);
+      list-style: none; user-select: none;
+    }
+    .jt-samples > summary::-webkit-details-marker { display: none; }
+    .jt-samples > summary:hover { color: var(--wb-fg); }
+    .jt-samples__chevron { margin-left: auto; color: var(--wb-fg-subtle); transition: transform .16s ease; }
+    .jt-samples[open] .jt-samples__chevron { transform: rotate(180deg); }
+    .jt-samples__body { padding: 2px 16px 16px; }   /* layout via wb-cluster in markup */
+
+    .jt-foot-note { color: var(--wb-fg-subtle); font-size: 12px; text-align: center; margin: 0; }
+    .jt-foot-note code { font-family: var(--jt-mono); }
+  </style>
+</head>
+<body>
+  <!-- ===================== Top bar ===================== -->
+  <div class="wb-navbar wb-navbar--sticky">
+    <button class="wb-btn wb-btn--ghost wb-btn--icon" id="btnToggleHistory" title="Show/hide history" aria-label="Show/hide history">
+      <span class="wb-ico">view_sidebar</span>
+    </button>
+    <a class="wb-navbar__brand"><span class="wb-navbar__mark">{ }</span> JSON Tree</a>
+    <span class="wb-navbar__spacer"></span>
+    <div class="wb-navbar__actions">
+      <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" id="themeToggle" aria-label="Light/Dark">
+        <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
+        <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
+      </button>
+    </div>
+  </div>
+
+  <main class="wb-container wb-container--wide jt-app wb-stack">
+    <p class="jt-lead">
+      Paste JSON — even if it's <b>missing whitespace / newlines</b>, <b>missing brackets</b>, missing
+      data, or littered with <b>junk characters</b> — then view it as a <b>structure tree</b>, search and query it.
+      Anything not quite right is <b>highlighted right in your original text</b> on the <span class="jt-kbd">Inspect</span> tab;
+      click a highlight to see what was fixed.
+    </p>
+
+    <div class="wb-cluster jt-layout" id="layout">
+      <!-- ===================== History sidebar ===================== -->
+      <aside class="jt-history" id="historyPanel">
+        <div class="jt-history__head">
+          <span class="jt-history__title"><span class="wb-ico wb-ico--sm">history</span> History</span>
+          <button id="btnNew" class="wb-btn wb-btn--ghost wb-btn--sm" title="Start a new entry (clears the editor)">
+            <span class="wb-ico wb-ico--sm">add</span> New
+          </button>
+        </div>
+        <div class="jt-history__list" id="historyList"></div>
+      </aside>
+
+      <div class="jt-main wb-grid wb-grid--2">
+      <!-- ===================== Input ===================== -->
+      <section class="wb-card">
+        <div class="wb-card__head">
+          <h2 class="wb-card__title">Paste JSON</h2>
+          <div class="wb-tabs wb-tabs--pill" id="inputTabs" role="tablist">
+            <button class="wb-tab is-active" data-inview="edit" type="button">Edit</button>
+            <button class="wb-tab" data-inview="inspect" type="button">Inspect<span class="jt-tab-count" id="inspectCount" hidden>0</span></button>
+          </div>
+          <div class="jt-card__actions">
+            <input type="file" id="fileInput" accept=".json,.txt,application/json,text/plain" hidden />
+            <button id="btnUpload" class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm" title="Open a .json file" aria-label="Upload file">
+              <span class="wb-ico wb-ico--sm">upload_file</span>
+            </button>
+            <button id="btnPaste" class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm" title="Paste from clipboard" aria-label="Paste">
+              <span class="wb-ico wb-ico--sm">content_paste</span>
+            </button>
+            <button id="btnClear" class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm" title="Clear the editor" aria-label="Clear">
+              <span class="wb-ico wb-ico--sm">backspace</span>
+            </button>
+          </div>
+        </div>
+        <div class="wb-card__body">
+          <textarea id="input" class="wb-textarea jt-editor" spellcheck="false"
+            placeholder="Paste JSON here… (even if it's broken, missing brackets, or has no whitespace/newlines at all)&#10;&#10;Open “Samples to try” at the bottom of the page for examples."></textarea>
+          <div id="inspectView" class="jt-inspect wb-scroll-y wb-scroll-y--pad" hidden></div>
+        </div>
+        <div class="wb-card__foot">
+          <div class="wb-cluster wb-cluster--between" style="width:100%">
+            <div class="jt-card__actions">
+              <button id="btnSave" class="wb-btn wb-btn--sm" title="Save to History (⌘/Ctrl + S)">
+                <span class="wb-ico wb-ico--sm">bookmark_add</span> Save
+              </button>
+              <button id="btnFormat" class="wb-btn wb-btn--secondary wb-btn--sm">Beautify</button>
+              <button id="btnMinify" class="wb-btn wb-btn--secondary wb-btn--sm">Minify</button>
+            </div>
+            <div class="jt-card__actions">
+              <span id="savedCap" class="jt-saved-cap"><span class="wb-ico">check</span> Saved</span>
+              <span id="charCount" class="wb-cap wb-cap--sm">0 chars</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== Output ===================== -->
+      <section class="wb-card">
+        <div class="wb-card__head">
+          <h2 class="wb-card__title">Structure</h2>
+          <div class="wb-tabs wb-tabs--pill" id="viewTabs" role="tablist">
+            <button class="wb-tab is-active" data-view="tree" type="button">Tree</button>
+            <button class="wb-tab" data-view="json" type="button">JSON</button>
+          </div>
+          <div class="jt-card__actions">
+            <button id="btnDownload" class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm" title="Download as .json" aria-label="Download JSON">
+              <span class="wb-ico wb-ico--sm">download</span>
+            </button>
+            <button id="btnCopyOut" class="wb-btn wb-btn--secondary wb-btn--sm">
+              <span class="wb-ico wb-ico--sm">content_copy</span> Copy
+            </button>
+          </div>
+        </div>
+        <div class="wb-card__body">
+          <div id="status" class="jt-status"></div>
+
+          <div class="jt-tools" id="treeTools">
+            <span class="wb-select-wrap jt-mode">
+              <select id="searchMode" class="wb-select" title="Query mode" aria-label="Query mode">
+                <option value="text">Contains</option>
+                <option value="regex">Regex</option>
+                <option value="path">Path</option>
+              </select>
+              <span class="wb-ico">expand_more</span>
+            </span>
+            <div class="wb-input-group jt-search">
+              <span class="wb-input-group__addon"><span class="wb-ico wb-ico--sm">search</span></span>
+              <input id="search" class="wb-input" type="search" placeholder="Search keys or values…" />
+              <span id="matchCount" class="jt-search__count" hidden></span>
+            </div>
+            <div class="jt-seg" role="group" aria-label="Expand / collapse tree">
+              <button id="btnExpand" class="jt-seg__btn" type="button" title="Expand all">
+                <span class="wb-ico wb-ico--sm">unfold_more</span>
+              </button>
+              <button id="btnCollapse" class="jt-seg__btn" type="button" title="Collapse all">
+                <span class="wb-ico wb-ico--sm">unfold_less</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="treeView" class="jt-tree jt-view wb-scroll-y wb-scroll-y--pad"></div>
+          <pre id="jsonView" class="jt-json jt-view wb-scroll-y wb-scroll-y--pad" hidden></pre>
+        </div>
+      </section>
+      </div><!-- /.jt-main (wb-grid--2) -->
+    </div><!-- /.jt-layout -->
+
+    <details class="jt-samples jt-help">
+      <summary>
+        <span class="wb-ico wb-ico--sm">help</span>
+        Search help — Regex and Path syntax (click to open)
+        <span class="wb-ico jt-samples__chevron">expand_more</span>
+      </summary>
+      <div class="jt-help__body wb-grid wb-grid--2">
+        <div class="jt-help__col">
+          <h3><span class="wb-ico">regular_expression</span> Regex (the “Regex” mode)</h3>
+          <table class="jt-tbl">
+            <thead><tr><th>Example</th><th>Meaning</th></tr></thead>
+            <tbody>
+              <tr><td><code>price</code></td><td>Contains “price” (case-insensitive)</td></tr>
+              <tr><td><code>^user</code></td><td>Starts with “user” — e.g. <code>user</code>, <code>username</code></td></tr>
+              <tr><td><code>id$</code></td><td>Ends with “id” — e.g. <code>id</code>, <code>userId</code></td></tr>
+              <tr><td><code>^total$</code></td><td>Exactly “total”, nothing more</td></tr>
+              <tr><td><code>name|email</code></td><td>Contains “name” <b>or</b> “email”</td></tr>
+              <tr><td><code>a.b</code></td><td><code>.</code> = any one character — “a”, one char, “b” (e.g. <code>axb</code>)</td></tr>
+              <tr><td><code>a.*b</code></td><td>“a”, then any characters (or none), then “b” — <code>ab</code>, <code>a123b</code></td></tr>
+              <tr><td><code>a.+b</code></td><td>“a”, then <b>one or more</b> characters, then “b”</td></tr>
+              <tr><td><code>a.{2,3}b</code></td><td>“a”, then <b>2 to 3</b> characters, then “b”</td></tr>
+              <tr><td><code>\d{4}</code></td><td>Four digits in a row — e.g. year <code>2026</code></td></tr>
+              <tr><td><code>-?\d+</code></td><td>An integer, optionally negative</td></tr>
+              <tr><td><code>[aeiou]</code></td><td>Any <b>one</b> of the characters in the brackets</td></tr>
+              <tr><td><code>[^0-9]</code></td><td>Any character that is <b>not</b> a digit</td></tr>
+              <tr><td><code>colou?r</code></td><td>The char before <code>?</code> is optional — “color”/“colour”</td></tr>
+              <tr><td><code>(cat|dog)s?</code></td><td>A group + optional “s” — cat, cats, dog, dogs</td></tr>
+              <tr><td><code>\.vn\b</code></td><td>Contains “.vn” (<code>\.</code> = a literal dot)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="jt-help__col">
+          <h3><span class="wb-ico">account_tree</span> Path (the “Path” mode)</h3>
+          <table class="jt-tbl">
+            <thead><tr><th>Example</th><th>Meaning</th></tr></thead>
+            <tbody>
+              <tr><td><code>user</code></td><td>The <code>user</code> field at the root (with its whole subtree)</td></tr>
+              <tr><td><code>user.co</code></td><td><b>Prefix</b> match: <code>user.code</code>, <code>user.cowork</code>…</td></tr>
+              <tr><td><code>user.addr.city</code></td><td>Drill down level by level with dots</td></tr>
+              <tr><td><code>items.0</code> · <code>items[0]</code></td><td>First element of the <code>items</code> array</td></tr>
+              <tr><td><code>items.*.sku</code></td><td><code>*</code> = any one level — the <code>sku</code> of every element</td></tr>
+              <tr><td><code>**.price</code></td><td><code>**</code> = any depth — every <code>price</code> anywhere</td></tr>
+              <tr><td><code>orders.*.total</code></td><td><code>total</code> in each order of <code>orders</code></td></tr>
+            </tbody>
+          </table>
+          <p style="margin:10px 0 0;font-size:12px;color:var(--wb-fg-subtle);line-height:1.5">
+            Tip: it filters as you type — the last segment matches by prefix, so partial input still returns results.
+          </p>
+        </div>
+      </div>
+    </details>
+
+    <details class="jt-samples">
+      <summary>
+        <span class="wb-ico wb-ico--sm">science</span>
+        Samples to try — broken-JSON examples to see how the tool handles them
+        <span class="wb-ico jt-samples__chevron">expand_more</span>
+      </summary>
+      <div class="jt-samples__body wb-cluster">
+        <div id="sampleChips" class="wb-cluster wb-cluster--tight"></div>
+        <button id="btnRandom" class="wb-btn wb-btn--secondary wb-btn--sm">
+          <span class="wb-ico wb-ico--sm">casino</span> Random
+        </button>
+      </div>
+    </details>
+
+    <p class="jt-foot-note">
+      Everything runs right in your browser. History is saved locally (localStorage)
+      on your machine and is never sent anywhere.
+    </p>
+  </main>
+
+  <div class="wb-toaster" id="toaster"></div>
+
+  <script>
+  /* ============================================================================
+     1) TOLERANT / RECOVERING JSON PARSER
+     ----------------------------------------------------------------------------
+     Produces an ordered node tree + a list of repairs. Never throws on bad input.
+
+     Node shapes:
+       { t:'obj', children:[ {key, node} ] }
+       { t:'arr', children:[ node ] }
+       { t:'str', v:string }
+       { t:'num', v:number, raw:string }
+       { t:'bool', v:boolean }
+       { t:'null', v:null }
+     ========================================================================== */
+  function parseLoose(src) {
+    let i = 0;
+    const n = src.length;
+    // Repairs are recorded as positioned ANNOTATIONS so the source text can be
+    // shown with the exact spots highlighted (and clicked for an explanation):
+    //   cls 'ins'     → text we added (missing bracket/comma/value) — shown red
+    //   cls 'removed' → something ignored (garbage/comment/stray) — struck, NOT deleted
+    //   cls 'changed' → a value normalised in place (quotes, bare key, number _, literal)
+    //   cls 'info'    → a non-positional note (duplicate key, merged top-level)
+    const annotations = [];
+    const REPAIR_CAP = 800;
+    let capped = false;
+    function pushAnn(a) { if (annotations.length >= REPAIR_CAP) { capped = true; return; } annotations.push(a); }
+    function note(msg, pos) { const p = pos == null ? i : pos; pushAnn({ start: p, end: p + 1, insert: null, cls: 'changed', msg }); }
+    function noteSpan(msg, a, b, cls) { pushAnn({ start: a, end: Math.max(b, a + 1), insert: null, cls: cls || 'changed', msg }); }
+    function noteIns(msg, pos, text) { pushAnn({ start: pos, end: pos, insert: text, cls: 'ins', msg }); }
+    function noteInfo(msg) { pushAnn({ start: null, end: null, insert: null, cls: 'info', msg }); }
+
+    const isWs = c => c === ' ' || c === '\t' || c === '\n' || c === '\r' ||
+                      c === '\f' || c === '\v' || c === ' ' || c === '﻿';
+    const isDelim = c => c === '{' || c === '}' || c === '[' || c === ']' ||
+                         c === ':' || c === ',' || c === '=';
+
+    function skipWs() {
+      while (i < n) {
+        const c = src[i];
+        if (isWs(c)) { i++; continue; }
+        if (c === '/' && src[i + 1] === '/') {           // line comment
+          const cs = i; i += 2;
+          while (i < n && src[i] !== '\n') i++;
+          noteSpan('“//” line comment — not allowed in JSON, ignored', cs, i, 'removed'); continue;
+        }
+        if (c === '/' && src[i + 1] === '*') {            // block comment
+          const cs = i; i += 2;
+          while (i < n && !(src[i] === '*' && src[i + 1] === '/')) i++;
+          i += 2; noteSpan('“/* */” block comment — not allowed in JSON, ignored', cs, i, 'removed'); continue;
+        }
+        break;
+      }
+    }
+
+    function shortVal(node) {
+      if (!node) return '';
+      switch (node.t) {
+        case 'str':  return JSON.stringify(node.v.length > 24 ? node.v.slice(0, 24) + '…' : node.v);
+        case 'num':  return node.raw != null ? node.raw : String(node.v);
+        case 'bool': return String(node.v);
+        case 'null': return 'null';
+        case 'obj':  return '{…}';
+        case 'arr':  return '[…]';
+      }
+      return '';
+    }
+
+    function parseString() {
+      const q = src[i]; const strStart = i; i++;   // consume opening quote (" ' or `)
+      let out = '';
+      let closed = false;
+      while (i < n) {
+        const c = src[i];
+        if (c === '\\') {
+          const e = src[i + 1];
+          if (e == null) { i++; break; }
+          switch (e) {
+            case '"':  out += '"';  i += 2; break;
+            case "'":  out += "'";  i += 2; break;
+            case '`':  out += '`';  i += 2; break;
+            case '\\': out += '\\'; i += 2; break;
+            case '/':  out += '/';  i += 2; break;
+            case 'b':  out += '\b'; i += 2; break;
+            case 'f':  out += '\f'; i += 2; break;
+            case 'n':  out += '\n'; i += 2; break;
+            case 'r':  out += '\r'; i += 2; break;
+            case 't':  out += '\t'; i += 2; break;
+            case 'u': {
+              const hex = src.substr(i + 2, 4);
+              if (/^[0-9a-fA-F]{4}$/.test(hex)) { out += String.fromCharCode(parseInt(hex, 16)); i += 6; }
+              else { out += 'u'; i += 2; }
+              break;
+            }
+            default: out += e; i += 2;       // unknown escape → keep char
+          }
+          continue;
+        }
+        if (c === q) { i++; closed = true; break; }
+        if (c === '\n' || c === '\r') {      // unterminated at line end
+          noteIns('Unclosed string → added a closing "', i, '"');
+          closed = true; break;              // stop, do not eat newline
+        }
+        out += c; i++;
+      }
+      if (!closed) noteIns('Unclosed string at end of input → added a closing "', i, '"');
+      if (q !== '"') noteSpan('String uses ' + q + ' quotes → normalized to double quotes "', strStart, i, 'changed');
+      return { t: 'str', v: out };
+    }
+
+    function parseNumber() {
+      const start = i;
+      if (src[i] === '+' || src[i] === '-') i++;
+      if (src[i] === '0' && (src[i + 1] === 'x' || src[i + 1] === 'X')) {
+        i += 2; while (i < n && /[0-9a-fA-F_]/.test(src[i])) i++;
+      } else {
+        while (i < n && /[0-9_]/.test(src[i])) i++;
+        if (src[i] === '.') { i++; while (i < n && /[0-9_]/.test(src[i])) i++; }
+        if (src[i] === 'e' || src[i] === 'E') {
+          i++; if (src[i] === '+' || src[i] === '-') i++;
+          while (i < n && /[0-9_]/.test(src[i])) i++;
+        }
+      }
+      const raw = src.slice(start, i);
+      const clean = raw.replace(/_/g, '');
+      // Only a sign (no digit) → not really a number, e.g. "-Infinity" / "-NaN".
+      // Back off and let bareword parsing catch the special literal.
+      if (!/[0-9]/.test(clean)) { i = start; return parseBareword(); }
+      const num = Number(clean);
+      if (Number.isFinite(num)) {
+        if (raw.indexOf('_') >= 0) noteSpan('Number with “_” (not allowed in JSON) → ' + clean, start, i, 'changed');
+        return { t: 'num', v: num, raw: clean };
+      }
+      noteSpan('Invalid number “' + raw + '” → kept as a string', start, i, 'changed');
+      return { t: 'str', v: raw };
+    }
+
+    function parseBareword() {
+      const start = i;
+      while (i < n && !isDelim(src[i]) && !isWs(src[i]) &&
+             src[i] !== '"' && src[i] !== "'" && src[i] !== '`') i++;
+      const word = src.slice(start, i);
+      const low = word.toLowerCase();
+      if (low === 'true')  return { t: 'bool', v: true };
+      if (low === 'false') return { t: 'bool', v: false };
+      if (low === 'null')  return { t: 'null', v: null };
+      // Special literals JSON can't represent — keep the original text visible
+      // (displayed as-is); JSON export turns them into null.
+      if (low === 'undefined' || low === 'nan' || low === 'none' ||
+          low === 'infinity' || low === '+infinity' || low === '-infinity') {
+        noteSpan('Literal “' + word + '” — not valid JSON, kept for viewing (exports as null)', start, i, 'changed');
+        return { t: 'lit', raw: word };
+      }
+      if (word === '') return { t: 'null', v: null };
+      noteSpan('Value “' + word + '” is missing quotes → treated as a string', start, i, 'changed');
+      return { t: 'str', v: word };
+    }
+
+    function parseKey() {
+      skipWs();
+      const c = src[i];
+      if (c === '"' || c === "'" || c === '`') return parseString().v;
+      const start = i;
+      while (i < n && !isDelim(src[i]) && !isWs(src[i]) &&
+             src[i] !== '"' && src[i] !== "'" && src[i] !== '`') i++;
+      const key = src.slice(start, i);
+      if (key !== '') noteSpan('Field name “' + key + '” has no quotes → added', start, i, 'changed');
+      return key;
+    }
+
+    function parseValue() {
+      skipWs();
+      if (i >= n) return { t: 'null', v: null };
+      const c = src[i];
+      if (c === '{') return parseObjectBody(true);
+      if (c === '[') return parseArray();
+      if (c === '"' || c === "'" || c === '`') return parseString();
+      if (c === '-' || c === '+' || (c >= '0' && c <= '9')) return parseNumber();
+      if (c === '.' && src[i + 1] >= '0' && src[i + 1] <= '9') return parseNumber();
+      return parseBareword();
+    }
+
+    function parseArray() {
+      i++;                                    // consume [
+      const children = [];
+      while (true) {
+        const before = i;
+        skipWs();
+        if (i >= n) { noteIns('Missing “]” to close array → added', i, ']'); break; }
+        const c = src[i];
+        if (c === ']') { i++; break; }
+        if (c === ',') { noteSpan('Extra comma in array → removed', i, i + 1, 'removed'); i++; continue; }
+        if (c === '}') { noteSpan('“}” inside array → treated as end of array', i, i + 1, 'changed'); break; }
+        children.push(parseValue());
+        skipWs();
+        if (src[i] === ',') { i++; continue; }
+        if (src[i] === ']') { i++; break; }
+        if (i >= n) { noteIns('Missing “]” to close array → added', i, ']'); break; }
+        noteIns('Missing comma between elements → added', i, ',');
+        if (i === before) i++;                // safety: never stall
+      }
+      return { t: 'arr', children };
+    }
+
+    function parseObjectBody(braced) {
+      if (braced) i++;                        // consume {
+      const children = [];
+      while (true) {
+        const before = i;
+        skipWs();
+        if (i >= n) { if (braced) noteIns('Missing “}” to close object → added', i, '}'); break; }
+        const c = src[i];
+        if (c === '}') {
+          if (braced) { i++; break; }          // implicit (unbraced) object has no "{" to match
+          noteSpan('Stray “}” with no matching “{” → ignored', i, i + 1, 'removed'); i++; continue;
+        }
+        if (c === ']') { noteSpan('Stray “]” → ignored', i, i + 1, 'removed'); i++; continue; }
+        if (c === ',') { noteSpan('Extra comma → removed', i, i + 1, 'removed'); i++; continue; }
+
+        const entryStart = i;
+        const key = parseKey();
+        skipWs();
+        if (src[i] === ':') { i++; }
+        else if (src[i] === '=') { noteSpan('“=” used instead of “:” → changed to “:”', i, i + 1, 'changed'); i++; }
+
+        skipWs();
+        let valNode;
+        if (i >= n || src[i] === ',' || src[i] === '}') {
+          valNode = { t: 'null', v: null };
+          if (key !== '') noteIns('Field “' + key + '” has no value → added null', i, 'null');
+        } else {
+          valNode = parseValue();
+        }
+
+        if (key === '') {
+          noteSpan('Dropped a pair with no field name (value: ' + shortVal(valNode) + ')', entryStart, i, 'removed');
+        } else {
+          children.push({ key, node: valNode });
+        }
+
+        skipWs();
+        if (src[i] === ',') { i++; continue; }
+        if (src[i] === '}') {
+          if (braced) { i++; break; }
+          noteSpan('Stray “}” with no matching “{” → ignored', i, i + 1, 'removed'); i++; continue;
+        }
+        if (i >= n) { if (braced) noteIns('Missing “}” to close object → added', i, '}'); break; }
+        noteIns('Missing comma between fields → added', i, ',');
+        if (i === before) i++;                // safety: never stall
+      }
+      // Flag every entry whose key appears more than once (kept, but struck through).
+      const counts = {};
+      children.forEach(c => { counts[c.key] = (counts[c.key] || 0) + 1; });
+      children.forEach(c => { if (counts[c.key] > 1) c.dup = true; });
+      Object.keys(counts).forEach(k => {
+        if (counts[k] > 1) noteInfo('Duplicate key “' + k + '” (×' + counts[k] + ') → all kept, struck through to flag them');
+      });
+      return { t: 'obj', children };
+    }
+
+    // Decide whether loose top-level text is really an object written without { }.
+    function looksLikeImplicitObject(from) {
+      let j = from;
+      while (j < n) {
+        const ch = src[j];
+        if (isWs(ch)) { j++; continue; }
+        if (ch === '/' && (src[j + 1] === '/' || src[j + 1] === '*')) { // skip comment
+          if (src[j + 1] === '/') { j += 2; while (j < n && src[j] !== '\n') j++; }
+          else { j += 2; while (j < n && !(src[j] === '*' && src[j + 1] === '/')) j++; j += 2; }
+          continue;
+        }
+        if (ch === '"' || ch === "'" || ch === '`') {   // skip a string
+          const q = ch; j++;
+          while (j < n && src[j] !== q) { if (src[j] === '\\') j++; j++; }
+          j++; continue;
+        }
+        if (ch === ':' || ch === '=') return true;      // key : value  → object
+        if (ch === ',') return false;                   // value, value → list
+        if (ch === '{' || ch === '[' || ch === '}' || ch === ']') return false;
+        j++;
+      }
+      return false;
+    }
+
+    // ---- document entry point ----
+    skipWs();
+    if (i >= n) return { node: null, annotations, empty: true, capped };
+
+    // A pasted fragment can begin with a stray quote (often followed by a comma)
+    // that is really the tail of a larger object, e.g.  ',email:"x",vip:true,}…
+    // The leading quote would otherwise swallow everything into one unterminated
+    // string. If it is unterminated AND the remainder looks like key:value pairs,
+    // drop the quote (and any leading commas) so the fields still get read.
+    if (src[i] === "'" || src[i] === '"' || src[i] === '`') {
+      const q = src[i];
+      let k = i + 1, closed = false;
+      while (k < n) {
+        if (src[k] === '\\') { k += 2; continue; }
+        if (src[k] === q) { closed = true; break; }
+        if (src[k] === '\n' || src[k] === '\r') break;
+        k++;
+      }
+      const rest = src.slice(i + 1).replace(/^[\s,]+/, '');
+      if (!closed && /^(?:"[^"]*"|'[^']*'|[^\s:,{}\[\]]+)\s*[:=]/.test(rest)) {
+        noteSpan('Stray quote at start → ignored', i, i + 1, 'removed');
+        i++; skipWs();
+        while (i < n && src[i] === ',') { noteSpan('Stray leading comma → removed', i, i + 1, 'removed'); i++; skipWs(); }
+      }
+    }
+
+    // Skip obvious leading garbage before a container if there's no key/value structure.
+    if (src[i] !== '{' && src[i] !== '[' && src[i] !== '"' && src[i] !== "'" && src[i] !== '`' &&
+        !looksLikeImplicitObject(i)) {
+      const brace = src.indexOf('{', i);
+      const brack = src.indexOf('[', i);
+      let target = -1;
+      if (brace >= 0 && brack >= 0) target = Math.min(brace, brack);
+      else target = Math.max(brace, brack);
+      if (target > i) { noteSpan('Junk characters at the start → ignored', i, target, 'removed'); i = target; skipWs(); }
+    }
+
+    const first = src[i];
+    let node;
+    if (first === '[') node = parseArray();
+    else if (first === '{') node = parseObjectBody(true);
+    else if (looksLikeImplicitObject(i)) {
+      const wrapStart = i;
+      noteIns('Missing outer “{” → added', wrapStart, '{');
+      node = parseObjectBody(false);
+      noteIns('Missing outer “}” → added', i, '}');
+    } else {
+      node = parseValue();
+    }
+
+    // Trailing content → gather any extra top-level values into one array.
+    skipWs();
+    if (i < n) {
+      const vals = [node];
+      let guard = 0;
+      while (i < n && guard++ < 100000) {
+        const before = i;
+        // stop consuming pure trailing junk that yields nothing meaningful
+        if (src[i] === '}' || src[i] === ']' || src[i] === ',') { i++; continue; }
+        vals.push(parseValue());
+        skipWs();
+        if (i === before) i++;
+      }
+      if (vals.length > 1) {
+        noteInfo('Multiple top-level values → merged into one array');
+        node = { t: 'arr', children: vals };
+      }
+    }
+
+    return { node, annotations, empty: false, capped };
+  }
+
+  /* ============================================================================
+     2) Parse entry point
+     ----------------------------------------------------------------------------
+     Always build the ordered tree with the recovering parser, so duplicate keys,
+     original order and special literals are preserved. JSON.parse is used ONLY as
+     the "is this strictly valid?" oracle for the badge — it silently drops
+     duplicate keys and can reorder, so it must not be the source of the tree.
+     ========================================================================== */
+  function parse(src) {
+    const trimmed = src.trim();
+    if (!trimmed) return { node: null, annotations: [], empty: true, strict: true };
+    let strict = true;
+    try { JSON.parse(trimmed); } catch (_) { strict = false; }
+    const r = parseLoose(src);
+    return { node: r.node, annotations: r.annotations, empty: r.empty, capped: r.capped, strict };
+  }
+
+  /* ============================================================================
+     3) Serialize a node tree back to JSON (order-preserving)
+     ========================================================================== */
+  function stringifyNode(node, pretty, indent) {
+    indent = indent || 0;
+    const nl = pretty ? '\n' : '';
+    const pad = pretty ? '  '.repeat(indent + 1) : '';
+    const padEnd = pretty ? '  '.repeat(indent) : '';
+    const sp = pretty ? ' ' : '';
+    if (!node) return 'null';
+    switch (node.t) {
+      case 'null': return 'null';
+      case 'lit':  return 'null';   // undefined / NaN / Infinity aren't valid JSON
+      case 'bool': return String(node.v);
+      case 'num':  return Number.isFinite(node.v) ? (node.raw != null ? node.raw : String(node.v)) : 'null';
+      case 'str':  return JSON.stringify(node.v);
+      case 'arr': {
+        if (!node.children.length) return '[]';
+        const parts = node.children.map(c => pad + stringifyNode(c, pretty, indent + 1));
+        return '[' + nl + parts.join(',' + nl) + nl + padEnd + ']';
+      }
+      case 'obj': {
+        if (!node.children.length) return '{}';
+        const parts = node.children.map(c =>
+          pad + JSON.stringify(c.key) + ':' + sp + stringifyNode(c.node, pretty, indent + 1));
+        return '{' + nl + parts.join(',' + nl) + nl + padEnd + '}';
+      }
+    }
+    return 'null';
+  }
+
+  /* ============================================================================
+     4) Stats
+     ========================================================================== */
+  function computeStats(node) {
+    const s = { nodes: 0, obj: 0, arr: 0, str: 0, num: 0, bool: 0, null: 0, lit: 0, depth: 0 };
+    (function walk(n, d) {
+      if (!n) return;
+      s.nodes++;
+      if (d > s.depth) s.depth = d;
+      if (n.t === 'obj') { s.obj++; n.children.forEach(c => walk(c.node, d + 1)); }
+      else if (n.t === 'arr') { s.arr++; n.children.forEach(c => walk(c, d + 1)); }
+      else if (s[n.t] !== undefined) s[n.t]++;
+    })(node, 1);
+    return s;
+  }
+
+  /* ============================================================================
+     5) Render the tree DOM
+     ========================================================================== */
+  const el = (tag, cls, txt) => {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (txt != null) e.textContent = txt;
+    return e;
+  };
+  const esc = s => s.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+
+  /* ---- search / query engine: text · regex · path (JSONPath-lite) ---- */
+  function buildQuery(raw, mode) {
+    raw = (raw || '').trim();
+    if (!raw) return { active: false, count: 0 };
+    if (mode === 'regex') {
+      try { return { active: true, mode: 'regex', re: new RegExp(raw, 'i'), count: 0 }; }
+      catch (e) { return { active: true, mode: 'regex', error: e.message, count: 0 }; }
+    }
+    if (mode === 'path') return { active: true, mode: 'path', segs: parsePath(raw), count: 0 };
+    return { active: true, mode: 'text', needle: raw.toLowerCase(), count: 0 };
+  }
+  function parsePath(raw) {
+    return raw.replace(/\[\s*(\w+|\*)\s*\]/g, '.$1')   // items[0] / items[*] → items.0 / items.*
+              .split('.').map(s => s.trim()).filter(s => s.length);
+  }
+  // Glob-style path match with * (one level) and ** (any depth). The query must
+  // consume the FULL path, but the LAST segment matches by PREFIX so a partial
+  // path typed as-you-go still matches: e.g. `user.co` → user.code, user.cowork.
+  // Earlier segments match exactly (they're presumed complete).
+  function pathMatches(path, segs) {
+    if (!segs.length) return false;
+    return (function m(pi, si) {
+      if (si === segs.length) return pi === path.length;
+      const seg = segs[si];
+      if (seg === '**') { for (let k = pi; k <= path.length; k++) if (m(k, si + 1)) return true; return false; }
+      if (pi >= path.length) return false;
+      const isLast = si === segs.length - 1;
+      const elem = String(path[pi]);
+      const ok = seg === '*' ? true
+        : isLast ? elem.toLowerCase().startsWith(seg.toLowerCase())
+        : elem === seg;
+      return ok && m(pi + 1, si + 1);
+    })(0, 0);
+  }
+  function textHit(text, query) {
+    if (!text) return false;
+    if (query.mode === 'regex') { if (!query.re) return false; query.re.lastIndex = 0; return query.re.test(text); }
+    return text.toLowerCase().indexOf(query.needle) !== -1;
+  }
+  // Wrap matched substrings in <mark> (text/regex). Path mode highlights whole rows.
+  function highlightQ(text, query) {
+    if (!query || !query.active || query.mode === 'path') return esc(text);
+    const ranges = [];
+    if (query.mode === 'regex') {
+      if (!query.re) return esc(text);
+      const re = new RegExp(query.re.source, 'gi');
+      let mt, guard = 0;
+      while ((mt = re.exec(text)) && guard++ < 2000) {
+        if (mt[0] === '') { re.lastIndex++; continue; }
+        ranges.push([mt.index, mt.index + mt[0].length]);
+      }
+    } else {
+      const lower = text.toLowerCase(); let from = 0, idx;
+      while ((idx = lower.indexOf(query.needle, from)) !== -1) { ranges.push([idx, idx + query.needle.length]); from = idx + query.needle.length; }
+    }
+    if (!ranges.length) return esc(text);
+    let out = '', pos = 0;
+    ranges.forEach(([s, e]) => { out += esc(text.slice(pos, s)) + '<mark>' + esc(text.slice(s, e)) + '</mark>'; pos = e; });
+    return out + esc(text.slice(pos));
+  }
+
+  // `inner` = the human-readable text used for matching AND highlighting (no
+  // surrounding quotes); `quoted` decides whether display wraps it in " ".
+  function valPreview(node) {
+    switch (node.t) {
+      case 'str':  return { cls: 'jt-val--string',  quoted: true,  inner: node.v };
+      case 'num':  return { cls: 'jt-val--number',  quoted: false, inner: node.raw != null ? node.raw : String(node.v) };
+      case 'bool': return { cls: 'jt-val--boolean', quoted: false, inner: String(node.v) };
+      case 'null': return { cls: 'jt-val--null',    quoted: false, inner: 'null' };
+      case 'lit':  return { cls: 'jt-val--lit',     quoted: false, inner: node.raw };
+    }
+    return { cls: '', quoted: false, inner: '' };
+  }
+  function valHTML(vp, query) {
+    return vp.quoted ? '"' + highlightQ(vp.inner, query) + '"' : highlightQ(vp.inner, query);
+  }
+
+  // Render a node → DOM element, or null when a query filters it out.
+  //  path       = keys/indices from root (for path queries)
+  //  underMatch = an ancestor already matched → show this subtree unfiltered.
+  function renderNode(node, keyInfo, query, path, underMatch) {
+    const isBranch = node.t === 'obj' || node.t === 'arr';
+    const keyText = keyInfo && keyInfo.type === 'key' ? keyInfo.label : '';
+    const active = !!(query && query.active && !query.error && !underMatch);
+    const hlq = active ? query : null;
+
+    // does THIS node match the query?
+    let selfMatch = false, pathHit = false;
+    if (active) {
+      if (query.mode === 'path') { pathHit = pathMatches(path, query.segs); selfMatch = pathHit; }
+      else {
+        if (keyText && textHit(keyText, query)) selfMatch = true;
+        if (!isBranch && textHit(valPreview(node).inner, query)) selfMatch = true;
+      }
+    }
+    if (selfMatch) query.count++;
+
+    if (!isBranch) {
+      if (active && !selfMatch) return null;
+      const vp = valPreview(node);
+      const wrap = el('div', 'jt-node');
+      const row = el('div', 'jt-row');
+      if (keyInfo && keyInfo.dup) row.classList.add('jt-dup');
+      if (pathHit) row.classList.add('jt-hit');
+      row.appendChild(makeToggle(true));
+      appendKey(row, keyInfo, hlq);
+      const val = el('span', 'jt-val ' + vp.cls);
+      val.innerHTML = valHTML(vp, hlq);
+      val.title = 'Click to copy value';
+      val.addEventListener('click', () => copyText(rawValue(node), 'Value copied'));
+      row.appendChild(val);
+      appendCopy(row, node);
+      wrap.appendChild(row);
+      return wrap;
+    }
+
+    // branch: a matched branch reveals its whole subtree (children render unfiltered)
+    const childUnder = underMatch || selfMatch;
+    const childEls = [];
+    if (node.t === 'obj') {
+      node.children.forEach(c =>
+        childEls.push(renderNode(c.node, { type: 'key', label: c.key, dup: c.dup }, query, path.concat(c.key), childUnder)));
+    } else {
+      node.children.forEach((c, idx) =>
+        childEls.push(renderNode(c, { type: 'index', label: idx }, query, path.concat(idx), childUnder)));
+    }
+    const kept = childEls.filter(Boolean);
+    if (active && !selfMatch && kept.length === 0) return null;
+
+    const count = node.children.length;
+    const open = node.t === 'obj' ? '{' : '[';
+    const close = node.t === 'obj' ? '}' : ']';
+    const countText = node.t === 'obj' ? count + (count === 1 ? ' field' : ' fields') : count + (count === 1 ? ' item' : ' items');
+
+    const wrap = el('div', 'jt-node');
+    if (count === 0 || (query && query.active && !query.error)) wrap.classList.remove('is-collapsed');
+    const row = el('div', 'jt-row');
+    if (keyInfo && keyInfo.dup) row.classList.add('jt-dup');
+    if (pathHit) row.classList.add('jt-hit');
+    row.appendChild(makeToggle(count === 0));
+    appendKey(row, keyInfo, hlq);
+    row.appendChild(el('span', 'jt-punc', open));
+    // collapsed inline hint
+    if (count > 0) {
+      row.appendChild(el('span', 'jt-preview', ' … '));
+      row.appendChild(el('span', 'jt-close-inline', close));
+    } else {
+      row.appendChild(el('span', 'jt-punc', close));
+    }
+    row.appendChild(el('span', 'jt-count', countText));
+    appendCopy(row, node);
+    wrap.appendChild(row);
+
+    if (count > 0) {
+      const kids = el('div', 'jt-children');
+      kept.forEach(k => kids.appendChild(k));
+      wrap.appendChild(kids);
+      wrap.appendChild(el('div', 'jt-close-row jt-punc', close));
+      // toggle behaviour
+      row.querySelector('.jt-toggle').addEventListener('click', e => {
+        e.stopPropagation();
+        wrap.classList.toggle('is-collapsed');
+      });
+      row.addEventListener('click', e => {
+        if (e.target.closest('.jt-copy') || e.target.closest('.jt-val')) return;
+        wrap.classList.toggle('is-collapsed');
+      });
+    }
+    return wrap;
+  }
+
+  function makeToggle(hidden) {
+    const b = el('button', 'jt-toggle' + (hidden ? ' is-hidden' : ''));
+    b.type = 'button';
+    b.appendChild(el('span', 'wb-ico', 'chevron_right'));
+    return b;
+  }
+  function appendKey(row, keyInfo, query) {
+    if (!keyInfo) return;
+    if (keyInfo.type === 'key') {
+      const k = el('span', 'jt-key');
+      k.innerHTML = '"' + highlightQ(keyInfo.label, query) + '"';
+      row.appendChild(k);
+      row.appendChild(el('span', 'jt-colon', ':'));
+      if (keyInfo.dup) row.appendChild(el('span', 'jt-dup-tag', 'duplicate key'));
+    } else {
+      row.appendChild(el('span', 'jt-index', keyInfo.label + ':'));
+    }
+  }
+  function appendCopy(row, node) {
+    const b = el('button', 'jt-copy');
+    b.type = 'button';
+    b.title = 'Copy this branch (JSON)';
+    b.appendChild(el('span', 'wb-ico', 'content_copy'));
+    b.addEventListener('click', e => {
+      e.stopPropagation();
+      copyText(stringifyNode(node, true), 'Branch copied as JSON');
+    });
+    row.appendChild(b);
+  }
+  function rawValue(node) {
+    if (node.t === 'str') return node.v;
+    if (node.t === 'num') return node.raw != null ? node.raw : String(node.v);
+    if (node.t === 'bool') return String(node.v);
+    if (node.t === 'lit') return node.raw;
+    return 'null';
+  }
+
+  /* ============================================================================
+     6) App wiring
+     ========================================================================== */
+  const $ = id => document.getElementById(id);
+  const input = $('input');
+  const treeView = $('treeView');
+  const jsonView = $('jsonView');
+  const statusBox = $('status');
+  const searchBox = $('search');
+  const searchMode = $('searchMode');
+
+  let currentNode = null;
+  let currentView = 'tree';
+
+  // ---- sample gallery: each entry targets a specific recovery scenario ----
+  const SAMPLES = [
+    { n: 'Order (many errors)',
+      d: 'Bare keys, single quotes, _ in numbers, undefined, a comment, missing ] } at the end',
+      s: `{user:{id:1024,name:'Ngoc Anh',email:"na@shop.vn",vip:true,},orders:[{code:"DH-2201",total:1_250_000,paid:true},{code:"DH-2202",total:980000,paid:false,note:undefined}],balance:15750000,tags:["loyal","2026"  // missing closing brackets` },
+
+    { n: 'No outer braces',
+      d: 'JSON missing the outer { }, just key: value pairs',
+      s: 'id: 7, name: "Minh", email: "minh@abc.vn", active: true, roles: ["admin","editor"]' },
+
+    { n: 'Minified (no newlines)',
+      d: 'Valid JSON but with all whitespace / newlines stripped',
+      s: '{"user":{"id":42,"name":"An","addr":{"city":"Hanoi","zip":"100000"}},"items":[{"sku":"A1","qty":2},{"sku":"B7","qty":1}],"paid":true}' },
+
+    { n: 'Missing ] and }',
+      d: 'Truncated at the end, missing closing brackets',
+      s: '{"order":"HD-0192","lines":[{"name":"Coffee","price":45000},{"name":"Sandwich","price":25000' },
+
+    { n: 'Duplicate keys',
+      d: '"amount" and "note" repeat several times → struck through to flag them',
+      s: '{"id":1,"amount":100,"note":"a","amount":200,"status":"ok","note":"b","amount":300}' },
+
+    { n: 'undefined / NaN / Infinity',
+      d: 'Literals JSON cannot represent — kept as-is for viewing',
+      s: '{"score":NaN,"limit":Infinity,"ratio":-Infinity,"note":undefined,"other":None,"ok":true}' },
+
+    { n: 'Single quotes & bare keys',
+      d: 'Single-quoted strings and unquoted keys',
+      s: "{name:'An', city:'HN', tags:['vip','new'], meta:{level:3, vip:true}}" },
+
+    { n: 'Has comments',
+      d: 'JSON mixed with // and /* */ comments',
+      s: '{\n  // user info\n  "name": "Dat",\n  "age": 30, /* age */\n  "roles": ["admin"] // permissions\n}' },
+
+    { n: '1_000_000 & bad commas',
+      d: 'Underscore numbers, extra / missing commas',
+      s: '{amount: 1_250_000, items: ["a" "b",], fee: 12_500, done: true,}' },
+
+    { n: 'Stray leading quote',
+      d: "A fragment that starts with a stray ' — the fields must still be read",
+      s: `',email:"na@shop.vn",vip:true,},orders:[{code:"DH-2201",total:1_250_000,paid:true},{code:"DH-2202",total:980000}],balance:15750000,tags:["loyal","2026` },
+
+    { n: 'Several JSONs stuck together',
+      d: 'Multiple top-level objects → merged into one array',
+      s: '{"a":1}{"b":2}{"c":3}' },
+
+    { n: 'Junk before the JSON',
+      d: 'A log / text prefix before the JSON',
+      s: 'some log line >>> {"event":"login","user":"dat","ok":true,"ts":1720000000}' },
+
+    { n: 'Deeply nested',
+      d: 'Many nesting levels — try collapse / expand',
+      s: '{"a":{"b":{"c":{"d":{"e":[1,2,{"f":"deep"}]}}}},"list":[[1,[2,[3,[4]]]]]}' },
+
+    { n: 'Perfectly valid ✓',
+      d: 'Fully valid JSON (fast path via JSON.parse)',
+      s: '{"name":"Cashy","version":2,"features":["tree","repair","dark"],"stable":true,"meta":null}' },
+  ];
+  let lastSample = -1;
+  function loadSample(idx) {
+    clearTimeout(saveTimer);
+    persistCurrent();                 // keep whatever's currently in the editor
+    lastSample = idx;
+    const sm = SAMPLES[idx];
+    input.value = sm.s;
+    createBlock(sm.s, sm.n);          // a sample loads as a fresh, named block
+    searchBox.value = '';
+    switchToEditTab();
+    run();
+  }
+
+  let currentAnnotations = [];
+  function run() {
+    const src = input.value;
+    $('charCount').textContent = src.length.toLocaleString('en-US') + ' chars';
+    const res = parse(src);
+    currentNode = res.node;
+    currentAnnotations = res.annotations || [];
+    renderStatus(res);
+    renderCurrentView();
+    renderInspect(src, currentAnnotations);
+  }
+
+  function renderStatus(res) {
+    statusBox.innerHTML = '';
+    if (res.empty || !res.node) {
+      if (input.value.trim() === '') return;   // nothing typed yet → no noise
+      const a = el('div', 'wb-alert wb-alert--danger');
+      a.innerHTML = '<span class="wb-alert__icon">!</span><div class="wb-alert__body">' +
+        '<p class="wb-alert__title">Could not read the content</p>' +
+        '<p class="wb-alert__msg">The text contains no recoverable JSON.</p></div>';
+      statusBox.appendChild(a);
+      return;
+    }
+
+    const s = computeStats(res.node);
+    const stats = el('div', 'jt-stats');
+    const cap = (txt, tone) => el('span', 'wb-cap wb-cap--sm' + (tone ? ' wb-cap--' + tone : ''), txt);
+    // The "fixes" cap is clickable → jumps to the "Inspect" view over the source.
+    const fixCap = txt => {
+      const c = el('span', 'wb-cap wb-cap--sm wb-cap--warning jt-fix-cap', txt);
+      c.title = 'Click to inspect each spot right in the text';
+      c.addEventListener('click', showInspect);
+      return c;
+    };
+    const nfix = res.annotations.length;
+    if (res.strict) {
+      stats.appendChild(cap('Valid JSON', 'success'));
+      if (nfix) stats.appendChild(fixCap(nfix + (nfix === 1 ? ' warning' : ' warnings')));
+    } else {
+      stats.appendChild(fixCap(nfix + (nfix === 1 ? ' fix' : ' fixes')));
+    }
+    stats.appendChild(cap(s.nodes.toLocaleString('en-US') + (s.nodes === 1 ? ' node' : ' nodes')));
+    if (s.obj)  stats.appendChild(cap(s.obj + (s.obj === 1 ? ' object' : ' objects')));
+    if (s.arr)  stats.appendChild(cap(s.arr + (s.arr === 1 ? ' array' : ' arrays')));
+    stats.appendChild(cap(s.depth + (s.depth === 1 ? ' level deep' : ' levels deep')));
+    statusBox.appendChild(stats);
+  }
+
+  /* ---- "Inspect": show the source text with the fixed spots highlighted ---- */
+  function showInspect() {
+    const tab = document.querySelector('#inputTabs [data-inview="inspect"]');
+    if (tab) tab.click();
+    const card = input.closest('.wb-card');
+    if (card) card.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+
+  function renderInspect(src, anns) {
+    const view = $('inspectView');
+    const badge = $('inspectCount');
+    const posCount = anns.filter(a => a.start != null).length;
+    if (badge) { badge.hidden = posCount === 0; badge.textContent = posCount; }
+    if (!view) return;
+    if (!src.trim()) { view.innerHTML = '<span class="jt-inspect-msg">Nothing to inspect yet.</span>'; return; }
+    const info = anns.filter(a => a.start == null);
+    if (posCount === 0 && info.length === 0) {
+      view.innerHTML = '<span class="jt-inspect-msg jt-inspect-ok">✓ Nothing needed fixing — valid JSON.</span>';
+      return;
+    }
+    let notes = '';
+    if (info.length) {
+      notes = '<div class="jt-inspect-notes"><b>Extra notes:</b><ul>' +
+        info.map(a => '<li>' + esc(a.msg) + '</li>').join('') + '</ul></div>';
+    }
+    const legend = posCount ? (
+      '<div class="jt-inspect-hint">' +
+        '<span class="jt-legend"><span class="jt-swatch" style="background:var(--wb-danger-soft);' +
+          'box-shadow:inset 0 0 0 1px var(--wb-danger)"></span> wrong spot (missing → added, extra → struck out)</span>' +
+        '<span class="jt-legend"><span class="jt-swatch" style="background:var(--wb-warning-soft);' +
+          'box-shadow:inset 0 -2px 0 var(--wb-warning)"></span> normalized spot</span>' +
+        '<span style="margin-left:auto">Click a highlighted spot to see what was fixed.</span>' +
+      '</div>') : '';
+    view.innerHTML = legend + '<pre class="jt-inspect-src">' + renderAnnotatedSource(src, anns) + '</pre>' + notes;
+  }
+
+  // Rebuild the source string, wrapping wrong spans + inserted fills in clickable
+  // <span data-ann="idx"> so each can pop up its explanation.
+  function renderAnnotatedSource(src, anns) {
+    const pos = anns.map((a, idx) => ({ a, idx })).filter(x => x.a.start != null);
+    const inserts = {};
+    pos.filter(x => x.a.insert != null).forEach(x => { (inserts[x.a.start] = inserts[x.a.start] || []).push(x); });
+    const spans = pos.filter(x => x.a.insert == null && x.a.end > x.a.start)
+                     .sort((p, q) => p.a.start - q.a.start || q.a.end - p.a.end);
+    spans.forEach(s => s.used = false);
+    const insHTML = x => '<span class="jt-ann jt-ann--ins" data-ann="' + x.idx + '" title="Added">' + esc(x.a.insert) + '</span>';
+    const spanAt = p => { for (const s of spans) if (!s.used && s.a.start === p) return s; return null; };
+    let out = '', i = 0;
+    while (i < src.length) {
+      if (inserts[i]) inserts[i].forEach(x => out += insHTML(x));
+      const sp = spanAt(i);
+      if (sp) {
+        sp.used = true;
+        const end = Math.min(sp.a.end, src.length);
+        out += '<span class="jt-ann jt-ann--' + sp.a.cls + '" data-ann="' + sp.idx + '">' + esc(src.slice(i, end)) + '</span>';
+        i = end; continue;
+      }
+      let nxt = src.length;                       // batch plain text to the next event
+      for (const k in inserts) { const kk = +k; if (kk > i && kk < nxt) nxt = kk; }
+      for (const s of spans) { if (!s.used && s.a.start > i && s.a.start < nxt) nxt = s.a.start; }
+      out += esc(src.slice(i, nxt)); i = nxt;
+    }
+    if (inserts[src.length]) inserts[src.length].forEach(x => out += insHTML(x));
+    return out;
+  }
+
+  let annPop = null;
+  function closeAnnPop() { if (annPop) { annPop.remove(); annPop = null; } }
+  function showAnnPop(target, ann) {
+    closeAnnPop();
+    const map = { ins: ['Added', 'danger'], removed: ['Ignored', 'danger'], changed: ['Normalized', 'warning'] };
+    const [label, tone] = map[ann.cls] || ['Note', 'info'];
+    annPop = el('div', 'jt-pop');
+    annPop.innerHTML = '<span class="jt-pop__tag jt-pop__tag--' + tone + '">' + label + '</span>' +
+      '<div class="jt-pop__msg">' + esc(ann.msg) + '</div>';
+    document.body.appendChild(annPop);
+    const r = target.getBoundingClientRect(), pr = annPop.getBoundingClientRect();
+    let top = r.bottom + 6, left = r.left;
+    if (left + pr.width > window.innerWidth - 8) left = window.innerWidth - pr.width - 8;
+    if (top + pr.height > window.innerHeight - 8) top = r.top - pr.height - 6;
+    annPop.style.top = Math.max(8, top) + 'px';
+    annPop.style.left = Math.max(8, left) + 'px';
+  }
+
+  function renderCurrentView() {
+    if (currentView !== 'tree') {
+      jsonView.textContent = currentNode ? stringifyNode(currentNode, true) : '';
+      return;
+    }
+    const query = buildQuery(searchBox.value, searchMode.value);
+    treeView.innerHTML = '';
+    if (!currentNode) { showEmpty(treeView); updateSearchStatus({ active: false }); return; }
+    const rootEl = renderNode(currentNode, null, query, [], false);
+    if (!rootEl) showEmpty(treeView, 'No matches.');
+    else treeView.appendChild(rootEl);
+    updateSearchStatus(query);
+  }
+
+  function updateSearchStatus(query) {
+    const cnt = $('matchCount');
+    if (!query.active) { cnt.hidden = true; cnt.textContent = ''; searchBox.classList.remove('is-invalid'); return; }
+    if (query.mode === 'regex' && query.error) {
+      searchBox.classList.add('is-invalid');
+      cnt.hidden = false; cnt.dataset.tone = 'danger'; cnt.textContent = 'Bad regex';
+      return;
+    }
+    searchBox.classList.remove('is-invalid');
+    cnt.hidden = false;
+    cnt.dataset.tone = query.count ? 'ok' : 'warn';
+    cnt.textContent = query.count + (query.count === 1 ? ' match' : ' matches');
+  }
+
+  function showEmpty(container, msg) {
+    const e = el('div', 'wb-empty');
+    e.innerHTML =
+      '<div class="wb-empty__icon">🌳</div>' +
+      '<p class="wb-empty__title">' + (msg || 'Nothing to show yet') + '</p>' +
+      (msg ? '' : '<p class="wb-empty__msg">Paste JSON in the panel on the left to build the tree.</p>');
+    container.appendChild(e);
+  }
+
+  function setAllCollapsed(collapsed) {
+    treeView.querySelectorAll('.jt-node').forEach(nodeEl => {
+      if (nodeEl.querySelector(':scope > .jt-children')) {
+        nodeEl.classList.toggle('is-collapsed', collapsed);
+      }
+    });
+  }
+
+  /* ---- clipboard ---- */
+  function copyText(text, msg) {
+    const done = () => toast(msg || 'Copied', 'success');
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
+    } else fallbackCopy(text, done);
+  }
+  function fallbackCopy(text, done) {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); done(); } catch (_) { toast('Could not copy', 'danger'); }
+    document.body.removeChild(ta);
+  }
+
+  /* ---- toast ---- */
+  function toast(msg, tone) {
+    const t = el('div', 'wb-toast' + (tone ? ' wb-toast--' + tone : ''));
+    t.innerHTML =
+      '<span class="wb-toast__icon"><span class="wb-ico wb-ico--xs">' +
+        (tone === 'danger' ? 'error' : 'check') + '</span></span>' +
+      '<div class="wb-toast__body"><p class="wb-toast__title">' + esc(msg) + '</p></div>' +
+      '<button class="wb-close" aria-label="Close"></button>';
+    $('toaster').appendChild(t);
+    const kill = () => t.remove();
+    t.querySelector('.wb-close').addEventListener('click', kill);
+    setTimeout(kill, 2200);
+  }
+
+  /* ============================================================================
+     7) History — saved JSON blocks, persisted in localStorage
+     ----------------------------------------------------------------------------
+     Every non-empty editor state maps to a block with a stable integer id.
+     Editing autosaves into the ACTIVE block (id unchanged). A NEW block (new id)
+     is minted when content appears from an EMPTY editor (typing / paste / upload)
+     or a sample is loaded. Opening a block re-activates its id and floats it to
+     the top; the previously-active block just stays saved in the list.
+     ========================================================================== */
+  const HKEY = 'jt-history-v1';
+  let store = { seq: 1, blocks: [] };   // block: { id, name, text, savedAt }
+  let activeId = null;
+  let parseTimer = null, saveTimer = null, savedCapTimer = null, undoTimer = null;
+  let lastDeleted = null;
+
+  // Strictly-monotonic timestamp: two saves in the same millisecond must still
+  // order deterministically, so an opened/loaded block always floats above the
+  // one just auto-saved before it.
+  let lastTs = 0;
+  function stamp() { lastTs = Math.max(Date.now(), lastTs + 1); return lastTs; }
+
+  function loadStore() {
+    try { const h = JSON.parse(localStorage.getItem(HKEY)); if (h && Array.isArray(h.blocks)) store = h; }
+    catch (_) {}
+    if (typeof store.seq !== 'number') store.seq = 1;
+    if (!Array.isArray(store.blocks)) store.blocks = [];
+    // keep seq ahead of any existing id, and lastTs ahead of any saved time
+    store.blocks.forEach(b => {
+      if (b.id >= store.seq) store.seq = b.id + 1;
+      if (b.savedAt > lastTs) lastTs = b.savedAt;
+    });
+  }
+  function saveStore() { try { localStorage.setItem(HKEY, JSON.stringify(store)); } catch (_) {} }
+  function sortBlocks() { store.blocks.sort((a, b) => b.savedAt - a.savedAt); }
+  function findBlock(id) { return store.blocks.find(b => b.id === id); }
+
+  function createBlock(text, name) {
+    const b = { id: store.seq++, name: name || '', text: text, savedAt: stamp() };
+    store.blocks.push(b);
+    activeId = b.id;
+    sortBlocks(); saveStore(); renderHistory();
+    return b;
+  }
+  // Save the current editor content into the active block, minting one if the
+  // editor just went from empty→content. Empty editor → detach (block is kept).
+  function persistCurrent(flash) {
+    const text = input.value;
+    if (!text.trim()) { activeId = null; return null; }
+    let b = activeId != null ? findBlock(activeId) : null;
+    if (!b) { b = createBlock(text, ''); }
+    // Only a REAL content change bumps savedAt (and thus the list order). Merely
+    // opening/flushing an unchanged block must not make it jump to the top.
+    else if (b.text !== text) { b.text = text; b.savedAt = stamp(); sortBlocks(); saveStore(); renderHistory(); }
+    if (flash) showSavedCap();
+    return b;
+  }
+  function openBlock(id) {
+    clearTimeout(saveTimer);
+    persistCurrent();                    // flush the outgoing content (bumps only if edited)
+    const b = findBlock(id);
+    if (!b) return;
+    activeId = id;
+    input.value = b.text;                // opening does NOT touch savedAt / order
+    searchBox.value = '';
+    switchToEditTab(); renderHistory(); run();
+  }
+  function deleteBlock(id) {
+    const idx = store.blocks.findIndex(b => b.id === id);
+    if (idx < 0) return;
+    const b = store.blocks[idx];
+    store.blocks.splice(idx, 1);
+    lastDeleted = { block: b, idx };
+    if (activeId === id) { activeId = null; input.value = ''; searchBox.value = ''; run(); }
+    saveStore(); renderHistory();
+    toastUndo('Deleted “' + (b.name || 'Untitled') + '”', () => {
+      store.blocks.splice(Math.min(lastDeleted.idx, store.blocks.length), 0, lastDeleted.block);
+      sortBlocks(); saveStore(); renderHistory();
+    });
+  }
+  function relTime(ts) {
+    const s = Math.round((Date.now() - ts) / 1000);
+    if (s < 45) return 'just now';
+    const m = Math.round(s / 60); if (m < 60) return m + (m === 1 ? ' min ago' : ' mins ago');
+    const h = Math.round(m / 60); if (h < 24) return h + (h === 1 ? ' hour ago' : ' hours ago');
+    const d = Math.round(h / 24); if (d < 7) return d + (d === 1 ? ' day ago' : ' days ago');
+    return new Date(ts).toLocaleDateString('vi-VN');
+  }
+  function histBtn(icon, title, danger) {
+    const b = el('button', 'jt-hist__btn' + (danger ? ' is-danger' : ''));
+    b.type = 'button'; b.title = title;
+    b.appendChild(el('span', 'wb-ico', icon)); return b;
+  }
+  function renderHistory() {
+    const list = $('historyList');
+    list.innerHTML = '';
+    if (!store.blocks.length) {
+      list.innerHTML = '<div class="jt-history__empty">No entries yet.<br>JSON you enter is saved here automatically.</div>';
+      return;
+    }
+    store.blocks.forEach(b => {
+      const item = el('div', 'jt-hist' + (b.id === activeId ? ' is-active' : ''));
+      const body = el('div', 'jt-hist__body');
+      body.appendChild(el('div', 'jt-hist__name' + (b.name ? '' : ' is-untitled'), b.name || 'Untitled'));
+      const time = el('div', 'jt-hist__time', relTime(b.savedAt));
+      time.title = new Date(b.savedAt).toLocaleString('vi-VN');
+      body.appendChild(time);
+      const actions = el('div', 'jt-hist__actions');
+      const rn = histBtn('edit', 'Rename'), dl = histBtn('delete', 'Delete', true);
+      actions.appendChild(rn); actions.appendChild(dl);
+      item.appendChild(body); item.appendChild(actions);
+      item.addEventListener('click', e => {
+        if (e.target.closest('.jt-hist__actions') || item.classList.contains('is-editing')) return;
+        openBlock(b.id);
+      });
+      rn.addEventListener('click', e => { e.stopPropagation(); startRename(item, b); });
+      dl.addEventListener('click', e => { e.stopPropagation(); deleteBlock(b.id); });
+      list.appendChild(item);
+    });
+  }
+  function startRename(item, b) {
+    item.classList.add('is-editing');
+    const body = item.querySelector('.jt-hist__body');
+    const inp = el('input', 'wb-input wb-input--sm jt-hist__rename');
+    inp.value = b.name || ''; inp.placeholder = 'Name this entry…';
+    body.innerHTML = ''; body.appendChild(inp); inp.focus(); inp.select();
+    let done = false;
+    const commit = () => { if (done) return; done = true; b.name = inp.value.trim(); saveStore(); renderHistory(); };
+    const cancel = () => { if (done) return; done = true; renderHistory(); };
+    inp.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); commit(); }
+      else if (e.key === 'Escape') { e.preventDefault(); cancel(); }
+    });
+    inp.addEventListener('blur', commit);
+    inp.addEventListener('click', e => e.stopPropagation());
+  }
+  function showSavedCap() {
+    const cap = $('savedCap'); if (!cap) return;
+    cap.classList.add('is-show');
+    clearTimeout(savedCapTimer);
+    savedCapTimer = setTimeout(() => cap.classList.remove('is-show'), 1600);
+  }
+  function switchToEditTab() {
+    const t = document.querySelector('#inputTabs [data-inview="edit"]');
+    if (t && !t.classList.contains('is-active')) t.click();
+  }
+  function saveDraft() {
+    clearTimeout(saveTimer);
+    if (!persistCurrent(true)) toast('Nothing to save', 'danger');
+  }
+  function toastUndo(msg, onUndo) {
+    const t = el('div', 'wb-toast');
+    t.innerHTML =
+      '<span class="wb-toast__icon"><span class="wb-ico wb-ico--xs">delete</span></span>' +
+      '<div class="wb-toast__body"><p class="wb-toast__title">' + esc(msg) + '</p></div>' +
+      '<button class="wb-btn wb-btn--ghost wb-btn--sm jt-undo" type="button">Undo</button>' +
+      '<button class="wb-close" aria-label="Close"></button>';
+    $('toaster').appendChild(t);
+    const kill = () => t.remove();
+    clearTimeout(undoTimer);
+    t.querySelector('.wb-close').addEventListener('click', kill);
+    t.querySelector('.jt-undo').addEventListener('click', () => { onUndo(); kill(); });
+    undoTimer = setTimeout(kill, 5000);
+  }
+
+  /* ============================================================================
+     8) Event wiring
+     ========================================================================== */
+  // Editing: parse quickly, autosave into the active block a little slower.
+  input.addEventListener('input', () => {
+    clearTimeout(parseTimer); parseTimer = setTimeout(run, 220);
+    clearTimeout(saveTimer);
+    if (input.value.trim() === '') { if (activeId !== null) { activeId = null; renderHistory(); } }
+    else { saveTimer = setTimeout(() => persistCurrent(true), 800); }
+  });
+  $('btnClear').addEventListener('click', () => {
+    clearTimeout(saveTimer); persistCurrent();          // preserve current in history
+    input.value = ''; searchBox.value = ''; activeId = null;
+    switchToEditTab(); renderHistory(); run(); input.focus();
+  });
+  $('btnNew').addEventListener('click', () => $('btnClear').click());
+  $('btnSave').addEventListener('click', saveDraft);
+
+  // Upload a .json file from disk → a fresh block named after the file.
+  $('btnUpload').addEventListener('click', () => $('fileInput').click());
+  $('fileInput').addEventListener('change', e => {
+    const file = e.target.files && e.target.files[0];
+    e.target.value = '';                                // allow re-picking the same file
+    if (!file) return;
+    if (file.size > 8 * 1024 * 1024) { toast('File too large (> 8 MB)', 'danger'); return; }
+    const reader = new FileReader();
+    reader.onload = () => {
+      clearTimeout(saveTimer); persistCurrent();
+      const text = String(reader.result || '');
+      input.value = text;
+      if (text.trim()) createBlock(text, file.name.replace(/\.(json|txt)$/i, ''));
+      else activeId = null;
+      searchBox.value = ''; switchToEditTab(); run();
+      toast('Opened “' + file.name + '”', 'success');
+    };
+    reader.onerror = () => toast('Could not read the file', 'danger');
+    reader.readAsText(file);
+  });
+
+  // Sidebar show/hide (persisted)
+  const layout = $('layout');
+  if (localStorage.getItem('jt-hist-hidden') === '1') layout.classList.add('is-history-hidden');
+  $('btnToggleHistory').addEventListener('click', () => {
+    const hidden = layout.classList.toggle('is-history-hidden');
+    localStorage.setItem('jt-hist-hidden', hidden ? '1' : '0');
+  });
+
+  // Input tabs: Edit (editable) ↔ Inspect (annotated source)
+  $('inputTabs').addEventListener('click', e => {
+    const tab = e.target.closest('.wb-tab'); if (!tab) return;
+    const inspect = tab.dataset.inview === 'inspect';
+    $('inputTabs').querySelectorAll('.wb-tab').forEach(t => t.classList.toggle('is-active', t === tab));
+    input.hidden = inspect;
+    $('inspectView').hidden = !inspect;
+    if (inspect) renderInspect(input.value, currentAnnotations);
+  });
+  // Click a highlighted spot → popup with its explanation
+  $('inspectView').addEventListener('click', e => {
+    const t = e.target.closest('.jt-ann');
+    const ann = t && t.dataset.ann != null ? currentAnnotations[+t.dataset.ann] : null;
+    if (!ann) { closeAnnPop(); return; }
+    e.stopPropagation();
+    showAnnPop(t, ann);
+  });
+  document.addEventListener('click', e => {
+    if (annPop && !e.target.closest('.jt-pop') && !e.target.closest('.jt-ann')) closeAnnPop();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeAnnPop();
+    if ((e.metaKey || e.ctrlKey) && (e.key === 's' || e.key === 'S')) { e.preventDefault(); saveDraft(); }
+  });
+
+  // build the sample chips
+  const chipWrap = $('sampleChips');
+  SAMPLES.forEach((sm, idx) => {
+    const b = el('button', 'wb-btn wb-btn--outline wb-btn--sm', sm.n);
+    b.type = 'button';
+    b.title = sm.d;
+    b.addEventListener('click', () => loadSample(idx));
+    chipWrap.appendChild(b);
+  });
+  $('btnRandom').addEventListener('click', () => {
+    let idx;
+    do { idx = Math.floor(Math.random() * SAMPLES.length); }
+    while (SAMPLES.length > 1 && idx === lastSample);
+    loadSample(idx);
+  });
+  $('btnPaste').addEventListener('click', async () => {
+    try {
+      const txt = await navigator.clipboard.readText();
+      if (!txt.trim()) { toast('Clipboard is empty', 'danger'); return; }
+      input.value = txt;
+      input.dispatchEvent(new Event('input', { bubbles: true }));   // → parse + autosave
+      switchToEditTab();
+      toast('Pasted from clipboard', 'success');
+    } catch (_) { toast('Browser blocked clipboard access — paste manually (Ctrl/Cmd+V)', 'danger'); }
+  });
+  // Reformatting rewrites the textarea. If the input still has mistakes, doing
+  // that silently would hide WHERE it was wrong — so instead we reveal them in
+  // "Inspect" first (the clean/compact version is always in the output panel).
+  function reformat(pretty) {
+    if (!currentNode) { toast('No JSON to process', 'danger'); return; }
+    const fixes = currentAnnotations.filter(a => a.start != null).length;
+    if (fixes) {
+      showInspect();
+      toast('Still ' + fixes + ' spot(s) not right — check the “Inspect” tab first. The fixed version is in the JSON panel on the right.', 'warning');
+      return;
+    }
+    switchToEditTab();
+    input.value = stringifyNode(currentNode, pretty); run(); persistCurrent();
+    toast(pretty ? 'Beautified' : 'Minified', 'success');
+  }
+  $('btnFormat').addEventListener('click', () => reformat(true));
+  $('btnMinify').addEventListener('click', () => reformat(false));
+  $('btnExpand').addEventListener('click', () => setAllCollapsed(false));
+  $('btnCollapse').addEventListener('click', () => setAllCollapsed(true));
+  $('btnCopyOut').addEventListener('click', () => {
+    if (!currentNode) { toast('Nothing to copy', 'danger'); return; }
+    copyText(stringifyNode(currentNode, true), 'Copied JSON (beautified)');
+  });
+  // Download the (beautified) JSON as a .json file, named after the active entry.
+  $('btnDownload').addEventListener('click', () => {
+    if (!currentNode) { toast('Nothing to download', 'danger'); return; }
+    const active = activeId != null ? findBlock(activeId) : null;
+    const base = ((active && active.name) || 'data').replace(/\.json$/i, '').replace(/[^\w.-]+/g, '_').replace(/^[_.]+|[_.]+$/g, '') || 'data';
+    const blob = new Blob([stringifyNode(currentNode, true)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = base + '.json';
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+    toast('Downloaded ' + base + '.json', 'success');
+  });
+  searchBox.addEventListener('input', () => { if (currentView === 'tree') renderCurrentView(); });
+  searchMode.addEventListener('change', () => { updatePlaceholder(); if (currentView === 'tree') renderCurrentView(); });
+  function updatePlaceholder() {
+    const m = searchMode.value;
+    searchBox.placeholder = m === 'regex'
+      ? 'Regex, e.g.  ^user|price$'
+      : m === 'path'
+        ? 'Path, e.g.  user.co · items.*.sku · **.price'
+        : 'Search keys or values…';
+  }
+  updatePlaceholder();
+
+  // view tabs
+  $('viewTabs').addEventListener('click', e => {
+    const tab = e.target.closest('.wb-tab');
+    if (!tab) return;
+    currentView = tab.dataset.view;
+    $('viewTabs').querySelectorAll('.wb-tab').forEach(t => t.classList.toggle('is-active', t === tab));
+    treeView.hidden = currentView !== 'tree';
+    jsonView.hidden = currentView !== 'json';
+    $('treeTools').style.display = currentView === 'tree' ? '' : 'none';
+    renderCurrentView();
+  });
+
+  // theme toggle (persisted)
+  const root = document.documentElement;
+  const savedTheme = localStorage.getItem('jt-theme');
+  if (savedTheme === 'dark') root.classList.add('dark');
+  $('themeToggle').addEventListener('click', () => {
+    root.classList.toggle('dark');
+    localStorage.setItem('jt-theme', root.classList.contains('dark') ? 'dark' : 'light');
+  });
+
+  // ---- boot: restore history, reopen the most recent block ----
+  loadStore();
+  sortBlocks();
+  if (store.blocks.length) { activeId = store.blocks[0].id; input.value = store.blocks[0].text; }
+  renderHistory();
+  run();
+  </script>
+</body>
+</html>
