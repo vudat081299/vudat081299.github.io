@@ -176,14 +176,17 @@
       border-left: var(--wb-bw) dashed var(--wb-border);
     }
     .ja-row {
+      /* NB: no row-wide word-break — that let a long value shrink the key flex-item
+         until the key wrapped one char per line. Only .ja-val breaks anywhere. */
       display: flex; align-items: flex-start; gap: 4px;
       border-radius: 6px; padding: 1px 26px 1px 4px; position: relative;
-      cursor: default; white-space: pre-wrap; word-break: break-word;
+      cursor: default; white-space: pre-wrap;
     }
     .ja-row:hover { background: var(--wb-surface-2); }
 
     .ja-toggle {
-      flex: none; width: 18px; height: 20px; padding: 0; margin: 0;
+      /* height = one tree line (13px × 1.75) so the chevron centres on the key row */
+      flex: none; width: 18px; height: calc(13px * 1.75); padding: 0; margin: 0;
       display: inline-flex; align-items: center; justify-content: center;
       border: none; background: none; cursor: pointer; color: var(--wb-fg-subtle);
     }
@@ -199,9 +202,9 @@
       background: var(--wb-surface-2); border: var(--wb-bw) solid var(--wb-border);
       border-radius: 999px; padding: 0 7px; }
 
-    /* click-to-copy value: show a 📋 copy cursor (not the OS "+" copy cursor);
-       falls back to a plain pointer if the image cursor can't render. */
-    .ja-val { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22'%3E%3Ctext y='18' font-size='18'%3E📋%3C/text%3E%3C/svg%3E") 3 3, pointer;
+    /* click-to-copy value: just a plain hand pointer to signal it's clickable.
+       The copy affordance is the per-row button on the right — no cursor glyph. */
+    .ja-val { cursor: pointer; min-width: 0; word-break: break-word;
       border-radius: 4px; padding: 0 2px; margin: 0 -2px; }
     .ja-val:hover { background: var(--wb-surface-hover); }
     .ja-val--string  { color: var(--ja-string); }
@@ -236,9 +239,10 @@
 
     /* per-row copy button */
     .ja-copy {
-      position: absolute; right: 3px; top: 1px; opacity: 0;
+      position: absolute; right: 3px; top: 50%; transform: translateY(-50%);
+      opacity: 0; display: inline-flex; align-items: center; justify-content: center;
       border: none; background: var(--wb-surface); color: var(--wb-fg-subtle);
-      border-radius: 5px; cursor: pointer; padding: 1px 3px; line-height: 1;
+      border-radius: 5px; cursor: pointer; padding: 2px 4px; line-height: 1;
       transition: opacity .1s ease;
     }
     .ja-row:hover .ja-copy { opacity: 1; }
