@@ -363,26 +363,38 @@
     .ja-cmp-legend-add { color: var(--wb-success-text); font-weight: 600; }
     .ja-cmp-legend-del { color: var(--wb-danger-text);  font-weight: 600; }
 
-    /* two-column aligned diff: each row is its own 2-col grid, so A and B stay
-       row-aligned even when one side is a placeholder gap. */
+    /* GitHub-style diff colouring, shared by both presentations via .is-add /
+       .is-del / .is-gap: red = in A (removed), green = in B (added). A soft line
+       tint, plus a stronger token tint (.ja-cmp-word) on the exact changed part.
+       Everything is scoped under .ja-cmp-diff so the state classes never leak. */
+    .ja-cmp-diff { max-height: 62vh; min-height: 220px; overflow: auto;
+      font-family: var(--ja-mono); font-size: 12.5px; line-height: 1.7; }
+    .ja-cmp-diff .ja-cmp-sign { width: 22px; flex: none; text-align: center; user-select: none;
+      color: var(--wb-fg-subtle); font-weight: 700; }
+    .ja-cmp-diff .ja-cmp-code { flex: 1 1 auto; min-width: 0; padding-right: 12px;
+      white-space: pre-wrap; word-break: break-word; }
+    .ja-cmp-diff .is-add { background: var(--wb-success-soft); }
+    .ja-cmp-diff .is-del { background: var(--wb-danger-soft); }
+    .ja-cmp-diff .is-gap { background: var(--wb-surface-2); }          /* calm, neutral empty side */
+    .ja-cmp-diff .is-add > .ja-cmp-sign { color: var(--wb-success-text); }
+    .ja-cmp-diff .is-del > .ja-cmp-sign { color: var(--wb-danger-text); }
+    .ja-cmp-diff .ja-cmp-word { border-radius: 3px; padding: 0 1px; }
+    .ja-cmp-diff .is-del .ja-cmp-word { background: color-mix(in srgb, var(--wb-danger)  26%, transparent); }
+    .ja-cmp-diff .is-add .ja-cmp-word { background: color-mix(in srgb, var(--wb-success) 30%, transparent); }
+
+    /* — split (side by side): each row is two [sign · code] cells, kept aligned — */
     .ja-cmp-colhead { display: grid; grid-template-columns: 1fr 1fr;
       font-size: 12px; font-weight: 650; color: var(--wb-fg-muted);
       border-bottom: var(--wb-bw) solid var(--wb-border); }
-    .ja-cmp-colhead > div { padding: 8px 14px; }
+    .ja-cmp-colhead[hidden] { display: none; }
+    .ja-cmp-colhead > div { padding: 8px 16px 8px 24px; }
     .ja-cmp-colhead > div + div { border-left: var(--wb-bw) solid var(--wb-border); }
-
-    .ja-cmp-diff { max-height: 60vh; min-height: 220px; overflow: auto;
-      font-family: var(--ja-mono); font-size: 12.5px; line-height: 1.7; }
     .ja-cmp-row { display: grid; grid-template-columns: 1fr 1fr; }
-    .ja-cmp-cell { padding: 0 14px; white-space: pre-wrap; word-break: break-word; min-height: 1.7em; }
+    .ja-cmp-cell { display: flex; min-height: 1.7em; }
     .ja-cmp-cell + .ja-cmp-cell { border-left: var(--wb-bw) solid var(--wb-border); }
-    .ja-cmp-line { display: inline-block; }
-    .ja-cmp-cell.is-extra { background: var(--wb-success-soft); }   /* present here, absent on the other side */
-    .ja-cmp-cell.is-chg   { background: var(--wb-warning-soft); }   /* same key, different value */
-    .ja-cmp-cell.is-gap   {                                          /* a gap: the other side has a value here */
-      background-color: var(--wb-danger-soft);
-      background-image: repeating-linear-gradient(45deg, transparent 0 6px, rgba(127,29,29,.10) 6px 12px);
-    }
+
+    /* — inline (unified): one column of [sign · code] lines — */
+    .ja-cmp-uline { display: flex; min-height: 1.7em; }
 
     /* syntax colours reuse the tree palette */
     .ja-cmp-k    { color: var(--ja-key); font-weight: 600; }
@@ -616,9 +628,10 @@
     <section id="viewCompare" class="wb-stack" hidden>
       <p class="ja-lead">
         Paste two JSON snippets — <b>broken or messy is fine</b>. Each is
-        <b>repaired and key-sorted</b> first, then lined up side by side:
-        <span class="ja-cmp-legend-add">green</span> marks a key/value present on that side only,
-        and a <span class="ja-cmp-legend-del">red gap</span> marks where the other side has something this one lacks.
+        <b>repaired and key-sorted</b> first, then diffed:
+        <span class="ja-cmp-legend-del">red</span> = only in A, <span class="ja-cmp-legend-add">green</span> = only in B;
+        a changed value shows old (red) → new (green) with the exact change highlighted.
+        Switch between <b>Side by side</b> and a simpler <b>Inline</b> view.
       </p>
 
       <div class="ja-cmp-inputs wb-grid wb-grid--2">
@@ -666,6 +679,9 @@
         <label class="ja-cmp-check" title="Sort every object's keys before comparing, so key order never counts as a difference">
           <input type="checkbox" id="cmpSort" checked /> Sort keys first
         </label>
+        <label class="ja-cmp-check" title="Hide identical lines — keep only the differences and the path to them">
+          <input type="checkbox" id="cmpDiffOnly" /> Only differences
+        </label>
         <button id="cmpSwap" class="wb-btn wb-btn--secondary wb-btn--sm">
           <span class="wb-ico wb-ico--sm">swap_horiz</span> Swap A ↔ B
         </button>
@@ -679,12 +695,12 @@
         <div class="wb-card__head">
           <h2 class="wb-card__title">Differences</h2>
           <div class="wb-tabs wb-tabs--pill" id="cmpViewTabs" role="tablist">
-            <button class="wb-tab is-active" data-cmpview="split" type="button">All</button>
-            <button class="wb-tab" data-cmpview="onlyDiff" type="button">Only differences</button>
+            <button class="wb-tab is-active" data-cmpview="split" type="button">Side by side</button>
+            <button class="wb-tab" data-cmpview="inline" type="button">Inline</button>
           </div>
         </div>
         <div class="wb-card__body">
-          <div class="ja-cmp-colhead"><div>JSON A</div><div>JSON B</div></div>
+          <div class="ja-cmp-colhead" id="cmpColhead"><div>JSON A</div><div>JSON B</div></div>
           <div id="cmpDiff" class="ja-cmp-diff"></div>
         </div>
       </section>
@@ -1999,7 +2015,7 @@
        • same key, different value     → both shown (amber "changed")
      ========================================================================== */
   const cmpA = $('cmpA'), cmpB = $('cmpB'), cmpDiff = $('cmpDiff');
-  let cmpTimer = null, cmpOnlyDiff = false;
+  let cmpTimer = null, cmpOnlyDiff = false, cmpView = 'split';   // 'split' | 'inline'
 
   // Recursively sort object keys; arrays keep their order (they're position-aligned).
   function sortNodeKeys(node) {
@@ -2065,6 +2081,21 @@
   }
 
   // Walk two nodes in lockstep → { rows, stats }. Each row: { depth, left, right, status }.
+  // Two changed scalars → { l, r } HTML, with the differing middle (common
+  // prefix/suffix stripped) wrapped in .ja-cmp-word for a stronger token tint.
+  function cmpValDiffHTML(a, b) {
+    const av = cmpScalarText(a), bv = cmpScalarText(b);
+    let p = 0; while (p < av.length && p < bv.length && av[p] === bv[p]) p++;
+    let s = 0; while (s < av.length - p && s < bv.length - p && av[av.length - 1 - s] === bv[bv.length - 1 - s]) s++;
+    const cls = n => ({ str: 'ja-cmp-s', num: 'ja-cmp-n', bool: 'ja-cmp-bool', null: 'ja-cmp-null', lit: 'ja-cmp-lit' }[n.t] || '');
+    const wrap = (full, node) => {
+      const mid = full.slice(p, full.length - s);
+      const midHTML = mid ? '<span class="ja-cmp-word">' + esc(mid) + '</span>' : '';
+      return '<span class="' + cls(node) + '">' + esc(full.slice(0, p)) + midHTML + esc(full.slice(full.length - s)) + '</span>';
+    };
+    return { l: wrap(av, a), r: wrap(bv, b) };
+  }
+
   function cmpBuild(a, b) {
     const rows = [];
     const stats = { onlyA: 0, onlyB: 0, changed: 0 };
@@ -2088,9 +2119,13 @@
       const comma = last ? '' : cmpP(',');
       if (cmpCat(a) !== cmpCat(b)) { del(a, key, depth, last); add(b, key, depth, last); return; }
       if (cmpCat(a) === 'scalar') {
-        const eq = cmpScalarEqual(a, b);
-        if (!eq) { stats.changed++; markDiff(); }
-        push({ depth, left: kl + cmpValHTML(a) + comma, right: kl + cmpValHTML(b) + comma, status: eq ? 'same' : 'chg' });
+        if (cmpScalarEqual(a, b)) {
+          push({ depth, left: kl + cmpValHTML(a) + comma, right: kl + cmpValHTML(b) + comma, status: 'same' });
+          return;
+        }
+        stats.changed++; markDiff();
+        const vd = cmpValDiffHTML(a, b);
+        push({ depth, left: kl + vd.l + comma, right: kl + vd.r + comma, status: 'chg' });
         return;
       }
       const o = a.t === 'obj' ? '{' : '[', c = a.t === 'obj' ? '}' : ']';
@@ -2132,21 +2167,37 @@
     if (r.close) return !!(r.openRef && r.openRef.hasDiff);
     return false;
   }
-  function cmpRenderRows(rows, onlyDiff) {
-    const cell = (html, status, side) => {
-      let cls = '';
-      if (status === 'del') cls = side === 'l' ? 'is-extra' : 'is-gap';
-      else if (status === 'add') cls = side === 'l' ? 'is-gap' : 'is-extra';
-      else if (status === 'chg') cls = 'is-chg';
-      return '<div class="ja-cmp-cell ' + cls + '">' + (html == null ? '' : html) + '</div>';
-    };
+  const CMP_SIGN = { 'is-del': '−', 'is-add': '+' };   /* − / + */
+  function cmpCol(html, cls, depth) {
+    const ind = html == null ? '' : ' style="padding-left:' + (depth * 1.35) + 'em"';
+    return '<span class="ja-cmp-sign">' + (CMP_SIGN[cls] || '') + '</span>'
+      + '<span class="ja-cmp-code"' + ind + '>' + (html == null ? '' : html) + '</span>';
+  }
+  // Split (side-by-side): A on the left (removals red), B on the right (adds green).
+  function cmpRenderSplit(rows, onlyDiff) {
     let out = '';
     rows.forEach(r => {
       if (!cmpRowVisible(r, onlyDiff)) return;
-      const ind = ' style="padding-left:' + (r.depth * 1.35) + 'em"';
-      const lh = r.left  == null ? null : '<span class="ja-cmp-line"' + ind + '>' + r.left  + '</span>';
-      const rh = r.right == null ? null : '<span class="ja-cmp-line"' + ind + '>' + r.right + '</span>';
-      out += '<div class="ja-cmp-row">' + cell(lh, r.status, 'l') + cell(rh, r.status, 'r') + '</div>';
+      let lc = '', rc = '';
+      if (r.status === 'del') { lc = 'is-del'; rc = 'is-gap'; }
+      else if (r.status === 'add') { lc = 'is-gap'; rc = 'is-add'; }
+      else if (r.status === 'chg') { lc = 'is-del'; rc = 'is-add'; }
+      out += '<div class="ja-cmp-row">'
+        + '<div class="ja-cmp-cell ' + lc + '">' + cmpCol(r.left, lc, r.depth) + '</div>'
+        + '<div class="ja-cmp-cell ' + rc + '">' + cmpCol(r.right, rc, r.depth) + '</div></div>';
+    });
+    return out;
+  }
+  // Inline (unified): one column; a changed value shows as −old then +new.
+  function cmpRenderInline(rows, onlyDiff) {
+    let out = '';
+    const line = (cls, depth, html) => '<div class="ja-cmp-uline ' + cls + '">' + cmpCol(html, cls, depth) + '</div>';
+    rows.forEach(r => {
+      if (!cmpRowVisible(r, onlyDiff)) return;
+      if (r.status === 'same') out += line('', r.depth, r.left);
+      else if (r.status === 'del') out += line('is-del', r.depth, r.left);
+      else if (r.status === 'add') out += line('is-add', r.depth, r.right);
+      else if (r.status === 'chg') { out += line('is-del', r.depth, r.left); out += line('is-add', r.depth, r.right); }
     });
     return out;
   }
@@ -2165,7 +2216,7 @@
     if (!stats) return;
     const cap = (txt, tone) => box.appendChild(el('span', 'wb-cap wb-cap--sm' + (tone ? ' wb-cap--' + tone : ''), txt));
     if (!stats.onlyA && !stats.onlyB && !stats.changed) { cap('identical', 'success'); return; }
-    cap(stats.onlyA + ' only in A', stats.onlyA ? 'success' : null);
+    cap(stats.onlyA + ' only in A', stats.onlyA ? 'danger' : null);
     cap(stats.onlyB + ' only in B', stats.onlyB ? 'success' : null);
     if (stats.changed) cap(stats.changed + (stats.changed === 1 ? ' changed value' : ' changed values'), 'warning');
   }
@@ -2176,8 +2227,10 @@
     const ra = parse(aSrc), rb = parse(bSrc);
     cmpSideStatus('cmpStatA', aSrc, ra);
     cmpSideStatus('cmpStatB', bSrc, rb);
-    if (!aSrc.trim() && !bSrc.trim()) { cmpDiff.innerHTML = cmpEmpty('Paste JSON into both A and B, then they’re compared automatically.'); cmpSetSummary(null); return; }
+    const colhead = $('cmpColhead');
+    if (!aSrc.trim() && !bSrc.trim()) { colhead.hidden = true; cmpDiff.innerHTML = cmpEmpty('Paste JSON into both A and B, then they’re compared automatically.'); cmpSetSummary(null); return; }
     if (!ra.node || !rb.node) {
+      colhead.hidden = true;
       cmpDiff.innerHTML = cmpEmpty((!ra.node ? 'A' : 'B') + ' has no readable JSON yet — fix it and the comparison updates.');
       cmpSetSummary(null); return;
     }
@@ -2186,10 +2239,14 @@
     const built = cmpBuild(na, nb);
     cmpSetSummary(built.stats);
     if (!built.stats.onlyA && !built.stats.onlyB && !built.stats.changed) {
+      colhead.hidden = true;
       cmpDiff.innerHTML = '<div class="ja-cmp-identical"><span class="wb-ico">check_circle</span> Identical — same keys and values after repair and key-sort.</div>';
       return;
     }
-    cmpDiff.innerHTML = cmpRenderRows(built.rows, cmpOnlyDiff);
+    colhead.hidden = cmpView !== 'split';   // the A | B header only makes sense in split
+    cmpDiff.innerHTML = cmpView === 'split'
+      ? cmpRenderSplit(built.rows, cmpOnlyDiff)
+      : cmpRenderInline(built.rows, cmpOnlyDiff);
   }
 
   const cmpDebounced = () => { clearTimeout(cmpTimer); cmpTimer = setTimeout(runCompare, 220); };
@@ -2210,10 +2267,11 @@
   $('cmpPasteB').addEventListener('click', () => cmpPaste(cmpB));
   $('cmpViewTabs').addEventListener('click', e => {
     const t = e.target.closest('.wb-tab'); if (!t) return;
-    cmpOnlyDiff = t.dataset.cmpview === 'onlyDiff';
+    cmpView = t.dataset.cmpview;   // 'split' | 'inline'
     $('cmpViewTabs').querySelectorAll('.wb-tab').forEach(x => x.classList.toggle('is-active', x === t));
     runCompare();
   });
+  $('cmpDiffOnly').addEventListener('change', e => { cmpOnlyDiff = e.target.checked; runCompare(); });
   $('cmpExample').addEventListener('click', () => {
     cmpA.value = '{"user":{"id":1,"name":"An","roles":["admin","editor"]},"active":true,"score":42}';
     cmpB.value = "{user:{id:1,name:'Anh',roles:['admin']},active:true,tags:['vip'],score:42}";
