@@ -256,19 +256,32 @@
     .ja-row.ja-hit { background: var(--ja-hl-bg); box-shadow: inset 0 0 0 1px var(--ja-hl-bd); }
     .ja-row.ja-hit .ja-key, .ja-row.ja-hit .ja-val, .ja-row.ja-hit .ja-index { color: var(--ja-hl-fg); }
 
-    /* ---- app shell: a docked left sidebar (views + history) + the content column ---- */
-    .ja-shell { display: flex; align-items: flex-start; gap: 16px;
-      max-width: 1400px; margin: 0 auto; padding: 18px 20px 64px; }
-    .ja-content { flex: 1 1 auto; min-width: 0; padding: 0; }   /* reflows when the sidebar hides */
+    /* ---- app shell: a full-height left sidebar flush to the window edge + a
+       content column with its own sticky top bar (the docs-site layout). ---- */
+    .ja-shell { display: flex; min-height: 100vh; align-items: stretch; }
 
-    /* the sidebar shares the row with the content (not an overlay), so the content
-       can still be used while it's open and simply widens when it's hidden. */
+    /* the sidebar is the outermost left column: pinned, full viewport height, one
+       divider on its right. Hiding it lets the content column take the full width. */
     .ja-sidebar {
-      flex: 0 0 250px; align-self: flex-start;
-      position: sticky; top: 72px; max-height: calc(100vh - 88px);
-      display: flex; flex-direction: column; gap: 10px; min-height: 0;
+      flex: none; width: 264px;
+      position: sticky; top: 0; align-self: flex-start; height: 100vh;
+      display: flex; flex-direction: column; gap: 8px;
+      padding: 14px 12px 16px; overflow: hidden;
+      background: var(--wb-surface);
+      border-right: var(--wb-bw) solid var(--wb-border);
     }
     .ja-shell.is-collapsed .ja-sidebar { display: none; }
+
+    /* brand — top-left of the window */
+    .ja-brand { display: flex; align-items: center; gap: 9px; flex: none;
+      padding: 4px 8px 8px; text-decoration: none; color: var(--wb-fg);
+      font-size: 15px; font-weight: 700; letter-spacing: -.01em; }
+    .ja-brand:hover { color: var(--wb-fg); }
+
+    /* content column: its own sticky top bar (wb-navbar) over a centred content area */
+    .ja-main-col { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; }
+    .ja-viewtitle { margin: 0; font-size: 15px; font-weight: 600; color: var(--wb-fg); }
+    .ja-content { width: 100%; max-width: 1320px; margin: 0 auto; padding: 20px 28px 72px; }
 
     /* view switcher (top of the sidebar) */
     .ja-sidenav { display: flex; flex-direction: column; gap: 2px; }
@@ -291,9 +304,11 @@
     .ja-history__body { flex: 1 1 auto; min-height: 0; padding: 4px 2px; }
     .ja-history__empty { padding: 24px 12px; text-align: center; color: var(--wb-fg-subtle); font-size: 12.5px; line-height: 1.6; }
 
-    @media (max-width: 940px) {
-      .ja-shell { flex-direction: column; }
-      .ja-sidebar { position: static; flex: none; width: 100%; max-height: 360px; top: 0; }
+    /* on small screens the sidebar overlays from the left (fixed) instead of
+       splitting the row, so the content keeps the full width. */
+    @media (max-width: 900px) {
+      .ja-sidebar { position: fixed; top: 0; left: 0; z-index: 60; box-shadow: var(--wb-shadow-md); }
+      .ja-content { padding: 18px 16px 64px; }
     }
 
     /* history rows come from wb-list; only the hover-reveal of row actions is custom */
@@ -385,24 +400,12 @@
   </style>
 </head>
 <body>
-  <!-- ===================== Top bar ===================== -->
-  <div class="wb-navbar wb-navbar--sticky">
-    <button class="wb-btn wb-btn--ghost wb-btn--icon" id="btnToggleHistory" title="Show/hide sidebar" aria-label="Show/hide sidebar">
-      <span class="wb-ico">view_sidebar</span>
-    </button>
-    <a class="wb-navbar__brand"><span class="wb-navbar__mark">{ }</span> JSON Analysis</a>
-    <span class="wb-navbar__spacer"></span>
-    <div class="wb-navbar__actions">
-      <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" id="themeToggle" aria-label="Light/Dark">
-        <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
-        <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
-      </button>
-    </div>
-  </div>
-
   <div class="ja-shell" id="shell">
-    <!-- ===================== Left sidebar: views + history ===================== -->
+    <!-- ===================== Left sidebar: brand · views · history ===================== -->
     <aside class="ja-sidebar" id="sidebar">
+      <a class="ja-brand" href="../" title="Back to the collection">
+        <span class="wb-navbar__mark">{ }</span> JSON Analysis
+      </a>
       <nav class="ja-sidenav" id="modeNav" aria-label="View">
         <button class="ja-sidenav__item is-active" data-mode="analyze" type="button">
           <span class="wb-ico">account_tree</span> <span>Analyze</span>
@@ -424,7 +427,22 @@
       </div>
     </aside>
 
-    <main class="ja-content ja-app wb-stack" id="content">
+    <div class="ja-main-col">
+      <header class="wb-navbar wb-navbar--sticky ja-topbar">
+        <button class="wb-btn wb-btn--ghost wb-btn--icon" id="btnToggleHistory" title="Show/hide sidebar" aria-label="Show/hide sidebar">
+          <span class="wb-ico">view_sidebar</span>
+        </button>
+        <h1 class="ja-viewtitle" id="viewTitle">Analyze</h1>
+        <span class="wb-navbar__spacer"></span>
+        <div class="wb-navbar__actions">
+          <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" id="themeToggle" aria-label="Light/Dark">
+            <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
+            <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
+          </button>
+        </div>
+      </header>
+
+      <main class="ja-content ja-app wb-stack" id="content">
       <section id="viewAnalyze" class="wb-stack">
       <p class="ja-lead">
         Paste JSON — even if it's <b>missing whitespace / newlines</b>, <b>missing brackets</b>, missing
@@ -677,6 +695,7 @@
       on your machine and is never sent anywhere.
     </p>
     </main><!-- /.ja-content -->
+    </div><!-- /.ja-main-col -->
   </div><!-- /.ja-shell -->
 
   <!-- dim scrim behind the expanded (maximized) result card -->
@@ -2207,6 +2226,7 @@
     modeNav.querySelectorAll('.ja-sidenav__item').forEach(t => t.classList.toggle('is-active', t.dataset.mode === m));
     $('viewAnalyze').hidden = m !== 'analyze';
     $('viewCompare').hidden = m !== 'compare';
+    $('viewTitle').textContent = m === 'compare' ? 'Compare' : 'Analyze';
     try { localStorage.setItem('ja-mode', m); } catch (_) {}
     if (m === 'compare') runCompare();
   }
