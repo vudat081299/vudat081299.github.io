@@ -34,24 +34,29 @@
     }
 
     .jt-app { padding: 20px 0 64px; --wb-stack-gap: 18px; }
-    .jt-lead { color: var(--wb-fg-muted); font-size: 13.5px; margin: 0; max-width: 78ch; }
+    .jt-lead { color: var(--wb-fg-muted); font-size: 14px; line-height: 1.6; margin: 0; max-width: 82ch; }
     .jt-lead b { color: var(--wb-fg); font-weight: 600; }
-    .jt-lead code, .jt-lead .jt-kbd { font-family: var(--jt-mono); font-size: 12.5px; background: var(--wb-surface-2);
-      border: 1px solid var(--wb-border); border-radius: 5px; padding: 1px 5px; }
-    .jt-lead .jt-kbd { font-family: var(--wb-font); font-weight: 600; color: var(--wb-fg); }
+    /* inline code + a keyboard hint (web-builder has no inline-code primitive) */
+    .jt-app code { font-family: var(--jt-mono); font-size: 12px; color: var(--jt-key);
+      background: var(--wb-surface-2); border: var(--wb-bw) solid var(--wb-border); border-radius: 5px; padding: 1px 5px; }
+    .jt-kbd { font-family: var(--wb-font); font-size: 12px; font-weight: 600; color: var(--wb-fg);
+      background: var(--wb-surface-2); border: var(--wb-bw) solid var(--wb-border); border-radius: 5px; padding: 1px 6px; }
 
-    /* Card heads: title on the left, controls pushed right, everything vertically
-       centered. (web-builder's default is align-items:flex-start, which is what
-       left the "Structure" title floating above the taller pill tabs.) */
+    /* Card heads: title + tabs + actions on one line, vertically centred.
+       (web-builder's head is top-aligned by default, which floated the title
+       above the taller pill tabs.) The right-hand tools use .wb-card__head-actions. */
     .jt-app .wb-card__head { align-items: center; }
-    .jt-app .wb-card__head .wb-card__title { white-space: nowrap; }
-    .jt-app .wb-card__head .jt-card__actions { margin-left: auto; }
-    .jt-app .wb-card__head .wb-tabs--pill { flex: none; }
+    .jt-app .wb-card__title { white-space: nowrap; }
+    .jt-app .wb-card__head .wb-tabs { flex: none; }
+
+    /* Toasts here are single-line, so center them vertically: web-builder's
+       default (align-items:flex-start, so the × sits top-right) is meant for
+       multi-line alerts and leaves a short line pinned to the top of a box
+       whose height is set by the taller close button — which reads as skewed. */
+    #toaster .wb-toast { align-items: center; }
 
     /* input | output panels use wb-grid--2 (see markup); the two cards fill it */
     .jt-main { align-self: stretch; }
-
-    .jt-card__actions { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 
     /* count badge on the "Inspect" tab */
     .jt-tab-count {
@@ -73,7 +78,7 @@
        inline (added text = red, wrong/extra = struck, normalized = amber). */
     .jt-inspect {
       min-height: 380px; max-height: 62vh; box-sizing: border-box;
-      overflow: auto; border: 1px solid var(--wb-border);
+      overflow: auto; border: var(--wb-bw) solid var(--wb-border);
       border-radius: var(--wb-input-radius); background: var(--wb-surface-2);
       padding: 12px 14px;
     }
@@ -87,19 +92,10 @@
     .jt-inspect-hint {
       display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center;
       margin-bottom: 12px; padding-bottom: 11px; font-size: 12px; color: var(--wb-fg-muted);
-      border-bottom: 1px dashed var(--wb-border);
+      border-bottom: var(--wb-bw) dashed var(--wb-border);
     }
     .jt-inspect-hint .jt-legend { display: inline-flex; align-items: center; gap: 5px; }
     .jt-inspect-hint .jt-swatch { width: 22px; height: 14px; border-radius: 3px; flex: none; }
-    .jt-inspect-notes {
-      margin-top: 14px; padding: 10px 12px; font-size: 12.5px; line-height: 1.55;
-      color: var(--wb-fg-muted); background: var(--wb-surface);
-      border: 1px solid var(--wb-border); border-radius: var(--wb-radius-sm);
-    }
-    .jt-inspect-notes b { color: var(--wb-fg); }
-    .jt-inspect-notes ul { margin: 6px 0 0; padding-left: 18px; }
-    .jt-inspect-notes li { margin: 2px 0; }
-
     /* the inline annotations — clickable, each pops up its explanation */
     .jt-ann { border-radius: 3px; cursor: pointer; }
     .jt-ann--ins {                       /* text the tool ADDED — shown red */
@@ -119,62 +115,55 @@
     .jt-fix-cap { cursor: pointer; }
     .jt-fix-cap:hover { filter: brightness(.96); }
 
-    /* explanation popup shown when a marked spot is clicked */
+    /* explanation popup shown when a marked spot is clicked (JS-positioned at a
+       fixed point, so not the static wb-popover; its label is a wb-cap) */
     .jt-pop {
       position: fixed; z-index: 60; max-width: 300px;
-      background: var(--wb-surface); border: 1px solid var(--wb-border-strong);
+      background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border-strong);
       border-radius: var(--wb-radius); box-shadow: var(--wb-shadow-md);
       padding: 10px 12px; font-size: 12.5px; line-height: 1.5;
     }
-    .jt-pop__tag {
-      display: inline-block; font-size: 10.5px; font-weight: 700; letter-spacing: .02em;
-      border-radius: 999px; padding: 1px 8px; margin-bottom: 6px;
-    }
-    .jt-pop__tag--danger  { color: var(--wb-danger-text);  background: var(--wb-danger-soft); }
-    .jt-pop__tag--warning { color: var(--wb-warning-text); background: var(--wb-warning-soft); }
-    .jt-pop__tag--info    { color: var(--wb-fg-muted);     background: var(--wb-surface-2); }
+    .jt-pop .wb-cap { margin-bottom: 6px; }
     .jt-pop__msg { color: var(--wb-fg); }
 
-    /* sub-toolbar above tree — one cohesive bar; all controls share a height */
-    .jt-tools { display: flex; gap: 8px; align-items: center; margin-bottom: 14px; }
-    .jt-tools .jt-mode { flex: none; width: 132px; }
-    .jt-tools .jt-search { flex: 1 1 auto; min-width: 120px; }
-    .jt-tools .wb-select, .jt-tools .wb-input {
-      height: 36px; padding-top: 0; padding-bottom: 0; font-size: 13.5px;
-    }
+    /* sub-toolbar above the tree — a wb-cluster of controls sharing one height;
+       expand/collapse is a wb-btn-group, the search grows via .wb-grow */
+    .jt-tools { margin-bottom: 14px; }
+    .jt-tools .jt-mode { flex: none; width: 128px; }
+    .jt-tools .jt-search { min-width: 140px; }
+    .jt-tools .wb-select, .jt-tools .wb-input { height: 36px; padding-top: 0; padding-bottom: 0; font-size: 13.5px; }
     .jt-tools .wb-input-group__addon { padding: 0 10px; }
+    .jt-tools .wb-btn-group .wb-btn { height: 36px; }
     /* result count lives inside the search field, right-aligned */
     .jt-search { position: relative; }
     .jt-search__count {
       position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
       font-size: 12px; font-weight: 600; color: var(--wb-fg-muted);
-      white-space: nowrap; pointer-events: none; background: var(--wb-surface);
-      padding-left: 8px;
+      white-space: nowrap; pointer-events: none; background: var(--wb-surface); padding-left: 8px;
     }
     .jt-search__count[data-tone="ok"]     { color: var(--wb-success-text); }
     .jt-search__count[data-tone="warn"]   { color: var(--wb-warning-text); }
     .jt-search__count[data-tone="danger"] { color: var(--wb-danger-text); }
     .jt-search input[type="search"] { padding-right: 78px; }   /* room for the count */
     .jt-search input[type="search"]::-webkit-search-cancel-button { -webkit-appearance: none; display: none; }
-    /* segmented expand/collapse — reads as one control, not stray icons */
-    .jt-seg {
-      display: inline-flex; flex: none; height: 36px; overflow: hidden;
-      border: 1px solid var(--wb-border); border-radius: var(--wb-radius-sm);
-    }
-    .jt-seg__btn {
-      border: 0; background: var(--wb-surface); color: var(--wb-fg-muted);
-      cursor: pointer; padding: 0 9px; display: inline-flex; align-items: center;
-    }
-    .jt-seg__btn:hover { background: var(--wb-surface-2); color: var(--wb-fg); }
-    .jt-seg__btn + .jt-seg__btn { border-left: 1px solid var(--wb-border); }
 
-    /* status caps under the output card head */
+    /* status area under the output head (the stats row is a wb-cluster) */
     .jt-status { margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px; }
     .jt-status:empty { display: none; }
-    .jt-stats { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 
     /* ---- the tree ---- */
     .jt-view { max-height: 62vh; min-height: 220px; }
+
+    /* expand the result card to fill the screen (for deep / long JSON): the whole
+       card goes fixed over a wb-overlay scrim, so its tabs, search, expand/collapse
+       and copy/download all come along — nothing is duplicated or re-synced. */
+    .wb-card.jt-maximized {
+      position: fixed; inset: 16px; z-index: 101; margin: 0; max-width: none;
+      display: flex; flex-direction: column; box-shadow: var(--wb-shadow-md);
+    }
+    .wb-card.jt-maximized > .wb-card__body { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+    .wb-card.jt-maximized .jt-view { flex: 1 1 auto; min-height: 0; max-height: none; }
+    @media (max-width: 940px) { .wb-card.jt-maximized { inset: 8px; } }
     .jt-tree { font-family: var(--jt-mono); font-size: 13px; line-height: 1.75; }
     .jt-json {
       font-family: var(--jt-mono); font-size: 12.5px; line-height: 1.6;
@@ -184,7 +173,7 @@
     .jt-node { position: relative; }
     .jt-children {
       margin-left: 8px; padding-left: 12px;
-      border-left: 1px dashed var(--wb-border);
+      border-left: var(--wb-bw) dashed var(--wb-border);
     }
     .jt-row {
       display: flex; align-items: flex-start; gap: 4px;
@@ -207,10 +196,13 @@
     .jt-colon  { color: var(--wb-fg-subtle); margin-right: 2px; }
     .jt-punc   { color: var(--wb-fg-subtle); }
     .jt-count  { color: var(--wb-fg-subtle); font-size: 11.5px; margin-left: 6px;
-      background: var(--wb-surface-2); border: 1px solid var(--wb-border);
+      background: var(--wb-surface-2); border: var(--wb-bw) solid var(--wb-border);
       border-radius: 999px; padding: 0 7px; }
 
-    .jt-val { cursor: copy; border-radius: 4px; padding: 0 2px; margin: 0 -2px; }
+    /* click-to-copy value: show a 📋 copy cursor (not the OS "+" copy cursor);
+       falls back to a plain pointer if the image cursor can't render. */
+    .jt-val { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22'%3E%3Ctext y='18' font-size='18'%3E📋%3C/text%3E%3C/svg%3E") 3 3, pointer;
+      border-radius: 4px; padding: 0 2px; margin: 0 -2px; }
     .jt-val:hover { background: var(--wb-surface-hover); }
     .jt-val--string  { color: var(--jt-string); }
     .jt-val--number  { color: var(--jt-number); }
@@ -264,94 +256,53 @@
     .jt-row.jt-hit { background: var(--jt-hl-bg); box-shadow: inset 0 0 0 1px var(--jt-hl-bd); }
     .jt-row.jt-hit .jt-key, .jt-row.jt-hit .jt-val, .jt-row.jt-hit .jt-index { color: var(--jt-hl-fg); }
 
-    /* ---- layout: history sidebar + main work area (wb-cluster row) ---- */
+    /* ---- layout: history rail + the two work cards (wb-cluster row) ---- */
     .jt-layout { align-items: flex-start; gap: 16px; }
-    .jt-layout > .jt-history { flex: 0 0 240px; }
+    .jt-layout > .jt-history { flex: 0 0 244px; }
     .jt-layout > .jt-main { flex: 1 1 460px; min-width: 0; }
     .jt-layout.is-history-hidden > .jt-history { display: none; }
 
+    /* history rail = a wb-card pinned while the page scrolls */
     .jt-history {
       position: sticky; top: 62px; align-self: start;
-      max-height: calc(100vh - 82px); display: flex; flex-direction: column;
-      background: var(--wb-surface); border: 1px solid var(--wb-border);
-      border-radius: var(--wb-card-radius); box-shadow: var(--wb-shadow-sm); overflow: hidden;
+      max-height: calc(100vh - 82px); display: flex; flex-direction: column; overflow: hidden;
     }
-    @media (max-width: 940px) { .jt-history { position: static; max-height: 300px; } }
-    .jt-history__head {
-      display: flex; align-items: center; gap: 8px; flex: none;
-      padding: 11px 10px 11px 14px; border-bottom: var(--wb-bw) solid var(--wb-border);
-    }
-    .jt-history__title { display: inline-flex; align-items: center; gap: 7px; font-size: 13.5px; font-weight: 650; }
+    @media (max-width: 940px) { .jt-history { position: static; max-height: 320px; } }
+    .jt-history .wb-card__head { padding: 12px 12px 12px 16px; }
+    .jt-history__title { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; }
     .jt-history__title .wb-ico { color: var(--wb-fg-muted); }
-    .jt-history__head .wb-btn { margin-left: auto; }
-    .jt-history__list { overflow-y: auto; padding: 6px; display: flex; flex-direction: column; gap: 2px; }
-    .jt-history__empty { padding: 22px 16px; text-align: center; color: var(--wb-fg-subtle); font-size: 12.5px; line-height: 1.6; }
+    .jt-history__body { flex: 1 1 auto; min-height: 0; padding: 6px; }
+    .jt-history__empty { padding: 24px 16px; text-align: center; color: var(--wb-fg-subtle); font-size: 12.5px; line-height: 1.6; }
 
-    .jt-hist {
-      display: flex; align-items: center; gap: 6px; cursor: pointer;
-      padding: 7px 6px 7px 10px; border-radius: var(--wb-radius-sm);
-    }
-    .jt-hist:hover { background: var(--wb-surface-2); }
-    .jt-hist.is-active { background: var(--wb-surface-hover); box-shadow: inset 0 0 0 1px var(--wb-border-strong); }
-    .jt-hist__body { min-width: 0; flex: 1 1 auto; }
-    .jt-hist__name { font-size: 13px; font-weight: 600; color: var(--wb-fg);
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .jt-hist__name.is-untitled { color: var(--wb-fg-subtle); font-weight: 500; font-style: italic; }
-    .jt-hist__time { font-size: 11px; color: var(--wb-fg-subtle); margin-top: 1px; }
-    .jt-hist__actions { display: flex; gap: 1px; flex: none; opacity: 0; transition: opacity .1s ease; }
-    .jt-hist:hover .jt-hist__actions, .jt-hist.is-active .jt-hist__actions { opacity: 1; }
-    .jt-hist__btn { border: none; background: none; cursor: pointer; color: var(--wb-fg-subtle);
-      padding: 3px; border-radius: 4px; line-height: 1; }
-    .jt-hist__btn:hover { color: var(--wb-fg); background: var(--wb-surface-hover); }
-    .jt-hist__btn.is-danger:hover { color: var(--wb-danger-text); background: var(--wb-danger-soft); }
-    .jt-hist__btn .wb-ico { font-size: 16px; }
-    .jt-hist__rename { width: 100%; }
+    /* history rows come from wb-list; only the hover-reveal of row actions is custom */
+    .jt-history .wb-list__item { border-top: 0; border-radius: var(--wb-radius-sm); padding: 8px 8px 8px 12px; margin-bottom: 2px; gap: 8px; }
+    .jt-history .wb-list__title { font-size: 13px; }
+    .jt-history .jt-name { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .jt-history .jt-name.is-untitled { color: var(--wb-fg-subtle); font-weight: 500; font-style: italic; }
+    .jt-history .wb-list__sub { font-size: 11px; margin-top: 1px; }
+    .jt-history .wb-list__end { opacity: 0; display: flex; gap: 1px; transition: opacity .1s ease; }
+    .jt-history .wb-list__item:hover .wb-list__end,
+    .jt-history .wb-list__item.is-active .wb-list__end { opacity: 1; }
+    .jt-history .wb-list__end .wb-btn { width: 27px; height: 27px; }
+    .jt-history .wb-list__item.is-editing .wb-list__title { flex: 1 1 auto; }
+    .jt-history .wb-list__item.is-editing .wb-list__end { display: none; }
+    .jt-hist-del:hover { color: var(--wb-danger-text); background: var(--wb-danger-soft); }
     .jt-undo { flex: none; white-space: nowrap; }
 
-    /* "saved" confirmation capsule (fades out after a moment) */
+    /* "saved" confirmation — a wb-cap that fades out after a moment */
     .jt-saved-cap {
-      display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;
-      font-size: 11.5px; font-weight: 600; color: var(--wb-success-text);
-      background: var(--wb-success-soft); border-radius: 999px; padding: 2px 9px;
-      opacity: 0; transform: translateY(1px); transition: opacity .2s ease, transform .2s ease; pointer-events: none;
+      opacity: 0; transform: translateY(1px); pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
     }
     .jt-saved-cap.is-show { opacity: 1; transform: none; }
-    .jt-saved-cap .wb-ico { font-size: 14px; }
 
-    /* ---- search help reference (regex + path tables; wb-grid--2 in markup) ---- */
-    .jt-help__body { padding: 4px 16px 18px; }
-    .jt-help__body.wb-grid { gap: 20px 24px; align-items: start; }
-    .jt-help__col h3 { margin: 0 0 8px; font-size: 13px; font-weight: 650; display: flex; align-items: center; gap: 6px; }
-    .jt-help__col h3 .wb-ico { color: var(--wb-fg-muted); font-size: 17px; }
-    .jt-tbl { width: 100%; border-collapse: collapse; font-size: 12.5px; }
-    .jt-tbl th { text-align: left; font-weight: 600; color: var(--wb-fg-muted);
-      border-bottom: var(--wb-bw) solid var(--wb-border); padding: 5px 8px; white-space: nowrap; }
-    .jt-tbl td { border-bottom: var(--wb-bw) solid var(--wb-border); padding: 6px 8px; vertical-align: top; line-height: 1.5; }
-    .jt-tbl tr:last-child td { border-bottom: 0; }
-    .jt-tbl code { font-family: var(--jt-mono); font-size: 11.5px; color: var(--jt-key);
-      background: var(--wb-surface-2); border: 1px solid var(--wb-border); border-radius: 4px; padding: 1px 5px; }
-    .jt-tbl td:first-child { white-space: nowrap; }
-
-    /* sample gallery — collapsed by default, parked at the bottom so it never
-       gets in the way when you're just here to work. */
-    .jt-samples {
-      margin: 0; overflow: hidden;
-      background: var(--wb-surface); border: 1px solid var(--wb-border);
-      border-radius: var(--wb-card-radius); box-shadow: var(--wb-shadow-sm);
-    }
-    .jt-samples > summary {
-      display: flex; align-items: center; gap: 8px; cursor: pointer;
-      padding: 13px 16px; font-size: 13.5px; font-weight: 600; color: var(--wb-fg-muted);
-      list-style: none; user-select: none;
-    }
-    .jt-samples > summary::-webkit-details-marker { display: none; }
-    .jt-samples > summary:hover { color: var(--wb-fg); }
-    .jt-samples__chevron { margin-left: auto; color: var(--wb-fg-subtle); transition: transform .16s ease; }
-    .jt-samples[open] .jt-samples__chevron { transform: rotate(180deg); }
-    .jt-samples__body { padding: 2px 16px 16px; }   /* layout via wb-cluster in markup */
+    /* ---- search help (regex + path) — a wb-table inside a two-column wb-grid ---- */
+    .jt-help__col h3 { margin: 2px 0 10px; font-size: 13px; font-weight: 650; display: flex; align-items: center; gap: 6px; color: var(--wb-fg); }
+    .jt-help__col h3 .wb-ico { color: var(--wb-fg-muted); font-size: 18px; }
+    .jt-help__col .wb-table td { vertical-align: top; }
+    .jt-help__col .wb-table td:first-child { white-space: nowrap; }
 
     .jt-foot-note { color: var(--wb-fg-subtle); font-size: 12px; text-align: center; margin: 0; }
-    .jt-foot-note code { font-family: var(--jt-mono); }
   </style>
 </head>
 <body>
@@ -380,14 +331,18 @@
 
     <div class="wb-cluster jt-layout" id="layout">
       <!-- ===================== History sidebar ===================== -->
-      <aside class="jt-history" id="historyPanel">
-        <div class="jt-history__head">
+      <aside class="wb-card jt-history" id="historyPanel">
+        <div class="wb-card__head">
           <span class="jt-history__title"><span class="wb-ico wb-ico--sm">history</span> History</span>
-          <button id="btnNew" class="wb-btn wb-btn--ghost wb-btn--sm" title="Start a new entry (clears the editor)">
-            <span class="wb-ico wb-ico--sm">add</span> New
-          </button>
+          <div class="wb-card__head-actions">
+            <button id="btnNew" class="wb-btn wb-btn--ghost wb-btn--sm" title="Start a new entry (clears the editor)">
+              <span class="wb-ico wb-ico--sm">add</span> New
+            </button>
+          </div>
         </div>
-        <div class="jt-history__list" id="historyList"></div>
+        <div class="jt-history__body wb-scroll-y">
+          <ul class="wb-list wb-list--flush" id="historyList"></ul>
+        </div>
       </aside>
 
       <div class="jt-main wb-grid wb-grid--2">
@@ -399,7 +354,7 @@
             <button class="wb-tab is-active" data-inview="edit" type="button">Edit</button>
             <button class="wb-tab" data-inview="inspect" type="button">Inspect<span class="jt-tab-count" id="inspectCount" hidden>0</span></button>
           </div>
-          <div class="jt-card__actions">
+          <div class="wb-card__head-actions">
             <input type="file" id="fileInput" accept=".json,.txt,application/json,text/plain" hidden />
             <button id="btnUpload" class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm" title="Open a .json file" aria-label="Upload file">
               <span class="wb-ico wb-ico--sm">upload_file</span>
@@ -418,19 +373,15 @@
           <div id="inspectView" class="jt-inspect wb-scroll-y wb-scroll-y--pad" hidden></div>
         </div>
         <div class="wb-card__foot">
-          <div class="wb-cluster wb-cluster--between" style="width:100%">
-            <div class="jt-card__actions">
-              <button id="btnSave" class="wb-btn wb-btn--sm" title="Save to History (⌘/Ctrl + S)">
-                <span class="wb-ico wb-ico--sm">bookmark_add</span> Save
-              </button>
-              <button id="btnFormat" class="wb-btn wb-btn--secondary wb-btn--sm">Beautify</button>
-              <button id="btnMinify" class="wb-btn wb-btn--secondary wb-btn--sm">Minify</button>
-            </div>
-            <div class="jt-card__actions">
-              <span id="savedCap" class="jt-saved-cap"><span class="wb-ico">check</span> Saved</span>
-              <span id="charCount" class="wb-cap wb-cap--sm">0 chars</span>
-            </div>
-          </div>
+          <button id="btnSave" class="wb-btn wb-btn--sm" title="Save to History (⌘/Ctrl + S)">
+            <span class="wb-ico wb-ico--sm">bookmark_add</span> Save
+          </button>
+          <button id="btnFormat" class="wb-btn wb-btn--secondary wb-btn--sm">Beautify</button>
+          <button id="btnMinify" class="wb-btn wb-btn--secondary wb-btn--sm">Minify</button>
+          <span class="wb-inline" style="margin-left:auto">
+            <span id="savedCap" class="wb-cap wb-cap--sm wb-cap--success jt-saved-cap"><span class="wb-ico wb-ico--xs">check</span> Saved</span>
+            <span id="charCount" class="wb-cap wb-cap--sm">0 chars</span>
+          </span>
         </div>
       </section>
 
@@ -442,7 +393,10 @@
             <button class="wb-tab is-active" data-view="tree" type="button">Tree</button>
             <button class="wb-tab" data-view="json" type="button">JSON</button>
           </div>
-          <div class="jt-card__actions">
+          <div class="wb-card__head-actions">
+            <button id="btnMaximize" class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm" title="Expand view (Esc to exit)" aria-label="Expand result view">
+              <span class="wb-ico wb-ico--sm">open_in_full</span>
+            </button>
             <button id="btnDownload" class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm" title="Download as .json" aria-label="Download JSON">
               <span class="wb-ico wb-ico--sm">download</span>
             </button>
@@ -454,7 +408,7 @@
         <div class="wb-card__body">
           <div id="status" class="jt-status"></div>
 
-          <div class="jt-tools" id="treeTools">
+          <div class="wb-cluster wb-cluster--nowrap jt-tools" id="treeTools">
             <span class="wb-select-wrap jt-mode">
               <select id="searchMode" class="wb-select" title="Query mode" aria-label="Query mode">
                 <option value="text">Contains</option>
@@ -463,16 +417,18 @@
               </select>
               <span class="wb-ico">expand_more</span>
             </span>
-            <div class="wb-input-group jt-search">
+            <div class="wb-input-group jt-search wb-grow">
               <span class="wb-input-group__addon"><span class="wb-ico wb-ico--sm">search</span></span>
-              <input id="search" class="wb-input" type="search" placeholder="Search keys or values…" />
+              <!-- count is position:absolute; keep the <input> as the group's last child
+                   so wb-input-group closes the right border/radius on it, not on this span -->
               <span id="matchCount" class="jt-search__count" hidden></span>
+              <input id="search" class="wb-input" type="search" placeholder="Search keys or values…" />
             </div>
-            <div class="jt-seg" role="group" aria-label="Expand / collapse tree">
-              <button id="btnExpand" class="jt-seg__btn" type="button" title="Expand all">
+            <div class="wb-btn-group" role="group" aria-label="Expand / collapse tree">
+              <button id="btnExpand" class="wb-btn wb-btn--outline wb-btn--icon wb-btn--sm" type="button" title="Expand all">
                 <span class="wb-ico wb-ico--sm">unfold_more</span>
               </button>
-              <button id="btnCollapse" class="jt-seg__btn" type="button" title="Collapse all">
+              <button id="btnCollapse" class="wb-btn wb-btn--outline wb-btn--icon wb-btn--sm" type="button" title="Collapse all">
                 <span class="wb-ico wb-ico--sm">unfold_less</span>
               </button>
             </div>
@@ -485,16 +441,14 @@
       </div><!-- /.jt-main (wb-grid--2) -->
     </div><!-- /.jt-layout -->
 
-    <details class="jt-samples jt-help">
-      <summary>
-        <span class="wb-ico wb-ico--sm">help</span>
-        Search help — Regex and Path syntax (click to open)
-        <span class="wb-ico jt-samples__chevron">expand_more</span>
-      </summary>
-      <div class="jt-help__body wb-grid wb-grid--2">
+    <div class="wb-accordion">
+      <details class="wb-accordion__item">
+      <summary><span class="wb-ico wb-ico--sm">help</span> Search help — Regex and Path syntax</summary>
+      <div class="wb-accordion__body wb-grid wb-grid--2 jt-help" style="gap:20px 24px;align-items:start">
         <div class="jt-help__col">
           <h3><span class="wb-ico">regular_expression</span> Regex (the “Regex” mode)</h3>
-          <table class="jt-tbl">
+          <div class="wb-table-scroll">
+          <table class="wb-table wb-table--compact">
             <thead><tr><th>Example</th><th>Meaning</th></tr></thead>
             <tbody>
               <tr><td><code>price</code></td><td>Contains “price” (case-insensitive)</td></tr>
@@ -515,10 +469,12 @@
               <tr><td><code>\.vn\b</code></td><td>Contains “.vn” (<code>\.</code> = a literal dot)</td></tr>
             </tbody>
           </table>
+          </div>
         </div>
         <div class="jt-help__col">
           <h3><span class="wb-ico">account_tree</span> Path (the “Path” mode)</h3>
-          <table class="jt-tbl">
+          <div class="wb-table-scroll">
+          <table class="wb-table wb-table--compact">
             <thead><tr><th>Example</th><th>Meaning</th></tr></thead>
             <tbody>
               <tr><td><code>user</code></td><td>The <code>user</code> field at the root (with its whole subtree)</td></tr>
@@ -530,32 +486,34 @@
               <tr><td><code>orders.*.total</code></td><td><code>total</code> in each order of <code>orders</code></td></tr>
             </tbody>
           </table>
+          </div>
           <p style="margin:10px 0 0;font-size:12px;color:var(--wb-fg-subtle);line-height:1.5">
             Tip: it filters as you type — the last segment matches by prefix, so partial input still returns results.
           </p>
         </div>
       </div>
-    </details>
-
-    <details class="jt-samples">
-      <summary>
-        <span class="wb-ico wb-ico--sm">science</span>
-        Samples to try — broken-JSON examples to see how the tool handles them
-        <span class="wb-ico jt-samples__chevron">expand_more</span>
-      </summary>
-      <div class="jt-samples__body wb-cluster">
-        <div id="sampleChips" class="wb-cluster wb-cluster--tight"></div>
-        <button id="btnRandom" class="wb-btn wb-btn--secondary wb-btn--sm">
-          <span class="wb-ico wb-ico--sm">casino</span> Random
-        </button>
-      </div>
-    </details>
+      </details>
+      <details class="wb-accordion__item">
+        <summary><span class="wb-ico wb-ico--sm">science</span> Samples to try — broken-JSON examples</summary>
+        <div class="wb-accordion__body">
+          <div class="wb-cluster">
+            <div id="sampleChips" class="wb-cluster wb-cluster--tight"></div>
+            <button id="btnRandom" class="wb-btn wb-btn--secondary wb-btn--sm">
+              <span class="wb-ico wb-ico--sm">casino</span> Random
+            </button>
+          </div>
+        </div>
+      </details>
+    </div>
 
     <p class="jt-foot-note">
       Everything runs right in your browser. History is saved locally (localStorage)
       on your machine and is never sent anywhere.
     </p>
   </main>
+
+  <!-- dim scrim behind the expanded (maximized) result card -->
+  <div class="wb-overlay" id="viewBackdrop"></div>
 
   <div class="wb-toaster" id="toaster"></div>
 
@@ -1308,7 +1266,7 @@
     }
 
     const s = computeStats(res.node);
-    const stats = el('div', 'jt-stats');
+    const stats = el('div', 'wb-cluster wb-cluster--tight');
     const cap = (txt, tone) => el('span', 'wb-cap wb-cap--sm' + (tone ? ' wb-cap--' + tone : ''), txt);
     // The "fixes" cap is clickable → jumps to the "Inspect" view over the source.
     const fixCap = txt => {
@@ -1353,8 +1311,11 @@
     }
     let notes = '';
     if (info.length) {
-      notes = '<div class="jt-inspect-notes"><b>Extra notes:</b><ul>' +
-        info.map(a => '<li>' + esc(a.msg) + '</li>').join('') + '</ul></div>';
+      notes = '<div class="wb-alert wb-alert--info" style="margin-top:14px">' +
+        '<span class="wb-alert__icon">i</span>' +
+        '<div class="wb-alert__body"><p class="wb-alert__title">Extra notes</p>' +
+        '<ul class="wb-alert__msg" style="margin:6px 0 0;padding-left:18px">' +
+        info.map(a => '<li>' + esc(a.msg) + '</li>').join('') + '</ul></div></div>';
     }
     const legend = posCount ? (
       '<div class="jt-inspect-hint">' +
@@ -1404,7 +1365,8 @@
     const map = { ins: ['Added', 'danger'], removed: ['Ignored', 'danger'], changed: ['Normalized', 'warning'] };
     const [label, tone] = map[ann.cls] || ['Note', 'info'];
     annPop = el('div', 'jt-pop');
-    annPop.innerHTML = '<span class="jt-pop__tag jt-pop__tag--' + tone + '">' + label + '</span>' +
+    const capTone = tone === 'info' ? '' : ' wb-cap--' + tone;
+    annPop.innerHTML = '<span class="wb-cap wb-cap--sm' + capTone + '">' + label + '</span>' +
       '<div class="jt-pop__msg">' + esc(ann.msg) + '</div>';
     document.body.appendChild(annPop);
     const r = target.getBoundingClientRect(), pr = annPop.getBoundingClientRect();
@@ -1577,30 +1539,30 @@
     return new Date(ts).toLocaleDateString('vi-VN');
   }
   function histBtn(icon, title, danger) {
-    const b = el('button', 'jt-hist__btn' + (danger ? ' is-danger' : ''));
+    const b = el('button', 'wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm' + (danger ? ' jt-hist-del' : ''));
     b.type = 'button'; b.title = title;
-    b.appendChild(el('span', 'wb-ico', icon)); return b;
+    b.appendChild(el('span', 'wb-ico wb-ico--sm', icon)); return b;
   }
   function renderHistory() {
     const list = $('historyList');
     list.innerHTML = '';
     if (!store.blocks.length) {
-      list.innerHTML = '<div class="jt-history__empty">No entries yet.<br>JSON you enter is saved here automatically.</div>';
+      list.innerHTML = '<li class="jt-history__empty">No entries yet.<br>JSON you enter is saved here automatically.</li>';
       return;
     }
     store.blocks.forEach(b => {
-      const item = el('div', 'jt-hist' + (b.id === activeId ? ' is-active' : ''));
-      const body = el('div', 'jt-hist__body');
-      body.appendChild(el('div', 'jt-hist__name' + (b.name ? '' : ' is-untitled'), b.name || 'Untitled'));
-      const time = el('div', 'jt-hist__time', relTime(b.savedAt));
+      const item = el('li', 'wb-list__item wb-list__item--link' + (b.id === activeId ? ' is-active' : ''));
+      const title = el('span', 'wb-list__title');
+      title.appendChild(el('span', 'jt-name' + (b.name ? '' : ' is-untitled'), b.name || 'Untitled'));
+      const time = el('span', 'wb-list__sub', relTime(b.savedAt));
       time.title = new Date(b.savedAt).toLocaleString('vi-VN');
-      body.appendChild(time);
-      const actions = el('div', 'jt-hist__actions');
+      title.appendChild(time);
+      const actions = el('span', 'wb-list__end');
       const rn = histBtn('edit', 'Rename'), dl = histBtn('delete', 'Delete', true);
       actions.appendChild(rn); actions.appendChild(dl);
-      item.appendChild(body); item.appendChild(actions);
+      item.appendChild(title); item.appendChild(actions);
       item.addEventListener('click', e => {
-        if (e.target.closest('.jt-hist__actions') || item.classList.contains('is-editing')) return;
+        if (e.target.closest('.wb-list__end') || item.classList.contains('is-editing')) return;
         openBlock(b.id);
       });
       rn.addEventListener('click', e => { e.stopPropagation(); startRename(item, b); });
@@ -1610,10 +1572,11 @@
   }
   function startRename(item, b) {
     item.classList.add('is-editing');
-    const body = item.querySelector('.jt-hist__body');
-    const inp = el('input', 'wb-input wb-input--sm jt-hist__rename');
+    const title = item.querySelector('.wb-list__title');
+    const inp = el('input', 'wb-input wb-input--sm');
+    inp.style.width = '100%';
     inp.value = b.name || ''; inp.placeholder = 'Name this entry…';
-    body.innerHTML = ''; body.appendChild(inp); inp.focus(); inp.select();
+    title.innerHTML = ''; title.appendChild(inp); inp.focus(); inp.select();
     let done = false;
     const commit = () => { if (done) return; done = true; b.name = inp.value.trim(); saveStore(); renderHistory(); };
     const cancel = () => { if (done) return; done = true; renderHistory(); };
@@ -1721,7 +1684,7 @@
     if (annPop && !e.target.closest('.jt-pop') && !e.target.closest('.jt-ann')) closeAnnPop();
   });
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeAnnPop();
+    if (e.key === 'Escape') { closeAnnPop(); if (isViewMaximized()) setViewMaximized(false); }
     if ((e.metaKey || e.ctrlKey) && (e.key === 's' || e.key === 'S')) { e.preventDefault(); saveDraft(); }
   });
 
@@ -1809,6 +1772,24 @@
     $('treeTools').style.display = currentView === 'tree' ? '' : 'none';
     renderCurrentView();
   });
+
+  // ---- expand / collapse the result view to fullscreen (for deep, long JSON) ----
+  // The whole output card goes fixed over the wb-overlay scrim, so its tabs,
+  // search, expand/collapse and copy/download all come along unchanged.
+  const outputCard = treeView.closest('.wb-card');
+  const viewBackdrop = $('viewBackdrop');
+  function isViewMaximized() { return outputCard.classList.contains('jt-maximized'); }
+  function setViewMaximized(on) {
+    outputCard.classList.toggle('jt-maximized', on);
+    viewBackdrop.classList.toggle('is-open', on);
+    document.body.style.overflow = on ? 'hidden' : '';
+    const ico = $('btnMaximize').querySelector('.wb-ico');
+    if (ico) ico.textContent = on ? 'close_fullscreen' : 'open_in_full';
+    $('btnMaximize').title = on ? 'Exit expanded view (Esc)' : 'Expand view (Esc to exit)';
+    $('btnMaximize').setAttribute('aria-label', on ? 'Exit expanded result view' : 'Expand result view');
+  }
+  $('btnMaximize').addEventListener('click', () => setViewMaximized(!isViewMaximized()));
+  viewBackdrop.addEventListener('click', () => setViewMaximized(false));
 
   // theme toggle (persisted)
   const root = document.documentElement;

@@ -1492,6 +1492,7 @@
 .wb-cluster--between { justify-content: space-between; }
 .wb-cluster--nowrap  { flex-wrap: nowrap; }
 .wb-cluster--stretch > * { flex: 1 1 0; }   /* equal-size items that fill the row */
+.wb-grow { flex: 1 1 auto; min-width: 0; }   /* a flex child that eats the remaining space */
 
 /* -----------------------------------------------------------------------------
    27. SCROLL AREAS  (theme-aware scrollbar + tail breathing room)
