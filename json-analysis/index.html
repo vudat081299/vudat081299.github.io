@@ -3,25 +3,25 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>JSON Tree — view, search & repair JSON (even broken JSON)</title>
+  <title>JSON Analysis — inspect, repair, search & compare JSON (even broken JSON)</title>
   <link rel="stylesheet" href="web-builder.css" />
   <style>
-    /* ---- JSON-tree specific tokens (theme-aware, built on web-builder tokens) ---- */
+    /* ---- JSON Analysis specific tokens (theme-aware, built on web-builder tokens) ---- */
     :root {
-      --jt-key:      #4f46e5;   /* indigo — object keys        */
-      --jt-string:   #15803d;   /* green  — string values      */
-      --jt-number:   #b45309;   /* amber  — number values      */
-      --jt-boolean:  #7c3aed;   /* violet — booleans           */
-      --jt-null:     var(--wb-fg-subtle);
-      --jt-index:    var(--wb-fg-subtle);
-      --jt-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+      --ja-key:      #4f46e5;   /* indigo — object keys        */
+      --ja-string:   #15803d;   /* green  — string values      */
+      --ja-number:   #b45309;   /* amber  — number values      */
+      --ja-boolean:  #7c3aed;   /* violet — booleans           */
+      --ja-null:     var(--wb-fg-subtle);
+      --ja-index:    var(--wb-fg-subtle);
+      --ja-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
                  "Liberation Mono", "Courier New", monospace;
     }
     .dark {
-      --jt-key:     #a5b4fc;
-      --jt-string:  #4ade80;
-      --jt-number:  #fbbf24;
-      --jt-boolean: #c4b5fd;
+      --ja-key:     #a5b4fc;
+      --ja-string:  #4ade80;
+      --ja-number:  #fbbf24;
+      --ja-boolean: #c4b5fd;
     }
 
     html, body { height: 100%; }
@@ -33,21 +33,21 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    .jt-app { padding: 20px 0 64px; --wb-stack-gap: 18px; }
-    .jt-lead { color: var(--wb-fg-muted); font-size: 14px; line-height: 1.6; margin: 0; max-width: 82ch; }
-    .jt-lead b { color: var(--wb-fg); font-weight: 600; }
+    .ja-app { padding: 20px 0 64px; --wb-stack-gap: 18px; }
+    .ja-lead { color: var(--wb-fg-muted); font-size: 14px; line-height: 1.6; margin: 0; max-width: 82ch; }
+    .ja-lead b { color: var(--wb-fg); font-weight: 600; }
     /* inline code + a keyboard hint (web-builder has no inline-code primitive) */
-    .jt-app code { font-family: var(--jt-mono); font-size: 12px; color: var(--jt-key);
+    .ja-app code { font-family: var(--ja-mono); font-size: 12px; color: var(--ja-key);
       background: var(--wb-surface-2); border: var(--wb-bw) solid var(--wb-border); border-radius: 5px; padding: 1px 5px; }
-    .jt-kbd { font-family: var(--wb-font); font-size: 12px; font-weight: 600; color: var(--wb-fg);
+    .ja-kbd { font-family: var(--wb-font); font-size: 12px; font-weight: 600; color: var(--wb-fg);
       background: var(--wb-surface-2); border: var(--wb-bw) solid var(--wb-border); border-radius: 5px; padding: 1px 6px; }
 
     /* Card heads: title + tabs + actions on one line, vertically centred.
        (web-builder's head is top-aligned by default, which floated the title
        above the taller pill tabs.) The right-hand tools use .wb-card__head-actions. */
-    .jt-app .wb-card__head { align-items: center; }
-    .jt-app .wb-card__title { white-space: nowrap; }
-    .jt-app .wb-card__head .wb-tabs { flex: none; }
+    .ja-app .wb-card__head { align-items: center; }
+    .ja-app .wb-card__title { white-space: nowrap; }
+    .ja-app .wb-card__head .wb-tabs { flex: none; }
 
     /* Toasts here are single-line, so center them vertically: web-builder's
        default (align-items:flex-start, so the × sits top-right) is meant for
@@ -56,10 +56,10 @@
     #toaster .wb-toast { align-items: center; }
 
     /* input | output panels use wb-grid--2 (see markup); the two cards fill it */
-    .jt-main { align-self: stretch; }
+    .ja-main { align-self: stretch; }
 
     /* count badge on the "Inspect" tab */
-    .jt-tab-count {
+    .ja-tab-count {
       display: inline-block; min-width: 15px; text-align: center;
       font-size: 10.5px; font-weight: 700; line-height: 1.55;
       color: var(--wb-danger-text); background: var(--wb-danger-soft);
@@ -67,158 +67,158 @@
     }
 
     /* editor */
-    .jt-editor {
+    .ja-editor {
       width: 100%; min-height: 380px; box-sizing: border-box;
-      font-family: var(--jt-mono); font-size: 13px; line-height: 1.55;
+      font-family: var(--ja-mono); font-size: 13px; line-height: 1.55;
       tab-size: 2; white-space: pre; overflow: auto;
     }
-    @media (max-width: 940px) { .jt-editor { min-height: 220px; } }
+    @media (max-width: 940px) { .ja-editor { min-height: 220px; } }
 
     /* "Inspect": the original text, read-only, with every fixed spot marked
        inline (added text = red, wrong/extra = struck, normalized = amber). */
-    .jt-inspect {
+    .ja-inspect {
       min-height: 380px; max-height: 62vh; box-sizing: border-box;
       overflow: auto; border: var(--wb-bw) solid var(--wb-border);
       border-radius: var(--wb-input-radius); background: var(--wb-surface-2);
       padding: 12px 14px;
     }
-    @media (max-width: 940px) { .jt-inspect { min-height: 220px; } }
-    .jt-inspect-src {
-      margin: 0; font-family: var(--jt-mono); font-size: 13px; line-height: 1.85;
+    @media (max-width: 940px) { .ja-inspect { min-height: 220px; } }
+    .ja-inspect-src {
+      margin: 0; font-family: var(--ja-mono); font-size: 13px; line-height: 1.85;
       white-space: pre-wrap; word-break: break-word; color: var(--wb-fg);
     }
-    .jt-inspect-msg { color: var(--wb-fg-muted); font-size: 13px; }
-    .jt-inspect-ok  { color: var(--wb-success-text); font-weight: 600; }
-    .jt-inspect-hint {
+    .ja-inspect-msg { color: var(--wb-fg-muted); font-size: 13px; }
+    .ja-inspect-ok  { color: var(--wb-success-text); font-weight: 600; }
+    .ja-inspect-hint {
       display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center;
       margin-bottom: 12px; padding-bottom: 11px; font-size: 12px; color: var(--wb-fg-muted);
       border-bottom: var(--wb-bw) dashed var(--wb-border);
     }
-    .jt-inspect-hint .jt-legend { display: inline-flex; align-items: center; gap: 5px; }
-    .jt-inspect-hint .jt-swatch { width: 22px; height: 14px; border-radius: 3px; flex: none; }
+    .ja-inspect-hint .ja-legend { display: inline-flex; align-items: center; gap: 5px; }
+    .ja-inspect-hint .ja-swatch { width: 22px; height: 14px; border-radius: 3px; flex: none; }
     /* the inline annotations — clickable, each pops up its explanation */
-    .jt-ann { border-radius: 3px; cursor: pointer; }
-    .jt-ann--ins {                       /* text the tool ADDED — shown red */
+    .ja-ann { border-radius: 3px; cursor: pointer; }
+    .ja-ann--ins {                       /* text the tool ADDED — shown red */
       color: var(--wb-danger-text); background: var(--wb-danger-soft);
       font-weight: 700; padding: 0 3px; border-radius: 4px;
       box-shadow: inset 0 0 0 1px var(--wb-danger-soft);
     }
-    .jt-ann--ins::before { content: "+"; font-size: .8em; opacity: .65; margin-right: 1px; }
-    .jt-ann--removed {                   /* wrong/extra — kept, struck through, NOT deleted */
+    .ja-ann--ins::before { content: "+"; font-size: .8em; opacity: .65; margin-right: 1px; }
+    .ja-ann--removed {                   /* wrong/extra — kept, struck through, NOT deleted */
       color: var(--wb-danger-text); background: var(--wb-danger-soft);
       text-decoration: line-through; text-decoration-color: var(--wb-danger); padding: 0 1px;
     }
-    .jt-ann--changed {                   /* normalized in place (quotes/bareword/number) */
+    .ja-ann--changed {                   /* normalized in place (quotes/bareword/number) */
       background: var(--wb-warning-soft); box-shadow: inset 0 -2px 0 var(--wb-warning); padding: 0 1px;
     }
-    .jt-ann:hover { outline: 2px solid var(--wb-border-strong); outline-offset: 1px; }
-    .jt-fix-cap { cursor: pointer; }
-    .jt-fix-cap:hover { filter: brightness(.96); }
+    .ja-ann:hover { outline: 2px solid var(--wb-border-strong); outline-offset: 1px; }
+    .ja-fix-cap { cursor: pointer; }
+    .ja-fix-cap:hover { filter: brightness(.96); }
 
     /* explanation popup shown when a marked spot is clicked (JS-positioned at a
        fixed point, so not the static wb-popover; its label is a wb-cap) */
-    .jt-pop {
+    .ja-pop {
       position: fixed; z-index: 60; max-width: 300px;
       background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border-strong);
       border-radius: var(--wb-radius); box-shadow: var(--wb-shadow-md);
       padding: 10px 12px; font-size: 12.5px; line-height: 1.5;
     }
-    .jt-pop .wb-cap { margin-bottom: 6px; }
-    .jt-pop__msg { color: var(--wb-fg); }
+    .ja-pop .wb-cap { margin-bottom: 6px; }
+    .ja-pop__msg { color: var(--wb-fg); }
 
     /* sub-toolbar above the tree — a wb-cluster of controls sharing one height;
        expand/collapse is a wb-btn-group, the search grows via .wb-grow */
-    .jt-tools { margin-bottom: 14px; }
-    .jt-tools .jt-mode { flex: none; width: 128px; }
-    .jt-tools .jt-search { min-width: 140px; }
-    .jt-tools .wb-select, .jt-tools .wb-input { height: 36px; padding-top: 0; padding-bottom: 0; font-size: 13.5px; }
-    .jt-tools .wb-input-group__addon { padding: 0 10px; }
-    .jt-tools .wb-btn-group .wb-btn { height: 36px; }
+    .ja-tools { margin-bottom: 14px; }
+    .ja-tools .ja-mode { flex: none; width: 128px; }
+    .ja-tools .ja-search { min-width: 140px; }
+    .ja-tools .wb-select, .ja-tools .wb-input { height: 36px; padding-top: 0; padding-bottom: 0; font-size: 13.5px; }
+    .ja-tools .wb-input-group__addon { padding: 0 10px; }
+    .ja-tools .wb-btn-group .wb-btn { height: 36px; }
     /* result count lives inside the search field, right-aligned */
-    .jt-search { position: relative; }
-    .jt-search__count {
+    .ja-search { position: relative; }
+    .ja-search__count {
       position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
       font-size: 12px; font-weight: 600; color: var(--wb-fg-muted);
       white-space: nowrap; pointer-events: none; background: var(--wb-surface); padding-left: 8px;
     }
-    .jt-search__count[data-tone="ok"]     { color: var(--wb-success-text); }
-    .jt-search__count[data-tone="warn"]   { color: var(--wb-warning-text); }
-    .jt-search__count[data-tone="danger"] { color: var(--wb-danger-text); }
-    .jt-search input[type="search"] { padding-right: 78px; }   /* room for the count */
-    .jt-search input[type="search"]::-webkit-search-cancel-button { -webkit-appearance: none; display: none; }
+    .ja-search__count[data-tone="ok"]     { color: var(--wb-success-text); }
+    .ja-search__count[data-tone="warn"]   { color: var(--wb-warning-text); }
+    .ja-search__count[data-tone="danger"] { color: var(--wb-danger-text); }
+    .ja-search input[type="search"] { padding-right: 78px; }   /* room for the count */
+    .ja-search input[type="search"]::-webkit-search-cancel-button { -webkit-appearance: none; display: none; }
 
     /* status area under the output head (the stats row is a wb-cluster) */
-    .jt-status { margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px; }
-    .jt-status:empty { display: none; }
+    .ja-status { margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px; }
+    .ja-status:empty { display: none; }
 
     /* ---- the tree ---- */
-    .jt-view { max-height: 62vh; min-height: 220px; }
+    .ja-view { max-height: 62vh; min-height: 220px; }
 
     /* expand the result card to fill the screen (for deep / long JSON): the whole
        card goes fixed over a wb-overlay scrim, so its tabs, search, expand/collapse
        and copy/download all come along — nothing is duplicated or re-synced. */
-    .wb-card.jt-maximized {
+    .wb-card.ja-maximized {
       position: fixed; inset: 16px; z-index: 101; margin: 0; max-width: none;
       display: flex; flex-direction: column; box-shadow: var(--wb-shadow-md);
     }
-    .wb-card.jt-maximized > .wb-card__body { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
-    .wb-card.jt-maximized .jt-view { flex: 1 1 auto; min-height: 0; max-height: none; }
-    @media (max-width: 940px) { .wb-card.jt-maximized { inset: 8px; } }
-    .jt-tree { font-family: var(--jt-mono); font-size: 13px; line-height: 1.75; }
-    .jt-json {
-      font-family: var(--jt-mono); font-size: 12.5px; line-height: 1.6;
+    .wb-card.ja-maximized > .wb-card__body { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+    .wb-card.ja-maximized .ja-view { flex: 1 1 auto; min-height: 0; max-height: none; }
+    @media (max-width: 940px) { .wb-card.ja-maximized { inset: 8px; } }
+    .ja-tree { font-family: var(--ja-mono); font-size: 13px; line-height: 1.75; }
+    .ja-json {
+      font-family: var(--ja-mono); font-size: 12.5px; line-height: 1.6;
       margin: 0; white-space: pre; color: var(--wb-fg);
     }
 
-    .jt-node { position: relative; }
-    .jt-children {
+    .ja-node { position: relative; }
+    .ja-children {
       margin-left: 8px; padding-left: 12px;
       border-left: var(--wb-bw) dashed var(--wb-border);
     }
-    .jt-row {
+    .ja-row {
       display: flex; align-items: flex-start; gap: 4px;
       border-radius: 6px; padding: 1px 26px 1px 4px; position: relative;
       cursor: default; white-space: pre-wrap; word-break: break-word;
     }
-    .jt-row:hover { background: var(--wb-surface-2); }
+    .ja-row:hover { background: var(--wb-surface-2); }
 
-    .jt-toggle {
+    .ja-toggle {
       flex: none; width: 18px; height: 20px; padding: 0; margin: 0;
       display: inline-flex; align-items: center; justify-content: center;
       border: none; background: none; cursor: pointer; color: var(--wb-fg-subtle);
     }
-    .jt-toggle .wb-ico { font-size: 18px; transition: transform .12s ease; }
-    .jt-node:not(.is-collapsed) > .jt-row > .jt-toggle .wb-ico { transform: rotate(90deg); }
-    .jt-toggle.is-hidden { visibility: hidden; cursor: default; }
+    .ja-toggle .wb-ico { font-size: 18px; transition: transform .12s ease; }
+    .ja-node:not(.is-collapsed) > .ja-row > .ja-toggle .wb-ico { transform: rotate(90deg); }
+    .ja-toggle.is-hidden { visibility: hidden; cursor: default; }
 
-    .jt-key    { color: var(--jt-key); font-weight: 600; }
-    .jt-index  { color: var(--jt-index); }
-    .jt-colon  { color: var(--wb-fg-subtle); margin-right: 2px; }
-    .jt-punc   { color: var(--wb-fg-subtle); }
-    .jt-count  { color: var(--wb-fg-subtle); font-size: 11.5px; margin-left: 6px;
+    .ja-key    { color: var(--ja-key); font-weight: 600; }
+    .ja-index  { color: var(--ja-index); }
+    .ja-colon  { color: var(--wb-fg-subtle); margin-right: 2px; }
+    .ja-punc   { color: var(--wb-fg-subtle); }
+    .ja-count  { color: var(--wb-fg-subtle); font-size: 11.5px; margin-left: 6px;
       background: var(--wb-surface-2); border: var(--wb-bw) solid var(--wb-border);
       border-radius: 999px; padding: 0 7px; }
 
     /* click-to-copy value: show a 📋 copy cursor (not the OS "+" copy cursor);
        falls back to a plain pointer if the image cursor can't render. */
-    .jt-val { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22'%3E%3Ctext y='18' font-size='18'%3E📋%3C/text%3E%3C/svg%3E") 3 3, pointer;
+    .ja-val { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22'%3E%3Ctext y='18' font-size='18'%3E📋%3C/text%3E%3C/svg%3E") 3 3, pointer;
       border-radius: 4px; padding: 0 2px; margin: 0 -2px; }
-    .jt-val:hover { background: var(--wb-surface-hover); }
-    .jt-val--string  { color: var(--jt-string); }
-    .jt-val--number  { color: var(--jt-number); }
-    .jt-val--boolean { color: var(--jt-boolean); font-weight: 600; }
-    .jt-val--null    { color: var(--jt-null); font-style: italic; }
-    .jt-val--lit     { color: var(--wb-warning-text); font-style: italic; font-weight: 600; }
+    .ja-val:hover { background: var(--wb-surface-hover); }
+    .ja-val--string  { color: var(--ja-string); }
+    .ja-val--number  { color: var(--ja-number); }
+    .ja-val--boolean { color: var(--ja-boolean); font-weight: 600; }
+    .ja-val--null    { color: var(--ja-null); font-style: italic; }
+    .ja-val--lit     { color: var(--wb-warning-text); font-style: italic; font-weight: 600; }
 
     /* duplicate keys: kept in place but struck through to flag them */
-    .jt-row.jt-dup { opacity: .68; }
-    .jt-row.jt-dup .jt-key,
-    .jt-row.jt-dup .jt-val,
-    .jt-row.jt-dup .jt-index,
-    .jt-row.jt-dup .jt-colon,
-    .jt-row.jt-dup .jt-punc,
-    .jt-row.jt-dup .jt-count { text-decoration: line-through; }
-    .jt-dup-tag {
+    .ja-row.ja-dup { opacity: .68; }
+    .ja-row.ja-dup .ja-key,
+    .ja-row.ja-dup .ja-val,
+    .ja-row.ja-dup .ja-index,
+    .ja-row.ja-dup .ja-colon,
+    .ja-row.ja-dup .ja-punc,
+    .ja-row.ja-dup .ja-count { text-decoration: line-through; }
+    .ja-dup-tag {
       display: inline-block; text-decoration: none !important;
       font-size: 10.5px; font-weight: 600; line-height: 1.6;
       color: var(--wb-danger-text); background: var(--wb-danger-soft);
@@ -226,83 +226,83 @@
     }
 
     /* collapsed preview / inline close */
-    .jt-preview { color: var(--wb-fg-subtle); font-style: italic; }
-    .jt-close-inline { color: var(--wb-fg-subtle); }
-    .jt-close-row { padding-left: 26px; color: var(--wb-fg-subtle); }
-    .jt-node.is-collapsed > .jt-children,
-    .jt-node.is-collapsed > .jt-close-row { display: none; }
-    .jt-node:not(.is-collapsed) > .jt-row .jt-preview,
-    .jt-node:not(.is-collapsed) > .jt-row .jt-close-inline { display: none; }
+    .ja-preview { color: var(--wb-fg-subtle); font-style: italic; }
+    .ja-close-inline { color: var(--wb-fg-subtle); }
+    .ja-close-row { padding-left: 26px; color: var(--wb-fg-subtle); }
+    .ja-node.is-collapsed > .ja-children,
+    .ja-node.is-collapsed > .ja-close-row { display: none; }
+    .ja-node:not(.is-collapsed) > .ja-row .ja-preview,
+    .ja-node:not(.is-collapsed) > .ja-row .ja-close-inline { display: none; }
 
     /* per-row copy button */
-    .jt-copy {
+    .ja-copy {
       position: absolute; right: 3px; top: 1px; opacity: 0;
       border: none; background: var(--wb-surface); color: var(--wb-fg-subtle);
       border-radius: 5px; cursor: pointer; padding: 1px 3px; line-height: 1;
       transition: opacity .1s ease;
     }
-    .jt-row:hover .jt-copy { opacity: 1; }
-    .jt-copy:hover { color: var(--wb-fg); background: var(--wb-surface-hover); }
-    .jt-copy .wb-ico { font-size: 15px; }
+    .ja-row:hover .ja-copy { opacity: 1; }
+    .ja-copy:hover { color: var(--wb-fg); background: var(--wb-surface-hover); }
+    .ja-copy .wb-ico { font-size: 15px; }
 
     /* search-hit highlight — blue, distinct from the amber "repair" colour */
-    :root { --jt-hl-bg: #bfdbfe; --jt-hl-fg: #1e3a8a; --jt-hl-bd: rgba(59,130,246,.55); }
-    .dark { --jt-hl-bg: rgba(59,130,246,.34); --jt-hl-fg: #dbeafe; --jt-hl-bd: rgba(96,165,250,.6); }
+    :root { --ja-hl-bg: #bfdbfe; --ja-hl-fg: #1e3a8a; --ja-hl-bd: rgba(59,130,246,.55); }
+    .dark { --ja-hl-bg: rgba(59,130,246,.34); --ja-hl-fg: #dbeafe; --ja-hl-bd: rgba(96,165,250,.6); }
     mark {
-      background: var(--jt-hl-bg); color: var(--jt-hl-fg);
-      border-radius: 3px; padding: 0 2px; box-shadow: 0 0 0 1px var(--jt-hl-bd);
+      background: var(--ja-hl-bg); color: var(--ja-hl-fg);
+      border-radius: 3px; padding: 0 2px; box-shadow: 0 0 0 1px var(--ja-hl-bd);
     }
     /* path-query hit → tint the whole matched row */
-    .jt-row.jt-hit { background: var(--jt-hl-bg); box-shadow: inset 0 0 0 1px var(--jt-hl-bd); }
-    .jt-row.jt-hit .jt-key, .jt-row.jt-hit .jt-val, .jt-row.jt-hit .jt-index { color: var(--jt-hl-fg); }
+    .ja-row.ja-hit { background: var(--ja-hl-bg); box-shadow: inset 0 0 0 1px var(--ja-hl-bd); }
+    .ja-row.ja-hit .ja-key, .ja-row.ja-hit .ja-val, .ja-row.ja-hit .ja-index { color: var(--ja-hl-fg); }
 
     /* ---- layout: history rail + the two work cards (wb-cluster row) ---- */
-    .jt-layout { align-items: flex-start; gap: 16px; }
-    .jt-layout > .jt-history { flex: 0 0 244px; }
-    .jt-layout > .jt-main { flex: 1 1 460px; min-width: 0; }
-    .jt-layout.is-history-hidden > .jt-history { display: none; }
+    .ja-layout { align-items: flex-start; gap: 16px; }
+    .ja-layout > .ja-history { flex: 0 0 244px; }
+    .ja-layout > .ja-main { flex: 1 1 460px; min-width: 0; }
+    .ja-layout.is-history-hidden > .ja-history { display: none; }
 
     /* history rail = a wb-card pinned while the page scrolls */
-    .jt-history {
+    .ja-history {
       position: sticky; top: 62px; align-self: start;
       max-height: calc(100vh - 82px); display: flex; flex-direction: column; overflow: hidden;
     }
-    @media (max-width: 940px) { .jt-history { position: static; max-height: 320px; } }
-    .jt-history .wb-card__head { padding: 12px 12px 12px 16px; }
-    .jt-history__title { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; }
-    .jt-history__title .wb-ico { color: var(--wb-fg-muted); }
-    .jt-history__body { flex: 1 1 auto; min-height: 0; padding: 6px; }
-    .jt-history__empty { padding: 24px 16px; text-align: center; color: var(--wb-fg-subtle); font-size: 12.5px; line-height: 1.6; }
+    @media (max-width: 940px) { .ja-history { position: static; max-height: 320px; } }
+    .ja-history .wb-card__head { padding: 12px 12px 12px 16px; }
+    .ja-history__title { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; }
+    .ja-history__title .wb-ico { color: var(--wb-fg-muted); }
+    .ja-history__body { flex: 1 1 auto; min-height: 0; padding: 6px; }
+    .ja-history__empty { padding: 24px 16px; text-align: center; color: var(--wb-fg-subtle); font-size: 12.5px; line-height: 1.6; }
 
     /* history rows come from wb-list; only the hover-reveal of row actions is custom */
-    .jt-history .wb-list__item { border-top: 0; border-radius: var(--wb-radius-sm); padding: 8px 8px 8px 12px; margin-bottom: 2px; gap: 8px; }
-    .jt-history .wb-list__title { font-size: 13px; }
-    .jt-history .jt-name { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .jt-history .jt-name.is-untitled { color: var(--wb-fg-subtle); font-weight: 500; font-style: italic; }
-    .jt-history .wb-list__sub { font-size: 11px; margin-top: 1px; }
-    .jt-history .wb-list__end { opacity: 0; display: flex; gap: 1px; transition: opacity .1s ease; }
-    .jt-history .wb-list__item:hover .wb-list__end,
-    .jt-history .wb-list__item.is-active .wb-list__end { opacity: 1; }
-    .jt-history .wb-list__end .wb-btn { width: 27px; height: 27px; }
-    .jt-history .wb-list__item.is-editing .wb-list__title { flex: 1 1 auto; }
-    .jt-history .wb-list__item.is-editing .wb-list__end { display: none; }
-    .jt-hist-del:hover { color: var(--wb-danger-text); background: var(--wb-danger-soft); }
-    .jt-undo { flex: none; white-space: nowrap; }
+    .ja-history .wb-list__item { border-top: 0; border-radius: var(--wb-radius-sm); padding: 8px 8px 8px 12px; margin-bottom: 2px; gap: 8px; }
+    .ja-history .wb-list__title { font-size: 13px; }
+    .ja-history .ja-name { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .ja-history .ja-name.is-untitled { color: var(--wb-fg-subtle); font-weight: 500; font-style: italic; }
+    .ja-history .wb-list__sub { font-size: 11px; margin-top: 1px; }
+    .ja-history .wb-list__end { opacity: 0; display: flex; gap: 1px; transition: opacity .1s ease; }
+    .ja-history .wb-list__item:hover .wb-list__end,
+    .ja-history .wb-list__item.is-active .wb-list__end { opacity: 1; }
+    .ja-history .wb-list__end .wb-btn { width: 27px; height: 27px; }
+    .ja-history .wb-list__item.is-editing .wb-list__title { flex: 1 1 auto; }
+    .ja-history .wb-list__item.is-editing .wb-list__end { display: none; }
+    .ja-hist-del:hover { color: var(--wb-danger-text); background: var(--wb-danger-soft); }
+    .ja-undo { flex: none; white-space: nowrap; }
 
     /* "saved" confirmation — a wb-cap that fades out after a moment */
-    .jt-saved-cap {
+    .ja-saved-cap {
       opacity: 0; transform: translateY(1px); pointer-events: none;
       transition: opacity .2s ease, transform .2s ease;
     }
-    .jt-saved-cap.is-show { opacity: 1; transform: none; }
+    .ja-saved-cap.is-show { opacity: 1; transform: none; }
 
     /* ---- search help (regex + path) — a wb-table inside a two-column wb-grid ---- */
-    .jt-help__col h3 { margin: 2px 0 10px; font-size: 13px; font-weight: 650; display: flex; align-items: center; gap: 6px; color: var(--wb-fg); }
-    .jt-help__col h3 .wb-ico { color: var(--wb-fg-muted); font-size: 18px; }
-    .jt-help__col .wb-table td { vertical-align: top; }
-    .jt-help__col .wb-table td:first-child { white-space: nowrap; }
+    .ja-help__col h3 { margin: 2px 0 10px; font-size: 13px; font-weight: 650; display: flex; align-items: center; gap: 6px; color: var(--wb-fg); }
+    .ja-help__col h3 .wb-ico { color: var(--wb-fg-muted); font-size: 18px; }
+    .ja-help__col .wb-table td { vertical-align: top; }
+    .ja-help__col .wb-table td:first-child { white-space: nowrap; }
 
-    .jt-foot-note { color: var(--wb-fg-subtle); font-size: 12px; text-align: center; margin: 0; }
+    .ja-foot-note { color: var(--wb-fg-subtle); font-size: 12px; text-align: center; margin: 0; }
   </style>
 </head>
 <body>
@@ -311,7 +311,7 @@
     <button class="wb-btn wb-btn--ghost wb-btn--icon" id="btnToggleHistory" title="Show/hide history" aria-label="Show/hide history">
       <span class="wb-ico">view_sidebar</span>
     </button>
-    <a class="wb-navbar__brand"><span class="wb-navbar__mark">{ }</span> JSON Tree</a>
+    <a class="wb-navbar__brand"><span class="wb-navbar__mark">{ }</span> JSON Analysis</a>
     <span class="wb-navbar__spacer"></span>
     <div class="wb-navbar__actions">
       <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" id="themeToggle" aria-label="Light/Dark">
@@ -321,38 +321,38 @@
     </div>
   </div>
 
-  <main class="wb-container wb-container--wide jt-app wb-stack">
-    <p class="jt-lead">
+  <main class="wb-container wb-container--wide ja-app wb-stack">
+    <p class="ja-lead">
       Paste JSON — even if it's <b>missing whitespace / newlines</b>, <b>missing brackets</b>, missing
       data, or littered with <b>junk characters</b> — then view it as a <b>structure tree</b>, search and query it.
-      Anything not quite right is <b>highlighted right in your original text</b> on the <span class="jt-kbd">Inspect</span> tab;
+      Anything not quite right is <b>highlighted right in your original text</b> on the <span class="ja-kbd">Inspect</span> tab;
       click a highlight to see what was fixed.
     </p>
 
-    <div class="wb-cluster jt-layout" id="layout">
+    <div class="wb-cluster ja-layout" id="layout">
       <!-- ===================== History sidebar ===================== -->
-      <aside class="wb-card jt-history" id="historyPanel">
+      <aside class="wb-card ja-history" id="historyPanel">
         <div class="wb-card__head">
-          <span class="jt-history__title"><span class="wb-ico wb-ico--sm">history</span> History</span>
+          <span class="ja-history__title"><span class="wb-ico wb-ico--sm">history</span> History</span>
           <div class="wb-card__head-actions">
             <button id="btnNew" class="wb-btn wb-btn--ghost wb-btn--sm" title="Start a new entry (clears the editor)">
               <span class="wb-ico wb-ico--sm">add</span> New
             </button>
           </div>
         </div>
-        <div class="jt-history__body wb-scroll-y">
+        <div class="ja-history__body wb-scroll-y">
           <ul class="wb-list wb-list--flush" id="historyList"></ul>
         </div>
       </aside>
 
-      <div class="jt-main wb-grid wb-grid--2">
+      <div class="ja-main wb-grid wb-grid--2">
       <!-- ===================== Input ===================== -->
       <section class="wb-card">
         <div class="wb-card__head">
           <h2 class="wb-card__title">Paste JSON</h2>
           <div class="wb-tabs wb-tabs--pill" id="inputTabs" role="tablist">
             <button class="wb-tab is-active" data-inview="edit" type="button">Edit</button>
-            <button class="wb-tab" data-inview="inspect" type="button">Inspect<span class="jt-tab-count" id="inspectCount" hidden>0</span></button>
+            <button class="wb-tab" data-inview="inspect" type="button">Inspect<span class="ja-tab-count" id="inspectCount" hidden>0</span></button>
           </div>
           <div class="wb-card__head-actions">
             <input type="file" id="fileInput" accept=".json,.txt,application/json,text/plain" hidden />
@@ -368,9 +368,9 @@
           </div>
         </div>
         <div class="wb-card__body">
-          <textarea id="input" class="wb-textarea jt-editor" spellcheck="false"
+          <textarea id="input" class="wb-textarea ja-editor" spellcheck="false"
             placeholder="Paste JSON here… (even if it's broken, missing brackets, or has no whitespace/newlines at all)&#10;&#10;Open “Samples to try” at the bottom of the page for examples."></textarea>
-          <div id="inspectView" class="jt-inspect wb-scroll-y wb-scroll-y--pad" hidden></div>
+          <div id="inspectView" class="ja-inspect wb-scroll-y wb-scroll-y--pad" hidden></div>
         </div>
         <div class="wb-card__foot">
           <button id="btnSave" class="wb-btn wb-btn--sm" title="Save to History (⌘/Ctrl + S)">
@@ -379,7 +379,7 @@
           <button id="btnFormat" class="wb-btn wb-btn--secondary wb-btn--sm">Beautify</button>
           <button id="btnMinify" class="wb-btn wb-btn--secondary wb-btn--sm">Minify</button>
           <span class="wb-inline" style="margin-left:auto">
-            <span id="savedCap" class="wb-cap wb-cap--sm wb-cap--success jt-saved-cap"><span class="wb-ico wb-ico--xs">check</span> Saved</span>
+            <span id="savedCap" class="wb-cap wb-cap--sm wb-cap--success ja-saved-cap"><span class="wb-ico wb-ico--xs">check</span> Saved</span>
             <span id="charCount" class="wb-cap wb-cap--sm">0 chars</span>
           </span>
         </div>
@@ -406,10 +406,10 @@
           </div>
         </div>
         <div class="wb-card__body">
-          <div id="status" class="jt-status"></div>
+          <div id="status" class="ja-status"></div>
 
-          <div class="wb-cluster wb-cluster--nowrap jt-tools" id="treeTools">
-            <span class="wb-select-wrap jt-mode">
+          <div class="wb-cluster wb-cluster--nowrap ja-tools" id="treeTools">
+            <span class="wb-select-wrap ja-mode">
               <select id="searchMode" class="wb-select" title="Query mode" aria-label="Query mode">
                 <option value="text">Contains</option>
                 <option value="regex">Regex</option>
@@ -417,11 +417,11 @@
               </select>
               <span class="wb-ico">expand_more</span>
             </span>
-            <div class="wb-input-group jt-search wb-grow">
+            <div class="wb-input-group ja-search wb-grow">
               <span class="wb-input-group__addon"><span class="wb-ico wb-ico--sm">search</span></span>
               <!-- count is position:absolute; keep the <input> as the group's last child
                    so wb-input-group closes the right border/radius on it, not on this span -->
-              <span id="matchCount" class="jt-search__count" hidden></span>
+              <span id="matchCount" class="ja-search__count" hidden></span>
               <input id="search" class="wb-input" type="search" placeholder="Search keys or values…" />
             </div>
             <div class="wb-btn-group" role="group" aria-label="Expand / collapse tree">
@@ -434,18 +434,18 @@
             </div>
           </div>
 
-          <div id="treeView" class="jt-tree jt-view wb-scroll-y wb-scroll-y--pad"></div>
-          <pre id="jsonView" class="jt-json jt-view wb-scroll-y wb-scroll-y--pad" hidden></pre>
+          <div id="treeView" class="ja-tree ja-view wb-scroll-y wb-scroll-y--pad"></div>
+          <pre id="jsonView" class="ja-json ja-view wb-scroll-y wb-scroll-y--pad" hidden></pre>
         </div>
       </section>
-      </div><!-- /.jt-main (wb-grid--2) -->
-    </div><!-- /.jt-layout -->
+      </div><!-- /.ja-main (wb-grid--2) -->
+    </div><!-- /.ja-layout -->
 
     <div class="wb-accordion">
       <details class="wb-accordion__item">
       <summary><span class="wb-ico wb-ico--sm">help</span> Search help — Regex and Path syntax</summary>
-      <div class="wb-accordion__body wb-grid wb-grid--2 jt-help" style="gap:20px 24px;align-items:start">
-        <div class="jt-help__col">
+      <div class="wb-accordion__body wb-grid wb-grid--2 ja-help" style="gap:20px 24px;align-items:start">
+        <div class="ja-help__col">
           <h3><span class="wb-ico">regular_expression</span> Regex (the “Regex” mode)</h3>
           <div class="wb-table-scroll">
           <table class="wb-table wb-table--compact">
@@ -471,7 +471,7 @@
           </table>
           </div>
         </div>
-        <div class="jt-help__col">
+        <div class="ja-help__col">
           <h3><span class="wb-ico">account_tree</span> Path (the “Path” mode)</h3>
           <div class="wb-table-scroll">
           <table class="wb-table wb-table--compact">
@@ -506,7 +506,7 @@
       </details>
     </div>
 
-    <p class="jt-foot-note">
+    <p class="ja-foot-note">
       Everything runs right in your browser. History is saved locally (localStorage)
       on your machine and is never sent anywhere.
     </p>
@@ -1013,11 +1013,11 @@
   // surrounding quotes); `quoted` decides whether display wraps it in " ".
   function valPreview(node) {
     switch (node.t) {
-      case 'str':  return { cls: 'jt-val--string',  quoted: true,  inner: node.v };
-      case 'num':  return { cls: 'jt-val--number',  quoted: false, inner: node.raw != null ? node.raw : String(node.v) };
-      case 'bool': return { cls: 'jt-val--boolean', quoted: false, inner: String(node.v) };
-      case 'null': return { cls: 'jt-val--null',    quoted: false, inner: 'null' };
-      case 'lit':  return { cls: 'jt-val--lit',     quoted: false, inner: node.raw };
+      case 'str':  return { cls: 'ja-val--string',  quoted: true,  inner: node.v };
+      case 'num':  return { cls: 'ja-val--number',  quoted: false, inner: node.raw != null ? node.raw : String(node.v) };
+      case 'bool': return { cls: 'ja-val--boolean', quoted: false, inner: String(node.v) };
+      case 'null': return { cls: 'ja-val--null',    quoted: false, inner: 'null' };
+      case 'lit':  return { cls: 'ja-val--lit',     quoted: false, inner: node.raw };
     }
     return { cls: '', quoted: false, inner: '' };
   }
@@ -1048,13 +1048,13 @@
     if (!isBranch) {
       if (active && !selfMatch) return null;
       const vp = valPreview(node);
-      const wrap = el('div', 'jt-node');
-      const row = el('div', 'jt-row');
-      if (keyInfo && keyInfo.dup) row.classList.add('jt-dup');
-      if (pathHit) row.classList.add('jt-hit');
+      const wrap = el('div', 'ja-node');
+      const row = el('div', 'ja-row');
+      if (keyInfo && keyInfo.dup) row.classList.add('ja-dup');
+      if (pathHit) row.classList.add('ja-hit');
       row.appendChild(makeToggle(true));
       appendKey(row, keyInfo, hlq);
-      const val = el('span', 'jt-val ' + vp.cls);
+      const val = el('span', 'ja-val ' + vp.cls);
       val.innerHTML = valHTML(vp, hlq);
       val.title = 'Click to copy value';
       val.addEventListener('click', () => copyText(rawValue(node), 'Value copied'));
@@ -1082,37 +1082,37 @@
     const close = node.t === 'obj' ? '}' : ']';
     const countText = node.t === 'obj' ? count + (count === 1 ? ' field' : ' fields') : count + (count === 1 ? ' item' : ' items');
 
-    const wrap = el('div', 'jt-node');
+    const wrap = el('div', 'ja-node');
     if (count === 0 || (query && query.active && !query.error)) wrap.classList.remove('is-collapsed');
-    const row = el('div', 'jt-row');
-    if (keyInfo && keyInfo.dup) row.classList.add('jt-dup');
-    if (pathHit) row.classList.add('jt-hit');
+    const row = el('div', 'ja-row');
+    if (keyInfo && keyInfo.dup) row.classList.add('ja-dup');
+    if (pathHit) row.classList.add('ja-hit');
     row.appendChild(makeToggle(count === 0));
     appendKey(row, keyInfo, hlq);
-    row.appendChild(el('span', 'jt-punc', open));
+    row.appendChild(el('span', 'ja-punc', open));
     // collapsed inline hint
     if (count > 0) {
-      row.appendChild(el('span', 'jt-preview', ' … '));
-      row.appendChild(el('span', 'jt-close-inline', close));
+      row.appendChild(el('span', 'ja-preview', ' … '));
+      row.appendChild(el('span', 'ja-close-inline', close));
     } else {
-      row.appendChild(el('span', 'jt-punc', close));
+      row.appendChild(el('span', 'ja-punc', close));
     }
-    row.appendChild(el('span', 'jt-count', countText));
+    row.appendChild(el('span', 'ja-count', countText));
     appendCopy(row, node);
     wrap.appendChild(row);
 
     if (count > 0) {
-      const kids = el('div', 'jt-children');
+      const kids = el('div', 'ja-children');
       kept.forEach(k => kids.appendChild(k));
       wrap.appendChild(kids);
-      wrap.appendChild(el('div', 'jt-close-row jt-punc', close));
+      wrap.appendChild(el('div', 'ja-close-row ja-punc', close));
       // toggle behaviour
-      row.querySelector('.jt-toggle').addEventListener('click', e => {
+      row.querySelector('.ja-toggle').addEventListener('click', e => {
         e.stopPropagation();
         wrap.classList.toggle('is-collapsed');
       });
       row.addEventListener('click', e => {
-        if (e.target.closest('.jt-copy') || e.target.closest('.jt-val')) return;
+        if (e.target.closest('.ja-copy') || e.target.closest('.ja-val')) return;
         wrap.classList.toggle('is-collapsed');
       });
     }
@@ -1120,7 +1120,7 @@
   }
 
   function makeToggle(hidden) {
-    const b = el('button', 'jt-toggle' + (hidden ? ' is-hidden' : ''));
+    const b = el('button', 'ja-toggle' + (hidden ? ' is-hidden' : ''));
     b.type = 'button';
     b.appendChild(el('span', 'wb-ico', 'chevron_right'));
     return b;
@@ -1128,17 +1128,17 @@
   function appendKey(row, keyInfo, query) {
     if (!keyInfo) return;
     if (keyInfo.type === 'key') {
-      const k = el('span', 'jt-key');
+      const k = el('span', 'ja-key');
       k.innerHTML = '"' + highlightQ(keyInfo.label, query) + '"';
       row.appendChild(k);
-      row.appendChild(el('span', 'jt-colon', ':'));
-      if (keyInfo.dup) row.appendChild(el('span', 'jt-dup-tag', 'duplicate key'));
+      row.appendChild(el('span', 'ja-colon', ':'));
+      if (keyInfo.dup) row.appendChild(el('span', 'ja-dup-tag', 'duplicate key'));
     } else {
-      row.appendChild(el('span', 'jt-index', keyInfo.label + ':'));
+      row.appendChild(el('span', 'ja-index', keyInfo.label + ':'));
     }
   }
   function appendCopy(row, node) {
-    const b = el('button', 'jt-copy');
+    const b = el('button', 'ja-copy');
     b.type = 'button';
     b.title = 'Copy this branch (JSON)';
     b.appendChild(el('span', 'wb-ico', 'content_copy'));
@@ -1270,7 +1270,7 @@
     const cap = (txt, tone) => el('span', 'wb-cap wb-cap--sm' + (tone ? ' wb-cap--' + tone : ''), txt);
     // The "fixes" cap is clickable → jumps to the "Inspect" view over the source.
     const fixCap = txt => {
-      const c = el('span', 'wb-cap wb-cap--sm wb-cap--warning jt-fix-cap', txt);
+      const c = el('span', 'wb-cap wb-cap--sm wb-cap--warning ja-fix-cap', txt);
       c.title = 'Click to inspect each spot right in the text';
       c.addEventListener('click', showInspect);
       return c;
@@ -1303,10 +1303,10 @@
     const posCount = anns.filter(a => a.start != null).length;
     if (badge) { badge.hidden = posCount === 0; badge.textContent = posCount; }
     if (!view) return;
-    if (!src.trim()) { view.innerHTML = '<span class="jt-inspect-msg">Nothing to inspect yet.</span>'; return; }
+    if (!src.trim()) { view.innerHTML = '<span class="ja-inspect-msg">Nothing to inspect yet.</span>'; return; }
     const info = anns.filter(a => a.start == null);
     if (posCount === 0 && info.length === 0) {
-      view.innerHTML = '<span class="jt-inspect-msg jt-inspect-ok">✓ Nothing needed fixing — valid JSON.</span>';
+      view.innerHTML = '<span class="ja-inspect-msg ja-inspect-ok">✓ Nothing needed fixing — valid JSON.</span>';
       return;
     }
     let notes = '';
@@ -1318,14 +1318,14 @@
         info.map(a => '<li>' + esc(a.msg) + '</li>').join('') + '</ul></div></div>';
     }
     const legend = posCount ? (
-      '<div class="jt-inspect-hint">' +
-        '<span class="jt-legend"><span class="jt-swatch" style="background:var(--wb-danger-soft);' +
+      '<div class="ja-inspect-hint">' +
+        '<span class="ja-legend"><span class="ja-swatch" style="background:var(--wb-danger-soft);' +
           'box-shadow:inset 0 0 0 1px var(--wb-danger)"></span> wrong spot (missing → added, extra → struck out)</span>' +
-        '<span class="jt-legend"><span class="jt-swatch" style="background:var(--wb-warning-soft);' +
+        '<span class="ja-legend"><span class="ja-swatch" style="background:var(--wb-warning-soft);' +
           'box-shadow:inset 0 -2px 0 var(--wb-warning)"></span> normalized spot</span>' +
         '<span style="margin-left:auto">Click a highlighted spot to see what was fixed.</span>' +
       '</div>') : '';
-    view.innerHTML = legend + '<pre class="jt-inspect-src">' + renderAnnotatedSource(src, anns) + '</pre>' + notes;
+    view.innerHTML = legend + '<pre class="ja-inspect-src">' + renderAnnotatedSource(src, anns) + '</pre>' + notes;
   }
 
   // Rebuild the source string, wrapping wrong spans + inserted fills in clickable
@@ -1337,7 +1337,7 @@
     const spans = pos.filter(x => x.a.insert == null && x.a.end > x.a.start)
                      .sort((p, q) => p.a.start - q.a.start || q.a.end - p.a.end);
     spans.forEach(s => s.used = false);
-    const insHTML = x => '<span class="jt-ann jt-ann--ins" data-ann="' + x.idx + '" title="Added">' + esc(x.a.insert) + '</span>';
+    const insHTML = x => '<span class="ja-ann ja-ann--ins" data-ann="' + x.idx + '" title="Added">' + esc(x.a.insert) + '</span>';
     const spanAt = p => { for (const s of spans) if (!s.used && s.a.start === p) return s; return null; };
     let out = '', i = 0;
     while (i < src.length) {
@@ -1346,7 +1346,7 @@
       if (sp) {
         sp.used = true;
         const end = Math.min(sp.a.end, src.length);
-        out += '<span class="jt-ann jt-ann--' + sp.a.cls + '" data-ann="' + sp.idx + '">' + esc(src.slice(i, end)) + '</span>';
+        out += '<span class="ja-ann ja-ann--' + sp.a.cls + '" data-ann="' + sp.idx + '">' + esc(src.slice(i, end)) + '</span>';
         i = end; continue;
       }
       let nxt = src.length;                       // batch plain text to the next event
@@ -1364,10 +1364,10 @@
     closeAnnPop();
     const map = { ins: ['Added', 'danger'], removed: ['Ignored', 'danger'], changed: ['Normalized', 'warning'] };
     const [label, tone] = map[ann.cls] || ['Note', 'info'];
-    annPop = el('div', 'jt-pop');
+    annPop = el('div', 'ja-pop');
     const capTone = tone === 'info' ? '' : ' wb-cap--' + tone;
     annPop.innerHTML = '<span class="wb-cap wb-cap--sm' + capTone + '">' + label + '</span>' +
-      '<div class="jt-pop__msg">' + esc(ann.msg) + '</div>';
+      '<div class="ja-pop__msg">' + esc(ann.msg) + '</div>';
     document.body.appendChild(annPop);
     const r = target.getBoundingClientRect(), pr = annPop.getBoundingClientRect();
     let top = r.bottom + 6, left = r.left;
@@ -1415,8 +1415,8 @@
   }
 
   function setAllCollapsed(collapsed) {
-    treeView.querySelectorAll('.jt-node').forEach(nodeEl => {
-      if (nodeEl.querySelector(':scope > .jt-children')) {
+    treeView.querySelectorAll('.ja-node').forEach(nodeEl => {
+      if (nodeEl.querySelector(':scope > .ja-children')) {
         nodeEl.classList.toggle('is-collapsed', collapsed);
       }
     });
@@ -1460,7 +1460,7 @@
      or a sample is loaded. Opening a block re-activates its id and floats it to
      the top; the previously-active block just stays saved in the list.
      ========================================================================== */
-  const HKEY = 'jt-history-v1';
+  const HKEY = 'jt-history-v1';   // legacy "jt-" key kept so saved history survives the JSON Analysis rename
   let store = { seq: 1, blocks: [] };   // block: { id, name, text, savedAt }
   let activeId = null;
   let parseTimer = null, saveTimer = null, savedCapTimer = null, undoTimer = null;
@@ -1539,7 +1539,7 @@
     return new Date(ts).toLocaleDateString('vi-VN');
   }
   function histBtn(icon, title, danger) {
-    const b = el('button', 'wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm' + (danger ? ' jt-hist-del' : ''));
+    const b = el('button', 'wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm' + (danger ? ' ja-hist-del' : ''));
     b.type = 'button'; b.title = title;
     b.appendChild(el('span', 'wb-ico wb-ico--sm', icon)); return b;
   }
@@ -1547,13 +1547,13 @@
     const list = $('historyList');
     list.innerHTML = '';
     if (!store.blocks.length) {
-      list.innerHTML = '<li class="jt-history__empty">No entries yet.<br>JSON you enter is saved here automatically.</li>';
+      list.innerHTML = '<li class="ja-history__empty">No entries yet.<br>JSON you enter is saved here automatically.</li>';
       return;
     }
     store.blocks.forEach(b => {
       const item = el('li', 'wb-list__item wb-list__item--link' + (b.id === activeId ? ' is-active' : ''));
       const title = el('span', 'wb-list__title');
-      title.appendChild(el('span', 'jt-name' + (b.name ? '' : ' is-untitled'), b.name || 'Untitled'));
+      title.appendChild(el('span', 'ja-name' + (b.name ? '' : ' is-untitled'), b.name || 'Untitled'));
       const time = el('span', 'wb-list__sub', relTime(b.savedAt));
       time.title = new Date(b.savedAt).toLocaleString('vi-VN');
       title.appendChild(time);
@@ -1606,13 +1606,13 @@
     t.innerHTML =
       '<span class="wb-toast__icon"><span class="wb-ico wb-ico--xs">delete</span></span>' +
       '<div class="wb-toast__body"><p class="wb-toast__title">' + esc(msg) + '</p></div>' +
-      '<button class="wb-btn wb-btn--ghost wb-btn--sm jt-undo" type="button">Undo</button>' +
+      '<button class="wb-btn wb-btn--ghost wb-btn--sm ja-undo" type="button">Undo</button>' +
       '<button class="wb-close" aria-label="Close"></button>';
     $('toaster').appendChild(t);
     const kill = () => t.remove();
     clearTimeout(undoTimer);
     t.querySelector('.wb-close').addEventListener('click', kill);
-    t.querySelector('.jt-undo').addEventListener('click', () => { onUndo(); kill(); });
+    t.querySelector('.ja-undo').addEventListener('click', () => { onUndo(); kill(); });
     undoTimer = setTimeout(kill, 5000);
   }
 
@@ -1674,14 +1674,14 @@
   });
   // Click a highlighted spot → popup with its explanation
   $('inspectView').addEventListener('click', e => {
-    const t = e.target.closest('.jt-ann');
+    const t = e.target.closest('.ja-ann');
     const ann = t && t.dataset.ann != null ? currentAnnotations[+t.dataset.ann] : null;
     if (!ann) { closeAnnPop(); return; }
     e.stopPropagation();
     showAnnPop(t, ann);
   });
   document.addEventListener('click', e => {
-    if (annPop && !e.target.closest('.jt-pop') && !e.target.closest('.jt-ann')) closeAnnPop();
+    if (annPop && !e.target.closest('.ja-pop') && !e.target.closest('.ja-ann')) closeAnnPop();
   });
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') { closeAnnPop(); if (isViewMaximized()) setViewMaximized(false); }
@@ -1778,9 +1778,9 @@
   // search, expand/collapse and copy/download all come along unchanged.
   const outputCard = treeView.closest('.wb-card');
   const viewBackdrop = $('viewBackdrop');
-  function isViewMaximized() { return outputCard.classList.contains('jt-maximized'); }
+  function isViewMaximized() { return outputCard.classList.contains('ja-maximized'); }
   function setViewMaximized(on) {
-    outputCard.classList.toggle('jt-maximized', on);
+    outputCard.classList.toggle('ja-maximized', on);
     viewBackdrop.classList.toggle('is-open', on);
     document.body.style.overflow = on ? 'hidden' : '';
     const ico = $('btnMaximize').querySelector('.wb-ico');
