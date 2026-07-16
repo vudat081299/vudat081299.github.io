@@ -303,6 +303,64 @@
     .ja-help__col .wb-table td:first-child { white-space: nowrap; }
 
     .ja-foot-note { color: var(--wb-fg-subtle); font-size: 12px; text-align: center; margin: 0; }
+    /* ============================================================================
+       Compare view — diff two JSON snippets (repaired + key-sorted, then aligned)
+       ========================================================================== */
+    .ja-modetabs { flex: none; }
+    /* the two panes carry .wb-stack (display:flex), which would otherwise beat the
+       UA [hidden] rule — this keeps hidden panes hidden. */
+    #viewAnalyze[hidden], #viewCompare[hidden] { display: none; }
+
+    .ja-cmp-inputs { align-items: stretch; }
+    .ja-cmp-editor {
+      width: 100%; min-height: 200px; box-sizing: border-box;
+      font-family: var(--ja-mono); font-size: 13px; line-height: 1.55;
+      tab-size: 2; white-space: pre; overflow: auto;
+    }
+    @media (max-width: 940px) { .ja-cmp-editor { min-height: 150px; } }
+
+    .ja-cmp-toolbar { align-items: center; gap: 10px 14px; }
+    .ja-cmp-check { display: inline-flex; align-items: center; gap: 6px; font-size: 13px;
+      color: var(--wb-fg-muted); cursor: pointer; user-select: none; }
+    .ja-cmp-check input { accent-color: var(--wb-fg); }
+
+    .ja-cmp-legend-add { color: var(--wb-success-text); font-weight: 600; }
+    .ja-cmp-legend-del { color: var(--wb-danger-text);  font-weight: 600; }
+
+    /* two-column aligned diff: each row is its own 2-col grid, so A and B stay
+       row-aligned even when one side is a placeholder gap. */
+    .ja-cmp-colhead { display: grid; grid-template-columns: 1fr 1fr;
+      font-size: 12px; font-weight: 650; color: var(--wb-fg-muted);
+      border-bottom: var(--wb-bw) solid var(--wb-border); }
+    .ja-cmp-colhead > div { padding: 8px 14px; }
+    .ja-cmp-colhead > div + div { border-left: var(--wb-bw) solid var(--wb-border); }
+
+    .ja-cmp-diff { max-height: 60vh; min-height: 220px; overflow: auto;
+      font-family: var(--ja-mono); font-size: 12.5px; line-height: 1.7; }
+    .ja-cmp-row { display: grid; grid-template-columns: 1fr 1fr; }
+    .ja-cmp-cell { padding: 0 14px; white-space: pre-wrap; word-break: break-word; min-height: 1.7em; }
+    .ja-cmp-cell + .ja-cmp-cell { border-left: var(--wb-bw) solid var(--wb-border); }
+    .ja-cmp-line { display: inline-block; }
+    .ja-cmp-cell.is-extra { background: var(--wb-success-soft); }   /* present here, absent on the other side */
+    .ja-cmp-cell.is-chg   { background: var(--wb-warning-soft); }   /* same key, different value */
+    .ja-cmp-cell.is-gap   {                                          /* a gap: the other side has a value here */
+      background-color: var(--wb-danger-soft);
+      background-image: repeating-linear-gradient(45deg, transparent 0 6px, rgba(127,29,29,.10) 6px 12px);
+    }
+
+    /* syntax colours reuse the tree palette */
+    .ja-cmp-k    { color: var(--ja-key); font-weight: 600; }
+    .ja-cmp-c    { color: var(--wb-fg-subtle); }
+    .ja-cmp-s    { color: var(--ja-string); }
+    .ja-cmp-n    { color: var(--ja-number); }
+    .ja-cmp-bool { color: var(--ja-boolean); font-weight: 600; }
+    .ja-cmp-null { color: var(--ja-null); font-style: italic; }
+    .ja-cmp-lit  { color: var(--wb-warning-text); font-style: italic; font-weight: 600; }
+    .ja-cmp-p    { color: var(--wb-fg-subtle); }
+
+    .ja-cmp-empty { padding: 46px 20px; text-align: center; color: var(--wb-fg-subtle); font-size: 13px; line-height: 1.6; }
+    .ja-cmp-identical { padding: 40px 20px; text-align: center; color: var(--wb-success-text);
+      display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13.5px; font-weight: 600; }
   </style>
 </head>
 <body>
@@ -313,6 +371,11 @@
     </button>
     <a class="wb-navbar__brand"><span class="wb-navbar__mark">{ }</span> JSON Analysis</a>
     <span class="wb-navbar__spacer"></span>
+    <div class="wb-tabs wb-tabs--pill ja-modetabs" id="modeTabs" role="tablist">
+      <button class="wb-tab is-active" data-mode="analyze" type="button">Analyze</button>
+      <button class="wb-tab" data-mode="compare" type="button">Compare</button>
+    </div>
+    <span class="wb-navbar__spacer"></span>
     <div class="wb-navbar__actions">
       <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" id="themeToggle" aria-label="Light/Dark">
         <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
@@ -322,6 +385,7 @@
   </div>
 
   <main class="wb-container wb-container--wide ja-app wb-stack">
+    <section id="viewAnalyze" class="wb-stack">
     <p class="ja-lead">
       Paste JSON — even if it's <b>missing whitespace / newlines</b>, <b>missing brackets</b>, missing
       data, or littered with <b>junk characters</b> — then view it as a <b>structure tree</b>, search and query it.
@@ -505,6 +569,85 @@
         </div>
       </details>
     </div>
+    </section><!-- /#viewAnalyze -->
+
+    <!-- ===================== Compare ===================== -->
+    <section id="viewCompare" class="wb-stack" hidden>
+      <p class="ja-lead">
+        Paste two JSON snippets — <b>broken or messy is fine</b>. Each is
+        <b>repaired and key-sorted</b> first, then lined up side by side:
+        <span class="ja-cmp-legend-add">green</span> marks a key/value present on that side only,
+        and a <span class="ja-cmp-legend-del">red gap</span> marks where the other side has something this one lacks.
+      </p>
+
+      <div class="ja-cmp-inputs wb-grid wb-grid--2">
+        <section class="wb-card">
+          <div class="wb-card__head">
+            <h2 class="wb-card__title">JSON A</h2>
+            <div class="wb-card__head-actions">
+              <span id="cmpStatA" class="wb-cap wb-cap--sm" hidden></span>
+              <button id="cmpPasteA" class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm" title="Paste from clipboard" aria-label="Paste into A">
+                <span class="wb-ico wb-ico--sm">content_paste</span>
+              </button>
+              <button id="cmpClearA" class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm" title="Clear A" aria-label="Clear A">
+                <span class="wb-ico wb-ico--sm">backspace</span>
+              </button>
+            </div>
+          </div>
+          <div class="wb-card__body">
+            <textarea id="cmpA" class="wb-textarea ja-cmp-editor" spellcheck="false" placeholder="Paste the first JSON here… (broken JSON is repaired automatically)"></textarea>
+          </div>
+        </section>
+
+        <section class="wb-card">
+          <div class="wb-card__head">
+            <h2 class="wb-card__title">JSON B</h2>
+            <div class="wb-card__head-actions">
+              <span id="cmpStatB" class="wb-cap wb-cap--sm" hidden></span>
+              <button id="cmpPasteB" class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm" title="Paste from clipboard" aria-label="Paste into B">
+                <span class="wb-ico wb-ico--sm">content_paste</span>
+              </button>
+              <button id="cmpClearB" class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm" title="Clear B" aria-label="Clear B">
+                <span class="wb-ico wb-ico--sm">backspace</span>
+              </button>
+            </div>
+          </div>
+          <div class="wb-card__body">
+            <textarea id="cmpB" class="wb-textarea ja-cmp-editor" spellcheck="false" placeholder="Paste the second JSON here… (broken JSON is repaired automatically)"></textarea>
+          </div>
+        </section>
+      </div>
+
+      <div class="wb-cluster ja-cmp-toolbar">
+        <button id="btnCompare" class="wb-btn">
+          <span class="wb-ico wb-ico--sm">compare_arrows</span> Compare
+        </button>
+        <label class="ja-cmp-check" title="Sort every object's keys before comparing, so key order never counts as a difference">
+          <input type="checkbox" id="cmpSort" checked /> Sort keys first
+        </label>
+        <button id="cmpSwap" class="wb-btn wb-btn--secondary wb-btn--sm">
+          <span class="wb-ico wb-ico--sm">swap_horiz</span> Swap A ↔ B
+        </button>
+        <button id="cmpExample" class="wb-btn wb-btn--secondary wb-btn--sm">
+          <span class="wb-ico wb-ico--sm">science</span> Load example
+        </button>
+        <span id="cmpSummary" class="wb-cluster wb-cluster--tight" style="margin-left:auto"></span>
+      </div>
+
+      <section class="wb-card">
+        <div class="wb-card__head">
+          <h2 class="wb-card__title">Differences</h2>
+          <div class="wb-tabs wb-tabs--pill" id="cmpViewTabs" role="tablist">
+            <button class="wb-tab is-active" data-cmpview="split" type="button">All</button>
+            <button class="wb-tab" data-cmpview="onlyDiff" type="button">Only differences</button>
+          </div>
+        </div>
+        <div class="wb-card__body">
+          <div class="ja-cmp-colhead"><div>JSON A</div><div>JSON B</div></div>
+          <div id="cmpDiff" class="ja-cmp-diff"></div>
+        </div>
+      </section>
+    </section><!-- /#viewCompare -->
 
     <p class="ja-foot-note">
       Everything runs right in your browser. History is saved locally (localStorage)
@@ -1800,12 +1943,258 @@
     localStorage.setItem('jt-theme', root.classList.contains('dark') ? 'dark' : 'light');
   });
 
+  /* ============================================================================
+     9) Compare — diff two JSON snippets
+     ----------------------------------------------------------------------------
+     Both sides go through the same tolerant parser as the Analyze tab (so broken
+     / pasted-wrong JSON is repaired), then every object's keys are sorted so key
+     ORDER never counts as a difference. The two trees are then walked in lockstep
+     into aligned rows:
+       • a key/value on ONE side only  → shown there (green "extra"), with a red
+         placeholder gap on the other side
+       • same key, different value     → both shown (amber "changed")
+     ========================================================================== */
+  const cmpA = $('cmpA'), cmpB = $('cmpB'), cmpDiff = $('cmpDiff');
+  let cmpTimer = null, cmpOnlyDiff = false;
+
+  // Recursively sort object keys; arrays keep their order (they're position-aligned).
+  function sortNodeKeys(node) {
+    if (!node) return node;
+    if (node.t === 'obj') {
+      return { t: 'obj', children: node.children
+        .map(c => ({ key: c.key, node: sortNodeKeys(c.node) }))
+        .sort((a, b) => a.key < b.key ? -1 : a.key > b.key ? 1 : 0) };
+    }
+    if (node.t === 'arr') return { t: 'arr', children: node.children.map(sortNodeKeys) };
+    return node;   // scalar — keep as-is (retains .v / .raw)
+  }
+
+  const cmpCat = n => (n.t === 'obj' || n.t === 'arr') ? n.t : 'scalar';
+  function cmpScalarText(n) {
+    switch (n.t) {
+      case 'str':  return JSON.stringify(n.v);
+      case 'num':  return n.raw != null ? n.raw : String(n.v);
+      case 'bool': return String(n.v);
+      case 'null': return 'null';
+      case 'lit':  return n.raw != null ? n.raw : 'null';
+    }
+    return '';
+  }
+  function cmpScalarEqual(a, b) {
+    if (a.t !== b.t) return false;
+    switch (a.t) {
+      case 'num':  return Number(a.v) === Number(b.v);
+      case 'str':  return a.v === b.v;
+      case 'bool': return a.v === b.v;
+      case 'lit':  return (a.raw || '') === (b.raw || '');
+      case 'null': return true;
+    }
+    return false;
+  }
+
+  const cmpP = s => '<span class="ja-cmp-p">' + s + '</span>';
+  const cmpKeyHTML = k => '<span class="ja-cmp-k">"' + esc(k) + '"</span><span class="ja-cmp-c">: </span>';
+  function cmpValHTML(n) {
+    const cls = { str: 'ja-cmp-s', num: 'ja-cmp-n', bool: 'ja-cmp-bool', null: 'ja-cmp-null', lit: 'ja-cmp-lit' }[n.t] || '';
+    return '<span class="' + cls + '">' + esc(cmpScalarText(n)) + '</span>';
+  }
+
+  // One-sided pretty render of a whole node → [{depth, html}] (used for extra/gap subtrees).
+  function cmpRenderSide(node, keyLabel, depth, last) {
+    const kl = keyLabel != null ? cmpKeyHTML(keyLabel) : '';
+    const comma = last ? '' : cmpP(',');
+    const out = [];
+    if (node.t === 'obj' || node.t === 'arr') {
+      const o = node.t === 'obj' ? '{' : '[', c = node.t === 'obj' ? '}' : ']';
+      if (!node.children.length) { out.push({ depth, html: kl + cmpP(o + c) + comma }); return out; }
+      out.push({ depth, html: kl + cmpP(o) });
+      node.children.forEach((ch, i) => {
+        const l = i === node.children.length - 1;
+        if (node.t === 'obj') out.push.apply(out, cmpRenderSide(ch.node, ch.key, depth + 1, l));
+        else out.push.apply(out, cmpRenderSide(ch, null, depth + 1, l));
+      });
+      out.push({ depth, html: cmpP(c) + comma });
+    } else {
+      out.push({ depth, html: kl + cmpValHTML(node) + comma });
+    }
+    return out;
+  }
+
+  // Walk two nodes in lockstep → { rows, stats }. Each row: { depth, left, right, status }.
+  function cmpBuild(a, b) {
+    const rows = [];
+    const stats = { onlyA: 0, onlyB: 0, changed: 0 };
+    const stack = [];                                   // ancestor open-bracket rows
+    const markDiff = () => stack.forEach(o => o.hasDiff = true);
+    const push = r => { rows.push(r); return r; };
+
+    function del(node, key, depth, last) {              // present in A only
+      stats.onlyA++; markDiff();
+      cmpRenderSide(node, key, depth, last).forEach(ln =>
+        push({ depth: ln.depth, left: ln.html, right: null, status: 'del' }));
+    }
+    function add(node, key, depth, last) {              // present in B only
+      stats.onlyB++; markDiff();
+      cmpRenderSide(node, key, depth, last).forEach(ln =>
+        push({ depth: ln.depth, left: null, right: ln.html, status: 'add' }));
+    }
+
+    function pair(a, b, key, depth, last) {
+      const kl = key != null ? cmpKeyHTML(key) : '';
+      const comma = last ? '' : cmpP(',');
+      if (cmpCat(a) !== cmpCat(b)) { del(a, key, depth, last); add(b, key, depth, last); return; }
+      if (cmpCat(a) === 'scalar') {
+        const eq = cmpScalarEqual(a, b);
+        if (!eq) { stats.changed++; markDiff(); }
+        push({ depth, left: kl + cmpValHTML(a) + comma, right: kl + cmpValHTML(b) + comma, status: eq ? 'same' : 'chg' });
+        return;
+      }
+      const o = a.t === 'obj' ? '{' : '[', c = a.t === 'obj' ? '}' : ']';
+      const open = push({ depth, left: kl + cmpP(o), right: kl + cmpP(o), status: 'same', open: true, hasDiff: false });
+      stack.push(open);
+      if (a.t === 'obj') {
+        const am = new Map(a.children.map(ch => [ch.key, ch.node]));
+        const bm = new Map(b.children.map(ch => [ch.key, ch.node]));
+        const keys = [], seen = new Set();
+        a.children.concat(b.children).forEach(ch => { if (!seen.has(ch.key)) { seen.add(ch.key); keys.push(ch.key); } });
+        keys.sort((x, y) => x < y ? -1 : x > y ? 1 : 0);
+        keys.forEach((k, i) => {
+          const l = i === keys.length - 1;
+          if (am.has(k) && bm.has(k)) pair(am.get(k), bm.get(k), k, depth + 1, l);
+          else if (am.has(k)) del(am.get(k), k, depth + 1, l);
+          else add(bm.get(k), k, depth + 1, l);
+        });
+      } else {
+        const len = Math.max(a.children.length, b.children.length);
+        for (let i = 0; i < len; i++) {
+          const l = i === len - 1, ea = a.children[i], eb = b.children[i];
+          if (ea !== undefined && eb !== undefined) pair(ea, eb, null, depth + 1, l);
+          else if (ea !== undefined) del(ea, null, depth + 1, l);
+          else add(eb, null, depth + 1, l);
+        }
+      }
+      stack.pop();
+      push({ depth, left: cmpP(c) + comma, right: cmpP(c) + comma, status: 'same', close: true, openRef: open });
+    }
+
+    pair(a, b, null, 0, true);
+    return { rows, stats };
+  }
+
+  // In "only differences" mode, keep diff rows plus the bracket rows on the path to them.
+  function cmpRowVisible(r, onlyDiff) {
+    if (!onlyDiff || r.status !== 'same') return true;
+    if (r.open)  return !!r.hasDiff;
+    if (r.close) return !!(r.openRef && r.openRef.hasDiff);
+    return false;
+  }
+  function cmpRenderRows(rows, onlyDiff) {
+    const cell = (html, status, side) => {
+      let cls = '';
+      if (status === 'del') cls = side === 'l' ? 'is-extra' : 'is-gap';
+      else if (status === 'add') cls = side === 'l' ? 'is-gap' : 'is-extra';
+      else if (status === 'chg') cls = 'is-chg';
+      return '<div class="ja-cmp-cell ' + cls + '">' + (html == null ? '' : html) + '</div>';
+    };
+    let out = '';
+    rows.forEach(r => {
+      if (!cmpRowVisible(r, onlyDiff)) return;
+      const ind = ' style="padding-left:' + (r.depth * 1.35) + 'em"';
+      const lh = r.left  == null ? null : '<span class="ja-cmp-line"' + ind + '>' + r.left  + '</span>';
+      const rh = r.right == null ? null : '<span class="ja-cmp-line"' + ind + '>' + r.right + '</span>';
+      out += '<div class="ja-cmp-row">' + cell(lh, r.status, 'l') + cell(rh, r.status, 'r') + '</div>';
+    });
+    return out;
+  }
+
+  function cmpSideStatus(id, src, res) {
+    const cap = $(id);
+    if (!src.trim()) { cap.hidden = true; return; }
+    cap.hidden = false;
+    if (!res.node) { cap.className = 'wb-cap wb-cap--sm wb-cap--danger'; cap.textContent = 'unreadable'; return; }
+    const fixes = (res.annotations || []).filter(a => a.start != null).length;
+    if (res.strict) { cap.className = 'wb-cap wb-cap--sm wb-cap--success'; cap.textContent = 'valid'; }
+    else { cap.className = 'wb-cap wb-cap--sm wb-cap--warning'; cap.textContent = fixes + (fixes === 1 ? ' fix' : ' fixes'); }
+  }
+  function cmpSetSummary(stats) {
+    const box = $('cmpSummary'); box.innerHTML = '';
+    if (!stats) return;
+    const cap = (txt, tone) => box.appendChild(el('span', 'wb-cap wb-cap--sm' + (tone ? ' wb-cap--' + tone : ''), txt));
+    if (!stats.onlyA && !stats.onlyB && !stats.changed) { cap('identical', 'success'); return; }
+    cap(stats.onlyA + ' only in A', stats.onlyA ? 'success' : null);
+    cap(stats.onlyB + ' only in B', stats.onlyB ? 'success' : null);
+    if (stats.changed) cap(stats.changed + (stats.changed === 1 ? ' changed value' : ' changed values'), 'warning');
+  }
+  function cmpEmpty(msg) { return '<div class="ja-cmp-empty">' + esc(msg) + '</div>'; }
+
+  function runCompare() {
+    const aSrc = cmpA.value, bSrc = cmpB.value;
+    const ra = parse(aSrc), rb = parse(bSrc);
+    cmpSideStatus('cmpStatA', aSrc, ra);
+    cmpSideStatus('cmpStatB', bSrc, rb);
+    if (!aSrc.trim() && !bSrc.trim()) { cmpDiff.innerHTML = cmpEmpty('Paste JSON into both A and B, then they’re compared automatically.'); cmpSetSummary(null); return; }
+    if (!ra.node || !rb.node) {
+      cmpDiff.innerHTML = cmpEmpty((!ra.node ? 'A' : 'B') + ' has no readable JSON yet — fix it and the comparison updates.');
+      cmpSetSummary(null); return;
+    }
+    let na = ra.node, nb = rb.node;
+    if ($('cmpSort').checked) { na = sortNodeKeys(na); nb = sortNodeKeys(nb); }
+    const built = cmpBuild(na, nb);
+    cmpSetSummary(built.stats);
+    if (!built.stats.onlyA && !built.stats.onlyB && !built.stats.changed) {
+      cmpDiff.innerHTML = '<div class="ja-cmp-identical"><span class="wb-ico">check_circle</span> Identical — same keys and values after repair and key-sort.</div>';
+      return;
+    }
+    cmpDiff.innerHTML = cmpRenderRows(built.rows, cmpOnlyDiff);
+  }
+
+  const cmpDebounced = () => { clearTimeout(cmpTimer); cmpTimer = setTimeout(runCompare, 220); };
+  cmpA.addEventListener('input', cmpDebounced);
+  cmpB.addEventListener('input', cmpDebounced);
+  $('btnCompare').addEventListener('click', runCompare);
+  $('cmpSort').addEventListener('change', runCompare);
+  $('cmpSwap').addEventListener('click', () => { const t = cmpA.value; cmpA.value = cmpB.value; cmpB.value = t; runCompare(); });
+  $('cmpClearA').addEventListener('click', () => { cmpA.value = ''; runCompare(); cmpA.focus(); });
+  $('cmpClearB').addEventListener('click', () => { cmpB.value = ''; runCompare(); cmpB.focus(); });
+  async function cmpPaste(ta) {
+    try {
+      const t = await navigator.clipboard.readText();
+      if (t.trim()) { ta.value = t; runCompare(); } else toast('Clipboard is empty', 'danger');
+    } catch (_) { toast('Browser blocked clipboard access — paste manually (Ctrl/Cmd+V)', 'danger'); }
+  }
+  $('cmpPasteA').addEventListener('click', () => cmpPaste(cmpA));
+  $('cmpPasteB').addEventListener('click', () => cmpPaste(cmpB));
+  $('cmpViewTabs').addEventListener('click', e => {
+    const t = e.target.closest('.wb-tab'); if (!t) return;
+    cmpOnlyDiff = t.dataset.cmpview === 'onlyDiff';
+    $('cmpViewTabs').querySelectorAll('.wb-tab').forEach(x => x.classList.toggle('is-active', x === t));
+    runCompare();
+  });
+  $('cmpExample').addEventListener('click', () => {
+    cmpA.value = '{"user":{"id":1,"name":"An","roles":["admin","editor"]},"active":true,"score":42}';
+    cmpB.value = "{user:{id:1,name:'Anh',roles:['admin']},active:true,tags:['vip'],score:42}";
+    runCompare();
+  });
+
+  // ---- top-level mode switch: Analyze ↔ Compare ----
+  const modeTabs = $('modeTabs');
+  function setMode(m) {
+    modeTabs.querySelectorAll('.wb-tab').forEach(t => t.classList.toggle('is-active', t.dataset.mode === m));
+    $('viewAnalyze').hidden = m !== 'analyze';
+    $('viewCompare').hidden = m !== 'compare';
+    $('btnToggleHistory').style.visibility = m === 'analyze' ? '' : 'hidden';   // history is Analyze-only
+    try { localStorage.setItem('ja-mode', m); } catch (_) {}
+    if (m === 'compare') runCompare();
+  }
+  modeTabs.addEventListener('click', e => { const t = e.target.closest('.wb-tab'); if (t) setMode(t.dataset.mode); });
+
   // ---- boot: restore history, reopen the most recent block ----
   loadStore();
   sortBlocks();
   if (store.blocks.length) { activeId = store.blocks[0].id; input.value = store.blocks[0].text; }
   renderHistory();
   run();
+  try { if (localStorage.getItem('ja-mode') === 'compare') setMode('compare'); } catch (_) {}
   </script>
 </body>
 </html>
