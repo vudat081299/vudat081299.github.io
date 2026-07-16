@@ -256,23 +256,45 @@
     .ja-row.ja-hit { background: var(--ja-hl-bg); box-shadow: inset 0 0 0 1px var(--ja-hl-bd); }
     .ja-row.ja-hit .ja-key, .ja-row.ja-hit .ja-val, .ja-row.ja-hit .ja-index { color: var(--ja-hl-fg); }
 
-    /* ---- layout: history rail + the two work cards (wb-cluster row) ---- */
-    .ja-layout { align-items: flex-start; gap: 16px; }
-    .ja-layout > .ja-history { flex: 0 0 244px; }
-    .ja-layout > .ja-main { flex: 1 1 460px; min-width: 0; }
-    .ja-layout.is-history-hidden > .ja-history { display: none; }
+    /* ---- app shell: a docked left sidebar (views + history) + the content column ---- */
+    .ja-shell { display: flex; align-items: flex-start; gap: 16px;
+      max-width: 1400px; margin: 0 auto; padding: 18px 20px 64px; }
+    .ja-content { flex: 1 1 auto; min-width: 0; padding: 0; }   /* reflows when the sidebar hides */
 
-    /* history rail = a wb-card pinned while the page scrolls */
-    .ja-history {
-      position: sticky; top: 62px; align-self: start;
-      max-height: calc(100vh - 82px); display: flex; flex-direction: column; overflow: hidden;
+    /* the sidebar shares the row with the content (not an overlay), so the content
+       can still be used while it's open and simply widens when it's hidden. */
+    .ja-sidebar {
+      flex: 0 0 250px; align-self: flex-start;
+      position: sticky; top: 72px; max-height: calc(100vh - 88px);
+      display: flex; flex-direction: column; gap: 10px; min-height: 0;
     }
-    @media (max-width: 940px) { .ja-history { position: static; max-height: 320px; } }
-    .ja-history .wb-card__head { padding: 12px 12px 12px 16px; }
-    .ja-history__title { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; }
+    .ja-shell.is-collapsed .ja-sidebar { display: none; }
+
+    /* view switcher (top of the sidebar) */
+    .ja-sidenav { display: flex; flex-direction: column; gap: 2px; }
+    .ja-sidenav__item {
+      display: flex; align-items: center; gap: 10px; width: 100%;
+      padding: 9px 12px; border: 0; background: none; cursor: pointer;
+      border-radius: var(--wb-radius-sm); font: inherit; font-size: 14px; font-weight: 550;
+      color: var(--wb-fg-muted); text-align: left;
+    }
+    .ja-sidenav__item .wb-ico { font-size: 20px; }
+    .ja-sidenav__item:hover { background: var(--wb-surface-2); color: var(--wb-fg); }
+    .ja-sidenav__item.is-active { background: var(--wb-surface-hover); color: var(--wb-fg); font-weight: 650; }
+
+    /* history (bottom of the sidebar) */
+    .ja-sidebar__hist { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column;
+      border-top: var(--wb-bw) solid var(--wb-border); padding-top: 8px; }
+    .ja-hist-head { display: flex; align-items: center; justify-content: space-between; padding: 2px 2px 6px 8px; }
+    .ja-history__title { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; }
     .ja-history__title .wb-ico { color: var(--wb-fg-muted); }
-    .ja-history__body { flex: 1 1 auto; min-height: 0; padding: 6px; }
-    .ja-history__empty { padding: 24px 16px; text-align: center; color: var(--wb-fg-subtle); font-size: 12.5px; line-height: 1.6; }
+    .ja-history__body { flex: 1 1 auto; min-height: 0; padding: 4px 2px; }
+    .ja-history__empty { padding: 24px 12px; text-align: center; color: var(--wb-fg-subtle); font-size: 12.5px; line-height: 1.6; }
+
+    @media (max-width: 940px) {
+      .ja-shell { flex-direction: column; }
+      .ja-sidebar { position: static; flex: none; width: 100%; max-height: 360px; top: 0; }
+    }
 
     /* history rows come from wb-list; only the hover-reveal of row actions is custom */
     .ja-history .wb-list__item { border-top: 0; border-radius: var(--wb-radius-sm); padding: 8px 8px 8px 12px; margin-bottom: 2px; gap: 8px; }
@@ -306,7 +328,6 @@
     /* ============================================================================
        Compare view — diff two JSON snippets (repaired + key-sorted, then aligned)
        ========================================================================== */
-    .ja-modetabs { flex: none; }
     /* the two panes carry .wb-stack (display:flex), which would otherwise beat the
        UA [hidden] rule — this keeps hidden panes hidden. */
     #viewAnalyze[hidden], #viewCompare[hidden] { display: none; }
@@ -366,15 +387,10 @@
 <body>
   <!-- ===================== Top bar ===================== -->
   <div class="wb-navbar wb-navbar--sticky">
-    <button class="wb-btn wb-btn--ghost wb-btn--icon" id="btnToggleHistory" title="Show/hide history" aria-label="Show/hide history">
+    <button class="wb-btn wb-btn--ghost wb-btn--icon" id="btnToggleHistory" title="Show/hide sidebar" aria-label="Show/hide sidebar">
       <span class="wb-ico">view_sidebar</span>
     </button>
     <a class="wb-navbar__brand"><span class="wb-navbar__mark">{ }</span> JSON Analysis</a>
-    <span class="wb-navbar__spacer"></span>
-    <div class="wb-tabs wb-tabs--pill ja-modetabs" id="modeTabs" role="tablist">
-      <button class="wb-tab is-active" data-mode="analyze" type="button">Analyze</button>
-      <button class="wb-tab" data-mode="compare" type="button">Compare</button>
-    </div>
     <span class="wb-navbar__spacer"></span>
     <div class="wb-navbar__actions">
       <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" id="themeToggle" aria-label="Light/Dark">
@@ -384,30 +400,38 @@
     </div>
   </div>
 
-  <main class="wb-container wb-container--wide ja-app wb-stack">
-    <section id="viewAnalyze" class="wb-stack">
-    <p class="ja-lead">
-      Paste JSON — even if it's <b>missing whitespace / newlines</b>, <b>missing brackets</b>, missing
-      data, or littered with <b>junk characters</b> — then view it as a <b>structure tree</b>, search and query it.
-      Anything not quite right is <b>highlighted right in your original text</b> on the <span class="ja-kbd">Inspect</span> tab;
-      click a highlight to see what was fixed.
-    </p>
-
-    <div class="wb-cluster ja-layout" id="layout">
-      <!-- ===================== History sidebar ===================== -->
-      <aside class="wb-card ja-history" id="historyPanel">
-        <div class="wb-card__head">
+  <div class="ja-shell" id="shell">
+    <!-- ===================== Left sidebar: views + history ===================== -->
+    <aside class="ja-sidebar" id="sidebar">
+      <nav class="ja-sidenav" id="modeNav" aria-label="View">
+        <button class="ja-sidenav__item is-active" data-mode="analyze" type="button">
+          <span class="wb-ico">account_tree</span> <span>Analyze</span>
+        </button>
+        <button class="ja-sidenav__item" data-mode="compare" type="button">
+          <span class="wb-ico">difference</span> <span>Compare</span>
+        </button>
+      </nav>
+      <div class="ja-sidebar__hist ja-history" id="historyPanel">
+        <div class="ja-hist-head">
           <span class="ja-history__title"><span class="wb-ico wb-ico--sm">history</span> History</span>
-          <div class="wb-card__head-actions">
-            <button id="btnNew" class="wb-btn wb-btn--ghost wb-btn--sm" title="Start a new entry (clears the editor)">
-              <span class="wb-ico wb-ico--sm">add</span> New
-            </button>
-          </div>
+          <button id="btnNew" class="wb-btn wb-btn--ghost wb-btn--sm" title="Start a new entry (clears the editor)">
+            <span class="wb-ico wb-ico--sm">add</span> New
+          </button>
         </div>
         <div class="ja-history__body wb-scroll-y">
           <ul class="wb-list wb-list--flush" id="historyList"></ul>
         </div>
-      </aside>
+      </div>
+    </aside>
+
+    <main class="ja-content ja-app wb-stack" id="content">
+      <section id="viewAnalyze" class="wb-stack">
+      <p class="ja-lead">
+        Paste JSON — even if it's <b>missing whitespace / newlines</b>, <b>missing brackets</b>, missing
+        data, or littered with <b>junk characters</b> — then view it as a <b>structure tree</b>, search and query it.
+        Anything not quite right is <b>highlighted right in your original text</b> on the <span class="ja-kbd">Inspect</span> tab;
+        click a highlight to see what was fixed.
+      </p>
 
       <div class="ja-main wb-grid wb-grid--2">
       <!-- ===================== Input ===================== -->
@@ -503,9 +527,8 @@
         </div>
       </section>
       </div><!-- /.ja-main (wb-grid--2) -->
-    </div><!-- /.ja-layout -->
 
-    <div class="wb-accordion">
+      <div class="wb-accordion">
       <details class="wb-accordion__item">
       <summary><span class="wb-ico wb-ico--sm">help</span> Search help — Regex and Path syntax</summary>
       <div class="wb-accordion__body wb-grid wb-grid--2 ja-help" style="gap:20px 24px;align-items:start">
@@ -653,7 +676,8 @@
       Everything runs right in your browser. History is saved locally (localStorage)
       on your machine and is never sent anywhere.
     </p>
-  </main>
+    </main><!-- /.ja-content -->
+  </div><!-- /.ja-shell -->
 
   <!-- dim scrim behind the expanded (maximized) result card -->
   <div class="wb-overlay" id="viewBackdrop"></div>
@@ -1652,6 +1676,7 @@
   }
   function openBlock(id) {
     clearTimeout(saveTimer);
+    setMode('analyze');                  // history is Analyze content — jump there if in Compare
     persistCurrent();                    // flush the outgoing content (bumps only if edited)
     const b = findBlock(id);
     if (!b) return;
@@ -1774,7 +1799,7 @@
     input.value = ''; searchBox.value = ''; activeId = null;
     switchToEditTab(); renderHistory(); run(); input.focus();
   });
-  $('btnNew').addEventListener('click', () => $('btnClear').click());
+  $('btnNew').addEventListener('click', () => { setMode('analyze'); $('btnClear').click(); });
   $('btnSave').addEventListener('click', saveDraft);
 
   // Upload a .json file from disk → a fresh block named after the file.
@@ -1798,12 +1823,12 @@
     reader.readAsText(file);
   });
 
-  // Sidebar show/hide (persisted)
-  const layout = $('layout');
-  if (localStorage.getItem('jt-hist-hidden') === '1') layout.classList.add('is-history-hidden');
+  // Sidebar show/hide (persisted). Docked, so the content reflows to full width when hidden.
+  const shell = $('shell');
+  if (localStorage.getItem('jt-hist-hidden') === '1') shell.classList.add('is-collapsed');
   $('btnToggleHistory').addEventListener('click', () => {
-    const hidden = layout.classList.toggle('is-history-hidden');
-    localStorage.setItem('jt-hist-hidden', hidden ? '1' : '0');
+    const collapsed = shell.classList.toggle('is-collapsed');
+    localStorage.setItem('jt-hist-hidden', collapsed ? '1' : '0');
   });
 
   // Input tabs: Edit (editable) ↔ Inspect (annotated source)
@@ -2176,22 +2201,21 @@
     runCompare();
   });
 
-  // ---- top-level mode switch: Analyze ↔ Compare ----
-  const modeTabs = $('modeTabs');
+  // ---- view switch (in the sidebar): Analyze ↔ Compare ----
+  const modeNav = $('modeNav');
   function setMode(m) {
-    modeTabs.querySelectorAll('.wb-tab').forEach(t => t.classList.toggle('is-active', t.dataset.mode === m));
+    modeNav.querySelectorAll('.ja-sidenav__item').forEach(t => t.classList.toggle('is-active', t.dataset.mode === m));
     $('viewAnalyze').hidden = m !== 'analyze';
     $('viewCompare').hidden = m !== 'compare';
-    $('btnToggleHistory').style.visibility = m === 'analyze' ? '' : 'hidden';   // history is Analyze-only
     try { localStorage.setItem('ja-mode', m); } catch (_) {}
     if (m === 'compare') runCompare();
   }
-  modeTabs.addEventListener('click', e => { const t = e.target.closest('.wb-tab'); if (t) setMode(t.dataset.mode); });
+  modeNav.addEventListener('click', e => { const t = e.target.closest('.ja-sidenav__item'); if (t) setMode(t.dataset.mode); });
 
-  // ---- boot: restore history, reopen the most recent block ----
+  // ---- boot: load the saved history list, but start with an EMPTY editor
+  //           (nothing selected) — the user opens an entry explicitly. ----
   loadStore();
   sortBlocks();
-  if (store.blocks.length) { activeId = store.blocks[0].id; input.value = store.blocks[0].text; }
   renderHistory();
   run();
   try { if (localStorage.getItem('ja-mode') === 'compare') setMode('compare'); } catch (_) {}
