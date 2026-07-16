@@ -365,8 +365,9 @@
 
     /* GitHub-style diff colouring, shared by both presentations via .is-add /
        .is-del / .is-gap: red = in A (removed), green = in B (added). A soft line
-       tint, plus a stronger token tint (.ja-cmp-word) on the exact changed part.
-       Everything is scoped under .ja-cmp-diff so the state classes never leak. */
+       tint, plus a stronger word tint (.ja-cmp-word) on the exact changed part —
+       drawn as a rounded, padded pill like the Analyze annotations, with the
+       removed side struck through. Scoped under .ja-cmp-diff so it never leaks. */
     .ja-cmp-diff { max-height: 62vh; min-height: 220px; overflow: auto;
       font-family: var(--ja-mono); font-size: 12.5px; line-height: 1.7; }
     .ja-cmp-diff .ja-cmp-sign { width: 22px; flex: none; text-align: center; user-select: none;
@@ -378,9 +379,14 @@
     .ja-cmp-diff .is-gap { background: var(--wb-surface-2); }          /* calm, neutral empty side */
     .ja-cmp-diff .is-add > .ja-cmp-sign { color: var(--wb-success-text); }
     .ja-cmp-diff .is-del > .ja-cmp-sign { color: var(--wb-danger-text); }
-    .ja-cmp-diff .ja-cmp-word { border-radius: 3px; padding: 0 1px; }
-    .ja-cmp-diff .is-del .ja-cmp-word { background: color-mix(in srgb, var(--wb-danger)  26%, transparent); }
-    .ja-cmp-diff .is-add .ja-cmp-word { background: color-mix(in srgb, var(--wb-success) 30%, transparent); }
+    .ja-cmp-diff .ja-cmp-word { border-radius: 4px; padding: 0 3px; font-weight: 700; }
+    .ja-cmp-diff .is-del .ja-cmp-word {
+      background: color-mix(in srgb, var(--wb-danger) 40%, transparent);
+      box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--wb-danger) 55%, transparent);
+      text-decoration: line-through; text-decoration-color: var(--wb-danger-text); }
+    .ja-cmp-diff .is-add .ja-cmp-word {
+      background: color-mix(in srgb, var(--wb-success) 40%, transparent);
+      box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--wb-success) 55%, transparent); }
 
     /* — split (side by side): each row is two [sign · code] cells, kept aligned — */
     .ja-cmp-colhead { display: grid; grid-template-columns: 1fr 1fr;
@@ -676,9 +682,6 @@
         <button id="btnCompare" class="wb-btn">
           <span class="wb-ico wb-ico--sm">compare_arrows</span> Compare
         </button>
-        <label class="ja-cmp-check" title="Sort every object's keys before comparing, so key order never counts as a difference">
-          <input type="checkbox" id="cmpSort" checked /> Sort keys first
-        </label>
         <label class="ja-cmp-check" title="Hide identical lines — keep only the differences and the path to them">
           <input type="checkbox" id="cmpDiffOnly" /> Only differences
         </label>
@@ -2234,8 +2237,8 @@
       cmpDiff.innerHTML = cmpEmpty((!ra.node ? 'A' : 'B') + ' has no readable JSON yet — fix it and the comparison updates.');
       cmpSetSummary(null); return;
     }
-    let na = ra.node, nb = rb.node;
-    if ($('cmpSort').checked) { na = sortNodeKeys(na); nb = sortNodeKeys(nb); }
+    // keys are always sorted first, so key order never registers as a difference
+    const na = sortNodeKeys(ra.node), nb = sortNodeKeys(rb.node);
     const built = cmpBuild(na, nb);
     cmpSetSummary(built.stats);
     if (!built.stats.onlyA && !built.stats.onlyB && !built.stats.changed) {
@@ -2253,7 +2256,6 @@
   cmpA.addEventListener('input', cmpDebounced);
   cmpB.addEventListener('input', cmpDebounced);
   $('btnCompare').addEventListener('click', runCompare);
-  $('cmpSort').addEventListener('change', runCompare);
   $('cmpSwap').addEventListener('click', () => { const t = cmpA.value; cmpA.value = cmpB.value; cmpB.value = t; runCompare(); });
   $('cmpClearA').addEventListener('click', () => { cmpA.value = ''; runCompare(); cmpA.focus(); });
   $('cmpClearB').addEventListener('click', () => { cmpB.value = ''; runCompare(); cmpB.focus(); });
