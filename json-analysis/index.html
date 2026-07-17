@@ -98,6 +98,31 @@
     .ja-cmp-editor::-webkit-scrollbar-thumb:hover,
     .ja-cmp-diff::-webkit-scrollbar-thumb:hover { background: var(--wb-fg-subtle); }
 
+    /* Whole-page scrollbar: same thin, theme-aware bar, replacing the fat
+       browser default on the right so it matches every panel above. */
+    html {
+      scrollbar-width: thin;
+      scrollbar-color: var(--wb-border-strong) transparent;
+    }
+    html::-webkit-scrollbar { width: 10px; height: 10px; }
+    html::-webkit-scrollbar-track { background: transparent; }
+    html::-webkit-scrollbar-thumb {
+      background: var(--wb-border-strong); border-radius: var(--wb-radius-pill);
+      border: 3px solid transparent; background-clip: padding-box;
+    }
+    html::-webkit-scrollbar-thumb:hover { background: var(--wb-fg-subtle); }
+
+    /* Textarea resize corner: the native grip renders off-theme grey dots. Mask
+       it with the surface colour and draw a single themed diagonal slash instead
+       — a quiet, on-palette resize affordance. */
+    .ja-editor::-webkit-resizer,
+    .ja-cmp-editor::-webkit-resizer {
+      background-color: var(--wb-surface);
+      background-image: linear-gradient(to top left,
+        transparent 0 41%, var(--wb-border-strong) 41% 59%, transparent 59% 100%);
+      background-repeat: no-repeat;
+    }
+
     /* "Inspect": the original text, read-only, with every fixed spot marked
        inline (added text = red, wrong/extra = struck, normalized = amber). */
     .ja-inspect {
