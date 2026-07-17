@@ -74,6 +74,30 @@
     }
     @media (max-width: 940px) { .ja-editor { min-height: 220px; } }
 
+    /* The textareas + compare diff scroll their own text but aren't wb-scroll-y
+       regions, so they'd fall back to the fat, unthemed system scrollbar. Give
+       them the same thin, theme-aware bar as wb-scroll-y (§27) / the docs
+       sidebar: a transparent track + subtle border-strong thumb. */
+    .ja-editor, .ja-cmp-editor, .ja-cmp-diff {
+      scrollbar-width: thin;
+      scrollbar-color: var(--wb-border-strong) transparent;
+    }
+    .ja-editor::-webkit-scrollbar,
+    .ja-cmp-editor::-webkit-scrollbar,
+    .ja-cmp-diff::-webkit-scrollbar { width: 10px; height: 10px; }
+    .ja-editor::-webkit-scrollbar-track,
+    .ja-cmp-editor::-webkit-scrollbar-track,
+    .ja-cmp-diff::-webkit-scrollbar-track { background: transparent; }
+    .ja-editor::-webkit-scrollbar-thumb,
+    .ja-cmp-editor::-webkit-scrollbar-thumb,
+    .ja-cmp-diff::-webkit-scrollbar-thumb {
+      background: var(--wb-border-strong); border-radius: var(--wb-radius-pill);
+      border: 3px solid transparent; background-clip: padding-box;
+    }
+    .ja-editor::-webkit-scrollbar-thumb:hover,
+    .ja-cmp-editor::-webkit-scrollbar-thumb:hover,
+    .ja-cmp-diff::-webkit-scrollbar-thumb:hover { background: var(--wb-fg-subtle); }
+
     /* "Inspect": the original text, read-only, with every fixed spot marked
        inline (added text = red, wrong/extra = struck, normalized = amber). */
     .ja-inspect {
