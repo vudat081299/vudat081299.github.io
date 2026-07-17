@@ -112,15 +112,22 @@
     }
     html::-webkit-scrollbar-thumb:hover { background: var(--wb-fg-subtle); }
 
-    /* Textarea resize corner: the native grip renders off-theme grey dots. Mask
-       it with the surface colour and draw a single themed diagonal slash instead
-       — a quiet, on-palette resize affordance. */
+    /* Textarea resize corner: suppress the native grey grip and paint our own —
+       a short, round-capped diagonal slash. It's an SVG background on the
+       ::-webkit-resizer (which honours `background` but ignores `mask`), so the
+       ends round via stroke-linecap and nothing paints an opaque square over the
+       textarea's rounded corner — which is what left a few blurred pixels there
+       before. The stroke hard-codes --wb-border-strong (#d4d4d8) because the SVG
+       can't read the token; the .dark rule swaps in its dark value (#34343a). */
     .ja-editor::-webkit-resizer,
     .ja-cmp-editor::-webkit-resizer {
-      background-color: var(--wb-surface);
-      background-image: linear-gradient(to top left,
-        transparent 0 41%, var(--wb-border-strong) 41% 59%, transparent 59% 100%);
-      background-repeat: no-repeat;
+      background: transparent
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cline x1='3.8' y1='6.2' x2='6.2' y2='3.8' stroke='%23d4d4d8' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E")
+        center / contain no-repeat;
+    }
+    .dark .ja-editor::-webkit-resizer,
+    .dark .ja-cmp-editor::-webkit-resizer {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cline x1='3.8' y1='6.2' x2='6.2' y2='3.8' stroke='%2334343a' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
     }
 
     /* "Inspect": the original text, read-only, with every fixed spot marked
