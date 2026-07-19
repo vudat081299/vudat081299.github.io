@@ -1,0 +1,34 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Đóng/mở (Disclosure)</p>
+  <h2>Accordion</h2>
+  <p>Đóng/mở từng phần nội dung. Dựng trên <code>&lt;details&gt;</code> gốc nên <b>không cần JS</b> và
+  truy cập được bằng bàn phím sẵn.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="demo">
+    <div class="demo__stage">
+      <div class="wb-accordion" style="max-width:520px">
+        <details class="wb-accordion__item" open>
+          <summary>Ledger lấy dữ liệu ngân hàng thế nào?</summary>
+          <div class="wb-accordion__body">Qua kết nối đọc-chỉ (read-only) được bạn cấp quyền; không lưu mật khẩu ngân hàng.</div>
+        </details>
+        <details class="wb-accordion__item">
+          <summary>Tôi đặt được nhiều ngân sách không?</summary>
+          <div class="wb-accordion__body">Có — mỗi danh mục một hạn mức riêng, theo tuần hoặc theo tháng.</div>
+        </details>
+        <details class="wb-accordion__item">
+          <summary>Dữ liệu có xuất ra được không?</summary>
+          <div class="wb-accordion__body">Có, xuất CSV bất cứ lúc nào từ màn hình Giao dịch.</div>
+        </details>
+      </div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-accordion"&gt;
+  &lt;details class="wb-accordion__item" open&gt;
+    &lt;summary&gt;Ledger lấy dữ liệu ngân hàng thế nào?&lt;/summary&gt;
+    &lt;div class="wb-accordion__body"&gt;Qua kết nối đọc-chỉ được cấp quyền…&lt;/div&gt;
+  &lt;/details&gt;
+  &lt;details class="wb-accordion__item"&gt; … &lt;/details&gt;
+&lt;/div&gt;</code></pre></div>
+  </div>
+</section>

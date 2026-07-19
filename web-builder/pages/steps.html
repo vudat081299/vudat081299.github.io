@@ -1,0 +1,231 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Điều hướng</p>
+  <h2>Steps / Stepper</h2>
+  <p>Một chuỗi bước có đánh số (hoặc chấm) với đường nối — cho wizard nhiều bước, onboarding, hay
+  timeline tiến trình. Marker là chip trung tính tương phản cao (tier 1 — tiêu <i>contrast</i>, không
+  tiêu màu, cùng idiom với <a href="#/avatar">avatar solid</a>). Mặc định dọc; thêm <code>--horizontal</code>
+  cho hàng ngang, <code>--dot</code> cho timeline mảnh.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-note">
+    <span aria-hidden="true">ℹ️</span>
+    <div>Chuyển bước là <b>logic của app</b>; class chỉ lo phần nhìn — đánh dấu trạng thái mỗi bước bằng
+    <code>.is-done</code> / <code>.is-active</code> / <code>.is-todo</code>.</div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Dọc — có trạng thái (done · active · todo)</h4>
+    <p class="doc-block__desc">Bước xong dùng <code>.is-done</code> (đặt icon <code>check</code> trong marker),
+    bước hiện tại <code>.is-active</code> (viền ring trung tính), bước chưa tới <code>.is-todo</code> (marker rỗng, mờ).</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <ol class="wb-steps">
+          <li class="wb-steps__item is-done">
+            <span class="wb-steps__marker"><span class="wb-ico">check</span></span>
+            <div class="wb-steps__content">
+              <p class="wb-steps__title">Chọn tài khoản nguồn</p>
+              <p class="wb-steps__desc">Vietcombank · •••• 8842</p>
+            </div>
+          </li>
+          <li class="wb-steps__item is-active">
+            <span class="wb-steps__marker">2</span>
+            <div class="wb-steps__content">
+              <p class="wb-steps__title">Nhập số tiền &amp; người nhận</p>
+              <p class="wb-steps__desc">Đang thực hiện…</p>
+            </div>
+          </li>
+          <li class="wb-steps__item is-todo">
+            <span class="wb-steps__marker">3</span>
+            <div class="wb-steps__content">
+              <p class="wb-steps__title">Xác nhận OTP</p>
+              <p class="wb-steps__desc">Mã gửi tới •••• 019</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;ol class="wb-steps"&gt;
+  &lt;li class="wb-steps__item is-done"&gt;
+    &lt;span class="wb-steps__marker"&gt;&lt;span class="wb-ico"&gt;check&lt;/span&gt;&lt;/span&gt;
+    &lt;div class="wb-steps__content"&gt;
+      &lt;p class="wb-steps__title"&gt;Chọn tài khoản nguồn&lt;/p&gt;
+      &lt;p class="wb-steps__desc"&gt;Vietcombank · •••• 8842&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li class="wb-steps__item is-active"&gt;
+    &lt;span class="wb-steps__marker"&gt;2&lt;/span&gt;
+    &lt;div class="wb-steps__content"&gt;…&lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li class="wb-steps__item is-todo"&gt;
+    &lt;span class="wb-steps__marker"&gt;3&lt;/span&gt;
+    &lt;div class="wb-steps__content"&gt;…&lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Bước tạm / chưa chốt — nét đứt (<code>--dashed</code>)</h4>
+    <p class="doc-block__desc">Thêm <code>--dashed</code> vào một <code>.wb-steps__item</code>: marker số + đường nối thành
+    <b>gạch đứt</b> — đọc là bước <b>tuỳ chọn / dự kiến / chưa chốt</b> (đúng idiom “nét đứt = chưa cuối cùng”, §9). Chạy cả ở <code>--horizontal</code>.</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <ol class="wb-steps">
+          <li class="wb-steps__item is-done">
+            <span class="wb-steps__marker"><span class="wb-ico">check</span></span>
+            <div class="wb-steps__content"><p class="wb-steps__title">Lập ngân sách</p><p class="wb-steps__desc">Đã đặt hạn mức tháng.</p></div>
+          </li>
+          <li class="wb-steps__item">
+            <span class="wb-steps__marker">2</span>
+            <div class="wb-steps__content"><p class="wb-steps__title">Ghi giao dịch</p><p class="wb-steps__desc">Nhập khoản chi hằng ngày.</p></div>
+          </li>
+          <li class="wb-steps__item wb-steps__item--dashed">
+            <span class="wb-steps__marker">3</span>
+            <div class="wb-steps__content"><p class="wb-steps__title">Đặt mục tiêu tiết kiệm (tuỳ chọn)</p><p class="wb-steps__desc">Bước dự kiến — có thể bỏ qua.</p></div>
+          </li>
+          <li class="wb-steps__item wb-steps__item--dashed">
+            <span class="wb-steps__marker">4</span>
+            <div class="wb-steps__content"><p class="wb-steps__title">Xuất báo cáo</p><p class="wb-steps__desc">Chưa chốt lịch.</p></div>
+          </li>
+        </ol>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;li class="wb-steps__item wb-steps__item--dashed"&gt;
+  &lt;span class="wb-steps__marker"&gt;3&lt;/span&gt;
+  &lt;div class="wb-steps__content"&gt;
+    &lt;p class="wb-steps__title"&gt;Đặt mục tiêu tiết kiệm (tuỳ chọn)&lt;/p&gt;
+    &lt;p class="wb-steps__desc"&gt;Bước dự kiến — có thể bỏ qua.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/li&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Dọc — đánh số + ghi chú (<code>__note</code>)</h4>
+    <p class="doc-block__desc">Mọi bước cùng cấp (không trạng thái) — marker số đặc. Treo một pill gạch đứt
+    <code>.wb-steps__note</code> dưới bước để ghi nhánh lặp / lưu ý.</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <ol class="wb-steps">
+          <li class="wb-steps__item">
+            <span class="wb-steps__marker">1</span>
+            <div class="wb-steps__content">
+              <p class="wb-steps__title">Tạo ngân sách</p>
+              <p class="wb-steps__desc">Đặt hạn mức cho từng nhóm chi.</p>
+            </div>
+          </li>
+          <li class="wb-steps__item">
+            <span class="wb-steps__marker">2</span>
+            <div class="wb-steps__content">
+              <p class="wb-steps__title">Gán giao dịch</p>
+              <p class="wb-steps__desc">Mỗi khoản chi vào đúng nhóm.</p>
+              <span class="wb-steps__note">↺ Sai nhóm → gán lại</span>
+            </div>
+          </li>
+          <li class="wb-steps__item">
+            <span class="wb-steps__marker">3</span>
+            <div class="wb-steps__content">
+              <p class="wb-steps__title">Theo dõi</p>
+              <p class="wb-steps__desc">Xem tiến độ so với hạn mức.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;ol class="wb-steps"&gt;
+  &lt;li class="wb-steps__item"&gt;
+    &lt;span class="wb-steps__marker"&gt;1&lt;/span&gt;
+    &lt;div class="wb-steps__content"&gt;
+      &lt;p class="wb-steps__title"&gt;Tạo ngân sách&lt;/p&gt;
+      &lt;p class="wb-steps__desc"&gt;Đặt hạn mức cho từng nhóm chi.&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li class="wb-steps__item"&gt;
+    &lt;span class="wb-steps__marker"&gt;2&lt;/span&gt;
+    &lt;div class="wb-steps__content"&gt;
+      &lt;p class="wb-steps__title"&gt;Gán giao dịch&lt;/p&gt;
+      &lt;span class="wb-steps__note"&gt;↺ Sai nhóm → gán lại&lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Timeline mảnh (<code>--dot</code>)</h4>
+    <p class="doc-block__desc">Marker thành chấm nhỏ (bỏ số) — hợp mốc thời gian / nhật ký giao dịch.</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <ol class="wb-steps wb-steps--dot">
+          <li class="wb-steps__item">
+            <span class="wb-steps__marker"></span>
+            <div class="wb-steps__content">
+              <p class="wb-steps__title">Khởi tạo lệnh chuyển</p>
+              <p class="wb-steps__desc">09:41 · 2.000.000&nbsp;₫</p>
+            </div>
+          </li>
+          <li class="wb-steps__item">
+            <span class="wb-steps__marker"></span>
+            <div class="wb-steps__content">
+              <p class="wb-steps__title">Ngân hàng xử lý</p>
+              <p class="wb-steps__desc">09:41</p>
+            </div>
+          </li>
+          <li class="wb-steps__item">
+            <span class="wb-steps__marker"></span>
+            <div class="wb-steps__content">
+              <p class="wb-steps__title">Hoàn tất</p>
+              <p class="wb-steps__desc">09:42 · thành công</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;ol class="wb-steps wb-steps--dot"&gt;
+  &lt;li class="wb-steps__item"&gt;
+    &lt;span class="wb-steps__marker"&gt;&lt;/span&gt;
+    &lt;div class="wb-steps__content"&gt;
+      &lt;p class="wb-steps__title"&gt;Khởi tạo lệnh chuyển&lt;/p&gt;
+      &lt;p class="wb-steps__desc"&gt;09:41 · 2.000.000 ₫&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  …
+&lt;/ol&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Ngang (<code>--horizontal</code>)</h4>
+    <p class="doc-block__desc">Marker trên, nhãn dưới, đường nối chạy giữa các marker — cho wizard checkout / nhiều bước.</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <ol class="wb-steps wb-steps--horizontal">
+          <li class="wb-steps__item is-done">
+            <span class="wb-steps__marker"><span class="wb-ico">check</span></span>
+            <div class="wb-steps__content"><p class="wb-steps__title">Giỏ hàng</p></div>
+          </li>
+          <li class="wb-steps__item is-active">
+            <span class="wb-steps__marker">2</span>
+            <div class="wb-steps__content"><p class="wb-steps__title">Địa chỉ</p></div>
+          </li>
+          <li class="wb-steps__item is-todo">
+            <span class="wb-steps__marker">3</span>
+            <div class="wb-steps__content"><p class="wb-steps__title">Thanh toán</p></div>
+          </li>
+          <li class="wb-steps__item is-todo">
+            <span class="wb-steps__marker">4</span>
+            <div class="wb-steps__content"><p class="wb-steps__title">Hoàn tất</p></div>
+          </li>
+        </ol>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;ol class="wb-steps wb-steps--horizontal"&gt;
+  &lt;li class="wb-steps__item is-done"&gt;
+    &lt;span class="wb-steps__marker"&gt;&lt;span class="wb-ico"&gt;check&lt;/span&gt;&lt;/span&gt;
+    &lt;div class="wb-steps__content"&gt;&lt;p class="wb-steps__title"&gt;Giỏ hàng&lt;/p&gt;&lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li class="wb-steps__item is-active"&gt;
+    &lt;span class="wb-steps__marker"&gt;2&lt;/span&gt;
+    &lt;div class="wb-steps__content"&gt;&lt;p class="wb-steps__title"&gt;Địa chỉ&lt;/p&gt;&lt;/div&gt;
+  &lt;/li&gt;
+  …
+&lt;/ol&gt;</code></pre></div>
+    </div>
+  </div>
+</section>

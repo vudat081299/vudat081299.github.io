@@ -1,0 +1,110 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Cấu trúc</p>
+  <h2>List / Grid kéo–thả</h2>
+  <p>Sắp xếp lại thứ tự một danh sách, lưới thẻ, hoặc <b>hàng trong bảng</b> bằng cách <b>kéo–thả</b> (một cấp, không
+  lồng nhau như tree). Khi bắt đầu kéo, chỗ sẽ thả hiện một <b>ô/hàng viền đứt nét</b> (dashed) để mắt bắt ngay vị trí đích.</p>
+</div>
+
+<section class="doc-sec">
+  <h3>Danh sách — đổi thứ tự</h3>
+  <p class="doc-sec__desc">Hợp để người dùng sắp lại thứ tự danh mục, ví, hay widget dashboard. Kéo cả hàng (tay nắm chỉ là gợi ý).</p>
+  <div class="demo">
+    <div class="demo__stage">
+      <div class="wb-sortable" data-sortable style="max-width:360px">
+        <div class="wb-sortable__item" draggable="true"><span class="wb-grip" aria-hidden="true"></span><span class="wb-tree__ico">🍜</span><span class="wb-sortable__label">Ăn uống</span><span class="wb-sortable__meta">−3.280.000 ₫</span></div>
+        <div class="wb-sortable__item" draggable="true"><span class="wb-grip" aria-hidden="true"></span><span class="wb-tree__ico">🏠</span><span class="wb-sortable__label">Nhà ở</span><span class="wb-sortable__meta">−6.500.000 ₫</span></div>
+        <div class="wb-sortable__item" draggable="true"><span class="wb-grip" aria-hidden="true"></span><span class="wb-tree__ico">🚕</span><span class="wb-sortable__label">Di chuyển</span><span class="wb-sortable__meta">−1.150.000 ₫</span></div>
+        <div class="wb-sortable__item" draggable="true"><span class="wb-grip" aria-hidden="true"></span><span class="wb-tree__ico">🎬</span><span class="wb-sortable__label">Giải trí</span><span class="wb-sortable__meta">−820.000 ₫</span></div>
+        <div class="wb-sortable__item" draggable="true"><span class="wb-grip" aria-hidden="true"></span><span class="wb-tree__ico">💊</span><span class="wb-sortable__label">Sức khỏe</span><span class="wb-sortable__meta">−450.000 ₫</span></div>
+      </div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-sortable" data-sortable&gt;
+  &lt;div class="wb-sortable__item" draggable="true"&gt;
+    &lt;span class="wb-grip"&gt;&lt;/span&gt;
+    &lt;span class="wb-sortable__label"&gt;Ăn uống&lt;/span&gt;
+    &lt;span class="wb-sortable__meta"&gt;−3.280.000 ₫&lt;/span&gt;
+  &lt;/div&gt;
+  … &lt;!-- các hàng khác --&gt;
+&lt;/div&gt;
+&lt;!-- ô thả (dashed) do JS chèn: &lt;div class="wb-sortable__ph"&gt;&lt;/div&gt; --&gt;</code></pre></div>
+  </div>
+  <div class="doc-note">
+    <span>💡</span>
+    <div>Ở tài liệu này, kéo–thả dùng HTML5 drag-and-drop thuần: khi kéo, một <code>.wb-sortable__ph</code> (viền đứt) hiện ở
+    vị trí sẽ thả. Trong app của bạn dùng <b>dnd-kit</b> (<code>@dnd-kit/sortable</code>) cho mượt + hỗ trợ bàn phím,
+    và giữ nguyên các class <code>wb-sortable*</code>.</div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Lưới thẻ — đổi vị trí</h3>
+  <p class="doc-sec__desc">Cùng cơ chế, thêm <code>--grid</code> để xếp thành lưới thẻ (vd sắp lại các thẻ trên dashboard). Tay nắm nằm <b>góc trên–trái</b> thẻ, thẳng lề với chữ; ô thả vẫn là dashed.</p>
+  <div class="demo">
+    <div class="demo__stage">
+      <div class="wb-sortable wb-sortable--grid" data-sortable>
+        <div class="wb-sortable__item" draggable="true"><span class="wb-grip" aria-hidden="true"></span><span class="wb-cell-strong">Số dư</span><span class="wb-cell-muted" style="font-size:12.5px">47.590.000 ₫</span></div>
+        <div class="wb-sortable__item" draggable="true"><span class="wb-grip" aria-hidden="true"></span><span class="wb-cell-strong">Chi tháng này</span><span class="wb-cell-muted" style="font-size:12.5px">−11.840.000 ₫</span></div>
+        <div class="wb-sortable__item" draggable="true"><span class="wb-grip" aria-hidden="true"></span><span class="wb-cell-strong">Ngân sách</span><span class="wb-cell-muted" style="font-size:12.5px">còn 34%</span></div>
+        <div class="wb-sortable__item" draggable="true"><span class="wb-grip" aria-hidden="true"></span><span class="wb-cell-strong">Công nợ</span><span class="wb-cell-muted" style="font-size:12.5px">2 khoản</span></div>
+      </div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-sortable wb-sortable--grid" data-sortable&gt;
+  &lt;div class="wb-sortable__item" draggable="true"&gt;
+    &lt;span class="wb-grip"&gt;&lt;/span&gt; &lt;!-- góc trên–trái --&gt;
+    &lt;span class="wb-cell-strong"&gt;Số dư&lt;/span&gt;
+    &lt;span class="wb-cell-muted"&gt;47.590.000 ₫&lt;/span&gt;
+  &lt;/div&gt; …
+&lt;/div&gt;</code></pre></div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Bỏ tay nắm — kéo cả thẻ</h3>
+  <p class="doc-sec__desc">Thêm <code>--no-grip</code> để ẩn icon 6 chấm; cả thẻ (hoặc cả hàng ở danh sách) trở thành vùng kéo, con trỏ đổi thành <code>grab</code>. Hợp khi muốn giao diện thật gọn.</p>
+  <div class="demo">
+    <div class="demo__stage">
+      <div class="wb-sortable wb-sortable--grid wb-sortable--no-grip" data-sortable>
+        <div class="wb-sortable__item" draggable="true"><span class="wb-cell-strong">Số dư</span><span class="wb-cell-muted" style="font-size:12.5px">47.590.000 ₫</span></div>
+        <div class="wb-sortable__item" draggable="true"><span class="wb-cell-strong">Chi tháng này</span><span class="wb-cell-muted" style="font-size:12.5px">−11.840.000 ₫</span></div>
+        <div class="wb-sortable__item" draggable="true"><span class="wb-cell-strong">Ngân sách</span><span class="wb-cell-muted" style="font-size:12.5px">còn 34%</span></div>
+        <div class="wb-sortable__item" draggable="true"><span class="wb-cell-strong">Công nợ</span><span class="wb-cell-muted" style="font-size:12.5px">2 khoản</span></div>
+      </div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-sortable wb-sortable--grid wb-sortable--no-grip" data-sortable&gt;
+  &lt;div class="wb-sortable__item" draggable="true"&gt; … &lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Bảng — kéo sắp xếp hàng</h3>
+  <p class="doc-sec__desc">Bảng dữ liệu mà kéo được cả <b>hàng</b> để đổi thứ tự (ưu tiên hạng mục, thứ tự hiển thị…).
+  Thêm <code>--sortable</code>, cho mỗi <code>&lt;tr&gt;</code> một ô tay nắm + <code>draggable</code>, và đặt
+  <code>data-sortable-rows</code> lên <code>&lt;tbody&gt;</code>. Khi kéo, đích là một <b>hàng viền đứt</b>.</p>
+  <div class="demo">
+    <div class="demo__stage">
+      <div class="wb-card" style="max-width:540px">
+        <div class="wb-table-scroll">
+          <table class="wb-table wb-table--sortable wb-table--compact">
+            <thead><tr><th style="width:30px"></th><th>Danh mục</th><th class="wb-num">Đã chi</th><th class="wb-num">Ngân sách</th></tr></thead>
+            <tbody data-sortable-rows>
+              <tr draggable="true"><td class="wb-row-grip"><span class="wb-grip" aria-hidden="true"></span></td><td class="wb-cell-strong">Nhà ở</td><td class="wb-num wb-num--strong">6.500.000&nbsp;₫</td><td class="wb-num wb-cell-muted">6.500.000&nbsp;₫</td></tr>
+              <tr draggable="true"><td class="wb-row-grip"><span class="wb-grip" aria-hidden="true"></span></td><td class="wb-cell-strong">Ăn uống</td><td class="wb-num wb-num--strong">3.280.000&nbsp;₫</td><td class="wb-num wb-cell-muted">4.000.000&nbsp;₫</td></tr>
+              <tr draggable="true"><td class="wb-row-grip"><span class="wb-grip" aria-hidden="true"></span></td><td class="wb-cell-strong">Di chuyển</td><td class="wb-num wb-num--strong">1.150.000&nbsp;₫</td><td class="wb-num wb-cell-muted">2.000.000&nbsp;₫</td></tr>
+              <tr draggable="true"><td class="wb-row-grip"><span class="wb-grip" aria-hidden="true"></span></td><td class="wb-cell-strong">Giải trí</td><td class="wb-num wb-num--strong">820.000&nbsp;₫</td><td class="wb-num wb-cell-muted">1.000.000&nbsp;₫</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;table class="wb-table wb-table--sortable"&gt;
+  &lt;tbody data-sortable-rows&gt;
+    &lt;tr draggable="true"&gt;
+      &lt;td class="wb-row-grip"&gt;&lt;span class="wb-grip"&gt;&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;Nhà ở&lt;/td&gt; …
+    &lt;/tr&gt; …
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;!-- hàng đích khi kéo (JS chèn): &lt;tr class="wb-row-ph"&gt;&lt;td colspan="n"&gt;&lt;div class="wb-row-ph__inner"&gt;&lt;/div&gt;&lt;/td&gt;&lt;/tr&gt; --&gt;</code></pre></div>
+  </div>
+</section>

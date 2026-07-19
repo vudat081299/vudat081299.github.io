@@ -1,0 +1,58 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Cấu trúc</p>
+  <h2>Lưới ô cố định</h2>
+  <p>Một lưới có <b>số ô cố định</b>: mỗi phần tử giữ đúng ô của nó, ô trống vẫn trống — nên bạn <b>đặt phần tử vào vị trí bất kỳ</b>
+  và chừa khoảng trống giữa chúng tuỳ ý. Kéo một thẻ thả vào ô trống để chuyển; thả trúng ô đang có thẻ thì <b>hai thẻ đổi chỗ</b> (swap).
+  Khác với <a href="#/sortable">List/Grid kéo–thả</a> — cái đó dồn khít, không giữ ô trống.</p>
+</div>
+
+<section class="doc-sec">
+  <h3>Lưới thẻ — đặt vào ô bất kỳ</h3>
+  <p class="doc-sec__desc">Thêm <code>--4</code> để khoá 4 cột. Ô trống hiện <b>viền đứt</b>; kéo thẻ vào ô trống để chuyển, hoặc thả lên thẻ khác để đổi chỗ.</p>
+  <div class="demo">
+    <div class="demo__stage">
+      <div class="wb-slotgrid wb-slotgrid--4" data-slotgrid style="max-width:520px">
+        <div class="wb-slotgrid__cell"><div class="wb-slotgrid__item" draggable="true"><span class="wb-cell-strong">Số dư</span><span class="wb-cell-muted" style="font-size:12.5px">47.590.000 ₫</span></div></div>
+        <div class="wb-slotgrid__cell"></div>
+        <div class="wb-slotgrid__cell"><div class="wb-slotgrid__item" draggable="true"><span class="wb-cell-strong">Chi tháng</span><span class="wb-cell-muted" style="font-size:12.5px">−11.840.000 ₫</span></div></div>
+        <div class="wb-slotgrid__cell"><div class="wb-slotgrid__item" draggable="true"><span class="wb-cell-strong">Thu tháng</span><span class="wb-cell-muted" style="font-size:12.5px">+18.200.000 ₫</span></div></div>
+        <div class="wb-slotgrid__cell"></div>
+        <div class="wb-slotgrid__cell"><div class="wb-slotgrid__item" draggable="true"><span class="wb-cell-strong">Ngân sách</span><span class="wb-cell-muted" style="font-size:12.5px">còn 34%</span></div></div>
+        <div class="wb-slotgrid__cell"></div>
+        <div class="wb-slotgrid__cell"><div class="wb-slotgrid__item" draggable="true"><span class="wb-cell-strong">Công nợ</span><span class="wb-cell-muted" style="font-size:12.5px">2 khoản</span></div></div>
+      </div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-slotgrid wb-slotgrid--4" data-slotgrid&gt;
+  &lt;div class="wb-slotgrid__cell"&gt;
+    &lt;div class="wb-slotgrid__item" draggable="true"&gt;…&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="wb-slotgrid__cell"&gt;&lt;/div&gt;   &lt;!-- ô trống (giữ nguyên) --&gt;
+  …
+&lt;/div&gt;</code></pre></div>
+  </div>
+  <div class="doc-note">
+    <span>💡</span>
+    <div>Ô trống chỉ là <code>&lt;div class="wb-slotgrid__cell"&gt;&lt;/div&gt;</code> (không chứa item — nhận diện qua <code>:not(:has(*))</code>, không ngại whitespace).
+    Tài liệu dùng HTML5 drag; trong app dùng <b>dnd-kit</b> với <code>rectSwappingStrategy</code> và giữ nguyên các class <code>wb-slotgrid*</code>.</div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Danh sách ô cố định (1 cột)</h3>
+  <p class="doc-sec__desc"><code>--1</code> cho một cột: các hàng cố định, vẫn chừa được hàng trống ở giữa. Kéo để đặt hàng vào đúng vị trí mong muốn.</p>
+  <div class="demo">
+    <div class="demo__stage">
+      <div class="wb-slotgrid wb-slotgrid--1" data-slotgrid style="max-width:320px">
+        <div class="wb-slotgrid__cell"><div class="wb-slotgrid__item" draggable="true"><span class="wb-cell-strong">Ví tiền mặt</span><span class="wb-cell-muted" style="font-size:12.5px">3.200.000 ₫</span></div></div>
+        <div class="wb-slotgrid__cell"></div>
+        <div class="wb-slotgrid__cell"><div class="wb-slotgrid__item" draggable="true"><span class="wb-cell-strong">Thẻ tín dụng</span><span class="wb-cell-muted" style="font-size:12.5px">−5.400.000 ₫</span></div></div>
+        <div class="wb-slotgrid__cell"><div class="wb-slotgrid__item" draggable="true"><span class="wb-cell-strong">Tiết kiệm</span><span class="wb-cell-muted" style="font-size:12.5px">120.000.000 ₫</span></div></div>
+      </div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-slotgrid wb-slotgrid--1" data-slotgrid&gt;
+  &lt;div class="wb-slotgrid__cell"&gt;&lt;div class="wb-slotgrid__item" draggable="true"&gt;…&lt;/div&gt;&lt;/div&gt;
+  &lt;div class="wb-slotgrid__cell"&gt;&lt;/div&gt;
+  …
+&lt;/div&gt;</code></pre></div>
+  </div>
+</section>

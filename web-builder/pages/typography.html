@@ -1,0 +1,84 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Nền tảng</p>
+  <h2>Typography</h2>
+  <p>Một họ chữ duy nhất, phân cấp bằng <b>cỡ + độ đậm + màu</b> chứ không “bùng nổ” kích thước.
+  Chữ nền nã để dữ liệu tiền là thứ nổi bật nhất trên màn hình.</p>
+</div>
+
+<section class="doc-sec">
+  <h3>Thang cỡ chữ</h3>
+  <p class="doc-sec__desc">Các cỡ dùng thật trong hệ. Giữ số bước ít và có mục đích rõ ràng.</p>
+  <div class="type-scale">
+    <div class="type-row">
+      <div class="type-row__meta">Display · 30 / 700</div>
+      <div class="type-row__sample" style="font-size:30px;font-weight:700;letter-spacing:-.02em">47.590.000&nbsp;₫</div>
+    </div>
+    <div class="type-row">
+      <div class="type-row__meta">Tiêu đề trang · 27 / 700</div>
+      <div class="type-row__sample" style="font-size:27px;font-weight:700;letter-spacing:-.02em">Tổng quan tài chính</div>
+    </div>
+    <div class="type-row">
+      <div class="type-row__meta">Mục lớn · 20 / 650</div>
+      <div class="type-row__sample" style="font-size:20px;font-weight:650">Giao dịch gần đây</div>
+    </div>
+    <div class="type-row">
+      <div class="type-row__meta">Tiêu đề thẻ · 15 / 650</div>
+      <div class="type-row__sample" style="font-size:15px;font-weight:650">Khoản phải thu</div>
+    </div>
+    <div class="type-row">
+      <div class="type-row__meta">Body · 14 / 400</div>
+      <div class="type-row__sample" style="font-size:14px">Lương tháng 7 từ Công ty ABC, đã ghi nhận vào tài khoản Vietcombank.</div>
+    </div>
+    <div class="type-row">
+      <div class="type-row__meta">Phụ / help · 13 / 400</div>
+      <div class="type-row__sample" style="font-size:13px;color:var(--wb-fg-muted)">Tối đa 200 ký tự.</div>
+    </div>
+    <div class="type-row">
+      <div class="type-row__meta">Caption · 12 / 500</div>
+      <div class="type-row__sample" style="font-size:12px;color:var(--wb-fg-muted)">Cập nhật 2 phút trước</div>
+    </div>
+    <div class="type-row">
+      <div class="type-row__meta">Label bảng · 11.5 / 600</div>
+      <div class="type-row__sample" style="font-size:11.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--wb-fg-muted)">Số tiền</div>
+    </div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Độ đậm — phân cấp bằng weight, không đổi cỡ</h3>
+  <p class="doc-sec__desc">Mạnh = <code>--wb-fg</code> @ 600–650, phụ = <code>--wb-fg-muted</code>, mờ = <code>--wb-fg-subtle</code>.</p>
+  <div class="wb-grid wb-grid--auto" style="--wb-grid-min:150px;gap:12px">
+    <div class="weight-cell"><div class="weight-cell__n">400 · Regular</div><div class="weight-cell__s" style="font-weight:400">Số dư khả dụng</div></div>
+    <div class="weight-cell"><div class="weight-cell__n">500 · Medium</div><div class="weight-cell__s" style="font-weight:500">Số dư khả dụng</div></div>
+    <div class="weight-cell"><div class="weight-cell__n">600 · Semibold</div><div class="weight-cell__s" style="font-weight:600">Số dư khả dụng</div></div>
+    <div class="weight-cell"><div class="weight-cell__n">700 · Bold</div><div class="weight-cell__s" style="font-weight:700">Số dư khả dụng</div></div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Số là dữ liệu tài chính — đối xử tử tế</h3>
+  <p class="doc-sec__desc">Căn phải, dùng chữ số tabular (<code>tabular-nums</code>) để các cột thẳng hàng.</p>
+  <div class="demo demo--plain">
+    <div class="demo__stage">
+      <div class="wb-grid wb-grid--2" style="gap:24px;max-width:520px">
+        <div>
+          <div class="wb-cell-muted" style="font-size:12px;margin-bottom:8px">✗ Chữ số thường (lệch cột)</div>
+          <div style="font-feature-settings:'tnum' 0;font-variant-numeric:normal;text-align:right;line-height:1.7">
+            1.280.000&nbsp;₫<br>47.590.000&nbsp;₫<br>−6.500.000&nbsp;₫
+          </div>
+        </div>
+        <div>
+          <div class="wb-cell-muted" style="font-size:12px;margin-bottom:8px">✓ Tabular (thẳng cột)</div>
+          <div style="font-variant-numeric:tabular-nums;font-feature-settings:'tnum' 1;text-align:right;line-height:1.7">
+            1.280.000&nbsp;₫<br>47.590.000&nbsp;₫<br>−6.500.000&nbsp;₫
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="doc-note">
+    <span>💡</span>
+    <div>Dùng locale của app (<code>1.234.567&nbsp;₫</code>) và một <b>non-breaking space</b> trước <code>₫</code>.
+    Class <code>.wb-num</code> đã bật sẵn tabular + căn phải — cứ thêm vào <code>&lt;th&gt;</code>/<code>&lt;td&gt;</code> cột tiền.</div>
+  </div>
+</section>

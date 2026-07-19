@@ -1,0 +1,480 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Hiển thị dữ liệu</p>
+  <h2>Charts</h2>
+  <p>Biểu đồ tài chính dựng bằng <b>SVG/CSS thuần</b> (không thêm thư viện vào skill) — đủ để chốt phần nhìn:
+  bảng màu, trục, lưới, chú thích (legend), tooltip. Trong app của bạn map sang <b>Recharts</b> và truyền
+  đúng bộ token màu <code>--wb-chart-*</code> để trông y hệt.</p>
+</div>
+
+<section class="doc-sec">
+  <h3>Đường / vùng — xu hướng chi tiêu</h3>
+  <p class="doc-sec__desc">Chi theo tháng. Đường + vùng tô mờ, có lưới ngang, nhãn trục, điểm mốc và <b>tooltip hiện khi rê chuột</b> vào điểm.</p>
+  <div class="demo">
+    <div class="demo__stage">
+      <div class="wb-grid wb-grid--2">
+      <div class="wb-card wb-chart-scheme--mono"><div class="wb-card__body">
+        <p class="wb-chart__title">Chi tiêu 6 tháng · xám (neutral)</p>
+        <p class="wb-chart__sub">Ưu tiên bảng màu trung tính trước</p>
+        <div class="wb-chart">
+          <svg class="wb-chart__svg" viewBox="0 0 340 172" aria-label="Biểu đồ đường chi tiêu 6 tháng (xám)">
+            <line class="wb-grid-line" x1="40" y1="22"  x2="320" y2="22"/>
+            <line class="wb-grid-line" x1="40" y1="81"  x2="320" y2="81"/>
+            <line class="wb-axis-line" x1="40" y1="140" x2="320" y2="140"/>
+            <text class="wb-axis-label" x="2"  y="26">12</text>
+            <text class="wb-axis-label" x="8"  y="85">6</text>
+            <text class="wb-axis-label" x="14" y="144">0</text>
+            <path class="wb-series-area" style="fill:var(--wb-chart-expense)" d="M40,58 L96,49 L152,66 L208,22 L264,38 L320,22 L320,140 L40,140 Z"/>
+            <polyline class="wb-series-line" style="stroke:var(--wb-chart-expense)" points="40,58 96,49 152,66 208,22 264,38 320,22"/>
+            <g class="wb-point"><circle class="wb-point__hit" cx="40" cy="58" r="14"/><circle class="wb-series-dot" style="fill:var(--wb-chart-expense)" cx="40" cy="58" r="3.5"/><g class="wb-point__tip" transform="translate(40,58)"><rect x="-20" y="-26" width="40" height="17" rx="4"/><text x="0" y="-14" text-anchor="middle">8,3tr</text></g></g>
+            <g class="wb-point"><circle class="wb-point__hit" cx="96" cy="49" r="14"/><circle class="wb-series-dot" style="fill:var(--wb-chart-expense)" cx="96" cy="49" r="3.5"/><g class="wb-point__tip" transform="translate(96,49)"><rect x="-20" y="-26" width="40" height="17" rx="4"/><text x="0" y="-14" text-anchor="middle">9,3tr</text></g></g>
+            <g class="wb-point"><circle class="wb-point__hit" cx="152" cy="66" r="14"/><circle class="wb-series-dot" style="fill:var(--wb-chart-expense)" cx="152" cy="66" r="3.5"/><g class="wb-point__tip" transform="translate(152,66)"><rect x="-20" y="-26" width="40" height="17" rx="4"/><text x="0" y="-14" text-anchor="middle">7,5tr</text></g></g>
+            <g class="wb-point"><circle class="wb-point__hit" cx="208" cy="22" r="14"/><circle class="wb-series-dot" style="fill:var(--wb-chart-expense)" cx="208" cy="22" r="4"/><g class="wb-point__tip" transform="translate(208,22)"><rect x="-20" y="-26" width="40" height="17" rx="4"/><text x="0" y="-14" text-anchor="middle">11,8tr</text></g></g>
+            <g class="wb-point"><circle class="wb-point__hit" cx="264" cy="38" r="14"/><circle class="wb-series-dot" style="fill:var(--wb-chart-expense)" cx="264" cy="38" r="3.5"/><g class="wb-point__tip" transform="translate(264,38)"><rect x="-20" y="-26" width="40" height="17" rx="4"/><text x="0" y="-14" text-anchor="middle">10,4tr</text></g></g>
+            <g class="wb-point"><circle class="wb-point__hit" cx="320" cy="22" r="14"/><circle class="wb-series-dot" style="fill:var(--wb-chart-expense)" cx="320" cy="22" r="3.5"/><g class="wb-point__tip" transform="translate(320,22)"><rect x="-20" y="-26" width="40" height="17" rx="4"/><text x="0" y="-14" text-anchor="middle">12,0tr</text></g></g>
+            <text class="wb-axis-label" x="40"  y="158" text-anchor="middle">T2</text>
+            <text class="wb-axis-label" x="96"  y="158" text-anchor="middle">T3</text>
+            <text class="wb-axis-label" x="152" y="158" text-anchor="middle">T4</text>
+            <text class="wb-axis-label" x="208" y="158" text-anchor="middle">T5</text>
+            <text class="wb-axis-label" x="264" y="158" text-anchor="middle">T6</text>
+            <text class="wb-axis-label" x="320" y="158" text-anchor="middle">T7</text>
+          </svg>
+          <p class="wb-chart__sub" style="margin:6px 0 0">Cùng dữ liệu, thang màu trung tính.</p>
+        </div>
+      </div></div>
+      <div class="wb-card"><div class="wb-card__body">
+        <p class="wb-chart__title">Chi tiêu 6 tháng · màu</p>
+        <p class="wb-chart__sub">Đơn vị: triệu ₫</p>
+        <div class="wb-chart">
+          <svg class="wb-chart__svg" viewBox="0 0 340 172" aria-label="Biểu đồ đường chi tiêu 6 tháng">
+            <line class="wb-grid-line" x1="40" y1="22"  x2="320" y2="22"/>
+            <line class="wb-grid-line" x1="40" y1="81"  x2="320" y2="81"/>
+            <line class="wb-axis-line" x1="40" y1="140" x2="320" y2="140"/>
+            <text class="wb-axis-label" x="2"  y="26">12</text>
+            <text class="wb-axis-label" x="8"  y="85">6</text>
+            <text class="wb-axis-label" x="14" y="144">0</text>
+            <path class="wb-series-area" style="fill:var(--wb-chart-expense)" d="M40,58 L96,49 L152,66 L208,22 L264,38 L320,22 L320,140 L40,140 Z"/>
+            <polyline class="wb-series-line" style="stroke:var(--wb-chart-expense)" points="40,58 96,49 152,66 208,22 264,38 320,22"/>
+            <!-- Each point = invisible hit-circle + dot + tooltip group (shows on hover). -->
+            <g class="wb-point"><circle class="wb-point__hit" cx="40" cy="58" r="14"/><circle class="wb-series-dot" style="fill:var(--wb-chart-expense)" cx="40" cy="58" r="3.5"/><g class="wb-point__tip" transform="translate(40,58)"><rect x="-20" y="-26" width="40" height="17" rx="4"/><text x="0" y="-14" text-anchor="middle">8,3tr</text></g></g>
+            <g class="wb-point"><circle class="wb-point__hit" cx="96" cy="49" r="14"/><circle class="wb-series-dot" style="fill:var(--wb-chart-expense)" cx="96" cy="49" r="3.5"/><g class="wb-point__tip" transform="translate(96,49)"><rect x="-20" y="-26" width="40" height="17" rx="4"/><text x="0" y="-14" text-anchor="middle">9,3tr</text></g></g>
+            <g class="wb-point"><circle class="wb-point__hit" cx="152" cy="66" r="14"/><circle class="wb-series-dot" style="fill:var(--wb-chart-expense)" cx="152" cy="66" r="3.5"/><g class="wb-point__tip" transform="translate(152,66)"><rect x="-20" y="-26" width="40" height="17" rx="4"/><text x="0" y="-14" text-anchor="middle">7,5tr</text></g></g>
+            <g class="wb-point"><circle class="wb-point__hit" cx="208" cy="22" r="14"/><circle class="wb-series-dot" style="fill:var(--wb-chart-expense)" cx="208" cy="22" r="4"/><g class="wb-point__tip" transform="translate(208,22)"><rect x="-20" y="-26" width="40" height="17" rx="4"/><text x="0" y="-14" text-anchor="middle">11,8tr</text></g></g>
+            <g class="wb-point"><circle class="wb-point__hit" cx="264" cy="38" r="14"/><circle class="wb-series-dot" style="fill:var(--wb-chart-expense)" cx="264" cy="38" r="3.5"/><g class="wb-point__tip" transform="translate(264,38)"><rect x="-20" y="-26" width="40" height="17" rx="4"/><text x="0" y="-14" text-anchor="middle">10,4tr</text></g></g>
+            <g class="wb-point"><circle class="wb-point__hit" cx="320" cy="22" r="14"/><circle class="wb-series-dot" style="fill:var(--wb-chart-expense)" cx="320" cy="22" r="3.5"/><g class="wb-point__tip" transform="translate(320,22)"><rect x="-20" y="-26" width="40" height="17" rx="4"/><text x="0" y="-14" text-anchor="middle">12,0tr</text></g></g>
+            <text class="wb-axis-label" x="40"  y="158" text-anchor="middle">T2</text>
+            <text class="wb-axis-label" x="96"  y="158" text-anchor="middle">T3</text>
+            <text class="wb-axis-label" x="152" y="158" text-anchor="middle">T4</text>
+            <text class="wb-axis-label" x="208" y="158" text-anchor="middle">T5</text>
+            <text class="wb-axis-label" x="264" y="158" text-anchor="middle">T6</text>
+            <text class="wb-axis-label" x="320" y="158" text-anchor="middle">T7</text>
+          </svg>
+          <p class="wb-chart__sub" style="margin:6px 0 0">Di chuột vào điểm để xem chi tiết.</p>
+        </div>
+      </div></div>
+      </div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;svg class="wb-chart__svg" viewBox="0 0 340 172"&gt;
+  &lt;line class="wb-grid-line" x1="40" y1="22" x2="320" y2="22"/&gt;
+  &lt;line class="wb-axis-line" x1="40" y1="140" x2="320" y2="140"/&gt;
+  &lt;path class="wb-series-area" style="fill:var(--wb-chart-expense)" d="…Z"/&gt;
+  &lt;polyline class="wb-series-line" style="stroke:var(--wb-chart-expense)" points="…"/&gt;
+  &lt;!-- điểm + tooltip hiện khi hover (thuần SVG, không JS) --&gt;
+  &lt;g class="wb-point"&gt;
+    &lt;circle class="wb-point__hit" cx="208" cy="22" r="14"/&gt;
+    &lt;circle class="wb-series-dot" style="fill:var(--wb-chart-expense)" cx="208" cy="22" r="4"/&gt;
+    &lt;g class="wb-point__tip" transform="translate(208,22)"&gt;
+      &lt;rect x="-20" y="-26" width="40" height="17" rx="4"/&gt;&lt;text x="0" y="-14" text-anchor="middle"&gt;11,8tr&lt;/text&gt;
+    &lt;/g&gt;
+  &lt;/g&gt;
+&lt;/svg&gt;</code></pre></div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Cột — thu vs chi theo tháng</h3>
+  <p class="doc-sec__desc">Cột nhóm bằng CSS (<code>.wb-bars</code>): mỗi tháng một cặp cột thu (xanh) / chi (đỏ), có lưới ngang mờ.
+  Cột mảnh, bo góc nhẹ; rê chuột vào một tháng để hiện số. Chiều cao là % của trục.</p>
+  <div class="demo">
+    <div class="demo__stage">
+      <div class="wb-card" style="max-width:480px"><div class="wb-card__body">
+        <div class="wb-cluster wb-cluster--between" style="margin-bottom:14px">
+          <p class="wb-chart__title" style="margin:0">Thu &amp; Chi</p>
+          <div class="wb-legend">
+            <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-income)"></span>Thu</span>
+            <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-expense)"></span>Chi</span>
+          </div>
+        </div>
+        <div class="wb-bars">
+          <div class="wb-bars__col"><span class="wb-bar__val">16,6 / 3,3tr</span><div class="wb-bar wb-bar--income" style="height:83%"></div><div class="wb-bar wb-bar--expense" style="height:27%"></div><span class="wb-bars__label">T3</span></div>
+          <div class="wb-bars__col"><span class="wb-bar__val">16,6 / 3,6tr</span><div class="wb-bar wb-bar--income" style="height:83%"></div><div class="wb-bar wb-bar--expense" style="height:30%"></div><span class="wb-bars__label">T4</span></div>
+          <div class="wb-bars__col"><span class="wb-bar__val">20,0 / 4,7tr</span><div class="wb-bar wb-bar--income" style="height:100%"></div><div class="wb-bar wb-bar--expense" style="height:39%"></div><span class="wb-bars__label">T5</span></div>
+          <div class="wb-bars__col"><span class="wb-bar__val">16,6 / 4,1tr</span><div class="wb-bar wb-bar--income" style="height:83%"></div><div class="wb-bar wb-bar--expense" style="height:34%"></div><span class="wb-bars__label">T6</span></div>
+          <div class="wb-bars__col"><span class="wb-bar__val">19,4 / 4,7tr</span><div class="wb-bar wb-bar--income" style="height:97%"></div><div class="wb-bar wb-bar--expense" style="height:39%"></div><span class="wb-bars__label">T7</span></div>
+        </div>
+      </div></div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-bars"&gt;
+  &lt;div class="wb-bars__col"&gt;
+    &lt;div class="wb-bar wb-bar--income"  style="height:83%"&gt;&lt;/div&gt;
+    &lt;div class="wb-bar wb-bar--expense" style="height:27%"&gt;&lt;/div&gt;
+    &lt;span class="wb-bars__label"&gt;T3&lt;/span&gt;
+  &lt;/div&gt; …
+&lt;/div&gt;
+&lt;div class="wb-legend"&gt;
+  &lt;span class="wb-legend__item"&gt;&lt;span class="wb-legend__dot" style="background:var(--wb-chart-income)"&gt;&lt;/span&gt;Thu&lt;/span&gt;
+&lt;/div&gt;</code></pre></div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Cột + đường (combo) — chi (cột) so với thu (đường)</h3>
+  <p class="doc-sec__desc">Kết hợp <b>hai loại</b> trên cùng một hệ trục: cột cho <b>chi</b> từng tháng, đường cho <b>thu</b> — thấy
+  ngay tháng nào thu &gt; chi (đường nằm trên cột). Kỹ thuật: vẽ <code>&lt;rect&gt;</code> cột trước, rồi phủ <code>.wb-series-line</code> +
+  điểm (có tooltip khi rê) lên trên, dùng chung lưới &amp; trục.</p>
+  <div class="demo">
+    <div class="demo__stage">
+      <div class="wb-card" style="max-width:480px"><div class="wb-card__body">
+        <div class="wb-cluster wb-cluster--between" style="margin-bottom:14px">
+          <p class="wb-chart__title" style="margin:0">Thu &amp; Chi 6 tháng</p>
+          <div class="wb-legend">
+            <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-expense)"></span>Chi (cột)</span>
+            <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-income)"></span>Thu (đường)</span>
+          </div>
+        </div>
+        <div class="wb-chart">
+          <svg class="wb-chart__svg" viewBox="0 0 340 172" aria-label="Biểu đồ cột chi kết hợp đường thu">
+            <line class="wb-grid-line" x1="34" y1="22" x2="328" y2="22"/>
+            <line class="wb-grid-line" x1="34" y1="81" x2="328" y2="81"/>
+            <line class="wb-axis-line" x1="34" y1="140" x2="328" y2="140"/>
+            <text class="wb-axis-label" x="6"  y="26">24</text>
+            <text class="wb-axis-label" x="6"  y="85">12</text>
+            <text class="wb-axis-label" x="10" y="144">0</text>
+            <!-- Cột = chi -->
+            <rect x="47"  y="99"  width="22" height="41" rx="3" style="fill:var(--wb-chart-expense);opacity:.9"/>
+            <rect x="99"  y="94"  width="22" height="46" rx="3" style="fill:var(--wb-chart-expense);opacity:.9"/>
+            <rect x="151" y="103" width="22" height="37" rx="3" style="fill:var(--wb-chart-expense);opacity:.9"/>
+            <rect x="203" y="82"  width="22" height="58" rx="3" style="fill:var(--wb-chart-expense);opacity:.9"/>
+            <rect x="255" y="89"  width="22" height="51" rx="3" style="fill:var(--wb-chart-expense);opacity:.9"/>
+            <rect x="305" y="81"  width="22" height="59" rx="3" style="fill:var(--wb-chart-expense);opacity:.9"/>
+            <!-- Đường = thu (phủ lên trên) -->
+            <polyline class="wb-series-line" style="stroke:var(--wb-chart-income)" points="58,58 110,58 162,42 214,58 266,45 316,42"/>
+            <g class="wb-point"><circle class="wb-point__hit" cx="58" cy="58" r="13"/><circle class="wb-series-dot" style="fill:var(--wb-chart-income)" cx="58" cy="58" r="3.5"/><g class="wb-point__tip" transform="translate(58,58)"><rect x="-20" y="-26" width="40" height="17" rx="4"/><text x="0" y="-14" text-anchor="middle">16,6tr</text></g></g>
+            <g class="wb-point"><circle class="wb-point__hit" cx="110" cy="58" r="13"/><circle class="wb-series-dot" style="fill:var(--wb-chart-income)" cx="110" cy="58" r="3.5"/><g class="wb-point__tip" transform="translate(110,58)"><rect x="-20" y="-26" width="40" height="17" rx="4"/><text x="0" y="-14" text-anchor="middle">16,6tr</text></g></g>
+            <g class="wb-point"><circle class="wb-point__hit" cx="162" cy="42" r="13"/><circle class="wb-series-dot" style="fill:var(--wb-chart-income)" cx="162" cy="42" r="4"/><g class="wb-point__tip" transform="translate(162,42)"><rect x="-20" y="-26" width="40" height="17" rx="4"/><text x="0" y="-14" text-anchor="middle">20,0tr</text></g></g>
+            <g class="wb-point"><circle class="wb-point__hit" cx="214" cy="58" r="13"/><circle class="wb-series-dot" style="fill:var(--wb-chart-income)" cx="214" cy="58" r="3.5"/><g class="wb-point__tip" transform="translate(214,58)"><rect x="-20" y="-26" width="40" height="17" rx="4"/><text x="0" y="-14" text-anchor="middle">16,6tr</text></g></g>
+            <g class="wb-point"><circle class="wb-point__hit" cx="266" cy="45" r="13"/><circle class="wb-series-dot" style="fill:var(--wb-chart-income)" cx="266" cy="45" r="3.5"/><g class="wb-point__tip" transform="translate(266,45)"><rect x="-20" y="-26" width="40" height="17" rx="4"/><text x="0" y="-14" text-anchor="middle">19,4tr</text></g></g>
+            <g class="wb-point"><circle class="wb-point__hit" cx="316" cy="42" r="13"/><circle class="wb-series-dot" style="fill:var(--wb-chart-income)" cx="316" cy="42" r="4"/><g class="wb-point__tip" transform="translate(316,42)"><rect x="-20" y="-26" width="40" height="17" rx="4"/><text x="0" y="-14" text-anchor="middle">20,0tr</text></g></g>
+            <text class="wb-axis-label" x="58"  y="158" text-anchor="middle">T2</text>
+            <text class="wb-axis-label" x="110" y="158" text-anchor="middle">T3</text>
+            <text class="wb-axis-label" x="162" y="158" text-anchor="middle">T4</text>
+            <text class="wb-axis-label" x="214" y="158" text-anchor="middle">T5</text>
+            <text class="wb-axis-label" x="266" y="158" text-anchor="middle">T6</text>
+            <text class="wb-axis-label" x="316" y="158" text-anchor="middle">T7</text>
+          </svg>
+        </div>
+      </div></div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;svg class="wb-chart__svg" viewBox="0 0 340 172"&gt;
+  &lt;line class="wb-axis-line" x1="34" y1="140" x2="328" y2="140"/&gt;
+  &lt;!-- 1) cột (chi) trước --&gt;
+  &lt;rect x="203" y="82" width="22" height="58" rx="3"
+        style="fill:var(--wb-chart-expense);opacity:.9"/&gt; …
+  &lt;!-- 2) đường (thu) phủ lên --&gt;
+  &lt;polyline class="wb-series-line" style="stroke:var(--wb-chart-income)"
+            points="58,58 110,58 162,42 214,58 266,45 316,42"/&gt;
+  &lt;g class="wb-point"&gt;…điểm + tooltip khi hover…&lt;/g&gt;
+&lt;/svg&gt;</code></pre></div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Thanh ngang — xếp hạng danh mục</h3>
+  <p class="doc-sec__desc">Khi cần <b>so sánh &amp; xếp hạng</b> nhiều mục (top chi tiêu, top công nợ…), thanh ngang dễ đọc hơn donut. Đây không
+  phải component mới — chỉ là <code>.wb-progress</code> (đã có) xếp dọc bằng <code>.wb-stack</code>, tô theo màu danh mục. Dài nhất = 100%.</p>
+  <div class="demo">
+    <div class="demo__stage">
+      <div class="wb-card" style="max-width:440px"><div class="wb-card__body">
+        <p class="wb-chart__title" style="margin-bottom:14px">Top chi tháng 7</p>
+        <div class="wb-stack">
+          <div>
+            <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:5px"><span class="wb-cell-strong">Nhà ở</span><span class="wb-cell-muted">6.500.000 ₫</span></div>
+            <div class="wb-progress"><div class="wb-progress__bar" style="width:100%;background:var(--wb-chart-1)"></div></div>
+          </div>
+          <div>
+            <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:5px"><span class="wb-cell-strong">Ăn uống</span><span class="wb-cell-muted">3.280.000 ₫</span></div>
+            <div class="wb-progress"><div class="wb-progress__bar" style="width:50%;background:var(--wb-chart-3)"></div></div>
+          </div>
+          <div>
+            <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:5px"><span class="wb-cell-strong">Di chuyển</span><span class="wb-cell-muted">1.150.000 ₫</span></div>
+            <div class="wb-progress"><div class="wb-progress__bar" style="width:18%;background:var(--wb-chart-2)"></div></div>
+          </div>
+          <div>
+            <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:5px"><span class="wb-cell-strong">Khác</span><span class="wb-cell-muted">910.000 ₫</span></div>
+            <div class="wb-progress"><div class="wb-progress__bar" style="width:14%;background:var(--wb-chart-4)"></div></div>
+          </div>
+        </div>
+      </div></div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-stack"&gt;
+  &lt;div&gt;
+    &lt;div class="wb-cluster wb-cluster--between"&gt;&lt;span&gt;Nhà ở&lt;/span&gt;&lt;span&gt;6.500.000 ₫&lt;/span&gt;&lt;/div&gt;
+    &lt;div class="wb-progress"&gt;&lt;div class="wb-progress__bar"
+         style="width:100%;background:var(--wb-chart-1)"&gt;&lt;/div&gt;&lt;/div&gt;
+  &lt;/div&gt; … &lt;!-- dài nhất = 100%, các mục còn lại theo tỉ lệ --&gt;
+&lt;/div&gt;</code></pre></div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Donut — cơ cấu chi theo danh mục</h3>
+  <p class="doc-sec__desc">Vòng tròn <code>stroke-dasharray</code> với <code>pathLength="100"</code> (mỗi lát = số %), có khe hở mảnh
+  giữa các lát cho sạch. Bảng màu <code>--wb-chart-*</code> đã tinh lại (tông ~500, hài hoà). Chú thích kèm số tiền bên cạnh.</p>
+  <div class="demo">
+    <div class="demo__stage">
+      <div class="wb-card" style="max-width:480px"><div class="wb-card__body">
+        <p class="wb-chart__title" style="margin-bottom:14px">Chi tháng 7 theo danh mục</p>
+        <div class="wb-cluster" style="gap:24px">
+          <svg class="wb-chart" width="140" height="140" viewBox="0 0 140 140" role="img" aria-label="Donut cơ cấu chi">
+            <g transform="rotate(-90 70 70)" fill="none" stroke-width="18">
+              <circle class="wb-donut__track" cx="70" cy="70" r="52" stroke-width="18"/>
+              <circle cx="70" cy="70" r="52" pathLength="100" stroke-dasharray="54 100" stroke-dashoffset="0"   style="stroke:var(--wb-chart-1)"/>
+              <circle cx="70" cy="70" r="52" pathLength="100" stroke-dasharray="27 100" stroke-dashoffset="-55" style="stroke:var(--wb-chart-3)"/>
+              <circle cx="70" cy="70" r="52" pathLength="100" stroke-dasharray="9 100"  stroke-dashoffset="-83" style="stroke:var(--wb-chart-2)"/>
+              <circle cx="70" cy="70" r="52" pathLength="100" stroke-dasharray="6 100"  stroke-dashoffset="-93" style="stroke:var(--wb-chart-4)"/>
+            </g>
+            <text class="wb-donut__center-value" x="70" y="68">11,8tr</text>
+            <text class="wb-donut__center-label" x="70" y="84">tổng chi</text>
+          </svg>
+          <div class="wb-legend" style="flex-direction:column;gap:9px;align-items:stretch;flex:1;min-width:180px">
+            <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-1)"></span>Nhà ở<span class="wb-legend__val" style="margin-left:auto">6.500.000&nbsp;₫</span></span>
+            <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-3)"></span>Ăn uống<span class="wb-legend__val" style="margin-left:auto">3.280.000&nbsp;₫</span></span>
+            <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-2)"></span>Di chuyển<span class="wb-legend__val" style="margin-left:auto">1.150.000&nbsp;₫</span></span>
+            <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-4)"></span>Khác<span class="wb-legend__val" style="margin-left:auto">910.000&nbsp;₫</span></span>
+          </div>
+        </div>
+      </div></div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;g transform="rotate(-90 70 70)" fill="none" stroke-width="18"&gt;
+  &lt;circle cx="70" cy="70" r="52" pathLength="100"
+          stroke-dasharray="55 100" stroke-dashoffset="0"
+          style="stroke:var(--wb-chart-1)"/&gt;
+  &lt;circle cx="70" cy="70" r="52" pathLength="100"
+          stroke-dasharray="28 100" stroke-dashoffset="-55"
+          style="stroke:var(--wb-chart-3)"/&gt;
+&lt;/g&gt;
+&lt;!-- dashoffset âm = cộng dồn % của các lát trước --&gt;</code></pre></div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Donut mảnh, bo tròn — &amp; vòng tiến độ</h3>
+  <p class="doc-sec__desc">Vòng <b>mảnh</b> hơn (giảm <code>stroke-width</code>) với đầu lát <b>bo tròn</b> (<code>.wb-arc--round</code>) và khe hở rộng hơn —
+  cảm giác nhẹ, hiện đại. Cùng kỹ thuật cho <b>vòng tiến độ</b> một giá trị (ngân sách, mục tiêu tiết kiệm): một lát bo tròn trên
+  <code>.wb-ring__track</code>.</p>
+  <div class="demo">
+    <div class="demo__stage">
+      <div style="display:flex;gap:20px;align-items:stretch;flex-wrap:wrap">
+        <div class="wb-card" style="flex:2;min-width:280px"><div class="wb-card__body">
+          <p class="wb-chart__title" style="margin-bottom:12px">Cơ cấu chi (mảnh, bo tròn)</p>
+          <div class="wb-cluster" style="gap:20px">
+            <svg class="wb-chart" width="150" height="150" viewBox="0 0 140 140" role="img" aria-label="Donut mảnh bo tròn">
+              <g transform="rotate(-90 70 70)" fill="none" stroke-width="10">
+                <circle class="wb-donut__track" cx="70" cy="70" r="54"/>
+                <circle class="wb-arc wb-arc--round" cx="70" cy="70" r="54" pathLength="100" stroke-dasharray="41 100" stroke-dashoffset="0"     style="stroke:var(--wb-chart-1)"/>
+                <circle class="wb-arc wb-arc--round" cx="70" cy="70" r="54" pathLength="100" stroke-dasharray="20 100" stroke-dashoffset="-46.5" style="stroke:var(--wb-chart-3)"/>
+                <circle class="wb-arc wb-arc--round" cx="70" cy="70" r="54" pathLength="100" stroke-dasharray="10 100" stroke-dashoffset="-72"   style="stroke:var(--wb-chart-2)"/>
+                <circle class="wb-arc wb-arc--round" cx="70" cy="70" r="54" pathLength="100" stroke-dasharray="7 100"  stroke-dashoffset="-87.5" style="stroke:var(--wb-chart-4)"/>
+              </g>
+              <text class="wb-donut__center-value" x="70" y="68">11,8tr</text>
+              <text class="wb-donut__center-label" x="70" y="84">tổng chi</text>
+            </svg>
+            <div class="wb-legend" style="flex-direction:column;gap:8px;flex:1;min-width:120px">
+              <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-1)"></span>Nhà ở</span>
+              <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-3)"></span>Ăn uống</span>
+              <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-2)"></span>Di chuyển</span>
+              <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-4)"></span>Khác</span>
+            </div>
+          </div>
+        </div></div>
+        <div class="wb-card" style="flex:1;min-width:190px"><div class="wb-card__body" style="text-align:center">
+          <p class="wb-chart__title" style="margin-bottom:12px">Ngân sách tháng</p>
+          <svg class="wb-chart" width="150" height="150" viewBox="0 0 140 140" role="img" aria-label="Vòng tiến độ ngân sách" style="max-width:150px;margin:0 auto">
+            <g transform="rotate(-90 70 70)" fill="none" stroke-width="10">
+              <circle class="wb-ring__track" cx="70" cy="70" r="54"/>
+              <circle class="wb-arc wb-arc--round" cx="70" cy="70" r="54" pathLength="100" stroke-dasharray="68 100" stroke-dashoffset="0" style="stroke:var(--wb-chart-1)"/>
+            </g>
+            <text class="wb-donut__center-value" x="70" y="68">68%</text>
+            <text class="wb-donut__center-label" x="70" y="84">8,1 / 12tr</text>
+          </svg>
+        </div></div>
+      </div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;!-- Donut mảnh, bo tròn: fill=none + stroke mỏng + .wb-arc--round + khe rộng hơn --&gt;
+&lt;g transform="rotate(-90 70 70)" fill="none" stroke-width="10"&gt;
+  &lt;circle class="wb-donut__track" cx="70" cy="70" r="54"/&gt;
+  &lt;circle class="wb-arc wb-arc--round" cx="70" cy="70" r="54" pathLength="100"
+          stroke-dasharray="41 100" stroke-dashoffset="0"     style="stroke:var(--wb-chart-1)"/&gt;
+  &lt;circle class="wb-arc wb-arc--round" cx="70" cy="70" r="54" pathLength="100"
+          stroke-dasharray="20 100" stroke-dashoffset="-46.5" style="stroke:var(--wb-chart-3)"/&gt;
+&lt;/g&gt;   &lt;!-- khe ≈5.5 giữa các lát để đầu bo tròn hiện rõ --&gt;
+
+&lt;!-- Vòng tiến độ một giá trị (bo tròn đầu). Đổi màu theo mức: chart-1 &lt; ~80%,
+     --wb-warning ~80–99%, --wb-danger khi ≥100% (giống thanh progress) --&gt;
+&lt;circle class="wb-ring__track" cx="70" cy="70" r="54"/&gt;
+&lt;circle class="wb-arc wb-arc--round" cx="70" cy="70" r="54" pathLength="100"
+        stroke-dasharray="68 100" style="stroke:var(--wb-chart-1)"/&gt;</code></pre></div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Tiến độ ngân sách — đã chi / hạn mức</h3>
+  <p class="doc-sec__desc">Dùng lại <code>.wb-progress</code>: xanh khi còn thoải mái, vàng khi sắp chạm, đỏ khi chạm/vượt. Thanh vượt hạn mức chốt ở 100% và ghi rõ % vượt.</p>
+  <div class="demo">
+    <div class="demo__stage">
+      <div class="wb-card" style="max-width:480px"><div class="wb-card__body wb-stack" style="--wb-stack-gap:16px">
+        <div>
+          <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:6px"><span class="wb-cell-strong">Di chuyển</span><span class="wb-cell-muted">1,15tr / 2,0tr</span></div>
+          <div class="wb-progress"><div class="wb-progress__bar wb-progress__bar--success" style="width:57%"></div></div>
+        </div>
+        <div>
+          <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:6px"><span class="wb-cell-strong">Ăn uống</span><span class="wb-cell-muted">3,28tr / 4,0tr</span></div>
+          <div class="wb-progress"><div class="wb-progress__bar wb-progress__bar--warning" style="width:82%"></div></div>
+        </div>
+        <div>
+          <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:6px"><span class="wb-cell-strong">Nhà ở</span><span class="wb-cell-muted">6,5tr / 6,5tr</span></div>
+          <div class="wb-progress"><div class="wb-progress__bar wb-progress__bar--danger" style="width:100%"></div></div>
+        </div>
+        <div>
+          <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:6px"><span class="wb-cell-strong">Ăn ngoài</span><span class="wb-num--neg" style="font-size:13px">2,4tr / 2,0tr · vượt 20%</span></div>
+          <div class="wb-progress"><div class="wb-progress__bar wb-progress__bar--danger" style="width:100%"></div></div>
+        </div>
+      </div></div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-progress"&gt;
+  &lt;div class="wb-progress__bar wb-progress__bar--warning" style="width:82%"&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;!-- success &lt; ~80% · warning ~80–99% · danger ≥100% (chạm/vượt) --&gt;</code></pre></div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Sparkline — trong thẻ KPI</h3>
+  <p class="doc-sec__desc">Đường xu hướng tí hon (<code>.wb-spark</code>) nhét gọn trong thẻ số liệu — thấy ngay đang lên hay xuống.</p>
+  <div class="demo">
+    <div class="demo__stage">
+      <div class="wb-stat-grid" style="max-width:460px">
+        <div class="wb-stat">
+          <div class="wb-stat__top"><span class="wb-stat__label">Số dư</span>
+            <svg class="wb-spark" viewBox="0 0 84 26" preserveAspectRatio="none" style="margin-left:auto">
+              <path style="stroke:var(--wb-chart-income)" d="M2,20 L14,17 L26,19 L38,11 L50,13 L62,7 L74,9 L82,4"/>
+            </svg>
+          </div>
+          <div class="wb-stat__value">47.590.000 ₫</div>
+          <div class="wb-stat__foot"><span class="wb-stat__delta wb-stat__delta--up">▲ 4,2%</span> so với tháng trước</div>
+        </div>
+        <div class="wb-stat">
+          <div class="wb-stat__top"><span class="wb-stat__label">Chi tuần này</span>
+            <svg class="wb-spark" viewBox="0 0 84 26" preserveAspectRatio="none" style="margin-left:auto">
+              <path style="stroke:var(--wb-chart-expense)" d="M2,8 L14,10 L26,7 L38,14 L50,12 L62,18 L74,16 L82,21"/>
+            </svg>
+          </div>
+          <div class="wb-stat__value">2.180.000 ₫</div>
+          <div class="wb-stat__foot"><span class="wb-stat__delta wb-stat__delta--down">▼ 6,8%</span> so với tuần trước</div>
+        </div>
+      </div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;svg class="wb-spark" viewBox="0 0 84 26" preserveAspectRatio="none"&gt;
+  &lt;path style="stroke:var(--wb-chart-income)" d="M2,20 L14,17 … L82,4"/&gt;
+&lt;/svg&gt;</code></pre></div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Thang màu thay thế — xám &amp; một tông</h3>
+  <p class="doc-sec__desc">Khi đa sắc quá rối, bọc chart trong <code>.wb-chart-scheme--mono</code> (thang xám) hoặc
+  <code>.wb-chart-scheme--blue</code> (một tông xanh). Mỗi lát trộn từ <b>một màu mực</b> ra nền và <b>giãn đều theo số
+  lát</b>: thêm <code>.wb-chart-ramp--N</code> (N = số lát) để N series trải đều từ 100% → 25% cường độ, nên không hai
+  lát nào nhìn giống nhau — donut dưới đây 4 lát nên dùng <code>--4</code>. Tự đảo sáng/tối theo theme; đặt lên
+  <code>:root</code> (qua Config) để áp toàn site.</p>
+  <div class="demo">
+    <div class="demo__stage">
+      <div class="chart-grid">
+        <div class="wb-card"><div class="wb-card__body">
+          <p class="wb-chart__title" style="margin-bottom:12px">Thang xám</p>
+          <div class="wb-chart-scheme--mono wb-chart-ramp--4 wb-cluster" style="gap:16px">
+            <svg class="wb-chart" width="104" height="104" viewBox="0 0 140 140" aria-label="Donut thang xám">
+              <g transform="rotate(-90 70 70)" fill="none" stroke-width="18">
+                <circle class="wb-donut__track" cx="70" cy="70" r="52" stroke-width="18"/>
+                <circle cx="70" cy="70" r="52" pathLength="100" stroke-dasharray="44 100" stroke-dashoffset="0"   style="stroke:var(--wb-chart-1)"/>
+                <circle cx="70" cy="70" r="52" pathLength="100" stroke-dasharray="24 100" stroke-dashoffset="-45" style="stroke:var(--wb-chart-2)"/>
+                <circle cx="70" cy="70" r="52" pathLength="100" stroke-dasharray="19 100" stroke-dashoffset="-70" style="stroke:var(--wb-chart-3)"/>
+                <circle cx="70" cy="70" r="52" pathLength="100" stroke-dasharray="9 100"  stroke-dashoffset="-90" style="stroke:var(--wb-chart-4)"/>
+              </g>
+            </svg>
+            <div class="wb-legend" style="flex-direction:column;gap:7px;flex:1;min-width:118px">
+              <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-1)"></span>Nhà ở</span>
+              <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-2)"></span>Ăn uống</span>
+              <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-3)"></span>Di chuyển</span>
+              <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-4)"></span>Khác</span>
+            </div>
+          </div>
+        </div></div>
+        <div class="wb-card"><div class="wb-card__body">
+          <p class="wb-chart__title" style="margin-bottom:12px">Một tông xanh</p>
+          <div class="wb-chart-scheme--blue wb-chart-ramp--4 wb-cluster" style="gap:16px">
+            <svg class="wb-chart" width="104" height="104" viewBox="0 0 140 140" aria-label="Donut một tông xanh">
+              <g transform="rotate(-90 70 70)" fill="none" stroke-width="18">
+                <circle class="wb-donut__track" cx="70" cy="70" r="52" stroke-width="18"/>
+                <circle cx="70" cy="70" r="52" pathLength="100" stroke-dasharray="44 100" stroke-dashoffset="0"   style="stroke:var(--wb-chart-1)"/>
+                <circle cx="70" cy="70" r="52" pathLength="100" stroke-dasharray="24 100" stroke-dashoffset="-45" style="stroke:var(--wb-chart-2)"/>
+                <circle cx="70" cy="70" r="52" pathLength="100" stroke-dasharray="19 100" stroke-dashoffset="-70" style="stroke:var(--wb-chart-3)"/>
+                <circle cx="70" cy="70" r="52" pathLength="100" stroke-dasharray="9 100"  stroke-dashoffset="-90" style="stroke:var(--wb-chart-4)"/>
+              </g>
+            </svg>
+            <div class="wb-legend" style="flex-direction:column;gap:7px;flex:1;min-width:118px">
+              <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-1)"></span>Nhà ở</span>
+              <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-2)"></span>Ăn uống</span>
+              <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-3)"></span>Di chuyển</span>
+              <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-4)"></span>Khác</span>
+            </div>
+          </div>
+        </div></div>
+      </div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;!-- scheme = màu mực · ramp--N = số lát (trải đều 100%→25%) --&gt;
+&lt;div class="wb-chart-scheme--mono wb-chart-ramp--4"&gt;   &lt;!-- hoặc --blue --&gt;
+  &lt;svg class="wb-chart" …&gt; … donut dùng var(--wb-chart-1..4) … &lt;/svg&gt;
+&lt;/div&gt;
+&lt;!-- đặt scheme lên :root (qua Config) để áp cho toàn site --&gt;</code></pre></div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Bảng màu biểu đồ</h3>
+  <p class="doc-sec__desc">Bộ màu phân loại (dịu, phân biệt tốt) + <b>thu = xanh</b>, <b>chi = đỏ</b> để biểu đồ đọc như phần còn lại của giao diện. Tất cả sáng hơn ở dark mode.</p>
+  <div class="demo demo--plain">
+    <div class="demo__stage">
+      <div class="wb-legend" style="gap:12px 18px">
+        <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-income)"></span>income</span>
+        <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-expense)"></span>expense</span>
+        <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-1)"></span>chart-1</span>
+        <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-2)"></span>chart-2</span>
+        <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-3)"></span>chart-3</span>
+        <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-4)"></span>chart-4</span>
+        <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-5)"></span>chart-5</span>
+        <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-6)"></span>chart-6</span>
+        <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-7)"></span>chart-7</span>
+        <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-8)"></span>chart-8</span>
+      </div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>--wb-chart-income / --wb-chart-expense   /* thu / chi */
+--wb-chart-1 … --wb-chart-8              /* lát/loạt phân loại */
+--wb-chart-grid / --wb-chart-axis        /* lưới / trục */</code></pre></div>
+  </div>
+  <div class="doc-note">
+    <span>💡</span>
+    <div>Trong app của bạn, cho <b>Recharts</b> đọc đúng các token này (vd <code>fill="var(--wb-chart-1)"</code>,
+    <code>&lt;CartesianGrid stroke="var(--wb-chart-grid)"/&gt;</code>, tooltip bọc bằng class <code>wb-chart__tip</code>).
+    Skill giữ SVG thuần để không kéo thêm thư viện; Recharts lo phần tương tác (hover, tooltip động, responsive).</div>
+  </div>
+</section>

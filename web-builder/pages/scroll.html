@@ -1,0 +1,85 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Bố cục &amp; tiện ích</p>
+  <h2>Scroll / thanh cuộn</h2>
+  <p>Thanh cuộn <b>theme-aware</b> dùng lại được: một bar mảnh, track trong suốt, thumb màu
+  <code>--wb-border-strong</code> bo pill (hover → <code>--wb-fg-subtle</code>) — thay cho bar OS chói trên nền
+  tối. <code>.wb-scroll-y</code> / <code>.wb-scroll-x</code> cho vùng overflow; <code>.wb-scrollbars</code> chỉ
+  đổi <i>hình</i> thanh cuộn (không đụng overflow) — kể cả thanh cuộn cả trang. Textarea, thân bảng và menu
+  dropdown cũng tự mang kiểu này.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-note">
+    <span aria-hidden="true">🖥️</span>
+    <div>Thanh cuộn <b>cả trang (viewport)</b>: thêm class vào thẻ gốc —
+    <code>&lt;html class="wb-scrollbars"&gt;</code>. Chính trang docs này đang dùng nó, nên bar bên phải cửa sổ
+    khớp theme sáng/tối thay vì dùng bar mặc định của trình duyệt.</div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Vùng cuộn dọc — <code>.wb-scroll-y</code></h4>
+    <p class="doc-block__desc">Đặt trên bất kỳ vùng <code>overflow-y</code>. Kèm <code>scroll-padding</code> để dòng
+    cuối cuộn thoát mép.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-scroll-y" style="max-height:172px;max-width:360px">
+          <ul class="wb-list">
+            <li class="wb-list__item"><span class="wb-list__title">Grab</span><span class="wb-list__end">−82.000&nbsp;₫</span></li>
+            <li class="wb-list__item"><span class="wb-list__title">Highlands Coffee</span><span class="wb-list__end">−65.000&nbsp;₫</span></li>
+            <li class="wb-list__item"><span class="wb-list__title">WinMart</span><span class="wb-list__end">−213.000&nbsp;₫</span></li>
+            <li class="wb-list__item"><span class="wb-list__title">Shopee</span><span class="wb-list__end">−349.000&nbsp;₫</span></li>
+            <li class="wb-list__item"><span class="wb-list__title">Circle K</span><span class="wb-list__end">−38.000&nbsp;₫</span></li>
+            <li class="wb-list__item"><span class="wb-list__title">Baemin</span><span class="wb-list__end">−127.000&nbsp;₫</span></li>
+            <li class="wb-list__item"><span class="wb-list__title">Tiki</span><span class="wb-list__end">−540.000&nbsp;₫</span></li>
+            <li class="wb-list__item"><span class="wb-list__title">The Coffee House</span><span class="wb-list__end">−55.000&nbsp;₫</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-scroll-y" style="max-height:172px"&gt;
+  &lt;ul class="wb-list"&gt; … &lt;/ul&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Vùng cuộn ngang — <code>.wb-scroll-x</code></h4>
+    <p class="doc-block__desc">Cho hàng thẻ / nội dung rộng hơn khung. Thanh cuộn ngang cùng kiểu mảnh.</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="wb-scroll-x" style="max-width:520px">
+          <div class="wb-cluster" style="flex-wrap:nowrap;width:max-content;padding-bottom:10px">
+            <div class="wb-card" style="width:170px;flex:none"><div class="wb-card__body"><div class="wb-cell-muted" style="font-size:12px">Tháng 5</div><div class="wb-cell-strong">12.400.000&nbsp;₫</div></div></div>
+            <div class="wb-card" style="width:170px;flex:none"><div class="wb-card__body"><div class="wb-cell-muted" style="font-size:12px">Tháng 6</div><div class="wb-cell-strong">9.850.000&nbsp;₫</div></div></div>
+            <div class="wb-card" style="width:170px;flex:none"><div class="wb-card__body"><div class="wb-cell-muted" style="font-size:12px">Tháng 7</div><div class="wb-cell-strong">14.020.000&nbsp;₫</div></div></div>
+            <div class="wb-card" style="width:170px;flex:none"><div class="wb-card__body"><div class="wb-cell-muted" style="font-size:12px">Tháng 8</div><div class="wb-cell-strong">11.300.000&nbsp;₫</div></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-scroll-x"&gt;
+  &lt;div class="wb-cluster" style="flex-wrap:nowrap;width:max-content"&gt; … thẻ … &lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Danh sách dài — <code>--pad</code> (chừa đuôi)</h4>
+    <p class="doc-block__desc">Thêm <code>.wb-scroll-y--pad</code> cho khoảng đệm đáy lớn hơn, để item cuối cuộn thoát
+    hẳn mép (dễ đọc / chạm) thay vì dán sát khung.</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="wb-scroll-y wb-scroll-y--pad" style="max-height:172px;max-width:360px">
+          <ul class="wb-list">
+            <li class="wb-list__item"><span class="wb-list__title">Ăn uống</span><span class="wb-list__end">1.240.000&nbsp;₫</span></li>
+            <li class="wb-list__item"><span class="wb-list__title">Đi lại</span><span class="wb-list__end">860.000&nbsp;₫</span></li>
+            <li class="wb-list__item"><span class="wb-list__title">Chợ búa</span><span class="wb-list__end">2.150.000&nbsp;₫</span></li>
+            <li class="wb-list__item"><span class="wb-list__title">Hoá đơn</span><span class="wb-list__end">1.780.000&nbsp;₫</span></li>
+            <li class="wb-list__item"><span class="wb-list__title">Giải trí</span><span class="wb-list__end">430.000&nbsp;₫</span></li>
+            <li class="wb-list__item"><span class="wb-list__title">Sức khoẻ</span><span class="wb-list__end">690.000&nbsp;₫</span></li>
+            <li class="wb-list__item"><span class="wb-list__title">Giáo dục</span><span class="wb-list__end">3.500.000&nbsp;₫</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-scroll-y wb-scroll-y--pad" style="max-height:172px"&gt; … &lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+</section>

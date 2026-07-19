@@ -1,0 +1,119 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Nhập liệu</p>
+  <h2>Range / Slider</h2>
+  <p>Thanh trượt chọn một giá trị trong khoảng — hạn mức ngân sách, ngưỡng cảnh báo, mức lọc số tiền.
+  Track + thumb trung tính, tự đảo màu theo theme.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>Cơ bản + hiện giá trị</h4>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-field" style="max-width:380px">
+          <label class="wb-label">Hạn mức ăn uống / tháng</label>
+          <input class="wb-range" type="range" min="0" max="10000000" step="500000" value="3500000"
+                 oninput="this.nextElementSibling.textContent = (+this.value).toLocaleString('vi-VN') + ' ₫'" />
+          <span class="wb-help">3.500.000 ₫</span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;input class="wb-range" type="range" min="0" max="10000000" step="500000" value="3500000" /&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Có nấc chia vạch — <code>.wb-range-ticks</code></h4>
+    <p class="doc-block__desc">Thêm các <b>vạch mốc</b> (và nhãn) dưới track cho các mức rời rạc. Đặt <code>step</code> khớp
+    số vạch để thumb <b>búng đúng vào từng nấc</b>. Vạch dùng thang xám trung tính.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-field" style="max-width:380px">
+          <label class="wb-label">Hạn mức ăn uống / tháng</label>
+          <div class="wb-range-ticks">
+            <input class="wb-range" type="range" min="0" max="10000000" step="2500000" value="5000000"
+                   oninput="this.closest('.wb-field').querySelector('.wb-help').textContent = (+this.value).toLocaleString('vi-VN') + ' ₫'" />
+            <div class="wb-range-ticks__marks"><span></span><span></span><span></span><span></span><span></span></div>
+            <div class="wb-range-ticks__labels"><span>0</span><span>2,5tr</span><span>5tr</span><span>7,5tr</span><span>10tr</span></div>
+          </div>
+          <span class="wb-help">5.000.000 ₫</span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-range-ticks"&gt;
+  &lt;input class="wb-range" type="range" min="0" max="10000000" step="2500000" value="5000000" /&gt;
+  &lt;div class="wb-range-ticks__marks"&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/div&gt;
+  &lt;div class="wb-range-ticks__labels"&gt;&lt;span&gt;0&lt;/span&gt;&lt;span&gt;2,5tr&lt;/span&gt;&lt;span&gt;5tr&lt;/span&gt;&lt;span&gt;7,5tr&lt;/span&gt;&lt;span&gt;10tr&lt;/span&gt;&lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Track có phần "đã chọn" (filled)</h4>
+    <p class="doc-block__desc">Tô đậm phần bên trái thumb bằng gradient nội tuyến — đặt mốc % bằng giá trị hiện tại.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <input class="wb-range" type="range" min="0" max="100" value="65"
+               style="max-width:380px;background:linear-gradient(to right, var(--wb-fg) 65%, var(--wb-border-strong) 65%)" />
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;input class="wb-range" type="range" value="65"
+  style="background:linear-gradient(to right, var(--wb-fg) 65%, var(--wb-border-strong) 65%)" /&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Hai đầu — chọn khoảng (min–max) <span class="wb-cap wb-cap--sm wb-cap--outline">mới</span></h4>
+    <p class="doc-block__desc">Hai thumb trên một track, phần giữa được tô — chuẩn UX lọc khoảng số tiền/giá.
+    Ghép <b>thanh trượt + 2 ô min/max + một câu tóm tắt</b>, tất cả đồng bộ (kéo thumb ↔ gõ số ↔ chữ đổi theo).
+    Thử kéo hai đầu hoặc gõ số.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-range-filter" data-range-filter style="max-width:360px">
+          <div class="wb-range-filter__summary">…</div>
+          <div class="wb-range-dual" style="--a:20;--b:70">
+            <div class="wb-range-dual__track"></div>
+            <div class="wb-range-dual__fill"></div>
+            <input class="wb-range-dual__input" data-h="min" type="range" min="0" max="10000000" step="500000" value="2000000" aria-label="Tối thiểu" />
+            <input class="wb-range-dual__input" data-h="max" type="range" min="0" max="10000000" step="500000" value="7000000" aria-label="Tối đa" />
+          </div>
+          <div class="wb-cluster wb-cluster--nowrap wb-cluster--stretch wb-cluster--tight">
+            <div class="wb-input-group"><span class="wb-input-group__addon">₫</span><input class="wb-input" data-range-min inputmode="numeric" value="2000000" aria-label="Tối thiểu" /></div>
+            <div class="wb-input-group"><span class="wb-input-group__addon">₫</span><input class="wb-input" data-range-max inputmode="numeric" value="7000000" aria-label="Tối đa" /></div>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-range-filter" data-range-filter&gt;
+  &lt;div class="wb-range-filter__summary"&gt;…&lt;/div&gt;
+  &lt;div class="wb-range-dual" style="--a:20;--b:70"&gt;
+    &lt;div class="wb-range-dual__track"&gt;&lt;/div&gt;&lt;div class="wb-range-dual__fill"&gt;&lt;/div&gt;
+    &lt;input class="wb-range-dual__input" data-h="min" type="range" min="0" max="10000000" value="2000000" /&gt;
+    &lt;input class="wb-range-dual__input" data-h="max" type="range" min="0" max="10000000" value="7000000" /&gt;
+  &lt;/div&gt;
+  &lt;div class="wb-cluster wb-cluster--nowrap wb-cluster--stretch wb-cluster--tight"&gt;
+    &lt;div class="wb-input-group"&gt;&lt;span class="wb-input-group__addon"&gt;₫&lt;/span&gt;&lt;input class="wb-input" data-range-min value="2000000" /&gt;&lt;/div&gt;
+    &lt;div class="wb-input-group"&gt;&lt;span class="wb-input-group__addon"&gt;₫&lt;/span&gt;&lt;input class="wb-input" data-range-max value="7000000" /&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- app.js đồng bộ: 2 slider ⇄ 2 ô ⇄ câu tóm tắt (data-range-filter) --&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Nhỏ · vô hiệu</h4>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-stack" style="--wb-stack-gap:18px;max-width:380px">
+          <input class="wb-range wb-range--sm" type="range" min="0" max="100" value="40" />
+          <input class="wb-range" type="range" min="0" max="100" value="50" disabled />
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;input class="wb-range wb-range--sm" type="range" /&gt;
+&lt;input class="wb-range" type="range" disabled /&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-note">
+    <span>💡</span>
+    <div>Bản <b>hai đầu</b> (<code>wb-range-dual</code>) ở trên đã đủ cho lọc khoảng; trong app có thể thay lõi bằng
+    Radix <b>Slider</b> cho chắc tay về bàn phím/độ chính xác, vẫn giữ class <code>wb-range</code> / <code>wb-range-dual</code> cho phần nhìn.</div>
+  </div>
+</section>

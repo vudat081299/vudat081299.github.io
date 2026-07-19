@@ -1,0 +1,91 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Điều hướng</p>
+  <h2>Tabs</h2>
+  <p>Chuyển giữa các khung nội dung. Kiểu gạch chân (mặc định) và kiểu <b>pill</b> (dùng như segmented
+  control: Thu/Chi, khoảng thời gian…). Docs chuyển tab bằng JS; app có thể dùng Radix Tabs.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>Gạch chân</h4>
+    <div class="demo">
+      <div class="demo__stage">
+        <div data-tabs style="max-width:520px">
+          <div class="wb-tabs">
+            <button class="wb-tab is-active" data-tab="a">Tổng quan</button>
+            <button class="wb-tab" data-tab="b">Giao dịch</button>
+            <button class="wb-tab" data-tab="c">Ngân sách</button>
+          </div>
+          <div class="wb-tab-panel" data-panel="a"><span class="wb-cell-muted">Số dư, thu, chi trong kỳ…</span></div>
+          <div class="wb-tab-panel" data-panel="b" hidden><span class="wb-cell-muted">Danh sách giao dịch gần đây…</span></div>
+          <div class="wb-tab-panel" data-panel="c" hidden><span class="wb-cell-muted">Hạn mức theo danh mục…</span></div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div data-tabs&gt;
+  &lt;div class="wb-tabs"&gt;
+    &lt;button class="wb-tab is-active" data-tab="a"&gt;Tổng quan&lt;/button&gt;
+    &lt;button class="wb-tab" data-tab="b"&gt;Giao dịch&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class="wb-tab-panel" data-panel="a"&gt;…&lt;/div&gt;
+  &lt;div class="wb-tab-panel" data-panel="b" hidden&gt;…&lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Pill / segmented</h4>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div data-tabs>
+          <div class="wb-tabs wb-tabs--pill">
+            <button class="wb-tab is-active" data-tab="chi">Chi</button>
+            <button class="wb-tab" data-tab="thu">Thu</button>
+            <button class="wb-tab" data-tab="all">Tất cả</button>
+          </div>
+          <div class="wb-tab-panel" data-panel="chi"><span class="wb-cell-muted">Chỉ khoản chi.</span></div>
+          <div class="wb-tab-panel" data-panel="thu" hidden><span class="wb-cell-muted">Chỉ khoản thu.</span></div>
+          <div class="wb-tab-panel" data-panel="all" hidden><span class="wb-cell-muted">Cả thu &amp; chi.</span></div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-tabs wb-tabs--pill"&gt;
+  &lt;button class="wb-tab is-active" data-tab="chi"&gt;Chi&lt;/button&gt;
+  &lt;button class="wb-tab" data-tab="thu"&gt;Thu&lt;/button&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Boxed / vuông — tương phản cao</h4>
+    <p class="doc-block__desc">Góc vuông tuyệt đối. Thanh nền đặc (đen ở light), tab đang chọn là ô đặc <b>nhỏ hơn cell</b>
+    (trắng ở light) nên vẫn thấy khung tối bao quanh — chữ đảo màu khi được chọn. Tự đảo ngược ở dark mode.
+    Xem cạnh nhau ở cả hai chế độ:</p>
+    <div class="dual" data-dual data-pad="18px">
+      <template>
+        <div class="wb-tabs wb-tabs--boxed">
+          <button class="wb-tab is-active">Tuần</button>
+          <button class="wb-tab">Tháng</button>
+          <button class="wb-tab">Năm</button>
+        </div>
+      </template>
+    </div>
+    <div class="demo" style="margin-top:14px">
+      <div class="demo__stage">
+        <div data-tabs>
+          <div class="wb-tabs wb-tabs--boxed">
+            <button class="wb-tab is-active" data-tab="w">Tuần</button>
+            <button class="wb-tab" data-tab="m">Tháng</button>
+            <button class="wb-tab" data-tab="y">Năm</button>
+          </div>
+          <div class="wb-tab-panel" data-panel="w"><span class="wb-cell-muted">Số liệu theo tuần.</span></div>
+          <div class="wb-tab-panel" data-panel="m" hidden><span class="wb-cell-muted">Số liệu theo tháng.</span></div>
+          <div class="wb-tab-panel" data-panel="y" hidden><span class="wb-cell-muted">Số liệu theo năm.</span></div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-tabs wb-tabs--boxed"&gt;
+  &lt;button class="wb-tab is-active" data-tab="w"&gt;Tuần&lt;/button&gt;
+  &lt;button class="wb-tab" data-tab="m"&gt;Tháng&lt;/button&gt;
+  &lt;button class="wb-tab" data-tab="y"&gt;Năm&lt;/button&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+</section>

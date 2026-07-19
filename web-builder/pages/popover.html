@@ -1,0 +1,125 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Lớp phủ (Overlay)</p>
+  <h2>Popover</h2>
+  <p>Một tấm thẻ nổi <b>bấm để mở</b>, neo vào nút kích hoạt, có mũi tên chỉ về nút và nút đóng <b>×</b> ở góc trên phải.
+  Giàu hơn <a href="#/tooltip">tooltip</a> (chỉ hover, chỉ chữ) và không phải danh sách thao tác như
+  <a href="#/dropdown">dropdown</a>. Bật/tắt bằng class <code>.is-open</code> trên <code>.wb-popover</code> —
+  trong docs là vanilla JS, trong app dùng Radix Popover / Floating UI để tự né mép màn hình.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>Cơ bản</h4>
+    <p class="doc-block__desc">Mặc định popover nổi <b>phía trên</b> nút, canh giữa. Bấm nút để mở; bấm ra ngoài hoặc <b>×</b> để đóng.</p>
+    <div class="demo demo--pop">
+      <div class="demo__stage" style="padding-top:120px">
+        <span class="wb-popover is-open">
+          <button class="wb-btn wb-btn--outline" data-pop-toggle>Số dư khả dụng</button>
+          <div class="wb-popover__panel">
+            <div class="wb-popover__arrow"></div>
+            <button class="wb-close" aria-label="Đóng"></button>
+            <div class="wb-popover__title">Số dư khả dụng</div>
+            <p class="wb-popover__body">Đã trừ các giao dịch đang chờ và hạn mức giữ. Cập nhật lúc 14:32.</p>
+          </div>
+        </span>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="wb-popover"&gt;
+  &lt;button class="wb-btn wb-btn--outline" data-pop-toggle&gt;Số dư khả dụng&lt;/button&gt;
+  &lt;div class="wb-popover__panel"&gt;
+    &lt;div class="wb-popover__arrow"&gt;&lt;/div&gt;
+    &lt;button class="wb-close" aria-label="Đóng"&gt;&lt;/button&gt;
+    &lt;div class="wb-popover__title"&gt;Số dư khả dụng&lt;/div&gt;
+    &lt;p class="wb-popover__body"&gt;Đã trừ các giao dịch đang chờ…&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/span&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Hướng đặt</h4>
+    <p class="doc-block__desc"><code>--bottom</code> · <code>--left</code> · <code>--right</code> đổi vị trí (mặc định là trên).
+    Mũi tên tự đổi cạnh theo hướng.</p>
+    <div class="demo demo--plain demo--pop">
+      <div class="demo__stage" style="padding:44px 150px 128px">
+        <div class="wb-cluster wb-cluster--center" style="gap:56px">
+          <span class="wb-popover wb-popover--left is-open">
+            <button class="wb-btn wb-btn--outline" data-pop-toggle>Trái</button>
+            <div class="wb-popover__panel"><div class="wb-popover__arrow"></div>
+              <p class="wb-popover__body">Nổi bên trái nút.</p></div>
+          </span>
+          <span class="wb-popover wb-popover--bottom is-open">
+            <button class="wb-btn wb-btn--outline" data-pop-toggle>Dưới</button>
+            <div class="wb-popover__panel"><div class="wb-popover__arrow"></div>
+              <p class="wb-popover__body">Nổi phía dưới nút.</p></div>
+          </span>
+          <span class="wb-popover wb-popover--right is-open">
+            <button class="wb-btn wb-btn--outline" data-pop-toggle>Phải</button>
+            <div class="wb-popover__panel"><div class="wb-popover__arrow"></div>
+              <p class="wb-popover__body">Nổi bên phải nút.</p></div>
+          </span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="wb-popover wb-popover--bottom"&gt;…&lt;/span&gt;
+&lt;span class="wb-popover wb-popover--right"&gt;…&lt;/span&gt;
+&lt;span class="wb-popover wb-popover--left"&gt;…&lt;/span&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Có thao tác bên trong</h4>
+    <p class="doc-block__desc">Popover chứa được nội dung tương tác (nút, liên kết) — bấm bên trong không làm nó đóng, chỉ <b>×</b> hoặc bấm ra ngoài mới đóng.</p>
+    <div class="demo demo--plain demo--pop">
+      <div class="demo__stage" style="padding:26px 26px 190px">
+        <span class="wb-popover wb-popover--bottom is-open">
+          <button class="wb-btn" data-pop-toggle><span class="wb-ico wb-ico--sm">delete</span> Xoá giao dịch</button>
+          <div class="wb-popover__panel" style="max-width:240px">
+            <div class="wb-popover__arrow"></div>
+            <div class="wb-popover__title">Xoá giao dịch này?</div>
+            <p class="wb-popover__body" style="margin-bottom:12px">Không thể hoàn tác. Bản ghi sẽ bị gỡ khỏi sổ.</p>
+            <div class="wb-cluster wb-cluster--end" style="gap:8px">
+              <button class="wb-btn wb-btn--sm wb-btn--ghost" data-pop-toggle>Huỷ</button>
+              <button class="wb-btn wb-btn--sm wb-btn--danger">Xoá</button>
+            </div>
+          </div>
+        </span>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="wb-popover wb-popover--bottom"&gt;
+  &lt;button class="wb-btn" data-pop-toggle&gt;Xoá giao dịch&lt;/button&gt;
+  &lt;div class="wb-popover__panel"&gt;
+    &lt;div class="wb-popover__arrow"&gt;&lt;/div&gt;
+    &lt;div class="wb-popover__title"&gt;Xoá giao dịch này?&lt;/div&gt;
+    &lt;p class="wb-popover__body"&gt;Không thể hoàn tác.&lt;/p&gt;
+    &lt;div class="wb-cluster wb-cluster--end"&gt;
+      &lt;button class="wb-btn wb-btn--sm wb-btn--ghost" data-pop-toggle&gt;Huỷ&lt;/button&gt;
+      &lt;button class="wb-btn wb-btn--sm wb-btn--danger"&gt;Xoá&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/span&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-note">
+    <span class="wb-ico" style="color:var(--wb-info-text)">info</span>
+    <div>Tài liệu này chỉ trình bày <b>kiểu dáng</b>; hành vi mở/đóng &amp; né mép là việc của app. Popover ở đây đặt tĩnh theo modifier —
+    khi tích hợp thật, dùng bộ định vị (Radix / Floating UI) để tự lật hướng khi chạm mép màn hình.</div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Light &amp; Dark</h4>
+    <p class="doc-block__desc">Thẻ dùng <code>--wb-surface</code> + viền + <code>--wb-shadow-md</code>; ở dark bóng đổi sang viền sáng mờ tự động.</p>
+    <div class="dual" data-dual data-pad="20px 20px 128px">
+      <template>
+        <div style="text-align:center">
+          <span class="wb-popover wb-popover--bottom is-open">
+            <button class="wb-btn wb-btn--outline" data-pop-toggle>Chi tiết phí</button>
+            <div class="wb-popover__panel">
+              <div class="wb-popover__arrow"></div>
+              <div class="wb-popover__title">Phí giao dịch</div>
+              <p class="wb-popover__body">0,5% mỗi lần chuyển, tối đa 15.000&nbsp;₫.</p>
+            </div>
+          </span>
+        </div>
+      </template>
+    </div>
+  </div>
+</section>

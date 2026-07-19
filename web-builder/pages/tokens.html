@@ -1,0 +1,50 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Nền tảng</p>
+  <h2>Design tokens</h2>
+  <p>Tất cả màu đến từ CSS variables. Đổi token → đổi toàn hệ. Đây là các token hay dùng nhất
+  (xem đủ trong <code>web-builder.css</code>). Bảng dưới đổi theo Light/Dark bạn đang bật.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="wb-grid wb-grid--auto" data-swatches style="--wb-grid-min:116px;gap:12px"><!-- rendered by app.js --></div>
+</section>
+
+<section class="doc-sec">
+  <h3>Nhóm token chính</h3>
+  <p class="doc-sec__desc">Tham chiếu các token “semantic” này thay vì thang xám thô, để cả 2 theme luôn đúng.</p>
+  <div class="demo">
+    <div class="demo__code">
+      <pre><code>/* Bề mặt &amp; chữ */
+--wb-canvas      /* nền app          */   --wb-fg         /* chữ chính     */
+--wb-surface     /* card, table      */   --wb-fg-muted   /* chữ phụ       */
+--wb-surface-2   /* header, sọc      */   --wb-fg-subtle  /* chữ mờ nhất   */
+--wb-border      /* viền hairline    */   --wb-border-strong
+
+/* Thang xám ngữ nghĩa — mặc định cho phần ĐƠN MÀU (divider, track
+   progress, icon mờ, vạch chia…). Chọn theo NGHĨA, tự đảo ở dark. */
+--wb-neutral-weak    /* xám nhẹ  */   --wb-neutral-strong /* xám đậm */
+--wb-neutral         /* xám vừa  */   --wb-neutral-ink    /* đen     */
+
+/* Cỡ icon — một thang, dùng .wb-ico--xs…--xl (đừng ghi px thẳng) */
+--wb-ico-xs 16 | --wb-ico-sm 18 | --wb-ico-md 20 | --wb-ico-lg 24 | --wb-ico-xl 32
+
+/* Màu có ý nghĩa — mỗi màu có 3 biến */
+--wb-success / --wb-success-soft / --wb-success-text   /* xanh: đã trả  */
+--wb-danger  / --wb-danger-soft  / --wb-danger-text    /* đỏ:  quá hạn  */
+--wb-warning / --wb-warning-soft / --wb-warning-text   /* vàng: sắp hạn */
+--wb-info    / --wb-info-soft    / --wb-info-text      /* xanh dương    */
+
+/* Hình khối &amp; đổ bóng */
+--wb-radius-sm | --wb-radius | --wb-radius-lg | --wb-radius-pill
+--wb-shadow-sm (nghỉ) | --wb-shadow-md (nổi)
+
+/* Font — đổi 1 dòng này là đổi toàn bộ chữ (xem trang Fonts) */
+--wb-font</code></pre>
+    </div>
+  </div>
+  <div class="doc-note">
+    <span>💡</span>
+    <div>Cần một màu mới? Thêm token ở <b>cả</b> <code>:root</code> và <code>.dark</code>, rồi dùng token —
+    đừng bao giờ viết mã hex thẳng vào component.</div>
+  </div>
+</section>

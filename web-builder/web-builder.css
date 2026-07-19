@@ -1,0 +1,2826 @@
+/* =============================================================================
+   Web Builder — component library for personal finance web apps
+   -----------------------------------------------------------------------------
+   • Self-contained: link this one file, no build step required.
+   • Themed entirely through CSS custom properties (design tokens).
+   • Light is the default; add class="dark" on <html> (or any ancestor) for dark.
+     This matches any class-based theme toggle (e.g. next-themes), which toggles the `.dark` class.
+   • Colour philosophy (see references/design-principles.md):
+       1. white / black / grey  → the default for almost everything
+       2. bright solid colour   → only when it carries meaning (paid, overdue…)
+       3. bright colour + alpha  → soft tints, the lowest-priority accent
+   • Prefix `wb-` avoids collisions with Bootstrap/Tailwind/shadcn classes.
+   • Icons come from a real icon font (Material Symbols, imported below) — never
+     hand-drawn. Online-first; swap --wb-icon-font in the app to use another set.
+   ========================================================================== */
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200");
+
+/* -----------------------------------------------------------------------------
+   1. DESIGN TOKENS
+   -------------------------------------------------------------------------- */
+:root {
+  /* Neutral scale — the backbone. Near-black instead of pure #000 reads softer. */
+  --wb-white:      #ffffff;
+  --wb-gray-50:    #f7f7f8;
+  --wb-gray-100:   #f1f1f3;
+  --wb-gray-150:   #ececee;
+  --wb-gray-200:   #e4e4e7;
+  --wb-gray-300:   #d4d4d8;
+  --wb-gray-400:   #a1a1aa;
+  --wb-gray-500:   #71717a;
+  --wb-gray-600:   #52525b;
+  --wb-gray-700:   #3f3f46;
+  --wb-gray-800:   #27272a;
+  --wb-gray-900:   #18181b;
+  --wb-gray-950:   #0b0b0d;
+
+  /* Semantic surfaces / text — reference these, not the raw scale above. */
+  --wb-canvas:       var(--wb-gray-50);   /* app background            */
+  --wb-surface:      var(--wb-white);     /* cards, tables             */
+  --wb-surface-2:    var(--wb-gray-50);   /* header rows, striped rows */
+  --wb-surface-hover:var(--wb-gray-100);  /* row hover                 */
+  --wb-fg:           var(--wb-gray-900);  /* primary text              */
+  --wb-fg-muted:     var(--wb-gray-500);  /* secondary text            */
+  --wb-fg-subtle:    var(--wb-gray-400);  /* tertiary / placeholder    */
+  --wb-border:       var(--wb-gray-200);  /* hairline borders          */
+  --wb-border-strong:var(--wb-gray-300);
+
+  /* Neutral tone ladder — the DEFAULT ink for single-colour, non-text parts
+     (divider, progress track, muted icon, tick marks, scroll thumb…). Four
+     weights so a page picks BY MEANING and stays consistent, instead of every
+     divider/icon inventing its own grey. Reference these; a custom colour is
+     still fine when a design genuinely needs one. Auto-flips in dark below. */
+  --wb-neutral-weak:   var(--wb-gray-200);  /* xám nhẹ  — quiet line / track / off-state */
+  --wb-neutral:        var(--wb-gray-400);  /* xám vừa  — the default visible grey       */
+  --wb-neutral-strong: var(--wb-gray-600);  /* xám đậm  — emphasis, still not full black */
+  --wb-neutral-ink:    var(--wb-fg);        /* đen      — full ink (gray-900)             */
+
+  /* Elevation — soft grey shadows in light mode. */
+  --wb-shadow-sm: 0 1px 2px rgba(16, 17, 18, .05), 0 1px 3px rgba(16, 17, 18, .04);
+  --wb-shadow-md: 0 2px 4px rgba(16, 17, 18, .05), 0 6px 16px rgba(16, 17, 18, .08);
+
+  /* Focus ring — neutral, used by buttons and inputs. */
+  --wb-ring: rgba(24, 24, 27, .30);
+
+  /* Semantic colours — tier 2 (solid) and tier 3 (soft = alpha tint). */
+  --wb-success:        #16a34a;
+  --wb-success-fg:     #ffffff;
+  --wb-success-soft:   rgba(22, 163, 74, .12);
+  --wb-success-text:   #15803d;
+
+  --wb-danger:         #dc2626;
+  --wb-danger-fg:      #ffffff;
+  --wb-danger-soft:    rgba(220, 38, 38, .11);
+  --wb-danger-text:    #b91c1c;
+
+  --wb-warning:        #d97706;
+  --wb-warning-fg:     #ffffff;
+  --wb-warning-soft:   rgba(217, 119, 6, .14);
+  --wb-warning-text:   #b45309;
+
+  --wb-info:           #2563eb;
+  --wb-info-fg:        #ffffff;
+  --wb-info-soft:      rgba(37, 99, 235, .11);
+  --wb-info-text:      #1d4ed8;
+
+  /* Very subtle row tints for meaningful table states. */
+  --wb-row-danger:  rgba(220, 38, 38, .045);
+  --wb-row-warning: rgba(217, 119, 6, .055);
+  --wb-row-success: rgba(22, 163, 74, .05);
+
+  /* Chart palette — a categorical set for slices/series (donut, bars, legend).
+     Muted-but-distinct hues that sit calmly next to the neutral UI. Income/expense
+     echo the semantic green/red but one step BRIGHTER (~*-500) so bars read lively,
+     not muddy — the deeper -600 semantic shades looked heavy filling a whole bar. */
+  --wb-chart-income:  #22c55e;   /* green-500 (brighter than success #16a34a) */
+  --wb-chart-expense: #ef4444;   /* red-500   (brighter than danger  #dc2626) */
+  --wb-chart-grid:    var(--wb-border);
+  --wb-chart-axis:    var(--wb-fg-subtle);
+  /* Harmonious categorical set (all ~*-500) so slices sit well side by side. */
+  --wb-chart-1: #6366f1;   /* indigo  */
+  --wb-chart-2: #14b8a6;   /* teal    */
+  --wb-chart-3: #f59e0b;   /* amber   */
+  --wb-chart-4: #ec4899;   /* pink    */
+  --wb-chart-5: #3b82f6;   /* blue    */
+  --wb-chart-6: #8b5cf6;   /* violet  */
+  --wb-chart-7: #06b6d4;   /* cyan    */
+  --wb-chart-8: #84cc16;   /* lime    */
+
+  /* Shape & rhythm. */
+  --wb-radius-sm:  6px;
+  --wb-radius:     10px;
+  --wb-radius-lg:  14px;
+  --wb-radius-pill: 999px;
+
+  --wb-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+               Arial, "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+  /* Fixed-width face — every glyph the same width, so a templated field's "dd / mm"
+     placeholder lines up in exact character cells (no clipped letters). */
+  --wb-font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+               "Liberation Mono", monospace;
+
+  /* Icons — a real icon font, not hand-drawn glyphs. Size + weight are single
+     knobs (the docs Config panel drives them). A touch heavy = crisp, not thin. */
+  --wb-icon-font: "Material Symbols Rounded";
+  /* Size scale — ONE ladder so icons stop picking ad-hoc px. Use the utilities
+     .wb-ico--xs…--xl (they read these tokens); md is the default. */
+  --wb-ico-xs: 16px;
+  --wb-ico-sm: 18px;
+  --wb-ico-md: 20px;
+  --wb-ico-lg: 24px;
+  --wb-ico-xl: 32px;
+  --wb-ico-size:   var(--wb-ico-md);   /* default icon size (the "md" step) */
+  --wb-ico-weight: 600;
+  --wb-ico-fill:   0;
+
+  /* Border width — one knob so hairlines can be tuned globally (per-component
+     overrides below inherit this by default). */
+  --wb-bw: 1px;
+
+  /* Per-component radii — default to the global scale; override to taste. */
+  --wb-btn-radius:   var(--wb-radius-sm);
+  --wb-card-radius:  var(--wb-radius-lg);
+  --wb-input-radius: var(--wb-radius-sm);
+
+  /* Sharp-ready radii for controls that used to hardcode round/pill shapes — each
+     defaults to today's look but can be zeroed globally (Config → Kiểu góc → Vuông sắc). */
+  --wb-switch-radius:       var(--wb-radius-pill);
+  --wb-switch-thumb-radius: 50%;
+  --wb-range-radius:        var(--wb-radius-pill);
+  --wb-range-thumb-radius:  50%;
+  --wb-check-radius:        var(--wb-radius-sm);
+
+  /* Checkbox/radio box — own size + border-width knob so the box can be made bolder. */
+  --wb-check-size: 18px;
+  --wb-check-bw:   2px;
+}
+
+.dark {
+  --wb-canvas:       var(--wb-gray-950);
+  --wb-surface:      #131316;
+  --wb-surface-2:    #1a1a1e;
+  --wb-surface-hover:#212127;
+  --wb-fg:           var(--wb-gray-50);
+  --wb-fg-muted:     var(--wb-gray-400);
+  --wb-fg-subtle:    var(--wb-gray-500);
+  --wb-border:       #26262b;
+  --wb-border-strong:#34343a;
+
+  /* Neutral ladder flips: on dark, "more visible" = lighter. weak→ink go
+     darkest→lightest so the four weights stay monotonic on the dark canvas. */
+  --wb-neutral-weak:   var(--wb-gray-700);
+  --wb-neutral:        var(--wb-gray-500);
+  --wb-neutral-strong: var(--wb-gray-400);
+  /* --wb-neutral-ink inherits --wb-fg (gray-50) automatically */
+
+  /* On dark, a black shadow vanishes into the canvas (shadow == background). So
+     elevation reads as a soft LIGHT lift — white/grey at low alpha — never
+     black-on-black. Pairs with the hairline border that does the hard edge. */
+  --wb-shadow-sm: 0 1px 2px rgba(255, 255, 255, .05), 0 1px 3px rgba(255, 255, 255, .045);
+  --wb-shadow-md: 0 2px 6px rgba(255, 255, 255, .06), 0 10px 24px rgba(255, 255, 255, .05);
+  --wb-ring: rgba(255, 255, 255, .28);
+
+  /* Slightly brighter fills + stronger tints so colour survives a dark canvas. */
+  --wb-success:      #22c55e;
+  --wb-success-soft: rgba(34, 197, 94, .16);
+  --wb-success-text: #4ade80;
+
+  --wb-danger:       #ef4444;
+  --wb-danger-soft:  rgba(239, 68, 68, .16);
+  --wb-danger-text:  #f87171;
+
+  --wb-warning:      #f59e0b;
+  --wb-warning-soft: rgba(245, 158, 11, .17);
+  --wb-warning-text: #fbbf24;
+
+  --wb-info:         #3b82f6;
+  --wb-info-soft:    rgba(59, 130, 246, .17);
+  --wb-info-text:    #60a5fa;
+
+  --wb-row-danger:  rgba(239, 68, 68, .09);
+  --wb-row-warning: rgba(245, 158, 11, .09);
+  --wb-row-success: rgba(34, 197, 94, .09);
+
+  /* Brighter chart hues so series survive the dark canvas. */
+  --wb-chart-1: #818cf8;
+  --wb-chart-2: #2dd4bf;
+  --wb-chart-3: #fbbf24;
+  --wb-chart-4: #f472b6;
+  --wb-chart-5: #60a5fa;
+  --wb-chart-6: #a78bfa;
+  --wb-chart-7: #22d3ee;
+  --wb-chart-8: #a3e635;
+  /* Keep income/expense one step brighter than the dark semantic green/red. */
+  --wb-chart-income:  #4ade80;   /* green-400 */
+  --wb-chart-expense: #f87171;   /* red-400   */
+}
+
+/* -----------------------------------------------------------------------------
+   1.5 ICONS  (a real icon font — Material Symbols — never hand-drawn)
+   -----------------------------------------------------------------------------
+   Inline:  <span class="wb-ico">expand_more</span>  (the text is a ligature).
+   In CSS:  a few components inject icons via ::before/::after using codepoints.
+   Size + weight are tunable via --wb-ico-size / --wb-ico-weight.
+   -------------------------------------------------------------------------- */
+.wb-ico,
+.wb-accordion__item > summary::after,
+.wb-tree__toggle::before,
+.wb-tree__handle::before,
+.wb-grip::before,
+.wb-close::before,
+.wb-tag__x::before,
+.wb-filter-token__x::before {
+  font-family: var(--wb-icon-font);
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-variation-settings: "FILL" var(--wb-ico-fill), "wght" var(--wb-ico-weight), "GRAD" 0, "opsz" 24;
+}
+.wb-ico {
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  font-size: var(--wb-ico-size);
+  vertical-align: middle; user-select: none;
+}
+/* Size steps — read the --wb-ico-* scale (Config-tunable), never raw px. */
+.wb-ico--xs { font-size: var(--wb-ico-xs); }
+.wb-ico--sm { font-size: var(--wb-ico-sm); }
+.wb-ico--md { font-size: var(--wb-ico-md); }
+.wb-ico--lg { font-size: var(--wb-ico-lg); }
+.wb-ico--xl { font-size: var(--wb-ico-xl); }
+/* Tone steps — the neutral ladder, so a muted icon picks BY MEANING (not a
+   one-off colour). Default icon colour is currentColor (inherits the text). */
+.wb-ico--strong { color: var(--wb-neutral-strong); }
+.wb-ico--muted  { color: var(--wb-neutral); }
+.wb-ico--faint  { color: var(--wb-neutral-weak); }
+/* Spin utility (e.g. a "sync"/"progress_activity" icon). */
+.wb-ico--spin { animation: wb-spin .9s linear infinite; }
+
+/* -----------------------------------------------------------------------------
+   2. CAPSULES  (badges / tags / status pills)
+   -----------------------------------------------------------------------------
+   Compose two independent axes:
+     • FILL   → default (soft grey) · --solid · --outline · --elevated
+     • TONE   → default (neutral)   · --success · --danger · --warning · --info
+   e.g.  .wb-cap                       neutral soft grey   (tier 1, default)
+         .wb-cap.wb-cap--elevated    white + grey shadow (tier 1, emphasis)
+         .wb-cap.wb-cap--success     soft green          (tier 3)
+         .wb-cap.wb-cap--success.wb-cap--solid  solid green (tier 2)
+   -------------------------------------------------------------------------- */
+.wb-cap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  font-family: var(--wb-font);
+  font-size: 12px;
+  font-weight: 550;
+  line-height: 1.4;
+  letter-spacing: .01em;
+  white-space: nowrap;
+  border-radius: var(--wb-radius-pill);
+  border: var(--wb-bw) solid transparent;
+  /* Tier 1 default: soft grey. */
+  background: var(--wb-gray-100);
+  color: var(--wb-gray-700);
+}
+/* :where() so tone variants (--success/--danger/…) keep their colour in dark. */
+.dark :where(.wb-cap) { background: var(--wb-gray-800); color: var(--wb-gray-200); }
+
+/* Optional leading status dot. */
+.wb-cap__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--wb-radius-pill);
+  background: currentColor;
+  opacity: .85;
+  flex: none;
+}
+
+/* --- FILL: outline --------------------------------------------------------- */
+.wb-cap--outline {
+  background: transparent;
+  border-color: var(--wb-border-strong);
+  color: var(--wb-fg-muted);
+}
+
+/* --- FILL: elevated (white capsule, grey shadow — the signature neutral) ---- */
+.wb-cap--elevated {
+  background: var(--wb-surface);
+  color: var(--wb-fg);
+  border-color: var(--wb-border);
+  box-shadow: var(--wb-shadow-sm);
+}
+
+/* --- FILL: solid neutral (near-black / near-white in dark) ------------------ */
+.wb-cap--solid {
+  background: var(--wb-gray-900);
+  color: var(--wb-white);
+  border-color: transparent;
+}
+.dark .wb-cap--solid { background: var(--wb-gray-100); color: var(--wb-gray-900); }
+
+/* --- TONE: soft (tier 3) — the default fill when a tone is set -------------- */
+.wb-cap--success { background: var(--wb-success-soft); color: var(--wb-success-text); }
+.wb-cap--danger  { background: var(--wb-danger-soft);  color: var(--wb-danger-text);  }
+.wb-cap--warning { background: var(--wb-warning-soft); color: var(--wb-warning-text); }
+.wb-cap--info    { background: var(--wb-info-soft);    color: var(--wb-info-text);    }
+
+/* --- TONE + solid (tier 2) — bright, high-emphasis ------------------------- */
+.wb-cap--success.wb-cap--solid { background: var(--wb-success); color: var(--wb-success-fg); }
+.wb-cap--danger.wb-cap--solid  { background: var(--wb-danger);  color: var(--wb-danger-fg);  }
+.wb-cap--warning.wb-cap--solid { background: var(--wb-warning); color: var(--wb-warning-fg); }
+.wb-cap--info.wb-cap--solid    { background: var(--wb-info);    color: var(--wb-info-fg);    }
+
+/* --- TONE + outline -------------------------------------------------------- */
+.wb-cap--success.wb-cap--outline { background: transparent; border-color: var(--wb-success); color: var(--wb-success-text); }
+.wb-cap--danger.wb-cap--outline  { background: transparent; border-color: var(--wb-danger);  color: var(--wb-danger-text);  }
+.wb-cap--warning.wb-cap--outline { background: transparent; border-color: var(--wb-warning); color: var(--wb-warning-text); }
+.wb-cap--info.wb-cap--outline    { background: transparent; border-color: var(--wb-info);    color: var(--wb-info-text);    }
+
+/* --- COLOUR: custom hue (a coloured category chip) — set one variable -------
+   Same mechanism as tags. Use ONLY for classification that genuinely benefits
+   from a colour key (e.g. a category legend); status still uses the tones above. */
+.wb-cap--tinted {
+  background: color-mix(in srgb, var(--wb-cap-color, var(--wb-gray-500)) 14%, transparent);
+  color:      color-mix(in srgb, var(--wb-cap-color, var(--wb-gray-700)) 82%, var(--wb-fg));
+}
+.dark .wb-cap--tinted {
+  background: color-mix(in srgb, var(--wb-cap-color, var(--wb-gray-400)) 24%, transparent);
+  color:      color-mix(in srgb, var(--wb-cap-color, var(--wb-gray-200)) 80%, white);
+}
+.wb-cap--tinted.wb-cap--outline { background: transparent; border-color: var(--wb-cap-color, var(--wb-gray-400)); }
+.wb-cap--tinted.wb-cap--solid   { background: var(--wb-cap-color, var(--wb-gray-700)); color: #fff; border-color: transparent; }
+
+/* --- FILL: dashed (an "optional / draft / add-new" chip — dashed reads as "not final", §9) ----
+   Border only (bg transparent, dashed strong border); text stays the base/tone colour so it
+   composes with a tone the same way --outline does (the tone rules above set the text). */
+.wb-cap--dashed { background: transparent; border-style: dashed; border-color: var(--wb-border-strong); }
+.wb-cap--success.wb-cap--dashed { border-color: var(--wb-success); }
+.wb-cap--danger.wb-cap--dashed  { border-color: var(--wb-danger);  }
+.wb-cap--warning.wb-cap--dashed { border-color: var(--wb-warning); }
+.wb-cap--info.wb-cap--dashed    { border-color: var(--wb-info);    }
+.wb-cap--tinted.wb-cap--dashed  { background: transparent; border-color: var(--wb-cap-color, var(--wb-gray-400)); }
+
+/* Size modifiers. */
+.wb-cap--sm { padding: 1px 8px;  font-size: 11px; gap: 5px; }
+.wb-cap--lg { padding: 5px 13px; font-size: 13px; }
+
+/* -----------------------------------------------------------------------------
+   2.5 TAGS  (#hashtag chips — labels attached to a transaction)
+   -----------------------------------------------------------------------------
+   Same family as capsules, but a tag ALWAYS shows a leading "#". Meant for the
+   free-form labels a user pins to transactions ("#du-lich", "#hoan-tien"). Three
+   shapes and optional colour. Neutral by default; a category may carry its own
+   hue via a single custom property.
+     SHAPE:  (pill, default) · --rect (rectangle) · --notch (physical tag)
+     TONE:   (neutral) · --success · --danger · --warning · --info
+     COLOUR: --tinted + style="--wb-tag-color:#hex"   (custom category hue)
+     EMPH:   --solid  (tier-2 full colour, pairs with a tone or --tinted)
+     SIZE:   (default) · --sm · --lg
+     REMOVE: add <button class="wb-tag__x" aria-label="Xoá">×</button>
+   -------------------------------------------------------------------------- */
+.wb-tag {
+  position: relative;
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 10px;
+  font-family: var(--wb-font); font-size: 12px; font-weight: 550;
+  line-height: 1.5; letter-spacing: .01em; white-space: nowrap;
+  border-radius: var(--wb-radius-pill); border: var(--wb-bw) solid transparent;
+  background: var(--wb-gray-100); color: var(--wb-gray-700);
+}
+.wb-tag::before { content: "#"; font-weight: 650; opacity: .5; }
+/* :where() so tone/tinted variants keep their colour in dark (see .wb-cap note). */
+.dark :where(.wb-tag) { background: var(--wb-gray-800); color: var(--wb-gray-200); }
+
+/* --- SHAPE: rectangle & physical-tag (notch + punch hole) ------------------ */
+.wb-tag--rect  { border-radius: var(--wb-radius-sm); }
+.wb-tag--notch {
+  border-radius: 0 var(--wb-radius-sm) var(--wb-radius-sm) 0;
+  padding-left: 15px;
+  clip-path: polygon(8px 0, 100% 0, 100% 100%, 8px 100%, 0 50%);
+}
+.wb-tag--notch::after {          /* the punch-hole of a luggage/price tag */
+  content: ""; position: absolute; left: 4px; top: 50%; transform: translateY(-50%);
+  width: 4px; height: 4px; border-radius: 50%; background: rgba(0, 0, 0, .28);
+}
+.dark .wb-tag--notch::after { background: rgba(255, 255, 255, .38); }
+
+/* --- TONE: soft (tier 3) --------------------------------------------------- */
+.wb-tag--success { background: var(--wb-success-soft); color: var(--wb-success-text); }
+.wb-tag--danger  { background: var(--wb-danger-soft);  color: var(--wb-danger-text);  }
+.wb-tag--warning { background: var(--wb-warning-soft); color: var(--wb-warning-text); }
+.wb-tag--info    { background: var(--wb-info-soft);    color: var(--wb-info-text);    }
+
+/* --- COLOUR: custom category hue from one variable ------------------------- */
+.wb-tag--tinted {
+  background: color-mix(in srgb, var(--wb-tag-color, var(--wb-gray-500)) 14%, transparent);
+  color:      color-mix(in srgb, var(--wb-tag-color, var(--wb-gray-700)) 82%, var(--wb-fg));
+}
+.dark .wb-tag--tinted {
+  background: color-mix(in srgb, var(--wb-tag-color, var(--wb-gray-400)) 24%, transparent);
+  color:      color-mix(in srgb, var(--wb-tag-color, var(--wb-gray-200)) 80%, white);
+}
+
+/* --- EMPH: solid — neutral high-emphasis (tier 1 black) by default; + a tone/--tinted paints
+   that colour full-strength (tier 2). Neutral rules go FIRST so the compound tone rules (equal
+   specificity) still win in dark — mirrors .wb-cap--solid; the reverse order greys them out. */
+.wb-tag--solid { background: var(--wb-gray-900); color: var(--wb-white); }
+.dark .wb-tag--solid { background: var(--wb-gray-100); color: var(--wb-gray-900); }
+.wb-tag--solid.wb-tag--success { background: var(--wb-success); color: var(--wb-success-fg); }
+.wb-tag--solid.wb-tag--danger  { background: var(--wb-danger);  color: var(--wb-danger-fg);  }
+.wb-tag--solid.wb-tag--warning { background: var(--wb-warning); color: var(--wb-warning-fg); }
+.wb-tag--solid.wb-tag--info    { background: var(--wb-info);    color: var(--wb-info-fg);    }
+.wb-tag--solid.wb-tag--tinted  { background: var(--wb-tag-color, var(--wb-gray-700)); color: #fff; }
+.wb-tag--solid::before { opacity: .72; }
+
+/* --- SIZE ------------------------------------------------------------------ */
+.wb-tag--sm { padding: 1px 8px;  font-size: 11px; }
+.wb-tag--lg { padding: 4px 13px; font-size: 13px; }
+
+/* --- REMOVABLE (× to delete the tag) — a real "close" icon (Material) -------- */
+.wb-tag__x {
+  display: inline-flex; align-items: center; justify-content: center;
+  margin: 0 -4px 0 1px; width: 16px; height: 16px; flex: none;
+  border: 0; border-radius: 50%; cursor: pointer; font-size: 0; line-height: 1;
+  background: transparent; color: inherit; opacity: .6;
+}
+.wb-tag__x::before { content: "\e5cd"; font-size: 14px; }   /* close */
+.wb-tag__x:hover { opacity: 1; background: rgba(0, 0, 0, .08); }
+.dark .wb-tag__x:hover { background: rgba(255, 255, 255, .14); }
+
+/* A tidy wrapper when several tags sit together (transaction row, filter bar). */
+.wb-tags { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+
+/* -----------------------------------------------------------------------------
+   3. TABLES
+   -----------------------------------------------------------------------------
+   Structure:
+     .wb-card            optional wrapper giving surface + border + radius
+       .wb-table-head    optional title / subtitle / actions bar
+       .wb-table-scroll  makes the table body scroll (needed for sticky head)
+         table.wb-table
+       .wb-table-foot    optional footer (pagination, summary)
+   Modifiers on .wb-table:  --striped · --bordered · --compact · --hover(default)
+   -------------------------------------------------------------------------- */
+.wb-card {
+  background: var(--wb-surface);
+  border: var(--wb-bw) solid var(--wb-border);
+  border-radius: var(--wb-card-radius);
+  box-shadow: var(--wb-shadow-sm);
+  overflow: hidden;
+  font-family: var(--wb-font);
+}
+
+.wb-table-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  border-bottom: var(--wb-bw) solid var(--wb-border);
+}
+.wb-table-head__title { font-size: 15px; font-weight: 650; color: var(--wb-fg); margin: 0; }
+.wb-table-head__sub   { font-size: 13px; color: var(--wb-fg-muted); margin: 2px 0 0; }
+.wb-table-head__actions { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+
+.wb-table-scroll { width: 100%; overflow: auto; }
+
+.wb-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-family: var(--wb-font);
+  font-size: 14px;
+  color: var(--wb-fg);
+  background: var(--wb-surface);
+}
+
+/* Header cells — quiet, uppercase-ish label styling. */
+.wb-table thead th {
+  position: relative;
+  padding: 11px 16px;
+  text-align: left;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--wb-fg-muted);
+  background: var(--wb-surface-2);
+  border-bottom: var(--wb-bw) solid var(--wb-border);
+  white-space: nowrap;
+}
+
+/* Body cells. */
+.wb-table tbody td {
+  padding: 13px 16px;
+  border-bottom: var(--wb-bw) solid var(--wb-border);
+  vertical-align: middle;
+}
+.wb-table tbody tr:last-child td { border-bottom: none; }
+
+/* Hover is on by default; add nothing to get it. */
+.wb-table tbody tr { transition: background-color .12s ease; }
+.wb-table:not(.wb-table--no-hover) tbody tr:hover { background: var(--wb-surface-hover); }
+
+/* Footer / totals row. */
+.wb-table tfoot td {
+  padding: 13px 16px;
+  font-weight: 650;
+  color: var(--wb-fg);
+  background: var(--wb-surface-2);
+  border-top: 2px solid var(--wb-border-strong);
+}
+
+/* --- MODIFIER: striped ----------------------------------------------------- */
+.wb-table--striped tbody tr:nth-child(even) { background: var(--wb-surface-2); }
+.wb-table--striped tbody tr:nth-child(even):hover { background: var(--wb-surface-hover); }
+
+/* --- MODIFIER: bordered (vertical grid lines) ------------------------------ */
+.wb-table--bordered th,
+.wb-table--bordered td { border-right: var(--wb-bw) solid var(--wb-border); }
+.wb-table--bordered th:last-child,
+.wb-table--bordered td:last-child { border-right: none; }
+
+/* --- MODIFIER: compact / dense --------------------------------------------- */
+.wb-table--compact thead th { padding: 8px 12px; }
+.wb-table--compact tbody td,
+.wb-table--compact tfoot td { padding: 8px 12px; }
+
+/* --- MODIFIER: sticky header (needs a height-bounded .wb-table-scroll) ---- */
+.wb-table--sticky thead th { position: sticky; top: 0; z-index: 2; }
+
+/* Numeric cells — right-aligned with tabular figures so digits line up. */
+.wb-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  white-space: nowrap;
+}
+.wb-num--pos { color: var(--wb-success-text); font-weight: 600; }
+.wb-num--neg { color: var(--wb-danger-text);  font-weight: 600; }
+/* Muted-strong: emphasise an amount without colour (white-black-grey first). */
+.wb-num--strong { color: var(--wb-fg); font-weight: 650; }
+
+/* Meaningful full-row states — a subtle background tint carries the meaning
+   (no left accent bar: this site favours outline + soft background, see the
+   Border page). Pair with a coloured capsule in the row for an explicit label. */
+.wb-table tbody tr.wb-row--danger  { background: var(--wb-row-danger); }
+.wb-table tbody tr.wb-row--warning { background: var(--wb-row-warning); }
+.wb-table tbody tr.wb-row--success { background: var(--wb-row-success); }
+
+/* Small helpers used inside cells. */
+.wb-cell-strong { font-weight: 600; color: var(--wb-fg); }
+.wb-cell-muted  { color: var(--wb-fg-muted); }
+.wb-cell-sub    { display: block; font-size: 12px; color: var(--wb-fg-muted); margin-top: 2px; }
+.wb-inline      { display: inline-flex; align-items: center; gap: 8px; }
+
+/* -----------------------------------------------------------------------------
+   4. BUTTONS
+   -----------------------------------------------------------------------------
+   Default is the neutral "primary" — near-black in light, near-white in dark
+   (white-black-grey first: the primary action isn't a brand colour).
+   FILL:  (default solid neutral) · --secondary · --outline · --ghost
+   TONE:  --danger · --success   (only for meaningful actions: delete, confirm pay)
+   SIZE:  (default) · --sm · --lg     SHAPE: --icon (square) · --block (full width)
+   STATE: :disabled / .is-disabled · .is-loading (add a <span class="wb-spinner">)
+   -------------------------------------------------------------------------- */
+.wb-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-family: var(--wb-font); font-size: 14px; font-weight: 600; line-height: 1;
+  padding: 9px 16px; border-radius: var(--wb-btn-radius);
+  border: var(--wb-bw) solid transparent; cursor: pointer; white-space: nowrap;
+  text-decoration: none; user-select: none;
+  transition: background-color .13s ease, border-color .13s ease, color .13s ease,
+              box-shadow .13s ease, transform .04s ease;
+  /* default: neutral solid */
+  background: var(--wb-gray-900); color: var(--wb-white);
+}
+.wb-btn:hover  { background: var(--wb-gray-800); }
+.wb-btn:active { transform: translateY(.5px); }
+.wb-btn:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
+/* Theme inversion for the DEFAULT (neutral) button. :where() keeps this at 0-1-0
+   specificity so the variant rules below (secondary/outline/ghost/danger/success)
+   keep their own text colour in dark instead of being overridden to near-black. */
+.dark :where(.wb-btn)        { background: var(--wb-gray-100); color: var(--wb-gray-900); }
+.dark :where(.wb-btn):hover  { background: var(--wb-white); }
+
+.wb-btn--secondary {
+  background: var(--wb-surface); color: var(--wb-fg);
+  border-color: var(--wb-border-strong); box-shadow: var(--wb-shadow-sm);
+}
+.wb-btn--secondary:hover { background: var(--wb-surface-2); border-color: var(--wb-gray-400); }
+.dark .wb-btn--secondary { background: var(--wb-surface-2); }
+.dark .wb-btn--secondary:hover { background: var(--wb-surface-hover); }
+
+.wb-btn--outline { background: transparent; color: var(--wb-fg); border-color: var(--wb-border-strong); }
+.wb-btn--outline:hover { background: var(--wb-surface-2); }
+.dark .wb-btn--outline:hover { background: var(--wb-surface-hover); }
+
+.wb-btn--ghost { background: transparent; color: var(--wb-fg-muted); }
+.wb-btn--ghost:hover { background: var(--wb-surface-2); color: var(--wb-fg); }
+.dark .wb-btn--ghost:hover { background: var(--wb-surface-hover); }
+
+.wb-btn--danger  { background: var(--wb-danger);  color: var(--wb-danger-fg);  }
+.wb-btn--success { background: var(--wb-success); color: var(--wb-success-fg); }
+/* Re-assert the tone background on hover — otherwise in dark mode the neutral
+   `.dark :where(.wb-btn):hover { background:#fff }` (line above, equal 0-1-0+hover
+   specificity) would win by source order and paint white-on-white. */
+.wb-btn--danger:hover  { background: var(--wb-danger);  filter: brightness(.94); }
+.wb-btn--success:hover { background: var(--wb-success); filter: brightness(.94); }
+
+.wb-btn--sm { padding: 6px 12px;  font-size: 13px; border-radius: 6px; }
+.wb-btn--lg { padding: 12px 20px; font-size: 15px; border-radius: var(--wb-radius); }
+.wb-btn--icon { padding: 9px; }
+.wb-btn--icon.wb-btn--sm { padding: 6px; }
+.wb-btn--icon.wb-btn--lg { padding: 12px; }
+.wb-btn--block { width: 100%; }
+
+.wb-btn:disabled, .wb-btn.is-disabled { opacity: .5; cursor: not-allowed; pointer-events: none; }
+.wb-btn.is-loading { pointer-events: none; }
+
+/* Reusable spinner — inherits the current text colour, so it works on any button. */
+.wb-spinner {
+  display: inline-block; width: 1em; height: 1em; flex: none;
+  border: 2px solid currentColor; border-top-color: transparent; border-radius: 50%;
+  animation: wb-spin .6s linear infinite; vertical-align: -.15em;
+}
+@keyframes wb-spin { to { transform: rotate(360deg); } }
+
+/* -----------------------------------------------------------------------------
+   5. STAT / KPI CARDS
+   -----------------------------------------------------------------------------
+   Neutral card; the only colour is the delta (up = success, down = danger) —
+   because a change direction is meaningful. Lay several out in .wb-stat-grid.
+   -------------------------------------------------------------------------- */
+.wb-stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; }
+.wb-stat {
+  background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border);
+  border-radius: var(--wb-radius-lg); box-shadow: var(--wb-shadow-sm);
+  padding: 18px; font-family: var(--wb-font);
+}
+.wb-stat__top   { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.wb-stat__label { font-size: 13px; font-weight: 550; color: var(--wb-fg-muted); }
+.wb-stat__icon  {
+  margin-left: auto; width: 34px; height: 34px; border-radius: 9px; flex: none;
+  display: grid; place-items: center; font-size: 16px;
+  background: var(--wb-surface-2); color: var(--wb-fg-muted); border: var(--wb-bw) solid var(--wb-border);
+}
+.wb-stat__value {
+  font-size: 26px; font-weight: 700; letter-spacing: -.02em; line-height: 1.1;
+  color: var(--wb-fg); font-variant-numeric: tabular-nums;
+}
+.wb-stat__foot  { display: flex; align-items: center; gap: 8px; margin-top: 10px;
+  font-size: 13px; color: var(--wb-fg-muted); }
+.wb-stat__delta { display: inline-flex; align-items: center; gap: 3px; font-weight: 650;
+  font-variant-numeric: tabular-nums; }
+.wb-stat__delta--up   { color: var(--wb-success-text); }
+.wb-stat__delta--down { color: var(--wb-danger-text); }
+
+/* -----------------------------------------------------------------------------
+   6. FORM CONTROLS
+   -----------------------------------------------------------------------------
+   .wb-field wraps label + control + help/error. Controls are neutral; the only
+   colour is the invalid/error state (red) — meaningful.
+   -------------------------------------------------------------------------- */
+.wb-field { display: flex; flex-direction: column; gap: 6px; font-family: var(--wb-font); }
+.wb-label { font-size: 13px; font-weight: 600; color: var(--wb-fg); }
+.wb-label__opt { font-weight: 500; color: var(--wb-fg-subtle); }
+
+.wb-input, .wb-select, .wb-textarea {
+  width: 100%; font-family: inherit; font-size: 14px; color: var(--wb-fg);
+  background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border-strong);
+  border-radius: var(--wb-input-radius); padding: 9px 12px; line-height: 1.4;
+  transition: border-color .13s ease, box-shadow .13s ease;
+}
+.wb-input::placeholder, .wb-textarea::placeholder { color: var(--wb-fg-subtle); }
+.wb-input:focus, .wb-select:focus, .wb-textarea:focus {
+  outline: none; border-color: var(--wb-gray-500); box-shadow: 0 0 0 3px var(--wb-ring);
+}
+.dark .wb-input:focus, .dark .wb-select:focus, .dark .wb-textarea:focus { border-color: var(--wb-gray-400); }
+.wb-input:disabled, .wb-select:disabled, .wb-textarea:disabled {
+  background: var(--wb-surface-2); color: var(--wb-fg-muted); cursor: not-allowed;
+}
+.wb-textarea { resize: vertical; min-height: 82px; }
+/* Hide the OS resizer grip (the dotted corner) but keep resize working — a clean,
+   rounded corner with no fuzzy pixels. Note: ::-webkit-resizer honours `background`
+   but ignores `mask`, and painting an opaque square here would smudge the border
+   radius (so we go transparent). The visible handle is drawn by .wb-textarea-wrap
+   below, which CAN use a token-coloured mask. */
+.wb-textarea::-webkit-resizer { background: transparent; }
+/* --code: keep long lines on one line and scroll horizontally (themed bar via §27)
+   instead of wrapping — a code / log field. */
+.wb-textarea--code { white-space: pre; }
+/* Custom resize handle — a short, round-capped diagonal (╱) in the corner. Wrap the
+   textarea: <div class="wb-textarea-wrap"><textarea class="wb-textarea">…</textarea></div>.
+   Drawn on the wrapper's ::after (a normal element HONOURS mask, unlike ::-webkit-resizer),
+   so the colour is the token --wb-border-strong — not a hard-coded SVG stroke — and it
+   auto-flips with the theme. pointer-events:none lets a drag reach the native resizer
+   beneath, so resize still works. The SVG is only a shape (mask alpha); its stroke colour
+   is irrelevant. Known limit: Firefox has no ::-webkit-resizer grip to hide, but the native
+   resize corner still works and this handle still shows (mask is cross-browser). Tracks the
+   corner for the default resize:vertical (fixed width); for resize:both the wrapper follows
+   height, and the handle stays at the wrapper's right edge. */
+.wb-textarea-wrap { position: relative; display: block; }
+.wb-textarea-wrap > .wb-textarea { display: block; width: 100%; }
+.wb-textarea-wrap::after {
+  content: ""; position: absolute; right: 3px; bottom: 3px;
+  width: 12px; height: 12px; pointer-events: none;
+  background-color: var(--wb-border-strong);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2012%2012'%3E%3Cline%20x1='3'%20y1='9'%20x2='9'%20y2='3'%20stroke='%23000'%20stroke-width='1.6'%20stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
+          mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2012%2012'%3E%3Cline%20x1='3'%20y1='9'%20x2='9'%20y2='3'%20stroke='%23000'%20stroke-width='1.6'%20stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+.wb-select { appearance: none; -webkit-appearance: none; padding-right: 34px; }
+/* Wrap the <select> so a real chevron icon overlays it (can't put a child inside
+   a <select>): <span class="wb-select-wrap"><select …><span class="wb-ico">expand_more</span></span> */
+.wb-select-wrap { position: relative; display: block; }
+.wb-select-wrap > .wb-select { width: 100%; }
+.wb-select-wrap > .wb-ico {
+  position: absolute; top: 50%; right: 9px; transform: translateY(-50%);
+  pointer-events: none; color: var(--wb-fg-muted); font-size: 20px;
+}
+
+/* Invalid = a runtime STATE (.is-invalid) — consistent with .is-active / .is-open.
+   Red border always; on focus it KEEPS red (never falls back to the neutral ring, so
+   a bad field still reads red while you're typing in it). */
+.wb-input.is-invalid, .wb-select.is-invalid, .wb-textarea.is-invalid {
+  border-color: var(--wb-danger);
+}
+.wb-input.is-invalid:focus, .wb-select.is-invalid:focus, .wb-textarea.is-invalid:focus {
+  border-color: var(--wb-danger); box-shadow: 0 0 0 3px var(--wb-danger-soft);
+}
+
+/* Input group — prefix/suffix addons (e.g. ₫, %, .00). */
+.wb-input-group { display: flex; align-items: stretch; }
+.wb-input-group > .wb-input, .wb-input-group > .wb-input-group__addon,
+.wb-input-group > .wb-input-group__btn { border-radius: 0; }
+.wb-input-group > *:not(:last-child) { border-right-width: 0; }
+.wb-input-group > *:first-child { border-top-left-radius: var(--wb-radius-sm); border-bottom-left-radius: var(--wb-radius-sm); }
+.wb-input-group > *:last-child  { border-top-right-radius: var(--wb-radius-sm); border-bottom-right-radius: var(--wb-radius-sm); }
+.wb-input-group__addon {
+  display: inline-flex; align-items: center; padding: 0 12px; font-size: 14px; white-space: nowrap;
+  color: var(--wb-fg-muted); background: var(--wb-surface-2); border: var(--wb-bw) solid var(--wb-border-strong);
+}
+/* Clickable affix — a button-flavoured addon: reveal a password, clear a field, toggle a unit.
+   Shares the addon's box; adds pointer feedback + a focus ring (the :focus rule below lifts it). */
+.wb-input-group__btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; flex: none;
+  padding: 0 11px; font-family: inherit; font-size: 14px; cursor: pointer;
+  color: var(--wb-fg-muted); background: var(--wb-surface-2);
+  border: var(--wb-bw) solid var(--wb-border-strong);
+  transition: background .13s ease, color .13s ease;
+}
+.wb-input-group__btn:hover { background: var(--wb-surface-hover); color: var(--wb-fg); }
+.wb-input-group__btn:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
+/* Focus: lift the focused control above its siblings so its ring isn't overpainted by the
+   next addon, and carry the focus colour onto the shared edge. Non-last children drop their
+   right border (the collapse rule above), so that edge is drawn by the neighbour's left border
+   and would otherwise stay grey — the "missing edge" when focusing a non-last input. */
+.wb-input-group > :focus { position: relative; z-index: 2; }
+.wb-input-group > :focus + :not(.is-invalid) { border-left-color: var(--wb-gray-500); }
+.dark .wb-input-group > :focus + :not(.is-invalid) { border-left-color: var(--wb-gray-400); }
+
+/* Seamless input — no outline; the field melts into the page (transparent fill).
+   The focus RING still shows so it stays operable. Good inside a card/toolbar where
+   the container already frames it. */
+.wb-input--seamless, .wb-textarea--seamless { background: transparent; border-color: transparent; padding-inline: 6px; }
+.wb-input--seamless:focus, .wb-textarea--seamless:focus { border-color: transparent; }
+
+/* Seamless input-group — ONE outline around the whole row; the addons/buttons carry
+   NO fill and NO divider line, they just sit inside with a little spacing (icon /
+   prefix / suffix / button share the field with the text). */
+.wb-input-group--seamless {
+  align-items: center; gap: 2px; padding: 0 6px;
+  background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border-strong);
+  border-radius: var(--wb-input-radius);
+  transition: border-color .13s ease, box-shadow .13s ease;
+}
+.wb-input-group--seamless > .wb-input,
+.wb-input-group--seamless > .wb-input-group__addon,
+.wb-input-group--seamless > .wb-input-group__btn {
+  border: 0; background: transparent; border-radius: var(--wb-radius-sm);
+}
+.wb-input-group--seamless > .wb-input { padding-inline: 4px; }
+/* Affix button melts in too: a compact SQUARE hit area (equal padding), so its hover fill
+   is a tidy rounded-square — never a stretched capsule/ellipse. Ghost (no fill) until hover. */
+.wb-input-group--seamless > .wb-input-group__btn { padding: 6px; line-height: 0; }
+.wb-input-group--seamless > .wb-input-group__btn:hover { background: var(--wb-surface-hover); }
+.wb-input-group--seamless:focus-within { border-color: var(--wb-gray-500); box-shadow: 0 0 0 3px var(--wb-ring); }
+.dark .wb-input-group--seamless:focus-within { border-color: var(--wb-gray-400); }
+.wb-input-group--seamless > .wb-input:focus { box-shadow: none; }   /* group shows focus, not the inner input */
+.wb-input-group--seamless.is-invalid { border-color: var(--wb-danger); }
+
+/* Templated field — the separators are REAL inked characters ("dd / mm / yyyy"),
+   each segment its own tiny input so the unfilled parts show a GREY placeholder
+   while the " / " · " : " · " – " stay inked (with spaces around them). Looks like
+   one .wb-input; a tiny driver (app.js) auto-advances segment→segment as each fills. */
+.wb-input-tpl {
+  display: inline-flex; align-items: center; width: auto; max-width: 100%;
+  font-family: var(--wb-font-mono); font-size: 14px; color: var(--wb-fg);
+  background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border-strong);
+  border-radius: var(--wb-input-radius); padding: 9px 12px; line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+  transition: border-color .13s ease, box-shadow .13s ease;
+}
+.wb-input-tpl:focus-within { border-color: var(--wb-gray-500); box-shadow: 0 0 0 3px var(--wb-ring); }
+.dark .wb-input-tpl:focus-within { border-color: var(--wb-gray-400); }
+.wb-input-tpl.is-invalid { border-color: var(--wb-danger); }
+.wb-input-tpl__seg {
+  border: 0; background: transparent; padding: 1px 1px; margin: 0; font: inherit; color: var(--wb-fg);
+  text-align: center; outline: none; -webkit-appearance: none; appearance: none; width: 2.6ch;
+}
+.wb-input-tpl__seg--y { width: 4.6ch; }   /* yyyy */
+.wb-input-tpl__seg::placeholder { color: var(--wb-fg-subtle); }
+.wb-input-tpl__seg:focus { background: var(--wb-surface-hover); border-radius: 4px; }
+.wb-input-tpl__sep { color: var(--wb-fg); padding: 0 5px; user-select: none; }   /* inked separator + spaces */
+
+/* -----------------------------------------------------------------------------
+   FORMAT TOOLBAR  (rich-text / markdown format bar for a textarea)
+   -----------------------------------------------------------------------------
+   A horizontal row of icon/label buttons in groups (Aa · H1 · H2 · bold · italic ·
+   underline · strike · highlight · colour · clear). A button toggles .is-active
+   (pressed = tier-1 solid neutral); __sep divides groups. Pairs above a .wb-textarea;
+   the behaviour (wrap the selection in markdown tokens) is a tiny driver in app.js. */
+.wb-toolbar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 2px;
+  padding: 4px; font-family: var(--wb-font);
+  background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border-strong);
+  border-radius: var(--wb-input-radius);
+}
+/* Sit flush on top of a textarea it controls (share the seam). */
+.wb-toolbar--attached { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+.wb-toolbar--attached + .wb-textarea,
+.wb-toolbar--attached + .wb-textarea-wrap > .wb-textarea { border-top-left-radius: 0; border-top-right-radius: 0; border-top: 0; }
+.wb-toolbar__group { display: inline-flex; align-items: center; gap: 2px; }
+.wb-toolbar__sep { align-self: stretch; width: var(--wb-bw); margin: 3px 4px; background: var(--wb-neutral-weak); }
+.wb-toolbar__btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+  min-width: 30px; height: 30px; padding: 0 7px; flex: none;
+  border: 0; border-radius: var(--wb-radius-sm); background: transparent; color: var(--wb-fg-muted);
+  font: inherit; font-size: 14px; line-height: 1; cursor: pointer;
+  transition: background .12s ease, color .12s ease;
+}
+.wb-toolbar__btn--text { font-weight: 700; }                 /* Aa · H1 · H2 label buttons */
+.wb-toolbar__btn .wb-ico { font-size: var(--wb-ico-sm); }
+.wb-toolbar__btn:hover { background: var(--wb-surface-hover); color: var(--wb-fg); }
+.wb-toolbar__btn.is-active { background: var(--wb-fg); color: var(--wb-surface); }   /* pressed = tier-1 solid */
+.wb-toolbar__btn:disabled { opacity: .45; cursor: not-allowed; }
+.wb-toolbar__btn:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
+/* Highlight-colour button — a swatch chip of the current colour under a small caret. */
+.wb-toolbar__swatch { width: 15px; height: 15px; border-radius: 4px; background: var(--wb-hl-color, #fde68a); box-shadow: inset 0 0 0 var(--wb-bw) rgba(0,0,0,.15); }
+
+/* Checkbox & radio — neutral accent, native for accessibility. */
+/* Checkbox & radio — drawn on the native input itself (appearance:none keeps it
+   focusable, clickable and form-correct, no extra markup). Border width is a knob
+   (--wb-check-bw, so the box can be bolder) and the corner follows the radius tokens,
+   so both track the Config panel. Checked = solid ink, which auto-flips on dark. */
+.wb-check, .wb-radio { display: inline-flex; align-items: center; gap: 9px; font-size: 14px; color: var(--wb-fg); cursor: pointer; }
+.wb-check input, .wb-radio input {
+  appearance: none; -webkit-appearance: none; box-sizing: border-box; flex: none; margin: 0; cursor: pointer;
+  width: var(--wb-check-size); height: var(--wb-check-size);
+  border: var(--wb-check-bw) solid var(--wb-fg); background: var(--wb-surface);
+  background-repeat: no-repeat; background-position: center;
+  transition: background-color .12s ease, border-color .12s ease, box-shadow .12s ease;
+}
+.wb-check input { border-radius: var(--wb-check-radius); }
+.wb-radio input { border-radius: 50%; }
+.wb-check input:checked, .wb-radio input:checked { background-color: var(--wb-fg); border-color: var(--wb-fg); }
+.wb-check input:checked {
+  /* Tick traces the Material "check" glyph (same shape stepper/steps use), so a
+     ticked box and a done step read as one checkmark. */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19.5 6.5'/%3E%3C/svg%3E");
+  background-size: 76% 76%;
+}
+.wb-radio input:checked { background-image: radial-gradient(circle at center, var(--wb-surface) 0 30%, transparent 34%); }
+.wb-check input:focus-visible, .wb-radio input:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
+.wb-check input:disabled, .wb-radio input:disabled { opacity: .45; cursor: not-allowed; }
+/* Dark: box turns white, so the tick flips to dark ink (SVG colour is baked in). */
+.dark .wb-check input:checked {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2318181b' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19.5 6.5'/%3E%3C/svg%3E");
+}
+
+/* Radio — the circle can read three ways when selected (all auto-flip in dark):
+   • (default)  ink-filled circle with a white centre dot
+   • --ring     classic: white interior + ink outline + ink centre dot (white gap)
+   • --solid    fully filled ink circle, no dot. */
+.wb-radio--ring input:checked {
+  background-color: var(--wb-surface);
+  background-image: radial-gradient(circle at center, var(--wb-fg) 0 30%, transparent 34%);
+}
+.wb-radio--solid input:checked { background-image: none; }
+
+/* Locked (--locked) — same idiom as the switch: keeps the real checked value but
+   can't be changed; a small lock sits BESIDE the control and shakes when a change
+   is attempted (wired by the delegated handler in app.js). Distinct from :disabled
+   (which reads inert). Works on .wb-check and .wb-radio. */
+.wb-check__lock {
+  flex: none; display: inline-grid; place-items: center; width: 18px; height: 18px;
+  font-family: var(--wb-icon-font); font-size: 15px; font-weight: normal; line-height: 1;
+  text-transform: none;   /* keep the "lock" ligature intact under an uppercase ancestor */
+  color: var(--wb-fg-subtle); opacity: .5; cursor: not-allowed;
+  transition: opacity .15s ease, color .15s ease, transform .12s ease;
+}
+.wb-check--locked, .wb-radio--locked { cursor: default; }
+.wb-check--locked:hover .wb-check__lock, .wb-radio--locked:hover .wb-check__lock { opacity: 1; }
+.wb-check--locked.is-denied .wb-check__lock, .wb-radio--locked.is-denied .wb-check__lock {
+  opacity: 1; color: var(--wb-fg); animation: wb-lock-shake .4s ease;
+}
+
+/* Switch / toggle. */
+.wb-switch { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; color: var(--wb-fg); cursor: pointer; }
+.wb-switch input { position: absolute; opacity: 0; width: 0; height: 0; }
+.wb-switch__track {
+  position: relative; flex: none; width: 40px; height: 23px; border-radius: var(--wb-switch-radius);
+  background: var(--wb-gray-300); transition: background-color .16s ease;
+}
+.wb-switch__track::after {
+  content: ""; position: absolute; top: 2px; left: 2px; width: 19px; height: 19px; border-radius: var(--wb-switch-thumb-radius);
+  background: #fff; box-shadow: var(--wb-shadow-sm); transition: transform .16s ease;
+}
+.wb-switch input:checked + .wb-switch__track { background: var(--wb-gray-900); }
+.wb-switch input:checked + .wb-switch__track::after { transform: translateX(17px); }
+.wb-switch input:focus-visible + .wb-switch__track { box-shadow: 0 0 0 3px var(--wb-ring); }
+.dark .wb-switch__track { background: var(--wb-gray-600); }
+.dark .wb-switch__track::after { background: var(--wb-gray-100); }
+.dark .wb-switch input:checked + .wb-switch__track { background: var(--wb-gray-100); }
+.dark .wb-switch input:checked + .wb-switch__track::after { background: var(--wb-gray-900); }
+/* I/O — a power-rocker hint drawn in the TRACK background as CSS shapes (a bar “I” = on at left,
+   a ring “O” = off at right) — NOT glyphs, so it never depends on the font. Drawn on ::before so
+   the track's own background colour still flips per state; the thumb (::after) paints on top and
+   covers the inactive side, leaving the active symbol showing. --io-c flips the shape colour so it
+   stays legible as the track colour changes across state × theme. Only add --io, no markup change. */
+.wb-switch--io .wb-switch__track::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  --io-c: rgba(0, 0, 0, .5);
+  background-image:
+    linear-gradient(var(--io-c), var(--io-c)),                                        /* “I” bar */
+    radial-gradient(circle, transparent 2.8px, var(--io-c) 2.9px 4px, transparent 4.2px);  /* “O” ring */
+  background-repeat: no-repeat;
+  background-size: 2px 9px, 13px 13px;
+  background-position: left 8px center, right 5px center;
+}
+.wb-switch--io input:checked + .wb-switch__track::before { --io-c: rgba(255, 255, 255, .72); }
+.dark .wb-switch--io .wb-switch__track::before { --io-c: rgba(255, 255, 255, .5); }
+.dark .wb-switch--io input:checked + .wb-switch__track::before { --io-c: rgba(0, 0, 0, .55); }
+/* Disabled — reads as inert: a dim neutral track (never the on/off colour) + not-allowed. */
+.wb-switch:has(input:disabled) { cursor: not-allowed; color: var(--wb-fg-subtle); }
+.wb-switch input:disabled + .wb-switch__track { background: var(--wb-gray-200); cursor: not-allowed; }
+.wb-switch input:disabled:checked + .wb-switch__track { background: var(--wb-gray-300); }
+.dark .wb-switch input:disabled + .wb-switch__track { background: var(--wb-gray-700); }
+.dark .wb-switch input:disabled:checked + .wb-switch__track { background: var(--wb-gray-600); }
+
+/* Locked (--locked): the switch keeps showing its REAL on/off value but can't be flipped.
+   A small lock sits BESIDE the toggle (not on the thumb) as a quiet hint — it brightens on
+   hover and, when the user tries to flip it, darkens to strong ink and shakes, then settles. The
+   input stays enabled so it still emits the click we intercept; wire the deny+shake with the
+   delegated handler (docs app.js). Put the lock left or right of the track as your layout wants. */
+.wb-switch__lock {
+  flex: none; display: inline-grid; place-items: center; width: 18px; height: 18px;
+  font-family: var(--wb-icon-font); font-size: 15px; font-weight: normal; line-height: 1;
+  text-transform: none;   /* keep the "lock" ligature intact under an uppercase ancestor */
+  color: var(--wb-fg-subtle); opacity: .5; cursor: not-allowed;
+  transition: opacity .15s ease, color .15s ease, transform .12s ease;
+}
+.wb-switch--locked { cursor: default; }
+.wb-switch--locked:hover .wb-switch__lock { opacity: 1; }
+.wb-switch--locked.is-denied .wb-switch__lock {
+  opacity: 1; color: var(--wb-fg); animation: wb-lock-shake .4s ease;
+}
+@keyframes wb-lock-shake {
+  10%, 90% { transform: translateX(-1px); }
+  20%, 80% { transform: translateX(2px); }
+  30%, 50%, 70% { transform: translateX(-2px); }
+  40%, 60% { transform: translateX(2px); }
+}
+
+/* Help & error text under a field. */
+.wb-help  { font-size: 12.5px; color: var(--wb-fg-muted); }
+.wb-error { font-size: 12.5px; font-weight: 500; color: var(--wb-danger-text); }
+
+/* -----------------------------------------------------------------------------
+   SHARED — a small neutral close button reused by alert / modal / toast
+   -------------------------------------------------------------------------- */
+.wb-close {
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  align-self: flex-start;   /* a dismiss × belongs top-right — never vertically centred */
+  width: 26px; height: 26px; margin: -2px -4px -2px 0;
+  border: 0; border-radius: 7px; background: none; color: var(--wb-fg-muted);
+  cursor: pointer; font-size: 0; line-height: 1;
+}
+.wb-close::before { content: "\e5cd"; font-size: 19px; }   /* close */
+.wb-close:hover { background: var(--wb-surface-hover); color: var(--wb-fg); }
+
+/* -----------------------------------------------------------------------------
+   7. CARD
+   -----------------------------------------------------------------------------
+   .wb-card is the surface (border + radius + soft shadow). It already wraps
+   tables; these parts make it a general content card. Compose head/body/foot.
+     VARIANTS: --dashed (dashed hairline, no shadow) · --flat (no shadow) ·
+               --hover (lifts on hover — for clickable cards)
+   -------------------------------------------------------------------------- */
+.wb-card__head {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 16px 18px; border-bottom: var(--wb-bw) solid var(--wb-border);
+}
+.wb-card__title { font-size: 15px; font-weight: 650; color: var(--wb-fg); margin: 0; }
+.wb-card__sub   { font-size: 13px; color: var(--wb-fg-muted); margin: 2px 0 0; }
+.wb-card__head-actions { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+.wb-card__body  { padding: 18px; }
+.wb-card__foot  {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 18px; border-top: var(--wb-bw) solid var(--wb-border); background: var(--wb-surface-2);
+}
+.wb-card--flat   { box-shadow: none; }
+.wb-card--dashed { border-style: dashed; border-color: var(--wb-border-strong); box-shadow: none; }
+.wb-card--hover  { transition: border-color .13s ease, box-shadow .13s ease, transform .06s ease; cursor: pointer; }
+.wb-card--hover:hover { border-color: var(--wb-border-strong); box-shadow: var(--wb-shadow-md); transform: translateY(-1px); }
+
+/* -----------------------------------------------------------------------------
+   8. DROPDOWN / MENU
+   -----------------------------------------------------------------------------
+   .wb-dropdown wraps a trigger + .wb-dropdown__menu; toggle .is-open (JS or
+   Radix in the app). .wb-menu is the floating panel and works standalone too.
+   -------------------------------------------------------------------------- */
+.wb-dropdown { position: relative; display: inline-block; }
+.wb-dropdown__menu { position: absolute; top: calc(100% + 6px); left: 0; z-index: 50; display: none; }
+.wb-dropdown__menu--right { left: auto; right: 0; }
+.wb-dropdown.is-open > .wb-dropdown__menu { display: block; }
+/* Trigger caret — the chevron "v" (Material expand_more); flips up when open.
+   One family with select/accordion/collapse — never a literal ▾. */
+.wb-dropdown__caret { transition: transform .2s ease; margin-left: 2px; margin-right: -2px; }
+.wb-dropdown.is-open .wb-dropdown__caret { transform: rotate(180deg); }
+
+.wb-menu {
+  min-width: 208px; padding: 6px; font-family: var(--wb-font);
+  background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border);
+  border-radius: var(--wb-radius); box-shadow: var(--wb-shadow-md);
+}
+.wb-menu__label {
+  font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+  color: var(--wb-fg-subtle); padding: 8px 10px 4px;
+}
+.wb-menu__item {
+  display: flex; align-items: center; gap: 10px; width: 100%; text-align: left;
+  border: 0; background: none; font: inherit; font-size: 13.5px; color: var(--wb-fg);
+  padding: 8px 10px; border-radius: 7px; cursor: pointer; text-decoration: none;
+}
+.wb-menu__item:hover { background: var(--wb-surface-hover); }
+.wb-menu__item:disabled, .wb-menu__item[aria-disabled="true"] { opacity: .5; pointer-events: none; }
+.wb-menu__item--danger { color: var(--wb-danger-text); }
+.wb-menu__item--danger:hover { background: var(--wb-danger-soft); }
+.wb-menu__ico { width: 16px; flex: none; text-align: center; color: var(--wb-fg-muted); }
+.wb-menu__item--danger .wb-menu__ico { color: var(--wb-danger-text); }
+.wb-menu__kbd { margin-left: auto; font-size: 11px; color: var(--wb-fg-subtle);
+  font-family: "SF Mono", ui-monospace, monospace; }
+.wb-menu__sep { height: 1px; background: var(--wb-border); margin: 6px 4px; }
+/* Expandable row — a menu item that opens/closes a nested sub-list. Toggle
+   .is-open on the wrapping .wb-menu__group; the "v" caret (expand_more) rotates and
+   the sub grows with the 0fr→1fr grid trick (same as .wb-collapse — smooth, no JS
+   height maths). Clicking it toggles the sub instead of closing the dropdown. */
+.wb-menu__caret { margin-left: auto; color: var(--wb-fg-subtle); transition: transform .2s ease; }
+.wb-menu__group.is-open > .wb-menu__item--expand .wb-menu__caret { transform: rotate(180deg); }
+.wb-menu__sub { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .22s ease; }
+.wb-menu__group.is-open > .wb-menu__sub { grid-template-rows: 1fr; }
+.wb-menu__sub-inner { overflow: hidden; min-height: 0; }
+.wb-menu__sub .wb-menu__item { padding-left: 34px; }   /* indent nested items under their parent */
+
+/* -----------------------------------------------------------------------------
+   9. ALERT / BANNER
+   -----------------------------------------------------------------------------
+   Inline message block. Neutral by default; a tone adds a soft tint + a full
+   outline in the tone colour (the house style — no left-accent bar). The old
+   left-border style is documented on the Border page for future use.
+   -------------------------------------------------------------------------- */
+.wb-alert {
+  display: flex; gap: 12px; align-items: flex-start; font-family: var(--wb-font);
+  padding: 12px 14px; border: var(--wb-bw) solid var(--wb-border);
+  border-radius: var(--wb-radius); background: var(--wb-surface-2);
+  font-size: 13.5px; color: var(--wb-fg);
+}
+.wb-alert__icon  { flex: none; font-size: 16px; line-height: 1.5; color: var(--wb-fg-muted); }
+.wb-alert__body  { min-width: 0; flex: 1 1 auto; }   /* grows so a close × is pushed to the far right */
+.wb-alert__title { font-weight: 650; margin: 0 0 2px; }
+.wb-alert__msg   { color: var(--wb-fg-muted); margin: 0; }
+/* Title only (no description): centre the icon against the single line instead of
+   top-aligning it — top-align only reads right when a second line follows. */
+.wb-alert:not(:has(.wb-alert__msg)) { align-items: center; }
+.wb-alert:not(:has(.wb-alert__msg)) .wb-alert__title { margin-bottom: 0; }
+/* Tone = soft background + an outline mixed toward the tone (calmer than full saturation). */
+.wb-alert--info    { border-color: color-mix(in srgb, var(--wb-info) 55%, var(--wb-border));    background: var(--wb-info-soft); }
+.wb-alert--success { border-color: color-mix(in srgb, var(--wb-success) 55%, var(--wb-border)); background: var(--wb-success-soft); }
+.wb-alert--warning { border-color: color-mix(in srgb, var(--wb-warning) 55%, var(--wb-border)); background: var(--wb-warning-soft); }
+.wb-alert--danger  { border-color: color-mix(in srgb, var(--wb-danger) 55%, var(--wb-border));  background: var(--wb-danger-soft); }
+/* No outline — just the soft fill (a flat banner). Rides on any tone; must come
+   after the tone rules so it wins the border on a combined class. */
+.wb-alert--plain { border-color: transparent; }
+.wb-alert--info    .wb-alert__icon { color: var(--wb-info-text); }
+.wb-alert--success .wb-alert__icon { color: var(--wb-success-text); }
+.wb-alert--warning .wb-alert__icon { color: var(--wb-warning-text); }
+.wb-alert--danger  .wb-alert__icon { color: var(--wb-danger-text); }
+
+/* -----------------------------------------------------------------------------
+   10. MODAL / DIALOG  (overlay + panel)
+   -----------------------------------------------------------------------------
+   .wb-overlay dims the screen (toggle .is-open). In the app use Radix Dialog for
+   focus-trap/portal; these classes give the look. .wb-modal also renders inline.
+   -------------------------------------------------------------------------- */
+.wb-overlay {
+  position: fixed; inset: 0; z-index: 100; display: none;
+  align-items: center; justify-content: center; padding: 20px;
+  background: rgba(9, 9, 11, .5); backdrop-filter: blur(2px);
+}
+.wb-overlay.is-open { display: flex; }
+/* Backdrop options. Default = modal: dims + light blur, blocks the page, click-
+   outside closes. Swap the feel or make it non-modal:
+     --blur   frosted glass (làm mờ mạnh)         --clear  no dim, still blocks
+     --pass   non-modal: page below stays usable (không chặn — the scrim lets
+              clicks through; note click-outside-to-close no longer fires). */
+.wb-overlay--blur  { background: rgba(9, 9, 11, .32); backdrop-filter: blur(8px); }
+.wb-overlay--clear { background: none; backdrop-filter: none; }
+.wb-overlay--pass  { background: none; backdrop-filter: none; pointer-events: none; }
+.wb-overlay--pass > * { pointer-events: auto; }
+.wb-modal {
+  width: 100%; max-width: 460px; font-family: var(--wb-font); overflow: hidden;
+  background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border);
+  border-radius: var(--wb-radius-lg); box-shadow: var(--wb-shadow-md);
+}
+.wb-modal__head  { display: flex; align-items: flex-start; gap: 12px; padding: 18px 20px 0; }
+/* Title block takes the row; the close button is always pinned to the far right. */
+.wb-modal__head > :first-child { flex: 1 1 auto; min-width: 0; }
+.wb-modal__head .wb-close { margin-left: auto; }
+.wb-modal__title { font-size: 17px; font-weight: 700; margin: 0; }
+.wb-modal__sub   { font-size: 13.5px; color: var(--wb-fg-muted); margin: 4px 0 0; }
+.wb-modal__body  { padding: 14px 20px; font-size: 14px; color: var(--wb-fg); }
+.wb-modal__foot  { display: flex; justify-content: flex-end; gap: 10px; padding: 8px 20px 20px; }
+
+/* -----------------------------------------------------------------------------
+   11. TOAST  (transient notification)
+   -------------------------------------------------------------------------- */
+.wb-toaster { position: fixed; bottom: 20px; right: 20px; z-index: 120;
+  display: flex; flex-direction: column; gap: 10px; }
+.wb-toast {
+  display: flex; align-items: flex-start; gap: 11px; width: 330px; max-width: calc(100vw - 40px);
+  font-family: var(--wb-font); font-size: 13.5px; color: var(--wb-fg);
+  padding: 12px 14px; background: var(--wb-surface);
+  border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius);
+  box-shadow: var(--wb-shadow-md); animation: wb-toast-in .18s ease;
+}
+@keyframes wb-toast-in { from { opacity: 0; transform: translateY(8px); } }
+/* The tone lives in a small coloured disc, not a left bar. */
+.wb-toast__icon  {
+  flex: none; width: 22px; height: 22px; margin-top: 1px; border-radius: 50%;
+  display: grid; place-items: center; font-size: 12px; font-weight: 700; line-height: 1;
+  background: var(--wb-gray-200); color: var(--wb-fg-muted);
+}
+.dark .wb-toast__icon { background: var(--wb-gray-700); color: var(--wb-fg); }
+.wb-toast__body  { min-width: 0; flex: 1 1 auto; }   /* grows so the close × sits top-right */
+.wb-toast__title { font-weight: 650; margin: 0 0 1px; }
+.wb-toast__msg   { color: var(--wb-fg-muted); margin: 0; }
+/* Title only: centre the disc against the single line (see .wb-alert above). */
+.wb-toast:not(:has(.wb-toast__msg)) { align-items: center; }
+.wb-toast:not(:has(.wb-toast__msg)) .wb-toast__icon  { margin-top: 0; }
+.wb-toast:not(:has(.wb-toast__msg)) .wb-toast__title { margin-bottom: 0; }
+.wb-toast--success .wb-toast__icon { background: var(--wb-success-soft); color: var(--wb-success-text); }
+.wb-toast--warning .wb-toast__icon { background: var(--wb-warning-soft); color: var(--wb-warning-text); }
+.wb-toast--danger  .wb-toast__icon { background: var(--wb-danger-soft);  color: var(--wb-danger-text); }
+.wb-toast--info    .wb-toast__icon { background: var(--wb-info-soft);    color: var(--wb-info-text); }
+
+/* -----------------------------------------------------------------------------
+   12. TABS
+   -------------------------------------------------------------------------- */
+.wb-tabs { display: flex; gap: 2px; border-bottom: var(--wb-bw) solid var(--wb-border); }
+.wb-tab {
+  position: relative; border: 0; background: none; font: inherit; font-size: 14px; font-weight: 550;
+  color: var(--wb-fg-muted); padding: 10px 14px; cursor: pointer;
+}
+.wb-tab:hover { color: var(--wb-fg); }
+.wb-tab.is-active { color: var(--wb-fg); }
+.wb-tab.is-active::after {
+  content: ""; position: absolute; left: 10px; right: 10px; bottom: -1px; height: 2px;
+  background: var(--wb-fg); border-radius: 2px;
+}
+.wb-tab-panel { padding-top: 16px; }
+.wb-tab-panel[hidden] { display: none; }
+/* Pill variant — a segmented control (e.g. Thu / Chi, khoảng thời gian). */
+.wb-tabs--pill { border: 0; gap: 4px; padding: 4px; background: var(--wb-surface-2);
+  border-radius: var(--wb-radius); display: inline-flex; }
+.wb-tabs--pill .wb-tab { padding: 6px 14px; border-radius: var(--wb-radius-sm); }
+.wb-tabs--pill .wb-tab.is-active { background: var(--wb-surface); color: var(--wb-fg);
+  box-shadow: var(--wb-shadow-sm); }
+.wb-tabs--pill .wb-tab.is-active::after { display: none; }
+
+/* Boxed variant — sharp-cornered, high-contrast: a solid (near-black) track with
+   an inset (near-white) thumb on the active tab. The track padding keeps the thumb
+   smaller than the cell, so the dark frame stays visible around it. Inverts cleanly
+   in dark mode (white track, dark thumb). */
+.wb-tabs--boxed {
+  display: inline-flex; gap: 0; border: 0; border-radius: 0;
+  padding: 3px; background: var(--wb-fg);
+}
+.wb-tabs--boxed .wb-tab {
+  border-radius: 0; padding: 7px 16px; font-weight: 600; color: var(--wb-surface);
+}
+.wb-tabs--boxed .wb-tab:hover:not(.is-active) {
+  color: var(--wb-surface); background: color-mix(in srgb, var(--wb-surface) 22%, transparent);
+}
+.wb-tabs--boxed .wb-tab.is-active { background: var(--wb-surface); color: var(--wb-fg); }
+.wb-tabs--boxed .wb-tab.is-active::after { display: none; }
+
+/* -----------------------------------------------------------------------------
+   13. TOOLTIP  (pure-CSS hover/focus bubble)
+   -------------------------------------------------------------------------- */
+.wb-tooltip { position: relative; display: inline-flex; }
+.wb-tooltip__bubble {
+  position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+  z-index: 60; white-space: nowrap; font-size: 12px; font-family: var(--wb-font);
+  padding: 5px 9px; border-radius: 6px; opacity: 0; pointer-events: none; transition: opacity .12s ease;
+  background: var(--wb-gray-900); color: var(--wb-white); box-shadow: var(--wb-shadow-md);
+}
+.dark .wb-tooltip__bubble { background: var(--wb-gray-100); color: var(--wb-gray-900); }
+.wb-tooltip__bubble::after {
+  content: ""; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+  border: 5px solid transparent; border-top-color: var(--wb-gray-900);
+}
+.dark .wb-tooltip__bubble::after { border-top-color: var(--wb-gray-100); }
+.wb-tooltip:hover .wb-tooltip__bubble,
+.wb-tooltip:focus-within .wb-tooltip__bubble { opacity: 1; }
+
+/* -----------------------------------------------------------------------------
+   14. BREADCRUMB
+   -------------------------------------------------------------------------- */
+.wb-breadcrumb { display: flex; align-items: center; flex-wrap: wrap; gap: 7px;
+  font-family: var(--wb-font); font-size: 13.5px; color: var(--wb-fg-muted); }
+.wb-breadcrumb a { color: var(--wb-fg-muted); text-decoration: none; }
+.wb-breadcrumb a:hover { color: var(--wb-fg); }
+.wb-breadcrumb__sep { color: var(--wb-fg-subtle); }
+.wb-breadcrumb__current { color: var(--wb-fg); font-weight: 600; }
+
+/* -----------------------------------------------------------------------------
+   15. PAGINATION
+   -------------------------------------------------------------------------- */
+.wb-pagination { display: inline-flex; align-items: center; gap: 4px; font-family: var(--wb-font); }
+.wb-page {
+  min-width: 34px; height: 34px; padding: 0 10px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: var(--wb-bw) solid var(--wb-border-strong); background: var(--wb-surface); color: var(--wb-fg);
+  border-radius: var(--wb-radius-sm); font-size: 13.5px; cursor: pointer; text-decoration: none;
+}
+.wb-page:hover { background: var(--wb-surface-2); border-color: var(--wb-gray-400); }
+.wb-page.is-active { background: var(--wb-gray-900); color: var(--wb-white); border-color: transparent; }
+.dark .wb-page.is-active { background: var(--wb-gray-100); color: var(--wb-gray-900); }
+.wb-page:disabled, .wb-page.is-disabled { opacity: .5; pointer-events: none; }
+.wb-page--gap { border: 0; background: none; cursor: default; }
+
+/* -----------------------------------------------------------------------------
+   16. AVATAR
+   -------------------------------------------------------------------------- */
+.wb-avatar {
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  width: 36px; height: 36px; border-radius: 50%; overflow: hidden;
+  font-family: var(--wb-font); font-size: 13px; font-weight: 650;
+  background: var(--wb-gray-200); color: var(--wb-gray-700);
+}
+.dark .wb-avatar { background: var(--wb-gray-700); color: var(--wb-gray-100); }
+/* Solid — neutral high-emphasis avatar (black chip); flips in dark. */
+.wb-avatar--solid { background: var(--wb-gray-900); color: var(--wb-white); }
+.dark .wb-avatar--solid { background: var(--wb-gray-100); color: var(--wb-gray-900); }
+.wb-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.wb-avatar--sm { width: 28px; height: 28px; font-size: 11px; }
+.wb-avatar--lg { width: 48px; height: 48px; font-size: 16px; }
+.wb-avatar--square { border-radius: var(--wb-radius); }
+.wb-avatar-group { display: inline-flex; }
+.wb-avatar-group .wb-avatar { border: 2px solid var(--wb-surface); margin-left: -10px; }
+.wb-avatar-group .wb-avatar:first-child { margin-left: 0; }
+
+/* -----------------------------------------------------------------------------
+   17. PROGRESS  (bar — also used for budget "đã chi / ngân sách")
+   -------------------------------------------------------------------------- */
+/* Track + fill default to the neutral ladder (auto-flips in dark, so no
+   separate .dark rules needed). Status variants ride on top — tier-2 solid. */
+.wb-progress { height: 8px; border-radius: var(--wb-radius-pill); overflow: hidden; background: var(--wb-neutral-weak); }
+.wb-progress__bar { height: 100%; border-radius: var(--wb-radius-pill); background: var(--wb-neutral-ink); transition: width .3s ease; }
+.wb-progress__bar--success { background: var(--wb-success); }
+.wb-progress__bar--warning { background: var(--wb-warning); }
+.wb-progress__bar--danger  { background: var(--wb-danger); }
+.wb-progress__bar--info    { background: var(--wb-info); }
+.wb-progress--lg { height: 12px; }
+/* Loading — a determinate bar that is still working: the __bar shows the real %, and a
+   skeleton-like sheen sweeps ACROSS THE FILLED part only (0 → the bar's width, never the empty
+   track). Tune the sheen colour with --wb-progress-shimmer and the sweeping band's width with
+   --wb-progress-band. Needs a .wb-progress__bar child. Respects prefers-reduced-motion. */
+.wb-progress--loading .wb-progress__bar { position: relative; overflow: hidden; }
+.wb-progress--loading .wb-progress__bar::after {
+  content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: var(--wb-progress-band, 45%);
+  background: linear-gradient(90deg, transparent, var(--wb-progress-shimmer, rgba(255, 255, 255, .55)), transparent);
+  animation: wb-progress-shimmer 1.3s cubic-bezier(.65, .1, .35, .9) infinite;
+}
+.dark .wb-progress--loading .wb-progress__bar::after {
+  background: linear-gradient(90deg, transparent, var(--wb-progress-shimmer, rgba(0, 0, 0, .4)), transparent);
+}
+/* Sweep in bar-relative % so the sheen stays inside the fill for ANY band width. */
+@keyframes wb-progress-shimmer {
+  0%   { left: calc(-1 * var(--wb-progress-band, 45%)); }
+  100% { left: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wb-progress--loading .wb-progress__bar::after { animation: none; opacity: .5; }
+}
+
+/* -----------------------------------------------------------------------------
+   18. ACCORDION  (built on native <details> — no JS needed)
+   -------------------------------------------------------------------------- */
+.wb-accordion { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius);
+  overflow: hidden; background: var(--wb-surface); font-family: var(--wb-font); }
+.wb-accordion__item { border-bottom: var(--wb-bw) solid var(--wb-border); }
+.wb-accordion__item:last-child { border-bottom: 0; }
+.wb-accordion__item > summary {
+  list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px;
+  padding: 14px 16px; font-size: 14px; font-weight: 600; color: var(--wb-fg);
+}
+.wb-accordion__item > summary::-webkit-details-marker { display: none; }
+/* A real chevron icon. Points down when closed, rotates up when open. */
+.wb-accordion__item > summary::after {
+  content: "\e5cf"; margin-left: auto; flex: none; color: var(--wb-fg-muted);
+  font-size: 22px; transition: transform .18s ease;
+}
+.wb-accordion__item[open] > summary::after { transform: rotate(180deg); }
+.wb-accordion__body { padding: 0 16px 14px; font-size: 13.5px; color: var(--wb-fg-muted); }
+
+/* -----------------------------------------------------------------------------
+   19. DIVIDER
+   -------------------------------------------------------------------------- */
+/* One colour knob (--wb-divider-c) drives the line, label ticks, and ray base.
+   A divider is a single flat grey — it defaults to the NEUTRAL LADDER and never
+   spends a hue (a status colour on a section break was noise, so it's gone);
+   the only weight variant is --strong (ink) for a firmer break. */
+.wb-divider { --wb-divider-c: var(--wb-neutral-weak);
+  border: 0; border-top: var(--wb-bw) solid var(--wb-divider-c); margin: 16px 0; }
+.wb-divider--dotted { border-top-style: dotted; }
+.wb-divider--dashed { border-top-style: dashed; }
+/* Long-dash — dash + gap both longer than the browser's default dashed border.
+   A border can't tune dash length, so paint the line as a repeating gradient. */
+.wb-divider--long-dash {
+  border-top: 0; height: var(--wb-bw);
+  background: repeating-linear-gradient(90deg, var(--wb-divider-c) 0 14px, transparent 14px 24px);
+}
+.wb-divider--strong  { --wb-divider-c: var(--wb-neutral-ink); }   /* ink emphasis (still neutral) */
+
+/* Fade — the rule dissolves at both ends (a soft section break). */
+.wb-divider--fade { border-top-color: transparent;
+  border-image: linear-gradient(90deg, transparent, var(--wb-divider-c), transparent) 1; }
+
+/* --vertical / --label are used STANDALONE (no .wb-divider base), so --wb-divider-c
+   is unset there — fall back to the neutral ladder or the shorthand is invalid and
+   the line vanishes (this is why the vertical rule never showed). */
+.wb-divider--vertical { border-top: 0; border-left: var(--wb-bw) solid var(--wb-divider-c, var(--wb-neutral-weak));
+  width: 0; align-self: stretch; margin: 0 12px; }
+
+.wb-divider--label { display: flex; align-items: center; gap: 12px; border: 0; margin: 18px 0;
+  font-size: 12px; color: var(--wb-fg-subtle); font-family: var(--wb-font); }
+.wb-divider--label::before, .wb-divider--label::after { content: ""; flex: 1;
+  border-top: var(--wb-bw) solid var(--wb-divider-c, var(--wb-neutral-weak)); }
+
+/* Ray — a highlight sweeps ALONG the rule. Decoration only: the full line stays visible and the
+   segment just travels across on a loop — it does NOT fill/empty like a progress bar. Override the
+   sweep colour with --wb-divider-ray; tone modifiers still colour the base line. */
+.wb-divider--ray { border: 0; height: max(var(--wb-bw), 2px);
+  background: var(--wb-divider-c, var(--wb-border-strong));   /* base line always visible */
+  border-radius: var(--wb-radius-pill); position: relative; overflow: hidden; margin: 16px 0; }
+.wb-divider--ray::after { content: ""; position: absolute; inset: 0 auto 0 0; width: var(--wb-divider-ray-w, 40%);
+  background: linear-gradient(90deg, transparent, var(--wb-divider-ray, var(--wb-fg)), transparent);
+  transform: translateX(-110%);
+  animation: wb-divider-ray 2.6s cubic-bezier(.45, 0, .2, 1) infinite; }
+@keyframes wb-divider-ray { to { transform: translateX(360%); } }
+@media (prefers-reduced-motion: reduce) { .wb-divider--ray::after { animation: none; } }
+
+/* -----------------------------------------------------------------------------
+   20. SKELETON  (loading placeholder)
+   -------------------------------------------------------------------------- */
+.wb-skeleton {
+  border-radius: var(--wb-radius-sm); background-size: 400% 100%;
+  background-image: linear-gradient(90deg, var(--wb-gray-200) 25%, var(--wb-gray-150) 37%, var(--wb-gray-200) 63%);
+  animation: wb-shimmer 1.4s ease infinite;
+}
+.dark .wb-skeleton {
+  background-image: linear-gradient(90deg, var(--wb-gray-800) 25%, var(--wb-gray-700) 37%, var(--wb-gray-800) 63%);
+}
+@keyframes wb-shimmer { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
+.wb-skeleton--text   { height: 12px; margin: 7px 0; }
+.wb-skeleton--title  { height: 18px; width: 45%; }
+.wb-skeleton--circle { border-radius: 50%; }
+
+/* -----------------------------------------------------------------------------
+   21. EMPTY STATE
+   -------------------------------------------------------------------------- */
+.wb-empty { text-align: center; padding: 40px 20px; font-family: var(--wb-font); color: var(--wb-fg-muted); }
+.wb-empty__icon  { font-size: 30px; opacity: .5; margin-bottom: 10px; }
+.wb-empty__title { font-size: 15px; font-weight: 650; color: var(--wb-fg); margin: 0 0 4px; }
+.wb-empty__msg   { font-size: 13.5px; margin: 0 auto 16px; max-width: 42ch; }
+
+/* -----------------------------------------------------------------------------
+   22. TREE  (nested categories — expand/collapse, + optional drag to reorder/reparent)
+   -----------------------------------------------------------------------------
+   Structure (recursive, so depth is unlimited):
+     ul.wb-tree
+       li.wb-tree__node            (+ .is-collapsed to hide its children)
+         .wb-tree__row             (the draggable line: toggle · label · meta · actions)
+         ul.wb-tree__children      (nested nodes)
+   Variants: --lines (guide rails). Row helpers: __toggle · __handle · __dot · __meta ·
+   __actions · __check. Drag classes (is-dragging / is-drop-before|after|inside) are set
+   by the docs JS; in the app use dnd-kit and keep these classes.
+   -------------------------------------------------------------------------- */
+.wb-tree, .wb-tree__children { list-style: none; margin: 0; padding: 0; font-family: var(--wb-font); }
+.wb-tree__children { padding-left: 22px; }
+.wb-tree--lines > .wb-tree__node .wb-tree__children {
+  margin-left: 10px; padding-left: 12px; border-left: var(--wb-bw) solid var(--wb-border);
+}
+.wb-tree__node.is-collapsed > .wb-tree__children { display: none; }
+
+.wb-tree__row {
+  position: relative; display: flex; align-items: center; gap: 8px;
+  padding: 6px 8px; border-radius: var(--wb-radius-sm);
+  font-size: 14px; color: var(--wb-fg);
+}
+.wb-tree__row:hover { background: var(--wb-surface-hover); }
+.wb-tree__row.is-selected { background: var(--wb-surface-hover); font-weight: 600; }
+
+/* Toggle: a real chevron icon (Material "expand_more"), rotates with a small
+   animation. Down = expanded, right (−90°) = collapsed. The <button> is empty. */
+.wb-tree__toggle {
+  width: 20px; height: 20px; flex: none; border: 0; background: none; cursor: pointer;
+  font-size: 0; color: var(--wb-fg-muted);
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.wb-tree__toggle::before { content: "\e5cf"; font-size: 20px; transition: transform .15s ease; }
+.wb-tree__toggle:hover { color: var(--wb-fg); }
+.wb-tree__node.is-collapsed > .wb-tree__row .wb-tree__toggle::before { transform: rotate(-90deg); }
+.wb-tree__toggle.is-leaf { visibility: hidden; }
+
+/* Drag handle: a real 6-dot grip icon (Material "drag_indicator"). */
+.wb-tree__handle {
+  flex: none; cursor: grab; align-self: center; color: var(--wb-fg-subtle); opacity: .7;
+  display: inline-flex; align-items: center; font-size: 0;
+}
+.wb-tree__handle::before { content: "\e945"; font-size: 18px; }   /* drag_indicator */
+.wb-tree__handle:hover  { opacity: 1; }
+.wb-tree__handle:active { cursor: grabbing; }
+.wb-tree__dot   { width: 8px; height: 8px; border-radius: 50%; flex: none; background: var(--wb-gray-400); }
+.wb-tree__ico   { flex: none; font-size: 14px; line-height: 1; }
+.wb-tree__label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wb-tree__meta  { margin-left: auto; color: var(--wb-fg-muted); font-size: 12.5px; font-variant-numeric: tabular-nums; }
+.wb-tree__check { margin: 0 2px 0 0; accent-color: var(--wb-gray-900); }
+.dark .wb-tree__check { accent-color: var(--wb-gray-100); }
+
+/* Row actions (add / edit / …). Two modes:
+     • default        reveal on hover or keyboard focus (keeps the tree calm)
+     • --actions-shown always visible (touch, or a management screen where
+                       add/edit is the primary job) — put it on .wb-tree. */
+.wb-tree__actions { display: inline-flex; gap: 2px; opacity: 0; transition: opacity .12s ease; }
+.wb-tree__row:hover .wb-tree__actions,
+.wb-tree__row:focus-within .wb-tree__actions,
+.wb-tree--actions-shown .wb-tree__actions { opacity: 1; }
+/* when __meta is present it already pushed right; actions sit after it. If no __meta,
+   push actions right: */
+.wb-tree__row > .wb-tree__actions:not(:last-child) { margin-left: auto; }
+
+/* --- VARIANT: chevron on the RIGHT (toggle sits at the end of the row) ------
+   Expanded points up, collapsed points down — a "disclosure on the right" look. */
+.wb-tree--right .wb-tree__toggle { order: 9; margin-left: auto; }
+.wb-tree--right .wb-tree__meta   { margin-left: 0; }
+.wb-tree--right .wb-tree__toggle::before { transform: rotate(180deg); }   /* points up when open */
+.wb-tree--right .wb-tree__node.is-collapsed > .wb-tree__row .wb-tree__toggle::before { transform: rotate(0deg); }
+
+/* --- VARIANT: static / no-collapse (hide toggles, always expanded) ----------
+   Use for a read-only outline. Without .wb-tree__toggle buttons there is
+   nothing to collapse; --flat also hides any that are present and reclaims space. */
+.wb-tree--flat .wb-tree__toggle { display: none; }
+.wb-tree--flat .wb-tree__node.is-collapsed > .wb-tree__children { display: block; }
+
+/* --- Drag & drop feedback --- */
+.wb-tree__node.is-dragging > .wb-tree__row { opacity: .45; }
+.wb-tree__row.is-drop-before::before,
+.wb-tree__row.is-drop-after::after {
+  content: ""; position: absolute; left: 6px; right: 6px; height: 2px;
+  background: var(--wb-info); border-radius: 2px;
+}
+.wb-tree__row.is-drop-before::before { top: -1px; }
+.wb-tree__row.is-drop-after::after  { bottom: -1px; }
+.wb-tree__row.is-drop-inside {
+  outline: 2px solid var(--wb-info); outline-offset: -2px; background: var(--wb-info-soft);
+}
+
+/* -----------------------------------------------------------------------------
+   23. SORTABLE  (drag to reorder a list OR a grid of cards)
+   -----------------------------------------------------------------------------
+   A flat, single-level reorder (unlike the nested tree). While dragging, an
+   empty slot with a DASHED outline shows where the item will land — a dashed
+   affordance the eye reads instantly. Docs use HTML5 drag; app → dnd-kit.
+     .wb-sortable            vertical list (default)
+     .wb-sortable--grid      wrap into a responsive card grid (grip sits top-left)
+     .wb-sortable--no-grip   hide the grip; drag the whole row/card instead
+     .wb-sortable__item      a draggable row/card  (+ .is-dragging)
+     .wb-sortable__ph        the dashed drop placeholder (inserted by JS)
+     .wb-grip                the 6-dot drag handle (shared)
+   -------------------------------------------------------------------------- */
+.wb-sortable { display: flex; flex-direction: column; gap: 8px; font-family: var(--wb-font); }
+.wb-sortable--grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px;
+}
+.wb-sortable__item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 13px; font-size: 14px; color: var(--wb-fg);
+  background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border);
+  border-radius: var(--wb-radius-sm); box-shadow: var(--wb-shadow-sm);
+}
+.wb-sortable__item.is-dragging { opacity: .4; }
+.wb-sortable__item .wb-sortable__label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wb-sortable__item .wb-sortable__meta  { margin-left: auto; color: var(--wb-fg-muted); font-size: 13px;
+  font-variant-numeric: tabular-nums; }
+/* The dashed placeholder — the empty slot the dragged item will drop into. */
+.wb-sortable__ph {
+  border: 1.5px dashed var(--wb-border-strong); border-radius: var(--wb-radius-sm);
+  background: var(--wb-surface-2);
+}
+/* Shared drag grip (also usable in the tree) — real "drag_indicator" icon. */
+.wb-grip {
+  flex: none; cursor: grab; align-self: center; color: var(--wb-fg-subtle); opacity: .7;
+  display: inline-flex; align-items: center; font-size: 0;
+}
+.wb-grip::before { content: "\e945"; font-size: 18px; }   /* drag_indicator */
+.wb-grip:hover  { opacity: 1; }
+.wb-grip:active { cursor: grabbing; }
+/* Grid cards stack title over value; the grip sits at the TOP-LEFT — aligned with
+   the text's left edge, never floating centred. Card layout lives here, not inline. */
+.wb-sortable--grid .wb-sortable__item { flex-direction: column; align-items: flex-start; gap: 6px; }
+.wb-sortable--grid .wb-grip { align-self: flex-start; }
+/* Optional: hide the grip and make the whole row/card the drag surface. */
+.wb-sortable--no-grip .wb-grip { display: none; }
+.wb-sortable--no-grip .wb-sortable__item { cursor: grab; }
+.wb-sortable--no-grip .wb-sortable__item.is-dragging,
+.wb-sortable--no-grip .wb-sortable__item:active { cursor: grabbing; }
+
+/* -----------------------------------------------------------------------------
+   24. CHARTS  (SVG/CSS primitives for finance visuals)
+   -----------------------------------------------------------------------------
+   The chart shapes are inline SVG in the markup; these classes give a consistent
+   frame, palette, axis, legend and tooltip. Series use --wb-chart-* tokens, and
+   income/expense keep the semantic green/red. In the app, map onto Recharts and
+   feed it the same palette tokens. Nothing here needs JS.
+   -------------------------------------------------------------------------- */
+.wb-chart { font-family: var(--wb-font); color: var(--wb-fg); }
+.wb-chart__svg { display: block; width: 100%; height: auto; overflow: visible; }
+.wb-chart__title { font-size: 14px; font-weight: 650; margin: 0 0 2px; }
+.wb-chart__sub   { font-size: 13px; color: var(--wb-fg-muted); margin: 0 0 14px; }
+
+/* Axis + gridlines (inside the SVG): give these classes to <line>/<text>. */
+.wb-axis-line { stroke: var(--wb-chart-axis); stroke-width: 1; }
+.wb-grid-line { stroke: var(--wb-chart-grid); stroke-width: 1; }
+.wb-axis-label { fill: var(--wb-fg-muted); font-size: 11px; font-family: var(--wb-font); }
+
+/* Line / area series. */
+.wb-series-line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.wb-series-dot  { stroke: var(--wb-surface); stroke-width: 2; }
+.wb-series-area { stroke: none; opacity: .12; }
+
+/* Hover point + tooltip for the line chart — pure SVG :hover, no JS. Wrap each
+   point in <g class="wb-point"> with an invisible larger hit-circle so hover is
+   easy; the tooltip group fades in. (Replaces the old always-on static tooltip.) */
+.wb-point__hit  { fill: transparent; cursor: pointer; }
+.wb-point__tip  { opacity: 0; transition: opacity .12s ease; pointer-events: none; }
+.wb-point:hover .wb-point__tip { opacity: 1; }
+.wb-point__tip rect { fill: var(--wb-gray-900); }
+.wb-point__tip text { fill: var(--wb-white); font-family: var(--wb-font); font-size: 9px; font-weight: 700; }
+.dark .wb-point__tip rect { fill: var(--wb-surface); stroke: var(--wb-border); }
+.dark .wb-point__tip text { fill: var(--wb-fg); }
+
+/* Donut / pie — segments are <circle> with stroke-dasharray, or <path> slices. */
+.wb-donut__track { fill: none; stroke: var(--wb-surface); }
+.wb-donut__center-value { fill: var(--wb-fg); font-size: 20px; font-weight: 700;
+  text-anchor: middle; font-variant-numeric: tabular-nums; }
+.wb-donut__center-label { fill: var(--wb-fg-muted); font-size: 11px; text-anchor: middle; }
+
+/* CSS bar chart (no SVG needed) — columns grow from the baseline; bar heights
+   are % of the column. Group two bars in a column for income-vs-expense. Labels
+   sit just below the axis. */
+.wb-bars { position: relative; display: flex; align-items: flex-end; gap: 16px; height: 168px;
+  margin-bottom: 26px; padding-top: 6px; border-bottom: 2px solid var(--wb-chart-axis);
+  background-image: repeating-linear-gradient(to top, transparent 0 calc(25% - 1px), var(--wb-chart-grid) calc(25% - 1px) 25%); }
+.wb-bars__col { position: relative; flex: 1; height: 100%; min-width: 0;
+  display: flex; align-items: flex-end; justify-content: center; gap: 6px; }
+.wb-bar { width: 15px; max-width: 38%; border-radius: 3px 3px 0 0;
+  background: var(--wb-gray-300); min-height: 2px; transition: filter .12s ease; }
+/* :where() so the dark neutral-fill doesn't out-rank the --income/--expense tones. */
+.dark :where(.wb-bar) { background: var(--wb-gray-600); }
+.wb-bar--income  { background: var(--wb-chart-income); }
+.wb-bar--expense { background: var(--wb-chart-expense); }
+.wb-bars__label { position: absolute; bottom: -22px; left: 0; right: 0; text-align: center;
+  font-size: 11px; color: var(--wb-fg-muted); white-space: nowrap; }
+
+/* Legend — a key of coloured dots + labels (shared by every chart type). */
+.wb-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12.5px; color: var(--wb-fg-muted); }
+.wb-legend__item { display: inline-flex; align-items: center; gap: 7px; }
+.wb-legend__dot  { width: 9px; height: 9px; border-radius: 3px; flex: none; background: var(--wb-gray-400); }
+.wb-legend__val  { margin-left: 4px; color: var(--wb-fg); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* Sparkline — a tiny inline trend line for a stat card. */
+.wb-spark { display: inline-block; width: 84px; height: 26px; vertical-align: middle; }
+.wb-spark path { fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Static tooltip look (position it with the app's chart lib at runtime). */
+.wb-chart__tip {
+  display: inline-flex; flex-direction: column; gap: 2px;
+  padding: 7px 10px; font-size: 12px; border-radius: var(--wb-radius-sm);
+  background: var(--wb-gray-900); color: var(--wb-white); box-shadow: var(--wb-shadow-md);
+}
+.dark .wb-chart__tip { background: var(--wb-surface); color: var(--wb-fg); border: var(--wb-bw) solid var(--wb-border); }
+.wb-chart__tip b { font-variant-numeric: tabular-nums; }
+
+/* Value label above a bar — appears on column hover (no JS tooltip needed). */
+.wb-bar__val { position: absolute; top: -18px; left: 0; right: 0; text-align: center;
+  font-size: 10.5px; font-weight: 700; color: var(--wb-fg-muted); font-variant-numeric: tabular-nums;
+  white-space: nowrap; opacity: 0; transition: opacity .12s ease; pointer-events: none; }
+.wb-bars__col:hover .wb-bar__val { opacity: 1; }
+.wb-bars__col:hover .wb-bar { filter: brightness(1.06); }
+
+/* Chart colour SCHEMES — swap the whole categorical palette in one place. Put the
+   class on a wrapper around a chart (or on :root via the docs Config panel).
+   -----------------------------------------------------------------------------
+   Single-hue ramps (grey or one blue) for when multi-colour is too busy. Rather
+   than fixed grey-900…grey-200 steps — which bunch up at the dark end and read
+   almost alike — every series is mixed from ONE ink colour toward the canvas, so
+   the steps are spread by lightness and stay distinct.
+
+   Spread the intensity by HOW MANY series you have: add a count class
+   .wb-chart-ramp--N next to the scheme so N series fan out evenly from full
+   strength (100%) down to a legible floor (25%). e.g. 5 series → 100/81/63/44/25%
+   — no two slices look the same. Without a count class an even up-to-8 spread is
+   used. Both schemes invert light↔dark automatically.
+     <div class="wb-chart-scheme--mono wb-chart-ramp--5"> … </div>  */
+.wb-chart-scheme--mono { --wb-ramp-ink: var(--wb-fg); --wb-ramp-bg: var(--wb-canvas); }
+.wb-chart-scheme--blue { --wb-ramp-ink: #1d4ed8; --wb-ramp-bg: #ffffff; }
+.dark .wb-chart-scheme--blue { --wb-ramp-ink: #93c5fd; --wb-ramp-bg: var(--wb-gray-950); }
+
+/* Default even spread (used when no .wb-chart-ramp--N count is given). */
+.wb-chart-scheme--mono, .wb-chart-scheme--blue {
+  --wb-chart-1: color-mix(in srgb, var(--wb-ramp-ink) 100%, var(--wb-ramp-bg));
+  --wb-chart-2: color-mix(in srgb, var(--wb-ramp-ink)  89%, var(--wb-ramp-bg));
+  --wb-chart-3: color-mix(in srgb, var(--wb-ramp-ink)  78%, var(--wb-ramp-bg));
+  --wb-chart-4: color-mix(in srgb, var(--wb-ramp-ink)  67%, var(--wb-ramp-bg));
+  --wb-chart-5: color-mix(in srgb, var(--wb-ramp-ink)  55%, var(--wb-ramp-bg));
+  --wb-chart-6: color-mix(in srgb, var(--wb-ramp-ink)  44%, var(--wb-ramp-bg));
+  --wb-chart-7: color-mix(in srgb, var(--wb-ramp-ink)  33%, var(--wb-ramp-bg));
+  --wb-chart-8: color-mix(in srgb, var(--wb-ramp-ink)  22%, var(--wb-ramp-bg));
+  /* Semantic series follow the scheme too, so line/area/bar charts that use income/expense go
+     mono/blue as well — expense = full ink, income = a lighter step (still tell-apart). */
+  --wb-chart-expense: color-mix(in srgb, var(--wb-ramp-ink) 100%, var(--wb-ramp-bg));
+  --wb-chart-income:  color-mix(in srgb, var(--wb-ramp-ink)  55%, var(--wb-ramp-bg));
+}
+
+/* Count-aware ramps — spread exactly N series evenly from 100% → 25% ink. */
+.wb-chart-ramp--2 {
+  --wb-chart-1: color-mix(in srgb, var(--wb-ramp-ink) 100%, var(--wb-ramp-bg));
+  --wb-chart-2: color-mix(in srgb, var(--wb-ramp-ink)  45%, var(--wb-ramp-bg));
+}
+.wb-chart-ramp--3 {
+  --wb-chart-1: color-mix(in srgb, var(--wb-ramp-ink) 100%, var(--wb-ramp-bg));
+  --wb-chart-2: color-mix(in srgb, var(--wb-ramp-ink)  63%, var(--wb-ramp-bg));
+  --wb-chart-3: color-mix(in srgb, var(--wb-ramp-ink)  25%, var(--wb-ramp-bg));
+}
+.wb-chart-ramp--4 {
+  --wb-chart-1: color-mix(in srgb, var(--wb-ramp-ink) 100%, var(--wb-ramp-bg));
+  --wb-chart-2: color-mix(in srgb, var(--wb-ramp-ink)  75%, var(--wb-ramp-bg));
+  --wb-chart-3: color-mix(in srgb, var(--wb-ramp-ink)  50%, var(--wb-ramp-bg));
+  --wb-chart-4: color-mix(in srgb, var(--wb-ramp-ink)  25%, var(--wb-ramp-bg));
+}
+.wb-chart-ramp--5 {
+  --wb-chart-1: color-mix(in srgb, var(--wb-ramp-ink) 100%, var(--wb-ramp-bg));
+  --wb-chart-2: color-mix(in srgb, var(--wb-ramp-ink)  81%, var(--wb-ramp-bg));
+  --wb-chart-3: color-mix(in srgb, var(--wb-ramp-ink)  63%, var(--wb-ramp-bg));
+  --wb-chart-4: color-mix(in srgb, var(--wb-ramp-ink)  44%, var(--wb-ramp-bg));
+  --wb-chart-5: color-mix(in srgb, var(--wb-ramp-ink)  25%, var(--wb-ramp-bg));
+}
+.wb-chart-ramp--6 {
+  --wb-chart-1: color-mix(in srgb, var(--wb-ramp-ink) 100%, var(--wb-ramp-bg));
+  --wb-chart-2: color-mix(in srgb, var(--wb-ramp-ink)  85%, var(--wb-ramp-bg));
+  --wb-chart-3: color-mix(in srgb, var(--wb-ramp-ink)  70%, var(--wb-ramp-bg));
+  --wb-chart-4: color-mix(in srgb, var(--wb-ramp-ink)  55%, var(--wb-ramp-bg));
+  --wb-chart-5: color-mix(in srgb, var(--wb-ramp-ink)  40%, var(--wb-ramp-bg));
+  --wb-chart-6: color-mix(in srgb, var(--wb-ramp-ink)  25%, var(--wb-ramp-bg));
+}
+.wb-chart-ramp--7 {
+  --wb-chart-1: color-mix(in srgb, var(--wb-ramp-ink) 100%, var(--wb-ramp-bg));
+  --wb-chart-2: color-mix(in srgb, var(--wb-ramp-ink)  88%, var(--wb-ramp-bg));
+  --wb-chart-3: color-mix(in srgb, var(--wb-ramp-ink)  75%, var(--wb-ramp-bg));
+  --wb-chart-4: color-mix(in srgb, var(--wb-ramp-ink)  63%, var(--wb-ramp-bg));
+  --wb-chart-5: color-mix(in srgb, var(--wb-ramp-ink)  50%, var(--wb-ramp-bg));
+  --wb-chart-6: color-mix(in srgb, var(--wb-ramp-ink)  38%, var(--wb-ramp-bg));
+  --wb-chart-7: color-mix(in srgb, var(--wb-ramp-ink)  25%, var(--wb-ramp-bg));
+}
+.wb-chart-ramp--8 {
+  --wb-chart-1: color-mix(in srgb, var(--wb-ramp-ink) 100%, var(--wb-ramp-bg));
+  --wb-chart-2: color-mix(in srgb, var(--wb-ramp-ink)  89%, var(--wb-ramp-bg));
+  --wb-chart-3: color-mix(in srgb, var(--wb-ramp-ink)  79%, var(--wb-ramp-bg));
+  --wb-chart-4: color-mix(in srgb, var(--wb-ramp-ink)  68%, var(--wb-ramp-bg));
+  --wb-chart-5: color-mix(in srgb, var(--wb-ramp-ink)  57%, var(--wb-ramp-bg));
+  --wb-chart-6: color-mix(in srgb, var(--wb-ramp-ink)  46%, var(--wb-ramp-bg));
+  --wb-chart-7: color-mix(in srgb, var(--wb-ramp-ink)  36%, var(--wb-ramp-bg));
+  --wb-chart-8: color-mix(in srgb, var(--wb-ramp-ink)  25%, var(--wb-ramp-bg));
+}
+
+/* -----------------------------------------------------------------------------
+   25. SORTABLE TABLE ROWS  (drag whole <tr>s to reorder; dashed row placeholder)
+   -----------------------------------------------------------------------------
+   Add --sortable to a .wb-table, give each row a leading grip cell, and mark
+   the rows draggable. Docs use HTML5 drag; the app uses dnd-kit's sortable.
+   -------------------------------------------------------------------------- */
+.wb-table--sortable tbody tr.is-dragging > td { opacity: .35; }
+.wb-table--sortable tbody tr[draggable] { cursor: grab; }
+.wb-row-grip { width: 30px; text-align: center; color: var(--wb-fg-subtle); }
+.wb-row-grip .wb-grip { margin: 0 auto; }
+/* The dashed drop target row (inserted by JS while dragging). */
+.wb-row-ph > td { padding: 4px 6px; border-bottom: 0; }
+.wb-row-ph__inner { height: 36px; border: 1.5px dashed var(--wb-border-strong);
+  border-radius: var(--wb-radius-sm); background: var(--wb-surface-2); }
+
+/* -----------------------------------------------------------------------------
+   26. LAYOUT UTILITIES  (grid + cluster helpers for arranging cards & chips)
+   -----------------------------------------------------------------------------
+   Small, composable layout primitives so a page is assembled, not hand-styled:
+     .wb-grid --auto|--2|--3|--4|--equal   (2-D grids; --auto fills by min width)
+     .wb-cluster (1-D row, wraps) — main axis: --start/end/center/between/around/evenly;
+                 cross axis (vertical): --top/middle/bottom/baseline (middle = default); + --tight/loose/nowrap/stretch
+     .wb-grow (child eats slack) · .wb-self--top/center/bottom/stretch/baseline (per-item align)
+   -------------------------------------------------------------------------- */
+.wb-grid { display: grid; gap: 14px; }
+.wb-grid--auto { grid-template-columns: repeat(auto-fill, minmax(var(--wb-grid-min, 200px), 1fr)); }
+.wb-grid--2 { grid-template-columns: repeat(2, 1fr); }
+.wb-grid--3 { grid-template-columns: repeat(3, 1fr); }
+.wb-grid--4 { grid-template-columns: repeat(4, 1fr); }
+.wb-grid--equal { grid-auto-flow: column; grid-auto-columns: 1fr; }   /* equal columns, one row */
+@media (max-width: 640px) {
+  .wb-grid--2, .wb-grid--3, .wb-grid--4 { grid-template-columns: 1fr; }
+}
+.wb-cluster { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.wb-cluster--tight   { gap: 6px; }
+.wb-cluster--loose   { gap: 16px; }
+/* main axis (justify) — where items sit along the row */
+.wb-cluster--start   { justify-content: flex-start; }
+.wb-cluster--end     { justify-content: flex-end; }
+.wb-cluster--center  { justify-content: center; }
+.wb-cluster--between { justify-content: space-between; }
+.wb-cluster--around  { justify-content: space-around; }
+.wb-cluster--evenly  { justify-content: space-evenly; }
+/* cross axis (align) — vertical alignment when items differ in height (default: center).
+   NB: --center is horizontal (justify, above); --middle is vertical (align). */
+.wb-cluster--top      { align-items: flex-start; }
+.wb-cluster--middle   { align-items: center; }      /* explicit vertical centre (this is the default) */
+.wb-cluster--bottom   { align-items: flex-end; }
+.wb-cluster--baseline { align-items: baseline; }
+.wb-cluster--nowrap  { flex-wrap: nowrap; }
+.wb-cluster--stretch > * { flex: 1 1 0; }   /* equal-WIDTH items filling the row (for equal-HEIGHT blocks use .wb-grid) */
+/* per-item helpers — on a flex child of .wb-cluster or .wb-stack */
+.wb-grow { flex: 1 1 auto; }                       /* this item eats the remaining space */
+.wb-self--top      { align-self: flex-start; }
+.wb-self--center   { align-self: center; }
+.wb-self--bottom   { align-self: flex-end; }
+.wb-self--stretch  { align-self: stretch; }
+.wb-self--baseline { align-self: baseline; }
+
+/* -----------------------------------------------------------------------------
+   27. SCROLL AREAS  (theme-aware scrollbar + tail breathing room)
+   -----------------------------------------------------------------------------
+   Two habits for any region that scrolls:
+     1. The scrollbar should follow the THEME — a thin bar in the neutral border
+        colour, not a bright OS default that clashes on a dark canvas.
+     2. Leave a little room past the LAST item (scroll-padding + a tail) so it can
+        scroll clear of the bottom edge — the final rows are then easier to read
+        and to tap/select instead of being pinned against the frame.
+   Regions:  .wb-scroll-y (overflow-y) · .wb-scroll-x (overflow-x); add --pad for a
+   taller tail on long lists / menus / sidebars.
+   Bar-only:  .wb-scrollbars themes an element's scrollbar WITHOUT touching its overflow.
+   Put it on <html class="wb-scrollbars"> for a theme-aware VIEWPORT (whole-page) bar, or on
+   any element that already scrolls. Textareas and the built-in areas (table body, dropdown
+   menu) carry the theming too. Set BOTH the standard props (scrollbar-width/-color — Firefox
+   + Chrome 121+) and the ::-webkit-* block (older WebKit), kept identical. Scale the tail. */
+.wb-scroll-y, .wb-scroll-x, .wb-table-scroll, .wb-menu, .wb-textarea, .wb-scrollbars {
+  scrollbar-width: thin;
+  scrollbar-color: var(--wb-border-strong) transparent;
+}
+.wb-scroll-y::-webkit-scrollbar, .wb-scroll-x::-webkit-scrollbar,
+.wb-table-scroll::-webkit-scrollbar, .wb-menu::-webkit-scrollbar,
+.wb-textarea::-webkit-scrollbar, .wb-scrollbars::-webkit-scrollbar { width: 10px; height: 10px; }
+.wb-scroll-y::-webkit-scrollbar-track, .wb-scroll-x::-webkit-scrollbar-track,
+.wb-table-scroll::-webkit-scrollbar-track, .wb-menu::-webkit-scrollbar-track,
+.wb-textarea::-webkit-scrollbar-track, .wb-scrollbars::-webkit-scrollbar-track { background: transparent; }
+.wb-scroll-y::-webkit-scrollbar-thumb, .wb-scroll-x::-webkit-scrollbar-thumb,
+.wb-table-scroll::-webkit-scrollbar-thumb, .wb-menu::-webkit-scrollbar-thumb,
+.wb-textarea::-webkit-scrollbar-thumb, .wb-scrollbars::-webkit-scrollbar-thumb {
+  background: var(--wb-border-strong); border-radius: var(--wb-radius-pill);
+  border: 3px solid transparent; background-clip: padding-box;
+}
+.wb-scroll-y::-webkit-scrollbar-thumb:hover, .wb-scroll-x::-webkit-scrollbar-thumb:hover,
+.wb-table-scroll::-webkit-scrollbar-thumb:hover, .wb-menu::-webkit-scrollbar-thumb:hover,
+.wb-textarea::-webkit-scrollbar-thumb:hover, .wb-scrollbars::-webkit-scrollbar-thumb:hover { background: var(--wb-fg-subtle); }
+/* Where the horizontal + vertical bars meet (e.g. a code textarea) — keep it transparent
+   instead of the bright OS default square. */
+.wb-scroll-y::-webkit-scrollbar-corner, .wb-scroll-x::-webkit-scrollbar-corner,
+.wb-table-scroll::-webkit-scrollbar-corner, .wb-menu::-webkit-scrollbar-corner,
+.wb-textarea::-webkit-scrollbar-corner, .wb-scrollbars::-webkit-scrollbar-corner { background: transparent; }
+.wb-scroll-y { overflow-y: auto; scroll-padding-block-end: 12px; }
+.wb-scroll-x { overflow-x: auto; }
+.wb-scroll-y--pad { padding-bottom: 44px; }
+
+/* -----------------------------------------------------------------------------
+   28. RANGE / SLIDER
+   -----------------------------------------------------------------------------
+   Native `accent-color` can't differ per light/dark, so the track + thumb are
+   styled by hand. Thumb is the neutral `--wb-fg` (auto-inverts). For a FILLED
+   track set an inline gradient from the current value, e.g.
+     style="background:linear-gradient(to right,var(--wb-fg) 60%,var(--wb-border-strong) 60%)"
+   -------------------------------------------------------------------------- */
+.wb-range {
+  -webkit-appearance: none; appearance: none; width: 100%; height: 4px; padding: 0; margin: 8px 0;
+  border-radius: var(--wb-range-radius); background: var(--wb-border-strong); cursor: pointer;
+}
+.wb-range::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 18px; height: 18px; border-radius: var(--wb-range-thumb-radius);
+  background: var(--wb-fg); border: 2px solid var(--wb-surface);
+  box-shadow: var(--wb-shadow-sm); cursor: pointer; transition: transform .1s ease;
+}
+.wb-range::-moz-range-thumb {
+  width: 18px; height: 18px; border-radius: var(--wb-range-thumb-radius); background: var(--wb-fg);
+  border: 2px solid var(--wb-surface); box-shadow: var(--wb-shadow-sm); cursor: pointer;
+}
+.wb-range::-webkit-slider-thumb:hover  { transform: scale(1.08); }
+.wb-range::-webkit-slider-thumb:active { transform: scale(1.14); }
+.wb-range:focus-visible { outline: none; }
+.wb-range:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 3px var(--wb-ring); }
+.wb-range:focus-visible::-moz-range-thumb     { box-shadow: 0 0 0 3px var(--wb-ring); }
+.wb-range:disabled { opacity: .5; cursor: not-allowed; }
+.wb-range--sm { height: 3px; }
+.wb-range--sm::-webkit-slider-thumb { width: 14px; height: 14px; }
+.wb-range--sm::-moz-range-thumb     { width: 14px; height: 14px; }
+
+/* Slider WITH TICK MARKS — a wrapper that lays evenly-spaced marks (and optional
+   labels) under the track. The rows are inset by half the thumb (9px) so each mark
+   sits under the thumb's travel; pair the input with a matching `step` so the handle
+   snaps mark-to-mark. Marks are the neutral ladder (single-colour part). */
+.wb-range-ticks .wb-range { margin-bottom: 0; }
+.wb-range-ticks__marks,
+.wb-range-ticks__labels { display: flex; justify-content: space-between; padding-inline: 9px; }
+.wb-range-ticks__marks { margin-top: -1px; }
+.wb-range-ticks__marks > span { width: var(--wb-bw); height: 7px; background: var(--wb-neutral); border-radius: var(--wb-bw); }
+.wb-range-ticks__labels { margin-top: 5px; font-size: 11px; color: var(--wb-fg-muted); font-variant-numeric: tabular-nums; }
+/* Each label is a zero-width anchor sitting on its mark, its text grid-centred on that
+   point — so every label reads centred under its tick (not spread edge-to-edge). */
+.wb-range-ticks__labels > span { display: grid; justify-items: center; width: 0; white-space: nowrap; }
+
+/* Dual-handle — pick a MIN + MAX band (the standard price / amount filter). Two native
+   range inputs are stacked so each thumb keeps native keyboard support; the coloured fill
+   between them is a div driven by --a / --b (percentages the app keeps in sync — see the
+   app.js demo). The inputs ignore the pointer except on their thumbs, so both stay grabbable. */
+.wb-range-dual { position: relative; width: 100%; height: 20px; }
+.wb-range-dual__track, .wb-range-dual__fill {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  height: 4px; border-radius: var(--wb-range-radius); pointer-events: none;
+}
+.wb-range-dual__track { left: 0; right: 0; background: var(--wb-border-strong); }
+.wb-range-dual__fill  { left: calc(var(--a, 0) * 1%); right: calc((100 - var(--b, 100)) * 1%); background: var(--wb-fg); }
+.wb-range-dual__input {
+  -webkit-appearance: none; appearance: none;
+  position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; background: none; pointer-events: none;
+}
+.wb-range-dual__input::-webkit-slider-runnable-track { background: none; border: 0; }
+.wb-range-dual__input::-moz-range-track { background: none; border: 0; }
+.wb-range-dual__input::-webkit-slider-thumb {
+  -webkit-appearance: none; pointer-events: auto;
+  width: 18px; height: 18px; border-radius: var(--wb-range-thumb-radius);
+  background: var(--wb-fg); border: 2px solid var(--wb-surface); box-shadow: var(--wb-shadow-sm);
+  cursor: pointer; transition: transform .1s ease;
+}
+.wb-range-dual__input::-moz-range-thumb {
+  pointer-events: auto; width: 18px; height: 18px; border-radius: var(--wb-range-thumb-radius);
+  background: var(--wb-fg); border: 2px solid var(--wb-surface); box-shadow: var(--wb-shadow-sm); cursor: pointer;
+}
+.wb-range-dual__input::-webkit-slider-thumb:hover { transform: scale(1.08); }
+.wb-range-dual__input:focus-visible { outline: none; }
+.wb-range-dual__input:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 3px var(--wb-ring); }
+.wb-range-dual__input:focus-visible::-moz-range-thumb     { box-shadow: 0 0 0 3px var(--wb-ring); }
+
+/* -----------------------------------------------------------------------------
+   29. SWATCHES & COLOUR PICKER  (preset palette · custom panel)
+   -----------------------------------------------------------------------------
+   .wb-swatches — the minimalist picker: a grid of preset colour chips you pick FROM,
+   so choice stays inside approved hues (the colour ladder) rather than opening the
+   OS colour dialog. Give each chip its hue inline via --wb-swatch-color (same recipe
+   as --wb-tag-color); the selected chip gets a gap-ring in the fg colour that reads
+   on any hue. For a genuinely free colour, use the .wb-colorpicker panel below.
+
+   .wb-colorpicker — a custom panel that REPLACES the ugly native OS colour dialog
+   (and the old .wb-color native input it used to open): an SV (saturation/value) area
+   + a hue slider + a hex field + a preset row (reuses .wb-swatches). Look + layout only;
+   wire the drag / HSV maths with a small pointer handler (the docs ship one) or a headless
+   lib — Web Builder owns the pixels. Host it in .wb-popover for a trigger→popup, or inline.
+   NOTE: the #fff/#000 and rainbow gradients below are HSV colour-space construction,
+   not themeable UI colours.
+   -------------------------------------------------------------------------- */
+/* Swatch grid — pick from preset hues (the minimalist, on-ladder picker). */
+.wb-swatches { display: flex; flex-wrap: wrap; gap: 8px; }
+.wb-swatch {
+  --wb-swatch-color: var(--wb-gray-400);   /* visible fallback if a chip omits its hue (distinct from the border) */
+  flex: none; width: 28px; height: 28px; padding: 0; cursor: pointer;
+  background: var(--wb-swatch-color);
+  border: var(--wb-bw) solid var(--wb-border-strong); border-radius: var(--wb-radius-sm);
+  transition: transform .1s ease, box-shadow .13s ease;
+}
+.wb-swatch:hover { transform: scale(1.08); }
+/* Selected = a gap-ring in the fg colour (surface-coloured gap), legible on any hue.
+   Assumes the grid sits on a surface (card / popover) — the usual case. */
+.wb-swatch.is-selected { box-shadow: 0 0 0 2px var(--wb-surface), 0 0 0 4px var(--wb-fg); }
+.wb-swatch:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
+.wb-swatches--round .wb-swatch { border-radius: var(--wb-radius-pill); }
+.wb-swatches--sm .wb-swatch { width: 22px; height: 22px; }
+
+/* Colour picker — custom panel replacing the native OS dialog (look + layout only). */
+.wb-colorpicker {
+  width: 216px; display: flex; flex-direction: column; gap: 10px; padding: 12px;
+  background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border);
+  border-radius: var(--wb-radius); box-shadow: var(--wb-shadow-md);
+}
+/* SV area + hue track: #fff/#000/rainbow are HSV colour-space, not themeable tokens. */
+.wb-colorpicker__area {
+  position: relative; width: 100%; height: 132px; cursor: crosshair; touch-action: none;
+  border-radius: var(--wb-radius-sm);
+  background:
+    linear-gradient(to top, #000, transparent),
+    linear-gradient(to right, #fff, transparent),
+    var(--wb-cp-hue, #ff0000);
+}
+.wb-colorpicker__hue {
+  position: relative; width: 100%; height: 12px; cursor: pointer; touch-action: none;
+  border-radius: var(--wb-radius-pill);
+  background: linear-gradient(to right,
+    #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+}
+/* Draggable handle — hollow white ring so the colour underneath shows through. */
+.wb-colorpicker__thumb {
+  position: absolute; width: 16px; height: 16px; border-radius: 50%;
+  border: 2px solid var(--wb-white);
+  box-shadow: 0 0 0 var(--wb-bw) var(--wb-ring), var(--wb-shadow-sm);
+  transform: translate(-50%, -50%); pointer-events: none;
+}
+.wb-colorpicker__hue > .wb-colorpicker__thumb { top: 50%; }
+.wb-colorpicker__foot { display: flex; align-items: center; gap: 8px; }
+.wb-colorpicker__foot > .wb-input-group { flex: 1; }
+.wb-colorpicker__preview {
+  flex: none; width: 30px; height: 30px; border-radius: var(--wb-radius-sm);
+  border: var(--wb-bw) solid var(--wb-border-strong);
+  background: var(--wb-cp-value, #6366f1);
+}
+/* Hosted in a popover: the panel already supplies the card, so drop the picker's own. */
+.wb-popover__panel > .wb-colorpicker { padding: 0; background: none; border: 0; box-shadow: none; }
+
+/* -----------------------------------------------------------------------------
+   30. BUTTON GROUP  (segmented — joined buttons sharing a border)
+   -----------------------------------------------------------------------------
+   Joins .wb-btn children into one control (shared 1px seams, rounded outer ends).
+   Works with any button variant; --outline / --secondary read best. Mark the chosen
+   one .is-active. For a calm single-select toggle, .wb-tabs--pill is often nicer.
+   -------------------------------------------------------------------------- */
+.wb-btn-group { display: inline-flex; }
+.wb-btn-group > .wb-btn { border-radius: 0; border: var(--wb-bw) solid var(--wb-border-strong); }
+.wb-btn-group > .wb-btn:not(:first-child) { margin-left: -1px; }
+.wb-btn-group > .wb-btn:first-child { border-top-left-radius: var(--wb-btn-radius); border-bottom-left-radius: var(--wb-btn-radius); }
+.wb-btn-group > .wb-btn:last-child  { border-top-right-radius: var(--wb-btn-radius); border-bottom-right-radius: var(--wb-btn-radius); }
+.wb-btn-group > .wb-btn:hover, .wb-btn-group > .wb-btn:focus-visible { z-index: 1; }
+.wb-btn-group > .wb-btn.is-active {
+  z-index: 2; background: var(--wb-fg); color: var(--wb-surface); border-color: var(--wb-fg);
+}
+
+/* -----------------------------------------------------------------------------
+   31. LIST GROUP  (a bordered, hairline-divided list — settings, accounts, picker)
+   -----------------------------------------------------------------------------
+   .wb-list wraps .wb-list__item rows split by hairlines. --link rows hover;
+   .is-active marks a selection; --flush drops the frame to sit inside a card.
+   Compose __title (+ nested __sub) and __end (right-aligned meta) in a row.
+   -------------------------------------------------------------------------- */
+.wb-list {
+  list-style: none; margin: 0; padding: 0; font-family: var(--wb-font);
+  border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius);
+  background: var(--wb-surface); overflow: hidden;
+}
+.wb-list__item {
+  display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+  border-top: var(--wb-bw) solid var(--wb-border); font-size: 14px; color: var(--wb-fg);
+}
+.wb-list__item:first-child { border-top: 0; }
+.wb-list__item--link { cursor: pointer; text-decoration: none; color: var(--wb-fg); transition: background-color .12s ease; }
+.wb-list__item--link:hover { background: var(--wb-surface-hover); }
+.wb-list__item.is-active { background: var(--wb-surface-hover); font-weight: 600; }
+.wb-list__item.is-disabled { opacity: .5; pointer-events: none; }
+.wb-list__title { font-weight: 550; min-width: 0; }
+.wb-list__sub   { display: block; font-size: 12.5px; color: var(--wb-fg-muted); font-weight: 400; margin-top: 1px; }
+.wb-list__end   { margin-left: auto; color: var(--wb-fg-muted); font-size: 13px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.wb-list--flush { border: 0; border-radius: 0; background: none; }
+.wb-list--flush .wb-list__item { padding-inline: 0; }
+
+/* -----------------------------------------------------------------------------
+   32. FILE INPUT  (styled native control + a dashed dropzone)
+   -------------------------------------------------------------------------- */
+.wb-file {
+  font-family: var(--wb-font); font-size: 14px; color: var(--wb-fg-muted); max-width: 100%;
+  border: var(--wb-bw) solid var(--wb-border-strong); border-radius: var(--wb-input-radius);
+  background: var(--wb-surface); cursor: pointer;
+}
+.wb-file::file-selector-button {
+  font-family: inherit; font-size: 13px; font-weight: 600; color: var(--wb-fg);
+  background: var(--wb-surface-2); border: 0; border-right: var(--wb-bw) solid var(--wb-border-strong);
+  padding: 9px 14px; margin-right: 12px; cursor: pointer; transition: background-color .12s ease;
+}
+.wb-file::file-selector-button:hover { background: var(--wb-surface-hover); }
+/* Solid — a high-emphasis (neutral black) file button; small control, flips in dark. */
+.wb-file--solid { border-color: var(--wb-gray-900); }
+.wb-file--solid::file-selector-button { background: var(--wb-gray-900); color: var(--wb-white); border-right-color: var(--wb-gray-900); }
+.wb-file--solid::file-selector-button:hover { background: var(--wb-gray-700); }
+.dark .wb-file--solid { border-color: var(--wb-gray-100); }
+.dark .wb-file--solid::file-selector-button { background: var(--wb-gray-100); color: var(--wb-gray-900); border-right-color: var(--wb-gray-100); }
+.dark .wb-file--solid::file-selector-button:hover { background: var(--wb-gray-300); }
+/* Dropzone — the dashed "droppable" affordance for statements / receipts. */
+.wb-dropzone {
+  display: grid; place-items: center; gap: 6px; text-align: center;
+  border: 1.5px dashed var(--wb-border-strong); border-radius: var(--wb-radius);
+  background: var(--wb-surface-2); color: var(--wb-fg-muted);
+  padding: 26px 20px; cursor: pointer; font-size: 13.5px;
+  transition: border-color .12s ease, background-color .12s ease;
+}
+.wb-dropzone:hover, .wb-dropzone.is-dragover {
+  border-color: var(--wb-gray-400); background: var(--wb-surface-hover); color: var(--wb-fg);
+}
+.wb-dropzone__icon { font-size: 26px; opacity: .7; }
+
+/* -----------------------------------------------------------------------------
+   33. DRAWER / OFFCANVAS  (a panel that slides in from an edge over the scrim)
+   -----------------------------------------------------------------------------
+   Reuses .wb-overlay for the dim. .wb-drawer slides from the right (--left
+   from the left). Toggle .is-open on the overlay (the shared modal JS works). In
+   the app use Radix Dialog / vaul for focus-trap + drag; keep these classes.
+   -------------------------------------------------------------------------- */
+.wb-drawer {
+  position: fixed; top: 0; right: 0; z-index: 101; height: 100vh;
+  width: 380px; max-width: 92vw; display: flex; flex-direction: column;
+  background: var(--wb-surface); border-left: var(--wb-bw) solid var(--wb-border);
+  box-shadow: var(--wb-shadow-md);
+  transform: translateX(100%); transition: transform .24s cubic-bezier(.4, 0, .2, 1);
+}
+.wb-drawer--left {
+  right: auto; left: 0; border-left: 0;
+  border-right: var(--wb-bw) solid var(--wb-border); transform: translateX(-100%);
+}
+.wb-overlay.is-open > .wb-drawer, .wb-drawer.is-open { transform: translateX(0); }
+.wb-drawer__head { display: flex; align-items: flex-start; gap: 12px; padding: 16px 18px;
+  border-bottom: var(--wb-bw) solid var(--wb-border); }
+.wb-drawer__head > :first-child { flex: 1 1 auto; min-width: 0; }
+.wb-drawer__head .wb-close { margin-left: auto; }
+.wb-drawer__title { font-size: 16px; font-weight: 700; margin: 0; }
+.wb-drawer__sub   { font-size: 13px; color: var(--wb-fg-muted); margin: 3px 0 0; }
+.wb-drawer__body  { flex: 1 1 auto; overflow-y: auto; padding: 16px 18px; }
+.wb-drawer__foot  { display: flex; justify-content: flex-end; gap: 10px; padding: 14px 18px;
+  border-top: var(--wb-bw) solid var(--wb-border); background: var(--wb-surface-2); }
+
+/* -----------------------------------------------------------------------------
+   34. LAYOUT — STACK · CONTAINER · RATIO  (companions to grid / cluster, §26)
+   -----------------------------------------------------------------------------
+   .wb-stack     vertical flow with a gap (the vertical partner of --cluster);
+                 align items horizontally with --start / --center / --end
+   .wb-container centered max-width page column (--narrow / --wide)
+   .wb-ratio     hold an aspect ratio for embeds/media (--1x1 / --4x3 / --16x9)
+   -------------------------------------------------------------------------- */
+.wb-stack { display: flex; flex-direction: column; gap: var(--wb-stack-gap, 14px); }
+.wb-stack--tight { --wb-stack-gap: 8px; }
+.wb-stack--loose { --wb-stack-gap: 22px; }
+/* cross axis (align) — horizontal alignment of items (default: stretch = full width) */
+.wb-stack--start  { align-items: flex-start; }   /* left  */
+.wb-stack--center { align-items: center; }        /* horizontally centered */
+.wb-stack--end    { align-items: flex-end; }      /* right */
+.wb-container { width: 100%; max-width: var(--wb-container-max, 1120px); margin-inline: auto; padding-inline: 20px; }
+.wb-container--narrow { --wb-container-max: 720px; }
+.wb-container--wide   { --wb-container-max: 1320px; }
+.wb-ratio { position: relative; width: 100%; }
+.wb-ratio::before { content: ""; display: block; padding-top: var(--wb-ratio, 56.25%); }
+.wb-ratio > * { position: absolute; inset: 0; width: 100%; height: 100%; }
+.wb-ratio--1x1  { --wb-ratio: 100%; }
+.wb-ratio--4x3  { --wb-ratio: 75%; }
+.wb-ratio--16x9 { --wb-ratio: 56.25%; }
+
+/* -----------------------------------------------------------------------------
+   35. CHART — ARC CAPS  (thin / rounded donut & progress-ring segments)
+   -----------------------------------------------------------------------------
+   Put .wb-arc on donut/ring <circle>/<path> segments; --round gives soft "pill"
+   ends. Pair a THIN stroke-width (~8–10) with a slightly bigger gap between slices
+   so the rounded caps show — a lighter look than the solid ring. A progress ring is
+   one .wb-arc--round over a .wb-ring__track, with .wb-donut__center-* text.
+   -------------------------------------------------------------------------- */
+.wb-arc { fill: none; }
+.wb-arc--round { stroke-linecap: round; }
+.wb-ring__track { fill: none; stroke: var(--wb-surface-2); }
+.dark .wb-ring__track { stroke: var(--wb-surface-hover); }
+
+/* -----------------------------------------------------------------------------
+   36. RECEIPT  (hoá đơn — a torn-paper slip for one transaction / bill)
+   -----------------------------------------------------------------------------
+   The shape a ticket / thermal slip has: a narrow paper strip whose edge is a
+   row of SCALLOPS — half-circle notches bitten UP into the paper, each one held
+   apart from the next by a flat gap (a torn-off stub / stamp-perforation look).
+   The notches are REAL transparent cuts (a CSS mask, not a same-colour circle
+   painted on top), so the edge works on ANY background and in dark, and the soft
+   drop-shadow traces the scalloped silhouette. Two elements:
+     .wb-receipt           wrapper — casts the drop-shadow (follows the notches)
+       .wb-receipt__paper  the paper — surface fill + the notch MASK + content
+   Two knobs (any CSS length) — this is where you change the look:
+     --wb-receipt-d    = D, one notch's diameter (how wide each half-circle is)
+     --wb-receipt-gap  = G, the flat gap between two neighbouring notches
+   Derived from those: radius/depth = D/2, nominal period = D + G. The notch row
+   uses mask-repeat:round, so the browser always fits a WHOLE number of notches
+   across the width and spreads them symmetrically (centred — never a clipped
+   half-notch at one end); the flat gap flexes a hair around G to make them fit.
+   Edge styles (pick one): (default) scallop · --wave (bigger, sparser notches)
+   · --dashed (flat coupon edge with a dashed perforation line, no cut).
+   Modifiers: --flat (no shadow) · --bottom (notch only the bottom, flat top)
+   · --ticket (a tear-off: a dashed rule across with a half-circle notch cut into
+     each SIDE edge at its ends — see the --ticket rule + its two knobs below).
+   -------------------------------------------------------------------------- */
+.wb-receipt {
+  --wb-receipt-d: 12px;      /* D — notch diameter        ← chỉnh ở đây */
+  --wb-receipt-gap: 6px;     /* G — flat gap between notches ← chỉnh ở đây */
+  --wb-receipt-r: calc(var(--wb-receipt-d) / 2);                          /* radius = notch depth */
+  --wb-receipt-period: calc(var(--wb-receipt-d) + var(--wb-receipt-gap)); /* one repeat = D + G */
+  --wb-receipt-side-d: 20px;   /* --ticket: đường kính bán nguyệt khoét ở 2 CẠNH tại đường xé ← chỉnh được */
+  --wb-receipt-side-r: calc(var(--wb-receipt-side-d) / 2);
+  --wb-receipt-tear: 50%;      /* --ticket: vị trí (dọc) của đường xé + 2 vết khoét cạnh ← chỉnh được */
+  display: block; width: fit-content; max-width: 100%;
+  font-family: var(--wb-font);
+  filter: drop-shadow(0 2px 4px rgba(16, 17, 18, .10));
+}
+/* On dark a black shadow vanishes — lift with a faint light edge + soft ambient. */
+.dark .wb-receipt {
+  filter: drop-shadow(0 0 .5px rgba(255, 255, 255, .10)) drop-shadow(0 4px 10px rgba(0, 0, 0, .5));
+}
+.wb-receipt--flat { filter: none; }
+
+.wb-receipt__paper {
+  width: 300px; max-width: 100%;
+  color: var(--wb-fg);
+  padding: calc(20px + var(--wb-receipt-r)) 24px;   /* keep content clear of the notch depth */
+  background: var(--wb-surface);
+  /* A solid middle band, then a row of half-circle CUTS at the top & bottom edge.
+     Each tile is one period (D+G) wide; the notch — a transparent disc of radius
+     r=D/2 centred on the tile — carves a semicircle into the edge, leaving G/2 of
+     flat paper on either side. mask-repeat:round tiles a WHOLE number of notches
+     across the width, centred (gap flexes a touch around G — never a half-notch). */
+  --wb-receipt-mask:
+    linear-gradient(#000 0 0) 0 50% / 100% calc(100% - 2 * var(--wb-receipt-r)) no-repeat,
+    radial-gradient(var(--wb-receipt-r) at 50% 100%, #0000 98%, #000 100%) 0 100% / var(--wb-receipt-period) var(--wb-receipt-r) round no-repeat,
+    radial-gradient(var(--wb-receipt-r) at 50% 0,    #0000 98%, #000 100%) 0 0    / var(--wb-receipt-period) var(--wb-receipt-r) round no-repeat;
+  -webkit-mask: var(--wb-receipt-mask);
+          mask: var(--wb-receipt-mask);
+}
+/* Notch only the BOTTOM edge (top stays flat — good under a logo header). */
+.wb-receipt--bottom .wb-receipt__paper {
+  padding-block: 20px calc(20px + var(--wb-receipt-r));
+  --wb-receipt-mask:
+    linear-gradient(#000 0 0) 0 0 / 100% calc(100% - var(--wb-receipt-r)) no-repeat,
+    radial-gradient(var(--wb-receipt-r) at 50% 100%, #0000 98%, #000 100%) 0 100% / var(--wb-receipt-period) var(--wb-receipt-r) round no-repeat;
+}
+
+/* --- Alternate edges — pick one ------------------------------------------- */
+/* Bigger, more generous notches (larger D + wider gap). */
+.wb-receipt--wave { --wb-receipt-d: 18px; --wb-receipt-gap: 12px; }
+/* Straight coupon edge: no cut at all, just a dashed perforation line. */
+.wb-receipt--dashed .wb-receipt__paper {
+  -webkit-mask: none; mask: none; padding-block: 22px;
+  background:
+    repeating-linear-gradient(90deg, var(--wb-fg-subtle) 0 9px, #0000 9px 16px) 50% 7px / 100% 1px repeat-x,
+    repeating-linear-gradient(90deg, var(--wb-fg-subtle) 0 9px, #0000 9px 16px) 50% calc(100% - 7px) / 100% 1px repeat-x,
+    var(--wb-surface);
+}
+.wb-receipt--dashed.wb-receipt--bottom .wb-receipt__paper {
+  background:
+    repeating-linear-gradient(90deg, var(--wb-fg-subtle) 0 9px, #0000 9px 16px) 50% calc(100% - 7px) / 100% 1px repeat-x,
+    var(--wb-surface);
+}
+
+/* --- Tear-off ticket (vé xé) ---------------------------------------------- */
+/* A horizontal TEAR across the body: a dashed rule with a half-circle notch
+   bitten into BOTH side edges at its ends — the classic detachable stub / vé.
+   The two side notches are REAL transparent cuts: the paper mask keeps the
+   scallop silhouette (top+bottom, composited `add`) and then SUBTRACTS a disc
+   at each side edge, so it shows the background through — same as the top/bottom
+   notches, works on any background. Knobs on .wb-receipt:
+     --wb-receipt-side-d  = notch diameter (how far each half-circle bites in)
+     --wb-receipt-tear    = where the tear sits down the paper (length or %)
+   The dashed line is drawn between the two notches (auto-stops at their inner
+   edge) so line + notches always stay aligned. Leave a blank band in the
+   content at --wb-receipt-tear so nothing gets clipped by the cut. */
+.wb-receipt--ticket .wb-receipt__paper {
+  /* Layers bottom→top: the two side discs are the destination; the solid band is
+     laid over them with `subtract` (band ∖ discs) so the discs punch holes in the
+     body; then the top & bottom scallop rows are `add`ed back on. `subtract` is
+     source∖destination, hence this order (not "discs on top"). */
+  --wb-receipt-mask:
+    radial-gradient(var(--wb-receipt-r) at 50% 0,    #0000 98%, #000 100%) 0 0    / var(--wb-receipt-period) var(--wb-receipt-r) round no-repeat,
+    radial-gradient(var(--wb-receipt-r) at 50% 100%, #0000 98%, #000 100%) 0 100% / var(--wb-receipt-period) var(--wb-receipt-r) round no-repeat,
+    linear-gradient(#000 0 0) 0 50% / 100% calc(100% - 2 * var(--wb-receipt-r)) no-repeat,
+    radial-gradient(var(--wb-receipt-side-r) at 0    var(--wb-receipt-tear), #000 98%, #0000 100%) no-repeat,
+    radial-gradient(var(--wb-receipt-side-r) at 100% var(--wb-receipt-tear), #000 98%, #0000 100%) no-repeat;
+  -webkit-mask: var(--wb-receipt-mask);
+          mask: var(--wb-receipt-mask);
+  -webkit-mask-composite: source-over, source-over, source-out, source-over, source-over;
+          mask-composite: add, add, subtract, add, add;
+  /* the dashed tear line, centred between the two notches at the same tear line */
+  background:
+    repeating-linear-gradient(90deg, var(--wb-fg-subtle) 0 9px, #0000 9px 16px)
+      50% var(--wb-receipt-tear) / calc(100% - 2 * var(--wb-receipt-side-d)) var(--wb-bw) no-repeat,
+    var(--wb-surface);
+}
+
+/* Header — merchant + meta (date / id), centred like a printed slip. */
+.wb-receipt__head { text-align: center; margin-bottom: 12px; }
+.wb-receipt__merchant { font-size: 15px; font-weight: 700; letter-spacing: -.01em; }
+.wb-receipt__meta { font-size: 12px; color: var(--wb-fg-muted); margin-top: 2px; }
+
+/* Line items — description left, amount right (tabular so columns align). */
+.wb-receipt__body { display: flex; flex-direction: column; gap: 7px; }
+.wb-receipt__line { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; font-size: 13px; }
+.wb-receipt__line > span:last-child { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.wb-receipt__line--muted { color: var(--wb-fg-muted); font-size: 12px; }
+
+/* Perforation — the dashed tear-off rule between items and the total.
+   A repeating-gradient (not a CSS dashed border) so the dash length + gap are
+   tunable and read clearly, not a fuzzy 1px hairline. */
+.wb-receipt__rule {
+  height: var(--wb-bw); margin: 12px 0;
+  background: repeating-linear-gradient(90deg, var(--wb-border-strong) 0 7px, #0000 7px 13px);
+}
+
+/* Total — the emphasised bottom line. */
+.wb-receipt__total { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; font-weight: 700; }
+.wb-receipt__total > span:last-child { font-variant-numeric: tabular-nums; font-size: 16px; }
+
+/* A centred muted footer note (thank-you / code). */
+.wb-receipt__note { text-align: center; font-size: 11.5px; color: var(--wb-fg-subtle); margin-top: 12px; }
+
+/* Optional decorative barcode + code line (pure CSS — inks in --wb-fg, so it flips in dark).
+   Bars of uneven width repeat so it reads like a real Code-128 strip, not a grid. */
+.wb-receipt__barcode {
+  height: 40px; margin-top: 14px; border-radius: 1px;
+  background: repeating-linear-gradient(90deg,
+    var(--wb-fg) 0 2px, transparent 2px 4px,
+    var(--wb-fg) 4px 5px, transparent 5px 8px,
+    var(--wb-fg) 8px 11px, transparent 11px 12px,
+    var(--wb-fg) 12px 15px, transparent 15px 17px);
+}
+.wb-receipt__code {
+  text-align: center; margin-top: 6px; font-size: 11px; letter-spacing: .3em;
+  color: var(--wb-fg-muted); font-family: "SF Mono", ui-monospace, monospace;
+}
+
+/* -----------------------------------------------------------------------------
+   37. NAVBAR  (the top app bar — brand · inline nav · actions)
+   -----------------------------------------------------------------------------
+   A horizontal bar for the top of an app shell. Compose the middle links from
+   the NAV primitive (§38): <nav class="wb-nav"> inside .wb-navbar__nav.
+   --sticky pins it; behaviour (mobile menu toggle) is the app's job.
+   -------------------------------------------------------------------------- */
+.wb-navbar {
+  display: flex; align-items: center; gap: 16px;
+  height: 56px; padding: 0 18px;
+  background: var(--wb-surface);
+  border-bottom: var(--wb-bw) solid var(--wb-border);
+  font-family: var(--wb-font);
+  position: relative;            /* anchor the collapsed menu dropdown */
+  container-type: inline-size;   /* collapse by OWN width, not the viewport */
+}
+.wb-navbar--sticky { position: sticky; top: 0; z-index: 30; }
+/* Hamburger toggle — hidden until the bar is too narrow for inline links. */
+.wb-navbar__toggle { display: none; }
+/* When the bar itself gets narrow: hide the inline links, show the hamburger, and
+   turn the nav into a dropdown panel under the bar (toggle .is-open on it). This is
+   the standard app-bar collapse — no overlap, links tuck into a menu. */
+@container (max-width: 640px) {
+  .wb-navbar__toggle { display: inline-flex; order: -1; }   /* leads the row */
+  .wb-navbar__menu {
+    position: absolute; top: calc(100% + var(--wb-bw)); left: 0; right: 0; z-index: 40;
+    flex-direction: column; align-items: stretch; gap: 2px; padding: 8px;
+    background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border); border-top: 0;
+    border-radius: 0 0 var(--wb-radius) var(--wb-radius); box-shadow: var(--wb-shadow-md);
+  }
+  .wb-navbar__menu:not(.is-open) { display: none; }
+  .wb-navbar__menu .wb-nav__link { padding: 9px 10px; border-radius: var(--wb-radius-sm); }
+  .wb-navbar__menu .wb-nav__link.is-active { background: var(--wb-surface-hover); }
+}
+.wb-navbar__brand {
+  display: inline-flex; align-items: center; gap: 9px; flex: none;
+  font-size: 15px; font-weight: 700; letter-spacing: -.01em;
+  color: var(--wb-fg); text-decoration: none;
+}
+.wb-navbar__mark {
+  width: 26px; height: 26px; border-radius: var(--wb-radius-sm); flex: none;
+  display: grid; place-items: center; font-size: 13px; font-weight: 700;
+  background: var(--wb-gray-900); color: var(--wb-white);
+}
+.dark .wb-navbar__mark { background: var(--wb-gray-100); color: var(--wb-gray-900); }
+.wb-navbar__spacer { margin-left: auto; }
+.wb-navbar__actions { display: flex; align-items: center; gap: 8px; flex: none; }
+
+/* Theme (sáng/tối) toggle — an icon button that shows the glyph for the mode you'd switch TO.
+   Root .dark decides which glyph is visible; the app only flips .dark (see integration.md).
+   Reusable anywhere (navbar actions, sidenav footer…), not just here. */
+.wb-theme-toggle__to-light { display: none; }               /* light mode → show moon (go dark) */
+.dark .wb-theme-toggle__to-dark  { display: none; }         /* dark mode  → hide moon */
+.dark .wb-theme-toggle__to-light { display: inline-flex; }  /* dark mode  → show sun (go light) */
+
+/* -----------------------------------------------------------------------------
+   38. NAV  (a set of navigation links — the menu primitive)
+   -----------------------------------------------------------------------------
+   Horizontal by default; --vertical stacks it; --underline gives a page-tab look
+   (distinct from §12 TABS, which switch panels). Active = a plain highlight, in
+   keeping with the kit's "no leading bar" selection style.
+   -------------------------------------------------------------------------- */
+.wb-nav {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 2px;
+  margin: 0; padding: 0; list-style: none; font-family: var(--wb-font);
+}
+.wb-nav--vertical { flex-direction: column; align-items: stretch; gap: 1px; }
+.wb-nav__link {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 12px; border-radius: var(--wb-radius-sm);
+  font-size: 14px; font-weight: 550; white-space: nowrap;
+  color: var(--wb-fg-muted); text-decoration: none; cursor: pointer;
+  transition: color .13s ease, background .13s ease;
+}
+.wb-nav__link:hover      { color: var(--wb-fg); background: var(--wb-surface-hover); }
+.wb-nav__link.is-active  { color: var(--wb-fg); background: var(--wb-surface-hover); }
+.wb-nav__link.is-disabled { color: var(--wb-fg-subtle); pointer-events: none; }
+.wb-nav__link .wb-ico  { font-size: var(--wb-ico-md); color: inherit; flex: none; }
+/* Underline (page tabs) — the highlight becomes a bottom rule instead of a fill. */
+.wb-nav--underline { gap: 6px; border-bottom: var(--wb-bw) solid var(--wb-border); }
+.wb-nav--underline .wb-nav__link {
+  border-radius: 0; padding: 9px 4px; margin-bottom: calc(-1 * var(--wb-bw));
+  border-bottom: 2px solid transparent;
+}
+.wb-nav--underline .wb-nav__link:hover     { background: none; color: var(--wb-fg); }
+.wb-nav--underline .wb-nav__link.is-active  { background: none; color: var(--wb-fg); border-bottom-color: var(--wb-fg); }
+
+/* -----------------------------------------------------------------------------
+   39. SIDENAV  (the vertical app rail — a shippable sibling of the docs sidebar)
+   -----------------------------------------------------------------------------
+   A left navigation column for an app shell: sections + icon links + count
+   badges. Icons are .wb-ico; active is a plain highlight (matches §38 / the
+   docs tree). Give it a height + let it scroll with §27 .wb-scroll if long.
+   -------------------------------------------------------------------------- */
+.wb-sidenav {
+  display: flex; flex-direction: column; gap: 1px;
+  width: 240px; padding: 12px 10px;
+  background: var(--wb-surface);
+  border-right: var(--wb-bw) solid var(--wb-border);
+  font-family: var(--wb-font);
+}
+.wb-sidenav__section {
+  font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+  color: var(--wb-fg-subtle); padding: 12px 10px 4px;
+}
+.wb-sidenav__section:first-child { padding-top: 2px; }
+.wb-sidenav__link {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px; border-radius: var(--wb-radius-sm);
+  font-size: 14px; font-weight: 550; color: var(--wb-fg-muted);
+  text-decoration: none; cursor: pointer;
+  transition: color .13s ease, background .13s ease;
+}
+.wb-sidenav__link:hover     { color: var(--wb-fg); background: var(--wb-surface-hover); }
+.wb-sidenav__link.is-active { color: var(--wb-fg); background: var(--wb-surface-hover); font-weight: 650; }
+.wb-sidenav__link .wb-ico { font-size: 20px; color: inherit; flex: none; }
+.wb-sidenav__badge {
+  margin-left: auto; font-size: 11px; font-variant-numeric: tabular-nums;
+  color: var(--wb-fg-subtle);
+}
+
+/* -----------------------------------------------------------------------------
+   40. FILTER BAR  (a toolbar for narrowing a table / list — finance-first)
+   -----------------------------------------------------------------------------
+   Assembles from primitives already in the kit: §6 inputs (search + amount range),
+   §8 dropdown/menu (pick a field, multi-select), §2 caps & tags (status / tag
+   pickers). This section adds only three new parts: the bar itself, the removable
+   token chip, and the dashed "add filter" trigger.
+
+   Behaviour (open/close, apply, remove) is the app's — the classes are the visuals.
+   Colour ladder: the bar & tokens stay grey chrome; a token borrows a SOFT status
+   tone ONLY when it stands for a status filter (--success / --danger / …).
+   -------------------------------------------------------------------------- */
+.wb-filterbar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  font-family: var(--wb-font);
+}
+.wb-filterbar__search { flex: 1 1 220px; min-width: 170px; max-width: 340px; }
+.wb-filterbar__count {
+  margin-left: auto; font-size: 13px; color: var(--wb-fg-muted);
+  font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+
+/* Add-filter trigger — a dashed pill that reads as "＋ one more filter". */
+.wb-filter-add {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 12px; border-radius: var(--wb-radius-pill);
+  border: var(--wb-bw) dashed var(--wb-border-strong); background: none;
+  font: inherit; font-size: 13px; font-weight: 550; color: var(--wb-fg-muted);
+  cursor: pointer; transition: color .13s ease, border-color .13s ease, background .13s ease;
+}
+.wb-filter-add:hover { color: var(--wb-fg); border-color: var(--wb-fg-subtle); background: var(--wb-surface-hover); }
+
+/* Applied-filter token — [ key : value × ]. Neutral by default; a value can be a
+   number range, a #tag, a status, a date — the chip shape is the same. */
+.wb-filter-token {
+  --wb-ft-c: var(--wb-fg);
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 5px 4px 11px; border-radius: var(--wb-radius-pill);
+  border: var(--wb-bw) solid var(--wb-border); background: var(--wb-surface);
+  font-size: 12.5px; line-height: 1.4; color: var(--wb-fg); white-space: nowrap;
+}
+.wb-filter-token__key { color: var(--wb-fg-subtle); }
+.wb-filter-token__val { font-weight: 600; color: var(--wb-ft-c); font-variant-numeric: tabular-nums; }
+.wb-filter-token__x {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px; flex: none; padding: 0; border: 0; border-radius: 50%;
+  background: none; color: var(--wb-fg-subtle); cursor: pointer;
+}
+.wb-filter-token__x::before { content: "\e5cd"; font-size: 14px; line-height: 1; }   /* Material "close" — one × across the whole system */
+.wb-filter-token__x:hover { background: var(--wb-surface-hover); color: var(--wb-fg); }
+
+/* Soft status tones — use ONLY when the token stands for a status filter. */
+.wb-filter-token--success { --wb-ft-c: var(--wb-success-text); border-color: var(--wb-success); background: var(--wb-success-soft); }
+.wb-filter-token--danger  { --wb-ft-c: var(--wb-danger-text);  border-color: var(--wb-danger);  background: var(--wb-danger-soft);  }
+.wb-filter-token--warning { --wb-ft-c: var(--wb-warning-text); border-color: var(--wb-warning); background: var(--wb-warning-soft); }
+.wb-filter-token--info    { --wb-ft-c: var(--wb-info-text);    border-color: var(--wb-info);    background: var(--wb-info-soft);    }
+.wb-filter-token--success .wb-filter-token__key,
+.wb-filter-token--danger  .wb-filter-token__key,
+.wb-filter-token--warning .wb-filter-token__key,
+.wb-filter-token--info    .wb-filter-token__key { color: inherit; opacity: .72; }
+.wb-filter-token--success .wb-filter-token__x,
+.wb-filter-token--danger  .wb-filter-token__x,
+.wb-filter-token--warning .wb-filter-token__x,
+.wb-filter-token--info    .wb-filter-token__x { color: inherit; opacity: .8; }
+
+/* A popover body for one field's editor (amount range, date, …) — a padded .wb-menu. */
+.wb-filter-pop { min-width: 244px; padding: 12px; }
+.wb-filter-pop__title { font-size: 12px; font-weight: 700; letter-spacing: .03em;
+  text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 10px; }
+
+/* Amount / value range editor — plain-language summary + a dual-handle slider (§28) +
+   min/max inputs, all kept in sync (app.js demo shows the wiring; in an app use Radix Slider). */
+.wb-range-filter { display: flex; flex-direction: column; gap: 12px; }
+.wb-range-filter__summary { font-size: 14px; font-weight: 650; color: var(--wb-fg); font-variant-numeric: tabular-nums; }
+
+/* =============================================================================
+   41. POPOVER  (a click-toggled floating card — title + body + arrow)
+   -----------------------------------------------------------------------------
+   Richer than a tooltip (hover, text-only) and not a list of actions (dropdown):
+   a small card anchored to a trigger, with a pointer arrow and a top-right ×.
+   Toggle .is-open on .wb-popover (JS in docs; Radix Popover / Floating UI in the
+   app handles real collision-aware placement). Default sits ABOVE the trigger;
+   --bottom / --left / --right flip it. Structure:
+     <span class="wb-popover">
+       <button data-pop-toggle>…</button>
+       <div class="wb-popover__panel">
+         <div class="wb-popover__arrow"></div> … </div>
+     </span>
+   -------------------------------------------------------------------------- */
+.wb-popover { position: relative; display: inline-block; }
+.wb-popover__panel {
+  position: absolute; z-index: 60; display: none;
+  width: max-content; max-width: 280px; padding: 12px 14px;
+  font-family: var(--wb-font); font-size: 13px; line-height: 1.5; color: var(--wb-fg);
+  background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border);
+  border-radius: var(--wb-radius); box-shadow: var(--wb-shadow-md);
+  /* default placement: above, centred */
+  bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%);
+}
+.wb-popover.is-open > .wb-popover__panel { display: block; }
+.wb-popover__title { font-size: 13.5px; font-weight: 700; letter-spacing: -.01em; margin: 0 0 4px; }
+.wb-popover__body { margin: 0; color: var(--wb-fg-muted); }
+.wb-popover__panel .wb-close { position: absolute; top: 8px; right: 8px; }
+.wb-popover__panel .wb-close ~ .wb-popover__title,
+.wb-popover__panel .wb-close ~ * .wb-popover__title { padding-right: 18px; }
+
+/* Arrow — a rotated square straddling the panel border; only the two outward-
+   facing borders show, so it reads as a bordered point in light & dark. */
+.wb-popover__arrow {
+  position: absolute; width: 10px; height: 10px; background: var(--wb-surface);
+  border: var(--wb-bw) solid var(--wb-border);
+  bottom: -5px; left: 50%; transform: translateX(-50%) rotate(45deg);
+  border-top: 0; border-left: 0;
+}
+/* Placement flips — panel offset + arrow side. */
+.wb-popover--bottom > .wb-popover__panel { bottom: auto; top: calc(100% + 10px); }
+.wb-popover--bottom > .wb-popover__panel > .wb-popover__arrow {
+  bottom: auto; top: -5px; border: var(--wb-bw) solid var(--wb-border); border-bottom: 0; border-right: 0; }
+.wb-popover--right > .wb-popover__panel {
+  bottom: auto; left: calc(100% + 10px); top: 50%; transform: translateY(-50%); }
+.wb-popover--right > .wb-popover__panel > .wb-popover__arrow {
+  bottom: auto; left: -5px; top: 50%; transform: translateY(-50%) rotate(45deg);
+  border: var(--wb-bw) solid var(--wb-border); border-top: 0; border-right: 0; }
+.wb-popover--left > .wb-popover__panel {
+  bottom: auto; left: auto; right: calc(100% + 10px); top: 50%; transform: translateY(-50%); }
+.wb-popover--left > .wb-popover__panel > .wb-popover__arrow {
+  bottom: auto; left: auto; right: -5px; top: 50%; transform: translateY(-50%) rotate(45deg);
+  border: var(--wb-bw) solid var(--wb-border); border-bottom: 0; border-left: 0; }
+
+/* =============================================================================
+   42. COLLAPSE  (a standalone show/hide region — Bootstrap's .collapse)
+   -----------------------------------------------------------------------------
+   A single toggle-able block (read-more, an optional form section, a details
+   drawer inside a card) — distinct from ACCORDION (§18, a grouped, native
+   <details> set). Height animates via the grid 0fr→1fr trick, so no fixed
+   height or JS measuring is needed. Toggle .is-open on .wb-collapse.
+     <div class="wb-collapse">
+       <button data-collapse-toggle>… <span class="wb-collapse__caret wb-ico">expand_more</span></button>
+       <div class="wb-collapse__panel"><div class="wb-collapse__inner">…</div></div>
+     </div>
+   -------------------------------------------------------------------------- */
+.wb-collapse__panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .24s ease; }
+.wb-collapse.is-open > .wb-collapse__panel { grid-template-rows: 1fr; }
+.wb-collapse__inner { overflow: hidden; min-height: 0; }
+.wb-collapse__caret { transition: transform .2s ease; }
+.wb-collapse.is-open .wb-collapse__caret { transform: rotate(180deg); }
+
+/* =============================================================================
+   43. STICKY  (pin an element to the top / bottom edge while its section scrolls)
+   -----------------------------------------------------------------------------
+   A layout utility (foundation): a toolbar, card, action button or menu that
+   follows an edge on scroll — position: sticky, so it stays in normal flow then
+   pins at the offset. Set the gap with --wb-sticky-gap (default 0). Needs a
+   scrollable ancestor / long page to actually pin. z-index sits under the navbar
+   (30) so a sticky bar tucks beneath a fixed app bar, not over it.
+   -------------------------------------------------------------------------- */
+.wb-sticky         { position: sticky; top: var(--wb-sticky-gap, 0px); z-index: 20; }
+.wb-sticky--bottom { top: auto; bottom: var(--wb-sticky-gap, 0px); }
+
+/* =============================================================================
+   44. STEPS / STEPPER  (a numbered or dotted sequence — wizard, onboarding, timeline)
+   -----------------------------------------------------------------------------
+   Vertical by default (marker + connector rail + title/desc); add --horizontal for
+   a wizard row, or --dot for a slim timeline. Markers are a tier-1 high-contrast
+   neutral chip (spends contrast, not colour — same idiom as .wb-avatar--solid).
+   Per-item state classes drive a live flow:
+     .is-todo    → upcoming (muted outline marker)
+     .is-active  → current  (filled + neutral ring)
+     default / .is-done → filled  (put <span class="wb-ico">check</span> in a done marker)
+   .wb-steps__note is a dashed annotation pill hung under a step (e.g. a loop-back).
+   Marker size is one knob: --wb-steps-size.
+   -------------------------------------------------------------------------- */
+.wb-steps {
+  --wb-steps-size: 30px;
+  list-style: none; margin: 0; padding: 0; font-family: var(--wb-font);
+  display: flex; flex-direction: column;
+}
+.wb-steps__item { position: relative; display: flex; gap: 14px; padding-bottom: 20px; }
+.wb-steps__item:last-child { padding-bottom: 0; }
+/* Connector rail — centred on the marker, running down to the next marker. */
+.wb-steps__item::before {
+  content: ""; position: absolute; left: calc(var(--wb-steps-size) / 2);
+  top: var(--wb-steps-size); bottom: 0; width: var(--wb-bw);
+  background: var(--wb-border); transform: translateX(-50%);
+}
+.wb-steps__item:last-child::before { display: none; }
+.wb-steps__marker {
+  position: relative; z-index: 1; flex: none;
+  width: var(--wb-steps-size); height: var(--wb-steps-size);
+  border: var(--wb-bw) solid transparent; border-radius: var(--wb-radius-pill);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums;
+  background: var(--wb-gray-900); color: var(--wb-white);
+}
+.dark .wb-steps__marker { background: var(--wb-gray-100); color: var(--wb-gray-900); }
+.wb-steps__marker .wb-ico { font-size: 18px; }
+.wb-steps__content { padding-top: 4px; min-width: 0; }
+.wb-steps__title { font-size: 14.5px; font-weight: 650; color: var(--wb-fg); margin: 0 0 2px; }
+.wb-steps__desc  { font-size: 13px; color: var(--wb-fg-muted); margin: 0; }
+.wb-steps__note {
+  display: inline-flex; align-items: center; gap: 6px; margin-top: 8px;
+  font-size: 11.5px; font-weight: 600; color: var(--wb-fg-muted);
+  border: var(--wb-bw) dashed var(--wb-border-strong);
+  border-radius: var(--wb-radius-pill); padding: 3px 11px;
+}
+/* State: upcoming — a muted outline marker. */
+.wb-steps__item.is-todo .wb-steps__marker {
+  background: transparent; color: var(--wb-fg-subtle); border-color: var(--wb-border-strong);
+}
+.dark .wb-steps__item.is-todo .wb-steps__marker { background: transparent; color: var(--wb-fg-subtle); }
+/* State: active — filled + a neutral ring so the current step stands out. */
+.wb-steps__item.is-active .wb-steps__marker {
+  box-shadow: 0 0 0 3px var(--wb-surface), 0 0 0 5px var(--wb-border-strong);
+}
+/* --dashed (per item): a tentative / optional step — dashed number marker + dashed rail
+   ("not final", §9). Self-contained (outline look), so it reads right with or without .is-todo. */
+.wb-steps__item--dashed .wb-steps__marker {
+  background: transparent; color: var(--wb-fg-subtle);
+  border-style: dashed; border-color: var(--wb-border-strong);
+}
+.dark .wb-steps__item--dashed .wb-steps__marker { background: transparent; color: var(--wb-fg-subtle); }
+/* Rail below a dashed step: a dashed line (a repeating gradient, so the 1px rail box is unchanged). */
+.wb-steps__item--dashed::before { background: repeating-linear-gradient(var(--wb-border-strong) 0 4px, transparent 4px 7px); }
+.wb-steps--horizontal .wb-steps__item--dashed::before { background: repeating-linear-gradient(to right, var(--wb-border-strong) 0 4px, transparent 4px 7px); }
+/* --dot: small dots instead of numbers (a plain timeline). */
+.wb-steps--dot { --wb-steps-size: 12px; }
+.wb-steps--dot .wb-steps__marker { font-size: 0; }
+.wb-steps--dot .wb-steps__content { padding-top: 0; }
+/* --horizontal: marker on top, label below, rail between markers. */
+.wb-steps--horizontal { flex-direction: row; }
+.wb-steps--horizontal .wb-steps__item {
+  flex: 1 1 0; flex-direction: column; align-items: center; text-align: center;
+  gap: 8px; padding: 0;
+}
+.wb-steps--horizontal .wb-steps__item::before {
+  left: 50%; top: calc(var(--wb-steps-size) / 2); right: auto; bottom: auto;
+  width: 100%; height: var(--wb-bw); transform: translateY(-50%);
+}
+.wb-steps--horizontal .wb-steps__content { padding-top: 0; }
+
+/* =============================================================================
+   45. MEDIA OBJECT  (a leading figure + a title/text body — ranked rows, features)
+   -----------------------------------------------------------------------------
+   The classic media object: a fixed figure (icon / avatar / number / emoji) beside a
+   flexible body. Drop it in a .wb-card for a "media card" (see the Card page), in a
+   .wb-list row, an alert, or use standalone. For a numbered figure reuse
+   .wb-avatar.wb-avatar--solid (a tier-1 high-contrast chip) — no new badge needed.
+   -------------------------------------------------------------------------- */
+.wb-media { display: flex; align-items: flex-start; gap: 12px; font-family: var(--wb-font); }
+.wb-media--center { align-items: center; }
+/* Body grows + can shrink; the leading figure (an avatar / icon / emoji) keeps its
+   natural size, so there's no separate figure class to carry. */
+.wb-media__body   { flex: 1 1 auto; min-width: 0; }
+.wb-media__title  { font-size: 14.5px; font-weight: 650; color: var(--wb-fg); margin: 0 0 2px; }
+.wb-media__text   { font-size: 13px; color: var(--wb-fg-muted); margin: 0; }
+
+/* =============================================================================
+   46. CALENDAR  (a month grid for picking a date — or a date range)
+   -----------------------------------------------------------------------------
+   A date picker's panel: a month header (‹ title ›), a weekday row, and a 6×7 day
+   grid (weekday cells + day cells share one grid). Selection is TIER-1 CONTRAST,
+   never colour — the chosen day is a solid neutral chip (same idiom as
+   .wb-steps__marker / .wb-avatar--solid), today is a neutral ring, and a range is a
+   soft-grey band between two solid endpoints. Add --range for range mode. Look only;
+   the month maths + click logic is a behaviour engine (react-day-picker, or the small
+   driver the docs ship). Host inline, or in .wb-popover for a trigger→popup (pair with
+   an .wb-input-group trigger field). The grid has NO gap so an in-range band reads
+   continuous; empty neighbours give a single selected chip its air. Cell size is one
+   knob: --wb-cal-cell.
+     <div class="wb-calendar" data-calendar>
+       <div class="wb-calendar__head">
+         <button class="wb-calendar__nav" data-cal-prev><span class="wb-ico">chevron_left</span></button>
+         <span class="wb-calendar__title"></span>
+         <button class="wb-calendar__nav" data-cal-next><span class="wb-ico">chevron_right</span></button>
+       </div>
+       <div class="wb-calendar__grid"></div>   <!-- weekdays + days injected by JS -->
+     </div>
+   -------------------------------------------------------------------------- */
+.wb-calendar {
+  --wb-cal-cell: 36px;
+  width: max-content; font-family: var(--wb-font);
+  display: flex; flex-direction: column; gap: 10px; padding: 12px;
+  background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border);
+  border-radius: var(--wb-radius); box-shadow: var(--wb-shadow-md);
+}
+.wb-calendar__head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.wb-calendar__title {
+  font-size: 13.5px; font-weight: 650; color: var(--wb-fg); font-variant-numeric: tabular-nums;
+}
+.wb-calendar__nav {
+  flex: none; width: 28px; height: 28px; padding: 0; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--wb-fg-muted); background: none;
+  border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius-sm);
+  transition: background .13s ease, color .13s ease;
+}
+.wb-calendar__nav:hover { background: var(--wb-surface-hover); color: var(--wb-fg); }
+.wb-calendar__nav .wb-ico { font-size: 18px; }
+.wb-calendar__grid { display: grid; grid-template-columns: repeat(7, var(--wb-cal-cell)); }
+.wb-calendar__wd {
+  height: 26px; display: inline-flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 600; letter-spacing: .03em; color: var(--wb-fg-subtle);
+}
+.wb-calendar__day {
+  height: var(--wb-cal-cell); padding: 0; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 13px; font-variant-numeric: tabular-nums; color: var(--wb-fg);
+  background: none; border: var(--wb-bw) solid transparent; border-radius: var(--wb-radius-sm);
+  transition: background .1s ease, color .1s ease;
+}
+.wb-calendar__day:hover { background: var(--wb-surface-hover); }
+.wb-calendar__day.is-muted    { color: var(--wb-fg-subtle); }        /* adjacent month */
+.wb-calendar__day.is-disabled { color: var(--wb-fg-subtle); opacity: .45; cursor: not-allowed; pointer-events: none; }
+/* Today — a neutral ring (contrast, not colour). */
+.wb-calendar__day.is-today { border-color: var(--wb-border-strong); font-weight: 700; }
+/* In-range middle — a soft-grey continuous band (square, so consecutive cells join). */
+.wb-calendar__day.is-in-range { background: var(--wb-surface-2); border-radius: 0; }
+/* Selected day / range endpoints — a solid neutral chip; auto-flips on dark. */
+.wb-calendar__day.is-selected,
+.wb-calendar__day.is-range-start,
+.wb-calendar__day.is-range-end {
+  background: var(--wb-gray-900); color: var(--wb-white); font-weight: 650; border-color: transparent;
+}
+.dark .wb-calendar__day.is-selected,
+.dark .wb-calendar__day.is-range-start,
+.dark .wb-calendar__day.is-range-end { background: var(--wb-gray-100); color: var(--wb-gray-900); }
+/* Endpoints round only their OUTER edge so they merge into the band. */
+.wb-calendar__day.is-range-start { border-radius: var(--wb-radius-sm) 0 0 var(--wb-radius-sm); }
+.wb-calendar__day.is-range-end   { border-radius: 0 var(--wb-radius-sm) var(--wb-radius-sm) 0; }
+.wb-calendar__day.is-range-start.is-range-end { border-radius: var(--wb-radius-sm); }   /* a 1-day range = a full chip */
+/* Hosted in a popover: the panel already supplies the card, so drop the calendar's own. */
+.wb-popover__panel > .wb-calendar { padding: 0; background: none; border: 0; box-shadow: none; }
+
+/* =============================================================================
+   47. TIME PICKER  (scroll columns hour : minute — no popup, just pick a value)
+   -----------------------------------------------------------------------------
+   Pick a time from scrollable columns (iOS-style): an hour column and a minute
+   column (add --ampm for a 12-hour AM/PM period column; 24-hour by default). The
+   selected option is a solid neutral chip (tier-1 contrast, never colour), matching
+   the calendar. Columns reuse the themed scrollbar — pair each column with
+   .wb-scroll-y. Look only; the option lists + selection are wired by a small driver
+   (the docs ship one). Host inline, or in .wb-popover for a trigger→popup. Height is
+   one knob: --wb-timepicker-h.
+     <div class="wb-timepicker" data-timepicker>
+       <div class="wb-timepicker__col wb-scroll-y" data-tp="hour"></div>
+       <span class="wb-timepicker__sep">:</span>
+       <div class="wb-timepicker__col wb-scroll-y" data-tp="minute"></div>
+     </div>
+   -------------------------------------------------------------------------- */
+.wb-timepicker {
+  --wb-timepicker-h: 176px;
+  display: flex; gap: 6px; padding: 10px; font-family: var(--wb-font);
+  background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border);
+  border-radius: var(--wb-radius); box-shadow: var(--wb-shadow-md);
+}
+.wb-timepicker__col {
+  height: var(--wb-timepicker-h); overflow-y: auto;
+  display: flex; flex-direction: column; gap: 2px; padding-right: 4px;
+}
+.wb-timepicker__opt {
+  flex: none; min-width: 46px; padding: 7px 12px; cursor: pointer; text-align: center;
+  font-size: 13px; font-variant-numeric: tabular-nums; color: var(--wb-fg);
+  background: none; border: var(--wb-bw) solid transparent; border-radius: var(--wb-radius-sm);
+  transition: background .1s ease, color .1s ease;
+}
+.wb-timepicker__opt:hover { background: var(--wb-surface-hover); }
+.wb-timepicker__opt.is-selected { background: var(--wb-gray-900); color: var(--wb-white); font-weight: 650; }
+.dark .wb-timepicker__opt.is-selected { background: var(--wb-gray-100); color: var(--wb-gray-900); }
+.wb-timepicker__sep { align-self: center; padding: 0 2px; font-size: 15px; font-weight: 700; color: var(--wb-fg-subtle); }
+/* Hosted in a popover: drop the picker's own card chrome. */
+.wb-popover__panel > .wb-timepicker { padding: 0; background: none; border: 0; box-shadow: none; }
+
+/* -----------------------------------------------------------------------------
+   48. SLOT GRID  (fixed cells — drop an item into ANY slot; empty slots persist)
+   -----------------------------------------------------------------------------
+   Unlike .wb-sortable--grid (which reflows and closes gaps), the slot grid has a
+   FIXED set of cells. Each item keeps its exact slot and empty cells stay empty, so
+   you can leave gaps between items. Drag an item onto any cell to move it there;
+   dropping on an occupied cell SWAPS the two. A single column (--1) is the
+   "fixed-slot list". Docs use HTML5 drag; app → dnd-kit (rectSwappingStrategy).
+     .wb-slotgrid            the fixed grid  (data-slotgrid; default 2 columns)
+     .wb-slotgrid--1..--6    lock the column count (--1 = a list)
+     .wb-slotgrid__cell      one fixed slot  (dashed while empty; .is-over on hover)
+     .wb-slotgrid__item      a draggable card inside a cell  (+ .is-dragging)
+   -------------------------------------------------------------------------- */
+.wb-slotgrid {
+  display: grid; gap: 10px; grid-template-columns: repeat(2, 1fr);
+  font-family: var(--wb-font);
+}
+.wb-slotgrid--1 { grid-template-columns: 1fr; }
+.wb-slotgrid--2 { grid-template-columns: repeat(2, 1fr); }
+.wb-slotgrid--3 { grid-template-columns: repeat(3, 1fr); }
+.wb-slotgrid--4 { grid-template-columns: repeat(4, 1fr); }
+.wb-slotgrid--5 { grid-template-columns: repeat(5, 1fr); }
+.wb-slotgrid--6 { grid-template-columns: repeat(6, 1fr); }
+/* A cell is only a drop target; the dashed slot shows only while the cell holds no
+   item — `:not(:has(*))` is robust to stray whitespace in the markup (unlike `:empty`).
+   Same dashed weight (--wb-border-strong) as the other drop affordances (§9, §23). */
+.wb-slotgrid__cell {
+  display: flex; min-height: 62px;
+  border: 1.5px dashed transparent; border-radius: var(--wb-radius-sm);
+}
+.wb-slotgrid__cell:not(:has(*)) { border-color: var(--wb-border-strong); background: var(--wb-surface-2); }
+.wb-slotgrid__cell.is-over { border-color: var(--wb-fg-subtle); background: var(--wb-surface-2); }
+.wb-slotgrid__cell.is-over .wb-slotgrid__item { outline: 2px dashed var(--wb-fg-subtle); outline-offset: 2px; }  /* swap hint */
+/* The draggable card fills its slot. */
+.wb-slotgrid__item {
+  flex: 1 1 auto; min-width: 0;
+  display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 6px;
+  padding: 11px 13px; cursor: grab; color: var(--wb-fg);
+  background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border);
+  border-radius: var(--wb-radius-sm); box-shadow: var(--wb-shadow-sm);
+}
+.wb-slotgrid__item:active { cursor: grabbing; }
+.wb-slotgrid__item.is-dragging { opacity: .4; }

@@ -1,0 +1,36 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Lớp phủ (Overlay)</p>
+  <h2>Tooltip</h2>
+  <p>Gợi ý ngắn khi rê chuột / focus. Thuần CSS (<code>:hover</code> + <code>:focus-within</code>), nền
+  đảo theo theme. Cho chú thích số liệu, nút chỉ-icon, nhãn viết tắt.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="demo demo--pop">
+    <div class="demo__stage wb-cluster" style="min-height:120px;gap:22px">
+      <span class="wb-tooltip">
+        <button class="wb-btn wb-btn--secondary">Rê vào đây</button>
+        <span class="wb-tooltip__bubble">Số dư gồm cả ví &amp; tiền mặt</span>
+      </span>
+      <span class="wb-tooltip">
+        <button class="wb-btn wb-btn--secondary wb-btn--icon" aria-label="Thông tin">ⓘ</button>
+        <span class="wb-tooltip__bubble">Cập nhật 5 phút trước</span>
+      </span>
+      <span class="wb-inline">Lãi kép
+        <span class="wb-tooltip">
+          <span class="wb-cap wb-cap--sm" style="cursor:help">?</span>
+          <span class="wb-tooltip__bubble">Lãi tính trên cả gốc lẫn lãi trước đó</span>
+        </span>
+      </span>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="wb-tooltip"&gt;
+  &lt;button class="wb-btn wb-btn--icon" aria-label="Thông tin"&gt;ⓘ&lt;/button&gt;
+  &lt;span class="wb-tooltip__bubble"&gt;Cập nhật 5 phút trước&lt;/span&gt;
+&lt;/span&gt;</code></pre></div>
+  </div>
+  <div class="doc-note">
+    <span>💡</span>
+    <div>Tooltip thuần CSS hợp cho gợi ý ngắn. Cần định vị thông minh (tránh tràn viewport), delay, hoặc
+    nội dung phức tạp → dùng <b>Radix Tooltip</b> trong app và giữ style bong bóng như trên.</div>
+  </div>
+</section>

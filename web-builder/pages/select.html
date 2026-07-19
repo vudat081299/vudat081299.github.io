@@ -1,0 +1,57 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Nhập liệu</p>
+  <h2>Select</h2>
+  <p><code>&lt;select&gt;</code> gốc được style lại. Bọc trong <code>.wb-select-wrap</code> để mũi tên là <b>icon thật</b>
+  (Material) đè lên — không vẽ tay. Trong app, dùng Radix <b>Select</b> nếu cần render option tuỳ biến.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>Cơ bản</h4>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-field" style="max-width:320px">
+          <label class="wb-label">Danh mục</label>
+          <span class="wb-select-wrap">
+            <select class="wb-select">
+              <option>Ăn uống</option><option>Di chuyển</option>
+              <option>Nhà ở</option><option>Giải trí</option>
+            </select>
+            <span class="wb-ico">expand_more</span>
+          </span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="wb-select-wrap"&gt;
+  &lt;select class="wb-select"&gt;
+    &lt;option&gt;Ăn uống&lt;/option&gt;
+    &lt;option&gt;Di chuyển&lt;/option&gt;
+  &lt;/select&gt;
+  &lt;span class="wb-ico"&gt;expand_more&lt;/span&gt;
+&lt;/span&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Lỗi &amp; khoá</h4>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-stack" style="max-width:320px">
+          <span class="wb-select-wrap">
+            <select class="wb-select is-invalid" aria-invalid="true">
+              <option>— Chọn ví —</option><option>Tiền mặt</option><option>Vietcombank</option>
+            </select>
+            <span class="wb-ico">expand_more</span>
+          </span>
+          <span class="wb-select-wrap">
+            <select class="wb-select" disabled><option>Không đổi được</option></select>
+            <span class="wb-ico">expand_more</span>
+          </span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="wb-select-wrap"&gt;
+  &lt;select class="wb-select is-invalid" aria-invalid="true"&gt; … &lt;/select&gt;
+  &lt;span class="wb-ico"&gt;expand_more&lt;/span&gt;
+&lt;/span&gt;</code></pre></div>
+    </div>
+  </div>
+</section>

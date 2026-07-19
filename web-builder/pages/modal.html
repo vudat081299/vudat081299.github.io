@@ -1,0 +1,114 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Lớp phủ (Overlay)</p>
+  <h2>Modal / Dialog</h2>
+  <p><code>.wb-overlay</code> làm mờ nền (bật bằng <code>.is-open</code>), bên trong là <code>.wb-modal</code>.
+  Ở app dùng <b>Radix Dialog</b> cho focus-trap/portal; các class này lo phần nhìn.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>Xem trước (tĩnh) &amp; mở thử</h4>
+    <div class="demo">
+      <div class="demo__stage">
+        <button class="wb-btn" data-modal-open="#demoModal">Mở modal</button>
+        <button class="wb-btn wb-btn--danger" data-modal-open="#confirmModal" style="margin-left:8px">Xoá giao dịch…</button>
+
+        <!-- panel tĩnh cho dễ xem -->
+        <div style="margin-top:20px" class="wb-modal">
+          <div class="wb-modal__head">
+            <div>
+              <h4 class="wb-modal__title">Thêm giao dịch</h4>
+              <p class="wb-modal__sub">Ghi nhận một khoản thu hoặc chi.</p>
+            </div>
+            <button class="wb-close" aria-label="Đóng"></button>
+          </div>
+          <div class="wb-modal__body">
+            <div class="wb-field"><label class="wb-label">Nội dung</label><input class="wb-input" placeholder="VD: Ăn trưa" /></div>
+          </div>
+          <div class="wb-modal__foot">
+            <button class="wb-btn wb-btn--ghost">Huỷ</button>
+            <button class="wb-btn">Lưu</button>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;button class="wb-btn" data-modal-open="#demoModal"&gt;Mở modal&lt;/button&gt;
+
+&lt;div class="wb-overlay" id="demoModal"&gt;
+  &lt;div class="wb-modal"&gt;
+    &lt;div class="wb-modal__head"&gt;
+      &lt;div&gt;&lt;h4 class="wb-modal__title"&gt;Thêm giao dịch&lt;/h4&gt;&lt;/div&gt;
+      &lt;button class="wb-close" data-modal-close&gt;&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div class="wb-modal__body"&gt;…&lt;/div&gt;
+    &lt;div class="wb-modal__foot"&gt;
+      &lt;button class="wb-btn wb-btn--ghost" data-modal-close&gt;Huỷ&lt;/button&gt;
+      &lt;button class="wb-btn"&gt;Lưu&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Kiểu lớp phủ (backdrop)</h4>
+    <p class="doc-block__desc">Mặc định lớp phủ <b>làm mờ + chặn</b> trang dưới (modal). Thêm modifier lên <code>.wb-overlay</code> để đổi:</p>
+    <div class="wb-card" style="max-width:640px">
+      <div class="wb-table-scroll">
+        <table class="wb-table wb-table--compact">
+          <thead><tr><th>Class</th><th>Làm mờ?</th><th>Thao tác trang dưới?</th></tr></thead>
+          <tbody>
+            <tr><td class="wb-cell-strong"><code>.wb-overlay</code> (mặc định)</td><td>Mờ nhẹ + blur</td><td>Không (chặn, bấm nền = đóng)</td></tr>
+            <tr><td class="wb-cell-strong"><code>--blur</code></td><td>Kính mờ (blur mạnh)</td><td>Không (chặn)</td></tr>
+            <tr><td class="wb-cell-strong"><code>--clear</code></td><td>Không mờ</td><td>Không (vẫn chặn)</td></tr>
+            <tr><td class="wb-cell-strong"><code>--pass</code></td><td>Không mờ</td><td><b>Có</b> — non-modal, trang dưới vẫn dùng được (không tự đóng khi bấm ngoài)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="demo__code" style="margin-top:12px"><button class="copy-btn">Copy</button><pre><code>&lt;!-- kính mờ --&gt;
+&lt;div class="wb-overlay wb-overlay--blur is-open"&gt;…&lt;/div&gt;
+
+&lt;!-- non-modal: vẫn thao tác được trang bên dưới --&gt;
+&lt;div class="wb-overlay wb-overlay--pass is-open"&gt;…&lt;/div&gt;</code></pre></div>
+  </div>
+</section>
+
+<!-- overlays thật (bấm nút ở trên để mở; bấm nền hoặc × để đóng) -->
+<div class="wb-overlay" id="demoModal">
+  <div class="wb-modal">
+    <div class="wb-modal__head">
+      <div>
+        <h4 class="wb-modal__title">Thêm giao dịch</h4>
+        <p class="wb-modal__sub">Ghi nhận một khoản thu hoặc chi.</p>
+      </div>
+      <button class="wb-close" data-modal-close aria-label="Đóng"></button>
+    </div>
+    <div class="wb-modal__body">
+      <div class="wb-stack">
+        <div class="wb-field"><label class="wb-label">Nội dung</label><input class="wb-input" placeholder="VD: Ăn trưa với khách" /></div>
+        <div class="wb-field"><label class="wb-label">Số tiền</label>
+          <div class="wb-input-group"><input class="wb-input" inputmode="numeric" placeholder="0" /><span class="wb-input-group__addon">₫</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="wb-modal__foot">
+      <button class="wb-btn wb-btn--ghost" data-modal-close>Huỷ</button>
+      <button class="wb-btn" data-modal-close>Lưu</button>
+    </div>
+  </div>
+</div>
+
+<div class="wb-overlay" id="confirmModal">
+  <div class="wb-modal" style="max-width:400px">
+    <div class="wb-modal__head">
+      <div>
+        <h4 class="wb-modal__title">Xoá giao dịch?</h4>
+        <p class="wb-modal__sub">Hành động này không thể hoàn tác.</p>
+      </div>
+    </div>
+    <div class="wb-modal__foot">
+      <button class="wb-btn wb-btn--ghost" data-modal-close>Huỷ</button>
+      <button class="wb-btn wb-btn--danger" data-modal-close>Xoá</button>
+    </div>
+  </div>
+</div>

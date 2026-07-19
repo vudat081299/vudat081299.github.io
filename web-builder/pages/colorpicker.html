@@ -1,0 +1,129 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Bộ chọn</p>
+  <h2>Bộ chọn màu</h2>
+  <p>Hai cách chọn màu, đúng thang màu: một lưới ô <b>preset</b> (<code>.wb-swatches</code>) để chọn từ các hue đã duyệt,
+  và một panel <b>tự do</b> (<code>.wb-colorpicker</code>) thay hẳn hộp thoại màu của hệ điều hành. Thư viện lo <i>giao diện</i>;
+  phần kéo-chọn + quy đổi HSV do một handler nhỏ đảm nhiệm (bản docs này có sẵn) hoặc một lib headless.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>Bảng màu — <code>wb-swatches</code></h4>
+    <p class="doc-block__desc">Picker tối giản, thuần CSS: một lưới ô màu <b>preset</b> để chọn từ — giữ lựa chọn trong các hue đã duyệt (đúng
+    thang màu), thay vì mở hộp chọn màu của hệ điều hành. Đặt hue mỗi ô bằng <code>--wb-swatch-color</code>; ô đang chọn thêm
+    <code>.is-selected</code> (viền nhấn theo màu chữ, đọc rõ trên mọi hue). Biến thể <code>--round</code> (tròn) · <code>--sm</code> (nhỏ).
+    Cần màu tự do thì dùng <code>.wb-colorpicker</code> bên dưới.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-stack">
+          <div class="wb-swatches" role="group" aria-label="Chọn màu danh mục">
+            <button type="button" class="wb-swatch is-selected" style="--wb-swatch-color:var(--wb-chart-1)" aria-label="Chàm" aria-pressed="true"></button>
+            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-2)" aria-label="Xanh mòng két"></button>
+            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-3)" aria-label="Hổ phách"></button>
+            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-4)" aria-label="Hồng"></button>
+            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-5)" aria-label="Xanh dương"></button>
+            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-6)" aria-label="Tím"></button>
+            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-7)" aria-label="Xanh lơ"></button>
+            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-8)" aria-label="Xanh lá mạ"></button>
+            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-gray-400)" aria-label="Xám"></button>
+          </div>
+          <div class="wb-swatches wb-swatches--round wb-swatches--sm" role="group" aria-label="Chọn màu (tròn, nhỏ)">
+            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-1)" aria-label="Chàm"></button>
+            <button type="button" class="wb-swatch is-selected" style="--wb-swatch-color:var(--wb-chart-2)" aria-label="Xanh mòng két" aria-pressed="true"></button>
+            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-4)" aria-label="Hồng"></button>
+            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-6)" aria-label="Tím"></button>
+            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-8)" aria-label="Xanh lá mạ"></button>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-swatches" role="group" aria-label="Chọn màu"&gt;
+  &lt;button type="button" class="wb-swatch is-selected"
+          style="--wb-swatch-color:var(--wb-chart-1)" aria-label="Chàm"&gt;&lt;/button&gt;
+  &lt;button type="button" class="wb-swatch"
+          style="--wb-swatch-color:var(--wb-chart-2)" aria-label="Teal"&gt;&lt;/button&gt;
+  &lt;!-- … --&gt;
+&lt;/div&gt;
+
+&lt;!-- tròn + nhỏ --&gt;
+&lt;div class="wb-swatches wb-swatches--round wb-swatches--sm"&gt;…&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Panel màu tự do — <code>wb-colorpicker</code></h4>
+    <p class="doc-block__desc">Panel custom <b>thay hẳn hộp thoại màu của hệ điều hành</b> (hộp màu mặc định của trình duyệt) — tối giản, đúng tông:
+    vùng <b>SV</b> (đậm/sáng) + thanh <b>hue</b> cầu vồng + ô nhập <b>hex</b> + hàng <b>preset</b> (tái dùng <code>wb-swatches</code>). Kéo thử vùng màu / thanh hue, gõ hex, hay bấm preset:</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-colorpicker" data-colorpicker>
+          <div class="wb-colorpicker__area"><span class="wb-colorpicker__thumb"></span></div>
+          <div class="wb-colorpicker__hue"><span class="wb-colorpicker__thumb"></span></div>
+          <div class="wb-colorpicker__foot">
+            <span class="wb-colorpicker__preview"></span>
+            <div class="wb-input-group">
+              <span class="wb-input-group__addon">#</span>
+              <input class="wb-input" data-cp-hex value="6366F1" spellcheck="false" aria-label="Mã màu hex" />
+            </div>
+          </div>
+          <div class="wb-swatches wb-swatches--sm" role="group" aria-label="Màu gợi ý">
+            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-1)" aria-label="Chàm"></button>
+            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-2)" aria-label="Xanh mòng két"></button>
+            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-3)" aria-label="Hổ phách"></button>
+            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-4)" aria-label="Hồng"></button>
+            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-5)" aria-label="Xanh dương"></button>
+            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-6)" aria-label="Tím"></button>
+            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-8)" aria-label="Xanh lá mạ"></button>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-colorpicker"&gt;
+  &lt;div class="wb-colorpicker__area"&gt;&lt;span class="wb-colorpicker__thumb"&gt;&lt;/span&gt;&lt;/div&gt;
+  &lt;div class="wb-colorpicker__hue"&gt;&lt;span class="wb-colorpicker__thumb"&gt;&lt;/span&gt;&lt;/div&gt;
+  &lt;div class="wb-colorpicker__foot"&gt;
+    &lt;span class="wb-colorpicker__preview"&gt;&lt;/span&gt;
+    &lt;div class="wb-input-group"&gt;
+      &lt;span class="wb-input-group__addon"&gt;#&lt;/span&gt;
+      &lt;input class="wb-input" value="6366F1" /&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="wb-swatches wb-swatches--sm"&gt;…&lt;/div&gt;   &lt;!-- preset --&gt;
+&lt;/div&gt;
+&lt;!-- Kéo/hex do JS lo (xem integration.md). Bọc trong .wb-popover cho pattern bấm-để-mở. --&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Bấm để mở (popover)</h4>
+    <p class="doc-block__desc">Ghép <code>.wb-colorpicker</code> trong <code>.wb-popover</code> để có pattern <b>bấm ô màu → hiện panel</b>. Nút mở là một ô
+    màu nhỏ; panel bỏ khung riêng (đã có khung của popover). Đây đúng là cách trang <b>Config</b> dùng để chỉnh token màu.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <span class="wb-popover wb-popover--bottom">
+          <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-1)" data-pop-toggle aria-label="Mở bộ chọn màu"></button>
+          <div class="wb-popover__panel">
+            <div class="wb-popover__arrow"></div>
+            <div class="wb-colorpicker" data-colorpicker>
+              <div class="wb-colorpicker__area"><span class="wb-colorpicker__thumb"></span></div>
+              <div class="wb-colorpicker__hue"><span class="wb-colorpicker__thumb"></span></div>
+              <div class="wb-colorpicker__foot">
+                <span class="wb-colorpicker__preview"></span>
+                <div class="wb-input-group">
+                  <span class="wb-input-group__addon">#</span>
+                  <input class="wb-input" data-cp-hex value="14B8A6" spellcheck="false" aria-label="Mã màu hex" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </span>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="wb-popover wb-popover--bottom"&gt;
+  &lt;button class="wb-swatch" data-pop-toggle
+          style="--wb-swatch-color:var(--wb-chart-1)"&gt;&lt;/button&gt;
+  &lt;div class="wb-popover__panel"&gt;
+    &lt;div class="wb-popover__arrow"&gt;&lt;/div&gt;
+    &lt;div class="wb-colorpicker"&gt;…&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/span&gt;</code></pre></div>
+    </div>
+  </div>
+</section>

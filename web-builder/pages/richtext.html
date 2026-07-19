@@ -1,0 +1,110 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Nhập liệu</p>
+  <h2>Rich text — thanh định dạng (format bar)</h2>
+  <p>Thanh nút <b>nằm ngang</b> đặt trên một <code>.wb-textarea</code> để người dùng viết kiểu <b>markdown</b>:
+  văn bản thường (Aa), tiêu đề (H1/H2), <b>đậm</b> · <i>nghiêng</i> · gạch dưới · gạch ngang, tô nền (highlight) +
+  chọn màu tô, và nút <b>xoá toàn bộ định dạng</b>. Chỉ dựng <b>giao diện</b>; hành vi (bọc đoạn chọn bằng ký hiệu
+  markdown) là một driver nhỏ trong <code>app.js</code> — app thật thay bằng trình soạn thảo thực (TipTap, Lexical…).</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>Thanh định dạng gắn trên textarea</h4>
+    <p class="doc-block__desc">Bôi đen một đoạn rồi bấm nút — ký hiệu markdown tự bọc quanh đoạn chọn (H1/H2 thêm ở đầu dòng).
+    Nút đang bật dùng nền <b>đặc trung tính</b> (tầng 1). <code>--attached</code> ghép liền mép trên của textarea.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-field" style="max-width:560px">
+          <label class="wb-label">Ghi chú giao dịch (markdown)</label>
+          <div class="wb-toolbar wb-toolbar--attached" data-formatbar="note-ta" role="toolbar" aria-label="Định dạng văn bản">
+            <div class="wb-toolbar__group">
+              <button type="button" class="wb-toolbar__btn wb-toolbar__btn--text" data-cmd="normal" title="Văn bản thường">Aa</button>
+              <button type="button" class="wb-toolbar__btn wb-toolbar__btn--text" data-cmd="h1" title="Tiêu đề 1">H1</button>
+              <button type="button" class="wb-toolbar__btn wb-toolbar__btn--text" data-cmd="h2" title="Tiêu đề 2">H2</button>
+            </div>
+            <span class="wb-toolbar__sep"></span>
+            <div class="wb-toolbar__group">
+              <button type="button" class="wb-toolbar__btn" data-cmd="bold" title="Đậm" aria-label="Đậm"><span class="wb-ico">format_bold</span></button>
+              <button type="button" class="wb-toolbar__btn" data-cmd="italic" title="Nghiêng" aria-label="Nghiêng"><span class="wb-ico">format_italic</span></button>
+              <button type="button" class="wb-toolbar__btn" data-cmd="underline" title="Gạch dưới" aria-label="Gạch dưới"><span class="wb-ico">format_underlined</span></button>
+              <button type="button" class="wb-toolbar__btn" data-cmd="strike" title="Gạch ngang" aria-label="Gạch ngang"><span class="wb-ico">format_strikethrough</span></button>
+            </div>
+            <span class="wb-toolbar__sep"></span>
+            <div class="wb-toolbar__group">
+              <button type="button" class="wb-toolbar__btn" data-cmd="highlight" title="Tô nền" aria-label="Tô nền"><span class="wb-ico">ink_highlighter</span></button>
+              <div class="wb-dropdown">
+                <button type="button" class="wb-toolbar__btn" data-dd-toggle title="Màu tô" aria-label="Chọn màu tô"><span class="wb-toolbar__swatch"></span><span class="wb-ico wb-ico--xs wb-dropdown__caret">expand_more</span></button>
+                <div class="wb-dropdown__menu">
+                  <div class="wb-swatches" style="padding:8px;max-width:132px" role="group" aria-label="Màu tô nền">
+                    <button type="button" class="wb-swatch" style="--wb-swatch-color:#fde68a" aria-label="Vàng"></button>
+                    <button type="button" class="wb-swatch" style="--wb-swatch-color:#bbf7d0" aria-label="Xanh lá"></button>
+                    <button type="button" class="wb-swatch" style="--wb-swatch-color:#bfdbfe" aria-label="Xanh dương"></button>
+                    <button type="button" class="wb-swatch" style="--wb-swatch-color:#fbcfe8" aria-label="Hồng"></button>
+                    <button type="button" class="wb-swatch" style="--wb-swatch-color:#fed7aa" aria-label="Cam"></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <span class="wb-toolbar__sep"></span>
+            <button type="button" class="wb-toolbar__btn" data-cmd="clear" title="Xoá định dạng" aria-label="Xoá toàn bộ định dạng"><span class="wb-ico">format_clear</span></button>
+          </div>
+          <textarea class="wb-textarea" id="note-ta" rows="6" placeholder="Bôi đen chữ rồi bấm nút định dạng…">## Ăn trưa với khách hàng
+
+Nhà hàng **The Deck**, thanh toán bằng thẻ. Cần ==xuất hoá đơn== trước cuối tháng.</textarea>
+          <span class="wb-help">Nội dung lưu ở dạng markdown; render khi hiển thị.</span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-toolbar wb-toolbar--attached" data-formatbar="note-ta" role="toolbar"&gt;
+  &lt;div class="wb-toolbar__group"&gt;
+    &lt;button class="wb-toolbar__btn wb-toolbar__btn--text" data-cmd="normal"&gt;Aa&lt;/button&gt;
+    &lt;button class="wb-toolbar__btn wb-toolbar__btn--text" data-cmd="h1"&gt;H1&lt;/button&gt;
+    &lt;button class="wb-toolbar__btn wb-toolbar__btn--text" data-cmd="h2"&gt;H2&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;span class="wb-toolbar__sep"&gt;&lt;/span&gt;
+  &lt;div class="wb-toolbar__group"&gt;
+    &lt;button class="wb-toolbar__btn" data-cmd="bold"&gt;&lt;span class="wb-ico"&gt;format_bold&lt;/span&gt;&lt;/button&gt;
+    &lt;button class="wb-toolbar__btn" data-cmd="italic"&gt;&lt;span class="wb-ico"&gt;format_italic&lt;/span&gt;&lt;/button&gt;
+    &lt;button class="wb-toolbar__btn" data-cmd="underline"&gt;&lt;span class="wb-ico"&gt;format_underlined&lt;/span&gt;&lt;/button&gt;
+    &lt;button class="wb-toolbar__btn" data-cmd="strike"&gt;&lt;span class="wb-ico"&gt;format_strikethrough&lt;/span&gt;&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;span class="wb-toolbar__sep"&gt;&lt;/span&gt;
+  &lt;button class="wb-toolbar__btn" data-cmd="highlight"&gt;&lt;span class="wb-ico"&gt;ink_highlighter&lt;/span&gt;&lt;/button&gt;
+  &lt;!-- + dropdown .wb-swatches chọn màu tô --&gt;
+  &lt;span class="wb-toolbar__sep"&gt;&lt;/span&gt;
+  &lt;button class="wb-toolbar__btn" data-cmd="clear"&gt;&lt;span class="wb-ico"&gt;format_clear&lt;/span&gt;&lt;/button&gt;
+&lt;/div&gt;
+&lt;textarea class="wb-textarea" id="note-ta"&gt;…markdown…&lt;/textarea&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Thanh rời (không gắn textarea)</h4>
+    <p class="doc-block__desc">Bỏ <code>--attached</code> để dùng như một thanh công cụ độc lập (bo góc đủ 4 cạnh). Nhóm nút bằng
+    <code>__group</code> + <code>__sep</code>; nút bật thêm <code>.is-active</code>.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-toolbar" role="toolbar" aria-label="Ví dụ thanh công cụ" style="max-width:340px">
+          <div class="wb-toolbar__group">
+            <button type="button" class="wb-toolbar__btn is-active" aria-pressed="true"><span class="wb-ico">format_bold</span></button>
+            <button type="button" class="wb-toolbar__btn"><span class="wb-ico">format_italic</span></button>
+            <button type="button" class="wb-toolbar__btn"><span class="wb-ico">format_underlined</span></button>
+          </div>
+          <span class="wb-toolbar__sep"></span>
+          <div class="wb-toolbar__group">
+            <button type="button" class="wb-toolbar__btn"><span class="wb-ico">format_list_bulleted</span></button>
+            <button type="button" class="wb-toolbar__btn"><span class="wb-ico">format_list_numbered</span></button>
+            <button type="button" class="wb-toolbar__btn"><span class="wb-ico">link</span></button>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-toolbar" role="toolbar"&gt;
+  &lt;div class="wb-toolbar__group"&gt;
+    &lt;button class="wb-toolbar__btn is-active" aria-pressed="true"&gt;&lt;span class="wb-ico"&gt;format_bold&lt;/span&gt;&lt;/button&gt;
+    …
+  &lt;/div&gt;
+  &lt;span class="wb-toolbar__sep"&gt;&lt;/span&gt;
+  …
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+</section>

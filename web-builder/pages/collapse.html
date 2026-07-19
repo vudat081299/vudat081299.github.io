@@ -1,0 +1,112 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Đóng/mở (Disclosure)</p>
+  <h2>Collapse</h2>
+  <p>Một vùng <b>ẩn/hiện độc lập</b> — “xem thêm”, một mục tuỳ chọn trong form, hay ngăn chi tiết trong thẻ.
+  Khác <a href="#/accordion">Accordion</a> (một cụm nhiều mục dùng <code>&lt;details&gt;</code> gốc): collapse là <b>một</b> khối bật/tắt,
+  kích hoạt bằng nút bất kỳ. Chiều cao tự trượt mượt bằng thủ thuật grid <code>0fr→1fr</code> — không cần đo chiều cao hay JS phức tạp.
+  Bật/tắt bằng <code>.is-open</code> trên <code>.wb-collapse</code>.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>Cơ bản — xem thêm</h4>
+    <p class="doc-block__desc">Nút mang <code>data-collapse-toggle</code>; thêm <code>.wb-collapse__caret</code> vào icon để nó tự xoay khi mở.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-collapse" style="max-width:420px">
+          <button class="wb-btn wb-btn--ghost wb-btn--sm" data-collapse-toggle>
+            <span class="wb-ico wb-ico--sm wb-collapse__caret">expand_more</span> Xem chi tiết tính lãi
+          </button>
+          <div class="wb-collapse__panel">
+            <div class="wb-collapse__inner">
+              <p style="font-size:13.5px;color:var(--wb-fg-muted);line-height:1.6;padding:10px 4px 0">
+                Lãi kép theo ngày trên số dư cuối ngày, chốt vào cuối tháng. Lãi suất hiện tại 4,6%/năm cho gói linh hoạt;
+                rút trước hạn không mất gốc, chỉ tính lãi không kỳ hạn cho phần đã rút.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-collapse"&gt;
+  &lt;button class="wb-btn wb-btn--ghost wb-btn--sm" data-collapse-toggle&gt;
+    &lt;span class="wb-ico wb-ico--sm wb-collapse__caret"&gt;expand_more&lt;/span&gt; Xem chi tiết tính lãi
+  &lt;/button&gt;
+  &lt;div class="wb-collapse__panel"&gt;
+    &lt;div class="wb-collapse__inner"&gt;
+      &lt;p&gt;Lãi kép theo ngày…&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Mục nâng cao trong thẻ</h4>
+    <p class="doc-block__desc">Gói một phần form không bắt buộc để mặc định gọn gàng — mở ra khi cần.</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="wb-card" style="max-width:380px">
+          <div class="wb-card__body wb-stack" style="gap:14px">
+            <div class="wb-field">
+              <label class="wb-label">Số tiền</label>
+              <div class="wb-input-group">
+                <input class="wb-input" type="text" value="1.500.000" />
+                <span class="wb-input-group__addon">₫</span>
+              </div>
+            </div>
+            <div class="wb-collapse">
+              <button class="wb-btn wb-btn--ghost wb-btn--sm" data-collapse-toggle style="padding-inline:6px">
+                <span class="wb-ico wb-ico--sm wb-collapse__caret">expand_more</span> Tuỳ chọn nâng cao
+              </button>
+              <div class="wb-collapse__panel">
+                <div class="wb-collapse__inner">
+                  <div class="wb-stack" style="gap:12px;padding-top:12px">
+                    <div class="wb-field">
+                      <label class="wb-label">Ghi chú</label>
+                      <input class="wb-input" type="text" placeholder="Ví dụ: tiền nhà tháng 7" />
+                    </div>
+                    <label class="wb-check"><input type="checkbox" /> Lặp lại hằng tháng</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button class="wb-btn">Lưu giao dịch</button>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-collapse"&gt;
+  &lt;button class="wb-btn wb-btn--ghost wb-btn--sm" data-collapse-toggle&gt;
+    &lt;span class="wb-ico wb-ico--sm wb-collapse__caret"&gt;expand_more&lt;/span&gt; Tuỳ chọn nâng cao
+  &lt;/button&gt;
+  &lt;div class="wb-collapse__panel"&gt;&lt;div class="wb-collapse__inner"&gt;
+    &lt;!-- các trường không bắt buộc --&gt;
+  &lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-note">
+    <span class="wb-ico" style="color:var(--wb-info-text)">info</span>
+    <div>Cần một cụm nhiều mục chỉ mở một mục tại một thời điểm? Dùng <a href="#/accordion">Accordion</a>.
+    Collapse hợp cho <b>một</b> vùng bật/tắt riêng lẻ, hoặc nhiều vùng độc lập cùng mở.</div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Light &amp; Dark</h4>
+    <p class="doc-block__desc">Collapse chỉ ẩn/hiện — màu chữ &amp; nền theo token nên tự đúng ở cả hai theme.</p>
+    <div class="dual" data-dual data-pad="24px">
+      <template>
+        <div class="wb-collapse is-open" style="width:260px">
+          <button class="wb-btn wb-btn--ghost wb-btn--sm" data-collapse-toggle>
+            <span class="wb-ico wb-ico--sm wb-collapse__caret">expand_more</span> Điều khoản
+          </button>
+          <div class="wb-collapse__panel">
+            <div class="wb-collapse__inner">
+              <p style="font-size:13px;color:var(--wb-fg-muted);line-height:1.6;padding:8px 4px 0">
+                Miễn phí 5 lần chuyển đầu mỗi tháng. Từ lần thứ 6 tính 2.000&nbsp;₫/lần.</p>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,90 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Phản hồi</p>
+  <h2>Alert / Banner</h2>
+  <p>Khối thông báo tại chỗ (trong trang/form). Trung tính mặc định; thêm tone để có nền mờ + viền màu
+  bao quanh (outline). Thêm <code>--plain</code> để <b>bỏ viền</b> — chỉ còn nền mềm (kiểu banner phẳng).
+  Dùng màu đúng ý nghĩa như thang màu chung.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="demo">
+    <div class="demo__stage">
+      <div class="wb-stack" style="--wb-stack-gap:12px;max-width:560px">
+        <div class="wb-alert">
+          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">campaign</span></span>
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Nhắc nhở chung</p>
+            <p class="wb-alert__msg">Thông báo trung tính, không mang trạng thái — mặc định nên dùng bản này trước.</p>
+          </div>
+          <button class="wb-close" aria-label="Đóng"></button>
+        </div>
+        <div class="wb-alert wb-alert--info">
+          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span>
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Đồng bộ ngân hàng</p>
+            <p class="wb-alert__msg">Lần đồng bộ gần nhất: 5 phút trước.</p>
+          </div>
+          <button class="wb-close" aria-label="Đóng"></button>
+        </div>
+        <div class="wb-alert wb-alert--success">
+          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">check_circle</span></span>
+          <div class="wb-alert__body"><p class="wb-alert__title">Đã lưu giao dịch</p></div>
+        </div>
+        <div class="wb-alert wb-alert--warning">
+          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">warning</span></span>
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Sắp vượt ngân sách “Ăn uống”</p>
+            <p class="wb-alert__msg">Đã dùng 82% hạn mức tháng này.</p>
+          </div>
+        </div>
+        <div class="wb-alert wb-alert--danger">
+          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">error</span></span>
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Có 2 khoản quá hạn</p>
+            <p class="wb-alert__msg">Tổng 6.800.000&nbsp;₫. Kiểm tra mục Công nợ.</p>
+          </div>
+          <button class="wb-close" aria-label="Đóng"></button>
+        </div>
+      </div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;!-- trung tính (mặc định — ưu tiên) --&gt;
+&lt;div class="wb-alert"&gt;…&lt;/div&gt;
+
+&lt;!-- có trạng thái --&gt;
+&lt;div class="wb-alert wb-alert--warning"&gt;
+  &lt;span class="wb-alert__icon"&gt;&lt;span class="wb-ico wb-ico--xs"&gt;warning&lt;/span&gt;&lt;/span&gt;
+  &lt;div class="wb-alert__body"&gt;
+    &lt;p class="wb-alert__title"&gt;Sắp vượt ngân sách “Ăn uống”&lt;/p&gt;
+    &lt;p class="wb-alert__msg"&gt;Đã dùng 82% hạn mức tháng này.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;button class="wb-close" aria-label="Đóng"&gt;&lt;/button&gt;
+&lt;/div&gt;</code></pre></div>
+  </div>
+
+  <div class="doc-block" style="margin-top:26px">
+    <h4>Không viền — <code>--plain</code> (banner phẳng)</h4>
+    <p class="doc-block__desc">Bỏ đường viền, chỉ giữ nền mềm — nhẹ hơn, hợp làm banner đầu trang/mục. Ghép với bất kỳ tone nào.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-stack" style="--wb-stack-gap:12px;max-width:560px">
+          <div class="wb-alert wb-alert--plain">
+            <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">campaign</span></span>
+            <div class="wb-alert__body"><p class="wb-alert__title">Nhắc nhở chung</p><p class="wb-alert__msg">Trung tính, không viền — chỉ nền xám mềm.</p></div>
+            <button class="wb-close" aria-label="Đóng"></button>
+          </div>
+          <div class="wb-alert wb-alert--info wb-alert--plain">
+            <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span>
+            <div class="wb-alert__body"><p class="wb-alert__title">Đồng bộ ngân hàng</p><p class="wb-alert__msg">Lần gần nhất: 5 phút trước.</p></div>
+          </div>
+          <div class="wb-alert wb-alert--danger wb-alert--plain">
+            <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">error</span></span>
+            <div class="wb-alert__body"><p class="wb-alert__title">Có 2 khoản quá hạn</p><p class="wb-alert__msg">Tổng 6.800.000&nbsp;₫.</p></div>
+            <button class="wb-close" aria-label="Đóng"></button>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-alert wb-alert--plain"&gt;…&lt;/div&gt;
+&lt;div class="wb-alert wb-alert--info wb-alert--plain"&gt;…&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+</section>

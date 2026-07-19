@@ -1,0 +1,99 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Hành động</p>
+  <h2>Dropdown / Menu</h2>
+  <p>Menu nổi gắn với một nút. <code>.wb-dropdown</code> bọc trigger + <code>.wb-dropdown__menu</code>;
+  bật/tắt bằng class <code>.is-open</code> (JS ở docs, hoặc Radix DropdownMenu trong app).
+  <code>.wb-menu</code> cũng dùng độc lập được.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>Bấm để mở</h4>
+    <div class="demo">
+      <div class="demo__stage" style="min-height:280px">
+        <div class="wb-dropdown is-open">
+          <button class="wb-btn wb-btn--secondary" data-dd-toggle>Thao tác <span class="wb-ico wb-ico--sm wb-dropdown__caret">expand_more</span></button>
+          <div class="wb-dropdown__menu">
+            <div class="wb-menu">
+              <div class="wb-menu__label">Giao dịch</div>
+              <button class="wb-menu__item"><span class="wb-menu__ico"><span class="wb-ico wb-ico--xs">edit</span></span> Sửa <span class="wb-menu__kbd">E</span></button>
+              <button class="wb-menu__item"><span class="wb-menu__ico"><span class="wb-ico wb-ico--xs">content_copy</span></span> Nhân bản</button>
+              <button class="wb-menu__item"><span class="wb-menu__ico"><span class="wb-ico wb-ico--xs">download</span></span> Xuất CSV</button>
+              <div class="wb-menu__sep"></div>
+              <button class="wb-menu__item wb-menu__item--danger"><span class="wb-menu__ico"><span class="wb-ico wb-ico--xs">delete</span></span> Xoá</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-dropdown"&gt;
+  &lt;button class="wb-btn wb-btn--secondary" data-dd-toggle&gt;Thao tác &lt;span class="wb-ico wb-ico--sm wb-dropdown__caret"&gt;expand_more&lt;/span&gt;&lt;/button&gt;
+  &lt;div class="wb-dropdown__menu"&gt;
+    &lt;div class="wb-menu"&gt;
+      &lt;div class="wb-menu__label"&gt;Giao dịch&lt;/div&gt;
+      &lt;button class="wb-menu__item"&gt;&lt;span class="wb-menu__ico"&gt;&lt;span class="wb-ico wb-ico--xs"&gt;edit&lt;/span&gt;&lt;/span&gt; Sửa &lt;span class="wb-menu__kbd"&gt;E&lt;/span&gt;&lt;/button&gt;
+      &lt;div class="wb-menu__sep"&gt;&lt;/div&gt;
+      &lt;button class="wb-menu__item wb-menu__item--danger"&gt;&lt;span class="wb-menu__ico"&gt;&lt;span class="wb-ico wb-ico--xs"&gt;delete&lt;/span&gt;&lt;/span&gt; Xoá&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Dòng mở rộng — có sub-list thu gọn được</h4>
+    <p class="doc-block__desc">Một dòng trong menu tự <b>bung/gập</b> một danh sách con — bấm dòng đó (mũi tên <b>chữ “v”</b>
+    <code>expand_more</code> bên phải, xoay khi mở) chỉ mở sub-list, <b>không đóng dropdown</b>. Bọc dòng + sub trong
+    <code>.wb-menu__group</code>; toggle <code>.is-open</code>.</p>
+    <div class="demo">
+      <div class="demo__stage" style="min-height:320px">
+        <div class="wb-dropdown is-open">
+          <button class="wb-btn wb-btn--secondary" data-dd-toggle>Thao tác <span class="wb-ico wb-ico--sm wb-dropdown__caret">expand_more</span></button>
+          <div class="wb-dropdown__menu">
+            <div class="wb-menu">
+              <button class="wb-menu__item"><span class="wb-menu__ico"><span class="wb-ico wb-ico--xs">edit</span></span> Sửa</button>
+              <div class="wb-menu__group is-open">
+                <button class="wb-menu__item wb-menu__item--expand" data-menu-expand aria-expanded="true">
+                  <span class="wb-menu__ico"><span class="wb-ico wb-ico--xs">download</span></span> Xuất
+                  <span class="wb-ico wb-ico--xs wb-menu__caret">expand_more</span>
+                </button>
+                <div class="wb-menu__sub"><div class="wb-menu__sub-inner">
+                  <button class="wb-menu__item">CSV</button>
+                  <button class="wb-menu__item">Excel (.xlsx)</button>
+                  <button class="wb-menu__item">PDF</button>
+                </div></div>
+              </div>
+              <div class="wb-menu__group">
+                <button class="wb-menu__item wb-menu__item--expand" data-menu-expand aria-expanded="false">
+                  <span class="wb-menu__ico"><span class="wb-ico wb-ico--xs">move_to_inbox</span></span> Chuyển tới
+                  <span class="wb-ico wb-ico--xs wb-menu__caret">expand_more</span>
+                </button>
+                <div class="wb-menu__sub"><div class="wb-menu__sub-inner">
+                  <button class="wb-menu__item">Cần xem lại</button>
+                  <button class="wb-menu__item">Lưu trữ</button>
+                </div></div>
+              </div>
+              <div class="wb-menu__sep"></div>
+              <button class="wb-menu__item wb-menu__item--danger"><span class="wb-menu__ico"><span class="wb-ico wb-ico--xs">delete</span></span> Xoá</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-menu__group is-open"&gt;
+  &lt;button class="wb-menu__item wb-menu__item--expand" data-menu-expand aria-expanded="true"&gt;
+    &lt;span class="wb-menu__ico"&gt;…&lt;/span&gt; Xuất
+    &lt;span class="wb-ico wb-ico--xs wb-menu__caret"&gt;expand_more&lt;/span&gt;   &lt;!-- "v" xoay khi mở --&gt;
+  &lt;/button&gt;
+  &lt;div class="wb-menu__sub"&gt;&lt;div class="wb-menu__sub-inner"&gt;
+    &lt;button class="wb-menu__item"&gt;CSV&lt;/button&gt; …
+  &lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-note">
+    <span>💡</span>
+    <div>Ở tài liệu này, JS chỉ toggle <code>.is-open</code> và đóng khi bấm ra ngoài. Trong app dùng
+    <b>Radix DropdownMenu</b> để có focus-trap, điều hướng bàn phím và portal — rồi gắn class
+    <code>wb-menu*</code> để giữ đúng “ngôn ngữ hình ảnh”.</div>
+  </div>
+</section>

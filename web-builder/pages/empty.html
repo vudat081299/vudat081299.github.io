@@ -1,0 +1,41 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Phản hồi</p>
+  <h2>Empty state</h2>
+  <p>Khi chưa có dữ liệu: một biểu tượng nhạt, câu ngắn gọn, và một hành động rõ ràng để bắt đầu.
+  Đặt gọn trong <code>.wb-card</code> hoặc thẳng trong vùng nội dung.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="demo">
+    <div class="demo__stage">
+      <div class="wb-card">
+        <div class="wb-empty">
+          <div class="wb-empty__icon">🧾</div>
+          <p class="wb-empty__title">Chưa có giao dịch nào</p>
+          <p class="wb-empty__msg">Thêm giao dịch đầu tiên để bắt đầu theo dõi thu chi của bạn.</p>
+          <button class="wb-btn">＋ Thêm giao dịch</button>
+        </div>
+      </div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-empty"&gt;
+  &lt;div class="wb-empty__icon"&gt;🧾&lt;/div&gt;
+  &lt;p class="wb-empty__title"&gt;Chưa có giao dịch nào&lt;/p&gt;
+  &lt;p class="wb-empty__msg"&gt;Thêm giao dịch đầu tiên để bắt đầu theo dõi thu chi.&lt;/p&gt;
+  &lt;button class="wb-btn"&gt;＋ Thêm giao dịch&lt;/button&gt;
+&lt;/div&gt;</code></pre></div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Kết quả tìm kiếm rỗng (gọn hơn)</h4>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="wb-empty">
+          <div class="wb-empty__icon">🔍</div>
+          <p class="wb-empty__title">Không tìm thấy giao dịch</p>
+          <p class="wb-empty__msg">Thử đổi bộ lọc hoặc khoảng thời gian.</p>
+          <button class="wb-btn wb-btn--secondary wb-btn--sm">Xoá bộ lọc</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,71 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Nền tảng</p>
+  <h2>Config / Tweak</h2>
+  <p>Bảng tinh chỉnh trượt ra từ bên phải (nút <span class="wb-ico wb-ico--sm" style="vertical-align:-5px">tune</span>
+  trên thanh trên cùng). Kéo các thông số và xem giao diện đổi <b>ngay lập tức</b>. Việc chỉnh ở đây
+  <b>chỉ ảnh hưởng bản docs</b> đang mở — hoàn toàn không đụng tới <code>web-builder.css</code> hay component gốc.
+  Chỉnh xong bấm <b>Xuất .md</b> để lấy khối token, rồi dán vào source (hoặc đưa cho AI cập nhật).</p>
+</div>
+
+<section class="doc-sec">
+  <button class="wb-btn wb-btn--lg" data-config-open>
+    <span class="wb-ico wb-ico--sm">tune</span> Mở bảng tinh chỉnh
+  </button>
+
+  <div class="doc-note" style="margin-top:20px">
+    <span class="wb-ico" style="color:var(--wb-info-text)">info</span>
+    <div>Cơ chế: bảng chỉ ghi các biến CSS (<code>--wb-*</code>) lên <code>:root</code> của trang docs. Vì component
+    dùng biến, chúng đổi theo tức thì; còn file thư viện thì <b>bất biến</b>. Màu áp dụng cho <b>theme đang xem</b> —
+    muốn chỉnh cả sáng &amp; tối thì đổi theme rồi xuất thêm một lần nữa.</div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Xem trực tiếp khi chỉnh</h4>
+    <p class="doc-block__desc">Mở bảng và thử preset "Kiểu góc" (Vuông sắc), "Độ dày viền", "Viền checkbox", "Cỡ/đậm icon" hay đổi màu — cụm dưới đây đổi theo.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-cluster">
+          <button class="wb-btn">Lưu giao dịch</button>
+          <button class="wb-btn wb-btn--outline">Huỷ</button>
+          <span class="wb-cap wb-cap--success wb-cap--solid">Đã trả</span>
+          <span class="wb-cap wb-cap--warning">Sắp đến hạn</span>
+          <span class="wb-tag wb-tag--info">hoá-đơn</span>
+          <label class="wb-check"><input type="checkbox" checked /> Định kỳ</label>
+          <label class="wb-switch"><input type="checkbox" checked /><span class="wb-switch__track"></span> Bật</label>
+        </div>
+        <div class="wb-card" style="margin-top:16px;max-width:340px">
+          <div class="wb-card__body wb-cluster" style="gap:14px">
+            <span class="wb-stat__icon"><span class="wb-ico wb-ico--sm">savings</span></span>
+            <div class="wb-grow">
+              <div class="wb-stat__value" style="font-size:22px">2.480.000&nbsp;₫</div>
+              <div class="wb-cell-muted" style="font-size:13px">Số dư khả dụng</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Chỉnh được những gì</h4>
+    <div class="wb-card" style="max-width:640px">
+      <div class="wb-table-scroll">
+        <table class="wb-table wb-table--compact">
+          <thead><tr><th>Nhóm</th><th>Thông số</th></tr></thead>
+          <tbody>
+            <tr><td class="wb-cell-strong">Kiểu góc (bo góc)</td><td>Preset <b>Bo tròn / Vuông sắc (0) / Bo nhiều</b> đổi mọi radius cùng lúc, + slider riêng cho radius nhỏ/vừa/lớn/nút/card/input <b>và từng component</b>: rãnh &amp; núm switch, thanh &amp; núm slider, checkbox (kéo về 0 = vuông)</td></tr>
+            <tr><td class="wb-cell-strong">Viền</td><td>Độ dày viền, <b>viền checkbox</b>, màu viền, màu viền đậm</td></tr>
+            <tr><td class="wb-cell-strong">Đổ bóng</td><td>Đổ bóng component</td></tr>
+            <tr><td class="wb-cell-strong">Màu nền &amp; chữ</td><td>Canvas, surface, surface phụ, chữ chính/phụ/mờ — theo theme đang xem</td></tr>
+            <tr><td class="wb-cell-strong">Màu trạng thái</td><td>success / danger / warning / info</td></tr>
+            <tr><td class="wb-cell-strong">Chữ &amp; icon</td><td>Font (10 font đẹp + font hệ thống), cỡ icon, độ đậm icon</td></tr>
+            <tr><td class="wb-cell-strong">Biểu đồ</td><td>Thang màu (đa sắc / xám / một tông xanh), màu Thu &amp; Chi</td></tr>
+            <tr><td class="wb-cell-strong">Chỉ trong docs</td><td>Viền &amp; đổ bóng của sample, màu divider</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p class="doc-block__desc" style="margin-top:12px">Nút <b>Đặt lại</b> trả mọi thứ về mặc định. Nút <b>Xuất .md</b> tải
+    về file <code>web-builder-tweaks.md</code> chứa khối <code>:root { … }</code> đúng các giá trị bạn đã đổi.</p>
+  </div>
+</section>

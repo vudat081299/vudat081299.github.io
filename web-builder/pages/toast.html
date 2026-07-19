@@ -1,0 +1,47 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Phản hồi</p>
+  <h2>Toast</h2>
+  <p>Thông báo thoáng qua, xếp góc màn hình. Bấm nút để thử (tự biến mất sau ~4s).
+  Ở app dùng <b>sonner</b>; các class <code>wb-toast*</code> giữ đúng phong cách.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>Bắn thử</h4>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="wb-cluster">
+          <button class="wb-btn wb-btn--secondary" data-toast="success" data-title="Đã lưu giao dịch" data-msg="Lương tháng 7 · +25.000.000 ₫">Thành công</button>
+          <button class="wb-btn wb-btn--secondary" data-toast="info" data-title="Đang đồng bộ…" data-msg="Vietcombank">Thông tin</button>
+          <button class="wb-btn wb-btn--secondary" data-toast="warning" data-title="Sắp vượt ngân sách" data-msg="Ăn uống · 82%">Cảnh báo</button>
+          <button class="wb-btn wb-btn--secondary" data-toast="danger" data-title="Không lưu được" data-msg="Kiểm tra kết nối mạng">Lỗi</button>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;!-- Container 1 lần, đặt ở cuối &lt;body&gt; --&gt;
+&lt;div class="wb-toaster"&gt;&lt;/div&gt;
+
+&lt;!-- Một toast --&gt;
+&lt;div class="wb-toast wb-toast--success"&gt;
+  &lt;span class="wb-toast__icon"&gt;&lt;span class="wb-ico wb-ico--xs"&gt;check&lt;/span&gt;&lt;/span&gt;
+  &lt;div class="wb-toast__body"&gt;
+    &lt;p class="wb-toast__title"&gt;Đã lưu giao dịch&lt;/p&gt;
+    &lt;p class="wb-toast__msg"&gt;Lương tháng 7 · +25.000.000 ₫&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;button class="wb-close" aria-label="Đóng"&gt;&lt;/button&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Tĩnh (để xem cấu trúc)</h4>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="wb-stack" style="--wb-stack-gap:10px;max-width:340px">
+          <div class="wb-toast"><span class="wb-toast__icon"><span class="wb-ico wb-ico--xs">content_copy</span></span><div class="wb-toast__body"><p class="wb-toast__title">Đã sao chép mã giao dịch</p><p class="wb-toast__msg">Trung tính — không kèm trạng thái</p></div><button class="wb-close" aria-label="Đóng"></button></div>
+          <div class="wb-toast wb-toast--success"><span class="wb-toast__icon"><span class="wb-ico wb-ico--xs">check</span></span><div class="wb-toast__body"><p class="wb-toast__title">Đã lưu giao dịch</p><p class="wb-toast__msg">+25.000.000 ₫</p></div><button class="wb-close" aria-label="Đóng"></button></div>
+          <div class="wb-toast wb-toast--danger"><span class="wb-toast__icon"><span class="wb-ico wb-ico--xs">close</span></span><div class="wb-toast__body"><p class="wb-toast__title">Không lưu được</p></div><button class="wb-close" aria-label="Đóng"></button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

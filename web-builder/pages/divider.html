@@ -1,0 +1,104 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Bố cục &amp; tiện ích</p>
+  <h2>Divider</h2>
+  <p>Đường kẻ ngăn cách — một nét <b>xám phẳng</b> theo thang trung tính (không tô màu trạng thái). Có nhiều
+  kiểu nét (liền · chấm · đứt · đứt dài · mờ dần), bản <b>dọc</b>, bản có <b>nhãn</b> ở giữa, và bản
+  <b>tia sáng chạy dọc</b> (trang trí). Màu &amp; độ đậm đổi bằng một biến <code>--wb-divider-c</code>
+  (mặc định <code>--wb-neutral-weak</code>; thêm <code>--strong</code> để dùng mực đậm).</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>Kiểu nét</h4>
+    <p class="doc-block__desc">Liền (mặc định) · chấm · nét đứt · nét đứt <b>dài</b> (nét &amp; khoảng cách rộng
+    hơn) · mờ dần ở hai đầu. Ghép được với <code>--strong</code> (mực đậm).</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-stack" style="max-width:460px;--wb-stack-gap:6px">
+          <span class="wb-cell-muted">Nét liền (mặc định)</span>
+          <hr class="wb-divider" />
+          <span class="wb-cell-muted">Chấm</span>
+          <hr class="wb-divider wb-divider--dotted" />
+          <span class="wb-cell-muted">Nét đứt</span>
+          <hr class="wb-divider wb-divider--dashed" />
+          <span class="wb-cell-muted">Nét đứt dài</span>
+          <hr class="wb-divider wb-divider--long-dash" />
+          <span class="wb-cell-muted">Mờ dần hai đầu</span>
+          <hr class="wb-divider wb-divider--fade" />
+          <span class="wb-cell-muted">Mực đậm (<code>--strong</code>)</span>
+          <hr class="wb-divider wb-divider--strong" />
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;hr class="wb-divider" /&gt;                        &lt;!-- liền --&gt;
+&lt;hr class="wb-divider wb-divider--dotted" /&gt;
+&lt;hr class="wb-divider wb-divider--dashed" /&gt;
+&lt;hr class="wb-divider wb-divider--long-dash" /&gt;   &lt;!-- nét đứt dài --&gt;
+&lt;hr class="wb-divider wb-divider--fade" /&gt;        &lt;!-- mờ dần 2 đầu --&gt;
+&lt;hr class="wb-divider wb-divider--strong" /&gt;      &lt;!-- mực đậm --&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Dọc — giữa các cụm</h4>
+    <p class="doc-block__desc">Đặt <code>.wb-divider--vertical</code> giữa các phần tử trong một hàng ngang
+    (<code>.wb-inline</code> / <code>.wb-cluster</code>); nó tự kéo cao bằng hàng.</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="wb-inline" style="height:28px">
+          <span class="wb-cell-strong">12 giao dịch</span>
+          <span class="wb-divider--vertical"></span>
+          <span class="wb-cell-muted">Tháng 7</span>
+          <span class="wb-divider--vertical"></span>
+          <span class="wb-num wb-num--pos">+5.140.000&nbsp;₫</span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-inline" style="height:28px"&gt;
+  &lt;span&gt;12 giao dịch&lt;/span&gt;
+  &lt;span class="wb-divider--vertical"&gt;&lt;/span&gt;
+  &lt;span&gt;Tháng 7&lt;/span&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Có nhãn ở giữa</h4>
+    <div class="demo">
+      <div class="demo__stage">
+        <div style="max-width:460px">
+          <span class="wb-cell-muted">Phần trên</span>
+          <div class="wb-divider--label">HOẶC</div>
+          <span class="wb-cell-muted">Sau nhãn</span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-divider--label"&gt;HOẶC&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Tia sáng chạy dọc <span class="wb-cap wb-cap--sm wb-cap--outline">animation</span></h4>
+    <p class="doc-block__desc">Một vệt sáng lướt dọc đường kẻ theo vòng lặp — <b>trang trí</b>, không phải thanh
+    tiến trình (đường kẻ luôn hiện đủ, vệt chỉ chạy qua). Đúng gu trắng-đen-xám: chỉ hai kiểu. Tôn trọng
+    <code>prefers-reduced-motion</code>. Đổi <b>độ rộng vệt</b> bằng <code>--wb-divider-ray-w</code>.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-stack" style="max-width:460px;--wb-stack-gap:22px">
+          <div class="wb-stack" style="--wb-stack-gap:6px">
+            <span class="wb-cell-muted">Nền xám · vệt mực (đen)</span>
+            <hr class="wb-divider--ray" />
+          </div>
+          <div class="wb-stack" style="--wb-stack-gap:6px">
+            <span class="wb-cell-muted">Nền mực (đen) · vệt xám-trắng</span>
+            <hr class="wb-divider--ray" style="--wb-divider-c:var(--wb-neutral-ink);--wb-divider-ray:var(--wb-neutral-weak)" />
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;!-- 1 · nền xám, vệt mực --&gt;
+&lt;hr class="wb-divider--ray" /&gt;
+
+&lt;!-- 2 · nền mực (đen), vệt xám-trắng --&gt;
+&lt;hr class="wb-divider--ray"
+    style="--wb-divider-c:var(--wb-neutral-ink);
+           --wb-divider-ray:var(--wb-neutral-weak)" /&gt;</code></pre></div>
+    </div>
+  </div>
+</section>

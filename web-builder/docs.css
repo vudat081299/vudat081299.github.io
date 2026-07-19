@@ -1,0 +1,500 @@
+/* =============================================================================
+   Web Builder — DOCS SITE CHROME  (not part of the shipped library)
+   -----------------------------------------------------------------------------
+   Styles only the documentation shell: the tree sidebar, topbar, demo stages,
+   code blocks, the dual light/dark preview, and the typography/font specimens.
+   It reuses web-builder tokens so the docs follow the same light/dark theme.
+   The shipped library is web-builder.css; this file never ships to the app.
+
+   Dogfood rule: wherever the library ships a primitive (cluster / grid / stack /
+   buttons / cards / nav / sidenav…), the pages use it DIRECTLY. This file only
+   holds chrome the library has no equivalent for — the sidebar tree, code block,
+   dual preview, config drawer, and the token / type / font specimens.
+   ========================================================================== */
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+
+/* Docs-only tweak knobs — the Config panel drives these live; they never ship. */
+:root {
+  --wb-demo-bw: 1px;
+  --wb-demo-shadow: var(--wb-shadow-sm);
+  --wb-doc-divider: var(--wb-border);
+}
+body {
+  font-family: var(--wb-font);
+  background: var(--wb-canvas);
+  color: var(--wb-fg);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.55;
+}
+a { color: inherit; }
+
+.doc-shell { display: flex; min-height: 100vh; }
+
+/* -----------------------------------------------------------------------------
+   Sidebar — the tree (grouped, collapsible)
+   -------------------------------------------------------------------------- */
+.doc-side {
+  position: sticky; top: 0; align-self: flex-start;
+  width: 252px; height: 100vh; flex: none;
+  border-right: var(--wb-bw) solid var(--wb-border);   /* the ONE divider — on the right */
+  background: var(--wb-surface);
+  padding: 18px 12px 56px;                                  /* tail room so the last item scrolls clear */
+  overflow-y: auto; scroll-padding-block-end: 12px;
+}
+/* Theme-aware scrollbars now come from the library primitive `.wb-scrollbars`
+   (web-builder.css §27): the sidebar (.doc-side), the whole page (<html>) and the
+   Config drawer body carry the class in index.html, so this file no longer re-declares
+   the bar — it dogfoods the shipped utility instead of duplicating it. */
+
+.doc-brand { display: flex; align-items: center; gap: 10px; padding: 4px 8px 14px; }
+.doc-brand__mark {
+  width: 30px; height: 30px; border-radius: 8px; flex: none;
+  background: var(--wb-gray-900); color: var(--wb-white);
+  display: grid; place-items: center; font-weight: 700; font-size: 15px;
+}
+.dark .doc-brand__mark { background: var(--wb-gray-100); color: var(--wb-gray-900); }
+.doc-brand__name { font-weight: 650; font-size: 15px; }
+.doc-brand__ver  { font-size: 11px; color: var(--wb-fg-muted); }
+
+.doc-tree { display: flex; flex-direction: column; }
+.doc-tree__group { margin-top: 12px; }
+.doc-tree__group:first-child { margin-top: 0; }
+/* Group heading: the one prominent (primary) line. It's a button that collapses
+   the group; the caret is on the RIGHT and only shows on hover / when collapsed,
+   so the resting state stays clean (no leading triangle). */
+.doc-tree__head {
+  display: flex; align-items: center; width: 100%;
+  font-family: inherit; font-size: 12.5px; font-weight: 650; color: var(--wb-fg);
+  padding: 8px 10px 5px; background: none; border: 0; cursor: pointer; text-align: left;
+}
+.doc-tree__head > span:first-child { flex: 1; }
+.doc-tree__caret {
+  flex: none; font-family: var(--wb-icon-font); font-size: 18px; line-height: 1;
+  color: var(--wb-fg-subtle); opacity: 0;
+  transition: transform .15s ease, opacity .12s ease;
+  font-variation-settings: "wght" var(--wb-ico-weight), "opsz" 24;
+}
+.doc-tree__caret::before { content: "\e5cf"; }   /* expand_more */
+.doc-tree__head:hover .doc-tree__caret,
+.doc-tree__group.is-collapsed .doc-tree__caret { opacity: .85; }
+.doc-tree__group.is-collapsed .doc-tree__caret { transform: rotate(-90deg); }
+.doc-tree__group.is-collapsed .doc-tree__items { display: none; }
+/* Items: dimmer (secondary) + indented; selection is a plain highlight. */
+.doc-tree__items { display: flex; flex-direction: column; gap: 1px; padding-left: 10px; }
+.doc-tree__link {
+  display: flex; align-items: center; gap: 8px; text-decoration: none;
+  font-size: 13.5px; color: var(--wb-fg-muted);
+  padding: 6px 10px; border-radius: 7px; cursor: pointer;
+}
+.doc-tree__link:hover     { background: var(--wb-surface-hover); color: var(--wb-fg); }
+.doc-tree__link.is-active { background: var(--wb-surface-hover); color: var(--wb-fg); font-weight: 600; }
+.doc-tree__link.is-coming { color: var(--wb-fg-subtle); cursor: default; }
+.doc-tree__link.is-coming:hover { background: none; color: var(--wb-fg-subtle); }
+.doc-tree__badge {
+  margin-left: auto; font-size: 9px; letter-spacing: .05em; text-transform: uppercase;
+  color: var(--wb-fg-subtle); border: var(--wb-bw) solid var(--wb-border);
+  border-radius: 999px; padding: 1px 6px;
+}
+
+/* -----------------------------------------------------------------------------
+   Main column + topbar
+   -------------------------------------------------------------------------- */
+.doc-main { flex: 1 1 auto; min-width: 0; }
+.doc-topbar {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; gap: 14px; padding: 14px 32px;
+  background: color-mix(in srgb, var(--wb-canvas) 82%, transparent);
+  backdrop-filter: saturate(1.1) blur(8px);
+  border-bottom: var(--wb-bw) solid var(--wb-border);
+}
+.doc-topbar h1 { font-size: 15px; margin: 0; font-weight: 600; }
+.doc-topbar .spacer { margin-left: auto; }
+.theme-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: inherit; font-size: 13px; font-weight: 550; cursor: pointer;
+  padding: 7px 13px; border-radius: var(--wb-radius-pill);
+  border: var(--wb-bw) solid var(--wb-border); background: var(--wb-surface);
+  color: var(--wb-fg); box-shadow: var(--wb-shadow-sm);
+}
+.theme-btn:hover { border-color: var(--wb-border-strong); }
+
+/* Toggle to hide/show the whole sidebar — a panel icon (left_panel_open/close),
+   rendered as a .wb-ico ligature and swapped by app.js to match the current state
+   (clearer than a plain hamburger, which reads as "open a menu", not "toggle panel"). */
+.doc-side-toggle {
+  flex: none; width: 34px; height: 34px; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius-sm);
+  background: var(--wb-surface); color: var(--wb-fg);
+}
+.doc-side-toggle:hover { border-color: var(--wb-border-strong); }
+.doc-shell.is-side-hidden .doc-side { display: none; }
+
+.doc-content { max-width: 980px; margin: 0 auto; padding: 36px 32px 120px; }
+
+/* -----------------------------------------------------------------------------
+   Page + section headers (used inside every partial)
+   -------------------------------------------------------------------------- */
+.doc-eyebrow { font-size: 11px; letter-spacing: .07em; text-transform: uppercase;
+  color: var(--wb-fg-subtle); font-weight: 700; margin: 0 0 8px; }
+.doc-page-head { margin-bottom: 8px; }
+.doc-page-head h2 { font-size: 27px; margin: 0 0 8px; letter-spacing: -.02em; font-weight: 700; }
+.doc-page-head p  { font-size: 15px; color: var(--wb-fg-muted); margin: 0; max-width: 64ch; }
+
+.doc-sec { margin-top: 44px; }
+.doc-sec > h3 { font-size: 19px; margin: 0 0 6px; letter-spacing: -.01em; }
+.doc-sec__desc { color: var(--wb-fg-muted); margin: 0 0 20px; font-size: 14px; max-width: 68ch; }
+.doc-block { margin-top: 28px; }
+.doc-block > h4 { font-size: 14px; margin: 0 0 3px; font-weight: 600; }
+.doc-block__desc { font-size: 13px; color: var(--wb-fg-muted); margin: 0 0 14px; }
+
+/* A small callout box for notes / tips — outline + soft tint (no left bar). */
+.doc-note {
+  display: flex; gap: 10px; align-items: flex-start;
+  border: 1px solid color-mix(in srgb, var(--wb-info) 45%, var(--wb-border));
+  background: var(--wb-info-soft); color: var(--wb-fg);
+  border-radius: var(--wb-radius); padding: 12px 14px; font-size: 13.5px; margin: 18px 0;
+}
+.doc-note b { font-weight: 650; }
+
+/* -----------------------------------------------------------------------------
+   Demo stage + code block
+   -------------------------------------------------------------------------- */
+/* One consistent look for every demo: a hairline-outlined card + the same soft
+   shadow as the specimen cards, whose stage is a plain subtle canvas. Border
+   width + shadow are docs knobs (--wb-demo-bw / --wb-demo-shadow) the Config
+   panel tweaks. --plain kept as an alias so old markup still renders identically. */
+.demo { border: var(--wb-demo-bw) solid var(--wb-border); border-radius: var(--wb-radius-lg);
+  background: var(--wb-surface); overflow: hidden; }
+.demo__stage { padding: 26px; background: var(--wb-canvas); }
+.demo--plain .demo__stage { background: var(--wb-canvas); }
+/* Floating-panel demos (popover): the panel must escape the box, which otherwise
+   clips it — drop overflow but re-round the corners the clip used to handle. */
+.demo--pop { overflow: visible; }
+.demo--pop > .demo__stage { border-radius: var(--wb-radius-lg) var(--wb-radius-lg) 0 0; }
+.demo--pop > .demo__stage:last-child { border-radius: var(--wb-radius-lg); }
+.demo--pop > .demo__code { border-radius: 0 0 var(--wb-radius-lg) var(--wb-radius-lg); }
+.demo__code { border-top: var(--wb-bw) solid var(--wb-doc-divider); position: relative; }
+.demo__code pre { margin: 0; padding: 16px 18px; overflow-x: auto;
+  font: 12.5px/1.6 "SF Mono", ui-monospace, "Cascadia Code", Menlo, Consolas, monospace;
+  color: var(--wb-fg-muted); background: var(--wb-surface-2); }
+.copy-btn { position: absolute; top: 10px; right: 10px;
+  font: 11px/1 var(--wb-font); font-weight: 600; cursor: pointer;
+  padding: 6px 10px; border-radius: 6px;
+  border: var(--wb-bw) solid var(--wb-border); background: var(--wb-surface); color: var(--wb-fg-muted); }
+.copy-btn:hover { color: var(--wb-fg); border-color: var(--wb-border-strong); }
+
+.cap-row  { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 14px; }
+.cap-row:last-child { margin-bottom: 0; }
+.cap-row__label { width: 96px; flex: none; font-size: 12px; color: var(--wb-fg-subtle); font-weight: 600; }
+
+/* -----------------------------------------------------------------------------
+   Dual light/dark preview — shows the SAME snippet in both themes at once,
+   so a viewer on a single mode still sees what the other mode looks like.
+   Each panel is an isolated <iframe> that loads web-builder.css under its theme.
+   -------------------------------------------------------------------------- */
+.dual { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.dual__panel { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); overflow: hidden; }
+.dual__cap { display: flex; align-items: center; gap: 7px;
+  font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+  color: var(--wb-fg-subtle); padding: 8px 12px;
+  border-bottom: var(--wb-bw) solid var(--wb-border); background: var(--wb-surface-2); }
+.dual__frame { display: block; width: 100%; height: 120px; border: 0; background: transparent; }
+@media (max-width: 720px) { .dual { grid-template-columns: 1fr; } }
+
+/* -----------------------------------------------------------------------------
+   Overview cards
+   -------------------------------------------------------------------------- */
+.doc-hero h2 { font-size: 31px; margin: 0 0 10px; letter-spacing: -.02em; font-weight: 700; }
+.doc-hero p  { font-size: 15px; color: var(--wb-fg-muted); margin: 0; max-width: 62ch; }
+.nav-card { display: block; text-decoration: none; border: var(--wb-bw) solid var(--wb-border);
+  border-radius: var(--wb-radius-lg); background: var(--wb-surface); padding: 18px;
+  box-shadow: var(--wb-shadow-sm); transition: border-color .13s ease, transform .06s ease; }
+.nav-card:hover { border-color: var(--wb-border-strong); transform: translateY(-1px); }
+.nav-card__t { font-weight: 650; font-size: 15px; margin: 0 0 4px; display: flex; align-items: center; gap: 8px; }
+.nav-card__d { font-size: 13px; color: var(--wb-fg-muted); margin: 0; }
+
+/* -----------------------------------------------------------------------------
+   Overview extras — a separator glyph for the phase strip + cascade.
+   The ranked list and the pipeline stepper it used to hold are now SHIPPED
+   primitives (.wb-media + .wb-steps); the overview dogfoods those directly, so
+   only this tiny separator (which the library has no primitive for) stays here.
+   -------------------------------------------------------------------------- */
+/* Neutral separator glyph — → between phases, ↔ across the cascade. */
+.doc-sep { color: var(--wb-fg-subtle); font-weight: 700; }
+
+/* -----------------------------------------------------------------------------
+   Tokens (swatches) + colour tiers
+   -------------------------------------------------------------------------- */
+.swatch { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); overflow: hidden; background: var(--wb-surface); }
+.swatch__chip { height: 52px; }
+.swatch__meta { padding: 8px 10px; }
+.swatch__name { font-size: 12px; font-weight: 600; }
+.swatch__val  { font-size: 11px; color: var(--wb-fg-muted); font-family: "SF Mono", ui-monospace, monospace; }
+.tier { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 8px; }
+.tier__item { flex: 1 1 220px; border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius);
+  padding: 16px; background: var(--wb-surface); }
+.tier__n { font-size: 11px; font-weight: 700; color: var(--wb-fg-subtle); letter-spacing: .04em; }
+.tier__t { font-weight: 600; margin: 4px 0 6px; }
+.tier__d { font-size: 13px; color: var(--wb-fg-muted); margin: 0; }
+
+/* -----------------------------------------------------------------------------
+   Typography specimens
+   -------------------------------------------------------------------------- */
+.type-scale { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius-lg);
+  background: var(--wb-surface); overflow: hidden; }
+.type-row { display: flex; align-items: baseline; gap: 20px; padding: 16px 20px;
+  border-bottom: var(--wb-bw) solid var(--wb-doc-divider); }
+.type-row:last-child { border-bottom: 0; }
+.type-row__meta { width: 150px; flex: none; font-size: 12px; color: var(--wb-fg-muted);
+  font-family: "SF Mono", ui-monospace, monospace; }
+.type-row__sample { color: var(--wb-fg); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.weight-cell { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius);
+  padding: 14px 16px; background: var(--wb-surface); }
+.weight-cell__n { font-size: 12px; color: var(--wb-fg-muted); margin-bottom: 4px; }
+.weight-cell__s { font-size: 20px; }
+
+/* -----------------------------------------------------------------------------
+   Font specimens (Fonts page)
+   -------------------------------------------------------------------------- */
+.font-card { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius-lg);
+  background: var(--wb-surface); padding: 22px; margin-bottom: 14px; box-shadow: var(--wb-shadow-sm); }
+.font-card__top { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
+.font-card__name { font-size: 17px; font-weight: 700; margin: 0; }
+.font-card__tag  { font-size: 11px; }
+.font-card__meta { font-size: 13px; color: var(--wb-fg-muted); margin: 0 0 16px; max-width: 60ch; }
+.font-card__big  { font-size: 38px; font-weight: 700; letter-spacing: -.02em; margin: 0 0 4px; line-height: 1.1; }
+.font-card__mid  { font-size: 15px; color: var(--wb-fg-muted); margin: 0 0 10px; }
+.font-card__nums { font-size: 22px; font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1;
+  color: var(--wb-fg); border-top: 1px dashed var(--wb-border); padding-top: 12px; }
+
+/* -----------------------------------------------------------------------------
+   Coming-soon placeholder (Đợt 2/3)
+   -------------------------------------------------------------------------- */
+.doc-coming { border: 1px dashed var(--wb-border-strong); border-radius: var(--wb-radius-lg);
+  padding: 44px; text-align: center; color: var(--wb-fg-muted); background: var(--wb-surface); }
+.doc-coming h3 { color: var(--wb-fg); margin: 0 0 8px; }
+
+/* Layout helper: responsive grid for chart cards. */
+.chart-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+
+/* Layout-page demo tile — filler that visualises the grid / cluster / ratio utilities.
+   Not a shipped component: it lives here as docs chrome (like the specimens above),
+   never in a per-page <style> block. Colour/border/radius are tokens; the px are
+   docs-only sizing (docs.css never ships, and there is no space/type-scale token yet). */
+.lay-box { background: var(--wb-surface-2); border: var(--wb-bw) solid var(--wb-border);
+  border-radius: var(--wb-radius-sm); padding: 16px; text-align: center; font-size: 13px;
+  font-weight: 600; color: var(--wb-fg-muted); }
+
+/* Unify elevation: every specimen/demo container gets the SAME hairline + soft
+   shadow (some previously had a shadow, some didn't — this syncs them). One knob
+   (--wb-demo-shadow) turns it up/down/off for the whole docs site. */
+.demo, .type-scale, .swatch, .tier__item, .weight-cell,
+.dual__panel, .font-card, .nav-card { box-shadow: var(--wb-demo-shadow); }
+
+/* -----------------------------------------------------------------------------
+   Config / tweak drawer (docs-only) — slides in from the right
+   -------------------------------------------------------------------------- */
+.doc-icon-btn {
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  width: 36px; height: 36px; cursor: pointer;
+  border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius-pill);
+  background: var(--wb-surface); color: var(--wb-fg); box-shadow: var(--wb-shadow-sm);
+}
+.doc-icon-btn:hover { border-color: var(--wb-border-strong); }
+
+.doc-config {
+  position: fixed; top: 0; right: 0; z-index: 200;
+  width: 366px; max-width: 92vw; height: 100vh;
+  display: flex; flex-direction: column;
+  background: var(--wb-surface); border-left: var(--wb-bw) solid var(--wb-border);
+  box-shadow: -14px 0 44px rgba(16, 17, 18, .14);
+  transform: translateX(100%); transition: transform .24s cubic-bezier(.4, 0, .2, 1);
+}
+.doc-config.is-open { transform: translateX(0); }
+/* Dark: a black drop shadow is invisible over the dark page, so separation comes
+   from a soft light edge highlight + a gentle ambient — never black-on-black. */
+.dark .doc-config { box-shadow: -1px 0 0 rgba(255, 255, 255, .07), -14px 0 44px rgba(0, 0, 0, .5); }
+
+.doc-config__head {
+  display: flex; align-items: flex-start; gap: 12px; padding: 18px 18px 15px;
+  border-bottom: var(--wb-bw) solid var(--wb-border); background: var(--wb-surface-2);
+}
+.doc-config__title { font-size: 15px; font-weight: 700; letter-spacing: -.01em; }
+.doc-config__sub   { font-size: 12px; color: var(--wb-fg-muted); margin-top: 3px; line-height: 1.45; }
+.doc-config__head .wb-close { margin-left: auto; }
+
+/* Body: theme-aware thin scrollbar; groups stack with breathing room. */
+.doc-config__body {
+  flex: 1 1 auto; overflow-y: auto; padding: 16px 16px 28px;
+  display: flex; flex-direction: column; gap: 14px;
+}   /* scrollbar theming via .wb-scrollbars (web-builder.css §27) — set in index.html */
+
+/* Each group is a subtle card, so the controls read as tidy sections. */
+.doc-config__group {
+  margin: 0; padding: 4px 14px 8px;
+  border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius);
+  background: var(--wb-canvas);
+}
+.doc-config__gtitle {
+  font-size: 10.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--wb-fg-subtle); margin: 8px 2px 2px;
+}
+/* Hairline between rows inside a group for a clean, scannable list. */
+.doc-config__row {
+  display: flex; align-items: center; gap: 10px; padding: 8px 2px; font-size: 13px; color: var(--wb-fg);
+  border-top: var(--wb-bw) solid var(--wb-border);
+}
+.doc-config__group .doc-config__row:first-of-type { border-top: 0; }
+.doc-config__label { flex: 1 1 auto; min-width: 0; }
+
+/* Slider and select reuse the library primitives (.wb-range / .wb-select) so the panel
+   matches the docs; size them to the row. */
+.doc-config__row .wb-range { width: 122px; flex: none; margin: 0; }
+.doc-config__row .wb-select-wrap { flex: none; width: 172px; }
+.doc-config__row .wb-select { font-size: 13px; padding: 7px 30px 7px 10px; cursor: pointer; }
+.doc-config__row .wb-select-wrap > .wb-ico { right: 8px; font-size: 18px; }
+/* Colour: a compact swatch that opens the wb-colorpicker in a popover (replaces the old
+   native .wb-color swatch). Opens to the LEFT so the panel stays inside the drawer. */
+.doc-config__color { flex: none; }
+.doc-config__swatch {
+  width: 30px; height: 20px; padding: 0; cursor: pointer;
+  border: var(--wb-bw) solid var(--wb-border-strong); border-radius: var(--wb-radius-sm);
+}
+.doc-config__color .wb-popover__panel { width: 216px; }
+/* Scroll room so the last colour rows can rise to the middle where their popover fits (the body
+   scrolls, so an edge row's picker would otherwise clip against the overflow boundary). */
+.doc-config__body { padding-bottom: 150px; }
+.doc-config__out {
+  min-width: 44px; text-align: right; font-size: 12px; color: var(--wb-fg-muted);
+  font-variant-numeric: tabular-nums; font-family: "SF Mono", ui-monospace, monospace;
+}
+.doc-config__foot {
+  display: flex; gap: 10px; justify-content: flex-end; padding: 14px 16px;
+  border-top: var(--wb-bw) solid var(--wb-border); background: var(--wb-surface-2);
+}
+
+@media (max-width: 900px) {
+  /* Sidebar → off-canvas DRAWER: slid off-screen by default, brought in by the topbar
+     toggle (.is-side-open on the shell) over a dim backdrop. Previously this was a hard
+     `display:none`, so the toggle could never reveal it on a phone — now it can. (The
+     desktop --hidden collapse is undone here; the drawer uses transform, not display.) */
+  .doc-side {
+    position: fixed; top: 0; left: 0; height: 100vh; z-index: 60;
+    width: 264px; max-width: 82vw;
+    transform: translateX(-100%); transition: transform .22s ease;
+    box-shadow: var(--wb-shadow-md);
+  }
+  .doc-shell.is-side-hidden .doc-side { display: block; }        /* undo the desktop hide on mobile */
+  .doc-shell.is-side-open .doc-side { transform: translateX(0); }
+  .doc-shell.is-side-open::before {
+    content: ""; position: fixed; inset: 0; z-index: 55; background: rgba(0, 0, 0, .42);
+  }
+  .doc-content { padding: 26px 18px 90px; }
+  .doc-topbar { padding: 12px 18px; }
+}
+
+/* ---- Topbar search trigger + full-text search dialog (docs-only) ---------- */
+.doc-search-trigger {
+  display: inline-flex; align-items: center; gap: 8px;
+  height: 34px; padding: 0 10px; font: inherit; font-size: 13px;
+  color: var(--wb-fg-muted); background: var(--wb-surface-2);
+  border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius-pill);
+  cursor: pointer; transition: background .12s ease, border-color .12s ease, color .12s ease;
+}
+.doc-search-trigger:hover { background: var(--wb-surface-hover); border-color: var(--wb-border-strong); color: var(--wb-fg); }
+.doc-search-trigger__kbd {
+  font-size: 11px; line-height: 1; padding: 3px 5px; color: var(--wb-fg-subtle);
+  background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border); border-radius: 5px;
+}
+@media (max-width: 640px) { .doc-search-trigger__label, .doc-search-trigger__kbd { display: none; } }
+
+/* Command-palette dialog: anchored near the top, built on the .wb-overlay + .wb-modal
+   shell. A search bar, a scrolling list of hits, and a keyboard-hint footer. */
+.doc-search.wb-overlay { align-items: flex-start; }
+.doc-search__box {
+  width: min(600px, 94vw); margin-top: 9vh; padding: 0; overflow: hidden;
+  display: flex; flex-direction: column; max-height: 78vh;
+}
+
+/* --- Search bar (borderless input + leading icon + close) --- */
+.doc-search__bar {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 14px 14px 18px; border-bottom: var(--wb-bw) solid var(--wb-border);
+}
+.doc-search__bar-ico { font-size: 22px; color: var(--wb-fg-muted); flex: none; }
+.doc-search__input {
+  flex: 1; min-width: 0; border: 0; background: none; padding: 0; margin: 0;
+  font: inherit; font-size: 16px; color: var(--wb-fg); outline: none;
+}
+.doc-search__input::placeholder { color: var(--wb-fg-subtle); }
+/* strip the native search clear/decoration if a UA still shows it */
+.doc-search__input::-webkit-search-cancel-button { display: none; }
+
+/* --- Results list --- */
+.doc-search__results { flex: 1; overflow: auto; padding: 6px; min-height: 96px; }
+
+.doc-search__hit {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 9px 10px; border-radius: var(--wb-radius);
+  text-decoration: none; color: var(--wb-fg); cursor: pointer;
+  scroll-margin: 8px;
+}
+.doc-search__hit:hover,
+.doc-search__hit.is-active { background: var(--wb-surface-hover); }
+/* leading page-icon tile — a consistent anchor for the ragged text to the right */
+.doc-search__hit-ico {
+  flex: none; width: 32px; height: 32px; border-radius: var(--wb-radius-sm);
+  display: grid; place-items: center; margin-top: 1px;
+  background: var(--wb-surface-2); border: var(--wb-bw) solid var(--wb-border);
+  color: var(--wb-fg-muted); font-size: 18px;
+}
+.doc-search__hit.is-active .doc-search__hit-ico { border-color: var(--wb-border-strong); color: var(--wb-fg); }
+.doc-search__hit-main { flex: 1; min-width: 0; }
+.doc-search__hit-titlerow { display: flex; align-items: baseline; gap: 8px; }
+.doc-search__hit-title {
+  flex: 0 1 auto; min-width: 0; font-weight: 600; font-size: 14px; color: var(--wb-fg);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;   /* long titles ellipsis, never wrap */
+}
+.doc-search__hit-group { flex: none; font-size: 11.5px; color: var(--wb-fg-subtle); }
+.doc-search__hit-enter {
+  flex: none; margin-left: auto; align-self: center; font-size: 11px; line-height: 1;
+  padding: 3px 6px; color: var(--wb-fg-muted);
+  background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border); border-radius: 5px;
+  opacity: 0; transition: opacity .1s ease;
+}
+.doc-search__hit.is-active .doc-search__hit-enter { opacity: 1; }
+.doc-search__hit-snip {
+  margin-top: 2px; font-size: 12.5px; line-height: 1.5; color: var(--wb-fg-muted);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+/* Match highlight — monochrome (bold + underline), so it reads on every row bg
+   including the active/hover tint, without spending colour (design-principles §1).
+   `background:none` kills the UA <mark> yellow, which would break the colour ladder. */
+.doc-search__hl {
+  background: none; font-weight: 700; color: var(--wb-fg);
+  border-bottom: 2px solid var(--wb-border-strong);
+}
+
+/* --- Empty / hint state --- */
+.doc-search__hint {
+  margin: 0; padding: 40px 20px; text-align: center; color: var(--wb-fg-muted); font-size: 13px;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+}
+.doc-search__hint .wb-ico { font-size: 30px; color: var(--wb-fg-subtle); }
+.doc-search__hint b { color: var(--wb-fg); font-weight: 600; }
+
+/* --- Footer: keyboard legend + result count --- */
+.doc-search__foot {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 9px 14px; border-top: var(--wb-bw) solid var(--wb-border);
+  background: var(--wb-surface-2); color: var(--wb-fg-subtle); font-size: 11.5px;
+}
+.doc-search__legend { display: flex; align-items: center; }
+.doc-search__foot kbd {
+  font-family: var(--wb-font); font-size: 10.5px; line-height: 1; padding: 3px 5px; margin: 0 1px;
+  color: var(--wb-fg-muted); background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border); border-radius: 4px;
+}
+.doc-search__count { flex: none; white-space: nowrap; }
+@media (max-width: 520px) { .doc-search__legend { display: none; } }

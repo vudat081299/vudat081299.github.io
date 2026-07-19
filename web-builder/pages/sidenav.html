@@ -1,0 +1,88 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Điều hướng</p>
+  <h2>Sidebar (side-nav)</h2>
+  <p>Cột điều hướng dọc cho <b>app shell</b> — có nhóm (<code>__section</code>), liên kết kèm icon, và số đếm (<code>__badge</code>).
+  Đây là bản <b>dùng được trong app</b> của chính thanh bên trái tài liệu này. Active là highlight phẳng (đồng bộ với <a href="#/navbar">Nav</a> &amp; cây thư mục).</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>Rail cơ bản</h4>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <nav class="wb-sidenav" style="border-radius:var(--wb-radius-lg);border:var(--wb-bw) solid var(--wb-border)">
+          <div class="wb-sidenav__section">Tổng quan</div>
+          <a class="wb-sidenav__link is-active" href="#/sidenav"><span class="wb-ico">dashboard</span> Bảng điều khiển</a>
+          <a class="wb-sidenav__link" href="#/sidenav"><span class="wb-ico">receipt_long</span> Giao dịch <span class="wb-sidenav__badge">128</span></a>
+          <a class="wb-sidenav__link" href="#/sidenav"><span class="wb-ico">savings</span> Ngân sách</a>
+          <a class="wb-sidenav__link" href="#/sidenav"><span class="wb-ico">insights</span> Báo cáo</a>
+          <div class="wb-sidenav__section">Tài khoản</div>
+          <a class="wb-sidenav__link" href="#/sidenav"><span class="wb-ico">account_balance_wallet</span> Ví &amp; ngân hàng</a>
+          <a class="wb-sidenav__link" href="#/sidenav"><span class="wb-ico">flag</span> Mục tiêu <span class="wb-sidenav__badge">3</span></a>
+          <a class="wb-sidenav__link" href="#/sidenav"><span class="wb-ico">settings</span> Cài đặt</a>
+        </nav>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;nav class="wb-sidenav"&gt;
+  &lt;div class="wb-sidenav__section"&gt;Tổng quan&lt;/div&gt;
+  &lt;a class="wb-sidenav__link is-active"&gt;&lt;span class="wb-ico"&gt;dashboard&lt;/span&gt; Bảng điều khiển&lt;/a&gt;
+  &lt;a class="wb-sidenav__link"&gt;&lt;span class="wb-ico"&gt;receipt_long&lt;/span&gt; Giao dịch
+    &lt;span class="wb-sidenav__badge"&gt;128&lt;/span&gt;&lt;/a&gt;
+  …
+&lt;/nav&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Ghép thành app shell</h4>
+    <p class="doc-block__desc">Navbar (§<a href="#/navbar">Navbar</a>) trên cùng + sidebar bên trái + vùng nội dung — ba primitive lắp thành khung một app tài chính.</p>
+    <div class="demo">
+      <div class="demo__stage" style="padding:0">
+        <div style="height:340px;display:flex;flex-direction:column">
+          <div class="wb-navbar">
+            <a class="wb-navbar__brand"><span class="wb-navbar__mark">C</span> Ledger</a>
+            <span class="wb-navbar__spacer"></span>
+            <div class="wb-navbar__actions">
+              <button class="wb-btn wb-btn--ghost wb-btn--icon" aria-label="Tìm kiếm"><span class="wb-ico">search</span></button>
+              <span class="wb-avatar wb-avatar--sm">DV</span>
+            </div>
+          </div>
+          <div style="display:flex;flex:1;min-height:0">
+            <nav class="wb-sidenav wb-scroll-y" style="width:210px">
+              <div class="wb-sidenav__section">Tổng quan</div>
+              <a class="wb-sidenav__link is-active"><span class="wb-ico">dashboard</span> Bảng điều khiển</a>
+              <a class="wb-sidenav__link"><span class="wb-ico">receipt_long</span> Giao dịch <span class="wb-sidenav__badge">128</span></a>
+              <a class="wb-sidenav__link"><span class="wb-ico">savings</span> Ngân sách</a>
+              <a class="wb-sidenav__link"><span class="wb-ico">insights</span> Báo cáo</a>
+              <a class="wb-sidenav__link"><span class="wb-ico">settings</span> Cài đặt</a>
+            </nav>
+            <div class="wb-container wb-scrollbars" style="flex:1;padding:22px;overflow:auto">
+              <div class="wb-cluster wb-cluster--between wb-cluster--bottom" style="margin-bottom:16px">
+                <div>
+                  <div class="wb-cell-muted" style="font-size:12px">Số dư khả dụng</div>
+                  <div class="wb-num wb-num--strong" style="font-size:24px">47.590.000&nbsp;₫</div>
+                </div>
+                <button class="wb-btn wb-btn--sm">+ Giao dịch</button>
+              </div>
+              <div class="wb-grid wb-grid--3">
+                <div class="wb-stat"><div class="wb-stat__label">Thu</div><div class="wb-stat__value" style="font-size:18px">20,0tr</div></div>
+                <div class="wb-stat"><div class="wb-stat__label">Chi</div><div class="wb-stat__value" style="font-size:18px">11,8tr</div></div>
+                <div class="wb-stat"><div class="wb-stat__label">Còn</div><div class="wb-stat__value" style="font-size:18px">8,2tr</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-navbar"&gt; … &lt;/div&gt;
+&lt;div style="display:flex"&gt;                &lt;!-- khung shell: sidebar + nội dung --&gt;
+  &lt;nav class="wb-sidenav wb-scroll-y"&gt; … &lt;/nav&gt;
+  &lt;main&gt; … nội dung … &lt;/main&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-note">
+    <span class="wb-ico" style="color:var(--wb-info-text)">info</span>
+    <div>Thanh sidebar của <b>tài liệu này</b> có thêm hành vi (thu/gọn nhóm) nên dùng chrome riêng; <code>.wb-sidenav</code> là bản gọn, tĩnh để mang thẳng vào app.
+    Cho cuộn dài, thêm <code>.wb-scroll-y</code> (§Scroll areas). Thu gọn/đóng-mở trên mobile là việc của app.</div>
+  </div>
+</section>

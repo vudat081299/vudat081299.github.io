@@ -1,0 +1,272 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Nhập liệu</p>
+  <h2>Text input</h2>
+  <p>Ô nhập trung tính; màu duy nhất là trạng thái lỗi (đỏ). Gói trong <code>.wb-field</code> (label + control +
+  help/error). Ghép <b>prefix / suffix</b> bằng <code>.wb-input-group</code> — addon là chữ (₫, %, https://), icon, hoặc một
+  <b>nút bấm</b> <code>.wb-input-group__btn</code> (hiện/ẩn mật khẩu…). Muốn <b>định dạng khi gõ</b> (ngày, giờ, số thẻ) xem mục cuối.
+  Chọn màu đã chuyển sang <b>Bộ chọn → Bộ chọn màu</b>.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>Cơ bản</h4>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-field" style="max-width:380px">
+          <label class="wb-label">Tên giao dịch</label>
+          <input class="wb-input" placeholder="VD: Ăn trưa với khách hàng" />
+          <span class="wb-help">Tối đa 120 ký tự.</span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-field"&gt;
+  &lt;label class="wb-label"&gt;Tên giao dịch&lt;/label&gt;
+  &lt;input class="wb-input" placeholder="VD: Ăn trưa…" /&gt;
+  &lt;span class="wb-help"&gt;Tối đa 120 ký tự.&lt;/span&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Liền mạch — không viền &amp; không vạch ngăn (<code>--seamless</code>)</h4>
+    <p class="doc-block__desc"><code>.wb-input--seamless</code>: bỏ viền, nền trong suốt — ô <b>hoà vào nền trang</b> (chỉ còn ring khi focus).
+    <code>.wb-input-group--seamless</code>: cả cụm <b>một viền</b>, các icon/prefix/suffix/nút <b>không nền, không vạch ngăn</b> —
+    chỉ cách nhau bằng khoảng trắng.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-stack" style="max-width:420px">
+          <input class="wb-input wb-input--seamless" value="Ăn trưa với khách hàng" aria-label="Tên (liền mạch)" />
+          <div class="wb-input-group wb-input-group--seamless">
+            <span class="wb-input-group__addon"><span class="wb-ico wb-ico--sm">search</span></span>
+            <input class="wb-input" placeholder="Tìm giao dịch…" />
+          </div>
+          <div class="wb-input-group wb-input-group--seamless">
+            <span class="wb-input-group__addon">₫</span>
+            <input class="wb-input" value="1.280.000" inputmode="numeric" />
+            <button type="button" class="wb-input-group__btn" aria-label="Xoá"><span class="wb-ico wb-ico--sm">close</span></button>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;!-- ô hoà nền, không viền --&gt;
+&lt;input class="wb-input wb-input--seamless" value="…" /&gt;
+
+&lt;!-- cụm một viền, addon không vạch ngăn --&gt;
+&lt;div class="wb-input-group wb-input-group--seamless"&gt;
+  &lt;span class="wb-input-group__addon"&gt;&lt;span class="wb-ico wb-ico--sm"&gt;search&lt;/span&gt;&lt;/span&gt;
+  &lt;input class="wb-input" placeholder="Tìm giao dịch…" /&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Nhập ngày/giờ theo ô — dấu phân cách là <b>ký tự thật</b></h4>
+    <p class="doc-block__desc">Mỗi phần (dd · mm · yyyy) là một ô riêng; dấu <b>/ &nbsp;:&nbsp; –</b> là <b>ký tự mực thật</b>
+    (không phải placeholder), có <b>khoảng cách hai bên</b>. Ô chưa nhập hiện chữ mờ; gõ đủ một ô tự nhảy sang ô kế
+    (Backspace ở ô trống lùi lại). Bản UI đẹp hơn cho <code>data-mask</code> — dùng cho ngày · giờ · ngày&amp;giờ · khoảng ngày.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-stack" style="max-width:440px;--wb-stack-gap:14px">
+          <div class="wb-field">
+            <label class="wb-label">Ngày</label>
+            <div class="wb-input-tpl" role="group" aria-label="Ngày">
+              <input class="wb-input-tpl__seg" inputmode="numeric" maxlength="2" placeholder="dd" value="14" aria-label="Ngày" />
+              <span class="wb-input-tpl__sep">/</span>
+              <input class="wb-input-tpl__seg" inputmode="numeric" maxlength="2" placeholder="mm" value="07" aria-label="Tháng" />
+              <span class="wb-input-tpl__sep">/</span>
+              <input class="wb-input-tpl__seg wb-input-tpl__seg--y" inputmode="numeric" maxlength="4" placeholder="yyyy" value="2026" aria-label="Năm" />
+            </div>
+          </div>
+          <div class="wb-field">
+            <label class="wb-label">Giờ</label>
+            <div class="wb-input-tpl" role="group" aria-label="Giờ">
+              <input class="wb-input-tpl__seg" inputmode="numeric" maxlength="2" placeholder="HH" aria-label="Giờ" />
+              <span class="wb-input-tpl__sep">:</span>
+              <input class="wb-input-tpl__seg" inputmode="numeric" maxlength="2" placeholder="MM" aria-label="Phút" />
+            </div>
+          </div>
+          <div class="wb-field">
+            <label class="wb-label">Ngày &amp; giờ</label>
+            <div class="wb-input-tpl" role="group" aria-label="Ngày và giờ">
+              <input class="wb-input-tpl__seg" inputmode="numeric" maxlength="2" placeholder="dd" aria-label="Ngày" />
+              <span class="wb-input-tpl__sep">/</span>
+              <input class="wb-input-tpl__seg" inputmode="numeric" maxlength="2" placeholder="mm" aria-label="Tháng" />
+              <span class="wb-input-tpl__sep">/</span>
+              <input class="wb-input-tpl__seg wb-input-tpl__seg--y" inputmode="numeric" maxlength="4" placeholder="yyyy" aria-label="Năm" />
+              <span class="wb-input-tpl__sep" style="padding-inline:9px"></span>
+              <input class="wb-input-tpl__seg" inputmode="numeric" maxlength="2" placeholder="HH" aria-label="Giờ" />
+              <span class="wb-input-tpl__sep">:</span>
+              <input class="wb-input-tpl__seg" inputmode="numeric" maxlength="2" placeholder="MM" aria-label="Phút" />
+            </div>
+          </div>
+          <div class="wb-field">
+            <label class="wb-label">Khoảng ngày</label>
+            <div class="wb-input-tpl" role="group" aria-label="Khoảng ngày">
+              <input class="wb-input-tpl__seg" inputmode="numeric" maxlength="2" placeholder="dd" aria-label="Từ ngày" />
+              <span class="wb-input-tpl__sep">/</span>
+              <input class="wb-input-tpl__seg" inputmode="numeric" maxlength="2" placeholder="mm" aria-label="Từ tháng" />
+              <span class="wb-input-tpl__sep">/</span>
+              <input class="wb-input-tpl__seg wb-input-tpl__seg--y" inputmode="numeric" maxlength="4" placeholder="yyyy" aria-label="Từ năm" />
+              <span class="wb-input-tpl__sep">–</span>
+              <input class="wb-input-tpl__seg" inputmode="numeric" maxlength="2" placeholder="dd" aria-label="Đến ngày" />
+              <span class="wb-input-tpl__sep">/</span>
+              <input class="wb-input-tpl__seg" inputmode="numeric" maxlength="2" placeholder="mm" aria-label="Đến tháng" />
+              <span class="wb-input-tpl__sep">/</span>
+              <input class="wb-input-tpl__seg wb-input-tpl__seg--y" inputmode="numeric" maxlength="4" placeholder="yyyy" aria-label="Đến năm" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-input-tpl" role="group" aria-label="Ngày"&gt;
+  &lt;input class="wb-input-tpl__seg" inputmode="numeric" maxlength="2" placeholder="dd" /&gt;
+  &lt;span class="wb-input-tpl__sep"&gt;/&lt;/span&gt;                        &lt;!-- dấu mực thật + cách 2 bên --&gt;
+  &lt;input class="wb-input-tpl__seg" inputmode="numeric" maxlength="2" placeholder="mm" /&gt;
+  &lt;span class="wb-input-tpl__sep"&gt;/&lt;/span&gt;
+  &lt;input class="wb-input-tpl__seg wb-input-tpl__seg--y" inputmode="numeric" maxlength="4" placeholder="yyyy" /&gt;
+&lt;/div&gt;
+&lt;!-- giờ → dấu ":" · khoảng ngày → dấu "–" giữa hai cụm --&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Prefix &amp; suffix (input-group)</h4>
+    <p class="doc-block__desc">Addon đứng <b>trước</b> (prefix) hoặc <b>sau</b> (suffix) ô nhập — cho tiền tệ, %, đường dẫn, tìm kiếm…</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-stack" style="max-width:420px">
+          <div class="wb-input-group">
+            <span class="wb-input-group__addon">https://</span>
+            <input class="wb-input" value="ledger.app/vi" />
+          </div>
+          <div class="wb-input-group">
+            <span class="wb-input-group__addon"><span class="wb-ico wb-ico--sm">search</span></span>
+            <input class="wb-input" placeholder="Tìm giao dịch…" />
+          </div>
+          <div class="wb-input-group">
+            <span class="wb-input-group__addon">₫</span>
+            <input class="wb-input" value="1.280.000" inputmode="numeric" />
+            <span class="wb-input-group__addon">.00</span>
+          </div>
+          <div class="wb-input-group">
+            <input class="wb-input" value="8" inputmode="numeric" />
+            <span class="wb-input-group__addon">% / năm</span>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;!-- prefix: chữ --&gt;
+&lt;div class="wb-input-group"&gt;
+  &lt;span class="wb-input-group__addon"&gt;https://&lt;/span&gt;
+  &lt;input class="wb-input" value="ledger.app/vi" /&gt;
+&lt;/div&gt;
+
+&lt;!-- prefix: icon --&gt;
+&lt;div class="wb-input-group"&gt;
+  &lt;span class="wb-input-group__addon"&gt;&lt;span class="wb-ico wb-ico--sm"&gt;search&lt;/span&gt;&lt;/span&gt;
+  &lt;input class="wb-input" placeholder="Tìm giao dịch…" /&gt;
+&lt;/div&gt;
+
+&lt;!-- prefix + suffix --&gt;
+&lt;div class="wb-input-group"&gt;
+  &lt;span class="wb-input-group__addon"&gt;₫&lt;/span&gt;
+  &lt;input class="wb-input" value="1.280.000" /&gt;
+  &lt;span class="wb-input-group__addon"&gt;.00&lt;/span&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Trạng thái</h4>
+    <p class="doc-block__desc">Lỗi dùng state <code>.is-invalid</code> (không phải <code>--invalid</code>) — thống nhất với các state
+    runtime khác (<code>.is-active</code>, <code>.is-open</code>). Kèm <code>aria-invalid</code> cho screen reader.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-stack" style="max-width:380px">
+          <div class="wb-field">
+            <label class="wb-label">Email nhắc nợ</label>
+            <input class="wb-input is-invalid" value="sai-email" aria-invalid="true" />
+            <span class="wb-error">Email không hợp lệ.</span>
+          </div>
+          <div class="wb-field">
+            <label class="wb-label">Mã giao dịch <span class="wb-label__opt">(khoá)</span></label>
+            <input class="wb-input" value="TXN-2026-0714" disabled />
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;input class="wb-input is-invalid" value="sai-email" aria-invalid="true" /&gt;
+&lt;span class="wb-error"&gt;Email không hợp lệ.&lt;/span&gt;
+
+&lt;input class="wb-input" value="TXN-2026-0714" disabled /&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Mật khẩu — hiện/ẩn (<code>input-group__btn</code>)</h4>
+    <p class="doc-block__desc">Một <b>nút bấm</b> trong input-group: <code>.wb-input-group__btn</code> có icon con mắt, bấm để lật
+    <code>type="password" ⇄ "text"</code>. Cùng cách này dùng cho nút xoá nhanh (×) hay đổi đơn vị.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-field" style="max-width:380px">
+          <label class="wb-label">Mật khẩu</label>
+          <div class="wb-input-group">
+            <input class="wb-input" type="password" value="s3cret-pass" aria-label="Mật khẩu" />
+            <button type="button" class="wb-input-group__btn" data-reveal aria-label="Hiện/ẩn mật khẩu" aria-pressed="false"><span class="wb-ico wb-ico--sm">visibility</span></button>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-input-group"&gt;
+  &lt;input class="wb-input" type="password" value="s3cret-pass" /&gt;
+  &lt;button class="wb-input-group__btn" data-reveal aria-pressed="false"&gt;
+    &lt;span class="wb-ico wb-ico--sm"&gt;visibility&lt;/span&gt;
+  &lt;/button&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Định dạng khi gõ (mask)</h4>
+    <p class="doc-block__desc">Không mở popup — vẫn <b>gõ tay</b>, nhưng mỗi ký tự tự chèn dấu phân cách: ngày <code>dd/mm/yyyy</code>,
+    giờ <code>HH:MM</code>, ngày-giờ, số thẻ <code>0000 0000 0000 0000</code>, khoảng ngày. Đặt qua <code>data-mask</code>
+    (<code>date · time · datetime · card · daterange</code>). Thử gõ vào các ô — chỉ nhận chữ số, dấu tự hiện:</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-stack" style="max-width:420px">
+          <div class="wb-field">
+            <label class="wb-label">Ngày <span class="wb-label__opt">dd/mm/yyyy</span></label>
+            <input class="wb-input" data-mask="date" inputmode="numeric" placeholder="dd/mm/yyyy" value="14072026" aria-label="Ngày" />
+          </div>
+          <div class="wb-field">
+            <label class="wb-label">Giờ <span class="wb-label__opt">HH:MM</span></label>
+            <input class="wb-input" data-mask="time" inputmode="numeric" placeholder="HH:MM" value="0930" aria-label="Giờ" />
+          </div>
+          <div class="wb-field">
+            <label class="wb-label">Ngày &amp; giờ <span class="wb-label__opt">dd/mm/yyyy HH:MM</span></label>
+            <input class="wb-input" data-mask="datetime" inputmode="numeric" placeholder="dd/mm/yyyy HH:MM" aria-label="Ngày và giờ" />
+          </div>
+          <div class="wb-field">
+            <label class="wb-label">Số thẻ ngân hàng</label>
+            <div class="wb-input-group">
+              <span class="wb-input-group__addon"><span class="wb-ico wb-ico--sm">credit_card</span></span>
+              <input class="wb-input" data-mask="card" inputmode="numeric" placeholder="0000 0000 0000 0000" value="4111111111111111" aria-label="Số thẻ" />
+            </div>
+          </div>
+          <div class="wb-field">
+            <label class="wb-label">Khoảng ngày <span class="wb-label__opt">dd/mm/yyyy – dd/mm/yyyy</span></label>
+            <input class="wb-input" data-mask="daterange" inputmode="numeric" placeholder="dd/mm/yyyy – dd/mm/yyyy" aria-label="Khoảng ngày" />
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;!-- ngày: gõ 14072026 → 14/07/2026 --&gt;
+&lt;input class="wb-input" data-mask="date" inputmode="numeric" placeholder="dd/mm/yyyy" /&gt;
+
+&lt;!-- giờ · ngày-giờ · khoảng ngày --&gt;
+&lt;input class="wb-input" data-mask="time"      inputmode="numeric" /&gt;
+&lt;input class="wb-input" data-mask="datetime"  inputmode="numeric" /&gt;
+&lt;input class="wb-input" data-mask="daterange" inputmode="numeric" /&gt;
+
+&lt;!-- số thẻ: 4111 1111 1111 1111 --&gt;
+&lt;div class="wb-input-group"&gt;
+  &lt;span class="wb-input-group__addon"&gt;&lt;span class="wb-ico wb-ico--sm"&gt;credit_card&lt;/span&gt;&lt;/span&gt;
+  &lt;input class="wb-input" data-mask="card" inputmode="numeric" /&gt;
+&lt;/div&gt;
+&lt;!-- Format do JS lo; app thật nên dùng imask/cleave (xem integration.md) --&gt;</code></pre></div>
+    </div>
+  </div>
+</section>

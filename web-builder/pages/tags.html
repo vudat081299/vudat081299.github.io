@@ -1,0 +1,188 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Hiển thị dữ liệu</p>
+  <h2>Tags <span style="color:var(--wb-fg-subtle);font-weight:600">(#)</span></h2>
+  <p>Nhãn tự do người dùng gắn vào giao dịch — <b>luôn có “#” phía trước</b>. Cùng hệ với capsule nhưng
+  thêm 3 hình dạng (pill · chữ nhật · thẻ có khía) và màu tùy chọn cho từng danh mục.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>Hình dạng</h4>
+    <p class="doc-block__desc">Mặc định là <b>pill</b>. Thêm <code>--rect</code> cho chữ nhật, <code>--notch</code> cho dáng “thẻ” (có khía + lỗ bấm).</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="wb-cluster">
+          <span class="wb-tag">pill</span>
+          <span class="wb-tag wb-tag--rect">rect</span>
+          <span class="wb-tag wb-tag--notch">notch</span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="wb-tag"&gt;an-uong&lt;/span&gt;                    &lt;!-- pill (mặc định) --&gt;
+&lt;span class="wb-tag wb-tag--rect"&gt;an-uong&lt;/span&gt;      &lt;!-- chữ nhật --&gt;
+&lt;span class="wb-tag wb-tag--notch"&gt;an-uong&lt;/span&gt;     &lt;!-- thẻ có khía --&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Không màu &amp; có màu</h4>
+    <p class="doc-block__desc">Neutral (mặc định) cho nhãn thường. Dùng tone semantic, gán màu riêng qua <code>--wb-tag-color</code>, hoặc <code>--solid</code> để nhấn mạnh — <code>--solid</code> đứng một mình là <b>đen chữ trắng</b> (đảo ở dark).</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="cap-row"><span class="cap-row__label">Neutral</span>
+          <span class="wb-tag">hang-ngay</span>
+          <span class="wb-tag">tien-mat</span>
+          <span class="wb-tag">chua-phan-loai</span>
+        </div>
+        <div class="cap-row"><span class="cap-row__label">Semantic</span>
+          <span class="wb-tag wb-tag--success">hoan-tien</span>
+          <span class="wb-tag wb-tag--warning">can-xem-lai</span>
+          <span class="wb-tag wb-tag--danger">vuot-ngan-sach</span>
+          <span class="wb-tag wb-tag--info">dinh-ky</span>
+        </div>
+        <div class="cap-row"><span class="cap-row__label">Màu riêng</span>
+          <span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#0d9488">du-lich</span>
+          <span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#7c3aed">gia-dinh</span>
+          <span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#d97706">dau-tu</span>
+          <span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#db2777">qua-tang</span>
+        </div>
+        <div class="cap-row"><span class="cap-row__label">Solid</span>
+          <span class="wb-tag wb-tag--solid">hang-ngay</span>
+          <span class="wb-tag wb-tag--solid">tien-mat</span>
+          <span class="wb-tag wb-tag--danger wb-tag--solid">khan-cap</span>
+          <span class="wb-tag wb-tag--tinted wb-tag--solid" style="--wb-tag-color:#0d9488">du-lich</span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;!-- neutral / semantic --&gt;
+&lt;span class="wb-tag"&gt;hang-ngay&lt;/span&gt;
+&lt;span class="wb-tag wb-tag--success"&gt;hoan-tien&lt;/span&gt;
+
+&lt;!-- màu riêng cho danh mục: 1 biến là đủ --&gt;
+&lt;span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#0d9488"&gt;du-lich&lt;/span&gt;
+
+&lt;!-- nhấn mạnh: solid trung tính (đen) hoặc solid theo tone --&gt;
+&lt;span class="wb-tag wb-tag--solid"&gt;hang-ngay&lt;/span&gt;
+&lt;span class="wb-tag wb-tag--danger wb-tag--solid"&gt;khan-cap&lt;/span&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Bảng màu danh mục — mỗi danh mục một sắc</h4>
+    <p class="doc-block__desc">Chỉ cần đổi <code>--wb-tag-color</code> là ra vô số màu. Đây là một bảng gợi ý (dịu, phân biệt tốt),
+    hợp làm khoá màu cho danh mục người dùng tự đặt.</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="wb-tags" style="gap:8px">
+          <span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#4f46e5">an-uong</span>
+          <span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#0d9488">di-chuyen</span>
+          <span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#d97706">nha-o</span>
+          <span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#db2777">giai-tri</span>
+          <span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#2563eb">hoa-don</span>
+          <span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#16a34a">tiet-kiem</span>
+          <span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#0891b2">suc-khoe</span>
+          <span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#7c3aed">giao-duc</span>
+          <span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#ca8a04">dau-tu</span>
+          <span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#ea580c">mua-sam</span>
+          <span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#059669">luong</span>
+          <span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#e11d48">no</span>
+        </div>
+        <hr class="wb-divider" />
+        <div class="cap-row"><span class="cap-row__label">3 hình dạng</span>
+          <span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#0d9488">du-lich</span>
+          <span class="wb-tag wb-tag--tinted wb-tag--rect" style="--wb-tag-color:#7c3aed">gia-dinh</span>
+          <span class="wb-tag wb-tag--tinted wb-tag--notch" style="--wb-tag-color:#d97706">dau-tu</span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#4f46e5"&gt;an-uong&lt;/span&gt;
+&lt;span class="wb-tag wb-tag--tinted wb-tag--rect"  style="--wb-tag-color:#7c3aed"&gt;gia-dinh&lt;/span&gt;
+&lt;span class="wb-tag wb-tag--tinted wb-tag--notch" style="--wb-tag-color:#d97706"&gt;dau-tu&lt;/span&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Emoji + chữ</h4>
+    <p class="doc-block__desc">Gắn emoji ngay sau dấu <code>#</code> (do <code>.wb-tag</code> tự thêm) để nhãn danh mục dễ nhận ra. Chạy với mọi hình dạng, màu &amp; nút xoá.</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="wb-cluster" style="gap:8px;margin-bottom:12px">
+          <span class="wb-tag">🚴 đạp-xe</span>
+          <span class="wb-tag">🎾 tennis</span>
+          <span class="wb-tag">🏊 bơi</span>
+          <span class="wb-tag">⚽ thể-thao</span>
+          <span class="wb-tag">🍳 ăn-sáng</span>
+          <span class="wb-tag">☕ cà-phê</span>
+        </div>
+        <div class="wb-cluster" style="gap:8px">
+          <span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#0d9488">🚴 đạp-xe</span>
+          <span class="wb-tag wb-tag--tinted wb-tag--rect" style="--wb-tag-color:#7c3aed">🎾 tennis</span>
+          <span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#d97706">🍳 ăn-sáng</span>
+          <span class="wb-tag wb-tag--info">🏊 bơi<button class="wb-tag__x" aria-label="Xoá"></button></span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="wb-tag"&gt;🎾 tennis&lt;/span&gt;                       &lt;!-- # tự thêm → "#🎾 tennis" --&gt;
+&lt;span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#0d9488"&gt;🚴 đạp-xe&lt;/span&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Kích thước &amp; xoá được</h4>
+    <p class="doc-block__desc">Ba cỡ như capsule. Thêm nút <code>×</code> để làm tag có thể gỡ (bộ lọc, ô nhập tag).</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="cap-row"><span class="cap-row__label">Size</span>
+          <span class="wb-tag wb-tag--sm">nho</span>
+          <span class="wb-tag">vua</span>
+          <span class="wb-tag wb-tag--lg">lon</span>
+        </div>
+        <div class="cap-row"><span class="cap-row__label">Xoá được</span>
+          <span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#0d9488">du-lich<button class="wb-tag__x" aria-label="Xoá"></button></span>
+          <span class="wb-tag">an-uong<button class="wb-tag__x" aria-label="Xoá"></button></span>
+          <span class="wb-tag wb-tag--info">dinh-ky<button class="wb-tag__x" aria-label="Xoá"></button></span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="wb-tag"&gt;an-uong
+  &lt;button class="wb-tag__x" aria-label="Xoá"&gt;&lt;/button&gt;
+&lt;/span&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Trên một giao dịch</h4>
+    <p class="doc-block__desc">Gom nhiều tag bằng <code>.wb-tags</code> (tự xuống dòng).</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-card" style="max-width:460px;padding:16px">
+          <div class="wb-cell-strong" style="margin-bottom:2px">Vé máy bay Tết</div>
+          <div class="wb-cell-muted" style="font-size:13px;margin-bottom:10px">−3.450.000&nbsp;₫ · 12/07</div>
+          <div class="wb-tags">
+            <span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#0d9488">du-lich</span>
+            <span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#7c3aed">gia-dinh</span>
+            <span class="wb-tag">tet-2027</span>
+            <span class="wb-tag wb-tag--info">dinh-ky</span>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-tags"&gt;
+  &lt;span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#0d9488"&gt;du-lich&lt;/span&gt;
+  &lt;span class="wb-tag"&gt;tet-2027&lt;/span&gt;
+  &lt;span class="wb-tag wb-tag--info"&gt;dinh-ky&lt;/span&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Xem đồng thời ở Light &amp; Dark</h4>
+    <p class="doc-block__desc">Màu tag hiển thị đúng ở cả hai chế độ — xem cạnh nhau bên dưới.</p>
+    <div class="dual" data-dual data-pad="18px">
+      <template>
+        <div class="wb-cluster" style="gap:8px">
+          <span class="wb-tag">an-uong</span>
+          <span class="wb-tag wb-tag--notch">tien-mat</span>
+          <span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#0d9488">du-lich</span>
+          <span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#7c3aed">gia-dinh</span>
+          <span class="wb-tag wb-tag--success">hoan-tien</span>
+          <span class="wb-tag wb-tag--danger wb-tag--solid">khan-cap</span>
+        </div>
+      </template>
+    </div>
+  </div>
+</section>

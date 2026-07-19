@@ -1,0 +1,111 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Nền tảng</p>
+  <h2>Border &amp; bo góc</h2>
+  <p>Quy ước về đường viền và bo góc để mọi component nhất quán. Bộ này thể hiện “tone/ý nghĩa”
+  bằng <b>viền bao quanh (outline) + nền mờ</b> giống capsule, thay cho kiểu <b>vạch màu bên trái</b> —
+  để màu nhấn không lệch hẳn về một phía và giữ nhịp bo góc đều nhau.</p>
+</div>
+
+<section class="doc-sec">
+  <h3>Độ dày &amp; màu viền</h3>
+  <p class="doc-sec__desc">Hai mức: <code>--wb-border</code> (hairline, mặc định) và <code>--wb-border-strong</code> (đậm hơn, cho phần cần nổi). Viền đổi màu theo theme.</p>
+  <div class="demo">
+    <div class="demo__stage">
+      <div class="wb-cluster wb-cluster--loose">
+        <div style="flex:1;min-width:160px;padding:18px;border:var(--wb-bw) solid var(--wb-border);border-radius:var(--wb-radius);background:var(--wb-surface)">
+          <div class="wb-cell-strong">Hairline</div><div class="wb-cell-muted" style="font-size:12.5px">--wb-bw · --wb-border</div>
+        </div>
+        <div style="flex:1;min-width:160px;padding:18px;border:var(--wb-bw) solid var(--wb-border-strong);border-radius:var(--wb-radius);background:var(--wb-surface)">
+          <div class="wb-cell-strong">Strong</div><div class="wb-cell-muted" style="font-size:12.5px">1px · --wb-border-strong</div>
+        </div>
+        <div style="flex:1;min-width:160px;padding:18px;border:2px solid var(--wb-border-strong);border-radius:var(--wb-radius);background:var(--wb-surface)">
+          <div class="wb-cell-strong">Dày 2px</div><div class="wb-cell-muted" style="font-size:12.5px">2px cố định · nhấn khối lớn</div>
+        </div>
+      </div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>border: 1px solid var(--wb-border);          /* hairline, mặc định */
+border: 1px solid var(--wb-border-strong);   /* đậm hơn */
+border: 2px solid var(--wb-border-strong);   /* khối lớn cần nổi */</code></pre></div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Bo góc</h3>
+  <p class="doc-sec__desc">Thang bo góc dùng lại qua token thay vì gõ px trực tiếp.</p>
+  <div class="demo">
+    <div class="demo__stage">
+      <div class="wb-cluster wb-cluster--loose wb-cluster--bottom">
+        <div style="width:96px;height:64px;border:var(--wb-bw) solid var(--wb-border-strong);border-radius:var(--wb-radius-sm);background:var(--wb-surface);display:grid;place-items:center;font-size:12px;color:var(--wb-fg-muted)">sm · 6px</div>
+        <div style="width:96px;height:64px;border:var(--wb-bw) solid var(--wb-border-strong);border-radius:var(--wb-radius);background:var(--wb-surface);display:grid;place-items:center;font-size:12px;color:var(--wb-fg-muted)">base · 10px</div>
+        <div style="width:96px;height:64px;border:var(--wb-bw) solid var(--wb-border-strong);border-radius:var(--wb-radius-lg);background:var(--wb-surface);display:grid;place-items:center;font-size:12px;color:var(--wb-fg-muted)">lg · 14px</div>
+        <div style="width:120px;height:44px;border:var(--wb-bw) solid var(--wb-border-strong);border-radius:var(--wb-radius-pill);background:var(--wb-surface);display:grid;place-items:center;font-size:12px;color:var(--wb-fg-muted)">pill · 999px</div>
+        <div style="width:64px;height:64px;border:var(--wb-bw) solid var(--wb-border-strong);border-radius:0;background:var(--wb-surface);display:grid;place-items:center;font-size:12px;color:var(--wb-fg-muted)">0 · vuông</div>
+      </div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>border-radius: var(--wb-radius-sm);    /* 6px  — input, nút nhỏ */
+border-radius: var(--wb-radius);       /* 10px — mặc định */
+border-radius: var(--wb-radius-lg);    /* 14px — card, bảng */
+border-radius: var(--wb-radius-pill);  /* 999px — capsule, tag */
+border-radius: 0;                        /* vuông — tab boxed */</code></pre></div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Đặc vs đứt nét (dashed)</h3>
+  <p class="doc-sec__desc">Viền <b>đứt nét</b> báo hiệu “chỗ trống / có thể thả / tuỳ chọn / nháp”. Dùng nhất quán giúp người
+  dùng nắm UI nhanh: chỗ nào thêm được, chỗ nào đang kéo–thả. Sẵn có: <code>.wb-card--dashed</code>,
+  <code>.wb-divider--dashed</code>, và ô thả <code>.wb-sortable__ph</code>.</p>
+  <div class="demo">
+    <div class="demo__stage">
+      <div class="wb-grid wb-grid--2">
+        <div class="wb-card" style="min-width:180px"><div class="wb-card__body">
+          <div class="wb-cell-strong">Card đặc</div><div class="wb-cell-muted" style="font-size:12.5px">nội dung thật</div>
+        </div></div>
+        <div class="wb-card wb-card--dashed" style="flex:1;min-width:180px"><div class="wb-card__body" style="text-align:center;color:var(--wb-fg-muted)">
+          <div style="font-size:20px">＋</div><div style="font-size:13px">Thêm danh mục</div>
+        </div></div>
+      </div>
+      <hr class="wb-divider wb-divider--dashed" style="margin:20px 0" />
+      <div class="wb-sortable__ph" style="height:44px;max-width:280px"></div>
+      <div class="wb-cell-muted" style="font-size:12.5px;margin-top:6px">↑ ô thả (dashed) khi kéo–thả</div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-card wb-card--dashed"&gt; … &lt;/div&gt;   &lt;!-- ô “thêm mới” --&gt;
+&lt;hr class="wb-divider wb-divider--dashed" /&gt;
+&lt;div class="wb-sortable__ph"&gt;&lt;/div&gt;                 &lt;!-- ô thả khi kéo --&gt;</code></pre></div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Kiểu nhấn: outline + nền mờ (như capsule)</h3>
+  <p class="doc-sec__desc">Đây là cách site này thể hiện “tone/ý nghĩa” — viền màu bao quanh + nền mờ cùng màu,
+  thay cho vạch bên trái. Alert, toast, note đều theo kiểu này.</p>
+  <div class="demo demo--plain">
+    <div class="demo__stage">
+      <div class="wb-stack" style="--wb-stack-gap:12px">
+        <div style="padding:12px 14px;border-radius:var(--wb-radius);border:var(--wb-bw) solid color-mix(in srgb, var(--wb-info) 55%, var(--wb-border));background:var(--wb-info-soft);font-size:13.5px">Info — outline xanh + nền mờ</div>
+        <div style="padding:12px 14px;border-radius:var(--wb-radius);border:var(--wb-bw) solid color-mix(in srgb, var(--wb-success) 55%, var(--wb-border));background:var(--wb-success-soft);font-size:13.5px">Success — outline xanh lá + nền mờ</div>
+        <div style="padding:12px 14px;border-radius:var(--wb-radius);border:var(--wb-bw) solid color-mix(in srgb, var(--wb-danger) 55%, var(--wb-border));background:var(--wb-danger-soft);font-size:13.5px">Danger — outline đỏ + nền mờ</div>
+      </div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>border: 1px solid color-mix(in srgb, var(--wb-info) 55%, var(--wb-border));
+background: var(--wb-info-soft);
+border-radius: var(--wb-radius);</code></pre></div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Vạch nhấn bên trái — biến thể không mặc định</h3>
+  <p class="doc-sec__desc">Vạch màu bên trái là một cách nhấn tone khác. Bộ này <b>không dùng làm mặc định</b> (đã có
+  outline + nền mờ ở trên), nhưng nó hợp lý cho <b>danh sách thông báo / feed</b> hoặc <b>trích dẫn</b> —
+  khi cần một dấu tone mảnh mà không tô cả khối. Dùng có chủ đích đúng ngữ cảnh, không rải lên mọi component.</p>
+  <div class="demo demo--plain">
+    <div class="demo__stage">
+      <div style="padding:12px 14px;border:var(--wb-bw) solid var(--wb-border);border-left:3px solid var(--wb-warning);border-radius:var(--wb-radius);background:var(--wb-surface-2);font-size:13.5px">
+        Sắp đến hạn thanh toán — <span class="wb-cell-muted">vạch trái báo tone “cảnh báo”</span>
+      </div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>/* Biến thể nhấn tone — hợp cho feed/thông báo, không mặc định cho component */
+border: 1px solid var(--wb-border);
+border-left: 3px solid var(--wb-warning);</code></pre></div>
+  </div>
+</section>

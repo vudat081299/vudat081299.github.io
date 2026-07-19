@@ -1,0 +1,285 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Cấu trúc</p>
+  <h2>Tree danh mục</h2>
+  <p>Cây danh mục giao dịch — <b>độ sâu tùy ý</b>, xổ ra/thu vào, và <b>kéo–thả</b> để đổi vị trí hoặc
+  đổi cấp cha. Cùng một cấu trúc <code>.wb-tree</code> ra được nhiều kiểu: quản lý (kéo–thả), điều hướng
+  (guide lines), ngân sách (màu + số tiền), chọn lọc (checkbox), ký hiệu mở bên phải, và cây tĩnh không thu gọn.</p>
+</div>
+
+<section class="doc-sec">
+  <h3>Quản lý danh mục — kéo &amp; thả <span class="wb-cap wb-cap--solid wb-cap--sm">Hero</span></h3>
+  <p class="doc-sec__desc">Kéo bằng tay nắm (chấm) để đổi vị trí. Thả vào <b>giữa</b> một mục để đưa vào làm con
+  (reparent); thả vào <b>mép trên/dưới</b> để chèn trước/sau. Không cho thả vào chính con của nó.
+  Nút hành động (<code>.wb-tree__actions</code>) mặc định <b>hiện khi rê chuột / focus</b>; muốn
+  <b>luôn hiện</b> thì thêm <code>.wb-tree--actions-shown</code> (xem bên dưới).</p>
+  <div class="demo">
+    <div class="demo__stage">
+      <div class="wb-card" style="max-width:460px"><div class="wb-card__body" style="padding:8px">
+        <ul class="wb-tree" data-tree>
+          <li class="wb-tree__node">
+            <div class="wb-tree__row" draggable="true">
+              <button class="wb-tree__toggle" aria-label="Mở/đóng"></button>
+              <span class="wb-tree__handle" aria-hidden="true"></span>
+              <span class="wb-tree__label">Chi tiêu</span>
+              <span class="wb-tree__meta">128</span>
+              <span class="wb-tree__actions">
+                <button class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm" aria-label="Thêm con"><span class="wb-ico wb-ico--sm">add</span></button>
+                <button class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm" aria-label="Sửa"><span class="wb-ico wb-ico--sm">edit</span></button>
+              </span>
+            </div>
+            <ul class="wb-tree__children">
+              <li class="wb-tree__node">
+                <div class="wb-tree__row" draggable="true">
+                  <button class="wb-tree__toggle" aria-label="Mở/đóng"></button>
+                  <span class="wb-tree__handle" aria-hidden="true"></span>
+                  <span class="wb-tree__label">Ăn uống</span>
+                  <span class="wb-tree__meta">64</span>
+                </div>
+                <ul class="wb-tree__children">
+                  <li class="wb-tree__node"><div class="wb-tree__row" draggable="true"><button class="wb-tree__toggle is-leaf" aria-hidden="true"></button><span class="wb-tree__handle" aria-hidden="true"></span><span class="wb-tree__label">Cà phê</span><span class="wb-tree__meta">21</span></div></li>
+                  <li class="wb-tree__node"><div class="wb-tree__row" draggable="true"><button class="wb-tree__toggle is-leaf" aria-hidden="true"></button><span class="wb-tree__handle" aria-hidden="true"></span><span class="wb-tree__label">Đi chợ</span><span class="wb-tree__meta">30</span></div></li>
+                </ul>
+              </li>
+              <li class="wb-tree__node"><div class="wb-tree__row" draggable="true"><button class="wb-tree__toggle is-leaf" aria-hidden="true"></button><span class="wb-tree__handle" aria-hidden="true"></span><span class="wb-tree__label">Nhà ở</span><span class="wb-tree__meta">18</span></div></li>
+              <li class="wb-tree__node"><div class="wb-tree__row" draggable="true"><button class="wb-tree__toggle is-leaf" aria-hidden="true"></button><span class="wb-tree__handle" aria-hidden="true"></span><span class="wb-tree__label">Di chuyển</span><span class="wb-tree__meta">27</span></div></li>
+            </ul>
+          </li>
+          <li class="wb-tree__node">
+            <div class="wb-tree__row" draggable="true">
+              <button class="wb-tree__toggle" aria-label="Mở/đóng"></button>
+              <span class="wb-tree__handle" aria-hidden="true"></span>
+              <span class="wb-tree__label">Thu nhập</span>
+              <span class="wb-tree__meta">12</span>
+            </div>
+            <ul class="wb-tree__children">
+              <li class="wb-tree__node"><div class="wb-tree__row" draggable="true"><button class="wb-tree__toggle is-leaf" aria-hidden="true"></button><span class="wb-tree__handle" aria-hidden="true"></span><span class="wb-tree__label">Lương</span><span class="wb-tree__meta">7</span></div></li>
+              <li class="wb-tree__node"><div class="wb-tree__row" draggable="true"><button class="wb-tree__toggle is-leaf" aria-hidden="true"></button><span class="wb-tree__handle" aria-hidden="true"></span><span class="wb-tree__label">Freelance</span><span class="wb-tree__meta">5</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </div></div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;ul class="wb-tree" data-tree&gt;
+  &lt;li class="wb-tree__node"&gt;
+    &lt;div class="wb-tree__row" draggable="true"&gt;
+      &lt;button class="wb-tree__toggle"&gt;&lt;/button&gt;      &lt;!-- chevron (icon-font), để rỗng --&gt;
+      &lt;span class="wb-tree__handle"&gt;&lt;/span&gt;         &lt;!-- tay nắm 6 chấm (icon-font), để rỗng --&gt;
+      &lt;span class="wb-tree__label"&gt;Chi tiêu&lt;/span&gt;
+      &lt;span class="wb-tree__meta"&gt;128&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;ul class="wb-tree__children"&gt;
+      &lt;li class="wb-tree__node"&gt;
+        &lt;div class="wb-tree__row" draggable="true"&gt;
+          &lt;button class="wb-tree__toggle is-leaf"&gt;&lt;/button&gt;
+          &lt;span class="wb-tree__handle"&gt;&lt;/span&gt;
+          &lt;span class="wb-tree__label"&gt;Ăn uống&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</code></pre></div>
+  </div>
+  <div class="doc-block">
+    <h4>Nút hành động luôn hiện — <code>--actions-shown</code></h4>
+    <p class="doc-block__desc">Mặc định nút thêm/sửa chỉ hiện khi rê chuột hoặc focus (giữ cây gọn). Cho màn
+    <b>quản lý</b> hoặc thiết bị <b>cảm ứng</b> (không có hover), thêm <code>.wb-tree--actions-shown</code> để nút luôn hiển thị.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-card" style="max-width:420px"><div class="wb-card__body" style="padding:8px">
+          <ul class="wb-tree wb-tree--actions-shown">
+            <li class="wb-tree__node"><div class="wb-tree__row"><button class="wb-tree__toggle is-leaf" aria-hidden="true"></button><span class="wb-tree__label">Ăn uống</span><span class="wb-tree__actions"><button class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm" aria-label="Thêm con"><span class="wb-ico wb-ico--sm">add</span></button><button class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm" aria-label="Sửa"><span class="wb-ico wb-ico--sm">edit</span></button></span></div></li>
+            <li class="wb-tree__node"><div class="wb-tree__row"><button class="wb-tree__toggle is-leaf" aria-hidden="true"></button><span class="wb-tree__label">Nhà ở</span><span class="wb-tree__actions"><button class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm" aria-label="Thêm con"><span class="wb-ico wb-ico--sm">add</span></button><button class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm" aria-label="Sửa"><span class="wb-ico wb-ico--sm">edit</span></button></span></div></li>
+          </ul>
+        </div></div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;ul class="wb-tree wb-tree--actions-shown"&gt;   &lt;!-- nút luôn hiện --&gt;
+  &lt;li class="wb-tree__node"&gt;&lt;div class="wb-tree__row"&gt;
+    &lt;span class="wb-tree__label"&gt;Ăn uống&lt;/span&gt;
+    &lt;span class="wb-tree__actions"&gt;
+      &lt;button class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm"&gt;&lt;span class="wb-ico wb-ico--sm"&gt;add&lt;/span&gt;&lt;/button&gt;
+      &lt;button class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm"&gt;&lt;span class="wb-ico wb-ico--sm"&gt;edit&lt;/span&gt;&lt;/button&gt;
+    &lt;/span&gt;
+  &lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-note">
+    <span>💡</span>
+    <div>Chevron, tay nắm và icon hành động đều dùng <b>icon-font Material Symbols</b> (đậm &amp; sắc, đổi cỡ/độ đậm
+    qua token) — nút/thẻ để rỗng, icon được chèn bằng CSS. Ở tài liệu này, kéo–thả dùng HTML5 drag-and-drop thuần (reorder +
+    reparent, chặn thả vào con của chính nó). Trong app của bạn dùng <b>dnd-kit</b> (React) và giữ nguyên các class
+    <code>wb-tree*</code> cho phần nhìn.</div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Điều hướng — guide lines + số đếm</h3>
+  <p class="doc-sec__desc">Thêm <code>--lines</code> để có đường dẫn dọc; bỏ tay nắm khi chỉ để xem/điều hướng. Mục đang chọn dùng <code>.is-selected</code>.</p>
+  <div class="demo">
+    <div class="demo__stage">
+      <ul class="wb-tree wb-tree--lines" data-tree style="max-width:340px">
+        <li class="wb-tree__node">
+          <div class="wb-tree__row"><button class="wb-tree__toggle" aria-label="Mở/đóng"></button><span class="wb-tree__label">Chi tiêu</span><span class="wb-tree__meta">128</span></div>
+          <ul class="wb-tree__children">
+            <li class="wb-tree__node"><div class="wb-tree__row is-selected"><button class="wb-tree__toggle is-leaf" aria-hidden="true"></button><span class="wb-tree__label">Ăn uống</span><span class="wb-tree__meta">64</span></div></li>
+            <li class="wb-tree__node"><div class="wb-tree__row"><button class="wb-tree__toggle is-leaf" aria-hidden="true"></button><span class="wb-tree__label">Nhà ở</span><span class="wb-tree__meta">18</span></div></li>
+          </ul>
+        </li>
+        <li class="wb-tree__node is-collapsed">
+          <div class="wb-tree__row"><button class="wb-tree__toggle" aria-label="Mở/đóng"></button><span class="wb-tree__label">Thu nhập</span><span class="wb-tree__meta">12</span></div>
+          <ul class="wb-tree__children">
+            <li class="wb-tree__node"><div class="wb-tree__row"><button class="wb-tree__toggle is-leaf" aria-hidden="true"></button><span class="wb-tree__label">Lương</span></div></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;ul class="wb-tree wb-tree--lines" data-tree&gt; … &lt;/ul&gt;
+&lt;!-- mục đang chọn --&gt;  &lt;div class="wb-tree__row is-selected"&gt; … &lt;/div&gt;
+&lt;!-- thu gọn sẵn --&gt;   &lt;li class="wb-tree__node is-collapsed"&gt; … &lt;/li&gt;</code></pre></div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Ngân sách — chấm màu + số tiền</h3>
+  <p class="doc-sec__desc">Gắn <code>.wb-tree__dot</code> (màu danh mục qua <code>background</code>) và để số tiền trong <code>.wb-tree__meta</code>.</p>
+  <div class="demo">
+    <div class="demo__stage">
+      <ul class="wb-tree" data-tree style="max-width:380px">
+        <li class="wb-tree__node">
+          <div class="wb-tree__row"><button class="wb-tree__toggle" aria-label="Mở/đóng"></button><span class="wb-tree__dot" style="background:var(--wb-chart-1)"></span><span class="wb-tree__label">Chi tiêu</span><span class="wb-tree__meta">−11.840.000&nbsp;₫</span></div>
+          <ul class="wb-tree__children">
+            <li class="wb-tree__node"><div class="wb-tree__row"><button class="wb-tree__toggle is-leaf" aria-hidden="true"></button><span class="wb-tree__dot" style="background:var(--wb-chart-3)"></span><span class="wb-tree__label">Ăn uống</span><span class="wb-tree__meta">−3.280.000&nbsp;₫</span></div></li>
+            <li class="wb-tree__node"><div class="wb-tree__row"><button class="wb-tree__toggle is-leaf" aria-hidden="true"></button><span class="wb-tree__dot" style="background:var(--wb-chart-6)"></span><span class="wb-tree__label">Nhà ở</span><span class="wb-tree__meta">−6.500.000&nbsp;₫</span></div></li>
+          </ul>
+        </li>
+        <li class="wb-tree__node">
+          <div class="wb-tree__row"><button class="wb-tree__toggle" aria-label="Mở/đóng"></button><span class="wb-tree__dot" style="background:var(--wb-chart-5)"></span><span class="wb-tree__label">Thu nhập</span><span class="wb-tree__meta wb-num--pos">+29.200.000&nbsp;₫</span></div>
+          <ul class="wb-tree__children">
+            <li class="wb-tree__node"><div class="wb-tree__row"><button class="wb-tree__toggle is-leaf" aria-hidden="true"></button><span class="wb-tree__dot" style="background:var(--wb-chart-7)"></span><span class="wb-tree__label">Lương</span><span class="wb-tree__meta wb-num--pos">+25.000.000&nbsp;₫</span></div></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-tree__row"&gt;
+  &lt;button class="wb-tree__toggle"&gt;&lt;/button&gt;
+  &lt;span class="wb-tree__dot" style="background:var(--wb-chart-3)"&gt;&lt;/span&gt;
+  &lt;span class="wb-tree__label"&gt;Ăn uống&lt;/span&gt;
+  &lt;span class="wb-tree__meta"&gt;−3.280.000 ₫&lt;/span&gt;
+&lt;/div&gt;</code></pre></div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Chọn lọc — checkbox</h3>
+  <p class="doc-sec__desc">Thêm <code>.wb-tree__check</code> để lọc theo danh mục (vd lọc giao dịch, chọn danh mục xuất báo cáo).</p>
+  <div class="demo">
+    <div class="demo__stage">
+      <ul class="wb-tree" data-tree style="max-width:320px">
+        <li class="wb-tree__node">
+          <div class="wb-tree__row"><button class="wb-tree__toggle" aria-label="Mở/đóng"></button><input type="checkbox" class="wb-tree__check" checked /><span class="wb-tree__label">Chi tiêu</span></div>
+          <ul class="wb-tree__children">
+            <li class="wb-tree__node"><div class="wb-tree__row"><button class="wb-tree__toggle is-leaf" aria-hidden="true"></button><input type="checkbox" class="wb-tree__check" checked /><span class="wb-tree__label">Ăn uống</span></div></li>
+            <li class="wb-tree__node"><div class="wb-tree__row"><button class="wb-tree__toggle is-leaf" aria-hidden="true"></button><input type="checkbox" class="wb-tree__check" /><span class="wb-tree__label">Giải trí</span></div></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-tree__row"&gt;
+  &lt;button class="wb-tree__toggle is-leaf"&gt;&lt;/button&gt;
+  &lt;input type="checkbox" class="wb-tree__check" checked /&gt;
+  &lt;span class="wb-tree__label"&gt;Ăn uống&lt;/span&gt;
+&lt;/div&gt;</code></pre></div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Kiểu mở/thu gọn</h3>
+  <p class="doc-sec__desc">Ba lựa chọn cho ký hiệu xổ ra: mặc định (bên trái), <b>bên phải</b> (<code>--right</code>),
+  hoặc <b>không thu gọn</b> / bỏ hẳn icon (<code>--flat</code>, cây tĩnh chỉ để đọc).</p>
+
+  <div class="doc-block">
+    <h4>Ký hiệu mở bên phải — <code>--right</code></h4>
+    <div class="demo">
+      <div class="demo__stage">
+        <ul class="wb-tree wb-tree--right" data-tree style="max-width:320px">
+          <li class="wb-tree__node">
+            <div class="wb-tree__row"><span class="wb-tree__label">Chi tiêu</span><button class="wb-tree__toggle" aria-label="Mở/đóng"></button></div>
+            <ul class="wb-tree__children">
+              <li class="wb-tree__node"><div class="wb-tree__row"><span class="wb-tree__label">Ăn uống</span><button class="wb-tree__toggle is-leaf" aria-hidden="true"></button></div></li>
+              <li class="wb-tree__node"><div class="wb-tree__row"><span class="wb-tree__label">Nhà ở</span><button class="wb-tree__toggle is-leaf" aria-hidden="true"></button></div></li>
+            </ul>
+          </li>
+          <li class="wb-tree__node is-collapsed">
+            <div class="wb-tree__row"><span class="wb-tree__label">Thu nhập</span><button class="wb-tree__toggle" aria-label="Mở/đóng"></button></div>
+            <ul class="wb-tree__children">
+              <li class="wb-tree__node"><div class="wb-tree__row"><span class="wb-tree__label">Lương</span><button class="wb-tree__toggle is-leaf" aria-hidden="true"></button></div></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;ul class="wb-tree wb-tree--right" data-tree&gt;
+  &lt;li class="wb-tree__node"&gt;
+    &lt;div class="wb-tree__row"&gt;
+      &lt;span class="wb-tree__label"&gt;Chi tiêu&lt;/span&gt;
+      &lt;button class="wb-tree__toggle"&gt;&lt;/button&gt;   &lt;!-- toggle nằm cuối hàng --&gt;
+    &lt;/div&gt; …
+  &lt;/li&gt;
+&lt;/ul&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Không thu gọn / bỏ icon — <code>--flat</code></h4>
+    <p class="doc-block__desc">Không có toggle nên không thu gọn được — một bản phác danh mục để đọc. Ghép với <code>--lines</code> cho có đường dẫn.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <ul class="wb-tree wb-tree--flat wb-tree--lines" style="max-width:320px">
+          <li class="wb-tree__node">
+            <div class="wb-tree__row"><span class="wb-tree__label" style="font-weight:600">Chi tiêu</span><span class="wb-tree__meta">128</span></div>
+            <ul class="wb-tree__children">
+              <li class="wb-tree__node"><div class="wb-tree__row"><span class="wb-tree__label">Ăn uống</span><span class="wb-tree__meta">64</span></div></li>
+              <li class="wb-tree__node"><div class="wb-tree__row"><span class="wb-tree__label">Nhà ở</span><span class="wb-tree__meta">18</span></div></li>
+              <li class="wb-tree__node"><div class="wb-tree__row"><span class="wb-tree__label">Di chuyển</span><span class="wb-tree__meta">27</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;ul class="wb-tree wb-tree--flat wb-tree--lines"&gt;
+  &lt;li class="wb-tree__node"&gt;
+    &lt;div class="wb-tree__row"&gt;&lt;span class="wb-tree__label"&gt;Chi tiêu&lt;/span&gt;&lt;/div&gt;
+    &lt;ul class="wb-tree__children"&gt; … &lt;/ul&gt;   &lt;!-- luôn mở --&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</code></pre></div>
+    </div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Trình duyệt thư mục — icon emoji</h3>
+  <p class="doc-sec__desc">Thêm <code>.wb-tree__ico</code> (dùng emoji sẵn có, không cần bộ icon ngoài) trước nhãn để ra dáng “file explorer”. Ở đây kết hợp với ký hiệu mở bên phải.</p>
+  <div class="demo">
+    <div class="demo__stage">
+      <ul class="wb-tree wb-tree--right" data-tree style="max-width:340px">
+        <li class="wb-tree__node">
+          <div class="wb-tree__row"><span class="wb-tree__ico">📁</span><span class="wb-tree__label">Tài liệu tài chính</span><button class="wb-tree__toggle" aria-label="Mở/đóng"></button></div>
+          <ul class="wb-tree__children">
+            <li class="wb-tree__node">
+              <div class="wb-tree__row"><span class="wb-tree__ico">📁</span><span class="wb-tree__label">Sao kê 2027</span><button class="wb-tree__toggle" aria-label="Mở/đóng"></button></div>
+              <ul class="wb-tree__children">
+                <li class="wb-tree__node"><div class="wb-tree__row"><span class="wb-tree__ico">📄</span><span class="wb-tree__label">thang-06.pdf</span><button class="wb-tree__toggle is-leaf" aria-hidden="true"></button></div></li>
+                <li class="wb-tree__node"><div class="wb-tree__row"><span class="wb-tree__ico">📄</span><span class="wb-tree__label">thang-07.pdf</span><button class="wb-tree__toggle is-leaf" aria-hidden="true"></button></div></li>
+              </ul>
+            </li>
+            <li class="wb-tree__node"><div class="wb-tree__row"><span class="wb-tree__ico">🧾</span><span class="wb-tree__label">hoa-don-dien.jpg</span><button class="wb-tree__toggle is-leaf" aria-hidden="true"></button></div></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-tree__row"&gt;
+  &lt;span class="wb-tree__ico"&gt;📁&lt;/span&gt;
+  &lt;span class="wb-tree__label"&gt;Sao kê 2027&lt;/span&gt;
+  &lt;button class="wb-tree__toggle"&gt;&lt;/button&gt;
+&lt;/div&gt;</code></pre></div>
+  </div>
+</section>

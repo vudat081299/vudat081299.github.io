@@ -1,0 +1,136 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Điều hướng</p>
+  <h2>Navbar &amp; Menu</h2>
+  <p>Thanh điều hướng trên cùng của <b>app shell</b> (<code>.wb-navbar</code>) và tập liên kết điều hướng (<code>.wb-nav</code> — "menu").
+  Đây là <b>giao diện</b> thuần; hành vi (menu mobile, active theo route) do app xử lý (React Router…). Active = highlight phẳng, không có thanh dẫn bên trái.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>App bar cơ bản <span class="wb-cap wb-cap--sm wb-cap--outline">responsive</span></h4>
+    <p class="doc-block__desc">Thương hiệu bên trái · <code>.wb-nav</code> ở giữa · <code>__spacer</code> đẩy <code>__actions</code> về phải.
+    Trong <code>__actions</code> có nút <b>đổi giao diện sáng/tối</b> (<code>.wb-theme-toggle</code>). <b>Thu hẹp cửa sổ</b>
+    (hoặc xem trên điện thoại): khi thanh quá hẹp, các link tự <b>gập vào nút ☰</b> — bấm để bung menu thả xuống,
+    không còn chèn đè lên nhau. Bọc <code>.wb-nav</code> thêm <code>.wb-navbar__menu</code> và thêm nút
+    <code>.wb-navbar__toggle</code> có <code>data-navbar-toggle</code>. (Dùng <b>container query</b> — gập theo bề rộng
+    của chính thanh, nên đúng cả trong ô demo hẹp lẫn màn hình nhỏ.)</p>
+    <div class="demo demo--pop">
+      <div class="demo__stage">
+        <div class="wb-navbar">
+          <button class="wb-navbar__toggle wb-btn wb-btn--ghost wb-btn--icon" data-navbar-toggle aria-label="Mở menu" aria-expanded="false"><span class="wb-ico">menu</span></button>
+          <a class="wb-navbar__brand" href="#/navbar"><span class="wb-navbar__mark">C</span> Ledger</a>
+          <nav class="wb-nav wb-navbar__menu">
+            <a class="wb-nav__link is-active" href="#/navbar">Tổng quan</a>
+            <a class="wb-nav__link" href="#/navbar">Giao dịch</a>
+            <a class="wb-nav__link" href="#/navbar">Ngân sách</a>
+            <a class="wb-nav__link" href="#/navbar">Báo cáo</a>
+          </nav>
+          <span class="wb-navbar__spacer"></span>
+          <div class="wb-navbar__actions">
+            <button class="wb-btn wb-btn--ghost wb-btn--icon" aria-label="Tìm kiếm"><span class="wb-ico">search</span></button>
+            <button class="wb-btn wb-btn--ghost wb-btn--icon" aria-label="Thông báo"><span class="wb-ico">notifications</span></button>
+            <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" aria-label="Đổi giao diện sáng/tối" title="Sáng / Tối">
+              <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
+              <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
+            </button>
+            <span class="wb-avatar wb-avatar--sm">DV</span>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-navbar"&gt;
+  &lt;!-- ☰ hiện khi thanh hẹp, bung .wb-navbar__menu --&gt;
+  &lt;button class="wb-navbar__toggle wb-btn wb-btn--ghost wb-btn--icon"
+          data-navbar-toggle aria-label="Mở menu"&gt;&lt;span class="wb-ico"&gt;menu&lt;/span&gt;&lt;/button&gt;
+  &lt;a class="wb-navbar__brand"&gt;&lt;span class="wb-navbar__mark"&gt;C&lt;/span&gt; Ledger&lt;/a&gt;
+  &lt;nav class="wb-nav wb-navbar__menu"&gt;
+    &lt;a class="wb-nav__link is-active"&gt;Tổng quan&lt;/a&gt;
+    &lt;a class="wb-nav__link"&gt;Giao dịch&lt;/a&gt;
+  &lt;/nav&gt;
+  &lt;span class="wb-navbar__spacer"&gt;&lt;/span&gt;
+  &lt;div class="wb-navbar__actions"&gt;
+    &lt;button class="wb-btn wb-btn--ghost wb-btn--icon"&gt;&lt;span class="wb-ico"&gt;search&lt;/span&gt;&lt;/button&gt;
+    &lt;!-- đổi giao diện: icon tự đổi theo .dark ở &lt;html&gt;, app chỉ bật/tắt .dark --&gt;
+    &lt;button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" aria-label="Sáng/Tối"&gt;
+      &lt;span class="wb-ico wb-theme-toggle__to-dark"&gt;dark_mode&lt;/span&gt;
+      &lt;span class="wb-ico wb-theme-toggle__to-light"&gt;light_mode&lt;/span&gt;
+    &lt;/button&gt;
+    &lt;span class="wb-avatar wb-avatar--sm"&gt;DV&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- ghim trên đầu: thêm --sticky --&gt;
+&lt;div class="wb-navbar wb-navbar--sticky"&gt; … &lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Bản hẹp / mobile — tự gập vào ☰ <span class="wb-cap wb-cap--sm wb-cap--outline">container query</span></h4>
+    <p class="doc-block__desc">Vẫn <b>y hệt markup</b> ở trên, chỉ đặt trong khung hẹp — thanh tự nhận mình &lt; 640px nên <b>gập các link vào nút ☰</b>.
+    Bấm ☰ để bung menu thả xuống (không đè lên nội dung). Đây chính là dáng thanh trên điện thoại; bạn không cần viết lại gì.</p>
+    <div class="demo demo--pop">
+      <div class="demo__stage">
+        <div style="max-width:360px">
+          <div class="wb-navbar">
+            <button class="wb-navbar__toggle wb-btn wb-btn--ghost wb-btn--icon" data-navbar-toggle aria-label="Mở menu" aria-expanded="false"><span class="wb-ico">menu</span></button>
+            <a class="wb-navbar__brand" href="#/navbar"><span class="wb-navbar__mark">C</span> Ledger</a>
+            <nav class="wb-nav wb-navbar__menu">
+              <a class="wb-nav__link is-active" href="#/navbar">Tổng quan</a>
+              <a class="wb-nav__link" href="#/navbar">Giao dịch</a>
+              <a class="wb-nav__link" href="#/navbar">Ngân sách</a>
+              <a class="wb-nav__link" href="#/navbar">Báo cáo</a>
+            </nav>
+            <span class="wb-navbar__spacer"></span>
+            <div class="wb-navbar__actions">
+              <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" aria-label="Đổi giao diện sáng/tối" title="Sáng / Tối">
+                <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
+                <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
+              </button>
+              <span class="wb-avatar wb-avatar--sm">DV</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Menu (.wb-nav) — ngang · gạch chân · dọc</h4>
+    <p class="doc-block__desc">Mặc định là highlight nền · <code>--underline</code> cho kiểu tab-trang (khác §Tabs vốn đổi panel) · <code>--vertical</code> xếp dọc (đặt trong sidebar, popover…).</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="wb-stack" style="--wb-stack-gap:20px">
+          <nav class="wb-nav">
+            <a class="wb-nav__link is-active" href="#/navbar"><span class="wb-ico">dashboard</span> Tổng quan</a>
+            <a class="wb-nav__link" href="#/navbar"><span class="wb-ico">receipt_long</span> Giao dịch</a>
+            <a class="wb-nav__link" href="#/navbar"><span class="wb-ico">savings</span> Ngân sách</a>
+            <a class="wb-nav__link is-disabled" href="#/navbar">Sắp có</a>
+          </nav>
+
+          <nav class="wb-nav wb-nav--underline">
+            <a class="wb-nav__link is-active" href="#/navbar">Tháng này</a>
+            <a class="wb-nav__link" href="#/navbar">Quý</a>
+            <a class="wb-nav__link" href="#/navbar">Năm</a>
+            <a class="wb-nav__link" href="#/navbar">Tuỳ chỉnh</a>
+          </nav>
+
+          <nav class="wb-nav wb-nav--vertical" style="max-width:220px">
+            <a class="wb-nav__link is-active" href="#/navbar"><span class="wb-ico">account_balance_wallet</span> Ví tiền mặt</a>
+            <a class="wb-nav__link" href="#/navbar"><span class="wb-ico">credit_card</span> Vietcombank</a>
+            <a class="wb-nav__link" href="#/navbar"><span class="wb-ico">account_balance</span> Techcombank</a>
+          </nav>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;nav class="wb-nav"&gt; … &lt;/nav&gt;                 &lt;!-- ngang, highlight nền --&gt;
+&lt;nav class="wb-nav wb-nav--underline"&gt; … &lt;/nav&gt;  &lt;!-- gạch chân (tab-trang) --&gt;
+&lt;nav class="wb-nav wb-nav--vertical"&gt; … &lt;/nav&gt;   &lt;!-- dọc --&gt;
+
+&lt;a class="wb-nav__link is-active"&gt;&lt;span class="wb-ico"&gt;dashboard&lt;/span&gt; Tổng quan&lt;/a&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-note">
+    <span class="wb-ico" style="color:var(--wb-info-text)">info</span>
+    <div>Trong app, gắn <code>.is-active</code> theo route hiện tại (React Router <code>NavLink</code>…). Menu <b>mở/đóng</b> (dropdown) hay panel dùng Radix — xem <a href="#/dropdown">Dropdown</a> / <a href="#/tabs">Tabs</a>.
+    Nút <b>sáng/tối</b> chỉ cần bật/tắt class <code>.dark</code> ở <code>&lt;html&gt;</code> (next-themes / một dòng JS) — icon tự đổi; xem <a href="#/config">Config</a>.</div>
+  </div>
+</section>

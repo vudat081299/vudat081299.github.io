@@ -1,0 +1,203 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Hiển thị dữ liệu</p>
+  <h2>Filter bar</h2>
+  <p>Thanh lọc gắn trên đầu <b>bảng / danh sách giao dịch</b>: ô tìm kiếm, dropdown chọn nhiều trường,
+  và các <b>token lọc gỡ được</b> — lọc theo <b>nhãn</b>, theo <b>trạng thái</b> (capsule), theo <b>số tiền</b>
+  (lớn/nhỏ hơn hoặc trong khoảng), theo ngày… Lắp từ primitive sẵn có: <code>input</code>, <code>menu</code>,
+  <code>cap</code>, <code>tag</code>. Phần này chỉ thêm thanh, token và nút “thêm bộ lọc”.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>Thanh lọc — ví dụ đầy đủ</h4>
+    <p class="doc-block__desc">Tìm kiếm + token đang áp dụng + nút thêm lọc + số kết quả. Token mang tông
+    <b>mềm</b> chỉ khi nó là bộ lọc <b>trạng thái</b>; còn lại giữ xám (đúng thang màu).</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-filterbar" style="max-width:720px">
+          <div class="wb-input-group wb-filterbar__search">
+            <span class="wb-input-group__addon"><span class="wb-ico wb-ico--sm">search</span></span>
+            <input class="wb-input" type="search" placeholder="Tìm giao dịch…" />
+          </div>
+
+          <span class="wb-filter-token wb-filter-token--success">
+            <span class="wb-filter-token__key">Trạng thái</span>
+            <span class="wb-filter-token__val">Đã trả</span>
+            <button class="wb-filter-token__x" aria-label="Bỏ lọc trạng thái"></button>
+          </span>
+          <span class="wb-filter-token">
+            <span class="wb-filter-token__key">Nhãn</span>
+            <span class="wb-filter-token__val">#thuê-nhà</span>
+            <button class="wb-filter-token__x" aria-label="Bỏ lọc nhãn"></button>
+          </span>
+          <span class="wb-filter-token">
+            <span class="wb-filter-token__key">Số tiền</span>
+            <span class="wb-filter-token__val">≥&nbsp;1.000.000&nbsp;₫</span>
+            <button class="wb-filter-token__x" aria-label="Bỏ lọc số tiền"></button>
+          </span>
+
+          <button class="wb-filter-add"><span class="wb-ico wb-ico--sm">add</span> Thêm bộ lọc</button>
+          <span class="wb-filterbar__count">24 giao dịch</span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-filterbar"&gt;
+  &lt;div class="wb-input-group wb-filterbar__search"&gt;
+    &lt;span class="wb-input-group__addon"&gt;&lt;span class="wb-ico wb-ico--sm"&gt;search&lt;/span&gt;&lt;/span&gt;
+    &lt;input class="wb-input" type="search" placeholder="Tìm giao dịch…" /&gt;
+  &lt;/div&gt;
+
+  &lt;span class="wb-filter-token wb-filter-token--success"&gt;
+    &lt;span class="wb-filter-token__key"&gt;Trạng thái&lt;/span&gt;
+    &lt;span class="wb-filter-token__val"&gt;Đã trả&lt;/span&gt;
+    &lt;button class="wb-filter-token__x" aria-label="Bỏ lọc"&gt;&lt;/button&gt;
+  &lt;/span&gt;
+
+  &lt;button class="wb-filter-add"&gt;&lt;span class="wb-ico wb-ico--sm"&gt;add&lt;/span&gt; Thêm bộ lọc&lt;/button&gt;
+  &lt;span class="wb-filterbar__count"&gt;24 giao dịch&lt;/span&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Token lọc</h4>
+    <p class="doc-block__desc"><code>[ khoá : giá trị × ]</code>. Xám mặc định; giá trị có thể là khoảng số,
+    một <code>#nhãn</code>, một trạng thái, một mốc ngày. Chỉ mượn tông mềm khi token là bộ lọc trạng thái.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-cluster">
+          <span class="wb-filter-token">
+            <span class="wb-filter-token__key">Danh mục</span>
+            <span class="wb-filter-token__val">Ăn uống</span>
+            <button class="wb-filter-token__x" aria-label="Bỏ lọc"></button>
+          </span>
+          <span class="wb-filter-token">
+            <span class="wb-filter-token__key">Số tiền</span>
+            <span class="wb-filter-token__val">200K – 2Tr</span>
+            <button class="wb-filter-token__x" aria-label="Bỏ lọc"></button>
+          </span>
+          <span class="wb-filter-token wb-filter-token--success">
+            <span class="wb-filter-token__key">Trạng thái</span>
+            <span class="wb-filter-token__val">Đã trả</span>
+            <button class="wb-filter-token__x" aria-label="Bỏ lọc"></button>
+          </span>
+          <span class="wb-filter-token wb-filter-token--danger">
+            <span class="wb-filter-token__key">Trạng thái</span>
+            <span class="wb-filter-token__val">Quá hạn</span>
+            <button class="wb-filter-token__x" aria-label="Bỏ lọc"></button>
+          </span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="wb-filter-token"&gt;
+  &lt;span class="wb-filter-token__key"&gt;Số tiền&lt;/span&gt;
+  &lt;span class="wb-filter-token__val"&gt;200K – 2Tr&lt;/span&gt;
+  &lt;button class="wb-filter-token__x"&gt;&lt;/button&gt;
+&lt;/span&gt;
+
+&lt;!-- tông mềm CHỈ cho bộ lọc trạng thái --&gt;
+&lt;span class="wb-filter-token wb-filter-token--danger"&gt;…&lt;/span&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Chọn trường lọc — dropdown nhiều lựa chọn</h4>
+    <p class="doc-block__desc">Nút “Thêm bộ lọc” mở <code>.wb-menu</code> (đặt trong
+    <code>.wb-dropdown__menu</code>, bật <code>.is-open</code>). Mỗi dòng là một checkbox nên chọn được
+    nhiều trường cùng lúc.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-menu" style="min-width:230px">
+          <div class="wb-menu__label">Lọc theo trường</div>
+          <label class="wb-check wb-menu__item"><input type="checkbox" checked /> Trạng thái</label>
+          <label class="wb-check wb-menu__item"><input type="checkbox" checked /> Nhãn</label>
+          <label class="wb-check wb-menu__item"><input type="checkbox" checked /> Số tiền</label>
+          <label class="wb-check wb-menu__item"><input type="checkbox" /> Danh mục</label>
+          <label class="wb-check wb-menu__item"><input type="checkbox" /> Ngày</label>
+          <label class="wb-check wb-menu__item"><input type="checkbox" /> Tài khoản</label>
+          <div class="wb-menu__sep"></div>
+          <div class="wb-cluster wb-cluster--between" style="padding:2px 4px">
+            <button class="wb-btn wb-btn--ghost wb-btn--sm">Xoá hết</button>
+            <button class="wb-btn wb-btn--sm">Xong</button>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-dropdown is-open"&gt;
+  &lt;button class="wb-filter-add"&gt;…&lt;/button&gt;
+  &lt;div class="wb-dropdown__menu"&gt;
+    &lt;div class="wb-menu"&gt;
+      &lt;div class="wb-menu__label"&gt;Lọc theo trường&lt;/div&gt;
+      &lt;label class="wb-check wb-menu__item"&gt;&lt;input type="checkbox" checked /&gt; Nhãn&lt;/label&gt;
+      &lt;label class="wb-check wb-menu__item"&gt;&lt;input type="checkbox" /&gt; Ngày&lt;/label&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Bộ chỉnh theo kiểu dữ liệu</h4>
+    <p class="doc-block__desc">Mỗi trường mở một popover riêng — <b>số tiền</b> (thanh trượt 2 đầu + ô min/max
+    + câu tóm tắt, đồng bộ nhau), <b>nhãn</b> và <b>trạng thái</b> (chọn nhiều, hiện đúng bằng
+    <code>tag</code> / <code>cap</code>). Tất cả là <code>.wb-menu.wb-filter-pop</code>.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-cluster wb-cluster--top">
+
+          <div class="wb-menu wb-filter-pop">
+            <p class="wb-filter-pop__title">Số tiền</p>
+            <div class="wb-range-filter" data-range-filter>
+              <div class="wb-range-filter__summary">1.000.000 – 5.000.000 ₫</div>
+              <div class="wb-range-dual" style="--a:10;--b:50">
+                <div class="wb-range-dual__track"></div>
+                <div class="wb-range-dual__fill"></div>
+                <input class="wb-range-dual__input" data-h="min" type="range" min="0" max="10000000" step="100000" value="1000000" aria-label="Tối thiểu" />
+                <input class="wb-range-dual__input" data-h="max" type="range" min="0" max="10000000" step="100000" value="5000000" aria-label="Tối đa" />
+              </div>
+              <div class="wb-cluster wb-cluster--nowrap wb-cluster--stretch wb-cluster--tight">
+                <div class="wb-input-group"><span class="wb-input-group__addon">₫</span><input class="wb-input" data-range-min inputmode="numeric" value="1000000" aria-label="Tối thiểu" /></div>
+                <div class="wb-input-group"><span class="wb-input-group__addon">₫</span><input class="wb-input" data-range-max inputmode="numeric" value="5000000" aria-label="Tối đa" /></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="wb-menu wb-filter-pop">
+            <p class="wb-filter-pop__title">Nhãn</p>
+            <div class="wb-stack" style="--wb-stack-gap:1px">
+              <label class="wb-check wb-menu__item"><input type="checkbox" checked /> <span class="wb-tag wb-tag--sm">thuê-nhà</span></label>
+              <label class="wb-check wb-menu__item"><input type="checkbox" /> <span class="wb-tag wb-tag--sm">ăn-uống</span></label>
+              <label class="wb-check wb-menu__item"><input type="checkbox" checked /> <span class="wb-tag wb-tag--sm">hoá-đơn</span></label>
+              <label class="wb-check wb-menu__item"><input type="checkbox" /> <span class="wb-tag wb-tag--sm">đi-lại</span></label>
+            </div>
+          </div>
+
+          <div class="wb-menu wb-filter-pop">
+            <p class="wb-filter-pop__title">Trạng thái</p>
+            <div class="wb-stack" style="--wb-stack-gap:1px">
+              <label class="wb-check wb-menu__item"><input type="checkbox" checked /> <span class="wb-cap wb-cap--success wb-cap--sm">Đã trả</span></label>
+              <label class="wb-check wb-menu__item"><input type="checkbox" /> <span class="wb-cap wb-cap--warning wb-cap--sm">Sắp đến hạn</span></label>
+              <label class="wb-check wb-menu__item"><input type="checkbox" checked /> <span class="wb-cap wb-cap--danger wb-cap--sm">Quá hạn</span></label>
+              <label class="wb-check wb-menu__item"><input type="checkbox" /> <span class="wb-cap wb-cap--sm">Nháp</span></label>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;!-- số tiền: thanh trượt 2 đầu + min/max + tóm tắt (đồng bộ qua app.js) --&gt;
+&lt;div class="wb-range-filter" data-range-filter&gt;
+  &lt;div class="wb-range-filter__summary"&gt;1.000.000 – 5.000.000 ₫&lt;/div&gt;
+  &lt;div class="wb-range-dual" style="--a:10;--b:50"&gt;
+    &lt;div class="wb-range-dual__track"&gt;&lt;/div&gt;&lt;div class="wb-range-dual__fill"&gt;&lt;/div&gt;
+    &lt;input class="wb-range-dual__input" data-h="min" type="range" min="0" max="10000000" step="100000" value="1000000" /&gt;
+    &lt;input class="wb-range-dual__input" data-h="max" type="range" min="0" max="10000000" step="100000" value="5000000" /&gt;
+  &lt;/div&gt;
+  &lt;div class="wb-cluster wb-cluster--nowrap wb-cluster--stretch wb-cluster--tight"&gt;
+    &lt;div class="wb-input-group"&gt;&lt;span class="wb-input-group__addon"&gt;₫&lt;/span&gt;&lt;input class="wb-input" data-range-min value="1000000" /&gt;&lt;/div&gt;
+    &lt;div class="wb-input-group"&gt;&lt;span class="wb-input-group__addon"&gt;₫&lt;/span&gt;&lt;input class="wb-input" data-range-max value="5000000" /&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- nhãn / trạng thái: chọn nhiều, hiện bằng tag / cap --&gt;
+&lt;label class="wb-check wb-menu__item"&gt;&lt;input type="checkbox" checked /&gt; &lt;span class="wb-tag wb-tag--sm"&gt;thuê-nhà&lt;/span&gt;&lt;/label&gt;
+&lt;label class="wb-check wb-menu__item"&gt;&lt;input type="checkbox" checked /&gt; &lt;span class="wb-cap wb-cap--success wb-cap--sm"&gt;Đã trả&lt;/span&gt;&lt;/label&gt;</code></pre></div>
+    </div>
+  </div>
+</section>

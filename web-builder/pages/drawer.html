@@ -1,0 +1,97 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Lớp phủ (Overlay)</p>
+  <h2>Drawer / Offcanvas</h2>
+  <p>Bảng trượt vào từ cạnh màn hình trên nền mờ — cho bộ lọc, chi tiết giao dịch, hay menu phụ.
+  Dùng chung lớp phủ <code>.wb-overlay</code> với modal; đổi <code>.is-open</code> để mở.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>Mở thử — phải &amp; trái</h4>
+    <div class="demo">
+      <div class="demo__stage">
+        <button class="wb-btn" data-modal-open="#drawerRight">Mở bộ lọc (phải)</button>
+        <button class="wb-btn wb-btn--outline" data-modal-open="#drawerLeft" style="margin-left:8px">Menu (trái)</button>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;button class="wb-btn" data-modal-open="#drawerRight"&gt;Mở bộ lọc&lt;/button&gt;
+
+&lt;div class="wb-overlay" id="drawerRight"&gt;
+  &lt;aside class="wb-drawer"&gt;                    &lt;!-- --left để trượt từ trái --&gt;
+    &lt;div class="wb-drawer__head"&gt;
+      &lt;div&gt;&lt;h3 class="wb-drawer__title"&gt;Bộ lọc&lt;/h3&gt;&lt;/div&gt;
+      &lt;button class="wb-close" data-modal-close&gt;&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div class="wb-drawer__body"&gt;…&lt;/div&gt;
+    &lt;div class="wb-drawer__foot"&gt;…&lt;/div&gt;
+  &lt;/aside&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-note">
+    <span>💡</span>
+    <div>Ở tài liệu này, drawer mở/đóng bằng đúng JS của modal (<code>data-modal-open</code>/<code>-close</code>, bấm nền để đóng). Trong app
+    dùng Radix <b>Dialog</b> hoặc <b>vaul</b> để có focus-trap, khoá cuộn nền và kéo mượt — giữ nguyên class <code>wb-drawer*</code>.</div>
+  </div>
+  <div class="doc-note">
+    <span class="wb-ico" style="color:var(--wb-info-text)">info</span>
+    <div>Lớp phủ dùng chung với modal nên nhận cùng tuỳ chọn backdrop:
+    <code>--blur</code> (kính mờ) · <code>--clear</code> (không làm mờ) · <code>--pass</code> (non-modal — vẫn thao tác được trang dưới).
+    Xem bảng ở trang <a href="#/modal">Modal</a>.</div>
+  </div>
+</section>
+
+<!-- overlays thật (bấm nút ở trên để mở; bấm nền hoặc × để đóng) -->
+<div class="wb-overlay" id="drawerRight">
+  <aside class="wb-drawer">
+    <div class="wb-drawer__head">
+      <div>
+        <h3 class="wb-drawer__title">Bộ lọc giao dịch</h3>
+        <p class="wb-drawer__sub">Lọc theo khoảng tiền, danh mục, loại.</p>
+      </div>
+      <button class="wb-close" data-modal-close aria-label="Đóng"></button>
+    </div>
+    <div class="wb-drawer__body">
+      <div class="wb-stack">
+        <div class="wb-field">
+          <label class="wb-label">Số tiền tối đa</label>
+          <input class="wb-range" type="range" min="0" max="10000000" step="500000" value="6000000" />
+        </div>
+        <div class="wb-field">
+          <label class="wb-label">Danh mục</label>
+          <span class="wb-select-wrap"><select class="wb-select"><option>Tất cả</option><option>Ăn uống</option><option>Nhà ở</option><option>Di chuyển</option></select><span class="wb-ico">expand_more</span></span>
+        </div>
+        <div class="wb-field">
+          <label class="wb-label">Loại</label>
+          <div class="wb-btn-group">
+            <button class="wb-btn wb-btn--outline is-active">Tất cả</button>
+            <button class="wb-btn wb-btn--outline">Thu</button>
+            <button class="wb-btn wb-btn--outline">Chi</button>
+          </div>
+        </div>
+        <label class="wb-check"><input type="checkbox" checked /> Chỉ khoản chưa phân loại</label>
+      </div>
+    </div>
+    <div class="wb-drawer__foot">
+      <button class="wb-btn wb-btn--ghost" data-modal-close>Đặt lại</button>
+      <button class="wb-btn" data-modal-close>Áp dụng</button>
+    </div>
+  </aside>
+</div>
+
+<div class="wb-overlay" id="drawerLeft">
+  <aside class="wb-drawer wb-drawer--left" style="width:300px">
+    <div class="wb-drawer__head">
+      <div><h3 class="wb-drawer__title">Ledger</h3></div>
+      <button class="wb-close" data-modal-close aria-label="Đóng"></button>
+    </div>
+    <div class="wb-drawer__body" style="padding:8px">
+      <ul class="wb-list wb-list--flush">
+        <a class="wb-list__item wb-list__item--link is-active" href="#/drawer"><span class="wb-list__title">Tổng quan</span></a>
+        <a class="wb-list__item wb-list__item--link" href="#/drawer"><span class="wb-list__title">Giao dịch</span></a>
+        <a class="wb-list__item wb-list__item--link" href="#/drawer"><span class="wb-list__title">Ngân sách</span></a>
+        <a class="wb-list__item wb-list__item--link" href="#/drawer"><span class="wb-list__title">Báo cáo</span></a>
+      </ul>
+    </div>
+  </aside>
+</div>

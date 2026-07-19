@@ -1,0 +1,60 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Điều hướng</p>
+  <h2>Pagination</h2>
+  <p>Điều hướng trang cho danh sách/bảng dài. Trang hiện tại nổi bật (nền đậm — đảo màu theo theme),
+  nút trước/sau vô hiệu hoá khi ở biên.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="demo demo--plain">
+    <div class="demo__stage">
+      <nav class="wb-pagination" aria-label="Phân trang">
+        <button class="wb-page" disabled aria-label="Trước"><span class="wb-ico wb-ico--sm">chevron_left</span></button>
+        <a class="wb-page is-active" href="#/pagination" aria-current="page">1</a>
+        <a class="wb-page" href="#/pagination">2</a>
+        <a class="wb-page" href="#/pagination">3</a>
+        <span class="wb-page wb-page--gap">…</span>
+        <a class="wb-page" href="#/pagination">12</a>
+        <button class="wb-page" aria-label="Sau"><span class="wb-ico wb-ico--sm">chevron_right</span></button>
+      </nav>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;nav class="wb-pagination" aria-label="Phân trang"&gt;
+  &lt;button class="wb-page" disabled aria-label="Trước"&gt;&lt;span class="wb-ico wb-ico--sm"&gt;chevron_left&lt;/span&gt;&lt;/button&gt;
+  &lt;a class="wb-page is-active" aria-current="page"&gt;1&lt;/a&gt;
+  &lt;a class="wb-page"&gt;2&lt;/a&gt;
+  &lt;span class="wb-page wb-page--gap"&gt;…&lt;/span&gt;
+  &lt;a class="wb-page"&gt;12&lt;/a&gt;
+  &lt;button class="wb-page" aria-label="Sau"&gt;&lt;span class="wb-ico wb-ico--sm"&gt;chevron_right&lt;/span&gt;&lt;/button&gt;
+&lt;/nav&gt;</code></pre></div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Trong footer bảng</h4>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-card" style="max-width:520px">
+          <div class="wb-table-scroll">
+            <table class="wb-table wb-table--compact">
+              <thead><tr><th>Nội dung</th><th class="wb-num">Số tiền</th></tr></thead>
+              <tbody>
+                <tr><td>Grab</td><td class="wb-num wb-num--strong">−85.000&nbsp;₫</td></tr>
+                <tr><td>Highlands</td><td class="wb-num wb-num--strong">−62.000&nbsp;₫</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="wb-card__foot">
+            <span class="wb-cell-muted" style="font-size:13px">Trang 1 / 12</span>
+            <nav class="wb-pagination" style="margin-left:auto">
+              <button class="wb-page" disabled aria-label="Trước"><span class="wb-ico wb-ico--sm">chevron_left</span></button>
+              <button class="wb-page" aria-label="Sau"><span class="wb-ico wb-ico--sm">chevron_right</span></button>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-card__foot"&gt;
+  &lt;span class="wb-cell-muted"&gt;Trang 1 / 12&lt;/span&gt;
+  &lt;nav class="wb-pagination" style="margin-left:auto"&gt; … &lt;/nav&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+</section>

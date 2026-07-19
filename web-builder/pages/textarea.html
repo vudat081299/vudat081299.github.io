@@ -1,0 +1,85 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Nhập liệu</p>
+  <h2>Textarea</h2>
+  <p>Vùng nhập nhiều dòng, mặc định chỉ kéo dọc (<code>resize: vertical</code>). Cùng bộ token với input nên viền,
+  focus, trạng thái lỗi đồng nhất. Thanh cuộn <b>theme-aware</b> (dọc &amp; ngang); bọc trong
+  <code>.wb-textarea-wrap</code> để thay grip OS bằng <b>tay kéo tuỳ biến</b> — một gạch chéo bo tròn, màu theo token.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>Cơ bản + tay kéo tuỳ biến</h4>
+    <p class="doc-block__desc">Bọc <code>&lt;textarea&gt;</code> trong <code>.wb-textarea-wrap</code>: grip chấm của OS
+    biến mất (góc bo sạch), thay bằng gạch chéo <code>--wb-border-strong</code> bo tròn 2 đầu. Kéo để resize vẫn chạy.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-field" style="max-width:440px">
+          <label class="wb-label">Ghi chú <span class="wb-label__opt">(tuỳ chọn)</span></label>
+          <div class="wb-textarea-wrap">
+            <textarea class="wb-textarea" placeholder="Thêm mô tả giao dịch…"></textarea>
+          </div>
+          <span class="wb-help">Kéo góc dưới-phải để mở rộng.</span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-textarea-wrap"&gt;
+  &lt;textarea class="wb-textarea" placeholder="Thêm mô tả…"&gt;&lt;/textarea&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Thanh cuộn theme &amp; biến thể <code>--code</code></h4>
+    <p class="doc-block__desc">Nội dung dài → thanh cuộn dọc mảnh, theo theme. Thêm <code>--code</code>
+    (<code>white-space: pre</code>) để dòng dài không xuống hàng mà cuộn ngang — thanh cuộn ngang cùng kiểu.</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="wb-grid wb-grid--2">
+          <div class="wb-field">
+            <label class="wb-label">Cuộn dọc (nội dung dài)</label>
+            <div class="wb-textarea-wrap">
+              <textarea class="wb-textarea" rows="4">Dòng 1 — ăn trưa với khách hàng
+Dòng 2 — taxi về văn phòng
+Dòng 3 — mua văn phòng phẩm
+Dòng 4 — cà phê chiều
+Dòng 5 — phí ngân hàng
+Dòng 6 — ứng lương nhân viên
+Dòng 7 — thanh toán nhà cung cấp</textarea>
+            </div>
+          </div>
+          <div class="wb-field">
+            <label class="wb-label">Cuộn ngang (<code>--code</code>)</label>
+            <div class="wb-textarea-wrap">
+              <textarea class="wb-textarea wb-textarea--code" rows="4">{ "id": 8842, "merchant": "The Coffee House", "amount": -45000, "category": "Ăn uống" }
+{ "id": 8843, "merchant": "Grab",             "amount": -82000, "category": "Đi lại"  }
+{ "id": 8844, "merchant": "WinMart",          "amount": -213000, "category": "Chợ búa" }</textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;!-- cuộn dọc: thanh cuộn theme tự có trên .wb-textarea --&gt;
+&lt;div class="wb-textarea-wrap"&gt;&lt;textarea class="wb-textarea"&gt;…&lt;/textarea&gt;&lt;/div&gt;
+
+&lt;!-- cuộn ngang: --code giữ dòng dài trên một hàng --&gt;
+&lt;div class="wb-textarea-wrap"&gt;&lt;textarea class="wb-textarea wb-textarea--code"&gt;…&lt;/textarea&gt;&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Trạng thái lỗi</h4>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-field" style="max-width:440px">
+          <label class="wb-label">Lý do điều chỉnh</label>
+          <div class="wb-textarea-wrap">
+            <textarea class="wb-textarea is-invalid" aria-invalid="true">x</textarea>
+          </div>
+          <span class="wb-error">Cần ít nhất 10 ký tự.</span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-textarea-wrap"&gt;
+  &lt;textarea class="wb-textarea is-invalid" aria-invalid="true"&gt;&lt;/textarea&gt;
+&lt;/div&gt;
+&lt;span class="wb-error"&gt;Cần ít nhất 10 ký tự.&lt;/span&gt;</code></pre></div>
+    </div>
+  </div>
+</section>

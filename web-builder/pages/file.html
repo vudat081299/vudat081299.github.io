@@ -1,0 +1,50 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Nhập liệu</p>
+  <h2>File / Upload</h2>
+  <p>Chọn tệp để đính kèm — sao kê, hoá đơn, ảnh chứng từ. Hai kiểu: nút chọn tệp gọn, và vùng thả
+  (dropzone) nét đứt cho kéo–thả.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>Nút chọn tệp — <code>wb-file</code></h4>
+    <p class="doc-block__desc">Bọc gọn <code>&lt;input type="file"&gt;</code> gốc: nút "Chọn tệp" + tên tệp bên cạnh. Thêm <code>--solid</code> cho nút <b>đen nhấn mạnh</b> (đảo ở dark).</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-stack" style="--wb-stack-gap:12px">
+          <input class="wb-file" type="file" aria-label="Chọn tệp" />
+          <input class="wb-file wb-file--solid" type="file" aria-label="Chọn tệp (nhấn mạnh)" />
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;input class="wb-file" type="file" /&gt;                  &lt;!-- trung tính (mặc định) --&gt;
+&lt;input class="wb-file wb-file--solid" type="file" /&gt;   &lt;!-- nút đen, nhấn mạnh --&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Vùng thả — <code>wb-dropzone</code></h4>
+    <p class="doc-block__desc">Nét đứt = "thả được vào đây" (cùng ngôn ngữ với ô kéo–thả). Là một <code>&lt;label&gt;</code> bọc
+    input ẩn; trong app gắn thêm sự kiện drag-and-drop và trạng thái <code>.is-dragover</code>.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <label class="wb-dropzone" style="max-width:440px">
+          <span class="wb-ico wb-dropzone__icon">cloud_upload</span>
+          <div><b>Kéo sao kê vào đây</b> hoặc bấm để chọn</div>
+          <div class="wb-cell-muted" style="font-size:12px">PDF, CSV, ảnh — tối đa 10MB</div>
+          <input type="file" hidden />
+        </label>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;label class="wb-dropzone"&gt;
+  &lt;span class="wb-ico wb-dropzone__icon"&gt;cloud_upload&lt;/span&gt;
+  &lt;div&gt;&lt;b&gt;Kéo sao kê vào đây&lt;/b&gt; hoặc bấm để chọn&lt;/div&gt;
+  &lt;input type="file" hidden /&gt;
+&lt;/label&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-note">
+    <span>💡</span>
+    <div>Sau khi chọn, hiện tệp đã đính bằng <b>tag</b> (<code>.wb-tag</code> có nút ×) hoặc một dòng
+    <code>.wb-list__item</code> kèm dung lượng — để người dùng bỏ bớt trước khi lưu.</div>
+  </div>
+</section>

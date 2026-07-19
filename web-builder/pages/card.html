@@ -1,0 +1,143 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Hiển thị dữ liệu</p>
+  <h2>Card</h2>
+  <p>Bề mặt nền tảng: viền hairline + bo góc + đổ bóng mềm. Đây cũng là lớp bọc cho bảng
+  (xem <a href="#/tables">Tables</a>). Ghép <code>__head</code> / <code>__body</code> / <code>__foot</code>.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>Card cơ bản (head · body · foot)</h4>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-grid wb-grid--2">
+          <div class="wb-card">
+            <div class="wb-card__head">
+              <div>
+                <h4 class="wb-card__title">Ngân sách "Đi lại"</h4>
+                <p class="wb-card__sub">Còn 12 ngày</p>
+              </div>
+              <div class="wb-card__head-actions">
+                <span class="wb-cap">Đúng hạn mức</span>
+              </div>
+            </div>
+            <div class="wb-card__body">
+              <div class="wb-cluster wb-cluster--between" style="margin-bottom:8px">
+                <span class="wb-cell-muted">Đã chi 1.850.000&nbsp;₫</span>
+                <span class="wb-cell-strong">/ 4.000.000&nbsp;₫</span>
+              </div>
+              <div class="wb-progress"><div class="wb-progress__bar" style="width:46%"></div></div>
+            </div>
+            <div class="wb-card__foot">
+              <button class="wb-btn wb-btn--ghost wb-btn--sm">Chi tiết</button>
+              <button class="wb-btn wb-btn--sm" style="margin-left:auto">Điều chỉnh</button>
+            </div>
+          </div>
+          <div class="wb-card">
+            <div class="wb-card__head">
+              <div>
+                <h4 class="wb-card__title">Ngân sách "Ăn uống"</h4>
+                <p class="wb-card__sub">Còn 12 ngày</p>
+              </div>
+              <div class="wb-card__head-actions">
+                <span class="wb-cap wb-cap--warning">Sắp vượt</span>
+              </div>
+            </div>
+            <div class="wb-card__body">
+              <div class="wb-cluster wb-cluster--between" style="margin-bottom:8px">
+                <span class="wb-cell-muted">Đã chi 8.240.000&nbsp;₫</span>
+                <span class="wb-cell-strong">/ 10.000.000&nbsp;₫</span>
+              </div>
+              <div class="wb-progress"><div class="wb-progress__bar wb-progress__bar--warning" style="width:82%"></div></div>
+            </div>
+            <div class="wb-card__foot">
+              <button class="wb-btn wb-btn--ghost wb-btn--sm">Chi tiết</button>
+              <button class="wb-btn wb-btn--sm" style="margin-left:auto">Điều chỉnh</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-card"&gt;
+  &lt;div class="wb-card__head"&gt;
+    &lt;div&gt;&lt;h4 class="wb-card__title"&gt;Ngân sách "Ăn uống"&lt;/h4&gt;
+    &lt;p class="wb-card__sub"&gt;Còn 12 ngày&lt;/p&gt;&lt;/div&gt;
+    &lt;div class="wb-card__head-actions"&gt;&lt;span class="wb-cap wb-cap--warning"&gt;Sắp vượt&lt;/span&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="wb-card__body"&gt;…&lt;/div&gt;
+  &lt;div class="wb-card__foot"&gt;…&lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Biến thể</h4>
+    <p class="doc-block__desc"><code>--dashed</code> (viền đứt, bo quanh — hợp ô "thêm mới"/thả file), <code>--flat</code> (bỏ bóng), <code>--hover</code> (nổi lên khi rê — cho card bấm được).</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="wb-grid wb-grid--3">
+          <div class="wb-card wb-card--dashed"><div class="wb-card__body" style="text-align:center;color:var(--wb-fg-muted)"><div style="font-size:22px;margin-bottom:4px">＋</div>Thêm tài khoản</div></div>
+          <div class="wb-card wb-card--flat"><div class="wb-card__body"><div class="wb-cell-muted" style="font-size:12px">Flat</div><div class="wb-cell-strong">Không đổ bóng</div></div></div>
+          <div class="wb-card wb-card--hover"><div class="wb-card__body"><div class="wb-cell-muted" style="font-size:12px">Hover</div><div class="wb-cell-strong">Rê chuột thử →</div></div></div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-card wb-card--dashed"&gt; … &lt;/div&gt;   &lt;!-- viền đứt --&gt;
+&lt;div class="wb-card wb-card--flat"&gt; … &lt;/div&gt;     &lt;!-- không bóng --&gt;
+&lt;div class="wb-card wb-card--hover"&gt; … &lt;/div&gt;    &lt;!-- nổi khi rê --&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Media card (figure + nội dung)</h4>
+    <p class="doc-block__desc">Ghép <code>.wb-media</code> (figure dẫn đầu + <code>__body</code>) vào trong
+    <code>.wb-card</code> — hợp danh sách xếp hạng, hàng tính năng, mục cài đặt. Figure là icon, emoji hay số:
+    đánh số thì <b>tái dùng</b> <a href="#/avatar"><code>.wb-avatar--solid</code></a>, khỏi đẻ badge mới.</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="wb-stack">
+          <div class="wb-card"><div class="wb-card__body">
+            <div class="wb-media">
+              <span class="wb-avatar wb-avatar--solid wb-avatar--sm">1</span>
+              <div class="wb-media__body">
+                <p class="wb-media__title">Reuse-first</p>
+                <p class="wb-media__text">Ráp từ part đã duyệt; cái mới gấp lại vào thư viện.</p>
+              </div>
+            </div>
+          </div></div>
+          <div class="wb-card"><div class="wb-card__body">
+            <div class="wb-media">
+              <span class="wb-avatar wb-avatar--solid wb-avatar--sm">2</span>
+              <div class="wb-media__body">
+                <p class="wb-media__title">Token thay số ma thuật</p>
+                <p class="wb-media__text">Một knob đổi cả hệ — không gõ hex/px bằng tay.</p>
+              </div>
+            </div>
+          </div></div>
+          <div class="wb-card"><div class="wb-card__body">
+            <div class="wb-media wb-media--center">
+              <span class="wb-avatar wb-avatar--square"><span class="wb-ico">bolt</span></span>
+              <div class="wb-media__body">
+                <p class="wb-media__title">Zero-build</p>
+                <p class="wb-media__text">Drop-in một file CSS, không cần bước build.</p>
+              </div>
+            </div>
+          </div></div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-card"&gt;&lt;div class="wb-card__body"&gt;
+  &lt;div class="wb-media"&gt;
+    &lt;span class="wb-avatar wb-avatar--solid wb-avatar--sm"&gt;1&lt;/span&gt;
+    &lt;div class="wb-media__body"&gt;
+      &lt;p class="wb-media__title"&gt;Reuse-first&lt;/p&gt;
+      &lt;p class="wb-media__text"&gt;Ráp từ part đã duyệt…&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;&lt;/div&gt;
+
+&lt;!-- figure cũng có thể là icon/emoji --&gt;
+&lt;div class="wb-media wb-media--center"&gt;
+  &lt;span class="wb-avatar wb-avatar--square"&gt;&lt;span class="wb-ico"&gt;bolt&lt;/span&gt;&lt;/span&gt;
+  &lt;div class="wb-media__body"&gt;…&lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+</section>

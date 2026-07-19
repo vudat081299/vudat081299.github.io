@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="vi" class="wb-scrollbars">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Web Builder — Minimalist UI kit</title>
+  <!-- Top web fonts, so the Config font picker works site-wide (docs only). -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Lexend:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Public+Sans:wght@400;500;600;700&family=Roboto:wght@400;500;700&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" />
+  <script>
+    /* Local docs tool: load our own CSS/JS fresh each visit so edits never show
+       stale (the browser otherwise caches web-builder.css / docs.css / app.js). This
+       affects only the docs shell — the shipped library is still a plain file. */
+    window.__v = Date.now();
+    document.write('<link rel="stylesheet" href="web-builder.css?v=' + window.__v + '">');
+    document.write('<link rel="stylesheet" href="docs.css?v=' + window.__v + '">');
+    /* Set theme before paint to avoid a flash of the wrong mode. Modes: 'system'
+       (default — follow the OS), 'light', 'dark'. */
+    try {
+      var s = localStorage.getItem('wb-theme');
+      var sysDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (s === 'dark' || ((s === 'system' || !s) && sysDark)) document.documentElement.classList.add('dark');
+    } catch (e) {}
+  </script>
+</head>
+<body>
+  <div class="doc-shell">
+
+    <!-- ============================ SIDEBAR (tree) ======================= -->
+    <aside class="doc-side wb-scrollbars">
+      <div class="doc-brand">
+        <div class="doc-brand__mark">W</div>
+        <div>
+          <div class="doc-brand__name">Web Builder</div>
+          <div class="doc-brand__ver">v0.6 · design system</div>
+        </div>
+      </div>
+      <nav class="doc-tree" id="nav"><!-- rendered by app.js from NAV --></nav>
+    </aside>
+
+    <!-- ============================= MAIN ================================ -->
+    <div class="doc-main">
+      <header class="doc-topbar">
+        <button class="doc-side-toggle" data-side-toggle aria-label="Ẩn/hiện menu"><span class="wb-ico">menu_open</span></button>
+        <h1>Web Builder</h1>
+        <span class="wb-cap wb-cap--outline wb-cap--sm">Minimalist UI kit</span>
+        <div class="spacer"></div>
+        <button class="doc-search-trigger" id="searchBtn" aria-label="Tìm kiếm" title="Tìm kiếm — Ctrl/⌘K">
+          <span class="wb-ico wb-ico--sm">search</span>
+          <span class="doc-search-trigger__label">Tìm kiếm</span>
+          <kbd class="doc-search-trigger__kbd">⌘K</kbd>
+        </button>
+        <button class="doc-icon-btn" id="configBtn" aria-label="Tinh chỉnh (Config)" title="Tinh chỉnh">
+          <span class="wb-ico">tune</span>
+        </button>
+        <button class="theme-btn" id="themeBtn" title="Giao diện: Tự động → Sáng → Tối" aria-label="Đổi giao diện">
+          <span id="themeIcon">◐</span> <span id="themeLabel">Tự động</span>
+        </button>
+      </header>
+
+      <!-- Each page (pages/<id>.html) is loaded here by the router. -->
+      <main class="doc-content" id="view"></main>
+    </div>
+
+  </div>
+
+  <!-- Config / tweak drawer (docs-only; slides in from the right). -->
+  <aside class="doc-config" id="configDrawer" aria-label="Bảng tinh chỉnh">
+    <div class="doc-config__head">
+      <div>
+        <div class="doc-config__title">Tinh chỉnh</div>
+        <div class="doc-config__sub">Chỉnh sống — chỉ ảnh hưởng bản docs này</div>
+      </div>
+      <button class="wb-close" data-config-close aria-label="Đóng"></button>
+    </div>
+    <div class="doc-config__body wb-scrollbars"><!-- rendered by app.js --></div>
+    <div class="doc-config__foot">
+      <button class="wb-btn wb-btn--outline wb-btn--sm" data-config-reset>Đặt lại</button>
+      <button class="wb-btn wb-btn--sm" data-config-export>
+        <span class="wb-ico wb-ico--sm">download</span> Xuất .md
+      </button>
+    </div>
+  </aside>
+
+  <!-- Search dialog (docs-only): full-text search across every page. A command-palette
+       shell built on the .wb-overlay + .wb-modal primitives; the rows are doc-* chrome. -->
+  <div class="wb-overlay doc-search" id="searchModal" aria-hidden="true">
+    <div class="wb-modal doc-search__box" role="dialog" aria-modal="true" aria-label="Tìm kiếm">
+      <div class="doc-search__bar">
+        <span class="wb-ico doc-search__bar-ico" aria-hidden="true">search</span>
+        <input class="doc-search__input" id="searchInput" type="text" role="combobox"
+               aria-controls="searchResults" aria-expanded="true" aria-autocomplete="list"
+               placeholder="Tìm trong tiêu đề &amp; nội dung mọi trang…" autocomplete="off" spellcheck="false" />
+        <button class="wb-close" data-modal-close aria-label="Đóng"></button>
+      </div>
+      <div class="doc-search__results wb-scrollbars" id="searchResults" role="listbox" aria-label="Kết quả"></div>
+      <div class="doc-search__foot">
+        <span class="doc-search__legend">
+          <kbd>↑</kbd><kbd>↓</kbd> di chuyển&nbsp;&nbsp; <kbd>↵</kbd> mở&nbsp;&nbsp; <kbd>esc</kbd> đóng
+        </span>
+        <span class="doc-search__count" id="searchCount" aria-live="polite"></span>
+      </div>
+    </div>
+  </div>
+
+  <script>document.write('<scr' + 'ipt src="app.js?v=' + window.__v + '"></scr' + 'ipt>');</script>
+</body>
+</html>

@@ -1,0 +1,290 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Hiển thị dữ liệu</p>
+  <h2>Tables</h2>
+  <p>Bảng tiền: viền hairline, hover nhẹ, số căn phải dạng tabular, dòng tổng ở footer.
+  Bọc trong <code>.wb-card</code> để có nền + bo góc + đổ bóng.</p>
+</div>
+
+<div class="doc-note">
+  <span>🎨</span>
+  <div>Các <b>nhãn (#)</b> và <b>trạng thái</b> có màu dưới đây hiển thị đúng ở <b>cả Light lẫn Dark</b>.
+  Bấm nút <b>Theme</b> (góc phải) để đổi chế độ, hoặc kéo xuống mục <b>“So sánh Light &amp; Dark”</b> ở cuối trang
+  để thấy cả hai cạnh nhau mà không cần bật đổi.</div>
+</div>
+
+<section class="doc-sec">
+  <h3>Giao dịch <span class="wb-cap wb-cap--solid wb-cap--sm">Hero</span></h3>
+  <p class="doc-sec__desc">Bảng chủ lực: capsule phân loại, cột nhãn <code>#</code>, thu (xanh)/chi (trung tính),
+  trạng thái đủ tone (success/warning/danger/info), và dòng tổng.</p>
+  <div class="demo">
+    <div class="demo__stage">
+      <div class="wb-card">
+        <div class="wb-table-head">
+          <div>
+            <h4 class="wb-table-head__title">Giao dịch gần đây</h4>
+            <p class="wb-table-head__sub">Tháng 7, 2026 · 6 giao dịch</p>
+          </div>
+          <div class="wb-table-head__actions">
+            <span class="wb-cap wb-cap--outline">Tháng này</span>
+            <span class="wb-cap wb-cap--elevated">Xuất CSV</span>
+          </div>
+        </div>
+        <div class="wb-table-scroll">
+          <table class="wb-table">
+            <thead>
+              <tr>
+                <th>Ngày</th><th>Nội dung</th><th>Danh mục</th><th>Nhãn</th>
+                <th class="wb-num">Số tiền</th><th>Trạng thái</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="wb-cell-muted">14/07</td>
+                <td><span class="wb-cell-strong">Lương tháng 7</span><span class="wb-cell-sub">Công ty ABC</span></td>
+                <td><span class="wb-cap">Thu nhập</span></td>
+                <td><div class="wb-tags"><span class="wb-tag wb-tag--info">dinh-ky</span><span class="wb-tag">luong</span></div></td>
+                <td class="wb-num wb-num--pos">+25.000.000&nbsp;₫</td>
+                <td><span class="wb-cap wb-cap--success"><span class="wb-cap__dot"></span> Đã nhận</span></td>
+              </tr>
+              <tr>
+                <td class="wb-cell-muted">13/07</td>
+                <td><span class="wb-cell-strong">Siêu thị WinMart</span><span class="wb-cell-sub">Đi chợ tuần</span></td>
+                <td><span class="wb-cap">Ăn uống</span></td>
+                <td><div class="wb-tags"><span class="wb-tag">hang-ngay</span></div></td>
+                <td class="wb-num wb-num--strong">−1.280.000&nbsp;₫</td>
+                <td><span class="wb-cap wb-cap--success"><span class="wb-cap__dot"></span> Hoàn tất</span></td>
+              </tr>
+              <tr>
+                <td class="wb-cell-muted">12/07</td>
+                <td><span class="wb-cell-strong">Tiền nhà</span><span class="wb-cell-sub">Kỳ tháng 7</span></td>
+                <td><span class="wb-cap">Nhà ở</span></td>
+                <td><div class="wb-tags"><span class="wb-tag">co-dinh</span><span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#7c3aed">gia-dinh</span></div></td>
+                <td class="wb-num wb-num--strong">−6.500.000&nbsp;₫</td>
+                <td><span class="wb-cap wb-cap--warning"><span class="wb-cap__dot"></span> Chờ xác nhận</span></td>
+              </tr>
+              <tr>
+                <td class="wb-cell-muted">11/07</td>
+                <td><span class="wb-cell-strong">Netflix</span><span class="wb-cell-sub">Gói Premium</span></td>
+                <td><span class="wb-cap">Giải trí</span></td>
+                <td><div class="wb-tags"><span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#db2777">giai-tri</span></div></td>
+                <td class="wb-num wb-num--strong">−260.000&nbsp;₫</td>
+                <td><span class="wb-cap wb-cap--danger wb-cap--solid">Thất bại</span></td>
+              </tr>
+              <tr>
+                <td class="wb-cell-muted">10/07</td>
+                <td><span class="wb-cell-strong">Mua chứng chỉ quỹ</span><span class="wb-cell-sub">VN-Index ETF</span></td>
+                <td><span class="wb-cap">Đầu tư</span></td>
+                <td><div class="wb-tags"><span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#d97706">dau-tu</span></div></td>
+                <td class="wb-num wb-num--strong">−12.000.000&nbsp;₫</td>
+                <td><span class="wb-cap wb-cap--info"><span class="wb-cap__dot"></span> Đang xử lý</span></td>
+              </tr>
+              <tr>
+                <td class="wb-cell-muted">09/07</td>
+                <td><span class="wb-cell-strong">Hoàn tiền Shopee</span><span class="wb-cell-sub">Huỷ đơn</span></td>
+                <td><span class="wb-cap">Hoàn tiền</span></td>
+                <td><div class="wb-tags"><span class="wb-tag wb-tag--success">hoan-tien</span></div></td>
+                <td class="wb-num wb-num--pos">+180.000&nbsp;₫</td>
+                <td><span class="wb-cap wb-cap--success"><span class="wb-cap__dot"></span> Đã nhận</span></td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr><td colspan="4">Ròng trong kỳ</td><td class="wb-num wb-num--pos">+5.140.000&nbsp;₫</td><td></td></tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;td&gt;&lt;span class="wb-cap"&gt;Ăn uống&lt;/span&gt;&lt;/td&gt;                &lt;!-- phân loại: xám --&gt;
+&lt;td&gt;
+  &lt;div class="wb-tags"&gt;
+    &lt;span class="wb-tag wb-tag--info"&gt;dinh-ky&lt;/span&gt;
+    &lt;span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#7c3aed"&gt;gia-dinh&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/td&gt;
+&lt;td class="wb-num wb-num--pos"&gt;+25.000.000 ₫&lt;/td&gt;    &lt;!-- thu: xanh --&gt;
+&lt;td&gt;&lt;span class="wb-cap wb-cap--danger wb-cap--solid"&gt;Thất bại&lt;/span&gt;&lt;/td&gt;</code></pre></div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>So sánh Light &amp; Dark</h3>
+  <p class="doc-sec__desc">Cùng một bảng mini render ở cả hai chế độ — thấy ngay nhãn/trạng thái màu ở chế độ còn lại mà không cần chuyển theme.</p>
+  <div class="dual" data-dual data-pad="14px">
+    <template>
+      <div class="wb-card">
+        <div class="wb-table-scroll">
+          <table class="wb-table wb-table--compact">
+            <thead><tr><th>Nội dung</th><th>Nhãn</th><th class="wb-num">Số tiền</th><th>Trạng thái</th></tr></thead>
+            <tbody>
+              <tr>
+                <td class="wb-cell-strong">Lương tháng 7</td>
+                <td><span class="wb-tag wb-tag--info">dinh-ky</span></td>
+                <td class="wb-num wb-num--pos">+25.000.000&nbsp;₫</td>
+                <td><span class="wb-cap wb-cap--success"><span class="wb-cap__dot"></span> Đã nhận</span></td>
+              </tr>
+              <tr>
+                <td class="wb-cell-strong">Netflix</td>
+                <td><span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#db2777">giai-tri</span></td>
+                <td class="wb-num wb-num--strong">−260.000&nbsp;₫</td>
+                <td><span class="wb-cap wb-cap--danger wb-cap--solid">Thất bại</span></td>
+              </tr>
+              <tr>
+                <td class="wb-cell-strong">Tiền nhà</td>
+                <td><span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#7c3aed">gia-dinh</span></td>
+                <td class="wb-num wb-num--strong">−6.500.000&nbsp;₫</td>
+                <td><span class="wb-cap wb-cap--warning"><span class="wb-cap__dot"></span> Chờ</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </template>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Cơ bản</h3>
+  <p class="doc-sec__desc">Bảng sạch cho danh sách tài khoản/ danh mục đơn giản.</p>
+  <div class="demo">
+    <div class="demo__stage">
+      <div class="wb-card">
+        <div class="wb-table-scroll">
+          <table class="wb-table">
+            <thead><tr><th>Tài khoản</th><th>Loại</th><th class="wb-num">Số dư</th></tr></thead>
+            <tbody>
+              <tr><td class="wb-cell-strong">Vietcombank</td><td><span class="wb-cap">Ngân hàng</span></td><td class="wb-num wb-num--strong">42.850.000&nbsp;₫</td></tr>
+              <tr><td class="wb-cell-strong">Ví Momo</td><td><span class="wb-cap">Ví điện tử</span></td><td class="wb-num wb-num--strong">1.240.000&nbsp;₫</td></tr>
+              <tr><td class="wb-cell-strong">Tiền mặt</td><td><span class="wb-cap">Tiền mặt</span></td><td class="wb-num wb-num--strong">3.500.000&nbsp;₫</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-card"&gt;
+  &lt;div class="wb-table-scroll"&gt;
+    &lt;table class="wb-table"&gt;
+      &lt;thead&gt;&lt;tr&gt;&lt;th&gt;Tài khoản&lt;/th&gt;&lt;th&gt;Loại&lt;/th&gt;&lt;th class="wb-num"&gt;Số dư&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+      &lt;tbody&gt;…&lt;/tbody&gt;
+    &lt;/table&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Biến thể</h3>
+  <p class="doc-sec__desc">Thêm modifier: <code>--striped</code>, <code>--compact</code>, <code>--bordered</code>. Kết hợp tùy ý.</p>
+
+  <div class="doc-block">
+    <h4>Striped + Compact</h4>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="wb-card">
+          <div class="wb-table-scroll">
+            <table class="wb-table wb-table--striped wb-table--compact">
+              <thead><tr><th>Danh mục</th><th class="wb-num">Ngân sách</th><th class="wb-num">Đã chi</th><th class="wb-num">Còn lại</th></tr></thead>
+              <tbody>
+                <tr><td>Ăn uống</td><td class="wb-num">5.000.000</td><td class="wb-num">3.280.000</td><td class="wb-num wb-num--pos">1.720.000</td></tr>
+                <tr><td>Di chuyển</td><td class="wb-num">1.500.000</td><td class="wb-num">1.650.000</td><td class="wb-num wb-num--neg">−150.000</td></tr>
+                <tr><td>Giải trí</td><td class="wb-num">1.000.000</td><td class="wb-num">260.000</td><td class="wb-num wb-num--pos">740.000</td></tr>
+                <tr><td>Nhà ở</td><td class="wb-num">6.500.000</td><td class="wb-num">6.500.000</td><td class="wb-num">0</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;table class="wb-table wb-table--striped wb-table--compact"&gt; … &lt;/table&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Bordered</h4>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="wb-card">
+          <div class="wb-table-scroll">
+            <table class="wb-table wb-table--bordered wb-table--compact">
+              <thead><tr><th>Mã</th><th>Hạng mục</th><th class="wb-num">Giá trị</th></tr></thead>
+              <tbody>
+                <tr><td class="wb-cell-muted">#001</td><td>Cổ phiếu</td><td class="wb-num">120.000.000</td></tr>
+                <tr><td class="wb-cell-muted">#002</td><td>Vàng</td><td class="wb-num">45.000.000</td></tr>
+                <tr><td class="wb-cell-muted">#003</td><td>Tiền gửi</td><td class="wb-num">80.000.000</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;table class="wb-table wb-table--bordered wb-table--compact"&gt; … &lt;/table&gt;</code></pre></div>
+    </div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Sticky header (cuộn)</h3>
+  <p class="doc-sec__desc">Thêm <code>--sticky</code> và giới hạn chiều cao của <code>.wb-table-scroll</code>. Header dính khi cuộn.</p>
+  <div class="demo demo--plain">
+    <div class="demo__stage">
+      <div class="wb-card">
+        <div class="wb-table-scroll" style="max-height:240px;">
+          <table class="wb-table wb-table--sticky wb-table--compact">
+            <thead><tr><th>Ngày</th><th>Nội dung</th><th class="wb-num">Số tiền</th></tr></thead>
+            <tbody data-sticky-fill><!-- filled by app.js --></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-table-scroll" style="max-height:240px;"&gt;
+  &lt;table class="wb-table wb-table--sticky"&gt; … &lt;/table&gt;
+&lt;/div&gt;</code></pre></div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Công nợ — dùng màu có chủ đích</h3>
+  <p class="doc-sec__desc">Ví dụ khi màu <em>đáng</em> dùng: hàng quá hạn/nợ xấu nền đỏ rất nhạt;
+  sắp đến hạn vàng; đã trả xanh. Phần còn lại vẫn trung tính.</p>
+  <div class="demo">
+    <div class="demo__stage">
+      <div class="wb-card">
+        <div class="wb-table-head">
+          <div>
+            <h4 class="wb-table-head__title">Khoản phải thu</h4>
+            <p class="wb-table-head__sub">Theo dõi nợ &amp; hạn thanh toán</p>
+          </div>
+          <div class="wb-table-head__actions">
+            <span class="wb-cap wb-cap--danger">2 quá hạn</span>
+          </div>
+        </div>
+        <div class="wb-table-scroll">
+          <table class="wb-table">
+            <thead><tr><th>Người vay</th><th>Hạn trả</th><th class="wb-num">Số tiền</th><th>Trạng thái</th></tr></thead>
+            <tbody>
+              <tr class="wb-row--danger">
+                <td class="wb-cell-strong">Nguyễn Văn A</td><td class="wb-cell-muted">01/06/2026</td>
+                <td class="wb-num wb-num--strong">5.000.000&nbsp;₫</td>
+                <td><span class="wb-cap wb-cap--danger wb-cap--solid">Quá hạn 43 ngày</span></td>
+              </tr>
+              <tr class="wb-row--danger">
+                <td class="wb-cell-strong">Trần Thị B</td><td class="wb-cell-muted">20/06/2026</td>
+                <td class="wb-num wb-num--strong">1.800.000&nbsp;₫</td>
+                <td><span class="wb-cap wb-cap--danger">Nợ xấu</span></td>
+              </tr>
+              <tr class="wb-row--warning">
+                <td class="wb-cell-strong">Lê Văn C</td><td class="wb-cell-muted">18/07/2026</td>
+                <td class="wb-num wb-num--strong">2.500.000&nbsp;₫</td>
+                <td><span class="wb-cap wb-cap--warning"><span class="wb-cap__dot"></span> Còn 4 ngày</span></td>
+              </tr>
+              <tr class="wb-row--success">
+                <td class="wb-cell-strong">Phạm Thị D</td><td class="wb-cell-muted">05/07/2026</td>
+                <td class="wb-num">3.200.000&nbsp;₫</td>
+                <td><span class="wb-cap wb-cap--success"><span class="wb-cap__dot"></span> Đã trả</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;tr class="wb-row--danger"&gt; … &lt;span class="wb-cap wb-cap--danger wb-cap--solid"&gt;Quá hạn 43 ngày&lt;/span&gt; … &lt;/tr&gt;
+&lt;tr class="wb-row--success"&gt; … &lt;span class="wb-cap wb-cap--success"&gt;Đã trả&lt;/span&gt; … &lt;/tr&gt;</code></pre></div>
+  </div>
+</section>

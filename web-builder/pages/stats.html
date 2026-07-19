@@ -1,0 +1,64 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Hiển thị dữ liệu</p>
+  <h2>Stat / KPI cards</h2>
+  <p>Lõi của dashboard tài chính. Thẻ trung tính; màu duy nhất là <em>delta</em> (tăng = xanh, giảm = đỏ)
+  vì hướng thay đổi mới mang ý nghĩa. Xếp nhiều thẻ trong <code>.wb-stat-grid</code>.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="demo">
+    <div class="demo__stage">
+      <div class="wb-stat-grid">
+        <div class="wb-stat">
+          <div class="wb-stat__top">
+            <span class="wb-stat__label">Tổng số dư</span>
+            <span class="wb-stat__icon" aria-hidden="true"><span class="wb-ico wb-ico--sm">account_balance_wallet</span></span>
+          </div>
+          <div class="wb-stat__value">47.590.000&nbsp;₫</div>
+          <div class="wb-stat__foot"><span class="wb-stat__delta wb-stat__delta--up">↑ 12,4%</span> so với tháng trước</div>
+        </div>
+        <div class="wb-stat">
+          <div class="wb-stat__top">
+            <span class="wb-stat__label">Thu nhập tháng 7</span>
+            <span class="wb-stat__icon" aria-hidden="true"><span class="wb-ico wb-ico--sm">payments</span></span>
+          </div>
+          <div class="wb-stat__value">29.200.000&nbsp;₫</div>
+          <div class="wb-stat__foot"><span class="wb-stat__delta wb-stat__delta--up">↑ 8,1%</span> so với TB 6 tháng</div>
+        </div>
+        <div class="wb-stat">
+          <div class="wb-stat__top">
+            <span class="wb-stat__label">Chi tiêu tháng 7</span>
+            <span class="wb-stat__icon" aria-hidden="true"><span class="wb-ico wb-ico--sm">shopping_cart</span></span>
+          </div>
+          <div class="wb-stat__value">11.840.000&nbsp;₫</div>
+          <div class="wb-stat__foot"><span class="wb-stat__delta wb-stat__delta--down">↓ 3,2%</span> so với tháng trước</div>
+        </div>
+        <div class="wb-stat">
+          <div class="wb-stat__top">
+            <span class="wb-stat__label">Nợ phải thu</span>
+            <span class="wb-stat__icon" aria-hidden="true"><span class="wb-ico wb-ico--sm">schedule</span></span>
+          </div>
+          <div class="wb-stat__value">6.800.000&nbsp;₫</div>
+          <div class="wb-stat__foot"><span class="wb-cap wb-cap--danger wb-cap--sm">2 quá hạn</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-stat-grid"&gt;
+  &lt;div class="wb-stat"&gt;
+    &lt;div class="wb-stat__top"&gt;
+      &lt;span class="wb-stat__label"&gt;Tổng số dư&lt;/span&gt;
+      &lt;span class="wb-stat__icon"&gt;&lt;span class="wb-ico wb-ico--sm"&gt;account_balance_wallet&lt;/span&gt;&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class="wb-stat__value"&gt;47.590.000 ₫&lt;/div&gt;
+    &lt;div class="wb-stat__foot"&gt;
+      &lt;span class="wb-stat__delta wb-stat__delta--up"&gt;↑ 12,4%&lt;/span&gt; so với tháng trước
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+  </div>
+  <div class="doc-note">
+    <span>💡</span>
+    <div><code>__foot</code> có thể chứa delta, một caption thường, hoặc một capsule (vd danger “2 quá hạn”).
+    Giá trị luôn ở dạng <code>tabular-nums</code> (class đã bật sẵn).</div>
+  </div>
+</section>

@@ -1,0 +1,159 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Bố cục &amp; tiện ích</p>
+  <h2>Sticky</h2>
+  <p>Tiện ích bố cục để <b>ghim một phần tử theo cạnh trên hoặc dưới</b> khi cuộn — thanh công cụ, thẻ,
+  nút hành động hay menu bám mép trong lúc phần còn lại trôi qua. Chạy trên <code>position: sticky</code> nên
+  phần tử vẫn nằm trong luồng rồi mới dính lại. Đặt khoảng hở bằng <code>--wb-sticky-gap</code> (mặc định 0).
+  Cần một vùng cuộn / trang đủ dài mới thấy nó ghim.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>Ghim mép trên</h4>
+    <p class="doc-block__desc"><code>.wb-sticky</code> dính vào cạnh trên của vùng cuộn. Cho nền (<code>--wb-surface</code>) để nội dung
+    không lộ ra sau khi trôi bên dưới. Cuộn ô dưới để thấy tiêu đề ở lại.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-scroll-y" style="max-height:240px;border:var(--wb-bw) solid var(--wb-border);border-radius:var(--wb-radius)">
+          <div class="wb-sticky" style="background:var(--wb-surface);border-bottom:var(--wb-bw) solid var(--wb-border);padding:12px 16px">
+            <div class="wb-cluster wb-cluster--between">
+              <b>Giao dịch tháng 7</b>
+              <span class="wb-cap wb-cap--tinted">42 mục</span>
+            </div>
+          </div>
+          <div class="wb-stack" style="gap:0">
+            <div class="wb-cluster wb-cluster--between" style="padding:12px 16px;border-bottom:var(--wb-bw) solid var(--wb-border)"><span>Cà phê sữa đá</span><span>−45.000</span></div>
+            <div class="wb-cluster wb-cluster--between" style="padding:12px 16px;border-bottom:var(--wb-bw) solid var(--wb-border)"><span>Grab tới công ty</span><span>−52.000</span></div>
+            <div class="wb-cluster wb-cluster--between" style="padding:12px 16px;border-bottom:var(--wb-bw) solid var(--wb-border)"><span>Lương tháng 7</span><span style="color:var(--wb-success-text)">+18.000.000</span></div>
+            <div class="wb-cluster wb-cluster--between" style="padding:12px 16px;border-bottom:var(--wb-bw) solid var(--wb-border)"><span>Tiền nhà</span><span>−4.500.000</span></div>
+            <div class="wb-cluster wb-cluster--between" style="padding:12px 16px;border-bottom:var(--wb-bw) solid var(--wb-border)"><span>Siêu thị WinMart</span><span>−399.600</span></div>
+            <div class="wb-cluster wb-cluster--between" style="padding:12px 16px;border-bottom:var(--wb-bw) solid var(--wb-border)"><span>Netflix</span><span>−260.000</span></div>
+            <div class="wb-cluster wb-cluster--between" style="padding:12px 16px;border-bottom:var(--wb-bw) solid var(--wb-border)"><span>Ăn trưa</span><span>−65.000</span></div>
+            <div class="wb-cluster wb-cluster--between" style="padding:12px 16px"><span>Tiền điện</span><span>−1.086.400</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-scroll-y" style="max-height:240px"&gt;
+  &lt;div class="wb-sticky" style="background:var(--wb-surface);border-bottom:1px solid var(--wb-border);padding:12px 16px"&gt;
+    &lt;b&gt;Giao dịch tháng 7&lt;/b&gt;
+  &lt;/div&gt;
+  &lt;!-- danh sách dài --&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Ghim mép dưới (thanh hành động)</h4>
+    <p class="doc-block__desc"><code>.wb-sticky--bottom</code> dính vào cạnh dưới — hợp cho thanh nút “Lưu / Huỷ” luôn thấy được khi cuộn form dài.</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="wb-scroll-y" style="max-height:240px;border:var(--wb-bw) solid var(--wb-border);border-radius:var(--wb-radius)">
+          <div class="wb-stack" style="padding:16px;gap:14px">
+            <div class="wb-field"><label class="wb-label">Tên giao dịch</label><input class="wb-input" value="Thanh toán nhà cung cấp" /></div>
+            <div class="wb-field"><label class="wb-label">Số tiền</label><input class="wb-input" value="12.500.000 ₫" /></div>
+            <div class="wb-field"><label class="wb-label">Ghi chú</label><div class="wb-textarea-wrap"><textarea class="wb-textarea" rows="4">Đợt 2/3 hợp đồng #A-118</textarea></div></div>
+            <div class="wb-field"><label class="wb-label">Danh mục</label><input class="wb-input" value="Chi phí vận hành" /></div>
+            <div class="wb-field"><label class="wb-label">Ngày</label><input class="wb-input" data-mask="date" inputmode="numeric" value="16/07/2026" /></div>
+          </div>
+          <div class="wb-sticky--bottom wb-sticky" style="background:var(--wb-surface);border-top:var(--wb-bw) solid var(--wb-border);padding:12px 16px">
+            <div class="wb-cluster wb-cluster--end" style="gap:8px">
+              <button class="wb-btn wb-btn--ghost wb-btn--sm">Huỷ</button>
+              <button class="wb-btn wb-btn--sm">Lưu giao dịch</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-sticky wb-sticky--bottom" style="background:var(--wb-surface);border-top:1px solid var(--wb-border);padding:12px 16px"&gt;
+  &lt;div class="wb-cluster wb-cluster--end"&gt;
+    &lt;button class="wb-btn wb-btn--ghost wb-btn--sm"&gt;Huỷ&lt;/button&gt;
+    &lt;button class="wb-btn wb-btn--sm"&gt;Lưu giao dịch&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Tóm tắt bám theo nội dung (brief)</h4>
+    <p class="doc-block__desc">Cột nội dung dài cuộn, còn <b>thẻ tóm tắt</b> bên cạnh dùng <code>.wb-sticky</code> +
+    <code>.wb-self--top</code> (để ô lưới không giãn cao) nên ở lại trong tầm mắt — kiểu tóm tắt số liệu của một
+    báo cáo / đơn hàng. Cuộn ô để thấy nó bám theo.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-scroll-y" style="max-height:300px;border:var(--wb-bw) solid var(--wb-border);border-radius:var(--wb-radius);padding:18px">
+          <div class="wb-grid" style="grid-template-columns:1fr 188px;gap:22px">
+            <div class="wb-stack" style="gap:12px">
+              <h4 style="margin:0">Báo cáo chi tiêu · Tháng 7</h4>
+              <p style="font-size:13.5px;color:var(--wb-fg-muted);line-height:1.7;margin:0">Tổng chi tháng này tăng 6% so với tháng trước, chủ yếu ở nhóm ăn uống và đi lại. Ba khoản lớn nhất chiếm 61% tổng chi.</p>
+              <div class="wb-stack" style="gap:0">
+                <div class="wb-cluster wb-cluster--between" style="padding:9px 0;border-bottom:var(--wb-bw) solid var(--wb-border)"><span>Tiền nhà</span><span class="wb-num">4.500.000</span></div>
+                <div class="wb-cluster wb-cluster--between" style="padding:9px 0;border-bottom:var(--wb-bw) solid var(--wb-border)"><span>Ăn uống</span><span class="wb-num">3.180.000</span></div>
+                <div class="wb-cluster wb-cluster--between" style="padding:9px 0;border-bottom:var(--wb-bw) solid var(--wb-border)"><span>Đi lại</span><span class="wb-num">1.940.000</span></div>
+                <div class="wb-cluster wb-cluster--between" style="padding:9px 0;border-bottom:var(--wb-bw) solid var(--wb-border)"><span>Siêu thị</span><span class="wb-num">1.560.000</span></div>
+                <div class="wb-cluster wb-cluster--between" style="padding:9px 0;border-bottom:var(--wb-bw) solid var(--wb-border)"><span>Hoá đơn dịch vụ</span><span class="wb-num">1.346.400</span></div>
+                <div class="wb-cluster wb-cluster--between" style="padding:9px 0;border-bottom:var(--wb-bw) solid var(--wb-border)"><span>Giải trí</span><span class="wb-num">920.000</span></div>
+                <div class="wb-cluster wb-cluster--between" style="padding:9px 0"><span>Khác</span><span class="wb-num">1.294.000</span></div>
+              </div>
+              <p style="font-size:13.5px;color:var(--wb-fg-muted);line-height:1.7;margin:0">Gợi ý: đặt hạn mức cho nhóm ăn uống để giữ mức chi ổn định ở các tháng tới.</p>
+            </div>
+            <div class="wb-sticky wb-self--top">
+              <div class="wb-card"><div class="wb-card__body">
+                <div class="wb-cell-muted" style="font-size:11px;text-transform:uppercase;letter-spacing:.05em">Tóm tắt</div>
+                <div class="wb-stack" style="gap:9px;margin-top:10px">
+                  <div class="wb-cluster wb-cluster--between"><span class="wb-cell-muted">Thu</span><span class="wb-num wb-num--pos">+32.000.000</span></div>
+                  <div class="wb-cluster wb-cluster--between"><span class="wb-cell-muted">Chi</span><span class="wb-num wb-num--neg">−14.740.400</span></div>
+                  <hr class="wb-divider" style="margin:3px 0" />
+                  <div class="wb-cluster wb-cluster--between"><b>Còn lại</b><b class="wb-num">17.259.600</b></div>
+                </div>
+              </div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-grid" style="grid-template-columns:1fr 188px;gap:22px"&gt;
+  &lt;div&gt;… nội dung dài …&lt;/div&gt;
+
+  &lt;!-- brief bám theo: sticky + self--top để ô không giãn cao --&gt;
+  &lt;div class="wb-sticky wb-self--top"&gt;
+    &lt;div class="wb-card"&gt;&lt;div class="wb-card__body"&gt; … tóm tắt … &lt;/div&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Tiêu đề nhóm dính (danh sách dài)</h4>
+    <p class="doc-block__desc">Nhiều <code>.wb-sticky</code> trong một danh sách: mỗi tiêu đề nhóm dính ở mép trên cho tới khi
+    nhóm sau đẩy nó lên — kiểu danh sách giao dịch gộp theo ngày. Cuộn để thấy tiêu đề đổi.</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="wb-scroll-y" style="max-height:280px;border:var(--wb-bw) solid var(--wb-border);border-radius:var(--wb-radius)">
+          <div class="wb-sticky" style="background:var(--wb-surface-2);padding:7px 16px;font-size:12px;font-weight:700;letter-spacing:.02em;color:var(--wb-fg-muted);border-bottom:var(--wb-bw) solid var(--wb-border)">Hôm nay · 16/07</div>
+          <div class="wb-cluster wb-cluster--between" style="padding:12px 16px;border-bottom:var(--wb-bw) solid var(--wb-border)"><span>Cà phê sữa đá</span><span class="wb-num">−45.000</span></div>
+          <div class="wb-cluster wb-cluster--between" style="padding:12px 16px;border-bottom:var(--wb-bw) solid var(--wb-border)"><span>Grab tới công ty</span><span class="wb-num">−52.000</span></div>
+          <div class="wb-cluster wb-cluster--between" style="padding:12px 16px;border-bottom:var(--wb-bw) solid var(--wb-border)"><span>Ăn trưa văn phòng</span><span class="wb-num">−65.000</span></div>
+          <div class="wb-sticky" style="background:var(--wb-surface-2);padding:7px 16px;font-size:12px;font-weight:700;letter-spacing:.02em;color:var(--wb-fg-muted);border-bottom:var(--wb-bw) solid var(--wb-border)">Hôm qua · 15/07</div>
+          <div class="wb-cluster wb-cluster--between" style="padding:12px 16px;border-bottom:var(--wb-bw) solid var(--wb-border)"><span>Lương tháng 7</span><span class="wb-num wb-num--pos">+18.000.000</span></div>
+          <div class="wb-cluster wb-cluster--between" style="padding:12px 16px;border-bottom:var(--wb-bw) solid var(--wb-border)"><span>Siêu thị WinMart</span><span class="wb-num">−399.600</span></div>
+          <div class="wb-cluster wb-cluster--between" style="padding:12px 16px;border-bottom:var(--wb-bw) solid var(--wb-border)"><span>Netflix</span><span class="wb-num">−260.000</span></div>
+          <div class="wb-sticky" style="background:var(--wb-surface-2);padding:7px 16px;font-size:12px;font-weight:700;letter-spacing:.02em;color:var(--wb-fg-muted);border-bottom:var(--wb-bw) solid var(--wb-border)">14/07</div>
+          <div class="wb-cluster wb-cluster--between" style="padding:12px 16px;border-bottom:var(--wb-bw) solid var(--wb-border)"><span>Tiền nhà</span><span class="wb-num">−4.500.000</span></div>
+          <div class="wb-cluster wb-cluster--between" style="padding:12px 16px;border-bottom:var(--wb-bw) solid var(--wb-border)"><span>Tiền điện</span><span class="wb-num">−1.086.400</span></div>
+          <div class="wb-cluster wb-cluster--between" style="padding:12px 16px"><span>Internet FPT</span><span class="wb-num">−220.000</span></div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-scroll-y" style="max-height:280px"&gt;
+  &lt;div class="wb-sticky" style="background:var(--wb-surface-2);…"&gt;Hôm nay · 16/07&lt;/div&gt;
+  &lt;!-- giao dịch trong ngày --&gt;
+  &lt;div class="wb-sticky" style="…"&gt;Hôm qua · 15/07&lt;/div&gt;
+  &lt;!-- … --&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-note">
+    <span class="wb-ico" style="color:var(--wb-info-text)">info</span>
+    <div>Dưới một thanh app cố định (navbar), đặt khoảng hở đúng chiều cao navbar:
+    <code>style="--wb-sticky-gap:56px"</code>. <code>z-index</code> của <code>.wb-sticky</code> (20) nằm dưới navbar (30)
+    nên nó nằm dưới app bar chứ không đè lên. Navbar cả trang thì đã có sẵn <code>.wb-navbar--sticky</code>.</div>
+  </div>
+</section>

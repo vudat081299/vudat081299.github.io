@@ -1,0 +1,89 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Nhập liệu</p>
+  <h2>Checkbox &amp; Radio</h2>
+  <p>Vẽ trực tiếp trên input gốc bằng <code>appearance:none</code> — vẫn chuẩn accessibility (focus/bàn phím/form nguyên vẹn):
+  ô &amp; vòng viền đen, khi chọn <b>đặc đen</b> + tick/chấm trắng (tự đảo trắng ở dark). Radio có 3 kiểu vòng chọn
+  (mặc định · <code>--ring</code> · <code>--solid</code>) và cả hai có bản <b>khoá</b> (<code>--locked</code>).
+  Độ dày viền chỉnh qua <code>--wb-check-bw</code>, bo góc theo token. Bọc trong <code>.wb-check</code> / <code>.wb-radio</code> để căn nhãn.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>Checkbox</h4>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-stack" style="--wb-stack-gap:12px">
+          <label class="wb-check"><input type="checkbox" checked /> Giao dịch định kỳ</label>
+          <label class="wb-check"><input type="checkbox" /> Gửi email nhắc nợ</label>
+          <label class="wb-check"><input type="checkbox" disabled /> Tuỳ chọn bị khoá</label>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;label class="wb-check"&gt;&lt;input type="checkbox" checked /&gt; Giao dịch định kỳ&lt;/label&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Radio</h4>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-cluster wb-cluster--loose">
+          <label class="wb-radio"><input type="radio" name="tt" checked /> Chi</label>
+          <label class="wb-radio"><input type="radio" name="tt" /> Thu</label>
+          <label class="wb-radio"><input type="radio" name="tt" /> Chuyển khoản</label>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;label class="wb-radio"&gt;&lt;input type="radio" name="tt" checked /&gt; Chi&lt;/label&gt;
+&lt;label class="wb-radio"&gt;&lt;input type="radio" name="tt" /&gt; Thu&lt;/label&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Radio — ba kiểu vòng chọn</h4>
+    <p class="doc-block__desc"><b>Mặc định</b>: vòng đặc đen + chấm trắng. <code>--ring</code>: viền đen, <b>ruột trắng</b>,
+    chấm đen ở giữa (kiểu cổ điển). <code>--solid</code>: <b>đen đặc hoàn toàn</b>, không chấm. (Tự đảo trắng ở dark.)</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-stack" style="--wb-stack-gap:14px">
+          <div class="wb-cluster wb-cluster--loose">
+            <label class="wb-radio"><input type="radio" name="r1" checked /> Mặc định (đặc + chấm trắng)</label>
+            <label class="wb-radio"><input type="radio" name="r1" /> Chưa chọn</label>
+          </div>
+          <div class="wb-cluster wb-cluster--loose">
+            <label class="wb-radio wb-radio--ring"><input type="radio" name="r2" checked /> <code>--ring</code> (cổ điển)</label>
+            <label class="wb-radio wb-radio--ring"><input type="radio" name="r2" /> Chưa chọn</label>
+          </div>
+          <div class="wb-cluster wb-cluster--loose">
+            <label class="wb-radio wb-radio--solid"><input type="radio" name="r3" checked /> <code>--solid</code> (đen đặc)</label>
+            <label class="wb-radio wb-radio--solid"><input type="radio" name="r3" /> Chưa chọn</label>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;label class="wb-radio wb-radio--ring"&gt;&lt;input type="radio" name="r" checked /&gt; Ring&lt;/label&gt;
+&lt;label class="wb-radio wb-radio--solid"&gt;&lt;input type="radio" name="r" checked /&gt; Solid&lt;/label&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Khoá (locked) — thử đổi sẽ bị chặn &amp; lắc</h4>
+    <p class="doc-block__desc">Khác “vô hiệu” (<code>disabled</code> — trơ &amp; mờ, không bấm được): bản <b>khoá</b> vẫn giữ
+    <b>giá trị thật</b> nhưng không cho đổi; ổ khoá nhỏ nằm <b>cạnh</b> ô, <b>lắc</b> khi bấm. Dùng chung với
+    <code>--ring</code>/<code>--solid</code> tuỳ ý.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-stack" style="--wb-stack-gap:12px">
+          <label class="wb-check wb-check--locked"><input type="checkbox" checked /> Đồng bộ tự động (đã khoá) <span class="wb-check__lock" aria-hidden="true">lock</span></label>
+          <label class="wb-radio wb-radio--locked"><input type="radio" name="rl" checked /> Gói hiện tại (đã khoá) <span class="wb-check__lock" aria-hidden="true">lock</span></label>
+          <label class="wb-check"><input type="checkbox" disabled /> Vô hiệu — <code>disabled</code></label>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;label class="wb-check wb-check--locked"&gt;&lt;input type="checkbox" checked /&gt; Đồng bộ tự động
+  &lt;span class="wb-check__lock" aria-hidden="true"&gt;lock&lt;/span&gt;&lt;/label&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-note">
+    <span>💡</span>
+    <div>Ô/vòng vẽ bằng <code>appearance:none</code> nên chỉnh được: <b>độ dày viền</b> qua <code>--wb-check-bw</code>
+    (Config → Viền → “Viền checkbox”) và <b>bo góc</b> theo token (Config → Kiểu góc → “Vuông sắc” cho ô vuông).</div>
+  </div>
+</section>

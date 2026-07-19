@@ -1,0 +1,114 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Bộ chọn</p>
+  <h2>Chọn giờ (time)</h2>
+  <p>Chọn giờ bằng <b>cột cuộn</b> kiểu iOS: một cột <b>giờ</b> và một cột <b>phút</b> (thêm <code>--ampm</code> để có cột
+  AM/PM 12 giờ; mặc định 24 giờ). Ô đang chọn là chip <b>đậm trung tính</b> như calendar. Mỗi cột ghép với
+  <code>.wb-scroll-y</code> để có thanh cuộn theo theme.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>24 giờ</h4>
+    <p class="doc-block__desc">Giờ <code>00–23</code>, phút theo bước <code>data-minute-step</code> (mặc định 1 phút; ở đây để 5 cho gọn).
+    Đặt sẵn giờ bằng <code>data-value="HH:MM"</code>.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-timepicker" data-timepicker data-value="09:30" data-minute-step="5">
+          <div class="wb-timepicker__col wb-scroll-y" data-tp="hour" aria-label="Giờ"></div>
+          <span class="wb-timepicker__sep">:</span>
+          <div class="wb-timepicker__col wb-scroll-y" data-tp="minute" aria-label="Phút"></div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-timepicker" data-timepicker data-value="09:30" data-minute-step="5"&gt;
+  &lt;div class="wb-timepicker__col wb-scroll-y" data-tp="hour"&gt;&lt;/div&gt;
+  &lt;span class="wb-timepicker__sep"&gt;:&lt;/span&gt;
+  &lt;div class="wb-timepicker__col wb-scroll-y" data-tp="minute"&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;!-- Các option do JS đổ vào; chọn → phát wb-time-input (xem integration.md) --&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>12 giờ AM/PM — <code>--ampm</code></h4>
+    <p class="doc-block__desc">Thêm <code>data-ampm</code>: giờ <code>1–12</code> và một cột <b>AM/PM</b>. Ở đây phút để mặc định (mỗi phút).</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-timepicker" data-timepicker data-ampm data-value="02:15 PM">
+          <div class="wb-timepicker__col wb-scroll-y" data-tp="hour" aria-label="Giờ"></div>
+          <span class="wb-timepicker__sep">:</span>
+          <div class="wb-timepicker__col wb-scroll-y" data-tp="minute" aria-label="Phút"></div>
+          <div class="wb-timepicker__col wb-scroll-y" data-tp="period" aria-label="Buổi"></div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-timepicker" data-timepicker data-ampm data-value="02:15 PM"&gt;
+  &lt;div class="wb-timepicker__col wb-scroll-y" data-tp="hour"&gt;&lt;/div&gt;
+  &lt;span class="wb-timepicker__sep"&gt;:&lt;/span&gt;
+  &lt;div class="wb-timepicker__col wb-scroll-y" data-tp="minute"&gt;&lt;/div&gt;
+  &lt;div class="wb-timepicker__col wb-scroll-y" data-tp="period"&gt;&lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Gõ hoặc chọn (field + popover)</h4>
+    <p class="doc-block__desc">Cùng pattern như calendar: ô nhập <b>gõ được</b> (tự định dạng <code>HH:MM</code> qua <code>data-mask="time"</code>) <b>hoặc</b> bấm icon đồng hồ mở
+    <code>.wb-popover</code> chứa time picker. Giờ chọn điền vào ô (<code>data-picker-out</code>); popover <b>không</b> tự đóng để còn chỉnh cả giờ lẫn phút.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <span class="wb-popover wb-popover--bottom">
+          <span class="wb-input-group" style="width:176px">
+            <input class="wb-input" data-picker-out data-mask="time" inputmode="numeric" placeholder="HH:MM" value="09:30" aria-label="Giờ (gõ hoặc chọn)" />
+            <button type="button" class="wb-input-group__btn" data-pop-toggle aria-label="Mở bộ chọn giờ"><span class="wb-ico wb-ico--sm">schedule</span></button>
+          </span>
+          <div class="wb-popover__panel">
+            <div class="wb-popover__arrow"></div>
+            <div class="wb-timepicker" data-timepicker data-value="09:30" data-minute-step="5">
+              <div class="wb-timepicker__col wb-scroll-y" data-tp="hour" aria-label="Giờ"></div>
+              <span class="wb-timepicker__sep">:</span>
+              <div class="wb-timepicker__col wb-scroll-y" data-tp="minute" aria-label="Phút"></div>
+            </div>
+          </div>
+        </span>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="wb-popover wb-popover--bottom"&gt;
+  &lt;span class="wb-input-group"&gt;
+    &lt;input class="wb-input" data-picker-out data-mask="time" placeholder="HH:MM" value="09:30" /&gt;
+    &lt;button class="wb-input-group__btn" data-pop-toggle&gt;&lt;span class="wb-ico wb-ico--sm"&gt;schedule&lt;/span&gt;&lt;/button&gt;
+  &lt;/span&gt;
+  &lt;div class="wb-popover__panel"&gt;
+    &lt;div class="wb-popover__arrow"&gt;&lt;/div&gt;
+    &lt;div class="wb-timepicker" data-timepicker data-value="09:30"&gt;…&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/span&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Ngày + giờ (datetime)</h4>
+    <p class="doc-block__desc">Cần chọn cả <b>ngày lẫn giờ</b>? Đặt <code>.wb-calendar</code> cạnh <code>.wb-timepicker</code> bằng
+    <code>.wb-cluster</code> — hai primitive rời, ghép lại thành bộ chọn datetime.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-cluster wb-cluster--top" style="gap:10px">
+          <div class="wb-calendar" data-calendar data-value="14/07/2026">
+            <div class="wb-calendar__head">
+              <button type="button" class="wb-calendar__nav" data-cal-prev aria-label="Tháng trước"><span class="wb-ico">chevron_left</span></button>
+              <span class="wb-calendar__title"></span>
+              <button type="button" class="wb-calendar__nav" data-cal-next aria-label="Tháng sau"><span class="wb-ico">chevron_right</span></button>
+            </div>
+            <div class="wb-calendar__grid"></div>
+          </div>
+          <div class="wb-timepicker" data-timepicker data-value="14:00" data-minute-step="5">
+            <div class="wb-timepicker__col wb-scroll-y" data-tp="hour" aria-label="Giờ"></div>
+            <span class="wb-timepicker__sep">:</span>
+            <div class="wb-timepicker__col wb-scroll-y" data-tp="minute" aria-label="Phút"></div>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-cluster wb-cluster--top"&gt;
+  &lt;div class="wb-calendar" data-calendar&gt;…&lt;/div&gt;
+  &lt;div class="wb-timepicker" data-timepicker&gt;…&lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+</section>

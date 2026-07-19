@@ -1,0 +1,112 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Nhập liệu</p>
+  <h2>Switch</h2>
+  <p>Công tắc bật/tắt cho thiết lập tức thời (khác checkbox — checkbox cho lựa chọn trong form gửi đi). Track + thumb
+  trung tính, đảo màu theo theme.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>Cơ bản</h4>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-stack">
+          <label class="wb-switch"><input type="checkbox" checked /><span class="wb-switch__track"></span> Đã thanh toán</label>
+          <label class="wb-switch"><input type="checkbox" /><span class="wb-switch__track"></span> Ẩn giao dịch nhỏ</label>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;label class="wb-switch"&gt;
+  &lt;input type="checkbox" checked /&gt;
+  &lt;span class="wb-switch__track"&gt;&lt;/span&gt; Đã thanh toán
+&lt;/label&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>I/O — ký hiệu nguồn ở nền track</h4>
+    <p class="doc-block__desc">Thêm <code>--io</code>: <b>nền track</b> hiện <b>vạch “I”</b> (bật) và <b>vòng “O”</b> (tắt) như công tắc nguồn —
+    vẽ bằng <b>hình khối CSS</b>, không phải ký tự nên không lệ thuộc font. Thumb che bên đang không dùng, chỉ chừa ký hiệu đang bật.
+    Không đổi markup, chỉ thêm một class.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-stack">
+          <label class="wb-switch wb-switch--io"><input type="checkbox" checked /><span class="wb-switch__track"></span> Bật thông báo</label>
+          <label class="wb-switch wb-switch--io"><input type="checkbox" /><span class="wb-switch__track"></span> Chế độ tối giản</label>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;label class="wb-switch wb-switch--io"&gt;
+  &lt;input type="checkbox" checked /&gt;
+  &lt;span class="wb-switch__track"&gt;&lt;/span&gt; Bật thông báo
+&lt;/label&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Vô hiệu (disabled)</h4>
+    <p class="doc-block__desc">Không tương tác được: track về tông xám “trơ” (không phải màu bật/tắt), con trỏ <code>not-allowed</code>.
+    Dùng khi lựa chọn <b>tạm thời không dùng đến</b> trong ngữ cảnh này. Giữ thuộc tính <code>disabled</code> trên input.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-stack">
+          <label class="wb-switch"><input type="checkbox" checked disabled /><span class="wb-switch__track"></span> Nhận email tuần</label>
+          <label class="wb-switch"><input type="checkbox" disabled /><span class="wb-switch__track"></span> Tự động phân loại</label>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;label class="wb-switch"&gt;
+  &lt;input type="checkbox" checked disabled /&gt;
+  &lt;span class="wb-switch__track"&gt;&lt;/span&gt; Nhận email tuần
+&lt;/label&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Khoá (locked) — thử gạt sẽ bị chặn &amp; lắc</h4>
+    <p class="doc-block__desc">Khác “vô hiệu”: công tắc vẫn hiện <b>giá trị thật</b> (bật/tắt) nhưng <b>không cho đổi</b>. Ổ khoá nhỏ nằm
+    <b>cạnh</b> công tắc (mờ, sáng lên khi rê chuột); khi người dùng cố gạt, ổ khoá <b>chuyển đen (đậm) và lắc</b> rồi dịu lại — không
+    cần thêm chữ “đã khoá”. Ổ khoá tách rời công tắc nên bạn đặt trái/phải tuỳ layout. Hợp cho tính năng bị giới hạn theo gói,
+    quyền, hay điều kiện tiên quyết.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-stack">
+          <label class="wb-switch wb-switch--locked">
+            <input type="checkbox" checked />
+            <span class="wb-switch__track"></span>
+            <span class="wb-switch__lock" aria-hidden="true">lock</span>
+            Đồng bộ ngân hàng <span class="wb-cell-muted">· gói Pro</span>
+          </label>
+          <label class="wb-switch wb-switch--locked">
+            <input type="checkbox" />
+            <span class="wb-switch__track"></span>
+            <span class="wb-switch__lock" aria-hidden="true">lock</span>
+            Xuất báo cáo tự động <span class="wb-cell-muted">· cần bật đồng bộ trước</span>
+          </label>
+        </div>
+        <p class="wb-help" style="margin-top:12px">↑ Bấm thử vào công tắc — giá trị không đổi, ổ khoá lắc để báo “không sửa được”.</p>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;label class="wb-switch wb-switch--locked"&gt;
+  &lt;input type="checkbox" checked /&gt;          &lt;!-- vẫn enabled: để bắt được cú bấm --&gt;
+  &lt;span class="wb-switch__track"&gt;&lt;/span&gt;
+  &lt;span class="wb-switch__lock" aria-hidden="true"&gt;lock&lt;/span&gt;
+  Đồng bộ ngân hàng
+&lt;/label&gt;
+
+&lt;!-- Chặn thao tác + lắc ổ khoá (docs xử lý bằng 1 handler uỷ quyền) --&gt;
+document.addEventListener("click", (e) =&gt; {
+  const sw = e.target.closest(".wb-switch--locked");
+  if (!sw) return;
+  e.preventDefault();                       // huỷ việc gạt
+  sw.classList.remove("is-denied");
+  void sw.offsetWidth;                       // reflow để chạy lại animation
+  sw.classList.add("is-denied");
+  setTimeout(() =&gt; sw.classList.remove("is-denied"), 450);
+});</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-note">
+    <span>💡</span>
+    <div><b>Vô hiệu</b> vs <b>Khoá</b>: <code>disabled</code> = “giờ không dùng được” (xám, trơ). <code>--locked</code> = “có giá trị,
+    nhưng bạn không được đổi” (hiện đúng bật/tắt + ổ khoá phản hồi khi cố sửa). Trong app, để form/quyền thật sự chốt logic;
+    class này chỉ lo phần nhìn &amp; phản hồi.</div>
+  </div>
+</section>

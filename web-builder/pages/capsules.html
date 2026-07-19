@@ -1,0 +1,230 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Hiển thị dữ liệu</p>
+  <h2>Capsules / Badges</h2>
+  <p>Hai trục kết hợp tự do: <b>FILL</b> (soft · solid · outline · elevated) và
+  <b>TONE</b> (neutral · success · danger · warning · info). Mặc định là soft-xám (tầng 1).</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>Neutral — trắng/đen/xám (tầng 1, dùng nhiều nhất)</h4>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="wb-cluster">
+          <span class="wb-cap">Mặc định</span>
+          <span class="wb-cap wb-cap--elevated">Elevated · bóng xám</span>
+          <span class="wb-cap wb-cap--outline">Outline</span>
+          <span class="wb-cap wb-cap--solid">Solid</span>
+          <span class="wb-cap"><span class="wb-cap__dot"></span> Có chấm</span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="wb-cap"&gt;Mặc định&lt;/span&gt;
+&lt;span class="wb-cap wb-cap--elevated"&gt;Elevated · bóng xám&lt;/span&gt;
+&lt;span class="wb-cap wb-cap--outline"&gt;Outline&lt;/span&gt;
+&lt;span class="wb-cap wb-cap--solid"&gt;Solid&lt;/span&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Nét đứt — tuỳ chọn / nháp / thêm-mới (<code>--dashed</code>)</h4>
+    <p class="doc-block__desc">Viền gạch đứt đọc là <b>“chưa chốt”</b> (đúng idiom §9) — hợp cho chip <b>thêm-mới</b>,
+    <b>nháp</b>, hay tuỳ chọn. Trung tính mặc định; ghép được với tone để viền theo màu status, như <code>--outline</code>.</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="wb-cluster">
+          <button type="button" class="wb-cap wb-cap--dashed">+ Thêm nhãn</button>
+          <span class="wb-cap wb-cap--dashed">Nháp</span>
+          <span class="wb-cap wb-cap--dashed"><span class="wb-cap__dot"></span> Chưa gán</span>
+          <span class="wb-cap wb-cap--dashed wb-cap--success">Tạm duyệt</span>
+          <span class="wb-cap wb-cap--dashed wb-cap--warning">Chờ bổ sung</span>
+          <span class="wb-cap wb-cap--dashed wb-cap--tinted" style="--wb-cap-color:#4f46e5">Danh mục mới</span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;!-- thêm-mới / tuỳ chọn (trung tính) --&gt;
+&lt;button class="wb-cap wb-cap--dashed"&gt;+ Thêm nhãn&lt;/button&gt;
+&lt;span class="wb-cap wb-cap--dashed"&gt;Nháp&lt;/span&gt;
+
+&lt;!-- ghép tone: viền gạch đứt theo màu status --&gt;
+&lt;span class="wb-cap wb-cap--dashed wb-cap--success"&gt;Tạm duyệt&lt;/span&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Semantic — soft (tầng 3) và solid (tầng 2)</h4>
+    <p class="doc-block__desc">Thêm tone; mặc định là bản soft mờ. Thêm <code>--solid</code> để thành bản đặc, nhấn mạnh.</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="cap-row"><span class="cap-row__label">Soft</span>
+          <span class="wb-cap wb-cap--success"><span class="wb-cap__dot"></span> Đã trả</span>
+          <span class="wb-cap wb-cap--warning"><span class="wb-cap__dot"></span> Sắp đến hạn</span>
+          <span class="wb-cap wb-cap--danger"><span class="wb-cap__dot"></span> Quá hạn</span>
+          <span class="wb-cap wb-cap--info"><span class="wb-cap__dot"></span> Đang xử lý</span>
+        </div>
+        <div class="cap-row"><span class="cap-row__label">Solid</span>
+          <span class="wb-cap wb-cap--success wb-cap--solid">Đã trả</span>
+          <span class="wb-cap wb-cap--warning wb-cap--solid">Sắp đến hạn</span>
+          <span class="wb-cap wb-cap--danger wb-cap--solid">Quá hạn</span>
+          <span class="wb-cap wb-cap--info wb-cap--solid">Đang xử lý</span>
+        </div>
+        <div class="cap-row"><span class="cap-row__label">Outline</span>
+          <span class="wb-cap wb-cap--success wb-cap--outline">Đã trả</span>
+          <span class="wb-cap wb-cap--danger wb-cap--outline">Quá hạn</span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;!-- soft (tầng 3) --&gt;
+&lt;span class="wb-cap wb-cap--success"&gt;&lt;span class="wb-cap__dot"&gt;&lt;/span&gt; Đã trả&lt;/span&gt;
+&lt;!-- solid (tầng 2) --&gt;
+&lt;span class="wb-cap wb-cap--danger wb-cap--solid"&gt;Quá hạn&lt;/span&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Bảng màu đầy đủ — 4 tone × 3 fill</h4>
+    <p class="doc-block__desc">Bốn tone semantic, mỗi tone ở ba kiểu fill. Đây là toàn bộ dải màu “trạng thái”.</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="cap-row"><span class="cap-row__label">Success</span>
+          <span class="wb-cap wb-cap--success">Soft</span>
+          <span class="wb-cap wb-cap--success wb-cap--solid">Solid</span>
+          <span class="wb-cap wb-cap--success wb-cap--outline">Outline</span>
+        </div>
+        <div class="cap-row"><span class="cap-row__label">Warning</span>
+          <span class="wb-cap wb-cap--warning">Soft</span>
+          <span class="wb-cap wb-cap--warning wb-cap--solid">Solid</span>
+          <span class="wb-cap wb-cap--warning wb-cap--outline">Outline</span>
+        </div>
+        <div class="cap-row"><span class="cap-row__label">Danger</span>
+          <span class="wb-cap wb-cap--danger">Soft</span>
+          <span class="wb-cap wb-cap--danger wb-cap--solid">Solid</span>
+          <span class="wb-cap wb-cap--danger wb-cap--outline">Outline</span>
+        </div>
+        <div class="cap-row"><span class="cap-row__label">Info</span>
+          <span class="wb-cap wb-cap--info">Soft</span>
+          <span class="wb-cap wb-cap--info wb-cap--solid">Solid</span>
+          <span class="wb-cap wb-cap--info wb-cap--outline">Outline</span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="wb-cap wb-cap--success"&gt;Soft&lt;/span&gt;
+&lt;span class="wb-cap wb-cap--success wb-cap--solid"&gt;Solid&lt;/span&gt;
+&lt;span class="wb-cap wb-cap--success wb-cap--outline"&gt;Outline&lt;/span&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Màu danh mục — <code>--tinted</code> + một biến</h4>
+    <p class="doc-block__desc">Khi cần một chip <b>phân loại có màu</b> (vd chú thích danh mục cho biểu đồ), dùng
+    <code>--tinted</code> và gán màu qua <code>--wb-cap-color</code>. Lưu ý: <b>trạng thái</b> vẫn dùng 4 tone ở trên;
+    màu tự do chỉ cho <b>phân loại</b>.</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="wb-cluster" style="margin-bottom:12px">
+          <span class="wb-cap wb-cap--tinted" style="--wb-cap-color:#4f46e5"><span class="wb-cap__dot"></span> Ăn uống</span>
+          <span class="wb-cap wb-cap--tinted" style="--wb-cap-color:#0d9488"><span class="wb-cap__dot"></span> Di chuyển</span>
+          <span class="wb-cap wb-cap--tinted" style="--wb-cap-color:#d97706"><span class="wb-cap__dot"></span> Nhà ở</span>
+          <span class="wb-cap wb-cap--tinted" style="--wb-cap-color:#db2777"><span class="wb-cap__dot"></span> Giải trí</span>
+          <span class="wb-cap wb-cap--tinted" style="--wb-cap-color:#2563eb"><span class="wb-cap__dot"></span> Hóa đơn</span>
+          <span class="wb-cap wb-cap--tinted" style="--wb-cap-color:#0891b2"><span class="wb-cap__dot"></span> Sức khỏe</span>
+          <span class="wb-cap wb-cap--tinted" style="--wb-cap-color:#7c3aed"><span class="wb-cap__dot"></span> Giáo dục</span>
+          <span class="wb-cap wb-cap--tinted" style="--wb-cap-color:#65a30d"><span class="wb-cap__dot"></span> Tiết kiệm</span>
+        </div>
+        <div class="wb-cluster">
+          <span class="wb-cap wb-cap--tinted wb-cap--outline" style="--wb-cap-color:#4f46e5">Outline</span>
+          <span class="wb-cap wb-cap--tinted wb-cap--solid" style="--wb-cap-color:#4f46e5">Solid</span>
+          <span class="wb-cap wb-cap--tinted wb-cap--lg" style="--wb-cap-color:#0d9488">Lớn</span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="wb-cap wb-cap--tinted" style="--wb-cap-color:#4f46e5"&gt;
+  &lt;span class="wb-cap__dot"&gt;&lt;/span&gt; Ăn uống
+&lt;/span&gt;
+&lt;span class="wb-cap wb-cap--tinted wb-cap--solid" style="--wb-cap-color:#4f46e5"&gt;Solid&lt;/span&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Emoji + chữ — nhãn danh mục thân thiện</h4>
+    <p class="doc-block__desc">Emoji là cách nhẹ (không cần icon-font) giúp danh mục do người dùng tự đặt trông sinh động hơn. Đặt emoji ngay trước chữ; chạy với mọi fill / tone / màu <code>--tinted</code>.</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="wb-cluster" style="margin-bottom:12px">
+          <span class="wb-cap">🚴 Đạp xe</span>
+          <span class="wb-cap">🎾 Tennis</span>
+          <span class="wb-cap">🏊 Bơi</span>
+          <span class="wb-cap">⚽ Thể thao</span>
+          <span class="wb-cap">🍳 Ăn sáng</span>
+          <span class="wb-cap">☕ Cà phê</span>
+        </div>
+        <div class="wb-cluster">
+          <span class="wb-cap wb-cap--tinted" style="--wb-cap-color:#0d9488">🚴 Đạp xe</span>
+          <span class="wb-cap wb-cap--tinted" style="--wb-cap-color:#7c3aed">🎾 Tennis</span>
+          <span class="wb-cap wb-cap--tinted" style="--wb-cap-color:#2563eb">🏊 Bơi</span>
+          <span class="wb-cap wb-cap--tinted" style="--wb-cap-color:#d97706">🍳 Ăn sáng</span>
+          <span class="wb-cap wb-cap--tinted wb-cap--solid" style="--wb-cap-color:#16a34a">💰 Tiết kiệm</span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="wb-cap"&gt;🚴 Đạp xe&lt;/span&gt;
+&lt;span class="wb-cap wb-cap--tinted" style="--wb-cap-color:#0d9488"&gt;🎾 Tennis&lt;/span&gt;
+&lt;span class="wb-cap wb-cap--tinted wb-cap--solid" style="--wb-cap-color:#16a34a"&gt;💰 Tiết kiệm&lt;/span&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Token gỡ được — có nút <code>×</code> bên phải</h4>
+    <p class="doc-block__desc">Capsule dạng <b>[ khoá : giá trị × ]</b>: một chip <b>gỡ được</b> cho bộ lọc / lựa chọn đã áp
+    dụng. Xám mặc định (phân loại — tầng 1); chỉ mượn tông <b>mềm</b> khi token là một <b>trạng thái</b>. Nút
+    <code>×</code> là icon-font <code>close</code> (chung một dấu với modal / tag). Bộ đầy đủ + ô tìm kiếm nằm ở
+    trang <a href="#/filterbar">Filter bar</a>.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-cluster">
+          <span class="wb-filter-token">
+            <span class="wb-filter-token__key">Danh mục</span>
+            <span class="wb-filter-token__val">Ăn uống</span>
+            <button class="wb-filter-token__x" aria-label="Bỏ lọc danh mục"></button>
+          </span>
+          <span class="wb-filter-token">
+            <span class="wb-filter-token__key">Số tiền</span>
+            <span class="wb-filter-token__val">200K – 2Tr</span>
+            <button class="wb-filter-token__x" aria-label="Bỏ lọc số tiền"></button>
+          </span>
+          <span class="wb-filter-token wb-filter-token--success">
+            <span class="wb-filter-token__key">Trạng thái</span>
+            <span class="wb-filter-token__val">Đã trả</span>
+            <button class="wb-filter-token__x" aria-label="Bỏ lọc trạng thái"></button>
+          </span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="wb-filter-token"&gt;
+  &lt;span class="wb-filter-token__key"&gt;Danh mục&lt;/span&gt;
+  &lt;span class="wb-filter-token__val"&gt;Ăn uống&lt;/span&gt;
+  &lt;button class="wb-filter-token__x" aria-label="Bỏ lọc"&gt;&lt;/button&gt;
+&lt;/span&gt;
+&lt;!-- trạng thái → mượn tông mềm --&gt;
+&lt;span class="wb-filter-token wb-filter-token--success"&gt;…&lt;/span&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Xem đồng thời ở Light &amp; Dark</h4>
+    <p class="doc-block__desc">Cùng một bộ capsule, render ở cả hai chế độ cạnh nhau — để thấy ngay dải màu ở chế độ còn lại
+    mà không cần bật đổi theme. (Neutral <code>--solid</code> cố ý đảo: đen ở light ↔ trắng ở dark; màu semantic giữ tông ở cả hai.)</p>
+    <div class="dual" data-dual data-pad="18px">
+      <template>
+        <div class="wb-cluster">
+          <span class="wb-cap">Ăn uống</span>
+          <span class="wb-cap wb-cap--solid">Solid</span>
+          <span class="wb-cap wb-cap--success"><span class="wb-cap__dot"></span> Đã trả</span>
+          <span class="wb-cap wb-cap--warning"><span class="wb-cap__dot"></span> Sắp hạn</span>
+          <span class="wb-cap wb-cap--danger wb-cap--solid">Quá hạn</span>
+          <span class="wb-cap wb-cap--info"><span class="wb-cap__dot"></span> Đang xử lý</span>
+        </div>
+      </template>
+    </div>
+  </div>
+
+  <div class="doc-note">
+    <span>💡</span>
+    <div><b>Phân loại</b> (Ăn uống, Nhà ở) là classification → giữ xám. <b>Trạng thái</b> (Đã trả, Quá hạn)
+    mới được dùng màu. Mapping dùng chung: đã trả/nhận/hoàn tất → success · chờ/sắp hạn → warning ·
+    quá hạn/thất bại/nợ xấu → danger · đang xử lý → info.</div>
+  </div>
+</section>

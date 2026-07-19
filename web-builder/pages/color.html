@@ -1,0 +1,52 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Nền tảng</p>
+  <h2>Triết lý màu — 3 tầng ưu tiên</h2>
+  <p>Mặc định mọi thứ là trắng–đen–xám. Màu chỉ xuất hiện khi nó <em>mang ý nghĩa</em>
+  (đã trả, quá hạn, cảnh báo). Đây là quy tắc xuyên suốt mọi component.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="tier">
+    <div class="tier__item">
+      <div class="tier__n">TẦNG 1 · MẶC ĐỊNH</div>
+      <div class="tier__t">Trắng · Đen · Xám</div>
+      <p class="tier__d">Nền, chữ, viền, phần lớn capsule. Capsule trắng đổ bóng xám, chữ đen/xám đậm. Nền tối thì đảo lại.</p>
+    </div>
+    <div class="tier__item">
+      <div class="tier__n">TẦNG 2 · CÓ Ý NGHĨA</div>
+      <div class="tier__t">Màu tươi, đặc</div>
+      <p class="tier__d">Dùng khi cần phân biệt trạng thái quan trọng: xanh = đã trả, đỏ = quá hạn/nợ xấu, vàng = sắp đến hạn.</p>
+    </div>
+    <div class="tier__item">
+      <div class="tier__n">TẦNG 3 · NHẤN NHẸ</div>
+      <div class="tier__t">Màu + độ trong (opacity)</div>
+      <p class="tier__d">Nền màu mờ + chữ cùng tông. Ưu tiên thấp nhất — cho capsule/hàng cần gợi ý trạng thái mà không “hét”.</p>
+    </div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Quy tắc quyết định</h3>
+  <p class="doc-sec__desc">Nếu một màu không mang ý nghĩa thì không nên có mặt.</p>
+  <div class="demo demo--plain">
+    <div class="demo__stage">
+      <div class="cap-row"><span class="cap-row__label">Phân loại</span>
+        <span class="wb-cap">Ăn uống</span>
+        <span class="wb-cap">Nhà ở</span>
+        <span class="wb-cap">Di chuyển</span>
+        <span class="wb-cell-muted" style="margin-left:8px">→ chỉ là phân loại, giữ xám (tầng 1)</span>
+      </div>
+      <div class="cap-row"><span class="cap-row__label">Trạng thái</span>
+        <span class="wb-cap wb-cap--success"><span class="wb-cap__dot"></span> Đã trả</span>
+        <span class="wb-cap wb-cap--danger wb-cap--solid">Quá hạn</span>
+        <span class="wb-cell-muted" style="margin-left:8px">→ là trạng thái, được dùng màu (tầng 2/3)</span>
+      </div>
+    </div>
+  </div>
+  <div class="doc-note">
+    <span>💡</span>
+    <div>Đừng tô đỏ mọi khoản chi hay xanh mọi khoản thu theo phản xạ. Trong bảng giao dịch, khoản chi giữ
+    trung tính (<code>.wb-num--strong</code>); chỉ dành xanh (<code>.wb-num--pos</code>) cho dòng tiền vào
+    thật và đỏ (<code>.wb-num--neg</code>) cho vấn đề thật (vượt ngân sách, lỗ).</div>
+  </div>
+</section>
