@@ -1,11 +1,15 @@
 /* =========================================================================
-   Cashy — base layer (Tailwind-free)
+   Cashy — base + app layer (Tailwind-free)
    -------------------------------------------------------------------------
    web-builder.css owns the whole component system + design tokens (--wb-*);
-   wb-theme.css overrides the fonts. This file only carries what a component
-   library can't: the page reset, the body ground, and a few app-specific
-   responsive helpers (breakpoint show/hide) that an inline `style={}` can't
-   express. Everything is hand-written CSS — no @tailwind, no @apply.
+   wb-theme.css overrides the fonts. This file carries what a component library
+   can't: the page reset, the body ground, a few breakpoint show/hide helpers,
+   and the app-level screen chrome (page headers, sidebar labels, ranked bars)
+   — the Cashy equivalent of the docs' docs.css.
+
+   HARD RULE: every value here comes from a --wb-* token. No raw hexes, no magic
+   colours. One knob (a token) moves the whole system. Prefix cashy-* so nothing
+   ever collides with wb-*; web-builder.css stays pristine (re-syncable upstream).
    ========================================================================= */
 
 *,
@@ -45,11 +49,11 @@ body {
 @media (min-width: 768px) {
   .cashy-hide-md {
     display: none !important;
-  } /* was `md:hidden` — the ☰ trigger */
+  }
 }
 .cashy-show-md {
   display: none;
-} /* was `hidden md:block` — the sidebar rail */
+}
 @media (min-width: 768px) {
   .cashy-show-md {
     display: block;
@@ -57,7 +61,7 @@ body {
 }
 .cashy-show-sm {
   display: none;
-} /* was `hidden sm:inline` */
+}
 @media (min-width: 640px) {
   .cashy-show-sm {
     display: inline;
@@ -66,5 +70,411 @@ body {
 @media (min-width: 640px) {
   .cashy-hide-sm {
     display: none;
-  } /* was `sm:hidden` */
+  }
+}
+
+/* =========================================================================
+   PAGE HEADER — the editorial motif that repeats on every screen:
+   an eyebrow (small-caps, tracked) + a strong title + a muted subtitle,
+   with an actions cluster pinned right. Hierarchy is weight + colour, never
+   a size explosion (design-principles §4).
+   ========================================================================= */
+.cashy-pagehead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.cashy-pagehead__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.cashy-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--wb-fg-subtle);
+  line-height: 1;
+}
+.cashy-title {
+  margin: 7px 0 0;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--wb-fg);
+}
+.cashy-subtitle {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--wb-fg-muted);
+  max-width: 64ch;
+}
+
+/* =========================================================================
+   CARD TITLES — section heading inside a wb-card (+ an optional eyebrow).
+   ========================================================================= */
+.cashy-card-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--wb-fg);
+}
+.cashy-card-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--wb-fg-subtle);
+}
+
+/* =========================================================================
+   SMALL PARTS — colour dot (category/tag identity), neutral icon tile.
+   ========================================================================= */
+.cashy-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: var(--wb-radius-pill);
+  flex: none;
+}
+.cashy-dot--sm {
+  width: 7px;
+  height: 7px;
+}
+.cashy-tile {
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: var(--wb-radius-sm);
+  background: var(--wb-surface-2);
+  color: var(--wb-fg-muted);
+  border: var(--wb-bw) solid var(--wb-border);
+}
+
+/* =========================================================================
+   RANKED CATEGORY BARS — the dashboard breakdown legend, built on the
+   web-builder ranked-bars pattern (wb-progress rows). Neutral bars keep the
+   colour budget for the numbers; the category hue lives only in the dot.
+   ========================================================================= */
+.cashy-rank {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.cashy-rank__row {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.cashy-rank__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--wb-fg);
+  min-width: 0;
+}
+.cashy-rank__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cashy-rank__val {
+  margin-left: auto;
+  padding-left: 8px;
+  color: var(--wb-fg-muted);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  flex: none;
+}
+
+/* =========================================================================
+   SIDEBAR — section label above the nav rail links.
+   ========================================================================= */
+.cashy-navlabel {
+  padding: 6px 12px 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--wb-fg-subtle);
+}
+
+/* =========================================================================
+   NAV LOGO — a black rounded-rectangle wordmark ("Cashy"), the app's mark.
+   Inverts on dark like every other solid-neutral small element (§1).
+   ========================================================================= */
+.cashy-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex: none;
+  padding: 6px 12px 6px 10px;
+  border-radius: var(--wb-radius);
+  background: var(--wb-gray-900);
+  color: var(--wb-white);
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-decoration: none;
+}
+.dark .cashy-logo {
+  background: var(--wb-gray-100);
+  color: var(--wb-gray-900);
+}
+.cashy-logo .wb-ico {
+  font-size: 18px;
+}
+
+/* =========================================================================
+   CHART TOOLTIP — the recharts hover card, styled with tokens (recharts only
+   lets us swap the *content*, so the chrome lives here).
+   ========================================================================= */
+.cashy-charttip {
+  min-width: 160px;
+  padding: 9px 11px;
+  border-radius: var(--wb-radius-sm);
+  border: var(--wb-bw) solid var(--wb-border);
+  background: var(--wb-surface);
+  box-shadow: var(--wb-shadow-md);
+  font-size: 12px;
+}
+.cashy-charttip__label {
+  font-weight: 700;
+  color: var(--wb-fg);
+  margin-bottom: 6px;
+}
+.cashy-charttip__row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--wb-fg-muted);
+  line-height: 1.7;
+}
+.cashy-charttip__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--wb-radius-pill);
+  flex: none;
+}
+.cashy-charttip__val {
+  margin-left: auto;
+  padding-left: 12px;
+  color: var(--wb-fg);
+  font-weight: 600;
+}
+
+/* =========================================================================
+   TABLE — multi-select checkbox column, reveal-on-hover row actions, and a
+   selected-row tint. All tokenised; keeps web-builder's table pristine.
+   ========================================================================= */
+.cashy-check-cell,
+.cashy-actions-cell {
+  width: 1%;
+  white-space: nowrap;
+}
+.cashy-check-cell {
+  padding-right: 4px;
+}
+.cashy-actions-cell {
+  text-align: right;
+}
+.cashy-rowactions {
+  display: inline-flex;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+/* Reveal on row hover, or when an ACTION button itself is keyboard-focused.
+   Deliberately NOT `tr:focus-within` — that would latch the icons open after
+   a click landed focus on the row / its checkbox, so they'd stay visible with
+   the pointer gone. Scoping focus to the actions cell keeps keyboard access
+   without the stuck-open bug. */
+.wb-table tbody tr:hover .cashy-rowactions,
+.cashy-actions-cell:focus-within .cashy-rowactions {
+  opacity: 1;
+}
+@media (hover: none) {
+  .cashy-rowactions {
+    opacity: 1;
+  }
+}
+/* Right-align a numeric COLUMN header so it lines up over the amounts (the
+   table's `thead th` left-align otherwise out-specifies `.wb-num`). */
+.wb-table thead th.wb-num {
+  text-align: right;
+}
+.wb-table tbody tr.is-selected,
+.wb-table tbody tr.is-selected:hover {
+  background: color-mix(in srgb, var(--wb-fg) 7%, transparent);
+}
+
+/* =========================================================================
+   SEARCH FIELD — a rounded (pill) input-group whose magnifier addon keeps a
+   filled panel + a divider from the text, with a hover-only clear button.
+   Built on web-builder's .wb-input-group (its collapse rule drops the addon's
+   divider; we put one back for the "icon | text" split the user asked for).
+   ========================================================================= */
+.cashy-search {
+  border-radius: var(--wb-radius-pill);
+}
+.cashy-search > *:first-child {
+  border-top-left-radius: var(--wb-radius-pill);
+  border-bottom-left-radius: var(--wb-radius-pill);
+}
+.cashy-search > *:last-child {
+  border-top-right-radius: var(--wb-radius-pill);
+  border-bottom-right-radius: var(--wb-radius-pill);
+}
+/* divider between the magnifier panel and the text area — needs to out-specify
+   web-builder's `.wb-input-group > *:not(:last-child){border-right:0}` collapse */
+.wb-input-group.cashy-search .wb-input-group__addon {
+  border-right: var(--wb-bw) solid var(--wb-border-strong);
+  padding-left: 14px;
+}
+.wb-input-group.cashy-search > .wb-input {
+  border-left-color: transparent;
+}
+/* show ONE focus ring on the whole pill (not a rectangle around the inner input) */
+.wb-input-group.cashy-search:focus-within {
+  border-color: var(--wb-gray-500);
+  box-shadow: 0 0 0 3px var(--wb-ring);
+}
+.wb-input-group.cashy-search > .wb-input:focus {
+  box-shadow: none;
+}
+/* drop the browser's native search-cancel × so it doesn't duplicate ours */
+.cashy-search input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+/* clear (×): no fill until hover — a ghost affix, per the request */
+.cashy-search .cashy-search__clear {
+  background: transparent;
+  color: var(--wb-fg-subtle);
+}
+.cashy-search .cashy-search__clear:hover {
+  background: var(--wb-surface-hover);
+  color: var(--wb-fg);
+}
+
+/* =========================================================================
+   TYPE SEGMENT — the Tất cả / Chi / Thu control, a rounded take on the
+   web-builder boxed tabs (dark track, light active thumb). Sits below the
+   search so it never crowds the row.
+   ========================================================================= */
+.cashy-typeseg {
+  align-self: flex-start;
+  border-radius: var(--wb-radius);
+}
+.cashy-typeseg .wb-tab {
+  border-radius: calc(var(--wb-radius) - 3px);
+  font-size: 13px;
+}
+.cashy-typeseg .wb-tab.is-active {
+  border-radius: calc(var(--wb-radius) - 3px);
+}
+
+/* =========================================================================
+   INSIGHTS — a compact strip of derived facts (savings rate, daily burn,
+   run-rate, biggest hit). Neutral tiles; colour only on the savings delta.
+   ========================================================================= */
+.cashy-insights {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+.cashy-insight {
+  display: flex;
+  gap: 11px;
+  align-items: flex-start;
+}
+.cashy-insight__ico {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  background: var(--wb-surface-2);
+  color: var(--wb-fg-muted);
+  border: var(--wb-bw) solid var(--wb-border);
+}
+.cashy-insight__label {
+  font-size: 12px;
+  color: var(--wb-fg-muted);
+  line-height: 1.3;
+}
+.cashy-insight__value {
+  margin-top: 2px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--wb-fg);
+  font-variant-numeric: tabular-nums;
+}
+.cashy-insight__hint {
+  font-size: 12px;
+  color: var(--wb-fg-subtle);
+}
+
+/* =========================================================================
+   SUBSCRIPTIONS — a coloured service tile + a "due" reminder row. The tile
+   carries the service's identity hue softly (tier-3), a real status use.
+   ========================================================================= */
+.cashy-subtile {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--wb-radius-sm);
+  display: grid;
+  place-items: center;
+  color: var(--cashy-sub-c, var(--wb-fg-muted));
+  background: color-mix(in srgb, var(--cashy-sub-c, var(--wb-neutral)) 14%, transparent);
+  border: var(--wb-bw) solid color-mix(in srgb, var(--cashy-sub-c, var(--wb-border)) 30%, transparent);
+}
+.cashy-due {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 12px 14px;
+  border: var(--wb-bw) solid var(--wb-border);
+  border-radius: var(--wb-radius-sm);
+  background: var(--wb-surface-2);
+}
+.cashy-due__actions {
+  margin-left: auto;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* =========================================================================
+   BRAND LOCKUP — the onboarding hero mark + wordmark.
+   ========================================================================= */
+.cashy-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+}
+.cashy-brand__title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--wb-fg);
+}
+.cashy-brand__sub {
+  margin: 5px 0 0;
+  font-size: 13px;
+  color: var(--wb-fg-muted);
 }

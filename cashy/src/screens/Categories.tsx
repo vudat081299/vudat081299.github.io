@@ -14,6 +14,7 @@ import type { Category, TxType } from "@/types";
 import { ColorPicker } from "@/components/ColorPicker";
 import { IconPicker } from "@/components/IconPicker";
 import { EmptyState } from "@/components/EmptyState";
+import { PageHeader } from "@/components/PageHeader";
 import { Modal } from "@/components/wb/Modal";
 
 type DropPos = "before" | "into" | "after";
@@ -88,18 +89,7 @@ function CategoryEditor({
             Tên
           </label>
           <div style={{ display: "flex", gap: 8 }}>
-            <span
-              style={{
-                width: 38,
-                height: 38,
-                flex: "none",
-                display: "grid",
-                placeItems: "center",
-                borderRadius: "var(--wb-radius-sm)",
-                background: `color-mix(in srgb, ${colorHex} 15%, transparent)`,
-                color: colorHex,
-              }}
-            >
+            <span className="cashy-tile" style={{ width: 38, height: 38, color: colorHex }}>
               <Icon name={icon} size={18} />
             </span>
             <input
@@ -271,19 +261,8 @@ function Tree({
                     setDragId(cat.id);
                   }}
                 />
-                <span
-                  style={{
-                    width: 24,
-                    height: 24,
-                    flex: "none",
-                    display: "grid",
-                    placeItems: "center",
-                    borderRadius: 5,
-                    background: `color-mix(in srgb, ${cat.colorHex} 15%, transparent)`,
-                    color: cat.colorHex,
-                  }}
-                >
-                  <Icon name={cat.icon} size={13} />
+                <span className="cashy-tile" style={{ width: 26, height: 26, color: cat.colorHex }}>
+                  <Icon name={cat.icon} size={14} />
                 </span>
                 <span className="wb-tree__label">{cat.name}</span>
                 <div className="wb-tree__actions">
@@ -325,25 +304,26 @@ export function Categories() {
   const [type, setType] = useState<TxType>("expense");
   const [editor, setEditor] = useState<EditorState | null>(null);
 
+  const { workspace } = useCashy();
+
   return (
     <div className="wb-stack wb-stack--loose">
-      <div className="wb-cluster wb-cluster--between wb-cluster--bottom">
-        <div>
-          <h2 style={{ fontSize: 24, fontWeight: 700, letterSpacing: "-0.02em", margin: 0 }}>Danh mục</h2>
-          <p style={{ marginTop: 2, fontSize: 13, color: "var(--wb-fg-muted)" }}>
-            Kéo tay cầm để đổi thứ tự; thả vào giữa một mục để lồng vào — cây sâu tuỳ ý.
-          </p>
-        </div>
-        <button
-          type="button"
-          className="wb-btn"
-          style={{ gap: 6, flex: "none" }}
-          onClick={() => setEditor({ editing: null, type, parentId: null })}
-        >
-          <span className="wb-ico wb-ico--sm">add</span>
-          Thêm danh mục
-        </button>
-      </div>
+      <PageHeader
+        eyebrow={workspace?.displayName ?? "Cashy"}
+        title="Danh mục"
+        subtitle="Kéo tay cầm để đổi thứ tự; thả vào giữa một mục để lồng vào — cây sâu tuỳ ý."
+        actions={
+          <button
+            type="button"
+            className="wb-btn"
+            style={{ gap: 6 }}
+            onClick={() => setEditor({ editing: null, type, parentId: null })}
+          >
+            <span className="wb-ico wb-ico--sm">add</span>
+            Thêm danh mục
+          </button>
+        }
+      />
 
       <div className="wb-tabs wb-tabs--pill" style={{ width: "fit-content" }}>
         {(["expense", "income"] as TxType[]).map((t) => (

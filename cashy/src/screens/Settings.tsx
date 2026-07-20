@@ -4,12 +4,14 @@ import { cn } from "@/lib/utils";
 import {
   exportData,
   importData,
+  loadSampleData,
   resetAll,
   setTheme,
   updateWorkspace,
   useCashy,
 } from "@/lib/store";
 import { todayYMD } from "@/lib/date";
+import { PageHeader } from "@/components/PageHeader";
 import type { ThemeMode } from "@/types";
 
 function download(filename: string, text: string, mime: string) {
@@ -90,6 +92,18 @@ export function Settings() {
     toast.success("Đã lưu");
   }
 
+  function doLoadSample() {
+    if (
+      transactions.length &&
+      !window.confirm(
+        "Nạp dữ liệu mẫu sẽ thay thế toàn bộ danh mục, nhãn và giao dịch hiện tại. Tiếp tục?",
+      )
+    )
+      return;
+    loadSampleData();
+    toast.success("Đã nạp dữ liệu mẫu");
+  }
+
   function doReset() {
     if (
       window.confirm(
@@ -102,7 +116,11 @@ export function Settings() {
 
   return (
     <div className="wb-stack wb-stack--loose" style={{ maxWidth: 640, marginInline: "auto", width: "100%" }}>
-      <h2 style={{ fontSize: 24, fontWeight: 700, letterSpacing: "-0.02em", margin: 0 }}>Cài đặt</h2>
+      <PageHeader
+        eyebrow={workspace?.displayName ?? "Cashy"}
+        title="Cài đặt"
+        subtitle="Giao diện, không gian và sao lưu dữ liệu."
+      />
 
       <Section title="Giao diện">
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
@@ -184,6 +202,20 @@ export function Settings() {
             style={{ display: "none" }}
             onChange={onImportFile}
           />
+        </div>
+        <div className="wb-cluster wb-cluster--between">
+          <p style={{ fontSize: 13, color: "var(--wb-fg-muted)", margin: 0, flex: "1 1 200px" }}>
+            Nạp ~200 giao dịch mẫu cùng danh mục và nhãn để xem thử giao diện.
+          </p>
+          <button
+            type="button"
+            className="wb-btn wb-btn--outline wb-btn--sm"
+            style={{ gap: 6, flex: "none" }}
+            onClick={doLoadSample}
+          >
+            <span className="wb-ico wb-ico--sm">database</span>
+            Nạp dữ liệu mẫu
+          </button>
         </div>
       </Section>
 

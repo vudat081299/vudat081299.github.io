@@ -1,13 +1,16 @@
 import { useEffect } from "react";
-import { useCashy } from "@/lib/store";
+import { useCashy, syncSubscriptions } from "@/lib/store";
 import { applyTheme } from "@/lib/theme";
 import { useRoute } from "@/lib/router";
 import { Layout } from "@/components/Layout";
 import { TransactionEditor } from "@/components/TransactionEditor";
+import { TransactionDetail } from "@/components/TransactionDetail";
 import { Toaster } from "@/components/wb/Toast";
 import { Onboarding } from "@/screens/Onboarding";
 import { Dashboard } from "@/screens/Dashboard";
 import { Transactions } from "@/screens/Transactions";
+import { Subscriptions } from "@/screens/Subscriptions";
+import { SubscriptionEditor } from "@/components/SubscriptionEditor";
 import { Categories } from "@/screens/Categories";
 import { Tags } from "@/screens/Tags";
 import { Settings } from "@/screens/Settings";
@@ -25,6 +28,11 @@ export default function App() {
     return () => mq.removeEventListener("change", onChange);
   }, [theme]);
 
+  // Materialise any newly-due subscription charges as "pending" rows on load.
+  useEffect(() => {
+    if (workspace) syncSubscriptions();
+  }, [workspace]);
+
   if (!workspace) {
     return (
       <>
@@ -37,6 +45,8 @@ export default function App() {
   const screen =
     route === "transactions" ? (
       <Transactions />
+    ) : route === "subscriptions" ? (
+      <Subscriptions />
     ) : route === "categories" ? (
       <Categories />
     ) : route === "tags" ? (
@@ -50,7 +60,9 @@ export default function App() {
   return (
     <>
       <Layout>{screen}</Layout>
+      <TransactionDetail />
       <TransactionEditor />
+      <SubscriptionEditor />
       <Toaster position="top-center" />
     </>
   );

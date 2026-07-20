@@ -3,45 +3,33 @@ import { createWorkspace } from "@/lib/store";
 
 export function Onboarding() {
   const [name, setName] = useState("");
+  const [sample, setSample] = useState(true);
 
   function submit() {
-    createWorkspace({ displayName: name.trim() || "Của tôi" });
+    createWorkspace({ displayName: name.trim() || "Của tôi", sample });
   }
 
   return (
     <div style={{ display: "grid", placeItems: "center", minHeight: "100dvh", padding: 16 }}>
-      <div style={{ width: "100%", maxWidth: 380 }}>
-        <div
-          style={{
-            marginBottom: 24,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 12,
-            textAlign: "center",
-          }}
-        >
+      <div className="wb-stack" style={{ width: "100%", maxWidth: 400 }}>
+        <div className="cashy-brand">
           <span
             className="wb-navbar__mark"
-            style={{ width: 44, height: 44, borderRadius: "var(--wb-radius-lg)" }}
+            style={{ width: 48, height: 48, borderRadius: "var(--wb-radius-lg)" }}
           >
-            <span className="wb-ico">account_balance_wallet</span>
+            <span className="wb-ico wb-ico--lg">account_balance_wallet</span>
           </span>
           <div>
-            <h1 style={{ fontSize: 20, fontWeight: 700, letterSpacing: "-0.01em", margin: 0 }}>
+            <span className="cashy-eyebrow">Sổ chi tiêu cá nhân</span>
+            <h1 className="cashy-brand__title" style={{ marginTop: 8 }}>
               Chào mừng đến Cashy
             </h1>
-            <p style={{ marginTop: 4, fontSize: 13, color: "var(--wb-fg-muted)" }}>
-              Sổ chi tiêu cá nhân — số liệu là nhân vật chính.
-            </p>
+            <p className="cashy-brand__sub">Số liệu là nhân vật chính — trắng, đen, xám.</p>
           </div>
         </div>
 
         <div className="wb-card">
-          <div
-            className="wb-card__body"
-            style={{ display: "flex", flexDirection: "column", gap: 16 }}
-          >
+          <div className="wb-card__body wb-stack">
             <div className="wb-field">
               <label className="wb-label" htmlFor="ws-name">
                 Tên không gian
@@ -57,23 +45,28 @@ export function Onboarding() {
               />
             </div>
 
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                background: "var(--wb-surface-2)",
-                borderRadius: "var(--wb-radius-sm)",
-                padding: "8px 12px",
-                fontSize: 13,
-                color: "var(--wb-fg-muted)",
-              }}
-            >
-              <span>Đơn vị tiền tệ</span>
-              <span style={{ fontWeight: 600, color: "var(--wb-fg)" }}>VND (₫)</span>
-            </div>
+            <ul className="wb-list wb-list--flush">
+              <li className="wb-list__item">
+                <span className="wb-list__title">Đơn vị tiền tệ</span>
+                <span className="wb-list__end wb-num--strong">VND (₫)</span>
+              </li>
+              <li className="wb-list__item">
+                <span className="wb-list__title" style={{ flex: 1 }}>
+                  Nạp dữ liệu mẫu
+                  <span className="wb-list__sub">~3 tháng dữ liệu mẫu để xem thử giao diện</span>
+                </span>
+                <label className="wb-switch">
+                  <input
+                    type="checkbox"
+                    checked={sample}
+                    onChange={(e) => setSample(e.target.checked)}
+                  />
+                  <span className="wb-switch__track" />
+                </label>
+              </li>
+            </ul>
 
-            <button className="wb-btn" style={{ width: "100%" }} onClick={submit}>
+            <button className="wb-btn wb-btn--block" onClick={submit}>
               Tạo không gian
             </button>
           </div>

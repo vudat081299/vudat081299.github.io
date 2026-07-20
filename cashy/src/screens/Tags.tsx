@@ -4,6 +4,7 @@ import { SWATCHES } from "@/lib/palette";
 import type { Tag } from "@/types";
 import { ColorPicker } from "@/components/ColorPicker";
 import { EmptyState } from "@/components/EmptyState";
+import { PageHeader } from "@/components/PageHeader";
 import { Modal } from "@/components/wb/Modal";
 
 function TagEditor({
@@ -75,7 +76,7 @@ function TagEditor({
 }
 
 export function Tags() {
-  const { tags, transactions } = useCashy();
+  const { workspace, tags, transactions } = useCashy();
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Tag | null>(null);
 
@@ -108,26 +109,23 @@ export function Tags() {
 
   return (
     <div className="wb-stack wb-stack--loose">
-      <div className="wb-cluster wb-cluster--between wb-cluster--bottom">
-        <div>
-          <h2 style={{ fontSize: 24, fontWeight: 700, letterSpacing: "-0.02em", margin: 0 }}>Nhãn</h2>
-          <p style={{ marginTop: 2, fontSize: 13, color: "var(--wb-fg-muted)" }}>
-            {tags.length} nhãn · gắn nhiều nhãn cho một giao dịch để lọc nhanh
-          </p>
-        </div>
-        <button type="button" className="wb-btn" style={{ gap: 6, flex: "none" }} onClick={openAdd}>
-          <span className="wb-ico wb-ico--sm">add</span>
-          Thêm nhãn
-        </button>
-      </div>
+      <PageHeader
+        eyebrow={workspace?.displayName ?? "Cashy"}
+        title="Nhãn"
+        subtitle={`${tags.length} nhãn · gắn nhiều nhãn cho một giao dịch để lọc nhanh`}
+        actions={
+          <button type="button" className="wb-btn" style={{ gap: 6 }} onClick={openAdd}>
+            <span className="wb-ico wb-ico--sm">add</span>
+            Thêm nhãn
+          </button>
+        }
+      />
 
       {tags.length ? (
         <div className="wb-list">
           {tags.map((t) => (
             <div key={t.id} className="wb-list__item">
-              <span
-                style={{ width: 12, height: 12, borderRadius: "50%", background: t.colorHex, flex: "none" }}
-              />
+              <span className="cashy-dot" style={{ background: t.colorHex }} />
               <span
                 className="wb-list__title"
                 style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}

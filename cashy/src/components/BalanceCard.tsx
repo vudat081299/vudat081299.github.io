@@ -1,7 +1,5 @@
-import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatMoney } from "@/lib/money";
-import { Sparkline } from "@/components/Sparkline";
 
 type Tone = "neutral" | "income" | "expense";
 
@@ -13,21 +11,25 @@ const toneColor: Record<Tone, string | undefined> = {
   expense: "var(--wb-danger-text)",
 };
 
+/** One KPI tile on the dashboard — the web-builder `.wb-stat`: a neutral icon
+ *  tile and a footer delta vs the previous period (no in-card sparkline; the
+ *  "↑ 12,4% so với kỳ trước" line carries the trend, per the docs). */
 export function BalanceCard({
   label,
   amount,
   tone = "neutral",
+  icon,
   delta,
-  spark,
-  sparkColor,
+  note = "so với kỳ trước",
 }: {
   label: string;
   amount: number;
   tone?: Tone;
+  icon?: string;
   /** fractional change vs previous period, e.g. 0.12 = +12% */
   delta?: number | null;
-  spark?: number[];
-  sparkColor?: string;
+  /** caption after the delta chip */
+  note?: string;
 }) {
   const hasDelta = delta !== undefined && delta !== null && isFinite(delta);
   const up = (delta ?? 0) >= 0;
@@ -36,28 +38,27 @@ export function BalanceCard({
     <div className="wb-stat">
       <div className="wb-stat__top">
         <span className="wb-stat__label">{label}</span>
-        {hasDelta && (
-          <span
-            className={cn(
-              "wb-stat__delta",
-              up ? "wb-stat__delta--up" : "wb-stat__delta--down",
-            )}
-            style={{ marginLeft: "auto" }}
-          >
-            {up ? <ArrowUpRight size={13} /> : <ArrowDownRight size={13} />}
-            {Math.abs(Math.round((delta ?? 0) * 100))}%
+        {icon && (
+          <span className="wb-stat__icon">
+            <span className="wb-ico wb-ico--sm">{icon}</span>
           </span>
         )}
       </div>
       <div className="wb-stat__value" style={color ? { color } : undefined}>
         {formatMoney(amount)}
       </div>
-      {spark && spark.length > 1 && (
-        <div style={{ marginTop: 8, marginInline: -2 }}>
-          <Sparkline
-            data={spark}
-            color={sparkColor ?? color ?? "var(--wb-neutral-strong)"}
-          />
+      {hasDelta && (
+        <div className="wb-stat__foot">
+          <span
+            className={cn(
+              "wb-stat__delta",
+              up ? "wb-stat__delta--up" : "wb-stat__delta--down",
+            )}
+          >
+            <span className="wb-ico wb-ico--xs">{up ? "trending_up" : "trending_down"}</span>
+            {Math.abs(Math.round((delta ?? 0) * 100))}%
+          </span>
+          {note}
         </div>
       )}
     </div>

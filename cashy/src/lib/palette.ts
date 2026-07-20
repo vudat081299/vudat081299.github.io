@@ -1,15 +1,19 @@
-// Category & tag swatches: vivid marks (text/icon/dot), never area fills.
+// Category & tag identity colours. These mirror the web-builder chart palette
+// (`--wb-chart-1…8` + two neutrals) so every category dot, donut slice and
+// ranked bar reads like the rest of the UI — bright, harmonious, never murky.
+// Used as vivid *marks* (dot / icon / donut slice) and, softened to tier-3, as
+// ranked-bar fills; never as a flat area fill behind text.
 export const SWATCHES = [
-  "#e0483d",
-  "#d9730d",
-  "#cb8a14",
-  "#1a8f6b",
-  "#0b6e99",
-  "#2383e2",
-  "#6940a5",
-  "#ad1a72",
-  "#64473a",
-  "#787774",
+  "#6366f1", // indigo   (chart-1)
+  "#14b8a6", // teal     (chart-2)
+  "#f59e0b", // amber    (chart-3)
+  "#ec4899", // pink     (chart-4)
+  "#3b82f6", // blue     (chart-5)
+  "#8b5cf6", // violet   (chart-6)
+  "#06b6d4", // cyan     (chart-7)
+  "#84cc16", // lime     (chart-8)
+  "#f43f5e", // rose
+  "#64748b", // slate
 ] as const;
 
 export const AVATAR_COLORS = SWATCHES;

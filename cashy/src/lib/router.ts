@@ -3,6 +3,7 @@ import { useSyncExternalStore } from "react";
 export type Route =
   | "dashboard"
   | "transactions"
+  | "subscriptions"
   | "categories"
   | "tags"
   | "settings";
@@ -10,6 +11,7 @@ export type Route =
 const ROUTES: Route[] = [
   "dashboard",
   "transactions",
+  "subscriptions",
   "categories",
   "tags",
   "settings",

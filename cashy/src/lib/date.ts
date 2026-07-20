@@ -38,3 +38,35 @@ export function addDays(s: string, n: number): string {
   d.setDate(d.getDate() + n);
   return ymd(d);
 }
+
+// ---- month keys ("YYYY-MM") — for recurring / subscription math -------------
+export function monthKey(d: Date = new Date()): string {
+  return ymd(d).slice(0, 7);
+}
+
+/** Shift a "YYYY-MM" key by n months (n may be negative). */
+export function addMonthKey(key: string, n: number): string {
+  const [y, m] = key.split("-").map(Number);
+  const d = new Date(y || 1970, (m || 1) - 1 + n, 1);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+}
+
+/** The billing date of a month for a given day-of-month, clamped to month length. */
+export function billingDate(key: string, day: number): string {
+  const [y, m] = key.split("-").map(Number);
+  const daysInMonth = new Date(y, m, 0).getDate();
+  const d = Math.min(Math.max(1, day), daysInMonth);
+  return `${key}-${String(d).padStart(2, "0")}`;
+}
+
+/** "T7/2026" — compact month label. */
+export function monthLabelShort(key: string): string {
+  const [y, m] = key.split("-").map(Number);
+  return `T${m}/${y}`;
+}
+
+/** "tháng 7 2026" — full month label. */
+export function monthLabel(key: string): string {
+  const [y, m] = key.split("-").map(Number);
+  return `tháng ${m} ${y}`;
+}

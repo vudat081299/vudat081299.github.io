@@ -1,82 +1,76 @@
 import { useEffect, useMemo, useState } from "react";
 import {
-  addTransaction,
-  deleteTransaction,
-  updateTransaction,
+  addSubscription,
+  deleteSubscription,
+  updateSubscription,
   useCashy,
 } from "@/lib/store";
 import { flattenTree } from "@/lib/domain";
 import { formatMoney, parseMoney } from "@/lib/money";
-import { todayYMD } from "@/lib/date";
-import { TX_STATUS_META, TX_STATUS_ORDER } from "@/lib/txStatus";
-import type { TxStatus, TxType } from "@/types";
+import { SWATCHES } from "@/lib/palette";
 import { Modal } from "@/components/wb/Modal";
 import { Popover } from "@/components/wb/Popover";
-import { DatePicker } from "@/components/DatePicker";
+import { IconPicker } from "@/components/IconPicker";
+import { ColorPicker } from "@/components/ColorPicker";
 import { TagChip } from "@/components/TagChip";
+import { Icon } from "@/lib/icons";
 
 let openFn: ((id: string | null) => void) | null = null;
-/** Open the transaction editor from anywhere. Pass an id to edit, or null to add. */
-export function openTxEditor(id: string | null = null) {
+/** Open the subscription editor from anywhere. Pass an id to edit, or null to add. */
+export function openSubscriptionEditor(id: string | null = null) {
   openFn?.(id);
 }
 
-export function TransactionEditor() {
-  const { categories, tags, transactions } = useCashy();
+export function SubscriptionEditor() {
+  const { categories, tags, subscriptions } = useCashy();
   const [open, setOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [type, setType] = useState<TxType>("expense");
+  const [name, setName] = useState("");
   const [amountStr, setAmountStr] = useState("");
+  const [dayOfMonth, setDayOfMonth] = useState(1);
   const [categoryId, setCategoryId] = useState<string | null>(null);
   const [tagIds, setTagIds] = useState<string[]>([]);
-  const [occurredAt, setOccurredAt] = useState(todayYMD());
+  const [color, setColor] = useState<string>(SWATCHES[0]);
+  const [icon, setIcon] = useState("credit-card");
   const [note, setNote] = useState("");
-  const [payee, setPayee] = useState("");
-  const [status, setStatus] = useState<TxStatus>("recorded");
 
   useEffect(() => {
     openFn = (id) => {
-      const tx = id ? (transactions.find((t) => t.id === id) ?? null) : null;
-      setEditingId(tx ? tx.id : null);
-      setType(tx?.type ?? "expense");
-      setAmountStr(tx && tx.amount ? String(tx.amount) : "");
-      setCategoryId(tx?.categoryId ?? null);
-      setTagIds(tx?.tagIds ?? []);
-      setOccurredAt(tx?.occurredAt ?? todayYMD());
-      setNote(tx?.note ?? "");
-      setPayee(tx?.payee ?? "");
-      setStatus(tx?.status ?? "recorded");
+      const sub = id ? (subscriptions.find((s) => s.id === id) ?? null) : null;
+      setEditingId(sub ? sub.id : null);
+      setName(sub?.name ?? "");
+      setAmountStr(sub && sub.amount ? String(sub.amount) : "");
+      setDayOfMonth(sub?.dayOfMonth ?? 1);
+      setCategoryId(sub?.categoryId ?? null);
+      setTagIds(sub?.tagIds ?? []);
+      setColor(sub?.colorHex ?? SWATCHES[0]);
+      setIcon(sub?.icon ?? "credit-card");
+      setNote(sub?.note ?? "");
       setOpen(true);
     };
     return () => {
       openFn = null;
     };
-  }, [transactions]);
+  }, [subscriptions]);
 
   const amount = parseMoney(amountStr);
-  const catOptions = useMemo(() => flattenTree(categories, type), [categories, type]);
-
-  function changeType(t: TxType) {
-    setType(t);
-    if (categoryId && !categories.some((c) => c.id === categoryId && c.type === t)) {
-      setCategoryId(null);
-    }
-  }
+  const catOptions = useMemo(() => flattenTree(categories, "expense"), [categories]);
+  const canSave = name.trim() !== "" && amount > 0;
 
   function save() {
-    if (amount <= 0) return;
+    if (!canSave) return;
     const payload = {
+      name: name.trim(),
       amount,
-      type,
+      dayOfMonth: Math.min(31, Math.max(1, dayOfMonth || 1)),
       categoryId,
       tagIds,
+      colorHex: color,
+      icon,
       note: note.trim(),
-      payee: payee.trim() || undefined,
-      status,
-      occurredAt,
     };
-    if (editingId) updateTransaction(editingId, payload);
-    else addTransaction(payload);
+    if (editingId) updateSubscription(editingId, payload);
+    else addSubscription(payload);
     setOpen(false);
   }
 
@@ -96,8 +90,10 @@ export function TransactionEditor() {
           className="wb-btn wb-btn--ghost"
           style={{ color: "var(--wb-danger-text)", gap: 6 }}
           onClick={() => {
-            deleteTransaction(editingId);
-            setOpen(false);
+            if (window.confirm("Xoá đăng ký này? Các giao dịch đã ghi vẫn được giữ lại.")) {
+              deleteSubscription(editingId);
+              setOpen(false);
+            }
           }}
         >
           <span className="wb-ico wb-ico--sm">delete</span>
@@ -110,7 +106,7 @@ export function TransactionEditor() {
         <button type="button" className="wb-btn wb-btn--secondary" onClick={() => setOpen(false)}>
           Huỷ
         </button>
-        <button type="button" className="wb-btn" onClick={save} disabled={amount <= 0}>
+        <button type="button" className="wb-btn" onClick={save} disabled={!canSave}>
           {editingId ? "Lưu" : "Thêm"}
         </button>
       </div>
@@ -121,60 +117,65 @@ export function TransactionEditor() {
     <Modal
       open={open}
       onClose={() => setOpen(false)}
-      title={editingId ? "Sửa giao dịch" : "Thêm giao dịch"}
+      title={editingId ? "Sửa đăng ký" : "Thêm đăng ký"}
       footer={footer}
     >
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-        {/* Chi / Thu segmented toggle */}
-        <div className="wb-tabs wb-tabs--pill" style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
-          {(["expense", "income"] as TxType[]).map((t) => {
-            const active = type === t;
-            const tone = t === "income" ? "var(--wb-success-text)" : "var(--wb-danger-text)";
-            return (
-              <button
-                key={t}
-                type="button"
-                className={active ? "wb-tab is-active" : "wb-tab"}
-                style={{ textAlign: "center", color: active ? tone : undefined }}
-                onClick={() => changeType(t)}
-              >
-                {t === "expense" ? "Chi tiêu" : "Thu nhập"}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Amount */}
         <div className="wb-field">
-          <label className="wb-label" htmlFor="tx-amount">
-            Số tiền
+          <label className="wb-label" htmlFor="sub-name">
+            Tên dịch vụ
           </label>
           <input
-            id="tx-amount"
+            id="sub-name"
             className="wb-input"
-            inputMode="numeric"
-            autoComplete="off"
-            value={amountStr}
-            onChange={(e) => setAmountStr(e.target.value)}
-            placeholder="0"
-            style={{ fontSize: 18 }}
+            value={name}
+            autoFocus
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Ví dụ: Netflix, YouTube Premium"
           />
-          <span
-            className="wb-num"
-            style={{ fontSize: 12, color: "var(--wb-fg-muted)", textAlign: "left" }}
-          >
-            {formatMoney(amount)}
-          </span>
         </div>
 
-        {/* Category */}
+        <div className="wb-cluster wb-cluster--nowrap wb-cluster--stretch" style={{ gap: 12 }}>
+          <div className="wb-field" style={{ flex: 2 }}>
+            <label className="wb-label" htmlFor="sub-amount">
+              Số tiền / tháng
+            </label>
+            <input
+              id="sub-amount"
+              className="wb-input"
+              inputMode="numeric"
+              autoComplete="off"
+              value={amountStr}
+              onChange={(e) => setAmountStr(e.target.value)}
+              placeholder="0"
+            />
+            <span className="wb-num" style={{ fontSize: 12, color: "var(--wb-fg-muted)", textAlign: "left" }}>
+              {formatMoney(amount)}
+            </span>
+          </div>
+          <div className="wb-field" style={{ flex: 1 }}>
+            <label className="wb-label" htmlFor="sub-day">
+              Ngày trong tháng
+            </label>
+            <input
+              id="sub-day"
+              className="wb-input"
+              type="number"
+              min={1}
+              max={31}
+              value={dayOfMonth}
+              onChange={(e) => setDayOfMonth(Number(e.target.value))}
+            />
+          </div>
+        </div>
+
         <div className="wb-field">
-          <label className="wb-label" htmlFor="tx-cat">
+          <label className="wb-label" htmlFor="sub-cat">
             Danh mục
           </label>
           <span className="wb-select-wrap">
             <select
-              id="tx-cat"
+              id="sub-cat"
               className="wb-select"
               value={categoryId ?? "none"}
               onChange={(e) => setCategoryId(e.target.value === "none" ? null : e.target.value)}
@@ -182,7 +183,7 @@ export function TransactionEditor() {
               <option value="none">Chưa phân loại</option>
               {catOptions.map(({ cat, depth }) => (
                 <option key={cat.id} value={cat.id}>
-                  {"  ".repeat(depth) + cat.name}
+                  {"  ".repeat(depth) + cat.name}
                 </option>
               ))}
             </select>
@@ -190,44 +191,6 @@ export function TransactionEditor() {
           </span>
         </div>
 
-        {/* Counterparty + status */}
-        <div className="wb-cluster wb-cluster--nowrap wb-cluster--stretch" style={{ gap: 12 }}>
-          <div className="wb-field" style={{ flex: 1, minWidth: 0 }}>
-            <label className="wb-label" htmlFor="tx-payee">
-              Bên giao dịch <span className="wb-label__opt">(người / công ty)</span>
-            </label>
-            <input
-              id="tx-payee"
-              className="wb-input"
-              value={payee}
-              autoComplete="off"
-              onChange={(e) => setPayee(e.target.value)}
-              placeholder="VD: Highlands, Công ty ABC"
-            />
-          </div>
-          <div className="wb-field" style={{ flex: 1, minWidth: 0 }}>
-            <label className="wb-label" htmlFor="tx-status">
-              Trạng thái
-            </label>
-            <span className="wb-select-wrap">
-              <select
-                id="tx-status"
-                className="wb-select"
-                value={status}
-                onChange={(e) => setStatus(e.target.value as TxStatus)}
-              >
-                {TX_STATUS_ORDER.map((s) => (
-                  <option key={s} value={s}>
-                    {TX_STATUS_META[s].label}
-                  </option>
-                ))}
-              </select>
-              <span className="wb-ico">expand_more</span>
-            </span>
-          </div>
-        </div>
-
-        {/* Tags */}
         <div className="wb-field">
           <label className="wb-label">Nhãn</label>
           <Popover
@@ -291,19 +254,33 @@ export function TransactionEditor() {
           </Popover>
         </div>
 
-        {/* Date */}
-        <div className="wb-field">
-          <label className="wb-label">Ngày</label>
-          <DatePicker value={occurredAt} onChange={setOccurredAt} />
+        <div className="wb-cluster wb-cluster--nowrap" style={{ gap: 12, alignItems: "flex-start" }}>
+          <div className="wb-field" style={{ flex: "none" }}>
+            <label className="wb-label">Biểu tượng &amp; màu</label>
+            <span
+              className="cashy-subtile"
+              style={{ "--cashy-sub-c": color } as React.CSSProperties}
+            >
+              <Icon name={icon} size={20} />
+            </span>
+          </div>
+          <div className="wb-field" style={{ flex: 1, minWidth: 0 }}>
+            <label className="wb-label" style={{ visibility: "hidden" }}>
+              Màu
+            </label>
+            <ColorPicker value={color} onChange={setColor} />
+            <div style={{ marginTop: 8 }}>
+              <IconPicker value={icon} onChange={setIcon} />
+            </div>
+          </div>
         </div>
 
-        {/* Note */}
         <div className="wb-field">
-          <label className="wb-label" htmlFor="tx-note">
+          <label className="wb-label" htmlFor="sub-note">
             Ghi chú
           </label>
           <textarea
-            id="tx-note"
+            id="sub-note"
             className="wb-textarea"
             value={note}
             onChange={(e) => setNote(e.target.value)}
