@@ -146,6 +146,15 @@ export function Layout({ children }: { children: ReactNode }) {
 
         <main className="wb-grow" style={{ minWidth: 0, overflowY: "auto" }}>
           <div className="wb-container" style={{ paddingBlock: 24 }}>{children}</div>
+          <footer className="wb-footer wb-footer--slim">
+            <div className="wb-footer__inner">
+              <div className="wb-footer__bottom">
+                <span className="wb-footer__copy">
+                  © 2026 Cashy · Sổ chi tiêu cá nhân — dữ liệu chỉ lưu trên trình duyệt này
+                </span>
+              </div>
+            </div>
+          </footer>
         </main>
       </div>
     </div>

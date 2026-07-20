@@ -11,6 +11,7 @@ import { todayYMD } from "@/lib/date";
 import type { TxType } from "@/types";
 import { Modal } from "@/components/wb/Modal";
 import { Popover } from "@/components/wb/Popover";
+import { DatePicker } from "@/components/DatePicker";
 import { TagChip } from "@/components/TagChip";
 
 let openFn: ((id: string | null) => void) | null = null;
@@ -250,16 +251,8 @@ export function TransactionEditor() {
 
         {/* Date */}
         <div className="wb-field">
-          <label className="wb-label" htmlFor="tx-date">
-            Ngày
-          </label>
-          <input
-            id="tx-date"
-            className="wb-input"
-            type="date"
-            value={occurredAt}
-            onChange={(e) => setOccurredAt(e.target.value)}
-          />
+          <label className="wb-label">Ngày</label>
+          <DatePicker value={occurredAt} onChange={setOccurredAt} />
         </div>
 
         {/* Note */}

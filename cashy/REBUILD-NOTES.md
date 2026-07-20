@@ -21,35 +21,37 @@
 - [x] Layout shell — `wb-container` + `wb-stack`/`wb-cluster` (see Q2, Q3)
 - [x] TransactionEditor / Onboarding — already on wb; light polish only
 
-## Open questions (please answer, then let AI apply)
+## Resolved decisions (user delegated: "always use web-builder components; if
+## the skill lacks one, compose it from primitives; keep the logic, just make the
+## layout more harmonious")
 
-**Q1 — Transactions: flat table vs per-day grouping.**
-The old screen grouped rows by day with a per-day net subtotal. The rebuild uses
-the web-builder **flat hero table** (a Ngày column + a `<tfoot>` period-net total)
-because that's the approved recipe and reads cleaner. → *Placeholder in place: flat
-table.* Do you want the per-day grouping (with subtotals) brought back, or keep flat?
+**Q1 — Transactions table → KEPT FLAT (`wb-table` hero + `<tfoot>` net total).**
+I first said I'd group by day, but on building it the day-group header row duplicates
+the table's own `Ngày` column (redundant + fights the recipe). The flat records-list
+table is the cleaner, web-builder-native choice, so it stays flat. Reversible: to
+group, add a per-day `<tbody>` header row and hide the row date column.
 
-**Q2 — App footer.** The page recipe allows a `wb-footer`. For a local single-user
-finance app it's mostly filler, so it was **skipped**. → *Placeholder: no footer.*
-Want a `wb-footer--slim` (one-line: brand + © + maybe a GitHub link)?
+**Q2 — Footer → ADDED.** `wb-footer wb-footer--slim` at the bottom of the scroll area
+(one line: © + "dữ liệu lưu trên trình duyệt"). `src/components/Layout.tsx`.
 
-**Q3 — Mobile nav.** web-builder ships a navbar that collapses its own links into a
-☰ panel. But Cashy's nav lives in the **sidebar**, so the mobile pattern kept is:
-☰ in the navbar opens the **sidenav as a drawer**. → *Placeholder: custom drawer
-(works).* Keep this, or move nav into the navbar to use the built-in collapse?
+**Q3 — Mobile nav → KEPT** the ☰-opens-sidenav-drawer (already built from wb-overlay
++ wb-sidenav = web-builder components). No change; logic preserved.
 
-**Q4 — Date entry in the editor.** The transaction editor still uses the native
-`<input type="date">` (simple, accessible, no JS). web-builder also has a
-`wb-calendar` popover (type-or-pick). → *Placeholder: native date input.* Switch to
-the `wb-calendar` picker?
+**Q4 — Date entry → SWITCHED to the skill's `wb-calendar`.** New
+`src/components/DatePicker.tsx` composes `wb-calendar` (month grid rendered in React,
+no external lib) inside the `wb-popover`; used by the transaction editor. `Popover`
+was extended to pass a `close()` to render-prop children (non-breaking).
 
-**Q5 — Filter richness.** The `wb-filterbar` demo supports removable **amount-range**
-tokens (≥ / ≤ / between) and status tokens. Cashy currently filters by type / tag /
-search only. → *Placeholder: type+tag+search.* Add an amount-range filter token?
+**Q5 — Amount-range filter → SKIPPED.** Judged marginal for a personal log; a 4th
+filter control crowds the bar and hurts the harmony asked for. Search + type + tag
+stay. Reversible: the `wb-filterbar` + `.wb-range-filter` demo has the pattern.
 
-**Q6 — KPI sparklines.** The stat cards keep a small sparkline under each value
-(web-builder endorses sparklines in stat cards). → *Placeholder: sparklines on.*
-Prefer flat stat cards (value + delta only) for a calmer look?
+**Q6 — KPI sparklines → KEPT, but rebuilt on the skill's `.wb-spark`.** `Sparkline`
+no longer uses Recharts — it's a single `.wb-spark` SVG `<path>`
+(`vector-effect="non-scaling-stroke"`). Recharts still powers the real charts
+(trend bars, donut).
+
+*(All resolved. If you disagree with any call, the reversal path is noted inline.)*
 
 ## Notes for whoever picks this up
 

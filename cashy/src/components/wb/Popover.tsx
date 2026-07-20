@@ -11,7 +11,8 @@ export function Popover({
   panelWidth,
 }: {
   trigger: (props: { open: boolean; toggle: () => void }) => ReactNode;
-  children: ReactNode;
+  /** Static content, or a render fn that receives `close` (e.g. close after a pick). */
+  children: ReactNode | ((props: { close: () => void }) => ReactNode);
   panelWidth?: number;
 }) {
   const [open, setOpen] = useState(false);
@@ -56,7 +57,9 @@ export function Popover({
           padding: 6,
         }}
       >
-        {children}
+        {typeof children === "function"
+          ? children({ close: () => setOpen(false) })
+          : children}
       </div>
     </span>
   );
