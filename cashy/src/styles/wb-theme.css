@@ -1,0 +1,22 @@
+/* =============================================================================
+   Cashy — web-builder token overrides
+   -----------------------------------------------------------------------------
+   Loaded AFTER web-builder.css so these :root values win. Keep the vendored
+   web-builder.css pristine (easy to re-sync upstream) — every Cashy-specific
+   tweak to the design system lives here.
+
+   Colour: web-builder is already neutral-first with reserved status hues
+   (success / danger / warning / info + chart income/expense), which matches
+   Cashy's "neutral chủ đạo + màu trạng thái" choice — so we override only the
+   fonts for typographic continuity with the old shell.
+   ========================================================================== */
+:root {
+  /* System UI stack first (native + Vietnamese-safe), Plus Jakarta Sans as the
+     embedded offline fallback — mirrors the old Tailwind `sans` stack. */
+  --wb-font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Plus Jakarta Sans", "Noto Sans", sans-serif;
+
+  /* JetBrains Mono stays the number/fixed-width hero. */
+  --wb-font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+}
