@@ -1,6 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { Check, Trash2 } from "lucide-react";
-import { cn } from "@/lib/utils";
 import {
   addTransaction,
   deleteTransaction,
@@ -11,29 +9,8 @@ import { flattenTree } from "@/lib/domain";
 import { formatMoney, parseMoney } from "@/lib/money";
 import { todayYMD } from "@/lib/date";
 import type { TxType } from "@/types";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Modal } from "@/components/wb/Modal";
+import { Popover } from "@/components/wb/Popover";
 import { TagChip } from "@/components/TagChip";
 
 let openFn: ((id: string | null) => void) | null = null;
@@ -95,172 +72,211 @@ export function TransactionEditor() {
     setOpen(false);
   }
 
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-h-[92vh] max-w-md overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>{editingId ? "Sửa giao dịch" : "Thêm giao dịch"}</DialogTitle>
-        </DialogHeader>
+  const footer = (
+    <div
+      style={{
+        display: "flex",
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: 10,
+      }}
+    >
+      {editingId ? (
+        <button
+          type="button"
+          className="wb-btn wb-btn--ghost"
+          style={{ color: "var(--wb-danger-text)", gap: 6 }}
+          onClick={() => {
+            deleteTransaction(editingId);
+            setOpen(false);
+          }}
+        >
+          <span className="wb-ico wb-ico--sm">delete</span>
+          Xoá
+        </button>
+      ) : (
+        <span />
+      )}
+      <div style={{ display: "flex", gap: 8 }}>
+        <button type="button" className="wb-btn wb-btn--secondary" onClick={() => setOpen(false)}>
+          Huỷ
+        </button>
+        <button type="button" className="wb-btn" onClick={save} disabled={amount <= 0}>
+          {editingId ? "Lưu" : "Thêm"}
+        </button>
+      </div>
+    </div>
+  );
 
-        <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-1 rounded-md bg-muted p-1">
-            {(["expense", "income"] as TxType[]).map((t) => (
+  return (
+    <Modal
+      open={open}
+      onClose={() => setOpen(false)}
+      title={editingId ? "Sửa giao dịch" : "Thêm giao dịch"}
+      footer={footer}
+    >
+      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        {/* Chi / Thu segmented toggle */}
+        <div className="wb-tabs wb-tabs--pill" style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
+          {(["expense", "income"] as TxType[]).map((t) => {
+            const active = type === t;
+            const tone = t === "income" ? "var(--wb-success-text)" : "var(--wb-danger-text)";
+            return (
               <button
                 key={t}
                 type="button"
+                className={active ? "wb-tab is-active" : "wb-tab"}
+                style={{ textAlign: "center", color: active ? tone : undefined }}
                 onClick={() => changeType(t)}
-                className={cn(
-                  "rounded-[4px] py-1.5 text-[13px] font-medium transition",
-                  type === t
-                    ? t === "income"
-                      ? "bg-card text-income shadow-sm"
-                      : "bg-card text-expense shadow-sm"
-                    : "text-muted-foreground",
-                )}
               >
                 {t === "expense" ? "Chi tiêu" : "Thu nhập"}
               </button>
-            ))}
-          </div>
-
-          <div className="space-y-1.5">
-            <Label htmlFor="tx-amount">Số tiền</Label>
-            <Input
-              id="tx-amount"
-              inputMode="numeric"
-              autoComplete="off"
-              value={amountStr}
-              onChange={(e) => setAmountStr(e.target.value)}
-              placeholder="0"
-              className="text-lg tnum"
-            />
-            <div className="text-xs text-muted-foreground tnum">
-              {formatMoney(amount)}
-            </div>
-          </div>
-
-          <div className="space-y-1.5">
-            <Label>Danh mục</Label>
-            <Select
-              value={categoryId ?? "none"}
-              onValueChange={(v) => setCategoryId(v === "none" ? null : v)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">Chưa phân loại</SelectItem>
-                {catOptions.map(({ cat, depth }) => (
-                  <SelectItem key={cat.id} value={cat.id}>
-                    <span style={{ paddingLeft: depth * 12 }}>{cat.name}</span>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-1.5">
-            <Label>Nhãn</Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="h-auto min-h-9 w-full flex-wrap justify-start gap-1 py-1.5 font-normal"
-                >
-                  {tagIds.length ? (
-                    tagIds.map((id) => {
-                      const t = tags.find((x) => x.id === id);
-                      return t ? <TagChip key={id} tag={t} /> : null;
-                    })
-                  ) : (
-                    <span className="text-muted-foreground">Chọn nhãn…</span>
-                  )}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent align="start" className="w-56 p-1">
-                {tags.length === 0 ? (
-                  <div className="px-2 py-3 text-center text-xs text-muted-foreground">
-                    Chưa có nhãn nào. Tạo ở màn Nhãn.
-                  </div>
-                ) : (
-                  tags.map((t) => {
-                    const on = tagIds.includes(t.id);
-                    return (
-                      <button
-                        key={t.id}
-                        type="button"
-                        onClick={() =>
-                          setTagIds(
-                            on ? tagIds.filter((x) => x !== t.id) : [...tagIds, t.id],
-                          )
-                        }
-                        className={cn(
-                          "flex w-full items-center gap-2 rounded-[4px] px-2 py-1.5 text-[13px] hover:bg-accent",
-                          on && "bg-accent",
-                        )}
-                      >
-                        <span
-                          className="size-2 rounded-full"
-                          style={{ background: t.colorHex }}
-                        />
-                        {t.name}
-                        {on && <Check size={14} className="ml-auto" />}
-                      </button>
-                    );
-                  })
-                )}
-              </PopoverContent>
-            </Popover>
-          </div>
-
-          <div className="space-y-1.5">
-            <Label htmlFor="tx-date">Ngày</Label>
-            <Input
-              id="tx-date"
-              type="date"
-              value={occurredAt}
-              onChange={(e) => setOccurredAt(e.target.value)}
-            />
-          </div>
-
-          <div className="space-y-1.5">
-            <Label htmlFor="tx-note">Ghi chú</Label>
-            <Textarea
-              id="tx-note"
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              placeholder="Không bắt buộc"
-              rows={2}
-            />
-          </div>
+            );
+          })}
         </div>
 
-        <DialogFooter className="gap-2 sm:justify-between">
-          {editingId ? (
-            <Button
-              variant="ghost"
-              className="gap-1.5 text-expense hover:text-expense"
-              onClick={() => {
-                deleteTransaction(editingId);
-                setOpen(false);
-              }}
+        {/* Amount */}
+        <div className="wb-field">
+          <label className="wb-label" htmlFor="tx-amount">
+            Số tiền
+          </label>
+          <input
+            id="tx-amount"
+            className="wb-input"
+            inputMode="numeric"
+            autoComplete="off"
+            value={amountStr}
+            onChange={(e) => setAmountStr(e.target.value)}
+            placeholder="0"
+            style={{ fontSize: 18 }}
+          />
+          <span
+            className="wb-num"
+            style={{ fontSize: 12, color: "var(--wb-fg-muted)", textAlign: "left" }}
+          >
+            {formatMoney(amount)}
+          </span>
+        </div>
+
+        {/* Category */}
+        <div className="wb-field">
+          <label className="wb-label" htmlFor="tx-cat">
+            Danh mục
+          </label>
+          <span className="wb-select-wrap">
+            <select
+              id="tx-cat"
+              className="wb-select"
+              value={categoryId ?? "none"}
+              onChange={(e) => setCategoryId(e.target.value === "none" ? null : e.target.value)}
             >
-              <Trash2 size={15} />
-              Xoá
-            </Button>
-          ) : (
-            <span />
-          )}
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={() => setOpen(false)}>
-              Huỷ
-            </Button>
-            <Button onClick={save} disabled={amount <= 0}>
-              {editingId ? "Lưu" : "Thêm"}
-            </Button>
-          </div>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+              <option value="none">Chưa phân loại</option>
+              {catOptions.map(({ cat, depth }) => (
+                <option key={cat.id} value={cat.id}>
+                  {"  ".repeat(depth) + cat.name}
+                </option>
+              ))}
+            </select>
+            <span className="wb-ico">expand_more</span>
+          </span>
+        </div>
+
+        {/* Tags */}
+        <div className="wb-field">
+          <label className="wb-label">Nhãn</label>
+          <Popover
+            panelWidth={224}
+            trigger={({ toggle }) => (
+              <button
+                type="button"
+                className="wb-input"
+                onClick={toggle}
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: 4,
+                  alignItems: "center",
+                  minHeight: 38,
+                  height: "auto",
+                  cursor: "pointer",
+                  textAlign: "left",
+                }}
+              >
+                {tagIds.length ? (
+                  tagIds.map((id) => {
+                    const t = tags.find((x) => x.id === id);
+                    return t ? <TagChip key={id} tag={t} /> : null;
+                  })
+                ) : (
+                  <span style={{ color: "var(--wb-fg-subtle)" }}>Chọn nhãn…</span>
+                )}
+              </button>
+            )}
+          >
+            {tags.length === 0 ? (
+              <div style={{ padding: "8px 10px", textAlign: "center", fontSize: 12, color: "var(--wb-fg-muted)" }}>
+                Chưa có nhãn nào. Tạo ở màn Nhãn.
+              </div>
+            ) : (
+              <div className="wb-menu" style={{ border: 0, boxShadow: "none", padding: 0, background: "none" }}>
+                {tags.map((t) => {
+                  const on = tagIds.includes(t.id);
+                  return (
+                    <button
+                      key={t.id}
+                      type="button"
+                      className="wb-menu__item"
+                      onClick={() =>
+                        setTagIds(on ? tagIds.filter((x) => x !== t.id) : [...tagIds, t.id])
+                      }
+                    >
+                      <span
+                        style={{ width: 8, height: 8, borderRadius: "50%", background: t.colorHex, flex: "none" }}
+                      />
+                      {t.name}
+                      {on && (
+                        <span className="wb-ico wb-ico--xs" style={{ marginLeft: "auto" }}>
+                          check
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </Popover>
+        </div>
+
+        {/* Date */}
+        <div className="wb-field">
+          <label className="wb-label" htmlFor="tx-date">
+            Ngày
+          </label>
+          <input
+            id="tx-date"
+            className="wb-input"
+            type="date"
+            value={occurredAt}
+            onChange={(e) => setOccurredAt(e.target.value)}
+          />
+        </div>
+
+        {/* Note */}
+        <div className="wb-field">
+          <label className="wb-label" htmlFor="tx-note">
+            Ghi chú
+          </label>
+          <textarea
+            id="tx-note"
+            className="wb-textarea"
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            placeholder="Không bắt buộc"
+            rows={2}
+          />
+        </div>
+      </div>
+    </Modal>
   );
 }
