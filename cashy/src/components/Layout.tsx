@@ -29,7 +29,7 @@ function Navbar({ onMenu }: { onMenu: () => void }) {
 
   return (
     <header className="wb-navbar" style={{ flex: "none" }}>
-      <span className="md:hidden">
+      <span className="cashy-hide-md">
         <button
           type="button"
           onClick={onMenu}
@@ -62,8 +62,8 @@ function Navbar({ onMenu }: { onMenu: () => void }) {
         </button>
         <button type="button" className="wb-btn" style={{ gap: 6 }} onClick={() => openTxEditor(null)}>
           <span className="wb-ico wb-ico--sm">add</span>
-          <span className="hidden sm:inline">Thêm giao dịch</span>
-          <span className="sm:hidden">Thêm</span>
+          <span className="cashy-show-sm">Thêm giao dịch</span>
+          <span className="cashy-hide-sm">Thêm</span>
         </button>
       </div>
     </header>
@@ -120,7 +120,7 @@ export function Layout({ children }: { children: ReactNode }) {
       <Navbar onMenu={() => setMobileOpen(true)} />
 
       <div style={{ display: "flex", minHeight: 0, flex: 1, overflow: "hidden" }}>
-        <aside className="hidden md:block" style={{ flex: "none" }}>
+        <aside className="cashy-show-md" style={{ flex: "none" }}>
           <SidebarBody />
         </aside>
 

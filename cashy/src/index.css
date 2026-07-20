@@ -1,90 +1,118 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* =========================================================================
+   Cashy — base layer (Tailwind-free)
+   -------------------------------------------------------------------------
+   web-builder.css owns the whole component system + design tokens (--wb-*);
+   wb-theme.css overrides the fonts. This file only carries what a component
+   library can't: the page reset, the body ground, and a few app-specific
+   utilities that need media queries or :hover state (things an inline
+   `style={}` can't express). Everything is hand-written CSS — no @tailwind,
+   no @apply, no build-time utility generation.
+   ========================================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--wb-canvas);
+  color: var(--wb-fg);
+  font-family: var(--wb-font);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: rgba(24, 24, 27, 0.14);
+}
+.dark ::selection {
+  background: rgba(255, 255, 255, 0.18);
+}
 
 /* =========================================================================
-   Cashy — "Bảng số" design system
-   Notion-neutral ground + JetBrains Mono numbers as the hero.
-   Tokens are HSL triples consumed via hsl(var(--x)). Theme via [data-theme].
+   App utilities — the handful of responsive / stateful bits that replaced
+   the old Tailwind classes. Named `cashy-*` so they never collide with wb-*.
    ========================================================================= */
-@layer base {
-  :root,
-  :root[data-theme="light"] {
-    --background: 0 0% 100%;
-    --foreground: 45 8% 20%; /* #37352f warm near-black */
-    --card: 0 0% 100%;
-    --card-foreground: 45 8% 20%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 45 8% 20%;
-    --primary: 45 8% 20%; /* action = near-black (Notion primary) */
-    --primary-foreground: 0 0% 100%;
-    --secondary: 48 8% 96%;
-    --secondary-foreground: 45 8% 22%;
-    --muted: 48 8% 96%; /* #f7f7f5 soft surface */
-    --muted-foreground: 45 3% 46%; /* secondary text */
-    --accent: 45 6% 95%; /* hover surface */
-    --accent-foreground: 45 8% 20%;
-    --destructive: 4 55% 50%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 43 9% 90%; /* #e9e9e7 hairline */
-    --input: 43 9% 90%;
-    --ring: 211 77% 51%; /* Notion blue focus */
-    --income: 148 32% 38%;
-    --expense: 4 58% 50%;
-    --brand: 211 77% 51%;
-    --radius: 10px;
-    /* dark top bar — mirrors the site launcher's Bootstrap navbar (#212529) */
-    --navbar: 210 11% 15%;
-    --navbar-foreground: 210 17% 98%;
-  }
 
-  :root[data-theme="dark"] {
-    --background: 0 0% 10%; /* #191919 Notion dark */
-    --foreground: 48 7% 91%;
-    --card: 40 3% 13%;
-    --card-foreground: 48 7% 91%;
-    --popover: 40 3% 13%;
-    --popover-foreground: 48 7% 91%;
-    --primary: 48 7% 91%; /* action = near-white */
-    --primary-foreground: 0 0% 10%;
-    --secondary: 40 3% 16%;
-    --secondary-foreground: 48 7% 91%;
-    --muted: 40 3% 15%;
-    --muted-foreground: 45 4% 58%;
-    --accent: 40 3% 18%;
-    --accent-foreground: 48 7% 91%;
-    --destructive: 4 78% 67%;
-    --destructive-foreground: 0 0% 10%;
-    --border: 40 3% 23%;
-    --input: 40 3% 23%;
-    --ring: 211 58% 62%;
-    --income: 160 40% 52%;
-    --expense: 4 84% 69%;
-    --brand: 211 62% 64%;
-    --radius: 10px;
-    --navbar: 40 4% 16%;
-    --navbar-foreground: 48 12% 94%;
+/* Dashboard KPI row: 2 columns on mobile, 4 from the lg breakpoint. */
+.cashy-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+@media (min-width: 1024px) {
+  .cashy-stat-grid {
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 
-@layer base {
-  * {
-    @apply border-border;
+/* Dashboard panels: stacked on mobile, 3 columns from lg (chart spans 2). */
+.cashy-panel-grid {
+  display: grid;
+  gap: 16px;
+}
+@media (min-width: 1024px) {
+  .cashy-panel-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
-  html {
-    -webkit-text-size-adjust: 100%;
+  .cashy-panel-grid__wide {
+    grid-column: span 2;
   }
-  body {
-    @apply bg-background text-foreground font-sans antialiased;
-    font-size: 14px;
-    line-height: 1.5;
+}
+
+/* Category-tree row: reveal the trailing action buttons on hover / focus. */
+.cashy-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: var(--wb-radius-sm);
+  padding: 6px 4px 6px 0;
+}
+.cashy-row__actions {
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.cashy-row:hover .cashy-row__actions,
+.cashy-row:focus-within .cashy-row__actions {
+  opacity: 1;
+}
+
+/* Responsive show / hide — replaces the few Tailwind breakpoint utilities. */
+@media (min-width: 768px) {
+  .cashy-hide-md {
+    display: none !important;
+  } /* was `md:hidden` */
+}
+.cashy-show-md {
+  display: none;
+} /* was `hidden md:block` */
+@media (min-width: 768px) {
+  .cashy-show-md {
+    display: block;
   }
-  /* numbers are the hero: tabular alignment wherever figures render */
-  .tnum {
-    font-variant-numeric: tabular-nums;
-    font-feature-settings: "tnum" 1;
+}
+.cashy-show-sm {
+  display: none;
+} /* was `hidden sm:inline` */
+@media (min-width: 640px) {
+  .cashy-show-sm {
+    display: inline;
   }
-  ::selection {
-    background: hsl(var(--brand) / 0.18);
-  }
+}
+@media (min-width: 640px) {
+  .cashy-hide-sm {
+    display: none;
+  } /* was `sm:hidden` */
 }

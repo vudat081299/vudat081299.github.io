@@ -95,7 +95,7 @@ export function Dashboard() {
         <PeriodPicker value={period} onChange={setPeriod} />
       </div>
 
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <div className="cashy-stat-grid">
         <BalanceCard label="Số dư (tất cả)" amount={view.balance} spark={netSpark} />
         <BalanceCard
           label="Thu nhập"
@@ -119,8 +119,8 @@ export function Dashboard() {
         />
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-3">
-        <div className="wb-card lg:col-span-2">
+      <div className="cashy-panel-grid">
+        <div className="wb-card cashy-panel-grid__wide">
           <div className="wb-card__body">
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
               <h3 style={{ fontSize: 14, fontWeight: 650, margin: 0 }}>Thu / Chi theo thời gian</h3>

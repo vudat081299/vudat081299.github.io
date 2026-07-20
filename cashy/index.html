@@ -25,6 +25,9 @@
             "data-theme",
             dark ? "dark" : "light"
           );
+          // web-builder themes off a `.dark` class — set it here too so the
+          // first paint already matches (no flash of the light theme).
+          document.documentElement.classList.toggle("dark", dark);
         } catch (e) {}
       })();
     </script>

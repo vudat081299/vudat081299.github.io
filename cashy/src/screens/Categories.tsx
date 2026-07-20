@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { cn } from "@/lib/utils";
 import {
   addCategory,
   deleteCategory,
@@ -253,12 +252,10 @@ function Tree({
           <div
             key={cat.id}
             data-cat-id={cat.id}
-            className={cn(
-              "group relative flex items-center gap-2 rounded-md py-1.5 pr-1",
-              dragId === cat.id && "opacity-40",
-            )}
+            className="cashy-row"
             style={{
               ...style,
+              opacity: dragId === cat.id ? 0.4 : undefined,
               boxShadow:
                 isDrop && drop.pos === "into"
                   ? "inset 0 0 0 2px var(--wb-fg)"
@@ -267,8 +264,13 @@ function Tree({
           >
             <button
               type="button"
-              className="cursor-grab touch-none"
-              style={{ color: "var(--wb-fg-subtle)", background: "transparent", border: 0 }}
+              style={{
+                cursor: "grab",
+                touchAction: "none",
+                color: "var(--wb-fg-subtle)",
+                background: "transparent",
+                border: 0,
+              }}
               onPointerDown={(e) => {
                 e.preventDefault();
                 document.body.style.userSelect = "none";
@@ -295,7 +297,7 @@ function Tree({
             <span style={{ flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontSize: 13.5 }}>
               {cat.name}
             </span>
-            <div className="flex items-center opacity-0 transition group-hover:opacity-100">
+            <div className="cashy-row__actions">
               <button
                 type="button"
                 className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm"

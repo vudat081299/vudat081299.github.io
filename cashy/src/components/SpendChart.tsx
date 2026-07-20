@@ -22,8 +22,14 @@ export function SpendChart({
   const data = empty ? [{ id: "empty", total: 1 }] : slices;
   return (
     <div
-      className="relative mx-auto"
-      style={{ width: size, height: size, maxWidth: "100%", color: "var(--wb-border)" }}
+      style={{
+        position: "relative",
+        marginInline: "auto",
+        width: size,
+        height: size,
+        maxWidth: "100%",
+        color: "var(--wb-border)",
+      }}
     >
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
@@ -48,7 +54,18 @@ export function SpendChart({
           </Pie>
         </PieChart>
       </ResponsiveContainer>
-      <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-0.5">
+      <div
+        style={{
+          pointerEvents: "none",
+          position: "absolute",
+          inset: 0,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 2,
+        }}
+      >
         <span style={{ fontSize: 11, fontWeight: 550, color: "var(--wb-fg-muted)" }}>
           {label}
         </span>

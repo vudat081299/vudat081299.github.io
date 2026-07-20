@@ -105,7 +105,7 @@ export function Settings() {
       <h2 style={{ fontSize: 24, fontWeight: 700, letterSpacing: "-0.02em", margin: 0 }}>Cài đặt</h2>
 
       <Section title="Giao diện">
-        <div className="grid grid-cols-3 gap-2">
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
           {THEMES.map((t) => {
             const active = theme === t.key;
             return (
