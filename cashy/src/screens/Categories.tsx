@@ -1,11 +1,4 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import {
-  FolderTree,
-  GripVertical,
-  Pencil,
-  Plus,
-  Trash2,
-} from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   addCategory,
@@ -19,26 +12,10 @@ import { descendantIds, flattenTree } from "@/lib/domain";
 import { Icon, ICON_CHOICES } from "@/lib/icons";
 import { SWATCHES } from "@/lib/palette";
 import type { Category, TxType } from "@/types";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { ColorPicker } from "@/components/ColorPicker";
 import { IconPicker } from "@/components/IconPicker";
 import { EmptyState } from "@/components/EmptyState";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Modal } from "@/components/wb/Modal";
 
 type DropPos = "before" | "into" | "after";
 interface Drop {
@@ -60,7 +37,6 @@ function CategoryEditor({
   onClose: () => void;
 }) {
   const { categories } = useCashy();
-  const open = state !== null;
   const editing = state?.editing ?? null;
 
   const [name, setName] = useState("");
@@ -81,9 +57,7 @@ function CategoryEditor({
 
   // valid parents: same type, excluding self + descendants
   const banned = editing ? descendantIds(categories, editing.id) : new Set<string>();
-  const parentOptions = flattenTree(categories, type).filter(
-    (n) => !banned.has(n.cat.id),
-  );
+  const parentOptions = flattenTree(categories, type).filter((n) => !banned.has(n.cat.id));
 
   function save() {
     const n = name.trim();
@@ -94,75 +68,87 @@ function CategoryEditor({
   }
 
   return (
-    <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-h-[92vh] max-w-md overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>
-            {editing ? "Sửa danh mục" : "Thêm danh mục"} ·{" "}
-            {type === "income" ? "Thu nhập" : "Chi tiêu"}
-          </DialogTitle>
-        </DialogHeader>
-        <div className="space-y-4">
-          <div className="space-y-1.5">
-            <Label htmlFor="cat-name">Tên</Label>
-            <div className="flex gap-2">
-              <span
-                className="grid size-9 shrink-0 place-items-center rounded-md"
-                style={{ background: colorHex + "22", color: colorHex }}
-              >
-                <Icon name={icon} size={18} />
-              </span>
-              <Input
-                id="cat-name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && save()}
-                placeholder="Ví dụ: Ăn uống"
-                autoFocus
-              />
-            </div>
-          </div>
-
-          <div className="space-y-1.5">
-            <Label>Danh mục cha</Label>
-            <Select
-              value={parentId ?? "none"}
-              onValueChange={(v) => setParentId(v === "none" ? null : v)}
+    <Modal
+      open
+      onClose={onClose}
+      title={`${editing ? "Sửa danh mục" : "Thêm danh mục"} · ${type === "income" ? "Thu nhập" : "Chi tiêu"}`}
+      footer={
+        <>
+          <button type="button" className="wb-btn wb-btn--secondary" onClick={onClose}>
+            Huỷ
+          </button>
+          <button type="button" className="wb-btn" onClick={save} disabled={!name.trim()}>
+            {editing ? "Lưu" : "Thêm"}
+          </button>
+        </>
+      }
+    >
+      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <div className="wb-field">
+          <label className="wb-label" htmlFor="cat-name">
+            Tên
+          </label>
+          <div style={{ display: "flex", gap: 8 }}>
+            <span
+              style={{
+                width: 38,
+                height: 38,
+                flex: "none",
+                display: "grid",
+                placeItems: "center",
+                borderRadius: "var(--wb-radius-sm)",
+                background: `color-mix(in srgb, ${colorHex} 15%, transparent)`,
+                color: colorHex,
+              }}
             >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">— Cấp gốc —</SelectItem>
-                {parentOptions.map(({ cat, depth }) => (
-                  <SelectItem key={cat.id} value={cat.id}>
-                    <span style={{ paddingLeft: depth * 12 }}>{cat.name}</span>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Label>Màu</Label>
-            <ColorPicker value={colorHex} onChange={setColorHex} />
-          </div>
-
-          <div className="space-y-2">
-            <Label>Biểu tượng</Label>
-            <IconPicker value={icon} onChange={setIcon} />
+              <Icon name={icon} size={18} />
+            </span>
+            <input
+              id="cat-name"
+              className="wb-input"
+              style={{ flex: 1 }}
+              value={name}
+              autoFocus
+              onChange={(e) => setName(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && save()}
+              placeholder="Ví dụ: Ăn uống"
+            />
           </div>
         </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
-            Huỷ
-          </Button>
-          <Button onClick={save} disabled={!name.trim()}>
-            {editing ? "Lưu" : "Thêm"}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+
+        <div className="wb-field">
+          <label className="wb-label" htmlFor="cat-parent">
+            Danh mục cha
+          </label>
+          <span className="wb-select-wrap">
+            <select
+              id="cat-parent"
+              className="wb-select"
+              value={parentId ?? "none"}
+              onChange={(e) => setParentId(e.target.value === "none" ? null : e.target.value)}
+            >
+              <option value="none">— Cấp gốc —</option>
+              {parentOptions.map(({ cat, depth }) => (
+                <option key={cat.id} value={cat.id}>
+                  {"  ".repeat(depth) + cat.name}
+                </option>
+              ))}
+            </select>
+            <span className="wb-ico">expand_more</span>
+          </span>
+        </div>
+
+        <div className="wb-field">
+          <label className="wb-label">Màu</label>
+          <ColorPicker value={colorHex} onChange={setColorHex} />
+        </div>
+
+        <div className="wb-field">
+          <label className="wb-label">Biểu tượng</label>
+          <IconPicker value={icon} onChange={setIcon} />
+        </div>
+      </div>
+    </Modal>
   );
 }
 
@@ -241,24 +227,28 @@ function Tree({
 
   if (nodes.length === 0) {
     return (
-      <EmptyState
-        icon={<FolderTree size={18} />}
-        title="Chưa có danh mục"
-        description={`Thêm danh mục ${type === "income" ? "thu nhập" : "chi tiêu"} đầu tiên.`}
-      />
+      <div className="wb-card">
+        <div className="wb-card__body">
+          <EmptyState
+            icon="🗂️"
+            title="Chưa có danh mục"
+            description={`Thêm danh mục ${type === "income" ? "thu nhập" : "chi tiêu"} đầu tiên.`}
+          />
+        </div>
+      </div>
     );
   }
 
   return (
-    <div className="rounded-lg border bg-card p-1">
+    <div className="wb-card" style={{ padding: 4 }}>
       {nodes.map(({ cat, depth }) => {
         const isDrop = drop?.id === cat.id;
         const style: CSSProperties = { paddingLeft: 8 + depth * 22 };
         if (isDrop && drop.pos !== "into")
           style.boxShadow =
             drop.pos === "before"
-              ? "inset 0 2px 0 hsl(var(--brand))"
-              : "inset 0 -2px 0 hsl(var(--brand))";
+              ? "inset 0 2px 0 var(--wb-fg)"
+              : "inset 0 -2px 0 var(--wb-fg)";
         return (
           <div
             key={cat.id}
@@ -266,13 +256,19 @@ function Tree({
             className={cn(
               "group relative flex items-center gap-2 rounded-md py-1.5 pr-1",
               dragId === cat.id && "opacity-40",
-              isDrop && drop.pos === "into" && "ring-2 ring-brand ring-inset",
             )}
-            style={style}
+            style={{
+              ...style,
+              boxShadow:
+                isDrop && drop.pos === "into"
+                  ? "inset 0 0 0 2px var(--wb-fg)"
+                  : style.boxShadow,
+            }}
           >
             <button
               type="button"
-              className="cursor-grab touch-none text-muted-foreground/40 hover:text-muted-foreground"
+              className="cursor-grab touch-none"
+              style={{ color: "var(--wb-fg-subtle)", background: "transparent", border: 0 }}
               onPointerDown={(e) => {
                 e.preventDefault();
                 document.body.style.userSelect = "none";
@@ -280,43 +276,50 @@ function Tree({
               }}
               aria-label="Kéo để sắp xếp"
             >
-              <GripVertical size={15} />
+              <span className="wb-ico wb-ico--sm">drag_indicator</span>
             </button>
             <span
-              className="grid size-6 shrink-0 place-items-center rounded-[5px]"
-              style={{ background: cat.colorHex + "22", color: cat.colorHex }}
+              style={{
+                width: 24,
+                height: 24,
+                flex: "none",
+                display: "grid",
+                placeItems: "center",
+                borderRadius: 5,
+                background: `color-mix(in srgb, ${cat.colorHex} 15%, transparent)`,
+                color: cat.colorHex,
+              }}
             >
               <Icon name={cat.icon} size={13} />
             </span>
-            <span className="flex-1 truncate text-[13.5px]">{cat.name}</span>
+            <span style={{ flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontSize: 13.5 }}>
+              {cat.name}
+            </span>
             <div className="flex items-center opacity-0 transition group-hover:opacity-100">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="size-7 text-muted-foreground"
+              <button
+                type="button"
+                className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm"
                 onClick={() => onAddChild(cat.id)}
                 aria-label="Thêm danh mục con"
               >
-                <Plus size={14} />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="size-7 text-muted-foreground"
+                <span className="wb-ico wb-ico--sm">add</span>
+              </button>
+              <button
+                type="button"
+                className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm"
                 onClick={() => onEdit(cat)}
                 aria-label="Sửa"
               >
-                <Pencil size={14} />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="size-7 text-muted-foreground hover:text-expense"
+                <span className="wb-ico wb-ico--sm">edit</span>
+              </button>
+              <button
+                type="button"
+                className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm"
                 onClick={() => remove(cat)}
                 aria-label="Xoá"
               >
-                <Trash2 size={14} />
-              </Button>
+                <span className="wb-ico wb-ico--sm">delete</span>
+              </button>
             </div>
           </div>
         );
@@ -330,37 +333,32 @@ export function Categories() {
   const [editor, setEditor] = useState<EditorState | null>(null);
 
   return (
-    <div className="space-y-5">
-      <div className="flex flex-wrap items-end justify-between gap-3">
+    <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", justifyContent: "space-between", gap: 12 }}>
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Danh mục</h2>
-          <p className="mt-0.5 text-[13px] text-muted-foreground">
-            Kéo tay cầm để đổi thứ tự; thả vào giữa một mục để lồng vào — cây sâu
-            tuỳ ý.
+          <h2 style={{ fontSize: 24, fontWeight: 700, letterSpacing: "-0.02em", margin: 0 }}>Danh mục</h2>
+          <p style={{ marginTop: 2, fontSize: 13, color: "var(--wb-fg-muted)" }}>
+            Kéo tay cầm để đổi thứ tự; thả vào giữa một mục để lồng vào — cây sâu tuỳ ý.
           </p>
         </div>
-        <Button
-          size="sm"
-          className="gap-1.5"
+        <button
+          type="button"
+          className="wb-btn"
+          style={{ gap: 6, flex: "none" }}
           onClick={() => setEditor({ editing: null, type, parentId: null })}
         >
-          <Plus size={15} />
+          <span className="wb-ico wb-ico--sm">add</span>
           Thêm danh mục
-        </Button>
+        </button>
       </div>
 
-      <div className="flex w-fit rounded-md bg-muted p-0.5">
+      <div className="wb-tabs wb-tabs--pill" style={{ width: "fit-content" }}>
         {(["expense", "income"] as TxType[]).map((t) => (
           <button
             key={t}
             type="button"
+            className={type === t ? "wb-tab is-active" : "wb-tab"}
             onClick={() => setType(t)}
-            className={cn(
-              "rounded-[4px] px-3 py-1 text-[13px] font-medium transition",
-              type === t
-                ? "bg-card text-foreground shadow-sm"
-                : "text-muted-foreground",
-            )}
           >
             {t === "expense" ? "Chi tiêu" : "Thu nhập"}
           </button>
