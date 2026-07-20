@@ -1,13 +1,5 @@
 import { useRef, useState, type ChangeEvent, type ReactNode } from "react";
 import { toast } from "@/components/wb/Toast";
-import {
-  Download,
-  Monitor,
-  Moon,
-  Sun,
-  Trash2,
-  Upload,
-} from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   exportData,
@@ -20,9 +12,6 @@ import {
 import { todayYMD } from "@/lib/date";
 import type { ThemeMode } from "@/types";
 import { AVATAR_COLORS } from "@/lib/palette";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 
 function download(filename: string, text: string, mime: string) {
   const blob = new Blob([text], { type: mime });
@@ -35,17 +24,19 @@ function download(filename: string, text: string, mime: string) {
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <section className="space-y-3 rounded-lg border bg-card p-4">
-      <h3 className="text-sm font-semibold">{title}</h3>
-      {children}
+    <section className="wb-card">
+      <div className="wb-card__body" style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        <h3 style={{ fontSize: 14, fontWeight: 650, margin: 0 }}>{title}</h3>
+        {children}
+      </div>
     </section>
   );
 }
 
-const THEMES: { key: ThemeMode; label: string; icon: typeof Sun }[] = [
-  { key: "system", label: "Hệ thống", icon: Monitor },
-  { key: "light", label: "Sáng", icon: Sun },
-  { key: "dark", label: "Tối", icon: Moon },
+const THEMES: { key: ThemeMode; label: string; icon: string }[] = [
+  { key: "system", label: "Hệ thống", icon: "computer" },
+  { key: "light", label: "Sáng", icon: "light_mode" },
+  { key: "dark", label: "Tối", icon: "dark_mode" },
 ];
 
 export function Settings() {
@@ -54,11 +45,7 @@ export function Settings() {
   const fileRef = useRef<HTMLInputElement>(null);
 
   function doExportJSON() {
-    download(
-      `cashy-${todayYMD()}.json`,
-      exportData(),
-      "application/json",
-    );
+    download(`cashy-${todayYMD()}.json`, exportData(), "application/json");
     toast.success("Đã xuất JSON");
   }
 
@@ -115,10 +102,8 @@ export function Settings() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight">Cài đặt</h2>
-      </div>
+    <div style={{ maxWidth: 640, margin: "0 auto", display: "flex", flexDirection: "column", gap: 24 }}>
+      <h2 style={{ fontSize: 24, fontWeight: 700, letterSpacing: "-0.02em", margin: 0 }}>Cài đặt</h2>
 
       <Section title="Giao diện">
         <div className="grid grid-cols-3 gap-2">
@@ -129,14 +114,10 @@ export function Settings() {
                 key={t.key}
                 type="button"
                 onClick={() => setTheme(t.key)}
-                className={cn(
-                  "flex flex-col items-center gap-1.5 rounded-md border py-3 text-[13px] font-medium transition",
-                  active
-                    ? "border-foreground/30 bg-accent"
-                    : "text-muted-foreground hover:bg-accent/50",
-                )}
+                className={cn("wb-btn", active ? "wb-btn--secondary" : "wb-btn--outline")}
+                style={{ flexDirection: "column", gap: 6, height: "auto", paddingBlock: 12 }}
               >
-                <t.icon size={18} />
+                <span className="wb-ico">{t.icon}</span>
                 {t.label}
               </button>
             );
@@ -145,90 +126,106 @@ export function Settings() {
       </Section>
 
       <Section title="Không gian">
-        <div className="space-y-1.5">
-          <Label htmlFor="ws">Tên</Label>
-          <div className="flex gap-2">
-            <Input id="ws" value={name} onChange={(e) => setName(e.target.value)} />
-            <Button
-              variant="outline"
+        <div className="wb-field">
+          <label className="wb-label" htmlFor="ws">
+            Tên
+          </label>
+          <div style={{ display: "flex", gap: 8 }}>
+            <input
+              id="ws"
+              className="wb-input"
+              style={{ flex: 1 }}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <button
+              type="button"
+              className="wb-btn wb-btn--secondary"
               onClick={saveName}
               disabled={name.trim() === (workspace?.displayName ?? "")}
             >
               Lưu
-            </Button>
+            </button>
           </div>
         </div>
-        <div className="space-y-2">
-          <Label>Màu nhận diện</Label>
-          <div className="flex flex-wrap gap-1.5">
+        <div className="wb-field">
+          <label className="wb-label">Màu nhận diện</label>
+          <div className="wb-swatches">
             {AVATAR_COLORS.map((hex) => (
               <button
                 key={hex}
                 type="button"
                 onClick={() => updateWorkspace({ avatarColor: hex })}
-                className={cn(
-                  "size-7 rounded-md ring-offset-2 ring-offset-card transition",
-                  workspace?.avatarColor === hex && "ring-2 ring-foreground/40",
-                )}
-                style={{ background: hex }}
+                className={cn("wb-swatch", workspace?.avatarColor === hex && "is-selected")}
+                style={{ "--wb-swatch-color": hex } as React.CSSProperties}
                 aria-label={hex}
               />
             ))}
           </div>
         </div>
-        <div className="flex items-center justify-between rounded-md bg-muted px-3 py-2 text-[13px]">
-          <span className="text-muted-foreground">Đơn vị tiền tệ</span>
-          <span className="font-medium">VND (₫)</span>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            background: "var(--wb-surface-2)",
+            borderRadius: "var(--wb-radius-sm)",
+            padding: "8px 12px",
+            fontSize: 13,
+          }}
+        >
+          <span style={{ color: "var(--wb-fg-muted)" }}>Đơn vị tiền tệ</span>
+          <span style={{ fontWeight: 600 }}>VND (₫)</span>
         </div>
       </Section>
 
       <Section title="Dữ liệu">
-        <p className="text-[13px] text-muted-foreground">
-          Sao lưu ra JSON (khôi phục được) hoặc CSV (mở bằng Excel). Dữ liệu chỉ
-          lưu trên trình duyệt này.
+        <p style={{ fontSize: 13, color: "var(--wb-fg-muted)", margin: 0 }}>
+          Sao lưu ra JSON (khôi phục được) hoặc CSV (mở bằng Excel). Dữ liệu chỉ lưu trên
+          trình duyệt này.
         </p>
-        <div className="flex flex-wrap gap-2">
-          <Button variant="outline" size="sm" className="gap-1.5" onClick={doExportJSON}>
-            <Download size={15} />
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+          <button type="button" className="wb-btn wb-btn--secondary wb-btn--sm" style={{ gap: 6 }} onClick={doExportJSON}>
+            <span className="wb-ico wb-ico--sm">download</span>
             Xuất JSON
-          </Button>
-          <Button variant="outline" size="sm" className="gap-1.5" onClick={doExportCSV}>
-            <Download size={15} />
+          </button>
+          <button type="button" className="wb-btn wb-btn--secondary wb-btn--sm" style={{ gap: 6 }} onClick={doExportCSV}>
+            <span className="wb-ico wb-ico--sm">download</span>
             Xuất CSV
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            className="gap-1.5"
+          </button>
+          <button
+            type="button"
+            className="wb-btn wb-btn--secondary wb-btn--sm"
+            style={{ gap: 6 }}
             onClick={() => fileRef.current?.click()}
           >
-            <Upload size={15} />
+            <span className="wb-ico wb-ico--sm">upload</span>
             Nhập JSON
-          </Button>
+          </button>
           <input
             ref={fileRef}
             type="file"
             accept="application/json,.json"
-            className="hidden"
+            style={{ display: "none" }}
             onChange={onImportFile}
           />
         </div>
       </Section>
 
       <Section title="Nguy hiểm">
-        <div className="flex items-center justify-between gap-4">
-          <p className="text-[13px] text-muted-foreground">
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
+          <p style={{ fontSize: 13, color: "var(--wb-fg-muted)", margin: 0 }}>
             Xoá toàn bộ giao dịch, danh mục và nhãn, rồi bắt đầu lại từ đầu.
           </p>
-          <Button
-            variant="outline"
-            size="sm"
-            className="shrink-0 gap-1.5 border-expense/40 text-expense hover:bg-expense/10"
+          <button
+            type="button"
+            className="wb-btn wb-btn--outline wb-btn--sm"
+            style={{ gap: 6, flex: "none", color: "var(--wb-danger-text)", borderColor: "var(--wb-danger)" }}
             onClick={doReset}
           >
-            <Trash2 size={15} />
-            Xoá & làm lại
-          </Button>
+            <span className="wb-ico wb-ico--sm">delete</span>
+            Xoá &amp; làm lại
+          </button>
         </div>
       </Section>
     </div>
