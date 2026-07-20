@@ -1,6 +1,6 @@
 export default {
   plugins: {
-    tailwindcss: {},
+    // Vendor-prefix the hand-written CSS. Tailwind is no longer used.
     autoprefixer: {},
   },
-}
+};
