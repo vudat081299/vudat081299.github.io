@@ -3,8 +3,9 @@ import { formatMoney, signedMoney } from "@/lib/money";
 import type { TxType } from "@/types";
 
 /**
- * The single way money is rendered in the UI. Numbers use the body sans with
- * tabular figures — Notion keeps one typeface, so no mono. Color follows sign.
+ * The single way money is rendered in the UI. `.wb-num` gives tabular figures in
+ * the UI sans (not mono); colour follows sign via the status tokens
+ * (income = wb-num--pos green, expense = wb-num--neg red).
  */
 export function AmountDisplay({
   amount,
@@ -20,14 +21,12 @@ export function AmountDisplay({
   className?: string;
 }) {
   const text = signed && type ? signedMoney(amount, type) : formatMoney(amount);
-  const color = !tone
+  const toneClass = !tone
     ? undefined
     : type === "income"
-      ? "text-income"
+      ? "wb-num--pos"
       : type === "expense"
-        ? "text-expense"
+        ? "wb-num--neg"
         : undefined;
-  return (
-    <span className={cn("tnum tracking-tight", color, className)}>{text}</span>
-  );
+  return <span className={cn("wb-num", toneClass, className)}>{text}</span>;
 }
