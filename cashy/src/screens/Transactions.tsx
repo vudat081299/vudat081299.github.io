@@ -1,6 +1,4 @@
 import { useMemo, useState } from "react";
-import { Check, Receipt, Search, Tags as TagsIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { useCashy } from "@/lib/store";
 import { filterTx, totals } from "@/lib/domain";
 import { periodRange, type PeriodKey } from "@/lib/period";
@@ -11,13 +9,7 @@ import { EmptyState } from "@/components/EmptyState";
 import { PeriodPicker } from "@/components/PeriodPicker";
 import { TransactionRow } from "@/components/TransactionRow";
 import { openTxEditor } from "@/components/TransactionEditor";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover } from "@/components/wb/Popover";
 
 const TYPES: { key: TxType | "all"; label: string }[] = [
   { key: "all", label: "Tất cả" },
@@ -32,10 +24,7 @@ export function Transactions() {
   const [search, setSearch] = useState("");
   const [activeTags, setActiveTags] = useState<string[]>([]);
 
-  const catById = useMemo(
-    () => new Map(categories.map((c) => [c.id, c])),
-    [categories],
-  );
+  const catById = useMemo(() => new Map(categories.map((c) => [c.id, c])), [categories]);
   const tagById = useMemo(() => new Map(tags.map((t) => [t.id, t])), [tags]);
 
   const filtered = useMemo(
@@ -66,40 +55,45 @@ export function Transactions() {
   }, [filtered]);
 
   return (
-    <div className="space-y-5">
+    <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
       <div>
-        <h2 className="text-2xl font-bold tracking-tight">Giao dịch</h2>
-        <p className="mt-0.5 text-[13px] text-muted-foreground">
+        <h2 style={{ fontSize: 24, fontWeight: 700, letterSpacing: "-0.02em", margin: 0 }}>Giao dịch</h2>
+        <p style={{ marginTop: 2, fontSize: 13, color: "var(--wb-fg-muted)" }}>
           {filtered.length} giao dịch trong kỳ
         </p>
       </div>
 
-      <div className="flex flex-wrap items-center gap-2">
-        <div className="relative min-w-[180px] flex-1">
-          <Search
-            size={15}
-            className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground"
-          />
-          <Input
+      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8 }}>
+        <div style={{ position: "relative", flex: "1 1 200px", minWidth: 180 }}>
+          <span
+            className="wb-ico wb-ico--sm"
+            style={{
+              position: "absolute",
+              left: 10,
+              top: "50%",
+              transform: "translateY(-50%)",
+              color: "var(--wb-fg-muted)",
+              pointerEvents: "none",
+            }}
+          >
+            search
+          </span>
+          <input
+            className="wb-input"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Tìm theo ghi chú…"
-            className="h-8 pl-8 text-[13px]"
+            style={{ paddingLeft: 34 }}
           />
         </div>
 
-        <div className="flex rounded-md bg-muted p-0.5">
+        <div className="wb-tabs wb-tabs--pill" style={{ flex: "none" }}>
           {TYPES.map((t) => (
             <button
               key={t.key}
               type="button"
+              className={type === t.key ? "wb-tab is-active" : "wb-tab"}
               onClick={() => setType(t.key)}
-              className={cn(
-                "rounded-[4px] px-2.5 py-1 text-[13px] font-medium transition",
-                type === t.key
-                  ? "bg-card text-foreground shadow-sm"
-                  : "text-muted-foreground",
-              )}
             >
               {t.label}
             </button>
@@ -107,42 +101,45 @@ export function Transactions() {
         </div>
 
         {tags.length > 0 && (
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="outline" size="sm" className="h-8 gap-1.5 text-[13px]">
-                <TagsIcon size={14} />
+          <Popover
+            panelWidth={208}
+            trigger={({ toggle }) => (
+              <button
+                type="button"
+                className="wb-btn wb-btn--secondary wb-btn--sm"
+                style={{ gap: 6 }}
+                onClick={toggle}
+              >
+                <span className="wb-ico wb-ico--sm">sell</span>
                 Nhãn{activeTags.length ? ` (${activeTags.length})` : ""}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent align="end" className="w-52 p-1">
+              </button>
+            )}
+          >
+            <div className="wb-menu" style={{ border: 0, boxShadow: "none", padding: 0, background: "none" }}>
               {tags.map((t) => {
                 const on = activeTags.includes(t.id);
                 return (
                   <button
                     key={t.id}
                     type="button"
+                    className="wb-menu__item"
                     onClick={() =>
-                      setActiveTags(
-                        on
-                          ? activeTags.filter((x) => x !== t.id)
-                          : [...activeTags, t.id],
-                      )
+                      setActiveTags(on ? activeTags.filter((x) => x !== t.id) : [...activeTags, t.id])
                     }
-                    className={cn(
-                      "flex w-full items-center gap-2 rounded-[4px] px-2 py-1.5 text-[13px] hover:bg-accent",
-                      on && "bg-accent",
-                    )}
                   >
                     <span
-                      className="size-2 rounded-full"
-                      style={{ background: t.colorHex }}
+                      style={{ width: 8, height: 8, borderRadius: "50%", background: t.colorHex, flex: "none" }}
                     />
                     {t.name}
-                    {on && <Check size={14} className="ml-auto" />}
+                    {on && (
+                      <span className="wb-ico wb-ico--xs" style={{ marginLeft: "auto" }}>
+                        check
+                      </span>
+                    )}
                   </button>
                 );
               })}
-            </PopoverContent>
+            </div>
           </Popover>
         )}
 
@@ -150,35 +147,33 @@ export function Transactions() {
       </div>
 
       {groups.length ? (
-        <div className="space-y-3">
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           {groups.map(([date, txs]) => {
             const net = totals(txs).net;
             return (
-              <div key={date} className="overflow-hidden rounded-lg border bg-card">
-                <div className="flex items-center justify-between border-b bg-muted/40 px-3 py-2">
-                  <span className="text-[13px] font-medium text-muted-foreground">
+              <div key={date}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: "0 4px 6px",
+                  }}
+                >
+                  <span style={{ fontSize: 13, fontWeight: 550, color: "var(--wb-fg-muted)" }}>
                     {relativeDateHead(date)}
                   </span>
-                  <AmountDisplay
-                    amount={Math.abs(net)}
-                    type={net >= 0 ? "income" : "expense"}
-                    signed
-                    className="text-xs"
-                  />
+                  <AmountDisplay amount={Math.abs(net)} type={net >= 0 ? "income" : "expense"} signed />
                 </div>
-                <div className="wb-list wb-list--flush">
+                <div className="wb-list">
                   {txs.map((tx) => (
                     <TransactionRow
                       key={tx.id}
                       tx={tx}
-                      category={
-                        tx.categoryId ? (catById.get(tx.categoryId) ?? null) : null
-                      }
-                      tags={
-                        tx.tagIds
-                          .map((id) => tagById.get(id))
-                          .filter((t): t is Tag => Boolean(t))
-                      }
+                      category={tx.categoryId ? (catById.get(tx.categoryId) ?? null) : null}
+                      tags={tx.tagIds
+                        .map((id) => tagById.get(id))
+                        .filter((t): t is Tag => Boolean(t))}
                       onClick={() => openTxEditor(tx.id)}
                     />
                   ))}
@@ -188,16 +183,20 @@ export function Transactions() {
           })}
         </div>
       ) : (
-        <EmptyState
-          icon={<Receipt size={18} />}
-          title="Không có giao dịch"
-          description="Thử đổi bộ lọc, hoặc thêm giao dịch mới."
-          action={
-            <Button size="sm" onClick={() => openTxEditor(null)}>
-              Thêm giao dịch
-            </Button>
-          }
-        />
+        <div className="wb-card">
+          <div className="wb-card__body">
+            <EmptyState
+              icon="🧾"
+              title="Không có giao dịch"
+              description="Thử đổi bộ lọc, hoặc thêm giao dịch mới."
+              action={
+                <button type="button" className="wb-btn" onClick={() => openTxEditor(null)}>
+                  Thêm giao dịch
+                </button>
+              }
+            />
+          </div>
+        </div>
       )}
     </div>
   );
