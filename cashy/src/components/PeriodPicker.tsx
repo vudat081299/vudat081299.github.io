@@ -1,10 +1,3 @@
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { PERIODS, type PeriodKey } from "@/lib/period";
 
 export function PeriodPicker({
@@ -15,17 +8,19 @@ export function PeriodPicker({
   onChange: (key: PeriodKey) => void;
 }) {
   return (
-    <Select value={value} onValueChange={(v) => onChange(v as PeriodKey)}>
-      <SelectTrigger className="h-8 w-[132px] text-[13px]">
-        <SelectValue />
-      </SelectTrigger>
-      <SelectContent>
+    <span className="wb-select-wrap" style={{ width: 150 }}>
+      <select
+        className="wb-select"
+        value={value}
+        onChange={(e) => onChange(e.target.value as PeriodKey)}
+      >
         {PERIODS.map((p) => (
-          <SelectItem key={p.key} value={p.key} className="text-[13px]">
+          <option key={p.key} value={p.key}>
             {p.label}
-          </SelectItem>
+          </option>
         ))}
-      </SelectContent>
-    </Select>
+      </select>
+      <span className="wb-ico">expand_more</span>
+    </span>
   );
 }

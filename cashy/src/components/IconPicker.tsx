@@ -9,15 +9,26 @@ export function IconPicker({
   onChange: (name: string) => void;
 }) {
   return (
-    <div className="grid max-h-40 grid-cols-8 gap-1 overflow-y-auto rounded-md border p-2">
+    <div
+      className="wb-scroll-y"
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(8, 1fr)",
+        gap: 4,
+        maxHeight: 160,
+        padding: 6,
+        border: "var(--wb-bw) solid var(--wb-border)",
+        borderRadius: "var(--wb-radius-sm)",
+      }}
+    >
       {ICON_CHOICES.map((name) => (
         <button
           key={name}
           type="button"
           onClick={() => onChange(name)}
           className={cn(
-            "grid aspect-square place-items-center rounded-md text-muted-foreground transition hover:bg-accent hover:text-foreground",
-            value === name && "bg-accent text-foreground ring-1 ring-foreground/30",
+            "wb-btn wb-btn--icon wb-btn--sm",
+            value === name ? "wb-btn--secondary" : "wb-btn--ghost",
           )}
           aria-label={name}
         >
