@@ -24,8 +24,8 @@ function download(filename: string, text: string, mime: string) {
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="wb-card">
-      <div className="wb-card__body" style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-        <h3 style={{ fontSize: 14, fontWeight: 650, margin: 0 }}>{title}</h3>
+      <div className="wb-card__body wb-stack">
+        <h3 className="wb-card__title">{title}</h3>
         {children}
       </div>
     </section>
@@ -101,7 +101,7 @@ export function Settings() {
   }
 
   return (
-    <div style={{ maxWidth: 640, margin: "0 auto", display: "flex", flexDirection: "column", gap: 24 }}>
+    <div className="wb-stack wb-stack--loose" style={{ maxWidth: 640, marginInline: "auto", width: "100%" }}>
       <h2 style={{ fontSize: 24, fontWeight: 700, letterSpacing: "-0.02em", margin: 0 }}>Cài đặt</h2>
 
       <Section title="Giao diện">
@@ -129,11 +129,10 @@ export function Settings() {
           <label className="wb-label" htmlFor="ws">
             Tên
           </label>
-          <div style={{ display: "flex", gap: 8 }}>
+          <div className="wb-cluster wb-cluster--nowrap">
             <input
               id="ws"
-              className="wb-input"
-              style={{ flex: 1 }}
+              className="wb-input wb-grow"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
@@ -147,20 +146,12 @@ export function Settings() {
             </button>
           </div>
         </div>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            background: "var(--wb-surface-2)",
-            borderRadius: "var(--wb-radius-sm)",
-            padding: "8px 12px",
-            fontSize: 13,
-          }}
-        >
-          <span style={{ color: "var(--wb-fg-muted)" }}>Đơn vị tiền tệ</span>
-          <span style={{ fontWeight: 600 }}>VND (₫)</span>
-        </div>
+        <ul className="wb-list wb-list--flush">
+          <li className="wb-list__item">
+            <span className="wb-list__title">Đơn vị tiền tệ</span>
+            <span className="wb-list__end wb-num--strong">VND (₫)</span>
+          </li>
+        </ul>
       </Section>
 
       <Section title="Dữ liệu">
@@ -168,7 +159,7 @@ export function Settings() {
           Sao lưu ra JSON (khôi phục được) hoặc CSV (mở bằng Excel). Dữ liệu chỉ lưu trên
           trình duyệt này.
         </p>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+        <div className="wb-cluster">
           <button type="button" className="wb-btn wb-btn--secondary wb-btn--sm" style={{ gap: 6 }} onClick={doExportJSON}>
             <span className="wb-ico wb-ico--sm">download</span>
             Xuất JSON
@@ -197,8 +188,8 @@ export function Settings() {
       </Section>
 
       <Section title="Nguy hiểm">
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
-          <p style={{ fontSize: 13, color: "var(--wb-fg-muted)", margin: 0 }}>
+        <div className="wb-cluster wb-cluster--between">
+          <p style={{ fontSize: 13, color: "var(--wb-fg-muted)", margin: 0, flex: "1 1 200px" }}>
             Xoá toàn bộ giao dịch, danh mục và nhãn, rồi bắt đầu lại từ đầu.
           </p>
           <button

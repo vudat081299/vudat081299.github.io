@@ -107,8 +107,8 @@ export function Tags() {
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-      <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 12 }}>
+    <div className="wb-stack wb-stack--loose">
+      <div className="wb-cluster wb-cluster--between wb-cluster--bottom">
         <div>
           <h2 style={{ fontSize: 24, fontWeight: 700, letterSpacing: "-0.02em", margin: 0 }}>Nhãn</h2>
           <p style={{ marginTop: 2, fontSize: 13, color: "var(--wb-fg-muted)" }}>

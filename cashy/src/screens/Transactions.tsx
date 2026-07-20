@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import { useCashy } from "@/lib/store";
 import { filterTx, totals } from "@/lib/domain";
 import { periodRange, type PeriodKey } from "@/lib/period";
-import { relativeDateHead } from "@/lib/date";
 import type { Tag, TxType } from "@/types";
 import { AmountDisplay } from "@/components/AmountDisplay";
 import { EmptyState } from "@/components/EmptyState";
@@ -39,23 +38,20 @@ export function Transactions() {
     [transactions, categories, period, type, search, activeTags],
   );
 
-  const groups = useMemo(() => {
-    const sorted = [...filtered].sort(
-      (a, b) =>
-        b.occurredAt.localeCompare(a.occurredAt) ||
-        b.createdAt.localeCompare(a.createdAt),
-    );
-    const map = new Map<string, typeof sorted>();
-    for (const t of sorted) {
-      const arr = map.get(t.occurredAt);
-      if (arr) arr.push(t);
-      else map.set(t.occurredAt, [t]);
-    }
-    return [...map.entries()];
-  }, [filtered]);
+  const sorted = useMemo(
+    () =>
+      [...filtered].sort(
+        (a, b) =>
+          b.occurredAt.localeCompare(a.occurredAt) ||
+          b.createdAt.localeCompare(a.createdAt),
+      ),
+    [filtered],
+  );
+
+  const net = totals(filtered).net;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+    <div className="wb-stack wb-stack--loose">
       <div>
         <h2 style={{ fontSize: 24, fontWeight: 700, letterSpacing: "-0.02em", margin: 0 }}>Giao dịch</h2>
         <p style={{ marginTop: 2, fontSize: 13, color: "var(--wb-fg-muted)" }}>
@@ -63,27 +59,17 @@ export function Transactions() {
         </p>
       </div>
 
-      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8 }}>
-        <div style={{ position: "relative", flex: "1 1 200px", minWidth: 180 }}>
-          <span
-            className="wb-ico wb-ico--sm"
-            style={{
-              position: "absolute",
-              left: 10,
-              top: "50%",
-              transform: "translateY(-50%)",
-              color: "var(--wb-fg-muted)",
-              pointerEvents: "none",
-            }}
-          >
-            search
+      <div className="wb-filterbar">
+        <div className="wb-input-group wb-filterbar__search">
+          <span className="wb-input-group__addon">
+            <span className="wb-ico wb-ico--sm">search</span>
           </span>
           <input
             className="wb-input"
+            type="search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Tìm theo ghi chú…"
-            style={{ paddingLeft: 34 }}
           />
         </div>
 
@@ -106,12 +92,15 @@ export function Transactions() {
             trigger={({ toggle }) => (
               <button
                 type="button"
-                className="wb-btn wb-btn--secondary wb-btn--sm"
-                style={{ gap: 6 }}
+                className={
+                  activeTags.length
+                    ? "wb-filter-token"
+                    : "wb-filter-add"
+                }
                 onClick={toggle}
               >
                 <span className="wb-ico wb-ico--sm">sell</span>
-                Nhãn{activeTags.length ? ` (${activeTags.length})` : ""}
+                Nhãn{activeTags.length ? ` · ${activeTags.length}` : ""}
               </button>
             )}
           >
@@ -144,43 +133,44 @@ export function Transactions() {
         )}
 
         <PeriodPicker value={period} onChange={setPeriod} />
+        <span className="wb-filterbar__count">{filtered.length} giao dịch</span>
       </div>
 
-      {groups.length ? (
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          {groups.map(([date, txs]) => {
-            const net = totals(txs).net;
-            return (
-              <div key={date}>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    padding: "0 4px 6px",
-                  }}
-                >
-                  <span style={{ fontSize: 13, fontWeight: 550, color: "var(--wb-fg-muted)" }}>
-                    {relativeDateHead(date)}
-                  </span>
-                  <AmountDisplay amount={Math.abs(net)} type={net >= 0 ? "income" : "expense"} signed />
-                </div>
-                <div className="wb-list">
-                  {txs.map((tx) => (
-                    <TransactionRow
-                      key={tx.id}
-                      tx={tx}
-                      category={tx.categoryId ? (catById.get(tx.categoryId) ?? null) : null}
-                      tags={tx.tagIds
-                        .map((id) => tagById.get(id))
-                        .filter((t): t is Tag => Boolean(t))}
-                      onClick={() => openTxEditor(tx.id)}
-                    />
-                  ))}
-                </div>
-              </div>
-            );
-          })}
+      {sorted.length ? (
+        <div className="wb-card">
+          <div className="wb-table-scroll">
+            <table className="wb-table">
+              <thead>
+                <tr>
+                  <th>Ngày</th>
+                  <th>Nội dung</th>
+                  <th>Danh mục</th>
+                  <th className="wb-num">Số tiền</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sorted.map((tx) => (
+                  <TransactionRow
+                    key={tx.id}
+                    tx={tx}
+                    category={tx.categoryId ? (catById.get(tx.categoryId) ?? null) : null}
+                    tags={tx.tagIds
+                      .map((id) => tagById.get(id))
+                      .filter((t): t is Tag => Boolean(t))}
+                    onClick={() => openTxEditor(tx.id)}
+                  />
+                ))}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colSpan={3}>Ròng trong kỳ</td>
+                  <td className="wb-num">
+                    <AmountDisplay amount={Math.abs(net)} type={net >= 0 ? "income" : "expense"} signed />
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
         </div>
       ) : (
         <div className="wb-card">

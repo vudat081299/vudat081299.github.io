@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useState, type CSSProperties, type ReactNode } from "react";
 import { useCashy, setTheme } from "@/lib/store";
 import { navigate, useRoute, type Route } from "@/lib/router";
 import type { ThemeMode } from "@/types";
@@ -116,10 +116,16 @@ export function Layout({ children }: { children: ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100dvh", overflow: "hidden" }}>
+    <div
+      className="wb-stack"
+      style={{ "--wb-stack-gap": "0px", height: "100dvh", overflow: "hidden" } as CSSProperties}
+    >
       <Navbar onMenu={() => setMobileOpen(true)} />
 
-      <div style={{ display: "flex", minHeight: 0, flex: 1, overflow: "hidden" }}>
+      <div
+        className="wb-cluster wb-cluster--nowrap"
+        style={{ gap: 0, alignItems: "stretch", flex: 1, minHeight: 0, overflow: "hidden" }}
+      >
         <aside className="cashy-show-md" style={{ flex: "none" }}>
           <SidebarBody />
         </aside>
@@ -138,8 +144,8 @@ export function Layout({ children }: { children: ReactNode }) {
           </div>
         )}
 
-        <main style={{ minWidth: 0, flex: 1, overflowY: "auto" }}>
-          <div style={{ maxWidth: 1100, margin: "0 auto", padding: "24px 32px" }}>{children}</div>
+        <main className="wb-grow" style={{ minWidth: 0, overflowY: "auto" }}>
+          <div className="wb-container" style={{ paddingBlock: 24 }}>{children}</div>
         </main>
       </div>
     </div>

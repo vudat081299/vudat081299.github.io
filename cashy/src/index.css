@@ -4,9 +4,8 @@
    web-builder.css owns the whole component system + design tokens (--wb-*);
    wb-theme.css overrides the fonts. This file only carries what a component
    library can't: the page reset, the body ground, and a few app-specific
-   utilities that need media queries or :hover state (things an inline
-   `style={}` can't express). Everything is hand-written CSS — no @tailwind,
-   no @apply, no build-time utility generation.
+   responsive helpers (breakpoint show/hide) that an inline `style={}` can't
+   express. Everything is hand-written CSS — no @tailwind, no @apply.
    ========================================================================= */
 
 *,
@@ -39,65 +38,18 @@ body {
 }
 
 /* =========================================================================
-   App utilities — the handful of responsive / stateful bits that replaced
-   the old Tailwind classes. Named `cashy-*` so they never collide with wb-*.
+   Responsive show / hide — the few breakpoint utilities the app shell needs
+   (the sidebar rail vs the ☰ drawer trigger). Named `cashy-*` so they never
+   collide with wb-*. Everything else uses web-builder's own layout utilities.
    ========================================================================= */
-
-/* Dashboard KPI row: 2 columns on mobile, 4 from the lg breakpoint. */
-.cashy-stat-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
-@media (min-width: 1024px) {
-  .cashy-stat-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-/* Dashboard panels: stacked on mobile, 3 columns from lg (chart spans 2). */
-.cashy-panel-grid {
-  display: grid;
-  gap: 16px;
-}
-@media (min-width: 1024px) {
-  .cashy-panel-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  .cashy-panel-grid__wide {
-    grid-column: span 2;
-  }
-}
-
-/* Category-tree row: reveal the trailing action buttons on hover / focus. */
-.cashy-row {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  border-radius: var(--wb-radius-sm);
-  padding: 6px 4px 6px 0;
-}
-.cashy-row__actions {
-  display: flex;
-  align-items: center;
-  opacity: 0;
-  transition: opacity 0.15s ease;
-}
-.cashy-row:hover .cashy-row__actions,
-.cashy-row:focus-within .cashy-row__actions {
-  opacity: 1;
-}
-
-/* Responsive show / hide — replaces the few Tailwind breakpoint utilities. */
 @media (min-width: 768px) {
   .cashy-hide-md {
     display: none !important;
-  } /* was `md:hidden` */
+  } /* was `md:hidden` — the ☰ trigger */
 }
 .cashy-show-md {
   display: none;
-} /* was `hidden md:block` */
+} /* was `hidden md:block` — the sidebar rail */
 @media (min-width: 768px) {
   .cashy-show-md {
     display: block;

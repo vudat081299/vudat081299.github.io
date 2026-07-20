@@ -84,8 +84,8 @@ export function Dashboard() {
   const netSpark = series.map((s) => s.income - s.expense);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", justifyContent: "space-between", gap: 12 }}>
+    <div className="wb-stack wb-stack--loose">
+      <div className="wb-cluster wb-cluster--between wb-cluster--bottom">
         <div>
           <h2 style={{ fontSize: 24, fontWeight: 700, letterSpacing: "-0.02em", margin: 0 }}>Tổng quan</h2>
           <p style={{ marginTop: 2, fontSize: 13, color: "var(--wb-fg-muted)" }}>
@@ -95,7 +95,7 @@ export function Dashboard() {
         <PeriodPicker value={period} onChange={setPeriod} />
       </div>
 
-      <div className="cashy-stat-grid">
+      <div className="wb-stat-grid">
         <BalanceCard label="Số dư (tất cả)" amount={view.balance} spark={netSpark} />
         <BalanceCard
           label="Thu nhập"
@@ -119,17 +119,17 @@ export function Dashboard() {
         />
       </div>
 
-      <div className="cashy-panel-grid">
-        <div className="wb-card cashy-panel-grid__wide">
+      <div className="wb-grid wb-grid--3">
+        <div className="wb-card" style={{ gridColumn: "span 2" }}>
           <div className="wb-card__body">
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+            <div className="wb-cluster wb-cluster--between" style={{ marginBottom: 12 }}>
               <h3 style={{ fontSize: 14, fontWeight: 650, margin: 0 }}>Thu / Chi theo thời gian</h3>
-              <div style={{ display: "flex", alignItems: "center", gap: 12, fontSize: 12, color: "var(--wb-fg-muted)" }}>
-                <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                  <span style={{ width: 8, height: 8, borderRadius: 2, background: "var(--wb-chart-income)" }} /> Thu
+              <div className="wb-legend">
+                <span className="wb-legend__item">
+                  <span className="wb-legend__dot" style={{ background: "var(--wb-chart-income)" }} /> Thu
                 </span>
-                <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                  <span style={{ width: 8, height: 8, borderRadius: 2, background: "var(--wb-chart-expense)" }} /> Chi
+                <span className="wb-legend__item">
+                  <span className="wb-legend__dot" style={{ background: "var(--wb-chart-expense)" }} /> Chi
                 </span>
               </div>
             </div>
@@ -147,16 +147,14 @@ export function Dashboard() {
           <div className="wb-card__body">
             <h3 style={{ fontSize: 14, fontWeight: 650, margin: "0 0 12px" }}>Chi tiêu theo danh mục</h3>
             <SpendChart slices={slices} total={t.expense} size={180} />
-            <div style={{ marginTop: 16, display: "flex", flexDirection: "column", gap: 6 }}>
+            <div className="wb-stack wb-stack--tight" style={{ marginTop: 16 }}>
               {slices.slice(0, 5).map((s) => (
-                <div key={s.id} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13 }}>
-                  <span style={{ width: 10, height: 10, flex: "none", borderRadius: 3, background: s.colorHex }} />
-                  <span style={{ minWidth: 0, flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                    {s.name}
+                <div key={s.id} className="wb-cluster wb-cluster--between" style={{ fontSize: 13 }}>
+                  <span className="wb-cluster wb-cluster--tight wb-cluster--nowrap" style={{ minWidth: 0 }}>
+                    <span style={{ width: 10, height: 10, flex: "none", borderRadius: 3, background: s.colorHex }} />
+                    <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{s.name}</span>
                   </span>
-                  <span className="wb-num" style={{ color: "var(--wb-fg-muted)" }}>
-                    {Math.round(s.pct * 100)}%
-                  </span>
+                  <span className="wb-num" style={{ color: "var(--wb-fg-muted)" }}>{Math.round(s.pct * 100)}%</span>
                 </div>
               ))}
               {slices.length === 0 && (
@@ -168,16 +166,8 @@ export function Dashboard() {
       </div>
 
       <div className="wb-card">
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "12px 16px",
-            borderBottom: "var(--wb-bw) solid var(--wb-border)",
-          }}
-        >
-          <h3 style={{ fontSize: 14, fontWeight: 650, margin: 0 }}>Giao dịch gần đây</h3>
+        <div className="wb-table-head">
+          <h3 className="wb-table-head__title">Giao dịch gần đây</h3>
           <button
             type="button"
             className="wb-btn wb-btn--ghost wb-btn--sm"
@@ -189,15 +179,27 @@ export function Dashboard() {
           </button>
         </div>
         {recent.length ? (
-          <div className="wb-list wb-list--flush">
-            {recent.map((tx) => (
-              <TransactionRow
-                key={tx.id}
-                tx={tx}
-                category={categories.find((c) => c.id === tx.categoryId) ?? null}
-                onClick={() => openTxEditor(tx.id)}
-              />
-            ))}
+          <div className="wb-table-scroll">
+            <table className="wb-table">
+              <thead>
+                <tr>
+                  <th>Ngày</th>
+                  <th>Nội dung</th>
+                  <th>Danh mục</th>
+                  <th className="wb-num">Số tiền</th>
+                </tr>
+              </thead>
+              <tbody>
+                {recent.map((tx) => (
+                  <TransactionRow
+                    key={tx.id}
+                    tx={tx}
+                    category={categories.find((c) => c.id === tx.categoryId) ?? null}
+                    onClick={() => openTxEditor(tx.id)}
+                  />
+                ))}
+              </tbody>
+            </table>
           </div>
         ) : (
           <div style={{ padding: 16 }}>

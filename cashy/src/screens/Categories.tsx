@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   addCategory,
   deleteCategory,
@@ -240,92 +240,83 @@ function Tree({
 
   return (
     <div className="wb-card" style={{ padding: 4 }}>
-      {nodes.map(({ cat, depth }) => {
-        const isDrop = drop?.id === cat.id;
-        const style: CSSProperties = { paddingLeft: 8 + depth * 22 };
-        if (isDrop && drop.pos !== "into")
-          style.boxShadow =
-            drop.pos === "before"
-              ? "inset 0 2px 0 var(--wb-fg)"
-              : "inset 0 -2px 0 var(--wb-fg)";
-        return (
-          <div
-            key={cat.id}
-            data-cat-id={cat.id}
-            className="cashy-row"
-            style={{
-              ...style,
-              opacity: dragId === cat.id ? 0.4 : undefined,
-              boxShadow:
-                isDrop && drop.pos === "into"
-                  ? "inset 0 0 0 2px var(--wb-fg)"
-                  : style.boxShadow,
-            }}
-          >
-            <button
-              type="button"
-              style={{
-                cursor: "grab",
-                touchAction: "none",
-                color: "var(--wb-fg-subtle)",
-                background: "transparent",
-                border: 0,
-              }}
-              onPointerDown={(e) => {
-                e.preventDefault();
-                document.body.style.userSelect = "none";
-                setDragId(cat.id);
-              }}
-              aria-label="Kéo để sắp xếp"
+      <ul className="wb-tree">
+        {nodes.map(({ cat, depth }) => {
+          const dropCls =
+            drop?.id === cat.id
+              ? drop.pos === "into"
+                ? " is-drop-inside"
+                : drop.pos === "before"
+                  ? " is-drop-before"
+                  : " is-drop-after"
+              : "";
+          return (
+            <li
+              key={cat.id}
+              className={dragId === cat.id ? "wb-tree__node is-dragging" : "wb-tree__node"}
             >
-              <span className="wb-ico wb-ico--sm">drag_indicator</span>
-            </button>
-            <span
-              style={{
-                width: 24,
-                height: 24,
-                flex: "none",
-                display: "grid",
-                placeItems: "center",
-                borderRadius: 5,
-                background: `color-mix(in srgb, ${cat.colorHex} 15%, transparent)`,
-                color: cat.colorHex,
-              }}
-            >
-              <Icon name={cat.icon} size={13} />
-            </span>
-            <span style={{ flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontSize: 13.5 }}>
-              {cat.name}
-            </span>
-            <div className="cashy-row__actions">
-              <button
-                type="button"
-                className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm"
-                onClick={() => onAddChild(cat.id)}
-                aria-label="Thêm danh mục con"
+              <div
+                data-cat-id={cat.id}
+                className={"wb-tree__row" + dropCls}
+                style={{ paddingLeft: 8 + depth * 22 }}
               >
-                <span className="wb-ico wb-ico--sm">add</span>
-              </button>
-              <button
-                type="button"
-                className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm"
-                onClick={() => onEdit(cat)}
-                aria-label="Sửa"
-              >
-                <span className="wb-ico wb-ico--sm">edit</span>
-              </button>
-              <button
-                type="button"
-                className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm"
-                onClick={() => remove(cat)}
-                aria-label="Xoá"
-              >
-                <span className="wb-ico wb-ico--sm">delete</span>
-              </button>
-            </div>
-          </div>
-        );
-      })}
+                <span
+                  className="wb-tree__handle"
+                  role="button"
+                  aria-label="Kéo để sắp xếp"
+                  style={{ touchAction: "none" }}
+                  onPointerDown={(e) => {
+                    e.preventDefault();
+                    document.body.style.userSelect = "none";
+                    setDragId(cat.id);
+                  }}
+                />
+                <span
+                  style={{
+                    width: 24,
+                    height: 24,
+                    flex: "none",
+                    display: "grid",
+                    placeItems: "center",
+                    borderRadius: 5,
+                    background: `color-mix(in srgb, ${cat.colorHex} 15%, transparent)`,
+                    color: cat.colorHex,
+                  }}
+                >
+                  <Icon name={cat.icon} size={13} />
+                </span>
+                <span className="wb-tree__label">{cat.name}</span>
+                <div className="wb-tree__actions">
+                  <button
+                    type="button"
+                    className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm"
+                    onClick={() => onAddChild(cat.id)}
+                    aria-label="Thêm danh mục con"
+                  >
+                    <span className="wb-ico wb-ico--sm">add</span>
+                  </button>
+                  <button
+                    type="button"
+                    className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm"
+                    onClick={() => onEdit(cat)}
+                    aria-label="Sửa"
+                  >
+                    <span className="wb-ico wb-ico--sm">edit</span>
+                  </button>
+                  <button
+                    type="button"
+                    className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm"
+                    onClick={() => remove(cat)}
+                    aria-label="Xoá"
+                  >
+                    <span className="wb-ico wb-ico--sm">delete</span>
+                  </button>
+                </div>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 }
@@ -335,8 +326,8 @@ export function Categories() {
   const [editor, setEditor] = useState<EditorState | null>(null);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", justifyContent: "space-between", gap: 12 }}>
+    <div className="wb-stack wb-stack--loose">
+      <div className="wb-cluster wb-cluster--between wb-cluster--bottom">
         <div>
           <h2 style={{ fontSize: 24, fontWeight: 700, letterSpacing: "-0.02em", margin: 0 }}>Danh mục</h2>
           <p style={{ marginTop: 2, fontSize: 13, color: "var(--wb-fg-muted)" }}>
