@@ -4,7 +4,7 @@ import { applyTheme } from "@/lib/theme";
 import { useRoute } from "@/lib/router";
 import { Layout } from "@/components/Layout";
 import { TransactionEditor } from "@/components/TransactionEditor";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "@/components/wb/Toast";
 import { Onboarding } from "@/screens/Onboarding";
 import { Dashboard } from "@/screens/Dashboard";
 import { Transactions } from "@/screens/Transactions";
