@@ -166,7 +166,7 @@ export function Transactions() {
                     className="text-xs"
                   />
                 </div>
-                <div className="divide-y p-1">
+                <div className="wb-list wb-list--flush">
                   {txs.map((tx) => (
                     <TransactionRow
                       key={tx.id}

@@ -4,6 +4,12 @@ import { AmountDisplay } from "@/components/AmountDisplay";
 import { TagChip } from "@/components/TagChip";
 import type { Category, Tag, Transaction } from "@/types";
 
+const ELLIPSIS: React.CSSProperties = {
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+};
+
 export function TransactionRow({
   tx,
   category,
@@ -19,31 +25,46 @@ export function TransactionRow({
 }) {
   const color = category?.colorHex ?? "#9b9a97";
   return (
-    <button
-      type="button"
+    <div
+      className={cn("wb-list__item wb-list__item--link", className)}
+      role="button"
+      tabIndex={0}
       onClick={onClick}
-      className={cn(
-        "group flex w-full items-center gap-3 px-2 py-2 text-left transition-colors hover:bg-accent",
-        className,
-      )}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onClick?.();
+        }
+      }}
     >
       <span
-        className="grid size-8 shrink-0 place-items-center rounded-md"
-        style={{ background: color + "1f", color }}
+        style={{
+          width: 32,
+          height: 32,
+          flex: "none",
+          display: "grid",
+          placeItems: "center",
+          borderRadius: "var(--wb-radius-sm)",
+          background: `color-mix(in srgb, ${color} 15%, transparent)`,
+          color,
+        }}
       >
         <Icon name={category?.icon ?? "circle-dollar-sign"} size={16} />
       </span>
 
-      <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-        <span className="flex items-center gap-2">
-          <span className="truncate text-[13.5px] font-medium">
-            {tx.note || category?.name || "Giao dịch"}
-          </span>
+      <span
+        style={{ minWidth: 0, flex: "1 1 auto", display: "flex", flexDirection: "column", gap: 1 }}
+      >
+        <span className="wb-list__title" style={ELLIPSIS}>
+          {tx.note || category?.name || "Giao dịch"}
         </span>
-        <span className="flex min-w-0 items-center gap-1.5 text-xs text-muted-foreground">
-          <span className="truncate">{category?.name ?? "Chưa phân loại"}</span>
+        <span
+          className="wb-list__sub"
+          style={{ display: "flex", alignItems: "center", gap: 6, minWidth: 0 }}
+        >
+          <span style={ELLIPSIS}>{category?.name ?? "Chưa phân loại"}</span>
           {tags && tags.length > 0 && (
-            <span className="flex items-center gap-1">
+            <span className="wb-tags">
               {tags.slice(0, 3).map((t) => (
                 <TagChip key={t.id} tag={t} />
               ))}
@@ -53,12 +74,9 @@ export function TransactionRow({
         </span>
       </span>
 
-      <AmountDisplay
-        amount={tx.amount}
-        type={tx.type}
-        signed
-        className="shrink-0 text-[13.5px] font-medium"
-      />
-    </button>
+      <span style={{ marginLeft: "auto", flex: "none", fontWeight: 550 }}>
+        <AmountDisplay amount={tx.amount} type={tx.type} signed />
+      </span>
+    </div>
   );
 }

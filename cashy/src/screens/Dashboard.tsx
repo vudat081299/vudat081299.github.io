@@ -194,7 +194,7 @@ export function Dashboard() {
           </Button>
         </div>
         {recent.length ? (
-          <div className="divide-y p-1">
+          <div className="wb-list wb-list--flush">
             {recent.map((tx) => (
               <TransactionRow
                 key={tx.id}
