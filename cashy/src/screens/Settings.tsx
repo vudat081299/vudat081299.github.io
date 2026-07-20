@@ -11,7 +11,6 @@ import {
 } from "@/lib/store";
 import { todayYMD } from "@/lib/date";
 import type { ThemeMode } from "@/types";
-import { AVATAR_COLORS } from "@/lib/palette";
 
 function download(filename: string, text: string, mime: string) {
   const blob = new Blob([text], { type: mime });
@@ -146,21 +145,6 @@ export function Settings() {
             >
               Lưu
             </button>
-          </div>
-        </div>
-        <div className="wb-field">
-          <label className="wb-label">Màu nhận diện</label>
-          <div className="wb-swatches">
-            {AVATAR_COLORS.map((hex) => (
-              <button
-                key={hex}
-                type="button"
-                onClick={() => updateWorkspace({ avatarColor: hex })}
-                className={cn("wb-swatch", workspace?.avatarColor === hex && "is-selected")}
-                style={{ "--wb-swatch-color": hex } as React.CSSProperties}
-                aria-label={hex}
-              />
-            ))}
           </div>
         </div>
         <div

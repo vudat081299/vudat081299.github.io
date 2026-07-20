@@ -41,9 +41,7 @@ function Navbar({ onMenu }: { onMenu: () => void }) {
       </span>
 
       <a className="wb-navbar__brand" href="/" aria-label="Cashy">
-        <span className="wb-navbar__mark" style={{ background: workspace?.avatarColor, color: "#fff" }}>
-          {initial}
-        </span>
+        <span className="wb-navbar__mark">{initial}</span>
         <span>{workspace?.displayName ?? "Cashy"}</span>
         <span style={{ fontSize: 12, fontWeight: 500, color: "var(--wb-fg-subtle)" }}>
           {workspace?.currency ?? "VND"}

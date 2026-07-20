@@ -1,14 +1,11 @@
 import { useState } from "react";
 import { createWorkspace } from "@/lib/store";
-import { AVATAR_COLORS } from "@/lib/palette";
-import { cn } from "@/lib/utils";
 
 export function Onboarding() {
   const [name, setName] = useState("");
-  const [color, setColor] = useState<string>(AVATAR_COLORS[5]);
 
   function submit() {
-    createWorkspace({ displayName: name.trim() || "Của tôi", avatarColor: color });
+    createWorkspace({ displayName: name.trim() || "Của tôi" });
   }
 
   return (
@@ -25,15 +22,8 @@ export function Onboarding() {
           }}
         >
           <span
-            style={{
-              width: 44,
-              height: 44,
-              display: "grid",
-              placeItems: "center",
-              borderRadius: "var(--wb-radius-lg)",
-              background: color,
-              color: "#fff",
-            }}
+            className="wb-navbar__mark"
+            style={{ width: 44, height: 44, borderRadius: "var(--wb-radius-lg)" }}
           >
             <span className="wb-ico">account_balance_wallet</span>
           </span>
@@ -65,22 +55,6 @@ export function Onboarding() {
                 onKeyDown={(e) => e.key === "Enter" && submit()}
                 placeholder="Ví dụ: Chi tiêu của Đạt"
               />
-            </div>
-
-            <div className="wb-field">
-              <label className="wb-label">Màu nhận diện</label>
-              <div className="wb-swatches">
-                {AVATAR_COLORS.map((hex) => (
-                  <button
-                    key={hex}
-                    type="button"
-                    onClick={() => setColor(hex)}
-                    className={cn("wb-swatch", color === hex && "is-selected")}
-                    style={{ "--wb-swatch-color": hex } as React.CSSProperties}
-                    aria-label={hex}
-                  />
-                ))}
-              </div>
             </div>
 
             <div

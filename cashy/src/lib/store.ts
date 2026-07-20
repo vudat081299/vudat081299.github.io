@@ -78,12 +78,10 @@ export function setTheme(theme: ThemeMode) {
 // ---- workspace -------------------------------------------------------------
 export function createWorkspace(input: {
   displayName: string;
-  avatarColor: string;
   currency?: string;
 }) {
   const workspace: Workspace = {
     displayName: input.displayName.trim() || "Của tôi",
-    avatarColor: input.avatarColor,
     currency: input.currency ?? "VND",
     createdAt: new Date().toISOString(),
   };

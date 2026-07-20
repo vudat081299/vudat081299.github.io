@@ -5,7 +5,6 @@ export type ThemeMode = "system" | "light" | "dark";
 export interface Workspace {
   displayName: string;
   currency: string; // "VND"
-  avatarColor: string; // hex
   createdAt: string; // ISO
 }
 
