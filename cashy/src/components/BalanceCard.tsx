@@ -5,10 +5,12 @@ import { Sparkline } from "@/components/Sparkline";
 
 type Tone = "neutral" | "income" | "expense";
 
-const toneColor: Record<Tone, string> = {
-  neutral: "text-foreground",
-  income: "text-income",
-  expense: "text-expense",
+// Income/expense amounts carry status meaning, so they earn a status hue; the
+// neutral KPI stays ink. Delta always follows its own up/down colour.
+const toneColor: Record<Tone, string | undefined> = {
+  neutral: undefined,
+  income: "var(--wb-success-text)",
+  expense: "var(--wb-danger-text)",
 };
 
 export function BalanceCard({
@@ -29,33 +31,33 @@ export function BalanceCard({
 }) {
   const hasDelta = delta !== undefined && delta !== null && isFinite(delta);
   const up = (delta ?? 0) >= 0;
+  const color = toneColor[tone];
   return (
-    <div className="flex flex-col gap-2 rounded-xl border bg-card p-3.5 shadow-card">
-      <div className="flex items-center justify-between gap-2">
-        <span className="text-xs font-medium text-muted-foreground">{label}</span>
+    <div className="wb-stat">
+      <div className="wb-stat__top">
+        <span className="wb-stat__label">{label}</span>
         {hasDelta && (
           <span
             className={cn(
-              "inline-flex items-center gap-0.5 rounded-[4px] px-1 py-px text-[11px] font-medium tnum",
-              up ? "text-income" : "text-expense",
+              "wb-stat__delta",
+              up ? "wb-stat__delta--up" : "wb-stat__delta--down",
             )}
+            style={{ marginLeft: "auto" }}
           >
-            {up ? <ArrowUpRight size={11} /> : <ArrowDownRight size={11} />}
+            {up ? <ArrowUpRight size={13} /> : <ArrowDownRight size={13} />}
             {Math.abs(Math.round((delta ?? 0) * 100))}%
           </span>
         )}
       </div>
-      <div
-        className={cn(
-          "text-[22px] font-semibold leading-none tracking-tight tnum",
-          toneColor[tone],
-        )}
-      >
+      <div className="wb-stat__value" style={color ? { color } : undefined}>
         {formatMoney(amount)}
       </div>
       {spark && spark.length > 1 && (
-        <div className="-mx-1 -mb-1 mt-0.5">
-          <Sparkline data={spark} color={sparkColor ?? "hsl(var(--brand))"} />
+        <div style={{ marginTop: 8, marginInline: -2 }}>
+          <Sparkline
+            data={spark}
+            color={sparkColor ?? color ?? "var(--wb-neutral-strong)"}
+          />
         </div>
       )}
     </div>
