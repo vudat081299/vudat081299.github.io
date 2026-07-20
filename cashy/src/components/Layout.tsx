@@ -1,30 +1,15 @@
 import { useState, type ReactNode } from "react";
-import {
-  ArrowLeftRight,
-  FolderTree,
-  LayoutDashboard,
-  Menu,
-  Monitor,
-  Moon,
-  Plus,
-  Settings as SettingsIcon,
-  Sun,
-  Tags as TagsIcon,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
 import { useCashy, setTheme } from "@/lib/store";
 import { navigate, useRoute, type Route } from "@/lib/router";
 import type { ThemeMode } from "@/types";
-import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { openTxEditor } from "@/components/TransactionEditor";
 
-const NAV: { id: Route; label: string; icon: typeof LayoutDashboard }[] = [
-  { id: "dashboard", label: "Tổng quan", icon: LayoutDashboard },
-  { id: "transactions", label: "Giao dịch", icon: ArrowLeftRight },
-  { id: "categories", label: "Danh mục", icon: FolderTree },
-  { id: "tags", label: "Nhãn", icon: TagsIcon },
-  { id: "settings", label: "Cài đặt", icon: SettingsIcon },
+const NAV: { id: Route; label: string; icon: string }[] = [
+  { id: "dashboard", label: "Tổng quan", icon: "dashboard" },
+  { id: "transactions", label: "Giao dịch", icon: "swap_horiz" },
+  { id: "categories", label: "Danh mục", icon: "account_tree" },
+  { id: "tags", label: "Nhãn", icon: "sell" },
+  { id: "settings", label: "Cài đặt", icon: "settings" },
 ];
 
 const THEME_NEXT: Record<ThemeMode, ThemeMode> = {
@@ -32,72 +17,57 @@ const THEME_NEXT: Record<ThemeMode, ThemeMode> = {
   light: "dark",
   dark: "system",
 };
-const THEME_META: Record<ThemeMode, { icon: typeof Sun; label: string }> = {
-  system: { icon: Monitor, label: "Theo hệ thống" },
-  light: { icon: Sun, label: "Nền sáng" },
-  dark: { icon: Moon, label: "Nền tối" },
+const THEME_META: Record<ThemeMode, { icon: string; label: string }> = {
+  system: { icon: "computer", label: "Theo hệ thống" },
+  light: { icon: "light_mode", label: "Nền sáng" },
+  dark: { icon: "dark_mode", label: "Nền tối" },
 };
 
-/* Dark top navbar — mirrors the site launcher (Bootstrap "Dashboard" shell):
-   brand on the left, theme toggle + primary action on the right. */
 function Navbar({ onMenu }: { onMenu: () => void }) {
   const { workspace, theme } = useCashy();
-  const ThemeIcon = THEME_META[theme].icon;
   const initial = (workspace?.displayName ?? "C").slice(0, 1).toUpperCase();
 
   return (
-    <header className="z-20 flex h-14 shrink-0 items-center gap-2 border-b border-white/5 bg-navbar px-3 text-navbar-foreground shadow-sm md:px-4">
-      <button
-        type="button"
-        onClick={onMenu}
-        className="grid size-9 place-items-center rounded-md text-navbar-foreground/80 transition-colors hover:bg-white/10 hover:text-navbar-foreground md:hidden"
-        aria-label="Mở menu"
-      >
-        <Menu size={18} />
-      </button>
-
-      <a
-        href="/"
-        className="flex items-center gap-2.5 rounded-md py-1 pr-2 no-underline"
-        aria-label="Cashy"
-      >
-        <span
-          className="grid size-7 shrink-0 place-items-center rounded-md text-[13px] font-semibold text-white"
-          style={{ background: workspace?.avatarColor ?? "#2383e2" }}
+    <header className="wb-navbar" style={{ flex: "none" }}>
+      <span className="md:hidden">
+        <button
+          type="button"
+          onClick={onMenu}
+          className="wb-btn wb-btn--ghost wb-btn--icon"
+          aria-label="Mở menu"
         >
+          <span className="wb-ico">menu</span>
+        </button>
+      </span>
+
+      <a className="wb-navbar__brand" href="/" aria-label="Cashy">
+        <span className="wb-navbar__mark" style={{ background: workspace?.avatarColor, color: "#fff" }}>
           {initial}
         </span>
-        <span className="flex items-baseline gap-1.5 leading-none">
-          <span className="text-sm font-semibold text-navbar-foreground">
-            {workspace?.displayName ?? "Cashy"}
-          </span>
-          <span className="hidden text-xs text-navbar-foreground/50 sm:inline">
-            {workspace?.currency ?? "VND"}
-          </span>
+        <span>{workspace?.displayName ?? "Cashy"}</span>
+        <span style={{ fontSize: 12, fontWeight: 500, color: "var(--wb-fg-subtle)" }}>
+          {workspace?.currency ?? "VND"}
         </span>
       </a>
 
-      <div className="flex-1" />
+      <span className="wb-navbar__spacer" />
 
-      <button
-        type="button"
-        onClick={() => setTheme(THEME_NEXT[theme])}
-        className="grid size-9 place-items-center rounded-md text-navbar-foreground/80 transition-colors hover:bg-white/10 hover:text-navbar-foreground"
-        aria-label={`Giao diện: ${THEME_META[theme].label}`}
-        title={THEME_META[theme].label}
-      >
-        <ThemeIcon size={17} />
-      </button>
-
-      <Button
-        size="sm"
-        className="gap-1.5 bg-white text-neutral-900 hover:bg-white/90"
-        onClick={() => openTxEditor(null)}
-      >
-        <Plus size={15} />
-        <span className="hidden sm:inline">Thêm giao dịch</span>
-        <span className="sm:hidden">Thêm</span>
-      </Button>
+      <div className="wb-navbar__actions">
+        <button
+          type="button"
+          onClick={() => setTheme(THEME_NEXT[theme])}
+          className="wb-btn wb-btn--ghost wb-btn--icon"
+          aria-label={`Giao diện: ${THEME_META[theme].label}`}
+          title={THEME_META[theme].label}
+        >
+          <span className="wb-ico">{THEME_META[theme].icon}</span>
+        </button>
+        <button type="button" className="wb-btn" style={{ gap: 6 }} onClick={() => openTxEditor(null)}>
+          <span className="wb-ico wb-ico--sm">add</span>
+          <span className="hidden sm:inline">Thêm giao dịch</span>
+          <span className="sm:hidden">Thêm</span>
+        </button>
+      </div>
     </header>
   );
 }
@@ -112,33 +82,32 @@ function SidebarBody({ onNavigate }: { onNavigate?: () => void }) {
   };
 
   return (
-    <nav className="flex h-full flex-col gap-0.5 p-2 pt-3">
+    <nav className="wb-sidenav" style={{ width: "100%", height: "100%" }}>
       {NAV.map((item) => {
         const active = route === item.id;
         const count = counts[item.id];
         return (
-          <button
+          <a
             key={item.id}
-            type="button"
+            role="button"
+            tabIndex={0}
+            className={active ? "wb-sidenav__link is-active" : "wb-sidenav__link"}
             onClick={() => {
               navigate(item.id);
               onNavigate?.();
             }}
-            className={cn(
-              "flex w-full items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[13.5px] font-medium transition-colors",
-              active
-                ? "bg-accent text-foreground"
-                : "text-muted-foreground hover:bg-accent/60 hover:text-foreground",
-            )}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                navigate(item.id);
+                onNavigate?.();
+              }
+            }}
           >
-            <item.icon size={16} className="shrink-0" />
-            <span className="flex-1 text-left">{item.label}</span>
-            {count ? (
-              <span className="text-[11px] text-muted-foreground tnum">
-                {count}
-              </span>
-            ) : null}
-          </button>
+            <span className="wb-ico">{item.icon}</span>
+            <span style={{ flex: 1 }}>{item.label}</span>
+            {count ? <span className="wb-sidenav__badge">{count}</span> : null}
+          </a>
         );
       })}
     </nav>
@@ -149,24 +118,30 @@ export function Layout({ children }: { children: ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="flex h-dvh flex-col overflow-hidden">
+    <div style={{ display: "flex", flexDirection: "column", height: "100dvh", overflow: "hidden" }}>
       <Navbar onMenu={() => setMobileOpen(true)} />
 
-      <div className="flex min-h-0 flex-1 overflow-hidden">
-        <aside className="hidden w-60 shrink-0 border-r bg-muted/30 md:block">
+      <div style={{ display: "flex", minHeight: 0, flex: 1, overflow: "hidden" }}>
+        <aside className="hidden md:block" style={{ flex: "none" }}>
           <SidebarBody />
         </aside>
 
-        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-          <SheetContent side="left" className="w-64 p-0">
-            <SidebarBody onNavigate={() => setMobileOpen(false)} />
-          </SheetContent>
-        </Sheet>
-
-        <main className="min-w-0 flex-1 overflow-y-auto">
-          <div className="mx-auto max-w-[1100px] px-4 py-6 md:px-8">
-            {children}
+        {mobileOpen && (
+          <div
+            className="wb-overlay is-open"
+            style={{ justifyContent: "flex-start", padding: 0 }}
+            onMouseDown={(e) => {
+              if (e.target === e.currentTarget) setMobileOpen(false);
+            }}
+          >
+            <div style={{ height: "100%", width: 260, maxWidth: "80vw" }}>
+              <SidebarBody onNavigate={() => setMobileOpen(false)} />
+            </div>
           </div>
+        )}
+
+        <main style={{ minWidth: 0, flex: 1, overflowY: "auto" }}>
+          <div style={{ maxWidth: 1100, margin: "0 auto", padding: "24px 32px" }}>{children}</div>
         </main>
       </div>
     </div>
