@@ -228,8 +228,70 @@ body {
   background: var(--wb-gray-100);
   color: var(--wb-gray-900);
 }
-.cashy-logo .wb-ico {
-  font-size: 18px;
+
+/* =========================================================================
+   ACCOUNT CHIP — who you are signed in as, sitting right beside the wordmark:
+   initials avatar + workspace name + currency. Neutral throughout (§1): an
+   account is an identity, not a status, so it never takes a semantic colour.
+   ========================================================================= */
+.cashy-account {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  padding: 3px 10px 3px 3px;
+  border: var(--wb-bw) solid var(--wb-border);
+  border-radius: var(--wb-radius-pill);
+  background: var(--wb-surface-2);
+}
+.cashy-account__name {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--wb-fg);
+  max-width: 15ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cashy-account__cur {
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  color: var(--wb-fg-subtle);
+  padding-left: 7px;
+  border-left: var(--wb-bw) solid var(--wb-border);
+}
+
+/* =========================================================================
+   DRAFT BUTTON — the "add transaction" action while an unconfirmed draft is
+   parked. Same dashed idiom the capsule docs use for "chưa chốt" (--dashed):
+   border only, no fill, so it reads as not-yet-real next to the solid button.
+   `.wb-btn` doubles up on the selector: this file loads BEFORE web-builder.css,
+   so a single class would lose the cascade tie to `.wb-btn`'s own fill.
+   ========================================================================= */
+.wb-btn.cashy-btn--draft {
+  background: transparent;
+  color: var(--wb-fg-muted);
+  border-style: dashed;
+  border-color: var(--wb-border-strong);
+}
+.wb-btn.cashy-btn--draft:hover {
+  background: var(--wb-surface-2);
+  color: var(--wb-fg);
+}
+.dark .wb-btn.cashy-btn--draft:hover {
+  background: var(--wb-surface-hover);
+}
+
+/* =========================================================================
+   RANKED TAG — a #chip inked by how much the ledger uses it. Both ends of the
+   ramp are mixes of --wb-fg, so the whole scale inverts by itself in dark mode
+   (heavier = lighter there). Percentages come from the data via TagChip.
+   ========================================================================= */
+.wb-tag.cashy-tag--rank {
+  background: color-mix(in srgb, var(--wb-fg) var(--cashy-tag-bg, 8%), transparent);
+  color: color-mix(in srgb, var(--wb-fg) var(--cashy-tag-fg, 70%), transparent);
 }
 
 /* =========================================================================
@@ -285,25 +347,13 @@ body {
 .cashy-actions-cell {
   text-align: right;
 }
+/* Row actions are ALWAYS shown. They used to fade in on hover, which hid the
+   only way into a row behind a gesture the user had to guess at; now that the
+   destructive action has moved inside the editor, a permanently visible edit
+   button costs nothing and discovers itself. */
 .cashy-rowactions {
   display: inline-flex;
   gap: 2px;
-  opacity: 0;
-  transition: opacity 0.12s ease;
-}
-/* Reveal on row hover, or when an ACTION button itself is keyboard-focused.
-   Deliberately NOT `tr:focus-within` — that would latch the icons open after
-   a click landed focus on the row / its checkbox, so they'd stay visible with
-   the pointer gone. Scoping focus to the actions cell keeps keyboard access
-   without the stuck-open bug. */
-.wb-table tbody tr:hover .cashy-rowactions,
-.cashy-actions-cell:focus-within .cashy-rowactions {
-  opacity: 1;
-}
-@media (hover: none) {
-  .cashy-rowactions {
-    opacity: 1;
-  }
 }
 /* Right-align a numeric COLUMN header so it lines up over the amounts (the
    table's `thead th` left-align otherwise out-specifies `.wb-num`). */
@@ -379,6 +429,41 @@ body {
   align-items: center;
   gap: 10px;
   min-width: 0;
+}
+/* One card per service on the overview. auto-fill so the row reflows instead of
+   stretching three cards across a wide screen. */
+.cashy-subgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(276px, 1fr));
+  gap: 14px;
+}
+/* Cards in a row are as tall as the tallest, so pin the actions to the bottom
+   edge instead of letting them float wherever the body happens to end. */
+.cashy-subgrid > .wb-card {
+  display: flex;
+  flex-direction: column;
+}
+.cashy-subgrid > .wb-card > .wb-card__body {
+  flex: 1;
+}
+/* The two dates a subscription is actually about: last paid & next due. */
+.cashy-submeta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.cashy-submeta__label {
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--wb-fg-subtle);
+  line-height: 1.4;
+}
+.cashy-submeta__val {
+  font-size: 13px;
+  color: var(--wb-fg);
+  font-variant-numeric: tabular-nums;
 }
 .cashy-due {
   display: flex;

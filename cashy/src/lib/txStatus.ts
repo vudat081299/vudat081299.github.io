@@ -25,11 +25,11 @@ export interface StatusMeta {
 }
 
 export const TX_STATUS_META: Record<TxStatus, StatusMeta> = {
-  recorded: { label: "Ghi nhận", cap: "wb-cap--success", dot: true, counted: true },
-  pending: { label: "Chờ xác nhận", cap: "wb-cap--warning", dot: true, counted: false },
-  awaiting: { label: "Chờ đối tác", cap: "wb-cap--info", dot: true, counted: false },
-  skipped: { label: "Bỏ qua", cap: "", dot: true, counted: false },
-  failed: { label: "Thất bại", cap: "wb-cap--danger wb-cap--solid", dot: false, counted: false },
+  recorded: { label: "Recorded", cap: "wb-cap--success", dot: true, counted: true },
+  pending: { label: "Awaiting you", cap: "wb-cap--warning", dot: true, counted: false },
+  awaiting: { label: "In flight", cap: "wb-cap--info", dot: true, counted: false },
+  skipped: { label: "Skipped", cap: "", dot: true, counted: false },
+  failed: { label: "Failed", cap: "wb-cap--danger wb-cap--solid", dot: false, counted: false },
 };
 
 export const TX_STATUS_ORDER: TxStatus[] = [

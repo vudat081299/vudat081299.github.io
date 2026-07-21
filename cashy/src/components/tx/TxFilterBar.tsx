@@ -1,13 +1,15 @@
 import { useMemo } from "react";
-import type { Tag, TxType } from "@/types";
+import type { TxType } from "@/types";
+import type { TagRank } from "@/lib/domain";
 import type { TxQuery } from "@/lib/useTxQuery";
 import { PERIODS, periodLabel } from "@/lib/period";
 import { TagChip } from "@/components/TagChip";
+import { RangeCalendar } from "@/components/RangeCalendar";
 import { Popover } from "@/components/wb/Popover";
 
 const TYPES: { key: TxType; label: string }[] = [
-  { key: "expense", label: "Chi" },
-  { key: "income", label: "Thu" },
+  { key: "expense", label: "Expense" },
+  { key: "income", label: "Income" },
 ];
 
 /**
@@ -24,16 +26,17 @@ const TYPES: { key: TxType; label: string }[] = [
  */
 export function TxFilterBar({
   q,
-  tags,
+  tagRanks,
   count,
   showPeriod = true,
 }: {
   q: TxQuery;
-  tags: Tag[];
+  /** tags already ordered most-used first (see `rankTags`) */
+  tagRanks: TagRank[];
   count: number;
   showPeriod?: boolean;
 }) {
-  const tagById = useMemo(() => new Map(tags.map((t) => [t.id, t])), [tags]);
+  const rankById = useMemo(() => new Map(tagRanks.map((r) => [r.tag.id, r])), [tagRanks]);
   const typeLabel = TYPES.find((t) => t.key === q.type)?.label;
 
   return (
@@ -47,19 +50,19 @@ export function TxFilterBar({
           type="search"
           value={q.search}
           onChange={(e) => q.setSearch(e.target.value)}
-          placeholder="Tìm giao dịch…"
+          placeholder="Search transactions…"
         />
       </div>
 
       {/* Applied filters, each removable right where it is shown. */}
       {showPeriod && q.period !== "all" && (
         <span className="wb-filter-token">
-          <span className="wb-filter-token__key">Kỳ</span>
-          <span className="wb-filter-token__val">{periodLabel(q.period)}</span>
+          <span className="wb-filter-token__key">Period</span>
+          <span className="wb-filter-token__val">{periodLabel(q.period, q.custom)}</span>
           <button
             type="button"
             className="wb-filter-token__x"
-            aria-label="Bỏ lọc kỳ"
+            aria-label="Clear period filter"
             onClick={() => q.setPeriod("all")}
           />
         </span>
@@ -67,28 +70,28 @@ export function TxFilterBar({
 
       {typeLabel && (
         <span className="wb-filter-token">
-          <span className="wb-filter-token__key">Loại</span>
+          <span className="wb-filter-token__key">Type</span>
           <span className="wb-filter-token__val">{typeLabel}</span>
           <button
             type="button"
             className="wb-filter-token__x"
-            aria-label="Bỏ lọc loại"
+            aria-label="Clear type filter"
             onClick={() => q.setType("all")}
           />
         </span>
       )}
 
       {q.activeTags.map((id) => {
-        const t = tagById.get(id);
-        if (!t) return null;
+        const r = rankById.get(id);
+        if (!r) return null;
         return (
           <span key={id} className="wb-filter-token">
-            <span className="wb-filter-token__key">Nhãn</span>
-            <span className="wb-filter-token__val">{t.name}</span>
+            <span className="wb-filter-token__key">Tag</span>
+            <span className="wb-filter-token__val">{r.tag.name}</span>
             <button
               type="button"
               className="wb-filter-token__x"
-              aria-label={`Bỏ nhãn ${t.name}`}
+              aria-label={`Remove tag ${r.tag.name}`}
               onClick={() => q.toggleTag(id)}
             />
           </span>
@@ -99,14 +102,14 @@ export function TxFilterBar({
         panelWidth={252}
         trigger={({ toggle }) => (
           <button type="button" className="wb-filter-add" onClick={toggle}>
-            <span className="wb-ico wb-ico--sm">add</span> Thêm bộ lọc
+            <span className="wb-ico wb-ico--sm">add</span> Add filter
           </button>
         )}
       >
         <div className="wb-menu wb-filter-pop" style={{ border: 0, boxShadow: "none" }}>
           {showPeriod && (
             <>
-              <p className="wb-filter-pop__title">Kỳ</p>
+              <p className="wb-filter-pop__title">Period</p>
               <div className="wb-stack" style={{ "--wb-stack-gap": "1px" } as React.CSSProperties}>
                 {PERIODS.map((p) => (
                   <label key={p.key} className="wb-radio wb-menu__item">
@@ -120,11 +123,16 @@ export function TxFilterBar({
                   </label>
                 ))}
               </div>
+              <p className="wb-filter-pop__title">Custom range</p>
+              <RangeCalendar
+                value={q.period === "custom" ? q.custom : null}
+                onChange={(r) => q.setPeriod("custom", r)}
+              />
               <div className="wb-menu__sep" />
             </>
           )}
 
-          <p className="wb-filter-pop__title">Loại</p>
+          <p className="wb-filter-pop__title">Type</p>
           <div className="wb-stack" style={{ "--wb-stack-gap": "1px" } as React.CSSProperties}>
             <label className="wb-radio wb-menu__item">
               <input
@@ -133,7 +141,7 @@ export function TxFilterBar({
                 checked={q.type === "all"}
                 onChange={() => q.setType("all")}
               />
-              Tất cả
+              All
             </label>
             {TYPES.map((t) => (
               <label key={t.key} className="wb-radio wb-menu__item">
@@ -148,22 +156,25 @@ export function TxFilterBar({
             ))}
           </div>
 
-          {tags.length > 0 && (
+          {tagRanks.length > 0 && (
             <>
               <div className="wb-menu__sep" />
-              <p className="wb-filter-pop__title">Nhãn</p>
+              <p className="wb-filter-pop__title">Tags · most used first</p>
               <div
                 className="wb-stack wb-scroll-y"
                 style={{ "--wb-stack-gap": "1px", maxHeight: 188 } as React.CSSProperties}
               >
-                {tags.map((t) => (
-                  <label key={t.id} className="wb-check wb-menu__item">
+                {tagRanks.map(({ tag, count: used, weight }) => (
+                  <label key={tag.id} className="wb-check wb-menu__item">
                     <input
                       type="checkbox"
-                      checked={q.activeTags.includes(t.id)}
-                      onChange={() => q.toggleTag(t.id)}
+                      checked={q.activeTags.includes(tag.id)}
+                      onChange={() => q.toggleTag(tag.id)}
                     />
-                    <TagChip tag={t} tinted />
+                    <TagChip tag={tag} weight={weight} />
+                    <span className="wb-menu__kbd" style={{ marginLeft: "auto" }}>
+                      {used}
+                    </span>
                   </label>
                 ))}
               </div>
@@ -178,14 +189,14 @@ export function TxFilterBar({
                 className="wb-btn wb-btn--ghost wb-btn--sm wb-btn--block"
                 onClick={q.clearTokens}
               >
-                Xoá hết bộ lọc
+                Clear all filters
               </button>
             </>
           )}
         </div>
       </Popover>
 
-      <span className="wb-filterbar__count">{count} giao dịch</span>
+      <span className="wb-filterbar__count">{count} transactions</span>
     </div>
   );
 }

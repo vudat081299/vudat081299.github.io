@@ -1,11 +1,15 @@
 import { useMemo, useState } from "react";
 import type { Category, Transaction, TxType } from "@/types";
 import { filterTx } from "@/lib/domain";
-import { periodRange, type PeriodKey } from "@/lib/period";
+import { periodRange, type PeriodKey, type Range } from "@/lib/period";
 
 export interface TxQuery {
   period: PeriodKey;
-  setPeriod: (k: PeriodKey) => void;
+  /** the hand-picked window, only meaningful while `period === "custom"` */
+  custom: Range | null;
+  setPeriod: (k: PeriodKey, custom?: Range | null) => void;
+  /** the concrete dates the period resolves to — what the charts should bucket */
+  range: Range;
   type: TxType | "all";
   setType: (t: TxType | "all") => void;
   search: string;
@@ -34,21 +38,31 @@ export function useTxQuery(
   // would hide part of it on those days.
   defaultPeriod: PeriodKey = "30d",
 ): TxQuery {
-  const [period, setPeriod] = useState<PeriodKey>(defaultPeriod);
+  const [period, setPeriodKey] = useState<PeriodKey>(defaultPeriod);
+  const [custom, setCustom] = useState<Range | null>(null);
   const [type, setType] = useState<TxType | "all">("all");
   const [search, setSearch] = useState("");
   const [activeTags, setActiveTags] = useState<string[]>([]);
 
+  // A preset clears whatever range was hand-picked; picking dates implies custom.
+  const setPeriod = (k: PeriodKey, next?: Range | null) => {
+    setPeriodKey(k);
+    if (next !== undefined) setCustom(next);
+    else if (k !== "custom") setCustom(null);
+  };
+
+  const range = useMemo(() => periodRange(period, new Date(), custom), [period, custom]);
+
   const filtered = useMemo(
     () =>
       filterTx(transactions, {
-        range: periodRange(period),
+        range,
         type,
         search,
         tagIds: activeTags,
         cats: categories,
       }),
-    [transactions, categories, period, type, search, activeTags],
+    [transactions, categories, range, type, search, activeTags],
   );
 
   const sorted = useMemo(
@@ -66,7 +80,9 @@ export function useTxQuery(
 
   return {
     period,
+    custom,
     setPeriod,
+    range,
     type,
     setType,
     search,

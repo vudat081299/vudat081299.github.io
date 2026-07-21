@@ -10,7 +10,7 @@ import type { BreakdownSlice } from "@/lib/domain";
 export function SpendChart({
   slices,
   total,
-  label = "Tổng chi",
+  label = "Total spent",
   size = 220,
 }: {
   slices: BreakdownSlice[];

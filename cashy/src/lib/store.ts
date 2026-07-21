@@ -19,7 +19,8 @@ import { buildSampleData } from "@/lib/sample";
 const KEY = "cashy_state_v1";
 // v2 re-colours legacy data onto the bright web-builder chart palette.
 // v3 gives subscriptions a real `startedAt` date + a `lastPaidAt` marker.
-const CURRENT_VERSION = 3;
+// v4 gives subscriptions their payment history (`paymentTxIds`).
+const CURRENT_VERSION = 4;
 
 function emptyState(): CashyState {
   return {
@@ -62,12 +63,28 @@ function recolor(cats: Category[], tags: Tag[]): { categories: Category[]; tags:
 function migrateSubV3(s: Subscription, txs: Transaction[]): Subscription {
   const legacyMonth = (s as unknown as { startMonth?: string }).startMonth;
   const startedAt = s.startedAt ?? billingDate(legacyMonth ?? monthKey(), s.dayOfMonth);
-  const paid = txs
-    .filter((t) => t.subscriptionId === s.id && (t.status ?? "recorded") === "recorded")
-    .map((t) => t.occurredAt)
-    .sort();
   const { startMonth: _drop, ...rest } = s as Subscription & { startMonth?: string };
-  return { ...rest, startedAt, lastPaidAt: s.lastPaidAt ?? (paid[paid.length - 1] ?? null) };
+  return { ...rest, startedAt, ...paymentsOf(s.id, txs) };
+}
+
+/**
+ * A subscription's payment history, read straight off the ledger: the charges it
+ * booked that were actually confirmed, oldest first, plus the date of the last
+ * of them. Both stored fields are only ever a cache of this — deriving them in
+ * one place is what stops confirm / skip / undo / delete-a-charge drifting the
+ * service's history away from the money it claims to have spent.
+ */
+function paymentsOf(
+  subId: string,
+  txs: Transaction[],
+): { paymentTxIds: string[]; lastPaidAt: string | null } {
+  const paid = txs
+    .filter((t) => t.subscriptionId === subId && statusOf(t) === "recorded")
+    .sort((a, b) => a.occurredAt.localeCompare(b.occurredAt));
+  return {
+    paymentTxIds: paid.map((t) => t.id),
+    lastPaidAt: paid.length ? paid[paid.length - 1].occurredAt : null,
+  };
 }
 
 function load(): CashyState {
@@ -90,6 +107,12 @@ function load(): CashyState {
     }
     if ((p.version ?? 1) < 3) {
       next = { ...next, subscriptions: next.subscriptions.map((s) => migrateSubV3(s, next.transactions)) };
+    }
+    if ((p.version ?? 1) < 4) {
+      next = {
+        ...next,
+        subscriptions: next.subscriptions.map((s) => ({ ...s, ...paymentsOf(s.id, next.transactions) })),
+      };
     }
     // A workspace must never open on an empty ledger: any account that got this
     // far with no transactions is re-seeded with the 200-row demo dataset. Only
@@ -298,10 +321,13 @@ export function updateTransaction(id: string, patch: Partial<Transaction>) {
 }
 
 export function deleteTransaction(id: string) {
+  // Read the owner first — once the row is gone there is nothing left to ask.
+  const subId = state.transactions.find((t) => t.id === id)?.subscriptionId;
   commit({
     ...state,
     transactions: state.transactions.filter((t) => t.id !== id),
   });
+  if (subId) syncPayments(subId);
 }
 
 // ---- subscriptions ---------------------------------------------------------
@@ -329,6 +355,7 @@ export function addSubscription(input: {
     active: true,
     startedAt: input.startedAt ?? todayYMD(),
     lastPaidAt: null,
+    paymentTxIds: [],
     createdAt: new Date().toISOString(),
   };
   commit({ ...state, subscriptions: [...state.subscriptions, sub] });
@@ -400,19 +427,16 @@ export function syncSubscriptions() {
   if (fresh.length) commit({ ...state, transactions: [...fresh, ...state.transactions] });
 }
 
-/**
- * Re-derive a subscription's `lastPaidAt` from its recorded charges. The ledger
- * stays the source of truth and the marker is only ever a cache of it, so
- * confirm / skip / undo / delete-a-charge can never drift apart from it.
- */
-function syncLastPaid(subId: string) {
-  const paid = state.transactions
-    .filter((t) => t.subscriptionId === subId && statusOf(t) === "recorded")
-    .map((t) => t.occurredAt)
-    .sort();
-  const lastPaidAt = paid.length ? paid[paid.length - 1] : null;
+/** Re-read a subscription's payment history off the ledger (see `paymentsOf`). */
+function syncPayments(subId: string) {
   const sub = state.subscriptions.find((s) => s.id === subId);
-  if (sub && sub.lastPaidAt !== lastPaidAt) updateSubscription(subId, { lastPaidAt });
+  if (!sub) return;
+  const next = paymentsOf(subId, state.transactions);
+  const same =
+    sub.lastPaidAt === next.lastPaidAt &&
+    sub.paymentTxIds.length === next.paymentTxIds.length &&
+    sub.paymentTxIds.every((id, i) => id === next.paymentTxIds[i]);
+  if (!same) updateSubscription(subId, next);
 }
 
 /** The subscription a charge belongs to, read before the status is changed. */
@@ -424,21 +448,21 @@ function subIdOfCharge(txId: string): string | undefined {
 export function confirmSubscriptionCharge(txId: string) {
   const subId = subIdOfCharge(txId);
   updateTransaction(txId, { status: "recorded" });
-  if (subId) syncLastPaid(subId);
+  if (subId) syncPayments(subId);
 }
 
 /** Skip a subscription charge this cycle (grey; the next cycle still reminds). */
 export function skipSubscriptionCharge(txId: string) {
   const subId = subIdOfCharge(txId);
   updateTransaction(txId, { status: "skipped" });
-  if (subId) syncLastPaid(subId);
+  if (subId) syncPayments(subId);
 }
 
 /** Undo a decision — back to awaiting confirmation. */
 export function revertSubscriptionCharge(txId: string) {
   const subId = subIdOfCharge(txId);
   updateTransaction(txId, { status: "pending" });
-  if (subId) syncLastPaid(subId);
+  if (subId) syncPayments(subId);
 }
 
 // ---- import / export -------------------------------------------------------

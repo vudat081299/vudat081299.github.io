@@ -1,6 +1,13 @@
-import type { Category, Subscription, Transaction, TxType } from "@/types";
+import type { Category, Subscription, Tag, Transaction, TxType } from "@/types";
 import type { Range } from "@/lib/period";
-import { addMonthKey, billingDate, monthKey, parseYMD, ymd } from "@/lib/date";
+import {
+  addMonthKey,
+  billingDate,
+  daysBetween,
+  monthKey,
+  parseYMD,
+  ymd,
+} from "@/lib/date";
 import { isCounted } from "@/lib/txStatus";
 
 // ---- sorting ---------------------------------------------------------------
@@ -62,6 +69,38 @@ export function flattenTree(cats: Category[], type?: TxType): FlatNode[] {
   };
   walk(null, 0);
   return out;
+}
+
+// ---- tag usage -------------------------------------------------------------
+export interface TagRank {
+  tag: Tag;
+  /** how many transactions carry this tag */
+  count: number;
+  /** 0..1 — this tag's usage against the most-used tag; drives its emphasis */
+  weight: number;
+}
+/**
+ * Rank the tags by how much the ledger actually uses them. The result drives
+ * BOTH the order tags are listed in and how strongly each one is inked: a tag
+ * used on half the transactions is a real handle on the data, a tag used twice
+ * is noise, and the UI should say so without inventing a new colour for it —
+ * the weight only ever deepens the neutral (§1: emphasis = contrast, not hue).
+ */
+export function rankTags(tags: Tag[], txs: Transaction[]): TagRank[] {
+  const count = new Map<string, number>();
+  for (const t of txs) for (const id of t.tagIds) count.set(id, (count.get(id) ?? 0) + 1);
+  const max = Math.max(0, ...count.values());
+  return tags
+    .map((tag) => {
+      const c = count.get(tag.id) ?? 0;
+      return { tag, count: c, weight: max ? c / max : 0 };
+    })
+    .sort((a, b) => b.count - a.count || byName(a.tag, b.tag));
+}
+
+/** The ranks by tag id, for the tables that render one transaction's tags. */
+export function tagRankMap(tags: Tag[], txs: Transaction[]): Map<string, TagRank> {
+  return new Map(rankTags(tags, txs).map((r) => [r.tag.id, r] as const));
 }
 
 // ---- aggregates ------------------------------------------------------------
@@ -136,7 +175,7 @@ export function breakdown(
     const cat = cats.find((c) => c.id === key);
     slices.push({
       id: key,
-      name: cat ? cat.name : "Chưa phân loại",
+      name: cat ? cat.name : "Uncategorised",
       colorHex: cat ? cat.colorHex : "#9b9a97",
       total,
       pct: grand ? total / grand : 0,
@@ -164,6 +203,11 @@ export interface WalletPoint {
  * the wallet then draws down as you spend). Expense is scoped to the range; the
  * balance is cumulative across ALL transactions so the line reads as a real
  * account balance, not just the in-period delta. Day/month granularity auto.
+ *
+ * Empty buckets at BOTH ENDS are trimmed away: a 30-day window over a ledger
+ * that only starts 10 days ago should draw 10 days, not 20 days of flat nothing
+ * followed by the actual data. Gaps in the MIDDLE stay — a quiet week is a fact
+ * about the data, whereas dead margins are just an artefact of the window.
  */
 export function walletSeries(all: Transaction[], range: Range): WalletPoint[] {
   let start = range.start;
@@ -180,6 +224,8 @@ export function walletSeries(all: Transaction[], range: Range): WalletPoint[] {
 
   interface B extends WalletPoint {
     endYMD: string;
+    /** any transaction at all landed here — what the end-trim reads */
+    hasTx: boolean;
   }
   const buckets: B[] = [];
   if (monthly) {
@@ -192,6 +238,7 @@ export function walletSeries(all: Transaction[], range: Range): WalletPoint[] {
         endYMD: ymd(last),
         expense: 0,
         balance: 0,
+        hasTx: false,
       });
       c.setMonth(c.getMonth() + 1);
     }
@@ -199,7 +246,14 @@ export function walletSeries(all: Transaction[], range: Range): WalletPoint[] {
     const c = new Date(startD);
     while (c <= endD) {
       const k = ymd(c);
-      buckets.push({ key: k, label: String(c.getDate()), endYMD: k, expense: 0, balance: 0 });
+      buckets.push({
+        key: k,
+        label: String(c.getDate()),
+        endYMD: k,
+        expense: 0,
+        balance: 0,
+        hasTx: false,
+      });
       c.setDate(c.getDate() + 1);
     }
   }
@@ -207,10 +261,11 @@ export function walletSeries(all: Transaction[], range: Range): WalletPoint[] {
   // spending per bucket — only transactions inside the visible range
   const byKey = new Map(buckets.map((b) => [b.key, b] as const));
   for (const t of all) {
-    if (t.type !== "expense" || !isCounted(t)) continue;
     if (t.occurredAt < start || t.occurredAt > end) continue;
     const b = byKey.get(monthly ? t.occurredAt.slice(0, 7) : t.occurredAt);
-    if (b) b.expense += t.amount;
+    if (!b) continue;
+    b.hasTx = true;
+    if (t.type === "expense" && isCounted(t)) b.expense += t.amount;
   }
 
   // running wallet balance — cumulative net of the COUNTED tx up to each bucket's end
@@ -225,7 +280,17 @@ export function walletSeries(all: Transaction[], range: Range): WalletPoint[] {
     }
     b.balance = running;
   }
-  return buckets.map(({ key, label, expense, balance }) => ({ key, label, expense, balance }));
+
+  // Drop the dead margins. Balance was computed on the FULL span first, so the
+  // first surviving bucket still opens on the correct running balance.
+  let lo = 0;
+  let hi = buckets.length - 1;
+  while (lo < hi && !buckets[lo].hasTx) lo++;
+  while (hi > lo && !buckets[hi].hasTx) hi--;
+
+  return buckets
+    .slice(lo, hi + 1)
+    .map(({ key, label, expense, balance }) => ({ key, label, expense, balance }));
 }
 
 // ---- subscriptions ---------------------------------------------------------
@@ -271,6 +336,66 @@ export function needsPaymentThisMonth(sub: Subscription, now: Date = new Date())
   if (startMonthOf(sub) > cur) return false; // hasn't started yet
   if (billingDate(cur, sub.dayOfMonth) > ymd(now)) return false; // not due yet
   return firstUnpaidMonth(sub) <= cur;
+}
+
+/**
+ * A service the provider would have cut off: still switched on, but a WHOLE
+ * billing cycle has gone by unpaid (an earlier month is still owed). That is a
+ * different thing from "due this month", which is merely a bill on the doormat.
+ */
+export function isLapsed(sub: Subscription, now: Date = new Date()): boolean {
+  if (!sub.active) return false;
+  return firstUnpaidMonth(sub) < monthKey(now);
+}
+
+/**
+ * The date money is next wanted. For a service that is up to date that is the
+ * next billing day; for one that already owes a month it is the day that month
+ * fell due — a date in the PAST, which is the whole point: "next payment: in
+ * three weeks" would be a lie while a bill is sitting there unpaid.
+ */
+export function nextPaymentDate(sub: Subscription, now: Date = new Date()): string {
+  const owed = billingDate(firstUnpaidMonth(sub), sub.dayOfMonth);
+  return owed <= ymd(now) ? owed : subCycle(sub, now).end;
+}
+
+export interface SubCycle {
+  /** the billing date that opened the cycle today falls in */
+  start: string;
+  /** the next billing date — when money is wanted again */
+  end: string;
+  /** real calendar days in this cycle: 28, 29, 30 or 31, whatever the month is */
+  totalDays: number;
+  elapsedDays: number;
+  remainingDays: number;
+  /** 0..1 — how far through the paid-for period we are */
+  pct: number;
+}
+/**
+ * Where today sits inside the current billing period. Both ends are REAL billing
+ * dates, so the length is whatever that particular month happens to be — 28 days
+ * in February, 31 in July — rather than an assumed 30. (A yearly plan would fall
+ * out of the same arithmetic once the model carries an interval; today every
+ * subscription bills monthly.)
+ */
+export function subCycle(sub: Subscription, now: Date = new Date()): SubCycle {
+  const today = ymd(now);
+  // The cycle we are in opened on the last billing date that has already passed.
+  let m = monthKey(now);
+  if (billingDate(m, sub.dayOfMonth) > today) m = addMonthKey(m, -1);
+  const start = billingDate(m, sub.dayOfMonth);
+  const end = billingDate(addMonthKey(m, 1), sub.dayOfMonth);
+
+  const totalDays = Math.max(1, daysBetween(start, end));
+  const elapsedDays = Math.min(totalDays, Math.max(0, daysBetween(start, today)));
+  return {
+    start,
+    end,
+    totalDays,
+    elapsedDays,
+    remainingDays: totalDays - elapsedDays,
+    pct: elapsedDays / totalDays,
+  };
 }
 
 export function subscriptionStatus(
@@ -388,7 +513,7 @@ export function periodInsights(
       top = {
         note: tx.note || cat?.name || "Giao dịch",
         amount: tx.amount,
-        categoryName: cat?.name ?? "Chưa phân loại",
+        categoryName: cat?.name ?? "Uncategorised",
       };
     }
   }

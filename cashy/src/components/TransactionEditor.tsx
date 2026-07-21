@@ -6,6 +6,7 @@ import {
   useCashy,
 } from "@/lib/store";
 import { flattenTree } from "@/lib/domain";
+import { clearDraft, getDraft, saveDraft, type TxDraft } from "@/lib/draft";
 import { formatMoney, parseMoney } from "@/lib/money";
 import { todayYMD } from "@/lib/date";
 import { TX_STATUS_META, TX_STATUS_ORDER } from "@/lib/txStatus";
@@ -37,15 +38,18 @@ export function TransactionEditor() {
   useEffect(() => {
     openFn = (id) => {
       const tx = id ? (transactions.find((t) => t.id === id) ?? null) : null;
+      // Adding: pick up whatever was left half-typed last time. Editing an
+      // existing row never touches the draft — that is a different transaction.
+      const d = tx ? null : getDraft();
       setEditingId(tx ? tx.id : null);
-      setType(tx?.type ?? "expense");
-      setAmountStr(tx && tx.amount ? String(tx.amount) : "");
-      setCategoryId(tx?.categoryId ?? null);
-      setTagIds(tx?.tagIds ?? []);
-      setOccurredAt(tx?.occurredAt ?? todayYMD());
-      setNote(tx?.note ?? "");
-      setPayee(tx?.payee ?? "");
-      setStatus(tx?.status ?? "recorded");
+      setType(tx?.type ?? d?.type ?? "expense");
+      setAmountStr(tx && tx.amount ? String(tx.amount) : (d?.amountStr ?? ""));
+      setCategoryId(tx?.categoryId ?? d?.categoryId ?? null);
+      setTagIds(tx?.tagIds ?? d?.tagIds ?? []);
+      setOccurredAt(tx?.occurredAt ?? d?.occurredAt ?? todayYMD());
+      setNote(tx?.note ?? d?.note ?? "");
+      setPayee(tx?.payee ?? d?.payee ?? "");
+      setStatus(tx?.status ?? d?.status ?? "recorded");
       setOpen(true);
     };
     return () => {
@@ -54,6 +58,25 @@ export function TransactionEditor() {
   }, [transactions]);
 
   const amount = parseMoney(amountStr);
+  const isDraft = !editingId && getDraft() !== null;
+
+  /**
+   * Leaving without confirming does NOT create a transaction — it parks what was
+   * typed as a draft, and the "add transaction" button then wears the dashed
+   * "chưa chốt" outline until it is either confirmed or thrown away.
+   */
+  function dismiss() {
+    if (!editingId) {
+      const d: TxDraft = { type, amountStr, categoryId, tagIds, occurredAt, note, payee, status };
+      saveDraft(d);
+    }
+    setOpen(false);
+  }
+
+  function discard() {
+    clearDraft();
+    setOpen(false);
+  }
   const catOptions = useMemo(() => flattenTree(categories, type), [categories, type]);
 
   function changeType(t: TxType) {
@@ -76,7 +99,10 @@ export function TransactionEditor() {
       occurredAt,
     };
     if (editingId) updateTransaction(editingId, payload);
-    else addTransaction(payload);
+    else {
+      addTransaction(payload);
+      clearDraft(); // the draft became a real transaction
+    }
     setOpen(false);
   }
 
@@ -90,12 +116,15 @@ export function TransactionEditor() {
         gap: 10,
       }}
     >
+      {/* Deleting lives HERE, not on the table row: you open the transaction,
+          look at it, and only then may you destroy it. */}
       {editingId ? (
         <button
           type="button"
           className="wb-btn wb-btn--ghost"
           style={{ color: "var(--wb-danger-text)", gap: 6 }}
           onClick={() => {
+            if (!window.confirm("Xoá giao dịch này?")) return;
             deleteTransaction(editingId);
             setOpen(false);
           }}
@@ -103,15 +132,20 @@ export function TransactionEditor() {
           <span className="wb-ico wb-ico--sm">delete</span>
           Xoá
         </button>
+      ) : isDraft ? (
+        <button type="button" className="wb-btn wb-btn--ghost" style={{ gap: 6 }} onClick={discard}>
+          <span className="wb-ico wb-ico--sm">backspace</span>
+          Bỏ bản nháp
+        </button>
       ) : (
         <span />
       )}
       <div style={{ display: "flex", gap: 8 }}>
-        <button type="button" className="wb-btn wb-btn--secondary" onClick={() => setOpen(false)}>
-          Huỷ
+        <button type="button" className="wb-btn wb-btn--secondary" onClick={dismiss}>
+          {editingId ? "Huỷ" : "Để sau"}
         </button>
         <button type="button" className="wb-btn" onClick={save} disabled={amount <= 0}>
-          {editingId ? "Lưu" : "Thêm"}
+          {editingId ? "Lưu" : "Thêm giao dịch"}
         </button>
       </div>
     </div>
@@ -120,7 +154,7 @@ export function TransactionEditor() {
   return (
     <Modal
       open={open}
-      onClose={() => setOpen(false)}
+      onClose={dismiss}
       title={editingId ? "Sửa giao dịch" : "Thêm giao dịch"}
       footer={footer}
     >

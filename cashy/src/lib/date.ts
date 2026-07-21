@@ -44,6 +44,12 @@ export function addDays(s: string, n: number): string {
   return ymd(d);
 }
 
+/** Whole calendar days from `a` to `b` (negative when `b` is earlier). Real dates,
+ *  so month lengths and leap years are already accounted for — never assume 30. */
+export function daysBetween(a: string, b: string): number {
+  return differenceInCalendarDays(parseYMD(b), parseYMD(a));
+}
+
 // ---- month keys ("YYYY-MM") — for recurring / subscription math -------------
 export function monthKey(d: Date = new Date()): string {
   return ymd(d).slice(0, 7);

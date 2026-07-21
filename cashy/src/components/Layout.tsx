@@ -1,16 +1,17 @@
 import { useState, type CSSProperties, type ReactNode } from "react";
 import { useCashy, setTheme } from "@/lib/store";
+import { useTxDraft } from "@/lib/draft";
 import { navigate, useRoute, type Route } from "@/lib/router";
 import type { ThemeMode } from "@/types";
 import { openTxEditor } from "@/components/TransactionEditor";
 
 const NAV: { id: Route; label: string; icon: string }[] = [
-  { id: "dashboard", label: "Tổng quan", icon: "dashboard" },
-  { id: "transactions", label: "Giao dịch", icon: "swap_horiz" },
-  { id: "subscriptions", label: "Đăng ký", icon: "autorenew" },
-  { id: "categories", label: "Danh mục", icon: "account_tree" },
-  { id: "tags", label: "Nhãn", icon: "sell" },
-  { id: "settings", label: "Cài đặt", icon: "settings" },
+  { id: "dashboard", label: "Overview", icon: "dashboard" },
+  { id: "transactions", label: "Transactions", icon: "swap_horiz" },
+  { id: "subscriptions", label: "Subscriptions", icon: "autorenew" },
+  { id: "categories", label: "Categories", icon: "account_tree" },
+  { id: "tags", label: "Tags", icon: "sell" },
+  { id: "settings", label: "Settings", icon: "settings" },
 ];
 
 const THEME_NEXT: Record<ThemeMode, ThemeMode> = {
@@ -19,13 +20,23 @@ const THEME_NEXT: Record<ThemeMode, ThemeMode> = {
   dark: "system",
 };
 const THEME_META: Record<ThemeMode, { icon: string; label: string }> = {
-  system: { icon: "computer", label: "Theo hệ thống" },
-  light: { icon: "light_mode", label: "Nền sáng" },
-  dark: { icon: "dark_mode", label: "Nền tối" },
+  system: { icon: "computer", label: "Match system" },
+  light: { icon: "light_mode", label: "Light" },
+  dark: { icon: "dark_mode", label: "Dark" },
 };
+
+/** "Dat Vu" → "DV", "Dat" → "D". Two letters at most; the avatar is 28px wide. */
+function initialsOf(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "?";
+  return (parts[0][0] + (parts.length > 1 ? parts[parts.length - 1][0] : "")).toUpperCase();
+}
 
 function Navbar({ onMenu }: { onMenu: () => void }) {
   const { workspace, theme } = useCashy();
+  // An unconfirmed transaction is parked → the add button says so (dashed = §9
+  // "chưa chốt") instead of pretending nothing is outstanding.
+  const draft = useTxDraft();
 
   return (
     <header className="wb-navbar" style={{ flex: "none" }}>
@@ -33,8 +44,8 @@ function Navbar({ onMenu }: { onMenu: () => void }) {
         type="button"
         onClick={onMenu}
         className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--round wb-btn--sm"
-        aria-label="Ẩn/hiện menu"
-        title="Ẩn/hiện menu"
+        aria-label="Toggle menu"
+        title="Toggle menu"
       >
         <span className="wb-ico wb-ico--sm">menu</span>
       </button>
@@ -48,12 +59,15 @@ function Navbar({ onMenu }: { onMenu: () => void }) {
           navigate("dashboard");
         }}
       >
-        <span className="wb-ico">account_balance_wallet</span>
         Cashy
       </a>
+
+      {/* Which account am I in? Initials + name + currency, one neutral chip. */}
       {workspace && (
-        <span className="wb-cap wb-cap--sm cashy-hide-sm" style={{ marginLeft: 2 }}>
-          {workspace.currency}
+        <span className="cashy-account cashy-hide-sm">
+          <span className="wb-avatar wb-avatar--sm">{initialsOf(workspace.displayName)}</span>
+          <span className="cashy-account__name">{workspace.displayName}</span>
+          <span className="cashy-account__cur">{workspace.currency}</span>
         </span>
       )}
 
@@ -64,20 +78,25 @@ function Navbar({ onMenu }: { onMenu: () => void }) {
           type="button"
           onClick={() => setTheme(THEME_NEXT[theme])}
           className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--round wb-btn--sm"
-          aria-label={`Giao diện: ${THEME_META[theme].label}`}
+          aria-label={`Theme: ${THEME_META[theme].label}`}
           title={THEME_META[theme].label}
         >
           <span className="wb-ico wb-ico--sm">{THEME_META[theme].icon}</span>
         </button>
         <button
           type="button"
-          className="wb-btn wb-btn--round wb-btn--sm"
+          className={
+            draft
+              ? "wb-btn wb-btn--round wb-btn--sm cashy-btn--draft"
+              : "wb-btn wb-btn--round wb-btn--sm"
+          }
           style={{ gap: 5 }}
+          title={draft ? "You have an unfinished transaction — pick it up" : undefined}
           onClick={() => openTxEditor(null)}
         >
-          <span className="wb-ico wb-ico--xs">add</span>
-          <span className="cashy-show-sm">Thêm giao dịch</span>
-          <span className="cashy-hide-sm">Thêm</span>
+          <span className="wb-ico wb-ico--xs">{draft ? "edit_note" : "add"}</span>
+          <span className="cashy-show-sm">{draft ? "Finish draft" : "Add transaction"}</span>
+          <span className="cashy-hide-sm">{draft ? "Draft" : "Add"}</span>
         </button>
       </div>
     </header>
@@ -95,7 +114,7 @@ function SidebarBody({ onNavigate }: { onNavigate?: () => void }) {
 
   return (
     <nav className="wb-sidenav" style={{ width: "100%", height: "100%" }}>
-      <span className="cashy-navlabel">Điều hướng</span>
+      <span className="cashy-navlabel">Navigation</span>
       {NAV.map((item) => {
         const active = route === item.id;
         const count = counts[item.id];
@@ -180,7 +199,7 @@ export function Layout({ children }: { children: ReactNode }) {
             <div className="wb-footer__inner">
               <div className="wb-footer__bottom">
                 <span className="wb-footer__copy">
-                  © 2026 Cashy · Sổ chi tiêu cá nhân — dữ liệu chỉ lưu trên trình duyệt này
+                  © 2026 Cashy · Personal spending ledger — data never leaves this browser
                 </span>
               </div>
             </div>

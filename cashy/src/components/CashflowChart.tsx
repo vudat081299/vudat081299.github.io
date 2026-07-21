@@ -27,7 +27,7 @@ function ChartTip({ active, payload, label }: TooltipContentProps) {
       {balance != null && (
         <div className="cashy-charttip__row">
           <span className="cashy-charttip__dot" style={{ background: BALANCE_COLOR }} />
-          <span>Số dư ví</span>
+          <span>Wallet balance</span>
           <span className="wb-num cashy-charttip__val">{formatMoney(Number(balance))}</span>
         </div>
       )}
@@ -37,7 +37,7 @@ function ChartTip({ active, payload, label }: TooltipContentProps) {
             className="cashy-charttip__dot"
             style={{ background: "var(--wb-chart-expense)" }}
           />
-          <span>Chi tiêu</span>
+          <span>Spending</span>
           <span className="wb-num cashy-charttip__val">{formatMoney(Number(expense))}</span>
         </div>
       )}
@@ -52,6 +52,13 @@ function ChartTip({ active, payload, label }: TooltipContentProps) {
  * balance is the figure that matters. Colours come straight from `--wb-chart-*`.
  */
 export function CashflowChart({ data }: { data: WalletPoint[] }) {
+  // Pin the axis to zero unless the wallet really does go negative. Left to
+  // itself the scale pads below the lowest point and invents a stretch of
+  // negative money under a line that never once went into the red — an axis
+  // should not show territory the data cannot reach.
+  const goesNegative = data.some((d) => d.balance < 0);
+  const balanceDomain: [number | "auto", "auto"] = goesNegative ? ["auto", "auto"] : [0, "auto"];
+
   return (
     <ResponsiveContainer width="100%" height="100%" minHeight={240}>
       <ComposedChart data={data} margin={{ top: 8, right: 4, bottom: 0, left: 0 }}>
@@ -70,10 +77,13 @@ export function CashflowChart({ data }: { data: WalletPoint[] }) {
           width={48}
           tickLine={false}
           axisLine={false}
+          domain={balanceDomain}
           tick={{ fontSize: 10, fill: "var(--wb-fg-subtle)" }}
           tickFormatter={(v) => formatMoneyShort(Number(v)).replace(" đ", "")}
         />
-        <YAxis yAxisId="expense" orientation="right" hide />
+        {/* Spending is never negative — its (hidden) scale starts at the baseline
+            so the bars grow up from zero rather than from a padded floor. */}
+        <YAxis yAxisId="expense" orientation="right" hide domain={[0, "auto"]} />
         <Tooltip
           cursor={{ fill: "var(--wb-surface-2)" }}
           content={ChartTip}

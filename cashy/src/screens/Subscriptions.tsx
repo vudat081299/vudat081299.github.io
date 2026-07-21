@@ -63,6 +63,10 @@ function SubscriptionRow({
       <td className="wb-cell-muted">{fmtDateNum(sub.startedAt)}</td>
       <td className="wb-cell-muted">
         {sub.lastPaidAt ? fmtDateNum(sub.lastPaidAt) : "—"}
+        {/* The stored history, not a guess: one id per transaction that paid it. */}
+        {sub.paymentTxIds.length > 0 && (
+          <span className="wb-cell-sub">{sub.paymentTxIds.length} kỳ đã trả</span>
+        )}
       </td>
       <td className="wb-num wb-num--strong">{formatMoney(sub.amount)}</td>
       <td>

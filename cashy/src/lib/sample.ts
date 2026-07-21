@@ -1,13 +1,15 @@
 // Demo seed — every workspace opens on a full dataset, never an empty shell:
 // EXACTLY 200 transactions spread evenly over the last 10 days (20 per day,
 // ending "now"), each one tagged, all wired to the seeded categories. The oldest
-// day also carries the opening balance, the salary and the fixed monthly bills,
-// so the wallet reads positive and income/expense both have something to show.
+// day also carries the salary and the fixed monthly bills, so income/expense
+// both have something to show. On top of that window sit the subscriptions'
+// past charges (older months) and one opening-balance row dated before them all,
+// so the wallet reads positive from the very first point of the balance line.
 // Amounts are integer VND. Referenced by store.createWorkspace, store.load
 // (re-seeds an empty workspace) and store.loadSampleData.
 import type { Category, Subscription, Tag, Transaction, TxStatus, TxType } from "@/types";
 import { uid } from "@/lib/id";
-import { addMonthKey, billingDate, monthKey, ymd } from "@/lib/date";
+import { addDays, addMonthKey, billingDate, monthKey, monthLabelShort, ymd } from "@/lib/date";
 
 type Pool = {
   key: string;
@@ -95,20 +97,29 @@ const SUBSCRIPTIONS: SubDef[] = [
   { name: "YouTube Premium", amount: 79_000, dueOffset: -3, category: "Giải trí", icon: "star", colorHex: "#f43f5e", note: "Không quảng cáo", paidThrough: "last", startedMonthsAgo: 5 },
   { name: "iCloud 200GB", amount: 25_000, dueOffset: -12, category: "Hóa đơn", icon: "smartphone", colorHex: "#3b82f6", note: "Sao lưu iPhone", paidThrough: "this", startedMonthsAgo: 20 },
   { name: "ChatGPT Plus", amount: 500_000, dueOffset: 4, category: "Mua sắm", icon: "laptop", colorHex: "#8b5cf6", note: "Dùng cho công việc", paidThrough: "last", startedMonthsAgo: 3 },
+  // Still switched on but two months behind — the "suspended, unpaid" state.
+  { name: "Adobe Creative Cloud", amount: 620_000, dueOffset: -6, category: "Mua sắm", icon: "laptop", colorHex: "#06b6d4", note: "Quên gia hạn 2 tháng", paidThrough: "older", startedMonthsAgo: 9 },
   { name: "California Fitness", amount: 750_000, dueOffset: -20, category: "Sức khỏe", icon: "dumbbell", colorHex: "#f59e0b", note: "Tạm dừng khi đi công tác", paidThrough: "older", startedMonthsAgo: 10, active: false },
 ];
+
+/** How many past cycles of each service get a real charge row in the demo. */
+const MAX_HISTORY = 6;
 
 /**
  * The demo subscriptions — one service in each payment state, so the reminder,
  * the paid rows, an upcoming charge and a paused service are all visible on
- * first open. `lastPaidAt` is what decides which of those a row is in, so it is
- * derived here from `paidThrough` rather than hard-coded to a date.
+ * first open.
+ *
+ * Each past payment is a REAL recorded transaction, not a date on the service:
+ * `paymentTxIds` points at them and `lastPaidAt` is simply the last of them. The
+ * ledger stays the only place money exists, and the service's payment history is
+ * a view of it — which is what lets the store re-derive both fields at any time.
  */
 export function buildSampleSubscriptions(
   categories: Category[],
   tags: Tag[],
   now: Date = new Date(),
-): Subscription[] {
+): { subscriptions: Subscription[]; charges: Transaction[] } {
   const catIdByName = new Map<string, string>();
   for (const c of categories) if (!catIdByName.has(c.name)) catIdByName.set(c.name, c.id);
   const tagIdByName = new Map(tags.map((t) => [t.name, t.id] as const));
@@ -121,13 +132,44 @@ export function buildSampleSubscriptions(
   // Clamp to 1..28 so the billing day exists in every month.
   const clampDay = (d: number) => Math.min(28, Math.max(1, d));
 
-  return SUBSCRIPTIONS.map((s) => {
+  const subscriptions: Subscription[] = [];
+  const charges: Transaction[] = [];
+
+  for (const s of SUBSCRIPTIONS) {
+    const id = uid();
     const dayOfMonth = clampDay(today + s.dueOffset);
     const startMonth = addMonthKey(cur, -s.startedMonthsAgo);
     const paidMonth =
       s.paidThrough === "this" ? cur : addMonthKey(cur, s.paidThrough === "last" ? -1 : -2);
-    return {
-      id: uid(),
+
+    // Every month from the start (capped) through the last settled one is paid.
+    const earliest = addMonthKey(paidMonth, -(MAX_HISTORY - 1));
+    let m = earliest > startMonth ? earliest : startMonth;
+    const paymentTxIds: string[] = [];
+    let lastPaidAt: string | null = null;
+    for (let guard = 0; m <= paidMonth && guard < MAX_HISTORY; guard++, m = addMonthKey(m, 1)) {
+      const txId = uid();
+      const occurredAt = billingDate(m, dayOfMonth);
+      charges.push({
+        id: txId,
+        amount: s.amount,
+        type: "expense",
+        categoryId: catIdByName.get(s.category) ?? null,
+        tagIds: subTagIds,
+        note: s.name,
+        payee: `Đăng ký · ${monthLabelShort(m)}`,
+        status: "recorded",
+        occurredAt,
+        createdAt: new Date(`${occurredAt}T09:00:00`).toISOString(),
+        subscriptionId: id,
+        subMonth: m,
+      });
+      paymentTxIds.push(txId);
+      lastPaidAt = occurredAt;
+    }
+
+    subscriptions.push({
+      id,
       name: s.name,
       amount: s.amount,
       dayOfMonth,
@@ -138,10 +180,13 @@ export function buildSampleSubscriptions(
       note: s.note,
       active: s.active ?? true,
       startedAt: billingDate(startMonth, dayOfMonth),
-      lastPaidAt: billingDate(paidMonth, dayOfMonth),
+      lastPaidAt,
+      paymentTxIds,
       createdAt: now.toISOString(),
-    };
-  });
+    });
+  }
+
+  return { subscriptions, charges };
 }
 
 export function buildSampleData(
@@ -190,12 +235,16 @@ export function buildSampleData(
     dates.push(ymd(d));
   }
 
+  // The services and their real payment history — needed up front so the opening
+  // balance can be dated before the oldest of those charges.
+  const { subscriptions, charges } = buildSampleSubscriptions(categories, tags, now);
+
   const transactions: Transaction[] = [];
 
-  // Every day carries EXACTLY `PER_DAY` rows, so the dataset always totals 200.
-  // The oldest day spends its first slots on the opening balance, the salary and
-  // the fixed monthly bills; every other day is daily spending plus the odd
-  // windfall. Whatever slots are left over that day get filled with spending.
+  // Every day carries EXACTLY `PER_DAY` rows, so the 10-day window always holds
+  // 200. The oldest day spends its first slots on the salary and the fixed
+  // monthly bills; every other day is daily spending plus the odd windfall.
+  // Whatever slots are left over that day get filled with spending.
   dates.forEach((dateStr, dayIndex) => {
     const opening = dayIndex === 0;
     const [y, m, dd] = dateStr.split("-").map(Number);
@@ -225,23 +274,6 @@ export function buildSampleData(
 
     let slots = PER_DAY;
 
-    // Opening balance, timestamped earliest so it sorts first — the wallet
-    // balance line then starts from a real, positive figure.
-    if (opening) {
-      transactions.push({
-        id: uid(),
-        amount: OPENING_BALANCE,
-        type: "income",
-        categoryId: catIdByName.get("Khác") ?? null,
-        tagIds: [tg("Chuyển khoản")],
-        note: "Số dư đầu kỳ",
-        payee: "Vietcombank",
-        occurredAt: dateStr,
-        createdAt: new Date(y, m - 1, dd, 0, 0).toISOString(),
-      });
-      slots--;
-    }
-
     const income: Pool[] = opening ? [SALARY] : chance(0.15) ? [pick(INCOME_EXTRA)] : [];
     const fixed: Pool[] = opening ? FIXED : [];
 
@@ -252,10 +284,29 @@ export function buildSampleData(
     for (let i = 0; i < slots; i++) make(pick(EXPENSES), "expense");
   });
 
+  // The wallet has to be funded BEFORE the first subscription charge, otherwise
+  // the running balance would open months in the red purely because the demo
+  // starts its history there. So the opening balance is dated a day earlier than
+  // anything else in the dataset — it is the ground the line rises from.
+  const firstDated = [...charges.map((c) => c.occurredAt), dates[0]].sort()[0];
+  const openedAt = addDays(firstDated, -1);
+  transactions.push({
+    id: uid(),
+    amount: OPENING_BALANCE,
+    type: "income",
+    categoryId: catIdByName.get("Khác") ?? null,
+    tagIds: [tg("Chuyển khoản")],
+    note: "Số dư đầu kỳ",
+    payee: "Vietcombank",
+    occurredAt: openedAt,
+    createdAt: new Date(`${openedAt}T00:00:00`).toISOString(),
+  });
+  transactions.push(...charges);
+
   // Newest first, matching addTransaction's prepend order.
   transactions.sort((a, b) =>
     a.occurredAt < b.occurredAt ? 1 : a.occurredAt > b.occurredAt ? -1 : a.createdAt < b.createdAt ? 1 : -1,
   );
 
-  return { tags, transactions, subscriptions: buildSampleSubscriptions(categories, tags, now) };
+  return { tags, transactions, subscriptions };
 }

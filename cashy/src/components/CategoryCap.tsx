@@ -11,5 +11,5 @@ import type { Category } from "@/types";
  * carries real meaning instead of just tinting every row of a dense table.
  */
 export function CategoryCap({ category }: { category?: Category | null }) {
-  return <span className="wb-cap">{category ? category.name : "Chưa phân loại"}</span>;
+  return <span className="wb-cap">{category ? category.name : "Uncategorised"}</span>;
 }

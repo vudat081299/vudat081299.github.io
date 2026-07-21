@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import type { Category, Tag, Transaction } from "@/types";
+import type { Category, Transaction } from "@/types";
+import type { TagRank } from "@/lib/domain";
 import { deleteTransaction } from "@/lib/store";
 import { AmountDisplay } from "@/components/AmountDisplay";
 import { CategoryCap } from "@/components/CategoryCap";
@@ -13,13 +14,17 @@ import { Pagination } from "@/components/tx/Pagination";
 /**
  * The one transaction table shared by the Dashboard (20/page) and the
  * Transactions screen (50/page). Self-contained: internal pagination, a
- * multi-select column with a bulk-delete bar, reveal-on-hover row edit/delete,
+ * multi-select column with a bulk-delete bar, an always-visible row edit button,
  * row click → the receipt detail, and a card foot with the pager + page info.
+ *
+ * There is deliberately NO per-row delete: one stray click should not be able to
+ * destroy a row. Deleting is inside the editor, where the transaction is open in
+ * front of you (bulk delete still exists, but only after an explicit selection).
  */
 export function TransactionTable({
   rows,
   categories,
-  tags,
+  tagRanks,
   pageSize,
   title,
   subtitle,
@@ -28,7 +33,8 @@ export function TransactionTable({
 }: {
   rows: Transaction[];
   categories: Category[];
-  tags: Tag[];
+  /** tag → how heavily the ledger uses it; drives chip order and ink */
+  tagRanks: Map<string, TagRank>;
   pageSize: number;
   title?: ReactNode;
   subtitle?: ReactNode;
@@ -36,7 +42,6 @@ export function TransactionTable({
   emptyState?: ReactNode;
 }) {
   const catById = useMemo(() => new Map(categories.map((c) => [c.id, c])), [categories]);
-  const tagById = useMemo(() => new Map(tags.map((t) => [t.id, t])), [tags]);
   const { page, setPage, totalPages, pageItems, total, from, to } = usePagination(rows, pageSize);
 
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -70,7 +75,7 @@ export function TransactionTable({
     });
 
   const bulkDelete = () => {
-    if (!window.confirm(`Xoá ${selected.size} giao dịch đã chọn?`)) return;
+    if (!window.confirm(`Delete ${selected.size} selected transactions?`)) return;
     selected.forEach((id) => deleteTransaction(id));
     setSelected(new Set());
   };
@@ -102,8 +107,8 @@ export function TransactionTable({
         {selecting ? (
           <>
             <div>
-              <h3 className="wb-table-head__title">Đã chọn {selected.size}</h3>
-              <p className="wb-table-head__sub">Chọn hành động hàng loạt</p>
+              <h3 className="wb-table-head__title">{selected.size} selected</h3>
+              <p className="wb-table-head__sub">Pick a bulk action</p>
             </div>
             <div className="wb-table-head__actions">
               <button
@@ -111,7 +116,7 @@ export function TransactionTable({
                 className="wb-btn wb-btn--ghost wb-btn--sm"
                 onClick={() => setSelected(new Set())}
               >
-                Bỏ chọn
+                Deselect
               </button>
               <button
                 type="button"
@@ -120,7 +125,7 @@ export function TransactionTable({
                 onClick={bulkDelete}
               >
                 <span className="wb-ico wb-ico--sm">delete</span>
-                Xoá đã chọn
+                Delete selected
               </button>
             </div>
           </>
@@ -142,7 +147,7 @@ export function TransactionTable({
           <thead>
             <tr>
               <th className="cashy-check-cell">
-                <label className="wb-check" aria-label="Chọn tất cả trên trang">
+                <label className="wb-check" aria-label="Select every row on this page">
                   <input
                     type="checkbox"
                     checked={allChecked}
@@ -153,21 +158,24 @@ export function TransactionTable({
                   />
                 </label>
               </th>
-              <th>Ngày</th>
-              <th>Nội dung</th>
-              <th>Danh mục</th>
-              <th>Nhãn</th>
-              <th className="wb-num">Số tiền</th>
-              <th>Trạng thái</th>
-              <th aria-label="Hành động" />
+              <th>Date</th>
+              <th>Description</th>
+              <th>Category</th>
+              <th>Tags</th>
+              <th className="wb-num">Amount</th>
+              <th>Status</th>
+              <th aria-label="Actions" />
             </tr>
           </thead>
           <tbody>
             {pageItems.map((tx) => {
               const category = tx.categoryId ? (catById.get(tx.categoryId) ?? null) : null;
+              // Most-used tag first: when only two of them fit, show the two that
+              // actually say something about this ledger.
               const txTags = tx.tagIds
-                .map((id) => tagById.get(id))
-                .filter((t): t is Tag => Boolean(t));
+                .map((id) => tagRanks.get(id))
+                .filter((r): r is TagRank => Boolean(r))
+                .sort((a, b) => b.count - a.count);
               const day = `${tx.occurredAt.slice(8, 10)}/${tx.occurredAt.slice(5, 7)}`;
               const isSel = selected.has(tx.id);
               return (
@@ -185,14 +193,14 @@ export function TransactionTable({
                   }}
                 >
                   <td className="cashy-check-cell" onClick={(e) => e.stopPropagation()}>
-                    <label className="wb-check" aria-label="Chọn giao dịch">
+                    <label className="wb-check" aria-label="Select transaction">
                       <input type="checkbox" checked={isSel} onChange={() => toggle(tx.id)} />
                     </label>
                   </td>
                   <td className="wb-cell-muted">{day}</td>
                   <td>
                     <span className="wb-cell-strong">
-                      {tx.note || category?.name || "Giao dịch"}
+                      {tx.note || category?.name || "Transaction"}
                     </span>
                     {tx.payee && <span className="wb-cell-sub">{tx.payee}</span>}
                   </td>
@@ -202,8 +210,8 @@ export function TransactionTable({
                   <td>
                     {txTags.length > 0 ? (
                       <span className="wb-tags">
-                        {txTags.slice(0, 2).map((t) => (
-                          <TagChip key={t.id} tag={t} />
+                        {txTags.slice(0, 2).map((r) => (
+                          <TagChip key={r.tag.id} tag={r.tag} weight={r.weight} />
                         ))}
                         {txTags.length > 2 && (
                           <span className="wb-cell-muted" style={{ fontSize: 12 }}>
@@ -226,22 +234,11 @@ export function TransactionTable({
                       <button
                         type="button"
                         className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm wb-btn--round"
-                        aria-label="Sửa giao dịch"
-                        title="Sửa"
+                        aria-label="Edit transaction"
+                        title="Edit"
                         onClick={() => openTxEditor(tx.id)}
                       >
                         <span className="wb-ico wb-ico--sm">edit</span>
-                      </button>
-                      <button
-                        type="button"
-                        className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm wb-btn--round"
-                        aria-label="Xoá giao dịch"
-                        title="Xoá"
-                        onClick={() => {
-                          if (window.confirm("Xoá giao dịch này?")) deleteTransaction(tx.id);
-                        }}
-                      >
-                        <span className="wb-ico wb-ico--sm">delete</span>
                       </button>
                     </span>
                   </td>
@@ -254,7 +251,7 @@ export function TransactionTable({
 
       <div className="wb-card__foot">
         <span className="wb-cell-muted" style={{ fontSize: 13, marginRight: "auto" }}>
-          {from}–{to} / {total} giao dịch
+          {from}–{to} of {total} transactions
         </span>
         <Pagination page={page} totalPages={totalPages} onPage={setPage} />
       </div>

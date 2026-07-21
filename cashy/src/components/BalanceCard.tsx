@@ -14,7 +14,7 @@ export function BalanceCard({
   amount,
   icon,
   delta,
-  note = "so với kỳ trước",
+  note = "vs. previous period",
 }: {
   label: string;
   amount: number;

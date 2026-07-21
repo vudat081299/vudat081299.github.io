@@ -83,6 +83,11 @@ export interface Subscription {
    *  payment falls in an earlier month than today's is what "cần trả tháng này"
    *  means. Kept in step with the ledger by the store. */
   lastPaidAt: string | null;
+  /** Every transaction that has actually PAID this subscription, oldest first —
+   *  the service's payment history. A cache of the ledger (the transactions
+   *  carrying `subscriptionId` with status `recorded`), re-derived by the store
+   *  on every confirm / skip / undo, so it can never drift from the money. */
+  paymentTxIds: string[];
   createdAt: string; // ISO
 }
 

@@ -9,11 +9,14 @@ export function Popover({
   trigger,
   children,
   panelWidth,
+  align = "left",
 }: {
   trigger: (props: { open: boolean; toggle: () => void }) => ReactNode;
   /** Static content, or a render fn that receives `close` (e.g. close after a pick). */
   children: ReactNode | ((props: { close: () => void }) => ReactNode);
   panelWidth?: number;
+  /** Which edge the panel lines up with — `right` for triggers near the page edge. */
+  align?: "left" | "right";
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLSpanElement>(null);
@@ -51,7 +54,8 @@ export function Popover({
         style={{
           top: "calc(100% + 8px)",
           bottom: "auto",
-          left: 0,
+          left: align === "left" ? 0 : "auto",
+          right: align === "right" ? 0 : "auto",
           transform: "none",
           width: panelWidth,
           padding: 6,
