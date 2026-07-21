@@ -6,6 +6,7 @@ import {
   useCashy,
 } from "@/lib/store";
 import { flattenTree } from "@/lib/domain";
+import { todayYMD } from "@/lib/date";
 import { formatMoney, parseMoney } from "@/lib/money";
 import { SWATCHES } from "@/lib/palette";
 import { Modal } from "@/components/wb/Modal";
@@ -33,6 +34,7 @@ export function SubscriptionEditor() {
   const [color, setColor] = useState<string>(SWATCHES[0]);
   const [icon, setIcon] = useState("credit-card");
   const [note, setNote] = useState("");
+  const [startedAt, setStartedAt] = useState(todayYMD());
 
   useEffect(() => {
     openFn = (id) => {
@@ -46,6 +48,7 @@ export function SubscriptionEditor() {
       setColor(sub?.colorHex ?? SWATCHES[0]);
       setIcon(sub?.icon ?? "credit-card");
       setNote(sub?.note ?? "");
+      setStartedAt(sub?.startedAt ?? todayYMD());
       setOpen(true);
     };
     return () => {
@@ -68,6 +71,7 @@ export function SubscriptionEditor() {
       colorHex: color,
       icon,
       note: note.trim(),
+      startedAt,
     };
     if (editingId) updateSubscription(editingId, payload);
     else addSubscription(payload);
@@ -167,6 +171,20 @@ export function SubscriptionEditor() {
               onChange={(e) => setDayOfMonth(Number(e.target.value))}
             />
           </div>
+        </div>
+
+        <div className="wb-field">
+          <label className="wb-label" htmlFor="sub-start">
+            Ngày bắt đầu đăng ký
+          </label>
+          <input
+            id="sub-start"
+            className="wb-input"
+            type="date"
+            value={startedAt}
+            onChange={(e) => setStartedAt(e.target.value)}
+          />
+          <span className="wb-help">Không tính phí cho bất kỳ tháng nào trước ngày này.</span>
         </div>
 
         <div className="wb-field">

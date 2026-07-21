@@ -75,7 +75,14 @@ export interface Subscription {
   icon: string; // curated lucide key
   note: string;
   active: boolean; // false = paused (no new charges), history kept
-  startMonth: string; // "YYYY-MM" — first month it can be billed
+  /** "YYYY-MM-DD" — the day the user actually subscribed. Billing can start in
+   *  this month; nothing before it is ever charged. */
+  startedAt: string;
+  /** "YYYY-MM-DD" of the most recent confirmed payment, `null` if never paid.
+   *  This is the marker the monthly reminder reads: a subscription whose last
+   *  payment falls in an earlier month than today's is what "cần trả tháng này"
+   *  means. Kept in step with the ledger by the store. */
+  lastPaidAt: string | null;
   createdAt: string; // ISO
 }
 

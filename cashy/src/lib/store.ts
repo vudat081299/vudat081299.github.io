@@ -10,15 +10,16 @@ import type {
   Workspace,
 } from "@/types";
 import { uid } from "@/lib/id";
-import { descendantIds, rootOf } from "@/lib/domain";
-import { addMonthKey, billingDate, monthKey, monthLabelShort, ymd } from "@/lib/date";
+import { descendantIds, firstUnpaidMonth, rootOf } from "@/lib/domain";
+import { addMonthKey, billingDate, monthKey, monthLabelShort, todayYMD, ymd } from "@/lib/date";
 import { statusOf } from "@/lib/txStatus";
 import { SWATCHES } from "@/lib/palette";
 import { buildSampleData } from "@/lib/sample";
 
 const KEY = "cashy_state_v1";
 // v2 re-colours legacy data onto the bright web-builder chart palette.
-const CURRENT_VERSION = 2;
+// v3 gives subscriptions a real `startedAt` date + a `lastPaidAt` marker.
+const CURRENT_VERSION = 3;
 
 function emptyState(): CashyState {
   return {
@@ -52,6 +53,23 @@ function recolor(cats: Category[], tags: Tag[]): { categories: Category[]; tags:
   return { categories, tags: recoloredTags };
 }
 
+/**
+ * v2 → v3: a subscription used to carry only `startMonth` ("YYYY-MM"). Give it a
+ * real `startedAt` date — its first billing day in that month — and back-fill
+ * `lastPaidAt` from whatever it has actually recorded, so the new reminder is
+ * correct for existing data instead of demanding a payment already made.
+ */
+function migrateSubV3(s: Subscription, txs: Transaction[]): Subscription {
+  const legacyMonth = (s as unknown as { startMonth?: string }).startMonth;
+  const startedAt = s.startedAt ?? billingDate(legacyMonth ?? monthKey(), s.dayOfMonth);
+  const paid = txs
+    .filter((t) => t.subscriptionId === s.id && (t.status ?? "recorded") === "recorded")
+    .map((t) => t.occurredAt)
+    .sort();
+  const { startMonth: _drop, ...rest } = s as Subscription & { startMonth?: string };
+  return { ...rest, startedAt, lastPaidAt: s.lastPaidAt ?? (paid[paid.length - 1] ?? null) };
+}
+
 function load(): CashyState {
   try {
     const raw = localStorage.getItem(KEY);
@@ -70,13 +88,16 @@ function load(): CashyState {
       const { categories, tags } = recolor(next.categories, next.tags);
       next = { ...next, categories, tags };
     }
+    if ((p.version ?? 1) < 3) {
+      next = { ...next, subscriptions: next.subscriptions.map((s) => migrateSubV3(s, next.transactions)) };
+    }
     // A workspace must never open on an empty ledger: any account that got this
     // far with no transactions is re-seeded with the 200-row demo dataset. Only
     // an EMPTY ledger is filled, so nothing a user actually entered is touched.
     if (next.workspace && next.transactions.length === 0) {
       const categories = next.categories.length ? next.categories : seedCategories();
-      const { tags, transactions } = buildSampleData(categories);
-      next = { ...next, categories, tags, transactions };
+      const { tags, transactions, subscriptions } = buildSampleData(categories);
+      next = { ...next, categories, tags, transactions, subscriptions };
     }
     try {
       localStorage.setItem(KEY, JSON.stringify(next));
@@ -135,20 +156,20 @@ export function createWorkspace(input: { displayName: string; currency?: string 
     createdAt: new Date().toISOString(),
   };
   const categories = seedCategories();
-  const { tags, transactions } = buildSampleData(categories);
-  commit({ ...state, workspace, categories, tags, transactions, subscriptions: [] });
+  const { tags, transactions, subscriptions } = buildSampleData(categories);
+  commit({ ...state, workspace, categories, tags, transactions, subscriptions });
 }
 
 /** Replace categories/tags/transactions with a fresh demo dataset (200 txns). */
 export function loadSampleData() {
   const categories = seedCategories();
-  const { tags, transactions } = buildSampleData(categories);
+  const { tags, transactions, subscriptions } = buildSampleData(categories);
   const workspace: Workspace = state.workspace ?? {
     displayName: "Của tôi",
     currency: "VND",
     createdAt: new Date().toISOString(),
   };
-  commit({ ...state, workspace, categories, tags, transactions });
+  commit({ ...state, workspace, categories, tags, transactions, subscriptions });
 }
 
 export function updateWorkspace(patch: Partial<Workspace>) {
@@ -293,7 +314,7 @@ export function addSubscription(input: {
   colorHex: string;
   icon: string;
   note?: string;
-  startMonth?: string;
+  startedAt?: string;
 }): string {
   const sub: Subscription = {
     id: uid(),
@@ -306,7 +327,8 @@ export function addSubscription(input: {
     icon: input.icon,
     note: input.note?.trim() ?? "",
     active: true,
-    startMonth: input.startMonth ?? monthKey(),
+    startedAt: input.startedAt ?? todayYMD(),
+    lastPaidAt: null,
     createdAt: new Date().toISOString(),
   };
   commit({ ...state, subscriptions: [...state.subscriptions, sub] });
@@ -352,7 +374,10 @@ export function syncSubscriptions() {
   const fresh: Transaction[] = [];
   for (const sub of state.subscriptions) {
     if (!sub.active) continue;
-    let m = sub.startMonth;
+    // Start from the first month still owed, NOT from the subscription's start:
+    // `lastPaidAt` says everything up to it is settled, so a service subscribed
+    // a year ago doesn't materialise a year of dues the first time it syncs.
+    let m = firstUnpaidMonth(sub);
     for (let guard = 0; m <= cur && guard < 600; guard++, m = addMonthKey(m, 1)) {
       if (billingDate(m, sub.dayOfMonth) > today) continue; // not due yet
       if (have.has(`${sub.id}|${m}`)) continue; // already charged
@@ -375,19 +400,45 @@ export function syncSubscriptions() {
   if (fresh.length) commit({ ...state, transactions: [...fresh, ...state.transactions] });
 }
 
+/**
+ * Re-derive a subscription's `lastPaidAt` from its recorded charges. The ledger
+ * stays the source of truth and the marker is only ever a cache of it, so
+ * confirm / skip / undo / delete-a-charge can never drift apart from it.
+ */
+function syncLastPaid(subId: string) {
+  const paid = state.transactions
+    .filter((t) => t.subscriptionId === subId && statusOf(t) === "recorded")
+    .map((t) => t.occurredAt)
+    .sort();
+  const lastPaidAt = paid.length ? paid[paid.length - 1] : null;
+  const sub = state.subscriptions.find((s) => s.id === subId);
+  if (sub && sub.lastPaidAt !== lastPaidAt) updateSubscription(subId, { lastPaidAt });
+}
+
+/** The subscription a charge belongs to, read before the status is changed. */
+function subIdOfCharge(txId: string): string | undefined {
+  return state.transactions.find((t) => t.id === txId)?.subscriptionId ?? undefined;
+}
+
 /** Confirm a pending subscription charge → it becomes a recorded expense. */
 export function confirmSubscriptionCharge(txId: string) {
+  const subId = subIdOfCharge(txId);
   updateTransaction(txId, { status: "recorded" });
+  if (subId) syncLastPaid(subId);
 }
 
 /** Skip a subscription charge this cycle (grey; the next cycle still reminds). */
 export function skipSubscriptionCharge(txId: string) {
+  const subId = subIdOfCharge(txId);
   updateTransaction(txId, { status: "skipped" });
+  if (subId) syncLastPaid(subId);
 }
 
 /** Undo a decision — back to awaiting confirmation. */
 export function revertSubscriptionCharge(txId: string) {
+  const subId = subIdOfCharge(txId);
   updateTransaction(txId, { status: "pending" });
+  if (subId) syncLastPaid(subId);
 }
 
 // ---- import / export -------------------------------------------------------

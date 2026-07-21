@@ -244,6 +244,35 @@ export interface SubStatus {
 }
 
 /** Derive a subscription's state from its linked transactions. */
+/** The first month a subscription can be billed — the month it was subscribed. */
+export function startMonthOf(sub: Subscription): string {
+  return sub.startedAt.slice(0, 7);
+}
+
+/** The first month still owed: the month after the last payment, or the month
+ *  it started if it has never been paid. Charges are never raised before this,
+ *  which is what stops a months-old subscription backfilling a year of dues. */
+export function firstUnpaidMonth(sub: Subscription): string {
+  const start = startMonthOf(sub);
+  if (!sub.lastPaidAt) return start;
+  const after = addMonthKey(sub.lastPaidAt.slice(0, 7), 1);
+  return after > start ? after : start;
+}
+
+/**
+ * Should this subscription be asking for money for the CURRENT month? True when
+ * it is active, its billing day has arrived, and the last payment landed in an
+ * earlier month. This single predicate is what decides whether the "cần trả
+ * tháng này" reminder shows.
+ */
+export function needsPaymentThisMonth(sub: Subscription, now: Date = new Date()): boolean {
+  if (!sub.active) return false;
+  const cur = monthKey(now);
+  if (startMonthOf(sub) > cur) return false; // hasn't started yet
+  if (billingDate(cur, sub.dayOfMonth) > ymd(now)) return false; // not due yet
+  return firstUnpaidMonth(sub) <= cur;
+}
+
 export function subscriptionStatus(
   sub: Subscription,
   txs: Transaction[],
@@ -262,7 +291,8 @@ export function subscriptionStatus(
   if (sub.active) {
     const cur = monthKey(now);
     const today = ymd(now);
-    let mm = sub.startMonth < cur ? cur : sub.startMonth;
+    const from = firstUnpaidMonth(sub);
+    let mm = from < cur ? cur : from;
     for (let guard = 0; guard < 36; guard++) {
       if (!haveMonth.has(mm) && billingDate(mm, sub.dayOfMonth) > today) {
         nextMonth = mm;

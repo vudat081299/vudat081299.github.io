@@ -373,6 +373,13 @@ body {
   background: color-mix(in srgb, var(--cashy-sub-c, var(--wb-neutral)) 14%, transparent);
   border: var(--wb-bw) solid color-mix(in srgb, var(--cashy-sub-c, var(--wb-border)) 30%, transparent);
 }
+/* Service cell in the subscriptions table — tile + name/note stacked beside it. */
+.cashy-subcell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
 .cashy-due {
   display: flex;
   align-items: center;

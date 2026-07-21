@@ -25,6 +25,11 @@ export function fmtDateShort(s: string): string {
   return format(parseYMD(s), "d MMM", { locale: vi });
 }
 
+/** "05/07/2026" — numeric, fixed-width; for date columns in a dense table. */
+export function fmtDateNum(s: string): string {
+  return format(parseYMD(s), "dd/MM/yyyy");
+}
+
 /** "Hôm nay" / "Hôm qua" / "Thứ Năm, 10 tháng 7 2026" — for date group headers. */
 export function relativeDateHead(s: string): string {
   const diff = differenceInCalendarDays(new Date(), parseYMD(s));

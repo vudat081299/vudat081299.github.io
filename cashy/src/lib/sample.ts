@@ -5,9 +5,9 @@
 // so the wallet reads positive and income/expense both have something to show.
 // Amounts are integer VND. Referenced by store.createWorkspace, store.load
 // (re-seeds an empty workspace) and store.loadSampleData.
-import type { Category, Tag, Transaction, TxStatus, TxType } from "@/types";
+import type { Category, Subscription, Tag, Transaction, TxStatus, TxType } from "@/types";
 import { uid } from "@/lib/id";
-import { ymd } from "@/lib/date";
+import { addMonthKey, billingDate, monthKey, ymd } from "@/lib/date";
 
 type Pool = {
   key: string;
@@ -70,10 +70,84 @@ function weighted(pairs: [string, number][]): string {
   return pairs[0][0];
 }
 
+// The demo subscriptions. `dueOffset` places the billing day relative to TODAY
+// so every payment state is on screen whenever the demo is opened: a negative
+// offset is a day already past this month, a positive one is still to come.
+// `paidThrough` is which month the service is settled up to — "this" needs
+// nothing, "last" makes the current month fall due, and a paused service keeps
+// an older marker. Amounts are VND.
+type SubDef = {
+  name: string;
+  amount: number;
+  dueOffset: number;
+  category: string;
+  icon: string;
+  colorHex: string;
+  note: string;
+  paidThrough: "this" | "last" | "older";
+  startedMonthsAgo: number;
+  active?: boolean;
+};
+
+const SUBSCRIPTIONS: SubDef[] = [
+  { name: "Netflix", amount: 260_000, dueOffset: -16, category: "Giải trí", icon: "film", colorHex: "#ef4444", note: "Gói Premium 4K", paidThrough: "last", startedMonthsAgo: 14 },
+  { name: "Spotify", amount: 59_000, dueOffset: -9, category: "Giải trí", icon: "music", colorHex: "#22c55e", note: "Gói cá nhân", paidThrough: "this", startedMonthsAgo: 8 },
+  { name: "YouTube Premium", amount: 79_000, dueOffset: -3, category: "Giải trí", icon: "star", colorHex: "#f43f5e", note: "Không quảng cáo", paidThrough: "last", startedMonthsAgo: 5 },
+  { name: "iCloud 200GB", amount: 25_000, dueOffset: -12, category: "Hóa đơn", icon: "smartphone", colorHex: "#3b82f6", note: "Sao lưu iPhone", paidThrough: "this", startedMonthsAgo: 20 },
+  { name: "ChatGPT Plus", amount: 500_000, dueOffset: 4, category: "Mua sắm", icon: "laptop", colorHex: "#8b5cf6", note: "Dùng cho công việc", paidThrough: "last", startedMonthsAgo: 3 },
+  { name: "California Fitness", amount: 750_000, dueOffset: -20, category: "Sức khỏe", icon: "dumbbell", colorHex: "#f59e0b", note: "Tạm dừng khi đi công tác", paidThrough: "older", startedMonthsAgo: 10, active: false },
+];
+
+/**
+ * The demo subscriptions — one service in each payment state, so the reminder,
+ * the paid rows, an upcoming charge and a paused service are all visible on
+ * first open. `lastPaidAt` is what decides which of those a row is in, so it is
+ * derived here from `paidThrough` rather than hard-coded to a date.
+ */
+export function buildSampleSubscriptions(
+  categories: Category[],
+  tags: Tag[],
+  now: Date = new Date(),
+): Subscription[] {
+  const catIdByName = new Map<string, string>();
+  for (const c of categories) if (!catIdByName.has(c.name)) catIdByName.set(c.name, c.id);
+  const tagIdByName = new Map(tags.map((t) => [t.name, t.id] as const));
+  const subTagIds = ["Định kỳ", "Thẻ"]
+    .map((n) => tagIdByName.get(n))
+    .filter((id): id is string => Boolean(id));
+
+  const cur = monthKey(now);
+  const today = now.getDate();
+  // Clamp to 1..28 so the billing day exists in every month.
+  const clampDay = (d: number) => Math.min(28, Math.max(1, d));
+
+  return SUBSCRIPTIONS.map((s) => {
+    const dayOfMonth = clampDay(today + s.dueOffset);
+    const startMonth = addMonthKey(cur, -s.startedMonthsAgo);
+    const paidMonth =
+      s.paidThrough === "this" ? cur : addMonthKey(cur, s.paidThrough === "last" ? -1 : -2);
+    return {
+      id: uid(),
+      name: s.name,
+      amount: s.amount,
+      dayOfMonth,
+      categoryId: catIdByName.get(s.category) ?? null,
+      tagIds: subTagIds,
+      colorHex: s.colorHex,
+      icon: s.icon,
+      note: s.note,
+      active: s.active ?? true,
+      startedAt: billingDate(startMonth, dayOfMonth),
+      lastPaidAt: billingDate(paidMonth, dayOfMonth),
+      createdAt: now.toISOString(),
+    };
+  });
+}
+
 export function buildSampleData(
   categories: Category[],
   now: Date = new Date(),
-): { tags: Tag[]; transactions: Transaction[] } {
+): { tags: Tag[]; transactions: Transaction[]; subscriptions: Subscription[] } {
   const catIdByName = new Map<string, string>();
   for (const c of categories) if (!catIdByName.has(c.name)) catIdByName.set(c.name, c.id);
 
@@ -183,5 +257,5 @@ export function buildSampleData(
     a.occurredAt < b.occurredAt ? 1 : a.occurredAt > b.occurredAt ? -1 : a.createdAt < b.createdAt ? 1 : -1,
   );
 
-  return { tags, transactions };
+  return { tags, transactions, subscriptions: buildSampleSubscriptions(categories, tags, now) };
 }
