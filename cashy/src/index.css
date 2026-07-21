@@ -282,6 +282,38 @@ body {
   border-left: var(--wb-bw) solid var(--wb-border);
 }
 
+/* Theme switch — copied verbatim from the web-builder docs `.theme-btn` so
+   Cashy's switch reads identically: a glyph + label pill (◐ Tự động → ☀ Sáng →
+   ☾ Tối) rather than an icon-only round button. Tokens all resolve in cashy. */
+.theme-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 550;
+  line-height: 1;
+  cursor: pointer;
+  padding: 6px 13px;
+  border-radius: var(--wb-radius-pill);
+  border: var(--wb-bw) solid var(--wb-border);
+  background: var(--wb-surface);
+  color: var(--wb-fg);
+  box-shadow: var(--wb-shadow-sm);
+  /* Match the height of the "Add transaction" button beside it: the navbar
+     actions row is align-items:center, so stretching to it tracks that button's
+     height exactly (its icon makes it a touch taller than text-only padding). */
+  align-self: stretch;
+}
+/* The emoji sun renders on its own metrics; cap its box so it never lifts the
+   button past the Add button's height. */
+.theme-btn > span {
+  line-height: 1;
+}
+.theme-btn:hover {
+  border-color: var(--wb-border-strong);
+}
+
 /* =========================================================================
    DRAFT BUTTON — the "add transaction" action while an unconfirmed draft is
    parked. Same dashed idiom the capsule docs use for "chưa chốt" (--dashed):
@@ -346,29 +378,146 @@ body {
   color: color-mix(in srgb, var(--wb-fg) var(--cashy-tag-fg, 70%), var(--wb-surface));
 }
 
-/* Table title with a trailing rule + row count: "Recent transactions ── 219".
-   The rule fills the gap between the label and the count so the number reads as
-   a quiet meta-fact about the table, not another heading. */
+/* Table title with a parenthesised row count: "Recent transactions (219)".
+   The number reads as a quiet meta-fact about the table, not another heading. */
 .cashy-table-title {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  align-items: baseline;
+  gap: 6px;
 }
 .cashy-table-title > span:first-child {
   flex: 0 0 auto;
 }
-.cashy-table-title__rule {
-  flex: 0 0 auto;
-  width: 28px;
-  height: 0;
-  border-top: var(--wb-bw) solid var(--wb-border);
-}
 .cashy-table-title__count {
   flex: 0 0 auto;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--wb-fg-muted);
   font-variant-numeric: tabular-nums;
+}
+
+/* Search field on the filter bar — a seamless pill (bo tròn 2 đầu). The
+   wb-input-group--seamless variant already drops the addon's fill + divider; here
+   we only swap the radius to a pill and trim the magnifier's gutter so the icon,
+   text and clear button read as one control. */
+.cashy-search.wb-input-group--seamless {
+  border-radius: var(--wb-radius-pill);
+  padding-inline: 12px;
+}
+.cashy-search .wb-input-group__addon {
+  padding: 0 4px 0 0;
+}
+
+/* The type filter is called out with a heavier black 2px outline — the one token
+   on the bar that carries weight, so a "Chi / Thu" scope reads at a glance. Ink
+   (var(--wb-fg)) rather than literal #000 so it stays "black" in light and flips
+   to a crisp white edge in dark. */
+.wb-filter-token.cashy-filter-token--type {
+  border-width: 2px;
+  border-color: var(--wb-fg);
+  /* keep the pill the same overall height as its 1px-bordered neighbours */
+  padding-block: 3px;
+}
+
+/* Segmented toggle — the Day ⇄ Week switch on the cash-flow chart. A pill track
+   with a raised active segment; neutral throughout (a view mode is not a status). */
+.cashy-seg {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border-radius: var(--wb-radius-pill);
+  border: var(--wb-bw) solid var(--wb-border);
+  background: var(--wb-surface-2);
+}
+.cashy-seg__btn {
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--wb-fg-muted);
+  padding: 4px 12px;
+  border-radius: var(--wb-radius-pill);
+  transition: background 0.13s ease, color 0.13s ease;
+}
+.cashy-seg__btn:hover {
+  color: var(--wb-fg);
+}
+.cashy-seg__btn.is-active {
+  background: var(--wb-surface);
+  color: var(--wb-fg);
+  box-shadow: var(--wb-shadow-sm);
+}
+
+/* =========================================================================
+   PERIOD PICKER — grouped presets, each with a muted note of the concrete
+   window it resolves to, plus a typed-range field. The whole panel scrolls.
+   ========================================================================= */
+.cashy-period-pop {
+  max-height: min(72vh, 560px);
+  overflow-y: auto;
+}
+/* preset row: radio · label (grows) · resolved-range note pinned right */
+.cashy-period-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cashy-period-row__label {
+  flex: 1;
+  min-width: 0;
+}
+.cashy-period-row__note {
+  flex: none;
+  font-size: 11.5px;
+  color: var(--wb-fg-subtle);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+/* the resolved window rides along in the trigger button, quietly */
+.cashy-period-btn__note {
+  color: var(--wb-fg-muted);
+  font-weight: 500;
+}
+/* typed date range + its Apply button */
+.cashy-range-type {
+  display: flex;
+  gap: 6px;
+}
+.cashy-range-type .wb-input {
+  flex: 1;
+  min-width: 0;
+}
+.cashy-range-err {
+  margin: 6px 0 0;
+  font-size: 11.5px;
+  color: var(--wb-danger-text);
+}
+
+/* =========================================================================
+   ADD-FILTER POPOVER — many sections (type / status / category / amount /
+   tags), so the panel caps its height and scrolls rather than running off-screen.
+   ========================================================================= */
+.cashy-filter-scroll {
+  max-height: min(74vh, 620px);
+  overflow-y: auto;
+}
+/* amount range: two right-aligned number fields joined by an en dash */
+.cashy-amount-range {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cashy-amount-range .wb-input {
+  flex: 1;
+  min-width: 0;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.cashy-amount-range__dash {
+  flex: none;
+  color: var(--wb-fg-subtle);
 }
 
 /* =========================================================================
@@ -451,6 +600,35 @@ body {
    only once under ~10% of the period is left, so black now means "renews soon". */
 .wb-progress__bar.cashy-progress__bar--quiet {
   background: var(--wb-neutral);
+}
+
+/* Subscription cards sit several-to-a-row and the cycle bar is a quiet detail,
+   not the headline — trim the stock 8px track to 6px on these cards only. */
+.wb-progress.cashy-sub-progress {
+  height: 6px;
+}
+
+/* Full name on hover, shown ONLY for names the card had to clip (SubscriptionCard
+   mounts it conditionally). Fixed-positioned so the card's own `overflow: hidden`
+   can't cut it off; styled like web-builder's own tooltip bubble so it reads as
+   house furniture rather than the browser's slow, unstyled `title`. */
+.cashy-nametip {
+  position: fixed;
+  z-index: 200;
+  max-width: 288px;
+  padding: 6px 10px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.35;
+  background: var(--wb-gray-900);
+  color: var(--wb-white);
+  box-shadow: var(--wb-shadow-md);
+  pointer-events: none;
+}
+.dark .cashy-nametip {
+  background: var(--wb-gray-100);
+  color: var(--wb-gray-900);
 }
 
 /* =========================================================================

@@ -1,4 +1,4 @@
-import { useState, type CSSProperties } from "react";
+import { useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import type { Subscription, Transaction } from "@/types";
 import {
   billingLabel,
@@ -51,6 +51,35 @@ export function SubscriptionCard({
   // and lifts only when the pointer actually leaves.
   const [suppressReveal, setSuppressReveal] = useState(false);
   const { subIconStyle } = useCashy();
+
+  // A long name is clipped with an ellipsis by CSS; only then is a tooltip
+  // worth having. Measure the rendered heading and expose the full name via
+  // `title` ONLY when it actually overflows — names that fit get no tooltip.
+  const nameRef = useRef<HTMLHeadingElement>(null);
+  const [nameClipped, setNameClipped] = useState(false);
+  useLayoutEffect(() => {
+    const el = nameRef.current;
+    if (!el) return;
+    const measure = () => setNameClipped(el.scrollWidth > el.clientWidth);
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [sub.name]);
+
+  // Styled hover tooltip for clipped names. The browser's own `title` bubble is
+  // slow to appear and unstyled, and an absolutely-positioned one would be cut
+  // off by the card's `overflow: hidden`. A `position: fixed` bubble anchored to
+  // the name's rect escapes that clip; clamp X so a long name in the right-hand
+  // column can't push the bubble past the viewport edge.
+  const [tip, setTip] = useState<{ x: number; y: number } | null>(null);
+  const showNameTip = () => {
+    const el = nameRef.current;
+    if (!el || !nameClipped) return;
+    const r = el.getBoundingClientRect();
+    setTip({ x: Math.max(8, Math.min(r.left, window.innerWidth - 300)), y: r.bottom + 6 });
+  };
+  const hideNameTip = () => setTip(null);
 
   const st = subscriptionStatus(sub, txs);
   const cycle = subCycle(sub);
@@ -132,7 +161,14 @@ export function SubscriptionCard({
         </span>
         <div className="cashy-subhead__main">
           <div className="cashy-subhead__row">
-            <h4 className="wb-card__title">{sub.name}</h4>
+            <h4
+              ref={nameRef}
+              className="wb-card__title"
+              onMouseEnter={showNameTip}
+              onMouseLeave={hideNameTip}
+            >
+              {sub.name}
+            </h4>
             {statusCap}
           </div>
           <p className="wb-card__sub">
@@ -183,7 +219,7 @@ export function SubscriptionCard({
                   : `${cycle.remainingDays} ${cycle.remainingDays === 1 ? "day" : "days"} left`}
               </span>
             </div>
-            <div className="wb-progress">
+            <div className="wb-progress cashy-sub-progress">
               <div
                 className={
                   tone === "danger"
@@ -314,7 +350,7 @@ export function SubscriptionCard({
     <Modal
       open={payModalOpen}
       onClose={() => setPayModalOpen(false)}
-      title={`Đánh dấu đã trả · ${sub.name}`}
+      title={sub.name}
       maxWidth={420}
       footer={
         <>
@@ -359,6 +395,13 @@ export function SubscriptionCard({
         ))}
       </div>
     </Modal>
+
+    {/* Full name on hover — only mounted for names the card actually clipped. */}
+    {tip && (
+      <div className="cashy-nametip" style={{ left: tip.x, top: tip.y }} role="tooltip">
+        {sub.name}
+      </div>
+    )}
     </>
   );
 }

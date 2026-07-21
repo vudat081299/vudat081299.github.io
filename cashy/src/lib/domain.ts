@@ -1,15 +1,16 @@
-import type { Category, Subscription, Tag, Transaction, TxType } from "@/types";
+import type { Category, Subscription, Tag, Transaction, TxStatus, TxType } from "@/types";
 import type { Range } from "@/lib/period";
 import {
   addMonthKey,
   billingDate,
   daysBetween,
+  mondayOf,
   monthKey,
   monthNameShort,
   parseYMD,
   ymd,
 } from "@/lib/date";
-import { isCounted } from "@/lib/txStatus";
+import { isCounted, statusOf } from "@/lib/txStatus";
 
 // ---- sorting ---------------------------------------------------------------
 export function byName(a: { name: string }, b: { name: string }): number {
@@ -137,20 +138,43 @@ export interface TxFilter {
   range?: Range;
   type?: TxType | "all";
   categoryId?: string | null;
+  /** multi-select categories (each expanded to its descendants) — OR'd together */
+  categoryIds?: string[];
   tagIds?: string[];
+  /** multi-select statuses — a row matches if its status is any of these */
+  statuses?: TxStatus[];
+  /** inclusive amount bounds in đồng (either side optional) */
+  amountMin?: number | null;
+  amountMax?: number | null;
   search?: string;
   cats?: Category[];
 }
 export function filterTx(txs: Transaction[], f: TxFilter): Transaction[] {
-  const catSet =
-    f.categoryId && f.cats ? descendantIds(f.cats, f.categoryId) : null;
+  // Single-category (`categoryId`) and multi-category (`categoryIds`) both expand
+  // to descendants; a row passes if it sits under ANY selected category.
+  let catSet: Set<string> | null = null;
+  if (f.cats) {
+    const ids = [
+      ...(f.categoryId ? [f.categoryId] : []),
+      ...(f.categoryIds ?? []),
+    ];
+    if (ids.length) {
+      catSet = new Set<string>();
+      for (const id of ids) for (const d of descendantIds(f.cats, id)) catSet.add(d);
+    }
+  }
   const q = f.search?.trim().toLowerCase();
+  const min = f.amountMin ?? null;
+  const max = f.amountMax ?? null;
   return txs.filter((t) => {
     if (f.range && !inRange(t.occurredAt, f.range)) return false;
     if (f.type && f.type !== "all" && t.type !== f.type) return false;
     if (catSet && (!t.categoryId || !catSet.has(t.categoryId))) return false;
     if (f.tagIds && f.tagIds.length && !f.tagIds.some((id) => t.tagIds.includes(id)))
       return false;
+    if (f.statuses && f.statuses.length && !f.statuses.includes(statusOf(t))) return false;
+    if (min != null && t.amount < min) return false;
+    if (max != null && t.amount > max) return false;
     if (q && !t.note.toLowerCase().includes(q)) return false;
     return true;
   });
@@ -221,7 +245,7 @@ export interface WalletPoint {
  * followed by the actual data. Gaps in the MIDDLE stay — a quiet week is a fact
  * about the data, whereas dead margins are just an artefact of the window.
  */
-export function walletSeries(all: Transaction[], range: Range): WalletPoint[] {
+export function walletSeries(all: Transaction[], range: Range, weekly = false): WalletPoint[] {
   let start = range.start;
   let end = range.end;
   if (start === "0000-01-01" || end === "9999-12-31") {
@@ -236,6 +260,9 @@ export function walletSeries(all: Transaction[], range: Range): WalletPoint[] {
   // window, months for up to a couple of years, whole years beyond that.
   const yearly = spanDays > 800;
   const monthly = !yearly && spanDays > 62;
+  // Weekly is an opt-in the caller sets for a day-range window (30–62d) where a
+  // daily bar per day gets busy; it never overrides the month/year auto-tiers.
+  const weeklyMode = weekly && !yearly && !monthly;
 
   interface B extends WalletPoint {
     endYMD: string;
@@ -243,7 +270,23 @@ export function walletSeries(all: Transaction[], range: Range): WalletPoint[] {
     hasTx: boolean;
   }
   const buckets: B[] = [];
-  if (yearly) {
+  if (weeklyMode) {
+    const c = mondayOf(startD);
+    while (c <= endD) {
+      const wEnd = new Date(c);
+      wEnd.setDate(wEnd.getDate() + 6);
+      buckets.push({
+        key: `W:${ymd(c)}`,
+        label: `${c.getDate()}/${c.getMonth() + 1}`,
+        endYMD: ymd(wEnd),
+        income: 0,
+        expense: 0,
+        balance: 0,
+        hasTx: false,
+      });
+      c.setDate(c.getDate() + 7);
+    }
+  } else if (yearly) {
     const c = new Date(startD.getFullYear(), 0, 1);
     while (c <= endD) {
       buckets.push({
@@ -290,7 +333,14 @@ export function walletSeries(all: Transaction[], range: Range): WalletPoint[] {
   }
 
   // income + spending per bucket — only transactions inside the visible range
-  const groupKey = (occ: string) => (yearly ? occ.slice(0, 4) : monthly ? occ.slice(0, 7) : occ);
+  const groupKey = (occ: string) =>
+    yearly
+      ? occ.slice(0, 4)
+      : monthly
+        ? occ.slice(0, 7)
+        : weeklyMode
+          ? `W:${ymd(mondayOf(parseYMD(occ)))}`
+          : occ;
   const byKey = new Map(buckets.map((b) => [b.key, b] as const));
   for (const t of all) {
     if (t.occurredAt < start || t.occurredAt > end) continue;

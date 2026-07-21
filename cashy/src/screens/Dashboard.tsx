@@ -1,5 +1,6 @@
-import { useMemo, type CSSProperties } from "react";
+import { useMemo, useState, type CSSProperties } from "react";
 import { useCashy } from "@/lib/store";
+import { daysBetween, todayYMD } from "@/lib/date";
 import {
   breakdown,
   filterTx,
@@ -29,20 +30,40 @@ import { EmptyState } from "@/components/EmptyState";
 export function Dashboard() {
   // The query owns the period so the header picker, the charts AND the table all
   // move together; type/search/tag filters narrow the table only (not the charts).
-  const { workspace, transactions, categories, tags, subscriptions } = useCashy();
+  const { transactions, categories, tags, subscriptions } = useCashy();
   const q = useTxQuery(transactions, categories);
 
   const view = useMemo(() => {
     const cur = filterTx(transactions, { range: q.range });
     const t = totals(cur);
     const tp = totals(filterTx(transactions, { range: prevRange(q.period, new Date(), q.custom) }));
-    const wallet = walletSeries(transactions, q.range);
     const slices = breakdown(cur, "expense", categories);
     const insights = periodInsights(cur, q.range, categories);
-    return { balance: totals(transactions).net, t, tp, wallet, slices, insights, count: cur.length };
+    return { balance: totals(transactions).net, t, tp, slices, insights, count: cur.length };
   }, [transactions, categories, q.range, q.period, q.custom]);
 
-  const { t, tp, wallet, slices, insights } = view;
+  const { t, tp, slices, insights } = view;
+
+  // Cash-flow bars run per day by default; over a 30–62 day window that gets
+  // busy, so offer a weekly roll-up. The toggle only appears in that band — a
+  // short window is fine daily, a long one is already auto-bucketed by month.
+  const spanDays = useMemo(() => {
+    let s = q.range.start;
+    let e = q.range.end;
+    if (s === "0000-01-01" || e === "9999-12-31") {
+      const ds = transactions.map((tx) => tx.occurredAt).sort();
+      s = ds[0] ?? todayYMD();
+      e = ds[ds.length - 1] ?? todayYMD();
+    }
+    return daysBetween(s, e) + 1;
+  }, [q.range, transactions]);
+  const canWeekly = spanDays >= 30 && spanDays <= 62;
+  const [chartBucket, setChartBucket] = useState<"day" | "week">("day");
+  const weekly = canWeekly && chartBucket === "week";
+  const wallet = useMemo(
+    () => walletSeries(transactions, q.range, weekly),
+    [transactions, q.range, weekly],
+  );
   const maxSlice = slices[0]?.pct || 1;
   const hasFlow = Boolean(t.income || t.expense);
 
@@ -65,7 +86,6 @@ export function Dashboard() {
   return (
     <div className="wb-stack wb-stack--loose">
       <PageHeader
-        eyebrow={workspace?.displayName ?? "Cashy"}
         title="Overview"
         subtitle={`${view.count} transactions · ${periodLabel(q.period, q.custom)}`}
         actions={<PeriodPicker value={q.period} custom={q.custom} onChange={q.setPeriod} />}
@@ -140,23 +160,47 @@ export function Dashboard() {
             className="wb-card__body"
             style={{ flex: 1, display: "flex", flexDirection: "column" }}
           >
-            <div className="wb-cluster wb-cluster--between" style={{ marginBottom: 16 }}>
+            <div
+              className="wb-cluster wb-cluster--between"
+              style={{ marginBottom: 16, gap: 10 }}
+            >
               <div>
                 <span className="cashy-card-eyebrow">Cash flow</span>
                 <h3 className="cashy-card-title">Wallet balance &amp; spending</h3>
               </div>
-              <div className="wb-legend">
-                <span className="wb-legend__item">
-                  <span className="wb-legend__dot" style={{ background: "var(--wb-chart-5)" }} />{" "}
-                  Wallet balance
-                </span>
-                <span className="wb-legend__item">
-                  <span
-                    className="wb-legend__dot"
-                    style={{ background: "var(--wb-chart-expense)" }}
-                  />{" "}
-                  Spending
-                </span>
+              <div className="wb-cluster" style={{ gap: 12 }}>
+                {/* Day ⇄ Week roll-up — only in the 30–62 day band (see above). */}
+                {canWeekly && (
+                  <div className="cashy-seg" role="group" aria-label="Chart granularity">
+                    <button
+                      type="button"
+                      className={chartBucket === "day" ? "cashy-seg__btn is-active" : "cashy-seg__btn"}
+                      onClick={() => setChartBucket("day")}
+                    >
+                      Ngày
+                    </button>
+                    <button
+                      type="button"
+                      className={chartBucket === "week" ? "cashy-seg__btn is-active" : "cashy-seg__btn"}
+                      onClick={() => setChartBucket("week")}
+                    >
+                      Tuần
+                    </button>
+                  </div>
+                )}
+                <div className="wb-legend">
+                  <span className="wb-legend__item">
+                    <span className="wb-legend__dot" style={{ background: "var(--wb-chart-5)" }} />{" "}
+                    Wallet balance
+                  </span>
+                  <span className="wb-legend__item">
+                    <span
+                      className="wb-legend__dot"
+                      style={{ background: "var(--wb-chart-expense)" }}
+                    />{" "}
+                    Spending
+                  </span>
+                </div>
               </div>
             </div>
             {hasFlow ? (
@@ -299,7 +343,7 @@ export function Dashboard() {
       )}
 
       <div className="wb-stack" style={{ "--wb-stack-gap": "16px" } as CSSProperties}>
-        <TxFilterBar q={q} tagRanks={tagRanks} count={q.filtered.length} showPeriod={false} />
+        <TxFilterBar q={q} tagRanks={tagRanks} categories={categories} />
         <TransactionTable
           rows={q.sorted}
           categories={categories}

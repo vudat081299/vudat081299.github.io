@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import type { Category, Transaction, TxType } from "@/types";
+import type { Category, Transaction, TxStatus, TxType } from "@/types";
 import { filterTx } from "@/lib/domain";
 import { periodRange, type PeriodKey, type Range } from "@/lib/period";
 
@@ -16,7 +16,14 @@ export interface TxQuery {
   setSearch: (s: string) => void;
   activeTags: string[];
   toggleTag: (id: string) => void;
-  /** true when any removable filter is applied (search, type or a tag) */
+  statuses: TxStatus[];
+  toggleStatus: (s: TxStatus) => void;
+  catIds: string[];
+  toggleCat: (id: string) => void;
+  amountMin: number | null;
+  amountMax: number | null;
+  setAmountRange: (min: number | null, max: number | null) => void;
+  /** true when any removable filter is applied (not the period scope) */
   hasTokens: boolean;
   /** clears every removable filter; leaves the period scope alone */
   clearTokens: () => void;
@@ -26,9 +33,9 @@ export interface TxQuery {
 
 /**
  * The one transaction query used by BOTH the Dashboard and the Transactions
- * screen — period + type + free-text + tags → filtered & date-sorted list. Each
- * screen owns its own instance; sharing the *shape* keeps the two filter bars and
- * tables identical without coupling their state.
+ * screen — period + type + status + category + amount + free-text + tags →
+ * filtered & date-sorted list. Each screen owns its own instance; sharing the
+ * *shape* keeps the two filter bars and tables identical without coupling state.
  */
 export function useTxQuery(
   transactions: Transaction[],
@@ -43,6 +50,10 @@ export function useTxQuery(
   const [type, setType] = useState<TxType | "all">("all");
   const [search, setSearch] = useState("");
   const [activeTags, setActiveTags] = useState<string[]>([]);
+  const [statuses, setStatuses] = useState<TxStatus[]>([]);
+  const [catIds, setCatIds] = useState<string[]>([]);
+  const [amountMin, setAmountMin] = useState<number | null>(null);
+  const [amountMax, setAmountMax] = useState<number | null>(null);
 
   // A preset clears whatever range was hand-picked; picking dates implies custom.
   const setPeriod = (k: PeriodKey, next?: Range | null) => {
@@ -60,9 +71,13 @@ export function useTxQuery(
         type,
         search,
         tagIds: activeTags,
+        statuses,
+        categoryIds: catIds,
+        amountMin,
+        amountMax,
         cats: categories,
       }),
-    [transactions, categories, range, type, search, activeTags],
+    [transactions, categories, range, type, search, activeTags, statuses, catIds, amountMin, amountMax],
   );
 
   const sorted = useMemo(
@@ -77,6 +92,10 @@ export function useTxQuery(
 
   const toggleTag = (id: string) =>
     setActiveTags((cur) => (cur.includes(id) ? cur.filter((x) => x !== id) : [...cur, id]));
+  const toggleStatus = (s: TxStatus) =>
+    setStatuses((cur) => (cur.includes(s) ? cur.filter((x) => x !== s) : [...cur, s]));
+  const toggleCat = (id: string) =>
+    setCatIds((cur) => (cur.includes(id) ? cur.filter((x) => x !== id) : [...cur, id]));
 
   return {
     period,
@@ -89,11 +108,32 @@ export function useTxQuery(
     setSearch,
     activeTags,
     toggleTag,
-    hasTokens: search.trim() !== "" || activeTags.length > 0 || type !== "all",
+    statuses,
+    toggleStatus,
+    catIds,
+    toggleCat,
+    amountMin,
+    amountMax,
+    setAmountRange: (min, max) => {
+      setAmountMin(min);
+      setAmountMax(max);
+    },
+    hasTokens:
+      search.trim() !== "" ||
+      activeTags.length > 0 ||
+      type !== "all" ||
+      statuses.length > 0 ||
+      catIds.length > 0 ||
+      amountMin != null ||
+      amountMax != null,
     clearTokens: () => {
       setSearch("");
       setActiveTags([]);
       setType("all");
+      setStatuses([]);
+      setCatIds([]);
+      setAmountMin(null);
+      setAmountMax(null);
     },
     filtered,
     sorted,

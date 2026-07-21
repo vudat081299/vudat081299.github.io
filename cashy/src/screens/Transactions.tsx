@@ -5,6 +5,7 @@ import { useTxQuery } from "@/lib/useTxQuery";
 import { AmountDisplay } from "@/components/AmountDisplay";
 import { EmptyState } from "@/components/EmptyState";
 import { PageHeader } from "@/components/PageHeader";
+import { PeriodPicker } from "@/components/PeriodPicker";
 import { TxFilterBar } from "@/components/tx/TxFilterBar";
 import { TransactionTable } from "@/components/tx/TransactionTable";
 import { openTxEditor } from "@/components/TransactionEditor";
@@ -26,21 +27,24 @@ export function Transactions() {
         title="Transactions"
         subtitle={`${q.filtered.length} transactions in this period`}
         actions={
-          <span className="wb-cap wb-cap--sm" style={{ gap: 5 }}>
-            Net
-            {/* A net loss for the period IS a real problem, so this is one of
-                the few places red is earned (§1). */}
-            <AmountDisplay
-              amount={Math.abs(net)}
-              type={net >= 0 ? "income" : "expense"}
-              negative={net < 0}
-              signed
-            />
-          </span>
+          <div className="wb-cluster" style={{ gap: 10 }}>
+            <PeriodPicker value={q.period} custom={q.custom} onChange={q.setPeriod} />
+            <span className="wb-cap wb-cap--sm" style={{ gap: 5 }}>
+              Net
+              {/* A net loss for the period IS a real problem, so this is one of
+                  the few places red is earned (§1). */}
+              <AmountDisplay
+                amount={Math.abs(net)}
+                type={net >= 0 ? "income" : "expense"}
+                negative={net < 0}
+                signed
+              />
+            </span>
+          </div>
         }
       />
 
-      <TxFilterBar q={q} tagRanks={tagRanks} count={q.filtered.length} showPeriod />
+      <TxFilterBar q={q} tagRanks={tagRanks} categories={categories} />
 
       <TransactionTable
         rows={q.sorted}

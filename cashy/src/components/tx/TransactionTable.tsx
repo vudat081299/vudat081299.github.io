@@ -137,10 +137,9 @@ export function TransactionTable({
                 {title && (
                   <h3 className="wb-table-head__title cashy-table-title">
                     <span>{title}</span>
-                    {/* A rule runs from the title to the count of rows this table
-                        holds — "Recent transactions ──── 219". */}
-                    <span className="cashy-table-title__rule" aria-hidden />
-                    <span className="cashy-table-title__count">{total}</span>
+                    {/* The row count rides along in parentheses — "Recent
+                        transactions (219)". */}
+                    <span className="cashy-table-title__count">({total})</span>
                   </h3>
                 )}
                 {subtitle && <p className="wb-table-head__sub">{subtitle}</p>}

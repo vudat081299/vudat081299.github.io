@@ -1,13 +1,12 @@
-import type { CSSProperties } from "react";
-import { PERIODS, periodLabel, type PeriodKey, type Range } from "@/lib/period";
+import { PERIODS, periodLabel, periodNote, type PeriodKey, type Range } from "@/lib/period";
 import { Popover } from "@/components/wb/Popover";
-import { RangeCalendar } from "@/components/RangeCalendar";
+import { PeriodPanel } from "@/components/PeriodPanel";
 
 /**
- * The period scope: five presets **and** an arbitrary range. A `<select>` could
- * only ever offer the presets, which is why picking "01/07 → 12/07" was
- * impossible before — so the control is a popover holding the preset list plus
- * the docs' range calendar, and the trigger simply states the window in force.
+ * The period scope: presets (rolling-day + whole-month) AND an arbitrary range,
+ * typed or clicked. The trigger states the window in force plus the concrete
+ * dates it means ("Last 3 months · Tháng 5 – tháng 7"); the panel lives in
+ * `PeriodPanel`, shared with anything else that scopes by date.
  */
 export function PeriodPicker({
   value,
@@ -18,9 +17,11 @@ export function PeriodPicker({
   custom: Range | null;
   onChange: (key: PeriodKey, custom?: Range | null) => void;
 }) {
+  const note = periodNote(value, new Date(), custom);
+  const isPreset = PERIODS.some((p) => p.key === value);
   return (
     <Popover
-      panelWidth={288}
+      panelWidth={300}
       align="right"
       trigger={({ open, toggle }) => (
         <button
@@ -31,38 +32,18 @@ export function PeriodPicker({
         >
           <span className="wb-ico wb-ico--sm">calendar_month</span>
           {periodLabel(value, custom)}
+          {/* The resolved window rides along so the label is never ambiguous.
+              Skipped for custom, whose label already IS the exact dates. */}
+          {note && isPreset && value !== "custom" && (
+            <span className="cashy-period-btn__note">· {note}</span>
+          )}
           <span className="wb-ico wb-ico--xs">expand_more</span>
         </button>
       )}
     >
       {({ close }) => (
-        <div className="wb-menu wb-filter-pop" style={{ border: 0, boxShadow: "none" }}>
-          <div className="wb-stack" style={{ "--wb-stack-gap": "1px" } as CSSProperties}>
-            {PERIODS.map((p) => (
-              <label key={p.key} className="wb-radio wb-menu__item">
-                <input
-                  type="radio"
-                  name="cashy-period-picker"
-                  checked={value === p.key}
-                  onChange={() => {
-                    onChange(p.key, null);
-                    close();
-                  }}
-                />
-                {p.label}
-              </label>
-            ))}
-          </div>
-
-          <div className="wb-menu__sep" />
-          <p className="wb-filter-pop__title">Custom range</p>
-          <RangeCalendar
-            value={value === "custom" ? custom : null}
-            onChange={(r) => {
-              onChange("custom", r);
-              close();
-            }}
-          />
+        <div className="wb-menu wb-filter-pop cashy-period-pop" style={{ border: 0, boxShadow: "none" }}>
+          <PeriodPanel value={value} custom={custom} onChange={onChange} onPick={close} />
         </div>
       )}
     </Popover>

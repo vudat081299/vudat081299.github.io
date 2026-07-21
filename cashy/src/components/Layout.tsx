@@ -19,10 +19,14 @@ const THEME_NEXT: Record<ThemeMode, ThemeMode> = {
   light: "dark",
   dark: "system",
 };
+// Glyphs + labels mirror the web-builder docs theme switch exactly: a moon/sun/
+// half-disc pill that cycles Tự động → Sáng → Tối, not an icon-only button.
 const THEME_META: Record<ThemeMode, { icon: string; label: string }> = {
-  system: { icon: "computer", label: "Match system" },
-  light: { icon: "light_mode", label: "Light" },
-  dark: { icon: "dark_mode", label: "Dark" },
+  system: { icon: "◐", label: "Tự động" },
+  // Emoji sun (VS16) for the light state, per the docs — a colour glyph, not the
+  // monochrome ☀ outline the plain codepoint renders as.
+  light: { icon: "☀️", label: "Sáng" },
+  dark: { icon: "☾", label: "Tối" },
 };
 
 /** "Dat Vu" → "DV", "Dat" → "D". Two letters at most; the avatar is 28px wide. */
@@ -76,15 +80,6 @@ function Navbar({ onMenu }: { onMenu: () => void }) {
       <div className="wb-navbar__actions">
         <button
           type="button"
-          onClick={() => setTheme(THEME_NEXT[theme])}
-          className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--round wb-btn--sm"
-          aria-label={`Theme: ${THEME_META[theme].label}`}
-          title={THEME_META[theme].label}
-        >
-          <span className="wb-ico wb-ico--sm">{THEME_META[theme].icon}</span>
-        </button>
-        <button
-          type="button"
           className={
             draft
               ? "wb-btn wb-btn--round wb-btn--sm cashy-btn--draft"
@@ -97,6 +92,16 @@ function Navbar({ onMenu }: { onMenu: () => void }) {
           <span className="wb-ico wb-ico--xs">{draft ? "edit_note" : "add"}</span>
           <span className="cashy-show-sm">{draft ? "Finish draft" : "Add transaction"}</span>
           <span className="cashy-hide-sm">{draft ? "Draft" : "Add"}</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setTheme(THEME_NEXT[theme])}
+          className="theme-btn"
+          title="Giao diện: Tự động → Sáng → Tối"
+          aria-label="Đổi giao diện"
+        >
+          <span aria-hidden="true">{THEME_META[theme].icon}</span>
+          <span className="cashy-show-sm">{THEME_META[theme].label}</span>
         </button>
       </div>
     </header>

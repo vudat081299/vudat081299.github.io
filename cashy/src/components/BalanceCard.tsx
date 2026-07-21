@@ -46,7 +46,10 @@ export function BalanceCard({
             )}
           >
             <span className="wb-ico wb-ico--xs">{up ? "trending_up" : "trending_down"}</span>
-            {Math.abs(Math.round((delta ?? 0) * 100))}%
+            {/* One decimal when it carries signal, vi-VN comma separator: the
+                delta is a precise fraction, so "12,4%" — but a whole number drops
+                the ",0" and reads "12%", never "12,0%". */}
+            {parseFloat(Math.abs((delta ?? 0) * 100).toFixed(1)).toString().replace(".", ",")}%
           </span>
           {note}
         </div>
