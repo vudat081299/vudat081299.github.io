@@ -5,7 +5,7 @@ import {
   updateTransaction,
   useCashy,
 } from "@/lib/store";
-import { flattenTree } from "@/lib/domain";
+import { flattenTree, rankTags } from "@/lib/domain";
 import { clearDraft, getDraft, saveDraft, type TxDraft } from "@/lib/draft";
 import { formatMoney, parseMoney } from "@/lib/money";
 import { todayYMD } from "@/lib/date";
@@ -82,6 +82,13 @@ export function TransactionEditor() {
     setOpen(false);
   }
   const catOptions = useMemo(() => flattenTree(categories, type), [categories, type]);
+  // Tags ordered by how much the ledger uses them (most-used first), each with a
+  // shade that inks the chip — the same rank ramp the transaction table uses.
+  const rankedTags = useMemo(() => rankTags(tags, transactions), [tags, transactions]);
+  const tagShade = useMemo(
+    () => new Map(rankedTags.map((r) => [r.tag.id, r.shade])),
+    [rankedTags],
+  );
 
   function changeType(t: TxType) {
     setType(t);
@@ -268,68 +275,77 @@ export function TransactionEditor() {
           </div>
         </div>
 
-        {/* Tags */}
+        {/* Tags — a dashed "＋" capsule LEADS (fixed first slot, so the way to add
+            never moves as chips come and go), then the chosen tags follow as
+            removable, frequency-inked chips. No text-input frame: you never type
+            here, you pick. */}
         <div className="wb-field">
           <label className="wb-label">Nhãn</label>
-          <Popover
-            panelWidth={224}
-            trigger={({ toggle }) => (
-              <button
-                type="button"
-                className="wb-input"
-                onClick={toggle}
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: 4,
-                  alignItems: "center",
-                  minHeight: 38,
-                  height: "auto",
-                  cursor: "pointer",
-                  textAlign: "left",
-                }}
-              >
-                {tagIds.length ? (
-                  tagIds.map((id) => {
-                    const t = tags.find((x) => x.id === id);
-                    return t ? <TagChip key={id} tag={t} /> : null;
-                  })
-                ) : (
-                  <span style={{ color: "var(--wb-fg-subtle)" }}>Chọn nhãn…</span>
-                )}
-              </button>
-            )}
-          >
-            {tags.length === 0 ? (
-              <div style={{ padding: "8px 10px", textAlign: "center", fontSize: 12, color: "var(--wb-fg-muted)" }}>
-                Chưa có nhãn nào. Tạo ở màn Nhãn.
-              </div>
-            ) : (
-              <div className="wb-menu" style={{ border: 0, boxShadow: "none", padding: 0, background: "none" }}>
-                {tags.map((t) => {
-                  const on = tagIds.includes(t.id);
-                  return (
-                    <button
-                      key={t.id}
-                      type="button"
-                      className="wb-menu__item"
-                      onClick={() =>
-                        setTagIds(on ? tagIds.filter((x) => x !== t.id) : [...tagIds, t.id])
-                      }
-                    >
-                      <span className="cashy-dot cashy-dot--sm" style={{ background: t.colorHex }} />
-                      {t.name}
-                      {on && (
-                        <span className="wb-ico wb-ico--xs" style={{ marginLeft: "auto" }}>
-                          check
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-          </Popover>
+          <div className="wb-cluster" style={{ flexWrap: "wrap", gap: 6, alignItems: "center" }}>
+            <Popover
+              inline
+              panelWidth={240}
+              trigger={({ toggle }) => (
+                <button type="button" className="cashy-tag-add" onClick={toggle}>
+                  <span className="wb-ico wb-ico--xs">add</span>
+                  Thêm nhãn
+                </button>
+              )}
+            >
+              {tags.length === 0 ? (
+                <div style={{ padding: "8px 10px", textAlign: "center", fontSize: 12, color: "var(--wb-fg-muted)" }}>
+                  Chưa có nhãn nào. Tạo ở màn Nhãn.
+                </div>
+              ) : (
+                // Ranked (most-used first) + bounded height with its own scroll,
+                // so a long tag list stays a fixed pane instead of stretching the modal.
+                <div
+                  className="wb-menu"
+                  style={{
+                    border: 0,
+                    boxShadow: "none",
+                    padding: 0,
+                    background: "none",
+                    maxHeight: 240,
+                    overflowY: "auto",
+                  }}
+                >
+                  {rankedTags.map(({ tag, shade }) => {
+                    const on = tagIds.includes(tag.id);
+                    return (
+                      <button
+                        key={tag.id}
+                        type="button"
+                        className="wb-menu__item"
+                        style={{ gap: 8 }}
+                        onClick={() =>
+                          setTagIds(on ? tagIds.filter((x) => x !== tag.id) : [...tagIds, tag.id])
+                        }
+                      >
+                        <TagChip tag={tag} shade={shade} />
+                        {on && (
+                          <span className="wb-ico wb-ico--xs" style={{ marginLeft: "auto" }}>
+                            check
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </Popover>
+            {tagIds.map((id) => {
+              const t = tags.find((x) => x.id === id);
+              return t ? (
+                <TagChip
+                  key={id}
+                  tag={t}
+                  shade={tagShade.get(id)}
+                  onRemove={() => setTagIds(tagIds.filter((x) => x !== id))}
+                />
+              ) : null;
+            })}
+          </div>
         </div>
 
         {/* Date + optional time */}

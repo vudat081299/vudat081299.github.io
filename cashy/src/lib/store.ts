@@ -2,6 +2,7 @@ import { useSyncExternalStore } from "react";
 import type {
   CashyState,
   Category,
+  SubIconStyle,
   SubInterval,
   Subscription,
   Tag,
@@ -28,6 +29,7 @@ function emptyState(): CashyState {
   return {
     version: CURRENT_VERSION,
     theme: "system",
+    subIconStyle: "neutral",
     workspace: null,
     categories: [],
     tags: [],
@@ -177,6 +179,11 @@ export function setTheme(theme: ThemeMode) {
   commit({ ...state, theme });
 }
 
+/** Toggle whether subscription icon tiles carry the service's hue or stay grey. */
+export function setSubIconStyle(subIconStyle: SubIconStyle) {
+  commit({ ...state, subIconStyle });
+}
+
 // ---- workspace -------------------------------------------------------------
 /**
  * Create a workspace. It is ALWAYS seeded with the 200-transaction demo dataset
@@ -211,7 +218,7 @@ export function updateWorkspace(patch: Partial<Workspace>) {
 }
 
 export function resetAll() {
-  commit({ ...emptyState(), theme: state.theme });
+  commit({ ...emptyState(), theme: state.theme, subIconStyle: state.subIconStyle });
 }
 
 // ---- categories ------------------------------------------------------------
@@ -533,6 +540,7 @@ export function importData(json: string): { ok: boolean; error?: string } {
     commit({
       version: CURRENT_VERSION,
       theme: state.theme,
+      subIconStyle: p.subIconStyle ?? state.subIconStyle,
       workspace: p.workspace ?? state.workspace,
       categories: p.categories,
       tags: Array.isArray(p.tags) ? p.tags : [],

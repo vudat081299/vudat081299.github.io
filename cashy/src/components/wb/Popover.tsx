@@ -10,6 +10,7 @@ export function Popover({
   children,
   panelWidth,
   align = "left",
+  inline = false,
 }: {
   trigger: (props: { open: boolean; toggle: () => void }) => ReactNode;
   /** Static content, or a render fn that receives `close` (e.g. close after a pick). */
@@ -17,6 +18,8 @@ export function Popover({
   panelWidth?: number;
   /** Which edge the panel lines up with — `right` for triggers near the page edge. */
   align?: "left" | "right";
+  /** Sit inline (a chip/capsule trigger) instead of the default full-width block. */
+  inline?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLSpanElement>(null);
@@ -46,7 +49,7 @@ export function Popover({
     <span
       ref={ref}
       className={open ? "wb-popover is-open" : "wb-popover"}
-      style={{ display: "block" }}
+      style={{ display: inline ? "inline-block" : "block" }}
     >
       {trigger({ open, toggle: () => setOpen((v) => !v) })}
       <div

@@ -77,26 +77,34 @@ export interface TagRank {
   tag: Tag;
   /** how many transactions carry this tag */
   count: number;
-  /** 0..1 — this tag's usage against the most-used tag; drives its emphasis */
-  weight: number;
+  /** 100..900 — the gray-token step this tag's rank inks to (900 = most-used). */
+  shade: number;
 }
 /**
  * Rank the tags by how much the ledger actually uses them. The result drives
- * BOTH the order tags are listed in and how strongly each one is inked: a tag
- * used on half the transactions is a real handle on the data, a tag used twice
- * is noise, and the UI should say so without inventing a new colour for it —
- * the weight only ever deepens the neutral (§1: emphasis = contrast, not hue).
+ * BOTH the order tags are listed in and how strongly each one is inked (§1:
+ * emphasis = contrast, not hue).
+ *
+ * Ink is a step on the gray scale, chosen by RANK, not raw count: the most-used
+ * tag is w900, and the ramp steps evenly down to w100. With `m` used tags the
+ * step is (900-100)/(m-1), but `m` is capped at 9 — so the 9th-most-used tag
+ * already lands on w100 and everything past it (and every unused tag) stays
+ * w100. Positional stepping keeps a busy ledger a clean dark→light gradient
+ * instead of bunching every middling tag into one muddy grey.
  */
 export function rankTags(tags: Tag[], txs: Transaction[]): TagRank[] {
   const count = new Map<string, number>();
   for (const t of txs) for (const id of t.tagIds) count.set(id, (count.get(id) ?? 0) + 1);
-  const max = Math.max(0, ...count.values());
-  return tags
-    .map((tag) => {
-      const c = count.get(tag.id) ?? 0;
-      return { tag, count: c, weight: max ? c / max : 0 };
-    })
+  const ranked = tags
+    .map((tag) => ({ tag, count: count.get(tag.id) ?? 0 }))
     .sort((a, b) => b.count - a.count || byName(a.tag, b.tag));
+  const used = ranked.filter((r) => r.count > 0).length;
+  const m = Math.min(used, 9);
+  const step = m > 1 ? 800 / (m - 1) : 0;
+  return ranked.map((r, i) => ({
+    ...r,
+    shade: r.count > 0 && i < 9 ? Math.round(900 - i * step) : 100,
+  }));
 }
 
 /** The ranks by tag id, for the tables that render one transaction's tags. */
@@ -193,9 +201,12 @@ export function pctChange(cur: number, prev: number): number | null {
 export interface WalletPoint {
   key: string;
   label: string;
+  /** total income booked in this bucket (within the visible range) */
+  income: number;
   /** total spending in this bucket (within the visible range) */
   expense: number;
-  /** running wallet balance = cumulative net of ALL tx up to this bucket's end */
+  /** running wallet balance = cumulative net of ALL tx up to this bucket's end.
+   *  The bucket's OPENING balance is `balance - income + expense`. */
   balance: number;
 }
 /**
@@ -221,7 +232,10 @@ export function walletSeries(all: Transaction[], range: Range): WalletPoint[] {
   const startD = parseYMD(start);
   const endD = parseYMD(end);
   const spanDays = Math.round((endD.getTime() - startD.getTime()) / 86400000) + 1;
-  const monthly = spanDays > 62;
+  // Three granularities so the columns never get too dense: days for a short
+  // window, months for up to a couple of years, whole years beyond that.
+  const yearly = spanDays > 800;
+  const monthly = !yearly && spanDays > 62;
 
   interface B extends WalletPoint {
     endYMD: string;
@@ -229,7 +243,21 @@ export function walletSeries(all: Transaction[], range: Range): WalletPoint[] {
     hasTx: boolean;
   }
   const buckets: B[] = [];
-  if (monthly) {
+  if (yearly) {
+    const c = new Date(startD.getFullYear(), 0, 1);
+    while (c <= endD) {
+      buckets.push({
+        key: String(c.getFullYear()),
+        label: String(c.getFullYear()),
+        endYMD: ymd(new Date(c.getFullYear(), 11, 31)),
+        income: 0,
+        expense: 0,
+        balance: 0,
+        hasTx: false,
+      });
+      c.setFullYear(c.getFullYear() + 1);
+    }
+  } else if (monthly) {
     const c = new Date(startD.getFullYear(), startD.getMonth(), 1);
     while (c <= endD) {
       const last = new Date(c.getFullYear(), c.getMonth() + 1, 0);
@@ -237,6 +265,7 @@ export function walletSeries(all: Transaction[], range: Range): WalletPoint[] {
         key: ymd(c).slice(0, 7),
         label: `${c.getMonth() + 1}/${String(c.getFullYear()).slice(2)}`,
         endYMD: ymd(last),
+        income: 0,
         expense: 0,
         balance: 0,
         hasTx: false,
@@ -251,6 +280,7 @@ export function walletSeries(all: Transaction[], range: Range): WalletPoint[] {
         key: k,
         label: String(c.getDate()),
         endYMD: k,
+        income: 0,
         expense: 0,
         balance: 0,
         hasTx: false,
@@ -259,14 +289,17 @@ export function walletSeries(all: Transaction[], range: Range): WalletPoint[] {
     }
   }
 
-  // spending per bucket — only transactions inside the visible range
+  // income + spending per bucket — only transactions inside the visible range
+  const groupKey = (occ: string) => (yearly ? occ.slice(0, 4) : monthly ? occ.slice(0, 7) : occ);
   const byKey = new Map(buckets.map((b) => [b.key, b] as const));
   for (const t of all) {
     if (t.occurredAt < start || t.occurredAt > end) continue;
-    const b = byKey.get(monthly ? t.occurredAt.slice(0, 7) : t.occurredAt);
+    const b = byKey.get(groupKey(t.occurredAt));
     if (!b) continue;
     b.hasTx = true;
-    if (t.type === "expense" && isCounted(t)) b.expense += t.amount;
+    if (!isCounted(t)) continue;
+    if (t.type === "expense") b.expense += t.amount;
+    else b.income += t.amount;
   }
 
   // running wallet balance — cumulative net of the COUNTED tx up to each bucket's end
@@ -291,7 +324,7 @@ export function walletSeries(all: Transaction[], range: Range): WalletPoint[] {
 
   return buckets
     .slice(lo, hi + 1)
-    .map(({ key, label, expense, balance }) => ({ key, label, expense, balance }));
+    .map(({ key, label, income, expense, balance }) => ({ key, label, income, expense, balance }));
 }
 
 // ---- subscriptions ---------------------------------------------------------

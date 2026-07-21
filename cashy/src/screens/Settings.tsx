@@ -6,13 +6,14 @@ import {
   importData,
   loadSampleData,
   resetAll,
+  setSubIconStyle,
   setTheme,
   updateWorkspace,
   useCashy,
 } from "@/lib/store";
 import { todayYMD } from "@/lib/date";
 import { PageHeader } from "@/components/PageHeader";
-import type { ThemeMode } from "@/types";
+import type { SubIconStyle, ThemeMode } from "@/types";
 
 function download(filename: string, text: string, mime: string) {
   const blob = new Blob([text], { type: mime });
@@ -40,8 +41,13 @@ const THEMES: { key: ThemeMode; label: string; icon: string }[] = [
   { key: "dark", label: "Tối", icon: "dark_mode" },
 ];
 
+const SUB_ICON_STYLES: { key: SubIconStyle; label: string; icon: string }[] = [
+  { key: "neutral", label: "Trung tính", icon: "filter_b_and_w" },
+  { key: "brand", label: "Theo dịch vụ", icon: "palette" },
+];
+
 export function Settings() {
-  const { workspace, theme, categories, tags, transactions } = useCashy();
+  const { workspace, theme, subIconStyle, categories, tags, transactions } = useCashy();
   const [name, setName] = useState(workspace?.displayName ?? "");
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -139,6 +145,31 @@ export function Settings() {
               </button>
             );
           })}
+        </div>
+
+        <div className="wb-field">
+          <label className="wb-label">Màu icon đăng ký</label>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+            {SUB_ICON_STYLES.map((o) => {
+              const active = subIconStyle === o.key;
+              return (
+                <button
+                  key={o.key}
+                  type="button"
+                  onClick={() => setSubIconStyle(o.key)}
+                  className={cn("wb-btn", active ? "wb-btn--secondary" : "wb-btn--outline")}
+                  style={{ gap: 8 }}
+                >
+                  <span className="wb-ico wb-ico--sm">{o.icon}</span>
+                  {o.label}
+                </button>
+              );
+            })}
+          </div>
+          <span style={{ fontSize: 12, color: "var(--wb-fg-muted)" }}>
+            “Trung tính” giữ mọi icon dịch vụ màu xám; “Theo dịch vụ” tô icon theo màu riêng
+            của từng dịch vụ.
+          </span>
         </div>
       </Section>
 

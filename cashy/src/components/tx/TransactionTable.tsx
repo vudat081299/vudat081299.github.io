@@ -6,6 +6,7 @@ import { AmountDisplay } from "@/components/AmountDisplay";
 import { CategoryCap } from "@/components/CategoryCap";
 import { StatusCap } from "@/components/StatusCap";
 import { TagChip } from "@/components/TagChip";
+import { TagsMorePopover } from "@/components/tx/TagsMorePopover";
 import { openTxEditor } from "@/components/TransactionEditor";
 import { openTxDetail } from "@/components/TransactionDetail";
 import { usePagination } from "@/components/tx/usePagination";
@@ -132,8 +133,16 @@ export function TransactionTable({
         ) : (
           <>
             {(title || subtitle) && (
-              <div>
-                {title && <h3 className="wb-table-head__title">{title}</h3>}
+              <div style={{ minWidth: 0 }}>
+                {title && (
+                  <h3 className="wb-table-head__title cashy-table-title">
+                    <span>{title}</span>
+                    {/* A rule runs from the title to the count of rows this table
+                        holds — "Recent transactions ──── 219". */}
+                    <span className="cashy-table-title__rule" aria-hidden />
+                    <span className="cashy-table-title__count">{total}</span>
+                  </h3>
+                )}
                 {subtitle && <p className="wb-table-head__sub">{subtitle}</p>}
               </div>
             )}
@@ -217,12 +226,10 @@ export function TransactionTable({
                     {txTags.length > 0 ? (
                       <span className="wb-tags">
                         {txTags.slice(0, 2).map((r) => (
-                          <TagChip key={r.tag.id} tag={r.tag} weight={r.weight} />
+                          <TagChip key={r.tag.id} tag={r.tag} shade={r.shade} />
                         ))}
                         {txTags.length > 2 && (
-                          <span className="wb-cell-muted" style={{ fontSize: 12 }}>
-                            +{txTags.length - 2}
-                          </span>
+                          <TagsMorePopover tags={txTags} count={txTags.length - 2} />
                         )}
                       </span>
                     ) : (

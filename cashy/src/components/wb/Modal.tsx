@@ -23,6 +23,23 @@ export function Modal({
 }) {
   const panelRef = useRef<HTMLDivElement>(null);
 
+  // Focus the first field — but ONLY when the modal opens. This deliberately
+  // depends on `open` alone: callers pass a fresh `onClose` (and children re-render
+  // on every keystroke), so folding this into the Esc/scroll effect below would
+  // re-run it on each render and yank focus back to the first field mid-typing.
+  useEffect(() => {
+    if (!open) return;
+    const focusTimer = window.setTimeout(() => {
+      const el = panelRef.current?.querySelector<HTMLElement>(
+        'input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      );
+      el?.focus();
+    }, 0);
+    return () => window.clearTimeout(focusTimer);
+  }, [open]);
+
+  // Esc to close + body scroll-lock. Safe to re-bind on an `onClose` change: it
+  // only re-attaches a listener and re-sets overflow — it never moves focus.
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -31,16 +48,9 @@ export function Modal({
     document.addEventListener("keydown", onKey);
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    const focusTimer = window.setTimeout(() => {
-      const el = panelRef.current?.querySelector<HTMLElement>(
-        'input, select, textarea, [tabindex]:not([tabindex="-1"])',
-      );
-      el?.focus();
-    }, 0);
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prevOverflow;
-      window.clearTimeout(focusTimer);
     };
   }, [open, onClose]);
 

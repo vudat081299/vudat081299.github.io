@@ -91,3 +91,19 @@ export function monthLabel(key: string): string {
   const [y, m] = key.split("-").map(Number);
   return `tháng ${m} ${y}`;
 }
+
+/**
+ * The full title for a cash-flow chart bucket, read off its key length:
+ *   "2026-01-01" → "Thứ Năm, ngày 1 tháng 1 năm 2026"
+ *   "2026-03"    → "Tháng 3 năm 2026"
+ *   "2026"       → "Năm 2026"
+ */
+export function chartBucketTitle(key: string): string {
+  if (key.length === 4) return `Năm ${key}`;
+  if (key.length === 7) {
+    const [y, m] = key.split("-").map(Number);
+    return `Tháng ${m} năm ${y}`;
+  }
+  const s = format(parseYMD(key), "EEEE, 'ngày' d 'tháng' M 'năm' yyyy", { locale: vi });
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}

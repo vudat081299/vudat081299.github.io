@@ -11,6 +11,7 @@ import {
   walletSeries,
 } from "@/lib/domain";
 import { periodLabel, prevRange } from "@/lib/period";
+import { useStableSubOrder } from "@/lib/useStableSubOrder";
 import { useTxQuery } from "@/lib/useTxQuery";
 import { navigate } from "@/lib/router";
 import { formatMoneyShort } from "@/lib/money";
@@ -57,16 +58,8 @@ export function Dashboard() {
   );
 
   // Services that want attention first, then the rest; cancelled ones sink.
-  const subCards = useMemo(
-    () =>
-      [...subscriptions].sort(
-        (a, b) =>
-          Number(b.active) - Number(a.active) ||
-          Number(needsPaymentNow(b)) - Number(needsPaymentNow(a)) ||
-          a.name.localeCompare(b.name, "en"),
-      ),
-    [subscriptions],
-  );
+  // Sorted once, then held stable so editing a card never reorders it.
+  const subCards = useStableSubOrder(subscriptions);
   const dueCount = subscriptions.filter((s) => needsPaymentNow(s)).length;
 
   return (
@@ -320,7 +313,7 @@ export function Dashboard() {
               style={{ gap: 4 }}
               onClick={() => navigate("transactions")}
             >
-              See all
+              View all
               <span className="wb-ico wb-ico--xs">arrow_forward</span>
             </button>
           }

@@ -42,6 +42,25 @@ body {
 }
 
 /* =========================================================================
+   INK LADDER — a finer neutral text scale than web-builder's three rungs
+   (--wb-fg / -muted / -subtle). Each step is ~10% of --wb-fg mixed toward
+   transparent, so quiet text can be nudged "mờ hơn N bậc" precisely and the
+   whole scale still inverts by itself on dark (--wb-fg flips). ink-1 ≈ full
+   ink, ink-6 ≈ the faintest still-readable grey. Use these for secondary
+   captions where --wb-fg-muted is a touch too dark; keep real content on the
+   wb tokens.
+   ========================================================================= */
+:root {
+  --cashy-ink-1: color-mix(in srgb, var(--wb-fg) 90%, transparent);
+  --cashy-ink-2: color-mix(in srgb, var(--wb-fg) 80%, transparent);
+  --cashy-ink-3: color-mix(in srgb, var(--wb-fg) 68%, transparent);
+  --cashy-ink-4: color-mix(in srgb, var(--wb-fg) 56%, transparent);
+  --cashy-ink-5: color-mix(in srgb, var(--wb-fg) 46%, transparent);
+  --cashy-ink-6: color-mix(in srgb, var(--wb-fg) 38%, transparent);
+  --cashy-ink-7: color-mix(in srgb, var(--wb-fg) 30%, transparent);
+}
+
+/* =========================================================================
    Responsive show / hide — the few breakpoint utilities the app shell needs
    (the sidebar rail vs the ☰ drawer trigger). Named `cashy-*` so they never
    collide with wb-*. Everything else uses web-builder's own layout utilities.
@@ -303,15 +322,135 @@ body {
   background: var(--wb-danger-soft);
   color: var(--wb-danger-text);
 }
+/* Its success twin — the quiet "đã trả" confirm. Green = paid (§1). Same 0-3-0
+   dance for the dark hover. */
+.wb-btn.cashy-btn--quiet-success {
+  color: var(--wb-success-text);
+}
+.wb-btn.cashy-btn--quiet-success:hover,
+.dark .wb-btn.cashy-btn--quiet-success:hover {
+  background: var(--wb-success-soft);
+  color: var(--wb-success-text);
+}
 
 /* =========================================================================
    RANKED TAG — a #chip inked by how much the ledger uses it. Both ends of the
    ramp are mixes of --wb-fg, so the whole scale inverts by itself in dark mode
    (heavier = lighter there). Percentages come from the data via TagChip.
    ========================================================================= */
+/* Solid ramp, mixed over --wb-surface (not transparent) so a dark charcoal
+   ground can carry LIGHT ink — a translucent mix could only ever fade toward the
+   row behind it, never flip the text light. TagChip drives both stops. */
 .wb-tag.cashy-tag--rank {
-  background: color-mix(in srgb, var(--wb-fg) var(--cashy-tag-bg, 8%), transparent);
-  color: color-mix(in srgb, var(--wb-fg) var(--cashy-tag-fg, 70%), transparent);
+  background: color-mix(in srgb, var(--wb-fg) var(--cashy-tag-bg, 8%), var(--wb-surface));
+  color: color-mix(in srgb, var(--wb-fg) var(--cashy-tag-fg, 70%), var(--wb-surface));
+}
+
+/* Table title with a trailing rule + row count: "Recent transactions ── 219".
+   The rule fills the gap between the label and the count so the number reads as
+   a quiet meta-fact about the table, not another heading. */
+.cashy-table-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.cashy-table-title > span:first-child {
+  flex: 0 0 auto;
+}
+.cashy-table-title__rule {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 0;
+  border-top: var(--wb-bw) solid var(--wb-border);
+}
+.cashy-table-title__count {
+  flex: 0 0 auto;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--wb-fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* =========================================================================
+   ADD-TAG CAPSULE — the "＋ Thêm nhãn" trigger in the transaction editor. A
+   dashed pill (the house "chưa chốt / optional" idiom, §capsules) rather than a
+   text-input look: it sits inline right after the chosen tags and reads as an
+   action, not a field to type into.
+   ========================================================================= */
+.cashy-tag-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px 2px 7px;
+  font-family: var(--wb-font);
+  font-size: 12px;
+  font-weight: 550;
+  line-height: 1.5;
+  color: var(--wb-fg-muted);
+  background: transparent;
+  border: var(--wb-bw) dashed var(--wb-border-strong);
+  border-radius: var(--wb-radius-pill);
+  cursor: pointer;
+}
+.cashy-tag-add:hover {
+  color: var(--wb-fg);
+  border-color: var(--wb-fg-muted);
+  background: var(--wb-surface-2);
+}
+.dark .cashy-tag-add:hover {
+  background: var(--wb-surface-hover);
+}
+
+/* =========================================================================
+   OVERFLOW TAGS — the clickable "+n" chip in the tags column and the little
+   grid it opens. The panel is PORTALLED to <body> and fixed-positioned (a
+   normal popover would be clipped by the table's own overflow:auto), so the
+   chrome is styled here rather than piggy-backing on wb-popover.
+   ========================================================================= */
+.cashy-tagmore {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--wb-fg-muted);
+  background: color-mix(in srgb, var(--wb-fg) 6%, transparent);
+  border: var(--wb-bw) solid transparent;
+  border-radius: var(--wb-radius-pill);
+  cursor: pointer;
+}
+.cashy-tagmore:hover {
+  color: var(--wb-fg);
+  background: color-mix(in srgb, var(--wb-fg) 12%, transparent);
+}
+.cashy-tagpop {
+  position: fixed;
+  z-index: 80;
+  max-width: 280px;
+  max-height: 208px;
+  overflow-y: auto;
+  padding: 8px;
+  background: var(--wb-surface);
+  border: var(--wb-bw) solid var(--wb-border);
+  border-radius: var(--wb-radius);
+  box-shadow: var(--wb-shadow-md);
+}
+/* Chips wrap, each sized to its OWN text (never stretched to a shared column
+   width) — the panel shrinks to content and only wraps to a new row when it hits
+   max-width, so short tags stay compact and long ones keep their full label. */
+.cashy-tagpop__wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* Active subscriptions spend most of a cycle with plenty of runway, and a
+   full-black bar makes every one of them look urgent. Quiet the bar to a plain
+   grey for the calm stretch; SubscriptionCard swaps back to the default ink bar
+   only once under ~10% of the period is left, so black now means "renews soon". */
+.wb-progress__bar.cashy-progress__bar--quiet {
+  background: var(--wb-neutral);
 }
 
 /* =========================================================================
@@ -350,6 +489,30 @@ body {
   padding-left: 12px;
   color: var(--wb-fg);
   font-weight: 600;
+}
+/* The closing balance is the result line (= opening + income − spend): ruled off
+   and inked full-strength so it reads as the answer, not another input. */
+.cashy-charttip__row--total {
+  margin-top: 5px;
+  padding-top: 6px;
+  border-top: var(--wb-bw) solid var(--wb-border);
+  color: var(--wb-fg);
+  font-weight: 600;
+}
+
+/* Charts are for reading, not selecting: a double-click was grabbing SVG text
+   and drawing a text-selection box. Kill selection + focus outlines inside any
+   recharts surface. */
+.recharts-wrapper,
+.recharts-wrapper * {
+  user-select: none;
+  -webkit-user-select: none;
+}
+.recharts-wrapper:focus,
+.recharts-wrapper :focus,
+.recharts-surface,
+.recharts-surface:focus {
+  outline: none;
 }
 
 /* =========================================================================
@@ -503,7 +666,32 @@ body {
 .cashy-subgrid .wb-card__head,
 .cashy-subgrid .wb-card__body,
 .cashy-subgrid .wb-card__foot {
-  padding: 8px;
+  padding: 10px;
+}
+/* A cancelled service is history, not a live card: it drops well back — dim AND
+   desaturated so a brand-tinted icon stops pulling the eye — yet stays legible.
+   Hover / focus inside it restores full strength, so Resume is never hidden. */
+.wb-card.cashy-sub--cancelled {
+  opacity: 0.4;
+  filter: grayscale(0.85);
+  transition:
+    opacity 0.15s ease,
+    filter 0.15s ease;
+}
+.wb-card.cashy-sub--cancelled:hover,
+.wb-card.cashy-sub--cancelled:focus-within {
+  opacity: 1;
+  filter: none;
+}
+/* Right after cancelling the pointer is still inside the card, so :hover would
+   keep it bright. `--force-quiet` (dropped once the pointer leaves) wins over
+   both hover and focus-within — an extra class beats their 0-3-0 — so the card
+   greys out the instant you cancel. */
+.wb-card.cashy-sub--cancelled.cashy-sub--force-quiet,
+.wb-card.cashy-sub--cancelled.cashy-sub--force-quiet:hover,
+.wb-card.cashy-sub--cancelled.cashy-sub--force-quiet:focus-within {
+  opacity: 0.4;
+  filter: grayscale(0.85);
 }
 /* The two dates a subscription is actually about: last paid & next due. */
 .cashy-submeta {
@@ -511,17 +699,21 @@ body {
   grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
+/* Sentence case, not small-caps: the labels sit quiet under the money line, so
+   "Last paid" reads as a caption rather than shouting in tracked uppercase. The
+   caption recedes (faintest ink) while the value it names advances (heavier
+   weight) — the label points, the date is the thing you read. */
 .cashy-submeta__label {
-  font-size: 11px;
-  font-weight: 650;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--wb-fg-subtle);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--cashy-ink-7);
   line-height: 1.4;
 }
 .cashy-submeta__val {
-  font-size: 13px;
-  color: var(--wb-fg);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cashy-ink-5);
   font-variant-numeric: tabular-nums;
 }
 .cashy-due {
@@ -539,6 +731,30 @@ body {
   display: flex;
   gap: 6px;
   flex-wrap: wrap;
+}
+
+/* One selectable owed cycle in the catch-up picker: tick · month · date · amount,
+   the amount pinned right so the column reads as a running list of what you owe. */
+.cashy-pay-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 11px;
+  border: var(--wb-bw) solid var(--wb-border);
+  border-radius: var(--wb-radius-sm);
+}
+.cashy-pay-row__month {
+  font-weight: 600;
+  font-size: 13px;
+}
+.cashy-pay-row__date {
+  font-size: 12px;
+  color: var(--wb-fg-muted);
+}
+.cashy-pay-row__amt {
+  margin-left: auto;
+  font-size: 13px;
+  font-weight: 600;
 }
 
 /* =========================================================================

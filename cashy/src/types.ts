@@ -1,6 +1,10 @@
 // Cashy domain types. Money is ALWAYS an integer count of Vietnamese đồng.
 export type TxType = "income" | "expense";
 export type ThemeMode = "system" | "light" | "dark";
+/** How a subscription's icon tile is coloured. `neutral` (default) keeps every
+ *  tile grey — the house neutral-first taste; `brand` tints it with the
+ *  service's own hue (the old look). A display preference, like `theme`. */
+export type SubIconStyle = "neutral" | "brand";
 
 /**
  * Lifecycle of a transaction — drives the status column + which rows count.
@@ -106,6 +110,8 @@ export interface Subscription {
 export interface CashyState {
   version: number;
   theme: ThemeMode;
+  /** subscription icon tile colouring; defaults to "neutral" */
+  subIconStyle: SubIconStyle;
   workspace: Workspace | null;
   categories: Category[];
   tags: Tag[];

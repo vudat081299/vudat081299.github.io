@@ -1,5 +1,5 @@
 import { useMemo, type CSSProperties } from "react";
-import type { Category, Subscription, Transaction } from "@/types";
+import type { Category, SubIconStyle, Subscription, Transaction } from "@/types";
 import { useCashy, setSubscriptionActive } from "@/lib/store";
 import {
   collectDues,
@@ -9,6 +9,7 @@ import {
   needsPaymentNow,
   subscriptionStatus,
 } from "@/lib/domain";
+import { useStableSubOrder } from "@/lib/useStableSubOrder";
 import { formatMoney } from "@/lib/money";
 import { fmtDateNum, fmtDateShort, monthLabelShort } from "@/lib/date";
 import { Icon } from "@/lib/icons";
@@ -28,10 +29,12 @@ function SubscriptionRow({
   sub,
   category,
   txs,
+  iconStyle,
 }: {
   sub: Subscription;
   category: Category | null;
   txs: Transaction[];
+  iconStyle: SubIconStyle;
 }) {
   const st = subscriptionStatus(sub, txs);
   const due = needsPaymentNow(sub);
@@ -52,7 +55,13 @@ function SubscriptionRow({
         <span className="cashy-subcell">
           <span
             className="cashy-subtile"
-            style={{ "--cashy-sub-c": sub.colorHex, width: 32, height: 32 } as CSSProperties}
+            style={
+              {
+                ...(iconStyle === "brand" ? { "--cashy-sub-c": sub.colorHex } : {}),
+                width: 32,
+                height: 32,
+              } as CSSProperties
+            }
           >
             <Icon name={sub.icon} size={16} />
           </span>
@@ -126,7 +135,7 @@ function SubscriptionRow({
 }
 
 export function Subscriptions() {
-  const { workspace, subscriptions, categories, transactions } = useCashy();
+  const { workspace, subscriptions, categories, transactions, subIconStyle } = useCashy();
   const catById = useMemo(() => new Map(categories.map((c) => [c.id, c])), [categories]);
 
   const dues = useMemo(() => collectDues(subscriptions, transactions), [subscriptions, transactions]);
@@ -134,17 +143,9 @@ export function Subscriptions() {
   const monthly = monthlyCommitment(subscriptions);
   const dueCount = subscriptions.filter((s) => needsPaymentNow(s)).length;
 
-  // Whatever needs money first sits at the top; paused services sink.
-  const ordered = useMemo(
-    () =>
-      [...subscriptions].sort(
-        (a, b) =>
-          Number(b.active) - Number(a.active) ||
-          Number(needsPaymentNow(b)) - Number(needsPaymentNow(a)) ||
-          a.name.localeCompare(b.name, "vi"),
-      ),
-    [subscriptions],
-  );
+  // Whatever needs money first sits at the top; paused services sink. Sorted
+  // once on open, then held stable so editing a row never makes it jump.
+  const ordered = useStableSubOrder(subscriptions);
 
   return (
     <div className="wb-stack wb-stack--loose">
@@ -252,6 +253,7 @@ export function Subscriptions() {
                     key={sub.id}
                     sub={sub}
                     txs={transactions}
+                    iconStyle={subIconStyle}
                     category={sub.categoryId ? (catById.get(sub.categoryId) ?? null) : null}
                   />
                 ))}

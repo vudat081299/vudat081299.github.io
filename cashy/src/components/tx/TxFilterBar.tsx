@@ -159,19 +159,19 @@ export function TxFilterBar({
           {tagRanks.length > 0 && (
             <>
               <div className="wb-menu__sep" />
-              <p className="wb-filter-pop__title">Tags · most used first</p>
+              <p className="wb-filter-pop__title">Tags</p>
               <div
                 className="wb-stack wb-scroll-y"
                 style={{ "--wb-stack-gap": "1px", maxHeight: 188 } as React.CSSProperties}
               >
-                {tagRanks.map(({ tag, count: used, weight }) => (
+                {tagRanks.map(({ tag, count: used, shade }) => (
                   <label key={tag.id} className="wb-check wb-menu__item">
                     <input
                       type="checkbox"
                       checked={q.activeTags.includes(tag.id)}
                       onChange={() => q.toggleTag(tag.id)}
                     />
-                    <TagChip tag={tag} weight={weight} />
+                    <TagChip tag={tag} shade={shade} />
                     <span className="wb-menu__kbd" style={{ marginLeft: "auto" }}>
                       {used}
                     </span>
