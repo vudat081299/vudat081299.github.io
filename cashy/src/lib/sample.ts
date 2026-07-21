@@ -7,7 +7,15 @@
 // so the wallet reads positive from the very first point of the balance line.
 // Amounts are integer VND. Referenced by store.createWorkspace, store.load
 // (re-seeds an empty workspace) and store.loadSampleData.
-import type { Category, Subscription, Tag, Transaction, TxStatus, TxType } from "@/types";
+import type {
+  Category,
+  SubInterval,
+  Subscription,
+  Tag,
+  Transaction,
+  TxStatus,
+  TxType,
+} from "@/types";
 import { uid } from "@/lib/id";
 import { addDays, addMonthKey, billingDate, monthKey, monthLabelShort, ymd } from "@/lib/date";
 
@@ -89,6 +97,9 @@ type SubDef = {
   paidThrough: "this" | "last" | "older";
   startedMonthsAgo: number;
   active?: boolean;
+  interval?: SubInterval;
+  /** 1..12, yearly only — the month it bills in. */
+  monthOfYear?: number;
 };
 
 const SUBSCRIPTIONS: SubDef[] = [
@@ -100,6 +111,9 @@ const SUBSCRIPTIONS: SubDef[] = [
   // Still switched on but two months behind — the "suspended, unpaid" state.
   { name: "Adobe Creative Cloud", amount: 620_000, dueOffset: -6, category: "Mua sắm", icon: "laptop", colorHex: "#06b6d4", note: "Quên gia hạn 2 tháng", paidThrough: "older", startedMonthsAgo: 9 },
   { name: "California Fitness", amount: 750_000, dueOffset: -20, category: "Sức khỏe", icon: "dumbbell", colorHex: "#f59e0b", note: "Tạm dừng khi đi công tác", paidThrough: "older", startedMonthsAgo: 10, active: false },
+  // A yearly plan — settled for this year, so its card shows a long cycle in
+  // progress and a next payment twelve months out.
+  { name: "Tên miền & hosting", amount: 1_450_000, dueOffset: -6, category: "Hóa đơn", icon: "wifi", colorHex: "#6366f1", note: "Gia hạn thường niên", paidThrough: "this", startedMonthsAgo: 40, interval: "yearly", monthOfYear: 3 },
 ];
 
 /** How many past cycles of each service get a real charge row in the demo. */
@@ -138,16 +152,31 @@ export function buildSampleSubscriptions(
   for (const s of SUBSCRIPTIONS) {
     const id = uid();
     const dayOfMonth = clampDay(today + s.dueOffset);
-    const startMonth = addMonthKey(cur, -s.startedMonthsAgo);
-    const paidMonth =
-      s.paidThrough === "this" ? cur : addMonthKey(cur, s.paidThrough === "last" ? -1 : -2);
+    const interval = s.interval ?? "monthly";
+    // One "cycle" is 1 month or 12; a yearly plan's cycles sit on the grid of its
+    // own billing month, so its keys are built from that rather than from today.
+    const step = interval === "yearly" ? 12 : 1;
+    const anchorMM =
+      interval === "yearly" ? String(s.monthOfYear ?? 1).padStart(2, "0") : null;
 
-    // Every month from the start (capped) through the last settled one is paid.
-    const earliest = addMonthKey(paidMonth, -(MAX_HISTORY - 1));
+    let startMonth: string;
+    let paidMonth: string;
+    if (anchorMM) {
+      const y = Number(cur.slice(0, 4));
+      paidMonth = `${y}-${anchorMM}` <= cur ? `${y}-${anchorMM}` : `${y - 1}-${anchorMM}`;
+      startMonth = `${y - Math.max(1, Math.round(s.startedMonthsAgo / 12))}-${anchorMM}`;
+    } else {
+      startMonth = addMonthKey(cur, -s.startedMonthsAgo);
+      paidMonth =
+        s.paidThrough === "this" ? cur : addMonthKey(cur, s.paidThrough === "last" ? -1 : -2);
+    }
+
+    // Every cycle from the start (capped) through the last settled one is paid.
+    const earliest = addMonthKey(paidMonth, -(MAX_HISTORY - 1) * step);
     let m = earliest > startMonth ? earliest : startMonth;
     const paymentTxIds: string[] = [];
     let lastPaidAt: string | null = null;
-    for (let guard = 0; m <= paidMonth && guard < MAX_HISTORY; guard++, m = addMonthKey(m, 1)) {
+    for (let guard = 0; m <= paidMonth && guard < MAX_HISTORY; guard++, m = addMonthKey(m, step)) {
       const txId = uid();
       const occurredAt = billingDate(m, dayOfMonth);
       charges.push({
@@ -172,7 +201,9 @@ export function buildSampleSubscriptions(
       id,
       name: s.name,
       amount: s.amount,
+      interval,
       dayOfMonth,
+      monthOfYear: s.monthOfYear,
       categoryId: catIdByName.get(s.category) ?? null,
       tagIds: subTagIds,
       colorHex: s.colorHex,

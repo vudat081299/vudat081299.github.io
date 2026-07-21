@@ -66,7 +66,8 @@ export function TransactionDetail() {
             <div className="wb-receipt__head">
               <div className="wb-receipt__merchant">{merchant}</div>
               <div className="wb-receipt__meta">
-                {fmtDate(tx.occurredAt)} · {typeLabel}
+                {fmtDate(tx.occurredAt)}
+                {tx.occurredTime ? ` lúc ${tx.occurredTime}` : ""} · {typeLabel}
               </div>
             </div>
 

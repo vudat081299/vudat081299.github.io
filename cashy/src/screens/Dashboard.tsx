@@ -3,7 +3,7 @@ import { useCashy } from "@/lib/store";
 import {
   breakdown,
   filterTx,
-  needsPaymentThisMonth,
+  needsPaymentNow,
   pctChange,
   periodInsights,
   rankTags,
@@ -62,12 +62,12 @@ export function Dashboard() {
       [...subscriptions].sort(
         (a, b) =>
           Number(b.active) - Number(a.active) ||
-          Number(needsPaymentThisMonth(b)) - Number(needsPaymentThisMonth(a)) ||
+          Number(needsPaymentNow(b)) - Number(needsPaymentNow(a)) ||
           a.name.localeCompare(b.name, "en"),
       ),
     [subscriptions],
   );
-  const dueCount = subscriptions.filter((s) => needsPaymentThisMonth(s)).length;
+  const dueCount = subscriptions.filter((s) => needsPaymentNow(s)).length;
 
   return (
     <div className="wb-stack wb-stack--loose">

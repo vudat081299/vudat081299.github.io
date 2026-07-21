@@ -285,6 +285,26 @@ body {
 }
 
 /* =========================================================================
+   DESTRUCTIVE CONFIRM — visual weight tracks CONSEQUENCE, not which answer
+   the question expects. The escape route ("Keep it") keeps the plain neutral
+   `.wb-btn` fill — black on light, white on dark, maximum contrast against
+   the canvas — while the irreversible choice drops to a ghost that spends red
+   on its text alone. A misfired click then lands on the harmless button.
+   This inverts the docs' modal pattern (ghost Huỷ + solid danger Xoá); only
+   the ordering is ours, the two fills are both stock web-builder.
+   ========================================================================= */
+.wb-btn.cashy-btn--quiet-danger {
+  color: var(--wb-danger-text);
+}
+/* `.dark .wb-btn--ghost:hover` also scores 0-3-0 and, loading later, would win
+   the hover with a plain grey — so the dark rule is spelled out too. */
+.wb-btn.cashy-btn--quiet-danger:hover,
+.dark .wb-btn.cashy-btn--quiet-danger:hover {
+  background: var(--wb-danger-soft);
+  color: var(--wb-danger-text);
+}
+
+/* =========================================================================
    RANKED TAG — a #chip inked by how much the ledger uses it. Both ends of the
    ramp are mixes of --wb-fg, so the whole scale inverts by itself in dark mode
    (heavier = lighter there). Percentages come from the data via TagChip.
@@ -430,21 +450,60 @@ body {
   gap: 10px;
   min-width: 0;
 }
+/* Head of a subscription card: [tile][name + status / money + cadence].
+   The tile pins to the top edge (`start`) so a name that wraps to two lines
+   can't drag it off-centre — it belongs to the whole block, not to one line.
+   Doubled selector because index.css loads BEFORE web-builder.css, so at
+   equal specificity `.wb-card__head` would win the alignment. */
+.wb-card__head.cashy-subhead {
+  align-items: start;
+  gap: 10px;
+}
+.cashy-subhead__main {
+  flex: 1;
+  min-width: 0;
+}
+.cashy-subhead__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+/* Long service names truncate rather than shove the status cap off the card. */
+.cashy-subhead__row > .wb-card__title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cashy-subhead__row > .wb-cap {
+  flex: none;
+  margin-left: auto;
+}
+/* The stock 2px is tuned for a title with nothing to its right; here the name
+   shares its line with a status cap, so the money line needs real air or it
+   reads as a second line of the name rather than its own fact. */
+.cashy-subhead .wb-card__sub {
+  margin-top: 6px;
+}
 /* One card per service on the overview. auto-fill so the row reflows instead of
    stretching three cards across a wide screen. */
 .cashy-subgrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(276px, 1fr));
   gap: 14px;
+  /* CSS Grid stretches items to the row height by DEFAULT — nothing in
+     web-builder asks for equal heights. `start` opts out, so each card is only
+     as tall as its own content and a card with no warning note doesn't grow a
+     band of dead space to match its neighbour. */
+  align-items: start;
 }
-/* Cards in a row are as tall as the tallest, so pin the actions to the bottom
-   edge instead of letting them float wherever the body happens to end. */
-.cashy-subgrid > .wb-card {
-  display: flex;
-  flex-direction: column;
-}
-.cashy-subgrid > .wb-card > .wb-card__body {
-  flex: 1;
+/* Denser than the stock card (head 16/18 · body 18 · foot 14/18): these sit
+   several-to-a-row, so the padding that suits one wide card wastes the width. */
+.cashy-subgrid .wb-card__head,
+.cashy-subgrid .wb-card__body,
+.cashy-subgrid .wb-card__foot {
+  padding: 8px;
 }
 /* The two dates a subscription is actually about: last paid & next due. */
 .cashy-submeta {

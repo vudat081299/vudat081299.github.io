@@ -3,12 +3,14 @@ import type { Category, Subscription, Transaction } from "@/types";
 import { useCashy, setSubscriptionActive } from "@/lib/store";
 import {
   collectDues,
+  currentCycle,
+  firstUnpaidCycle,
   monthlyCommitment,
-  needsPaymentThisMonth,
+  needsPaymentNow,
   subscriptionStatus,
 } from "@/lib/domain";
 import { formatMoney } from "@/lib/money";
-import { fmtDateNum, fmtDateShort, monthKey, monthLabelShort } from "@/lib/date";
+import { fmtDateNum, fmtDateShort, monthLabelShort } from "@/lib/date";
 import { Icon } from "@/lib/icons";
 import { PageHeader } from "@/components/PageHeader";
 import { EmptyState } from "@/components/EmptyState";
@@ -32,11 +34,15 @@ function SubscriptionRow({
   txs: Transaction[];
 }) {
   const st = subscriptionStatus(sub, txs);
-  const due = needsPaymentThisMonth(sub);
-  const cur = monthKey();
-  // Settled for this month, as opposed to merely not billed yet — the two look
+  const due = needsPaymentNow(sub);
+  // The CYCLE in play — the current month for a monthly plan, the current
+  // billing year for a yearly one. Using monthKey() here would tell a yearly
+  // subscriber "chưa đến hạn tháng 7" every month of the year.
+  const cur = currentCycle(sub);
+  const owed = firstUnpaidCycle(sub);
+  // Settled for this cycle, as opposed to merely not billed yet — the two look
   // the same from "not due" but only one of them means the money has been paid.
-  const paidThisMonth = sub.lastPaidAt?.slice(0, 7) === cur;
+  const paidThisCycle = sub.lastPaidAt?.slice(0, 7) === cur;
 
   const rowTone = !sub.active ? undefined : due ? "wb-row--warning" : undefined;
 
@@ -59,7 +65,11 @@ function SubscriptionRow({
       <td>
         <CategoryCap category={category} />
       </td>
-      <td className="wb-cell-muted">Ngày {sub.dayOfMonth}</td>
+      <td className="wb-cell-muted">
+        {sub.interval === "yearly"
+          ? `${sub.dayOfMonth}/${sub.monthOfYear ?? 1} hàng năm`
+          : `Ngày ${sub.dayOfMonth}`}
+      </td>
       <td className="wb-cell-muted">{fmtDateNum(sub.startedAt)}</td>
       <td className="wb-cell-muted">
         {sub.lastPaidAt ? fmtDateNum(sub.lastPaidAt) : "—"}
@@ -75,9 +85,9 @@ function SubscriptionRow({
         ) : due ? (
           <span className="wb-cap wb-cap--warning">
             <span className="wb-cap__dot" />
-            Cần trả {monthLabelShort(cur)}
+            Cần trả {monthLabelShort(owed)}
           </span>
-        ) : paidThisMonth ? (
+        ) : paidThisCycle ? (
           <span className="wb-cap wb-cap--success">
             <span className="wb-cap__dot" />
             Đã trả {monthLabelShort(cur)}
@@ -122,7 +132,7 @@ export function Subscriptions() {
   const dues = useMemo(() => collectDues(subscriptions, transactions), [subscriptions, transactions]);
   const active = subscriptions.filter((s) => s.active);
   const monthly = monthlyCommitment(subscriptions);
-  const dueCount = subscriptions.filter((s) => needsPaymentThisMonth(s)).length;
+  const dueCount = subscriptions.filter((s) => needsPaymentNow(s)).length;
 
   // Whatever needs money first sits at the top; paused services sink.
   const ordered = useMemo(
@@ -130,7 +140,7 @@ export function Subscriptions() {
       [...subscriptions].sort(
         (a, b) =>
           Number(b.active) - Number(a.active) ||
-          Number(needsPaymentThisMonth(b)) - Number(needsPaymentThisMonth(a)) ||
+          Number(needsPaymentNow(b)) - Number(needsPaymentNow(a)) ||
           a.name.localeCompare(b.name, "vi"),
       ),
     [subscriptions],
@@ -141,7 +151,7 @@ export function Subscriptions() {
       <PageHeader
         eyebrow={workspace?.displayName ?? "Cashy"}
         title="Đăng ký định kỳ"
-        subtitle="Dịch vụ trả theo tháng (Netflix, YouTube…). Mỗi tháng bạn xác nhận đã trả thì mới ghi thành giao dịch."
+        subtitle="Dịch vụ trả định kỳ theo tháng hoặc theo năm. Mỗi kỳ bạn xác nhận đã trả thì mới ghi thành giao dịch."
         actions={
           <button
             type="button"

@@ -51,15 +51,23 @@ export interface Transaction {
   /** lifecycle; undefined = "recorded" (legacy rows) */
   status?: TxStatus;
   occurredAt: string; // YYYY-MM-DD
+  /** "HH:mm" — OPTIONAL clock time. Most spending is remembered by day, not by
+   *  minute, so this is never required and every date comparison in the app
+   *  still works off `occurredAt` alone. Absent = "some time that day". */
+  occurredTime?: string;
   createdAt: string; // ISO
   /** set when this row is a subscription cycle charge (link + dedup) */
   subscriptionId?: string;
   subMonth?: string; // "YYYY-MM" the cycle this charge belongs to
 }
 
+/** How often a subscription bills. Monthly is the default; yearly plans bill on
+ *  one fixed day of one fixed month (`dayOfMonth` + `monthOfYear`). */
+export type SubInterval = "monthly" | "yearly";
+
 /**
- * A recurring monthly service (Netflix, YouTube…). It never books money on its
- * own: each due month it materialises a `pending` transaction, which the user
+ * A recurring service (Netflix, YouTube…), billing monthly or yearly. It never
+ * books money on its own: each due cycle it materialises a `pending` transaction, which the user
  * confirms as "đã trả" (→ `recorded`, counts) or "bỏ qua" (→ `skipped`, grey,
  * still reminds next month). A paused subscription (`active: false`) stops
  * generating new charges but keeps its history.
@@ -67,8 +75,12 @@ export interface Transaction {
 export interface Subscription {
   id: string;
   name: string;
-  amount: number; // integer VND per month
+  amount: number; // integer VND per BILLING CYCLE (not normalised to a month)
+  interval: SubInterval;
   dayOfMonth: number; // 1..31 billing day (clamped to the month length)
+  /** 1..12 — only meaningful when `interval` is "yearly": the month it bills in.
+   *  Together with `dayOfMonth` this is the "ngày a tháng b hàng năm" date. */
+  monthOfYear?: number;
   categoryId: string | null;
   tagIds: string[];
   colorHex: string;

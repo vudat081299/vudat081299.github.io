@@ -76,6 +76,16 @@ export function monthLabelShort(key: string): string {
   return `T${m}/${y}`;
 }
 
+/** "Mar" — English short month name from a 1..12 number. Used by the English
+ *  subscription surfaces, which state a yearly plan's date as "15 Mar". */
+const MONTHS_SHORT = [
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+];
+export function monthNameShort(m: number): string {
+  return MONTHS_SHORT[Math.min(12, Math.max(1, m)) - 1];
+}
+
 /** "tháng 7 2026" — full month label. */
 export function monthLabel(key: string): string {
   const [y, m] = key.split("-").map(Number);

@@ -1,13 +1,19 @@
 import { useState, type CSSProperties } from "react";
 import type { Subscription, Transaction } from "@/types";
 import {
+  billingLabel,
   isLapsed,
-  needsPaymentThisMonth,
+  needsPaymentNow,
   nextPaymentDate,
   subCycle,
   subscriptionStatus,
 } from "@/lib/domain";
-import { confirmSubscriptionCharge, setSubscriptionActive } from "@/lib/store";
+import {
+  confirmSubscriptionCharge,
+  confirmSubscriptionCharges,
+  setSubscriptionActive,
+} from "@/lib/store";
+import { toast } from "@/components/wb/Toast";
 import { fmtDateNum } from "@/lib/date";
 import { formatMoney } from "@/lib/money";
 import { Icon } from "@/lib/icons";
@@ -35,53 +41,62 @@ export function SubscriptionCard({
 
   const st = subscriptionStatus(sub, txs);
   const cycle = subCycle(sub);
-  const due = needsPaymentThisMonth(sub);
+  const due = needsPaymentNow(sub);
   const lapsed = isLapsed(sub);
   const dueTxId = st.pending[0]?.txId;
+  // Several cycles owed = the user paid in real life and never told the app.
+  // Clearing that must be one action, not one click per month.
+  const behind = st.pending.length;
 
   const tone = !sub.active ? undefined : lapsed ? "danger" : due ? "warning" : undefined;
 
+  const statusCap = !sub.active ? (
+    <span className="wb-cap">Cancelled</span>
+  ) : lapsed ? (
+    <span className="wb-cap wb-cap--danger">
+      <span className="wb-cap__dot" />
+      Suspended
+    </span>
+  ) : due ? (
+    <span className="wb-cap wb-cap--warning">
+      <span className="wb-cap__dot" />
+      Payment due
+    </span>
+  ) : (
+    <span className="wb-cap wb-cap--success">
+      <span className="wb-cap__dot" />
+      Active
+    </span>
+  );
+
   return (
     <div className="wb-card">
-      <div className="wb-card__head">
-        <div className="cashy-subcell">
-          <span
-            className="cashy-subtile"
-            style={{ "--cashy-sub-c": sub.colorHex, width: 34, height: 34 } as CSSProperties}
-          >
-            <Icon name={sub.icon} size={17} />
-          </span>
-          <div style={{ minWidth: 0 }}>
+      {/* Two columns, not three: the tile, then everything the tile is about.
+          Name and status share a line because the status is a fact about the
+          NAME; the money line reads as detail underneath both. */}
+      <div className="wb-card__head cashy-subhead">
+        <span
+          className="cashy-subtile"
+          style={{ "--cashy-sub-c": sub.colorHex, width: 34, height: 34 } as CSSProperties}
+        >
+          <Icon name={sub.icon} size={17} />
+        </span>
+        <div className="cashy-subhead__main">
+          <div className="cashy-subhead__row">
             <h4 className="wb-card__title">{sub.name}</h4>
-            <p className="wb-card__sub">
-              {formatMoney(sub.amount)} · day {sub.dayOfMonth} each month
-            </p>
+            {statusCap}
           </div>
-        </div>
-        <div className="wb-card__head-actions">
-          {!sub.active ? (
-            <span className="wb-cap">Cancelled</span>
-          ) : lapsed ? (
-            <span className="wb-cap wb-cap--danger">
-              <span className="wb-cap__dot" />
-              Suspended
-            </span>
-          ) : due ? (
-            <span className="wb-cap wb-cap--warning">
-              <span className="wb-cap__dot" />
-              Payment due
-            </span>
-          ) : (
-            <span className="wb-cap wb-cap--success">
-              <span className="wb-cap__dot" />
-              Active
-            </span>
-          )}
+          <p className="wb-card__sub">
+            {formatMoney(sub.amount)} · {billingLabel(sub)}
+          </p>
         </div>
       </div>
 
       <div className="wb-card__body">
-        <div className="cashy-submeta" style={{ marginBottom: sub.active ? 14 : 0 }}>
+        <div
+          className="cashy-submeta"
+          style={{ marginBottom: sub.active && cycle.started ? 14 : 0 }}
+        >
           <div>
             <div className="cashy-submeta__label">Last paid</div>
             <div className="cashy-submeta__val">
@@ -102,7 +117,7 @@ export function SubscriptionCard({
 
         {/* A cancelled service has no running period, so it gets no progress bar
             — an empty track would only invite the question "progress to what?". */}
-        {sub.active && (
+        {sub.active && cycle.started && (
           <>
             {/* Days used out of the days actually paid for — the divisor is the
                 real length of THIS billing period: a 28-day February is 28. */}
@@ -133,7 +148,9 @@ export function SubscriptionCard({
 
         {lapsed && (
           <p className="wb-cell-muted" style={{ fontSize: 12, margin: "10px 0 0" }}>
-            A whole billing period went unpaid — the provider would have stopped the service.
+            {behind > 1
+              ? `${behind} billing periods are unrecorded. If you did pay them, catch the record up below.`
+              : "A whole billing period went unpaid — the provider would have stopped the service."}
           </p>
         )}
       </div>
@@ -144,22 +161,25 @@ export function SubscriptionCard({
             <span className="wb-cell-muted" style={{ fontSize: 13, marginRight: "auto" }}>
               Cancel {sub.name}?
             </span>
+            {/* Weight follows consequence, not grammar: the destructive choice
+                is a quiet ghost and the safe one carries the fill, so a
+                reflexive click on the loud button costs nothing. */}
             <button
               type="button"
-              className="wb-btn wb-btn--ghost wb-btn--sm"
-              onClick={() => setConfirming(false)}
-            >
-              Keep it
-            </button>
-            <button
-              type="button"
-              className="wb-btn wb-btn--danger wb-btn--sm"
+              className="wb-btn wb-btn--ghost wb-btn--sm cashy-btn--quiet-danger"
               onClick={() => {
                 setSubscriptionActive(sub.id, false);
                 setConfirming(false);
               }}
             >
               Yes, cancel
+            </button>
+            <button
+              type="button"
+              className="wb-btn wb-btn--sm"
+              onClick={() => setConfirming(false)}
+            >
+              Keep it
             </button>
           </>
         ) : sub.active ? (
@@ -177,10 +197,14 @@ export function SubscriptionCard({
                 type="button"
                 className="wb-btn wb-btn--sm"
                 style={{ gap: 4 }}
-                onClick={() => confirmSubscriptionCharge(dueTxId)}
+                onClick={() =>
+                  behind > 1
+                    ? confirmSubscriptionCharges(st.pending.map((p) => p.txId))
+                    : confirmSubscriptionCharge(dueTxId)
+                }
               >
                 <span className="wb-ico wb-ico--xs">check</span>
-                Mark paid
+                {behind > 1 ? `Mark ${behind} paid` : "Mark paid"}
               </button>
             )}
           </>
@@ -189,10 +213,16 @@ export function SubscriptionCard({
             <span className="wb-cell-muted" style={{ fontSize: 13, marginRight: "auto" }}>
               No longer billing
             </span>
+            {/* Resuming is cheap and reversible, so it happens on one click and
+                offers the way back in a toast — a confirm dialog here would tax
+                the harmless direction while cancelling stays the guarded one. */}
             <button
               type="button"
               className="wb-btn wb-btn--secondary wb-btn--sm"
-              onClick={() => setSubscriptionActive(sub.id, true)}
+              onClick={() => {
+                setSubscriptionActive(sub.id, true);
+                toast.undo(`${sub.name} resumed`, () => setSubscriptionActive(sub.id, false));
+              }}
             >
               Resume
             </button>

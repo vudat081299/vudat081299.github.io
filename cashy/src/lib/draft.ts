@@ -16,6 +16,8 @@ export interface TxDraft {
   categoryId: string | null;
   tagIds: string[];
   occurredAt: string;
+  /** "HH:mm" or "" — optional, see Transaction.occurredTime */
+  occurredTime: string;
   note: string;
   payee: string;
   status: TxStatus;
@@ -46,7 +48,8 @@ export function isBlankDraft(d: TxDraft): boolean {
     d.note.trim() === "" &&
     d.payee.trim() === "" &&
     d.categoryId === null &&
-    d.tagIds.length === 0
+    d.tagIds.length === 0 &&
+    !d.occurredTime
   );
 }
 

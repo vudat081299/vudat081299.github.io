@@ -15,6 +15,7 @@ import { IconPicker } from "@/components/IconPicker";
 import { ColorPicker } from "@/components/ColorPicker";
 import { TagChip } from "@/components/TagChip";
 import { Icon } from "@/lib/icons";
+import type { SubInterval } from "@/types";
 
 let openFn: ((id: string | null) => void) | null = null;
 /** Open the subscription editor from anywhere. Pass an id to edit, or null to add. */
@@ -28,7 +29,9 @@ export function SubscriptionEditor() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [amountStr, setAmountStr] = useState("");
+  const [interval, setInterval] = useState<SubInterval>("monthly");
   const [dayOfMonth, setDayOfMonth] = useState(1);
+  const [monthOfYear, setMonthOfYear] = useState(1);
   const [categoryId, setCategoryId] = useState<string | null>(null);
   const [tagIds, setTagIds] = useState<string[]>([]);
   const [color, setColor] = useState<string>(SWATCHES[0]);
@@ -42,7 +45,9 @@ export function SubscriptionEditor() {
       setEditingId(sub ? sub.id : null);
       setName(sub?.name ?? "");
       setAmountStr(sub && sub.amount ? String(sub.amount) : "");
+      setInterval(sub?.interval ?? "monthly");
       setDayOfMonth(sub?.dayOfMonth ?? 1);
+      setMonthOfYear(sub?.monthOfYear ?? new Date().getMonth() + 1);
       setCategoryId(sub?.categoryId ?? null);
       setTagIds(sub?.tagIds ?? []);
       setColor(sub?.colorHex ?? SWATCHES[0]);
@@ -65,7 +70,10 @@ export function SubscriptionEditor() {
     const payload = {
       name: name.trim(),
       amount,
+      interval,
       dayOfMonth: Math.min(31, Math.max(1, dayOfMonth || 1)),
+      // Only carried for yearly plans; a monthly one has no billing month.
+      monthOfYear: interval === "yearly" ? Math.min(12, Math.max(1, monthOfYear || 1)) : undefined,
       categoryId,
       tagIds,
       colorHex: color,
@@ -139,10 +147,32 @@ export function SubscriptionEditor() {
           />
         </div>
 
+        {/* Billing interval — decides whether the date below is a day of the
+            month or a full "ngày a tháng b" date. */}
+        <div className="wb-field">
+          <label className="wb-label">Chu kỳ thanh toán</label>
+          <div
+            className="wb-tabs wb-tabs--pill"
+            style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}
+          >
+            {(["monthly", "yearly"] as SubInterval[]).map((iv) => (
+              <button
+                key={iv}
+                type="button"
+                className={interval === iv ? "wb-tab is-active" : "wb-tab"}
+                style={{ textAlign: "center" }}
+                onClick={() => setInterval(iv)}
+              >
+                {iv === "monthly" ? "Hàng tháng" : "Hàng năm"}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className="wb-cluster wb-cluster--nowrap wb-cluster--stretch" style={{ gap: 12 }}>
           <div className="wb-field" style={{ flex: 2 }}>
             <label className="wb-label" htmlFor="sub-amount">
-              Số tiền / tháng
+              {interval === "yearly" ? "Số tiền / năm" : "Số tiền / tháng"}
             </label>
             <input
               id="sub-amount"
@@ -159,7 +189,7 @@ export function SubscriptionEditor() {
           </div>
           <div className="wb-field" style={{ flex: 1 }}>
             <label className="wb-label" htmlFor="sub-day">
-              Ngày trong tháng
+              {interval === "yearly" ? "Ngày" : "Ngày trong tháng"}
             </label>
             <input
               id="sub-day"
@@ -171,7 +201,35 @@ export function SubscriptionEditor() {
               onChange={(e) => setDayOfMonth(Number(e.target.value))}
             />
           </div>
+          {interval === "yearly" && (
+            <div className="wb-field" style={{ flex: 1 }}>
+              <label className="wb-label" htmlFor="sub-month">
+                Tháng
+              </label>
+              <span className="wb-select-wrap">
+                <select
+                  id="sub-month"
+                  className="wb-select"
+                  value={monthOfYear}
+                  onChange={(e) => setMonthOfYear(Number(e.target.value))}
+                >
+                  {Array.from({ length: 12 }, (_, i) => (
+                    <option key={i + 1} value={i + 1}>
+                      Tháng {i + 1}
+                    </option>
+                  ))}
+                </select>
+                <span className="wb-ico">expand_more</span>
+              </span>
+            </div>
+          )}
         </div>
+        {interval === "yearly" && (
+          <span className="wb-help" style={{ marginTop: -8 }}>
+            Thu phí ngày {Math.min(31, Math.max(1, dayOfMonth || 1))} tháng{" "}
+            {Math.min(12, Math.max(1, monthOfYear || 1))} hàng năm.
+          </span>
+        )}
 
         <div className="wb-field">
           <label className="wb-label" htmlFor="sub-start">

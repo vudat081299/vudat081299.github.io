@@ -197,7 +197,13 @@ export function TransactionTable({
                       <input type="checkbox" checked={isSel} onChange={() => toggle(tx.id)} />
                     </label>
                   </td>
-                  <td className="wb-cell-muted">{day}</td>
+                  {/* Time is optional, so it only takes a line when it exists —
+                      an empty slot on every other row would cost more than it
+                      is worth. */}
+                  <td className="wb-cell-muted">
+                    {day}
+                    {tx.occurredTime && <span className="wb-cell-sub">{tx.occurredTime}</span>}
+                  </td>
                   <td>
                     <span className="wb-cell-strong">
                       {tx.note || category?.name || "Transaction"}

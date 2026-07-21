@@ -8,11 +8,19 @@ import { useEffect, useState } from "react";
 
 export type ToastTone = "neutral" | "success" | "danger" | "warning" | "info";
 
+export interface ToastAction {
+  label: string;
+  onClick: () => void;
+}
+
 export interface ToastItem {
   id: number;
   tone: ToastTone;
   title: string;
   msg?: string;
+  /** Optional one-click reversal. This is what makes a low-risk action safe to
+   *  perform immediately instead of gating it behind a confirmation dialog. */
+  action?: ToastAction;
 }
 
 // Material Symbols glyph per tone (rendered inside .wb-toast__icon).
@@ -25,6 +33,8 @@ const TONE_ICON: Record<ToastTone, string> = {
 };
 
 const DURATION = 4000;
+/** An undo needs longer on screen — it is the only window the user gets. */
+const UNDO_DURATION = 9000;
 
 let items: ToastItem[] = [];
 let nextId = 1;
@@ -40,11 +50,11 @@ function dismiss(id: number) {
   emit();
 }
 
-function push(tone: ToastTone, title: string, msg?: string) {
+function push(tone: ToastTone, title: string, msg?: string, action?: ToastAction) {
   const id = nextId++;
-  items = [...items, { id, tone, title, msg }];
+  items = [...items, { id, tone, title, msg, action }];
   emit();
-  window.setTimeout(() => dismiss(id), DURATION);
+  window.setTimeout(() => dismiss(id), action ? UNDO_DURATION : DURATION);
   return id;
 }
 
@@ -54,6 +64,9 @@ export const toast = {
   warning: (title: string, msg?: string) => push("warning", title, msg),
   info: (title: string, msg?: string) => push("info", title, msg),
   message: (title: string, msg?: string) => push("neutral", title, msg),
+  /** A toast carrying a reversal, e.g. `toast.undo("Resumed", undoFn)`. */
+  undo: (title: string, onUndo: () => void, msg?: string) =>
+    push("neutral", title, msg, { label: "Undo", onClick: onUndo }),
   dismiss,
 };
 
@@ -98,6 +111,19 @@ export function Toaster({ position = "top-center" }: { position?: Position }) {
             <p className="wb-toast__title">{t.title}</p>
             {t.msg && <p className="wb-toast__msg">{t.msg}</p>}
           </div>
+          {t.action && (
+            <button
+              type="button"
+              className="wb-btn wb-btn--ghost wb-btn--sm"
+              style={{ flex: "none" }}
+              onClick={() => {
+                t.action?.onClick();
+                dismiss(t.id);
+              }}
+            >
+              {t.action.label}
+            </button>
+          )}
           <button
             className="wb-close"
             aria-label="Đóng"

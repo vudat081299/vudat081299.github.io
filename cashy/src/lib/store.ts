@@ -2,6 +2,7 @@ import { useSyncExternalStore } from "react";
 import type {
   CashyState,
   Category,
+  SubInterval,
   Subscription,
   Tag,
   ThemeMode,
@@ -10,8 +11,8 @@ import type {
   Workspace,
 } from "@/types";
 import { uid } from "@/lib/id";
-import { descendantIds, firstUnpaidMonth, rootOf } from "@/lib/domain";
-import { addMonthKey, billingDate, monthKey, monthLabelShort, todayYMD, ymd } from "@/lib/date";
+import { addCycle, cycleDate, descendantIds, firstUnpaidCycle, rootOf } from "@/lib/domain";
+import { billingDate, monthKey, monthLabelShort, todayYMD, ymd } from "@/lib/date";
 import { statusOf } from "@/lib/txStatus";
 import { SWATCHES } from "@/lib/palette";
 import { buildSampleData } from "@/lib/sample";
@@ -20,7 +21,8 @@ const KEY = "cashy_state_v1";
 // v2 re-colours legacy data onto the bright web-builder chart palette.
 // v3 gives subscriptions a real `startedAt` date + a `lastPaidAt` marker.
 // v4 gives subscriptions their payment history (`paymentTxIds`).
-const CURRENT_VERSION = 4;
+// v5 gives subscriptions a billing `interval` — everything before it was monthly.
+const CURRENT_VERSION = 5;
 
 function emptyState(): CashyState {
   return {
@@ -112,6 +114,14 @@ function load(): CashyState {
       next = {
         ...next,
         subscriptions: next.subscriptions.map((s) => ({ ...s, ...paymentsOf(s.id, next.transactions) })),
+      };
+    }
+    // Every subscription that existed before v5 billed monthly, by construction
+    // — the model had no other option — so the back-fill is unambiguous.
+    if ((p.version ?? 1) < 5) {
+      next = {
+        ...next,
+        subscriptions: next.subscriptions.map((s) => ({ ...s, interval: s.interval ?? "monthly" })),
       };
     }
     // A workspace must never open on an empty ledger: any account that got this
@@ -334,7 +344,9 @@ export function deleteTransaction(id: string) {
 export function addSubscription(input: {
   name: string;
   amount: number;
+  interval?: SubInterval;
   dayOfMonth: number;
+  monthOfYear?: number;
   categoryId: string | null;
   tagIds: string[];
   colorHex: string;
@@ -342,11 +354,14 @@ export function addSubscription(input: {
   note?: string;
   startedAt?: string;
 }): string {
+  const interval = input.interval ?? "monthly";
   const sub: Subscription = {
     id: uid(),
     name: input.name.trim(),
     amount: input.amount,
+    interval,
     dayOfMonth: input.dayOfMonth,
+    monthOfYear: interval === "yearly" ? (input.monthOfYear ?? 1) : undefined,
     categoryId: input.categoryId,
     tagIds: input.tagIds,
     colorHex: input.colorHex,
@@ -372,6 +387,10 @@ export function updateSubscription(id: string, patch: Partial<Subscription>) {
 
 export function setSubscriptionActive(id: string, active: boolean) {
   updateSubscription(id, { active });
+  // Resuming has to raise the cycles that came due while it was off, right now:
+  // otherwise the card reports "suspended, unpaid" while offering no charge to
+  // settle, and the way out only appears after a page reload.
+  if (active) syncSubscriptions();
 }
 
 /** Remove a subscription. Recorded charges are real spending and stay; the
@@ -404,9 +423,9 @@ export function syncSubscriptions() {
     // Start from the first month still owed, NOT from the subscription's start:
     // `lastPaidAt` says everything up to it is settled, so a service subscribed
     // a year ago doesn't materialise a year of dues the first time it syncs.
-    let m = firstUnpaidMonth(sub);
-    for (let guard = 0; m <= cur && guard < 600; guard++, m = addMonthKey(m, 1)) {
-      if (billingDate(m, sub.dayOfMonth) > today) continue; // not due yet
+    let m = firstUnpaidCycle(sub);
+    for (let guard = 0; m <= cur && guard < 600; guard++, m = addCycle(sub, m, 1)) {
+      if (cycleDate(sub, m) > today) continue; // not due yet
       if (have.has(`${sub.id}|${m}`)) continue; // already charged
       fresh.push({
         id: uid(),
@@ -417,7 +436,7 @@ export function syncSubscriptions() {
         note: sub.name,
         payee: `Đăng ký · ${monthLabelShort(m)}`,
         status: "pending",
-        occurredAt: billingDate(m, sub.dayOfMonth),
+        occurredAt: cycleDate(sub, m),
         createdAt: now.toISOString(),
         subscriptionId: sub.id,
         subMonth: m,
@@ -449,6 +468,28 @@ export function confirmSubscriptionCharge(txId: string) {
   const subId = subIdOfCharge(txId);
   updateTransaction(txId, { status: "recorded" });
   if (subId) syncPayments(subId);
+}
+
+/**
+ * Confirm several pending charges at once — the "I did pay, I just never told
+ * the app" case. A subscription's status is user-maintained, not read from a
+ * bank feed, so falling months behind is normal and clearing it must not cost
+ * one click per month. Committed as ONE state change so the whole catch-up is a
+ * single undo-able step rather than N separate ones.
+ */
+export function confirmSubscriptionCharges(txIds: string[]) {
+  if (!txIds.length) return;
+  const ids = new Set(txIds);
+  const subIds = new Set(
+    state.transactions.filter((t) => ids.has(t.id) && t.subscriptionId).map((t) => t.subscriptionId!),
+  );
+  commit({
+    ...state,
+    transactions: state.transactions.map((t) =>
+      ids.has(t.id) ? { ...t, status: "recorded" as const } : t,
+    ),
+  });
+  for (const id of subIds) syncPayments(id);
 }
 
 /** Skip a subscription charge this cycle (grey; the next cycle still reminds). */

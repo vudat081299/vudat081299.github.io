@@ -31,6 +31,7 @@ export function TransactionEditor() {
   const [categoryId, setCategoryId] = useState<string | null>(null);
   const [tagIds, setTagIds] = useState<string[]>([]);
   const [occurredAt, setOccurredAt] = useState(todayYMD());
+  const [occurredTime, setOccurredTime] = useState("");
   const [note, setNote] = useState("");
   const [payee, setPayee] = useState("");
   const [status, setStatus] = useState<TxStatus>("recorded");
@@ -47,6 +48,7 @@ export function TransactionEditor() {
       setCategoryId(tx?.categoryId ?? d?.categoryId ?? null);
       setTagIds(tx?.tagIds ?? d?.tagIds ?? []);
       setOccurredAt(tx?.occurredAt ?? d?.occurredAt ?? todayYMD());
+      setOccurredTime(tx?.occurredTime ?? d?.occurredTime ?? "");
       setNote(tx?.note ?? d?.note ?? "");
       setPayee(tx?.payee ?? d?.payee ?? "");
       setStatus(tx?.status ?? d?.status ?? "recorded");
@@ -67,7 +69,9 @@ export function TransactionEditor() {
    */
   function dismiss() {
     if (!editingId) {
-      const d: TxDraft = { type, amountStr, categoryId, tagIds, occurredAt, note, payee, status };
+      const d: TxDraft = {
+        type, amountStr, categoryId, tagIds, occurredAt, occurredTime, note, payee, status,
+      };
       saveDraft(d);
     }
     setOpen(false);
@@ -97,6 +101,9 @@ export function TransactionEditor() {
       payee: payee.trim() || undefined,
       status,
       occurredAt,
+      // Empty means "no particular time" — store nothing rather than "00:00",
+      // which would read as midnight and be a claim the user never made.
+      occurredTime: occurredTime || undefined,
     };
     if (editingId) updateTransaction(editingId, payload);
     else {
@@ -325,10 +332,38 @@ export function TransactionEditor() {
           </Popover>
         </div>
 
-        {/* Date */}
-        <div className="wb-field">
-          <label className="wb-label">Ngày</label>
-          <DatePicker value={occurredAt} onChange={setOccurredAt} />
+        {/* Date + optional time */}
+        <div className="wb-cluster wb-cluster--nowrap" style={{ gap: 12, alignItems: "flex-start" }}>
+          <div className="wb-field" style={{ flex: 1, minWidth: 0 }}>
+            <label className="wb-label">Ngày</label>
+            <DatePicker value={occurredAt} onChange={setOccurredAt} />
+          </div>
+          <div className="wb-field" style={{ flex: "none", width: 132 }}>
+            <label className="wb-label" htmlFor="tx-time">
+              Giờ <span className="wb-label__opt">(không bắt buộc)</span>
+            </label>
+            <div className="wb-cluster wb-cluster--nowrap" style={{ gap: 4 }}>
+              <input
+                id="tx-time"
+                className="wb-input"
+                type="time"
+                value={occurredTime}
+                onChange={(e) => setOccurredTime(e.target.value)}
+                style={{ minWidth: 0 }}
+              />
+              {/* A time input has no "unset" of its own once filled. */}
+              {occurredTime && (
+                <button
+                  type="button"
+                  className="wb-btn wb-btn--ghost wb-btn--sm wb-btn--icon"
+                  aria-label="Bỏ giờ"
+                  onClick={() => setOccurredTime("")}
+                >
+                  <span className="wb-ico wb-ico--xs">close</span>
+                </button>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Note */}
