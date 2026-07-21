@@ -22,9 +22,12 @@ export function Transactions() {
         actions={
           <span className="wb-cap wb-cap--sm" style={{ gap: 5 }}>
             Ròng
+            {/* A net loss for the period IS a real problem, so this is one of
+                the few places red is earned (§1). */}
             <AmountDisplay
               amount={Math.abs(net)}
               type={net >= 0 ? "income" : "expense"}
+              negative={net < 0}
               signed
             />
           </span>

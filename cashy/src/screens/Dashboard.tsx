@@ -87,21 +87,18 @@ export function Dashboard() {
         <BalanceCard
           label="Thu nhập"
           amount={t.income}
-          tone="income"
           icon="trending_up"
           delta={pctChange(t.income, tp.income)}
         />
         <BalanceCard
           label="Chi tiêu"
           amount={t.expense}
-          tone="expense"
           icon="trending_down"
           delta={pctChange(t.expense, tp.expense)}
         />
         <BalanceCard
           label="Chênh lệch"
           amount={t.net}
-          tone={t.net >= 0 ? "income" : "expense"}
           icon="swap_vert"
           delta={pctChange(t.net, tp.net)}
         />

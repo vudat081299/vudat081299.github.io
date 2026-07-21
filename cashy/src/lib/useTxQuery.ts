@@ -12,9 +12,9 @@ export interface TxQuery {
   setSearch: (s: string) => void;
   activeTags: string[];
   toggleTag: (id: string) => void;
-  /** true when a removable token is active (search or a tag) */
+  /** true when any removable filter is applied (search, type or a tag) */
   hasTokens: boolean;
-  /** clears the removable tokens (search + tags); leaves the type pills alone */
+  /** clears every removable filter; leaves the period scope alone */
   clearTokens: () => void;
   filtered: Transaction[];
   sorted: Transaction[];
@@ -29,7 +29,10 @@ export interface TxQuery {
 export function useTxQuery(
   transactions: Transaction[],
   categories: Category[],
-  defaultPeriod: PeriodKey = "this-month",
+  // 30 days, not "this month": the seeded dataset spans the last 10 days, which
+  // straddles a month boundary for most of the month — a "this month" default
+  // would hide part of it on those days.
+  defaultPeriod: PeriodKey = "30d",
 ): TxQuery {
   const [period, setPeriod] = useState<PeriodKey>(defaultPeriod);
   const [type, setType] = useState<TxType | "all">("all");
@@ -70,10 +73,11 @@ export function useTxQuery(
     setSearch,
     activeTags,
     toggleTag,
-    hasTokens: search.trim() !== "" || activeTags.length > 0,
+    hasTokens: search.trim() !== "" || activeTags.length > 0 || type !== "all",
     clearTokens: () => {
       setSearch("");
       setActiveTags([]);
+      setType("all");
     },
     filtered,
     sorted,

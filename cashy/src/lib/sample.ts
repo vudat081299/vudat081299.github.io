@@ -1,9 +1,10 @@
-// Demo seed — gives a fresh workspace a lively, realistic ~3 months of data so
-// the dashboard/charts aren't empty on first run AND period-over-period deltas +
-// the wallet-balance trend have something to show. ~7 tx/day over the last 92
-// days ending "now", an opening balance so the wallet starts positive, plus a
-// curated set of tags, all wired to the seeded categories. Amounts are integer
-// VND. Referenced by store.createWorkspace and store.loadSampleData.
+// Demo seed — every workspace opens on a full dataset, never an empty shell:
+// EXACTLY 200 transactions spread evenly over the last 10 days (20 per day,
+// ending "now"), each one tagged, all wired to the seeded categories. The oldest
+// day also carries the opening balance, the salary and the fixed monthly bills,
+// so the wallet reads positive and income/expense both have something to show.
+// Amounts are integer VND. Referenced by store.createWorkspace, store.load
+// (re-seeds an empty workspace) and store.loadSampleData.
 import type { Category, Tag, Transaction, TxStatus, TxType } from "@/types";
 import { uid } from "@/lib/id";
 import { ymd } from "@/lib/date";
@@ -53,8 +54,9 @@ const TAG_DEFS: [string, string][] = [
   ["Du lịch", "#8b5cf6"], ["Cá nhân", "#f59e0b"],
 ];
 
-const DAYS = 92;
-const PER_DAY = 7;
+// 10 days × 20 rows = the 200 transactions the demo dataset promises.
+const DAYS = 10;
+const PER_DAY = 20;
 const OPENING_BALANCE = 60_000_000; // wallet starts here, so it reads positive
 
 const rnd = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -116,43 +118,17 @@ export function buildSampleData(
 
   const transactions: Transaction[] = [];
 
-  // Opening balance on the oldest day, timestamped earliest so it sorts first —
-  // the wallet-balance line then starts from a real, positive figure.
-  {
-    const [y, m, dd] = dates[0].split("-").map(Number);
-    transactions.push({
-      id: uid(),
-      amount: OPENING_BALANCE,
-      type: "income",
-      categoryId: catIdByName.get("Khác") ?? null,
-      tagIds: [tg("Chuyển khoản")],
-      note: "Số dư đầu kỳ",
-      payee: "Vietcombank",
-      occurredAt: dates[0],
-      createdAt: new Date(y, m - 1, dd, 0, 0).toISOString(),
-    });
-  }
-
-  const monthSeen = new Set<string>();
-
-  for (const dateStr of dates) {
-    const monthKey = dateStr.slice(0, 7);
-    const payday = !monthSeen.has(monthKey);
-    monthSeen.add(monthKey);
-
-    const income: Pool[] = [];
-    if (payday) income.push(SALARY);
-    if (chance(0.1)) income.push(pick(INCOME_EXTRA));
-
-    const expenses: Pool[] = [];
-    // Fixed bills land once, on payday; the rest of the month is daily spending.
-    if (payday) expenses.push(...FIXED);
-    for (let i = 0; i < PER_DAY; i++) expenses.push(pick(EXPENSES));
+  // Every day carries EXACTLY `PER_DAY` rows, so the dataset always totals 200.
+  // The oldest day spends its first slots on the opening balance, the salary and
+  // the fixed monthly bills; every other day is daily spending plus the odd
+  // windfall. Whatever slots are left over that day get filled with spending.
+  dates.forEach((dateStr, dayIndex) => {
+    const opening = dayIndex === 0;
+    const [y, m, dd] = dateStr.split("-").map(Number);
 
     let seq = 0;
     const make = (pool: Pool, type: TxType) => {
       const amount = moneyK(pool.min, pool.max);
-      const [y, m, dd] = dateStr.split("-").map(Number);
       const createdAt = new Date(y, m - 1, dd, 7 + (seq % 14), rnd(0, 59)).toISOString();
       seq++;
       // Most rows are recorded; sprinkle a few other statuses to show the column.
@@ -173,9 +149,34 @@ export function buildSampleData(
       });
     };
 
+    let slots = PER_DAY;
+
+    // Opening balance, timestamped earliest so it sorts first — the wallet
+    // balance line then starts from a real, positive figure.
+    if (opening) {
+      transactions.push({
+        id: uid(),
+        amount: OPENING_BALANCE,
+        type: "income",
+        categoryId: catIdByName.get("Khác") ?? null,
+        tagIds: [tg("Chuyển khoản")],
+        note: "Số dư đầu kỳ",
+        payee: "Vietcombank",
+        occurredAt: dateStr,
+        createdAt: new Date(y, m - 1, dd, 0, 0).toISOString(),
+      });
+      slots--;
+    }
+
+    const income: Pool[] = opening ? [SALARY] : chance(0.15) ? [pick(INCOME_EXTRA)] : [];
+    const fixed: Pool[] = opening ? FIXED : [];
+
     for (const p of income) make(p, "income");
-    for (const p of expenses) make(p, "expense");
-  }
+    for (const p of fixed) make(p, "expense");
+    slots -= income.length + fixed.length;
+
+    for (let i = 0; i < slots; i++) make(pick(EXPENSES), "expense");
+  });
 
   // Newest first, matching addTransaction's prepend order.
   transactions.sort((a, b) =>

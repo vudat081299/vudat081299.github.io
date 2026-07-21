@@ -1,30 +1,23 @@
 import { cn } from "@/lib/utils";
 import { formatMoney } from "@/lib/money";
 
-type Tone = "neutral" | "income" | "expense";
-
-// Income/expense amounts carry status meaning, so they earn a status hue; the
-// neutral KPI stays ink. Delta always follows its own up/down colour.
-const toneColor: Record<Tone, string | undefined> = {
-  neutral: undefined,
-  income: "var(--wb-success-text)",
-  expense: "var(--wb-danger-text)",
-};
-
 /** One KPI tile on the dashboard — the web-builder `.wb-stat`: a neutral icon
  *  tile and a footer delta vs the previous period (no in-card sparkline; the
- *  "↑ 12,4% so với kỳ trước" line carries the trend, per the docs). */
+ *  "↑ 12,4% so với kỳ trước" line carries the trend, per the docs).
+ *
+ *  The value itself is always **ink**, exactly as every specimen on the docs'
+ *  stats page prints it. A period's income or spend is a magnitude, not a
+ *  status, so it does not spend colour (§1) — the only tinted thing on the tile
+ *  is the delta chip, where up/down genuinely is the signal. */
 export function BalanceCard({
   label,
   amount,
-  tone = "neutral",
   icon,
   delta,
   note = "so với kỳ trước",
 }: {
   label: string;
   amount: number;
-  tone?: Tone;
   icon?: string;
   /** fractional change vs previous period, e.g. 0.12 = +12% */
   delta?: number | null;
@@ -33,7 +26,6 @@ export function BalanceCard({
 }) {
   const hasDelta = delta !== undefined && delta !== null && isFinite(delta);
   const up = (delta ?? 0) >= 0;
-  const color = toneColor[tone];
   return (
     <div className="wb-stat">
       <div className="wb-stat__top">
@@ -44,9 +36,7 @@ export function BalanceCard({
           </span>
         )}
       </div>
-      <div className="wb-stat__value" style={color ? { color } : undefined}>
-        {formatMoney(amount)}
-      </div>
+      <div className="wb-stat__value">{formatMoney(amount)}</div>
       {hasDelta && (
         <div className="wb-stat__foot">
           <span

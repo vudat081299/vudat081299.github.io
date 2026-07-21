@@ -2,9 +2,14 @@ import type { Transaction, TxStatus } from "@/types";
 
 /**
  * Status vocabulary for the table's Trạng thái column — label + web-builder cap
- * classes + whether the row counts toward the money totals. Tones follow the
- * docs' hero table: recorded=success, pending=warning, awaiting=info,
- * skipped=neutral, failed=solid danger. `counted` gates the aggregates.
+ * classes + whether the row counts toward the money totals. `counted` gates the
+ * aggregates.
+ *
+ * Tones follow the colour ladder (§1). "Ghi nhận" is the **default** state of
+ * nearly every row, so it stays tier-1 neutral: a green cap repeated 195 times
+ * down a column is colour carrying no information, and it drowns out the few
+ * rows that DO need attention. Colour is spent only on the exceptions —
+ * pending/awaiting need action, failed is a real problem.
  */
 export interface StatusMeta {
   label: string;
@@ -16,7 +21,7 @@ export interface StatusMeta {
 }
 
 export const TX_STATUS_META: Record<TxStatus, StatusMeta> = {
-  recorded: { label: "Ghi nhận", cap: "wb-cap--success", dot: true, counted: true },
+  recorded: { label: "Ghi nhận", cap: "", dot: false, counted: true },
   pending: { label: "Chờ xác nhận", cap: "wb-cap--warning", dot: true, counted: false },
   awaiting: { label: "Chờ đối tác", cap: "wb-cap--info", dot: true, counted: false },
   skipped: { label: "Bỏ qua", cap: "", dot: true, counted: false },

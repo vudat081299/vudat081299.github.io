@@ -3,10 +3,9 @@ import { createWorkspace } from "@/lib/store";
 
 export function Onboarding() {
   const [name, setName] = useState("");
-  const [sample, setSample] = useState(true);
 
   function submit() {
-    createWorkspace({ displayName: name.trim() || "Của tôi", sample });
+    createWorkspace({ displayName: name.trim() || "Của tôi" });
   }
 
   return (
@@ -52,17 +51,10 @@ export function Onboarding() {
               </li>
               <li className="wb-list__item">
                 <span className="wb-list__title" style={{ flex: 1 }}>
-                  Nạp dữ liệu mẫu
-                  <span className="wb-list__sub">~3 tháng dữ liệu mẫu để xem thử giao diện</span>
+                  Dữ liệu mẫu
+                  <span className="wb-list__sub">200 giao dịch trong 10 ngày gần đây</span>
                 </span>
-                <label className="wb-switch">
-                  <input
-                    type="checkbox"
-                    checked={sample}
-                    onChange={(e) => setSample(e.target.checked)}
-                  />
-                  <span className="wb-switch__track" />
-                </label>
+                <span className="wb-list__end wb-cell-muted">Tự động nạp</span>
               </li>
             </ul>
 

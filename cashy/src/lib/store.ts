@@ -69,11 +69,19 @@ function load(): CashyState {
     if ((p.version ?? 1) < 2) {
       const { categories, tags } = recolor(next.categories, next.tags);
       next = { ...next, categories, tags };
-      try {
-        localStorage.setItem(KEY, JSON.stringify(next));
-      } catch {
-        /* ignore quota errors */
-      }
+    }
+    // A workspace must never open on an empty ledger: any account that got this
+    // far with no transactions is re-seeded with the 200-row demo dataset. Only
+    // an EMPTY ledger is filled, so nothing a user actually entered is touched.
+    if (next.workspace && next.transactions.length === 0) {
+      const categories = next.categories.length ? next.categories : seedCategories();
+      const { tags, transactions } = buildSampleData(categories);
+      next = { ...next, categories, tags, transactions };
+    }
+    try {
+      localStorage.setItem(KEY, JSON.stringify(next));
+    } catch {
+      /* ignore quota errors */
     }
     return next;
   } catch {
@@ -116,26 +124,22 @@ export function setTheme(theme: ThemeMode) {
 }
 
 // ---- workspace -------------------------------------------------------------
-export function createWorkspace(input: {
-  displayName: string;
-  currency?: string;
-  /** Seed ~200 demo transactions + tags so the dashboard is lively (default). */
-  sample?: boolean;
-}) {
+/**
+ * Create a workspace. It is ALWAYS seeded with the 200-transaction demo dataset
+ * — every account, from every entry point, opens on a populated ledger.
+ */
+export function createWorkspace(input: { displayName: string; currency?: string }) {
   const workspace: Workspace = {
     displayName: input.displayName.trim() || "Của tôi",
     currency: input.currency ?? "VND",
     createdAt: new Date().toISOString(),
   };
   const categories = seedCategories();
-  const { tags, transactions } =
-    input.sample === false
-      ? { tags: [], transactions: [] }
-      : buildSampleData(categories);
+  const { tags, transactions } = buildSampleData(categories);
   commit({ ...state, workspace, categories, tags, transactions, subscriptions: [] });
 }
 
-/** Replace categories/tags/transactions with a fresh demo dataset (~200 txns). */
+/** Replace categories/tags/transactions with a fresh demo dataset (200 txns). */
 export function loadSampleData() {
   const categories = seedCategories();
   const { tags, transactions } = buildSampleData(categories);
