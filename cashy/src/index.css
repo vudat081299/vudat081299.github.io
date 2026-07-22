@@ -789,6 +789,61 @@ body {
   background: color-mix(in srgb, var(--cashy-sub-c, var(--wb-neutral)) 14%, transparent);
   border: var(--wb-bw) solid color-mix(in srgb, var(--cashy-sub-c, var(--wb-border)) 30%, transparent);
 }
+/* Status picker — capsules you click instead of a dropdown (see StatusPicker).
+   The radio itself is hidden but still focusable, so arrow keys and screen
+   readers work; the capsule beside it is the whole visual. */
+.cashy-statuspick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.cashy-statuspick__opt {
+  cursor: pointer;
+}
+.cashy-statuspick__opt input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+.cashy-statuspick__opt .wb-cap {
+  transition: background .12s ease, color .12s ease, box-shadow .12s ease;
+}
+/* Unchosen: neutral and quiet, so the form never shows five tones at once.
+   Scoped to :not(:checked) ON PURPOSE — a plain `.cashy-statuspick__opt
+   .wb-cap` would be 0-2-0 and would beat the tone classes (.wb-cap--success
+   et al, 0-1-0), stripping the colour from the very capsule that should have
+   it. Restricting it to the unchosen state leaves the chosen one to the kit. */
+.cashy-statuspick__opt input:not(:checked) + .wb-cap {
+  color: var(--wb-fg-muted);
+  background: transparent;
+  border: var(--wb-bw) solid var(--wb-border);
+}
+.cashy-statuspick__opt:hover input:not(:checked) + .wb-cap {
+  border-color: var(--wb-border-strong);
+  color: var(--wb-fg);
+}
+/* Chosen reads as FILLED, unchosen as an outline — one signal that works for
+   every option. The toned statuses get their fill from the kit's own tone class;
+   `Skipped` has no tone by design, so it is given a neutral fill here rather
+   than a ring. (A ring was tried first via color-mix on currentColor: it
+   resolved fully transparent, leaving chosen-Skipped identical to an unchosen
+   capsule.)
+
+   Note the doubled selector: index.css loads BEFORE web-builder.css, so a bare
+   .cashy-cap--chosen-plain (0-1-0) would tie with .wb-cap (0-1-0) and lose on
+   order. .wb-cap.cashy-cap--chosen-plain is 0-2-0 and wins outright. */
+.wb-cap.cashy-cap--chosen-plain {
+  color: var(--wb-fg);
+  background: var(--wb-surface-2);
+  border: var(--wb-bw) solid var(--wb-border-strong);
+}
+.cashy-statuspick__opt input:focus-visible + .wb-cap {
+  outline: 2px solid var(--wb-focus, var(--wb-fg));
+  outline-offset: 2px;
+}
+
 /* Question shown in a card foot while a two-step confirm is open.
    It MUST NOT wrap: the subscription cards sit in a grid, so one card growing a
    line drags the whole row taller. The question shrinks to an ellipsis and the

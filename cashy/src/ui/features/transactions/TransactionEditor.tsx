@@ -5,12 +5,13 @@ import { flattenTree, rankTags } from "@/domain";
 import { clearDraft, getDraft, saveDraft, type TxDraft } from "@/data/draft";
 import { formatMoney, parseMoney } from "@/domain/money";
 import { todayYMD } from "@/domain/date";
-import { TX_STATUS_META, TX_STATUS_ORDER } from "@/domain/txStatus";
+import { TX_STATUS_META } from "@/domain/txStatus";
 import type { TxStatus, TxType } from "@/domain/types";
 import { Modal } from "@/ui/kit/Modal";
 import { Popover } from "@/ui/kit/Popover";
 import { DatePicker } from "@/ui/common/DatePicker";
 import { Select } from "@/ui/common/Select";
+import { StatusPicker } from "@/ui/common/StatusPicker";
 import { TagChip } from "@/ui/common/TagChip";
 import { registerTxEditor } from "@/lib/modals";
 import { confirm } from "@/lib/confirm";
@@ -228,37 +229,35 @@ export function TransactionEditor() {
           </Select>
         </div>
 
-        {/* Counterparty + status */}
-        <div className="wb-cluster wb-cluster--nowrap wb-cluster--stretch" style={{ gap: 12 }}>
-          <div className="wb-field" style={{ flex: 1, minWidth: 0 }}>
-            <label className="wb-label" htmlFor="tx-payee">
-              Bên giao dịch <span className="wb-label__opt">(người / công ty)</span>
-            </label>
-            <input
-              id="tx-payee"
-              className="wb-input"
-              value={payee}
-              autoComplete="off"
-              onChange={(e) => setPayee(e.target.value)}
-              placeholder="VD: Highlands, Công ty ABC"
-            />
-          </div>
-          <div className="wb-field" style={{ flex: 1, minWidth: 0 }}>
-            <label className="wb-label" htmlFor="tx-status">
-              Trạng thái
-            </label>
-            <Select
-              id="tx-status"
-              value={status}
-              onChange={(e) => setStatus(e.target.value as TxStatus)}
-            >
-              {TX_STATUS_ORDER.map((s) => (
-                <option key={s} value={s}>
-                  {TX_STATUS_META[s].label}
-                </option>
-              ))}
-            </Select>
-          </div>
+        {/* Counterparty — full width now that the status picker below needs the
+            room for five capsules. */}
+        <div className="wb-field">
+          <label className="wb-label" htmlFor="tx-payee">
+            Bên giao dịch <span className="wb-label__opt">(người / công ty)</span>
+          </label>
+          <input
+            id="tx-payee"
+            className="wb-input"
+            value={payee}
+            autoComplete="off"
+            onChange={(e) => setPayee(e.target.value)}
+            placeholder="VD: Highlands, Công ty ABC"
+          />
+        </div>
+
+        {/* Status — capsules, not a dropdown: five options, and this vocabulary
+            is already a capsule everywhere else it is shown. */}
+        <div className="wb-field">
+          <label className="wb-label">Trạng thái</label>
+          <StatusPicker value={status} onChange={setStatus} />
+          {/* Whether a row counts toward the totals is a real rule the user
+              cannot guess from the label alone — say it, and only when the
+              choice actually withholds the money. */}
+          <span className="wb-label__opt">
+            {TX_STATUS_META[status].counted
+              ? "Được tính vào tổng thu chi."
+              : "Chưa tính vào tổng thu chi."}
+          </span>
         </div>
 
         {/* Tags — a dashed "＋" capsule LEADS (fixed first slot, so the way to add
