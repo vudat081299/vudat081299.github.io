@@ -4,13 +4,49 @@ Sổ chi tiêu cá nhân. Vite + React + TypeScript, không Tailwind — hệ th
 `src/styles/web-builder.css` (`wb-*`), lớp app là `src/index.css` (`cashy-*`).
 
 Dữ liệu nằm hoàn toàn trong `localStorage` (`cashy_state_v1`), có chuỗi migration
-theo `version`. Không server, không tài khoản.
+theo `version`. Không server, không tài khoản, dữ liệu không rời khỏi trình duyệt.
+
+## Bắt đầu
 
 ```bash
 pnpm install
-pnpm dev      # http://localhost:5173
-pnpm build
+pnpm dev            # http://localhost:5173
 ```
+
+| Lệnh | Làm gì |
+|---|---|
+| `pnpm dev` | dev server |
+| `pnpm build` | typecheck → **check layers** → build vào `dist/` (deploy tại `/cashy/`) |
+| `pnpm build:wb` | build riêng gallery component vào `dist-wb/` (deploy tại `/cashy-wb/`) |
+| `pnpm test` | vitest, chạy một lần |
+| `pnpm test:watch` | vitest watch |
+| `pnpm check:layers` | kiểm tra quy tắc phụ thuộc một chiều |
+| `pnpm lint` | oxlint |
+
+Gallery component còn xem được ngay trong dev tại `#/wb` (chỉ bật ở DEV, được
+code-split nên không lọt vào bundle production).
+
+## Kiến trúc — 30 giây
+
+Ba lớp, một quy tắc: **phụ thuộc chạy một chiều**.
+
+```
+ui  ──▶  usecases  ──▶  domain
+                   └─▶  data
+```
+
+- `domain/` — luật nghiệp vụ, **thuần 100%**: không React, không IO. Test được mà
+  không cần dựng app.
+- `usecases/` — đọc state → hỏi domain → commit. Đây là lớp **duy nhất** UI được
+  ghi qua.
+- `data/` — store, localStorage, migrations.
+- `ui/kit/` — design system, không biết Cashy là gì. `ui/features/` — màn hình.
+
+UI **đọc** bằng `useCashy()`, **ghi** bằng usecase — không bao giờ `commit()` trực
+tiếp. `scripts/check-layers.mjs` chặn vi phạm trong `pnpm build`.
+
+Chi tiết đầy đủ (cây thư mục, ranh giới component, một cú click đi qua đâu, thêm
+feature thì sửa ở đâu): **[docs/architecture.md](docs/architecture.md)**.
 
 ## Vài quy ước dễ vấp
 
@@ -23,12 +59,25 @@ cũng 0-3-0 và nạp sau.
 
 **Subscription không tự tiêu tiền.** Mỗi kỳ đến hạn nó sinh một transaction
 `pending`; chỉ khi user xác nhận nó mới thành `recorded` và mới được tính vào tổng.
-`paymentTxIds` / `lastPaidAt` chỉ là cache đọc lại từ sổ (`paymentsOf`), không bao
-giờ là nguồn sự thật.
+`paymentTxIds` / `lastPaidAt` chỉ là cache đọc lại từ sổ (`domain/subscription.ts`
+→ `paymentsOf`), không bao giờ là nguồn sự thật.
 
 **Cycle key luôn là `"YYYY-MM"`** cho cả gói tháng lẫn gói năm — gói năm đơn giản là
 mỗi năm chỉ có một key. Nhờ vậy `subMonth`, khoá chống trùng và toàn bộ sổ cũ chạy
 được với gói năm mà không cần nhánh code thứ hai.
+
+**Đổi hình dạng dữ liệu đã lưu** thì tăng `CURRENT_VERSION` và thêm một nhánh trong
+`data/migrations.ts`. Migration cũ không bao giờ được sửa — dữ liệu ngoài kia đã đi
+qua nó rồi.
+
+## Tài liệu
+
+| File | Nội dung |
+|---|---|
+| [docs/architecture.md](docs/architecture.md) | ba lớp, quy tắc phụ thuộc, đặt code ở đâu |
+| [docs/cashy-vision.md](docs/cashy-vision.md) | sản phẩm hướng tới cái gì |
+| [docs/cashy-v1-spec.md](docs/cashy-v1-spec.md) | spec v1 |
+| [REBUILD-NOTES.md](REBUILD-NOTES.md) | ghi chú lần dựng lại |
 
 ---
 
@@ -66,11 +115,16 @@ trả đúng hạn cả 2 kỳ".
 Nếu thực tế trả gộp cả 2 vào hôm nay thì con số theo tháng nằm sai chỗ. Có nên hỏi
 "trả vào ngày nào?" khi catch-up, hay cứ giữ ngày đến hạn?
 
-### 4. Bỏ qua một kỳ (skip)
+### 4. Bỏ qua một kỳ (skip) — chỉ có ở một chỗ
 
-Store đã có `skipSubscriptionCharge` nhưng **không nút nào gọi tới nó**. Trường hợp
-thật: tháng đó không dùng dịch vụ, không trả, cũng không muốn nó nằm mãi ở trạng
-thái nợ. Thêm nút *Skip* cạnh *Mark paid* không?
+*(Ghi chú cũ nói "không nút nào gọi tới nó" — sai. Đã kiểm lại.)*
+
+`skipSubscriptionCharge` **có** nút gọi: nút *Bỏ qua* trong danh sách "Cần xác
+nhận" ở màn Subscriptions. Nhưng **`SubscriptionCard` thì không có** — trên card
+chỉ có *Mark paid* và *Cancel subscription*.
+
+Nên bổ sung *Skip* lên card cho đối xứng, hay cố ý giữ skip ở một chỗ duy nhất để
+card gọn?
 
 ### 5. Bốn màn còn tiếng Việt
 
