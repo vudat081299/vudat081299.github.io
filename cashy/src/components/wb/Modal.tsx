@@ -63,23 +63,39 @@ export function Modal({
         if (e.target === e.currentTarget) onClose();
       }}
     >
+      {/* A flex column with a capped height: the head and foot are fixed panes
+          (flex-shrink:0) and ONLY the body scrolls. Previously the whole modal
+          was one overflow:auto box, so scrolling a tall form slid the footer
+          buttons and title off the panel and revealed the backdrop behind them. */}
       <div
         ref={panelRef}
         className="wb-modal"
         role="dialog"
         aria-modal="true"
-        style={{ maxWidth, maxHeight: "92vh", overflowY: "auto" }}
+        style={{ maxWidth, maxHeight: "92vh", display: "flex", flexDirection: "column" }}
       >
         {title !== undefined && (
-          <div className="wb-modal__head">
+          <div className="wb-modal__head" style={{ flexShrink: 0 }}>
             <div>
               <h2 className="wb-modal__title">{title}</h2>
             </div>
             <button className="wb-close" aria-label="Đóng" onClick={onClose} />
           </div>
         )}
-        <div className="wb-modal__body">{children}</div>
-        {footer && <div className="wb-modal__foot">{footer}</div>}
+        <div
+          className="wb-modal__body"
+          style={{ overflowY: "auto", flex: "1 1 auto", minHeight: 0 }}
+        >
+          {children}
+        </div>
+        {footer && (
+          <div
+            className="wb-modal__foot"
+            style={{ flexShrink: 0, borderTop: "var(--wb-bw) solid var(--wb-border)" }}
+          >
+            {footer}
+          </div>
+        )}
       </div>
     </div>
   );

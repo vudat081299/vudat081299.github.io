@@ -11,13 +11,86 @@ import { formatMoney, parseMoney } from "@/lib/money";
 import { todayYMD } from "@/lib/date";
 import { TX_STATUS_META, TX_STATUS_ORDER } from "@/lib/txStatus";
 import type { TxStatus, TxType } from "@/types";
+import { cn } from "@/lib/utils";
 import { Modal } from "@/components/wb/Modal";
 import { Popover } from "@/components/wb/Popover";
+import { Field, Input } from "@/components/wb/Input";
+import { Textarea } from "@/components/wb/Textarea";
 import { DatePicker } from "@/components/DatePicker";
 import { Select } from "@/components/Select";
 import { TagChip } from "@/components/TagChip";
 import { registerTxEditor } from "@/lib/modals";
 import { confirm } from "@/lib/confirm";
+
+/**
+ * Status as a colour capsule that opens the full ladder — recorded (green),
+ * awaiting-you (amber), in-flight (blue), skipped (grey), failed (red) — so the
+ * choice is read by COLOUR, not by parsing a dropdown's words. Each option is the
+ * exact capsule it will become, so picking is recognition, not recall.
+ */
+function StatusPicker({ value, onChange }: { value: TxStatus; onChange: (s: TxStatus) => void }) {
+  const meta = TX_STATUS_META[value];
+  return (
+    <Popover
+      inline
+      panelWidth={220}
+      trigger={({ toggle, open }) => (
+        <button
+          type="button"
+          className={cn("cashy-statuspick", open && "is-open")}
+          onClick={toggle}
+          aria-haspopup="listbox"
+          aria-expanded={open}
+        >
+          <span className={cn("wb-cap", meta.cap)}>
+            {meta.dot && <span className="wb-cap__dot" />}
+            {meta.label}
+          </span>
+          <span className="wb-ico wb-ico--xs" style={{ marginLeft: "auto", color: "var(--wb-fg-muted)" }}>
+            expand_more
+          </span>
+        </button>
+      )}
+    >
+      {({ close }) => (
+        <div
+          className="wb-menu"
+          role="listbox"
+          style={{ border: 0, boxShadow: "none", padding: 4, background: "none" }}
+        >
+          {TX_STATUS_ORDER.map((s) => {
+            const m = TX_STATUS_META[s];
+            const on = s === value;
+            return (
+              <button
+                key={s}
+                type="button"
+                role="option"
+                aria-selected={on}
+                className="wb-menu__item cashy-statuspick__opt"
+                style={{ gap: 8 }}
+                onClick={() => {
+                  onChange(s);
+                  close();
+                }}
+              >
+                <span className={cn("wb-cap", m.cap)}>
+                  {m.dot && <span className="wb-cap__dot" />}
+                  {m.label}
+                </span>
+                {on && (
+                  <span className="wb-ico wb-ico--xs" style={{ marginLeft: "auto" }}>
+                    check
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </Popover>
+  );
+}
 
 export function TransactionEditor() {
   const { categories, tags, transactions } = useCashy();
@@ -190,34 +263,24 @@ export function TransactionEditor() {
           })}
         </div>
 
-        {/* Amount */}
-        <div className="wb-field">
-          <label className="wb-label" htmlFor="tx-amount">
-            Số tiền
-          </label>
-          <input
+        {/* Amount — the field the eye should land on first: large, monospaced
+            digits with a ₫ unit addon, and the grouped value spelled out beneath. */}
+        <Field label="Số tiền" htmlFor="tx-amount" help={amount > 0 ? formatMoney(amount) : undefined}>
+          <Input
             id="tx-amount"
-            className="wb-input"
             inputMode="numeric"
             autoComplete="off"
             value={amountStr}
             onChange={(e) => setAmountStr(e.target.value)}
             placeholder="0"
-            style={{ fontSize: 18 }}
+            size="lg"
+            trailingAddon="₫"
+            style={{ fontSize: 20, fontWeight: 700, fontVariantNumeric: "tabular-nums" }}
           />
-          <span
-            className="wb-num"
-            style={{ fontSize: 12, color: "var(--wb-fg-muted)", textAlign: "left" }}
-          >
-            {formatMoney(amount)}
-          </span>
-        </div>
+        </Field>
 
         {/* Category */}
-        <div className="wb-field">
-          <label className="wb-label" htmlFor="tx-cat">
-            Danh mục
-          </label>
+        <Field label="Danh mục" htmlFor="tx-cat">
           <Select
             id="tx-cat"
             value={categoryId ?? "none"}
@@ -230,39 +293,27 @@ export function TransactionEditor() {
                 </option>
               ))}
           </Select>
-        </div>
+        </Field>
 
         {/* Counterparty + status */}
         <div className="wb-cluster wb-cluster--nowrap wb-cluster--stretch" style={{ gap: 12 }}>
-          <div className="wb-field" style={{ flex: 1, minWidth: 0 }}>
-            <label className="wb-label" htmlFor="tx-payee">
-              Bên giao dịch <span className="wb-label__opt">(người / công ty)</span>
-            </label>
-            <input
+          <Field
+            label="Bên giao dịch"
+            labelOptional="(người / công ty)"
+            htmlFor="tx-payee"
+            style={{ flex: 1, minWidth: 0 }}
+          >
+            <Input
               id="tx-payee"
-              className="wb-input"
               value={payee}
               autoComplete="off"
               onChange={(e) => setPayee(e.target.value)}
               placeholder="VD: Highlands, Công ty ABC"
             />
-          </div>
-          <div className="wb-field" style={{ flex: 1, minWidth: 0 }}>
-            <label className="wb-label" htmlFor="tx-status">
-              Trạng thái
-            </label>
-            <Select
-              id="tx-status"
-              value={status}
-              onChange={(e) => setStatus(e.target.value as TxStatus)}
-            >
-              {TX_STATUS_ORDER.map((s) => (
-                <option key={s} value={s}>
-                  {TX_STATUS_META[s].label}
-                </option>
-              ))}
-            </Select>
-          </div>
+          </Field>
+          <Field label="Trạng thái" style={{ flex: 1, minWidth: 0 }}>
+            <StatusPicker value={status} onChange={setStatus} />
+          </Field>
         </div>
 
         {/* Tags — a dashed "＋" capsule LEADS (fixed first slot, so the way to add
@@ -372,20 +423,17 @@ export function TransactionEditor() {
           </div>
         </div>
 
-        {/* Note */}
-        <div className="wb-field">
-          <label className="wb-label" htmlFor="tx-note">
-            Ghi chú
-          </label>
-          <textarea
+        {/* Note — the migrated wb Textarea (themed resize handle, auto-grows). */}
+        <Field label="Ghi chú" htmlFor="tx-note">
+          <Textarea
             id="tx-note"
-            className="wb-textarea"
             value={note}
             onChange={(e) => setNote(e.target.value)}
             placeholder="Không bắt buộc"
+            autoSize
             rows={2}
           />
-        </div>
+        </Field>
       </div>
     </Modal>
   );

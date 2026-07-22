@@ -183,12 +183,38 @@ body {
 .cashy-rank {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 6px;
+  /* Lists EVERY category in the period; cap the height and let it scroll rather
+     than pushing the card taller than the donut beside it. */
+  max-height: 300px;
+  overflow-y: auto;
 }
+/* A rank row is a toggle: click to select its slice on the donut (and back). */
 .cashy-rank__row {
   display: flex;
   flex-direction: column;
   gap: 7px;
+  width: 100%;
+  padding: 8px;
+  margin: -8px 0;
+  border: 0;
+  border-radius: var(--wb-radius-sm);
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background .12s ease;
+}
+.cashy-rank__row:hover {
+  background: var(--wb-surface-2);
+}
+.cashy-rank__row--active {
+  background: var(--wb-surface-2);
+}
+.cashy-rank__row--dim {
+  opacity: 0.55;
+}
+.cashy-rank__row--dim:hover {
+  opacity: 1;
 }
 .cashy-rank__head {
   display: flex;
@@ -203,11 +229,18 @@ body {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.cashy-rank__val {
+.cashy-rank__amt {
   margin-left: auto;
   padding-left: 8px;
   color: var(--wb-fg-muted);
-  font-weight: 600;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  flex: none;
+}
+.cashy-rank__val {
+  padding-left: 10px;
+  color: var(--wb-fg);
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
   flex: none;
 }
@@ -981,6 +1014,31 @@ body {
 }
 .cashy-histlink:hover {
   color: var(--wb-fg);
+}
+
+/* Status picker — a control that looks like a wb-input box but holds the current
+   status capsule; clicking opens the colour ladder (see StatusPicker). Geometry
+   mirrors .wb-input so it sits flush beside the payee field. */
+.cashy-statuspick {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 12px;
+  border: var(--wb-bw) solid var(--wb-border-strong);
+  border-radius: var(--wb-input-radius);
+  background: var(--wb-surface);
+  cursor: pointer;
+  transition: border-color 0.13s ease;
+}
+.cashy-statuspick:hover {
+  border-color: var(--wb-fg-muted);
+}
+.cashy-statuspick.is-open {
+  border-color: var(--wb-fg);
+}
+.cashy-statuspick__opt {
+  width: 100%;
 }
 
 /* =========================================================================
