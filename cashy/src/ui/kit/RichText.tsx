@@ -6,6 +6,7 @@ import {
   type ReactNode,
 } from "react";
 import { cn } from "@/lib/utils";
+import { Textarea } from "@/ui/kit/Textarea";
 
 /** Selection-wrapping tokens (the same map app.js's initFormatbar uses). */
 const WRAP: Record<string, [string, string]> = {
@@ -267,17 +268,14 @@ export function RichText({
           <span className="wb-ico">format_clear</span>
         </button>
       </div>
-      <div className="wb-textarea-wrap">
-        <textarea
-          ref={ref}
-          id={id}
-          className="wb-textarea"
-          rows={rows}
-          placeholder={placeholder}
-          value={current}
-          onChange={(e) => setValue(e.currentTarget.value)}
-        />
-      </div>
+      <Textarea
+        ref={ref}
+        id={id}
+        rows={rows}
+        placeholder={placeholder}
+        value={current}
+        onChange={(e) => setValue(e.currentTarget.value)}
+      />
       {help !== undefined && <span className="wb-help">{help}</span>}
     </div>
   );

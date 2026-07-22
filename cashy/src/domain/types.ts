@@ -104,6 +104,30 @@ export interface Subscription {
    *  carrying `subscriptionId` with status `recorded`), re-derived by the store
    *  on every confirm / skip / undo, so it can never drift from the money. */
   paymentTxIds: string[];
+  /**
+   * Shared / family plan. `fullAmount` is the WHOLE plan's price per cycle and
+   * `members` how many people split it (including you, ≥ 2 when shared); `amount`
+   * stays YOUR own share — the number that hits your budget. Both omitted for a
+   * solo plan (then amount IS the full price). Stored so the record mirrors
+   * reality rather than a bare 1/N figure.
+   */
+  fullAmount?: number;
+  members?: number;
+  /**
+   * Prorated first charge: when you join part-way through a billing period, the
+   * FIRST cycle costs less than a full one (e.g. join on the 15th when billing
+   * anchors on the 1st → pay ~half). This is that one-off amount; every later
+   * cycle bills `amount`. Omitted = the first cycle bills in full like the rest.
+   */
+  firstCycleAmount?: number;
+  /**
+   * The day the service actually stopped (YYYY-MM-DD), set when it is cancelled.
+   * Cycles that would bill on or after it are never raised, and any already
+   * raised are retired — so cancelling in May doesn't leave June and July
+   * standing there as "unpaid" for the user to tidy up by hand. Cleared on
+   * resume. Absent while the subscription is running.
+   */
+  cancelledAt?: string;
   createdAt: string; // ISO
 }
 

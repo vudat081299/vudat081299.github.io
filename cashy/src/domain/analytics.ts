@@ -46,6 +46,10 @@ export function pctChange(cur: number, prev: number): number | null {
   return (cur - prev) / Math.abs(prev);
 }
 
+/** How the cash-flow bars are bucketed. "auto" (in `walletSeries`) tiers by span;
+ *  the chart toggle pins one of these explicitly. */
+export type ChartBucket = "day" | "week" | "month" | "year";
+
 export interface WalletPoint {
   key: string;
   label: string;
@@ -69,7 +73,11 @@ export interface WalletPoint {
  * followed by the actual data. Gaps in the MIDDLE stay — a quiet week is a fact
  * about the data, whereas dead margins are just an artefact of the window.
  */
-export function walletSeries(all: Transaction[], range: Range, weekly = false): WalletPoint[] {
+export function walletSeries(
+  all: Transaction[],
+  range: Range,
+  bucket: ChartBucket | "auto" = "auto",
+): WalletPoint[] {
   let start = range.start;
   let end = range.end;
   if (start === "0000-01-01" || end === "9999-12-31") {
@@ -80,13 +88,15 @@ export function walletSeries(all: Transaction[], range: Range, weekly = false): 
   const startD = parseYMD(start);
   const endD = parseYMD(end);
   const spanDays = Math.round((endD.getTime() - startD.getTime()) / 86400000) + 1;
-  // Three granularities so the columns never get too dense: days for a short
-  // window, months for up to a couple of years, whole years beyond that.
-  const yearly = spanDays > 800;
-  const monthly = !yearly && spanDays > 62;
-  // Weekly is an opt-in the caller sets for a day-range window (30–62d) where a
-  // daily bar per day gets busy; it never overrides the month/year auto-tiers.
-  const weeklyMode = weekly && !yearly && !monthly;
+  // Granularity: "auto" tiers by span so columns never get too dense (days for a
+  // short window, months up to a couple of years, whole years beyond that); the
+  // caller can also PIN it — the chart's Ngày/Tuần/Tháng toggle passes an explicit
+  // bucket for any window over 30 days so the user drives the roll-up themselves.
+  const resolved: ChartBucket =
+    bucket === "auto" ? (spanDays > 800 ? "year" : spanDays > 62 ? "month" : "day") : bucket;
+  const yearly = resolved === "year";
+  const monthly = resolved === "month";
+  const weeklyMode = resolved === "week";
 
   interface B extends WalletPoint {
     endYMD: string;

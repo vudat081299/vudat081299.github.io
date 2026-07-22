@@ -1,4 +1,4 @@
-import type { Subscription, Transaction } from "@/domain/types";
+import type { SubInterval, Subscription, Transaction } from "@/domain/types";
 import {
   addMonthKey,
   billingDate,
@@ -116,51 +116,124 @@ export function currentCycle(sub: Subscription, now: Date = new Date()): string 
 }
 
 /**
- * Should this subscription be asking for money NOW? True when it is active, its
- * billing day has arrived, and the cycle it opened is still unpaid. This single
- * predicate is what decides whether the "cần trả" reminder shows.
+ * Should this subscription be asking for money NOW? True when it is active and
+ * has at least one unresolved (still-pending) charge on the books.
+ *
+ * Read from the LEDGER, not from `lastPaidAt`. Paying a newer cycle while an
+ * older one is still owed used to jump that marker past the old cycle, so the
+ * card fell quiet while the orphaned pending charge kept nagging in the dues
+ * list and the transactions table — three surfaces, three different answers.
+ * Deriving "due" from the charges themselves is what makes them agree.
+ * (`dueCharges` only ever raises a pending charge once its billing day has
+ * passed, so a pending charge already means "due".)
  */
-export function needsPaymentNow(sub: Subscription, now: Date = new Date()): boolean {
+export function needsPaymentNow(
+  sub: Subscription,
+  txs: Transaction[],
+  now: Date = new Date(),
+): boolean {
   if (!sub.active) return false;
-  const cur = currentCycle(sub, now);
-  if (cycleDate(sub, cur) > ymd(now)) return false; // not due yet
-  return firstUnpaidCycle(sub) <= cur;
+  return subscriptionStatus(sub, txs, now).pending.length > 0;
 }
 
 /**
  * A service the provider would have cut off: still switched on, but a WHOLE
- * billing cycle has gone by unpaid (an earlier cycle is still owed). That is a
- * different thing from "due now", which is merely a bill on the doormat.
+ * billing cycle has gone by with an earlier cycle still owed. That is a different
+ * thing from "due now", which is merely a bill on the doormat. Ledger-based too,
+ * so skipping a cycle clears the lapse instead of leaving the card stuck on
+ * "Suspended" forever.
  */
-export function isLapsed(sub: Subscription, now: Date = new Date()): boolean {
+export function isLapsed(
+  sub: Subscription,
+  txs: Transaction[],
+  now: Date = new Date(),
+): boolean {
   if (!sub.active) return false;
-  return firstUnpaidCycle(sub) < currentCycle(sub, now);
+  const { pending } = subscriptionStatus(sub, txs, now);
+  return pending.length > 0 && pending[0].month < currentCycle(sub, now);
 }
 
-/** How many whole cycles this subscription currently owes. */
-export function cyclesOwed(sub: Subscription, now: Date = new Date()): number {
+/** How many whole cycles this subscription currently owes — the count of
+ *  still-pending charges (read from the ledger, see `needsPaymentNow`). */
+export function cyclesOwed(
+  sub: Subscription,
+  txs: Transaction[],
+  now: Date = new Date(),
+): number {
   if (!sub.active) return 0;
-  const cur = currentCycle(sub, now);
-  if (cycleDate(sub, cur) > ymd(now)) return 0;
-  let k = firstUnpaidCycle(sub);
-  let n = 0;
-  for (let guard = 0; k <= cur && guard < 4000; guard++, k = addCycle(sub, k, 1)) n++;
-  return n;
+  return subscriptionStatus(sub, txs, now).pending.length;
 }
 
 /**
  * The date money is next wanted. For a service that is up to date that is the
- * next billing day; for one that already owes a month it is the day that month
+ * next billing day; for one that already owes a cycle it is the day that cycle
  * fell due — a date in the PAST, which is the whole point: "next payment: in
  * three weeks" would be a lie while a bill is sitting there unpaid.
+ *
+ * The EARLIEST still-pending charge wins when there is one, for the same reason
+ * `needsPaymentNow` reads the ledger: settling a later cycle out of order must
+ * not make the card advertise a future date while an older bill is outstanding.
+ * With nothing pending, the first unpaid cycle's billing date is the answer —
+ * already correct for a settled plan and for one that hasn't begun billing.
+ * (Deriving it from `subCycle().end` instead got that last case a year wrong:
+ * that cycle's END is one full period after a start that hasn't happened.)
  */
-export function nextPaymentDate(sub: Subscription): string {
-  // The first unpaid cycle's billing date IS the answer in every case: already
-  // past when a bill is outstanding, the end of the running cycle when it is
-  // settled, and the very first billing date for a plan that hasn't begun.
-  // (Deriving it from `subCycle().end` instead got the last case a year wrong —
-  // that cycle's END is one full period after a start that hasn't happened.)
+export function nextPaymentDate(
+  sub: Subscription,
+  txs: Transaction[] = [],
+  now: Date = new Date(),
+): string {
+  const { pending } = subscriptionStatus(sub, txs, now);
+  if (pending.length) return cycleDate(sub, pending[0].month);
   return cycleDate(sub, firstUnpaidCycle(sub));
+}
+
+export interface Proration {
+  /** the reduced first-cycle charge (whole đồng) */
+  amount: number;
+  /** days actually covered (join → next billing date) */
+  days: number;
+  /** the full cycle's length in days, for the "X/Y ngày" caption */
+  total: number;
+}
+
+/**
+ * The prorated FIRST charge when a plan is joined part-way through a period. The
+ * first cycle opens on the plan's billing anchor (e.g. the 1st); if the join date
+ * falls AFTER that anchor, only the slice from the join to the next billing date
+ * is owed — `share × usedDays / cycleDays`. Returns `null` when there is nothing
+ * to prorate (joined on/before the anchor → the first cycle is billed in full).
+ *
+ * In practice this only ever fires for MONTHLY plans, and that is correct rather
+ * than an oversight: a yearly plan joined after its billing month has its first
+ * cycle pushed to next year by `startCycle` (so that signing up in June for a
+ * March plan doesn't instantly owe a backdated March). Its first cycle therefore
+ * always opens in the future and is billed in full — there is no part-period to
+ * charge for. The maths below is written generally anyway, so it stays correct if
+ * that anchoring rule ever changes.
+ */
+export function firstCycleProration(opts: {
+  amount: number;
+  startedAt: string;
+  dayOfMonth: number;
+  interval: SubInterval;
+  monthOfYear?: number;
+}): Proration | null {
+  // Reuse the cycle maths via a minimal sub-shape (only these fields are read).
+  const s = {
+    interval: opts.interval,
+    dayOfMonth: opts.dayOfMonth,
+    monthOfYear: opts.monthOfYear,
+    startedAt: opts.startedAt,
+  } as Subscription;
+  const sc = startCycle(s);
+  const cycleStart = cycleDate(s, sc);
+  const cycleEnd = cycleDate(s, addCycle(s, sc, 1));
+  if (opts.startedAt <= cycleStart) return null; // joined on/before the anchor
+  const total = daysBetween(cycleStart, cycleEnd);
+  const used = daysBetween(opts.startedAt, cycleEnd);
+  if (used <= 0 || used >= total) return null;
+  return { amount: Math.max(0, Math.round((opts.amount * used) / total)), days: used, total };
 }
 
 export interface SubCycle {
@@ -343,12 +416,16 @@ export function dueCharges(
   const out: DueCharge[] = [];
   for (const sub of subs) {
     if (!sub.active) continue;
+    const first = startCycle(sub);
     let m = firstUnpaidCycle(sub);
     for (let guard = 0; m <= cur && guard < 600; guard++, m = addCycle(sub, m, 1)) {
       if (cycleDate(sub, m) > today) continue; // not due yet
       if (have.has(`${sub.id}|${m}`)) continue; // already charged
+      // The very first cycle can be a prorated (smaller) charge when the plan was
+      // joined mid-period; every later cycle bills the full share.
+      const amount = sub.firstCycleAmount != null && m === first ? sub.firstCycleAmount : sub.amount;
       out.push({
-        amount: sub.amount,
+        amount,
         type: "expense",
         categoryId: sub.categoryId,
         tagIds: sub.tagIds,
@@ -362,6 +439,115 @@ export function dueCharges(
     }
   }
   return out;
+}
+
+// ---- catching up on owed cycles --------------------------------------------
+/**
+ * What the user said about ONE owed cycle in the catch-up dialog: did they use
+ * the service that cycle, and did they pay for it. The two are separate
+ * questions — "I cancelled Netflix in May" and "I paid for May" are different
+ * facts, and only the pair of them settles what the cycle's charge should be.
+ */
+export interface CycleChoice {
+  txId: string;
+  month: string;
+  /** the service was running that cycle (switch on) */
+  used: boolean;
+  /** the cycle was actually paid for (checkbox ticked) */
+  paid: boolean;
+}
+
+export interface CatchUpPlan {
+  /** charges to record as real spending */
+  pay: string[];
+  /** charges to grey out — the service wasn't used that cycle */
+  skip: string[];
+  /** every cycle was switched off, so the user is really cancelling the service */
+  cancelling: boolean;
+  /** null when the plan may be submitted; otherwise why it may not be */
+  problem: string | null;
+}
+
+/**
+ * Turn the dialog's per-cycle answers into the charges to record and to skip.
+ *
+ * The rule that makes this more than a partition: **debts are settled oldest
+ * first**. A subscription is a queue — a provider paid in June while May is
+ * still outstanding has not been paid for June, they have been paid for May.
+ * So a cycle that was used but left unpaid may only sit at the TAIL of the
+ * timeline: paying cycles 1–3 of five owed is fine, paying only cycle 2 while
+ * cycle 1 stands unpaid is not, and this is where that gets rejected.
+ *
+ * Cycles switched OFF are not debts at all, so they are transparent to that
+ * ordering — skipping cycle 1 and paying cycle 2 is perfectly coherent.
+ *
+ * Switching every cycle off says the service was never running in any of them,
+ * which is a cancellation rather than a catch-up; `cancelling` tells the caller
+ * to deactivate the subscription once the charges are settled.
+ *
+ * `rows` must be in chronological order (oldest first) — the order
+ * `subscriptionStatus().pending` already returns.
+ */
+export function planCatchUp(rows: CycleChoice[]): CatchUpPlan {
+  const pay: string[] = [];
+  const skip: string[] = [];
+  // The oldest cycle the user says they used but have NOT paid for. Everything
+  // paid must come before it; the first thing that doesn't is the violation.
+  let owedFrom: string | null = null;
+  let outOfOrder: string | null = null;
+
+  for (const r of rows) {
+    if (!r.used) {
+      skip.push(r.txId);
+      continue; // not a debt, so it neither opens nor breaks the queue
+    }
+    if (r.paid) {
+      pay.push(r.txId);
+      if (owedFrom && !outOfOrder) outOfOrder = r.month;
+    } else if (!owedFrom) {
+      owedFrom = r.month;
+    }
+  }
+
+  const cancelling = rows.length > 0 && rows.every((r) => !r.used);
+  let problem: string | null = null;
+  if (outOfOrder && owedFrom) {
+    problem =
+      `Phải trả từ kỳ cũ nhất. Kỳ ${monthLabelShort(owedFrom)} chưa trả ` +
+      `nhưng kỳ ${monthLabelShort(outOfOrder)} sau đó lại đánh dấu đã trả.`;
+  } else if (pay.length === 0 && skip.length === 0) {
+    problem = "Chưa có thay đổi nào để lưu.";
+  }
+
+  return { pay, skip, cancelling, problem };
+}
+
+// ---- cancelling ------------------------------------------------------------
+/**
+ * The ledger after a subscription is cancelled effective `cancelledAt`.
+ *
+ * A charge is only real if the service was running when it billed, so every
+ * PENDING charge whose billing date falls on or after the stop date is dropped —
+ * those cycles never happened. Charges that billed BEFORE it stay owed: you had
+ * the service for that period whether or not you have paid for it yet.
+ *
+ * Recorded and skipped charges are never touched at all; they are history, and
+ * history does not change because the service later ended.
+ *
+ * This is what stops a cancellation from leaving a pile of phantom "unpaid"
+ * cycles for the user to clear by hand in the catch-up dialog.
+ */
+export function chargesSurvivingCancel(
+  txs: Transaction[],
+  sub: Subscription,
+  cancelledAt: string,
+): Transaction[] {
+  return txs.filter((t) => {
+    if (t.subscriptionId !== sub.id) return true;
+    if (statusOf(t) !== "pending") return true; // settled history stays
+    if (!t.subMonth) return true;
+    return cycleDate(sub, t.subMonth) < cancelledAt;
+  });
 }
 
 /**

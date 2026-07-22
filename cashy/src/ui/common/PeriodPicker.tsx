@@ -21,7 +21,11 @@ export function PeriodPicker({
   const isPreset = PERIODS.some((p) => p.key === value);
   return (
     <Popover
-      panelWidth={360}
+      // Wide enough that a preset row keeps its label and its resolved-range note
+      // ("Last 3 months" · "Tháng 5 – tháng 7") on ONE line, and that the six
+      // segments of dd/mm/yyyy – dd/mm/yyyy sit in the field without crowding. At
+      // 360 both wrapped to a second line and dragged the panel taller.
+      panelWidth={420}
       align="right"
       trigger={({ open, toggle }) => (
         <button
@@ -30,7 +34,10 @@ export function PeriodPicker({
           style={{ gap: 6 }}
           onClick={toggle}
         >
-          <span className="wb-ico wb-ico--sm">calendar_month</span>
+          {/* `calendar_today` (a plain frame), not `calendar_month` — the latter
+              draws a grid of date dots that turns to mush at 18px and reads busy
+              next to the label. This also matches the DatePicker's trigger. */}
+          <span className="wb-ico wb-ico--sm">calendar_today</span>
           {periodLabel(value, custom)}
           {/* The resolved window rides along so the label is never ambiguous.
               Skipped for custom, whose label already IS the exact dates. */}

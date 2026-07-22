@@ -1,4 +1,11 @@
-import { Fragment, useEffect, useRef, useState, type KeyboardEvent } from "react";
+import {
+  Fragment,
+  useEffect,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type MouseEvent,
+} from "react";
 import { parseDMY } from "@/domain/date";
 import { cn } from "@/lib/utils";
 import type { Range } from "@/domain/period";
@@ -49,6 +56,10 @@ export function DateRangeInput({
   const [segs, setSegs] = useState<string[]>(() => segsFromRange(value));
   const [invalid, setInvalid] = useState(false);
   const refs = useRef<Array<HTMLInputElement | null>>([]);
+  // Set by the blank-space click just before it focuses a segment, and read by
+  // that segment's onFocus to collapse the caret to the end instead of selecting.
+  // A ref (not state) because it must be readable inside the very same tick.
+  const resumeRef = useRef(false);
 
   // Re-seed only when an EXTERNAL value (a calendar click, a preset) says
   // something different from what the segments already spell — so applying our
@@ -77,6 +88,30 @@ export function DateRangeInput({
     if (v.length === MAXLEN[i] && i < 5) refs.current[i + 1]?.focus();
   };
 
+  // Clicking the field's own empty space — its padding or an inked "/" separator,
+  // anywhere that is NOT a segment — should still land the caret somewhere useful:
+  //
+  //   __/__/____  → the FIRST segment, ready to start typing
+  //   21/02/____  → the END of "02", the last segment that holds a value
+  //
+  // so a stray click either starts entry or resumes it exactly where it left off,
+  // instead of doing nothing. Clicking a segment itself is left alone — the
+  // browser puts the caret where the user aimed.
+  const focusFromBlankSpace = (e: MouseEvent<HTMLDivElement>) => {
+    if ((e.target as HTMLElement).closest("input")) return; // a real segment was hit
+    e.preventDefault(); // keep focus off the wrapper; drive it to a segment instead
+    const lastFilled = segs.reduce((last, v, i) => (v ? i : last), -1);
+    const target = lastFilled === -1 ? 0 : lastFilled;
+    const el = refs.current[target];
+    if (!el) return;
+    // Resuming means "carry on from the end of what I typed", so the caret is
+    // collapsed AFTER the digits rather than selecting them — a select-all would
+    // make the next keystroke wipe the segment instead of continuing it. The
+    // empty-field case has nothing to place a caret past, so it just focuses.
+    resumeRef.current = lastFilled !== -1;
+    el.focus();
+  };
+
   const onKey = (i: number, e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Backspace" && !segs[i] && i > 0) {
       e.preventDefault();
@@ -93,6 +128,7 @@ export function DateRangeInput({
       className={cn("wb-input-tpl", invalid && "is-invalid")}
       role="group"
       aria-label="Khoảng ngày"
+      onMouseDown={focusFromBlankSpace}
     >
       {[0, 1, 2, 3, 4, 5].map((i) => (
         <Fragment key={i}>
@@ -108,7 +144,18 @@ export function DateRangeInput({
             value={segs[i]}
             onChange={(e) => write(i, e.target.value)}
             onKeyDown={(e) => onKey(i, e)}
-            onFocus={(e) => e.currentTarget.select()}
+            onFocus={(e) => {
+              // Tabbing or clicking a segment selects it, so typing replaces the
+              // value — the usual date-field behaviour. Resuming from a
+              // blank-space click instead parks the caret after the last digit.
+              if (resumeRef.current) {
+                resumeRef.current = false;
+                const end = e.currentTarget.value.length;
+                e.currentTarget.setSelectionRange(end, end);
+              } else {
+                e.currentTarget.select();
+              }
+            }}
           />
           {i === 2 ? (
             <span className="wb-input-tpl__sep wb-input-tpl__sep--gap">–</span>

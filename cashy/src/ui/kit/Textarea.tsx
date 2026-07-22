@@ -3,6 +3,7 @@ import {
   useLayoutEffect,
   useRef,
   type ChangeEvent,
+  type Ref,
   type TextareaHTMLAttributes,
 } from "react";
 import { cn } from "@/lib/utils";
@@ -29,6 +30,7 @@ export function Textarea({
   className,
   style,
   onChange,
+  ref: externalRef,
   "aria-invalid": ariaInvalid,
   ...rest
 }: {
@@ -39,8 +41,22 @@ export function Textarea({
   /** Blend into the container: no border/fill, focus ring only (--seamless). */
   seamless?: boolean;
   invalid?: boolean;
+  /** Reach the element itself (selection, focus, execCommand) — merged with the
+   *  internal ref auto-sizing needs, so callers get the node without losing it. */
+  ref?: Ref<HTMLTextAreaElement>;
 } & TextareaHTMLAttributes<HTMLTextAreaElement>) {
   const ref = useRef<HTMLTextAreaElement>(null);
+
+  // One DOM ref, two consumers: `fit()` below reads it, and the caller may want
+  // it too. A callback ref is the only way to satisfy both.
+  const setRef = useCallback(
+    (el: HTMLTextAreaElement | null) => {
+      ref.current = el;
+      if (typeof externalRef === "function") externalRef(el);
+      else if (externalRef) externalRef.current = el;
+    },
+    [externalRef],
+  );
 
   const fit = useCallback(() => {
     const el = ref.current;
@@ -63,7 +79,7 @@ export function Textarea({
   const textarea = (
     <textarea
       {...rest}
-      ref={ref}
+      ref={setRef}
       rows={rows}
       aria-invalid={invalid ? true : ariaInvalid}
       onChange={handleChange}

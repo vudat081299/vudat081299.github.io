@@ -12,6 +12,18 @@ export function todayYMD(): string {
   return ymd(new Date());
 }
 
+/** The wall clock right now as "HH:MM" — what a new transaction defaults to. */
+export function nowHM(now: Date = new Date()): string {
+  return `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+}
+
+/** Yesterday's date as YYYY-MM-DD — the other date a "when?" field ever wants. */
+export function yesterdayYMD(now: Date = new Date()): string {
+  const d = new Date(now);
+  d.setDate(d.getDate() - 1);
+  return ymd(d);
+}
+
 export function parseYMD(s: string): Date {
   const [y, m, d] = s.split("-").map(Number);
   return new Date(y || 1970, (m || 1) - 1, d || 1);

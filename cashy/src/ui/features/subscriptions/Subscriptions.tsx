@@ -38,12 +38,14 @@ function SubscriptionRow({
   iconStyle: SubIconStyle;
 }) {
   const st = subscriptionStatus(sub, txs);
-  const due = needsPaymentNow(sub);
+  const due = needsPaymentNow(sub, txs);
   // The CYCLE in play — the current month for a monthly plan, the current
   // billing year for a yearly one. Using monthKey() here would tell a yearly
   // subscriber "chưa đến hạn tháng 7" every month of the year.
   const cur = currentCycle(sub);
-  const owed = firstUnpaidCycle(sub);
+  // The cycle the row should name as owed — the EARLIEST charge still pending,
+  // so an older unpaid cycle is never masked by a newer one being settled.
+  const owed = st.pending[0]?.month ?? firstUnpaidCycle(sub);
   // Settled for this cycle, as opposed to merely not billed yet — the two look
   // the same from "not due" but only one of them means the money has been paid.
   const paidThisCycle = sub.lastPaidAt?.slice(0, 7) === cur;
@@ -137,11 +139,11 @@ export function Subscriptions() {
   const dues = useMemo(() => collectDues(subscriptions, transactions), [subscriptions, transactions]);
   const active = subscriptions.filter((s) => s.active);
   const monthly = monthlyCommitment(subscriptions);
-  const dueCount = subscriptions.filter((s) => needsPaymentNow(s)).length;
+  const dueCount = subscriptions.filter((s) => needsPaymentNow(s, transactions)).length;
 
   // Whatever needs money first sits at the top; paused services sink. Sorted
   // once on open, then held stable so editing a row never makes it jump.
-  const ordered = useStableSubOrder(subscriptions);
+  const ordered = useStableSubOrder(subscriptions, transactions);
 
   return (
     <div className="wb-stack wb-stack--loose">

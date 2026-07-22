@@ -1,8 +1,8 @@
 import {
+  Area,
   Bar,
   CartesianGrid,
   ComposedChart,
-  Line,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -81,7 +81,26 @@ export function CashflowChart({ data }: { data: WalletPoint[] }) {
   return (
     <ResponsiveContainer width="100%" height="100%" minHeight={240}>
       <ComposedChart data={data} margin={{ top: 8, right: 4, bottom: 0, left: 0 }}>
-        <CartesianGrid vertical={false} stroke="var(--wb-chart-grid)" strokeDasharray="2 3" />
+        {/* The balance line carries the same top-down gradient wash as the
+            Projected-balance chart so both wallet-balance series read as one
+            visual language. A distinct id keeps it from colliding with the
+            forecast gradient when the two charts share the dashboard. */}
+        <defs>
+          <linearGradient id="cashy-cashflow-balance-fill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={BALANCE_COLOR} stopOpacity={0.18} />
+            <stop offset="100%" stopColor={BALANCE_COLOR} stopOpacity={0.02} />
+          </linearGradient>
+        </defs>
+        {/* Bind the grid to the balance (left) axis — with two NAMED y-axes and no
+            yAxisId here, recharts defaults to yAxisId={0}, finds no such axis, and
+            silently draws zero horizontal lines. Naming it restores the dashed
+            gridlines that make the balance line readable across buckets. */}
+        <CartesianGrid
+          yAxisId="balance"
+          vertical={false}
+          stroke="var(--wb-chart-grid)"
+          strokeDasharray="2 3"
+        />
         <XAxis
           dataKey="label"
           tickLine={false}
@@ -128,12 +147,16 @@ export function CashflowChart({ data }: { data: WalletPoint[] }) {
           maxBarSize={26}
           isAnimationActive={false}
         />
-        <Line
+        {/* Filled area (not a bare Line) so the running balance carries the same
+            gradient as the Projected-balance chart. Declared after the bars so the
+            line rides on top; the fill is faint enough not to muddy the red bars. */}
+        <Area
           yAxisId="balance"
           type="monotone"
           dataKey="balance"
           stroke={BALANCE_COLOR}
           strokeWidth={2.5}
+          fill="url(#cashy-cashflow-balance-fill)"
           dot={false}
           activeDot={{ r: 3.5, fill: BALANCE_COLOR, stroke: "var(--wb-surface)", strokeWidth: 2 }}
           isAnimationActive={false}

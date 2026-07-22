@@ -1,14 +1,14 @@
 import { useMemo, useRef } from "react";
-import type { Subscription } from "@/domain/types";
+import type { Subscription, Transaction } from "@/domain/types";
 import { needsPaymentNow } from "@/domain";
 
-/** Active first, then the ones asking for money, then by name. */
-function sortSubs(a: Subscription, b: Subscription): number {
-  return (
+/** Active first, then the ones asking for money, then by name. "Asking for
+ *  money" is a fact about the LEDGER, so the ordering needs the charges too. */
+function sortSubs(txs: Transaction[]) {
+  return (a: Subscription, b: Subscription): number =>
     Number(b.active) - Number(a.active) ||
-    Number(needsPaymentNow(b)) - Number(needsPaymentNow(a)) ||
-    a.name.localeCompare(b.name, "en")
-  );
+    Number(needsPaymentNow(b, txs)) - Number(needsPaymentNow(a, txs)) ||
+    a.name.localeCompare(b.name, "en");
 }
 
 /**
@@ -22,13 +22,21 @@ function sortSubs(a: Subscription, b: Subscription): number {
  * on every edit would yank a card out from under the user the instant they
  * changed it. Sorting once and holding keeps the list calm while they work.
  */
-export function useStableSubOrder(subscriptions: Subscription[]): Subscription[] {
+export function useStableSubOrder(
+  subscriptions: Subscription[],
+  txs: Transaction[],
+): Subscription[] {
   const orderRef = useRef<string[]>([]);
+  // `txs` is deliberately NOT a dependency: it only ever seeds the frozen order
+  // on the first non-empty render, and re-running on every ledger change is
+  // exactly the card-jumping this hook exists to prevent.
+  const txsRef = useRef(txs);
+  txsRef.current = txs;
   return useMemo(() => {
     const byId = new Map(subscriptions.map((s) => [s.id, s] as const));
     if (orderRef.current.length === 0) {
       // First non-empty render: take the sorted order and freeze its ids.
-      orderRef.current = [...subscriptions].sort(sortSubs).map((s) => s.id);
+      orderRef.current = [...subscriptions].sort(sortSubs(txsRef.current)).map((s) => s.id);
     } else {
       // Later renders: keep the frozen order, drop removed ids, append new ones.
       const known = orderRef.current.filter((id) => byId.has(id));

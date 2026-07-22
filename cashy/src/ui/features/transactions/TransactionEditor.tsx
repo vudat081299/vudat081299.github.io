@@ -4,11 +4,13 @@ import { addTransaction, deleteTransaction, updateTransaction } from "@/usecases
 import { flattenTree, rankTags } from "@/domain";
 import { clearDraft, getDraft, saveDraft, type TxDraft } from "@/data/draft";
 import { formatMoney, parseMoney } from "@/domain/money";
-import { todayYMD } from "@/domain/date";
-import { TX_STATUS_META } from "@/domain/txStatus";
+import { nowHM, todayYMD, yesterdayYMD } from "@/domain/date";
 import type { TxStatus, TxType } from "@/domain/types";
 import { Modal } from "@/ui/kit/Modal";
 import { Popover } from "@/ui/kit/Popover";
+import { Field, Input } from "@/ui/kit/Input";
+import { Textarea } from "@/ui/kit/Textarea";
+import { TimePicker } from "@/ui/kit/TimePicker";
 import { DatePicker } from "@/ui/common/DatePicker";
 import { Select } from "@/ui/common/Select";
 import { StatusPicker } from "@/ui/common/StatusPicker";
@@ -42,7 +44,11 @@ export function TransactionEditor() {
       setCategoryId(tx?.categoryId ?? d?.categoryId ?? null);
       setTagIds(tx?.tagIds ?? d?.tagIds ?? []);
       setOccurredAt(tx?.occurredAt ?? d?.occurredAt ?? todayYMD());
-      setOccurredTime(tx?.occurredTime ?? d?.occurredTime ?? "");
+      // A NEW transaction opens on the current time — you are almost always
+      // recording something as it happens, so the common case should need no
+      // input at all. An existing row keeps whatever it was saved with (including
+      // deliberately having no time), and a resumed draft keeps what was typed.
+      setOccurredTime(tx ? (tx.occurredTime ?? "") : (d?.occurredTime ?? nowHM()));
       setNote(tx?.note ?? d?.note ?? "");
       setPayee(tx?.payee ?? d?.payee ?? "");
       setStatus(tx?.status ?? d?.status ?? "recorded");
@@ -197,28 +203,25 @@ export function TransactionEditor() {
           })}
         </div>
 
-        {/* Amount */}
-        <div className="wb-field">
-          <label className="wb-label" htmlFor="tx-amount">
-            Số tiền
-          </label>
-          <input
+        {/* Amount — the field the eye should land on first: large digits with a ₫
+            unit addon, and the grouped value spelled out beneath so a mistyped
+            zero is visible before it is saved. */}
+        <Field
+          label="Số tiền"
+          htmlFor="tx-amount"
+          help={amount > 0 ? formatMoney(amount) : undefined}
+        >
+          <Input
             id="tx-amount"
-            className="wb-input"
             inputMode="numeric"
             autoComplete="off"
             value={amountStr}
             onChange={(e) => setAmountStr(e.target.value)}
             placeholder="0"
+            trailingAddon="₫"
             style={{ fontSize: 18 }}
           />
-          <span
-            className="wb-num"
-            style={{ fontSize: 12, color: "var(--wb-fg-muted)", textAlign: "left" }}
-          >
-            {formatMoney(amount)}
-          </span>
-        </div>
+        </Field>
 
         {/* Category */}
         <div className="wb-field">
@@ -260,14 +263,6 @@ export function TransactionEditor() {
         <div className="wb-field">
           <label className="wb-label">Trạng thái</label>
           <StatusPicker value={status} onChange={setStatus} />
-          {/* Whether a row counts toward the totals is a real rule the user
-              cannot guess from the label alone — say it, and only when the
-              choice actually withholds the money. */}
-          <span className="wb-label__opt">
-            {TX_STATUS_META[status].counted
-              ? "Được tính vào tổng thu chi."
-              : "Chưa tính vào tổng thu chi."}
-          </span>
         </div>
 
         {/* Tags — a dashed "＋" capsule LEADS (fixed first slot, so the way to add
@@ -343,54 +338,103 @@ export function TransactionEditor() {
           </div>
         </div>
 
-        {/* Date + optional time */}
-        <div className="wb-cluster wb-cluster--nowrap" style={{ gap: 12, alignItems: "flex-start" }}>
-          <div className="wb-field" style={{ flex: 1, minWidth: 0 }}>
-            <label className="wb-label">Ngày</label>
-            <DatePicker value={occurredAt} onChange={setOccurredAt} />
-          </div>
-          <div className="wb-field" style={{ flex: "none", width: 132 }}>
-            <label className="wb-label" htmlFor="tx-time">
-              Giờ <span className="wb-label__opt">(không bắt buộc)</span>
-            </label>
-            <div className="wb-cluster wb-cluster--nowrap" style={{ gap: 4 }}>
-              <input
-                id="tx-time"
-                className="wb-input"
-                type="time"
-                value={occurredTime}
-                onChange={(e) => setOccurredTime(e.target.value)}
-                style={{ minWidth: 0 }}
-              />
-              {/* A time input has no "unset" of its own once filled. */}
-              {occurredTime && (
+        {/* When it happened. Pre-filled with NOW, because a transaction is almost
+            always entered as it happens — so the fast path is to touch neither
+            control. The quick chips cover nearly all of the rest ("bought it
+            yesterday", "correct the clock back to now"); the pickers are there for
+            the genuinely arbitrary date. */}
+        <div className="wb-field">
+          <label className="wb-label">Thời điểm</label>
+          <div className="wb-cluster wb-cluster--nowrap" style={{ gap: 8 }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <DatePicker value={occurredAt} onChange={setOccurredAt} />
+            </div>
+            {/* Scroll columns rather than a native time box: picking 21:35 by
+                spinning two wheels beats typing into a control whose keyboard
+                behaviour differs on every platform. */}
+            <Popover
+              panelWidth={220}
+              align="right"
+              trigger={({ open, toggle }) => (
                 <button
                   type="button"
-                  className="wb-btn wb-btn--ghost wb-btn--sm wb-btn--icon"
-                  aria-label="Bỏ giờ"
-                  onClick={() => setOccurredTime("")}
+                  className="wb-input"
+                  onClick={toggle}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    width: 128,
+                    flex: "none",
+                    cursor: "pointer",
+                    textAlign: "left",
+                    borderColor: open ? "var(--wb-fg)" : undefined,
+                  }}
                 >
-                  <span className="wb-ico wb-ico--xs">close</span>
+                  <span className="wb-ico wb-ico--sm">schedule</span>
+                  <span className="wb-num">{occurredTime || "--:--"}</span>
                 </button>
               )}
-            </div>
+            >
+              <div style={{ padding: 4 }}>
+                <TimePicker
+                  value={occurredTime || nowHM()}
+                  onChange={setOccurredTime}
+                  minuteStep={1}
+                />
+              </div>
+            </Popover>
+          </div>
+          <div className="wb-cluster" style={{ gap: 6, marginTop: 8, flexWrap: "wrap" }}>
+            <button
+              type="button"
+              className="cashy-tag-add"
+              onClick={() => {
+                setOccurredAt(todayYMD());
+                setOccurredTime(nowHM());
+              }}
+            >
+              Bây giờ
+            </button>
+            <button
+              type="button"
+              className="cashy-tag-add"
+              onClick={() => setOccurredAt(todayYMD())}
+            >
+              Hôm nay
+            </button>
+            <button
+              type="button"
+              className="cashy-tag-add"
+              onClick={() => setOccurredAt(yesterdayYMD())}
+            >
+              Hôm qua
+            </button>
+            {/* The time stays genuinely optional — a transaction you only know the
+                DAY of should not be forced to claim an hour it doesn't have. */}
+            {occurredTime && (
+              <button
+                type="button"
+                className="cashy-tag-add"
+                onClick={() => setOccurredTime("")}
+              >
+                Bỏ giờ
+              </button>
+            )}
           </div>
         </div>
 
         {/* Note */}
-        <div className="wb-field">
-          <label className="wb-label" htmlFor="tx-note">
-            Ghi chú
-          </label>
-          <textarea
+        {/* Note — the migrated wb Textarea (themed resize handle). */}
+        <Field label="Ghi chú" htmlFor="tx-note">
+          <Textarea
             id="tx-note"
-            className="wb-textarea"
             value={note}
             onChange={(e) => setNote(e.target.value)}
             placeholder="Không bắt buộc"
             rows={2}
           />
-        </div>
+        </Field>
       </div>
     </Modal>
   );

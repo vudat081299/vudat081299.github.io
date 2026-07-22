@@ -1,15 +1,18 @@
 import { describe, expect, it } from "vitest";
 import type { Subscription, Transaction } from "@/domain/types";
 import {
+  chargesSurvivingCancel,
   chargesSurvivingDeletion,
   cyclesOwed,
   dueCharges,
+  firstCycleProration,
   firstUnpaidCycle,
   isLapsed,
   needsPaymentNow,
   nextPaymentDate,
   paymentsDrifted,
   paymentsOf,
+  planCatchUp,
   startCycle,
 } from "@/domain/subscription";
 
@@ -56,6 +59,21 @@ function charge(over: Partial<Transaction> = {}): Transaction {
 }
 
 const AT = (ymd: string) => new Date(`${ymd}T12:00:00`);
+
+/**
+ * The ledger the app would actually be holding for `s` at `now`: every cycle
+ * that has come due, raised as a pending charge — which is exactly what
+ * `syncSubscriptions` does on mount. `needsPaymentNow` and friends read the
+ * charges rather than `lastPaidAt`, so a test that asks "is this due?" has to
+ * hand them the same ledger the screen would have.
+ */
+function ledger(s: Subscription, now: Date): Transaction[] {
+  return dueCharges([s], [], now).map((c, i) => ({
+    ...c,
+    id: `auto${i}`,
+    createdAt: `${c.occurredAt}T00:00:00.000Z`,
+  }));
+}
 
 describe("dueCharges", () => {
   it("raises one pending charge per cycle that has come due", () => {
@@ -127,7 +145,7 @@ describe("re-gridding after the billing date is edited", () => {
 
   it("bills nothing while the plan is settled on its original grid", () => {
     expect(firstUnpaidCycle(yearlyMarch)).toBe("2027-03");
-    expect(needsPaymentNow(yearlyMarch, NOW)).toBe(false);
+    expect(needsPaymentNow(yearlyMarch, ledger(yearlyMarch, NOW), NOW)).toBe(false);
   });
 
   it("re-grids onto the new date and bills the cycle that has come due", () => {
@@ -135,7 +153,7 @@ describe("re-gridding after the billing date is edited", () => {
     const moved = { ...yearlyMarch, monthOfYear: 6 };
     expect(startCycle(moved)).toBe("2024-06");
     expect(firstUnpaidCycle(moved)).toBe("2026-06"); // was "2027-03" — off-grid
-    expect(needsPaymentNow(moved, NOW)).toBe(true);
+    expect(needsPaymentNow(moved, ledger(moved, NOW), NOW)).toBe(true);
     expect(dueCharges([moved], [], NOW).map((c) => c.subMonth)).toEqual(["2026-06"]);
   });
 
@@ -147,15 +165,15 @@ describe("re-gridding after the billing date is edited", () => {
   it("moving the date forward past today owes nothing yet", () => {
     // March → November: this year's November has not arrived.
     const moved = { ...yearlyMarch, monthOfYear: 11 };
-    expect(needsPaymentNow(moved, NOW)).toBe(false);
+    expect(needsPaymentNow(moved, ledger(moved, NOW), NOW)).toBe(false);
     expect(dueCharges([moved], [], NOW)).toEqual([]);
   });
 
   it("treats the re-gridded plan as due, not lapsed", () => {
     // One cycle owed is a bill on the doormat, not a service the provider cut off.
     const moved = { ...yearlyMarch, monthOfYear: 6 };
-    expect(isLapsed(moved, NOW)).toBe(false);
-    expect(cyclesOwed(moved, NOW)).toBe(1);
+    expect(isLapsed(moved, ledger(moved, NOW), NOW)).toBe(false);
+    expect(cyclesOwed(moved, ledger(moved, NOW), NOW)).toBe(1);
   });
 });
 
@@ -189,30 +207,52 @@ describe("firstUnpaidCycle — regression guards", () => {
 });
 
 describe("needsPaymentNow / isLapsed", () => {
+  const at = (d: string) => {
+    const now = AT(d);
+    return [sub(), ledger(sub(), now), now] as const;
+  };
+
   it("is due on the billing day, and not the day before", () => {
-    expect(needsPaymentNow(sub(), AT("2026-01-05"))).toBe(false);
-    expect(needsPaymentNow(sub(), AT("2026-01-06"))).toBe(true);
+    expect(needsPaymentNow(...at("2026-01-05"))).toBe(false);
+    expect(needsPaymentNow(...at("2026-01-06"))).toBe(true);
   });
 
   it("is due but not lapsed inside the first unpaid cycle", () => {
-    const at = AT("2026-01-20");
-    expect(needsPaymentNow(sub(), at)).toBe(true);
-    expect(isLapsed(sub(), at)).toBe(false);
+    expect(needsPaymentNow(...at("2026-01-20"))).toBe(true);
+    expect(isLapsed(...at("2026-01-20"))).toBe(false);
   });
 
   it("is lapsed once a whole cycle has gone by unpaid", () => {
-    expect(isLapsed(sub(), AT("2026-02-20"))).toBe(true);
+    expect(isLapsed(...at("2026-02-20"))).toBe(true);
   });
 
   it("never chases a paused subscription", () => {
     const s = sub({ active: false });
-    expect(needsPaymentNow(s, AT("2026-06-01"))).toBe(false);
-    expect(isLapsed(s, AT("2026-06-01"))).toBe(false);
-    expect(cyclesOwed(s, AT("2026-06-01"))).toBe(0);
+    const now = AT("2026-06-01");
+    expect(needsPaymentNow(s, ledger(s, now), now)).toBe(false);
+    expect(isLapsed(s, ledger(s, now), now)).toBe(false);
+    expect(cyclesOwed(s, ledger(s, now), now)).toBe(0);
   });
 
   it("counts every cycle owed", () => {
-    expect(cyclesOwed(sub(), AT("2026-03-20"))).toBe(3);
+    expect(cyclesOwed(...at("2026-03-20"))).toBe(3);
+  });
+
+  it("keeps an older cycle owed when a newer one is settled out of order", () => {
+    // The bug this whole ledger-based reading exists to kill. Jan, Feb and Mar
+    // are owed; the user confirms FEBRUARY only. Read from `lastPaidAt` the
+    // subscription then looks settled through February and quietly stops asking
+    // — while January's pending charge is still sitting in the ledger nagging
+    // from the dues list. It must stay due, and it must still name January.
+    const now = AT("2026-03-20");
+    const s = sub({ lastPaidAt: "2026-02-06" });
+    const txs = ledger(sub(), now).map((t) =>
+      t.subMonth === "2026-02" ? { ...t, status: "recorded" as const } : t,
+    );
+    expect(needsPaymentNow(s, txs, now)).toBe(true);
+    expect(cyclesOwed(s, txs, now)).toBe(2); // Jan and Mar
+    expect(isLapsed(s, txs, now)).toBe(true); // January is a whole cycle behind
+    expect(nextPaymentDate(s, txs, now)).toBe("2026-01-06"); // not February's successor
   });
 });
 
@@ -224,6 +264,123 @@ describe("nextPaymentDate", () => {
 
   it("is the end of the running cycle once the service is settled", () => {
     expect(nextPaymentDate(sub({ lastPaidAt: "2026-01-06" }))).toBe("2026-02-06");
+  });
+});
+
+describe("firstCycleProration", () => {
+  const monthly = { amount: 300_000, dayOfMonth: 1, interval: "monthly" as const };
+
+  it("charges a fraction of the cycle when you join part-way through", () => {
+    // Billing anchors on the 1st; joining on 16 Jan covers 16 Jan → 1 Feb.
+    const p = firstCycleProration({ ...monthly, startedAt: "2026-01-16" });
+    expect(p).not.toBeNull();
+    expect(p!.total).toBe(31); // 1 Jan → 1 Feb
+    expect(p!.days).toBe(16); // 16 Jan → 1 Feb
+    expect(p!.amount).toBe(Math.round((300_000 * 16) / 31));
+  });
+
+  it("has nothing to prorate when you join on the anchor itself", () => {
+    expect(firstCycleProration({ ...monthly, startedAt: "2026-01-01" })).toBeNull();
+  });
+
+  it("never prorates a yearly plan — its first cycle is always still ahead", () => {
+    // Joining in March on a January-billing plan: `startCycle` pushes the first
+    // cycle to Jan 2027 rather than backdating Jan 2026, so the whole first cycle
+    // lies in the future and is billed in full. There is no part-period to charge.
+    expect(
+      firstCycleProration({
+        amount: 1_200_000,
+        startedAt: "2026-03-15",
+        dayOfMonth: 1,
+        interval: "yearly",
+        monthOfYear: 1,
+      }),
+    ).toBeNull();
+  });
+
+  it("bills only the FIRST cycle at the reduced rate", () => {
+    const s = sub({ startedAt: "2026-01-16", dayOfMonth: 1, firstCycleAmount: 100_000 });
+    const out = dueCharges([s], [], AT("2026-03-20"));
+    expect(out.map((c) => c.amount)).toEqual([100_000, 260_000, 260_000]);
+  });
+});
+
+describe("planCatchUp", () => {
+  // Five owed cycles, Jan → May, in the order the dialog lists them.
+  const rows = (answers: Array<[used: boolean, paid: boolean]>) =>
+    answers.map(([used, paid], i) => ({
+      txId: `t${i + 1}`,
+      month: `2026-0${i + 1}`,
+      used,
+      paid,
+    }));
+  const ALL_USED_UNPAID = rows([
+    [true, false],
+    [true, false],
+    [true, false],
+    [true, false],
+    [true, false],
+  ]);
+
+  it("records the ticked cycles and skips the switched-off ones", () => {
+    const plan = planCatchUp(
+      rows([
+        [true, true],
+        [false, false],
+        [true, false],
+      ]),
+    );
+    expect(plan.pay).toEqual(["t1"]);
+    expect(plan.skip).toEqual(["t2"]);
+    expect(plan.problem).toBeNull();
+  });
+
+  it("accepts any prefix of the timeline — the oldest debts settled first", () => {
+    for (const n of [1, 2, 3, 4, 5]) {
+      const plan = planCatchUp(ALL_USED_UNPAID.map((r, i) => ({ ...r, paid: i < n })));
+      expect(plan.problem).toBeNull();
+      expect(plan.pay).toHaveLength(n);
+    }
+  });
+
+  it("refuses to pay a later cycle while an earlier one stands unpaid", () => {
+    // Paying only February with January still owed: a provider paid in February
+    // while January is outstanding has been paid for JANUARY.
+    const plan = planCatchUp(ALL_USED_UNPAID.map((r, i) => ({ ...r, paid: i === 1 })));
+    expect(plan.problem).toMatch(/kỳ cũ nhất/);
+  });
+
+  it("lets a skipped cycle sit anywhere — it is not a debt", () => {
+    // January not used at all, February paid. Nothing is owed before February,
+    // so this is in order despite the gap.
+    const plan = planCatchUp(
+      rows([
+        [false, false],
+        [true, true],
+        [true, false],
+      ]),
+    );
+    expect(plan.problem).toBeNull();
+    expect(plan.pay).toEqual(["t2"]);
+    expect(plan.skip).toEqual(["t1"]);
+  });
+
+  it("reads every cycle switched off as cancelling the service", () => {
+    const plan = planCatchUp(
+      rows([
+        [false, false],
+        [false, false],
+      ]),
+    );
+    expect(plan.cancelling).toBe(true);
+    expect(plan.skip).toHaveLength(2);
+    expect(plan.problem).toBeNull();
+  });
+
+  it("has nothing to submit when the user changed nothing", () => {
+    const plan = planCatchUp(ALL_USED_UNPAID);
+    expect(plan.cancelling).toBe(false);
+    expect(plan.problem).toBe("Chưa có thay đổi nào để lưu.");
   });
 });
 
@@ -266,6 +423,44 @@ describe("paymentsDrifted", () => {
     expect(paymentsDrifted(sub(history), { ...history, lastPaidAt: "2026-03-06" })).toBe(true);
     expect(paymentsDrifted(sub(history), { ...history, paymentTxIds: ["a"] })).toBe(true);
     expect(paymentsDrifted(sub(history), { ...history, paymentTxIds: ["b", "a"] })).toBe(true);
+  });
+});
+
+describe("chargesSurvivingCancel", () => {
+  // Billing on the 6th; Jan, Feb and Mar were all raised and never settled.
+  const s = sub();
+  const owed = ["2026-01", "2026-02", "2026-03"].map((m, i) =>
+    charge({ id: `p${i}`, status: "pending", subMonth: m, occurredAt: `${m}-06` }),
+  );
+
+  it("drops the cycles that would have billed on or after the stop date", () => {
+    // Stopped 20 Feb: March (bills 6 Mar) never happened.
+    const out = chargesSurvivingCancel(owed, s, "2026-02-20");
+    expect(out.map((t) => t.subMonth)).toEqual(["2026-01", "2026-02"]);
+  });
+
+  it("keeps a cycle that had already billed when the service stopped", () => {
+    // Stopped 10 Feb, after February's 6th — that period WAS used, so it is
+    // still owed even though the service is now off.
+    const out = chargesSurvivingCancel(owed, s, "2026-02-10");
+    expect(out.map((t) => t.subMonth)).toContain("2026-02");
+  });
+
+  it("never rewrites settled history", () => {
+    const history = [
+      charge({ id: "paid", status: "recorded", subMonth: "2026-05" }),
+      charge({ id: "skipped", status: "skipped", subMonth: "2026-06" }),
+    ];
+    // Both cycles bill long after the stop date and would be dropped if pending.
+    expect(chargesSurvivingCancel(history, s, "2026-01-01").map((t) => t.id)).toEqual([
+      "paid",
+      "skipped",
+    ]);
+  });
+
+  it("leaves other subscriptions' charges alone", () => {
+    const other = [charge({ id: "x", subscriptionId: "s2", status: "pending", subMonth: "2026-09" })];
+    expect(chargesSurvivingCancel(other, s, "2026-01-01")).toHaveLength(1);
   });
 });
 

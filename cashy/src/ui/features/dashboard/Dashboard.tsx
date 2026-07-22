@@ -1,11 +1,6 @@
-import { useMemo, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { useCashy } from "@/data/store";
-import {
-  confirmSubscriptionCharges,
-  deleteTransaction,
-  setSubscriptionActive,
-  skipSubscriptionCharge,
-} from "@/usecases";
+import { deleteTransaction } from "@/usecases";
 import { daysBetween, todayYMD } from "@/domain/date";
 import {
   breakdown,
@@ -18,12 +13,13 @@ import {
   rankTags,
   totals,
   walletSeries,
+  type ChartBucket,
 } from "@/domain";
 import { periodLabel, prevRange } from "@/domain/period";
 import { useStableSubOrder } from "@/ui/features/subscriptions/useStableSubOrder";
 import { useTxQuery } from "@/ui/features/transactions/useTxQuery";
 import { navigate } from "@/lib/router";
-import { formatMoneyShort } from "@/domain/money";
+import { formatMoney, formatMoneyShort } from "@/domain/money";
 import { openTxEditor } from "@/lib/modals";
 import { PageHeader } from "@/ui/common/PageHeader";
 import { BalanceCard } from "@/ui/features/dashboard/BalanceCard";
@@ -31,7 +27,7 @@ import { BalanceForecastChart } from "@/ui/features/dashboard/BalanceForecastCha
 import { CashflowChart } from "@/ui/features/dashboard/CashflowChart";
 import { SpendChart } from "@/ui/features/dashboard/SpendChart";
 import { PeriodPicker } from "@/ui/common/PeriodPicker";
-import { SubscriptionCard } from "@/ui/features/subscriptions/SubscriptionCard";
+import { ConnectedSubscriptionCard } from "@/ui/features/subscriptions/ConnectedSubscriptionCard";
 import { TxFilterBar } from "@/ui/features/transactions/TxFilterBar";
 import { TransactionTable } from "@/ui/features/transactions/TransactionTable";
 import { EmptyState } from "@/ui/common/EmptyState";
@@ -53,9 +49,12 @@ export function Dashboard() {
 
   const { t, tp, slices, insights } = view;
 
-  // Cash-flow bars run per day by default; over a 30–62 day window that gets
-  // busy, so offer a weekly roll-up. The toggle only appears in that band — a
-  // short window is fine daily, a long one is already auto-bucketed by month.
+  // Cash-flow bars run per day for a short window. The moment the range is longer
+  // than 30 days (60/90 days, 2–3 months…) a daily bar per day gets dense, so the
+  // user gets a Ngày / Tuần / Tháng roll-up toggle to pick the granularity. A
+  // window of a month or less stays daily with no toggle; multi-year "All time"
+  // (>800 days) auto-buckets by year, also with no toggle — daily/weekly there
+  // would be thousands of bars.
   const spanDays = useMemo(() => {
     let s = q.range.start;
     let e = q.range.end;
@@ -66,12 +65,26 @@ export function Dashboard() {
     }
     return daysBetween(s, e) + 1;
   }, [q.range, transactions]);
-  const canWeekly = spanDays >= 30 && spanDays <= 62;
-  const [chartBucket, setChartBucket] = useState<"day" | "week">("day");
-  const weekly = canWeekly && chartBucket === "week";
+  const showBucketToggle = spanDays > 30 && spanDays <= 800;
+  // User's explicit pick (null = follow the sensible default for this span). Reset
+  // whenever the range changes so each window opens at its natural granularity.
+  const [bucketOverride, setBucketOverride] = useState<ChartBucket | null>(null);
+  useEffect(() => {
+    setBucketOverride(null);
+  }, [q.range.start, q.range.end]);
+  const defaultBucket: ChartBucket = spanDays > 62 ? "month" : "day";
+  const chartBucket: ChartBucket | "auto" = showBucketToggle
+    ? (bucketOverride ?? defaultBucket)
+    : "auto";
+  // Selected category on the spend-by-category donut (shared with the legend list
+  // so the two stay in lock-step). Cleared when the period changes.
+  const [selectedCat, setSelectedCat] = useState<string | null>(null);
+  useEffect(() => {
+    setSelectedCat(null);
+  }, [q.range.start, q.range.end]);
   const wallet = useMemo(
-    () => walletSeries(transactions, q.range, weekly),
-    [transactions, q.range, weekly],
+    () => walletSeries(transactions, q.range, chartBucket),
+    [transactions, q.range, chartBucket],
   );
   const maxSlice = slices[0]?.pct || 1;
   const hasFlow = Boolean(t.income || t.expense);
@@ -99,8 +112,8 @@ export function Dashboard() {
 
   // Services that want attention first, then the rest; cancelled ones sink.
   // Sorted once, then held stable so editing a card never reorders it.
-  const subCards = useStableSubOrder(subscriptions);
-  const dueCount = subscriptions.filter((s) => needsPaymentNow(s)).length;
+  const subCards = useStableSubOrder(subscriptions, transactions);
+  const dueCount = subscriptions.filter((s) => needsPaymentNow(s, transactions)).length;
 
   return (
     <div className="wb-stack wb-stack--loose">
@@ -206,14 +219,11 @@ export function Dashboard() {
           </div>
           <div className="cashy-subgrid">
             {subCards.map((sub) => (
-              <SubscriptionCard
+              <ConnectedSubscriptionCard
                 key={sub.id}
                 sub={sub}
                 txs={transactions}
                 iconStyle={subIconStyle}
-                onConfirmCharges={confirmSubscriptionCharges}
-                onSkipCharge={skipSubscriptionCharge}
-                onSetActive={(active) => setSubscriptionActive(sub.id, active)}
               />
             ))}
           </div>
@@ -238,23 +248,28 @@ export function Dashboard() {
                 <h3 className="cashy-card-title">Wallet balance &amp; spending</h3>
               </div>
               <div className="wb-cluster" style={{ gap: 12 }}>
-                {/* Day ⇄ Week roll-up — only in the 30–62 day band (see above). */}
-                {canWeekly && (
+                {/* Ngày / Tuần / Tháng roll-up FIRST, then the colour key — the
+                    control the user actually operates sits next to the title, and
+                    the legend (which is only ever read) trails at the edge. Only
+                    offered once the window is longer than 30 days (see spanDays). */}
+                {showBucketToggle && (
                   <div className="cashy-seg" role="group" aria-label="Chart granularity">
-                    <button
-                      type="button"
-                      className={chartBucket === "day" ? "cashy-seg__btn is-active" : "cashy-seg__btn"}
-                      onClick={() => setChartBucket("day")}
-                    >
-                      Ngày
-                    </button>
-                    <button
-                      type="button"
-                      className={chartBucket === "week" ? "cashy-seg__btn is-active" : "cashy-seg__btn"}
-                      onClick={() => setChartBucket("week")}
-                    >
-                      Tuần
-                    </button>
+                    {(
+                      [
+                        ["day", "Ngày"],
+                        ["week", "Tuần"],
+                        ["month", "Tháng"],
+                      ] as [ChartBucket, string][]
+                    ).map(([key, label]) => (
+                      <button
+                        key={key}
+                        type="button"
+                        className={chartBucket === key ? "cashy-seg__btn is-active" : "cashy-seg__btn"}
+                        onClick={() => setBucketOverride(key)}
+                      >
+                        {label}
+                      </button>
+                    ))}
                   </div>
                 )}
                 <div className="wb-legend">
@@ -299,28 +314,50 @@ export function Dashboard() {
             <h3 className="cashy-card-title" style={{ marginBottom: 14 }}>
               Spending by category
             </h3>
-            <SpendChart slices={slices} total={t.expense} size={168} />
+            <SpendChart
+              slices={slices}
+              total={t.expense}
+              size={168}
+              selectedId={selectedCat}
+              onSelect={setSelectedCat}
+            />
+            {/* EVERY category in the period is listed (not just the top few); each
+                row toggles its slice on the donut. */}
             <div className="cashy-rank" style={{ marginTop: 18 }}>
-              {slices.slice(0, 5).map((s) => (
-                <div key={s.id} className="cashy-rank__row">
-                  <div className="cashy-rank__head">
-                    <span className="cashy-dot cashy-dot--sm" style={{ background: s.colorHex }} />
-                    <span className="cashy-rank__name">{s.name}</span>
-                    <span className="cashy-rank__val">{Math.round(s.pct * 100)}%</span>
-                  </div>
-                  <div className="wb-progress">
-                    <div
-                      className="wb-progress__bar"
-                      style={{
-                        width: `${Math.max(4, (s.pct / maxSlice) * 100)}%`,
-                        // full category hue, matching its donut slice (web-builder
-                        // ranked bars use the bright chart colour, not a soft tint)
-                        background: s.colorHex,
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
+              {slices.map((s) => {
+                const on = s.id === selectedCat;
+                const dim = selectedCat !== null && !on;
+                return (
+                  <button
+                    key={s.id}
+                    type="button"
+                    className={
+                      "cashy-rank__row" +
+                      (on ? " cashy-rank__row--active" : "") +
+                      (dim ? " cashy-rank__row--dim" : "")
+                    }
+                    onClick={() => setSelectedCat(on ? null : s.id)}
+                  >
+                    <div className="cashy-rank__head">
+                      <span className="cashy-dot cashy-dot--sm" style={{ background: s.colorHex }} />
+                      <span className="cashy-rank__name">{s.name}</span>
+                      <span className="wb-num cashy-rank__amt">{formatMoney(s.total)}</span>
+                      <span className="wb-num cashy-rank__val">{Math.round(s.pct * 100)}%</span>
+                    </div>
+                    <div className="wb-progress">
+                      <div
+                        className="wb-progress__bar"
+                        style={{
+                          width: `${Math.max(4, (s.pct / maxSlice) * 100)}%`,
+                          // full category hue, matching its donut slice (web-builder
+                          // ranked bars use the bright chart colour, not a soft tint)
+                          background: s.colorHex,
+                        }}
+                      />
+                    </div>
+                  </button>
+                );
+              })}
               {slices.length === 0 && (
                 <p style={{ fontSize: 13, color: "var(--wb-fg-muted)", margin: 0 }}>
                   No spending in this period.

@@ -183,12 +183,40 @@ body {
 .cashy-rank {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 6px;
+  /* Lists EVERY category in the period; cap the height and let it scroll rather
+     than pushing the card taller than the donut beside it. */
+  max-height: 300px;
+  overflow-y: auto;
 }
+/* A rank row is a toggle: click to select its slice on the donut (and back). */
 .cashy-rank__row {
   display: flex;
   flex-direction: column;
   gap: 7px;
+  width: 100%;
+  padding: 8px;
+  margin: -8px 0;
+  border: 0;
+  border-radius: var(--wb-radius-sm);
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+.cashy-rank__row:hover {
+  background: var(--wb-surface-2);
+}
+.cashy-rank__row--active {
+  background: var(--wb-surface-2);
+}
+/* Everything that is NOT the selected slice recedes — but comes back on hover so
+   the list stays browsable while a selection is held. */
+.cashy-rank__row--dim {
+  opacity: 0.55;
+}
+.cashy-rank__row--dim:hover {
+  opacity: 1;
 }
 .cashy-rank__head {
   display: flex;
@@ -203,11 +231,20 @@ body {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.cashy-rank__val {
+/* The money sits between the name and the share, and carries the auto margin
+   that pushes both to the right edge. */
+.cashy-rank__amt {
   margin-left: auto;
   padding-left: 8px;
   color: var(--wb-fg-muted);
-  font-weight: 600;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  flex: none;
+}
+.cashy-rank__val {
+  padding-left: 10px;
+  color: var(--wb-fg);
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
   flex: none;
 }
@@ -354,6 +391,22 @@ body {
   background: var(--wb-danger-soft);
   color: var(--wb-danger-text);
 }
+/* Destructive, but only once you reach for it: neutral grey at rest so "Huỷ đăng
+   ký" sitting permanently on every card never shouts, turning red on hover to
+   confirm what it does before the click. (`--quiet-danger` above is the other
+   half of the pair: red from the start, for a button that only appears once the
+   user is already in a destructive flow.) Same 0-2-0 + explicit `.dark` dance as
+   the rest of this block — index.css loads BEFORE web-builder.css, so a plain
+   `.cashy-*` hover would lose to `.dark .wb-btn--ghost:hover`. */
+.wb-btn.cashy-btn--danger-hover {
+  color: var(--wb-fg-muted);
+}
+.wb-btn.cashy-btn--danger-hover:hover,
+.dark .wb-btn.cashy-btn--danger-hover:hover {
+  background: var(--wb-danger-soft);
+  color: var(--wb-danger-text);
+}
+
 /* Its success twin — the quiet "đã trả" confirm. Green = paid (§1). Same 0-3-0
    dance for the dark hover. */
 .wb-btn.cashy-btn--quiet-success {
@@ -464,9 +517,16 @@ body {
   align-items: center;
   gap: 8px;
 }
+/* One line, always. The row's job is label-on-the-left / resolved-range-on-the
+   right, and a wrapped label breaks that pairing AND makes the row twice as tall
+   as its neighbours. Clip with an ellipsis instead — the panel is sized so no
+   real preset label ever reaches it. */
 .cashy-period-row__label {
   flex: 1;
   min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .cashy-period-row__note {
   flex: none;
@@ -849,7 +909,11 @@ body {
    line drags the whole row taller. The question shrinks to an ellipsis and the
    buttons hold their size, so the foot stays exactly one line whatever the
    string. */
-.cashy-cardfoot__q {
+/* The card foot is one overflow menu + at most one action, and the standing text
+   between them is the ONLY thing allowed to give up space. Clipping it with an
+   ellipsis (rather than letting it wrap) is what keeps every card's foot exactly
+   one row tall in a grid where the columns can get narrow. */
+.cashy-cardfoot__note {
   font-size: 13px;
   margin-right: auto;
   min-width: 0;
@@ -858,6 +922,16 @@ body {
   text-overflow: ellipsis;
 }
 .wb-card__foot .wb-btn {
+  flex-shrink: 0;
+}
+/* The foot's right-hand group: everything you can DO to the service, pushed to
+   the far edge as one block so the status line on the left keeps its own space
+   and the buttons never interleave with it. */
+.cashy-cardfoot__end {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
   flex-shrink: 0;
 }
 
@@ -990,7 +1064,11 @@ body {
 
 /* One selectable owed cycle in the catch-up picker: tick · month · date · amount,
    the amount pinned right so the column reads as a running list of what you owe. */
-.cashy-pay-row {
+/* One owed (or settled) billing cycle as a row: the payment answer on the left,
+   the cycle's facts in the middle, and the "did you use it" switch pinned right.
+   Shared by the catch-up dialog and the history dialog so a cycle reads the same
+   in both. */
+.cashy-catchup-row {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -998,18 +1076,65 @@ body {
   border: var(--wb-bw) solid var(--wb-border);
   border-radius: var(--wb-radius-sm);
 }
-.cashy-pay-row__month {
+/* Switched off = "I wasn't a customer that cycle". The row stays readable but
+   visibly out of play, and its checkbox is disabled, so there is no way to
+   mistake it for a cycle still awaiting a decision. */
+.cashy-catchup-row.is-off {
+  opacity: 0.5;
+  background: var(--wb-surface-2);
+}
+.cashy-catchup-row__pay {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+.cashy-catchup-row__month {
   font-weight: 600;
   font-size: 13px;
+  white-space: nowrap;
 }
-.cashy-pay-row__date {
+.cashy-catchup-row__date {
   font-size: 12px;
   color: var(--wb-fg-muted);
+  white-space: nowrap;
 }
-.cashy-pay-row__amt {
+/* Pushes itself — and everything after it — to the right, so the amount and the
+   switch sit in a stable column however long the month label runs. */
+.cashy-catchup-row__amt {
   margin-left: auto;
   font-size: 13px;
   font-weight: 600;
+  white-space: nowrap;
+}
+.cashy-catchup-row__used {
+  flex-shrink: 0;
+}
+.cashy-catchup__lead {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: var(--wb-fg-muted);
+}
+/* The reason the confirm button is refusing. Danger-toned because it marks the
+   dialog as un-submittable, not merely informative. */
+.cashy-catchup__problem {
+  margin: 12px 0 0;
+  padding: 9px 11px;
+  border-radius: var(--wb-radius-sm);
+  background: var(--wb-danger-soft);
+  color: var(--wb-danger-text);
+  font-size: 12.5px;
+}
+.cashy-catchup__note {
+  margin: 12px 0 0;
+  font-size: 12.5px;
+  color: var(--wb-fg-muted);
+}
+/* The settled-cycle list can run to years; cap it and scroll rather than growing
+   the dialog past the viewport. */
+.cashy-history-scroll {
+  max-height: min(52vh, 420px);
+  overflow-y: auto;
 }
 
 /* =========================================================================

@@ -1,4 +1,5 @@
 import { useEffect, useRef, type ReactNode } from "react";
+import { ScrollArea } from "@/ui/kit/ScrollArea";
 
 /**
  * Modal — web-builder wb-overlay + wb-modal look with the behaviour Radix used
@@ -63,23 +64,40 @@ export function Modal({
         if (e.target === e.currentTarget) onClose();
       }}
     >
+      {/* A flex column with a capped height: the head and foot are fixed panes
+          (flex-shrink: 0) and ONLY the body scrolls. As one overflow:auto box,
+          scrolling a tall form slid the title and the footer buttons off the
+          panel and revealed the backdrop behind them — so a long catch-up list
+          could scroll its own confirm button out of reach. */}
       <div
         ref={panelRef}
         className="wb-modal"
         role="dialog"
         aria-modal="true"
-        style={{ maxWidth, maxHeight: "92vh", overflowY: "auto" }}
+        style={{ maxWidth, maxHeight: "92vh", display: "flex", flexDirection: "column" }}
       >
         {title !== undefined && (
-          <div className="wb-modal__head">
+          <div className="wb-modal__head" style={{ flexShrink: 0 }}>
             <div>
               <h2 className="wb-modal__title">{title}</h2>
             </div>
             <button className="wb-close" aria-label="Đóng" onClick={onClose} />
           </div>
         )}
-        <div className="wb-modal__body">{children}</div>
-        {footer && <div className="wb-modal__foot">{footer}</div>}
+        {/* ScrollArea, not a bare overflow:auto — the body is the one pane that
+            scrolls, so it should carry the themed pill scrollbar rather than the
+            bright OS default sitting against a dark panel. */}
+        <ScrollArea className="wb-modal__body" style={{ flex: "1 1 auto", minHeight: 0 }}>
+          {children}
+        </ScrollArea>
+        {footer && (
+          <div
+            className="wb-modal__foot"
+            style={{ flexShrink: 0, borderTop: "var(--wb-bw) solid var(--wb-border)" }}
+          >
+            {footer}
+          </div>
+        )}
       </div>
     </div>
   );
