@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { Popover } from "@/components/wb/Popover";
 
 // Vietnamese, Monday-first (matches the app's date heads).
@@ -61,7 +61,7 @@ export function DatePicker({
       )}
     >
       {({ close }) => (
-        <div className="wb-calendar" style={{ "--wb-cal-cell": "34px" } as React.CSSProperties}>
+        <div className="wb-calendar" style={{ "--wb-cal-cell": "34px" } as CSSProperties}>
           <div className="wb-calendar__head">
             <button type="button" className="wb-calendar__nav" aria-label="Tháng trước" onClick={prevMonth}>
               <span className="wb-ico">chevron_left</span>

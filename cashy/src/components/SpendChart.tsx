@@ -45,9 +45,9 @@ export function SpendChart({
             strokeWidth={0}
             isAnimationActive={false}
           >
-            {data.map((s, i) => (
+            {data.map((s) => (
               <Cell
-                key={i}
+                key={s.id}
                 fill={empty ? "currentColor" : (s as BreakdownSlice).colorHex}
               />
             ))}

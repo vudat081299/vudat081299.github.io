@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import type { Range } from "@/lib/period";
 
 // Vietnamese, Monday-first (matches the app's date heads).
@@ -55,7 +55,7 @@ export function RangeCalendar({
   }
 
   return (
-    <div className="wb-calendar" style={{ "--wb-cal-cell": "34px" } as React.CSSProperties}>
+    <div className="wb-calendar" style={{ "--wb-cal-cell": "34px" } as CSSProperties}>
       <div className="wb-calendar__head">
         <button
           type="button"

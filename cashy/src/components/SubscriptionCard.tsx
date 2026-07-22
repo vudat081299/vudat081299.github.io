@@ -102,7 +102,8 @@ export function SubscriptionCard({
   const togglePay = (txId: string) =>
     setPaySel((prev) => {
       const next = new Set(prev);
-      next.has(txId) ? next.delete(txId) : next.add(txId);
+      if (next.has(txId)) next.delete(txId);
+      else next.add(txId);
       return next;
     });
   const confirmPaySelected = () => {

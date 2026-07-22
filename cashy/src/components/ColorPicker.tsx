@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { cn } from "@/lib/utils";
 import { SWATCHES } from "@/lib/palette";
 
@@ -16,7 +17,7 @@ export function ColorPicker({
           type="button"
           onClick={() => onChange(hex)}
           className={cn("wb-swatch", value === hex && "is-selected")}
-          style={{ "--wb-swatch-color": hex } as React.CSSProperties}
+          style={{ "--wb-swatch-color": hex } as CSSProperties}
           aria-label={hex}
         />
       ))}
