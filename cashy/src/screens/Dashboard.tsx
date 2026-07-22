@@ -93,8 +93,8 @@ export function Dashboard() {
 
   // Services that want attention first, then the rest; cancelled ones sink.
   // Sorted once, then held stable so editing a card never reorders it.
-  const subCards = useStableSubOrder(subscriptions);
-  const dueCount = subscriptions.filter((s) => needsPaymentNow(s)).length;
+  const subCards = useStableSubOrder(subscriptions, transactions);
+  const dueCount = subscriptions.filter((s) => needsPaymentNow(s, transactions)).length;
 
   return (
     <div className="wb-stack wb-stack--loose">

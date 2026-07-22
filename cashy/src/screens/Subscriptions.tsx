@@ -1,10 +1,9 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import type { Category, SubIconStyle, Subscription, Transaction } from "@/types";
 import { useCashy, setSubscriptionActive } from "@/lib/store";
 import {
   collectDues,
   currentCycle,
-  firstUnpaidCycle,
   monthlyCommitment,
   needsPaymentNow,
   subscriptionStatus,
@@ -17,6 +16,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { EmptyState } from "@/components/EmptyState";
 import { CategoryCap } from "@/components/CategoryCap";
 import { SubscriptionDues } from "@/components/SubscriptionDues";
+import { SubscriptionHistory } from "@/components/SubscriptionHistory";
 import { openSubscriptionEditor } from "@/lib/modals";
 
 /**
@@ -37,15 +37,22 @@ function SubscriptionRow({
   iconStyle: SubIconStyle;
 }) {
   const st = subscriptionStatus(sub, txs);
-  const due = needsPaymentNow(sub);
+  const due = needsPaymentNow(sub, txs);
   // The CYCLE in play — the current month for a monthly plan, the current
   // billing year for a yearly one. Using monthKey() here would tell a yearly
   // subscriber "chưa đến hạn tháng 7" every month of the year.
   const cur = currentCycle(sub);
-  const owed = firstUnpaidCycle(sub);
+  // The earliest cycle actually owed (ledger-based), so the "Cần trả" label names
+  // the oldest unpaid month rather than a marker that can sit past it.
+  const owed = st.pending[0]?.month ?? cur;
   // Settled for this cycle, as opposed to merely not billed yet — the two look
   // the same from "not due" but only one of them means the money has been paid.
   const paidThisCycle = sub.lastPaidAt?.slice(0, 7) === cur;
+  const skippedCount = txs.filter(
+    (t) => t.subscriptionId === sub.id && t.status === "skipped",
+  ).length;
+  const hasHistory = sub.paymentTxIds.length > 0 || skippedCount > 0;
+  const [historyOpen, setHistoryOpen] = useState(false);
 
   const rowTone = !sub.active ? undefined : due ? "wb-row--warning" : undefined;
 
@@ -77,10 +84,19 @@ function SubscriptionRow({
       <td className="wb-cell-muted">{fmtDateNum(sub.startedAt)}</td>
       <td className="wb-cell-muted">
         {sub.lastPaidAt ? fmtDateNum(sub.lastPaidAt) : "—"}
-        {/* The stored history, not a guess: one id per transaction that paid it. */}
-        {sub.paymentTxIds.length > 0 && (
-          <span className="wb-cell-sub">{sub.paymentTxIds.length} kỳ đã trả</span>
+        {/* The stored history, not a guess: one id per transaction that paid it.
+            Clickable — opens the per-cycle history where a payment can be undone. */}
+        {hasHistory && (
+          <button type="button" className="cashy-histlink" onClick={() => setHistoryOpen(true)}>
+            {sub.paymentTxIds.length > 0 ? `${sub.paymentTxIds.length} kỳ đã trả` : "Xem lịch sử"}
+          </button>
         )}
+        <SubscriptionHistory
+          sub={sub}
+          txs={txs}
+          open={historyOpen}
+          onClose={() => setHistoryOpen(false)}
+        />
       </td>
       <td className="wb-num wb-num--strong">{formatMoney(sub.amount)}</td>
       <td>
@@ -136,11 +152,11 @@ export function Subscriptions() {
   const dues = useMemo(() => collectDues(subscriptions, transactions), [subscriptions, transactions]);
   const active = subscriptions.filter((s) => s.active);
   const monthly = monthlyCommitment(subscriptions);
-  const dueCount = subscriptions.filter((s) => needsPaymentNow(s)).length;
+  const dueCount = subscriptions.filter((s) => needsPaymentNow(s, transactions)).length;
 
   // Whatever needs money first sits at the top; paused services sink. Sorted
   // once on open, then held stable so editing a row never makes it jump.
-  const ordered = useStableSubOrder(subscriptions);
+  const ordered = useStableSubOrder(subscriptions, transactions);
 
   return (
     <div className="wb-stack wb-stack--loose">

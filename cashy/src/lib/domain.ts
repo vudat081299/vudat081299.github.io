@@ -457,36 +457,50 @@ export function currentCycle(sub: Subscription, now: Date = new Date()): string 
 }
 
 /**
- * Should this subscription be asking for money NOW? True when it is active, its
- * billing day has arrived, and the cycle it opened is still unpaid. This single
- * predicate is what decides whether the "cần trả" reminder shows.
+ * Should this subscription be asking for money NOW? True when it is active and
+ * has at least one unresolved (still-pending) charge on the books. Read from the
+ * LEDGER, not from `lastPaidAt`: paying a newer cycle out of order used to jump
+ * the marker past an older unpaid one, so the card fell quiet while an orphaned
+ * pending charge kept nagging in the dues list. Deriving "due" from the actual
+ * charges keeps every surface (card, dues, row) telling the same story.
+ * (`syncSubscriptions` only ever materialises a pending charge once its billing
+ * day has passed, so a pending charge already means "due".)
  */
-export function needsPaymentNow(sub: Subscription, now: Date = new Date()): boolean {
+export function needsPaymentNow(
+  sub: Subscription,
+  txs: Transaction[],
+  now: Date = new Date(),
+): boolean {
   if (!sub.active) return false;
-  const cur = currentCycle(sub, now);
-  if (cycleDate(sub, cur) > ymd(now)) return false; // not due yet
-  return firstUnpaidCycle(sub) <= cur;
+  return subscriptionStatus(sub, txs, now).pending.length > 0;
 }
 
 /**
  * A service the provider would have cut off: still switched on, but a WHOLE
- * billing cycle has gone by unpaid (an earlier cycle is still owed). That is a
- * different thing from "due now", which is merely a bill on the doormat.
+ * billing cycle has gone by with an earlier cycle still owed. That is a different
+ * thing from "due now", which is merely a bill on the doormat. Also ledger-based,
+ * so skipping a cycle (resolving it) clears the lapse instead of leaving the card
+ * stuck on "Suspended".
  */
-export function isLapsed(sub: Subscription, now: Date = new Date()): boolean {
+export function isLapsed(
+  sub: Subscription,
+  txs: Transaction[],
+  now: Date = new Date(),
+): boolean {
   if (!sub.active) return false;
-  return firstUnpaidCycle(sub) < currentCycle(sub, now);
+  const { pending } = subscriptionStatus(sub, txs, now);
+  return pending.length > 0 && pending[0].month < currentCycle(sub, now);
 }
 
-/** How many whole cycles this subscription currently owes. */
-export function cyclesOwed(sub: Subscription, now: Date = new Date()): number {
+/** How many whole cycles this subscription currently owes — the count of
+ *  still-pending charges (read from the ledger, see `needsPaymentNow`). */
+export function cyclesOwed(
+  sub: Subscription,
+  txs: Transaction[],
+  now: Date = new Date(),
+): number {
   if (!sub.active) return 0;
-  const cur = currentCycle(sub, now);
-  if (cycleDate(sub, cur) > ymd(now)) return 0;
-  let k = firstUnpaidCycle(sub);
-  let n = 0;
-  for (let guard = 0; k <= cur && guard < 4000; guard++, k = addCycle(sub, k, 1)) n++;
-  return n;
+  return subscriptionStatus(sub, txs, now).pending.length;
 }
 
 /**

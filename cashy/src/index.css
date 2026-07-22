@@ -940,6 +940,49 @@ body {
   font-weight: 600;
 }
 
+/* One owed cycle in the 3-way catch-up picker: month/date on the left, a
+   Trả / Bỏ qua / Để sau segmented control on the right. */
+.cashy-catchup-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 11px;
+  border: var(--wb-bw) solid var(--wb-border);
+  border-radius: var(--wb-radius-sm);
+}
+.cashy-catchup-row__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-right: auto;
+  min-width: 0;
+}
+
+/* The settled-cycles history list scrolls once it outgrows the modal. */
+.cashy-history-scroll {
+  max-height: 340px;
+  overflow-y: auto;
+}
+
+/* The "N kỳ đã trả" link in the subscriptions table — reads as quiet subtext but
+   opens the payment history where a cycle can be undone. */
+.cashy-histlink {
+  display: inline-block;
+  margin-top: 2px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--wb-fg-muted);
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+}
+.cashy-histlink:hover {
+  color: var(--wb-fg);
+}
+
 /* =========================================================================
    BRAND LOCKUP — the onboarding hero mark + wordmark.
    ========================================================================= */

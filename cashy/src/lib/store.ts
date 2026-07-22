@@ -8,6 +8,7 @@ import type {
   Tag,
   ThemeMode,
   Transaction,
+  TxStatus,
   TxType,
   Workspace,
 } from "@/types";
@@ -506,11 +507,66 @@ export function skipSubscriptionCharge(txId: string) {
   if (subId) syncPayments(subId);
 }
 
+/** Skip several charges at once (grey) — the "bỏ qua" side of a catch-up. */
+export function skipSubscriptionCharges(txIds: string[]) {
+  setChargeStatuses(txIds, "skipped");
+}
+
+/**
+ * Settle a catch-up in ONE step: the ticked cycles become recorded, the skipped
+ * ones become grey, and any the user left undecided stay pending (still owed,
+ * still nagging). Committed as a single state change so the whole catch-up — pay
+ * AND skip together — is one undo-able step, and `syncPayments` runs once per
+ * affected subscription afterwards.
+ */
+export function resolveSubscriptionCharges(sel: { pay: string[]; skip: string[] }) {
+  const pay = new Set(sel.pay);
+  const skip = new Set(sel.skip);
+  if (pay.size === 0 && skip.size === 0) return;
+  const affected = new Set(
+    state.transactions
+      .filter((t) => (pay.has(t.id) || skip.has(t.id)) && t.subscriptionId)
+      .map((t) => t.subscriptionId!),
+  );
+  commit({
+    ...state,
+    transactions: state.transactions.map((t) =>
+      pay.has(t.id)
+        ? { ...t, status: "recorded" as const }
+        : skip.has(t.id)
+          ? { ...t, status: "skipped" as const }
+          : t,
+    ),
+  });
+  for (const id of affected) syncPayments(id);
+}
+
 /** Undo a decision — back to awaiting confirmation. */
 export function revertSubscriptionCharge(txId: string) {
   const subId = subIdOfCharge(txId);
   updateTransaction(txId, { status: "pending" });
   if (subId) syncPayments(subId);
+}
+
+/** Undo several decisions at once — the reversal for a batch catch-up. */
+export function revertSubscriptionCharges(txIds: string[]) {
+  setChargeStatuses(txIds, "pending");
+}
+
+/** Set the same status on a batch of charges in one commit, then refresh the
+ *  payment history of every subscription they touched. Shared by the batch
+ *  skip / revert helpers so they never drift from `confirmSubscriptionCharges`. */
+function setChargeStatuses(txIds: string[], status: TxStatus) {
+  if (!txIds.length) return;
+  const ids = new Set(txIds);
+  const affected = new Set(
+    state.transactions.filter((t) => ids.has(t.id) && t.subscriptionId).map((t) => t.subscriptionId!),
+  );
+  commit({
+    ...state,
+    transactions: state.transactions.map((t) => (ids.has(t.id) ? { ...t, status } : t)),
+  });
+  for (const id of affected) syncPayments(id);
 }
 
 // ---- import / export -------------------------------------------------------

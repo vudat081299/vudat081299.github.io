@@ -4,13 +4,14 @@ import {
   billingLabel,
   isLapsed,
   needsPaymentNow,
-  nextPaymentDate,
   subCycle,
   subscriptionStatus,
 } from "@/lib/domain";
 import {
   confirmSubscriptionCharge,
-  confirmSubscriptionCharges,
+  resolveSubscriptionCharges,
+  revertSubscriptionCharge,
+  revertSubscriptionCharges,
   setSubscriptionActive,
   useCashy,
 } from "@/lib/store";
@@ -19,6 +20,11 @@ import { Modal } from "@/components/wb/Modal";
 import { billingDate, fmtDateNum, fmtDateShort, monthLabelShort } from "@/lib/date";
 import { formatMoney } from "@/lib/money";
 import { SubTile } from "@/components/SubTile";
+import { SubscriptionHistory } from "@/components/SubscriptionHistory";
+
+/** What to do with one owed cycle in the catch-up picker. `leave` keeps it
+ *  pending — still owed, still nagging — for a cycle you mean to pay later. */
+type CatchUpChoice = "pay" | "skip" | "leave";
 
 /**
  * One service, one card. It answers the four questions a subscription actually
@@ -42,10 +48,13 @@ export function SubscriptionCard({
   const [confirming, setConfirming] = useState(false);
   // Marking a single cycle paid gets the same two-step confirm as cancelling.
   const [payConfirming, setPayConfirming] = useState(false);
-  // Catching up several cycles opens a picker — you tick the ones you actually
-  // paid, since "behind" does not mean you paid every missed month.
+  // Catching up several cycles opens a picker — each owed cycle gets an explicit
+  // Trả / Bỏ qua / Để sau choice, since "behind" does not mean you paid every
+  // missed month, nor that you want to write off the ones you didn't.
   const [payModalOpen, setPayModalOpen] = useState(false);
-  const [paySel, setPaySel] = useState<Set<string>>(new Set());
+  const [choices, setChoices] = useState<Record<string, CatchUpChoice>>({});
+  // The persistent "undo a payment" surface — the settled-cycles list.
+  const [historyOpen, setHistoryOpen] = useState(false);
   // After cancelling, the pointer is still over the card, so CSS :hover would
   // keep it bright until you move away. This forces the greyed-out look at once
   // and lifts only when the pointer actually leaves.
@@ -83,9 +92,15 @@ export function SubscriptionCard({
 
   const st = subscriptionStatus(sub, txs);
   const cycle = subCycle(sub);
-  const due = needsPaymentNow(sub);
-  const lapsed = isLapsed(sub);
+  const due = needsPaymentNow(sub, txs);
+  const lapsed = isLapsed(sub, txs);
   const dueTxId = st.pending[0]?.txId;
+  const dueMonth = st.pending[0]?.month;
+  // The date the meta line shows: the earliest owed cycle's date when money is
+  // owed (a date in the past — the point of the reminder), else the next upcoming
+  // billing date. Both come from the ledger so they never contradict the status.
+  const owedDate = dueMonth ? billingDate(dueMonth, sub.dayOfMonth) : st.nextDate;
+  const hasHistory = sub.paymentTxIds.length > 0 || txs.some((t) => t.subscriptionId === sub.id && t.status === "skipped");
   // The bar only earns full ink in the home stretch — under ~10% of the period
   // left — so a black bar means "renews soon" rather than merely "time passes".
   const nearEnd = cycle.remainingDays < cycle.totalDays * 0.1;
@@ -93,22 +108,42 @@ export function SubscriptionCard({
   // Clearing that must be one action, not one click per month.
   const behind = st.pending.length;
 
-  // Open the catch-up picker with every owed cycle pre-ticked — the common case
-  // is "I paid them all", and unticking the odd one is cheaper than ticking all.
+  // Open the catch-up picker with every owed cycle pre-set to "Trả" — the common
+  // case is "I paid them all", and flipping the odd one is cheaper than ticking
+  // all. The other two choices (Bỏ qua / Để sau) are one tap away per cycle.
   const openPayModal = () => {
-    setPaySel(new Set(st.pending.map((p) => p.txId)));
+    const init: Record<string, CatchUpChoice> = {};
+    for (const p of st.pending) init[p.txId] = "pay";
+    setChoices(init);
     setPayModalOpen(true);
   };
-  const togglePay = (txId: string) =>
-    setPaySel((prev) => {
-      const next = new Set(prev);
-      if (next.has(txId)) next.delete(txId);
-      else next.add(txId);
-      return next;
-    });
-  const confirmPaySelected = () => {
-    confirmSubscriptionCharges([...paySel]);
+  const setChoice = (txId: string, choice: CatchUpChoice) =>
+    setChoices((prev) => ({ ...prev, [txId]: choice }));
+
+  const payIds = st.pending.filter((p) => choices[p.txId] === "pay").map((p) => p.txId);
+  const skipIds = st.pending.filter((p) => choices[p.txId] === "skip").map((p) => p.txId);
+  const leaveCount = st.pending.length - payIds.length - skipIds.length;
+
+  const confirmCatchUp = () => {
+    resolveSubscriptionCharges({ pay: payIds, skip: skipIds });
     setPayModalOpen(false);
+    const touched = [...payIds, ...skipIds];
+    if (!touched.length) return;
+    const parts = [
+      payIds.length ? `${payIds.length} đã trả` : "",
+      skipIds.length ? `${skipIds.length} bỏ qua` : "",
+    ].filter(Boolean);
+    toast.undo(`${sub.name}: ${parts.join(", ")}`, () => revertSubscriptionCharges(touched));
+  };
+
+  // Single owed cycle: the inline confirm books it and offers an immediate undo.
+  const confirmSingle = () => {
+    if (!dueTxId) return;
+    confirmSubscriptionCharge(dueTxId);
+    toast.undo(`Đã trả kỳ ${monthLabelShort(dueMonth ?? "")}`, () =>
+      revertSubscriptionCharge(dueTxId),
+    );
+    setPayConfirming(false);
   };
 
   const tone = !sub.active ? undefined : lapsed ? "danger" : due ? "warning" : undefined;
@@ -191,7 +226,9 @@ export function SubscriptionCard({
             <div className="cashy-submeta__val">
               {!sub.active
                 ? `${sub.paymentTxIds.length} on record`
-                : fmtDateNum(nextPaymentDate(sub))}
+                : owedDate
+                  ? fmtDateNum(owedDate)
+                  : "—"}
             </div>
           </div>
         </div>
@@ -272,17 +309,14 @@ export function SubscriptionCard({
         ) : payConfirming ? (
           <>
             <span className="wb-cell-muted" style={{ fontSize: 13, marginRight: "auto" }}>
-              Đã thanh toán kỳ {monthLabelShort(st.pending[0]?.month ?? "")}?
+              Đã thanh toán kỳ {monthLabelShort(dueMonth ?? "")}?
             </span>
             {/* The confirming action is a quiet green (paid = success, §1); the
                 do-nothing carries the fill, so a reflexive click records nothing. */}
             <button
               type="button"
               className="wb-btn wb-btn--ghost wb-btn--sm cashy-btn--quiet-success"
-              onClick={() => {
-                if (dueTxId) confirmSubscriptionCharge(dueTxId);
-                setPayConfirming(false);
-              }}
+              onClick={confirmSingle}
             >
               Đã trả
             </button>
@@ -304,17 +338,27 @@ export function SubscriptionCard({
             >
               Cancel subscription
             </button>
+            {hasHistory && (
+              <button
+                type="button"
+                className="wb-btn wb-btn--ghost wb-btn--sm"
+                onClick={() => setHistoryOpen(true)}
+              >
+                Lịch sử
+              </button>
+            )}
             {dueTxId && (
               <button
                 type="button"
                 className="wb-btn wb-btn--sm"
                 style={{ gap: 4 }}
-                // One owed cycle → a quick inline confirm; several → the picker,
-                // since being "behind" doesn't mean every missed month was paid.
+                // One owed cycle → a quick inline confirm that names the month;
+                // several → the picker, since being "behind" doesn't mean every
+                // missed month was paid.
                 onClick={() => (behind > 1 ? openPayModal() : setPayConfirming(true))}
               >
                 <span className="wb-ico wb-ico--xs">check</span>
-                {behind > 1 ? `Mark ${behind} paid` : "Mark paid"}
+                {behind > 1 ? `Trả ${behind} kỳ…` : `Trả kỳ ${monthLabelShort(dueMonth ?? "")}`}
               </button>
             )}
           </>
@@ -323,6 +367,15 @@ export function SubscriptionCard({
             <span className="wb-cell-muted" style={{ fontSize: 13, marginRight: "auto" }}>
               No longer billing
             </span>
+            {hasHistory && (
+              <button
+                type="button"
+                className="wb-btn wb-btn--ghost wb-btn--sm"
+                onClick={() => setHistoryOpen(true)}
+              >
+                Lịch sử
+              </button>
+            )}
             {/* Resuming is cheap and reversible, so it happens on one click and
                 offers the way back in a toast — a confirm dialog here would tax
                 the harmless direction while cancelling stays the guarded one. */}
@@ -341,13 +394,15 @@ export function SubscriptionCard({
       </div>
     </div>
 
-    {/* Catch-up picker — tick the cycles actually paid, then record them in one
-        step. Opened only when several cycles are owed. */}
+    {/* Catch-up picker — for each owed cycle, say what really happened: Trả (paid,
+        books it), Bỏ qua (skip, greys it, no more nag), or Để sau (leave it owed).
+        The footer spells out exactly what the confirm will do. Opened only when
+        several cycles are owed. */}
     <Modal
       open={payModalOpen}
       onClose={() => setPayModalOpen(false)}
-      title={sub.name}
-      maxWidth={420}
+      title={`${sub.name} · ${behind} kỳ chưa xử lý`}
+      maxWidth={460}
       footer={
         <>
           <button
@@ -362,35 +417,70 @@ export function SubscriptionCard({
             type="button"
             className="wb-btn wb-btn--sm"
             style={{ gap: 4 }}
-            disabled={paySel.size === 0}
-            onClick={confirmPaySelected}
+            disabled={payIds.length === 0 && skipIds.length === 0}
+            onClick={confirmCatchUp}
           >
             <span className="wb-ico wb-ico--xs">check</span>
-            Đã trả {paySel.size} kỳ · {formatMoney(sub.amount * paySel.size)}
+            {payIds.length > 0
+              ? `Trả ${payIds.length} kỳ · ${formatMoney(sub.amount * payIds.length)}`
+              : "Xác nhận"}
+            {skipIds.length > 0 ? ` · bỏ qua ${skipIds.length}` : ""}
           </button>
         </>
       }
     >
       <p style={{ margin: "0 0 12px", fontSize: 13, color: "var(--wb-fg-muted)" }}>
-        Chọn những kỳ bạn đã thanh toán:
+        Mỗi kỳ chọn: <strong>Trả</strong> nếu đã thanh toán, <strong>Bỏ qua</strong> nếu không trả
+        kỳ đó, hoặc <strong>Để sau</strong> để vẫn nợ và nhắc lại sau.
       </p>
-      <div className="wb-stack" style={{ "--wb-stack-gap": "6px" } as CSSProperties}>
-        {st.pending.map((p) => (
-          <label key={p.txId} className="wb-check cashy-pay-row">
-            <input
-              type="checkbox"
-              checked={paySel.has(p.txId)}
-              onChange={() => togglePay(p.txId)}
-            />
-            <span className="cashy-pay-row__month">{monthLabelShort(p.month)}</span>
-            <span className="cashy-pay-row__date">
-              {fmtDateShort(billingDate(p.month, sub.dayOfMonth))}
-            </span>
-            <span className="wb-num cashy-pay-row__amt">{formatMoney(sub.amount)}</span>
-          </label>
-        ))}
+      <div className="wb-stack" style={{ "--wb-stack-gap": "8px" } as CSSProperties}>
+        {st.pending.map((p) => {
+          const choice = choices[p.txId] ?? "leave";
+          return (
+            <div key={p.txId} className="cashy-catchup-row">
+              <div className="cashy-catchup-row__info">
+                <span className="cashy-pay-row__month">{monthLabelShort(p.month)}</span>
+                <span className="cashy-pay-row__date">
+                  {fmtDateShort(billingDate(p.month, sub.dayOfMonth))} · {formatMoney(sub.amount)}
+                </span>
+              </div>
+              <div className="cashy-seg" role="group" aria-label={`Kỳ ${monthLabelShort(p.month)}`}>
+                {(
+                  [
+                    ["pay", "Trả"],
+                    ["skip", "Bỏ qua"],
+                    ["leave", "Để sau"],
+                  ] as [CatchUpChoice, string][]
+                ).map(([key, label]) => (
+                  <button
+                    key={key}
+                    type="button"
+                    className={choice === key ? "cashy-seg__btn is-active" : "cashy-seg__btn"}
+                    onClick={() => setChoice(p.txId, key)}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          );
+        })}
       </div>
+      {leaveCount > 0 && (
+        <p style={{ margin: "12px 0 0", fontSize: 12, color: "var(--wb-fg-muted)" }}>
+          {leaveCount} kỳ để sau — vẫn còn nợ và sẽ nhắc lại.
+        </p>
+      )}
     </Modal>
+
+    {/* Payment history — the persistent place to undo a confirmed (or skipped)
+        cycle, long after the toast is gone. */}
+    <SubscriptionHistory
+      sub={sub}
+      txs={txs}
+      open={historyOpen}
+      onClose={() => setHistoryOpen(false)}
+    />
 
     {/* Full name on hover — only mounted for names the card actually clipped. */}
     {tip && (

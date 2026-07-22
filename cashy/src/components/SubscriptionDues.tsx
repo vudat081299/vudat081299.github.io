@@ -1,13 +1,32 @@
 import type { CSSProperties } from "react";
 import type { Due } from "@/lib/domain";
-import { confirmSubscriptionCharge, skipSubscriptionCharge } from "@/lib/store";
+import {
+  confirmSubscriptionCharge,
+  revertSubscriptionCharge,
+  skipSubscriptionCharge,
+} from "@/lib/store";
+import { toast } from "@/lib/toast";
 import { formatMoney } from "@/lib/money";
 import { billingDate, fmtDateShort, monthLabelShort } from "@/lib/date";
 import { SubTile } from "@/components/SubTile";
 
-/** "Cần xác nhận" rows — confirm paid (→ books the charge) or skip the month. */
+/** "Cần xác nhận" rows — confirm paid (→ books the charge) or skip the month.
+ *  Every decision is reversible on the spot via an Undo toast, so a mis-click on
+ *  either button costs nothing. */
 export function SubscriptionDues({ dues, max }: { dues: Due[]; max?: number }) {
   const shown = max ? dues.slice(0, max) : dues;
+  const pay = (sub: Due["sub"], month: string, txId: string) => {
+    confirmSubscriptionCharge(txId);
+    toast.undo(`Đã trả ${sub.name} · ${monthLabelShort(month)}`, () =>
+      revertSubscriptionCharge(txId),
+    );
+  };
+  const skip = (sub: Due["sub"], month: string, txId: string) => {
+    skipSubscriptionCharge(txId);
+    toast.undo(`Bỏ qua ${sub.name} · ${monthLabelShort(month)}`, () =>
+      revertSubscriptionCharge(txId),
+    );
+  };
   return (
     <div className="wb-stack" style={{ "--wb-stack-gap": "8px" } as CSSProperties}>
       {shown.map(({ sub, month, txId }) => (
@@ -24,7 +43,7 @@ export function SubscriptionDues({ dues, max }: { dues: Due[]; max?: number }) {
             <button
               type="button"
               className="wb-btn wb-btn--secondary wb-btn--sm"
-              onClick={() => skipSubscriptionCharge(txId)}
+              onClick={() => skip(sub, month, txId)}
             >
               Bỏ qua
             </button>
@@ -32,7 +51,7 @@ export function SubscriptionDues({ dues, max }: { dues: Due[]; max?: number }) {
               type="button"
               className="wb-btn wb-btn--sm"
               style={{ gap: 4 }}
-              onClick={() => confirmSubscriptionCharge(txId)}
+              onClick={() => pay(sub, month, txId)}
             >
               <span className="wb-ico wb-ico--xs">check</span>
               Đã trả
