@@ -21,7 +21,7 @@ export function PeriodPicker({
   const isPreset = PERIODS.some((p) => p.key === value);
   return (
     <Popover
-      panelWidth={300}
+      panelWidth={360}
       align="right"
       trigger={({ open, toggle }) => (
         <button

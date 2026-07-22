@@ -1,7 +1,7 @@
-import { useId, useState, type CSSProperties } from "react";
+import { useId, type CSSProperties } from "react";
 import { PERIODS, periodNote, type PeriodKey, type Range } from "@/lib/period";
-import { parseRangeText } from "@/lib/date";
 import { RangeCalendar } from "@/components/RangeCalendar";
+import { DateRangeInput } from "@/components/DateRangeInput";
 
 /**
  * The period chooser body, shared by the header PeriodPicker and any filter that
@@ -24,21 +24,6 @@ export function PeriodPanel({
 }) {
   const name = useId();
   const now = new Date();
-  const [rangeText, setRangeText] = useState("");
-  const [err, setErr] = useState(false);
-
-  const applyText = () => {
-    const t = rangeText.trim();
-    if (!t) return;
-    const r = parseRangeText(t);
-    if (!r) {
-      setErr(true);
-      return;
-    }
-    setErr(false);
-    onChange("custom", r);
-    onPick?.();
-  };
 
   const presetRow = (p: { key: PeriodKey; label: string }) => {
     const note = periodNote(p.key, now);
@@ -76,32 +61,23 @@ export function PeriodPanel({
 
       <div className="wb-menu__sep" />
       <p className="wb-filter-pop__title">Khoảng tuỳ chọn</p>
+      {/* Type the range in a segmented dd/mm/yyyy – dd/mm/yyyy field (inked "/"),
+          OR click it out on the calendar. The two stay in sync: typing a valid
+          range applies live and moves the calendar; clicking the calendar fills
+          the field. Typed edits keep the panel open (preview); Enter or a second
+          calendar click commits and closes. */}
       <div className="cashy-range-type">
-        <input
-          className={err ? "wb-input is-invalid" : "wb-input"}
-          value={rangeText}
-          onChange={(e) => {
-            setRangeText(e.target.value);
-            if (err) setErr(false);
+        <DateRangeInput
+          value={value === "custom" ? custom : null}
+          onChange={(r) => onChange("custom", r)}
+          onCommit={(r) => {
+            onChange("custom", r);
+            onPick?.();
           }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              applyText();
-            }
-          }}
-          placeholder="1/7/2026 – 15/7/2026"
-          aria-label="Nhập khoảng ngày"
         />
-        <button type="button" className="wb-btn wb-btn--sm" onClick={applyText}>
-          Áp dụng
-        </button>
       </div>
-      {err && (
-        <p className="cashy-range-err">Định dạng: ngày/tháng/năm – ngày/tháng/năm</p>
-      )}
 
-      <div style={{ marginTop: 8 }}>
+      <div style={{ marginTop: 10 }}>
         <RangeCalendar
           value={value === "custom" ? custom : null}
           onChange={(r) => {
