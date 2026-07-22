@@ -1,4 +1,4 @@
-import type { ThemeMode } from "@/types";
+import type { ThemeMode } from "@/domain/types";
 
 export function resolveTheme(mode: ThemeMode): "light" | "dark" {
   if (mode === "system") {

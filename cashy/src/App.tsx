@@ -1,25 +1,25 @@
 import { useEffect, useState, lazy, Suspense } from "react";
-import { useCashy, syncSubscriptions } from "@/lib/store";
+import { useCashy, syncSubscriptions } from "@/data/store";
 import { applyTheme } from "@/lib/theme";
 import { useRoute } from "@/lib/router";
-import { Layout } from "@/components/Layout";
-import { TransactionEditor } from "@/components/TransactionEditor";
-import { TransactionDetail } from "@/components/TransactionDetail";
-import { Toaster } from "@/components/wb/Toast";
-import { ConfirmHost } from "@/components/wb/ConfirmDialog";
-import { Onboarding } from "@/screens/Onboarding";
-import { Dashboard } from "@/screens/Dashboard";
-import { Transactions } from "@/screens/Transactions";
-import { Subscriptions } from "@/screens/Subscriptions";
-import { SubscriptionEditor } from "@/components/SubscriptionEditor";
-import { Categories } from "@/screens/Categories";
-import { Tags } from "@/screens/Tags";
-import { Settings } from "@/screens/Settings";
+import { Layout } from "@/ui/app/Layout";
+import { TransactionEditor } from "@/ui/features/transactions/TransactionEditor";
+import { TransactionDetail } from "@/ui/features/transactions/TransactionDetail";
+import { Toaster } from "@/ui/kit/Toast";
+import { ConfirmHost } from "@/ui/kit/ConfirmDialog";
+import { Onboarding } from "@/ui/features/onboarding/Onboarding";
+import { Dashboard } from "@/ui/features/dashboard/Dashboard";
+import { Transactions } from "@/ui/features/transactions/Transactions";
+import { Subscriptions } from "@/ui/features/subscriptions/Subscriptions";
+import { SubscriptionEditor } from "@/ui/features/subscriptions/SubscriptionEditor";
+import { Categories } from "@/ui/features/categories/Categories";
+import { Tags } from "@/ui/features/tags/Tags";
+import { Settings } from "@/ui/features/settings/Settings";
 
 // Dev-only component catalogue, code-split so it never ships in the production
 // bundle (the DEV guard means the dynamic import is unreachable when built).
 const WbGallery = lazy(() =>
-  import("@/screens/WbGallery").then((m) => ({ default: m.WbGallery })),
+  import("@/ui/dev/WbGallery").then((m) => ({ default: m.WbGallery })),
 );
 
 function useIsWbGallery() {
