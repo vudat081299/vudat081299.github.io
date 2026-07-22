@@ -2,6 +2,8 @@ name: Deploy site (build Cashy)
 
 # Publishes the whole user-site to GitHub Pages. Static projects are copied
 # as-is; Cashy is a Vite app, so it is built and its output is served at /cashy/.
+# The web-builder component gallery is a second standalone Vite build, served at
+# /cashy-wb/ (separate from the app).
 #
 # One-time setup: repo Settings → Pages → Build and deployment → Source =
 # "GitHub Actions" (instead of "Deploy from a branch").
@@ -44,6 +46,10 @@ jobs:
         working-directory: cashy
         run: pnpm build
 
+      - name: Build component gallery
+        working-directory: cashy
+        run: pnpm build:wb
+
       - name: Assemble site
         run: |
           mkdir -p _site
@@ -56,6 +62,11 @@ jobs:
             ./ _site/
           mkdir -p _site/cashy
           cp -r cashy/dist/. _site/cashy/
+          # Component gallery → /cashy-wb/ ; rename its entry so the bare
+          # directory URL resolves without /wb.html.
+          mkdir -p _site/cashy-wb
+          cp -r cashy/dist-wb/. _site/cashy-wb/
+          mv _site/cashy-wb/wb.html _site/cashy-wb/index.html
 
       - uses: actions/upload-pages-artifact@v3
         with:
