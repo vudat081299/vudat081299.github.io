@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { Fragment, useEffect, useRef, useState, type KeyboardEvent, type MouseEvent } from "react";
 import { parseDMY } from "@/lib/date";
 import { cn } from "@/lib/utils";
 import type { Range } from "@/lib/period";
@@ -77,6 +77,18 @@ export function DateRangeInput({
     if (v.length === MAXLEN[i] && i < 5) refs.current[i + 1]?.focus();
   };
 
+  // Clicking the field's own empty space — its padding or an inked "/" separator,
+  // anywhere that is NOT a segment — should still land the caret somewhere useful:
+  // the first segment when nothing is typed yet, otherwise the last segment that
+  // already holds a value, so a stray click resumes where you left off instead of
+  // doing nothing.
+  const focusFromBlankSpace = (e: MouseEvent<HTMLDivElement>) => {
+    if ((e.target as HTMLElement).closest("input")) return; // a real segment was hit
+    e.preventDefault(); // keep focus off the wrapper; drive it to a segment instead
+    const lastFilled = segs.reduce((last, v, i) => (v ? i : last), -1);
+    refs.current[lastFilled === -1 ? 0 : lastFilled]?.focus();
+  };
+
   const onKey = (i: number, e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Backspace" && !segs[i] && i > 0) {
       e.preventDefault();
@@ -93,6 +105,7 @@ export function DateRangeInput({
       className={cn("wb-input-tpl", invalid && "is-invalid")}
       role="group"
       aria-label="Khoảng ngày"
+      onMouseDown={focusFromBlankSpace}
     >
       {[0, 1, 2, 3, 4, 5].map((i) => (
         <Fragment key={i}>

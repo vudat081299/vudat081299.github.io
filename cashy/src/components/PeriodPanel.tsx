@@ -1,5 +1,5 @@
 import { useId, type CSSProperties } from "react";
-import { PERIODS, periodNote, type PeriodKey, type Range } from "@/lib/period";
+import { PERIODS, periodNote, periodRange, type PeriodKey, type Range } from "@/lib/period";
 import { RangeCalendar } from "@/components/RangeCalendar";
 import { DateRangeInput } from "@/components/DateRangeInput";
 
@@ -25,6 +25,14 @@ export function PeriodPanel({
   const name = useId();
   const now = new Date();
 
+  // Reflect the ACTIVE window in the field + calendar too, not only hand-picked
+  // ranges: selecting "Last 90 days" now fills the six segments and highlights the
+  // span on the calendar (jumping it to the start month), so a preset's concrete
+  // dates are always visible and ready to fine-tune. "All time" has no bound to
+  // show, so it leaves both blank.
+  const shown: Range | null =
+    value === "custom" ? custom : value === "all" ? null : periodRange(value, now);
+
   const presetRow = (p: { key: PeriodKey; label: string }) => {
     const note = periodNote(p.key, now);
     return (
@@ -33,10 +41,11 @@ export function PeriodPanel({
           type="radio"
           name={name}
           checked={value === p.key}
-          onChange={() => {
-            onChange(p.key, null);
-            onPick?.();
-          }}
+          // Apply the preset but KEEP the panel open, so its resolved window shows
+          // up live in the segmented field and on the calendar below — the whole
+          // point of picking here. Dismiss is by outside-click / Esc, or an
+          // explicit commit (Enter in the field, or a second calendar click).
+          onChange={() => onChange(p.key, null)}
         />
         <span className="cashy-period-row__label">{p.label}</span>
         {note && <span className="cashy-period-row__note">{note}</span>}
@@ -68,7 +77,7 @@ export function PeriodPanel({
           calendar click commits and closes. */}
       <div className="cashy-range-type">
         <DateRangeInput
-          value={value === "custom" ? custom : null}
+          value={shown}
           onChange={(r) => onChange("custom", r)}
           onCommit={(r) => {
             onChange("custom", r);
@@ -79,7 +88,7 @@ export function PeriodPanel({
 
       <div style={{ marginTop: 10 }}>
         <RangeCalendar
-          value={value === "custom" ? custom : null}
+          value={shown}
           onChange={(r) => {
             onChange("custom", r);
             onPick?.();
