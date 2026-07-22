@@ -16,7 +16,11 @@ const CX = 50;
 const CY = 50;
 const INNER_R = 27;
 const OUTER_R = 42;
-const POP = 5; // how far the selected slice grows + lifts out past the ring
+// How much the selected slice's OUTER edge grows — a gentle emphasis, not a
+// leap. It grows outward only: the inner radius is untouched, so the slice keeps
+// its distance from the centre hole instead of sliding away from it. Kept small
+// so OUTER_R + POP (45) still sits inside the 0–100 viewBox and never clips.
+const POP = 3;
 
 /** A point on a circle, angle in degrees measured clockwise from 12 o'clock. */
 function pt(cx: number, cy: number, r: number, deg: number): [number, number] {
@@ -65,12 +69,12 @@ export function SpendChart({
     const deg1 = Math.min(359.99, cursor + Math.max(sweep, 0.01));
     cursor += s.pct * 360;
     const selected = s.id === selectedId;
-    // The selected slice grows and lifts outward along its own mid-angle.
-    const mid = (deg0 + deg1) / 2;
-    const [dx, dy] = selected ? pt(0, 0, POP, mid) : [0, 0];
+    // The selected slice grows OUTWARD from a fixed centre — no lift along its
+    // mid-angle, so its inner edge stays flush with the hole and it can't drift
+    // past the viewBox and get clipped.
     return {
       id: s.id,
-      d: segPath(CX + dx, CY + dy, INNER_R, selected ? OUTER_R + POP : OUTER_R, deg0, deg1),
+      d: segPath(CX, CY, INNER_R, selected ? OUTER_R + POP : OUTER_R, deg0, deg1),
       color: s.colorHex,
       selected,
     };

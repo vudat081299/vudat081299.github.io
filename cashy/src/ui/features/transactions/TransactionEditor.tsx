@@ -1,22 +1,29 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useCashy } from "@/data/store";
 import { addTransaction, deleteTransaction, updateTransaction } from "@/usecases";
-import { flattenTree, rankTags } from "@/domain";
+import { rankTags } from "@/domain";
 import { clearDraft, getDraft, saveDraft, type TxDraft } from "@/data/draft";
-import { formatMoney, parseMoney } from "@/domain/money";
+import { formatDigits, parseMoney } from "@/domain/money";
 import { nowHM, todayYMD, yesterdayYMD } from "@/domain/date";
 import type { TxStatus, TxType } from "@/domain/types";
 import { Modal } from "@/ui/kit/Modal";
 import { Popover } from "@/ui/kit/Popover";
 import { Field, Input } from "@/ui/kit/Input";
+import { Kbd } from "@/ui/kit/Kbd";
 import { Textarea } from "@/ui/kit/Textarea";
 import { TimePicker } from "@/ui/kit/TimePicker";
 import { DatePicker } from "@/ui/common/DatePicker";
-import { Select } from "@/ui/common/Select";
+import { CategorySelect } from "@/ui/common/CategorySelect";
+import { PayeeInput } from "@/ui/common/PayeeInput";
 import { StatusPicker } from "@/ui/common/StatusPicker";
 import { TagChip } from "@/ui/common/TagChip";
 import { registerTxEditor } from "@/lib/modals";
 import { confirm } from "@/lib/confirm";
+
+/** ⌘ on Apple hardware, Ctrl elsewhere — for both the handler and the hint chip. */
+const IS_MAC =
+  typeof navigator !== "undefined" && /Mac|iPhone|iPad|iPod/.test(navigator.platform || "");
+const kbdLabel = (key: string) => (IS_MAC ? `⌘${key}` : `Ctrl ${key}`);
 
 export function TransactionEditor() {
   const { categories, tags, transactions } = useCashy();
@@ -40,7 +47,7 @@ export function TransactionEditor() {
       const d = tx ? null : getDraft();
       setEditingId(tx ? tx.id : null);
       setType(tx?.type ?? d?.type ?? "expense");
-      setAmountStr(tx && tx.amount ? String(tx.amount) : (d?.amountStr ?? ""));
+      setAmountStr(tx && tx.amount ? formatDigits(tx.amount) : (d?.amountStr ?? ""));
       setCategoryId(tx?.categoryId ?? d?.categoryId ?? null);
       setTagIds(tx?.tagIds ?? d?.tagIds ?? []);
       setOccurredAt(tx?.occurredAt ?? d?.occurredAt ?? todayYMD());
@@ -62,6 +69,26 @@ export function TransactionEditor() {
   const amount = parseMoney(amountStr);
   const isDraft = !editingId && getDraft() !== null;
 
+  // Group the digits with dots as they're typed ("1000000" -> "1.000.000"), so a
+  // mistyped zero is visible in the field itself — which is why the old spelled-out
+  // amount beneath it is now gone. Store the grouped string; `parseMoney` strips the
+  // dots back out, and a resumed draft keeps the grouped form as-is.
+  function changeAmount(raw: string) {
+    const digits = raw.replace(/\D/g, "");
+    setAmountStr(digits ? formatDigits(parseInt(digits, 10)) : "");
+  }
+
+  // Distinct counterparties already in the ledger, most-used first — the ranking
+  // the suggestion list wants. Recomputed only when the ledger changes.
+  const payeeSuggestions = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const t of transactions) {
+      const p = t.payee?.trim();
+      if (p) counts.set(p, (counts.get(p) ?? 0) + 1);
+    }
+    return [...counts.entries()].sort((a, b) => b[1] - a[1]).map(([p]) => p);
+  }, [transactions]);
+
   /**
    * Leaving without confirming does NOT create a transaction — it parks what was
    * typed as a draft, and the "add transaction" button then wears the dashed
@@ -81,7 +108,6 @@ export function TransactionEditor() {
     clearDraft();
     setOpen(false);
   }
-  const catOptions = useMemo(() => flattenTree(categories, type), [categories, type]);
   // Tags ordered by how much the ledger uses them (most-used first), each with a
   // shade that inks the chip — the same rank ramp the transaction table uses.
   const rankedTags = useMemo(() => rankTags(tags, transactions), [tags, transactions]);
@@ -90,12 +116,38 @@ export function TransactionEditor() {
     [rankedTags],
   );
 
-  function changeType(t: TxType) {
-    setType(t);
-    if (categoryId && !categories.some((c) => c.id === categoryId && c.type === t)) {
-      setCategoryId(null);
-    }
-  }
+  // Switching sides drops a category that doesn't exist on the new side. Functional
+  // setState keeps this off `categoryId`, so it depends only on `categories` and the
+  // keyboard-shortcut effect below can hold a stable reference to it.
+  const changeType = useCallback(
+    (t: TxType) => {
+      setType(t);
+      setCategoryId((cur) =>
+        cur && !categories.some((c) => c.id === cur && c.type === t) ? null : cur,
+      );
+    },
+    [categories],
+  );
+
+  // ⌘I / ⌘O flip the Chi/Thu toggle without leaving the keyboard — the two fastest
+  // things to get wrong when logging quickly. Capture phase + preventDefault so the
+  // browser's own ⌘I/⌘O never fires while the editor owns the screen.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (!(e.metaKey || e.ctrlKey) || e.altKey || e.shiftKey) return;
+      const k = e.key.toLowerCase();
+      if (k === "i") {
+        e.preventDefault();
+        changeType("income");
+      } else if (k === "o") {
+        e.preventDefault();
+        changeType("expense");
+      }
+    };
+    document.addEventListener("keydown", onKey, true);
+    return () => document.removeEventListener("keydown", onKey, true);
+  }, [open, changeType]);
 
   function save() {
     if (amount <= 0) return;
@@ -184,7 +236,9 @@ export function TransactionEditor() {
       footer={footer}
     >
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-        {/* Chi / Thu segmented toggle */}
+        {/* Chi / Thu segmented toggle. Each tab carries its own shortcut chip
+            (⌘O = chi ra / out, ⌘I = thu vào / in) so the keys are discoverable
+            without a legend, and the handler above makes them work. */}
         <div className="wb-tabs wb-tabs--pill" style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
           {(["expense", "income"] as TxType[]).map((t) => {
             const active = type === t;
@@ -194,52 +248,51 @@ export function TransactionEditor() {
                 key={t}
                 type="button"
                 className={active ? "wb-tab is-active" : "wb-tab"}
-                style={{ textAlign: "center", color: active ? tone : undefined }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 7,
+                  color: active ? tone : undefined,
+                }}
                 onClick={() => changeType(t)}
               >
                 {t === "expense" ? "Chi tiêu" : "Thu nhập"}
+                <Kbd style={{ opacity: 0.7 }}>{kbdLabel(t === "expense" ? "O" : "I")}</Kbd>
               </button>
             );
           })}
         </div>
 
         {/* Amount — the field the eye should land on first: large digits with a ₫
-            unit addon, and the grouped value spelled out beneath so a mistyped
-            zero is visible before it is saved. */}
-        <Field
-          label="Số tiền"
-          htmlFor="tx-amount"
-          help={amount > 0 ? formatMoney(amount) : undefined}
-        >
+            unit addon, grouped with dots as you type so a mistyped zero shows up
+            in the field itself. */}
+        <Field label="Số tiền" htmlFor="tx-amount">
           <Input
             id="tx-amount"
             inputMode="numeric"
             autoComplete="off"
             value={amountStr}
-            onChange={(e) => setAmountStr(e.target.value)}
+            onChange={(e) => changeAmount(e.target.value)}
             placeholder="0"
             trailingAddon="₫"
             style={{ fontSize: 18 }}
           />
         </Field>
 
-        {/* Category */}
+        {/* Category — a real tree picker (icon + colour + indent), not a native
+            select faking nesting with leading spaces. */}
         <div className="wb-field">
           <label className="wb-label" htmlFor="tx-cat">
             Danh mục
           </label>
-          <Select
+          <CategorySelect
             id="tx-cat"
-            value={categoryId ?? "none"}
-            onChange={(e) => setCategoryId(e.target.value === "none" ? null : e.target.value)}
-          >
-              <option value="none">Chưa phân loại</option>
-              {catOptions.map(({ cat, depth }) => (
-                <option key={cat.id} value={cat.id}>
-                  {"  ".repeat(depth) + cat.name}
-                </option>
-              ))}
-          </Select>
+            categories={categories}
+            type={type}
+            value={categoryId}
+            onChange={setCategoryId}
+          />
         </div>
 
         {/* Counterparty — full width now that the status picker below needs the
@@ -248,12 +301,11 @@ export function TransactionEditor() {
           <label className="wb-label" htmlFor="tx-payee">
             Bên giao dịch <span className="wb-label__opt">(người / công ty)</span>
           </label>
-          <input
+          <PayeeInput
             id="tx-payee"
-            className="wb-input"
             value={payee}
-            autoComplete="off"
-            onChange={(e) => setPayee(e.target.value)}
+            onChange={setPayee}
+            suggestions={payeeSuggestions}
             placeholder="VD: Highlands, Công ty ABC"
           />
         </div>

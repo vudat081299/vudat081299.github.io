@@ -472,37 +472,6 @@ body {
   padding-block: 3px;
 }
 
-/* Segmented toggle — the Day ⇄ Week switch on the cash-flow chart. A pill track
-   with a raised active segment; neutral throughout (a view mode is not a status). */
-.cashy-seg {
-  display: inline-flex;
-  gap: 2px;
-  padding: 2px;
-  border-radius: var(--wb-radius-pill);
-  border: var(--wb-bw) solid var(--wb-border);
-  background: var(--wb-surface-2);
-}
-.cashy-seg__btn {
-  border: 0;
-  background: none;
-  cursor: pointer;
-  font: inherit;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--wb-fg-muted);
-  padding: 4px 12px;
-  border-radius: var(--wb-radius-pill);
-  transition: background 0.13s ease, color 0.13s ease;
-}
-.cashy-seg__btn:hover {
-  color: var(--wb-fg);
-}
-.cashy-seg__btn.is-active {
-  background: var(--wb-surface);
-  color: var(--wb-fg);
-  box-shadow: var(--wb-shadow-sm);
-}
-
 /* =========================================================================
    PERIOD PICKER — grouped presets, each with a muted note of the concrete
    window it resolves to, plus a typed-range field. The whole panel scrolls.
@@ -870,35 +839,46 @@ body {
 .cashy-statuspick__opt .wb-cap {
   transition: background .12s ease, color .12s ease, box-shadow .12s ease;
 }
-/* Unchosen: neutral and quiet, so the form never shows five tones at once.
-   Scoped to :not(:checked) ON PURPOSE — a plain `.cashy-statuspick__opt
-   .wb-cap` would be 0-2-0 and would beat the tone classes (.wb-cap--success
-   et al, 0-1-0), stripping the colour from the very capsule that should have
-   it. Restricting it to the unchosen state leaves the chosen one to the kit. */
+/* Unchosen: a SOFT tone outline (tier 3) — the option still wears its status
+   colour, just dialled down so five of them don't compete. The base is neutral
+   (covers Skipped, whose tone IS grey); the per-tone rules below tint the border
+   and text. Scoped to :not(:checked) ON PURPOSE — a plain `.cashy-statuspick__opt
+   .wb-cap` would be 0-2-0 and would beat the kit's tone classes (0-1-0),
+   stripping the fill from the very capsule that should have it. */
 .cashy-statuspick__opt input:not(:checked) + .wb-cap {
   color: var(--wb-fg-muted);
   background: transparent;
   border: var(--wb-bw) solid var(--wb-border);
 }
+.cashy-statuspick__opt input:not(:checked) + .wb-cap[data-tone="success"] {
+  border-color: color-mix(in srgb, var(--wb-success) 42%, transparent);
+  color: var(--wb-success-text);
+}
+.cashy-statuspick__opt input:not(:checked) + .wb-cap[data-tone="warning"] {
+  border-color: color-mix(in srgb, var(--wb-warning) 48%, transparent);
+  color: var(--wb-warning-text);
+}
+.cashy-statuspick__opt input:not(:checked) + .wb-cap[data-tone="info"] {
+  border-color: color-mix(in srgb, var(--wb-info) 45%, transparent);
+  color: var(--wb-info-text);
+}
+.cashy-statuspick__opt input:not(:checked) + .wb-cap[data-tone="danger"] {
+  border-color: color-mix(in srgb, var(--wb-danger) 45%, transparent);
+  color: var(--wb-danger-text);
+}
+/* Hover firms the same tone up toward its full colour. */
 .cashy-statuspick__opt:hover input:not(:checked) + .wb-cap {
   border-color: var(--wb-border-strong);
   color: var(--wb-fg);
 }
-/* Chosen reads as FILLED, unchosen as an outline — one signal that works for
-   every option. The toned statuses get their fill from the kit's own tone class;
-   `Skipped` has no tone by design, so it is given a neutral fill here rather
-   than a ring. (A ring was tried first via color-mix on currentColor: it
-   resolved fully transparent, leaving chosen-Skipped identical to an unchosen
-   capsule.)
-
-   Note the doubled selector: index.css loads BEFORE web-builder.css, so a bare
-   .cashy-cap--chosen-plain (0-1-0) would tie with .wb-cap (0-1-0) and lose on
-   order. .wb-cap.cashy-cap--chosen-plain is 0-2-0 and wins outright. */
-.wb-cap.cashy-cap--chosen-plain {
-  color: var(--wb-fg);
-  background: var(--wb-surface-2);
-  border: var(--wb-bw) solid var(--wb-border-strong);
-}
+.cashy-statuspick__opt:hover input:not(:checked) + .wb-cap[data-tone="success"] { border-color: var(--wb-success); }
+.cashy-statuspick__opt:hover input:not(:checked) + .wb-cap[data-tone="warning"] { border-color: var(--wb-warning); }
+.cashy-statuspick__opt:hover input:not(:checked) + .wb-cap[data-tone="info"]    { border-color: var(--wb-info); }
+.cashy-statuspick__opt:hover input:not(:checked) + .wb-cap[data-tone="danger"]  { border-color: var(--wb-danger); }
+/* Chosen reads as FILLED (tone class from the kit), unchosen as an outline —
+   one signal for every option. Skipped has no tone, so chosen-Skipped is just
+   the plain grey `wb-cap` (gray fill, no border) — identical to a skipped row
+   in the transaction table, which is what the field should preview. */
 .cashy-statuspick__opt input:focus-visible + .wb-cap {
   outline: 2px solid var(--wb-focus, var(--wb-fg));
   outline-offset: 2px;

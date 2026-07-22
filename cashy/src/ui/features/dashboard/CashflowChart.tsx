@@ -38,22 +38,22 @@ function ChartTip({ active, payload }: TooltipContentProps) {
       <div className="cashy-charttip__label">{chartBucketTitle(pt.key)}</div>
       <div className="cashy-charttip__row">
         <span className="cashy-charttip__dot" style={{ background: "var(--wb-neutral)" }} />
-        <span>Số dư đầu kỳ</span>
+        <span>Opening balance</span>
         <span className="wb-num cashy-charttip__val">{formatMoney(opening)}</span>
       </div>
       <div className="cashy-charttip__row">
         <span className="cashy-charttip__dot" style={{ background: "var(--wb-success)" }} />
-        <span>Thu nhập</span>
+        <span>Income</span>
         <span className="wb-num cashy-charttip__val">{formatMoney(income)}</span>
       </div>
       <div className="cashy-charttip__row">
         <span className="cashy-charttip__dot" style={{ background: "var(--wb-chart-expense)" }} />
-        <span>Chi tiêu</span>
+        <span>Spending</span>
         <span className="wb-num cashy-charttip__val">{formatMoney(spend)}</span>
       </div>
       <div className="cashy-charttip__row cashy-charttip__row--total">
         <span className="cashy-charttip__dot" style={{ background: BALANCE_COLOR }} />
-        <span>Số dư cuối kỳ</span>
+        <span>Closing balance</span>
         <span className="wb-num cashy-charttip__val">{formatMoney(closing)}</span>
       </div>
     </div>

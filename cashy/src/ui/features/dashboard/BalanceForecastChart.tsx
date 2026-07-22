@@ -27,11 +27,11 @@ function ForecastTip({ active, payload }: TooltipContentProps) {
     <div className="cashy-charttip">
       <div className="cashy-charttip__label">
         {chartBucketTitle(pt.key)}
-        {pt.offset === 0 ? " · hiện tại" : ""}
+        {pt.offset === 0 ? " · now" : ""}
       </div>
       <div className="cashy-charttip__row cashy-charttip__row--total">
         <span className="cashy-charttip__dot" style={{ background: LINE }} />
-        <span>{pt.offset === 0 ? "Số dư hiện tại" : "Số dư dự kiến"}</span>
+        <span>{pt.offset === 0 ? "Current balance" : "Projected balance"}</span>
         <span className="wb-num cashy-charttip__val">{formatMoney(pt.balance)}</span>
       </div>
     </div>

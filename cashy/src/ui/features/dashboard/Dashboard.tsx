@@ -22,6 +22,7 @@ import { navigate } from "@/lib/router";
 import { formatMoney, formatMoneyShort } from "@/domain/money";
 import { openTxEditor } from "@/lib/modals";
 import { PageHeader } from "@/ui/common/PageHeader";
+import { ScrollArea } from "@/ui/kit/ScrollArea";
 import { BalanceCard } from "@/ui/features/dashboard/BalanceCard";
 import { BalanceForecastChart } from "@/ui/features/dashboard/BalanceForecastChart";
 import { CashflowChart } from "@/ui/features/dashboard/CashflowChart";
@@ -166,23 +167,23 @@ export function Dashboard() {
               <span className="cashy-card-eyebrow">Forecast</span>
               <h3 className="cashy-card-title">Projected balance</h3>
               <p style={{ margin: "4px 0 0", fontSize: 13, color: "var(--wb-fg-muted)" }}>
-                Số dư hiện tại cộng dồn net{" "}
+                Today's balance, compounding{" "}
                 <strong style={{ color: "var(--wb-fg)", fontWeight: 650 }}>
                   {monthlyNet >= 0 ? "+" : ""}
                   {formatMoneyShort(monthlyNet)}
                 </strong>{" "}
-                mỗi tháng
+                net per month
               </p>
             </div>
-            <div className="cashy-seg" role="group" aria-label="Forecast horizon">
+            <div className="wb-tabs wb-tabs--pill" role="group" aria-label="Forecast horizon">
               {[6, 12, 24].map((mo) => (
                 <button
                   key={mo}
                   type="button"
-                  className={horizon === mo ? "cashy-seg__btn is-active" : "cashy-seg__btn"}
+                  className={horizon === mo ? "wb-tab is-active" : "wb-tab"}
                   onClick={() => setHorizon(mo)}
                 >
-                  {mo} tháng
+                  {mo} mo
                 </button>
               ))}
             </div>
@@ -241,38 +242,14 @@ export function Dashboard() {
           >
             <div
               className="wb-cluster wb-cluster--between"
-              style={{ marginBottom: 16, gap: 10 }}
+              style={{ marginBottom: 16, gap: 10, alignItems: "flex-start" }}
             >
+              {/* LEFT: title + the colour key. The legend is only ever read, so it
+                  belongs beside the heading it explains, not out at the edge. */}
               <div>
                 <span className="cashy-card-eyebrow">Cash flow</span>
                 <h3 className="cashy-card-title">Wallet balance &amp; spending</h3>
-              </div>
-              <div className="wb-cluster" style={{ gap: 12 }}>
-                {/* Ngày / Tuần / Tháng roll-up FIRST, then the colour key — the
-                    control the user actually operates sits next to the title, and
-                    the legend (which is only ever read) trails at the edge. Only
-                    offered once the window is longer than 30 days (see spanDays). */}
-                {showBucketToggle && (
-                  <div className="cashy-seg" role="group" aria-label="Chart granularity">
-                    {(
-                      [
-                        ["day", "Ngày"],
-                        ["week", "Tuần"],
-                        ["month", "Tháng"],
-                      ] as [ChartBucket, string][]
-                    ).map(([key, label]) => (
-                      <button
-                        key={key}
-                        type="button"
-                        className={chartBucket === key ? "cashy-seg__btn is-active" : "cashy-seg__btn"}
-                        onClick={() => setBucketOverride(key)}
-                      >
-                        {label}
-                      </button>
-                    ))}
-                  </div>
-                )}
-                <div className="wb-legend">
+                <div className="wb-legend" style={{ marginTop: 8 }}>
                   <span className="wb-legend__item">
                     <span className="wb-legend__dot" style={{ background: "var(--wb-chart-5)" }} />{" "}
                     Wallet balance
@@ -286,6 +263,29 @@ export function Dashboard() {
                   </span>
                 </div>
               </div>
+              {/* RIGHT: the Day / Week / Month roll-up — the one control the user
+                  operates. Built from the kit's segmented primitive (wb-tabs--pill),
+                  not a bespoke one. Only offered past a 30-day window (see spanDays). */}
+              {showBucketToggle && (
+                <div className="wb-tabs wb-tabs--pill" role="group" aria-label="Chart granularity">
+                  {(
+                    [
+                      ["day", "Day"],
+                      ["week", "Week"],
+                      ["month", "Month"],
+                    ] as [ChartBucket, string][]
+                  ).map(([key, label]) => (
+                    <button
+                      key={key}
+                      type="button"
+                      className={chartBucket === key ? "wb-tab is-active" : "wb-tab"}
+                      onClick={() => setBucketOverride(key)}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
             {hasFlow ? (
               <div style={{ flex: 1, minHeight: 240 }}>
@@ -322,8 +322,9 @@ export function Dashboard() {
               onSelect={setSelectedCat}
             />
             {/* EVERY category in the period is listed (not just the top few); each
-                row toggles its slice on the donut. */}
-            <div className="cashy-rank" style={{ marginTop: 18 }}>
+                row toggles its slice on the donut. Themed scroll container so a
+                long list scrolls under the kit's thin scrollbar, not the OS one. */}
+            <ScrollArea className="cashy-rank" style={{ marginTop: 18 }}>
               {slices.map((s) => {
                 const on = s.id === selectedCat;
                 const dim = selectedCat !== null && !on;
@@ -363,7 +364,7 @@ export function Dashboard() {
                   No spending in this period.
                 </p>
               )}
-            </div>
+            </ScrollArea>
           </div>
         </div>
       </div>

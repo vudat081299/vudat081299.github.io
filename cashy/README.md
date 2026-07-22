@@ -87,7 +87,11 @@ Break these and the app is wrong, not merely inconsistent.
 Blocked on a decision from the owner. **Do not silently resolve these** — they
 are recorded choices, not oversights.
 
-None outstanding.
+| # | Question | Status / options |
+|---|---|---|
+| 8 | **How far to take the English translation?** The **Overview page** is now English (KPIs, forecast caption, `6/12/24 mo`, `Day/Week/Month`, both chart tooltips) and the single-cycle subscription button reads **"Mark as paid"**. Still Vietnamese: the subscription **card foot** (`Huỷ đăng ký`, `Đã thanh toán đủ`, `Tiếp tục`, multi-cycle `Xử lý N kỳ`), the **catch-up / cancel / history dialogs**, the **Subscriptions page**, and — everywhere — **chart date labels** (`Tháng 3 năm 2026`, axis `T7/2026`) which come from the shared `domain/date` formatter used app-wide. | **Decide:** (a) translate the whole app to English incl. app-wide dates, or (b) stop at the Overview. Nothing is blocked either way — pick when you're back. |
+| 9 | Status-picker outline strength (tuning, not blocking) | Unselected capsules now show a soft tone outline at ~42–48% opacity (`StatusPicker.tsx` + `.cashy-statuspick` in `index.css`). Bump the `color-mix` percentages if you want them stronger/fainter. |
+| 10 | Donut selected-slice emphasis (tuning, not blocking) | Selected slice grows outward by `POP = 3` with **no** outward slide, so it stays flush with the hole and never clips (`SpendChart.tsx`). Change `POP` to dial the zoom. |
 
 <details>
 <summary>Resolved — kept for the reasoning, do not reopen without cause</summary>

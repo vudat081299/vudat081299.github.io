@@ -50,14 +50,20 @@ export function SubscriptionCatchUp({
   const [paidThrough, setPaidThrough] = useState(-1);
 
   // Re-arm on each open, and whenever the owed set changes underneath (a charge
-  // settled in the transactions table while this was closed). Everything opens
-  // TICKED: people come here because they already paid and never told the app,
-  // so the common case should cost no clicks at all.
+  // settled in the transactions table while this was closed).
+  //
+  // Up to three owed cycles opens TICKED: people come here because they already
+  // paid and never told the app, so the common case should cost no clicks. But
+  // once FOUR or more cycles are behind, the far likelier story is that the
+  // service was abandoned months ago and this visit is to cancel it, not to
+  // confirm four separate payments — so past that threshold every switch opens
+  // OFF, which the dialog already reads as "cancel the service".
   const cycleKey = pending.map((p) => p.txId).join("|");
   useEffect(() => {
     if (!open) return;
-    setUsed(Object.fromEntries(pending.map((p) => [p.txId, true])));
-    setPaidThrough(pending.length - 1);
+    const likelyCancelling = pending.length > 3;
+    setUsed(Object.fromEntries(pending.map((p) => [p.txId, !likelyCancelling])));
+    setPaidThrough(likelyCancelling ? -1 : pending.length - 1);
     // `pending` is a fresh array each render; its ids are the real dependency.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, cycleKey]);
@@ -99,18 +105,28 @@ export function SubscriptionCatchUp({
       title={`${sub.name} · ${pending.length} kỳ chưa xử lý`}
       maxWidth={520}
       footer={
-        <>
-          <button
-            type="button"
-            className="wb-btn wb-btn--ghost wb-btn--sm"
-            style={{ marginRight: "auto" }}
-            onClick={onClose}
-          >
+        // A full-width row with the two ends pinned (space-between) and vertically
+        // centred — the `marginRight:auto` trick left the buttons riding the foot's
+        // default `stretch`, so a text-only "Huỷ dịch vụ" and an icon+text confirm
+        // read as two different heights. This matches the transaction editor's foot.
+        <div
+          style={{
+            display: "flex",
+            width: "100%",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 10,
+          }}
+        >
+          <button type="button" className="wb-btn wb-btn--ghost wb-btn--sm" onClick={onClose}>
             Để sau
           </button>
           <button
             type="button"
-            className={plan.cancelling ? "wb-btn wb-btn--sm cashy-btn--quiet-danger" : "wb-btn wb-btn--sm"}
+            // Cancelling is a real destructive outcome, so the confirm goes solid
+            // red (tier 2) rather than the black primary fill with red text, which
+            // read as a broken button.
+            className={plan.cancelling ? "wb-btn wb-btn--danger wb-btn--sm" : "wb-btn wb-btn--sm"}
             style={{ gap: 4 }}
             disabled={Boolean(plan.problem)}
             onClick={submit}
@@ -126,7 +142,7 @@ export function SubscriptionCatchUp({
               </>
             )}
           </button>
-        </>
+        </div>
       }
     >
       <p className="cashy-catchup__lead">

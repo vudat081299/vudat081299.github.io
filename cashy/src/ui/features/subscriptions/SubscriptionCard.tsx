@@ -293,7 +293,7 @@ export function SubscriptionCard({
                     onClick={onOpenCatchUp}
                   >
                     <span className="wb-ico wb-ico--xs">check</span>
-                    {behind > 1 ? `Xử lý ${behind} kỳ` : "Xác nhận"}
+                    {behind > 1 ? `Xử lý ${behind} kỳ` : "Mark as paid"}
                   </button>
                 )
               : // Resuming is cheap and reversible, so it happens on one click and
