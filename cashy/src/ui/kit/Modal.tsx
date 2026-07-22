@@ -81,7 +81,7 @@ export function Modal({
             <div>
               <h2 className="wb-modal__title">{title}</h2>
             </div>
-            <button className="wb-close" aria-label="Đóng" onClick={onClose} />
+            <button className="wb-close" aria-label="Close" onClick={onClose} />
           </div>
         )}
         {/* ScrollArea, not a bare overflow:auto — the body is the one pane that

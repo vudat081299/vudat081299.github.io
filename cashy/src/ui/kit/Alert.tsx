@@ -65,7 +65,7 @@ export function Alert({
         <button
           type="button"
           className="wb-close"
-          aria-label="Đóng"
+          aria-label="Close"
           onClick={() => {
             setOpen(false);
             onDismiss?.();

@@ -1,7 +1,7 @@
 import { useMemo, type CSSProperties } from "react";
 import type { Subscription, Transaction } from "@/domain/types";
 import { statusOf } from "@/domain/txStatus";
-import { billingDate, fmtDateShort, monthLabelShort } from "@/domain/date";
+import { billingDate, fmtDate } from "@/domain/date";
 import { formatMoney } from "@/domain/money";
 import { Modal } from "@/ui/kit/Modal";
 
@@ -52,16 +52,16 @@ export function SubscriptionHistory({
   const paidCount = rows.filter((r) => r.paid).length;
 
   return (
-    <Modal open={open} onClose={onClose} title={`${sub.name} · Lịch sử`} maxWidth={460}>
+    <Modal open={open} onClose={onClose} title={`${sub.name} · History`} maxWidth={460}>
       {rows.length === 0 ? (
         <p className="cashy-catchup__lead" style={{ marginBottom: 0 }}>
-          Chưa có kỳ nào được ghi nhận hay bỏ qua.
+          No cycles have been recorded or skipped yet.
         </p>
       ) : (
         <>
           <p className="cashy-catchup__lead">
-            {paidCount} kỳ đã trả · {formatMoney(sub.amount * paidCount)}. Hoàn tác một kỳ để đưa
-            nó về lại “cần trả”.
+            {paidCount} cycles paid · {formatMoney(sub.amount * paidCount)}. Undo a cycle to put it
+            back to “payment due”.
           </p>
           <div
             className="wb-stack cashy-history-scroll"
@@ -71,11 +71,10 @@ export function SubscriptionHistory({
               <div key={r.txId} className="cashy-catchup-row">
                 <span className={r.paid ? "wb-cap wb-cap--success" : "wb-cap"}>
                   {r.paid && <span className="wb-cap__dot" />}
-                  {r.paid ? "Đã trả" : "Không dùng"}
+                  {r.paid ? "Paid" : "Not used"}
                 </span>
-                <span className="cashy-catchup-row__month">{monthLabelShort(r.month)}</span>
-                <span className="cashy-catchup-row__date">
-                  {fmtDateShort(billingDate(r.month, sub.dayOfMonth))}
+                <span className="cashy-catchup-row__month">
+                  {fmtDate(billingDate(r.month, sub.dayOfMonth))}
                 </span>
                 <span className="wb-num cashy-catchup-row__amt">
                   {r.paid ? formatMoney(r.amount) : "—"}
@@ -85,7 +84,7 @@ export function SubscriptionHistory({
                   className="wb-btn wb-btn--ghost wb-btn--sm"
                   onClick={() => onRevert(r.txId, r.month, r.paid)}
                 >
-                  Hoàn tác
+                  Undo
                 </button>
               </div>
             ))}

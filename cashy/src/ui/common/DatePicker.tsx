@@ -2,7 +2,7 @@ import { useEffect, useState, type CSSProperties } from "react";
 import { Popover } from "@/ui/kit/Popover";
 
 // Vietnamese, Monday-first (matches the app's date heads).
-const WEEKDAYS = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];
+const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const pad = (n: number) => String(n).padStart(2, "0");
 const key = (dt: Date) => `${dt.getFullYear()}-${pad(dt.getMonth() + 1)}-${pad(dt.getDate())}`;
 
@@ -63,13 +63,13 @@ export function DatePicker({
       {({ close }) => (
         <div className="wb-calendar" style={{ "--wb-cal-cell": "34px" } as CSSProperties}>
           <div className="wb-calendar__head">
-            <button type="button" className="wb-calendar__nav" aria-label="Tháng trước" onClick={prevMonth}>
+            <button type="button" className="wb-calendar__nav" aria-label="Previous month" onClick={prevMonth}>
               <span className="wb-ico">chevron_left</span>
             </button>
             <span className="wb-calendar__title">
-              Tháng {view.m + 1}, {view.y}
+              Month {view.m + 1}, {view.y}
             </span>
-            <button type="button" className="wb-calendar__nav" aria-label="Tháng sau" onClick={nextMonth}>
+            <button type="button" className="wb-calendar__nav" aria-label="Next month" onClick={nextMonth}>
               <span className="wb-ico">chevron_right</span>
             </button>
           </div>

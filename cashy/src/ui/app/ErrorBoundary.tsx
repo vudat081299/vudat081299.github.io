@@ -53,9 +53,9 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, State> {
           colorScheme: "light",
         }}
       >
-        <h1 style={{ fontSize: 16, margin: "0 0 4px" }}>Cashy đã dừng khi render</h1>
+        <h1 style={{ fontSize: 16, margin: "0 0 4px" }}>Cashy stopped while rendering</h1>
         <p style={{ margin: "0 0 16px", color: "#71717a" }}>
-          Lỗi bên dưới là nguyên nhân trang bị trắng. Dữ liệu vẫn nằm trong trình duyệt.
+          The error below is why the page went blank. Your data is still in the browser.
         </p>
 
         <pre
@@ -107,14 +107,14 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, State> {
               color: "#18181b",
             }}
           >
-            Tải lại trang
+            Reload page
           </button>
           {/* The escape hatch when the SAVED STATE is what crashes: nothing else
               in the app can run to clear it once rendering is down. */}
           <button
             type="button"
             onClick={() => {
-              if (!window.confirm("Xoá toàn bộ dữ liệu Cashy trong trình duyệt này?")) return;
+              if (!window.confirm("Delete all Cashy data in this browser?")) return;
               localStorage.removeItem("cashy_state_v1");
               localStorage.removeItem("cashy_tx_draft_v1");
               window.location.reload();
@@ -129,7 +129,7 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, State> {
               color: "#b91c1c",
             }}
           >
-            Xoá dữ liệu đã lưu &amp; tải lại
+            Delete saved data &amp; reload
           </button>
         </div>
       </div>

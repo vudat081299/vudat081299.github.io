@@ -13,9 +13,9 @@ import { TagChip } from "@/ui/common/TagChip";
  * the row sits low in the viewport, and closes on outside-click / Esc / scroll
  * (scrolling would otherwise drift the fixed panel away from its anchor).
  *
- * `tags` is the row's full ranked tag list (most-used first) so the grid inks
- * each chip by the same weight the table uses — the popover is the same data,
- * just unfolded.
+ * `tags` is ONLY the tags that didn't fit in the row (the hidden overflow, still
+ * ranked most-used first), so the panel reveals what the row couldn't show rather
+ * than re-listing the chips already visible beside the "+n".
  */
 export function TagsMorePopover({ tags, count }: { tags: TagRank[]; count: number }) {
   const [open, setOpen] = useState(false);

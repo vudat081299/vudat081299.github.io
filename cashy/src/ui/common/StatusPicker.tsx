@@ -39,7 +39,7 @@ export function StatusPicker({
   name?: string;
 }) {
   return (
-    <div className="cashy-statuspick" role="radiogroup" aria-label="Trạng thái">
+    <div className="cashy-statuspick" role="radiogroup" aria-label="Status">
       {TX_STATUS_ORDER.map((s) => {
         const meta = TX_STATUS_META[s];
         const active = value === s;

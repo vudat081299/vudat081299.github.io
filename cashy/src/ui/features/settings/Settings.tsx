@@ -29,14 +29,14 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 }
 
 const THEMES: { key: ThemeMode; label: string; icon: string }[] = [
-  { key: "system", label: "Hệ thống", icon: "computer" },
-  { key: "light", label: "Sáng", icon: "light_mode" },
-  { key: "dark", label: "Tối", icon: "dark_mode" },
+  { key: "system", label: "System", icon: "computer" },
+  { key: "light", label: "Light", icon: "light_mode" },
+  { key: "dark", label: "Dark", icon: "dark_mode" },
 ];
 
 const SUB_ICON_STYLES: { key: SubIconStyle; label: string; icon: string }[] = [
-  { key: "neutral", label: "Trung tính", icon: "filter_b_and_w" },
-  { key: "brand", label: "Theo dịch vụ", icon: "palette" },
+  { key: "neutral", label: "Neutral", icon: "filter_b_and_w" },
+  { key: "brand", label: "By service", icon: "palette" },
 ];
 
 export function Settings() {
@@ -46,7 +46,7 @@ export function Settings() {
 
   function doExportJSON() {
     download(`cashy-${todayYMD()}.json`, exportData(), "application/json");
-    toast.success("Đã xuất JSON");
+    toast.success("Exported JSON");
   }
 
   function doExportCSV() {
@@ -57,10 +57,10 @@ export function Settings() {
         .map((id) => tags.find((t) => t.id === id)?.name ?? "")
         .filter(Boolean)
         .join("|");
-    const header = ["Ngày", "Loại", "Số tiền", "Danh mục", "Nhãn", "Ghi chú"];
+    const header = ["Date", "Type", "Amount", "Category", "Tag", "Note"];
     const rows = transactions.map((t) => [
       t.occurredAt,
-      t.type === "income" ? "Thu" : "Chi",
+      t.type === "income" ? "Income" : "Expense",
       String(t.amount),
       catName(t.categoryId),
       tagNames(t.tagIds),
@@ -70,7 +70,7 @@ export function Settings() {
       .map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(","))
       .join("\n");
     download(`cashy-${todayYMD()}.csv`, "﻿" + csv, "text/csv;charset=utf-8");
-    toast.success("Đã xuất CSV");
+    toast.success("Exported CSV");
   }
 
   function onImportFile(e: ChangeEvent<HTMLInputElement>) {
@@ -80,36 +80,36 @@ export function Settings() {
     const reader = new FileReader();
     reader.onload = () => {
       const res = importData(String(reader.result));
-      if (res.ok) toast.success("Đã nhập dữ liệu");
-      else toast.error(res.error ?? "Nhập thất bại");
+      if (res.ok) toast.success("Data imported");
+      else toast.error(res.error ?? "Import failed");
     };
     reader.readAsText(file);
   }
 
   function saveName() {
-    updateWorkspace({ displayName: name.trim() || "Của tôi" });
-    toast.success("Đã lưu");
+    updateWorkspace({ displayName: name.trim() || "Mine" });
+    toast.success("Saved");
   }
 
   async function doLoadSample() {
     if (transactions.length) {
       const ok = await confirm({
-        title: "Nạp dữ liệu mẫu?",
-        message: "Sẽ thay thế toàn bộ danh mục, nhãn và giao dịch hiện tại.",
-        confirmLabel: "Nạp dữ liệu mẫu",
+        title: "Load sample data?",
+        message: "This will replace all current categories, tags, and transactions.",
+        confirmLabel: "Load sample data",
         danger: true,
       });
       if (!ok) return;
     }
     loadSampleData();
-    toast.success("Đã nạp dữ liệu mẫu");
+    toast.success("Sample data loaded");
   }
 
   async function doReset() {
     const ok = await confirm({
-      title: "Xoá toàn bộ dữ liệu và bắt đầu lại?",
-      message: "Hành động này không hoàn tác được.",
-      confirmLabel: "Xoá & làm lại",
+      title: "Delete all data and start over?",
+      message: "This action cannot be undone.",
+      confirmLabel: "Delete & start over",
       danger: true,
     });
     if (ok) resetAll();
@@ -119,11 +119,11 @@ export function Settings() {
     <div className="wb-stack wb-stack--loose" style={{ maxWidth: 640, marginInline: "auto", width: "100%" }}>
       <PageHeader
         eyebrow={workspace?.displayName ?? "Cashy"}
-        title="Cài đặt"
-        subtitle="Giao diện, không gian và sao lưu dữ liệu."
+        title="Settings"
+        subtitle="Appearance, workspace, and data backup."
       />
 
-      <Section title="Giao diện">
+      <Section title="Appearance">
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
           {THEMES.map((t) => {
             const active = theme === t.key;
@@ -143,7 +143,7 @@ export function Settings() {
         </div>
 
         <div className="wb-field">
-          <label className="wb-label">Màu icon đăng ký</label>
+          <label className="wb-label">Subscription icon color</label>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
             {SUB_ICON_STYLES.map((o) => {
               const active = subIconStyle === o.key;
@@ -162,16 +162,16 @@ export function Settings() {
             })}
           </div>
           <span style={{ fontSize: 12, color: "var(--wb-fg-muted)" }}>
-            “Trung tính” giữ mọi icon dịch vụ màu xám; “Theo dịch vụ” tô icon theo màu riêng
-            của từng dịch vụ.
+            “Neutral” keeps every service icon grey; “By service” tints each icon with its
+            own service color.
           </span>
         </div>
       </Section>
 
-      <Section title="Không gian">
+      <Section title="Workspace">
         <div className="wb-field">
           <label className="wb-label" htmlFor="ws">
-            Tên
+            Name
           </label>
           <div className="wb-cluster wb-cluster--nowrap">
             <input
@@ -186,31 +186,31 @@ export function Settings() {
               onClick={saveName}
               disabled={name.trim() === (workspace?.displayName ?? "")}
             >
-              Lưu
+              Save
             </button>
           </div>
         </div>
         <ul className="wb-list wb-list--flush">
           <li className="wb-list__item">
-            <span className="wb-list__title">Đơn vị tiền tệ</span>
+            <span className="wb-list__title">Currency</span>
             <span className="wb-list__end wb-num--strong">VND (₫)</span>
           </li>
         </ul>
       </Section>
 
-      <Section title="Dữ liệu">
+      <Section title="Data">
         <p style={{ fontSize: 13, color: "var(--wb-fg-muted)", margin: 0 }}>
-          Sao lưu ra JSON (khôi phục được) hoặc CSV (mở bằng Excel). Dữ liệu chỉ lưu trên
-          trình duyệt này.
+          Back up to JSON (restorable) or CSV (opens in Excel). Data is stored only in this
+          browser.
         </p>
         <div className="wb-cluster">
           <button type="button" className="wb-btn wb-btn--secondary wb-btn--sm" style={{ gap: 6 }} onClick={doExportJSON}>
             <span className="wb-ico wb-ico--sm">download</span>
-            Xuất JSON
+            Export JSON
           </button>
           <button type="button" className="wb-btn wb-btn--secondary wb-btn--sm" style={{ gap: 6 }} onClick={doExportCSV}>
             <span className="wb-ico wb-ico--sm">download</span>
-            Xuất CSV
+            Export CSV
           </button>
           <button
             type="button"
@@ -219,7 +219,7 @@ export function Settings() {
             onClick={() => fileRef.current?.click()}
           >
             <span className="wb-ico wb-ico--sm">upload</span>
-            Nhập JSON
+            Import JSON
           </button>
           <input
             ref={fileRef}
@@ -231,7 +231,7 @@ export function Settings() {
         </div>
         <div className="wb-cluster wb-cluster--between">
           <p style={{ fontSize: 13, color: "var(--wb-fg-muted)", margin: 0, flex: "1 1 200px" }}>
-            Nạp ~200 giao dịch mẫu cùng danh mục và nhãn để xem thử giao diện.
+            Load ~200 sample transactions with categories and tags to try out the interface.
           </p>
           <button
             type="button"
@@ -240,15 +240,15 @@ export function Settings() {
             onClick={doLoadSample}
           >
             <span className="wb-ico wb-ico--sm">database</span>
-            Nạp dữ liệu mẫu
+            Load sample data
           </button>
         </div>
       </Section>
 
-      <Section title="Nguy hiểm">
+      <Section title="Danger zone">
         <div className="wb-cluster wb-cluster--between">
           <p style={{ fontSize: 13, color: "var(--wb-fg-muted)", margin: 0, flex: "1 1 200px" }}>
-            Xoá toàn bộ giao dịch, danh mục và nhãn, rồi bắt đầu lại từ đầu.
+            Delete all transactions, categories, and tags, then start over from scratch.
           </p>
           <button
             type="button"
@@ -257,7 +257,7 @@ export function Settings() {
             onClick={doReset}
           >
             <span className="wb-ico wb-ico--sm">delete</span>
-            Xoá &amp; làm lại
+            Delete &amp; start over
           </button>
         </div>
       </Section>

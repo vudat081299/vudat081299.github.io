@@ -37,6 +37,7 @@ export function TransactionEditor() {
   const [occurredTime, setOccurredTime] = useState("");
   const [note, setNote] = useState("");
   const [payee, setPayee] = useState("");
+  const [account, setAccount] = useState("");
   const [status, setStatus] = useState<TxStatus>("recorded");
 
   useEffect(() => {
@@ -58,6 +59,7 @@ export function TransactionEditor() {
       setOccurredTime(tx ? (tx.occurredTime ?? "") : (d?.occurredTime ?? nowHM()));
       setNote(tx?.note ?? d?.note ?? "");
       setPayee(tx?.payee ?? d?.payee ?? "");
+      setAccount(tx?.account ?? d?.account ?? "");
       setStatus(tx?.status ?? d?.status ?? "recorded");
       setOpen(true);
     });
@@ -89,6 +91,17 @@ export function TransactionEditor() {
     return [...counts.entries()].sort((a, b) => b[1] - a[1]).map(([p]) => p);
   }, [transactions]);
 
+  // The cards / accounts already seen in the ledger, most-used first — the same
+  // suggestion treatment the payee field gets, so "Paid with" autocompletes.
+  const accountSuggestions = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const t of transactions) {
+      const a = t.account?.trim();
+      if (a) counts.set(a, (counts.get(a) ?? 0) + 1);
+    }
+    return [...counts.entries()].sort((a, b) => b[1] - a[1]).map(([a]) => a);
+  }, [transactions]);
+
   /**
    * Leaving without confirming does NOT create a transaction — it parks what was
    * typed as a draft, and the "add transaction" button then wears the dashed
@@ -97,7 +110,7 @@ export function TransactionEditor() {
   function dismiss() {
     if (!editingId) {
       const d: TxDraft = {
-        type, amountStr, categoryId, tagIds, occurredAt, occurredTime, note, payee, status,
+        type, amountStr, categoryId, tagIds, occurredAt, occurredTime, note, payee, account, status,
       };
       saveDraft(d);
     }
@@ -158,6 +171,7 @@ export function TransactionEditor() {
       tagIds,
       note: note.trim(),
       payee: payee.trim() || undefined,
+      account: account.trim() || undefined,
       status,
       occurredAt,
       // Empty means "no particular time" — store nothing rather than "00:00",
@@ -190,29 +204,29 @@ export function TransactionEditor() {
           className="wb-btn wb-btn--ghost"
           style={{ color: "var(--wb-danger-text)", gap: 6 }}
           onClick={async () => {
-            if (!(await confirm({ title: "Xoá giao dịch này?", confirmLabel: "Xoá", danger: true })))
+            if (!(await confirm({ title: "Delete this transaction?", confirmLabel: "Delete", danger: true })))
               return;
             deleteTransaction(editingId);
             setOpen(false);
           }}
         >
           <span className="wb-ico wb-ico--sm">delete</span>
-          Xoá
+          Delete
         </button>
       ) : isDraft ? (
         <button type="button" className="wb-btn wb-btn--ghost" style={{ gap: 6 }} onClick={discard}>
           <span className="wb-ico wb-ico--sm">backspace</span>
-          Bỏ bản nháp
+          Discard draft
         </button>
       ) : (
         <span />
       )}
       <div style={{ display: "flex", gap: 8 }}>
         <button type="button" className="wb-btn wb-btn--secondary" onClick={dismiss}>
-          {editingId ? "Huỷ" : "Để sau"}
+          {editingId ? "Cancel" : "Later"}
         </button>
         <button type="button" className="wb-btn" onClick={save} disabled={amount <= 0}>
-          {editingId ? "Lưu" : "Thêm giao dịch"}
+          {editingId ? "Save" : "Add transaction"}
         </button>
       </div>
     </div>
@@ -232,7 +246,7 @@ export function TransactionEditor() {
       open={open}
       onClose={dismiss}
       maxWidth={540}
-      title={editingId ? "Sửa giao dịch" : "Thêm giao dịch"}
+      title={editingId ? "Edit transaction" : "Add transaction"}
       footer={footer}
     >
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
@@ -257,8 +271,10 @@ export function TransactionEditor() {
                 }}
                 onClick={() => changeType(t)}
               >
-                {t === "expense" ? "Chi tiêu" : "Thu nhập"}
-                <Kbd style={{ opacity: 0.7 }}>{kbdLabel(t === "expense" ? "O" : "I")}</Kbd>
+                {t === "expense" ? "Expense" : "Income"}
+                <Kbd style={{ opacity: 0.7, textTransform: "uppercase" }}>
+                  {kbdLabel(t === "expense" ? "O" : "I")}
+                </Kbd>
               </button>
             );
           })}
@@ -267,9 +283,10 @@ export function TransactionEditor() {
         {/* Amount — the field the eye should land on first: large digits with a ₫
             unit addon, grouped with dots as you type so a mistyped zero shows up
             in the field itself. */}
-        <Field label="Số tiền" htmlFor="tx-amount">
+        <Field label="Amount" htmlFor="tx-amount">
           <Input
             id="tx-amount"
+            className="wb-input-group--underline"
             inputMode="numeric"
             autoComplete="off"
             value={amountStr}
@@ -284,7 +301,7 @@ export function TransactionEditor() {
             select faking nesting with leading spaces. */}
         <div className="wb-field">
           <label className="wb-label" htmlFor="tx-cat">
-            Danh mục
+            Category
           </label>
           <CategorySelect
             id="tx-cat"
@@ -299,21 +316,39 @@ export function TransactionEditor() {
             room for five capsules. */}
         <div className="wb-field">
           <label className="wb-label" htmlFor="tx-payee">
-            Bên giao dịch <span className="wb-label__opt">(người / công ty)</span>
+            Payee <span className="wb-label__opt">(person / company)</span>
           </label>
           <PayeeInput
             id="tx-payee"
+            className="wb-input--underline"
             value={payee}
             onChange={setPayee}
             suggestions={payeeSuggestions}
-            placeholder="VD: Highlands, Công ty ABC"
+            placeholder="e.g. Highlands, ABC Company"
+          />
+        </div>
+
+        {/* Paid with — which card / account / wallet the money moved through. Free
+            text (with autocomplete from past entries) for now; the seed of a real
+            multi-wallet model later. */}
+        <div className="wb-field">
+          <label className="wb-label" htmlFor="tx-account">
+            Paid with <span className="wb-label__opt">(card / account / wallet)</span>
+          </label>
+          <PayeeInput
+            id="tx-account"
+            className="wb-input--underline"
+            value={account}
+            onChange={setAccount}
+            suggestions={accountSuggestions}
+            placeholder="e.g. Techcombank Visa, MoMo, Cash"
           />
         </div>
 
         {/* Status — capsules, not a dropdown: five options, and this vocabulary
             is already a capsule everywhere else it is shown. */}
         <div className="wb-field">
-          <label className="wb-label">Trạng thái</label>
+          <label className="wb-label">Status</label>
           <StatusPicker value={status} onChange={setStatus} />
         </div>
 
@@ -322,7 +357,7 @@ export function TransactionEditor() {
             removable, frequency-inked chips. No text-input frame: you never type
             here, you pick. */}
         <div className="wb-field">
-          <label className="wb-label">Nhãn</label>
+          <label className="wb-label">Tags</label>
           <div className="wb-cluster" style={{ flexWrap: "wrap", gap: 6, alignItems: "center" }}>
             <Popover
               inline
@@ -330,13 +365,13 @@ export function TransactionEditor() {
               trigger={({ toggle }) => (
                 <button type="button" className="cashy-tag-add" onClick={toggle}>
                   <span className="wb-ico wb-ico--xs">add</span>
-                  Thêm nhãn
+                  Add tag
                 </button>
               )}
             >
               {tags.length === 0 ? (
                 <div style={{ padding: "8px 10px", textAlign: "center", fontSize: 12, color: "var(--wb-fg-muted)" }}>
-                  Chưa có nhãn nào. Tạo ở màn Nhãn.
+                  No tags yet. Create them on the Tags screen.
                 </div>
               ) : (
                 // Ranked (most-used first) + bounded height with its own scroll,
@@ -396,7 +431,7 @@ export function TransactionEditor() {
             yesterday", "correct the clock back to now"); the pickers are there for
             the genuinely arbitrary date. */}
         <div className="wb-field">
-          <label className="wb-label">Thời điểm</label>
+          <label className="wb-label">When</label>
           <div className="wb-cluster wb-cluster--nowrap" style={{ gap: 8 }}>
             <div style={{ flex: 1, minWidth: 0 }}>
               <DatePicker value={occurredAt} onChange={setOccurredAt} />
@@ -446,21 +481,21 @@ export function TransactionEditor() {
                 setOccurredTime(nowHM());
               }}
             >
-              Bây giờ
+              Now
             </button>
             <button
               type="button"
               className="cashy-tag-add"
               onClick={() => setOccurredAt(todayYMD())}
             >
-              Hôm nay
+              Today
             </button>
             <button
               type="button"
               className="cashy-tag-add"
               onClick={() => setOccurredAt(yesterdayYMD())}
             >
-              Hôm qua
+              Yesterday
             </button>
             {/* The time stays genuinely optional — a transaction you only know the
                 DAY of should not be forced to claim an hour it doesn't have. */}
@@ -470,7 +505,7 @@ export function TransactionEditor() {
                 className="cashy-tag-add"
                 onClick={() => setOccurredTime("")}
               >
-                Bỏ giờ
+                Clear time
               </button>
             )}
           </div>
@@ -478,12 +513,13 @@ export function TransactionEditor() {
 
         {/* Note */}
         {/* Note — the migrated wb Textarea (themed resize handle). */}
-        <Field label="Ghi chú" htmlFor="tx-note">
+        <Field label="Note" htmlFor="tx-note">
           <Textarea
             id="tx-note"
+            className="wb-textarea--underline"
             value={note}
             onChange={(e) => setNote(e.target.value)}
-            placeholder="Không bắt buộc"
+            placeholder="Optional"
             rows={2}
           />
         </Field>

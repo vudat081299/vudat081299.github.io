@@ -8,6 +8,7 @@ import {
   type KeyboardEvent,
 } from "react";
 import { createPortal } from "react-dom";
+import { cn } from "@/lib/utils";
 
 /** Gap below the input, and the margin kept off the viewport edge. */
 const GAP = 6;
@@ -30,6 +31,7 @@ export function PayeeInput({
   onChange,
   suggestions,
   placeholder,
+  className,
 }: {
   id?: string;
   value: string;
@@ -37,6 +39,8 @@ export function PayeeInput({
   /** distinct payees already in the ledger, most-used first */
   suggestions: string[];
   placeholder?: string;
+  /** extra classes on the field itself, e.g. `wb-input--underline`. */
+  className?: string;
 }) {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(-1);
@@ -140,7 +144,7 @@ export function PayeeInput({
       <input
         id={id}
         ref={inputRef}
-        className="wb-input"
+        className={cn("wb-input", className)}
         value={value}
         autoComplete="off"
         placeholder={placeholder}

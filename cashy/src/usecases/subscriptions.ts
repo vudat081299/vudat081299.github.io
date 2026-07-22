@@ -21,10 +21,12 @@ export function addSubscription(input: {
   colorHex: string;
   icon: string;
   note?: string;
+  account?: string;
   startedAt?: string;
   fullAmount?: number;
   members?: number;
   firstCycleAmount?: number;
+  trialMonths?: number;
 }): string {
   const state = getState();
   const interval = input.interval ?? "monthly";
@@ -40,6 +42,7 @@ export function addSubscription(input: {
     colorHex: input.colorHex,
     icon: input.icon,
     note: input.note?.trim() ?? "",
+    account: input.account?.trim() || undefined,
     active: true,
     startedAt: input.startedAt ?? todayYMD(),
     lastPaidAt: null,
@@ -49,6 +52,7 @@ export function addSubscription(input: {
     fullAmount: input.fullAmount,
     members: input.members,
     firstCycleAmount: input.firstCycleAmount,
+    trialMonths: input.trialMonths,
     createdAt: new Date().toISOString(),
   };
   commit({ ...state, subscriptions: [...state.subscriptions, sub] });
@@ -58,7 +62,7 @@ export function addSubscription(input: {
 
 /** The fields that define WHEN a plan bills. Editing any of them moves the whole
  *  cycle grid, so the dues have to be recomputed. */
-const BILLING_FIELDS = ["interval", "dayOfMonth", "monthOfYear", "startedAt"] as const;
+const BILLING_FIELDS = ["interval", "dayOfMonth", "monthOfYear", "startedAt", "trialMonths"] as const;
 
 export function updateSubscription(id: string, patch: Partial<Subscription>): void {
   const state = getState();
@@ -194,26 +198,39 @@ export function confirmSubscriptionCharges(txIds: string[]): void {
  * must see the FINISHED picture. Run per charge instead, `lastPaidAt` would be
  * recomputed against a half-applied ledger at every step.
  */
-export function resolveSubscriptionCharges(sel: { pay: string[]; skip: string[] }): void {
+export function resolveSubscriptionCharges(sel: {
+  pay: string[];
+  skip: string[];
+  /** per-charge amount the user actually paid, when it differs from the plan
+   *  price (variable monthly pricing). Only applied to charges in `pay`. */
+  amounts?: Record<string, number>;
+}): void {
   const pay = new Set(sel.pay);
   const skip = new Set(sel.skip);
   if (pay.size === 0 && skip.size === 0) return;
+  const amounts = sel.amounts ?? {};
   const state = getState();
   const subIds = new Set(
     state.transactions
       .filter((t) => (pay.has(t.id) || skip.has(t.id)) && t.subscriptionId)
       .map((t) => t.subscriptionId!),
   );
-  commit({
-    ...state,
-    transactions: state.transactions.map((t) =>
-      pay.has(t.id)
-        ? { ...t, status: "recorded" as const }
-        : skip.has(t.id)
-          ? { ...t, status: "skipped" as const }
-          : t,
-    ),
-  });
+  // A named helper instead of a nested ternary: a paid charge may also carry an
+  // edited amount, and that reads far clearer as a couple of small if-blocks.
+  const settle = (t: Transaction): Transaction => {
+    if (pay.has(t.id)) {
+      const amt = amounts[t.id];
+      if (amt != null && amt > 0 && amt !== t.amount) {
+        return { ...t, status: "recorded", amount: amt };
+      }
+      return { ...t, status: "recorded" };
+    }
+    if (skip.has(t.id)) {
+      return { ...t, status: "skipped" };
+    }
+    return t;
+  };
+  commit({ ...state, transactions: state.transactions.map(settle) });
   for (const id of subIds) syncPayments(id);
 }
 

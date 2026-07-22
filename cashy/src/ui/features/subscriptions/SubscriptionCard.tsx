@@ -1,7 +1,8 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import type { Subscription, Transaction } from "@/domain/types";
 import {
   billingLabel,
+  inTrial,
   isLapsed,
   needsPaymentNow,
   nextPaymentDate,
@@ -100,6 +101,9 @@ export function SubscriptionCard({
   const cycle = subCycle(sub);
   const due = needsPaymentNow(sub, txs);
   const lapsed = isLapsed(sub, txs);
+  // Inside the free window: nothing is owed yet and the first charge is still
+  // ahead, so the card says "Free trial" rather than the plain "Active".
+  const trial = sub.active && inTrial(sub);
   // The bar only earns full ink in the home stretch — under ~10% of the period
   // left — so a black bar means "renews soon" rather than merely "time passes".
   const nearEnd = cycle.remainingDays < cycle.totalDays * 0.1;
@@ -107,26 +111,52 @@ export function SubscriptionCard({
   const behind = st.pending.length;
   const settledCount = sub.paymentTxIds.length;
 
-  const tone = !sub.active ? undefined : lapsed ? "danger" : due ? "warning" : undefined;
+  // Tone ladder (§1): suspended = danger, a bill due = warning, else no tone.
+  let tone: "danger" | "warning" | undefined;
+  if (!sub.active) {
+    tone = undefined;
+  } else if (lapsed) {
+    tone = "danger";
+  } else if (due) {
+    tone = "warning";
+  } else {
+    tone = undefined;
+  }
 
-  const statusCap = !sub.active ? (
-    <span className="wb-cap">Cancelled</span>
-  ) : lapsed ? (
-    <span className="wb-cap wb-cap--danger">
-      <span className="wb-cap__dot" />
-      Suspended
-    </span>
-  ) : due ? (
-    <span className="wb-cap wb-cap--warning">
-      <span className="wb-cap__dot" />
-      Payment due
-    </span>
-  ) : (
-    <span className="wb-cap wb-cap--success">
-      <span className="wb-cap__dot" />
-      Active
-    </span>
-  );
+  // The status capsule, one branch per state — spelled out as an if-ladder rather
+  // than a stack of ternaries so each state's markup reads on its own.
+  let statusCap: ReactNode;
+  if (!sub.active) {
+    statusCap = <span className="wb-cap">Cancelled</span>;
+  } else if (lapsed) {
+    statusCap = (
+      <span className="wb-cap wb-cap--danger">
+        <span className="wb-cap__dot" />
+        Suspended
+      </span>
+    );
+  } else if (due) {
+    statusCap = (
+      <span className="wb-cap wb-cap--warning">
+        <span className="wb-cap__dot" />
+        Payment due
+      </span>
+    );
+  } else if (trial) {
+    statusCap = (
+      <span className="wb-cap wb-cap--info">
+        <span className="wb-cap__dot" />
+        Free trial
+      </span>
+    );
+  } else {
+    statusCap = (
+      <span className="wb-cap wb-cap--success">
+        <span className="wb-cap__dot" />
+        Active
+      </span>
+    );
+  }
 
   const cardClass = !sub.active
     ? `wb-card cashy-sub--cancelled${suppressReveal ? " cashy-sub--force-quiet" : ""}`
@@ -141,7 +171,36 @@ export function SubscriptionCard({
   // The standing line next to the history button. A service that owes money says
   // so through the action button instead, so it gets no note — two statements of
   // the same fact would only compete for the same row.
-  const footNote = !sub.active ? "Không còn thu phí" : due ? null : "Đã thanh toán đủ";
+  let footNote: string | null;
+  if (!sub.active) {
+    footNote = "No longer billed";
+  } else if (trial) {
+    footNote = "In free trial";
+  } else if (due) {
+    footNote = null;
+  } else {
+    footNote = "Paid up";
+  }
+
+  // The right-hand meta cell: what to call the next money date, and the date/value
+  // itself. An if-ladder rather than a 4-way ternary so each state is legible.
+  let paymentLabel: string;
+  if (!sub.active) {
+    paymentLabel = "Payments";
+  } else if (due) {
+    paymentLabel = "Payment owed";
+  } else if (trial) {
+    paymentLabel = "First charge";
+  } else {
+    paymentLabel = "Next payment";
+  }
+
+  let paymentValue: string;
+  if (!sub.active) {
+    paymentValue = `${settledCount} on record`;
+  } else {
+    paymentValue = fmtDateNum(nextPaymentDate(sub, txs));
+  }
 
 
   return (
@@ -177,8 +236,9 @@ export function SubscriptionCard({
               {/* On a shared plan the amount above is only YOUR share, which on
                   its own reads as the whole price — say what it is a share of. */}
               {(sub.members ?? 0) > 1 && (
-                <span className="wb-cell-muted"> · 1/{sub.members} gói chung</span>
+                <span className="wb-cell-muted"> · 1/{sub.members} shared</span>
               )}
+              {sub.account && <span className="wb-cell-muted"> · {sub.account}</span>}
             </p>
           </div>
         </div>
@@ -195,20 +255,16 @@ export function SubscriptionCard({
               </div>
             </div>
             <div>
-              <div className="cashy-submeta__label">
-                {!sub.active ? "Payments" : due ? "Payment owed" : "Next payment"}
-              </div>
-              <div className="cashy-submeta__val">
-                {!sub.active
-                  ? `${settledCount} on record`
-                  : fmtDateNum(nextPaymentDate(sub, txs))}
-              </div>
+              <div className="cashy-submeta__label">{paymentLabel}</div>
+              <div className="cashy-submeta__val">{paymentValue}</div>
             </div>
           </div>
 
           {/* A cancelled service has no running period, so it gets no progress bar
-              — an empty track would only invite the question "progress to what?". */}
-          {sub.active && cycle.started && (
+              — an empty track would only invite the question "progress to what?".
+              A trialing one is skipped too: the bar would chart a period nobody is
+              paying for, when the fact that matters is simply when billing begins. */}
+          {sub.active && cycle.started && !trial && (
             <>
               {/* Days used out of the days actually paid for — the divisor is the
                   real length of THIS billing period: a 28-day February is 28. */}
@@ -262,8 +318,8 @@ export function SubscriptionCard({
           <button
             type="button"
             className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm wb-btn--round"
-            aria-label={`Lịch sử thanh toán ${sub.name}`}
-            title="Lịch sử thanh toán"
+            aria-label={`Payment history for ${sub.name}`}
+            title="Payment history"
             disabled={!hasHistory}
             onClick={onOpenHistory}
           >
@@ -281,7 +337,7 @@ export function SubscriptionCard({
                 className="wb-btn wb-btn--ghost wb-btn--sm cashy-btn--danger-hover"
                 onClick={onOpenCancel}
               >
-                Huỷ đăng ký
+                Cancel
               </button>
             )}
             {sub.active
@@ -293,7 +349,7 @@ export function SubscriptionCard({
                     onClick={onOpenCatchUp}
                   >
                     <span className="wb-ico wb-ico--xs">check</span>
-                    {behind > 1 ? `Xử lý ${behind} kỳ` : "Mark as paid"}
+                    {behind > 1 ? `Settle ${behind} cycles` : "Mark as paid"}
                   </button>
                 )
               : // Resuming is cheap and reversible, so it happens on one click and
@@ -304,7 +360,7 @@ export function SubscriptionCard({
                   className="wb-btn wb-btn--secondary wb-btn--sm"
                   onClick={() => onSetActive(true)}
                 >
-                  Tiếp tục
+                  Resume
                 </button>}
           </div>
         </div>

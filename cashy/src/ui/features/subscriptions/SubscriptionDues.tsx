@@ -40,7 +40,7 @@ export function SubscriptionDues({
               className="wb-btn wb-btn--secondary wb-btn--sm"
               onClick={() => onSkip(txId)}
             >
-              Bỏ qua
+              Skip
             </button>
             <button
               type="button"
@@ -49,14 +49,14 @@ export function SubscriptionDues({
               onClick={() => onConfirm(txId)}
             >
               <span className="wb-ico wb-ico--xs">check</span>
-              Đã trả
+              Paid
             </button>
           </div>
         </div>
       ))}
       {dues.length > shown.length && (
         <span className="wb-cell-muted" style={{ fontSize: 12 }}>
-          +{dues.length - shown.length} tháng khác ở màn Đăng ký…
+          +{dues.length - shown.length} more months on the Subscriptions page…
         </span>
       )}
     </div>

@@ -5,15 +5,18 @@ import { daysBetween, todayYMD } from "@/domain/date";
 import {
   breakdown,
   filterTx,
+  foldTailSlices,
   forecastSeries,
   monthlyNetRate,
   needsPaymentNow,
+  OTHER_SLICE_ID,
   pctChange,
   periodInsights,
   rankTags,
   totals,
   walletSeries,
   type ChartBucket,
+  type Steadiness,
 } from "@/domain";
 import { periodLabel, prevRange } from "@/domain/period";
 import { useStableSubOrder } from "@/ui/features/subscriptions/useStableSubOrder";
@@ -33,6 +36,15 @@ import { TxFilterBar } from "@/ui/features/transactions/TxFilterBar";
 import { TransactionTable } from "@/ui/features/transactions/TransactionTable";
 import { EmptyState } from "@/ui/common/EmptyState";
 
+/** Plain-language wording for the daily-spend steadiness band (see periodInsights).
+ *  The band already hides the "coefficient of variation" — this hides the jargon. */
+const STEADINESS: Record<Steadiness, { label: string; hint: string }> = {
+  "very-steady": { label: "Very steady", hint: "barely changes day to day" },
+  steady: { label: "Steady", hint: "fairly consistent day to day" },
+  uneven: { label: "Uneven", hint: "some days spike above the rest" },
+  erratic: { label: "Erratic", hint: "a few days dominate the total" },
+};
+
 export function Dashboard() {
   // The query owns the period so the header picker, the charts AND the table all
   // move together; type/search/tag filters narrow the table only (not the charts).
@@ -43,7 +55,9 @@ export function Dashboard() {
     const cur = filterTx(transactions, { range: q.range });
     const t = totals(cur);
     const tp = totals(filterTx(transactions, { range: prevRange(q.period, new Date(), q.custom) }));
-    const slices = breakdown(cur, "expense", categories);
+    // Fold the long tail of tiny categories (≤5% combined) into one grey "Other"
+    // slice so the donut and its list read as a handful of real categories.
+    const slices = foldTailSlices(breakdown(cur, "expense", categories));
     const insights = periodInsights(cur, q.range, categories);
     return { balance: totals(transactions).net, t, tp, slices, insights, count: cur.length };
   }, [transactions, categories, q.range, q.period, q.custom]);
@@ -115,6 +129,94 @@ export function Dashboard() {
   // Sorted once, then held stable so editing a card never reorders it.
   const subCards = useStableSubOrder(subscriptions, transactions);
   const dueCount = subscriptions.filter((s) => needsPaymentNow(s, transactions)).length;
+
+  // Insights — a strip of plain-language facts a KPI grid alone doesn't state.
+  // Each is one derived truth about the period, written for someone who has never
+  // heard the word "median". Spending less than last period is the GOOD direction,
+  // so that delta greens when it falls and reds when it climbs.
+  const spendDelta = pctChange(t.expense, tp.expense);
+  const steady = insights.steadiness ? STEADINESS[insights.steadiness] : null;
+  const insightTiles: {
+    icon: string;
+    label: string;
+    value: string;
+    hint: string;
+    color?: string;
+  }[] = [
+    {
+      icon: "savings",
+      label: "Savings rate",
+      value: insights.savingsRate == null ? "—" : `${Math.round(insights.savingsRate * 100)}%`,
+      hint: "of income kept",
+      color:
+        insights.savingsRate == null
+          ? undefined
+          : insights.savingsRate >= 0
+            ? "var(--wb-success-text)"
+            : "var(--wb-danger-text)",
+    },
+    {
+      icon: spendDelta != null && spendDelta > 0 ? "trending_up" : "trending_down",
+      label: "Spending vs last period",
+      value:
+        spendDelta == null
+          ? "—"
+          : `${spendDelta > 0 ? "+" : spendDelta < 0 ? "−" : ""}${Math.abs(Math.round(spendDelta * 100))}%`,
+      hint:
+        spendDelta == null
+          ? "no earlier period yet"
+          : spendDelta > 0
+            ? "you spent more"
+            : spendDelta < 0
+              ? "you spent less"
+              : "about the same",
+      color:
+        spendDelta == null || spendDelta === 0
+          ? undefined
+          : spendDelta < 0
+            ? "var(--wb-success-text)"
+            : "var(--wb-danger-text)",
+    },
+    {
+      icon: "today",
+      label: "Average per day",
+      value: formatMoneyShort(insights.avgPerDay),
+      hint: `over ${insights.daysElapsed} ${insights.daysElapsed === 1 ? "day" : "days"}`,
+    },
+    {
+      icon: "speed",
+      label: "Typical day",
+      value: formatMoneyShort(insights.medianPerDay),
+      hint:
+        insights.medianPerDay > 0 && insights.avgPerDay > insights.medianPerDay * 1.3
+          ? "a few big days lift the average"
+          : "close to your average",
+    },
+    {
+      icon: "show_chart",
+      label: "How steady",
+      value: steady?.label ?? "—",
+      hint: steady?.hint ?? "not enough spending yet",
+    },
+    {
+      icon: "donut_small",
+      label: "Top category",
+      value: insights.topCategory ? `${Math.round(insights.topCategory.pct * 100)}%` : "—",
+      hint: insights.topCategory ? `on ${insights.topCategory.name}` : "no spending yet",
+    },
+    {
+      icon: "insights",
+      label: "This month's forecast",
+      value: insights.projected == null ? "—" : formatMoneyShort(insights.projected),
+      hint: insights.projected == null ? "this month only" : "at the current pace",
+    },
+    {
+      icon: "local_fire_department",
+      label: "Largest expense",
+      value: insights.topExpense ? formatMoneyShort(insights.topExpense.amount) : "—",
+      hint: insights.topExpense ? insights.topExpense.note : "nothing spent yet",
+    },
+  ];
 
   return (
     <div className="wb-stack wb-stack--loose">
@@ -341,7 +443,12 @@ export function Dashboard() {
                   >
                     <div className="cashy-rank__head">
                       <span className="cashy-dot cashy-dot--sm" style={{ background: s.colorHex }} />
-                      <span className="cashy-rank__name">{s.name}</span>
+                      <span className="cashy-rank__name">
+                        {s.name}
+                        {s.id === OTHER_SLICE_ID && s.count
+                          ? ` · ${s.count} categories`
+                          : ""}
+                      </span>
                       <span className="wb-num cashy-rank__amt">{formatMoney(s.total)}</span>
                       <span className="wb-num cashy-rank__val">{Math.round(s.pct * 100)}%</span>
                     </div>
@@ -378,72 +485,23 @@ export function Dashboard() {
               Spending indicators
             </h3>
             <div className="cashy-insights">
-              <div className="cashy-insight">
-                <span className="cashy-insight__ico">
-                  <span className="wb-ico wb-ico--sm">savings</span>
-                </span>
-                <div>
-                  <div className="cashy-insight__label">Savings rate</div>
-                  <div
-                    className="cashy-insight__value"
-                    style={{
-                      color:
-                        insights.savingsRate == null
-                          ? undefined
-                          : insights.savingsRate >= 0
-                            ? "var(--wb-success-text)"
-                            : "var(--wb-danger-text)",
-                    }}
-                  >
-                    {insights.savingsRate == null
-                      ? "—"
-                      : `${Math.round(insights.savingsRate * 100)}%`}
-                  </div>
-                  <div className="cashy-insight__hint">of income kept</div>
-                </div>
-              </div>
-              <div className="cashy-insight">
-                <span className="cashy-insight__ico">
-                  <span className="wb-ico wb-ico--sm">today</span>
-                </span>
-                <div>
-                  <div className="cashy-insight__label">Average spend</div>
-                  <div className="cashy-insight__value">
-                    {formatMoneyShort(insights.avgPerDay)}
-                  </div>
-                  <div className="cashy-insight__hint">
-                    per day ({insights.daysElapsed} days)
+              {insightTiles.map((tile) => (
+                <div className="cashy-insight" key={tile.label}>
+                  <span className="cashy-insight__ico">
+                    <span className="wb-ico wb-ico--sm">{tile.icon}</span>
+                  </span>
+                  <div>
+                    <div className="cashy-insight__label">{tile.label}</div>
+                    <div
+                      className="cashy-insight__value"
+                      style={tile.color ? { color: tile.color } : undefined}
+                    >
+                      {tile.value}
+                    </div>
+                    <div className="cashy-insight__hint">{tile.hint}</div>
                   </div>
                 </div>
-              </div>
-              <div className="cashy-insight">
-                <span className="cashy-insight__ico">
-                  <span className="wb-ico wb-ico--sm">insights</span>
-                </span>
-                <div>
-                  <div className="cashy-insight__label">Full-month forecast</div>
-                  <div className="cashy-insight__value">
-                    {insights.projected == null ? "—" : formatMoneyShort(insights.projected)}
-                  </div>
-                  <div className="cashy-insight__hint">
-                    {insights.projected == null ? "this month only" : "at the current pace"}
-                  </div>
-                </div>
-              </div>
-              <div className="cashy-insight">
-                <span className="cashy-insight__ico">
-                  <span className="wb-ico wb-ico--sm">local_fire_department</span>
-                </span>
-                <div>
-                  <div className="cashy-insight__label">Largest expense</div>
-                  <div className="cashy-insight__value">
-                    {insights.topExpense ? formatMoneyShort(insights.topExpense.amount) : "—"}
-                  </div>
-                  <div className="cashy-insight__hint">
-                    {insights.topExpense ? insights.topExpense.note : "nothing spent yet"}
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>

@@ -21,7 +21,7 @@ import type {
   TxType,
 } from "@/domain/types";
 import { uid } from "@/lib/id";
-import { addMonthKey, billingDate, monthKey, monthLabelShort } from "@/domain/date";
+import { addMonthKey, addMonths, billingDate, monthKey, monthLabelShort } from "@/domain/date";
 
 type Pool = {
   key: string;
@@ -105,7 +105,25 @@ type SubDef = {
   interval?: SubInterval;
   /** 1..12, yearly only — the month it bills in. */
   monthOfYear?: number;
+  /** free-trial length in months from the start date; no charge before it ends */
+  trialMonths?: number;
+  /** how many cycles ago the last payment was — sets how many cycles are OWED
+   *  now (with a past billing day). Overrides `paidThrough` when given. */
+  paidCyclesAgo?: number;
+  /** which card / account pays it ("Paid with") — inherited onto each charge */
+  account?: string;
 };
+
+// The cards / wallets the demo pays from — a small, realistic set so the new
+// "Paid with" field has something to show across the seeded ledger.
+const ACCOUNTS = [
+  "Techcombank Visa",
+  "VPBank Mastercard",
+  "Vietcombank",
+  "MoMo",
+  "ZaloPay",
+  "Cash",
+];
 
 const SUBSCRIPTIONS: SubDef[] = [
   { name: "Netflix", amount: 260_000, dueOffset: -16, category: "Giải trí", icon: "film", colorHex: "#ef4444", note: "Gói Premium 4K", paidThrough: "last", startedMonthsAgo: 14 },
@@ -124,6 +142,23 @@ const SUBSCRIPTIONS: SubDef[] = [
   { name: "Thẻ tín dụng VPBank Mastercard", amount: 999_000, dueOffset: 5, category: "Hóa đơn", icon: "credit-card", colorHex: "#7c3aed", note: "Phí thường niên hạng Platinum", paidThrough: "this", startedMonthsAgo: 4, interval: "yearly", monthOfYear: 4 },
   // A deliberately long name — stresses the card & table layout.
   { name: "Phí thường niên thẻ tín dụng Vietcombank Visa Signature Priority Banking", amount: 1_200_000, dueOffset: -3, category: "Hóa đơn", icon: "credit-card", colorHex: "#0ea5e9", note: "Hạng Signature — miễn phí năm đầu", paidThrough: "last", startedMonthsAgo: 6, interval: "yearly", monthOfYear: 1 },
+  // FREE TRIAL, still running — subscribed a month ago with three months free, so
+  // the card shows "Free trial" and a first-charge date roughly two months out and
+  // no charge has been raised yet.
+  { name: "Disney+ Hotstar", amount: 149_000, dueOffset: 2, category: "Giải trí", icon: "film", colorHex: "#2563eb", note: "Miễn phí 3 tháng đầu", paidThrough: "this", startedMonthsAgo: 1, trialMonths: 3 },
+  // FREE TRIAL that has ENDED — two free months, subscribed six months ago, so the
+  // first four months of billing sit in the history and it now bills normally.
+  { name: "Notion Plus", amount: 220_000, dueOffset: -5, category: "Mua sắm", icon: "laptop", colorHex: "#0ea5e9", note: "Hết 2 tháng dùng thử, giờ thu phí", paidThrough: "this", startedMonthsAgo: 6, trialMonths: 2, account: "Techcombank Visa" },
+
+  // ---- OWING N cycles — the reminder / suspended states, one per depth ----
+  { name: "Apple Music", amount: 65_000, dueOffset: -7, category: "Giải trí", icon: "music", colorHex: "#ef4444", note: "Nợ 1 kỳ", paidThrough: "this", paidCyclesAgo: 1, startedMonthsAgo: 10, account: "MoMo" },
+  { name: "Dropbox", amount: 240_000, dueOffset: -10, category: "Mua sắm", icon: "laptop", colorHex: "#2563eb", note: "Nợ 2 kỳ", paidThrough: "this", paidCyclesAgo: 2, startedMonthsAgo: 12, account: "VPBank Mastercard" },
+  { name: "Notion AI", amount: 200_000, dueOffset: -4, category: "Mua sắm", icon: "laptop", colorHex: "#8b5cf6", note: "Nợ 3 kỳ", paidThrough: "this", paidCyclesAgo: 3, startedMonthsAgo: 12, account: "Techcombank Visa" },
+  { name: "FPT Play", amount: 90_000, dueOffset: -14, category: "Giải trí", icon: "film", colorHex: "#f59e0b", note: "Nợ 4 kỳ", paidThrough: "this", paidCyclesAgo: 4, startedMonthsAgo: 14, account: "ZaloPay" },
+
+  // ---- FREE TRIAL in progress, one per length (1 / 2 / 3 months) ----
+  { name: "Canva Pro", amount: 130_000, dueOffset: 3, category: "Mua sắm", icon: "laptop", colorHex: "#06b6d4", note: "Miễn phí 1 tháng đầu", paidThrough: "this", startedMonthsAgo: 0, trialMonths: 1, account: "VPBank Mastercard" },
+  { name: "Coursera Plus", amount: 480_000, dueOffset: 6, category: "Mua sắm", icon: "laptop", colorHex: "#6366f1", note: "Miễn phí 2 tháng đầu", paidThrough: "this", startedMonthsAgo: 1, trialMonths: 2, account: "Vietcombank" },
 ];
 
 /** How many past cycles of each service get a real charge row in the demo. */
@@ -166,6 +201,9 @@ export function buildSampleSubscriptions(
 
   for (const s of SUBSCRIPTIONS) {
     const id = uid();
+    // Which card pays this service ("Paid with"): explicit when the def names one,
+    // otherwise spread deterministically across ACCOUNTS by position.
+    const account = s.account ?? ACCOUNTS[subscriptions.length % ACCOUNTS.length];
     const dayOfMonth = clampDay(today + s.dueOffset);
     const interval = s.interval ?? "monthly";
     // One "cycle" is 1 month or 12; a yearly plan's cycles sit on the grid of its
@@ -182,8 +220,16 @@ export function buildSampleSubscriptions(
       startMonth = `${y - Math.max(1, Math.round(s.startedMonthsAgo / 12))}-${anchorMM}`;
     } else {
       startMonth = addMonthKey(cur, -s.startedMonthsAgo);
-      paidMonth =
-        s.paidThrough === "this" ? cur : addMonthKey(cur, s.paidThrough === "last" ? -1 : -2);
+      // `paidCyclesAgo` (owe exactly N) wins; otherwise the paidThrough shorthand.
+      if (s.paidCyclesAgo != null) {
+        paidMonth = addMonthKey(cur, -s.paidCyclesAgo);
+      } else if (s.paidThrough === "this") {
+        paidMonth = cur;
+      } else if (s.paidThrough === "last") {
+        paidMonth = addMonthKey(cur, -1);
+      } else {
+        paidMonth = addMonthKey(cur, -2);
+      }
     }
 
     // Every cycle from the start (capped) through the last settled one is paid —
@@ -192,12 +238,17 @@ export function buildSampleSubscriptions(
     let m = earliest > startMonth ? earliest : startMonth;
     while (m < floorMonth) m = addMonthKey(m, step);
     const startKey = startMonth < floorMonth ? floorMonth : startMonth;
+    const startedAt = billingDate(startKey, dayOfMonth);
+    // Free trial: the first `trialMonths` months are free, so any cycle billing
+    // before the trial end books nothing (matching domain/subscription.dueCharges).
+    const trialEndYMD = s.trialMonths ? addMonths(startedAt, s.trialMonths) : null;
 
     const paymentTxIds: string[] = [];
     let lastPaidAt: string | null = null;
     for (let guard = 0; m <= paidMonth && guard < MAX_HISTORY; guard++, m = addMonthKey(m, step)) {
-      const txId = uid();
       const occurredAt = billingDate(m, dayOfMonth);
+      if (trialEndYMD && occurredAt < trialEndYMD) continue; // free cycle → no charge
+      const txId = uid();
       charges.push({
         id: txId,
         amount: s.amount,
@@ -205,7 +256,8 @@ export function buildSampleSubscriptions(
         categoryId: catIdByName.get(s.category) ?? null,
         tagIds: subTagIds,
         note: s.name,
-        payee: `Đăng ký · ${monthLabelShort(m)}`,
+        payee: `Subscription · ${monthLabelShort(m)}`,
+        account,
         status: "recorded",
         occurredAt,
         createdAt: new Date(`${occurredAt}T09:00:00`).toISOString(),
@@ -228,8 +280,10 @@ export function buildSampleSubscriptions(
       colorHex: s.colorHex,
       icon: s.icon,
       note: s.note,
+      account,
       active: s.active ?? true,
-      startedAt: billingDate(startKey, dayOfMonth),
+      startedAt,
+      trialMonths: s.trialMonths,
       lastPaidAt,
       paymentTxIds,
       createdAt: now.toISOString(),
@@ -276,6 +330,20 @@ export function buildSampleData(
     return [...set];
   };
 
+  // Which card / wallet a row was paid from. Income lands in the bank; everyday
+  // spend is spread across the cards and wallets, cash most common.
+  const accountFor = (type: TxType): string => {
+    if (type === "income") return "Vietcombank";
+    return weighted([
+      ["Cash", 28],
+      ["Techcombank Visa", 26],
+      ["MoMo", 16],
+      ["Vietcombank", 14],
+      ["ZaloPay", 9],
+      ["VPBank Mastercard", 7],
+    ]);
+  };
+
   // Services + their real payment history, all inside the window. Needed up
   // front so each month's everyday spend can be sized around the sub charges.
   const { subscriptions, charges } = buildSampleSubscriptions(categories, tags, now, DATA_START_MONTH);
@@ -301,6 +369,7 @@ export function buildSampleData(
     tagIds: [tg("Chuyển khoản")],
     note: "Số dư đầu kỳ",
     payee: "Vietcombank",
+    account: "Vietcombank",
     occurredAt: openedAt,
     createdAt: new Date(`${openedAt}T00:00:00`).toISOString(),
   });
@@ -322,6 +391,7 @@ export function buildSampleData(
       tagIds: assignTags(SALARY.key, "income", salaryAmt),
       note: pick(SALARY.notes),
       payee: pick(SALARY.payees),
+      account: accountFor("income"),
       status: "recorded",
       occurredAt: salaryDate,
       createdAt: new Date(`${salaryDate}T08:00:00`).toISOString(),
@@ -350,6 +420,7 @@ export function buildSampleData(
         tagIds: assignTags(pool.key, "expense", amt),
         note: pick(pool.notes),
         payee: pick(pool.payees),
+        account: accountFor("expense"),
         status,
         occurredAt: dateStr,
         createdAt: new Date(y, mm - 1, day, 7 + rnd(0, 14), rnd(0, 59)).toISOString(),

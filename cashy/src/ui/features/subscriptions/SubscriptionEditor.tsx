@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useCashy } from "@/data/store";
 import { addSubscription, deleteSubscription, updateSubscription } from "@/usecases";
-import { firstCycleProration, flattenTree } from "@/domain";
-import { todayYMD } from "@/domain/date";
+import { cycleDate, firstBillableCycle, firstCycleProration, flattenTree } from "@/domain";
+import { fmtDateNum, todayYMD } from "@/domain/date";
 import { formatMoney, parseMoney } from "@/domain/money";
 import { SWATCHES } from "@/lib/palette";
 import { Modal } from "@/ui/kit/Modal";
@@ -16,7 +16,12 @@ import { SubTile } from "@/ui/features/subscriptions/SubTile";
 import { TagChip } from "@/ui/common/TagChip";
 import { registerSubscriptionEditor } from "@/lib/modals";
 import { confirm } from "@/lib/confirm";
-import type { SubInterval } from "@/domain/types";
+import type { SubInterval, Subscription } from "@/domain/types";
+
+const MONTH_NAMES = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
 
 export function SubscriptionEditor() {
   const { categories, tags, subscriptions } = useCashy();
@@ -32,6 +37,7 @@ export function SubscriptionEditor() {
   const [color, setColor] = useState<string>(SWATCHES[0]);
   const [icon, setIcon] = useState("credit-card");
   const [note, setNote] = useState("");
+  const [account, setAccount] = useState("");
   const [startedAt, setStartedAt] = useState(todayYMD());
   // Shared / family plan: the whole price + how many split it; `amount` is the
   // user's own share.
@@ -41,6 +47,9 @@ export function SubscriptionEditor() {
   // Prorated first cycle when joining mid-period.
   const [prorate, setProrate] = useState(false);
   const [firstAmountStr, setFirstAmountStr] = useState("");
+  // Free trial: the first N months cost nothing, billing starts after.
+  const [hasTrial, setHasTrial] = useState(false);
+  const [trialMonthsStr, setTrialMonthsStr] = useState("1");
 
   useEffect(() => {
     registerSubscriptionEditor((id) => {
@@ -56,12 +65,15 @@ export function SubscriptionEditor() {
       setColor(sub?.colorHex ?? SWATCHES[0]);
       setIcon(sub?.icon ?? "credit-card");
       setNote(sub?.note ?? "");
+      setAccount(sub?.account ?? "");
       setStartedAt(sub?.startedAt ?? todayYMD());
       setShared((sub?.members ?? 0) > 1 || sub?.fullAmount != null);
       setFullAmountStr(sub?.fullAmount != null ? String(sub.fullAmount) : "");
       setMembersStr(sub?.members != null ? String(sub.members) : "2");
       setProrate(sub?.firstCycleAmount != null);
       setFirstAmountStr(sub?.firstCycleAmount != null ? String(sub.firstCycleAmount) : "");
+      setHasTrial((sub?.trialMonths ?? 0) > 0);
+      setTrialMonthsStr(sub?.trialMonths && sub.trialMonths > 0 ? String(sub.trialMonths) : "1");
       setOpen(true);
     });
     return () => {
@@ -74,8 +86,23 @@ export function SubscriptionEditor() {
   const members = Math.max(2, parseInt(membersStr, 10) || 2);
   const clampedDay = Math.min(31, Math.max(1, dayOfMonth || 1));
   const firstAmount = parseMoney(firstAmountStr);
+  const trialMonths = Math.max(1, parseInt(trialMonthsStr, 10) || 1);
   const catOptions = useMemo(() => flattenTree(categories, "expense"), [categories]);
   const canSave = name.trim() !== "" && amount > 0;
+
+  // Live preview of the first day money is actually wanted, so the trial's end is
+  // stated as a concrete date rather than left for the user to work out.
+  const trialFirstCharge = useMemo(() => {
+    if (!hasTrial) return null;
+    const s = {
+      interval,
+      dayOfMonth: clampedDay,
+      monthOfYear,
+      startedAt,
+      trialMonths,
+    } as Subscription;
+    return cycleDate(s, firstBillableCycle(s));
+  }, [hasTrial, interval, clampedDay, monthOfYear, startedAt, trialMonths]);
 
   // Live proration suggestion for the first cycle (null when there is nothing to
   // prorate — joined on/before the billing anchor). Drives both the "Kỳ đầu" hint
@@ -107,6 +134,8 @@ export function SubscriptionEditor() {
       fullAmount: shared && fullAmount > 0 ? fullAmount : undefined,
       members: shared ? members : undefined,
       firstCycleAmount,
+      // Free-trial length; cleared when the toggle is off.
+      trialMonths: hasTrial && trialMonths > 0 ? trialMonths : undefined,
       // Only carried for yearly plans; a monthly one has no billing month.
       monthOfYear: interval === "yearly" ? Math.min(12, Math.max(1, monthOfYear || 1)) : undefined,
       categoryId,
@@ -114,6 +143,7 @@ export function SubscriptionEditor() {
       colorHex: color,
       icon,
       note: note.trim(),
+      account: account.trim() || undefined,
       startedAt,
     };
     if (editingId) updateSubscription(editingId, payload);
@@ -139,9 +169,9 @@ export function SubscriptionEditor() {
           onClick={async () => {
             if (
               await confirm({
-                title: "Xoá đăng ký này?",
-                message: "Các giao dịch đã ghi vẫn được giữ lại.",
-                confirmLabel: "Xoá",
+                title: "Delete this subscription?",
+                message: "Recorded transactions are kept.",
+                confirmLabel: "Delete",
                 danger: true,
               })
             ) {
@@ -151,17 +181,17 @@ export function SubscriptionEditor() {
           }}
         >
           <span className="wb-ico wb-ico--sm">delete</span>
-          Xoá
+          Delete
         </button>
       ) : (
         <span />
       )}
       <div style={{ display: "flex", gap: 8 }}>
         <button type="button" className="wb-btn wb-btn--secondary" onClick={() => setOpen(false)}>
-          Huỷ
+          Cancel
         </button>
         <button type="button" className="wb-btn" onClick={save} disabled={!canSave}>
-          {editingId ? "Lưu" : "Thêm"}
+          {editingId ? "Save" : "Add"}
         </button>
       </div>
     </div>
@@ -171,13 +201,13 @@ export function SubscriptionEditor() {
     <Modal
       open={open}
       onClose={() => setOpen(false)}
-      title={editingId ? "Sửa đăng ký" : "Thêm đăng ký"}
+      title={editingId ? "Edit subscription" : "Add subscription"}
       footer={footer}
     >
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         <div className="wb-field">
           <label className="wb-label" htmlFor="sub-name">
-            Tên dịch vụ
+            Service name
           </label>
           <input
             id="sub-name"
@@ -185,14 +215,14 @@ export function SubscriptionEditor() {
             value={name}
             autoFocus
             onChange={(e) => setName(e.target.value)}
-            placeholder="Ví dụ: Netflix, YouTube Premium"
+            placeholder="e.g. Netflix, YouTube Premium"
           />
         </div>
 
         {/* Billing interval — decides whether the date below is a day of the
             month or a full "ngày a tháng b" date. */}
         <div className="wb-field">
-          <label className="wb-label">Chu kỳ thanh toán</label>
+          <label className="wb-label">Billing cycle</label>
           <div
             className="wb-tabs wb-tabs--pill"
             style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}
@@ -205,7 +235,7 @@ export function SubscriptionEditor() {
                 style={{ textAlign: "center" }}
                 onClick={() => setInterval(iv)}
               >
-                {iv === "monthly" ? "Hàng tháng" : "Hàng năm"}
+                {iv === "monthly" ? "Monthly" : "Yearly"}
               </button>
             ))}
           </div>
@@ -214,7 +244,7 @@ export function SubscriptionEditor() {
         <div className="wb-cluster wb-cluster--nowrap wb-cluster--stretch" style={{ gap: 12 }}>
           <div className="wb-field" style={{ flex: 2 }}>
             <label className="wb-label" htmlFor="sub-amount">
-              {shared ? "Phần của bạn" : "Số tiền"} / {interval === "yearly" ? "năm" : "tháng"}
+              {shared ? "Your share" : "Amount"} / {interval === "yearly" ? "year" : "month"}
             </label>
             <input
               id="sub-amount"
@@ -231,7 +261,7 @@ export function SubscriptionEditor() {
           </div>
           <div className="wb-field" style={{ flex: 1 }}>
             <label className="wb-label" htmlFor="sub-day">
-              {interval === "yearly" ? "Ngày" : "Ngày trong tháng"}
+              {interval === "yearly" ? "Day" : "Day of month"}
             </label>
             <input
               id="sub-day"
@@ -246,16 +276,16 @@ export function SubscriptionEditor() {
           {interval === "yearly" && (
             <div className="wb-field" style={{ flex: 1 }}>
               <label className="wb-label" htmlFor="sub-month">
-                Tháng
+                Month
               </label>
               <Select
                 id="sub-month"
                 value={monthOfYear}
                 onChange={(e) => setMonthOfYear(Number(e.target.value))}
               >
-                  {Array.from({ length: 12 }, (_, i) => (
+                  {MONTH_NAMES.map((mn, i) => (
                     <option key={i + 1} value={i + 1}>
-                      Tháng {i + 1}
+                      {mn}
                     </option>
                   ))}
               </Select>
@@ -264,14 +294,14 @@ export function SubscriptionEditor() {
         </div>
         {interval === "yearly" && (
           <span className="wb-help" style={{ marginTop: -8 }}>
-            Thu phí ngày {Math.min(31, Math.max(1, dayOfMonth || 1))} tháng{" "}
-            {Math.min(12, Math.max(1, monthOfYear || 1))} hàng năm.
+            Billed on {MONTH_NAMES[Math.min(12, Math.max(1, monthOfYear || 1)) - 1]}{" "}
+            {Math.min(31, Math.max(1, dayOfMonth || 1))} each year.
           </span>
         )}
 
         <div className="wb-field">
           <label className="wb-label" htmlFor="sub-start">
-            Ngày bắt đầu đăng ký
+            Start date
           </label>
           <input
             id="sub-start"
@@ -280,7 +310,48 @@ export function SubscriptionEditor() {
             value={startedAt}
             onChange={(e) => setStartedAt(e.target.value)}
           />
-          <span className="wb-help">Không tính phí cho bất kỳ tháng nào trước ngày này.</span>
+          <span className="wb-help">No month before this date is ever charged.</span>
+        </div>
+
+        {/* Free trial — the first N months cost nothing; billing starts after. The
+            first billing date is shown live so "when do I start paying" is never a
+            guess. */}
+        <div className="wb-field">
+          <label className="wb-check" style={{ cursor: "pointer" }}>
+            <input
+              type="checkbox"
+              checked={hasTrial}
+              onChange={(e) => setHasTrial(e.target.checked)}
+            />
+            <span>Free for the first months (free trial)</span>
+          </label>
+          {hasTrial && (
+            <div
+              className="wb-cluster wb-cluster--nowrap wb-cluster--stretch"
+              style={{ gap: 12, marginTop: 10, alignItems: "flex-end" }}
+            >
+              <div className="wb-field" style={{ flex: "none", width: 132 }}>
+                <label className="wb-label" htmlFor="sub-trial">
+                  Free months
+                </label>
+                <input
+                  id="sub-trial"
+                  className="wb-input"
+                  type="number"
+                  min={1}
+                  max={36}
+                  value={trialMonthsStr}
+                  onChange={(e) => setTrialMonthsStr(e.target.value)}
+                />
+              </div>
+              {trialFirstCharge && (
+                <span className="wb-help" style={{ margin: 0, flex: 1 }}>
+                  Nothing is charged during the trial. First charge on{" "}
+                  <strong>{fmtDateNum(trialFirstCharge)}</strong>.
+                </span>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Shared / family plan — record the WHOLE price and how many split it, so
@@ -288,7 +359,7 @@ export function SubscriptionEditor() {
         <div className="wb-field">
           <label className="wb-check" style={{ cursor: "pointer" }}>
             <input type="checkbox" checked={shared} onChange={(e) => setShared(e.target.checked)} />
-            <span>Gói chia sẻ / gia đình (dùng chung nhiều người)</span>
+            <span>Shared / family plan (split between people)</span>
           </label>
           {shared && (
             <>
@@ -298,7 +369,7 @@ export function SubscriptionEditor() {
               >
                 <div className="wb-field" style={{ flex: 2 }}>
                   <label className="wb-label" htmlFor="sub-full">
-                    Giá gói đầy đủ / {interval === "yearly" ? "năm" : "tháng"}
+                    Full plan price / {interval === "yearly" ? "year" : "month"}
                   </label>
                   <input
                     id="sub-full"
@@ -312,7 +383,7 @@ export function SubscriptionEditor() {
                 </div>
                 <div className="wb-field" style={{ flex: 1 }}>
                   <label className="wb-label" htmlFor="sub-members">
-                    Số người
+                    People
                   </label>
                   <input
                     id="sub-members"
@@ -331,11 +402,11 @@ export function SubscriptionEditor() {
                   disabled={fullAmount <= 0}
                   onClick={() => setAmountStr(String(Math.round(fullAmount / members)))}
                 >
-                  Chia đều cho {members} người
+                  Split evenly across {members}
                 </button>
                 {fullAmount > 0 && (
                   <span className="wb-help" style={{ margin: 0 }}>
-                    Phần của bạn: <strong>{formatMoney(amount)}</strong> · gói{" "}
+                    Your share: <strong>{formatMoney(amount)}</strong> · plan{" "}
                     {formatMoney(fullAmount)}
                   </span>
                 )}
@@ -354,12 +425,12 @@ export function SubscriptionEditor() {
                 checked={prorate}
                 onChange={(e) => setProrate(e.target.checked)}
               />
-              <span>Kỳ đầu tính theo số ngày dùng (tham gia giữa kỳ)</span>
+              <span>Prorate the first cycle by days used (joined mid-period)</span>
             </label>
             {prorate && (
               <div style={{ marginTop: 10 }}>
                 <label className="wb-label" htmlFor="sub-first">
-                  Số tiền kỳ đầu
+                  First-cycle amount
                 </label>
                 <input
                   id="sub-first"
@@ -371,8 +442,8 @@ export function SubscriptionEditor() {
                   placeholder={String(pro.amount)}
                 />
                 <span className="wb-help">
-                  Gợi ý {formatMoney(pro.amount)} — {pro.days}/{pro.total} ngày của kỳ đầu. Các kỳ
-                  sau vẫn {formatMoney(amount)}.
+                  Suggested {formatMoney(pro.amount)} — {pro.days}/{pro.total} days of the first
+                  cycle. Later cycles stay {formatMoney(amount)}.
                 </span>
               </div>
             )}
@@ -381,14 +452,14 @@ export function SubscriptionEditor() {
 
         <div className="wb-field">
           <label className="wb-label" htmlFor="sub-cat">
-            Danh mục
+            Category
           </label>
           <Select
             id="sub-cat"
             value={categoryId ?? "none"}
             onChange={(e) => setCategoryId(e.target.value === "none" ? null : e.target.value)}
           >
-              <option value="none">Chưa phân loại</option>
+              <option value="none">Uncategorised</option>
               {catOptions.map(({ cat, depth }) => (
                 <option key={cat.id} value={cat.id}>
                   {"  ".repeat(depth) + cat.name}
@@ -398,7 +469,7 @@ export function SubscriptionEditor() {
         </div>
 
         <div className="wb-field">
-          <label className="wb-label">Nhãn</label>
+          <label className="wb-label">Tags</label>
           <Popover
             panelWidth={224}
             trigger={({ toggle }) => (
@@ -423,14 +494,14 @@ export function SubscriptionEditor() {
                     return t ? <TagChip key={id} tag={t} /> : null;
                   })
                 ) : (
-                  <span style={{ color: "var(--wb-fg-subtle)" }}>Chọn nhãn…</span>
+                  <span style={{ color: "var(--wb-fg-subtle)" }}>Select tags…</span>
                 )}
               </button>
             )}
           >
             {tags.length === 0 ? (
               <div style={{ padding: "8px 10px", textAlign: "center", fontSize: 12, color: "var(--wb-fg-muted)" }}>
-                Chưa có nhãn nào. Tạo ở màn Nhãn.
+                No tags yet. Create them on the Tags page.
               </div>
             ) : (
               <div className="wb-menu" style={{ border: 0, boxShadow: "none", padding: 0, background: "none" }}>
@@ -462,12 +533,12 @@ export function SubscriptionEditor() {
 
         <div className="wb-cluster wb-cluster--nowrap" style={{ gap: 12, alignItems: "flex-start" }}>
           <div className="wb-field" style={{ flex: "none" }}>
-            <label className="wb-label">Biểu tượng &amp; màu</label>
+            <label className="wb-label">Icon &amp; color</label>
             <SubTile icon={icon} colorHex={color} brand iconSize={20} />
           </div>
           <div className="wb-field" style={{ flex: 1, minWidth: 0 }}>
             <label className="wb-label" style={{ visibility: "hidden" }}>
-              Màu
+              Color
             </label>
             <ColorPicker value={color} onChange={setColor} />
             <div style={{ marginTop: 8 }}>
@@ -476,12 +547,27 @@ export function SubscriptionEditor() {
           </div>
         </div>
 
-        <Field label="Ghi chú" htmlFor="sub-note">
+        {/* Which card / account pays this service — inherited onto every cycle
+            charge, so the ledger shows what funded each payment. Free text for now. */}
+        <div className="wb-field">
+          <label className="wb-label" htmlFor="sub-account">
+            Paid with <span className="wb-label__opt">(card / account / wallet)</span>
+          </label>
+          <input
+            id="sub-account"
+            className="wb-input"
+            value={account}
+            onChange={(e) => setAccount(e.target.value)}
+            placeholder="e.g. Techcombank Visa, MoMo, Cash"
+          />
+        </div>
+
+        <Field label="Note" htmlFor="sub-note">
           <Textarea
             id="sub-note"
             value={note}
             onChange={(e) => setNote(e.target.value)}
-            placeholder="Không bắt buộc"
+            placeholder="Optional"
             rows={2}
           />
         </Field>

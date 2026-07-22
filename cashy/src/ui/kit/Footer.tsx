@@ -25,7 +25,7 @@ export function Footer({
   copyright,
   bottom,
   slim = false,
-  columnsLabel = "Liên kết",
+  columnsLabel = "Links",
   className,
   ...rest
 }: {

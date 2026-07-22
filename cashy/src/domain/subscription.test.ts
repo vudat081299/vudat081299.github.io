@@ -5,8 +5,10 @@ import {
   chargesSurvivingDeletion,
   cyclesOwed,
   dueCharges,
+  firstBillableCycle,
   firstCycleProration,
   firstUnpaidCycle,
+  inTrial,
   isLapsed,
   needsPaymentNow,
   nextPaymentDate,
@@ -14,6 +16,7 @@ import {
   paymentsOf,
   planCatchUp,
   startCycle,
+  trialEndDate,
 } from "@/domain/subscription";
 
 // These tests exist because the billing rule used to live inside the store,
@@ -305,6 +308,45 @@ describe("firstCycleProration", () => {
   });
 });
 
+describe("free trial", () => {
+  // Subscribed 6 Jan, three months free → first charge 6 Apr.
+  const trialSub = sub({ startedAt: "2026-01-06", trialMonths: 3 });
+
+  it("ends the trial `trialMonths` on from the start date", () => {
+    expect(trialEndDate(trialSub)).toBe("2026-04-06");
+    expect(trialEndDate(sub())).toBeNull(); // no trial → no end date
+  });
+
+  it("bills from the first cycle on or after the trial end", () => {
+    expect(firstBillableCycle(trialSub)).toBe("2026-04");
+    expect(firstUnpaidCycle(trialSub)).toBe("2026-04");
+  });
+
+  it("is in trial strictly before the end date, and out of it on the day", () => {
+    expect(inTrial(trialSub, AT("2026-02-01"))).toBe(true);
+    expect(inTrial(trialSub, AT("2026-04-05"))).toBe(true);
+    expect(inTrial(trialSub, AT("2026-04-06"))).toBe(false); // charge day = out
+  });
+
+  it("raises no charge while the trial is running", () => {
+    // 20 Mar is inside the free window — Jan/Feb/Mar are all free.
+    expect(dueCharges([trialSub], [], AT("2026-03-20"))).toEqual([]);
+    expect(needsPaymentNow(trialSub, ledger(trialSub, AT("2026-03-20")), AT("2026-03-20"))).toBe(
+      false,
+    );
+  });
+
+  it("bills only the cycles from the trial end onward", () => {
+    // By 20 May: Apr and May have billed; Jan–Mar stay free and are never raised.
+    const out = dueCharges([trialSub], [], AT("2026-05-20"));
+    expect(out.map((c) => c.subMonth)).toEqual(["2026-04", "2026-05"]);
+  });
+
+  it("points the next payment at the first charge date during the trial", () => {
+    expect(nextPaymentDate(trialSub, [], AT("2026-02-15"))).toBe("2026-04-06");
+  });
+});
+
 describe("planCatchUp", () => {
   // Five owed cycles, Jan → May, in the order the dialog lists them.
   const rows = (answers: Array<[used: boolean, paid: boolean]>) =>
@@ -347,7 +389,7 @@ describe("planCatchUp", () => {
     // Paying only February with January still owed: a provider paid in February
     // while January is outstanding has been paid for JANUARY.
     const plan = planCatchUp(ALL_USED_UNPAID.map((r, i) => ({ ...r, paid: i === 1 })));
-    expect(plan.problem).toMatch(/kỳ cũ nhất/);
+    expect(plan.problem).toMatch(/oldest cycle first/);
   });
 
   it("lets a skipped cycle sit anywhere — it is not a debt", () => {
@@ -380,7 +422,7 @@ describe("planCatchUp", () => {
   it("has nothing to submit when the user changed nothing", () => {
     const plan = planCatchUp(ALL_USED_UNPAID);
     expect(plan.cancelling).toBe(false);
-    expect(plan.problem).toBe("Chưa có thay đổi nào để lưu.");
+    expect(plan.problem).toBe("No changes to save.");
   });
 });
 

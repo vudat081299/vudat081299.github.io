@@ -52,6 +52,10 @@ export interface Transaction {
   note: string;
   /** counterparty / source-destination — company, buyer/seller, merchant */
   payee?: string;
+  /** Which card / account / wallet the money moved through — free text for now
+   *  (e.g. "Techcombank Visa", "MoMo", "Cash"). A deliberate stepping stone to a
+   *  real multi-wallet model later, where this becomes an `accountId`. */
+  account?: string;
   /** lifecycle; undefined = "recorded" (legacy rows) */
   status?: TxStatus;
   occurredAt: string; // YYYY-MM-DD
@@ -90,6 +94,9 @@ export interface Subscription {
   colorHex: string;
   icon: string; // curated lucide key
   note: string;
+  /** Which card / account / wallet pays this subscription — free text for now,
+   *  inherited onto each cycle charge. Future: an `accountId` into a wallet model. */
+  account?: string;
   active: boolean; // false = paused (no new charges), history kept
   /** "YYYY-MM-DD" — the day the user actually subscribed. Billing can start in
    *  this month; nothing before it is ever charged. */
@@ -120,6 +127,17 @@ export interface Subscription {
    * cycle bills `amount`. Omitted = the first cycle bills in full like the rest.
    */
   firstCycleAmount?: number;
+  /**
+   * Free-trial length in whole MONTHS from `startedAt`. While the trial runs the
+   * service costs nothing and no charge is raised at all — the first charge lands
+   * on the first billing date ON OR AFTER the trial end (`startedAt` + this many
+   * months). Omitted / 0 = billed from the first cycle like any other plan.
+   *
+   * The boundary is exclusive of the end day the way a person reads it: "3 months
+   * free from 10 Jan" means free through 9 Apr and the first charge on 10 Apr —
+   * so `domain/subscription.inTrial` is true strictly BEFORE the trial-end date.
+   */
+  trialMonths?: number;
   /**
    * The day the service actually stopped (YYYY-MM-DD), set when it is cancelled.
    * Cycles that would bill on or after it are never raised, and any already

@@ -11,8 +11,8 @@ import { cn } from "@/lib/utils";
 export function Pager({
   prevLabel,
   nextLabel,
-  prevDir = "Trang trước",
-  nextDir = "Trang sau",
+  prevDir = "Previous page",
+  nextDir = "Next page",
   prevMeta,
   nextMeta,
   prevHref,
@@ -68,7 +68,7 @@ export function Pager({
   );
 
   return (
-    <nav aria-label="Chuyển trang" className={cn("wb-pager", className)} {...rest}>
+    <nav aria-label="Page navigation" className={cn("wb-pager", className)} {...rest}>
       {hasPrev &&
         (prevHref !== undefined && !prevDisabled ? (
           <a

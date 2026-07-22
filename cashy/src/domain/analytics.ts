@@ -11,6 +11,8 @@ export interface BreakdownSlice {
   colorHex: string;
   total: number;
   pct: number;
+  /** only set on the merged "Other" slice — how many categories it stands for */
+  count?: number;
 }
 /** Spend/earn grouped by ROOT category, for the donut. */
 export function breakdown(
@@ -39,6 +41,53 @@ export function breakdown(
     });
   }
   return slices.sort((a, b) => b.total - a.total);
+}
+
+/** The id carried by the merged tail slice, so the UI can special-case it. */
+export const OTHER_SLICE_ID = "__other__";
+/** The house neutral grey — the tail is not a category, so it takes no hue. */
+const OTHER_SLICE_COLOR = "#9b9a97";
+
+/**
+ * Collapse the long tail of tiny categories into one grey "Other" slice.
+ *
+ * Walking the slices smallest-first, take as many as fit under `maxShare` of the
+ * grand total COMBINED — the biggest set of the smallest categories whose shares
+ * still sum to ≤ maxShare — and merge them into a single neutral slice. A donut
+ * with twenty categories then reads as its handful of real ones plus "Other",
+ * instead of a dozen unlabelable slivers.
+ *
+ * Left untouched when the fold would swallow fewer than two slices: renaming one
+ * small category "Other" only hides which category it was, buying no tidiness.
+ *
+ * `slices` must be largest-first (what `breakdown` returns); the result is again
+ * largest-first, with "Other" placed by its combined total.
+ */
+export function foldTailSlices(
+  slices: BreakdownSlice[],
+  maxShare = 0.05,
+  label = "Other",
+): BreakdownSlice[] {
+  if (slices.length < 3) return slices; // two slices are already legible
+  const ascending = [...slices].sort((a, b) => a.total - b.total);
+  const fold: BreakdownSlice[] = [];
+  let share = 0;
+  for (const s of ascending) {
+    if (share + s.pct > maxShare) break;
+    share += s.pct;
+    fold.push(s);
+  }
+  if (fold.length < 2) return slices;
+  const folded = new Set(fold.map((s) => s.id));
+  const other: BreakdownSlice = {
+    id: OTHER_SLICE_ID,
+    name: label,
+    colorHex: OTHER_SLICE_COLOR,
+    total: fold.reduce((n, s) => n + s.total, 0),
+    pct: fold.reduce((n, s) => n + s.pct, 0),
+    count: fold.length,
+  };
+  return [...slices.filter((s) => !folded.has(s.id)), other].sort((a, b) => b.total - a.total);
 }
 
 export function pctChange(cur: number, prev: number): number | null {
@@ -223,13 +272,44 @@ export interface Insight {
  * "so what" a KPI grid alone doesn't say (savings rate, daily burn, a run-rate
  * projection, the single biggest hit). Pure read model; the screen formats.
  */
+/** How even day-to-day spending is — a plain-language band over the coefficient
+ *  of variation, so the screen never has to say "CV" to a non-statistician. */
+export type Steadiness = "very-steady" | "steady" | "uneven" | "erratic";
+
 export interface InsightData {
   savingsRate: number | null; // net / income, null if no income
-  avgPerDay: number; // expense / elapsed days in range
+  avgPerDay: number; // expense / elapsed days in range (the mean)
+  /** a TYPICAL day's spend — the median of daily totals, zero-filled for the days
+   *  nothing was spent. Robust to the odd big day the mean is dragged around by. */
+  medianPerDay: number;
+  /** coefficient of variation of daily spend (std / mean); null when nothing spent */
+  dailyCv: number | null;
+  /** friendly band derived from dailyCv; null when there is nothing to judge */
+  steadiness: Steadiness | null;
+  /** the biggest spending category this period + its share of the total */
+  topCategory: { name: string; pct: number; colorHex: string } | null;
   projected: number | null; // run-rate expense for the whole month (this-month only)
   topExpense: { note: string; amount: number; categoryName: string } | null;
   daysElapsed: number;
   daysInPeriod: number;
+}
+
+/** Median of a list (0 for empty). Sorts a copy — the caller's array is left alone. */
+function median(xs: number[]): number {
+  if (xs.length === 0) return 0;
+  const s = [...xs].sort((a, b) => a - b);
+  const mid = Math.floor(s.length / 2);
+  return s.length % 2 ? s[mid] : (s[mid - 1] + s[mid]) / 2;
+}
+
+/** Turn a coefficient of variation into a word a person can act on. The bands are
+ *  tuned for daily personal spend (zero days included), where a CV near 1 is
+ *  ordinary and above ~2 means a few days dominate the month. */
+function steadinessOf(cv: number): Steadiness {
+  if (cv < 0.75) return "very-steady";
+  if (cv < 1.25) return "steady";
+  if (cv < 2) return "uneven";
+  return "erratic";
 }
 export function periodInsights(
   txs: Transaction[],
@@ -254,13 +334,40 @@ export function periodInsights(
   const isThisMonth = range.start.slice(0, 7) === monthKey(now) && range.end !== "9999-12-31";
   const projected = isThisMonth && daysElapsed < daysInPeriod ? Math.round(avgPerDay * daysInPeriod) : null;
 
+  // A day-by-day series of counted spending across the elapsed window, ZERO-FILLED
+  // for the days nothing was spent — the honest sample for a "typical day" and for
+  // how much the daily figure swings. `median` shrugs off the odd big day the mean
+  // is dragged around by; the coefficient of variation says how spread the days are.
+  const byDay = new Map<string, number>();
+  for (const tx of txs) {
+    if (tx.type !== "expense" || !isCounted(tx) || tx.occurredAt > capEnd) continue;
+    byDay.set(tx.occurredAt, (byDay.get(tx.occurredAt) ?? 0) + tx.amount);
+  }
+  const spends = [...byDay.values()];
+  const daily = [...spends, ...new Array(Math.max(0, daysElapsed - spends.length)).fill(0)];
+  const medianPerDay = median(daily);
+  const dailyMean = daily.length ? daily.reduce((s, v) => s + v, 0) / daily.length : 0;
+  let dailyCv: number | null = null;
+  let steadiness: Steadiness | null = null;
+  if (dailyMean > 0 && daily.length > 1) {
+    const variance = daily.reduce((s, v) => s + (v - dailyMean) ** 2, 0) / daily.length;
+    dailyCv = Math.sqrt(variance) / dailyMean;
+    steadiness = steadinessOf(dailyCv);
+  }
+
+  // Biggest spending category (rolled up to its root, same as the donut).
+  const catSlices = breakdown(txs, "expense", cats);
+  const topCategory = catSlices.length
+    ? { name: catSlices[0].name, pct: catSlices[0].pct, colorHex: catSlices[0].colorHex }
+    : null;
+
   let top: InsightData["topExpense"] = null;
   for (const tx of txs) {
     if (tx.type !== "expense" || !isCounted(tx)) continue;
     if (!top || tx.amount > top.amount) {
       const cat = tx.categoryId ? cats.find((c) => c.id === tx.categoryId) : null;
       top = {
-        note: tx.note || cat?.name || "Giao dịch",
+        note: tx.note || cat?.name || "Transaction",
         amount: tx.amount,
         categoryName: cat?.name ?? "Uncategorised",
       };
@@ -270,6 +377,10 @@ export function periodInsights(
   return {
     savingsRate: t.income > 0 ? t.net / t.income : null,
     avgPerDay,
+    medianPerDay,
+    dailyCv,
+    steadiness,
+    topCategory,
     projected,
     topExpense: top,
     daysElapsed,

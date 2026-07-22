@@ -44,8 +44,25 @@ export function ConnectedSubscriptionCard({
 
   const pending = subscriptionStatus(sub, txs).pending;
 
-  const resolve = (plan: { pay: string[]; skip: string[]; cancelling: boolean }) => {
-    resolveSubscriptionCharges({ pay: plan.pay, skip: plan.skip });
+  // Prefill the catch-up prices with the most recent charge actually recorded —
+  // last month's figure — falling back to the plan price when nothing is on
+  // record yet. Computed as a block rather than a chained ternary for clarity.
+  const lastPaidAmount = (() => {
+    const recorded = txs.filter(
+      (t) => t.subscriptionId === sub.id && (t.status ?? "recorded") === "recorded",
+    );
+    if (recorded.length === 0) return sub.amount;
+    const latest = recorded.reduce((a, b) => (a.occurredAt >= b.occurredAt ? a : b));
+    return latest.amount;
+  })();
+
+  const resolve = (plan: {
+    pay: string[];
+    skip: string[];
+    cancelling: boolean;
+    amounts: Record<string, number>;
+  }) => {
+    resolveSubscriptionCharges({ pay: plan.pay, skip: plan.skip, amounts: plan.amounts });
     if (plan.cancelling) setSubscriptionActive(sub.id, false);
 
     // One toast for the whole catch-up, undoing it as one: the charges go back to
@@ -53,10 +70,10 @@ export function ConnectedSubscriptionCard({
     // the user to unpick a five-row decision by hand.
     const touched = [...plan.pay, ...plan.skip];
     const what = plan.cancelling
-      ? `Đã huỷ ${sub.name}`
+      ? `Cancelled ${sub.name}`
       : plan.pay.length > 0
-        ? `Đã ghi nhận ${plan.pay.length} kỳ của ${sub.name}`
-        : `Đã bỏ qua ${plan.skip.length} kỳ của ${sub.name}`;
+        ? `Recorded ${plan.pay.length} cycles of ${sub.name}`
+        : `Skipped ${plan.skip.length} cycles of ${sub.name}`;
     toast.undo(what, () => {
       revertSubscriptionCharges(touched);
       if (plan.cancelling) setSubscriptionActive(sub.id, true);
@@ -65,14 +82,14 @@ export function ConnectedSubscriptionCard({
 
   const revert = (txId: string, month: string, wasPaid: boolean) => {
     revertSubscriptionCharge(txId);
-    toast.undo(`Đã hoàn tác kỳ ${monthLabelShort(month)}`, () =>
+    toast.undo(`Reverted the ${monthLabelShort(month)} cycle`, () =>
       wasPaid ? confirmSubscriptionCharge(txId) : skipSubscriptionCharge(txId),
     );
   };
 
   const setActive = (active: boolean) => {
     setSubscriptionActive(sub.id, active);
-    toast.undo(active ? `${sub.name} đã tiếp tục` : `${sub.name} đã huỷ`, () =>
+    toast.undo(active ? `${sub.name} resumed` : `${sub.name} cancelled`, () =>
       setSubscriptionActive(sub.id, !active),
     );
   };
@@ -82,7 +99,7 @@ export function ConnectedSubscriptionCard({
   // reversal needs no record of what was dropped.
   const cancel = (cancelledAt: string) => {
     cancelSubscription(sub.id, cancelledAt);
-    toast.undo(`${sub.name} đã huỷ`, () => setSubscriptionActive(sub.id, true));
+    toast.undo(`${sub.name} cancelled`, () => setSubscriptionActive(sub.id, true));
   };
 
   return (
@@ -102,6 +119,7 @@ export function ConnectedSubscriptionCard({
         open={catchUpOpen}
         onClose={() => setCatchUpOpen(false)}
         onResolve={resolve}
+        defaultAmount={lastPaidAmount}
       />
       <SubscriptionHistory
         sub={sub}

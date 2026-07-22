@@ -29,7 +29,11 @@ export function formatMoneyShort(n: number): string {
 }
 
 function trim(x: number): string {
-  return x.toFixed(x % 1 === 0 ? 0 : 1).replace(".", ",");
+  // Round to the one decimal we actually show FIRST, then decide whether it is a
+  // whole number. Deciding on the raw value shows a bogus ",0": 100.04 is not an
+  // integer, so the old code took the toFixed(1) branch and printed "100,0k".
+  const r = Math.round(x * 10) / 10;
+  return r.toFixed(Number.isInteger(r) ? 0 : 1).replace(".", ",");
 }
 
 /** Parse free text to integer VND: "1.500.000 đ" -> 1500000 */

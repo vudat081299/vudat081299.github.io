@@ -46,8 +46,8 @@ export function TransactionDetail() {
 
   const category = tx.categoryId ? categories.find((c) => c.id === tx.categoryId) : null;
   const txTags = tx.tagIds.map((tid) => tags.find((t) => t.id === tid)).filter(Boolean);
-  const typeLabel = tx.type === "income" ? "Thu nhập" : "Chi tiêu";
-  const merchant = tx.note.trim() || category?.name || "Giao dịch";
+  const typeLabel = tx.type === "income" ? "Income" : "Expense";
+  const merchant = tx.note.trim() || category?.name || "Transaction";
 
   return (
     <div
@@ -63,32 +63,38 @@ export function TransactionDetail() {
               <div className="wb-receipt__merchant">{merchant}</div>
               <div className="wb-receipt__meta">
                 {fmtDate(tx.occurredAt)}
-                {tx.occurredTime ? ` lúc ${tx.occurredTime}` : ""} · {typeLabel}
+                {tx.occurredTime ? ` at ${tx.occurredTime}` : ""} · {typeLabel}
               </div>
             </div>
 
             <div className="wb-receipt__body">
               <div className="wb-receipt__line">
-                <span>Danh mục</span>
-                <span>{category?.name ?? "Chưa phân loại"}</span>
+                <span>Category</span>
+                <span>{category?.name ?? "Uncategorised"}</span>
               </div>
               <div className="wb-receipt__line">
-                <span>Loại</span>
+                <span>Type</span>
                 <span>{typeLabel}</span>
               </div>
               <div className="wb-receipt__line">
-                <span>Trạng thái</span>
+                <span>Status</span>
                 <StatusCap tx={tx} />
               </div>
               {tx.payee && (
                 <div className="wb-receipt__line wb-receipt__line--muted">
-                  <span>Bên giao dịch</span>
+                  <span>Payee</span>
                   <span>{tx.payee}</span>
+                </div>
+              )}
+              {tx.account && (
+                <div className="wb-receipt__line wb-receipt__line--muted">
+                  <span>Paid with</span>
+                  <span>{tx.account}</span>
                 </div>
               )}
               {tx.note.trim() && (
                 <div className="wb-receipt__line wb-receipt__line--muted">
-                  <span>Ghi chú</span>
+                  <span>Note</span>
                   <span>{tx.note}</span>
                 </div>
               )}
@@ -105,7 +111,7 @@ export function TransactionDetail() {
 
             <div className="wb-receipt__rule" />
             <div className="wb-receipt__total">
-              <span>Số tiền</span>
+              <span>Amount</span>
               <AmountDisplay amount={tx.amount} type={tx.type} signed />
             </div>
 
@@ -122,8 +128,8 @@ export function TransactionDetail() {
             onClick={async () => {
               if (
                 await confirm({
-                  title: `Xoá giao dịch "${merchant}" (${formatMoney(tx.amount)})?`,
-                  confirmLabel: "Xoá",
+                  title: `Delete transaction "${merchant}" (${formatMoney(tx.amount)})?`,
+                  confirmLabel: "Delete",
                   danger: true,
                 })
               ) {
@@ -133,11 +139,11 @@ export function TransactionDetail() {
             }}
           >
             <span className="wb-ico wb-ico--sm">delete</span>
-            Xoá
+            Delete
           </button>
           <div className="wb-cluster wb-cluster--tight">
             <button type="button" className="wb-btn wb-btn--secondary" onClick={close}>
-              Đóng
+              Close
             </button>
             <button
               type="button"
@@ -150,7 +156,7 @@ export function TransactionDetail() {
               }}
             >
               <span className="wb-ico wb-ico--sm">edit</span>
-              Sửa
+              Edit
             </button>
           </div>
         </div>

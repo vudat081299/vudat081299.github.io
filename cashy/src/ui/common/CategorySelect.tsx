@@ -83,7 +83,7 @@ export function CategorySelect({
                 </span>
               </>
             ) : (
-              <span style={{ flex: 1, color: "var(--wb-fg-muted)" }}>Chưa phân loại</span>
+              <span style={{ flex: 1, color: "var(--wb-fg-muted)" }}>Uncategorised</span>
             )}
             <span
               className="wb-ico wb-ico--sm"
@@ -151,7 +151,7 @@ function CategoryPanel({
           className="wb-input"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Tìm danh mục…"
+          placeholder="Search categories…"
           style={{ fontSize: 13, padding: "6px 10px" }}
         />
       </div>
@@ -172,7 +172,7 @@ function CategoryPanel({
           onClick={() => onPick(null)}
           style={{ color: "var(--wb-fg-muted)" }}
         >
-          <span style={{ flex: 1 }}>Chưa phân loại</span>
+          <span style={{ flex: 1 }}>Uncategorised</span>
           {value === null && <span className="wb-ico wb-ico--xs">check</span>}
         </button>
         {visible.map(({ cat, depth }) => (
@@ -204,7 +204,7 @@ function CategoryPanel({
           <div
             style={{ padding: 12, textAlign: "center", fontSize: 12, color: "var(--wb-fg-muted)" }}
           >
-            Không tìm thấy danh mục
+            No categories found
           </div>
         )}
       </div>

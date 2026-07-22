@@ -20,6 +20,8 @@ export interface TxDraft {
   occurredTime: string;
   note: string;
   payee: string;
+  /** which card / account / wallet paid — see Transaction.account */
+  account: string;
   status: TxStatus;
 }
 
@@ -47,6 +49,7 @@ export function isBlankDraft(d: TxDraft): boolean {
     d.amountStr.trim() === "" &&
     d.note.trim() === "" &&
     d.payee.trim() === "" &&
+    (d.account ?? "").trim() === "" &&
     d.categoryId === null &&
     d.tagIds.length === 0 &&
     !d.occurredTime

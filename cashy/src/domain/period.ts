@@ -1,4 +1,4 @@
-import { addDays, daysBetween, ymd } from "@/domain/date";
+import { addDays, daysBetween, monthNameShort, ymd } from "@/domain/date";
 
 export type PeriodKey =
   | "this-month"
@@ -46,16 +46,16 @@ export function periodLabel(key: PeriodKey, custom?: Range | null): string {
   return PERIODS.find((p) => p.key === key)?.label ?? "This month";
 }
 
-/** "Tháng 5 – tháng 7" / "Tháng 11/2025 – tháng 1/2026" — the year is dropped
- *  when start and end share it. */
+/** "May – Jul" / "Nov 2025 – Jan 2026" — the year is dropped when start and end
+ *  share it. */
 function monthRangeNote(r: Range): string {
   const sy = +r.start.slice(0, 4);
   const sm = +r.start.slice(5, 7);
   const ey = +r.end.slice(0, 4);
   const em = +r.end.slice(5, 7);
-  if (sy === ey && sm === em) return `Tháng ${sm}`;
-  if (sy === ey) return `Tháng ${sm} – tháng ${em}`;
-  return `Tháng ${sm}/${sy} – tháng ${em}/${ey}`;
+  if (sy === ey && sm === em) return monthNameShort(sm);
+  if (sy === ey) return `${monthNameShort(sm)} – ${monthNameShort(em)}`;
+  return `${monthNameShort(sm)} ${sy} – ${monthNameShort(em)} ${ey}`;
 }
 
 /** "23/4 – 21/7" / "23/4/2025 – 21/7/2026" — the year is dropped when shared. */
@@ -72,7 +72,7 @@ const MONTH_BASED = new Set<PeriodKey>(["this-month", "last-month", "2m", "3m"])
 
 /**
  * A plain-language note of the concrete window a preset resolves to, so the user
- * can see "Last 3 months" actually means "Tháng 5 – tháng 7". Month-based presets
+ * can see "Last 3 months" actually means "May – Jul". Month-based presets
  * are stated in months, day-based ones ("Last 90 days", custom) in dates; both
  * drop the year when it's shared. `null` for "All time" — nothing to bound.
  */
@@ -83,7 +83,7 @@ export function periodNote(
 ): string | null {
   if (key === "all") return null;
   if (key === "custom" && !custom) return null;
-  if (key === "this-year") return `Năm ${now.getFullYear()}`;
+  if (key === "this-year") return `${now.getFullYear()}`;
   const r = periodRange(key, now, custom);
   return MONTH_BASED.has(key) ? monthRangeNote(r) : dateRangeNote(r);
 }

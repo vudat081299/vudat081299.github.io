@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import type { Category, TxType } from "@/domain/types";
 import { flattenTree, type TagRank } from "@/domain";
 import type { TxQuery } from "@/ui/features/transactions/useTxQuery";
@@ -20,14 +20,82 @@ function parseAmt(s: string): number | null {
 }
 
 /**
- * The shared transaction filter bar — the web-builder `filterbar` pattern, one
- * row: the search field, then "Add filter" (always right after the search and
- * ahead of every capsule), then the removable filter tokens.
+ * One filter facet, rendered as a self-contained dropdown CHIP: click the body to
+ * open its own little panel, and — once something is chosen — the chip shows the
+ * selection and grows an × that clears just this facet. So the chip IS the applied
+ * token; there is no separate token row echoing it.
  *
- * One popover holds every editor — type, status, category, amount range, tags —
- * so a busy query is assembled in one place and each applied filter reads back
- * as a `[ key : value × ]` token. Scopes stay neutral (§1); only the type token
- * is called out with a black outline, and the status column keeps its own tones.
+ * `accent` calls out the type facet with a black outline (§1 sanctions the type
+ * scope alone); every other active chip stays neutral grey.
+ */
+function FacetChip({
+  label,
+  value,
+  active,
+  accent = false,
+  panelWidth = 240,
+  onClear,
+  children,
+}: {
+  label: string;
+  /** the summary shown after the label when active (e.g. "Recorded +1") */
+  value?: string;
+  active: boolean;
+  accent?: boolean;
+  panelWidth?: number;
+  onClear: () => void;
+  children: ReactNode | ((props: { close: () => void }) => ReactNode);
+}) {
+  return (
+    <Popover
+      inline
+      panelWidth={panelWidth}
+      trigger={({ open, toggle }) => (
+        <span
+          className={cn(
+            "cashy-facet",
+            active && "cashy-facet--active",
+            active && accent && "cashy-facet--accent",
+            open && "cashy-facet--open",
+          )}
+        >
+          <button
+            type="button"
+            className="cashy-facet__main"
+            onClick={toggle}
+            aria-expanded={open}
+          >
+            <span className="cashy-facet__label">{label}</span>
+            {active && value ? <span className="cashy-facet__val">{value}</span> : null}
+            {!active && <span className="wb-ico wb-ico--xs cashy-facet__caret">expand_more</span>}
+          </button>
+          {active && (
+            // Reuse the kit's filter-token × (18×18, glyph via ::before, proper
+            // hover background) rather than a hand-rolled one — one × across the app.
+            <button
+              type="button"
+              className="wb-filter-token__x cashy-facet__x"
+              aria-label={`Clear ${label.toLowerCase()} filter`}
+              onClick={(e) => {
+                e.stopPropagation();
+                onClear();
+              }}
+            />
+          )}
+        </span>
+      )}
+    >
+      {children}
+    </Popover>
+  );
+}
+
+/**
+ * The shared transaction filter bar. Rather than one "Add filter" popover holding
+ * every facet, each facet — Type, Status, Category, Amount, Tags — is its OWN
+ * dropdown chip, so a busy query reads as a row of discrete, individually-editable
+ * controls. Scopes stay neutral (§1); only the type chip is called out with a
+ * black outline, and the status options keep their own tones.
  */
 export function TxFilterBar({
   q,
@@ -44,7 +112,7 @@ export function TxFilterBar({
   const catById = useMemo(() => new Map(categories.map((c) => [c.id, c])), [categories]);
   const typeLabel = TYPES.find((t) => t.key === q.type)?.label;
 
-  // Amount inputs live-drive the query; an external clear (token ×, "clear all")
+  // Amount inputs live-drive the query; an external clear (chip ×, "clear all")
   // flows back so the fields empty out with it.
   const [minText, setMinText] = useState("");
   const [maxText, setMaxText] = useState("");
@@ -59,6 +127,7 @@ export function TxFilterBar({
     labels.length <= 1 ? (labels[0] ?? "") : `${labels[0]} +${labels.length - 1}`;
   const statusToken = summarise(q.statuses.map((s) => TX_STATUS_META[s].label));
   const catToken = summarise(q.catIds.map((id) => catById.get(id)?.name ?? "?"));
+  const tagToken = summarise(q.activeTags.map((id) => rankById.get(id)?.tag.name ?? "?"));
   const amountToken =
     q.amountMin != null && q.amountMax != null
       ? `${formatMoneyShort(q.amountMin).replace(" đ", "")} – ${formatMoneyShort(q.amountMax)}`
@@ -95,20 +164,16 @@ export function TxFilterBar({
         )}
       </div>
 
-      {/* Add filter — right after the search, always ahead of the capsules. */}
-      <Popover
-        panelWidth={272}
-        trigger={({ toggle }) => (
-          <button type="button" className="wb-filter-add" onClick={toggle}>
-            <span className="wb-ico wb-ico--sm">add</span> Add filter
-          </button>
-        )}
+      {/* One chip per facet, each its own dropdown. */}
+      <FacetChip
+        label="Type"
+        value={typeLabel}
+        active={q.type !== "all"}
+        accent
+        panelWidth={200}
+        onClear={() => q.setType("all")}
       >
-        <div
-          className="wb-menu wb-filter-pop cashy-filter-scroll"
-          style={{ border: 0, boxShadow: "none" }}
-        >
-          <p className="wb-filter-pop__title">Type</p>
+        <div className="wb-menu cashy-facet-pop" style={{ border: 0, boxShadow: "none" }}>
           <div className="wb-stack" style={{ "--wb-stack-gap": "1px" } as CSSProperties}>
             <label className="wb-radio wb-menu__item">
               <input
@@ -131,9 +196,17 @@ export function TxFilterBar({
               </label>
             ))}
           </div>
+        </div>
+      </FacetChip>
 
-          <div className="wb-menu__sep" />
-          <p className="wb-filter-pop__title">Status</p>
+      <FacetChip
+        label="Status"
+        value={statusToken}
+        active={q.statuses.length > 0}
+        panelWidth={220}
+        onClear={() => q.statuses.forEach((s) => q.toggleStatus(s))}
+      >
+        <div className="wb-menu cashy-facet-pop" style={{ border: 0, boxShadow: "none" }}>
           <div className="wb-stack" style={{ "--wb-stack-gap": "1px" } as CSSProperties}>
             {TX_STATUS_ORDER.map((s) => {
               const meta = TX_STATUS_META[s];
@@ -152,30 +225,45 @@ export function TxFilterBar({
               );
             })}
           </div>
+        </div>
+      </FacetChip>
 
-          {catFlat.length > 0 && (
-            <>
-              <div className="wb-menu__sep" />
-              <p className="wb-filter-pop__title">Category</p>
-              <div
-                className="wb-stack wb-scroll-y"
-                style={{ "--wb-stack-gap": "1px", maxHeight: 176 } as CSSProperties}
-              >
-                {catFlat.map(({ cat, depth }) => (
-                  <label key={cat.id} className="wb-check wb-menu__item">
-                    <input
-                      type="checkbox"
-                      checked={q.catIds.includes(cat.id)}
-                      onChange={() => q.toggleCat(cat.id)}
-                    />
-                    <span style={{ paddingLeft: depth * 14 }}>{cat.name}</span>
-                  </label>
-                ))}
-              </div>
-            </>
-          )}
+      {catFlat.length > 0 && (
+        <FacetChip
+          label="Category"
+          value={catToken}
+          active={q.catIds.length > 0}
+          panelWidth={248}
+          onClear={() => q.catIds.forEach((id) => q.toggleCat(id))}
+        >
+          <div className="wb-menu cashy-facet-pop" style={{ border: 0, boxShadow: "none" }}>
+            <div
+              className="wb-stack wb-scroll-y"
+              style={{ "--wb-stack-gap": "1px", maxHeight: 220 } as CSSProperties}
+            >
+              {catFlat.map(({ cat, depth }) => (
+                <label key={cat.id} className="wb-check wb-menu__item">
+                  <input
+                    type="checkbox"
+                    checked={q.catIds.includes(cat.id)}
+                    onChange={() => q.toggleCat(cat.id)}
+                  />
+                  <span style={{ paddingLeft: depth * 14 }}>{cat.name}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        </FacetChip>
+      )}
 
-          <div className="wb-menu__sep" />
+      <FacetChip
+        label="Amount"
+        value={amountToken}
+        active={q.amountMin != null || q.amountMax != null}
+        panelWidth={248}
+        onClear={() => q.setAmountRange(null, null)}
+      >
+        <div className="wb-menu cashy-facet-pop" style={{ border: 0, boxShadow: "none" }}>
           <p className="wb-filter-pop__title">Amount (đ)</p>
           <div className="cashy-amount-range">
             <input
@@ -186,7 +274,7 @@ export function TxFilterBar({
                 setMinText(e.target.value);
                 q.setAmountRange(parseAmt(e.target.value), q.amountMax);
               }}
-              placeholder="Từ"
+              placeholder="From"
               aria-label="Amount from"
             />
             <span className="cashy-amount-range__dash">–</span>
@@ -198,120 +286,50 @@ export function TxFilterBar({
                 setMaxText(e.target.value);
                 q.setAmountRange(q.amountMin, parseAmt(e.target.value));
               }}
-              placeholder="Đến"
+              placeholder="To"
               aria-label="Amount to"
             />
           </div>
-
-          {tagRanks.length > 0 && (
-            <>
-              <div className="wb-menu__sep" />
-              <p className="wb-filter-pop__title">Tags</p>
-              <div
-                className="wb-stack wb-scroll-y"
-                style={{ "--wb-stack-gap": "1px", maxHeight: 176 } as CSSProperties}
-              >
-                {tagRanks.map(({ tag, count: used, shade }) => (
-                  <label key={tag.id} className="wb-check wb-menu__item">
-                    <input
-                      type="checkbox"
-                      checked={q.activeTags.includes(tag.id)}
-                      onChange={() => q.toggleTag(tag.id)}
-                    />
-                    <TagChip tag={tag} shade={shade} />
-                    <span className="wb-menu__kbd" style={{ marginLeft: "auto" }}>
-                      {used}
-                    </span>
-                  </label>
-                ))}
-              </div>
-            </>
-          )}
-
-          {q.hasTokens && (
-            <>
-              <div className="wb-menu__sep" />
-              <button
-                type="button"
-                className="wb-btn wb-btn--ghost wb-btn--sm wb-btn--block"
-                onClick={q.clearTokens}
-              >
-                Clear all filters
-              </button>
-            </>
-          )}
         </div>
-      </Popover>
+      </FacetChip>
 
-      {/* Applied filters, each removable right where it is shown. */}
-      {typeLabel && (
-        <span className="wb-filter-token cashy-filter-token--type">
-          <span className="wb-filter-token__key">Type</span>
-          <span className="wb-filter-token__val">{typeLabel}</span>
-          <button
-            type="button"
-            className="wb-filter-token__x"
-            aria-label="Clear type filter"
-            onClick={() => q.setType("all")}
-          />
-        </span>
+      {tagRanks.length > 0 && (
+        <FacetChip
+          label="Tags"
+          value={tagToken}
+          active={q.activeTags.length > 0}
+          panelWidth={240}
+          onClear={() => q.activeTags.forEach((id) => q.toggleTag(id))}
+        >
+          <div className="wb-menu cashy-facet-pop" style={{ border: 0, boxShadow: "none" }}>
+            <div
+              className="wb-stack wb-scroll-y"
+              style={{ "--wb-stack-gap": "1px", maxHeight: 220 } as CSSProperties}
+            >
+              {tagRanks.map(({ tag, count: used, shade }) => (
+                <label key={tag.id} className="wb-check wb-menu__item">
+                  <input
+                    type="checkbox"
+                    checked={q.activeTags.includes(tag.id)}
+                    onChange={() => q.toggleTag(tag.id)}
+                  />
+                  <TagChip tag={tag} shade={shade} />
+                  <span className="wb-menu__kbd" style={{ marginLeft: "auto" }}>
+                    {used}
+                  </span>
+                </label>
+              ))}
+            </div>
+          </div>
+        </FacetChip>
       )}
 
-      {q.statuses.length > 0 && (
-        <span className="wb-filter-token">
-          <span className="wb-filter-token__key">Status</span>
-          <span className="wb-filter-token__val">{statusToken}</span>
-          <button
-            type="button"
-            className="wb-filter-token__x"
-            aria-label="Clear status filter"
-            onClick={() => q.statuses.forEach((s) => q.toggleStatus(s))}
-          />
-        </span>
+      {/* Clear everything at once — only worth showing once something is applied. */}
+      {q.hasTokens && (
+        <button type="button" className="cashy-facet-clear" onClick={q.clearTokens}>
+          Clear all
+        </button>
       )}
-
-      {q.catIds.length > 0 && (
-        <span className="wb-filter-token">
-          <span className="wb-filter-token__key">Category</span>
-          <span className="wb-filter-token__val">{catToken}</span>
-          <button
-            type="button"
-            className="wb-filter-token__x"
-            aria-label="Clear category filter"
-            onClick={() => q.catIds.forEach((id) => q.toggleCat(id))}
-          />
-        </span>
-      )}
-
-      {amountToken && (
-        <span className="wb-filter-token">
-          <span className="wb-filter-token__key">Amount</span>
-          <span className="wb-filter-token__val">{amountToken}</span>
-          <button
-            type="button"
-            className="wb-filter-token__x"
-            aria-label="Clear amount filter"
-            onClick={() => q.setAmountRange(null, null)}
-          />
-        </span>
-      )}
-
-      {q.activeTags.map((id) => {
-        const r = rankById.get(id);
-        if (!r) return null;
-        return (
-          <span key={id} className="wb-filter-token">
-            <span className="wb-filter-token__key">#</span>
-            <span className="wb-filter-token__val">{r.tag.name}</span>
-            <button
-              type="button"
-              className="wb-filter-token__x"
-              aria-label={`Remove tag ${r.tag.name}`}
-              onClick={() => q.toggleTag(id)}
-            />
-          </span>
-        );
-      })}
     </div>
   );
 }

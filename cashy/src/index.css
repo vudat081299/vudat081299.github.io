@@ -100,7 +100,10 @@ body {
    ========================================================================= */
 .cashy-pagehead {
   display: flex;
-  align-items: flex-end;
+  /* Centre the actions against the whole title block (title + subtitle) so a
+     single-line control like the period picker never rides high or low against
+     the two-line heading beside it. */
+  align-items: center;
   justify-content: space-between;
   gap: 16px;
   flex-wrap: wrap;
@@ -183,20 +186,23 @@ body {
 .cashy-rank {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 2px;
   /* Lists EVERY category in the period; cap the height and let it scroll rather
      than pushing the card taller than the donut beside it. */
   max-height: 300px;
   overflow-y: auto;
 }
-/* A rank row is a toggle: click to select its slice on the donut (and back). */
+/* A rank row is a toggle: click to select its slice on the donut (and back).
+   Each row carries its OWN padding and no negative margin: a `-8px 0` bleed
+   (the old trick to let the hover background spill past the text) subtracted
+   16px of height while the flex `gap` only added a few back, so consecutive
+   rows overlapped by ~10px and their bars sat on top of each other. */
 .cashy-rank__row {
   display: flex;
   flex-direction: column;
   gap: 7px;
   width: 100%;
   padding: 8px;
-  margin: -8px 0;
   border: 0;
   border-radius: var(--wb-radius-sm);
   background: none;
@@ -555,6 +561,105 @@ body {
 }
 
 /* =========================================================================
+   FILTER FACETS — one dropdown chip per facet (Type / Status / Category /
+   Amount / Tags). Inactive = a quiet outline pill with a caret; active = a
+   filled token (muted label + bold value) that carries its own × to clear.
+   The active chip IS the applied token, so there is no separate token row.
+   ========================================================================= */
+.cashy-facet {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--wb-radius-pill);
+  border: var(--wb-bw) solid var(--wb-border);
+  background: none;
+  color: var(--wb-fg-muted);
+  font-size: 13px;
+  line-height: 1.4;
+  white-space: nowrap;
+  transition: color 0.13s ease, border-color 0.13s ease, background 0.13s ease;
+}
+.cashy-facet__main {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 11px;
+  border: 0;
+  border-radius: inherit;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+.cashy-facet__label {
+  font-weight: 550;
+}
+.cashy-facet__caret {
+  margin-left: -2px;
+  color: var(--wb-fg-subtle);
+}
+.cashy-facet:hover,
+.cashy-facet--open {
+  color: var(--wb-fg);
+  border-color: var(--wb-fg-subtle);
+  background: var(--wb-surface-hover);
+}
+/* Active = a filled token: the label recedes, the chosen value leads. */
+.cashy-facet--active {
+  color: var(--wb-fg);
+  background: var(--wb-surface);
+}
+.cashy-facet--active .cashy-facet__main {
+  gap: 6px;
+  padding-right: 7px;
+}
+.cashy-facet--active .cashy-facet__label {
+  color: var(--wb-fg-subtle);
+}
+.cashy-facet__val {
+  font-weight: 600;
+  color: var(--wb-fg);
+  font-variant-numeric: tabular-nums;
+}
+/* The clear × reuses the kit's `.wb-filter-token__x` (sizing, glyph, hover bg);
+   here we only give it the small right gutter the chip needs. */
+.cashy-facet__x {
+  margin-right: 5px;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+/* The type scope alone carries a heavy black edge when active (§1) — "black" via
+   var(--wb-fg) so it flips to a crisp white edge in dark. */
+.cashy-facet--accent {
+  border-width: 2px;
+  border-color: var(--wb-fg);
+}
+.cashy-facet--accent .cashy-facet__main {
+  padding-block: 4px;
+}
+/* "Clear all" — a plain ghost text button that closes out the whole query. */
+.cashy-facet-clear {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 11px;
+  border: 0;
+  border-radius: var(--wb-radius-pill);
+  background: none;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 550;
+  color: var(--wb-fg-subtle);
+  cursor: pointer;
+  transition: color 0.13s ease, background 0.13s ease;
+}
+.cashy-facet-clear:hover {
+  color: var(--wb-fg);
+  background: var(--wb-surface-hover);
+}
+.cashy-facet-pop {
+  border: 0;
+  box-shadow: none;
+}
+
+/* =========================================================================
    ADD-TAG CAPSULE — the "＋ Thêm nhãn" trigger in the transaction editor. A
    dashed pill (the house "chưa chốt / optional" idiom, §capsules) rather than a
    text-input look: it sits inline right after the chosen tags and reads as an
@@ -766,8 +871,15 @@ body {
    ========================================================================= */
 .cashy-insights {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 14px;
+  /* Two per row on narrow, capped at FOUR per row from tablet up — never five,
+     so the indicator strip stays scannable however wide the card gets. */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+@media (min-width: 720px) {
+  .cashy-insights {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }
 .cashy-insight {
   display: flex;
@@ -839,32 +951,36 @@ body {
 .cashy-statuspick__opt .wb-cap {
   transition: background .12s ease, color .12s ease, box-shadow .12s ease;
 }
-/* Unchosen: a SOFT tone outline (tier 3) — the option still wears its status
-   colour, just dialled down so five of them don't compete. The base is neutral
-   (covers Skipped, whose tone IS grey); the per-tone rules below tint the border
-   and text. Scoped to :not(:checked) ON PURPOSE — a plain `.cashy-statuspick__opt
-   .wb-cap` would be 0-2-0 and would beat the kit's tone classes (0-1-0),
-   stripping the fill from the very capsule that should have it. */
+/* Unchosen: ONLY the outline wears the status colour (tier 3) — the text stays
+   grey so an unselected capsule never looks lit up. The base grey is `fg-muted`,
+   which is what `Skipped` (tone = neutral, no per-tone rule) keeps; the four
+   coloured tones drop their text one shade fainter to `fg-subtle`, so a
+   grey-texted coloured capsule can never be mistaken for the Skipped one whose
+   defining trait IS its grey. Scoped to :not(:checked) ON PURPOSE — a plain
+   `.cashy-statuspick__opt .wb-cap` would be 0-2-0 and would beat the kit's tone
+   classes (0-1-0), stripping the fill from the very capsule that should have it. */
 .cashy-statuspick__opt input:not(:checked) + .wb-cap {
   color: var(--wb-fg-muted);
   background: transparent;
   border: var(--wb-bw) solid var(--wb-border);
 }
+.cashy-statuspick__opt input:not(:checked) + .wb-cap[data-tone="success"],
+.cashy-statuspick__opt input:not(:checked) + .wb-cap[data-tone="warning"],
+.cashy-statuspick__opt input:not(:checked) + .wb-cap[data-tone="info"],
+.cashy-statuspick__opt input:not(:checked) + .wb-cap[data-tone="danger"] {
+  color: var(--wb-fg-subtle);
+}
 .cashy-statuspick__opt input:not(:checked) + .wb-cap[data-tone="success"] {
   border-color: color-mix(in srgb, var(--wb-success) 42%, transparent);
-  color: var(--wb-success-text);
 }
 .cashy-statuspick__opt input:not(:checked) + .wb-cap[data-tone="warning"] {
   border-color: color-mix(in srgb, var(--wb-warning) 48%, transparent);
-  color: var(--wb-warning-text);
 }
 .cashy-statuspick__opt input:not(:checked) + .wb-cap[data-tone="info"] {
   border-color: color-mix(in srgb, var(--wb-info) 45%, transparent);
-  color: var(--wb-info-text);
 }
 .cashy-statuspick__opt input:not(:checked) + .wb-cap[data-tone="danger"] {
   border-color: color-mix(in srgb, var(--wb-danger) 45%, transparent);
-  color: var(--wb-danger-text);
 }
 /* Hover firms the same tone up toward its full colour. */
 .cashy-statuspick__opt:hover input:not(:checked) + .wb-cap {
@@ -1074,18 +1190,27 @@ body {
   font-size: 13px;
   white-space: nowrap;
 }
-.cashy-catchup-row__date {
-  font-size: 12px;
-  color: var(--wb-fg-muted);
-  white-space: nowrap;
-}
 /* Pushes itself — and everything after it — to the right, so the amount and the
-   switch sit in a stable column however long the month label runs. */
+   switch sit in a stable column however long the date label runs. */
 .cashy-catchup-row__amt {
   margin-left: auto;
   font-size: 13px;
   font-weight: 600;
   white-space: nowrap;
+}
+/* The editable price sits in the same right-hand column as the static amount —
+   `margin-left:auto` keeps the switch pinned to the edge whichever is shown. It's an
+   underline input-group (no box, ₫ suffix), so the width/alignment live on the group
+   and the numeric styling drops onto the inner field. */
+.cashy-catchup-row__amt-input {
+  margin-left: auto;
+  width: 116px;
+}
+.cashy-catchup-row__amt-input > .wb-input {
+  text-align: right;
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 .cashy-catchup-row__used {
   flex-shrink: 0;

@@ -63,7 +63,7 @@ export function ConfirmHost() {
             className="wb-btn wb-btn--secondary"
             onClick={() => settleConfirm(req.id, false)}
           >
-            {req.cancelLabel ?? "Huỷ"}
+            {req.cancelLabel ?? "Cancel"}
           </button>
           <button
             ref={okRef}

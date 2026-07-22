@@ -83,7 +83,7 @@ export function TagChip({
         <button
           type="button"
           className="wb-tag__x"
-          aria-label={`Bỏ tag ${tag.name}`}
+          aria-label={`Remove tag ${tag.name}`}
           onClick={(e) => {
             e.stopPropagation();
             onRemove();

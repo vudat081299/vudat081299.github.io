@@ -58,18 +58,18 @@ export function PeriodPanel({
 
   return (
     <div>
-      <p className="wb-filter-pop__title">Gần đây</p>
+      <p className="wb-filter-pop__title">Recent</p>
       <div className="wb-stack" style={{ "--wb-stack-gap": "1px" } as CSSProperties}>
         {dayPresets.map(presetRow)}
       </div>
 
-      <p className="wb-filter-pop__title">Theo tháng</p>
+      <p className="wb-filter-pop__title">By month</p>
       <div className="wb-stack" style={{ "--wb-stack-gap": "1px" } as CSSProperties}>
         {monthPresets.map(presetRow)}
       </div>
 
       <div className="wb-menu__sep" />
-      <p className="wb-filter-pop__title">Khoảng tuỳ chọn</p>
+      <p className="wb-filter-pop__title">Custom range</p>
       {/* Type the range in a segmented dd/mm/yyyy – dd/mm/yyyy field (inked "/"),
           OR click it out on the calendar. The two stay in sync: typing a valid
           range applies live and moves the calendar; clicking the calendar fills

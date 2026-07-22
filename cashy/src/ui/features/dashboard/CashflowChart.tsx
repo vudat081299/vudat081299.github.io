@@ -78,6 +78,13 @@ export function CashflowChart({ data }: { data: WalletPoint[] }) {
   const goesNegative = data.some((d) => d.balance < 0);
   const balanceDomain: [number | "auto", "auto"] = goesNegative ? ["auto", "auto"] : [0, "auto"];
 
+  // The x-axis is keyed by the bucket's UNIQUE key, not its display label. Daily
+  // labels are bare day-of-month numbers ("1".."31") that repeat every month, so
+  // over a multi-month range recharts' category scale collapsed the duplicates and
+  // the tooltip/cursor snapped to the wrong occurrence and jumped around. Keying on
+  // the unique `key` and mapping back to the label for ticks fixes the hover.
+  const labelByKey = new Map(data.map((d) => [d.key, d.label] as const));
+
   return (
     <ResponsiveContainer width="100%" height="100%" minHeight={240}>
       <ComposedChart data={data} margin={{ top: 8, right: 4, bottom: 0, left: 0 }}>
@@ -102,7 +109,8 @@ export function CashflowChart({ data }: { data: WalletPoint[] }) {
           strokeDasharray="2 3"
         />
         <XAxis
-          dataKey="label"
+          dataKey="key"
+          tickFormatter={(k) => labelByKey.get(k) ?? k}
           tickLine={false}
           axisLine={false}
           tick={{ fontSize: 10, fill: "var(--wb-fg-muted)" }}

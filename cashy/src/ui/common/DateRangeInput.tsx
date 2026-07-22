@@ -13,7 +13,7 @@ import type { Range } from "@/domain/period";
 // Six numeric segments in order: dd mm yyyy — dd mm yyyy.
 const MAXLEN = [2, 2, 4, 2, 2, 4];
 const PLACEHOLDER = ["dd", "mm", "yyyy", "dd", "mm", "yyyy"];
-const ARIA = ["Từ ngày", "Từ tháng", "Từ năm", "Đến ngày", "Đến tháng", "Đến năm"];
+const ARIA = ["From day", "From month", "From year", "To day", "To month", "To year"];
 
 function segsFromRange(r: Range | null): string[] {
   if (!r) return ["", "", "", "", "", ""];
@@ -127,7 +127,7 @@ export function DateRangeInput({
     <div
       className={cn("wb-input-tpl", invalid && "is-invalid")}
       role="group"
-      aria-label="Khoảng ngày"
+      aria-label="Date range"
       onMouseDown={focusFromBlankSpace}
     >
       {[0, 1, 2, 3, 4, 5].map((i) => (

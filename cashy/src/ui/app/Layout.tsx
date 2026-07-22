@@ -23,11 +23,11 @@ const THEME_NEXT: Record<ThemeMode, ThemeMode> = {
 // Glyphs + labels mirror the web-builder docs theme switch exactly: a moon/sun/
 // half-disc pill that cycles Tự động → Sáng → Tối, not an icon-only button.
 const THEME_META: Record<ThemeMode, { icon: string; label: string }> = {
-  system: { icon: "◐", label: "Tự động" },
+  system: { icon: "◐", label: "Auto" },
   // Emoji sun (VS16) for the light state, per the docs — a colour glyph, not the
   // monochrome ☀ outline the plain codepoint renders as.
-  light: { icon: "☀️", label: "Sáng" },
-  dark: { icon: "☾", label: "Tối" },
+  light: { icon: "☀️", label: "Light" },
+  dark: { icon: "☾", label: "Dark" },
 };
 
 /** "Dat Vu" → "DV", "Dat" → "D". Two letters at most; the avatar is 28px wide. */
@@ -98,8 +98,8 @@ function Navbar({ onMenu }: { onMenu: () => void }) {
           type="button"
           onClick={() => setTheme(THEME_NEXT[theme])}
           className="theme-btn"
-          title="Giao diện: Tự động → Sáng → Tối"
-          aria-label="Đổi giao diện"
+          title="Theme: Auto → Light → Dark"
+          aria-label="Change theme"
         >
           <span aria-hidden="true">{THEME_META[theme].icon}</span>
           <span className="cashy-show-sm">{THEME_META[theme].label}</span>

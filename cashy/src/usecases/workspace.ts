@@ -16,7 +16,7 @@ function freshDataset() {
  */
 export function createWorkspace(input: { displayName: string; currency?: string }): void {
   const workspace: Workspace = {
-    displayName: input.displayName.trim() || "Của tôi",
+    displayName: input.displayName.trim() || "Mine",
     currency: input.currency ?? "VND",
     createdAt: new Date().toISOString(),
   };
@@ -27,7 +27,7 @@ export function createWorkspace(input: { displayName: string; currency?: string 
 export function loadSampleData(): void {
   const state = getState();
   const workspace: Workspace = state.workspace ?? {
-    displayName: "Của tôi",
+    displayName: "Mine",
     currency: "VND",
     createdAt: new Date().toISOString(),
   };
@@ -70,7 +70,7 @@ export function importData(json: string): { ok: boolean; error?: string } {
   try {
     const p = JSON.parse(json) as Partial<CashyState>;
     if (!Array.isArray(p.categories) || !Array.isArray(p.transactions)) {
-      return { ok: false, error: "File không đúng định dạng Cashy." };
+      return { ok: false, error: "File is not a valid Cashy file." };
     }
     const state = getState();
     commit({
@@ -85,6 +85,6 @@ export function importData(json: string): { ok: boolean; error?: string } {
     });
     return { ok: true };
   } catch {
-    return { ok: false, error: "Không đọc được nội dung JSON." };
+    return { ok: false, error: "Could not read the JSON content." };
   }
 }

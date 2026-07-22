@@ -40,15 +40,15 @@ function TagEditor({
     <Modal
       open={open}
       onClose={onClose}
-      title={editing ? "Sửa nhãn" : "Thêm nhãn"}
+      title={editing ? "Edit tag" : "Add tag"}
       maxWidth={380}
       footer={
         <>
           <button type="button" className="wb-btn wb-btn--secondary" onClick={onClose}>
-            Huỷ
+            Cancel
           </button>
           <button type="button" className="wb-btn" onClick={save} disabled={!name.trim()}>
-            {editing ? "Lưu" : "Thêm"}
+            {editing ? "Save" : "Add"}
           </button>
         </>
       }
@@ -56,7 +56,7 @@ function TagEditor({
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         <div className="wb-field">
           <label className="wb-label" htmlFor="tag-name">
-            Tên nhãn
+            Tag name
           </label>
           <input
             id="tag-name"
@@ -65,11 +65,11 @@ function TagEditor({
             autoFocus
             onChange={(e) => setName(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && save()}
-            placeholder="Ví dụ: Du lịch"
+            placeholder="e.g. Travel"
           />
         </div>
         <div className="wb-field">
-          <label className="wb-label">Màu</label>
+          <label className="wb-label">Color</label>
           <ColorPicker value={color} onChange={setColor} />
         </div>
       </div>
@@ -100,9 +100,9 @@ export function Tags() {
   async function remove(t: Tag) {
     const n = usage.get(t.id) ?? 0;
     const ok = await confirm({
-      title: `Xoá nhãn "${t.name}"?`,
-      message: n ? `Nhãn sẽ bị gỡ khỏi ${n} giao dịch.` : undefined,
-      confirmLabel: "Xoá",
+      title: `Delete tag "${t.name}"?`,
+      message: n ? `The tag will be removed from ${n} transactions.` : undefined,
+      confirmLabel: "Delete",
       danger: true,
     });
     if (ok) deleteTag(t.id);
@@ -112,12 +112,12 @@ export function Tags() {
     <div className="wb-stack wb-stack--loose">
       <PageHeader
         eyebrow={workspace?.displayName ?? "Cashy"}
-        title="Nhãn"
-        subtitle={`${tags.length} nhãn · gắn nhiều nhãn cho một giao dịch để lọc nhanh`}
+        title="Tags"
+        subtitle={`${tags.length} tags · add multiple tags to a transaction for quick filtering`}
         actions={
           <button type="button" className="wb-btn" style={{ gap: 6 }} onClick={openAdd}>
             <span className="wb-ico wb-ico--sm">add</span>
-            Thêm nhãn
+            Add tag
           </button>
         }
       />
@@ -133,12 +133,12 @@ export function Tags() {
               >
                 {t.name}
               </span>
-              <span className="wb-list__end">{usage.get(t.id) ?? 0} giao dịch</span>
+              <span className="wb-list__end">{usage.get(t.id) ?? 0} transactions</span>
               <button
                 type="button"
                 className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm"
                 onClick={() => openEdit(t)}
-                aria-label="Sửa"
+                aria-label="Edit"
               >
                 <span className="wb-ico wb-ico--sm">edit</span>
               </button>
@@ -146,7 +146,7 @@ export function Tags() {
                 type="button"
                 className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm"
                 onClick={() => remove(t)}
-                aria-label="Xoá"
+                aria-label="Delete"
               >
                 <span className="wb-ico wb-ico--sm">delete</span>
               </button>
@@ -158,11 +158,11 @@ export function Tags() {
           <div className="wb-card__body">
             <EmptyState
               icon="🏷️"
-              title="Chưa có nhãn"
-              description="Tạo nhãn như “Du lịch”, “Công việc” để lọc giao dịch dễ hơn."
+              title="No tags yet"
+              description="Create tags like “Travel” or “Work” to filter transactions more easily."
               action={
                 <button type="button" className="wb-btn" onClick={openAdd}>
-                  Thêm nhãn
+                  Add tag
                 </button>
               }
             />

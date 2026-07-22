@@ -237,7 +237,9 @@ export function TransactionTable({
                           <TagChip key={r.tag.id} tag={r.tag} shade={r.shade} />
                         ))}
                         {txTags.length > 2 && (
-                          <TagsMorePopover tags={txTags} count={txTags.length - 2} />
+                          // Only the tags that DIDN'T fit — the "+n" reveals the
+                          // hidden ones, never re-lists the two already shown.
+                          <TagsMorePopover tags={txTags.slice(2)} count={txTags.length - 2} />
                         )}
                       </span>
                     ) : (

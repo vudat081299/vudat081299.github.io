@@ -74,36 +74,36 @@ function SubscriptionRow({
       </td>
       <td className="wb-cell-muted">
         {sub.interval === "yearly"
-          ? `${sub.dayOfMonth}/${sub.monthOfYear ?? 1} hàng năm`
-          : `Ngày ${sub.dayOfMonth}`}
+          ? `${sub.dayOfMonth}/${sub.monthOfYear ?? 1} yearly`
+          : `Day ${sub.dayOfMonth}`}
       </td>
       <td className="wb-cell-muted">{fmtDateNum(sub.startedAt)}</td>
       <td className="wb-cell-muted">
         {sub.lastPaidAt ? fmtDateNum(sub.lastPaidAt) : "—"}
         {/* The stored history, not a guess: one id per transaction that paid it. */}
         {sub.paymentTxIds.length > 0 && (
-          <span className="wb-cell-sub">{sub.paymentTxIds.length} kỳ đã trả</span>
+          <span className="wb-cell-sub">{sub.paymentTxIds.length} cycles paid</span>
         )}
       </td>
       <td className="wb-num wb-num--strong">{formatMoney(sub.amount)}</td>
       <td>
         {!sub.active ? (
-          <span className="wb-cap">Tạm dừng</span>
+          <span className="wb-cap">Suspended</span>
         ) : due ? (
           <span className="wb-cap wb-cap--warning">
             <span className="wb-cap__dot" />
-            Cần trả {monthLabelShort(owed)}
+            Pay {monthLabelShort(owed)}
           </span>
         ) : paidThisCycle ? (
           <span className="wb-cap wb-cap--success">
             <span className="wb-cap__dot" />
-            Đã trả {monthLabelShort(cur)}
+            Paid {monthLabelShort(cur)}
           </span>
         ) : (
-          <span className="wb-cap">Chưa đến hạn</span>
+          <span className="wb-cap">Not due yet</span>
         )}
         {sub.active && !due && st.nextDate && (
-          <span className="wb-cell-sub">Kỳ tới {fmtDateShort(st.nextDate)}</span>
+          <span className="wb-cell-sub">Next payment {fmtDateShort(st.nextDate)}</span>
         )}
       </td>
       <td className="cashy-actions-cell">
@@ -111,8 +111,8 @@ function SubscriptionRow({
           <button
             type="button"
             className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm wb-btn--round"
-            aria-label={`Sửa ${sub.name}`}
-            title="Sửa"
+            aria-label={`Edit ${sub.name}`}
+            title="Edit"
             onClick={() => openSubscriptionEditor(sub.id)}
           >
             <span className="wb-ico wb-ico--sm">edit</span>
@@ -120,8 +120,8 @@ function SubscriptionRow({
           <button
             type="button"
             className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm wb-btn--round"
-            aria-label={sub.active ? `Tạm dừng ${sub.name}` : `Tiếp tục ${sub.name}`}
-            title={sub.active ? "Tạm dừng" : "Tiếp tục"}
+            aria-label={sub.active ? `Suspend ${sub.name}` : `Resume ${sub.name}`}
+            title={sub.active ? "Suspend" : "Resume"}
             onClick={() => setSubscriptionActive(sub.id, !sub.active)}
           >
             <span className="wb-ico wb-ico--sm">{sub.active ? "pause" : "play_arrow"}</span>
@@ -149,8 +149,8 @@ export function Subscriptions() {
     <div className="wb-stack wb-stack--loose">
       <PageHeader
         eyebrow={workspace?.displayName ?? "Cashy"}
-        title="Đăng ký định kỳ"
-        subtitle="Dịch vụ trả định kỳ theo tháng hoặc theo năm. Mỗi kỳ bạn xác nhận đã trả thì mới ghi thành giao dịch."
+        title="Subscriptions"
+        subtitle="Services billed monthly or yearly. Each cycle is recorded as a transaction only after you confirm it's paid."
         actions={
           <button
             type="button"
@@ -159,7 +159,7 @@ export function Subscriptions() {
             onClick={() => openSubscriptionEditor(null)}
           >
             <span className="wb-ico wb-ico--sm">add</span>
-            Thêm đăng ký
+            Add subscription
           </button>
         }
       />
@@ -168,33 +168,33 @@ export function Subscriptions() {
         <div className="wb-stat-grid">
           <div className="wb-stat">
             <div className="wb-stat__top">
-              <span className="wb-stat__label">Cam kết mỗi tháng</span>
+              <span className="wb-stat__label">Monthly commitment</span>
               <span className="wb-stat__icon">
                 <span className="wb-ico wb-ico--sm">autorenew</span>
               </span>
             </div>
             <div className="wb-stat__value">{formatMoney(monthly)}</div>
-            <div className="wb-stat__foot">{active.length} dịch vụ đang chạy</div>
+            <div className="wb-stat__foot">{active.length} active services</div>
           </div>
           <div className="wb-stat">
             <div className="wb-stat__top">
-              <span className="wb-stat__label">Cần trả tháng này</span>
+              <span className="wb-stat__label">Due this month</span>
               <span className="wb-stat__icon">
                 <span className="wb-ico wb-ico--sm">notifications</span>
               </span>
             </div>
             <div className="wb-stat__value">{dueCount}</div>
-            <div className="wb-stat__foot">dịch vụ chưa thanh toán</div>
+            <div className="wb-stat__foot">unpaid services</div>
           </div>
           <div className="wb-stat">
             <div className="wb-stat__top">
-              <span className="wb-stat__label">Tổng dịch vụ</span>
+              <span className="wb-stat__label">Total services</span>
               <span className="wb-stat__icon">
                 <span className="wb-ico wb-ico--sm">list</span>
               </span>
             </div>
             <div className="wb-stat__value">{subscriptions.length}</div>
-            <div className="wb-stat__foot">{subscriptions.length - active.length} đang tạm dừng</div>
+            <div className="wb-stat__foot">{subscriptions.length - active.length} suspended</div>
           </div>
         </div>
       )}
@@ -203,13 +203,13 @@ export function Subscriptions() {
         <div className="wb-card">
           <div className="wb-table-head">
             <div>
-              <h3 className="wb-table-head__title">Cần xác nhận</h3>
+              <h3 className="wb-table-head__title">To confirm</h3>
               <p className="wb-table-head__sub">
-                Xác nhận “Đã trả” để ghi thành giao dịch, hoặc “Bỏ qua” tháng này.
+                Confirm “Paid” to record it as a transaction, or “Skip” this month.
               </p>
             </div>
             <div className="wb-table-head__actions">
-              <span className="wb-cap wb-cap--warning">{dues.length} tháng</span>
+              <span className="wb-cap wb-cap--warning">{dues.length} months</span>
             </div>
           </div>
           <div className="wb-card__body">
@@ -226,12 +226,12 @@ export function Subscriptions() {
         <div className="wb-card">
           <div className="wb-table-head">
             <div>
-              <h3 className="wb-table-head__title">Dịch vụ đăng ký</h3>
-              <p className="wb-table-head__sub">Chu kỳ, ngày bắt đầu &amp; lần trả gần nhất</p>
+              <h3 className="wb-table-head__title">Subscribed services</h3>
+              <p className="wb-table-head__sub">Cycle, start date &amp; last paid</p>
             </div>
             {dueCount > 0 && (
               <div className="wb-table-head__actions">
-                <span className="wb-cap wb-cap--warning">{dueCount} cần trả</span>
+                <span className="wb-cap wb-cap--warning">{dueCount} due</span>
               </div>
             )}
           </div>
@@ -239,14 +239,14 @@ export function Subscriptions() {
             <table className="wb-table">
               <thead>
                 <tr>
-                  <th>Dịch vụ</th>
-                  <th>Danh mục</th>
-                  <th>Chu kỳ</th>
-                  <th>Bắt đầu</th>
-                  <th>Trả gần nhất</th>
-                  <th className="wb-num">Số tiền</th>
-                  <th>Trạng thái</th>
-                  <th aria-label="Hành động" />
+                  <th>Service</th>
+                  <th>Category</th>
+                  <th>Cycle</th>
+                  <th>Started</th>
+                  <th>Last paid</th>
+                  <th className="wb-num">Amount</th>
+                  <th>Status</th>
+                  <th aria-label="Actions" />
                 </tr>
               </thead>
               <tbody>
@@ -262,7 +262,7 @@ export function Subscriptions() {
               </tbody>
               <tfoot>
                 <tr>
-                  <td colSpan={5}>Cam kết mỗi tháng · {active.length} dịch vụ</td>
+                  <td colSpan={5}>Monthly commitment · {active.length} services</td>
                   <td className="wb-num wb-num--strong">{formatMoney(monthly)}</td>
                   <td colSpan={2} />
                 </tr>
@@ -275,11 +275,11 @@ export function Subscriptions() {
           <div className="wb-card__body">
             <EmptyState
               icon="🔁"
-              title="Chưa có đăng ký nào"
-              description="Thêm các dịch vụ trả theo tháng như Netflix, Spotify, YouTube. Cashy sẽ nhắc bạn xác nhận mỗi tháng."
+              title="No subscriptions yet"
+              description="Add services you pay for monthly like Netflix, Spotify, or YouTube. Cashy will remind you to confirm each month."
               action={
                 <button type="button" className="wb-btn" onClick={() => openSubscriptionEditor(null)}>
-                  Thêm đăng ký
+                  Add subscription
                 </button>
               }
             />

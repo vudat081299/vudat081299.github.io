@@ -49,7 +49,7 @@ export function SubscriptionCancel({
     <Modal
       open={open}
       onClose={onClose}
-      title={`Huỷ ${sub.name}?`}
+      title={`Cancel the ${sub.name} subscription?`}
       maxWidth={440}
       footer={
         <>
@@ -59,32 +59,32 @@ export function SubscriptionCancel({
             style={{ marginRight: "auto" }}
             onClick={onClose}
           >
-            Giữ lại
+            Keep it
           </button>
           <button
             type="button"
-            className="wb-btn wb-btn--sm cashy-btn--quiet-danger"
+            className="wb-btn wb-btn--danger wb-btn--sm"
             onClick={() => {
               onCancel(date);
               onClose();
             }}
           >
-            Huỷ đăng ký
+            Cancel subscription
           </button>
         </>
       }
     >
       <p className="cashy-catchup__lead">
-        Dịch vụ sẽ không phát sinh kỳ mới nữa. Các kỳ đã ghi nhận vẫn nằm trong lịch sử chi tiêu,
-        và bạn có thể tiếp tục đăng ký bất cứ lúc nào.
+        The service won't create new cycles anymore. Cycles already recorded stay in your spending
+        history, and you can resume the subscription anytime.
       </p>
 
-      <label className="wb-label">Dừng dùng từ ngày</label>
+      <label className="wb-label">Stopped using on</label>
       <DatePicker value={date} onChange={setDate} />
 
       <div className="wb-cluster" style={{ gap: 6, marginTop: 8, flexWrap: "wrap" }}>
         <button type="button" className="cashy-tag-add" onClick={() => setDate(todayYMD())}>
-          Hôm nay
+          Today
         </button>
         {firstOwed && (
           <button
@@ -92,7 +92,7 @@ export function SubscriptionCancel({
             className="cashy-tag-add"
             onClick={() => setDate(cycleDate(sub, firstOwed.month))}
           >
-            Từ kỳ {monthLabelShort(firstOwed.month)}
+            From {monthLabelShort(firstOwed.month)}
           </button>
         )}
       </div>
@@ -103,15 +103,15 @@ export function SubscriptionCancel({
         <p className="cashy-catchup__note">
           {dropped.length > 0 && (
             <>
-              {dropped.length} kỳ chưa xử lý (từ {monthLabelShort(dropped[0].month)}) sẽ được gỡ
-              bỏ vì dịch vụ không còn chạy trong những kỳ đó.
+              {dropped.length} unsettled cycles (from {monthLabelShort(dropped[0].month)}) will be
+              removed because the service wasn't running during those cycles.
             </>
           )}
           {dropped.length > 0 && kept > 0 && " "}
           {kept > 0 && (
             <>
-              {kept} kỳ trước ngày {fmtDateShort(date)} vẫn còn nợ — bạn đã dùng dịch vụ trong
-              những kỳ đó.
+              {kept} cycles before {fmtDateShort(date)} remain owed — you used the service during
+              those cycles.
             </>
           )}
         </p>

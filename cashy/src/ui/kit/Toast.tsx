@@ -76,7 +76,7 @@ export function Toaster({ position = "top-center" }: { position?: Position }) {
           )}
           <button
             className="wb-close"
-            aria-label="Đóng"
+            aria-label="Close"
             onClick={() => dismissToast(t.id)}
           />
         </div>

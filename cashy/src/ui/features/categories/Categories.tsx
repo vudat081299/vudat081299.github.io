@@ -68,14 +68,14 @@ function CategoryEditor({
     <Modal
       open
       onClose={onClose}
-      title={`${editing ? "Sửa danh mục" : "Thêm danh mục"} · ${type === "income" ? "Thu nhập" : "Chi tiêu"}`}
+      title={`${editing ? "Edit category" : "Add category"} · ${type === "income" ? "Income" : "Expense"}`}
       footer={
         <>
           <button type="button" className="wb-btn wb-btn--secondary" onClick={onClose}>
-            Huỷ
+            Cancel
           </button>
           <button type="button" className="wb-btn" onClick={save} disabled={!name.trim()}>
-            {editing ? "Lưu" : "Thêm"}
+            {editing ? "Save" : "Add"}
           </button>
         </>
       }
@@ -83,7 +83,7 @@ function CategoryEditor({
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         <div className="wb-field">
           <label className="wb-label" htmlFor="cat-name">
-            Tên
+            Name
           </label>
           <div style={{ display: "flex", gap: 8 }}>
             <span className="cashy-tile" style={{ width: 38, height: 38, color: colorHex }}>
@@ -97,21 +97,21 @@ function CategoryEditor({
               autoFocus
               onChange={(e) => setName(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && save()}
-              placeholder="Ví dụ: Ăn uống"
+              placeholder="e.g. Dining"
             />
           </div>
         </div>
 
         <div className="wb-field">
           <label className="wb-label" htmlFor="cat-parent">
-            Danh mục cha
+            Parent category
           </label>
           <Select
             id="cat-parent"
             value={parentId ?? "none"}
             onChange={(e) => setParentId(e.target.value === "none" ? null : e.target.value)}
           >
-              <option value="none">— Cấp gốc —</option>
+              <option value="none">— Top level —</option>
               {parentOptions.map(({ cat, depth }) => (
                 <option key={cat.id} value={cat.id}>
                   {"  ".repeat(depth) + cat.name}
@@ -121,12 +121,12 @@ function CategoryEditor({
         </div>
 
         <div className="wb-field">
-          <label className="wb-label">Màu</label>
+          <label className="wb-label">Color</label>
           <ColorPicker value={colorHex} onChange={setColorHex} />
         </div>
 
         <div className="wb-field">
-          <label className="wb-label">Biểu tượng</label>
+          <label className="wb-label">Icon</label>
           <IconPicker value={icon} onChange={setIcon} />
         </div>
       </div>
@@ -202,9 +202,9 @@ function Tree({
   async function remove(cat: Category) {
     const kids = descendantIds(categories, cat.id).size - 1;
     const ok = await confirm({
-      title: kids ? `Xoá "${cat.name}" và ${kids} danh mục con?` : `Xoá "${cat.name}"?`,
-      message: 'Giao dịch liên quan sẽ thành "Chưa phân loại".',
-      confirmLabel: "Xoá",
+      title: kids ? `Delete "${cat.name}" and ${kids} subcategories?` : `Delete "${cat.name}"?`,
+      message: 'Related transactions will become "Uncategorised".',
+      confirmLabel: "Delete",
       danger: true,
     });
     if (ok) deleteCategory(cat.id);
@@ -216,8 +216,8 @@ function Tree({
         <div className="wb-card__body">
           <EmptyState
             icon="🗂️"
-            title="Chưa có danh mục"
-            description={`Thêm danh mục ${type === "income" ? "thu nhập" : "chi tiêu"} đầu tiên.`}
+            title="No categories yet"
+            description={`Add your first ${type === "income" ? "income" : "expense"} category.`}
           />
         </div>
       </div>
@@ -249,7 +249,7 @@ function Tree({
                 <span
                   className="wb-tree__handle"
                   role="button"
-                  aria-label="Kéo để sắp xếp"
+                  aria-label="Drag to reorder"
                   style={{ touchAction: "none" }}
                   onPointerDown={(e) => {
                     e.preventDefault();
@@ -266,7 +266,7 @@ function Tree({
                     type="button"
                     className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm"
                     onClick={() => onAddChild(cat.id)}
-                    aria-label="Thêm danh mục con"
+                    aria-label="Add subcategory"
                   >
                     <span className="wb-ico wb-ico--sm">add</span>
                   </button>
@@ -274,7 +274,7 @@ function Tree({
                     type="button"
                     className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm"
                     onClick={() => onEdit(cat)}
-                    aria-label="Sửa"
+                    aria-label="Edit"
                   >
                     <span className="wb-ico wb-ico--sm">edit</span>
                   </button>
@@ -282,7 +282,7 @@ function Tree({
                     type="button"
                     className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm"
                     onClick={() => remove(cat)}
-                    aria-label="Xoá"
+                    aria-label="Delete"
                   >
                     <span className="wb-ico wb-ico--sm">delete</span>
                   </button>
@@ -306,8 +306,8 @@ export function Categories() {
     <div className="wb-stack wb-stack--loose">
       <PageHeader
         eyebrow={workspace?.displayName ?? "Cashy"}
-        title="Danh mục"
-        subtitle="Kéo tay cầm để đổi thứ tự; thả vào giữa một mục để lồng vào — cây sâu tuỳ ý."
+        title="Categories"
+        subtitle="Drag the handle to reorder; drop onto the middle of an item to nest it — nest as deep as you like."
         actions={
           <button
             type="button"
@@ -316,7 +316,7 @@ export function Categories() {
             onClick={() => setEditor({ editing: null, type, parentId: null })}
           >
             <span className="wb-ico wb-ico--sm">add</span>
-            Thêm danh mục
+            Add category
           </button>
         }
       />
@@ -329,7 +329,7 @@ export function Categories() {
             className={type === t ? "wb-tab is-active" : "wb-tab"}
             onClick={() => setType(t)}
           >
-            {t === "expense" ? "Chi tiêu" : "Thu nhập"}
+            {t === "expense" ? "Expense" : "Income"}
           </button>
         ))}
       </div>

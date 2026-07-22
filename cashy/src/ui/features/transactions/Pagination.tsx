@@ -24,13 +24,13 @@ export function Pagination({
 }) {
   if (totalPages <= 1) return null;
   return (
-    <nav className="wb-pagination" aria-label="Phân trang">
+    <nav className="wb-pagination" aria-label="Pagination">
       <button
         type="button"
         className="wb-page"
         disabled={page <= 1}
         onClick={() => onPage(page - 1)}
-        aria-label="Trang trước"
+        aria-label="Previous page"
       >
         <span className="wb-ico wb-ico--sm">chevron_left</span>
       </button>
@@ -56,7 +56,7 @@ export function Pagination({
         className="wb-page"
         disabled={page >= totalPages}
         onClick={() => onPage(page + 1)}
-        aria-label="Trang sau"
+        aria-label="Next page"
       >
         <span className="wb-ico wb-ico--sm">chevron_right</span>
       </button>

@@ -819,6 +819,41 @@
 .wb-input-group--seamless > .wb-input:focus { box-shadow: none; }   /* group shows focus, not the inner input */
 .wb-input-group--seamless.is-invalid { border-color: var(--wb-danger); }
 
+/* Underline input — no box, just an inked baseline (a Material-style text field).
+   The field sits flush in the page; only the bottom edge shows, and it darkens to
+   the foreground on focus instead of drawing a ring. Works on .wb-input, .wb-textarea,
+   and — for a currency/percent suffix — .wb-input-group. */
+.wb-input--underline, .wb-textarea--underline {
+  background: transparent; border: 0;
+  border-bottom: var(--wb-bw) solid var(--wb-border-strong);
+  border-radius: 0; padding-inline: 2px;
+}
+.wb-input--underline:focus, .wb-textarea--underline:focus {
+  border-bottom-color: var(--wb-fg); box-shadow: none;
+}
+.wb-input--underline.is-invalid, .wb-textarea--underline.is-invalid {
+  border-bottom-color: var(--wb-danger);
+}
+
+/* Underline input-group — the same baseline-only rule, but around a whole row so a
+   prefix/suffix (₫, %, đ) shares the line with the text. Addons carry no fill and no
+   divider; the group owns the single bottom border and the focus colour. */
+.wb-input-group--underline {
+  align-items: center; gap: 2px; background: transparent;
+  border: 0; border-bottom: var(--wb-bw) solid var(--wb-border-strong);
+  border-radius: 0; transition: border-color .13s ease;
+}
+.wb-input-group--underline > .wb-input,
+.wb-input-group--underline > .wb-input-group__addon,
+.wb-input-group--underline > .wb-input-group__btn {
+  border: 0; background: transparent; border-radius: 0;
+}
+.wb-input-group--underline > .wb-input { padding-inline: 2px; }
+.wb-input-group--underline > .wb-input-group__addon { padding: 0 2px; color: var(--wb-fg-muted); }
+.wb-input-group--underline:focus-within { border-bottom-color: var(--wb-fg); }
+.wb-input-group--underline > .wb-input:focus { box-shadow: none; }
+.wb-input-group--underline.is-invalid { border-bottom-color: var(--wb-danger); }
+
 /* Templated field — the separators are REAL inked characters ("dd/mm/yyyy"),
    each segment its own tiny input so the unfilled parts show a GREY placeholder
    while the "/" · ":" · "–" stay inked, tight against the segments (no spaces). Looks
@@ -1166,7 +1201,7 @@
 .wb-modal__title { font-size: 17px; font-weight: 700; margin: 0; }
 .wb-modal__sub   { font-size: 13.5px; color: var(--wb-fg-muted); margin: 4px 0 0; }
 .wb-modal__body  { padding: 14px 20px; font-size: 14px; color: var(--wb-fg); }
-.wb-modal__foot  { display: flex; justify-content: flex-end; gap: 10px; padding: 8px 20px 20px; }
+.wb-modal__foot  { display: flex; align-items: center; justify-content: flex-end; gap: 10px; padding: 8px 20px 20px; }
 
 /* -----------------------------------------------------------------------------
    11. TOAST  (transient notification)

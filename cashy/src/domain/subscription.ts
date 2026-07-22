@@ -1,6 +1,7 @@
 import type { SubInterval, Subscription, Transaction } from "@/domain/types";
 import {
   addMonthKey,
+  addMonths,
   billingDate,
   daysBetween,
   monthKey,
@@ -61,6 +62,43 @@ export function startCycle(sub: Subscription): string {
 }
 
 /**
+ * The day the free trial ends, or `null` when there is no trial. The service is
+ * free STRICTLY BEFORE this date; the first charge lands on the first billing
+ * date on or after it. A person reads "3 months free from 10 Jan" as free through
+ * 9 Apr with the first charge on 10 Apr — which is exactly this date.
+ */
+export function trialEndDate(sub: Subscription): string | null {
+  return sub.trialMonths && sub.trialMonths > 0 ? addMonths(sub.startedAt, sub.trialMonths) : null;
+}
+
+/**
+ * The first cycle a charge is ever raised for. Without a trial that is simply the
+ * starting cycle; with one it is the first cycle whose billing date falls on or
+ * after the trial end — every earlier cycle is inside the free window and books
+ * nothing. Walked forward on the plan's own grid so a yearly trial skips whole
+ * years and a monthly one skips whole months, with no interval-specific maths.
+ */
+export function firstBillableCycle(sub: Subscription): string {
+  const start = startCycle(sub);
+  const end = trialEndDate(sub);
+  if (!end) return start;
+  let k = start;
+  for (let guard = 0; guard < 600; guard++) {
+    if (cycleDate(sub, k) >= end) return k;
+    k = addCycle(sub, k, 1);
+  }
+  return k;
+}
+
+/** True while the service is inside its free window: it has a trial and today is
+ *  before the trial-end date. Paused plans are never "in trial" — they bill
+ *  nothing regardless — so this stays a pure statement about the calendar. */
+export function inTrial(sub: Subscription, now: Date = new Date()): boolean {
+  const end = trialEndDate(sub);
+  return end != null && ymd(now) < end;
+}
+
+/**
  * The cycle a given month falls in — the latest grid cycle at or before it, or
  * `null` when the month precedes the plan entirely.
  *
@@ -89,7 +127,10 @@ export function cycleContaining(sub: Subscription, month: string): string | null
  * silently skipped rather than billed.
  */
 export function firstUnpaidCycle(sub: Subscription): string {
-  const start = startCycle(sub);
+  // Baseline on the first BILLABLE cycle, not the start cycle: a free trial makes
+  // the two differ, and nothing owed can ever precede the first cycle that bills.
+  // With no trial they are identical, so this is a no-op for ordinary plans.
+  const start = firstBillableCycle(sub);
   if (!sub.lastPaidAt) return start;
   const paidCycle = cycleContaining(sub, sub.lastPaidAt.slice(0, 7));
   if (!paidCycle) return start; // paid before the plan's first cycle
@@ -430,7 +471,8 @@ export function dueCharges(
         categoryId: sub.categoryId,
         tagIds: sub.tagIds,
         note: sub.name,
-        payee: `Đăng ký · ${monthLabelShort(m)}`,
+        payee: `Subscription · ${monthLabelShort(m)}`,
+        account: sub.account,
         status: "pending",
         occurredAt: cycleDate(sub, m),
         subscriptionId: sub.id,
@@ -513,10 +555,10 @@ export function planCatchUp(rows: CycleChoice[]): CatchUpPlan {
   let problem: string | null = null;
   if (outOfOrder && owedFrom) {
     problem =
-      `Phải trả từ kỳ cũ nhất. Kỳ ${monthLabelShort(owedFrom)} chưa trả ` +
-      `nhưng kỳ ${monthLabelShort(outOfOrder)} sau đó lại đánh dấu đã trả.`;
+      `Settle the oldest cycle first. ${monthLabelShort(owedFrom)} is still unpaid, ` +
+      `but the later ${monthLabelShort(outOfOrder)} is marked as paid.`;
   } else if (pay.length === 0 && skip.length === 0) {
-    problem = "Chưa có thay đổi nào để lưu.";
+    problem = "No changes to save.";
   }
 
   return { pay, skip, cancelling, problem };

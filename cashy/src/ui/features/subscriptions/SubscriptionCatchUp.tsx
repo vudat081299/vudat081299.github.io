@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import type { Subscription } from "@/domain/types";
 import { planCatchUp, type CycleChoice } from "@/domain";
-import { billingDate, fmtDateShort, monthLabelShort } from "@/domain/date";
-import { formatMoney } from "@/domain/money";
+import { billingDate, fmtDate, monthLabelShort } from "@/domain/date";
+import { formatDigits, formatMoney, parseMoney } from "@/domain/money";
 import { Modal } from "@/ui/kit/Modal";
+import { Input } from "@/ui/kit/Input";
 import { Switch } from "@/ui/kit/Switch";
 
 /**
@@ -31,14 +32,24 @@ export function SubscriptionCatchUp({
   open,
   onClose,
   onResolve,
+  defaultAmount,
 }: {
   sub: Subscription;
   /** the owed cycles, oldest first */
   pending: { month: string; txId: string }[];
   open: boolean;
   onClose: () => void;
-  /** settle the charges; `cancelling` also switches the service off */
-  onResolve: (plan: { pay: string[]; skip: string[]; cancelling: boolean }) => void;
+  /** settle the charges; `cancelling` also switches the service off. `amounts`
+   *  carries the price the user actually paid per cycle (variable pricing). */
+  onResolve: (plan: {
+    pay: string[];
+    skip: string[];
+    cancelling: boolean;
+    amounts: Record<string, number>;
+  }) => void;
+  /** the price to prefill each cycle with — the most recent charge's amount, so
+   *  a plan whose price drifts month to month opens on last month's figure. */
+  defaultAmount: number;
 }) {
   // Whether the service was running that cycle — a free per-row answer.
   const [used, setUsed] = useState<Record<string, boolean>>({});
@@ -48,6 +59,10 @@ export function SubscriptionCatchUp({
   // index of the last paid cycle (-1 = nothing paid) makes the out-of-order
   // state unrepresentable rather than merely rejected.
   const [paidThrough, setPaidThrough] = useState(-1);
+  // The price paid per cycle, as grouped digit strings. Prefilled with the most
+  // recent charge's amount so a variable-price plan opens on last month's figure;
+  // the user edits only the cycles whose price actually changed.
+  const [amounts, setAmounts] = useState<Record<string, string>>({});
 
   // Re-arm on each open, and whenever the owed set changes underneath (a charge
   // settled in the transactions table while this was closed).
@@ -64,6 +79,9 @@ export function SubscriptionCatchUp({
     const likelyCancelling = pending.length > 3;
     setUsed(Object.fromEntries(pending.map((p) => [p.txId, !likelyCancelling])));
     setPaidThrough(likelyCancelling ? -1 : pending.length - 1);
+    setAmounts(Object.fromEntries(pending.map((p) => [p.txId, formatDigits(defaultAmount)])));
+    // defaultAmount is derived from the same ledger as `pending`; the id list is
+    // the real signal that the owed set changed, so it stays the dependency.
     // `pending` is a fresh array each render; its ids are the real dependency.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, cycleKey]);
@@ -84,8 +102,20 @@ export function SubscriptionCatchUp({
   // reason the ordering rule needs no error message here.)
   const setWaterline = (i: number) => setPaidThrough((cur) => (i <= cur ? i - 1 : i));
 
+  // The price for one cycle: what was typed, or the prefilled default if blank.
+  const amountOf = (txId: string) => {
+    const parsed = parseMoney(amounts[txId] ?? "");
+    if (parsed > 0) return parsed;
+    return defaultAmount;
+  };
+  const setAmount = (txId: string, raw: string) => {
+    const digits = raw.replace(/\D/g, "");
+    const next = digits ? formatDigits(parseInt(digits, 10)) : "";
+    setAmounts((a) => ({ ...a, [txId]: next }));
+  };
+
   const plan = planCatchUp(rows);
-  const payTotal = plan.pay.length * sub.amount;
+  const payTotal = plan.pay.reduce((sum, txId) => sum + amountOf(txId), 0);
 
   // A cycle switched off is not a debt, so it drops out of the paid set without
   // disturbing the waterline around it — `planCatchUp` treats skipped cycles as
@@ -94,7 +124,9 @@ export function SubscriptionCatchUp({
 
   const submit = () => {
     if (plan.problem) return;
-    onResolve({ pay: plan.pay, skip: plan.skip, cancelling: plan.cancelling });
+    const paidAmounts: Record<string, number> = {};
+    for (const txId of plan.pay) paidAmounts[txId] = amountOf(txId);
+    onResolve({ pay: plan.pay, skip: plan.skip, cancelling: plan.cancelling, amounts: paidAmounts });
     onClose();
   };
 
@@ -102,7 +134,7 @@ export function SubscriptionCatchUp({
     <Modal
       open={open}
       onClose={onClose}
-      title={`${sub.name} · ${pending.length} kỳ chưa xử lý`}
+      title={`${sub.name} · ${pending.length} cycles to settle`}
       maxWidth={520}
       footer={
         // A full-width row with the two ends pinned (space-between) and vertically
@@ -119,7 +151,7 @@ export function SubscriptionCatchUp({
           }}
         >
           <button type="button" className="wb-btn wb-btn--ghost wb-btn--sm" onClick={onClose}>
-            Để sau
+            Later
           </button>
           <button
             type="button"
@@ -132,13 +164,13 @@ export function SubscriptionCatchUp({
             onClick={submit}
           >
             {plan.cancelling ? (
-              "Huỷ dịch vụ"
+              "Cancel subscription"
             ) : (
               <>
                 <span className="wb-ico wb-ico--xs">check</span>
                 {plan.pay.length > 0
-                  ? `Đã trả ${plan.pay.length} kỳ · ${formatMoney(payTotal)}`
-                  : "Lưu"}
+                  ? `Paid ${plan.pay.length} cycles · ${formatMoney(payTotal)}`
+                  : "Save"}
               </>
             )}
           </button>
@@ -146,9 +178,10 @@ export function SubscriptionCatchUp({
       }
     >
       <p className="cashy-catchup__lead">
-        Tick đến kỳ bạn <strong>đã thanh toán</strong> — nợ luôn trả từ kỳ cũ nhất, nên chọn một
-        kỳ là mọi kỳ trước đó cũng được tính là đã trả. Tắt công tắc ở kỳ bạn{" "}
-        <strong>không dùng</strong> dịch vụ.
+        Tick up to the cycle you <strong>have paid</strong> — debts always clear oldest-first, so
+        picking one cycle counts every earlier cycle as paid too. Turn off the switch for any cycle
+        you{" "}
+        <strong>didn't use</strong> the service.
       </p>
 
       <div className="wb-stack" style={{ "--wb-stack-gap": "6px" } as CSSProperties}>
@@ -167,17 +200,31 @@ export function SubscriptionCatchUp({
                 disabled={!r.used}
                 onChange={() => setWaterline(i)}
               />
-              <span className="cashy-catchup-row__month">{monthLabelShort(r.month)}</span>
+              {/* The cycle's billing date, whole — the day carries the month, so one
+                  date reads where two (month label + billing day) used to confuse. */}
+              <span className="cashy-catchup-row__month">
+                {fmtDate(billingDate(r.month, sub.dayOfMonth))}
+              </span>
             </label>
-            <span className="cashy-catchup-row__date">
-              {fmtDateShort(billingDate(r.month, sub.dayOfMonth))}
-            </span>
-            <span className="wb-num cashy-catchup-row__amt">{formatMoney(sub.amount)}</span>
+            {/* Editable price per cycle (variable monthly pricing). Only the cycles
+                being PAID take an input; the rest show the figure, greyed. */}
+            {r.paid && r.used ? (
+              <Input
+                className="wb-input-group--underline cashy-catchup-row__amt-input"
+                inputMode="numeric"
+                value={amounts[r.txId] ?? ""}
+                onChange={(e) => setAmount(r.txId, e.target.value)}
+                trailingAddon="đ"
+                aria-label={`Amount paid for ${monthLabelShort(r.month)}`}
+              />
+            ) : (
+              <span className="wb-num cashy-catchup-row__amt">{formatMoney(amountOf(r.txId))}</span>
+            )}
             <Switch
               size="sm"
               checked={r.used}
               onChange={(e) => toggleUsed(r.txId, e.target.checked)}
-              aria-label={`Có dùng dịch vụ kỳ ${monthLabelShort(r.month)}`}
+              aria-label={`Used the service in ${monthLabelShort(r.month)}`}
               className="cashy-catchup-row__used"
             />
           </div>
@@ -190,13 +237,13 @@ export function SubscriptionCatchUp({
 
       {plan.cancelling && (
         <p className="cashy-catchup__note">
-          Bạn đã tắt tất cả các kỳ — Cashy hiểu là dịch vụ này không còn dùng nữa và sẽ huỷ đăng
-          ký, đồng thời bỏ qua {plan.skip.length} kỳ chưa xử lý.
+          You've turned off every cycle — Cashy reads this as the service no longer being used, so
+          it will cancel the subscription and skip {plan.skip.length} unsettled cycles.
         </p>
       )}
       {!plan.cancelling && plan.skip.length > 0 && !plan.problem && (
         <p className="cashy-catchup__note">
-          {plan.skip.length} kỳ sẽ được đánh dấu không dùng và không tính vào chi tiêu.
+          {plan.skip.length} cycles will be marked as not used and left out of your spending.
         </p>
       )}
     </Modal>

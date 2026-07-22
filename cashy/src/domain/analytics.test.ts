@@ -1,6 +1,16 @@
 import { describe, expect, it } from "vitest";
 import type { Category, Transaction } from "@/domain/types";
-import { breakdown, forecastSeries, monthlyNetRate, pctChange, walletSeries } from "@/domain/analytics";
+import {
+  breakdown,
+  foldTailSlices,
+  forecastSeries,
+  monthlyNetRate,
+  OTHER_SLICE_ID,
+  pctChange,
+  periodInsights,
+  walletSeries,
+} from "@/domain/analytics";
+import type { BreakdownSlice } from "@/domain/analytics";
 
 function tx(over: Partial<Transaction> = {}): Transaction {
   return {
@@ -59,6 +69,85 @@ describe("breakdown", () => {
 
   it("returns nothing rather than dividing by zero on an empty ledger", () => {
     expect(breakdown([], "expense", cats)).toEqual([]);
+  });
+});
+
+describe("foldTailSlices", () => {
+  const slice = (id: string, total: number, pct: number): BreakdownSlice => ({
+    id,
+    name: id,
+    colorHex: "#000",
+    total,
+    pct,
+  });
+
+  it("folds the smallest categories whose shares sum to ≤5% into one 'Other'", () => {
+    const slices = [
+      slice("a", 700, 0.7),
+      slice("b", 250, 0.25),
+      slice("c", 30, 0.03),
+      slice("d", 15, 0.015),
+      slice("e", 5, 0.005),
+    ];
+    const out = foldTailSlices(slices);
+    expect(out.map((s) => s.id)).toEqual(["a", "b", OTHER_SLICE_ID]);
+    const other = out.find((s) => s.id === OTHER_SLICE_ID)!;
+    expect(other.total).toBe(50); // c + d + e
+    expect(other.count).toBe(3);
+    expect(other.name).toBe("Other");
+  });
+
+  it("stops before a category that would push the tail over the budget", () => {
+    // c is 6% on its own → it can never join a ≤5% fold, and d+e (2%) is only
+    // one-plus-one below it, so nothing folds (a lone slice is left named).
+    const slices = [
+      slice("a", 800, 0.8),
+      slice("c", 60, 0.06),
+      slice("d", 15, 0.015),
+      slice("e", 5, 0.005),
+    ];
+    const out = foldTailSlices(slices);
+    expect(out.find((s) => s.id === OTHER_SLICE_ID)!.count).toBe(2); // d + e only
+    expect(out.some((s) => s.id === "c")).toBe(true); // c survives on its own
+  });
+
+  it("leaves the list untouched when only one slice would fold", () => {
+    const slices = [slice("a", 600, 0.6), slice("b", 390, 0.39), slice("c", 10, 0.01)];
+    expect(foldTailSlices(slices)).toBe(slices);
+  });
+
+  it("never folds a list of two", () => {
+    const slices = [slice("a", 990, 0.99), slice("b", 10, 0.01)];
+    expect(foldTailSlices(slices)).toBe(slices);
+  });
+});
+
+describe("periodInsights", () => {
+  const range = { start: "2026-03-01", end: "2026-03-05" };
+  const NOW = new Date("2026-03-05T12:00:00");
+
+  it("reports a typical day (median) apart from the mean, plus the biggest category", () => {
+    const rows = [
+      tx({ id: "1", categoryId: "car", amount: 100, occurredAt: "2026-03-01" }),
+      tx({ id: "2", categoryId: "car", amount: 100, occurredAt: "2026-03-02" }),
+      tx({ id: "3", categoryId: "car", amount: 100, occurredAt: "2026-03-03" }),
+      tx({ id: "4", categoryId: "car", amount: 100, occurredAt: "2026-03-04" }),
+      tx({ id: "5", categoryId: "car", amount: 500, occurredAt: "2026-03-05" }),
+    ];
+    const ins = periodInsights(rows, range, cats, NOW);
+    expect(ins.daysElapsed).toBe(5);
+    expect(ins.avgPerDay).toBe(180); // 900 / 5
+    expect(ins.medianPerDay).toBe(100); // one big day doesn't move the middle
+    expect(ins.dailyCv).toBeGreaterThan(0);
+    expect(ins.steadiness).not.toBeNull();
+    expect(ins.topCategory).toMatchObject({ name: "Di chuyển", pct: 1 });
+  });
+
+  it("has no steadiness to report when nothing was spent", () => {
+    const ins = periodInsights([], range, cats, NOW);
+    expect(ins.dailyCv).toBeNull();
+    expect(ins.steadiness).toBeNull();
+    expect(ins.topCategory).toBeNull();
   });
 });
 

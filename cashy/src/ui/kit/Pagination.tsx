@@ -58,8 +58,8 @@ export function Pagination({
   onChange,
   siblingCount = 1,
   boundaryCount = 1,
-  prevLabel = "Trước",
-  nextLabel = "Sau",
+  prevLabel = "Previous",
+  nextLabel = "Next",
   prevIcon = "chevron_left",
   nextIcon = "chevron_right",
   className,
@@ -87,7 +87,7 @@ export function Pagination({
   const items = buildItems(page, pageCount, siblingCount, boundaryCount);
 
   return (
-    <nav aria-label="Phân trang" className={cn("wb-pagination", className)} {...rest}>
+    <nav aria-label="Pagination" className={cn("wb-pagination", className)} {...rest}>
       <button
         type="button"
         className="wb-page"

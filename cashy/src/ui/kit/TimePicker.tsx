@@ -53,8 +53,8 @@ export function TimePicker({
   defaultValue,
   onChange,
   minuteStep = 1,
-  hourLabel = "Giờ",
-  minuteLabel = "Phút",
+  hourLabel = "Hour",
+  minuteLabel = "Minute",
   className,
 }: {
   value?: string;
