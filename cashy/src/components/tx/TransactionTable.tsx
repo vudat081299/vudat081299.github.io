@@ -2,13 +2,13 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import type { Category, Transaction } from "@/types";
 import type { TagRank } from "@/lib/domain";
 import { deleteTransaction } from "@/lib/store";
+import { confirm } from "@/lib/confirm";
 import { AmountDisplay } from "@/components/AmountDisplay";
 import { CategoryCap } from "@/components/CategoryCap";
 import { StatusCap } from "@/components/StatusCap";
 import { TagChip } from "@/components/TagChip";
 import { TagsMorePopover } from "@/components/tx/TagsMorePopover";
-import { openTxEditor } from "@/components/TransactionEditor";
-import { openTxDetail } from "@/components/TransactionDetail";
+import { openTxEditor, openTxDetail } from "@/lib/modals";
 import { usePagination } from "@/components/tx/usePagination";
 import { Pagination } from "@/components/tx/Pagination";
 
@@ -76,8 +76,14 @@ export function TransactionTable({
       return next;
     });
 
-  const bulkDelete = () => {
-    if (!window.confirm(`Delete ${selected.size} selected transactions?`)) return;
+  const bulkDelete = async () => {
+    const ok = await confirm({
+      title: `Delete ${selected.size} selected transactions?`,
+      confirmLabel: "Delete",
+      cancelLabel: "Cancel",
+      danger: true,
+    });
+    if (!ok) return;
     selected.forEach((id) => deleteTransaction(id));
     setSelected(new Set());
   };

@@ -3,7 +3,7 @@ import { useCashy, setTheme } from "@/lib/store";
 import { useTxDraft } from "@/lib/draft";
 import { navigate, useRoute, type Route } from "@/lib/router";
 import type { ThemeMode } from "@/types";
-import { openTxEditor } from "@/components/TransactionEditor";
+import { openTxEditor } from "@/lib/modals";
 
 const NAV: { id: Route; label: string; icon: string }[] = [
   { id: "dashboard", label: "Overview", icon: "dashboard" },

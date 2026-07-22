@@ -8,7 +8,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { PeriodPicker } from "@/components/PeriodPicker";
 import { TxFilterBar } from "@/components/tx/TxFilterBar";
 import { TransactionTable } from "@/components/tx/TransactionTable";
-import { openTxEditor } from "@/components/TransactionEditor";
+import { openTxEditor } from "@/lib/modals";
 
 export function Transactions() {
   const { workspace, transactions, categories, tags } = useCashy();

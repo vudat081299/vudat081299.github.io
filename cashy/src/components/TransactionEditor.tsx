@@ -16,12 +16,8 @@ import { Popover } from "@/components/wb/Popover";
 import { DatePicker } from "@/components/DatePicker";
 import { Select } from "@/components/Select";
 import { TagChip } from "@/components/TagChip";
-
-let openFn: ((id: string | null) => void) | null = null;
-/** Open the transaction editor from anywhere. Pass an id to edit, or null to add. */
-export function openTxEditor(id: string | null = null) {
-  openFn?.(id);
-}
+import { registerTxEditor } from "@/lib/modals";
+import { confirm } from "@/lib/confirm";
 
 export function TransactionEditor() {
   const { categories, tags, transactions } = useCashy();
@@ -38,7 +34,7 @@ export function TransactionEditor() {
   const [status, setStatus] = useState<TxStatus>("recorded");
 
   useEffect(() => {
-    openFn = (id) => {
+    registerTxEditor((id) => {
       const tx = id ? (transactions.find((t) => t.id === id) ?? null) : null;
       // Adding: pick up whatever was left half-typed last time. Editing an
       // existing row never touches the draft — that is a different transaction.
@@ -54,9 +50,9 @@ export function TransactionEditor() {
       setPayee(tx?.payee ?? d?.payee ?? "");
       setStatus(tx?.status ?? d?.status ?? "recorded");
       setOpen(true);
-    };
+    });
     return () => {
-      openFn = null;
+      registerTxEditor(null);
     };
   }, [transactions]);
 
@@ -138,8 +134,9 @@ export function TransactionEditor() {
           type="button"
           className="wb-btn wb-btn--ghost"
           style={{ color: "var(--wb-danger-text)", gap: 6 }}
-          onClick={() => {
-            if (!window.confirm("Xoá giao dịch này?")) return;
+          onClick={async () => {
+            if (!(await confirm({ title: "Xoá giao dịch này?", confirmLabel: "Xoá", danger: true })))
+              return;
             deleteTransaction(editingId);
             setOpen(false);
           }}

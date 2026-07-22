@@ -6,6 +6,7 @@ import { Layout } from "@/components/Layout";
 import { TransactionEditor } from "@/components/TransactionEditor";
 import { TransactionDetail } from "@/components/TransactionDetail";
 import { Toaster } from "@/components/wb/Toast";
+import { ConfirmHost } from "@/components/wb/ConfirmDialog";
 import { Onboarding } from "@/screens/Onboarding";
 import { Dashboard } from "@/screens/Dashboard";
 import { Transactions } from "@/screens/Transactions";
@@ -64,6 +65,7 @@ export default function App() {
       <TransactionEditor />
       <SubscriptionEditor />
       <Toaster position="top-center" />
+      <ConfirmHost />
     </>
   );
 }

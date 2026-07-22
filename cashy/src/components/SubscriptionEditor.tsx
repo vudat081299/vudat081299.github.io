@@ -16,14 +16,9 @@ import { ColorPicker } from "@/components/ColorPicker";
 import { Select } from "@/components/Select";
 import { SubTile } from "@/components/SubTile";
 import { TagChip } from "@/components/TagChip";
-import { Icon } from "@/lib/icons";
+import { registerSubscriptionEditor } from "@/lib/modals";
+import { confirm } from "@/lib/confirm";
 import type { SubInterval } from "@/types";
-
-let openFn: ((id: string | null) => void) | null = null;
-/** Open the subscription editor from anywhere. Pass an id to edit, or null to add. */
-export function openSubscriptionEditor(id: string | null = null) {
-  openFn?.(id);
-}
 
 export function SubscriptionEditor() {
   const { categories, tags, subscriptions } = useCashy();
@@ -42,7 +37,7 @@ export function SubscriptionEditor() {
   const [startedAt, setStartedAt] = useState(todayYMD());
 
   useEffect(() => {
-    openFn = (id) => {
+    registerSubscriptionEditor((id) => {
       const sub = id ? (subscriptions.find((s) => s.id === id) ?? null) : null;
       setEditingId(sub ? sub.id : null);
       setName(sub?.name ?? "");
@@ -57,9 +52,9 @@ export function SubscriptionEditor() {
       setNote(sub?.note ?? "");
       setStartedAt(sub?.startedAt ?? todayYMD());
       setOpen(true);
-    };
+    });
     return () => {
-      openFn = null;
+      registerSubscriptionEditor(null);
     };
   }, [subscriptions]);
 
@@ -103,8 +98,15 @@ export function SubscriptionEditor() {
           type="button"
           className="wb-btn wb-btn--ghost"
           style={{ color: "var(--wb-danger-text)", gap: 6 }}
-          onClick={() => {
-            if (window.confirm("Xoá đăng ký này? Các giao dịch đã ghi vẫn được giữ lại.")) {
+          onClick={async () => {
+            if (
+              await confirm({
+                title: "Xoá đăng ký này?",
+                message: "Các giao dịch đã ghi vẫn được giữ lại.",
+                confirmLabel: "Xoá",
+                danger: true,
+              })
+            ) {
               deleteSubscription(editingId);
               setOpen(false);
             }

@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
-import { Icon, ICON_CHOICES } from "@/lib/icons";
+import { Icon } from "@/lib/icons";
+import { ICON_CHOICES } from "@/lib/icon-map";
 
 export function IconPicker({
   value,

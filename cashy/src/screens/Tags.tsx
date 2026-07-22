@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { addTag, deleteTag, updateTag, useCashy } from "@/lib/store";
+import { confirm } from "@/lib/confirm";
 import { SWATCHES } from "@/lib/palette";
 import type { Tag } from "@/types";
 import { ColorPicker } from "@/components/ColorPicker";
@@ -95,16 +96,15 @@ export function Tags() {
     setEditing(t);
     setOpen(true);
   }
-  function remove(t: Tag) {
+  async function remove(t: Tag) {
     const n = usage.get(t.id) ?? 0;
-    if (
-      window.confirm(
-        n
-          ? `Xoá nhãn "${t.name}"? Nhãn sẽ bị gỡ khỏi ${n} giao dịch.`
-          : `Xoá nhãn "${t.name}"?`,
-      )
-    )
-      deleteTag(t.id);
+    const ok = await confirm({
+      title: `Xoá nhãn "${t.name}"?`,
+      message: n ? `Nhãn sẽ bị gỡ khỏi ${n} giao dịch.` : undefined,
+      confirmLabel: "Xoá",
+      danger: true,
+    });
+    if (ok) deleteTag(t.id);
   }
 
   return (

@@ -17,7 +17,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { EmptyState } from "@/components/EmptyState";
 import { CategoryCap } from "@/components/CategoryCap";
 import { SubscriptionDues } from "@/components/SubscriptionDues";
-import { openSubscriptionEditor } from "@/components/SubscriptionEditor";
+import { openSubscriptionEditor } from "@/lib/modals";
 
 /**
  * One service row. Modelled on the docs' "Công nợ" table — the pattern for

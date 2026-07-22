@@ -1,5 +1,5 @@
 import { useRef, useState, type ChangeEvent, type ReactNode } from "react";
-import { toast } from "@/components/wb/Toast";
+import { toast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import {
   exportData,
@@ -12,6 +12,7 @@ import {
   useCashy,
 } from "@/lib/store";
 import { todayYMD } from "@/lib/date";
+import { confirm } from "@/lib/confirm";
 import { PageHeader } from "@/components/PageHeader";
 import type { SubIconStyle, ThemeMode } from "@/types";
 
@@ -98,26 +99,28 @@ export function Settings() {
     toast.success("Đã lưu");
   }
 
-  function doLoadSample() {
-    if (
-      transactions.length &&
-      !window.confirm(
-        "Nạp dữ liệu mẫu sẽ thay thế toàn bộ danh mục, nhãn và giao dịch hiện tại. Tiếp tục?",
-      )
-    )
-      return;
+  async function doLoadSample() {
+    if (transactions.length) {
+      const ok = await confirm({
+        title: "Nạp dữ liệu mẫu?",
+        message: "Sẽ thay thế toàn bộ danh mục, nhãn và giao dịch hiện tại.",
+        confirmLabel: "Nạp dữ liệu mẫu",
+        danger: true,
+      });
+      if (!ok) return;
+    }
     loadSampleData();
     toast.success("Đã nạp dữ liệu mẫu");
   }
 
-  function doReset() {
-    if (
-      window.confirm(
-        "Xoá toàn bộ dữ liệu và bắt đầu lại? Hành động này không hoàn tác được.",
-      )
-    ) {
-      resetAll();
-    }
+  async function doReset() {
+    const ok = await confirm({
+      title: "Xoá toàn bộ dữ liệu và bắt đầu lại?",
+      message: "Hành động này không hoàn tác được.",
+      confirmLabel: "Xoá & làm lại",
+      danger: true,
+    });
+    if (ok) resetAll();
   }
 
   return (

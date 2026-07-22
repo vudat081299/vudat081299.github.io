@@ -16,7 +16,7 @@ import { useStableSubOrder } from "@/lib/useStableSubOrder";
 import { useTxQuery } from "@/lib/useTxQuery";
 import { navigate } from "@/lib/router";
 import { formatMoneyShort } from "@/lib/money";
-import { openTxEditor } from "@/components/TransactionEditor";
+import { openTxEditor } from "@/lib/modals";
 import { PageHeader } from "@/components/PageHeader";
 import { BalanceCard } from "@/components/BalanceCard";
 import { CashflowChart } from "@/components/CashflowChart";

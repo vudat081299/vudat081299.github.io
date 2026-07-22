@@ -5,13 +5,8 @@ import { formatMoney } from "@/lib/money";
 import { AmountDisplay } from "@/components/AmountDisplay";
 import { StatusCap } from "@/components/StatusCap";
 import { TagChip } from "@/components/TagChip";
-import { openTxEditor } from "@/components/TransactionEditor";
-
-let openFn: ((id: string) => void) | null = null;
-/** Open the receipt-style detail view for a transaction, from anywhere. */
-export function openTxDetail(id: string) {
-  openFn?.(id);
-}
+import { registerTxDetail, openTxEditor } from "@/lib/modals";
+import { confirm } from "@/lib/confirm";
 
 /**
  * A single transaction rendered as a torn-paper receipt (web-builder `wb-receipt`)
@@ -23,9 +18,9 @@ export function TransactionDetail() {
   const [id, setId] = useState<string | null>(null);
 
   useEffect(() => {
-    openFn = (txId) => setId(txId);
+    registerTxDetail((txId) => setId(txId));
     return () => {
-      openFn = null;
+      registerTxDetail(null);
     };
   }, []);
 
@@ -123,9 +118,13 @@ export function TransactionDetail() {
             type="button"
             className="wb-btn wb-btn--ghost"
             style={{ color: "var(--wb-danger-text)", gap: 6 }}
-            onClick={() => {
+            onClick={async () => {
               if (
-                window.confirm(`Xoá giao dịch "${merchant}" (${formatMoney(tx.amount)})?`)
+                await confirm({
+                  title: `Xoá giao dịch "${merchant}" (${formatMoney(tx.amount)})?`,
+                  confirmLabel: "Xoá",
+                  danger: true,
+                })
               ) {
                 deleteTransaction(tx.id);
                 close();

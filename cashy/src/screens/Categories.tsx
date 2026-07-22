@@ -8,14 +8,16 @@ import {
   useCashy,
 } from "@/lib/store";
 import { descendantIds, flattenTree } from "@/lib/domain";
-import { Icon, ICON_CHOICES } from "@/lib/icons";
+import { confirm } from "@/lib/confirm";
+import { Icon } from "@/lib/icons";
+import { ICON_CHOICES } from "@/lib/icon-map";
 import { SWATCHES } from "@/lib/palette";
 import type { Category, TxType } from "@/types";
 import { ColorPicker } from "@/components/ColorPicker";
 import { IconPicker } from "@/components/IconPicker";
+import { Select } from "@/components/Select";
 import { EmptyState } from "@/components/EmptyState";
 import { PageHeader } from "@/components/PageHeader";
-import { Select } from "@/components/Select";
 import { Modal } from "@/components/wb/Modal";
 
 type DropPos = "before" | "into" | "after";
@@ -199,16 +201,15 @@ function Tree({
     };
   }, [dragId]);
 
-  function remove(cat: Category) {
+  async function remove(cat: Category) {
     const kids = descendantIds(categories, cat.id).size - 1;
-    if (
-      window.confirm(
-        kids
-          ? `Xoá "${cat.name}" và ${kids} danh mục con? Giao dịch liên quan sẽ thành "Chưa phân loại".`
-          : `Xoá "${cat.name}"? Giao dịch liên quan sẽ thành "Chưa phân loại".`,
-      )
-    )
-      deleteCategory(cat.id);
+    const ok = await confirm({
+      title: kids ? `Xoá "${cat.name}" và ${kids} danh mục con?` : `Xoá "${cat.name}"?`,
+      message: 'Giao dịch liên quan sẽ thành "Chưa phân loại".',
+      confirmLabel: "Xoá",
+      danger: true,
+    });
+    if (ok) deleteCategory(cat.id);
   }
 
   if (nodes.length === 0) {

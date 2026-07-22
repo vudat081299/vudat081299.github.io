@@ -14,7 +14,7 @@ import {
   setSubscriptionActive,
   useCashy,
 } from "@/lib/store";
-import { toast } from "@/components/wb/Toast";
+import { toast } from "@/lib/toast";
 import { Modal } from "@/components/wb/Modal";
 import { billingDate, fmtDateNum, fmtDateShort, monthLabelShort } from "@/lib/date";
 import { formatMoney } from "@/lib/money";
