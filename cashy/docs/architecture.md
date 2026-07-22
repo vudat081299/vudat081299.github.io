@@ -1,93 +1,134 @@
-# Cashy — kiến trúc
+# Cashy — architecture
 
-Không phải Clean Architecture. Chỉ ba lớp và **một quy tắc**.
+Spec for anyone (human or agent) modifying `cashy/src`. Rules are normative:
+MUST / MUST NOT are enforced by `pnpm check:layers`, which runs inside
+`pnpm build`. Everything here is verifiable against the code.
+
+---
+
+## 1. Layers
+
+Dependencies flow one way. There are no exceptions.
 
 ```
 ui  ──▶  usecases  ──▶  domain
-                   └─▶  data
+                   └─▶  data          lib is a leaf: every layer may import it
 ```
 
-Phụ thuộc chạy **một chiều**. `domain` không import gì ở trên nó; `ui` không bao
-giờ import `data` để ghi. Quy tắc này được `scripts/check-layers.mjs` kiểm tra
-trong `pnpm build`, nên nó không mục theo thời gian.
+### 1.1 Import matrix
+
+Rows = importer. `✓` allowed, `✗` rejected by the checker.
+
+| from ↓ / to → | `domain` | `data` | `usecases` | `ui/kit` | `ui/**` | `lib` | `react` |
+|---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+| `domain/`   | ✓ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ |
+| `data/`     | ✓ | ✓ | ✗ | ✗ | ✗ | ✓ | ✓ |
+| `usecases/` | ✓ | ✓ | ✓ | ✗ | ✗ | ✓ | ✓ |
+| `ui/kit/`   | ✗ | ✗ | ✗ | ✓ | ✗ | ✓ | ✓ |
+| `ui/**`     | ✓ | partial¹ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `lib/`      | `types` only² | ✗ | ✗ | ✗ | ✗ | ✓ | ✓ |
+
+1. `ui/**` may import **only** `@/data/store` and `@/data/draft`. From
+   `@/data/store` the **only** permitted binding is `useCashy`. Importing
+   `commit` or `getState` into `ui/**` is rejected.
+2. `lib/` may import `@/domain/types` (type-only). `@/domain` and every other
+   `@/domain/*` module is rejected.
+
+### 1.2 Hard invariants
+
+- **I1** — `domain/**` imports no React and no I/O. It is pure.
+- **I2** — Every `domain` function taking "now" accepts it as a parameter with a
+  default (`now: Date = new Date()`). Never read the clock inline.
+- **I3** — `data/store.ts` holds no business rule. If a change requires a
+  decision, that decision goes in `domain/`.
+- **I4** — `ui/kit/**` knows nothing about Cashy. It is a generic design system.
+- **I5** — Money is an integer count of VND everywhere. No floats, no cents.
+- **I6** — Only `status: "recorded"` transactions count toward money totals
+  (`domain/txStatus.isCounted`). A missing `status` means `"recorded"` (legacy rows).
+
+Adding a rule to `check-layers.mjs`? Plant a violation, confirm it fails, remove
+it. A guard that has never failed is not known to work.
 
 ---
 
-## 1. Ba lớp
+## 2. File map
 
-| Thư mục | Là gì | Được import | Cấm |
-|---|---|---|---|
-| `domain/` | Luật nghiệp vụ + tính toán, **thuần 100%** | `lib/` | React, store, localStorage |
-| `data/` | Store, localStorage, migrations, seed | `domain/`, `lib/` | `usecases/`, `ui/` |
-| `usecases/` | "App làm được gì" — đọc state → hỏi domain → commit | `domain/`, `data/`, `lib/` | `ui/` |
-| `ui/kit/` | Design system `wb-*` | `lib/` | `domain/`, `data/`, `usecases/` |
-| `ui/**` | Màn hình & component | `domain/`, `usecases/`, `useCashy()` | ghi thẳng vào store |
-| `lib/` | Tiện ích lá | `domain/types` | mọi thứ khác |
+Where a given kind of code MUST live.
 
-`lib/` chỉ phụ thuộc vào *kiểu* của domain (`ThemeMode`), không phụ thuộc luật —
-nên mọi lớp import nó đều an toàn.
-
-### Cây thư mục
+| Kind of code | Location | Test? |
+|---|---|---|
+| Business rule, calculation, predicate | `domain/<aggregate>.ts` | **required** |
+| Shared type / entity shape | `domain/types.ts` | — |
+| A thing the user can do (mutates state) | `usecases/<aggregate>.ts` | optional |
+| localStorage, migration, seed, sample | `data/` | — |
+| Generic UI primitive (no Cashy concepts) | `ui/kit/` | — |
+| Cashy-aware shared component | `ui/common/` | — |
+| Screen + its own components | `ui/features/<area>/` | — |
+| App shell (Layout, ErrorBoundary) | `ui/app/` | — |
+| Leaf utility with no layer allegiance | `lib/` | — |
 
 ```
 src/
-  domain/       ← luật. không React, không IO.
-    types.ts sort.ts category.ts tag.ts transaction.ts
-    subscription.ts analytics.ts
-    date.ts period.ts money.ts txStatus.ts
-    index.ts    ← barrel
-    *.test.ts   ← test nằm cạnh luật nó kiểm
-  data/
-    store.ts        ← getState / commit / subscribe / useCashy (37 dòng)
-    persistence.ts  ← load / save localStorage
-    migrations.ts   ← v1..v5
-    seed.ts sample.ts draft.ts
-  usecases/     ← một module mỗi aggregate
-    workspace.ts settings.ts categories.ts tags.ts
-    transactions.ts subscriptions.ts index.ts
-  ui/
-    kit/        ← design system, không biết Cashy là gì
-    common/     ← component chia sẻ có biết domain (AmountDisplay, TagChip…)
-    app/        ← Layout, ErrorBoundary
-    features/   ← dashboard/ transactions/ subscriptions/
-                  categories/ tags/ settings/ onboarding/
-    dev/        ← WbGallery (dev-only, code-split)
-  lib/          ← id, palette, cn, router, theme, toast, confirm, modals
+  domain/     types sort category tag transaction subscription analytics
+              date period money txStatus · index.ts (barrel) · *.test.ts
+  data/       store persistence migrations seed sample draft
+  usecases/   workspace settings categories tags transactions subscriptions
+  ui/kit/     wb-* design system (63 files)
+  ui/common/  AmountDisplay CategoryCap StatusCap TagChip PeriodPicker …
+  ui/app/     Layout ErrorBoundary
+  ui/features/ dashboard transactions subscriptions categories tags
+               settings onboarding
+  ui/dev/     WbGallery — DEV only, code-split, reachable at #/wb
+  lib/        id palette utils(cn) router theme toast confirm modals
 ```
 
----
-
-## 2. `domain/` — nơi đặt luật
-
-Thuần tuyệt đối: không React, không IO, `now` luôn là tham số có default. Đó là lý
-do test chạy được mà không cần dựng app, không cần jsdom, không cần localStorage.
-
-Import module cụ thể (`@/domain/subscription`) khi chỉ cần một mảng; import barrel
-`@/domain` khi màn hình thật sự trải nhiều mảng.
-
-Vài luật đáng chú ý sống ở đây:
-
-- **`dueCharges()`** — chu kỳ nào còn nợ. Đi từ `firstUnpaidCycle`, **không** từ
-  ngày bắt đầu, nên dịch vụ đăng ký một năm trước không dựng lại 12 tháng nợ.
-  Idempotent: chu kỳ đã có charge thì không bao giờ sinh lại.
-- **`paymentsOf()`** — lịch sử trả tiền đọc thẳng từ sổ. `paymentTxIds` và
-  `lastPaidAt` trong `Subscription` **chỉ là cache** của hàm này; `paymentsDrifted()`
-  là thứ phát hiện cache lệch.
-- **`chargesSurvivingDeletion()`** — xoá subscription thì charge đã ghi nhận **ở
-  lại**: tiền đã tiêu vẫn là tiền đã tiêu. Chỉ pending/skipped bị xoá theo.
-- **`startCycle()`** — gói năm đăng ký sau tháng thanh toán thì kỳ đầu là năm sau,
-  không phải một tháng đã trôi qua.
-
-Cycle key luôn là `"YYYY-MM"` cho **cả** gói tháng lẫn gói năm — gói năm đơn giản
-là mỗi năm chỉ có một key. Nhờ vậy `subMonth`, khoá chống trùng và toàn bộ sổ cũ
-chạy được với gói năm mà không cần nhánh code thứ hai.
+Import a specific domain module (`@/domain/subscription`) when you need one
+area; import the barrel `@/domain` only when a file genuinely spans several.
 
 ---
 
-## 3. `usecases/` — nơi đặt trình tự
+## 3. `domain/` — the rules
 
-Một usecase đọc state hiện tại, hỏi `domain/` state kế tiếp nên là gì, rồi commit.
-Hết. Không render, không luật riêng.
+Pure. No React, no I/O. This is why the tests need no jsdom and no localStorage.
+
+### 3.1 Subscription rules (the densest area)
+
+A subscription **never books money on its own**. Each due cycle materialises a
+`pending` transaction; only the user confirming it makes it `recorded`.
+
+- **Cycle key is `"YYYY-MM"` for both intervals.** A yearly plan simply has one
+  key per year. This is what lets `subMonth`, the dedup key and every existing
+  ledger row carry yearly plans with no second code path. Do not introduce a
+  different key shape.
+- `dueCharges(subs, txs, now)` — the charges the ledger is missing. Walks from
+  `firstUnpaidCycle`, **not** from `startedAt`, so a service subscribed a year
+  ago does not backfill twelve months. Idempotent: a cycle that already carries
+  a charge is never raised again. Safe to call on every mount.
+- `paymentsOf(subId, txs)` — payment history read from the ledger. **This is the
+  source of truth.** `Subscription.paymentTxIds` and `Subscription.lastPaidAt`
+  are only a cache of it; `paymentsDrifted()` detects staleness. Any usecase that
+  changes a charge's status MUST call `syncPayments`.
+- `startCycle(sub)` — a yearly plan subscribed *after* its billing month starts
+  next year, not in a month that already passed.
+- `chargesSurvivingDeletion(txs, subId)` — deleting a subscription keeps its
+  `recorded` charges (money spent was still spent) and drops pending/skipped.
+- `needsPaymentNow` = a bill on the doormat. `isLapsed` = a whole cycle went by
+  unpaid. They are different questions; do not conflate them.
+
+### 3.2 Other aggregates
+
+| Module | Owns |
+|---|---|
+| `category.ts` | tree walking, `canReparent` (no cycles), `reorderCategories` (returns full renumbered list or `null` for an illegal move), `nextOrder` |
+| `transaction.ts` | `totals`, `filterTx`, `byRecency`, `orphanCategory` (deleting a category empties its transactions, never deletes them), `detachTag` |
+| `tag.ts` | `rankTags` — order **and** ink shade by usage rank, not raw count |
+| `analytics.ts` | `breakdown` (rolls children into root category), `walletSeries` (trims dead margins at both ends, keeps middle gaps), `periodInsights`, `monthlyNetRate`, `forecastSeries` |
+
+---
+
+## 4. `usecases/` — the sequencing
+
+A usecase: read state → ask `domain` for the next state → `commit`. Nothing else.
 
 ```ts
 export function syncSubscriptions(): void {
@@ -99,82 +140,112 @@ export function syncSubscriptions(): void {
 }
 ```
 
-Ranh giới: nếu một usecase dài ra vì *quyết định* thay vì *sắp xếp*, phần quyết
-định đó thuộc về `domain/`. `syncSubscriptions` trước đây 35 dòng vì nó tự quyết
-kỳ nào đến hạn; giờ 5 dòng vì `dueCharges` lo việc đó.
+**Boundary test:** if a usecase grows because it is *deciding* rather than
+*sequencing*, the decision belongs in `domain/`.
 
-`usecases/transactions.ts` được phép import `usecases/subscriptions.ts` (xoá một
-charge làm lệch lịch sử của subscription sở hữu nó). Chiều ngược lại thì không —
-`subscriptions.ts` tự commit để tránh vòng lặp import.
+Inventory:
+
+| Module | Exports |
+|---|---|
+| `workspace.ts` | `createWorkspace` `loadSampleData` `updateWorkspace` `resetAll` `exportData` `importData` |
+| `settings.ts` | `setTheme` `setSubIconStyle` |
+| `categories.ts` | `addCategory` `updateCategory` `deleteCategory` `reorderCategory` |
+| `tags.ts` | `addTag` `updateTag` `deleteTag` |
+| `transactions.ts` | `addTransaction` `updateTransaction` `deleteTransaction` |
+| `subscriptions.ts` | `addSubscription` `updateSubscription` `setSubscriptionActive` `deleteSubscription` `syncSubscriptions` `syncPayments` `confirmSubscriptionCharge` `confirmSubscriptionCharges` `skipSubscriptionCharge` `revertSubscriptionCharge` |
+
+**Cross-usecase direction:** `transactions.ts` → `subscriptions.ts` only
+(deleting a charge invalidates its owner's history). The reverse is forbidden;
+`subscriptions.ts` commits directly to avoid an import cycle.
+
+Batch semantics: `confirmSubscriptionCharges` commits **once** for N charges, so
+a multi-month catch-up is a single undoable step, not N steps.
 
 ---
 
-## 4. `ui/` — đọc và ghi
+## 5. `ui/` — reading and writing
 
-- **Đọc**: `useCashy()` từ `@/data/store`. Đây là thứ **duy nhất** UI được lấy từ
-  `data` (cùng `data/draft` cho bản nháp giao dịch).
-- **Ghi**: gọi usecase. Không bao giờ `commit` / `getState`.
+- **Read:** `useCashy()` from `@/data/store`.
+- **Write:** call a usecase. Never `commit()` / `getState()`.
 
-Ranh giới component — cố ý **không** prop-drill mọi thứ:
+### 5.1 Component contract
 
-| Loại | Ví dụ | Cách nối |
+| Tier | Examples | Contract |
 |---|---|---|
-| Leaf | `SubscriptionCard`, `TransactionTable`, `SubscriptionDues` | nhận callback qua props; **không biết store tồn tại** |
-| Container / màn hình | `Dashboard`, `Subscriptions`, `Transactions` | gọi usecase, truyền callback xuống |
-| Modal singleton | `TransactionEditor`, `SubscriptionEditor` | là container; gọi usecase, đăng ký handler qua `lib/modals` |
+| **Leaf** | `SubscriptionCard` `TransactionTable` `SubscriptionDues` | Receives data + callbacks via props. MUST NOT import `usecases` or `data`. Renders in `ui/dev/WbGallery` and in tests with no app behind it. |
+| **Container / screen** | `Dashboard` `Subscriptions` `Transactions` `Categories` | Calls `useCashy()` and usecases; passes callbacks down. |
+| **Singleton modal** | `TransactionEditor` `SubscriptionEditor` `TransactionDetail` | A container. Calls usecases; registers its open handler via `lib/modals`. |
 
-Prop-drill toàn bộ sẽ khổ hơn hiện tại mà không mua thêm được gì. Lợi ích thật của
-việc leaf không biết store: chúng render được trong `ui/dev/WbGallery` và trong
-test mà không cần app phía sau.
+Do **not** prop-drill beyond the leaf tier — containers calling usecases directly
+is intended, not a violation.
 
-### Một cú click đi qua đâu
+### 5.2 Control flow of one action
 
 ```
-người dùng bấm "Đã trả"
-  └─ SubscriptionCard  gọi prop  onConfirmCharges([txId])
-      └─ Subscriptions.tsx (màn hình)  gọi usecase
-          └─ usecases/subscriptions.confirmSubscriptionCharges()
-              ├─ getState()
-              ├─ commit({ …, transactions: … })   → data/store → localStorage
-              └─ syncPayments()
-                  └─ domain/subscription.paymentsOf()   ← luật ở đây
-                      └─ paymentsDrifted() → chỉ update khi thật sự lệch
-  └─ useSyncExternalStore đánh thức mọi component đang đọc
+click "Đã trả"
+└─ SubscriptionCard            → props.onConfirmCharges([txId])      (leaf: no store)
+   └─ Subscriptions.tsx        → confirmSubscriptionCharges([txId])  (container)
+      └─ usecases/subscriptions
+         ├─ getState()
+         ├─ commit({…})        → data/store → data/persistence → localStorage
+         └─ syncPayments(subId)
+            └─ domain/subscription.paymentsOf()      ← the rule
+               └─ paymentsDrifted() → update only when actually stale
+└─ useSyncExternalStore wakes every component reading state
 ```
 
 ---
 
-## 5. Test
+## 6. Procedures
 
-```bash
-pnpm test          # vitest run
-pnpm test:watch
-pnpm check:layers  # cũng chạy trong pnpm build
-```
+### 6.1 Add a business rule
+1. Write it in `domain/<aggregate>.ts` as a pure function; inject `now` if needed.
+2. Add cases to `domain/<aggregate>.test.ts` — including the boundary and the
+   "does nothing" case.
+3. Call it from a usecase. Do not inline the rule at the call site.
 
-Test nhắm vào `domain/` — chỗ có luật. Không jsdom, không localStorage, không mount:
+### 6.2 Add a user action
+1. `usecases/<aggregate>.ts`, exported from `usecases/index.ts` via the barrel.
+2. If it changes a charge's status → call `syncPayments`.
+3. Screens import from `@/usecases`.
 
-```ts
-expect(dueCharges([sub], [], new Date("2026-03-20")).map((c) => c.subMonth))
-  .toEqual(["2026-01", "2026-02", "2026-03"]);
-```
+### 6.3 Change persisted data shape
+1. Bump `CURRENT_VERSION` in `data/migrations.ts`.
+2. Add a new `if (fromVersion < N)` branch. **Never edit an existing branch** —
+   real data has already passed through it.
+3. Update `domain/types.ts`.
+4. Migrations are pure functions of `(state, fromVersion)`; they may call
+   `domain` but not a usecase.
 
-Đây chính là thứ trước đây không làm được: khi luật còn nằm trong store, hỏi "gói
-năm nợ gì vào 15/03" phải dựng cả localStorage.
-
-`check-layers.mjs` đã được thử ngược — cắm vi phạm giả vào `domain/` và `ui/` thì
-nó fail, không chỉ pass trên cây sạch.
+### 6.4 Add a UI primitive
+Generic → `ui/kit/` + export from `ui/kit/index.ts`. Cashy-aware → `ui/common/`.
 
 ---
 
-## 6. Thêm một tính năng thì sửa ở đâu
+## 7. Commands
 
-1. Luật mới hoặc phép tính mới → `domain/`, **kèm test**.
-2. Một thao tác mới người dùng làm được → `usecases/`.
-3. Chỗ hiển thị → `ui/features/<area>/`.
-4. Primitive dùng lại được, không dính nghiệp vụ → `ui/kit/`.
-5. Đổi hình dạng dữ liệu đã lưu → tăng `CURRENT_VERSION` + thêm nhánh trong
-   `data/migrations.ts`. Migration cũ không bao giờ được sửa.
+| Command | Effect |
+|---|---|
+| `pnpm dev` | dev server, `http://localhost:5173` |
+| `pnpm test` / `pnpm test:watch` | vitest (61 tests over `domain/`) |
+| `pnpm check:layers` | enforce §1 |
+| `pnpm build` | `tsc -b` → `check:layers` → vite build → `dist/` (base `/cashy/`) |
+| `pnpm build:wb` | gallery only → `dist-wb/` (base `/cashy-wb/`) |
+| `pnpm lint` | oxlint |
 
-Nếu thấy mình muốn import `@/data/store` từ `ui/` để ghi, hoặc import React vào
-`domain/` — dừng lại. `pnpm check:layers` sẽ chặn, và nó chặn có lý do.
+`pnpm build` fails on a layering violation. That is deliberate.
+
+---
+
+## 8. Known traps
+
+- **CSS order.** `main.tsx` loads `index.css` **before** `web-builder.css`. Any
+  app-level `wb-*` override needs raised specificity
+  (`.wb-btn.cashy-btn--quiet-danger`), and `:hover` in dark needs an explicit
+  `.dark` branch — `.dark .wb-btn--ghost:hover` is also 0-3-0 and loads later.
+- **`data/store.ts` runs `load()` at import time.** Importing it touches
+  localStorage immediately. Never import it from a test; test `domain/` instead.
+- **Two `Pagination` components exist**: `ui/kit/Pagination.tsx` (generic) and
+  `ui/features/transactions/Pagination.tsx`. Check the path before editing.
+- **`ui/common/` and `ui/kit/` both export `EmptyState` / `ColorPicker` /
+  `Select`.** They are different components. Check the import path.

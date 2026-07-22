@@ -41,6 +41,14 @@ const RULES = [
     forbid: [/^@\/data\/(?!store|draft)/],
     why: "UI reads state via useCashy() and writes via usecases — nothing else in data/",
   },
+  {
+    dir: "lib",
+    // Leaf utilities. They may name domain TYPES (ThemeMode) but must not
+    // depend on a rule, a store or a component — that is what makes them safe
+    // to import from every layer.
+    forbid: [/^@\/(data|usecases|ui)\b/, /^@\/domain$/, /^@\/domain\/(?!types)/],
+    why: "lib/ is a leaf — it may import @/domain/types and nothing else from the app",
+  },
 ];
 
 /** Named imports from @/data/store that UI is allowed to use. */
