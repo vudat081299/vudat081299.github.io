@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState, lazy, Suspense } from "react";
 import { useCashy, syncSubscriptions } from "@/lib/store";
 import { applyTheme } from "@/lib/theme";
 import { useRoute } from "@/lib/router";
@@ -16,9 +16,29 @@ import { Categories } from "@/screens/Categories";
 import { Tags } from "@/screens/Tags";
 import { Settings } from "@/screens/Settings";
 
+// Dev-only component catalogue, code-split so it never ships in the production
+// bundle (the DEV guard means the dynamic import is unreachable when built).
+const WbGallery = lazy(() =>
+  import("@/screens/WbGallery").then((m) => ({ default: m.WbGallery })),
+);
+
+function useIsWbGallery() {
+  const [on, setOn] = useState(
+    () => import.meta.env.DEV && location.hash.replace(/^#\/?/, "") === "wb",
+  );
+  useEffect(() => {
+    if (!import.meta.env.DEV) return;
+    const check = () => setOn(location.hash.replace(/^#\/?/, "") === "wb");
+    window.addEventListener("hashchange", check);
+    return () => window.removeEventListener("hashchange", check);
+  }, []);
+  return on;
+}
+
 export default function App() {
   const { workspace, theme } = useCashy();
   const route = useRoute();
+  const isWbGallery = useIsWbGallery();
 
   useEffect(() => {
     applyTheme(theme);
@@ -33,6 +53,14 @@ export default function App() {
   useEffect(() => {
     if (workspace) syncSubscriptions();
   }, [workspace]);
+
+  if (isWbGallery) {
+    return (
+      <Suspense fallback={null}>
+        <WbGallery />
+      </Suspense>
+    );
+  }
 
   if (!workspace) {
     return (
