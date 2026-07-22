@@ -81,7 +81,16 @@ export function CashflowChart({ data }: { data: WalletPoint[] }) {
   return (
     <ResponsiveContainer width="100%" height="100%" minHeight={240}>
       <ComposedChart data={data} margin={{ top: 8, right: 4, bottom: 0, left: 0 }}>
-        <CartesianGrid vertical={false} stroke="var(--wb-chart-grid)" strokeDasharray="2 3" />
+        {/* Bind the grid to the balance (left) axis — with two NAMED y-axes and no
+            yAxisId here, recharts defaults to yAxisId={0}, finds no such axis, and
+            silently draws zero horizontal lines. Naming it restores the dashed
+            gridlines that make the balance line readable across buckets. */}
+        <CartesianGrid
+          yAxisId="balance"
+          vertical={false}
+          stroke="var(--wb-chart-grid)"
+          strokeDasharray="2 3"
+        />
         <XAxis
           dataKey="label"
           tickLine={false}
