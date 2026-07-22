@@ -16,13 +16,18 @@ export function formatDigits(n: number): string {
   return nf.format(Math.round(n || 0));
 }
 
-/** Compact: 3400000 -> "3,4 tr đ", 890000 -> "890k đ", 1200000000 -> "1,2 tỷ đ" */
+/**
+ * Compact: 3400000 -> "3.4m đ", 890000 -> "890k đ", 1200000000 -> "1.2b đ".
+ * English magnitude letters (k / m / b), because the UI chrome is English even
+ * though the amounts are đồng — the Vietnamese "k / tr / tỷ" belongs to the
+ * seeded data, not the app's own labels.
+ */
 export function formatMoneyShort(n: number): string {
   const v = Math.round(Math.abs(n || 0));
   const sign = n < 0 ? "-" : "";
   let out: string;
-  if (v >= 1_000_000_000) out = trim(v / 1_000_000_000) + " tỷ";
-  else if (v >= 1_000_000) out = trim(v / 1_000_000) + " tr";
+  if (v >= 1_000_000_000) out = trim(v / 1_000_000_000) + "b";
+  else if (v >= 1_000_000) out = trim(v / 1_000_000) + "m";
   else if (v >= 1_000) out = trim(v / 1_000) + "k";
   else out = String(v);
   return sign + out + " đ";
@@ -30,10 +35,10 @@ export function formatMoneyShort(n: number): string {
 
 function trim(x: number): string {
   // Round to the one decimal we actually show FIRST, then decide whether it is a
-  // whole number. Deciding on the raw value shows a bogus ",0": 100.04 is not an
-  // integer, so the old code took the toFixed(1) branch and printed "100,0k".
+  // whole number. Deciding on the raw value shows a bogus ".0": 100.04 is not an
+  // integer, so the old code took the toFixed(1) branch and printed "100.0k".
   const r = Math.round(x * 10) / 10;
-  return r.toFixed(Number.isInteger(r) ? 0 : 1).replace(".", ",");
+  return r.toFixed(Number.isInteger(r) ? 0 : 1);
 }
 
 /** Parse free text to integer VND: "1.500.000 đ" -> 1500000 */
