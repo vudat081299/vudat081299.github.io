@@ -3,8 +3,8 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import "./styles/web-builder.css";
 import "./styles/wb-theme.css";
-import { WbGallery } from "./screens/WbGallery";
-import { ErrorBoundary } from "./components/ErrorBoundary";
+import { WbGallery } from "./ui/dev/WbGallery";
+import { ErrorBoundary } from "./ui/app/ErrorBoundary";
 
 /**
  * Standalone entry for the web-builder component gallery, published as its own
