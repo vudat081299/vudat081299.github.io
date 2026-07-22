@@ -4,6 +4,10 @@ Spec for anyone (human or agent) modifying `cashy/src`. Rules are normative:
 MUST / MUST NOT are enforced by `pnpm check:layers`, which runs inside
 `pnpm build`. Everything here is verifiable against the code.
 
+> New here? Read [../CLAUDE.md](../CLAUDE.md) first (the map). Companion refs:
+> [data-model.md](data-model.md) (entities & relationships) and
+> [components.md](components.md) (the component catalogue + live galleries).
+
 ---
 
 ## 1. Layers
@@ -78,7 +82,8 @@ src/
   ui/app/     Layout ErrorBoundary
   ui/features/ dashboard transactions subscriptions categories tags
                settings onboarding
-  ui/dev/     WbGallery — DEV only, code-split, reachable at #/wb
+  ui/dev/     WbGallery (#/wb, generic wb-*) · CashyGallery (#/cashy, Cashy layer)
+              — DEV only, code-split, never loaded in production
   lib/        id palette utils(cn) router theme toast confirm modals
 ```
 
@@ -172,7 +177,7 @@ a multi-month catch-up is a single undoable step, not N steps.
 
 | Tier | Examples | Contract |
 |---|---|---|
-| **Leaf** | `SubscriptionCard` `TransactionTable` `SubscriptionDues` | Receives data + callbacks via props. MUST NOT import `usecases` or `data`. Renders in `ui/dev/WbGallery` and in tests with no app behind it. |
+| **Leaf** | `SubscriptionCard` `TransactionTable` `SubscriptionDues` | Receives data + callbacks via props. MUST NOT import `usecases` or `data`. Renders in `ui/dev/CashyGallery` (`#/cashy`) and in tests with no app behind it. |
 | **Container / screen** | `Dashboard` `Subscriptions` `Transactions` `Categories` | Calls `useCashy()` and usecases; passes callbacks down. |
 | **Singleton modal** | `TransactionEditor` `SubscriptionEditor` `TransactionDetail` | A container. Calls usecases; registers its open handler via `lib/modals`. |
 
@@ -227,7 +232,7 @@ Generic → `ui/kit/` + export from `ui/kit/index.ts`. Cashy-aware → `ui/commo
 | Command | Effect |
 |---|---|
 | `pnpm dev` | dev server, `http://localhost:5173` |
-| `pnpm test` / `pnpm test:watch` | vitest (61 tests over `domain/`) |
+| `pnpm test` / `pnpm test:watch` | vitest (98 tests over `domain/`) |
 | `pnpm check:layers` | enforce §1 |
 | `pnpm build` | `tsc -b` → `check:layers` → vite build → `dist/` (base `/cashy/`) |
 | `pnpm build:wb` | gallery only → `dist-wb/` (base `/cashy-wb/`) |

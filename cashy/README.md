@@ -4,6 +4,9 @@ Personal spending ledger. Vite + React + TypeScript. No Tailwind — the design
 system is `src/styles/web-builder.css` (`wb-*`), the app layer is
 `src/index.css` (`cashy-*`).
 
+> **Working on this (human or AI)? Start with [CLAUDE.md](CLAUDE.md)** — the
+> one-page map to the philosophy, data model, screens, components and invariants.
+
 All data lives in `localStorage` under `cashy_state_v1`, migrated forward by
 `version`. No server, no account, nothing leaves the browser.
 
@@ -17,15 +20,18 @@ pnpm dev            # http://localhost:5173
 | Command | Effect |
 |---|---|
 | `pnpm dev` | dev server |
-| `pnpm test` | vitest, single run (61 tests over `src/domain/`) |
+| `pnpm test` | vitest, single run (98 tests over `src/domain/`) |
 | `pnpm test:watch` | vitest watch |
 | `pnpm check:layers` | enforce the dependency rule |
 | `pnpm build` | `tsc -b` → `check:layers` → build to `dist/` (base `/cashy/`) |
 | `pnpm build:wb` | component gallery only → `dist-wb/` (base `/cashy-wb/`) |
 | `pnpm lint` | oxlint |
 
-The component gallery is also reachable in dev at `#/wb` (DEV-only, code-split,
-never in the production bundle).
+Two component galleries are reachable in dev (DEV-only, code-split, never loaded
+in the production bundle):
+
+- `#/cashy` — the **Cashy-specific** components (`ui/common` + `ui/features`), fed by fake data
+- `#/wb` — the generic **`wb-*`** design-system primitives
 
 ## Architecture
 
@@ -75,10 +81,14 @@ Break these and the app is wrong, not merely inconsistent.
 
 | File | Contents |
 |---|---|
-| [docs/architecture.md](docs/architecture.md) | layers, import matrix, file map, procedures, traps |
-| [docs/cashy-vision.md](docs/cashy-vision.md) | product direction |
-| [docs/cashy-v1-spec.md](docs/cashy-v1-spec.md) | v1 spec |
-| [REBUILD-NOTES.md](REBUILD-NOTES.md) | rebuild notes |
+| [CLAUDE.md](CLAUDE.md) | **the AI/onboarding map — start here** |
+| [docs/architecture.md](docs/architecture.md) | layers, import matrix, file map, procedures, traps (normative for `src/`) |
+| [docs/data-model.md](docs/data-model.md) | data dictionary — entities, enums, relationships, derived values |
+| [docs/components.md](docs/components.md) | component catalogue — tiers, props, screen→component map |
+| [docs/cashy-vision.md](docs/cashy-vision.md) | product direction (timeless; native-iOS-flavoured) |
+| [docs/cashy-v1-spec.md](docs/cashy-v1-spec.md) | v1 spec (native-iOS-flavoured) |
+| [REBUILD-NOTES.md](REBUILD-NOTES.md) | web-rebuild notes |
+| [docs/handoff-checklist.md](docs/handoff-checklist.md) | this documentation pass + open questions for the owner |
 
 ---
 

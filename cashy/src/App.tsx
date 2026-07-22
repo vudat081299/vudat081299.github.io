@@ -17,29 +17,37 @@ import { Categories } from "@/ui/features/categories/Categories";
 import { Tags } from "@/ui/features/tags/Tags";
 import { Settings } from "@/ui/features/settings/Settings";
 
-// Dev-only component catalogue, code-split so it never ships in the production
+// Dev-only component catalogues, code-split so they never ship in the production
 // bundle (the DEV guard means the dynamic import is unreachable when built).
+// `#/wb` = the generic wb-* primitives; `#/cashy` = the Cashy-specific layer.
 const WbGallery = lazy(() =>
   import("@/ui/dev/WbGallery").then((m) => ({ default: m.WbGallery })),
 );
+const CashyGallery = lazy(() =>
+  import("@/ui/dev/CashyGallery").then((m) => ({ default: m.CashyGallery })),
+);
 
-function useIsWbGallery() {
+/** True when the hash is `#/<slug>` and we are in a DEV build. Powers the two
+ *  code-split gallery routes; production can never flip these on, so Rollup
+ *  tree-shakes both galleries out of `dist/`. */
+function useIsDevRoute(slug: string) {
   const [on, setOn] = useState(
-    () => import.meta.env.DEV && location.hash.replace(/^#\/?/, "") === "wb",
+    () => import.meta.env.DEV && location.hash.replace(/^#\/?/, "") === slug,
   );
   useEffect(() => {
     if (!import.meta.env.DEV) return;
-    const check = () => setOn(location.hash.replace(/^#\/?/, "") === "wb");
+    const check = () => setOn(location.hash.replace(/^#\/?/, "") === slug);
     window.addEventListener("hashchange", check);
     return () => window.removeEventListener("hashchange", check);
-  }, []);
+  }, [slug]);
   return on;
 }
 
 export default function App() {
   const { workspace, theme } = useCashy();
   const route = useRoute();
-  const isWbGallery = useIsWbGallery();
+  const isWbGallery = useIsDevRoute("wb");
+  const isCashyGallery = useIsDevRoute("cashy");
 
   useEffect(() => {
     applyTheme(theme);
@@ -59,6 +67,14 @@ export default function App() {
     return (
       <Suspense fallback={null}>
         <WbGallery />
+      </Suspense>
+    );
+  }
+
+  if (isCashyGallery) {
+    return (
+      <Suspense fallback={null}>
+        <CashyGallery />
       </Suspense>
     );
   }
