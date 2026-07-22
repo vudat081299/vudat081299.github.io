@@ -161,9 +161,19 @@ export function TransactionEditor() {
   );
 
   return (
+    // Wider than the 460 default: this is the app's densest form, and the five
+    // status capsules want one uninterrupted row. Modal widths here are sized to
+    // their content already (Tags 380, confirm 400, catch-up picker 420) — this
+    // is the largest of them, not a new convention.
+    //
+    // 540 rather than the 520 that just barely fits: the capsule row needs 444px
+    // in this font, and the app takes the system UI face first (SF Pro here,
+    // Segoe UI on Windows), so a few percent of metric drift is normal. 520 left
+    // 19px of slack, which that drift would eat; 540 leaves ~39px.
     <Modal
       open={open}
       onClose={dismiss}
+      maxWidth={540}
       title={editingId ? "Sửa giao dịch" : "Thêm giao dịch"}
       footer={footer}
     >
