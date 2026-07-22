@@ -6,6 +6,7 @@ import {
   daysBetween,
   mondayOf,
   monthKey,
+  monthLabelShort,
   monthNameShort,
   parseYMD,
   ymd,
@@ -683,4 +684,53 @@ export function periodInsights(
     daysElapsed,
     daysInPeriod,
   };
+}
+
+// ---- balance forecast ------------------------------------------------------
+const DAYS_PER_MONTH = 365.25 / 12; // 30.4375 — real average, not a flat 30
+
+/** Turn a period's net into a per-month figure, so a slope computed over "last
+ *  3 months" or "last 30 days" both mean the same thing: money gained (or lost)
+ *  in an average month. `spanDays` is the length of the window the net came from. */
+export function monthlyNetRate(net: number, spanDays: number): number {
+  const months = spanDays / DAYS_PER_MONTH;
+  return months > 0 ? net / months : 0;
+}
+
+export interface ForecastPoint {
+  /** "YYYY-MM" — feeds chartBucketTitle for the tooltip */
+  key: string;
+  /** compact axis label, e.g. "T8/2026" */
+  label: string;
+  /** months ahead of now; 0 is the current month (today's balance) */
+  offset: number;
+  /** projected wallet balance at the end of this month */
+  balance: number;
+}
+
+/**
+ * A straight-line balance projection: start from today's balance and add the
+ * monthly net once per future month. It is called a "forecast", but it is really
+ * just arithmetic — balance(k) = current + monthlyNet · k — not a trend model, so
+ * it moves by whole months and never pretends to a day-level precision it lacks.
+ * Point 0 is now (the current balance); points 1…months carry the projection.
+ */
+export function forecastSeries(
+  currentBalance: number,
+  monthlyNet: number,
+  months: number,
+  now: Date = new Date(),
+): ForecastPoint[] {
+  const startKey = monthKey(now);
+  const out: ForecastPoint[] = [];
+  for (let i = 0; i <= months; i++) {
+    const key = addMonthKey(startKey, i);
+    out.push({
+      key,
+      label: monthLabelShort(key),
+      offset: i,
+      balance: Math.round(currentBalance + monthlyNet * i),
+    });
+  }
+  return out;
 }

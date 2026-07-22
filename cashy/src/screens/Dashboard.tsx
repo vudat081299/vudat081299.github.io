@@ -4,6 +4,8 @@ import { daysBetween, todayYMD } from "@/lib/date";
 import {
   breakdown,
   filterTx,
+  forecastSeries,
+  monthlyNetRate,
   needsPaymentNow,
   pctChange,
   periodInsights,
@@ -19,6 +21,7 @@ import { formatMoneyShort } from "@/lib/money";
 import { openTxEditor } from "@/lib/modals";
 import { PageHeader } from "@/components/PageHeader";
 import { BalanceCard } from "@/components/BalanceCard";
+import { BalanceForecastChart } from "@/components/BalanceForecastChart";
 import { CashflowChart } from "@/components/CashflowChart";
 import { SpendChart } from "@/components/SpendChart";
 import { PeriodPicker } from "@/components/PeriodPicker";
@@ -67,6 +70,16 @@ export function Dashboard() {
   const maxSlice = slices[0]?.pct || 1;
   const hasFlow = Boolean(t.income || t.expense);
 
+  // Forecast: extend today's balance forward at the selected period's net,
+  // normalised to a per-month rate so any window (30 days, 3 months…) projects
+  // the same "money per average month". The horizon is how far ahead to walk it.
+  const [horizon, setHorizon] = useState(12);
+  const monthlyNet = useMemo(() => monthlyNetRate(t.net, spanDays), [t.net, spanDays]);
+  const forecast = useMemo(
+    () => forecastSeries(view.balance, monthlyNet, horizon),
+    [view.balance, monthlyNet, horizon],
+  );
+
   // Balance grows/shrinks by this period's net; compare to where it started.
   const balanceStart = view.balance - t.net;
   const balanceDelta = balanceStart !== 0 ? t.net / Math.abs(balanceStart) : null;
@@ -104,19 +117,61 @@ export function Dashboard() {
           amount={t.income}
           icon="trending_up"
           delta={pctChange(t.income, tp.income)}
+          muted
         />
         <BalanceCard
           label="Spending"
           amount={t.expense}
           icon="trending_down"
           delta={pctChange(t.expense, tp.expense)}
+          muted
         />
         <BalanceCard
           label="Net"
           amount={t.net}
           icon="swap_vert"
           delta={pctChange(t.net, tp.net)}
+          muted
         />
+      </div>
+
+      {/* Where the balance is headed: today's number carried forward at the
+          period's monthly net. Arithmetic, not a trend model — see the chart. */}
+      <div className="wb-card">
+        <div className="wb-card__body">
+          <div
+            className="wb-cluster wb-cluster--between"
+            style={{ marginBottom: 16, gap: 10 }}
+          >
+            <div>
+              <span className="cashy-card-eyebrow">Forecast</span>
+              <h3 className="cashy-card-title">Projected balance</h3>
+              <p style={{ margin: "4px 0 0", fontSize: 13, color: "var(--wb-fg-muted)" }}>
+                Số dư hiện tại cộng dồn net{" "}
+                <strong style={{ color: "var(--wb-fg)", fontWeight: 650 }}>
+                  {monthlyNet >= 0 ? "+" : ""}
+                  {formatMoneyShort(monthlyNet)}
+                </strong>{" "}
+                mỗi tháng
+              </p>
+            </div>
+            <div className="cashy-seg" role="group" aria-label="Forecast horizon">
+              {[6, 12, 24].map((mo) => (
+                <button
+                  key={mo}
+                  type="button"
+                  className={horizon === mo ? "cashy-seg__btn is-active" : "cashy-seg__btn"}
+                  onClick={() => setHorizon(mo)}
+                >
+                  {mo} tháng
+                </button>
+              ))}
+            </div>
+          </div>
+          <div style={{ height: 260 }}>
+            <BalanceForecastChart data={forecast} />
+          </div>
+        </div>
       </div>
 
       {/* One card per service: what was paid, what is owed, how far through the

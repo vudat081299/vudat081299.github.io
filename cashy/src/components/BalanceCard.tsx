@@ -5,16 +5,17 @@ import { formatMoney } from "@/lib/money";
  *  tile and a footer delta vs the previous period (no in-card sparkline; the
  *  "↑ 12,4% so với kỳ trước" line carries the trend, per the docs).
  *
- *  The value itself is always **ink**, exactly as every specimen on the docs'
- *  stats page prints it. A period's income or spend is a magnitude, not a
- *  status, so it does not spend colour (§1) — the only tinted thing on the tile
- *  is the delta chip, where up/down genuinely is the signal. */
+ *  The value is ink by default (a magnitude, not a status — it spends no colour
+ *  per §1). `muted` drops it to the subdued grey so a single ink tile — the
+ *  all-time balance — reads as the one figure to look at first, with income /
+ *  spend / net stepping back as supporting numbers. */
 export function BalanceCard({
   label,
   amount,
   icon,
   delta,
   note = "vs. previous period",
+  muted = false,
 }: {
   label: string;
   amount: number;
@@ -23,6 +24,8 @@ export function BalanceCard({
   delta?: number | null;
   /** caption after the delta chip */
   note?: string;
+  /** render the value in subdued grey rather than full ink (supporting KPI) */
+  muted?: boolean;
 }) {
   const hasDelta = delta !== undefined && delta !== null && isFinite(delta);
   const up = (delta ?? 0) >= 0;
@@ -36,7 +39,26 @@ export function BalanceCard({
           </span>
         )}
       </div>
-      <div className="wb-stat__value">{formatMoney(amount)}</div>
+      <div
+        className="wb-stat__value"
+        style={
+          muted
+            ? {
+                color: "var(--wb-fg-muted)",
+                // A touch smaller, but the line box is pinned to the ink tile's
+                // (26px × 1.1) so the card keeps its height. The shorter glyphs
+                // would otherwise centre 2px high in that box, so nudge them back
+                // down onto the balance figure's baseline (relative → no reflow).
+                fontSize: "22px",
+                lineHeight: "28.6px",
+                position: "relative",
+                top: "2px",
+              }
+            : undefined
+        }
+      >
+        {formatMoney(amount)}
+      </div>
       {hasDelta && (
         <div className="wb-stat__foot">
           <span
