@@ -15,6 +15,7 @@ import { ColorPicker } from "@/components/ColorPicker";
 import { IconPicker } from "@/components/IconPicker";
 import { EmptyState } from "@/components/EmptyState";
 import { PageHeader } from "@/components/PageHeader";
+import { Select } from "@/components/Select";
 import { Modal } from "@/components/wb/Modal";
 
 type DropPos = "before" | "into" | "after";
@@ -109,22 +110,18 @@ function CategoryEditor({
           <label className="wb-label" htmlFor="cat-parent">
             Danh mục cha
           </label>
-          <span className="wb-select-wrap">
-            <select
-              id="cat-parent"
-              className="wb-select"
-              value={parentId ?? "none"}
-              onChange={(e) => setParentId(e.target.value === "none" ? null : e.target.value)}
-            >
+          <Select
+            id="cat-parent"
+            value={parentId ?? "none"}
+            onChange={(e) => setParentId(e.target.value === "none" ? null : e.target.value)}
+          >
               <option value="none">— Cấp gốc —</option>
               {parentOptions.map(({ cat, depth }) => (
                 <option key={cat.id} value={cat.id}>
                   {"  ".repeat(depth) + cat.name}
                 </option>
               ))}
-            </select>
-            <span className="wb-ico">expand_more</span>
-          </span>
+          </Select>
         </div>
 
         <div className="wb-field">

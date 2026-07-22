@@ -1,4 +1,4 @@
-import { useMemo, type CSSProperties } from "react";
+import { useMemo } from "react";
 import type { Category, SubIconStyle, Subscription, Transaction } from "@/types";
 import { useCashy, setSubscriptionActive } from "@/lib/store";
 import {
@@ -12,7 +12,7 @@ import {
 import { useStableSubOrder } from "@/lib/useStableSubOrder";
 import { formatMoney } from "@/lib/money";
 import { fmtDateNum, fmtDateShort, monthLabelShort } from "@/lib/date";
-import { Icon } from "@/lib/icons";
+import { SubTile } from "@/components/SubTile";
 import { PageHeader } from "@/components/PageHeader";
 import { EmptyState } from "@/components/EmptyState";
 import { CategoryCap } from "@/components/CategoryCap";
@@ -53,18 +53,13 @@ function SubscriptionRow({
     <tr className={rowTone}>
       <td>
         <span className="cashy-subcell">
-          <span
-            className="cashy-subtile"
-            style={
-              {
-                ...(iconStyle === "brand" ? { "--cashy-sub-c": sub.colorHex } : {}),
-                width: 32,
-                height: 32,
-              } as CSSProperties
-            }
-          >
-            <Icon name={sub.icon} size={16} />
-          </span>
+          <SubTile
+            icon={sub.icon}
+            colorHex={sub.colorHex}
+            brand={iconStyle === "brand"}
+            size={32}
+            iconSize={16}
+          />
           <span style={{ minWidth: 0 }}>
             <span className="wb-cell-strong">{sub.name}</span>
             {sub.note && <span className="wb-cell-sub">{sub.note}</span>}

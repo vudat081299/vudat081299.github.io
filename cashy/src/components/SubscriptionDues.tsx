@@ -3,7 +3,7 @@ import type { Due } from "@/lib/domain";
 import { confirmSubscriptionCharge, skipSubscriptionCharge } from "@/lib/store";
 import { formatMoney } from "@/lib/money";
 import { billingDate, fmtDateShort, monthLabelShort } from "@/lib/date";
-import { Icon } from "@/lib/icons";
+import { SubTile } from "@/components/SubTile";
 
 /** "Cần xác nhận" rows — confirm paid (→ books the charge) or skip the month. */
 export function SubscriptionDues({ dues, max }: { dues: Due[]; max?: number }) {
@@ -12,12 +12,7 @@ export function SubscriptionDues({ dues, max }: { dues: Due[]; max?: number }) {
     <div className="wb-stack" style={{ "--wb-stack-gap": "8px" } as CSSProperties}>
       {shown.map(({ sub, month, txId }) => (
         <div key={txId} className="cashy-due">
-          <span
-            className="cashy-subtile"
-            style={{ "--cashy-sub-c": sub.colorHex, width: 32, height: 32 } as CSSProperties}
-          >
-            <Icon name={sub.icon} size={16} />
-          </span>
+          <SubTile icon={sub.icon} colorHex={sub.colorHex} brand size={32} iconSize={16} />
           <div style={{ minWidth: 0 }}>
             <div className="wb-cell-strong">{sub.name}</div>
             <div className="wb-cell-muted" style={{ fontSize: 12 }}>

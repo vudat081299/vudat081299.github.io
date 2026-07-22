@@ -13,6 +13,8 @@ import { Modal } from "@/components/wb/Modal";
 import { Popover } from "@/components/wb/Popover";
 import { IconPicker } from "@/components/IconPicker";
 import { ColorPicker } from "@/components/ColorPicker";
+import { Select } from "@/components/Select";
+import { SubTile } from "@/components/SubTile";
 import { TagChip } from "@/components/TagChip";
 import { Icon } from "@/lib/icons";
 import type { SubInterval } from "@/types";
@@ -206,21 +208,17 @@ export function SubscriptionEditor() {
               <label className="wb-label" htmlFor="sub-month">
                 Tháng
               </label>
-              <span className="wb-select-wrap">
-                <select
-                  id="sub-month"
-                  className="wb-select"
-                  value={monthOfYear}
-                  onChange={(e) => setMonthOfYear(Number(e.target.value))}
-                >
+              <Select
+                id="sub-month"
+                value={monthOfYear}
+                onChange={(e) => setMonthOfYear(Number(e.target.value))}
+              >
                   {Array.from({ length: 12 }, (_, i) => (
                     <option key={i + 1} value={i + 1}>
                       Tháng {i + 1}
                     </option>
                   ))}
-                </select>
-                <span className="wb-ico">expand_more</span>
-              </span>
+              </Select>
             </div>
           )}
         </div>
@@ -249,22 +247,18 @@ export function SubscriptionEditor() {
           <label className="wb-label" htmlFor="sub-cat">
             Danh mục
           </label>
-          <span className="wb-select-wrap">
-            <select
-              id="sub-cat"
-              className="wb-select"
-              value={categoryId ?? "none"}
-              onChange={(e) => setCategoryId(e.target.value === "none" ? null : e.target.value)}
-            >
+          <Select
+            id="sub-cat"
+            value={categoryId ?? "none"}
+            onChange={(e) => setCategoryId(e.target.value === "none" ? null : e.target.value)}
+          >
               <option value="none">Chưa phân loại</option>
               {catOptions.map(({ cat, depth }) => (
                 <option key={cat.id} value={cat.id}>
                   {"  ".repeat(depth) + cat.name}
                 </option>
               ))}
-            </select>
-            <span className="wb-ico">expand_more</span>
-          </span>
+          </Select>
         </div>
 
         <div className="wb-field">
@@ -333,12 +327,7 @@ export function SubscriptionEditor() {
         <div className="wb-cluster wb-cluster--nowrap" style={{ gap: 12, alignItems: "flex-start" }}>
           <div className="wb-field" style={{ flex: "none" }}>
             <label className="wb-label">Biểu tượng &amp; màu</label>
-            <span
-              className="cashy-subtile"
-              style={{ "--cashy-sub-c": color } as React.CSSProperties}
-            >
-              <Icon name={icon} size={20} />
-            </span>
+            <SubTile icon={icon} colorHex={color} brand iconSize={20} />
           </div>
           <div className="wb-field" style={{ flex: 1, minWidth: 0 }}>
             <label className="wb-label" style={{ visibility: "hidden" }}>

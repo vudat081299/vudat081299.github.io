@@ -14,6 +14,7 @@ import type { TxStatus, TxType } from "@/types";
 import { Modal } from "@/components/wb/Modal";
 import { Popover } from "@/components/wb/Popover";
 import { DatePicker } from "@/components/DatePicker";
+import { Select } from "@/components/Select";
 import { TagChip } from "@/components/TagChip";
 
 let openFn: ((id: string | null) => void) | null = null;
@@ -220,22 +221,18 @@ export function TransactionEditor() {
           <label className="wb-label" htmlFor="tx-cat">
             Danh mục
           </label>
-          <span className="wb-select-wrap">
-            <select
-              id="tx-cat"
-              className="wb-select"
-              value={categoryId ?? "none"}
-              onChange={(e) => setCategoryId(e.target.value === "none" ? null : e.target.value)}
-            >
+          <Select
+            id="tx-cat"
+            value={categoryId ?? "none"}
+            onChange={(e) => setCategoryId(e.target.value === "none" ? null : e.target.value)}
+          >
               <option value="none">Chưa phân loại</option>
               {catOptions.map(({ cat, depth }) => (
                 <option key={cat.id} value={cat.id}>
                   {"  ".repeat(depth) + cat.name}
                 </option>
               ))}
-            </select>
-            <span className="wb-ico">expand_more</span>
-          </span>
+          </Select>
         </div>
 
         {/* Counterparty + status */}
@@ -257,21 +254,17 @@ export function TransactionEditor() {
             <label className="wb-label" htmlFor="tx-status">
               Trạng thái
             </label>
-            <span className="wb-select-wrap">
-              <select
-                id="tx-status"
-                className="wb-select"
-                value={status}
-                onChange={(e) => setStatus(e.target.value as TxStatus)}
-              >
-                {TX_STATUS_ORDER.map((s) => (
-                  <option key={s} value={s}>
-                    {TX_STATUS_META[s].label}
-                  </option>
-                ))}
-              </select>
-              <span className="wb-ico">expand_more</span>
-            </span>
+            <Select
+              id="tx-status"
+              value={status}
+              onChange={(e) => setStatus(e.target.value as TxStatus)}
+            >
+              {TX_STATUS_ORDER.map((s) => (
+                <option key={s} value={s}>
+                  {TX_STATUS_META[s].label}
+                </option>
+              ))}
+            </Select>
           </div>
         </div>
 

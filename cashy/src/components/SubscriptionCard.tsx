@@ -18,7 +18,7 @@ import { toast } from "@/components/wb/Toast";
 import { Modal } from "@/components/wb/Modal";
 import { billingDate, fmtDateNum, fmtDateShort, monthLabelShort } from "@/lib/date";
 import { formatMoney } from "@/lib/money";
-import { Icon } from "@/lib/icons";
+import { SubTile } from "@/components/SubTile";
 
 /**
  * One service, one card. It answers the four questions a subscription actually
@@ -146,20 +146,15 @@ export function SubscriptionCard({
           Name and status share a line because the status is a fact about the
           NAME; the money line reads as detail underneath both. */}
       <div className="wb-card__head cashy-subhead">
-        <span
-          className="cashy-subtile"
-          style={
-            {
-              // Neutral by default (house taste); only "brand" mode lets the
-              // service's hue onto the tile — otherwise it falls back to grey.
-              ...(subIconStyle === "brand" ? { "--cashy-sub-c": sub.colorHex } : {}),
-              width: 34,
-              height: 34,
-            } as CSSProperties
-          }
-        >
-          <Icon name={sub.icon} size={17} />
-        </span>
+        {/* Neutral by default (house taste); only "brand" mode lets the
+            service's hue onto the tile — otherwise it stays grey. */}
+        <SubTile
+          icon={sub.icon}
+          colorHex={sub.colorHex}
+          brand={subIconStyle === "brand"}
+          size={34}
+          iconSize={17}
+        />
         <div className="cashy-subhead__main">
           <div className="cashy-subhead__row">
             <h4
