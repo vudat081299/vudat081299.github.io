@@ -87,12 +87,20 @@ Break these and the app is wrong, not merely inconsistent.
 Blocked on a decision from the owner. **Do not silently resolve these** — they
 are recorded choices, not oversights.
 
-| # | Question | Current behaviour | Options |
-|---|---|---|---|
-| 1 | Delete icon on a transaction row | No per-row delete; Edit button always visible; delete lives inside the editor | Keep, or restore a row-level delete |
-| 2 | Yearly plan changes its billing month mid-life | Not handled — `firstUnpaidCycle` (from `lastPaidAt`) can fall off the new cycle grid | **A.** keep history, re-grid from the new date (one odd-length cycle) · **B.** block the edit once history exists. Leaning A |
-| 3 | Date recorded by "Mark N paid" | Each charge keeps **its own due date**, so the ledger reads "paid on time" | Keep, or ask "paid on which date?" during catch-up |
-| 4 | Skip a cycle | Reachable from the *Bỏ qua* button in the "Cần xác nhận" list only — `SubscriptionCard` has no Skip | Add Skip to the card for symmetry, or keep it in one place |
-| 5 | Mixed language | Sidebar + Overview are English; Subscriptions / Categories / Tags / Settings and all forms are Vietnamese | Finish the translation, or keep as is |
-| 6 | `occurredTime` | Stored (optional) and displayed, but nothing consumes it — no sort, filter, or time-of-day chart | Define the intended use |
-| 7 | Subscription card padding | 8px as requested; tight on narrow viewports | Keep, or relax to 10–12px |
+| # | Question | Status |
+|---|---|---|
+| 2 | **Yearly plan changes its billing month mid-life** — confirmed reachable: `SubscriptionEditor` lets you edit `monthOfYear` on a subscription that already has payment history, and `updateSubscription` writes it straight through. Reproduced: a plan paid to 2026-03 that moves to June gets `currentCycle` 2026-06 but `firstUnpaidCycle` 2027-03 — off the new grid — so `needsPaymentNow` is `false` and `dueCharges` returns `[]`. **The June cycle falls due and is silently never billed.** | **OPEN — real bug.** Options: **A.** keep history, re-grid from the new date (one odd-length cycle) · **B.** block the edit once history exists. Leaning A |
+
+<details>
+<summary>Resolved — kept for the reasoning, do not reopen without cause</summary>
+
+| # | Question | Decision |
+|---|---|---|
+| 1 | Delete icon on a transaction row | **Confirmed as built.** No per-row delete; Edit always visible; delete lives inside the editor. |
+| 3 | Date recorded by "Mark N paid" | **Keep.** Each charge keeps its own due date, so a caught-up month lands in the month it belonged to. Recording all of them as "today" would move historical spend into the current month and distort every by-month figure. |
+| 4 | Skip a cycle | **Added to `SubscriptionCard`**, inside the pay-confirm step (`Đã trả` / `Bỏ qua` / `Để sau`) rather than the resting foot. The Dashboard renders cards *without* the dues list, so skipping was unreachable from that screen; putting it in the confirm step fixes that without adding a third button to every card at rest. |
+| 5 | Mixed language | **Keep as is** for now; owner will handle the translation later. |
+| 6 | `occurredTime` | **Display-only, by design.** It is consumed — `TransactionTable` renders it under the date, `TransactionDetail` as "lúc HH:mm". It drives no sort/filter/chart deliberately: the field is optional and most rows have none, so any time-of-day analytic would be computed over a biased subset and read as fact. |
+| 7 | Subscription card padding | **Keep 8px.** Unchanged. |
+
+</details>

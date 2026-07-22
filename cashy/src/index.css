@@ -789,6 +789,23 @@ body {
   background: color-mix(in srgb, var(--cashy-sub-c, var(--wb-neutral)) 14%, transparent);
   border: var(--wb-bw) solid color-mix(in srgb, var(--cashy-sub-c, var(--wb-border)) 30%, transparent);
 }
+/* Question shown in a card foot while a two-step confirm is open.
+   It MUST NOT wrap: the subscription cards sit in a grid, so one card growing a
+   line drags the whole row taller. The question shrinks to an ellipsis and the
+   buttons hold their size, so the foot stays exactly one line whatever the
+   string. */
+.cashy-cardfoot__q {
+  font-size: 13px;
+  margin-right: auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.wb-card__foot .wb-btn {
+  flex-shrink: 0;
+}
+
 /* Service cell in the subscriptions table — tile + name/note stacked beside it. */
 .cashy-subcell {
   display: flex;

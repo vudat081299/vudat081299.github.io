@@ -1,6 +1,11 @@
 import { useMemo, useState, type CSSProperties } from "react";
 import { useCashy } from "@/data/store";
-import { confirmSubscriptionCharges, deleteTransaction, setSubscriptionActive } from "@/usecases";
+import {
+  confirmSubscriptionCharges,
+  deleteTransaction,
+  setSubscriptionActive,
+  skipSubscriptionCharge,
+} from "@/usecases";
 import { daysBetween, todayYMD } from "@/domain/date";
 import {
   breakdown,
@@ -207,6 +212,7 @@ export function Dashboard() {
                 txs={transactions}
                 iconStyle={subIconStyle}
                 onConfirmCharges={confirmSubscriptionCharges}
+                onSkipCharge={skipSubscriptionCharge}
                 onSetActive={(active) => setSubscriptionActive(sub.id, active)}
               />
             ))}

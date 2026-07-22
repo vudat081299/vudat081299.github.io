@@ -34,6 +34,7 @@ export function SubscriptionCard({
   txs,
   iconStyle = "neutral",
   onConfirmCharges,
+  onSkipCharge,
   onSetActive,
 }: {
   sub: Subscription;
@@ -42,6 +43,8 @@ export function SubscriptionCard({
   iconStyle?: SubIconStyle;
   /** the cycles the user says they paid — one id, or several from the catch-up picker */
   onConfirmCharges: (txIds: string[]) => void;
+  /** the cycle the user is not paying for; it greys out and next cycle still reminds */
+  onSkipCharge: (txId: string) => void;
   /** cancel (false) or resume (true) the service */
   onSetActive: (active: boolean) => void;
 }) {
@@ -251,8 +254,12 @@ export function SubscriptionCard({
       <div className="wb-card__foot">
         {confirming ? (
           <>
-            <span className="wb-cell-muted" style={{ fontSize: 13, marginRight: "auto" }}>
-              Cancel {sub.name}?
+            {/* No service name here on purpose. The card heading two rows up
+                already says which service this is, and a long name (bank cards
+                run to 60+ chars) would wrap and drag the whole grid row taller
+                for the seconds the confirm is open. */}
+            <span className="wb-cell-muted cashy-cardfoot__q">
+              Cancel this subscription?
             </span>
             {/* Weight follows consequence, not grammar: the destructive choice
                 is a quiet ghost and the safe one carries the fill, so a
@@ -278,8 +285,11 @@ export function SubscriptionCard({
           </>
         ) : payConfirming ? (
           <>
-            <span className="wb-cell-muted" style={{ fontSize: 13, marginRight: "auto" }}>
-              Đã thanh toán kỳ {monthLabelShort(st.pending[0]?.month ?? "")}?
+            {/* Kept short on purpose: three buttons follow it, and the cycle
+                label is the one part that must survive — a truncated "T6/…"
+                loses the year the question is actually about. */}
+            <span className="wb-cell-muted cashy-cardfoot__q">
+              Thanh toán {monthLabelShort(st.pending[0]?.month ?? "")}?
             </span>
             {/* The confirming action is a quiet green (paid = success, §1); the
                 do-nothing carries the fill, so a reflexive click records nothing. */}
@@ -292,6 +302,20 @@ export function SubscriptionCard({
               }}
             >
               Đã trả
+            </button>
+            {/* Skipping lives HERE rather than on the resting foot: this is the
+                moment the user is already judging one cycle, and the Dashboard
+                shows cards WITHOUT the dues list, so without it there would be
+                no way to skip a cycle from that screen at all. */}
+            <button
+              type="button"
+              className="wb-btn wb-btn--ghost wb-btn--sm"
+              onClick={() => {
+                if (dueTxId) onSkipCharge(dueTxId);
+                setPayConfirming(false);
+              }}
+            >
+              Bỏ qua
             </button>
             <button
               type="button"
