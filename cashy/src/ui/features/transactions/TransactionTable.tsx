@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import type { Category, Transaction } from "@/domain/types";
 import type { TagRank } from "@/domain";
-import { deleteTransaction } from "@/data/store";
+import { deleteTransaction } from "@/usecases";
 import { confirm } from "@/lib/confirm";
 import { AmountDisplay } from "@/ui/common/AmountDisplay";
 import { CategoryCap } from "@/ui/common/CategoryCap";

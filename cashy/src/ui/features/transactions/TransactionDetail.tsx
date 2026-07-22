@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { deleteTransaction, useCashy } from "@/data/store";
+import { useCashy } from "@/data/store";
+import { deleteTransaction } from "@/usecases";
 import { fmtDate } from "@/domain/date";
 import { formatMoney } from "@/domain/money";
 import { AmountDisplay } from "@/ui/common/AmountDisplay";

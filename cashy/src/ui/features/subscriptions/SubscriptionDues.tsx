@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import type { Due } from "@/domain";
-import { confirmSubscriptionCharge, skipSubscriptionCharge } from "@/data/store";
+import { confirmSubscriptionCharge, skipSubscriptionCharge } from "@/usecases";
 import { formatMoney } from "@/domain/money";
 import { billingDate, fmtDateShort, monthLabelShort } from "@/domain/date";
 import { SubTile } from "@/ui/features/subscriptions/SubTile";

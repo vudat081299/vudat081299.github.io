@@ -1,12 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  addCategory,
-  deleteCategory,
-  getState,
-  reorderCategory,
-  updateCategory,
-  useCashy,
-} from "@/data/store";
+import { useCashy } from "@/data/store";
+import { addCategory, deleteCategory, reorderCategory, updateCategory } from "@/usecases";
 import { descendantIds, flattenTree } from "@/domain";
 import { confirm } from "@/lib/confirm";
 import { Icon } from "@/ui/kit/icons";
@@ -154,6 +148,10 @@ function Tree({
   const [dragId, setDragId] = useState<string | null>(null);
   const [drop, setDrop] = useState<Drop | null>(null);
   const dropRef = useRef<Drop | null>(null);
+  // The pointer handlers below are bound once per drag, so they would close over
+  // a stale list. A ref keeps them reading the tree as it stands on drop.
+  const catsRef = useRef(categories);
+  catsRef.current = categories;
 
   useEffect(() => {
     if (!dragId) return;
@@ -176,7 +174,7 @@ function Tree({
     const up = () => {
       const d = dropRef.current;
       if (d) {
-        const target = getState().categories.find((c) => c.id === d.id);
+        const target = catsRef.current.find((c) => c.id === d.id);
         if (target) {
           if (d.pos === "into") reorderCategory(dragId, target.id, null, false);
           else

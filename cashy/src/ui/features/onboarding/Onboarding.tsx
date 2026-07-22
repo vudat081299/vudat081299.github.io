@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createWorkspace } from "@/data/store";
+import { createWorkspace } from "@/usecases";
 
 export function Onboarding() {
   const [name, setName] = useState("");

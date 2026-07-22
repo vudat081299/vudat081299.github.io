@@ -1,5 +1,6 @@
 import { useEffect, useState, lazy, Suspense } from "react";
-import { useCashy, syncSubscriptions } from "@/data/store";
+import { useCashy } from "@/data/store";
+import { syncSubscriptions } from "@/usecases";
 import { applyTheme } from "@/lib/theme";
 import { useRoute } from "@/lib/router";
 import { Layout } from "@/ui/app/Layout";

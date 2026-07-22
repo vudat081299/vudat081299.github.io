@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { addTag, deleteTag, updateTag, useCashy } from "@/data/store";
+import { useCashy } from "@/data/store";
+import { addTag, deleteTag, updateTag } from "@/usecases";
 import { confirm } from "@/lib/confirm";
 import { SWATCHES } from "@/lib/palette";
 import type { Tag } from "@/domain/types";

@@ -1,5 +1,6 @@
 import { useState, type CSSProperties, type ReactNode } from "react";
-import { useCashy, setTheme } from "@/data/store";
+import { useCashy } from "@/data/store";
+import { setTheme } from "@/usecases";
 import { useTxDraft } from "@/data/draft";
 import { navigate, useRoute, type Route } from "@/lib/router";
 import type { ThemeMode } from "@/domain/types";

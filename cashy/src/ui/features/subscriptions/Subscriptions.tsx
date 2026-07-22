@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import type { Category, SubIconStyle, Subscription, Transaction } from "@/domain/types";
-import { useCashy, setSubscriptionActive } from "@/data/store";
+import { useCashy } from "@/data/store";
+import { setSubscriptionActive } from "@/usecases";
 import {
   collectDues,
   currentCycle,
