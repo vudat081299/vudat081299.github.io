@@ -8,8 +8,7 @@ import {
   subCycle,
   subscriptionStatus,
 } from "@/domain";
-import { useCashy } from "@/data/store";
-import { confirmSubscriptionCharge, confirmSubscriptionCharges, setSubscriptionActive } from "@/usecases";
+import type { SubIconStyle } from "@/domain/types";
 import { toast } from "@/lib/toast";
 import { Modal } from "@/ui/kit/Modal";
 import { billingDate, fmtDateNum, fmtDateShort, monthLabelShort } from "@/domain/date";
@@ -25,13 +24,26 @@ import { SubTile } from "@/ui/features/subscriptions/SubTile";
  * Colour follows the ladder (§1): a service the provider would have cut off is
  * danger, a bill on the doormat is warning, everything settled stays neutral.
  * The progress bar is neutral too — time passing is not a status.
+ *
+ * Presentational: every decision it offers leaves as a callback, so the card can
+ * be rendered against any subscription — including in the component gallery,
+ * with no store behind it.
  */
 export function SubscriptionCard({
   sub,
   txs,
+  iconStyle = "neutral",
+  onConfirmCharges,
+  onSetActive,
 }: {
   sub: Subscription;
   txs: Transaction[];
+  /** how the icon tile is coloured; a display preference the screen passes down */
+  iconStyle?: SubIconStyle;
+  /** the cycles the user says they paid — one id, or several from the catch-up picker */
+  onConfirmCharges: (txIds: string[]) => void;
+  /** cancel (false) or resume (true) the service */
+  onSetActive: (active: boolean) => void;
 }) {
   // Cancelling is two clicks, never one: the card swaps its foot for a
   // confirmation rather than throwing a browser dialog at the user.
@@ -46,7 +58,6 @@ export function SubscriptionCard({
   // keep it bright until you move away. This forces the greyed-out look at once
   // and lifts only when the pointer actually leaves.
   const [suppressReveal, setSuppressReveal] = useState(false);
-  const { subIconStyle } = useCashy();
 
   // A long name is clipped with an ellipsis by CSS; only then is a tooltip
   // worth having. Measure the rendered heading and expose the full name via
@@ -103,7 +114,7 @@ export function SubscriptionCard({
       return next;
     });
   const confirmPaySelected = () => {
-    confirmSubscriptionCharges([...paySel]);
+    onConfirmCharges([...paySel]);
     setPayModalOpen(false);
   };
 
@@ -147,7 +158,7 @@ export function SubscriptionCard({
         <SubTile
           icon={sub.icon}
           colorHex={sub.colorHex}
-          brand={subIconStyle === "brand"}
+          brand={iconStyle === "brand"}
           size={34}
           iconSize={17}
         />
@@ -250,7 +261,7 @@ export function SubscriptionCard({
               type="button"
               className="wb-btn wb-btn--ghost wb-btn--sm cashy-btn--quiet-danger"
               onClick={() => {
-                setSubscriptionActive(sub.id, false);
+                onSetActive(false);
                 setConfirming(false);
                 setSuppressReveal(true); // grey the card at once, don't wait for a re-hover
               }}
@@ -276,7 +287,7 @@ export function SubscriptionCard({
               type="button"
               className="wb-btn wb-btn--ghost wb-btn--sm cashy-btn--quiet-success"
               onClick={() => {
-                if (dueTxId) confirmSubscriptionCharge(dueTxId);
+                if (dueTxId) onConfirmCharges([dueTxId]);
                 setPayConfirming(false);
               }}
             >
@@ -326,8 +337,8 @@ export function SubscriptionCard({
               type="button"
               className="wb-btn wb-btn--secondary wb-btn--sm"
               onClick={() => {
-                setSubscriptionActive(sub.id, true);
-                toast.undo(`${sub.name} resumed`, () => setSubscriptionActive(sub.id, false));
+                onSetActive(true);
+                toast.undo(`${sub.name} resumed`, () => onSetActive(false));
               }}
             >
               Resume

@@ -1,12 +1,26 @@
 import type { CSSProperties } from "react";
 import type { Due } from "@/domain";
-import { confirmSubscriptionCharge, skipSubscriptionCharge } from "@/usecases";
 import { formatMoney } from "@/domain/money";
 import { billingDate, fmtDateShort, monthLabelShort } from "@/domain/date";
 import { SubTile } from "@/ui/features/subscriptions/SubTile";
 
-/** "Cần xác nhận" rows — confirm paid (→ books the charge) or skip the month. */
-export function SubscriptionDues({ dues, max }: { dues: Due[]; max?: number }) {
+/**
+ * "Cần xác nhận" rows — confirm paid (→ books the charge) or skip the month.
+ *
+ * Presentational: it reports which charge the user acted on and lets the screen
+ * decide what that means, so it can be rendered against any list of dues.
+ */
+export function SubscriptionDues({
+  dues,
+  max,
+  onConfirm,
+  onSkip,
+}: {
+  dues: Due[];
+  max?: number;
+  onConfirm: (txId: string) => void;
+  onSkip: (txId: string) => void;
+}) {
   const shown = max ? dues.slice(0, max) : dues;
   return (
     <div className="wb-stack" style={{ "--wb-stack-gap": "8px" } as CSSProperties}>
@@ -24,7 +38,7 @@ export function SubscriptionDues({ dues, max }: { dues: Due[]; max?: number }) {
             <button
               type="button"
               className="wb-btn wb-btn--secondary wb-btn--sm"
-              onClick={() => skipSubscriptionCharge(txId)}
+              onClick={() => onSkip(txId)}
             >
               Bỏ qua
             </button>
@@ -32,7 +46,7 @@ export function SubscriptionDues({ dues, max }: { dues: Due[]; max?: number }) {
               type="button"
               className="wb-btn wb-btn--sm"
               style={{ gap: 4 }}
-              onClick={() => confirmSubscriptionCharge(txId)}
+              onClick={() => onConfirm(txId)}
             >
               <span className="wb-ico wb-ico--xs">check</span>
               Đã trả

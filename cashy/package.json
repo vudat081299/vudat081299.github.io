@@ -5,9 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && node scripts/check-layers.mjs && vite build",
     "build:wb": "tsc -b && vite build --config vite.wb.config.ts",
     "lint": "oxlint",
+    "check:layers": "node scripts/check-layers.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -27,6 +30,7 @@
     "oxlint": "^1.71.0",
     "postcss": "^8.5.16",
     "typescript": "~6.0.2",
-    "vite": "^8.1.1"
+    "vite": "^8.1.1",
+    "vitest": "^4.1.10"
   }
 }

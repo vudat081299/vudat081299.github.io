@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import type { Category, Transaction } from "@/domain/types";
 import type { TagRank } from "@/domain";
-import { deleteTransaction } from "@/usecases";
 import { confirm } from "@/lib/confirm";
 import { AmountDisplay } from "@/ui/common/AmountDisplay";
 import { CategoryCap } from "@/ui/common/CategoryCap";
@@ -31,6 +30,7 @@ export function TransactionTable({
   subtitle,
   headerActions,
   emptyState,
+  onDelete,
 }: {
   rows: Transaction[];
   categories: Category[];
@@ -41,6 +41,8 @@ export function TransactionTable({
   subtitle?: ReactNode;
   headerActions?: ReactNode;
   emptyState?: ReactNode;
+  /** the ids the user chose to bulk-delete, once they have confirmed it */
+  onDelete: (ids: string[]) => void;
 }) {
   const catById = useMemo(() => new Map(categories.map((c) => [c.id, c])), [categories]);
   const { page, setPage, totalPages, pageItems, total, from, to } = usePagination(rows, pageSize);
@@ -84,7 +86,7 @@ export function TransactionTable({
       danger: true,
     });
     if (!ok) return;
-    selected.forEach((id) => deleteTransaction(id));
+    onDelete([...selected]);
     setSelected(new Set());
   };
 

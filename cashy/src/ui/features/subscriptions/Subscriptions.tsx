@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import type { Category, SubIconStyle, Subscription, Transaction } from "@/domain/types";
 import { useCashy } from "@/data/store";
-import { setSubscriptionActive } from "@/usecases";
+import { confirmSubscriptionCharges, setSubscriptionActive, skipSubscriptionCharge } from "@/usecases";
 import {
   collectDues,
   currentCycle,
@@ -211,7 +211,11 @@ export function Subscriptions() {
             </div>
           </div>
           <div className="wb-card__body">
-            <SubscriptionDues dues={dues} />
+            <SubscriptionDues
+              dues={dues}
+              onConfirm={(txId) => confirmSubscriptionCharges([txId])}
+              onSkip={skipSubscriptionCharge}
+            />
           </div>
         </div>
       )}

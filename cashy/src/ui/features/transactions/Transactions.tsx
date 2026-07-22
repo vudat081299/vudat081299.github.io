@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { useCashy } from "@/data/store";
+import { deleteTransaction } from "@/usecases";
 import { rankTags, totals } from "@/domain";
 import { useTxQuery } from "@/ui/features/transactions/useTxQuery";
 import { AmountDisplay } from "@/ui/common/AmountDisplay";
@@ -51,6 +52,7 @@ export function Transactions() {
         categories={categories}
         tagRanks={tagRankMap}
         pageSize={50}
+        onDelete={(ids) => ids.forEach(deleteTransaction)}
         emptyState={
           <EmptyState
             icon="🧾"

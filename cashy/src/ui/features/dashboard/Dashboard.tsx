@@ -1,5 +1,6 @@
 import { useMemo, useState, type CSSProperties } from "react";
 import { useCashy } from "@/data/store";
+import { confirmSubscriptionCharges, deleteTransaction, setSubscriptionActive } from "@/usecases";
 import { daysBetween, todayYMD } from "@/domain/date";
 import {
   breakdown,
@@ -33,7 +34,7 @@ import { EmptyState } from "@/ui/common/EmptyState";
 export function Dashboard() {
   // The query owns the period so the header picker, the charts AND the table all
   // move together; type/search/tag filters narrow the table only (not the charts).
-  const { transactions, categories, tags, subscriptions } = useCashy();
+  const { transactions, categories, tags, subscriptions, subIconStyle } = useCashy();
   const q = useTxQuery(transactions, categories);
 
   const view = useMemo(() => {
@@ -200,7 +201,14 @@ export function Dashboard() {
           </div>
           <div className="cashy-subgrid">
             {subCards.map((sub) => (
-              <SubscriptionCard key={sub.id} sub={sub} txs={transactions} />
+              <SubscriptionCard
+                key={sub.id}
+                sub={sub}
+                txs={transactions}
+                iconStyle={subIconStyle}
+                onConfirmCharges={confirmSubscriptionCharges}
+                onSetActive={(active) => setSubscriptionActive(sub.id, active)}
+              />
             ))}
           </div>
         </div>
@@ -404,6 +412,7 @@ export function Dashboard() {
           categories={categories}
           tagRanks={tagRankMap}
           pageSize={20}
+          onDelete={(ids) => ids.forEach(deleteTransaction)}
           title="Recent transactions"
           headerActions={
             <button
