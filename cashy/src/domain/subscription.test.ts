@@ -4,6 +4,7 @@ import {
   chargesSurvivingDeletion,
   cyclesOwed,
   dueCharges,
+  firstUnpaidCycle,
   isLapsed,
   needsPaymentNow,
   nextPaymentDate,
@@ -106,6 +107,84 @@ describe("dueCharges", () => {
     const s = sub({ categoryId: "c1", tagIds: ["t1", "t2"], amount: 99_000 });
     const [c] = dueCharges([s], [], AT("2026-01-06"));
     expect(c).toMatchObject({ categoryId: "c1", tagIds: ["t1", "t2"], amount: 99_000 });
+  });
+});
+
+describe("re-gridding after the billing date is edited", () => {
+  // The editor lets a plan with payment history change its billing month, which
+  // re-anchors every cycle. Option A: keep the history, re-grid from the new
+  // date, and accept one odd-length cycle. What must NOT happen is the next due
+  // cycle being silently skipped because the old payment no longer sits on the
+  // grid.
+  const yearlyMarch = sub({
+    interval: "yearly",
+    monthOfYear: 3,
+    dayOfMonth: 15,
+    startedAt: "2024-03-15",
+    lastPaidAt: "2026-03-15",
+  });
+  const NOW = AT("2026-07-22");
+
+  it("bills nothing while the plan is settled on its original grid", () => {
+    expect(firstUnpaidCycle(yearlyMarch)).toBe("2027-03");
+    expect(needsPaymentNow(yearlyMarch, NOW)).toBe(false);
+  });
+
+  it("re-grids onto the new date and bills the cycle that has come due", () => {
+    // March → June. June 2026 has already passed, and was never paid.
+    const moved = { ...yearlyMarch, monthOfYear: 6 };
+    expect(startCycle(moved)).toBe("2024-06");
+    expect(firstUnpaidCycle(moved)).toBe("2026-06"); // was "2027-03" — off-grid
+    expect(needsPaymentNow(moved, NOW)).toBe(true);
+    expect(dueCharges([moved], [], NOW).map((c) => c.subMonth)).toEqual(["2026-06"]);
+  });
+
+  it("raises exactly one catch-up charge, not one per intervening month", () => {
+    const moved = { ...yearlyMarch, monthOfYear: 6 };
+    expect(dueCharges([moved], [], NOW)).toHaveLength(1);
+  });
+
+  it("moving the date forward past today owes nothing yet", () => {
+    // March → November: this year's November has not arrived.
+    const moved = { ...yearlyMarch, monthOfYear: 11 };
+    expect(needsPaymentNow(moved, NOW)).toBe(false);
+    expect(dueCharges([moved], [], NOW)).toEqual([]);
+  });
+
+  it("treats the re-gridded plan as due, not lapsed", () => {
+    // One cycle owed is a bill on the doormat, not a service the provider cut off.
+    const moved = { ...yearlyMarch, monthOfYear: 6 };
+    expect(isLapsed(moved, NOW)).toBe(false);
+    expect(cyclesOwed(moved, NOW)).toBe(1);
+  });
+});
+
+describe("firstUnpaidCycle — regression guards", () => {
+  it("still advances one month for an ordinary monthly plan", () => {
+    expect(firstUnpaidCycle(sub({ lastPaidAt: "2026-01-06" }))).toBe("2026-02");
+  });
+
+  it("counts a payment made EARLY as paying that cycle", () => {
+    // Billing day is the 6th; paying on the 3rd settles February, so the next
+    // owed cycle is March — not February all over again.
+    expect(firstUnpaidCycle(sub({ lastPaidAt: "2026-02-03" }))).toBe("2026-03");
+  });
+
+  it("counts a payment made LATE as paying that cycle", () => {
+    expect(firstUnpaidCycle(sub({ lastPaidAt: "2026-02-25" }))).toBe("2026-03");
+  });
+
+  it("falls back to the first cycle when the payment predates the plan", () => {
+    const s = sub({ startedAt: "2026-06-06", lastPaidAt: "2025-01-06" });
+    expect(firstUnpaidCycle(s)).toBe(startCycle(s));
+  });
+
+  it("leaves a stable yearly plan on its own grid", () => {
+    const s = sub({
+      interval: "yearly", monthOfYear: 3, dayOfMonth: 15,
+      startedAt: "2024-03-15", lastPaidAt: "2026-03-15",
+    });
+    expect(firstUnpaidCycle(s)).toBe("2027-03");
   });
 });
 

@@ -1,5 +1,14 @@
 import type { Subscription, Transaction } from "@/domain/types";
-import { addMonthKey, billingDate, daysBetween, monthKey, monthLabelShort, monthNameShort, ymd } from "@/domain/date";
+import {
+  addMonthKey,
+  billingDate,
+  daysBetween,
+  monthKey,
+  monthLabelShort,
+  monthNameShort,
+  monthsBetweenKeys,
+  ymd,
+} from "@/domain/date";
 import { statusOf } from "@/domain/txStatus";
 
 // A subscription's per-cycle state IS a transaction (subscriptionId + subMonth):
@@ -51,13 +60,40 @@ export function startCycle(sub: Subscription): string {
   return cycleDate(sub, thisYear) >= sub.startedAt ? thisYear : `${year + 1}-${mm}`;
 }
 
-/** The first cycle still owed: the cycle after the last payment, or the starting
- *  cycle if it has never been paid. Charges are never raised before this, which
- *  is what stops an old subscription backfilling years of dues. */
+/**
+ * The cycle a given month falls in — the latest grid cycle at or before it, or
+ * `null` when the month precedes the plan entirely.
+ *
+ * The cycles of a plan sit on a grid anchored to `startCycle`, one step every
+ * `cycleMonths`. A month is snapped onto that grid rather than used directly,
+ * because an arbitrary month need not BE a cycle: a yearly plan only has one
+ * cycle a year, so "2026-03" belongs to whichever June cycle precedes it.
+ */
+export function cycleContaining(sub: Subscription, month: string): string | null {
+  const start = startCycle(sub);
+  const diff = monthsBetweenKeys(start, month);
+  if (diff < 0) return null;
+  return addCycle(sub, start, Math.floor(diff / cycleMonths(sub)));
+}
+
+/**
+ * The first cycle still owed: the cycle after the last payment, or the starting
+ * cycle if it has never been paid. Charges are never raised before this, which
+ * is what stops an old subscription backfilling years of dues.
+ *
+ * The last payment is SNAPPED onto the cycle grid before stepping forward. That
+ * matters when the grid has moved under the history — editing a yearly plan's
+ * `monthOfYear` re-anchors every cycle, and a payment made on the old schedule
+ * no longer lands on a cycle key. Advancing from the raw month would produce a
+ * key that is not on the grid at all, and the next cycle to fall due would be
+ * silently skipped rather than billed.
+ */
 export function firstUnpaidCycle(sub: Subscription): string {
   const start = startCycle(sub);
   if (!sub.lastPaidAt) return start;
-  const after = addCycle(sub, sub.lastPaidAt.slice(0, 7), 1);
+  const paidCycle = cycleContaining(sub, sub.lastPaidAt.slice(0, 7));
+  if (!paidCycle) return start; // paid before the plan's first cycle
+  const after = addCycle(sub, paidCycle, 1);
   return after > start ? after : start;
 }
 

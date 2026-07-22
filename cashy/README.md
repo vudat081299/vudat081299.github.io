@@ -87,15 +87,14 @@ Break these and the app is wrong, not merely inconsistent.
 Blocked on a decision from the owner. **Do not silently resolve these** — they
 are recorded choices, not oversights.
 
-| # | Question | Status |
-|---|---|---|
-| 2 | **Yearly plan changes its billing month mid-life** — confirmed reachable: `SubscriptionEditor` lets you edit `monthOfYear` on a subscription that already has payment history, and `updateSubscription` writes it straight through. Reproduced: a plan paid to 2026-03 that moves to June gets `currentCycle` 2026-06 but `firstUnpaidCycle` 2027-03 — off the new grid — so `needsPaymentNow` is `false` and `dueCharges` returns `[]`. **The June cycle falls due and is silently never billed.** | **OPEN — real bug.** Options: **A.** keep history, re-grid from the new date (one odd-length cycle) · **B.** block the edit once history exists. Leaning A |
+None outstanding.
 
 <details>
 <summary>Resolved — kept for the reasoning, do not reopen without cause</summary>
 
 | # | Question | Decision |
 |---|---|---|
+| 2 | Yearly plan changes its billing month mid-life | **Fixed, option A: keep the history, re-grid from the new date.** `firstUnpaidCycle` now snaps `lastPaidAt` onto the cycle grid (`cycleContaining`) before stepping forward, so a payment made on the old schedule still resolves to a real cycle. `updateSubscription` re-runs `syncSubscriptions` when a billing field changes, so the newly-owed cycle appears immediately rather than after a reload. **Accepted trade-off:** the catch-up cycle is charged in full even though it is shorter than a normal period — that is the "one odd-length cycle" of option A. |
 | 1 | Delete icon on a transaction row | **Confirmed as built.** No per-row delete; Edit always visible; delete lives inside the editor. |
 | 3 | Date recorded by "Mark N paid" | **Keep.** Each charge keeps its own due date, so a caught-up month lands in the month it belonged to. Recording all of them as "today" would move historical spend into the current month and distort every by-month figure. |
 | 4 | Skip a cycle | **Added to `SubscriptionCard`**, inside the pay-confirm step (`Đã trả` / `Bỏ qua` / `Để sau`) rather than the resting foot. The Dashboard renders cards *without* the dues list, so skipping was unreachable from that screen; putting it in the confirm step fixes that without adding a third button to every card at rest. |

@@ -47,12 +47,21 @@ export function addSubscription(input: {
   return sub.id;
 }
 
+/** The fields that define WHEN a plan bills. Editing any of them moves the whole
+ *  cycle grid, so the dues have to be recomputed. */
+const BILLING_FIELDS = ["interval", "dayOfMonth", "monthOfYear", "startedAt"] as const;
+
 export function updateSubscription(id: string, patch: Partial<Subscription>): void {
   const state = getState();
   commit({
     ...state,
     subscriptions: state.subscriptions.map((s) => (s.id === id ? { ...s, ...patch } : s)),
   });
+  // Re-shaping the schedule can put a cycle in the past that was never billed
+  // (see domain/subscription.firstUnpaidCycle). Raise it NOW — otherwise the
+  // card claims the plan is settled until something else triggers a sync.
+  // Safe from recursion: syncPayments patches only lastPaidAt / paymentTxIds.
+  if (BILLING_FIELDS.some((f) => f in patch)) syncSubscriptions();
 }
 
 export function setSubscriptionActive(id: string, active: boolean): void {

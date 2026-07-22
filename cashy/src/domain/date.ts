@@ -102,6 +102,13 @@ export function addMonthKey(key: string, n: number): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
 }
 
+/** Whole months from key `a` to key `b`. Negative when `b` precedes `a`. */
+export function monthsBetweenKeys(a: string, b: string): number {
+  const [ay, am] = a.split("-").map(Number);
+  const [by, bm] = b.split("-").map(Number);
+  return (by - ay) * 12 + (bm - am);
+}
+
 /** The billing date of a month for a given day-of-month, clamped to month length. */
 export function billingDate(key: string, day: number): string {
   const [y, m] = key.split("-").map(Number);
