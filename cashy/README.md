@@ -88,3 +88,72 @@ Giờ đã lưu (`occurredTime`, optional) và hiện ở bảng + chi tiết. N
 
 Đã set đúng 8px như yêu cầu (trước đó head 16/18 · body 18 · foot 14/18). Ở màn
 hẹp trông khá sát mép — nếu thấy chật thì 10–12px vẫn giữ được cảm giác gọn.
+
+---
+
+## Phiên 22/07 — làm tự động (Dat đọc sau khi tới công ty)
+
+Batch lớn, làm theo yêu cầu "giải quyết hết, đừng hỏi trong session". Đã commit +
+push lên `refactor/componentize-and-confirm`. Chỗ tự quyết + còn mở ghi dưới đây,
+KHÔNG cần trả lời gấp — cứ nhắn khi rảnh.
+
+### Đã xử lý xong (gỡ khỏi danh sách chờ ở trên)
+
+- **(4) Skip một kỳ** — giờ có thật: danh sách "Cần xác nhận" có nút *Bỏ qua*
+  (kèm Undo toast); catch-up nhiều kỳ là 3 lựa chọn *Trả / Bỏ qua / Để sau* cho
+  TỪNG kỳ. Hoàn tác một kỳ đã trả: Undo toast ngay lúc bấm + modal **"Lịch sử"**
+  (trên card và ở bảng Đăng ký) để hoàn tác/khôi phục bất kỳ kỳ nào về sau.
+- **Nhất quán owed/due** — "cần trả / trễ hạn / suspended" giờ đọc theo charge
+  thực tế (pending/recorded/skipped), không còn lệch với danh sách dues khi trả
+  kỳ mới mà bỏ kỳ cũ.
+
+### Tự quyết trong phiên này (nói nếu muốn đổi)
+
+1. **Toggle Ngày/Tuần/Tháng của chart Cash flow** chỉ hiện khi khoảng > 30 ngày;
+   ẩn khi > 800 ngày (multi-year "All time" tự gom theo NĂM — daily/weekly sẽ ra
+   hàng nghìn cột). Mặc định: > 62 ngày mở ở "Tháng", còn lại "Ngày"; reset về
+   mặc định mỗi khi đổi khoảng ngày. Legend & toggle đã đổi chỗ (legend trước).
+2. **Pie "Spending by category"** — click một lát → lát nhô ra khỏi vành + làm mờ
+   các lát khác, tâm donut hiện tên/số tiền/% của lát đó. Danh sách bên cạnh liệt
+   kê HẾT category (cuộn nếu dài), click đồng bộ hai chiều với donut. Bỏ chọn khi
+   đổi khoảng ngày.
+3. **Dialog** — sửa Modal dùng chung thành flex-column: head + foot CỐ ĐỊNH, chỉ
+   body cuộn (áp dụng cho MỌI modal, không riêng Thêm giao dịch). Trạng thái là
+   capsule mở ra 5 màu để chọn bằng mắt. Ghi chú dùng đúng component `wb Textarea`
+   (tự giãn). Số tiền thêm addon "₫", dùng `Field/Input` từ docs.
+4. **Kỳ đầu prorated** — công thức: `phần_của_bạn × số_ngày_còn_lại / số_ngày_kỳ`,
+   làm tròn đồng. Chỉ hiện toggle khi ngày bắt đầu rơi SAU ngày chốt của kỳ đầu.
+   Ô "số tiền kỳ đầu" để trống = dùng gợi ý (placeholder, cập nhật động). Các kỳ
+   sau vẫn giá đầy đủ. **Giả định cần xác nhận:** mình prorate cho đoạn
+   `[ngày bắt đầu → ngày chốt kế tiếp]`. Nếu dịch vụ của bạn tính khác (từ ngày
+   bắt đầu → cuối tháng dương lịch, hay có phí kích hoạt riêng) thì mình chỉnh.
+
+### Gói gia đình — đã làm phần DATA, phần LINK USER còn mở (cần bạn chốt)
+
+Đã lưu đầy đủ & sát thực tế: `fullAmount` (giá cả gói), `members` (số người chia),
+`amount` (phần của bạn); nút "Chia đều" set `amount = fullAmount / members`; card
+hiện "phần bạn trong gói N người". Data giờ phản ánh đúng thực tế, không còn là con
+số 1/N trơ trọi.
+
+Phần "**link user vào gói family để tracing / nhắc đóng tiền**" (bạn nói "về sau")
+là feature lớn, CHƯA làm vì nó đụng kiến trúc — cần bạn chốt hướng:
+
+- App hiện **1 người dùng, offline, localStorage, không tài khoản**. "Link nhiều
+  user thật" đòi hỏi **(a)** backend + auth (thoát mô hình offline), HOẶC **(b)**
+  một "gói dùng chung" cục bộ: bạn là chủ gói, nhập danh sách thành viên (tên +
+  phần tiền), app nhắc bạn THU tiền từng người mỗi kỳ — vẫn offline.
+- **Đề xuất của mình:** làm (b) trước — entity
+  `SharedPlan { id, name, fullAmount, cycle, members: [{ name, share, paidUntil }] }`,
+  subscription cá nhân trỏ tới qua `sharedPlanId`; mỗi kỳ nhắc "ai đã đưa tiền / ai
+  còn nợ". Khi nào cần đồng bộ nhiều thiết bị thật mới lên (a).
+- **Câu hỏi chốt hướng:** bạn muốn gói family để **(1)** chỉ theo dõi PHẦN CỦA BẠN
+  (đang có rồi), hay **(2)** bạn là chủ gói, theo dõi cả việc THU TIỀN từ mấy người
+  kia? Nếu (2) thì mình dựng `SharedPlan` như trên.
+
+### Ghi chú nhỏ
+
+- Item (3) "Mark N paid ghi ngày nào" ở trên vẫn giữ nguyên (ghi theo ngày đến hạn
+  từng kỳ) — chưa đổi, chờ bạn.
+- Dữ liệu demo ở cổng 5200 mình bấm thử khá nhiều (revert vài kỳ Adobe, thêm gói
+  test "YouTube Family") — chỉ là localStorage của origin đó, KHÔNG ảnh hưởng
+  code/nhánh.

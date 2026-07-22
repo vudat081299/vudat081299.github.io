@@ -204,6 +204,7 @@ export function SubscriptionCard({
           </div>
           <p className="wb-card__sub">
             {formatMoney(sub.amount)} · {billingLabel(sub)}
+            {sub.members ? ` · phần bạn trong gói ${sub.members} người` : ""}
           </p>
         </div>
       </div>

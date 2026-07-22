@@ -5,7 +5,7 @@ import {
   updateSubscription,
   useCashy,
 } from "@/lib/store";
-import { flattenTree } from "@/lib/domain";
+import { firstCycleProration, flattenTree } from "@/lib/domain";
 import { todayYMD } from "@/lib/date";
 import { formatMoney, parseMoney } from "@/lib/money";
 import { SWATCHES } from "@/lib/palette";
@@ -35,6 +35,14 @@ export function SubscriptionEditor() {
   const [icon, setIcon] = useState("credit-card");
   const [note, setNote] = useState("");
   const [startedAt, setStartedAt] = useState(todayYMD());
+  // Shared / family plan: the whole price + how many split it; `amount` is the
+  // user's own share.
+  const [shared, setShared] = useState(false);
+  const [fullAmountStr, setFullAmountStr] = useState("");
+  const [membersStr, setMembersStr] = useState("2");
+  // Prorated first cycle when joining mid-period.
+  const [prorate, setProrate] = useState(false);
+  const [firstAmountStr, setFirstAmountStr] = useState("");
 
   useEffect(() => {
     registerSubscriptionEditor((id) => {
@@ -51,6 +59,11 @@ export function SubscriptionEditor() {
       setIcon(sub?.icon ?? "credit-card");
       setNote(sub?.note ?? "");
       setStartedAt(sub?.startedAt ?? todayYMD());
+      setShared((sub?.members ?? 0) > 1 || sub?.fullAmount != null);
+      setFullAmountStr(sub?.fullAmount != null ? String(sub.fullAmount) : "");
+      setMembersStr(sub?.members != null ? String(sub.members) : "2");
+      setProrate(sub?.firstCycleAmount != null);
+      setFirstAmountStr(sub?.firstCycleAmount != null ? String(sub.firstCycleAmount) : "");
       setOpen(true);
     });
     return () => {
@@ -59,16 +72,36 @@ export function SubscriptionEditor() {
   }, [subscriptions]);
 
   const amount = parseMoney(amountStr);
+  const fullAmount = parseMoney(fullAmountStr);
+  const members = Math.max(2, parseInt(membersStr, 10) || 2);
+  const clampedDay = Math.min(31, Math.max(1, dayOfMonth || 1));
+  const firstAmount = parseMoney(firstAmountStr);
   const catOptions = useMemo(() => flattenTree(categories, "expense"), [categories]);
   const canSave = name.trim() !== "" && amount > 0;
 
+  // Live proration suggestion for the first cycle (null when nothing to prorate —
+  // joined on/before the billing anchor). Drives the "Kỳ đầu" hint + default.
+  const pro = useMemo(
+    () =>
+      firstCycleProration({
+        amount,
+        startedAt,
+        dayOfMonth: clampedDay,
+        interval,
+        monthOfYear,
+      }),
+    [amount, startedAt, clampedDay, interval, monthOfYear],
+  );
+
   function save() {
     if (!canSave) return;
+    // Prorated first charge: an explicit value if typed, else the suggestion.
+    const firstCycleAmount = prorate ? (firstAmount > 0 ? firstAmount : pro?.amount) : undefined;
     const payload = {
       name: name.trim(),
       amount,
       interval,
-      dayOfMonth: Math.min(31, Math.max(1, dayOfMonth || 1)),
+      dayOfMonth: clampedDay,
       // Only carried for yearly plans; a monthly one has no billing month.
       monthOfYear: interval === "yearly" ? Math.min(12, Math.max(1, monthOfYear || 1)) : undefined,
       categoryId,
@@ -77,6 +110,11 @@ export function SubscriptionEditor() {
       icon,
       note: note.trim(),
       startedAt,
+      // Shared-plan totals (kept only while the toggle is on) + the prorated
+      // first charge. Undefined clears them on edit when a toggle is switched off.
+      fullAmount: shared && fullAmount > 0 ? fullAmount : undefined,
+      members: shared ? members : undefined,
+      firstCycleAmount,
     };
     if (editingId) updateSubscription(editingId, payload);
     else addSubscription(payload);
@@ -176,7 +214,7 @@ export function SubscriptionEditor() {
         <div className="wb-cluster wb-cluster--nowrap wb-cluster--stretch" style={{ gap: 12 }}>
           <div className="wb-field" style={{ flex: 2 }}>
             <label className="wb-label" htmlFor="sub-amount">
-              {interval === "yearly" ? "Số tiền / năm" : "Số tiền / tháng"}
+              {shared ? "Phần của bạn" : "Số tiền"} / {interval === "yearly" ? "năm" : "tháng"}
             </label>
             <input
               id="sub-amount"
@@ -231,6 +269,67 @@ export function SubscriptionEditor() {
           </span>
         )}
 
+        {/* Shared / family plan — record the WHOLE price and how many split it, so
+            the data mirrors reality; the amount above stays your own share. */}
+        <div className="wb-field">
+          <label className="wb-check" style={{ cursor: "pointer" }}>
+            <input type="checkbox" checked={shared} onChange={(e) => setShared(e.target.checked)} />
+            <span>Gói chia sẻ / gia đình (dùng chung nhiều người)</span>
+          </label>
+          {shared && (
+            <>
+              <div
+                className="wb-cluster wb-cluster--nowrap wb-cluster--stretch"
+                style={{ gap: 12, marginTop: 10 }}
+              >
+                <div className="wb-field" style={{ flex: 2 }}>
+                  <label className="wb-label" htmlFor="sub-full">
+                    Giá gói đầy đủ / {interval === "yearly" ? "năm" : "tháng"}
+                  </label>
+                  <input
+                    id="sub-full"
+                    className="wb-input"
+                    inputMode="numeric"
+                    autoComplete="off"
+                    value={fullAmountStr}
+                    onChange={(e) => setFullAmountStr(e.target.value)}
+                    placeholder="0"
+                  />
+                </div>
+                <div className="wb-field" style={{ flex: 1 }}>
+                  <label className="wb-label" htmlFor="sub-members">
+                    Số người
+                  </label>
+                  <input
+                    id="sub-members"
+                    className="wb-input"
+                    type="number"
+                    min={2}
+                    value={membersStr}
+                    onChange={(e) => setMembersStr(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="wb-cluster" style={{ gap: 10, marginTop: 8, alignItems: "center" }}>
+                <button
+                  type="button"
+                  className="wb-btn wb-btn--secondary wb-btn--sm"
+                  disabled={fullAmount <= 0}
+                  onClick={() => setAmountStr(String(Math.round(fullAmount / members)))}
+                >
+                  Chia đều cho {members} người
+                </button>
+                {fullAmount > 0 && (
+                  <span className="wb-help" style={{ margin: 0 }}>
+                    Phần của bạn: <strong>{formatMoney(amount)}</strong> · gói{" "}
+                    {formatMoney(fullAmount)}
+                  </span>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+
         <div className="wb-field">
           <label className="wb-label" htmlFor="sub-start">
             Ngày bắt đầu đăng ký
@@ -244,6 +343,41 @@ export function SubscriptionEditor() {
           />
           <span className="wb-help">Không tính phí cho bất kỳ tháng nào trước ngày này.</span>
         </div>
+
+        {/* Prorated first cycle — offered only when the join date lands mid-period
+            (the billing anchor already passed for this cycle). */}
+        {pro && (
+          <div className="wb-field">
+            <label className="wb-check" style={{ cursor: "pointer" }}>
+              <input
+                type="checkbox"
+                checked={prorate}
+                onChange={(e) => setProrate(e.target.checked)}
+              />
+              <span>Kỳ đầu tính theo số ngày dùng (tham gia giữa kỳ)</span>
+            </label>
+            {prorate && (
+              <div style={{ marginTop: 10 }}>
+                <label className="wb-label" htmlFor="sub-first">
+                  Số tiền kỳ đầu
+                </label>
+                <input
+                  id="sub-first"
+                  className="wb-input"
+                  inputMode="numeric"
+                  autoComplete="off"
+                  value={firstAmountStr}
+                  onChange={(e) => setFirstAmountStr(e.target.value)}
+                  placeholder={String(pro.amount)}
+                />
+                <span className="wb-help">
+                  Gợi ý {formatMoney(pro.amount)} — {pro.days}/{pro.total} ngày của kỳ đầu. Các kỳ
+                  sau vẫn {formatMoney(amount)}.
+                </span>
+              </div>
+            )}
+          </div>
+        )}
 
         <div className="wb-field">
           <label className="wb-label" htmlFor="sub-cat">

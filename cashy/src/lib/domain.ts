@@ -1,4 +1,4 @@
-import type { Category, Subscription, Tag, Transaction, TxStatus, TxType } from "@/types";
+import type { Category, SubInterval, Subscription, Tag, Transaction, TxStatus, TxType } from "@/types";
 import type { Range } from "@/lib/period";
 import {
   addMonthKey,
@@ -436,6 +436,47 @@ export function startCycle(sub: Subscription): string {
   const mm = String(Math.min(12, Math.max(1, sub.monthOfYear ?? 1))).padStart(2, "0");
   const thisYear = `${year}-${mm}`;
   return cycleDate(sub, thisYear) >= sub.startedAt ? thisYear : `${year + 1}-${mm}`;
+}
+
+export interface Proration {
+  /** the reduced first-cycle charge (whole đồng) */
+  amount: number;
+  /** days actually covered (join → next billing date) */
+  days: number;
+  /** the full cycle's length in days, for the "X/Y ngày" caption */
+  total: number;
+}
+
+/**
+ * The prorated FIRST charge when a plan is joined part-way through a period. The
+ * first cycle opens on the plan's billing anchor (e.g. the 1st); if the join date
+ * falls AFTER that anchor, only the slice from the join to the next billing date
+ * is owed — `share × usedDays / cycleDays`. Returns `null` when there is nothing
+ * to prorate (joined on/before the anchor → the first cycle is billed in full).
+ * Works for monthly and yearly alike (the two cycle ends are a period apart).
+ */
+export function firstCycleProration(opts: {
+  amount: number;
+  startedAt: string;
+  dayOfMonth: number;
+  interval: SubInterval;
+  monthOfYear?: number;
+}): Proration | null {
+  // Reuse the cycle maths via a minimal sub-shape (only these fields are read).
+  const s = {
+    interval: opts.interval,
+    dayOfMonth: opts.dayOfMonth,
+    monthOfYear: opts.monthOfYear,
+    startedAt: opts.startedAt,
+  } as Subscription;
+  const sc = startCycle(s);
+  const cycleStart = cycleDate(s, sc);
+  const cycleEnd = cycleDate(s, addCycle(s, sc, 1));
+  if (opts.startedAt <= cycleStart) return null; // joined on/before the anchor
+  const total = daysBetween(cycleStart, cycleEnd);
+  const used = daysBetween(opts.startedAt, cycleEnd);
+  if (used <= 0 || used >= total) return null;
+  return { amount: Math.max(0, Math.round((opts.amount * used) / total)), days: used, total };
 }
 
 /** The first cycle still owed: the cycle after the last payment, or the starting

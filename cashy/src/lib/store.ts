@@ -13,7 +13,7 @@ import type {
   Workspace,
 } from "@/types";
 import { uid } from "@/lib/id";
-import { addCycle, cycleDate, descendantIds, firstUnpaidCycle, rootOf } from "@/lib/domain";
+import { addCycle, cycleDate, descendantIds, firstUnpaidCycle, rootOf, startCycle } from "@/lib/domain";
 import { billingDate, monthKey, monthLabelShort, todayYMD, ymd } from "@/lib/date";
 import { statusOf } from "@/lib/txStatus";
 import { SWATCHES } from "@/lib/palette";
@@ -361,6 +361,9 @@ export function addSubscription(input: {
   icon: string;
   note?: string;
   startedAt?: string;
+  fullAmount?: number;
+  members?: number;
+  firstCycleAmount?: number;
 }): string {
   const interval = input.interval ?? "monthly";
   const sub: Subscription = {
@@ -379,6 +382,11 @@ export function addSubscription(input: {
     startedAt: input.startedAt ?? todayYMD(),
     lastPaidAt: null,
     paymentTxIds: [],
+    // Shared-plan bookkeeping + a prorated first charge — all optional, only set
+    // when the editor collected them (see Subscription type).
+    fullAmount: input.fullAmount,
+    members: input.members,
+    firstCycleAmount: input.firstCycleAmount,
     createdAt: new Date().toISOString(),
   };
   commit({ ...state, subscriptions: [...state.subscriptions, sub] });
@@ -431,13 +439,17 @@ export function syncSubscriptions() {
     // Start from the first month still owed, NOT from the subscription's start:
     // `lastPaidAt` says everything up to it is settled, so a service subscribed
     // a year ago doesn't materialise a year of dues the first time it syncs.
+    const first = startCycle(sub);
     let m = firstUnpaidCycle(sub);
     for (let guard = 0; m <= cur && guard < 600; guard++, m = addCycle(sub, m, 1)) {
       if (cycleDate(sub, m) > today) continue; // not due yet
       if (have.has(`${sub.id}|${m}`)) continue; // already charged
+      // The very first cycle can be a prorated (smaller) charge when the plan was
+      // joined mid-period; every later cycle bills the full share.
+      const amount = sub.firstCycleAmount != null && m === first ? sub.firstCycleAmount : sub.amount;
       fresh.push({
         id: uid(),
-        amount: sub.amount,
+        amount,
         type: "expense",
         categoryId: sub.categoryId,
         tagIds: sub.tagIds,
