@@ -20,6 +20,7 @@ import {
 } from "@/domain";
 import { periodLabel, prevRange } from "@/domain/period";
 import { useStableSubOrder } from "@/ui/features/subscriptions/useStableSubOrder";
+import { useAtScrollEnd } from "@/ui/features/dashboard/useAtScrollEnd";
 import { useTxQuery } from "@/ui/features/transactions/useTxQuery";
 import { navigate } from "@/lib/router";
 import { formatMoney, formatMoneyShort } from "@/domain/money";
@@ -129,6 +130,10 @@ export function Dashboard() {
   // Sorted once, then held stable so editing a card never reorders it.
   const subCards = useStableSubOrder(subscriptions, transactions);
   const dueCount = subscriptions.filter((s) => needsPaymentNow(s, transactions)).length;
+  // When the strip is a peek-scroll (> 6), drop its foot fade once scrolled to
+  // the end so the last row reads clearly instead of dissolving.
+  const subPeek = useAtScrollEnd<HTMLDivElement>();
+  const subScroll = subCards.length > 6;
 
   // Insights — a strip of plain-language facts a KPI grid alone doesn't state.
   // Each is one derived truth about the period, written for someone who has never
@@ -324,8 +329,11 @@ export function Dashboard() {
               rows and scrolls, with the foot half-row fading out to signal more.
               (`Manage` opens the full, unclipped list.) */}
           <div
+            ref={subPeek.ref}
             className={
-              subCards.length > 6 ? "cashy-subgrid cashy-subgrid--scroll" : "cashy-subgrid"
+              subScroll
+                ? `cashy-subgrid cashy-subgrid--scroll${subPeek.atEnd ? " is-at-bottom" : ""}`
+                : "cashy-subgrid"
             }
           >
             {subCards.map((sub) => (

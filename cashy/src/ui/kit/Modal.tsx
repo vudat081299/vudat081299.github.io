@@ -1,11 +1,19 @@
 import { useEffect, useRef, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { ScrollArea } from "@/ui/kit/ScrollArea";
 
 /**
  * Modal — web-builder wb-overlay + wb-modal look with the behaviour Radix used
  * to provide, hand-rolled (no shadcn): Esc to close, click-outside (backdrop)
  * to close, body scroll-lock, and focus moved to the first field on open.
- * Rendered at the app root, so fixed positioning needs no portal.
+ *
+ * Portalled to `document.body`. The overlay is `position: fixed; inset: 0`, but
+ * "fixed" only means "the viewport" when no ancestor establishes a containing
+ * block — and one that sets `transform`, `filter`, `mask`, etc. captures it.
+ * The subscription dialogs are hosted from cards INSIDE the dashboard's masked
+ * peek-scroll strip (`.cashy-subgrid--scroll`), so rendered inline the backdrop
+ * and panel would be trapped inside that strip instead of covering the screen.
+ * The portal lifts the overlay out to the body so it's always full-screen.
  */
 export function Modal({
   open,
@@ -57,7 +65,7 @@ export function Modal({
 
   if (!open) return null;
 
-  return (
+  return createPortal(
     <div
       className="wb-overlay is-open"
       onMouseDown={(e) => {
@@ -99,6 +107,7 @@ export function Modal({
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

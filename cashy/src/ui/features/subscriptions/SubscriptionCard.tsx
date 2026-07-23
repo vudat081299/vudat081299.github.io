@@ -315,16 +315,20 @@ export function SubscriptionCard({
             No dropdown menu here: the card sets `overflow: hidden` (rounded
             corners + the progress track) and would clip an open one. */}
         <div className="wb-card__foot">
-          <button
-            type="button"
-            className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm wb-btn--round"
-            aria-label={`Payment history for ${sub.name}`}
-            title="Payment history"
-            disabled={!hasHistory}
-            onClick={onOpenHistory}
-          >
-            <span className="wb-ico wb-ico--sm">history</span>
-          </button>
+          {/* No history to show = no button. A trialing (or brand-new) service has
+              nothing paid or skipped yet, so it earns no history control — a
+              permanently-disabled icon would only be dead weight on the row. */}
+          {hasHistory && (
+            <button
+              type="button"
+              className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm wb-btn--round"
+              aria-label={`Payment history for ${sub.name}`}
+              title="Payment history"
+              onClick={onOpenHistory}
+            >
+              <span className="wb-ico wb-ico--sm">history</span>
+            </button>
+          )}
           {footNote && <span className="wb-cell-muted cashy-cardfoot__note">{footNote}</span>}
 
           <div className="cashy-cardfoot__end">

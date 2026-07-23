@@ -1209,6 +1209,15 @@ body {
    foot melts to transparent under a gradient mask to signal there's more below.
    Row height is an ESTIMATE (cards vary with their notes) — the whole thing is
    driven off `--cashy-sub-row`, so tune that one knob if the peek drifts. */
+/* The fade is a length so it can be transitioned. Registering it means the
+   custom property animates (a bare `--x` can't), which lets the foot mask melt
+   open smoothly the moment the strip is scrolled to its end (`.is-at-bottom`)
+   rather than snapping. */
+@property --cashy-sub-fade {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
 .cashy-subgrid--scroll {
   --cashy-sub-row: 280px; /* estimated card height per row */
   --cashy-sub-fade: calc(0.5 * var(--cashy-sub-row)); /* the half-row that fades */
@@ -1219,6 +1228,7 @@ body {
   /* no scrollbar indicator */
   scrollbar-width: none;
   -ms-overflow-style: none;
+  transition: --cashy-sub-fade 0.28s ease;
   /* the foot fades over the last half-row */
   -webkit-mask-image: linear-gradient(
     to bottom,
@@ -1230,6 +1240,11 @@ body {
     #000 calc(100% - var(--cashy-sub-fade)),
     transparent
   );
+}
+/* Reached the last row: there's nothing more below to hint at, so the foot mask
+   opens fully and the half-row that was dissolving reads clearly again. */
+.cashy-subgrid--scroll.is-at-bottom {
+  --cashy-sub-fade: 0px;
 }
 .cashy-subgrid--scroll::-webkit-scrollbar {
   width: 0;
