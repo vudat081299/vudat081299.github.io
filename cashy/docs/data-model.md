@@ -18,7 +18,7 @@ The single object serialized to `localStorage`. `types.ts` · built empty in
 
 | Field | Type | Meaning | Notes |
 |---|---|---|---|
-| `version` | `number` | Schema version of this snapshot | Drives migrations. Current = **8**. On load it is forced to `CURRENT_VERSION` and the old value passed to `migrate()`. |
+| `version` | `number` | Schema version of this snapshot | Drives migrations. Current = **9**. On load it is forced to `CURRENT_VERSION` and the old value passed to `migrate()`. |
 | `theme` | `ThemeMode` | UI colour scheme | `"system" \| "light" \| "dark"`; default `"system"`. |
 | `subIconStyle` | `SubIconStyle` | How subscription icon tiles are coloured | `"neutral"` (default, grey) \| `"brand"` (service hue). |
 | `workspace` | `Workspace \| null` | The profile; `null` = not yet onboarded | Non-null but empty ledger ⇒ `load()` re-seeds the demo data. |
@@ -311,13 +311,15 @@ Loan (0..n)                               — first-class record; references NO 
   A workspace that opens with an **empty ledger** is re-seeded with the demo dataset (only an
   empty ledger — real data is never overwritten).
 
-**Migrations** (`data/migrations.ts`, `CURRENT_VERSION = 8`), **append-only** ascending
+**Migrations** (`data/migrations.ts`, `CURRENT_VERSION = 9`), **append-only** ascending
 `if (fromVersion < N)` blocks: v2 recolor onto the chart palette · v3 `startMonth` → real
 `startedAt` + back-fill `lastPaidAt` · v4 back-fill `paymentTxIds` · v5 back-fill
 `interval = "monthly"` · v6 distinct free-text `account` strings → `Wallet` entities +
 `walletId` links (account kept intact) · v7 ensure `state.loans` exists (defaults to `[]`)
 — loans are brand new, so there is nothing to transform. v8 adds optional card fields
-(`cardNetwork` + `creditLimit`) — additive, no back-fill (no branch needed). **Import** runs the same
+(`cardNetwork` + `creditLimit`) — additive, no back-fill (no branch needed). v9 ensures
+`state.contacts` exists (defaults to `[]`) — the contacts model is brand new, nothing to
+transform. **Import** runs the same
 `migrate()` so an older export is brought forward, not stamped current unmigrated.
 
 **Export** (`workspace.exportData`) now serializes `wallets` **and** `loans` too (it
