@@ -288,6 +288,8 @@ Loan (0..n)                               — first-class record; references NO 
 | Due charges to raise (idempotent) | `dueCharges` | `subscription.ts` |
 | All pending dues across subs | `collectDues` | `subscription.ts` |
 | Needs-payment-now / lapsed / cycles owed | `needsPaymentNow`, `isLapsed`, `cyclesOwed` | `subscription.ts` |
+| Status bucket + default display order | `subState` (suspended/due/trial/active/cancelled), `sortSubscriptions` | `subscription.ts` |
+| Free-trial progress window | `trialCycle` | `subscription.ts` |
 | Payment history (the cache values) | `paymentsOf`, `paymentsDrifted` | `subscription.ts` |
 | Monthly committed spend (yearly ÷12) | `monthlyCommitment` | `subscription.ts` |
 | First-cycle proration | `firstCycleProration` | `subscription.ts` |

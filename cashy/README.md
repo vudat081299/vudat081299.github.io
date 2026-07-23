@@ -20,7 +20,7 @@ pnpm dev            # http://localhost:5173
 | Command | Effect |
 |---|---|
 | `pnpm dev` | dev server |
-| `pnpm test` | vitest, single run (116 tests over `src/domain/` + `src/data/`) |
+| `pnpm test` | vitest, single run (186 tests over `src/domain/` + `src/data/`) |
 | `pnpm test:watch` | vitest watch |
 | `pnpm check:layers` | enforce the dependency rule |
 | `pnpm build` | `tsc -b` → `check:layers` → build to `dist/` (base `/cashy/`) |

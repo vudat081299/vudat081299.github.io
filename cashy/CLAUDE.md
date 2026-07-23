@@ -19,6 +19,11 @@ make any change correctly **without asking**.
 > exists, the **code wins**; when philosophy is in question, the **vision wins**.
 > [architecture.md](docs/architecture.md) describes the code as it is and is
 > normative for anything under `src/`.
+>
+> **The bridge between the two:** [docs/cashy-web-spec.md](docs/cashy-web-spec.md)
+> states what the *web build* actually is (stack, shipped features, and an explicit
+> "not in the web build" list) and links out to the deep docs — read it when the
+> product docs mention a feature and you need to know whether it exists here.
 
 ---
 
@@ -29,7 +34,7 @@ Package manager is **pnpm** (a `pnpm-lock.yaml` is committed; npm also works).
 ```bash
 pnpm install
 pnpm dev            # http://localhost:5173
-pnpm test           # vitest, ~116 tests over src/domain/ + src/data/ (pure, no DOM)
+pnpm test           # vitest — pure tests over src/domain/ + src/data/ (no DOM)
 pnpm lint           # oxlint
 pnpm build          # tsc -b → check:layers → vite build → dist/  (base /cashy/)
 ```
@@ -76,9 +81,10 @@ Full text: [docs/cashy-vision.md](docs/cashy-vision.md). The parts that bind day
 - **Money is an integer count of đồng.** Never a float. See invariants below.
 - **Language:** the **UI chrome is English**; the **seeded ledger data stays
   Vietnamese** (payees, category names, notes). Compact money uses English
-  magnitude letters **k / m / b** (`3.4m đ`), not `k / tr / tỷ`. Currency glyph is
-  `đ` via `domain/money.formatMoney` (one field, the transaction amount addon,
-  still shows `₫` — an open item, see the checklist).
+  magnitude letters **k / m / b** (`3,4m`), not `k / tr / tỷ`. The currency glyph
+  is the đồng sign **`₫`** (U+20AB), applied app-wide through `domain/money`
+  (`formatMoney` / `formatMoneyShort`); `formatMoneyAxis` is the same compact form
+  with the unit stripped, for chart axes and range labels.
 
 ---
 
@@ -168,7 +174,7 @@ toggle; collapses to a ☰ drawer on mobile). Routes:
 |---|---|---|
 | `#/dashboard` (default) | **Dashboard** | KPIs, projected-balance chart, subscriptions strip, cash-flow + spending-donut, insights, recent-transactions table |
 | `#/transactions` | **Transactions** | period + filter bar + full ledger table (50/page) |
-| `#/subscriptions` | **Subscriptions** | commitment/due/total stats, "to confirm" dues, services table |
+| `#/subscriptions` | **Subscriptions** | commitment/due/total stats, "to confirm" dues, then a card grid (one `ConnectedSubscriptionCard` per service, sorted by status; a filter bar past 6) |
 | `#/wallets` | **Wallets** | wallet balances + net worth; add/edit/archive/delete. Assigned in the tx/sub editors, filterable, and money moves between wallets via **transfers** |
 | `#/loans` | **Loans** (handshake icon) | money you owe + owed to you; borrowed/lent, per-loan payment log, receivable − payable net worth; add/edit/archive/delete. Touches no transactions |
 | `#/categories` | **Categories** | drag-to-reorder / drop-to-nest tree; per-side (expense/income) |
@@ -298,7 +304,8 @@ Detailed steps in [architecture.md §6](docs/architecture.md). In short:
 | [docs/architecture.md](docs/architecture.md) | **normative** for `src/` — layers, import matrix, procedures, traps |
 | [docs/data-model.md](docs/data-model.md) | full data dictionary — entities, enums, relationships, derived values |
 | [docs/components.md](docs/components.md) | component catalogue — tiers, props, screen→component map |
-| [docs/features/](docs/features/) | **per-feature deep dives** — one doc per screen (overview, transactions, subscriptions, categories, tags, settings, onboarding); see [features/README.md](docs/features/README.md) |
+| [docs/features/](docs/features/) | **per-feature deep dives** — one doc per screen (overview, transactions, subscriptions, wallets, loans, contacts, categories, tags, settings, onboarding); see [features/README.md](docs/features/README.md) |
+| [docs/cashy-web-spec.md](docs/cashy-web-spec.md) | **what actually ships** — the React web build: stack, features, and what's deliberately *not* here |
 | [docs/cashy-vision.md](docs/cashy-vision.md) | product philosophy (timeless; native-iOS-flavoured) |
 | [docs/cashy-v1-spec.md](docs/cashy-v1-spec.md) | v1 use-case spec (native-iOS-flavoured) |
 | [docs/wallets-plan.md](docs/wallets-plan.md) | multi-wallet / asset **roadmap** (phases 1–2 shipped; see [features/wallets.md](docs/features/wallets.md)) |

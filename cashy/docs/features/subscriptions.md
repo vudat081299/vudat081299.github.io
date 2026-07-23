@@ -16,9 +16,11 @@ the user confirming it makes it a `recorded` expense that counts toward totals
 (`skipped` = "didn't use it", greyed, still reminds next cycle). Because Cashy has
 no bank feed, a service's paid/owed state is *user-maintained*: the feature is
 built around catching a ledger up when several cycles have gone by unconfirmed.
-The `#/subscriptions` screen holds the stats, a "to confirm" list, and the full
-services table; the Dashboard shows the same services as rich cards with the
-catch-up / cancel / history dialogs.
+Both the `#/subscriptions` screen and the Dashboard strip show the same rich
+`SubscriptionCard`s (with the catch-up / cancel / history dialogs); the screen adds
+the stats and the "to confirm" list above them. Cards are ordered **by status**
+(urgent first) and, past six services, a filter bar (search · status · wallet ·
+sort) appears on both surfaces.
 
 ## 2. Screen & route
 
@@ -29,13 +31,15 @@ catch-up / cancel / history dialogs.
   `wb-stack wb-stack--loose` of `PageHeader` (+ "Add subscription") → a 3-tile
   `wb-stat-grid` (**Monthly commitment**, **Due this month**, **Total services**)
   → a **"To confirm"** card (`SubscriptionDues`, shown only when dues exist) → the
-  **"Subscribed services"** table (one `SubscriptionRow` per sub, or an
-  `EmptyState`), with a commitment total in `tfoot`.
-- The rich **payment card + its three dialogs** do **not** live on this screen —
-  they are a Dashboard surface. `src/ui/features/dashboard/Dashboard.tsx:332`
+  **"Subscribed services"** section: a section header, a `SubFilterBar` (only when
+  there are **> 6** subs), then a **`.cashy-subgrid`** of `ConnectedSubscriptionCard`
+  (the same card the Dashboard strip uses), a "no matches" note when a filter empties
+  it, and a monthly-commitment caption; an `EmptyState` replaces the whole section
+  when there are no subs.
+- The Dashboard strip is the second surface: `src/ui/features/dashboard/Dashboard.tsx`
   renders a `ConnectedSubscriptionCard` per service in the "Subscriptions" strip
-  (caps at 6 then scrolls). Both surfaces order services with the same
-  `useStableSubOrder` hook.
+  (peek-scrolls past 6, and grows the same `SubFilterBar`). Both surfaces order with
+  the pure `sortSubscriptions` (via the shared `useSubFilter` hook) — no frozen order.
 - The **editor** is a **singleton modal** (`SubscriptionEditor`), mounted once at
   the app root and opened imperatively via `lib/modals` (`openSubscriptionEditor(id | null)`),
   from the screen header, the empty state, and each table row's pencil.
@@ -73,7 +77,7 @@ All pure, in `src/domain/subscription.ts` (dates via `src/domain/date.ts`,
 | `cycleContaining(sub, month)` | snaps an arbitrary month onto the plan's grid (the latest cycle ≤ it), `null` if before the plan. |
 | `currentCycle(sub, now)` | the cycle today falls in — walked forward from `startCycle` (a yearly grid can't be recovered by arithmetic on "this month"). |
 | `firstUnpaidCycle(sub)` | first cycle still owed: cycle after `lastPaidAt` (snapped onto the grid first), else `firstBillableCycle`. Stops an old plan backfilling years of dues. |
-| `subCycle(sub, now)` | where today sits in the current period — real billing dates at both ends (28/29/30/31/366 days as they fall), `pct`, `started`. Drives the card progress bar. |
+| `subCycle(sub, now)` | where today sits in the current period — real billing dates at both ends (28/29/30/31/366 days as they fall), `pct`, `started`. Drives the card's billing-period progress bar. |
 
 **Trials & proration:**
 
@@ -82,6 +86,7 @@ All pure, in `src/domain/subscription.ts` (dates via `src/domain/date.ts`,
 | `trialEndDate(sub)` | `addMonths(startedAt, trialMonths)` or `null`. Free **strictly before** this date. |
 | `firstBillableCycle(sub)` | first cycle whose billing date is ≥ the trial end (walked on the plan's own grid); = `startCycle` when no trial. |
 | `inTrial(sub, now)` | has a trial **and** `ymd(now)` < trial-end. Card shows "Free trial". |
+| `trialCycle(sub, now)` | the free window `[startedAt → trialEndDate]` as a `SubCycle` (same shape as `subCycle`), or `null` with no trial. Lets the card draw a progress bar to the first-charge date with the *same* markup as the billing bar. |
 | `firstCycleProration({amount,startedAt,dayOfMonth,interval,monthOfYear})` | reduced first charge when joined after the billing anchor: `round(amount × usedDays / cycleDays)` + a `{days,total}` caption. `null` when nothing to prorate. In practice fires for **monthly** only (a yearly plan's first cycle is pushed to the future by `startCycle`, so it bills in full). |
 
 **Status derived from the ledger (never from `lastPaidAt`):**
@@ -95,6 +100,8 @@ All pure, in `src/domain/subscription.ts` (dates via `src/domain/date.ts`,
 | `nextPaymentDate(sub, txs, now)` | earliest pending cycle's date (a **past** date while a bill is outstanding), else `firstUnpaidCycle`'s date. |
 | `monthlyCommitment(subs)` | total per-month spend across **active** subs, yearly spread as `amount / 12`. |
 | `billingLabel(sub)` | "day 15 each month" / "15 Mar each year". |
+| `subState(sub, txs, now)` | the **one** bucket a service is in — `suspended`/`due`/`trial`/`active`/`cancelled` (the card's tone ladder). Single source of truth shared by the card, the sort, and the status filter, so they never disagree. |
+| `sortSubscriptions(subs, txs, now)` | the default display order — urgent → calm (`suspended → due → trial → active → cancelled`), then by name. Pure; used by both surfaces via `useSubFilter`. |
 
 **Payment-history cache (§7):** `paymentsOf(subId, txs)` derives `{paymentTxIds, lastPaidAt}` from recorded charges; `paymentsDrifted(sub, next)` says whether the cache is stale.
 
@@ -136,18 +143,18 @@ The editor calls `addSubscription` / `updateSubscription` / `deleteSubscription`
 
 | Component | Tier | File | Role |
 |---|---|---|---|
-| `Subscriptions` | container/screen | `ui/features/subscriptions/Subscriptions.tsx` | reads `useCashy()`; stats, dues card, services table; holds the local `SubscriptionRow` |
-| `SubscriptionRow` | leaf (local) | *(in `Subscriptions.tsx`)* | one table row: tile, category, cycle/started/last-paid, amount, status capsule, edit + suspend/resume |
+| `Subscriptions` | container/screen | `ui/features/subscriptions/Subscriptions.tsx` | reads `useCashy()`; stats, dues card, then a `SubFilterBar` (when >6) over a `.cashy-subgrid` of `ConnectedSubscriptionCard` |
+| `SubFilterBar` | feature-leaf | `ui/features/subscriptions/SubFilterBar.tsx` | the subscriptions filter bar (search · Status · Wallet facets + far-right Price / Days-left sort capsules); reuses `FacetChip`. The transaction bar's twin |
+| `useSubFilter` | hook | `ui/features/subscriptions/useSubFilter.ts` | the shared query — `{query, status, walletId, sort}` → filtered + ordered list; default order is `sortSubscriptions`, sort keys `price`/`days` re-sort live. Each surface owns an instance (mirrors `useTxQuery`) |
 | `SubscriptionDues` | feature-leaf | `ui/features/subscriptions/SubscriptionDues.tsx` | "To confirm" list — one row per owed cycle with **Paid** / **Skip**; optional `max` + "+n more" |
-| `ConnectedSubscriptionCard` | container | `ui/features/subscriptions/ConnectedSubscriptionCard.tsx` | wires a `SubscriptionCard` + its 3 dialogs to the usecases; every write is Undo-able (Dashboard strip) |
-| `SubscriptionCard` | feature-leaf | `ui/features/subscriptions/SubscriptionCard.tsx` | presentational card: status capsule, last-paid / next-payment, progress bar, catch-up/cancel/resume/history actions |
+| `ConnectedSubscriptionCard` | container | `ui/features/subscriptions/ConnectedSubscriptionCard.tsx` | wires a `SubscriptionCard` + its 3 dialogs to the usecases; every write is Undo-able. Used by **both** surfaces (screen grid + Dashboard strip) |
+| `SubscriptionCard` | feature-leaf | `ui/features/subscriptions/SubscriptionCard.tsx` | presentational card: status capsule, last-paid / next-payment, a progress bar (billing period, **or the trial run-up via `trialCycle`**), catch-up/cancel/resume/history actions. Shares one `CycleProgress` block for both bars |
 | `SubscriptionCatchUp` | modal | `ui/features/subscriptions/SubscriptionCatchUp.tsx` | settle owed cycles — per-cycle **used** switch + **paid** waterline + editable amount; enforces oldest-first |
 | `SubscriptionCancel` | modal | `ui/features/subscriptions/SubscriptionCancel.tsx` | asks **when** the service stopped (`DatePicker` + Today / "From <month>"), shows what will be dropped vs kept |
 | `SubscriptionHistory` | modal | `ui/features/subscriptions/SubscriptionHistory.tsx` | settled (recorded/skipped) cycles, newest first, each with an **Undo** back to pending |
 | `SubscriptionEditor` | singleton modal | `ui/features/subscriptions/SubscriptionEditor.tsx` | add/edit form (interval, amount, day/month, trial, shared plan, proration, category/tags/icon/color, "Paid from" wallet via `WalletPicker`, note); delete |
 | `SubTile` | feature-leaf | `ui/features/subscriptions/SubTile.tsx` | the rounded icon square; `brand` lets the service hue in, else neutral grey |
-| `useStableSubOrder` | hook | `ui/features/subscriptions/useStableSubOrder.ts` | freezes display order (active → due → name) on first render so editing a row never makes it jump |
-| `PageHeader`, `EmptyState`, `CategoryCap` | common | `ui/common/…` | header + no-subs block + category capsule |
+| `PageHeader`, `EmptyState`, `FacetChip` | common | `ui/common/…` | header + no-subs block + the shared filter capsule |
 | `Modal`, `Input`, `Switch`, `Popover`, `Select`, `Textarea`, `IconPicker`, `ColorPicker`, `TagChip`, `DatePicker` | kit/common | `ui/kit/…`, `ui/common/…` | dialog + editor building blocks |
 
 ## 7. Behaviours & edge cases
@@ -215,8 +222,11 @@ with "Recorded transactions are kept."
 **Trials.** `trialMonths` free months from `startedAt`; nothing is charged during
 the window (`firstBillableCycle` skips whole cycles inside it). Free **strictly
 before** the trial-end date — "3 months free from 10 Jan" is free through 9 Apr,
-first charge 10 Apr. The card shows a "Free trial" capsule and "First charge" date
-and suppresses the progress bar; the editor previews the first-charge date live.
+first charge 10 Apr. The card shows a "Free trial" capsule and "First charge" date,
+and — once the trial has actually begun — a **progress bar over `trialCycle`**
+(`[startedAt → trialEndDate]`, "Day X of Y" + "N days of trial left") that darkens
+near the end exactly like the active card. A trial dated to start in the future
+shows no bar yet (nothing to chart). The editor previews the first-charge date live.
 
 **Shared / family plans.** `fullAmount` = the whole plan price per cycle, `members`
 = how many split it (≥ 2), `amount` = **your own share** (the number that hits
@@ -228,11 +238,17 @@ both (then `amount` *is* the full price).
 non-null (joined mid-period). Stored as `firstCycleAmount`; `dueCharges` bills it on
 the first cycle only.
 
-**Stable ordering (`useStableSubOrder`).** Sort key = active first, then
-needs-payment, then name — computed **once** on the first non-empty render and
-frozen for the mount, because the key includes mutable state and re-sorting on
-every edit would yank a card out from under the user. New subs append; deleted ones
-drop out; a fresh mount re-sorts.
+**Ordering & filtering (`sortSubscriptions` + `useSubFilter`).** The default order
+is the pure `sortSubscriptions` — urgent → calm by `subState`
+(`suspended → due → trial → active → cancelled`), then by name — applied **live**
+on both surfaces (marking a service paid moves it out of the "due" cluster, which is
+coherent feedback). Past **6** subscriptions a `SubFilterBar` appears (below the
+section header, above the grid): a search field, a **Status** facet (the five
+`subState` buckets), a **Wallet** facet listing only wallets that actually pay for a
+sub, and two far-right **sort capsules** — Price and Days-left — each a three-state
+toggle (natural direction → reversed → back to the status default). All of it is
+driven by `useSubFilter`, one instance per surface. When a filter empties the grid,
+a "No subscriptions match these filters" note shows in place of the cards.
 
 **"Paid from" (`walletId`).** The editor picks the paying **wallet** with a
 `WalletPicker`; it is inherited onto every generated cycle charge's
@@ -249,16 +265,17 @@ measured, portalled hover tooltip only when it actually clips.
 
 ## 8. Files
 
-- `src/ui/features/subscriptions/Subscriptions.tsx` — the screen container (+ local `SubscriptionRow`)
+- `src/ui/features/subscriptions/Subscriptions.tsx` — the screen container (card grid + filter)
+- `src/ui/features/subscriptions/SubFilterBar.tsx` — the shared filter bar (search · status · wallet · sort)
+- `src/ui/features/subscriptions/useSubFilter.ts` — the shared filter/sort query hook
 - `src/ui/features/subscriptions/SubscriptionDues.tsx` — the "To confirm" owed-cycle list
-- `src/ui/features/subscriptions/ConnectedSubscriptionCard.tsx` — card + dialogs wired to usecases (Dashboard)
+- `src/ui/features/subscriptions/ConnectedSubscriptionCard.tsx` — card + dialogs wired to usecases (both surfaces)
 - `src/ui/features/subscriptions/SubscriptionCard.tsx` — the presentational service card
 - `src/ui/features/subscriptions/SubscriptionCatchUp.tsx` — settle owed cycles (used-switch + paid-waterline)
 - `src/ui/features/subscriptions/SubscriptionCancel.tsx` — cancel dialog (effective date)
 - `src/ui/features/subscriptions/SubscriptionHistory.tsx` — settled-cycle history with per-row Undo
 - `src/ui/features/subscriptions/SubscriptionEditor.tsx` — the add/edit singleton modal
 - `src/ui/features/subscriptions/SubTile.tsx` — the icon tile
-- `src/ui/features/subscriptions/useStableSubOrder.ts` — frozen display-order hook
 - `src/domain/subscription.ts` — all the pure rules (§4)
 - `src/usecases/subscriptions.ts` — all the writes (§5)
 - `src/domain/date.ts` — `cycleDate` support: `billingDate`, `addMonthKey`, `monthsBetweenKeys`, `daysBetween`, `monthLabelShort`, `monthNameShort`

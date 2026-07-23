@@ -1,5 +1,10 @@
 # Cashy — Product Vision
 
+> **iOS-native product vision (timeless).** For the software that actually ships —
+> the React web app — see [cashy-web-spec.md](cashy-web-spec.md). When this vision
+> and the code disagree about what *exists*, the code wins; when *philosophy* is in
+> question, this vision wins.
+
 > **Mục đích:** Tài liệu định hướng tầm nhìn phát triển Cashy. Đây là tài liệu **TIMELESS** — tư tưởng áp dụng qua mọi version.
 >
 > **Cách dùng:** Đọc file này đầu tiên khi onboarding. Mọi feature spec, code review, AI session phải align với vision này. Khi vision và spec mâu thuẫn, vision thắng.

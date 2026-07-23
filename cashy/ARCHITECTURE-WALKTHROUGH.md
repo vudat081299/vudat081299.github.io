@@ -42,9 +42,9 @@ src/
 ├─ usecases/   10 files (+2 tests)   ── categories tags transactions subscriptions wallets
 │                                       loans contacts settings workspace
 ├─ ui/kit/     63 files              ── wb-* generic design system (Button, Modal, Popover, charts…)
-├─ ui/common/  21 files              ── Cashy-aware building blocks: AmountDisplay, StatFigure,
-│                                       FacetChip, CardIdentity, CategoryCap, pickers…
-├─ ui/features/37 files              ── 10 screens: dashboard transactions subscriptions wallets
+├─ ui/common/  22 files              ── Cashy-aware building blocks: AmountDisplay, StatFigure,
+│                                       FacetChip, SearchField, CardIdentity, CategoryCap, pickers…
+├─ ui/features/38 files              ── 10 screens: dashboard transactions subscriptions wallets
 │                                       loans categories tags contacts settings onboarding
 ├─ ui/app/      2 files              ── Layout · ErrorBoundary
 ├─ ui/dev/      2 files              ── WbGallery (#/wb) · CashyGallery (#/cashy) — DEV only, code-split
@@ -63,7 +63,7 @@ across screens, no home-rolled money formatting per feature.
 
 | Concern | The one file | Functions |
 |---|---|---|
-| **Format money** | `domain/money.ts` | `formatMoney` (`18.785.000 đ`), `formatMoneyShort` (`3,4m` — a k/m/b letter carries the unit, so **no "đ"**), `formatDigits`, `signedMoney` |
+| **Format money** | `domain/money.ts` | `formatMoney` (`18.785.000 ₫`), `formatMoneyShort` (`3,4m` — a k/m/b letter carries the unit, so **no "₫"**), `formatMoneyAxis` (compact, unit stripped — chart axes / range labels), `formatDigits`, `signedMoney`. Currency glyph is the đồng sign `₫` (U+20AB), one home for the whole app |
 | **Parse money** | `domain/money.ts` | `parseMoney` (text → integer đồng) |
 | **Round / coerce money** | `domain/money.ts` | `toVnd` (round to whole đồng), `toVndNonNeg` (clamp ≥ 0) — **every** usecase that writes a money field routes through these |
 | **Format percent** | `domain/format.ts` | `formatPercent(ratio, decimals?)` → `"13%"` / `"12,8%"`, vi-VN comma |
@@ -87,7 +87,7 @@ LoanEditor (ui) → addLoan (usecase) → toVndNonNeg(principal) [domain/money] 
 display:          loanOutstanding [domain/loan] → <AmountDisplay short/> → formatMoneyShort [domain/money]
 ```
 
-No step does its own `Math.round` or appends `" đ"` by hand.
+No step does its own `Math.round` or appends `" ₫"` by hand.
 
 ---
 
@@ -118,6 +118,7 @@ Deliberately minimal: a **single** custom script (`scripts/check-layers.mjs`) �
 | | `docs/features/*.md` (11) | One doc per feature, describing it **exactly as the code is today**: overview, transactions, subscriptions, wallets, loans, categories, tags, contacts, settings, onboarding (+ a README index) |
 | **Plans (design record)** | `docs/loans-plan.md` | ✅ SHIPPED — kept as the design record |
 | | `docs/wallets-plan.md` | 📋 PLAN, not built — awaiting go-ahead per phase |
+| | `docs/PLAN.md` | ✅ SHIPPED (2026-07-24) — currency → `₫`, subscriptions filter/sort/trial, `cashy-web-spec.md` split |
 | **Handoff / ops** | `docs/handoff-checklist.md` | For the owner: documentation + component-catalogue status |
 | | `REBUILD-NOTES.md` | Log of rebuilding every screen onto web-builder + open questions |
 | | `README.md` / `CLAUDE.md` | Repo README · `CLAUDE.md` = the guide + conventions an agent must follow |

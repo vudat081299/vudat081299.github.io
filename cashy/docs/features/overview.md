@@ -155,11 +155,13 @@ period is listed (not just the top few); the `Other` row shows `· N categories`
 Progress-bar width is `pct / maxSlice` (min 4%) in the category's own hue. Empty →
 "No spending in this period."
 
-**Subscriptions strip.** Rendered only when `subCards.length > 0`. Order from
-`useStableSubOrder` (sorted once, held stable so editing a card never reorders it).
-`needsPaymentNow` count surfaces as a "N due now" warning capsule; "Manage" →
-`#/subscriptions`. Past 6 cards the grid caps at ~2.5 rows and scrolls
-(`cashy-subgrid--scroll`).
+**Subscriptions strip.** Rendered whenever there are subscriptions. Ordered by
+status via the pure `sortSubscriptions` (urgent → calm) through the shared
+`useSubFilter` hook — the same one the `#/subscriptions` screen uses, so both
+surfaces agree. `needsPaymentNow` count surfaces as a "N due now" warning capsule;
+"Manage" → `#/subscriptions`. Past 6 cards the grid caps at ~2.5 rows and scrolls
+(`cashy-subgrid--scroll`) **and** a `SubFilterBar` appears below the header (search ·
+status · wallet · sort); a filter that empties the strip shows a "no matches" note.
 
 **Insights strip.** Rendered only when `hasFlow`. Eight tiles from `periodInsights`
 + `pctChange`: Savings rate (green ≥0 / red <0, `—` when no income), Spending vs
@@ -194,4 +196,4 @@ Shared pieces it hosts (documented once, here or in their own docs):
 - `src/ui/features/transactions/useTxQuery.ts` — the shared query hook (period + filters)
 - `src/domain/analytics.ts`, `domain/period.ts`, `domain/transaction.ts` — the derivations
 - `src/ui/features/transactions/{TxFilterBar,TransactionTable}.tsx` → [transactions.md](./transactions.md)
-- `src/ui/features/subscriptions/ConnectedSubscriptionCard.tsx`, `useStableSubOrder.ts` → [subscriptions.md](./subscriptions.md)
+- `src/ui/features/subscriptions/ConnectedSubscriptionCard.tsx`, `useSubFilter.ts`, `SubFilterBar.tsx` → [subscriptions.md](./subscriptions.md)

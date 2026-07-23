@@ -21,6 +21,7 @@ references, which stay the authority for anything that spans features:
 | [subscriptions.md](subscriptions.md) | `#/subscriptions` | recurring services: dues/confirm, cards + catch-up/cancel/history dialogs, editor, the whole subscription domain |
 | [wallets.md](wallets.md) | `#/wallets` | spending wallets: balances + net worth, add/edit/archive/delete, wallet-per-transaction, transfers between wallets |
 | [loans.md](loans.md) | `#/loans` | loans & debts: money you owe + owed to you, due dates, interest (reference-only), a manual repayment log, net-worth integration |
+| [contacts.md](contacts.md) | `#/contacts` | the people you lend to / borrow from — a first-class address book that holds no money; add/edit/archive/delete |
 | [categories.md](categories.md) | `#/categories` | the drag-to-reorder / drop-to-nest category tree + editor, per-side split |
 | [tags.md](tags.md) | `#/tags` | flat labels, usage-rank grey shading, the tag manager + editor |
 | [settings.md](settings.md) | `#/settings` | appearance, workspace, data export/import + opt-in sample data, danger-zone reset |

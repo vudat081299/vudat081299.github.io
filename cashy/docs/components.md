@@ -103,6 +103,7 @@ Pure/presentational; none touch the store.
 | `PeriodPanel` | the period-chooser body (day/month presets + custom range) | `value: PeriodKey`, `custom`, `onChange`, `onPick?` |
 | `PeriodPicker` | Popover trigger stating the active window; hosts `PeriodPanel` | `value: PeriodKey`, `custom`, `onChange` |
 | `RangeCalendar` | `wb-calendar --range` with a live preview band | `value: Range\|null`, `onChange` |
+| `SearchField` | the seamless search pill (magnifier + borderless input + clear ×) shared by every filter bar (transactions, loans, subscriptions) | `value`, `onChange`, `placeholder?`, `className?`, `ariaLabel?` |
 | `Select` | native `<select>` wrapped with the chevron inside | `value`, `onChange`, `children` |
 | `StatusCap` | the tone capsule for a transaction's status | `tx: Transaction` |
 | `StatusPicker` | pick a `TxStatus` by clicking a capsule | `value: TxStatus`, `onChange`, `name?` |
@@ -127,7 +128,8 @@ examples).
 | `Pagination` | `wb-pagination` control (nothing for ≤1 page) | `page`, `totalPages`, `onPage` |
 | `TagsMorePopover` | the "+n" overflow chip in a table tags cell | `tags: TagRank[]` (the hidden ones), `count` |
 | `SubTile` | rounded icon tile; neutral unless `brand` | `icon`, `colorHex?`, `brand?`, `size?`, `iconSize?` |
-| `SubscriptionCard` | one service card (last paid, owed, progress, status, foot actions) | `sub: Subscription`, `txs: Transaction[]`, `iconStyle?`, `onOpenCatchUp`, `onOpenHistory`, `onOpenCancel`, `onSetActive` |
+| `SubscriptionCard` | one service card (last paid, owed, a progress bar for the billing period **or the trial run-up**, status, foot actions incl. **edit**) | `sub: Subscription`, `txs: Transaction[]`, `iconStyle?`, `onOpenEditor`, `onOpenCatchUp`, `onOpenHistory`, `onOpenCancel`, `onSetActive` |
+| `SubFilterBar` | the subscriptions filter bar (the tx bar's twin): `SearchField` + Status + Wallet `FacetChip`s + far-right Price / Days-left sort capsules | `f: SubFilter` (from `useSubFilter`) |
 | `SubscriptionDues` | "to confirm" rows — Paid/Skip each due cycle | `dues: Due[]` (`{ sub, month, txId }`), `max?`, `onConfirm`, `onSkip` |
 | `SubscriptionCatchUp` | settle owed cycles (used-switch + oldest-first waterline + editable price + per-cycle date override via a `Calendar` popover; the "nothing to do" state shows in the disabled confirm button) — controlled modal | `sub`, `pending: {month,txId}[]`, `open`, `onClose`, `onResolve(plan)`, `defaultAmount` |
 | `SubscriptionHistory` | settled cycles, newest first, each with Undo — controlled modal | `sub`, `txs`, `open`, `onClose`, `onRevert(txId,month,wasPaid)` |
@@ -135,7 +137,7 @@ examples).
 | `WalletCard` | one wallet as a card: accent-tinted tile + kind (or card network) + derived balance (negative → red, archived → dimmed); a `card` with a credit limit adds a utilisation bar + "used / available" line | `wallet: Wallet`, `balance: number`, `onEdit?(id)` |
 | `LoanCard` | one loan as a card — **composed from `CardIdentity` + `.cashy-card*`** like `WalletCard` (migrated off inline styles in the loans redesign). Neutral tile + counterparty + source; a direction line ("I owe" / "Owed to me") whose arrow is tinted by side — **red for "I owe"**, **green for "Owed to me"** — with the lent amount green and the borrowed amount neutral (red only when overdue); a 6px repayment bar; a foot with a tier-3 due line (only the day-count bolded) + interest with the **rate figure bolded** ("**N%** per year"; "No interest" recedes). Every state carries a status capsule — overdue/due-soon/paid, or a neutral "N months left" (rounded down via `loanTimeLeft`) for a calm active loan; a settled loan dims like a cancelled subscription | `loan: Loan` (derives its own numbers from `domain/loan`), `onEdit?(id)`, `now?`; renders in the `#/cashy` gallery ("8 · Loans") |
 | `LoanSummary` | the loans-overview header: a "where I stand" panel (you owe / owed to me / net) beside a "what's coming" panel — the next payment (date · amount · to whom) and a segmented **schedule bar** + legend splitting what I owe into overdue / ≤30d / 31–60d / later | `payable`, `receivable`, `net`, `schedule: PayableSchedule`, `next` (from `domain/loan.payableSchedule` + `nextPayment`) |
-| `FacetChip` (common) | one filter facet as a self-contained dropdown chip — dashed outline unselected, solid when a value is chosen, with an × to clear just that facet. Shared by the transaction **and** loan filter bars | `label`, `value?`, `active`, `accent?`, `panelWidth?`, `onClear`, `children` (panel, or `({close})⇒panel`) |
+| `FacetChip` (common) | one filter facet as a self-contained dropdown chip — dashed outline unselected, solid when a value is chosen, with an × to clear just that facet. Shared by the transaction, loan **and** subscription filter bars | `label`, `value?`, `active`, `accent?`, `panelWidth?`, `onClear`, `children` (panel, or `({close})⇒panel`) |
 
 `TagRank = { tag: Tag; count: number; shade: number }` (from `rankTags`). `Due`, `TxQuery`,
 `Range`, `BreakdownSlice`, `WalletPoint`, `ForecastPoint` are exported from the relevant
@@ -150,7 +152,7 @@ examples).
 | `ConnectedSubscriptionCard` | wires a `SubscriptionCard` to usecases + hosts its 3 dialogs; every write is undoable via toast (imports usecases, not `useCashy`) |
 | `Dashboard` | Overview: KPIs, projected balance, subscriptions strip, cash-flow + donut, insights, recent-tx table |
 | `Transactions` | period + filter bar + full table (50/page) |
-| `Subscriptions` | stats + "to confirm" dues + services table (in-file `SubscriptionRow`, not the card) |
+| `Subscriptions` | stats + "to confirm" dues + a card grid of `ConnectedSubscriptionCard` with a `SubFilterBar` (shown when > 6) |
 | `Wallets` | net worth + wallets grouped by kind (Cash & accounts / Cards / Other / Archived) + in-file `WalletEditor` (name, kind, balance, card network + credit limit for cards, colour, icon, archive/delete) |
 | `Loans` | `LoanSummary` header (position + payments-due schedule) + a shared `FacetChip` filter bar (search · Status · Source · Archived) + grouped `LoanCard` grids ("Money I owe" / "Owed to me" / "Archived", each sorted by `sortLoans`) + in-file `LoanEditor` (borrowed/lent toggle, counterparty, source, principal, interest rate + period, opened + optional due dates, colour, icon, note, a live payments sub-editor with a live outstanding readout, archive/delete) |
 | `Categories` | drag-to-reorder / drop-to-nest tree + in-file `CategoryEditor` modal |
@@ -185,7 +187,7 @@ Dashboard
 └─ TransactionTable → AmountDisplay, CategoryCap, StatusCap, TagChip, TagsMorePopover, Pagination → EmptyState
 
 Transactions   PageHeader · PeriodPicker · AmountDisplay(net) · TxFilterBar · TransactionTable · EmptyState
-Subscriptions  PageHeader · stat tiles · SubscriptionDues → SubTile · SubscriptionRow → SubTile, CategoryCap · EmptyState  → opens SubscriptionEditor
+Subscriptions  PageHeader · stat tiles · SubscriptionDues → SubTile · SubFilterBar → SearchField, FacetChip · ConnectedSubscriptionCard → SubscriptionCard → SubTile · EmptyState  → opens SubscriptionEditor
 Wallets        PageHeader · net-worth card · grouped WalletCard ×N → AmountDisplay, Progress (card utilisation) · WalletEditor(Modal) → Select, ColorPicker, IconPicker
 Loans          PageHeader · owe/owed/net summary card · LoanCard ×N → AmountDisplay, Progress · LoanEditor(Modal) → Select, ColorPicker, IconPicker, AmountDisplay
 Categories     PageHeader · Tree (wb-tree DnD) → Icon · CategoryEditor(Modal) → ColorPicker, IconPicker, Select · EmptyState

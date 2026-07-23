@@ -60,7 +60,7 @@ Pure functions from `domain/*` (`src/domain/…`):
 | `periodRange(key, now, custom)` | `period.ts` | resolves a `PeriodKey` to concrete `{start,end}` dates for the range filter. |
 | `rankTags(tags, txs)` | `tag.ts` | tag order **and** grey ink shade by usage rank (not raw count). |
 | `flattenTree(categories)` | `category.ts` | depth-indented category list for the Category facet. |
-| `formatMoney` / `signedMoney` / `formatMoneyShort` / `formatDigits` / `parseMoney` | `money.ts` | render / parse amounts (detail total, signed cells, amount-facet summary, grouped editor input, digits→integer đồng). |
+| `formatMoney` / `signedMoney` / `formatMoneyShort` / `formatMoneyAxis` / `formatDigits` / `parseMoney` | `money.ts` | render / parse amounts (detail total, signed cells, the amount-facet range summary via `formatMoneyAxis`, grouped editor input, digits→integer đồng). Currency glyph is `₫`. |
 | `todayYMD` / `yesterdayYMD` / `nowHM` / `fmtDate` | `date.ts` | editor "Now / Today / Yesterday" chips, default time, detail date. |
 
 ## 5. Usecases

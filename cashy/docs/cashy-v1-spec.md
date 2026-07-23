@@ -1,5 +1,10 @@
 # Cashy v1.0 — Implementation Spec
 
+> **iOS-native v1 use-case spec.** For the software that actually ships — the
+> React web app, whose stack and constraints differ — see
+> [cashy-web-spec.md](cashy-web-spec.md). This doc's tech stack (SwiftData, TCA,
+> Sign in with Apple, Face ID…) is the native target, not what the web build uses.
+
 > **Mục đích:** Spec chi tiết cho version v1.0 — use cases, screens, tech stack cụ thể, architecture pattern hiện tại, data model, hard constraints.
 >
 > **Tài liệu này VERSION-SPECIFIC.** Sẽ có `cashy-v2-spec.md`, `cashy-v3-spec.md` sau. Tư tưởng dài hạn xem `cashy-vision.md` — **phải đọc trước file này**.

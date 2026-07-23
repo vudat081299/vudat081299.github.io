@@ -38,48 +38,40 @@
 
 - [x] `pnpm build` passes (`tsc -b` + `check:layers` + vite build). Layering holds.
 - [x] `pnpm lint` clean (only the pre-existing `wb-main.tsx` fast-refresh warning).
-- [x] `pnpm test` — **98/98** pass. (Docs previously said "61"; corrected.)
+- [x] `pnpm test` — **186 pass (12 files)**.
 - [x] `#/cashy` renders all 6 sections in **light and dark**; no console errors;
       charts, table (paginated), subscription cards, dues and the three dialogs all
       work; the money format shows `m`/`b`.
 - [x] Galleries are DEV-only and code-split (own chunks; the `import.meta.env.DEV`
       guard means they are never *loaded* in production).
 
-## 3. Open questions — need your call
+## 3. Open questions — all resolved
 
-I picked a sensible default for each so nothing was blocked; change any if you disagree.
+Everything below was decided and shipped; kept here as a short record.
 
-> **Resolved & removed 2026-07-23:** the `tr → m` question — kept `k / m / b` but
-> the number stays `vi-VN` (comma decimal, `3,4m đ`), settled in `domain/money.ts`;
-> and the English-translation scope (old #3 / repo #8) — the whole app is now
-> English **incl. app-wide chart dates** (`domain/date.ts`); only the DEV galleries
-> and the intentionally-Vietnamese seed data remain.
+> **Resolved 2026-07-23:** the `tr → m` question — kept `k / m / b`, number stays
+> `vi-VN` (comma decimal), settled in `domain/money.ts`; and the English-translation
+> scope — the whole app is English **incl. app-wide chart dates** (`domain/date.ts`);
+> only the DEV galleries and the intentionally-Vietnamese seed data remain.
 
-1. **Currency glyph consistency — `₫` vs `đ`.** The whole app formats money with
-   `đ` via `domain/money.formatMoney`, **except** the Add-transaction *amount*
-   field, whose input addon still shows `₫` (U+20AB, `TransactionEditor.tsx`). I
-   left it as-is (you only asked about the border style there). → **Unify to `đ`
-   everywhere?** (one-line change.)
+1. **Currency glyph — RESOLVED (2026-07-24).** Unified to the đồng sign **`₫`**
+   (U+20AB) app-wide through `domain/money` (`formatMoney`/`formatMoneyShort`), plus
+   the labels that showed a bare `đ` (loans/wallets/subscriptions editors, the amount
+   facet). (Decided the opposite way from the earlier "unify to `đ`" suggestion.)
 
-2. **Product docs vs. the actual web app.** `docs/cashy-vision.md` and
-   `docs/cashy-v1-spec.md` describe a native-iOS product (Sign in with Apple, PIN,
-   Face ID, SwiftUI/TCA, CSV import) — features **not** in this React web build.
-   I flagged this in `CLAUDE.md` rather than editing your product docs. → **Do you
-   want me to add a "web vs. native" status note at the top of each product doc (or
-   split a `cashy-web-spec.md`), so an AI never tries to build SwiftData/Face ID
-   here?**
+2. **Product docs vs. the web app — RESOLVED (2026-07-24).** Split
+   [`docs/cashy-web-spec.md`](cashy-web-spec.md) describing what actually ships (with
+   an explicit "not in the web build" list), and added a one-line pointer at the top
+   of `cashy-vision.md` and `cashy-v1-spec.md`; `CLAUDE.md` cross-links it.
 
-3. **Dev galleries in the production `dist/`.** Both `#/wb` and `#/cashy` emit their
-   own JS chunk into `dist/` (~5 KB gzip each). They are never *loaded* in prod (the
-   DEV guard), but the files ship. This is the pre-existing pattern. → **Fine to
-   leave, or should the galleries be excluded from the prod build entirely?**
+3. **Dev galleries in `dist/` — RESOLVED.** Kept as-is (code-split, DEV-guarded, never
+   loaded in production).
 
 ## 4. Observations (not blocking — for when you want them)
 
-- **In-file sub-components.** `Subscriptions.tsx` (`SubscriptionRow`),
-  `Categories.tsx` (`CategoryEditor`, `Tree`), `Tags.tsx` (`TagEditor`),
-  `Settings.tsx` (`Section`) keep small components inline. That's fine (feature-
-  local, single-use); extract only if one gets reused elsewhere.
+- **In-file sub-components.** `Categories.tsx` (`CategoryEditor`, `Tree`),
+  `Tags.tsx` (`TagEditor`), `Settings.tsx` (`Section`) keep small components inline.
+  That's fine (feature-local, single-use); extract only if one gets reused elsewhere.
 - **Gallery coverage.** `#/cashy` shows the common + feature-leaf + controlled
   dialogs. It deliberately omits the containers/screens and the three store-backed
   singleton modals (they read the live store) — see the note at the foot of the
@@ -87,5 +79,7 @@ I picked a sensible default for each so nothing was blocked; change any if you d
 - **`SubscriptionEditor.tsx` is large** (~450 lines: proration, trial, shared-plan
   hints). It's coherent but the densest UI file — a candidate for a future split if
   it grows.
-- **Docs count drift** was real (`61 tests` → actually `98`). The other doc facts
-  spot-checked accurate. Worth re-running these numbers whenever tests are added.
+- **Docs count drift** is a recurring trap — the test count has been wrong more than
+  once (`61` → `98` → `186`). The canonical figure now lives in the README command
+  table; other docs describe the tests without repeating a hard number. Re-check when
+  tests are added.
