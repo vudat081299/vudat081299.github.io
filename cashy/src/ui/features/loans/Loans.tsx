@@ -21,6 +21,7 @@ import type { InterestPeriod, Loan, LoanDirection, LoanPayment, LoanSource } fro
 import { PageHeader } from "@/ui/common/PageHeader";
 import { Select } from "@/ui/common/Select";
 import { FacetChip } from "@/ui/common/FacetChip";
+import { SearchField } from "@/ui/common/SearchField";
 import { ColorPicker } from "@/ui/common/ColorPicker";
 import { IconPicker } from "@/ui/common/IconPicker";
 import { Modal } from "@/ui/kit/Modal";
@@ -216,7 +217,7 @@ function LoanEditor({
           </div>
           <div className="wb-field" style={{ flex: 1, minWidth: 0 }}>
             <label className="wb-label" htmlFor="loan-principal">
-              Principal <span className="wb-label__opt">(đ)</span>
+              Principal <span className="wb-label__opt">(₫)</span>
             </label>
             <input
               id="loan-principal"
@@ -531,29 +532,13 @@ export function Loans() {
               whether put-away loans show. Grouping already handles direction. */}
           <div className="wb-filterbar">
             {/* Seamless search pill — same control as the transaction filter. */}
-            <div className="wb-input-group wb-input-group--seamless wb-filterbar__search cashy-search">
-              <span className="wb-input-group__addon">
-                <span className="wb-ico wb-ico--sm">search</span>
-              </span>
-              <input
-                className="wb-input"
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search a name…"
-                aria-label="Search loans by name"
-              />
-              {query && (
-                <button
-                  type="button"
-                  className="wb-input-group__btn"
-                  aria-label="Clear search"
-                  onClick={() => setQuery("")}
-                >
-                  <span className="wb-ico wb-ico--sm">close</span>
-                </button>
-              )}
-            </div>
+            <SearchField
+              value={query}
+              onChange={setQuery}
+              placeholder="Search a name…"
+              className="wb-filterbar__search"
+              ariaLabel="Search loans by name"
+            />
 
             <FacetChip
               label="Status"

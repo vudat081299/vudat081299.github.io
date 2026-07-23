@@ -25,7 +25,8 @@ import {
 } from "@/domain";
 import { periodLabel, prevRange } from "@/domain/period";
 import { formatPercent } from "@/domain/format";
-import { useStableSubOrder } from "@/ui/features/subscriptions/useStableSubOrder";
+import { useSubFilter } from "@/ui/features/subscriptions/useSubFilter";
+import { SubFilterBar } from "@/ui/features/subscriptions/SubFilterBar";
 import { useAtScrollEnd } from "@/ui/features/dashboard/useAtScrollEnd";
 import { useTxQuery } from "@/ui/features/transactions/useTxQuery";
 import { navigate } from "@/lib/router";
@@ -150,12 +151,17 @@ export function Dashboard() {
     [tagRanks],
   );
 
-  // Services that want attention first, then the rest; cancelled ones sink.
-  // Sorted once, then held stable so editing a card never reorders it.
-  const subCards = useStableSubOrder(subscriptions, transactions);
+  // Services that want attention first (the pure "by status" default), plus the
+  // shared filter/sort — the same one the Subscriptions screen uses, so the strip
+  // and the full screen order identically. Ordering is live: marking a service
+  // paid moves it out of the "due" cluster, which is coherent feedback here.
+  const subFilter = useSubFilter(subscriptions, transactions, wallets);
+  const subCards = subFilter.result;
   const dueCount = subscriptions.filter((s) => needsPaymentNow(s, transactions)).length;
-  // When the strip is a peek-scroll (> 6), drop its foot fade once scrolled to
-  // the end so the last row reads clearly instead of dissolving.
+  // Past six services the strip becomes a peek-scroll AND grows a filter bar.
+  const showSubFilter = subscriptions.length > 6;
+  // When the strip is a peek-scroll (> 6 shown), drop its foot fade once scrolled
+  // to the end so the last row reads clearly instead of dissolving.
   const subPeek = useAtScrollEnd<HTMLDivElement>();
   const subScroll = subCards.length > 6;
 
@@ -403,7 +409,7 @@ export function Dashboard() {
 
       {/* One card per service: what was paid, what is owed, how far through the
           period we are, and the way out. */}
-      {subCards.length > 0 && (
+      {subscriptions.length > 0 && (
         <div className="wb-stack" style={{ "--wb-stack-gap": "14px" } as CSSProperties}>
           <div className="wb-cluster wb-cluster--between" style={{ gap: 10 }}>
             <div>
@@ -425,26 +431,33 @@ export function Dashboard() {
               </button>
             </div>
           </div>
+
+          {showSubFilter && <SubFilterBar f={subFilter} />}
+
           {/* Past 6 services the strip stops growing the page: it caps at ~2.5
               rows and scrolls, with the foot half-row fading out to signal more.
               (`Manage` opens the full, unclipped list.) */}
-          <div
-            ref={subPeek.ref}
-            className={
-              subScroll
-                ? `cashy-subgrid cashy-subgrid--scroll${subPeek.atEnd ? " is-at-bottom" : ""}`
-                : "cashy-subgrid"
-            }
-          >
-            {subCards.map((sub) => (
-              <ConnectedSubscriptionCard
-                key={sub.id}
-                sub={sub}
-                txs={transactions}
-                iconStyle={subIconStyle}
-              />
-            ))}
-          </div>
+          {subCards.length ? (
+            <div
+              ref={subPeek.ref}
+              className={
+                subScroll
+                  ? `cashy-subgrid cashy-subgrid--scroll${subPeek.atEnd ? " is-at-bottom" : ""}`
+                  : "cashy-subgrid"
+              }
+            >
+              {subCards.map((sub) => (
+                <ConnectedSubscriptionCard
+                  key={sub.id}
+                  sub={sub}
+                  txs={transactions}
+                  iconStyle={subIconStyle}
+                />
+              ))}
+            </div>
+          ) : (
+            <p className="cashy-subgrid-empty">No subscriptions match these filters.</p>
+          )}
         </div>
       )}
 

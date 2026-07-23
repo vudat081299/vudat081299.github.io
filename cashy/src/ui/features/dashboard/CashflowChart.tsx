@@ -9,7 +9,7 @@ import {
   YAxis,
 } from "recharts";
 import type { TooltipContentProps } from "recharts";
-import { formatMoney, formatMoneyShort } from "@/domain/money";
+import { formatMoney, formatMoneyAxis } from "@/domain/money";
 import { chartBucketTitle } from "@/domain/date";
 import type { WalletPoint } from "@/domain";
 
@@ -125,7 +125,7 @@ export function CashflowChart({ data }: { data: WalletPoint[] }) {
           axisLine={false}
           domain={balanceDomain}
           tick={{ fontSize: 10, fontWeight: 600, fill: BALANCE_COLOR }}
-          tickFormatter={(v) => formatMoneyShort(Number(v)).replace(" đ", "")}
+          tickFormatter={(v) => formatMoneyAxis(Number(v))}
         />
         {/* Spending rides its own axis on the RIGHT, labelled in the spending
             colour so the bars are read against their own scale (0 → a few million)
@@ -139,7 +139,7 @@ export function CashflowChart({ data }: { data: WalletPoint[] }) {
           axisLine={false}
           domain={[0, "auto"]}
           tick={{ fontSize: 10, fontWeight: 600, fill: "var(--wb-chart-expense)" }}
-          tickFormatter={(v) => formatMoneyShort(Number(v)).replace(" đ", "")}
+          tickFormatter={(v) => formatMoneyAxis(Number(v))}
         />
         <Tooltip
           cursor={{ fill: "var(--wb-surface-2)" }}

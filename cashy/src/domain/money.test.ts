@@ -3,11 +3,11 @@ import { formatMoney, formatMoneyShort, parseMoney, toVnd, toVndNonNeg } from "@
 
 describe("formatMoney", () => {
   it("groups digits vi-VN and appends the unit", () => {
-    expect(formatMoney(18785000)).toBe("18.785.000 đ");
+    expect(formatMoney(18785000)).toBe("18.785.000 ₫");
   });
   it("rounds to a whole đồng and treats junk as 0", () => {
-    expect(formatMoney(100.6)).toBe("101 đ");
-    expect(formatMoney(NaN)).toBe("0 đ");
+    expect(formatMoney(100.6)).toBe("101 ₫");
+    expect(formatMoney(NaN)).toBe("0 ₫");
   });
 });
 
@@ -18,7 +18,7 @@ describe("formatMoneyShort", () => {
     expect(formatMoneyShort(1200000000)).toBe("1,2b");
   });
   it("keeps đ only for the sub-1.000 form that has no letter", () => {
-    expect(formatMoneyShort(500)).toBe("500 đ");
+    expect(formatMoneyShort(500)).toBe("500 ₫");
   });
   it("drops a trailing ,0 on a whole magnitude and carries the sign", () => {
     expect(formatMoneyShort(5000000)).toBe("5m");

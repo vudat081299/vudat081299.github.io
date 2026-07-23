@@ -314,9 +314,9 @@ function SubsDemo() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 14 }}>
-        <SubscriptionCard sub={SUB_NETFLIX} txs={SUB_TXS} onOpenCatchUp={noop} onOpenHistory={noop} onOpenCancel={noop} onSetActive={noop} />
-        <SubscriptionCard sub={SUB_ICLOUD} txs={SUB_TXS} onOpenCatchUp={noop} onOpenHistory={noop} onOpenCancel={noop} onSetActive={noop} />
-        <SubscriptionCard sub={SUB_SPOTIFY} txs={[]} onOpenCatchUp={noop} onOpenHistory={noop} onOpenCancel={noop} onSetActive={noop} />
+        <SubscriptionCard sub={SUB_NETFLIX} txs={SUB_TXS} onOpenEditor={noop} onOpenCatchUp={noop} onOpenHistory={noop} onOpenCancel={noop} onSetActive={noop} />
+        <SubscriptionCard sub={SUB_ICLOUD} txs={SUB_TXS} onOpenEditor={noop} onOpenCatchUp={noop} onOpenHistory={noop} onOpenCancel={noop} onSetActive={noop} />
+        <SubscriptionCard sub={SUB_SPOTIFY} txs={[]} onOpenEditor={noop} onOpenCatchUp={noop} onOpenHistory={noop} onOpenCancel={noop} onSetActive={noop} />
       </div>
 
       <Cell label="SubscriptionDues — one row per owed cycle">

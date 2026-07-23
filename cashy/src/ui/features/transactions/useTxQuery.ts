@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import type { Category, Transaction, TxStatus, TxType } from "@/domain/types";
-import { filterTx } from "@/domain";
+import { byRecency, filterTx } from "@/domain";
 import { periodRange, type PeriodKey, type Range } from "@/domain/period";
 
 export interface TxQuery {
@@ -84,15 +84,7 @@ export function useTxQuery(
     [transactions, categories, range, type, search, activeTags, statuses, catIds, walletId, amountMin, amountMax],
   );
 
-  const sorted = useMemo(
-    () =>
-      [...filtered].sort(
-        (a, b) =>
-          b.occurredAt.localeCompare(a.occurredAt) ||
-          b.createdAt.localeCompare(a.createdAt),
-      ),
-    [filtered],
-  );
+  const sorted = useMemo(() => [...filtered].sort(byRecency), [filtered]);
 
   const toggleTag = (id: string) =>
     setActiveTags((cur) => (cur.includes(id) ? cur.filter((x) => x !== id) : [...cur, id]));

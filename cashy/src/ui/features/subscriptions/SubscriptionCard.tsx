@@ -8,8 +8,11 @@ import {
   nextPaymentDate,
   subCycle,
   subscriptionStatus,
+  trialCycle,
+  type SubCycle,
 } from "@/domain";
 import type { SubIconStyle } from "@/domain/types";
+import { statusOf } from "@/domain/txStatus";
 import { fmtDateNum } from "@/domain/date";
 import { formatMoney } from "@/domain/money";
 import { SubTile } from "@/ui/features/subscriptions/SubTile";
@@ -37,6 +40,52 @@ import { Icon } from "@/ui/kit/icons";
  * be rendered against any subscription — including in the component gallery,
  * with no store behind it.
  */
+/**
+ * The "Day X of Y" caption + bar, shared by the active billing period and the
+ * free-trial window — both are a `SubCycle`, so one block draws either. The bar
+ * earns full ink only in the home stretch (< ~10% of the span left); a tone
+ * (danger/warning) overrides that when the service is behind. `rightNote` writes
+ * the trailing figure ("N days left" vs "N days of trial left") for the caller.
+ */
+function CycleProgress({
+  cyc,
+  tone,
+  rightNote,
+}: {
+  cyc: SubCycle;
+  tone?: "danger" | "warning";
+  rightNote: (c: SubCycle) => string;
+}) {
+  const nearEnd = cyc.remainingDays < cyc.totalDays * 0.1;
+  let barClass: string;
+  if (tone === "danger") {
+    barClass = "wb-progress__bar wb-progress__bar--danger";
+  } else if (tone === "warning") {
+    barClass = "wb-progress__bar wb-progress__bar--warning";
+  } else if (nearEnd) {
+    barClass = "wb-progress__bar";
+  } else {
+    barClass = "wb-progress__bar cashy-progress__bar--quiet";
+  }
+  return (
+    <>
+      <div className="wb-cluster wb-cluster--between" style={{ marginBottom: 7, gap: 8 }}>
+        {/* The "Day X of Y" reference recedes (faint caption); the trailing note
+            advances with heavier weight since it's the number the user reads. */}
+        <span style={{ fontSize: 12, color: "var(--cashy-ink-6)" }}>
+          Day {cyc.elapsedDays} of {cyc.totalDays}
+        </span>
+        <span className="wb-cell-muted" style={{ fontSize: 12, fontWeight: 600 }}>
+          {rightNote(cyc)}
+        </span>
+      </div>
+      <div className="wb-progress cashy-sub-progress">
+        <div className={barClass} style={{ width: `${Math.round(cyc.pct * 100)}%` }} />
+      </div>
+    </>
+  );
+}
+
 export function SubscriptionCard({
   sub,
   txs,
@@ -44,12 +93,15 @@ export function SubscriptionCard({
   onOpenCatchUp,
   onOpenHistory,
   onOpenCancel,
+  onOpenEditor,
   onSetActive,
 }: {
   sub: Subscription;
   txs: Transaction[];
   /** how the icon tile is coloured; a display preference the screen passes down */
   iconStyle?: SubIconStyle;
+  /** edit the plan itself (name, amount, cadence…) — opens the editor modal */
+  onOpenEditor: () => void;
   /** settle the owed cycles — opens the catch-up dialog */
   onOpenCatchUp: () => void;
   /** review and reverse cycles already paid or skipped */
@@ -105,9 +157,13 @@ export function SubscriptionCard({
   // Inside the free window: nothing is owed yet and the first charge is still
   // ahead, so the card says "Free trial" rather than the plain "Active".
   const trial = sub.active && inTrial(sub);
-  // The bar only earns full ink in the home stretch — under ~10% of the period
-  // left — so a black bar means "renews soon" rather than merely "time passes".
-  const nearEnd = cycle.remainingDays < cycle.totalDays * 0.1;
+  // The free-trial window as its own cycle, so the card can chart the run-up to
+  // the first charge with the same bar the billing period uses.
+  const tc = trial ? trialCycle(sub) : null;
+  // Which progress block, if any, to draw: the billing period for a running plan,
+  // or the trial run-up for one still inside its free window (never both).
+  const showActiveBar = sub.active && cycle.started && !trial;
+  const showTrialBar = trial && !!tc?.started;
   // Several cycles owed = the user paid in real life and never told the app.
   const behind = st.pending.length;
   const settledCount = sub.paymentTxIds.length;
@@ -164,9 +220,11 @@ export function SubscriptionCard({
     : "wb-card";
 
   // Nothing settled yet = an empty history; offering it would only lead to an
-  // empty dialog. Skipped cycles count too, so this is not `paymentTxIds`.
+  // empty dialog. Skipped cycles count too, so this is not `paymentTxIds`. Read
+  // status via `statusOf` (I6): a legacy charge with no `status` means "recorded",
+  // and comparing the raw field would wrongly hide its history.
   const hasHistory = txs.some(
-    (t) => t.subscriptionId === sub.id && (t.status === "recorded" || t.status === "skipped"),
+    (t) => t.subscriptionId === sub.id && (statusOf(t) === "recorded" || statusOf(t) === "skipped"),
   );
 
   // The standing line next to the history button. A service that owes money says
@@ -255,7 +313,7 @@ export function SubscriptionCard({
         <div className="wb-card__body">
           <div
             className="cashy-submeta"
-            style={{ marginBottom: sub.active && cycle.started ? 14 : 0 }}
+            style={{ marginBottom: showActiveBar || showTrialBar ? 14 : 0 }}
           >
             <div>
               <div className="cashy-submeta__label">Last paid</div>
@@ -269,42 +327,35 @@ export function SubscriptionCard({
             </div>
           </div>
 
-          {/* A cancelled service has no running period, so it gets no progress bar
-              — an empty track would only invite the question "progress to what?".
-              A trialing one is skipped too: the bar would chart a period nobody is
-              paying for, when the fact that matters is simply when billing begins. */}
-          {sub.active && cycle.started && !trial && (
-            <>
-              {/* Days used out of the days actually paid for — the divisor is the
-                  real length of THIS billing period: a 28-day February is 28. */}
-              <div className="wb-cluster wb-cluster--between" style={{ marginBottom: 7, gap: 8 }}>
-                {/* The "Day X of Y" reference recedes (faint caption); "days left"
-                    advances with heavier weight since it's the number the user
-                    actually reads. */}
-                <span style={{ fontSize: 12, color: "var(--cashy-ink-6)" }}>
-                  Day {cycle.elapsedDays} of {cycle.totalDays}
-                </span>
-                <span className="wb-cell-muted" style={{ fontSize: 12, fontWeight: 600 }}>
-                  {cycle.remainingDays === 0
-                    ? "Renews today"
-                    : `${cycle.remainingDays} ${cycle.remainingDays === 1 ? "day" : "days"} left`}
-                </span>
-              </div>
-              <div className="wb-progress cashy-sub-progress">
-                <div
-                  className={
-                    tone === "danger"
-                      ? "wb-progress__bar wb-progress__bar--danger"
-                      : tone === "warning"
-                        ? "wb-progress__bar wb-progress__bar--warning"
-                        : nearEnd
-                          ? "wb-progress__bar"
-                          : "wb-progress__bar cashy-progress__bar--quiet"
-                  }
-                  style={{ width: `${Math.round(cycle.pct * 100)}%` }}
-                />
-              </div>
-            </>
+          {/* A cancelled service has no running period, so it gets no progress
+              bar — an empty track would only invite "progress to what?". The
+              billing period (days used out of the days paid for — the divisor is
+              the REAL length of this period, so a 28-day February is 28). */}
+          {showActiveBar && (
+            <CycleProgress
+              cyc={cycle}
+              tone={tone}
+              rightNote={(c) =>
+                c.remainingDays === 0
+                  ? "Renews today"
+                  : `${c.remainingDays} ${c.remainingDays === 1 ? "day" : "days"} left`
+              }
+            />
+          )}
+
+          {/* The free trial gets the SAME bar, charting the run-up to the first
+              charge (`[startedAt → trialEndDate]`) — so a trialing card shows how
+              close billing is instead of a blank body. It darkens near the end
+              exactly like the active card. */}
+          {showTrialBar && tc && (
+            <CycleProgress
+              cyc={tc}
+              rightNote={(c) =>
+                c.remainingDays === 0
+                  ? "Charges today"
+                  : `${c.remainingDays} ${c.remainingDays === 1 ? "day" : "days"} of trial left`
+              }
+            />
           )}
 
           {lapsed && (
@@ -327,6 +378,18 @@ export function SubscriptionCard({
           {/* No history to show = no button. A trialing (or brand-new) service has
               nothing paid or skipped yet, so it earns no history control — a
               permanently-disabled icon would only be dead weight on the row. */}
+          {/* Edit the plan itself. This is the sole entry point to the editor for
+              an existing service now that the screen is a card grid (no table row
+              with a pencil), so it is always offered — active or cancelled. */}
+          <button
+            type="button"
+            className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm wb-btn--round"
+            aria-label={`Edit ${sub.name}`}
+            title="Edit"
+            onClick={onOpenEditor}
+          >
+            <span className="wb-ico wb-ico--sm">edit</span>
+          </button>
           {hasHistory && (
             <button
               type="button"

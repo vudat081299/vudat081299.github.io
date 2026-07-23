@@ -782,6 +782,42 @@ body {
   box-shadow: none;
 }
 
+/* Subscriptions filter — the transaction bar's twin, but its two SORT capsules
+   float to the far right. So the search must NOT grow (unlike `.wb-filterbar__search`),
+   leaving the free space for the sort group's `margin-left: auto` to consume. */
+.cashy-subfilter__search {
+  flex: 0 1 260px;
+  min-width: 170px;
+}
+.cashy-subfilter__sort {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+/* A sort capsule is a facet-styled TOGGLE with no dropdown: the button itself is
+   the chip, so it carries the padding the FacetChip normally puts on its inner
+   `__main` button. It reuses `.cashy-facet` (dashed) / `--active` (solid) so the
+   sort state reads exactly like an applied filter. */
+.cashy-sortchip {
+  gap: 5px;
+  padding: 5px 11px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--wb-fg-muted);
+  cursor: pointer;
+}
+.cashy-sortchip .wb-ico {
+  color: var(--wb-fg-subtle);
+}
+/* No value leads a sort chip (just the label), so keep the label legible when
+   active rather than muting it the way a value-carrying facet does. */
+.cashy-sortchip.cashy-facet--active .cashy-facet__label,
+.cashy-sortchip.cashy-facet--active .wb-ico {
+  color: var(--wb-fg);
+}
+
 /* =========================================================================
    ADD-TAG CAPSULE — the "＋ Thêm nhãn" trigger in the transaction editor. A
    dashed pill (the house "chưa chốt / optional" idiom, §capsules) rather than a
@@ -1681,6 +1717,25 @@ body {
 .cashy-subgrid .wb-card__body,
 .cashy-subgrid .wb-card__foot {
   padding: 10px;
+}
+/* The subscription grid's "no matches" note and its monthly-commitment caption —
+   quiet lines that sit outside the cards, so they carry their own muted styling. */
+.cashy-subgrid-empty {
+  margin: 0;
+  padding: 18px 4px;
+  color: var(--wb-fg-muted);
+  font-size: 13px;
+}
+.cashy-subgrid-foot {
+  margin: 0;
+  padding: 2px 4px;
+  color: var(--wb-fg-muted);
+  font-size: 13px;
+}
+.cashy-subgrid-foot strong {
+  color: var(--wb-fg);
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
 }
 /* A cancelled service is history, not a live card: it drops well back — dim AND
    desaturated so a brand-tinted icon stops pulling the eye — yet stays legible.

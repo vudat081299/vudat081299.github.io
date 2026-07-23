@@ -72,26 +72,3 @@ export function deleteLoan(id: string): void {
   const state = getState();
   commit({ ...state, loans: state.loans.filter((l) => l.id !== id) });
 }
-
-/** Record a repayment (a `borrowed` loan) / collection (a `lent` loan). A
- *  non-positive amount is ignored rather than stored as a zero entry. */
-export function addLoanPayment(id: string, input: { amount: number; date: string; note?: string }): void {
-  const payment = normalisePayment(input);
-  if (payment.amount <= 0) return;
-  const state = getState();
-  commit({
-    ...state,
-    loans: state.loans.map((l) => (l.id === id ? { ...l, payments: [...l.payments, payment] } : l)),
-  });
-}
-
-/** Remove one payment entry from a loan. */
-export function removeLoanPayment(id: string, paymentId: string): void {
-  const state = getState();
-  commit({
-    ...state,
-    loans: state.loans.map((l) =>
-      l.id === id ? { ...l, payments: l.payments.filter((p) => p.id !== paymentId) } : l,
-    ),
-  });
-}

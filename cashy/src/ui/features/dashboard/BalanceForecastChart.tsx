@@ -9,7 +9,7 @@ import {
   YAxis,
 } from "recharts";
 import type { TooltipContentProps } from "recharts";
-import { formatMoney, formatMoneyShort } from "@/domain/money";
+import { formatMoney, formatMoneyAxis } from "@/domain/money";
 import { chartBucketTitle } from "@/domain/date";
 import type { ForecastPoint } from "@/domain";
 
@@ -73,7 +73,7 @@ export function BalanceForecastChart({ data }: { data: ForecastPoint[] }) {
           axisLine={false}
           domain={domain}
           tick={{ fontSize: 10, fontWeight: 600, fill: "var(--wb-fg-muted)" }}
-          tickFormatter={(v) => formatMoneyShort(Number(v)).replace(" đ", "")}
+          tickFormatter={(v) => formatMoneyAxis(Number(v))}
         />
         {goesNegative && (
           <ReferenceLine y={0} stroke="var(--wb-chart-expense)" strokeDasharray="3 3" />

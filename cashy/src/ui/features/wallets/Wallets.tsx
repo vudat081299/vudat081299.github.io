@@ -166,7 +166,7 @@ function WalletEditor({
           <div className="wb-field" style={{ flex: 1, minWidth: 0 }}>
             <label className="wb-label" htmlFor="wallet-opening">
               {isCard ? "Current balance" : "Opening balance"}{" "}
-              <span className="wb-label__opt">(đ · − = {isCard ? "debt owed" : "you owe"})</span>
+              <span className="wb-label__opt">(₫ · − = {isCard ? "debt owed" : "you owe"})</span>
             </label>
             <input
               id="wallet-opening"
@@ -201,7 +201,7 @@ function WalletEditor({
             </div>
             <div className="wb-field" style={{ flex: 1, minWidth: 0 }}>
               <label className="wb-label" htmlFor="wallet-limit">
-                Credit limit <span className="wb-label__opt">(đ · optional)</span>
+                Credit limit <span className="wb-label__opt">(₫ · optional)</span>
               </label>
               <input
                 id="wallet-limit"

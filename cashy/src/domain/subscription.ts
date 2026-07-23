@@ -206,6 +206,55 @@ export function cyclesOwed(
 }
 
 /**
+ * The ONE bucket a subscription is in right now — the single source of truth the
+ * card, the sort and the status filter all read, so the three never disagree
+ * about whether a service is "due" or "suspended". The ladder mirrors the card's
+ * own tone precedence (§1): a cancelled service is set apart, then among the
+ * running ones a suspended (lapsed) service outranks a bill that is merely due,
+ * which outranks a free trial, and everything settled is plain "active".
+ */
+export type SubState = "suspended" | "due" | "trial" | "active" | "cancelled";
+
+export function subState(
+  sub: Subscription,
+  txs: Transaction[],
+  now: Date = new Date(),
+): SubState {
+  if (!sub.active) return "cancelled";
+  if (isLapsed(sub, txs, now)) return "suspended";
+  if (needsPaymentNow(sub, txs, now)) return "due";
+  if (inTrial(sub, now)) return "trial";
+  return "active";
+}
+
+/** Rank for the default "by status" ordering — urgent first, cancelled last. */
+const SUB_STATE_RANK: Record<SubState, number> = {
+  suspended: 0,
+  due: 1,
+  trial: 2,
+  active: 3,
+  cancelled: 4,
+};
+
+/**
+ * The default display order: whatever needs attention first (suspended → due →
+ * trial → active → cancelled), then alphabetically within a bucket. Pure and
+ * `now`-injected, so it is testable and shared by both the Dashboard strip and
+ * the Subscriptions screen instead of each re-deriving an order.
+ */
+export function sortSubscriptions(
+  subs: Subscription[],
+  txs: Transaction[],
+  now: Date = new Date(),
+): Subscription[] {
+  return [...subs].sort(
+    (a, b) =>
+      SUB_STATE_RANK[subState(a, txs, now)] - SUB_STATE_RANK[subState(b, txs, now)] ||
+      a.name.localeCompare(b.name, "en"),
+  );
+}
+
+/**
  * The date money is next wanted. For a service that is up to date that is the
  * next billing day; for one that already owes a cycle it is the day that cycle
  * fell due — a date in the PAST, which is the whole point: "next payment: in
@@ -304,6 +353,30 @@ export function subCycle(sub: Subscription, now: Date = new Date()): SubCycle {
   const start = cycleDate(sub, k);
   const end = cycleDate(sub, addCycle(sub, k, 1));
 
+  const totalDays = Math.max(1, daysBetween(start, end));
+  const elapsedDays = Math.min(totalDays, Math.max(0, daysBetween(start, today)));
+  return {
+    start,
+    end,
+    totalDays,
+    elapsedDays,
+    remainingDays: totalDays - elapsedDays,
+    pct: elapsedDays / totalDays,
+    started: start <= today,
+  };
+}
+
+/**
+ * The progress of the FREE window `[startedAt → trialEndDate]` for a trialing
+ * plan — the mirror of `subCycle` so the card can reuse the very same progress
+ * markup, just fed a different span. The end is the first-charge date, so a full
+ * bar reads as "billing starts now". Returns `null` when the plan has no trial.
+ */
+export function trialCycle(sub: Subscription, now: Date = new Date()): SubCycle | null {
+  const end = trialEndDate(sub);
+  if (!end) return null;
+  const start = sub.startedAt;
+  const today = ymd(now);
   const totalDays = Math.max(1, daysBetween(start, end));
   const elapsedDays = Math.min(totalDays, Math.max(0, daysBetween(start, today)));
   return {

@@ -49,14 +49,6 @@ export function fmtDateNum(s: string): string {
   return format(parseYMD(s), "dd/MM/yyyy");
 }
 
-/** "Today" / "Yesterday" / "Thursday, 10 July 2026" — for date group headers. */
-export function relativeDateHead(s: string): string {
-  const diff = differenceInCalendarDays(new Date(), parseYMD(s));
-  if (diff === 0) return "Today";
-  if (diff === 1) return "Yesterday";
-  return format(parseYMD(s), "EEEE, d MMMM yyyy");
-}
-
 export function addDays(s: string, n: number): string {
   const d = parseYMD(s);
   d.setDate(d.getDate() + n);
@@ -87,22 +79,6 @@ export function parseDMY(s: string): string | null {
   const dt = new Date(year, month - 1, day);
   if (dt.getMonth() !== month - 1) return null; // e.g. 31/2 → rolled over, reject
   return ymd(dt);
-}
-
-/** Parse a typed date range — "1/7/2026 - 15/7/2026", "1/7/2026 – 15/7", "… to …"
- *  — into an ordered {start,end}, or null if either side is unparseable. A
- *  missing end year is borrowed from the start. */
-export function parseRangeText(s: string): { start: string; end: string } | null {
-  const parts = s.split(/\s*[–—]\s*|\s+-\s+|\s+to\s+/i).map((p) => p.trim()).filter(Boolean);
-  if (parts.length !== 2) return null;
-  // Let a bare "15/7" on the end borrow the start's year.
-  const startYearMatch = parts[0].match(/[/-](\d{2,4})$/);
-  let endText = parts[1];
-  if (startYearMatch && /^\d{1,2}[/-]\d{1,2}$/.test(endText)) endText = `${endText}/${startYearMatch[1]}`;
-  const start = parseDMY(parts[0]);
-  const end = parseDMY(endText);
-  if (!start || !end) return null;
-  return start <= end ? { start, end } : { start: end, end: start };
 }
 
 /** The Monday that opens the week containing `d` (weeks start Monday). Used to

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { SubIconStyle, Subscription, Transaction } from "@/domain/types";
 import { subscriptionStatus } from "@/domain";
+import { statusOf } from "@/domain/txStatus";
 import { monthLabelShort } from "@/domain/date";
 import {
   cancelSubscription,
@@ -13,6 +14,7 @@ import {
 } from "@/usecases";
 import { toast } from "@/lib/toast";
 import { confirm } from "@/lib/confirm";
+import { openSubscriptionEditor } from "@/lib/modals";
 import { SubscriptionCard } from "@/ui/features/subscriptions/SubscriptionCard";
 import { SubscriptionCatchUp } from "@/ui/features/subscriptions/SubscriptionCatchUp";
 import { SubscriptionHistory } from "@/ui/features/subscriptions/SubscriptionHistory";
@@ -50,7 +52,7 @@ export function ConnectedSubscriptionCard({
   // record yet. Computed as a block rather than a chained ternary for clarity.
   const lastPaidAmount = (() => {
     const recorded = txs.filter(
-      (t) => t.subscriptionId === sub.id && (t.status ?? "recorded") === "recorded",
+      (t) => t.subscriptionId === sub.id && statusOf(t) === "recorded",
     );
     if (recorded.length === 0) return sub.amount;
     const latest = recorded.reduce((a, b) => (a.occurredAt >= b.occurredAt ? a : b));
@@ -122,6 +124,7 @@ export function ConnectedSubscriptionCard({
         sub={sub}
         txs={txs}
         iconStyle={iconStyle}
+        onOpenEditor={() => openSubscriptionEditor(sub.id)}
         onOpenCatchUp={() => setCatchUpOpen(true)}
         onOpenHistory={() => setHistoryOpen(true)}
         onOpenCancel={() => setCancelOpen(true)}

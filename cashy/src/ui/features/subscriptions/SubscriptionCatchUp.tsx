@@ -301,7 +301,7 @@ export function SubscriptionCatchUp({
               value={amounts[r.txId] ?? ""}
               onChange={(e) => setAmount(r.txId, e.target.value)}
               disabled={!(r.paid && r.used)}
-              trailingAddon="đ"
+              trailingAddon="₫"
               aria-label={`Amount paid for ${monthLabelShort(r.month)}`}
             />
             <Switch

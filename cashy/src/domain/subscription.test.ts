@@ -15,7 +15,10 @@ import {
   paymentsDrifted,
   paymentsOf,
   planCatchUp,
+  sortSubscriptions,
   startCycle,
+  subState,
+  trialCycle,
   trialEndDate,
 } from "@/domain/subscription";
 
@@ -344,6 +347,49 @@ describe("free trial", () => {
 
   it("points the next payment at the first charge date during the trial", () => {
     expect(nextPaymentDate(trialSub, [], AT("2026-02-15"))).toBe("2026-04-06");
+  });
+
+  it("trialCycle charts the free window and is null without a trial", () => {
+    expect(trialCycle(sub())).toBeNull();
+    // 90 days from 6 Jan to 6 Apr; on 5 Feb, 30 have elapsed.
+    const tc = trialCycle(trialSub, AT("2026-02-05"))!;
+    expect(tc.start).toBe("2026-01-06");
+    expect(tc.end).toBe("2026-04-06");
+    expect(tc.totalDays).toBe(90);
+    expect(tc.elapsedDays).toBe(30);
+    expect(tc.remainingDays).toBe(60);
+    expect(tc.started).toBe(true);
+  });
+});
+
+describe("subState / sortSubscriptions", () => {
+  it("labels each service by its one bucket", () => {
+    // No trial, up to date, before its first bill → plain active.
+    const active = sub({ startedAt: "2026-07-01", dayOfMonth: 1 });
+    expect(subState(active, [], AT("2026-07-01"))).toBe("active");
+
+    // In its free window → trial.
+    const trial = sub({ startedAt: "2026-07-01", trialMonths: 2 });
+    expect(subState(trial, [], AT("2026-07-10"))).toBe("trial");
+
+    // Cancelled outranks everything else.
+    expect(subState(sub({ active: false }), [], AT("2026-07-10"))).toBe("cancelled");
+
+    // A cycle has billed and sits pending → due.
+    const dueSub = sub({ startedAt: "2026-06-06" });
+    const dueLedger = ledger(dueSub, AT("2026-06-10"));
+    expect(subState(dueSub, dueLedger, AT("2026-06-10"))).toBe("due");
+  });
+
+  it("orders urgent → calm, then by name within a bucket", () => {
+    const now = AT("2026-07-10");
+    const cancelled = sub({ id: "c", name: "AAA cancelled", active: false });
+    const active1 = sub({ id: "a1", name: "Zeta", startedAt: "2026-08-01", dayOfMonth: 1 });
+    const active2 = sub({ id: "a2", name: "Alpha", startedAt: "2026-08-01", dayOfMonth: 1 });
+    const ordered = sortSubscriptions([cancelled, active1, active2], [], now);
+    // Both active plans sort before the cancelled one despite its earlier name;
+    // within the active bucket, Alpha precedes Zeta.
+    expect(ordered.map((s) => s.id)).toEqual(["a2", "a1", "c"]);
   });
 });
 

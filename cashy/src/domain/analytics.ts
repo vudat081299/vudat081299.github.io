@@ -262,12 +262,6 @@ export function walletSeries(
 }
 
 // ---- dashboard insights ----------------------------------------------------
-export interface Insight {
-  icon: string; // material symbols glyph
-  label: string;
-  value: string;
-  hint?: string;
-}
 /**
  * A few derived, plain-language facts about the current period — the kind of
  * "so what" a KPI grid alone doesn't say (savings rate, daily burn, a run-rate

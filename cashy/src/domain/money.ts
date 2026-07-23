@@ -6,9 +6,9 @@ import type { TxType } from "@/domain/types";
 // ============================================================================
 const nf = new Intl.NumberFormat("vi-VN");
 
-/** Full amount with unit: 18785000 -> "18.785.000 đ" */
+/** Full amount with unit: 18785000 -> "18.785.000 ₫" */
 export function formatMoney(n: number): string {
-  return nf.format(Math.round(n || 0)) + " đ";
+  return nf.format(Math.round(n || 0)) + " ₫";
 }
 
 /** Grouped digits, no unit: 18785000 -> "18.785.000" */
@@ -17,7 +17,7 @@ export function formatDigits(n: number): string {
 }
 
 /**
- * Compact: 3400000 -> "3,4m", 890000 -> "890k", 1200000000 -> "1,2b", 500 -> "500 đ".
+ * Compact: 3400000 -> "3,4m", 890000 -> "890k", 1200000000 -> "1,2b", 500 -> "500 ₫".
  * English magnitude letters (k / m / b), because the UI chrome is English even
  * though the amounts are đồng — the Vietnamese "k / tr / tỷ" belongs to the
  * seeded data, not the app's own labels. The NUMBER itself, though, is formatted
@@ -25,9 +25,9 @@ export function formatDigits(n: number): string {
  * ("7,3m") — matching the dot-means-thousands grouping of the full "7.300.000 đ"
  * form instead of clashing with it (a bare `toFixed` would emit an English ".").
  *
- * A magnitude letter already reads as "this is money", so it carries NO "đ" —
- * "3,4m đ" states the unit twice. Only the sub-1.000 form, which has no letter to
- * lean on, keeps the currency mark ("500 đ").
+ * A magnitude letter already reads as "this is money", so it carries NO "₫" —
+ * "3,4m ₫" states the unit twice. Only the sub-1.000 form, which has no letter to
+ * lean on, keeps the currency mark ("500 ₫").
  */
 const shortNf = new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 1 });
 
@@ -39,7 +39,16 @@ export function formatMoneyShort(n: number): string {
   if (v >= 1_000_000_000) return sign + shortNf.format(v / 1_000_000_000) + "b";
   if (v >= 1_000_000) return sign + shortNf.format(v / 1_000_000) + "m";
   if (v >= 1_000) return sign + shortNf.format(v / 1_000) + "k";
-  return sign + shortNf.format(v) + " đ";
+  return sign + shortNf.format(v) + " ₫";
+}
+
+/**
+ * Compact form for chart axes and range labels — the same as `formatMoneyShort`
+ * but NEVER carrying a currency unit (a tick reads "3,4m", not "500 ₫"). One home
+ * for "compact, unit-stripped" so screens don't each re-do `.replace(" ₫", "")`.
+ */
+export function formatMoneyAxis(n: number): string {
+  return formatMoneyShort(n).replace(" ₫", "");
 }
 
 /** Parse free text to integer VND: "1.500.000 đ" -> 1500000 */

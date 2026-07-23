@@ -94,10 +94,6 @@ export function loanStatus(loan: Loan, now: Date = new Date(), soonDays = 7): Lo
   return "active";
 }
 
-export function isOverdue(loan: Loan, now: Date = new Date()): boolean {
-  return loanStatus(loan, now) === "overdue";
-}
-
 /**
  * This loan's contribution to net worth: an outstanding debt I OWE subtracts,
  * money still owed TO me adds. A paid-off loan contributes 0 either way. The

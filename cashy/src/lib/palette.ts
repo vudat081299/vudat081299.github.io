@@ -15,5 +15,3 @@ export const SWATCHES = [
   "#f43f5e", // rose
   "#64748b", // slate
 ] as const;
-
-export const AVATAR_COLORS = SWATCHES;

@@ -3,10 +3,11 @@ import type { Category, TxType, Wallet } from "@/domain/types";
 import { flattenTree, type TagRank } from "@/domain";
 import type { TxQuery } from "@/ui/features/transactions/useTxQuery";
 import { TX_STATUS_META, TX_STATUS_ORDER } from "@/domain/txStatus";
-import { formatMoneyShort } from "@/domain/money";
+import { formatMoneyAxis } from "@/domain/money";
 import { cn } from "@/lib/utils";
 import { TagChip } from "@/ui/common/TagChip";
 import { FacetChip } from "@/ui/common/FacetChip";
+import { SearchField } from "@/ui/common/SearchField";
 
 const TYPES: { key: TxType; label: string }[] = [
   { key: "expense", label: "Expense" },
@@ -66,39 +67,21 @@ export function TxFilterBar({
   const tagToken = summarise(q.activeTags.map((id) => rankById.get(id)?.tag.name ?? "?"));
   const amountToken =
     q.amountMin != null && q.amountMax != null
-      ? `${formatMoneyShort(q.amountMin).replace(" đ", "")} – ${formatMoneyShort(q.amountMax)}`
+      ? `${formatMoneyAxis(q.amountMin)} – ${formatMoneyAxis(q.amountMax)}`
       : q.amountMin != null
-        ? `≥ ${formatMoneyShort(q.amountMin)}`
+        ? `≥ ${formatMoneyAxis(q.amountMin)}`
         : q.amountMax != null
-          ? `≤ ${formatMoneyShort(q.amountMax)}`
+          ? `≤ ${formatMoneyAxis(q.amountMax)}`
           : "";
 
   return (
     <div className="wb-filterbar">
-      {/* Search — a seamless pill (bo tròn 2 đầu): the magnifier and the clear
-          button carry no fill or divider, they share the field with the text. */}
-      <div className="wb-input-group wb-input-group--seamless wb-filterbar__search cashy-search">
-        <span className="wb-input-group__addon">
-          <span className="wb-ico wb-ico--sm">search</span>
-        </span>
-        <input
-          className="wb-input"
-          type="text"
-          value={q.search}
-          onChange={(e) => q.setSearch(e.target.value)}
-          placeholder="Search transactions…"
-        />
-        {q.search && (
-          <button
-            type="button"
-            className="wb-input-group__btn"
-            aria-label="Clear search"
-            onClick={() => q.setSearch("")}
-          >
-            <span className="wb-ico wb-ico--sm">close</span>
-          </button>
-        )}
-      </div>
+      <SearchField
+        value={q.search}
+        onChange={q.setSearch}
+        placeholder="Search transactions…"
+        className="wb-filterbar__search"
+      />
 
       {/* One chip per facet, each its own dropdown. */}
       <FacetChip
@@ -247,7 +230,7 @@ export function TxFilterBar({
         onClear={() => q.setAmountRange(null, null)}
       >
         <div className="wb-menu cashy-facet-pop" style={{ border: 0, boxShadow: "none" }}>
-          <p className="wb-filter-pop__title">Amount (đ)</p>
+          <p className="wb-filter-pop__title">Amount (₫)</p>
           <div className="cashy-amount-range">
             <input
               className="wb-input"
