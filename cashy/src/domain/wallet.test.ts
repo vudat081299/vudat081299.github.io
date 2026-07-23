@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import type { Transaction, Wallet } from "@/domain/types";
 import {
+  cardUtilization,
+  guessCardNetwork,
   guessWalletKind,
   isTransfer,
   netWorth,
@@ -146,5 +148,40 @@ describe("helpers", () => {
     expect(walletIcon("bank")).toBe("landmark");
     expect(walletIcon("ewallet")).toBe("smartphone");
     expect(walletIcon("other")).toBe("wallet");
+  });
+  it("guessCardNetwork reads the network from a name", () => {
+    expect(guessCardNetwork("Techcombank Visa")).toBe("visa");
+    expect(guessCardNetwork("VPBank Mastercard")).toBe("mastercard");
+    expect(guessCardNetwork("Amex Platinum")).toBe("amex");
+    expect(guessCardNetwork("Sacombank JCB")).toBe("jcb");
+    expect(guessCardNetwork("Napas napas")).toBe("other");
+  });
+});
+
+describe("cardUtilization", () => {
+  const card = (over: Partial<Wallet> = {}) => wal({ kind: "card", creditLimit: 20_000_000, ...over });
+
+  it("is null for a non-card or a card with no positive limit", () => {
+    expect(cardUtilization(wal({ kind: "bank", creditLimit: 20_000_000 }), -5_000_000)).toBeNull();
+    expect(cardUtilization(card({ creditLimit: 0 }), -5_000_000)).toBeNull();
+    expect(cardUtilization(wal({ kind: "card" }), -5_000_000)).toBeNull(); // no limit set
+  });
+
+  it("treats a negative balance as debt: debt = −balance, available = limit − debt", () => {
+    const u = cardUtilization(card(), -12_000_000)!;
+    expect(u).toEqual({ debt: 12_000_000, limit: 20_000_000, available: 8_000_000, pct: 0.6 });
+  });
+
+  it("a zero/positive balance means no debt and full availability", () => {
+    const u = cardUtilization(card(), 0)!;
+    expect(u.debt).toBe(0);
+    expect(u.available).toBe(20_000_000);
+    expect(u.pct).toBe(0);
+  });
+
+  it("clamps pct at 1 when debt exceeds the limit (over-limit)", () => {
+    const u = cardUtilization(card(), -25_000_000)!;
+    expect(u.pct).toBe(1);
+    expect(u.available).toBe(0);
   });
 });

@@ -12,7 +12,8 @@ import { SWATCHES } from "@/lib/palette";
 // v5 gives subscriptions a billing `interval` — everything before it was monthly.
 // v6 turns the free-text `account` "Paid with" field into a real Wallet model.
 // v7 adds the loans model (money owed / owing) — a brand-new array.
-export const CURRENT_VERSION = 7;
+// v8 adds optional card fields (cardNetwork + creditLimit) — additive, no back-fill.
+export const CURRENT_VERSION = 8;
 
 /**
  * v1 → v2: repaint every category & tag onto the bright chart palette (each

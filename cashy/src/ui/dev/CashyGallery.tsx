@@ -461,7 +461,7 @@ export function CashyGallery() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 12 }}>
             <WalletCard wallet={{ id: "w-cash", name: "Cash", kind: "cash", openingBalance: 0, colorHex: "#10b981", icon: "banknote", order: 0, archived: false, createdAt: "" }} balance={2_400_000} onEdit={() => {}} />
             <WalletCard wallet={{ id: "w-bank", name: "Vietcombank", kind: "bank", openingBalance: 0, colorHex: "#3b82f6", icon: "landmark", order: 1, archived: false, createdAt: "" }} balance={48_750_000} onEdit={() => {}} />
-            <WalletCard wallet={{ id: "w-card", name: "Techcombank Visa", kind: "card", openingBalance: 0, colorHex: "#8b5cf6", icon: "credit-card", order: 2, archived: false, createdAt: "" }} balance={-3_120_000} onEdit={() => {}} />
+            <WalletCard wallet={{ id: "w-card", name: "Techcombank Visa", kind: "card", openingBalance: 0, cardNetwork: "visa", creditLimit: 20_000_000, colorHex: "#8b5cf6", icon: "credit-card", order: 2, archived: false, createdAt: "" }} balance={-12_000_000} onEdit={() => {}} />
             <WalletCard wallet={{ id: "w-momo", name: "MoMo", kind: "ewallet", openingBalance: 0, colorHex: "#ec4899", icon: "smartphone", order: 3, archived: true, createdAt: "" }} balance={180_000} onEdit={() => {}} />
           </div>
         </Section>

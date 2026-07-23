@@ -1,4 +1,4 @@
-import type { Transaction, Wallet, WalletKind } from "@/domain/types";
+import type { CardNetwork, Transaction, Wallet, WalletKind } from "@/domain/types";
 import { isCounted } from "@/domain/txStatus";
 
 // ============================================================================
@@ -104,6 +104,36 @@ export function guessWalletKind(name: string): WalletKind {
   if (has("momo", "zalopay", "zalo pay", "vnpay", "vn pay", "shopeepay", "shopee pay", "grabpay", "viettelpay", "viettel pay", "moca", "ewallet", "e-wallet", "ví điện tử", "vi dien tu")) return "ewallet";
   if (has("cash", "tiền mặt", "tien mat")) return "cash";
   if (has("bank", "techcombank", "vietcombank", "vpbank", "bidv", "acb", "mbbank", "mb bank", "tpbank", "sacombank", "agribank", "vietinbank", "ngân hàng", "ngan hang", "account", "checking", "savings")) return "bank";
+  return "other";
+}
+
+/**
+ * Credit-card utilisation from a card's current balance + its limit. A card's
+ * DEBT is its negative balance — what you owe — so `debt = max(0, −balance)`;
+ * utilisation is `debt ÷ limit`, and `available = limit − debt`. Returns `null`
+ * when the wallet isn't a card or carries no positive credit limit (so the UI
+ * simply shows a plain balance).
+ */
+export function cardUtilization(
+  wallet: Wallet,
+  balance: number,
+): { debt: number; limit: number; available: number; pct: number } | null {
+  if (wallet.kind !== "card" || !wallet.creditLimit || wallet.creditLimit <= 0) return null;
+  const limit = wallet.creditLimit;
+  const debt = balance < 0 ? -balance : 0;
+  const available = Math.max(0, limit - debt);
+  const pct = Math.min(1, debt / limit);
+  return { debt, limit, available, pct };
+}
+
+/** Best-guess card network from a name (e.g. "Techcombank Visa" → "visa"). Used
+ *  to give demo/seed cards a sensible network; the editor lets the user override. */
+export function guessCardNetwork(name: string): CardNetwork {
+  const n = name.toLowerCase();
+  if (n.includes("visa")) return "visa";
+  if (n.includes("master")) return "mastercard";
+  if (n.includes("amex") || n.includes("american express")) return "amex";
+  if (n.includes("jcb")) return "jcb";
   return "other";
 }
 

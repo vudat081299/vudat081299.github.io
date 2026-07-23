@@ -1,22 +1,29 @@
-import type { Wallet, WalletKind } from "@/domain/types";
+import type { CardNetwork, Wallet, WalletKind } from "@/domain/types";
 import { commit, getState } from "@/data/store";
 import { nextWalletOrder, orphanWallet } from "@/domain/wallet";
 import { uid } from "@/lib/id";
 
-/** Create a wallet, appended after the existing ones. Returns the new id. */
+/** Create a wallet, appended after the existing ones. Returns the new id. The
+ *  card-only fields (`cardNetwork`, `creditLimit`) are kept only for `card`
+ *  wallets, so changing kind can't leave stale card metadata behind. */
 export function addWallet(input: {
   name: string;
   kind: WalletKind;
   openingBalance: number;
   colorHex: string;
   icon: string;
+  cardNetwork?: CardNetwork;
+  creditLimit?: number;
 }): string {
   const state = getState();
+  const isCard = input.kind === "card";
   const wallet: Wallet = {
     id: uid(),
     name: input.name.trim() || "Wallet",
     kind: input.kind,
     openingBalance: Math.round(input.openingBalance || 0),
+    cardNetwork: isCard ? input.cardNetwork : undefined,
+    creditLimit: isCard && input.creditLimit ? Math.max(0, Math.round(input.creditLimit)) : undefined,
     colorHex: input.colorHex,
     icon: input.icon,
     order: nextWalletOrder(state.wallets),

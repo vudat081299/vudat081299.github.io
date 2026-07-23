@@ -13,6 +13,11 @@ export type SubIconStyle = "neutral" | "brand";
  */
 export type WalletKind = "cash" | "bank" | "ewallet" | "card" | "other";
 
+/** The payment network printed on a card — a classification label for `card`
+ *  wallets only. The union is OPEN like `WalletKind`; `other` covers the rest
+ *  (Napas, UnionPay, Discover…). */
+export type CardNetwork = "visa" | "mastercard" | "amex" | "jcb" | "other";
+
 /**
  * Lifecycle of a transaction — drives the status column + which rows count.
  * Only `recorded` affects the money totals; the rest are shown but not summed.
@@ -63,6 +68,12 @@ export interface Wallet {
   kind: WalletKind;
   /** integer VND balance BEFORE the ledger begins; may be negative (a card in debt) */
   openingBalance: number;
+  /** For a card (`kind: "card"`): the payment network — a classification label
+   *  only. Absent for non-cards. */
+  cardNetwork?: CardNetwork;
+  /** For a card: its credit limit (hạn mức) in integer VND. Drives the
+   *  utilisation bar (debt ÷ limit) + available-credit readout. Absent = none/unknown. */
+  creditLimit?: number;
   colorHex: string; // classification hue
   icon: string; // curated lucide key, see lib/icons
   order: number; // sort position among wallets

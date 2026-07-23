@@ -25,7 +25,7 @@ import type {
 } from "@/domain/types";
 import { uid } from "@/lib/id";
 import { addMonthKey, addMonths, billingDate, monthKey, monthLabelShort, todayYMD } from "@/domain/date";
-import { guessWalletKind, walletIcon } from "@/domain/wallet";
+import { guessCardNetwork, guessWalletKind, walletIcon } from "@/domain/wallet";
 import { loanSourceIcon } from "@/domain/loan";
 import { SWATCHES } from "@/lib/palette";
 
@@ -572,11 +572,15 @@ export function buildSampleData(
   // `walletId` from its `account` string, exactly as migration v6 does for real data.
   const wallets: Wallet[] = ACCOUNTS.map((name, i) => {
     const kind = guessWalletKind(name);
+    const isCard = kind === "card";
     return {
       id: uid(),
       name,
       kind,
       openingBalance: 0,
+      cardNetwork: isCard ? guessCardNetwork(name) : undefined,
+      // A sensible demo limit so the utilisation bar has something to chart.
+      creditLimit: isCard ? (name.toLowerCase().includes("visa") ? 50_000_000 : 80_000_000) : undefined,
       colorHex: SWATCHES[i % SWATCHES.length],
       icon: walletIcon(kind),
       order: i,
