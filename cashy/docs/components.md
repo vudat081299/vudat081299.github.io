@@ -131,7 +131,7 @@ examples).
 | `SubscriptionCatchUp` | settle owed cycles (used-switch + oldest-first waterline + editable price) — controlled modal | `sub`, `pending: {month,txId}[]`, `open`, `onClose`, `onResolve(plan)`, `defaultAmount` |
 | `SubscriptionHistory` | settled cycles, newest first, each with Undo — controlled modal | `sub`, `txs`, `open`, `onClose`, `onRevert(txId,month,wasPaid)` |
 | `SubscriptionCancel` | cancel dialog asking WHEN the service stopped — controlled modal | `sub`, `pending`, `open`, `onClose`, `onCancel(cancelledAt)` |
-| `WalletCard` | one wallet as a card: neutral tile + kind + derived balance (negative → red, archived → dimmed) | `wallet: Wallet`, `balance: number`, `onEdit?(id)` |
+| `WalletCard` | one wallet as a card: accent-tinted tile + kind (or card network) + derived balance (negative → red, archived → dimmed); a `card` with a credit limit adds a utilisation bar + "used / available" line | `wallet: Wallet`, `balance: number`, `onEdit?(id)` |
 | `LoanCard` | one loan as a card: neutral tile + counterparty + source label, the outstanding amount, a repayment progress bar, a due-date + interest line, and a status pill (overdue → danger / due-soon → warning / paid → success; active → none). Borrowed vs lent flips the wording ("You owe"/"…repaid" ↔ "Owed to you"/"…collected") | `loan: Loan` (derives its own numbers from `domain/loan`); renders in the `#/cashy` gallery ("8 · Loans") |
 
 `TagRank = { tag: Tag; count: number; shade: number }` (from `rankTags`). `Due`, `TxQuery`,
@@ -148,7 +148,7 @@ examples).
 | `Dashboard` | Overview: KPIs, projected balance, subscriptions strip, cash-flow + donut, insights, recent-tx table |
 | `Transactions` | period + filter bar + full table (50/page) |
 | `Subscriptions` | stats + "to confirm" dues + services table (in-file `SubscriptionRow`, not the card) |
-| `Wallets` | net worth + wallet-card grid + in-file `WalletEditor` (name, kind, opening balance, colour, icon, archive/delete) |
+| `Wallets` | net worth + wallets grouped by kind (Cash & accounts / Cards / Other / Archived) + in-file `WalletEditor` (name, kind, balance, card network + credit limit for cards, colour, icon, archive/delete) |
 | `Loans` | You-owe / Owed-to-you / Net summary card + grouped `LoanCard` grids ("Money I owe" / "Owed to me" / "Archived", each sorted by `sortLoans`) + in-file `LoanEditor` (borrowed/lent toggle, counterparty, source, principal, interest rate + period, opened + optional due dates, colour, icon, note, a live payments sub-editor with a live outstanding readout, archive/delete) |
 | `Categories` | drag-to-reorder / drop-to-nest tree + in-file `CategoryEditor` modal |
 | `Tags` | tag list + in-file `TagEditor` modal |
@@ -182,7 +182,7 @@ Dashboard
 
 Transactions   PageHeader · PeriodPicker · AmountDisplay(net) · TxFilterBar · TransactionTable · EmptyState
 Subscriptions  PageHeader · stat tiles · SubscriptionDues → SubTile · SubscriptionRow → SubTile, CategoryCap · EmptyState  → opens SubscriptionEditor
-Wallets        PageHeader · net-worth card · WalletCard ×N → AmountDisplay · WalletEditor(Modal) → Select, ColorPicker, IconPicker
+Wallets        PageHeader · net-worth card · grouped WalletCard ×N → AmountDisplay, Progress (card utilisation) · WalletEditor(Modal) → Select, ColorPicker, IconPicker
 Loans          PageHeader · owe/owed/net summary card · LoanCard ×N → AmountDisplay, Progress · LoanEditor(Modal) → Select, ColorPicker, IconPicker, AmountDisplay
 Categories     PageHeader · Tree (wb-tree DnD) → Icon · CategoryEditor(Modal) → ColorPicker, IconPicker, Select · EmptyState
 Tags           PageHeader · wb-list · TagEditor(Modal) → ColorPicker · EmptyState

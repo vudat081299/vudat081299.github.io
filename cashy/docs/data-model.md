@@ -18,7 +18,7 @@ The single object serialized to `localStorage`. `types.ts` · built empty in
 
 | Field | Type | Meaning | Notes |
 |---|---|---|---|
-| `version` | `number` | Schema version of this snapshot | Drives migrations. Current = **7**. On load it is forced to `CURRENT_VERSION` and the old value passed to `migrate()`. |
+| `version` | `number` | Schema version of this snapshot | Drives migrations. Current = **8**. On load it is forced to `CURRENT_VERSION` and the old value passed to `migrate()`. |
 | `theme` | `ThemeMode` | UI colour scheme | `"system" \| "light" \| "dark"`; default `"system"`. |
 | `subIconStyle` | `SubIconStyle` | How subscription icon tiles are coloured | `"neutral"` (default, grey) \| `"brand"` (service hue). |
 | `workspace` | `Workspace \| null` | The profile; `null` = not yet onboarded | Non-null but empty ledger ⇒ `load()` re-seeds the demo data. |
@@ -111,11 +111,11 @@ persisted only until the user commits or clears it. Fields mirror the editor:
 A draft with every meaningful field empty is treated as blank and dropped (`isBlankDraft`).
 Also carries an optional `walletId` (mirrors the editor).
 
-### 1.8 `Wallet` — a spending account / wallet (added v6)
+### 1.8 `Wallet` — a spending account / wallet (added v6; card fields v8)
 Where money sits: cash, a bank account, an e-wallet, a card. A transaction moves
 through one wallet (`walletId`); a transfer moves between two (`walletId` →
-`toWalletId`). Rules in `domain/wallet.ts`. **Schema is live; there is no wallet UI
-yet** — see [wallets-plan.md](wallets-plan.md).
+`toWalletId`). Rules in `domain/wallet.ts`. Fully shipped — see
+[features/wallets.md](features/wallets.md) · [wallets-plan.md](wallets-plan.md).
 
 | Field | Type | Meaning | Notes |
 |---|---|---|---|
@@ -123,6 +123,8 @@ yet** — see [wallets-plan.md](wallets-plan.md).
 | `name` | `string` | Display name | "Techcombank Visa", "MoMo", "Tiền mặt" |
 | `kind` | `WalletKind` | Classification | Open union — v1 uses the spending kinds. |
 | `openingBalance` | `number` | Integer VND **before** the ledger starts | May be **negative** (a card in debt). |
+| `cardNetwork?` | `CardNetwork` | Card network (Visa / Mastercard / …) | **card only**; a classification label. Absent otherwise. (v8) |
+| `creditLimit?` | `number` | Card credit limit (hạn mức), integer VND | **card only**; drives the utilisation bar (`cardUtilization`). Absent = none. (v8) |
 | `colorHex` | `string` | Classification hue | Rendered grey; hue is an accent only. |
 | `icon` | `string` | Curated lucide key | `walletIcon(kind)` by default. |
 | `order` | `number` | Sort position among wallets | |
@@ -188,6 +190,7 @@ never moves the balance.
 | `SubInterval` | `monthly` / `yearly` | Billing frequency |
 | `TxStatus` | `recorded` / `pending` / `awaiting` / `skipped` / `failed` | Lifecycle (below) |
 | `WalletKind` | `cash` / `bank` / `ewallet` / `card` / `other` | Wallet classification; **open union** (future net-worth: savings/investment/asset/liability) |
+| `CardNetwork` | `visa` / `mastercard` / `amex` / `jcb` / `other` | Card network label for `card` wallets; **open union** (v8) |
 | `LoanDirection` | `borrowed` / `lent` | Which side of a loan you're on: `borrowed` = a liability (money you owe), `lent` = a receivable (money owed to you) |
 | `LoanSource` | `personal` / `card` / `bank` / `other` | Where a loan came from / went to; **open union** like `WalletKind` |
 | `InterestPeriod` | `year` / `month` | The period `interestRatePct` is quoted over; reference / display only, never accrued |
@@ -288,12 +291,13 @@ Loan (0..n)                               — first-class record; references NO 
   A workspace that opens with an **empty ledger** is re-seeded with the demo dataset (only an
   empty ledger — real data is never overwritten).
 
-**Migrations** (`data/migrations.ts`, `CURRENT_VERSION = 7`), **append-only** ascending
+**Migrations** (`data/migrations.ts`, `CURRENT_VERSION = 8`), **append-only** ascending
 `if (fromVersion < N)` blocks: v2 recolor onto the chart palette · v3 `startMonth` → real
 `startedAt` + back-fill `lastPaidAt` · v4 back-fill `paymentTxIds` · v5 back-fill
 `interval = "monthly"` · v6 distinct free-text `account` strings → `Wallet` entities +
 `walletId` links (account kept intact) · v7 ensure `state.loans` exists (defaults to `[]`)
-— loans are brand new, so there is nothing to transform. **Import** runs the same
+— loans are brand new, so there is nothing to transform. v8 adds optional card fields
+(`cardNetwork` + `creditLimit`) — additive, no back-fill (no branch needed). **Import** runs the same
 `migrate()` so an older export is brought forward, not stamped current unmigrated.
 
 **Export** (`workspace.exportData`) now serializes `wallets` **and** `loans` too (it

@@ -8,6 +8,8 @@
 > **Status:** fully shipped (plan phases 1–5). Schema + migration, the screen +
 > balances, wallet assignment in the transaction/subscription editors, a wallet
 > filter, transfers between wallets, and the dashboard balances strip are all live.
+> Cards also record a **network + credit limit** (with a utilisation bar), and the
+> screen is grouped by kind (schema v8).
 
 ## 1. What it does
 
@@ -24,15 +26,15 @@ wallets. This is the feature described in [wallets-plan.md](../wallets-plan.md).
 - Route `#/wallets` (`src/lib/router.ts`), rendered by `src/App.tsx`; nav item
   ("Wallets", `account_balance_wallet`) in `src/ui/app/Layout.tsx` with a live count.
 - Screen shape (`src/ui/features/wallets/Wallets.tsx`): `PageHeader` (+ "Add wallet")
-  → a **net-worth** card → a responsive grid of `WalletCard` (active first, archived
-  dimmed at the end) → an empty-state line when there are none → the in-file
-  `WalletEditor` modal.
+  → a **net-worth** card → wallets **grouped** into "Cash & accounts" / "Cards" /
+  "Other" / "Archived" (each a subheading + `WalletCard` grid) → an empty-state line
+  when there are none → the in-file `WalletEditor` modal.
 
 ## 3. Data it touches
 
 | Entity | Fields | R/W |
 |---|---|---|
-| `Wallet` | `id`, `name`, `kind`, `openingBalance`, `colorHex`, `icon`, `order`, `archived`, `createdAt` | read (cards + net worth); write via the editor usecases |
+| `Wallet` | `id`, `name`, `kind`, `openingBalance`, `cardNetwork?`, `creditLimit?`, `colorHex`, `icon`, `order`, `archived`, `createdAt` | read (cards + net worth); write via the editor usecases |
 | `Transaction` | `walletId`, `toWalletId`, `amount`, `type`, `status` | **read** (to compute balances); a `deleteWallet` re-points `walletId`/`toWalletId` to null |
 | `Subscription` | `walletId` | write only on `deleteWallet` (drops the link) |
 
@@ -53,6 +55,8 @@ All pure, in `src/domain/wallet.ts`.
 | `orphanWallet(txs, id)` | strip a deleted wallet's references from the ledger (rows kept) |
 | `nextWalletOrder(wallets)` | next `order` for a new wallet |
 | `walletIcon(kind)` | default lucide key per kind (`bank`→`landmark`, `card`→`credit-card`, …) |
+| `cardUtilization(wallet, balance)` | for a `card` with a positive `creditLimit`: `{debt, limit, available, pct}` — `debt = max(0, −balance)`, `pct` clamped to 1; else `null` |
+| `guessCardNetwork(name)` | best-guess `CardNetwork` from a name (used by seed/demo) |
 
 ## 5. Usecases
 
@@ -70,8 +74,8 @@ All pure, in `src/domain/wallet.ts`.
 | Tier | Component | File | Role |
 |---|---|---|---|
 | Container/screen | `Wallets` | `ui/features/wallets/Wallets.tsx` | reads `useCashy()`; net worth + card grid; holds the in-file `WalletEditor` |
-| Singleton-ish modal | `WalletEditor` | *(in `Wallets.tsx`)* | add/edit form (name, kind `Select`, signed opening-balance input, `ColorPicker`, `IconPicker`) + archive/delete |
-| Feature-leaf | `WalletCard` | `ui/features/wallets/WalletCard.tsx` | neutral tile + name + kind + `AmountDisplay` balance (negative → red, archived → dimmed); renders in the `#/cashy` gallery |
+| Singleton-ish modal | `WalletEditor` | *(in `Wallets.tsx`)* | add/edit form (name, kind `Select`, signed balance input, `ColorPicker`, `IconPicker`) + **card-only** "Card type" + "Credit limit" fields (the balance relabels to "Current balance (− = debt owed)") + archive/delete |
+| Feature-leaf | `WalletCard` | `ui/features/wallets/WalletCard.tsx` | accent-tinted tile + name + kind/network + `AmountDisplay` balance (negative → red, archived → dimmed); a `card` with a credit limit adds a **utilisation bar** + "used / available" line; renders in the `#/cashy` gallery |
 | Common | `WalletPicker` | `ui/common/WalletPicker.tsx` | the flat wallet dropdown used by the transaction + subscription editors (and both transfer legs); `excludeId` hides a transfer's other side |
 | Common/kit | `PageHeader`, `Select`, `ColorPicker`, `IconPicker`, `AmountDisplay`, `Modal` | `ui/common/…`, `ui/kit/…` | building blocks |
 
@@ -84,6 +88,15 @@ All pure, in `src/domain/wallet.ts`.
 - **Opening balance can be negative.** The editor input keeps a leading `−`
   (`parseOpening`/`fmtOpening`), because `domain/money.parseMoney` strips the sign —
   a card can open in debt.
+- **Cards carry a network + credit limit.** For `kind: "card"` the editor shows a
+  "Card type" (Visa/Mastercard/Amex/JCB/Other) select and an optional "Credit limit",
+  and the balance field relabels to "Current balance (− = debt owed)" — a card's debt is
+  its negative balance, so a negative is expected. With a limit set, the card shows a
+  **utilisation bar** (`cardUtilization` = debt ÷ limit) + "X used · Y available". Both
+  card fields are dropped when the kind changes away from `card`.
+- **The screen groups wallets** into "Cash & accounts" (cash/bank/e-wallet), "Cards",
+  "Other", and "Archived" — each a subheading + grid — rather than one flat grid; each
+  card's icon tile is tinted with the wallet's `colorHex` accent.
 - **Kind change resets the icon** to that kind's default (`walletIcon`); the user can
   still pick any icon afterwards.
 - **Delete keeps the ledger.** `deleteWallet` orphans a wallet's rows (`walletId`/
@@ -102,8 +115,9 @@ All pure, in `src/domain/wallet.ts`.
   From → To with a neutral amount; the wallet filter matches a transfer on either leg.
 - **Wallet filter.** `TxFilterBar` has a single-select Wallet facet (matches the
   row's `walletId` or `toWalletId`), on both the Transactions screen and the Dashboard.
-- **Dashboard strip.** A compact "Wallets" card under the KPIs: net worth + each
-  wallet's balance + a Manage link to `#/wallets`.
+- **Dashboard strip.** A compact "Balances" card under the KPIs: net worth (now
+  **assets − debts** once loans exist — see [loans.md](loans.md)) + each wallet's balance
+  + a reconciling "Loans · net" row + a Manage link to `#/wallets`.
 
 ## 8. Files
 

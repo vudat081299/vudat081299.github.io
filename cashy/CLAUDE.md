@@ -133,6 +133,7 @@ Subscription          a recurring service; books NO money itself
    ├─ paymentTxIds[] / lastPaidAt   CACHE, re-derived from the ledger (never authoritative)
    └─ each due cycle materialises a `pending` Transaction the user confirms/skips
 Wallet                a place money sits (cash/bank/e-wallet/card); balance DERIVED from the ledger
+   ├─ cardNetwork + creditLimit  (card only; drive the utilisation bar — added v8)
    └─ assigned per tx/sub, filterable, transfers between wallets — #/wallets screen (added v6)
 Loan                  money you owe / are owed — a FIRST-CLASS record (not a wallet, not a transaction)
    ├─ direction borrowed|lent · source personal|card|bank|other · principal (int VND)
@@ -145,6 +146,7 @@ Enums: `TxType` = income|expense · `TxStatus` = recorded|pending|awaiting|skipp
 (**only `recorded` counts toward totals**; missing = recorded) · `SubInterval` =
 monthly|yearly · `ThemeMode` = system|light|dark · `SubIconStyle` = neutral|brand ·
 `WalletKind` = cash|bank|ewallet|card|other (open union — future net-worth kinds) ·
+`CardNetwork` = visa|mastercard|amex|jcb|other (card only) ·
 `LoanDirection` = borrowed|lent · `LoanSource` = personal|card|bank|other ·
 `InterestPeriod` = year|month.
 

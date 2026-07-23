@@ -457,7 +457,7 @@ export function CashyGallery() {
           <SubsDemo />
         </Section>
 
-        <Section title="7 · Wallets" hint="A wallet as a card — neutral tile, kind, and its derived balance. A negative balance (an overdrawn card) reads red; an archived wallet is dimmed.">
+        <Section title="7 · Wallets" hint="A wallet as a card — accent-tinted tile, kind (or card network), and its derived balance. A negative balance (an overdrawn card) reads red; a card with a credit limit adds a utilisation bar + used/available line; an archived wallet is dimmed.">
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 12 }}>
             <WalletCard wallet={{ id: "w-cash", name: "Cash", kind: "cash", openingBalance: 0, colorHex: "#10b981", icon: "banknote", order: 0, archived: false, createdAt: "" }} balance={2_400_000} onEdit={() => {}} />
             <WalletCard wallet={{ id: "w-bank", name: "Vietcombank", kind: "bank", openingBalance: 0, colorHex: "#3b82f6", icon: "landmark", order: 1, archived: false, createdAt: "" }} balance={48_750_000} onEdit={() => {}} />
