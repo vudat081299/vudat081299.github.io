@@ -17,6 +17,7 @@ export function emptyState(): CashyState {
     subscriptions: [],
     wallets: [],
     loans: [],
+    contacts: [],
   };
 }
 

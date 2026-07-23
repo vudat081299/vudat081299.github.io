@@ -252,6 +252,23 @@ export interface Loan {
   createdAt: string; // ISO
 }
 
+/**
+ * A person you lend to / borrow from — a first-class entity so a loan (slice B)
+ * can reference the SAME person by a stable `id` rather than a copied name.
+ * Rendered neutral/grey like other entities; `colorHex` is a classification
+ * accent. Holds no money. See domain/contact + docs/agentic-workflow/specs/2026-07-23-contact.md.
+ * @ADR-contact-001
+ */
+export interface Contact {
+  id: string;
+  name: string; // required, trimmed, 1..80 (@BR-contact-001, @BR-contact-011)
+  username?: string; // optional handle / account id, trimmed, ..30 (@BR-contact-003, @BR-contact-012)
+  colorHex: string; // classification hue
+  icon: string; // curated lucide key
+  archived: boolean; // true = hidden from active selection, kept (@BR-contact-006)
+  createdAt: string; // ISO
+}
+
 export interface CashyState {
   version: number;
   theme: ThemeMode;
@@ -264,4 +281,5 @@ export interface CashyState {
   subscriptions: Subscription[];
   wallets: Wallet[];
   loans: Loan[];
+  contacts: Contact[];
 }

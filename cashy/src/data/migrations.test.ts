@@ -53,6 +53,7 @@ function stateV5(over: Partial<CashyState> = {}): CashyState {
     subscriptions: [],
     wallets: [],
     loans: [],
+    contacts: [],
     ...over,
   };
 }
