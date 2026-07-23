@@ -76,11 +76,11 @@ src/
   domain/     types sort category tag transaction subscription analytics
               wallet date period money txStatus · index.ts (barrel) · *.test.ts
   data/       store persistence migrations seed sample draft
-  usecases/   workspace settings categories tags transactions subscriptions
+  usecases/   workspace settings categories tags transactions subscriptions wallets
   ui/kit/     wb-* design system (63 files)
   ui/common/  AmountDisplay CategoryCap StatusCap TagChip PeriodPicker …
   ui/app/     Layout ErrorBoundary
-  ui/features/ dashboard transactions subscriptions categories tags
+  ui/features/ dashboard transactions subscriptions wallets categories tags
                settings onboarding
   ui/dev/     WbGallery (#/wb, generic wb-*) · CashyGallery (#/cashy, Cashy layer)
               — DEV only, code-split, never loaded in production
@@ -159,6 +159,7 @@ Inventory:
 | `tags.ts` | `addTag` `updateTag` `deleteTag` |
 | `transactions.ts` | `addTransaction` `updateTransaction` `deleteTransaction` |
 | `subscriptions.ts` | `addSubscription` `updateSubscription` `setSubscriptionActive` `deleteSubscription` `syncSubscriptions` `syncPayments` `confirmSubscriptionCharge` `confirmSubscriptionCharges` `skipSubscriptionCharge` `revertSubscriptionCharge` |
+| `wallets.ts` | `addWallet` `updateWallet` `setWalletArchived` `deleteWallet` (orphans rows via `orphanWallet`, never deletes them) |
 
 **Cross-usecase direction:** `transactions.ts` → `subscriptions.ts` only
 (deleting a charge invalidates its owner's history). The reverse is forbidden;

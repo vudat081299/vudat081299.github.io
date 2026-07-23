@@ -133,7 +133,7 @@ Subscription          a recurring service; books NO money itself
    ├─ paymentTxIds[] / lastPaidAt   CACHE, re-derived from the ledger (never authoritative)
    └─ each due cycle materialises a `pending` Transaction the user confirms/skips
 Wallet                a place money sits (cash/bank/e-wallet/card); balance DERIVED from the ledger
-   └─ SCHEMA LIVE, no UI yet — see docs/wallets-plan.md (added v6)
+   └─ #/wallets screen live (balances + net worth); transfers/assignment pending — docs/wallets-plan.md (added v6)
 ```
 
 Enums: `TxType` = income|expense · `TxStatus` = recorded|pending|awaiting|skipped|failed
@@ -158,6 +158,7 @@ toggle; collapses to a ☰ drawer on mobile). Routes:
 | `#/dashboard` (default) | **Dashboard** | KPIs, projected-balance chart, subscriptions strip, cash-flow + spending-donut, insights, recent-transactions table |
 | `#/transactions` | **Transactions** | period + filter bar + full ledger table (50/page) |
 | `#/subscriptions` | **Subscriptions** | commitment/due/total stats, "to confirm" dues, services table |
+| `#/wallets` | **Wallets** | wallet balances + net worth; add/edit/archive/delete (transfers + assignment pending — see [wallets-plan.md](docs/wallets-plan.md)) |
 | `#/categories` | **Categories** | drag-to-reorder / drop-to-nest tree; per-side (expense/income) |
 | `#/tags` | **Tags** | tag list with usage counts; add/edit/delete |
 | `#/settings` | **Settings** | appearance, workspace, data export/import, reset |
@@ -259,7 +260,7 @@ Detailed steps in [architecture.md §6](docs/architecture.md). In short:
 | [docs/features/](docs/features/) | **per-feature deep dives** — one doc per screen (overview, transactions, subscriptions, categories, tags, settings, onboarding); see [features/README.md](docs/features/README.md) |
 | [docs/cashy-vision.md](docs/cashy-vision.md) | product philosophy (timeless; native-iOS-flavoured) |
 | [docs/cashy-v1-spec.md](docs/cashy-v1-spec.md) | v1 use-case spec (native-iOS-flavoured) |
-| [docs/wallets-plan.md](docs/wallets-plan.md) | **PLAN** — multi-wallet / asset feature (not built yet) |
+| [docs/wallets-plan.md](docs/wallets-plan.md) | multi-wallet / asset **roadmap** (phases 1–2 shipped; see [features/wallets.md](docs/features/wallets.md)) |
 | [REBUILD-NOTES.md](REBUILD-NOTES.md) | the web-rebuild handoff notes |
 | [docs/handoff-checklist.md](docs/handoff-checklist.md) | **← what was done in this pass + open questions for the owner** |
 

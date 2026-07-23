@@ -19,6 +19,7 @@ references, which stay the authority for anything that spans features:
 | [overview.md](overview.md) | `#/dashboard` | KPIs, balance forecast, subscriptions strip, cash-flow + spending donut, insights, recent-transactions table |
 | [transactions.md](transactions.md) | `#/transactions` | the ledger screen, filter bar, table (bulk-delete + pagination), transaction editor + detail, draft caching |
 | [subscriptions.md](subscriptions.md) | `#/subscriptions` | recurring services: dues/confirm, cards + catch-up/cancel/history dialogs, editor, the whole subscription domain |
+| [wallets.md](wallets.md) | `#/wallets` | spending wallets: balances + net worth, add/edit/archive/delete (phases 1–2 shipped; transfers + assignment pending) |
 | [categories.md](categories.md) | `#/categories` | the drag-to-reorder / drop-to-nest category tree + editor, per-side split |
 | [tags.md](tags.md) | `#/tags` | flat labels, usage-rank grey shading, the tag manager + editor |
 | [settings.md](settings.md) | `#/settings` | appearance, workspace, data export/import + opt-in sample data, danger-zone reset |
@@ -28,7 +29,7 @@ references, which stay the authority for anything that spans features:
 
 | Doc | Covers |
 |---|---|
-| [../wallets-plan.md](../wallets-plan.md) | **PLAN** — multi-wallet / asset management: a `Wallet` entity, first-class transfers, opening balances, migration v6. The "future `accountId`" the free-text "Paid with" field points at. When built, it graduates into a `wallets.md` feature doc here. |
+| [../wallets-plan.md](../wallets-plan.md) | **ROADMAP** — multi-wallet / asset management. Phases 1–2 (schema, migration v6, balances, the screen) shipped and documented in [wallets.md](wallets.md); phases 3–5 (assignment in editors, wallet filter, transfers, dashboard strip) still ahead. |
 
 > Keeping these honest: a feature doc describes current behaviour, so when a
 > feature changes, update its doc in the same pass (the cross-cutting refs too if

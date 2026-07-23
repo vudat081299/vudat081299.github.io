@@ -228,8 +228,11 @@ uncategorised transaction.
    unchanged; wallets exist in data, invisible in UI. **Deferred to phase 4:** the
    demo *transfer* row (would read as an uncategorised expense until the table is
    transfer-aware) — transfer logic is covered by unit tests instead.
-2. **Wallets screen + usecases.** `usecases/wallets.ts`, `#/wallets`, nav item,
-   `WalletCard`, opening-balance editing, balances + net worth. Gallery fixtures.
+2. **✅ DONE (2026-07-23) — Wallets screen + usecases.** `usecases/wallets.ts`
+   (add/update/archive/delete), `#/wallets` + nav item + count, `WalletCard`,
+   in-file `WalletEditor` (signed opening balance, kind/colour/icon, archive/delete),
+   net-worth stat + balances, gallery section "7 · Wallets". Verified live. Documented
+   in [features/wallets.md](features/wallets.md).
 3. **Assign on entry.** `WalletPicker` in the transaction + subscription editors;
    wallet inherited onto sub charges; wallet facet in filters + table column.
 4. **Transfers.** Transfer mode in the editor, `addTransfer`, transfer row rendering,
