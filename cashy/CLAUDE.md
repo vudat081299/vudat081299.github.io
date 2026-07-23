@@ -246,6 +246,7 @@ Detailed steps in [architecture.md §6](docs/architecture.md). In short:
 | [docs/architecture.md](docs/architecture.md) | **normative** for `src/` — layers, import matrix, procedures, traps |
 | [docs/data-model.md](docs/data-model.md) | full data dictionary — entities, enums, relationships, derived values |
 | [docs/components.md](docs/components.md) | component catalogue — tiers, props, screen→component map |
+| [docs/features/](docs/features/) | **per-feature deep dives** — one doc per screen (overview, transactions, subscriptions, categories, tags, settings, onboarding); see [features/README.md](docs/features/README.md) |
 | [docs/cashy-vision.md](docs/cashy-vision.md) | product philosophy (timeless; native-iOS-flavoured) |
 | [docs/cashy-v1-spec.md](docs/cashy-v1-spec.md) | v1 use-case spec (native-iOS-flavoured) |
 | [docs/wallets-plan.md](docs/wallets-plan.md) | **PLAN** — multi-wallet / asset feature (not built yet) |

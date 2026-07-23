@@ -85,6 +85,7 @@ Break these and the app is wrong, not merely inconsistent.
 | [docs/architecture.md](docs/architecture.md) | layers, import matrix, file map, procedures, traps (normative for `src/`) |
 | [docs/data-model.md](docs/data-model.md) | data dictionary — entities, enums, relationships, derived values |
 | [docs/components.md](docs/components.md) | component catalogue — tiers, props, screen→component map |
+| [docs/features/](docs/features/) | per-feature deep dives — one doc per screen ([index](docs/features/README.md)) |
 | [docs/cashy-vision.md](docs/cashy-vision.md) | product direction (timeless; native-iOS-flavoured) |
 | [docs/cashy-v1-spec.md](docs/cashy-v1-spec.md) | v1 spec (native-iOS-flavoured) |
 | [docs/wallets-plan.md](docs/wallets-plan.md) | **plan** — multi-wallet / asset feature (not built yet) |

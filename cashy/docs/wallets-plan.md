@@ -154,6 +154,14 @@ add state.wallets = [...the created wallets]   (default [] when there were none)
 sets real opening balances afterwards on the Wallets screen. `data/persistence.ts`
 `emptyState()` gains `wallets: []`.
 
+> **Fix a pre-existing gap first.** `usecases/workspace.importData` stamps
+> `version: CURRENT_VERSION` on the imported payload but **never calls `migrate()`**
+> (`workspace.ts:85`) — so an older export imported into a newer build is labelled
+> current without its migrations ever running, and once v6 exists an import would
+> silently skip the wallet back-fill. Phase 1 must route `importData` through
+> `migrate(next, p.version ?? 1)` (like `data/persistence.load` does) before the
+> `commit`. Small, but it's on the critical path for this feature.
+
 ### 5.2 Seed & sample
 
 - **`data/seed.ts`** — a fresh workspace seeds **one** wallet: **"Tiền mặt" (cash)**,
