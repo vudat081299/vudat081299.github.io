@@ -61,8 +61,9 @@ export function ConnectedSubscriptionCard({
     skip: string[];
     cancelling: boolean;
     amounts: Record<string, number>;
+    dates: Record<string, string>;
   }) => {
-    resolveSubscriptionCharges({ pay: plan.pay, skip: plan.skip, amounts: plan.amounts });
+    resolveSubscriptionCharges({ pay: plan.pay, skip: plan.skip, amounts: plan.amounts, dates: plan.dates });
     if (plan.cancelling) setSubscriptionActive(sub.id, false);
 
     // One toast for the whole catch-up, undoing it as one: the charges go back to

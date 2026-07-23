@@ -128,7 +128,7 @@ examples).
 | `SubTile` | rounded icon tile; neutral unless `brand` | `icon`, `colorHex?`, `brand?`, `size?`, `iconSize?` |
 | `SubscriptionCard` | one service card (last paid, owed, progress, status, foot actions) | `sub: Subscription`, `txs: Transaction[]`, `iconStyle?`, `onOpenCatchUp`, `onOpenHistory`, `onOpenCancel`, `onSetActive` |
 | `SubscriptionDues` | "to confirm" rows — Paid/Skip each due cycle | `dues: Due[]` (`{ sub, month, txId }`), `max?`, `onConfirm`, `onSkip` |
-| `SubscriptionCatchUp` | settle owed cycles (used-switch + oldest-first waterline + editable price) — controlled modal | `sub`, `pending: {month,txId}[]`, `open`, `onClose`, `onResolve(plan)`, `defaultAmount` |
+| `SubscriptionCatchUp` | settle owed cycles (used-switch + oldest-first waterline + editable price + per-cycle date override via a `Calendar` popover; the "nothing to do" state shows in the disabled confirm button) — controlled modal | `sub`, `pending: {month,txId}[]`, `open`, `onClose`, `onResolve(plan)`, `defaultAmount` |
 | `SubscriptionHistory` | settled cycles, newest first, each with Undo — controlled modal | `sub`, `txs`, `open`, `onClose`, `onRevert(txId,month,wasPaid)` |
 | `SubscriptionCancel` | cancel dialog asking WHEN the service stopped — controlled modal | `sub`, `pending`, `open`, `onClose`, `onCancel(cancelledAt)` |
 | `WalletCard` | one wallet as a card: accent-tinted tile + kind (or card network) + derived balance (negative → red, archived → dimmed); a `card` with a credit limit adds a utilisation bar + "used / available" line | `wallet: Wallet`, `balance: number`, `onEdit?(id)` |

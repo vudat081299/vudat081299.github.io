@@ -1358,6 +1358,22 @@ body {
   font-size: 13px;
   white-space: nowrap;
 }
+/* The date doubles as a button that opens a per-cycle date picker (a rare
+   override). Reset the button chrome but keep the `__month` weight/size — only
+   the font-family needs re-inheriting, since a <button> doesn't inherit it. */
+.cashy-catchup-row__date {
+  border: none;
+  background: none;
+  font-family: inherit;
+  color: inherit;
+  padding: 2px 5px;
+  margin-left: -5px;
+  border-radius: var(--wb-radius-sm);
+  cursor: pointer;
+}
+.cashy-catchup-row__date:hover {
+  background: var(--wb-surface-2);
+}
 /* Pushes itself — and everything after it — to the right, so the amount and the
    switch sit in a stable column however long the date label runs. */
 .cashy-catchup-row__amt {

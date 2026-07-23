@@ -32,6 +32,14 @@ export function fmtDate(s: string): string {
   return format(parseYMD(s), "d MMM yyyy");
 }
 
+/** The three parts of a `fmtDate` string ("d MMM yyyy"), so a list can grey the
+ *  parts that repeat across rows (day + year) and keep the distinguishing one
+ *  (the month) prominent. */
+export function fmtDateParts(s: string): { day: string; month: string; year: string } {
+  const d = parseYMD(s);
+  return { day: format(d, "d"), month: format(d, "MMM"), year: format(d, "yyyy") };
+}
+
 export function fmtDateShort(s: string): string {
   return format(parseYMD(s), "d MMM");
 }

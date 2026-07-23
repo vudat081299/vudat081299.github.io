@@ -204,11 +204,15 @@ export function resolveSubscriptionCharges(sel: {
   /** per-charge amount the user actually paid, when it differs from the plan
    *  price (variable monthly pricing). Only applied to charges in `pay`. */
   amounts?: Record<string, number>;
+  /** per-charge occurred date (YYYY-MM-DD) when the user overrode the billing
+   *  day for that cycle. Only applied to charges in `pay`. */
+  dates?: Record<string, string>;
 }): void {
   const pay = new Set(sel.pay);
   const skip = new Set(sel.skip);
   if (pay.size === 0 && skip.size === 0) return;
   const amounts = sel.amounts ?? {};
+  const dates = sel.dates ?? {};
   const state = getState();
   const subIds = new Set(
     state.transactions
@@ -216,14 +220,16 @@ export function resolveSubscriptionCharges(sel: {
       .map((t) => t.subscriptionId!),
   );
   // A named helper instead of a nested ternary: a paid charge may also carry an
-  // edited amount, and that reads far clearer as a couple of small if-blocks.
+  // edited amount and/or an overridden date, which reads far clearer as a few
+  // small if-blocks than one big spread.
   const settle = (t: Transaction): Transaction => {
     if (pay.has(t.id)) {
+      let next: Transaction = { ...t, status: "recorded" };
       const amt = amounts[t.id];
-      if (amt != null && amt > 0 && amt !== t.amount) {
-        return { ...t, status: "recorded", amount: amt };
-      }
-      return { ...t, status: "recorded" };
+      if (amt != null && amt > 0 && amt !== t.amount) next = { ...next, amount: amt };
+      const date = dates[t.id];
+      if (date && date !== t.occurredAt) next = { ...next, occurredAt: date };
+      return next;
     }
     if (skip.has(t.id)) {
       return { ...t, status: "skipped" };

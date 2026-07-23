@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import type { Subscription } from "@/domain/types";
 import { planCatchUp, type CycleChoice } from "@/domain";
-import { billingDate, fmtDate, monthLabelShort } from "@/domain/date";
+import { billingDate, fmtDateParts, monthLabelShort } from "@/domain/date";
 import { formatDigits, formatMoney, parseMoney } from "@/domain/money";
 import { Modal } from "@/ui/kit/Modal";
 import { Input } from "@/ui/kit/Input";
 import { Switch } from "@/ui/kit/Switch";
+import { Popover } from "@/ui/kit/Popover";
+import { Calendar } from "@/ui/kit/Calendar";
 
 /**
  * The one place a subscription's owed cycles are settled.
@@ -40,12 +42,14 @@ export function SubscriptionCatchUp({
   open: boolean;
   onClose: () => void;
   /** settle the charges; `cancelling` also switches the service off. `amounts`
-   *  carries the price the user actually paid per cycle (variable pricing). */
+   *  carries the price the user actually paid per cycle (variable pricing);
+   *  `dates` carries any per-cycle billing-date override (only when changed). */
   onResolve: (plan: {
     pay: string[];
     skip: string[];
     cancelling: boolean;
     amounts: Record<string, number>;
+    dates: Record<string, string>;
   }) => void;
   /** the price to prefill each cycle with — the most recent charge's amount, so
    *  a plan whose price drifts month to month opens on last month's figure. */
@@ -63,6 +67,9 @@ export function SubscriptionCatchUp({
   // recent charge's amount so a variable-price plan opens on last month's figure;
   // the user edits only the cycles whose price actually changed.
   const [amounts, setAmounts] = useState<Record<string, string>>({});
+  // Per-cycle billing date. Defaults to the subscription's billing day for that
+  // month; the user can override it (rare) via the date-picker on the date label.
+  const [dates, setDates] = useState<Record<string, string>>({});
 
   // Re-arm on each open, and whenever the owed set changes underneath (a charge
   // settled in the transactions table while this was closed).
@@ -80,6 +87,7 @@ export function SubscriptionCatchUp({
     setUsed(Object.fromEntries(pending.map((p) => [p.txId, !likelyCancelling])));
     setPaidThrough(likelyCancelling ? -1 : pending.length - 1);
     setAmounts(Object.fromEntries(pending.map((p) => [p.txId, formatDigits(defaultAmount)])));
+    setDates(Object.fromEntries(pending.map((p) => [p.txId, billingDate(p.month, sub.dayOfMonth)])));
     // defaultAmount is derived from the same ledger as `pending`; the id list is
     // the real signal that the owed set changed, so it stays the dependency.
     // `pending` is a fresh array each render; its ids are the real dependency.
@@ -114,6 +122,11 @@ export function SubscriptionCatchUp({
     setAmounts((a) => ({ ...a, [txId]: next }));
   };
 
+  // The billing date for one cycle: the override if the user picked one, else the
+  // subscription's billing day for that month.
+  const dateOf = (txId: string, month: string) => dates[txId] ?? billingDate(month, sub.dayOfMonth);
+  const setDate = (txId: string, v: string) => setDates((d) => ({ ...d, [txId]: v }));
+
   const plan = planCatchUp(rows);
   const payTotal = plan.pay.reduce((sum, txId) => sum + amountOf(txId), 0);
 
@@ -125,10 +138,32 @@ export function SubscriptionCatchUp({
   const submit = () => {
     if (plan.problem) return;
     const paidAmounts: Record<string, number> = {};
-    for (const txId of plan.pay) paidAmounts[txId] = amountOf(txId);
-    onResolve({ pay: plan.pay, skip: plan.skip, cancelling: plan.cancelling, amounts: paidAmounts });
+    const paidDates: Record<string, string> = {};
+    for (const txId of plan.pay) {
+      paidAmounts[txId] = amountOf(txId);
+      // Only send a date when the user actually moved it off the billing day —
+      // otherwise the charge keeps its original occurredAt untouched.
+      const row = rows.find((r) => r.txId === txId);
+      if (row) {
+        const def = billingDate(row.month, sub.dayOfMonth);
+        const chosen = dates[txId] ?? def;
+        if (chosen !== def) paidDates[txId] = chosen;
+      }
+    }
+    onResolve({
+      pay: plan.pay,
+      skip: plan.skip,
+      cancelling: plan.cancelling,
+      amounts: paidAmounts,
+      dates: paidDates,
+    });
     onClose();
   };
+
+  // "No changes to save" is the one problem that means "nothing to do" rather
+  // than "you did something invalid" — it belongs in the disabled button label,
+  // not in a red refusal banner.
+  const noChanges = plan.problem === "No changes to save.";
 
   return (
     <Modal
@@ -165,6 +200,8 @@ export function SubscriptionCatchUp({
           >
             {plan.cancelling ? (
               "Cancel subscription"
+            ) : noChanges ? (
+              "No changes to save"
             ) : (
               <>
                 <span className="wb-ico wb-ico--xs">check</span>
@@ -200,26 +237,50 @@ export function SubscriptionCatchUp({
                 disabled={!r.used}
                 onChange={() => setWaterline(i)}
               />
-              {/* The cycle's billing date, whole — the day carries the month, so one
-                  date reads where two (month label + billing day) used to confuse. */}
-              <span className="cashy-catchup-row__month">
-                {fmtDate(billingDate(r.month, sub.dayOfMonth))}
-              </span>
             </label>
-            {/* Editable price per cycle (variable monthly pricing). Only the cycles
-                being PAID take an input; the rest show the figure, greyed. */}
-            {r.paid && r.used ? (
-              <Input
-                className="wb-input-group--underline cashy-catchup-row__amt-input"
-                inputMode="numeric"
-                value={amounts[r.txId] ?? ""}
-                onChange={(e) => setAmount(r.txId, e.target.value)}
-                trailingAddon="đ"
-                aria-label={`Amount paid for ${monthLabelShort(r.month)}`}
-              />
-            ) : (
-              <span className="wb-num cashy-catchup-row__amt">{formatMoney(amountOf(r.txId))}</span>
-            )}
+            {/* The cycle's billing date, split into parts: the day + year repeat
+                down every row, so they recede to tier-2 grey while the MONTH (the
+                part that changes) stays prominent. Clicking it opens a date picker
+                to override this cycle's date — rare, but possible. */}
+            <Popover
+              inline
+              trigger={({ toggle }) => {
+                const p = fmtDateParts(dateOf(r.txId, r.month));
+                return (
+                  <button
+                    type="button"
+                    className="cashy-catchup-row__month cashy-catchup-row__date"
+                    onClick={toggle}
+                    aria-label={`Change the date for ${monthLabelShort(r.month)}`}
+                  >
+                    <span style={{ color: "var(--wb-fg-muted)" }}>{p.day}</span> {p.month}{" "}
+                    <span style={{ color: "var(--wb-fg-muted)" }}>{p.year}</span>
+                  </button>
+                );
+              }}
+            >
+              {({ close }) => (
+                <Calendar
+                  value={dateOf(r.txId, r.month)}
+                  onChange={(v) => {
+                    setDate(r.txId, v);
+                    close();
+                  }}
+                />
+              )}
+            </Popover>
+            {/* Editable price per cycle (variable monthly pricing). The input is
+                ALWAYS rendered — just disabled for a cycle not being paid — so
+                toggling a row never changes its height (a text↔input swap did). */}
+            <Input
+              className="wb-input-group--underline cashy-catchup-row__amt-input"
+              inputMode="numeric"
+              value={amounts[r.txId] ?? ""}
+              onChange={(e) => setAmount(r.txId, e.target.value)}
+              disabled={!(r.paid && r.used)}
+              trailingAddon="đ"
+              aria-label={`Amount paid for ${monthLabelShort(r.month)}`}
+            />
             <Switch
               size="sm"
               checked={r.used}
@@ -232,8 +293,9 @@ export function SubscriptionCatchUp({
       </div>
 
       {/* Why the confirm is refusing, in words. A disabled button with no reason
-          is the thing that makes a form feel broken rather than strict. */}
-      {plan.problem && <p className="cashy-catchup__problem">{plan.problem}</p>}
+          is the thing that makes a form feel broken rather than strict. The
+          "nothing to do" case is shown in the button itself, not here. */}
+      {plan.problem && !noChanges && <p className="cashy-catchup__problem">{plan.problem}</p>}
 
       {plan.cancelling && (
         <p className="cashy-catchup__note">
