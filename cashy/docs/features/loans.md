@@ -94,8 +94,9 @@ All pure, in `src/domain/loan.ts`.
 - **Outstanding = principal − Σ payments, floored at 0.** An overpayment reads as
   "paid in full", never a negative debt. Progress = paid / principal.
 - **Interest is reference-only.** `interestRatePct` + `interestPeriod` are shown
-  **spelled out** ("20% per year", "2% per month") and stored; they never accrue and
-  there is no schedule. Rate 0 renders a tier-3 "No interest" (out of focus).
+  **spelled out** with the rate figure **bolded** ("**20%** per year", "**2%** per
+  month") and stored; they never accrue and there is no schedule. Rate 0 renders a
+  plain tier-3 "No interest" (out of focus, no bold).
 - **Every state carries a status capsule + bar tone.** `overdue` (danger, "Overdue"),
   `due-soon` (warning, "Due soon"), `paid` (success, "Paid off" — the card also dims
   like a cancelled subscription), and a calm `active` gets a **neutral "N months left"**
@@ -103,10 +104,11 @@ All pure, in `src/domain/loan.ts`.
   never overdue even past its due date. The foot's due line is tier-3 with only the
   **day-count bolded**; overdue turns the whole line red.
 - **Direction is read by colour, not just words.** `borrowed` → "I owe" / "…repaid";
-  `lent` → "Owed to me" / "…collected". A lent loan's arrow + amount go **green** (a
-  future inflow); a borrowed loan stays neutral, its amount turning **red only when
-  overdue** — the "I owe" arrow is never tinted (house rule: colour = status, not
-  debt). The screen still groups them ("Money I owe" / "Owed to me").
+  `lent` → "Owed to me" / "…collected". The direction arrow is tinted by side: an
+  "I owe" arrow is **red** (a debt), an "Owed to me" arrow is **green** (a future
+  inflow). The lent amount also reads green; the borrowed amount stays neutral,
+  turning **red only when overdue**. The screen still groups them ("Money I owe" /
+  "Owed to me").
 - **Filter + overview.** A shared `FacetChip` bar (search · Status · Source ·
   Archived; dashed unselected, solid selected) narrows the lists; the `LoanSummary`
   header shows position + the next payment + a segmented **schedule bar**

@@ -21,10 +21,15 @@ const SOURCE_LABEL: Record<LoanSource, string> = {
   other: "Other",
 };
 
-/** Interest rate spelled out in full — "20% per year", not "20%/yr". */
-function rateLabel(loan: Loan): string {
-  if (loan.interestRatePct <= 0) return "No interest";
-  return `${loan.interestRatePct}% per ${loan.interestPeriod === "year" ? "year" : "month"}`;
+/** Interest rate spelled out in full, with the rate figure bolded — "**20%** per
+ *  year", not "20%/yr". Rate 0 reads a plain "No interest". */
+function RateLabel({ loan }: { loan: Loan }) {
+  if (loan.interestRatePct <= 0) return <>No interest</>;
+  return (
+    <>
+      <strong>{loan.interestRatePct}%</strong> per {loan.interestPeriod === "year" ? "year" : "month"}
+    </>
+  );
 }
 
 /** The status capsule text + tone. Every state earns one: overdue/due-soon carry
@@ -104,11 +109,9 @@ export function LoanCard({
   const overdue = status === "overdue";
   const settled = status === "paid";
 
-  // The direction arrow is green ONLY on a lent card (money owed to you — an
-  // inflow). A borrowed card's arrow is never tinted: a coloured "you owe" arrow
-  // reads as an alarm on an ordinary debt. (The amount below still turns red when
-  // it's genuinely overdue — that's a status, carried by the amount, not here.)
-  const dirColor = owed ? "var(--wb-fg-muted)" : "var(--wb-success-text)";
+  // Direction reads by colour: "I owe" (borrowed) is a debt → arrow red;
+  // "Owed to me" (lent) is a future inflow → arrow green.
+  const dirColor = owed ? "var(--wb-danger-text)" : "var(--wb-success-text)";
 
   let barClass: string;
   if (overdue) {
@@ -193,7 +196,7 @@ export function LoanCard({
             <DueText loan={loan} status={status} now={now} />
           </span>
           <span className="cashy-loanfoot__rate" data-none={loan.interestRatePct <= 0}>
-            {rateLabel(loan)}
+            <RateLabel loan={loan} />
           </span>
         </div>
       </div>

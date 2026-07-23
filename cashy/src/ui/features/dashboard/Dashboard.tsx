@@ -303,69 +303,61 @@ export function Dashboard() {
                 Manage
               </button>
             </div>
-            {/* Net worth broken into its three parts as even stat figures (shared
-                StatFigure), not a crammed dotted strip. Colour = status: owed-to-you
-                reads green, assets + you-owe stay neutral. */}
+            {/* Net worth broken into its three parts as stat figures (shared
+                StatFigure), clustered left and colour-coded as a legend: assets
+                blue, what you owe red, what's owed to you green. */}
             {hasLoans && (
-              <div className="cashy-figrow cashy-networth__break">
-                <StatFigure label="Assets" amount={walletNet} short />
-                <StatFigure label="You owe" amount={payable} short />
-                {receivable > 0 && <StatFigure label="Owed to you" amount={receivable} positive short />}
+              <div className="cashy-networth__break">
+                <StatFigure label="Assets" amount={walletNet} short valueColor="var(--wb-info-text)" />
+                <StatFigure label="You owe" amount={payable} short valueColor="var(--wb-danger-text)" />
+                {receivable > 0 && (
+                  <StatFigure label="Owed to you" amount={receivable} short valueColor="var(--wb-success-text)" />
+                )}
               </div>
             )}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 8 }}>
+            {/* Per-wallet mini-tiles: icon + a stacked name-over-amount body, top
+                aligned; the name never truncates and the amount sits right under
+                it, so nothing clips or drifts to the far edge. */}
+            <div className="cashy-balgrid">
               {shownWallets.map((w) => {
                 const bal = walletBals.get(w.id) ?? w.openingBalance;
                 return (
-                  <div
-                    key={w.id}
-                    className="wb-cluster wb-cluster--nowrap"
-                    style={{ gap: 8, alignItems: "center", padding: "6px 4px", minWidth: 0 }}
-                  >
-                    <span className="cashy-tile" style={{ width: 24, height: 24, flex: "none" }}>
-                      <Icon name={w.icon} size={14} />
+                  <div key={w.id} className="cashy-balrow">
+                    <span className="cashy-tile">
+                      <Icon name={w.icon} size={15} />
                     </span>
-                    <span style={{ flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontSize: 13 }}>
-                      {w.name}
-                    </span>
-                    <AmountDisplay amount={bal} negative={bal < 0} />
+                    <div className="cashy-balrow__body">
+                      <span className="cashy-balrow__name">{w.name}</span>
+                      <AmountDisplay amount={bal} negative={bal < 0} className="cashy-balrow__amt" />
+                    </div>
                   </div>
                 );
               })}
+              {/* Loans fold in as one reconciling line — wallet tiles + this = net worth. */}
+              {hasLoans && (
+                <div
+                  role="button"
+                  tabIndex={0}
+                  title="Manage loans"
+                  onClick={() => navigate("loans")}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      navigate("loans");
+                    }
+                  }}
+                  className="cashy-balloans"
+                >
+                  <span className="cashy-tile">
+                    <Icon name="handshake" size={15} />
+                  </span>
+                  <span className="cashy-balloans__label">
+                    Loans <span style={{ color: "var(--wb-fg-muted)" }}>· net</span>
+                  </span>
+                  <AmountDisplay amount={loansNet} negative={loansNet < 0} />
+                </div>
+              )}
             </div>
-            {/* Loans fold in as one reconciling row — wallet rows + this = net worth. */}
-            {hasLoans && (
-              <div
-                role="button"
-                tabIndex={0}
-                title="Manage loans"
-                onClick={() => navigate("loans")}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    navigate("loans");
-                  }
-                }}
-                className="wb-cluster wb-cluster--nowrap"
-                style={{
-                  gap: 8,
-                  alignItems: "center",
-                  padding: "10px 4px 2px",
-                  marginTop: 6,
-                  borderTop: shownWallets.length > 0 ? "1px solid var(--wb-border)" : "none",
-                  cursor: "pointer",
-                  minWidth: 0,
-                }}
-              >
-                <span className="cashy-tile" style={{ width: 24, height: 24, flex: "none" }}>
-                  <Icon name="handshake" size={14} />
-                </span>
-                <span style={{ flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontSize: 13 }}>
-                  Loans <span style={{ color: "var(--wb-fg-muted)" }}>· net</span>
-                </span>
-                <AmountDisplay amount={loansNet} negative={loansNet < 0} />
-              </div>
-            )}
           </div>
         </div>
       )}
