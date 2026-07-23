@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { getState, commit } from "@/data/store";
 import { emptyState } from "@/data/persistence";
 import { addContact, deleteContact, setContactArchived, updateContact } from "@/usecases/contacts";
+import { CONTACT_DEFAULT_ICON } from "@/domain/contact";
 
 beforeEach(() => commit(emptyState()));
 
@@ -21,6 +22,14 @@ describe("addContact", () => {
     addContact({ name: "Anh", colorHex: "#222", icon: "user" });
     expect(getState().contacts).toHaveLength(2);
   });
+  it("falls back to the default icon when given an empty icon", () => {
+    const id = addContact({ name: "Anh", colorHex: "#111", icon: "" })!;
+    expect(getState().contacts.find((c) => c.id === id)!.icon).toBe(CONTACT_DEFAULT_ICON);
+  });
+  it("stores no username when none is given (@BR-contact-003)", () => {
+    const id = addContact({ name: "Anh", colorHex: "#111", icon: "user" })!;
+    expect(getState().contacts.find((c) => c.id === id)!.username).toBeUndefined();
+  });
 });
 
 describe("updateContact keeps identity (@BR-contact-005)", () => {
@@ -34,6 +43,21 @@ describe("updateContact keeps identity (@BR-contact-005)", () => {
     expect(after.name).toBe("Minh");
     expect(getState().contacts).toHaveLength(1);
   });
+  it("returns false for a nonexistent id", () => {
+    expect(updateContact("nonexistent", { name: "Minh" })).toBe(false);
+  });
+  it("returns false and leaves the contact unchanged on an invalid patch (empty name)", () => {
+    const id = addContact({ name: "Anh Minh", colorHex: "#111", icon: "user" })!;
+    const before = getState().contacts[0];
+    expect(updateContact(id, { name: "" })).toBe(false);
+    expect(getState().contacts[0]).toEqual(before);
+  });
+  it("clears an existing username end-to-end (@BR-contact-003)", () => {
+    const id = addContact({ name: "Anh Minh", username: "minh_vcb", colorHex: "#111", icon: "user" })!;
+    expect(getState().contacts[0].username).toBe("minh_vcb");
+    expect(updateContact(id, { username: "" })).toBe(true);
+    expect(getState().contacts[0].username).toBeUndefined();
+  });
 });
 
 describe("deleteContact (@BR-contact-007, @BR-contact-008)", () => {
@@ -41,6 +65,9 @@ describe("deleteContact (@BR-contact-007, @BR-contact-008)", () => {
     const id = addContact({ name: "X", colorHex: "#111", icon: "user" })!;
     expect(deleteContact(id)).toBe(true);
     expect(getState().contacts).toHaveLength(0);
+  });
+  it("returns false for a nonexistent id", () => {
+    expect(deleteContact("nonexistent")).toBe(false);
   });
   // @BR-contact-008: a referenced contact is blocked from hard-delete. In slice A
   // nothing references a contact, so this guard cannot yet be exercised true —

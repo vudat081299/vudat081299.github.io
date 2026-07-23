@@ -82,6 +82,18 @@ describe("applyContactEdit — identity is immutable (@BR-contact-005)", () => {
   it("returns null on an invalid edit (empty name)", () => {
     expect(applyContactEdit(con(), { name: "" })).toBeNull();
   });
+  it("clears an existing username when patched with an empty string (@BR-contact-003)", () => {
+    const before = con({ username: "minh_vcb" });
+    const after = applyContactEdit(before, { username: "" });
+    expect(after).not.toBeNull();
+    expect(after!.username).toBeUndefined();
+  });
+  it("preserves the existing username when the patch omits the key (@BR-contact-003)", () => {
+    const before = con({ username: "minh_vcb" });
+    const after = applyContactEdit(before, { colorHex: "#fff" });
+    expect(after).not.toBeNull();
+    expect(after!.username).toBe("minh_vcb");
+  });
 });
 
 describe("activeContacts (@BR-contact-006)", () => {

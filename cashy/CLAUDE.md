@@ -113,7 +113,7 @@ Full data dictionary: [docs/data-model.md](docs/data-model.md). Types live in
 (`localStorage["cashy_state_v1"]`):
 
 ```
-CashyState { version, theme, subIconStyle, workspace, categories[], tags[], transactions[], subscriptions[], wallets[], loans[] }
+CashyState { version, theme, subIconStyle, workspace, categories[], tags[], transactions[], subscriptions[], wallets[], loans[], contacts[] }
 ```
 
 Entities & links:
@@ -140,6 +140,8 @@ Loan                  money you owe / are owed — a FIRST-CLASS record (not a w
    ├─ interestRatePct + interestPeriod year|month  (reference-only; never accrued)
    ├─ openedAt · dueAt (YMD|null) · archived
    └─ payments[] (LoanPayment, manual log); outstanding DERIVED — #/loans screen (added v7)
+Contact               a person you lend to / borrow from — a FIRST-CLASS entity, holds no money
+   └─ name, username? (disambiguating handle), colorHex, icon, archived — #/contacts screen (added v9)
 ```
 
 Enums: `TxType` = income|expense · `TxStatus` = recorded|pending|awaiting|skipped|failed

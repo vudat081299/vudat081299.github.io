@@ -30,7 +30,7 @@ function ContactEditor({ open, editing, onClose }: { open: boolean; editing: Con
   function save() {
     const n = name.trim();
     if (!n) return;
-    const patch = { name: n, username: username.trim() || undefined, colorHex: color, icon };
+    const patch = { name: n, username: username.trim(), colorHex: color, icon };
     if (editing) updateContact(editing.id, patch);
     else addContact(patch);
     onClose();

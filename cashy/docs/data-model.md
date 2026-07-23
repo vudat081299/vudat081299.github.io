@@ -28,6 +28,7 @@ The single object serialized to `localStorage`. `types.ts` · built empty in
 | `subscriptions` | `Subscription[]` | Recurring services | Carry cache fields re-derived from `transactions`. |
 | `wallets` | `Wallet[]` | Spending wallets / accounts (added **v6**) | Balances are DERIVED from the ledger, never stored. Schema live; UI pending — see [wallets-plan.md](wallets-plan.md). |
 | `loans` | `Loan[]` | Debts you owe / money owed to you (added **v7**) | First-class records — **not** wallets, **not** transactions. Outstanding is DERIVED (`principal` − payments), never stored. See [features/loans.md](features/loans.md) · [loans-plan.md](loans-plan.md). |
+| `contacts` | `Contact[]` | People you lend to / borrow from (added **v9**) | First-class entity; holds no money. Loans link to a contact in a later slice. |
 
 ### 1.2 `Workspace`
 | Field | Type | Meaning |
@@ -177,6 +178,25 @@ See [features/loans.md](features/loans.md) · [loans-plan.md](loans-plan.md).
 loan's outstanding **subtracts** from net worth, a `lent` loan's **adds**
 (`loanNetWorthDelta`, `loansNetWorth`). Interest is reference-only: `interestRatePct`
 never moves the balance.
+
+### 1.10 `Contact` — a person you lend to / borrow from (added v9)
+A **first-class entity** so a loan can reference the same person by a stable `id`
+rather than a copied name. Holds no money itself. Rendered neutral/grey like other
+entities; `colorHex` is a classification accent only. Rules in `domain/contact.ts`.
+
+| Field | Type | Meaning | Notes |
+|---|---|---|---|
+| `id` | `string` | Primary key | Identity — immutable once created. |
+| `name` | `string` | Display name | Required, trimmed, 1..80 chars. Not unique — duplicates allowed. |
+| `username?` | `string` | **Optional** handle / account id | Trimmed, ≤30 chars; blank input normalizes to `undefined`. Disambiguates same-name contacts. |
+| `colorHex` | `string` | Classification hue | Rendered grey; hue is an accent only. |
+| `icon` | `string` | Curated lucide key | Falls back to `CONTACT_DEFAULT_ICON` when empty. |
+| `archived` | `boolean` | `true` = hidden from active selection, history kept | |
+| `createdAt` | `string` | ISO timestamp | Identity — immutable once created. |
+
+`id` and `createdAt` never change after creation (`applyContactEdit`). Loans link
+to a contact in a later slice — in this slice `isContactReferenced` always returns
+`false`, so a contact can always be hard-deleted.
 
 ---
 

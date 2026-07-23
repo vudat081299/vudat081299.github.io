@@ -114,12 +114,13 @@ function Navbar({ onMenu }: { onMenu: () => void }) {
 }
 
 function SidebarBody({ onNavigate }: { onNavigate?: () => void }) {
-  const { transactions, categories, tags, wallets, loans } = useCashy();
+  const { transactions, categories, tags, wallets, loans, contacts } = useCashy();
   const route = useRoute();
   const counts: Partial<Record<Route, number>> = {
     transactions: transactions.length,
     wallets: wallets.length,
     loans: loans.filter((l) => !l.archived).length,
+    contacts: contacts.length,
     categories: categories.length,
     tags: tags.length,
   };

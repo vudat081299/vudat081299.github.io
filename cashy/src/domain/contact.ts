@@ -16,11 +16,11 @@ type NormErr = { ok: false; error: string };
  */
 export function normalizeContactInput(input: { name: string; username?: string }): NormOk | NormErr {
   const name = input.name.trim();
-  if (!name) return { ok: false, error: "Tên là bắt buộc" };
-  if (name.length > CONTACT_NAME_MAX) return { ok: false, error: `Tên tối đa ${CONTACT_NAME_MAX} ký tự` };
+  if (!name) return { ok: false, error: "Name is required" };
+  if (name.length > CONTACT_NAME_MAX) return { ok: false, error: `Name must be at most ${CONTACT_NAME_MAX} characters` };
   const username = input.username?.trim() || undefined;
   if (username && username.length > CONTACT_USERNAME_MAX)
-    return { ok: false, error: `Username tối đa ${CONTACT_USERNAME_MAX} ký tự` };
+    return { ok: false, error: `Username must be at most ${CONTACT_USERNAME_MAX} characters` };
   return { ok: true, name, username };
 }
 
