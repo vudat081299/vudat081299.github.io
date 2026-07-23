@@ -12,7 +12,7 @@ import { TransactionTable } from "@/ui/features/transactions/TransactionTable";
 import { openTxEditor } from "@/lib/modals";
 
 export function Transactions() {
-  const { transactions, categories, tags } = useCashy();
+  const { transactions, categories, tags, wallets } = useCashy();
   const q = useTxQuery(transactions, categories);
   const net = totals(q.filtered).net;
   const tagRanks = useMemo(() => rankTags(tags, transactions), [tags, transactions]);
@@ -44,12 +44,13 @@ export function Transactions() {
         }
       />
 
-      <TxFilterBar q={q} tagRanks={tagRanks} categories={categories} />
+      <TxFilterBar q={q} tagRanks={tagRanks} categories={categories} wallets={wallets} />
 
       <TransactionTable
         rows={q.sorted}
         categories={categories}
         tagRanks={tagRankMap}
+        wallets={wallets}
         pageSize={50}
         onDelete={(ids) => ids.forEach(deleteTransaction)}
         emptyState={

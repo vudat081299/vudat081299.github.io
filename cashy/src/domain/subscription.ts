@@ -473,6 +473,7 @@ export function dueCharges(
         note: sub.name,
         payee: `Subscription · ${monthLabelShort(m)}`,
         account: sub.account,
+        walletId: sub.walletId,
         status: "pending",
         occurredAt: cycleDate(sub, m),
         subscriptionId: sub.id,

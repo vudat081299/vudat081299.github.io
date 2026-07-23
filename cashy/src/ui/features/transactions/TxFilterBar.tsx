@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type CSSProperties, type ReactNode } from "react";
-import type { Category, TxType } from "@/domain/types";
+import type { Category, TxType, Wallet } from "@/domain/types";
 import { flattenTree, type TagRank } from "@/domain";
 import type { TxQuery } from "@/ui/features/transactions/useTxQuery";
 import { TX_STATUS_META, TX_STATUS_ORDER } from "@/domain/txStatus";
@@ -101,15 +101,22 @@ export function TxFilterBar({
   q,
   tagRanks,
   categories,
+  wallets = [],
 }: {
   q: TxQuery;
   /** tags already ordered most-used first (see `rankTags`) */
   tagRanks: TagRank[];
   categories: Category[];
+  wallets?: Wallet[];
 }) {
   const rankById = useMemo(() => new Map(tagRanks.map((r) => [r.tag.id, r])), [tagRanks]);
   const catFlat = useMemo(() => flattenTree(categories), [categories]);
   const catById = useMemo(() => new Map(categories.map((c) => [c.id, c])), [categories]);
+  const walletOptions = useMemo(
+    () => [...wallets].sort((a, b) => Number(a.archived) - Number(b.archived) || a.order - b.order),
+    [wallets],
+  );
+  const walletById = useMemo(() => new Map(wallets.map((w) => [w.id, w])), [wallets]);
   const typeLabel = TYPES.find((t) => t.key === q.type)?.label;
 
   // Amount inputs live-drive the query; an external clear (chip ×, "clear all")
@@ -253,6 +260,53 @@ export function TxFilterBar({
               ))}
             </div>
           </div>
+        </FacetChip>
+      )}
+
+      {walletOptions.length > 0 && (
+        <FacetChip
+          label="Wallet"
+          value={q.walletId ? (walletById.get(q.walletId)?.name ?? "?") : ""}
+          active={q.walletId != null}
+          panelWidth={220}
+          onClear={() => q.setWallet(null)}
+        >
+          {({ close }) => (
+            <div className="wb-menu cashy-facet-pop" style={{ border: 0, boxShadow: "none" }}>
+              <div
+                className="wb-stack wb-scroll-y"
+                style={{ "--wb-stack-gap": "1px", maxHeight: 220 } as CSSProperties}
+              >
+                <label className="wb-radio wb-menu__item">
+                  <input
+                    type="radio"
+                    name="cashy-wallet"
+                    checked={q.walletId == null}
+                    onChange={() => {
+                      q.setWallet(null);
+                      close();
+                    }}
+                  />
+                  All wallets
+                </label>
+                {walletOptions.map((w) => (
+                  <label key={w.id} className="wb-radio wb-menu__item">
+                    <input
+                      type="radio"
+                      name="cashy-wallet"
+                      checked={q.walletId === w.id}
+                      onChange={() => {
+                        q.setWallet(w.id);
+                        close();
+                      }}
+                    />
+                    {w.name}
+                    {w.archived && <span style={{ color: "var(--wb-fg-muted)" }}> · archived</span>}
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
         </FacetChip>
       )}
 

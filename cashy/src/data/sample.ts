@@ -22,7 +22,7 @@ import type {
   Wallet,
 } from "@/domain/types";
 import { uid } from "@/lib/id";
-import { addMonthKey, addMonths, billingDate, monthKey, monthLabelShort } from "@/domain/date";
+import { addMonthKey, addMonths, billingDate, monthKey, monthLabelShort, todayYMD } from "@/domain/date";
 import { guessWalletKind, walletIcon } from "@/domain/wallet";
 import { SWATCHES } from "@/lib/palette";
 
@@ -434,15 +434,8 @@ export function buildSampleData(
 
   transactions.push(...charges);
 
-  // Newest first, matching addTransaction's prepend order.
-  transactions.sort((a, b) =>
-    a.occurredAt < b.occurredAt ? 1 : a.occurredAt > b.occurredAt ? -1 : a.createdAt < b.createdAt ? 1 : -1,
-  );
-
   // Real wallets for the demo — one per "Paid with" account the ledger names,
-  // kind guessed from the name. Opening balances stay 0 for now (a coherent
-  // per-wallet balance picture wants salary→wallet transfers, which arrive with
-  // the transfer UI — see docs/wallets-plan.md phase 4); every row is linked by
+  // kind guessed from the name. Opening balances stay 0; every row is linked by
   // `walletId` from its `account` string, exactly as migration v6 does for real data.
   const wallets: Wallet[] = ACCOUNTS.map((name, i) => {
     const kind = guessWalletKind(name);
@@ -459,7 +452,39 @@ export function buildSampleData(
     };
   });
   const walletIdByName = new Map(wallets.map((w) => [w.name, w.id] as const));
+
+  // A couple of TRANSFERS, so the demo shows the "moves between two wallets,
+  // counts toward no total" case: monthly cash withdrawals from the bank.
+  const bankId = walletIdByName.get("Vietcombank");
+  const cashId = walletIdByName.get("Cash");
+  if (bankId && cashId) {
+    for (const mk of months) {
+      const day = billingDate(mk, 3);
+      if (day > todayYMD()) continue;
+      transactions.push({
+        id: uid(),
+        amount: 3_000_000,
+        type: "expense", // convention — never summed; `toWalletId` marks it a transfer
+        categoryId: null,
+        tagIds: [],
+        note: "Rút tiền mặt",
+        walletId: bankId,
+        toWalletId: cashId,
+        status: "recorded",
+        occurredAt: day,
+        createdAt: new Date(`${day}T10:00:00`).toISOString(),
+      });
+    }
+  }
+
+  // Newest first, matching addTransaction's prepend order.
+  transactions.sort((a, b) =>
+    a.occurredAt < b.occurredAt ? 1 : a.occurredAt > b.occurredAt ? -1 : a.createdAt < b.createdAt ? 1 : -1,
+  );
+
   const linkWallet = <T extends { account?: string; walletId?: string | null }>(row: T): T => {
+    // A row that already names a wallet (a transfer) keeps it; otherwise link by account.
+    if (row.walletId) return row;
     const id = row.account?.trim() ? walletIdByName.get(row.account.trim()) : undefined;
     return id ? { ...row, walletId: id } : row;
   };

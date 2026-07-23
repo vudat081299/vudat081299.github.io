@@ -12,6 +12,7 @@ import { Textarea } from "@/ui/kit/Textarea";
 import { IconPicker } from "@/ui/common/IconPicker";
 import { ColorPicker } from "@/ui/common/ColorPicker";
 import { Select } from "@/ui/common/Select";
+import { WalletPicker } from "@/ui/common/WalletPicker";
 import { SubTile } from "@/ui/features/subscriptions/SubTile";
 import { TagChip } from "@/ui/common/TagChip";
 import { registerSubscriptionEditor } from "@/lib/modals";
@@ -24,7 +25,7 @@ const MONTH_NAMES = [
 ];
 
 export function SubscriptionEditor() {
-  const { categories, tags, subscriptions } = useCashy();
+  const { categories, tags, subscriptions, wallets } = useCashy();
   const [open, setOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [name, setName] = useState("");
@@ -37,7 +38,7 @@ export function SubscriptionEditor() {
   const [color, setColor] = useState<string>(SWATCHES[0]);
   const [icon, setIcon] = useState("credit-card");
   const [note, setNote] = useState("");
-  const [account, setAccount] = useState("");
+  const [walletId, setWalletId] = useState<string | null>(null);
   const [startedAt, setStartedAt] = useState(todayYMD());
   // Shared / family plan: the whole price + how many split it; `amount` is the
   // user's own share.
@@ -65,7 +66,7 @@ export function SubscriptionEditor() {
       setColor(sub?.colorHex ?? SWATCHES[0]);
       setIcon(sub?.icon ?? "credit-card");
       setNote(sub?.note ?? "");
-      setAccount(sub?.account ?? "");
+      setWalletId(sub?.walletId ?? null);
       setStartedAt(sub?.startedAt ?? todayYMD());
       setShared((sub?.members ?? 0) > 1 || sub?.fullAmount != null);
       setFullAmountStr(sub?.fullAmount != null ? String(sub.fullAmount) : "");
@@ -143,7 +144,7 @@ export function SubscriptionEditor() {
       colorHex: color,
       icon,
       note: note.trim(),
-      account: account.trim() || undefined,
+      walletId,
       startedAt,
     };
     if (editingId) updateSubscription(editingId, payload);
@@ -545,19 +546,13 @@ export function SubscriptionEditor() {
           </div>
         </div>
 
-        {/* Which card / account pays this service — inherited onto every cycle
-            charge, so the ledger shows what funded each payment. Free text for now. */}
+        {/* Which wallet pays this service — inherited onto every cycle charge, so
+            the ledger shows what funded each payment. */}
         <div className="wb-field">
-          <label className="wb-label" htmlFor="sub-account">
-            Paid with <span className="wb-label__opt">(card / account / wallet)</span>
+          <label className="wb-label" htmlFor="sub-wallet">
+            Paid from <span className="wb-label__opt">(wallet)</span>
           </label>
-          <input
-            id="sub-account"
-            className="wb-input"
-            value={account}
-            onChange={(e) => setAccount(e.target.value)}
-            placeholder="e.g. Techcombank Visa, MoMo, Cash"
-          />
+          <WalletPicker id="sub-wallet" wallets={wallets} value={walletId} onChange={setWalletId} />
         </div>
 
         <Field label="Note" htmlFor="sub-note">

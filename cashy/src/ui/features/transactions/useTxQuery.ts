@@ -20,6 +20,8 @@ export interface TxQuery {
   toggleStatus: (s: TxStatus) => void;
   catIds: string[];
   toggleCat: (id: string) => void;
+  walletId: string | null;
+  setWallet: (id: string | null) => void;
   amountMin: number | null;
   amountMax: number | null;
   setAmountRange: (min: number | null, max: number | null) => void;
@@ -52,6 +54,7 @@ export function useTxQuery(
   const [activeTags, setActiveTags] = useState<string[]>([]);
   const [statuses, setStatuses] = useState<TxStatus[]>([]);
   const [catIds, setCatIds] = useState<string[]>([]);
+  const [walletId, setWalletId] = useState<string | null>(null);
   const [amountMin, setAmountMin] = useState<number | null>(null);
   const [amountMax, setAmountMax] = useState<number | null>(null);
 
@@ -73,11 +76,12 @@ export function useTxQuery(
         tagIds: activeTags,
         statuses,
         categoryIds: catIds,
+        walletId,
         amountMin,
         amountMax,
         cats: categories,
       }),
-    [transactions, categories, range, type, search, activeTags, statuses, catIds, amountMin, amountMax],
+    [transactions, categories, range, type, search, activeTags, statuses, catIds, walletId, amountMin, amountMax],
   );
 
   const sorted = useMemo(
@@ -112,6 +116,8 @@ export function useTxQuery(
     toggleStatus,
     catIds,
     toggleCat,
+    walletId,
+    setWallet: setWalletId,
     amountMin,
     amountMax,
     setAmountRange: (min, max) => {
@@ -124,6 +130,7 @@ export function useTxQuery(
       type !== "all" ||
       statuses.length > 0 ||
       catIds.length > 0 ||
+      walletId != null ||
       amountMin != null ||
       amountMax != null,
     clearTokens: () => {
@@ -132,6 +139,7 @@ export function useTxQuery(
       setType("all");
       setStatuses([]);
       setCatIds([]);
+      setWalletId(null);
       setAmountMin(null);
       setAmountMax(null);
     },

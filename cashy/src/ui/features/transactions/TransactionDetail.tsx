@@ -3,6 +3,7 @@ import { useCashy } from "@/data/store";
 import { deleteTransaction } from "@/usecases";
 import { fmtDate } from "@/domain/date";
 import { formatMoney } from "@/domain/money";
+import { isTransfer } from "@/domain";
 import { AmountDisplay } from "@/ui/common/AmountDisplay";
 import { StatusCap } from "@/ui/common/StatusCap";
 import { TagChip } from "@/ui/common/TagChip";
@@ -15,7 +16,7 @@ import { confirmDelete } from "@/lib/confirm";
  * the form editor; delete removes it. Neutral throughout; only the amount is tinted.
  */
 export function TransactionDetail() {
-  const { transactions, categories, tags } = useCashy();
+  const { transactions, categories, tags, wallets } = useCashy();
   const [id, setId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -45,9 +46,12 @@ export function TransactionDetail() {
   if (!id || !tx) return null;
 
   const category = tx.categoryId ? categories.find((c) => c.id === tx.categoryId) : null;
+  const transfer = isTransfer(tx);
+  const fromW = tx.walletId ? (wallets.find((w) => w.id === tx.walletId) ?? null) : null;
+  const toW = tx.toWalletId ? (wallets.find((w) => w.id === tx.toWalletId) ?? null) : null;
   const txTags = tx.tagIds.map((tid) => tags.find((t) => t.id === tid)).filter(Boolean);
-  const typeLabel = tx.type === "income" ? "Income" : "Expense";
-  const merchant = tx.note.trim() || category?.name || "Transaction";
+  const typeLabel = transfer ? "Transfer" : tx.type === "income" ? "Income" : "Expense";
+  const merchant = tx.note.trim() || (transfer ? "Transfer" : category?.name) || "Transaction";
 
   return (
     <div
@@ -70,28 +74,43 @@ export function TransactionDetail() {
             </div>
 
             <div className="wb-receipt__body">
-              <div className="wb-receipt__line">
-                <span>Category</span>
-                <span>{category?.name ?? "Uncategorised"}</span>
-              </div>
-              <div className="wb-receipt__line">
-                <span>Type</span>
-                <span>{typeLabel}</span>
-              </div>
+              {transfer ? (
+                <>
+                  <div className="wb-receipt__line">
+                    <span>From</span>
+                    <span>{fromW?.name ?? "—"}</span>
+                  </div>
+                  <div className="wb-receipt__line">
+                    <span>To</span>
+                    <span>{toW?.name ?? "—"}</span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="wb-receipt__line">
+                    <span>Category</span>
+                    <span>{category?.name ?? "Uncategorised"}</span>
+                  </div>
+                  <div className="wb-receipt__line">
+                    <span>Type</span>
+                    <span>{typeLabel}</span>
+                  </div>
+                </>
+              )}
               <div className="wb-receipt__line">
                 <span>Status</span>
                 <StatusCap tx={tx} />
               </div>
-              {tx.payee && (
+              {tx.payee && !transfer && (
                 <div className="wb-receipt__line wb-receipt__line--muted">
                   <span>Payee</span>
                   <span>{tx.payee}</span>
                 </div>
               )}
-              {tx.account && (
+              {!transfer && (fromW || tx.account) && (
                 <div className="wb-receipt__line wb-receipt__line--muted">
-                  <span>Paid with</span>
-                  <span>{tx.account}</span>
+                  <span>{tx.type === "income" ? "Received into" : "Paid from"}</span>
+                  <span>{fromW?.name ?? tx.account}</span>
                 </div>
               )}
               {tx.note.trim() && (
@@ -114,7 +133,11 @@ export function TransactionDetail() {
             <div className="wb-receipt__rule" />
             <div className="wb-receipt__total">
               <span>Amount</span>
-              <AmountDisplay amount={tx.amount} type={tx.type} signed />
+              {transfer ? (
+                <AmountDisplay amount={tx.amount} />
+              ) : (
+                <AmountDisplay amount={tx.amount} type={tx.type} signed />
+              )}
             </div>
 
             <div className="wb-receipt__barcode" aria-hidden />

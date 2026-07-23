@@ -20,11 +20,13 @@ export interface TxDraft {
   occurredTime: string;
   note: string;
   payee: string;
-  /** which card / account / wallet paid — see Transaction.account */
-  account: string;
-  /** FK → Wallet.id chosen in the editor, or null — see Transaction.walletId.
-   *  Optional until the editor wires the wallet picker (plan phase 3). */
+  /** legacy free-text "Paid with" — retired in favour of `walletId`, kept optional
+   *  so any older parked draft still deserialises. */
+  account?: string;
+  /** FK → Wallet.id chosen in the editor, or null — see Transaction.walletId. */
   walletId?: string | null;
+  /** transfer destination wallet — present ⇒ the draft is a transfer. */
+  toWalletId?: string | null;
   status: TxStatus;
 }
 
@@ -54,6 +56,7 @@ export function isBlankDraft(d: TxDraft): boolean {
     d.payee.trim() === "" &&
     (d.account ?? "").trim() === "" &&
     d.walletId == null &&
+    d.toWalletId == null &&
     d.categoryId === null &&
     d.tagIds.length === 0 &&
     !d.occurredTime

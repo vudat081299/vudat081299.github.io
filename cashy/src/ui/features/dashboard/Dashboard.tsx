@@ -9,11 +9,13 @@ import {
   forecastSeries,
   monthlyNetRate,
   needsPaymentNow,
+  netWorth,
   OTHER_SLICE_ID,
   pctChange,
   periodInsights,
   rankTags,
   totals,
+  walletBalances,
   walletSeries,
   type ChartBucket,
   type Steadiness,
@@ -31,6 +33,8 @@ import { BalanceCard } from "@/ui/features/dashboard/BalanceCard";
 import { BalanceForecastChart } from "@/ui/features/dashboard/BalanceForecastChart";
 import { CashflowChart } from "@/ui/features/dashboard/CashflowChart";
 import { SpendChart } from "@/ui/features/dashboard/SpendChart";
+import { AmountDisplay } from "@/ui/common/AmountDisplay";
+import { Icon } from "@/ui/kit/icons";
 import { PeriodPicker } from "@/ui/common/PeriodPicker";
 import { ConnectedSubscriptionCard } from "@/ui/features/subscriptions/ConnectedSubscriptionCard";
 import { TxFilterBar } from "@/ui/features/transactions/TxFilterBar";
@@ -49,8 +53,17 @@ const STEADINESS: Record<Steadiness, { label: string; hint: string }> = {
 export function Dashboard() {
   // The query owns the period so the header picker, the charts AND the table all
   // move together; type/search/tag filters narrow the table only (not the charts).
-  const { transactions, categories, tags, subscriptions, subIconStyle } = useCashy();
+  const { transactions, categories, tags, subscriptions, subIconStyle, wallets } = useCashy();
   const q = useTxQuery(transactions, categories);
+
+  // Wallet balances + net worth — a compact strip under the KPIs. Derived from the
+  // whole ledger (not the period), because a balance is a running total, not a flow.
+  const walletBals = useMemo(() => walletBalances(wallets, transactions), [wallets, transactions]);
+  const netWorthAll = useMemo(() => netWorth(wallets, transactions), [wallets, transactions]);
+  const shownWallets = useMemo(
+    () => wallets.filter((w) => !w.archived).sort((a, b) => a.order - b.order),
+    [wallets],
+  );
 
   const view = useMemo(() => {
     const cur = filterTx(transactions, { range: q.range });
@@ -261,6 +274,46 @@ export function Dashboard() {
           muted
         />
       </div>
+
+      {/* Wallet balances — a compact strip; the full editor lives at #/wallets. */}
+      {shownWallets.length > 0 && (
+        <div className="wb-card">
+          <div className="wb-card__body">
+            <div className="wb-cluster wb-cluster--between" style={{ marginBottom: 12, gap: 10 }}>
+              <div>
+                <span className="cashy-card-eyebrow">Wallets</span>
+                <h3 className="cashy-card-title" style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
+                  Net worth
+                  <AmountDisplay amount={netWorthAll} negative={netWorthAll < 0} />
+                </h3>
+              </div>
+              <button type="button" className="wb-btn wb-btn--ghost wb-btn--sm" onClick={() => navigate("wallets")}>
+                Manage
+              </button>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 8 }}>
+              {shownWallets.map((w) => {
+                const bal = walletBals.get(w.id) ?? w.openingBalance;
+                return (
+                  <div
+                    key={w.id}
+                    className="wb-cluster wb-cluster--nowrap"
+                    style={{ gap: 8, alignItems: "center", padding: "6px 4px", minWidth: 0 }}
+                  >
+                    <span className="cashy-tile" style={{ width: 24, height: 24, flex: "none" }}>
+                      <Icon name={w.icon} size={14} />
+                    </span>
+                    <span style={{ flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontSize: 13 }}>
+                      {w.name}
+                    </span>
+                    <AmountDisplay amount={bal} negative={bal < 0} />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Where the balance is headed: today's number carried forward at the
           period's monthly net. Arithmetic, not a trend model — see the chart. */}
@@ -523,11 +576,12 @@ export function Dashboard() {
       )}
 
       <div className="wb-stack" style={{ "--wb-stack-gap": "16px" } as CSSProperties}>
-        <TxFilterBar q={q} tagRanks={tagRanks} categories={categories} />
+        <TxFilterBar q={q} tagRanks={tagRanks} categories={categories} wallets={wallets} />
         <TransactionTable
           rows={q.sorted}
           categories={categories}
           tagRanks={tagRankMap}
+          wallets={wallets}
           pageSize={20}
           onDelete={(ids) => ids.forEach(deleteTransaction)}
           title="Recent transactions"

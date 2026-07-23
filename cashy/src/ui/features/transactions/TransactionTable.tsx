@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import type { Category, Transaction } from "@/domain/types";
-import type { TagRank } from "@/domain";
+import type { Category, Transaction, Wallet } from "@/domain/types";
+import { isTransfer, type TagRank } from "@/domain";
 import { confirmDelete } from "@/lib/confirm";
 import { AmountDisplay } from "@/ui/common/AmountDisplay";
 import { CategoryCap } from "@/ui/common/CategoryCap";
@@ -25,6 +25,7 @@ export function TransactionTable({
   rows,
   categories,
   tagRanks,
+  wallets = [],
   pageSize,
   title,
   subtitle,
@@ -36,6 +37,8 @@ export function TransactionTable({
   categories: Category[];
   /** tag → how heavily the ledger uses it; drives chip order and ink */
   tagRanks: Map<string, TagRank>;
+  /** wallets, so a transfer row can name its from → to instead of a category */
+  wallets?: Wallet[];
   pageSize: number;
   title?: ReactNode;
   subtitle?: ReactNode;
@@ -45,6 +48,7 @@ export function TransactionTable({
   onDelete: (ids: string[]) => void;
 }) {
   const catById = useMemo(() => new Map(categories.map((c) => [c.id, c])), [categories]);
+  const walletById = useMemo(() => new Map(wallets.map((w) => [w.id, w])), [wallets]);
   const { page, setPage, totalPages, pageItems, total, from, to } = usePagination(rows, pageSize);
 
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -184,6 +188,9 @@ export function TransactionTable({
           <tbody>
             {pageItems.map((tx) => {
               const category = tx.categoryId ? (catById.get(tx.categoryId) ?? null) : null;
+              const transfer = isTransfer(tx);
+              const fromW = tx.walletId ? walletById.get(tx.walletId) : undefined;
+              const toW = tx.toWalletId ? walletById.get(tx.toWalletId) : undefined;
               // Most-used tag first: when only two of them fit, show the two that
               // actually say something about this ledger.
               const txTags = tx.tagIds
@@ -220,12 +227,20 @@ export function TransactionTable({
                   </td>
                   <td>
                     <span className="wb-cell-strong">
-                      {tx.note || category?.name || "Transaction"}
+                      {tx.note || (transfer ? "Transfer" : category?.name) || "Transaction"}
                     </span>
                     {tx.payee && <span className="wb-cell-sub">{tx.payee}</span>}
                   </td>
                   <td>
-                    <CategoryCap category={category} />
+                    {transfer ? (
+                      <span className="wb-cell-muted" style={{ display: "inline-flex", alignItems: "center", gap: 4, whiteSpace: "nowrap" }}>
+                        {fromW?.name ?? "—"}
+                        <span className="wb-ico wb-ico--xs">arrow_forward</span>
+                        {toW?.name ?? "—"}
+                      </span>
+                    ) : (
+                      <CategoryCap category={category} />
+                    )}
                   </td>
                   <td>
                     {txTags.length > 0 ? (
@@ -244,7 +259,12 @@ export function TransactionTable({
                     )}
                   </td>
                   <td className="wb-num">
-                    <AmountDisplay amount={tx.amount} type={tx.type} signed />
+                    {/* A transfer is neither + nor − — show it neutral, not as spend. */}
+                    {transfer ? (
+                      <AmountDisplay amount={tx.amount} />
+                    ) : (
+                      <AmountDisplay amount={tx.amount} type={tx.type} signed />
+                    )}
                   </td>
                   <td>
                     <StatusCap tx={tx} />
