@@ -22,6 +22,9 @@ export interface TxDraft {
   payee: string;
   /** which card / account / wallet paid — see Transaction.account */
   account: string;
+  /** FK → Wallet.id chosen in the editor, or null — see Transaction.walletId.
+   *  Optional until the editor wires the wallet picker (plan phase 3). */
+  walletId?: string | null;
   status: TxStatus;
 }
 
@@ -50,6 +53,7 @@ export function isBlankDraft(d: TxDraft): boolean {
     d.note.trim() === "" &&
     d.payee.trim() === "" &&
     (d.account ?? "").trim() === "" &&
+    d.walletId == null &&
     d.categoryId === null &&
     d.tagIds.length === 0 &&
     !d.occurredTime

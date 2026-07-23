@@ -1,9 +1,9 @@
 import type { CashyState, Workspace } from "@/domain/types";
 import { commit, getState } from "@/data/store";
 import { emptyState } from "@/data/persistence";
-import { CURRENT_VERSION } from "@/data/migrations";
+import { CURRENT_VERSION, migrate } from "@/data/migrations";
 import { buildSampleData } from "@/data/sample";
-import { seedCategories } from "@/data/seed";
+import { seedCategories, seedWallets } from "@/data/seed";
 
 function freshDataset() {
   const categories = seedCategories();
@@ -28,6 +28,7 @@ export function createWorkspace(input: { displayName: string; currency?: string 
     tags: [],
     transactions: [],
     subscriptions: [],
+    wallets: seedWallets(),
   });
 }
 
@@ -81,7 +82,11 @@ export function importData(json: string): { ok: boolean; error?: string } {
       return { ok: false, error: "File is not a valid Cashy file." };
     }
     const state = getState();
-    commit({
+    // Run the imported payload through the same forward migrations `load` uses —
+    // an older export must not be stamped current without them (once wallets/v6
+    // exist, a raw import would otherwise skip the back-fill entirely).
+    const merged: CashyState = {
+      ...emptyState(),
       version: CURRENT_VERSION,
       theme: state.theme,
       subIconStyle: p.subIconStyle ?? state.subIconStyle,
@@ -90,7 +95,9 @@ export function importData(json: string): { ok: boolean; error?: string } {
       tags: Array.isArray(p.tags) ? p.tags : [],
       transactions: p.transactions,
       subscriptions: Array.isArray(p.subscriptions) ? p.subscriptions : [],
-    });
+      wallets: Array.isArray(p.wallets) ? p.wallets : [],
+    };
+    commit(migrate(merged, p.version ?? 1));
     return { ok: true };
   } catch {
     return { ok: false, error: "Could not read the JSON content." };

@@ -15,6 +15,7 @@ export function emptyState(): CashyState {
     tags: [],
     transactions: [],
     subscriptions: [],
+    wallets: [],
   };
 }
 
@@ -48,6 +49,7 @@ export function load(): CashyState {
         tags: p.tags ?? [],
         transactions: p.transactions ?? [],
         subscriptions: p.subscriptions ?? [],
+        wallets: p.wallets ?? [],
       },
       fromVersion,
     );
@@ -56,8 +58,8 @@ export function load(): CashyState {
     // an EMPTY ledger is filled, so nothing a user actually entered is touched.
     if (next.workspace && next.transactions.length === 0) {
       const categories = next.categories.length ? next.categories : seedCategories();
-      const { tags, transactions, subscriptions } = buildSampleData(categories);
-      next = { ...next, categories, tags, transactions, subscriptions };
+      const { tags, transactions, subscriptions, wallets } = buildSampleData(categories);
+      next = { ...next, categories, tags, transactions, subscriptions, wallets };
     }
     save(next);
     return next;

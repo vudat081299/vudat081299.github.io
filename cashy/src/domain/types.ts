@@ -7,6 +7,13 @@ export type ThemeMode = "system" | "light" | "dark";
 export type SubIconStyle = "neutral" | "brand";
 
 /**
+ * What kind of account a wallet is. v1 covers spending wallets; the union is
+ * deliberately OPEN — `savings | investment | asset | liability` slot in later
+ * for full net-worth WITHOUT a second migration. See `docs/wallets-plan.md`.
+ */
+export type WalletKind = "cash" | "bank" | "ewallet" | "card" | "other";
+
+/**
  * Lifecycle of a transaction — drives the status column + which rows count.
  * Only `recorded` affects the money totals; the rest are shown but not summed.
  *  - recorded : done & counted (green)
@@ -43,6 +50,26 @@ export interface Tag {
   createdAt: string;
 }
 
+/**
+ * A place money sits — cash, a bank account, an e-wallet, a card. A transaction
+ * moves through one wallet (`Transaction.walletId`); a transfer moves between two
+ * (`walletId` → `toWalletId`). Current balance = `openingBalance` + net of the
+ * wallet's recorded rows — see `domain/wallet.walletBalance`. Rendered neutral/grey
+ * like categories & tags; `colorHex` is a classification accent, never decoration.
+ */
+export interface Wallet {
+  id: string;
+  name: string;
+  kind: WalletKind;
+  /** integer VND balance BEFORE the ledger begins; may be negative (a card in debt) */
+  openingBalance: number;
+  colorHex: string; // classification hue
+  icon: string; // curated lucide key, see lib/icons
+  order: number; // sort position among wallets
+  archived: boolean; // true = hidden from pickers, history kept
+  createdAt: string; // ISO
+}
+
 export interface Transaction {
   id: string;
   amount: number; // integer VND, >= 0; sign implied by `type`
@@ -56,6 +83,14 @@ export interface Transaction {
    *  (e.g. "Techcombank Visa", "MoMo", "Cash"). A deliberate stepping stone to a
    *  real multi-wallet model later, where this becomes an `accountId`. */
   account?: string;
+  /** FK → Wallet.id — the wallet the money sits in / moves FROM. `null`/absent =
+   *  unassigned (legacy rows, or one left blank). Supersedes the free-text
+   *  `account` above; see `domain/wallet` + `docs/wallets-plan.md`. */
+  walletId?: string | null;
+  /** Present ⇒ this row is a TRANSFER: `amount` moves from `walletId` to this
+   *  wallet, counting toward NEITHER income nor expense — only wallet balances
+   *  (`domain/wallet.isTransfer`). A transfer carries no category. */
+  toWalletId?: string;
   /** lifecycle; undefined = "recorded" (legacy rows) */
   status?: TxStatus;
   occurredAt: string; // YYYY-MM-DD
@@ -97,6 +132,9 @@ export interface Subscription {
   /** Which card / account / wallet pays this subscription — free text for now,
    *  inherited onto each cycle charge. Future: an `accountId` into a wallet model. */
   account?: string;
+  /** FK → Wallet.id — the wallet that pays this sub, inherited onto each cycle
+   *  charge (like `account`). See `docs/wallets-plan.md`. */
+  walletId?: string | null;
   active: boolean; // false = paused (no new charges), history kept
   /** "YYYY-MM-DD" — the day the user actually subscribed. Billing can start in
    *  this month; nothing before it is ever charged. */
@@ -159,4 +197,5 @@ export interface CashyState {
   tags: Tag[];
   transactions: Transaction[];
   subscriptions: Subscription[];
+  wallets: Wallet[];
 }

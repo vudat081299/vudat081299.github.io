@@ -2,6 +2,7 @@ import type { Category, Transaction, TxStatus, TxType } from "@/domain/types";
 import type { Range } from "@/domain/period";
 import { descendantIds } from "@/domain/category";
 import { isCounted, statusOf } from "@/domain/txStatus";
+import { isTransfer } from "@/domain/wallet";
 
 export interface Totals {
   income: number;
@@ -13,6 +14,7 @@ export function totals(txs: Transaction[]): Totals {
   let expense = 0;
   for (const t of txs) {
     if (!isCounted(t)) continue; // pending / skipped / failed don't move money
+    if (isTransfer(t)) continue; // a transfer moves between wallets — neither in nor out
     if (t.type === "income") income += t.amount;
     else expense += t.amount;
   }
@@ -30,6 +32,8 @@ export interface TxFilter {
   /** multi-select categories (each expanded to its descendants) — OR'd together */
   categoryIds?: string[];
   tagIds?: string[];
+  /** the wallet the row moved through (its source, for a transfer) */
+  walletId?: string | null;
   /** multi-select statuses — a row matches if its status is any of these */
   statuses?: TxStatus[];
   /** inclusive amount bounds in đồng (either side optional) */
@@ -59,6 +63,8 @@ export function filterTx(txs: Transaction[], f: TxFilter): Transaction[] {
     if (f.range && !inRange(t.occurredAt, f.range)) return false;
     if (f.type && f.type !== "all" && t.type !== f.type) return false;
     if (catSet && (!t.categoryId || !catSet.has(t.categoryId))) return false;
+    if (f.walletId != null && t.walletId !== f.walletId && t.toWalletId !== f.walletId)
+      return false;
     if (f.tagIds && f.tagIds.length && !f.tagIds.some((id) => t.tagIds.includes(id)))
       return false;
     if (f.statuses && f.statuses.length && !f.statuses.includes(statusOf(t))) return false;

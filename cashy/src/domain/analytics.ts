@@ -4,6 +4,7 @@ import { addMonthKey, mondayOf, monthKey, monthLabelShort, parseYMD, ymd } from 
 import { rootOf } from "@/domain/category";
 import { totals } from "@/domain/transaction";
 import { isCounted } from "@/domain/txStatus";
+import { isTransfer } from "@/domain/wallet";
 
 export interface BreakdownSlice {
   id: string;
@@ -23,7 +24,7 @@ export function breakdown(
   const byRoot = new Map<string, number>();
   let grand = 0;
   for (const t of txs) {
-    if (t.type !== type || !isCounted(t)) continue;
+    if (t.type !== type || !isCounted(t) || isTransfer(t)) continue;
     const root = rootOf(cats, t.categoryId);
     const key = root ? root.id : "__none__";
     byRoot.set(key, (byRoot.get(key) ?? 0) + t.amount);
@@ -230,7 +231,7 @@ export function walletSeries(
     const b = byKey.get(groupKey(t.occurredAt));
     if (!b) continue;
     b.hasTx = true;
-    if (!isCounted(t)) continue;
+    if (!isCounted(t) || isTransfer(t)) continue;
     if (t.type === "expense") b.expense += t.amount;
     else b.income += t.amount;
   }
@@ -242,7 +243,7 @@ export function walletSeries(
   for (const b of buckets) {
     while (i < sorted.length && sorted[i].occurredAt <= b.endYMD) {
       const s = sorted[i];
-      if (isCounted(s)) running += s.type === "income" ? s.amount : -s.amount;
+      if (isCounted(s) && !isTransfer(s)) running += s.type === "income" ? s.amount : -s.amount;
       i++;
     }
     b.balance = running;
@@ -340,7 +341,7 @@ export function periodInsights(
   // is dragged around by; the coefficient of variation says how spread the days are.
   const byDay = new Map<string, number>();
   for (const tx of txs) {
-    if (tx.type !== "expense" || !isCounted(tx) || tx.occurredAt > capEnd) continue;
+    if (tx.type !== "expense" || !isCounted(tx) || isTransfer(tx) || tx.occurredAt > capEnd) continue;
     byDay.set(tx.occurredAt, (byDay.get(tx.occurredAt) ?? 0) + tx.amount);
   }
   const spends = [...byDay.values()];
@@ -363,7 +364,7 @@ export function periodInsights(
 
   let top: InsightData["topExpense"] = null;
   for (const tx of txs) {
-    if (tx.type !== "expense" || !isCounted(tx)) continue;
+    if (tx.type !== "expense" || !isCounted(tx) || isTransfer(tx)) continue;
     if (!top || tx.amount > top.amount) {
       const cat = tx.categoryId ? cats.find((c) => c.id === tx.categoryId) : null;
       top = {

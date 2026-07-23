@@ -1,14 +1,17 @@
-import type { CashyState, Category, Subscription, Tag, Transaction } from "@/domain/types";
+import type { CashyState, Category, Subscription, Tag, Transaction, Wallet } from "@/domain/types";
 import { rootOf } from "@/domain/category";
 import { paymentsOf } from "@/domain/subscription";
+import { guessWalletKind, walletIcon } from "@/domain/wallet";
 import { billingDate, monthKey } from "@/domain/date";
+import { uid } from "@/lib/id";
 import { SWATCHES } from "@/lib/palette";
 
 // v2 re-colours legacy data onto the bright web-builder chart palette.
 // v3 gives subscriptions a real `startedAt` date + a `lastPaidAt` marker.
 // v4 gives subscriptions their payment history (`paymentTxIds`).
 // v5 gives subscriptions a billing `interval` — everything before it was monthly.
-export const CURRENT_VERSION = 5;
+// v6 turns the free-text `account` "Paid with" field into a real Wallet model.
+export const CURRENT_VERSION = 6;
 
 /**
  * v1 → v2: repaint every category & tag onto the bright chart palette (each
@@ -43,6 +46,58 @@ function migrateSubV3(s: Subscription, txs: Transaction[]): Subscription {
   return { ...rest, startedAt, ...paymentsOf(s.id, txs) };
 }
 
+/**
+ * v5 → v6: turn the free-text `account` "Paid with" field into a real Wallet
+ * model. Each distinct account string across transactions + subscriptions becomes
+ * a Wallet (openingBalance 0, kind guessed from the name); every row that carried
+ * that string is linked by `walletId`. `account` is left intact — the migration is
+ * purely additive. See docs/wallets-plan.md.
+ */
+function migrateWalletsV6(state: CashyState): CashyState {
+  if (state.wallets?.length) return state; // already has wallets — nothing to do
+  const names: string[] = [];
+  const seen = new Set<string>();
+  const collect = (a?: string) => {
+    const name = a?.trim();
+    if (name && !seen.has(name)) {
+      seen.add(name);
+      names.push(name);
+    }
+  };
+  for (const t of state.transactions) collect(t.account);
+  for (const s of state.subscriptions) collect(s.account);
+
+  const now = new Date().toISOString();
+  const idByName = new Map<string, string>();
+  const wallets: Wallet[] = names.map((name, i) => {
+    const kind = guessWalletKind(name);
+    const id = uid();
+    idByName.set(name, id);
+    return {
+      id,
+      name,
+      kind,
+      openingBalance: 0,
+      colorHex: SWATCHES[i % SWATCHES.length],
+      icon: walletIcon(kind),
+      order: i,
+      archived: false,
+      createdAt: now,
+    };
+  });
+
+  const link = <T extends { account?: string; walletId?: string | null }>(row: T): T => {
+    const id = row.account?.trim() ? idByName.get(row.account.trim()) : undefined;
+    return id ? { ...row, walletId: id } : row;
+  };
+  return {
+    ...state,
+    wallets,
+    transactions: state.transactions.map(link),
+    subscriptions: state.subscriptions.map(link),
+  };
+}
+
 /** Bring a persisted snapshot of any past version up to `CURRENT_VERSION`. */
 export function migrate(state: CashyState, fromVersion: number): CashyState {
   let next = state;
@@ -69,6 +124,9 @@ export function migrate(state: CashyState, fromVersion: number): CashyState {
       ...next,
       subscriptions: next.subscriptions.map((s) => ({ ...s, interval: s.interval ?? "monthly" })),
     };
+  }
+  if (fromVersion < 6) {
+    next = migrateWalletsV6(next);
   }
   return next;
 }

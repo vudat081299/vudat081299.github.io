@@ -19,9 +19,12 @@ import type {
   Transaction,
   TxStatus,
   TxType,
+  Wallet,
 } from "@/domain/types";
 import { uid } from "@/lib/id";
 import { addMonthKey, addMonths, billingDate, monthKey, monthLabelShort } from "@/domain/date";
+import { guessWalletKind, walletIcon } from "@/domain/wallet";
+import { SWATCHES } from "@/lib/palette";
 
 type Pool = {
   key: string;
@@ -296,7 +299,7 @@ export function buildSampleSubscriptions(
 export function buildSampleData(
   categories: Category[],
   now: Date = new Date(),
-): { tags: Tag[]; transactions: Transaction[]; subscriptions: Subscription[] } {
+): { tags: Tag[]; transactions: Transaction[]; subscriptions: Subscription[]; wallets: Wallet[] } {
   const catIdByName = new Map<string, string>();
   for (const c of categories) if (!catIdByName.has(c.name)) catIdByName.set(c.name, c.id);
 
@@ -436,5 +439,35 @@ export function buildSampleData(
     a.occurredAt < b.occurredAt ? 1 : a.occurredAt > b.occurredAt ? -1 : a.createdAt < b.createdAt ? 1 : -1,
   );
 
-  return { tags, transactions, subscriptions };
+  // Real wallets for the demo — one per "Paid with" account the ledger names,
+  // kind guessed from the name. Opening balances stay 0 for now (a coherent
+  // per-wallet balance picture wants salary→wallet transfers, which arrive with
+  // the transfer UI — see docs/wallets-plan.md phase 4); every row is linked by
+  // `walletId` from its `account` string, exactly as migration v6 does for real data.
+  const wallets: Wallet[] = ACCOUNTS.map((name, i) => {
+    const kind = guessWalletKind(name);
+    return {
+      id: uid(),
+      name,
+      kind,
+      openingBalance: 0,
+      colorHex: SWATCHES[i % SWATCHES.length],
+      icon: walletIcon(kind),
+      order: i,
+      archived: false,
+      createdAt: now.toISOString(),
+    };
+  });
+  const walletIdByName = new Map(wallets.map((w) => [w.name, w.id] as const));
+  const linkWallet = <T extends { account?: string; walletId?: string | null }>(row: T): T => {
+    const id = row.account?.trim() ? walletIdByName.get(row.account.trim()) : undefined;
+    return id ? { ...row, walletId: id } : row;
+  };
+
+  return {
+    tags,
+    transactions: transactions.map(linkWallet),
+    subscriptions: subscriptions.map(linkWallet),
+    wallets,
+  };
 }

@@ -1,5 +1,6 @@
-import type { Category, TxType } from "@/domain/types";
+import type { Category, TxType, Wallet } from "@/domain/types";
 import { uid } from "@/lib/id";
+import { walletIcon } from "@/domain/wallet";
 
 /**
  * The category tree a brand-new workspace starts with. One bright hue per ROOT
@@ -48,4 +49,24 @@ export function seedCategories(): Category[] {
   add("Đầu tư", "income", "#0ea5e9", "trending-up");
   add("Khác", "income", "#64748b", "circle-dollar-sign");
   return out;
+}
+
+/**
+ * The one wallet a brand-new workspace starts with: a cash wallet with a zero
+ * opening balance. The user adds their banks / cards / e-wallets from there.
+ */
+export function seedWallets(now: Date = new Date()): Wallet[] {
+  return [
+    {
+      id: uid(),
+      name: "Tiền mặt",
+      kind: "cash",
+      openingBalance: 0,
+      colorHex: "#10b981",
+      icon: walletIcon("cash"),
+      order: 0,
+      archived: false,
+      createdAt: now.toISOString(),
+    },
+  ];
 }
