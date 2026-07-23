@@ -18,7 +18,7 @@ The single object serialized to `localStorage`. `types.ts` · built empty in
 
 | Field | Type | Meaning | Notes |
 |---|---|---|---|
-| `version` | `number` | Schema version of this snapshot | Drives migrations. Current = **5**. On load it is forced to `CURRENT_VERSION` and the old value passed to `migrate()`. |
+| `version` | `number` | Schema version of this snapshot | Drives migrations. Current = **7**. On load it is forced to `CURRENT_VERSION` and the old value passed to `migrate()`. |
 | `theme` | `ThemeMode` | UI colour scheme | `"system" \| "light" \| "dark"`; default `"system"`. |
 | `subIconStyle` | `SubIconStyle` | How subscription icon tiles are coloured | `"neutral"` (default, grey) \| `"brand"` (service hue). |
 | `workspace` | `Workspace \| null` | The profile; `null` = not yet onboarded | Non-null but empty ledger ⇒ `load()` re-seeds the demo data. |
@@ -27,6 +27,7 @@ The single object serialized to `localStorage`. `types.ts` · built empty in
 | `transactions` | `Transaction[]` | **The ledger — the single source of truth for money** | |
 | `subscriptions` | `Subscription[]` | Recurring services | Carry cache fields re-derived from `transactions`. |
 | `wallets` | `Wallet[]` | Spending wallets / accounts (added **v6**) | Balances are DERIVED from the ledger, never stored. Schema live; UI pending — see [wallets-plan.md](wallets-plan.md). |
+| `loans` | `Loan[]` | Debts you owe / money owed to you (added **v7**) | First-class records — **not** wallets, **not** transactions. Outstanding is DERIVED (`principal` − payments), never stored. See [features/loans.md](features/loans.md) · [loans-plan.md](loans-plan.md). |
 
 ### 1.2 `Workspace`
 | Field | Type | Meaning |
@@ -132,6 +133,49 @@ yet** — see [wallets-plan.md](wallets-plan.md).
 (`domain/wallet.walletBalance`). **Net worth** (v1 scope) = Σ non-archived wallet
 balances (`netWorth`). Both derived at runtime, never persisted.
 
+### 1.9 `Loan` — a debt you owe / money owed to you (added v7)
+A **first-class record — not a wallet and not a transaction.** It carries the
+counterparty, the source, an interest rate and a due date (`hạn trả`); the
+outstanding balance is DERIVED (`principal` minus its payments, floored at 0) and
+interest is stored for display / reminders only, **never accrued**. Loans reference
+no other entity and touch no transactions, categories, tags or analytics — their
+only cross-cutting figure is the Dashboard net worth. Rules in `domain/loan.ts`.
+See [features/loans.md](features/loans.md) · [loans-plan.md](loans-plan.md).
+
+| Field | Type | Meaning | Notes |
+|---|---|---|---|
+| `id` | `string` | Primary key | |
+| `direction` | `LoanDirection` | Which side you're on | `borrowed` = money I owe (a liability) \| `lent` = money owed to me (a receivable). Sets which way it hits net worth. |
+| `counterparty` | `string` | The other party | The lender when `borrowed`, the borrower when `lent`. |
+| `source` | `LoanSource` | Classification | `personal \| card \| bank \| other` — **open union** like `WalletKind`. |
+| `principal` | `number` | Original amount, **integer VND, > 0** | The amount borrowed / lent. |
+| `interestRatePct` | `number` | Annual / monthly interest % | **Display + reminders ONLY, never accrued.** `0` = interest-free. |
+| `interestPeriod` | `InterestPeriod` | What the rate is quoted over | `year` \| `month`. |
+| `openedAt` | `string` | Opened date **`YYYY-MM-DD`** | When the loan was taken out / given. |
+| `dueAt` | `string \| null` | Due date **`YYYY-MM-DD`** (`hạn trả`) | `null` = open-ended, no fixed date. |
+| `payments` | `LoanPayment[]` | Manual repayment / collection log | See `LoanPayment` below. |
+| `colorHex` | `string` | Classification hue | Rendered grey; hue is an accent only. |
+| `icon` | `string` | Curated lucide key | `loanSourceIcon(source)` by default. |
+| `note` | `string` | Free-text note | |
+| `archived` | `boolean` | `true` = closed/hidden, history kept | Dropped from net worth by default. |
+| `createdAt` | `string` | ISO timestamp | |
+
+**`LoanPayment`** — one manual repayment (on a `borrowed` loan) or collection (on a
+`lent` loan). Cashy tracks the money by hand rather than generating a schedule.
+
+| Field | Type | Meaning |
+|---|---|---|
+| `id` | `string` | Primary key |
+| `amount` | `number` | Integer VND, **> 0** |
+| `date` | `string` | `YYYY-MM-DD` |
+| `note` | `string` | Free-text note |
+
+**Outstanding** = `max(0, principal − Σ payments.amount)` (`domain/loan.loanOutstanding`)
+— never stored, never negative (overpayment reads as paid-in-full). A `borrowed`
+loan's outstanding **subtracts** from net worth, a `lent` loan's **adds**
+(`loanNetWorthDelta`, `loansNetWorth`). Interest is reference-only: `interestRatePct`
+never moves the balance.
+
 ---
 
 ## 2. Enums & unions
@@ -144,6 +188,9 @@ balances (`netWorth`). Both derived at runtime, never persisted.
 | `SubInterval` | `monthly` / `yearly` | Billing frequency |
 | `TxStatus` | `recorded` / `pending` / `awaiting` / `skipped` / `failed` | Lifecycle (below) |
 | `WalletKind` | `cash` / `bank` / `ewallet` / `card` / `other` | Wallet classification; **open union** (future net-worth: savings/investment/asset/liability) |
+| `LoanDirection` | `borrowed` / `lent` | Which side of a loan you're on: `borrowed` = a liability (money you owe), `lent` = a receivable (money owed to you) |
+| `LoanSource` | `personal` / `card` / `bank` / `other` | Where a loan came from / went to; **open union** like `WalletKind` |
+| `InterestPeriod` | `year` / `month` | The period `interestRatePct` is quoted over; reference / display only, never accrued |
 
 **`TxStatus` meanings & whether counted** (`domain/txStatus.ts`):
 
@@ -178,6 +225,8 @@ Subscription.paymentTxIds  ──▶ Transaction.id     (CACHE: the recorded cha
 Wallet   1 ──◀ walletId  N  Transaction    (nullable; deleting a wallet orphans rows to null, never deletes)
 Wallet   1 ──◀ walletId  N  Subscription   (nullable; inherited onto charges)
 Transaction.toWalletId ──▶ Wallet          (set only on a transfer — the destination wallet)
+
+Loan (0..n)                               — first-class record; references NO other entity
 ```
 
 - `Transaction.categoryId` → `Category.id` (nullable). Category delete re-points rows
@@ -187,6 +236,9 @@ Transaction.toWalletId ──▶ Wallet          (set only on a transfer — the
   `(subscriptionId, subMonth)` is the **uniqueness/dedup key** that makes `dueCharges` idempotent.
 - `Subscription.categoryId` / `tagIds` / `account` are **inherited** (copied) onto each
   generated charge.
+- `Loan` links to **no** other entity — loans touch no transactions, categories, tags or
+  analytics. The only cross-cutting figure they feed is the **Dashboard net worth**
+  (assets − debts): a `borrowed` loan's outstanding is a debt, a `lent` loan's a receivable.
 
 **Source of truth vs. cache**
 - **Source of truth:** `transactions` (the ledger). All money, all payment facts.
@@ -220,6 +272,9 @@ Transaction.toWalletId ──▶ Wallet          (set only on a transfer — the
 | Ledger after cancel / delete | `chargesSurvivingCancel`, `chargesSurvivingDeletion` | `subscription.ts` |
 | Wallet balances + net worth | `walletBalance`, `walletBalances`, `netWorth` | `wallet.ts` |
 | Is-a-transfer predicate | `isTransfer` | `wallet.ts` |
+| Loan outstanding / paid / progress | `loanOutstanding`, `loanPaid`, `loanProgress`, `isPaidOff` | `loan.ts` |
+| Loan net-worth delta + totals payable/receivable | `loanNetWorthDelta`, `totalPayable`, `totalReceivable`, `loansNetWorth` | `loan.ts` |
+| Loan due / overdue status | `loanStatus`, `daysUntilDue`, `isOverdue` | `loan.ts` |
 
 ---
 
@@ -233,12 +288,16 @@ Transaction.toWalletId ──▶ Wallet          (set only on a transfer — the
   A workspace that opens with an **empty ledger** is re-seeded with the demo dataset (only an
   empty ledger — real data is never overwritten).
 
-**Migrations** (`data/migrations.ts`, `CURRENT_VERSION = 6`), **append-only** ascending
+**Migrations** (`data/migrations.ts`, `CURRENT_VERSION = 7`), **append-only** ascending
 `if (fromVersion < N)` blocks: v2 recolor onto the chart palette · v3 `startMonth` → real
 `startedAt` + back-fill `lastPaidAt` · v4 back-fill `paymentTxIds` · v5 back-fill
 `interval = "monthly"` · v6 distinct free-text `account` strings → `Wallet` entities +
-`walletId` links (account kept intact). **Import** runs the same `migrate()` so an older
-export is brought forward, not stamped current unmigrated.
+`walletId` links (account kept intact) · v7 ensure `state.loans` exists (defaults to `[]`)
+— loans are brand new, so there is nothing to transform. **Import** runs the same
+`migrate()` so an older export is brought forward, not stamped current unmigrated.
+
+**Export** (`workspace.exportData`) now serializes `wallets` **and** `loans` too (it
+previously omitted wallets); on import both back-fill to `[]` when an older export lacks them.
 
 **Seed vs. sample**
 - `data/seed.ts` — `seedCategories()`: the default category tree a new workspace starts with
@@ -265,3 +324,7 @@ export is brought forward, not stamped current unmigrated.
 12. **Debts settle oldest-first** (catch-up rejects paying a later cycle while an older used cycle is unpaid).
 13. **A row with `toWalletId` is a transfer** — excluded from every income/expense/breakdown total; only the two wallet balances it touches move.
 14. **Wallet balance = `openingBalance` + net of its recorded rows**; deleting a wallet orphans rows' `walletId` to `null`, never deletes them.
+15. **A loan's outstanding is DERIVED** — `max(0, principal − Σ payments.amount)`; never stored, never negative (overpayment reads as paid-in-full).
+16. **Loan interest is reference-only** — `interestRatePct` never changes the outstanding balance; Cashy never accrues interest or generates a schedule.
+17. **A `borrowed` loan's outstanding subtracts from net worth; a `lent` loan's adds** — archived loans drop out by default.
+18. **Money stays an integer count of VND** for a loan's `principal` and every `LoanPayment.amount`.

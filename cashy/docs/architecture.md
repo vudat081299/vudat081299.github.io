@@ -74,13 +74,13 @@ Where a given kind of code MUST live.
 ```
 src/
   domain/     types sort category tag transaction subscription analytics
-              wallet date period money txStatus · index.ts (barrel) · *.test.ts
+              wallet loan date period money txStatus · index.ts (barrel) · *.test.ts
   data/       store persistence migrations seed sample draft
-  usecases/   workspace settings categories tags transactions subscriptions wallets
+  usecases/   workspace settings categories tags transactions subscriptions wallets loans
   ui/kit/     wb-* design system (63 files)
   ui/common/  AmountDisplay CategoryCap StatusCap TagChip PeriodPicker …
   ui/app/     Layout ErrorBoundary
-  ui/features/ dashboard transactions subscriptions wallets categories tags
+  ui/features/ dashboard transactions subscriptions wallets loans categories tags
                settings onboarding
   ui/dev/     WbGallery (#/wb, generic wb-*) · CashyGallery (#/cashy, Cashy layer)
               — DEV only, code-split, never loaded in production
@@ -129,6 +129,7 @@ A subscription **never books money on its own**. Each due cycle materialises a
 | `tag.ts` | `rankTags` — order **and** ink shade by usage rank, not raw count |
 | `analytics.ts` | `breakdown` (rolls children into root category), `walletSeries` (trims dead margins at both ends, keeps middle gaps), `periodInsights`, `monthlyNetRate`, `forecastSeries` — all skip transfers |
 | `wallet.ts` | `isTransfer`, `walletBalance`/`walletBalances`, `netWorth`, `orphanWallet`, `guessWalletKind`, `walletIcon`, `nextWalletOrder` — balances DERIVED from the ledger; a transfer moves between two wallets and counts toward no income/expense total |
+| `loan.ts` | `loanPaid`, `loanOutstanding` (`principal − Σ payments`, floored at 0), `loanProgress`, `isPaidOff`, `daysUntilDue`, `loanStatus` (paid\|overdue\|due-soon\|active), `isOverdue`, `loanNetWorthDelta` (borrowed −, lent +), `totalPayable`, `totalReceivable`, `loansNetWorth` (= receivable − payable), `sortLoans`, `loanSourceIcon` — money borrowed (I owe) or lent (owed to me), each a self-contained record with a manual repayment log; outstanding is DERIVED and interest is reference-only (never accrued). Does NOT intersect transactions/analytics — net worth is composed at the UI edge as `walletNetWorth + loansNetWorth` |
 
 ---
 
@@ -160,6 +161,7 @@ Inventory:
 | `transactions.ts` | `addTransaction` `updateTransaction` `deleteTransaction` |
 | `subscriptions.ts` | `addSubscription` `updateSubscription` `setSubscriptionActive` `deleteSubscription` `syncSubscriptions` `syncPayments` `confirmSubscriptionCharge` `confirmSubscriptionCharges` `skipSubscriptionCharge` `revertSubscriptionCharge` |
 | `wallets.ts` | `addWallet` `updateWallet` `setWalletArchived` `deleteWallet` (orphans rows via `orphanWallet`, never deletes them) |
+| `loans.ts` | `addLoan` `updateLoan` `setLoanArchived` `deleteLoan` (self-contained — no ledger rows to orphan, unlike `deleteWallet`) `addLoanPayment` `removeLoanPayment` |
 
 **Cross-usecase direction:** `transactions.ts` → `subscriptions.ts` only
 (deleting a charge invalidates its owner's history). The reverse is forbidden;

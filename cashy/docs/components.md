@@ -132,6 +132,7 @@ examples).
 | `SubscriptionHistory` | settled cycles, newest first, each with Undo — controlled modal | `sub`, `txs`, `open`, `onClose`, `onRevert(txId,month,wasPaid)` |
 | `SubscriptionCancel` | cancel dialog asking WHEN the service stopped — controlled modal | `sub`, `pending`, `open`, `onClose`, `onCancel(cancelledAt)` |
 | `WalletCard` | one wallet as a card: neutral tile + kind + derived balance (negative → red, archived → dimmed) | `wallet: Wallet`, `balance: number`, `onEdit?(id)` |
+| `LoanCard` | one loan as a card: neutral tile + counterparty + source label, the outstanding amount, a repayment progress bar, a due-date + interest line, and a status pill (overdue → danger / due-soon → warning / paid → success; active → none). Borrowed vs lent flips the wording ("You owe"/"…repaid" ↔ "Owed to you"/"…collected") | `loan: Loan` (derives its own numbers from `domain/loan`); renders in the `#/cashy` gallery ("8 · Loans") |
 
 `TagRank = { tag: Tag; count: number; shade: number }` (from `rankTags`). `Due`, `TxQuery`,
 `Range`, `BreakdownSlice`, `WalletPoint`, `ForecastPoint` are exported from the relevant
@@ -148,6 +149,7 @@ examples).
 | `Transactions` | period + filter bar + full table (50/page) |
 | `Subscriptions` | stats + "to confirm" dues + services table (in-file `SubscriptionRow`, not the card) |
 | `Wallets` | net worth + wallet-card grid + in-file `WalletEditor` (name, kind, opening balance, colour, icon, archive/delete) |
+| `Loans` | You-owe / Owed-to-you / Net summary card + grouped `LoanCard` grids ("Money I owe" / "Owed to me" / "Archived", each sorted by `sortLoans`) + in-file `LoanEditor` (borrowed/lent toggle, counterparty, source, principal, interest rate + period, opened + optional due dates, colour, icon, note, a live payments sub-editor with a live outstanding readout, archive/delete) |
 | `Categories` | drag-to-reorder / drop-to-nest tree + in-file `CategoryEditor` modal |
 | `Tags` | tag list + in-file `TagEditor` modal |
 | `Settings` | appearance / workspace / data (export/import/sample) / danger zone |
@@ -181,6 +183,7 @@ Dashboard
 Transactions   PageHeader · PeriodPicker · AmountDisplay(net) · TxFilterBar · TransactionTable · EmptyState
 Subscriptions  PageHeader · stat tiles · SubscriptionDues → SubTile · SubscriptionRow → SubTile, CategoryCap · EmptyState  → opens SubscriptionEditor
 Wallets        PageHeader · net-worth card · WalletCard ×N → AmountDisplay · WalletEditor(Modal) → Select, ColorPicker, IconPicker
+Loans          PageHeader · owe/owed/net summary card · LoanCard ×N → AmountDisplay, Progress · LoanEditor(Modal) → Select, ColorPicker, IconPicker, AmountDisplay
 Categories     PageHeader · Tree (wb-tree DnD) → Icon · CategoryEditor(Modal) → ColorPicker, IconPicker, Select · EmptyState
 Tags           PageHeader · wb-list · TagEditor(Modal) → ColorPicker · EmptyState
 Settings       PageHeader · Section ×4   (kit primitives only)

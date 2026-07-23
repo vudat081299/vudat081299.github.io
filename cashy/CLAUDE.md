@@ -113,7 +113,7 @@ Full data dictionary: [docs/data-model.md](docs/data-model.md). Types live in
 (`localStorage["cashy_state_v1"]`):
 
 ```
-CashyState { version, theme, subIconStyle, workspace, categories[], tags[], transactions[], subscriptions[], wallets[] }
+CashyState { version, theme, subIconStyle, workspace, categories[], tags[], transactions[], subscriptions[], wallets[], loans[] }
 ```
 
 Entities & links:
@@ -134,12 +134,19 @@ Subscription          a recurring service; books NO money itself
    └─ each due cycle materialises a `pending` Transaction the user confirms/skips
 Wallet                a place money sits (cash/bank/e-wallet/card); balance DERIVED from the ledger
    └─ assigned per tx/sub, filterable, transfers between wallets — #/wallets screen (added v6)
+Loan                  money you owe / are owed — a FIRST-CLASS record (not a wallet, not a transaction)
+   ├─ direction borrowed|lent · source personal|card|bank|other · principal (int VND)
+   ├─ interestRatePct + interestPeriod year|month  (reference-only; never accrued)
+   ├─ openedAt · dueAt (YMD|null) · archived
+   └─ payments[] (LoanPayment, manual log); outstanding DERIVED — #/loans screen (added v7)
 ```
 
 Enums: `TxType` = income|expense · `TxStatus` = recorded|pending|awaiting|skipped|failed
 (**only `recorded` counts toward totals**; missing = recorded) · `SubInterval` =
 monthly|yearly · `ThemeMode` = system|light|dark · `SubIconStyle` = neutral|brand ·
-`WalletKind` = cash|bank|ewallet|card|other (open union — future net-worth kinds).
+`WalletKind` = cash|bank|ewallet|card|other (open union — future net-worth kinds) ·
+`LoanDirection` = borrowed|lent · `LoanSource` = personal|card|bank|other ·
+`InterestPeriod` = year|month.
 
 Derived (pure, never stored): totals, category breakdown/donut, cash-flow series,
 insights, forecast, subscription due/lapsed/owed state, catch-up plan. Each is one
@@ -159,6 +166,7 @@ toggle; collapses to a ☰ drawer on mobile). Routes:
 | `#/transactions` | **Transactions** | period + filter bar + full ledger table (50/page) |
 | `#/subscriptions` | **Subscriptions** | commitment/due/total stats, "to confirm" dues, services table |
 | `#/wallets` | **Wallets** | wallet balances + net worth; add/edit/archive/delete. Assigned in the tx/sub editors, filterable, and money moves between wallets via **transfers** |
+| `#/loans` | **Loans** (handshake icon) | money you owe + owed to you; borrowed/lent, per-loan payment log, receivable − payable net worth; add/edit/archive/delete. Touches no transactions |
 | `#/categories` | **Categories** | drag-to-reorder / drop-to-nest tree; per-side (expense/income) |
 | `#/tags` | **Tags** | tag list with usage counts; add/edit/delete |
 | `#/settings` | **Settings** | appearance, workspace, data export/import, reset |
@@ -226,6 +234,13 @@ branch (architecture.md §8).
    expense total (only the two wallet balances it moves). A wallet's balance is
    `openingBalance` + the net of its `recorded` rows (`domain/wallet`); deleting a
    wallet orphans its rows to `null`, never deletes them.
+9. **A loan is a first-class record, not a transaction.** Its `outstanding` is
+   DERIVED — `max(0, principal − Σ payments)` (`domain/loan`), never stored — and
+   interest (`interestRatePct`/`interestPeriod`) is REFERENCE-ONLY, never accrued.
+   In net worth a `borrowed` loan subtracts and a `lent` loan adds (`loansNetWorth =
+   receivable − payable`; the Dashboard shows assets − debts = `walletNet +
+   loansNetWorth`). Loans touch NO transactions, categories, or analytics; amounts
+   are integer VND like all money.
 
 ---
 
@@ -261,6 +276,7 @@ Detailed steps in [architecture.md §6](docs/architecture.md). In short:
 | [docs/cashy-vision.md](docs/cashy-vision.md) | product philosophy (timeless; native-iOS-flavoured) |
 | [docs/cashy-v1-spec.md](docs/cashy-v1-spec.md) | v1 use-case spec (native-iOS-flavoured) |
 | [docs/wallets-plan.md](docs/wallets-plan.md) | multi-wallet / asset **roadmap** (phases 1–2 shipped; see [features/wallets.md](docs/features/wallets.md)) |
+| [docs/loans-plan.md](docs/loans-plan.md) | loans (owe / owed) **design record** (all phases shipped; see [features/loans.md](docs/features/loans.md)) |
 | [REBUILD-NOTES.md](REBUILD-NOTES.md) | the web-rebuild handoff notes |
 | [docs/handoff-checklist.md](docs/handoff-checklist.md) | **← what was done in this pass + open questions for the owner** |
 

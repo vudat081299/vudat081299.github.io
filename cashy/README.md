@@ -93,6 +93,8 @@ Break these and the app is wrong, not merely inconsistent.
 | [docs/cashy-vision.md](docs/cashy-vision.md) | product direction (timeless; native-iOS-flavoured) |
 | [docs/cashy-v1-spec.md](docs/cashy-v1-spec.md) | v1 spec (native-iOS-flavoured) |
 | [docs/wallets-plan.md](docs/wallets-plan.md) | **plan** — multi-wallet / asset feature (not built yet) |
+| [docs/features/loans.md](docs/features/loans.md) | **feature** — loans / debts: money you owe + owed to you (due dates, reference-only interest, source), folds into Dashboard net worth (assets − debts) |
+| [docs/loans-plan.md](docs/loans-plan.md) | **plan** — loans / debts feature (all phases shipped) |
 | [REBUILD-NOTES.md](REBUILD-NOTES.md) | web-rebuild notes |
 | [docs/handoff-checklist.md](docs/handoff-checklist.md) | this documentation pass + open questions for the owner |
 
