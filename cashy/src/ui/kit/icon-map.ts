@@ -34,6 +34,8 @@ import {
   Star,
   Stethoscope,
   TrendingUp,
+  User,
+  Users,
   Utensils,
   UtensilsCrossed,
   Wallet,
@@ -84,6 +86,8 @@ export const MAP: Record<string, LucideIcon> = {
   star: Star,
   dog: Dog,
   plug: Plug,
+  user: User,
+  users: Users,
 };
 
 /** Names available in the category icon picker. */
