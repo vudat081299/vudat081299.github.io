@@ -16,3 +16,4 @@ export * from "@/usecases/transactions";
 export * from "@/usecases/subscriptions";
 export * from "@/usecases/wallets";
 export * from "@/usecases/loans";
+export * from "@/usecases/contacts";
