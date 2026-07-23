@@ -320,7 +320,14 @@ export function Dashboard() {
               </button>
             </div>
           </div>
-          <div className="cashy-subgrid">
+          {/* Past 6 services the strip stops growing the page: it caps at ~2.5
+              rows and scrolls, with the foot half-row fading out to signal more.
+              (`Manage` opens the full, unclipped list.) */}
+          <div
+            className={
+              subCards.length > 6 ? "cashy-subgrid cashy-subgrid--scroll" : "cashy-subgrid"
+            }
+          >
             {subCards.map((sub) => (
               <ConnectedSubscriptionCard
                 key={sub.id}

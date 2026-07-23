@@ -64,6 +64,7 @@ function Navbar({ onMenu }: { onMenu: () => void }) {
           navigate("dashboard");
         }}
       >
+        <span className="cashy-logo__mark" aria-hidden="true">$</span>
         Cashy
       </a>
 

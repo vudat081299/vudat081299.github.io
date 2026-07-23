@@ -29,7 +29,7 @@ export function parseYMD(s: string): Date {
 }
 
 export function fmtDate(s: string): string {
-  return format(parseYMD(s), "d MMM, yyyy");
+  return format(parseYMD(s), "d MMM yyyy");
 }
 
 export function fmtDateShort(s: string): string {

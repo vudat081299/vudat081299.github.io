@@ -52,9 +52,9 @@ export function Onboarding() {
               <li className="wb-list__item">
                 <span className="wb-list__title" style={{ flex: 1 }}>
                   Sample data
-                  <span className="wb-list__sub">200 transactions from the last 10 days</span>
+                  <span className="wb-list__sub">Load 200 demo transactions anytime from Settings</span>
                 </span>
-                <span className="wb-list__end wb-cell-muted">Auto-loaded</span>
+                <span className="wb-list__end wb-cell-muted">Optional</span>
               </li>
             </ul>
 

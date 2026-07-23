@@ -11,8 +11,9 @@ function freshDataset() {
 }
 
 /**
- * Create a workspace. It is ALWAYS seeded with the 200-transaction demo dataset
- * — every account, from every entry point, opens on a populated ledger.
+ * Create a workspace with the default category tree but an EMPTY ledger — no
+ * sample transactions, tags, or subscriptions. The 200-transaction demo dataset
+ * is opt-in: load it on demand from Settings → Data ("Load sample data").
  */
 export function createWorkspace(input: { displayName: string; currency?: string }): void {
   const workspace: Workspace = {
@@ -20,7 +21,14 @@ export function createWorkspace(input: { displayName: string; currency?: string 
     currency: input.currency ?? "VND",
     createdAt: new Date().toISOString(),
   };
-  commit({ ...getState(), workspace, ...freshDataset() });
+  commit({
+    ...getState(),
+    workspace,
+    categories: seedCategories(),
+    tags: [],
+    transactions: [],
+    subscriptions: [],
+  });
 }
 
 /** Replace categories/tags/transactions with a fresh demo dataset (200 txns). */

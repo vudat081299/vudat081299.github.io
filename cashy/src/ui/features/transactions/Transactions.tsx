@@ -12,7 +12,7 @@ import { TransactionTable } from "@/ui/features/transactions/TransactionTable";
 import { openTxEditor } from "@/lib/modals";
 
 export function Transactions() {
-  const { workspace, transactions, categories, tags } = useCashy();
+  const { transactions, categories, tags } = useCashy();
   const q = useTxQuery(transactions, categories);
   const net = totals(q.filtered).net;
   const tagRanks = useMemo(() => rankTags(tags, transactions), [tags, transactions]);
@@ -24,7 +24,6 @@ export function Transactions() {
   return (
     <div className="wb-stack wb-stack--loose">
       <PageHeader
-        eyebrow={workspace?.displayName ?? "Cashy"}
         title="Transactions"
         subtitle={`${q.filtered.length} transactions in this period`}
         actions={
@@ -59,7 +58,13 @@ export function Transactions() {
             title="No transactions"
             description="Try a different filter, or add a new transaction."
             action={
-              <button type="button" className="wb-btn" onClick={() => openTxEditor(null)}>
+              <button
+                type="button"
+                className="wb-btn wb-btn--round"
+                style={{ gap: 6 }}
+                onClick={() => openTxEditor(null)}
+              >
+                <span className="wb-ico wb-ico--sm">add</span>
                 Add transaction
               </button>
             }

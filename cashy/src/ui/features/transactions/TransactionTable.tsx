@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import type { Category, Transaction } from "@/domain/types";
 import type { TagRank } from "@/domain";
-import { confirm } from "@/lib/confirm";
+import { confirmDelete } from "@/lib/confirm";
 import { AmountDisplay } from "@/ui/common/AmountDisplay";
 import { CategoryCap } from "@/ui/common/CategoryCap";
 import { StatusCap } from "@/ui/common/StatusCap";
@@ -79,11 +79,8 @@ export function TransactionTable({
     });
 
   const bulkDelete = async () => {
-    const ok = await confirm({
+    const ok = await confirmDelete({
       title: `Delete ${selected.size} selected transactions?`,
-      confirmLabel: "Delete",
-      cancelLabel: "Cancel",
-      danger: true,
     });
     if (!ok) return;
     onDelete([...selected]);

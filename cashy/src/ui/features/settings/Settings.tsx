@@ -1,10 +1,10 @@
-import { useRef, useState, type ChangeEvent, type ReactNode } from "react";
+import { useRef, useState, type ChangeEvent, type CSSProperties, type ReactNode } from "react";
 import { toast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import { useCashy } from "@/data/store";
 import { exportData, importData, loadSampleData, resetAll, setSubIconStyle, setTheme, updateWorkspace } from "@/usecases";
 import { todayYMD } from "@/domain/date";
-import { confirm } from "@/lib/confirm";
+import { confirm, confirmDelete } from "@/lib/confirm";
 import { PageHeader } from "@/ui/common/PageHeader";
 import type { SubIconStyle, ThemeMode } from "@/domain/types";
 
@@ -106,23 +106,29 @@ export function Settings() {
   }
 
   async function doReset() {
-    const ok = await confirm({
+    const ok = await confirmDelete({
       title: "Delete all data and start over?",
       message: "This action cannot be undone.",
       confirmLabel: "Delete & start over",
-      danger: true,
     });
     if (ok) resetAll();
   }
 
   return (
-    <div className="wb-stack wb-stack--loose" style={{ maxWidth: 640, marginInline: "auto", width: "100%" }}>
+    <div className="wb-stack wb-stack--loose">
       <PageHeader
-        eyebrow={workspace?.displayName ?? "Cashy"}
         title="Settings"
         subtitle="Appearance, workspace, and data backup."
       />
 
+      {/* Fills the page like every other screen (no narrow centred rail). Auto
+          columns: two side-by-side only when there's room for a comfortable card,
+          otherwise one full-width column — never a cramped, clipping two-up.
+          align-items:start so a short card doesn't stretch to a tall neighbour. */}
+      <div
+        className="wb-grid wb-grid--auto"
+        style={{ alignItems: "start", "--wb-grid-min": "340px" } as CSSProperties}
+      >
       <Section title="Appearance">
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
           {THEMES.map((t) => {
@@ -261,6 +267,7 @@ export function Settings() {
           </button>
         </div>
       </Section>
+      </div>
     </div>
   );
 }

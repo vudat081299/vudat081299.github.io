@@ -14,6 +14,8 @@ export interface ConfirmOptions {
   cancelLabel?: string;
   /** style the confirm button as destructive */
   danger?: boolean;
+  /** a Material Symbols glyph shown in a badge beside the title (e.g. "delete") */
+  icon?: string;
 }
 
 export interface ConfirmRequest extends ConfirmOptions {
@@ -38,6 +40,22 @@ export function subscribeConfirm(l: () => void): () => void {
 
 export function getConfirm(): ConfirmRequest | null {
   return current;
+}
+
+/**
+ * The shared "delete X?" prompt — the one component every destructive action in
+ * the app funnels through, so deletes look and read the same everywhere: a trash
+ * badge, a red **Delete** action, and dismiss-to-cancel. Pass a `title` (and an
+ * optional `message`); override `confirmLabel` only for the odd wording ("Delete
+ * & start over"). Resolves `true` when confirmed.
+ */
+export function confirmDelete(opts: {
+  title: string;
+  message?: string;
+  confirmLabel?: string;
+  cancelLabel?: string;
+}): Promise<boolean> {
+  return confirm({ danger: true, icon: "delete", confirmLabel: "Delete", ...opts });
 }
 
 /** Ask the user to confirm. Resolves `true` on confirm, `false` on cancel/dismiss. */

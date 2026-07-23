@@ -133,7 +133,7 @@ function SubscriptionRow({
 }
 
 export function Subscriptions() {
-  const { workspace, subscriptions, categories, transactions, subIconStyle } = useCashy();
+  const { subscriptions, categories, transactions, subIconStyle } = useCashy();
   const catById = useMemo(() => new Map(categories.map((c) => [c.id, c])), [categories]);
 
   const dues = useMemo(() => collectDues(subscriptions, transactions), [subscriptions, transactions]);
@@ -148,9 +148,8 @@ export function Subscriptions() {
   return (
     <div className="wb-stack wb-stack--loose">
       <PageHeader
-        eyebrow={workspace?.displayName ?? "Cashy"}
         title="Subscriptions"
-        subtitle="Services billed monthly or yearly. Each cycle is recorded as a transaction only after you confirm it's paid."
+        subtitle="Services billed monthly or yearly"
         actions={
           <button
             type="button"
@@ -278,7 +277,13 @@ export function Subscriptions() {
               title="No subscriptions yet"
               description="Add services you pay for monthly like Netflix, Spotify, or YouTube. Cashy will remind you to confirm each month."
               action={
-                <button type="button" className="wb-btn" onClick={() => openSubscriptionEditor(null)}>
+                <button
+                  type="button"
+                  className="wb-btn wb-btn--round"
+                  style={{ gap: 6 }}
+                  onClick={() => openSubscriptionEditor(null)}
+                >
+                  <span className="wb-ico wb-ico--sm">add</span>
                   Add subscription
                 </button>
               }

@@ -48,14 +48,35 @@ export function ConfirmHost() {
     >
       <div className="wb-modal" role="alertdialog" aria-modal="true" style={{ maxWidth: 400 }}>
         <div className="wb-modal__body">
-          <h2 className="wb-modal__title" style={{ marginBottom: req.message ? 8 : 0 }}>
-            {req.title}
-          </h2>
-          {req.message && (
-            <p style={{ margin: 0, fontSize: 14, lineHeight: 1.55, color: "var(--wb-fg-muted)" }}>
-              {req.message}
-            </p>
-          )}
+          <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
+            {req.icon && (
+              <span
+                aria-hidden="true"
+                style={{
+                  flex: "none",
+                  display: "grid",
+                  placeItems: "center",
+                  width: 40,
+                  height: 40,
+                  borderRadius: "var(--wb-radius-pill)",
+                  background: req.danger ? "var(--wb-danger-soft)" : "var(--wb-surface-2)",
+                  color: req.danger ? "var(--wb-danger-text)" : "var(--wb-fg-muted)",
+                }}
+              >
+                <span className="wb-ico">{req.icon}</span>
+              </span>
+            )}
+            <div style={{ minWidth: 0 }}>
+              <h2 className="wb-modal__title" style={{ marginBottom: req.message ? 8 : 0 }}>
+                {req.title}
+              </h2>
+              {req.message && (
+                <p style={{ margin: 0, fontSize: 14, lineHeight: 1.55, color: "var(--wb-fg-muted)" }}>
+                  {req.message}
+                </p>
+              )}
+            </div>
+          </div>
         </div>
         <div className="wb-modal__foot">
           <button

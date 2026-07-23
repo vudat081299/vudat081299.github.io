@@ -7,7 +7,7 @@ import { AmountDisplay } from "@/ui/common/AmountDisplay";
 import { StatusCap } from "@/ui/common/StatusCap";
 import { TagChip } from "@/ui/common/TagChip";
 import { registerTxDetail, openTxEditor } from "@/lib/modals";
-import { confirm } from "@/lib/confirm";
+import { confirmDelete } from "@/lib/confirm";
 
 /**
  * A single transaction rendered as a torn-paper receipt (web-builder `wb-receipt`)
@@ -56,7 +56,9 @@ export function TransactionDetail() {
         if (e.target === e.currentTarget) close();
       }}
     >
-      <div className="wb-stack" style={{ alignItems: "center", maxWidth: 420, width: "100%" }}>
+      {/* Match the stack to the receipt paper's fixed 300px so the docked toolbar
+          lines up edge-to-edge under it instead of overhanging to one side. */}
+      <div className="wb-stack" style={{ alignItems: "center", maxWidth: 300, width: "100%" }}>
         <div className="wb-receipt" style={{ width: "100%" }}>
           <div className="wb-receipt__paper">
             <div className="wb-receipt__head">
@@ -120,17 +122,31 @@ export function TransactionDetail() {
           </div>
         </div>
 
-        <div className="wb-cluster wb-cluster--between" style={{ width: "100%" }}>
+        {/* The actions live in their own docked toolbar — a real surface with a
+            hairline + shadow — so they read as a deliberate control bar instead of
+            three buttons stranded on the raw overlay below the paper. Delete stays
+            on the far left (destructive, kept apart from the primary), Close + Edit
+            pair on the right. */}
+        <div
+          className="wb-cluster wb-cluster--between"
+          style={{
+            width: "100%",
+            gap: 8,
+            padding: 8,
+            background: "var(--wb-surface)",
+            border: "var(--wb-bw) solid var(--wb-border)",
+            borderRadius: "var(--wb-radius-lg)",
+            boxShadow: "var(--wb-shadow-md)",
+          }}
+        >
           <button
             type="button"
-            className="wb-btn wb-btn--ghost"
+            className="wb-btn wb-btn--ghost wb-btn--sm"
             style={{ color: "var(--wb-danger-text)", gap: 6 }}
             onClick={async () => {
               if (
-                await confirm({
+                await confirmDelete({
                   title: `Delete transaction "${merchant}" (${formatMoney(tx.amount)})?`,
-                  confirmLabel: "Delete",
-                  danger: true,
                 })
               ) {
                 deleteTransaction(tx.id);
@@ -142,12 +158,12 @@ export function TransactionDetail() {
             Delete
           </button>
           <div className="wb-cluster wb-cluster--tight">
-            <button type="button" className="wb-btn wb-btn--secondary" onClick={close}>
+            <button type="button" className="wb-btn wb-btn--secondary wb-btn--sm" onClick={close}>
               Close
             </button>
             <button
               type="button"
-              className="wb-btn"
+              className="wb-btn wb-btn--sm"
               style={{ gap: 6 }}
               onClick={() => {
                 const editId = tx.id;

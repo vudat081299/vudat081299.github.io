@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useCashy } from "@/data/store";
 import { addCategory, deleteCategory, reorderCategory, updateCategory } from "@/usecases";
 import { descendantIds, flattenTree } from "@/domain";
-import { confirm } from "@/lib/confirm";
+import { confirmDelete } from "@/lib/confirm";
 import { Icon } from "@/ui/kit/icons";
 import { ICON_CHOICES } from "@/ui/kit/icon-map";
 import { SWATCHES } from "@/lib/palette";
@@ -201,11 +201,9 @@ function Tree({
 
   async function remove(cat: Category) {
     const kids = descendantIds(categories, cat.id).size - 1;
-    const ok = await confirm({
+    const ok = await confirmDelete({
       title: kids ? `Delete "${cat.name}" and ${kids} subcategories?` : `Delete "${cat.name}"?`,
       message: 'Related transactions will become "Uncategorised".',
-      confirmLabel: "Delete",
-      danger: true,
     });
     if (ok) deleteCategory(cat.id);
   }
@@ -300,18 +298,15 @@ export function Categories() {
   const [type, setType] = useState<TxType>("expense");
   const [editor, setEditor] = useState<EditorState | null>(null);
 
-  const { workspace } = useCashy();
-
   return (
     <div className="wb-stack wb-stack--loose">
       <PageHeader
-        eyebrow={workspace?.displayName ?? "Cashy"}
         title="Categories"
-        subtitle="Drag the handle to reorder; drop onto the middle of an item to nest it — nest as deep as you like."
+        subtitle="Drag to reorder · drop onto an item to nest"
         actions={
           <button
             type="button"
-            className="wb-btn"
+            className="wb-btn wb-btn--round"
             style={{ gap: 6 }}
             onClick={() => setEditor({ editing: null, type, parentId: null })}
           >

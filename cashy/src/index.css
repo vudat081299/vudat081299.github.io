@@ -179,6 +179,107 @@ body {
 }
 
 /* =========================================================================
+   TAG MANAGEMENT GRID — the Tags screen. Physical `--notch` tags: click the
+   body to edit, the × to remove; a dashed capsule at the head of the grid adds
+   one. The usage count is hidden and only surfaced on hover (native title).
+
+   The chip body stays NEUTRAL grey — the tag's own hue shows in ONE place only:
+   the colour dot sitting in the notch (left). The `#` and the name stay grey, so
+   a wall of tags reads calm, not rainbow.
+   ========================================================================= */
+.cashy-taggrid {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+/* The whole chip is the edit target; lift a hair on hover so it reads clickable
+   (a box-shadow/outline would be swallowed by the notch clip-path). */
+.cashy-tag-edit {
+  cursor: pointer;
+  transition: transform 0.1s ease, filter 0.1s ease;
+}
+.cashy-tag-edit:hover { transform: translateY(-1px); }
+/* Focus keeps the lift and adds a brightness bump (compound selector so it wins
+   over the base `--cashy-tag-lift` filter set below). */
+.cashy-tag-mgmt.cashy-tag-edit:focus-visible {
+  outline: none;
+  filter: var(--cashy-tag-lift) brightness(1.06);
+}
+
+/* --- The neutral-body tag with a two-spot colour accent -------------------- */
+/* Bound the width and truncate an over-long name with an ellipsis. Compound
+   selectors (0-2-0+) so they beat the base `.wb-tag` rules regardless of the
+   index.css → web-builder.css load order (see the cascade note). */
+.cashy-tag-mgmt.wb-tag {
+  max-width: 220px;
+  /* symmetric right padding: paired with the × margins below it gives the ×
+     equal breathing room on both sides (was hugging the right edge). */
+  padding-right: 4px;
+  /* The grey-100 fill sat only a shade off the grey-50 canvas, so tags melted
+     into the page. A stronger fill + a drop-shadow lift separates them: a
+     box-shadow would be swallowed by the notch clip-path, but a drop-shadow
+     hugs the notched silhouette. */
+  background: var(--wb-gray-200);
+  --cashy-tag-lift: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.14))
+    drop-shadow(0 0 0.5px rgba(0, 0, 0, 0.16));
+  filter: var(--cashy-tag-lift);
+}
+.dark .cashy-tag-mgmt.wb-tag {
+  /* keep the base dark fill (the un-scoped rule above would otherwise light it) */
+  background: var(--wb-gray-800);
+  /* a black shadow vanishes on the dark canvas — lift with a faint light edge */
+  --cashy-tag-lift: drop-shadow(0 0 0.6px rgba(255, 255, 255, 0.22));
+}
+/* The leading `#` stays the base's muted grey — colour lives only in the dot. */
+/* The punch-hole in the notch becomes the colour DOT — a touch bigger so it
+   reads as an indicator, not a hole. Needs a `.dark` twin: the base dark rule
+   `.dark .wb-tag--notch::after` has equal specificity and, loading later, would
+   otherwise win and repaint it grey. */
+.cashy-tag-mgmt.wb-tag--notch::after,
+.dark .cashy-tag-mgmt.wb-tag--notch::after {
+  width: 5px;
+  height: 5px;
+  background: var(--wb-tag-color);
+}
+.cashy-tag-mgmt__name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* Even gap either side of the × (base pulls it hard against the edge). */
+.cashy-tag-mgmt .wb-tag__x { margin: 0 2px; }
+/* The "add a tag" capsule — dashed = the house signal for "empty / create". Sized
+   to sit level with a --lg tag beside it. */
+.cashy-tag-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 14px;
+  font-family: var(--wb-font);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+  border-radius: var(--wb-radius-pill);
+  border: var(--wb-bw) dashed var(--wb-border-strong);
+  background: transparent;
+  color: var(--wb-fg-muted);
+  cursor: pointer;
+  transition: color 0.1s ease, border-color 0.1s ease, background 0.1s ease;
+}
+.cashy-tag-add:hover {
+  color: var(--wb-fg);
+  border-color: var(--wb-fg-subtle);
+  background: var(--wb-surface-2);
+}
+.cashy-tag-add:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--wb-ring);
+}
+
+/* =========================================================================
    RANKED CATEGORY BARS — the dashboard breakdown legend, built on the
    web-builder ranked-bars pattern (wb-progress rows). Neutral bars keep the
    colour budget for the numbers; the category hue lives only in the dot.
@@ -268,16 +369,18 @@ body {
 }
 
 /* =========================================================================
-   NAV LOGO — a black rounded-rectangle wordmark ("Cashy"), the app's mark.
-   Inverts on dark like every other solid-neutral small element (§1).
+   NAV LOGO — a solid-neutral CAPSULE wordmark ("Cashy") led by a "$" ringed in a
+   dashed circle. Inverts on dark like every other solid-neutral element (§1).
    ========================================================================= */
 .cashy-logo {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   flex: none;
-  padding: 6px 12px 6px 10px;
-  border-radius: var(--wb-radius);
+  /* Tighter on the left so the dashed-circle mark tucks in like a leading avatar;
+     roomier on the right to balance the wordmark. */
+  padding: 5px 14px 5px 5px;
+  border-radius: var(--wb-radius-pill); /* a true capsule */
   background: var(--wb-gray-900);
   color: var(--wb-white);
   font-size: 15px;
@@ -289,6 +392,21 @@ body {
 .dark .cashy-logo {
   background: var(--wb-gray-100);
   color: var(--wb-gray-900);
+}
+/* The mark: a "$" inside a dashed circle. Border + glyph use currentColor, so it
+   is WHITE on the dark light-mode capsule (as asked) and auto-inverts to dark on
+   the light dark-mode capsule — always contrasting, never a white-on-white ghost. */
+.cashy-logo__mark {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px dashed currentColor;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1;
 }
 
 /* =========================================================================
@@ -1085,6 +1203,38 @@ body {
      as tall as its own content and a card with no warning note doesn't grow a
      band of dead space to match its neighbour. */
   align-items: start;
+}
+/* When the strip runs long (> 6 services) it stops growing the page and becomes
+   a peek-scroll: ~2.5 rows tall, no scrollbar chrome, and the half-row at the
+   foot melts to transparent under a gradient mask to signal there's more below.
+   Row height is an ESTIMATE (cards vary with their notes) — the whole thing is
+   driven off `--cashy-sub-row`, so tune that one knob if the peek drifts. */
+.cashy-subgrid--scroll {
+  --cashy-sub-row: 280px; /* estimated card height per row */
+  --cashy-sub-fade: calc(0.5 * var(--cashy-sub-row)); /* the half-row that fades */
+  /* 2 full rows + their gaps + the fading half-row */
+  max-height: calc(2.5 * var(--cashy-sub-row) + 2 * 14px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  /* no scrollbar indicator */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  /* the foot fades over the last half-row */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 calc(100% - var(--cashy-sub-fade)),
+    transparent
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 calc(100% - var(--cashy-sub-fade)),
+    transparent
+  );
+}
+.cashy-subgrid--scroll::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 /* Denser than the stock card (head 16/18 · body 18 · foot 14/18): these sit
    several-to-a-row, so the padding that suits one wide card wastes the width. */

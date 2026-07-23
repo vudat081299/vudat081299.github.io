@@ -15,7 +15,7 @@ import { Select } from "@/ui/common/Select";
 import { SubTile } from "@/ui/features/subscriptions/SubTile";
 import { TagChip } from "@/ui/common/TagChip";
 import { registerSubscriptionEditor } from "@/lib/modals";
-import { confirm } from "@/lib/confirm";
+import { confirmDelete } from "@/lib/confirm";
 import type { SubInterval, Subscription } from "@/domain/types";
 
 const MONTH_NAMES = [
@@ -168,11 +168,9 @@ export function SubscriptionEditor() {
           style={{ color: "var(--wb-danger-text)", gap: 6 }}
           onClick={async () => {
             if (
-              await confirm({
+              await confirmDelete({
                 title: "Delete this subscription?",
                 message: "Recorded transactions are kept.",
-                confirmLabel: "Delete",
-                danger: true,
               })
             ) {
               deleteSubscription(editingId);

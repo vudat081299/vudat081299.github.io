@@ -17,28 +17,27 @@ export function formatDigits(n: number): string {
 }
 
 /**
- * Compact: 3400000 -> "3.4m đ", 890000 -> "890k đ", 1200000000 -> "1.2b đ".
+ * Compact: 3400000 -> "3,4m đ", 890000 -> "890k đ", 1200000000 -> "1,2b đ".
  * English magnitude letters (k / m / b), because the UI chrome is English even
  * though the amounts are đồng — the Vietnamese "k / tr / tỷ" belongs to the
- * seeded data, not the app's own labels.
+ * seeded data, not the app's own labels. The NUMBER itself, though, is formatted
+ * `vi-VN` like every other amount in the app, so its decimal mark is a comma
+ * ("7,3m") — matching the dot-means-thousands grouping of the full "7.300.000 đ"
+ * form instead of clashing with it (a bare `toFixed` would emit an English ".").
  */
+const shortNf = new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 1 });
+
 export function formatMoneyShort(n: number): string {
   const v = Math.round(Math.abs(n || 0));
   const sign = n < 0 ? "-" : "";
   let out: string;
-  if (v >= 1_000_000_000) out = trim(v / 1_000_000_000) + "b";
-  else if (v >= 1_000_000) out = trim(v / 1_000_000) + "m";
-  else if (v >= 1_000) out = trim(v / 1_000) + "k";
-  else out = String(v);
+  // `shortNf` rounds to the one decimal we show and drops a trailing ",0", so a
+  // whole magnitude prints clean ("5m", not "5,0m") with no special-casing.
+  if (v >= 1_000_000_000) out = shortNf.format(v / 1_000_000_000) + "b";
+  else if (v >= 1_000_000) out = shortNf.format(v / 1_000_000) + "m";
+  else if (v >= 1_000) out = shortNf.format(v / 1_000) + "k";
+  else out = shortNf.format(v);
   return sign + out + " đ";
-}
-
-function trim(x: number): string {
-  // Round to the one decimal we actually show FIRST, then decide whether it is a
-  // whole number. Deciding on the raw value shows a bogus ".0": 100.04 is not an
-  // integer, so the old code took the toFixed(1) branch and printed "100.0k".
-  const r = Math.round(x * 10) / 10;
-  return r.toFixed(Number.isInteger(r) ? 0 : 1);
 }
 
 /** Parse free text to integer VND: "1.500.000 đ" -> 1500000 */

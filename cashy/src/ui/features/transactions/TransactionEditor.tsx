@@ -18,7 +18,7 @@ import { PayeeInput } from "@/ui/common/PayeeInput";
 import { StatusPicker } from "@/ui/common/StatusPicker";
 import { TagChip } from "@/ui/common/TagChip";
 import { registerTxEditor } from "@/lib/modals";
-import { confirm } from "@/lib/confirm";
+import { confirmDelete } from "@/lib/confirm";
 
 /** ⌘ on Apple hardware, Ctrl elsewhere — for both the handler and the hint chip. */
 const IS_MAC =
@@ -204,7 +204,7 @@ export function TransactionEditor() {
           className="wb-btn wb-btn--ghost"
           style={{ color: "var(--wb-danger-text)", gap: 6 }}
           onClick={async () => {
-            if (!(await confirm({ title: "Delete this transaction?", confirmLabel: "Delete", danger: true })))
+            if (!(await confirmDelete({ title: "Delete this transaction?" })))
               return;
             deleteTransaction(editingId);
             setOpen(false);

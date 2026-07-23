@@ -1,11 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { useCashy } from "@/data/store";
 import { addTag, deleteTag, updateTag } from "@/usecases";
-import { confirm } from "@/lib/confirm";
+import { confirmDelete } from "@/lib/confirm";
 import { SWATCHES } from "@/lib/palette";
 import type { Tag } from "@/domain/types";
 import { ColorPicker } from "@/ui/common/ColorPicker";
-import { EmptyState } from "@/ui/common/EmptyState";
 import { PageHeader } from "@/ui/common/PageHeader";
 import { Modal } from "@/ui/kit/Modal";
 
@@ -77,10 +76,13 @@ function TagEditor({
   );
 }
 
+type SortKey = "name" | "count";
+
 export function Tags() {
-  const { workspace, tags, transactions } = useCashy();
+  const { tags, transactions } = useCashy();
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Tag | null>(null);
+  const [sort, setSort] = useState<SortKey>("name");
 
   const usage = useMemo(() => {
     const m = new Map<string, number>();
@@ -88,6 +90,22 @@ export function Tags() {
       for (const id of t.tagIds) m.set(id, (m.get(id) ?? 0) + 1);
     return m;
   }, [transactions]);
+
+  // Two orders the UI toggles between: alphabetical, or most-used first. The
+  // count itself is hidden until hover, so "Most used" is how you read the ranking.
+  const ordered = useMemo(() => {
+    const list = [...tags];
+    if (sort === "count") {
+      list.sort(
+        (a, b) =>
+          (usage.get(b.id) ?? 0) - (usage.get(a.id) ?? 0) ||
+          a.name.localeCompare(b.name, "vi"),
+      );
+    } else {
+      list.sort((a, b) => a.name.localeCompare(b.name, "vi"));
+    }
+    return list;
+  }, [tags, usage, sort]);
 
   function openAdd() {
     setEditing(null);
@@ -99,11 +117,9 @@ export function Tags() {
   }
   async function remove(t: Tag) {
     const n = usage.get(t.id) ?? 0;
-    const ok = await confirm({
+    const ok = await confirmDelete({
       title: `Delete tag "${t.name}"?`,
       message: n ? `The tag will be removed from ${n} transactions.` : undefined,
-      confirmLabel: "Delete",
-      danger: true,
     });
     if (ok) deleteTag(t.id);
   }
@@ -111,63 +127,73 @@ export function Tags() {
   return (
     <div className="wb-stack wb-stack--loose">
       <PageHeader
-        eyebrow={workspace?.displayName ?? "Cashy"}
         title="Tags"
-        subtitle={`${tags.length} tags · add multiple tags to a transaction for quick filtering`}
+        subtitle={`${tags.length} tags · click to edit, × to remove`}
         actions={
-          <button type="button" className="wb-btn" style={{ gap: 6 }} onClick={openAdd}>
-            <span className="wb-ico wb-ico--sm">add</span>
-            Add tag
-          </button>
+          <div className="wb-tabs wb-tabs--pill" role="group" aria-label="Sort tags">
+            <button
+              type="button"
+              className={sort === "name" ? "wb-tab is-active" : "wb-tab"}
+              onClick={() => setSort("name")}
+            >
+              Name
+            </button>
+            <button
+              type="button"
+              className={sort === "count" ? "wb-tab is-active" : "wb-tab"}
+              onClick={() => setSort("count")}
+            >
+              Most used
+            </button>
+          </div>
         }
       />
 
-      {tags.length ? (
-        <div className="wb-list">
-          {tags.map((t) => (
-            <div key={t.id} className="wb-list__item">
-              <span className="cashy-dot" style={{ background: t.colorHex }} />
-              <span
-                className="wb-list__title"
-                style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
-              >
-                {t.name}
-              </span>
-              <span className="wb-list__end">{usage.get(t.id) ?? 0} transactions</span>
+      <div className="cashy-taggrid">
+        {/* The create capsule lives in the grid itself — dashed = "add", per the
+            house convention — so there's one obvious way to make a tag. */}
+        <button type="button" className="cashy-tag-add" onClick={openAdd}>
+          <span className="wb-ico wb-ico--sm">add</span>
+          New tag
+        </button>
+
+        {ordered.map((t) => {
+          const n = usage.get(t.id) ?? 0;
+          return (
+            <span
+              key={t.id}
+              className="wb-tag wb-tag--notch wb-tag--lg cashy-tag-mgmt cashy-tag-edit"
+              style={{ "--wb-tag-color": t.colorHex } as CSSProperties}
+              role="button"
+              tabIndex={0}
+              title={`${t.name} · ${n} ${n === 1 ? "transaction" : "transactions"}`}
+              onClick={() => openEdit(t)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  openEdit(t);
+                }
+              }}
+            >
+              <span className="cashy-tag-mgmt__name">{t.name}</span>
               <button
                 type="button"
-                className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm"
-                onClick={() => openEdit(t)}
-                aria-label="Edit"
-              >
-                <span className="wb-ico wb-ico--sm">edit</span>
-              </button>
-              <button
-                type="button"
-                className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm"
-                onClick={() => remove(t)}
-                aria-label="Delete"
-              >
-                <span className="wb-ico wb-ico--sm">delete</span>
-              </button>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="wb-card">
-          <div className="wb-card__body">
-            <EmptyState
-              icon="🏷️"
-              title="No tags yet"
-              description="Create tags like “Travel” or “Work” to filter transactions more easily."
-              action={
-                <button type="button" className="wb-btn" onClick={openAdd}>
-                  Add tag
-                </button>
-              }
-            />
-          </div>
-        </div>
+                className="wb-tag__x"
+                aria-label={`Delete tag ${t.name}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  remove(t);
+                }}
+              />
+            </span>
+          );
+        })}
+      </div>
+
+      {tags.length === 0 && (
+        <p style={{ fontSize: 13, color: "var(--wb-fg-muted)", margin: "2px 0 0" }}>
+          No tags yet — create one like “Travel” or “Work” to filter transactions more easily.
+        </p>
       )}
 
       <TagEditor open={open} editing={editing} onClose={() => setOpen(false)} />
