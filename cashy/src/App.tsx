@@ -14,6 +14,7 @@ import { Transactions } from "@/ui/features/transactions/Transactions";
 import { Subscriptions } from "@/ui/features/subscriptions/Subscriptions";
 import { SubscriptionEditor } from "@/ui/features/subscriptions/SubscriptionEditor";
 import { Wallets } from "@/ui/features/wallets/Wallets";
+import { Loans } from "@/ui/features/loans/Loans";
 import { Categories } from "@/ui/features/categories/Categories";
 import { Tags } from "@/ui/features/tags/Tags";
 import { Settings } from "@/ui/features/settings/Settings";
@@ -96,6 +97,8 @@ export default function App() {
       <Subscriptions />
     ) : route === "wallets" ? (
       <Wallets />
+    ) : route === "loans" ? (
+      <Loans />
     ) : route === "categories" ? (
       <Categories />
     ) : route === "tags" ? (

@@ -5,6 +5,7 @@ export type Route =
   | "transactions"
   | "subscriptions"
   | "wallets"
+  | "loans"
   | "categories"
   | "tags"
   | "settings";
@@ -14,6 +15,7 @@ const ROUTES: Route[] = [
   "transactions",
   "subscriptions",
   "wallets",
+  "loans",
   "categories",
   "tags",
   "settings",
