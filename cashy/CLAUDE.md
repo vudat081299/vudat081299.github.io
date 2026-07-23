@@ -248,6 +248,7 @@ Detailed steps in [architecture.md §6](docs/architecture.md). In short:
 | [docs/components.md](docs/components.md) | component catalogue — tiers, props, screen→component map |
 | [docs/cashy-vision.md](docs/cashy-vision.md) | product philosophy (timeless; native-iOS-flavoured) |
 | [docs/cashy-v1-spec.md](docs/cashy-v1-spec.md) | v1 use-case spec (native-iOS-flavoured) |
+| [docs/wallets-plan.md](docs/wallets-plan.md) | **PLAN** — multi-wallet / asset feature (not built yet) |
 | [REBUILD-NOTES.md](REBUILD-NOTES.md) | the web-rebuild handoff notes |
 | [docs/handoff-checklist.md](docs/handoff-checklist.md) | **← what was done in this pass + open questions for the owner** |
 

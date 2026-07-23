@@ -87,6 +87,7 @@ Break these and the app is wrong, not merely inconsistent.
 | [docs/components.md](docs/components.md) | component catalogue — tiers, props, screen→component map |
 | [docs/cashy-vision.md](docs/cashy-vision.md) | product direction (timeless; native-iOS-flavoured) |
 | [docs/cashy-v1-spec.md](docs/cashy-v1-spec.md) | v1 spec (native-iOS-flavoured) |
+| [docs/wallets-plan.md](docs/wallets-plan.md) | **plan** — multi-wallet / asset feature (not built yet) |
 | [REBUILD-NOTES.md](REBUILD-NOTES.md) | web-rebuild notes |
 | [docs/handoff-checklist.md](docs/handoff-checklist.md) | this documentation pass + open questions for the owner |
 
@@ -99,7 +100,6 @@ are recorded choices, not oversights.
 
 | # | Question | Status / options |
 |---|---|---|
-| 8 | **How far to take the English translation?** The **Overview page** is now English (KPIs, forecast caption, `6/12/24 mo`, `Day/Week/Month`, both chart tooltips) and the single-cycle subscription button reads **"Mark as paid"**. Still Vietnamese: the subscription **card foot** (`Huỷ đăng ký`, `Đã thanh toán đủ`, `Tiếp tục`, multi-cycle `Xử lý N kỳ`), the **catch-up / cancel / history dialogs**, the **Subscriptions page**, and — everywhere — **chart date labels** (`Tháng 3 năm 2026`, axis `T7/2026`) which come from the shared `domain/date` formatter used app-wide. | **Decide:** (a) translate the whole app to English incl. app-wide dates, or (b) stop at the Overview. Nothing is blocked either way — pick when you're back. |
 | 9 | Status-picker outline strength (tuning, not blocking) | Unselected capsules now show a soft tone outline at ~42–48% opacity (`StatusPicker.tsx` + `.cashy-statuspick` in `index.css`). Bump the `color-mix` percentages if you want them stronger/fainter. |
 | 10 | Donut selected-slice emphasis (tuning, not blocking) | Selected slice grows outward by `POP = 3` with **no** outward slide, so it stays flush with the hole and never clips (`SpendChart.tsx`). Change `POP` to dial the zoom. |
 
@@ -115,5 +115,6 @@ are recorded choices, not oversights.
 | 5 | Mixed language | **Keep as is** for now; owner will handle the translation later. |
 | 6 | `occurredTime` | **Display-only, by design.** It is consumed — `TransactionTable` renders it under the date, `TransactionDetail` as "lúc HH:mm". It drives no sort/filter/chart deliberately: the field is optional and most rows have none, so any time-of-day analytic would be computed over a biased subset and read as fact. |
 | 7 | Subscription card padding | **Keep 8px.** Unchanged. |
+| 8 | How far to take the English translation? | **Done — full English (2026-07-23).** The whole app is English: the subscription card foot, the catch-up / cancel / history dialogs, the Subscriptions page, and — app-wide — chart date labels (`domain/date` now emits `MMMM yyyy`, `Today`/`Yesterday`). Only the DEV-only galleries and the intentionally-Vietnamese seed data stay Vietnamese. Compact money kept `k / m / b` with a `vi-VN` comma decimal (`3,4m đ`). |
 
 </details>

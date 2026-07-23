@@ -49,24 +49,19 @@
 
 I picked a sensible default for each so nothing was blocked; change any if you disagree.
 
+> **Resolved & removed 2026-07-23:** the `tr → m` question — kept `k / m / b` but
+> the number stays `vi-VN` (comma decimal, `3,4m đ`), settled in `domain/money.ts`;
+> and the English-translation scope (old #3 / repo #8) — the whole app is now
+> English **incl. app-wide chart dates** (`domain/date.ts`); only the DEV galleries
+> and the intentionally-Vietnamese seed data remain.
+
 1. **Currency glyph consistency — `₫` vs `đ`.** The whole app formats money with
    `đ` via `domain/money.formatMoney`, **except** the Add-transaction *amount*
-   field, whose input addon still shows `₫` (U+20AB). I left it as-is (you only
-   asked about the border style there). → **Unify to `đ` everywhere?** (one-line
-   change in `TransactionEditor.tsx`.)
+   field, whose input addon still shows `₫` (U+20AB, `TransactionEditor.tsx`). I
+   left it as-is (you only asked about the border style there). → **Unify to `đ`
+   everywhere?** (one-line change.)
 
-2. **How far did I take the `tr → m` change?** You asked specifically about
-   `triệu → m`. I also changed `tỷ → b` (billion) and the decimal separator
-   `,` → `.` for English consistency (`3,4 tr` → `3.4m`). → **Keep `b` and the dot
-   decimal, or revert those two to just the `tr → m` you literally asked for?**
-
-3. **English translation scope (this is the repo's existing open question #8).**
-   Still Vietnamese: subscription card foot, the catch-up/cancel/history dialogs,
-   the Subscriptions page, and — app-wide — chart date labels (`Tháng 3`, axis
-   `T7/2026`) from `domain/date`. → **(a) finish English incl. app-wide dates, or
-   (b) stop at the Overview?** (Unchanged this pass.)
-
-4. **Product docs vs. the actual web app.** `docs/cashy-vision.md` and
+2. **Product docs vs. the actual web app.** `docs/cashy-vision.md` and
    `docs/cashy-v1-spec.md` describe a native-iOS product (Sign in with Apple, PIN,
    Face ID, SwiftUI/TCA, CSV import) — features **not** in this React web build.
    I flagged this in `CLAUDE.md` rather than editing your product docs. → **Do you
@@ -74,7 +69,7 @@ I picked a sensible default for each so nothing was blocked; change any if you d
    split a `cashy-web-spec.md`), so an AI never tries to build SwiftData/Face ID
    here?**
 
-5. **Dev galleries in the production `dist/`.** Both `#/wb` and `#/cashy` emit their
+3. **Dev galleries in the production `dist/`.** Both `#/wb` and `#/cashy` emit their
    own JS chunk into `dist/` (~5 KB gzip each). They are never *loaded* in prod (the
    DEV guard), but the files ship. This is the pre-existing pattern. → **Fine to
    leave, or should the galleries be excluded from the prod build entirely?**
