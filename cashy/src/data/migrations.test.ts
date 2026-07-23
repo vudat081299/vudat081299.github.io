@@ -140,3 +140,12 @@ describe("migration v7 — loans array added", () => {
     expect(out.loans[0].id).toBe("L1");
   });
 });
+
+it("v8 → v9 adds an empty contacts array without touching other data (@ADR-contact-004)", () => {
+  const base = {
+    version: 8, theme: "system", subIconStyle: "neutral", workspace: null,
+    categories: [], tags: [], transactions: [], subscriptions: [], wallets: [], loans: [],
+  } as unknown as CashyState;
+  const next = migrate(base, 8);
+  expect(next.contacts).toEqual([]);
+});

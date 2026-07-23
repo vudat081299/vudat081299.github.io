@@ -13,6 +13,7 @@
 // (re-seeds an empty workspace) and store.loadSampleData.
 import type {
   Category,
+  Contact,
   Loan,
   LoanPayment,
   SubInterval,
@@ -423,6 +424,27 @@ export function buildSampleLoans(now: Date = new Date()): Loan[] {
   return defs.map((d) => ({ ...d, id: uid(), colorHex: nextHue(), createdAt: iso(d.openedAt) }));
 }
 
+/** A handful of demo contacts (people you lend to / borrow from), so slice B's
+ *  loan demo has real counterparties to attach to. @BR-contact-010 */
+export function buildSampleContacts(now: Date = new Date()): Contact[] {
+  const defs: { name: string; username?: string }[] = [
+    { name: "Bố mẹ" },
+    { name: "Anh Hùng", username: "hung" },
+    { name: "Minh", username: "minh_vcb" },
+    { name: "Chị Hoà", username: "hoa" },
+    { name: "Nhóm bạn thân" },
+  ];
+  return defs.map((d, i) => ({
+    id: uid(),
+    name: d.name,
+    username: d.username,
+    colorHex: SWATCHES[i % SWATCHES.length],
+    icon: "user",
+    archived: false,
+    createdAt: now.toISOString(),
+  }));
+}
+
 export function buildSampleData(
   categories: Category[],
   now: Date = new Date(),
@@ -432,6 +454,7 @@ export function buildSampleData(
   subscriptions: Subscription[];
   wallets: Wallet[];
   loans: Loan[];
+  contacts: Contact[];
 } {
   const catIdByName = new Map<string, string>();
   for (const c of categories) if (!catIdByName.has(c.name)) catIdByName.set(c.name, c.id);
@@ -632,5 +655,6 @@ export function buildSampleData(
     subscriptions: subscriptions.map(linkWallet),
     wallets,
     loans: buildSampleLoans(now),
+    contacts: buildSampleContacts(now),
   };
 }

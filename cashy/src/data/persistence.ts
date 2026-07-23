@@ -53,16 +53,18 @@ export function load(): CashyState {
         subscriptions: p.subscriptions ?? [],
         wallets: p.wallets ?? [],
         loans: p.loans ?? [],
+        contacts: p.contacts ?? [],
       },
       fromVersion,
     );
     // A workspace must never open on an empty ledger: any account that got this
     // far with no transactions is re-seeded with the 200-row demo dataset. Only
     // an EMPTY ledger is filled, so nothing a user actually entered is touched.
+    // Contacts flow through this same persistence seam — no dedicated repository. @ADR-contact-005
     if (next.workspace && next.transactions.length === 0) {
       const categories = next.categories.length ? next.categories : seedCategories();
-      const { tags, transactions, subscriptions, wallets, loans } = buildSampleData(categories);
-      next = { ...next, categories, tags, transactions, subscriptions, wallets, loans };
+      const { tags, transactions, subscriptions, wallets, loans, contacts } = buildSampleData(categories);
+      next = { ...next, categories, tags, transactions, subscriptions, wallets, loans, contacts };
     }
     save(next);
     return next;

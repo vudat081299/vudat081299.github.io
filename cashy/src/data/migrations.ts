@@ -13,7 +13,8 @@ import { SWATCHES } from "@/lib/palette";
 // v6 turns the free-text `account` "Paid with" field into a real Wallet model.
 // v7 adds the loans model (money owed / owing) — a brand-new array.
 // v8 adds optional card fields (cardNetwork + creditLimit) — additive, no back-fill.
-export const CURRENT_VERSION = 8;
+// v9 adds the contacts model (danh bạ đối tác) — a brand-new array.
+export const CURRENT_VERSION = 9;
 
 /**
  * v1 → v2: repaint every category & tag onto the bright chart palette (each
@@ -134,6 +135,11 @@ export function migrate(state: CashyState, fromVersion: number): CashyState {
   // the field exists on snapshots that predate it.
   if (fromVersion < 7) {
     next = { ...next, loans: next.loans ?? [] };
+  }
+  // Contacts are brand new — no data to transform, so the branch only guarantees
+  // the field exists on snapshots that predate it. @ADR-contact-004
+  if (fromVersion < 9) {
+    next = { ...next, contacts: next.contacts ?? [] };
   }
   return next;
 }

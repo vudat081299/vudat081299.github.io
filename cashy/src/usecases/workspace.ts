@@ -30,6 +30,7 @@ export function createWorkspace(input: { displayName: string; currency?: string 
     subscriptions: [],
     wallets: seedWallets(),
     loans: [],
+    contacts: [],
   });
 }
 
@@ -58,6 +59,9 @@ export function resetAll(): void {
 }
 
 // ---- import / export -------------------------------------------------------
+// Contacts round-trip through the same export/import JSON payload as every
+// other array — no dedicated repository, just the existing persistence seam.
+// @BR-contact-009 @ADR-contact-005
 export function exportData(): string {
   const state = getState();
   return JSON.stringify(
@@ -72,6 +76,7 @@ export function exportData(): string {
       subscriptions: state.subscriptions,
       wallets: state.wallets,
       loans: state.loans,
+      contacts: state.contacts,
     },
     null,
     2,
@@ -100,6 +105,7 @@ export function importData(json: string): { ok: boolean; error?: string } {
       subscriptions: Array.isArray(p.subscriptions) ? p.subscriptions : [],
       wallets: Array.isArray(p.wallets) ? p.wallets : [],
       loans: Array.isArray(p.loans) ? p.loans : [],
+      contacts: Array.isArray(p.contacts) ? p.contacts : [],
     };
     commit(migrate(merged, p.version ?? 1));
     return { ok: true };
