@@ -12,6 +12,7 @@ const NAV: { id: Route; label: string; icon: string }[] = [
   { id: "subscriptions", label: "Subscriptions", icon: "autorenew" },
   { id: "wallets", label: "Wallets", icon: "account_balance_wallet" },
   { id: "loans", label: "Loans", icon: "handshake" },
+  { id: "contacts", label: "Contacts", icon: "group" },
   { id: "categories", label: "Categories", icon: "account_tree" },
   { id: "tags", label: "Tags", icon: "sell" },
   { id: "settings", label: "Settings", icon: "settings" },
