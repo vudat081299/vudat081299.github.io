@@ -1,6 +1,7 @@
 # Cashy — Loans & debts (feature plan)
 
-> **Status:** IN PROGRESS. Phase 1 (schema + domain + migration) building 2026-07-23.
+> **Status:** SHIPPED (all three phases, 2026-07-23). Kept as the design record.
+> The feature itself is documented in [features/loans.md](features/loans.md).
 > **Owner:** Đạt · **Drafted:** 2026-07-23 · **Target:** the feature after wallets.
 >
 > Adds **quản lý khoản vay** — money you owe and money owed to you: lender/borrower,
@@ -170,17 +171,26 @@ Loans render neutral/grey; the source hue is a classification accent only.
 
 ## 8. Phased delivery (each phase ships green: `pnpm test` + `pnpm build` + `pnpm lint`)
 
-1. **Schema + migration v7 + domain + data wiring (no UI).** Types (`Loan`,
-   `LoanPayment`, enums, `CashyState.loans`), `domain/loan.ts` + tests, migration
-   v7 (+ test), `emptyState`/`load`/`importData`/`exportData` wired, sample loans.
-   App runs unchanged; loans exist in data, invisible in UI.
-2. **Loans screen + usecases.** `usecases/loans.ts`, `#/loans` + nav + count,
-   `LoanCard`, in-file `LoanEditor` with the payments sub-editor, summary header,
-   gallery section.
-3. **Dashboard net-worth integration + docs.** Fold loans into net worth
-   (assets − debts) on the dashboard; author [features/loans.md](features/loans.md)
-   and sync the cross-cutting refs (data-model, components, architecture, CLAUDE,
-   README, features/README). Verify live end-to-end.
+1. **✅ DONE (2026-07-23) — Schema + migration v7 + domain + data wiring (no UI).**
+   Types (`Loan`, `LoanPayment`, enums, `CashyState.loans`), `domain/loan.ts` + 11
+   tests, migration v7 (+ 2 tests), `emptyState`/`load`/`importData` wired and
+   `exportData` now carries wallets **and** loans (closed a latent export gap),
+   `buildSampleLoans` demo. 129 tests; build + lint green. App runs unchanged.
+2. **✅ DONE (2026-07-23) — Loans screen + usecases.** `usecases/loans.ts`
+   (add/update/archive/delete + add/removeLoanPayment), `#/loans` + nav item
+   (`handshake`) + count, `LoanCard` (status pill + progress + due line), in-file
+   `LoanEditor` with the live payments sub-editor, You-owe / Owed-to-you / Net
+   summary, "Money I owe" / "Owed to me" groups, gallery section "8 · Loans".
+   Verified live (6 demo loans, add round-trip).
+3. **✅ DONE (2026-07-23) — Dashboard net-worth integration + docs.** The balances
+   strip's net worth became **assets − debts** (`walletNet + loansNetWorth`) with an
+   assets/owe/owed caption and a reconciling "Loans · net" row → `#/loans`.
+   [features/loans.md](features/loans.md) authored + cross-cutting refs synced
+   (data-model, components, architecture, CLAUDE, README, features/README). Verified
+   live end-to-end.
+
+**Feature complete.** (Optional later polish: mirror a repayment into a wallet
+transfer so wallet balances move too — see §9.1.)
 
 ---
 
