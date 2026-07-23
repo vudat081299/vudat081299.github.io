@@ -17,3 +17,4 @@ export * from "@/domain/transaction";
 export * from "@/domain/subscription";
 export * from "@/domain/analytics";
 export * from "@/domain/wallet";
+export * from "@/domain/loan";

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { CashyState, Subscription, Transaction } from "@/domain/types";
+import type { CashyState, Loan, Subscription, Transaction } from "@/domain/types";
 import { migrate } from "@/data/migrations";
 
 // Only the v6 (wallets) branch is exercised here — calling migrate with
@@ -52,6 +52,7 @@ function stateV5(over: Partial<CashyState> = {}): CashyState {
     transactions: [],
     subscriptions: [],
     wallets: [],
+    loans: [],
     ...over,
   };
 }
@@ -105,5 +106,36 @@ describe("migration v6 — free-text account → wallets", () => {
     const clean = migrate(stateV5({ transactions: [tx({ id: "x" })] }), 5);
     expect(clean.wallets).toEqual([]);
     expect(clean.transactions[0].walletId).toBeUndefined();
+  });
+});
+
+describe("migration v7 — loans array added", () => {
+  const sampleLoan: Loan = {
+    id: "L1",
+    direction: "borrowed",
+    counterparty: "Bank",
+    source: "bank",
+    principal: 1_000_000,
+    interestRatePct: 10,
+    interestPeriod: "year",
+    openedAt: "2026-01-01",
+    dueAt: null,
+    payments: [],
+    colorHex: "#000000",
+    icon: "landmark",
+    note: "",
+    archived: false,
+    createdAt: "2026-01-01T00:00:00.000Z",
+  };
+
+  it("defaults loans to [] on a snapshot that predates it", () => {
+    const old = stateV5({ loans: undefined as unknown as Loan[] });
+    expect(migrate(old, 6).loans).toEqual([]);
+  });
+
+  it("preserves existing loans", () => {
+    const out = migrate(stateV5({ loans: [sampleLoan] }), 6);
+    expect(out.loans).toHaveLength(1);
+    expect(out.loans[0].id).toBe("L1");
   });
 });

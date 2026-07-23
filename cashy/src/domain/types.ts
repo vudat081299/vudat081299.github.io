@@ -187,6 +187,60 @@ export interface Subscription {
   createdAt: string; // ISO
 }
 
+/** Which side of a loan you're on. `borrowed` = money you took and must repay
+ *  (a liability); `lent` = money you gave out and expect back (a receivable). */
+export type LoanDirection = "borrowed" | "lent";
+
+/** Where a loan came from / went to. Drives the icon + a classification chip; the
+ *  union is OPEN like `WalletKind` so more sources can slot in without a migration. */
+export type LoanSource = "personal" | "card" | "bank" | "other";
+
+/** The period an interest rate is quoted over. Reference/display ONLY — Cashy
+ *  never auto-accrues interest into the balance (see docs/loans-plan.md). */
+export type InterestPeriod = "year" | "month";
+
+/** One manual repayment (a `borrowed` loan) or collection (a `lent` loan). The
+ *  loan's outstanding is `principal` minus the sum of these — Cashy tracks the
+ *  money by hand rather than generating a schedule. */
+export interface LoanPayment {
+  id: string;
+  amount: number; // integer VND, > 0
+  date: string; // YYYY-MM-DD
+  note: string;
+}
+
+/**
+ * A debt you owe or a loan you've made. Kept as its OWN record — not a wallet and
+ * not a transaction — so it can carry the lender/borrower, source, interest rate
+ * and a due date (`hạn trả`). The outstanding balance is DERIVED (`principal`
+ * minus its payments, floored at 0) and interest is stored for reminders /
+ * reference only, never accrued automatically. Rendered neutral/grey like every
+ * other entity; `colorHex` is a classification accent, never decoration. See
+ * `domain/loan` + `docs/loans-plan.md`.
+ */
+export interface Loan {
+  id: string;
+  direction: LoanDirection;
+  /** the other party — the lender (`borrowed`) or the borrower (`lent`) */
+  counterparty: string;
+  source: LoanSource;
+  /** integer VND, > 0 — the original amount borrowed / lent */
+  principal: number;
+  /** annual or monthly %, for display + reminders only; 0 = interest-free */
+  interestRatePct: number;
+  interestPeriod: InterestPeriod;
+  openedAt: string; // YYYY-MM-DD — when the loan was taken out / given
+  /** YYYY-MM-DD due date (`hạn trả`); null = open-ended, no fixed date */
+  dueAt: string | null;
+  /** manual repayment / collection entries; outstanding = principal − Σ amounts */
+  payments: LoanPayment[];
+  colorHex: string; // classification hue
+  icon: string; // curated lucide key, see lib/icons
+  note: string;
+  archived: boolean; // true = closed/hidden, history kept
+  createdAt: string; // ISO
+}
+
 export interface CashyState {
   version: number;
   theme: ThemeMode;
@@ -198,4 +252,5 @@ export interface CashyState {
   transactions: Transaction[];
   subscriptions: Subscription[];
   wallets: Wallet[];
+  loans: Loan[];
 }

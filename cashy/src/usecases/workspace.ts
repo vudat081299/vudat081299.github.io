@@ -29,6 +29,7 @@ export function createWorkspace(input: { displayName: string; currency?: string 
     transactions: [],
     subscriptions: [],
     wallets: seedWallets(),
+    loans: [],
   });
 }
 
@@ -69,6 +70,8 @@ export function exportData(): string {
       tags: state.tags,
       transactions: state.transactions,
       subscriptions: state.subscriptions,
+      wallets: state.wallets,
+      loans: state.loans,
     },
     null,
     2,
@@ -96,6 +99,7 @@ export function importData(json: string): { ok: boolean; error?: string } {
       transactions: p.transactions,
       subscriptions: Array.isArray(p.subscriptions) ? p.subscriptions : [],
       wallets: Array.isArray(p.wallets) ? p.wallets : [],
+      loans: Array.isArray(p.loans) ? p.loans : [],
     };
     commit(migrate(merged, p.version ?? 1));
     return { ok: true };

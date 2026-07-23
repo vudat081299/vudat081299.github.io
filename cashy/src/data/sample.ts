@@ -13,6 +13,8 @@
 // (re-seeds an empty workspace) and store.loadSampleData.
 import type {
   Category,
+  Loan,
+  LoanPayment,
   SubInterval,
   Subscription,
   Tag,
@@ -24,6 +26,7 @@ import type {
 import { uid } from "@/lib/id";
 import { addMonthKey, addMonths, billingDate, monthKey, monthLabelShort, todayYMD } from "@/domain/date";
 import { guessWalletKind, walletIcon } from "@/domain/wallet";
+import { loanSourceIcon } from "@/domain/loan";
 import { SWATCHES } from "@/lib/palette";
 
 type Pool = {
@@ -296,10 +299,140 @@ export function buildSampleSubscriptions(
   return { subscriptions, charges };
 }
 
+/**
+ * The demo loans — one in each status so the progress bars and the overdue /
+ * due-soon badges are all visible on first open: a bank car-loan (part-paid), a
+ * 0% family loan (open-ended), a card installment (due soon), an overdue personal
+ * loan, a receivable lent to a friend, and one paid-off loan. Deterministic
+ * amounts + dates relative to `now`; money is integer VND. See docs/loans-plan.md.
+ */
+export function buildSampleLoans(now: Date = new Date()): Loan[] {
+  const ymd = (d: Date) =>
+    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  const today = ymd(now);
+  const monthsAgo = (m: number) => addMonths(today, -m);
+  const monthsAhead = (m: number) => addMonths(today, m);
+  const daysFromToday = (n: number) => ymd(new Date(now.getFullYear(), now.getMonth(), now.getDate() + n));
+  const iso = (d: string) => new Date(`${d}T09:00:00`).toISOString();
+
+  let hue = 0;
+  const nextHue = () => SWATCHES[hue++ % SWATCHES.length];
+  const pmt = (amount: number, date: string, note = "Trả góp hàng tháng"): LoanPayment => ({
+    id: uid(),
+    amount,
+    date,
+    note,
+  });
+
+  // A bank car loan — active, part-paid: eight monthly instalments so far.
+  const carPayments: LoanPayment[] = [];
+  for (let i = 7; i >= 0; i--) carPayments.push(pmt(9_000_000, monthsAgo(i)));
+
+  const defs: Omit<Loan, "id" | "colorHex" | "createdAt">[] = [
+    {
+      direction: "borrowed",
+      counterparty: "Techcombank",
+      source: "bank",
+      principal: 300_000_000,
+      interestRatePct: 9,
+      interestPeriod: "year",
+      openedAt: monthsAgo(8),
+      dueAt: monthsAhead(28),
+      payments: carPayments,
+      icon: loanSourceIcon("bank"),
+      note: "Vay mua ô tô",
+      archived: false,
+    },
+    {
+      direction: "borrowed",
+      counterparty: "Bố mẹ",
+      source: "personal",
+      principal: 50_000_000,
+      interestRatePct: 0,
+      interestPeriod: "year",
+      openedAt: monthsAgo(4),
+      dueAt: null,
+      payments: [pmt(10_000_000, monthsAgo(3), "Trả bớt"), pmt(10_000_000, monthsAgo(1), "Trả bớt")],
+      icon: loanSourceIcon("personal"),
+      note: "Mượn sửa nhà — trả dần, không lãi",
+      archived: false,
+    },
+    {
+      direction: "borrowed",
+      counterparty: "Thẻ tín dụng VPBank",
+      source: "card",
+      principal: 24_000_000,
+      interestRatePct: 0,
+      interestPeriod: "month",
+      openedAt: monthsAgo(5),
+      dueAt: daysFromToday(5),
+      payments: [
+        pmt(4_000_000, monthsAgo(4)),
+        pmt(4_000_000, monthsAgo(3)),
+        pmt(4_000_000, monthsAgo(2)),
+        pmt(4_000_000, monthsAgo(1)),
+      ],
+      icon: loanSourceIcon("card"),
+      note: "Trả góp iPhone 0% — 6 kỳ",
+      archived: false,
+    },
+    {
+      direction: "borrowed",
+      counterparty: "Anh Hùng",
+      source: "personal",
+      principal: 15_000_000,
+      interestRatePct: 2,
+      interestPeriod: "month",
+      openedAt: monthsAgo(2),
+      dueAt: daysFromToday(-10),
+      payments: [pmt(5_000_000, monthsAgo(1), "Trả một phần")],
+      icon: loanSourceIcon("personal"),
+      note: "Vay nóng — quá hạn",
+      archived: false,
+    },
+    {
+      direction: "lent",
+      counterparty: "Minh",
+      source: "personal",
+      principal: 10_000_000,
+      interestRatePct: 0,
+      interestPeriod: "year",
+      openedAt: monthsAgo(2),
+      dueAt: monthsAhead(1),
+      payments: [],
+      icon: loanSourceIcon("personal"),
+      note: "Cho bạn mượn — chưa thu",
+      archived: false,
+    },
+    {
+      direction: "borrowed",
+      counterparty: "VPBank",
+      source: "bank",
+      principal: 20_000_000,
+      interestRatePct: 12,
+      interestPeriod: "year",
+      openedAt: monthsAgo(10),
+      dueAt: monthsAgo(1),
+      payments: [pmt(20_000_000, monthsAgo(1), "Tất toán")],
+      icon: loanSourceIcon("bank"),
+      note: "Vay tiêu dùng — đã tất toán",
+      archived: false,
+    },
+  ];
+
+  return defs.map((d) => ({ ...d, id: uid(), colorHex: nextHue(), createdAt: iso(d.openedAt) }));
+}
+
 export function buildSampleData(
   categories: Category[],
   now: Date = new Date(),
-): { tags: Tag[]; transactions: Transaction[]; subscriptions: Subscription[]; wallets: Wallet[] } {
+): {
+  tags: Tag[];
+  transactions: Transaction[];
+  subscriptions: Subscription[];
+  wallets: Wallet[];
+  loans: Loan[];
+} {
   const catIdByName = new Map<string, string>();
   for (const c of categories) if (!catIdByName.has(c.name)) catIdByName.set(c.name, c.id);
 
@@ -494,5 +627,6 @@ export function buildSampleData(
     transactions: transactions.map(linkWallet),
     subscriptions: subscriptions.map(linkWallet),
     wallets,
+    loans: buildSampleLoans(now),
   };
 }
