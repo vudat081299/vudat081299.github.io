@@ -212,6 +212,22 @@ load-bearing**: `index.css` loads *before* `web-builder.css`, so app-level `wb-*
 overrides need raised specificity and dark `:hover` needs an explicit `.dark`
 branch (architecture.md §8).
 
+**Card composition (feature-leaf cards).** A card is a *composition of the `Card`
+primitive*, not a bespoke `<div>`. Compose the primitive's semantic regions
+(`wb-card__head` / `__body` / `__foot`) and express every bespoke rule through a
+**named `cashy-*` class in `index.css`** — never a wall of inline `style`
+(a lone dynamic value like `opacity` for an archived state is the only exception).
+Sub-structures shared by two or more cards are extracted into **Cashy-aware
+molecules in `ui/common/`** rather than duplicated: the icon-tile + name + subtitle
++ status header is `CardIdentity`; the caption + headline figure is `.cashy-cardfig`;
+a meter + its note is `.cashy-cardmeter`; the reusable icon tile is `.cashy-subtile`
+(hue via the `--cashy-sub-c` custom property). A card bound to a domain lives in
+that domain's `ui/features/<domain>/` folder and is *reused* by any screen — the
+Dashboard/Overview imports `SubscriptionCard` from `features/subscriptions/`, it is
+not re-implemented per screen; only a card with no domain of its own belongs in a
+screen's folder. `SubscriptionCard` and `WalletCard` follow this; `LoanCard` still
+carries legacy inline styling and is migrated as part of the loans redesign.
+
 ---
 
 ## 8. Invariants — break these and the app is *wrong*, not just messy

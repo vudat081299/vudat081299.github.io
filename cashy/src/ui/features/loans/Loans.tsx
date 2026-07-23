@@ -413,13 +413,7 @@ function LoanGroup({
       <div style={{ fontSize: 13, fontWeight: 600, color: "var(--wb-fg-muted)" }}>
         {title} <span style={{ fontWeight: 400 }}>· {loans.length}</span>
       </div>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
-          gap: 12,
-        }}
-      >
+      <div className="cashy-loangrid">
         {sorted.map((l) => (
           <LoanCard key={l.id} loan={l} onEdit={onEdit} now={now} />
         ))}

@@ -1048,6 +1048,89 @@ body {
   background: color-mix(in srgb, var(--cashy-sub-c, var(--wb-neutral)) 14%, transparent);
   border: var(--wb-bw) solid color-mix(in srgb, var(--cashy-sub-c, var(--wb-border)) 30%, transparent);
 }
+
+/* ── Shared entity-card building blocks ──────────────────────────────────────
+   Feature-leaf cards (WalletCard, LoanCard, …) COMPOSE these instead of
+   hand-rolling the icon+name header, the label+figure block and the meter caption
+   with inline styles — so every card reads with identical typography + spacing.
+   The `CardIdentity` molecule (ui/common) renders `.cashy-cardhead*`. */
+.cashy-cardhead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.cashy-cardhead__main {
+  flex: 1;
+  min-width: 0;
+}
+.cashy-cardhead__title {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cashy-cardhead__archived {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--wb-fg-muted);
+}
+.cashy-cardhead__sub {
+  font-size: 12px;
+  color: var(--wb-fg-muted);
+}
+.cashy-cardhead__trailing {
+  flex: none;
+  margin-left: auto;
+}
+/* A card body laid out as a vertical stack of sections. */
+.cashy-cardstack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+/* A caption + headline figure (balance, outstanding, a KPI). */
+.cashy-cardfig {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.cashy-cardfig__label {
+  font-size: 12px;
+  color: var(--wb-fg-muted);
+}
+.cashy-cardfig__val {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+/* A progress/utilisation meter with its explanatory caption. */
+.cashy-cardmeter {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.cashy-cardmeter__note {
+  font-size: 11px;
+  color: var(--wb-fg-muted);
+}
+/* Loan card grid — three per row on desktop (matching the overview subscription
+   strip), stepping down to two then one so cards never crush on narrow screens. */
+.cashy-loangrid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 620px) {
+  .cashy-loangrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 940px) {
+  .cashy-loangrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
 /* Status picker — capsules you click instead of a dropdown (see StatusPicker).
    The radio itself is hidden but still focusable, so arrow keys and screen
    readers work; the capsule beside it is the whole visual. */

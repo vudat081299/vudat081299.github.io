@@ -1,9 +1,8 @@
-import type { CSSProperties } from "react";
 import type { CardNetwork, Wallet, WalletKind } from "@/domain/types";
 import { cardUtilization } from "@/domain/wallet";
 import { formatMoneyShort } from "@/domain/money";
-import { Icon } from "@/ui/kit/icons";
 import { AmountDisplay } from "@/ui/common/AmountDisplay";
+import { CardIdentity } from "@/ui/common/CardIdentity";
 
 const KIND_LABEL: Record<WalletKind, string> = {
   cash: "Cash",
@@ -20,8 +19,6 @@ const NETWORK_LABEL: Record<CardNetwork, string> = {
   jcb: "JCB",
   other: "Card",
 };
-
-const truncate: CSSProperties = { overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" };
 
 /**
  * One wallet as a card: an accent-tinted icon tile, name + kind (or card network),
@@ -42,7 +39,6 @@ export function WalletCard({
   const util = cardUtilization(wallet, balance);
   const sub =
     wallet.kind === "card" && wallet.cardNetwork ? NETWORK_LABEL[wallet.cardNetwork] : KIND_LABEL[wallet.kind];
-  const tint = `color-mix(in srgb, ${wallet.colorHex} 15%, transparent)`;
   const barClass =
     util && util.pct >= 0.9
       ? "wb-progress__bar wb-progress__bar--danger"
@@ -68,41 +64,28 @@ export function WalletCard({
       }
       style={{ opacity: wallet.archived ? 0.55 : 1 }}
     >
-      <div className="wb-card__body" style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-        <div className="wb-cluster wb-cluster--nowrap" style={{ gap: 12, alignItems: "center" }}>
-          <span
-            className="cashy-subtile"
-            aria-hidden="true"
-            style={{ background: tint, color: wallet.colorHex }}
-          >
-            <Icon name={wallet.icon} size={18} />
-          </span>
-          <div style={{ minWidth: 0, flex: 1 }}>
-            <div style={{ ...truncate, fontWeight: 600 }}>
-              {wallet.name}
-              {wallet.archived && (
-                <span style={{ marginLeft: 6, fontSize: 11, fontWeight: 500, color: "var(--wb-fg-muted)" }}>
-                  · archived
-                </span>
-              )}
-            </div>
-            <span style={{ fontSize: 12, color: "var(--wb-fg-muted)" }}>{sub}</span>
-          </div>
-        </div>
+      <div className="wb-card__body cashy-cardstack">
+        <CardIdentity
+          icon={wallet.icon}
+          tint={wallet.colorHex}
+          title={wallet.name}
+          subtitle={sub}
+          archived={wallet.archived}
+        />
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          <span style={{ fontSize: 12, color: "var(--wb-fg-muted)" }}>Balance</span>
-          <div style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.1 }}>
+        <div className="cashy-cardfig">
+          <span className="cashy-cardfig__label">Balance</span>
+          <div className="cashy-cardfig__val">
             <AmountDisplay amount={balance} negative={balance < 0} />
           </div>
         </div>
 
         {util && (
-          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+          <div className="cashy-cardmeter">
             <div className="wb-progress">
               <div className={barClass} style={{ width: `${Math.round(util.pct * 100)}%` }} />
             </div>
-            <span style={{ fontSize: 11, color: "var(--wb-fg-muted)" }}>
+            <span className="cashy-cardmeter__note">
               {formatMoneyShort(util.debt)} used · {formatMoneyShort(util.available)} of{" "}
               {formatMoneyShort(util.limit)} available
             </span>
