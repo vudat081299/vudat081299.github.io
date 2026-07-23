@@ -1224,7 +1224,10 @@ body {
   /* 2 full rows + their gaps + the fading half-row */
   max-height: calc(2.5 * var(--cashy-sub-row) + 2 * 14px);
   overflow-y: auto;
-  overscroll-behavior: contain;
+  /* Chain to the page once this peek-scroll reaches its own end, rather than
+     trapping the wheel — the user shouldn't have to move the cursor out of the
+     grid to keep scrolling the page. */
+  overscroll-behavior: auto;
   /* no scrollbar indicator */
   scrollbar-width: none;
   -ms-overflow-style: none;

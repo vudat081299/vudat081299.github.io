@@ -202,11 +202,14 @@ export function Layout({ children }: { children: ReactNode }) {
           </div>
         )}
 
-        <main className="wb-grow wb-scrollbars" style={{ minWidth: 0, overflowY: "auto" }}>
-          <div className="wb-container" style={{ paddingBlock: 28 }}>
+        <main
+          className="wb-grow wb-scrollbars"
+          style={{ minWidth: 0, overflowY: "auto", display: "flex", flexDirection: "column" }}
+        >
+          <div className="wb-container" style={{ paddingBlock: 28, flex: "1 0 auto" }}>
             {children}
           </div>
-          <footer className="wb-footer wb-footer--slim">
+          <footer className="wb-footer wb-footer--slim" style={{ flexShrink: 0 }}>
             <div className="wb-footer__inner">
               <div className="wb-footer__bottom">
                 <span className="wb-footer__copy">
