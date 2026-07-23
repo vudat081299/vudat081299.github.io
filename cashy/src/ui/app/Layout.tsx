@@ -10,6 +10,7 @@ const NAV: { id: Route; label: string; icon: string }[] = [
   { id: "dashboard", label: "Overview", icon: "dashboard" },
   { id: "transactions", label: "Transactions", icon: "swap_horiz" },
   { id: "subscriptions", label: "Subscriptions", icon: "autorenew" },
+  { id: "wallets", label: "Wallets", icon: "account_balance_wallet" },
   { id: "categories", label: "Categories", icon: "account_tree" },
   { id: "tags", label: "Tags", icon: "sell" },
   { id: "settings", label: "Settings", icon: "settings" },
@@ -111,10 +112,11 @@ function Navbar({ onMenu }: { onMenu: () => void }) {
 }
 
 function SidebarBody({ onNavigate }: { onNavigate?: () => void }) {
-  const { transactions, categories, tags } = useCashy();
+  const { transactions, categories, tags, wallets } = useCashy();
   const route = useRoute();
   const counts: Partial<Record<Route, number>> = {
     transactions: transactions.length,
+    wallets: wallets.length,
     categories: categories.length,
     tags: tags.length,
   };

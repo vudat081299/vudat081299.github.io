@@ -36,6 +36,7 @@ import { Pagination } from "@/ui/features/transactions/Pagination";
 import { TagsMorePopover } from "@/ui/features/transactions/TagsMorePopover";
 import { useTxQuery } from "@/ui/features/transactions/useTxQuery";
 import { SubTile } from "@/ui/features/subscriptions/SubTile";
+import { WalletCard } from "@/ui/features/wallets/WalletCard";
 import { SubscriptionCard } from "@/ui/features/subscriptions/SubscriptionCard";
 import { SubscriptionDues } from "@/ui/features/subscriptions/SubscriptionDues";
 import { SubscriptionCatchUp } from "@/ui/features/subscriptions/SubscriptionCatchUp";
@@ -453,6 +454,15 @@ export function CashyGallery() {
 
         <Section title="6 · Subscriptions" hint="The service card, the dues list, and the three settle/history/cancel dialogs.">
           <SubsDemo />
+        </Section>
+
+        <Section title="7 · Wallets" hint="A wallet as a card — neutral tile, kind, and its derived balance. A negative balance (an overdrawn card) reads red; an archived wallet is dimmed.">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 12 }}>
+            <WalletCard wallet={{ id: "w-cash", name: "Cash", kind: "cash", openingBalance: 0, colorHex: "#10b981", icon: "banknote", order: 0, archived: false, createdAt: "" }} balance={2_400_000} onEdit={() => {}} />
+            <WalletCard wallet={{ id: "w-bank", name: "Vietcombank", kind: "bank", openingBalance: 0, colorHex: "#3b82f6", icon: "landmark", order: 1, archived: false, createdAt: "" }} balance={48_750_000} onEdit={() => {}} />
+            <WalletCard wallet={{ id: "w-card", name: "Techcombank Visa", kind: "card", openingBalance: 0, colorHex: "#8b5cf6", icon: "credit-card", order: 2, archived: false, createdAt: "" }} balance={-3_120_000} onEdit={() => {}} />
+            <WalletCard wallet={{ id: "w-momo", name: "MoMo", kind: "ewallet", openingBalance: 0, colorHex: "#ec4899", icon: "smartphone", order: 3, archived: true, createdAt: "" }} balance={180_000} onEdit={() => {}} />
+          </div>
         </Section>
 
         <p style={{ marginTop: 32, fontSize: 12, color: "var(--wb-fg-subtle)" }}>

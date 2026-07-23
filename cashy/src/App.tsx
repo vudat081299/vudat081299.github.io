@@ -13,6 +13,7 @@ import { Dashboard } from "@/ui/features/dashboard/Dashboard";
 import { Transactions } from "@/ui/features/transactions/Transactions";
 import { Subscriptions } from "@/ui/features/subscriptions/Subscriptions";
 import { SubscriptionEditor } from "@/ui/features/subscriptions/SubscriptionEditor";
+import { Wallets } from "@/ui/features/wallets/Wallets";
 import { Categories } from "@/ui/features/categories/Categories";
 import { Tags } from "@/ui/features/tags/Tags";
 import { Settings } from "@/ui/features/settings/Settings";
@@ -93,6 +94,8 @@ export default function App() {
       <Transactions />
     ) : route === "subscriptions" ? (
       <Subscriptions />
+    ) : route === "wallets" ? (
+      <Wallets />
     ) : route === "categories" ? (
       <Categories />
     ) : route === "tags" ? (

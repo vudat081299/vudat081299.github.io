@@ -14,3 +14,4 @@ export * from "@/usecases/categories";
 export * from "@/usecases/tags";
 export * from "@/usecases/transactions";
 export * from "@/usecases/subscriptions";
+export * from "@/usecases/wallets";
