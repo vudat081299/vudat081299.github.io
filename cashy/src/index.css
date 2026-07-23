@@ -1404,6 +1404,45 @@ body {
   font-size: 13px;
   color: var(--wb-fg-muted);
 }
+/* Column headers over the cycle rows: "Paid" sits above the tick column (left),
+   "Used" above the switch column (right). Same 11px inset as a row so the two
+   labels line up with the controls they name. `cursor: help` hints the tooltip. */
+.cashy-catchup-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 11px 4px;
+}
+.cashy-catchup-head__label {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--wb-fg-muted);
+  cursor: help;
+}
+/* The two headers sit at the modal's edges, so the tooltip's default centre-above
+   bubble overflows (and the modal clips it). Pin the left header's bubble to the
+   left and the right header's to the right, and slide the little arrow back under
+   the label it points at. */
+.cashy-catchup-head .wb-tooltip:first-child .wb-tooltip__bubble {
+  left: 0;
+  transform: none;
+}
+.cashy-catchup-head .wb-tooltip:first-child .wb-tooltip__bubble::after {
+  left: 16px;
+  transform: none;
+}
+.cashy-catchup-head .wb-tooltip:last-child .wb-tooltip__bubble {
+  left: auto;
+  right: 0;
+  transform: none;
+}
+.cashy-catchup-head .wb-tooltip:last-child .wb-tooltip__bubble::after {
+  left: auto;
+  right: 16px;
+  transform: none;
+}
 /* The reason the confirm button is refusing. Danger-toned because it marks the
    dialog as un-submittable, not merely informative. */
 .cashy-catchup__problem {

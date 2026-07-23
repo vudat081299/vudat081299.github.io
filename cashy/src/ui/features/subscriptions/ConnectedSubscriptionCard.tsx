@@ -12,6 +12,7 @@ import {
   skipSubscriptionCharge,
 } from "@/usecases";
 import { toast } from "@/lib/toast";
+import { confirm } from "@/lib/confirm";
 import { SubscriptionCard } from "@/ui/features/subscriptions/SubscriptionCard";
 import { SubscriptionCatchUp } from "@/ui/features/subscriptions/SubscriptionCatchUp";
 import { SubscriptionHistory } from "@/ui/features/subscriptions/SubscriptionHistory";
@@ -81,7 +82,19 @@ export function ConnectedSubscriptionCard({
     });
   };
 
-  const revert = (txId: string, month: string, wasPaid: boolean) => {
+  const revert = async (txId: string, month: string, wasPaid: boolean) => {
+    // Reverting is easy to fire by accident on a scrollable list, and it undoes a
+    // deliberate act ("I paid June") — so gate it behind a confirm. The undo toast
+    // still follows, for the change-of-mind a step or two later.
+    const ok = await confirm({
+      title: `Undo the ${monthLabelShort(month)} cycle?`,
+      message: wasPaid
+        ? "It goes back to “payment due” — dropped from your spending and shown as owed until you settle it again."
+        : "It goes back to “payment due” and will ask to be settled again.",
+      confirmLabel: "Undo cycle",
+      icon: "undo",
+    });
+    if (!ok) return;
     revertSubscriptionCharge(txId);
     toast.undo(`Reverted the ${monthLabelShort(month)} cycle`, () =>
       wasPaid ? confirmSubscriptionCharge(txId) : skipSubscriptionCharge(txId),

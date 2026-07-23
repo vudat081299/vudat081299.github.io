@@ -8,6 +8,7 @@ import { Input } from "@/ui/kit/Input";
 import { Switch } from "@/ui/kit/Switch";
 import { Popover } from "@/ui/kit/Popover";
 import { Calendar } from "@/ui/kit/Calendar";
+import { Tooltip } from "@/ui/kit/Tooltip";
 
 /**
  * The one place a subscription's owed cycles are settled.
@@ -220,6 +221,20 @@ export function SubscriptionCatchUp({
         you{" "}
         <strong>didn't use</strong> the service.
       </p>
+
+      {/* Column headers: the switch and the tick carry no labels of their own, so
+          the two questions each answers ("was it paid" / "was it running") are
+          spelled out once, always visible — clearer than a hover-only tooltip,
+          and it works on touch. Each header also carries a one-line tooltip with
+          the rule behind it. */}
+      <div className="cashy-catchup-head">
+        <Tooltip label="Last cycle you've paid">
+          <span className="cashy-catchup-head__label">Paid</span>
+        </Tooltip>
+        <Tooltip label="Off if you weren't subscribed">
+          <span className="cashy-catchup-head__label">Used</span>
+        </Tooltip>
+      </div>
 
       <div className="wb-stack" style={{ "--wb-stack-gap": "6px" } as CSSProperties}>
         {rows.map((r, i) => (
