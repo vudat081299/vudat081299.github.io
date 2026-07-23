@@ -133,7 +133,7 @@ Subscription          a recurring service; books NO money itself
    ├─ paymentTxIds[] / lastPaidAt   CACHE, re-derived from the ledger (never authoritative)
    └─ each due cycle materialises a `pending` Transaction the user confirms/skips
 Wallet                a place money sits (cash/bank/e-wallet/card); balance DERIVED from the ledger
-   └─ #/wallets screen live (balances + net worth); transfers/assignment pending — docs/wallets-plan.md (added v6)
+   └─ assigned per tx/sub, filterable, transfers between wallets — #/wallets screen (added v6)
 ```
 
 Enums: `TxType` = income|expense · `TxStatus` = recorded|pending|awaiting|skipped|failed
@@ -158,7 +158,7 @@ toggle; collapses to a ☰ drawer on mobile). Routes:
 | `#/dashboard` (default) | **Dashboard** | KPIs, projected-balance chart, subscriptions strip, cash-flow + spending-donut, insights, recent-transactions table |
 | `#/transactions` | **Transactions** | period + filter bar + full ledger table (50/page) |
 | `#/subscriptions` | **Subscriptions** | commitment/due/total stats, "to confirm" dues, services table |
-| `#/wallets` | **Wallets** | wallet balances + net worth; add/edit/archive/delete (transfers + assignment pending — see [wallets-plan.md](docs/wallets-plan.md)) |
+| `#/wallets` | **Wallets** | wallet balances + net worth; add/edit/archive/delete. Assigned in the tx/sub editors, filterable, and money moves between wallets via **transfers** |
 | `#/categories` | **Categories** | drag-to-reorder / drop-to-nest tree; per-side (expense/income) |
 | `#/tags` | **Tags** | tag list with usage counts; add/edit/delete |
 | `#/settings` | **Settings** | appearance, workspace, data export/import, reset |

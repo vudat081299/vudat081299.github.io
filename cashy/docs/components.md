@@ -91,6 +91,7 @@ Pure/presentational; none touch the store.
 | `AmountDisplay` | the single way money is drawn (income green, spend neutral-bold, red only when a real problem) | `amount`, `type?`, `signed?`, `tone?` (default true), `negative?` |
 | `CategoryCap` | a category as a neutral grey capsule | `category?: Category \| null` (null → "Uncategorised") |
 | `CategorySelect` | tree category picker (icon+colour+indent+search) in a Popover | `categories`, `type: TxType`, `value: string\|null`, `onChange` |
+| `WalletPicker` | flat wallet picker (neutral tile + name) in a Popover; `excludeId` drops a transfer's other leg | `wallets`, `value: string\|null`, `onChange`, `allowNone?`, `placeholder?`, `excludeId?` |
 | `ColorPicker` | swatch grid from `lib/palette` | `value`, `onChange` |
 | `DatePicker` | single-date field on a `wb-calendar` in a Popover | `value` (`YYYY-MM-DD`), `onChange` |
 | `DateRangeInput` | segmented `dd/mm/yyyy – dd/mm/yyyy` with inked separators | `value: Range\|null`, `onChange`, `onCommit?` |
@@ -158,7 +159,7 @@ Mounted once at the app root, opened imperatively via `lib/modals`.
 
 | Component | Opened via | Composes |
 |---|---|---|
-| `TransactionEditor` | `openTxEditor(id\|null)` | Modal, Field/Input, Kbd, Textarea, TimePicker · DatePicker, CategorySelect, PayeeInput ×2, StatusPicker, TagChip |
+| `TransactionEditor` | `openTxEditor(id\|null)` | Modal, Field/Input, Kbd, Textarea, TimePicker · DatePicker, CategorySelect, WalletPicker, PayeeInput, StatusPicker, TagChip. 3-way Expense/Income/**Transfer** toggle (transfer = From→To wallets, no category) |
 | `SubscriptionEditor` | `openSubscriptionEditor(id\|null)` | Modal, Field, Textarea · IconPicker, ColorPicker, Select, TagChip, SubTile |
 | `TransactionDetail` | `openTxDetail(id)` | receipt overlay · AmountDisplay, StatusCap, TagChip |
 

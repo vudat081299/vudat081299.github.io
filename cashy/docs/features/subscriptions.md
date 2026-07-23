@@ -144,7 +144,7 @@ The editor calls `addSubscription` / `updateSubscription` / `deleteSubscription`
 | `SubscriptionCatchUp` | modal | `ui/features/subscriptions/SubscriptionCatchUp.tsx` | settle owed cycles — per-cycle **used** switch + **paid** waterline + editable amount; enforces oldest-first |
 | `SubscriptionCancel` | modal | `ui/features/subscriptions/SubscriptionCancel.tsx` | asks **when** the service stopped (`DatePicker` + Today / "From <month>"), shows what will be dropped vs kept |
 | `SubscriptionHistory` | modal | `ui/features/subscriptions/SubscriptionHistory.tsx` | settled (recorded/skipped) cycles, newest first, each with an **Undo** back to pending |
-| `SubscriptionEditor` | singleton modal | `ui/features/subscriptions/SubscriptionEditor.tsx` | add/edit form (interval, amount, day/month, trial, shared plan, proration, category/tags/icon/color, "Paid with", note); delete |
+| `SubscriptionEditor` | singleton modal | `ui/features/subscriptions/SubscriptionEditor.tsx` | add/edit form (interval, amount, day/month, trial, shared plan, proration, category/tags/icon/color, "Paid from" wallet via `WalletPicker`, note); delete |
 | `SubTile` | feature-leaf | `ui/features/subscriptions/SubTile.tsx` | the rounded icon square; `brand` lets the service hue in, else neutral grey |
 | `useStableSubOrder` | hook | `ui/features/subscriptions/useStableSubOrder.ts` | freezes display order (active → due → name) on first render so editing a row never makes it jump |
 | `PageHeader`, `EmptyState`, `CategoryCap` | common | `ui/common/…` | header + no-subs block + category capsule |
@@ -168,8 +168,8 @@ backfilling) up to the current month, **skipping** cycles whose billing date is
 still in the future and cycles that already carry a charge. The very first cycle
 (`m === startCycle`) bills `firstCycleAmount` when set (proration); every later
 cycle bills `amount`. Each raised row inherits the sub's `categoryId`, `tagIds`,
-`account`, and `note`, with `payee = "Subscription · <month label>"` and
-`occurredAt` = the cycle billing date.
+`walletId` (+ the legacy `account`), and `note`, with `payee = "Subscription · <month label>"`
+and `occurredAt` = the cycle billing date.
 
 **Status is read from the ledger, not from `lastPaidAt`.** `needsPaymentNow`,
 `isLapsed`, `cyclesOwed`, and `nextPaymentDate` all go through
@@ -234,10 +234,11 @@ frozen for the mount, because the key includes mutable state and re-sorting on
 every edit would yank a card out from under the user. New subs append; deleted ones
 drop out; a fresh mount re-sorts.
 
-**"Paid with" (`account`).** Free text today (e.g. "Techcombank Visa", "MoMo",
-"Cash"), collected in the editor and inherited onto every cycle charge's
-`Transaction.account`. It is the deliberate stepping stone to a real multi-wallet
-model — see [../wallets-plan.md](../wallets-plan.md).
+**"Paid from" (`walletId`).** The editor picks the paying **wallet** with a
+`WalletPicker`; it is inherited onto every generated cycle charge's
+`Transaction.walletId`, so the ledger shows which wallet funded each payment. The
+legacy free-text `account` is retired (kept on old rows, no longer written). See
+[wallets.md](wallets.md).
 
 **Empty / quiet states.** No subs → an `EmptyState` in place of the table (stats and
 dues cards are hidden too). The "To confirm" card only renders when `collectDues`

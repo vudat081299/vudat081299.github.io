@@ -19,17 +19,17 @@ references, which stay the authority for anything that spans features:
 | [overview.md](overview.md) | `#/dashboard` | KPIs, balance forecast, subscriptions strip, cash-flow + spending donut, insights, recent-transactions table |
 | [transactions.md](transactions.md) | `#/transactions` | the ledger screen, filter bar, table (bulk-delete + pagination), transaction editor + detail, draft caching |
 | [subscriptions.md](subscriptions.md) | `#/subscriptions` | recurring services: dues/confirm, cards + catch-up/cancel/history dialogs, editor, the whole subscription domain |
-| [wallets.md](wallets.md) | `#/wallets` | spending wallets: balances + net worth, add/edit/archive/delete (phases 1–2 shipped; transfers + assignment pending) |
+| [wallets.md](wallets.md) | `#/wallets` | spending wallets: balances + net worth, add/edit/archive/delete, wallet-per-transaction, transfers between wallets |
 | [categories.md](categories.md) | `#/categories` | the drag-to-reorder / drop-to-nest category tree + editor, per-side split |
 | [tags.md](tags.md) | `#/tags` | flat labels, usage-rank grey shading, the tag manager + editor |
 | [settings.md](settings.md) | `#/settings` | appearance, workspace, data export/import + opt-in sample data, danger-zone reset |
 | [onboarding.md](onboarding.md) | *(no workspace)* | the first-run screen: name the workspace, seed categories + empty ledger |
 
-## Planned (not built yet)
+## Roadmap docs
 
 | Doc | Covers |
 |---|---|
-| [../wallets-plan.md](../wallets-plan.md) | **ROADMAP** — multi-wallet / asset management. Phases 1–2 (schema, migration v6, balances, the screen) shipped and documented in [wallets.md](wallets.md); phases 3–5 (assignment in editors, wallet filter, transfers, dashboard strip) still ahead. |
+| [../wallets-plan.md](../wallets-plan.md) | the multi-wallet / asset-management plan — **all five phases shipped**; kept as the design record + the source of the deferred-polish notes. The feature itself is documented in [wallets.md](wallets.md). |
 
 > Keeping these honest: a feature doc describes current behaviour, so when a
 > feature changes, update its doc in the same pass (the cross-cutting refs too if

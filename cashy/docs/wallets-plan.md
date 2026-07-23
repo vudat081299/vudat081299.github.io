@@ -233,14 +233,23 @@ uncategorised transaction.
    in-file `WalletEditor` (signed opening balance, kind/colour/icon, archive/delete),
    net-worth stat + balances, gallery section "7 · Wallets". Verified live. Documented
    in [features/wallets.md](features/wallets.md).
-3. **Assign on entry.** `WalletPicker` in the transaction + subscription editors;
-   wallet inherited onto sub charges; wallet facet in filters + table column.
-4. **Transfers.** Transfer mode in the editor, `addTransfer`, transfer row rendering,
-   a sample transfer.
-5. **Dashboard + polish.** Balances strip / net-worth KPI, empty states, dark-mode
-   pass, docs sync (data-model.md, CLAUDE.md, components.md, README invariants).
+3. **✅ DONE (2026-07-23) — Assign on entry.** `WalletPicker` (common) in the
+   transaction editor (label adapts "Paid from" / "Received into") + subscription
+   editor; `dueCharges` inherits `walletId` onto each cycle charge; a single-select
+   Wallet facet in `TxFilterBar`/`useTxQuery` (matches source or destination).
+4. **✅ DONE (2026-07-23) — Transfers.** A 3-way Expense/Income/Transfer toggle
+   (⌘O/⌘I/⌘T); transfer mode shows From → To wallet pickers and saves a row with
+   `toWalletId`. **Deviation:** no `addTransfer` usecase — `addTransaction` carries
+   the transfer payload (one write path, no dead code). `TransactionTable` +
+   `TransactionDetail` render transfers as From → To with a neutral amount; the demo
+   seeds monthly bank→cash transfers.
+5. **✅ DONE (2026-07-23) — Dashboard + docs.** A compact wallet balances strip
+   (net worth + per-wallet) under the KPIs, Manage → `#/wallets`; docs synced (this
+   plan, data-model, components, CLAUDE, the feature docs). Verified live end-to-end.
 
-Phases 1–2 are the useful minimum (wallets with real balances). 3–5 layer value on top.
+Phases 1–2 were the useful minimum (wallets with real balances); 3–5 layered on
+assignment, transfers, and the overview strip. **Feature complete.** (Reorder-UI and
+per-wallet realistic demo opening balances remain optional polish.)
 
 ---
 

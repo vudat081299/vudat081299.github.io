@@ -101,7 +101,8 @@ Container → leaf/common/modal, each with its file and one-line role:
 | `StatusCap` / `StatusPicker` | common | `ui/common/StatusCap.tsx`, `StatusPicker.tsx` | status tone capsule (cells/detail) / capsule radio group (editor) |
 | `TagChip` | common | `ui/common/TagChip.tsx` | a tag as a `#`-chip, grey by usage shade |
 | `DatePicker` | common | `ui/common/DatePicker.tsx` | single-date field (editor "When") |
-| `PayeeInput` | common | `ui/common/PayeeInput.tsx` | free-text + portalled ranked autocomplete; used for **both** Payee and "Paid with" |
+| `PayeeInput` | common | `ui/common/PayeeInput.tsx` | free-text + portalled ranked autocomplete; the Payee field |
+| `WalletPicker` | common | `ui/common/WalletPicker.tsx` | the wallet dropdown — "Paid from" / "Received into", and both legs of a transfer |
 | `EmptyState` | common | `ui/common/EmptyState.tsx` | the no-transactions block (with an Add action) |
 | `TimePicker`, `Textarea`, `Input`/`Field`, `Kbd`, `Modal`, `Popover` | kit | `ui/kit/…` | editor building blocks |
 
@@ -122,6 +123,9 @@ Container → leaf/common/modal, each with its file and one-line role:
   are stripped to an integer (`parseAmt`).
 - **Tags** — multi-select, OR'd; ordered most-used first with a usage count; the
   facet hides when there are no tags.
+- **Wallet** — single choice; matches a row on **either** its `walletId` or its
+  `toWalletId`, so filtering by a wallet includes transfers that touch it. Hidden
+  when there are no wallets.
 - Each facet is its own dropdown **chip** that shows the applied value inline
   (`"Recorded +1"`, `"≥ 200k đ"`) and grows an × to clear just that facet; **Clear
   all** (`clearTokens`) appears once any removable filter is set and leaves the
@@ -140,11 +144,12 @@ Container → leaf/common/modal, each with its file and one-line role:
 **Quick-entry & draft caching** (`TransactionEditor` + `data/draft.ts`):
 - A **new** transaction opens pre-filled: `type=expense`, `occurredAt=today`,
   `occurredTime=now`, `status=recorded` — so the fast path touches nothing but
-  amount. **⌘I / ⌘O** (Ctrl elsewhere) flip income/expense from the keyboard;
-  switching type drops a category that doesn't exist on the new side.
+  amount. **⌘O / ⌘I / ⌘T** (Ctrl elsewhere) switch Expense / Income / Transfer from
+  the keyboard; switching to income/expense drops a category that doesn't exist on
+  the new side.
 - Amount groups digits with dots as typed (`formatDigits`); **Add is disabled
-  until `amount > 0`**. Payee and "Paid with" autocomplete from distinct past
-  values, most-used first.
+  until `amount > 0`** (a transfer also needs two distinct wallets). Payee
+  autocompletes from distinct past values; the wallet is a `WalletPicker`.
 - Closing without confirming (`dismiss` / "Later" / Esc / backdrop) **parks the
   form as a draft** rather than discarding it; a blank draft is dropped
   (`isBlankDraft`). Re-opening **Add** resumes the draft; the navbar button then
@@ -176,10 +181,14 @@ destroy a row):
 `EmptyState` (icon, "No transactions", and an "Add transaction" button) inside the
 card instead of the table body.
 
-**`account` / "Paid with" field:** today this is **free text** with autocomplete
-from prior entries (`PayeeInput` reused), stored as `Transaction.account` and shown
-in the detail receipt. It is the deliberate stepping stone to a real multi-wallet
-model — see [../wallets-plan.md](../wallets-plan.md).
+**Wallet & transfers:** each row moves through a **wallet** — chosen with a
+`WalletPicker` ("Paid from" for an expense, "Received into" for income), stored as
+`Transaction.walletId`. The editor's third mode, **Transfer**, moves money between
+two of your own wallets: it saves a row with a `toWalletId` that counts toward **no**
+income/expense total (only wallet balances). The table and detail render a transfer
+as **From → To** with a neutral amount, no category. The legacy free-text
+`Transaction.account` is kept on old rows but no longer written. See
+[wallets.md](wallets.md).
 
 ## 8. Files
 

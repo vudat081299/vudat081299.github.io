@@ -5,18 +5,19 @@
 > [architecture.md](../architecture.md), [data-model.md](../data-model.md),
 > [components.md](../components.md), and the roadmap in [wallets-plan.md](../wallets-plan.md).
 >
-> **Status:** phases 1–2 shipped (schema + balances + the screen). Assigning a
-> wallet in the transaction/subscription editors, a wallet filter, transfers, and
-> the dashboard balances strip are still to come (plan phases 3–5).
+> **Status:** fully shipped (plan phases 1–5). Schema + migration, the screen +
+> balances, wallet assignment in the transaction/subscription editors, a wallet
+> filter, transfers between wallets, and the dashboard balances strip are all live.
 
 ## 1. What it does
 
 Tracks the places money sits — cash, bank accounts, e-wallets, cards. Each wallet
 has an **opening balance** and a **current balance** derived from the ledger; the
-screen sums the non-archived ones into a **net worth**. Wallets are the real model
-behind the free-text "Paid with" field (`Transaction.account`); migration v6 turned
-existing account strings into wallets. This is the evolution described in
-[wallets-plan.md](../wallets-plan.md).
+screen (and a Dashboard strip) sum the non-archived ones into a **net worth**. Every
+transaction and subscription is assigned a wallet, and money can be **transferred**
+between two wallets (income/expense-neutral). Wallets are the real model behind the
+old free-text "Paid with" field; migration v6 turned existing account strings into
+wallets. This is the feature described in [wallets-plan.md](../wallets-plan.md).
 
 ## 2. Screen & route
 
@@ -71,6 +72,7 @@ All pure, in `src/domain/wallet.ts`.
 | Container/screen | `Wallets` | `ui/features/wallets/Wallets.tsx` | reads `useCashy()`; net worth + card grid; holds the in-file `WalletEditor` |
 | Singleton-ish modal | `WalletEditor` | *(in `Wallets.tsx`)* | add/edit form (name, kind `Select`, signed opening-balance input, `ColorPicker`, `IconPicker`) + archive/delete |
 | Feature-leaf | `WalletCard` | `ui/features/wallets/WalletCard.tsx` | neutral tile + name + kind + `AmountDisplay` balance (negative → red, archived → dimmed); renders in the `#/cashy` gallery |
+| Common | `WalletPicker` | `ui/common/WalletPicker.tsx` | the flat wallet dropdown used by the transaction + subscription editors (and both transfer legs); `excludeId` hides a transfer's other side |
 | Common/kit | `PageHeader`, `Select`, `ColorPicker`, `IconPicker`, `AmountDisplay`, `Modal` | `ui/common/…`, `ui/kit/…` | building blocks |
 
 ## 7. Behaviours & edge cases
@@ -89,11 +91,19 @@ All pure, in `src/domain/wallet.ts`.
   wallet — mirroring the category-delete rule. Archive is offered as the
   non-destructive alternative in the editor.
 - **A fresh workspace** seeds one cash wallet ("Tiền mặt", `seedWallets`); the demo
-  builds one wallet per sample "Paid with" account and links every row.
-- **Not wired yet (plan phases 3–5):** choosing a wallet when adding a
-  transaction/subscription, a wallet filter on the ledger, transfers between wallets,
-  and a balances strip on the Dashboard. Until then most balances reflect only the
-  rows whose `account` migrated to a `walletId`.
+  builds one wallet per sample "Paid with" account, links every row, and seeds
+  monthly bank→cash **transfers**.
+- **Assignment.** The transaction editor picks a wallet via `WalletPicker` (label
+  "Paid from" / "Received into"); the subscription editor picks the wallet that pays
+  it, inherited onto every generated cycle charge (`dueCharges`).
+- **Transfers.** The editor's 3-way toggle (Expense / Income / **Transfer**, ⌘O/⌘I/⌘T)
+  switches to a From → To pair; the row is saved with `toWalletId` and counts toward
+  no income/expense total. `TransactionTable` and `TransactionDetail` render it as
+  From → To with a neutral amount; the wallet filter matches a transfer on either leg.
+- **Wallet filter.** `TxFilterBar` has a single-select Wallet facet (matches the
+  row's `walletId` or `toWalletId`), on both the Transactions screen and the Dashboard.
+- **Dashboard strip.** A compact "Wallets" card under the KPIs: net worth + each
+  wallet's balance + a Manage link to `#/wallets`.
 
 ## 8. Files
 
