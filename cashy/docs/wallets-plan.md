@@ -167,10 +167,11 @@ sets real opening balances afterwards on the Wallets screen. `data/persistence.t
 - **`data/seed.ts`** — a fresh workspace seeds **one** wallet: **"Tiền mặt" (cash)**,
   `openingBalance: 0`. (Vietnamese seed data, per the house rule.)
 - **`data/sample.ts`** — `buildSampleData` already scatters `account` strings
-  ("Techcombank Visa", "MoMo", "VPBank Mastercard", "ZaloPay", …). Create a `Wallet`
-  per distinct one with a plausible `openingBalance`, and set `walletId` (+ the sub
-  `walletId`) directly so the demo shows real balances and at least one **transfer**
-  row (e.g. bank → cash withdrawal, card payoff).
+  ("Techcombank Visa", "MoMo", "VPBank Mastercard", "ZaloPay", …). **Done (phase 1):**
+  a `Wallet` per distinct one, every row linked by `walletId` (+ the sub `walletId`).
+  Opening balances stay 0 for now — a realistic per-wallet picture needs
+  salary→wallet **transfers**, which land with the transfer UI (**phase 4**),
+  together with the illustrative bank→cash / card-payoff transfer row.
 
 ---
 
@@ -219,9 +220,14 @@ uncategorised transaction.
 
 ## 8. Phased delivery (each phase ships green: `pnpm test` + `pnpm build`)
 
-1. **Schema + migration + domain (no UI).** Types, `domain/wallet.ts` + tests,
-   migration v6, `emptyState`, seed/sample wallets, transfer-exclusion in
-   `transaction`/`analytics`. App still runs; wallets exist in data, invisible in UI.
+1. **✅ DONE (2026-07-23) — Schema + migration + domain (no UI).** Types
+   (`Wallet`, `walletId`/`toWalletId`, `CashyState.wallets`), `domain/wallet.ts`
+   + tests, migration v6 (+ its own test), `importData` now runs `migrate()`,
+   `emptyState`, seed default cash wallet, sample wallets + links, transfer-
+   exclusion in `transaction`/`analytics`. 116 tests; build + lint green. App runs
+   unchanged; wallets exist in data, invisible in UI. **Deferred to phase 4:** the
+   demo *transfer* row (would read as an uncategorised expense until the table is
+   transfer-aware) — transfer logic is covered by unit tests instead.
 2. **Wallets screen + usecases.** `usecases/wallets.ts`, `#/wallets`, nav item,
    `WalletCard`, opening-balance editing, balances + net worth. Gallery fixtures.
 3. **Assign on entry.** `WalletPicker` in the transaction + subscription editors;

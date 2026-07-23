@@ -29,7 +29,7 @@ Package manager is **pnpm** (a `pnpm-lock.yaml` is committed; npm also works).
 ```bash
 pnpm install
 pnpm dev            # http://localhost:5173
-pnpm test           # vitest, ~98 tests over src/domain/ (pure, no DOM)
+pnpm test           # vitest, ~116 tests over src/domain/ + src/data/ (pure, no DOM)
 pnpm lint           # oxlint
 pnpm build          # tsc -b → check:layers → vite build → dist/  (base /cashy/)
 ```
@@ -113,7 +113,7 @@ Full data dictionary: [docs/data-model.md](docs/data-model.md). Types live in
 (`localStorage["cashy_state_v1"]`):
 
 ```
-CashyState { version, theme, subIconStyle, workspace, categories[], tags[], transactions[], subscriptions[] }
+CashyState { version, theme, subIconStyle, workspace, categories[], tags[], transactions[], subscriptions[], wallets[] }
 ```
 
 Entities & links:
@@ -125,15 +125,21 @@ Tag                   flat label; rendered grey by USAGE RANK, not its stored co
 Transaction           the ledger row — the source of truth for money
    ├─ categoryId  ──▶ Category   (nullable; deleting a category orphans rows to null, never deletes them)
    ├─ tagIds[]    ──▶ Tag        (many-to-many; deleting a tag strips the id)
+   ├─ walletId    ──▶ Wallet     (nullable; the wallet the money moved through / a transfer's source)
+   ├─ toWalletId  ──▶ Wallet     (set ⇒ the row is a TRANSFER; excluded from income/expense totals)
    └─ subscriptionId + subMonth  ──▶ Subscription   (set only when the row is a subscription charge)
 Subscription          a recurring service; books NO money itself
+   ├─ walletId    ──▶ Wallet     (nullable; inherited onto each cycle charge)
    ├─ paymentTxIds[] / lastPaidAt   CACHE, re-derived from the ledger (never authoritative)
    └─ each due cycle materialises a `pending` Transaction the user confirms/skips
+Wallet                a place money sits (cash/bank/e-wallet/card); balance DERIVED from the ledger
+   └─ SCHEMA LIVE, no UI yet — see docs/wallets-plan.md (added v6)
 ```
 
 Enums: `TxType` = income|expense · `TxStatus` = recorded|pending|awaiting|skipped|failed
 (**only `recorded` counts toward totals**; missing = recorded) · `SubInterval` =
-monthly|yearly · `ThemeMode` = system|light|dark · `SubIconStyle` = neutral|brand.
+monthly|yearly · `ThemeMode` = system|light|dark · `SubIconStyle` = neutral|brand ·
+`WalletKind` = cash|bank|ewallet|card|other (open union — future net-worth kinds).
 
 Derived (pure, never stored): totals, category breakdown/donut, cash-flow series,
 insights, forecast, subscription due/lapsed/owed state, catch-up plan. Each is one
@@ -215,6 +221,10 @@ branch (architecture.md §8).
    through it.
 7. **`domain/**` is pure** (no React, no I/O; `now` is a parameter) and **`ui/kit/**`
    knows nothing about Cashy.** Both are checked by `pnpm build`.
+8. **A transaction with `toWalletId` is a transfer** — it counts toward NO income/
+   expense total (only the two wallet balances it moves). A wallet's balance is
+   `openingBalance` + the net of its `recorded` rows (`domain/wallet`); deleting a
+   wallet orphans its rows to `null`, never deletes them.
 
 ---
 

@@ -74,7 +74,7 @@ Where a given kind of code MUST live.
 ```
 src/
   domain/     types sort category tag transaction subscription analytics
-              date period money txStatus · index.ts (barrel) · *.test.ts
+              wallet date period money txStatus · index.ts (barrel) · *.test.ts
   data/       store persistence migrations seed sample draft
   usecases/   workspace settings categories tags transactions subscriptions
   ui/kit/     wb-* design system (63 files)
@@ -127,7 +127,8 @@ A subscription **never books money on its own**. Each due cycle materialises a
 | `category.ts` | tree walking, `canReparent` (no cycles), `reorderCategories` (returns full renumbered list or `null` for an illegal move), `nextOrder` |
 | `transaction.ts` | `totals`, `filterTx`, `byRecency`, `orphanCategory` (deleting a category empties its transactions, never deletes them), `detachTag` |
 | `tag.ts` | `rankTags` — order **and** ink shade by usage rank, not raw count |
-| `analytics.ts` | `breakdown` (rolls children into root category), `walletSeries` (trims dead margins at both ends, keeps middle gaps), `periodInsights`, `monthlyNetRate`, `forecastSeries` |
+| `analytics.ts` | `breakdown` (rolls children into root category), `walletSeries` (trims dead margins at both ends, keeps middle gaps), `periodInsights`, `monthlyNetRate`, `forecastSeries` — all skip transfers |
+| `wallet.ts` | `isTransfer`, `walletBalance`/`walletBalances`, `netWorth`, `orphanWallet`, `guessWalletKind`, `walletIcon`, `nextWalletOrder` — balances DERIVED from the ledger; a transfer moves between two wallets and counts toward no income/expense total |
 
 ---
 
@@ -232,7 +233,7 @@ Generic → `ui/kit/` + export from `ui/kit/index.ts`. Cashy-aware → `ui/commo
 | Command | Effect |
 |---|---|
 | `pnpm dev` | dev server, `http://localhost:5173` |
-| `pnpm test` / `pnpm test:watch` | vitest (98 tests over `domain/`) |
+| `pnpm test` / `pnpm test:watch` | vitest (116 tests over `domain/` + `data/migrations`) |
 | `pnpm check:layers` | enforce §1 |
 | `pnpm build` | `tsc -b` → `check:layers` → vite build → `dist/` (base `/cashy/`) |
 | `pnpm build:wb` | gallery only → `dist-wb/` (base `/cashy-wb/`) |

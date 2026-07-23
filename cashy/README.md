@@ -20,7 +20,7 @@ pnpm dev            # http://localhost:5173
 | Command | Effect |
 |---|---|
 | `pnpm dev` | dev server |
-| `pnpm test` | vitest, single run (98 tests over `src/domain/`) |
+| `pnpm test` | vitest, single run (116 tests over `src/domain/` + `src/data/`) |
 | `pnpm test:watch` | vitest watch |
 | `pnpm check:layers` | enforce the dependency rule |
 | `pnpm build` | `tsc -b` → `check:layers` → build to `dist/` (base `/cashy/`) |
@@ -73,6 +73,10 @@ Break these and the app is wrong, not merely inconsistent.
   and every existing ledger row carry yearly plans with no second code path.
 - **Migrations are append-only.** Bump `CURRENT_VERSION`, add a branch in
   `data/migrations.ts`; never edit an existing one — real data went through it.
+- **A transfer (`toWalletId` set) counts toward no income/expense total** — only
+  wallet balances. A wallet's balance is `openingBalance` + the net of its recorded
+  rows; deleting a wallet orphans its rows to `null` (schema live, UI pending —
+  [docs/wallets-plan.md](docs/wallets-plan.md)).
 - **CSS order:** `index.css` loads *before* `web-builder.css`, so app-level
   `wb-*` overrides need raised specificity, and dark `:hover` needs an explicit
   `.dark` branch. Details in architecture.md §8.

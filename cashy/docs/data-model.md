@@ -26,6 +26,7 @@ The single object serialized to `localStorage`. `types.ts` · built empty in
 | `tags` | `Tag[]` | Flat tag list | |
 | `transactions` | `Transaction[]` | **The ledger — the single source of truth for money** | |
 | `subscriptions` | `Subscription[]` | Recurring services | Carry cache fields re-derived from `transactions`. |
+| `wallets` | `Wallet[]` | Spending wallets / accounts (added **v6**) | Balances are DERIVED from the ledger, never stored. Schema live; UI pending — see [wallets-plan.md](wallets-plan.md). |
 
 ### 1.2 `Workspace`
 | Field | Type | Meaning |
@@ -64,7 +65,9 @@ The single object serialized to `localStorage`. `types.ts` · built empty in
 | `tagIds` | `string[]` | FK list → `Tag.id`; 0..n | Tag removal strips the id (`detachTag`). |
 | `note` | `string` | Free-text note | The only field `TxFilter.search` matches. |
 | `payee?` | `string` | **Optional.** Counterparty / merchant / source | Subscription charges set it to `"Subscription · <Mon YYYY>"`. |
-| `account?` | `string` | **Optional.** "Paid with" card/account/wallet — free text | Deliberate stepping stone to a future `accountId` multi-wallet model. |
+| `account?` | `string` | **Optional.** "Paid with" card/account/wallet — free text | The stepping stone `walletId` now supersedes; kept intact (append-only). |
+| `walletId?` | `string \| null` | **Optional FK → `Wallet.id`** — the wallet the money sits in / moves FROM | Added **v6**. `null`/absent = unassigned. |
+| `toWalletId?` | `string` | **Optional.** Present ⇒ the row is a **transfer** to this wallet | Moves `amount` from `walletId` here; counts toward NO income/expense total — only balances (`domain/wallet.isTransfer`). |
 | `status?` | `TxStatus` | **Optional.** Lifecycle | **`undefined` ⇒ `"recorded"`** (legacy rows). Always read via `statusOf`. |
 | `occurredAt` | `string` | Event date **`YYYY-MM-DD`** | Sole basis of every date comparison/range filter. |
 | `occurredTime?` | `string` | **Optional.** Clock time `"HH:mm"` | Absent = "some time that day". Never used in date maths. |
@@ -87,6 +90,7 @@ The single object serialized to `localStorage`. `types.ts` · built empty in
 | `icon` | `string` | Curated lucide key | |
 | `note` | `string` | Free-text note | |
 | `account?` | `string` | **Optional** "Paid with" | Inherited onto each cycle charge. |
+| `walletId?` | `string \| null` | **Optional FK → `Wallet.id`** (added **v6**) | Inherited onto each cycle charge, like `account`. |
 | `active` | `boolean` | `false` = paused (no new charges, history kept) | Gates dues/commitment/needsPayment. |
 | `startedAt` | `string` | Subscribe date `"YYYY-MM-DD"` | Nothing before it is charged. |
 | `lastPaidAt` | `string \| null` | **CACHE.** Date of most recent confirmed payment | Re-derived by `paymentsOf`. |
@@ -104,6 +108,29 @@ raw form fields (`amountStr` is text) under its own key `localStorage["cashy_tx_
 persisted only until the user commits or clears it. Fields mirror the editor:
 `type, amountStr, categoryId, tagIds, occurredAt, occurredTime, note, payee, account, status`.
 A draft with every meaningful field empty is treated as blank and dropped (`isBlankDraft`).
+Also carries an optional `walletId` (mirrors the editor).
+
+### 1.8 `Wallet` — a spending account / wallet (added v6)
+Where money sits: cash, a bank account, an e-wallet, a card. A transaction moves
+through one wallet (`walletId`); a transfer moves between two (`walletId` →
+`toWalletId`). Rules in `domain/wallet.ts`. **Schema is live; there is no wallet UI
+yet** — see [wallets-plan.md](wallets-plan.md).
+
+| Field | Type | Meaning | Notes |
+|---|---|---|---|
+| `id` | `string` | Primary key | |
+| `name` | `string` | Display name | "Techcombank Visa", "MoMo", "Tiền mặt" |
+| `kind` | `WalletKind` | Classification | Open union — v1 uses the spending kinds. |
+| `openingBalance` | `number` | Integer VND **before** the ledger starts | May be **negative** (a card in debt). |
+| `colorHex` | `string` | Classification hue | Rendered grey; hue is an accent only. |
+| `icon` | `string` | Curated lucide key | `walletIcon(kind)` by default. |
+| `order` | `number` | Sort position among wallets | |
+| `archived` | `boolean` | `true` = hidden from pickers, history kept | Excluded from `netWorth` by default. |
+| `createdAt` | `string` | ISO timestamp | |
+
+**Current balance** = `openingBalance` + net of the wallet's *recorded* rows
+(`domain/wallet.walletBalance`). **Net worth** (v1 scope) = Σ non-archived wallet
+balances (`netWorth`). Both derived at runtime, never persisted.
 
 ---
 
@@ -116,6 +143,7 @@ A draft with every meaningful field empty is treated as blank and dropped (`isBl
 | `SubIconStyle` | `neutral` / `brand` | Sub icon tile colour: `neutral` grey (default), `brand` = service hue |
 | `SubInterval` | `monthly` / `yearly` | Billing frequency |
 | `TxStatus` | `recorded` / `pending` / `awaiting` / `skipped` / `failed` | Lifecycle (below) |
+| `WalletKind` | `cash` / `bank` / `ewallet` / `card` / `other` | Wallet classification; **open union** (future net-worth: savings/investment/asset/liability) |
 
 **`TxStatus` meanings & whether counted** (`domain/txStatus.ts`):
 
@@ -146,6 +174,10 @@ Tag  M ──◀ tagIds ▶ N  Subscription       (many-to-many; inherited onto 
 
 Subscription 1 ──◀ subscriptionId N Transaction   (a "charge"; also carries subMonth)
 Subscription.paymentTxIds  ──▶ Transaction.id     (CACHE: the recorded charges)
+
+Wallet   1 ──◀ walletId  N  Transaction    (nullable; deleting a wallet orphans rows to null, never deletes)
+Wallet   1 ──◀ walletId  N  Subscription   (nullable; inherited onto charges)
+Transaction.toWalletId ──▶ Wallet          (set only on a transfer — the destination wallet)
 ```
 
 - `Transaction.categoryId` → `Category.id` (nullable). Category delete re-points rows
@@ -186,6 +218,8 @@ Subscription.paymentTxIds  ──▶ Transaction.id     (CACHE: the recorded cha
 | First-cycle proration | `firstCycleProration` | `subscription.ts` |
 | Catch-up plan (pay/skip/cancel, oldest-first) | `planCatchUp` | `subscription.ts` |
 | Ledger after cancel / delete | `chargesSurvivingCancel`, `chargesSurvivingDeletion` | `subscription.ts` |
+| Wallet balances + net worth | `walletBalance`, `walletBalances`, `netWorth` | `wallet.ts` |
+| Is-a-transfer predicate | `isTransfer` | `wallet.ts` |
 
 ---
 
@@ -199,10 +233,12 @@ Subscription.paymentTxIds  ──▶ Transaction.id     (CACHE: the recorded cha
   A workspace that opens with an **empty ledger** is re-seeded with the demo dataset (only an
   empty ledger — real data is never overwritten).
 
-**Migrations** (`data/migrations.ts`, `CURRENT_VERSION = 5`), **append-only** ascending
+**Migrations** (`data/migrations.ts`, `CURRENT_VERSION = 6`), **append-only** ascending
 `if (fromVersion < N)` blocks: v2 recolor onto the chart palette · v3 `startMonth` → real
 `startedAt` + back-fill `lastPaidAt` · v4 back-fill `paymentTxIds` · v5 back-fill
-`interval = "monthly"`.
+`interval = "monthly"` · v6 distinct free-text `account` strings → `Wallet` entities +
+`walletId` links (account kept intact). **Import** runs the same `migrate()` so an older
+export is brought forward, not stamped current unmigrated.
 
 **Seed vs. sample**
 - `data/seed.ts` — `seedCategories()`: the default category tree a new workspace starts with
@@ -227,3 +263,5 @@ Subscription.paymentTxIds  ──▶ Transaction.id     (CACHE: the recorded cha
 10. **Dates are `YYYY-MM-DD` strings** compared lexicographically; range/period logic works off `occurredAt` alone.
 11. **A workspace never opens on an empty ledger** — empty ledgers are auto-seeded.
 12. **Debts settle oldest-first** (catch-up rejects paying a later cycle while an older used cycle is unpaid).
+13. **A row with `toWalletId` is a transfer** — excluded from every income/expense/breakdown total; only the two wallet balances it touches move.
+14. **Wallet balance = `openingBalance` + net of its recorded rows**; deleting a wallet orphans rows' `walletId` to `null`, never deletes them.
