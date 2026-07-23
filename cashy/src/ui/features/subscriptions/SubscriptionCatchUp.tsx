@@ -244,11 +244,19 @@ export function SubscriptionCatchUp({
           >
             {/* The tick is the payment answer; it is meaningless — and disabled —
                 for a cycle the user says they weren't a customer for. Clicking it
-                sets the waterline rather than toggling this row alone. */}
+                sets the waterline rather than toggling this row alone.
+
+                `checked` is gated on `used`, not on `r.paid` alone: an off cycle
+                below the waterline is still "paid" in the waterline sense (so the
+                oldest-first plan stays intact around it), but showing its box
+                ticked while its switch is off reads as a contradiction. Switch it
+                back on and it sits below the waterline again, so it re-ticks on
+                its own — which is exactly the "turning it on marks it paid too"
+                behaviour the ordering rule needs. */}
             <label className="wb-check cashy-catchup-row__pay">
               <input
                 type="checkbox"
-                checked={r.paid}
+                checked={r.paid && r.used}
                 disabled={!r.used}
                 onChange={() => setWaterline(i)}
               />

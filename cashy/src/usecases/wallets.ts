@@ -1,4 +1,5 @@
 import type { CardNetwork, Wallet, WalletKind } from "@/domain/types";
+import { toVnd, toVndNonNeg } from "@/domain/money";
 import { commit, getState } from "@/data/store";
 import { nextWalletOrder, orphanWallet } from "@/domain/wallet";
 import { uid } from "@/lib/id";
@@ -21,9 +22,9 @@ export function addWallet(input: {
     id: uid(),
     name: input.name.trim() || "Wallet",
     kind: input.kind,
-    openingBalance: Math.round(input.openingBalance || 0),
+    openingBalance: toVnd(input.openingBalance), // a wallet may start in the red → signed
     cardNetwork: isCard ? input.cardNetwork : undefined,
-    creditLimit: isCard && input.creditLimit ? Math.max(0, Math.round(input.creditLimit)) : undefined,
+    creditLimit: isCard && input.creditLimit ? toVndNonNeg(input.creditLimit) : undefined,
     colorHex: input.colorHex,
     icon: input.icon,
     order: nextWalletOrder(state.wallets),

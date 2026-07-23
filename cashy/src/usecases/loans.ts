@@ -1,4 +1,5 @@
 import type { InterestPeriod, Loan, LoanDirection, LoanPayment, LoanSource } from "@/domain/types";
+import { toVndNonNeg } from "@/domain/money";
 import { commit, getState } from "@/data/store";
 import { uid } from "@/lib/id";
 
@@ -22,7 +23,7 @@ type LoanInput = {
 function normalisePayment(p: { id?: string; amount: number; date: string; note?: string }): LoanPayment {
   return {
     id: p.id ?? uid(),
-    amount: Math.max(0, Math.round(p.amount || 0)),
+    amount: toVndNonNeg(p.amount),
     date: p.date,
     note: (p.note ?? "").trim(),
   };
@@ -36,7 +37,7 @@ export function addLoan(input: LoanInput): string {
     direction: input.direction,
     counterparty: input.counterparty.trim() || "Unknown",
     source: input.source,
-    principal: Math.max(0, Math.round(input.principal || 0)),
+    principal: toVndNonNeg(input.principal),
     interestRatePct: Math.max(0, input.interestRatePct || 0),
     interestPeriod: input.interestPeriod,
     openedAt: input.openedAt,
@@ -57,7 +58,7 @@ export function updateLoan(id: string, patch: Partial<Loan>): void {
   const state = getState();
   const clean: Partial<Loan> = { ...patch };
   if (patch.payments) clean.payments = patch.payments.map(normalisePayment).filter((p) => p.amount > 0);
-  if (patch.principal != null) clean.principal = Math.max(0, Math.round(patch.principal));
+  if (patch.principal != null) clean.principal = toVndNonNeg(patch.principal);
   commit({ ...state, loans: state.loans.map((l) => (l.id === id ? { ...l, ...clean } : l)) });
 }
 

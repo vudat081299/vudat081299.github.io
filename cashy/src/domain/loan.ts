@@ -44,6 +44,38 @@ export function daysUntilDue(loan: Loan, now: Date = new Date()): number | null 
   return Math.round((due - today) / 86_400_000);
 }
 
+export interface TimeLeft {
+  /** the count, already rounded DOWN (e.g. 2, 1.5, 20) */
+  value: number;
+  unit: "day" | "month" | "year";
+  /** the value landed on a half (…,5), so the label reads "about …" */
+  approx: boolean;
+}
+
+/** Round DOWN to the nearest half — never up. floorHalf(1.81)=1.5, floorHalf(2.14)=2. */
+function floorHalf(x: number): number {
+  return Math.floor(x * 2) / 2;
+}
+
+/**
+ * Coarse "time remaining" for the safe-loan badge, from a POSITIVE day count.
+ * A short span stays in days; up to a year it becomes months, beyond that years —
+ * and the month/year figure is always rounded DOWN to the nearest half (65d → 2
+ * months, 55d → 1,5 months), NEVER up, so the badge can't over-promise how long
+ * is left. Returns null for a non-positive count — overdue / due-today are the
+ * status badge's job, not this one's.
+ */
+export function loanTimeLeft(days: number): TimeLeft | null {
+  if (days <= 0) return null;
+  if (days <= 31) return { value: days, unit: "day", approx: false };
+  if (days < 365) {
+    const v = floorHalf(days / 30.4);
+    return { value: v, unit: "month", approx: v % 1 !== 0 };
+  }
+  const v = floorHalf(days / 365);
+  return { value: v, unit: "year", approx: v % 1 !== 0 };
+}
+
 export type LoanStatus = "paid" | "overdue" | "due-soon" | "active";
 
 /**
@@ -98,6 +130,66 @@ export function totalReceivable(loans: Loan[], opts: { includeArchived?: boolean
  *  `domain/wallet.netWorth` at the UI edge for a full assets − debts figure. */
 export function loansNetWorth(loans: Loan[], opts: { includeArchived?: boolean } = {}): number {
   return totalReceivable(loans, opts) - totalPayable(loans, opts);
+}
+
+/**
+ * How much I OWE, bucketed by WHEN it falls due — the fuel for the loans-overview
+ * schedule. Each debt is counted once, at its full outstanding, in exactly one
+ * bucket:
+ *  - `overdue`  : the due date is already past
+ *  - `within30` : due in the next 0–30 days (today counts)
+ *  - `within60` : due in 31–60 days
+ *  - `later`    : due beyond 60 days, OR open-ended (no due date)
+ *
+ * `total` is their sum (equals `totalPayable`). Only non-archived borrowed loans
+ * with something still outstanding count — money owed TO me is not a bill I pay,
+ * so lent loans are excluded. See docs/features/loans.md.
+ */
+export interface PayableSchedule {
+  overdue: number;
+  within30: number;
+  within60: number;
+  later: number;
+  total: number;
+}
+export function payableSchedule(loans: Loan[], now: Date = new Date()): PayableSchedule {
+  const s: PayableSchedule = { overdue: 0, within30: 0, within60: 0, later: 0, total: 0 };
+  for (const l of loans) {
+    if (l.archived || l.direction !== "borrowed") continue;
+    const out = loanOutstanding(l);
+    if (out <= 0) continue;
+    s.total += out;
+    const d = daysUntilDue(l, now);
+    if (d == null || d > 60) s.later += out;
+    else if (d < 0) s.overdue += out;
+    else if (d <= 30) s.within30 += out;
+    else s.within60 += out;
+  }
+  return s;
+}
+
+/**
+ * The next debt payment coming up: the non-archived borrowed loan with the
+ * soonest FUTURE due date (today = 0 days) that still owes money. Overdue debts
+ * belong to `payableSchedule.overdue`, not here, so a book with only overdue /
+ * open-ended debts returns null. Ties break on the larger outstanding.
+ */
+export function nextPayment(
+  loans: Loan[],
+  now: Date = new Date(),
+): { loan: Loan; days: number; amount: number } | null {
+  let best: { loan: Loan; days: number; amount: number } | null = null;
+  for (const l of loans) {
+    if (l.archived || l.direction !== "borrowed") continue;
+    const out = loanOutstanding(l);
+    if (out <= 0) continue;
+    const d = daysUntilDue(l, now);
+    if (d == null || d < 0) continue; // open-ended or overdue → not "upcoming"
+    if (!best || d < best.days || (d === best.days && out > best.amount)) {
+      best = { loan: l, days: d, amount: out };
+    }
+  }
+  return best;
 }
 
 /** Sort for the loans list: unsettled before paid; within unsettled, overdue

@@ -688,7 +688,10 @@ body {
   display: inline-flex;
   align-items: center;
   border-radius: var(--wb-radius-pill);
-  border: var(--wb-bw) solid var(--wb-border);
+  /* Unselected filters wear a DASHED outline — the dashes read as "nothing is
+     pinned here yet"; the moment a value is chosen the chip goes solid (below), so
+     an applied filter is legible at a glance without reading its text. */
+  border: var(--wb-bw) dashed var(--wb-border);
   background: none;
   color: var(--wb-fg-muted);
   font-size: 13px;
@@ -721,9 +724,11 @@ body {
   border-color: var(--wb-fg-subtle);
   background: var(--wb-surface-hover);
 }
-/* Active = a filled token: the label recedes, the chosen value leads. */
+/* Active = a filled token with a SOLID edge (the counterpart to the dashed
+   unselected state): the label recedes, the chosen value leads. */
 .cashy-facet--active {
   color: var(--wb-fg);
+  border-style: solid;
   background: var(--wb-surface);
 }
 .cashy-facet--active .cashy-facet__main {
@@ -1056,7 +1061,10 @@ body {
    The `CardIdentity` molecule (ui/common) renders `.cashy-cardhead*`. */
 .cashy-cardhead {
   display: flex;
-  align-items: center;
+  /* Pin the tile to the TOP (like the subscription head) so a name that wraps to
+     two lines, or a subtitle beneath it, can't drag the tile off-centre — it
+     belongs to the whole block, not to one line. */
+  align-items: flex-start;
   gap: 12px;
   min-width: 0;
 }
@@ -1110,6 +1118,12 @@ body {
   flex-direction: column;
   gap: 6px;
 }
+/* The meter is a quiet detail on these entity cards, not a headline — trim the
+   stock 8px track to the 6px the subscription cycle bar uses, so a wallet's
+   utilisation bar and a loan's repayment bar read at the same weight as it. */
+.cashy-cardmeter .wb-progress {
+  height: 6px;
+}
 .cashy-cardmeter__note {
   font-size: 11px;
   color: var(--wb-fg-muted);
@@ -1130,6 +1144,247 @@ body {
   .cashy-loangrid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+}
+/* Match the overview subscription card's density: these sit three-to-a-row, so
+   the stock 18px body padding wastes the width — trim it to the same 10px the
+   subscription strip uses (`.cashy-subgrid .wb-card__body`). */
+.cashy-loangrid .wb-card__body {
+  padding: 10px;
+}
+/* Dashboard "Balances" card header — the net-worth figure is the headline (not a
+   word squeezed onto an h3 baseline), with a one-line caption. Beneath it the
+   three parts of net worth read as even stat figures (`.cashy-figrow`), not a
+   crammed dotted strip; colour = status is left to StatFigure. */
+.cashy-networth {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.cashy-networth__val {
+  font-size: 26px;
+  font-weight: 750;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+.cashy-networth__cap {
+  font-size: 12px;
+  color: var(--wb-fg-muted);
+}
+/* The breakdown figures are secondary to the headline + wallet rows — a touch
+   smaller than the loans-overview figures, with a divider before the wallets. */
+.cashy-networth__break {
+  margin: 0 0 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--wb-border);
+}
+.cashy-networth__break .cashy-fig__val {
+  font-size: 17px;
+}
+
+/* Loans overview header (LoanSummary): a "where I stand" panel beside a "what's
+   coming" panel. On a wide card they sit side by side with a divider; they stack
+   on narrow screens. */
+.cashy-loansum {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+@media (min-width: 720px) {
+  .cashy-loansum {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: 24px;
+  }
+  .cashy-loansum__sched {
+    padding-left: 24px;
+    border-left: 1px solid var(--wb-border);
+  }
+}
+/* Shared summary "figure" — a caption over a bold, tone-aware amount (component
+   StatFigure). `.cashy-figrow` lays a set of them out as even, wrapping columns;
+   used by the Loans overview and the Dashboard "Balances" breakdown so a figure
+   looks the same everywhere money is summarised. */
+.cashy-figrow {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 12px 18px;
+  align-content: start;
+}
+.cashy-fig {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.cashy-fig__label {
+  font-size: 12px;
+  color: var(--wb-fg-muted);
+}
+.cashy-fig__val {
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+.cashy-loansum__sched {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.cashy-loansum__next {
+  margin: 0;
+  font-size: 13px;
+  color: var(--wb-fg-muted);
+}
+.cashy-loansum__next strong {
+  color: var(--wb-fg);
+  font-weight: 650;
+}
+.cashy-loansum__next-in {
+  color: var(--wb-fg-subtle);
+}
+.cashy-loansum__note {
+  margin: 0;
+  font-size: 13px;
+  color: var(--wb-fg-muted);
+}
+/* The schedule bar — one segment per non-empty bucket, width ∝ amount owed. The
+   ramp red → amber → mid-grey → faint-grey reads as near-and-urgent to far-and-
+   calm, so colour still means "how soon", i.e. status, not decoration. */
+.cashy-schedbar {
+  display: flex;
+  height: 10px;
+  gap: 2px;
+  border-radius: var(--wb-radius-pill);
+  overflow: hidden;
+  background: var(--wb-neutral-weak);
+}
+.cashy-schedbar__seg {
+  min-width: 3px;
+}
+.cashy-schedbar__seg.is-overdue {
+  background: var(--wb-danger);
+}
+.cashy-schedbar__seg.is-w30 {
+  background: var(--wb-warning);
+}
+.cashy-schedbar__seg.is-w60 {
+  background: var(--wb-neutral-ink);
+}
+.cashy-schedbar__seg.is-later {
+  background: var(--wb-neutral);
+}
+.cashy-schedlegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  font-size: 12px;
+  color: var(--wb-fg-muted);
+}
+.cashy-schedlegend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.cashy-schedlegend__item strong {
+  color: var(--wb-fg);
+  font-weight: 600;
+}
+.cashy-schedlegend__dot {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 999px;
+}
+.cashy-schedlegend__dot.is-overdue {
+  background: var(--wb-danger);
+}
+.cashy-schedlegend__dot.is-w30 {
+  background: var(--wb-warning);
+}
+.cashy-schedlegend__dot.is-w60 {
+  background: var(--wb-neutral-ink);
+}
+.cashy-schedlegend__dot.is-later {
+  background: var(--wb-neutral);
+}
+
+/* A settled loan is history, not a live obligation — it drops back the same way
+   a cancelled subscription does (dim + desaturated so a tinted icon stops pulling
+   the eye), yet a hover/focus restores it fully so it stays reviewable. Mirrors
+   `.cashy-sub--cancelled` on purpose so "done" reads identically across cards. */
+.wb-card.cashy-loan--settled {
+  opacity: 0.45;
+  filter: grayscale(0.85);
+  transition:
+    opacity 0.15s ease,
+    filter 0.15s ease;
+}
+.wb-card.cashy-loan--settled:hover,
+.wb-card.cashy-loan--settled:focus-within {
+  opacity: 1;
+  filter: none;
+}
+/* The direction line: an arrow + "I owe" / "Owed to me". The label text recedes
+   (it repeats down the column) while the arrow carries the at-a-glance colour. */
+.cashy-loandir {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.cashy-loandir svg {
+  flex: none;
+}
+/* The loan card's bottom line — the due date and the interest rate. This is the
+   ONE row on the card given weight (semibold): the identity subtitle, the
+   direction label and the repayment note all sit quiet above it, so the fact you
+   act on (when it's due, what it costs) is the one that reads first. */
+.cashy-loanfoot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12px;
+}
+/* The due line is fine print — it recedes to tier-3 grey; only the day COUNT is
+   pulled forward (bold, full ink) so "Due in 65 days" reads as the number first.
+   The precise capsule above carries the coarse "2 months left". */
+.cashy-loanfoot__due {
+  color: var(--wb-fg-subtle);
+  font-weight: 400;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cashy-loanfoot__due strong {
+  color: var(--wb-fg);
+  font-weight: 700;
+}
+/* Overdue is the one due-state that costs the whole line its quiet — it goes red,
+   the count included, so a late loan can't hide in tier-3 grey. */
+.cashy-loanfoot__due[data-overdue="true"],
+.cashy-loanfoot__due[data-overdue="true"] strong {
+  color: var(--wb-danger-text);
+}
+.cashy-loanfoot__due[data-overdue="true"] {
+  font-weight: 600;
+}
+/* "Settled" / "No due date" carry no count to bold — they simply stay tier-3. */
+.cashy-loanfoot__due[data-quiet="true"] {
+  color: var(--wb-fg-subtle);
+  font-weight: 400;
+}
+.cashy-loanfoot__rate {
+  flex: none;
+  color: var(--wb-fg-muted);
+  font-weight: 500;
+}
+/* No interest is a non-event — push it further out of focus (tier-3, regular
+   weight) so a rate that actually costs money is the one that stands out. */
+.cashy-loanfoot__rate[data-none="true"] {
+  color: var(--wb-fg-subtle);
+  font-weight: 400;
 }
 /* Status picker — capsules you click instead of a dropdown (see StatusPicker).
    The radio itself is hidden but still focusable, so arrow keys and screen
@@ -1274,6 +1529,20 @@ body {
    reads as a second line of the name rather than its own fact. */
 .cashy-subhead .wb-card__sub {
   margin-top: 6px;
+}
+/* The "paid from" wallet, on its own line beneath the money line — a quieter,
+   different kind of fact than price/cadence, tagged with a small wallet glyph. */
+.cashy-subhead__wallet {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 3px 0 0;
+  font-size: 12px;
+  color: var(--wb-fg-muted);
+}
+.cashy-subhead__wallet svg {
+  flex: none;
+  opacity: 0.8;
 }
 /* One card per service on the overview. auto-fill so the row reflows instead of
    stretching three cards across a wide screen. */

@@ -1,4 +1,5 @@
-import type { CSSProperties } from "react";
+import type { ReactNode } from "react";
+import { ArrowDownLeft, ArrowUpRight } from "lucide-react";
 import type { Loan, LoanSource } from "@/domain/types";
 import {
   daysUntilDue,
@@ -6,11 +7,12 @@ import {
   loanPaid,
   loanProgress,
   loanStatus,
+  loanTimeLeft,
   type LoanStatus,
 } from "@/domain/loan";
 import { formatMoneyShort } from "@/domain/money";
-import { Icon } from "@/ui/kit/icons";
 import { AmountDisplay } from "@/ui/common/AmountDisplay";
+import { CardIdentity } from "@/ui/common/CardIdentity";
 
 const SOURCE_LABEL: Record<LoanSource, string> = {
   personal: "Personal",
@@ -19,41 +21,70 @@ const SOURCE_LABEL: Record<LoanSource, string> = {
   other: "Other",
 };
 
-const truncate: CSSProperties = { overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" };
-
-/** Semantic token per status — drives both the pill and the progress-bar tone. */
-const STATUS_TOKEN: Record<LoanStatus, string | null> = {
-  overdue: "--wb-danger",
-  "due-soon": "--wb-warning",
-  paid: "--wb-success",
-  active: null,
-};
-const STATUS_LABEL: Record<LoanStatus, string> = {
-  overdue: "Overdue",
-  "due-soon": "Due soon",
-  paid: "Paid off",
-  active: "Active",
-};
-
+/** Interest rate spelled out in full — "20% per year", not "20%/yr". */
 function rateLabel(loan: Loan): string {
   if (loan.interestRatePct <= 0) return "No interest";
-  return `${loan.interestRatePct}%/${loan.interestPeriod === "year" ? "yr" : "mo"}`;
+  return `${loan.interestRatePct}% per ${loan.interestPeriod === "year" ? "year" : "month"}`;
 }
 
-function dueLabel(loan: Loan, status: LoanStatus, now: Date): string {
+/** The status capsule text + tone. Every state earns one: overdue/due-soon carry
+ *  urgency colour, a settled loan says it's cleared, and a calm active loan wears
+ *  a neutral "how long is left" badge (rounded DOWN — see `loanTimeLeft`). */
+function statusCap(
+  loan: Loan,
+  status: LoanStatus,
+  now: Date,
+): { label: string; tone?: "danger" | "warning" | "success" } {
+  if (status === "paid") return { label: "Paid off", tone: "success" };
+  if (status === "overdue") return { label: "Overdue", tone: "danger" };
+  if (status === "due-soon") return { label: "Due soon", tone: "warning" };
+  const d = daysUntilDue(loan, now);
+  const tl = d == null ? null : loanTimeLeft(d);
+  if (!tl) return { label: "Ongoing" };
+  const unit = tl.value === 1 ? tl.unit : `${tl.unit}s`;
+  const num = tl.value.toString().replace(".", ",");
+  return { label: `${tl.approx ? "about " : ""}${num} ${unit} left` };
+}
+
+/** The due line, with the day count bolded so the number reads at a glance. */
+function DueText({ loan, status, now }: { loan: Loan; status: LoanStatus; now: Date }): ReactNode {
   if (status === "paid") return "Settled";
   const d = daysUntilDue(loan, now);
   if (d == null) return "No due date";
-  if (d === 0) return "Due today";
-  if (d < 0) return `Overdue by ${-d} ${-d === 1 ? "day" : "days"}`;
-  return `Due in ${d} ${d === 1 ? "day" : "days"}`;
+  if (d === 0) {
+    return (
+      <>
+        Due <strong>today</strong>
+      </>
+    );
+  }
+  if (d < 0) {
+    const late = -d;
+    return (
+      <>
+        Overdue by <strong>{late}</strong> {late === 1 ? "day" : "days"}
+      </>
+    );
+  }
+  return (
+    <>
+      Due in <strong>{d}</strong> {d === 1 ? "day" : "days"}
+    </>
+  );
 }
 
 /**
- * One loan as a card: neutral icon tile, counterparty + source, the outstanding
- * amount, a repayment progress bar, and a due-date line + interest rate. A status
- * pill (overdue / due-soon / paid) carries the urgency; everything else stays
- * neutral. Self-contained — derives its numbers from `domain/loan`.
+ * One loan as a card, composed from the shared entity-card parts (`CardIdentity`
+ * + `.cashy-card*`) exactly like `WalletCard` — so its icon tile, spacing,
+ * progress track and typography match the subscription/wallet cards instead of
+ * drifting on hand-rolled inline styles.
+ *
+ * Direction is the thing you should read WITHOUT reading: a lent loan (money owed
+ * to you) is a future inflow, so its arrow and amount go green like income; a
+ * borrowed loan (money you owe) stays neutral and only turns red when it's
+ * actually overdue — the house rule is colour-means-status, not colour-means-debt.
+ * A settled loan fades back the way a cancelled subscription does. Self-contained
+ * — every figure comes from `domain/loan`.
  */
 export function LoanCard({
   loan,
@@ -68,22 +99,43 @@ export function LoanCard({
   const paid = loanPaid(loan);
   const pct = Math.round(loanProgress(loan) * 100);
   const status = loanStatus(loan, now);
-  const token = STATUS_TOKEN[status];
   const clickable = Boolean(onEdit);
-  const owed = loan.direction === "borrowed";
+  const owed = loan.direction === "borrowed"; // borrowed ⇒ I owe someone
+  const overdue = status === "overdue";
+  const settled = status === "paid";
 
-  const barClass =
-    status === "overdue"
-      ? "wb-progress__bar wb-progress__bar--danger"
-      : status === "due-soon"
-        ? "wb-progress__bar wb-progress__bar--warning"
-        : status === "paid"
-          ? "wb-progress__bar wb-progress__bar--success"
-          : "wb-progress__bar cashy-progress__bar--quiet";
+  // The direction arrow is green ONLY on a lent card (money owed to you — an
+  // inflow). A borrowed card's arrow is never tinted: a coloured "you owe" arrow
+  // reads as an alarm on an ordinary debt. (The amount below still turns red when
+  // it's genuinely overdue — that's a status, carried by the amount, not here.)
+  const dirColor = owed ? "var(--wb-fg-muted)" : "var(--wb-success-text)";
+
+  let barClass: string;
+  if (overdue) {
+    barClass = "wb-progress__bar wb-progress__bar--danger";
+  } else if (status === "due-soon") {
+    barClass = "wb-progress__bar wb-progress__bar--warning";
+  } else if (settled) {
+    barClass = "wb-progress__bar wb-progress__bar--success";
+  } else {
+    barClass = "wb-progress__bar cashy-progress__bar--quiet";
+  }
+
+  const cap = statusCap(loan, status, now);
+  const trailing = (
+    <span className={cap.tone ? `wb-cap wb-cap--${cap.tone}` : "wb-cap"}>
+      {cap.tone && <span className="wb-cap__dot" />}
+      {cap.label}
+    </span>
+  );
+
+  let cls = "wb-card";
+  if (clickable) cls += " wb-card--hover";
+  if (settled && !loan.archived) cls += " cashy-loan--settled";
 
   return (
     <div
-      className={clickable ? "wb-card wb-card--hover" : "wb-card"}
+      className={cls}
       role={clickable ? "button" : undefined}
       tabIndex={clickable ? 0 : undefined}
       onClick={clickable ? () => onEdit?.(loan.id) : undefined}
@@ -97,68 +149,52 @@ export function LoanCard({
             }
           : undefined
       }
-      style={{ opacity: loan.archived ? 0.55 : 1 }}
+      style={{ opacity: loan.archived ? 0.55 : undefined }}
     >
-      <div className="wb-card__body" style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-        <div className="wb-cluster wb-cluster--nowrap" style={{ gap: 12, alignItems: "center" }}>
-          <span className="cashy-subtile" aria-hidden="true">
-            <Icon name={loan.icon} size={18} />
+      <div className="wb-card__body cashy-cardstack">
+        <CardIdentity
+          icon={loan.icon}
+          title={loan.counterparty}
+          subtitle={SOURCE_LABEL[loan.source]}
+          archived={loan.archived}
+          trailing={trailing}
+        />
+
+        <div className="cashy-cardfig">
+          <span className="cashy-cardfig__label cashy-loandir">
+            {owed ? (
+              <ArrowUpRight size={13} style={{ color: dirColor }} />
+            ) : (
+              <ArrowDownLeft size={13} style={{ color: dirColor }} />
+            )}
+            {owed ? "I owe" : "Owed to me"}
           </span>
-          <div style={{ minWidth: 0, flex: 1 }}>
-            <div style={{ ...truncate, fontWeight: 600 }}>
-              {loan.counterparty}
-              {loan.archived && (
-                <span style={{ marginLeft: 6, fontSize: 11, fontWeight: 500, color: "var(--wb-fg-muted)" }}>
-                  · archived
-                </span>
-              )}
-            </div>
-            <span style={{ fontSize: 12, color: "var(--wb-fg-muted)" }}>{SOURCE_LABEL[loan.source]}</span>
-          </div>
-          {token && (
-            <span
-              style={{
-                fontSize: 11,
-                fontWeight: 600,
-                padding: "2px 8px",
-                borderRadius: "var(--wb-radius-pill)",
-                whiteSpace: "nowrap",
-                color: `var(${token})`,
-                background: `color-mix(in srgb, var(${token}) 14%, transparent)`,
-              }}
-            >
-              {STATUS_LABEL[status]}
-            </span>
-          )}
-        </div>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          <span style={{ fontSize: 12, color: "var(--wb-fg-muted)" }}>{owed ? "You owe" : "Owed to you"}</span>
-          <div style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.1 }}>
-            <AmountDisplay amount={outstanding} />
+          <div className="cashy-cardfig__val">
+            <AmountDisplay amount={outstanding} positive={!owed} negative={owed && overdue} />
           </div>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+        <div className="cashy-cardmeter">
           <div className="wb-progress">
             <div className={barClass} style={{ width: `${pct}%` }} />
           </div>
-          <span style={{ fontSize: 11, color: "var(--wb-fg-muted)" }}>
-            {formatMoneyShort(paid)} of {formatMoneyShort(loan.principal)} {owed ? "repaid" : "collected"}
+          <span className="cashy-cardmeter__note">
+            {formatMoneyShort(paid)} of {formatMoneyShort(loan.principal)}{" "}
+            {owed ? "repaid" : "collected"}
           </span>
         </div>
 
-        <div className="wb-cluster" style={{ justifyContent: "space-between", alignItems: "baseline", gap: 8 }}>
+        <div className="cashy-loanfoot">
           <span
-            style={{
-              fontSize: 12,
-              fontWeight: status === "overdue" ? 600 : 400,
-              color: status === "overdue" ? "var(--wb-danger)" : "var(--wb-fg-muted)",
-            }}
+            className="cashy-loanfoot__due"
+            data-overdue={overdue}
+            data-quiet={settled || daysUntilDue(loan, now) == null}
           >
-            {dueLabel(loan, status, now)}
+            <DueText loan={loan} status={status} now={now} />
           </span>
-          <span style={{ fontSize: 12, color: "var(--wb-fg-muted)" }}>{rateLabel(loan)}</span>
+          <span className="cashy-loanfoot__rate" data-none={loan.interestRatePct <= 0}>
+            {rateLabel(loan)}
+          </span>
         </div>
       </div>
     </div>

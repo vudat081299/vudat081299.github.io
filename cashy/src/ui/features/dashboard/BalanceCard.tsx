@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { formatMoney } from "@/domain/money";
+import { formatPercent } from "@/domain/format";
 
 /** One KPI tile on the dashboard — the web-builder `.wb-stat`: a neutral icon
  *  tile and a footer delta vs the previous period (no in-card sparkline; the
@@ -68,10 +69,9 @@ export function BalanceCard({
             )}
           >
             <span className="wb-ico wb-ico--xs">{up ? "trending_up" : "trending_down"}</span>
-            {/* One decimal when it carries signal, vi-VN comma separator: the
-                delta is a precise fraction, so "12,4%" — but a whole number drops
-                the ",0" and reads "12%", never "12,0%". */}
-            {parseFloat(Math.abs((delta ?? 0) * 100).toFixed(1)).toString().replace(".", ",")}%
+            {/* The arrow already carries the sign, so show the magnitude only —
+                one decimal, vi-VN comma ("12,4%"), ",0" dropped (formatPercent). */}
+            {formatPercent(Math.abs(delta ?? 0), 1)}
           </span>
           {note}
         </div>

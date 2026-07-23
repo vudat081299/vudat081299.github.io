@@ -24,6 +24,7 @@ import {
   type Steadiness,
 } from "@/domain";
 import { periodLabel, prevRange } from "@/domain/period";
+import { formatPercent } from "@/domain/format";
 import { useStableSubOrder } from "@/ui/features/subscriptions/useStableSubOrder";
 import { useAtScrollEnd } from "@/ui/features/dashboard/useAtScrollEnd";
 import { useTxQuery } from "@/ui/features/transactions/useTxQuery";
@@ -37,6 +38,7 @@ import { BalanceForecastChart } from "@/ui/features/dashboard/BalanceForecastCha
 import { CashflowChart } from "@/ui/features/dashboard/CashflowChart";
 import { SpendChart } from "@/ui/features/dashboard/SpendChart";
 import { AmountDisplay } from "@/ui/common/AmountDisplay";
+import { StatFigure } from "@/ui/common/StatFigure";
 import { Icon } from "@/ui/kit/icons";
 import { PeriodPicker } from "@/ui/common/PeriodPicker";
 import { ConnectedSubscriptionCard } from "@/ui/features/subscriptions/ConnectedSubscriptionCard";
@@ -173,7 +175,7 @@ export function Dashboard() {
     {
       icon: "savings",
       label: "Savings rate",
-      value: insights.savingsRate == null ? "—" : `${Math.round(insights.savingsRate * 100)}%`,
+      value: insights.savingsRate == null ? "—" : formatPercent(insights.savingsRate),
       hint: "of income kept",
       color:
         insights.savingsRate == null
@@ -188,7 +190,7 @@ export function Dashboard() {
       value:
         spendDelta == null
           ? "—"
-          : `${spendDelta > 0 ? "+" : spendDelta < 0 ? "−" : ""}${Math.abs(Math.round(spendDelta * 100))}%`,
+          : `${spendDelta > 0 ? "+" : spendDelta < 0 ? "−" : ""}${formatPercent(Math.abs(spendDelta))}`,
       hint:
         spendDelta == null
           ? "no earlier period yet"
@@ -228,7 +230,7 @@ export function Dashboard() {
     {
       icon: "donut_small",
       label: "Top category",
-      value: insights.topCategory ? `${Math.round(insights.topCategory.pct * 100)}%` : "—",
+      value: insights.topCategory ? formatPercent(insights.topCategory.pct) : "—",
       hint: insights.topCategory ? `on ${insights.topCategory.name}` : "no spending yet",
     },
     {
@@ -289,24 +291,28 @@ export function Dashboard() {
       {(shownWallets.length > 0 || hasLoans) && (
         <div className="wb-card">
           <div className="wb-card__body">
-            <div className="wb-cluster wb-cluster--between" style={{ marginBottom: 12, gap: 10 }}>
-              <div>
+            <div className="wb-cluster wb-cluster--between" style={{ marginBottom: hasLoans ? 16 : 14, gap: 10 }}>
+              <div className="cashy-networth">
                 <span className="cashy-card-eyebrow">Balances</span>
-                <h3 className="cashy-card-title" style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
-                  Net worth
+                <div className="cashy-networth__val">
                   <AmountDisplay amount={netWorthAll} negative={netWorthAll < 0} />
-                </h3>
-                {hasLoans && (
-                  <p style={{ margin: "4px 0 0", fontSize: 12, color: "var(--wb-fg-muted)" }}>
-                    assets {formatMoneyShort(walletNet)} · you owe {formatMoneyShort(payable)}
-                    {receivable > 0 ? ` · owed to you ${formatMoneyShort(receivable)}` : ""}
-                  </p>
-                )}
+                </div>
+                <span className="cashy-networth__cap">Net worth · assets − debts</span>
               </div>
               <button type="button" className="wb-btn wb-btn--ghost wb-btn--sm" onClick={() => navigate("wallets")}>
                 Manage
               </button>
             </div>
+            {/* Net worth broken into its three parts as even stat figures (shared
+                StatFigure), not a crammed dotted strip. Colour = status: owed-to-you
+                reads green, assets + you-owe stay neutral. */}
+            {hasLoans && (
+              <div className="cashy-figrow cashy-networth__break">
+                <StatFigure label="Assets" amount={walletNet} short />
+                <StatFigure label="You owe" amount={payable} short />
+                {receivable > 0 && <StatFigure label="Owed to you" amount={receivable} positive short />}
+              </div>
+            )}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 8 }}>
               {shownWallets.map((w) => {
                 const bal = walletBals.get(w.id) ?? w.openingBalance;
@@ -567,7 +573,7 @@ export function Dashboard() {
                           : ""}
                       </span>
                       <span className="wb-num cashy-rank__amt">{formatMoney(s.total)}</span>
-                      <span className="wb-num cashy-rank__val">{Math.round(s.pct * 100)}%</span>
+                      <span className="wb-num cashy-rank__val">{formatPercent(s.pct)}</span>
                     </div>
                     <div className="wb-progress">
                       <div

@@ -7,6 +7,7 @@ import {
   paymentsOf,
 } from "@/domain/subscription";
 import { todayYMD } from "@/domain/date";
+import { toVndNonNeg } from "@/domain/money";
 import { commit, getState } from "@/data/store";
 import { uid } from "@/lib/id";
 
@@ -33,7 +34,7 @@ export function addSubscription(input: {
   const sub: Subscription = {
     id: uid(),
     name: input.name.trim(),
-    amount: input.amount,
+    amount: toVndNonNeg(input.amount),
     interval,
     dayOfMonth: input.dayOfMonth,
     monthOfYear: interval === "yearly" ? (input.monthOfYear ?? 1) : undefined,
@@ -48,10 +49,11 @@ export function addSubscription(input: {
     lastPaidAt: null,
     paymentTxIds: [],
     // Shared-plan bookkeeping + a prorated first charge — all optional, only set
-    // when the editor collected them (see the Subscription type).
-    fullAmount: input.fullAmount,
+    // when the editor collected them (see the Subscription type). The money ones
+    // keep the integer-VND invariant; `undefined` (not set) is preserved as-is.
+    fullAmount: input.fullAmount == null ? undefined : toVndNonNeg(input.fullAmount),
     members: input.members,
-    firstCycleAmount: input.firstCycleAmount,
+    firstCycleAmount: input.firstCycleAmount == null ? undefined : toVndNonNeg(input.firstCycleAmount),
     trialMonths: input.trialMonths,
     createdAt: new Date().toISOString(),
   };
@@ -226,7 +228,10 @@ export function resolveSubscriptionCharges(sel: {
     if (pay.has(t.id)) {
       let next: Transaction = { ...t, status: "recorded" };
       const amt = amounts[t.id];
-      if (amt != null && amt > 0 && amt !== t.amount) next = { ...next, amount: amt };
+      if (amt != null) {
+        const rounded = toVndNonNeg(amt); // an override is still money → integer đồng
+        if (rounded > 0 && rounded !== t.amount) next = { ...next, amount: rounded };
+      }
       const date = dates[t.id];
       if (date && date !== t.occurredAt) next = { ...next, occurredAt: date };
       return next;

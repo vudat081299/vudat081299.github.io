@@ -13,6 +13,7 @@ import type { SubIconStyle } from "@/domain/types";
 import { fmtDateNum } from "@/domain/date";
 import { formatMoney } from "@/domain/money";
 import { SubTile } from "@/ui/features/subscriptions/SubTile";
+import { Icon } from "@/ui/kit/icons";
 
 /**
  * One service, one card. It answers the four questions a subscription actually
@@ -238,8 +239,16 @@ export function SubscriptionCard({
               {(sub.members ?? 0) > 1 && (
                 <span className="wb-cell-muted"> · 1/{sub.members} shared</span>
               )}
-              {sub.account && <span className="wb-cell-muted"> · {sub.account}</span>}
             </p>
+            {/* The wallet it's paid from is a different KIND of fact from the price
+                and cadence, so it drops to its own line with a wallet glyph rather
+                than trailing the money line as one more "· …" clause. */}
+            {sub.account && (
+              <p className="cashy-subhead__wallet">
+                <Icon name="wallet" size={12} />
+                {sub.account}
+              </p>
+            )}
           </div>
         </div>
 

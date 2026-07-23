@@ -17,33 +17,52 @@ export function formatDigits(n: number): string {
 }
 
 /**
- * Compact: 3400000 -> "3,4m đ", 890000 -> "890k đ", 1200000000 -> "1,2b đ".
+ * Compact: 3400000 -> "3,4m", 890000 -> "890k", 1200000000 -> "1,2b", 500 -> "500 đ".
  * English magnitude letters (k / m / b), because the UI chrome is English even
  * though the amounts are đồng — the Vietnamese "k / tr / tỷ" belongs to the
  * seeded data, not the app's own labels. The NUMBER itself, though, is formatted
  * `vi-VN` like every other amount in the app, so its decimal mark is a comma
  * ("7,3m") — matching the dot-means-thousands grouping of the full "7.300.000 đ"
  * form instead of clashing with it (a bare `toFixed` would emit an English ".").
+ *
+ * A magnitude letter already reads as "this is money", so it carries NO "đ" —
+ * "3,4m đ" states the unit twice. Only the sub-1.000 form, which has no letter to
+ * lean on, keeps the currency mark ("500 đ").
  */
 const shortNf = new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 1 });
 
 export function formatMoneyShort(n: number): string {
   const v = Math.round(Math.abs(n || 0));
   const sign = n < 0 ? "-" : "";
-  let out: string;
   // `shortNf` rounds to the one decimal we show and drops a trailing ",0", so a
   // whole magnitude prints clean ("5m", not "5,0m") with no special-casing.
-  if (v >= 1_000_000_000) out = shortNf.format(v / 1_000_000_000) + "b";
-  else if (v >= 1_000_000) out = shortNf.format(v / 1_000_000) + "m";
-  else if (v >= 1_000) out = shortNf.format(v / 1_000) + "k";
-  else out = shortNf.format(v);
-  return sign + out + " đ";
+  if (v >= 1_000_000_000) return sign + shortNf.format(v / 1_000_000_000) + "b";
+  if (v >= 1_000_000) return sign + shortNf.format(v / 1_000_000) + "m";
+  if (v >= 1_000) return sign + shortNf.format(v / 1_000) + "k";
+  return sign + shortNf.format(v) + " đ";
 }
 
 /** Parse free text to integer VND: "1.500.000 đ" -> 1500000 */
 export function parseMoney(s: string): number {
   const d = String(s).replace(/[^\d]/g, "");
   return d ? parseInt(d, 10) : 0;
+}
+
+/**
+ * Coerce any input to an integer number of đồng. Money is NEVER stored or
+ * computed as a float (see the header), so every usecase that writes a money
+ * field routes through here — the "integer VND" invariant then lives in exactly
+ * one place instead of an ad-hoc `Math.round(x || 0)` at each write site. Rounds
+ * to the nearest đồng and treats a missing / NaN input as 0.
+ */
+export function toVnd(n: number): number {
+  return Math.round(n || 0);
+}
+
+/** `toVnd` for a field that cannot be negative — a principal, a repayment, a
+ *  credit limit, a subscription price. Clamps up to 0. */
+export function toVndNonNeg(n: number): number {
+  return Math.max(0, toVnd(n));
 }
 
 /** Signed display by type: income "+…", expense "−…" (true minus sign). */

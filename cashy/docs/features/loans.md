@@ -25,9 +25,12 @@ Dashboard's net worth as **assets − debts**. This is the feature described in
 - Route `#/loans` (`src/lib/router.ts`), rendered by `src/App.tsx`; nav item
   ("Loans", `handshake`) in `src/ui/app/Layout.tsx` with a live count of non-archived loans.
 - Screen shape (`src/ui/features/loans/Loans.tsx`): `PageHeader` (+ "Add loan") → a
-  summary card (**You owe · Owed to you · Net**) → grouped grids **"Money I owe"** /
-  **"Owed to me"** (+ **Archived** when any), each of `LoanCard` sorted by
-  `sortLoans` → an empty-state line when there are none → the in-file `LoanEditor` modal.
+  `LoanSummary` header (**position** — you owe / owed to me / net — beside a
+  **payments-due** panel: the next payment + a segmented schedule bar) → a shared
+  `FacetChip` **filter bar** (search · Status · Source · Archived) → grouped grids
+  **"Money I owe"** / **"Owed to me"** (+ **Archived** when the filter shows them),
+  each of `LoanCard` sorted by `sortLoans` → a match-aware empty-state line → the
+  in-file `LoanEditor` modal.
 
 ## 3. Data it touches
 
@@ -57,6 +60,9 @@ All pure, in `src/domain/loan.ts`.
 | `loanNetWorthDelta(loan)` | `borrowed ⇒ −outstanding`, `lent ⇒ +outstanding` |
 | `totalPayable(loans)` / `totalReceivable(loans)` | Σ outstanding per direction (non-archived by default) |
 | `loansNetWorth(loans)` | `receivable − payable` |
+| `loanTimeLeft(days)` | coarse remaining time for the "safe" badge — days → months → years, **rounded DOWN to the nearest half** only (65d→2mo, 55d→1,5mo); `null` for a non-positive count |
+| `payableSchedule(loans, now)` | what I OWE bucketed by due-ness — `overdue \| within30 \| within60 \| later \| total` (non-archived borrowed with outstanding; open-ended ⇒ `later`); fuels the overview schedule bar |
+| `nextPayment(loans, now)` | the soonest **upcoming** borrowed debt with outstanding (`{loan, days, amount}`), else `null` (overdue/open-ended don't count) |
 | `sortLoans(loans, now)` | overdue → due-soon → active → paid; then soonest due; then largest outstanding |
 | `loanSourceIcon(source)` | default lucide key per source (`bank`→`landmark`, `card`→`credit-card`, `personal`→`users`, …) |
 
@@ -79,21 +85,33 @@ All pure, in `src/domain/loan.ts`.
 |---|---|---|---|
 | Container/screen | `Loans` | `ui/features/loans/Loans.tsx` | reads `useCashy()`; summary + grouped card grids; holds the in-file `LoanEditor` |
 | Singleton-ish modal | `LoanEditor` | *(in `Loans.tsx`)* | add/edit form (Borrowed/Lent toggle, counterparty, source `Select`, principal, rate + period, opened/due dates, `ColorPicker`, `IconPicker`, note) + a live **payments sub-editor** (outstanding updates as rows are added) + archive/delete |
-| Feature-leaf | `LoanCard` | `ui/features/loans/LoanCard.tsx` | neutral tile + counterparty + source, outstanding (`AmountDisplay`), a repayment progress bar, a due-date line + rate, and a status pill (overdue/due-soon/paid); renders in the `#/cashy` gallery |
-| Common/kit | `PageHeader`, `Select`, `ColorPicker`, `IconPicker`, `AmountDisplay`, `Modal` | `ui/common/…`, `ui/kit/…` | building blocks |
+| Feature-leaf | `LoanCard` | `ui/features/loans/LoanCard.tsx` | **composed from `CardIdentity` + `.cashy-card*`** (like `WalletCard`): tile + counterparty + source, a direction line ("I owe"/"Owed to me"), outstanding (`AmountDisplay`), a 6px repayment bar, a foot (tier-3 due line w/ bold count + rate), and a per-state status capsule; renders in the `#/cashy` gallery |
+| Feature-leaf | `LoanSummary` | `ui/features/loans/LoanSummary.tsx` | the overview header — position (owe/owed/net) + a payments-due panel (next payment + segmented schedule bar from `payableSchedule`/`nextPayment`) |
+| Common/kit | `FacetChip`, `PageHeader`, `Select`, `ColorPicker`, `IconPicker`, `AmountDisplay`, `Modal` | `ui/common/…`, `ui/kit/…` | building blocks — `FacetChip` is the shared filter chip (also used by transactions) |
 
 ## 7. Behaviours & edge cases
 
 - **Outstanding = principal − Σ payments, floored at 0.** An overpayment reads as
   "paid in full", never a negative debt. Progress = paid / principal.
 - **Interest is reference-only.** `interestRatePct` + `interestPeriod` are shown
-  ("9%/yr", "2%/mo") and stored; they never accrue into the balance and there is no
-  schedule. Rate 0 renders "No interest".
-- **Status drives the pill + bar tone.** `paid` (green, "Settled"), `overdue` (red,
-  "Overdue by N days"), `due-soon` (amber, within 7 days), `active` (quiet). A paid
-  loan is never overdue even past its due date.
-- **Direction flips the wording.** `borrowed` → "You owe" / "…repaid"; `lent` →
-  "Owed to you" / "…collected". The screen groups them ("Money I owe" / "Owed to me").
+  **spelled out** ("20% per year", "2% per month") and stored; they never accrue and
+  there is no schedule. Rate 0 renders a tier-3 "No interest" (out of focus).
+- **Every state carries a status capsule + bar tone.** `overdue` (danger, "Overdue"),
+  `due-soon` (warning, "Due soon"), `paid` (success, "Paid off" — the card also dims
+  like a cancelled subscription), and a calm `active` gets a **neutral "N months left"**
+  badge (via `loanTimeLeft`, rounded down; open-ended ⇒ "Ongoing"). A paid loan is
+  never overdue even past its due date. The foot's due line is tier-3 with only the
+  **day-count bolded**; overdue turns the whole line red.
+- **Direction is read by colour, not just words.** `borrowed` → "I owe" / "…repaid";
+  `lent` → "Owed to me" / "…collected". A lent loan's arrow + amount go **green** (a
+  future inflow); a borrowed loan stays neutral, its amount turning **red only when
+  overdue** — the "I owe" arrow is never tinted (house rule: colour = status, not
+  debt). The screen still groups them ("Money I owe" / "Owed to me").
+- **Filter + overview.** A shared `FacetChip` bar (search · Status · Source ·
+  Archived; dashed unselected, solid selected) narrows the lists; the `LoanSummary`
+  header shows position + the next payment + a segmented **schedule bar**
+  (`payableSchedule`: overdue / ≤30d / 31–60d / later) so "how much, and by when"
+  reads at a glance.
 - **Due date is optional.** `dueAt: null` = open-ended ("No due date"), sorted after
   the dated ones.
 - **Source resets the icon** to that source's default (`loanSourceIcon`); the user can
@@ -114,8 +132,10 @@ All pure, in `src/domain/loan.ts`.
 
 ## 8. Files
 
-- `src/ui/features/loans/Loans.tsx` — the screen container (+ in-file `LoanEditor`)
-- `src/ui/features/loans/LoanCard.tsx` — the presentational loan card
+- `src/ui/features/loans/Loans.tsx` — the screen container (+ in-file `LoanEditor`, filter state)
+- `src/ui/features/loans/LoanCard.tsx` — the presentational loan card (composed from `CardIdentity` + `.cashy-card*`)
+- `src/ui/features/loans/LoanSummary.tsx` — the overview header (position + payments-due schedule)
+- `src/ui/common/FacetChip.tsx` — the shared filter-chip (transaction + loan bars)
 - `src/domain/loan.ts` — all the pure rules (§4) + `src/domain/loan.test.ts`
 - `src/usecases/loans.ts` — the writes (§5)
 - `src/data/migrations.ts` — the v7 branch (+ `src/data/migrations.test.ts`)

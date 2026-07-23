@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import type { Category, TxType, Wallet } from "@/domain/types";
 import { flattenTree, type TagRank } from "@/domain";
 import type { TxQuery } from "@/ui/features/transactions/useTxQuery";
@@ -6,7 +6,7 @@ import { TX_STATUS_META, TX_STATUS_ORDER } from "@/domain/txStatus";
 import { formatMoneyShort } from "@/domain/money";
 import { cn } from "@/lib/utils";
 import { TagChip } from "@/ui/common/TagChip";
-import { Popover } from "@/ui/kit/Popover";
+import { FacetChip } from "@/ui/common/FacetChip";
 
 const TYPES: { key: TxType; label: string }[] = [
   { key: "expense", label: "Expense" },
@@ -17,77 +17,6 @@ const TYPES: { key: TxType; label: string }[] = [
 function parseAmt(s: string): number | null {
   const d = s.replace(/[^\d]/g, "");
   return d ? parseInt(d, 10) : null;
-}
-
-/**
- * One filter facet, rendered as a self-contained dropdown CHIP: click the body to
- * open its own little panel, and — once something is chosen — the chip shows the
- * selection and grows an × that clears just this facet. So the chip IS the applied
- * token; there is no separate token row echoing it.
- *
- * `accent` calls out the type facet with a black outline (§1 sanctions the type
- * scope alone); every other active chip stays neutral grey.
- */
-function FacetChip({
-  label,
-  value,
-  active,
-  accent = false,
-  panelWidth = 240,
-  onClear,
-  children,
-}: {
-  label: string;
-  /** the summary shown after the label when active (e.g. "Recorded +1") */
-  value?: string;
-  active: boolean;
-  accent?: boolean;
-  panelWidth?: number;
-  onClear: () => void;
-  children: ReactNode | ((props: { close: () => void }) => ReactNode);
-}) {
-  return (
-    <Popover
-      inline
-      panelWidth={panelWidth}
-      trigger={({ open, toggle }) => (
-        <span
-          className={cn(
-            "cashy-facet",
-            active && "cashy-facet--active",
-            active && accent && "cashy-facet--accent",
-            open && "cashy-facet--open",
-          )}
-        >
-          <button
-            type="button"
-            className="cashy-facet__main"
-            onClick={toggle}
-            aria-expanded={open}
-          >
-            <span className="cashy-facet__label">{label}</span>
-            {active && value ? <span className="cashy-facet__val">{value}</span> : null}
-            {!active && <span className="wb-ico wb-ico--xs cashy-facet__caret">expand_more</span>}
-          </button>
-          {active && (
-            // Reuse the kit's filter-token × (18×18, glyph via ::before, proper
-            // hover background) rather than a hand-rolled one — one × across the app.
-            <button
-              type="button"
-              className="wb-filter-token__x cashy-facet__x"
-              aria-label={`Clear ${label.toLowerCase()} filter`}
-              onClick={(e) => {
-                e.stopPropagation();
-                onClear();
-              }}
-            />
-          )}
-        </span>
-      )}
-    >
-      {children}
-    </Popover>
-  );
 }
 
 /**

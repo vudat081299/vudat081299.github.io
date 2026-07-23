@@ -1,4 +1,5 @@
 import { formatMoneyShort } from "@/domain/money";
+import { formatPercent } from "@/domain/format";
 import type { BreakdownSlice } from "@/domain";
 
 /**
@@ -151,7 +152,7 @@ export function SpendChart({
               className="wb-num"
               style={{ fontSize: 12, fontWeight: 700, color: sel.colorHex }}
             >
-              {Math.round(sel.pct * 100)}%
+              {formatPercent(sel.pct)}
             </span>
           </>
         ) : (

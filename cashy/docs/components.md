@@ -88,7 +88,8 @@ Pure/presentational; none touch the store.
 
 | Component | Purpose | Key props |
 |---|---|---|
-| `AmountDisplay` | the single way money is drawn (income green, spend neutral-bold, red only when a real problem) | `amount`, `type?`, `signed?`, `tone?` (default true), `negative?` |
+| `AmountDisplay` | the single way money is drawn (income green, spend neutral-bold, red only when a real problem; `positive` tints a real inflow/asset green, `short` renders the compact `3,4m` form) | `amount`, `type?`, `signed?`, `tone?` (default true), `negative?`, `positive?`, `short?` |
+| `StatFigure` | one labelled money figure — a caption over a bold, tone-aware `AmountDisplay`; the shared building block for summary stat rows (group inside `.cashy-figrow`). Used by `LoanSummary` and the Dashboard "Balances" breakdown | `label`, `amount`, `positive?`, `negativeRed?`, `short?` |
 | `CategoryCap` | a category as a neutral grey capsule | `category?: Category \| null` (null → "Uncategorised") |
 | `CategorySelect` | tree category picker (icon+colour+indent+search) in a Popover | `categories`, `type: TxType`, `value: string\|null`, `onChange` |
 | `WalletPicker` | flat wallet picker (neutral tile + name) in a Popover; `excludeId` drops a transfer's other leg | `wallets`, `value: string\|null`, `onChange`, `allowNone?`, `placeholder?`, `excludeId?` |
@@ -132,7 +133,9 @@ examples).
 | `SubscriptionHistory` | settled cycles, newest first, each with Undo — controlled modal | `sub`, `txs`, `open`, `onClose`, `onRevert(txId,month,wasPaid)` |
 | `SubscriptionCancel` | cancel dialog asking WHEN the service stopped — controlled modal | `sub`, `pending`, `open`, `onClose`, `onCancel(cancelledAt)` |
 | `WalletCard` | one wallet as a card: accent-tinted tile + kind (or card network) + derived balance (negative → red, archived → dimmed); a `card` with a credit limit adds a utilisation bar + "used / available" line | `wallet: Wallet`, `balance: number`, `onEdit?(id)` |
-| `LoanCard` | one loan as a card: neutral tile + counterparty + source label, the outstanding amount, a repayment progress bar, a due-date + interest line, and a status pill (overdue → danger / due-soon → warning / paid → success; active → none). Borrowed vs lent flips the wording ("You owe"/"…repaid" ↔ "Owed to you"/"…collected") | `loan: Loan` (derives its own numbers from `domain/loan`); renders in the `#/cashy` gallery ("8 · Loans") |
+| `LoanCard` | one loan as a card — **composed from `CardIdentity` + `.cashy-card*`** like `WalletCard` (migrated off inline styles in the loans redesign). Neutral tile + counterparty + source; a direction line ("I owe" / "Owed to me") whose arrow + amount go **green for lent** (an inflow) and stay neutral for borrowed (red only when overdue); a 6px repayment bar; a foot with a tier-3 due line (only the day-count bolded) + interest "N% per year" ("No interest" recedes). Every state carries a status capsule — overdue/due-soon/paid, or a neutral "N months left" (rounded down via `loanTimeLeft`) for a calm active loan; a settled loan dims like a cancelled subscription | `loan: Loan` (derives its own numbers from `domain/loan`), `onEdit?(id)`, `now?`; renders in the `#/cashy` gallery ("8 · Loans") |
+| `LoanSummary` | the loans-overview header: a "where I stand" panel (you owe / owed to me / net) beside a "what's coming" panel — the next payment (date · amount · to whom) and a segmented **schedule bar** + legend splitting what I owe into overdue / ≤30d / 31–60d / later | `payable`, `receivable`, `net`, `schedule: PayableSchedule`, `next` (from `domain/loan.payableSchedule` + `nextPayment`) |
+| `FacetChip` (common) | one filter facet as a self-contained dropdown chip — dashed outline unselected, solid when a value is chosen, with an × to clear just that facet. Shared by the transaction **and** loan filter bars | `label`, `value?`, `active`, `accent?`, `panelWidth?`, `onClear`, `children` (panel, or `({close})⇒panel`) |
 
 `TagRank = { tag: Tag; count: number; shade: number }` (from `rankTags`). `Due`, `TxQuery`,
 `Range`, `BreakdownSlice`, `WalletPoint`, `ForecastPoint` are exported from the relevant
@@ -149,7 +152,7 @@ examples).
 | `Transactions` | period + filter bar + full table (50/page) |
 | `Subscriptions` | stats + "to confirm" dues + services table (in-file `SubscriptionRow`, not the card) |
 | `Wallets` | net worth + wallets grouped by kind (Cash & accounts / Cards / Other / Archived) + in-file `WalletEditor` (name, kind, balance, card network + credit limit for cards, colour, icon, archive/delete) |
-| `Loans` | You-owe / Owed-to-you / Net summary card + grouped `LoanCard` grids ("Money I owe" / "Owed to me" / "Archived", each sorted by `sortLoans`) + in-file `LoanEditor` (borrowed/lent toggle, counterparty, source, principal, interest rate + period, opened + optional due dates, colour, icon, note, a live payments sub-editor with a live outstanding readout, archive/delete) |
+| `Loans` | `LoanSummary` header (position + payments-due schedule) + a shared `FacetChip` filter bar (search · Status · Source · Archived) + grouped `LoanCard` grids ("Money I owe" / "Owed to me" / "Archived", each sorted by `sortLoans`) + in-file `LoanEditor` (borrowed/lent toggle, counterparty, source, principal, interest rate + period, opened + optional due dates, colour, icon, note, a live payments sub-editor with a live outstanding readout, archive/delete) |
 | `Categories` | drag-to-reorder / drop-to-nest tree + in-file `CategoryEditor` modal |
 | `Tags` | tag list + in-file `TagEditor` modal |
 | `Settings` | appearance / workspace / data (export/import/sample) / danger zone |
@@ -173,6 +176,7 @@ Mounted once at the app root, opened imperatively via `lib/modals`.
 Dashboard
 ├─ PageHeader · PeriodPicker → PeriodPanel → DateRangeInput, RangeCalendar
 ├─ BalanceCard ×4
+├─ Balances card  → StatFigure ×3 (.cashy-figrow), AmountDisplay (wallet + loans rows)
 ├─ BalanceForecastChart                (ForecastPoint[])
 ├─ ConnectedSubscriptionCard ×N  →  SubscriptionCard → SubTile
 │                                    + SubscriptionCatchUp / History / Cancel

@@ -74,7 +74,7 @@ Where a given kind of code MUST live.
 ```
 src/
   domain/     types sort category tag transaction subscription analytics
-              wallet loan date period money txStatus · index.ts (barrel) · *.test.ts
+              wallet loan date period money format txStatus · index.ts (barrel) · *.test.ts
   data/       store persistence migrations seed sample draft
   usecases/   workspace settings categories tags transactions subscriptions wallets loans
   ui/kit/     wb-* design system (63 files)
@@ -129,7 +129,20 @@ A subscription **never books money on its own**. Each due cycle materialises a
 | `tag.ts` | `rankTags` — order **and** ink shade by usage rank, not raw count |
 | `analytics.ts` | `breakdown` (rolls children into root category), `walletSeries` (trims dead margins at both ends, keeps middle gaps), `periodInsights`, `monthlyNetRate`, `forecastSeries` — all skip transfers |
 | `wallet.ts` | `isTransfer`, `walletBalance`/`walletBalances`, `netWorth`, `orphanWallet`, `guessWalletKind`, `walletIcon`, `nextWalletOrder` — balances DERIVED from the ledger; a transfer moves between two wallets and counts toward no income/expense total |
-| `loan.ts` | `loanPaid`, `loanOutstanding` (`principal − Σ payments`, floored at 0), `loanProgress`, `isPaidOff`, `daysUntilDue`, `loanStatus` (paid\|overdue\|due-soon\|active), `isOverdue`, `loanNetWorthDelta` (borrowed −, lent +), `totalPayable`, `totalReceivable`, `loansNetWorth` (= receivable − payable), `sortLoans`, `loanSourceIcon` — money borrowed (I owe) or lent (owed to me), each a self-contained record with a manual repayment log; outstanding is DERIVED and interest is reference-only (never accrued). Does NOT intersect transactions/analytics — net worth is composed at the UI edge as `walletNetWorth + loansNetWorth` |
+| `loan.ts` | `loanPaid`, `loanOutstanding` (`principal − Σ payments`, floored at 0), `loanProgress`, `isPaidOff`, `daysUntilDue`, `loanStatus` (paid\|overdue\|due-soon\|active), `isOverdue`, `loanNetWorthDelta` (borrowed −, lent +), `totalPayable`, `totalReceivable`, `loansNetWorth` (= receivable − payable), `loanTimeLeft` (coarse "N months left", floored to the half), `payableSchedule` (what I owe bucketed overdue/≤30d/31–60d/later), `nextPayment` (soonest upcoming debt), `sortLoans`, `loanSourceIcon` — money borrowed (I owe) or lent (owed to me), each a self-contained record with a manual repayment log; outstanding is DERIVED and interest is reference-only (never accrued). Does NOT intersect transactions/analytics — net worth is composed at the UI edge as `walletNetWorth + loansNetWorth` |
+
+### 3.3 Shared numeric & text helpers
+
+Small, pure, and cross-cutting — the one home for a rounding/formatting rule so
+no screen or usecase reinvents it (`Math.round(x*100)+"%"` scattered around is
+exactly what these prevent).
+
+| Module | Owns |
+|---|---|
+| `money.ts` | **The only place money is formatted _or_ rounded.** `formatMoney` (full `18.785.000 đ`), `formatMoneyShort` (compact `3,4m` — a magnitude letter carries the unit, so no `đ`), `formatDigits`, `signedMoney`, `parseMoney` (text → integer đồng); plus the coercion the "integer VND, never a float" invariant hangs on — `toVnd` (round to whole đồng) and `toVndNonNeg` (clamp ≥ 0). Every usecase that writes a money field routes through these two. |
+| `format.ts` | Non-money display formatting. `formatPercent(ratio, decimals?)` — a ratio → `"13%"` / `"12,8%"`, vi-VN comma, trailing `,0` dropped. Callers pass the raw ratio and add any sign themselves. |
+| `date.ts` / `period.ts` | Calendar maths + labels (YMD parsing, `daysBetween`, `todayYMD`, `fmtDateShort`; period ranges + `prevRange`). All date arithmetic lives here, never inline in a component. |
+| `sort.ts` | Generic stable comparators reused across the aggregates. |
 
 ---
 

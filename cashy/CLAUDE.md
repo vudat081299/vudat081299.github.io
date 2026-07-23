@@ -227,15 +227,21 @@ a meter + its note is `.cashy-cardmeter`; the reusable icon tile is `.cashy-subt
 that domain's `ui/features/<domain>/` folder and is *reused* by any screen — the
 Dashboard/Overview imports `SubscriptionCard` from `features/subscriptions/`, it is
 not re-implemented per screen; only a card with no domain of its own belongs in a
-screen's folder. `SubscriptionCard` and `WalletCard` follow this; `LoanCard` still
-carries legacy inline styling and is migrated as part of the loans redesign.
+screen's folder. `SubscriptionCard`, `WalletCard` **and `LoanCard`** all follow
+this now (LoanCard was migrated off its legacy inline styling in the loans
+redesign — see [docs/features/loans.md](docs/features/loans.md)). A card's shared
+filter bar is likewise composed, not re-implemented: `FacetChip`
+(`ui/common/FacetChip.tsx`) is the one dropdown-chip both the transaction and loan
+filters use — unselected chips wear a dashed outline, a chosen one goes solid.
 
 ---
 
 ## 8. Invariants — break these and the app is *wrong*, not just messy
 
 1. **Money is an integer count of VND.** No floats, no cents. Format/parse only via
-   `domain/money`.
+   `domain/money`; every write coerces through `money.toVnd` / `toVndNonNeg` (one
+   home for the rounding rule). Non-money display formatting (percent) lives in
+   `domain/format`.
 2. **Only `status: "recorded"` counts toward money totals** (`domain/txStatus.isCounted`).
    A missing `status` means `"recorded"` (legacy rows) — always read via `statusOf`.
 3. **Subscriptions never book money on their own.** Each due cycle materialises a

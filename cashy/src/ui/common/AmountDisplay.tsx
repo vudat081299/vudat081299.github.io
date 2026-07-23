@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { formatMoney, signedMoney } from "@/domain/money";
+import { formatMoney, formatMoneyShort, signedMoney } from "@/domain/money";
 import type { TxType } from "@/domain/types";
 
 /**
@@ -18,6 +18,8 @@ export function AmountDisplay({
   signed = false,
   tone = true,
   negative = false,
+  positive = false,
+  short = false,
   className,
 }: {
   amount: number;
@@ -26,15 +28,31 @@ export function AmountDisplay({
   tone?: boolean;
   /** Render red — for a genuine problem, not merely for an expense. */
   negative?: boolean;
+  /** Render green — a real inflow / asset (e.g. money owed to you), the way
+   *  income already reads, without having to fake a `type`. */
+  positive?: boolean;
+  /** Compact magnitude form (`334,1m`, no `đ`) for glance summaries — see
+   *  `formatMoneyShort`. Ignores `signed`/`type`. */
+  short?: boolean;
   className?: string;
 }) {
-  const text = signed && type ? signedMoney(amount, type) : formatMoney(amount);
-  const toneClass = !tone
-    ? undefined
-    : negative
-      ? "wb-num--neg"
-      : type === "income"
-        ? "wb-num--pos"
-        : "wb-num--strong";
+  let text: string;
+  if (short) {
+    text = formatMoneyShort(amount);
+  } else if (signed && type) {
+    text = signedMoney(amount, type);
+  } else {
+    text = formatMoney(amount);
+  }
+  let toneClass: string | undefined;
+  if (!tone) {
+    toneClass = undefined;
+  } else if (negative) {
+    toneClass = "wb-num--neg";
+  } else if (positive || type === "income") {
+    toneClass = "wb-num--pos";
+  } else {
+    toneClass = "wb-num--strong";
+  }
   return <span className={cn("wb-num", toneClass, className)}>{text}</span>;
 }

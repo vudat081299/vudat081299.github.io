@@ -6,15 +6,26 @@ import { SWATCHES } from "@/lib/palette";
 import { uid } from "@/lib/id";
 import { formatDigits, formatMoney, parseMoney } from "@/domain/money";
 import { todayYMD } from "@/domain/date";
-import { loanSourceIcon, loansNetWorth, sortLoans, totalPayable, totalReceivable } from "@/domain/loan";
+import {
+  loanSourceIcon,
+  loansNetWorth,
+  loanStatus,
+  nextPayment,
+  payableSchedule,
+  sortLoans,
+  totalPayable,
+  totalReceivable,
+  type LoanStatus,
+} from "@/domain/loan";
 import type { InterestPeriod, Loan, LoanDirection, LoanPayment, LoanSource } from "@/domain/types";
 import { PageHeader } from "@/ui/common/PageHeader";
 import { Select } from "@/ui/common/Select";
+import { FacetChip } from "@/ui/common/FacetChip";
 import { ColorPicker } from "@/ui/common/ColorPicker";
 import { IconPicker } from "@/ui/common/IconPicker";
-import { AmountDisplay } from "@/ui/common/AmountDisplay";
 import { Modal } from "@/ui/kit/Modal";
 import { LoanCard } from "@/ui/features/loans/LoanCard";
+import { LoanSummary } from "@/ui/features/loans/LoanSummary";
 
 const SOURCES: { value: LoanSource; label: string }[] = [
   { value: "personal", label: "Personal" },
@@ -25,6 +36,13 @@ const SOURCES: { value: LoanSource; label: string }[] = [
 const PERIODS: { value: InterestPeriod; label: string }[] = [
   { value: "year", label: "per year" },
   { value: "month", label: "per month" },
+];
+const STATUS_FILTERS: { value: LoanStatus | "all"; label: string }[] = [
+  { value: "all", label: "All statuses" },
+  { value: "overdue", label: "Overdue" },
+  { value: "due-soon", label: "Due soon" },
+  { value: "active", label: "Active" },
+  { value: "paid", label: "Settled" },
 ];
 
 function LoanEditor({
@@ -422,31 +440,56 @@ function LoanGroup({
   );
 }
 
-function Stat({ label, amount, negativeRed }: { label: string; amount: number; negativeRed?: boolean }) {
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-      <span style={{ fontSize: 12, color: "var(--wb-fg-muted)" }}>{label}</span>
-      <div style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.1 }}>
-        <AmountDisplay amount={amount} negative={negativeRed ? amount < 0 : false} />
-      </div>
-    </div>
-  );
-}
-
 export function Loans() {
   const { loans } = useCashy();
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Loan | null>(null);
   const now = useMemo(() => new Date(), []);
 
-  const active = useMemo(() => loans.filter((l) => !l.archived), [loans]);
-  const archived = useMemo(() => loans.filter((l) => l.archived), [loans]);
+  // Filters. The screen already groups by direction, so the filter narrows the
+  // OTHER axes — name, status, source — plus whether put-away (archived) loans
+  // show. The stat row above stays on the full set: it's your whole position, not
+  // a view of the current filter.
+  const [query, setQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<LoanStatus | "all">("all");
+  const [sourceFilter, setSourceFilter] = useState<LoanSource | "all">("all");
+  const [showArchived, setShowArchived] = useState(false);
+
   const payable = useMemo(() => totalPayable(loans), [loans]);
   const receivable = useMemo(() => totalReceivable(loans), [loans]);
   const net = useMemo(() => loansNetWorth(loans), [loans]);
+  const activeCount = useMemo(() => loans.filter((l) => !l.archived).length, [loans]);
+  // When I owe money, bucketed by when it's due, and the next payment coming up —
+  // the fuel for the overview's "what's coming" panel.
+  const schedule = useMemo(() => payableSchedule(loans, now), [loans, now]);
+  const next = useMemo(() => nextPayment(loans, now), [loans, now]);
 
-  const borrowed = useMemo(() => active.filter((l) => l.direction === "borrowed"), [active]);
-  const lent = useMemo(() => active.filter((l) => l.direction === "lent"), [active]);
+  const visible = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return loans.filter((l) => {
+      if (q && !l.counterparty.toLowerCase().includes(q)) return false;
+      if (sourceFilter !== "all" && l.source !== sourceFilter) return false;
+      if (statusFilter !== "all" && loanStatus(l, now) !== statusFilter) return false;
+      return true;
+    });
+  }, [loans, query, sourceFilter, statusFilter, now]);
+
+  const borrowed = useMemo(
+    () => visible.filter((l) => !l.archived && l.direction === "borrowed"),
+    [visible],
+  );
+  const lent = useMemo(
+    () => visible.filter((l) => !l.archived && l.direction === "lent"),
+    [visible],
+  );
+  const archivedList = useMemo(
+    () => (showArchived ? visible.filter((l) => l.archived) : []),
+    [visible, showArchived],
+  );
+
+  const filtersActive =
+    query.trim() !== "" || statusFilter !== "all" || sourceFilter !== "all";
+  const nothingShown = borrowed.length === 0 && lent.length === 0 && archivedList.length === 0;
 
   function openAdd() {
     setEditing(null);
@@ -461,7 +504,7 @@ export function Loans() {
     <div className="wb-stack wb-stack--loose">
       <PageHeader
         title="Loans"
-        subtitle={`${active.length} active · money you owe and money owed to you`}
+        subtitle={`${activeCount} active · money you owe and money owed to you`}
         actions={
           <button type="button" className="wb-btn wb-btn--round" onClick={openAdd}>
             <span className="wb-ico wb-ico--xs">add</span>
@@ -470,16 +513,13 @@ export function Loans() {
         }
       />
 
-      <div className="wb-card">
-        <div
-          className="wb-card__body"
-          style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 16 }}
-        >
-          <Stat label="You owe" amount={payable} />
-          <Stat label="Owed to you" amount={receivable} />
-          <Stat label="Net" amount={net} negativeRed />
-        </div>
-      </div>
+      <LoanSummary
+        payable={payable}
+        receivable={receivable}
+        net={net}
+        schedule={schedule}
+        next={next}
+      />
 
       {loans.length === 0 ? (
         <p style={{ fontSize: 13, color: "var(--wb-fg-muted)", margin: "2px 0 0" }}>
@@ -487,10 +527,164 @@ export function Loans() {
         </p>
       ) : (
         <>
-          <LoanGroup title="Money I owe" loans={borrowed} onEdit={openEdit} now={now} />
-          <LoanGroup title="Owed to me" loans={lent} onEdit={openEdit} now={now} />
-          {archived.length > 0 && (
-            <LoanGroup title="Archived" loans={archived} onEdit={openEdit} now={now} />
+          {/* Filter bar: search a name, narrow by status or source, and choose
+              whether put-away loans show. Grouping already handles direction. */}
+          <div className="wb-filterbar">
+            {/* Seamless search pill — same control as the transaction filter. */}
+            <div className="wb-input-group wb-input-group--seamless wb-filterbar__search cashy-search">
+              <span className="wb-input-group__addon">
+                <span className="wb-ico wb-ico--sm">search</span>
+              </span>
+              <input
+                className="wb-input"
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search a name…"
+                aria-label="Search loans by name"
+              />
+              {query && (
+                <button
+                  type="button"
+                  className="wb-input-group__btn"
+                  aria-label="Clear search"
+                  onClick={() => setQuery("")}
+                >
+                  <span className="wb-ico wb-ico--sm">close</span>
+                </button>
+              )}
+            </div>
+
+            <FacetChip
+              label="Status"
+              value={statusFilter === "all" ? undefined : STATUS_FILTERS.find((s) => s.value === statusFilter)?.label}
+              active={statusFilter !== "all"}
+              panelWidth={200}
+              onClear={() => setStatusFilter("all")}
+            >
+              {({ close }) => (
+                <div className="wb-menu cashy-facet-pop" style={{ border: 0, boxShadow: "none" }}>
+                  <div className="wb-stack" style={{ "--wb-stack-gap": "1px" } as CSSProperties}>
+                    {STATUS_FILTERS.map((s) => (
+                      <label key={s.value} className="wb-radio wb-menu__item">
+                        <input
+                          type="radio"
+                          name="loan-status"
+                          checked={statusFilter === s.value}
+                          onChange={() => {
+                            setStatusFilter(s.value);
+                            close();
+                          }}
+                        />
+                        {s.label}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </FacetChip>
+
+            <FacetChip
+              label="Source"
+              value={sourceFilter === "all" ? undefined : SOURCES.find((s) => s.value === sourceFilter)?.label}
+              active={sourceFilter !== "all"}
+              panelWidth={200}
+              onClear={() => setSourceFilter("all")}
+            >
+              {({ close }) => (
+                <div className="wb-menu cashy-facet-pop" style={{ border: 0, boxShadow: "none" }}>
+                  <div className="wb-stack" style={{ "--wb-stack-gap": "1px" } as CSSProperties}>
+                    <label className="wb-radio wb-menu__item">
+                      <input
+                        type="radio"
+                        name="loan-source"
+                        checked={sourceFilter === "all"}
+                        onChange={() => {
+                          setSourceFilter("all");
+                          close();
+                        }}
+                      />
+                      All sources
+                    </label>
+                    {SOURCES.map((s) => (
+                      <label key={s.value} className="wb-radio wb-menu__item">
+                        <input
+                          type="radio"
+                          name="loan-source"
+                          checked={sourceFilter === s.value}
+                          onChange={() => {
+                            setSourceFilter(s.value);
+                            close();
+                          }}
+                        />
+                        {s.label}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </FacetChip>
+
+            <FacetChip
+              label="Archived"
+              value={showArchived ? "Shown" : undefined}
+              active={showArchived}
+              panelWidth={170}
+              onClear={() => setShowArchived(false)}
+            >
+              {({ close }) => (
+                <div className="wb-menu cashy-facet-pop" style={{ border: 0, boxShadow: "none" }}>
+                  <div className="wb-stack" style={{ "--wb-stack-gap": "1px" } as CSSProperties}>
+                    {[
+                      { v: false, label: "Hidden" },
+                      { v: true, label: "Shown" },
+                    ].map((o) => (
+                      <label key={String(o.v)} className="wb-radio wb-menu__item">
+                        <input
+                          type="radio"
+                          name="loan-arch"
+                          checked={showArchived === o.v}
+                          onChange={() => {
+                            setShowArchived(o.v);
+                            close();
+                          }}
+                        />
+                        {o.label}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </FacetChip>
+
+            {(filtersActive || showArchived) && (
+              <button
+                type="button"
+                className="cashy-facet-clear"
+                onClick={() => {
+                  setQuery("");
+                  setStatusFilter("all");
+                  setSourceFilter("all");
+                  setShowArchived(false);
+                }}
+              >
+                Clear all
+              </button>
+            )}
+          </div>
+
+          {nothingShown ? (
+            <p style={{ fontSize: 13, color: "var(--wb-fg-muted)", margin: "2px 0 0" }}>
+              {filtersActive
+                ? "No loans match your filters."
+                : "Nothing to show — every loan is archived. Use the Archived filter to show them."}
+            </p>
+          ) : (
+            <>
+              <LoanGroup title="Money I owe" loans={borrowed} onEdit={openEdit} now={now} />
+              <LoanGroup title="Owed to me" loans={lent} onEdit={openEdit} now={now} />
+              <LoanGroup title="Archived" loans={archivedList} onEdit={openEdit} now={now} />
+            </>
           )}
         </>
       )}

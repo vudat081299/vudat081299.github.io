@@ -25,9 +25,10 @@ except deleting rows from its own recent-transactions table.
 | Container | `src/ui/features/dashboard/Dashboard.tsx` |
 
 Layout, top to bottom: `PageHeader` (title + `<PeriodPicker>` action) → 4-up
-`wb-stat-grid` KPIs → Forecast card → Subscriptions strip (conditional) →
-`wb-grid--3` row (cash-flow card spanning 2 cols + spending-donut card) → Insights
-card (conditional) → filter bar + recent-transactions table.
+`wb-stat-grid` KPIs → **Balances card** (net worth + wallet rows + loans; shown
+when there's ≥1 wallet or loan) → Forecast card → Subscriptions strip
+(conditional) → `wb-grid--3` row (cash-flow card spanning 2 cols + spending-donut
+card) → Insights card (conditional) → filter bar + recent-transactions table.
 
 ## 3. Data it touches
 
@@ -116,6 +117,17 @@ delta greens on any rise and reds on any fall — a raw sign, so a *rising spend
 tile shows green. Only the Insights "Spending vs last period" tile inverts this
 (green when you spent less). Delta is formatted vi-VN (`"12,4%"`, one decimal only
 when it carries signal), hidden when `prev` is 0 (`pctChange` → `null`).
+
+**Balances card.** A true net worth of **assets − debts** = `netWorth(wallets,
+txs)` (wallet net) + `loansNetWorth(loans)`. The headline is the net-worth figure
+(`.cashy-networth__val`, not squeezed onto an `h3` baseline) with a "Net worth ·
+assets − debts" caption and a "Manage" → `#/wallets` button. When there are loans,
+a `.cashy-figrow` of three shared `StatFigure`s breaks it down — **Assets** (wallet
+net), **You owe** (payable), **Owed to you** (receivable, green) — instead of a
+crammed dotted strip. Below: one row per non-archived wallet (balance from
+`walletBalances`), then a single reconciling "Loans · net" row (→ `#/loans`); the
+wallet rows + the loans row sum to the headline. Colour = status throughout
+(owed-to-you green, a negative net red), left to `StatFigure`/`AmountDisplay`.
 
 **Forecast card.** Horizon toggle 6 / 12 / 24 months (default 12). Projects
 `view.balance` (all-time net) forward at `monthlyNet = monthlyNetRate(t.net,

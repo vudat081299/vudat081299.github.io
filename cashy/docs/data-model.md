@@ -336,7 +336,7 @@ previously omitted wallets); on import both back-fill to `[]` when an older expo
 
 ## 6. Data-touching invariants
 
-1. **Money = integer VND, never a float** (`amount ≥ 0`; sign implied by `type`). Format/parse only via `money.ts`.
+1. **Money = integer VND, never a float** (`amount ≥ 0`; sign implied by `type`). Format/parse only via `money.ts`; every write coerces through `money.toVnd` / `toVndNonNeg` so the integer-đồng rule lives in one place.
 2. **Only `recorded` rows count** toward totals (`isCounted`/`statusOf`).
 3. **Missing status ⇒ `recorded`** (legacy rows).
 4. **Cycle key is `"YYYY-MM"` for both intervals** (a yearly plan = one key per year).
