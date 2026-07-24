@@ -11,7 +11,6 @@ import {
   monthlyNetRate,
   needsPaymentNow,
   netWorth,
-  OTHER_SLICE_ID,
   pctChange,
   periodInsights,
   rankTags,
@@ -21,43 +20,26 @@ import {
   walletBalances,
   walletSeries,
   type ChartBucket,
-  type Steadiness,
 } from "@/domain";
 import { periodLabel, prevRange } from "@/domain/period";
-import { formatPercent } from "@/domain/format";
 import { useSubFilter } from "@/ui/features/subscriptions/useSubFilter";
-import { SubFilterBar } from "@/ui/features/subscriptions/SubFilterBar";
 import { useAtScrollEnd } from "@/ui/features/dashboard/useAtScrollEnd";
 import { useTxQuery } from "@/ui/features/transactions/useTxQuery";
 import { navigate } from "@/lib/router";
-import { formatMoney, formatMoneyShort } from "@/domain/money";
 import { openTxEditor } from "@/lib/modals";
 import { PageHeader } from "@/ui/common/PageHeader";
-import { ScrollArea } from "@/ui/kit/ScrollArea";
 import { BalanceCard } from "@/ui/features/dashboard/BalanceCard";
-import { BalanceForecastChart } from "@/ui/features/dashboard/BalanceForecastChart";
-import { CashflowChart } from "@/ui/features/dashboard/CashflowChart";
-import { SpendChart } from "@/ui/features/dashboard/SpendChart";
-import { AmountDisplay } from "@/ui/common/AmountDisplay";
-import { StatFigure } from "@/ui/common/StatFigure";
-import { Icon } from "@/ui/kit/icons";
 import { PeriodPicker } from "@/ui/common/PeriodPicker";
-import { ConnectedSubscriptionCard } from "@/ui/features/subscriptions/ConnectedSubscriptionCard";
 import { TxFilterBar } from "@/ui/features/transactions/TxFilterBar";
 import { TransactionTable } from "@/ui/features/transactions/TransactionTable";
 import { EmptyState } from "@/ui/kit/EmptyState";
 import { Button } from "@/ui/kit/Button";
-import { Card } from "@/ui/kit/Card";
-import { Capsule } from "@/ui/kit/Capsule";
-
-/** Plain-language wording for the daily-spend steadiness band (see periodInsights).
- *  The band already hides the "coefficient of variation" — this hides the jargon. */
-const STEADINESS: Record<Steadiness, { label: string; hint: string }> = {
-  "very-steady": { label: "Very steady", hint: "barely changes day to day" },
-  steady: { label: "Steady", hint: "fairly consistent day to day" },
-  uneven: { label: "Uneven", hint: "some days spike above the rest" },
-  erratic: { label: "Erratic", hint: "a few days dominate the total" },
-};
+import { BalancesCard } from "./BalancesCard";
+import { ForecastCard } from "./ForecastCard";
+import { DashboardSubscriptions } from "./DashboardSubscriptions";
+import { CashflowCard } from "./CashflowCard";
+import { CategoryBreakdownCard } from "./CategoryBreakdownCard";
+import { InsightsCard } from "./InsightsCard";
 
 export function Dashboard() {
   // The query owns the period so the header picker, the charts AND the table all
@@ -173,88 +155,6 @@ export function Dashboard() {
   // heard the word "median". Spending less than last period is the GOOD direction,
   // so that delta greens when it falls and reds when it climbs.
   const spendDelta = pctChange(t.expense, tp.expense);
-  const steady = insights.steadiness ? STEADINESS[insights.steadiness] : null;
-  const insightTiles: {
-    icon: string;
-    label: string;
-    value: string;
-    hint: string;
-    color?: string;
-  }[] = [
-    {
-      icon: "savings",
-      label: "Savings rate",
-      value: insights.savingsRate == null ? "—" : formatPercent(insights.savingsRate),
-      hint: "of income kept",
-      color:
-        insights.savingsRate == null
-          ? undefined
-          : insights.savingsRate >= 0
-            ? "var(--wb-success-text)"
-            : "var(--wb-danger-text)",
-    },
-    {
-      icon: spendDelta != null && spendDelta > 0 ? "trending_up" : "trending_down",
-      label: "Spending vs last period",
-      value:
-        spendDelta == null
-          ? "—"
-          : `${spendDelta > 0 ? "+" : spendDelta < 0 ? "−" : ""}${formatPercent(Math.abs(spendDelta))}`,
-      hint:
-        spendDelta == null
-          ? "no earlier period yet"
-          : spendDelta > 0
-            ? "you spent more"
-            : spendDelta < 0
-              ? "you spent less"
-              : "about the same",
-      color:
-        spendDelta == null || spendDelta === 0
-          ? undefined
-          : spendDelta < 0
-            ? "var(--wb-success-text)"
-            : "var(--wb-danger-text)",
-    },
-    {
-      icon: "today",
-      label: "Average per day",
-      value: formatMoneyShort(insights.avgPerDay),
-      hint: `over ${insights.daysElapsed} ${insights.daysElapsed === 1 ? "day" : "days"}`,
-    },
-    {
-      icon: "speed",
-      label: "Typical day",
-      value: formatMoneyShort(insights.medianPerDay),
-      hint:
-        insights.medianPerDay > 0 && insights.avgPerDay > insights.medianPerDay * 1.3
-          ? "a few big days lift the average"
-          : "close to your average",
-    },
-    {
-      icon: "show_chart",
-      label: "How steady",
-      value: steady?.label ?? "—",
-      hint: steady?.hint ?? "not enough spending yet",
-    },
-    {
-      icon: "donut_small",
-      label: "Top category",
-      value: insights.topCategory ? formatPercent(insights.topCategory.pct) : "—",
-      hint: insights.topCategory ? `on ${insights.topCategory.name}` : "no spending yet",
-    },
-    {
-      icon: "insights",
-      label: "This month's forecast",
-      value: insights.projected == null ? "—" : formatMoneyShort(insights.projected),
-      hint: insights.projected == null ? "this month only" : "at the current pace",
-    },
-    {
-      icon: "local_fire_department",
-      label: "Largest expense",
-      value: insights.topExpense ? formatMoneyShort(insights.topExpense.amount) : "—",
-      hint: insights.topExpense ? insights.topExpense.note : "nothing spent yet",
-    },
-  ];
 
   return (
     <div className="wb-stack wb-stack--loose">
@@ -297,347 +197,24 @@ export function Dashboard() {
 
       {/* Balances — wallet balances + loans net into a true net worth (assets −
           debts). Full editors live at #/wallets and #/loans. */}
-      {(shownWallets.length > 0 || hasLoans) && (
-        <Card>
-          <div className="wb-card__body">
-            <div className="wb-cluster wb-cluster--between" style={{ marginBottom: hasLoans ? 16 : 14, gap: 10 }}>
-              <div className="cashy-networth">
-                <span className="cashy-card-eyebrow">Balances</span>
-                <div className="cashy-networth__val">
-                  <AmountDisplay amount={netWorthAll} negative={netWorthAll < 0} />
-                </div>
-                <span className="cashy-networth__cap">Net worth · assets − debts</span>
-              </div>
-              <Button variant="ghost" size="sm" type="button" onClick={() => navigate("wallets")}>
-                Manage
-              </Button>
-            </div>
-            {/* Net worth broken into its three parts as stat figures (shared
-                StatFigure), clustered left and colour-coded as a legend: assets
-                blue, what you owe red, what's owed to you green. */}
-            {hasLoans && (
-              <div className="cashy-networth__break">
-                <StatFigure label="Assets" amount={walletNet} short valueColor="var(--wb-info-text)" />
-                <StatFigure label="You owe" amount={payable} short valueColor="var(--wb-danger-text)" />
-                {receivable > 0 && (
-                  <StatFigure label="Owed to you" amount={receivable} short valueColor="var(--wb-success-text)" />
-                )}
-              </div>
-            )}
-            {/* Per-wallet mini-tiles: icon + a stacked name-over-amount body, top
-                aligned; the name never truncates and the amount sits right under
-                it, so nothing clips or drifts to the far edge. */}
-            <div className="cashy-balgrid">
-              {shownWallets.map((w) => {
-                const bal = walletBals.get(w.id) ?? w.openingBalance;
-                return (
-                  <div key={w.id} className="cashy-balrow">
-                    <span className="cashy-tile">
-                      <Icon name={w.icon} size={15} />
-                    </span>
-                    <div className="cashy-balrow__body">
-                      <span className="cashy-balrow__name">{w.name}</span>
-                      <AmountDisplay amount={bal} negative={bal < 0} className="cashy-balrow__amt" />
-                    </div>
-                  </div>
-                );
-              })}
-              {/* Loans fold in as one reconciling line — wallet tiles + this = net worth. */}
-              {hasLoans && (
-                <div
-                  role="button"
-                  tabIndex={0}
-                  title="Manage loans"
-                  onClick={() => navigate("loans")}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      navigate("loans");
-                    }
-                  }}
-                  className="cashy-balloans"
-                >
-                  <span className="cashy-tile">
-                    <Icon name="handshake" size={15} />
-                  </span>
-                  <span className="cashy-balloans__label">
-                    Loans <span style={{ color: "var(--wb-fg-muted)" }}>· net</span>
-                  </span>
-                  <AmountDisplay amount={loansNet} negative={loansNet < 0} />
-                </div>
-              )}
-            </div>
-          </div>
-        </Card>
-      )}
+      {(shownWallets.length > 0 || hasLoans) && <BalancesCard shownWallets={shownWallets} hasLoans={hasLoans} walletBals={walletBals} walletNet={walletNet} netWorthAll={netWorthAll} payable={payable} receivable={receivable} loansNet={loansNet} />}
 
       {/* Where the balance is headed: today's number carried forward at the
           period's monthly net. Arithmetic, not a trend model — see the chart. */}
-      <Card>
-        <div className="wb-card__body">
-          <div
-            className="wb-cluster wb-cluster--between"
-            style={{ marginBottom: 16, gap: 10 }}
-          >
-            <div>
-              <span className="cashy-card-eyebrow">Forecast</span>
-              <h3 className="cashy-card-title">Projected balance</h3>
-              <p style={{ margin: "4px 0 0", fontSize: 13, color: "var(--wb-fg-muted)" }}>
-                Today's balance, compounding{" "}
-                <strong style={{ color: "var(--wb-fg)", fontWeight: 650 }}>
-                  {monthlyNet >= 0 ? "+" : ""}
-                  {formatMoneyShort(monthlyNet)}
-                </strong>{" "}
-                net per month
-              </p>
-            </div>
-            <div className="wb-tabs wb-tabs--pill" role="group" aria-label="Forecast horizon">
-              {[6, 12, 24].map((mo) => (
-                <button
-                  key={mo}
-                  type="button"
-                  className={horizon === mo ? "wb-tab is-active" : "wb-tab"}
-                  onClick={() => setHorizon(mo)}
-                >
-                  {mo} mo
-                </button>
-              ))}
-            </div>
-          </div>
-          <div style={{ height: 260 }}>
-            <BalanceForecastChart data={forecast} />
-          </div>
-        </div>
-      </Card>
+      <ForecastCard monthlyNet={monthlyNet} forecast={forecast} horizon={horizon} setHorizon={setHorizon} />
 
       {/* One card per service: what was paid, what is owed, how far through the
           period we are, and the way out. */}
-      {subscriptions.length > 0 && (
-        <div className="wb-stack" style={{ "--wb-stack-gap": "14px" } as CSSProperties}>
-          <div className="wb-cluster wb-cluster--between" style={{ gap: 10 }}>
-            <div>
-              <span className="cashy-card-eyebrow">Recurring</span>
-              <h3 className="cashy-card-title">Subscriptions</h3>
-            </div>
-            <div className="wb-cluster" style={{ gap: 8 }}>
-              {dueCount > 0 && (
-                <Capsule tone="warning">{dueCount} due now</Capsule>
-              )}
-              <Button
-                variant="ghost"
-                size="sm"
-                round
-                type="button"
-                style={{ gap: 4 }}
-                onClick={() => navigate("subscriptions")}
-              >
-                Manage
-                <span className="wb-ico wb-ico--xs">arrow_forward</span>
-              </Button>
-            </div>
-          </div>
-
-          {showSubFilter && <SubFilterBar f={subFilter} />}
-
-          {/* Past 6 services the strip stops growing the page: it caps at ~2.5
-              rows and scrolls, with the foot half-row fading out to signal more.
-              (`Manage` opens the full, unclipped list.) */}
-          {subCards.length ? (
-            <div
-              ref={subPeek.ref}
-              className={
-                subScroll
-                  ? `cashy-subgrid cashy-subgrid--scroll${subPeek.atEnd ? " is-at-bottom" : ""}`
-                  : "cashy-subgrid"
-              }
-            >
-              {subCards.map((sub) => (
-                <ConnectedSubscriptionCard
-                  key={sub.id}
-                  sub={sub}
-                  txs={transactions}
-                  iconStyle={subIconStyle}
-                />
-              ))}
-            </div>
-          ) : (
-            <p className="cashy-subgrid-empty">No subscriptions match these filters.</p>
-          )}
-        </div>
-      )}
+      {subscriptions.length > 0 && <DashboardSubscriptions dueCount={dueCount} showSubFilter={showSubFilter} subFilter={subFilter} subCards={subCards} subPeek={subPeek} subScroll={subScroll} transactions={transactions} subIconStyle={subIconStyle} />}
 
       <div className="wb-grid wb-grid--3">
-        <Card
-          style={{ gridColumn: "span 2", display: "flex", flexDirection: "column" }}
-        >
-          <div
-            className="wb-card__body"
-            style={{ flex: 1, display: "flex", flexDirection: "column" }}
-          >
-            <div
-              className="wb-cluster wb-cluster--between"
-              style={{ marginBottom: 16, gap: 10, alignItems: "flex-start" }}
-            >
-              {/* LEFT: title + the colour key. The legend is only ever read, so it
-                  belongs beside the heading it explains, not out at the edge. */}
-              <div>
-                <span className="cashy-card-eyebrow">Cash flow</span>
-                <h3 className="cashy-card-title">Wallet balance &amp; spending</h3>
-                <div className="wb-legend" style={{ marginTop: 8 }}>
-                  <span className="wb-legend__item">
-                    <span className="wb-legend__dot" style={{ background: "var(--wb-chart-5)" }} />{" "}
-                    Wallet balance
-                  </span>
-                  <span className="wb-legend__item">
-                    <span
-                      className="wb-legend__dot"
-                      style={{ background: "var(--wb-chart-expense)" }}
-                    />{" "}
-                    Spending
-                  </span>
-                </div>
-              </div>
-              {/* RIGHT: the Day / Week / Month roll-up — the one control the user
-                  operates. Built from the kit's segmented primitive (wb-tabs--pill),
-                  not a bespoke one. Only offered past a 30-day window (see spanDays). */}
-              {showBucketToggle && (
-                <div className="wb-tabs wb-tabs--pill" role="group" aria-label="Chart granularity">
-                  {(
-                    [
-                      ["day", "Day"],
-                      ["week", "Week"],
-                      ["month", "Month"],
-                    ] as [ChartBucket, string][]
-                  ).map(([key, label]) => (
-                    <button
-                      key={key}
-                      type="button"
-                      className={chartBucket === key ? "wb-tab is-active" : "wb-tab"}
-                      onClick={() => setBucketOverride(key)}
-                    >
-                      {label}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-            {hasFlow ? (
-              <div style={{ flex: 1, minHeight: 240 }}>
-                <CashflowChart data={wallet} />
-              </div>
-            ) : (
-              <div
-                style={{
-                  flex: 1,
-                  display: "grid",
-                  placeItems: "center",
-                  minHeight: 240,
-                  fontSize: 13,
-                  color: "var(--wb-fg-muted)",
-                }}
-              >
-                Nothing recorded in this period
-              </div>
-            )}
-          </div>
-        </Card>
+        <CashflowCard showBucketToggle={showBucketToggle} chartBucket={chartBucket} setBucketOverride={setBucketOverride} hasFlow={hasFlow} wallet={wallet} />
 
-        <Card>
-          <div className="wb-card__body">
-            <span className="cashy-card-eyebrow">Breakdown</span>
-            <h3 className="cashy-card-title" style={{ marginBottom: 14 }}>
-              Spending by category
-            </h3>
-            <SpendChart
-              slices={slices}
-              total={t.expense}
-              size={168}
-              selectedId={selectedCat}
-              onSelect={setSelectedCat}
-            />
-            {/* EVERY category in the period is listed (not just the top few); each
-                row toggles its slice on the donut. Themed scroll container so a
-                long list scrolls under the kit's thin scrollbar, not the OS one. */}
-            <ScrollArea className="cashy-rank" style={{ marginTop: 18 }}>
-              {slices.map((s) => {
-                const on = s.id === selectedCat;
-                const dim = selectedCat !== null && !on;
-                return (
-                  <button
-                    key={s.id}
-                    type="button"
-                    className={
-                      "cashy-rank__row" +
-                      (on ? " cashy-rank__row--active" : "") +
-                      (dim ? " cashy-rank__row--dim" : "")
-                    }
-                    onClick={() => setSelectedCat(on ? null : s.id)}
-                  >
-                    <div className="cashy-rank__head">
-                      <span className="cashy-dot cashy-dot--sm" style={{ background: s.colorHex }} />
-                      <span className="cashy-rank__name">
-                        {s.name}
-                        {s.id === OTHER_SLICE_ID && s.count
-                          ? ` · ${s.count} categories`
-                          : ""}
-                      </span>
-                      <span className="wb-num cashy-rank__amt">{formatMoney(s.total)}</span>
-                      <span className="wb-num cashy-rank__val">{formatPercent(s.pct)}</span>
-                    </div>
-                    <div className="wb-progress">
-                      <div
-                        className="wb-progress__bar"
-                        style={{
-                          width: `${Math.max(4, (s.pct / maxSlice) * 100)}%`,
-                          // full category hue, matching its donut slice (web-builder
-                          // ranked bars use the bright chart colour, not a soft tint)
-                          background: s.colorHex,
-                        }}
-                      />
-                    </div>
-                  </button>
-                );
-              })}
-              {slices.length === 0 && (
-                <p style={{ fontSize: 13, color: "var(--wb-fg-muted)", margin: 0 }}>
-                  No spending in this period.
-                </p>
-              )}
-            </ScrollArea>
-          </div>
-        </Card>
+        <CategoryBreakdownCard slices={slices} total={t.expense} selectedCat={selectedCat} setSelectedCat={setSelectedCat} maxSlice={maxSlice} />
       </div>
 
       {/* Insights — derived facts a KPI grid alone doesn't state */}
-      {hasFlow && (
-        <Card>
-          <div className="wb-card__body">
-            <span className="cashy-card-eyebrow">Insights</span>
-            <h3 className="cashy-card-title" style={{ marginBottom: 16 }}>
-              Spending indicators
-            </h3>
-            <div className="cashy-insights">
-              {insightTiles.map((tile) => (
-                <div className="cashy-insight" key={tile.label}>
-                  <span className="cashy-insight__ico">
-                    <span className="wb-ico wb-ico--sm">{tile.icon}</span>
-                  </span>
-                  <div>
-                    <div className="cashy-insight__label">{tile.label}</div>
-                    <div
-                      className="cashy-insight__value"
-                      style={tile.color ? { color: tile.color } : undefined}
-                    >
-                      {tile.value}
-                    </div>
-                    <div className="cashy-insight__hint">{tile.hint}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </Card>
-      )}
+      {hasFlow && <InsightsCard insights={insights} spendDelta={spendDelta} />}
 
       <div className="wb-stack" style={{ "--wb-stack-gap": "16px" } as CSSProperties}>
         <TxFilterBar q={q} tagRanks={tagRanks} categories={categories} wallets={wallets} />
