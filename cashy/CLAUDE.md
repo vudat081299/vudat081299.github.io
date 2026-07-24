@@ -224,8 +224,14 @@ The app is built by *composing* the kit, not by hand-writing `wb-*` markup:
    product-specific (e.g. `TransactionTable` is deliberately NOT the generic `kit/Table`).
 3. **feature entry files** (`Dashboard.tsx`, `Transactions.tsx`, …) do **one job**:
    assemble tier-2 components + layout + wiring (`useCashy` / usecases). `Transactions.tsx`
-   is the model (thin). Fat entries still carrying inline organisms (`Dashboard`, `Loans`,
-   `Subscriptions` — chiefly inline editors) are on the list to extract into tier-2.
+   is the model (thin). The inline editors have been extracted into their own tier-2 files
+   — `LoanEditor` / `WalletEditor` / `ContactEditor` / `CategoryEditor` (with shared option
+   lists in `loanOptions.ts`), slimming `Loans` 686→295, `Wallets` 359→124, `Contacts`
+   150→59, `Categories` 349→230 (pure moves, verified zero UI impact). Still to decompose:
+   `Dashboard.tsx` (681 LOC — six inline `<Card>` sections: Balances / Forecast /
+   Subscriptions / Spending chart / Category breakdown / Insights, over ~14 derivation
+   `useMemo`s → extract each section into a tier-2 organism taking derived props) and
+   `Categories`' inline `Tree` organism (~166 LOC — needs parent state threaded as props).
 
 Known residuals the kit can't yet cover byte-identically (left hand-written on purpose):
 `Settings`' `Section` uses `<section className="wb-card">` (kit `Card` renders a `<div>` —
