@@ -1225,19 +1225,20 @@ body {
   font-size: 17px;
 }
 
-/* Balances card — per-wallet mini-tiles. A tile is an icon beside a stacked
-   name-over-amount body; content is TOP-aligned (align-start) and the name never
-   truncates, so nothing clips ("……") or drifts to the far edge. */
+/* Balances card — per-wallet ledger rows. Each row is an icon beside a single
+   line: the wallet name on the left, its balance pushed to the right edge, so the
+   amounts stack into a clean right-aligned column (matching the "Loans · net"
+   line below). Fewer, wider columns keep the last row from looking lopsided. */
 .cashy-balgrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 2px 24px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2px 32px;
 }
 .cashy-balrow {
   display: flex;
-  align-items: center; /* icon centred against the 2-line name+amount block */
+  align-items: center;
   gap: 10px;
-  padding: 8px 0;
+  padding: 9px 0;
   min-width: 0;
 }
 .cashy-balrow .cashy-tile {
@@ -1247,15 +1248,23 @@ body {
 }
 .cashy-balrow__body {
   display: flex;
-  flex-direction: column;
-  gap: 1px;
+  align-items: baseline;
+  gap: 12px;
+  flex: 1;
   min-width: 0;
 }
 .cashy-balrow__name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: 13px;
   color: var(--wb-fg-muted);
 }
 .cashy-balrow__amt {
+  margin-left: auto;
+  white-space: nowrap;
   font-size: 14px;
 }
 /* The loans total folds in as ONE full-width reconciling line under a divider —

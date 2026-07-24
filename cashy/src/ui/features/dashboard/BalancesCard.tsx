@@ -52,9 +52,9 @@ export function BalancesCard({
                 )}
               </div>
             )}
-            {/* Per-wallet mini-tiles: icon + a stacked name-over-amount body, top
-                aligned; the name never truncates and the amount sits right under
-                it, so nothing clips or drifts to the far edge. */}
+            {/* Per-wallet ledger rows: icon + name on the left, balance pushed to
+                the right edge so the amounts line up in a clean column (see
+                .cashy-balrow). Long names ellipsize rather than wrap. */}
             <div className="cashy-balgrid">
               {shownWallets.map((w) => {
                 const bal = walletBals.get(w.id) ?? w.openingBalance;
