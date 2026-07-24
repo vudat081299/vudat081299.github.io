@@ -52,6 +52,10 @@ export function Dashboard() {
   // Derived from the whole ledger (not the period): a balance is a running total.
   const walletBals = useMemo(() => walletBalances(wallets, transactions), [wallets, transactions]);
   const walletNet = useMemo(() => netWorth(wallets, transactions), [wallets, transactions]);
+  // The wallets' combined opening balance — money on hand before the ledger's
+  // first row. The cash-flow chart's running line starts here so its latest point
+  // matches wallet balance / net worth instead of the in-ledger delta alone.
+  const walletsOpening = useMemo(() => wallets.reduce((s, w) => s + w.openingBalance, 0), [wallets]);
   const shownWallets = useMemo(
     () => wallets.filter((w) => !w.archived).sort((a, b) => a.order - b.order),
     [wallets],
@@ -114,8 +118,8 @@ export function Dashboard() {
     setSelectedCat(null);
   }, [q.range.start, q.range.end]);
   const wallet = useMemo(
-    () => walletSeries(transactions, q.range, chartBucket),
-    [transactions, q.range, chartBucket],
+    () => walletSeries(transactions, q.range, chartBucket, walletsOpening),
+    [transactions, q.range, chartBucket, walletsOpening],
   );
   const maxSlice = slices[0]?.pct || 1;
   const hasFlow = Boolean(t.income || t.expense);

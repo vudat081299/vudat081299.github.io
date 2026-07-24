@@ -187,6 +187,16 @@ describe("walletSeries", () => {
     expect(out[out.length - 1].balance).toBe(600);
   });
 
+  it("starts the running balance from the wallets' opening balance", () => {
+    const rows = [
+      tx({ id: "in", type: "income", amount: 1000, occurredAt: "2026-03-02" }),
+      tx({ id: "out", amount: 400, occurredAt: "2026-03-05" }),
+    ];
+    const out = walletSeries(rows, range, "auto", 5000);
+    expect(out[0].balance).toBe(6000); // 5000 opening + 1000 income
+    expect(out[out.length - 1].balance).toBe(5600); // − 400 spent
+  });
+
   it("splits income and expense per bucket", () => {
     const rows = [
       tx({ id: "in", type: "income", amount: 1000, occurredAt: "2026-03-02" }),

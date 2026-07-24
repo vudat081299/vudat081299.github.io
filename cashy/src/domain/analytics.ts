@@ -118,6 +118,11 @@ export interface WalletPoint {
  * balance is cumulative across ALL transactions so the line reads as a real
  * account balance, not just the in-period delta. Day/month granularity auto.
  *
+ * `opening` is the wallets' combined opening balance — the money on hand BEFORE
+ * the ledger's first row. The running line starts there (not at 0) so it reads as
+ * a real account balance and its latest point matches wallet balance / net worth;
+ * pass 0 (the default) to plot the pure in-ledger delta.
+ *
  * Empty buckets at BOTH ENDS are trimmed away: a 30-day window over a ledger
  * that only starts 10 days ago should draw 10 days, not 20 days of flat nothing
  * followed by the actual data. Gaps in the MIDDLE stay — a quiet week is a fact
@@ -127,6 +132,7 @@ export function walletSeries(
   all: Transaction[],
   range: Range,
   bucket: ChartBucket | "auto" = "auto",
+  opening = 0,
 ): WalletPoint[] {
   let start = range.start;
   let end = range.end;
@@ -236,10 +242,11 @@ export function walletSeries(
     else b.income += t.amount;
   }
 
-  // running wallet balance — cumulative net of the COUNTED tx up to each bucket's end
+  // running wallet balance — the wallets' opening balance plus the cumulative net
+  // of the COUNTED tx up to each bucket's end
   const sorted = [...all].sort((a, b) => a.occurredAt.localeCompare(b.occurredAt));
   let i = 0;
-  let running = 0;
+  let running = opening;
   for (const b of buckets) {
     while (i < sorted.length && sorted[i].occurredAt <= b.endYMD) {
       const s = sorted[i];
