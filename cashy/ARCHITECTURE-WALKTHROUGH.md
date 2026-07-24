@@ -120,9 +120,7 @@ Deliberately minimal: a **single** custom script (`scripts/check-layers.mjs`) �
 | **Plans (design record)** | `docs/loans-plan.md` | ✅ SHIPPED — kept as the design record |
 | | `docs/wallets-plan.md` | ✅ SHIPPED — kept as the wallets design record |
 | | `docs/PLAN.md` | ✅ SHIPPED (2026-07-24) — currency → `₫`, subscriptions filter/sort/trial, `cashy-web-spec.md` split |
-| **Handoff / ops** | `docs/handoff-checklist.md` | Closed record of the documentation + component-catalogue pass |
-| | `REBUILD-NOTES.md` | Closed record of rebuilding every screen onto web-builder |
-| | `README.md` / `CLAUDE.md` | Repo README · `CLAUDE.md` = the guide + conventions an agent must follow |
+| **Operations** | `README.md` / `CLAUDE.md` | Repo README · `CLAUDE.md` = the guide, conventions, and temporary-handoff lifecycle an agent must follow |
 
-Handoff files are closed historical records unless an item is explicitly marked
-`OPEN` with acceptance criteria and a next action.
+Completed handoffs are deleted after durable knowledge is promoted into the
+canonical docs; Git history is the archive.

@@ -31,7 +31,6 @@
 | Currency glyph | Use **`₫` (U+20AB)** across the whole web app, replacing plain `đ` (item 2). |
 | Product docs | **Split a new `docs/cashy-web-spec.md`** for the actual React web build; leave the iOS-native vision docs untouched (item 3). |
 | Subscriptions surface | Build the filter/sort/trial-progress on **BOTH** surfaces — the `#/subscriptions` screen AND the Overview strip (item 1). |
-| REBUILD-NOTES.md | **Keep as history** — no action. |
 | Dev galleries in `dist/` | **Leave as-is** (code-split, DEV-guarded, ~5 KB gzip each) — no action. |
 
 Build order (recommended): **item 2 (currency) → item 1 (subscriptions) → item 3 (web-spec)**, each its own commit. Currency first because it is a tiny, app-wide change that would otherwise churn the subscription snapshots.
@@ -123,7 +122,7 @@ status and shows the filter. Screenshot both. `tsc`/`oxlint`/`build`/`vitest` gr
 - `TransactionEditor.tsx`'s amount input addon already shows `₫` → now consistent; grep
   for any other literal `đ` used as a currency glyph in UI and switch. **Do NOT** touch
   `đ` inside seeded Vietnamese text or copy — only the money glyph.
-- Update docs that show a formatted-money example (`data-model.md`, `handoff-checklist.md`,
+- Update docs that show a formatted-money example (`data-model.md`,
   `transactions.md`, the money row in `components.md`) from `đ` → `₫`, and the memory
   `cashy-design-conventions` (compact-money rule).
 
@@ -159,5 +158,4 @@ reads `… ₫`; the compact forms stay `3,4m` (no unit). `vitest` green.
 
 ## 5. No-action (confirmed)
 
-- `REBUILD-NOTES.md` — keep as history.
 - Dev galleries (`#/wb`, `#/cashy`) in `dist/` — leave as-is.

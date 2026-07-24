@@ -95,15 +95,13 @@ Break these and the app is wrong, not merely inconsistent.
 | [docs/wallets-plan.md](docs/wallets-plan.md) | wallets design record — all five phases shipped |
 | [docs/features/loans.md](docs/features/loans.md) | **feature** — loans / debts: money you owe + owed to you (due dates, reference-only interest, source), folds into Dashboard net worth (assets − debts) |
 | [docs/loans-plan.md](docs/loans-plan.md) | **plan** — loans / debts feature (all phases shipped) |
-| [REBUILD-NOTES.md](REBUILD-NOTES.md) | web-rebuild notes |
-| [docs/handoff-checklist.md](docs/handoff-checklist.md) | closed record of the documentation pass |
 
 ---
 
 ## Optional visual tuning
 
-There are no open handoff blockers. These two constants are intentionally easy to
-tune if the owner wants a different visual weight:
+There are no known blockers. These two constants are intentionally easy to tune if
+the owner wants a different visual weight:
 
 | # | Question | Status / options |
 |---|---|---|

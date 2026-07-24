@@ -27,8 +27,8 @@ make any change correctly **without asking**.
 
 **Source-of-truth order when documents disagree:** code + tests → this web spec /
 the normative architecture and data-model docs → current feature docs → shipped
-plans (historical design records) → native vision/spec. Plans and handoff notes
-record why a decision was made; they do not override current feature docs or code.
+plans (historical design records) → native vision/spec. Plans record why a
+decision was made; they do not override current feature docs or code.
 
 **Minimum reading path for a safe change:** this file → the relevant
 `docs/features/<feature>.md` → the entity fields in `docs/data-model.md` → the
@@ -376,9 +376,27 @@ Detailed steps in [architecture.md §6](docs/architecture.md). In short:
 - **Add a UI primitive** → generic → `ui/kit/` (+ `index.ts`); Cashy-aware → `ui/common/`.
 - **Add a component to the gallery** → drop it into `src/ui/dev/CashyGallery.tsx`
   with fake data (fixtures live at the top of that file).
-- Grep a `wb-*` class in `web-builder.css` before using it; check the import path —
-  `ui/kit` and `ui/common` both export `EmptyState` / `Select` / `ColorPicker`, and
-  two `Pagination`s exist.
+- Grep a `wb-*` class in `web-builder.css` before using it. `EmptyState`, `Select`,
+  and `Pagination` each have one canonical home in `ui/kit`; `ColorPicker` is the
+  remaining intentional name collision with `ui/common`, so check that import.
+
+### Handoff lifecycle (mandatory)
+
+A handoff is a **temporary work queue**, not project documentation.
+
+1. Create or retain a handoff only while work is genuinely unfinished. Every open
+   item must say `OPEN`, name the owner/current state, define acceptance criteria,
+   and give the next safe action.
+2. When an item is completed, first move any durable knowledge into its canonical
+   home: business behaviour → `docs/features/`, data contract → `data-model.md`,
+   architecture/reuse rule → `architecture.md` or `components.md`, agent procedure
+   → this file.
+3. Then **delete the completed item**. If no open item remains, delete the handoff
+   file itself and remove every link to it. Do not keep closed checklists or session
+   notes “for history”; Git history already provides that archive.
+4. If the reasoning remains valuable after the task closes, promote it to an
+   explicit design record/ADR. A design record explains a durable decision; it is
+   not a disguised completed handoff.
 
 ---
 
@@ -397,10 +415,3 @@ Detailed steps in [architecture.md §6](docs/architecture.md). In short:
 | [docs/cashy-v1-spec.md](docs/cashy-v1-spec.md) | v1 use-case spec (native-iOS-flavoured) |
 | [docs/wallets-plan.md](docs/wallets-plan.md) | wallets **design record** (all five phases shipped; see [features/wallets.md](docs/features/wallets.md)) |
 | [docs/loans-plan.md](docs/loans-plan.md) | loans (owe / owed) **design record** (all phases shipped; see [features/loans.md](docs/features/loans.md)) |
-| [REBUILD-NOTES.md](REBUILD-NOTES.md) | the web-rebuild handoff notes |
-| [docs/handoff-checklist.md](docs/handoff-checklist.md) | closed documentation-pass record; no open blockers |
-
-`REBUILD-NOTES.md` and `docs/handoff-checklist.md` are **closed historical
-handoffs**. Any future unfinished work must be marked explicitly `OPEN` with an
-owner, current state, acceptance criteria, and the next safe action; otherwise it
-is context, not a task.
