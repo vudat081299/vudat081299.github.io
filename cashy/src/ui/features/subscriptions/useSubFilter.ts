@@ -49,11 +49,22 @@ export function useSubFilter(
   subscriptions: Subscription[],
   transactions: Transaction[],
   wallets: Wallet[],
+  { pinStatusOrder = false }: { pinStatusOrder?: boolean } = {},
 ): SubFilter {
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState<SubState | null>(null);
   const [walletId, setWallet] = useState<string | null>(null);
   const [sort, setSort] = useState<SubSort>({ key: "status", dir: "asc" });
+
+  // Snapshot the "by status" order ONCE, at first load, when the caller asks the
+  // grid to stay put. On the Subscriptions screen, paying a service changes its
+  // status — without this its card would jump to a new slot mid-interaction and
+  // you'd lose the one you just edited. The Dashboard strip opts out (default):
+  // there, a paid service dropping out of the "due" cluster is useful feedback.
+  const [pinnedOrder] = useState<string[]>(() =>
+    pinStatusOrder ? sortSubscriptions(subscriptions, transactions, new Date()).map((s) => s.id) : [],
+  );
+  const pinnedRank = useMemo(() => new Map(pinnedOrder.map((id, i) => [id, i])), [pinnedOrder]);
 
   const cycleSort = (key: "price" | "days") =>
     setSort((cur) => {
@@ -78,7 +89,15 @@ export function useSubFilter(
     });
 
     // Default order is the pure status sort; the two explicit keys re-sort live.
-    if (sort.key === "status") return sortSubscriptions(kept, transactions, now);
+    if (sort.key === "status") {
+      if (pinStatusOrder) {
+        // Hold the first-load order: a status change (a payment) must not reshuffle
+        // cards. Subs added later aren't in the snapshot, so they fall to the end.
+        const rankOf = (s: Subscription) => pinnedRank.get(s.id) ?? Number.MAX_SAFE_INTEGER;
+        return [...kept].sort((a, b) => rankOf(a) - rankOf(b));
+      }
+      return sortSubscriptions(kept, transactions, now);
+    }
 
     const flip = sort.dir === "asc" ? 1 : -1;
     const byName = (a: Subscription, b: Subscription) => a.name.localeCompare(b.name, "en");
@@ -89,7 +108,7 @@ export function useSubFilter(
     const today = ymd(now);
     const daysLeft = (s: Subscription) => daysBetween(today, nextPaymentDate(s, transactions, now));
     return [...kept].sort((a, b) => flip * (daysLeft(a) - daysLeft(b)) || byName(a, b));
-  }, [subscriptions, transactions, query, status, walletId, sort]);
+  }, [subscriptions, transactions, query, status, walletId, sort, pinStatusOrder, pinnedRank]);
 
   return {
     query,

@@ -13,6 +13,7 @@ import {
 import type { Loan, LoanSource } from "@/domain/types";
 import { PageHeader } from "@/ui/common/PageHeader";
 import { Button } from "@/ui/kit/Button";
+import { Capsule } from "@/ui/kit/Capsule";
 import { FacetChip } from "@/ui/common/FacetChip";
 import { SearchField } from "@/ui/common/SearchField";
 import { LoanCard } from "@/ui/features/loans/LoanCard";
@@ -107,6 +108,14 @@ export function Loans() {
     setOpen(true);
   }
 
+  // A status filter option as the SAME coloured capsule the card wears, so the
+  // filter reads by colour, not just text. "All"/"Active" have no tone → neutral.
+  const statusCapsule = (s: (typeof STATUS_FILTERS)[number]) => (
+    <Capsule tone={s.tone ?? "neutral"} dot={s.tone != null} size="sm">
+      {s.label}
+    </Capsule>
+  );
+
   return (
     <div className="wb-stack wb-stack--loose">
       <PageHeader
@@ -148,7 +157,14 @@ export function Loans() {
 
             <FacetChip
               label="Status"
-              value={statusFilter === "all" ? undefined : STATUS_FILTERS.find((s) => s.value === statusFilter)?.label}
+              value={
+                statusFilter === "all"
+                  ? undefined
+                  : (() => {
+                      const s = STATUS_FILTERS.find((x) => x.value === statusFilter);
+                      return s ? statusCapsule(s) : undefined;
+                    })()
+              }
               active={statusFilter !== "all"}
               panelWidth={200}
               onClear={() => setStatusFilter("all")}
@@ -167,7 +183,7 @@ export function Loans() {
                             close();
                           }}
                         />
-                        {s.label}
+                        {statusCapsule(s)}
                       </label>
                     ))}
                   </div>

@@ -1187,10 +1187,10 @@ body {
 .cashy-loangrid .wb-card__body {
   padding: 10px;
 }
-/* Dashboard "Balances" card header — the net-worth figure is the headline (not a
-   word squeezed onto an h3 baseline), with a one-line caption. Beneath it the
-   three parts of net worth read as even stat figures (`.cashy-figrow`), not a
-   crammed dotted strip; colour = status is left to StatFigure. */
+/* Dashboard "Net worth" card header — the net-worth figure is the headline (not a
+   word squeezed onto an h3 baseline), with a one-line caption stating the equation
+   in plain words. Beneath it (`.cashy-nwbreak`) the number is spelled out as its
+   labelled components; see those rules below. */
 .cashy-networth {
   display: flex;
   flex-direction: column;
@@ -1207,87 +1207,108 @@ body {
   font-size: 12px;
   color: var(--wb-fg-muted);
 }
-/* The breakdown figures are secondary to the headline — they CLUSTER at the
-   left (a fixed gap between them) instead of stretching across the whole card,
-   so short amounts don't drift apart. A divider sets them off from the wallets. */
-.cashy-networth__break {
+/* The headline is spelled out as the parts that add up to it. A divider sets the
+   breakdown off from the header. */
+.cashy-nwbreak {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--wb-border);
+}
+/* One component of net worth: label on the left, amount on the right, so the
+   components stack into a single column that reads down to the headline number
+   (In your wallets + Owed to you − You owe = Net worth). */
+.cashy-nwline {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px 44px;
-  margin: 0 0 14px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid var(--wb-border);
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
 }
-.cashy-networth__break .cashy-fig {
-  flex: 0 0 auto; /* natural width — do NOT stretch to fill the row */
+.cashy-nwline--head {
+  padding-top: 0;
 }
-.cashy-networth__break .cashy-fig__val {
-  font-size: 17px;
+.cashy-nwline__label {
+  font-size: 13px;
+  font-weight: 550;
+  color: var(--wb-fg);
 }
+.cashy-nwline__hint {
+  margin-left: 7px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--wb-fg-subtle);
+}
+/* On narrow screens the labels ("Owed to you" / "You owe") stand on their own —
+   drop the hint so it doesn't wrap mid-phrase beside the amount. */
+@media (max-width: 520px) {
+  .cashy-nwline__hint {
+    display: none;
+  }
+}
+.cashy-nwline__amt {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 1px;
+  white-space: nowrap;
+  font-size: 14px;
+}
+.cashy-nwsign {
+  font-weight: 600;
+}
+.cashy-nwsign--pos { color: var(--wb-success-text); }
+.cashy-nwsign--neg { color: var(--wb-danger-text); }
 
-/* Balances card — per-wallet ledger rows. Each row is an icon beside a single
-   line: the wallet name on the left, its balance pushed to the right edge, so the
-   amounts stack into a clean right-aligned column (matching the "Loans · net"
-   line below). Fewer, wider columns keep the last row from looking lopsided. */
+/* Balances card — per-wallet rows. An icon beside a left-aligned two-line
+   stack: the wallet name over its balance as a secondary label. Both hug the
+   left, so nothing has to line up across columns (the old single-line ledger
+   pushed each amount to its column's right edge and scattered them). */
 .cashy-balgrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 2px 32px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 4px 28px;
 }
 .cashy-balrow {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 9px 0;
+  gap: 11px;
+  padding: 8px 0;
   min-width: 0;
 }
 .cashy-balrow .cashy-tile {
-  width: 30px;
-  height: 30px;
+  width: 34px;
+  height: 34px;
   flex: none;
 }
 .cashy-balrow__body {
   display: flex;
-  align-items: baseline;
-  gap: 12px;
-  flex: 1;
+  flex-direction: column;
+  gap: 2px;
   min-width: 0;
 }
 .cashy-balrow__name {
-  flex: 1;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 13px;
-  color: var(--wb-fg-muted);
+  font-weight: 550;
+  color: var(--wb-fg);
 }
-.cashy-balrow__amt {
-  margin-left: auto;
+/* Doubled selector so the balance left-aligns under the name — `.wb-num` sets
+   `text-align:right` and loads after index.css (see architecture.md §8). The
+   smaller size makes it read as a secondary label below the name. */
+.cashy-balrow .cashy-balrow__amt {
+  text-align: left;
   white-space: nowrap;
-  font-size: 14px;
+  font-size: 12.5px;
 }
-/* The loans total folds in as ONE full-width reconciling line under a divider —
-   wallet tiles + this line = the headline net worth. */
-.cashy-balloans {
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 4px;
-  padding-top: 12px;
+/* The loan components (Owed to you / You owe) sit under a divider from the wallet
+   detail and are clickable through to the Loans screen. */
+.cashy-nwloans {
+  margin-top: 8px;
+  padding-top: 8px;
   border-top: 1px solid var(--wb-border);
   cursor: pointer;
-}
-.cashy-balloans .cashy-tile {
-  width: 30px;
-  height: 30px;
-  flex: none;
-}
-.cashy-balloans__label {
-  flex: 1;
-  min-width: 0;
-  font-size: 13px;
 }
 
 /* Loans overview header (LoanSummary): a "where I stand" panel beside a "what's
@@ -1657,6 +1678,30 @@ body {
 .cashy-subhead__wallet svg {
   flex: none;
   opacity: 0.8;
+}
+/* The tile and the name double as the "edit this subscription" target (the foot
+   pencil was removed). The tile is a reset <button> wrapping the SubTile; both
+   hint the target on hover so it reads as tappable. */
+.cashy-subedit-tile {
+  flex: none;
+  display: inline-flex;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  border-radius: var(--wb-radius-sm);
+}
+.cashy-subedit-tile:hover .cashy-subtile,
+.cashy-subedit-tile:focus-visible .cashy-subtile {
+  border-color: var(--wb-border-strong);
+  background: color-mix(in srgb, var(--cashy-sub-c, var(--wb-neutral)) 24%, transparent);
+}
+.cashy-subedit-name {
+  cursor: pointer;
+}
+.cashy-subedit-name:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 /* One card per service on the overview. auto-fill so the row reflows instead of
    stretching three cards across a wide screen. */

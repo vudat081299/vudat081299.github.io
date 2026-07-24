@@ -29,9 +29,11 @@ export function Subscriptions() {
   const monthly = monthlyCommitment(subscriptions);
   const dueCount = subscriptions.filter((s) => needsPaymentNow(s, transactions)).length;
 
-  // The filter owns ordering too: default is the pure "by status" sort, so the
-  // grid opens with whatever needs attention first even before any facet is used.
-  const filter = useSubFilter(subscriptions, transactions, wallets);
+  // The filter owns ordering too: default is the "by status" sort, so the grid
+  // opens with whatever needs attention first. `pinStatusOrder` freezes that order
+  // at first load — paying a service must not reshuffle the grid and lose the card
+  // the user just acted on (the Dashboard strip keeps the live re-sort instead).
+  const filter = useSubFilter(subscriptions, transactions, wallets, { pinStatusOrder: true });
   // A filter bar earns its space only once the list is long enough to need it.
   const showFilter = subscriptions.length > 6;
 

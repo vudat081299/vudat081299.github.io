@@ -26,8 +26,9 @@ export function FacetChip({
   children,
 }: {
   label: string;
-  /** the summary shown after the label when active (e.g. "Recorded +1") */
-  value?: string;
+  /** the summary shown after the label when active — plain text (e.g. "Recorded
+   *  +1") or a small node like a status capsule */
+  value?: ReactNode;
   active: boolean;
   accent?: boolean;
   panelWidth?: number;

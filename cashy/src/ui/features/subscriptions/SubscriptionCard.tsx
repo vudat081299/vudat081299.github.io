@@ -267,22 +267,37 @@ export function SubscriptionCard({
             Name and status share a line because the status is a fact about the
             NAME; the money line reads as detail underneath both. */}
         <div className="wb-card__head cashy-subhead">
-          {/* Neutral by default (house taste); only "brand" mode lets the
-              service's hue onto the tile — otherwise it stays grey. */}
-          <SubTile
-            icon={sub.icon}
-            colorHex={sub.colorHex}
-            brand={iconStyle === "brand"}
-            size={34}
-            iconSize={17}
-          />
+          {/* The tile IS the edit affordance now (the foot pencil is gone): tap it
+              — or the name — to open the editor. Kept a real <button> so it stays
+              keyboard-reachable and screen-reader-labelled. Neutral by default
+              (house taste); only "brand" mode lets the service's hue onto the
+              tile — otherwise it stays grey. */}
+          <button
+            type="button"
+            className="cashy-subedit-tile"
+            aria-label={`Edit ${sub.name}`}
+            title="Edit subscription"
+            onClick={onOpenEditor}
+          >
+            <SubTile
+              icon={sub.icon}
+              colorHex={sub.colorHex}
+              brand={iconStyle === "brand"}
+              size={34}
+              iconSize={17}
+            />
+          </button>
           <div className="cashy-subhead__main">
             <div className="cashy-subhead__row">
+              {/* The name is the second edit target (a big, obvious one for touch);
+                  it stays a heading for structure, so the tile's <button> carries
+                  the keyboard/AT affordance and this is a pointer convenience. */}
               <h4
                 ref={nameRef}
-                className="wb-card__title"
+                className="wb-card__title cashy-subedit-name"
                 onMouseEnter={showNameTip}
                 onMouseLeave={hideNameTip}
+                onClick={onOpenEditor}
               >
                 {sub.name}
               </h4>
@@ -375,22 +390,9 @@ export function SubscriptionCard({
         <div className="wb-card__foot">
           {/* No history to show = no button. A trialing (or brand-new) service has
               nothing paid or skipped yet, so it earns no history control — a
-              permanently-disabled icon would only be dead weight on the row. */}
-          {/* Edit the plan itself. This is the sole entry point to the editor for
-              an existing service now that the screen is a card grid (no table row
-              with a pencil), so it is always offered — active or cancelled. */}
-          <Button
-            variant="ghost"
-            iconOnly
-            size="sm"
-            round
-            type="button"
-            aria-label={`Edit ${sub.name}`}
-            title="Edit"
-            onClick={onOpenEditor}
-          >
-            <span className="wb-ico wb-ico--sm">edit</span>
-          </Button>
+              permanently-disabled icon would only be dead weight on the row. The
+              editor is now opened from the tile/name in the header, not a foot
+              pencil. */}
           {hasHistory && (
             <Button
               variant="ghost"

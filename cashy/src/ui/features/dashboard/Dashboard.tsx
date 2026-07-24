@@ -197,7 +197,7 @@ export function Dashboard() {
 
       {/* Balances — wallet balances + loans net into a true net worth (assets −
           debts). Full editors live at #/wallets and #/loans. */}
-      {(shownWallets.length > 0 || hasLoans) && <BalancesCard shownWallets={shownWallets} hasLoans={hasLoans} walletBals={walletBals} walletNet={walletNet} netWorthAll={netWorthAll} payable={payable} receivable={receivable} loansNet={loansNet} />}
+      {(shownWallets.length > 0 || hasLoans) && <BalancesCard shownWallets={shownWallets} hasLoans={hasLoans} walletBals={walletBals} walletNet={walletNet} netWorthAll={netWorthAll} payable={payable} receivable={receivable} />}
 
       {/* Where the balance is headed: today's number carried forward at the
           period's monthly net. Arithmetic, not a trend model — see the chart. */}

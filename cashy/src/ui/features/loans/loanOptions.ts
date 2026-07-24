@@ -16,11 +16,18 @@ export const PERIODS: { value: InterestPeriod; label: string }[] = [
   { value: "month", label: "per month" },
 ];
 
-/** Status-filter options for the loans-list facet. */
-export const STATUS_FILTERS: { value: LoanStatus | "all"; label: string }[] = [
+/** Status-filter options for the loans-list facet. `tone` mirrors the status
+ *  capsule on the card (LoanCard `statusCap`), so the filter shows the SAME
+ *  colour a loan wears — colour makes the choice quicker to scan. `active`/`all`
+ *  stay neutral (no dot). */
+export const STATUS_FILTERS: {
+  value: LoanStatus | "all";
+  label: string;
+  tone?: "danger" | "warning" | "success";
+}[] = [
   { value: "all", label: "All statuses" },
-  { value: "overdue", label: "Overdue" },
-  { value: "due-soon", label: "Due soon" },
+  { value: "overdue", label: "Overdue", tone: "danger" },
+  { value: "due-soon", label: "Due soon", tone: "warning" },
   { value: "active", label: "Active" },
-  { value: "paid", label: "Settled" },
+  { value: "paid", label: "Settled", tone: "success" },
 ];
