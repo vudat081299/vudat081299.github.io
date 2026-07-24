@@ -70,8 +70,13 @@ export function Dashboard() {
     // slice so the donut and its list read as a handful of real categories.
     const slices = foldTailSlices(breakdown(cur, "expense", categories));
     const insights = periodInsights(cur, q.range, categories);
-    return { balance: totals(transactions).net, t, tp, slices, insights, count: cur.length };
-  }, [transactions, categories, q.range, q.period, q.custom]);
+    // "Balance (all time)" is the real money you hold — every wallet's opening
+    // balance PLUS the net of the ledger (i.e. walletNet / netWorth), NOT just
+    // income − expense. A lone income−expense figure silently drops the openings,
+    // so any wallet that starts with a non-zero balance would under-report here
+    // (and mislead the forecast + delta that read this value). See domain/wallet.
+    return { balance: walletNet, t, tp, slices, insights, count: cur.length };
+  }, [walletNet, transactions, categories, q.range, q.period, q.custom]);
 
   const { t, tp, slices, insights } = view;
 
