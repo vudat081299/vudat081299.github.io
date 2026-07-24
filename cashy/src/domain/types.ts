@@ -42,7 +42,7 @@ export interface Category {
   order: number;
   name: string;
   colorHex: string;
-  icon: string; // curated lucide key, see lib/icons
+  icon: string; // curated lucide key, see ui/kit/icon-map
   type: TxType;
   isSystem: boolean;
 }
@@ -75,7 +75,7 @@ export interface Wallet {
    *  utilisation bar (debt ÷ limit) + available-credit readout. Absent = none/unknown. */
   creditLimit?: number;
   colorHex: string; // classification hue
-  icon: string; // curated lucide key, see lib/icons
+  icon: string; // curated lucide key, see ui/kit/icon-map
   order: number; // sort position among wallets
   archived: boolean; // true = hidden from pickers, history kept
   createdAt: string; // ISO
@@ -246,7 +246,7 @@ export interface Loan {
   /** manual repayment / collection entries; outstanding = principal − Σ amounts */
   payments: LoanPayment[];
   colorHex: string; // classification hue
-  icon: string; // curated lucide key, see lib/icons
+  icon: string; // curated lucide key, see ui/kit/icon-map
   note: string;
   archived: boolean; // true = closed/hidden, history kept
   createdAt: string; // ISO
@@ -256,7 +256,7 @@ export interface Loan {
  * A person you lend to / borrow from — a first-class entity so a loan (slice B)
  * can reference the SAME person by a stable `id` rather than a copied name.
  * Rendered neutral/grey like other entities; `colorHex` is a classification
- * accent. Holds no money. See domain/contact + docs/agentic-workflow/specs/2026-07-23-contact.md.
+ * accent. Holds no money. See domain/contact + docs/features/contacts.md.
  * @ADR-contact-001
  */
 export interface Contact {

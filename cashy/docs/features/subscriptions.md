@@ -25,8 +25,8 @@ sort) appears on both surfaces.
 ## 2. Screen & route
 
 - Route `#/subscriptions` (hash router, `src/lib/router.ts`); rendered by
-  `src/App.tsx:94` (`route === "subscriptions" ? <Subscriptions/>`), nav item in
-  `src/ui/app/Layout.tsx:12`.
+  `src/App.tsx` (`route === "subscriptions" ? <Subscriptions/>`), nav item in
+  `src/ui/app/Layout.tsx`.
 - Screen shape (`src/ui/features/subscriptions/Subscriptions.tsx`): a
   `wb-stack wb-stack--loose` of `PageHeader` (+ "Add subscription") → a 3-tile
   `wb-stat-grid` (**Monthly commitment**, **Due this month**, **Total services**)
@@ -43,7 +43,7 @@ sort) appears on both surfaces.
 - The **editor** is a **singleton modal** (`SubscriptionEditor`), mounted once at
   the app root and opened imperatively via `lib/modals` (`openSubscriptionEditor(id | null)`),
   from the screen header, the empty state, and each table row's pencil.
-- On app load `src/App.tsx:63` calls `syncSubscriptions()` once a workspace
+- On app load `src/App.tsx` calls `syncSubscriptions()` once a workspace
   exists — this is what materialises any newly-due charges as `pending` rows.
 
 ## 3. Data it touches

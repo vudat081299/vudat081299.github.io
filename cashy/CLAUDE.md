@@ -25,6 +25,16 @@ make any change correctly **without asking**.
 > "not in the web build" list) and links out to the deep docs — read it when the
 > product docs mention a feature and you need to know whether it exists here.
 
+**Source-of-truth order when documents disagree:** code + tests → this web spec /
+the normative architecture and data-model docs → current feature docs → shipped
+plans (historical design records) → native vision/spec. Plans and handoff notes
+record why a decision was made; they do not override current feature docs or code.
+
+**Minimum reading path for a safe change:** this file → the relevant
+`docs/features/<feature>.md` → the entity fields in `docs/data-model.md` → the
+layer/procedure in `docs/architecture.md`. Read `docs/components.md` when touching
+UI composition and the vision when making a product/taste decision.
+
 ---
 
 ## 1. Run it
@@ -39,8 +49,9 @@ pnpm lint           # oxlint
 pnpm build          # tsc -b → check:layers → vite build → dist/  (base /cashy/)
 ```
 
-First launch seeds a demo workspace (~200 transactions + ~20 subscriptions, all
-Vietnamese sample data). To wipe: Settings → Danger zone → reset, or clear
+A fresh workspace starts with the default categories, wallets, and an **empty
+ledger**. The Vietnamese demo dataset (~200 transactions + ~20 subscriptions) is
+opt-in from Settings → Data. To wipe: Settings → Danger zone → reset, or clear
 `localStorage`.
 
 **Two dev-only component galleries** (code-split, never loaded in production):
@@ -85,6 +96,43 @@ Full text: [docs/cashy-vision.md](docs/cashy-vision.md). The parts that bind day
   is the đồng sign **`₫`** (U+20AB), applied app-wide through `domain/money`
   (`formatMoney` / `formatMoneyShort`); `formatMoneyAxis` is the same compact form
   with the unit stripped, for chart axes and range labels.
+
+### 3.1 Engineering doctrine (the names behind the style)
+
+The project applies these ideas pragmatically, without pretending to implement
+every textbook pattern:
+
+- **Clean/layered architecture + Dependency Rule:** source dependencies point
+  inward (`ui → usecases → domain`; persistence stays below usecases). Business
+  rules do not know React or localStorage.
+- **Functional core, imperative shell:** `domain/` is pure and deterministic;
+  usecases perform the small state-transition/commit shell; React orchestrates
+  and renders.
+- **Single Responsibility + Separation of Concerns:** parsing/formatting, a
+  business decision, persistence, and rendering live in different homes.
+- **Single Source of Truth:** transactions own money; subscription payment fields
+  are caches; wallet balances, loan outstanding, charts, totals, and statuses are
+  derived.
+- **Component-first composition / Atomic Design:** kit primitives → Cashy-aware
+  common molecules → presentational feature leaves → connected containers/screens.
+- **Composition over duplication:** reuse an existing component or pure helper
+  before adding markup/math at a call site. A semantic rule has **one home**:
+  money through `domain/money`, percent through `domain/format`, status pills
+  through `Capsule`, entity-card identity through `CardIdentity`, filter facets
+  through `FacetChip`.
+- **Container/presentational split:** reusable leaves accept props + callbacks and
+  do not touch the store. Containers read `useCashy`, call usecases, and pass data
+  down.
+- **Pragmatic SOLID:** SRP and dependency inversion are strong; interface
+  segregation appears as narrow component props and small usecases. Do not add
+  abstractions merely to claim SOLID—extract when a concept has a stable name, a
+  business rule, or real reuse.
+- **Make invalid states hard to represent:** typed unions, typed kit props,
+  oldest-first catch-up planning, integer-money coercion, and append-only
+  migrations encode constraints before runtime.
+- **DRY means knowledge, not text:** duplicate harmless layout locally if it has
+  no shared meaning; centralise duplicated business knowledge immediately. Small
+  feature-local subcomponents may remain inline until another consumer exists.
 
 ---
 
@@ -177,6 +225,7 @@ toggle; collapses to a ☰ drawer on mobile). Routes:
 | `#/subscriptions` | **Subscriptions** | commitment/due/total stats, "to confirm" dues, then a card grid (one `ConnectedSubscriptionCard` per service, sorted by status; a filter bar past 6) |
 | `#/wallets` | **Wallets** | wallet balances + net worth; add/edit/archive/delete. Assigned in the tx/sub editors, filterable, and money moves between wallets via **transfers** |
 | `#/loans` | **Loans** (handshake icon) | money you owe + owed to you; borrowed/lent, per-loan payment log, receivable − payable net worth; add/edit/archive/delete. Touches no transactions |
+| `#/contacts` | **Contacts** | standalone people directory; add/edit/archive/delete. `ContactPicker` and loan linkage are intentionally staged, not wired yet |
 | `#/categories` | **Categories** | drag-to-reorder / drop-to-nest tree; per-side (expense/income) |
 | `#/tags` | **Tags** | tag list with usage counts; add/edit/delete |
 | `#/settings` | **Settings** | appearance, workspace, data export/import, reset |
@@ -208,9 +257,9 @@ Component tiers (full catalogue + props + screen map: [docs/components.md](docs/
 | Tier | Examples | Contract |
 |---|---|---|
 | **Atom / molecule (kit)** | `Button`, `Capsule`, `Input`, `Modal`, `Table`, `Donut` | generic, no Cashy concepts |
-| **Common (Cashy-aware)** | `AmountDisplay`, `TagChip`, `CategorySelect`, `StatusPicker`, `DatePicker`, `PeriodPicker` | props + callbacks, no store |
-| **Feature-leaf** | `SubscriptionCard`, `TransactionTable`, `SpendChart`, `CashflowChart`, `BalanceCard`, `SubscriptionDues` | presentational; fed data + callbacks; render in the gallery with no store |
-| **Container / screen** | `Dashboard`, `Transactions`, `Subscriptions`, `Categories`, `Tags`, `Settings` | call `useCashy()` + usecases; pass callbacks down |
+| **Common (Cashy-aware)** | `AmountDisplay`, `CardIdentity`, `FacetChip`, `TagChip`, `CategorySelect`, `StatusPicker`, `PeriodPicker` | props + callbacks, no store |
+| **Feature-leaf** | `SubscriptionCard`, `LoanCard`, `ContactCard`, `TransactionTable`, `SpendChart`, `BalanceCard` | presentational; fed data + callbacks; render in the gallery with no store |
+| **Container / screen** | `Dashboard`, `Transactions`, `Subscriptions`, `Wallets`, `Loans`, `Contacts`, `Categories`, `Tags`, `Settings` | call `useCashy()` + usecases; pass callbacks down |
 | **Singleton modal** | `TransactionEditor`, `SubscriptionEditor`, `TransactionDetail` | register an open-handler; call usecases |
 
 **Composition rule — three tiers, one job each (kit-adoption pass, 2026-07-24).**
@@ -264,12 +313,13 @@ a meter + its note is `.cashy-cardmeter`; the reusable icon tile is `.cashy-subt
 that domain's `ui/features/<domain>/` folder and is *reused* by any screen — the
 Dashboard/Overview imports `SubscriptionCard` from `features/subscriptions/`, it is
 not re-implemented per screen; only a card with no domain of its own belongs in a
-screen's folder. `SubscriptionCard`, `WalletCard` **and `LoanCard`** all follow
-this now (LoanCard was migrated off its legacy inline styling in the loans
-redesign — see [docs/features/loans.md](docs/features/loans.md)). A card's shared
-filter bar is likewise composed, not re-implemented: `FacetChip`
-(`ui/common/FacetChip.tsx`) is the one dropdown-chip both the transaction and loan
-filters use — unselected chips wear a dashed outline, a chosen one goes solid.
+screen's folder. `WalletCard`, `LoanCard`, and `ContactCard` compose
+`CardIdentity`; `SubscriptionCard` keeps its specialised measured-name/trial
+header but follows the same card-region conventions. A card's shared filter bar
+is likewise composed, not re-implemented: `FacetChip`
+(`ui/common/FacetChip.tsx`) is the one dropdown-chip the transaction, loan, and
+subscription filters use — unselected chips wear a dashed outline, a chosen one
+goes solid.
 
 ---
 
@@ -295,8 +345,9 @@ filters use — unselected chips wear a dashed outline, a chosen one goes solid.
    knows nothing about Cashy.** Both are checked by `pnpm build`.
 8. **A transaction with `toWalletId` is a transfer** — it counts toward NO income/
    expense total (only the two wallet balances it moves). A wallet's balance is
-   `openingBalance` + the net of its `recorded` rows (`domain/wallet`); deleting a
-   wallet orphans its rows to `null`, never deletes them.
+   `openingBalance` + the net of its `recorded` rows (`domain/wallet`). A wallet
+   used by a transfer cannot be deleted (archive it); deleting any other wallet
+   orphans ordinary rows to `null`, never deletes them.
 9. **A loan is a first-class record, not a transaction.** Its `outstanding` is
    DERIVED — `max(0, principal − Σ payments)` (`domain/loan`), never stored — and
    interest (`interestRatePct`/`interestPeriod`) is REFERENCE-ONLY, never accrued.
@@ -304,6 +355,11 @@ filters use — unselected chips wear a dashed outline, a chosen one goes solid.
    receivable − payable`; the Dashboard shows assets − debts = `walletNet +
    loansNetWorth`). Loans touch NO transactions, categories, or analytics; amounts
    are integer VND like all money.
+10. **Contacts currently hold identity only.** There is no `Loan.contactId` yet;
+    `ContactPicker` is deliberate scaffolding and `isContactReferenced` deliberately
+    returns false. Do not invent a partial link—adding it requires a persisted
+    foreign key, migration, delete guard, editor wiring, tests, and doc updates in
+    one slice.
 
 ---
 
@@ -330,7 +386,7 @@ Detailed steps in [architecture.md §6](docs/architecture.md). In short:
 
 | File | What |
 |---|---|
-| [README.md](README.md) | quickstart, commands, open questions |
+| [README.md](README.md) | quickstart, commands, invariants, optional visual tuning |
 | **CLAUDE.md** (this) | the AI map |
 | [docs/architecture.md](docs/architecture.md) | **normative** for `src/` — layers, import matrix, procedures, traps |
 | [docs/data-model.md](docs/data-model.md) | full data dictionary — entities, enums, relationships, derived values |
@@ -339,11 +395,12 @@ Detailed steps in [architecture.md §6](docs/architecture.md). In short:
 | [docs/cashy-web-spec.md](docs/cashy-web-spec.md) | **what actually ships** — the React web build: stack, features, and what's deliberately *not* here |
 | [docs/cashy-vision.md](docs/cashy-vision.md) | product philosophy (timeless; native-iOS-flavoured) |
 | [docs/cashy-v1-spec.md](docs/cashy-v1-spec.md) | v1 use-case spec (native-iOS-flavoured) |
-| [docs/wallets-plan.md](docs/wallets-plan.md) | multi-wallet / asset **roadmap** (phases 1–2 shipped; see [features/wallets.md](docs/features/wallets.md)) |
+| [docs/wallets-plan.md](docs/wallets-plan.md) | wallets **design record** (all five phases shipped; see [features/wallets.md](docs/features/wallets.md)) |
 | [docs/loans-plan.md](docs/loans-plan.md) | loans (owe / owed) **design record** (all phases shipped; see [features/loans.md](docs/features/loans.md)) |
 | [REBUILD-NOTES.md](REBUILD-NOTES.md) | the web-rebuild handoff notes |
-| [docs/handoff-checklist.md](docs/handoff-checklist.md) | **← what was done in this pass + open questions for the owner** |
+| [docs/handoff-checklist.md](docs/handoff-checklist.md) | closed documentation-pass record; no open blockers |
 
-> **Owner:** before your next session, skim
-> [docs/handoff-checklist.md](docs/handoff-checklist.md) — it lists what this
-> documentation pass produced and the decisions I need from you.
+`REBUILD-NOTES.md` and `docs/handoff-checklist.md` are **closed historical
+handoffs**. Any future unfinished work must be marked explicitly `OPEN` with an
+owner, current state, acceptance criteria, and the next safe action; otherwise it
+is context, not a task.

@@ -148,10 +148,10 @@ reads `… ₫`; the compact forms stay `3,4m` (no unit). `vitest` green.
 
 ## 4. Deferred / future (not this batch — reference only)
 
-- **Multi-wallet / asset model** (memory `cashy-multiwallet-direction`): manage multiple
-  wallets & asset types (cash, stocks, gold, savings) + receivables/debt; migrate the
-  free-text `account` → an `accountId` referencing a real Account entity. A large future
-  program, per-phase on the owner's go-ahead.
+- **Broader asset model:** spending wallets, transfers, receivables, and debts are
+  already shipped. A future programme could extend `WalletKind` into valued assets
+  such as stocks/gold/savings and add valuation history; the legacy free-text
+  `account` has already been superseded by `walletId`.
 - **Wallets polish** (`docs/wallets-plan.md`): drag-to-reorder wallets; more realistic
   per-wallet demo opening balances. Optional.
 

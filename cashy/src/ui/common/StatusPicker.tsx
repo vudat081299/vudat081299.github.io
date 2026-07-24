@@ -2,16 +2,6 @@ import type { TxStatus } from "@/domain/types";
 import { TX_STATUS_META, TX_STATUS_ORDER } from "@/domain/txStatus";
 import { Capsule } from "@/ui/kit/Capsule";
 
-/** Each status's tone, so an UNSELECTED capsule can still hint its colour with a
- *  soft outline. Skipped is neutral by design (grey), matching the table. */
-const TONE: Record<TxStatus, string> = {
-  recorded: "success",
-  pending: "warning",
-  awaiting: "info",
-  skipped: "neutral",
-  failed: "danger",
-};
-
 /**
  * Pick a transaction status by clicking the capsule you mean, rather than
  * hunting through a dropdown. Five options is well under the count where a
@@ -53,9 +43,14 @@ export function StatusPicker({
               onChange={() => onChange(s)}
             />
             {/* Chosen = filled with the tone (or plain grey for skipped, the
-                table's look). Unselected = soft tone outline, driven by
-                `data-tone` in CSS. */}
-            <Capsule className={active ? meta.cap : undefined} data-tone={TONE[s]} dot={meta.dot}>
+                table's look). Unselected = a plain capsule whose soft tone outline
+                is driven by `data-tone` in CSS. */}
+            <Capsule
+              tone={active ? meta.tone : "neutral"}
+              fill={active ? meta.fill : undefined}
+              dot={meta.dot}
+              data-tone={meta.tone}
+            >
               {meta.label}
             </Capsule>
           </label>

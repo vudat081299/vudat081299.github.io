@@ -20,7 +20,7 @@ pnpm dev            # http://localhost:5173
 | Command | Effect |
 |---|---|
 | `pnpm dev` | dev server |
-| `pnpm test` | vitest, single run (186 tests over `src/domain/` + `src/data/`) |
+| `pnpm test` | vitest, single run over pure domain/data/usecase rules |
 | `pnpm test:watch` | vitest watch |
 | `pnpm check:layers` | enforce the dependency rule |
 | `pnpm build` | `tsc -b` → `check:layers` → build to `dist/` (base `/cashy/`) |
@@ -38,7 +38,7 @@ in the production bundle):
 **[docs/architecture.md](docs/architecture.md) is the authority.** Read it before
 changing anything under `src/`. Summary:
 
-Three layers, one rule — dependencies flow one way, enforced by
+One dependency rule across the app layers — dependencies flow one way, enforced by
 `scripts/check-layers.mjs` inside `pnpm build`:
 
 ```
@@ -75,8 +75,8 @@ Break these and the app is wrong, not merely inconsistent.
   `data/migrations.ts`; never edit an existing one — real data went through it.
 - **A transfer (`toWalletId` set) counts toward no income/expense total** — only
   wallet balances. A wallet's balance is `openingBalance` + the net of its recorded
-  rows; deleting a wallet orphans its rows to `null` (schema live, UI pending —
-  [docs/wallets-plan.md](docs/wallets-plan.md)).
+  rows. A wallet used by a transfer cannot be deleted (archive it); deleting any
+  other wallet orphans ordinary rows to `null`, never deletes them.
 - **CSS order:** `index.css` loads *before* `web-builder.css`, so app-level
   `wb-*` overrides need raised specificity, and dark `:hover` needs an explicit
   `.dark` branch. Details in architecture.md §8.
@@ -92,18 +92,18 @@ Break these and the app is wrong, not merely inconsistent.
 | [docs/features/](docs/features/) | per-feature deep dives — one doc per screen ([index](docs/features/README.md)) |
 | [docs/cashy-vision.md](docs/cashy-vision.md) | product direction (timeless; native-iOS-flavoured) |
 | [docs/cashy-v1-spec.md](docs/cashy-v1-spec.md) | v1 spec (native-iOS-flavoured) |
-| [docs/wallets-plan.md](docs/wallets-plan.md) | **plan** — multi-wallet / asset feature (not built yet) |
+| [docs/wallets-plan.md](docs/wallets-plan.md) | wallets design record — all five phases shipped |
 | [docs/features/loans.md](docs/features/loans.md) | **feature** — loans / debts: money you owe + owed to you (due dates, reference-only interest, source), folds into Dashboard net worth (assets − debts) |
 | [docs/loans-plan.md](docs/loans-plan.md) | **plan** — loans / debts feature (all phases shipped) |
 | [REBUILD-NOTES.md](REBUILD-NOTES.md) | web-rebuild notes |
-| [docs/handoff-checklist.md](docs/handoff-checklist.md) | this documentation pass + open questions for the owner |
+| [docs/handoff-checklist.md](docs/handoff-checklist.md) | closed record of the documentation pass |
 
 ---
 
-## Open questions
+## Optional visual tuning
 
-Blocked on a decision from the owner. **Do not silently resolve these** — they
-are recorded choices, not oversights.
+There are no open handoff blockers. These two constants are intentionally easy to
+tune if the owner wants a different visual weight:
 
 | # | Question | Status / options |
 |---|---|---|
@@ -122,6 +122,6 @@ are recorded choices, not oversights.
 | 5 | Mixed language | **Keep as is** for now; owner will handle the translation later. |
 | 6 | `occurredTime` | **Display-only, by design.** It is consumed — `TransactionTable` renders it under the date, `TransactionDetail` as "lúc HH:mm". It drives no sort/filter/chart deliberately: the field is optional and most rows have none, so any time-of-day analytic would be computed over a biased subset and read as fact. |
 | 7 | Subscription card padding | **Keep 8px.** Unchanged. |
-| 8 | How far to take the English translation? | **Done — full English (2026-07-23).** The whole app is English: the subscription card foot, the catch-up / cancel / history dialogs, the Subscriptions page, and — app-wide — chart date labels (`domain/date` now emits `MMMM yyyy`, `Today`/`Yesterday`). Only the DEV-only galleries and the intentionally-Vietnamese seed data stay Vietnamese. Compact money kept `k / m / b` with a `vi-VN` comma decimal (`3,4m đ`). |
+| 8 | How far to take the English translation? | **Done — full English (2026-07-23).** The whole app is English: the subscription card foot, the catch-up / cancel / history dialogs, the Subscriptions page, and — app-wide — chart date labels (`domain/date` now emits `MMMM yyyy`, `Today`/`Yesterday`). Only the DEV-only galleries and the intentionally-Vietnamese seed data stay Vietnamese. Compact money kept `k / m / b` with a `vi-VN` comma decimal (`3,4m`). |
 
 </details>

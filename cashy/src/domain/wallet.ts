@@ -14,6 +14,15 @@ export function isTransfer(tx: Transaction): boolean {
   return tx.toWalletId != null;
 }
 
+/** Whether a wallet is either leg of a transfer. A referenced wallet cannot be
+ * hard-deleted because removing either leg would change the ledger's meaning;
+ * archive it instead. */
+export function walletHasTransfers(txs: Transaction[], walletId: string): boolean {
+  return txs.some(
+    (tx) => isTransfer(tx) && (tx.walletId === walletId || tx.toWalletId === walletId),
+  );
+}
+
 /**
  * Current balance of one wallet: its opening balance plus the net of every
  * RECORDED row that touches it. A normal row adds income / subtracts expense on
@@ -54,8 +63,8 @@ export function walletBalances(wallets: Wallet[], txs: Transaction[]): Map<strin
 }
 
 /**
- * Net worth (v1 scope) = the sum of wallet balances. Archived wallets keep their
- * balance but drop out of the total by default (see open question #1 in the plan).
+ * Net worth = the sum of wallet balances. Archived wallets keep their balance
+ * but drop out of the total by default (the shipped product decision).
  */
 export function netWorth(
   wallets: Wallet[],
@@ -72,20 +81,15 @@ export function netWorth(
 }
 
 /**
- * Detach a deleted wallet from the ledger: rows lose the reference rather than
- * being deleted (the money still moved). A normal row's `walletId` → `null`; a
- * transfer that loses a leg is degraded — dropping `toWalletId` turns it back
- * into a plain row, so the real delete policy for transfers is decided when the
- * `deleteWallet` usecase lands (Phase 2). For now this keeps balances honest by
- * removing every reference to the id.
+ * Detach a deleted wallet from ordinary ledger rows: their `walletId` becomes
+ * `null`, but the money row is never deleted. Transfers are deliberately left
+ * intact; `deleteWallet` rejects a wallet used by either transfer leg because
+ * removing one leg would silently turn a transfer into income/expense.
  */
 export function orphanWallet(txs: Transaction[], walletId: string): Transaction[] {
   return txs.map((t) => {
-    if (t.walletId !== walletId && t.toWalletId !== walletId) return t;
-    const next: Transaction = { ...t };
-    if (next.walletId === walletId) next.walletId = null;
-    if (next.toWalletId === walletId) delete next.toWalletId;
-    return next;
+    if (isTransfer(t) || t.walletId !== walletId) return t;
+    return { ...t, walletId: null };
   });
 }
 

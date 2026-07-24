@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { ArrowDownLeft, ArrowUpRight } from "lucide-react";
 import type { Loan, LoanSource } from "@/domain/types";
 import {
   daysUntilDue,
@@ -15,6 +14,7 @@ import { AmountDisplay } from "@/ui/common/AmountDisplay";
 import { CardIdentity } from "@/ui/common/CardIdentity";
 import { Capsule } from "@/ui/kit/Capsule";
 import { Progress } from "@/ui/kit/Progress";
+import { Icon } from "@/ui/kit/icons";
 
 const SOURCE_LABEL: Record<LoanSource, string> = {
   personal: "Personal",
@@ -162,9 +162,9 @@ export function LoanCard({
         <div className="cashy-cardfig">
           <span className="cashy-cardfig__label cashy-loandir">
             {owed ? (
-              <ArrowUpRight size={13} style={{ color: dirColor }} />
+              <Icon name="arrow-up-right" size={13} style={{ color: dirColor }} />
             ) : (
-              <ArrowDownLeft size={13} style={{ color: dirColor }} />
+              <Icon name="arrow-down-left" size={13} style={{ color: dirColor }} />
             )}
             {owed ? "I owe" : "Owed to me"}
           </span>

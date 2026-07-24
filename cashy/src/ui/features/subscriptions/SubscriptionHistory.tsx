@@ -3,9 +3,9 @@ import type { Subscription, Transaction } from "@/domain/types";
 import { statusOf } from "@/domain/txStatus";
 import { billingDate, fmtDate } from "@/domain/date";
 import { formatMoney } from "@/domain/money";
+import { Capsule } from "@/ui/kit/Capsule";
 import { Modal } from "@/ui/kit/Modal";
 import { Button } from "@/ui/kit/Button";
-import { Capsule } from "@/ui/kit/Capsule";
 
 /**
  * A subscription's settled cycles — every charge that was paid or skipped — with

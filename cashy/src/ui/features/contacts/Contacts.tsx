@@ -8,7 +8,7 @@ import { ContactCard } from "@/ui/features/contacts/ContactCard";
 import { ContactEditor } from "./ContactEditor";
 
 /** Contacts screen: view/add/edit/archive/delete the people you lend to or
- *  borrow from — a card grid split Active / Archived + an inline editor modal.
+ *  borrow from — a card grid split Active / Archived + a feature-local editor.
  *  Mirrors `Wallets.tsx` and reuses `CardIdentity` via `ContactCard`. @ADR-contact-006 */
 export function Contacts() {
   const { contacts } = useCashy();

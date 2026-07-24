@@ -20,7 +20,7 @@ export function CardIdentity({
   archived = false,
   trailing,
 }: {
-  /** curated lucide key (see lib/icons) */
+  /** curated lucide key (see ui/kit/icon-map) */
   icon: string;
   /** classification hue for the tile; omitted → neutral grey */
   tint?: string;

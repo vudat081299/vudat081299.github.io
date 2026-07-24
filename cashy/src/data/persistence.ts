@@ -1,6 +1,4 @@
 import type { CashyState } from "@/domain/types";
-import { buildSampleData } from "@/data/sample";
-import { seedCategories } from "@/data/seed";
 import { CURRENT_VERSION, migrate } from "@/data/migrations";
 
 const KEY = "cashy_state_v1";
@@ -42,7 +40,7 @@ export function load(): CashyState {
     if (!raw) return emptyState();
     const p = JSON.parse(raw) as Partial<CashyState>;
     const fromVersion = p.version ?? 1;
-    let next = migrate(
+    const next = migrate(
       {
         ...emptyState(),
         ...p,
@@ -57,15 +55,6 @@ export function load(): CashyState {
       },
       fromVersion,
     );
-    // A workspace must never open on an empty ledger: any account that got this
-    // far with no transactions is re-seeded with the 200-row demo dataset. Only
-    // an EMPTY ledger is filled, so nothing a user actually entered is touched.
-    // Contacts flow through this same persistence seam — no dedicated repository. @ADR-contact-005
-    if (next.workspace && next.transactions.length === 0) {
-      const categories = next.categories.length ? next.categories : seedCategories();
-      const { tags, transactions, subscriptions, wallets, loans, contacts } = buildSampleData(categories);
-      next = { ...next, categories, tags, transactions, subscriptions, wallets, loans, contacts };
-    }
     save(next);
     return next;
   } catch {

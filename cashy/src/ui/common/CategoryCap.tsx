@@ -3,7 +3,7 @@ import { Capsule } from "@/ui/kit/Capsule";
 
 /**
  * A category shown as a plain **neutral** capsule — exactly what the web-builder
- * tables page prints (`<span class="wb-cap">Ăn uống</span>`).
+ * tables page prints (`<Capsule>Ăn uống</Capsule>`).
  *
  * A category is a *classification, not a status*, so under the colour ladder
  * (§1) it does not get to spend colour: "Ăn uống" / "Nhà ở" stay tier-1 grey.

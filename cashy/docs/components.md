@@ -51,7 +51,7 @@ Symbols **ligature name strings** (`"add"`, `"payments"`), except the standalone
 | `FileInput` / `Dropzone` | file pickers | `onFiles`; Dropzone `icon`/`title`/`hint` |
 | `Slider` / `RangeSlider` | range inputs | `min`/`max`/`step`/`value`/`onChange`, dual `[from,to]` |
 | `Sparkline` / `LineChart` / `ComboChart` / `BarChart` / `Donut` / `ProgressRing` / `RankedBars` / `Legend` | CSS/SVG chart primitives | mostly `values`/`points`/`slices`/`items` + colours |
-| `Icon` ⚠️ | lucide glyph by kebab-name (NOT exported from `index.ts`) | `name`, `size` |
+| `Icon` ⚠️ | lucide glyph by kebab-name (NOT exported from `index.ts`) | `name`, `size`, `className?`, `style?` |
 
 ### Molecules
 | Component | Purpose | Key props |
@@ -75,10 +75,10 @@ Symbols **ligature name strings** (`"add"`, `"payments"`), except the standalone
 | `Table` | generic data table | `columns[]`, `rows`, `rowKey`, `selectable`, `onReorder`, `footer`, `dense`/`striped`/`sticky` |
 | `Tree` / `Sortable` / `SlotGrid` | drag-reorder structures | `nodes`/`items`/`slots`, `onChange`/`onReorder`, `renderItem` |
 
-⚠️ **Name collisions** — the kit and `ui/common` both export **`EmptyState`**,
-**`Select`**, **`ColorPicker`**. They are different components; check the import
-path. Two **`Pagination`** files exist (`ui/kit` generic; `ui/features/transactions`
-Cashy-specific). `Icon` and `icon-map.ts` are NOT in the kit barrel.
+⚠️ **Name collision** — the kit and `ui/common` both export **`ColorPicker`**;
+they are different components, so check the import path. `EmptyState`, `Select`,
+and `Pagination` each have one canonical home in `ui/kit`. `Icon` and
+`icon-map.ts` are NOT in the kit barrel.
 
 ---
 
@@ -90,6 +90,8 @@ Pure/presentational; none touch the store.
 |---|---|---|
 | `AmountDisplay` | the single way money is drawn (income green, spend neutral-bold, red only when a real problem; `positive` tints a real inflow/asset green, `short` renders the compact `3,4m` form) | `amount`, `type?`, `signed?`, `tone?` (default true), `negative?`, `positive?`, `short?` |
 | `StatFigure` | one labelled money figure — a caption over a bold, tone-aware `AmountDisplay`; the shared building block for summary stat rows (group inside `.cashy-figrow`). Used by `LoanSummary` and the Dashboard "Balances" breakdown | `label`, `amount`, `positive?`, `negativeRed?`, `short?` |
+| `CardIdentity` | shared entity-card header: icon tile + title + subtitle + archived marker + optional trailing status | `icon`, `tint?`, `title`, `subtitle?`, `archived?`, `trailing?` |
+| `FacetChip` | shared dropdown filter chip; dashed unselected, solid selected, × clears only this facet | `label`, `value?`, `active`, `accent?`, `panelWidth?`, `onClear`, `children` or render-prop children |
 | `CategoryCap` | a category as a neutral grey capsule | `category?: Category \| null` (null → "Uncategorised") |
 | `CategorySelect` | tree category picker (icon+colour+indent+search) in a Popover | `categories`, `type: TxType`, `value: string\|null`, `onChange` |
 | `WalletPicker` | flat wallet picker (neutral tile + name) in a Popover; `excludeId` drops a transfer's other leg | `wallets`, `value: string\|null`, `onChange`, `allowNone?`, `placeholder?`, `excludeId?` |
@@ -124,7 +126,7 @@ examples).
 | `CashflowChart` | bars = spend (right axis) + line = running balance (left axis) | `data: WalletPoint[]` where `WalletPoint = { key, label, income, expense, balance }` |
 | `SpendChart` | interactive SVG donut of spend-by-category | `slices: BreakdownSlice[]` (`{ id, name, colorHex, total, pct, count? }`), `total`, `label?`, `size?`, `selectedId?`, `onSelect?` |
 | `TransactionTable` | the shared tx table (internal pagination, multi-select bulk-delete, row→detail) | `rows: Transaction[]`, `categories: Category[]`, `tagRanks: Map<string,TagRank>`, `pageSize`, `title?`/`subtitle?`/`headerActions?`/`emptyState?`, `onDelete(ids)` |
-| `TxFilterBar` | search pill + one dropdown chip per facet | `q: TxQuery` (from `useTxQuery`), `tagRanks: TagRank[]`, `categories: Category[]` |
+| `TxFilterBar` | search pill + one dropdown chip per facet | `q: TxQuery` (from `useTxQuery`), `tagRanks: TagRank[]`, `categories: Category[]`, `wallets: Wallet[]` |
 | `Pagination` | `wb-pagination` control (nothing for ≤1 page) | `page`, `totalPages`, `onPage` |
 | `TagsMorePopover` | the "+n" overflow chip in a table tags cell | `tags: TagRank[]` (the hidden ones), `count` |
 | `SubTile` | rounded icon tile; neutral unless `brand` | `icon`, `colorHex?`, `brand?`, `size?`, `iconSize?` |
@@ -137,7 +139,7 @@ examples).
 | `WalletCard` | one wallet as a card: accent-tinted tile + kind (or card network) + derived balance (negative → red, archived → dimmed); a `card` with a credit limit adds a utilisation bar + "used / available" line | `wallet: Wallet`, `balance: number`, `onEdit?(id)` |
 | `LoanCard` | one loan as a card — **composed from `CardIdentity` + `.cashy-card*`** like `WalletCard` (migrated off inline styles in the loans redesign). Neutral tile + counterparty + source; a direction line ("I owe" / "Owed to me") whose arrow is tinted by side — **red for "I owe"**, **green for "Owed to me"** — with the lent amount green and the borrowed amount neutral (red only when overdue); a 6px repayment bar; a foot with a tier-3 due line (only the day-count bolded) + interest with the **rate figure bolded** ("**N%** per year"; "No interest" recedes). Every state carries a status capsule — overdue/due-soon/paid, or a neutral "N months left" (rounded down via `loanTimeLeft`) for a calm active loan; a settled loan dims like a cancelled subscription | `loan: Loan` (derives its own numbers from `domain/loan`), `onEdit?(id)`, `now?`; renders in the `#/cashy` gallery ("8 · Loans") |
 | `LoanSummary` | the loans-overview header: a "where I stand" panel (you owe / owed to me / net) beside a "what's coming" panel — the next payment (date · amount · to whom) and a segmented **schedule bar** + legend splitting what I owe into overdue / ≤30d / 31–60d / later | `payable`, `receivable`, `net`, `schedule: PayableSchedule`, `next` (from `domain/loan.payableSchedule` + `nextPayment`) |
-| `FacetChip` (common) | one filter facet as a self-contained dropdown chip — dashed outline unselected, solid when a value is chosen, with an × to clear just that facet. Shared by the transaction, loan **and** subscription filter bars | `label`, `value?`, `active`, `accent?`, `panelWidth?`, `onClear`, `children` (panel, or `({close})⇒panel`) |
+| `ContactCard` | one contact card composed from `CardIdentity`; tinted identity tile, optional `@username`, archived dimming | `contact: Contact`, `onEdit?(id)` |
 
 `TagRank = { tag: Tag; count: number; shade: number }` (from `rankTags`). `Due`, `TxQuery`,
 `Range`, `BreakdownSlice`, `WalletPoint`, `ForecastPoint` are exported from the relevant
@@ -153,9 +155,11 @@ examples).
 | `Dashboard` | Overview: KPIs, projected balance, subscriptions strip, cash-flow + donut, insights, recent-tx table |
 | `Transactions` | period + filter bar + full table (50/page) |
 | `Subscriptions` | stats + "to confirm" dues + a card grid of `ConnectedSubscriptionCard` with a `SubFilterBar` (shown when > 6) |
-| `Wallets` | net worth + wallets grouped by kind (Cash & accounts / Cards / Other / Archived) + in-file `WalletEditor` (name, kind, balance, card network + credit limit for cards, colour, icon, archive/delete) |
-| `Loans` | `LoanSummary` header (position + payments-due schedule) + a shared `FacetChip` filter bar (search · Status · Source · Archived) + grouped `LoanCard` grids ("Money I owe" / "Owed to me" / "Archived", each sorted by `sortLoans`) + in-file `LoanEditor` (borrowed/lent toggle, counterparty, source, principal, interest rate + period, opened + optional due dates, colour, icon, note, a live payments sub-editor with a live outstanding readout, archive/delete) |
-| `Categories` | drag-to-reorder / drop-to-nest tree + in-file `CategoryEditor` modal |
+| `Wallets` | thin screen: net worth + wallets grouped by kind; composes feature-local `WalletEditor` (name, kind, balance, card network + credit limit, colour, icon, archive/delete) |
+| `Loans` | thin screen: `LoanSummary`, shared `FacetChip` filters, grouped `LoanCard` grids; composes feature-local `LoanEditor` with the live payments sub-editor |
+| `Contacts` | thin screen: active + archived `ContactCard` grids + feature-local `ContactEditor`; standalone today, with `ContactPicker` staged for future loan linkage |
+| `ContactPicker` | connected select/search/create control (`useCashy` + `addContact`); **staged scaffolding**, not wired until the loan↔contact persisted link lands |
+| `Categories` | thin screen composing feature-local `Tree` (drag/reorder/nest) + `CategoryEditor` |
 | `Tags` | tag list + in-file `TagEditor` modal |
 | `Settings` | appearance / workspace / data (export/import/sample) / danger zone |
 | `Onboarding` | name the workspace + optionally load sample data (kit primitives only) |
@@ -190,6 +194,7 @@ Transactions   PageHeader · PeriodPicker · AmountDisplay(net) · TxFilterBar �
 Subscriptions  PageHeader · stat tiles · SubscriptionDues → SubTile · SubFilterBar → SearchField, FacetChip · ConnectedSubscriptionCard → SubscriptionCard → SubTile · EmptyState  → opens SubscriptionEditor
 Wallets        PageHeader · net-worth card · grouped WalletCard ×N → AmountDisplay, Progress (card utilisation) · WalletEditor(Modal) → Select, ColorPicker, IconPicker
 Loans          PageHeader · owe/owed/net summary card · LoanCard ×N → AmountDisplay, Progress · LoanEditor(Modal) → Select, ColorPicker, IconPicker, AmountDisplay
+Contacts       PageHeader · ContactCard ×N → CardIdentity · ContactEditor(Modal) → ColorPicker, IconPicker
 Categories     PageHeader · Tree (wb-tree DnD) → Icon · CategoryEditor(Modal) → ColorPicker, IconPicker, Select · EmptyState
 Tags           PageHeader · wb-list · TagEditor(Modal) → ColorPicker · EmptyState
 Settings       PageHeader · Section ×4   (kit primitives only)

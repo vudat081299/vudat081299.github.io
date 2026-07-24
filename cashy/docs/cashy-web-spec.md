@@ -16,8 +16,8 @@
 
 A personal spending **ledger**, 100% client-side. No server, no account, no
 network, no telemetry — every byte of data lives in the browser's `localStorage`
-under `cashy_state_v1`. First launch can seed a Vietnamese demo workspace; a reset
-clears it.
+under `cashy_state_v1`. A fresh workspace starts empty; the Vietnamese demo
+dataset is an explicit opt-in from Settings. A reset clears the workspace.
 
 - **Stack:** React 19, TypeScript (strict), Vite, `recharts` for charts. Package
   manager **pnpm** (npm also works). No backend, no state library beyond a tiny
@@ -60,6 +60,7 @@ The full per-feature behaviour lives in [features/](features/README.md). At a gl
 | `#/subscriptions` | recurring services — dues/confirm, a card grid with a filter bar (search · status · wallet · sort) past 6 services, trial progress, catch-up / cancel / history dialogs |
 | `#/wallets` | wallet balances + net worth; add/edit/archive/delete; per-transaction wallet; transfers |
 | `#/loans` | money owed / owed to you; borrowed vs lent; per-loan repayment log; reference-only interest; net-worth integration |
+| `#/contacts` | standalone people directory; the future loan↔contact picker/link is staged but intentionally unwired |
 | `#/categories` | drag-to-reorder / drop-to-nest tree, per-side (expense/income) |
 | `#/tags` | flat labels, usage-rank grey shading |
 | `#/settings` | appearance, workspace, data export/import, danger-zone reset |

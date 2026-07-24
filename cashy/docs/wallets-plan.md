@@ -1,6 +1,7 @@
 # Cashy — Wallets & assets (feature plan)
 
-> **Status:** PLAN (not built). Awaiting owner go-ahead per phase.
+> **Status:** SHIPPED (all five phases, 2026-07-23). Kept as the design record.
+> Current behaviour lives in [features/wallets.md](features/wallets.md).
 > **Owner:** Đạt · **Drafted:** 2026-07-23 · **Target:** the next feature after the
 > docs/i18n pass.
 >
@@ -99,8 +100,9 @@ Add to the invariant list (CLAUDE.md §8 / data-model.md §6):
 2. **Wallet balance = `openingBalance` + net of its *recorded* rows.** Only
    `status: "recorded"` moves a balance (the existing `isCounted` gate still rules).
 3. **A transfer's source and destination must differ** and both must exist.
-4. **Deleting a wallet orphans its rows' `walletId` to `null`, never deletes them**
-   — exactly the `Category` delete rule (`orphanCategory` → `orphanWallet`).
+4. **A wallet used by a transfer cannot be hard-deleted; archive it.** Deleting
+   any other wallet orphans ordinary rows' `walletId` to `null`, never deletes
+   them — the safe subset of the Category delete rule.
 5. Money stays an **integer count of VND**; `openingBalance` included. No floats.
 
 ---
@@ -115,7 +117,8 @@ New pure module, `now` injected where needed, no I/O:
 | `walletBalance(wallet, txs)` | `openingBalance + Σ recorded rows`: `+income`, `−expense`, `−transfer-out` (walletId), `+transfer-in` (toWalletId) |
 | `walletBalances(wallets, txs)` | `Map<id, number>` — one pass over the ledger |
 | `netWorth(wallets, txs)` | Σ of all (non-archived?) wallet balances |
-| `orphanWallet(txs, walletId)` | rows with that wallet re-pointed to `null` (both `walletId` and `toWalletId`) |
+| `walletHasTransfers(txs, walletId)` | whether the wallet is either leg of a transfer; delete guard |
+| `orphanWallet(txs, walletId)` | ordinary rows with that wallet re-pointed to `null`; transfers are never degraded |
 | `guessWalletKind(name)` | `cash`/`card`/`ewallet`/`bank`/`other` from a name — used by the migration + as an add-wallet default |
 | `nextWalletOrder(wallets)` | max order + 1 |
 
@@ -130,8 +133,9 @@ Changes to existing domain modules:
 - **`domain/txStatus.ts`** — no change; balances reuse `isCounted`.
 
 Tests (`domain/wallet.test.ts`): opening balance; a transfer debits source + credits
-destination and shows in neither `totals`; delete orphans both ends; `guessWalletKind`
-boundaries; net worth = Σ balances.
+destination and shows in neither `totals`; delete orphans ordinary rows but
+preserves transfers; transfer-reference guard; `guessWalletKind` boundaries; net
+worth = Σ balances.
 
 ---
 
@@ -230,7 +234,8 @@ uncategorised transaction.
    transfer-aware) — transfer logic is covered by unit tests instead.
 2. **✅ DONE (2026-07-23) — Wallets screen + usecases.** `usecases/wallets.ts`
    (add/update/archive/delete), `#/wallets` + nav item + count, `WalletCard`,
-   in-file `WalletEditor` (signed opening balance, kind/colour/icon, archive/delete),
+   `WalletEditor` (later extracted to its own feature-local file; signed opening
+   balance, kind/colour/icon, archive/delete),
    net-worth stat + balances, gallery section "7 · Wallets". Verified live. Documented
    in [features/wallets.md](features/wallets.md).
 3. **✅ DONE (2026-07-23) — Assign on entry.** `WalletPicker` (common) in the
@@ -253,27 +258,25 @@ per-wallet realistic demo opening balances remain optional polish.)
 
 ---
 
-## 9. Open questions (pick before the phase that needs them)
+## 9. Shipped decisions
 
-1. **Net worth = all wallets, or exclude archived?** Default plan: archived wallets
-   keep their balance but drop out of the net-worth stat once archived.
-2. **Card balance sign.** A credit card is a liability — its balance is usually
-   negative (you owe). Show it as a negative wallet balance (simple), or as "owed"
-   framing? v1 default: plain signed balance; revisit with the net-worth `liability`
-   kind later.
-3. **Delete vs. archive a wallet with history.** Plan offers both (delete orphans
-   rows; archive keeps the link). Confirm we want destructive delete at all, or
-   archive-only.
-4. **Editor 3-way toggle vs. a separate "Transfer" action.** Plan folds Transfer into
-   the existing type toggle. Alternative: a distinct "+ Transfer" entry point. Decide
-   in Phase 4.
+1. **Net worth excludes archived wallets.** Their history/balance remains, but they
+   drop out of the default total.
+2. **Card debt is a signed negative balance.** The UI adds card framing and
+   utilisation without changing the underlying balance model.
+3. **Archive and delete both ship.** Archive always keeps links. Hard delete is
+   blocked for wallets used by transfers; otherwise it orphans ordinary ledger
+   and subscription references, never deletes rows.
+4. **Transfer is the third transaction-editor mode.** It uses the same
+   `addTransaction`/`updateTransaction` path, with From → To wallet pickers.
 
 ## 10. DO / DON'T (specific to this feature)
 
 **DO**
 - Keep `domain/wallet.ts` pure; put every balance/transfer rule there, call from usecases.
 - Gate income/expense aggregates with `!isTransfer(tx)`; gate balances with `isCounted`.
-- Orphan a deleted wallet's rows to `null` (never delete rows).
+- Block hard delete for a wallet used by a transfer; otherwise orphan ordinary
+  rows to `null` (never delete rows).
 - Bump `CURRENT_VERSION` + add a v6 branch; leave `account` data intact.
 - Render wallets neutral/grey; hue only as a classification accent.
 

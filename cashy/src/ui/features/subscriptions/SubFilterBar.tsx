@@ -20,12 +20,17 @@ import { SearchField } from "@/ui/common/SearchField";
 
 // Each status option wears the same capsule tone as the card's own status pill,
 // so "Payment due" reads amber here exactly as it does on the card.
-const STATUS_OPTS: { key: SubState; label: string; cap: string; dot: boolean }[] = [
-  { key: "due", label: "Payment due", cap: "wb-cap--warning", dot: true },
-  { key: "trial", label: "Free trial", cap: "wb-cap--info", dot: true },
-  { key: "active", label: "Active", cap: "wb-cap--success", dot: true },
-  { key: "suspended", label: "Suspended", cap: "wb-cap--danger", dot: true },
-  { key: "cancelled", label: "Cancelled", cap: "", dot: false },
+const STATUS_OPTS: {
+  key: SubState;
+  label: string;
+  tone: "neutral" | "success" | "warning" | "danger" | "info";
+  dot: boolean;
+}[] = [
+  { key: "due", label: "Payment due", tone: "warning", dot: true },
+  { key: "trial", label: "Free trial", tone: "info", dot: true },
+  { key: "active", label: "Active", tone: "success", dot: true },
+  { key: "suspended", label: "Suspended", tone: "danger", dot: true },
+  { key: "cancelled", label: "Cancelled", tone: "neutral", dot: false },
 ];
 const STATUS_LABEL: Record<SubState, string> = {
   due: "Payment due",
@@ -105,7 +110,7 @@ export function SubFilterBar({ f }: { f: SubFilter }) {
                       close();
                     }}
                   />
-                  <Capsule dot={o.dot} className={o.cap}>
+                  <Capsule tone={o.tone} dot={o.dot}>
                     {o.label}
                   </Capsule>
                 </label>

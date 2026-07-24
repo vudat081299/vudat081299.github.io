@@ -27,7 +27,7 @@ screens stay identical without sharing state.
   `TransactionTable`.
 - The editor and detail are **singleton modals**, mounted once at the app root and
   opened imperatively via `lib/modals` (`openTxEditor`, `openTxDetail`) — not
-  children of this screen. The navbar **Add** button (`src/ui/app/Layout.tsx:82`)
+  children of this screen. The navbar **Add** button (`src/ui/app/Layout.tsx`)
   also opens the editor and, while a draft is parked, switches to a dashed
   "Finish draft" affordance (`cashy-btn--draft`, driven by `useTxDraft`).
 
@@ -56,7 +56,7 @@ Pure functions from `domain/*` (`src/domain/…`):
 | `orphanCategory` / `detachTag` | `transaction.ts` | not called here directly — the guarantees behind "delete never cascades": a category delete nulls `categoryId`, a tag delete strips the id. |
 | `statusOf(tx)` | `txStatus.ts` | `tx.status ?? "recorded"` — always read status through this (legacy rows have none). |
 | `isCounted(tx)` | `txStatus.ts` | `true` only for `recorded`; gates every total. |
-| `TX_STATUS_META` / `TX_STATUS_ORDER` | `txStatus.ts` | label + `wb-cap` tone classes + `counted` flag + the fixed option order for the status facet, picker, and cells. |
+| `TX_STATUS_META` / `TX_STATUS_ORDER` | `txStatus.ts` | label + typed `Capsule` tone/fill metadata + `counted` flag + the fixed option order for the status facet, picker, and cells. |
 | `periodRange(key, now, custom)` | `period.ts` | resolves a `PeriodKey` to concrete `{start,end}` dates for the range filter. |
 | `rankTags(tags, txs)` | `tag.ts` | tag order **and** grey ink shade by usage rank (not raw count). |
 | `flattenTree(categories)` | `category.ts` | depth-indented category list for the Category facet. |
@@ -89,7 +89,7 @@ Container → leaf/common/modal, each with its file and one-line role:
 | `TxFilterBar` | feature-leaf | `ui/features/transactions/TxFilterBar.tsx` | search pill + one dropdown **`FacetChip`** per facet + "Clear all" |
 | `TransactionTable` | feature-leaf | `ui/features/transactions/TransactionTable.tsx` | the shared table: internal pagination, select column, bulk-delete bar, row→detail, per-row edit |
 | `usePagination` | hook | `ui/features/transactions/usePagination.ts` | slice rows into pages; clamps page when the list shrinks; exposes `from`/`to`/`total` |
-| `Pagination` | feature-leaf | `ui/features/transactions/Pagination.tsx` | `wb-pagination` control; renders nothing for ≤1 page (distinct from the kit's `Pagination`) |
+| `Pagination` | kit | `ui/kit/Pagination.tsx` | canonical `wb-pagination` control; renders nothing for ≤1 page |
 | `TagsMorePopover` | feature-leaf | `ui/features/transactions/TagsMorePopover.tsx` | the "+n" overflow chip; portalled, viewport-clamped panel of the hidden tags |
 | `TransactionEditor` | singleton modal | `ui/features/transactions/TransactionEditor.tsx` | add/edit form; draft caching; delete; ⌘I/⌘O type flip |
 | `TransactionDetail` | singleton modal | `ui/features/transactions/TransactionDetail.tsx` | receipt overlay (`wb-receipt`); Close / Edit / Delete toolbar |
@@ -103,7 +103,7 @@ Container → leaf/common/modal, each with its file and one-line role:
 | `DatePicker` | common | `ui/common/DatePicker.tsx` | single-date field (editor "When") |
 | `PayeeInput` | common | `ui/common/PayeeInput.tsx` | free-text + portalled ranked autocomplete; the Payee field |
 | `WalletPicker` | common | `ui/common/WalletPicker.tsx` | the wallet dropdown — "Paid from" / "Received into", and both legs of a transfer |
-| `EmptyState` | common | `ui/common/EmptyState.tsx` | the no-transactions block (with an Add action) |
+| `EmptyState` | kit | `ui/kit/EmptyState.tsx` | the no-transactions block (with an Add action) |
 | `TimePicker`, `Textarea`, `Input`/`Field`, `Kbd`, `Modal`, `Popover` | kit | `ui/kit/…` | editor building blocks |
 
 ## 7. Behaviours & edge cases
@@ -127,7 +127,7 @@ Container → leaf/common/modal, each with its file and one-line role:
   `toWalletId`, so filtering by a wallet includes transfers that touch it. Hidden
   when there are no wallets.
 - Each facet is its own dropdown **chip** that shows the applied value inline
-  (`"Recorded +1"`, `"≥ 200k đ"`) and grows an × to clear just that facet; **Clear
+  (`"Recorded +1"`, `"≥ 200k"`) and grows an × to clear just that facet; **Clear
   all** (`clearTokens`) appears once any removable filter is set and leaves the
   **period scope** untouched (period is not a "token").
 - Default period is **`30d`**, not "this month" — the seeded ~10-day dataset
@@ -197,7 +197,7 @@ as **From → To** with a neutral amount, no category. The legacy free-text
 - `src/ui/features/transactions/TxFilterBar.tsx` — filter bar + `FacetChip`
 - `src/ui/features/transactions/TransactionTable.tsx` — the shared paged table
 - `src/ui/features/transactions/usePagination.ts` — pagination hook
-- `src/ui/features/transactions/Pagination.tsx` — the pager control (Cashy-specific)
+- `src/ui/kit/Pagination.tsx` — the canonical pager control
 - `src/ui/features/transactions/TagsMorePopover.tsx` — tags "+n" overflow popover
 - `src/ui/features/transactions/TransactionEditor.tsx` — add/edit modal
 - `src/ui/features/transactions/TransactionDetail.tsx` — receipt detail modal

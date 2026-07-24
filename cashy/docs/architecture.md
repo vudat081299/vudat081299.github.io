@@ -53,6 +53,23 @@ Rows = importer. `✓` allowed, `✗` rejected by the checker.
 Adding a rule to `check-layers.mjs`? Plant a violation, confirm it fails, remove
 it. A guard that has never failed is not known to work.
 
+### 1.3 Design principles behind the rule
+
+This is a pragmatic **Clean/layered architecture** with a **functional core and
+imperative shell**, not a framework implementation:
+
+- `domain/` owns decisions and derived facts; it is deterministic and testable.
+- `usecases/` sequence one user action and commit once where practical.
+- `data/` owns survival mechanics, never product decisions.
+- `ui/` follows the container/presentational split and composes Atomic-Design-like
+  tiers rather than duplicating whole features.
+- SRP, separation of concerns, dependency inversion, and narrow interfaces are
+  preferred. Other SOLID vocabulary is not a reason to add abstraction by itself.
+- DRY applies to **knowledge**: money/status/date/business rules get one home
+  immediately. Repeated layout with no stable shared meaning may stay local.
+- Prefer composition over inheritance and typed props/unions over stringly class
+  contracts. Reuse kit/common components before writing primitive markup.
+
 ---
 
 ## 2. File map
@@ -76,12 +93,12 @@ src/
   domain/     types sort category tag transaction subscription analytics
               wallet loan date period money format txStatus · index.ts (barrel) · *.test.ts
   data/       store persistence migrations seed sample draft
-  usecases/   workspace settings categories tags transactions subscriptions wallets loans
+  usecases/   workspace settings categories tags transactions subscriptions wallets loans contacts
   ui/kit/     wb-* design system (63 files)
-  ui/common/  AmountDisplay CategoryCap StatusCap TagChip PeriodPicker …
+  ui/common/  AmountDisplay CardIdentity FacetChip CategoryCap StatusCap TagChip PeriodPicker …
   ui/app/     Layout ErrorBoundary
-  ui/features/ dashboard transactions subscriptions wallets loans categories tags
-               settings onboarding
+  ui/features/ dashboard transactions subscriptions wallets loans contacts
+               categories tags settings onboarding
   ui/dev/     WbGallery (#/wb, generic wb-*) · CashyGallery (#/cashy, Cashy layer)
               — DEV only, code-split, never loaded in production
   lib/        id palette utils(cn) router theme toast confirm modals
@@ -128,8 +145,9 @@ A subscription **never books money on its own**. Each due cycle materialises a
 | `transaction.ts` | `totals`, `filterTx`, `byRecency`, `orphanCategory` (deleting a category empties its transactions, never deletes them), `detachTag` |
 | `tag.ts` | `rankTags` — order **and** ink shade by usage rank, not raw count |
 | `analytics.ts` | `breakdown` (rolls children into root category), `walletSeries` (trims dead margins at both ends, keeps middle gaps), `periodInsights`, `monthlyNetRate`, `forecastSeries` — all skip transfers |
-| `wallet.ts` | `isTransfer`, `walletBalance`/`walletBalances`, `netWorth`, `orphanWallet`, `guessWalletKind`, `walletIcon`, `nextWalletOrder` — balances DERIVED from the ledger; a transfer moves between two wallets and counts toward no income/expense total |
+| `wallet.ts` | `isTransfer`, `walletBalance`/`walletBalances`, `netWorth`, `walletHasTransfers`, `orphanWallet`, `guessWalletKind`, `walletIcon`, `nextWalletOrder` — balances DERIVED from the ledger; a transfer moves between two wallets, counts toward no income/expense total, and guards either referenced wallet from hard delete |
 | `loan.ts` | `loanPaid`, `loanOutstanding` (`principal − Σ payments`, floored at 0), `loanProgress`, `isPaidOff`, `daysUntilDue`, `loanStatus` (paid\|overdue\|due-soon\|active), `loanNetWorthDelta` (borrowed −, lent +), `totalPayable`, `totalReceivable`, `loansNetWorth` (= receivable − payable), `loanTimeLeft` (coarse "N months left", floored to the half), `payableSchedule` (what I owe bucketed overdue/≤30d/31–60d/later), `nextPayment` (soonest upcoming debt), `sortLoans`, `loanSourceIcon` — money borrowed (I owe) or lent (owed to me), each a self-contained record with a manual repayment log; outstanding is DERIVED and interest is reference-only (never accrued). Does NOT intersect transactions/analytics — net worth is composed at the UI edge as `walletNetWorth + loansNetWorth` |
+| `contact.ts` | contact validation/normalisation, stable labels, active/name sorting, and the future-reference seam. Contacts hold identity only; `isContactReferenced` intentionally returns false until a complete persisted loan↔contact link lands |
 
 ### 3.3 Shared numeric & text helpers
 
@@ -172,9 +190,10 @@ Inventory:
 | `categories.ts` | `addCategory` `updateCategory` `deleteCategory` `reorderCategory` |
 | `tags.ts` | `addTag` `updateTag` `deleteTag` |
 | `transactions.ts` | `addTransaction` `updateTransaction` `deleteTransaction` |
-| `subscriptions.ts` | `addSubscription` `updateSubscription` `setSubscriptionActive` `deleteSubscription` `syncSubscriptions` `syncPayments` `confirmSubscriptionCharge` `confirmSubscriptionCharges` `skipSubscriptionCharge` `revertSubscriptionCharge` |
-| `wallets.ts` | `addWallet` `updateWallet` `setWalletArchived` `deleteWallet` (orphans rows via `orphanWallet`, never deletes them) |
+| `subscriptions.ts` | `addSubscription` `updateSubscription` `setSubscriptionActive` `cancelSubscription` `deleteSubscription` `syncSubscriptions` `syncPayments` `confirmSubscriptionCharge(s)` `skipSubscriptionCharge` `revertSubscriptionCharge(s)` `resolveSubscriptionCharges` |
+| `wallets.ts` | `addWallet` `updateWallet` `setWalletArchived` `deleteWallet` (blocks wallets used by transfers; otherwise orphans ordinary rows via `orphanWallet`, never deletes them) |
 | `loans.ts` | `addLoan` `updateLoan` `setLoanArchived` `deleteLoan` (self-contained — no ledger rows to orphan, unlike `deleteWallet`). Payments are edited inline in the loan editor and saved as the whole `payments` array through `addLoan`/`updateLoan` |
+| `contacts.ts` | `addContact` `updateContact` `setContactArchived` `deleteContact`; hard-delete consults the staged reference guard |
 
 **Cross-usecase direction:** `transactions.ts` → `subscriptions.ts` only
 (deleting a charge invalidates its owner's history). The reverse is forbidden;
@@ -194,8 +213,9 @@ a multi-month catch-up is a single undoable step, not N steps.
 
 | Tier | Examples | Contract |
 |---|---|---|
-| **Leaf** | `SubscriptionCard` `TransactionTable` `SubscriptionDues` | Receives data + callbacks via props. MUST NOT import `usecases` or `data`. Renders in `ui/dev/CashyGallery` (`#/cashy`) and in tests with no app behind it. |
-| **Container / screen** | `Dashboard` `Subscriptions` `Transactions` `Categories` | Calls `useCashy()` and usecases; passes callbacks down. |
+| **Leaf** | `SubscriptionCard` `LoanCard` `ContactCard` `TransactionTable` | Receives data + callbacks via props. MUST NOT import `usecases` or `data`. Renders in `ui/dev/CashyGallery` (`#/cashy`) with fixtures and no app behind it. |
+| **Container / screen** | `Dashboard` `Subscriptions` `Transactions` `Wallets` `Loans` `Contacts` `Categories` | Calls `useCashy()` and usecases; passes callbacks down. |
+| **Connected wrapper/control** | `ConnectedSubscriptionCard` `ContactPicker` | May call usecases/read state, but keeps the underlying reusable leaf or control surface focused. `ContactPicker` is staged and currently has no screen consumer. |
 | **Singleton modal** | `TransactionEditor` `SubscriptionEditor` `TransactionDetail` | A container. Calls usecases; registers its open handler via `lib/modals`. |
 
 Do **not** prop-drill beyond the leaf tier — containers calling usecases directly
@@ -266,8 +286,9 @@ Generic → `ui/kit/` + export from `ui/kit/index.ts`. Cashy-aware → `ui/commo
   (`.wb-btn.cashy-btn--quiet-danger`), and `:hover` in dark needs an explicit
   `.dark` branch — `.dark .wb-btn--ghost:hover` is also 0-3-0 and loads later.
 - **`data/store.ts` runs `load()` at import time.** Importing it touches
-  localStorage immediately. Never import it from a test; test `domain/` instead.
-- **Two `Pagination` components exist**: `ui/kit/Pagination.tsx` (generic) and
-  `ui/features/transactions/Pagination.tsx`. Check the path before editing.
-- **`ui/common/` and `ui/kit/` both export `EmptyState` / `ColorPicker` /
-  `Select`.** They are different components. Check the import path.
+  localStorage immediately. Domain tests must stay store-free; usecase tests may
+  import it only with the test environment's localStorage and must reset state via
+  `commit(emptyState())` in `beforeEach`.
+- **`Pagination`, `EmptyState`, and `Select` have one home in `ui/kit/`.**
+  `ColorPicker` is the remaining intentional collision between `ui/common/` and
+  `ui/kit/`; check the import path before editing it.

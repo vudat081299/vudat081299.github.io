@@ -34,7 +34,7 @@ export function createWorkspace(input: { displayName: string; currency?: string 
   });
 }
 
-/** Replace categories/tags/transactions with a fresh demo dataset (200 txns). */
+/** Replace every business-data array with a fresh demo dataset (~200 txns). */
 export function loadSampleData(): void {
   const state = getState();
   const workspace: Workspace = state.workspace ?? {

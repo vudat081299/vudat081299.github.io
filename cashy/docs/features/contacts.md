@@ -22,8 +22,8 @@ about linked loans.
 - Screen (`src/ui/features/contacts/Contacts.tsx`): a `PageHeader` (+ "Add contact")
   over a `.cashy-loangrid` of `ContactCard`s, split into **Active** and (when any)
   an **Archived** group. Empty state is a one-line muted note. The **editor** is an
-  in-file `ContactEditor` `Modal` (not a global singleton — it belongs to this
-  screen), opened by the header button (add) or clicking a card (edit).
+  feature-local `ContactEditor` `Modal` (not a global singleton — it belongs to
+  this feature), opened by the header button (add) or clicking a card (edit).
 
 ## 3. Data it touches
 
@@ -64,10 +64,10 @@ All in `src/usecases/contacts.ts` (UI writes only through these).
 
 | Component | Tier | File | Role |
 |---|---|---|---|
-| `Contacts` | container/screen | `ui/features/contacts/Contacts.tsx` | reads `useCashy()`; active/archived grids + in-file `ContactEditor` |
+| `Contacts` | container/screen | `ui/features/contacts/Contacts.tsx` | thin screen: reads `useCashy()`; active/archived grids + editor state |
 | `ContactCard` | feature-leaf | `ui/features/contacts/ContactCard.tsx` | one contact as a card — composes `CardIdentity` (tinted tile + name + `@username` subtitle); click → edit; dimmed when archived |
-| `ContactEditor` | modal (in-file) | *(in `Contacts.tsx`)* | add/edit form (name, optional username, colour, icon) + archive / delete |
-| `ContactPicker` | feature-leaf | `ui/features/contacts/ContactPicker.tsx` | a select-or-create contact control — **staged for the loan↔contact link, not yet wired to any screen** |
+| `ContactEditor` | feature-local modal | `ui/features/contacts/ContactEditor.tsx` | add/edit form (name, optional username, colour, icon) + archive / delete |
+| `ContactPicker` | connected staged control | `ui/features/contacts/ContactPicker.tsx` | reads contacts and can call `addContact`; **staged for the loan↔contact link, not yet wired to any screen** |
 | `PageHeader`, `CardIdentity`, `ColorPicker`, `IconPicker` | common | `ui/common/…` | header + card identity + editor pickers |
 
 ## 7. Behaviours & edge cases
@@ -85,8 +85,9 @@ All in `src/usecases/contacts.ts` (UI writes only through these).
 
 ## 8. Files
 
-- `src/ui/features/contacts/Contacts.tsx` — screen + in-file `ContactEditor`
+- `src/ui/features/contacts/Contacts.tsx` — thin screen container
 - `src/ui/features/contacts/ContactCard.tsx` — the contact card (composes `CardIdentity`)
+- `src/ui/features/contacts/ContactEditor.tsx` — feature-local editor modal
 - `src/ui/features/contacts/ContactPicker.tsx` — staged select-or-create control (unwired)
 - `src/domain/contact.ts` — the pure rules (§4)
 - `src/usecases/contacts.ts` — the writes (§5)

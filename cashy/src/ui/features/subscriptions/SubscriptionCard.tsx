@@ -16,11 +16,11 @@ import { statusOf } from "@/domain/txStatus";
 import { fmtDateNum } from "@/domain/date";
 import { formatMoney } from "@/domain/money";
 import { SubTile } from "@/ui/features/subscriptions/SubTile";
+import { Capsule } from "@/ui/kit/Capsule";
 import { Icon } from "@/ui/kit/icons";
 import { Progress } from "@/ui/kit/Progress";
 import { Button } from "@/ui/kit/Button";
 import { Card } from "@/ui/kit/Card";
-import { Capsule } from "@/ui/kit/Capsule";
 
 /**
  * One service, one card. It answers the four questions a subscription actually

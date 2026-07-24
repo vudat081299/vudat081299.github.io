@@ -28,7 +28,7 @@ tag**, not the colour you gave it.
   the tags themselves as large notched capsules. An empty-state line shows when
   there are no tags.
 - The **tag editor** is a `Modal` (`src/ui/kit/Modal`), not a route — the in-file
-  `TagEditor` component (`Tags.tsx:11`), opened by clicking a tag (edit) or the add
+  `TagEditor` component (`Tags.tsx`), opened by clicking a tag (edit) or the add
   cell (create). It is *not* one of the app's singleton modals; it is local state
   on this screen.
 
@@ -47,12 +47,12 @@ grey ink comes from a derived usage rank, never from the row.
 
 | Function | What it does |
 |---|---|
-| `rankTags(tags, txs)` (`src/domain/tag.ts:24`) | Counts each tag's transactions, then returns `TagRank[]` sorted **most-used first** (ties broken by `byName`). Also assigns each a `shade` (100–900 grey step) **by rank position, not raw count** — see §7. |
-| `tagRankMap(tags, txs)` (`src/domain/tag.ts:40`) | Same ranking keyed `Map<tagId, TagRank>`, for surfaces that render one transaction's tags and need to look up a shade by id. |
-| `detachTag(txs, tagId)` (`src/domain/transaction.ts:89`) | Pure: returns the transaction list with `tagId` filtered out of every `tagIds`. Backs the delete invariant (§7). |
-| `byName(a, b)` (`src/domain/sort.ts:4`) | `localeCompare(..., "vi")` name order — the tie-break inside `rankTags` and the alphabetical branch on this screen. |
+| `rankTags(tags, txs)` (`src/domain/tag.ts`) | Counts each tag's transactions, then returns `TagRank[]` sorted **most-used first** (ties broken by `byName`). Also assigns each a `shade` (100–900 grey step) **by rank position, not raw count** — see §7. |
+| `tagRankMap(tags, txs)` (`src/domain/tag.ts`) | Same ranking keyed `Map<tagId, TagRank>`, for surfaces that render one transaction's tags and need to look up a shade by id. |
+| `detachTag(txs, tagId)` (`src/domain/transaction.ts`) | Pure: returns the transaction list with `tagId` filtered out of every `tagIds`. Backs the delete invariant (§7). |
+| `byName(a, b)` (`src/domain/sort.ts`) | `localeCompare(..., "vi")` name order — the tie-break inside `rankTags` and the alphabetical branch on this screen. |
 
-`TagRank` shape (`src/domain/tag.ts:4`): `{ tag: Tag; count: number; shade: number }`.
+`TagRank` shape (`src/domain/tag.ts`): `{ tag: Tag; count: number; shade: number }`.
 
 ## 5. Usecases
 
@@ -70,14 +70,14 @@ totals or subscription payment caches.
 
 | Component | Tier | File | Role |
 |---|---|---|---|
-| `Tags` | container / screen | `src/ui/features/tags/Tags.tsx:81` | Reads `useCashy()`; computes a local usage `Map`; renders the sort toggle + capsule grid; wires add/edit/delete. |
-| `TagEditor` | modal (in-file) | `src/ui/features/tags/Tags.tsx:11` | Name input + `ColorPicker`; `addTag` when new, `updateTag` when editing; save disabled on empty name; Enter saves. |
-| `TagChip` | common / leaf | `src/ui/common/TagChip.tsx:43` | The `#`-chip used everywhere tags are *shown*. Grey by `shade` (usage rank), or its own hue when `tinted`; optional `onRemove` × button. |
-| `TagsMorePopover` | feature-leaf | `src/ui/features/transactions/TagsMorePopover.tsx:20` | The `+n` overflow chip in a table's tags column; portals a fixed-positioned panel to `<body>` (escapes the table's `overflow`) listing only the tags that didn't fit, still most-used-first. |
+| `Tags` | container / screen | `src/ui/features/tags/Tags.tsx` | Reads `useCashy()`; computes a local usage `Map`; renders the sort toggle + capsule grid; wires add/edit/delete. |
+| `TagEditor` | modal (in-file) | `src/ui/features/tags/Tags.tsx` | Name input + `ColorPicker`; `addTag` when new, `updateTag` when editing; save disabled on empty name; Enter saves. |
+| `TagChip` | common / leaf | `src/ui/common/TagChip.tsx` | The `#`-chip used everywhere tags are *shown*. Grey by `shade` (usage rank), or its own hue when `tinted`; optional `onRemove` × button. |
+| `TagsMorePopover` | feature-leaf | `src/ui/features/transactions/TagsMorePopover.tsx` | The `+n` overflow chip in a table's tags column; portals a fixed-positioned panel to `<body>` (escapes the table's `overflow`) listing only the tags that didn't fit, still most-used-first. |
 | `ColorPicker` | common | `src/ui/common/ColorPicker` | Swatch grid (`SWATCHES`) the editor uses to set `colorHex`. |
 
 Consumers of the ranked chips (read-only, all grey-by-rank): `TransactionTable`
-(top 2 + `TagsMorePopover`, `TransactionTable.tsx:233`), `TransactionEditor` picker
+(top 2 + `TagsMorePopover`, `TransactionTable.tsx`), `TransactionEditor` picker
 + selected chips, `TxFilterBar` tag facet, and the Dashboard recent-transactions
 table — each feeds `rankTags` / `tagRankMap` down as a `tagRanks` prop.
 
@@ -98,7 +98,7 @@ table — each feeds `rankTags` / `tagRankMap` down as a `tagRanks` prop.
 - **`colorHex` is largely decorative.** Every tag stores a `colorHex` you can edit,
   but it only reaches the screen on **tag-*about* surfaces**: the manager grid
   itself (each capsule sets `--wb-tag-color: t.colorHex` via
-  `wb-tag--notch cashy-tag-mgmt`, `Tags.tsx:165`) and the editor's `ColorPicker`
+  `wb-tag--notch cashy-tag-mgmt`, `Tags.tsx`) and the editor's `ColorPicker`
   preview. Everywhere a tag classifies a transaction it is grey-by-rank (or plain
   grey). `TagChip`'s `tinted` prop opts a chip back into its own hue, but in the
   shipped surfaces it is used only in the dev gallery — production tag pickers pass
@@ -106,14 +106,14 @@ table — each feeds `rankTags` / `tagRankMap` down as a `tagRanks` prop.
   (see [CLAUDE.md](../../CLAUDE.md) §3), so a table of rows each wearing rainbow
   chips is exactly what the neutral-first ladder avoids.
 - **Sort toggle on the manager.** `Name` = `localeCompare(..., "vi")` alphabetical;
-  `Most used` = usage count desc, name-tiebroken (`Tags.tsx:96`). The raw count is
+  `Most used` = usage count desc, name-tiebroken (`Tags.tsx`). The raw count is
   **hidden** — it surfaces only in each capsule's hover `title` (`"<name> · n
   transactions"`), so `Most used` is how you read the ranking on-screen.
 - **Delete strips the id from every transaction (invariant).** `deleteTag` removes
   the tag *and* calls `detachTag(state.transactions, id)` in the same `commit`, so
   no transaction is ever left pointing at a dead tag id. The delete confirm names
   the blast radius up front — `"The tag will be removed from n transactions."` when
-  `n > 0` (`Tags.tsx:118`). Money is untouched: detaching a tag never changes an
+  `n > 0` (`Tags.tsx`). Money is untouched: detaching a tag never changes an
   amount or status. (Contrast categories, which *orphan* rows to `null` rather than
   scrubbing the field.)
 - **Add / edit.** Empty (whitespace-only) name can't be saved — the button is
@@ -135,7 +135,7 @@ table — each feeds `rankTags` / `tagRankMap` down as a `tagRanks` prop.
 - `src/ui/common/TagChip.tsx` — the shared `#`-chip (grey-by-shade or `tinted`).
 - `src/ui/features/transactions/TagsMorePopover.tsx` — the `+n` overflow chip +
   portalled panel.
-- `src/domain/types.ts:39` — the `Tag` interface.
+- `src/domain/types.ts` — the `Tag` interface.
 - Consuming surfaces (read only): `src/ui/features/transactions/TransactionTable.tsx`,
   `TransactionEditor.tsx`, `TxFilterBar.tsx`, `TransactionDetail.tsx`, and
   `src/ui/features/dashboard/Dashboard.tsx`.

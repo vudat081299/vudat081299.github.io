@@ -1,5 +1,5 @@
-// Demo seed — every workspace opens on a full, BALANCED ledger rather than an
-// empty shell. The dataset runs from Jan 2026 to today:
+// Opt-in demo dataset — loaded from Settings, never injected into a fresh or
+// merely empty workspace. It runs from Jan 2026 to today:
 //   • income  — one salary on the 1st of each month, starting at 25M and
 //     compounding +1% every following month (a gentle raise schedule).
 //   • spending — everyday expenses spread across the days of each month, sized
@@ -9,8 +9,7 @@
 //     same window so the balance line never opens months in the red.
 //   • one opening-balance row dated the very first day, so the wallet reads
 //     positive from the first point of the line.
-// Amounts are integer VND. Referenced by store.createWorkspace, store.load
-// (re-seeds an empty workspace) and store.loadSampleData.
+// Amounts are integer VND. Referenced by workspace.loadSampleData.
 import type {
   Category,
   Contact,

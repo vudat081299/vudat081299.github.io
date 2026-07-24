@@ -17,19 +17,21 @@ import type { Transaction, TxStatus } from "@/domain/types";
  */
 export interface StatusMeta {
   label: string;
-  /** classes appended to `wb-cap` */
-  cap: string;
+  /** the capsule's semantic tone (fed straight to the kit `Capsule`) */
+  tone: "neutral" | "success" | "warning" | "info" | "danger";
+  /** fill treatment when it differs from the default soft (failed is solid) */
+  fill?: "solid";
   /** show the leading status dot (soft tones only; solid/neutral skip it) */
   dot: boolean;
   counted: boolean;
 }
 
 export const TX_STATUS_META: Record<TxStatus, StatusMeta> = {
-  recorded: { label: "Recorded", cap: "wb-cap--success", dot: true, counted: true },
-  pending: { label: "Awaiting you", cap: "wb-cap--warning", dot: true, counted: false },
-  awaiting: { label: "In flight", cap: "wb-cap--info", dot: true, counted: false },
-  skipped: { label: "Skipped", cap: "", dot: true, counted: false },
-  failed: { label: "Failed", cap: "wb-cap--danger wb-cap--solid", dot: false, counted: false },
+  recorded: { label: "Recorded", tone: "success", dot: true, counted: true },
+  pending: { label: "Awaiting you", tone: "warning", dot: true, counted: false },
+  awaiting: { label: "In flight", tone: "info", dot: true, counted: false },
+  skipped: { label: "Skipped", tone: "neutral", dot: true, counted: false },
+  failed: { label: "Failed", tone: "danger", fill: "solid", dot: false, counted: false },
 };
 
 export const TX_STATUS_ORDER: TxStatus[] = [

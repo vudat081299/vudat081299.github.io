@@ -96,7 +96,6 @@ New pure module, `now` injected, no I/O:
 | `isPaidOff(loan)` | `loanOutstanding === 0` |
 | `daysUntilDue(loan, now)` | whole days to `dueAt` (negative = overdue); `null` if open-ended |
 | `loanStatus(loan, now)` | `paid \| overdue \| due-soon \| active` |
-| `isOverdue(loan, now)` | `loanStatus === "overdue"` |
 | `loanNetWorthDelta(loan)` | `borrowed ⇒ −outstanding`, `lent ⇒ +outstanding` |
 | `totalPayable(loans)` / `totalReceivable(loans)` | Σ outstanding per direction (non-archived) |
 | `loansNetWorth(loans)` | `receivable − payable` |
@@ -148,8 +147,10 @@ arrays; it gains `loans`.
 | `updateLoan(id, patch)` | edit any field |
 | `setLoanArchived(id, archived)` | close/reopen without losing history |
 | `deleteLoan(id)` | drop the loan (self-contained — no ledger rows to orphan) |
-| `addLoanPayment(id, {amount, date, note})` | append a repayment/collection |
-| `removeLoanPayment(id, paymentId)` | undo one |
+
+Payments are managed as an editor-owned list and saved atomically through
+`addLoan`/`updateLoan`; the planned granular add/remove-payment usecases were not
+needed.
 
 No usecase gains a *decision*; the arithmetic lives in `domain/loan`.
 
@@ -162,7 +163,7 @@ No usecase gains a *decision*; the arithmetic lives in `domain/loan`.
 | **`#/loans` screen** | `ui/features/loans/Loans.tsx` (container) | summary header (total payable · total receivable · net); two groups **"Money I owe"** / **"Owed to me"**; `LoanCard` per loan; add/edit/archive/delete; empty state. Mirrors the Wallets screen shape. |
 | **Nav item** | `ui/app/Layout.tsx` | a "Loans" entry (handshake / hand-coins icon) in the sidebar + mobile drawer, with a count. |
 | **`LoanCard`** | `ui/features/loans/LoanCard.tsx` | feature-leaf: counterparty, source chip, **outstanding** (`AmountDisplay`), a progress bar, a due-date countdown / overdue badge, the rate. Renders in the `#/cashy` gallery with fake data. |
-| **`LoanEditor`** | in `Loans.tsx` (in-file, like `WalletEditor`) | direction toggle (Borrowed / Lent), counterparty, source select, principal (money field), rate + period, `openedAt`, optional `dueAt`, colour, icon, note; a **payments** editor (add/remove repayments) with a live outstanding readout; archive/delete. |
+| **`LoanEditor`** | `ui/features/loans/LoanEditor.tsx` (later extracted from `Loans.tsx`) | direction toggle (Borrowed / Lent), counterparty, source select, principal (money field), rate + period, `openedAt`, optional `dueAt`, colour, icon, note; a **payments** editor (add/remove repayments) with a live outstanding readout; archive/delete. |
 | **Dashboard** | `ui/features/dashboard/Dashboard.tsx` | net worth becomes **assets − debts**: extend the balances strip with a payable/receivable line, or a compact "Debts" stat, Manage → `#/loans`. |
 
 Loans render neutral/grey; the source hue is a classification accent only.
@@ -177,8 +178,8 @@ Loans render neutral/grey; the source hue is a classification accent only.
    `exportData` now carries wallets **and** loans (closed a latent export gap),
    `buildSampleLoans` demo. 129 tests; build + lint green. App runs unchanged.
 2. **✅ DONE (2026-07-23) — Loans screen + usecases.** `usecases/loans.ts`
-   (add/update/archive/delete + add/removeLoanPayment), `#/loans` + nav item
-   (`handshake`) + count, `LoanCard` (status pill + progress + due line), in-file
+   (add/update/archive/delete; payment lists save through add/update), `#/loans` + nav item
+   (`handshake`) + count, `LoanCard` (status pill + progress + due line),
    `LoanEditor` with the live payments sub-editor, You-owe / Owed-to-you / Net
    summary, "Money I owe" / "Owed to me" groups, gallery section "8 · Loans".
    Verified live (6 demo loans, add round-trip).
@@ -194,17 +195,17 @@ transfer so wallet balances move too — see §9.1.)
 
 ---
 
-## 9. Open questions (defaults chosen; change any and say so)
+## 9. Shipped decisions and optional future extension
 
 1. **Repayment ↔ wallet link.** v1 records a repayment as an entry on the loan only
    — it does **not** move a wallet balance. Default: keep them separate (simplest,
    matches "manual"). A later phase could offer "also deduct from wallet X" (creating
    a linked transfer) so wallet balances stay honest without double entry.
-2. **Net worth & archived loans.** Archived loans drop out of net worth (mirrors
-   archived wallets). Confirm.
-3. **Overpayment.** `outstanding` floors at 0; the extra is shown as "paid in full"
-   rather than a negative/credit. OK for personal use?
-4. **Due-soon window.** Default 7 days for the "due soon" badge.
+2. **Net worth & archived loans — shipped.** Archived loans drop out of net worth
+   (mirrors archived wallets).
+3. **Overpayment — shipped.** `outstanding` floors at 0; the extra reads as paid
+   in full rather than a negative credit.
+4. **Due-soon window — shipped.** Seven days.
 
 ## 10. DO / DON'T (specific to this feature)
 

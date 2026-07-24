@@ -1,4 +1,6 @@
 import {
+  ArrowDownLeft,
+  ArrowUpRight,
   Banknote,
   Beer,
   BookOpen,
@@ -46,6 +48,8 @@ import {
 
 /** Icon name (kebab-case, as stored on categories/subscriptions) → lucide glyph. */
 export const MAP: Record<string, LucideIcon> = {
+  "arrow-up-right": ArrowUpRight,
+  "arrow-down-left": ArrowDownLeft,
   utensils: Utensils,
   "shopping-cart": ShoppingCart,
   "utensils-crossed": UtensilsCrossed,
@@ -90,5 +94,6 @@ export const MAP: Record<string, LucideIcon> = {
   users: Users,
 };
 
-/** Names available in the category icon picker. */
-export const ICON_CHOICES: string[] = Object.keys(MAP);
+/** Names available in entity icon pickers; utility-only UI glyphs stay out. */
+const UTILITY_ICONS = new Set(["arrow-up-right", "arrow-down-left"]);
+export const ICON_CHOICES: string[] = Object.keys(MAP).filter((name) => !UTILITY_ICONS.has(name));

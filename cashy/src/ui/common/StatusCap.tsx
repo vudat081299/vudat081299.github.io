@@ -6,7 +6,7 @@ import { Capsule } from "@/ui/kit/Capsule";
 export function StatusCap({ tx }: { tx: Transaction }) {
   const meta = TX_STATUS_META[statusOf(tx)];
   return (
-    <Capsule className={meta.cap} dot={meta.dot}>
+    <Capsule tone={meta.tone} fill={meta.fill} dot={meta.dot}>
       {meta.label}
     </Capsule>
   );

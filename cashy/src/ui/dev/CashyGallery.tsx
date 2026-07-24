@@ -1,5 +1,5 @@
 import { useState, type CSSProperties, type ReactNode } from "react";
-import type { Category, Subscription, Tag, Transaction, TxStatus } from "@/domain/types";
+import type { Category, Contact, Subscription, Tag, Transaction, TxStatus } from "@/domain/types";
 import type { BreakdownSlice, WalletPoint, ForecastPoint } from "@/domain/analytics";
 import type { TagRank } from "@/domain/tag";
 import type { Due } from "@/domain/subscription";
@@ -38,6 +38,7 @@ import { useTxQuery } from "@/ui/features/transactions/useTxQuery";
 import { SubTile } from "@/ui/features/subscriptions/SubTile";
 import { WalletCard } from "@/ui/features/wallets/WalletCard";
 import { LoanCard } from "@/ui/features/loans/LoanCard";
+import { ContactCard } from "@/ui/features/contacts/ContactCard";
 import { SubscriptionCard } from "@/ui/features/subscriptions/SubscriptionCard";
 import { SubscriptionDues } from "@/ui/features/subscriptions/SubscriptionDues";
 import { SubscriptionCatchUp } from "@/ui/features/subscriptions/SubscriptionCatchUp";
@@ -175,6 +176,12 @@ const DUES: Due[] = [
   { sub: SUB_NETFLIX, month: "2026-07", txId: "n-jul" },
   { sub: SUB_ICLOUD, month: "2026-06", txId: "ic-jun" },
   { sub: SUB_ICLOUD, month: "2026-07", txId: "ic-jul" },
+];
+
+const CONTACTS: Contact[] = [
+  { id: "ct-minh", name: "Minh Nguyễn", username: "minh_vcb", colorHex: "#14b8a6", icon: "user", archived: false, createdAt: iso("2026-01-10") },
+  { id: "ct-family", name: "Bố mẹ", colorHex: "#6366f1", icon: "users", archived: false, createdAt: iso("2026-02-12") },
+  { id: "ct-old", name: "Anh Hùng", colorHex: "#f59e0b", icon: "user", archived: true, createdAt: iso("2025-11-08") },
 ];
 
 // ============================================================================
@@ -472,6 +479,14 @@ export function CashyGallery() {
             <LoanCard now={new Date("2026-07-23T09:00:00")} onEdit={() => {}} loan={{ id: "l-soon", direction: "borrowed", counterparty: "Thẻ tín dụng VPBank", source: "card", principal: 24_000_000, interestRatePct: 0, interestPeriod: "month", openedAt: "2026-02-23", dueAt: "2026-07-28", payments: [{ id: "p2", amount: 16_000_000, date: "2026-06-23", note: "" }], colorHex: "#8b5cf6", icon: "credit-card", note: "", archived: false, createdAt: "" }} />
             <LoanCard now={new Date("2026-07-23T09:00:00")} onEdit={() => {}} loan={{ id: "l-paid", direction: "borrowed", counterparty: "VPBank", source: "bank", principal: 20_000_000, interestRatePct: 12, interestPeriod: "year", openedAt: "2025-09-23", dueAt: "2026-06-23", payments: [{ id: "p3", amount: 20_000_000, date: "2026-06-23", note: "Tất toán" }], colorHex: "#3b82f6", icon: "landmark", note: "", archived: false, createdAt: "" }} />
             <LoanCard now={new Date("2026-07-23T09:00:00")} onEdit={() => {}} loan={{ id: "l-lent", direction: "lent", counterparty: "Minh", source: "personal", principal: 10_000_000, interestRatePct: 0, interestPeriod: "year", openedAt: "2026-05-23", dueAt: "2026-08-23", payments: [], colorHex: "#14b8a6", icon: "users", note: "", archived: false, createdAt: "" }} />
+          </div>
+        </Section>
+
+        <Section title="9 · Contacts" hint="ContactCard reuses CardIdentity for a stable person identity. ContactPicker stays store-backed scaffolding and is intentionally omitted until the loan↔contact slice lands.">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 12 }}>
+            {CONTACTS.map((contact) => (
+              <ContactCard key={contact.id} contact={contact} onEdit={() => {}} />
+            ))}
           </div>
         </Section>
 

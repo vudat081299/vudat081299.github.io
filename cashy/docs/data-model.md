@@ -21,12 +21,12 @@ The single object serialized to `localStorage`. `types.ts` · built empty in
 | `version` | `number` | Schema version of this snapshot | Drives migrations. Current = **9**. On load it is forced to `CURRENT_VERSION` and the old value passed to `migrate()`. |
 | `theme` | `ThemeMode` | UI colour scheme | `"system" \| "light" \| "dark"`; default `"system"`. |
 | `subIconStyle` | `SubIconStyle` | How subscription icon tiles are coloured | `"neutral"` (default, grey) \| `"brand"` (service hue). |
-| `workspace` | `Workspace \| null` | The profile; `null` = not yet onboarded | Non-null but empty ledger ⇒ `load()` re-seeds the demo data. |
+| `workspace` | `Workspace \| null` | The profile; `null` = not yet onboarded | A non-null workspace may legitimately have an empty ledger; demo data is opt-in. |
 | `categories` | `Category[]` | Category tree (self-referencing) | |
 | `tags` | `Tag[]` | Flat tag list | |
 | `transactions` | `Transaction[]` | **The ledger — the single source of truth for money** | |
 | `subscriptions` | `Subscription[]` | Recurring services | Carry cache fields re-derived from `transactions`. |
-| `wallets` | `Wallet[]` | Spending wallets / accounts (added **v6**) | Balances are DERIVED from the ledger, never stored. Schema live; UI pending — see [wallets-plan.md](wallets-plan.md). |
+| `wallets` | `Wallet[]` | Spending wallets / accounts (added **v6**) | Fully shipped. Balances are DERIVED from the ledger, never stored. See [features/wallets.md](features/wallets.md). |
 | `loans` | `Loan[]` | Debts you owe / money owed to you (added **v7**) | First-class records — **not** wallets, **not** transactions. Outstanding is DERIVED (`principal` − payments), never stored. See [features/loans.md](features/loans.md) · [loans-plan.md](loans-plan.md). |
 | `contacts` | `Contact[]` | People you lend to / borrow from (added **v9**) | First-class entity; holds no money. Loans link to a contact in a later slice. |
 
@@ -245,7 +245,7 @@ Tag  M ──◀ tagIds ▶ N  Subscription       (many-to-many; inherited onto 
 Subscription 1 ──◀ subscriptionId N Transaction   (a "charge"; also carries subMonth)
 Subscription.paymentTxIds  ──▶ Transaction.id     (CACHE: the recorded charges)
 
-Wallet   1 ──◀ walletId  N  Transaction    (nullable; deleting a wallet orphans rows to null, never deletes)
+Wallet   1 ──◀ walletId  N  Transaction    (nullable; hard delete orphans ordinary rows, never transfers)
 Wallet   1 ──◀ walletId  N  Subscription   (nullable; inherited onto charges)
 Transaction.toWalletId ──▶ Wallet          (set only on a transfer — the destination wallet)
 
@@ -299,7 +299,7 @@ Loan (0..n)                               — first-class record; references NO 
 | Is-a-transfer predicate | `isTransfer` | `wallet.ts` |
 | Loan outstanding / paid / progress | `loanOutstanding`, `loanPaid`, `loanProgress`, `isPaidOff` | `loan.ts` |
 | Loan net-worth delta + totals payable/receivable | `loanNetWorthDelta`, `totalPayable`, `totalReceivable`, `loansNetWorth` | `loan.ts` |
-| Loan due / overdue status | `loanStatus`, `daysUntilDue`, `isOverdue` | `loan.ts` |
+| Loan due / overdue status | `loanStatus`, `daysUntilDue` | `loan.ts` |
 
 ---
 
@@ -309,9 +309,9 @@ Loan (0..n)                               — first-class record; references NO 
 - **Draft key:** `localStorage["cashy_tx_draft_v1"]` — JSON of `TxDraft`, separate lifecycle.
 - **Save:** `commit(next)` in `data/store.ts` replaces the in-memory cell, persists, notifies.
 - **Load** (`data/persistence.ts`): missing/corrupt → empty state; else parse, merge over an
-  empty state, force `version = CURRENT_VERSION`, run `migrate(next, fromVersion)`, re-save.
-  A workspace that opens with an **empty ledger** is re-seeded with the demo dataset (only an
-  empty ledger — real data is never overwritten).
+  empty state, force `version = CURRENT_VERSION`, run `migrate(next, fromVersion)`,
+  and re-save. An onboarded empty ledger stays empty; sample data is loaded only
+  through the explicit Settings action.
 
 **Migrations** (`data/migrations.ts`, `CURRENT_VERSION = 9`), **append-only** ascending
 `if (fromVersion < N)` blocks: v2 recolor onto the chart palette · v3 `startMonth` → real
@@ -324,12 +324,15 @@ Loan (0..n)                               — first-class record; references NO 
 transform. **Import** runs the same
 `migrate()` so an older export is brought forward, not stamped current unmigrated.
 
-**Export** (`workspace.exportData`) now serializes `wallets` **and** `loans` too (it
-previously omitted wallets); on import both back-fill to `[]` when an older export lacks them.
+**Export** (`workspace.exportData`) serializes the workspace and every business
+array: categories, tags, transactions, subscriptions, wallets, loans, and contacts.
+Display preferences remain local to the browser. On import missing arrays back-fill
+to `[]`, then the payload runs through the same forward migrations as normal load.
 
 **Seed vs. sample**
 - `data/seed.ts` — `seedCategories()`: the default category tree a new workspace starts with
-  (Vietnamese names; one bright hue per root).
+  (Vietnamese names; one bright hue per root), plus `seedWallets()`. A fresh
+  workspace has an empty ledger and empty tags/subscriptions/loans/contacts.
 - `data/sample.ts` — `buildSampleData()` / `buildSampleSubscriptions()`: a ~200-row demo ledger
   (Jan 2026 → today) + ~20 demo subscriptions covering every payment state. Seeded data is
   deliberately Vietnamese; the UI chrome is English.
@@ -348,11 +351,18 @@ previously omitted wallets); on import both back-fill to `[]` when an older expo
 8. **Recorded subscription charges always survive** cancellation and deletion; only pending/skipped are pruned.
 9. **Migrations are append-only.**
 10. **Dates are `YYYY-MM-DD` strings** compared lexicographically; range/period logic works off `occurredAt` alone.
-11. **A workspace never opens on an empty ledger** — empty ledgers are auto-seeded.
+11. **An onboarded empty ledger is valid** — demo data is opt-in and must never
+    appear merely because the app reloaded.
 12. **Debts settle oldest-first** (catch-up rejects paying a later cycle while an older used cycle is unpaid).
 13. **A row with `toWalletId` is a transfer** — excluded from every income/expense/breakdown total; only the two wallet balances it touches move.
-14. **Wallet balance = `openingBalance` + net of its recorded rows**; deleting a wallet orphans rows' `walletId` to `null`, never deletes them.
+14. **Wallet balance = `openingBalance` + net of its recorded rows.** A wallet
+    referenced by either leg of a transfer cannot be deleted (archive it);
+    deleting any other wallet orphans ordinary rows' `walletId` to `null`, never
+    deletes them.
 15. **A loan's outstanding is DERIVED** — `max(0, principal − Σ payments.amount)`; never stored, never negative (overpayment reads as paid-in-full).
 16. **Loan interest is reference-only** — `interestRatePct` never changes the outstanding balance; Cashy never accrues interest or generates a schedule.
 17. **A `borrowed` loan's outstanding subtracts from net worth; a `lent` loan's adds** — archived loans drop out by default.
 18. **Money stays an integer count of VND** for a loan's `principal` and every `LoanPayment.amount`.
+19. **Contacts hold identity only in v9** — no persisted entity references them
+    yet; `ContactPicker` and `isContactReferenced` are staged for a complete
+    loan↔contact slice.

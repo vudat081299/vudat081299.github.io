@@ -93,15 +93,13 @@ export function Settings() {
   }
 
   async function doLoadSample() {
-    if (transactions.length) {
-      const ok = await confirm({
-        title: "Load sample data?",
-        message: "This will replace all current categories, tags, and transactions.",
-        confirmLabel: "Load sample data",
-        danger: true,
-      });
-      if (!ok) return;
-    }
+    const ok = await confirm({
+      title: "Load sample data?",
+      message: "This will replace your current ledger, subscriptions, wallets, loans, contacts, categories, and tags.",
+      confirmLabel: "Load sample data",
+      danger: true,
+    });
+    if (!ok) return;
     loadSampleData();
     toast.success("Sample data loaded");
   }
@@ -257,7 +255,7 @@ export function Settings() {
       <Section title="Danger zone">
         <div className="wb-cluster wb-cluster--between">
           <p style={{ fontSize: 13, color: "var(--wb-fg-muted)", margin: 0, flex: "1 1 200px" }}>
-            Delete all transactions, categories, and tags, then start over from scratch.
+            Delete the entire workspace and start over from scratch.
           </p>
           <Button
             type="button"

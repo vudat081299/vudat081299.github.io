@@ -19,9 +19,9 @@ except deleting rows from its own recent-transactions table.
 
 | | |
 |---|---|
-| Hash route | `#/dashboard` — also the fallback for any unknown hash (`src/App.tsx:22`, `router.ts`) |
-| Nav label | **Overview** (`src/ui/app/Layout.tsx:10`) |
-| Mounted by | `src/App.tsx:103` — the `else` branch of the route switch renders `<Dashboard/>` inside `<Layout>` |
+| Hash route | `#/dashboard` — also the fallback for any unknown hash (`src/App.tsx`, `router.ts`) |
+| Nav label | **Overview** (`src/ui/app/Layout.tsx`) |
+| Mounted by | `src/App.tsx` — the `else` branch of the route switch renders `<Dashboard/>` inside `<Layout>` |
 | Container | `src/ui/features/dashboard/Dashboard.tsx` |
 
 Layout, top to bottom: `PageHeader` (title + `<PeriodPicker>` action) → 4-up
@@ -40,12 +40,14 @@ Reads via `useCashy()`; the only write is `deleteTransaction`.
 | `Category` | `id`, `name`, `parentId`, `colorHex` | read (breakdown roll-up, donut hue) |
 | `Tag` | via `rankTags` for the filter bar + table chips | read |
 | `Subscription` | via the strip + `needsPaymentNow` | read (cross-ref [subscriptions.md](./subscriptions.md)) |
+| `Wallet` | balances, archived state | read (wallet strip + wallet facet; cross-ref [wallets.md](wallets.md)) |
+| `Loan` | direction, outstanding, archived state | read (assets − debts net-worth reconciliation; cross-ref [loans.md](loans.md)) |
 | `subIconStyle` | `neutral \| brand` | read (passed to subscription cards) |
 
 Money is an integer count of VND; **only `status: "recorded"` counts** — every
-total/series here filters through `isCounted` (`domain/txStatus`). The recent-tx
-table's free-text `account` ("Paid with") field is out of scope here; see
-[wallets-plan.md](../wallets-plan.md) for the (unbuilt) wallet direction.
+total/series here filters through `isCounted` (`domain/txStatus`). Wallet balances
+use `walletId`/`toWalletId`; the legacy free-text `account` is display-compatible
+history only.
 
 ## 4. Domain rules used
 
@@ -53,19 +55,19 @@ Pure functions the screen composes (`@/domain`, re-exported from `domain/index`)
 
 | Function | Source | What it yields |
 |---|---|---|
-| `totals(txs)` | `domain/transaction.ts:11` | `{income, expense, net}` over counted rows |
-| `filterTx(txs, {range})` | `domain/transaction.ts:41` | period-scoped rows feeding the KPIs/charts (range only — table filters are separate) |
-| `periodRange` / `prevRange` | `domain/period.ts:91,130` | the concrete window + its immediately-preceding comparable window (for deltas) |
-| `periodLabel` / `periodNote` / `rangeLabel` | `domain/period.ts:44,79,39` | header + picker display strings |
-| `breakdown(txs,"expense",cats)` | `domain/analytics.ts:18` | spend grouped by **root** category → donut slices (`Uncategorised` = grey `#9b9a97`) |
-| `foldTailSlices(slices)` | `domain/analytics.ts:66` | merges the tail of tiny categories (≤5% combined, ≥2 of them) into one grey `Other` slice (`OTHER_SLICE_ID`) |
-| `pctChange(cur, prev)` | `domain/analytics.ts:93` | fractional change vs previous period; `null` when `prev` is 0 |
-| `walletSeries(txs, range, bucket)` | `domain/analytics.ts:125` | per-bucket `{income, expense, balance}`; balance is cumulative net of ALL counted tx to the bucket end; dead end-margins trimmed |
-| `periodInsights(txs, range, cats)` | `domain/analytics.ts:314` | savings rate, avg/median per day, CV→`steadiness`, top category, run-rate `projected`, largest expense, days elapsed/in-period |
-| `monthlyNetRate(net, spanDays)` | `domain/analytics.ts:397` | normalises the period net to money-per-average-month (30.4375-day month) |
-| `forecastSeries(balance, monthlyNet, months)` | `domain/analytics.ts:420` | `ForecastPoint[]` — `balance(k) = current + monthlyNet·k`, point 0 = now |
-| `rankTags(tags, txs)` | `domain/tag.ts:24` | usage-ranked tags for the filter bar + table chips |
-| `needsPaymentNow(sub, txs)` | `domain/subscription.ts:171` | drives the "N due now" count |
+| `totals(txs)` | `domain/transaction.ts` | `{income, expense, net}` over counted rows |
+| `filterTx(txs, {range})` | `domain/transaction.ts` | period-scoped rows feeding the KPIs/charts (range only — table filters are separate) |
+| `periodRange` / `prevRange` | `domain/period.ts` | the concrete window + its immediately-preceding comparable window (for deltas) |
+| `periodLabel` / `periodNote` / `rangeLabel` | `domain/period.ts` | header + picker display strings |
+| `breakdown(txs,"expense",cats)` | `domain/analytics.ts` | spend grouped by **root** category → donut slices (`Uncategorised` = grey `#9b9a97`) |
+| `foldTailSlices(slices)` | `domain/analytics.ts` | merges the tail of tiny categories (≤5% combined, ≥2 of them) into one grey `Other` slice (`OTHER_SLICE_ID`) |
+| `pctChange(cur, prev)` | `domain/analytics.ts` | fractional change vs previous period; `null` when `prev` is 0 |
+| `walletSeries(txs, range, bucket)` | `domain/analytics.ts` | per-bucket `{income, expense, balance}`; balance is cumulative net of ALL counted tx to the bucket end; dead end-margins trimmed |
+| `periodInsights(txs, range, cats)` | `domain/analytics.ts` | savings rate, avg/median per day, CV→`steadiness`, top category, run-rate `projected`, largest expense, days elapsed/in-period |
+| `monthlyNetRate(net, spanDays)` | `domain/analytics.ts` | normalises the period net to money-per-average-month (30.4375-day month) |
+| `forecastSeries(balance, monthlyNet, months)` | `domain/analytics.ts` | `ForecastPoint[]` — `balance(k) = current + monthlyNet·k`, point 0 = now |
+| `rankTags(tags, txs)` | `domain/tag.ts` | usage-ranked tags for the filter bar + table chips |
+| `needsPaymentNow(sub, txs)` | `domain/subscription.ts` | drives the "N due now" count |
 | `daysBetween` / `todayYMD` | `domain/date.ts` | span length for the chart-bucket + forecast rate |
 
 ## 5. Usecases
@@ -74,7 +76,7 @@ Read-only except for one write, invoked from the embedded recent-tx table.
 
 | Usecase | Effect |
 |---|---|
-| `deleteTransaction(id)` | removes a row (table's bulk-delete calls it per id, `Dashboard.tsx:524`) |
+| `deleteTransaction(id)` | removes a row (table's bulk-delete calls it per id, `Dashboard.tsx`) |
 
 `navigate("subscriptions" \| "transactions")` (`lib/router`) and `openTxEditor(null)`
 (`lib/modals`, opens the singleton editor from the empty state) are lib helpers,
@@ -84,15 +86,21 @@ not usecases — the editor itself performs the add-transaction write.
 
 | Tier | Component | File | Role |
 |---|---|---|---|
-| Container | `Dashboard` | `ui/features/dashboard/Dashboard.tsx` | owns `useTxQuery`, composes everything below |
+| Container | `Dashboard` | `ui/features/dashboard/Dashboard.tsx` | thin entry: owns queries/derivations and composes the six organisms below |
 | Common | `PageHeader` | `ui/common/PageHeader.tsx` | title + subtitle + actions slot |
 | Common | `PeriodPicker` | `ui/common/PeriodPicker.tsx` | period trigger button + popover (the header action) |
 | Common | `PeriodPanel` | `ui/common/PeriodPanel.tsx` | panel body: day/month preset radios + custom range |
 | Common | `DateRangeInput` | `ui/common/DateRangeInput.tsx` | segmented `dd/mm/yyyy – dd/mm/yyyy` field, live-applies |
 | Common | `RangeCalendar` | `ui/common/RangeCalendar.tsx` | click-two-ends range calendar with live preview band |
 | Kit | `ScrollArea` | `ui/kit/ScrollArea.tsx` | themed scroll container for the category rank list |
-| Common | `EmptyState` | `ui/common/EmptyState.tsx` | recent-tx empty state |
+| Kit | `EmptyState` | `ui/kit/EmptyState.tsx` | recent-tx empty state |
 | Feature-leaf | `BalanceCard` | `ui/features/dashboard/BalanceCard.tsx` | one KPI tile: icon, value, delta chip vs previous period |
+| Feature organism | `BalancesCard` | `ui/features/dashboard/BalancesCard.tsx` | net worth, wallet rows, and loan reconciliation |
+| Feature organism | `ForecastCard` | `ui/features/dashboard/ForecastCard.tsx` | horizon controls + `BalanceForecastChart` |
+| Feature organism | `DashboardSubscriptions` | `ui/features/dashboard/DashboardSubscriptions.tsx` | recurring header/filter/scrolling subscription grid |
+| Feature organism | `CashflowCard` | `ui/features/dashboard/CashflowCard.tsx` | bucket controls + `CashflowChart` |
+| Feature organism | `CategoryBreakdownCard` | `ui/features/dashboard/CategoryBreakdownCard.tsx` | `SpendChart` + ranked category list |
+| Feature organism | `InsightsCard` | `ui/features/dashboard/InsightsCard.tsx` | presentation mapping for the period insight tiles |
 | Feature-leaf | `BalanceForecastChart` | `ui/features/dashboard/BalanceForecastChart.tsx` | filled-area balance projection (recharts `AreaChart`) |
 | Feature-leaf | `CashflowChart` | `ui/features/dashboard/CashflowChart.tsx` | spending bars (right axis) + running-balance area (left axis), `ComposedChart` |
 | Feature-leaf | `SpendChart` | `ui/features/dashboard/SpendChart.tsx` | interactive hand-drawn SVG donut, selection controlled by parent |
@@ -106,11 +114,12 @@ charts AND table all move with it. But the charts/KPIs are fed
 `filterTx(transactions, { range: q.range })` — **range only**. The type / search /
 tag / status / amount tokens in the filter bar narrow the **table only** (via
 `q.sorted`), never the charts. Default period is **`30d`**, not "this month"
-(`useTxQuery.ts:46` — the seeded dataset spans ~10 days across a month boundary).
+(`useTxQuery.ts` — the seeded dataset spans ~10 days across a month boundary).
 
 **KPI deltas.** `t` = totals over the period; `tp` = totals over `prevRange`.
 Income/Spending/Net show `pctChange(t.x, tp.x)`; the all-time **Balance** tile
-shows `totals(transactions).net` (ignores the period) with a delta of
+shows `netWorth(wallets, transactions)` — including wallet opening balances and
+ignoring the selected period — with a delta of
 `t.net / |balanceStart|` where `balanceStart = balance − t.net`. Balance renders in
 full ink, the other three `muted` (they're supporting figures). **Gotcha:** the KPI
 delta greens on any rise and reds on any fall — a raw sign, so a *rising spending*
@@ -130,7 +139,7 @@ wallet rows + the loans row sum to the headline. Colour = status throughout
 (owed-to-you green, a negative net red), left to `StatFigure`/`AmountDisplay`.
 
 **Forecast card.** Horizon toggle 6 / 12 / 24 months (default 12). Projects
-`view.balance` (all-time net) forward at `monthlyNet = monthlyNetRate(t.net,
+`view.balance` (all-time wallet balance) forward at `monthlyNet = monthlyNetRate(t.net,
 spanDays)`. Point 0 is labelled "now" (a fact); the rest are arithmetic, not a
 trend model. If the line would cross zero, a dashed zero `ReferenceLine` is drawn
 and the Y-axis is allowed negative so the month the money runs out is visible.
@@ -142,10 +151,10 @@ appears only when `spanDays > 30 && ≤ 800`; the default within that is `month`
 window of ≤30 days stays daily and multi-year (>800 days) auto-buckets by year,
 both with no toggle. `walletSeries`' own `"auto"` mode tiers `>800→year`,
 `>62→month`, else `day`. Bars = per-bucket spending (own right axis); the area line
-= running wallet balance, **cumulative net of all counted tx** (a stock, not the
-in-period flow), on a separate left axis. Empty end-margins are trimmed; middle
-gaps kept. `hasFlow = t.income || t.expense` → otherwise "Nothing recorded in this
-period".
+= running wallet balance, starting from the sum of wallet opening balances and
+then applying the **cumulative net of all counted tx** (a stock, not the in-period
+flow), on a separate left axis. Empty end-margins are trimmed; middle gaps kept.
+`hasFlow = t.income || t.expense` → otherwise "Nothing recorded in this period".
 
 **Spending donut + rank list.** Slices come from `foldTailSlices(breakdown(...))`.
 The donut and the legend list share one controlled `selectedCat` (reset on range
@@ -187,6 +196,7 @@ Each preset shows a muted note of the concrete window it resolves to (`periodNot
 
 - `src/ui/features/dashboard/Dashboard.tsx` — container / composition
 - `src/ui/features/dashboard/BalanceCard.tsx` — KPI tile
+- `src/ui/features/dashboard/{BalancesCard,ForecastCard,DashboardSubscriptions,CashflowCard,CategoryBreakdownCard,InsightsCard}.tsx` — feature-local organisms composed by the entry
 - `src/ui/features/dashboard/BalanceForecastChart.tsx` — projected-balance area chart
 - `src/ui/features/dashboard/CashflowChart.tsx` — spending-bars + balance-line combo
 - `src/ui/features/dashboard/SpendChart.tsx` — spend-by-category donut

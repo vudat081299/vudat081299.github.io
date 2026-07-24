@@ -1,9 +1,8 @@
-# Handoff checklist & open questions
+# Documentation/component-catalogue pass record (closed)
 
-> For the owner (Đạt). This records what the **documentation + component-catalogue
-> pass** produced, what I verified, and the decisions I need from you. Per your
-> instruction I did **not** ask in chat — tick the boxes and answer §3 when you're
-> back. Resolve an item, then delete it (same convention as REBUILD-NOTES.md).
+> **Status: CLOSED. No owner decision or actionable handoff remains.** This records
+> what the 2026-07-23 documentation + component-catalogue pass produced. Current
+> facts live in `CLAUDE.md` and the normative/current docs; this file is history.
 >
 > Date of pass: **2026-07-23**.
 
@@ -11,8 +10,8 @@
 
 ## 1. What this pass did
 
-- [x] **`tr → m` money fix.** Compact money is now English `k / m / b` with a dot
-      decimal (`3.4m đ`), not `k / tr / tỷ` with a comma. `domain/money.ts`
+- [x] **`tr → m` money fix.** Compact money is now English `k / m / b` with a
+      vi-VN comma decimal (`3,4m`), not `k / tr / tỷ`. `domain/money.ts`
       (`formatMoneyShort` + `trim`). Committed separately (`fix(cashy): English
       magnitude letters…`). Verified live in the chart axes (`80m`, `320m`, …).
 - [x] **`CLAUDE.md`** — the new AI/onboarding map at the repo root: philosophy,
@@ -69,9 +68,10 @@ Everything below was decided and shipped; kept here as a short record.
 
 ## 4. Observations (not blocking — for when you want them)
 
-- **In-file sub-components.** `Categories.tsx` (`CategoryEditor`, `Tree`),
-  `Tags.tsx` (`TagEditor`), `Settings.tsx` (`Section`) keep small components inline.
-  That's fine (feature-local, single-use); extract only if one gets reused elsewhere.
+- **Feature-entry decomposition — resolved.** `CategoryEditor`, category `Tree`,
+  `WalletEditor`, `LoanEditor`, `ContactEditor`, and six Dashboard organisms were
+  extracted into feature-local files on 2026-07-24. `Tags.tsx` (`TagEditor`) and
+  `Settings.tsx` (`Section`) remain small, coherent inline components.
 - **Gallery coverage.** `#/cashy` shows the common + feature-leaf + controlled
   dialogs. It deliberately omits the containers/screens and the three store-backed
   singleton modals (they read the live store) — see the note at the foot of the

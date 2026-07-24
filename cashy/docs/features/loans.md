@@ -30,14 +30,14 @@ Dashboard's net worth as **assets − debts**. This is the feature described in
   `FacetChip` **filter bar** (search · Status · Source · Archived) → grouped grids
   **"Money I owe"** / **"Owed to me"** (+ **Archived** when the filter shows them),
   each of `LoanCard` sorted by `sortLoans` → a match-aware empty-state line → the
-  in-file `LoanEditor` modal.
+  feature-local `LoanEditor` modal.
 
 ## 3. Data it touches
 
 | Entity | Fields | R/W |
 |---|---|---|
 | `Loan` | `id`, `direction`, `counterparty`, `source`, `principal`, `interestRatePct`, `interestPeriod`, `openedAt`, `dueAt`, `payments`, `colorHex`, `icon`, `note`, `archived`, `createdAt` | read (cards + summary + net worth); write via the editor usecases |
-| `LoanPayment` | `id`, `amount`, `date`, `note` | read (outstanding + progress); written by the editor / `addLoanPayment` |
+| `LoanPayment` | `id`, `amount`, `date`, `note` | read (outstanding + progress); edited locally and committed as the loan's full `payments` array |
 
 Loans touch **no other entity** — no transactions, no categories, no analytics. The
 only cross-cutting number they feed is the Dashboard net worth. Money is an integer
@@ -56,7 +56,6 @@ All pure, in `src/domain/loan.ts`.
 | `isPaidOff(loan)` | `loanOutstanding === 0` |
 | `daysUntilDue(loan, now)` | whole days to `dueAt` (negative = overdue); `null` if open-ended |
 | `loanStatus(loan, now, soonDays=7)` | `paid \| overdue \| due-soon \| active` |
-| `isOverdue(loan, now)` | `loanStatus === "overdue"` |
 | `loanNetWorthDelta(loan)` | `borrowed ⇒ −outstanding`, `lent ⇒ +outstanding` |
 | `totalPayable(loans)` / `totalReceivable(loans)` | Σ outstanding per direction (non-archived by default) |
 | `loansNetWorth(loans)` | `receivable − payable` |
@@ -76,15 +75,13 @@ All pure, in `src/domain/loan.ts`.
 | `updateLoan(id, patch)` | shallow-merge a patch (payments + principal re-normalised) |
 | `setLoanArchived(id, archived)` | hide from the active groups, keep the record |
 | `deleteLoan(id)` | remove the loan outright — **self-contained**, no ledger rows to orphan |
-| `addLoanPayment(id, {amount,date,note?})` | append one repayment / collection (a non-positive amount is ignored) |
-| `removeLoanPayment(id, paymentId)` | drop one payment entry |
 
 ## 6. Components
 
 | Tier | Component | File | Role |
 |---|---|---|---|
-| Container/screen | `Loans` | `ui/features/loans/Loans.tsx` | reads `useCashy()`; summary + grouped card grids; holds the in-file `LoanEditor` |
-| Singleton-ish modal | `LoanEditor` | *(in `Loans.tsx`)* | add/edit form (Borrowed/Lent toggle, counterparty, source `Select`, principal, rate + period, opened/due dates, `ColorPicker`, `IconPicker`, note) + a live **payments sub-editor** (outstanding updates as rows are added) + archive/delete |
+| Container/screen | `Loans` | `ui/features/loans/Loans.tsx` | thin composition root: reads `useCashy()`, owns filter/editor state, mounts summary + grouped cards + editor |
+| Feature-local modal | `LoanEditor` | `ui/features/loans/LoanEditor.tsx` | add/edit form (Borrowed/Lent toggle, counterparty, source `Select`, principal, rate + period, opened/due dates, `ColorPicker`, `IconPicker`, note) + a live **payments sub-editor** (outstanding updates as rows are added) + archive/delete |
 | Feature-leaf | `LoanCard` | `ui/features/loans/LoanCard.tsx` | **composed from `CardIdentity` + `.cashy-card*`** (like `WalletCard`): tile + counterparty + source, a direction line ("I owe"/"Owed to me"), outstanding (`AmountDisplay`), a 6px repayment bar, a foot (tier-3 due line w/ bold count + rate), and a per-state status capsule; renders in the `#/cashy` gallery |
 | Feature-leaf | `LoanSummary` | `ui/features/loans/LoanSummary.tsx` | the overview header — position (owe/owed/net) + a payments-due panel (next payment + segmented schedule bar from `payableSchedule`/`nextPayment`) |
 | Common/kit | `FacetChip`, `PageHeader`, `Select`, `ColorPicker`, `IconPicker`, `AmountDisplay`, `Modal` | `ui/common/…`, `ui/kit/…` | building blocks — `FacetChip` is the shared filter chip (also used by transactions) |
@@ -120,7 +117,8 @@ All pure, in `src/domain/loan.ts`.
   still pick any icon afterwards.
 - **Payments sub-editor.** The editor holds a local payment list; the live
   "Outstanding" readout updates as rows are added/removed, and the whole list is
-  committed on save. `addLoanPayment`/`removeLoanPayment` exist for future quick actions.
+  normalised and committed through `addLoan`/`updateLoan` on save. There are no
+  separate quick-payment usecases in the shipped scope.
 - **Delete vs archive.** `deleteLoan` removes the loan and its payment history (no
   ledger rows reference it); archive is the non-destructive alternative, and archived
   loans drop out of the summary + net worth.
@@ -134,7 +132,9 @@ All pure, in `src/domain/loan.ts`.
 
 ## 8. Files
 
-- `src/ui/features/loans/Loans.tsx` — the screen container (+ in-file `LoanEditor`, filter state)
+- `src/ui/features/loans/Loans.tsx` — the thin screen container + filter/editor state
+- `src/ui/features/loans/LoanEditor.tsx` — feature-local editor + payment-list form
+- `src/ui/features/loans/loanOptions.ts` — shared source/status option metadata
 - `src/ui/features/loans/LoanCard.tsx` — the presentational loan card (composed from `CardIdentity` + `.cashy-card*`)
 - `src/ui/features/loans/LoanSummary.tsx` — the overview header (position + payments-due schedule)
 - `src/ui/common/FacetChip.tsx` — the shared filter-chip (transaction + loan bars)

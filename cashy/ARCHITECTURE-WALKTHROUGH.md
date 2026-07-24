@@ -38,13 +38,14 @@ src/
 ├─ domain/     16 files (+9 tests)   ── pure rules: types, transaction, subscription,
 │                                       wallet, loan, category, tag, analytics, contact
 │                                       + SHARED helpers: money, format, date, period, sort
-├─ data/        6 files (+1 test)    ── store · persistence · migrations · seed · sample · draft
-├─ usecases/   10 files (+2 tests)   ── categories tags transactions subscriptions wallets
+├─ data/        6 files (+2 tests)   ── store · persistence · migrations · seed · sample · draft
+├─ usecases/   10 files (+3 tests)   ── categories tags transactions subscriptions wallets
 │                                       loans contacts settings workspace
 ├─ ui/kit/     63 files              ── wb-* generic design system (Button, Modal, Popover, charts…)
-├─ ui/common/  22 files              ── Cashy-aware building blocks: AmountDisplay, StatFigure,
+├─ ui/common/  20 files              ── Cashy-aware building blocks: AmountDisplay, StatFigure,
 │                                       FacetChip, SearchField, CardIdentity, CategoryCap, pickers…
-├─ ui/features/38 files              ── 10 screens: dashboard transactions subscriptions wallets
+├─ ui/features/49 files              ── 10 screens + feature-local editors/organisms:
+│                                       dashboard transactions subscriptions wallets
 │                                       loans categories tags contacts settings onboarding
 ├─ ui/app/      2 files              ── Layout · ErrorBoundary
 ├─ ui/dev/      2 files              ── WbGallery (#/wb) · CashyGallery (#/cashy) — DEV only, code-split
@@ -74,11 +75,11 @@ across screens, no home-rolled money formatting per feature.
 **Reuse at the UI layer** — two baskets, generic vs Cashy-aware:
 
 - `ui/kit/` (63) — generic `wb-*` primitives; know nothing about Cashy, reusable by any app.
-- `ui/common/` (21) — Cashy-aware but purely presentational (no store). Examples:
+- `ui/common/` (22) — Cashy-aware but purely presentational (no store). Examples:
   - **`AmountDisplay`** — the *one* way money is drawn (colour = status, not sign).
   - **`StatFigure` + `.cashy-figrow`** — one "labelled figure"; shared by the Loans overview and the Dashboard Balances breakdown.
-  - **`FacetChip`** — the filter capsule shared by Transactions and Loans (dashed when unselected, solid when selected).
-  - **`CardIdentity`** — the "tile + name + subtitle" every entity card (Wallet / Subscription / Loan) composes from.
+  - **`FacetChip`** — the filter capsule shared by Transactions, Loans, and Subscriptions (dashed when unselected, solid when selected).
+  - **`CardIdentity`** — the "tile + name + subtitle" shared by Wallet, Loan, and Contact cards.
 
 One money value's round-trip, e.g. creating a loan:
 
@@ -97,7 +98,7 @@ No step does its own `Math.round` or appends `" ₫"` by hand.
 |---|---|
 | `pnpm dev` | Vite dev server |
 | `pnpm build` | `tsc -b` → **`check-layers.mjs`** → `vite build` (a layer violation fails the build) |
-| `pnpm test` / `test:watch` | Vitest — pure tests over `domain/` + `data/` (no DOM) |
+| `pnpm test` / `test:watch` | Vitest — pure tests over `domain/`, `data/`, and usecases (no DOM) |
 | `pnpm lint` | oxlint |
 | `pnpm check:layers` | run the layer-rule enforcer on its own |
 
@@ -115,14 +116,13 @@ Deliberately minimal: a **single** custom script (`scripts/check-layers.mjs`) �
 | | `docs/components.md` | Every UI component, low → high, with its props + a screen→component map |
 | **Business / vision** | `docs/cashy-vision.md` | Product vision (Vietnamese) |
 | | `docs/cashy-v1-spec.md` | Detailed v1 spec — use cases, screens, tech stack |
-| | `docs/features/*.md` (11) | One doc per feature, describing it **exactly as the code is today**: overview, transactions, subscriptions, wallets, loans, categories, tags, contacts, settings, onboarding (+ a README index) |
+| | `docs/features/*.md` (10 feature docs + index) | One doc per feature, describing it **exactly as the code is today**: overview, transactions, subscriptions, wallets, loans, categories, tags, contacts, settings, onboarding |
 | **Plans (design record)** | `docs/loans-plan.md` | ✅ SHIPPED — kept as the design record |
-| | `docs/wallets-plan.md` | 📋 PLAN, not built — awaiting go-ahead per phase |
+| | `docs/wallets-plan.md` | ✅ SHIPPED — kept as the wallets design record |
 | | `docs/PLAN.md` | ✅ SHIPPED (2026-07-24) — currency → `₫`, subscriptions filter/sort/trial, `cashy-web-spec.md` split |
-| **Handoff / ops** | `docs/handoff-checklist.md` | For the owner: documentation + component-catalogue status |
-| | `REBUILD-NOTES.md` | Log of rebuilding every screen onto web-builder + open questions |
+| **Handoff / ops** | `docs/handoff-checklist.md` | Closed record of the documentation + component-catalogue pass |
+| | `REBUILD-NOTES.md` | Closed record of rebuilding every screen onto web-builder |
 | | `README.md` / `CLAUDE.md` | Repo README · `CLAUDE.md` = the guide + conventions an agent must follow |
 
-> **On "skill" docs:** this repo has no custom skills yet (`.claude/skills/` is empty).
-> The `code-review` skill is a machine/system skill marked `disable-model-invocation`,
-> so it only runs when invoked explicitly as `/code-review`.
+Handoff files are closed historical records unless an item is explicitly marked
+`OPEN` with acceptance criteria and a next action.

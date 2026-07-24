@@ -1,10 +1,10 @@
-# Cashy — Rebuild notes & open questions (AI handoff)
+# Cashy — Web-builder rebuild record (closed)
 
-> Purpose: this file is the handoff for the "rebuild every screen on web-builder
-> blocks" work. It records **decisions made autonomously** (with a sensible
-> default in place) and **open questions** for the user to answer later, so the
-> session flow was never blocked. A future AI session (or the user) should read
-> this, resolve the OPEN items, and delete resolved entries.
+> **Status: CLOSED. No actionable handoff remains.** This is the historical record
+> for the original "rebuild every screen on web-builder blocks" pass. Current
+> architecture and component ownership live in `CLAUDE.md`,
+> `docs/architecture.md`, and `docs/components.md`; those override paths or
+> implementation details recorded here.
 >
 > Context: keep React + Vite. Use web-builder (`src/styles/web-builder.css`,
 > `wb-*` classes) as the component system. No Tailwind. Neutral-first + status
@@ -32,13 +32,14 @@ table is the cleaner, web-builder-native choice, so it stays flat. Reversible: t
 group, add a per-day `<tbody>` header row and hide the row date column.
 
 **Q2 — Footer → ADDED.** `wb-footer wb-footer--slim` at the bottom of the scroll area
-(one line: © + "dữ liệu lưu trên trình duyệt"). `src/components/Layout.tsx`.
+(one line: © + browser-local data note). Current home:
+`src/ui/app/Layout.tsx`.
 
 **Q3 — Mobile nav → KEPT** the ☰-opens-sidenav-drawer (already built from wb-overlay
 + wb-sidenav = web-builder components). No change; logic preserved.
 
 **Q4 — Date entry → SWITCHED to the skill's `wb-calendar`.** New
-`src/components/DatePicker.tsx` composes `wb-calendar` (month grid rendered in React,
+`src/ui/common/DatePicker.tsx` composes `wb-calendar` (month grid rendered in React,
 no external lib) inside the `wb-popover`; used by the transaction editor. `Popover`
 was extended to pass a `close()` to render-prop children (non-breaking).
 
@@ -57,7 +58,7 @@ no longer uses Recharts — it's a single `.wb-spark` SVG `<path>`
 
 - Every `wb-*` class used was verified to exist in `src/styles/web-builder.css`
   before use (grep the class before adding a new one).
-- Shared row: `src/components/TransactionRow.tsx` now renders a `<tr>` for
-  `wb-table`; it's used by both Dashboard (recent) and Transactions.
+- Shared table: `src/ui/features/transactions/TransactionTable.tsx` owns row
+  rendering and is reused by both Dashboard (recent) and Transactions.
 - The web-builder skill's catalog is the source of truth for markup:
   `references/components-catalog.md`.

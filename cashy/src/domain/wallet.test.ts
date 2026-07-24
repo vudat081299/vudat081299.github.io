@@ -8,6 +8,7 @@ import {
   netWorth,
   nextWalletOrder,
   orphanWallet,
+  walletHasTransfers,
   walletBalance,
   walletBalances,
   walletIcon,
@@ -108,7 +109,7 @@ describe("netWorth", () => {
 });
 
 describe("orphanWallet", () => {
-  it("strips every reference to the deleted wallet, keeping the rows", () => {
+  it("orphans ordinary rows but never degrades a transfer into an expense", () => {
     const txs = [
       tx({ id: "x", walletId: "cash" }),
       tx({ id: "y", walletId: "bank", toWalletId: "cash" }),
@@ -116,9 +117,24 @@ describe("orphanWallet", () => {
     ];
     const out = orphanWallet(txs, "cash");
     expect(out.find((t) => t.id === "x")?.walletId).toBeNull();
-    expect(out.find((t) => t.id === "y")?.toWalletId).toBeUndefined();
+    expect(out.find((t) => t.id === "y")?.toWalletId).toBe("cash");
     expect(out.find((t) => t.id === "z")?.walletId).toBe("bank"); // untouched
     expect(out).toHaveLength(3); // nothing deleted
+    expect(totals(out.filter((t) => t.id === "y"))).toEqual({
+      income: 0,
+      expense: 0,
+      net: 0,
+    });
+  });
+});
+
+describe("walletHasTransfers", () => {
+  const transfer = tx({ walletId: "bank", toWalletId: "cash" });
+
+  it("recognises either transfer leg, but not an ordinary wallet reference", () => {
+    expect(walletHasTransfers([transfer], "bank")).toBe(true);
+    expect(walletHasTransfers([transfer], "cash")).toBe(true);
+    expect(walletHasTransfers([tx({ walletId: "cash" })], "cash")).toBe(false);
   });
 });
 

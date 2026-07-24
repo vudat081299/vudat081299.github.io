@@ -22,16 +22,16 @@ parent, colour swatch, icon). Deleting a category deletes its whole subtree but
 ## 2. Screen & route
 
 - Route `#/categories` (hash router, `src/lib/router.ts`); rendered by
-  `src/App.tsx:96` in the `<Layout>` content slot. Nav entry in
-  `src/ui/app/Layout.tsx:13` (icon `account_tree`).
-- Layout shape (`src/ui/features/categories/Categories.tsx:301`): a
+  `src/App.tsx` in the `<Layout>` content slot. Nav entry in
+  `src/ui/app/Layout.tsx` (icon `account_tree`).
+- Layout shape (`src/ui/features/categories/Categories.tsx`): a
   `wb-stack wb-stack--loose` of `PageHeader` (title + "Drag to reorder · drop onto
   an item to nest" subtitle + **Add category** action) → a `wb-tabs--pill`
   **Expense / Income** switch → the `Tree` for the active side → the singleton
   `CategoryEditor` Modal.
-- Both the editor and the tree are **in-file components** of `Categories.tsx`
-  (`CategoryEditor`, `Tree`) — not shared modals. Local state: `type` (active
-  side) and `editor` (`EditorState | null`, drives the Modal).
+- The editor and tree are **feature-local components** in sibling files
+  (`CategoryEditor.tsx`, `Tree.tsx`), not generic kit pieces. `Categories.tsx`
+  stays the thin composition root and owns `type` (active side) + editor state.
 
 ## 3. Data it touches
 
@@ -68,18 +68,18 @@ Writes go through `src/usecases/categories.ts` (never mutate the store directly)
 | `addCategory({name, type, colorHex, icon, parentId})` | Appends a new `Category` with a fresh `uid()`, `order = nextOrder(...)`, `isSystem: false`. Returns the new id. |
 | `updateCategory(id, patch)` | Shallow-merges `patch` (name / colour / icon / parentId) into the matching category. Reparenting is done here when the editor's parent `<Select>` changes. |
 | `deleteCategory(id)` | Removes `id` **and its whole subtree** (`descendantIds`) from `categories`, and runs `orphanCategory` over `transactions` in the same commit. |
-| `reorderCategory(dragId, newParentId, refId, after)` | Calls `reorderCategories`; **commits only if it returns non-null** — an illegal move (a parent dropped into its own child) is silently ignored (`categories.ts:61`). |
+| `reorderCategory(dragId, newParentId, refId, after)` | Calls `reorderCategories`; **commits only if it returns non-null** — an illegal move (a parent dropped into its own child) is silently ignored (`categories.ts`). |
 
 ## 6. Components
 
 | Component | File | Role |
 |---|---|---|
-| `Categories` (container) | `src/ui/features/categories/Categories.tsx:297` | Screen: side tabs, header, mounts `Tree` + `CategoryEditor`; owns `type` / `editor` state and the callbacks. |
-| `Tree` (in-file) | `Categories.tsx:137` | Renders `flattenTree` as a flat `wb-tree` list (always fully expanded — no collapse), owns the pointer-drag, and calls `reorderCategory` / `deleteCategory`. |
-| `CategoryEditor` (in-file) | `Categories.tsx:29` | Add/edit `Modal`: name field (with live icon tile), parent `<Select>`, `ColorPicker`, `IconPicker`; calls `addCategory` / `updateCategory`. |
+| `Categories` (container) | `src/ui/features/categories/Categories.tsx` | Thin screen: side tabs, header, mounts `Tree` + `CategoryEditor`; owns `type` / editor state and callbacks. |
+| `Tree` (feature-local organism) | `src/ui/features/categories/Tree.tsx` | Renders `flattenTree` as a flat `wb-tree` list (always fully expanded — no collapse), owns pointer-drag, and calls `reorderCategory` / `deleteCategory`. |
+| `CategoryEditor` (feature-local modal) | `src/ui/features/categories/CategoryEditor.tsx` | Add/edit `Modal`: name field (with live icon tile), parent `<Select>`, `ColorPicker`, `IconPicker`; calls `addCategory` / `updateCategory`. |
 | `ColorPicker` (common) | `src/ui/common/ColorPicker.tsx` | The 10 `SWATCHES` (`src/lib/palette.ts`) as `wb-swatch` buttons. |
 | `IconPicker` (common) | `src/ui/common/IconPicker.tsx` | 8-column grid of `ICON_CHOICES` (`src/ui/kit/icon-map.ts`). |
-| `Select` (kit) | `src/ui/common/Select.tsx` | Native `<select>` for the parent choice. |
+| `Select` (kit) | `src/ui/kit/Select.tsx` | Native `<select>` for the parent choice. |
 | `Modal`, `PageHeader`, `EmptyState`, `Icon` | `ui/kit` / `ui/common` | Shell, header, empty card, icon-font glyph. |
 | `confirmDelete` | `src/lib/confirm.ts` | Danger confirm before a delete resolves. |
 
@@ -102,10 +102,10 @@ reusing the kit `Tree` (see §7).
   text selection; a `pointermove` listener reads the row under the cursor via
   `elementFromPoint(...).closest("[data-cat-id]")` and classifies the drop zone by
   vertical position — top 30 % = **before**, bottom 30 % = **after**, middle =
-  **into** (`Categories.tsx:169`). Live feedback via `is-drop-before/after/inside`.
+  **into** (`Categories.tsx`). Live feedback via `is-drop-before/after/inside`.
   The handlers are bound once per drag, so a `catsRef` keeps them reading the
   current tree on `pointerup` (avoids a stale-closure bug).
-- **Drop → usecase mapping** (`Categories.tsx:179`): `into` →
+- **Drop → usecase mapping** (`Categories.tsx`): `into` →
   `reorderCategory(dragId, target.id, null, false)` (append as last child);
   `before`/`after` → `reorderCategory(dragId, target.parentId ?? null, target.id,
   pos === "after")` (re-slot among the target's siblings).
@@ -141,8 +141,9 @@ reusing the kit `Tree` (see §7).
 
 ## 8. Files
 
-- `src/ui/features/categories/Categories.tsx` — the screen + in-file `Tree` and
-  `CategoryEditor`.
+- `src/ui/features/categories/Categories.tsx` — the thin screen container.
+- `src/ui/features/categories/Tree.tsx` — drag/reorder/nest organism.
+- `src/ui/features/categories/CategoryEditor.tsx` — add/edit modal.
 - `src/domain/category.ts` — `childrenOf`, `descendantIds`, `rootOf`, `flattenTree`,
   `canReparent`, `reorderCategories`, `nextOrder` (pure; re-exported via
   `src/domain/index.ts`).
@@ -152,7 +153,7 @@ reusing the kit `Tree` (see §7).
   `reorderCategory`.
 - `src/data/seed.ts` — `seedCategories`, the default tree.
 - `src/ui/common/ColorPicker.tsx`, `src/ui/common/IconPicker.tsx`,
-  `src/ui/common/Select.tsx` — editor controls.
+  `src/ui/kit/Select.tsx` — editor controls.
 - `src/lib/palette.ts` (`SWATCHES`), `src/ui/kit/icon-map.ts` (`ICON_CHOICES`),
   `src/lib/confirm.ts` (`confirmDelete`).
 - Related, used elsewhere: `src/ui/common/CategorySelect.tsx`,

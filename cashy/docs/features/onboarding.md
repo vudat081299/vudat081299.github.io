@@ -20,8 +20,8 @@ transactions, tags, or subscriptions.
 | | |
 |---|---|
 | Route | **None** — not a hash route. It is the gate the app falls into when `workspace` is null |
-| Shown when | `useCashy().workspace` is falsy (`src/App.tsx:82`) |
-| Mounted by | `src/App.tsx:85` — rendered with only a `<Toaster/>`, **outside** `<Layout>` (no navbar, sidebar, or modals) |
+| Shown when | `useCashy().workspace` is falsy (`src/App.tsx`) |
+| Mounted by | `src/App.tsx` — rendered with only a `<Toaster/>`, **outside** `<Layout>` (no navbar, sidebar, or modals) |
 | Container | `src/ui/features/onboarding/Onboarding.tsx` |
 
 A workspace's presence is the "onboarded" flag (see [data-model.md](../data-model.md)):
@@ -33,12 +33,12 @@ field, the two-row info `wb-list`, and a full-width **Create workspace** button.
 ## 3. Data it touches
 
 Reads nothing from the store. The only user input is local component state
-(`name`, `Onboarding.tsx:5`). On submit it writes, via `createWorkspace`:
+(`name`, `Onboarding.tsx`). On submit it writes, via `createWorkspace`:
 
 | Entity | Fields written | Note |
 |---|---|---|
-| `Workspace` | `displayName`, `currency` (`"VND"`), `createdAt` (ISO now) | `displayName` = trimmed input, or `"Mine"` if blank (`workspace.ts:18-23`) |
-| `Category[]` | full default tree from `seedCategories()` | 17 categories — 11 roots + 6 children, Vietnamese names, one hue per root (`data/seed.ts:9`) |
+| `Workspace` | `displayName`, `currency` (`"VND"`), `createdAt` (ISO now) | `displayName` = trimmed input, or `"Mine"` if blank (`workspace.ts-23`) |
+| `Category[]` | full default tree from `seedCategories()` | 17 categories — 11 roots + 6 children, Vietnamese names, one hue per root (`data/seed.ts`) |
 | `Tag[]` | `[]` | empty |
 | `Transaction[]` | `[]` | **empty ledger — the demo is NOT loaded here** |
 | `Subscription[]` | `[]` | empty |
@@ -55,13 +55,13 @@ seed tree from `data/seed.ts` (the seed lives in `data/`, not `domain/`).
 
 | Usecase | Effect |
 |---|---|
-| `createWorkspace({ displayName })` (`usecases/workspace.ts:18`) | Commits a new `Workspace` + `seedCategories()` + empty `tags`/`transactions`/`subscriptions`. Called from `Onboarding.tsx:8` on button click or `Enter`. |
+| `createWorkspace({ displayName })` (`usecases/workspace.ts`) | Commits a new `Workspace` + `seedCategories()` + empty `tags`/`transactions`/`subscriptions`. Called from `Onboarding.tsx` on button click or `Enter`. |
 
 Not called here, but referenced by the "Sample data" row: `loadSampleData()`
-(`usecases/workspace.ts:35`) — the opt-in demo. It replaces
+(`usecases/workspace.ts`) — the opt-in demo. It replaces
 categories/tags/transactions/subscriptions with a fresh dataset (`seedCategories()`
 + `buildSampleData`, ~200 txns) and is wired to Settings → Data ("Load sample
-data", `src/ui/features/settings/Settings.tsx:104`), not to onboarding.
+data", `src/ui/features/settings/Settings.tsx`), not to onboarding.
 
 ## 6. Components
 
@@ -79,19 +79,19 @@ rows, and a `wb-btn wb-btn--block` submit.
 ## 7. Behaviours & edge cases
 
 - **Submit paths.** Clicking **Create workspace** or pressing `Enter` in the name
-  field both call `submit()` (`Onboarding.tsx:42,61`).
+  field both call `submit()` (`Onboarding.tsx`).
 - **Blank name.** `name.trim() || "Mine"` in the component, and `createWorkspace`
-  applies the same `|| "Mine"` fallback again (`workspace.ts:22`) — a whitespace-only
+  applies the same `|| "Mine"` fallback again (`workspace.ts`) — a whitespace-only
   name always becomes `"Mine"`.
 - **Currency is not editable.** The `VND (₫)` list row is display-only; no control
   changes it. `createWorkspace` defaults `currency` to `"VND"`.
 - **Transition afterwards.** There is **no explicit navigate**. `commit` inside
-  `createWorkspace` wakes every `useCashy` subscriber (`data/store.ts:21-25`); App
+  `createWorkspace` wakes every `useCashy` subscriber (`data/store.ts-25`); App
   re-renders with a non-null `workspace`, so the `!workspace` gate falls through to
   the route switch. `useRoute()` returns `"dashboard"` for an empty/unknown hash
-  (`lib/router.ts:22`), so the user lands on the Overview screen inside `<Layout>`.
+  (`lib/router.ts`), so the user lands on the Overview screen inside `<Layout>`.
 - **Post-create effect.** Once `workspace` exists, App's effect runs
-  `syncSubscriptions()` (`App.tsx:63`) — a no-op on a fresh workspace since no
+  `syncSubscriptions()` (`App.tsx`) — a no-op on a fresh workspace since no
   subscriptions were seeded.
 - **No back door.** Onboarding cannot be reached again except by wiping the
   workspace (Settings → reset / `resetAll`, or clearing `localStorage`), which

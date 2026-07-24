@@ -28,14 +28,14 @@ wallets. This is the feature described in [wallets-plan.md](../wallets-plan.md).
 - Screen shape (`src/ui/features/wallets/Wallets.tsx`): `PageHeader` (+ "Add wallet")
   → a **net-worth** card → wallets **grouped** into "Cash & accounts" / "Cards" /
   "Other" / "Archived" (each a subheading + `WalletCard` grid) → an empty-state line
-  when there are none → the in-file `WalletEditor` modal.
+  when there are none → the feature-local `WalletEditor` modal.
 
 ## 3. Data it touches
 
 | Entity | Fields | R/W |
 |---|---|---|
 | `Wallet` | `id`, `name`, `kind`, `openingBalance`, `cardNetwork?`, `creditLimit?`, `colorHex`, `icon`, `order`, `archived`, `createdAt` | read (cards + net worth); write via the editor usecases |
-| `Transaction` | `walletId`, `toWalletId`, `amount`, `type`, `status` | **read** (to compute balances); a `deleteWallet` re-points `walletId`/`toWalletId` to null |
+| `Transaction` | `walletId`, `toWalletId`, `amount`, `type`, `status` | **read** (to compute balances); deleting an untransferred wallet re-points ordinary `walletId` references to null |
 | `Subscription` | `walletId` | write only on `deleteWallet` (drops the link) |
 
 Money is an integer count of VND; `openingBalance` may be **negative** (a card in
@@ -52,7 +52,8 @@ All pure, in `src/domain/wallet.ts`.
 | `walletBalance(wallet, txs)` | the same for one wallet |
 | `netWorth(wallets, txs, {includeArchived?})` | Σ balances; **excludes archived by default** |
 | `isTransfer(tx)` | `tx.toWalletId != null` — a transfer counts toward no income/expense total |
-| `orphanWallet(txs, id)` | strip a deleted wallet's references from the ledger (rows kept) |
+| `walletHasTransfers(txs, id)` | whether the wallet is either leg of a transfer; guards hard delete |
+| `orphanWallet(txs, id)` | null an ordinary row's deleted-wallet reference; transfers remain intact |
 | `nextWalletOrder(wallets)` | next `order` for a new wallet |
 | `walletIcon(kind)` | default lucide key per kind (`bank`→`landmark`, `card`→`credit-card`, …) |
 | `cardUtilization(wallet, balance)` | for a `card` with a positive `creditLimit`: `{debt, limit, available, pct}` — `debt = max(0, −balance)`, `pct` clamped to 1; else `null` |
@@ -67,14 +68,14 @@ All pure, in `src/domain/wallet.ts`.
 | `addWallet({name,kind,openingBalance,colorHex,icon})` | append a wallet (`order` via `nextWalletOrder`); returns the id |
 | `updateWallet(id, patch)` | shallow-merge a patch |
 | `setWalletArchived(id, archived)` | hide from (future) pickers, keep history |
-| `deleteWallet(id)` | `orphanWallet` the ledger + drop any subscription link, then remove the wallet — **rows are never deleted** |
+| `deleteWallet(id)` | reject (`false`) if a transfer references the wallet; otherwise `orphanWallet` ordinary rows + drop subscription links, then remove it — **rows are never deleted** |
 
 ## 6. Components
 
 | Tier | Component | File | Role |
 |---|---|---|---|
-| Container/screen | `Wallets` | `ui/features/wallets/Wallets.tsx` | reads `useCashy()`; net worth + card grid; holds the in-file `WalletEditor` |
-| Singleton-ish modal | `WalletEditor` | *(in `Wallets.tsx`)* | add/edit form (name, kind `Select`, signed balance input, `ColorPicker`, `IconPicker`) + **card-only** "Card type" + "Credit limit" fields (the balance relabels to "Current balance (− = debt owed)") + archive/delete |
+| Container/screen | `Wallets` | `ui/features/wallets/Wallets.tsx` | thin composition root: reads `useCashy()`, derives balances/groups, mounts cards + editor |
+| Feature-local modal | `WalletEditor` | `ui/features/wallets/WalletEditor.tsx` | add/edit form (name, kind `Select`, signed balance input, `ColorPicker`, `IconPicker`) + **card-only** "Card type" + "Credit limit" fields (the balance relabels to "Current balance (− = debt owed)") + archive/delete |
 | Feature-leaf | `WalletCard` | `ui/features/wallets/WalletCard.tsx` | accent-tinted tile + name + kind/network + `AmountDisplay` balance (negative → red, archived → dimmed); a `card` with a credit limit adds a **utilisation bar** + "used / available" line; renders in the `#/cashy` gallery |
 | Common | `WalletPicker` | `ui/common/WalletPicker.tsx` | the flat wallet dropdown used by the transaction + subscription editors (and both transfer legs); `excludeId` hides a transfer's other side |
 | Common/kit | `PageHeader`, `Select`, `ColorPicker`, `IconPicker`, `AmountDisplay`, `Modal` | `ui/common/…`, `ui/kit/…` | building blocks |
@@ -99,10 +100,11 @@ All pure, in `src/domain/wallet.ts`.
   card's icon tile is tinted with the wallet's `colorHex` accent.
 - **Kind change resets the icon** to that kind's default (`walletIcon`); the user can
   still pick any icon afterwards.
-- **Delete keeps the ledger.** `deleteWallet` orphans a wallet's rows (`walletId`/
-  `toWalletId` → null) and drops the link from any subscription, then removes the
-  wallet — mirroring the category-delete rule. Archive is offered as the
-  non-destructive alternative in the editor.
+- **Delete keeps the ledger and transfer meaning.** A wallet used by either side
+  of a transfer cannot be hard-deleted; the editor disables Delete and directs
+  the user to Archive. For any other wallet, `deleteWallet` nulls ordinary
+  `walletId` references and subscription links, then removes the wallet. No money
+  row is ever deleted.
 - **A fresh workspace** seeds one cash wallet ("Tiền mặt", `seedWallets`); the demo
   builds one wallet per sample "Paid with" account, links every row, and seeds
   monthly bank→cash **transfers**.
@@ -121,7 +123,8 @@ All pure, in `src/domain/wallet.ts`.
 
 ## 8. Files
 
-- `src/ui/features/wallets/Wallets.tsx` — the screen container (+ in-file `WalletEditor`)
+- `src/ui/features/wallets/Wallets.tsx` — the thin screen container
+- `src/ui/features/wallets/WalletEditor.tsx` — feature-local add/edit/archive/delete modal
 - `src/ui/features/wallets/WalletCard.tsx` — the presentational wallet card
 - `src/domain/wallet.ts` — all the pure rules (§4) + `src/domain/wallet.test.ts`
 - `src/usecases/wallets.ts` — the writes (§5)

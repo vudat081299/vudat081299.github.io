@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
+import { useCashy } from "@/data/store";
 import { addWallet, deleteWallet, setWalletArchived, updateWallet } from "@/usecases";
 import { confirmDelete } from "@/lib/confirm";
 import { SWATCHES } from "@/lib/palette";
 import { formatDigits, parseMoney } from "@/domain/money";
-import { walletIcon } from "@/domain/wallet";
+import { walletHasTransfers, walletIcon } from "@/domain/wallet";
 import type { CardNetwork, Wallet, WalletKind } from "@/domain/types";
 import { Select } from "@/ui/kit/Select";
 import { ColorPicker } from "@/ui/common/ColorPicker";
@@ -48,6 +49,7 @@ export function WalletEditor({
   editing: Wallet | null;
   onClose: () => void;
 }) {
+  const { transactions } = useCashy();
   const [name, setName] = useState("");
   const [kind, setKind] = useState<WalletKind>("bank");
   const [openingStr, setOpeningStr] = useState("0");
@@ -57,6 +59,7 @@ export function WalletEditor({
   const [icon, setIcon] = useState<string>(walletIcon("bank"));
 
   const isCard = kind === "card";
+  const hasTransfers = editing ? walletHasTransfers(transactions, editing.id) : false;
 
   useEffect(() => {
     if (!open) return;
@@ -94,10 +97,7 @@ export function WalletEditor({
       title: `Delete wallet "${editing.name}"?`,
       message: "Its transactions are kept — they just lose the wallet. Archive instead to keep the link.",
     });
-    if (ok) {
-      deleteWallet(editing.id);
-      onClose();
-    }
+    if (ok && deleteWallet(editing.id)) onClose();
   }
 
   return (
@@ -228,11 +228,25 @@ export function WalletEditor({
               <span className="wb-ico wb-ico--xs">{editing.archived ? "unarchive" : "archive"}</span>
               {editing.archived ? "Unarchive" : "Archive"}
             </Button>
-            <Button variant="ghost" size="sm" className="cashy-btn--quiet-danger" type="button" onClick={remove}>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="cashy-btn--quiet-danger"
+              type="button"
+              onClick={remove}
+              disabled={hasTransfers}
+              title={hasTransfers ? "Archive this wallet to preserve its transfers" : undefined}
+            >
               <span className="wb-ico wb-ico--xs">delete</span>
               Delete
             </Button>
           </div>
+        )}
+        {editing && hasTransfers && (
+          <p className="wb-help" style={{ margin: 0 }}>
+            This wallet is part of a transfer, so it cannot be deleted. Archive it
+            to keep both sides of the ledger intact.
+          </p>
         )}
       </div>
     </Modal>

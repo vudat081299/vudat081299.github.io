@@ -137,7 +137,7 @@ export function TxFilterBar({
                     checked={q.statuses.includes(s)}
                     onChange={() => q.toggleStatus(s)}
                   />
-                  <Capsule className={meta.cap} dot={meta.dot}>
+                  <Capsule tone={meta.tone} fill={meta.fill} dot={meta.dot}>
                     {meta.label}
                   </Capsule>
                 </label>

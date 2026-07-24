@@ -1,7 +1,7 @@
 import type { CardNetwork, Wallet, WalletKind } from "@/domain/types";
 import { toVnd, toVndNonNeg } from "@/domain/money";
 import { commit, getState } from "@/data/store";
-import { nextWalletOrder, orphanWallet } from "@/domain/wallet";
+import { nextWalletOrder, orphanWallet, walletHasTransfers } from "@/domain/wallet";
 import { uid } from "@/lib/id";
 
 /** Create a wallet, appended after the existing ones. Returns the new id. The
@@ -50,12 +50,15 @@ export function setWalletArchived(id: string, archived: boolean): void {
 }
 
 /**
- * Delete a wallet. Its ledger rows are NOT deleted — they lose the reference
- * (`orphanWallet`), the same way deleting a category orphans rows to `null`. Any
- * subscription paid from it drops the link too.
+ * Delete a wallet that is not part of a transfer. Ordinary ledger rows are NOT
+ * deleted — they lose the reference (`orphanWallet`), the same way deleting a
+ * category orphans rows to `null`. Any subscription paid from it drops the link.
+ * Returns false without committing when a transfer references the wallet; archive
+ * is the safe alternative because removing either leg would change ledger meaning.
  */
-export function deleteWallet(id: string): void {
+export function deleteWallet(id: string): boolean {
   const state = getState();
+  if (walletHasTransfers(state.transactions, id)) return false;
   const transactions = orphanWallet(state.transactions, id);
   const subscriptions = state.subscriptions.map((s) =>
     s.walletId === id ? { ...s, walletId: null } : s,
@@ -66,4 +69,5 @@ export function deleteWallet(id: string): void {
     transactions,
     subscriptions,
   });
+  return true;
 }
