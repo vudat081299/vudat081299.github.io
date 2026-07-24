@@ -4,6 +4,8 @@ import { statusOf } from "@/domain/txStatus";
 import { billingDate, fmtDate } from "@/domain/date";
 import { formatMoney } from "@/domain/money";
 import { Modal } from "@/ui/kit/Modal";
+import { Button } from "@/ui/kit/Button";
+import { Capsule } from "@/ui/kit/Capsule";
 
 /**
  * A subscription's settled cycles — every charge that was paid or skipped — with
@@ -69,23 +71,23 @@ export function SubscriptionHistory({
           >
             {rows.map((r) => (
               <div key={r.txId} className="cashy-catchup-row">
-                <span className={r.paid ? "wb-cap wb-cap--success" : "wb-cap"}>
-                  {r.paid && <span className="wb-cap__dot" />}
+                <Capsule tone={r.paid ? "success" : "neutral"} dot={r.paid}>
                   {r.paid ? "Paid" : "Not used"}
-                </span>
+                </Capsule>
                 <span className="cashy-catchup-row__month">
                   {fmtDate(billingDate(r.month, sub.dayOfMonth))}
                 </span>
                 <span className="wb-num cashy-catchup-row__amt">
                   {r.paid ? formatMoney(r.amount) : "—"}
                 </span>
-                <button
+                <Button
+                  variant="ghost"
+                  size="sm"
                   type="button"
-                  className="wb-btn wb-btn--ghost wb-btn--sm"
                   onClick={() => onRevert(r.txId, r.month, r.paid)}
                 >
                   Undo
-                </button>
+                </Button>
               </div>
             ))}
           </div>

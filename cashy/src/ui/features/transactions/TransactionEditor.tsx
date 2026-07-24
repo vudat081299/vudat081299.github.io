@@ -6,6 +6,7 @@ import { clearDraft, getDraft, saveDraft, type TxDraft } from "@/data/draft";
 import { formatDigits, parseMoney } from "@/domain/money";
 import { nowHM, todayYMD, yesterdayYMD } from "@/domain/date";
 import type { TxStatus, TxType } from "@/domain/types";
+import { Button } from "@/ui/kit/Button";
 import { Modal } from "@/ui/kit/Modal";
 import { Popover } from "@/ui/kit/Popover";
 import { Field, Input } from "@/ui/kit/Input";
@@ -215,9 +216,9 @@ export function TransactionEditor() {
       {/* Deleting lives HERE, not on the table row: you open the transaction,
           look at it, and only then may you destroy it. */}
       {editingId ? (
-        <button
+        <Button
           type="button"
-          className="wb-btn wb-btn--ghost"
+          variant="ghost"
           style={{ color: "var(--wb-danger-text)", gap: 6 }}
           onClick={async () => {
             if (!(await confirmDelete({ title: "Delete this transaction?" })))
@@ -228,22 +229,22 @@ export function TransactionEditor() {
         >
           <span className="wb-ico wb-ico--sm">delete</span>
           Delete
-        </button>
+        </Button>
       ) : isDraft ? (
-        <button type="button" className="wb-btn wb-btn--ghost" style={{ gap: 6 }} onClick={discard}>
+        <Button type="button" variant="ghost" style={{ gap: 6 }} onClick={discard}>
           <span className="wb-ico wb-ico--sm">backspace</span>
           Discard draft
-        </button>
+        </Button>
       ) : (
         <span />
       )}
       <div style={{ display: "flex", gap: 8 }}>
-        <button type="button" className="wb-btn wb-btn--secondary" onClick={dismiss}>
+        <Button type="button" variant="secondary" onClick={dismiss}>
           {editingId ? "Cancel" : "Later"}
-        </button>
-        <button type="button" className="wb-btn" onClick={save} disabled={!valid}>
+        </Button>
+        <Button type="button" onClick={save} disabled={!valid}>
           {editingId ? "Save" : isTransfer ? "Add transfer" : "Add transaction"}
-        </button>
+        </Button>
       </div>
     </div>
   );

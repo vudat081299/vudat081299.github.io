@@ -24,6 +24,7 @@ export function Progress({
   shimmer,
   label,
   className,
+  barClassName,
   style,
   ...rest
 }: {
@@ -43,6 +44,9 @@ export function Progress({
   shimmer?: string;
   /** Optional muted caption rendered above the bar (`wb-cell-muted`). */
   label?: ReactNode;
+  /** Extra class on the fill bar — an escape hatch for app-level bar variants
+   * (e.g. a muted `cashy-progress__bar--quiet`) beyond the generic `tone` axis. */
+  barClassName?: string;
 } & Omit<HTMLAttributes<HTMLDivElement>, "children">) {
   const pct = max > 0 ? Math.max(0, Math.min(100, (value / max) * 100)) : 0;
 
@@ -71,6 +75,7 @@ export function Progress({
         className={cn(
           "wb-progress__bar",
           tone !== "neutral" && `wb-progress__bar--${tone}`,
+          barClassName,
         )}
         style={{ width: `${pct}%` }}
       />

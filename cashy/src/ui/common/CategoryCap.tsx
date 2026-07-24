@@ -1,4 +1,5 @@
 import type { Category } from "@/domain/types";
+import { Capsule } from "@/ui/kit/Capsule";
 
 /**
  * A category shown as a plain **neutral** capsule — exactly what the web-builder
@@ -11,5 +12,5 @@ import type { Category } from "@/domain/types";
  * carries real meaning instead of just tinting every row of a dense table.
  */
 export function CategoryCap({ category }: { category?: Category | null }) {
-  return <span className="wb-cap">{category ? category.name : "Uncategorised"}</span>;
+  return <Capsule>{category ? category.name : "Uncategorised"}</Capsule>;
 }

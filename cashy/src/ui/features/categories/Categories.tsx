@@ -9,10 +9,13 @@ import { SWATCHES } from "@/lib/palette";
 import type { Category, TxType } from "@/domain/types";
 import { ColorPicker } from "@/ui/common/ColorPicker";
 import { IconPicker } from "@/ui/common/IconPicker";
-import { Select } from "@/ui/common/Select";
-import { EmptyState } from "@/ui/common/EmptyState";
+import { Select } from "@/ui/kit/Select";
+import { EmptyState } from "@/ui/kit/EmptyState";
 import { PageHeader } from "@/ui/common/PageHeader";
 import { Modal } from "@/ui/kit/Modal";
+import { Button } from "@/ui/kit/Button";
+import { Card } from "@/ui/kit/Card";
+import { Input } from "@/ui/kit/Input";
 
 type DropPos = "before" | "into" | "after";
 interface Drop {
@@ -71,12 +74,12 @@ function CategoryEditor({
       title={`${editing ? "Edit category" : "Add category"} · ${type === "income" ? "Income" : "Expense"}`}
       footer={
         <>
-          <button type="button" className="wb-btn wb-btn--secondary" onClick={onClose}>
+          <Button variant="secondary" type="button" onClick={onClose}>
             Cancel
-          </button>
-          <button type="button" className="wb-btn" onClick={save} disabled={!name.trim()}>
+          </Button>
+          <Button type="button" onClick={save} disabled={!name.trim()}>
             {editing ? "Save" : "Add"}
-          </button>
+          </Button>
         </>
       }
     >
@@ -89,9 +92,8 @@ function CategoryEditor({
             <span className="cashy-tile" style={{ width: 38, height: 38, color: colorHex }}>
               <Icon name={icon} size={18} />
             </span>
-            <input
+            <Input
               id="cat-name"
-              className="wb-input"
               style={{ flex: 1 }}
               value={name}
               autoFocus
@@ -210,7 +212,7 @@ function Tree({
 
   if (nodes.length === 0) {
     return (
-      <div className="wb-card">
+      <Card>
         <div className="wb-card__body">
           <EmptyState
             icon="🗂️"
@@ -218,12 +220,12 @@ function Tree({
             description={`Add your first ${type === "income" ? "income" : "expense"} category.`}
           />
         </div>
-      </div>
+      </Card>
     );
   }
 
   return (
-    <div className="wb-card" style={{ padding: 4 }}>
+    <Card style={{ padding: 4 }}>
       <ul className="wb-tree">
         {nodes.map(({ cat, depth }) => {
           const dropCls =
@@ -260,37 +262,43 @@ function Tree({
                 </span>
                 <span className="wb-tree__label">{cat.name}</span>
                 <div className="wb-tree__actions">
-                  <button
+                  <Button
+                    variant="ghost"
+                    iconOnly
+                    size="sm"
                     type="button"
-                    className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm"
                     onClick={() => onAddChild(cat.id)}
                     aria-label="Add subcategory"
                   >
                     <span className="wb-ico wb-ico--sm">add</span>
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    iconOnly
+                    size="sm"
                     type="button"
-                    className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm"
                     onClick={() => onEdit(cat)}
                     aria-label="Edit"
                   >
                     <span className="wb-ico wb-ico--sm">edit</span>
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    iconOnly
+                    size="sm"
                     type="button"
-                    className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm"
                     onClick={() => remove(cat)}
                     aria-label="Delete"
                   >
                     <span className="wb-ico wb-ico--sm">delete</span>
-                  </button>
+                  </Button>
                 </div>
               </div>
             </li>
           );
         })}
       </ul>
-    </div>
+    </Card>
   );
 }
 
@@ -304,15 +312,15 @@ export function Categories() {
         title="Categories"
         subtitle="Drag to reorder · drop onto an item to nest"
         actions={
-          <button
+          <Button
+            round
             type="button"
-            className="wb-btn wb-btn--round"
             style={{ gap: 6 }}
             onClick={() => setEditor({ editing: null, type, parentId: null })}
           >
             <span className="wb-ico wb-ico--sm">add</span>
             Add category
-          </button>
+          </Button>
         }
       />
 

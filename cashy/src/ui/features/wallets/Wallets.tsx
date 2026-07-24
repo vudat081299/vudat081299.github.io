@@ -7,11 +7,14 @@ import { formatDigits, parseMoney } from "@/domain/money";
 import { netWorth, walletBalances, walletIcon } from "@/domain/wallet";
 import type { CardNetwork, Wallet, WalletKind } from "@/domain/types";
 import { PageHeader } from "@/ui/common/PageHeader";
-import { Select } from "@/ui/common/Select";
+import { Select } from "@/ui/kit/Select";
 import { ColorPicker } from "@/ui/common/ColorPicker";
 import { IconPicker } from "@/ui/common/IconPicker";
 import { AmountDisplay } from "@/ui/common/AmountDisplay";
 import { Modal } from "@/ui/kit/Modal";
+import { Button } from "@/ui/kit/Button";
+import { Card } from "@/ui/kit/Card";
+import { Input } from "@/ui/kit/Input";
 import { WalletCard } from "@/ui/features/wallets/WalletCard";
 
 const KINDS: { value: WalletKind; label: string }[] = [
@@ -117,12 +120,12 @@ function WalletEditor({
       maxWidth={440}
       footer={
         <>
-          <button type="button" className="wb-btn wb-btn--secondary" onClick={onClose}>
+          <Button variant="secondary" type="button" onClick={onClose}>
             Cancel
-          </button>
-          <button type="button" className="wb-btn" onClick={save} disabled={!name.trim()}>
+          </Button>
+          <Button type="button" onClick={save} disabled={!name.trim()}>
             {editing ? "Save" : "Add"}
-          </button>
+          </Button>
         </>
       }
     >
@@ -131,9 +134,8 @@ function WalletEditor({
           <label className="wb-label" htmlFor="wallet-name">
             Wallet name
           </label>
-          <input
+          <Input
             id="wallet-name"
-            className="wb-input"
             value={name}
             autoFocus
             onChange={(e) => setName(e.target.value)}
@@ -168,9 +170,8 @@ function WalletEditor({
               {isCard ? "Current balance" : "Opening balance"}{" "}
               <span className="wb-label__opt">(₫ · − = {isCard ? "debt owed" : "you owe"})</span>
             </label>
-            <input
+            <Input
               id="wallet-opening"
-              className="wb-input"
               inputMode="numeric"
               value={openingStr}
               onChange={(e) => setOpeningStr(e.target.value)}
@@ -203,9 +204,8 @@ function WalletEditor({
               <label className="wb-label" htmlFor="wallet-limit">
                 Credit limit <span className="wb-label__opt">(₫ · optional)</span>
               </label>
-              <input
+              <Input
                 id="wallet-limit"
-                className="wb-input"
                 inputMode="numeric"
                 value={limitStr}
                 onChange={(e) => setLimitStr(e.target.value)}
@@ -228,9 +228,10 @@ function WalletEditor({
 
         {editing && (
           <div className="wb-cluster" style={{ gap: 8, justifyContent: "flex-start" }}>
-            <button
+            <Button
+              variant="ghost"
+              size="sm"
               type="button"
-              className="wb-btn wb-btn--ghost wb-btn--sm"
               onClick={() => {
                 setWalletArchived(editing.id, !editing.archived);
                 onClose();
@@ -238,11 +239,11 @@ function WalletEditor({
             >
               <span className="wb-ico wb-ico--xs">{editing.archived ? "unarchive" : "archive"}</span>
               {editing.archived ? "Unarchive" : "Archive"}
-            </button>
-            <button type="button" className="wb-btn wb-btn--ghost wb-btn--sm cashy-btn--quiet-danger" onClick={remove}>
+            </Button>
+            <Button variant="ghost" size="sm" className="cashy-btn--quiet-danger" type="button" onClick={remove}>
               <span className="wb-ico wb-ico--xs">delete</span>
               Delete
-            </button>
+            </Button>
           </div>
         )}
       </div>
@@ -314,14 +315,14 @@ export function Wallets() {
         title="Wallets"
         subtitle={`${wallets.length} ${wallets.length === 1 ? "wallet" : "wallets"} · where your money sits`}
         actions={
-          <button type="button" className="wb-btn wb-btn--round" onClick={openAdd}>
+          <Button round type="button" onClick={openAdd}>
             <span className="wb-ico wb-ico--xs">add</span>
             Add wallet
-          </button>
+          </Button>
         }
       />
 
-      <div className="wb-card">
+      <Card>
         <div className="wb-card__body" style={{ display: "flex", flexDirection: "column", gap: 4 }}>
           <span style={{ fontSize: 12, color: "var(--wb-fg-muted)" }}>Net worth</span>
           <div style={{ fontSize: 26, fontWeight: 700, lineHeight: 1.1 }}>
@@ -331,7 +332,7 @@ export function Wallets() {
             across {active.length} active {active.length === 1 ? "wallet" : "wallets"}
           </span>
         </div>
-      </div>
+      </Card>
 
       {wallets.length === 0 ? (
         <p style={{ fontSize: 13, color: "var(--wb-fg-muted)", margin: "2px 0 0" }}>

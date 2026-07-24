@@ -4,7 +4,10 @@ import { confirmSubscriptionCharges, skipSubscriptionCharge } from "@/usecases";
 import { collectDues, monthlyCommitment, needsPaymentNow } from "@/domain";
 import { formatMoney } from "@/domain/money";
 import { PageHeader } from "@/ui/common/PageHeader";
-import { EmptyState } from "@/ui/common/EmptyState";
+import { EmptyState } from "@/ui/kit/EmptyState";
+import { Button } from "@/ui/kit/Button";
+import { Card } from "@/ui/kit/Card";
+import { Capsule } from "@/ui/kit/Capsule";
 import { SubscriptionDues } from "@/ui/features/subscriptions/SubscriptionDues";
 import { ConnectedSubscriptionCard } from "@/ui/features/subscriptions/ConnectedSubscriptionCard";
 import { SubFilterBar } from "@/ui/features/subscriptions/SubFilterBar";
@@ -38,15 +41,15 @@ export function Subscriptions() {
         title="Subscriptions"
         subtitle="Services billed monthly or yearly"
         actions={
-          <button
+          <Button
+            round
             type="button"
-            className="wb-btn wb-btn--round"
             style={{ gap: 6 }}
             onClick={() => openSubscriptionEditor(null)}
           >
             <span className="wb-ico wb-ico--sm">add</span>
             Add subscription
-          </button>
+          </Button>
         }
       />
 
@@ -86,7 +89,7 @@ export function Subscriptions() {
       )}
 
       {dues.length > 0 && (
-        <div className="wb-card">
+        <Card>
           <div className="wb-table-head">
             <div>
               <h3 className="wb-table-head__title">To confirm</h3>
@@ -95,7 +98,7 @@ export function Subscriptions() {
               </p>
             </div>
             <div className="wb-table-head__actions">
-              <span className="wb-cap wb-cap--warning">{dues.length} months</span>
+              <Capsule tone="warning">{dues.length} months</Capsule>
             </div>
           </div>
           <div className="wb-card__body">
@@ -105,7 +108,7 @@ export function Subscriptions() {
               onSkip={skipSubscriptionCharge}
             />
           </div>
-        </div>
+        </Card>
       )}
 
       {subscriptions.length ? (
@@ -115,7 +118,7 @@ export function Subscriptions() {
               <span className="cashy-card-eyebrow">Recurring</span>
               <h3 className="cashy-card-title">Subscribed services</h3>
             </div>
-            {dueCount > 0 && <span className="wb-cap wb-cap--warning">{dueCount} due</span>}
+            {dueCount > 0 && <Capsule tone="warning">{dueCount} due</Capsule>}
           </div>
 
           {showFilter && <SubFilterBar f={filter} />}
@@ -141,26 +144,26 @@ export function Subscriptions() {
           </p>
         </div>
       ) : (
-        <div className="wb-card">
+        <Card>
           <div className="wb-card__body">
             <EmptyState
               icon="🔁"
               title="No subscriptions yet"
               description="Add services you pay for monthly like Netflix, Spotify, or YouTube. Cashy will remind you to confirm each month."
               action={
-                <button
+                <Button
+                  round
                   type="button"
-                  className="wb-btn wb-btn--round"
                   style={{ gap: 6 }}
                   onClick={() => openSubscriptionEditor(null)}
                 >
                   <span className="wb-ico wb-ico--sm">add</span>
                   Add subscription
-                </button>
+                </Button>
               }
             />
           </div>
-        </div>
+        </Card>
       )}
     </div>
   );

@@ -4,6 +4,7 @@ import { planCatchUp, type CycleChoice } from "@/domain";
 import { billingDate, fmtDateParts, monthLabelShort } from "@/domain/date";
 import { formatDigits, formatMoney, parseMoney } from "@/domain/money";
 import { Modal } from "@/ui/kit/Modal";
+import { Button } from "@/ui/kit/Button";
 import { Input } from "@/ui/kit/Input";
 import { Switch } from "@/ui/kit/Switch";
 import { Popover } from "@/ui/kit/Popover";
@@ -186,15 +187,16 @@ export function SubscriptionCatchUp({
             gap: 10,
           }}
         >
-          <button type="button" className="wb-btn wb-btn--ghost wb-btn--sm" onClick={onClose}>
+          <Button variant="ghost" size="sm" type="button" onClick={onClose}>
             Later
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
             // Cancelling is a real destructive outcome, so the confirm goes solid
             // red (tier 2) rather than the black primary fill with red text, which
             // read as a broken button.
-            className={plan.cancelling ? "wb-btn wb-btn--danger wb-btn--sm" : "wb-btn wb-btn--sm"}
+            variant={plan.cancelling ? "danger" : "primary"}
+            size="sm"
+            type="button"
             style={{ gap: 4 }}
             disabled={Boolean(plan.problem)}
             onClick={submit}
@@ -211,7 +213,7 @@ export function SubscriptionCatchUp({
                   : "Save"}
               </>
             )}
-          </button>
+          </Button>
         </div>
       }
     >

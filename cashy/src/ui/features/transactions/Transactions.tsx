@@ -4,7 +4,9 @@ import { deleteTransaction } from "@/usecases";
 import { rankTags, totals } from "@/domain";
 import { useTxQuery } from "@/ui/features/transactions/useTxQuery";
 import { AmountDisplay } from "@/ui/common/AmountDisplay";
-import { EmptyState } from "@/ui/common/EmptyState";
+import { Button } from "@/ui/kit/Button";
+import { Capsule } from "@/ui/kit/Capsule";
+import { EmptyState } from "@/ui/kit/EmptyState";
 import { PageHeader } from "@/ui/common/PageHeader";
 import { PeriodPicker } from "@/ui/common/PeriodPicker";
 import { TxFilterBar } from "@/ui/features/transactions/TxFilterBar";
@@ -29,7 +31,7 @@ export function Transactions() {
         actions={
           <div className="wb-cluster" style={{ gap: 10 }}>
             <PeriodPicker value={q.period} custom={q.custom} onChange={q.setPeriod} />
-            <span className="wb-cap wb-cap--sm" style={{ gap: 5 }}>
+            <Capsule size="sm" style={{ gap: 5 }}>
               Net
               {/* A net loss for the period IS a real problem, so this is one of
                   the few places red is earned (§1). */}
@@ -39,7 +41,7 @@ export function Transactions() {
                 negative={net < 0}
                 signed
               />
-            </span>
+            </Capsule>
           </div>
         }
       />
@@ -59,15 +61,15 @@ export function Transactions() {
             title="No transactions"
             description="Try a different filter, or add a new transaction."
             action={
-              <button
+              <Button
                 type="button"
-                className="wb-btn wb-btn--round"
+                round
                 style={{ gap: 6 }}
                 onClick={() => openTxEditor(null)}
               >
                 <span className="wb-ico wb-ico--sm">add</span>
                 Add transaction
-              </button>
+              </Button>
             }
           />
         }

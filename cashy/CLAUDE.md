@@ -213,6 +213,27 @@ Component tiers (full catalogue + props + screen map: [docs/components.md](docs/
 | **Container / screen** | `Dashboard`, `Transactions`, `Subscriptions`, `Categories`, `Tags`, `Settings` | call `useCashy()` + usecases; pass callbacks down |
 | **Singleton modal** | `TransactionEditor`, `SubscriptionEditor`, `TransactionDetail` | register an open-handler; call usecases |
 
+**Composition rule — three tiers, one job each (kit-adoption pass, 2026-07-24).**
+The app is built by *composing* the kit, not by hand-writing `wb-*` markup:
+1. **kit primitives** (`Button`, `Card`, `Capsule`, `Input`, `Progress`, `Modal`, …) are
+   the shared vocabulary — never re-hand-write `<button className="wb-btn">`, use
+   `<Button variant=…>`; same for `Card` / `Capsule` / `Input` / `Progress`.
+2. **feature-custom components** (`ui/common/*` + `ui/features/<x>/*` — `TransactionTable`,
+   `SubscriptionCard`, `BalanceCard`, `StatusCap`, the pickers…) encapsulate one
+   feature's business rendering by **composing kit primitives** inside. These stay
+   product-specific (e.g. `TransactionTable` is deliberately NOT the generic `kit/Table`).
+3. **feature entry files** (`Dashboard.tsx`, `Transactions.tsx`, …) do **one job**:
+   assemble tier-2 components + layout + wiring (`useCashy` / usecases). `Transactions.tsx`
+   is the model (thin). Fat entries still carrying inline organisms (`Dashboard`, `Loans`,
+   `Subscriptions` — chiefly inline editors) are on the list to extract into tier-2.
+
+Known residuals the kit can't yet cover byte-identically (left hand-written on purpose):
+`Settings`' `Section` uses `<section className="wb-card">` (kit `Card` renders a `<div>` —
+would need an `as` prop); `CategorySelect`'s search `<input>` needs a `ref`, so it waits on
+`kit/Input` gaining `forwardRef`; `SearchField`'s clear-`×` is a direct group child the kit
+wraps differently. `wb-tab` / `wb-tag` / `wb-tree` / `wb-table` / `wb-stat` are their own
+components, not Button/Card/Capsule.
+
 Styling conventions: money cells use `.wb-num` (tabular, right-aligned). Design
 tokens (colours, radii, typography, chart palette) are CSS custom properties on
 `:root`, flipped for dark by a single `.dark` block. **CSS load order is

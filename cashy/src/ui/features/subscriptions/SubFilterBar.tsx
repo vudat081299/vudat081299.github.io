@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import type { SubState } from "@/domain";
 import type { SubFilter } from "@/ui/features/subscriptions/useSubFilter";
 import { cn } from "@/lib/utils";
+import { Capsule } from "@/ui/kit/Capsule";
 import { FacetChip } from "@/ui/common/FacetChip";
 import { SearchField } from "@/ui/common/SearchField";
 
@@ -104,10 +105,9 @@ export function SubFilterBar({ f }: { f: SubFilter }) {
                       close();
                     }}
                   />
-                  <span className={cn("wb-cap", o.cap)}>
-                    {o.dot && <span className="wb-cap__dot" />}
+                  <Capsule dot={o.dot} className={o.cap}>
                     {o.label}
-                  </span>
+                  </Capsule>
                 </label>
               ))}
             </div>

@@ -21,9 +21,9 @@ import { RangeCalendar } from "@/ui/common/RangeCalendar";
 import { PeriodPicker } from "@/ui/common/PeriodPicker";
 import { IconPicker } from "@/ui/common/IconPicker";
 import { ColorPicker } from "@/ui/common/ColorPicker";
-import { Select } from "@/ui/common/Select";
+import { Select } from "@/ui/kit/Select";
 import { PageHeader } from "@/ui/common/PageHeader";
-import { EmptyState } from "@/ui/common/EmptyState";
+import { EmptyState } from "@/ui/kit/EmptyState";
 
 // feature-leaf — presentational, fed entirely by the fixtures below
 import { BalanceCard } from "@/ui/features/dashboard/BalanceCard";
@@ -32,7 +32,7 @@ import { CashflowChart } from "@/ui/features/dashboard/CashflowChart";
 import { BalanceForecastChart } from "@/ui/features/dashboard/BalanceForecastChart";
 import { TransactionTable } from "@/ui/features/transactions/TransactionTable";
 import { TxFilterBar } from "@/ui/features/transactions/TxFilterBar";
-import { Pagination } from "@/ui/features/transactions/Pagination";
+import { Pagination } from "@/ui/kit/Pagination";
 import { TagsMorePopover } from "@/ui/features/transactions/TagsMorePopover";
 import { useTxQuery } from "@/ui/features/transactions/useTxQuery";
 import { SubTile } from "@/ui/features/subscriptions/SubTile";
@@ -303,7 +303,7 @@ function TxDemo() {
 
 function PaginationDemo() {
   const [page, setPage] = useState(3);
-  return <Pagination page={page} totalPages={8} onPage={setPage} />;
+  return <Pagination page={page} pageCount={8} onChange={setPage} />;
 }
 
 function SubsDemo() {

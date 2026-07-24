@@ -3,6 +3,8 @@ import { cardUtilization } from "@/domain/wallet";
 import { formatMoneyShort } from "@/domain/money";
 import { AmountDisplay } from "@/ui/common/AmountDisplay";
 import { CardIdentity } from "@/ui/common/CardIdentity";
+import { Progress } from "@/ui/kit/Progress";
+import { Card } from "@/ui/kit/Card";
 
 const KIND_LABEL: Record<WalletKind, string> = {
   cash: "Cash",
@@ -39,16 +41,13 @@ export function WalletCard({
   const util = cardUtilization(wallet, balance);
   const sub =
     wallet.kind === "card" && wallet.cardNetwork ? NETWORK_LABEL[wallet.cardNetwork] : KIND_LABEL[wallet.kind];
-  const barClass =
-    util && util.pct >= 0.9
-      ? "wb-progress__bar wb-progress__bar--danger"
-      : util && util.pct >= 0.5
-        ? "wb-progress__bar wb-progress__bar--warning"
-        : "wb-progress__bar cashy-progress__bar--quiet";
+  const utilTone: "neutral" | "danger" | "warning" =
+    util && util.pct >= 0.9 ? "danger" : util && util.pct >= 0.5 ? "warning" : "neutral";
+  const utilQuiet = !util || util.pct < 0.5;
 
   return (
-    <div
-      className={clickable ? "wb-card wb-card--hover" : "wb-card"}
+    <Card
+      variant={clickable ? "hover" : "default"}
       role={clickable ? "button" : undefined}
       tabIndex={clickable ? 0 : undefined}
       onClick={clickable ? () => onEdit?.(wallet.id) : undefined}
@@ -82,9 +81,12 @@ export function WalletCard({
 
         {util && (
           <div className="cashy-cardmeter">
-            <div className="wb-progress">
-              <div className={barClass} style={{ width: `${Math.round(util.pct * 100)}%` }} />
-            </div>
+            <Progress
+              value={util.pct}
+              max={1}
+              tone={utilTone}
+              barClassName={utilQuiet ? "cashy-progress__bar--quiet" : undefined}
+            />
             <span className="cashy-cardmeter__note">
               {formatMoneyShort(util.debt)} used · {formatMoneyShort(util.available)} of{" "}
               {formatMoneyShort(util.limit)} available
@@ -92,6 +94,6 @@ export function WalletCard({
           </div>
         )}
       </div>
-    </div>
+    </Card>
   );
 }

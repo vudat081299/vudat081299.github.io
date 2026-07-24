@@ -4,6 +4,8 @@ import { addContact } from "@/usecases";
 import { activeContacts, contactLabel, CONTACT_DEFAULT_ICON } from "@/domain/contact";
 import { SWATCHES } from "@/lib/palette";
 import { Icon } from "@/ui/kit/icons";
+import { Button } from "@/ui/kit/Button";
+import { Input } from "@/ui/kit/Input";
 
 /**
  * The contact picker — search an active contact by name/username, or create a
@@ -77,17 +79,16 @@ export function ContactPicker({
         >
           {contactLabel(selected)}
         </span>
-        <button type="button" className="wb-btn wb-btn--ghost wb-btn--sm" onClick={() => onChange(null)}>
+        <Button variant="ghost" size="sm" type="button" onClick={() => onChange(null)}>
           Change
-        </button>
+        </Button>
       </div>
     );
   }
 
   return (
     <div className="wb-stack" style={{ gap: 6 }}>
-      <input
-        className="wb-input"
+      <Input
         value={q}
         placeholder="Search or create a contact…"
         onChange={(e) => setQ(e.target.value)}
@@ -95,10 +96,11 @@ export function ContactPicker({
       {(matches.length > 0 || canCreate) && (
         <div className="wb-stack" style={{ gap: 2 }}>
           {matches.map((c) => (
-            <button
+            <Button
               key={c.id}
+              variant="ghost"
+              size="sm"
               type="button"
-              className="wb-btn wb-btn--ghost wb-btn--sm"
               style={{ justifyContent: "flex-start" }}
               onClick={() => {
                 onChange(c.id);
@@ -106,17 +108,18 @@ export function ContactPicker({
               }}
             >
               {contactLabel(c)}
-            </button>
+            </Button>
           ))}
           {canCreate && (
-            <button
+            <Button
+              variant="ghost"
+              size="sm"
               type="button"
-              className="wb-btn wb-btn--ghost wb-btn--sm"
               style={{ justifyContent: "flex-start" }}
               onClick={createAndSelect}
             >
               <span className="wb-ico wb-ico--xs">add</span> Create &quot;{trimmed}&quot;
-            </button>
+            </Button>
           )}
         </div>
       )}

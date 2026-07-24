@@ -4,7 +4,8 @@ import { flattenTree, type TagRank } from "@/domain";
 import type { TxQuery } from "@/ui/features/transactions/useTxQuery";
 import { TX_STATUS_META, TX_STATUS_ORDER } from "@/domain/txStatus";
 import { formatMoneyAxis } from "@/domain/money";
-import { cn } from "@/lib/utils";
+import { Capsule } from "@/ui/kit/Capsule";
+import { Input } from "@/ui/kit/Input";
 import { TagChip } from "@/ui/common/TagChip";
 import { FacetChip } from "@/ui/common/FacetChip";
 import { SearchField } from "@/ui/common/SearchField";
@@ -136,10 +137,9 @@ export function TxFilterBar({
                     checked={q.statuses.includes(s)}
                     onChange={() => q.toggleStatus(s)}
                   />
-                  <span className={cn("wb-cap", meta.cap)}>
-                    {meta.dot && <span className="wb-cap__dot" />}
+                  <Capsule className={meta.cap} dot={meta.dot}>
                     {meta.label}
-                  </span>
+                  </Capsule>
                 </label>
               );
             })}
@@ -232,8 +232,7 @@ export function TxFilterBar({
         <div className="wb-menu cashy-facet-pop" style={{ border: 0, boxShadow: "none" }}>
           <p className="wb-filter-pop__title">Amount (₫)</p>
           <div className="cashy-amount-range">
-            <input
-              className="wb-input"
+            <Input
               inputMode="numeric"
               value={minText}
               onChange={(e) => {
@@ -244,8 +243,7 @@ export function TxFilterBar({
               aria-label="Amount from"
             />
             <span className="cashy-amount-range__dash">–</span>
-            <input
-              className="wb-input"
+            <Input
               inputMode="numeric"
               value={maxText}
               onChange={(e) => {

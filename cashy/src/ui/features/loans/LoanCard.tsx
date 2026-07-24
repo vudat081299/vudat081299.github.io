@@ -13,6 +13,8 @@ import {
 import { formatMoneyShort } from "@/domain/money";
 import { AmountDisplay } from "@/ui/common/AmountDisplay";
 import { CardIdentity } from "@/ui/common/CardIdentity";
+import { Capsule } from "@/ui/kit/Capsule";
+import { Progress } from "@/ui/kit/Progress";
 
 const SOURCE_LABEL: Record<LoanSource, string> = {
   personal: "Personal",
@@ -102,7 +104,6 @@ export function LoanCard({
 }) {
   const outstanding = loanOutstanding(loan);
   const paid = loanPaid(loan);
-  const pct = Math.round(loanProgress(loan) * 100);
   const status = loanStatus(loan, now);
   const clickable = Boolean(onEdit);
   const owed = loan.direction === "borrowed"; // borrowed ⇒ I owe someone
@@ -113,23 +114,18 @@ export function LoanCard({
   // "Owed to me" (lent) is a future inflow → arrow green.
   const dirColor = owed ? "var(--wb-danger-text)" : "var(--wb-success-text)";
 
-  let barClass: string;
-  if (overdue) {
-    barClass = "wb-progress__bar wb-progress__bar--danger";
-  } else if (status === "due-soon") {
-    barClass = "wb-progress__bar wb-progress__bar--warning";
-  } else if (settled) {
-    barClass = "wb-progress__bar wb-progress__bar--success";
-  } else {
-    barClass = "wb-progress__bar cashy-progress__bar--quiet";
-  }
+  let barTone: "neutral" | "danger" | "warning" | "success" = "neutral";
+  let barQuiet = false;
+  if (overdue) barTone = "danger";
+  else if (status === "due-soon") barTone = "warning";
+  else if (settled) barTone = "success";
+  else barQuiet = true;
 
   const cap = statusCap(loan, status, now);
   const trailing = (
-    <span className={cap.tone ? `wb-cap wb-cap--${cap.tone}` : "wb-cap"}>
-      {cap.tone && <span className="wb-cap__dot" />}
+    <Capsule tone={cap.tone ?? "neutral"} dot={cap.tone != null}>
       {cap.label}
-    </span>
+    </Capsule>
   );
 
   let cls = "wb-card";
@@ -178,9 +174,12 @@ export function LoanCard({
         </div>
 
         <div className="cashy-cardmeter">
-          <div className="wb-progress">
-            <div className={barClass} style={{ width: `${pct}%` }} />
-          </div>
+          <Progress
+            value={loanProgress(loan)}
+            max={1}
+            tone={barTone}
+            barClassName={barQuiet ? "cashy-progress__bar--quiet" : undefined}
+          />
           <span className="cashy-cardmeter__note">
             {formatMoneyShort(paid)} of {formatMoneyShort(loan.principal)}{" "}
             {owed ? "repaid" : "collected"}

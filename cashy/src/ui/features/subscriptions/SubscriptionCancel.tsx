@@ -3,6 +3,7 @@ import type { Subscription } from "@/domain/types";
 import { cycleDate } from "@/domain";
 import { fmtDateShort, monthLabelShort, todayYMD } from "@/domain/date";
 import { Modal } from "@/ui/kit/Modal";
+import { Button } from "@/ui/kit/Button";
 import { DatePicker } from "@/ui/common/DatePicker";
 
 /**
@@ -53,24 +54,26 @@ export function SubscriptionCancel({
       maxWidth={440}
       footer={
         <>
-          <button
+          <Button
+            variant="ghost"
+            size="sm"
             type="button"
-            className="wb-btn wb-btn--ghost wb-btn--sm"
             style={{ marginRight: "auto" }}
             onClick={onClose}
           >
             Keep it
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="danger"
+            size="sm"
             type="button"
-            className="wb-btn wb-btn--danger wb-btn--sm"
             onClick={() => {
               onCancel(date);
               onClose();
             }}
           >
             Cancel subscription
-          </button>
+          </Button>
         </>
       }
     >

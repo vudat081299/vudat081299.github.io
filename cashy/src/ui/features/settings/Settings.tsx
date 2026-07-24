@@ -1,7 +1,8 @@
 import { useRef, useState, type ChangeEvent, type CSSProperties, type ReactNode } from "react";
 import { toast } from "@/lib/toast";
-import { cn } from "@/lib/utils";
 import { useCashy } from "@/data/store";
+import { Button } from "@/ui/kit/Button";
+import { Input } from "@/ui/kit/Input";
 import { exportData, importData, loadSampleData, resetAll, setSubIconStyle, setTheme, updateWorkspace } from "@/usecases";
 import { todayYMD } from "@/domain/date";
 import { confirm, confirmDelete } from "@/lib/confirm";
@@ -134,16 +135,16 @@ export function Settings() {
           {THEMES.map((t) => {
             const active = theme === t.key;
             return (
-              <button
+              <Button
                 key={t.key}
                 type="button"
                 onClick={() => setTheme(t.key)}
-                className={cn("wb-btn", active ? "wb-btn--secondary" : "wb-btn--outline")}
+                variant={active ? "secondary" : "outline"}
                 style={{ flexDirection: "column", gap: 6, height: "auto", paddingBlock: 12 }}
               >
                 <span className="wb-ico">{t.icon}</span>
                 {t.label}
-              </button>
+              </Button>
             );
           })}
         </div>
@@ -154,16 +155,16 @@ export function Settings() {
             {SUB_ICON_STYLES.map((o) => {
               const active = subIconStyle === o.key;
               return (
-                <button
+                <Button
                   key={o.key}
                   type="button"
                   onClick={() => setSubIconStyle(o.key)}
-                  className={cn("wb-btn", active ? "wb-btn--secondary" : "wb-btn--outline")}
+                  variant={active ? "secondary" : "outline"}
                   style={{ gap: 8 }}
                 >
                   <span className="wb-ico wb-ico--sm">{o.icon}</span>
                   {o.label}
-                </button>
+                </Button>
               );
             })}
           </div>
@@ -180,20 +181,20 @@ export function Settings() {
             Name
           </label>
           <div className="wb-cluster wb-cluster--nowrap">
-            <input
+            <Input
               id="ws"
-              className="wb-input wb-grow"
+              className="wb-grow"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
-            <button
+            <Button
               type="button"
-              className="wb-btn wb-btn--secondary"
+              variant="secondary"
               onClick={saveName}
               disabled={name.trim() === (workspace?.displayName ?? "")}
             >
               Save
-            </button>
+            </Button>
           </div>
         </div>
         <ul className="wb-list wb-list--flush">
@@ -210,23 +211,24 @@ export function Settings() {
           browser.
         </p>
         <div className="wb-cluster">
-          <button type="button" className="wb-btn wb-btn--secondary wb-btn--sm" style={{ gap: 6 }} onClick={doExportJSON}>
+          <Button type="button" variant="secondary" size="sm" style={{ gap: 6 }} onClick={doExportJSON}>
             <span className="wb-ico wb-ico--sm">download</span>
             Export JSON
-          </button>
-          <button type="button" className="wb-btn wb-btn--secondary wb-btn--sm" style={{ gap: 6 }} onClick={doExportCSV}>
+          </Button>
+          <Button type="button" variant="secondary" size="sm" style={{ gap: 6 }} onClick={doExportCSV}>
             <span className="wb-ico wb-ico--sm">download</span>
             Export CSV
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
-            className="wb-btn wb-btn--secondary wb-btn--sm"
+            variant="secondary"
+            size="sm"
             style={{ gap: 6 }}
             onClick={() => fileRef.current?.click()}
           >
             <span className="wb-ico wb-ico--sm">upload</span>
             Import JSON
-          </button>
+          </Button>
           <input
             ref={fileRef}
             type="file"
@@ -239,15 +241,16 @@ export function Settings() {
           <p style={{ fontSize: 13, color: "var(--wb-fg-muted)", margin: 0, flex: "1 1 200px" }}>
             Load ~200 sample transactions with categories and tags to try out the interface.
           </p>
-          <button
+          <Button
             type="button"
-            className="wb-btn wb-btn--outline wb-btn--sm"
+            variant="outline"
+            size="sm"
             style={{ gap: 6, flex: "none" }}
             onClick={doLoadSample}
           >
             <span className="wb-ico wb-ico--sm">database</span>
             Load sample data
-          </button>
+          </Button>
         </div>
       </Section>
 
@@ -256,15 +259,16 @@ export function Settings() {
           <p style={{ fontSize: 13, color: "var(--wb-fg-muted)", margin: 0, flex: "1 1 200px" }}>
             Delete all transactions, categories, and tags, then start over from scratch.
           </p>
-          <button
+          <Button
             type="button"
-            className="wb-btn wb-btn--outline wb-btn--sm"
+            variant="outline"
+            size="sm"
             style={{ gap: 6, flex: "none", color: "var(--wb-danger-text)", borderColor: "var(--wb-danger)" }}
             onClick={doReset}
           >
             <span className="wb-ico wb-ico--sm">delete</span>
             Delete &amp; start over
-          </button>
+          </Button>
         </div>
       </Section>
       </div>

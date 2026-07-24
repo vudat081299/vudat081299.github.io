@@ -3,6 +3,7 @@ import type { Due } from "@/domain";
 import { formatMoney } from "@/domain/money";
 import { billingDate, fmtDateShort, monthLabelShort } from "@/domain/date";
 import { SubTile } from "@/ui/features/subscriptions/SubTile";
+import { Button } from "@/ui/kit/Button";
 
 /**
  * "Cần xác nhận" rows — confirm paid (→ books the charge) or skip the month.
@@ -35,22 +36,23 @@ export function SubscriptionDues({
             </div>
           </div>
           <div className="cashy-due__actions">
-            <button
+            <Button
+              variant="secondary"
+              size="sm"
               type="button"
-              className="wb-btn wb-btn--secondary wb-btn--sm"
               onClick={() => onSkip(txId)}
             >
               Skip
-            </button>
-            <button
+            </Button>
+            <Button
+              size="sm"
               type="button"
-              className="wb-btn wb-btn--sm"
               style={{ gap: 4 }}
               onClick={() => onConfirm(txId)}
             >
               <span className="wb-ico wb-ico--xs">check</span>
               Paid
-            </button>
+            </Button>
           </div>
         </div>
       ))}

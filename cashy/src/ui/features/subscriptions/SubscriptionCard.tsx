@@ -17,6 +17,10 @@ import { fmtDateNum } from "@/domain/date";
 import { formatMoney } from "@/domain/money";
 import { SubTile } from "@/ui/features/subscriptions/SubTile";
 import { Icon } from "@/ui/kit/icons";
+import { Progress } from "@/ui/kit/Progress";
+import { Button } from "@/ui/kit/Button";
+import { Card } from "@/ui/kit/Card";
+import { Capsule } from "@/ui/kit/Capsule";
 
 /**
  * One service, one card. It answers the four questions a subscription actually
@@ -57,16 +61,10 @@ function CycleProgress({
   rightNote: (c: SubCycle) => string;
 }) {
   const nearEnd = cyc.remainingDays < cyc.totalDays * 0.1;
-  let barClass: string;
-  if (tone === "danger") {
-    barClass = "wb-progress__bar wb-progress__bar--danger";
-  } else if (tone === "warning") {
-    barClass = "wb-progress__bar wb-progress__bar--warning";
-  } else if (nearEnd) {
-    barClass = "wb-progress__bar";
-  } else {
-    barClass = "wb-progress__bar cashy-progress__bar--quiet";
-  }
+  let barTone: "neutral" | "danger" | "warning" = "neutral";
+  if (tone === "danger") barTone = "danger";
+  else if (tone === "warning") barTone = "warning";
+  const barQuiet = !tone && !nearEnd;
   return (
     <>
       <div className="wb-cluster wb-cluster--between" style={{ marginBottom: 7, gap: 8 }}>
@@ -79,9 +77,13 @@ function CycleProgress({
           {rightNote(cyc)}
         </span>
       </div>
-      <div className="wb-progress cashy-sub-progress">
-        <div className={barClass} style={{ width: `${Math.round(cyc.pct * 100)}%` }} />
-      </div>
+      <Progress
+        className="cashy-sub-progress"
+        value={cyc.pct}
+        max={1}
+        tone={barTone}
+        barClassName={barQuiet ? "cashy-progress__bar--quiet" : undefined}
+      />
     </>
   );
 }
@@ -184,40 +186,36 @@ export function SubscriptionCard({
   // than a stack of ternaries so each state's markup reads on its own.
   let statusCap: ReactNode;
   if (!sub.active) {
-    statusCap = <span className="wb-cap">Cancelled</span>;
+    statusCap = <Capsule>Cancelled</Capsule>;
   } else if (lapsed) {
     statusCap = (
-      <span className="wb-cap wb-cap--danger">
-        <span className="wb-cap__dot" />
+      <Capsule tone="danger" dot>
         Suspended
-      </span>
+      </Capsule>
     );
   } else if (due) {
     statusCap = (
-      <span className="wb-cap wb-cap--warning">
-        <span className="wb-cap__dot" />
+      <Capsule tone="warning" dot>
         Payment due
-      </span>
+      </Capsule>
     );
   } else if (trial) {
     statusCap = (
-      <span className="wb-cap wb-cap--info">
-        <span className="wb-cap__dot" />
+      <Capsule tone="info" dot>
         Free trial
-      </span>
+      </Capsule>
     );
   } else {
     statusCap = (
-      <span className="wb-cap wb-cap--success">
-        <span className="wb-cap__dot" />
+      <Capsule tone="success" dot>
         Active
-      </span>
+      </Capsule>
     );
   }
 
   const cardClass = !sub.active
-    ? `wb-card cashy-sub--cancelled${suppressReveal ? " cashy-sub--force-quiet" : ""}`
-    : "wb-card";
+    ? `cashy-sub--cancelled${suppressReveal ? " cashy-sub--force-quiet" : ""}`
+    : undefined;
 
   // Nothing settled yet = an empty history; offering it would only lead to an
   // empty dialog. Skipped cycles count too, so this is not `paymentTxIds`. Read
@@ -264,7 +262,7 @@ export function SubscriptionCard({
 
   return (
     <>
-      <div className={cardClass} onMouseLeave={() => suppressReveal && setSuppressReveal(false)}>
+      <Card className={cardClass} onMouseLeave={() => suppressReveal && setSuppressReveal(false)}>
         {/* Two columns, not three: the tile, then everything the tile is about.
             Name and status share a line because the status is a fact about the
             NAME; the money line reads as detail underneath both. */}
@@ -381,25 +379,31 @@ export function SubscriptionCard({
           {/* Edit the plan itself. This is the sole entry point to the editor for
               an existing service now that the screen is a card grid (no table row
               with a pencil), so it is always offered — active or cancelled. */}
-          <button
+          <Button
+            variant="ghost"
+            iconOnly
+            size="sm"
+            round
             type="button"
-            className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm wb-btn--round"
             aria-label={`Edit ${sub.name}`}
             title="Edit"
             onClick={onOpenEditor}
           >
             <span className="wb-ico wb-ico--sm">edit</span>
-          </button>
+          </Button>
           {hasHistory && (
-            <button
+            <Button
+              variant="ghost"
+              iconOnly
+              size="sm"
+              round
               type="button"
-              className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm wb-btn--round"
               aria-label={`Payment history for ${sub.name}`}
               title="Payment history"
               onClick={onOpenHistory}
             >
               <span className="wb-ico wb-ico--sm">history</span>
-            </button>
+            </Button>
           )}
           {footNote && <span className="wb-cell-muted cashy-cardfoot__note">{footNote}</span>}
 
@@ -408,39 +412,42 @@ export function SubscriptionCard({
               // Spelled out rather than an icon: a "block" glyph reads as a road
               // sign and says nothing about WHAT is being blocked. Quiet grey at
               // rest so the destructive option never shouts, red only on hover.
-              <button
+              <Button
+                variant="ghost"
+                size="sm"
                 type="button"
-                className="wb-btn wb-btn--ghost wb-btn--sm cashy-btn--danger-hover"
+                className="cashy-btn--danger-hover"
                 onClick={onOpenCancel}
               >
                 Cancel
-              </button>
+              </Button>
             )}
             {sub.active
               ? due && (
-                  <button
+                  <Button
+                    size="sm"
                     type="button"
-                    className="wb-btn wb-btn--sm"
                     style={{ gap: 4 }}
                     onClick={onOpenCatchUp}
                   >
                     <span className="wb-ico wb-ico--xs">check</span>
                     {behind > 1 ? `Settle ${behind} cycles` : "Mark as paid"}
-                  </button>
+                  </Button>
                 )
               : // Resuming is cheap and reversible, so it happens on one click and
                 // offers the way back in a toast — a confirm dialog here would tax
                 // the harmless direction while cancelling stays the guarded one.
-                <button
+                <Button
+                  variant="secondary"
+                  size="sm"
                   type="button"
-                  className="wb-btn wb-btn--secondary wb-btn--sm"
                   onClick={() => onSetActive(true)}
                 >
                   Resume
-                </button>}
+                </Button>}
           </div>
         </div>
-      </div>
+      </Card>
 
       {/* Full name on hover — only mounted for names the card actually clipped. */}
       {tip && (

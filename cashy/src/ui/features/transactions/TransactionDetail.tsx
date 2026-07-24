@@ -4,6 +4,7 @@ import { deleteTransaction } from "@/usecases";
 import { fmtDate } from "@/domain/date";
 import { formatMoney } from "@/domain/money";
 import { isTransfer } from "@/domain";
+import { Button } from "@/ui/kit/Button";
 import { AmountDisplay } from "@/ui/common/AmountDisplay";
 import { StatusCap } from "@/ui/common/StatusCap";
 import { TagChip } from "@/ui/common/TagChip";
@@ -162,9 +163,10 @@ export function TransactionDetail() {
             boxShadow: "var(--wb-shadow-md)",
           }}
         >
-          <button
+          <Button
             type="button"
-            className="wb-btn wb-btn--ghost wb-btn--sm"
+            variant="ghost"
+            size="sm"
             style={{ color: "var(--wb-danger-text)", gap: 6 }}
             onClick={async () => {
               if (
@@ -179,14 +181,14 @@ export function TransactionDetail() {
           >
             <span className="wb-ico wb-ico--sm">delete</span>
             Delete
-          </button>
+          </Button>
           <div className="wb-cluster wb-cluster--tight">
-            <button type="button" className="wb-btn wb-btn--secondary wb-btn--sm" onClick={close}>
+            <Button type="button" variant="secondary" size="sm" onClick={close}>
               Close
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
-              className="wb-btn wb-btn--sm"
+              size="sm"
               style={{ gap: 6 }}
               onClick={() => {
                 const editId = tx.id;
@@ -196,7 +198,7 @@ export function TransactionDetail() {
             >
               <span className="wb-ico wb-ico--sm">edit</span>
               Edit
-            </button>
+            </Button>
           </div>
         </div>
       </div>

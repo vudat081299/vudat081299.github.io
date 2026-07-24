@@ -1,13 +1,14 @@
 import type { Contact } from "@/domain/types";
 import { CardIdentity } from "@/ui/common/CardIdentity";
+import { Card } from "@/ui/kit/Card";
 
 /** One contact as a card: tinted icon tile + name, with the @username (if any)
  *  as the subtitle. Presentational; click opens the editor. @ADR-contact-006 */
 export function ContactCard({ contact, onEdit }: { contact: Contact; onEdit?: (id: string) => void }) {
   const clickable = Boolean(onEdit);
   return (
-    <div
-      className={clickable ? "wb-card wb-card--hover" : "wb-card"}
+    <Card
+      variant={clickable ? "hover" : "default"}
       role={clickable ? "button" : undefined}
       tabIndex={clickable ? 0 : undefined}
       onClick={clickable ? () => onEdit?.(contact.id) : undefined}
@@ -32,6 +33,6 @@ export function ContactCard({ contact, onEdit }: { contact: Contact; onEdit?: (i
           archived={contact.archived}
         />
       </div>
-    </div>
+    </Card>
   );
 }

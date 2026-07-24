@@ -9,6 +9,8 @@ import { PageHeader } from "@/ui/common/PageHeader";
 import { ColorPicker } from "@/ui/common/ColorPicker";
 import { IconPicker } from "@/ui/common/IconPicker";
 import { Modal } from "@/ui/kit/Modal";
+import { Button } from "@/ui/kit/Button";
+import { Input } from "@/ui/kit/Input";
 import { ContactCard } from "@/ui/features/contacts/ContactCard";
 
 function ContactEditor({ open, editing, onClose }: { open: boolean; editing: Contact | null; onClose: () => void }) {
@@ -53,17 +55,17 @@ function ContactEditor({ open, editing, onClose }: { open: boolean; editing: Con
       maxWidth={440}
       footer={
         <>
-          <button type="button" className="wb-btn wb-btn--secondary" onClick={onClose}>Cancel</button>
-          <button type="button" className="wb-btn" onClick={save} disabled={!name.trim()}>
+          <Button variant="secondary" type="button" onClick={onClose}>Cancel</Button>
+          <Button type="button" onClick={save} disabled={!name.trim()}>
             {editing ? "Save" : "Add"}
-          </button>
+          </Button>
         </>
       }
     >
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         <div className="wb-field">
           <label className="wb-label" htmlFor="contact-name">Name</label>
-          <input id="contact-name" className="wb-input" value={name} autoFocus maxLength={80}
+          <Input id="contact-name" value={name} autoFocus maxLength={80}
             onChange={(e) => setName(e.target.value)} onKeyDown={(e) => e.key === "Enter" && save()}
             placeholder="e.g. Anh Minh, Bố mẹ, Chị Hoà" />
         </div>
@@ -73,7 +75,7 @@ function ContactEditor({ open, editing, onClose }: { open: boolean; editing: Con
           <label className="wb-label" htmlFor="contact-username">
             Username <span className="wb-label__opt">(optional · to disambiguate / account handle)</span>
           </label>
-          <input id="contact-username" className="wb-input" value={username} maxLength={30}
+          <Input id="contact-username" value={username} maxLength={30}
             onChange={(e) => setUsername(e.target.value)} onKeyDown={(e) => e.key === "Enter" && save()}
             placeholder="e.g. minh_vcb" />
         </div>
@@ -81,14 +83,14 @@ function ContactEditor({ open, editing, onClose }: { open: boolean; editing: Con
         <div className="wb-field"><label className="wb-label">Icon</label><IconPicker value={icon} onChange={setIcon} /></div>
         {editing && (
           <div className="wb-cluster" style={{ gap: 8, justifyContent: "flex-start" }}>
-            <button type="button" className="wb-btn wb-btn--ghost wb-btn--sm"
+            <Button variant="ghost" size="sm" type="button"
               onClick={() => { setContactArchived(editing.id, !editing.archived); onClose(); }}>
               <span className="wb-ico wb-ico--xs">{editing.archived ? "unarchive" : "archive"}</span>
               {editing.archived ? "Unarchive" : "Archive"}
-            </button>
-            <button type="button" className="wb-btn wb-btn--ghost wb-btn--sm cashy-btn--quiet-danger" onClick={remove}>
+            </Button>
+            <Button variant="ghost" size="sm" className="cashy-btn--quiet-danger" type="button" onClick={remove}>
               <span className="wb-ico wb-ico--xs">delete</span> Delete
-            </button>
+            </Button>
           </div>
         )}
       </div>
@@ -116,9 +118,9 @@ export function Contacts() {
         title="Contacts"
         subtitle={`${contacts.length} ${contacts.length === 1 ? "person" : "people"} · who you lend to / borrow from`}
         actions={
-          <button type="button" className="wb-btn wb-btn--round" onClick={openAdd}>
+          <Button round type="button" onClick={openAdd}>
             <span className="wb-ico wb-ico--xs">add</span> Add contact
-          </button>
+          </Button>
         }
       />
       {contacts.length === 0 ? (

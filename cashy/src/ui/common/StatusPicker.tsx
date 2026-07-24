@@ -1,6 +1,6 @@
 import type { TxStatus } from "@/domain/types";
 import { TX_STATUS_META, TX_STATUS_ORDER } from "@/domain/txStatus";
-import { cn } from "@/lib/utils";
+import { Capsule } from "@/ui/kit/Capsule";
 
 /** Each status's tone, so an UNSELECTED capsule can still hint its colour with a
  *  soft outline. Skipped is neutral by design (grey), matching the table. */
@@ -55,10 +55,9 @@ export function StatusPicker({
             {/* Chosen = filled with the tone (or plain grey for skipped, the
                 table's look). Unselected = soft tone outline, driven by
                 `data-tone` in CSS. */}
-            <span className={cn("wb-cap", active && meta.cap)} data-tone={TONE[s]}>
-              {meta.dot && <span className="wb-cap__dot" />}
+            <Capsule className={active ? meta.cap : undefined} data-tone={TONE[s]} dot={meta.dot}>
               {meta.label}
-            </span>
+            </Capsule>
           </label>
         );
       })}

@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { createWorkspace } from "@/usecases";
+import { Button } from "@/ui/kit/Button";
+import { Card } from "@/ui/kit/Card";
+import { Input } from "@/ui/kit/Input";
 
 export function Onboarding() {
   const [name, setName] = useState("");
@@ -27,15 +30,14 @@ export function Onboarding() {
           </div>
         </div>
 
-        <div className="wb-card">
+        <Card>
           <div className="wb-card__body wb-stack">
             <div className="wb-field">
               <label className="wb-label" htmlFor="ws-name">
                 Workspace name
               </label>
-              <input
+              <Input
                 id="ws-name"
-                className="wb-input"
                 value={name}
                 autoFocus
                 onChange={(e) => setName(e.target.value)}
@@ -58,11 +60,11 @@ export function Onboarding() {
               </li>
             </ul>
 
-            <button className="wb-btn wb-btn--block" onClick={submit}>
+            <Button block onClick={submit}>
               Create workspace
-            </button>
+            </Button>
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   );

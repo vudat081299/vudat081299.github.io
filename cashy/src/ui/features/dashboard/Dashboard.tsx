@@ -45,7 +45,10 @@ import { PeriodPicker } from "@/ui/common/PeriodPicker";
 import { ConnectedSubscriptionCard } from "@/ui/features/subscriptions/ConnectedSubscriptionCard";
 import { TxFilterBar } from "@/ui/features/transactions/TxFilterBar";
 import { TransactionTable } from "@/ui/features/transactions/TransactionTable";
-import { EmptyState } from "@/ui/common/EmptyState";
+import { EmptyState } from "@/ui/kit/EmptyState";
+import { Button } from "@/ui/kit/Button";
+import { Card } from "@/ui/kit/Card";
+import { Capsule } from "@/ui/kit/Capsule";
 
 /** Plain-language wording for the daily-spend steadiness band (see periodInsights).
  *  The band already hides the "coefficient of variation" — this hides the jargon. */
@@ -295,7 +298,7 @@ export function Dashboard() {
       {/* Balances — wallet balances + loans net into a true net worth (assets −
           debts). Full editors live at #/wallets and #/loans. */}
       {(shownWallets.length > 0 || hasLoans) && (
-        <div className="wb-card">
+        <Card>
           <div className="wb-card__body">
             <div className="wb-cluster wb-cluster--between" style={{ marginBottom: hasLoans ? 16 : 14, gap: 10 }}>
               <div className="cashy-networth">
@@ -305,9 +308,9 @@ export function Dashboard() {
                 </div>
                 <span className="cashy-networth__cap">Net worth · assets − debts</span>
               </div>
-              <button type="button" className="wb-btn wb-btn--ghost wb-btn--sm" onClick={() => navigate("wallets")}>
+              <Button variant="ghost" size="sm" type="button" onClick={() => navigate("wallets")}>
                 Manage
-              </button>
+              </Button>
             </div>
             {/* Net worth broken into its three parts as stat figures (shared
                 StatFigure), clustered left and colour-coded as a legend: assets
@@ -365,12 +368,12 @@ export function Dashboard() {
               )}
             </div>
           </div>
-        </div>
+        </Card>
       )}
 
       {/* Where the balance is headed: today's number carried forward at the
           period's monthly net. Arithmetic, not a trend model — see the chart. */}
-      <div className="wb-card">
+      <Card>
         <div className="wb-card__body">
           <div
             className="wb-cluster wb-cluster--between"
@@ -405,7 +408,7 @@ export function Dashboard() {
             <BalanceForecastChart data={forecast} />
           </div>
         </div>
-      </div>
+      </Card>
 
       {/* One card per service: what was paid, what is owed, how far through the
           period we are, and the way out. */}
@@ -418,17 +421,19 @@ export function Dashboard() {
             </div>
             <div className="wb-cluster" style={{ gap: 8 }}>
               {dueCount > 0 && (
-                <span className="wb-cap wb-cap--warning">{dueCount} due now</span>
+                <Capsule tone="warning">{dueCount} due now</Capsule>
               )}
-              <button
+              <Button
+                variant="ghost"
+                size="sm"
+                round
                 type="button"
-                className="wb-btn wb-btn--ghost wb-btn--sm wb-btn--round"
                 style={{ gap: 4 }}
                 onClick={() => navigate("subscriptions")}
               >
                 Manage
                 <span className="wb-ico wb-ico--xs">arrow_forward</span>
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -462,8 +467,7 @@ export function Dashboard() {
       )}
 
       <div className="wb-grid wb-grid--3">
-        <div
-          className="wb-card"
+        <Card
           style={{ gridColumn: "span 2", display: "flex", flexDirection: "column" }}
         >
           <div
@@ -536,9 +540,9 @@ export function Dashboard() {
               </div>
             )}
           </div>
-        </div>
+        </Card>
 
-        <div className="wb-card">
+        <Card>
           <div className="wb-card__body">
             <span className="cashy-card-eyebrow">Breakdown</span>
             <h3 className="cashy-card-title" style={{ marginBottom: 14 }}>
@@ -601,12 +605,12 @@ export function Dashboard() {
               )}
             </ScrollArea>
           </div>
-        </div>
+        </Card>
       </div>
 
       {/* Insights — derived facts a KPI grid alone doesn't state */}
       {hasFlow && (
-        <div className="wb-card">
+        <Card>
           <div className="wb-card__body">
             <span className="cashy-card-eyebrow">Insights</span>
             <h3 className="cashy-card-title" style={{ marginBottom: 16 }}>
@@ -632,7 +636,7 @@ export function Dashboard() {
               ))}
             </div>
           </div>
-        </div>
+        </Card>
       )}
 
       <div className="wb-stack" style={{ "--wb-stack-gap": "16px" } as CSSProperties}>
@@ -646,15 +650,17 @@ export function Dashboard() {
           onDelete={(ids) => ids.forEach(deleteTransaction)}
           title="Recent transactions"
           headerActions={
-            <button
+            <Button
+              variant="ghost"
+              size="sm"
+              round
               type="button"
-              className="wb-btn wb-btn--ghost wb-btn--sm wb-btn--round"
               style={{ gap: 4 }}
               onClick={() => navigate("transactions")}
             >
               View all
               <span className="wb-ico wb-ico--xs">arrow_forward</span>
-            </button>
+            </Button>
           }
           emptyState={
             <EmptyState
@@ -662,9 +668,9 @@ export function Dashboard() {
               title="No transactions yet"
               description="Add your first transaction to see the overview come to life."
               action={
-                <button type="button" className="wb-btn" onClick={() => openTxEditor(null)}>
+                <Button type="button" onClick={() => openTxEditor(null)}>
                   Add transaction
-                </button>
+                </Button>
               }
             />
           }

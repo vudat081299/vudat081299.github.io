@@ -7,6 +7,8 @@ import type { Tag } from "@/domain/types";
 import { ColorPicker } from "@/ui/common/ColorPicker";
 import { PageHeader } from "@/ui/common/PageHeader";
 import { Modal } from "@/ui/kit/Modal";
+import { Button } from "@/ui/kit/Button";
+import { Input } from "@/ui/kit/Input";
 
 function TagEditor({
   open,
@@ -43,12 +45,12 @@ function TagEditor({
       maxWidth={380}
       footer={
         <>
-          <button type="button" className="wb-btn wb-btn--secondary" onClick={onClose}>
+          <Button variant="secondary" type="button" onClick={onClose}>
             Cancel
-          </button>
-          <button type="button" className="wb-btn" onClick={save} disabled={!name.trim()}>
+          </Button>
+          <Button type="button" onClick={save} disabled={!name.trim()}>
             {editing ? "Save" : "Add"}
-          </button>
+          </Button>
         </>
       }
     >
@@ -57,9 +59,8 @@ function TagEditor({
           <label className="wb-label" htmlFor="tag-name">
             Tag name
           </label>
-          <input
+          <Input
             id="tag-name"
-            className="wb-input"
             value={name}
             autoFocus
             onChange={(e) => setName(e.target.value)}

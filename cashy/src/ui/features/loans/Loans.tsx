@@ -19,7 +19,8 @@ import {
 } from "@/domain/loan";
 import type { InterestPeriod, Loan, LoanDirection, LoanPayment, LoanSource } from "@/domain/types";
 import { PageHeader } from "@/ui/common/PageHeader";
-import { Select } from "@/ui/common/Select";
+import { Select } from "@/ui/kit/Select";
+import { Button } from "@/ui/kit/Button";
 import { FacetChip } from "@/ui/common/FacetChip";
 import { SearchField } from "@/ui/common/SearchField";
 import { ColorPicker } from "@/ui/common/ColorPicker";
@@ -155,12 +156,12 @@ function LoanEditor({
       maxWidth={480}
       footer={
         <>
-          <button type="button" className="wb-btn wb-btn--secondary" onClick={onClose}>
+          <Button type="button" variant="secondary" onClick={onClose}>
             Cancel
-          </button>
-          <button type="button" className="wb-btn" onClick={save} disabled={!canSave}>
+          </Button>
+          <Button type="button" onClick={save} disabled={!canSave}>
             {editing ? "Save" : "Add"}
-          </button>
+          </Button>
         </>
       }
     >
@@ -317,14 +318,17 @@ function LoanEditor({
                   >
                     {p.note}
                   </span>
-                  <button
+                  <Button
                     type="button"
-                    className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm wb-btn--round"
+                    variant="ghost"
+                    iconOnly
+                    size="sm"
+                    round
                     aria-label="Remove payment"
                     onClick={() => removePayment(p.id)}
                   >
                     <span className="wb-ico wb-ico--xs">close</span>
-                  </button>
+                  </Button>
                 </div>
               ))}
             </div>
@@ -347,14 +351,15 @@ function LoanEditor({
               value={payDate}
               onChange={(e) => setPayDate(e.target.value)}
             />
-            <button
+            <Button
               type="button"
-              className="wb-btn wb-btn--secondary wb-btn--sm"
+              variant="secondary"
+              size="sm"
               onClick={addPayment}
               disabled={parseMoney(payAmount) <= 0}
             >
               Add
-            </button>
+            </Button>
           </div>
           <input
             className="wb-input"
@@ -392,9 +397,10 @@ function LoanEditor({
 
         {editing && (
           <div className="wb-cluster" style={{ gap: 8, justifyContent: "flex-start" }}>
-            <button
+            <Button
               type="button"
-              className="wb-btn wb-btn--ghost wb-btn--sm"
+              variant="ghost"
+              size="sm"
               onClick={() => {
                 setLoanArchived(editing.id, !editing.archived);
                 onClose();
@@ -402,11 +408,11 @@ function LoanEditor({
             >
               <span className="wb-ico wb-ico--xs">{editing.archived ? "unarchive" : "archive"}</span>
               {editing.archived ? "Unarchive" : "Archive"}
-            </button>
-            <button type="button" className="wb-btn wb-btn--ghost wb-btn--sm cashy-btn--quiet-danger" onClick={remove}>
+            </Button>
+            <Button type="button" variant="ghost" size="sm" className="cashy-btn--quiet-danger" onClick={remove}>
               <span className="wb-ico wb-ico--xs">delete</span>
               Delete
-            </button>
+            </Button>
           </div>
         )}
       </div>
@@ -507,10 +513,10 @@ export function Loans() {
         title="Loans"
         subtitle={`${activeCount} active · money you owe and money owed to you`}
         actions={
-          <button type="button" className="wb-btn wb-btn--round" onClick={openAdd}>
+          <Button type="button" round onClick={openAdd}>
             <span className="wb-ico wb-ico--xs">add</span>
             Add loan
-          </button>
+          </Button>
         }
       />
 

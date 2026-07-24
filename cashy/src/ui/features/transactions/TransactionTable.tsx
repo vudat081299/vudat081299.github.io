@@ -9,7 +9,9 @@ import { TagChip } from "@/ui/common/TagChip";
 import { TagsMorePopover } from "@/ui/features/transactions/TagsMorePopover";
 import { openTxEditor, openTxDetail } from "@/lib/modals";
 import { usePagination } from "@/ui/features/transactions/usePagination";
-import { Pagination } from "@/ui/features/transactions/Pagination";
+import { Button } from "@/ui/kit/Button";
+import { Card } from "@/ui/kit/Card";
+import { Pagination } from "@/ui/kit/Pagination";
 
 /**
  * The one transaction table shared by the Dashboard (20/page) and the
@@ -93,7 +95,7 @@ export function TransactionTable({
 
   if (total === 0) {
     return (
-      <div className="wb-card">
+      <Card>
         {(title || headerActions) && (
           <div className="wb-table-head">
             {title && (
@@ -106,14 +108,14 @@ export function TransactionTable({
           </div>
         )}
         <div style={{ padding: 16 }}>{emptyState}</div>
-      </div>
+      </Card>
     );
   }
 
   const selecting = selected.size > 0;
 
   return (
-    <div className="wb-card">
+    <Card>
       <div className="wb-table-head">
         {selecting ? (
           <>
@@ -122,22 +124,24 @@ export function TransactionTable({
               <p className="wb-table-head__sub">Pick a bulk action</p>
             </div>
             <div className="wb-table-head__actions">
-              <button
+              <Button
                 type="button"
-                className="wb-btn wb-btn--ghost wb-btn--sm"
+                variant="ghost"
+                size="sm"
                 onClick={() => setSelected(new Set())}
               >
                 Deselect
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
-                className="wb-btn wb-btn--danger wb-btn--sm"
+                variant="danger"
+                size="sm"
                 style={{ gap: 4 }}
                 onClick={bulkDelete}
               >
                 <span className="wb-ico wb-ico--sm">delete</span>
                 Delete selected
-              </button>
+              </Button>
             </div>
           </>
         ) : (
@@ -271,15 +275,18 @@ export function TransactionTable({
                   </td>
                   <td className="cashy-actions-cell" onClick={(e) => e.stopPropagation()}>
                     <span className="cashy-rowactions">
-                      <button
+                      <Button
                         type="button"
-                        className="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm wb-btn--round"
+                        variant="ghost"
+                        iconOnly
+                        size="sm"
+                        round
                         aria-label="Edit transaction"
                         title="Edit"
                         onClick={() => openTxEditor(tx.id)}
                       >
                         <span className="wb-ico wb-ico--sm">edit</span>
-                      </button>
+                      </Button>
                     </span>
                   </td>
                 </tr>
@@ -293,8 +300,16 @@ export function TransactionTable({
         <span className="wb-cell-muted" style={{ fontSize: 13, marginRight: "auto" }}>
           {from}–{to} of {total} transactions
         </span>
-        <Pagination page={page} totalPages={totalPages} onPage={setPage} />
+        {totalPages > 1 && (
+          <Pagination
+            page={page}
+            pageCount={totalPages}
+            onChange={setPage}
+            prevLabel="Previous page"
+            nextLabel="Next page"
+          />
+        )}
       </div>
-    </div>
+    </Card>
   );
 }

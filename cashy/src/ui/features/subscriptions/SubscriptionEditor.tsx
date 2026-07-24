@@ -3,15 +3,16 @@ import { useCashy } from "@/data/store";
 import { addSubscription, deleteSubscription, updateSubscription } from "@/usecases";
 import { cycleDate, firstBillableCycle, firstCycleProration, flattenTree } from "@/domain";
 import { fmtDateNum, todayYMD } from "@/domain/date";
-import { formatMoney, parseMoney } from "@/domain/money";
+import { formatMoney, parseMoney, toVnd } from "@/domain/money";
 import { SWATCHES } from "@/lib/palette";
 import { Modal } from "@/ui/kit/Modal";
+import { Button } from "@/ui/kit/Button";
 import { Popover } from "@/ui/kit/Popover";
-import { Field } from "@/ui/kit/Input";
+import { Field, Input } from "@/ui/kit/Input";
 import { Textarea } from "@/ui/kit/Textarea";
 import { IconPicker } from "@/ui/common/IconPicker";
 import { ColorPicker } from "@/ui/common/ColorPicker";
-import { Select } from "@/ui/common/Select";
+import { Select } from "@/ui/kit/Select";
 import { WalletPicker } from "@/ui/common/WalletPicker";
 import { SubTile } from "@/ui/features/subscriptions/SubTile";
 import { TagChip } from "@/ui/common/TagChip";
@@ -163,9 +164,9 @@ export function SubscriptionEditor() {
       }}
     >
       {editingId ? (
-        <button
+        <Button
+          variant="ghost"
           type="button"
-          className="wb-btn wb-btn--ghost"
           style={{ color: "var(--wb-danger-text)", gap: 6 }}
           onClick={async () => {
             if (
@@ -181,17 +182,17 @@ export function SubscriptionEditor() {
         >
           <span className="wb-ico wb-ico--sm">delete</span>
           Delete
-        </button>
+        </Button>
       ) : (
         <span />
       )}
       <div style={{ display: "flex", gap: 8 }}>
-        <button type="button" className="wb-btn wb-btn--secondary" onClick={() => setOpen(false)}>
+        <Button variant="secondary" type="button" onClick={() => setOpen(false)}>
           Cancel
-        </button>
-        <button type="button" className="wb-btn" onClick={save} disabled={!canSave}>
+        </Button>
+        <Button type="button" onClick={save} disabled={!canSave}>
           {editingId ? "Save" : "Add"}
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -208,9 +209,8 @@ export function SubscriptionEditor() {
           <label className="wb-label" htmlFor="sub-name">
             Service name
           </label>
-          <input
+          <Input
             id="sub-name"
-            className="wb-input"
             value={name}
             autoFocus
             onChange={(e) => setName(e.target.value)}
@@ -245,9 +245,8 @@ export function SubscriptionEditor() {
             <label className="wb-label" htmlFor="sub-amount">
               {shared ? "Your share" : "Amount"} / {interval === "yearly" ? "year" : "month"}
             </label>
-            <input
+            <Input
               id="sub-amount"
-              className="wb-input"
               inputMode="numeric"
               autoComplete="off"
               value={amountStr}
@@ -262,9 +261,8 @@ export function SubscriptionEditor() {
             <label className="wb-label" htmlFor="sub-day">
               {interval === "yearly" ? "Day" : "Day of month"}
             </label>
-            <input
+            <Input
               id="sub-day"
-              className="wb-input"
               type="number"
               min={1}
               max={31}
@@ -302,9 +300,8 @@ export function SubscriptionEditor() {
           <label className="wb-label" htmlFor="sub-start">
             Start date
           </label>
-          <input
+          <Input
             id="sub-start"
-            className="wb-input"
             type="date"
             value={startedAt}
             onChange={(e) => setStartedAt(e.target.value)}
@@ -333,9 +330,8 @@ export function SubscriptionEditor() {
                 <label className="wb-label" htmlFor="sub-trial">
                   Free months
                 </label>
-                <input
+                <Input
                   id="sub-trial"
-                  className="wb-input"
                   type="number"
                   min={1}
                   max={36}
@@ -370,9 +366,8 @@ export function SubscriptionEditor() {
                   <label className="wb-label" htmlFor="sub-full">
                     Full plan price / {interval === "yearly" ? "year" : "month"}
                   </label>
-                  <input
+                  <Input
                     id="sub-full"
-                    className="wb-input"
                     inputMode="numeric"
                     autoComplete="off"
                     value={fullAmountStr}
@@ -384,9 +379,8 @@ export function SubscriptionEditor() {
                   <label className="wb-label" htmlFor="sub-members">
                     People
                   </label>
-                  <input
+                  <Input
                     id="sub-members"
-                    className="wb-input"
                     type="number"
                     min={2}
                     value={membersStr}
@@ -395,14 +389,15 @@ export function SubscriptionEditor() {
                 </div>
               </div>
               <div className="wb-cluster" style={{ gap: 10, marginTop: 8, alignItems: "center" }}>
-                <button
+                <Button
+                  variant="secondary"
+                  size="sm"
                   type="button"
-                  className="wb-btn wb-btn--secondary wb-btn--sm"
                   disabled={fullAmount <= 0}
-                  onClick={() => setAmountStr(String(Math.round(fullAmount / members)))}
+                  onClick={() => setAmountStr(String(toVnd(fullAmount / members)))}
                 >
                   Split evenly across {members}
-                </button>
+                </Button>
                 {fullAmount > 0 && (
                   <span className="wb-help" style={{ margin: 0 }}>
                     Your share: <strong>{formatMoney(amount)}</strong> · plan{" "}
@@ -431,9 +426,8 @@ export function SubscriptionEditor() {
                 <label className="wb-label" htmlFor="sub-first">
                   First-cycle amount
                 </label>
-                <input
+                <Input
                   id="sub-first"
-                  className="wb-input"
                   inputMode="numeric"
                   autoComplete="off"
                   value={firstAmountStr}
