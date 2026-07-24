@@ -1,0 +1,1627 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<title>Business Analytics — Toàn bộ môn học</title>
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});window.__katexDone=true;document.dispatchEvent(new Event('katexdone'));"></script>
+
+<style>
+:root{
+  --bg:#0a0a0f; --surface:#111118; --card:#16161f; --border:#2a2a3a; --hairline:rgba(255,255,255,0.04);
+  --bg-rgb:10 10 15; --surface-rgb:17 17 24; --card-rgb:22 22 31;
+  --text-primary:#f0f0f8; --text-secondary:#a8a8c0; --text-muted:#8888a8; --text-dim:#5a5a78;
+  --accent-green:#00e5a0; --accent-green-rgb:0 229 160;
+  --accent-blue:#3b82f6; --accent-blue-rgb:59 130 246;
+  --accent-yellow:#f5d000; --accent-yellow-rgb:245 208 0;
+  --accent-red:#ff4560; --accent-red-rgb:255 69 96;
+  --accent-purple:#c084fc; --accent-purple-rgb:192 132 252;
+  --accent-cyan:#22d3ee; --accent-cyan-rgb:34 211 238;
+  --accent-orange:#fb923c; --accent-orange-rgb:251 146 60;
+  --accent-identity:var(--accent-blue); --accent-identity-rgb:var(--accent-blue-rgb);
+  --cat-1:#00e5a0;--cat-2:#3b82f6;--cat-3:#f5d000;--cat-4:#ff4560;--cat-5:#c084fc;--cat-6:#fb923c;--cat-7:#22d3ee;
+  --font-display:'Bebas Neue','Oswald',sans-serif;
+  --font-body:'DM Sans',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono','Fira Code','SF Mono',monospace;
+  --fs-hero:clamp(38px,7vw,84px); --fs-h1:clamp(30px,5vw,52px); --fs-h2:clamp(23px,3.2vw,34px); --fs-h3:20px;
+  --fs-lg:18px; --fs-base:15px; --fs-sm:13px; --fs-xs:12px; --fs-label:11px; --fs-micro:10px; --fs-nano:9px;
+  --sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-5:20px;--sp-6:24px;--sp-8:32px;--sp-10:40px;--sp-12:48px;--sp-16:64px;--sp-20:80px;
+  --r-xs:3px;--r-sm:6px;--r-md:10px;--r-lg:12px;--r-xl:16px;--r-pill:9999px;
+  --z-sticky:10;--z-dropdown:100;--z-panel:1000;--z-modal:1100;--z-toast:1200;
+  --dur-fast:150ms;--dur-base:250ms;--dur-slow:400ms;--dur-entry:650ms;
+  --ease-out:cubic-bezier(0.16,1,0.3,1);
+  --sidebar-w:270px;
+}
+[data-theme="light"]{
+  --bg:#fafafa; --surface:#f0f0f4; --card:#ffffff; --border:#d4d4dc; --hairline:rgba(0,0,0,0.05);
+  --bg-rgb:250 250 250; --surface-rgb:240 240 244; --card-rgb:255 255 255;
+  --text-primary:#0a0a0f; --text-secondary:#3a3a4a; --text-muted:#5a5a6e; --text-dim:#9a9aae;
+  --accent-green:#008060;--accent-green-rgb:0 128 96;
+  --accent-blue:#1d4ed8;--accent-blue-rgb:29 78 216;
+  --accent-yellow:#936a00;--accent-yellow-rgb:147 106 0;
+  --accent-red:#c41e3a;--accent-red-rgb:196 30 58;
+  --accent-purple:#7c3aed;--accent-purple-rgb:124 58 237;
+  --accent-cyan:#0e7490;--accent-cyan-rgb:14 116 144;
+  --accent-orange:#c2410c;--accent-orange-rgb:194 65 12;
+  --cat-1:#008060;--cat-2:#1d4ed8;--cat-3:#936a00;--cat-4:#c41e3a;--cat-5:#7c3aed;--cat-6:#c2410c;--cat-7:#0e7490;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text-primary);font-family:var(--font-body);font-size:var(--fs-base);line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased;transition:background var(--dur-base),color var(--dur-base)}
+body::before{content:'';position:fixed;inset:0;background-image:repeating-linear-gradient(0deg,transparent 0 39px,var(--hairline) 39px 40px),repeating-linear-gradient(90deg,transparent 0 39px,var(--hairline) 39px 40px);z-index:0;pointer-events:none}
+.numeric,table td,.stat-value,code,pre,.katex,input[type=number]{font-variant-numeric:tabular-nums lining-nums}
+a{color:var(--accent-cyan);text-decoration:none}
+a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--accent-identity);outline-offset:2px;border-radius:var(--r-xs)}
+h1,h2,h3,h4{margin:0}
+p{margin:0 0 var(--sp-3)}
+
+/* ---------- APP SHELL ---------- */
+.appbar{position:fixed;top:0;left:0;right:0;height:54px;background:rgb(var(--bg-rgb)/0.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);z-index:var(--z-sticky);display:flex;align-items:center;gap:var(--sp-3);padding:0 var(--sp-4)}
+.appbar .brand{display:flex;align-items:center;gap:var(--sp-2);font-family:var(--font-display);font-size:20px;letter-spacing:.05em;color:var(--text-primary)}
+.brand-mark{display:grid;place-items:center;width:28px;height:28px;background:var(--accent-identity);color:#fff;border-radius:var(--r-sm);font-size:17px}
+.brand b{color:var(--accent-identity);font-weight:400}
+.appbar .spacer{flex:1}
+.appbar-crumb{font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:40vw}
+.icon-btn{background:transparent;border:1px solid var(--border);color:var(--text-secondary);border-radius:var(--r-sm);height:34px;padding:0 var(--sp-3);cursor:pointer;font-family:var(--font-mono);font-size:var(--fs-xs);letter-spacing:.08em;display:inline-flex;align-items:center;gap:6px;transition:all var(--dur-fast)}
+.icon-btn:hover{border-color:var(--text-muted);color:var(--text-primary)}
+#menu-toggle{display:none}
+
+.sidebar{position:fixed;top:54px;bottom:0;left:0;width:var(--sidebar-w);background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;z-index:var(--z-sticky);padding:var(--sp-5) 0 var(--sp-12)}
+.side-sec{font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.16em;text-transform:uppercase;color:var(--text-dim);padding:var(--sp-4) var(--sp-5) var(--sp-2)}
+.nav-link{display:flex;align-items:baseline;gap:var(--sp-3);padding:var(--sp-2) var(--sp-5);color:var(--text-secondary);cursor:pointer;border-left:2px solid transparent;transition:all var(--dur-fast);font-size:var(--fs-sm)}
+.nav-link:hover{background:var(--hairline);color:var(--text-primary);text-decoration:none}
+.nav-link .nk{font-family:var(--font-mono);font-size:var(--fs-xs);color:var(--accent-identity);min-width:1.6em;font-variant-numeric:tabular-nums}
+.nav-link.active{background:rgb(var(--accent-identity-rgb)/0.08);border-left-color:var(--accent-identity);color:var(--text-primary)}
+.nav-link.active .nk{color:var(--accent-identity)}
+.nav-link .done-dot{margin-left:auto;width:7px;height:7px;border-radius:50%;background:var(--accent-green);opacity:0;flex:0 0 auto;align-self:center}
+.nav-link.mod-complete .done-dot{opacity:1}
+
+.content{margin-left:var(--sidebar-w);padding:calc(54px + var(--sp-6)) clamp(var(--sp-4),4vw,var(--sp-12)) var(--sp-20);max-width:960px}
+.module{display:none;animation:fade var(--dur-entry) var(--ease-out)}
+.module.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ---------- HEADERS ---------- */
+.page-head{display:flex;flex-direction:column;gap:var(--sp-3);padding:var(--sp-4) 0 var(--sp-8);border-bottom:1px solid var(--border);margin-bottom:var(--sp-8)}
+.eyebrow{font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.2em;color:var(--accent-identity);text-transform:uppercase}
+.title{font-family:var(--font-display);font-size:var(--fs-hero);line-height:.9;letter-spacing:.01em}
+.title span{color:var(--accent-identity)}
+.subtitle{font-weight:300;font-size:var(--fs-lg);color:var(--text-secondary);max-width:62ch;line-height:1.6}
+.meta{font-family:var(--font-mono);font-size:var(--fs-label);color:var(--text-dim);letter-spacing:.1em;text-transform:uppercase}
+.meta b{color:var(--accent-yellow);font-weight:400}
+
+h2.sec{font-family:var(--font-display);font-size:var(--fs-h2);letter-spacing:.01em;margin:var(--sp-16) 0 var(--sp-2);padding-top:var(--sp-4);scroll-margin-top:70px}
+h2.sec:first-of-type{margin-top:var(--sp-6)}
+.sec-tag{font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.18em;text-transform:uppercase;color:var(--accent-identity);display:block;margin-bottom:var(--sp-1)}
+
+.concept{padding:var(--sp-4) 0;scroll-margin-top:70px}
+.concept>h3{font-family:var(--font-display);font-size:var(--fs-h3);letter-spacing:.02em;margin-bottom:var(--sp-3);display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--sp-2)}
+.concept>h3 .cid{font-family:var(--font-mono);font-size:var(--fs-sm);color:var(--accent-identity);font-variant-numeric:tabular-nums}
+.en{color:var(--text-muted);font-family:var(--font-body);font-size:var(--fs-sm);font-weight:400;letter-spacing:0}
+.lead{font-size:var(--fs-lg);color:var(--text-secondary);line-height:1.7;max-width:64ch}
+
+/* ---------- BOXES ---------- */
+.equation,.katex-display{margin:var(--sp-5) 0;padding:var(--sp-4) var(--sp-5);background:var(--card);border-left:3px solid var(--accent-blue);border-radius:0 var(--r-md) var(--r-md) 0;overflow-x:auto;overflow-y:hidden}
+.katex-display>.katex{white-space:normal}
+.callout{margin:var(--sp-5) 0;padding:var(--sp-4) var(--sp-5);border-left:3px solid;border-radius:0 var(--r-md) var(--r-md) 0}
+.callout .lbl{display:inline-block;font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.15em;text-transform:uppercase;margin-bottom:var(--sp-2);font-weight:500}
+.callout p:last-child{margin-bottom:0}
+.def{background:rgb(var(--accent-green-rgb)/0.07);border-color:var(--accent-green)} .def .lbl{color:var(--accent-green)}
+.theorem{background:rgb(var(--accent-blue-rgb)/0.06);border-color:var(--accent-blue)} .theorem .lbl{color:var(--accent-blue)}
+.example{background:rgb(var(--accent-purple-rgb)/0.06);border-color:var(--accent-purple)} .example .lbl{color:var(--accent-purple)}
+.note{background:rgb(var(--accent-cyan-rgb)/0.05);border-color:var(--accent-cyan)} .note .lbl{color:var(--accent-cyan)}
+.warning{background:rgb(var(--accent-red-rgb)/0.07);border-color:var(--accent-red)} .warning .lbl{color:var(--accent-red)}
+.fix{background:rgb(var(--accent-yellow-rgb)/0.06);border-color:var(--accent-yellow)} .fix .lbl{color:var(--accent-yellow)}
+.teaser{font-size:var(--fs-sm);color:var(--text-muted);margin:var(--sp-3) 0 var(--sp-2);font-style:italic}
+
+.derivation ol{list-style:none;counter-reset:step;padding:0;margin:var(--sp-4) 0}
+.derivation ol>li{counter-increment:step;display:grid;grid-template-columns:auto 1fr;gap:var(--sp-2) var(--sp-4);padding:var(--sp-3) 0;border-bottom:1px solid var(--border)}
+.derivation ol>li::before{content:counter(step,decimal-leading-zero);font-family:var(--font-mono);font-size:var(--fs-label);color:var(--accent-yellow);padding-top:3px}
+.step-label{grid-column:2;font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted)}
+.derivation ol>li .katex-display{grid-column:2;margin:var(--sp-1) 0}
+
+/* ---------- TABLES ---------- */
+.tbl-wrap{overflow-x:auto;margin:var(--sp-5) 0;border:1px solid var(--border);border-radius:var(--r-md)}
+table{border-collapse:collapse;width:100%;font-size:var(--fs-sm)}
+th,td{text-align:left;padding:var(--sp-3) var(--sp-4);border-bottom:1px solid var(--border);vertical-align:top}
+thead th{background:var(--surface);font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);position:sticky;top:0}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--hairline)}
+td code{font-size:.92em}
+
+/* ---------- PILLS / TAGS ---------- */
+.pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:var(--fs-micro);letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:var(--r-pill);background:rgb(var(--accent-identity-rgb)/0.09);color:var(--accent-identity);border:1px solid rgb(var(--accent-identity-rgb)/0.22)}
+.pill.g{background:rgb(var(--accent-green-rgb)/0.09);color:var(--accent-green);border-color:rgb(var(--accent-green-rgb)/0.22)}
+.pill.y{background:rgb(var(--accent-yellow-rgb)/0.09);color:var(--accent-yellow);border-color:rgb(var(--accent-yellow-rgb)/0.22)}
+.pill.r{background:rgb(var(--accent-red-rgb)/0.09);color:var(--accent-red);border-color:rgb(var(--accent-red-rgb)/0.22)}
+.pill.p{background:rgb(var(--accent-purple-rgb)/0.09);color:var(--accent-purple);border-color:rgb(var(--accent-purple-rgb)/0.22)}
+.tag-row{display:flex;flex-wrap:wrap;gap:var(--sp-2);margin:var(--sp-3) 0}
+code{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xs);padding:1px 5px;font-family:var(--font-mono);font-size:.88em;color:var(--accent-cyan)}
+strong{color:var(--text-primary);font-weight:700}
+ul,ol{margin:0 0 var(--sp-3);padding-left:var(--sp-6)}
+li{margin-bottom:var(--sp-1)}
+
+/* ---------- STAT / KPI CARDS ---------- */
+.grid{display:grid;gap:var(--sp-4);margin:var(--sp-5) 0}
+.grid.g2{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.grid.g3{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.grid.g4{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-4) var(--sp-5)}
+.stat .k{font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted)}
+.stat .v{font-family:var(--font-display);font-size:34px;line-height:1;margin-top:var(--sp-1);color:var(--accent-identity)}
+.stat .d{font-size:var(--fs-sm);color:var(--text-secondary);margin-top:var(--sp-2)}
+.mapcard{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--accent-identity);border-radius:0 var(--r-md) var(--r-md) 0;padding:var(--sp-4) var(--sp-5);cursor:pointer;transition:all var(--dur-fast)}
+.mapcard:hover{background:var(--surface);transform:translateX(3px)}
+.mapcard .mk{font-family:var(--font-mono);font-size:var(--fs-xs);color:var(--accent-identity)}
+.mapcard h4{font-family:var(--font-display);font-size:19px;letter-spacing:.02em;margin:2px 0 4px}
+.mapcard p{font-size:var(--fs-sm);color:var(--text-muted);margin:0}
+
+/* ---------- INTERACTIVE DEMO ---------- */
+.demo{margin:var(--sp-6) 0;border:1px solid rgb(var(--accent-identity-rgb)/0.3);border-radius:var(--r-lg);overflow:hidden;background:var(--card)}
+.demo-head{display:flex;align-items:center;gap:var(--sp-2);padding:var(--sp-3) var(--sp-5);background:rgb(var(--accent-identity-rgb)/0.06);border-bottom:1px solid var(--border)}
+.demo-head .eyebrow{color:var(--accent-identity)}
+.demo-stage{position:relative;background:var(--bg);isolation:isolate}
+.demo-stage canvas{display:block;width:100%}
+.demo-controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--sp-4);padding:var(--sp-4) var(--sp-5);align-items:end}
+.ctrl{display:flex;flex-direction:column;gap:6px}
+.ctrl label{font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);display:flex;justify-content:space-between}
+.ctrl output{color:var(--accent-identity);font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+input[type=range]{-webkit-appearance:none;appearance:none;height:4px;background:var(--border);border-radius:2px;outline:none;width:100%}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--accent-identity);cursor:pointer;border:2px solid var(--bg)}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--accent-identity);cursor:pointer;border:2px solid var(--bg)}
+.demo-readout{display:flex;flex-wrap:wrap;gap:var(--sp-2) var(--sp-5);padding:var(--sp-3) var(--sp-5);border-top:1px solid var(--border);background:var(--surface);font-family:var(--font-mono);font-size:var(--fs-sm)}
+.demo-readout .ro{color:var(--text-muted)} .demo-readout .ro b{color:var(--text-primary);font-weight:500;font-variant-numeric:tabular-nums}
+.demo-cap{padding:var(--sp-3) var(--sp-5);font-size:var(--fs-sm);color:var(--text-secondary);border-top:1px solid var(--border)}
+.demo-cap b{color:var(--accent-identity);font-weight:500}
+.btn-mini{background:var(--card);border:1px solid var(--border);color:var(--text-primary);border-radius:var(--r-sm);padding:var(--sp-2) var(--sp-3);cursor:pointer;font-family:var(--font-body);font-size:var(--fs-sm);transition:all var(--dur-fast)}
+.btn-mini:hover{border-color:var(--accent-identity)}
+.btn-mini.primary{background:var(--accent-identity);color:#fff;border-color:var(--accent-identity)}
+.cbox{display:inline-flex;align-items:center;gap:6px;padding:2px 8px;border-radius:var(--r-sm);font-family:var(--font-mono);font-size:var(--fs-xs)}
+
+/* confusion matrix mini */
+.cm{display:grid;grid-template-columns:auto auto auto;gap:4px;font-family:var(--font-mono);font-size:var(--fs-xs)}
+.cm div{padding:6px 10px;text-align:center;border-radius:var(--r-xs)}
+.cm .hd{color:var(--text-muted);background:transparent}
+.cm .tp{background:rgb(var(--accent-green-rgb)/0.15);color:var(--accent-green)}
+.cm .tn{background:rgb(var(--accent-blue-rgb)/0.15);color:var(--accent-blue)}
+.cm .fp{background:rgb(var(--accent-yellow-rgb)/0.15);color:var(--accent-yellow)}
+.cm .fn{background:rgb(var(--accent-red-rgb)/0.15);color:var(--accent-red)}
+.cm b{font-size:15px;display:block}
+
+/* ---------- READING PROGRESS BAR ---------- */
+#reading-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:var(--z-toast);pointer-events:none;background:transparent}
+#reading-bar>i{display:block;height:100%;width:0;background:var(--accent-identity);box-shadow:0 0 8px rgb(var(--accent-identity-rgb)/.6);transition:width .1s linear}
+
+/* ---------- DONE TICKS ---------- */
+.rp-tag{display:inline-flex;align-items:center;gap:8px;margin-left:auto;vertical-align:middle}
+.rp-time{font-family:var(--font-mono);font-size:var(--fs-nano);color:var(--text-dim);letter-spacing:.04em}
+.rp-check{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border);background:transparent;color:transparent;font-size:11px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;padding:0;transition:all var(--dur-fast)}
+.rp-check:hover{border-color:var(--accent-identity);color:rgb(var(--accent-identity-rgb)/.5)}
+.concept.is-done .rp-check{background:var(--accent-green);border-color:var(--accent-green);color:var(--bg)}
+.concept.is-done{opacity:.55;transition:opacity var(--dur-base)}
+.concept.is-done:hover{opacity:1}
+
+/* ---------- FOCUS DOCK + MODE ---------- */
+#focus-dock{position:fixed;right:16px;bottom:16px;z-index:90;display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+.fd-btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:var(--fs-xs);letter-spacing:.03em;color:var(--text-secondary);background:var(--card);border:1px solid var(--border);border-radius:var(--r-pill);padding:8px 14px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.28);transition:all var(--dur-fast)}
+.fd-btn:hover{color:var(--text-primary);border-color:var(--text-muted)}
+.fd-btn .fd-frac{color:var(--accent-identity);font-weight:700;font-variant-numeric:tabular-nums}
+#fp-focus[aria-pressed=true]{color:#fff;background:var(--accent-identity);border-color:var(--accent-identity)}
+body.focus-on .module.active .concept{opacity:.12;filter:saturate(.6);transition:opacity .25s,filter .25s}
+body.focus-on .module.active .concept.focus-active{opacity:1;filter:none}
+body.focus-on .module.active .concept:hover{opacity:.85}
+
+/* ---------- NOTES PANEL ---------- */
+.notes-launcher{position:fixed;left:var(--sidebar-w);top:auto;bottom:72px;transform:none;z-index:calc(var(--z-toast) - 2);display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 8px;background:var(--card);color:var(--text-secondary);border:1px solid var(--border);border-left:none;border-radius:0 var(--r-md) var(--r-md) 0;cursor:pointer;box-shadow:6px 0 22px rgba(0,0,0,.26);transition:color var(--dur-fast),background var(--dur-fast),opacity var(--dur-fast)}
+.notes-launcher:hover{color:var(--accent-identity);background:var(--surface)}
+.nl-text{writing-mode:vertical-rl;text-orientation:mixed;font-family:var(--font-mono);font-size:var(--fs-micro);letter-spacing:.16em;text-transform:uppercase}
+.nl-count{min-width:17px;height:17px;padding:0 5px;border-radius:var(--r-pill);font-family:var(--font-mono);font-size:var(--fs-nano);color:#fff;background:var(--accent-identity);display:grid;place-items:center}
+body.notes-open .notes-launcher{opacity:0;pointer-events:none}
+.notes-panel{position:fixed;top:0;left:0;height:100dvh;width:340px;max-width:88vw;display:flex;flex-direction:column;background:var(--surface);border-right:1px solid var(--border);z-index:calc(var(--z-toast) - 1);transform:translateX(-100%);transition:transform var(--dur-base) var(--ease-out)}
+.notes-panel.open{transform:none;box-shadow:26px 0 52px rgba(0,0,0,.34)}
+.notes-head{display:flex;align-items:center;gap:var(--sp-2);padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border)}
+.notes-head .t{font-family:var(--font-display);font-size:20px;letter-spacing:.03em}
+.notes-head .tot{font-family:var(--font-mono);font-size:var(--fs-xs);color:var(--accent-identity)}
+.notes-close{margin-left:auto;background:none;border:none;color:var(--text-muted);font-size:20px;cursor:pointer;line-height:1}
+.notes-ctx{padding:var(--sp-2) var(--sp-5);font-size:var(--fs-xs);color:var(--text-muted);border-bottom:1px solid var(--border)}
+.notes-ctx b{color:var(--accent-identity)}
+.notes-compose{padding:var(--sp-3) var(--sp-5);border-bottom:1px solid var(--border)}
+.notes-input{width:100%;background:var(--card);color:var(--text-primary);border:1px solid var(--border);border-radius:var(--r-sm);padding:var(--sp-3);font-family:var(--font-body);font-size:var(--fs-sm);resize:vertical;min-height:56px}
+.notes-actions{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.notes-io{padding:var(--sp-2) var(--sp-5);display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+.nf-btn{background:var(--card);border:1px solid var(--border);color:var(--text-secondary);border-radius:var(--r-sm);padding:4px 10px;font-family:var(--font-mono);font-size:var(--fs-xs);cursor:pointer}
+.nf-btn.active{color:var(--accent-identity);border-color:var(--accent-identity)}
+.notes-list{flex:1 1 auto;overflow-y:auto;padding:var(--sp-4) var(--sp-5) var(--sp-12)}
+.notes-empty{color:var(--text-dim);font-size:var(--fs-sm);text-align:center;padding:var(--sp-8) 0}
+.ni{background:var(--card);border:1px solid var(--border);border-left:3px solid rgb(var(--accent-identity-rgb)/.55);border-radius:0 var(--r-md) var(--r-md) 0;padding:var(--sp-3);margin-bottom:var(--sp-3)}
+.ni .txt{font-size:var(--fs-sm);white-space:pre-wrap;word-break:break-word}
+.ni .m{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap}
+.ni .tg{font-family:var(--font-mono);font-size:var(--fs-nano);text-transform:uppercase;color:var(--accent-identity);background:rgb(var(--accent-identity-rgb)/.1);border:1px solid rgb(var(--accent-identity-rgb)/.22);border-radius:var(--r-pill);padding:2px 8px;cursor:pointer}
+.ni .del{margin-left:auto;background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:var(--fs-xs)}
+.ni .del:hover,.ni .del.armed{color:var(--accent-red)}
+.notes-msg{font-size:var(--fs-xs);color:var(--accent-green);padding:0 var(--sp-5) var(--sp-2)}
+
+/* ---------- DETAIL PANEL ---------- */
+.detail-source{display:none}
+.expand-btn{font-family:var(--font-mono);font-size:var(--fs-sm);color:var(--accent-identity);background:rgb(var(--accent-identity-rgb)/.09);border:1px solid rgb(var(--accent-identity-rgb)/.22);border-radius:var(--r-pill);padding:6px 14px;cursor:pointer;transition:all var(--dur-fast);margin-top:var(--sp-1)}
+.expand-btn:hover{background:rgb(var(--accent-identity-rgb)/.15)}
+.expand-btn[aria-expanded=true]{background:rgb(var(--accent-identity-rgb)/.17)}
+.detail-panel{position:fixed;top:0;right:0;height:100dvh;width:min(560px,94vw);display:flex;flex-direction:column;background:var(--card);border-left:1px solid var(--border);transform:translateX(100%);transition:transform var(--dur-base) var(--ease-out);z-index:var(--z-modal)}
+.detail-panel.open{transform:none;box-shadow:-24px 0 48px rgba(0,0,0,.35)}
+.detail-head{display:flex;align-items:center;justify-content:space-between;padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);flex:0 0 auto}
+.detail-title{font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted)}
+.detail-close{background:none;border:none;color:var(--text-muted);font-size:22px;cursor:pointer;line-height:1}
+.detail-close:hover{color:var(--text-primary)}
+.detail-body{overflow-y:auto;padding:var(--sp-5) var(--sp-6)}
+.detail-body h4{font-family:var(--font-display);font-size:18px;letter-spacing:.02em;margin:var(--sp-5) 0 var(--sp-2);color:var(--accent-identity)}
+.detail-body h4:first-child{margin-top:0}
+.detail-backdrop{position:fixed;inset:0;z-index:calc(var(--z-modal) - 1);background:transparent;display:none}
+body.detail-open .detail-backdrop{display:block}
+
+/* ---------- MISC ---------- */
+.kbd{font-family:var(--font-mono);font-size:var(--fs-micro);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xs);padding:1px 5px;color:var(--text-secondary)}
+.hr{height:1px;background:var(--border);border:none;margin:var(--sp-8) 0}
+.svg-fig{margin:var(--sp-5) 0;background:var(--card);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-4)}
+.svg-fig figcaption{font-family:var(--font-mono);font-size:var(--fs-micro);letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-top:var(--sp-3);text-align:center}
+.lifecycle{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:var(--sp-4) 0}
+.lifecycle .step{background:var(--card);border:1px solid var(--border);border-radius:var(--r-sm);padding:6px 12px;font-size:var(--fs-sm);font-family:var(--font-mono)}
+.lifecycle .arr{color:var(--accent-identity)}
+
+/* ---------- RESPONSIVE ---------- */
+@media(max-width:960px){
+  :root{--sidebar-w:0px}
+  .sidebar{transform:translateX(-100%);transition:transform var(--dur-base);width:270px;box-shadow:20px 0 40px rgba(0,0,0,.4)}
+  body.nav-open .sidebar{transform:none}
+  .content{margin-left:0;padding-left:var(--sp-4);padding-right:var(--sp-4)}
+  #menu-toggle{display:inline-flex}
+  .detail-panel{width:100vw;border-left:none}
+  body.detail-open .detail-backdrop{background:rgba(0,0,0,.6)}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+@media print{
+  body::before{display:none}
+  .appbar,.sidebar,#focus-dock,#reading-bar,.notes-launcher,.notes-panel,.detail-panel,.expand-btn,.rp-tag,.demo-controls{display:none!important}
+  .content{margin:0;max-width:none}
+  .module{display:block!important}
+  .detail-source{display:block!important}
+  .concept.is-done{opacity:1!important}
+  :root{--bg:#fff;--card:#fff;--surface:#f5f5f5;--border:#ccc;--text-primary:#000;--text-secondary:#222;--text-muted:#444}
+}
+</style>
+</head>
+<body>
+
+<div id="reading-bar"><i></i></div>
+
+<header class="appbar">
+  <button class="icon-btn" id="menu-toggle" aria-label="Menu">☰</button>
+  <span class="brand"><span class="brand-mark">◧</span>BUSINESS <b>ANALYTICS</b></span>
+  <span class="spacer"></span>
+  <span class="appbar-crumb" id="crumb">Tổng quan</span>
+  <button class="icon-btn" id="theme-toggle" aria-label="Đổi giao diện"><span id="theme-label">DARK</span></button>
+</header>
+
+<nav class="sidebar" id="sidebar" aria-label="Danh sách module">
+  <div class="side-sec">Bắt đầu</div>
+  <a class="nav-link" data-go="overview"><span class="nk">00</span><span class="lab">Tổng quan môn học</span><span class="done-dot"></span></a>
+  <div class="side-sec">Nền tảng &amp; khung làm việc</div>
+  <a class="nav-link" data-go="foundations"><span class="nk">01</span><span class="lab">Nền tảng BA &amp; 4 loại phân tích</span><span class="done-dot"></span></a>
+  <a class="nav-link" data-go="crispdm"><span class="nk">02</span><span class="lab">CRISP-DM &amp; vòng đời dự án</span><span class="done-dot"></span></a>
+  <a class="nav-link" data-go="kpi"><span class="nk">03</span><span class="lab">KPI Tree &amp; Problem Framing</span><span class="done-dot"></span></a>
+  <div class="side-sec">Dữ liệu</div>
+  <a class="nav-link" data-go="dataquality"><span class="nk">04</span><span class="lab">Chất lượng DL &amp; Feature Engineering</span><span class="done-dot"></span></a>
+  <a class="nav-link" data-go="eda"><span class="nk">05</span><span class="lab">EDA &amp; Trực quan hoá</span><span class="done-dot"></span></a>
+  <div class="side-sec">Mô hình hoá</div>
+  <a class="nav-link" data-go="regression"><span class="nk">06</span><span class="lab">Hồi quy tuyến tính</span><span class="done-dot"></span></a>
+  <a class="nav-link" data-go="classification"><span class="nk">07</span><span class="lab">Đánh giá phân loại</span><span class="done-dot"></span></a>
+  <a class="nav-link" data-go="clustering"><span class="nk">08</span><span class="lab">Phân cụm &amp; Giảm chiều</span><span class="done-dot"></span></a>
+  <a class="nav-link" data-go="timeseries"><span class="nk">09</span><span class="lab">Chuỗi thời gian</span><span class="done-dot"></span></a>
+  <div class="side-sec">Vận dụng</div>
+  <a class="nav-link" data-go="projects"><span class="nk">10</span><span class="lab">Dự án môn học</span><span class="done-dot"></span></a>
+</nav>
+
+<main class="content" id="content">
+  <section class="module" id="m-overview" data-module="overview">
+  <header class="page-head">
+    <span class="eyebrow">Môn học · Học phần Phân tích kinh doanh</span>
+    <h1 class="title">Business <span>Analytics</span></h1>
+    <p class="subtitle">Toàn bộ kiến thức môn học — từ khung tư duy CRISP-DM, chất lượng dữ liệu, EDA, đến hồi quy, phân loại, phân cụm và chuỗi thời gian. Tổng hợp, kiểm chứng và sửa lỗi từ 9 tài liệu gốc, trình bày song ngữ Việt–Anh.</p>
+    <p class="meta">10 MODULE · ~120 KHÁI NIỆM · 6 DEMO TƯƠNG TÁC · CẬP NHẬT <b>2026-07-24</b></p>
+  </header>
+
+  <article class="concept" data-concept="ov-map">
+    <h3><span class="cid">Bức tranh lớn</span> Môn học này dạy gì?</h3>
+    <p class="lead">Business Analytics = <strong>biến dữ liệu thành insight và hành động</strong>. Toàn bộ môn học là <em>một vòng đời dự án</em>: bắt đầu từ <strong>câu hỏi kinh doanh</strong>, đi qua dữ liệu, rồi tới mô hình, và kết thúc bằng <strong>một quyết định</strong> đo lường được. Bản đồ dưới đây chính là trình tự đó — bấm vào từng ô để học.</p>
+
+    <div class="svg-fig">
+      <div class="lifecycle">
+        <span class="step">Câu hỏi KD</span><span class="arr">→</span>
+        <span class="step">Dữ liệu &amp; EDA</span><span class="arr">→</span>
+        <span class="step">Feature</span><span class="arr">→</span>
+        <span class="step">Mô hình</span><span class="arr">→</span>
+        <span class="step">Đánh giá</span><span class="arr">→</span>
+        <span class="step">Triển khai &amp; Giám sát</span>
+      </div>
+      <figcaption>Vòng đời phân tích (CRISP-DM) — mạch xuyên suốt mọi module</figcaption>
+    </div>
+
+    <div class="grid g2">
+      <div class="mapcard" data-goto="foundations"><span class="mk">01</span><h4>Nền tảng BA</h4><p>BA là gì · BA vs Data Analytics vs Data Science · 4 loại phân tích · tiến trình 6 bước.</p></div>
+      <div class="mapcard" data-goto="crispdm"><span class="mk">02</span><h4>CRISP-DM</h4><p>6 pha chuẩn của một dự án phân tích, Project Charter, cạm bẫy thường gặp.</p></div>
+      <div class="mapcard" data-goto="kpi"><span class="mk">03</span><h4>KPI Tree &amp; Framing</h4><p>North Star → driver → lever, cây KPI doanh thu, DOC, A/B testing. <span class="pill">demo</span></p></div>
+      <div class="mapcard" data-goto="dataquality"><span class="mk">04</span><h4>Data Quality &amp; FE</h4><p>Chất lượng dữ liệu, missing data, leakage, encoding, scaling, feature engineering. <span class="pill">demo</span></p></div>
+      <div class="mapcard" data-goto="eda"><span class="mk">05</span><h4>EDA &amp; Trực quan hoá</h4><p>Thống kê mô tả, phân phối, tương quan, correlation ≠ causation, nguyên tắc biểu đồ. <span class="pill">demo</span></p></div>
+      <div class="mapcard" data-goto="regression"><span class="mk">06</span><h4>Hồi quy tuyến tính</h4><p>OLS, $r^2$, giả định LINE, kiểm định, hồi quy bội, regularization. <span class="pill">demo</span></p></div>
+      <div class="mapcard" data-goto="classification"><span class="mk">07</span><h4>Đánh giá phân loại</h4><p>Confusion matrix, precision/recall/F1, ROC/AUC, ngưỡng, cost-sensitive, calibration. <span class="pill">demo</span></p></div>
+      <div class="mapcard" data-goto="clustering"><span class="mk">08</span><h4>Phân cụm &amp; PCA</h4><p>K-means, GMM/EM, chọn k, PCA, RFM. <span class="pill">demo</span></p></div>
+      <div class="mapcard" data-goto="timeseries"><span class="mk">09</span><h4>Chuỗi thời gian</h4><p>Phân rã, ETS/Holt-Winters, ARIMA, cross-validation, MAPE/MASE. <span class="pill">demo</span></p></div>
+      <div class="mapcard" data-goto="projects"><span class="mk">10</span><h4>Dự án môn học</h4><p>7 lựa chọn đề tài, vòng đời 8 module, rubric chấm điểm.</p></div>
+    </div>
+  </article>
+
+  <h2 class="sec"><span class="sec-tag">Định hướng</span>Bốn tầng phân tích — xương sống của cả môn</h2>
+  <article class="concept" data-concept="ov-types">
+    <h3><span class="cid">4 loại</span> Descriptive → Diagnostic → Predictive → Prescriptive</h3>
+    <p>Mọi kỹ thuật trong môn đều rơi vào một trong bốn tầng. Càng xuống dưới, <strong>giá trị càng cao nhưng độ khó càng lớn</strong> (đường cong "Analytic Continuum" của Gartner).</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Tầng</th><th>Câu hỏi</th><th>Ví dụ kỹ thuật trong môn</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Descriptive</strong> <span class="en">(mô tả)</span></td><td>Chuyện gì đã xảy ra?</td><td>EDA, thống kê mô tả, dashboard, <em>phân cụm/RFM</em></td></tr>
+        <tr><td><strong>Diagnostic</strong> <span class="en">(chẩn đoán)</span></td><td>Vì sao nó xảy ra?</td><td>Tương quan, chi-square, root-cause</td></tr>
+        <tr><td><strong>Predictive</strong> <span class="en">(dự đoán)</span></td><td>Điều gì sẽ xảy ra?</td><td>Hồi quy, phân loại, forecasting chuỗi thời gian</td></tr>
+        <tr><td><strong>Prescriptive</strong> <span class="en">(khuyến nghị)</span></td><td>Nên làm gì?</td><td>Tối ưu hoá, A/B testing, chọn ngưỡng theo chi phí</td></tr>
+      </tbody>
+    </table></div>
+    <div class="callout warning"><span class="lbl">⚠ Sửa lỗi tài liệu gốc</span><p>Slide gốc xếp <strong>clustering / K-means</strong> vào nhóm "predictive". Sai: phân cụm là <strong>unsupervised → thuộc tầng descriptive/exploratory</strong> (tìm cấu trúc, không dự đoán nhãn). "Predictive" chỉ dành cho học có giám sát: hồi quy, phân loại, forecasting. Logistic regression tuy tên là "regression" nhưng thực chất là <strong>phân loại</strong>.</p></div>
+  </article>
+
+  <h2 class="sec"><span class="sec-tag">Hướng dẫn</span>Cách dùng trang này</h2>
+  <article class="concept" data-concept="ov-howto">
+    <h3><span class="cid">Công cụ đọc</span> Đánh dấu · Focus · Ghi chú · Mở rộng</h3>
+    <ul>
+      <li><strong>Sidebar trái</strong> — chuyển giữa các module. Chấm xanh = module đã đọc hết.</li>
+      <li><strong>Nút ✓</strong> cạnh mỗi tiêu đề — đánh dấu đã đọc. Đồng hồ <span class="kbd">~n phút</span> ước lượng thời gian đọc.</li>
+      <li><strong>Góc phải dưới</strong> — bộ đếm <span class="kbd">x/y đã đọc</span> (bấm để nhảy tới phần chưa đọc) và nút <span class="kbd">Focus</span> (làm mờ mọi phần trừ phần đang đọc).</li>
+      <li><strong>Nút "Chi tiết →"</strong> — mở panel bên phải chứa dẫn xuất công thức, ví dụ số, code, các sửa lỗi chi tiết. Nội dung chính vẫn đọc hiểu được mà không cần mở.</li>
+      <li><strong>Cạnh trái ✎ Ghi chú</strong> — ghi chú gắn theo từng phần, lưu trên máy bạn, xuất ra <span class="kbd">.md</span>/<span class="kbd">.json</span>.</li>
+      <li><strong>DARK/LIGHT</strong> góc phải trên — đổi nền sáng/tối. In trang (Ctrl+P) sẽ tự bung hết panel chi tiết.</li>
+    </ul>
+    <div class="callout note"><span class="lbl">Quy ước ký hiệu</span><p>Thuật ngữ chuyên ngành giữ nguyên tiếng Anh (precision, recall, PCA, stationarity…) và có chú thích tiếng Việt lần đầu. Ký hiệu toán: $\hat{y}$ = giá trị dự đoán, $\bar{x}$ = trung bình, $\mu,\sigma$ = trung bình/độ lệch chuẩn tổng thể, $\theta,\beta$ = tham số mô hình. Mọi công thức đều được kiểm chứng lại; ô <span class="pill r">⚠ Sửa lỗi</span> đánh dấu chỗ tài liệu gốc sai và cách sửa.</p></div>
+  </article>
+</section>
+  <section class="module" id="m-foundations" data-module="foundations">
+  <header class="page-head">
+    <span class="eyebrow">Module 01 · Foundations</span>
+    <h1 class="title">Nền tảng <span>Business Analytics</span></h1>
+    <p class="subtitle">BA là gì, khác gì Data Analytics và Data Science, tại sao quan trọng, tiến hoá qua các thời kỳ, các thành phần cấu tạo, và tiến trình 6 bước.</p>
+  </header>
+
+  <article class="concept" data-concept="f-def">
+    <h3><span class="cid">1.1</span> Business Analytics là gì? <span class="en">(definition)</span></h3>
+    <p><strong>Cartoon:</strong> BA giống một cỗ máy biến <em>dữ liệu thô</em> ở đầu vào thành <em>quyết định tốt hơn</em> ở đầu ra.</p>
+    <p><strong>Cơ chế:</strong> BA là <strong>quá trình lặp lại</strong> dùng dữ liệu + công cụ thống kê/phân tích + một quy trình rõ ràng để rút ra insight <em>fact-based</em> (dựa trên bằng chứng) giúp nhà quản lý ra quyết định. Nó nằm ở <strong>giao của hiểu biết kinh doanh và dữ liệu</strong>.</p>
+    <div class="callout def"><span class="lbl">Định nghĩa gọn</span><p>BA = <strong>Dữ liệu + Công cụ + Quy trình lặp → insight hành động được</strong>. Bao trùm 3 tầng: descriptive (đã xảy ra gì), predictive (sẽ xảy ra gì), prescriptive (nên làm gì).</p></div>
+    <p><strong>Ba tính chất của BA tốt:</strong> <span class="pill">Purposive</span> biết <em>vì sao</em> phân tích (gắn với mục tiêu quản lý) · <span class="pill">Intuitive</span> phải ra insight mới, cause-and-effect có giá trị nhất · <span class="pill">Expedient</span> khuyến nghị phải <em>làm được</em>.</p>
+  </article>
+
+  <article class="concept" data-concept="f-vs">
+    <h3><span class="cid">1.2</span> BA vs Data Analytics vs Data Science</h3>
+    <p>Ba khái niệm chồng lấn nhưng khác trọng tâm — đây là dạng <em>so sánh</em>, đọc theo cột:</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th></th><th>Business Intelligence (BI)</th><th>Data Analytics / Science (DA/DS)</th><th>AI / ML</th></tr></thead>
+      <tbody>
+        <tr><td>Trọng tâm</td><td>Quá khứ &amp; hiện tại</td><td>Chẩn đoán, dự báo, phân khúc, tối ưu</td><td>Học từ dữ liệu để <strong>tự động hoá</strong> dự đoán trong sản phẩm</td></tr>
+        <tr><td>Sản phẩm</td><td>Báo cáo, dashboard, KPI</td><td>Mô hình thống kê/ML, A/B test</td><td>Hệ khuyến nghị, dự đoán real-time</td></tr>
+      </tbody>
+    </table></div>
+    <p>Về vai trò: <strong>Data Analyst</strong> làm dữ liệu có cấu trúc, dùng công cụ BI (Excel, SQL, Tableau), suy luận tĩnh. <strong>Data Scientist</strong> rộng &amp; sâu hơn — dữ liệu có + phi cấu trúc, ML, công cụ big-data (Python/R/Spark). <strong>Business Analytics</strong> gần với <em>quyết định kinh doanh</em> nhất.</p>
+    <p class="teaser">Mở rộng: bảng Data Scientist vs Data Analyst · dữ liệu có/phi/bán cấu trúc · học có giám sát vs không giám sát.</p>
+    <button class="expand-btn" data-expand="f-vs">Chi tiết →</button>
+    <div class="detail-source" id="detail-f-vs" data-title="Vai trò & loại dữ liệu">
+      <h4>Data Scientist vs Data Analyst (nguồn: DataFlair)</h4>
+      <div class="tbl-wrap"><table><thead><tr><th>Tiêu chí</th><th>Data Scientist</th><th>Data Analyst</th></tr></thead><tbody>
+        <tr><td>Loại dữ liệu</td><td>Có cấu trúc &amp; phi cấu trúc</td><td>Chỉ có cấu trúc</td></tr>
+        <tr><td>Kỹ năng</td><td>Toán, thống kê, thuật toán ML</td><td>Giải quyết vấn đề, thống kê cơ bản</td></tr>
+        <tr><td>Công cụ</td><td>SAS, Python, R, TensorFlow, Hadoop, Spark</td><td>Excel, SQL, R (đôi khi), Tableau</td></tr>
+      </tbody></table></div>
+      <h4>Ba loại dữ liệu</h4>
+      <ul><li><strong>Có cấu trúc</strong> — hàng/cột, hợp CSDL quan hệ (giao dịch).</li><li><strong>Phi cấu trúc</strong> — text, ảnh, audio, video (~80% dữ liệu doanh nghiệp).</li><li><strong>Bán cấu trúc</strong> — JSON, XML, log (có tag nhưng không schema cố định).</li></ul>
+      <h4>Học có giám sát vs không giám sát</h4>
+      <ul><li><strong>Supervised</strong> (có nhãn đích): hồi quy (đích số), phân loại (đích hạng mục) — thực sự <em>predictive</em>.</li><li><strong>Unsupervised</strong> (không nhãn): clustering, giảm chiều — <em>descriptive/exploratory</em>.</li></ul>
+    </div>
+  </article>
+
+  <article class="concept" data-concept="f-why">
+    <h3><span class="cid">1.3</span> Vì sao BA quan trọng trong ra quyết định</h3>
+    <p>Bốn trụ cột: <span class="pill">Data-Driven</span> chọn chiến lược nhờ phân tích xu hướng · <span class="pill">Risk Mitigation</span> nhận diện rủi ro sớm · <span class="pill">Performance Measurement</span> theo dõi KPI · <span class="pill">Customer Insights</span> hiểu hành vi khách hàng.</p>
+    <div class="callout note"><span class="lbl">Nguyên tắc số 1</span><p><strong>Bắt đầu từ quyết định cần hỗ trợ — không bắt đầu từ "ta có dữ liệu gì".</strong> Đây là ý tưởng quan trọng nhất của cả môn, lặp lại ở CRISP-DM (Business Understanding) và Problem Framing.</p></div>
+  </article>
+
+  <article class="concept" data-concept="f-steps">
+    <h3><span class="cid">1.4</span> Tiến trình BA 6 bước &amp; ROI</h3>
+    <p>Đây là dạng <em>quy trình có thứ tự</em> — chính là bản rút gọn của CRISP-DM (module 02):</p>
+    <ol>
+      <li><strong>Xác định vấn đề</strong> — hiểu kết quả mong đợi, chia nhỏ mục tiêu, quyết định dữ liệu cần.</li>
+      <li><strong>Khám phá dữ liệu</strong> — thu thập &amp; <em>làm sạch</em> (missing, outlier), tạo biến mới.</li>
+      <li><strong>Phân tích</strong> — thống kê, kiểm định, tương quan quanh biến đích → insight hành động.</li>
+      <li><strong>Dự đoán &amp; tối ưu</strong> — mô hình hoá, chạy nhiều mô hình, chọn cái tốt nhất, trả lời "what-if".</li>
+      <li><strong>Ra quyết định &amp; đánh giá</strong> — biến insight thành kế hoạch, thực thi, đo kết quả thực vs dự đoán.</li>
+      <li><strong>Tối ưu &amp; cập nhật</strong> — cải thiện, đo lại; tính <strong>ROI</strong>.</li>
+    </ol>
+    <div class="callout fix"><span class="lbl">Bổ sung: công thức ROI (được nhắc ở bước 6 nhưng không viết ra)</span>
+      $$\text{ROI} = \frac{\text{Gain} - \text{Cost}}{\text{Cost}} \times 100\%$$
+      <p style="margin-top:8px">Gain = tổng giá trị dự án mang lại, Cost = tổng chi phí đầu tư. ROI &gt; 0 ⇒ tạo giá trị.</p>
+    </div>
+    <p class="teaser">Mở rộng: 7 thành phần của BA · tiến hoá qua 5 thời kỳ · ánh xạ 6 bước ↔ CRISP-DM.</p>
+    <button class="expand-btn" data-expand="f-more">Chi tiết →</button>
+    <div class="detail-source" id="detail-f-more" data-title="Thành phần & tiến hoá của BA">
+      <h4>7 thành phần của BA</h4>
+      <p>Data (nền tảng) · Tools (xử lý &amp; trực quan) · Techniques (thống kê) · People (con người) · Processes (quy trình) · Insights (hiểu biết) · Impact (tác động lên hiệu quả KD). <em>(Slide gọi là "key components" nhưng vẽ đúng 7 ô.)</em></p>
+      <h4>Tiến hoá qua 5 thời kỳ</h4>
+      <ol>
+        <li><strong>Trước 1950s</strong> — thống kê (thuật ngữ ~1749), Operations Research (~1937, quân sự → quản lý).</li>
+        <li><strong>1960s–70s</strong> — BI (Luhn, IBM, 1958), Decision Support Systems.</li>
+        <li><strong>1980s–90s</strong> — ERP, Data Warehouse, EIS; descriptive analytics.</li>
+        <li><strong>2000s–10s</strong> — Big Data, "Analytics 2.0", predictive/prescriptive, NoSQL/cloud.</li>
+        <li><strong>2020s–nay</strong> — "Analytics 3.0", AI/ML là trụ cột; self-service (Tableau, Power BI); GDPR.</li>
+      </ol>
+      <div class="callout warning"><span class="lbl">⚠ Sửa lỗi</span><p><strong>"Analytics 4.0"</strong> không phải thuật ngữ chuẩn của Davenport (chỉ có 1.0/2.0/3.0) — dùng như nhãn không chính thức. <strong>"Thống kê ra đời 1749"</strong> chỉ là mốc <em>đặt tên</em>; thực hành thống kê có từ trước (Graunt 1662).</p></div>
+      <h4>Ánh xạ 6 bước ↔ CRISP-DM</h4>
+      <p>Bước 1 ↔ Business Understanding · Bước 2 ↔ Data Understanding + Preparation · Bước 3–4 ↔ Modeling · Bước 5 ↔ Evaluation/Deployment · Bước 6 ↔ Deployment + giám sát/lặp.</p>
+    </div>
+  </article>
+</section>
+  <section class="module" id="m-crispdm" data-module="crispdm">
+  <header class="page-head">
+    <span class="eyebrow">Module 02 · Process framework</span>
+    <h1 class="title">CRISP-DM &amp; <span>vòng đời dự án</span></h1>
+    <p class="subtitle">Cross-Industry Standard Process for Data Mining — khung 6 pha chuẩn, có thể lặp, dẫn dắt một dự án phân tích từ đầu đến cuối.</p>
+  </header>
+
+  <article class="concept" data-concept="c-overview">
+    <h3><span class="cid">2.1</span> Sáu pha &amp; tính lặp</h3>
+    <p><strong>Cartoon:</strong> CRISP-DM là "bản đồ đường đi" cho mọi dự án dữ liệu — luôn quay lại pha trước khi phát hiện điều mới.</p>
+    <div class="svg-fig"><div class="lifecycle">
+      <span class="step">1 Business</span><span class="arr">→</span>
+      <span class="step">2 Data</span><span class="arr">→</span>
+      <span class="step">3 Preparation</span><span class="arr">→</span>
+      <span class="step">4 Modeling</span><span class="arr">→</span>
+      <span class="step">5 Evaluation</span><span class="arr">→</span>
+      <span class="step">6 Deployment</span>
+    </div><figcaption>6 pha — mũi tên có thể quay ngược (iterative)</figcaption></div>
+    <p><strong>Iterative:</strong> phát hiện ở Data Understanding có thể đẩy ngược về Business Understanding; kết quả Evaluation kém đẩy về Data Preparation/Modeling. Sản phẩm bàn giao xuyên suốt: <em>project charter, data dictionary, feature list, model card, runbook</em>.</p>
+    <div class="callout note"><span class="lbl">Bối cảnh</span><p>CRISP-DM công bố ~1999–2000, là <em>chuẩn de-facto</em> (không do tổ chức chuẩn hoá duy trì). Các mở rộng hiện đại: <strong>CRISP-ML(Q)</strong> (thêm giám sát/QA cho ML), <strong>TDSP</strong> của Microsoft.</p></div>
+  </article>
+
+  <article class="concept" data-concept="c-phases">
+    <h3><span class="cid">2.2</span> Chi tiết 6 pha</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Pha</th><th>Mục đích</th><th>Hoạt động chính</th></tr></thead>
+      <tbody>
+        <tr><td><strong>1 · Business Understanding</strong></td><td>Rõ mục tiêu trước khi chạm dữ liệu</td><td>Mục tiêu <span class="pill">SMART</span>, xác định <em>quyết định</em> cần hỗ trợ, KPI &amp; guardrail (CR, AOV, CAC, NPS)</td></tr>
+        <tr><td><strong>2 · Data Understanding</strong></td><td>Khám phá &amp; kiểm tra trước khi mô hình hoá</td><td>Kiểm kê nguồn, EDA (phân phối, outlier, missing), đối chiếu định nghĩa KPI với dữ liệu thực, phân tích funnel</td></tr>
+        <tr><td><strong>3 · Data Preparation</strong></td><td>Làm sạch &amp; feature engineering</td><td>Xử lý missing/outlier, chuẩn hoá đơn vị, tạo feature (RFM…), <strong>time-based split</strong> chống leakage</td></tr>
+        <tr><td><strong>4 · Modeling</strong></td><td>Chọn bài toán &amp; baseline</td><td>Phân loại/hồi quy/clustering/tối ưu, baseline đơn giản, tune ngưỡng theo chi phí, SHAP, model card</td></tr>
+        <tr><td><strong>5 · Evaluation</strong></td><td>Đánh giá kỹ thuật &amp; kinh doanh</td><td>AUC/PR, RMSE/MAE, calibration; uplift doanh thu/lợi nhuận; A/B testing, holdout</td></tr>
+        <tr><td><strong>6 · Deployment</strong></td><td>Vận hành &amp; giám sát</td><td>Batch/real-time, canary/blue-green, giám sát <em>drift</em>, MLOps (CI/CD, model registry)</td></tr>
+      </tbody>
+    </table></div>
+    <p><strong>SMART</strong> = Specific, Measurable, Achievable, Relevant, Time-bound. <strong>RACI</strong> = Responsible, Accountable, Consulted, Informed.</p>
+  </article>
+
+  <article class="concept" data-concept="c-pitfalls">
+    <h3><span class="cid">2.3</span> Cạm bẫy &amp; Project Charter</h3>
+    <p>Ba cạm bẫy kinh điển: (1) bắt đầu từ <em>dữ liệu</em> thay vì <em>quyết định</em>; (2) data leakage &amp; định nghĩa KPI không nhất quán giữa các nhóm; (3) <strong>"mô hình tuyệt vời, tác động kinh doanh bằng 0"</strong> — không ai dùng, không thí nghiệm chứng minh giá trị.</p>
+    <p class="teaser">Mở rộng: Project Charter mẫu đầy đủ (case e-commerce +15% doanh thu) — dùng lại được cho đề án.</p>
+    <button class="expand-btn" data-expand="c-charter">Xem Project Charter mẫu →</button>
+    <div class="detail-source" id="detail-c-charter" data-title="Project Charter — mẫu">
+      <h4>1. Vấn đề &amp; cơ hội</h4>
+      <p>Nguy cơ trượt mục tiêu doanh thu Q4 dù traffic ổn định. AOV thấp do thiếu bundling/upsell; nhiều khách rơi rớt ở phễu mobile checkout.</p>
+      <h4>2. Mục tiêu</h4>
+      <p><strong>Primary:</strong> tăng ≥15% doanh thu Q4 (YoY) qua bundling, upsell/cross-sell, tối ưu mobile checkout. <strong>Guardrail cứng:</strong> không giảm CR tổng quá 1 điểm phần trăm — vi phạm là không deploy.</p>
+      <h4>3. Phạm vi</h4>
+      <p><em>Trong:</em> mô hình bundle/upsell, phân tích &amp; tối ưu phễu mobile, A/B test, đo tác động. <em>Ngoài:</em> quảng cáo trả phí, chiến lược giá tổng thể, hạ tầng backend.</p>
+      <h4>4. RACI (rút gọn)</h4>
+      <div class="tbl-wrap"><table><thead><tr><th>Bên</th><th>Vai trò</th></tr></thead><tbody>
+        <tr><td>E-commerce Director</td><td>Accountable</td></tr>
+        <tr><td>Marketing / Category</td><td>Responsible (bundle &amp; upsell)</td></tr>
+        <tr><td>UX/Frontend</td><td>Responsible (mobile checkout)</td></tr>
+        <tr><td>Data Science</td><td>Responsible (mô hình, thí nghiệm, đo lường)</td></tr>
+        <tr><td>Data Engineering</td><td>Consulted</td></tr>
+        <tr><td>Leadership</td><td>Informed</td></tr>
+      </tbody></table></div>
+      <div class="callout warning"><span class="lbl">⚠ Lưu ý về RACI</span><p>Slide gán <em>một</em> vai trò cho mỗi bên cho cả dự án. Chuẩn RACI gán vai trò <strong>theo từng deliverable</strong> (ma trận task × role) — một bên có thể Responsible việc này nhưng chỉ Consulted việc khác.</p></div>
+      <h4>5–6. Success criteria &amp; guardrail</h4>
+      <p>Primary: doanh thu Q4 ≥ +15%. Supporting: AOV +8–12%, mobile checkout CR +10–15%. Guardrail: CR giảm ≤ 1pp; không hại NPS; mô hình đạt ngưỡng fairness/latency/stability trước production.</p>
+    </div>
+  </article>
+</section>
+  <section class="module" id="m-kpi" data-module="kpi">
+  <header class="page-head">
+    <span class="eyebrow">Module 03 · Metrics &amp; framing</span>
+    <h1 class="title">KPI Tree &amp; <span>Problem Framing</span></h1>
+    <p class="subtitle">Phân rã "North Star" thành driver và lever có chủ nhân; đóng khung bài toán quanh <em>quyết định</em> chứ không quanh dữ liệu; nền tảng A/B testing.</p>
+  </header>
+
+  <article class="concept" data-concept="k-types">
+    <h3><span class="cid">3.1</span> Các loại KPI</h3>
+    <p>Ba trục phân loại KPI, mỗi trục là một <em>tương phản</em>:</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Trục</th><th>Ý nghĩa</th><th>Ví dụ</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Lagging vs Leading</strong></td><td>Lagging xác nhận <em>sau khi</em> đã xảy ra (khó tác động); Leading dự báo &amp; tác động được <em>trước</em></td><td>Lagging: doanh thu quý. Leading: số demo đặt tuần này</td></tr>
+        <tr><td><strong>Input vs Output</strong></td><td>Input là hành động ta kiểm soát; Output là kết quả downstream</td><td>Input: số cuộc gọi bán hàng. Output: doanh thu chốt</td></tr>
+        <tr><td><strong>Health vs Performance</strong></td><td>Health (guardrail) đảm bảo không phá vỡ thứ khác; Performance đo tiến độ tới mục tiêu</td><td>Health: latency, NPS. Performance: growth rate, CR</td></tr>
+      </tbody>
+    </table></div>
+    <p><strong>Nguyên tắc "Fewer but better":</strong> ít KPI được chọn kỹ tốt hơn dashboard đầy chỉ số không ai dùng. Tránh <em>vanity metric</em> (ví dụ "tổng user đăng ký" luôn tăng nhưng không gắn quyết định — nên đi kèm "monthly active users").</p>
+  </article>
+
+  <article class="concept" data-concept="k-tree">
+    <h3><span class="cid">3.2</span> Cây KPI e-commerce — công thức</h3>
+    <p><strong>Cartoon:</strong> chọn một chỉ số "North Star", rồi bẻ nó thành các cành mà ta thực sự tác động được.</p>
+    <div class="equation">$$\text{Revenue} = \text{Sessions} \times \text{CR} \times \text{AOV}$$</div>
+    <p>với Sessions = số phiên; CR = conversion rate (tỉ lệ phiên → mua); AOV = average order value. CR lại tách theo phễu:</p>
+    <div class="equation">$$\text{CR} = P(\text{session}\to\text{view}) \times P(\text{view}\to\text{cart}) \times P(\text{cart}\to\text{checkout}) \times P(\text{checkout}\to\text{purchase})$$</div>
+    <div class="equation">$$\text{AOV} = \frac{\sum(\text{price}\times\text{qty})}{\#\text{orders}}$$</div>
+    <div class="callout warning"><span class="lbl">⚠ Sửa lỗi tài liệu</span><p>Slide gốc viết CR bắt đầu từ <em>view</em> (bỏ bước <code>session→view</code>), nhưng lại dùng <code>Revenue = Sessions × CR × AOV</code> — đòi CR phải đo <em>từ session</em>. Công thức đúng phải có đủ bước <code>session→view</code> ở trên (ngầm giả định 100% session có view là không thực tế).</p></div>
+
+    <div class="demo" id="demo-kpi">
+      <div class="demo-head"><span class="eyebrow">Demo tương tác</span><span>Máy tính cây KPI doanh thu</span></div>
+      <div class="demo-controls">
+        <div class="ctrl"><label>SESSIONS / THÁNG <output id="kpi-sess">1,000,000</output></label><input type="range" id="kpi-sess-r" min="500000" max="2000000" step="25000" value="1000000"></div>
+        <div class="ctrl"><label>CR (%) <output id="kpi-cr">2.00</output></label><input type="range" id="kpi-cr-r" min="0.5" max="5" step="0.05" value="2"></div>
+        <div class="ctrl"><label>AOV (VND) <output id="kpi-aov">420,000</output></label><input type="range" id="kpi-aov-r" min="200000" max="800000" step="5000" value="420000"></div>
+      </div>
+      <div class="demo-readout">
+        <span class="ro">Revenue = <b id="kpi-rev">8.40 tỷ</b></span>
+        <span class="ro">vs hiện trạng <b id="kpi-delta">+0.0%</b></span>
+        <span class="ro">mục tiêu +15% = <b>9.66 tỷ</b></span>
+        <span class="ro" id="kpi-hit"></span>
+      </div>
+      <div class="demo-cap">Baseline: 1.000.000 × 2% × 420k = <b>8.4 tỷ VND</b>. Thử đạt mục tiêu 9.66 tỷ bằng cách <b>chỉ</b> tăng CR lên 2.3% — hoặc <b>chỉ</b> tăng AOV lên 483k. Cả hai đều ra +15% ($2.3/2.0 = 483/420 = 1.15$): một mục tiêu, nhiều lever.</div>
+    </div>
+    <p class="teaser">Mở rộng: cây MRR cho SaaS (+ sửa lỗi công thức) · dashboard 3 bảng.</p>
+    <button class="expand-btn" data-expand="k-mrr">Chi tiết SaaS/MRR →</button>
+    <div class="detail-source" id="detail-k-mrr" data-title="Cây KPI SaaS (MRR)">
+      <h4>Công thức trên slide</h4>
+      $$\text{MRR} = \#\text{Customers} \times \text{ARPA} \times (1 - \text{Churn})$$
+      <div class="callout warning"><span class="lbl">⚠ Sửa lỗi</span><p>Công thức này <strong>đếm churn hai lần</strong>. Nếu <code>#Customers</code> đã là số khách <em>đang active</em> (cách hiểu tự nhiên vì MRR là ảnh chụp tại một thời điểm), nhân thêm $(1-\text{Churn})$ lại trừ khách rời lần nữa → thiếu hụt MRR.</p></div>
+      <h4>Cách viết đúng</h4>
+      <p>MRR tại một thời điểm: $\text{MRR} = \text{Active Customers} \times \text{ARPA}$. Churn chi phối <em>sự thay đổi số khách qua các kỳ</em>:</p>
+      $$\text{Customers}_t = \text{Customers}_{t-1}(1-\text{Churn}) + \text{New Customers}_t$$
+      <p>Số khách trả tiền mới: $\#\text{New Paying} = \text{New Signups} \times \text{Activation} \times \text{Conversion to Paid}$. Lever: pricing tier, onboarding, customer success, retention.</p>
+    </div>
+  </article>
+
+  <article class="concept" data-concept="k-doc">
+    <h3><span class="cid">3.3</span> Problem Framing — mẫu DOC</h3>
+    <p>Đóng khung công việc phân tích quanh <strong>quyết định</strong>, không quanh dữ liệu. Mẫu <strong>DOC</strong>:</p>
+    <ul>
+      <li><strong>D — Decision:</strong> quyết định cụ thể cần đưa ra.</li>
+      <li><strong>O — Options:</strong> các phương án ứng viên.</li>
+      <li><strong>C — Criteria:</strong> tập KPI để so sánh phương án &amp; định nghĩa thành công.</li>
+    </ul>
+    <p><strong>Xác định biến đích &amp; tránh leakage:</strong> đích ví dụ "mua trong 7 ngày kể từ phiên" (nhãn nhị phân). <em>Loại</em> mọi biến chỉ có <em>sau</em> thời điểm quyết định (ví dụ "đã dùng voucher" nếu voucher là một phần của kết quả cần dự đoán → rò rỉ tương lai).</p>
+    <p><strong>Prioritization — ma trận Impact/Effort:</strong> Quick wins (impact cao/effort thấp) → Big bets (cao/cao) → Fillers (thấp/thấp) → Avoid (thấp/cao).</p>
+  </article>
+
+  <article class="concept" data-concept="k-ab">
+    <h3><span class="cid">3.4</span> A/B testing &amp; cỡ mẫu</h3>
+    <p>Đặt <strong>đơn vị randomize</strong> (user/session) &amp; <strong>metric chính</strong> từ đầu; <strong>tránh "peeking"</strong> (liên tục kiểm tra p-value giữa chừng làm phồng false-positive); ước lượng thời lượng từ traffic &amp; MDE (minimum detectable effect).</p>
+    <div class="equation">$$n \approx \frac{16 \cdot p(1-p)}{\Delta^2} \quad \text{(mỗi nhóm)}$$</div>
+    <p>với $n$ = cỡ mẫu mỗi nhánh, $p$ = tỉ lệ chuyển đổi nền, $\Delta$ = MDE tuyệt đối. Hằng số <strong>16</strong> ≈ $2(z_{\alpha/2}+z_\beta)^2$ cho test hai phía $\alpha=0.05$, power 80% ($1.96+0.84$).</p>
+    <div class="callout example"><span class="lbl">Ví dụ số (đã kiểm chứng)</span><p>$p = 2\%$, $\Delta = 0.3\text{pp} = 0.003$:</p>$$n \approx \frac{16 \times 0.02 \times 0.98}{0.003^2} = \frac{0.3136}{0.000009} \approx 34\,844 \text{ /nhóm}$$</div>
+    <div class="callout note"><span class="lbl">Khái niệm nền</span><p><strong>α</strong> = mức ý nghĩa (false-positive, thường 5%). <strong>Power (1−β)</strong> = xác suất phát hiện hiệu ứng thật (thường 80%). <strong>MDE</strong> nhỏ ⇒ cần mẫu lớn hơn nhiều vì $n \propto 1/\Delta^2$. "Peeking" là vấn đề optional-stopping / so sánh bội.</p></div>
+  </article>
+</section>
+  <section class="module" id="m-dataquality" data-module="dataquality">
+  <header class="page-head">
+    <span class="eyebrow">Module 04 · Data preparation</span>
+    <h1 class="title">Chất lượng dữ liệu &amp; <span>Feature Engineering</span></h1>
+    <p class="subtitle">Cầu nối giữa dữ liệu thô và mô hình: đánh giá chất lượng, xử lý missing, tránh leakage, encoding, scaling, tạo &amp; chọn feature — trong pipeline chống rò rỉ.</p>
+  </header>
+
+  <article class="concept" data-concept="d-quality">
+    <h3><span class="cid">4.1</span> Sáu chiều chất lượng dữ liệu</h3>
+    <p><strong>Garbage in, garbage out</strong> — chất lượng dữ liệu đặt <em>trần</em> cho hiệu năng mọi mô hình.</p>
+    <div class="tag-row"><span class="pill">Accuracy · đúng thực tế</span><span class="pill">Completeness · đủ giá trị</span><span class="pill">Consistency · nhất quán</span><span class="pill">Validity · đúng định dạng/miền</span><span class="pill">Timeliness · kịp thời</span><span class="pill">Provenance · truy nguồn được</span></div>
+    <p>Vòng đời: <code>Ingest → Profile → Clean → Validate → Monitor → Feedback</code>. Kết hợp <em>rule-based checks</em> (age ∈ [0,120]) với <em>thống kê mô tả</em> (drift trung bình/phương sai).</p>
+  </article>
+
+  <article class="concept" data-concept="d-missing">
+    <h3><span class="cid">4.2</span> Missing data — cơ chế &amp; xử lý</h3>
+    <p><strong>Vì sao</strong> dữ liệu bị thiếu quyết định cách xử lý hợp lệ (phân loại Rubin):</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Cơ chế</th><th>Nghĩa</th></tr></thead>
+      <tbody>
+        <tr><td><strong>MCAR</strong> <span class="en">(hoàn toàn ngẫu nhiên)</span></td><td>Xác suất thiếu không liên quan gì tới dữ liệu — nhiễu thuần tuý.</td></tr>
+        <tr><td><strong>MAR</strong> <span class="en">(ngẫu nhiên có điều kiện)</span></td><td>Xác suất thiếu chỉ phụ thuộc biến <em>quan sát được</em> (vd income thiếu nhiều hơn ở khách prepaid).</td></tr>
+        <tr><td><strong>MNAR</strong> <span class="en">(không ngẫu nhiên)</span></td><td>Xác suất thiếu phụ thuộc chính <em>giá trị bị thiếu</em> (vd người thu nhập cao ngại khai) — khó nhất.</td></tr>
+      </tbody>
+    </table></div>
+    <p><strong>Chiến lược:</strong> drop · imputation (mean/median/mode, group-wise, kNN, MICE, business-rule) · thêm cột chỉ báo <code>is_missing</code>. Ưu tiên <strong>median/mode</strong> hơn mean vì bền với outlier; <strong>group-wise</strong> (median theo từng nhóm) tôn trọng tính không đồng nhất.</p>
+    <div class="callout warning"><span class="lbl">⚠ Do / Don't</span><p><strong>KHÔNG</strong> impute bằng thống kê tính trên <em>toàn bộ</em> dataset (train+test), và <strong>KHÔNG</strong> impute <em>trước</em> khi split → đây là leakage kinh điển. <strong>PHẢI</strong> fit thống kê impute <em>chỉ trên train</em> rồi áp cho test.</p></div>
+  </article>
+
+  <article class="concept" data-concept="d-leakage">
+    <h3><span class="cid">4.3</span> Data leakage <span class="en">(rò rỉ dữ liệu)</span></h3>
+    <p><strong>Cartoon:</strong> mô hình "gian lận" bằng cách nhìn trộm thông tin nó sẽ không có lúc dự đoán thật — điểm cao khi train, sụp đổ khi production.</p>
+    <div class="tbl-wrap"><table><thead><tr><th>Loại</th><th>Mô tả</th></tr></thead><tbody>
+      <tr><td><strong>Target leakage</strong></td><td>Feature chứa chính nhãn hoặc hệ quả của nhãn (chỉ biết vì kết quả đã xảy ra).</td></tr>
+      <tr><td><strong>Train–test contamination</strong></td><td>Bước tiền xử lý (scale/impute/encode) fit trên toàn bộ dữ liệu thay vì chỉ train fold.</td></tr>
+      <tr><td><strong>Temporal leakage</strong></td><td>Dùng feature chỉ có <em>sau</em> thời điểm dự đoán.</td></tr>
+    </tbody></table></div>
+    <p><strong>Phòng chống:</strong> fit tiền xử lý <em>chỉ trên train fold</em> · dùng <code>Pipeline</code>/<code>ColumnTransformer</code> · CV trên <em>toàn pipeline</em> · time-based split, đóng băng feature window trước T0.</p>
+  </article>
+
+  <article class="concept" data-concept="d-encoding">
+    <h3><span class="cid">4.4</span> Encoding biến hạng mục</h3>
+    <p><strong>One-Hot</strong> (mỗi hạng mục một cột nhị phân — nổ chiều nếu cardinality cao) · <strong>Ordinal</strong> (chỉ khi có thứ tự thật S&lt;M&lt;L) · <strong>Target/Mean encoding</strong> (thay hạng mục bằng mean của đích — <em>phải</em> tính out-of-fold để tránh leakage) · <strong>WoE</strong> (credit scoring) · <strong>Hashing</strong> (cardinality lớn/streaming) · <strong>Frequency/Count</strong>.</p>
+    <p class="teaser">Mở rộng: công thức Weight of Evidence &amp; Information Value.</p>
+    <button class="expand-btn" data-expand="d-woe">Chi tiết WoE/IV →</button>
+    <div class="detail-source" id="detail-d-woe" data-title="Weight of Evidence & IV">
+      <h4>Weight of Evidence</h4>
+      $$WoE_i = \ln\!\left(\frac{Good_i/Good}{Bad_i/Bad}\right)$$
+      <p>$Good_i,Bad_i$ = số ca "good"/"bad" trong bin $i$; $Good,Bad$ = tổng toàn bộ. WoE cao ⇒ nghiêng "good".</p>
+      <h4>Information Value</h4>
+      $$IV = \sum_i (\%Good_i - \%Bad_i)\times WoE_i$$
+      <p>Quy ước: $IV&lt;0.02$ vô dụng · 0.02–0.1 yếu · 0.1–0.3 vừa · 0.3–0.5 mạnh · &gt;0.5 nghi ngờ leakage.</p>
+    </div>
+  </article>
+
+  <article class="concept" data-concept="d-scaling">
+    <h3><span class="cid">4.5</span> Scaling, biến đổi &amp; outlier</h3>
+    <p><strong>Vì sao scale:</strong> thuật toán dựa trên khoảng cách/phương sai (kNN, k-means, SVM, PCA, Lasso/Ridge) bị thống trị bởi feature có range lớn nhất. Cây (tree/RF/GBM) thì không nhạy với scaling đơn điệu.</p>
+    <div class="grid g3">
+      <div class="stat"><span class="k">StandardScaler (z-score)</span><div class="v" style="font-size:22px">$z=\frac{x-\mu}{\sigma}$</div><span class="d">Trung bình 0, phương sai 1</span></div>
+      <div class="stat"><span class="k">MinMaxScaler</span><div class="v" style="font-size:20px">$\frac{x-x_{\min}}{x_{\max}-x_{\min}}$</div><span class="d">Về [0,1]; nhạy outlier</span></div>
+      <div class="stat"><span class="k">RobustScaler</span><div class="v" style="font-size:20px">$\frac{x-\text{med}}{IQR}$</div><span class="d">Bền với outlier</span></div>
+    </div>
+    <p><strong>Phát hiện outlier:</strong> z-score (|z| &gt; 3), IQR/Tukey, Isolation Forest, LOF. <strong>Xử lý:</strong> capping/Winsorization, log transform, robust loss — nhưng outlier <em>có thể mang tín hiệu thật</em> (VIP), đừng bỏ tự động.</p>
+    <div class="equation">$$IQR = Q_3 - Q_1, \qquad \text{hàng rào Tukey} = [\,Q_1 - 1.5\,IQR,\; Q_3 + 1.5\,IQR\,]$$</div>
+
+    <div class="demo" id="demo-scale">
+      <div class="demo-head"><span class="eyebrow">Demo tương tác</span><span>Phát hiện outlier &amp; scaling</span></div>
+      <div class="demo-stage"><canvas id="scale-cv" data-h="180"></canvas></div>
+      <div class="demo-controls">
+        <div class="ctrl"><label>HỆ SỐ HÀNG RÀO k <output id="scale-k">1.5</output></label><input type="range" id="scale-k-r" min="1" max="3" step="0.1" value="1.5"></div>
+        <div class="ctrl"><label>THANG ĐO</label>
+          <div style="display:flex;gap:6px"><button class="btn-mini primary" data-scale="raw">Raw</button><button class="btn-mini" data-scale="z">z-score</button><button class="btn-mini" data-scale="mm">MinMax</button></div>
+        </div>
+      </div>
+      <div class="demo-readout">
+        <span class="ro">Q1 <b id="sc-q1">–</b></span><span class="ro">median <b id="sc-med">–</b></span><span class="ro">Q3 <b id="sc-q3">–</b></span>
+        <span class="ro">hàng rào trên <b id="sc-fence">–</b></span><span class="ro">outlier: <b id="sc-out">–</b></span>
+      </div>
+      <div class="demo-cap">Dữ liệu <b>monthly charges</b> (lệch phải, có VIP). Kéo <b>k</b> để nới/thắt hàng rào Tukey — điểm đỏ vượt rào. Đổi thang đo thấy z-score/MinMax <em>không</em> làm mất outlier (chỉ dời trục): scaling ≠ xử lý outlier.</div>
+    </div>
+  </article>
+
+  <article class="concept" data-concept="d-fe">
+    <h3><span class="cid">4.6</span> Feature engineering</h3>
+    <p><strong>Binning · interactions ($x_1 x_2$) · polynomials · ratios/rates.</strong> Với biến chu kỳ (giờ trong ngày, thứ trong tuần) dùng <strong>encoding sin–cos</strong> để tránh "khoảng cách" giả giữa giờ 23 và giờ 0:</p>
+    <div class="equation">$$x_{\sin}=\sin\!\left(\frac{2\pi t}{T}\right),\qquad x_{\cos}=\cos\!\left(\frac{2\pi t}{T}\right)$$</div>
+    <p>với $t$ = vị trí trong chu kỳ, $T$ = độ dài chu kỳ (24 cho giờ, 7 cho thứ). Ngoài ra: date-time features, recency, geo (Haversine), aggregation/group-by (dùng leave-one-out chống leakage), time-series (lags, rolling mean, differencing), text (TF-IDF + SVD = LSA).</p>
+  </article>
+
+  <article class="concept" data-concept="d-select">
+    <h3><span class="cid">4.7</span> Feature selection &amp; giảm chiều</h3>
+    <p>Ba họ phương pháp:</p>
+    <div class="tbl-wrap"><table><thead><tr><th>Họ</th><th>Ý tưởng</th><th>Phương pháp</th></tr></thead><tbody>
+      <tr><td><strong>Filter</strong></td><td>Chấm điểm từng feature độc lập với mô hình</td><td>Chi-square, ANOVA F, Mutual Information</td></tr>
+      <tr><td><strong>Wrapper</strong></td><td>Dùng hiệu năng mô hình để tìm tập con</td><td>RFE, SFS/SBS</td></tr>
+      <tr><td><strong>Embedded</strong></td><td>Chọn feature ngay trong lúc fit</td><td>Lasso (L1), Ridge (L2), tree importance</td></tr>
+    </tbody></table></div>
+    <p class="teaser">Mở rộng: công thức chi-square, ANOVA F, Mutual Information, Lasso/Ridge/ElasticNet, VIF, pipeline chống leakage.</p>
+    <button class="expand-btn" data-expand="d-sel">Công thức chi tiết →</button>
+    <div class="detail-source" id="detail-d-sel" data-title="Feature selection — công thức">
+      <h4>Filter</h4>
+      $$\chi^2 = \sum_{i,j}\frac{(O_{ij}-E_{ij})^2}{E_{ij}}, \qquad F=\frac{MS_{between}}{MS_{within}}, \qquad I(X;Y)=\sum_{x,y}p(x,y)\log\frac{p(x,y)}{p(x)p(y)}$$
+      <h4>Embedded / regularization</h4>
+      $$\text{Lasso: } \min_\beta \sum_i(y_i-X_i\beta)^2 + \lambda\sum_j|\beta_j|$$
+      $$\text{Ridge: } \min_\beta \sum_i(y_i-X_i\beta)^2 + \lambda\sum_j\beta_j^2$$
+      <p>Lasso đẩy hệ số về 0 (chọn feature); Ridge co hệ số giảm phương sai. <strong>Chuẩn hoá feature trước</strong> vì penalty nhạy scale.</p>
+      <h4>VIF — đa cộng tuyến (bổ sung, không có trên slide BA3)</h4>
+      $$VIF_j = \frac{1}{1-R_j^2}$$
+      <p>$R_j^2$ = $R^2$ khi hồi quy $X_j$ theo các feature còn lại. Quy tắc: VIF &gt; 5 đáng lo, &gt; 10 nghiêm trọng.</p>
+      <h4>Pipeline chống leakage</h4>
+      <p><code>Raw → Split → (Impute → Encode → Scale → Select) → Model → Evaluate</code>. Fit tiền xử lý chỉ trên train fold; bọc GridSearch quanh <em>cả</em> pipeline.</p>
+    </div>
+  </article>
+</section>
+  <section class="module" id="m-eda" data-module="eda">
+  <header class="page-head">
+    <span class="eyebrow">Module 05 · Exploratory Data Analysis</span>
+    <h1 class="title">EDA &amp; <span>Trực quan hoá</span></h1>
+    <p class="subtitle">Khám phá dữ liệu có hệ thống trước khi mô hình hoá, và chọn biểu đồ phục vụ <em>quyết định</em> — không phải trang trí báo cáo.</p>
+  </header>
+
+  <article class="concept" data-concept="e-what">
+    <h3><span class="cid">5.1</span> EDA là gì &amp; tư duy</h3>
+    <p><strong>EDA</strong> (thuật ngữ do <em>John Tukey</em> đặt) = khám phá dữ liệu có hệ thống để hình thành &amp; kiểm tra giả thuyết. Là <strong>cầu nối giữa câu hỏi kinh doanh và lựa chọn mô hình</strong>.</p>
+    <p>Tư duy: bắt đầu từ <em>câu hỏi &amp; bối cảnh</em> (không "câu cá" pattern giả); vòng lặp <code>profile → explore → hypothesize → validate</code>; <strong>tam giác hoá</strong> bằng nhiều góc nhìn (bảng, biểu đồ, nhóm).</p>
+    <div class="callout note"><span class="lbl">Anscombe's Quartet — vì sao EDA quan trọng</span><p>Bốn tập dữ liệu của Anscombe (1973) có <em>gần như cùng</em> mean, variance, tương quan $r\approx0.816$ và cùng đường hồi quy $y\approx3.00+0.5x$ — nhưng vẽ ra thì khác hẳn (một tuyến tính, một cong, một có 1 outlier…). Bằng chứng kinh điển: <strong>thống kê tóm tắt đơn thuần có thể đánh lừa, phải kèm trực quan hoá.</strong></p></div>
+  </article>
+
+  <article class="concept" data-concept="e-uni">
+    <h3><span class="cid">5.2</span> Phân tích đơn biến &amp; thống kê mô tả</h3>
+    <p><strong>Tâm:</strong> mean, median, mode. <strong>Độ phân tán:</strong> variance, SD, IQR. <strong>Hình dạng:</strong> skewness, kurtosis. Với dữ liệu lệch/đuôi nặng, dùng thống kê <em>bền</em> (median, IQR).</p>
+    <div class="equation">$$\bar{x}=\frac1n\sum_{i=1}^n x_i, \qquad s^2=\frac{1}{n-1}\sum_{i=1}^n(x_i-\bar x)^2, \qquad z=\frac{x-\mu}{\sigma}$$</div>
+    <p>Sample variance chia $n-1$ (không phải $n$) — hiệu chỉnh Bessel, bù độ chệch khi ước lượng $\mu$ bằng $\bar x$.</p>
+    <p class="teaser">Mở rộng: skewness, kurtosis, quy tắc chọn số bin histogram.</p>
+    <button class="expand-btn" data-expand="e-shape">Công thức hình dạng &amp; binning →</button>
+    <div class="detail-source" id="detail-e-shape" data-title="Skewness, Kurtosis, Binning">
+      <h4>Skewness (độ lệch)</h4>
+      $$g_1=\frac{m_3}{m_2^{3/2}}, \qquad m_k=\frac1n\sum(x_i-\bar x)^k$$
+      <p>$g_1&gt;0$ lệch phải (đuôi dài bên phải, vd income); $g_1&lt;0$ lệch trái; $=0$ đối xứng.</p>
+      <h4>Excess kurtosis (độ nhọn)</h4>
+      $$g_2=\frac{m_4}{m_2^2}-3$$
+      <p>Trừ 3 vì kurtosis của phân phối chuẩn = 3. $g_2&gt;0$ đuôi nặng (leptokurtic), nhiều outlier hơn chuẩn.</p>
+      <h4>Chọn số bin</h4>
+      $$\text{Freedman–Diaconis: } h=\frac{2\,IQR(x)}{n^{1/3}}, \qquad \text{sqrt: } k=\lceil\sqrt{n}\rceil$$
+      <p>FD bền với outlier (dùng IQR). Sturges $k=\lceil\log_2 n+1\rceil$ dưới-bin dữ liệu lớn/lệch.</p>
+    </div>
+  </article>
+
+  <article class="concept" data-concept="e-bi">
+    <h3><span class="cid">5.3</span> Phân tích hai biến &amp; tương quan</h3>
+    <p><strong>Pearson</strong> đo liên hệ <em>tuyến tính</em>; <strong>Spearman</strong> đo liên hệ <em>đơn điệu</em> (bền với outlier &amp; phi tuyến):</p>
+    <div class="equation">$$r=\frac{\sum(x_i-\bar x)(y_i-\bar y)}{\sqrt{\sum(x_i-\bar x)^2}\sqrt{\sum(y_i-\bar y)^2}}=\frac{\text{Cov}(X,Y)}{\sigma_X\sigma_Y}$$</div>
+    <p>$r\in[-1,1]$; $r=0$ nghĩa là <em>không có liên hệ tuyến tính</em> (vẫn có thể có phi tuyến). Quy ước độ mạnh: $|r|&lt;0.3$ yếu, $0.3$–$0.7$ vừa, $\ge0.7$ mạnh. Với cặp biến hạng mục, dùng <strong>chi-square</strong> $\chi^2=\sum(O-E)^2/E$.</p>
+
+    <div class="demo" id="demo-corr">
+      <div class="demo-head"><span class="eyebrow">Demo tương tác</span><span>Hệ số tương quan Pearson</span></div>
+      <div class="demo-stage"><canvas id="corr-cv" data-h="300"></canvas></div>
+      <div class="demo-controls">
+        <div class="ctrl"><label>TƯƠNG QUAN MỤC TIÊU r <output id="corr-r">0.70</output></label><input type="range" id="corr-r-r" min="-1" max="1" step="0.02" value="0.7"></div>
+      </div>
+      <div class="demo-readout"><span class="ro">r đo được trên đám điểm = <b id="corr-actual">–</b></span></div>
+      <div class="demo-cap">Kéo <b>r</b> từ −1 tới +1. Điểm được sinh từ $y = r\,x + \sqrt{1-r^2}\,z$ (x, z độc lập). Chú ý: ở $r=0$ đám điểm là "mây" tròn; $|r|\to1$ dồn về một đường thẳng. Pearson chỉ thấy <b>liên hệ tuyến tính</b>.</div>
+    </div>
+  </article>
+
+  <article class="concept" data-concept="e-causal">
+    <h3><span class="cid">5.4</span> Correlation ≠ Causation</h3>
+    <p>Quyết định kinh doanh cần <em>suy luận nhân quả</em> — cùng biến động (correlation) chưa đủ để can thiệp. Nguyên tắc: <strong>"EDA gợi ý, kiểm định xác nhận."</strong></p>
+    <ul>
+      <li><strong>Confounder</strong> — biến gây <em>cả</em> X lẫn Y, tạo liên hệ giả (tuổi → cả chọn gói lẫn churn).</li>
+      <li><strong>Collider</strong> — biến bị <em>cả</em> X và Y tác động; lọc theo collider <em>tạo</em> liên hệ giả không có sẵn.</li>
+      <li><strong>Simpson's Paradox</strong> — xu hướng gộp có thể <em>đảo ngược</em> xu hướng trong từng nhóm con.</li>
+    </ul>
+    <div class="callout warning"><span class="lbl">⚠ Sửa lỗi tài liệu (slide "Simpson's Paradox", trang 29)</span><p>Biểu đồ minh hoạ của slide <strong>không</strong> thực sự là Simpson's Paradox: cả hai nhóm con <em>và</em> đường gộp đều dốc <em>cùng chiều</em> (đi xuống) — đó chỉ là confounder dịch intercept. Simpson's Paradox đúng phải có <strong>đảo chiều</strong> (mỗi nhóm tăng, gộp lại giảm) — ví dụ chuẩn: tuyển sinh UC Berkeley 1973, hay batting average bóng chày.</p></div>
+    <p><strong>Nhân quả thật:</strong> RCT/A-B testing là chuẩn vàng; quasi-experiment: DID, IV, RDD.</p>
+  </article>
+
+  <article class="concept" data-concept="e-viz">
+    <h3><span class="cid">5.5</span> Nguyên tắc trực quan hoá</h3>
+    <p><strong>Marks &amp; channels (Cleveland–McGill):</strong> vị trí &amp; độ dài được đọc chính xác nhất; góc/diện tích/màu kém chính xác — tránh 3D, bong bóng theo diện tích. Luôn có tiêu đề, nhãn trục &amp; đơn vị.</p>
+    <div class="tbl-wrap"><table><thead><tr><th>Mục tiêu</th><th>Biểu đồ nên dùng</th></tr></thead><tbody>
+      <tr><td>Phân phối 1 biến</td><td>Histogram, boxplot</td></tr>
+      <tr><td>Quan hệ 2 biến số</td><td>Scatter (line cho theo thời gian)</td></tr>
+      <tr><td>Thành phần của tổng</td><td>Stacked bar (tránh pie 3D)</td></tr>
+    </tbody></table></div>
+    <p><strong>Scales:</strong> bar chart phải có mốc 0 (cắt trục phóng đại chênh lệch); log scale cho dữ liệu đuôi nặng; <strong>tránh dual y-axis</strong> (ngụ ý tương quan giả). <strong>Data-ink ratio (Tufte):</strong> tối đa hoá tỉ lệ mực-dữ-liệu / tổng-mực — xoá gridline thừa, viền, hiệu ứng 3D (chartjunk).</p>
+    <div class="equation">$$\text{Data-ink ratio}=\frac{\text{mực dùng để thể hiện dữ liệu}}{\text{tổng mực của biểu đồ}}$$</div>
+  </article>
+</section>
+  <section class="module" id="m-regression" data-module="regression">
+  <header class="page-head">
+    <span class="eyebrow">Module 06 · Predictive · Regression</span>
+    <h1 class="title">Hồi quy <span>tuyến tính</span></h1>
+    <p class="subtitle">Dự đoán một biến số liên tục từ một hay nhiều biến khác: mô hình, OLS, độ phù hợp $r^2$, giả định LINE, kiểm định, hồi quy bội, và mở rộng ML (regularization, gradient descent).</p>
+  </header>
+
+  <article class="concept" data-concept="r-model">
+    <h3><span class="cid">6.1</span> Từ tương quan đến hồi quy</h3>
+    <p><strong>Correlation</strong> chỉ đo <em>độ mạnh</em> liên hệ tuyến tính (không hàm ý nhân quả). <strong>Regression</strong> dùng để <em>dự đoán</em> &amp; <em>giải thích</em> tác động của X lên Y.</p>
+    <p><strong>Cartoon → cơ chế → công thức:</strong> ta kẻ một đường thẳng "đi xuyên giữa" đám điểm sao cho sát nhất. Mô hình tổng thể và đường ước lượng:</p>
+    <div class="equation">$$Y_i=\beta_0+\beta_1 X_i+\varepsilon_i \qquad\Longrightarrow\qquad \hat Y_i=b_0+b_1 X_i$$</div>
+    <p>$\beta_0,\beta_1$ = tham số <em>tổng thể</em> (thật); $b_0,b_1$ = ước lượng từ mẫu; $\varepsilon_i$ = sai số ngẫu nhiên; residual $e_i=Y_i-\hat Y_i$ ước lượng $\varepsilon_i$. Diễn giải: $b_1$ = thay đổi trung bình của Y khi X tăng 1 đơn vị.</p>
+  </article>
+
+  <article class="concept" data-concept="r-ols">
+    <h3><span class="cid">6.2</span> OLS &amp; ví dụ giá nhà</h3>
+    <p><strong>Least Squares (OLS):</strong> chọn $b_0,b_1$ để <strong>tối thiểu tổng bình phương residual</strong>:</p>
+    <div class="equation">$$\min_{b_0,b_1}\sum_i\bigl(Y_i-(b_0+b_1 X_i)\bigr)^2$$</div>
+    <p>Ví dụ 10 căn nhà (giá $1000s theo diện tích sqft) cho $\widehat{\text{price}}=98.248+0.10977\,(\text{sqft})$ — mỗi sqft tăng giá trung bình ≈ <b>$109.77</b>. Kéo thử để cảm nhận vì sao OLS là "tốt nhất":</p>
+
+    <div class="demo" id="demo-reg">
+      <div class="demo-head"><span class="eyebrow">Demo tương tác</span><span>Đường hồi quy &amp; sai số bình phương</span></div>
+      <div class="demo-stage"><canvas id="reg-cv" data-h="320"></canvas></div>
+      <div class="demo-controls">
+        <div class="ctrl"><label>INTERCEPT b₀ <output id="reg-b0">98.2</output></label><input type="range" id="reg-b0-r" min="0" max="220" step="0.5" value="98.2"></div>
+        <div class="ctrl"><label>SLOPE b₁ <output id="reg-b1">0.110</output></label><input type="range" id="reg-b1-r" min="0" max="0.25" step="0.001" value="0.11"></div>
+        <div class="ctrl"><label>&nbsp;</label><button class="btn-mini primary" id="reg-fit">Khớp OLS tối ưu</button></div>
+      </div>
+      <div class="demo-readout">
+        <span class="ro">SSE (tổng bình phương sai số) = <b id="reg-sse">–</b></span>
+        <span class="ro">r² = <b id="reg-r2">–</b></span>
+        <span class="ro" id="reg-best"></span>
+      </div>
+      <div class="demo-cap">Các thanh dọc đỏ = residual (khoảng cách điểm tới đường). SSE = tổng bình phương chúng. Bấm <b>Khớp OLS</b> để về nghiệm tối ưu $b_0=98.25,\,b_1=0.110$ (SSE nhỏ nhất = 13665.6, r² = 0.581). Không tổ hợp $b_0,b_1$ nào cho SSE thấp hơn.</div>
+    </div>
+  </article>
+
+  <article class="concept" data-concept="r-fit">
+    <h3><span class="cid">6.3</span> Đo độ phù hợp: SST = SSR + SSE, $r^2$</h3>
+    <p>Tổng biến thiên của Y tách làm hai phần — <em>giải thích được</em> (SSR) và <em>không giải thích được</em> (SSE):</p>
+    <div class="equation">$$\underbrace{\sum(Y_i-\bar Y)^2}_{SST}=\underbrace{\sum(\hat Y_i-\bar Y)^2}_{SSR}+\underbrace{\sum(Y_i-\hat Y_i)^2}_{SSE}$$</div>
+    <div class="equation">$$r^2=\frac{SSR}{SST}\in[0,1], \qquad S_{YX}=\sqrt{\frac{SSE}{n-2}}$$</div>
+    <p><strong>$r^2$</strong> = tỉ lệ biến thiên của Y được giải thích bởi X. Ví dụ nhà: $r^2=18934.9/32600.5=0.581$ → 58.1% biến thiên giá được giải thích bởi diện tích. <strong>$S_{YX}$</strong> = độ lệch chuẩn của điểm quanh đường ($=41.33$ nghìn $, chia $n-2$ vì đã ước lượng 2 tham số).</p>
+  </article>
+
+  <article class="concept" data-concept="r-line">
+    <h3><span class="cid">6.4</span> Giả định LINE &amp; phân tích residual</h3>
+    <p>Bốn giả định — kiểm bằng đồ thị residual:</p>
+    <div class="tbl-wrap"><table><thead><tr><th></th><th>Giả định</th><th>Kiểm tra</th></tr></thead><tbody>
+      <tr><td><strong>L</strong></td><td>Linearity (quan hệ tuyến tính)</td><td>Residual vs X không có pattern cong</td></tr>
+      <tr><td><strong>I</strong></td><td>Independence (sai số độc lập)</td><td>Residual theo thứ tự/thời gian ngẫu nhiên · Durbin–Watson</td></tr>
+      <tr><td><strong>N</strong></td><td>Normality (sai số phân phối chuẩn)</td><td>Q–Q plot của residual gần đường thẳng</td></tr>
+      <tr><td><strong>E</strong></td><td>Equal variance (đồng phương sai)</td><td>Residual vs X có độ tản đều (không hình phễu = heteroscedasticity)</td></tr>
+    </tbody></table></div>
+    <p><strong>Durbin–Watson</strong> phát hiện tự tương quan (dữ liệu theo thời gian): $D=\frac{\sum_{i=2}^n(e_i-e_{i-1})^2}{\sum e_i^2}\in[0,4]$; $D\approx2$ tốt, $D&lt;2$ gợi ý tự tương quan dương.</p>
+  </article>
+
+  <article class="concept" data-concept="r-infer">
+    <h3><span class="cid">6.5</span> Suy diễn: t-test, F-test, khoảng tin cậy</h3>
+    <p>Kiểm định "có quan hệ tuyến tính không?" — $H_0:\beta_1=0$:</p>
+    <div class="equation">$$t=\frac{b_1-\beta_1}{S_{b_1}},\ df=n-2 \qquad F=\frac{MSR}{MSE} \qquad b_1\pm t_{n-2}S_{b_1}$$</div>
+    <p>Ví dụ nhà: $t=0.10977/0.03297=3.33 &gt; 2.306$ → bác bỏ $H_0$ (p = 0.0104). Với hồi quy đơn, $F=t^2$ ($3.33^2\approx11.08$). CI 95% cho slope = $(0.0337,0.1858)$ — không chứa 0 ⇒ có ý nghĩa.</p>
+    <p class="teaser">Mở rộng: khoảng tin cậy cho trung bình Y vs khoảng dự đoán cho một Y (leverage).</p>
+    <button class="expand-btn" data-expand="r-interval">Khoảng tin cậy vs khoảng dự đoán →</button>
+    <div class="detail-source" id="detail-r-interval" data-title="CI cho mean Y vs PI cho individual Y">
+      <h4>Đòn bẩy (leverage)</h4>
+      $$h=\frac1n+\frac{(X_i-\bar X)^2}{\sum(X_i-\bar X)^2}$$
+      <h4>CI cho trung bình Y | X</h4>
+      $$\hat Y_i\pm t_{n-2}\,S_{YX}\sqrt{h}$$
+      <h4>PI cho một Y cá thể | X</h4>
+      $$\hat Y_i\pm t_{n-2}\,S_{YX}\sqrt{1+h}$$
+      <p>Số "+1" phản ánh bất định của một quan sát đơn lẻ → khoảng dự đoán <strong>luôn rộng hơn</strong> khoảng tin cậy. Ví dụ nhà 2000 sqft: CI mean = (280.7, 354.9) nghìn $; PI = (215.5, 420.1) nghìn $. Khoảng rộng ra khi $X_i$ xa $\bar X$ — <strong>đừng ngoại suy (extrapolate)</strong> ngoài miền dữ liệu.</p>
+    </div>
+  </article>
+
+  <article class="concept" data-concept="r-multi">
+    <h3><span class="cid">6.6</span> Hồi quy bội</h3>
+    <p>Nhiều biến độc lập: $Y'=a+b_1X_1+\dots+b_kX_k$. $b_j$ = hệ số <em>riêng phần</em> (tác động của $X_j$ khi giữ nguyên các biến khác). $R^2$ = tỉ lệ biến thiên giải thích bởi <em>tập</em> biến. So sánh sức mạnh predictor bằng <strong>hệ số chuẩn hoá (beta)</strong> $\beta_j=b_j\,s_{X_j}/s_Y$.</p>
+    <div class="callout warning"><span class="lbl">⚠ $R^2$ luôn tăng khi thêm biến</span><p>Thêm biến (kể cả vô dụng) không bao giờ làm $R^2$ giảm — ví dụ trong tài liệu $R^2$ tăng 0.160 → 0.161 khi thêm một biến <em>không</em> có ý nghĩa. Vì vậy dùng <strong>adjusted $R^2$</strong> hoặc F-test trên chênh lệch $R^2$:</p>$$\bar R^2=1-(1-R^2)\frac{n-1}{n-k-1}$$</div>
+    <p class="teaser">Mở rộng: normal equations, gradient descent, regularization (Ridge/Lasso), bias–variance, RMSE/MAE — nền tảng ML không có trong slide gốc.</p>
+    <button class="expand-btn" data-expand="r-ml">Mở rộng ML (companion) →</button>
+    <div class="detail-source" id="detail-r-ml" data-title="Hồi quy — góc nhìn Machine Learning">
+      <h4>Nghiệm đóng — normal equations</h4>
+      $$\hat{\boldsymbol\beta}=(X^\top X)^{-1}X^\top \mathbf{y}$$
+      <p>$X$ = ma trận thiết kế $n\times(k+1)$ (cột đầu toàn 1 cho intercept).</p>
+      <h4>Hàm chi phí (MSE) &amp; gradient descent</h4>
+      $$J(\boldsymbol\beta)=\frac{1}{2m}\sum_{i=1}^m(\hat y_i-y_i)^2, \qquad \beta_j:=\beta_j-\frac{\alpha}{m}\sum_i(\hat y_i-y_i)x_{ij}$$
+      <p>$\alpha$ = learning rate. Với dữ liệu lớn/streaming, gradient descent thay cho nghiệm đóng. <strong>Chuẩn hoá feature trước</strong> để hội tụ ổn định.</p>
+      <h4>Regularization (chống overfitting, xử lý đa cộng tuyến)</h4>
+      $$\text{Ridge (L2): }\ \sum(y_i-\hat y_i)^2+\lambda\sum\beta_j^2$$
+      $$\text{Lasso (L1): }\ \sum(y_i-\hat y_i)^2+\lambda\sum|\beta_j|$$
+      <p>Ridge co hệ số về gần 0; Lasso đẩy một số hệ số <em>đúng bằng 0</em> (tự chọn feature); Elastic Net trộn cả hai. <strong>Chuẩn hoá trước, không phạt intercept.</strong></p>
+      <h4>Bias–variance &amp; VIF</h4>
+      $$\mathbb{E}[(y-\hat f(x))^2]=\text{Bias}^2+\text{Variance}+\sigma^2, \qquad VIF_j=\frac1{1-R_j^2}$$
+      <p>Linh hoạt hơn ⇒ bias ↓ nhưng variance ↑. VIF &gt; 5 đáng lo, &gt; 10 nghiêm trọng. Đánh giá dự đoán ngoài mẫu bằng RMSE $=\sqrt{\frac1n\sum(y_i-\hat y_i)^2}$, MAE $=\frac1n\sum|y_i-\hat y_i|$ trên tập test / cross-validation.</p>
+      <div class="callout warning"><span class="lbl">⚠ Sửa lỗi slide 75</span><p>Slide in kết quả 56.23; hệ số hiển thị thực ra cho $36.83+3.52(6)-0.44(4)=\mathbf{56.19}$. Ngoài ra slide 7 nói "Y bị X <em>gây ra</em>" — quá lời, mâu thuẫn với cảnh báo correlation ≠ causation; OLS đơn thuần <em>không</em> chứng minh nhân quả.</p></div>
+    </div>
+  </article>
+</section>
+  <section class="module" id="m-classification" data-module="classification">
+  <header class="page-head">
+    <span class="eyebrow">Module 07 · Predictive · Classification</span>
+    <h1 class="title">Đánh giá <span>phân loại</span></h1>
+    <p class="subtitle">Vì sao accuracy không đủ: confusion matrix, precision/recall/F1, ROC &amp; PR, chọn ngưỡng theo mục tiêu &amp; chi phí, và hiệu chỉnh xác suất (calibration).</p>
+  </header>
+
+  <article class="concept" data-concept="cl-cm">
+    <h3><span class="cid">7.1</span> Confusion matrix &amp; các tỉ lệ lõi</h3>
+    <p>Mọi chỉ số bắt nguồn từ 4 ô, tính <em>sau khi</em> đã chọn ngưỡng τ để biến score → nhãn:</p>
+    <div class="tbl-wrap"><table><thead><tr><th></th><th>Dự đoán +</th><th>Dự đoán −</th></tr></thead><tbody>
+      <tr><td><strong>Thực tế +</strong></td><td>TP (đúng dương)</td><td>FN (bỏ sót, Type II)</td></tr>
+      <tr><td><strong>Thực tế −</strong></td><td>FP (báo động giả, Type I)</td><td>TN (đúng âm)</td></tr>
+    </tbody></table></div>
+    <div class="equation">$$\text{Precision}=\frac{TP}{TP+FP},\quad \text{Recall}=\text{TPR}=\frac{TP}{TP+FN},\quad \text{Specificity}=\text{TNR}=\frac{TN}{TN+FP}=1-\text{FPR}$$</div>
+    <div class="equation">$$\text{Accuracy}=\frac{TP+TN}{TP+TN+FP+FN}, \qquad F_1=2\cdot\frac{P\cdot R}{P+R}, \qquad F_\beta=(1+\beta^2)\frac{P\cdot R}{\beta^2 P+R}$$</div>
+    <p>$\beta&gt;1$ ưu tiên recall (bỏ sót đắt: y tế), $\beta&lt;1$ ưu tiên precision (báo động giả đắt).</p>
+    <div class="callout warning"><span class="lbl">⚠ Accuracy đánh lừa khi mất cân bằng lớp</span><p>1000 mẫu, 990 âm / 10 dương. Mô hình "lười" dự đoán tất cả là âm: <strong>accuracy 99%</strong> nhưng bắt được <em>0</em> ca dương → F1 = 0, MCC = 0. Dùng <strong>MCC, balanced accuracy, G-mean, PR-AUC</strong> khi mất cân bằng.</p></div>
+    <div class="equation">$$MCC=\frac{TP\cdot TN-FP\cdot FN}{\sqrt{(TP{+}FP)(TP{+}FN)(TN{+}FP)(TN{+}FN)}}\in[-1,1]$$</div>
+  </article>
+
+  <article class="concept" data-concept="cl-roc">
+    <h3><span class="cid">7.2</span> Ngưỡng, ROC &amp; PR</h3>
+    <p><strong>Cartoon:</strong> model cho <em>điểm số</em>, không phải nhãn. Trượt ngưỡng τ → 4 ô di chuyển → vẽ ra đường ROC/PR.</p>
+    <p><strong>ROC:</strong> vẽ TPR (trục y) theo FPR (trục x) khi quét mọi τ. <strong>AUC</strong> = xác suất một điểm dương ngẫu nhiên được xếp hạng cao hơn một điểm âm ngẫu nhiên: $\text{AUC}=P(\text{score}_+&gt;\text{score}_-)$; bất biến với biến đổi đơn điệu, <em>bỏ qua prevalence</em>. <strong>PR curve</strong> (precision theo recall) tốt hơn khi <strong>positive hiếm</strong>; baseline precision = prevalence.</p>
+
+    <div class="demo" id="demo-clf">
+      <div class="demo-head"><span class="eyebrow">Demo tương tác</span><span>Ngưỡng → confusion matrix → ROC</span></div>
+      <div class="demo-stage"><canvas id="clf-cv" data-h="260"></canvas></div>
+      <div class="demo-controls">
+        <div class="ctrl"><label>NGƯỠNG τ <output id="clf-t">0.50</output></label><input type="range" id="clf-t-r" min="0.02" max="0.98" step="0.01" value="0.5"></div>
+        <div class="ctrl"><label>MA TRẬN NHẦM LẪN</label>
+          <div class="cm" id="clf-cm">
+            <div class="hd"></div><div class="hd">Dự đoán +</div><div class="hd">Dự đoán −</div>
+            <div class="hd">Thực +</div><div class="tp"><b id="cm-tp">0</b>TP</div><div class="fn"><b id="cm-fn">0</b>FN</div>
+            <div class="hd">Thực −</div><div class="fp"><b id="cm-fp">0</b>FP</div><div class="tn"><b id="cm-tn">0</b>TN</div>
+          </div>
+        </div>
+      </div>
+      <div class="demo-readout">
+        <span class="ro">Precision <b id="clf-p">–</b></span><span class="ro">Recall <b id="clf-r">–</b></span>
+        <span class="ro">F1 <b id="clf-f1">–</b></span><span class="ro">Accuracy <b id="clf-acc">–</b></span>
+        <span class="ro">AUC <b id="clf-auc">–</b></span>
+      </div>
+      <div class="demo-cap">200 mẫu, 40 dương / 160 âm (prevalence 0.2). Trái: phân phối điểm của lớp âm (xanh) &amp; dương (đỏ) với đường ngưỡng. Phải: đường ROC + điểm vận hành hiện tại. Hạ τ → recall ↑ nhưng precision ↓ (nhiều FP). <b>AUC không đổi theo τ</b> — nó đo toàn bộ thứ hạng.</div>
+    </div>
+  </article>
+
+  <article class="concept" data-concept="cl-cost">
+    <h3><span class="cid">7.3</span> Chọn ngưỡng theo chi phí (cost-sensitive)</h3>
+    <p>Chi phí hai loại lỗi thường <em>bất đối xứng</em> (bỏ sót ung thư ≫ báo động giả; nhưng lọc nhầm email quan trọng ≫ để lọt spam). Ngưỡng tối ưu Bayes:</p>
+    <div class="equation">$$\tau^*=\frac{C_{FP}}{C_{FN}+C_{FP}}$$</div>
+    <p>Quy tắc: dự đoán dương khi $p&gt;\tau^*$. Dẫn xuất: dự đoán dương khi $(1-p)C_{FP}&lt;p\,C_{FN}\Rightarrow p&gt;C_{FP}/(C_{FN}+C_{FP})$.</p>
+    <div class="callout warning"><span class="lbl">⚠ Sửa lỗi tài liệu (slide 45)</span><p>Slide 45 ghi $\tau^*=C_{FP}/C_{FN}$ — <strong>sai</strong>, mâu thuẫn với công thức đúng ở slide 31. Bản slide 45 có thể vượt quá 1 (vô nghĩa cho ngưỡng) khi $C_{FP}&gt;C_{FN}$. Dùng $\tau^*=C_{FP}/(C_{FN}+C_{FP})$.</p></div>
+    <p><strong>Chọn ngưỡng còn theo:</strong> tối đa F1/Fβ trên validation · hình học ROC (gần điểm (0,1) nhất, hoặc max Youden's $J=\text{TPR}-\text{FPR}$) · ràng buộc precision/recall · <strong>top-k</strong> (chỉ hành động được k ca). <strong>Luôn tune τ trên held-out, không phải test set.</strong></p>
+  </article>
+
+  <article class="concept" data-concept="cl-calib">
+    <h3><span class="cid">7.4</span> Calibration &amp; các chỉ số nâng cao</h3>
+    <p><strong>Calibration</strong> đảm bảo "điểm 0.8" thật sự nghĩa là 80% xác suất. Cần khi <em>giá trị xác suất</em> đi vào công thức tài chính (ROI, phí bảo hiểm), không cần khi chỉ xếp hạng (top-k). Random Forest thường <em>over-confident</em> → dùng <strong>Isotonic</strong> hoặc <strong>Platt scaling</strong> để nắn về đường chéo. Calibration cải thiện Brier/log-loss/ECE nhưng <em>không đổi AUC</em>.</p>
+    <p class="teaser">Mở rộng: Brier, log loss, ECE/MCE · micro vs macro vs weighted averaging · lift/gain.</p>
+    <button class="expand-btn" data-expand="cl-more">Công thức &amp; averaging →</button>
+    <div class="detail-source" id="detail-cl-more" data-title="Calibration, averaging, lift">
+      <h4>Proper scoring rules</h4>
+      $$\text{Brier}=\frac1N\sum(p_i-y_i)^2, \qquad \text{LogLoss}=-\frac1N\sum[y_i\ln p_i+(1-y_i)\ln(1-p_i)]$$
+      $$\text{ECE}=\sum_b\frac{n_b}{N}|\text{acc}(b)-\text{conf}(b)|, \qquad \text{MCE}=\max_b|\text{acc}(b)-\text{conf}(b)|$$
+      <p>Reliability curve: chia xác suất thành ~10 bin, vẽ mean predicted (x) vs observed rate (y); hoàn hảo nằm trên đường chéo $y=x$.</p>
+      <h4>Micro vs Macro vs Weighted (đa lớp — thiếu trên slide)</h4>
+      <ul>
+        <li><strong>Macro</strong> = trung bình <em>không</em> trọng số các lớp → quan tâm lớp hiếm ngang lớp phổ biến.</li>
+        <li><strong>Weighted</strong> = trọng số theo support $n_c$ → phản ánh tổng thể.</li>
+        <li><strong>Micro</strong> = gộp mọi TP/FP/FN rồi tính một lần → với single-label multiclass, micro-F1 = accuracy.</li>
+      </ul>
+      <h4>Threshold-free vs threshold-dependent</h4>
+      <p>AUC-ROC, PR-AUC/AP, Brier, log loss <em>không</em> phụ thuộc ngưỡng (đánh giá cả thứ hạng/xác suất). Accuracy, precision, recall, F1, MCC tính <em>tại một</em> ngưỡng.</p>
+      <h4>Lift &amp; Gain</h4>
+      <p>Cumulative gain: "nhắm 20% top thu 70% responder". Lift: "nhắm 20% top hiệu quả gấp 3.5× ngẫu nhiên". Dùng cho marketing top-k.</p>
+    </div>
+  </article>
+</section>
+  <section class="module" id="m-clustering" data-module="clustering">
+  <header class="page-head">
+    <span class="eyebrow">Module 08 · Unsupervised learning</span>
+    <h1 class="title">Phân cụm &amp; <span>Giảm chiều</span></h1>
+    <p class="subtitle">Học không giám sát cho kinh doanh: phân khúc khách hàng (K-means, GMM/EM), giảm chiều (PCA), và khung RFM. Đây là kỹ thuật <em>descriptive</em>, không phải predictive.</p>
+  </header>
+
+  <article class="concept" data-concept="cu-prep">
+    <h3><span class="cid">8.1</span> Chuẩn bị dữ liệu &amp; khoảng cách</h3>
+    <p><strong>Scaling là bắt buộc</strong> trước cả K-means lẫn PCA: phương pháp dựa khoảng cách/phương sai bị thống trị bởi feature có range lớn nhất. Các khoảng cách:</p>
+    <div class="equation">$$d_{\text{Euclid}}=\sqrt{\textstyle\sum_j(p_j-q_j)^2}, \quad \cos\theta=\frac{\mathbf p\cdot\mathbf q}{\|\mathbf p\|\|\mathbf q\|}, \quad d_{\text{Maha}}=\sqrt{(\mathbf x-\boldsymbol\mu)^\top\Sigma^{-1}(\mathbf x-\boldsymbol\mu)}$$</div>
+    <p>Euclidean (mặc định K-means, nhạy scale) · Cosine (dữ liệu thưa, text — quan tâm <em>hướng</em>) · Mahalanobis (tính đến covariance, bất biến scale).</p>
+  </article>
+
+  <article class="concept" data-concept="cu-km">
+    <h3><span class="cid">8.2</span> K-means</h3>
+    <p><strong>Cartoon:</strong> đặt $k$ "tâm", gán mỗi điểm về tâm gần nhất, dời tâm về trung bình cụm, lặp tới khi tâm đứng yên.</p>
+    <p><strong>Mục tiêu</strong> — tối thiểu tổng bình phương trong cụm (WCSS / Inertia / SSE); bước "update" (dời tâm về mean) chính là bước tối thiểu WCSS:</p>
+    <div class="equation">$$\text{WCSS}=\sum_{i=1}^{k}\sum_{x\in C_i}\|x-\mu_i\|^2, \qquad \mu_i=\frac{1}{|C_i|}\sum_{x\in C_i}x$$</div>
+
+    <div class="demo" id="demo-km">
+      <div class="demo-head"><span class="eyebrow">Demo tương tác</span><span>Thuật toán K-means từng bước</span></div>
+      <div class="demo-stage"><canvas id="km-cv" data-h="340"></canvas></div>
+      <div class="demo-controls">
+        <div class="ctrl"><label>SỐ CỤM k <output id="km-k">3</output></label><input type="range" id="km-k-r" min="2" max="5" step="1" value="3"></div>
+        <div class="ctrl"><label>ĐIỀU KHIỂN</label>
+          <div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn-mini" id="km-reset">Khởi tạo lại</button><button class="btn-mini" id="km-step">Bước ▸</button><button class="btn-mini primary" id="km-run">Chạy ⏩</button></div>
+        </div>
+      </div>
+      <div class="demo-readout"><span class="ro">Vòng lặp <b id="km-iter">0</b></span><span class="ro">WCSS = <b id="km-wcss">–</b></span><span class="ro" id="km-conv"></span></div>
+      <div class="demo-cap">Dấu × = tâm cụm. Bấm <b>Bước</b> để xem một vòng gán-rồi-cập-nhật; <b>Chạy</b> tới hội tụ. WCSS <em>luôn giảm</em> qua mỗi bước. Thử <b>Khởi tạo lại</b> nhiều lần với k=3: đôi khi rơi vào <em>local minimum</em> xấu — đó là lý do dùng k-means++ &amp; nhiều lần khởi tạo (<code>n_init</code>).</div>
+    </div>
+    <div class="callout warning"><span class="lbl">⚠ Giả định &amp; điểm yếu K-means</span><p>Giả định cụm <strong>lồi, gần hình cầu, kích thước tương đương</strong>. Thất bại với hình lưỡi liềm/vòng (non-convex), mật độ khác nhau, cụm lệch cỡ. Chọn $k$ trước; nghiệm là <em>local optimum</em> (khởi tạo bằng k-means++, chạy nhiều lần giữ WCSS thấp nhất).</p></div>
+  </article>
+
+  <article class="concept" data-concept="cu-k">
+    <h3><span class="cid">8.3</span> Chọn số cụm k</h3>
+    <p><strong>Elbow:</strong> vẽ Inertia theo $k$, tìm "khuỷu" nơi đường gãy &amp; phẳng dần (diminishing returns). <strong>Silhouette:</strong> đo cohesion vs separation, chọn $k$ tối đa hoá:</p>
+    <div class="equation">$$s(i)=\frac{b(i)-a(i)}{\max\{a(i),b(i)\}}\in[-1,1]$$</div>
+    <p>$a(i)$ = khoảng cách trung bình tới điểm cùng cụm; $b(i)$ = khoảng cách trung bình nhỏ nhất tới cụm khác. Gần +1 tốt, ~0 chồng lấn, &lt;0 gán sai cụm. Kết hợp Elbow + Silhouette + <strong>ý nghĩa kinh doanh</strong> — không tin một chỉ số.</p>
+  </article>
+
+  <article class="concept" data-concept="cu-gmm">
+    <h3><span class="cid">8.4</span> GMM &amp; thuật toán EM</h3>
+    <p><strong>Vượt K-means:</strong> GMM mô hình cụm là <em>ellipse</em> (có covariance, xoay/kéo giãn được) và cho <strong>soft assignment</strong> (xác suất thành viên: "khách 60% Loyal, 40% At-Risk"). Mỗi thành phần Gaussian có 3 tham số: mean $\mu$, covariance $\Sigma$, weight $\pi$.</p>
+    <p class="teaser">Mở rộng: mật độ Gaussian, thuật toán EM (E-step/M-step), chọn số thành phần bằng AIC/BIC.</p>
+    <button class="expand-btn" data-expand="cu-em">Chi tiết GMM/EM →</button>
+    <div class="detail-source" id="detail-cu-em" data-title="GMM & EM">
+      <h4>Mật độ hỗn hợp</h4>
+      $$p(\mathbf x)=\sum_{c=1}^K\pi_c\,\mathcal N(\mathbf x\mid\boldsymbol\mu_c,\Sigma_c), \quad \sum_c\pi_c=1$$
+      <h4>EM — giải "con gà & quả trứng"</h4>
+      <p><strong>E-step</strong> (soft assignment) — trách nhiệm $\gamma_{ic}$:</p>
+      $$\gamma_{ic}=\frac{\pi_c\,\mathcal N(\mathbf x_i\mid\boldsymbol\mu_c,\Sigma_c)}{\sum_j\pi_j\,\mathcal N(\mathbf x_i\mid\boldsymbol\mu_j,\Sigma_j)}$$
+      <p><strong>M-step</strong> (cập nhật, có trọng số theo trách nhiệm), $N_c=\sum_i\gamma_{ic}$:</p>
+      $$\boldsymbol\mu_c=\frac1{N_c}\sum_i\gamma_{ic}\mathbf x_i,\quad \pi_c=\frac{N_c}{n}$$
+      <p>Lặp E&amp;M tới khi log-likelihood ngừng tăng. Chỉ đạt <em>local optimum</em>.</p>
+      <h4>Chọn số thành phần</h4>
+      $$\text{AIC}=2p-2\ln\hat L, \qquad \text{BIC}=p\ln n-2\ln\hat L$$
+      <p>Log-likelihood luôn tăng theo số thành phần → cần phạt độ phức tạp. <strong>Thấp hơn là tốt hơn.</strong> BIC phạt mạnh hơn ($p\ln n &gt; 2p$ khi $n\ge8$) → mô hình đơn giản hơn, an toàn cho BA.</p>
+    </div>
+  </article>
+
+  <article class="concept" data-concept="cu-pca">
+    <h3><span class="cid">8.5</span> PCA — Principal Component Analysis</h3>
+    <p><strong>Cartoon:</strong> xoay hệ trục về những hướng dữ liệu <em>trải rộng nhất</em>, giữ vài hướng đầu → nén dữ liệu, khử nhiễu, trực quan 2D.</p>
+    <p><strong>Cơ chế:</strong> PCA tìm các hướng trực giao (principal components) tối đa hoá phương sai, qua <em>eigen-decomposition</em> ma trận covariance (hoặc SVD của dữ liệu đã center):</p>
+    <div class="equation">$$\Sigma v_i=\lambda_i v_i \qquad (\lambda_1\ge\lambda_2\ge\dots), \qquad \text{EVR}_i=\frac{\lambda_i}{\sum_{j=1}^d\lambda_j}$$</div>
+    <p>$v_i$ = hướng PC thứ $i$; $\lambda_i$ = phương sai theo hướng đó; <strong>EVR</strong> = tỉ lệ phương sai PC $i$ giải thích. Chọn số PC theo scree plot (khuỷu) hoặc ngưỡng cumulative EVR (vd 95%).</p>
+    <div class="callout warning"><span class="lbl">⚠ Sửa lỗi &amp; lưu ý PCA</span><p>Slide 41 in mẫu số $\sum_{j=1}^d\lambda_i$ (lỗi chỉ số) → phải là $\sum_{j=1}^d\lambda_j$. PCA <strong>tuyến tính &amp; không giám sát</strong>: phương sai lớn ≠ khả năng phân biệt lớp (muốn phân biệt lớp → dùng LDA). <strong>Phải chuẩn hoá trước</strong>; dấu của loadings tuỳ ý (đừng diễn giải dấu, chỉ độ lớn/góc).</p></div>
+    <p class="teaser">Mở rộng: SVD, whitening, reconstruction error, loadings/biplot, t-SNE/UMAP, RFM.</p>
+    <button class="expand-btn" data-expand="cu-pca2">SVD, RFM &amp; t-SNE →</button>
+    <div class="detail-source" id="detail-cu-pca2" data-title="PCA (SVD), RFM, t-SNE/UMAP">
+      <h4>PCA qua SVD</h4>
+      $$X\leftarrow X-\mu, \qquad X=U\Sigma V^\top, \qquad \text{Scores}=U\Sigma, \qquad Z=X_{\text{centered}}W_k$$
+      <p>Cột của $V$ = hướng chính; $\Sigma$ ở đây là ma trận <em>giá trị kỳ dị</em> (khác ma trận covariance — trùng ký hiệu!). Quan hệ $\lambda_i=\sigma_i^2/(n-1)$. SVD <strong>chỉ</strong> là PCA khi áp lên dữ liệu đã center.</p>
+      <h4>Reconstruction error</h4>
+      $$\text{Error}=\frac1m\sum_i\|x^{(i)}-x_{\text{approx}}\|^2$$
+      <p>Càng nhiều PC càng nhỏ; $k=d$ → error 0. Test error có thể tăng lại nếu giữ quá nhiều PC (overfitting).</p>
+      <h4>t-SNE / UMAP</h4>
+      <p>Phi tuyến, "mở" được manifold cong mà PCA làm phẳng. Nhưng <strong>stochastic</strong>, nhạy hyperparameter (perplexity / n_neighbors), <strong>trục không có nghĩa</strong> — chỉ dùng trực quan, không làm feature. t-SNE không transform điểm mới; UMAP thì có.</p>
+      <h4>RFM — phân khúc hành vi</h4>
+      <p><strong>Recency</strong> (số ngày từ lần mua cuối — thấp = tốt, đảo ngược) · <strong>Frequency</strong> (số giao dịch) · <strong>Monetary</strong> (tổng chi tiêu). Chấm điểm bằng <em>quintile</em> (1–5), ghép mã "R5F5M5". Taxonomy: Champions, Loyal, Potential Loyalist / At Risk, Hibernating, Lost. F &amp; M thường lệch phải (Pareto 80/20) → phải dùng quantile binning. RFM là <em>descriptive</em>, không dự báo — ghép mô hình dự đoán nếu cần forecast.</p>
+      <h4>Pipeline lai</h4>
+      <p><code>Standardize → PCA → K-means/GMM → Profile &amp; đặt tên persona</code>. Dùng time-based split (dữ liệu khách rò rỉ nếu split ngẫu nhiên), giám sát concept drift, tránh thuộc tính nhạy cảm/proxy (GDPR).</p>
+    </div>
+  </article>
+</section>
+  <section class="module" id="m-timeseries" data-module="timeseries">
+  <header class="page-head">
+    <span class="eyebrow">Module 09 · Predictive · Forecasting</span>
+    <h1 class="title">Chuỗi <span>thời gian</span></h1>
+    <p class="subtitle">Dự báo khi thứ tự thời gian là tất cả: phân rã, làm mượt mũ (ETS/Holt-Winters), ARIMA &amp; tính dừng, cross-validation đúng cách, và chọn thước đo lỗi (MASE, không MAPE).</p>
+  </header>
+
+  <article class="concept" data-concept="t-comp">
+    <h3><span class="cid">9.1</span> Thành phần &amp; phân rã</h3>
+    <p><strong>Chuyển dịch tư duy:</strong> thống kê cổ điển giả định độc lập $y_i\perp y_j$; chuỗi thời gian thì ngược lại — <strong>sự phụ thuộc giữa các quan sát kề nhau chính là tín hiệu</strong> ($\text{Cov}(y_t,y_{t-1})\ne0$).</p>
+    <p>Ba thành phần: Trend-cycle $T_t$, Seasonality $S_t$ (chu kỳ cố định $m$), Remainder $R_t$.</p>
+    <div class="equation">$$\text{Cộng: } y_t=T_t+S_t+R_t \qquad\qquad \text{Nhân: } y_t=T_t\times S_t\times R_t$$</div>
+    <p>Chọn <strong>cộng</strong> khi biên độ mùa <em>không đổi</em> theo mức; <strong>nhân</strong> khi biên độ mùa <em>tỉ lệ</em> với mức (lấy log biến nhân thành cộng). <strong>STL</strong> (Seasonal-Trend with Loess) cho phép mùa <em>tiến hoá</em> theo thời gian &amp; bền với outlier.</p>
+  </article>
+
+  <article class="concept" data-concept="t-ets">
+    <h3><span class="cid">9.2</span> Làm mượt mũ (Exponential Smoothing / ETS)</h3>
+    <p><strong>Cartoon:</strong> trung bình di động cho mọi điểm trọng số bằng nhau; làm mượt mũ cho điểm <em>gần đây</em> trọng số lớn hơn, giảm dần theo cấp số nhân: $w_j=\alpha(1-\alpha)^j$.</p>
+    <p><strong>SES</strong> (không xu hướng, không mùa) — dự báo phẳng:</p>
+    <div class="equation">$$\ell_t=\alpha\,y_t+(1-\alpha)\,\ell_{t-1}, \qquad \hat y_{t+h|t}=\ell_t$$</div>
+    <p>$\alpha$ lớn → phản ứng nhanh với dữ liệu mới; $\alpha$ nhỏ → mượt, bám lịch sử. Kéo thử:</p>
+
+    <div class="demo" id="demo-ses">
+      <div class="demo-head"><span class="eyebrow">Demo tương tác</span><span>Simple Exponential Smoothing</span></div>
+      <div class="demo-stage"><canvas id="ses-cv" data-h="300"></canvas></div>
+      <div class="demo-controls">
+        <div class="ctrl"><label>THAM SỐ LÀM MƯỢT α <output id="ses-a">0.30</output></label><input type="range" id="ses-a-r" min="0.02" max="1" step="0.02" value="0.3"></div>
+      </div>
+      <div class="demo-readout"><span class="ro">SSE trên chuỗi = <b id="ses-sse">–</b></span><span class="ro">dự báo 4 kỳ tới = <b id="ses-fc">–</b></span></div>
+      <div class="demo-cap">Chấm = dữ liệu thật; đường xanh = mức đã làm mượt $\ell_t$; đoạn nét đứt = dự báo phẳng $\hat y_{t+h}=\ell_t$. α thấp (0.1) đường rất mượt nhưng chậm; α cao (0.9) bám sát nhưng nhiễu. α được <em>ước lượng</em> bằng tối thiểu SSE, không chọn tay.</div>
+    </div>
+
+    <p><strong>Holt</strong> (thêm xu hướng): $\hat y_{t+h|t}=\ell_t+h\,b_t$. <strong>Damped</strong> ($\phi&lt;1$): xu hướng "xẹp" dần về đường ngang — thường chính xác nhất cho dự báo dài hạn. <strong>Holt-Winters</strong> (thêm mùa): cộng hoặc nhân. Bộ phân loại <strong>ETS(Error, Trend, Seasonal)</strong>, tự chọn bằng min AICc.</p>
+    <div class="callout warning"><span class="lbl">⚠ Sửa lỗi Holt-Winters</span><p>Slide viết chỉ số mùa là $s_{t-m+k}$ — thiếu chính xác. Đúng là $s_{t+h-m(k+1)}$ với $k=\lfloor(h-1)/m\rfloor$ (lấy mùa tương ứng gần nhất). Khác biệt cộng/nhân: cộng dùng <em>trừ</em> ($y_t-s$), nhân dùng <em>chia</em> ($y_t/s$).</p></div>
+  </article>
+
+  <article class="concept" data-concept="t-arima">
+    <h3><span class="cid">9.3</span> ARIMA &amp; tính dừng (stationarity)</h3>
+    <p><strong>ARIMA(p,d,q)</strong> mô tả <em>tự tương quan</em>: AR($p$) hồi quy theo giá trị quá khứ, I($d$) sai phân để đạt tính dừng, MA($q$) hồi quy theo <em>sai số</em> quá khứ.</p>
+    <p><strong>Stationarity</strong> = trung bình, phương sai không đổi theo thời gian &amp; autocovariance chỉ phụ thuộc lag. <em>Quan trọng</em> vì tham số AR/MA chỉ có nghĩa &amp; tổng quát hoá được khi chuỗi dừng. Kiểm bằng <strong>ADF test</strong> ($H_0$: có unit root = không dừng; $p&lt;0.05$ ⇒ <em>dừng</em> — ngược trực giác!). Sai phân để tạo tính dừng: $y'_t=y_t-y_{t-1}=(1-B)y_t$.</p>
+    <p><strong>Chọn p, q</strong> bằng ACF/PACF: AR($p$) → PACF <em>cắt</em> sau lag $p$, ACF tắt dần; MA($q$) → ACF cắt sau lag $q$, PACF tắt dần.</p>
+    <p class="teaser">Mở rộng: quy trình Box-Jenkins, SARIMA, dynamic regression/Prophet, holiday effects.</p>
+    <button class="expand-btn" data-expand="t-bj">Box-Jenkins, SARIMA, Prophet →</button>
+    <div class="detail-source" id="detail-t-bj" data-title="ARIMA nâng cao">
+      <h4>Quy trình Box-Jenkins</h4>
+      <ol><li>Vẽ dữ liệu (trend/mùa/outlier).</li><li>Biến đổi (Box-Cox/log) ổn định phương sai.</li><li>Sai phân tới khi ADF pass.</li><li>Nhìn ACF/PACF đoán $p,q$.</li><li>Ước lượng bằng MLE, chọn min AICc.</li><li>Kiểm residual = white noise (<strong>Ljung-Box</strong>). Nếu chưa → sửa mô hình.</li></ol>
+      <h4>SARIMA (bổ sung — không viết trên slide)</h4>
+      $$\Phi_P(B^m)\phi_p(B)(1-B)^d(1-B^m)^D y_t=\Theta_Q(B^m)\theta_q(B)\epsilon_t$$
+      <p>Ký hiệu ARIMA$(p,d,q)(P,D,Q)_m$ — chữ hoa là bậc mùa trên $B^m$.</p>
+      <h4>Holiday di động &amp; dynamic regression</h4>
+      <p>SARIMA giả định mùa <em>khoá chặt vào tháng lịch</em> → không xử lý được lễ di động (Easter tháng 3/4, Ramadan trôi ~11 ngày). Giải: <strong>ARIMAX / dynamic regression</strong> — hồi quy $y_t=\beta_0+\sum\beta_i x_{i,t}+\eta_t$ với $\eta_t$ là quá trình ARIMA, và biến dummy cho lễ (kèm window lead/lag). <strong>Prophet</strong>: $y(t)=g(t)+s(t)+h(t)+\epsilon_t$ (trend piecewise + mùa Fourier + lễ) — dễ dùng nhưng ít chặt chẽ thống kê.</p>
+    </div>
+  </article>
+
+  <article class="concept" data-concept="t-eval">
+    <h3><span class="cid">9.4</span> Cross-validation &amp; thước đo lỗi</h3>
+    <div class="callout warning"><span class="lbl">⚠ Quy tắc vàng</span><p>K-Fold ngẫu nhiên (xáo trộn) là <strong>PHẠM LUẬT</strong> với chuỗi thời gian — phá vỡ phụ thuộc thời gian &amp; "nhìn trộm tương lai". Dùng <strong>Time-Series CV (walk-forward)</strong>: tập test luôn <em>sau</em> tập train. Cửa sổ mở rộng (expanding) dùng hết lịch sử; cửa sổ trượt (rolling) thích nghi structural break.</p></div>
+    <div class="equation">$$\text{MAPE}=\text{mean}\left|\frac{y_t-\hat y_t}{y_t}\right|\times100, \qquad \text{MASE}=\frac{\text{MAE}_{\text{model}}}{\text{MAE}_{\text{naive}}}$$</div>
+    <p><strong>MASE là tiêu chuẩn vàng:</strong> &lt;1 nghĩa là mô hình <em>thắng</em> naive; &gt;1 nghĩa là thua (nên dùng naive). Scale-free, xác định cả khi $y_t=0$.</p>
+    <div class="callout warning"><span class="lbl">⚠ Vấn đề của MAPE (và sửa lỗi hướng bất đối xứng)</span><p>MAPE <strong>không xác định khi $y_t=0$</strong> và bùng nổ khi $y_t$ gần 0. Nó <em>bất đối xứng</em>: phạt <strong>over-forecast</strong> nặng hơn under-forecast cùng độ lệch (vì chia cho actual). Ví dụ: actual 100, dự báo 150 → 50%; actual 150, dự báo 100 → 33%. (Slide gốc nói ngược chiều — nên phát biểu không phụ thuộc quy ước: "MAPE phạt dự báo cao hơn thực tế nặng hơn".)</p></div>
+    <p><strong>Thông điệp chốt (George Box):</strong> "Mọi mô hình đều sai, một số hữu ích." Mô hình phức tạp (LSTM) thường thua mô hình đơn giản bền vững (ETS) trên dữ liệu tháng nhiễu — <strong>bắt đầu đơn giản</strong>, luôn vượt được ít nhất seasonal naive.</p>
+  </article>
+</section>
+  <section class="module" id="m-projects" data-module="projects">
+  <header class="page-head">
+    <span class="eyebrow">Module 10 · Capstone</span>
+    <h1 class="title">Dự án <span>môn học</span></h1>
+    <p class="subtitle">7 lựa chọn đề tài (nhóm 4–5 người), cùng một vòng đời 8 module, bộ deliverable &amp; rubric thống nhất — mỗi đề tài vận dụng đúng những module bạn vừa học.</p>
+  </header>
+
+  <article class="concept" data-concept="p-options">
+    <h3><span class="cid">10.1</span> Bảy lựa chọn đề tài</h3>
+    <p>Bao phủ đủ 4 họ kỹ thuật của môn: 2 hồi quy, 2 forecasting, 2 clustering, 2 classification (2 đề tài kết hợp):</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Đề tài</th><th>Loại bài toán</th><th>Module chính</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Customer Churn &amp; Segmentation</strong> (digital bank)</td><td>Classification + Clustering</td><td>07 + 08</td></tr>
+        <tr><td><strong>E-commerce Fraud Detection</strong></td><td>Classification (mất cân bằng, fraud &lt;5%)</td><td>07</td></tr>
+        <tr><td><strong>E-commerce Order Value Prediction</strong></td><td>Regression</td><td>06</td></tr>
+        <tr><td><strong>EdTech Enrollment Forecasting</strong></td><td>Time-series forecasting</td><td>09</td></tr>
+        <tr><td><strong>EdTech Learner Segmentation</strong></td><td>Clustering</td><td>08</td></tr>
+        <tr><td><strong>Real Estate House Price Prediction</strong></td><td>Regression</td><td>06</td></tr>
+        <tr><td><strong>Retail/FMCG Demand Forecasting</strong></td><td>Time-series forecasting</td><td>09</td></tr>
+      </tbody>
+    </table></div>
+    <p>Mọi đề tài đều dùng thêm module <strong>01</strong> (framing/KPI), <strong>04</strong> (cleaning/feature) &amp; <strong>05</strong> (EDA) cho các giai đoạn đầu vòng đời.</p>
+  </article>
+
+  <article class="concept" data-concept="p-lifecycle">
+    <h3><span class="cid">10.2</span> Vòng đời 8 module (giống nhau ở mọi đề tài)</h3>
+    <div class="svg-fig"><div class="lifecycle">
+      <span class="step">1 Business &amp; Data Gen</span><span class="arr">→</span>
+      <span class="step">2 EDA</span><span class="arr">→</span>
+      <span class="step">3 Cleaning</span><span class="arr">→</span>
+      <span class="step">4 Feature Eng</span><span class="arr">→</span>
+      <span class="step">5 Model</span><span class="arr">→</span>
+      <span class="step">6 Deploy</span><span class="arr">→</span>
+      <span class="step">7 Monitor</span><span class="arr">→</span>
+      <span class="step">8 Report</span>
+    </div><figcaption>Vòng đời dự án — chính là CRISP-DM áp dụng thực tế</figcaption></div>
+    <p><strong>Thiết kế dữ liệu bắt buộc:</strong> ghép <em>1 dataset Kaggle gốc</em> + <em>dữ liệu synthetic tự sinh bằng Python</em> (Faker + logic nghiệp vụ), kèm <strong>data dictionary</strong> đầy đủ (cột, kiểu, đơn vị, miền giá trị, logic sinh). Mục đích: tránh bài "tải-về-rồi-train".</p>
+  </article>
+
+  <article class="concept" data-concept="p-rubric">
+    <h3><span class="cid">10.3</span> Deliverable &amp; rubric chấm điểm</h3>
+    <p><strong>Nộp:</strong> GitHub repo · data dictionary (Excel/Markdown) · API + demo dashboard (link deploy <em>trực tiếp</em>, bắt buộc — Render/HF Spaces/Streamlit Cloud) · monitoring report (Evidently) · báo cáo PDF + slide PPTX · demo trước lớp.</p>
+    <div class="callout note"><span class="lbl">Rubric — trọng tâm</span><p>Chấm <strong>độ chặt chẽ &amp; rõ ràng của từng giai đoạn</strong> hơn là độ chính xác thô: chất lượng/độ thực của dữ liệu synthetic · độ sâu EDA · tính hợp lý của cleaning/feature engineering · <em>chọn metric phù hợp bài toán</em> · deployment chạy được (link sống) · monitoring có trigger retrain · <strong>tính nguyên bản của code</strong> (cấm AutoML/no-code). Nhóm 4–5 người: Data Engineer, Data Analyst, ML Engineer (modeling &amp; evaluation), MLOps Lead.</p></div>
+    <div class="callout note"><span class="lbl">Chọn metric theo loại bài toán (nối lại kiến thức)</span><p><strong>Classification/Fraud</strong> → module 07: PR-AUC, Precision/Recall, F1, chi phí lỗi, chọn ngưỡng. <strong>Regression</strong> → module 06: RMSE, MAE, MAPE, R², residual analysis, VIF. <strong>Forecasting</strong> → module 09: MAE/RMSE/MAPE + <strong>MASE</strong>, backtesting rolling-origin, prediction interval. <strong>Clustering</strong> → module 08: silhouette, độ ổn định cụm, độ rõ persona.</p></div>
+  </article>
+</section>
+</main>
+
+<!-- FOCUS DOCK -->
+<div id="focus-dock">
+  <button class="fd-btn" id="fp-progress" title="Nhảy tới phần chưa đọc tiếp theo"><span>⬔</span><span><span class="fd-frac">0</span>/<span class="fd-total">0</span> đã đọc</span></button>
+  <button class="fd-btn" id="fp-focus" aria-pressed="false"><span>◐</span><span>Focus</span></button>
+</div>
+
+<!-- NOTES -->
+<button class="notes-launcher" id="notes-launcher" aria-label="Mở ghi chú" aria-expanded="false">
+  <span aria-hidden="true">✎</span><span class="nl-text">Ghi chú</span><span class="nl-count" id="nl-count" hidden>0</span>
+</button>
+<aside class="notes-panel" id="notes-panel" aria-label="Bảng ghi chú" aria-hidden="true">
+  <div class="notes-head"><span class="t">Ghi chú</span><span class="tot" id="notes-total">0</span><button class="notes-close" id="notes-close" aria-label="Đóng">✕</button></div>
+  <div class="notes-ctx">Đang đọc: <b id="nc-where">— chọn một phần —</b></div>
+  <div class="notes-compose">
+    <textarea class="notes-input" id="notes-input" rows="2" placeholder="Ghi chú cho phần đang đọc… (Enter để lưu, Shift+Enter xuống dòng)"></textarea>
+    <div class="notes-actions">
+      <button class="nf-btn" id="notes-add">Thêm</button>
+      <span style="flex:1"></span>
+      <button class="nf-btn" id="notes-import">Nhập</button>
+      <button class="nf-btn" id="notes-export-json">.json</button>
+      <button class="nf-btn" id="notes-export-md">.md</button>
+      <input type="file" id="notes-file" accept=".json,.md,.txt" hidden>
+    </div>
+  </div>
+  <div class="notes-io">
+    <button class="nf-btn active" id="nf-here" data-f="here">Phần này</button>
+    <button class="nf-btn" id="nf-all" data-f="all">Tất cả</button>
+  </div>
+  <div class="notes-msg" id="notes-msg" hidden></div>
+  <div class="notes-list" id="notes-list" aria-live="polite"></div>
+</aside>
+
+<!-- DETAIL PANEL -->
+<div class="detail-backdrop" id="detail-backdrop"></div>
+<aside class="detail-panel" id="detail-panel" role="dialog" aria-modal="false" aria-label="Chi tiết">
+  <div class="detail-head"><span class="detail-title" id="detail-title"></span><button class="detail-close" id="detail-close" aria-label="Đóng">×</button></div>
+  <div class="detail-body" id="detail-body"></div>
+</aside>
+
+<script>
+"use strict";
+/* ============ SEEDED RNG ============ */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function gauss(rng){var u=0,v=0;while(u===0)u=rng();while(v===0)v=rng();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)}
+
+/* ============ THEME ============ */
+(function(){var root=document.documentElement,btn=document.getElementById('theme-toggle'),lab=document.getElementById('theme-label');
+  try{if(localStorage.getItem('ba-theme')==='light')root.setAttribute('data-theme','light');}catch(e){}
+  lab.textContent=root.getAttribute('data-theme').toUpperCase();
+  btn.addEventListener('click',function(){var n=root.getAttribute('data-theme')==='light'?'dark':'light';root.setAttribute('data-theme',n);lab.textContent=n.toUpperCase();try{localStorage.setItem('ba-theme',n);}catch(e){}document.dispatchEvent(new Event('themechange'));});
+})();
+
+/* ============ MODULE NAV ============ */
+var CRUMB={overview:'Tổng quan',foundations:'01 · Nền tảng BA',crispdm:'02 · CRISP-DM',kpi:'03 · KPI & Framing',dataquality:'04 · Data Quality & FE',eda:'05 · EDA',regression:'06 · Hồi quy tuyến tính',classification:'07 · Đánh giá phân loại',clustering:'08 · Phân cụm & PCA',timeseries:'09 · Chuỗi thời gian',projects:'10 · Dự án'};
+window.__activateHooks={};
+function onActivate(mod,fn){(window.__activateHooks[mod]=window.__activateHooks[mod]||[]).push(fn);}
+function goModule(mod,push){
+  var sec=document.getElementById('m-'+mod); if(!sec)return;
+  document.querySelectorAll('.module').forEach(function(m){m.classList.toggle('active',m===sec);});
+  document.querySelectorAll('.nav-link').forEach(function(a){a.classList.toggle('active',a.getAttribute('data-go')===mod);});
+  document.getElementById('crumb').textContent=CRUMB[mod]||'';
+  document.body.classList.remove('nav-open');
+  window.scrollTo(0,0);
+  if(push!==false){try{history.replaceState(null,'','#'+mod);}catch(e){}}
+  scanReaderTools();
+  (window.__activateHooks[mod]||[]).forEach(function(fn){try{fn();}catch(e){}});
+}
+document.querySelectorAll('.nav-link').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();goModule(a.getAttribute('data-go'));});});
+document.getElementById('menu-toggle').addEventListener('click',function(){document.body.classList.toggle('nav-open');});
+document.querySelectorAll('[data-goto]').forEach(function(){});
+document.addEventListener('click',function(e){var g=e.target.closest('[data-goto]');if(g){e.preventDefault();goModule(g.getAttribute('data-goto'));}});
+
+/* ============ DETAIL PANEL ============ */
+(function(){var panel=document.getElementById('detail-panel'),body=document.getElementById('detail-body'),ttl=document.getElementById('detail-title'),last=null;
+  function open(id,trig){var src=document.getElementById('detail-'+id);if(!src)return;ttl.textContent=src.getAttribute('data-title')||'Chi tiết';body.replaceChildren.apply(body,Array.prototype.slice.call(src.cloneNode(true).childNodes));document.querySelectorAll('.expand-btn[aria-expanded=true]').forEach(function(b){b.setAttribute('aria-expanded','false');});if(trig)trig.setAttribute('aria-expanded','true');panel.classList.add('open');document.body.classList.add('detail-open');body.scrollTop=0;last=trig||null;document.getElementById('detail-close').focus();}
+  function close(){panel.classList.remove('open');document.body.classList.remove('detail-open');document.querySelectorAll('.expand-btn[aria-expanded=true]').forEach(function(b){b.setAttribute('aria-expanded','false');});if(last){last.focus();last=null;}}
+  document.addEventListener('click',function(e){var t=e.target.closest('[data-expand]');if(t){e.preventDefault();open(t.getAttribute('data-expand'),t);return;}if(e.target.closest('#detail-close')||e.target.id==='detail-backdrop')close();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&panel.classList.contains('open'))close();});
+})();
+
+/* ============ READER TOOLS: ticks, time, focus, counter ============ */
+var K_DONE='ba-course-done-v1',K_FOCUS='ba-course-focus-v1',WPM=150;
+var done={},focusOn=false;
+try{var rd=localStorage.getItem(K_DONE);if(rd)JSON.parse(rd).forEach(function(id){done[id]=1;});}catch(e){}
+try{focusOn=localStorage.getItem(K_FOCUS)==='1';}catch(e){}
+function saveDone(){try{localStorage.setItem(K_DONE,JSON.stringify(Object.keys(done)));}catch(e){}}
+function activeModuleEl(){return document.querySelector('.module.active');}
+function activeModId(){var m=activeModuleEl();return m?m.getAttribute('data-module'):'';}
+function wordsIn(el){var c=el.cloneNode(true);c.querySelectorAll('.katex,.katex-display,pre,code,.rp-tag,.detail-source,.teaser,.expand-btn,.demo').forEach(function(n){n.remove();});var t=(c.textContent||'').trim();return t?t.split(/\s+/).length:0;}
+function conceptsIn(m){return m?Array.prototype.slice.call(m.querySelectorAll('[data-concept]')):[];}
+function cidOf(el){return activeModId()+'::'+el.getAttribute('data-concept');}
+function scanReaderTools(){
+  var m=activeModuleEl();if(!m)return;
+  conceptsIn(m).forEach(function(el){
+    var head=el.querySelector('h3,h2');if(!head)return;
+    if(!head.querySelector('.rp-tag')){
+      var mins=Math.max(1,Math.round(wordsIn(el)/WPM));
+      var tag=document.createElement('span');tag.className='rp-tag';
+      var chk=document.createElement('button');chk.type='button';chk.className='rp-check';chk.textContent='✓';chk.setAttribute('aria-label','Đánh dấu đã đọc');
+      var tm=document.createElement('span');tm.className='rp-time';tm.textContent='~'+mins+' phút';
+      tag.appendChild(chk);tag.appendChild(tm);head.appendChild(tag);
+    }
+  });
+  applyDone();updateProgress();if(focusOn){document.body.classList.add('focus-on');computeActive();}
+}
+function applyDone(){var m=activeModuleEl();if(!m)return;conceptsIn(m).forEach(function(el){el.classList.toggle('is-done',!!done[cidOf(el)]);});updateModuleDots();}
+function toggleDone(el){var c=cidOf(el);if(done[c])delete done[c];else done[c]=1;saveDone();applyDone();updateProgress();}
+document.addEventListener('click',function(e){var b=e.target.closest('.rp-check');if(!b)return;e.preventDefault();var el=b.closest('[data-concept]');if(el)toggleDone(el);});
+function updateProgress(){var m=activeModuleEl();if(!m)return;var cs=conceptsIn(m),d=0;cs.forEach(function(el){if(done[cidOf(el)])d++;});document.querySelector('#fp-progress .fd-frac').textContent=d;document.querySelector('#fp-progress .fd-total').textContent=cs.length;}
+function updateModuleDots(){document.querySelectorAll('.nav-link').forEach(function(a){var mod=a.getAttribute('data-go');var sec=document.getElementById('m-'+mod);if(!sec)return;var cs=Array.prototype.slice.call(sec.querySelectorAll('[data-concept]'));if(!cs.length){return;}var all=cs.every(function(el){return done[mod+'::'+el.getAttribute('data-concept')];});a.classList.toggle('mod-complete',all);});}
+document.getElementById('fp-progress').addEventListener('click',function(){var m=activeModuleEl();if(!m)return;var cs=conceptsIn(m);for(var i=0;i<cs.length;i++){if(!done[cidOf(cs[i])]){var y=window.pageYOffset+cs[i].getBoundingClientRect().top-70;window.scrollTo({top:Math.max(0,y),behavior:'smooth'});return;}}window.scrollTo({top:0,behavior:'smooth'});});
+/* focus mode */
+var activeEl=null;
+function refOffset(){return 54+130;}
+function setActive(el){if(el===activeEl)return;if(activeEl)activeEl.classList.remove('focus-active');activeEl=el;if(activeEl&&focusOn)activeEl.classList.add('focus-active');}
+function computeActive(){var cs=conceptsIn(activeModuleEl());if(!cs.length){setActive(null);return;}var ref=refOffset(),ch=null;for(var i=0;i<cs.length;i++){if(cs[i].getBoundingClientRect().top<=ref)ch=cs[i];else break;}setActive(ch||cs[0]);}
+function setFocus(on){focusOn=on;document.body.classList.toggle('focus-on',on);document.getElementById('fp-focus').setAttribute('aria-pressed',on?'true':'false');try{localStorage.setItem(K_FOCUS,on?'1':'0');}catch(e){}var m=activeModuleEl();if(m)conceptsIn(m).forEach(function(c){c.classList.remove('focus-active');});activeEl=null;if(on)computeActive();}
+document.getElementById('fp-focus').addEventListener('click',function(){setFocus(!focusOn);});
+
+/* ============ PROGRESS BAR + SCROLL ============ */
+var ticking=false;
+function onScroll(){if(ticking)return;ticking=true;requestAnimationFrame(function(){var se=document.documentElement,max=se.scrollHeight-se.clientHeight,pct=max>0?se.scrollTop/max:0;document.querySelector('#reading-bar>i').style.width=(Math.min(1,Math.max(0,pct))*100).toFixed(1)+'%';if(focusOn)computeActive();updateNotesCtx();ticking=false;});}
+window.addEventListener('scroll',onScroll,{passive:true});window.addEventListener('resize',onScroll);
+
+/* ============ NOTES ============ */
+(function(){
+  var K='ba-course-notes-v1',notes=[];
+  try{var r=localStorage.getItem(K);if(r)notes=JSON.parse(r)||[];}catch(e){}
+  function save(){try{localStorage.setItem(K,JSON.stringify(notes));}catch(e){}}
+  var panel=document.getElementById('notes-panel'),launcher=document.getElementById('notes-launcher'),list=document.getElementById('notes-list'),input=document.getElementById('notes-input'),filter='here';
+  var curCid='',curLabel='';
+  function currentConcept(){var m=activeModuleEl();if(!m)return null;var cs=conceptsIn(m),ref=refOffset(),ch=null;for(var i=0;i<cs.length;i++){if(cs[i].getBoundingClientRect().top<=ref)ch=cs[i];else break;}return ch||cs[0]||null;}
+  window.updateNotesCtx=function(){var el=currentConcept();if(!el){curCid='';curLabel='';document.getElementById('nc-where').textContent='—';return;}var h=el.querySelector('h3,h2');var clone=h?h.cloneNode(true):null;if(clone)clone.querySelectorAll('.rp-tag,.en').forEach(function(s){s.remove();});curCid=activeModId()+'::'+el.getAttribute('data-concept');curLabel=(CRUMB[activeModId()]||'')+' · '+((clone&&clone.textContent)||'').replace(/\s+/g,' ').trim();document.getElementById('nc-where').textContent=(clone&&clone.textContent||'').replace(/\s+/g,' ').trim().slice(0,46);if(panel.classList.contains('open')&&filter==='here')render();};
+  function openP(){panel.classList.add('open');panel.setAttribute('aria-hidden','false');launcher.setAttribute('aria-expanded','true');document.body.classList.add('notes-open');updateNotesCtx();render();input.focus();}
+  function closeP(){panel.classList.remove('open');panel.setAttribute('aria-hidden','true');launcher.setAttribute('aria-expanded','false');document.body.classList.remove('notes-open');launcher.focus();}
+  launcher.addEventListener('click',openP);document.getElementById('notes-close').addEventListener('click',closeP);
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&panel.classList.contains('open'))closeP();});
+  function add(){var t=input.value.trim();if(!t)return;notes.push({id:'n'+Date.now()+Math.floor(Math.random()*1000),text:t,cid:curCid||'_general',label:curLabel||'Chung',ts:Date.now()});input.value='';save();render();badge();}
+  document.getElementById('notes-add').addEventListener('click',add);
+  input.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();add();}});
+  document.getElementById('nf-here').addEventListener('click',function(){filter='here';this.classList.add('active');document.getElementById('nf-all').classList.remove('active');render();});
+  document.getElementById('nf-all').addEventListener('click',function(){filter='all';this.classList.add('active');document.getElementById('nf-here').classList.remove('active');render();});
+  function render(){
+    var items=notes.slice().sort(function(a,b){return b.ts-a.ts;});
+    if(filter==='here')items=items.filter(function(n){return n.cid===curCid;});
+    list.innerHTML='';document.getElementById('notes-total').textContent=notes.length;
+    if(!items.length){var e=document.createElement('div');e.className='notes-empty';e.textContent=filter==='here'?'Chưa có ghi chú cho phần này.':'Chưa có ghi chú nào.';list.appendChild(e);return;}
+    items.forEach(function(n){
+      var d=document.createElement('div');d.className='ni';
+      var tx=document.createElement('div');tx.className='txt';tx.textContent=n.text;d.appendChild(tx);
+      var m=document.createElement('div');m.className='m';
+      var tg=document.createElement('span');tg.className='tg';tg.textContent=(n.label||'Chung').slice(0,34);m.appendChild(tg);
+      var del=document.createElement('button');del.className='del';del.textContent='Xoá';var armed=false,tid;
+      del.addEventListener('click',function(){if(!armed){armed=true;del.textContent='Xoá?';del.classList.add('armed');tid=setTimeout(function(){armed=false;del.textContent='Xoá';del.classList.remove('armed');},2500);return;}clearTimeout(tid);notes=notes.filter(function(x){return x.id!==n.id;});save();render();badge();});
+      m.appendChild(del);d.appendChild(m);list.appendChild(d);
+    });
+  }
+  function badge(){var c=document.getElementById('nl-count');c.textContent=notes.length;c.hidden=notes.length===0;}
+  function download(name,text,type){try{var b=new Blob([text],{type:type});var u=URL.createObjectURL(b);var a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(e){}}
+  document.getElementById('notes-export-json').addEventListener('click',function(){download('ghi-chu-BA.json',JSON.stringify(notes,null,2),'application/json');});
+  document.getElementById('notes-export-md').addEventListener('click',function(){var g={};notes.forEach(function(n){(g[n.label]=g[n.label]||[]).push(n);});var out='# Ghi chú — Business Analytics\n\n';Object.keys(g).forEach(function(k){out+='## '+k+'\n\n';g[k].forEach(function(n){out+='- '+n.text.replace(/\n/g,'\n  ')+'\n';});out+='\n';});download('ghi-chu-BA.md',out,'text/markdown');});
+  var msg=document.getElementById('notes-msg');
+  document.getElementById('notes-import').addEventListener('click',function(){document.getElementById('notes-file').click();});
+  document.getElementById('notes-file').addEventListener('change',function(ev){var f=ev.target.files[0];if(!f)return;var rdr=new FileReader();rdr.onload=function(){var added=0,dup=0;try{var incoming=[];if(f.name.endsWith('.json')){incoming=JSON.parse(rdr.result)||[];}else{var lbl='Chung';rdr.result.split(/\r?\n/).forEach(function(ln){var hm=ln.match(/^##\s+(.*)/);if(hm){lbl=hm[1].trim();return;}var bm=ln.match(/^-\s+(.*)/);if(bm)incoming.push({text:bm[1],label:lbl});});}var seen={};notes.forEach(function(n){seen[(n.cid||'')+'\0'+n.text.trim()]=1;});incoming.forEach(function(n){if(!n||!n.text)return;var key=(n.cid||'')+'\0'+n.text.trim();if(seen[key]){dup++;return;}seen[key]=1;notes.push({id:'n'+Date.now()+Math.floor(Math.random()*10000),text:n.text,cid:n.cid||'_general',label:n.label||'Chung',ts:n.ts||Date.now()});added++;});save();render();badge();msg.hidden=false;msg.textContent='Đã thêm '+added+' · bỏ qua '+dup+' trùng';setTimeout(function(){msg.hidden=true;},4000);}catch(e){msg.hidden=false;msg.style.color='var(--accent-red)';msg.textContent='Không đọc được tệp.';}};rdr.readAsText(f);ev.target.value='';});
+  badge();
+})();
+
+/* ============ CANVAS HELPERS ============ */
+function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+function fitCanvas(cv){var p=cv.parentElement,w=p.clientWidth||600,h=cv.getAttribute('data-h')?+cv.getAttribute('data-h'):Math.round(w*0.56);var dpr=window.devicePixelRatio||1;cv.width=w*dpr;cv.height=h*dpr;cv.style.height=h+'px';var ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);return{ctx:ctx,w:w,h:h};}
+</script>
+
+<!-- Per-demo scripts -->
+<script id="demo-scripts">
+"use strict";
+function theme(){var d=document.documentElement.getAttribute('data-theme');return{grid:css('--border'),txt:css('--text-muted'),txt2:css('--text-secondary'),acc:css('--accent-blue'),red:css('--accent-red'),grn:css('--accent-green'),card:css('--card'),line:css('--hairline')};}
+function catcol(i){return css('--cat-'+((i%7)+1));}
+
+/* ---------- DEMO KPI ---------- */
+(function(){
+  var s=document.getElementById('kpi-sess-r'),c=document.getElementById('kpi-cr-r'),a=document.getElementById('kpi-aov-r');
+  if(!s)return;var base=8.4e9,target=9.66e9;
+  function up(){
+    var sess=+s.value,cr=+c.value,aov=+a.value,rev=sess*(cr/100)*aov;
+    document.getElementById('kpi-sess').textContent=sess.toLocaleString('vi-VN');
+    document.getElementById('kpi-cr').textContent=cr.toFixed(2);
+    document.getElementById('kpi-aov').textContent=aov.toLocaleString('vi-VN');
+    document.getElementById('kpi-rev').textContent=(rev/1e9).toFixed(2)+' tỷ';
+    var d=(rev/base-1)*100;document.getElementById('kpi-delta').textContent=(d>=0?'+':'')+d.toFixed(1)+'%';
+    var hit=document.getElementById('kpi-hit');
+    if(rev>=target){hit.innerHTML='<b style="color:var(--accent-green)">✓ đạt mục tiêu +15%</b>';}
+    else{hit.innerHTML='<b style="color:var(--accent-yellow)">còn thiếu '+((target-rev)/1e9).toFixed(2)+' tỷ</b>';}
+  }
+  [s,c,a].forEach(function(el){el.addEventListener('input',up);});up();
+})();
+
+/* ---------- DEMO SCALE / OUTLIER ---------- */
+(function(){
+  var cv=document.getElementById('scale-cv');if(!cv)return;
+  var rng=mulberry32(11),data=[];
+  for(var i=0;i<44;i++){var v=25+gauss(rng)*7;data.push(Math.max(3,v));}
+  [58,63,71,88,102,135].forEach(function(v){data.push(v);});
+  var mean=data.reduce(function(p,q){return p+q;},0)/data.length;
+  var sd=Math.sqrt(data.reduce(function(p,q){return p+(q-mean)*(q-mean);},0)/data.length);
+  var mn=Math.min.apply(null,data),mx=Math.max.apply(null,data);
+  function quantile(arr,p){var s=arr.slice().sort(function(a,b){return a-b;});var idx=(s.length-1)*p,lo=Math.floor(idx),hi=Math.ceil(idx);return s[lo]+(s[hi]-s[lo])*(idx-lo);}
+  var Q1=quantile(data,.25),Q2=quantile(data,.5),Q3=quantile(data,.75),IQR=Q3-Q1;
+  var mode='raw';
+  function tf(v){if(mode==='z')return (v-mean)/sd;if(mode==='mm')return (v-mn)/(mx-mn);return v;}
+  function draw(){
+    var k=+document.getElementById('scale-k-r').value,g=fitCanvas(cv),ctx=g.ctx,t=theme();
+    document.getElementById('scale-k').textContent=k.toFixed(1);
+    var upFence=Q3+k*IQR,loFence=Q1-k*IQR;
+    ctx.clearRect(0,0,g.w,g.h);
+    var padL=30,padR=30,y0=g.h*0.55;
+    var vals=data.map(tf),vmn=Math.min.apply(null,vals),vmx=Math.max.apply(null,vals),rangeSpan=(vmx-vmn)||1;
+    function X(v){return padL+(tf(v)-vmn)/rangeSpan*(g.w-padL-padR);}
+    // axis
+    ctx.strokeStyle=t.grid;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(padL,y0);ctx.lineTo(g.w-padR,y0);ctx.stroke();
+    // fences
+    [loFence,upFence].forEach(function(f){var x=X(f);ctx.strokeStyle=t.red;ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(x,y0-55);ctx.lineTo(x,y0+55);ctx.stroke();ctx.setLineDash([]);});
+    // box (Q1..Q3)
+    ctx.fillStyle='rgba('+ (getComputedStyle(document.documentElement).getPropertyValue('--accent-blue-rgb')) +' / 0.12)';
+    ctx.fillRect(X(Q1),y0-20,X(Q3)-X(Q1),40);
+    ctx.strokeStyle=t.acc;ctx.strokeRect(X(Q1),y0-20,X(Q3)-X(Q1),40);
+    ctx.beginPath();ctx.moveTo(X(Q2),y0-20);ctx.lineTo(X(Q2),y0+20);ctx.stroke();
+    // points
+    var nOut=0;
+    data.forEach(function(v,i){var isOut=v>upFence||v<loFence;if(isOut)nOut++;var x=X(v),jy=y0+((i%7)-3)*6;ctx.beginPath();ctx.arc(x,jy,3.2,0,7);ctx.fillStyle=isOut?t.red:t.acc;ctx.globalAlpha=isOut?1:.6;ctx.fill();ctx.globalAlpha=1;});
+    // labels
+    ctx.fillStyle=t.txt;ctx.font='10px JetBrains Mono';ctx.textAlign='center';
+    ctx.fillText('Q1',X(Q1),y0+48);ctx.fillText('med',X(Q2),y0-28);ctx.fillText('Q3',X(Q3),y0+48);
+    ctx.fillStyle=t.red;ctx.fillText('rào trên',X(upFence),y0-62);
+    document.getElementById('sc-q1').textContent=Q1.toFixed(1);
+    document.getElementById('sc-med').textContent=Q2.toFixed(1);
+    document.getElementById('sc-q3').textContent=Q3.toFixed(1);
+    document.getElementById('sc-fence').textContent=upFence.toFixed(1);
+    document.getElementById('sc-out').textContent=nOut+' điểm';
+  }
+  document.getElementById('scale-k-r').addEventListener('input',draw);
+  document.querySelectorAll('#demo-scale [data-scale]').forEach(function(b){b.addEventListener('click',function(){mode=b.getAttribute('data-scale');document.querySelectorAll('#demo-scale [data-scale]').forEach(function(x){x.classList.toggle('primary',x===b);});draw();});});
+  onActivate('dataquality',draw);
+})();
+
+/* ---------- DEMO CORR ---------- */
+(function(){
+  var cv=document.getElementById('corr-cv');if(!cv)return;
+  var rng=mulberry32(23),n=140,xs=[],zs=[];
+  for(var i=0;i<n;i++){xs.push(gauss(rng));zs.push(gauss(rng));}
+  function std(a){var m=a.reduce(function(p,q){return p+q;},0)/a.length;var s=Math.sqrt(a.reduce(function(p,q){return p+(q-m)*(q-m);},0)/a.length);return a.map(function(v){return (v-m)/s;});}
+  xs=std(xs);zs=std(zs);
+  function pearson(x,y){var n=x.length,mx=0,my=0;for(var i=0;i<n;i++){mx+=x[i];my+=y[i];}mx/=n;my/=n;var sxy=0,sx=0,sy=0;for(var i=0;i<n;i++){var dx=x[i]-mx,dy=y[i]-my;sxy+=dx*dy;sx+=dx*dx;sy+=dy*dy;}return sxy/Math.sqrt(sx*sy);}
+  function draw(){
+    var r=+document.getElementById('corr-r-r').value,g=fitCanvas(cv),ctx=g.ctx,t=theme();
+    document.getElementById('corr-r').textContent=r.toFixed(2);
+    var ys=xs.map(function(x,i){return r*x+Math.sqrt(Math.max(0,1-r*r))*zs[i];});
+    ctx.clearRect(0,0,g.w,g.h);
+    var pad=34,L=-2.8,H=2.8;
+    function X(v){return pad+(v-L)/(H-L)*(g.w-2*pad);}
+    function Y(v){return g.h-pad-(v-L)/(H-L)*(g.h-2*pad);}
+    ctx.strokeStyle=t.grid;ctx.lineWidth=1;ctx.strokeRect(pad,pad,g.w-2*pad,g.h-2*pad);
+    ctx.strokeStyle=t.line;ctx.beginPath();ctx.moveTo(X(0),pad);ctx.lineTo(X(0),g.h-pad);ctx.moveTo(pad,Y(0));ctx.lineTo(g.w-pad,Y(0));ctx.stroke();
+    for(var i=0;i<n;i++){ctx.beginPath();ctx.arc(X(xs[i]),Y(ys[i]),3,0,7);ctx.fillStyle=t.acc;ctx.globalAlpha=.55;ctx.fill();}ctx.globalAlpha=1;
+    // fit line y=r*x (since standardized)
+    ctx.strokeStyle=t.red;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(X(L),Y(r*L));ctx.lineTo(X(H),Y(r*H));ctx.stroke();
+    ctx.fillStyle=t.txt;ctx.font='11px JetBrains Mono';ctx.textAlign='center';ctx.fillText('X',g.w-pad+14,Y(0)+4);ctx.fillText('Y',X(0),pad-10);
+    document.getElementById('corr-actual').textContent=pearson(xs,ys).toFixed(3);
+  }
+  document.getElementById('corr-r-r').addEventListener('input',draw);
+  onActivate('eda',draw);
+})();
+
+/* ---------- DEMO REGRESSION ---------- */
+(function(){
+  var cv=document.getElementById('reg-cv');if(!cv)return;
+  var X=[1400,1600,1700,1875,1100,1550,2350,2450,1425,1700],Y=[245,312,279,308,199,219,405,324,319,255];
+  var ybar=Y.reduce(function(p,q){return p+q;},0)/Y.length,SST=Y.reduce(function(p,q){return p+(q-ybar)*(q-ybar);},0);
+  var b0e=document.getElementById('reg-b0-r'),b1e=document.getElementById('reg-b1-r');
+  function draw(){
+    var b0=+b0e.value,b1=+b1e.value,g=fitCanvas(cv),ctx=g.ctx,t=theme();
+    document.getElementById('reg-b0').textContent=b0.toFixed(1);document.getElementById('reg-b1').textContent=b1.toFixed(3);
+    ctx.clearRect(0,0,g.w,g.h);
+    var pad=42,xmn=1000,xmx=2550,ymn=150,ymx=430;
+    function PX(v){return pad+(v-xmn)/(xmx-xmn)*(g.w-pad-20);}
+    function PY(v){return g.h-pad-(v-ymn)/(ymx-ymn)*(g.h-pad-16);}
+    ctx.strokeStyle=t.grid;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad,g.h-pad);ctx.lineTo(g.w-20,g.h-pad);ctx.moveTo(pad,g.h-pad);ctx.lineTo(pad,16);ctx.stroke();
+    ctx.fillStyle=t.txt;ctx.font='10px JetBrains Mono';ctx.textAlign='center';
+    ctx.fillText('diện tích (sqft) →',g.w/2,g.h-8);ctx.save();ctx.translate(12,g.h/2);ctx.rotate(-Math.PI/2);ctx.fillText('giá ($1000s) →',0,0);ctx.restore();
+    // line
+    ctx.strokeStyle=t.acc;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(PX(xmn),PY(b0+b1*xmn));ctx.lineTo(PX(xmx),PY(b0+b1*xmx));ctx.stroke();
+    // residuals + points
+    var SSE=0;
+    for(var i=0;i<X.length;i++){var yh=b0+b1*X[i];SSE+=(Y[i]-yh)*(Y[i]-yh);ctx.strokeStyle=t.red;ctx.globalAlpha=.6;ctx.beginPath();ctx.moveTo(PX(X[i]),PY(Y[i]));ctx.lineTo(PX(X[i]),PY(yh));ctx.stroke();ctx.globalAlpha=1;}
+    for(var i=0;i<X.length;i++){ctx.beginPath();ctx.arc(PX(X[i]),PY(Y[i]),4,0,7);ctx.fillStyle=t.grn;ctx.fill();}
+    document.getElementById('reg-sse').textContent=SSE.toFixed(1);
+    var r2=1-SSE/SST;document.getElementById('reg-r2').textContent=r2.toFixed(3);
+    document.getElementById('reg-best').innerHTML=(SSE<13720)?'<b style="color:var(--accent-green)">≈ nghiệm OLS tối ưu ✓</b>':'';
+  }
+  b0e.addEventListener('input',draw);b1e.addEventListener('input',draw);
+  document.getElementById('reg-fit').addEventListener('click',function(){b0e.value=98.24833;b1e.value=0.10977;draw();});
+  onActivate('regression',draw);
+})();
+
+/* ---------- DEMO CLASSIFICATION ---------- */
+(function(){
+  var cv=document.getElementById('clf-cv');if(!cv)return;
+  var rng=mulberry32(41),neg=[],pos=[];
+  for(var i=0;i<160;i++){neg.push(Math.min(.98,Math.max(.02,.35+gauss(rng)*.13)));}
+  for(var i=0;i<40;i++){pos.push(Math.min(.98,Math.max(.02,.62+gauss(rng)*.15)));}
+  var P=40,N=160;
+  var auc=0;for(var i=0;i<P;i++)for(var j=0;j<N;j++){if(pos[i]>neg[j])auc++;else if(pos[i]===neg[j])auc+=.5;}auc/=(P*N);
+  var roc=[];for(var t=0;t<=1.0001;t+=0.02){var tp=0,fp=0;for(var i=0;i<P;i++)if(pos[i]>=t)tp++;for(var j=0;j<N;j++)if(neg[j]>=t)fp++;roc.push([fp/N,tp/P]);}
+  function hist(arr,bins){var h=new Array(bins).fill(0);arr.forEach(function(v){var b=Math.min(bins-1,Math.floor(v*bins));h[b]++;});return h;}
+  var hn=hist(neg,20),hp=hist(pos,20),hmax=Math.max.apply(null,hn.concat(hp));
+  function draw(){
+    var tau=+document.getElementById('clf-t-r').value,g=fitCanvas(cv),ctx=g.ctx,t=theme();
+    document.getElementById('clf-t').textContent=tau.toFixed(2);
+    ctx.clearRect(0,0,g.w,g.h);
+    var gap=30,leftW=(g.w-gap)*0.52,rightW=g.w-gap-leftW,rx=leftW+gap;
+    // ---- histograms (left) ----
+    var pad=28,baseY=g.h-pad,topY=18,plotW=leftW-pad-6,plotH=baseY-topY;
+    ctx.strokeStyle=t.grid;ctx.beginPath();ctx.moveTo(pad,baseY);ctx.lineTo(pad+plotW,baseY);ctx.stroke();
+    var bw=plotW/20;
+    function bar(h,col){ctx.fillStyle=col;for(var b=0;b<20;b++){var bh=h[b]/hmax*plotH;ctx.fillRect(pad+b*bw,baseY-bh,bw-1,bh);}}
+    ctx.globalAlpha=.5;bar(hn,t.acc);bar(hp,t.red);ctx.globalAlpha=1;
+    var tx=pad+tau*plotW;ctx.strokeStyle=t.txt2;ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(tx,topY);ctx.lineTo(tx,baseY);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle=t.txt;ctx.font='10px JetBrains Mono';ctx.textAlign='center';ctx.fillText('điểm số → | τ='+tau.toFixed(2),pad+plotW/2,g.h-6);
+    ctx.textAlign='left';ctx.fillStyle=t.acc;ctx.fillText('■ âm(160)',pad+2,topY+2);ctx.fillStyle=t.red;ctx.fillText('■ dương(40)',pad+2,topY+15);
+    // ---- ROC (right) ----
+    var rp=26,rBase=g.h-pad,rTop=18,rW=rightW-rp-6,rH=rBase-rTop,sz=Math.min(rW,rH);
+    var ox=rx+rp,oy=rBase;
+    ctx.strokeStyle=t.grid;ctx.strokeRect(ox,oy-sz,sz,sz);
+    ctx.strokeStyle=t.line;ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(ox+sz,oy-sz);ctx.stroke();ctx.setLineDash([]);
+    ctx.strokeStyle=t.acc;ctx.lineWidth=2;ctx.beginPath();roc.forEach(function(p,i){var xx=ox+p[0]*sz,yy=oy-p[1]*sz;if(i===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy);});ctx.stroke();ctx.lineWidth=1;
+    // current op point
+    var tp=0,fp=0;for(var i=0;i<P;i++)if(pos[i]>=tau)tp++;for(var j=0;j<N;j++)if(neg[j]>=tau)fp++;
+    var fn=P-tp,tn=N-fp,fpr=fp/N,tpr=tp/P;
+    ctx.beginPath();ctx.arc(ox+fpr*sz,oy-tpr*sz,5,0,7);ctx.fillStyle=t.red;ctx.fill();
+    ctx.fillStyle=t.txt;ctx.font='10px JetBrains Mono';ctx.textAlign='center';ctx.fillText('FPR →',ox+sz/2,g.h-6);ctx.save();ctx.translate(rx+8,oy-sz/2);ctx.rotate(-Math.PI/2);ctx.fillText('TPR',0,0);ctx.restore();
+    ctx.fillText('ROC · AUC='+auc.toFixed(2),ox+sz/2,rTop-2);
+    // metrics
+    var prec=tp+fp>0?tp/(tp+fp):0,rec=tp/P,f1=(prec+rec>0)?2*prec*rec/(prec+rec):0,acc=(tp+tn)/(P+N);
+    document.getElementById('cm-tp').textContent=tp;document.getElementById('cm-fn').textContent=fn;document.getElementById('cm-fp').textContent=fp;document.getElementById('cm-tn').textContent=tn;
+    document.getElementById('clf-p').textContent=prec.toFixed(2);document.getElementById('clf-r').textContent=rec.toFixed(2);
+    document.getElementById('clf-f1').textContent=f1.toFixed(2);document.getElementById('clf-acc').textContent=acc.toFixed(2);document.getElementById('clf-auc').textContent=auc.toFixed(2);
+  }
+  document.getElementById('clf-t-r').addEventListener('input',draw);
+  onActivate('classification',draw);
+})();
+
+/* ---------- DEMO K-MEANS ---------- */
+(function(){
+  var cv=document.getElementById('km-cv');if(!cv)return;
+  var rng=mulberry32(59),pts=[],centersT=[[-3,3],[0.5,0.2],[4,4.2]];
+  centersT.forEach(function(c){for(var i=0;i<30;i++)pts.push([c[0]+gauss(rng)*0.9,c[1]+gauss(rng)*0.9]);});
+  var xmn=Math.min.apply(null,pts.map(function(p){return p[0];}))-.7,xmx=Math.max.apply(null,pts.map(function(p){return p[0];}))+.7;
+  var ymn=Math.min.apply(null,pts.map(function(p){return p[1];}))-.7,ymx=Math.max.apply(null,pts.map(function(p){return p[1];}))+.7;
+  var K=3,cent=[],asg=[],iter=0,conv=false,seed=1;
+  function d2(a,b){return (a[0]-b[0])*(a[0]-b[0])+(a[1]-b[1])*(a[1]-b[1]);}
+  function reset(){K=+document.getElementById('km-k-r').value;document.getElementById('km-k').textContent=K;var r=mulberry32(seed++ *7+3);cent=[];var idx={};for(var k=0;k<K;k++){var j;do{j=Math.floor(r()*pts.length);}while(idx[j]);idx[j]=1;cent.push([pts[j][0],pts[j][1]]);}asg=pts.map(function(){return -1;});iter=0;conv=false;draw();}
+  function step(){if(conv)return;var moved=0;asg=pts.map(function(p){var best=0,bd=1e9;for(var k=0;k<K;k++){var d=d2(p,cent[k]);if(d<bd){bd=d;best=k;}}return best;});for(var k=0;k<K;k++){var sx=0,sy=0,n=0;pts.forEach(function(p,i){if(asg[i]===k){sx+=p[0];sy+=p[1];n++;}});if(n){var nx=sx/n,ny=sy/n;moved=Math.max(moved,Math.abs(nx-cent[k][0])+Math.abs(ny-cent[k][1]));cent[k]=[nx,ny];}}iter++;if(moved<0.01)conv=true;draw();}
+  function run(){var g=0;(function loop(){if(conv||g++>25)return;step();setTimeout(loop,260);})();}
+  function draw(){
+    var g=fitCanvas(cv),ctx=g.ctx,t=theme(),pad=26;
+    function PX(v){return pad+(v-xmn)/(xmx-xmn)*(g.w-2*pad);}
+    function PY(v){return g.h-pad-(v-ymn)/(ymx-ymn)*(g.h-2*pad);}
+    ctx.clearRect(0,0,g.w,g.h);ctx.strokeStyle=t.grid;ctx.strokeRect(pad,pad,g.w-2*pad,g.h-2*pad);
+    pts.forEach(function(p,i){ctx.beginPath();ctx.arc(PX(p[0]),PY(p[1]),3.5,0,7);ctx.fillStyle=asg[i]<0?t.txt:catcol(asg[i]);ctx.globalAlpha=asg[i]<0?.5:.75;ctx.fill();ctx.globalAlpha=1;});
+    cent.forEach(function(c,k){var x=PX(c[0]),y=PY(c[1]);ctx.strokeStyle=catcol(k);ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x-7,y-7);ctx.lineTo(x+7,y+7);ctx.moveTo(x+7,y-7);ctx.lineTo(x-7,y+7);ctx.stroke();ctx.lineWidth=1;});
+    var wcss=0;pts.forEach(function(p,i){if(asg[i]>=0)wcss+=d2(p,cent[asg[i]]);});
+    document.getElementById('km-iter').textContent=iter;
+    document.getElementById('km-wcss').textContent=asg[0]<0?'–':wcss.toFixed(1);
+    document.getElementById('km-conv').innerHTML=conv?'<b style="color:var(--accent-green)">✓ đã hội tụ</b>':'';
+  }
+  document.getElementById('km-k-r').addEventListener('input',reset);
+  document.getElementById('km-reset').addEventListener('click',reset);
+  document.getElementById('km-step').addEventListener('click',step);
+  document.getElementById('km-run').addEventListener('click',run);
+  onActivate('clustering',function(){if(!cent.length)reset();else draw();});
+})();
+
+/* ---------- DEMO SES ---------- */
+(function(){
+  var cv=document.getElementById('ses-cv');if(!cv)return;
+  var rng=mulberry32(83),y=[],lvl=100;
+  for(var i=0;i<26;i++){lvl+=gauss(rng)*3.2;y.push(lvl+gauss(rng)*5);}
+  function draw(){
+    var a=+document.getElementById('ses-a-r').value,g=fitCanvas(cv),ctx=g.ctx,t=theme();
+    document.getElementById('ses-a').textContent=a.toFixed(2);
+    var l=[],sse=0;l[0]=y[0];for(var i=1;i<y.length;i++){var f=l[i-1];sse+=(y[i]-f)*(y[i]-f);l[i]=a*y[i]+(1-a)*l[i-1];}
+    var fc=l[l.length-1];
+    var all=y.concat([fc]),ymn=Math.min.apply(null,all)-6,ymx=Math.max.apply(null,all)+6,pad=30,n=y.length+4;
+    function PX(i){return pad+i/(n-1)*(g.w-2*pad);}
+    function PY(v){return g.h-pad-(v-ymn)/(ymx-ymn)*(g.h-2*pad);}
+    ctx.clearRect(0,0,g.w,g.h);ctx.strokeStyle=t.grid;ctx.beginPath();ctx.moveTo(pad,g.h-pad);ctx.lineTo(g.w-pad,g.h-pad);ctx.stroke();
+    // actual line
+    ctx.strokeStyle=t.line;ctx.beginPath();y.forEach(function(v,i){var x=PX(i),yy=PY(v);if(i===0)ctx.moveTo(x,yy);else ctx.lineTo(x,yy);});ctx.stroke();
+    // smoothed
+    ctx.strokeStyle=t.acc;ctx.lineWidth=2.2;ctx.beginPath();l.forEach(function(v,i){var x=PX(i),yy=PY(v);if(i===0)ctx.moveTo(x,yy);else ctx.lineTo(x,yy);});ctx.stroke();ctx.lineWidth=1;
+    // forecast flat
+    ctx.strokeStyle=t.grn;ctx.setLineDash([6,4]);ctx.beginPath();ctx.moveTo(PX(y.length-1),PY(fc));ctx.lineTo(PX(n-1),PY(fc));ctx.stroke();ctx.setLineDash([]);
+    // points
+    y.forEach(function(v,i){ctx.beginPath();ctx.arc(PX(i),PY(v),3,0,7);ctx.fillStyle=t.red;ctx.fill();});
+    ctx.fillStyle=t.txt;ctx.font='10px JetBrains Mono';ctx.textAlign='left';ctx.fillText('thời gian →',pad,g.h-8);
+    ctx.fillStyle=t.acc;ctx.fillText('— mức làm mượt ℓₜ',pad,16);ctx.fillStyle=t.grn;ctx.fillText('- - dự báo phẳng',pad+140,16);
+    document.getElementById('ses-sse').textContent=sse.toFixed(0);
+    document.getElementById('ses-fc').textContent=fc.toFixed(1);
+  }
+  document.getElementById('ses-a-r').addEventListener('input',draw);
+  onActivate('timeseries',draw);
+})();
+
+/* ---------- THEME + RESIZE REDRAW ---------- */
+function redrawActive(){var mod=activeModId();(window.__activateHooks[mod]||[]).forEach(function(fn){try{fn();}catch(e){}});}
+document.addEventListener('themechange',redrawActive);
+var rT;window.addEventListener('resize',function(){clearTimeout(rT);rT=setTimeout(redrawActive,150);});
+
+/* ---------- READING TIME RECOMPUTE (after KaTeX) ---------- */
+function recomputeTimes(){var m=activeModuleEl&&activeModuleEl();if(!m)return;conceptsIn(m).forEach(function(el){var tm=el.querySelector('.rp-time');if(tm){var mins=Math.max(1,Math.round(wordsIn(el)/WPM));tm.textContent='~'+mins+' phút';}});}
+document.addEventListener('katexdone',function(){recomputeTimes();redrawActive();});
+setTimeout(function(){if(window.__katexDone){recomputeTimes();}},2200);
+
+/* ---------- BOOT ---------- */
+(function(){
+  var h=(location.hash||'').replace('#','');
+  goModule(CRUMB[h]?h:'overview',false);
+  updateModuleDots();
+})();
+window.addEventListener('hashchange',function(){var h=(location.hash||'').replace('#','');if(CRUMB[h]&&activeModId()!==h)goModule(h,false);});
+</script>
+
+</body>
+</html>
