@@ -3,242 +3,324 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
     <title>vudat081299 · Collection</title>
-    <meta name="description" content="A collection of small web pages: poetry, music theory, tools and notes." />
+    <meta name="description" content="A collection of small web pages: poetry, music theory, tools, notes and graduate course material." />
 
-    <!-- Bootstrap core CSS + icons (same versions as the rest of the site) -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" />
+    <!-- Web Builder — the minimalist UI kit that styles the rest of the site -->
+    <link rel="stylesheet" href="web-builder/web-builder.css" />
 
     <style>
-      body { padding-top: 3.25rem; }
-      .navbar-brand { padding: .75rem 1rem; font-size: 1rem; background-color: rgba(0, 0, 0, .25); }
-
-      .launch-item {
-        display: flex; align-items: flex-start; gap: .9rem;
-        height: 100%; padding: 1rem;
-        border-radius: .75rem; color: #212529; text-decoration: none;
-        transition: background-color .15s ease;
+      /* Page-local layout only — every colour / radius / shadow comes from wb-* tokens. */
+      body {
+        background: var(--wb-canvas); color: var(--wb-fg); margin: 0;
+        font-family: var(--wb-font); -webkit-font-smoothing: antialiased;
       }
-      .launch-item:hover { background-color: #f6f8fa; }
-      .launch-item:focus-visible { outline: 2px solid #2470dc; outline-offset: 2px; }
-      .launch-item .bi { font-size: 1.7rem; line-height: 1; color: #212529; }
-      .launch-item h2 { font-size: 1.02rem; font-weight: 700; margin: 0; }
-      .launch-item p { margin: .15rem 0 0; font-size: .875rem; }
 
-      kbd.key {
-        flex: none; background: #f1f3f5; color: #495057;
-        border: 1px solid #dee2e6; border-bottom-width: 2px; border-radius: .4rem;
-        padding: .05rem .5rem; font-size: .8rem; line-height: 1.4;
+      /* crisp selection: black block / white text in light, inverts in dark */
+      ::selection { background: var(--wb-fg); color: var(--wb-canvas); }
+      ::-moz-selection { background: var(--wb-fg); color: var(--wb-canvas); }
+
+      .hub { max-width: 1000px; margin: 0 auto; padding: 28px 20px 64px; }
+
+      /* page head */
+      .hub-head { padding: 10px 0 22px; border-bottom: var(--wb-bw) solid var(--wb-border); }
+      .hub-eyebrow {
+        font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .16em;
+        text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 8px;
       }
+      .hub-title { font-size: clamp(28px, 5vw, 40px); font-weight: 720; letter-spacing: -.02em; margin: 0; }
+      .hub-sub { color: var(--wb-fg-muted); margin: 6px 0 0; font-size: 15px; }
+      .hub-head__row { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+      .hub-search { max-width: 280px; width: 100%; }
+
+      /* section heading */
+      .sec { margin-top: 40px; }
+      .sec__head { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+      .sec__ico {
+        display: grid; place-items: center; width: 30px; height: 30px; flex: none;
+        border-radius: var(--wb-radius-sm); background: var(--wb-surface-2);
+        border: var(--wb-bw) solid var(--wb-border); color: var(--wb-fg);
+      }
+      .sec__ico .wb-ico { font-size: 19px; }
+      .sec__label { font-size: 17px; font-weight: 640; }
+      .sec__desc { color: var(--wb-fg-muted); font-size: 13px; margin: 1px 0 0; }
+
+      /* standalone-page tiles */
+      .tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+      .tile {
+        display: flex; align-items: flex-start; gap: 12px; padding: 15px;
+        text-decoration: none; color: var(--wb-fg);
+      }
+      .tile__ico {
+        display: grid; place-items: center; width: 42px; height: 42px; flex: none;
+        border-radius: var(--wb-radius); background: var(--wb-surface-2);
+        border: var(--wb-bw) solid var(--wb-border);
+      }
+      .tile__ico .wb-ico { font-size: 23px; color: var(--wb-fg); }
+      .tile__text { flex: 1 1 auto; min-width: 0; }
+      .tile__name { font-size: 14.5px; font-weight: 650; margin: 1px 0 0; }
+      .tile__desc { font-size: 12.5px; color: var(--wb-fg-muted); margin: 3px 0 0; line-height: 1.45; }
+      .kbd {
+        flex: none; align-self: flex-start; font-family: var(--wb-font-mono); font-size: 11px;
+        min-width: 20px; text-align: center; padding: 1px 6px; color: var(--wb-fg-muted);
+        background: var(--wb-surface-2); border: var(--wb-bw) solid var(--wb-border);
+        border-bottom-width: 2px; border-radius: var(--wb-radius-sm);
+      }
+
+      /* master's subject = one full-width row card */
+      .subjects { display: flex; flex-direction: column; gap: 14px; }
+      .subj__head { display: flex; align-items: center; gap: 12px; }
+      .subj__ico {
+        display: grid; place-items: center; width: 38px; height: 38px; flex: none;
+        border-radius: var(--wb-radius); background: var(--wb-surface-2);
+        border: var(--wb-bw) solid var(--wb-border);
+      }
+      .subj__ico .wb-ico { font-size: 22px; color: var(--wb-fg); }
+      .subj__title { font-size: 16px; font-weight: 680; margin: 0; }
+      .subj__meta { font-size: 12.5px; color: var(--wb-fg-muted); margin: 1px 0 0; }
+      .subj__count { margin-left: auto; }
+
+      .file__ico {
+        display: grid; place-items: center; width: 28px; height: 28px; flex: none;
+        border-radius: var(--wb-radius-sm); background: var(--wb-surface-2);
+        border: var(--wb-bw) solid var(--wb-border); color: var(--wb-fg-muted);
+      }
+      .file__ico .wb-ico { font-size: 17px; }
+      /* rows fill the card edge-to-edge; inset lives on the row so hover bleeds full width */
+      .subj__files .wb-list__item { padding: 13px 18px; }
+      .wb-list__item--link .wb-list__end .wb-ico { font-size: 20px; transition: transform .12s ease; }
+      .wb-list__item--link:hover .wb-list__end .wb-ico { transform: translateX(2px); color: var(--wb-fg); }
+
+      .hub-foot {
+        display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+        gap: 10px; margin-top: 44px; padding-top: 18px; border-top: var(--wb-bw) solid var(--wb-border);
+        color: var(--wb-fg-muted); font-size: 13px;
+      }
+      .hub-foot a { color: var(--wb-fg-muted); text-decoration: none; }
+      .hub-foot a:hover { color: var(--wb-fg); }
+      .is-hidden { display: none !important; }
     </style>
   </head>
   <body>
-    <header class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-      <a class="navbar-brand col-12 me-0 d-flex align-items-center" href="index.html">
-        <i class="bi bi-collection-fill text-white"></i>
-        <span class="ms-2"><span class="text-secondary fw-bold">vudat081299</span> collection</span>
+    <div class="wb-navbar wb-navbar--sticky">
+      <a class="wb-navbar__brand" href="index.html">
+        <span class="wb-navbar__mark">V</span> vudat081299
       </a>
-    </header>
+      <span class="wb-navbar__spacer"></span>
+      <div class="wb-navbar__actions">
+        <a class="wb-btn wb-btn--ghost wb-btn--sm" href="https://github.com/vudat081299" target="_blank" rel="noopener">GitHub ↗</a>
+        <button class="wb-btn wb-btn--ghost wb-btn--icon" id="theme-toggle" aria-label="Toggle light / dark">
+          <span class="wb-ico" id="theme-ico">dark_mode</span>
+        </button>
+      </div>
+    </div>
 
-    <main class="container py-4">
-      <div class="row justify-content-center">
-        <div class="col-lg-10 col-xl-9">
-
-          <!-- header row: title + search -->
-          <div class="row justify-content-between align-items-center g-2 pb-3 border-bottom">
-            <div class="col-sm-5">
-              <span class="d-inline-flex align-items-center text-dark">
-                <i class="bi bi-collection me-2 fs-5"></i>
-                <span class="fs-4">Collection</span>
-              </span>
-            </div>
-            <div class="col-sm-6">
-              <div class="input-group">
-                <span class="input-group-text" id="find">@</span>
-                <input type="text" class="form-control" placeholder="quick search…" aria-label="Search" aria-describedby="find" oninput="filterItems(this.value)" />
-              </div>
-            </div>
+    <main class="hub">
+      <!-- page head -->
+      <div class="hub-head">
+        <div class="hub-head__row">
+          <div>
+            <p class="hub-eyebrow">vudat081299 / collection</p>
+            <h1 class="hub-title">Collection</h1>
+            <p class="hub-sub">Small web pages, tools & graduate course notes — all in one place.</p>
           </div>
-
-          <!-- grid of pages (hanging-icons) -->
-          <div id="list" class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-2 py-4">
-            <div class="col">
-              <a class="launch-item" href="poem/truyen-kieu.html" data-key="1" aria-label="Poetry">
-                <i class="bi bi-book" aria-hidden="true"></i>
-                <div class="flex-grow-1">
-                  <h2>Poetry</h2>
-                  <p class="text-secondary">The Tale of Kieu &amp; Nguyen Khuyen</p>
-                </div>
-                <kbd class="key" aria-hidden="true">1</kbd>
-              </a>
-            </div>
-
-            <div class="col">
-              <a class="launch-item" href="jazz-piano-theory.html" data-key="2" aria-label="Jazz Piano">
-                <i class="bi bi-music-note-beamed" aria-hidden="true"></i>
-                <div class="flex-grow-1">
-                  <h2>Jazz Piano</h2>
-                  <p class="text-secondary">Piano theory — basics to jazz</p>
-                </div>
-                <kbd class="key" aria-hidden="true">2</kbd>
-              </a>
-            </div>
-
-            <div class="col">
-              <a class="launch-item" href="loto/loto.html" data-key="3" aria-label="Loto">
-                <i class="bi bi-grid-3x3" aria-hidden="true"></i>
-                <div class="flex-grow-1">
-                  <h2>Loto</h2>
-                  <p class="text-secondary">Lottery heatmap &amp; statistics</p>
-                </div>
-                <kbd class="key" aria-hidden="true">3</kbd>
-              </a>
-            </div>
-
-            <div class="col">
-              <a class="launch-item" href="portfolio/index-portfolio.html" data-key="4" aria-label="Portfolio">
-                <i class="bi bi-palette" aria-hidden="true"></i>
-                <div class="flex-grow-1">
-                  <h2>Portfolio</h2>
-                  <p class="text-secondary">Web UI experiments</p>
-                </div>
-                <kbd class="key" aria-hidden="true">4</kbd>
-              </a>
-            </div>
-
-            <div class="col">
-              <a class="launch-item" href="read-excel-file-to-table/index.html" data-key="5" aria-label="Excel to Table">
-                <i class="bi bi-file-earmark-spreadsheet" aria-hidden="true"></i>
-                <div class="flex-grow-1">
-                  <h2>Excel → Table</h2>
-                  <p class="text-secondary">Read Excel files into a table</p>
-                </div>
-                <kbd class="key" aria-hidden="true">5</kbd>
-              </a>
-            </div>
-
-            <div class="col">
-              <a class="launch-item" href="scooter-maintenance-guide.html" data-key="6" aria-label="Scooter Maintenance">
-                <i class="bi bi-tools" aria-hidden="true"></i>
-                <div class="flex-grow-1">
-                  <h2>Scooter Maintenance</h2>
-                  <p class="text-secondary">Scooter service schedule</p>
-                </div>
-                <kbd class="key" aria-hidden="true">6</kbd>
-              </a>
-            </div>
-
-            <div class="col">
-              <a class="launch-item" href="SRE.html" data-key="7" aria-label="SRE">
-                <i class="bi bi-server" aria-hidden="true"></i>
-                <div class="flex-grow-1">
-                  <h2>SRE</h2>
-                  <p class="text-secondary">Swift Reading Engine</p>
-                </div>
-                <kbd class="key" aria-hidden="true">7</kbd>
-              </a>
-            </div>
-
-            <div class="col">
-              <a class="launch-item" href="thesis-research.html" data-key="8" aria-label="Thesis Research">
-                <i class="bi bi-mortarboard" aria-hidden="true"></i>
-                <div class="flex-grow-1">
-                  <h2>Thesis Research</h2>
-                  <p class="text-secondary">Graduate thesis research</p>
-                </div>
-                <kbd class="key" aria-hidden="true">8</kbd>
-              </a>
-            </div>
-
-            <div class="col">
-              <a class="launch-item" href="cashy/" data-key="9" aria-label="Cashy">
-                <i class="bi bi-wallet2" aria-hidden="true"></i>
-                <div class="flex-grow-1">
-                  <h2>Cashy</h2>
-                  <p class="text-secondary">Personal finance &amp; expense tracker</p>
-                </div>
-                <kbd class="key" aria-hidden="true">9</kbd>
-              </a>
-            </div>
-
-            <div class="col">
-              <a class="launch-item" href="json-analysis/" data-key="0" aria-label="JSON Analysis">
-                <i class="bi bi-diagram-3" aria-hidden="true"></i>
-                <div class="flex-grow-1">
-                  <h2>JSON Analysis</h2>
-                  <p class="text-secondary">Inspect, repair, search &amp; compare JSON</p>
-                </div>
-                <kbd class="key" aria-hidden="true">0</kbd>
-              </a>
-            </div>
-
-            <div class="col">
-              <a class="launch-item" href="web-builder/" data-key="w" aria-label="Web Builder">
-                <i class="bi bi-ui-checks-grid" aria-hidden="true"></i>
-                <div class="flex-grow-1">
-                  <h2>Web Builder</h2>
-                  <p class="text-secondary">Minimalist UI kit &amp; component docs</p>
-                </div>
-                <kbd class="key" aria-hidden="true">W</kbd>
-              </a>
-            </div>
+          <div class="wb-input-group hub-search">
+            <span class="wb-input-group__addon"><span class="wb-ico wb-ico--sm">search</span></span>
+            <input class="wb-input" type="search" placeholder="Quick search…" aria-label="Search"
+                   oninput="filterItems(this.value)" />
           </div>
-
-          <!-- section: Master's Degree course notes -->
-          <div class="row justify-content-between align-items-center g-2 pt-2 border-top">
-            <div class="col">
-              <span class="d-inline-flex align-items-center text-dark">
-                <i class="bi bi-mortarboard me-2 fs-5"></i>
-                <span class="fs-5">Master's Degree</span>
-              </span>
-              <p class="text-secondary small mb-0 mt-1">Graduate course notes &amp; knowledge summaries.</p>
-            </div>
-          </div>
-
-          <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-2 py-4">
-            <div class="col">
-              <a class="launch-item" href="masters/business-analytics/business-analytics.html" data-key="m" aria-label="Business Analytics">
-                <i class="bi bi-graph-up-arrow" aria-hidden="true"></i>
-                <div class="flex-grow-1">
-                  <h2>Business Analytics</h2>
-                  <p class="text-secondary">CRISP-DM, KPIs, EDA, regression, classification, clustering &amp; time series</p>
-                </div>
-                <kbd class="key" aria-hidden="true">M</kbd>
-              </a>
-            </div>
-
-            <div class="col">
-              <a class="launch-item" href="masters/business-analytics/fraud-detection-project.html" data-key="f" aria-label="Fraud Detection">
-                <i class="bi bi-shield-check" aria-hidden="true"></i>
-                <div class="flex-grow-1">
-                  <h2>Fraud Detection</h2>
-                  <p class="text-secondary">Business Analytics course project — payment fraud detection with ML</p>
-                </div>
-                <kbd class="key" aria-hidden="true">F</kbd>
-              </a>
-            </div>
-          </div>
-
-          <footer class="d-flex flex-wrap justify-content-between align-items-center gap-2 py-3 border-top text-secondary small">
-            <span>Press <kbd class="key">1</kbd>–<kbd class="key">9</kbd>, <kbd class="key">0</kbd>, <kbd class="key">W</kbd>, <kbd class="key">M</kbd>, <kbd class="key">F</kbd> to open</span>
-            <a class="link-secondary text-decoration-none" href="https://github.com/vudat081299">GitHub ↗</a>
-          </footer>
-
         </div>
       </div>
+
+      <!-- Section 1 — standalone pages -->
+      <section class="sec">
+        <div class="sec__head">
+          <span class="sec__ico"><span class="wb-ico">grid_view</span></span>
+          <div>
+            <div class="sec__label">Pages</div>
+            <p class="sec__desc">Standalone pages & tools.</p>
+          </div>
+        </div>
+
+        <div class="tiles" id="tiles">
+          <a class="wb-card wb-card--hover tile launch-item" href="poem/truyen-kieu.html" data-key="1">
+            <span class="tile__ico"><span class="wb-ico">auto_stories</span></span>
+            <span class="tile__text">
+              <span class="tile__name">Poetry</span>
+              <span class="tile__desc">The Tale of Kieu &amp; Nguyen Khuyen</span>
+            </span>
+            <kbd class="kbd">1</kbd>
+          </a>
+
+          <a class="wb-card wb-card--hover tile launch-item" href="jazz-piano-theory.html" data-key="2">
+            <span class="tile__ico"><span class="wb-ico">piano</span></span>
+            <span class="tile__text">
+              <span class="tile__name">Jazz Piano</span>
+              <span class="tile__desc">Piano theory — basics to jazz</span>
+            </span>
+            <kbd class="kbd">2</kbd>
+          </a>
+
+          <a class="wb-card wb-card--hover tile launch-item" href="loto/loto.html" data-key="3">
+            <span class="tile__ico"><span class="wb-ico">casino</span></span>
+            <span class="tile__text">
+              <span class="tile__name">Loto</span>
+              <span class="tile__desc">Lottery heatmap &amp; statistics</span>
+            </span>
+            <kbd class="kbd">3</kbd>
+          </a>
+
+          <a class="wb-card wb-card--hover tile launch-item" href="portfolio/index-portfolio.html" data-key="4">
+            <span class="tile__ico"><span class="wb-ico">palette</span></span>
+            <span class="tile__text">
+              <span class="tile__name">Portfolio</span>
+              <span class="tile__desc">Web UI experiments</span>
+            </span>
+            <kbd class="kbd">4</kbd>
+          </a>
+
+          <a class="wb-card wb-card--hover tile launch-item" href="read-excel-file-to-table/index.html" data-key="5">
+            <span class="tile__ico"><span class="wb-ico">table_chart</span></span>
+            <span class="tile__text">
+              <span class="tile__name">Excel → Table</span>
+              <span class="tile__desc">Read Excel files into a table</span>
+            </span>
+            <kbd class="kbd">5</kbd>
+          </a>
+
+          <a class="wb-card wb-card--hover tile launch-item" href="scooter-maintenance-guide.html" data-key="6">
+            <span class="tile__ico"><span class="wb-ico">two_wheeler</span></span>
+            <span class="tile__text">
+              <span class="tile__name">Scooter Maintenance</span>
+              <span class="tile__desc">Scooter service schedule</span>
+            </span>
+            <kbd class="kbd">6</kbd>
+          </a>
+
+          <a class="wb-card wb-card--hover tile launch-item" href="SRE.html" data-key="7">
+            <span class="tile__ico"><span class="wb-ico">bolt</span></span>
+            <span class="tile__text">
+              <span class="tile__name">SRE</span>
+              <span class="tile__desc">Swift Reading Engine</span>
+            </span>
+            <kbd class="kbd">7</kbd>
+          </a>
+
+          <a class="wb-card wb-card--hover tile launch-item" href="thesis-research.html" data-key="8">
+            <span class="tile__ico"><span class="wb-ico">school</span></span>
+            <span class="tile__text">
+              <span class="tile__name">Thesis Research</span>
+              <span class="tile__desc">Graduate thesis research</span>
+            </span>
+            <kbd class="kbd">8</kbd>
+          </a>
+
+          <a class="wb-card wb-card--hover tile launch-item" href="cashy/" data-key="9">
+            <span class="tile__ico"><span class="wb-ico">account_balance_wallet</span></span>
+            <span class="tile__text">
+              <span class="tile__name">Cashy</span>
+              <span class="tile__desc">Personal finance &amp; expense tracker</span>
+            </span>
+            <kbd class="kbd">9</kbd>
+          </a>
+
+          <a class="wb-card wb-card--hover tile launch-item" href="json-analysis/" data-key="0">
+            <span class="tile__ico"><span class="wb-ico">account_tree</span></span>
+            <span class="tile__text">
+              <span class="tile__name">JSON Analysis</span>
+              <span class="tile__desc">Inspect, repair, search &amp; compare JSON</span>
+            </span>
+            <kbd class="kbd">0</kbd>
+          </a>
+
+          <a class="wb-card wb-card--hover tile launch-item" href="web-builder/" data-key="w">
+            <span class="tile__ico"><span class="wb-ico">dashboard_customize</span></span>
+            <span class="tile__text">
+              <span class="tile__name">Web Builder</span>
+              <span class="tile__desc">Minimalist UI kit &amp; component docs</span>
+            </span>
+            <kbd class="kbd">W</kbd>
+          </a>
+        </div>
+      </section>
+
+      <!-- Section 2 — Master's Degree: one row card per subject -->
+      <section class="sec">
+        <div class="sec__head">
+          <span class="sec__ico"><span class="wb-ico">school</span></span>
+          <div>
+            <div class="sec__label">Master's Degree</div>
+            <p class="sec__desc">Each subject is a card — its rows are the pages inside that subject's folder.</p>
+          </div>
+        </div>
+
+        <div class="subjects" id="subjects">
+          <!-- Subject: Business Analytics -->
+          <div class="wb-card subject">
+            <div class="wb-card__head subj__head">
+              <span class="subj__ico"><span class="wb-ico">query_stats</span></span>
+              <div>
+                <h3 class="subj__title">Business Analytics</h3>
+                <p class="subj__meta">Graduate course · data analytics with ML</p>
+              </div>
+              <span class="subj__count"><span class="wb-cap wb-cap--sm">2 pages</span></span>
+            </div>
+            <ul class="wb-list wb-list--flush subj__files">
+              <a class="wb-list__item wb-list__item--link launch-item"
+                 href="masters/business-analytics/business-analytics.html" data-key="a">
+                <span class="file__ico"><span class="wb-ico">menu_book</span></span>
+                <span class="wb-list__title">Course Notes
+                  <span class="wb-list__sub">CRISP-DM · KPIs · EDA · regression · classification · clustering · time series</span>
+                </span>
+                <span class="wb-list__end"><span class="wb-ico">chevron_right</span></span>
+              </a>
+              <a class="wb-list__item wb-list__item--link launch-item"
+                 href="masters/business-analytics/fraud-detection-project.html" data-key="f">
+                <span class="file__ico"><span class="wb-ico">shield</span></span>
+                <span class="wb-list__title">Fraud Detection — Project
+                  <span class="wb-list__sub">Course project — payment fraud detection with machine learning</span>
+                </span>
+                <span class="wb-list__end"><span class="wb-ico">chevron_right</span></span>
+              </a>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <footer class="hub-foot">
+        <span>Press <kbd class="kbd">1</kbd>–<kbd class="kbd">9</kbd>, <kbd class="kbd">0</kbd>, <kbd class="kbd">W</kbd> to open a page.</span>
+        <a href="https://github.com/vudat081299" target="_blank" rel="noopener">github.com/vudat081299 ↗</a>
+      </footer>
     </main>
 
     <script>
       (function () {
-        var items = Array.prototype.slice.call(document.querySelectorAll('.launch-item[data-key]'));
+        /* ---- theme: default light (house style), remember choice ---- */
+        var root = document.documentElement;
+        var ico = document.getElementById('theme-ico');
+        function applyTheme(dark) {
+          root.classList.toggle('dark', dark);
+          if (ico) ico.textContent = dark ? 'light_mode' : 'dark_mode';
+        }
+        var saved = null;
+        try { saved = localStorage.getItem('hub-theme'); } catch (e) {}
+        applyTheme(saved === 'dark');
+        var toggle = document.getElementById('theme-toggle');
+        if (toggle) toggle.addEventListener('click', function () {
+          var dark = !root.classList.contains('dark');
+          applyTheme(dark);
+          try { localStorage.setItem('hub-theme', dark ? 'dark' : 'light'); } catch (e) {}
+        });
 
+        /* ---- keyboard shortcuts ---- */
+        var items = Array.prototype.slice.call(document.querySelectorAll('.launch-item[data-key]'));
         document.addEventListener('keydown', function (e) {
           if (e.metaKey || e.ctrlKey || e.altKey) return;
           var t = (e.target && e.target.tagName) || '';
           if (t === 'INPUT' || t === 'TEXTAREA') return;
           for (var i = 0; i < items.length; i++) {
-            if (items[i].getAttribute('data-key') === e.key) {
+            if (items[i].getAttribute('data-key') === e.key.toLowerCase()) {
               e.preventDefault();
               window.location.href = items[i].getAttribute('href');
               return;
@@ -246,11 +328,16 @@
           }
         });
 
+        /* ---- quick search: filter tiles + subject rows, hide empty subjects ---- */
         window.filterItems = function (q) {
           q = (q || '').trim().toLowerCase();
           items.forEach(function (a) {
-            var col = a.closest('.col');
-            if (col) col.style.display = a.textContent.toLowerCase().indexOf(q) >= 0 ? '' : 'none';
+            var hit = a.textContent.toLowerCase().indexOf(q) >= 0;
+            a.classList.toggle('is-hidden', !hit);
+          });
+          Array.prototype.forEach.call(document.querySelectorAll('.subject'), function (card) {
+            var anyVisible = card.querySelector('.launch-item:not(.is-hidden)');
+            card.classList.toggle('is-hidden', !anyVisible);
           });
         };
       })();
