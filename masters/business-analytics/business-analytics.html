@@ -288,6 +288,20 @@ body.detail-open .detail-backdrop{display:block}
   .detail-panel{width:100vw;border-left:none}
   body.detail-open .detail-backdrop{background:rgba(0,0,0,.6)}
 }
+/* ---------- EXERCISES ---------- */
+.exq{border:1px solid var(--border);border-radius:var(--r-md);background:var(--card);padding:var(--sp-4) var(--sp-5);margin:var(--sp-4) 0}
+.exq .qhead{display:flex;align-items:baseline;gap:var(--sp-3);margin-bottom:var(--sp-2);flex-wrap:wrap}
+.exq .qno{font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.1em;color:var(--accent-identity)}
+.exq .qsrc{font-family:var(--font-mono);font-size:var(--fs-micro);letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted);margin-left:auto}
+.exq .q>p:last-child{margin-bottom:0}
+details.soln{margin-top:var(--sp-3);border-top:1px dashed var(--border);padding-top:var(--sp-3)}
+details.soln>summary{cursor:pointer;font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.1em;text-transform:uppercase;color:var(--accent-green);list-style:none;user-select:none}
+details.soln>summary::-webkit-details-marker{display:none}
+details.soln>summary::before{content:'▸  '}
+details.soln[open]>summary::before{content:'▾  '}
+details.soln[open]>summary{margin-bottom:var(--sp-3)}
+details.soln ol,details.soln ul{padding-left:var(--sp-6)}
+details.soln .ans{margin:var(--sp-3) 0 0;padding:var(--sp-2) var(--sp-4);background:rgb(var(--accent-green-rgb)/0.08);border-left:3px solid var(--accent-green);border-radius:0 var(--r-xs) var(--r-xs) 0;font-weight:600}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 @media print{
   body::before{display:none}
@@ -295,6 +309,7 @@ body.detail-open .detail-backdrop{display:block}
   .content{margin:0;max-width:none}
   .module{display:block!important}
   .detail-source{display:block!important}
+  details.soln>*{display:block!important}
   .concept.is-done{opacity:1!important}
   :root{--bg:#fff;--card:#fff;--surface:#f5f5f5;--border:#ccc;--text-primary:#000;--text-secondary:#222;--text-muted:#444}
 }
@@ -329,6 +344,8 @@ body.detail-open .detail-backdrop{display:block}
   <a class="nav-link" data-go="timeseries"><span class="nk">09</span><span class="lab">Chuỗi thời gian</span><span class="done-dot"></span></a>
   <div class="side-sec">Vận dụng</div>
   <a class="nav-link" data-go="projects"><span class="nk">10</span><span class="lab">Dự án môn học</span><span class="done-dot"></span></a>
+  <div class="side-sec">Ôn tập</div>
+  <a class="nav-link" data-go="exercises"><span class="nk">11</span><span class="lab">Bài tập đặc trưng &amp; lời giải</span><span class="done-dot"></span></a>
 </nav>
 
 <main class="content" id="content">
@@ -337,7 +354,7 @@ body.detail-open .detail-backdrop{display:block}
     <span class="eyebrow">Môn học · Học phần Phân tích kinh doanh</span>
     <h1 class="title">Business <span>Analytics</span></h1>
     <p class="subtitle">Toàn bộ kiến thức môn học — từ khung tư duy CRISP-DM, chất lượng dữ liệu, EDA, đến hồi quy, phân loại, phân cụm và chuỗi thời gian. Tổng hợp, kiểm chứng và sửa lỗi từ 9 tài liệu gốc, trình bày song ngữ Việt–Anh.</p>
-    <p class="meta">10 MODULE · ~120 KHÁI NIỆM · 6 DEMO TƯƠNG TÁC · CẬP NHẬT <b>2026-07-24</b></p>
+    <p class="meta">11 MODULE · ~120 KHÁI NIỆM · 6 DEMO TƯƠNG TÁC · 16 BÀI TẬP CÓ LỜI GIẢI · CẬP NHẬT <b>2026-07-26</b></p>
   </header>
 
   <article class="concept" data-concept="ov-map">
@@ -367,6 +384,7 @@ body.detail-open .detail-backdrop{display:block}
       <div class="mapcard" data-goto="clustering"><span class="mk">08</span><h4>Phân cụm &amp; PCA</h4><p>K-means, GMM/EM, chọn k, PCA, RFM. <span class="pill">demo</span></p></div>
       <div class="mapcard" data-goto="timeseries"><span class="mk">09</span><h4>Chuỗi thời gian</h4><p>Phân rã, ETS/Holt-Winters, ARIMA, cross-validation, MAPE/MASE. <span class="pill">demo</span></p></div>
       <div class="mapcard" data-goto="projects"><span class="mk">10</span><h4>Dự án môn học</h4><p>7 lựa chọn đề tài, vòng đời 8 module, rubric chấm điểm.</p></div>
+      <div class="mapcard" data-goto="exercises"><span class="mk">11</span><h4>Bài tập &amp; lời giải</h4><p>16 bài tập đặc trưng, hay gặp nhất trong đề thi — mỗi bài kèm lời giải từng bước. <span class="pill">ôn thi</span></p></div>
     </div>
   </article>
 
@@ -417,14 +435,18 @@ body.detail-open .detail-backdrop{display:block}
 
   <article class="concept" data-concept="f-vs">
     <h3><span class="cid">1.2</span> BA vs Data Analytics vs Data Science</h3>
-    <p>Ba khái niệm chồng lấn nhưng khác trọng tâm — đây là dạng <em>so sánh</em>, đọc theo cột:</p>
+    <p>Ba khái niệm chồng lấn nhưng khác trọng tâm. Nhớ 1 câu: <strong>Data Science</strong> rộng nhất về <em>kỹ thuật</em> · <strong>Business Analytics</strong> gần <em>quyết định kinh doanh</em> nhất · <strong>Data Analytics</strong> nằm giữa, trả lời câu hỏi cụ thể từ dữ liệu. Đọc theo cột:</p>
     <div class="tbl-wrap"><table>
-      <thead><tr><th></th><th>Business Intelligence (BI)</th><th>Data Analytics / Science (DA/DS)</th><th>AI / ML</th></tr></thead>
+      <thead><tr><th></th><th>Business Analytics (BA)</th><th>Data Analytics (DA)</th><th>Data Science (DS)</th></tr></thead>
       <tbody>
-        <tr><td>Trọng tâm</td><td>Quá khứ &amp; hiện tại</td><td>Chẩn đoán, dự báo, phân khúc, tối ưu</td><td>Học từ dữ liệu để <strong>tự động hoá</strong> dự đoán trong sản phẩm</td></tr>
-        <tr><td>Sản phẩm</td><td>Báo cáo, dashboard, KPI</td><td>Mô hình thống kê/ML, A/B test</td><td>Hệ khuyến nghị, dự đoán real-time</td></tr>
+        <tr><td>Câu hỏi cốt lõi</td><td><em>"Nên làm gì"</em> để đạt mục tiêu kinh doanh?</td><td><em>"Đã/đang xảy ra gì"</em> và vì sao?</td><td><em>"Có thể dự đoán/tự động hoá gì"</em> từ dữ liệu?</td></tr>
+        <tr><td>Trọng tâm</td><td>Gắn insight với <strong>quyết định &amp; ROI</strong>, hiểu bối cảnh KD</td><td>Mô tả &amp; chẩn đoán trên dữ liệu <strong>có cấu trúc</strong></td><td>Xây <strong>thuật toán/mô hình</strong> mới; dữ liệu lớn, phi cấu trúc</td></tr>
+        <tr><td>Kỹ thuật · công cụ</td><td>Thống kê + tối ưu gắn domain · Excel, SQL, BI + mô hình</td><td>Thống kê mô tả, truy vấn · Excel, SQL, Tableau/Power BI</td><td>ML/DL, lập trình · Python/R, Spark, TensorFlow</td></tr>
+        <tr><td>Sản phẩm</td><td>Khuyến nghị <strong>hành động</strong></td><td>Báo cáo, dashboard, KPI</td><td>Mô hình dự đoán, sản phẩm dữ liệu</td></tr>
+        <tr><td>Phạm vi</td><td>Hẹp &amp; sâu về <em>kinh doanh</em></td><td>Hẹp, quanh câu hỏi cụ thể</td><td>Rộng nhất (bao trùm DA + ML + kỹ thuật)</td></tr>
       </tbody>
     </table></div>
+    <div class="callout note"><span class="lbl">Góc nhìn từ slide: 2 trục "dữ liệu ↔ kinh nghiệm" &amp; "quá khứ ↔ tương lai"</span><p>Slide xếp các hoạt động lên 2 trục để phân biệt BA với DA: <em>business case study</em> (kinh nghiệm · quá khứ) · <em>qualitative analytics</em> (kinh nghiệm · tương lai) · <em>báo cáo/dashboard</em> (dữ liệu · quá khứ) · <em>forecasting</em> (dữ liệu · tương lai — nằm ở giao của BA &amp; dữ liệu). Việc <strong>gắn với quyết định kinh doanh</strong> là thứ kéo một hoạt động vào vùng BA.</p></div>
     <p>Về vai trò: <strong>Data Analyst</strong> làm dữ liệu có cấu trúc, dùng công cụ BI (Excel, SQL, Tableau), suy luận tĩnh. <strong>Data Scientist</strong> rộng &amp; sâu hơn — dữ liệu có + phi cấu trúc, ML, công cụ big-data (Python/R/Spark). <strong>Business Analytics</strong> gần với <em>quyết định kinh doanh</em> nhất.</p>
     <p class="teaser">Mở rộng: bảng Data Scientist vs Data Analyst · dữ liệu có/phi/bán cấu trúc · học có giám sát vs không giám sát.</p>
     <button class="expand-btn" data-expand="f-vs">Chi tiết →</button>
@@ -1193,6 +1215,323 @@ body.detail-open .detail-backdrop{display:block}
     <div class="callout note"><span class="lbl">Chọn metric theo loại bài toán (nối lại kiến thức)</span><p><strong>Classification/Fraud</strong> → module 07: PR-AUC, Precision/Recall, F1, chi phí lỗi, chọn ngưỡng. <strong>Regression</strong> → module 06: RMSE, MAE, MAPE, R², residual analysis, VIF. <strong>Forecasting</strong> → module 09: MAE/RMSE/MAPE + <strong>MASE</strong>, backtesting rolling-origin, prediction interval. <strong>Clustering</strong> → module 08: silhouette, độ ổn định cụm, độ rõ persona.</p></div>
   </article>
 </section>
+  <section class="module" id="m-exercises" data-module="exercises">
+  <header class="page-head">
+    <span class="eyebrow">Module 11 · Ôn tập</span>
+    <h1 class="title">Bài tập đặc trưng <span>&amp; lời giải</span></h1>
+    <p class="subtitle">16 dạng bài <em>hay gặp nhất</em> trong đề thi &amp; đề án môn này — trích từ chính các ví dụ mẫu và Quick Exercise trong slide, kèm lời giải từng bước. Nhấn <b>“Xem lời giải”</b> để tự làm trước rồi đối chiếu.</p>
+  </header>
+
+  <article class="concept" data-concept="x-map">
+    <h3><span class="cid">11.0</span> Bản đồ dạng bài &amp; cách tiếp cận</h3>
+    <p>Đề môn này xoay quanh <strong>tính toán trên bảng số</strong> và <strong>chọn/diễn giải chỉ số đúng theo loại bài toán</strong>. Bảng dưới ánh xạ mỗi dạng bài về module lý thuyết &amp; công thức lõi:</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Dạng bài</th><th>Module</th><th>Công thức / kỹ năng lõi</th></tr></thead>
+      <tbody>
+        <tr><td>Phân rã KPI &amp; chọn lever cho +X%</td><td>03</td><td>Revenue = Sessions × CR × AOV</td></tr>
+        <tr><td>Cỡ mẫu A/B test</td><td>03</td><td>$n\approx 16\,p(1-p)/\Delta^2$</td></tr>
+        <tr><td>Đọc bảng ANOVA hồi quy</td><td>06</td><td>$r^2,\ S_{YX},\ t,\ F=t^2$, CI slope, dự đoán, CI vs PI</td></tr>
+        <tr><td>Chỉ số từ confusion matrix</td><td>07</td><td>precision, recall, F1, accuracy, MCC</td></tr>
+        <tr><td>Ngưỡng theo chi phí</td><td>07</td><td>$\tau^*=C_{FP}/(C_{FP}+C_{FN})$</td></tr>
+        <tr><td>Đọc bảng ngưỡng ROC/PR</td><td>07</td><td>TPR, FPR, precision, recall</td></tr>
+        <tr><td>Nhận diện cơ chế thiếu dữ liệu</td><td>04</td><td>MCAR / MAR / MNAR</td></tr>
+        <tr><td>Hàng rào IQR &amp; outlier</td><td>04–05</td><td>$[\,Q_1-1.5\,IQR,\ Q_3+1.5\,IQR\,]$</td></tr>
+        <tr><td>Weight of Evidence / IV</td><td>04</td><td>$\ln(\%Good/\%Bad)$; IV</td></tr>
+        <tr><td>K-means một vòng lặp bằng tay</td><td>08</td><td>gán → cập nhật tâm → WCSS</td></tr>
+        <tr><td>Chấm điểm RFM</td><td>08</td><td>quintile 1–5, Recency đảo chiều</td></tr>
+        <tr><td>Phương sai giải thích của PCA</td><td>08</td><td>$\text{EVR}_i=\lambda_i/\sum\lambda_j$, chọn k</td></tr>
+        <tr><td>Cộng vs nhân + dự báo SES</td><td>09</td><td>$\ell_t=\alpha y_t+(1-\alpha)\ell_{t-1}$</td></tr>
+        <tr><td>MASE</td><td>09</td><td>$\text{MAE}_{model}/\text{MAE}_{naive}$</td></tr>
+        <tr><td>ACF/PACF → bậc p, q</td><td>09</td><td>AR: PACF cắt · MA: ACF cắt</td></tr>
+      </tbody>
+    </table></div>
+    <div class="callout note"><span class="lbl">Ba bước làm bài an toàn</span><p>(1) <strong>Nhận dạng bài toán</strong> (hồi quy / phân loại / forecasting / clustering) ⇒ khoá đúng bộ chỉ số. (2) <strong>Viết công thức trước, thay số sau</strong> — chấm điểm thường cho điểm công thức. (3) <strong>Diễn giải kết quả</strong> theo ngôn ngữ kinh doanh &amp; nêu cạm bẫy (leakage, mất cân bằng lớp, ngoại suy…).</p></div>
+    <p class="teaser">Nguồn: các slide có sẵn ví dụ mẫu — BA1 (Quick Exercise 1–3, ví dụ số revenue &amp; cỡ mẫu), Linear Regression (case giá nhà đầy đủ), BA7 (bảng ROC/PR, ví dụ MCC), BA3/BA8 (mini-case churn, RFM). Các bài dưới hệ thống hoá lại chúng.</p>
+  </article>
+
+  <article class="concept" data-concept="x-kpi">
+    <h3><span class="cid">11.1</span> KPI &amp; A/B testing <span class="en">(module 03)</span></h3>
+
+    <div class="exq">
+      <div class="qhead"><span class="qno">Bài 1</span><span class="qsrc">BA1 · ví dụ revenue</span></div>
+      <div class="q"><p>Một sàn e-commerce hiện có <strong>1.000.000 phiên/tháng</strong>, <strong>CR = 2,0%</strong>, <strong>AOV = 420.000đ</strong>. Ban giám đốc muốn <strong>tăng 15% doanh thu</strong> mà <em>không tăng ngân sách quảng cáo</em> (giữ nguyên số phiên). Hỏi: (a) doanh thu hiện tại &amp; mục tiêu? (b) nếu <em>chỉ</em> tác động CR thì cần CR bao nhiêu? (c) nếu <em>chỉ</em> tác động AOV thì cần AOV bao nhiêu?</p></div>
+      <details class="soln"><summary>Xem lời giải</summary>
+        <ol>
+          <li>Công thức: $\text{Revenue}=\text{Sessions}\times\text{CR}\times\text{AOV}$.</li>
+          <li>Hiện tại: $10^6\times0{,}02\times420{.}000 = 8{,}4$ tỷ đ. Mục tiêu $= 8{,}4\times1{,}15 = 9{,}66$ tỷ đ.</li>
+          <li>Vì Sessions cố định, cần nhân phần còn lại lên <strong>1,15 lần</strong>. Chỉ CR: $\text{CR}=2{,}0\%\times1{,}15 = \mathbf{2{,}30\%}$ (kiểm tra: $10^6\times0{,}023\times420\text{k}=9{,}66$ tỷ ✓).</li>
+          <li>Chỉ AOV: $\text{AOV}=420\text{k}\times1{,}15 = \mathbf{483{.}000}$đ (kiểm tra: $10^6\times0{,}02\times483\text{k}=9{,}66$ tỷ ✓).</li>
+        </ol>
+        <div class="callout warning"><span class="lbl">⚠ Bẫy</span><p>Đề chỉ đòi <em>một</em> lever — không được tăng <em>cả</em> CR lẫn AOV rồi vẫn để mỗi cái +15% (sẽ thành $1{,}15^2\approx+32\%$). Thực tế thường phối hợp: ví dụ CR +7% &amp; AOV +7,5% $\Rightarrow 1{,}07\times1{,}075\approx1{,}15$.</p></div>
+        <p class="ans">Đáp số: hiện 8,4 tỷ → mục tiêu 9,66 tỷ; CR 2,0% → 2,30% <em>hoặc</em> AOV 420k → 483k.</p>
+      </details>
+    </div>
+
+    <div class="exq">
+      <div class="qhead"><span class="qno">Bài 2</span><span class="qsrc">BA1 · rule-of-thumb cỡ mẫu</span></div>
+      <div class="q"><p>Bạn chạy A/B test tối ưu phễu checkout. Conversion nền $p = 2\%$, muốn phát hiện mức cải thiện tối thiểu (MDE) $\Delta = 0{,}3$ điểm phần trăm, với $\alpha=5\%$ hai phía, power 80%. Ước lượng <strong>cỡ mẫu mỗi nhánh</strong>. Nếu traffic 50.000 phiên/nhánh/tuần thì cần chạy mấy tuần?</p></div>
+      <details class="soln"><summary>Xem lời giải</summary>
+        <ol>
+          <li>Rule-of-thumb: $n\approx \dfrac{16\,p(1-p)}{\Delta^2}$ mỗi nhóm (hằng số $16\approx 2(z_{\alpha/2}+z_\beta)^2=2(1{,}96+0{,}84)^2$).</li>
+          <li><strong>Quy đơn vị Δ</strong> (chỗ hay nhầm): $0{,}3$ điểm phần trăm $=0{,}3\times0{,}01=0{,}003$ — tức nâng conversion $2{,}0\%\to2{,}3\%$. Đây là chênh lệch <em>tuyệt đối</em>, cùng đơn vị với $p$; <em>không</em> phải $0{,}3\%$ tương đối. Δ phải cùng đơn vị với $p$ mới thay vào được.</li>
+          <li>Thay số: $p=0{,}02$, $\Delta=0{,}003$. Tử: $16\times0{,}02\times0{,}98 = 0{,}3136$.</li>
+          <li>$n\approx \dfrac{0{,}3136}{0{,}003^2}=\dfrac{0{,}3136}{0{,}000009}\approx \mathbf{34{.}844}$ /nhóm.</li>
+          <li>Hai nhánh ≈ 69.700 phiên. Với 50.000 phiên/nhánh/tuần ⇒ cần <strong>≈ 1 tuần</strong> để đủ mẫu (34.844/50.000), nhưng nên chạy tối thiểu 1–2 tuần trọn để phủ hiệu ứng ngày-trong-tuần.</li>
+        </ol>
+        <div class="callout warning"><span class="lbl">⚠ Bẫy</span><p>$n\propto 1/\Delta^2$: giảm MDE một nửa ⇒ cỡ mẫu <strong>gấp 4</strong>. Đừng “peeking” (soi p-value giữa chừng rồi dừng khi có ý nghĩa) — làm phồng false-positive.</p></div>
+        <p class="ans">Đáp số: ≈ 34.844 phiên/nhánh; ~1–2 tuần.</p>
+      </details>
+    </div>
+  </article>
+
+  <article class="concept" data-concept="x-reg">
+    <h3><span class="cid">11.2</span> Đọc bảng hồi quy tuyến tính <span class="en">(module 06)</span></h3>
+    <p>Đây là <strong>dạng bài trọng tâm nhất</strong> của phần predictive. Dữ liệu 10 căn nhà: $Y$ = giá (nghìn USD), $X$ = diện tích (sqft). Excel cho kết quả:</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Nguồn</th><th>df</th><th>SS</th><th>MS</th><th>F</th></tr></thead>
+      <tbody>
+        <tr><td>Regression</td><td>1</td><td>18934,93</td><td>18934,93</td><td>11,08</td></tr>
+        <tr><td>Residual</td><td>8</td><td>13665,57</td><td>1708,20</td><td></td></tr>
+        <tr><td>Total</td><td>9</td><td>32600,50</td><td></td><td></td></tr>
+      </tbody>
+    </table></div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th></th><th>Coef</th><th>Std Error</th><th>t</th><th>P-value</th></tr></thead>
+      <tbody>
+        <tr><td>Intercept</td><td>98,248</td><td>58,033</td><td>1,693</td><td>0,129</td></tr>
+        <tr><td>Square Feet</td><td>0,10977</td><td>0,03297</td><td>3,329</td><td>0,0104</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="exq">
+      <div class="qhead"><span class="qno">Bài 3</span><span class="qsrc">Linear Regression · case giá nhà</span></div>
+      <div class="q"><p>Cho $t_{0{,}025;\,8}=2{,}306$. Hãy: (a) viết phương trình hồi quy &amp; diễn giải hệ số góc; (b) tính $r^2$ và $S_{YX}$; (c) dự đoán giá nhà 2000 sqft; (d) kiểm định $\beta_1$ bằng cả <em>t-test</em> và <em>F-test</em>, giải thích quan hệ $F=t^2$; (e) lập CI 95% cho hệ số góc.</p></div>
+      <details class="soln"><summary>Xem lời giải</summary>
+        <ol>
+          <li><strong>Phương trình:</strong> $\widehat{\text{price}} = 98{,}248 + 0{,}10977\,(\text{sqft})$. Hệ số góc: mỗi sqft tăng ⇒ giá tăng trung bình $0{,}10977\times 1000 = 109{,}77$ USD.</li>
+          <li><strong>$r^2 = \dfrac{SSR}{SST} = \dfrac{18934{,}93}{32600{,}50} = 0{,}581$</strong> ⇒ 58,1% biến thiên giá được giải thích bởi diện tích.</li>
+          <li><strong>$S_{YX}=\sqrt{\dfrac{SSE}{n-2}}=\sqrt{\dfrac{13665{,}57}{8}}=\sqrt{1708{,}20}=41{,}33$</strong> (nghìn USD). Chia $n-2$ vì đã ước lượng 2 tham số.</li>
+          <li><strong>Dự đoán 2000 sqft:</strong> $98{,}248+0{,}10977\times2000 = 98{,}25+219{,}54 = \mathbf{317{,}8}$ ⇒ ≈ <strong>317.800 USD</strong>.</li>
+          <li><strong>t-test</strong> $H_0:\beta_1=0$: $t=\dfrac{b_1}{S_{b_1}}=\dfrac{0{,}10977}{0{,}03297}=3{,}329 &gt; 2{,}306$ ⇒ bác bỏ $H_0$ (p = 0,0104). Diện tích ảnh hưởng có ý nghĩa tới giá.</li>
+          <li><strong>F-test:</strong> $F=\dfrac{MSR}{MSE}=\dfrac{18934{,}93}{1708{,}20}=11{,}08$. Với hồi quy đơn (1 biến): $F=t^2=3{,}329^2\approx11{,}08$ — hai kiểm định <em>tương đương</em>, cùng kết luận.</li>
+          <li><strong>CI 95% slope:</strong> $b_1\pm t\,S_{b_1}=0{,}10977\pm2{,}306\times0{,}03297=0{,}10977\pm0{,}0760=(\mathbf{0{,}0337;\ 0{,}1858})$. Khoảng <em>không chứa 0</em> ⇒ có ý nghĩa (nhất quán với t-test).</li>
+        </ol>
+        <div class="callout warning"><span class="lbl">⚠ Bẫy hay bị hỏi thêm</span><p><strong>CI cho trung bình Y</strong> khác <strong>PI cho một Y cá thể</strong>. Tại 2000 sqft: CI mean = (280,7; 354,9) còn PI individual = (215,5; 420,1) — PI <em>luôn rộng hơn</em> vì có thêm “+1” dưới căn (bất định của một quan sát đơn lẻ). Và <strong>đừng ngoại suy</strong> ngoài miền dữ liệu (~1100–2450 sqft). Xem chi tiết ở mục 6.5.</p></div>
+        <p class="ans">Đáp số: $r^2=0{,}581$; $S_{YX}=41{,}33$; giá ≈ 317.800 USD; slope có ý nghĩa ($t=3{,}33$, $F=11{,}08=t^2$); CI slope (0,0337; 0,1858).</p>
+      </details>
+    </div>
+  </article>
+
+  <article class="concept" data-concept="x-dq">
+    <h3><span class="cid">11.3</span> Chất lượng dữ liệu &amp; feature <span class="en">(module 04–05)</span></h3>
+
+    <div class="exq">
+      <div class="qhead"><span class="qno">Bài 4</span><span class="qsrc">BA3 · cơ chế missing</span></div>
+      <div class="q"><p>Phân loại cơ chế thiếu (MCAR / MAR / MNAR) cho từng tình huống &amp; nêu cách xử lý phù hợp:</p>
+      <ul>
+        <li>(a) Cảm biến IoT thỉnh thoảng rớt gói tin do nhiễu sóng, không liên quan giá trị đo.</li>
+        <li>(b) Cột <code>income</code> thiếu <em>nhiều hơn</em> ở nhóm khách <code>prepaid</code> (biết được nhóm gói).</li>
+        <li>(c) Người <em>thu nhập cao</em> có xu hướng <em>không khai</em> thu nhập.</li>
+      </ul></div>
+      <details class="soln"><summary>Xem lời giải</summary>
+        <ol>
+          <li>(a) <strong>MCAR</strong> — xác suất thiếu độc lập với mọi biến. An toàn nhất: có thể drop hoặc impute đơn giản, ước lượng không chệch.</li>
+          <li>(b) <strong>MAR</strong> — xác suất thiếu phụ thuộc biến <em>quan sát được</em> (<code>plan_type</code>). Xử lý: <strong>impute theo nhóm</strong> (group-wise median theo <code>plan_type</code>), hoặc MICE; thêm cột <code>income_is_missing</code>.</li>
+          <li>(c) <strong>MNAR</strong> — xác suất thiếu phụ thuộc chính <em>giá trị bị thiếu</em>. Khó nhất: impute thông thường gây chệch; cần mô hình hoá cơ chế thiếu hoặc thu thập thêm dữ liệu/biến proxy.</li>
+        </ol>
+        <div class="callout warning"><span class="lbl">⚠ Bẫy</span><p>Luôn fit thống kê impute <strong>chỉ trên tập train</strong> và <strong>sau khi split</strong> — impute bằng mean/median tính trên toàn bộ dữ liệu là leakage kinh điển.</p></div>
+        <p class="ans">Đáp số: (a) MCAR · (b) MAR · (c) MNAR.</p>
+      </details>
+    </div>
+
+    <div class="exq">
+      <div class="qhead"><span class="qno">Bài 5</span><span class="qsrc">BA3/BA4 · IQR outlier</span></div>
+      <div class="q"><p>Cột <code>monthly_charges</code> có $Q_1 = 30$, $Q_3 = 70$. Dùng hàng rào Tukey ($k=1{,}5$): (a) tính IQR và hai hàng rào; (b) giá trị 140 và 125 có phải outlier không?</p></div>
+      <details class="soln"><summary>Xem lời giải</summary>
+        <ol>
+          <li>$IQR = Q_3-Q_1 = 70-30 = 40$.</li>
+          <li>Hàng rào dưới $= Q_1-1{,}5\,IQR = 30-60 = -30$. Hàng rào trên $= Q_3+1{,}5\,IQR = 70+60 = 130$.</li>
+          <li>Miền “bình thường” $= [-30;\ 130]$. <strong>140 &gt; 130 ⇒ outlier</strong>. <strong>125 ≤ 130 ⇒ không phải outlier</strong>.</li>
+        </ol>
+        <div class="callout warning"><span class="lbl">⚠ Bẫy</span><p>Outlier <em>có thể mang tín hiệu thật</em> (khách VIP) — điều tra theo nghiệp vụ trước khi xoá. Và scaling (z-score/MinMax) <strong>không</strong> loại outlier, chỉ dời trục.</p></div>
+        <p class="ans">Đáp số: IQR = 40; hàng rào [−30; 130]; 140 là outlier, 125 thì không.</p>
+      </details>
+    </div>
+
+    <div class="exq">
+      <div class="qhead"><span class="qno">Bài 6</span><span class="qsrc">BA3 · WoE / IV (credit scoring)</span></div>
+      <div class="q"><p>Trong một bin điểm tín dụng: <strong>Good = 1600, Bad = 200</strong>. Toàn bộ mẫu: <strong>Good = 8000, Bad = 2000</strong>. Tính <strong>WoE</strong> của bin và <strong>đóng góp IV</strong> của nó.</p></div>
+      <details class="soln"><summary>Xem lời giải</summary>
+        <ol>
+          <li>$\%Good = 1600/8000 = 0{,}20$; $\%Bad = 200/2000 = 0{,}10$.</li>
+          <li>$\text{WoE} = \ln\!\dfrac{\%Good}{\%Bad} = \ln\!\dfrac{0{,}20}{0{,}10} = \ln 2 = \mathbf{0{,}693}$ (dương ⇒ bin nghiêng về “good”).</li>
+          <li>Đóng góp IV $= (\%Good-\%Bad)\times\text{WoE} = (0{,}20-0{,}10)\times0{,}693 = \mathbf{0{,}069}$.</li>
+        </ol>
+        <div class="callout note"><span class="lbl">Ngưỡng IV</span><p>Cộng đóng góp IV của mọi bin: &lt;0,02 vô dụng · 0,02–0,1 yếu · 0,1–0,3 vừa · 0,3–0,5 mạnh · &gt;0,5 nghi ngờ leakage.</p></div>
+        <p class="ans">Đáp số: WoE = ln 2 ≈ 0,693; đóng góp IV ≈ 0,069.</p>
+      </details>
+    </div>
+  </article>
+
+  <article class="concept" data-concept="x-clf">
+    <h3><span class="cid">11.4</span> Đánh giá phân loại <span class="en">(module 07)</span></h3>
+
+    <div class="exq">
+      <div class="qhead"><span class="qno">Bài 7</span><span class="qsrc">BA7 · confusion matrix</span></div>
+      <div class="q"><p>Mô hình phát hiện gian lận trên 1000 giao dịch (50 gian lận = dương). Kết quả: <strong>TP = 30, FN = 20, FP = 90, TN = 860</strong>. Tính precision, recall, F1, accuracy. Vì sao accuracy “đẹp” lại đánh lừa? Tính MCC.</p></div>
+      <details class="soln"><summary>Xem lời giải</summary>
+        <ol>
+          <li>$\text{Precision}=\dfrac{TP}{TP+FP}=\dfrac{30}{120}=\mathbf{0{,}25}$.</li>
+          <li>$\text{Recall}=\dfrac{TP}{TP+FN}=\dfrac{30}{50}=\mathbf{0{,}60}$.</li>
+          <li>$F_1=2\cdot\dfrac{P\cdot R}{P+R}=2\cdot\dfrac{0{,}25\times0{,}60}{0{,}85}=\dfrac{0{,}30}{0{,}85}=\mathbf{0{,}353}$.</li>
+          <li>$\text{Accuracy}=\dfrac{TP+TN}{1000}=\dfrac{890}{1000}=\mathbf{0{,}89}$.</li>
+          <li><strong>Vì sao đánh lừa:</strong> lớp dương chỉ chiếm 5%. Mô hình “lười” đoán <em>tất cả là âm</em> đạt accuracy $950/1000=95\%$ nhưng recall = 0, F1 = 0 — vô dụng. Với dữ liệu mất cân bằng phải dùng PR-AUC / recall / MCC.</li>
+          <li>$\text{MCC}=\dfrac{TP\cdot TN-FP\cdot FN}{\sqrt{(TP{+}FP)(TP{+}FN)(TN{+}FP)(TN{+}FN)}}=\dfrac{30\cdot860-90\cdot20}{\sqrt{120\cdot50\cdot950\cdot880}}=\dfrac{24000}{70823}\approx\mathbf{0{,}34}$.</li>
+        </ol>
+        <p class="ans">Đáp số: P = 0,25; R = 0,60; F1 = 0,353; Acc = 0,89 (mô hình lười cũng đạt 0,95 → dùng MCC = 0,34).</p>
+      </details>
+    </div>
+
+    <div class="exq">
+      <div class="qhead"><span class="qno">Bài 8</span><span class="qsrc">BA7 · ngưỡng theo chi phí</span></div>
+      <div class="q"><p>Tính ngưỡng tối ưu Bayes $\tau^*$ cho hai bài toán, và diễn giải: (a) <strong>Tầm soát ung thư</strong>: $C_{FN}=10000$ (bỏ sót người bệnh), $C_{FP}=50$ (báo động giả). (b) <strong>Lọc spam</strong>: $C_{FP}=1000$ (lọc nhầm email quan trọng), $C_{FN}=1$ (để lọt spam).</p></div>
+      <details class="soln"><summary>Xem lời giải</summary>
+        <ol>
+          <li>Công thức: $\tau^*=\dfrac{C_{FP}}{C_{FP}+C_{FN}}$; dự đoán dương khi $p&gt;\tau^*$.</li>
+          <li>(a) Ung thư: $\tau^*=\dfrac{50}{50+10000}=\dfrac{50}{10050}\approx\mathbf{0{,}005}$ ⇒ chỉ cần $p&gt;0{,}5\%$ đã gắn cờ đi khám. Ngưỡng <em>rất thấp</em> vì bỏ sót đắt gấp 200 lần.</li>
+          <li>(b) Spam: $\tau^*=\dfrac{1000}{1000+1}\approx\mathbf{0{,}999}$ ⇒ chỉ xếp spam khi <em>gần như chắc chắn</em>, để bảo vệ email quan trọng.</li>
+        </ol>
+        <div class="callout warning"><span class="lbl">⚠ Bẫy (lỗi trong slide)</span><p>Đừng dùng $\tau^*=C_{FP}/C_{FN}$ (một slide ghi sai): với spam sẽ ra $1000/1=1000$ — <em>vô nghĩa</em> vì ngưỡng phải nằm trong $[0,1]$. Công thức đúng luôn có <strong>tổng</strong> ở mẫu.</p></div>
+        <p class="ans">Đáp số: (a) $\tau^*\approx0{,}005$ · (b) $\tau^*\approx0{,}999$.</p>
+      </details>
+    </div>
+
+    <div class="exq">
+      <div class="qhead"><span class="qno">Bài 9</span><span class="qsrc">BA7 · bảng ngưỡng ROC/PR</span></div>
+      <div class="q"><p>Bộ test có 40 dương / 160 âm (prevalence 0,2). Bảng đếm theo ngưỡng:</p>
+      <div class="tbl-wrap"><table><thead><tr><th>τ</th><th>TP</th><th>FP</th><th>FN</th><th>TN</th></tr></thead><tbody>
+        <tr><td>0,6</td><td>34</td><td>3</td><td>6</td><td>157</td></tr>
+        <tr><td>0,4</td><td>40</td><td>26</td><td>0</td><td>134</td></tr>
+      </tbody></table></div>
+      <p>Tính Precision, Recall, và FPR tại mỗi ngưỡng. Hạ ngưỡng từ 0,6 → 0,4 tác động thế nào? Baseline precision của đường PR là bao nhiêu?</p></div>
+      <details class="soln"><summary>Xem lời giải</summary>
+        <ol>
+          <li><strong>τ = 0,6:</strong> $P=\dfrac{34}{34+3}=0{,}919$; $R=\text{TPR}=\dfrac{34}{40}=0{,}85$; $\text{FPR}=\dfrac{FP}{FP+TN}=\dfrac{3}{160}=0{,}019$.</li>
+          <li><strong>τ = 0,4:</strong> $P=\dfrac{40}{40+26}=0{,}606$; $R=\dfrac{40}{40}=1{,}0$; $\text{FPR}=\dfrac{26}{160}=0{,}163$.</li>
+          <li><strong>Hạ ngưỡng:</strong> recall ↑ (0,85 → 1,0) nhưng precision ↓ (0,92 → 0,61) và FPR ↑ — bắt được hết ca dương nhưng đánh đổi bằng nhiều báo động giả.</li>
+          <li><strong>Baseline PR</strong> = prevalence = $40/200 = \mathbf{0{,}20}$ (mô hình ngẫu nhiên).</li>
+        </ol>
+        <div class="callout note"><span class="lbl">Nhớ</span><p>ROC dùng cặp (FPR, TPR); PR dùng cặp (Recall, Precision). Khi <em>dương hiếm</em>, ưu tiên đọc PR vì FPR “giấu” gánh nặng FP.</p></div>
+        <p class="ans">Đáp số: τ=0,6 → P=0,92, R=0,85, FPR=0,019; τ=0,4 → P=0,61, R=1,0, FPR=0,163; baseline PR = 0,20.</p>
+      </details>
+    </div>
+  </article>
+
+  <article class="concept" data-concept="x-clu">
+    <h3><span class="cid">11.5</span> Phân cụm &amp; PCA <span class="en">(module 08)</span></h3>
+
+    <div class="exq">
+      <div class="qhead"><span class="qno">Bài 10</span><span class="qsrc">BA8 · K-means một vòng lặp</span></div>
+      <div class="q"><p>Dữ liệu 1 chiều: $\{2, 3, 6, 8, 12, 15\}$, chọn $k=2$, tâm khởi tạo $c_1=2$, $c_2=15$. Thực hiện <strong>một vòng lặp</strong> (gán → cập nhật tâm), tính WCSS, và kiểm tra đã hội tụ chưa.</p></div>
+      <details class="soln"><summary>Xem lời giải</summary>
+        <ol>
+          <li><strong>Gán</strong> mỗi điểm về tâm gần hơn: 2,3,6,8 gần $c_1=2$ hơn (vd 8: |8−2|=6 &lt; |8−15|=7); 12,15 gần $c_2=15$. ⇒ $C_1=\{2,3,6,8\}$, $C_2=\{12,15\}$.</li>
+          <li><strong>Cập nhật tâm</strong> = trung bình cụm: $c_1=\dfrac{2+3+6+8}{4}=4{,}75$; $c_2=\dfrac{12+15}{2}=13{,}5$.</li>
+          <li><strong>WCSS</strong> $=\sum\|x-\mu\|^2$: cụm 1 $=2{,}75^2+1{,}75^2+1{,}25^2+3{,}25^2=7{,}56+3{,}06+1{,}56+10{,}56=22{,}75$; cụm 2 $=1{,}5^2+1{,}5^2=4{,}5$. Tổng $=\mathbf{27{,}25}$.</li>
+          <li><strong>Kiểm tra hội tụ:</strong> gán lại với tâm mới (4,75; 13,5) cho <em>y nguyên</em> hai cụm ⇒ tâm không đổi ⇒ <strong>đã hội tụ</strong>.</li>
+        </ol>
+        <div class="callout warning"><span class="lbl">⚠ Bẫy</span><p>Kết quả phụ thuộc khởi tạo (chỉ đạt <em>local optimum</em>) ⇒ dùng <strong>k-means++</strong> và chạy nhiều lần (<code>n_init</code>) giữ WCSS nhỏ nhất. Phải <strong>scale</strong> trước nếu nhiều chiều khác đơn vị.</p></div>
+        <p class="ans">Đáp số: $C_1=\{2,3,6,8\}$ (tâm 4,75), $C_2=\{12,15\}$ (tâm 13,5); WCSS = 27,25; đã hội tụ.</p>
+      </details>
+    </div>
+
+    <div class="exq">
+      <div class="qhead"><span class="qno">Bài 11</span><span class="qsrc">BA8 · chấm điểm RFM</span></div>
+      <div class="q"><p>Quy tắc quintile (điểm 1–5): Recency [0–20 ngày]=5·[21–45]=4·[46–90]=3·[91–180]=2·[&gt;180]=1; Frequency [≥20]=5·[12–19]=4·[6–11]=3·[2–5]=2·[1]=1; Monetary [≥1500]=5·[800–1499]=4·[400–799]=3·[150–399]=2·[&lt;150]=1. Chấm điểm &amp; đặt tên phân khúc cho: <strong>KH-A</strong> (R=15 ngày, F=22, M=1800) và <strong>KH-B</strong> (R=200 ngày, F=8, M=2000).</p></div>
+      <details class="soln"><summary>Xem lời giải</summary>
+        <ol>
+          <li><strong>KH-A:</strong> R=15 → 5 (mua rất gần đây), F=22 → 5, M=1800 → 5 ⇒ mã <strong>“555” = Champion</strong> (mua gần đây, thường xuyên, chi nhiều).</li>
+          <li><strong>KH-B:</strong> R=200 → 1 (lâu không mua), F=8 → 3, M=2000 → 5 ⇒ mã <strong>“135” = At Risk</strong> (khách chi nhiều nhưng đã lâu không quay lại — cần win-back).</li>
+        </ol>
+        <div class="callout warning"><span class="lbl">⚠ Bẫy</span><p><strong>Recency đảo chiều:</strong> số ngày <em>nhỏ</em> = điểm <em>cao</em>. F &amp; M thường lệch phải (Pareto 80/20) ⇒ dùng <em>quantile binning</em>, không dùng bin đều.</p></div>
+        <p class="ans">Đáp số: KH-A = 555 (Champion); KH-B = 135 (At Risk).</p>
+      </details>
+    </div>
+
+    <div class="exq">
+      <div class="qhead"><span class="qno">Bài 12</span><span class="qsrc">BA8 · phương sai giải thích PCA</span></div>
+      <div class="q"><p>Sau khi chuẩn hoá &amp; phân tích PCA trên 5 biến, các trị riêng (eigenvalue) là $\lambda = [4{,}2;\ 1{,}5;\ 0{,}8;\ 0{,}3;\ 0{,}2]$. Tính EVR từng PC &amp; EVR luỹ kế. Giữ bao nhiêu PC để đạt ≥ 90% phương sai?</p></div>
+      <details class="soln"><summary>Xem lời giải</summary>
+        <ol>
+          <li>Tổng phương sai $=\sum\lambda_j = 4{,}2+1{,}5+0{,}8+0{,}3+0{,}2 = 7{,}0$.</li>
+          <li>$\text{EVR}_i=\lambda_i/7$: PC1 = 60,0% · PC2 = 21,4% · PC3 = 11,4% · PC4 = 4,3% · PC5 = 2,9%.</li>
+          <li>Luỹ kế: PC1 = 60,0% · +PC2 = 81,4% · <strong>+PC3 = 92,9%</strong> · +PC4 = 97,1% · +PC5 = 100%.</li>
+          <li>Đạt ngưỡng ≥ 90% lần đầu ở PC3 ⇒ <strong>giữ 3 thành phần</strong> (giảm từ 5 chiều xuống 3).</li>
+        </ol>
+        <div class="callout warning"><span class="lbl">⚠ Bẫy</span><p>PCA <em>không giám sát</em>: phương sai lớn ≠ khả năng phân biệt lớp. Nếu mục tiêu là phân biệt nhãn ⇒ cân nhắc LDA. Bắt buộc chuẩn hoá trước PCA.</p></div>
+        <p class="ans">Đáp số: EVR = [60; 21,4; 11,4; 4,3; 2,9]%; giữ 3 PC (92,9% ≥ 90%).</p>
+      </details>
+    </div>
+  </article>
+
+  <article class="concept" data-concept="x-ts">
+    <h3><span class="cid">11.6</span> Chuỗi thời gian <span class="en">(module 09)</span></h3>
+
+    <div class="exq">
+      <div class="qhead"><span class="qno">Bài 13</span><span class="qsrc">BA9 · cộng vs nhân</span></div>
+      <div class="q"><p>Chọn mô hình phân rã (cộng hay nhân) &amp; giải thích: (a) doanh số có dao động mùa cố định <strong>±100 triệu</strong> bất kể mức nền; (b) lượng khách bay có biên độ mùa <strong>±20%</strong>, đỉnh hè <em>ngày càng lớn</em> khi tổng lượng khách tăng.</p></div>
+      <details class="soln"><summary>Xem lời giải</summary>
+        <ol>
+          <li>(a) Biên độ mùa <em>không đổi</em> theo mức ⇒ <strong>cộng</strong>: $y_t=T_t+S_t+R_t$.</li>
+          <li>(b) Biên độ mùa <em>tỉ lệ</em> với mức (±%) ⇒ <strong>nhân</strong>: $y_t=T_t\times S_t\times R_t$. Mẹo: lấy $\log$ biến mô hình nhân thành cộng.</li>
+        </ol>
+        <p class="ans">Đáp số: (a) cộng · (b) nhân (hoặc log rồi cộng).</p>
+      </details>
+    </div>
+
+    <div class="exq">
+      <div class="qhead"><span class="qno">Bài 14</span><span class="qsrc">BA9 · SES bằng tay</span></div>
+      <div class="q"><p>Simple Exponential Smoothing với $\alpha=0{,}3$, khởi tạo $\ell_1 = y_1 = 100$. Dữ liệu $y_2=110$, $y_3=105$. Tính $\ell_2$, $\ell_3$ và dự báo cho kỳ thứ 4 &amp; thứ 6.</p></div>
+      <details class="soln"><summary>Xem lời giải</summary>
+        <ol>
+          <li>$\ell_t=\alpha y_t+(1-\alpha)\ell_{t-1}$.</li>
+          <li>$\ell_2=0{,}3\times110+0{,}7\times100 = 33+70 = \mathbf{103}$.</li>
+          <li>$\ell_3=0{,}3\times105+0{,}7\times103 = 31{,}5+72{,}1 = \mathbf{103{,}6}$.</li>
+          <li>Dự báo SES <strong>phẳng</strong>: $\hat y_{t+h}=\ell_t$ với mọi $h$ ⇒ $\hat y_4=\hat y_6=\mathbf{103{,}6}$.</li>
+        </ol>
+        <div class="callout note"><span class="lbl">Nhớ</span><p>$\alpha$ lớn ⇒ phản ứng nhanh với dữ liệu mới; $\alpha$ nhỏ ⇒ mượt, bám lịch sử. Thực tế $\alpha$ được <em>ước lượng bằng tối thiểu SSE</em>, không chọn tay. SES không có xu hướng/mùa ⇒ dự báo là đường ngang.</p></div>
+        <p class="ans">Đáp số: $\ell_2=103$; $\ell_3=103{,}6$; $\hat y_4=\hat y_6=103{,}6$.</p>
+      </details>
+    </div>
+
+    <div class="exq">
+      <div class="qhead"><span class="qno">Bài 15</span><span class="qsrc">BA9 · MASE</span></div>
+      <div class="q"><p>Trên tập test, mô hình ETS có MAE = 18. Seasonal-naive (dự báo bằng giá trị cùng kỳ mùa trước) có MAE = 24 trên tập train. Tính MASE &amp; kết luận. Nếu một mô hình khác có MAE = 30 thì sao?</p></div>
+      <details class="soln"><summary>Xem lời giải</summary>
+        <ol>
+          <li>$\text{MASE}=\dfrac{\text{MAE}_{model}}{\text{MAE}_{naive}}=\dfrac{18}{24}=\mathbf{0{,}75}&lt;1$ ⇒ mô hình <strong>tốt hơn</strong> naive (giảm 25% lỗi) — chấp nhận được.</li>
+          <li>Mô hình MAE = 30: $\text{MASE}=30/24=\mathbf{1{,}25}&gt;1$ ⇒ <strong>thua</strong> naive ⇒ vô dụng, nên dùng naive.</li>
+        </ol>
+        <div class="callout warning"><span class="lbl">⚠ Vì sao không dùng MAPE</span><p>MAPE <em>không xác định khi $y_t=0$</em> (cửa hàng đóng cửa) và bất đối xứng (phạt dự báo cao hơn thực tế nặng hơn). MASE không thứ nguyên, xác định cả khi có số 0, luôn có mốc so sánh naive.</p></div>
+        <p class="ans">Đáp số: MASE = 0,75 (thắng naive); mô hình 30 → MASE = 1,25 (thua naive).</p>
+      </details>
+    </div>
+
+    <div class="exq">
+      <div class="qhead"><span class="qno">Bài 16</span><span class="qsrc">BA9 · ACF/PACF</span></div>
+      <div class="q"><p>Sau khi sai phân cho chuỗi dừng, quan sát: (a) ACF <em>tắt dần theo hàm mũ</em>, PACF <em>cắt đứt sau lag 2</em>; (b) ACF <em>cắt đứt sau lag 1</em>, PACF tắt dần. Nhận diện mô hình.</p></div>
+      <details class="soln"><summary>Xem lời giải</summary>
+        <ol>
+          <li>Quy tắc Box-Jenkins: <strong>AR(p)</strong> ⇒ PACF cắt sau lag $p$, ACF tắt dần. <strong>MA(q)</strong> ⇒ ACF cắt sau lag $q$, PACF tắt dần.</li>
+          <li>(a) PACF cắt sau lag 2 + ACF tắt dần ⇒ <strong>AR(2)</strong>.</li>
+          <li>(b) ACF cắt sau lag 1 + PACF tắt dần ⇒ <strong>MA(1)</strong>.</li>
+        </ol>
+        <div class="callout note"><span class="lbl">Nhớ</span><p>Nhớ mẹo “<em>cắt ở đâu, bậc ở đó</em>”: AR đọc bậc trên <strong>PACF</strong>, MA đọc bậc trên <strong>ACF</strong>. Bậc $d$ (số lần sai phân) chọn để ADF pass ($p&lt;0{,}05$ = dừng).</p></div>
+        <p class="ans">Đáp số: (a) AR(2) · (b) MA(1).</p>
+      </details>
+    </div>
+  </article>
+</section>
 </main>
 
 <!-- FOCUS DOCK -->
@@ -1248,7 +1587,7 @@ function gauss(rng){var u=0,v=0;while(u===0)u=rng();while(v===0)v=rng();return M
 })();
 
 /* ============ MODULE NAV ============ */
-var CRUMB={overview:'Tổng quan',foundations:'01 · Nền tảng BA',crispdm:'02 · CRISP-DM',kpi:'03 · KPI & Framing',dataquality:'04 · Data Quality & FE',eda:'05 · EDA',regression:'06 · Hồi quy tuyến tính',classification:'07 · Đánh giá phân loại',clustering:'08 · Phân cụm & PCA',timeseries:'09 · Chuỗi thời gian',projects:'10 · Dự án'};
+var CRUMB={overview:'Tổng quan',foundations:'01 · Nền tảng BA',crispdm:'02 · CRISP-DM',kpi:'03 · KPI & Framing',dataquality:'04 · Data Quality & FE',eda:'05 · EDA',regression:'06 · Hồi quy tuyến tính',classification:'07 · Đánh giá phân loại',clustering:'08 · Phân cụm & PCA',timeseries:'09 · Chuỗi thời gian',projects:'10 · Dự án',exercises:'11 · Bài tập & lời giải'};
 window.__activateHooks={};
 function onActivate(mod,fn){(window.__activateHooks[mod]=window.__activateHooks[mod]||[]).push(fn);}
 function goModule(mod,push){
