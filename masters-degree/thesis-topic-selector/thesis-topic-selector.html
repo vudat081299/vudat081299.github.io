@@ -1,0 +1,1908 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark" data-accent="probability" data-bg="dots">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>48 đề tài luận văn Data Science — bảng chọn theo mức tác động</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --bg:#0a0a0f; --surface:#111118; --card:#16161f; --border:#2a2a3a;
+  --hairline:rgba(255,255,255,0.04);
+  --bg-rgb:10 10 15; --surface-rgb:17 17 24; --card-rgb:22 22 31;
+  --text-primary:#f0f0f8; --text-secondary:#a8a8c0; --text-muted:#8888a8; --text-dim:#5a5a78;
+  --accent-green:#00e5a0;  --accent-green-rgb:0 229 160;
+  --accent-blue:#3b82f6;   --accent-blue-rgb:59 130 246;
+  --accent-yellow:#f5d000; --accent-yellow-rgb:245 208 0;
+  --accent-red:#ff4560;    --accent-red-rgb:255 69 96;
+  --accent-purple:#c084fc; --accent-purple-rgb:192 132 252;
+  --accent-cyan:#22d3ee;   --accent-cyan-rgb:34 211 238;
+  --accent-identity:var(--accent-purple); --accent-identity-rgb:var(--accent-purple-rgb);
+  --cat-1:#00e5a0; --cat-2:#3b82f6; --cat-3:#f5d000; --cat-4:#ff4560; --cat-5:#c084fc;
+  --cat-6:#fb923c; --cat-7:#22d3ee; --cat-8:#f472b6; --cat-9:#a3e635; --cat-10:#94a3b8;
+  --cat-11:#2dd4bf; --cat-11-rgb:45 212 191;
+  --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:20px; --sp-6:24px;
+  --sp-8:32px; --sp-10:40px; --sp-12:48px; --sp-16:64px; --sp-20:80px;
+  --r-xs:3px; --r-sm:6px; --r-md:10px; --r-lg:12px; --r-xl:16px; --r-pill:9999px;
+  --fs-hero:clamp(38px,7vw,84px); --fs-h2:clamp(22px,3vw,32px); --fs-h3:20px;
+  --fs-lg:18px; --fs-base:14px; --fs-sm:13px; --fs-xs:12px;
+  --fs-label:11px; --fs-micro:10px; --fs-nano:9px;
+  --font-display:'Bebas Neue','Oswald','Arial Narrow',sans-serif;
+  --font-body:'DM Sans',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono','Fira Code','SF Mono',monospace;
+  --dur-instant:80ms; --dur-fast:150ms; --dur-base:250ms; --dur-med:300ms; --dur-slow:400ms; --dur-entry:650ms;
+  --ease-out:cubic-bezier(0.16,1,0.3,1);
+  --z-sticky:10; --z-dropdown:100; --z-overlay:1000; --z-modal:1100;
+}
+[data-theme="light"]{
+  --bg:#fafafa; --surface:#f0f0f4; --card:#ffffff; --border:#d4d4dc;
+  --hairline:rgba(0,0,0,0.05);
+  --bg-rgb:250 250 250; --surface-rgb:240 240 244; --card-rgb:255 255 255;
+  --text-primary:#0a0a0f; --text-secondary:#3a3a4a; --text-muted:#6a6a7e; --text-dim:#9a9aae;
+  --accent-green:#008060;  --accent-green-rgb:0 128 96;
+  --accent-blue:#1d4ed8;   --accent-blue-rgb:29 78 216;
+  --accent-yellow:#936a00; --accent-yellow-rgb:147 106 0;
+  --accent-red:#c41e3a;    --accent-red-rgb:196 30 58;
+  --accent-purple:#7c3aed; --accent-purple-rgb:124 58 237;
+  --accent-cyan:#0e7490;   --accent-cyan-rgb:14 116 144;
+  --cat-1:#008060; --cat-2:#1d4ed8; --cat-3:#936a00; --cat-4:#c41e3a; --cat-5:#7c3aed;
+  --cat-6:#c2410c; --cat-7:#0e7490; --cat-8:#be185d; --cat-9:#4d7c0f; --cat-10:#475569;
+  --cat-11:#0f766e; --cat-11-rgb:15 118 110;
+}
+[data-accent="probability"]{--accent-identity:#c084fc;--accent-identity-rgb:192 132 252;}
+[data-theme="light"][data-accent="probability"]{--accent-identity:#7c3aed;--accent-identity-rgb:124 58 237;}
+
+*,*::before,*::after{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0; background:var(--bg); color:var(--text-primary);
+  font-family:var(--font-body); font-size:var(--fs-base); line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:''; position:fixed; inset:0;
+  background-image:radial-gradient(var(--hairline) 1.2px, transparent 1.3px);
+  background-size:40px 40px; z-index:0; pointer-events:none;
+}
+body > *{position:relative; z-index:1;}
+.numeric,.tabular,code,.stat{font-variant-numeric:tabular-nums lining-nums;font-feature-settings:'tnum' 1,'lnum' 1;}
+:focus-visible{outline:2px solid var(--accent-identity);outline-offset:2px;border-radius:var(--r-xs);}
+h1,h2,h3{margin:0;}
+p{margin:0 0 var(--sp-3);}
+a{color:var(--accent-identity);}
+
+/* ============ PROGRESS BAR ============ */
+#read-progress{position:fixed;top:0;left:0;height:2px;width:0;background:var(--accent-identity);z-index:var(--z-modal);transition:width 80ms linear;}
+
+/* ============ LAYOUT ============ */
+.wrap{max-width:1440px;margin:0 auto;padding:0 clamp(16px,3vw,40px);}
+.shell{display:grid;grid-template-columns:200px minmax(0,1fr);gap:var(--sp-10);align-items:start;}
+@media (max-width:1100px){.shell{grid-template-columns:minmax(0,1fr);} .toc-rail{display:none;}}
+
+/* ============ HEADER ============ */
+.topbar{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:var(--sp-4) 0;border-bottom:1px solid var(--hairline);
+}
+.brandmark{font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.2em;color:var(--text-muted);text-transform:uppercase;}
+.page-head{padding:var(--sp-16) 0 var(--sp-10);display:flex;flex-direction:column;gap:var(--sp-3);}
+.eyebrow{font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.2em;color:var(--accent-identity);text-transform:uppercase;}
+.title{font-family:var(--font-display);font-size:var(--fs-hero);line-height:.9;letter-spacing:.01em;}
+.title span{color:var(--accent-identity);}
+.subtitle{font-weight:300;font-size:var(--fs-lg);color:var(--text-secondary);max-width:62ch;line-height:1.65;}
+.meta{font-family:var(--font-mono);font-size:var(--fs-label);color:var(--text-dim);letter-spacing:.1em;}
+.meta b{color:var(--accent-yellow);font-weight:400;}
+
+/* ============ OVERVIEW ============ */
+.page-overview{padding:0 0 var(--sp-12);border-bottom:1px solid var(--border);margin-bottom:var(--sp-10);}
+.ov-lead{font-size:var(--fs-lg);line-height:1.7;color:var(--text-secondary);max-width:66ch;}
+.ov-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:var(--sp-4);margin-top:var(--sp-6);}
+.ov-box{background:var(--card);border:1px solid var(--border);border-left:2px solid var(--accent-identity);border-radius:var(--r-md);padding:var(--sp-4) var(--sp-5);}
+.ov-box h4{margin:0 0 var(--sp-2);font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-identity);font-weight:500;}
+.ov-box p{margin:0;font-size:var(--fs-sm);color:var(--text-secondary);}
+
+/* legend */
+.legend{margin-top:var(--sp-6);display:flex;flex-wrap:wrap;gap:var(--sp-5);font-size:var(--fs-sm);color:var(--text-muted);}
+.legend-item{display:flex;gap:var(--sp-2);align-items:baseline;}
+.legend-item b{color:var(--text-secondary);font-weight:500;}
+
+/* ============ TOC RAIL ============ */
+.toc-rail{position:sticky;top:var(--sp-6);padding-top:var(--sp-2);}
+.toc-title{font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.15em;text-transform:uppercase;color:var(--text-muted);margin-bottom:var(--sp-3);}
+.toc-list{list-style:none;margin:0;padding:0;display:grid;gap:2px;}
+.toc-list a{
+  display:flex;justify-content:space-between;gap:var(--sp-2);align-items:baseline;
+  padding:var(--sp-2) var(--sp-3);border-left:2px solid transparent;
+  color:var(--text-muted);text-decoration:none;font-size:var(--fs-sm);
+  border-radius:0 var(--r-sm) var(--r-sm) 0;
+  transition:color var(--dur-fast),border-color var(--dur-fast),background var(--dur-fast);
+}
+.toc-list a:hover{color:var(--text-primary);background:var(--hairline);}
+.toc-list a.active{color:var(--accent-identity);border-left-color:var(--accent-identity);background:rgb(var(--accent-identity-rgb)/0.06);}
+.toc-n{font-family:var(--font-mono);font-size:var(--fs-micro);color:var(--text-dim);}
+
+/* ============ FILTER BAR ============ */
+.filters{
+  position:sticky;top:0;z-index:var(--z-sticky);
+  background:rgb(var(--bg-rgb)/0.92);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:var(--sp-4) 0;margin-bottom:var(--sp-8);
+}
+.filter-row{display:flex;flex-wrap:wrap;gap:var(--sp-3);align-items:center;}
+.filter-row + .filter-row{margin-top:var(--sp-3);}
+.fgroup{display:flex;gap:var(--sp-2);align-items:center;flex-wrap:wrap;}
+.fgroup-label{font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);}
+.input{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);
+  color:var(--text-primary);font-family:var(--font-body);font-size:var(--fs-sm);
+  padding:var(--sp-2) var(--sp-4);min-height:38px;min-width:230px;
+  transition:border-color var(--dur-fast),box-shadow var(--dur-fast);
+}
+.input::placeholder{color:var(--text-dim);}
+.input:focus{outline:none;border-color:var(--accent-identity);box-shadow:0 0 0 3px rgb(var(--accent-identity-rgb)/0.15);}
+.fchip{
+  font-family:var(--font-body);font-size:var(--fs-xs);font-weight:500;
+  padding:5px var(--sp-3);border-radius:var(--r-pill);cursor:pointer;
+  background:var(--hairline);color:var(--text-secondary);border:1px solid var(--border);
+  transition:background var(--dur-fast),color var(--dur-fast),border-color var(--dur-fast);
+}
+.fchip:hover{color:var(--text-primary);border-color:var(--text-dim);}
+.fchip[aria-pressed="true"]{
+  background:rgb(var(--accent-identity-rgb)/0.10);
+  color:var(--accent-identity);
+  border-color:rgb(var(--accent-identity-rgb)/0.22);
+}
+.fchip[data-dom][aria-pressed="true"]{
+  background:rgb(var(--c-rgb)/0.10);color:var(--c);border-color:rgb(var(--c-rgb)/0.22);
+}
+.segmented{display:inline-flex;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:2px;}
+.segment{
+  font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.08em;text-transform:uppercase;
+  color:var(--text-muted);background:transparent;border:none;padding:6px var(--sp-3);
+  border-radius:4px;cursor:pointer;transition:background var(--dur-fast),color var(--dur-fast);
+}
+.segment:hover{color:var(--text-primary);}
+.segment[aria-checked="true"]{background:var(--card);color:var(--accent-identity);box-shadow:inset 0 0 0 1px var(--border);}
+.chip-clear{
+  background:transparent;border:none;font-family:var(--font-mono);font-size:var(--fs-label);
+  letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);cursor:pointer;padding:var(--sp-1) var(--sp-2);
+}
+.chip-clear:hover{color:var(--accent-red);}
+.result-count{font-family:var(--font-mono);font-size:var(--fs-sm);color:var(--text-muted);margin-left:auto;}
+.result-count b{color:var(--accent-identity);font-weight:500;}
+
+/* ============ SECTIONS + CARDS ============ */
+.dom-section{margin-bottom:var(--sp-12);scroll-margin-top:150px;}
+.dom-head{display:flex;align-items:baseline;gap:var(--sp-3);margin-bottom:var(--sp-5);padding-bottom:var(--sp-3);border-bottom:1px solid var(--border);}
+.dom-head h2{font-family:var(--font-display);font-size:var(--fs-h2);letter-spacing:.01em;color:var(--text-primary);}
+.dom-dot{width:8px;height:8px;border-radius:50%;background:var(--c);flex:0 0 auto;}
+.dom-count{font-family:var(--font-mono);font-size:var(--fs-label);color:var(--text-dim);letter-spacing:.1em;margin-left:auto;}
+
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:var(--sp-4);}
+.tcard{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);
+  padding:var(--sp-5);display:flex;flex-direction:column;gap:var(--sp-3);
+  transition:border-color var(--dur-fast),transform var(--dur-fast);
+}
+.tcard:hover{border-color:rgb(var(--c-rgb)/0.45);}
+.tcard.starred{border-color:rgb(var(--accent-yellow-rgb)/0.45);}
+.tcard.seen .tc-title{color:var(--text-secondary);}
+.tc-top{display:flex;align-items:flex-start;gap:var(--sp-3);}
+.tc-num{font-family:var(--font-mono);font-size:var(--fs-xs);color:var(--c);letter-spacing:.06em;padding-top:3px;flex:0 0 auto;}
+.tc-title{font-family:var(--font-body);font-weight:700;font-size:15px;line-height:1.35;color:var(--text-primary);flex:1;}
+.tc-star{
+  background:transparent;border:none;cursor:pointer;font-size:16px;line-height:1;
+  color:var(--text-dim);padding:2px 4px;border-radius:var(--r-sm);flex:0 0 auto;
+  transition:color var(--dur-fast),transform var(--dur-instant);
+}
+.tc-star:hover{color:var(--accent-yellow);transform:scale(1.15);}
+.tc-star[aria-pressed="true"]{color:var(--accent-yellow);}
+.tc-q{font-size:var(--fs-sm);color:var(--text-secondary);line-height:1.6;margin:0;}
+.tc-q b{color:var(--text-primary);font-weight:500;}
+.tc-meta{display:grid;gap:var(--sp-2);font-size:var(--fs-xs);}
+.tc-line{display:flex;gap:var(--sp-2);align-items:baseline;}
+.tc-k{font-family:var(--font-mono);font-size:var(--fs-micro);letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);flex:0 0 62px;}
+.tc-v{color:var(--text-muted);flex:1;line-height:1.5;}
+.tc-foot{display:flex;flex-wrap:wrap;gap:var(--sp-2);align-items:center;margin-top:auto;padding-top:var(--sp-3);border-top:1px solid var(--hairline);}
+.badge{
+  display:inline-flex;align-items:center;font-family:var(--font-mono);font-size:var(--fs-nano);
+  padding:2px 6px;border-radius:var(--r-xs);border:1px solid;letter-spacing:.05em;
+}
+.b-green{background:rgb(var(--accent-green-rgb)/0.10);color:var(--accent-green);border-color:rgb(var(--accent-green-rgb)/0.25);}
+.b-yellow{background:rgb(var(--accent-yellow-rgb)/0.10);color:var(--accent-yellow);border-color:rgb(var(--accent-yellow-rgb)/0.25);}
+.b-red{background:rgb(var(--accent-red-rgb)/0.10);color:var(--accent-red);border-color:rgb(var(--accent-red-rgb)/0.25);}
+.b-blue{background:rgb(var(--accent-blue-rgb)/0.10);color:var(--accent-blue);border-color:rgb(var(--accent-blue-rgb)/0.25);}
+.b-cyan{background:rgb(var(--accent-cyan-rgb)/0.10);color:var(--accent-cyan);border-color:rgb(var(--accent-cyan-rgb)/0.25);}
+.b-mute{background:var(--hairline);color:var(--text-muted);border-color:var(--border);}
+.diffbar{display:inline-flex;gap:2px;align-items:center;}
+.diffbar i{width:5px;height:12px;border-radius:1px;background:var(--border);display:block;}
+.diffbar i.on{background:var(--c);}
+
+/* ============ TÁC ĐỘNG / TÍNH ỨNG DỤNG ============ */
+.impact-badge{
+  display:inline-flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:var(--fs-nano);
+  padding:2px 7px;border-radius:var(--r-pill);letter-spacing:.05em;
+  background:rgb(var(--accent-green-rgb)/0.10);color:var(--accent-green);
+  border:1px solid rgb(var(--accent-green-rgb)/0.28);
+}
+.impact-badge.i-mid{background:rgb(var(--accent-yellow-rgb)/0.10);color:var(--accent-yellow);border-color:rgb(var(--accent-yellow-rgb)/0.28);}
+.impact-badge.i-low{background:var(--hairline);color:var(--text-muted);border-color:var(--border);}
+.impact-badge .dots{display:inline-flex;gap:2px;}
+.impact-badge .dots i{width:4px;height:4px;border-radius:50%;background:currentColor;opacity:.25;display:block;}
+.impact-badge .dots i.on{opacity:1;}
+.tcard.high-impact{border-color:rgb(var(--accent-green-rgb)/0.30);}
+.tc-line.tc-money .tc-k{color:var(--accent-green);}
+.tc-line.tc-money .tc-v{color:var(--text-secondary);}
+.d-impact{background:rgb(var(--accent-green-rgb)/0.06);border-left:2px solid var(--accent-green);border-radius:var(--r-sm);padding:var(--sp-3) var(--sp-4);}
+.d-impact h4{color:var(--accent-green);}
+.d-impact dl{margin:0;display:grid;gap:var(--sp-2);}
+.d-impact dt{font-family:var(--font-mono);font-size:var(--fs-micro);letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);}
+.d-impact dd{margin:2px 0 0;font-size:var(--fs-sm);color:var(--text-secondary);line-height:1.6;}
+.expand-btn{
+  font-family:var(--font-mono);font-size:var(--fs-xs);
+  color:var(--accent-identity);
+  background:rgb(var(--accent-identity-rgb)/0.09);
+  border:1px solid rgb(var(--accent-identity-rgb)/0.22);
+  border-radius:var(--r-pill);padding:5px var(--sp-3);cursor:pointer;margin-left:auto;
+  transition:background var(--dur-fast);
+}
+.expand-btn:hover{background:rgb(var(--accent-identity-rgb)/0.16);}
+.tc-seen{
+  font-family:var(--font-mono);font-size:var(--fs-micro);letter-spacing:.08em;
+  color:var(--text-dim);background:transparent;border:none;cursor:pointer;padding:4px 6px;border-radius:var(--r-sm);
+}
+.tc-seen:hover{color:var(--text-secondary);background:var(--hairline);}
+.tc-seen[aria-pressed="true"]{color:var(--accent-green);}
+.empty-state{padding:var(--sp-16) 0;text-align:center;color:var(--text-muted);}
+/* [hidden] phải thắng display:flex/grid — nếu không, bộ lọc không ẩn được gì */
+.tcard[hidden],.dom-section[hidden],.empty-state[hidden],.fd-btn[hidden]{display:none!important;}
+
+/* ============ DETAIL PANEL ============ */
+.detail-source{display:none;}
+.detail-panel{
+  --panel-w:min(600px,94vw);
+  position:fixed;top:0;right:0;height:100vh;width:var(--panel-w);
+  display:flex;flex-direction:column;background:var(--card);
+  border-left:1px solid var(--border);transform:translateX(100%);
+  transition:transform var(--dur-med) var(--ease-out);z-index:var(--z-modal);will-change:transform;
+}
+.detail-panel.open{transform:translateX(0);box-shadow:-24px 0 48px rgba(0,0,0,.35);}
+.detail-panel.resizing{transition:none;user-select:none;}
+.detail-resize{position:absolute;top:0;left:0;height:100%;width:10px;margin-left:-5px;cursor:col-resize;z-index:1;touch-action:none;}
+.detail-resize::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:2px;height:36px;border-radius:var(--r-pill);background:var(--border);transition:background var(--dur-fast);}
+.detail-resize:hover::after,.detail-panel.resizing .detail-resize::after{background:var(--accent-identity);}
+.detail-head{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-3);padding:var(--sp-5) var(--sp-6);border-bottom:1px solid var(--border);flex:0 0 auto;}
+.detail-title{font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);}
+.detail-close{background:none;border:none;color:var(--text-muted);font-size:1.6rem;line-height:1;cursor:pointer;padding:0 var(--sp-2);border-radius:var(--r-sm);}
+.detail-close:hover{color:var(--text-primary);}
+.detail-body{overflow-y:auto;padding:var(--sp-6);}
+.detail-backdrop{position:fixed;inset:0;z-index:calc(var(--z-modal) - 1);background:transparent;display:none;}
+body.detail-open .detail-backdrop{display:block;}
+.d-h1{font-family:var(--font-display);font-size:26px;line-height:1.1;margin-bottom:var(--sp-2);color:var(--text-primary);}
+.d-sub{font-size:var(--fs-sm);color:var(--text-muted);margin-bottom:var(--sp-5);}
+.d-sec{margin-bottom:var(--sp-5);}
+.d-sec h4{font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.14em;text-transform:uppercase;color:var(--accent-identity);margin:0 0 var(--sp-2);font-weight:500;}
+.d-sec p,.d-sec li{font-size:var(--fs-sm);color:var(--text-secondary);line-height:1.65;}
+.d-sec ul{margin:0;padding-left:var(--sp-5);}
+.d-sec li{margin-bottom:var(--sp-2);}
+.d-warn{background:rgb(var(--accent-red-rgb)/0.06);border-left:2px solid var(--accent-red);border-radius:var(--r-sm);padding:var(--sp-3) var(--sp-4);}
+.d-warn h4{color:var(--accent-red);}
+.d-spike{background:rgb(var(--accent-green-rgb)/0.06);border-left:2px solid var(--accent-green);border-radius:var(--r-sm);padding:var(--sp-3) var(--sp-4);}
+.d-spike h4{color:var(--accent-green);}
+.d-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:var(--sp-2);margin-bottom:var(--sp-5);}
+.d-stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:var(--sp-2) var(--sp-3);}
+.d-stat .k{font-family:var(--font-mono);font-size:var(--fs-nano);letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);display:block;}
+.d-stat .v{font-size:var(--fs-sm);color:var(--text-primary);font-weight:500;}
+
+/* ============ FOCUS DOCK ============ */
+#focus-dock{position:fixed;right:16px;bottom:16px;z-index:90;display:flex;flex-direction:column;gap:8px;align-items:flex-end;}
+.fd-btn{
+  display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:var(--fs-xs);
+  color:var(--text-secondary);background:var(--card);border:1px solid var(--border);border-radius:var(--r-pill);
+  padding:8px 14px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.28);
+  transition:color var(--dur-fast),border-color var(--dur-fast),background var(--dur-fast);
+}
+.fd-btn:hover{color:var(--text-primary);border-color:var(--text-muted);}
+#fd-star .fd-frac{color:var(--accent-yellow);font-weight:700;}
+#fd-seen .fd-frac{color:var(--accent-identity);font-weight:700;}
+#fd-star[aria-pressed="true"]{background:rgb(var(--accent-yellow-rgb)/0.12);border-color:rgb(var(--accent-yellow-rgb)/0.30);}
+
+/* ============ FOOTER ============ */
+.foot{border-top:1px solid var(--border);margin-top:var(--sp-16);padding:var(--sp-8) 0 var(--sp-20);color:var(--text-muted);font-size:var(--fs-sm);}
+.foot h3{font-family:var(--font-display);font-size:22px;color:var(--text-primary);margin-bottom:var(--sp-3);}
+.foot ul{padding-left:var(--sp-5);margin:0;}
+.foot li{margin-bottom:var(--sp-2);line-height:1.6;}
+
+.btn{
+  display:inline-flex;align-items:center;gap:var(--sp-2);font-family:var(--font-body);font-weight:500;
+  font-size:var(--fs-sm);padding:var(--sp-2) var(--sp-4);min-height:36px;border-radius:var(--r-sm);
+  border:1px solid var(--border);background:var(--card);color:var(--text-primary);cursor:pointer;
+  transition:border-color var(--dur-fast),background var(--dur-fast);
+}
+.btn:hover{border-color:var(--text-dim);background:var(--surface);}
+
+@media (max-width:1024px){
+  .detail-panel{width:100vw;border-left:none;}
+  .detail-resize{display:none;}
+  body.detail-open{overflow:hidden;}
+  body.detail-open .detail-backdrop{background:rgba(0,0,0,.6);}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}
+}
+@media print{
+  :root{--bg:#fff;--surface:#f5f5f5;--card:#fff;--border:#ccc;--text-primary:#000;--text-secondary:#333;--text-muted:#555;--text-dim:#666;}
+  body::before{display:none;}
+  .filters,.toc-rail,#focus-dock,.detail-panel,.detail-backdrop,.expand-btn,.tc-star,.tc-seen,.topbar,#read-progress{display:none!important;}
+  .shell{grid-template-columns:1fr;}
+  .detail-source{display:block!important;margin-top:12px;}
+  .card-grid{grid-template-columns:1fr;}
+  .tcard{break-inside:avoid;border:1px solid #ccc;}
+}
+</style>
+</head>
+<body>
+<div id="read-progress"></div>
+
+<div class="wrap">
+  <div class="topbar">
+    <span class="brandmark">Đồ án thạc sĩ · Data Science · HUST</span>
+    <button class="btn" id="theme-toggle" aria-label="Đổi giao diện sáng/tối"><span class="theme-label">DARK</span></button>
+  </div>
+
+  <header class="page-head">
+    <span class="eyebrow">Bảng chọn đề tài · 48 phương án · 10 lĩnh vực</span>
+    <h1 class="title">Chọn <span>đề tài</span></h1>
+    <p class="subtitle">Danh mục đề tài luận văn thạc sĩ Data Science, lọc qua hai tiêu chí: <b>một người có làm xong trong 9–12 tháng không</b> — và <b>xong rồi thì ai được lợi, ai trả tiền cho nó.</b> Tiêu chí thứ hai được ưu tiên: mỗi đề tài có một điểm <em>tác động</em> 1–5 và một phần „ai trả tiền” viết rõ ràng, để bạn chọn được đề tài mà hội đồng và doanh nghiệp ngồi dự bảo vệ đều thấy đáng đầu tư.</p>
+    <div class="meta">48 ĐỀ TÀI · LỌC THEO <b>TÁC ĐỘNG · LĨNH VỰC · ĐỘ KHÓ · RỦI RO DỮ LIỆU</b> · CHỌN SHORTLIST ĐỂ XUẤT RA</div>
+  </header>
+
+  <section class="page-overview">
+    <p class="ov-lead">Đừng đọc hết 48 cái. Bật <b>„Sắp xếp: tác động cao trước”</b> hoặc lọc <b>💰 tác động 4–5</b> để cắt xuống 8–10, đánh dấu ⭐ những cái còn lại, rồi mở chi tiết từng cái. Mục tiêu của trang này không phải là chọn hộ bạn — mà là làm cho việc <em>loại bỏ</em> trở nên nhanh.</p>
+
+    <div class="ov-box" style="margin-top:var(--sp-6);border-left-color:var(--accent-green)">
+      <h4 style="color:var(--accent-green)">Điểm tác động 1–5 — nghĩa là gì</h4>
+      <p>Mỗi đề tài được cho một điểm theo ba câu hỏi cụ thể, không phải theo cảm tính: <b>(1) ai được lợi và bao nhiêu người</b>; <b>(2) ai trả tiền</b> — có một người mua thật sự nhìn thấy được, hay lợi ích chỉ nằm trong nội bộ giới nghiên cứu; <b>(3) bàn giao được cái gì</b> — thư viện, dịch vụ, app demo bấm được, hay chỉ một bảng số. Điểm <b>5</b> = có người mua rõ mặt và có sản phẩm demo được trong buổi bảo vệ. Điểm <b>3</b> = đóng góp khoa học vững nhưng đường ra tiền gián tiếp (thường là hạ tầng đánh giá — vẫn là luận văn tốt, chỉ khó gây hứng thú cho doanh nghiệp). Điểm cao <em>không</em> có nghĩa là dễ hơn: hãy đọc kèm độ khó và rủi ro dữ liệu.</p>
+    </div>
+
+    <div class="ov-grid">
+      <div class="ov-box">
+        <h4>Khuôn mẫu 1 — Hoàng đế có mặc quần áo?</h4>
+        <p>Kiểm tra nghiêm ngặt xem một phương pháp đang mốt có thật sự thắng baseline đơn giản khi sửa lại giao thức đánh giá. Ưu điểm quyết định: <b>không thể thất bại</b> — kết quả nào cũng là luận văn.</p>
+      </div>
+      <div class="ov-box">
+        <h4>Khuôn mẫu 2 — Nó có chuyển được không?</h4>
+        <p>Huấn luyện ở nguồn A, kiểm định ở nguồn B, đo hỏng ở đâu và tại sao. Luôn ra kết quả, luôn có giá trị thực tế, và hầu như không ai làm tử tế.</p>
+      </div>
+      <div class="ov-box">
+        <h4>Khuôn mẫu 3 — Đóng cầu nối còn thiếu</h4>
+        <p>Ghép một tầng còn thiếu vào pipeline có sẵn — ví dụ tầng quyết định kinh tế phía sau một mô hình dự báo. Đóng góp rõ ràng, dễ bảo vệ.</p>
+      </div>
+      <div class="ov-box" style="border-left-color:var(--accent-green)">
+        <h4 style="color:var(--accent-green)">Khuôn mẫu 4 — Đo bằng tiền, không bằng RMSE</h4>
+        <p>Giữ nguyên mô hình, đổi <b>thước đo</b> sang đơn vị người mua hiểu được: đồng tồn kho, giờ điều tra, ca bỏ sót, hoá đơn API. Đây là khuôn mẫu tạo ra <b>điểm tác động cao nhất</b> với chi phí khoa học thấp nhất — và là lý do lĩnh vực „Ứng dụng cao” ở đầu trang tồn tại.</p>
+      </div>
+    </div>
+
+    <div class="legend">
+      <span class="legend-item"><b>💰 TÁC ĐỘNG</b> thang 1–5 — ai được lợi, ai trả tiền, bàn giao được cái gì</span>
+      <span class="legend-item"><b>ĐỘ KHÓ</b> thang 1–5, nhưng ở đây <em>không có đề tài nào dưới 3</em> — đó là chủ ý</span>
+      <span class="legend-item"><b>RỦI RO DL</b> khả năng bạn <em>không</em> lấy được dữ liệu</span>
+      <span class="legend-item"><b>📱</b> tận dụng nền mobile 7 năm của bạn</span>
+      <span class="legend-item"><b>🇻🇳</b> có góc Việt Nam — điểm cộng ở hội đồng</span>
+    </div>
+  </section>
+
+  <div class="shell">
+    <nav class="toc-rail" aria-label="Mục lục lĩnh vực">
+      <div class="toc-title">Lĩnh vực</div>
+      <ul class="toc-list" id="toc-list"></ul>
+    </nav>
+
+    <main>
+      <div class="filters">
+        <div class="filter-row">
+          <input type="search" class="input" id="q" placeholder="Tìm theo từ khoá, dữ liệu, phương pháp…" aria-label="Tìm kiếm đề tài">
+          <div class="fgroup" id="dom-chips" role="group" aria-label="Lọc theo lĩnh vực"></div>
+          <span class="result-count" id="rcount"></span>
+        </div>
+        <div class="filter-row">
+          <div class="fgroup">
+            <span class="fgroup-label">💰 Tác động</span>
+            <div class="segmented" role="radiogroup" aria-label="Lọc theo mức tác động" id="imp-seg">
+              <button class="segment" role="radio" aria-checked="true" data-v="all">Tất cả</button>
+              <button class="segment" role="radio" aria-checked="false" data-v="5">5 · ra sản phẩm</button>
+              <button class="segment" role="radio" aria-checked="false" data-v="4">4+ · ứng dụng rõ</button>
+              <button class="segment" role="radio" aria-checked="false" data-v="3">3 · học thuật</button>
+            </div>
+          </div>
+          <div class="fgroup">
+            <span class="fgroup-label">Sắp xếp</span>
+            <div class="segmented" role="radiogroup" aria-label="Sắp xếp danh sách" id="sort-seg">
+              <button class="segment" role="radio" aria-checked="false" data-v="impact">Tác động cao trước</button>
+              <button class="segment" role="radio" aria-checked="true" data-v="dom">Theo lĩnh vực</button>
+            </div>
+          </div>
+        </div>
+        <div class="filter-row">
+          <div class="fgroup">
+            <span class="fgroup-label">Độ khó</span>
+            <div class="segmented" role="radiogroup" aria-label="Lọc theo độ khó" id="diff-seg">
+              <button class="segment" role="radio" aria-checked="true" data-v="all">Tất cả</button>
+              <button class="segment" role="radio" aria-checked="false" data-v="3">3 · vừa</button>
+              <button class="segment" role="radio" aria-checked="false" data-v="4">4 · khó</button>
+              <button class="segment" role="radio" aria-checked="false" data-v="5">5 · rất khó</button>
+            </div>
+          </div>
+          <div class="fgroup">
+            <span class="fgroup-label">Rủi ro DL</span>
+            <div class="segmented" role="radiogroup" aria-label="Lọc theo rủi ro dữ liệu" id="risk-seg">
+              <button class="segment" role="radio" aria-checked="true" data-v="all">Tất cả</button>
+              <button class="segment" role="radio" aria-checked="false" data-v="thap">Thấp</button>
+              <button class="segment" role="radio" aria-checked="false" data-v="tb">TB</button>
+              <button class="segment" role="radio" aria-checked="false" data-v="cao">Cao</button>
+            </div>
+          </div>
+          <div class="fgroup">
+            <button class="fchip" id="f-mobile" aria-pressed="false">📱 Hợp nền mobile</button>
+            <button class="fchip" id="f-vn" aria-pressed="false">🇻🇳 Góc Việt Nam</button>
+            <button class="fchip" id="f-star" aria-pressed="false">⭐ Chỉ shortlist</button>
+          </div>
+          <button class="chip-clear" id="clear-all">Xoá bộ lọc</button>
+        </div>
+      </div>
+
+      <div id="sections"></div>
+      <div class="empty-state" id="empty" hidden>Không có đề tài nào khớp bộ lọc. Thử nới lỏng điều kiện.</div>
+
+      <section class="foot">
+        <h3>Trước khi cam kết — 3 việc bắt buộc</h3>
+        <ul>
+          <li><b>Kiểm tra có thầy hướng dẫn hiểu lĩnh vực đó không.</b> Đây là yếu tố quyết định lớn nhất, lớn hơn cả độ hay của đề tài. Xem danh sách giảng viên bộ môn và các luận văn đã bảo vệ 2–3 năm gần đây. Nếu chưa từng có ai làm mảng đó, đó không phải "cơ hội trống" mà là "không có ai đỡ bạn".</li>
+          <li><b>Chạy spike 5 ngày cho mỗi đề tài trong shortlist.</b> Ngày 1–2: lấy được dữ liệu về ổ cứng (không phải "tìm thấy link"). Ngày 3: chạy baseline ngu nhất, ghi số. Ngày 4: tái lập đúng <em>một</em> con số từ một bài báo. Ngày 5: viết một trang gồm câu hỏi / dữ liệu / phương pháp / <em>kết quả sẽ trông thế nào nếu giả thuyết đúng và nếu sai</em>. Nếu bạn không thấy cả hai kịch bản đều thú vị, đề tài chưa đủ tốt.</li>
+          <li><b>Nói chuyện với đúng một người sẽ dùng kết quả — trước khi cam kết.</b> Nếu đề tài có điểm tác động 4–5, phần „ai trả tiền” phải chịu được một cuộc gọi 30 phút với một người làm nghề đó: chủ cửa hàng, kế toán, kỹ sư vận hành, bác sĩ tuyến cơ sở. Hỏi họ đúng một câu: <em>„hôm nay anh/chị đang giải việc này bằng cách gì?”</em> Câu trả lời cho bạn baseline thật, và nó thường thấp hơn baseline học thuật rất nhiều — đó là chỗ tác động nằm. Nếu không tìm được một người như thế, điểm tác động của đề tài đó nên bị hạ xuống 3 trong đầu bạn.</li>
+          <li><b>Đăng ký truy cập dữ liệu ngay hôm nay</b> với bất kỳ đề tài nào cần credential (MIMIC-IV, eICU, UK Biobank…). Đăng ký không ràng buộc gì, nhưng độ trễ 2–4 tuần thì có thể giết cả timeline.</li>
+        </ul>
+        <h3 style="margin-top:40px">Bản 4 — rà soát dữ kiện (tra nguồn từng cái)</h3>
+        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">Lần này tôi đi tra lại từng con số và từng trích dẫn có thể tra được. Sáu chỗ sai, hai chỗ mâu thuẫn nội bộ. Ghi lại đây để bạn biết chỗ nào đã có nguồn và chỗ nào vẫn là ước lượng.</p>
+        <ul style="font-size:13px">
+          <li><b>Sai nghiêm trọng — #1:</b> bản trước ghi „lợi thế MSE 47–184% trên dataset rò rỉ, 0,3–14% trên dataset sạch”. <b>Hai con số này không có trong bài được trích</b> (arXiv 2510.13654) — tôi đã bỏ. Bài đó là <em>position paper</em> (Meyer và cộng sự, nộp 10/2025, sửa 02/2026) và những con số thật của nó là: các ca rò rỉ đã ghi nhận cho điểm test tốt hơn trên 50%; thực nghiệm giao thông Madrid ~43%; thực nghiệm riêng trên cú sốc thị trường 2020 ~37% và lợi thế biến mất sau cú sốc. Đã thay bằng đúng những con số này.</li>
+          <li><b>Sai chiều — #37:</b> Gervet 2020 <em>không</em> kết luận logistic thắng 4/9. Nguyên văn: <b>DKT có AUC cao nhất ở 4/9 dataset</b>; logistic với đặc trưng tốt dẫn ở dataset cỡ vừa hoặc có nhiều tương tác mỗi học sinh, DKT dẫn ở dataset lớn. Tôi cũng đã hạ giọng phần Mandalapu 2021: bài đó đặt câu hỏi „có cần đi sâu không” và không tìm được bằng chứng rõ cho mô hình sâu ở quy mô lớn — chứ không khẳng định DKT „tệ đi”.</li>
+          <li><b>Sai số liệu — #36:</b> Coat có <b>6.960 rating tự chọn (train) + 4.640 rating ngẫu nhiên (test)</b>, tổng ~11.600 — không phải ~5.500. Và KuaiRec bị tôi gộp nhầm hai ma trận: phần <em>quan sát đầy đủ</em> là ma trận nhỏ 1.411 × 3.327 (~4,7 triệu tương tác, mật độ ~99,6%); con số ~1,15 triệu là của ma trận <em>lớn và thưa</em> 7.176 × 10.728. Trích nhầm chỗ này là bị hội đồng bắt ngay.</li>
+          <li><b>Bỏ số không tra được — #3:</b> „72,6% chuỗi cấp đáy là intermittent” không tìm được nguồn gốc. Đã bỏ và thay bằng hướng dẫn tự tính (phân loại Syntetos–Boylan ngay ở spike ngày 1) — con số của chính bạn thì bảo vệ được, con số nghe được thì không.</li>
+          <li><b>Mâu thuẫn nội bộ — #24:</b> phần dữ liệu cảnh báo LendingClub không còn mở, nhưng phần spike vẫn bảo „ngày 1 tải LendingClub”. Đã sửa spike sang Home Credit / Give Me Some Credit.</li>
+          <li><b>Cạnh tranh sát hơn tôi tưởng — #2:</b> bài „Beyond Accuracy: Evaluating Forecasting Models by Multi-Echelon Inventory Cost” (arXiv 2603.16815) đã chạy đúng thiết lập newsvendor trên subset CA_FOODS_1 của M5 <b>và đã bao gồm multi-echelon</b>. Vậy multi-echelon không còn là điểm khác biệt — đã đổi hướng phân biệt sang nhu cầu rời rạc, hàng có hạn dùng, và huấn luyện theo mục tiêu quyết định.</li>
+          <li><b>Đã tra và chính xác:</b> Criteo Uplift <b>13.979.592 dòng</b> (mô tả gốc ghi 25M, bản công bố đã hạ mẫu) ✓ · scFM zero-shot thua HVG + Harmony/scVI theo AvgBio, Genome Biology 2025, tập 26 bài 101 ✓ · các số hiệu chuẩn MIMIC→eICU (nội bộ slope 0,982 / intercept 0,001; ngoại bộ intercept −0,678; slope tụt 1,007 → 0,417 khi thêm đặc trưng quá trình quan sát) đều có trong hai bài medRxiv 2026 ✓ · hạn mức Google Earth Engine từ 27/04/2026 ✓ (đã bổ sung chi tiết: Community 150 EECU-giờ, Contributor 1.000, và <em>không</em> phải ngưỡng cắt cứng).</li>
+          <li><b>Đã thay bằng nguồn tốt hơn — #47:</b> thay „các bộ dữ liệu tiêu thụ nước mở” chung chung bằng <b>BattLeDIM 2020 / L-Town</b> trên Zenodo — SCADA 5 phút/lần, cả năm 2018 và 2019, <b>có nhãn thời điểm và vị trí rò rỉ</b>. Kèm cảnh báo trung thực: đó là mô phỏng EPANET trên một mạng lưới thật ở Cyprus, không phải đo thực địa.</li>
+          <li><b>Đã bỏ hai con số ngành tôi không tra được nguồn:</b> „hàng huỷ 5–15% doanh thu tươi sống” (#40) và „thất thoát nước 15–25%” (#47). Cả hai giờ hướng bạn đi lấy số từ chính cửa hàng / công ty cấp nước bạn nhắm tới — vừa đúng hơn, vừa là một cuộc phỏng vấn bạn phải làm.</li>
+        </ul>
+
+        <h3 style="margin-top:40px">Bản 3 — bổ sung trục tác động</h3>
+        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">Bản này thêm <b>10 đề tài mới</b> (#39–#48) trong lĩnh vực „Ứng dụng cao · Ra sản phẩm”, và gán cho <b>cả 48 đề tài</b> một điểm tác động kèm ba dòng „ai được lợi / ai trả tiền / bàn giao được gì”.</p>
+        <ul style="font-size:13px">
+          <li><b>Điểm tác động là đánh giá, không phải số đo.</b> Nó phản ánh mức độ dễ nhìn thấy của đường ra tiền, không phải giá trị khoa học. Một đề tài 3 điểm (ví dụ #9, #27) vẫn có thể là luận văn tốt hơn một đề tài 5 điểm — chỉ khó gây hứng thú cho doanh nghiệp ngồi dự bảo vệ hơn.</li>
+          <li><b>Các con số quy mô trong phần „ai trả tiền” là ước lượng bối cảnh</b> (ví dụ tỉ lệ hàng huỷ ngành tươi sống, tỉ lệ thất thoát nước sạch). Chúng dùng để định hướng chọn đề tài — <b>đừng trích vào luận văn mà không tìm nguồn gốc</b>. Khi viết đề cương, mỗi con số kiểu này cần một nguồn cụ thể; nếu không tìm được nguồn, bỏ nó ra khỏi phần động lực.</li>
+          <li><b>Nhóm #39–#48 chưa được rà soát tính khả dụng dữ liệu ở mức như #1–#38.</b> Chúng được thiết kế để phần lớn dựa trên dữ liệu mở hoặc dữ liệu bạn tự tạo được, nhưng phần thu thập (sao kê, tin rao, hội thoại tiếng Việt) là chỗ phải xác minh trong spike ngày 1–2 — và cũng là chỗ dễ giết đề tài nhất trong nhóm này.</li>
+          <li><b>Điểm tác động cao thường đi kèm rủi ro phạm vi cao.</b> Đề tài „ra sản phẩm” dễ phình thành đi làm sản phẩm thật. Khoá lại bằng một câu hỏi nghiên cứu duy nhất có thể trả lời sai — phần demo chỉ là minh chứng, không phải nội dung luận văn.</li>
+        </ul>
+
+        <h3 style="margin-top:40px">Kết quả rà soát (bản 2)</h3>
+        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">Bản đầu có 6 chỗ sai hoặc thiếu chính xác. Đã sửa, và ghi lại ở đây để bạn biết mức tin cậy của phần còn lại.</p>
+        <ul style="font-size:13px">
+          <li><b>Đã sửa — #5:</b> Criteo Uplift không phải 25 triệu dòng. Mô tả chính thức ghi 25M nhưng file tải về chỉ có <b>13.979.592 dòng</b>. Đừng trích 25M vào luận văn.</li>
+          <li><b>Đã sửa — #24:</b> LendingClub <b>không còn mở</b> như tôi nói. Hồ sơ bị từ chối đã gỡ khỏi nguồn chính thức từ 2019 và trang tải về có điều khoản hạn chế; bản sao trên Kaggle dừng cập nhật ~2018–2020. Đã hạ rủi ro dữ liệu từ „thấp” lên „trung bình” và đổi nguồn chính sang Home Credit / Give Me Some Credit.</li>
+          <li><b>Đã sửa — #20:</b> Google Earth Engine vẫn miễn phí cho học thuật, nhưng <b>từ 27/04/2026 có hạn mức EECU-giờ hằng tháng</b> cho dự án phi thương mại. Trích ảnh nhiều năm cho cả ĐBSCL có thể chạm trần.</li>
+          <li><b>Đã sửa — #3:</b> con số „68% giá trị 0” của M5 phụ thuộc quy ước đếm (~60% nếu tính từ lần bán đầu tiên, ~68% nếu tính cả giai đoạn trước đó). <em>Bản 4 sửa tiếp: xem mục dưới.</em></li>
+          <li><b>Đã sửa — #37:</b> tôi khung sai là „ưu thế của DKT biến mất”. <em>Bản 4 sửa tiếp: xem mục dưới.</em></li>
+          <li><b>Đã bổ sung — #36:</b> Coat nhỏ hơn tôi ngụ ý rất nhiều. Đã thêm <b>KuaiRec</b> và <b>KuaiRand</b> — hai dataset có tập test không thiên lệch ở quy mô lớn hơn nhiều, khắc phục đúng điểm yếu đó. <em>Bản 4 sửa lại các con số cụ thể: xem mục dưới.</em></li>
+        </ul>
+        <p style="font-size:13px;color:var(--text-secondary);margin-top:16px"><b>Đã kiểm chứng và giữ nguyên:</b> kết quả scFM zero-shot thua baseline HVG (#6), các số hiệu chuẩn MIMIC→eICU (#13), nền lý thuyết DSR/PBO/CPCV (#22), sự tồn tại của tập test ngẫu nhiên hoá trong Yahoo!R3 và Coat (#36). <b style="color:var(--accent-red)">Bản 4 rút lại một mục ở đây:</b> „con số rò rỉ benchmark TSFM (#1)” <em>không</em> kiểm chứng được — xem mục Bản 4 ở trên.</p>
+        <p style="font-size:13px;color:var(--text-dim);margin-top:16px"><b>Chưa kiểm chứng — bạn phải tự xác minh ở spike ngày 1–2:</b> dữ liệu ca sốt xuất huyết theo tỉnh (#18), số liệu GSO cho nowcasting (#26), độ phủ lịch sử mạng cảm biến PAM Air (#19), chất lượng nhãn MIC trong BV-BRC (#8), tình trạng benchmark tiếng Việt (#31), khả năng truy cập dữ liệu Binance từ Việt Nam (#23), độ dài chuỗi năng suất lúa theo huyện (#20). Đây là những chỗ tôi không đủ căn cứ để khẳng định — và cũng là những chỗ dễ giết đề tài nhất.</p>
+        <p style="font-size:13px;color:var(--text-dim);margin-top:16px"><b>Chưa kiểm chứng ở nhóm mới (#39–#48) — cùng luật, spike ngày 1–2:</b> xin được bao nhiêu sao kê thật và của mấy ngân hàng khác nhau (#39); có chuỗi bán lẻ nào cho bạn dữ liệu hàng tươi không, và M5 FOODS có đủ thay thế không (#40); điều khoản sử dụng và khả năng thu thập tin rao (#45); chi phí API thật cho phần mô hình đắt (#46); xin được dữ liệu công tơ VN hay chỉ dùng L-Town (#47); và với mọi đề tài „ra sản phẩm”: <b>có tìm được một người thật đang làm nghề đó để phỏng vấn 30 phút không</b>. Nếu không, hạ điểm tác động xuống 3 và chọn đề tài khác.</p>
+      </section>
+    </main>
+  </div>
+</div>
+
+<div class="detail-backdrop"></div>
+<aside class="detail-panel" id="detail-panel" role="dialog" aria-modal="false" aria-label="Chi tiết đề tài">
+  <div class="detail-resize" role="separator" aria-orientation="vertical" aria-label="Kéo để đổi độ rộng" tabindex="0"></div>
+  <header class="detail-head">
+    <span class="detail-title"></span>
+    <button class="detail-close" aria-label="Đóng">&times;</button>
+  </header>
+  <div class="detail-body"></div>
+</aside>
+
+<script>
+/* ===== Dữ liệu 38 đề tài ===== */
+const DOMAINS = [
+  { id:"apply",  name:"Ứng dụng cao · Ra sản phẩm",      c:"var(--cat-11)", rgb:"45 212 191" },
+  { id:"ts",     name:"Chuỗi thời gian & Bán lẻ",        c:"var(--cat-1)",  rgb:"0 229 160"   },
+  { id:"bio",    name:"Tin sinh học",                     c:"var(--cat-2)",  rgb:"59 130 246"  },
+  { id:"clin",   name:"Y tế lâm sàng",                    c:"var(--cat-4)",  rgb:"255 69 96"   },
+  { id:"env",    name:"Môi trường · Nông nghiệp · YTCC",  c:"var(--cat-9)",  rgb:"163 230 53"  },
+  { id:"fin",    name:"Tài chính",                        c:"var(--cat-3)",  rgb:"245 208 0"   },
+  { id:"causal", name:"Nhân quả & Thống kê",              c:"var(--cat-5)",  rgb:"192 132 252" },
+  { id:"nlp",    name:"NLP & LLM",                        c:"var(--cat-6)",  rgb:"251 146 60"  },
+  { id:"sys",    name:"ML Systems & Mobile",              c:"var(--cat-7)",  rgb:"34 211 238"  },
+  { id:"misc",   name:"RecSys · Giáo dục · An ninh mạng", c:"var(--cat-10)", rgb:"148 163 184" }
+];
+
+const TOPICS = [
+/* ═══════════ CHUỖI THỜI GIAN & BÁN LẺ ═══════════ */
+{
+  id:"t01", n:1, dom:"ts", diff:3, risk:"thap", compute:"tb", know:"thap", mobile:false, vn:false,
+  t:"Foundation model chuỗi thời gian trên bán lẻ — sau khi kiểm soát rò rỉ dữ liệu thì còn lại gì?",
+  q:"TSFM (Chronos, TimesFM, Moirai) quảng cáo dự báo zero-shot vượt trội. Nhưng <b>M5 nằm trong tập pretraining của nhiều mô hình</b>. Lợi thế thật còn bao nhiêu sau khi kiểm soát nhiễm dữ liệu?",
+  data:"M5 (Kaggle, mở) làm tập „bẩn”; Favorita / Rossmann / dữ liệu bán lẻ VN làm tập „sạch” không có trong corpus pretraining.",
+  contrib:"Một benchmark có kiểm soát nhiễm dữ liệu + hybrid đưa biến ngoại sinh (giá, khuyến mãi, ngày lễ) vào TSFM.",
+  d:{
+    method:"Ba trục thực nghiệm: (1) TSFM zero-shot vs fine-tune vs LightGBM chuyên biệt vs baseline thống kê; (2) có/không covariates — đưa vào qua fine-tune hoặc mô hình phần dư; (3) tập sạch vs tập bẩn, định lượng phần lợi thế do rò rỉ. Metric: WRMSSE, CRPS, scaled pinball loss.",
+    why:"Có một position paper 2025 (Meyer và cộng sự, arXiv 2510.13654) chỉ ra hai dạng rò rỉ — trùng mẫu train–test do dataset bị tái sử dụng, và trùng thời gian giữa các chuỗi tương quan — kèm nhận định „tập pretraining của mô hình này là tập test của mô hình kia”, khiến so sánh chéo gần như vô nghĩa. Các con số họ dẫn và tự đo: những ca rò rỉ đã ghi nhận cho điểm test tốt hơn <b>trên 50%</b>; một thực nghiệm giao thông Madrid cải thiện ~43% khi chuỗi tương quan trùng thời gian; thực nghiệm riêng của họ trên giai đoạn sụp đổ thị trường 2020 cho ~37% — và lợi thế đó <em>biến mất</em> sau khi cú sốc qua đi. Chưa ai đo hệ thống khoảng cách này trên bán lẻ, đó là chỗ của bạn. Thêm nữa, hầu hết TSFM hiện bỏ qua biến ngoại sinh — trong bán lẻ, giá và khuyến mãi mới là thứ dịch chuyển nhu cầu.",
+    risk:"Fine-tune model 200–500M tham số cần GPU ổn định. Nếu không có, thu hẹp về Chronos-Bolt / các biến thể nhỏ — vẫn bảo vệ được, thậm chí hợp lý hơn.",
+    learn:"Đọc trước: position paper về rò rỉ trong đánh giá TSFM (arXiv 2510.13654) và các bài về covariates trong TSFM. ~2 tuần.",
+    spike:"Ngày 1: chạy Chronos zero-shot trên 100 chuỗi M5, so với seasonal naive. Nếu TSFM không thắng nổi naive ngay từ đầu, bạn đã có phát hiện đầu tiên."
+  }
+},
+{
+  id:"t02", n:2, dom:"ts", diff:3, risk:"thap", compute:"thap", know:"tb", mobile:false, vn:false,
+  t:"Beyond Accuracy — xếp hạng mô hình dự báo bằng chi phí tồn kho, không phải RMSE",
+  q:"Mô hình chính xác nhất theo RMSE có phải mô hình <b>rẻ nhất</b> theo chi phí vận hành không? Nếu không, thứ hạng đảo ở đâu và vì sao?",
+  data:"M5 (Kaggle) hoặc bất kỳ dữ liệu bán lẻ nào có giá + tồn kho. Không cần credential.",
+  contrib:"Bảng „đảo thứ hạng” giữa metric thống kê và metric kinh doanh, quét theo tỉ lệ chi phí thiếu/thừa. Cộng thêm decision-focused learning nếu còn thời gian.",
+  d:{
+    method:"Pipeline: dự báo phân phối (quantile) → giải newsvendor / chính sách (s,S) → mô phỏng chi phí trên tập test. So xếp hạng theo RMSE/WRMSSE với xếp hạng theo chi phí, quét b/h ∈ {2,5,10}. Mở rộng: huấn luyện trực tiếp bằng pinball loss tại phân vị critical fractile thay vì MSE.",
+    why:"Toán rất đẹp và vừa sức: lời giải newsvendor là critical fractile q* = F⁻¹(Cu/(Cu+Co)) — quyết định tối ưu chỉ cần MỘT phân vị của phân phối nhu cầu, không cần điểm dự báo. Đây là lý do lý thuyết vì sao tối ưu RMSE là sai mục tiêu. Rất dễ trình bày trước hội đồng.",
+    risk:"⚠️ Hướng này ĐÃ có người làm và làm khá gần: „Beyond Accuracy: Evaluating Forecasting Models by Multi-Echelon Inventory Cost” (arXiv 2603.16815) chạy đúng thiết lập newsvendor trên subset CA_FOODS_1 của M5, và <b>đã bao gồm phần multi-echelon</b> — nên đừng lấy multi-echelon làm điểm khác biệt. Chỗ còn trống để bạn chen vào: nhu cầu rời rạc (intermittent-aware, dùng phân phối đếm thay vì điểm dự báo), hàng có hạn sử dụng, và <em>huấn luyện</em> trực tiếp theo mục tiêu quyết định thay vì chỉ đánh giá theo nó. Đọc kỹ bài đó trước khi viết đề cương.",
+    learn:"Newsvendor, chính sách (s,S), quantile regression, pinball loss. ~2 tuần nếu nền xác suất đã vững.",
+    spike:"Ngày 1–2: dựng simulator newsvendor trên 1 store. Ngày 3: so 3 mô hình → xem thứ hạng có đảo không. Nếu đảo ngay ở quy mô nhỏ, đề tài đã có kết quả."
+  }
+},
+{
+  id:"t03", n:3, dom:"ts", diff:3, risk:"thap", compute:"thap", know:"tb", mobile:false, vn:false,
+  t:"Nhu cầu rời rạc: chọn phân phối đếm quan trọng hơn hay chọn kiến trúc quan trọng hơn?",
+  q:"Ở cấp SKU-store, <b>phần lớn chuỗi M5 là nhu cầu rời rạc</b> và tỉ lệ giá trị 0 vào khoảng 60–68% (tuỳ có tính giai đoạn trước lần bán đầu tiên hay không — hãy nêu rõ quy ước, phản biện sẽ hỏi). Tỉ lệ „intermittent” chính xác phụ thuộc ngưỡng phân loại bạn chọn, nên <b>hãy tự tính rồi trích số của mình</b>, đừng trích số nghe được. Cải thiện đến từ đâu — <b>phân phối</b>, <b>kiến trúc</b>, hay <b>hoà giải phân cấp</b>?",
+  data:"M5 với đầy đủ 12 cấp phân cấp. Mở hoàn toàn.",
+  contrib:"Thiết kế ablation kiểu factorial tách bạch ba nguồn cải thiện — dạng kết quả hội đồng rất thích vì nó trả lời „cái gì thực sự tạo ra khác biệt”.",
+  d:{
+    method:"Baselines đúng chuẩn ngành cho intermittent: Croston, SBA, TSB, ADIDA (KHÔNG phải Prophet). Phân phối: Negative Binomial, zero-inflated / hurdle, Tweedie loss cho LightGBM, GAMLSS. Hoà giải: bottom-up / top-down / MinT / probabilistic reconciliation. Metric: CRPS, scaled pinball, WRMSSE, coverage khoảng dự báo.",
+    why:"Phần lớn bài so sánh dự báo bán lẻ trộn lẫn ba trục này rồi kết luận „mô hình X tốt nhất” — vô nghĩa vì không biết cải thiện đến từ đâu. Tách chúng ra là đóng góp phương pháp thật, dù không phát minh mô hình nào.",
+    risk:"Rủi ro chính là sa lầy vào cài đặt MinT. Có thư viện sẵn (hierarchicalforecast của Nixtla) — dùng, đừng tự viết.",
+    learn:"Phân phối đếm, GAMLSS, lý thuyết hoà giải phân cấp (Hyndman & Athanasopoulos, chương phân cấp). ~3 tuần.",
+    spike:"Ngày 1: tính tỉ lệ zero, khoảng cách trung bình giữa hai lần bán và index of dispersion cho toàn bộ 30.490 chuỗi, rồi phân loại theo Syntetos–Boylan. Bức tranh này quyết định phần còn lại của luận văn — và cho bạn con số intermittent của riêng mình để trích dẫn."
+  }
+},
+{
+  id:"t04", n:4, dom:"ts", diff:3, risk:"thap", compute:"thap", know:"thap", mobile:true, vn:false,
+  t:"Khi nào nên huấn luyện lại mô hình? Chính sách retraining tối ưu chi phí",
+  q:"Mọi hệ thống ML sản xuất đều phải trả lời câu này, và hầu hết trả lời bằng cảm tính (\"mỗi tháng một lần\"). <b>Ngưỡng trôi nào thực sự đáng để trả tiền huấn luyện lại?</b>",
+  data:"Bất kỳ dataset chuỗi dài nào: M5, Favorita, dữ liệu điện, dữ liệu web. Hoàn toàn mở.",
+  contrib:"Một chính sách retraining có cơ sở lý thuyết quyết định — cân giữa chi phí tính toán, chi phí suy giảm hiệu năng, và chi phí cảnh báo giả của bộ phát hiện trôi.",
+  d:{
+    method:"Mô hình hoá như bài toán dừng tối ưu (optimal stopping): mỗi bước quyết định huấn luyện lại hay không, dựa trên tín hiệu từ bộ phát hiện trôi (ADWIN, DDM, KS-test trên phân phối lỗi). So sánh: lịch cố định vs ngưỡng trôi vs chính sách tối ưu chi phí. Đo cả tổng chi phí lẫn hiệu năng.",
+    why:"Đây là câu hỏi MLOps mà giới học thuật ít chạm và giới công nghiệp trả lời bằng thói quen. Bạn có 7 năm kỹ sư — bạn hiểu chi phí vận hành thật, đó là lợi thế hiếm trong lớp DS.",
+    risk:"Dễ trở thành „mô phỏng đồ chơi”. Chữa bằng cách lấy chi phí tính toán thật (giá GPU/CPU thật) và ít nhất một dataset có trôi thật đã được ghi nhận.",
+    learn:"Concept drift detection, optimal stopping cơ bản. ~2 tuần.",
+    spike:"Ngày 1–2: huấn luyện một lần trên 2015, đo hiệu năng suy giảm theo từng tháng 2016. Đường cong suy giảm đó là toàn bộ động lực của luận văn."
+  }
+},
+{
+  id:"t05", n:5, dom:"ts", diff:4, risk:"thap", compute:"tb", know:"tb", mobile:false, vn:false,
+  t:"Uplift modeling cho khuyến mãi dưới ràng buộc ngân sách",
+  q:"Đừng dự đoán ai sẽ mua — dự đoán <b>ai sẽ mua thêm vì được khuyến mãi</b>. Và khi ngân sách khuyến mãi có hạn, nên tiêu vào ai?",
+  data:"Criteo Uplift Dataset — <b>13.979.592 dòng</b> trong file tải về (mô tả gốc ghi „25M” nhưng bản công bố đã hạ mẫu; đừng trích nhầm con số 25M vào luận văn). Cộng Hillstrom MineThatData.",
+  contrib:"Ghép uplift modeling với bài toán phân bổ ngân sách có ràng buộc — đóng góp nằm ở tầng quyết định, không ở mô hình.",
+  d:{
+    method:"Meta-learners (S/T/X-learner), causal forest, uplift trees. Đánh giá bằng Qini curve và AUUC chứ không phải AUC. Tầng quyết định: knapsack / greedy theo uplift-per-đồng dưới ràng buộc ngân sách; so với phân bổ theo xác suất mua (cách làm phổ biến và sai).",
+    why:"Kết nối tự nhiên với nền bán lẻ bạn đã có, nhưng nâng lên tầng nhân quả — thứ mà hội đồng đánh giá cao hơn hẳn dự báo thuần. Và Qini/AUUC là metric ít người dùng đúng.",
+    risk:"Uplift là bài toán nhiễu cao: hiệu ứng thật thường nhỏ so với phương sai. Cần dataset đủ lớn (Criteo đủ) và phải cẩn thận với intervals.",
+    learn:"Neyman-Rubin potential outcomes, meta-learners, Qini. ~3 tuần. Chồng lấn tốt với đề tài #27.",
+    spike:"Ngày 1: chạy T-learner trên Criteo, vẽ Qini. Nếu Qini gần đường chéo thì tín hiệu quá yếu — biết ngay từ ngày đầu."
+  }
+},
+
+/* ═══════════ TIN SINH HỌC ═══════════ */
+{
+  id:"t06", n:6, dom:"bio", diff:3, risk:"thap", compute:"tb", know:"tb", mobile:false, vn:false,
+  t:"Foundation model tế bào đơn: cần bao nhiêu nhãn để chúng đáng dùng?",
+  q:"Các đánh giá đã cho thấy scGPT/Geneformer ở chế độ <b>zero-shot thua cả baseline HVG+PCA</b>. Nhưng gần như chưa ai đo chế độ fine-tune. Điểm hoà vốn nằm ở đâu?",
+  data:"CELLxGENE, Tabula Sapiens, PBMC, Immune, Pancreas — đều là benchmark chuẩn, mở hoàn toàn, không cần xin phép.",
+  contrib:"Đường cong hiệu quả nhãn (label-efficiency curves) cho từng mô hình × tác vụ × loại mô, dẫn tới khuyến nghị vận hành có số: „dưới N nhãn thì đừng dùng scFM”.",
+  d:{
+    method:"Với mỗi mô hình (scGPT, Geneformer, scFoundation) và mỗi baseline (HVG+PCA, scVI, Harmony), quét ngân sách nhãn từ 50 → 50.000 tế bào, vẽ đường cong hiệu năng kèm khoảng tin cậy bootstrap. Tác vụ: cell-type annotation, batch integration. Metric: chuẩn scIB.",
+    why:"Genome Biology 2025 và một benchmark bioRxiv 2026 đều xác nhận scFM thua baseline zero-shot. Nhưng chính giới nghiên cứu chỉ ra rằng cách benchmark này „chỉ tập trung vào tổng quát hoá, nên không cho hiểu hiệu năng trong tình huống thực tế nơi mô hình có thể phát huy”. Đó chính là chỗ trống của bạn.",
+    risk:"Rủi ro thấp bất thường — cả hai kết quả (hoà vốn sớm / không bao giờ hoà vốn) đều là luận văn tốt. Điểm nghẽn duy nhất là GPU cho fine-tune.",
+    learn:"Cell type annotation, batch effect, metric scIB. Gánh nặng sinh học THẤP — khoảng 2–3 tuần đọc là đủ.",
+    spike:"Ngày 1–2: cài scanpy, load PBMC, chạy HVG+PCA baseline. Ngày 3: lấy embedding zero-shot của scGPT, so sánh. Tái lập được con số đã công bố là tín hiệu xanh."
+  }
+},
+{
+  id:"t07", n:7, dom:"bio", diff:3, risk:"thap", compute:"thap", know:"tb", mobile:false, vn:false,
+  t:"Sống còn đa-omics trên TCGA: độ phức tạp có trả công không?",
+  q:"Deep learning đa-omics dự đoán tiên lượng ung thư có thật sự thắng một mô hình Cox chỉ dùng <b>tuổi, giai đoạn, grade</b> — khi đánh giá bằng hiệu chuẩn chứ không chỉ C-index?",
+  data:"TCGA qua GDC / cBioPortal. Tầng open-access (RNA-seq + lâm sàng) đủ dùng, không cần dbGaP.",
+  contrib:"Phân rã nguồn gốc cải thiện (lâm sàng / RNA-seq / methylation / CNV) bằng ablation, cộng nested CV đúng chuẩn để tránh rò rỉ lựa chọn đặc trưng — lỗi cực phổ biến trong mảng này.",
+  d:{
+    method:"Cox PH, Random Survival Forest, DeepSurv, mô hình đa-omics tích hợp. Metric: C-index, time-dependent AUC, integrated Brier score, calibration curve. Nested CV để tách vòng chọn đặc trưng khỏi vòng đánh giá.",
+    why:"Toán rất đẹp và hợp nền xác suất của bạn: partial likelihood, kiểm duyệt (censoring), risk set. Đây là thống kê thật chứ không phải gọi .fit(). Và nghi ngờ „đa-omics không thắng lâm sàng” là nghi ngờ có cơ sở trong y văn.",
+    risk:"Có thể bị chê là „chỉ benchmark”. Chữa bằng một đóng góp phương pháp nhỏ: regularization có cấu trúc theo pathway, hoặc ensembling nhận biết hiệu chuẩn.",
+    learn:"Phân tích sống còn (Cox, censoring, C-index, Brier). ~3–4 tuần. Rất đáng học vì dùng được suốt đời.",
+    spike:"Ngày 1: tải TCGA-BRCA lâm sàng, fit Cox chỉ với tuổi + stage, ghi C-index. Con số đó là baseline mà mọi mô hình sâu phải vượt."
+  }
+},
+{
+  id:"t08", n:8, dom:"bio", diff:4, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:true,
+  t:"Dự đoán kháng kháng sinh từ hệ gen vi khuẩn — có chuyển được sang khu vực khác không?",
+  q:"Mô hình huấn luyện trên isolate châu Âu có dùng được cho isolate Đông Nam Á không? <b>Hiệu năng sụp bao nhiêu khi đổi khu vực địa lý hoặc dòng vi khuẩn?</b>",
+  data:"BV-BRC (trước là PATRIC) — hàng nghìn bộ gen kèm nhãn MIC, mở. Có metadata quốc gia để chia tập theo khu vực.",
+  contrib:"Định lượng sụp đổ hiệu năng theo dịch chuyển địa lý — chưa ai làm hệ thống, và có ý nghĩa trực tiếp cho y tế công cộng Việt Nam.",
+  d:{
+    method:"Đặc trưng: k-mer counting (nặng I/O — sân của kỹ sư), pangenome gene presence/absence, SNP. Mô hình: LightGBM, SVM, CNN trên k-mer. Thiết kế then chốt: chia tập theo khu vực / theo dòng (lineage) chứ không random — random split là nguồn lạc quan giả trong mảng này.",
+    why:"Kháng kháng sinh là vấn đề y tế công cộng nghiêm trọng ở Việt Nam — điểm cộng rất lớn về tính thời sự trước hội đồng. Và bạn là kỹ sư: pipeline xử lý hàng nghìn genome là thứ bạn làm tốt hơn phần lớn bạn cùng lớp.",
+    risk:"Chất lượng metadata trong BV-BRC không đồng đều; phải làm sạch nhãn MIC cẩn thận. Dung lượng dữ liệu lớn (hàng trăm GB nếu lấy nhiều loài) — giới hạn ở 1–2 loài.",
+    learn:"Vi sinh cơ bản, k-mer, phân loại lineage. ~4 tuần.",
+    spike:"Ngày 1–2: tải 500 genome E. coli + nhãn MIC. Ngày 3: đếm k-mer, chạy LightGBM. Nếu pipeline chạy được trong 3 ngày, phần còn lại là mở rộng."
+  }
+},
+{
+  id:"t09", n:9, dom:"bio", diff:4, risk:"thap", compute:"tb", know:"cao", mobile:false, vn:false,
+  t:"Rò rỉ tương đồng chuỗi: bao nhiêu benchmark protein đang tự lừa mình?",
+  q:"Nếu train và test chứa các protein <b>homolog</b> của nhau, mô hình chỉ cần nhận ra „đã thấy họ hàng rồi”. Bao nhiêu phần hiệu năng công bố biến mất khi chia tập theo tương đồng chuỗi thật sự?",
+  data:"UniProt, CAFA, các benchmark dự đoán chức năng protein. Mở. Công cụ chia tập: MMseqs2, CD-HIT.",
+  contrib:"Một giao thức chia tập chống rò rỉ homolog + bảng định lượng mức thổi phồng cho các benchmark phổ biến. Đây là đóng góp về hạ tầng đánh giá — loại đóng góp bền.",
+  d:{
+    method:"Với mỗi benchmark: (1) tái lập kết quả với split gốc; (2) chia lại bằng ngưỡng identity 30% / 50% dùng MMseqs2; (3) đo chênh lệch. Mở rộng: đề xuất một „chỉ số ô nhiễm” tính nhanh cho bất kỳ split nào.",
+    why:"Đây là khuôn mẫu „hoàng đế có mặc quần áo” ở dạng thuần khiết nhất, trên một lĩnh vực mà vấn đề đã được biết nhưng chưa được đo hệ thống. Không thể ra kết quả rỗng.",
+    risk:"Gánh nặng sinh học CAO — bạn cần hiểu homology, domain, chức năng protein đủ để không nói sai. Cần thầy hướng dẫn hiểu tin sinh, hoặc bỏ đề tài này.",
+    learn:"Sinh học phân tử cơ bản, homology, alignment, ontology chức năng (GO). ~6–8 tuần. Đây là chi phí thật.",
+    spike:"Ngày 1–2: chạy MMseqs2 clustering trên một benchmark có sẵn, đếm bao nhiêu cặp train–test vượt ngưỡng 30% identity. Con số đó quyết định đề tài có tồn tại không."
+  }
+},
+{
+  id:"t10", n:10, dom:"bio", diff:3, risk:"thap", compute:"tb", know:"tb", mobile:false, vn:false,
+  t:"Dự đoán đáp ứng thuốc: cách chia tập quyết định kết luận",
+  q:"Mô hình dự đoán đáp ứng thuốc trên dòng tế bào ung thư báo cáo hiệu năng cao — nhưng với <b>thuốc mới chưa từng thấy</b> hay <b>dòng tế bào mới</b> thì sao? Ba cách chia tập cho ba kết luận khác nhau.",
+  data:"GDSC, CCLE, DepMap — đều mở và tải trực tiếp được, không cần credential.",
+  contrib:"Bản đồ hiệu năng theo ba chế độ tổng quát hoá (unseen cell line / unseen drug / unseen cả hai) + phân tích vì sao chế độ khó nhất lại sụp.",
+  d:{
+    method:"Mô hình: elastic net, random forest, mô hình đa nhánh (omics + cấu trúc phân tử). Thiết kế: ba split rõ ràng, cộng một baseline „chỉ dự đoán trung bình theo thuốc” — baseline này thường mạnh đến bất ngờ và là phép thử tàn nhẫn nhất.",
+    why:"Cộng đồng biết rằng nhiều kết quả trong mảng này đến từ việc mô hình học được „thuốc này nhìn chung độc” chứ không phải „dòng tế bào này nhạy với thuốc này”. Đo tách bạch điều đó là đóng góp rõ ràng.",
+    risk:"Dữ liệu sạch và sẵn nên rủi ro thấp; rủi ro thật là kết quả „ai cũng đoán được”. Chữa bằng cách thêm phần giải thích cơ chế: đặc trưng nào giữ được tín hiệu ở chế độ khó nhất.",
+    learn:"Khái niệm IC50/AUC dược lý, biểu diễn phân tử (fingerprint). ~3 tuần.",
+    spike:"Ngày 1: tải GDSC, dựng baseline „trung bình theo thuốc”. Ngày 2–3: so với elastic net ở cả ba split. Nếu baseline thắng ở split khó, bạn đã có kết quả chính."
+  }
+},
+{
+  id:"t11", n:11, dom:"bio", diff:3, risk:"thap", compute:"thap", know:"tb", mobile:false, vn:false,
+  t:"Microbiome đường ruột → kiểu hình: mô hình có chuyển được qua cohort khác không?",
+  q:"Các mô hình dự đoán bệnh từ hệ vi sinh đường ruột đạt AUC cao trong nội bộ cohort. <b>Huấn luyện ở cohort này, kiểm định ở cohort khác thì còn lại bao nhiêu?</b>",
+  data:"curatedMetagenomicData (gói R, mở, đã chuẩn hoá) — hàng chục cohort với metadata thống nhất. Đây là dataset lý tưởng cho câu hỏi này.",
+  contrib:"Ma trận chuyển giao cohort × cohort + phân tích nguồn gốc sụp đổ (hiệu ứng batch kỹ thuật vs khác biệt quần thể vs khác biệt định nghĩa bệnh).",
+  d:{
+    method:"Leave-one-cohort-out CV. Mô hình: random forest, LightGBM trên tương đối abundance, kèm CLR transform. So với mô hình chỉ dùng biến nhân khẩu học. Đo cả AUC lẫn hiệu chuẩn.",
+    why:"Dataset đã chuẩn hoá sẵn nghĩa là bạn tiêu 100% thời gian vào câu hỏi khoa học thay vì vào ETL — hiếm có trong tin sinh. Và câu hỏi chuyển giao cohort là câu hỏi mở thật sự.",
+    risk:"Dữ liệu compositional cần xử lý đúng (CLR/ILR), làm sai là lỗi thống kê cơ bản mà phản biện sẽ bắt ngay.",
+    learn:"Dữ liệu compositional, khái niệm alpha/beta diversity. ~3 tuần.",
+    spike:"Ngày 1: cài curatedMetagenomicData, lấy 5 cohort ung thư đại trực tràng. Ngày 2–3: chạy leave-one-cohort-out. Chênh lệch AUC nội bộ vs xuyên cohort là kết quả đầu tiên."
+  }
+},
+{
+  id:"t12", n:12, dom:"bio", diff:4, risk:"thap", compute:"cao", know:"cao", mobile:false, vn:false,
+  t:"Protein language model: điểm zero-shot có hiệu chuẩn không?",
+  q:"ESM và các PLM cho điểm zero-shot dự đoán tác động biến thể. Điểm đó xếp hạng tốt — nhưng nó có phải <b>xác suất có ý nghĩa</b> không, hay chỉ là số thứ tự?",
+  data:"ProteinGym — benchmark chuẩn cho variant effect prediction, mở. Trọng số ESM-2 tải tự do từ HuggingFace.",
+  contrib:"Phân tích hiệu chuẩn (không chỉ xếp hạng) của điểm PLM, cộng một phương pháp hiệu chuẩn lại đơn giản để biến điểm thành xác suất dùng được trong ra quyết định lâm sàng.",
+  d:{
+    method:"Tính điểm zero-shot trên ProteinGym, đo Spearman (chuẩn) NHƯNG thêm: reliability diagram, ECE, và phân tích theo họ protein. Rồi thử temperature scaling / isotonic regression để hiệu chuẩn, kiểm tra có chuyển giao sang họ protein chưa thấy không.",
+    why:"Toàn bộ mảng này báo cáo Spearman. Nhưng nếu điểm dùng để phân loại biến thể „gây bệnh / lành tính”, xếp hạng không đủ — cần xác suất hiệu chuẩn. Khoảng trống rõ và có ý nghĩa ứng dụng.",
+    risk:"Compute CAO: inference ESM-2 trên toàn ProteinGym cần GPU nhiều giờ. Thu hẹp về ESM-2 nhỏ (150M) nếu cần.",
+    learn:"Sinh học phân tử, đột biến, masked language modeling trên chuỗi protein. ~6 tuần.",
+    spike:"Ngày 1–2: chạy ESM-2 150M trên 3 DMS assay của ProteinGym, tái lập Spearman đã công bố. Ngày 3: vẽ reliability diagram — nếu lệch nhiều, đề tài có nội dung."
+  }
+},
+
+/* ═══════════ Y TẾ LÂM SÀNG ═══════════ */
+{
+  id:"t13", n:13, dom:"clin", diff:4, risk:"tb", compute:"thap", know:"tb", mobile:false, vn:false,
+  t:"Hiệu chuẩn sụp đổ khi mô hình chuyển viện — và có dự báo trước được không?",
+  q:"Khả năng phân biệt (AUROC) chuyển giao được, nhưng <b>hiệu chuẩn thì không</b>. Có thể xây một chỉ báo tính được <em>chỉ trên dữ liệu nguồn</em>, dự báo đặc trưng nào sẽ hỏng khi sang viện khác?",
+  data:"MIMIC-IV + eICU-CRD trên PhysioNet — miễn phí sau khoá CITI + credentialing. ⚠️ Độ trễ 2–4 tuần, đăng ký NGAY.",
+  contrib:"Một điểm số „transportability risk” cho từng đặc trưng, kiểm chứng bằng mức sụp đổ thực tế. Đây là đóng góp phương pháp, không phải benchmark thuần.",
+  d:{
+    method:"Huấn luyện mô hình tử vong ICU trên MIMIC-IV, kiểm định ngoại bộ trên eICU. Đo tách bạch: discrimination (AUROC) vs calibration (slope, intercept, ECE) vs decision curve. Rồi xây chỉ báo dự báo — dựa trên độ ổn định của đặc trưng giữa các đơn vị bên trong MIMIC — và kiểm tra nó dự báo đúng mức sụp đổ trên eICU.",
+    why:"Có hai nghiên cứu 2026 trên medRxiv đặt sẵn nền cho bạn. Bài „Calibration Drift Under Cross-Institutional Deployment” (MIMIC-IV n≈52.000 → eICU n≈114.000) cho thấy hiệu chuẩn nội bộ gần hoàn hảo (slope 0,982, intercept 0,001) nhưng intercept ngoại bộ âm mạnh (<b>−0,678</b>) — mô hình ước lượng rủi ro cao có hệ thống, do tỉ lệ tử vong ở eICU thấp hơn; AUROC hoàn toàn không phát hiện được điều này. Bài thứ hai („Observation-process features…”) cho thấy càng thêm đặc trưng <em>quá trình quan sát</em> (tần suất đo) thì slope ngoại bộ càng tụt: từ 1,007 ở mô hình đơn giản nhất xuống <b>0,417</b> ở mô hình phức tạp nhất. Hai manh mối rất rõ để mở rộng — nhưng hãy đọc bản gốc và tự trích số, đừng trích lại từ trang này.",
+    risk:"Độ trễ credential là rủi ro DUY NHẤT nhưng có thật. Đăng ký PhysioNet hôm nay, song song khi còn đang cân nhắc — không ràng buộc gì.",
+    learn:"Khái niệm lâm sàng ICU, hiệu chuẩn, decision curve analysis. ~4–6 tuần. MIMIC có tài liệu và code repo rất tốt.",
+    spike:"Ngày 1: nộp đăng ký PhysioNet. Trong lúc chờ, làm spike đề tài khác. Khi có quyền: ngày 1–2 dựng cohort, ngày 3 fit logistic, ngày 4 kiểm định chéo eICU."
+  }
+},
+{
+  id:"t14", n:14, dom:"clin", diff:4, risk:"tb", compute:"thap", know:"cao", mobile:false, vn:false,
+  t:"Cảnh báo sepsis sớm: định nghĩa nhãn quyết định kết quả nhiều hơn mô hình",
+  q:"Các mô hình cảnh báo sepsis báo AUROC 0,85+. Nhưng <b>thời điểm gán nhãn onset</b> thay đổi thì con số đó nhảy bao nhiêu? Và bao nhiêu tín hiệu đến từ rò rỉ thời gian?",
+  data:"MIMIC-IV, eICU. Cần credential PhysioNet.",
+  contrib:"Phân tích độ nhạy có hệ thống với định nghĩa nhãn — cho thấy phần lớn khác biệt giữa các bài báo đến từ định nghĩa chứ không từ mô hình.",
+  d:{
+    method:"Cố định mô hình, quét các định nghĩa onset (Sepsis-3 với các cửa sổ khác nhau, thời điểm kháng sinh, thời điểm cấy máu). Đo AUROC/AUPRC ở mỗi định nghĩa. Riêng biệt: kiểm tra rò rỉ bằng cách loại bỏ dần các đặc trưng chỉ tồn tại vì bác sĩ đã nghi ngờ sepsis (đặt kháng sinh, lấy lactate).",
+    why:"Đây là một scandal âm ỉ trong mảng cảnh báo sớm: mô hình thường học „bác sĩ đã lo lắng” chứ không phải „bệnh nhân sắp xấu đi”. Đo được điều đó là đóng góp thật và gây tranh luận — hội đồng nhớ lâu.",
+    risk:"Gánh nặng lâm sàng CAO. Cần ít nhất một người có nền y để không định nghĩa sai Sepsis-3.",
+    learn:"Tiêu chuẩn Sepsis-3, SOFA score, quy trình ICU. ~6 tuần.",
+    spike:"Ngày 1–3 (sau khi có quyền): dựng cohort với 2 định nghĩa onset khác nhau, so AUROC. Nếu chênh >0,05 thì luận văn đã có luận điểm."
+  }
+},
+{
+  id:"t15", n:15, dom:"clin", diff:3, risk:"tb", compute:"thap", know:"tb", mobile:false, vn:false,
+  t:"Công bằng thuật toán trong y tế: hiệu chuẩn theo phân nhóm, không chỉ AUROC tổng",
+  q:"Một mô hình có AUROC tốt trên toàn bộ bệnh nhân vẫn có thể <b>hiệu chuẩn sai lệch có hệ thống</b> ở một nhóm nhỏ — và đó chính là nhóm bị thiệt hại.",
+  data:"MIMIC-IV (có chủng tộc, giới, loại bảo hiểm), eICU. Cần credential.",
+  contrib:"Đo tách bạch ba loại bất công (hiệu chuẩn, sai số, tỉ lệ chọn) theo phân nhóm, và cho thấy tối ưu cái này làm xấu cái kia — bất khả thi luận trong công bằng.",
+  d:{
+    method:"Đo calibration slope/intercept, ECE, FPR/FNR theo từng phân nhóm. Áp dụng và so sánh các phương pháp giảm thiên lệch (reweighting, recalibration theo nhóm, adversarial debiasing). Trình bày rõ đánh đổi thay vì tuyên bố đã „giải quyết” công bằng.",
+    why:"Mảng này có nhiều bài báo tuyên bố hơn là bài báo đo đạc. Một phân tích trung thực về đánh đổi có giá trị hơn một phương pháp mới yếu. Và chủ đề rất được hội đồng quan tâm.",
+    risk:"Dễ trượt vào phát biểu đạo đức thay vì phân tích. Neo chặt vào số liệu và định lý bất khả thi (Kleinberg et al., Chouldechova).",
+    learn:"Các định nghĩa fairness và định lý bất khả thi. ~3 tuần.",
+    spike:"Ngày 1–2: fit mô hình tử vong, tách calibration theo nhóm bảo hiểm. Nếu intercept chênh rõ giữa các nhóm, đề tài có nội dung ngay."
+  }
+},
+{
+  id:"t16", n:16, dom:"clin", diff:3, risk:"thap", compute:"cao", know:"tb", mobile:false, vn:false,
+  t:"Shortcut learning trong X-quang ngực: mô hình đang nhìn bệnh hay nhìn thiết bị?",
+  q:"CNN đạt hiệu năng „ngang bác sĩ” trên X-quang ngực. Nhưng bao nhiêu phần đến từ việc mô hình nhận ra <b>dấu vết máy chụp, tư thế, ống dẫn lưu</b> thay vì tổn thương?",
+  data:"NIH ChestX-ray14, CheXpert, MIMIC-CXR — mở hoặc chỉ cần đăng ký đơn giản (MIMIC-CXR cần PhysioNet).",
+  contrib:"Định lượng shortcut bằng can thiệp phản thực (che vùng, xoá metadata burn-in) + kiểm định chéo bệnh viện, cho ra con số „bao nhiêu % hiệu năng là shortcut”.",
+  d:{
+    method:"Huấn luyện CNN chuẩn. Rồi: (1) che có hệ thống các vùng không liên quan bệnh lý và đo hiệu năng còn lại; (2) huấn luyện mô hình CHỈ trên vùng ngoài phổi — nếu vẫn dự đoán tốt, đó là shortcut thuần; (3) kiểm định chéo dataset (NIH → CheXpert).",
+    why:"Phép thử (2) rất mạnh và rất dễ hiểu trước hội đồng: nếu mô hình dự đoán được viêm phổi từ vùng KHÔNG chứa phổi, có gì đó sai căn bản. Đây là loại thực nghiệm sắc mà ai cũng gật đầu.",
+    risk:"Compute CAO — huấn luyện CNN trên hàng trăm nghìn ảnh. Thu hẹp: dùng một nhãn bệnh, ảnh giảm độ phân giải, hoặc fine-tune từ pretrained.",
+    learn:"Giải phẫu X-quang ngực cơ bản, các nhãn bệnh. ~3 tuần.",
+    spike:"Ngày 1–2: tải NIH ChestX-ray14, fine-tune ResNet trên 1 nhãn. Ngày 3: huấn luyện lại chỉ trên viền ảnh. So AUROC — chênh lệch là toàn bộ câu chuyện."
+  }
+},
+{
+  id:"t17", n:17, dom:"clin", diff:4, risk:"thap", compute:"tb", know:"tb", mobile:true, vn:false,
+  t:"Học tự giám sát cho tín hiệu sinh lý: bao nhiêu nhãn là đủ?",
+  q:"Nhãn ECG/PPG rất đắt (cần bác sĩ đọc). Học tự giám sát trên dữ liệu <b>không nhãn</b> có giảm được nhu cầu nhãn bao nhiêu lần?",
+  data:"PhysioNet: PTB-XL (ECG có nhãn, mở tự do), MIMIC-IV Waveform, CinC Challenge datasets. PTB-XL không cần credential.",
+  contrib:"Đường cong hiệu quả nhãn cho các phương pháp SSL (contrastive, masked autoencoding) trên tín hiệu sinh lý + phân tích biểu diễn học được có ý nghĩa sinh lý không.",
+  d:{
+    method:"Pretrain SSL trên tín hiệu không nhãn, fine-tune với ngân sách nhãn 1% → 100%. So với huấn luyện từ đầu và với đặc trưng thủ công truyền thống (HRV, morphology). Thêm: probing biểu diễn để xem nó mã hoá gì.",
+    why:"Kết nối tự nhiên với hướng on-device (#33) — mô hình ECG nhỏ chạy trên đồng hồ/điện thoại là ứng dụng thật. Và PTB-XL mở hoàn toàn nên rủi ro dữ liệu gần bằng 0.",
+    risk:"SSL nhạy với lựa chọn augmentation; chọn sai thì mọi kết quả đều tệ và bạn không biết vì sao. Dành thời gian cho phần này.",
+    learn:"Xử lý tín hiệu sinh lý, augmentation cho chuỗi thời gian, SSL. ~4 tuần.",
+    spike:"Ngày 1–2: tải PTB-XL, huấn luyện CNN 1D có giám sát làm baseline. Ngày 3–4: thử SimCLR-style pretrain. So ở mức 5% nhãn."
+  }
+},
+
+/* ═══════════ MÔI TRƯỜNG · NÔNG NGHIỆP · YTCC ═══════════ */
+{
+  id:"t18", n:18, dom:"env", diff:4, risk:"cao", compute:"tb", know:"tb", mobile:false, vn:true,
+  t:"Dự báo sốt xuất huyết Việt Nam theo không-thời gian",
+  q:"Ca sốt xuất huyết ở tỉnh này tuần sau phụ thuộc vào thời tiết, vào ca tuần này, và vào <b>các tỉnh lân cận</b>. Mô hình hoá cả ba có thắng mô hình chuỗi thời gian đơn lẻ không?",
+  data:"Ca bệnh theo tỉnh — ĐIỂM NGHẼN, phải xác minh nguồn trước. Khí hậu: ERA5, NOAA (miễn phí, đầy đủ). Có một số dataset dengue VN đã công bố kèm bài báo.",
+  contrib:"Mô hình không-thời gian đầu tiên cho dengue VN ở độ phân giải tỉnh, kèm phân tích độ trễ khí hậu — có giá trị y tế công cộng trực tiếp.",
+  d:{
+    method:"Baseline: SARIMA theo tỉnh. Nâng cấp: mô hình phân cấp Bayes (INLA/Stan) với hiệu ứng không gian, rồi spatio-temporal GNN. Biến khí hậu với độ trễ phân phối (distributed lag non-linear model — chuẩn vàng trong dịch tễ khí hậu). Đánh giá bằng dự báo ngoài mẫu theo thời gian, KHÔNG phải CV ngẫu nhiên.",
+    why:"Ý nghĩa địa phương rất mạnh — điểm cộng lớn ở hội đồng HUST. Và tận dụng nguyên vẹn kỹ năng chuỗi thời gian bạn đã có, chỉ thêm chiều không gian.",
+    risk:"⚠️ RỦI RO DỮ LIỆU CAO và đây là rủi ro giết đề tài. Dữ liệu ca bệnh theo tỉnh theo tuần không phải lúc nào cũng công khai. PHẢI xác minh nguồn cụ thể TRƯỚC KHI cam kết. Nếu không lấy được VN, có dữ liệu dengue mở cho Brazil/Thái Lan — nhưng mất góc địa phương.",
+    learn:"Dịch tễ học không gian, DLNM, mô hình Bayes phân cấp. ~5 tuần.",
+    spike:"Ngày 1–2 CHỈ để trả lời: tôi có lấy được dữ liệu ca bệnh theo tỉnh theo tuần không? Nếu sau 2 ngày chưa có file trên ổ cứng, loại đề tài này ngay."
+  }
+},
+{
+  id:"t19", n:19, dom:"env", diff:4, risk:"tb", compute:"tb", know:"thap", mobile:false, vn:true,
+  t:"PM2.5 Hà Nội: cấu trúc đồ thị nên học hay nên áp đặt?",
+  q:"Trong mô hình GNN dự báo chất lượng không khí, ma trận kề nên xây theo <b>khoảng cách địa lý, theo hướng gió, hay để mô hình tự học</b>? Đây là câu hỏi ablation gọn gàng và chưa có câu trả lời dứt khoát.",
+  data:"Mạng cảm biến PAM Air, trạm quan trắc Hà Nội, dữ liệu US Embassy lịch sử. Khí tượng: ERA5 (miễn phí). Rủi ro trung bình — cần kiểm tra độ phủ lịch sử.",
+  contrib:"Ablation có hệ thống về cách xây đồ thị trong ST-GNN cho chất lượng không khí — kết quả áp dụng được cho mọi bài toán cảm biến phân tán.",
+  d:{
+    method:"So sánh: STGCN, Graph WaveNet, ASTGNN với 4 cách xây adjacency (khoảng cách, k-NN, tương quan học được, hướng gió có điều kiện). Baseline bắt buộc: mô hình từng trạm độc lập — nếu GNN không thắng nó, cả bài toán không gian là ảo tưởng.",
+    why:"Ô nhiễm không khí Hà Nội là vấn đề ai cũng quan tâm, dễ tạo động lực trước hội đồng. Câu hỏi về cấu trúc đồ thị đủ hẹp để trả lời dứt điểm trong một luận văn — đây là đặc điểm của đề tài tốt.",
+    risk:"Dữ liệu cảm biến thấp cấp (low-cost sensor) có nhiễu và trôi hiệu chuẩn nghiêm trọng. Phần làm sạch dữ liệu có thể ngốn 1/3 thời gian — hãy tính vào kế hoạch.",
+    learn:"GNN cơ bản, khuếch tán ô nhiễm khí quyển ở mức khái niệm. ~3 tuần.",
+    spike:"Ngày 1–2: thu thập 1 năm dữ liệu từ 10 trạm. Ngày 3: kiểm tra tương quan chéo giữa các trạm theo độ trễ — nếu không có cấu trúc không gian rõ, GNN sẽ không giúp gì."
+  }
+},
+{
+  id:"t20", n:20, dom:"env", diff:4, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:true,
+  t:"Dự báo năng suất lúa Đồng bằng sông Cửu Long từ ảnh vệ tinh",
+  q:"Ảnh Sentinel-2 miễn phí và phủ toàn bộ ĐBSCL. <b>Dự báo năng suất trước thu hoạch bao nhiêu tuần thì vẫn còn chính xác đủ để hữu ích?</b>",
+  data:"Sentinel-2 & Sentinel-1 qua Google Earth Engine — vẫn miễn phí cho học thuật, <b>nhưng từ 27/04/2026 mọi dự án phi thương mại có hạn mức EECU-giờ hằng tháng theo tier</b>: Community 150 EECU-giờ (mặc định, dành cho sinh viên), Contributor 1.000 EECU-giờ (cần bật billing nhưng không bị tính tiền cho dùng phi thương mại). Đây <em>không</em> phải ngưỡng cắt cứng — chạm trần thì vẫn chạy được nhưng ở chế độ hạn chế, chậm hơn nhiều. Trích chuỗi nhiều năm cho cả ĐBSCL có thể chạm trần Community — đăng ký Contributor sớm và ước lượng compute trước khi cam kết. Năng suất theo huyện: Tổng cục Thống kê, cần xác minh độ phân giải và độ dài chuỗi.",
+  contrib:"Đường cong đánh đổi „thời gian báo trước ↔ độ chính xác” cho lúa ĐBSCL — thông tin có giá trị chính sách trực tiếp, và chưa có ai làm công khai cho VN.",
+  d:{
+    method:"Trích chỉ số thực vật (NDVI, EVI, LAI) theo mùa vụ từ GEE. Mô hình: LightGBM trên đặc trưng tổng hợp theo giai đoạn sinh trưởng, so với CNN/LSTM trên chuỗi ảnh. Kiểm định theo năm (leave-one-year-out) — KHÔNG random split, vì năm là đơn vị tương quan.",
+    why:"Google Earth Engine loại bỏ hoàn toàn gánh nặng hạ tầng ảnh vệ tinh — bạn viết JS/Python trên cloud của Google, miễn phí cho nghiên cứu. Đây là lý do đề tài viễn thám đã trở nên khả thi cho một người.",
+    risk:"Nhãn năng suất theo huyện có thể quá thô hoặc chuỗi quá ngắn (ít năm = ít mẫu). Kiểm tra số năm × số huyện trước — nếu dưới ~300 điểm dữ liệu, mô hình sâu vô nghĩa.",
+    learn:"Viễn thám cơ bản, chỉ số thực vật, lịch mùa vụ lúa. ~4 tuần. GEE có tutorial rất tốt.",
+    spike:"Ngày 1–2: đăng ký GEE, trích chuỗi NDVI cho 1 huyện qua 5 năm. Ngày 3: tìm và đối chiếu số liệu năng suất. Nếu ghép được hai nguồn trong 3 ngày, đề tài khả thi."
+  }
+},
+{
+  id:"t21", n:21, dom:"env", diff:3, risk:"thap", compute:"thap", know:"tb", mobile:false, vn:false,
+  t:"Dự báo xác suất công suất điện mặt trời — khoảng dự báo có đáng tin không?",
+  q:"Lưới điện cần biết <b>khoảng bất định</b>, không chỉ giá trị kỳ vọng. Các mô hình dự báo xác suất cho điện mặt trời có phủ đúng danh nghĩa không, hay chúng tự tin quá mức đúng vào lúc quan trọng nhất?",
+  data:"GEFCom2014 (competition data, mở), dữ liệu solar của NREL, Open Power System Data. Không cần credential.",
+  contrib:"Phân tích phủ có điều kiện — mô hình hỏng ở chế độ thời tiết nào — cộng hiệu chuẩn lại bằng conformal prediction.",
+  d:{
+    method:"Quantile regression, DeepAR, mô hình phân phối tham số. Đo pinball loss, CRPS, và quan trọng nhất: coverage CÓ ĐIỀU KIỆN theo mức bức xạ, mùa, độ che mây. Rồi áp dụng conformal prediction để phục hồi bảo đảm phủ.",
+    why:"„Phủ trung bình đúng 90%” có thể che giấu việc mô hình phủ 99% lúc trời quang và 60% lúc nhiều mây — mà lúc nhiều mây mới là lúc lưới điện cần. Tách bạch điều đó là đóng góp rõ ràng và trực quan.",
+    risk:"Rủi ro thấp toàn diện: dữ liệu mở, compute nhẹ, câu hỏi rõ. Rủi ro thật là đề tài hơi „an toàn” — thêm phần conformal để nâng độ sắc.",
+    learn:"Dự báo xác suất, proper scoring rules, conformal prediction cơ bản. ~3 tuần. Chồng lấn với #29.",
+    spike:"Ngày 1–2: tải GEFCom2014 solar, fit quantile regression. Ngày 3: vẽ coverage theo nhóm độ che mây. Chênh lệch phủ giữa các nhóm là kết quả đầu tiên."
+  }
+},
+
+/* ═══════════ TÀI CHÍNH ═══════════ */
+{
+  id:"t22", n:22, dom:"fin", diff:3, risk:"thap", compute:"thap", know:"tb", mobile:false, vn:true,
+  t:"Bao nhiêu alpha là ảo ảnh thống kê? Bản đồ backtest overfitting cho thị trường Việt Nam",
+  q:"Chạy đủ nhiều biến thể chiến lược thì <b>chắc chắn</b> tìm được một cái Sharpe cao — kể cả trên dữ liệu ngẫu nhiên. Trên thị trường VN, bao nhiêu phần alpha báo cáo sống sót sau hiệu chỉnh đa kiểm định?",
+  data:"Cổ phiếu HOSE/HNX qua vnstock (miễn phí), và/hoặc crypto Binance (miễn phí, tick-level). Rủi ro dữ liệu gần bằng 0.",
+  contrib:"Bản đồ định lượng đầu tiên về mức thổi phồng hiệu năng trên thị trường VN — mới về dữ liệu, chặt về phương pháp, và <b>không thể không ra kết quả</b>.",
+  d:{
+    method:"Chọn một họ chiến lược ML/kỹ thuật, chạy trên VN equities. GHI LẠI NGHIÊM NGẶT số phép thử — điều mà 99% bài báo và blog không làm. Tính PBO (Probability of Backtest Overfitting) và DSR (Deflated Sharpe Ratio). So sánh các giao thức CV: walk-forward vs purged K-fold vs Combinatorial Purged CV. Thêm trục ít ai làm: rủi ro triển khai — so 2–3 engine backtest trên cùng chiến lược.",
+    why:"Nền lý thuyết đã có và rất đẹp: DSR là Probabilistic Sharpe Ratio với ngưỡng bác bỏ thay bằng kỳ vọng Sharpe cực đại từ False Strategy Theorem (Bailey & López de Prado 2014). Toán nặng — extreme value theory, đa kiểm định — đúng sở trường thống kê của bạn. Và có bằng chứng CPCV vượt trội walk-froward về PBO/DSR.",
+    risk:"RỦI RO THẤP NHẤT TRONG TOÀN BỘ DANH SÁCH. Không thể không ra kết quả. Rủi ro duy nhất: bị coi là „chỉ phê bình”. Chữa bằng cách đề xuất một quy trình báo cáo chuẩn cho nghiên cứu định lượng ở VN.",
+    learn:"López de Prado, Advances in Financial Machine Learning (chương 11–12). Extreme value theory cơ bản. ~3 tuần.",
+    spike:"Ngày 1: tải giá HOSE qua vnstock. Ngày 2–3: chạy 1.000 biến thể moving-average crossover, lấy cái tốt nhất, tính DSR. Nếu DSR < 0 thì bạn vừa chứng minh luận điểm chính trong 3 ngày."
+  }
+},
+{
+  id:"t23", n:23, dom:"fin", diff:4, risk:"thap", compute:"tb", know:"tb", mobile:true, vn:false,
+  t:"Deep learning trên sổ lệnh crypto: có sống sót sau ma sát giao dịch không?",
+  q:"Các mô hình lớp DeepLOB dự đoán biến động giá ngắn hạn với độ chính xác ấn tượng. <b>Còn lại gì sau phí, spread, slippage — và có chuyển được sang tài sản khác không?</b>",
+  data:"Binance public data (tick + LOB snapshot, miễn phí, khổng lồ). Không cần credential, chỉ cần chịu khó về hạ tầng.",
+  contrib:"Đánh giá lớp mô hình LOB dưới ma sát thực tế + kiểm định chuyển giao chéo tài sản và chéo chế độ thị trường.",
+  d:{
+    method:"Tái lập DeepLOB / các biến thể transformer trên LOB. Rồi thêm ba tầng kiểm tra: (1) mô phỏng khớp lệnh có phí và slippage thực tế; (2) huấn luyện trên BTC, kiểm định trên altcoin; (3) chia tập theo chế độ thị trường (bull/bear/sideways) thay vì theo thời gian ngẫu nhiên.",
+    why:"Đây là đề tài NẶNG VỀ KỸ THUẬT DỮ LIỆU — hàng trăm GB, streaming, tái dựng sổ lệnh. Với 7 năm kỹ sư, đó là lợi thế của bạn chứ không phải rào cản. Phần lớn học viên DS sẽ chết ở bước này.",
+    risk:"Khối lượng dữ liệu có thể vượt khả năng lưu trữ. Thu hẹp: 2–3 cặp giao dịch, 3–6 tháng, độ sâu sổ lệnh 10 mức.",
+    learn:"Vi cấu trúc thị trường, cơ chế khớp lệnh, các dạng phí. ~3 tuần.",
+    spike:"Ngày 1–2: tải và tái dựng LOB cho 1 ngày BTCUSDT. Nếu pipeline chạy được 1 ngày dữ liệu trong 2 ngày làm việc, phần còn lại là mở rộng tuyến tính."
+  }
+},
+{
+  id:"t24", n:24, dom:"fin", diff:3, risk:"tb", compute:"thap", know:"thap", mobile:false, vn:false,
+  t:"Rủi ro tín dụng: hiệu chuẩn dưới dịch chuyển phân phối và công bằng",
+  q:"Mô hình chấm điểm tín dụng huấn luyện trên giai đoạn kinh tế này còn dùng được ở giai đoạn khác không? Và khi nó hỏng, nó <b>hỏng đều hay hỏng lệch về một nhóm vay</b>?",
+  data:"Ưu tiên <b>Home Credit Default Risk</b> và <b>Give Me Some Credit</b> (Kaggle, giấy phép rõ ràng). ⚠️ LendingClub <b>không còn tự công bố dữ liệu</b>: hồ sơ bị từ chối đã gỡ từ 2019 và trang tải về có điều khoản hạn chế; các bản sao trên Kaggle dừng cập nhật khoảng 2018–2020 và có vướng mắc bản quyền — nếu dùng thì phải nêu rõ nguồn và điều khoản trong luận văn.",
+  contrib:"Ghép hai mảng thường tách rời — robustness dưới dịch chuyển và fairness — cho thấy dịch chuyển phân phối làm bất công trầm trọng thêm như thế nào.",
+  d:{
+    method:"Chia tập theo thời gian (không random). Đo hiệu chuẩn và sai số theo phân nhóm ở từng giai đoạn. Kiểm tra giả thuyết: khi có dịch chuyển vĩ mô, khoảng cách hiệu chuẩn giữa các nhóm nới rộng. Thử các biện pháp: recalibration theo nhóm, reweighting, domain adaptation.",
+    why:"Dữ liệu sạch, sẵn, có nhãn thật, có chiều thời gian dài và có biến nhân khẩu — hiếm có sự kết hợp này. Nghĩa là bạn tiêu toàn bộ thời gian vào câu hỏi khoa học.",
+    risk:"Đề tài „an toàn” nên dễ bị đánh giá là thiếu tham vọng. Nâng độ sắc bằng cách thêm phân tích nhân quả: liệu chênh lệch có phải do biến proxy nào cụ thể không.",
+    learn:"Credit scoring cơ bản, các định nghĩa fairness. ~2 tuần. Gánh nặng ngành THẤP.",
+    spike:"Ngày 1: tải Home Credit (hoặc Give Me Some Credit) — KHÔNG phải LendingClub, xem cảnh báo ở phần dữ liệu. Ngày 2–3: chia tập theo thời gian, huấn luyện trên giai đoạn sớm, kiểm định trên giai đoạn muộn, tách calibration theo nhóm thu nhập. Chênh lệch là kết quả."
+  }
+},
+{
+  id:"t25", n:25, dom:"fin", diff:3, risk:"thap", compute:"thap", know:"thap", mobile:false, vn:false,
+  t:"Phát hiện gian lận: chọn ngưỡng theo lý thuyết quyết định, không theo F1",
+  q:"Với dữ liệu cực mất cân bằng và chi phí bất đối xứng (bỏ sót gian lận ≠ báo động giả), <b>F1 và AUC là metric sai</b>. Chọn ngưỡng đúng thay đổi kết luận bao nhiêu?",
+  data:"IEEE-CIS Fraud Detection, Credit Card Fraud (Kaggle), PaySim. Mở hoàn toàn.",
+  contrib:"Khung đánh giá theo chi phí kỳ vọng thay cho metric xếp hạng, cộng phân tích độ nhạy với tỉ lệ chi phí — cho thấy xếp hạng mô hình đảo khi tỉ lệ chi phí đổi.",
+  d:{
+    method:"Với mỗi mô hình, thay vì báo AUC, tính đường cong chi phí kỳ vọng theo ngưỡng, quét tỉ lệ chi phí. Vẽ cost curves và decision curves. So xếp hạng theo AUC/F1 với xếp hạng theo chi phí tối thiểu. Thêm: hiệu chuẩn xác suất là điều kiện cần để chọn ngưỡng đúng — đo ECE.",
+    why:"Cùng khuôn mẫu với đề tài #2 (chi phí tồn kho) nhưng ở lĩnh vực khác — nếu bạn thích logic „metric thống kê ≠ metric quyết định”, đây là phiên bản tài chính của nó, và có thể làm song song.",
+    risk:"Rủi ro thấp. Vấn đề là dataset gian lận công khai thường đã ẩn danh nặng (PCA-transformed) nên khó diễn giải. IEEE-CIS giữ được nhiều đặc trưng gốc hơn.",
+    learn:"Lý thuyết quyết định, cost-sensitive learning, hiệu chuẩn. ~2 tuần.",
+    spike:"Ngày 1–2: chạy 3 mô hình trên IEEE-CIS, xếp hạng theo AUC. Ngày 3: xếp lại theo chi phí kỳ vọng ở 3 tỉ lệ chi phí. Nếu thứ hạng đảo, xong."
+  }
+},
+{
+  id:"t26", n:26, dom:"fin", diff:4, risk:"cao", compute:"thap", know:"cao", mobile:false, vn:true,
+  t:"Nowcasting chỉ số vĩ mô Việt Nam từ dữ liệu tần suất cao",
+  q:"CPI và số liệu thương mại công bố trễ hàng tuần đến hàng tháng. <b>Dữ liệu tần suất cao (giá bán lẻ, tìm kiếm, vận tải) có ước lượng được chúng theo thời gian thực không?</b>",
+  data:"⚠️ ĐIỂM NGHẼN. GSO Việt Nam (công bố hạn chế), Google Trends (mở), dữ liệu giá từ sàn TMĐT (cần scrape). Rủi ro cao.",
+  contrib:"Mô hình nowcasting đầu tiên cho vĩ mô VN dùng dữ liệu thay thế, kèm phân tích trung thực về khi nào nó hỏng.",
+  d:{
+    method:"MIDAS regression (dữ liệu tần suất hỗn hợp), dynamic factor model, so với ML thuần. Đánh giá bằng dự báo thời gian thực có tôn trọng lịch công bố thật (real-time vintage) — đây là điểm mà hầu hết bài báo làm sai.",
+    why:"Có góc VN mạnh và ít cạnh tranh. Phần lý thuyết MIDAS/factor model đủ nặng để không bị coi là nhẹ.",
+    risk:"⚠️ RỦI RO CAO NHẤT VỀ DỮ LIỆU. Chuỗi vĩ mô VN ngắn (ít điểm quan sát), công bố không nhất quán, và không có kho dữ liệu real-time vintage. Đây có thể là rào cản không vượt được. Bài học Google Flu Trends: dữ liệu tìm kiếm trôi nhanh và mô hình sụp âm thầm.",
+    learn:"Kinh tế lượng chuỗi thời gian, MIDAS, factor model. ~6 tuần. Gánh nặng ngành CAO.",
+    spike:"Ngày 1–2 CHỈ để trả lời: tôi có bao nhiêu điểm quan sát cho biến mục tiêu? Nếu dưới 100 quan sát tháng, dừng lại."
+  }
+},
+
+/* ═══════════ NHÂN QUẢ & THỐNG KÊ ═══════════ */
+{
+  id:"t27", n:27, dom:"causal", diff:4, risk:"thap", compute:"thap", know:"thap", mobile:false, vn:false,
+  t:"Các bộ ước lượng nhân quả hỏng như thế nào khi giả định bị vi phạm?",
+  q:"DoubleML, causal forest, meta-learners đều hứa ước lượng hiệu ứng nhân quả không thiên lệch — <b>với điều kiện các giả định đúng</b>. Chúng suy giảm ra sao khi giả định sai dần?",
+  data:"Benchmark bán tổng hợp: IHDP, ACIC 2016/2018/2019, Lalonde, Twins. Mở hoàn toàn, và bạn <b>biết ground truth</b> — điều gần như không bao giờ có trong nhân quả thực.",
+  contrib:"Bản đồ độ bền: bộ ước lượng nào chịu được vi phạm nào (unconfoundedness, positivity, đặc tả sai mô hình) và ở mức độ nào — hướng dẫn thực hành mà mảng này đang thiếu.",
+  d:{
+    method:"Sinh dữ liệu tổng hợp có kiểm soát: quét dần mức vi phạm từng giả định. Đo bias, RMSE, coverage của khoảng tin cậy. So sánh DoubleML, causal forest, X/T/S-learner, TMLE, propensity matching. Kết quả trình bày dạng ma trận vi phạm × bộ ước lượng.",
+    why:"⭐ Đây có lẽ là đề tài <b>khả thi nhất</b> trong toàn danh sách với người có nền thống kê tốt: KHÔNG cần dữ liệu ngoài, KHÔNG cần GPU, KHÔNG cần kiến thức ngành. Toàn bộ độ khó nằm ở tư duy thống kê — đúng chỗ bạn mạnh. Và suy luận nhân quả được hội đồng đánh giá rất cao vì ít người làm được.",
+    risk:"Rủi ro là „chỉ mô phỏng”. Chữa bằng cách đóng khung như một benchmark có thể tái sử dụng, và kiểm chứng kết luận trên ít nhất một dataset thực có ground truth từ RCT.",
+    learn:"Potential outcomes, DAG, double machine learning. ~5 tuần — nặng nhưng là kiến thức giá trị nhất bạn có thể lấy từ luận văn này.",
+    spike:"Ngày 1–2: chạy DoubleML và causal forest trên IHDP, so với ATE thật. Ngày 3: thêm một confounder ẩn, đo bias tăng bao nhiêu. Ngày 4: bạn đã có mẫu của toàn bộ luận văn."
+  }
+},
+{
+  id:"t28", n:28, dom:"causal", diff:5, risk:"tb", compute:"thap", know:"cao", mobile:false, vn:false,
+  t:"Target trial emulation: mô phỏng thử nghiệm lâm sàng từ dữ liệu quan sát",
+  q:"Không phải lúc nào cũng làm được RCT. <b>Thiết kế lại dữ liệu quan sát như một thử nghiệm giả định</b> có tái tạo được kết luận của RCT thật không?",
+  data:"MIMIC-IV (cần credential) hoặc các dataset quan sát mở có RCT đối chứng đã công bố.",
+  contrib:"Tái lập một hoặc hai RCT đã biết kết quả bằng target trial emulation, và phân tích chính xác bước nào tạo ra sai lệch nếu có.",
+  d:{
+    method:"Protocol chuẩn: định nghĩa eligibility, treatment strategies, assignment, follow-up, outcome, causal contrast, analysis plan — TRƯỚC khi nhìn dữ liệu. Xử lý immortal time bias, time-varying confounding bằng inverse probability weighting / g-methods. So kết quả với RCT gốc.",
+    why:"Đây là chuẩn vàng hiện đại của suy luận nhân quả trong y học (Hernán & Robins). Làm được một cái tử tế là một tấm bằng nghề. Nhưng nó khó — độ khó 5/5, và tôi không muốn nói giảm.",
+    risk:"⚠️ ĐỘ KHÓ CAO NHẤT DANH SÁCH. Cần vừa hiểu lâm sàng vừa hiểu nhân quả nâng cao. KHÔNG nên chọn nếu không có thầy hướng dẫn mạnh về dịch tễ/nhân quả. Nhưng nếu có, đây là đề tài ấn tượng nhất.",
+    learn:"Hernán & Robins, Causal Inference: What If (miễn phí online). g-methods, IPW, marginal structural models. ~8 tuần.",
+    spike:"Ngày 1–3: đọc chương target trial của Hernán, viết protocol cho một câu hỏi cụ thể TRƯỚC khi chạm dữ liệu. Nếu viết không nổi protocol, đề tài chưa sẵn sàng."
+  }
+},
+{
+  id:"t29", n:29, dom:"causal", diff:3, risk:"thap", compute:"thap", know:"thap", mobile:false, vn:false,
+  t:"Conformal prediction: bảo đảm phủ còn đúng không khi phân phối dịch chuyển?",
+  q:"Conformal prediction cho bảo đảm phủ <b>hữu hạn mẫu, không cần giả định phân phối</b> — nhưng chỉ khi dữ liệu trao đổi được (exchangeable). Thực tế thì không. Bảo đảm đó vỡ nhanh đến đâu?",
+  data:"Bất kỳ: dữ liệu tabular chuẩn, chuỗi thời gian, hoặc ghép với bất kỳ đề tài nào khác trong danh sách này.",
+  contrib:"Đo tốc độ mất phủ theo mức dịch chuyển, so sánh các biến thể thích ứng (adaptive conformal, weighted conformal) và đưa ra hướng dẫn chọn.",
+  d:{
+    method:"Sinh dịch chuyển có kiểm soát (covariate shift, label shift, temporal drift) ở nhiều cường độ. Đo coverage thực tế vs danh nghĩa. So: split conformal, weighted conformal, ACI (adaptive conformal inference), EnbPI cho chuỗi thời gian.",
+    why:"Conformal prediction đang bùng nổ và là một trong ít công cụ ML có bảo đảm toán học thật. Toán đẹp, code nhẹ, không cần dữ liệu đặc biệt. Và nó <b>ghép được với hầu hết đề tài khác</b> trong danh sách — có thể làm chương phụ nếu đề tài chính hụt nội dung.",
+    risk:"Rủi ro thấp nhưng đề tài hơi „phương pháp thuần”, cần một ứng dụng cụ thể để không bị coi là bài tập. Ghép với #21 (điện mặt trời) hoặc #13 (lâm sàng) là lựa chọn tốt.",
+    learn:"Conformal prediction (Angelopoulos & Bates, A Gentle Introduction — miễn phí). ~3 tuần.",
+    spike:"Ngày 1–2: cài split conformal trên một bài hồi quy, xác nhận phủ 90% đúng trên dữ liệu iid. Ngày 3: thêm covariate shift, xem phủ tụt bao nhiêu."
+  }
+},
+
+/* ═══════════ NLP & LLM ═══════════ */
+{
+  id:"t30", n:30, dom:"nlp", diff:3, risk:"thap", compute:"tb", know:"thap", mobile:false, vn:true,
+  t:"Phân tích cảm xúc theo khía cạnh cho đánh giá TMĐT tiếng Việt",
+  q:"Đánh giá tiếng Việt trên Shopee/Tiki đầy teencode, viết tắt, trộn tiếng Anh, thiếu dấu. <b>Mô hình ABSA chuẩn hỏng ở đâu, và sửa được bằng gì?</b>",
+  data:"Đánh giá TMĐT (scrape được), UIT-ViSFD và các bộ ABSA tiếng Việt đã công bố. Rủi ro thấp.",
+  contrib:"Phân tích lỗi có hệ thống theo hiện tượng ngôn ngữ (teencode, thiếu dấu, code-switching) + biện pháp chuẩn hoá, thay vì chỉ báo cáo F1 cao hơn 1 điểm.",
+  d:{
+    method:"PhoBERT / ViT5 làm nền. Đóng góp nằm ở: (1) taxonomy lỗi xây từ phân tích thủ công vài trăm mẫu sai; (2) đo riêng hiệu năng trên từng hiện tượng; (3) thử các biện pháp (chuẩn hoá dấu, từ điển teencode, augmentation) và đo cái nào giúp cái gì.",
+    why:"Mảng này ở VN đông người làm nhưng hầu hết dừng ở „fine-tune PhoBERT, F1 = 0,8x”. Phân tích lỗi có cấu trúc là thứ phân biệt luận văn với bài tập lớn.",
+    risk:"Cạnh tranh cao, dễ bị coi là thiếu mới. BẮT BUỘC phải có góc riêng — phân tích lỗi là góc đó, đừng bỏ.",
+    learn:"NLP tiếng Việt, tokenization tiếng Việt (âm tiết vs từ), PhoBERT. ~3 tuần. Gánh nặng ngành thấp nhất trong danh sách.",
+    spike:"Ngày 1–2: fine-tune PhoBERT trên UIT-ViSFD. Ngày 3: đọc thủ công 100 mẫu sai, phân loại. Nếu thấy pattern rõ, đề tài có nội dung."
+  }
+},
+{
+  id:"t31", n:31, dom:"nlp", diff:3, risk:"thap", compute:"tb", know:"thap", mobile:false, vn:true,
+  t:"Benchmark LLM tiếng Việt có bị nhiễm không, và mô hình bền đến đâu?",
+  q:"Các LLM báo điểm cao trên benchmark tiếng Việt. Nhưng <b>bao nhiêu phần là do benchmark đã lọt vào dữ liệu huấn luyện?</b> Và điểm còn lại bao nhiêu khi diễn đạt lại câu hỏi?",
+  data:"Các benchmark tiếng Việt công khai (ViMMRC, VMLU, các bộ thi tốt nghiệp THPT). API/trọng số mô hình mở.",
+  contrib:"Bộ kiểm tra nhiễm + biến thể perturbation cho tiếng Việt, cộng bảng „điểm thật vs điểm báo cáo”.",
+  d:{
+    method:"Ba hướng phát hiện nhiễm: (1) so sánh hiệu năng trên phần benchmark trước/sau ngày cutoff; (2) kiểm tra khả năng mô hình hoàn thành câu hỏi khi chỉ cho một phần; (3) tạo biến thể ngữ nghĩa tương đương nhưng diễn đạt khác và đo mức tụt. Cộng kiểm tra bền: đổi thứ tự đáp án, thêm nhiễu.",
+    why:"Rất thời sự, dữ liệu sẵn, và có góc VN rõ ràng. Kết quả kiểu „mô hình X tụt 15 điểm khi đảo thứ tự đáp án” là loại phát hiện đáng nhớ.",
+    risk:"Chi phí API nếu dùng mô hình đóng. Giới hạn ở mô hình mở (Qwen, Llama, các mô hình Việt) để kiểm soát chi phí.",
+    learn:"Đánh giá LLM, các dạng contamination. ~2 tuần.",
+    spike:"Ngày 1–2: chạy một mô hình mở trên VMLU, ghi điểm. Ngày 3: đảo thứ tự đáp án, chạy lại. Chênh lệch là kết quả đầu tiên và thường gây sốc."
+  }
+},
+{
+  id:"t32", n:32, dom:"nlp", diff:3, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:true,
+  t:"RAG cho văn bản pháp luật Việt Nam: tầng truy hồi mới là chỗ hỏng",
+  q:"Hệ thống RAG pháp luật sai chủ yếu vì <b>truy hồi sai văn bản</b>, không phải vì LLM sinh sai. Nhưng gần như mọi đánh giá chỉ đo đầu ra cuối. Tách bạch ra thì thấy gì?",
+  data:"Văn bản quy phạm pháp luật VN (thuvienphapluat, cổng thông tin chính phủ — cần scrape và làm sạch). Rủi ro trung bình vì công đoạn thu thập nặng.",
+  contrib:"Bộ đánh giá tách tầng (retrieval vs generation) cho pháp luật tiếng Việt + phân tích các đặc thù (tham chiếu chéo, hiệu lực theo thời gian, văn bản sửa đổi).",
+  d:{
+    method:"Xây tập câu hỏi có gold passage. Đo riêng: recall@k của retrieval, faithfulness của generation. So các phương pháp truy hồi (BM25, dense, hybrid, reranking). Đặc thù pháp luật cần xử lý riêng: một điều luật có thể bị sửa bởi văn bản sau — mô hình có biết chọn phiên bản đang hiệu lực không?",
+    why:"Vấn đề „hiệu lực theo thời gian” là đặc thù pháp luật mà RAG chuẩn không xử lý, và nó là chỗ hệ thống sai nguy hiểm nhất. Đó là góc riêng đủ mạnh cho một luận văn.",
+    risk:"Thu thập và làm sạch văn bản pháp luật có thể ngốn 1/3 thời gian. Và cần cẩn thận: đừng để luận văn thành sản phẩm tư vấn pháp lý.",
+    learn:"Kiến trúc RAG, đánh giá truy hồi, cấu trúc văn bản quy phạm VN. ~4 tuần.",
+    spike:"Ngày 1–2: thu thập 500 điều luật, dựng index BM25. Ngày 3: viết 30 câu hỏi có gold passage, đo recall@5. Con số đó là baseline."
+  }
+},
+
+/* ═══════════ ML SYSTEMS & MOBILE ═══════════ */
+{
+  id:"t33", n:33, dom:"sys", diff:4, risk:"thap", compute:"tb", know:"thap", mobile:true, vn:false,
+  t:"Nén và chưng cất mô hình chuỗi thời gian để chạy trên thiết bị",
+  q:"Một mô hình dự báo mạnh có chạy được trên điện thoại với ngân sách năng lượng thực tế không? <b>Mất bao nhiêu độ chính xác cho mỗi đơn vị tiết kiệm?</b>",
+  data:"M5, PTB-XL, hoặc bất kỳ dataset nào ở trên. Phần cứng: iPhone của bạn. Rủi ro dữ liệu bằng 0.",
+  contrib:"Mặt Pareto ba chiều (độ chính xác × độ trễ × năng lượng) đo trên phần cứng thật — thứ mà gần như không học viên DS nào làm được.",
+  d:{
+    method:"Ứng viên: Chronos-Bolt (đã distilled), TimesFM nhỏ, N-BEATS, DLinear, TCN. Kỹ thuật: quantization (PTQ/QAT, int8/int4), structured pruning, knowledge distillation từ mô hình lớn. Đo trên Core ML / Apple Neural Engine: độ trễ, <b>năng lượng thực qua Instruments</b>, và thermal throttling khi chạy liên tục.",
+    why:"⭐ Đây là cầu nối đẹp nhất giữa hai thế giới của bạn, và nó <b>bao gồm</b> công sức dự báo bạn đã bỏ ra. Bảy năm iOS là lợi thế tuyệt đối ở đây — không ai trong lớp copy được.",
+    risk:"Hội đồng có thể cho là „thiên về kỹ thuật, ít khoa học”. Cách chữa BẮT BUỘC: đóng khung bằng phân tích Pareto đa mục tiêu có kiểm định thống kê, không phải bảng benchmark thuần.",
+    learn:"Quantization, pruning, distillation, Core ML tooling. ~3 tuần — phần Core ML bạn đã biết.",
+    spike:"Ngày 1–2: convert một mô hình nhỏ sang Core ML, chạy trên máy thật, đo latency. Ngày 3: quantize int8, đo lại. Nếu đo được năng lượng bằng Instruments trong 3 ngày, đề tài khả thi."
+  }
+},
+{
+  id:"t34", n:34, dom:"sys", diff:5, risk:"thap", compute:"tb", know:"tb", mobile:true, vn:false,
+  t:"Dự đoán độ trễ và năng lượng cho Apple Neural Engine từ kiến trúc mô hình",
+  q:"Apple Neural Engine gần như không có tài liệu công khai. <b>Có xây được mô hình dự đoán độ trễ/năng lượng từ đồ thị tính toán, mà không cần chạy thử?</b>",
+  data:"Bạn tự sinh: hàng nghìn kiến trúc mẫu, đo trên thiết bị thật. Đây là dataset gốc của bạn — và đó chính là đóng góp.",
+  contrib:"Một cost model thực nghiệm cho ANE — hạ tầng cần thiết cho hardware-aware NAS trên hệ sinh thái Apple, hiện chưa tồn tại công khai.",
+  d:{
+    method:"Sinh không gian kiến trúc (conv/attention/linear với các cấu hình khác nhau), benchmark từng cái trên thiết bị, xây bộ dự đoán (hồi quy trên đặc trưng layer, rồi GNN trên đồ thị tính toán). Đánh giá bằng sai số ngoài mẫu trên kiến trúc chưa thấy, và phân tích layer nào gây sai lệch nhiều nhất.",
+    why:"Các cost model hiện có (như nn-Meter) nhắm CPU/GPU di động; ANE bị bỏ trống vì cần vừa kỹ năng iOS vừa kỹ năng ML. Đó chính xác là giao của hai thứ bạn có. <b>Đây là đề tài duy nhất trong danh sách mà bạn có lợi thế gần như độc quyền.</b>",
+    risk:"⚠️ Độ khó 5/5 và rủi ro cao nhất về phạm vi: dễ phình to. Phải khoá phạm vi từ đầu (ví dụ: chỉ CNN, chỉ một dòng chip). Và cần thiết bị thật — nếu chỉ có simulator thì đề tài không tồn tại.",
+    learn:"Core ML compilation, ANE behavior, GNN cho biểu diễn đồ thị. ~5 tuần.",
+    spike:"Ngày 1–3: đo latency của 50 kiến trúc conv đơn giản trên thiết bị. Nếu quan hệ latency–FLOPs KHÔNG tuyến tính (rất có thể), bạn vừa chứng minh cost model là cần thiết."
+  }
+},
+{
+  id:"t35", n:35, dom:"sys", diff:4, risk:"thap", compute:"tb", know:"tb", mobile:true, vn:false,
+  t:"Federated learning trên thiết bị: đánh đổi riêng tư — năng lượng — độ chính xác",
+  q:"FL hứa học từ dữ liệu người dùng mà không thu thập nó. Nhưng <b>ngân sách riêng tư (ε) đổi lấy bao nhiêu độ chính xác, và tốn bao nhiêu pin của người dùng?</b>",
+  data:"Benchmark FL chuẩn: LEAF, FEMNIST, Shakespeare, Stack Overflow. Mở. Đo năng lượng trên thiết bị thật của bạn.",
+  contrib:"Đo đánh đổi ba chiều trên phần cứng thật — hầu hết bài FL mô phỏng client trên GPU server và bỏ qua hoàn toàn chiều năng lượng.",
+  d:{
+    method:"FedAvg và biến thể, cộng differential privacy với các mức ε. Mô phỏng non-IID ở nhiều mức. Đo: độ chính xác, số vòng đến hội tụ, chi phí truyền thông, và năng lượng thật khi chạy vòng huấn luyện cục bộ trên iPhone.",
+    why:"Chiều năng lượng là chỗ trống thật vì nó đòi hỏi kỹ năng mobile. Và câu hỏi „FL có đáng không” là câu hỏi công nghiệp thật đang chờ số liệu.",
+    risk:"FL có rất nhiều siêu tham số; dễ lạc. Khoá chặt: một dataset, một kiến trúc, quét CHỈ ε và mức non-IID.",
+    learn:"Federated learning, differential privacy (ε-δ). ~4 tuần.",
+    spike:"Ngày 1–2: chạy FedAvg mô phỏng trên FEMNIST. Ngày 3: chạy một vòng huấn luyện cục bộ trên iPhone, đo năng lượng. Nếu đo được, đề tài có trục độc đáo."
+  }
+},
+
+/* ═══════════ RECSYS · GIÁO DỤC · AN NINH MẠNG ═══════════ */
+{
+  id:"t36", n:36, dom:"misc", diff:4, risk:"thap", compute:"tb", know:"thap", mobile:false, vn:false,
+  t:"Khoảng cách offline–online trong hệ khuyến nghị: vì sao đánh giá ngoại tuyến nói dối?",
+  q:"Mô hình thắng trên đánh giá offline thường thua khi triển khai. <b>Đây là một vấn đề mở nổi tiếng.</b> Nguyên nhân nào đóng góp bao nhiêu — thiên lệch phơi nhiễm, vòng phản hồi, hay metric sai?",
+  data:"Bốn dataset có <b>tập test ngẫu nhiên hoá</b> — chìa khoá để đo thiên lệch: Yahoo!R3 (~311K rating thiên lệch + 54K rating MCAR), Coat (<b>rất nhỏ</b>: 290 người × 300 món; 6.960 rating tự chọn để huấn luyện + 4.640 rating ngẫu nhiên để test), và quan trọng hơn <b>KuaiRec</b> — chú ý phân biệt hai ma trận: ma trận <em>nhỏ</em> gần như quan sát đầy đủ (1.411 người × 3.327 video, mật độ ~99,6%, tức ~4,7 triệu tương tác) và ma trận <em>lớn</em> thưa (7.176 người × 10.728 video, ~1,15 triệu tương tác). Phần „fully-observed” nằm ở ma trận nhỏ — trích nhầm là bị hỏi ngay. Cộng <b>KuaiRand</b>. Mở hoàn toàn.",
+  contrib:"Phân rã định lượng khoảng cách offline–online bằng dữ liệu có phần ngẫu nhiên hoá — tách được thiên lệch phơi nhiễm khỏi lỗi mô hình.",
+  d:{
+    method:"Dùng Yahoo R3/Coat: huấn luyện trên phần thiên lệch, đánh giá trên phần ngẫu nhiên (không thiên lệch) — đây là thiết lập hiếm cho phép đo trực tiếp. So các phương pháp gỡ thiên lệch: IPS, doubly robust, causal embedding. Mở rộng: mô phỏng vòng phản hồi qua nhiều chu kỳ.",
+    why:"Có tập test không thiên lệch là điều gần như không bao giờ có trong RecSys — vài dataset này là ngoại lệ, và chúng biến một câu hỏi bất khả thi thành khả thi cho một người. Việc có bốn dataset ở bốn quy mô khác nhau còn cho phép kiểm tra kết luận có ổn định theo quy mô không.",
+    risk:"Coat quá nhỏ để kết luận chắc (tổng cộng ~11.600 rating, trong đó chỉ 4.640 là phần không thiên lệch) — đừng dựa vào nó làm bằng chứng chính, chỉ dùng để kiểm tra chéo. Neo kết luận vào Yahoo!R3 và KuaiRec, cộng bootstrap.",
+    learn:"RecSys cơ bản, IPS/counterfactual evaluation. ~4 tuần. Chồng lấn tốt với #27.",
+    spike:"Ngày 1–2: tải Coat (nhẹ, chạy nhanh), huấn luyện MF trên phần thiên lệch, đánh giá trên cả hai phần. Chênh lệch đó chính là đề tài — rồi lặp lại trên KuaiRec để xem nó có bền không."
+  }
+},
+{
+  id:"t37", n:37, dom:"misc", diff:3, risk:"thap", compute:"tb", know:"thap", mobile:false, vn:false,
+  t:"Knowledge tracing: mô hình sâu có thật sự thắng hồi quy logistic không?",
+  q:"Y văn <b>chưa ngã ngũ</b>. Gervet 2020 (9 dataset thật) kết luận: <b>DKT có AUC cao nhất ở 4/9 dataset</b> — dẫn ở dữ liệu lớn hoặc khi thông tin thời gian quan trọng — còn <b>logistic regression với đặc trưng tốt dẫn ở dataset cỡ vừa hoặc có rất nhiều tương tác mỗi học sinh</b>. Mandalapu 2021 („Do we need to go Deep?”, AAAI) đặt lại câu hỏi ở quy mô hàng triệu tương tác và <em>không</em> tìm được bằng chứng rõ rằng mô hình sâu vượt mô hình truyền thống ở quy mô đó. Vậy quy mô dữ liệu thực sự quyết định điều gì?",
+  data:"EdNet, RiiiD (Kaggle, ~100 triệu tương tác), ASSISTments, Junyi. Mở hoàn toàn, quy mô lớn.",
+  contrib:"So sánh công bằng có kiểm soát đặc trưng và có chia tập theo học sinh (không phải theo tương tác) — cộng phân tích khi nào mô hình sâu thật sự có lợi.",
+  d:{
+    method:"Baselines mạnh: BKT, PFA, IRT, logistic với đặc trưng đếm (số lần thử, số lần đúng gần đây). So với DKT, SAKT, AKT. Điểm then chốt: chia tập theo học sinh và theo thời gian — chia ngẫu nhiên theo tương tác là rò rỉ và là lỗi phổ biến trong mảng này.",
+    why:"Đây không phải khuôn mẫu „hoàng đế có mặc quần áo” thuần — nó mạnh hơn: <b>vai trò của quy mô dữ liệu vẫn là câu hỏi mở</b>, các nhóm nghiên cứu đưa ra kết luận không khớp nhau và không ai kiểm soát cùng lúc split, đặc trưng và ngân sách tuning. Một nghiên cứu có kiểm soát (cùng split, cùng tuning budget, quét quy mô dữ liệu) giải được tranh chấp đó là đóng góp rõ ràng, và tranh chấp thì luôn thú vị hơn xác nhận.",
+    risk:"EdNet/RiiiD rất lớn (hàng chục GB) — cần xử lý cẩn thận nhưng đó là sân của kỹ sư. Không có rủi ro khoa học đáng kể.",
+    learn:"Item response theory, knowledge tracing. ~2 tuần. Gánh nặng ngành thấp.",
+    spike:"Ngày 1–2: tải RiiiD, dựng logistic với 5 đặc trưng đếm, đo AUC. Con số đó là mốc mà mọi mô hình sâu phải vượt — và thường nó cao hơn bạn tưởng."
+  }
+},
+{
+  id:"t38", n:38, dom:"misc", diff:4, risk:"thap", compute:"tb", know:"tb", mobile:false, vn:false,
+  t:"Phát hiện malware dưới trôi khái niệm: thiên lệch thời gian làm hỏng mọi con số",
+  q:"Bộ phát hiện malware báo độ chính xác 99%. Nhưng nếu <b>train và test trộn lẫn theo thời gian</b>, mô hình đang nhìn tương lai. Hiệu năng thật khi chỉ được nhìn quá khứ là bao nhiêu?",
+  data:"EMBER (PE malware, mở, có timestamp), Drebin (Android), AndroZoo. Mở hoặc đăng ký đơn giản.",
+  contrib:"Đo suy giảm theo thời gian ở nhiều khoảng cách train–test + so sánh các chiến lược thích ứng (retrain định kỳ, active learning, incremental) theo chi phí gán nhãn.",
+  d:{
+    method:"Ràng buộc thời gian nghiêm ngặt: train trên tháng ≤ t, test trên t+1…t+12. Vẽ đường suy giảm. So các chiến lược thích ứng, và đo chi phí gán nhãn cần thiết để giữ hiệu năng — chi phí này là ràng buộc thật của mọi hãng bảo mật.",
+    why:"Vấn đề thiên lệch thời gian trong đánh giá malware đã được chỉ ra (dòng nghiên cứu Tesseract) nhưng phần lớn bài báo vẫn tiếp tục mắc. Nối được với đề tài #4 (chính sách retraining) — có thể làm chung một khung.",
+    risk:"Cần cẩn thận về đạo đức và pháp lý: chỉ dùng dataset đặc trưng đã trích xuất (EMBER cung cấp đặc trưng, không phải binary), không thu thập hay phát tán mã độc.",
+    learn:"Đặc trưng PE/APK, khái niệm họ malware. ~3 tuần.",
+    spike:"Ngày 1–2: tải EMBER, train trên 2017, test trên 2018 theo từng quý. Đường suy giảm vẽ được trong 2 ngày là toàn bộ động lực của luận văn."
+  }
+},
+
+/* ═══════════ ỨNG DỤNG CAO · RA SẢN PHẨM ═══════════ */
+{
+  id:"a01", n:39, dom:"apply", diff:4, risk:"thap", compute:"thap", know:"thap", mobile:true, vn:true,
+  t:"Sổ sách tự động cho hộ kinh doanh: cần bao nhiêu nhãn để máy phân loại đúng giao dịch của một cửa hàng?",
+  q:"Sao kê ngân hàng đã ở dạng số, nhưng hộ kinh doanh vẫn ghi sổ tay. <b>Cần bao nhiêu nhãn của chính chủ hộ để đạt 95% chính xác trên giao dịch của họ</b> — và một mô hình nền chung rút ngắn được con số đó bao nhiêu lần?",
+  data:"Sao kê CSV/PDF của các ngân hàng VN (tự thu thập từ người quen + của chính bạn, ẩn danh hoá), cộng dữ liệu tổng hợp sinh từ phân phối thật. Bổ sung: các bộ dữ liệu giao dịch cá nhân công khai để đối chiếu.",
+  contrib:"Đường cong hiệu quả nhãn cho phân loại giao dịch tiếng Việt + giao thức cá nhân hoá few-shot theo từng hộ, kèm ngưỡng tin cậy quyết định „tự động hay hỏi người”.",
+  d:{
+    method:"Chuỗi bước: chuẩn hoá mô tả giao dịch tiếng Việt (viết tắt, không dấu, mã máy POS, tên đối tác lẫn số) → trích payee → phân loại đa lớp phân cấp. So bốn nền: từ điển luật tay, TF-IDF + linear, PhoBERT fine-tune, LLM nhỏ few-shot. Cá nhân hoá: mô hình nền + prototype/adapter theo hộ; active learning chọn giao dịch đáng hỏi nhất. Đo: độ chính xác theo ngân sách nhãn, tỉ lệ tự động hoá ở ngưỡng tin cậy cố định, và chi phí nhãn quy ra phút của chủ hộ.",
+    why:"Đóng góp không phải „một bộ phân loại” — mà là <b>chi phí nhãn để đạt một mức tự động hoá</b>, đúng con số quyết định một sản phẩm kế toán có bán được không. Về mặt học thuật đây là bài long-tail + covariate shift theo từng người dùng, có cấu trúc rõ để đo. Về tiếng Việt gần như chưa ai công bố đường cong này.",
+    risk:"Dữ liệu cá nhân: phải ẩn danh hoá và mô tả quy trình xử lý trong luận văn. Nếu không xin được đủ sao kê thật, dùng dữ liệu của chính bạn làm tập lõi + tổng hợp phần còn lại, và hạ mức phát biểu kết luận cho đúng.",
+    learn:"Phân loại văn bản ngắn tiếng Việt, active learning, học cá nhân hoá. ~3 tuần. Gánh nặng ngành gần bằng 0.",
+    spike:"Ngày 1–2: lấy 1.000 dòng sao kê thật, gán nhãn 100 dòng, chạy TF-IDF + logistic. Ngày 3: vẽ độ chính xác theo 20 / 50 / 100 nhãn. Đường cong đó chính là luận văn."
+  }
+},
+{
+  id:"a02", n:40, dom:"apply", diff:4, risk:"tb", compute:"thap", know:"tb", mobile:false, vn:true,
+  t:"Giảm hàng huỷ cho bán lẻ hàng tươi: đặt hàng theo hạn sử dụng, đo bằng kilogram bị đổ đi",
+  q:"Hàng tươi hỏng sau 1–3 ngày, nên mỗi đơn vị sai số dự báo biến thẳng thành rác. <b>Một chính sách đặt hàng nhận biết hạn dùng cắt được bao nhiêu % lượng huỷ ở cùng mức phục vụ?</b>",
+  data:"M5 nhóm FOODS và Favorita (có nhóm hàng dễ hỏng) — mở hoàn toàn. Nếu xin được dữ liệu một chuỗi tạp hoá / bakery VN thì thành case study; không xin được vẫn làm trọn vẹn trên dữ liệu mở.",
+  contrib:"Chính sách đặt hàng cho hàng có hạn dùng dựa trên dự báo phân phối, đánh giá bằng bộ ba <b>chi phí × mức phục vụ × khối lượng huỷ</b> thay vì một con số RMSE.",
+  d:{
+    method:"Dự báo phân phối nhu cầu (quantile / Negative Binomial cho chuỗi rời rạc) → chính sách đặt hàng cho hàng suy giảm: newsvendor nhiều kỳ có tuổi tồn, so với (s,S) mù hạn dùng và với quy tắc tay „đặt bằng tuần trước”. Mô phỏng FIFO/LIFO khi khách chọn hàng. Xuất mặt Pareto giữa mức phục vụ và lượng huỷ.",
+    why:"Lý thuyết tồn kho hàng dễ hỏng (perishable inventory) có nền toán đẹp nhưng ít được ghép với dự báo học máy hiện đại và gần như không được đo trên dữ liệu bán lẻ công khai. Cắt rác thực phẩm còn là câu chuyện môi trường — hội đồng và doanh nghiệp thích hai lý do khác nhau của cùng một kết quả.",
+    risk:"Không có dữ liệu công khai ghi <em>lượng huỷ thật</em>, nên phần huỷ phải mô phỏng từ giả định hạn dùng. Hãy nêu giả định rõ và quét độ nhạy theo hạn dùng 1/2/3 ngày, đừng che nó đi.",
+    learn:"Perishable inventory, mô phỏng tồn kho, dự báo phân vị. ~3 tuần. Chồng lấn mạnh với #2 và #3 — có thể dùng lại toàn bộ hạ tầng.",
+    spike:"Ngày 1–2: dựng simulator một SKU sữa với hạn dùng 3 ngày. Ngày 3: so quy tắc tay với chính sách theo phân vị. Nếu lượng huỷ giảm mà mức phục vụ giữ nguyên, đề tài xong phần chứng minh khái niệm."
+  }
+},
+{
+  id:"a03", n:41, dom:"apply", diff:4, risk:"tb", compute:"thap", know:"tb", mobile:false, vn:true,
+  t:"Cho vay người chưa có lịch sử tín dụng: dữ liệu thay thế đáng giá bao nhiêu điểm Gini, và có công bằng không?",
+  q:"Một phần lớn người trưởng thành không có hồ sơ tín dụng chuẩn. <b>Dữ liệu thay thế (dòng tiền, hoá đơn tiện ích, hành vi ứng dụng) nâng Gini bao nhiêu trên chính nhóm thin-file</b> — và nó có thay thiên lệch cũ bằng một thiên lệch mới không?",
+  data:"Home Credit Default Risk (có nhóm hồ sơ thiếu dữ liệu bureau) và Give Me Some Credit — Kaggle, giấy phép rõ. Dòng tiền: mô phỏng từ dữ liệu giao dịch (nối được với #39).",
+  contrib:"Định lượng giá trị gia tăng của <em>từng nhóm</em> dữ liệu thay thế, đo riêng trên nhóm thin-file, cộng kiểm toán công bằng và ổn định theo thời gian của chính phần gia tăng đó.",
+  d:{
+    method:"Chia tập theo thời gian. Ba lớp mô hình: chỉ bureau, chỉ dữ liệu thay thế, kết hợp. Đo Gini/AUC, hiệu chuẩn, và giá trị kinh tế qua đường cong lợi nhuận theo ngưỡng chấp nhận (approval rate × loss rate). Kiểm toán: hiệu chuẩn theo phân nhóm, kiểm tra biến proxy, kiểm tra ổn định của phần gia tăng khi dịch chuyển vĩ mô.",
+    why:"Ngành fintech tuyên bố rất nhiều về dữ liệu thay thế nhưng công bố rất ít con số tách bạch cho nhóm thin-file — mà đó mới là nhóm cần. Trình bày theo đường cong lợi nhuận – tỉ lệ phê duyệt khiến người ngồi dự bảo vệ tính được ngay giá trị bằng tiền.",
+    risk:"Dữ liệu thay thế thật gần như không thể xin được ở mức luận văn; phần này phải mô phỏng. Hãy khung lại thành „giá trị tiềm năng dưới các giả định nêu rõ”, đừng phát biểu quá.",
+    learn:"Credit scoring, Gini/KS, các định nghĩa fairness. ~3 tuần. Chồng lấn với #24.",
+    spike:"Ngày 1: tách nhóm thin-file trong Home Credit, fit mô hình chỉ bureau, ghi Gini. Ngày 2–3: thêm nhóm biến hành vi, đo phần gia tăng. Nếu gia tăng nhỏ, đó cũng là một kết quả đáng công bố."
+  }
+},
+{
+  id:"a04", n:42, dom:"apply", diff:4, risk:"thap", compute:"thap", know:"tb", mobile:false, vn:true,
+  t:"Chặn lừa đảo chuyển khoản khi đội điều tra chỉ xử lý được N vụ mỗi ngày",
+  q:"Mọi bài phát hiện gian lận tối ưu AUC. Nhưng ngân hàng chỉ điều tra được vài trăm cảnh báo mỗi ngày. <b>Bài toán đúng là xếp hàng đợi có ngân sách, không phải phân loại.</b> Xếp hàng đúng cứu thêm bao nhiêu tiền so với ngưỡng tĩnh?",
+  data:"IEEE-CIS Fraud Detection, Sparkov / BankSim, PaySim — mở hoàn toàn, có số tiền giao dịch nên tính được „tiền cứu được”. Mô phỏng hàng đợi điều tra tự dựng.",
+  contrib:"Khung đánh giá <b>tiền cứu được trên mỗi giờ điều tra</b> + chính sách xếp hàng nhận biết ngân sách và độ trễ, so với ngưỡng tĩnh và với xếp theo xác suất — cách làm phổ biến và không tối ưu.",
+  d:{
+    method:"Tầng mô hình: LightGBM có hiệu chuẩn xác suất. Tầng quyết định: sắp thứ tự theo <em>xác suất × số tiền</em> dưới ràng buộc công suất mỗi giờ, so với ngưỡng cố định, với top-k, và với chính sách có tính đến thời gian chờ (tiền đã rời khỏi hệ thống thì không cứu được). Đo: tiền cứu được, tỉ lệ điều tra vô ích, độ trễ trung bình. Quét công suất đội điều tra.",
+    why:"Đây là khuôn mẫu #25 (ngưỡng theo chi phí) đẩy lên một bậc: thêm ràng buộc nguồn lực và chiều thời gian, thành bài phân bổ nguồn lực có ràng buộc — đủ nặng về toán, và là đúng bài toán mà một phòng chống gian lận thật đang giải bằng cảm tính.",
+    risk:"Dataset công khai không có mốc thời gian „tiền rời hệ thống”, nên phần độ trễ phải mô phỏng theo giả định nêu rõ. Rủi ro dữ liệu bằng 0, rủi ro là bị coi là mô phỏng — chữa bằng cách quét độ nhạy đủ rộng.",
+    learn:"Cost-sensitive learning, lý thuyết hàng đợi cơ bản, hiệu chuẩn. ~3 tuần.",
+    spike:"Ngày 1–2: chạy LightGBM trên IEEE-CIS, hiệu chuẩn xác suất. Ngày 3: mô phỏng công suất 200 cảnh báo/ngày, so ngưỡng tĩnh với xếp theo xác suất × số tiền. Chênh lệch tiền cứu được là kết quả chính."
+  }
+},
+{
+  id:"a05", n:43, dom:"apply", diff:4, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:true,
+  t:"Trợ lý tra cứu quy định biết nói „tôi không chắc”: RAG có kiểm soát rủi ro trả lời sai",
+  q:"Doanh nghiệp không dám dùng trợ lý nội bộ vì <b>một câu trả lời sai có thể tốn tiền thật</b>. Nếu thêm một tầng từ chối trả lời có hiệu chuẩn, <b>đánh đổi độ phủ ↔ độ chính xác nằm ở đâu, và có bảo đảm được không?</b>",
+  data:"Văn bản quy phạm pháp luật VN (mở, cần thu thập và làm sạch) + một bộ tài liệu nội bộ mô phỏng (quy chế, chính sách nhân sự) tự soạn. Bộ câu hỏi có gold passage tự xây — công sức thật nhưng kiểm soát được.",
+  contrib:"Bộ đo <b>độ chính xác ở mức độ phủ cho trước</b> (accuracy-at-coverage) cho RAG tiếng Việt + tầng từ chối dùng conformal prediction trên điểm truy hồi, có bảo đảm sai số hữu hạn mẫu.",
+  d:{
+    method:"Pipeline BM25 / dense / hybrid + reranking, sinh câu trả lời kèm trích dẫn bắt buộc. Tầng từ chối: hiệu chuẩn một điểm tin cậy hợp từ điểm truy hồi, độ đồng thuận giữa nhiều lần sinh, và kiểm tra trích dẫn có thật; áp conformal để chọn ngưỡng đạt mức sai số mục tiêu. Đo: risk–coverage curve, tỉ lệ trích dẫn sai, và tỉ lệ câu hỏi trả về „không đủ căn cứ” đúng lúc.",
+    why:"Đây là chỗ ghép ba thứ đã có nền vững — RAG, conformal prediction, selective prediction — thành cái mà thị trường thiếu: một trợ lý <em>dám</em> im lặng. Đóng góp đo được, và bảo đảm toán học của conformal khiến nó không phải chỉ là kỹ thuật.",
+    risk:"Xây bộ câu hỏi có gold passage ngốn thời gian; khoá phạm vi ở một lĩnh vực hẹp (ví dụ quy định về lao động) thay vì toàn bộ pháp luật. Và nêu rõ trong luận văn: đây không phải sản phẩm tư vấn pháp lý.",
+    learn:"RAG, đánh giá truy hồi, conformal / selective prediction. ~4 tuần. Chồng lấn với #29 và #32.",
+    spike:"Ngày 1–2: thu thập 500 điều, dựng BM25, viết 30 câu hỏi có gold passage. Ngày 3: vẽ risk–coverage bằng một điểm tin cậy thô. Nếu đường cong có hình dạng dùng được, đề tài chạy."
+  }
+},
+{
+  id:"a06", n:44, dom:"apply", diff:3, risk:"tb", compute:"tb", know:"thap", mobile:false, vn:true,
+  t:"Khi nào nên chuyển khách cho người thật? Chính sách bàn giao cho trợ lý chăm sóc khách hàng",
+  q:"Bot rẻ; người đắt nhưng đúng. <b>Chính sách bàn giao tối ưu chi phí nằm ở đâu</b>, khi mỗi lần bot trả lời sai có thể mất một khách hàng, và tổng đài chỉ có bấy nhiêu người?",
+  data:"MultiWOZ, các bộ hội thoại CSKH mở; hội thoại TMĐT tiếng Việt thu thập hoặc sinh có kiểm soát. Rủi ro trung bình vì phần tiếng Việt phải tự dựng.",
+  contrib:"Áp dụng learning-to-defer có ràng buộc năng lực tổng đài cho hội thoại tiếng Việt, đánh giá bằng <b>chi phí xử lý mỗi ticket</b> thay vì độ chính xác — kèm phân tích ai chịu thiệt khi chính sách sai.",
+  d:{
+    method:"Mô hình trả lời + bộ dự báo „câu trả lời này sẽ sai” (learning to defer). Ràng buộc: số người trực tối đa mỗi giờ. So bốn chính sách: luôn bot, luôn người, ngưỡng tin cậy tĩnh, và chính sách học được có ràng buộc năng lực. Đo: chi phí kỳ vọng mỗi hội thoại, tỉ lệ leo thang muộn, thời gian chờ. Thêm phân tích theo phân nhóm — chính sách rẻ nhất có bỏ rơi nhóm khách khó nói nhất không?",
+    why:"Learning-to-defer là mảng có lý thuyết đàng hoàng nhưng gần như luôn được đánh giá không có ràng buộc năng lực — điều làm mọi kết quả mất giá trị thực tế. Thêm ràng buộc vào là đóng góp nhỏ nhưng thật, và là con số mà bất kỳ giám đốc vận hành cũng hiểu.",
+    risk:"Dữ liệu hội thoại tiếng Việt thật khó xin. Cho phép làm chính trên dữ liệu mở và dùng phần tiếng Việt như một nghiên cứu chuyển giao ngôn ngữ.",
+    learn:"Learning to defer, đánh giá hội thoại, cost-sensitive decision. ~3 tuần.",
+    spike:"Ngày 1–2: chạy một mô hình trả lời trên MultiWOZ, ghi nhãn đúng/sai. Ngày 3: fit bộ dự báo lỗi, vẽ chi phí theo tỉ lệ bàn giao. Điểm thấp nhất của đường cong đó là luận điểm."
+  }
+},
+{
+  id:"a07", n:45, dom:"apply", diff:3, risk:"tb", compute:"thap", know:"thap", mobile:false, vn:true,
+  t:"Định giá tài sản cũ có khoảng tin cậy: xe và nhà trên chợ trực tuyến",
+  q:"Tin rao đầy giá ảo, tin trùng và tin môi giới. <b>Có ước lượng được giá kèm khoảng tin cậy có bảo đảm phủ từ dữ liệu công khai không</b> — và phần lọc tin rác đóng góp bao nhiêu vào độ chính xác cuối?",
+  data:"Tin rao công khai (chotot, bonbanh, batdongsan — phải tôn trọng robots.txt và điều khoản sử dụng), cộng dataset giá xe / nhà mở quốc tế để đối chiếu phương pháp. Rủi ro trung bình: phần thu thập.",
+  contrib:"Pipeline khử trùng lặp + phát hiện giá bất thường + <b>conformal regression</b> cho định giá, đo phủ theo từng phân khúc chứ không chỉ trung bình.",
+  d:{
+    method:"Khử trùng lặp gần đúng trên văn bản + ảnh. Gán nhãn yếu cho tin đáng nghi (giá lệch mạnh so với phân khúc, mô tả mâu thuẫn). Mô hình: gradient boosting trên đặc trưng có cấu trúc + embedding văn bản. Bất định: quantile regression và conformal, đo coverage <em>có điều kiện</em> theo phân khúc giá, khu vực, tuổi tài sản. Ablation: bỏ tầng lọc rác ra để định lượng nó đáng bao nhiêu.",
+    why:"Ngân hàng thẩm định tài sản đảm bảo và sàn giao dịch đều cần một con số kèm khoảng, không phải một con số trần trụi. Và coverage có điều kiện là chỗ mọi mô hình định giá thương mại nói tránh — phủ đúng ở phân khúc phổ thông, hỏng ở phân khúc hiếm, mà phân khúc hiếm mới là chỗ mất tiền.",
+    risk:"Pháp lý và kỹ thuật của việc thu thập dữ liệu: nêu rõ nguồn, tần suất, và giới hạn trong luận văn; nếu bị chặn thì chuyển sang dữ liệu quốc tế và giữ nguyên phương pháp.",
+    learn:"Conformal regression, khử trùng lặp, đặc trưng bất động sản / xe. ~3 tuần. Chồng lấn với #29.",
+    spike:"Ngày 1–2: thu 5.000 tin một phân khúc, fit gradient boosting, đo MAPE. Ngày 3: thêm conformal, kiểm tra phủ 90% có đúng ở từng phân khúc. Chênh lệch phủ giữa các phân khúc là kết quả đầu tiên."
+  }
+},
+{
+  id:"a08", n:46, dom:"apply", diff:4, risk:"thap", compute:"tb", know:"thap", mobile:false, vn:true,
+  t:"Cắt hoá đơn LLM: định tuyến truy vấn giữa mô hình rẻ và mô hình đắt, có bảo đảm chất lượng",
+  q:"Mọi sản phẩm AI đều gọi thẳng mô hình mạnh nhất cho mọi câu hỏi. <b>Một router học được có giữ nguyên chất lượng khi cắt 60–80% chi phí không</b> — và nó hỏng thế nào khi phân phối truy vấn của người dùng đổi?",
+  data:"Benchmark mở (MMLU, MT-Bench, VMLU tiếng Việt) làm tập chuẩn; log truy vấn tổng hợp có phân phối lệch để mô phỏng thực tế. Mô hình mở chạy local (Qwen, Llama, các mô hình Việt) + một API đắt làm mốc trên. Rủi ro dữ liệu gần bằng 0.",
+  contrib:"Router có <b>bảo đảm chất lượng</b> (cascade + từ chối + hiệu chuẩn) thay vì router chỉ tối đa hoá điểm trung bình, cộng phân tích độ bền khi phân phối truy vấn dịch chuyển — chỗ mà mọi router hiện có im lặng.",
+  d:{
+    method:"Ba kiến trúc: phân loại độ khó trước khi gọi, cascade (gọi mô hình rẻ, chỉ leo thang khi tin cậy thấp), và định tuyến theo dự báo chất lượng từng mô hình. Ràng buộc: chi phí tối thiểu thoả „chất lượng không tụt quá δ so với mô hình đắt nhất”. Đo: mặt Pareto chi phí × chất lượng, độ trễ, và mức tụt khi thay phân phối truy vấn (đổi miền, đổi ngôn ngữ sang tiếng Việt, thêm câu hỏi ngoài phân phối).",
+    why:"Đây là bài tối ưu có ràng buộc rất sạch — chọn mô hình rẻ nhất thoả một ràng buộc chất lượng — nên phần toán đứng vững trước hội đồng. Và nó là dòng tiền thật của mọi công ty đang xây sản phẩm trên LLM năm nay: kết quả „giảm 70% hoá đơn API” là loại số mà người ngồi dự bảo vệ ghi lại.",
+    risk:"Chi phí API cho mô hình đắt. Khoá trần chi tiêu từ đầu, dùng mô hình mở làm cả mốc trên nếu cần. Rủi ro thứ hai: mảng này đang chuyển động nhanh — hãy đóng khung theo <em>độ bền dưới dịch chuyển</em>, đó là phần không bị một bài báo mới xoá.",
+    learn:"Đánh giá LLM, hiệu chuẩn tin cậy, tối ưu có ràng buộc. ~3 tuần. Chồng lấn với #31.",
+    spike:"Ngày 1–2: chạy 2 mô hình (nhỏ, lớn) trên 500 câu VMLU, ghi đúng/sai và chi phí. Ngày 3: dựng cascade với ngưỡng tin cậy đơn giản, vẽ Pareto. Nếu có điểm cắt 50% chi phí mà chất lượng gần như không tụt, đề tài đã có kết quả bán được."
+  }
+},
+{
+  id:"a09", n:47, dom:"apply", diff:4, risk:"tb", compute:"thap", know:"tb", mobile:false, vn:true,
+  t:"Phát hiện thất thoát điện – nước từ công tơ thông minh khi gần như không có nhãn",
+  q:"Nước xử lý xong bị rò trên đường ống là khoản lỗ thường trực của mọi công ty cấp nước. <b>Bất thường trên chuỗi đo có tìm ra rò rỉ trước khi khách hàng báo không</b> — và cần bao nhiêu lượt kiểm tra hiện trường để tìm được một điểm rò thật?",
+  data:"Neo chính vào <b>BattLeDIM 2020 / L-Town</b> (Zenodo, mở): SCADA áp suất – lưu lượng – mực bể 5 phút/lần cho cả năm 2018 và 2019, <b>có nhãn thời điểm và vị trí rò rỉ</b> — hiếm có. Lưu ý trung thực: dữ liệu là mô phỏng EPANET dựng trên một mạng lưới thật ở Cyprus, không phải đo thực địa; hãy nói rõ điều đó trong luận văn. Bổ sung: UK-DALE / REDD cho phía điện (NILM), và dữ liệu công tơ VN nếu xin được từ một công ty cấp nước (rất quý, nhưng không bắt buộc để hoàn thành đề tài).",
+  contrib:"Benchmark phát hiện bất thường trên chuỗi tiêu thụ với <b>nhãn cực hiếm</b>, đánh giá theo chi phí đội sửa chữa (số lượt kiểm tra trên mỗi phát hiện đúng) thay vì AUC — cộng phân tích mô hình phát hiện được loại rò nào và bỏ sót loại nào.",
+  d:{
+    method:"Baselines phải có: quy tắc ngưỡng của ngành (dòng chảy đêm tối thiểu), phân rã chuỗi + kiểm định thay đổi, rồi mới đến mô hình học (autoencoder, isolation forest, mô hình dự báo + phần dư). Dùng nhãn rò rỉ sẵn có của L-Town làm ground truth, cộng tiêm lỗi có kiểm soát ở nhiều cường độ để quét liên tục. Đo: precision@k lượt kiểm tra, thời gian phát hiện, và độ nhạy theo cường độ rò.",
+    why:"Ngưỡng tay của ngành nước rất khó đánh bại và hầu như không bài học máy nào so với nó tử tế — nên phép so sánh này tự thân đã là đóng góp. Đo bằng „số lượt kiểm tra trên mỗi rò rỉ tìm được” khiến kết quả dịch trực tiếp thành chi phí vận hành.",
+    risk:"Nhãn của L-Town là nhãn mô phỏng, nên kết luận chỉ mạnh bằng độ trung thực của mô phỏng — nêu rõ giới hạn này thay vì lờ đi, và nếu xin được dù vài chục ca rò rỉ có nhãn thật từ một công ty cấp nước thì dùng để kiểm chứng chéo. Rủi ro thứ hai: BattLeDIM đã có bảng xếp hạng đội thi, nên đừng đóng khung luận văn là „thắng cuộc thi” — đóng khung theo chi phí vận hành, đó là trục chưa ai chấm.",
+    learn:"Phát hiện bất thường chuỗi thời gian, EPANET / cân bằng nước ở mức khái niệm, NILM. ~3 tuần.",
+    spike:"Ngày 1–2: tải bộ L-Town từ Zenodo, dựng lại chuỗi áp suất – lưu lượng và đối chiếu với bảng nhãn rò rỉ 2019. Ngày 3: so ngưỡng dòng chảy đêm tối thiểu với một mô hình phần dư, vẽ precision@k. Nếu ngưỡng tay thắng, đó là phát hiện đầu tiên và là phát hiện đáng giá."
+  }
+},
+{
+  id:"a10", n:48, dom:"apply", diff:4, risk:"thap", compute:"cao", know:"tb", mobile:false, vn:true,
+  t:"Sàng lọc bệnh võng mạc đái tháo đường bằng ảnh chất lượng thấp: mô hình có nên từ chối đọc?",
+  q:"Ảnh đáy mắt chụp bằng thiết bị rẻ ở tuyến cơ sở thì mờ, loá, lệch tâm. <b>Mô hình đạt chuẩn trên ảnh sạch còn lại bao nhiêu độ chính xác</b> — và một tầng „từ chối đọc, chụp lại” cứu được bao nhiêu ca bỏ sót?",
+  data:"EyePACS (Kaggle DR), APTOS 2019 (có nhiều ảnh chất lượng kém thật), Messidor — mở hoặc đăng ký đơn giản. Suy giảm chất lượng mô phỏng có kiểm soát để quét liên tục.",
+  contrib:"Đường cong <b>chất lượng ảnh ↔ độ chính xác</b> cho sàng lọc DR, cộng chính sách từ chối/chụp lại hiệu chuẩn, đo bằng <b>số ca bỏ sót trên mỗi 1.000 lượt sàng lọc</b> ở một ngân sách chụp lại cho trước.",
+  d:{
+    method:"Fine-tune một backbone chuẩn trên ảnh sạch. Quét suy giảm có kiểm soát (mờ, nhiễu, giảm sáng, lệch tâm, mất nét từng vùng) và đo hiệu năng theo cường độ. Xây bộ đánh giá chất lượng ảnh, ghép thành chính sách ba nhánh: đọc / chụp lại / chuyển bác sĩ. Kiểm định chéo dataset (EyePACS → APTOS). Đo: độ nhạy ở ngưỡng chuyên khoa, ca bỏ sót trên 1.000 lượt, tỉ lệ chụp lại.",
+    why:"Sàng lọc DR là một trong ít bài ảnh y tế đã được chứng minh có ích ở quy mô lớn, nên câu hỏi „nó chịu được thiết bị rẻ tới đâu” là câu hỏi triển khai thật, không phải bài tập. Và số „ca mù phòng được” là loại tác động mà cả hội đồng lẫn người ngoài ngành đều thấy ngay.",
+    risk:"Compute cao cho huấn luyện ảnh; thu hẹp bằng backbone pretrained, ảnh giảm độ phân giải, một nhiệm vụ nhị phân (cần chuyển tuyến hay không). Và phải nêu rõ đây là nghiên cứu, không phải thiết bị y tế được cấp phép.",
+    learn:"Phân độ DR, đánh giá chất lượng ảnh đáy mắt, selective prediction. ~4 tuần.",
+    spike:"Ngày 1–2: fine-tune ResNet trên APTOS, ghi độ nhạy. Ngày 3: áp mờ ở 5 mức, vẽ độ chính xác theo mức mờ. Đường cong đó quyết định đề tài có nội dung không — và nó thường tụt sớm hơn bạn tưởng."
+  }
+}
+];
+
+/* ===== Tác động / tính ứng dụng =====
+   s   = điểm 1–5
+   who = ai được lợi
+   pay = ai trả tiền (đường ra tiền)
+   out = bàn giao được cái gì — thứ hội đồng và doanh nghiệp nhìn thấy */
+const IMPACT = {
+  a01:{ s:5, who:"Hàng triệu hộ kinh doanh và SME đang ghi sổ tay hoặc thuê kế toán làm thủ công.",
+        pay:"Phần mềm kế toán / ví thông minh bán thuê bao; giá trị đo bằng số giờ kế toán cắt được mỗi tháng — con số hội đồng tính ra tiền ngay tại chỗ.",
+        out:"Thư viện phân loại giao dịch tiếng Việt + app demo: kéo file sao kê vào, 30 giây sau ra báo cáo thu chi theo danh mục." },
+  a02:{ s:5, who:"Chuỗi tạp hoá, bakery, siêu thị mini, bếp ăn công nghiệp — nơi hàng huỷ ăn thẳng vào lợi nhuận.",
+        pay:"Hàng huỷ nhóm tươi sống là khoản lỗ mà cửa hàng nào cũng biết nhưng ít nơi đo được; ở biên lợi nhuận mỏng của bán lẻ, cắt được một phần ba lượng huỷ là đổi được cả kết quả kinh doanh. Con số cụ thể hãy lấy từ chính cửa hàng bạn nói chuyện, đừng trích số ngành.",
+        out:"Engine đặt hàng nhận biết hạn dùng + báo cáo mô phỏng „tháng này lẽ ra tiết kiệm được bao nhiêu”." },
+  a03:{ s:5, who:"Người chưa có lịch sử tín dụng — nhóm bị từ chối vay không vì rủi ro mà vì thiếu dữ liệu.",
+        pay:"Mở rộng tệp cho vay là doanh thu trực tiếp của công ty tài chính; mỗi điểm Gini quy được ra tỉ lệ nợ xấu.",
+        out:"Bảng giá trị gia tăng theo từng nhóm dữ liệu + báo cáo kiểm toán công bằng dùng được làm hồ sơ tuân thủ." },
+  a04:{ s:5, who:"Người bị lừa chuyển khoản, và đội phòng chống gian lận đang chọn cảnh báo bằng cảm tính.",
+        pay:"Tiền cứu được trên mỗi giờ điều tra — chỉ số mà ngân hàng nào cũng muốn nhưng ít nơi đo được.",
+        out:"Bộ xếp hàng cảnh báo + mô phỏng cho biết cần bao nhiêu người trực để cứu bao nhiêu tiền." },
+  a05:{ s:5, who:"Nhân viên phải tra quy chế, và doanh nghiệp đang không dám bật trợ lý nội bộ vì sợ nó nói sai.",
+        pay:"Tuân thủ và pháp chế là chỗ doanh nghiệp chịu trả tiền cao nhất, vì rủi ro tính bằng tiền phạt.",
+        out:"Trợ lý tra cứu có trích dẫn kiểm chứng được, biết trả lời „không đủ căn cứ” — và một con số bảo đảm sai số." },
+  a06:{ s:5, who:"Khách hàng đang mắc kẹt với bot, và tổng đài đang trả lương cho việc máy làm được.",
+        pay:"Mỗi ticket người xử lý tốn hàng chục nghìn đồng; giảm 30% khối lượng là con số ai cũng hiểu.",
+        out:"Chính sách bàn giao cắm được vào tổng đài + bảng chi phí mỗi hội thoại theo từng mức bàn giao." },
+  a07:{ s:5, who:"Người mua bán tài sản cũ đang mò giá, và nhân viên thẩm định đang định giá bằng kinh nghiệm.",
+        pay:"Ngân hàng thẩm định tài sản đảm bảo, sàn giao dịch, bảo hiểm — cả ba đều mua ước lượng giá kèm khoảng.",
+        out:"API định giá trả về khoảng tin cậy có bảo đảm phủ + bộ lọc tin rác, demo được trên một phân khúc thật." },
+  a08:{ s:5, who:"Mọi đội đang xây sản phẩm trên LLM và đang trả tiền cho mô hình đắt ở cả những câu hỏi tầm thường.",
+        pay:"Hoá đơn API là chi phí biến đổi lớn nhất của một sản phẩm AI; „giảm 70% chi phí, chất lượng không tụt” là câu bán được ngay.",
+        out:"Router mã nguồn mở + mặt Pareto chi phí × chất lượng, cắm vào là thấy hoá đơn giảm." },
+  a09:{ s:4, who:"Công ty cấp nước / điện lực và toàn bộ khách hàng đang chia nhau chi phí thất thoát.",
+        pay:"Nước thất thoát là nước đã xử lý và bơm đi nhưng không thu được tiền — công ty cấp nước nào cũng công bố tỉ lệ này trong báo cáo thường niên, hãy lấy số của đúng đơn vị bạn nhắm tới. Mỗi lượt đào kiểm tra sai chỗ cũng là tiền.",
+        out:"Bộ phát hiện xếp hạng điểm đáng kiểm tra + con số „bao nhiêu lượt kiểm tra cho một rò rỉ tìm được”." },
+  a10:{ s:5, who:"Người đái tháo đường ở tuyến cơ sở — nhóm mất thị lực vì không được sàng lọc kịp, dù bệnh phòng được.",
+        pay:"Chương trình sàng lọc và phòng khám tuyến dưới: một lượt sàng lọc rẻ hơn nhiều lần một ca điều trị muộn.",
+        out:"Mô hình + tầng „chụp lại” chạy được trên ảnh thiết bị rẻ, kèm con số ca bỏ sót trên mỗi 1.000 lượt." },
+
+  t01:{ s:4, who:"Đội dự báo của bất kỳ nhà bán lẻ nào đang bị chào bán foundation model.",
+        pay:"Tránh mua và tránh tự xây một pipeline TSFM đắt tiền mà lợi thế thật chỉ vài phần trăm.",
+        out:"Bộ benchmark có kiểm soát nhiễm dữ liệu + khuyến nghị chọn mô hình theo tình huống." },
+  t02:{ s:5, who:"Người đặt hàng và người chịu trách nhiệm tồn kho — hai người luôn thua khi mô hình tối ưu sai mục tiêu.",
+        pay:"Chi phí tồn kho và mất doanh thu do hết hàng, quy đổi trực tiếp thành đồng.",
+        out:"Tầng quyết định đặt hàng gắn sau mô hình dự báo + bảng „đổi thước đo thì thứ hạng mô hình đảo ở đâu”." },
+  t03:{ s:4, who:"Bán lẻ có hàng nghìn SKU bán lắt nhắt — phần lớn danh mục của mọi cửa hàng.",
+        pay:"Dự báo đúng nhóm bán rời rạc là chỗ tiết kiệm tồn kho lớn nhất mà ít ai làm đúng.",
+        out:"Khuyến nghị có căn cứ: nên đầu tư vào phân phối, kiến trúc, hay hoà giải phân cấp — tiết kiệm hàng tháng công của một đội." },
+  t04:{ s:5, who:"Mọi đội đang vận hành mô hình trong sản phẩm và đang huấn luyện lại theo lịch cho yên tâm.",
+        pay:"Chi phí GPU của việc huấn luyện lại quá thường xuyên, và tổn thất khi huấn luyện lại quá muộn.",
+        out:"Một chính sách retraining cắm vào MLOps pipeline được, kèm ngưỡng tính từ chi phí thật." },
+  t05:{ s:5, who:"Người tiêu ngân sách khuyến mãi — hiện đang phát voucher cho cả người vốn đã mua.",
+        pay:"Ngân sách khuyến mãi là dòng tiền lớn và đo được: cùng số tiền, bao nhiêu đơn tăng thêm.",
+        out:"Bộ phân bổ ngân sách theo uplift + Qini curve chứng minh hiệu quả trên dữ liệu thật." },
+  t06:{ s:3, who:"Phòng thí nghiệm sinh học tính toán đang cân nhắc có nên đầu tư vào foundation model tế bào.",
+        pay:"Đường ra tiền gián tiếp: tiết kiệm chi phí gán nhãn tế bào và chi phí GPU cho một hướng có thể không đáng.",
+        out:"Đường cong hiệu quả nhãn + khuyến nghị vận hành „dưới N nhãn thì đừng dùng”." },
+  t07:{ s:3, who:"Bác sĩ ung thư và nhóm nghiên cứu tiên lượng đang bị thuyết phục bởi mô hình đa-omics.",
+        pay:"Gián tiếp: tránh chi phí xét nghiệm omics đắt nếu ba biến lâm sàng miễn phí đã đủ tốt.",
+        out:"Phân rã đóng góp của từng lớp dữ liệu — câu trả lời cho câu hỏi „xét nghiệm này có đáng tiền không”." },
+  t08:{ s:4, who:"Y tế công cộng và bệnh viện Việt Nam, nơi kháng kháng sinh đang là vấn đề nghiêm trọng.",
+        pay:"Chọn kháng sinh đúng sớm hơn cắt ngày điều trị; và cảnh báo được rằng mô hình nhập ngoại không dùng thẳng được.",
+        out:"Con số sụp đổ hiệu năng theo khu vực — bằng chứng để yêu cầu dữ liệu và mô hình bản địa." },
+  t09:{ s:3, who:"Cả cộng đồng tin sinh đang báo cáo những con số cao hơn thực tế.",
+        pay:"Không có người mua trực tiếp; giá trị là hạ tầng đánh giá dùng lại được nhiều năm.",
+        out:"Giao thức chia tập chống rò rỉ + chỉ số ô nhiễm tính nhanh cho bất kỳ benchmark nào." },
+  t10:{ s:3, who:"Nhóm sàng lọc thuốc đang đọc những con số hiệu năng không đúng chế độ họ cần.",
+        pay:"Gián tiếp: tránh đặt cược thí nghiệm ướt đắt tiền vào dự đoán không có giá trị ở thuốc mới.",
+        out:"Bản đồ hiệu năng theo ba chế độ tổng quát hoá — dùng làm bộ lọc kỳ vọng trước khi đầu tư." },
+  t11:{ s:3, who:"Nhóm nghiên cứu microbiome và các công ty đang bán xét nghiệm hệ vi sinh đường ruột.",
+        pay:"Gián tiếp nhưng thật: nếu mô hình không chuyển được qua cohort khác thì sản phẩm xét nghiệm đang bán quá lời hứa.",
+        out:"Ma trận chuyển giao cohort × cohort — bằng chứng để đọc lại mọi tuyên bố AUC nội bộ." },
+  t12:{ s:3, who:"Nhà di truyền lâm sàng phải phân loại biến thể „gây bệnh hay lành tính”.",
+        pay:"Gián tiếp: xác suất hiệu chuẩn là điều kiện để đưa điểm PLM vào quy trình ra quyết định lâm sàng.",
+        out:"Bộ hiệu chuẩn lại biến điểm xếp hạng thành xác suất dùng được + phân tích theo họ protein." },
+  t13:{ s:4, who:"Bệnh viện triển khai mô hình do nơi khác huấn luyện — tức gần như mọi bệnh viện.",
+        pay:"Một mô hình hiệu chuẩn sai làm thừa hoặc thiếu can thiệp; đây là chi phí và là an toàn bệnh nhân.",
+        out:"Điểm số „transportability risk” chạy được trước khi triển khai, cộng một bản sửa intercept đơn giản." },
+  t14:{ s:4, who:"Đội ICU đang bị bội thực cảnh báo, và bệnh nhân đang bị bỏ sót vì cảnh báo mất tin cậy.",
+        pay:"Cảnh báo sai làm kiệt sức điều dưỡng — chi phí nhân lực có thật; và mua hệ thống cảnh báo là khoản đầu tư lớn.",
+        out:"Bảng độ nhạy theo định nghĩa nhãn — công cụ để chất vấn bất kỳ nhà cung cấp nào báo AUROC 0,85." },
+  t15:{ s:4, who:"Nhóm bệnh nhân nhỏ đang bị mô hình dự báo lệch một cách có hệ thống.",
+        pay:"Rủi ro pháp lý và uy tín của bệnh viện; và các quy định về AI y tế đang bắt buộc kiểm toán kiểu này.",
+        out:"Báo cáo kiểm toán công bằng theo phân nhóm — thứ sắp trở thành hồ sơ bắt buộc khi triển khai." },
+  t16:{ s:4, who:"Bệnh viện đang định mua hoặc đã triển khai mô hình đọc X-quang.",
+        pay:"Tránh mua một mô hình sẽ sụp khi đổi máy chụp — khoản chi lớn và rủi ro chẩn đoán trực tiếp.",
+        out:"Phép thử „huấn luyện trên vùng không chứa phổi” — bài kiểm tra một buổi mà mọi bên mua nên bắt nhà cung cấp làm." },
+  t17:{ s:4, who:"Người mang thiết bị đo ECG/PPG, và bệnh viện không đủ bác sĩ đọc tín hiệu.",
+        pay:"Nhãn bác sĩ là chi phí lớn nhất của mọi sản phẩm tim mạch số; giảm nhu cầu nhãn 10 lần là giảm giá thành sản phẩm.",
+        out:"Mô hình pretrained cho tín hiệu sinh lý + đường cong nhãn, nối thẳng sang #33 để chạy trên đồng hồ." },
+  t18:{ s:5, who:"Sở y tế các tỉnh và người dân trong vùng dịch — dengue là dịch có thật, hằng năm, ở Việt Nam.",
+        pay:"Không phải doanh nghiệp mua, mà là ngân sách phòng dịch: phun thuốc và truyền thông đúng tỉnh, đúng tuần.",
+        out:"Bản đồ dự báo theo tỉnh theo tuần — sản phẩm y tế công cộng nhìn là hiểu, kể cả người ngoài ngành." },
+  t19:{ s:4, who:"Người dân Hà Nội, và các cơ quan đang ra quyết định cảnh báo chất lượng không khí.",
+        pay:"Ứng dụng cảnh báo và thiết bị lọc khí là thị trường thật; dự báo tốt hơn là tính năng bán được.",
+        out:"Mô hình dự báo PM2.5 theo trạm + kết luận nên xây đồ thị thế nào, dùng lại được cho mọi mạng cảm biến." },
+  t20:{ s:5, who:"Nông dân và doanh nghiệp lúa gạo Đồng bằng sông Cửu Long, cộng cơ quan điều hành xuất khẩu.",
+        pay:"Biết năng suất sớm hơn vài tuần đổi được giá hợp đồng và kế hoạch thu mua — tiền rất lớn ở quy mô vùng.",
+        out:"Đường cong „báo trước bao nhiêu tuần thì còn đủ chính xác” + bản đồ dự báo theo huyện." },
+  t21:{ s:4, who:"Đơn vị điều độ lưới điện và chủ đầu tư điện mặt trời.",
+        pay:"Khoảng dự báo sai làm mua điện dự phòng đắt hoặc bị phạt lệch công suất — chi phí có hoá đơn.",
+        out:"Bộ dự báo có khoảng đã hiệu chuẩn bằng conformal, kèm phân tích nó hỏng ở chế độ thời tiết nào." },
+  t22:{ s:4, who:"Nhà đầu tư cá nhân Việt Nam đang bị bán các chiến lược „Sharpe 3”.",
+        pay:"Đường ra tiền là tiền không mất: một quy trình báo cáo chặn được chiến lược quá khớp trước khi ai đó nạp vốn thật.",
+        out:"Bản đồ mức thổi phồng trên thị trường VN + checklist báo cáo cho nghiên cứu định lượng." },
+  t23:{ s:3, who:"Đội quant nhỏ và nhà đầu tư đang tin vào độ chính xác của mô hình sổ lệnh.",
+        pay:"Trực tiếp nhưng hẹp: biết một lớp mô hình không sống nổi qua phí là tiết kiệm cả năm công.",
+        out:"Kết luận trung thực về ma sát giao dịch + pipeline tái dựng sổ lệnh dùng lại được." },
+  t24:{ s:4, who:"Người vay bị từ chối oan khi kinh tế đổi chiều, và bộ phận quản trị rủi ro tín dụng.",
+        pay:"Nợ xấu do mô hình lỗi thời, cộng rủi ro tuân thủ khi mô hình lệch theo nhóm.",
+        out:"Quy trình theo dõi và hiệu chuẩn lại mô hình theo giai đoạn — thứ mọi tổ chức cho vay phải có." },
+  t25:{ s:5, who:"Đội chống gian lận đang tối ưu F1 trong khi kế toán đang tính bằng tiền.",
+        pay:"Chênh lệch chi phí kỳ vọng giữa ngưỡng chọn theo F1 và ngưỡng chọn theo lý thuyết quyết định — đo được, thường lớn.",
+        out:"Khung chọn ngưỡng theo chi phí + bảng đảo thứ hạng mô hình khi tỉ lệ chi phí đổi." },
+  t26:{ s:4, who:"Doanh nghiệp lập kế hoạch theo số vĩ mô, và cơ quan điều hành đang chờ số liệu chậm hàng tháng.",
+        pay:"Biết CPI hay thương mại sớm vài tuần là lợi thế thật trong định giá và tồn kho.",
+        out:"Bảng nowcast cập nhật theo tuần — nếu dữ liệu cho phép; nếu không, một báo cáo trung thực về vì sao chưa làm được ở VN." },
+  t27:{ s:3, who:"Bất kỳ ai đang dùng thư viện nhân quả để ra quyết định — ngày càng nhiều đội sản phẩm.",
+        pay:"Gián tiếp: tránh ra quyết định A/B sai vì bộ ước lượng đã hỏng âm thầm khi giả định vi phạm.",
+        out:"Bản đồ độ bền „vi phạm nào giết bộ ước lượng nào” — hướng dẫn thực hành dùng được ngay." },
+  t28:{ s:4, who:"Bệnh nhân trong những câu hỏi điều trị mà không ai làm được thử nghiệm ngẫu nhiên.",
+        pay:"Không có người mua trực tiếp, nhưng đây là kỹ năng mà công ty dược và cơ quan quản lý đang tuyển với giá cao.",
+        out:"Một target trial emulation hoàn chỉnh, tái lập được kết luận RCT — bằng chứng năng lực rất mạnh." },
+  t29:{ s:3, who:"Mọi đội đang gắn khoảng tin cậy vào đầu ra mô hình mà chưa kiểm tra nó có đúng không.",
+        pay:"Gián tiếp: khoảng tin cậy vỡ âm thầm là nguồn của quyết định tự tin sai.",
+        out:"Hướng dẫn chọn biến thể conformal theo loại dịch chuyển + đo tốc độ mất phủ." },
+  t30:{ s:4, who:"Người bán trên sàn TMĐT đang đọc hàng nghìn đánh giá bằng mắt.",
+        pay:"Công cụ phân tích đánh giá là sản phẩm đang được bán cho nhà bán hàng; chất lượng tiếng Việt là điểm khác biệt.",
+        out:"Taxonomy lỗi tiếng Việt + biện pháp chuẩn hoá nâng được F1, cắm vào bất kỳ pipeline ABSA nào." },
+  t31:{ s:4, who:"Ai đang chọn mô hình tiếng Việt dựa trên bảng xếp hạng — gồm cả các đội đang chi tiền.",
+        pay:"Chọn sai mô hình vì tin điểm bị nhiễm là chi phí thật, cả tiền API lẫn thời gian.",
+        out:"Bộ kiểm tra nhiễm và bền cho tiếng Việt + bảng „điểm thật vs điểm báo cáo”." },
+  t32:{ s:5, who:"Doanh nghiệp và người dân đang tra cứu quy định pháp luật mà không biết văn bản còn hiệu lực hay không.",
+        pay:"Pháp chế và tuân thủ trả tiền cao; và sai một điều khoản hết hiệu lực có thể tốn tiền phạt.",
+        out:"Bộ đánh giá tách tầng + cách xử lý hiệu lực theo thời gian — phần khó nhất của mọi trợ lý pháp luật." },
+  t33:{ s:5, who:"Người dùng cuối muốn tính năng thông minh mà không tốn pin và không gửi dữ liệu lên máy chủ.",
+        pay:"Chạy trên thiết bị cắt hoàn toàn chi phí suy luận trên máy chủ — với sản phẩm hàng triệu người dùng đó là con số rất lớn.",
+        out:"Mô hình đã nén chạy thật trên iPhone + mặt Pareto độ chính xác × độ trễ × năng lượng đo bằng máy thật." },
+  t34:{ s:4, who:"Mọi lập trình viên đang đưa mô hình lên hệ sinh thái Apple mà phải đo thử từng lần.",
+        pay:"Cắt vòng lặp thử–đo trong phát triển; và là hạ tầng cho tìm kiếm kiến trúc nhận biết phần cứng.",
+        out:"Cost model cho Apple Neural Engine — công cụ chưa tồn tại công khai, dùng được ngay." },
+  t35:{ s:4, who:"Người dùng muốn giữ dữ liệu trên máy mình, và đội sản phẩm đang cân nhắc federated learning.",
+        pay:"Câu trả lời „federated learning có đáng không” đang thiếu số liệu năng lượng — quyết định đầu tư hàng người-năm.",
+        out:"Bảng đánh đổi riêng tư × độ chính xác × pin đo trên thiết bị thật, không phải mô phỏng." },
+  t36:{ s:4, who:"Đội khuyến nghị đang thấy mô hình thắng offline rồi thua khi lên sản phẩm.",
+        pay:"Mỗi lần A/B thất bại là vài tuần của một đội; đo được nguyên nhân là tiết kiệm trực tiếp.",
+        out:"Phân rã định lượng khoảng cách offline–online + hướng dẫn gỡ thiên lệch nào thực sự có tác dụng." },
+  t37:{ s:3, who:"Học sinh dùng ứng dụng học tập, và đội sản phẩm edtech đang chọn mô hình theo mốt.",
+        pay:"Nếu hồi quy logistic đủ tốt, đó là cắt chi phí GPU và độ phức tạp hệ thống cho một sản phẩm edtech.",
+        out:"So sánh công bằng có kiểm soát + điều kiện cụ thể khi mô hình sâu mới đáng dùng." },
+  t38:{ s:4, who:"Người dùng cuối được bảo vệ, và hãng bảo mật đang phải trả tiền gán nhãn liên tục.",
+        pay:"Chi phí gán nhãn để giữ hiệu năng là chi phí vận hành lớn nhất của một sản phẩm phát hiện malware.",
+        out:"Đường suy giảm theo thời gian + so sánh chiến lược thích ứng theo chi phí nhãn." }
+};
+TOPICS.forEach(t => {
+  t.impact = IMPACT[t.id] || { s:3, who:"—", pay:"—", out:"—" };
+});
+
+/* ===== Trạng thái (localStorage có bảo vệ) ===== */
+const K_STAR = "detai-hust-star-v1";
+const K_SEEN = "detai-hust-seen-v1";
+const K_THEME = "detai-hust-theme-v1";
+
+function lsGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
+function lsSet(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
+
+let starred = {}, seen = {};
+(function loadState(){
+  try { (JSON.parse(lsGet(K_STAR)||"[]")).forEach(id => starred[id]=1); } catch(e){}
+  try { (JSON.parse(lsGet(K_SEEN)||"[]")).forEach(id => seen[id]=1); } catch(e){}
+})();
+function saveStar(){ lsSet(K_STAR, JSON.stringify(Object.keys(starred))); }
+function saveSeen(){ lsSet(K_SEEN, JSON.stringify(Object.keys(seen))); }
+
+/* ===== Bộ lọc ===== */
+const state = { q:"", doms:new Set(), diff:"all", risk:"all", imp:"all", sort:"dom", mobile:false, vn:false, starOnly:false };
+
+/* Tìm kiếm bỏ dấu: gõ "sinh hoc" vẫn ra "sinh học" */
+function deaccent(s){
+  return s.replace(/<[^>]+>/g," ").toLowerCase()
+          .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+          .replace(/đ/g,"d");
+}
+
+const RISK_LABEL = { thap:"DL: THẤP", tb:"DL: TB", cao:"DL: CAO" };
+const RISK_CLASS = { thap:"b-green", tb:"b-yellow", cao:"b-red" };
+const LVL_LABEL  = { thap:"thấp", tb:"trung bình", cao:"cao" };
+const domById = Object.fromEntries(DOMAINS.map(d => [d.id, d]));
+
+/* ===== Dựng khung ===== */
+function buildChips(){
+  const wrap = document.getElementById("dom-chips");
+  DOMAINS.forEach(d => {
+    const b = document.createElement("button");
+    b.className = "fchip"; b.dataset.dom = d.id;
+    b.setAttribute("aria-pressed","false");
+    b.style.setProperty("--c", d.c);
+    b.style.setProperty("--c-rgb", d.rgb);
+    b.textContent = d.name;
+    b.addEventListener("click", () => {
+      if (state.doms.has(d.id)) state.doms.delete(d.id); else state.doms.add(d.id);
+      b.setAttribute("aria-pressed", state.doms.has(d.id) ? "true" : "false");
+      apply();
+    });
+    wrap.appendChild(b);
+  });
+}
+
+function buildTOC(){
+  const ul = document.getElementById("toc-list");
+  DOMAINS.forEach(d => {
+    const n = TOPICS.filter(t => t.dom === d.id).length;
+    const li = document.createElement("li");
+    li.innerHTML = '<a href="#sec-'+d.id+'" data-sec="'+d.id+'"><span>'+d.name+'</span><span class="toc-n">'+n+'</span></a>';
+    ul.appendChild(li);
+  });
+}
+
+function diffBar(n, c){
+  let s = '<span class="diffbar" title="Độ khó '+n+'/5" aria-label="Độ khó '+n+' trên 5" style="--c:'+c+'">';
+  for (let i=1;i<=5;i++) s += '<i class="'+(i<=n?"on":"")+'"></i>';
+  return s + '</span>';
+}
+
+const IMP_WORD = { 5:"ra sản phẩm", 4:"ứng dụng rõ", 3:"học thuật", 2:"hẹp", 1:"hẹp" };
+function impactBadge(n){
+  const cls = n >= 5 ? "" : (n === 4 ? " i-mid" : " i-low");
+  let dots = '<span class="dots" aria-hidden="true">';
+  for (let i=1;i<=5;i++) dots += '<i class="'+(i<=n?"on":"")+'"></i>';
+  dots += '</span>';
+  return '<span class="impact-badge'+cls+'" title="Mức tác động '+n+'/5 — '+IMP_WORD[n]+'" '
+       + 'aria-label="Tác động '+n+' trên 5">💰'+dots+'</span>';
+}
+
+function detailHTML(t){
+  const d = domById[t.dom];
+  return ''
+   + '<div class="d-h1">'+t.t+'</div>'
+   + '<div class="d-sub">Đề tài #'+t.n+' · '+d.name+'</div>'
+   + '<div class="d-stats">'
+     + '<div class="d-stat"><span class="k">💰 Tác động</span><span class="v">'+t.impact.s+'/5 · '+IMP_WORD[t.impact.s]+'</span></div>'
+     + '<div class="d-stat"><span class="k">Độ khó</span><span class="v">'+t.diff+'/5</span></div>'
+     + '<div class="d-stat"><span class="k">Rủi ro dữ liệu</span><span class="v">'+LVL_LABEL[t.risk]+'</span></div>'
+     + '<div class="d-stat"><span class="k">Compute</span><span class="v">'+LVL_LABEL[t.compute]+'</span></div>'
+     + '<div class="d-stat"><span class="k">Kiến thức ngành</span><span class="v">'+LVL_LABEL[t.know]+'</span></div>'
+   + '</div>'
+   + '<div class="d-sec d-impact"><h4>Tác động — ai được lợi, ai trả tiền</h4><dl>'
+     + '<dt>Ai được lợi</dt><dd>'+t.impact.who+'</dd>'
+     + '<dt>Ai trả tiền</dt><dd>'+t.impact.pay+'</dd>'
+     + '<dt>Bàn giao được gì</dt><dd>'+t.impact.out+'</dd>'
+   + '</dl></div>'
+   + '<div class="d-sec"><h4>Câu hỏi nghiên cứu</h4><p>'+t.q+'</p></div>'
+   + '<div class="d-sec"><h4>Phương pháp</h4><p>'+t.d.method+'</p></div>'
+   + '<div class="d-sec"><h4>Dữ liệu</h4><p>'+t.data+'</p></div>'
+   + '<div class="d-sec"><h4>Đóng góp</h4><p>'+t.contrib+'</p></div>'
+   + '<div class="d-sec"><h4>Vì sao nó không tầm thường</h4><p>'+t.d.why+'</p></div>'
+   + '<div class="d-sec d-warn"><h4>Rủi ro chính</h4><p style="margin:0">'+t.d.risk+'</p></div>'
+   + '<div class="d-sec"><h4>Cần học thêm</h4><p>'+t.d.learn+'</p></div>'
+   + '<div class="d-sec d-spike"><h4>Spike 5 ngày để khử rủi ro</h4><p style="margin:0">'+t.d.spike+'</p></div>';
+}
+
+function cardHTML(t){
+  const d = domById[t.dom];
+  const flags = (t.mobile ? '<span title="Tận dụng nền mobile">📱</span>' : '')
+              + (t.vn ? '<span title="Có góc Việt Nam">🇻🇳</span>' : '');
+  return ''
+  + '<div class="tc-top">'
+    + '<span class="tc-num">#'+String(t.n).padStart(2,"0")+'</span>'
+    + '<h3 class="tc-title">'+t.t+'</h3>'
+    + '<button class="tc-star" data-star="'+t.id+'" aria-pressed="'+(starred[t.id]?"true":"false")+'" '
+      + 'aria-label="Thêm vào shortlist" title="Thêm vào shortlist">'+(starred[t.id]?"★":"☆")+'</button>'
+  + '</div>'
+  + '<p class="tc-q">'+t.q+'</p>'
+  + '<div class="tc-meta">'
+    + '<div class="tc-line tc-money"><span class="tc-k">Ai trả tiền</span><span class="tc-v">'+t.impact.pay+'</span></div>'
+    + '<div class="tc-line"><span class="tc-k">Dữ liệu</span><span class="tc-v">'+t.data+'</span></div>'
+    + '<div class="tc-line"><span class="tc-k">Đóng góp</span><span class="tc-v">'+t.contrib+'</span></div>'
+  + '</div>'
+  + '<div class="tc-foot">'
+    + impactBadge(t.impact.s)
+    + diffBar(t.diff, d.c)
+    + '<span class="badge '+RISK_CLASS[t.risk]+'">'+RISK_LABEL[t.risk]+'</span>'
+    + flags
+    + '<button class="tc-seen" data-seen="'+t.id+'" aria-pressed="'+(seen[t.id]?"true":"false")+'">'
+      + (seen[t.id]?"✓ đã xem":"đã xem") + '</button>'
+    + '<button class="expand-btn" data-expand="'+t.id+'" aria-expanded="false">Chi tiết →</button>'
+  + '</div>'
+  + '<div class="detail-source" id="detail-'+t.id+'" data-title="Đề tài #'+t.n+'">'+detailHTML(t)+'</div>';
+}
+
+function makeCard(t){
+  const d = domById[t.dom];
+  const card = document.createElement("article");
+  card.className = "tcard"; card.dataset.id = t.id;
+  card.style.setProperty("--c", d.c);
+  card.style.setProperty("--c-rgb", d.rgb);
+  card.innerHTML = cardHTML(t);
+  if (t.impact.s >= 5) card.classList.add("high-impact");
+  if (starred[t.id]) card.classList.add("starred");
+  if (seen[t.id]) card.classList.add("seen");
+  return card;
+}
+
+function render(){
+  const root = document.getElementById("sections");
+  root.innerHTML = "";
+  const rail = document.querySelector(".toc-rail");
+
+  if (state.sort === "impact"){
+    if (rail) rail.hidden = true;
+    const list = TOPICS.slice().sort((a,b) =>
+      b.impact.s - a.impact.s || a.diff - b.diff || a.n - b.n);
+    const sec = document.createElement("section");
+    sec.className = "dom-section"; sec.id = "sec-flat";
+    sec.style.setProperty("--c", "var(--accent-green)");
+    sec.style.setProperty("--c-rgb", "var(--accent-green-rgb)");
+    sec.innerHTML = '<div class="dom-head"><span class="dom-dot"></span><h2>Xếp theo mức tác động</h2>'
+                  + '<span class="dom-count"><span class="sec-n">'+list.length+'</span> ĐỀ TÀI</span></div>'
+                  + '<div class="card-grid"></div>';
+    const grid = sec.querySelector(".card-grid");
+    list.forEach(t => grid.appendChild(makeCard(t)));
+    root.appendChild(sec);
+    return;
+  }
+
+  if (rail) rail.hidden = false;
+  DOMAINS.forEach(d => {
+    const list = TOPICS.filter(t => t.dom === d.id)
+                       .sort((a,b) => b.impact.s - a.impact.s || a.n - b.n);
+    if (!list.length) return;
+    const sec = document.createElement("section");
+    sec.className = "dom-section"; sec.id = "sec-"+d.id;
+    sec.dataset.dom = d.id;
+    sec.style.setProperty("--c", d.c);
+    sec.style.setProperty("--c-rgb", d.rgb);
+    sec.innerHTML = '<div class="dom-head"><span class="dom-dot"></span><h2>'+d.name+'</h2>'
+                  + '<span class="dom-count"><span class="sec-n">'+list.length+'</span> ĐỀ TÀI</span></div>'
+                  + '<div class="card-grid"></div>';
+    const grid = sec.querySelector(".card-grid");
+    list.forEach(t => grid.appendChild(makeCard(t)));
+    root.appendChild(sec);
+  });
+}
+
+/* ===== Lọc ===== */
+function matches(t){
+  if (state.starOnly && !starred[t.id]) return false;
+  if (state.doms.size && !state.doms.has(t.dom)) return false;
+  if (state.mobile && !t.mobile) return false;
+  if (state.vn && !t.vn) return false;
+  if (state.risk !== "all" && t.risk !== state.risk) return false;
+  if (state.diff !== "all" && t.diff !== Number(state.diff)) return false;
+  if (state.imp === "5" && t.impact.s < 5) return false;
+  if (state.imp === "4" && t.impact.s < 4) return false;
+  if (state.imp === "3" && t.impact.s > 3) return false;
+  if (state.q){
+    if (t._hay === undefined){
+      t._hay = deaccent(t.t+" "+t.q+" "+t.data+" "+t.contrib+" "
+                      + t.d.method+" "+t.d.why+" "+t.d.learn+" "+t.d.risk+" "
+                      + t.impact.who+" "+t.impact.pay+" "+t.impact.out);
+    }
+    if (!t._hay.includes(state.q)) return false;
+  }
+  return true;
+}
+
+function apply(){
+  let shown = 0;
+  document.querySelectorAll(".tcard").forEach(card => {
+    const t = TOPICS.find(x => x.id === card.dataset.id);
+    const ok = t ? matches(t) : false;
+    card.hidden = !ok;
+    if (ok) shown++;
+  });
+  document.querySelectorAll(".dom-section").forEach(sec => {
+    const n = sec.querySelectorAll(".tcard:not([hidden])").length;
+    sec.hidden = n === 0;
+    const el = sec.querySelector(".sec-n");
+    if (el) el.textContent = n;
+  });
+  document.getElementById("rcount").innerHTML = '<b>'+shown+'</b> / '+TOPICS.length+' đề tài';
+  document.getElementById("empty").hidden = shown !== 0;
+  updateDock();
+}
+
+/* ===== Dock: shortlist + đã xem ===== */
+function visibleTopics(){
+  return TOPICS.filter(t => {
+    const c = document.querySelector('.tcard[data-id="'+t.id+'"]');
+    return c && !c.hidden;
+  });
+}
+function updateDock(){
+  const nStar = Object.keys(starred).length;
+  const vis = visibleTopics();
+  const nSeen = vis.filter(t => seen[t.id]).length;
+  document.querySelector("#fd-star .fd-frac").textContent = nStar;
+  document.querySelector("#fd-seen .fd-frac").textContent = nSeen;
+  document.querySelector("#fd-seen .fd-tot").textContent = vis.length;
+  document.getElementById("fd-export").hidden = nStar === 0;
+}
+
+function buildDock(){
+  const dock = document.createElement("div");
+  dock.id = "focus-dock";
+  dock.innerHTML = ''
+   + '<button type="button" class="fd-btn" id="fd-export" hidden title="Tải shortlist về dạng Markdown">'
+     + '<span>⭳</span><span>Xuất shortlist .md</span></button>'
+   + '<button type="button" class="fd-btn" id="fd-seen" title="Nhảy tới đề tài chưa xem tiếp theo">'
+     + '<span>◱</span><span><span class="fd-frac">0</span>/<span class="fd-tot">0</span> đã xem</span></button>'
+   + '<button type="button" class="fd-btn" id="fd-star" aria-pressed="false" title="Chỉ hiện shortlist">'
+     + '<span>★</span><span><span class="fd-frac">0</span> đã chọn</span></button>';
+  document.body.appendChild(dock);
+
+  document.getElementById("fd-star").addEventListener("click", function(){
+    state.starOnly = !state.starOnly;
+    this.setAttribute("aria-pressed", state.starOnly ? "true":"false");
+    const chip = document.getElementById("f-star");
+    chip.setAttribute("aria-pressed", state.starOnly ? "true":"false");
+    apply();
+    window.scrollTo({ top:0, behavior:"smooth" });
+  });
+
+  document.getElementById("fd-seen").addEventListener("click", () => {
+    const next = visibleTopics().find(t => !seen[t.id]);
+    if (next){
+      const el = document.querySelector('.tcard[data-id="'+next.id+'"]');
+      const y = window.pageYOffset + el.getBoundingClientRect().top - 190;
+      window.scrollTo({ top:Math.max(0,y), behavior:"smooth" });
+    } else {
+      window.scrollTo({ top:0, behavior:"smooth" });
+    }
+  });
+
+  document.getElementById("fd-export").addEventListener("click", exportShortlist);
+}
+
+function exportShortlist(){
+  const picks = TOPICS.filter(t => starred[t.id])
+                      .sort((a,b) => b.impact.s - a.impact.s || a.n - b.n);
+  if (!picks.length) return;
+  const strip = s => s.replace(/<[^>]+>/g,"");
+  let md = "# Shortlist đề tài luận văn\n\n_Xuất ngày "
+         + new Date().toLocaleDateString("vi-VN") + " · " + picks.length + " đề tài_\n\n";
+  picks.forEach(t => {
+    md += "## #" + t.n + " — " + strip(t.t) + "\n\n"
+       +  "**Lĩnh vực:** " + domById[t.dom].name + "  \n"
+       +  "**Tác động:** " + t.impact.s + "/5 (" + IMP_WORD[t.impact.s] + ") · **Độ khó:** " + t.diff
+       +  "/5 · **Rủi ro dữ liệu:** " + LVL_LABEL[t.risk]
+       +  " · **Compute:** " + LVL_LABEL[t.compute] + " · **Kiến thức ngành:** " + LVL_LABEL[t.know] + "\n\n"
+       +  "**Ai được lợi.** " + strip(t.impact.who) + "  \n"
+       +  "**Ai trả tiền.** " + strip(t.impact.pay) + "  \n"
+       +  "**Bàn giao được gì.** " + strip(t.impact.out) + "\n\n"
+       +  "**Câu hỏi nghiên cứu.** " + strip(t.q) + "\n\n"
+       +  "**Phương pháp.** " + strip(t.d.method) + "\n\n"
+       +  "**Dữ liệu.** " + strip(t.data) + "\n\n"
+       +  "**Đóng góp.** " + strip(t.contrib) + "\n\n"
+       +  "**Vì sao không tầm thường.** " + strip(t.d.why) + "\n\n"
+       +  "**Rủi ro chính.** " + strip(t.d.risk) + "\n\n"
+       +  "**Cần học thêm.** " + strip(t.d.learn) + "\n\n"
+       +  "**Spike 5 ngày.** " + strip(t.d.spike) + "\n\n---\n\n";
+  });
+  md += "## Việc cần làm tiếp\n\n"
+     +  "1. Kiểm tra có giảng viên hướng dẫn hiểu lĩnh vực này không — yếu tố quyết định lớn nhất.\n"
+     +  "2. Chạy spike 5 ngày cho từng đề tài trong shortlist.\n"
+     +  "3. Đăng ký truy cập dữ liệu ngay với đề tài cần credential (độ trễ 2–4 tuần).\n";
+  try {
+    const blob = new Blob([md], { type:"text/markdown;charset=utf-8" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "shortlist-de-tai.md";
+    document.body.appendChild(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  } catch(e){
+    navigator.clipboard && navigator.clipboard.writeText(md);
+    alert("Không tải được file — nội dung đã được chép vào clipboard.");
+  }
+}
+
+/* ===== Panel chi tiết ===== */
+function initPanel(){
+  const panel = document.getElementById("detail-panel");
+  const body  = panel.querySelector(".detail-body");
+  const titleEl = panel.querySelector(".detail-title");
+  let lastTrigger = null;
+
+  function open(id, trigger){
+    const src = document.getElementById("detail-"+id);
+    if (!src) return;
+    titleEl.textContent = src.dataset.title || "";
+    body.replaceChildren(...Array.from(src.cloneNode(true).childNodes));
+    document.querySelectorAll('.expand-btn[aria-expanded="true"]').forEach(b => b.setAttribute("aria-expanded","false"));
+    if (trigger) trigger.setAttribute("aria-expanded","true");
+    panel.classList.add("open");
+    document.body.classList.add("detail-open");
+    body.scrollTop = 0;
+    lastTrigger = trigger || null;
+    panel.querySelector(".detail-close").focus();
+    if (!seen[id]) { toggleSeen(id, true); }
+  }
+  function close(){
+    panel.classList.remove("open");
+    document.body.classList.remove("detail-open");
+    document.querySelectorAll('.expand-btn[aria-expanded="true"]').forEach(b => b.setAttribute("aria-expanded","false"));
+    if (lastTrigger){ lastTrigger.focus(); lastTrigger = null; }
+  }
+  document.addEventListener("click", e => {
+    const ex = e.target.closest("[data-expand]");
+    if (ex){ e.preventDefault(); open(ex.getAttribute("data-expand"), ex); return; }
+    if (e.target.closest(".detail-close") || e.target.classList.contains("detail-backdrop")) close();
+  });
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && panel.classList.contains("open")) close();
+  });
+
+  /* kéo đổi độ rộng */
+  const handle = panel.querySelector(".detail-resize");
+  const MIN = 380, max = () => Math.round(window.innerWidth * 0.92);
+  let remembered = null, startX = 0, startW = 0, dragging = false;
+  const clamp = w => Math.max(MIN, Math.min(max(), w));
+  const applyW = w => panel.style.setProperty("--panel-w", clamp(w)+"px");
+  function down(x){ if (window.innerWidth <= 1024) return; dragging = true; startX = x;
+    startW = panel.getBoundingClientRect().width; panel.classList.add("resizing"); }
+  function move(x){ if (dragging) applyW(startW + (startX - x)); }
+  function up(){ if (!dragging) return; dragging = false; panel.classList.remove("resizing");
+    remembered = panel.style.getPropertyValue("--panel-w"); }
+  handle.addEventListener("mousedown", e => { e.preventDefault(); down(e.clientX); });
+  window.addEventListener("mousemove", e => move(e.clientX));
+  window.addEventListener("mouseup", up);
+  handle.addEventListener("touchstart", e => down(e.touches[0].clientX), { passive:true });
+  window.addEventListener("touchmove", e => { if (dragging){ e.preventDefault(); move(e.touches[0].clientX); } }, { passive:false });
+  window.addEventListener("touchend", up);
+  handle.addEventListener("keydown", e => {
+    if (window.innerWidth <= 1024) return;
+    const cur = panel.getBoundingClientRect().width;
+    if (e.key === "ArrowLeft"){ e.preventDefault(); applyW(cur+24); remembered = panel.style.getPropertyValue("--panel-w"); }
+    if (e.key === "ArrowRight"){ e.preventDefault(); applyW(cur-24); remembered = panel.style.getPropertyValue("--panel-w"); }
+  });
+  handle.addEventListener("dblclick", () => { panel.style.removeProperty("--panel-w"); remembered = null; });
+  new MutationObserver(() => {
+    if (panel.classList.contains("open") && remembered && window.innerWidth > 1024)
+      panel.style.setProperty("--panel-w", remembered);
+  }).observe(panel, { attributes:true, attributeFilter:["class"] });
+}
+
+/* ===== Toggle sao / đã xem ===== */
+function toggleStar(id){
+  if (starred[id]) delete starred[id]; else starred[id] = 1;
+  saveStar();
+  const card = document.querySelector('.tcard[data-id="'+id+'"]');
+  const btn = card.querySelector("[data-star]");
+  btn.setAttribute("aria-pressed", starred[id] ? "true":"false");
+  btn.textContent = starred[id] ? "★" : "☆";
+  card.classList.toggle("starred", !!starred[id]);
+  if (state.starOnly) apply(); else updateDock();
+}
+function toggleSeen(id, force){
+  if (force === true) seen[id] = 1;
+  else if (seen[id]) delete seen[id];
+  else seen[id] = 1;
+  saveSeen();
+  const card = document.querySelector('.tcard[data-id="'+id+'"]');
+  if (!card) return;
+  const btn = card.querySelector("[data-seen]");
+  btn.setAttribute("aria-pressed", seen[id] ? "true":"false");
+  btn.textContent = seen[id] ? "✓ đã xem" : "đã xem";
+  card.classList.toggle("seen", !!seen[id]);
+  updateDock();
+}
+
+/* ===== Sự kiện lọc ===== */
+function initFilters(){
+  let tId;
+  document.getElementById("q").addEventListener("input", e => {
+    clearTimeout(tId);
+    tId = setTimeout(() => { state.q = deaccent(e.target.value.trim()); apply(); }, 160);
+  });
+
+  function seg(elId, key){
+    const g = document.getElementById(elId);
+    g.querySelectorAll(".segment").forEach(s => {
+      s.addEventListener("click", () => {
+        g.querySelectorAll(".segment").forEach(x => x.setAttribute("aria-checked","false"));
+        s.setAttribute("aria-checked","true");
+        state[key] = s.dataset.v;
+        apply();
+      });
+    });
+  }
+  seg("diff-seg","diff"); seg("risk-seg","risk"); seg("imp-seg","imp");
+
+  /* đổi cách sắp xếp thì phải dựng lại DOM */
+  const sortG = document.getElementById("sort-seg");
+  sortG.querySelectorAll(".segment").forEach(s => {
+    s.addEventListener("click", () => {
+      if (state.sort === s.dataset.v) return;
+      sortG.querySelectorAll(".segment").forEach(x => x.setAttribute("aria-checked","false"));
+      s.setAttribute("aria-checked","true");
+      state.sort = s.dataset.v;
+      render();
+      apply();
+    });
+  });
+
+  function chip(id, key){
+    const b = document.getElementById(id);
+    b.addEventListener("click", () => {
+      state[key] = !state[key];
+      b.setAttribute("aria-pressed", state[key] ? "true":"false");
+      if (key === "starOnly")
+        document.getElementById("fd-star").setAttribute("aria-pressed", state[key] ? "true":"false");
+      apply();
+    });
+  }
+  chip("f-mobile","mobile"); chip("f-vn","vn"); chip("f-star","starOnly");
+
+  document.getElementById("clear-all").addEventListener("click", () => {
+    state.q=""; state.doms.clear(); state.diff="all"; state.risk="all"; state.imp="all";
+    state.mobile=false; state.vn=false; state.starOnly=false;
+    document.getElementById("q").value = "";
+    document.querySelectorAll("#dom-chips .fchip").forEach(b => b.setAttribute("aria-pressed","false"));
+    ["f-mobile","f-vn","f-star"].forEach(i => document.getElementById(i).setAttribute("aria-pressed","false"));
+    document.getElementById("fd-star").setAttribute("aria-pressed","false");
+    ["diff-seg","risk-seg","imp-seg"].forEach(g => {
+      document.querySelectorAll("#"+g+" .segment").forEach((s,i) => s.setAttribute("aria-checked", i===0?"true":"false"));
+    });
+    apply();
+  });
+
+  document.addEventListener("click", e => {
+    const s = e.target.closest("[data-star]");
+    if (s){ toggleStar(s.getAttribute("data-star")); return; }
+    const v = e.target.closest("[data-seen]");
+    if (v){ toggleSeen(v.getAttribute("data-seen")); }
+  });
+}
+
+/* ===== Thanh tiến trình + scroll spy ===== */
+function initScroll(){
+  const bar = document.getElementById("read-progress");
+  const links = Array.from(document.querySelectorAll("#toc-list a"));
+  function onScroll(){
+    const h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.pageYOffset / h) * 100 : 0) + "%";
+    let active = null;
+    DOMAINS.forEach(d => {
+      const sec = document.getElementById("sec-"+d.id);
+      if (sec && !sec.hidden && sec.getBoundingClientRect().top <= 220) active = d.id;
+    });
+    links.forEach(a => a.classList.toggle("active", a.dataset.sec === active));
+  }
+  window.addEventListener("scroll", onScroll, { passive:true });
+  onScroll();
+}
+
+/* ===== Theme ===== */
+function initTheme(){
+  const root = document.documentElement;
+  if (lsGet(K_THEME) === "light") root.setAttribute("data-theme","light");
+  const btn = document.getElementById("theme-toggle");
+  btn.querySelector(".theme-label").textContent = root.getAttribute("data-theme").toUpperCase();
+  btn.addEventListener("click", () => {
+    const next = root.getAttribute("data-theme") === "light" ? "dark" : "light";
+    root.setAttribute("data-theme", next);
+    lsSet(K_THEME, next);
+    btn.querySelector(".theme-label").textContent = next.toUpperCase();
+  });
+}
+
+/* ===== Khởi động ===== */
+buildChips();
+buildTOC();
+render();
+buildDock();
+initPanel();
+initFilters();
+initScroll();
+initTheme();
+apply();
+
+</script>
+</body>
+</html>
