@@ -79,6 +79,7 @@ a{color:var(--accent-identity);}
 /* ============ LAYOUT ============ */
 .wrap{max-width:1440px;margin:0 auto;padding:0 clamp(16px,3vw,40px);}
 .shell{display:grid;grid-template-columns:200px minmax(0,1fr);gap:var(--sp-10);align-items:start;}
+.shell.no-rail{grid-template-columns:minmax(0,1fr);}
 @media (max-width:1100px){.shell{grid-template-columns:minmax(0,1fr);} .toc-rail{display:none;}}
 
 /* ============ HEADER ============ */
@@ -1530,9 +1531,11 @@ function render(){
   const root = document.getElementById("sections");
   root.innerHTML = "";
   const rail = document.querySelector(".toc-rail");
+  const shell = document.querySelector(".shell");
 
   if (state.sort === "impact"){
     if (rail) rail.hidden = true;
+    if (shell) shell.classList.add("no-rail");
     const list = TOPICS.slice().sort((a,b) =>
       b.impact.s - a.impact.s || a.diff - b.diff || a.n - b.n);
     const sec = document.createElement("section");
@@ -1549,6 +1552,7 @@ function render(){
   }
 
   if (rail) rail.hidden = false;
+  if (shell) shell.classList.remove("no-rail");
   DOMAINS.forEach(d => {
     const list = TOPICS.filter(t => t.dom === d.id)
                        .sort((a,b) => b.impact.s - a.impact.s || a.n - b.n);
