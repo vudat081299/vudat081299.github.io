@@ -1,6 +1,6 @@
 # Lượt chấm 100 đề tài theo `thesis-topic-rubric.md`
 
-`as_of: 2026-07-28` · đầu vào: `thesis-topic-selector.html` bản 6 (100 đề tài) · đầu ra: bản 7 (87 đề tài)
+`as_of: 2026-07-28` · đầu vào: `thesis-topic-selector.html` bản 6 (100 đề tài) · đầu ra: bản 7 (**90 đề tài** = 100 − 13 loại − 1 gộp + 4 hợp nhất từ nhánh rà soát)
 
 Đây là **kết quả chấm**, không phải tiêu chí. Tiêu chí ở [`thesis-topic-rubric.md`](thesis-topic-rubric.md).
 
@@ -27,6 +27,8 @@ Rubric mục 2 cấm bịa tên bài, tên dataset, con số. Năm chỗ load-be
 | #13 | Hai bài medRxiv 2026: slope nội bộ 0,982 · intercept 0,001 · intercept ngoại bộ −0,678; bài thứ hai slope tụt 1,007 → 0,417 | **Đúng** — cả hai bài tồn tại, các số khớp (CI của −0,678 là −0,712…−0,649) | `CÓ NGUỒN` |
 | #37 | Gervet 2020: DKT có AUC cao nhất ở 4/9 dataset; logistic dẫn ở dataset cỡ vừa | **Đúng** — và Mandalapu 2021 *Do we need to go Deep?* cũng tồn tại | `CÓ NGUỒN` |
 | #20 | Earth Engine: từ 27/04/2026 có hạn mức EECU-giờ; Community 150, Contributor 1.000; không phải ngưỡng cắt cứng | **Đúng từng chi tiết**, kể cả phần "restricted mode chứ không chặn" | `CÓ NGUỒN` |
+
+**Ghi chú về nhánh song song.** Sau khi chấm xong tôi phát hiện trang này được phát triển trên hai nhánh: nhánh kia rà soát lại toàn bộ trích dẫn của bản 48 rồi thêm 4 đề tài đã tra nguồn (thành #101–#104 sau khi hợp nhất). Nhánh đó tìm ra đúng lỗi KuaiRec bên dưới một cách độc lập, cộng hai lỗi nữa mà lượt này bỏ sót: **Mandalapu 2021 là workshop tại AAAI-2021, không phải hội nghị chính** (#37), và **con số 37% của #1 là „lên tới ~37%, thắng 8/10 lần chạy”** chứ không phải một mức chung. Cả hai đã được hợp nhất vào page.
 
 **Một số liệu sai đã tìm ra — #36.** Page ghi ma trận lớn của KuaiRec có "~1,15 triệu tương tác". Số đúng là **12.530.806** (mật độ ~16,3%); ma trận nhỏ 1.411 × 3.327 với ~4,7 triệu tương tác và mật độ ~99,6% thì page ghi đúng. Đây là lỗi do bản 4 tạo ra *trong lúc sửa* một lỗi khác.
 
@@ -72,7 +74,7 @@ Quy tắc áp dụng: **`know: cao` một mình KHÔNG loại** (đó là việc
 
 ## 4. KHÔNG loại, và vì sao — phần này quan trọng bằng phần trên
 
-**a. Trùng khuôn mẫu (F23) không phải lý do xoá khỏi thực đơn.** Page có nhiều cụm dùng cùng một khuôn: #16/#67/#87/#96 đều là bài shortcut/rò rỉ; #2/#21/#25/#42/#62/#65/#70/#71 đều là "đo bằng chi phí quyết định"; #9/#50 là cặp song sinh (rò rỉ homolog / rò rỉ scaffold); #6/#17/#49/#79 đều là đường cong hiệu quả nhãn. Rubric mục 10 xử lý trùng lặp ở **lượt chọn shortlist** — gộp cặp rồi chọn một dựa trên R4 và `know` — chứ không xoá khỏi danh sách. Xoá sớm là tự lấy mất phương án rơi: khuôn lặp chính là lý do mỗi đề tài trong shortlist có một đề tài dự phòng cùng phương pháp mà `risk` thấp hơn.
+**a. Trùng khuôn mẫu (F23) không phải lý do xoá khỏi thực đơn — nhưng trùng *đề tài* thì có.** Ngoại lệ duy nhất của lượt này: đề tài point-adjust cũ (#77) và #101 từ nhánh rà soát là cùng một luận văn — cùng câu hỏi, cùng bộ dữ liệu, cùng cơ chế thổi phồng. Đã giữ #101 (có nền phê phán trích nguồn được: Wu & Keogh TKDE, Kim 2022; cộng benchmark lành mạnh UCR/TSB-AD) và bỏ #77. Còn lại, page có nhiều cụm dùng cùng một *khuôn*: #16/#67/#87/#96 đều là bài shortcut/rò rỉ; #2/#21/#25/#42/#62/#65/#70/#71 đều là "đo bằng chi phí quyết định"; #9/#50 là cặp song sinh (rò rỉ homolog / rò rỉ scaffold); #6/#17/#49/#79 đều là đường cong hiệu quả nhãn. Rubric mục 10 xử lý trùng lặp ở **lượt chọn shortlist** — gộp cặp rồi chọn một dựa trên R4 và `know` — chứ không xoá khỏi danh sách. Xoá sớm là tự lấy mất phương án rơi: khuôn lặp chính là lý do mỗi đề tài trong shortlist có một đề tài dự phòng cùng phương pháp mà `risk` thấp hơn.
 
 **b. `know: cao` đơn lẻ ở lại.** Bảy đề tài: #9 (tin sinh), #12 (PLM), #14 (sepsis), #61 (kinh tế), #66 (khí hậu), #81 (kinh tế lượng), #83 (OPE). Tất cả đều mang câu "cần người để hỏi" — nhưng đó là **B6 `CHUA_THU`**, tức việc đi hỏi bộ môn, không phải bản án. Loại chúng bây giờ là đúng lỗi mà bản 5 của page đã tự thú: loại một lĩnh vực bằng một bộ lọc không viết ra.
 
@@ -88,18 +90,18 @@ Quy tắc áp dụng: **`know: cao` một mình KHÔNG loại** (đó là việc
 
 Chấm máy móc ba trục R1 (`risk`) · R2 (`know`) · R3 (`compute`), lấy mức xấu nhất:
 
-| | Trước (100) | Sau (87) |
-|---|---|---|
-| Ba trục `ĐI ĐƯỢC` | 19 | **18** |
-| Đúng một trục `CĂNG` | 58 | **58** |
-| Có trục `CHẶN` | 23 | **11** |
+| | Trước (100) | Sau loại (87) | Sau hợp nhất (90) |
+|---|---|---|---|
+| Ba trục `ĐI ĐƯỢC` | 19 | 18 | **20** |
+| Đúng một trục `CĂNG` | 58 | 58 | **59** |
+| Có trục `CHẶN` | 23 | 11 | **11** |
 
 Lượt loại lấy đi 12 trong 23 ca `CHẶN` và gần như không chạm phần giữa — đúng thứ nó nên làm. Mười một ca `CHẶN` còn lại là `know`/`compute` cao đơn lẻ, phần lớn hạ về `CĂNG` khi chấm bằng văn xuôi theo mục 4 của rubric.
 
-**18 đề tài xanh cả ba trục** — chỗ nên mang đi hỏi bộ môn trước:
-`#1 #4 #25 #27 #29 #30 #31 #33 #36 #37 #39 #46 #67 #77 #79 #91 #92 #95`
+**20 đề tài xanh cả ba trục** — chỗ nên mang đi hỏi bộ môn trước:
+`#1 #4 #25 #27 #29 #30 #31 #33 #36 #37 #39 #46 #67 #79 #91 #92 #95 #101 #102 #104`
 
-Trong đó 16 cái có `impact.s ≥ 4`. Ba cái rẻ nhất còn lại trong page: **#77** (point-adjust, kết quả chính trong một ngày), **#82** (A/B peeking, mô phỏng), **#92** (đo điện huấn luyện, tự sinh dữ liệu).
+Trong đó 16 cái có `impact.s ≥ 4`. Ba cái rẻ nhất còn lại trong page: **#101** (giao thức chấm điểm phát hiện bất thường — kết quả chính trong một ngày), **#82** (A/B peeking, mô phỏng), **#92** (đo điện huấn luyện, tự sinh dữ liệu).
 
 ---
 
@@ -108,4 +110,5 @@ Trong đó 16 cái có `impact.s ≥ 4`. Ba cái rẻ nhất còn lại trong pa
 1. **Trả lời R4.** Xem danh sách giảng viên bộ môn và luận văn đã bảo vệ 2–3 năm gần đây, rồi chấm lại. Đây là trục page tự gọi là quyết định nhất, và là thứ duy nhất mở được ô `DI_DUOC`.
 2. **Đăng ký PhysioNet hôm nay** nếu còn quan tâm #13/#15/#16/#17 — trễ 2–4 tuần, đăng ký không ràng buộc gì.
 3. **Tra công trình gần nhất** cho 3–5 đề tài đầu shortlist, để V2 lên được mức `TOT`. Ba chỗ page tự cảnh báo cạnh tranh sát: #2 (đã có bài rất gần), #77 (mảng đã có phê phán), #96 (đã có người làm gần).
-4. **Kiểm lại lượt này nếu quá 6 tháng** (`dieu_kien_tai_kiem`), hoặc ngay khi một nguồn dữ liệu chính đổi điều khoản. Tính khả dụng dữ liệu hết hạn; verdict cũng vậy.
+4. **Chấm 4 đề tài hợp nhất bằng chính bộ tiêu chí này.** #101–#104 vào page qua đường rà soát dữ kiện, chưa qua tầng blocker/ràng buộc. Chấm nhanh ba trục cho thấy #101, #102, #104 xanh cả ba và #103 có một trục `CĂNG` — nhưng R5 (thiết kế đo lường) và R6 (kết quả âm) của chúng thì lượt này chưa soi.
+5. **Kiểm lại lượt này nếu quá 6 tháng** (`dieu_kien_tai_kiem`), hoặc ngay khi một nguồn dữ liệu chính đổi điều khoản. Tính khả dụng dữ liệu hết hạn; verdict cũng vậy.

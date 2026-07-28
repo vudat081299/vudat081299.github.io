@@ -1,6 +1,6 @@
 # Bộ tiêu chí verify đề tài — bản riêng cho `thesis-topic-selector`
 
-Bộ này chấm các đề tài trong `thesis-topic-selector.html` (**87 đề tài, 16 lĩnh vực** — bản 7 của page, sau khi 13 đề tài bị loại bằng chính bộ này; số `#N` của các đề tài còn lại giữ nguyên nên dãy số có lỗ). Nó **không phải** rubric thạc sĩ dùng chung — nó dùng đúng các trường dữ liệu và đúng các thang đo mà page đó đã có, để kết quả chấm cắm được trở lại vào page thay vì nằm rời trong một file điểm.
+Bộ này chấm các đề tài trong `thesis-topic-selector.html` (**90 đề tài, 16 lĩnh vực** — bản 7 của page: 100 đề tài trừ 13 bị loại bằng chính bộ này, cộng 4 đề tài `#101`–`#104` hợp nhất từ nhánh rà soát và trừ 1 đề tài bị gộp vì trùng; số `#N` của các đề tài còn lại giữ nguyên nên dãy số có lỗ). Nó **không phải** rubric thạc sĩ dùng chung — nó dùng đúng các trường dữ liệu và đúng các thang đo mà page đó đã có, để kết quả chấm cắm được trở lại vào page thay vì nằm rời trong một file điểm.
 
 Tài liệu này chỉ định nghĩa tiêu chí. Nó không chứa kết quả chấm đề tài nào.
 
@@ -29,7 +29,7 @@ Mỗi đề tài trong page là một object trong `TOPICS`. Chấm được hay
 | Trường | Thang / dạng | Vai trò khi chấm |
 |---|---|---|
 | `id` | chuỗi (`a01`…`z02`) | Khoá thật của đề tài — tiền tố theo lĩnh vực, **không** phải `t` + số thứ tự |
-| `n` | 1–100, **có lỗ** | Số hiển thị `#N`. Mọi ghi chú trong page tham chiếu theo số này, nên nó **không được đánh lại** sau khi loại đề tài — 13 số đã biến mất (#26 #28 #51 #53 #57 #63 #69 #74 #78 #84 #86 #89 #98) và đó là chủ ý |
+| `n` | 1–104, **có lỗ** | Số hiển thị `#N`. Mọi ghi chú trong page tham chiếu theo số này, nên nó **không được đánh lại** sau khi loại đề tài — 14 số đã biến mất (#26 #28 #51 #53 #57 #63 #69 #74 #77 #78 #84 #86 #89 #98) và đó là chủ ý. Bốn số `#101`–`#104` là phần hợp nhất từ nhánh rà soát, đánh số nối tiếp để không đụng #49–#52 |
 | `dom` | id lĩnh vực | Một trong 16 `DOMAINS`. Cần cho lượt tổng ở mục 10 |
 | `t` | chuỗi | Tên đề tài |
 | `q` | chuỗi | **Câu hỏi nghiên cứu** — phải là câu hỏi có thể trả lời sai |
@@ -81,44 +81,44 @@ Trong mọi ca trên: liệt kê đúng trường thiếu, **không tự bổ su
 
 ### 1b. Thang khai báo vs thang thực dùng — đọc trước khi tin vào con số
 
-Đo trên 87 đề tài hiện có, sau lượt loại của bản 7 (ngày đo ghi trong `as_of` của lượt chấm):
+Đo trên 90 đề tài hiện có, sau lượt loại và hợp nhất của bản 7 (ngày đo ghi trong `as_of` của lượt chấm):
 
 | Trường | Khai báo | Giá trị thực xuất hiện | Hệ quả |
 |---|---|---|---|
-| `diff` | 1–5 | chỉ `3` (38) · `4` (48) · `5` (1) | Thực chất là thang **2 bậc rưỡi**: lượt loại đã lấy gần hết bậc 5 (còn đúng một đề tài). `diff: 3` là mức thấp nhất tồn tại, không phải "trung bình" |
-| `impact.s` | 1–5 | chỉ `2` (1) · `3` (10) · `4` (39) · `5` (37) | Thực chất **4 bậc**, và `5` chiếm 37/87 — bậc trên vẫn bị dồn, lượt loại không chữa được điều đó |
-| `risk` | 3 bậc | `thap` 48 · `tb` 38 · `cao` 1 | Bậc `cao` gần như đã bị lượt loại lấy hết — còn đúng #18 (dengue VN), và nó ở lại vì có phương án B rõ |
-| `compute` | 3 bậc | `thap` 29 · `tb` 54 · `cao` 4 | Bốn cái `cao` còn lại đều có đường thu hẹp ghi rõ trong `d.risk` |
-| `know` | 3 bậc | `thap` 28 · `tb` 52 · `cao` 7 | Bảy cái `cao` còn lại là loại "chỉ một ràng buộc nặng" — giữ lại có chủ ý, xem 1c |
-| `mobile` | bool | `true` 9 | Ít, và lượt loại không chạm cái nào — dùng để xếp hạng (V3), không dùng để sàng |
-| `vn` | bool | `true` 43 | Vẫn xấp xỉ nửa danh sách, nên một mình nó không phân biệt được gì |
+| `diff` | 1–5 | chỉ `3` (40) · `4` (49) · `5` (1) | Thực chất là thang **2 bậc rưỡi**: lượt loại đã lấy gần hết bậc 5 (còn đúng một đề tài). `diff: 3` là mức thấp nhất tồn tại, không phải "trung bình" |
+| `impact.s` | 1–5 | chỉ `2` (1) · `3` (11) · `4` (40) · `5` (38) | Thực chất **4 bậc**, và `5` chiếm 38/90 — bậc trên vẫn bị dồn, lượt loại không chữa được điều đó |
+| `risk` | 3 bậc | `thap` 50 · `tb` 39 · `cao` 1 | Bậc `cao` gần như đã bị lượt loại lấy hết — còn đúng #18 (dengue VN), và nó ở lại vì có phương án B rõ |
+| `compute` | 3 bậc | `thap` 29 · `tb` 57 · `cao` 4 | Bốn cái `cao` còn lại đều có đường thu hẹp ghi rõ trong `d.risk` |
+| `know` | 3 bậc | `thap` 31 · `tb` 52 · `cao` 7 | Bảy cái `cao` còn lại là loại "chỉ một ràng buộc nặng" — giữ lại có chủ ý, xem 1c |
+| `mobile` | bool | `true` 10 | Ít, và lượt loại không chạm cái nào — dùng để xếp hạng (V3), không dùng để sàng |
+| `vn` | bool | `true` 45 | Vẫn xấp xỉ nửa danh sách, nên một mình nó không phân biệt được gì |
 
 Hai điều phải rút ra:
 
 1. **Đừng đọc `diff: 3` là "dễ".** Trong thang thực dùng nó là sàn. Nếu bạn muốn so độ khó giữa hai đề tài thì `diff` một mình không phân giải được — phải đọc kèm `know` và `compute`.
-2. **`impact.s: 5` bị lạm phát.** 37/87 đề tài ở bậc cao nhất nghĩa là bậc đó không còn phân biệt được gì. Khi chấm V1, xu hướng đúng là **hạ**, không phải giữ: yêu cầu `pay` chịu được phép thử cuộc gọi 30 phút, và hạ xuống 4 nếu không. Một thang mà gần một nửa mẫu nằm ở đỉnh là thang cần siết lại, không phải thang cần thêm bậc.
+2. **`impact.s: 5` bị lạm phát.** 38/90 đề tài ở bậc cao nhất nghĩa là bậc đó không còn phân biệt được gì. Khi chấm V1, xu hướng đúng là **hạ**, không phải giữ: yêu cầu `pay` chịu được phép thử cuộc gọi 30 phút, và hạ xuống 4 nếu không. Một thang mà gần một nửa mẫu nằm ở đỉnh là thang cần siết lại, không phải thang cần thêm bậc.
 
 Đây chính là lý do bộ tiêu chí này không cộng dồn các trường của page thành một điểm: **các thang gốc chưa được hiệu chuẩn**, nên cộng chúng lại chỉ nhân thêm sai số.
 
-**Điều thứ ba, quan trọng cho verdict `THIEU_THONG_TIN`:** cả 87 đề tài đều có `t`, `q`, `data`, `contrib`, `d.method`, `d.why`, `d.risk`, `d.learn`, `d.spike` **không rỗng**, và `d.learn` nào cũng có số tuần/ngày. Nếu chỉ kiểm "trường rỗng" thì `THIEU_THONG_TIN` là nhánh chết, không bao giờ bật. Nó chỉ có ích khi kiểm theo bảng ở 1a: **có tên nguồn nhưng không có đường truy cập / không nói license**, hoặc `IMPACT[id]` là fallback.
+**Điều thứ ba, quan trọng cho verdict `THIEU_THONG_TIN`:** cả 90 đề tài đều có `t`, `q`, `data`, `contrib`, `d.method`, `d.why`, `d.risk`, `d.learn`, `d.spike` **không rỗng**, và `d.learn` nào cũng có số tuần/ngày. Nếu chỉ kiểm "trường rỗng" thì `THIEU_THONG_TIN` là nhánh chết, không bao giờ bật. Nó chỉ có ích khi kiểm theo bảng ở 1a: **có tên nguồn nhưng không có đường truy cập / không nói license**, hoặc `IMPACT[id]` là fallback.
 
 ### 1c. Hình dạng phân bố phải trông thế nào — mốc để biết mình chấm lệch
 
-Chấm máy móc chỉ ba trục R1 (từ `risk`), R2 (từ `know`), R3 (từ `compute`) và lấy mức xấu nhất, trên 87 đề tài:
+Chấm máy móc chỉ ba trục R1 (từ `risk`), R2 (từ `know`), R3 (từ `compute`) và lấy mức xấu nhất, trên 90 đề tài:
 
 | Kết quả | Số đề tài |
 |---|---|
-| Ba trục đều `ĐI ĐƯỢC` | 18 |
-| Đúng một trục `CĂNG` | 58 |
+| Ba trục đều `ĐI ĐƯỢC` | 20 |
+| Đúng một trục `CĂNG` | 59 |
 | Có ít nhất một trục `CHẶN` | 11 |
 
-(Trước lượt loại của bản 7, ba con số này là 19 · 58 · 23 — tức lượt loại lấy đi 12 trong 23 ca `CHẶN` và gần như không chạm phần giữa.)
+(Trước lượt loại của bản 7, ba con số này là 19 · 58 · 23 trên 100 đề tài — tức lượt loại lấy đi 12 trong 23 ca `CHẶN` và gần như không chạm phần giữa; bốn đề tài hợp nhất thêm vào thì có ba cái xanh cả ba trục.)
 
 Mười một ca `CHẶN` còn lại **không phải sót**: chúng là `know: cao` hoặc `compute: cao` đơn lẻ, có đường thu hẹp ghi rõ, nên theo quy tắc chấm-bằng-văn-xuôi ở mục 4 phần lớn hạ về `CĂNG`. Ánh xạ máy móc cố tình khắt khe hơn để bạn thấy chúng.
 
 Dùng ba con số này làm mốc kiểm chính mình. Nếu lượt chấm của bạn cho ra 80 đề tài `CHAN`, bạn đang đọc "chưa kiểm" thành "đã fail" — xem mục 3. Nếu cho ra 60 đề tài `DI_DUOC`, bạn đang bỏ qua R4/R5/R6.
 
-Và biết trước một điều: **`R4` chưa biết với cả 87 đề tài** (page không có trường nào cho nó). Cho tới khi bạn trả lời được câu hỏi thầy hướng dẫn, mọi đề tài mang sẵn một `CĂNG`, nên ô `DI_DUOC` rỗng **bằng thiết kế** — đó không phải rubric hỏng, đó là rubric đang nói bạn đi hỏi bộ môn.
+Và biết trước một điều: **`R4` chưa biết với cả 90 đề tài** (page không có trường nào cho nó). Cho tới khi bạn trả lời được câu hỏi thầy hướng dẫn, mọi đề tài mang sẵn một `CĂNG`, nên ô `DI_DUOC` rỗng **bằng thiết kế** — đó không phải rubric hỏng, đó là rubric đang nói bạn đi hỏi bộ môn.
 
 ---
 
@@ -311,7 +311,7 @@ Và ngược lại: **điểm tác động thấp không phải điểm xấu.**
 
 ### V3 — Đòn bẩy nền sẵn có (đọc `mobile` + `vn`, đối chiếu "Nền học viên")
 
-Page có hai trường `mobile` (9/87) và `vn` (43/87) mà **không trục nào ở trên tiêu thụ**, và mục 9 có slot "Nền học viên" cũng không được dùng vào đâu. Đó là bỏ sót: một đề tài khai thác đúng 7 năm kỹ sư mobile/backend của học viên đi nhanh hơn hẳn một đề tài buộc học viên bắt đầu từ số không, dù hai cái cùng mức `know`.
+Page có hai trường `mobile` (10/90) và `vn` (45/90) mà **không trục nào ở trên tiêu thụ**, và mục 9 có slot "Nền học viên" cũng không được dùng vào đâu. Đó là bỏ sót: một đề tài khai thác đúng 7 năm kỹ sư mobile/backend của học viên đi nhanh hơn hẳn một đề tài buộc học viên bắt đầu từ số không, dù hai cái cùng mức `know`.
 
 | Mức | Điều kiện |
 |---|---|
