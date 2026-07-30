@@ -269,13 +269,22 @@ a{color:var(--ink);}
    (tham khảo quy ước drawer non-modal — "--pass", page nền vẫn dùng được — của skill web-builder,
    nhưng ở đây bỏ hẳn scrim vì yêu cầu là list phải rõ, không chỉ là click xuyên qua được). */
 #detail-drawer{
-  position:fixed;top:0;right:0;bottom:0;width:min(440px,100vw);
+  position:fixed;top:0;right:0;bottom:0;
+  width:clamp(320px, var(--drawer-w, 33.334vw), 90vw);
   background:var(--surface);border-left:1px solid var(--line-strong);
   box-shadow:-3px 0 0 var(--ink);
   transform:translateX(100%);transition:transform 180ms ease;
   z-index:150;display:flex;flex-direction:column;
 }
 #detail-drawer.open{transform:translateX(0);}
+/* Tay kéo resize: dải mỏng đè lên mép trái, nửa trong nửa ngoài để dễ bắt chuột */
+.drawer-resize{
+  position:absolute;top:0;left:-4px;width:8px;height:100%;
+  cursor:col-resize;z-index:1;touch-action:none;background:transparent;
+  transition:background var(--dur);
+}
+.drawer-resize:hover,.drawer-resize.dragging{background:var(--line-strong);}
+@media (max-width:900px){ .drawer-resize{display:none;} }
 .drawer-head{display:flex;align-items:flex-start;gap:var(--sp-3);padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--line);}
 .drawer-title{font-size:var(--fs-sm);font-weight:800;color:var(--ink);flex:1;line-height:1.4;}
 .drawer-close{
@@ -286,8 +295,13 @@ a{color:var(--ink);}
 .drawer-close:hover{border-color:var(--ink);color:var(--ink);box-shadow:2px 2px 0 var(--ink);transform:translate(-1px,-1px);}
 .drawer-body{flex:1;overflow-y:auto;padding:var(--sp-5);}
 body.drawer-open .wrap{padding-right:0;}
-body.drawer-open{padding-right:min(440px,100vw);transition:padding-right 180ms ease;}
-body.drawer-open #focus-dock{right:calc(min(440px,100vw) + 16px);transition:right 180ms ease;}
+body.drawer-open{padding-right:clamp(320px, var(--drawer-w, 33.334vw), 90vw);transition:padding-right 180ms ease;}
+body.drawer-open #focus-dock{right:calc(clamp(320px, var(--drawer-w, 33.334vw), 90vw) + 16px);transition:right 180ms ease;}
+/* Khi đang kéo: tắt transition để không bị trễ/giật theo con trỏ */
+body.drawer-resizing #detail-drawer,
+body.drawer-resizing.drawer-open,
+body.drawer-resizing.drawer-open #focus-dock{transition:none;}
+body.drawer-resizing{user-select:none;}
 @media (max-width:900px){
   #detail-drawer{width:100vw;border-left:none;}
   body.drawer-open{padding-right:0;overflow:hidden;}
@@ -637,6 +651,7 @@ body.drawer-open #focus-dock{right:calc(min(440px,100vw) + 16px);transition:righ
 </div>
 
 <aside id="detail-drawer" aria-hidden="true" aria-label="Chi tiết đề tài">
+  <div class="drawer-resize" id="drawer-resize" role="separator" aria-orientation="vertical" aria-label="Kéo để đổi cỡ khung chi tiết"></div>
   <div class="drawer-head">
     <h3 class="drawer-title" id="drawer-title"></h3>
     <button type="button" class="drawer-close" id="drawer-close" aria-label="Đóng chi tiết">✕</button>
@@ -2651,6 +2666,47 @@ function initDrawer(){
   document.addEventListener("keydown", e => { if (e.key === "Escape") closeDrawer(); });
 }
 
+/* ===== Kéo đổi cỡ drawer (mặc định 1/3 màn hình, kéo tay để chỉnh) ===== */
+const K_DRAWER_W = "detai-hust-drawer-w-v1";
+const DRAWER_MIN_W = 320, DRAWER_MAX_RATIO = 0.9;
+
+function applyDrawerWidth(px){
+  const max = window.innerWidth * DRAWER_MAX_RATIO;
+  const clamped = Math.round(Math.max(DRAWER_MIN_W, Math.min(px, max)));
+  document.documentElement.style.setProperty("--drawer-w", clamped + "px");
+  return clamped;
+}
+
+function initDrawerResize(){
+  const handle = document.getElementById("drawer-resize");
+  if (!handle) return;
+
+  const saved = parseFloat(lsGet(K_DRAWER_W));
+  if (saved) applyDrawerWidth(saved);
+
+  let dragging = false;
+  handle.addEventListener("pointerdown", e => {
+    dragging = true;
+    handle.setPointerCapture(e.pointerId);
+    handle.classList.add("dragging");
+    document.body.classList.add("drawer-resizing");
+    e.preventDefault();
+  });
+  handle.addEventListener("pointermove", e => {
+    if (!dragging) return;
+    const clamped = applyDrawerWidth(window.innerWidth - e.clientX);
+    lsSet(K_DRAWER_W, String(clamped));
+  });
+  function stopDrag(){
+    if (!dragging) return;
+    dragging = false;
+    handle.classList.remove("dragging");
+    document.body.classList.remove("drawer-resizing");
+  }
+  handle.addEventListener("pointerup", stopDrag);
+  handle.addEventListener("pointercancel", stopDrag);
+}
+
 /* ===== Toggle sao / đã xem ===== */
 function toggleStar(id){
   if (starred[id]) delete starred[id]; else starred[id] = 1;
@@ -2793,6 +2849,7 @@ render();
 buildDock();
 initFilters();
 initDrawer();
+initDrawerResize();
 initScroll();
 initTheme();
 apply();
