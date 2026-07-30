@@ -1,348 +1,327 @@
 <!DOCTYPE html>
-<html lang="vi" data-theme="dark" data-accent="probability" data-bg="dots">
+<html lang="vi" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>90 đề tài luận văn Data Science — bảng chọn theo mức tác động</title>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
 /* ============ TOKENS ============ */
 :root{
-  --bg:#0a0a0f; --surface:#111118; --card:#16161f; --border:#2a2a3a;
-  --hairline:rgba(255,255,255,0.04);
-  --bg-rgb:10 10 15; --surface-rgb:17 17 24; --card-rgb:22 22 31;
-  --text-primary:#f0f0f8; --text-secondary:#a8a8c0; --text-muted:#8888a8; --text-dim:#5a5a78;
-  --accent-green:#00e5a0;  --accent-green-rgb:0 229 160;
-  --accent-blue:#3b82f6;   --accent-blue-rgb:59 130 246;
-  --accent-yellow:#f5d000; --accent-yellow-rgb:245 208 0;
-  --accent-red:#ff4560;    --accent-red-rgb:255 69 96;
-  --accent-purple:#c084fc; --accent-purple-rgb:192 132 252;
-  --accent-cyan:#22d3ee;   --accent-cyan-rgb:34 211 238;
-  --accent-identity:var(--accent-purple); --accent-identity-rgb:var(--accent-purple-rgb);
-  --cat-1:#00e5a0; --cat-2:#3b82f6; --cat-3:#f5d000; --cat-4:#ff4560; --cat-5:#c084fc;
-  --cat-6:#fb923c; --cat-7:#22d3ee; --cat-8:#f472b6; --cat-9:#a3e635; --cat-10:#94a3b8;
-  --cat-11:#2dd4bf; --cat-11-rgb:45 212 191;
-  --cat-12:#818cf8; --cat-13:#d6a06a; --cat-14:#4ade80; --cat-15:#fdba74; --cat-16:#fb7185;
+  --bg:#ffffff; --surface:#ffffff; --ink:#111111; --ink-soft:#45454a; --muted:#82828a;
+  --line:#e3e3e0; --line-strong:#cacac6;
+  --good:#16a34a; --warn:#c2760a; --bad:#dc2626; --gold:#b58900;
+  --cat-1:#22c55e; --cat-2:#3b82f6; --cat-3:#f59e0b; --cat-4:#ef4444; --cat-5:#8b5cf6;
+  --cat-6:#f97316; --cat-7:#06b6d4; --cat-8:#ec4899; --cat-9:#84cc16; --cat-10:#64748b;
+  --cat-11:#14b8a6; --cat-12:#6366f1; --cat-13:#a855f7; --cat-14:#10b981; --cat-15:#f43f5e; --cat-16:#0ea5e9;
   --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:20px; --sp-6:24px;
   --sp-8:32px; --sp-10:40px; --sp-12:48px; --sp-16:64px; --sp-20:80px;
-  --r-xs:3px; --r-sm:6px; --r-md:10px; --r-lg:12px; --r-xl:16px; --r-pill:9999px;
-  --fs-hero:clamp(38px,7vw,84px); --fs-h2:clamp(22px,3vw,32px); --fs-h3:20px;
-  --fs-lg:18px; --fs-base:14px; --fs-sm:13px; --fs-xs:12px;
-  --fs-label:11px; --fs-micro:10px; --fs-nano:9px;
-  --font-display:'Bebas Neue','Oswald','Arial Narrow',sans-serif;
-  --font-body:'DM Sans',system-ui,sans-serif;
-  --font-mono:'JetBrains Mono','Fira Code','SF Mono',monospace;
-  --dur-instant:80ms; --dur-fast:150ms; --dur-base:250ms; --dur-med:300ms; --dur-slow:400ms; --dur-entry:650ms;
-  --ease-out:cubic-bezier(0.16,1,0.3,1);
-  --z-sticky:10; --z-dropdown:100; --z-overlay:1000; --z-modal:1100;
+  --fs-h1:clamp(28px,4.5vw,40px); --fs-h2:16px; --fs-h3:16px;
+  --fs-lg:17px; --fs-base:16px; --fs-sm:14px; --fs-xs:13px; --fs-micro:11px;
+  --font-body:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --font-mono:ui-monospace,"SF Mono","Cascadia Code",Consolas,"Liberation Mono",Menlo,monospace;
+  --dur:90ms;
+  --z-sticky:10; --z-modal:1100;
 }
-[data-theme="light"]{
-  --bg:#fafafa; --surface:#f0f0f4; --card:#ffffff; --border:#d4d4dc;
-  --hairline:rgba(0,0,0,0.05);
-  --bg-rgb:250 250 250; --surface-rgb:240 240 244; --card-rgb:255 255 255;
-  --text-primary:#0a0a0f; --text-secondary:#3a3a4a; --text-muted:#6a6a7e; --text-dim:#9a9aae;
-  --accent-green:#008060;  --accent-green-rgb:0 128 96;
-  --accent-blue:#1d4ed8;   --accent-blue-rgb:29 78 216;
-  --accent-yellow:#936a00; --accent-yellow-rgb:147 106 0;
-  --accent-red:#c41e3a;    --accent-red-rgb:196 30 58;
-  --accent-purple:#7c3aed; --accent-purple-rgb:124 58 237;
-  --accent-cyan:#0e7490;   --accent-cyan-rgb:14 116 144;
-  --cat-1:#008060; --cat-2:#1d4ed8; --cat-3:#936a00; --cat-4:#c41e3a; --cat-5:#7c3aed;
-  --cat-6:#c2410c; --cat-7:#0e7490; --cat-8:#be185d; --cat-9:#4d7c0f; --cat-10:#475569;
-  --cat-11:#0f766e; --cat-11-rgb:15 118 110;
-  --cat-12:#4338ca; --cat-13:#92400e; --cat-14:#15803d; --cat-15:#b45309; --cat-16:#9f1239;
+[data-theme="dark"]{
+  --bg:#121214; --surface:#1c1c1e; --ink:#f2f2f2; --ink-soft:#c7c7cc; --muted:#8e8e93;
+  --line:#302f33; --line-strong:#48474c;
+  --good:#4ade80; --warn:#fbbf24; --bad:#f87171; --gold:#facc15;
+  --cat-1:#4ade80; --cat-2:#60a5fa; --cat-3:#fbbf24; --cat-4:#f87171; --cat-5:#a78bfa;
+  --cat-6:#fb923c; --cat-7:#22d3ee; --cat-8:#f472b6; --cat-9:#a3e635; --cat-10:#94a3b8;
+  --cat-11:#2dd4bf; --cat-12:#818cf8; --cat-13:#c084fc; --cat-14:#34d399; --cat-15:#fb7185; --cat-16:#38bdf8;
 }
-[data-accent="probability"]{--accent-identity:#c084fc;--accent-identity-rgb:192 132 252;}
-[data-theme="light"][data-accent="probability"]{--accent-identity:#7c3aed;--accent-identity-rgb:124 58 237;}
 
 *,*::before,*::after{box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 body{
-  margin:0; background:var(--bg); color:var(--text-primary);
-  font-family:var(--font-body); font-size:var(--fs-base); line-height:1.6;
+  margin:0; color:var(--ink);
+  background:var(--bg);
+  font-family:var(--font-body); font-size:var(--fs-base); line-height:1.65;
   -webkit-font-smoothing:antialiased;
 }
-body::before{
-  content:''; position:fixed; inset:0;
-  background-image:radial-gradient(var(--hairline) 1.2px, transparent 1.3px);
-  background-size:40px 40px; z-index:0; pointer-events:none;
-}
-body > *{position:relative; z-index:1;}
-.numeric,.tabular,code,.stat{font-variant-numeric:tabular-nums lining-nums;font-feature-settings:'tnum' 1,'lnum' 1;}
-:focus-visible{outline:2px solid var(--accent-identity);outline-offset:2px;border-radius:var(--r-xs);}
-h1,h2,h3{margin:0;}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px;}
+h1,h2,h3,h4{margin:0;}
 p{margin:0 0 var(--sp-3);}
-a{color:var(--accent-identity);}
+a{color:var(--ink);}
 
 /* ============ PROGRESS BAR ============ */
-#read-progress{position:fixed;top:0;left:0;height:2px;width:0;background:var(--accent-identity);z-index:var(--z-modal);transition:width 80ms linear;}
+#read-progress{position:fixed;top:0;left:0;height:3px;width:0;background:var(--ink);z-index:var(--z-modal);}
 
 /* ============ LAYOUT ============ */
-.wrap{max-width:1440px;margin:0 auto;padding:0 clamp(16px,3vw,40px);}
-.shell{display:grid;grid-template-columns:200px minmax(0,1fr);gap:var(--sp-10);align-items:start;}
+.wrap{max-width:1160px;margin:0 auto;padding:0 clamp(16px,3vw,32px);}
+.shell{display:grid;grid-template-columns:180px minmax(0,1fr);gap:var(--sp-6);align-items:start;}
 .shell.no-rail{grid-template-columns:minmax(0,1fr);}
-@media (max-width:1100px){.shell{grid-template-columns:minmax(0,1fr);} .toc-rail{display:none;}}
+@media (max-width:1000px){.shell{grid-template-columns:minmax(0,1fr);} .toc-rail{display:none;}}
 
 /* ============ HEADER ============ */
-.topbar{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:var(--sp-4) 0;border-bottom:1px solid var(--hairline);
-}
-.brandmark{font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.2em;color:var(--text-muted);text-transform:uppercase;}
-.page-head{padding:var(--sp-16) 0 var(--sp-10);display:flex;flex-direction:column;gap:var(--sp-3);}
-.eyebrow{font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.2em;color:var(--accent-identity);text-transform:uppercase;}
-.title{font-family:var(--font-display);font-size:var(--fs-hero);line-height:.9;letter-spacing:.01em;}
-.title span{color:var(--accent-identity);}
-.subtitle{font-weight:300;font-size:var(--fs-lg);color:var(--text-secondary);max-width:62ch;line-height:1.65;}
-.meta{font-family:var(--font-mono);font-size:var(--fs-label);color:var(--text-dim);letter-spacing:.1em;}
-.meta b{color:var(--accent-yellow);font-weight:400;}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:var(--sp-3) 0;border-bottom:1px solid var(--line);}
+.brandmark{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:var(--fs-micro);color:var(--muted);}
+.wc{width:8px;height:8px;display:inline-block;border:1px solid var(--line-strong);}
+.wc:nth-child(1){background:var(--bad);}
+.wc:nth-child(2){background:var(--warn);}
+.wc:nth-child(3){background:var(--good);}
+.page-head{padding:var(--sp-8) 0 var(--sp-6);display:flex;flex-direction:column;gap:var(--sp-2);max-width:820px;border-bottom:1px solid var(--line);}
+.eyebrow{font-family:var(--font-mono);font-size:var(--fs-xs);color:var(--muted);}
+.eyebrow::before{content:"> ";}
+.title{font-size:var(--fs-h1);line-height:1.15;font-weight:800;padding-bottom:var(--sp-4);}
+.title span{background:var(--ink);color:var(--surface);padding:1px 8px;}
+.subtitle{font-size:var(--fs-lg);color:var(--ink-soft);line-height:1.65;}
+.meta{font-family:var(--font-mono);font-size:var(--fs-micro);color:var(--muted);}
+.meta b{color:var(--ink);font-weight:700;}
 
 /* ============ OVERVIEW ============ */
-.page-overview{padding:0 0 var(--sp-12);border-bottom:1px solid var(--border);margin-bottom:var(--sp-10);}
-.ov-lead{font-size:var(--fs-lg);line-height:1.7;color:var(--text-secondary);max-width:66ch;}
-.ov-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:var(--sp-4);margin-top:var(--sp-6);}
-.ov-box{background:var(--card);border:1px solid var(--border);border-left:2px solid var(--accent-identity);border-radius:var(--r-md);padding:var(--sp-4) var(--sp-5);}
-.ov-box h4{margin:0 0 var(--sp-2);font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-identity);font-weight:500;}
-.ov-box p{margin:0;font-size:var(--fs-sm);color:var(--text-secondary);}
+.page-overview{padding:var(--sp-6) 0 var(--sp-10);border-bottom:1px solid var(--line);margin-bottom:var(--sp-8);max-width:820px;}
+.ov-lead{font-size:var(--fs-lg);line-height:1.7;color:var(--ink-soft);}
+.ov-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--sp-4);margin-top:var(--sp-6);}
+.ov-box{border:1px solid var(--line);border-left:4px solid var(--line-strong);padding:var(--sp-3) var(--sp-4);background:var(--surface);}
+.ov-box h4{margin:0 0 6px;font-size:var(--fs-sm);font-weight:800;color:var(--ink);}
+.ov-box p{margin:0;font-size:var(--fs-sm);color:var(--ink-soft);line-height:1.6;}
 
-/* legend */
-.legend{margin-top:var(--sp-6);display:flex;flex-wrap:wrap;gap:var(--sp-5);font-size:var(--fs-sm);color:var(--text-muted);}
-.legend-item{display:flex;gap:var(--sp-2);align-items:baseline;}
-.legend-item b{color:var(--text-secondary);font-weight:500;}
+.legend{margin-top:var(--sp-6);display:flex;flex-wrap:wrap;gap:var(--sp-2) var(--sp-6);font-size:var(--fs-xs);color:var(--muted);}
+.legend-item b{color:var(--ink);font-weight:700;}
 
-/* ============ TOC RAIL ============ */
-.toc-rail{position:sticky;top:var(--sp-6);padding-top:var(--sp-2);}
-.toc-title{font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.15em;text-transform:uppercase;color:var(--text-muted);margin-bottom:var(--sp-3);}
-.toc-list{list-style:none;margin:0;padding:0;display:grid;gap:2px;}
-.toc-list a{
-  display:flex;justify-content:space-between;gap:var(--sp-2);align-items:baseline;
-  padding:var(--sp-2) var(--sp-3);border-left:2px solid transparent;
-  color:var(--text-muted);text-decoration:none;font-size:var(--fs-sm);
-  border-radius:0 var(--r-sm) var(--r-sm) 0;
-  transition:color var(--dur-fast),border-color var(--dur-fast),background var(--dur-fast);
+/* ============ TOC RAIL (nội dung ít đổi — thu gọn + mờ khi không rê chuột vào, đỡ phân tâm) ============ */
+.toc-rail{
+  position:sticky;top:12px;border-right:1px solid var(--line);padding-right:var(--sp-3);
+  opacity:.32;filter:saturate(.45);transition:opacity 150ms,filter 150ms;
 }
-.toc-list a:hover{color:var(--text-primary);background:var(--hairline);}
-.toc-list a.active{color:var(--accent-identity);border-left-color:var(--accent-identity);background:rgb(var(--accent-identity-rgb)/0.06);}
-.toc-n{font-family:var(--font-mono);font-size:var(--fs-micro);color:var(--text-dim);}
+.toc-rail:hover,.toc-rail:focus-within{opacity:1;filter:none;}
+.toc-title{margin:0 0 6px;font-family:var(--font-mono);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);}
+.toc-list{list-style:none;margin:0;padding:0;}
+.toc-list li{border-top:1px solid var(--line);}
+.toc-list li:first-child{border-top:none;}
+.toc-list a{
+  display:flex;align-items:center;gap:7px;
+  padding:6px 4px;
+  color:var(--ink-soft);text-decoration:none;font-family:var(--font-mono);font-size:10px;line-height:1.3;
+  transition:background var(--dur),color var(--dur);
+}
+.toc-dot{width:7px;height:7px;flex:0 0 auto;background:var(--c);}
+.toc-list a:hover{background:var(--line);color:var(--ink);}
+.toc-list a.active{background:var(--ink);color:var(--surface);font-weight:700;}
+.toc-n{margin-left:auto;opacity:.7;padding-left:4px;}
 
-/* ============ FILTER BAR ============ */
+/* ============ FILTER BAR (mặc định gọn 1 dòng — bấm mới mở rộng) ============ */
 .filters{
   position:sticky;top:0;z-index:var(--z-sticky);
-  background:rgb(var(--bg-rgb)/0.92);backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--border);
-  padding:var(--sp-4) 0;margin-bottom:var(--sp-8);
+  background:var(--bg);
+  border-bottom:1px solid var(--line);
+  padding:var(--sp-3) 0;margin-bottom:var(--sp-6);
 }
-.filter-row{display:flex;flex-wrap:wrap;gap:var(--sp-3);align-items:center;}
-.filter-row + .filter-row{margin-top:var(--sp-3);}
-.fgroup{display:flex;gap:var(--sp-2);align-items:center;flex-wrap:wrap;}
-.fgroup-label{font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);}
+.filter-row{display:flex;flex-wrap:wrap;gap:var(--sp-2);align-items:center;}
+.filter-row--main{flex-wrap:nowrap;}
+.filter-row--main .input{flex:1 1 auto;min-width:0;}
+#filters-adv .filter-row{margin-top:var(--sp-3);padding-top:var(--sp-3);border-top:1px solid var(--line);}
+.fgroup{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+.fgroup-label{font-family:var(--font-mono);font-size:var(--fs-micro);text-transform:uppercase;color:var(--muted);}
 .input{
-  background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);
-  color:var(--text-primary);font-family:var(--font-body);font-size:var(--fs-sm);
-  padding:var(--sp-2) var(--sp-4);min-height:38px;min-width:230px;
-  transition:border-color var(--dur-fast),box-shadow var(--dur-fast);
+  background:var(--surface);border:1px solid var(--line-strong);
+  color:var(--ink);font-family:var(--font-mono);font-size:var(--fs-sm);
+  padding:8px 10px;min-height:36px;
+  transition:border-color var(--dur),box-shadow var(--dur);
 }
-.input::placeholder{color:var(--text-dim);}
-.input:focus{outline:none;border-color:var(--accent-identity);box-shadow:0 0 0 3px rgb(var(--accent-identity-rgb)/0.15);}
+.input::placeholder{color:var(--muted);}
+.input:focus{outline:none;border-color:var(--ink);box-shadow:2px 2px 0 var(--ink);}
 .fchip{
-  font-family:var(--font-body);font-size:var(--fs-xs);font-weight:500;
-  padding:5px var(--sp-3);border-radius:var(--r-pill);cursor:pointer;
-  background:var(--hairline);color:var(--text-secondary);border:1px solid var(--border);
-  transition:background var(--dur-fast),color var(--dur-fast),border-color var(--dur-fast);
+  display:inline-flex;align-items:center;
+  font-family:var(--font-mono);font-size:var(--fs-micro);
+  padding:6px 10px;cursor:pointer;
+  background:var(--surface);color:var(--ink-soft);border:1px solid var(--line-strong);
+  transition:transform var(--dur),box-shadow var(--dur),color var(--dur),border-color var(--dur);
 }
-.fchip:hover{color:var(--text-primary);border-color:var(--text-dim);}
-.fchip[aria-pressed="true"]{
-  background:rgb(var(--accent-identity-rgb)/0.10);
-  color:var(--accent-identity);
-  border-color:rgb(var(--accent-identity-rgb)/0.22);
-}
-.fchip[data-dom][aria-pressed="true"]{
-  background:rgb(var(--c-rgb)/0.10);color:var(--c);border-color:rgb(var(--c-rgb)/0.22);
-}
-.segmented{display:inline-flex;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:2px;}
+.fchip:hover{color:var(--ink);border-color:var(--ink);box-shadow:2px 2px 0 var(--ink);transform:translate(-1px,-1px);}
+.chip-dot{width:8px;height:8px;display:inline-block;margin-right:6px;background:var(--c);flex:0 0 auto;}
+.fchip[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink);}
+.fchip[aria-pressed="true"]:hover{transform:none;box-shadow:none;}
+.segmented{display:inline-flex;border:1px solid var(--line-strong);background:var(--surface);}
 .segment{
-  font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.08em;text-transform:uppercase;
-  color:var(--text-muted);background:transparent;border:none;padding:6px var(--sp-3);
-  border-radius:4px;cursor:pointer;transition:background var(--dur-fast),color var(--dur-fast);
+  font-family:var(--font-mono);font-size:var(--fs-micro);text-transform:uppercase;letter-spacing:.02em;
+  color:var(--ink-soft);background:transparent;border:none;border-right:1px solid var(--line-strong);padding:7px 11px;
+  cursor:pointer;transition:background var(--dur),color var(--dur);
 }
-.segment:hover{color:var(--text-primary);}
-.segment[aria-checked="true"]{background:var(--card);color:var(--accent-identity);box-shadow:inset 0 0 0 1px var(--border);}
+.segment:last-child{border-right:none;}
+.segment:hover{background:var(--line);color:var(--ink);}
+.segment[aria-checked="true"]{background:var(--ink);color:var(--surface);}
 .chip-clear{
-  background:transparent;border:none;font-family:var(--font-mono);font-size:var(--fs-label);
-  letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);cursor:pointer;padding:var(--sp-1) var(--sp-2);
+  background:transparent;border:none;font-family:var(--font-mono);font-size:var(--fs-micro);text-transform:uppercase;
+  color:var(--muted);cursor:pointer;padding:4px 6px;text-decoration:underline;text-underline-offset:3px;
 }
-.chip-clear:hover{color:var(--accent-red);}
-.result-count{font-family:var(--font-mono);font-size:var(--fs-sm);color:var(--text-muted);margin-left:auto;}
-.result-count b{color:var(--accent-identity);font-weight:500;}
+.chip-clear:hover{color:var(--bad);}
+.result-count{font-family:var(--font-mono);font-size:var(--fs-xs);color:var(--ink-soft);white-space:nowrap;}
+.result-count b{color:var(--ink);font-weight:700;}
+.adv-toggle{
+  display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:var(--fs-micro);text-transform:uppercase;
+  color:var(--ink);background:var(--surface);border:1px solid var(--line-strong);
+  padding:7px 12px;min-height:36px;cursor:pointer;white-space:nowrap;
+  transition:transform var(--dur),box-shadow var(--dur),background var(--dur),color var(--dur),border-color var(--dur);
+}
+.adv-toggle:hover{border-color:var(--ink);box-shadow:2px 2px 0 var(--ink);transform:translate(-1px,-1px);}
+.adv-toggle[aria-expanded="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink);}
 
-/* ============ SECTIONS + CARDS ============ */
-.dom-section{margin-bottom:var(--sp-12);scroll-margin-top:150px;}
-.dom-head{display:flex;align-items:baseline;gap:var(--sp-3);margin-bottom:var(--sp-5);padding-bottom:var(--sp-3);border-bottom:1px solid var(--border);}
-.dom-head h2{font-family:var(--font-display);font-size:var(--fs-h2);letter-spacing:.01em;color:var(--text-primary);}
-.dom-dot{width:8px;height:8px;border-radius:50%;background:var(--c);flex:0 0 auto;}
-.dom-count{font-family:var(--font-mono);font-size:var(--fs-label);color:var(--text-dim);letter-spacing:.1em;margin-left:auto;}
+/* ============ SECTIONS + ENTRIES ============ */
+.dom-section{margin-bottom:var(--sp-10);scroll-margin-top:76px;}
+.dom-head{display:flex;align-items:center;gap:10px;margin:0 0 var(--sp-4);padding:8px 10px;background:var(--ink);}
+.dom-head h2{font-family:var(--font-mono);font-size:var(--fs-h2);font-weight:700;text-transform:uppercase;letter-spacing:.02em;color:var(--surface);}
+.dom-dot{width:10px;height:10px;background:var(--c);flex:0 0 auto;}
+.dom-count{font-family:var(--font-mono);font-size:var(--fs-micro);color:var(--surface);opacity:.8;margin-left:auto;}
 
-.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:var(--sp-4);}
+.card-grid{display:flex;flex-direction:column;gap:var(--sp-4);max-width:820px;}
 .tcard{
-  background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);
-  padding:var(--sp-5);display:flex;flex-direction:column;gap:var(--sp-3);
-  transition:border-color var(--dur-fast),transform var(--dur-fast);
+  background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--c);
+  padding:var(--sp-4) var(--sp-5);display:flex;flex-direction:column;gap:var(--sp-2);
+  opacity:1;transition:opacity 200ms ease,border-color var(--dur),box-shadow var(--dur),transform var(--dur);
 }
-.tcard:hover{border-color:rgb(var(--c-rgb)/0.45);}
-.tcard.starred{border-color:rgb(var(--accent-yellow-rgb)/0.45);}
-.tcard.seen .tc-title{color:var(--text-secondary);}
-.tc-top{display:flex;align-items:flex-start;gap:var(--sp-3);}
-.tc-num{font-family:var(--font-mono);font-size:var(--fs-xs);color:var(--c);letter-spacing:.06em;padding-top:3px;flex:0 0 auto;}
-.tc-title{font-family:var(--font-body);font-weight:700;font-size:15px;line-height:1.35;color:var(--text-primary);flex:1;}
+/* Vùng đọc — thẻ ở dưới 1/3 trên màn hình (chưa cuộn tới) mờ đi cho đỡ rối mắt;
+   1/3 trên và bất cứ thẻ nào đang trỏ/focus vào thì luôn rõ. Gán bởi IntersectionObserver, xem initFocusZone(). */
+.tcard.out-of-focus{opacity:.2;}
+.tcard.out-of-focus:hover,.tcard.out-of-focus:focus-within{opacity:1;}
+.tcard:hover{border-color:var(--ink);box-shadow:3px 3px 0 var(--ink);transform:translate(-1px,-1px);}
+.tcard.starred{border-left-color:var(--gold);box-shadow:2px 2px 0 var(--gold);}
+.tcard.starred:hover{box-shadow:3px 3px 0 var(--gold);}
+.tcard.seen .tc-title{color:var(--ink-soft);}
+.tc-top{display:flex;align-items:flex-start;gap:var(--sp-2);}
+.tc-num{font-family:var(--font-mono);font-size:var(--fs-micro);font-weight:700;background:var(--line);color:var(--ink-soft);padding:2px 6px;flex:0 0 auto;}
+.tc-title{font-size:var(--fs-h3);font-weight:800;line-height:1.4;color:var(--ink);flex:1;}
 .tc-star{
-  background:transparent;border:none;cursor:pointer;font-size:16px;line-height:1;
-  color:var(--text-dim);padding:2px 4px;border-radius:var(--r-sm);flex:0 0 auto;
-  transition:color var(--dur-fast),transform var(--dur-instant);
+  width:28px;height:28px;flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;
+  background:var(--surface);border:1px solid var(--line-strong);
+  cursor:pointer;font-size:15px;color:var(--ink-soft);
+  transition:transform var(--dur),box-shadow var(--dur),background var(--dur),border-color var(--dur),color var(--dur);
 }
-.tc-star:hover{color:var(--accent-yellow);transform:scale(1.15);}
-.tc-star[aria-pressed="true"]{color:var(--accent-yellow);}
-.tc-q{font-size:var(--fs-sm);color:var(--text-secondary);line-height:1.6;margin:0;}
-.tc-q b{color:var(--text-primary);font-weight:500;}
-.tc-meta{display:grid;gap:var(--sp-2);font-size:var(--fs-xs);}
-.tc-line{display:flex;gap:var(--sp-2);align-items:baseline;}
-.tc-k{font-family:var(--font-mono);font-size:var(--fs-micro);letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);flex:0 0 62px;}
-.tc-v{color:var(--text-muted);flex:1;line-height:1.5;}
-.tc-foot{display:flex;flex-wrap:wrap;gap:var(--sp-2);align-items:center;margin-top:auto;padding-top:var(--sp-3);border-top:1px solid var(--hairline);}
-.badge{
-  display:inline-flex;align-items:center;font-family:var(--font-mono);font-size:var(--fs-nano);
-  padding:2px 6px;border-radius:var(--r-xs);border:1px solid;letter-spacing:.05em;
-}
-.b-green{background:rgb(var(--accent-green-rgb)/0.10);color:var(--accent-green);border-color:rgb(var(--accent-green-rgb)/0.25);}
-.b-yellow{background:rgb(var(--accent-yellow-rgb)/0.10);color:var(--accent-yellow);border-color:rgb(var(--accent-yellow-rgb)/0.25);}
-.b-red{background:rgb(var(--accent-red-rgb)/0.10);color:var(--accent-red);border-color:rgb(var(--accent-red-rgb)/0.25);}
-.b-blue{background:rgb(var(--accent-blue-rgb)/0.10);color:var(--accent-blue);border-color:rgb(var(--accent-blue-rgb)/0.25);}
-.b-cyan{background:rgb(var(--accent-cyan-rgb)/0.10);color:var(--accent-cyan);border-color:rgb(var(--accent-cyan-rgb)/0.25);}
-.b-mute{background:var(--hairline);color:var(--text-muted);border-color:var(--border);}
+.tc-star:hover{border-color:var(--ink);color:var(--ink);box-shadow:2px 2px 0 var(--ink);transform:translate(-1px,-1px);}
+.tc-star[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:var(--surface);}
+.tc-q{font-size:var(--fs-sm);color:var(--ink-soft);line-height:1.6;margin:0;}
+.tc-q b{color:var(--ink);font-weight:700;}
+.tc-meta{display:flex;flex-direction:column;gap:4px;}
+.tc-line{margin:0;font-size:var(--fs-xs);color:var(--ink-soft);line-height:1.6;}
+.tc-line b{color:var(--ink);font-weight:700;}
+.tc-line.tc-money b::before{content:"● ";color:var(--good);font-size:9px;}
+.tc-foot{display:flex;flex-wrap:wrap;gap:var(--sp-3);align-items:center;margin-top:var(--sp-1);padding-top:var(--sp-3);border-top:1px solid var(--line);font-family:var(--font-mono);font-size:var(--fs-micro);color:var(--muted);}
+.badge{font-family:var(--font-mono);font-size:var(--fs-micro);font-weight:700;text-transform:uppercase;}
+.b-green{color:var(--good);}
+.b-yellow{color:var(--warn);}
+.b-red{color:var(--bad);}
 .diffbar{display:inline-flex;gap:2px;align-items:center;}
-.diffbar i{width:5px;height:12px;border-radius:1px;background:var(--border);display:block;}
-.diffbar i.on{background:var(--c);}
+.diffbar i{width:7px;height:7px;border:1px solid var(--line-strong);background:var(--surface);display:block;}
+.diffbar i.on{background:var(--ink-soft);border-color:var(--ink-soft);}
 
 /* ============ TÁC ĐỘNG / TÍNH ỨNG DỤNG ============ */
-.impact-badge{
-  display:inline-flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:var(--fs-nano);
-  padding:2px 7px;border-radius:var(--r-pill);letter-spacing:.05em;
-  background:rgb(var(--accent-green-rgb)/0.10);color:var(--accent-green);
-  border:1px solid rgb(var(--accent-green-rgb)/0.28);
-}
-.impact-badge.i-mid{background:rgb(var(--accent-yellow-rgb)/0.10);color:var(--accent-yellow);border-color:rgb(var(--accent-yellow-rgb)/0.28);}
-.impact-badge.i-low{background:var(--hairline);color:var(--text-muted);border-color:var(--border);}
+.impact-badge{display:inline-flex;align-items:center;gap:5px;color:var(--good);}
+.impact-badge.i-mid{color:var(--warn);}
+.impact-badge.i-low{color:var(--muted);}
 .impact-badge .dots{display:inline-flex;gap:2px;}
-.impact-badge .dots i{width:4px;height:4px;border-radius:50%;background:currentColor;opacity:.25;display:block;}
-.impact-badge .dots i.on{opacity:1;}
-.tcard.high-impact{border-color:rgb(var(--accent-green-rgb)/0.30);}
-.tc-line.tc-money .tc-k{color:var(--accent-green);}
-.tc-line.tc-money .tc-v{color:var(--text-secondary);}
-.d-impact{background:rgb(var(--accent-green-rgb)/0.06);border-left:2px solid var(--accent-green);border-radius:var(--r-sm);padding:var(--sp-3) var(--sp-4);}
-.d-impact h4{color:var(--accent-green);}
-.d-impact dl{margin:0;display:grid;gap:var(--sp-2);}
-.d-impact dt{font-family:var(--font-mono);font-size:var(--fs-micro);letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);}
-.d-impact dd{margin:2px 0 0;font-size:var(--fs-sm);color:var(--text-secondary);line-height:1.6;}
+.impact-badge .dots i{width:6px;height:6px;border:1px solid currentColor;background:transparent;display:block;}
+.impact-badge .dots i.on{background:currentColor;}
 .expand-btn{
-  font-family:var(--font-mono);font-size:var(--fs-xs);
-  color:var(--accent-identity);
-  background:rgb(var(--accent-identity-rgb)/0.09);
-  border:1px solid rgb(var(--accent-identity-rgb)/0.22);
-  border-radius:var(--r-pill);padding:5px var(--sp-3);cursor:pointer;margin-left:auto;
-  transition:background var(--dur-fast);
+  font-family:var(--font-mono);font-size:var(--fs-micro);text-transform:uppercase;
+  color:var(--ink-soft);background:var(--surface);border:1px solid var(--line-strong);
+  padding:5px 10px;cursor:pointer;margin-left:auto;
+  transition:transform var(--dur),box-shadow var(--dur),background var(--dur),color var(--dur),border-color var(--dur);
 }
-.expand-btn:hover{background:rgb(var(--accent-identity-rgb)/0.16);}
+.expand-btn:hover{border-color:var(--ink);color:var(--ink);box-shadow:2px 2px 0 var(--ink);transform:translate(-1px,-1px);}
+.expand-btn[aria-expanded="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink);}
 .tc-seen{
-  font-family:var(--font-mono);font-size:var(--fs-micro);letter-spacing:.08em;
-  color:var(--text-dim);background:transparent;border:none;cursor:pointer;padding:4px 6px;border-radius:var(--r-sm);
+  font-family:var(--font-mono);font-size:var(--fs-micro);
+  color:var(--ink-soft);background:var(--surface);border:1px solid var(--line-strong);
+  padding:5px 10px;cursor:pointer;
+  transition:transform var(--dur),box-shadow var(--dur),background var(--dur),color var(--dur),border-color var(--dur);
 }
-.tc-seen:hover{color:var(--text-secondary);background:var(--hairline);}
-.tc-seen[aria-pressed="true"]{color:var(--accent-green);}
-.empty-state{padding:var(--sp-16) 0;text-align:center;color:var(--text-muted);}
+.tc-seen:hover{border-color:var(--ink);color:var(--ink);box-shadow:2px 2px 0 var(--ink);transform:translate(-1px,-1px);}
+.tc-seen[aria-pressed="true"]{background:var(--line);color:var(--ink-soft);border-color:var(--line-strong);}
+.empty-state{padding:var(--sp-16) 0;text-align:center;color:var(--muted);}
 /* [hidden] phải thắng display:flex/grid — nếu không, bộ lọc không ẩn được gì */
 .tcard[hidden],.dom-section[hidden],.empty-state[hidden],.fd-btn[hidden]{display:none!important;}
 
-/* ============ DETAIL PANEL ============ */
-.detail-source{display:none;}
-.detail-panel{
-  --panel-w:min(600px,94vw);
-  position:fixed;top:0;right:0;height:100vh;width:var(--panel-w);
-  display:flex;flex-direction:column;background:var(--card);
-  border-left:1px solid var(--border);transform:translateX(100%);
-  transition:transform var(--dur-med) var(--ease-out);z-index:var(--z-modal);will-change:transform;
+/* ============ DRAWER CHI TIẾT — trượt từ phải, ĐẨY layout chứ không phủ lên list ============ */
+/* Không dùng lớp phủ/backdrop: list bên trái vẫn đọc được và cuộn được bình thường khi drawer mở
+   (tham khảo quy ước drawer non-modal — "--pass", page nền vẫn dùng được — của skill web-builder,
+   nhưng ở đây bỏ hẳn scrim vì yêu cầu là list phải rõ, không chỉ là click xuyên qua được). */
+#detail-drawer{
+  position:fixed;top:0;right:0;bottom:0;width:min(440px,100vw);
+  background:var(--surface);border-left:1px solid var(--line-strong);
+  box-shadow:-3px 0 0 var(--ink);
+  transform:translateX(100%);transition:transform 180ms ease;
+  z-index:150;display:flex;flex-direction:column;
 }
-.detail-panel.open{transform:translateX(0);box-shadow:-24px 0 48px rgba(0,0,0,.35);}
-.detail-panel.resizing{transition:none;user-select:none;}
-.detail-resize{position:absolute;top:0;left:0;height:100%;width:10px;margin-left:-5px;cursor:col-resize;z-index:1;touch-action:none;}
-.detail-resize::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:2px;height:36px;border-radius:var(--r-pill);background:var(--border);transition:background var(--dur-fast);}
-.detail-resize:hover::after,.detail-panel.resizing .detail-resize::after{background:var(--accent-identity);}
-.detail-head{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-3);padding:var(--sp-5) var(--sp-6);border-bottom:1px solid var(--border);flex:0 0 auto;}
-.detail-title{font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);}
-.detail-close{background:none;border:none;color:var(--text-muted);font-size:1.6rem;line-height:1;cursor:pointer;padding:0 var(--sp-2);border-radius:var(--r-sm);}
-.detail-close:hover{color:var(--text-primary);}
-.detail-body{overflow-y:auto;padding:var(--sp-6);}
-.detail-backdrop{position:fixed;inset:0;z-index:calc(var(--z-modal) - 1);background:transparent;display:none;}
-body.detail-open .detail-backdrop{display:block;}
-.d-h1{font-family:var(--font-display);font-size:26px;line-height:1.1;margin-bottom:var(--sp-2);color:var(--text-primary);}
-.d-sub{font-size:var(--fs-sm);color:var(--text-muted);margin-bottom:var(--sp-5);}
-.d-sec{margin-bottom:var(--sp-5);}
-.d-sec h4{font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.14em;text-transform:uppercase;color:var(--accent-identity);margin:0 0 var(--sp-2);font-weight:500;}
-.d-sec p,.d-sec li{font-size:var(--fs-sm);color:var(--text-secondary);line-height:1.65;}
+#detail-drawer.open{transform:translateX(0);}
+.drawer-head{display:flex;align-items:flex-start;gap:var(--sp-3);padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--line);}
+.drawer-title{font-size:var(--fs-sm);font-weight:800;color:var(--ink);flex:1;line-height:1.4;}
+.drawer-close{
+  flex:0 0 auto;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;
+  background:var(--surface);border:1px solid var(--line-strong);color:var(--ink-soft);cursor:pointer;
+  transition:border-color var(--dur),color var(--dur),box-shadow var(--dur),transform var(--dur);
+}
+.drawer-close:hover{border-color:var(--ink);color:var(--ink);box-shadow:2px 2px 0 var(--ink);transform:translate(-1px,-1px);}
+.drawer-body{flex:1;overflow-y:auto;padding:var(--sp-5);}
+body.drawer-open .wrap{padding-right:0;}
+body.drawer-open{padding-right:min(440px,100vw);transition:padding-right 180ms ease;}
+body.drawer-open #focus-dock{right:calc(min(440px,100vw) + 16px);transition:right 180ms ease;}
+@media (max-width:900px){
+  #detail-drawer{width:100vw;border-left:none;}
+  body.drawer-open{padding-right:0;overflow:hidden;}
+  body.drawer-open #focus-dock{display:none;}
+}
+.d-sub{font-family:var(--font-mono);font-size:var(--fs-micro);color:var(--muted);margin-bottom:var(--sp-4);}
+.d-sec{margin-bottom:var(--sp-4);}
+.d-sec h4{font-size:var(--fs-sm);font-weight:800;color:var(--ink);margin:0 0 5px;}
+.d-sec p,.d-sec li{font-size:var(--fs-sm);color:var(--ink-soft);line-height:1.65;}
 .d-sec ul{margin:0;padding-left:var(--sp-5);}
-.d-sec li{margin-bottom:var(--sp-2);}
-.d-warn{background:rgb(var(--accent-red-rgb)/0.06);border-left:2px solid var(--accent-red);border-radius:var(--r-sm);padding:var(--sp-3) var(--sp-4);}
-.d-warn h4{color:var(--accent-red);}
-.d-spike{background:rgb(var(--accent-green-rgb)/0.06);border-left:2px solid var(--accent-green);border-radius:var(--r-sm);padding:var(--sp-3) var(--sp-4);}
-.d-spike h4{color:var(--accent-green);}
-.d-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:var(--sp-2);margin-bottom:var(--sp-5);}
-.d-stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:var(--sp-2) var(--sp-3);}
-.d-stat .k{font-family:var(--font-mono);font-size:var(--fs-nano);letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);display:block;}
-.d-stat .v{font-size:var(--fs-sm);color:var(--text-primary);font-weight:500;}
+.d-sec li{margin-bottom:4px;}
+.d-warn{border:1px solid var(--line);border-left:4px solid var(--bad);background:var(--surface);padding:var(--sp-3) var(--sp-4);}
+.d-warn h4{color:var(--bad);}
+.d-spike{border:1px solid var(--line);border-left:4px solid var(--good);background:var(--surface);padding:var(--sp-3) var(--sp-4);}
+.d-spike h4{color:var(--good);}
+.d-impact{border:1px solid var(--line);border-left:4px solid var(--good);background:var(--surface);padding:var(--sp-3) var(--sp-4);}
+.d-impact h4{color:var(--good);}
+.d-impact dl{margin:0;display:grid;gap:var(--sp-2);}
+.d-impact dt{font-family:var(--font-mono);font-size:var(--fs-micro);color:var(--muted);font-weight:700;}
+.d-impact dd{margin:2px 0 0;font-size:var(--fs-sm);color:var(--ink-soft);line-height:1.6;}
+.d-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:var(--sp-2);margin-bottom:var(--sp-4);}
+.d-stat{border:1px solid var(--line);padding:6px 10px;background:var(--bg);}
+.d-stat .k{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;color:var(--muted);display:block;}
+.d-stat .v{font-size:var(--fs-sm);color:var(--ink);font-weight:700;}
 
-/* ============ FOCUS DOCK ============ */
-#focus-dock{position:fixed;right:16px;bottom:16px;z-index:90;display:flex;flex-direction:column;gap:8px;align-items:flex-end;}
-.fd-btn{
-  display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:var(--fs-xs);
-  color:var(--text-secondary);background:var(--card);border:1px solid var(--border);border-radius:var(--r-pill);
-  padding:8px 14px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.28);
-  transition:color var(--dur-fast),border-color var(--dur-fast),background var(--dur-fast);
+/* ============ FOCUS DOCK (nổi cố định — mờ bớt khi không rê chuột vào, đỡ phân tâm) ============ */
+#focus-dock{
+  position:fixed;right:16px;bottom:16px;z-index:90;display:flex;flex-direction:column;gap:8px;align-items:flex-end;
+  opacity:.42;transition:opacity 150ms,right 180ms ease;
 }
-.fd-btn:hover{color:var(--text-primary);border-color:var(--text-muted);}
-#fd-star .fd-frac{color:var(--accent-yellow);font-weight:700;}
-#fd-seen .fd-frac{color:var(--accent-identity);font-weight:700;}
-#fd-star[aria-pressed="true"]{background:rgb(var(--accent-yellow-rgb)/0.12);border-color:rgb(var(--accent-yellow-rgb)/0.30);}
+#focus-dock:hover,#focus-dock:focus-within{opacity:1;}
+.fd-btn{
+  display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:var(--fs-micro);
+  color:var(--ink);background:var(--surface);border:1px solid var(--line-strong);
+  padding:8px 14px;cursor:pointer;
+  transition:transform var(--dur),box-shadow var(--dur),border-color var(--dur);
+}
+.fd-btn:hover{border-color:var(--ink);box-shadow:3px 3px 0 var(--ink);transform:translate(-1px,-1px);}
+#fd-star .fd-frac{color:var(--gold);font-weight:700;}
+#fd-seen .fd-frac{color:var(--ink);font-weight:700;}
+#fd-star[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:var(--surface);}
 
 /* ============ FOOTER ============ */
-.foot{border-top:1px solid var(--border);margin-top:var(--sp-16);padding:var(--sp-8) 0 var(--sp-20);color:var(--text-muted);font-size:var(--fs-sm);}
-.foot h3{font-family:var(--font-display);font-size:22px;color:var(--text-primary);margin-bottom:var(--sp-3);}
+.foot{border-top:1px solid var(--line);margin-top:var(--sp-16);padding:var(--sp-8) 0 var(--sp-20);color:var(--muted);font-size:var(--fs-sm);max-width:820px;}
+.foot h3{color:var(--ink);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.02em;font-size:var(--fs-sm);padding-bottom:6px;margin-bottom:var(--sp-4);border-bottom:1px solid var(--line);}
 .foot ul{padding-left:var(--sp-5);margin:0;}
 .foot li{margin-bottom:var(--sp-2);line-height:1.6;}
 
 .btn{
-  display:inline-flex;align-items:center;gap:var(--sp-2);font-family:var(--font-body);font-weight:500;
-  font-size:var(--fs-sm);padding:var(--sp-2) var(--sp-4);min-height:36px;border-radius:var(--r-sm);
-  border:1px solid var(--border);background:var(--card);color:var(--text-primary);cursor:pointer;
-  transition:border-color var(--dur-fast),background var(--dur-fast);
+  display:inline-flex;align-items:center;gap:var(--sp-2);font-weight:700;font-family:var(--font-mono);
+  font-size:var(--fs-xs);padding:7px 12px;min-height:34px;
+  border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);cursor:pointer;
+  transition:transform var(--dur),box-shadow var(--dur),border-color var(--dur);
 }
-.btn:hover{border-color:var(--text-dim);background:var(--surface);}
+.btn:hover{border-color:var(--ink);box-shadow:2px 2px 0 var(--ink);transform:translate(-1px,-1px);}
 
-@media (max-width:1024px){
-  .detail-panel{width:100vw;border-left:none;}
-  .detail-resize{display:none;}
-  body.detail-open{overflow:hidden;}
-  body.detail-open .detail-backdrop{background:rgba(0,0,0,.6);}
-}
+@media (max-width:640px){.filters{position:static;}}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}
 }
 @media print{
-  :root{--bg:#fff;--surface:#f5f5f5;--card:#fff;--border:#ccc;--text-primary:#000;--text-secondary:#333;--text-muted:#555;--text-dim:#666;}
-  body::before{display:none;}
-  .filters,.toc-rail,#focus-dock,.detail-panel,.detail-backdrop,.expand-btn,.tc-star,.tc-seen,.topbar,#read-progress{display:none!important;}
+  :root{--bg:#fff;--surface:#fff;--ink:#000;--ink-soft:#222;--muted:#555;}
+  .filters,.toc-rail,#focus-dock,#detail-drawer,.expand-btn,.tc-star,.tc-seen,.topbar,#read-progress{display:none!important;}
   .shell{grid-template-columns:1fr;}
-  .detail-source{display:block!important;margin-top:12px;}
-  .card-grid{grid-template-columns:1fr;}
-  .tcard{break-inside:avoid;border:1px solid #ccc;}
+  .card-grid{max-width:none;}
+  .tcard{break-inside:avoid;border:1px solid #000;border-left:1px solid #000;box-shadow:none;}
 }
 </style>
 </head>
@@ -351,8 +330,8 @@ body.detail-open .detail-backdrop{display:block;}
 
 <div class="wrap">
   <div class="topbar">
-    <span class="brandmark">Đồ án thạc sĩ · Data Science · HUST</span>
-    <button class="btn" id="theme-toggle" aria-label="Đổi giao diện sáng/tối"><span class="theme-label">DARK</span></button>
+    <span class="brandmark"><i class="wc"></i><i class="wc"></i><i class="wc"></i>Đồ án thạc sĩ · Data Science · HUST</span>
+    <button class="btn" id="theme-toggle" aria-label="Đổi giao diện sáng/tối"><span class="theme-label">LIGHT</span></button>
   </div>
 
   <header class="page-head">
@@ -365,8 +344,8 @@ body.detail-open .detail-backdrop{display:block;}
   <section class="page-overview">
     <p class="ov-lead">Đừng đọc hết 90 cái. Bật <b>„Sắp xếp: tác động cao trước”</b>, rồi lọc <b>💰 tác động 5</b> — còn <b>38</b>. Chồng thêm một bộ lọc lĩnh vực hoặc độ khó là xuống 8–10, đủ để đọc kỹ; đánh dấu ⭐ những cái sống sót rồi mở chi tiết từng cái. (Lọc <b>4+</b> giữ tới <b>78/90</b> nên nó gần như không lọc gì — dùng mức 5 nếu bạn muốn cắt mạnh.) Mục tiêu của trang này không phải là chọn hộ bạn — mà là làm cho việc <em>loại bỏ</em> trở nên nhanh.</p>
 
-    <div class="ov-box" style="margin-top:var(--sp-6);border-left-color:var(--accent-green)">
-      <h4 style="color:var(--accent-green)">Điểm tác động 1–5 — nghĩa là gì</h4>
+    <div class="ov-box" style="margin-top:var(--sp-6);border-left-color:var(--good)">
+      <h4 style="color:var(--good)">Điểm tác động 1–5 — nghĩa là gì</h4>
       <p>Mỗi đề tài được cho một điểm theo ba câu hỏi cụ thể, không phải theo cảm tính: <b>(1) ai được lợi và bao nhiêu người</b>; <b>(2) ai trả tiền</b> — có một người mua thật sự nhìn thấy được, hay lợi ích chỉ nằm trong nội bộ giới nghiên cứu; <b>(3) bàn giao được cái gì</b> — thư viện, dịch vụ, app demo bấm được, hay chỉ một bảng số. Điểm <b>5</b> = có người mua rõ mặt và có sản phẩm demo được trong buổi bảo vệ. Điểm <b>3</b> = đóng góp khoa học vững nhưng đường ra tiền gián tiếp (thường là hạ tầng đánh giá — vẫn là luận văn tốt, chỉ khó gây hứng thú cho doanh nghiệp). Điểm cao <em>không</em> có nghĩa là dễ hơn: hãy đọc kèm độ khó và rủi ro dữ liệu.</p>
           <p style="margin-top:12px"><b>Thang này bị nén ở đầu trên — nói rõ để bạn không đọc nhầm.</b> Phân bố thật của 90 đề tài: <b>38 đề tài 5 điểm, 40 đề tài 4 điểm, 11 đề tài 3 điểm, và đúng 1 đề tài 2 điểm</b> (#58, và nó được để nguyên thay vì đánh bóng). Hệ quả thực tế: <b>đây là thang ba mức chứ không phải năm mức</b>, nên đừng đọc nó như thứ hạng tuyệt đối — hai đề tài cùng 4 điểm có thể cách nhau khá xa. Điểm này là <em>bộ lọc thô để loại nhanh</em>, không phải phép đo; phần „ai trả tiền” mới là chỗ bạn nên đọc kỹ, và cuộc gọi 30 phút nói ở cuối trang mới là thứ xác nhận được nó.</p>
 </div>
@@ -384,8 +363,8 @@ body.detail-open .detail-backdrop{display:block;}
         <h4>Khuôn mẫu 3 — Đóng cầu nối còn thiếu</h4>
         <p>Ghép một tầng còn thiếu vào pipeline có sẵn — ví dụ tầng quyết định kinh tế phía sau một mô hình dự báo. Đóng góp rõ ràng, dễ bảo vệ.</p>
       </div>
-      <div class="ov-box" style="border-left-color:var(--accent-green)">
-        <h4 style="color:var(--accent-green)">Khuôn mẫu 4 — Đo bằng tiền, không bằng RMSE</h4>
+      <div class="ov-box" style="border-left-color:var(--good)">
+        <h4 style="color:var(--good)">Khuôn mẫu 4 — Đo bằng tiền, không bằng RMSE</h4>
         <p>Giữ nguyên mô hình, đổi <b>thước đo</b> sang đơn vị người mua hiểu được: đồng tồn kho, giờ điều tra, ca bỏ sót, hoá đơn API. Đây là khuôn mẫu tạo ra <b>điểm tác động cao nhất</b> với chi phí khoa học thấp nhất — và là lý do lĩnh vực „Ứng dụng cao” ở đầu trang tồn tại.</p>
       </div>
     </div>
@@ -407,54 +386,59 @@ body.detail-open .detail-backdrop{display:block;}
 
     <main>
       <div class="filters">
-        <div class="filter-row">
+        <div class="filter-row filter-row--main">
           <input type="search" class="input" id="q" placeholder="Tìm theo từ khoá, dữ liệu, phương pháp…" aria-label="Tìm kiếm đề tài">
-          <div class="fgroup" id="dom-chips" role="group" aria-label="Lọc theo lĩnh vực"></div>
           <span class="result-count" id="rcount"></span>
+          <button class="adv-toggle" id="adv-toggle" aria-expanded="false" aria-controls="filters-adv">☰ Lọc &amp; sắp xếp</button>
         </div>
-        <div class="filter-row">
-          <div class="fgroup">
-            <span class="fgroup-label">💰 Tác động</span>
-            <div class="segmented" role="radiogroup" aria-label="Lọc theo mức tác động" id="imp-seg">
-              <button class="segment" role="radio" aria-checked="true" data-v="all">Tất cả</button>
-              <button class="segment" role="radio" aria-checked="false" data-v="5">5 · ra sản phẩm</button>
-              <button class="segment" role="radio" aria-checked="false" data-v="4">4+ · ứng dụng rõ</button>
-              <button class="segment" role="radio" aria-checked="false" data-v="3">3 · học thuật</button>
+        <div id="filters-adv" hidden>
+          <div class="filter-row">
+            <div class="fgroup" id="dom-chips" role="group" aria-label="Lọc theo lĩnh vực"></div>
+          </div>
+          <div class="filter-row">
+            <div class="fgroup">
+              <span class="fgroup-label">💰 Tác động</span>
+              <div class="segmented" role="radiogroup" aria-label="Lọc theo mức tác động" id="imp-seg">
+                <button class="segment" role="radio" aria-checked="true" data-v="all">Tất cả</button>
+                <button class="segment" role="radio" aria-checked="false" data-v="5">5 · ra sản phẩm</button>
+                <button class="segment" role="radio" aria-checked="false" data-v="4">4+ · ứng dụng rõ</button>
+                <button class="segment" role="radio" aria-checked="false" data-v="3">3 · học thuật</button>
+              </div>
+            </div>
+            <div class="fgroup">
+              <span class="fgroup-label">Sắp xếp</span>
+              <div class="segmented" role="radiogroup" aria-label="Sắp xếp danh sách" id="sort-seg">
+                <button class="segment" role="radio" aria-checked="false" data-v="impact">Tác động cao trước</button>
+                <button class="segment" role="radio" aria-checked="true" data-v="dom">Theo lĩnh vực</button>
+              </div>
             </div>
           </div>
-          <div class="fgroup">
-            <span class="fgroup-label">Sắp xếp</span>
-            <div class="segmented" role="radiogroup" aria-label="Sắp xếp danh sách" id="sort-seg">
-              <button class="segment" role="radio" aria-checked="false" data-v="impact">Tác động cao trước</button>
-              <button class="segment" role="radio" aria-checked="true" data-v="dom">Theo lĩnh vực</button>
+          <div class="filter-row">
+            <div class="fgroup">
+              <span class="fgroup-label">Độ khó</span>
+              <div class="segmented" role="radiogroup" aria-label="Lọc theo độ khó" id="diff-seg">
+                <button class="segment" role="radio" aria-checked="true" data-v="all">Tất cả</button>
+                <button class="segment" role="radio" aria-checked="false" data-v="3">3 · vừa</button>
+                <button class="segment" role="radio" aria-checked="false" data-v="4">4 · khó</button>
+                <button class="segment" role="radio" aria-checked="false" data-v="5">5 · rất khó</button>
+              </div>
             </div>
-          </div>
-        </div>
-        <div class="filter-row">
-          <div class="fgroup">
-            <span class="fgroup-label">Độ khó</span>
-            <div class="segmented" role="radiogroup" aria-label="Lọc theo độ khó" id="diff-seg">
-              <button class="segment" role="radio" aria-checked="true" data-v="all">Tất cả</button>
-              <button class="segment" role="radio" aria-checked="false" data-v="3">3 · vừa</button>
-              <button class="segment" role="radio" aria-checked="false" data-v="4">4 · khó</button>
-              <button class="segment" role="radio" aria-checked="false" data-v="5">5 · rất khó</button>
+            <div class="fgroup">
+              <span class="fgroup-label">Rủi ro DL</span>
+              <div class="segmented" role="radiogroup" aria-label="Lọc theo rủi ro dữ liệu" id="risk-seg">
+                <button class="segment" role="radio" aria-checked="true" data-v="all">Tất cả</button>
+                <button class="segment" role="radio" aria-checked="false" data-v="thap">Thấp</button>
+                <button class="segment" role="radio" aria-checked="false" data-v="tb">TB</button>
+                <button class="segment" role="radio" aria-checked="false" data-v="cao">Cao</button>
+              </div>
             </div>
-          </div>
-          <div class="fgroup">
-            <span class="fgroup-label">Rủi ro DL</span>
-            <div class="segmented" role="radiogroup" aria-label="Lọc theo rủi ro dữ liệu" id="risk-seg">
-              <button class="segment" role="radio" aria-checked="true" data-v="all">Tất cả</button>
-              <button class="segment" role="radio" aria-checked="false" data-v="thap">Thấp</button>
-              <button class="segment" role="radio" aria-checked="false" data-v="tb">TB</button>
-              <button class="segment" role="radio" aria-checked="false" data-v="cao">Cao</button>
+            <div class="fgroup">
+              <button class="fchip" id="f-mobile" aria-pressed="false">📱 Hợp nền mobile</button>
+              <button class="fchip" id="f-vn" aria-pressed="false">🇻🇳 Góc Việt Nam</button>
+              <button class="fchip" id="f-star" aria-pressed="false">⭐ Chỉ shortlist</button>
             </div>
+            <button class="chip-clear" id="clear-all">Xoá bộ lọc</button>
           </div>
-          <div class="fgroup">
-            <button class="fchip" id="f-mobile" aria-pressed="false">📱 Hợp nền mobile</button>
-            <button class="fchip" id="f-vn" aria-pressed="false">🇻🇳 Góc Việt Nam</button>
-            <button class="fchip" id="f-star" aria-pressed="false">⭐ Chỉ shortlist</button>
-          </div>
-          <button class="chip-clear" id="clear-all">Xoá bộ lọc</button>
         </div>
       </div>
 
@@ -470,14 +454,14 @@ body.detail-open .detail-backdrop{display:block;}
           <li><b>Đăng ký truy cập dữ liệu ngay hôm nay</b> với bất kỳ đề tài nào cần credential (MIMIC-IV, eICU, UK Biobank…). Đăng ký không ràng buộc gì, nhưng độ trễ 2–4 tuần thì có thể giết cả timeline.</li>
         </ul>
         <h3 style="margin-top:40px">Bản 7 — lượt loại theo bộ tiêu chí, và hợp nhất hai nhánh (→ 90 đề tài)</h3>
-        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">Trang này có lúc bị phát triển trên <b>hai nhánh song song</b>: một nhánh mở rộng 48 → 100 đề tài theo lĩnh vực, một nhánh rà soát lại từng trích dẫn của bản 48 rồi thêm 4 đề tài đã tra nguồn. Bản 7 làm hai việc: <b>loại 13 đề tài</b> khỏi nhánh mở rộng, và <b>hợp nhất trọn vẹn</b> nhánh rà soát vào — không bỏ gì của bên nào.</p>
+        <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px">Trang này có lúc bị phát triển trên <b>hai nhánh song song</b>: một nhánh mở rộng 48 → 100 đề tài theo lĩnh vực, một nhánh rà soát lại từng trích dẫn của bản 48 rồi thêm 4 đề tài đã tra nguồn. Bản 7 làm hai việc: <b>loại 13 đề tài</b> khỏi nhánh mở rộng, và <b>hợp nhất trọn vẹn</b> nhánh rà soát vào — không bỏ gì của bên nào.</p>
         <ul style="font-size:13px">
           <li><b>Hợp nhất từ nhánh rà soát:</b> bốn đề tài đã tra nguồn được đưa vào với số mới <b>#101–#104</b> (không phải #49–#52 như ở nhánh kia, vì bốn số đó đã thuộc nhóm hoá–dược): <b>#101</b> giao thức chấm điểm phát hiện bất thường (Wu &amp; Keogh, Kim 2022), <b>#102</b> lỗi ASR tiếng Việt lan xuống tác vụ sau (PhoWhisper), <b>#103</b> trích xuất chứng từ tiếng Việt (MC-OCR), <b>#104</b> foundation model dữ liệu bảng vs GBDT (TabPFN v2). Kèm ba chỗ sửa dữ kiện của nhánh đó: Mandalapu 2021 là <em>workshop</em> tại AAAI-2021 chứ không phải hội nghị chính (#37); con số 37% của #1 là „lên tới ~37%, thắng 8/10 lần chạy” chứ không phải một mức chung; và câu „lọc tác động 4–5 để cắt xuống 8–10” ở phần mở đầu <b>sai về số học</b> — đã viết lại theo phân bố thật. Cộng bản sửa layout: cột mục lục nay thu lại khi xếp theo tác động.</li>
           <li><b>Gộp một cặp trùng thật, không phải trùng khuôn:</b> đề tài point-adjust cũ (#77) và #101 là <em>cùng một luận văn</em> — cùng câu hỏi, cùng bộ dữ liệu, cùng cơ chế thổi phồng. Đã giữ <b>#101</b> vì nó có nền phê phán được trích nguồn (Wu &amp; Keogh TKDE, Kim 2022) và có thêm benchmark lành mạnh (UCR Anomaly Archive, TSB-AD), rồi bỏ #77. Đây là ngoại lệ có lý do: <b>trùng khuôn mẫu thì giữ, trùng đề tài thì gộp.</b></li>
         </ul>
 
-        <h4 style="margin-top:28px;font-size:14px;color:var(--text-secondary)">Phần loại bỏ — 13 đề tài</h4>
-        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">Chấm cả 100 đề tài của nhánh mở rộng theo <code>thesis-topic-rubric.md</code> và loại những cái mà tầng blocker hoặc tầng ràng buộc bó chặt tới mức không nên tiêu 5 ngày spike. <b>Số <code>#N</code> của các đề tài còn lại không đổi</b> — nên dãy số có lỗ, và lỗ đó chính là hồ sơ của lượt loại này.</p>
+        <h4 style="margin-top:28px;font-size:14px;color:var(--ink-soft)">Phần loại bỏ — 13 đề tài</h4>
+        <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px">Chấm cả 100 đề tài của nhánh mở rộng theo <code>thesis-topic-rubric.md</code> và loại những cái mà tầng blocker hoặc tầng ràng buộc bó chặt tới mức không nên tiêu 5 ngày spike. <b>Số <code>#N</code> của các đề tài còn lại không đổi</b> — nên dãy số có lỗ, và lỗ đó chính là hồ sơ của lượt loại này.</p>
         <ul style="font-size:13px">
           <li><b>Bỏ vì không có đường dữ liệu hợp pháp hoặc khả dụng</b> (blocker B1/B2 thất bại, và chính hồ sơ đề tài đã nói vậy): <b>#26</b> nowcasting vĩ mô VN (GSO công bố hạn chế + phải scrape sàn TMĐT, và chuỗi có thể dưới 100 quan sát), <b>#63</b> dịch chuyển kỹ năng lao động (điều khoản nền tảng tuyển dụng không cho thu thập, lương lại thường bị ẩn), <b>#69</b> trích xuất bệnh án tiếng Việt (không có cơ chế đồng ý/ẩn danh sẵn, không có corpus chuẩn), <b>#84</b> dịch máy ngôn ngữ dân tộc thiểu số (license từng nguồn không rõ và chưa có người nói bản ngữ để đánh giá), <b>#98</b> tài khoản phối hợp trên nền tảng (thu thập vi phạm điều khoản, cộng rủi ro đạo đức nhắm vào người thật).</li>
           <li><b>Bỏ vì hai ràng buộc nặng chồng lên nhau</b> — gánh nặng domain cao <em>cộng</em> compute cao hoặc độ khó 5/5, và không có đường xoay nào ghi trong phần rủi ro: <b>#51</b> retrosynthesis (hoá hữu cơ + transformer), <b>#53</b> vật liệu pin/xúc tác (hoá lý/DFT + dữ liệu rất lớn), <b>#57</b> nguy cơ va chạm quỹ đạo (8 tuần cơ học quỹ đạo, độ khó 5/5, và nhãn „đã va chạm” gần như không tồn tại), <b>#78</b> mô hình thay thế mô phỏng vật lý (PDE + compute sinh dữ liệu), <b>#74</b> đèn tín hiệu bằng RL (độ khó 5/5 + compute cao + cần ≥5 seed mỗi cấu hình), <b>#28</b> target trial emulation (độ khó 5/5 + nhân quả nâng cao + chờ credential PhysioNet), <b>#86</b> OCR Hán-Nôm (bắt buộc có người đọc được Hán-Nôm để gán nhãn — không thay thế được bằng nỗ lực).</li>
@@ -488,7 +472,7 @@ body.detail-open .detail-backdrop{display:block;}
         </ul>
 
         <h3 style="margin-top:40px">Bản 6 — quét hết những gì tôi nghĩ ra được</h3>
-        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">Thêm <b>36 đề tài</b> (#65–#100), gồm ba lĩnh vực mới — <b>Giao thông · Đô thị · Vận hành</b> (#70–#75), <b>Công nghiệp · Bảo trì · Mô phỏng</b> (#76–#80), <b>An ninh · Gian lận · AI an toàn</b> (#94–#98) — và bổ sung vào các nhóm trước đó mỏng: Môi trường (+3), Y tế (+2), Nhân quả (+3), NLP (+6), ML Systems (+4), Giáo dục (+2).</p>
+        <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px">Thêm <b>36 đề tài</b> (#65–#100), gồm ba lĩnh vực mới — <b>Giao thông · Đô thị · Vận hành</b> (#70–#75), <b>Công nghiệp · Bảo trì · Mô phỏng</b> (#76–#80), <b>An ninh · Gian lận · AI an toàn</b> (#94–#98) — và bổ sung vào các nhóm trước đó mỏng: Môi trường (+3), Y tế (+2), Nhân quả (+3), NLP (+6), ML Systems (+4), Giáo dục (+2).</p>
         <ul style="font-size:13px">
           <li><b>Đây là lượt quét cạn, không phải lượt chọn lọc.</b> Bản 5 thêm theo lĩnh vực bạn hỏi; bản này thêm mọi hướng tôi nghĩ ra mà có dữ liệu mở và có câu hỏi kiểm chứng được. Hệ quả: chất lượng không đều — và <b>bản 7 đã loại đúng những cái tệ nhất của lượt này</b> (#74, #78, #84, #86, #89, #98). Với những cái còn lại, đọc phần rủi ro trước phần câu hỏi.</li>
           <li><b>Hai đề tài rẻ nhất còn lại của lượt này:</b> #82 (A/B test peeking — mô phỏng, không GPU), #92 (đo điện huấn luyện — tự sinh dữ liệu). Nếu bạn cần một đề tài gần như chắc chắn có kết quả, nhìn vào đây. (Cái thứ tư — #89, phình token — đã bị bản 7 loại vì quá nhỏ; nó thuộc về một chương của #46.)</li>
@@ -499,9 +483,9 @@ body.detail-open .detail-backdrop{display:block;}
         </ul>
 
         <h3 style="margin-top:40px">Bản 5 — mở rộng lĩnh vực (và một bộ lọc tôi đã áp mà không nói)</h3>
-        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">Bản này thêm <b>16 đề tài</b> (#49–#64) trong ba lĩnh vực mới: <b>Hoá học · Vật liệu · Dược</b> (#49–#55), <b>Vũ trụ · Khí quyển · Viễn thám</b> (#56–#60), <b>Kinh tế vĩ mô · Năng lượng</b> (#61–#64).</p>
+        <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px">Bản này thêm <b>16 đề tài</b> (#49–#64) trong ba lĩnh vực mới: <b>Hoá học · Vật liệu · Dược</b> (#49–#55), <b>Vũ trụ · Khí quyển · Viễn thám</b> (#56–#60), <b>Kinh tế vĩ mô · Năng lượng</b> (#61–#64).</p>
         <ul style="font-size:13px">
-          <li><b style="color:var(--accent-red)">Thú nhận trước:</b> bốn bản đầu <em>cố tình</em> bỏ hoá, dược, vũ trụ, và phần lớn kinh tế vĩ mô — theo ba tiêu chí của riêng tôi: khó tìm thầy hướng dẫn đỡ domain, chi phí học nền cao (6–8 tuần thay vì 2–3), và khó bàn giao được gì trong 6 tháng. <b>Nhưng tôi không viết bộ lọc đó ra</b>, nên nó trông như „không có đề tài nào ở các lĩnh vực này” chứ không phải „tôi đã loại chúng vì lý do X”. Đó là lỗi của bản trước. Giờ các đề tài đã có mặt, kèm nguyên văn ba rủi ro đó ở từng cái để bạn tự cân — quyết định là của bạn, không phải của tôi.</li>
+          <li><b style="color:var(--bad)">Thú nhận trước:</b> bốn bản đầu <em>cố tình</em> bỏ hoá, dược, vũ trụ, và phần lớn kinh tế vĩ mô — theo ba tiêu chí của riêng tôi: khó tìm thầy hướng dẫn đỡ domain, chi phí học nền cao (6–8 tuần thay vì 2–3), và khó bàn giao được gì trong 6 tháng. <b>Nhưng tôi không viết bộ lọc đó ra</b>, nên nó trông như „không có đề tài nào ở các lĩnh vực này” chứ không phải „tôi đã loại chúng vì lý do X”. Đó là lỗi của bản trước. Giờ các đề tài đã có mặt, kèm nguyên văn ba rủi ro đó ở từng cái để bạn tự cân — quyết định là của bạn, không phải của tôi.</li>
           <li><b>Gánh nặng domain là con số phải nhìn trước tiên ở nhóm này.</b> Bốn đề tài mang cảnh báo dừng thẳng: #51 (hoá hữu cơ), #53 (hoá lý/DFT), #57 (cơ học quỹ đạo), #61 (kinh tế học). Với chúng, câu „đừng nhận nếu không có ai để hỏi” là nghiêm túc — không phải lời khiêm tốn theo lệ. <b>Bản 7 đã loại ba cái đầu</b> vì gánh nặng domain còn chồng thêm compute cao hoặc độ khó 5/5; <b>#61 ở lại</b> vì compute nhẹ và spike của nó cho ra một bảng dùng được ngay cả khi phần dự báo thất bại.</li>
           <li><b>Ba đề tài trong nhóm mới có gánh nặng domain THẤP</b> và nên là chỗ bạn nhìn trước nếu muốn vào lĩnh vực mới mà không mất 2 tháng đọc: #49 và #50 (chỉ cần hiểu biểu diễn phân tử, không cần cơ chế phản ứng), #64 (viễn thám cơ bản). #54 cũng nhẹ về dược nhưng nặng về ETL — đúng sở trường kỹ sư.</li>
           <li><b>#58 có điểm tác động 2, và tôi để nguyên thay vì đánh bóng.</b> Phát hiện hành tinh ngoài hệ là khoa học cơ bản, không có đường ra tiền. Nó ở đây vì nó là hướng vũ trụ dễ làm nhất, không vì nó ứng dụng cao. Phần „ai trả tiền” của nó nói thẳng điều đó.</li>
@@ -510,11 +494,11 @@ body.detail-open .detail-backdrop{display:block;}
         </ul>
 
         <h3 style="margin-top:40px">Bản 4 — rà soát dữ kiện (tra nguồn từng cái)</h3>
-        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">Lần này tôi đi tra lại từng con số và từng trích dẫn có thể tra được. Sáu chỗ sai, hai chỗ mâu thuẫn nội bộ. Ghi lại đây để bạn biết chỗ nào đã có nguồn và chỗ nào vẫn là ước lượng.</p>
+        <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px">Lần này tôi đi tra lại từng con số và từng trích dẫn có thể tra được. Sáu chỗ sai, hai chỗ mâu thuẫn nội bộ. Ghi lại đây để bạn biết chỗ nào đã có nguồn và chỗ nào vẫn là ước lượng.</p>
         <ul style="font-size:13px">
           <li><b>Sai nghiêm trọng — #1:</b> bản trước ghi „lợi thế MSE 47–184% trên dataset rò rỉ, 0,3–14% trên dataset sạch”. <b>Hai con số này không có trong bài được trích</b> (arXiv 2510.13654) — tôi đã bỏ. Bài đó là <em>position paper</em> (Meyer và cộng sự, nộp 10/2025, sửa 02/2026) và những con số thật của nó là: các ca rò rỉ đã ghi nhận cho điểm test tốt hơn trên 50%; thực nghiệm giao thông Madrid ~43%; thực nghiệm riêng trên cú sốc thị trường 2020 ~37% và lợi thế biến mất sau cú sốc. Đã thay bằng đúng những con số này.</li>
           <li><b>Sai chiều — #37:</b> Gervet 2020 <em>không</em> kết luận logistic thắng 4/9. Nguyên văn: <b>DKT có AUC cao nhất ở 4/9 dataset</b>; logistic với đặc trưng tốt dẫn ở dataset cỡ vừa hoặc có nhiều tương tác mỗi học sinh, DKT dẫn ở dataset lớn. Tôi cũng đã hạ giọng phần Mandalapu 2021: bài đó đặt câu hỏi „có cần đi sâu không” và không tìm được bằng chứng rõ cho mô hình sâu ở quy mô lớn — chứ không khẳng định DKT „tệ đi”.</li>
-          <li><b>Sai số liệu — #36:</b> Coat có <b>6.960 rating tự chọn (train) + 4.640 rating ngẫu nhiên (test)</b>, tổng ~11.600 — không phải ~5.500. Và KuaiRec bị tôi gộp nhầm hai ma trận: phần <em>quan sát đầy đủ</em> là ma trận nhỏ 1.411 × 3.327 (~4,7 triệu tương tác, mật độ ~99,6%); ma trận <em>lớn và thưa hơn</em> là 7.176 × 10.728. Trích nhầm chỗ này là bị hội đồng bắt ngay. <b style="color:var(--accent-red)">Bản 7 sửa tiếp:</b> chính bản 4 lại gán sai số tương tác cho ma trận lớn — con số đúng là <b>12.530.806</b> (mật độ ~16,3%), không phải ~1,15 triệu. Đã kiểm lại trên trang dataset.</li>
+          <li><b>Sai số liệu — #36:</b> Coat có <b>6.960 rating tự chọn (train) + 4.640 rating ngẫu nhiên (test)</b>, tổng ~11.600 — không phải ~5.500. Và KuaiRec bị tôi gộp nhầm hai ma trận: phần <em>quan sát đầy đủ</em> là ma trận nhỏ 1.411 × 3.327 (~4,7 triệu tương tác, mật độ ~99,6%); ma trận <em>lớn và thưa hơn</em> là 7.176 × 10.728. Trích nhầm chỗ này là bị hội đồng bắt ngay. <b style="color:var(--bad)">Bản 7 sửa tiếp:</b> chính bản 4 lại gán sai số tương tác cho ma trận lớn — con số đúng là <b>12.530.806</b> (mật độ ~16,3%), không phải ~1,15 triệu. Đã kiểm lại trên trang dataset.</li>
           <li><b>Bỏ số không tra được — #3:</b> „72,6% chuỗi cấp đáy là intermittent” không tìm được nguồn gốc. Đã bỏ và thay bằng hướng dẫn tự tính (phân loại Syntetos–Boylan ngay ở spike ngày 1) — con số của chính bạn thì bảo vệ được, con số nghe được thì không.</li>
           <li><b>Mâu thuẫn nội bộ — #24:</b> phần dữ liệu cảnh báo LendingClub không còn mở, nhưng phần spike vẫn bảo „ngày 1 tải LendingClub”. Đã sửa spike sang Home Credit / Give Me Some Credit.</li>
           <li><b>Cạnh tranh sát hơn tôi tưởng — #2:</b> bài „Beyond Accuracy: Evaluating Forecasting Models by Multi-Echelon Inventory Cost” (arXiv 2603.16815) đã chạy đúng thiết lập newsvendor trên subset CA_FOODS_1 của M5 <b>và đã bao gồm multi-echelon</b>. Vậy multi-echelon không còn là điểm khác biệt — đã đổi hướng phân biệt sang nhu cầu rời rạc, hàng có hạn dùng, và huấn luyện theo mục tiêu quyết định.</li>
@@ -524,7 +508,7 @@ body.detail-open .detail-backdrop{display:block;}
         </ul>
 
         <h3 style="margin-top:40px">Bản 3 — bổ sung trục tác động</h3>
-        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">Bản này thêm <b>10 đề tài mới</b> (#39–#48) trong lĩnh vực „Ứng dụng cao · Ra sản phẩm”, và gán cho <b>cả 48 đề tài lúc đó</b> một điểm tác động kèm ba dòng „ai được lợi / ai trả tiền / bàn giao được gì”.</p>
+        <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px">Bản này thêm <b>10 đề tài mới</b> (#39–#48) trong lĩnh vực „Ứng dụng cao · Ra sản phẩm”, và gán cho <b>cả 48 đề tài lúc đó</b> một điểm tác động kèm ba dòng „ai được lợi / ai trả tiền / bàn giao được gì”.</p>
         <ul style="font-size:13px">
           <li><b>Điểm tác động là đánh giá, không phải số đo.</b> Nó phản ánh mức độ dễ nhìn thấy của đường ra tiền, không phải giá trị khoa học. Một đề tài 3 điểm (ví dụ #9, #27) vẫn có thể là luận văn tốt hơn một đề tài 5 điểm — chỉ khó gây hứng thú cho doanh nghiệp ngồi dự bảo vệ hơn.</li>
           <li><b>Các con số quy mô trong phần „ai trả tiền” là ước lượng bối cảnh</b> (ví dụ tỉ lệ hàng huỷ ngành tươi sống, tỉ lệ thất thoát nước sạch). Chúng dùng để định hướng chọn đề tài — <b>đừng trích vào luận văn mà không tìm nguồn gốc</b>. Khi viết đề cương, mỗi con số kiểu này cần một nguồn cụ thể; nếu không tìm được nguồn, bỏ nó ra khỏi phần động lực.</li>
@@ -533,7 +517,7 @@ body.detail-open .detail-backdrop{display:block;}
         </ul>
 
         <h3 style="margin-top:40px">Kết quả rà soát (bản 2)</h3>
-        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">Bản đầu có 6 chỗ sai hoặc thiếu chính xác. Đã sửa, và ghi lại ở đây để bạn biết mức tin cậy của phần còn lại.</p>
+        <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px">Bản đầu có 6 chỗ sai hoặc thiếu chính xác. Đã sửa, và ghi lại ở đây để bạn biết mức tin cậy của phần còn lại.</p>
         <ul style="font-size:13px">
           <li><b>Đã sửa — #5:</b> Criteo Uplift không phải 25 triệu dòng. Mô tả chính thức ghi 25M nhưng file tải về chỉ có <b>13.979.592 dòng</b>. Đừng trích 25M vào luận văn.</li>
           <li><b>Đã sửa — #24:</b> LendingClub <b>không còn mở</b> như tôi nói. Hồ sơ bị từ chối đã gỡ khỏi nguồn chính thức từ 2019 và trang tải về có điều khoản hạn chế; bản sao trên Kaggle dừng cập nhật ~2018–2020. Đã hạ rủi ro dữ liệu từ „thấp” lên „trung bình” và đổi nguồn chính sang Home Credit / Give Me Some Credit.</li>
@@ -542,22 +526,20 @@ body.detail-open .detail-backdrop{display:block;}
           <li><b>Đã sửa — #37:</b> tôi khung sai là „ưu thế của DKT biến mất”. <em>Bản 4 sửa tiếp: xem mục dưới.</em></li>
           <li><b>Đã bổ sung — #36:</b> Coat nhỏ hơn tôi ngụ ý rất nhiều. Đã thêm <b>KuaiRec</b> và <b>KuaiRand</b> — hai dataset có tập test không thiên lệch ở quy mô lớn hơn nhiều, khắc phục đúng điểm yếu đó. <em>Bản 4 sửa lại các con số cụ thể: xem mục dưới.</em></li>
         </ul>
-        <p style="font-size:13px;color:var(--text-secondary);margin-top:16px"><b>Đã kiểm chứng và giữ nguyên:</b> kết quả scFM zero-shot thua baseline HVG (#6), các số hiệu chuẩn MIMIC→eICU (#13), nền lý thuyết DSR/PBO/CPCV (#22), sự tồn tại của tập test ngẫu nhiên hoá trong Yahoo!R3 và Coat (#36). <b style="color:var(--accent-red)">Bản 4 rút lại một mục ở đây:</b> „con số rò rỉ benchmark TSFM (#1)” <em>không</em> kiểm chứng được — xem mục Bản 4 ở trên.</p>
-        <p style="font-size:13px;color:var(--text-dim);margin-top:16px"><b>Chưa kiểm chứng — bạn phải tự xác minh ở spike ngày 1–2:</b> dữ liệu ca sốt xuất huyết theo tỉnh (#18), độ phủ lịch sử mạng cảm biến PAM Air (#19), chất lượng nhãn MIC trong BV-BRC (#8), tình trạng benchmark tiếng Việt (#31), khả năng truy cập dữ liệu Binance từ Việt Nam (#23), độ dài chuỗi năng suất lúa theo huyện (#20). Đây là những chỗ tôi không đủ căn cứ để khẳng định — và cũng là những chỗ dễ giết đề tài nhất.</p>
-        <p style="font-size:13px;color:var(--text-dim);margin-top:16px"><b>Chưa kiểm chứng ở nhóm mới (#39–#48) — cùng luật, spike ngày 1–2:</b> xin được bao nhiêu sao kê thật và của mấy ngân hàng khác nhau (#39); có chuỗi bán lẻ nào cho bạn dữ liệu hàng tươi không, và M5 FOODS có đủ thay thế không (#40); điều khoản sử dụng và khả năng thu thập tin rao (#45); chi phí API thật cho phần mô hình đắt (#46); xin được dữ liệu công tơ VN hay chỉ dùng L-Town (#47); và với mọi đề tài „ra sản phẩm”: <b>có tìm được một người thật đang làm nghề đó để phỏng vấn 30 phút không</b>. Nếu không, hạ điểm tác động xuống 3 và chọn đề tài khác.</p>
+        <p style="font-size:13px;color:var(--ink-soft);margin-top:16px"><b>Đã kiểm chứng và giữ nguyên:</b> kết quả scFM zero-shot thua baseline HVG (#6), các số hiệu chuẩn MIMIC→eICU (#13), nền lý thuyết DSR/PBO/CPCV (#22), sự tồn tại của tập test ngẫu nhiên hoá trong Yahoo!R3 và Coat (#36). <b style="color:var(--bad)">Bản 4 rút lại một mục ở đây:</b> „con số rò rỉ benchmark TSFM (#1)” <em>không</em> kiểm chứng được — xem mục Bản 4 ở trên.</p>
+        <p style="font-size:13px;color:var(--muted);margin-top:16px"><b>Chưa kiểm chứng — bạn phải tự xác minh ở spike ngày 1–2:</b> dữ liệu ca sốt xuất huyết theo tỉnh (#18), độ phủ lịch sử mạng cảm biến PAM Air (#19), chất lượng nhãn MIC trong BV-BRC (#8), tình trạng benchmark tiếng Việt (#31), khả năng truy cập dữ liệu Binance từ Việt Nam (#23), độ dài chuỗi năng suất lúa theo huyện (#20). Đây là những chỗ tôi không đủ căn cứ để khẳng định — và cũng là những chỗ dễ giết đề tài nhất.</p>
+        <p style="font-size:13px;color:var(--muted);margin-top:16px"><b>Chưa kiểm chứng ở nhóm mới (#39–#48) — cùng luật, spike ngày 1–2:</b> xin được bao nhiêu sao kê thật và của mấy ngân hàng khác nhau (#39); có chuỗi bán lẻ nào cho bạn dữ liệu hàng tươi không, và M5 FOODS có đủ thay thế không (#40); điều khoản sử dụng và khả năng thu thập tin rao (#45); chi phí API thật cho phần mô hình đắt (#46); xin được dữ liệu công tơ VN hay chỉ dùng L-Town (#47); và với mọi đề tài „ra sản phẩm”: <b>có tìm được một người thật đang làm nghề đó để phỏng vấn 30 phút không</b>. Nếu không, hạ điểm tác động xuống 3 và chọn đề tài khác.</p>
       </section>
     </main>
   </div>
 </div>
 
-<div class="detail-backdrop"></div>
-<aside class="detail-panel" id="detail-panel" role="dialog" aria-modal="false" aria-label="Chi tiết đề tài">
-  <div class="detail-resize" role="separator" aria-orientation="vertical" aria-label="Kéo để đổi độ rộng" tabindex="0"></div>
-  <header class="detail-head">
-    <span class="detail-title"></span>
-    <button class="detail-close" aria-label="Đóng">&times;</button>
-  </header>
-  <div class="detail-body"></div>
+<aside id="detail-drawer" aria-hidden="true" aria-label="Chi tiết đề tài">
+  <div class="drawer-head">
+    <h3 class="drawer-title" id="drawer-title"></h3>
+    <button type="button" class="drawer-close" id="drawer-close" aria-label="Đóng chi tiết">✕</button>
+  </div>
+  <div class="drawer-body" id="drawer-body"></div>
 </aside>
 
 <script>
@@ -2223,7 +2205,7 @@ function buildChips(){
     b.setAttribute("aria-pressed","false");
     b.style.setProperty("--c", d.c);
     b.style.setProperty("--c-rgb", d.rgb);
-    b.textContent = d.name;
+    b.innerHTML = '<span class="chip-dot"></span>'+d.name;
     b.addEventListener("click", () => {
       if (state.doms.has(d.id)) state.doms.delete(d.id); else state.doms.add(d.id);
       b.setAttribute("aria-pressed", state.doms.has(d.id) ? "true" : "false");
@@ -2238,7 +2220,7 @@ function buildTOC(){
   DOMAINS.forEach(d => {
     const n = TOPICS.filter(t => t.dom === d.id).length;
     const li = document.createElement("li");
-    li.innerHTML = '<a href="#sec-'+d.id+'" data-sec="'+d.id+'"><span>'+d.name+'</span><span class="toc-n">'+n+'</span></a>';
+    li.innerHTML = '<a href="#sec-'+d.id+'" data-sec="'+d.id+'" style="--c:'+d.c+'"><span class="toc-dot"></span><span>'+d.name+'</span><span class="toc-n">'+n+'</span></a>';
     ul.appendChild(li);
   });
 }
@@ -2262,7 +2244,6 @@ function impactBadge(n){
 function detailHTML(t){
   const d = domById[t.dom];
   return ''
-   + '<div class="d-h1">'+t.t+'</div>'
    + '<div class="d-sub">Đề tài #'+t.n+' · '+d.name+'</div>'
    + '<div class="d-stats">'
      + '<div class="d-stat"><span class="k">💰 Tác động</span><span class="v">'+t.impact.s+'/5 · '+IMP_WORD[t.impact.s]+'</span></div>'
@@ -2299,9 +2280,9 @@ function cardHTML(t){
   + '</div>'
   + '<p class="tc-q">'+t.q+'</p>'
   + '<div class="tc-meta">'
-    + '<div class="tc-line tc-money"><span class="tc-k">Ai trả tiền</span><span class="tc-v">'+t.impact.pay+'</span></div>'
-    + '<div class="tc-line"><span class="tc-k">Dữ liệu</span><span class="tc-v">'+t.data+'</span></div>'
-    + '<div class="tc-line"><span class="tc-k">Đóng góp</span><span class="tc-v">'+t.contrib+'</span></div>'
+    + '<p class="tc-line tc-money"><b>Ai trả tiền.</b> '+t.impact.pay+'</p>'
+    + '<p class="tc-line"><b>Dữ liệu.</b> '+t.data+'</p>'
+    + '<p class="tc-line"><b>Đóng góp.</b> '+t.contrib+'</p>'
   + '</div>'
   + '<div class="tc-foot">'
     + impactBadge(t.impact.s)
@@ -2309,10 +2290,9 @@ function cardHTML(t){
     + '<span class="badge '+RISK_CLASS[t.risk]+'">'+RISK_LABEL[t.risk]+'</span>'
     + flags
     + '<button class="tc-seen" data-seen="'+t.id+'" aria-pressed="'+(seen[t.id]?"true":"false")+'">'
-      + (seen[t.id]?"✓ đã xem":"đã xem") + '</button>'
-    + '<button class="expand-btn" data-expand="'+t.id+'" aria-expanded="false">Chi tiết →</button>'
-  + '</div>'
-  + '<div class="detail-source" id="detail-'+t.id+'" data-title="Đề tài #'+t.n+'">'+detailHTML(t)+'</div>';
+      + (seen[t.id]?"☑ đã xem":"☐ đã xem") + '</button>'
+    + '<button class="expand-btn" data-expand="'+t.id+'" aria-expanded="false">▸ Chi tiết</button>'
+  + '</div>';
 }
 
 function makeCard(t){
@@ -2341,14 +2321,15 @@ function render(){
       b.impact.s - a.impact.s || a.diff - b.diff || a.n - b.n);
     const sec = document.createElement("section");
     sec.className = "dom-section"; sec.id = "sec-flat";
-    sec.style.setProperty("--c", "var(--accent-green)");
-    sec.style.setProperty("--c-rgb", "var(--accent-green-rgb)");
+    sec.style.setProperty("--c", "var(--good)");
+    sec.style.setProperty("--c-rgb", "22 163 74");
     sec.innerHTML = '<div class="dom-head"><span class="dom-dot"></span><h2>Xếp theo mức tác động</h2>'
                   + '<span class="dom-count"><span class="sec-n">'+list.length+'</span> ĐỀ TÀI</span></div>'
                   + '<div class="card-grid"></div>';
     const grid = sec.querySelector(".card-grid");
     list.forEach(t => grid.appendChild(makeCard(t)));
     root.appendChild(sec);
+    initFocusZone();
     return;
   }
 
@@ -2370,6 +2351,19 @@ function render(){
     list.forEach(t => grid.appendChild(makeCard(t)));
     root.appendChild(sec);
   });
+  initFocusZone();
+}
+
+/* ===== Vùng đọc — mờ thẻ dưới 1/3 trên màn hình, giữ rõ 1/3 trên (đỡ phân tán khi cuộn danh sách dài) ===== */
+let focusZoneObserver = null;
+function initFocusZone(){
+  if (focusZoneObserver) focusZoneObserver.disconnect();
+  focusZoneObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      entry.target.classList.toggle("out-of-focus", !entry.isIntersecting);
+    });
+  }, { root:null, rootMargin:"0px 0px -66.6667% 0px", threshold:0 });
+  document.querySelectorAll(".tcard").forEach(card => focusZoneObserver.observe(card));
 }
 
 /* ===== Lọc ===== */
@@ -2507,70 +2501,52 @@ function exportShortlist(){
   }
 }
 
-/* ===== Panel chi tiết ===== */
-function initPanel(){
-  const panel = document.getElementById("detail-panel");
-  const body  = panel.querySelector(".detail-body");
-  const titleEl = panel.querySelector(".detail-title");
-  let lastTrigger = null;
+/* ===== Chi tiết mở trong drawer bên phải — không che list, list vẫn đọc/cuộn được ===== */
+let openDrawerId = null;
 
-  function open(id, trigger){
-    const src = document.getElementById("detail-"+id);
-    if (!src) return;
-    titleEl.textContent = src.dataset.title || "";
-    body.replaceChildren(...Array.from(src.cloneNode(true).childNodes));
-    document.querySelectorAll('.expand-btn[aria-expanded="true"]').forEach(b => b.setAttribute("aria-expanded","false"));
-    if (trigger) trigger.setAttribute("aria-expanded","true");
-    panel.classList.add("open");
-    document.body.classList.add("detail-open");
-    body.scrollTop = 0;
-    lastTrigger = trigger || null;
-    panel.querySelector(".detail-close").focus();
-    if (!seen[id]) { toggleSeen(id, true); }
-  }
-  function close(){
-    panel.classList.remove("open");
-    document.body.classList.remove("detail-open");
-    document.querySelectorAll('.expand-btn[aria-expanded="true"]').forEach(b => b.setAttribute("aria-expanded","false"));
-    if (lastTrigger){ lastTrigger.focus(); lastTrigger = null; }
-  }
-  document.addEventListener("click", e => {
-    const ex = e.target.closest("[data-expand]");
-    if (ex){ e.preventDefault(); open(ex.getAttribute("data-expand"), ex); return; }
-    if (e.target.closest(".detail-close") || e.target.classList.contains("detail-backdrop")) close();
-  });
-  document.addEventListener("keydown", e => {
-    if (e.key === "Escape" && panel.classList.contains("open")) close();
-  });
+function drawerExpandBtn(id){
+  return document.querySelector('.expand-btn[data-expand="'+id+'"]');
+}
 
-  /* kéo đổi độ rộng */
-  const handle = panel.querySelector(".detail-resize");
-  const MIN = 380, max = () => Math.round(window.innerWidth * 0.92);
-  let remembered = null, startX = 0, startW = 0, dragging = false;
-  const clamp = w => Math.max(MIN, Math.min(max(), w));
-  const applyW = w => panel.style.setProperty("--panel-w", clamp(w)+"px");
-  function down(x){ if (window.innerWidth <= 1024) return; dragging = true; startX = x;
-    startW = panel.getBoundingClientRect().width; panel.classList.add("resizing"); }
-  function move(x){ if (dragging) applyW(startW + (startX - x)); }
-  function up(){ if (!dragging) return; dragging = false; panel.classList.remove("resizing");
-    remembered = panel.style.getPropertyValue("--panel-w"); }
-  handle.addEventListener("mousedown", e => { e.preventDefault(); down(e.clientX); });
-  window.addEventListener("mousemove", e => move(e.clientX));
-  window.addEventListener("mouseup", up);
-  handle.addEventListener("touchstart", e => down(e.touches[0].clientX), { passive:true });
-  window.addEventListener("touchmove", e => { if (dragging){ e.preventDefault(); move(e.touches[0].clientX); } }, { passive:false });
-  window.addEventListener("touchend", up);
-  handle.addEventListener("keydown", e => {
-    if (window.innerWidth <= 1024) return;
-    const cur = panel.getBoundingClientRect().width;
-    if (e.key === "ArrowLeft"){ e.preventDefault(); applyW(cur+24); remembered = panel.style.getPropertyValue("--panel-w"); }
-    if (e.key === "ArrowRight"){ e.preventDefault(); applyW(cur-24); remembered = panel.style.getPropertyValue("--panel-w"); }
-  });
-  handle.addEventListener("dblclick", () => { panel.style.removeProperty("--panel-w"); remembered = null; });
-  new MutationObserver(() => {
-    if (panel.classList.contains("open") && remembered && window.innerWidth > 1024)
-      panel.style.setProperty("--panel-w", remembered);
-  }).observe(panel, { attributes:true, attributeFilter:["class"] });
+function openDrawer(t, btn){
+  const prevId = openDrawerId;
+  if (prevId && prevId !== t.id){
+    const prevBtn = drawerExpandBtn(prevId);
+    if (prevBtn){ prevBtn.setAttribute("aria-expanded","false"); prevBtn.textContent = "▸ Chi tiết"; }
+  }
+  document.getElementById("drawer-title").textContent = "Đề tài #"+t.n+" · "+t.t;
+  document.getElementById("drawer-body").innerHTML = detailHTML(t);
+  const drawer = document.getElementById("detail-drawer");
+  drawer.classList.add("open");
+  drawer.setAttribute("aria-hidden","false");
+  document.body.classList.add("drawer-open");
+  openDrawerId = t.id;
+  btn.setAttribute("aria-expanded","true");
+  btn.textContent = "▾ Đang mở";
+  if (!seen[t.id]) toggleSeen(t.id, true);
+}
+
+function closeDrawer(){
+  if (!openDrawerId) return;
+  const drawer = document.getElementById("detail-drawer");
+  drawer.classList.remove("open");
+  drawer.setAttribute("aria-hidden","true");
+  document.body.classList.remove("drawer-open");
+  const prevBtn = drawerExpandBtn(openDrawerId);
+  if (prevBtn){ prevBtn.setAttribute("aria-expanded","false"); prevBtn.textContent = "▸ Chi tiết"; }
+  openDrawerId = null;
+}
+
+function toggleDetail(id, btn){
+  const t = TOPICS.find(x => x.id === id);
+  if (!t) return;
+  if (openDrawerId === id){ closeDrawer(); return; }
+  openDrawer(t, btn);
+}
+
+function initDrawer(){
+  document.getElementById("drawer-close").addEventListener("click", closeDrawer);
+  document.addEventListener("keydown", e => { if (e.key === "Escape") closeDrawer(); });
 }
 
 /* ===== Toggle sao / đã xem ===== */
@@ -2593,7 +2569,7 @@ function toggleSeen(id, force){
   if (!card) return;
   const btn = card.querySelector("[data-seen]");
   btn.setAttribute("aria-pressed", seen[id] ? "true":"false");
-  btn.textContent = seen[id] ? "✓ đã xem" : "đã xem";
+  btn.textContent = seen[id] ? "☑ đã xem" : "☐ đã xem";
   card.classList.toggle("seen", !!seen[id]);
   updateDock();
 }
@@ -2661,7 +2637,17 @@ function initFilters(){
     const s = e.target.closest("[data-star]");
     if (s){ toggleStar(s.getAttribute("data-star")); return; }
     const v = e.target.closest("[data-seen]");
-    if (v){ toggleSeen(v.getAttribute("data-seen")); }
+    if (v){ toggleSeen(v.getAttribute("data-seen")); return; }
+    const x = e.target.closest("[data-expand]");
+    if (x){ toggleDetail(x.getAttribute("data-expand"), x); }
+  });
+
+  const advBtn = document.getElementById("adv-toggle");
+  const advPanel = document.getElementById("filters-adv");
+  advBtn.addEventListener("click", () => {
+    const open = advPanel.hasAttribute("hidden");
+    if (open) advPanel.removeAttribute("hidden"); else advPanel.setAttribute("hidden","");
+    advBtn.setAttribute("aria-expanded", open ? "true" : "false");
   });
 }
 
@@ -2675,7 +2661,7 @@ function initScroll(){
     let active = null;
     DOMAINS.forEach(d => {
       const sec = document.getElementById("sec-"+d.id);
-      if (sec && !sec.hidden && sec.getBoundingClientRect().top <= 220) active = d.id;
+      if (sec && !sec.hidden && sec.getBoundingClientRect().top <= 90) active = d.id;
     });
     links.forEach(a => a.classList.toggle("active", a.dataset.sec === active));
   }
@@ -2686,7 +2672,8 @@ function initScroll(){
 /* ===== Theme ===== */
 function initTheme(){
   const root = document.documentElement;
-  if (lsGet(K_THEME) === "light") root.setAttribute("data-theme","light");
+  const stored = lsGet(K_THEME);
+  if (stored === "dark" || stored === "light") root.setAttribute("data-theme", stored);
   const btn = document.getElementById("theme-toggle");
   btn.querySelector(".theme-label").textContent = root.getAttribute("data-theme").toUpperCase();
   btn.addEventListener("click", () => {
@@ -2702,8 +2689,8 @@ buildChips();
 buildTOC();
 render();
 buildDock();
-initPanel();
 initFilters();
+initDrawer();
 initScroll();
 initTheme();
 apply();
