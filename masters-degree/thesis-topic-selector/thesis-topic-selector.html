@@ -77,8 +77,37 @@ a{color:var(--ink);}
 .ov-box h4{margin:0 0 6px;font-size:var(--fs-sm);font-weight:800;color:var(--ink);}
 .ov-box p{margin:0;font-size:var(--fs-sm);color:var(--ink-soft);line-height:1.6;}
 
-.legend{margin-top:var(--sp-6);display:flex;flex-wrap:wrap;gap:var(--sp-2) var(--sp-6);font-size:var(--fs-xs);color:var(--muted);}
-.legend-item b{color:var(--ink);font-weight:700;}
+/* legend — bảng ký hiệu */
+.legend-panel{
+  margin-top:var(--sp-6);background:var(--surface);border:1px solid var(--line);padding:var(--sp-5);
+}
+.legend-panel > h4{
+  margin:0 0 var(--sp-2);font-family:var(--font-mono);font-size:var(--fs-micro);
+  letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);font-weight:700;
+}
+.lg-lead{font-size:var(--fs-sm);color:var(--muted);max-width:78ch;margin:0 0 var(--sp-4);line-height:1.6;}
+.lg-lead b{color:var(--ink-soft);font-weight:700;}
+.lg-grid{display:grid;gap:var(--sp-3);}
+.lg-row{
+  display:grid;grid-template-columns:132px minmax(0,1fr);gap:var(--sp-4);
+  padding-top:var(--sp-3);border-top:1px solid var(--line);align-items:start;
+}
+.lg-row:first-child{padding-top:0;border-top:0;}
+.lg-sample{display:flex;flex-wrap:wrap;gap:var(--sp-2);align-items:center;--c:var(--ink-soft);}
+.lg-def{font-size:var(--fs-sm);color:var(--muted);line-height:1.6;}
+.lg-def b{color:var(--ink-soft);font-weight:700;}
+.lg-name{
+  display:block;font-family:var(--font-mono);font-size:var(--fs-micro);letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-soft);margin-bottom:2px;
+}
+.lg-levels{display:grid;gap:6px;margin-top:var(--sp-2);}
+.lg-lv{display:grid;grid-template-columns:76px minmax(0,1fr);gap:var(--sp-3);align-items:baseline;font-size:var(--fs-xs);}
+.lg-lv .badge{justify-self:start;}
+.lg-dist{display:block;margin-top:4px;font-family:var(--font-mono);font-size:var(--fs-micro);color:var(--muted);}
+@media (max-width:640px){
+  .lg-row{grid-template-columns:minmax(0,1fr);gap:var(--sp-2);}
+  .lg-lv{grid-template-columns:minmax(0,1fr);gap:2px;}
+}
 
 /* ============ TOC RAIL (nội dung ít đổi — thu gọn + mờ khi không rê chuột vào, đỡ phân tâm) ============ */
 .toc-rail{
@@ -147,6 +176,8 @@ a{color:var(--ink);}
   color:var(--muted);cursor:pointer;padding:4px 6px;text-decoration:underline;text-underline-offset:3px;
 }
 .chip-clear:hover{color:var(--bad);}
+.chip-legend{text-decoration:none;}
+.chip-legend:hover{color:var(--ink);}
 .result-count{font-family:var(--font-mono);font-size:var(--fs-xs);color:var(--ink-soft);white-space:nowrap;}
 .result-count b{color:var(--ink);font-weight:700;}
 .adv-toggle{
@@ -201,6 +232,7 @@ a{color:var(--ink);}
 .b-green{color:var(--good);}
 .b-yellow{color:var(--warn);}
 .b-red{color:var(--bad);}
+.b-mute{color:var(--muted);}
 .diffbar{display:inline-flex;gap:2px;align-items:center;}
 .diffbar i{width:7px;height:7px;border:1px solid var(--line-strong);background:var(--surface);display:block;}
 .diffbar i.on{background:var(--ink-soft);border-color:var(--ink-soft);}
@@ -369,12 +401,81 @@ body.drawer-open #focus-dock{right:calc(min(440px,100vw) + 16px);transition:righ
       </div>
     </div>
 
-    <div class="legend">
-      <span class="legend-item"><b>💰 TÁC ĐỘNG</b> thang 1–5 — ai được lợi, ai trả tiền, bàn giao được cái gì</span>
-      <span class="legend-item"><b>ĐỘ KHÓ</b> thang 1–5, nhưng ở đây <em>không có đề tài nào dưới 3</em> — đó là chủ ý</span>
-      <span class="legend-item"><b>RỦI RO DL</b> khả năng bạn <em>không</em> lấy được dữ liệu</span>
-      <span class="legend-item"><b>📱</b> tận dụng nền mobile 7 năm của bạn</span>
-      <span class="legend-item"><b>🇻🇳</b> có góc Việt Nam — điểm cộng ở hội đồng</span>
+    <div class="legend-panel" id="legend">
+      <h4>Bảng ký hiệu — đọc một thẻ đề tài thế nào</h4>
+      <p class="lg-lead">Hàng dưới cùng của mỗi thẻ có bốn thứ: <b>điểm tác động</b>, <b>thanh độ khó</b>, một nhãn <b>DL</b>, rồi cờ. „<b>DL</b>” là viết tắt của <b>dữ liệu</b> — nó nói khả năng bạn <em>không</em> lấy được dữ liệu, chứ không nói đề tài khó hay dễ. Ba thang này độc lập nhau: một đề tài có thể tác động 5, độ khó 4 mà DL vẫn THẤP. Số trong ngoặc là phân bố thật trên 90 đề tài — nhìn nó để biết một mức có phân biệt được gì không.</p>
+
+      <div class="lg-grid">
+        <div class="lg-row">
+          <div class="lg-sample">
+            <span class="impact-badge">💰<span class="dots" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></span>
+            <span class="impact-badge i-low">💰<span class="dots" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></span>
+          </div>
+          <div class="lg-def">
+            <span class="lg-name">💰 Tác động — thang 1–5, chấm 5 chấm tròn</span>
+            Chấm sáng = mức. <b>5</b> = có người mua rõ mặt và bàn giao được thứ bấm chạy trong buổi bảo vệ (viền xanh) · <b>4</b> = ứng dụng rõ nhưng người trả tiền còn xa một bước (viền vàng) · <b>3 trở xuống</b> = đóng góp học thuật vững, đường ra tiền gián tiếp (viền xám). Chi tiết ba câu hỏi chấm điểm nằm ở ô xanh phía trên.
+            <span class="lg-dist">phân bố: 5 → 38 · 4 → 40 · 3 → 11 · 2 → 1 · thực chất là thang 3 bậc</span>
+          </div>
+        </div>
+
+        <div class="lg-row">
+          <div class="lg-sample">
+            <span class="diffbar" style="--c:var(--ink-soft)"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span>
+            <span class="diffbar" style="--c:var(--ink-soft)"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span>
+          </div>
+          <div class="lg-def">
+            <span class="lg-name">Độ khó — thang 1–5, năm vạch dọc</span>
+            Vạch tô màu = mức, màu lấy theo lĩnh vực của thẻ. Đây là độ khó <em>kỹ thuật</em> của phương pháp. <b>Đừng đọc 3 vạch là „dễ”</b>: trang này không có đề tài nào dưới 3, nên 3 là <em>sàn</em> chứ không phải mức giữa. Muốn so hai đề tài thì một mình độ khó không đủ — đọc kèm compute và kiến thức ngành trong phần Chi tiết.
+            <span class="lg-dist">phân bố: 3 → 40 · 4 → 49 · 5 → 1</span>
+          </div>
+        </div>
+
+        <div class="lg-row">
+          <div class="lg-sample">
+            <span class="badge b-green">DL: THẤP</span>
+            <span class="badge b-yellow">DL: TB</span>
+            <span class="badge b-red">DL: CAO</span>
+          </div>
+          <div class="lg-def">
+            <span class="lg-name">DL = rủi ro dữ liệu</span>
+            Xác suất bạn không lấy được dữ liệu, hoặc lấy được nhưng không dùng được kịp. Đây là trục giết đề tài nhanh nhất — nó hỏng thì không có phương pháp nào cứu được.
+            <div class="lg-levels">
+              <div class="lg-lv"><span class="badge b-green">THẤP</span><span>Bộ dữ liệu mở, license rõ, có nhãn sẵn — tải về là chạy. Không phải xin ai.</span></div>
+              <div class="lg-lv"><span class="badge b-yellow">TB</span><span>Có, nhưng tốn công: phải đăng ký/xin quyền truy cập (kiểu PhysioNet), gộp nhiều nguồn, làm sạch nặng hoặc tự gán nhãn một phần. Vẫn có phương án B.</span></div>
+              <div class="lg-lv"><span class="badge b-red">CAO</span><span>Chưa chắc có: phụ thuộc một bên chưa cam kết, hoặc chưa rõ đường hợp pháp. <b>Phải xác minh nguồn TRƯỚC KHI cam kết đề tài.</b></span></div>
+            </div>
+            <span class="lg-dist">phân bố: thấp → 50 · TB → 39 · cao → 1 (đề tài #18, giữ lại vì có phương án B rõ)</span>
+          </div>
+        </div>
+
+        <div class="lg-row">
+          <div class="lg-sample"><span style="font-size:18px">📱</span><span style="font-size:18px">🇻🇳</span></div>
+          <div class="lg-def">
+            <span class="lg-name">Cờ — chỉ là gợi ý xếp hạng, không phải tiêu chí loại</span>
+            <b>📱</b> tận dụng được nền mobile 7 năm của bạn (10/90 đề tài) · <b>🇻🇳</b> có góc Việt Nam, thường là điểm cộng ở hội đồng (45/90 — gần nửa danh sách, nên một mình nó không phân biệt được gì).
+          </div>
+        </div>
+
+        <div class="lg-row">
+          <div class="lg-sample">
+            <span class="badge b-mute">Compute</span>
+            <span class="badge b-mute">Kiến thức ngành</span>
+          </div>
+          <div class="lg-def">
+            <span class="lg-name">Hai thang chỉ hiện khi bấm „Chi tiết →”</span>
+            <b>Compute</b> — nhu cầu tính toán: <em>thấp</em> chạy được trên laptop hoặc free tier (29) · <em>trung bình</em> cần GPU vài giờ, Colab/Kaggle là đủ (57) · <em>cao</em> cần GPU nhiều giờ và phải thu hẹp nếu bạn không có — đường thu hẹp đã ghi sẵn trong mục „Rủi ro chính” (4).<br>
+            <b>Kiến thức ngành</b> — nền chuyên môn ngoài ML phải học thêm: <em>thấp</em> ≈ 2–3 tuần (31) · <em>trung bình</em> ≈ 4–5 tuần, lĩnh vực mới nhưng có tài liệu vào cửa rõ (52) · <em>cao</em> ≈ 6–8 tuần và <b>cần một người có nền ngành để hỏi</b>; không có ai thì bỏ đề tài đó (7).
+          </div>
+        </div>
+
+        <div class="lg-row">
+          <div class="lg-sample"><span style="font-size:18px">☆</span><span class="badge b-mute">đã xem</span></div>
+          <div class="lg-def">
+            <span class="lg-name">Hai nút đánh dấu của riêng bạn</span>
+            <b>☆</b> đưa vào shortlist — thẻ viền vàng, bật „⭐ Chỉ shortlist” ở thanh lọc để xem lại · <b>đã xem</b> làm mờ tiêu đề để bạn không đọc lại lần hai. Cả hai lưu trong trình duyệt máy này, không gửi đi đâu — xoá dữ liệu duyệt web là mất.
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -437,6 +538,7 @@ body.drawer-open #focus-dock{right:calc(min(440px,100vw) + 16px);transition:righ
               <button class="fchip" id="f-vn" aria-pressed="false">🇻🇳 Góc Việt Nam</button>
               <button class="fchip" id="f-star" aria-pressed="false">⭐ Chỉ shortlist</button>
             </div>
+            <a class="chip-clear chip-legend" href="#legend" title="Bảng ký hiệu — DL, độ khó, tác động nghĩa là gì">❔ Ký hiệu</a>
             <button class="chip-clear" id="clear-all">Xoá bộ lọc</button>
           </div>
         </div>
