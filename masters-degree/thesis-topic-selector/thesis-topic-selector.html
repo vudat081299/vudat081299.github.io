@@ -575,6 +575,30 @@ body.drawer-resizing{user-select:none;}
           <li><b>Nói chuyện với đúng một người sẽ dùng kết quả — trước khi cam kết.</b> Nếu đề tài có điểm tác động 4–5, phần „ai trả tiền” phải chịu được một cuộc gọi 30 phút với một người làm nghề đó: chủ cửa hàng, kế toán, kỹ sư vận hành, bác sĩ tuyến cơ sở. Hỏi họ đúng một câu: <em>„hôm nay anh/chị đang giải việc này bằng cách gì?”</em> Câu trả lời cho bạn baseline thật, và nó thường thấp hơn baseline học thuật rất nhiều — đó là chỗ tác động nằm. Nếu không tìm được một người như thế, điểm tác động của đề tài đó nên bị hạ xuống 3 trong đầu bạn.</li>
           <li><b>Đăng ký truy cập dữ liệu ngay hôm nay</b> với bất kỳ đề tài nào cần credential (MIMIC-IV, eICU, UK Biobank…). Đăng ký không ràng buộc gì, nhưng độ trễ 2–4 tuần thì có thể giết cả timeline.</li>
         </ul>
+        <h3 style="margin-top:40px">Bản 11 — trả nợ: chấm 13 đề tài của bản 8, và khai xuất xứ cho cả 193 đề tài</h3>
+        <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px"><b>Bản này không thêm đề tài nào.</b> Nó trả hai khoản nợ mà ba bản trước đều ghi ra rồi không làm. Kết quả không dễ chịu: <b>9 trong 13 đề tài của bản 8 bị hạ xuống PHẢI SIẾT LẠI</b> vì y văn đã công bố đúng phê phán mà chúng đề ra — và một đề tài còn phát biểu sai một dữ kiện về hiện trạng ngành. Cả 9 đã được viết lại thành câu hỏi còn mở, không đề tài nào bị xoá.</p>
+        <ul style="font-size:13px">
+          <li><b>Nợ 1 đã trả — mọi đề tài giờ đều khai xuất xứ.</b> Rubric thêm trường bắt buộc <code>src</code>, và 105 trong 193 đề tài đang để <code>?</code> — theo chính luật của rubric (<code>F33</code>) thì <b>hơn nửa danh sách không chấm được</b> cho tới khi điền. Tôi không đoán: tôi truy từng đề tài về <b>commit đầu tiên chứa nó</b> rồi đọc trailer <code>Co-Authored-By</code> của commit đó. Kết quả sạch — 46 đề tài từ commit ngày 27/07, 40 + 4 đề tài ngày 28/07, 13 + 2 đề tài ngày 31/07, <b>tất cả đều do Claude Opus 5 sinh</b>. Nên 103 đề tài nhận <code>ai:claude-opus-5</code> và #145/#146 nhận <code>mix:claude-opus-5 ← literature</code>. Đây là bằng chứng mức <code>CÓ NGUỒN</code> (trailer git), không phải phỏng đoán. <code>node calibrate.js</code> giờ báo <b>ai: 103 · ext: 88 · chưa rõ 0</b> và „Toàn vẹn: không có vấn đề”.</li>
+          <li><b>Vì sao việc đó đổi cách đọc cả danh sách.</b> Rubric mục 1d nói: với <code>src: ai:*</code>, mọi tên bộ dữ liệu và mọi phát biểu trong <code>d.why</code> <b>mặc định là <code>CHƯA KIỂM</code></b>, vì kiểu hỏng đặc trưng của đề tài do model sinh là một cái tên hoặc một khoảng trống nghe rất đúng mà không tồn tại. Trước bản 11 luật đó không áp được vào đâu vì không đề tài nào khai <code>src</code>. Giờ áp được — và lượt chấm dưới đây là lần đầu nó được áp thật.</li>
+          <li><b>Nợ 2 đã trả — 13 đề tài của bản 8 (#105–#117) lần đầu qua vòng chấm.</b> Đây là khối di truyền người: 12 đề tài <code>gen</code> cộng 1 đề tài <code>sec</code>. Tôi chạy <code>B8</code> (tra công trình gần nhất, mục 5b) cho <b>11 trong 13</b> đề tài. <b>9 đề tài ra <code>V2 = YẾU</code></b> vì có công trình đã công bố làm đúng câu hỏi, đúng dữ liệu, đúng thước đo — theo mục 6b thì trần verdict là <code>PHẢI SIẾT LẠI</code>, và theo mục 10.1 thì chúng <em>ra khỏi bảng chọn</em> cho tới khi đổi câu hỏi.</li>
+          <li><b>Chín ca đó, kèm công trình đã đóng câu hỏi gốc.</b>
+            <b>#115</b> — ca rõ nhất: <a href="https://www.nature.com/articles/s41588-023-01574-w" target="_blank" rel="noopener">một bài trên Nature Genetics (2023)</a> đo đúng chế độ giữa-các-cá-thể trên Geuvadis (n = 421) cho Enformer, Basenji2, ExPecto, Xpresso, và làm luôn phép thử chiều hiệu ứng trên eQTL mà #115 định dùng. Bản đầu chỉ ghi „đã được nêu trong y văn” — nói nhẹ hơn thực tế rất nhiều.
+            <b>#105</b> — mức tụt PRS sang Đông Á đã được định lượng (báo cáo khoảng 2,5 lần thấp hơn) và <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11882803/" target="_blank" rel="noopener">đã có đánh giá riêng cho Đông Á trên mười bệnh</a>.
+            <b>#106</b> — <a href="https://link.springer.com/article/10.1186/s13059-025-03572-z" target="_blank" rel="noopener">hướng dẫn phát hành bộ dự đoán biến thể</a> đã đặt tên vòng tròn loại 1 và vòng tròn mức gen, và cắt ClinVar theo mốc thời gian đã thành thực hành phổ biến — tức <em>cả hai</em> đóng góp của #106.
+            <b>#109</b> — nhiễu do thành phần loại tế bào đã có <a href="https://onlinelibrary.wiley.com/doi/10.1111/acel.14071" target="_blank" rel="noopener">phân tích trên hơn mười nghìn mẫu cho sáu đồng hồ</a> và đã có <a href="https://www.nature.com/articles/s42003-024-06609-4" target="_blank" rel="noopener">đồng hồ dựng riêng để kháng nó</a>.
+            <b>#111</b> — <a href="https://www.frontiersin.org/journals/genetics/articles/10.3389/fgene.2022.1049501/full" target="_blank" rel="noopener">đã có công trình chỉ ra chữ ký COSMIC nào là tạo tác toán học</a>, và công cụ chuẩn đã có sẵn bước lấy mẫu lại để chọn số thành phần theo độ bền.
+            <b>#112</b> — benchmark trên exome mô phỏng và thước đo top-N là chuẩn của mảng, cộng <a href="https://www.medrxiv.org/content/10.1101/2025.04.18.25326061v1" target="_blank" rel="noopener">khuyến nghị tối ưu hoá công bố 2025</a>.
+            <b>#116</b> — <a href="https://www.annalsofoncology.org/article/S0923-7534(20)39870-7/fulltext" target="_blank" rel="noopener">bài phê phán tập trung vào giá trị dự đoán dương đã có từ 2020</a>, độ nhạy theo giai đoạn đã có số (khoảng 18% giai đoạn I → hơn 90% giai đoạn IV), và <b>đã có cả một cohort sàng lọc ở Việt Nam</b>.
+            <b>#117</b> — <a href="https://genome.cshlp.org/content/early/2023/05/19/gr277674123" target="_blank" rel="noopener">đánh đổi riêng-tư ↔ hữu-dụng cho beacon và summary statistics đã là một bài trên Genome Research</a>, và hệ quả chính sách của tấn công Homer đã xảy ra từ 2008.
+            <b>#113</b> — xem mục dưới.</li>
+          <li><b>Phát hiện quan trọng nhất của bản này: #113 phát biểu sai một dữ kiện.</b> Bản đầu của nó coi „phân bố null bằng hoán vị” là <em>bước đơn giản mà rất nhiều bài trong mảng này bỏ</em>, và dựng đóng góp lên đúng chỗ đó. Tra ra thì <b>hoán vị đã nằm trong cách tính điểm chuẩn của CMap</b> — 1.000 hoán vị cộng một bước hiệu chỉnh trên toàn bộ LINCS — và <a href="https://academic.oup.com/bib/article/22/6/bbab161/6278144" target="_blank" rel="noopener">việc đối chiếu nhiều loại điểm connectivity cũng đã được công bố</a>. Đây <em>chính xác</em> là kiểu hỏng mà rubric mục 1d cảnh báo cho <code>src: ai:*</code>: một phát biểu về hiện trạng ngành nghe hoàn toàn hợp lý mà không ai tra. Nó không phải lỗi nhỏ — nó là toàn bộ lý do tồn tại của bản đầu. Đã sửa tiền đề và đổi câu hỏi sang tầng imputation của L1000 (chỉ khoảng 1.000 gen được đo thật, phần còn lại do mô hình suy ra).</li>
+          <li><b>Hai đề tài giữ nguyên đường đi, và đề tài mạnh nhất khối.</b> <b>#107</b> (dược lý di truyền cho người Việt) là đề tài <em>duy nhất</em> mà B8 tra xong vẫn còn khoảng trống rõ: khuôn „tần số alen khác thì khuyến nghị đổi” đã được làm cho quần thể khác nhưng chưa cho người Kinh, và tôi tìm được nền cụ thể — <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12535187/" target="_blank" rel="noopener">một công bố về biến thể dược lý di truyền của người Kinh</a> ghi rằng <b>tần số alen người Kinh lệch đáng kể khỏi mọi quần thể Đông Á khác</b> (Hán, Đại, Nhật thì gần nhau). Đó là bằng chứng làm câu hỏi mạnh lên, không phải làm nó mất. <b>#110</b> (splicing) giữ được, và <b>bộ dữ liệu MFASS đã xác minh là tồn tại thật</b> — <a href="https://pubmed.ncbi.nlm.nih.gov/30503770/" target="_blank" rel="noopener">Molecular Cell, 27.733 biến thể ExAC trên 2.198 exon, 3,8% gây rối loạn splicing mạnh, 83% nằm ngoài điểm nối kinh điển</a> — nâng từ <code>CHƯA KIỂM</code> lên <code>CÓ NGUỒN</code>. Nhưng biên đóng góp hẹp hơn bản đầu tưởng: đã có bài benchmark bộ dự đoán trên chính MFASS, nên phần còn mở chỉ là chia theo họ gen, tầng vùng sâu trong intron, và baseline motif.</li>
+          <li><b>Hai đề tài tôi chưa tra, và tôi ghi rõ là chưa.</b> <b>#108</b> và <b>#114</b> chưa chạy B8. Vì 9 trong 11 đề tài đã tra đều ra „y văn làm rồi”, <b>đừng đọc „chưa tra” thành „chắc còn mở”</b> — xác suất tiên nghiệm ở khối này rõ ràng không thấp. Cảnh báo đã ghi vào <code>d.why</code> của từng đề tài.</li>
+          <li><b>Sửa trường theo rubric R5: 9 đề tài thiếu thanh sai số.</b> Mục R5 đòi năm thành phần, trong đó có „nhiều seed hoặc khoảng tin cậy”. Chín trong 13 đề tài của bản 8 không có chữ nào về seed, khoảng tin cậy hay bootstrap trong <code>d.method</code> — tức <code>R5 = CĂNG</code> vì thiếu đúng một thành phần. Đã thêm vào từng đề tài một câu cụ thể theo đúng đơn vị nhóm của nó: #106 và #110 bootstrap <em>theo gen</em> chứ không theo biến thể (biến thể cùng gen là cùng nhóm, bootstrap sai đơn vị cho khoảng tin cậy hẹp giả); #112 lặp trên nhiều tập exome mô phỏng; #115 lặp nhiều hạt giống vì tinh chỉnh có phương sai giữa các lần chạy.</li>
+          <li><b>Rủi ro tập trung mà bản 8 chưa từng nói ra.</b> 12 trong 13 đề tài nằm <em>cùng một lĩnh vực</em> (di truyền người), 10 đề tài có <code>know: cao</code> — nghĩa là 5–6 tuần nền chuyên ngành — và đây là chương trình Data Science. Theo rubric R2, <code>know: cao</code> cộng <code>B6</code> thất bại là <code>CHẶN</code>; hiện <code>B6</code> mới ở <code>CHUA_THU</code> nên chỉ là <code>CĂNG</code>, <b>nhưng cả khối này đứng hay sụp bằng đúng một câu hỏi</b>: bộ môn có ai đỡ được di truyền quần thể hay di truyền y học không? Nếu không có, 10 trong 13 đề tài chuyển sang <code>CHẶN</code> cùng lúc. #110 tự ghi thẳng điều đó („không nhận nếu không có ai đỡ phần sinh học phân tử”). Hỏi bộ môn <em>trước</em> khi đọc kỹ khối này.</li>
+          <li><b>Bài học về phương pháp, và nó biện hộ cho quy tắc chấm-trước-khi-thêm.</b> Bản 8 được thêm vào mà không qua vòng chấm. Nếu <code>B8</code> được chạy ngay lúc thêm, <b>9 trong 13 đề tài đã không vào bảng chọn</b> dưới dạng đó. Chín đề tài đã ngồi trong bảng chọn suốt ba bản, trông hoàn toàn hợp lệ — dữ liệu mở, phương pháp chặt, thước đo đúng — và cái sai duy nhất là thứ không đọc ra được từ hồ sơ: <em>người khác đã làm rồi</em>. Đó là lý do <code>B8</code> là blocker duy nhất mà một lượt chấm có quyền tra web <b>phải</b> chạy, chứ không để dành cho spike.</li>
+          <li><b>Chưa làm.</b> (1) <b>#108 và #114 chưa chạy B8.</b> (2) 90 đề tài của bản 7 đã qua lượt chấm ngày 28/07 <em>bằng rubric bản cũ</em> — bản cũ chưa có <code>B7</code>, <code>B8</code>, <code>QUA_NHO</code> và <code>src</code>, nên <b>lượt đó giờ đã lạc hậu</b>; 60 đề tài của bản 10 và 30 đề tài của bản 9 thì chưa qua <code>B8</code> lần nào. Nói thẳng: <b>lượt B8 mới chỉ phủ 11 trong 193 đề tài.</b> Nếu tỉ lệ 9/11 của bản 8 lặp lại ở nơi khác thì con số đó là tin xấu, và cách duy nhất để biết là tra tiếp. (3) 11 đề tài Oxford vẫn chưa đọc vì trang bị cắt ở mục 49/60. (4) Khối hiệu chuẩn §1b/§1c trong <code>thesis-topic-rubric.md</code> giờ đã cũ ở dòng <code>src</code> — chạy <code>node calibrate.js</code> rồi dán lại; tôi không tự sửa file đó vì nó đang có sửa đổi chưa commit của một phiên khác.</li>
+        </ul>
         <h3 style="margin-top:40px">Bản 10 — quét danh sách đề tài mở của các đại học quốc tế (→ 193 đề tài)</h3>
         <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px">Thêm <b>60 đề tài</b> (#148–#207) và <b>5 lĩnh vực mới</b>: Thần kinh · Tín hiệu sinh học · Âm thanh · Tiếng nói · Robot · Xúc giác · Trực quan hoá · Ra quyết định · Kiểm chứng hình thức · An toàn. Cùng phương pháp với bản 9 — <b>không tự nghĩ ra đề tài</b>, mà lấy từ danh sách đề tài các trường đang mở, và mỗi đề tài ghi nguồn trong <code>d.why</code>. Khác bản 9 ở loại bằng chứng: bản 9 lấy từ <em>luận văn đã bảo vệ ở Việt Nam</em>, bản 10 lấy từ <em>đề tài các giáo sư đang tìm người làm</em>.</p>
         <ul style="font-size:13px">
@@ -589,7 +613,7 @@ body.drawer-resizing{user-select:none;}
           <li><b>Mười ba chỗ nói thẳng „chọn một, đừng làm cả hai”.</b> #148 vs #2 · #154 vs #43 · #162 vs #138 · #167 vs #2/#148 · #168 vs #9/#39 · #170 vs #1 · #174 vs #101 · #177 vs #32/#43 · #178 vs #1/#123 · #190 vs #183 · #192 vs #118 · #201 vs #119 · #203 vs #135/#118. Đây là <code>F23</code>, và với 193 đề tài thì nó là red flag hay bật nhất — <b>đọc câu „chọn một” trong <code>d.why</code> trước khi cho hai đề tài cùng vào shortlist</b>.</li>
           <li><b>Vấn đề khuôn tư duy mà bản 9 tự tố: đã đỡ, chưa hết.</b> Bản 9 thừa nhận ~95/103 đề tài cũ dùng chung một khuôn — „con số báo cáo bị thổi phồng”. Bản 10 thêm được bốn khuôn khác: <em>thí nghiệm có đối chứng trên người</em> (#175 #195 #198 #200), <em>kế toán chi phí và năng lượng</em> (#170 #202 #203 #204), <em>độ tin cậy nhãn đặt trước mô hình</em> (#164 #173 #180), <em>lan truyền sai số sang đơn vị người dùng cần</em> (#149 #153 #183 #190). Nhưng nói thật: khuôn trội của tôi <b>vẫn là „con số đó đo sai thứ”</b>. Nếu bạn cần một đề tài kiểu <em>làm ra một hệ thống chạy được</em> thì page này vẫn mỏng, và đó là giới hạn của người viết nó chứ không phải của ngành.</li>
           <li><b>Điểm yếu lớn nhất của bản 10, nói trước để bạn không phát hiện muộn: trục <code>R4</code> mỏng hơn bản 9.</b> Bản 9 lấy đề tài từ luận văn <b>đã bảo vệ ở Việt Nam</b>, nên chắc chắn có người từng hướng dẫn mảng đó. Bản 10 lấy từ đề tài đang mở ở châu Âu — hay hơn, mới hơn, nhưng <b>chỉ 14/60 có góc Việt Nam rõ</b> (#164 #165 #166 #174 #175 #176 #182 #183 #188 #191 #192 #199 #201 #207). Với 46 cái còn lại, việc đầu tiên vẫn là mở danh sách giảng viên bộ môn xem có ai làm mảng đó không — rubric gọi đó là yếu tố quyết định lớn nhất, và một đề tài Oxford hay tới đâu cũng vô dụng nếu không ai ở đây đỡ được bạn.</li>
-          <li><b>Chưa làm — nợ cũ vẫn còn, cộng nợ mới.</b> (1) Tôi tra <em>danh sách đề tài</em>, <b>chưa tra từng bộ dữ liệu một</b>; tên bộ và giấy phép của cả 60 đề tài này ở mức <code>CÓ NGUỒN</code>/<code>CHƯA KIỂM</code>, không phải <code>ĐÃ CHẠY</code>. (2) <b>13 đề tài của bản 8 (#105–#117) vẫn chưa qua vòng chấm</b> như 90 đề tài của bản 7 đã qua — nợ này sang bản thứ ba vẫn chưa trả. (3) Trang Oxford bị cắt ở mục 49/60, nên <b>11 đề tài Oxford tôi chưa đọc</b>. (4) Cổng Chalmers chỉ hiện 13 tin đang đăng, danh sách đó đổi hằng tuần — tra lại sẽ ra khác.</li>
+          <li><b>Chưa làm — nợ cũ vẫn còn, cộng nợ mới.</b> (1) Tôi tra <em>danh sách đề tài</em>, <b>chưa tra từng bộ dữ liệu một</b>; tên bộ và giấy phép của cả 60 đề tài này ở mức <code>CÓ NGUỒN</code>/<code>CHƯA KIỂM</code>, không phải <code>ĐÃ CHẠY</code>. (2) <b>13 đề tài của bản 8 (#105–#117) vẫn chưa qua vòng chấm</b> như 90 đề tài của bản 7 đã qua — nợ này sang bản thứ ba vẫn chưa trả. <em>[Đã trả ở bản 11: 9 trong 13 đề tài bị hạ xuống PHẢI SIẾT LẠI và đã viết lại câu hỏi.]</em> (3) Trang Oxford bị cắt ở mục 49/60, nên <b>11 đề tài Oxford tôi chưa đọc</b>. (4) Cổng Chalmers chỉ hiện 13 tin đang đăng, danh sách đó đổi hằng tuần — tra lại sẽ ra khác.</li>
         </ul>
         <h3 style="margin-top:40px">Bản 9 — tra danh sách đề tài thật của các trường, rồi chấm bằng rubric (→ 133 đề tài)</h3>
         <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px">Thêm <b>30 đề tài</b> (#118–#147) và <b>5 lĩnh vực mới</b>: Tối ưu tổ hợp · Vận trù · Hạ tầng dữ liệu · Công nghệ phần mềm · Thị giác máy · Sinh thái–Biển. Khác mọi bản trước ở một điểm: các đề tài này <b>không phải do tôi tự nghĩ ra</b> — chúng đến từ danh sách đề tài thật của các trường, và mỗi đề tài ghi rõ nguồn trong trường <code>d.why</code>.</p>
@@ -604,7 +628,7 @@ body.drawer-resizing{user-select:none;}
           <li><b>Ưu tiên tác động và đóng góp.</b> Cao nhất: <b>#129</b> (tàu „tối” trên biển — Việt Nam đang chịu thẻ vàng IUU của EU, và câu hỏi phân biệt <em>hành vi tắt máy phát</em> với <em>vùng không có ai nghe</em> là thứ cơ quan quản lý cần để không cáo buộc oan) là đề tài duy nhất ở mức tác động 5 trong nhóm mới — và tôi <b>không</b> cho thêm cái nào lên 5, vì rubric nói thang đó đã lạm phát và xu hướng đúng là hạ. Bảy đề tài để mức 3 dù nghe „xịn” (#121 CSDL, #122 ước lượng nỗ lực, #131 robustness có chứng minh, #137 sinh phân tử, #138 thế liên nguyên tử, #139 rủi ro cạnh tranh, #144 WiFi CSI) vì <code>pay</code> của chúng không chịu được cuộc gọi 30 phút — với #137 và #138 thì mọi phân tử hay mô phỏng sinh ra đều chưa qua thí nghiệm, nên nói „ra sản phẩm” là nói dối.</li>
           <li><b>Hai đề tài tôi khuyên bạn đừng chọn nếu không có người đỡ.</b> #137 (sinh phân tử) và #138 (thế liên nguyên tử học máy) đều <code>know: cao</code>, và với #138 thì <b>không đọc được vật lý nghĩa là mọi con số sai số đều vô nghĩa</b>. Cả hai ghi thẳng đường thoát trong <code>d.risk</code>: chuyển sang #119 hoặc #136, cùng dạng đóng góp, nền domain nhẹ hơn nhiều. Tương tự #135 (lọc dữ liệu tiền huấn luyện) là đề tài <code>compute: cao</code> duy nhất trong nhóm — nếu không có GPU nhiều ngày liên tục thì đừng chọn, và spike của nó được thiết kế để giết nó ở ngày thứ 5.</li>
           <li><b>Chín chỗ có nguy cơ trùng khuôn với đề tài cũ, đã ghi rõ khác gì.</b> #124 vs #38 · #127 vs #60 · #128 vs #67 · #134 vs #43 · #140 vs #13 · #141 vs #44 · #145 vs #64 · #146 vs #18 · #147 vs #100. Mỗi cặp có một câu trong <code>d.why</code> nói khác ở <b>câu hỏi</b> hay khác ở <b>dữ liệu</b>, và bốn cặp nói thẳng <em>„chọn một, đừng làm cả hai”</em>. Đây là <code>F23</code> của rubric, và với một danh sách 133 đề tài dùng lặp bốn khuôn mẫu thì nó là red flag hay bật nhất.</li>
-          <li><b>Điều bản này KHÔNG làm — đọc trước khi tin.</b> Tôi đã tra <em>danh sách đề tài</em> của các trường, nhưng <b>chưa tra từng bộ dữ liệu một</b>. Tên bộ, license và tình trạng tải trong trường <code>data</code> của 30 đề tài mới ở mức <code>CÓ NGUỒN</code> cho các bộ nổi tiếng và <code>CHƯA KIỂM</code> cho phần còn lại — không phải <code>ĐÃ CHẠY</code>. Không con số hiệu năng nào được trích từ một bài báo cụ thể. Và <b>13 đề tài của bản 8 (#105–#117) vẫn chưa qua vòng chấm</b> như 90 đề tài của bản 7 đã qua — chúng còn nợ một lượt.</li>
+          <li><b>Điều bản này KHÔNG làm — đọc trước khi tin.</b> Tôi đã tra <em>danh sách đề tài</em> của các trường, nhưng <b>chưa tra từng bộ dữ liệu một</b>. Tên bộ, license và tình trạng tải trong trường <code>data</code> của 30 đề tài mới ở mức <code>CÓ NGUỒN</code> cho các bộ nổi tiếng và <code>CHƯA KIỂM</code> cho phần còn lại — không phải <code>ĐÃ CHẠY</code>. Không con số hiệu năng nào được trích từ một bài báo cụ thể. Và <b>13 đề tài của bản 8 (#105–#117) vẫn chưa qua vòng chấm</b> như 90 đề tài của bản 7 đã qua — chúng còn nợ một lượt. <em>[Đã trả ở bản 11.]</em></li>
         </ul>
         <h3 style="margin-top:40px">Bản 8 — thêm nhóm Di truyền người · Hệ gen (→ 103 đề tài)</h3>
         <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px">Thêm <b>13 đề tài</b>: nhóm mới <b>Di truyền người · Hệ gen</b> (#105–#116) cộng một đề tài tái định danh dữ liệu gen xếp vào nhóm An ninh (#117).</p>
@@ -742,7 +766,7 @@ const DOMAINS = [
 const TOPICS = [
 /* ═══════════ CHUỖI THỜI GIAN & BÁN LẺ ═══════════ */
 {
-  id:"t01", n:1, src:"?", dom:"ts", diff:3, risk:"thap", compute:"tb", know:"thap", mobile:false, vn:false,
+  id:"t01", n:1, src:"ai:claude-opus-5", dom:"ts", diff:3, risk:"thap", compute:"tb", know:"thap", mobile:false, vn:false,
   t:"Foundation model chuỗi thời gian trên bán lẻ — sau khi kiểm soát rò rỉ dữ liệu thì còn lại gì?",
   q:"TSFM (Chronos, TimesFM, Moirai) quảng cáo dự báo zero-shot vượt trội. Nhưng <b>M5 nằm trong tập pretraining của nhiều mô hình</b>. Lợi thế thật còn bao nhiêu sau khi kiểm soát nhiễm dữ liệu?",
   data:"M5 (Kaggle, mở) làm tập „bẩn”; Favorita / Rossmann / dữ liệu bán lẻ VN làm tập „sạch” không có trong corpus pretraining.",
@@ -756,7 +780,7 @@ const TOPICS = [
   }
 },
 {
-  id:"t02", n:2, src:"?", dom:"ts", diff:3, risk:"thap", compute:"thap", know:"tb", mobile:false, vn:false,
+  id:"t02", n:2, src:"ai:claude-opus-5", dom:"ts", diff:3, risk:"thap", compute:"thap", know:"tb", mobile:false, vn:false,
   t:"Beyond Accuracy — xếp hạng mô hình dự báo bằng chi phí tồn kho, không phải RMSE",
   q:"Mô hình chính xác nhất theo RMSE có phải mô hình <b>rẻ nhất</b> theo chi phí vận hành không? Nếu không, thứ hạng đảo ở đâu và vì sao?",
   data:"M5 (Kaggle) hoặc bất kỳ dữ liệu bán lẻ nào có giá + tồn kho. Không cần credential.",
@@ -770,7 +794,7 @@ const TOPICS = [
   }
 },
 {
-  id:"t03", n:3, src:"?", dom:"ts", diff:3, risk:"thap", compute:"thap", know:"tb", mobile:false, vn:false,
+  id:"t03", n:3, src:"ai:claude-opus-5", dom:"ts", diff:3, risk:"thap", compute:"thap", know:"tb", mobile:false, vn:false,
   t:"Nhu cầu rời rạc: chọn phân phối đếm quan trọng hơn hay chọn kiến trúc quan trọng hơn?",
   q:"Ở cấp SKU-store, <b>phần lớn chuỗi M5 là nhu cầu rời rạc</b> và tỉ lệ giá trị 0 vào khoảng 60–68% (tuỳ có tính giai đoạn trước lần bán đầu tiên hay không — hãy nêu rõ quy ước, phản biện sẽ hỏi). Tỉ lệ „intermittent” chính xác phụ thuộc ngưỡng phân loại bạn chọn, nên <b>hãy tự tính rồi trích số của mình</b>, đừng trích số nghe được. Cải thiện đến từ đâu — <b>phân phối</b>, <b>kiến trúc</b>, hay <b>hoà giải phân cấp</b>?",
   data:"M5 với đầy đủ 12 cấp phân cấp. Mở hoàn toàn.",
@@ -784,7 +808,7 @@ const TOPICS = [
   }
 },
 {
-  id:"t04", n:4, src:"?", dom:"ts", diff:3, risk:"thap", compute:"thap", know:"thap", mobile:true, vn:false,
+  id:"t04", n:4, src:"ai:claude-opus-5", dom:"ts", diff:3, risk:"thap", compute:"thap", know:"thap", mobile:true, vn:false,
   t:"Khi nào nên huấn luyện lại mô hình? Chính sách retraining tối ưu chi phí",
   q:"Mọi hệ thống ML sản xuất đều phải trả lời câu này, và hầu hết trả lời bằng cảm tính (\"mỗi tháng một lần\"). <b>Ngưỡng trôi nào thực sự đáng để trả tiền huấn luyện lại?</b>",
   data:"Bất kỳ dataset chuỗi dài nào: M5, Favorita, dữ liệu điện, dữ liệu web. Hoàn toàn mở.",
@@ -798,7 +822,7 @@ const TOPICS = [
   }
 },
 {
-  id:"t05", n:5, src:"?", dom:"ts", diff:4, risk:"thap", compute:"tb", know:"tb", mobile:false, vn:false,
+  id:"t05", n:5, src:"ai:claude-opus-5", dom:"ts", diff:4, risk:"thap", compute:"tb", know:"tb", mobile:false, vn:false,
   t:"Uplift modeling cho khuyến mãi dưới ràng buộc ngân sách",
   q:"Đừng dự đoán ai sẽ mua — dự đoán <b>ai sẽ mua thêm vì được khuyến mãi</b>. Và khi ngân sách khuyến mãi có hạn, nên tiêu vào ai?",
   data:"Criteo Uplift Dataset — <b>13.979.592 dòng</b> trong file tải về (mô tả gốc ghi „25M” nhưng bản công bố đã hạ mẫu; đừng trích nhầm con số 25M vào luận văn). Cộng Hillstrom MineThatData.",
@@ -814,7 +838,7 @@ const TOPICS = [
 
 /* ═══════════ TIN SINH HỌC ═══════════ */
 {
-  id:"t06", n:6, src:"?", dom:"bio", diff:3, risk:"thap", compute:"tb", know:"tb", mobile:false, vn:false,
+  id:"t06", n:6, src:"ai:claude-opus-5", dom:"bio", diff:3, risk:"thap", compute:"tb", know:"tb", mobile:false, vn:false,
   t:"Foundation model tế bào đơn: cần bao nhiêu nhãn để chúng đáng dùng?",
   q:"Các đánh giá đã cho thấy scGPT/Geneformer ở chế độ <b>zero-shot thua cả baseline HVG+PCA</b>. Nhưng gần như chưa ai đo chế độ fine-tune. Điểm hoà vốn nằm ở đâu?",
   data:"CELLxGENE, Tabula Sapiens, PBMC, Immune, Pancreas — đều là benchmark chuẩn, mở hoàn toàn, không cần xin phép.",
@@ -828,7 +852,7 @@ const TOPICS = [
   }
 },
 {
-  id:"t07", n:7, src:"?", dom:"bio", diff:3, risk:"thap", compute:"thap", know:"tb", mobile:false, vn:false,
+  id:"t07", n:7, src:"ai:claude-opus-5", dom:"bio", diff:3, risk:"thap", compute:"thap", know:"tb", mobile:false, vn:false,
   t:"Sống còn đa-omics trên TCGA: độ phức tạp có trả công không?",
   q:"Deep learning đa-omics dự đoán tiên lượng ung thư có thật sự thắng một mô hình Cox chỉ dùng <b>tuổi, giai đoạn, grade</b> — khi đánh giá bằng hiệu chuẩn chứ không chỉ C-index?",
   data:"TCGA qua GDC / cBioPortal. Tầng open-access (RNA-seq + lâm sàng) đủ dùng, không cần dbGaP.",
@@ -842,7 +866,7 @@ const TOPICS = [
   }
 },
 {
-  id:"t08", n:8, src:"?", dom:"bio", diff:4, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:true,
+  id:"t08", n:8, src:"ai:claude-opus-5", dom:"bio", diff:4, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:true,
   t:"Dự đoán kháng kháng sinh từ hệ gen vi khuẩn — có chuyển được sang khu vực khác không?",
   q:"Mô hình huấn luyện trên isolate châu Âu có dùng được cho isolate Đông Nam Á không? <b>Hiệu năng sụp bao nhiêu khi đổi khu vực địa lý hoặc dòng vi khuẩn?</b>",
   data:"BV-BRC (trước là PATRIC) — hàng nghìn bộ gen kèm nhãn MIC, mở. Có metadata quốc gia để chia tập theo khu vực.",
@@ -856,7 +880,7 @@ const TOPICS = [
   }
 },
 {
-  id:"t09", n:9, src:"?", dom:"bio", diff:4, risk:"thap", compute:"tb", know:"cao", mobile:false, vn:false,
+  id:"t09", n:9, src:"ai:claude-opus-5", dom:"bio", diff:4, risk:"thap", compute:"tb", know:"cao", mobile:false, vn:false,
   t:"Rò rỉ tương đồng chuỗi: bao nhiêu benchmark protein đang tự lừa mình?",
   q:"Nếu train và test chứa các protein <b>homolog</b> của nhau, mô hình chỉ cần nhận ra „đã thấy họ hàng rồi”. Bao nhiêu phần hiệu năng công bố biến mất khi chia tập theo tương đồng chuỗi thật sự?",
   data:"UniProt, CAFA, các benchmark dự đoán chức năng protein. Mở. Công cụ chia tập: MMseqs2, CD-HIT.",
@@ -870,7 +894,7 @@ const TOPICS = [
   }
 },
 {
-  id:"t10", n:10, src:"?", dom:"bio", diff:3, risk:"thap", compute:"tb", know:"tb", mobile:false, vn:false,
+  id:"t10", n:10, src:"ai:claude-opus-5", dom:"bio", diff:3, risk:"thap", compute:"tb", know:"tb", mobile:false, vn:false,
   t:"Dự đoán đáp ứng thuốc: cách chia tập quyết định kết luận",
   q:"Mô hình dự đoán đáp ứng thuốc trên dòng tế bào ung thư báo cáo hiệu năng cao — nhưng với <b>thuốc mới chưa từng thấy</b> hay <b>dòng tế bào mới</b> thì sao? Ba cách chia tập cho ba kết luận khác nhau.",
   data:"GDSC, CCLE, DepMap — đều mở và tải trực tiếp được, không cần credential.",
@@ -884,7 +908,7 @@ const TOPICS = [
   }
 },
 {
-  id:"t11", n:11, src:"?", dom:"bio", diff:3, risk:"thap", compute:"thap", know:"tb", mobile:false, vn:false,
+  id:"t11", n:11, src:"ai:claude-opus-5", dom:"bio", diff:3, risk:"thap", compute:"thap", know:"tb", mobile:false, vn:false,
   t:"Microbiome đường ruột → kiểu hình: mô hình có chuyển được qua cohort khác không?",
   q:"Các mô hình dự đoán bệnh từ hệ vi sinh đường ruột đạt AUC cao trong nội bộ cohort. <b>Huấn luyện ở cohort này, kiểm định ở cohort khác thì còn lại bao nhiêu?</b>",
   data:"curatedMetagenomicData (gói R, mở, đã chuẩn hoá) — hàng chục cohort với metadata thống nhất. Đây là dataset lý tưởng cho câu hỏi này.",
@@ -898,7 +922,7 @@ const TOPICS = [
   }
 },
 {
-  id:"t12", n:12, src:"?", dom:"bio", diff:4, risk:"thap", compute:"cao", know:"cao", mobile:false, vn:false,
+  id:"t12", n:12, src:"ai:claude-opus-5", dom:"bio", diff:4, risk:"thap", compute:"cao", know:"cao", mobile:false, vn:false,
   t:"Protein language model: điểm zero-shot có hiệu chuẩn không?",
   q:"ESM và các PLM cho điểm zero-shot dự đoán tác động biến thể. Điểm đó xếp hạng tốt — nhưng nó có phải <b>xác suất có ý nghĩa</b> không, hay chỉ là số thứ tự?",
   data:"ProteinGym — benchmark chuẩn cho variant effect prediction, mở. Trọng số ESM-2 tải tự do từ HuggingFace.",
@@ -914,7 +938,7 @@ const TOPICS = [
 
 /* ═══════════ Y TẾ LÂM SÀNG ═══════════ */
 {
-  id:"t13", n:13, src:"?", dom:"clin", diff:4, risk:"tb", compute:"thap", know:"tb", mobile:false, vn:false,
+  id:"t13", n:13, src:"ai:claude-opus-5", dom:"clin", diff:4, risk:"tb", compute:"thap", know:"tb", mobile:false, vn:false,
   t:"Hiệu chuẩn sụp đổ khi mô hình chuyển viện — và có dự báo trước được không?",
   q:"Khả năng phân biệt (AUROC) chuyển giao được, nhưng <b>hiệu chuẩn thì không</b>. Có thể xây một chỉ báo tính được <em>chỉ trên dữ liệu nguồn</em>, dự báo đặc trưng nào sẽ hỏng khi sang viện khác?",
   data:"MIMIC-IV + eICU-CRD trên PhysioNet — miễn phí sau khoá CITI + credentialing. ⚠️ Độ trễ 2–4 tuần, đăng ký NGAY.",
@@ -928,7 +952,7 @@ const TOPICS = [
   }
 },
 {
-  id:"t14", n:14, src:"?", dom:"clin", diff:4, risk:"tb", compute:"thap", know:"cao", mobile:false, vn:false,
+  id:"t14", n:14, src:"ai:claude-opus-5", dom:"clin", diff:4, risk:"tb", compute:"thap", know:"cao", mobile:false, vn:false,
   t:"Cảnh báo sepsis sớm: định nghĩa nhãn quyết định kết quả nhiều hơn mô hình",
   q:"Các mô hình cảnh báo sepsis báo AUROC 0,85+. Nhưng <b>thời điểm gán nhãn onset</b> thay đổi thì con số đó nhảy bao nhiêu? Và bao nhiêu tín hiệu đến từ rò rỉ thời gian?",
   data:"MIMIC-IV, eICU. Cần credential PhysioNet.",
@@ -942,7 +966,7 @@ const TOPICS = [
   }
 },
 {
-  id:"t15", n:15, src:"?", dom:"clin", diff:3, risk:"tb", compute:"thap", know:"tb", mobile:false, vn:false,
+  id:"t15", n:15, src:"ai:claude-opus-5", dom:"clin", diff:3, risk:"tb", compute:"thap", know:"tb", mobile:false, vn:false,
   t:"Công bằng thuật toán trong y tế: hiệu chuẩn theo phân nhóm, không chỉ AUROC tổng",
   q:"Một mô hình có AUROC tốt trên toàn bộ bệnh nhân vẫn có thể <b>hiệu chuẩn sai lệch có hệ thống</b> ở một nhóm nhỏ — và đó chính là nhóm bị thiệt hại.",
   data:"MIMIC-IV (có chủng tộc, giới, loại bảo hiểm), eICU. Cần credential.",
@@ -956,7 +980,7 @@ const TOPICS = [
   }
 },
 {
-  id:"t16", n:16, src:"?", dom:"clin", diff:3, risk:"thap", compute:"cao", know:"tb", mobile:false, vn:false,
+  id:"t16", n:16, src:"ai:claude-opus-5", dom:"clin", diff:3, risk:"thap", compute:"cao", know:"tb", mobile:false, vn:false,
   t:"Shortcut learning trong X-quang ngực: mô hình đang nhìn bệnh hay nhìn thiết bị?",
   q:"CNN đạt hiệu năng „ngang bác sĩ” trên X-quang ngực. Nhưng bao nhiêu phần đến từ việc mô hình nhận ra <b>dấu vết máy chụp, tư thế, ống dẫn lưu</b> thay vì tổn thương?",
   data:"NIH ChestX-ray14, CheXpert, MIMIC-CXR — mở hoặc chỉ cần đăng ký đơn giản (MIMIC-CXR cần PhysioNet).",
@@ -970,7 +994,7 @@ const TOPICS = [
   }
 },
 {
-  id:"t17", n:17, src:"?", dom:"clin", diff:4, risk:"thap", compute:"tb", know:"tb", mobile:true, vn:false,
+  id:"t17", n:17, src:"ai:claude-opus-5", dom:"clin", diff:4, risk:"thap", compute:"tb", know:"tb", mobile:true, vn:false,
   t:"Học tự giám sát cho tín hiệu sinh lý: bao nhiêu nhãn là đủ?",
   q:"Nhãn ECG/PPG rất đắt (cần bác sĩ đọc). Học tự giám sát trên dữ liệu <b>không nhãn</b> có giảm được nhu cầu nhãn bao nhiêu lần?",
   data:"PhysioNet: PTB-XL (ECG có nhãn, mở tự do), MIMIC-IV Waveform, CinC Challenge datasets. PTB-XL không cần credential.",
@@ -986,7 +1010,7 @@ const TOPICS = [
 
 /* ═══════════ MÔI TRƯỜNG · NÔNG NGHIỆP · YTCC ═══════════ */
 {
-  id:"t18", n:18, src:"?", dom:"env", diff:4, risk:"cao", compute:"tb", know:"tb", mobile:false, vn:true,
+  id:"t18", n:18, src:"ai:claude-opus-5", dom:"env", diff:4, risk:"cao", compute:"tb", know:"tb", mobile:false, vn:true,
   t:"Dự báo sốt xuất huyết Việt Nam theo không-thời gian",
   q:"Ca sốt xuất huyết ở tỉnh này tuần sau phụ thuộc vào thời tiết, vào ca tuần này, và vào <b>các tỉnh lân cận</b>. Mô hình hoá cả ba có thắng mô hình chuỗi thời gian đơn lẻ không?",
   data:"Ca bệnh theo tỉnh — ĐIỂM NGHẼN, phải xác minh nguồn trước. Khí hậu: ERA5, NOAA (miễn phí, đầy đủ). Có một số dataset dengue VN đã công bố kèm bài báo.",
@@ -1000,7 +1024,7 @@ const TOPICS = [
   }
 },
 {
-  id:"t19", n:19, src:"?", dom:"env", diff:4, risk:"tb", compute:"tb", know:"thap", mobile:false, vn:true,
+  id:"t19", n:19, src:"ai:claude-opus-5", dom:"env", diff:4, risk:"tb", compute:"tb", know:"thap", mobile:false, vn:true,
   t:"PM2.5 Hà Nội: cấu trúc đồ thị nên học hay nên áp đặt?",
   q:"Trong mô hình GNN dự báo chất lượng không khí, ma trận kề nên xây theo <b>khoảng cách địa lý, theo hướng gió, hay để mô hình tự học</b>? Đây là câu hỏi ablation gọn gàng và chưa có câu trả lời dứt khoát.",
   data:"Mạng cảm biến PAM Air, trạm quan trắc Hà Nội, dữ liệu US Embassy lịch sử. Khí tượng: ERA5 (miễn phí). Rủi ro trung bình — cần kiểm tra độ phủ lịch sử.",
@@ -1014,7 +1038,7 @@ const TOPICS = [
   }
 },
 {
-  id:"t20", n:20, src:"?", dom:"env", diff:4, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:true,
+  id:"t20", n:20, src:"ai:claude-opus-5", dom:"env", diff:4, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:true,
   t:"Dự báo năng suất lúa Đồng bằng sông Cửu Long từ ảnh vệ tinh",
   q:"Ảnh Sentinel-2 miễn phí và phủ toàn bộ ĐBSCL. <b>Dự báo năng suất trước thu hoạch bao nhiêu tuần thì vẫn còn chính xác đủ để hữu ích?</b>",
   data:"Sentinel-2 & Sentinel-1 qua Google Earth Engine — vẫn miễn phí cho học thuật, <b>nhưng từ 27/04/2026 mọi dự án phi thương mại có hạn mức EECU-giờ hằng tháng theo tier</b>: Community 150 EECU-giờ (mặc định, dành cho sinh viên), Contributor 1.000 EECU-giờ (cần bật billing nhưng không bị tính tiền cho dùng phi thương mại). Đây <em>không</em> phải ngưỡng cắt cứng — chạm trần thì vẫn chạy được nhưng ở chế độ hạn chế, chậm hơn nhiều. Trích chuỗi nhiều năm cho cả ĐBSCL có thể chạm trần Community — đăng ký Contributor sớm và ước lượng compute trước khi cam kết. Năng suất theo huyện: Tổng cục Thống kê, cần xác minh độ phân giải và độ dài chuỗi.",
@@ -1028,7 +1052,7 @@ const TOPICS = [
   }
 },
 {
-  id:"t21", n:21, src:"?", dom:"env", diff:3, risk:"thap", compute:"thap", know:"tb", mobile:false, vn:false,
+  id:"t21", n:21, src:"ai:claude-opus-5", dom:"env", diff:3, risk:"thap", compute:"thap", know:"tb", mobile:false, vn:false,
   t:"Dự báo xác suất công suất điện mặt trời — khoảng dự báo có đáng tin không?",
   q:"Lưới điện cần biết <b>khoảng bất định</b>, không chỉ giá trị kỳ vọng. Các mô hình dự báo xác suất cho điện mặt trời có phủ đúng danh nghĩa không, hay chúng tự tin quá mức đúng vào lúc quan trọng nhất?",
   data:"GEFCom2014 (competition data, mở), dữ liệu solar của NREL, Open Power System Data. Không cần credential.",
@@ -1044,7 +1068,7 @@ const TOPICS = [
 
 /* ═══════════ TÀI CHÍNH ═══════════ */
 {
-  id:"t22", n:22, src:"?", dom:"fin", diff:3, risk:"thap", compute:"thap", know:"tb", mobile:false, vn:true,
+  id:"t22", n:22, src:"ai:claude-opus-5", dom:"fin", diff:3, risk:"thap", compute:"thap", know:"tb", mobile:false, vn:true,
   t:"Bao nhiêu alpha là ảo ảnh thống kê? Bản đồ backtest overfitting cho thị trường Việt Nam",
   q:"Chạy đủ nhiều biến thể chiến lược thì <b>chắc chắn</b> tìm được một cái Sharpe cao — kể cả trên dữ liệu ngẫu nhiên. Trên thị trường VN, bao nhiêu phần alpha báo cáo sống sót sau hiệu chỉnh đa kiểm định?",
   data:"Cổ phiếu HOSE/HNX qua vnstock (miễn phí), và/hoặc crypto Binance (miễn phí, tick-level). Rủi ro dữ liệu gần bằng 0.",
@@ -1058,7 +1082,7 @@ const TOPICS = [
   }
 },
 {
-  id:"t23", n:23, src:"?", dom:"fin", diff:4, risk:"thap", compute:"tb", know:"tb", mobile:true, vn:false,
+  id:"t23", n:23, src:"ai:claude-opus-5", dom:"fin", diff:4, risk:"thap", compute:"tb", know:"tb", mobile:true, vn:false,
   t:"Deep learning trên sổ lệnh crypto: có sống sót sau ma sát giao dịch không?",
   q:"Các mô hình lớp DeepLOB dự đoán biến động giá ngắn hạn với độ chính xác ấn tượng. <b>Còn lại gì sau phí, spread, slippage — và có chuyển được sang tài sản khác không?</b>",
   data:"Binance public data (tick + LOB snapshot, miễn phí, khổng lồ). Không cần credential, chỉ cần chịu khó về hạ tầng.",
@@ -1072,7 +1096,7 @@ const TOPICS = [
   }
 },
 {
-  id:"t24", n:24, src:"?", dom:"fin", diff:3, risk:"tb", compute:"thap", know:"thap", mobile:false, vn:false,
+  id:"t24", n:24, src:"ai:claude-opus-5", dom:"fin", diff:3, risk:"tb", compute:"thap", know:"thap", mobile:false, vn:false,
   t:"Rủi ro tín dụng: hiệu chuẩn dưới dịch chuyển phân phối và công bằng",
   q:"Mô hình chấm điểm tín dụng huấn luyện trên giai đoạn kinh tế này còn dùng được ở giai đoạn khác không? Và khi nó hỏng, nó <b>hỏng đều hay hỏng lệch về một nhóm vay</b>?",
   data:"Ưu tiên <b>Home Credit Default Risk</b> và <b>Give Me Some Credit</b> (Kaggle, giấy phép rõ ràng). ⚠️ LendingClub <b>không còn tự công bố dữ liệu</b>: hồ sơ bị từ chối đã gỡ từ 2019 và trang tải về có điều khoản hạn chế; các bản sao trên Kaggle dừng cập nhật khoảng 2018–2020 và có vướng mắc bản quyền — nếu dùng thì phải nêu rõ nguồn và điều khoản trong luận văn.",
@@ -1086,7 +1110,7 @@ const TOPICS = [
   }
 },
 {
-  id:"t25", n:25, src:"?", dom:"fin", diff:3, risk:"thap", compute:"thap", know:"thap", mobile:false, vn:false,
+  id:"t25", n:25, src:"ai:claude-opus-5", dom:"fin", diff:3, risk:"thap", compute:"thap", know:"thap", mobile:false, vn:false,
   t:"Phát hiện gian lận: chọn ngưỡng theo lý thuyết quyết định, không theo F1",
   q:"Với dữ liệu cực mất cân bằng và chi phí bất đối xứng (bỏ sót gian lận ≠ báo động giả), <b>F1 và AUC là metric sai</b>. Chọn ngưỡng đúng thay đổi kết luận bao nhiêu?",
   data:"IEEE-CIS Fraud Detection, Credit Card Fraud (Kaggle), PaySim. Mở hoàn toàn.",
@@ -1102,7 +1126,7 @@ const TOPICS = [
 
 /* ═══════════ NHÂN QUẢ & THỐNG KÊ ═══════════ */
 {
-  id:"t27", n:27, src:"?", dom:"causal", diff:4, risk:"thap", compute:"thap", know:"thap", mobile:false, vn:false,
+  id:"t27", n:27, src:"ai:claude-opus-5", dom:"causal", diff:4, risk:"thap", compute:"thap", know:"thap", mobile:false, vn:false,
   t:"Các bộ ước lượng nhân quả hỏng như thế nào khi giả định bị vi phạm?",
   q:"DoubleML, causal forest, meta-learners đều hứa ước lượng hiệu ứng nhân quả không thiên lệch — <b>với điều kiện các giả định đúng</b>. Chúng suy giảm ra sao khi giả định sai dần?",
   data:"Benchmark bán tổng hợp: IHDP, ACIC 2016/2018/2019, Lalonde, Twins. Mở hoàn toàn, và bạn <b>biết ground truth</b> — điều gần như không bao giờ có trong nhân quả thực.",
@@ -1116,7 +1140,7 @@ const TOPICS = [
   }
 },
 {
-  id:"t29", n:29, src:"?", dom:"causal", diff:3, risk:"thap", compute:"thap", know:"thap", mobile:false, vn:false,
+  id:"t29", n:29, src:"ai:claude-opus-5", dom:"causal", diff:3, risk:"thap", compute:"thap", know:"thap", mobile:false, vn:false,
   t:"Conformal prediction: bảo đảm phủ còn đúng không khi phân phối dịch chuyển?",
   q:"Conformal prediction cho bảo đảm phủ <b>hữu hạn mẫu, không cần giả định phân phối</b> — nhưng chỉ khi dữ liệu trao đổi được (exchangeable). Thực tế thì không. Bảo đảm đó vỡ nhanh đến đâu?",
   data:"Bất kỳ: dữ liệu tabular chuẩn, chuỗi thời gian, hoặc ghép với bất kỳ đề tài nào khác trong danh sách này.",
@@ -1132,7 +1156,7 @@ const TOPICS = [
 
 /* ═══════════ NLP & LLM ═══════════ */
 {
-  id:"t30", n:30, src:"?", dom:"nlp", diff:3, risk:"thap", compute:"tb", know:"thap", mobile:false, vn:true,
+  id:"t30", n:30, src:"ai:claude-opus-5", dom:"nlp", diff:3, risk:"thap", compute:"tb", know:"thap", mobile:false, vn:true,
   t:"Phân tích cảm xúc theo khía cạnh cho đánh giá TMĐT tiếng Việt",
   q:"Đánh giá tiếng Việt trên Shopee/Tiki đầy teencode, viết tắt, trộn tiếng Anh, thiếu dấu. <b>Mô hình ABSA chuẩn hỏng ở đâu, và sửa được bằng gì?</b>",
   data:"Đánh giá TMĐT (scrape được), UIT-ViSFD và các bộ ABSA tiếng Việt đã công bố. Rủi ro thấp.",
@@ -1146,7 +1170,7 @@ const TOPICS = [
   }
 },
 {
-  id:"t31", n:31, src:"?", dom:"nlp", diff:3, risk:"thap", compute:"tb", know:"thap", mobile:false, vn:true,
+  id:"t31", n:31, src:"ai:claude-opus-5", dom:"nlp", diff:3, risk:"thap", compute:"tb", know:"thap", mobile:false, vn:true,
   t:"Benchmark LLM tiếng Việt có bị nhiễm không, và mô hình bền đến đâu?",
   q:"Các LLM báo điểm cao trên benchmark tiếng Việt. Nhưng <b>bao nhiêu phần là do benchmark đã lọt vào dữ liệu huấn luyện?</b> Và điểm còn lại bao nhiêu khi diễn đạt lại câu hỏi?",
   data:"Các benchmark tiếng Việt công khai (ViMMRC, VMLU, các bộ thi tốt nghiệp THPT). API/trọng số mô hình mở.",
@@ -1160,7 +1184,7 @@ const TOPICS = [
   }
 },
 {
-  id:"t32", n:32, src:"?", dom:"nlp", diff:3, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:true,
+  id:"t32", n:32, src:"ai:claude-opus-5", dom:"nlp", diff:3, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:true,
   t:"RAG cho văn bản pháp luật Việt Nam: tầng truy hồi mới là chỗ hỏng",
   q:"Hệ thống RAG pháp luật sai chủ yếu vì <b>truy hồi sai văn bản</b>, không phải vì LLM sinh sai. Nhưng gần như mọi đánh giá chỉ đo đầu ra cuối. Tách bạch ra thì thấy gì?",
   data:"Văn bản quy phạm pháp luật VN (thuvienphapluat, cổng thông tin chính phủ — cần scrape và làm sạch). Rủi ro trung bình vì công đoạn thu thập nặng.",
@@ -1176,7 +1200,7 @@ const TOPICS = [
 
 /* ═══════════ ML SYSTEMS & MOBILE ═══════════ */
 {
-  id:"t33", n:33, src:"?", dom:"sys", diff:4, risk:"thap", compute:"tb", know:"thap", mobile:true, vn:false,
+  id:"t33", n:33, src:"ai:claude-opus-5", dom:"sys", diff:4, risk:"thap", compute:"tb", know:"thap", mobile:true, vn:false,
   t:"Nén và chưng cất mô hình chuỗi thời gian để chạy trên thiết bị",
   q:"Một mô hình dự báo mạnh có chạy được trên điện thoại với ngân sách năng lượng thực tế không? <b>Mất bao nhiêu độ chính xác cho mỗi đơn vị tiết kiệm?</b>",
   data:"M5, PTB-XL, hoặc bất kỳ dataset nào ở trên. Phần cứng: iPhone của bạn. Rủi ro dữ liệu bằng 0.",
@@ -1190,7 +1214,7 @@ const TOPICS = [
   }
 },
 {
-  id:"t34", n:34, src:"?", dom:"sys", diff:5, risk:"thap", compute:"tb", know:"tb", mobile:true, vn:false,
+  id:"t34", n:34, src:"ai:claude-opus-5", dom:"sys", diff:5, risk:"thap", compute:"tb", know:"tb", mobile:true, vn:false,
   t:"Dự đoán độ trễ và năng lượng cho Apple Neural Engine từ kiến trúc mô hình",
   q:"Apple Neural Engine gần như không có tài liệu công khai. <b>Có xây được mô hình dự đoán độ trễ/năng lượng từ đồ thị tính toán, mà không cần chạy thử?</b>",
   data:"Bạn tự sinh: hàng nghìn kiến trúc mẫu, đo trên thiết bị thật. Đây là dataset gốc của bạn — và đó chính là đóng góp.",
@@ -1204,7 +1228,7 @@ const TOPICS = [
   }
 },
 {
-  id:"t35", n:35, src:"?", dom:"sys", diff:4, risk:"thap", compute:"tb", know:"tb", mobile:true, vn:false,
+  id:"t35", n:35, src:"ai:claude-opus-5", dom:"sys", diff:4, risk:"thap", compute:"tb", know:"tb", mobile:true, vn:false,
   t:"Federated learning trên thiết bị: đánh đổi riêng tư — năng lượng — độ chính xác",
   q:"FL hứa học từ dữ liệu người dùng mà không thu thập nó. Nhưng <b>ngân sách riêng tư (ε) đổi lấy bao nhiêu độ chính xác, và tốn bao nhiêu pin của người dùng?</b>",
   data:"Benchmark FL chuẩn: LEAF, FEMNIST, Shakespeare, Stack Overflow. Mở. Đo năng lượng trên thiết bị thật của bạn.",
@@ -1220,7 +1244,7 @@ const TOPICS = [
 
 /* ═══════════ RECSYS · GIÁO DỤC · AN NINH MẠNG ═══════════ */
 {
-  id:"t36", n:36, src:"?", dom:"misc", diff:4, risk:"thap", compute:"tb", know:"thap", mobile:false, vn:false,
+  id:"t36", n:36, src:"ai:claude-opus-5", dom:"misc", diff:4, risk:"thap", compute:"tb", know:"thap", mobile:false, vn:false,
   t:"Khoảng cách offline–online trong hệ khuyến nghị: vì sao đánh giá ngoại tuyến nói dối?",
   q:"Mô hình thắng trên đánh giá offline thường thua khi triển khai. <b>Đây là một vấn đề mở nổi tiếng.</b> Nguyên nhân nào đóng góp bao nhiêu — thiên lệch phơi nhiễm, vòng phản hồi, hay metric sai?",
   data:"Bốn dataset có <b>tập test ngẫu nhiên hoá</b> — chìa khoá để đo thiên lệch: Yahoo!R3 (~311K rating thiên lệch + 54K rating MCAR), Coat (<b>rất nhỏ</b>: 290 người × 300 món; 6.960 rating tự chọn để huấn luyện + 4.640 rating ngẫu nhiên để test), và quan trọng hơn <b>KuaiRec</b> — chú ý phân biệt hai ma trận: ma trận <em>nhỏ</em> gần như quan sát đầy đủ (1.411 người × 3.327 video, mật độ ~99,6%, tức ~4,7 triệu tương tác) và ma trận <em>lớn</em> thưa hơn (7.176 người × 10.728 video, <b>12.530.806 tương tác</b>, mật độ ~16,3%). Phần „fully-observed” nằm ở ma trận nhỏ — trích nhầm là bị hỏi ngay. Cộng <b>KuaiRand</b>. Mở hoàn toàn.",
@@ -1234,7 +1258,7 @@ const TOPICS = [
   }
 },
 {
-  id:"t37", n:37, src:"?", dom:"misc", diff:3, risk:"thap", compute:"tb", know:"thap", mobile:false, vn:false,
+  id:"t37", n:37, src:"ai:claude-opus-5", dom:"misc", diff:3, risk:"thap", compute:"tb", know:"thap", mobile:false, vn:false,
   t:"Knowledge tracing: mô hình sâu có thật sự thắng hồi quy logistic không?",
   q:"Y văn <b>chưa ngã ngũ</b>. Gervet 2020 (9 dataset thật) kết luận: <b>DKT có AUC cao nhất ở 4/9 dataset</b> — dẫn ở dữ liệu lớn hoặc khi thông tin thời gian quan trọng — còn <b>logistic regression với đặc trưng tốt dẫn ở dataset cỡ vừa hoặc có rất nhiều tương tác mỗi học sinh</b>. Mandalapu 2021 („Do we need to go Deep? Knowledge Tracing with Big Data”, workshop <em>AI Education</em> tại AAAI-2021 — là workshop, không phải hội nghị chính, hãy trích đúng) đặt lại câu hỏi ở quy mô hàng triệu tương tác và <em>không</em> tìm được bằng chứng rõ rằng mô hình sâu vượt mô hình truyền thống ở quy mô đó. Vậy quy mô dữ liệu thực sự quyết định điều gì?",
   data:"EdNet, RiiiD (Kaggle, ~100 triệu tương tác), ASSISTments, Junyi. Mở hoàn toàn, quy mô lớn.",
@@ -1248,7 +1272,7 @@ const TOPICS = [
   }
 },
 {
-  id:"t38", n:38, src:"?", dom:"misc", diff:4, risk:"thap", compute:"tb", know:"tb", mobile:false, vn:false,
+  id:"t38", n:38, src:"ai:claude-opus-5", dom:"misc", diff:4, risk:"thap", compute:"tb", know:"tb", mobile:false, vn:false,
   t:"Phát hiện malware dưới trôi khái niệm: thiên lệch thời gian làm hỏng mọi con số",
   q:"Bộ phát hiện malware báo độ chính xác 99%. Nhưng nếu <b>train và test trộn lẫn theo thời gian</b>, mô hình đang nhìn tương lai. Hiệu năng thật khi chỉ được nhìn quá khứ là bao nhiêu?",
   data:"EMBER (PE malware, mở, có timestamp), Drebin (Android), AndroZoo. Mở hoặc đăng ký đơn giản.",
@@ -1264,7 +1288,7 @@ const TOPICS = [
 
 /* ═══════════ ỨNG DỤNG CAO · RA SẢN PHẨM ═══════════ */
 {
-  id:"a01", n:39, src:"?", dom:"apply", diff:4, risk:"thap", compute:"thap", know:"thap", mobile:true, vn:true,
+  id:"a01", n:39, src:"ai:claude-opus-5", dom:"apply", diff:4, risk:"thap", compute:"thap", know:"thap", mobile:true, vn:true,
   t:"Sổ sách tự động cho hộ kinh doanh: cần bao nhiêu nhãn để máy phân loại đúng giao dịch của một cửa hàng?",
   q:"Sao kê ngân hàng đã ở dạng số, nhưng hộ kinh doanh vẫn ghi sổ tay. <b>Cần bao nhiêu nhãn của chính chủ hộ để đạt 95% chính xác trên giao dịch của họ</b> — và một mô hình nền chung rút ngắn được con số đó bao nhiêu lần?",
   data:"Sao kê CSV/PDF của các ngân hàng VN (tự thu thập từ người quen + của chính bạn, ẩn danh hoá), cộng dữ liệu tổng hợp sinh từ phân phối thật. Bổ sung: các bộ dữ liệu giao dịch cá nhân công khai để đối chiếu.",
@@ -1278,7 +1302,7 @@ const TOPICS = [
   }
 },
 {
-  id:"a02", n:40, src:"?", dom:"apply", diff:4, risk:"tb", compute:"thap", know:"tb", mobile:false, vn:true,
+  id:"a02", n:40, src:"ai:claude-opus-5", dom:"apply", diff:4, risk:"tb", compute:"thap", know:"tb", mobile:false, vn:true,
   t:"Giảm hàng huỷ cho bán lẻ hàng tươi: đặt hàng theo hạn sử dụng, đo bằng kilogram bị đổ đi",
   q:"Hàng tươi hỏng sau 1–3 ngày, nên mỗi đơn vị sai số dự báo biến thẳng thành rác. <b>Một chính sách đặt hàng nhận biết hạn dùng cắt được bao nhiêu % lượng huỷ ở cùng mức phục vụ?</b>",
   data:"M5 nhóm FOODS và Favorita (có nhóm hàng dễ hỏng) — mở hoàn toàn. Nếu xin được dữ liệu một chuỗi tạp hoá / bakery VN thì thành case study; không xin được vẫn làm trọn vẹn trên dữ liệu mở.",
@@ -1292,7 +1316,7 @@ const TOPICS = [
   }
 },
 {
-  id:"a03", n:41, src:"?", dom:"apply", diff:4, risk:"tb", compute:"thap", know:"tb", mobile:false, vn:true,
+  id:"a03", n:41, src:"ai:claude-opus-5", dom:"apply", diff:4, risk:"tb", compute:"thap", know:"tb", mobile:false, vn:true,
   t:"Cho vay người chưa có lịch sử tín dụng: dữ liệu thay thế đáng giá bao nhiêu điểm Gini, và có công bằng không?",
   q:"Một phần lớn người trưởng thành không có hồ sơ tín dụng chuẩn. <b>Dữ liệu thay thế (dòng tiền, hoá đơn tiện ích, hành vi ứng dụng) nâng Gini bao nhiêu trên chính nhóm thin-file</b> — và nó có thay thiên lệch cũ bằng một thiên lệch mới không?",
   data:"Home Credit Default Risk (có nhóm hồ sơ thiếu dữ liệu bureau) và Give Me Some Credit — Kaggle, giấy phép rõ. Dòng tiền: mô phỏng từ dữ liệu giao dịch (nối được với #39).",
@@ -1306,7 +1330,7 @@ const TOPICS = [
   }
 },
 {
-  id:"a04", n:42, src:"?", dom:"apply", diff:4, risk:"thap", compute:"thap", know:"tb", mobile:false, vn:true,
+  id:"a04", n:42, src:"ai:claude-opus-5", dom:"apply", diff:4, risk:"thap", compute:"thap", know:"tb", mobile:false, vn:true,
   t:"Chặn lừa đảo chuyển khoản khi đội điều tra chỉ xử lý được N vụ mỗi ngày",
   q:"Mọi bài phát hiện gian lận tối ưu AUC. Nhưng ngân hàng chỉ điều tra được vài trăm cảnh báo mỗi ngày. <b>Bài toán đúng là xếp hàng đợi có ngân sách, không phải phân loại.</b> Xếp hàng đúng cứu thêm bao nhiêu tiền so với ngưỡng tĩnh?",
   data:"IEEE-CIS Fraud Detection, Sparkov / BankSim, PaySim — mở hoàn toàn, có số tiền giao dịch nên tính được „tiền cứu được”. Mô phỏng hàng đợi điều tra tự dựng.",
@@ -1320,7 +1344,7 @@ const TOPICS = [
   }
 },
 {
-  id:"a05", n:43, src:"?", dom:"apply", diff:4, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:true,
+  id:"a05", n:43, src:"ai:claude-opus-5", dom:"apply", diff:4, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:true,
   t:"Trợ lý tra cứu quy định biết nói „tôi không chắc”: RAG có kiểm soát rủi ro trả lời sai",
   q:"Doanh nghiệp không dám dùng trợ lý nội bộ vì <b>một câu trả lời sai có thể tốn tiền thật</b>. Nếu thêm một tầng từ chối trả lời có hiệu chuẩn, <b>đánh đổi độ phủ ↔ độ chính xác nằm ở đâu, và có bảo đảm được không?</b>",
   data:"Văn bản quy phạm pháp luật VN (mở, cần thu thập và làm sạch) + một bộ tài liệu nội bộ mô phỏng (quy chế, chính sách nhân sự) tự soạn. Bộ câu hỏi có gold passage tự xây — công sức thật nhưng kiểm soát được.",
@@ -1334,7 +1358,7 @@ const TOPICS = [
   }
 },
 {
-  id:"a06", n:44, src:"?", dom:"apply", diff:3, risk:"tb", compute:"tb", know:"thap", mobile:false, vn:true,
+  id:"a06", n:44, src:"ai:claude-opus-5", dom:"apply", diff:3, risk:"tb", compute:"tb", know:"thap", mobile:false, vn:true,
   t:"Khi nào nên chuyển khách cho người thật? Chính sách bàn giao cho trợ lý chăm sóc khách hàng",
   q:"Bot rẻ; người đắt nhưng đúng. <b>Chính sách bàn giao tối ưu chi phí nằm ở đâu</b>, khi mỗi lần bot trả lời sai có thể mất một khách hàng, và tổng đài chỉ có bấy nhiêu người?",
   data:"MultiWOZ, các bộ hội thoại CSKH mở; hội thoại TMĐT tiếng Việt thu thập hoặc sinh có kiểm soát. Rủi ro trung bình vì phần tiếng Việt phải tự dựng.",
@@ -1348,7 +1372,7 @@ const TOPICS = [
   }
 },
 {
-  id:"a07", n:45, src:"?", dom:"apply", diff:3, risk:"tb", compute:"thap", know:"thap", mobile:false, vn:true,
+  id:"a07", n:45, src:"ai:claude-opus-5", dom:"apply", diff:3, risk:"tb", compute:"thap", know:"thap", mobile:false, vn:true,
   t:"Định giá tài sản cũ có khoảng tin cậy: xe và nhà trên chợ trực tuyến",
   q:"Tin rao đầy giá ảo, tin trùng và tin môi giới. <b>Có ước lượng được giá kèm khoảng tin cậy có bảo đảm phủ từ dữ liệu công khai không</b> — và phần lọc tin rác đóng góp bao nhiêu vào độ chính xác cuối?",
   data:"Tin rao công khai (chotot, bonbanh, batdongsan — phải tôn trọng robots.txt và điều khoản sử dụng), cộng dataset giá xe / nhà mở quốc tế để đối chiếu phương pháp. Rủi ro trung bình: phần thu thập.",
@@ -1362,7 +1386,7 @@ const TOPICS = [
   }
 },
 {
-  id:"a08", n:46, src:"?", dom:"apply", diff:4, risk:"thap", compute:"tb", know:"thap", mobile:false, vn:true,
+  id:"a08", n:46, src:"ai:claude-opus-5", dom:"apply", diff:4, risk:"thap", compute:"tb", know:"thap", mobile:false, vn:true,
   t:"Cắt hoá đơn LLM: định tuyến truy vấn giữa mô hình rẻ và mô hình đắt, có bảo đảm chất lượng",
   q:"Mọi sản phẩm AI đều gọi thẳng mô hình mạnh nhất cho mọi câu hỏi. <b>Một router học được có giữ nguyên chất lượng khi cắt 60–80% chi phí không</b> — và nó hỏng thế nào khi phân phối truy vấn của người dùng đổi?",
   data:"Benchmark mở (MMLU, MT-Bench, VMLU tiếng Việt) làm tập chuẩn; log truy vấn tổng hợp có phân phối lệch để mô phỏng thực tế. Mô hình mở chạy local (Qwen, Llama, các mô hình Việt) + một API đắt làm mốc trên. Rủi ro dữ liệu gần bằng 0.",
@@ -1376,7 +1400,7 @@ const TOPICS = [
   }
 },
 {
-  id:"a09", n:47, src:"?", dom:"apply", diff:4, risk:"tb", compute:"thap", know:"tb", mobile:false, vn:true,
+  id:"a09", n:47, src:"ai:claude-opus-5", dom:"apply", diff:4, risk:"tb", compute:"thap", know:"tb", mobile:false, vn:true,
   t:"Phát hiện thất thoát điện – nước từ công tơ thông minh khi gần như không có nhãn",
   q:"Nước xử lý xong bị rò trên đường ống là khoản lỗ thường trực của mọi công ty cấp nước. <b>Bất thường trên chuỗi đo có tìm ra rò rỉ trước khi khách hàng báo không</b> — và cần bao nhiêu lượt kiểm tra hiện trường để tìm được một điểm rò thật?",
   data:"Neo chính vào <b>BattLeDIM 2020 / L-Town</b> (Zenodo, mở): SCADA áp suất – lưu lượng – mực bể 5 phút/lần cho cả năm 2018 và 2019, <b>có nhãn thời điểm và vị trí rò rỉ</b> — hiếm có. Lưu ý trung thực: dữ liệu là mô phỏng EPANET dựng trên một mạng lưới thật ở Cyprus, không phải đo thực địa; hãy nói rõ điều đó trong luận văn. Bổ sung: UK-DALE / REDD cho phía điện (NILM), và dữ liệu công tơ VN nếu xin được từ một công ty cấp nước (rất quý, nhưng không bắt buộc để hoàn thành đề tài).",
@@ -1390,7 +1414,7 @@ const TOPICS = [
   }
 },
 {
-  id:"a10", n:48, src:"?", dom:"apply", diff:4, risk:"thap", compute:"cao", know:"tb", mobile:false, vn:true,
+  id:"a10", n:48, src:"ai:claude-opus-5", dom:"apply", diff:4, risk:"thap", compute:"cao", know:"tb", mobile:false, vn:true,
   t:"Sàng lọc bệnh võng mạc đái tháo đường bằng ảnh chất lượng thấp: mô hình có nên từ chối đọc?",
   q:"Ảnh đáy mắt chụp bằng thiết bị rẻ ở tuyến cơ sở thì mờ, loá, lệch tâm. <b>Mô hình đạt chuẩn trên ảnh sạch còn lại bao nhiêu độ chính xác</b> — và một tầng „từ chối đọc, chụp lại” cứu được bao nhiêu ca bỏ sót?",
   data:"EyePACS (Kaggle DR), APTOS 2019 (có nhiều ảnh chất lượng kém thật), Messidor — mở hoặc đăng ký đơn giản. Suy giảm chất lượng mô phỏng có kiểm soát để quét liên tục.",
@@ -1406,7 +1430,7 @@ const TOPICS = [
 
 /* ═══════════ HOÁ HỌC · VẬT LIỆU · DƯỢC ═══════════ */
 {
-  id:"c01", n:49, src:"?", dom:"chem", diff:3, risk:"thap", compute:"tb", know:"tb", mobile:false, vn:false,
+  id:"c01", n:49, src:"ai:claude-opus-5", dom:"chem", diff:3, risk:"thap", compute:"tb", know:"tb", mobile:false, vn:false,
   t:"Dự đoán tính chất phân tử: GNN có thật sự thắng fingerprint không?",
   q:"Graph neural network được coi là chuẩn mới cho hoá tin. Nhưng trên các bộ dữ liệu thật — vài nghìn phân tử, không phải vài triệu — <b>ECFP fingerprint cộng LightGBM thắng bao nhiêu lần?</b> Và cần bao nhiêu phân tử thì GNN mới đáng dùng?",
   data:"MoleculeNet và Therapeutics Data Commons (ESOL, FreeSolv, Lipophilicity, BACE, BBBP, HIV). Mở hoàn toàn, tải bằng một dòng Python, không cần credential.",
@@ -1420,7 +1444,7 @@ const TOPICS = [
   }
 },
 {
-  id:"c02", n:50, src:"?", dom:"chem", diff:3, risk:"thap", compute:"thap", know:"tb", mobile:false, vn:false,
+  id:"c02", n:50, src:"ai:claude-opus-5", dom:"chem", diff:3, risk:"thap", compute:"thap", know:"tb", mobile:false, vn:false,
   t:"Bao nhiêu mô hình độc tính đang tự lừa mình bằng cách chia tập?",
   q:"Mô hình dự đoán độc tính và ADMET báo AUC cao với chia tập random. Nhưng thuốc mới mang <b>bộ khung phân tử mới</b>. Hiệu năng còn lại bao nhiêu khi chia theo scaffold, theo cụm, hoặc theo thời gian công bố?",
   data:"Tox21, ToxCast, ClinTox, và nhóm ADMET của Therapeutics Data Commons (hơn hai chục endpoint). Mở hoàn toàn, dung lượng nhỏ, chạy được trên laptop.",
@@ -1434,7 +1458,7 @@ const TOPICS = [
   }
 },
 {
-  id:"c04", n:52, src:"?", dom:"chem", diff:4, risk:"thap", compute:"tb", know:"tb", mobile:false, vn:false,
+  id:"c04", n:52, src:"ai:claude-opus-5", dom:"chem", diff:4, risk:"thap", compute:"tb", know:"tb", mobile:false, vn:false,
   t:"Tương tác thuốc–đích: mô hình có dùng được cho đích chưa từng thấy?",
   q:"Mô hình dự đoán ái lực thuốc–protein báo hiệu năng cao. Nhưng khi chia tập theo <em>cặp</em>, mô hình chỉ cần học „thuốc này nhìn chung dính” và „protein này nhìn chung dễ dính”. Chia theo <b>thuốc mới / đích mới / cả hai mới</b> thì còn lại gì?",
   data:"BindingDB, DAVIS, KIBA, nhóm DTI của Therapeutics Data Commons. Mở.",
@@ -1448,7 +1472,7 @@ const TOPICS = [
   }
 },
 {
-  id:"c06", n:54, src:"?", dom:"chem", diff:4, risk:"tb", compute:"thap", know:"tb", mobile:false, vn:false,
+  id:"c06", n:54, src:"ai:claude-opus-5", dom:"chem", diff:4, risk:"tb", compute:"thap", know:"tb", mobile:false, vn:false,
   t:"Cái gì báo trước một thử nghiệm lâm sàng sẽ thất bại?",
   q:"Phần lớn thuốc vào thử nghiệm lâm sàng rồi thất bại, và mỗi lần thất bại là hàng trăm triệu đô cùng nhiều năm. <b>Từ thông tin có sẵn ở thời điểm đăng ký thử nghiệm, dự đoán được bao nhiêu?</b>",
   data:"ClinicalTrials.gov (API mở, toàn bộ registry), các bộ đã tiền xử lý dạng TrialBench/HINT, cộng ChEMBL cho phần phân tử. Mở hoàn toàn, compute thấp.",
@@ -1462,7 +1486,7 @@ const TOPICS = [
   }
 },
 {
-  id:"c07", n:55, src:"?", dom:"chem", diff:3, risk:"tb", compute:"thap", know:"tb", mobile:false, vn:true,
+  id:"c07", n:55, src:"ai:claude-opus-5", dom:"chem", diff:3, risk:"tb", compute:"thap", know:"tb", mobile:false, vn:true,
   t:"Tín hiệu tác dụng phụ từ báo cáo tự phát: bao nhiêu cảnh báo là thật?",
   q:"Cơ sở dữ liệu báo cáo phản ứng thuốc bất lợi là dữ liệu quan sát bẩn nhất có thể tưởng tượng: thiên lệch báo cáo, nhiễu do đồng dùng thuốc, không có mẫu số. <b>Các chỉ số phát hiện tín hiệu kinh điển cho bao nhiêu cảnh báo giả, và học máy có làm tốt hơn không?</b>",
   data:"FDA FAERS — mở, hàng chục triệu báo cáo, tải trực tiếp theo quý. Danh sách nhãn thuốc đã cập nhật làm chuẩn tham chiếu. Cộng dữ liệu Cảnh giác dược Việt Nam nếu tiếp cận được — đó là góc VN thật, nhưng đề tài phải chạy được mà không cần nó.",
@@ -1478,7 +1502,7 @@ const TOPICS = [
 
 /* ═══════════ VŨ TRỤ · KHÍ QUYỂN · VIỄN THÁM ═══════════ */
 {
-  id:"s01", n:56, src:"?", dom:"space", diff:4, risk:"thap", compute:"tb", know:"tb", mobile:false, vn:false,
+  id:"s01", n:56, src:"ai:claude-opus-5", dom:"space", diff:4, risk:"thap", compute:"tb", know:"tb", mobile:false, vn:false,
   t:"Dự báo bùng nổ mặt trời: bài mất cân bằng cực đoan có hậu quả thật",
   q:"Sự kiện lớn cực hiếm, nên một mô hình luôn nói „không có bùng nổ” vẫn đạt độ chính xác trên 99%. <b>Sau khi dùng thước đo đúng cho lớp cực hiếm và chia tập chống rò rỉ, mô hình học sâu còn thắng baseline không?</b>",
   data:"Đặc trưng từ trường vùng hoạt động (SHARP, từ SDO/HMI), danh mục bùng nổ GOES/NOAA, và các bộ đã tiền xử lý như SWAN-SF. Mở, do NASA/NOAA công bố.",
@@ -1492,7 +1516,7 @@ const TOPICS = [
   }
 },
 {
-  id:"s03", n:58, src:"?", dom:"space", diff:3, risk:"thap", compute:"tb", know:"tb", mobile:false, vn:false,
+  id:"s03", n:58, src:"ai:claude-opus-5", dom:"space", diff:3, risk:"thap", compute:"tb", know:"tb", mobile:false, vn:false,
   t:"Phát hiện hành tinh ngoài hệ — đẹp, nhưng đọc phần cảnh báo trước khi chọn",
   q:"Đường cong sáng của các nhiệm vụ khảo sát có hàng trăm nghìn tín hiệu ứng viên, phần lớn là dương tính giả. <b>Bộ phân loại tự động còn đáng tin bao nhiêu ở vùng tín hiệu yếu</b> — đúng nơi các hành tinh nhỏ cỡ Trái Đất nằm?",
   data:"Kepler/K2 và TESS qua MAST — đường cong sáng và danh mục ứng viên, mở hoàn toàn, có thư viện Python tốt (lightkurve).",
@@ -1506,7 +1530,7 @@ const TOPICS = [
   }
 },
 {
-  id:"s04", n:59, src:"?", dom:"space", diff:4, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:true,
+  id:"s04", n:59, src:"ai:claude-opus-5", dom:"space", diff:4, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:true,
   t:"Nhiễu điện ly và sai số định vị: Việt Nam nằm đúng vùng tệ nhất hành tinh",
   q:"Việt Nam nằm gần dị thường điện ly xích đạo — vùng nhiễu điện ly mạnh nhất, và đó là nguồn sai số lớn nhất của GNSS. <b>Dự báo được nhiễu trước bao lâu, và điều đó cắt được bao nhiêu centimet sai số định vị?</b>",
   data:"Dữ liệu GNSS toàn cầu của IGS (mở), bản đồ TEC toàn cầu (IGS/CODE), chỉ số địa từ Kp/Dst từ GFZ và NOAA. Trạm khu vực Đông Nam Á nếu xin được — nhưng phải thiết kế để chạy được mà không cần.",
@@ -1520,7 +1544,7 @@ const TOPICS = [
   }
 },
 {
-  id:"s05", n:60, src:"?", dom:"space", diff:4, risk:"tb", compute:"cao", know:"tb", mobile:false, vn:true,
+  id:"s05", n:60, src:"ai:claude-opus-5", dom:"space", diff:4, risk:"tb", compute:"cao", know:"tb", mobile:false, vn:true,
   t:"Giám sát mất rừng và ngập lụt bằng ảnh radar: cảnh báo sớm khi trời có mây",
   q:"Ảnh quang học vô dụng đúng lúc cần nhất — mùa mưa, mùa bão, mùa đốt đều nhiều mây. Ảnh radar xuyên mây được: <b>nó phát hiện sớm hơn bao nhiêu ngày, và đánh đổi bằng bao nhiêu báo động giả?</b>",
   data:"Sentinel-1 SAR và Sentinel-2 quang học qua Copernicus hoặc Google Earth Engine — mở, miễn phí, và chạy được phần lớn trên hạ tầng của họ nên không cần GPU riêng. Nhãn tham chiếu: sản phẩm giám sát rừng toàn cầu và bản đồ ngập sau bão.",
@@ -1536,7 +1560,7 @@ const TOPICS = [
 
 /* ═══════════ KINH TẾ VĨ MÔ · NĂNG LƯỢNG ═══════════ */
 {
-  id:"m01", n:61, src:"?", dom:"macro", diff:4, risk:"tb", compute:"thap", know:"cao", mobile:false, vn:true,
+  id:"m01", n:61, src:"ai:claude-opus-5", dom:"macro", diff:4, risk:"tb", compute:"thap", know:"cao", mobile:false, vn:true,
   t:"Cú sốc lan truyền qua mạng thương mại: dự báo được, hay chỉ giải thích được sau?",
   q:"Khi một mắt xích chuỗi cung ứng toàn cầu bị chặn, cú sốc lan tới đâu và sau bao lâu? <b>Mô hình mạng dự báo được trước, hay chỉ hợp lý hoá được sau khi việc đã xảy ra?</b>",
   data:"UN Comtrade (dòng thương mại song phương theo mã hàng, chuỗi dài, mở), bảng vào–ra liên quốc gia (OECD ICIO / WIOD), chỉ số vận tải biển và giá hàng hoá. Mở, compute thấp.",
@@ -1550,7 +1574,7 @@ const TOPICS = [
   }
 },
 {
-  id:"m02", n:62, src:"?", dom:"macro", diff:4, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:true,
+  id:"m02", n:62, src:"ai:claude-opus-5", dom:"macro", diff:4, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:true,
   t:"Chuyển dịch năng lượng: giá của một điểm phần trăm sai số dự báo, tính bằng MWh",
   q:"Điện mặt trời và điện gió tăng nhanh, phụ tải tăng nhanh, xe điện đang vào. <b>Ở mức tái tạo nào thì hệ thống bắt đầu phải cắt giảm, và dự báo tốt hơn đẩy được ngưỡng đó lên bao nhiêu?</b>",
   data:"Phụ tải hệ thống và cơ cấu nguồn từ nguồn công bố công khai, Our World in Data / Ember cho chuỗi dài theo quốc gia, dữ liệu khí tượng tái phân tích (ERA5) cho phần tái tạo. Dữ liệu vận hành nội bộ là phần thưởng nếu xin được — <b>không</b> phải điều kiện.",
@@ -1564,7 +1588,7 @@ const TOPICS = [
   }
 },
 {
-  id:"m04", n:64, src:"?", dom:"macro", diff:3, risk:"thap", compute:"tb", know:"tb", mobile:false, vn:true,
+  id:"m04", n:64, src:"ai:claude-opus-5", dom:"macro", diff:3, risk:"thap", compute:"tb", know:"tb", mobile:false, vn:true,
   t:"Ánh sáng ban đêm thay được thống kê kinh tế tới cấp hành chính nào?",
   q:"Số liệu kinh tế cấp tỉnh và cấp huyện công bố chậm, thô, hoặc không có. <b>Ảnh vệ tinh thay thế được đến mức nào — và xuống tới cấp nào thì nó bắt đầu vô dụng?</b>",
   data:"VIIRS nighttime lights (mở, theo tháng), lớp phủ xây dựng (GHSL/WSF), Sentinel-2, cộng số liệu kinh tế cấp tỉnh công bố chính thức làm nhãn. Tất cả mở — không có rủi ro xin phép.",
@@ -1580,7 +1604,7 @@ const TOPICS = [
 
 /* ═══════════ MÔI TRƯỜNG — BỔ SUNG ═══════════ */
 {
-  id:"e01", n:65, src:"?", dom:"env", diff:4, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:true,
+  id:"e01", n:65, src:"ai:claude-opus-5", dom:"env", diff:4, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:true,
   t:"Dự báo lũ lưu vực sông: hạn dự báo hữu ích thật là bao lâu?",
   q:"Cảnh báo lũ chỉ có giá trị nếu đến sớm hơn thời gian cần để sơ tán. <b>Hạn dự báo hữu ích thật là bao nhiêu giờ — và mô hình học máy đẩy thêm được mấy giờ so với mô hình thuỷ văn?</b>",
   data:"Mực nước và lưu lượng trạm thuỷ văn (nguồn công bố công khai trong nước, cộng Global Runoff Data Centre cho lưu vực quốc tế), mưa vệ tinh GPM/CHIRPS, tái phân tích ERA5, DEM. Phần lớn mở.",
@@ -1594,7 +1618,7 @@ const TOPICS = [
   }
 },
 {
-  id:"e02", n:66, src:"?", dom:"env", diff:4, risk:"thap", compute:"tb", know:"cao", mobile:false, vn:true,
+  id:"e02", n:66, src:"ai:claude-opus-5", dom:"env", diff:4, risk:"thap", compute:"tb", know:"cao", mobile:false, vn:true,
   t:"Downscaling khí hậu: mô hình học máy có giữ được cực trị?",
   q:"Kịch bản khí hậu toàn cầu quá thô để lập kế hoạch cấp tỉnh. Học máy downscale rẻ hơn mô hình động lực rất nhiều — nhưng <b>nó có giữ được phần đuôi phân phối</b>, tức mưa cực đoan và nắng nóng cực đoan, thứ duy nhất người ta thật sự cần?",
   data:"CMIP6 (mở), tái phân tích ERA5, quan trắc trạm hoặc bộ mưa vệ tinh làm tham chiếu. Mở.",
@@ -1608,7 +1632,7 @@ const TOPICS = [
   }
 },
 {
-  id:"e03", n:67, src:"?", dom:"env", diff:3, risk:"thap", compute:"tb", know:"thap", mobile:true, vn:true,
+  id:"e03", n:67, src:"ai:claude-opus-5", dom:"env", diff:3, risk:"thap", compute:"tb", know:"thap", mobile:true, vn:true,
   t:"Bệnh cây từ ảnh điện thoại: bao nhiêu là do lá, bao nhiêu là do nền ảnh?",
   q:"Mô hình phân loại bệnh cây báo độ chính xác trên 99% trên bộ dữ liệu chuẩn. Nhưng ảnh trong bộ đó là <b>lá đã tách nền, chụp trong studio</b>. Trên ảnh nông dân chụp ngoài ruộng thì còn lại bao nhiêu?",
   data:"PlantVillage (mở, ảnh studio), PlantDoc và các bộ ảnh thực địa (mở), cộng <b>một tập nhỏ bạn tự chụp ở Việt Nam</b> — vài trăm ảnh là đủ làm tập kiểm định thật.",
@@ -1624,7 +1648,7 @@ const TOPICS = [
 
 /* ═══════════ Y TẾ LÂM SÀNG — BỔ SUNG ═══════════ */
 {
-  id:"k01", n:68, src:"?", dom:"clin", diff:4, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:false,
+  id:"k01", n:68, src:"ai:claude-opus-5", dom:"clin", diff:4, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:false,
   t:"Sàng lọc bằng tiếng ho: bao nhiêu là bệnh, bao nhiêu là cái micro?",
   q:"Nhiều nghiên cứu báo AUC cao khi sàng lọc bệnh hô hấp từ tiếng ho. Nhưng người bệnh và người khoẻ thường được ghi âm <b>ở nơi khác nhau, bằng thiết bị khác nhau</b>. Sau khi kiểm soát thiết bị và bối cảnh, còn lại bao nhiêu?",
   data:"Coswara, COUGHVID, ICBHI respiratory sound. Mở. Chọn bộ có đủ metadata thiết bị/bối cảnh để kiểm soát được — đây là tiêu chí chọn dataset, không phải chi tiết phụ.",
@@ -1640,7 +1664,7 @@ const TOPICS = [
 
 /* ═══════════ GIAO THÔNG · ĐÔ THỊ · VẬN HÀNH ═══════════ */
 {
-  id:"y01", n:70, src:"?", dom:"city", diff:4, risk:"tb", compute:"tb", know:"thap", mobile:false, vn:true,
+  id:"y01", n:70, src:"ai:claude-opus-5", dom:"city", diff:4, risk:"tb", compute:"tb", know:"thap", mobile:false, vn:true,
   t:"Dự báo nhu cầu gọi xe, đo bằng thời gian chờ chứ không bằng RMSE",
   q:"Mô hình dự báo nhu cầu theo vùng-thời gian được đánh giá bằng RMSE. Nhưng người dùng cảm nhận <b>thời gian chờ</b>, tài xế cảm nhận <b>thời gian rỗng</b>. Xếp hạng mô hình theo hai thước đo đó có giống nhau không?",
   data:"NYC TLC taxi trips (mở, nhiều năm, cực lớn), các bộ chia sẻ xe công khai. Không có dữ liệu Việt Nam mở — dùng dữ liệu quốc tế cho phương pháp và thảo luận riêng phần chuyển giao sang đô thị Việt Nam.",
@@ -1654,7 +1678,7 @@ const TOPICS = [
   }
 },
 {
-  id:"y02", n:71, src:"?", dom:"city", diff:3, risk:"tb", compute:"tb", know:"thap", mobile:false, vn:true,
+  id:"y02", n:71, src:"ai:claude-opus-5", dom:"city", diff:3, risk:"tb", compute:"tb", know:"thap", mobile:false, vn:true,
   t:"Một phút sai số ETA đáng bao nhiêu phút trễ giao hàng?",
   q:"Dự báo thời gian di chuyển được tối ưu theo MAE. Nhưng trong giao hàng, sai số ETA <b>truyền vào lịch trình và nhân lên</b>. Một phút MAE đáng bao nhiêu phút trễ ở cuối tuyến?",
   data:"OpenStreetMap cộng dữ liệu chuyến đi mở (TLC có thời gian và toạ độ), các bộ dữ liệu giao hàng công khai. Mở.",
@@ -1668,7 +1692,7 @@ const TOPICS = [
   }
 },
 {
-  id:"y03", n:72, src:"?", dom:"city", diff:4, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:true,
+  id:"y03", n:72, src:"ai:claude-opus-5", dom:"city", diff:4, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:true,
   t:"Giao hàng chặng cuối: dự báo thời gian dừng hay tối ưu tuyến, đầu tư vào đâu?",
   q:"Bài toán định tuyến giả định thời gian dừng ở mỗi điểm là hằng số. Thực tế nó biến động cực mạnh (chung cư, ngõ nhỏ, khách không có nhà). <b>Cải thiện dự báo thời gian dừng đáng bao nhiêu so với cải thiện thuật toán định tuyến?</b>",
   data:"Amazon Last Mile Routing Challenge (có chuỗi điểm dừng thật và thời gian), OpenStreetMap. Mở.",
@@ -1682,7 +1706,7 @@ const TOPICS = [
   }
 },
 {
-  id:"y04", n:73, src:"?", dom:"city", diff:3, risk:"tb", compute:"thap", know:"tb", mobile:false, vn:true,
+  id:"y04", n:73, src:"ai:claude-opus-5", dom:"city", diff:3, risk:"tb", compute:"thap", know:"tb", mobile:false, vn:true,
   t:"Điểm đen tai nạn: xếp hạng đổi thế nào khi tính cả phần báo thiếu?",
   q:"Điểm đen được xác định bằng cách đếm tai nạn đã báo cáo. Nhưng tai nạn nhẹ bị báo thiếu, và <b>báo thiếu không đều theo vùng</b>. Xếp hạng điểm đen thay đổi bao nhiêu khi mô hình hoá phần báo thiếu?",
   data:"Dữ liệu tai nạn mở (UK STATS19 là bộ tốt nhất và có chuỗi dài), OpenStreetMap cho đặc trưng hạ tầng, dữ liệu lưu lượng. Dữ liệu Việt Nam nếu tiếp cận được — nhưng thiết kế để chạy trên dữ liệu quốc tế.",
@@ -1696,7 +1720,7 @@ const TOPICS = [
   }
 },
 {
-  id:"y06", n:75, src:"?", dom:"city", diff:3, risk:"thap", compute:"tb", know:"tb", mobile:false, vn:true,
+  id:"y06", n:75, src:"ai:claude-opus-5", dom:"city", diff:3, risk:"thap", compute:"tb", know:"tb", mobile:false, vn:true,
   t:"Đảo nhiệt đô thị: ai trong thành phố đang chịu nóng nhiều nhất?",
   q:"Nhiệt độ trong một thành phố chênh nhau nhiều độ giữa các phường. <b>Đo được phân bố đó ở độ phân giải nào — và nó liên hệ thế nào với cây xanh, mặt nước, và mật độ xây dựng?</b>",
   data:"Ảnh nhiệt Landsat 8/9 (mở, chuỗi dài), Sentinel-2 cho lớp phủ và chỉ số thực vật, lớp phủ xây dựng GHSL, ranh giới hành chính. Tất cả mở — không có rủi ro xin phép.",
@@ -1712,7 +1736,7 @@ const TOPICS = [
 
 /* ═══════════ CÔNG NGHIỆP · BẢO TRÌ · MÔ PHỎNG ═══════════ */
 {
-  id:"g01", n:76, src:"?", dom:"mfg", diff:4, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:false,
+  id:"g01", n:76, src:"ai:claude-opus-5", dom:"mfg", diff:4, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:false,
   t:"Dự đoán tuổi thọ còn lại: mô phỏng thắng đẹp, dữ liệu máy thật thì sao?",
   q:"Bộ dữ liệu chuẩn của mảng dự đoán tuổi thọ còn lại là <b>dữ liệu mô phỏng</b>, và mô hình học sâu đã „giải” nó từ lâu. Trên dữ liệu máy thật — nhiễu, thiếu, chế độ hỏng không đầy đủ — còn lại bao nhiêu?",
   data:"C-MAPSS (mô phỏng, mở) làm tập „dễ”; các bộ thật: PHM data challenges, FEMTO bearing, XJTU-SY, MetroPT. Mở.",
@@ -1726,7 +1750,7 @@ const TOPICS = [
   }
 },
 {
-  id:"g04", n:79, src:"?", dom:"mfg", diff:4, risk:"thap", compute:"tb", know:"thap", mobile:false, vn:true,
+  id:"g04", n:79, src:"ai:claude-opus-5", dom:"mfg", diff:4, risk:"thap", compute:"tb", know:"thap", mobile:false, vn:true,
   t:"Kiểm tra bề mặt sản phẩm: gán bao nhiêu nhãn lỗi thì dừng?",
   q:"Nhà máy có rất nhiều ảnh sản phẩm tốt, rất ít ảnh lỗi, và loại lỗi mới xuất hiện liên tục. <b>Mô hình chỉ học từ mẫu tốt bắt được bao nhiêu — và bao nhiêu nhãn lỗi thì đáng đi gán?</b>",
   data:"MVTec AD, MVTec LOCO, VisA (mở, là chuẩn của mảng này), cộng ảnh tự chụp nếu tiếp cận được một xưởng.",
@@ -1740,7 +1764,7 @@ const TOPICS = [
   }
 },
 {
-  id:"g05", n:80, src:"?", dom:"mfg", diff:4, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:true,
+  id:"g05", n:80, src:"ai:claude-opus-5", dom:"mfg", diff:4, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:true,
   t:"Tối ưu tham số khi mỗi lần thử rất đắt — và khi nào thì đừng dùng Bayes",
   q:"Nhiều quy trình sản xuất có hàng chục tham số, mỗi lần thử tốn tiền hoặc giờ máy. <b>Tối ưu Bayes tiết kiệm được bao nhiêu lần thử so với thiết kế thí nghiệm cổ điển và so với tìm kiếm ngẫu nhiên — và khi nào nó không đáng dùng?</b>",
   data:"Benchmark tối ưu mở (HPOBench, các bộ thiết kế thí nghiệm công khai) hoặc mô phỏng quy trình có sẵn. Mở. Tiếp cận được một xưởng hay phòng lab thật là phần thưởng, không phải điều kiện.",
@@ -1756,7 +1780,7 @@ const TOPICS = [
 
 /* ═══════════ NHÂN QUẢ — BỔ SUNG ═══════════ */
 {
-  id:"u01", n:81, src:"?", dom:"causal", diff:4, risk:"tb", compute:"thap", know:"cao", mobile:false, vn:true,
+  id:"u01", n:81, src:"ai:claude-opus-5", dom:"causal", diff:4, risk:"tb", compute:"thap", know:"cao", mobile:false, vn:true,
   t:"Difference-in-differences: kết luận đảo chiều bao nhiêu lần khi giả định bị vi phạm?",
   q:"DiD là công cụ mặc định để đánh giá tác động chính sách. Nhưng nó đứng trên giả định <b>xu hướng song song</b> — thứ gần như không kiểm được. Khi giả định bị vi phạm ở mức thực tế, kết luận đảo chiều bao nhiêu lần?",
   data:"Dữ liệu chính sách công khai (chỉ số kinh tế – xã hội cấp tỉnh, Our World in Data, các bộ dữ liệu tái lập của bài báo kinh tế), cộng mô phỏng có kiểm soát. Mở, compute gần bằng không.",
@@ -1770,7 +1794,7 @@ const TOPICS = [
   }
 },
 {
-  id:"u02", n:82, src:"?", dom:"causal", diff:3, risk:"thap", compute:"thap", know:"tb", mobile:false, vn:false,
+  id:"u02", n:82, src:"ai:claude-opus-5", dom:"causal", diff:3, risk:"thap", compute:"thap", know:"tb", mobile:false, vn:false,
   t:"A/B test: bao nhiêu quyết định đã ra là dương tính giả vì xem kết quả sớm?",
   q:"Đội sản phẩm nào cũng theo dõi A/B test hằng ngày và dừng khi thấy „có ý nghĩa”. Kiểm định cổ điển <b>không cho phép điều đó</b>. Với cách làm thực tế, tỉ lệ dương tính giả thật là bao nhiêu — và phương pháp tuần tự cứu được bao nhiêu?",
   data:"Mô phỏng có kiểm soát là nguồn chính, cộng dữ liệu tương tác mở để lấy <b>phân phối thật</b> của chỉ số (dữ liệu click, dữ liệu recsys mở). Mở, compute gần bằng không.",
@@ -1784,7 +1808,7 @@ const TOPICS = [
   }
 },
 {
-  id:"u03", n:83, src:"?", dom:"causal", diff:4, risk:"thap", compute:"tb", know:"cao", mobile:false, vn:false,
+  id:"u03", n:83, src:"ai:claude-opus-5", dom:"causal", diff:4, risk:"thap", compute:"tb", know:"cao", mobile:false, vn:false,
   t:"Đánh giá ngoài chính sách: ước lượng nào sống được với log thật?",
   q:"Muốn biết một chính sách khuyến nghị hoặc định giá mới có tốt hơn không mà chưa dám bật thử. Đánh giá ngoài chính sách hứa làm được từ log cũ. <b>Với chất lượng log thực tế — xác suất hành động không được ghi, không gian hành động lớn, chồng lấn kém — ước lượng nào còn dùng được?</b>",
   data:"Open Bandit Dataset (có log kèm <b>xác suất hành động thật</b> — hiếm và quý vì cho bạn ground truth), các bộ recsys có tập ngẫu nhiên hoá (KuaiRec, Yahoo!R3), cộng mô phỏng. Mở.",
@@ -1800,7 +1824,7 @@ const TOPICS = [
 
 /* ═══════════ NLP & LLM — BỔ SUNG ═══════════ */
 {
-  id:"p02", n:85, src:"?", dom:"nlp", diff:3, risk:"tb", compute:"tb", know:"thap", mobile:false, vn:true,
+  id:"p02", n:85, src:"ai:claude-opus-5", dom:"nlp", diff:3, risk:"tb", compute:"tb", know:"thap", mobile:false, vn:true,
   t:"Nhận dạng tiếng nói tiếng Việt: WER chênh bao nhiêu giữa các phương ngữ?",
   q:"Hệ thống nhận dạng tiếng nói tiếng Việt được đánh giá bằng <b>một</b> con số WER trung bình. Con số đó che mất chênh lệch bao nhiêu giữa giọng Bắc, Trung, Nam — và giữa người trẻ với người lớn tuổi?",
   data:"Các bộ tiếng nói tiếng Việt công khai (Common Voice tiếng Việt, VIVOS, VLSP), cộng dữ liệu tự thu có đồng ý nếu cần bù nhóm thiếu. Mở.",
@@ -1814,7 +1838,7 @@ const TOPICS = [
   }
 },
 {
-  id:"p04", n:87, src:"?", dom:"nlp", diff:3, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:true,
+  id:"p04", n:87, src:"ai:claude-opus-5", dom:"nlp", diff:3, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:true,
   t:"Phát hiện thông tin sai tiếng Việt: mô hình học nội dung hay học nguồn phát?",
   q:"Mô hình phát hiện tin sai báo độ chính xác cao. Nhưng nếu tin sai trong tập dữ liệu phần lớn đến từ vài nguồn nhất định, mô hình chỉ cần học <b>nhận ra nguồn và văn phong</b>. Chia tập theo nguồn và theo thời gian thì còn lại bao nhiêu?",
   data:"Các bộ tin tiếng Việt công khai, dữ liệu kiểm chứng của tổ chức fact-check (kiểm license), cộng tập tự thu từ nguồn có API hợp lệ. <b>Phải kiểm điều khoản từng nguồn.</b>",
@@ -1828,7 +1852,7 @@ const TOPICS = [
   }
 },
 {
-  id:"p05", n:88, src:"?", dom:"nlp", diff:4, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:true,
+  id:"p05", n:88, src:"ai:claude-opus-5", dom:"nlp", diff:4, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:true,
   t:"Chuẩn hoá thuật ngữ y tế tiếng Việt — cửa vào y tế mà không cần dữ liệu bệnh nhân",
   q:"Cùng một chẩn đoán được viết mười kiểu khác nhau trong dữ liệu y tế Việt Nam. <b>Liên kết được về một mã chuẩn ở độ chính xác nào — và sai sót ở tầng này làm lệch thống kê hạ nguồn bao nhiêu?</b>",
   data:"Danh mục mã bệnh và danh mục thuốc công bố công khai, thuật ngữ y tế tiếng Việt từ tài liệu mở, cộng tập biến thể do bạn tạo và gán nhãn. <b>Không cần dữ liệu bệnh nhân</b> — đây là điểm mạnh về đạo đức, và là lý do đề tài này còn ở lại sau lượt loại của bản 7.",
@@ -1844,7 +1868,7 @@ const TOPICS = [
 
 /* ═══════════ ML SYSTEMS — BỔ SUNG ═══════════ */
 {
-  id:"v01", n:90, src:"?", dom:"sys", diff:4, risk:"thap", compute:"tb", know:"tb", mobile:true, vn:true,
+  id:"v01", n:90, src:"ai:claude-opus-5", dom:"sys", diff:4, risk:"thap", compute:"tb", know:"tb", mobile:true, vn:true,
   t:"Lượng tử hoá LLM: chất lượng tiếng Việt mất ở đâu, không phải mất bao nhiêu",
   q:"Lượng tử hoá được báo là „gần như không mất chất lượng” — đo bằng benchmark tiếng Anh. <b>Với tiếng Việt, mất mát tập trung ở đâu: dấu, từ ghép, kiến thức bản địa, hay suy luận nhiều bước?</b>",
   data:"Mô hình mở nhiều cỡ, các bộ đánh giá tiếng Việt công khai, cộng bộ thử do bạn thiết kế để tách bạch từng loại năng lực. Mở.",
@@ -1858,7 +1882,7 @@ const TOPICS = [
   }
 },
 {
-  id:"v02", n:91, src:"?", dom:"sys", diff:4, risk:"thap", compute:"tb", know:"thap", mobile:false, vn:false,
+  id:"v02", n:91, src:"ai:claude-opus-5", dom:"sys", diff:4, risk:"thap", compute:"tb", know:"thap", mobile:false, vn:false,
   t:"Tầng truy hồi của RAG: đường Pareto giữa độ trễ, chi phí, và chất lượng",
   q:"Hầu hết bài về RAG tối ưu chất lượng câu trả lời và bỏ qua chi phí. <b>Trên cùng một ngân sách độ trễ và tiền, cấu hình truy hồi nào thắng — và đường Pareto dốc ở đâu?</b>",
   data:"Các bộ đánh giá truy hồi và hỏi đáp mở (BEIR, MS MARCO, benchmark RAG), cộng một tập tài liệu tiếng Việt nếu muốn có góc VN. Mở.",
@@ -1872,7 +1896,7 @@ const TOPICS = [
   }
 },
 {
-  id:"v03", n:92, src:"?", dom:"sys", diff:3, risk:"thap", compute:"tb", know:"thap", mobile:false, vn:false,
+  id:"v03", n:92, src:"ai:claude-opus-5", dom:"sys", diff:3, risk:"thap", compute:"tb", know:"thap", mobile:false, vn:false,
   t:"Chi phí điện của huấn luyện: đo thật thay vì suy từ FLOPs",
   q:"Chi phí năng lượng và carbon của huấn luyện thường được <em>suy ra</em> từ số FLOPs. <b>Đo thật trên phần cứng thì lệch bao nhiêu — và trong các lựa chọn thiết kế, cái nào thật sự tiết kiệm?</b>",
   data:"Tự sinh — bạn đo chính các thí nghiệm của mình. Cộng dữ liệu cường độ carbon của lưới điện theo vùng và theo giờ (công bố công khai) cho phần phát thải. <b>Không có rủi ro xin phép dữ liệu.</b>",
@@ -1886,7 +1910,7 @@ const TOPICS = [
   }
 },
 {
-  id:"v04", n:93, src:"?", dom:"sys", diff:4, risk:"tb", compute:"tb", know:"thap", mobile:false, vn:false,
+  id:"v04", n:93, src:"ai:claude-opus-5", dom:"sys", diff:4, risk:"tb", compute:"tb", know:"thap", mobile:false, vn:false,
   t:"Agent dùng tool: tỉ lệ hoàn thành sụp theo số bước theo hình dạng nào?",
   q:"Agent gọi tool được báo là hoàn thành nhiệm vụ nhiều bước. <b>Tỉ lệ hoàn thành giảm theo số bước theo hình dạng nào — và lỗi nằm ở suy luận, ở gọi tool sai định dạng, hay ở không phục hồi được sau lỗi?</b>",
   data:"Các bộ đánh giá agent/tool-use công khai, cộng một môi trường mô phỏng do bạn dựng để kiểm soát được số bước và loại lỗi. Mở.",
@@ -1902,7 +1926,7 @@ const TOPICS = [
 
 /* ═══════════ AN NINH · GIAN LẬN · AI AN TOÀN ═══════════ */
 {
-  id:"x01", n:94, src:"?", dom:"sec", diff:4, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:true,
+  id:"x01", n:94, src:"ai:claude-opus-5", dom:"sec", diff:4, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:true,
   t:"Deepfake giọng nói tiếng Việt: mô hình có chống được công cụ mới?",
   q:"Bộ phát hiện giọng nói giả báo độ chính xác rất cao — trên các công cụ tổng hợp mà nó <em>đã thấy</em>. <b>Với công cụ mới, giọng mới, và tiếng Việt, còn lại bao nhiêu?</b>",
   data:"ASVspoof (chuẩn quốc tế, mở), các bộ audio deepfake mở, cộng dữ liệu bạn tự sinh bằng công cụ TTS công khai <b>trên giọng có đồng ý</b>. Mở.",
@@ -1916,7 +1940,7 @@ const TOPICS = [
   }
 },
 {
-  id:"x02", n:95, src:"?", dom:"sec", diff:3, risk:"thap", compute:"tb", know:"thap", mobile:false, vn:true,
+  id:"x02", n:95, src:"ai:claude-opus-5", dom:"sec", diff:3, risk:"thap", compute:"tb", know:"thap", mobile:false, vn:true,
   t:"Phát hiện văn bản do AI sinh: bền tới đâu, và báo sai với ai?",
   q:"Công cụ phát hiện văn bản do AI sinh đang được dùng để <b>phán xét người thật</b> trong trường học và tuyển dụng. Chúng bền tới đâu dưới viết lại đơn giản — và tỉ lệ báo sai có cao hơn với người không viết bằng tiếng mẹ đẻ không?",
   data:"Các bộ dữ liệu văn bản người/máy công khai, văn bản học thuật của người không phải bản ngữ (có bộ công khai), cộng tập tiếng Việt bạn tự dựng. Mở.",
@@ -1930,7 +1954,7 @@ const TOPICS = [
   }
 },
 {
-  id:"x03", n:96, src:"?", dom:"sec", diff:4, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:false,
+  id:"x03", n:96, src:"ai:claude-opus-5", dom:"sec", diff:4, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:false,
   t:"Phân loại lưu lượng mã hoá: mô hình học nội dung hay học hạ tầng?",
   q:"Phân loại ứng dụng và phát hiện tấn công từ lưu lượng mã hoá báo độ chính xác rất cao. Nhưng đặc trưng thường gồm địa chỉ, cổng, và mẫu thời gian <b>đặc thù của môi trường thu thập</b>. Sau khi bỏ những đặc trưng chỉ định danh hạ tầng, còn lại bao nhiêu?",
   data:"Các bộ lưu lượng công khai (CIC, UNSW-NB15, ISCX VPN-nonVPN) và các bộ mới hơn có nhiều môi trường thu thập. Mở.",
@@ -1944,7 +1968,7 @@ const TOPICS = [
   }
 },
 {
-  id:"x04", n:97, src:"?", dom:"sec", diff:4, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:false,
+  id:"x04", n:97, src:"ai:claude-opus-5", dom:"sec", diff:4, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:false,
   t:"Mô hình tải về có cửa hậu: quét được với ngân sách thực tế không?",
   q:"Mọi đội đều tải mô hình pretrained về dùng. <b>Với ngân sách một buổi chiều và không có dữ liệu huấn luyện gốc, phát hiện được cửa hậu không — và tỉ lệ báo động giả bao nhiêu?</b>",
   data:"Tự sinh — bạn cài cửa hậu vào mô hình mở theo các kỹ thuật đã công bố, rồi trộn với mô hình sạch để tạo tập kiểm định. Cộng benchmark backdoor công khai nếu có.",
@@ -1960,7 +1984,7 @@ const TOPICS = [
 
 /* ═══════════ GIÁO DỤC — BỔ SUNG ═══════════ */
 {
-  id:"z01", n:99, src:"?", dom:"misc", diff:3, risk:"tb", compute:"tb", know:"thap", mobile:false, vn:true,
+  id:"z01", n:99, src:"ai:claude-opus-5", dom:"misc", diff:3, risk:"tb", compute:"tb", know:"thap", mobile:false, vn:true,
   t:"Chấm tự động bài luận tiếng Việt: chấm nội dung hay chấm độ dài?",
   q:"Hệ thống chấm tự động báo tương quan cao với điểm giáo viên. <b>Bao nhiêu phần tương quan đó chỉ đến từ độ dài bài và mật độ từ vựng — và mô hình có bị lừa bởi bài dài mà rỗng không?</b>",
   data:"Bộ chấm luận công khai tiếng Anh (ASAP và tương tự) để dựng phương pháp, cộng một tập bài luận tiếng Việt bạn tự thu <b>có đồng ý và có nhiều người chấm</b>. Kiểm license.",
@@ -1974,7 +1998,7 @@ const TOPICS = [
   }
 },
 {
-  id:"z02", n:100, src:"?", dom:"misc", diff:3, risk:"tb", compute:"thap", know:"thap", mobile:false, vn:true,
+  id:"z02", n:100, src:"ai:claude-opus-5", dom:"misc", diff:3, risk:"tb", compute:"thap", know:"thap", mobile:false, vn:true,
   t:"Dự báo bỏ học: hiệu chuẩn theo phân nhóm và can thiệp có ngân sách",
   q:"Mô hình dự báo sinh viên có nguy cơ bỏ học được dùng để phân bổ hỗ trợ. <b>Nếu mô hình hiệu chuẩn kém ở một nhóm thì hỗ trợ đi sai chỗ — và với ngân sách chỉ đủ hỗ trợ N người, cách xếp hạng nào giữ lại được nhiều người nhất?</b>",
   data:"OULAD (Open University Learning Analytics — mở, đầy đủ, chuỗi theo tuần), các bộ dữ liệu học tập công khai, cộng dữ liệu trường bạn nếu xin được và ẩn danh được.",
@@ -1990,7 +2014,7 @@ const TOPICS = [
 
 /* ═══════════ HỢP NHẤT TỪ NHÁNH RÀ SOÁT 28/07 ═══════════ */
 {
-  id:"t39", n:101, src:"?", dom:"ts", diff:3, risk:"thap", compute:"thap", know:"thap", mobile:false, vn:false,
+  id:"t39", n:101, src:"ai:claude-opus-5", dom:"ts", diff:3, risk:"thap", compute:"thap", know:"thap", mobile:false, vn:false,
   t:"Phát hiện bất thường chuỗi thời gian: bao nhiêu „tiến bộ” là do giao thức chấm điểm?",
   q:"Gần như cả kỷ nguyên học sâu của mảng này chấm điểm bằng <b>point-adjust</b>: chỉ cần cảnh báo trúng <em>một</em> điểm bất kỳ trong đoạn bất thường thì cả đoạn được tính là phát hiện đúng, rồi mới tính F1. Kim và cộng sự (AAAI 2022) chỉ ra hệ quả: <b>một bộ chấm điểm ngẫu nhiên cũng đạt F1 ngang SOTA</b> dưới giao thức đó. Vậy sau khi bỏ point-adjust, còn lại bao nhiêu tiến bộ thật?",
   data:"UCR Anomaly Archive (Wu & Keogh) và TSB-AD làm tập lành mạnh; các benchmark cũ bị phê phán (SMAP, MSL, SMD, SWaT) giữ lại làm đối chứng để đo chính phần chênh lệch. Mở hoàn toàn, dữ liệu nhẹ.",
@@ -2004,7 +2028,7 @@ const TOPICS = [
   }
 },
 {
-  id:"t40", n:102, src:"?", dom:"nlp", diff:3, risk:"thap", compute:"tb", know:"thap", mobile:false, vn:true,
+  id:"t40", n:102, src:"ai:claude-opus-5", dom:"nlp", diff:3, risk:"thap", compute:"tb", know:"thap", mobile:false, vn:true,
   t:"Lỗi nhận dạng tiếng nói tiếng Việt lan xuống tác vụ sau: giảm một điểm WER đáng bao nhiêu?",
   q:"Mọi bài ASR tiếng Việt báo cáo WER. Nhưng không ai tiêu thụ WER — người ta tiêu thụ kết quả của tác vụ phía sau. <b>Giảm WER một điểm cải thiện được bao nhiêu ở phân loại ý định, trích xuất thông tin, tóm tắt cuộc gọi?</b> Và quan trọng hơn: <b>loại lỗi nào tốn kém, loại nào vô hại?</b>",
   data:"PhoWhisper (VinAI, ICLR 2024 Tiny Paper, arXiv 2406.02555) — năm cỡ từ tiny đến large, mở trên HuggingFace, fine-tune từ Whisper trên 844 giờ tiếng Việt. Tập kiểm định: VIVOS, phần tiếng Việt của Common Voice, VLSP 2020 Task-1/Task-2. Mở hoàn toàn, không cần xin phép.",
@@ -2018,7 +2042,7 @@ const TOPICS = [
   }
 },
 {
-  id:"a11", n:103, src:"?", dom:"apply", diff:4, risk:"tb", compute:"tb", know:"thap", mobile:true, vn:true,
+  id:"a11", n:103, src:"ai:claude-opus-5", dom:"apply", diff:4, risk:"tb", compute:"tb", know:"thap", mobile:true, vn:true,
   t:"Trích xuất chứng từ tiếng Việt: bao nhiêu phần trăm hoá đơn máy đọc xong mà không cần người sửa?",
   q:"Kế toán vẫn gõ tay từng hoá đơn. Câu hỏi bán được không phải „F1 trích xuất bằng bao nhiêu” mà là <b>tỉ lệ chứng từ đi thẳng qua không cần người chạm vào</b> — ở một mức sai sót cho phép. <b>Con số đó là bao nhiêu, và ảnh chụp bằng điện thoại làm nó tụt bao nhiêu?</b>",
   data:"<b>MC-OCR 2021</b> (thi tại hội nghị RIVF — lưu ý là RIVF, không phải VLSP): <b>2.436 ảnh hoá đơn Việt Nam chụp bằng điện thoại</b>, hai tác vụ gồm chấm chất lượng ảnh và trích xuất bốn trường SELLER / SELLER ADDRESS / TIMESTAMP / TOTAL COST; có bản trên Kaggle. Đối chiếu quốc tế: SROIE, CORD. Bổ sung ảnh tự chụp để mở rộng dải chất lượng. Rủi ro trung bình: bốn trường của MC-OCR hẹp hơn nhu cầu thật, phần mở rộng phải tự gán nhãn.",
@@ -2032,7 +2056,7 @@ const TOPICS = [
   }
 },
 {
-  id:"t41", n:104, src:"?", dom:"sys", diff:3, risk:"thap", compute:"tb", know:"thap", mobile:false, vn:false,
+  id:"t41", n:104, src:"ai:claude-opus-5", dom:"sys", diff:3, risk:"thap", compute:"tb", know:"thap", mobile:false, vn:false,
   t:"Foundation model cho dữ liệu bảng: thắng GBDT ở đâu, và trả giá bằng gì lúc suy luận?",
   q:"TabPFN v2 lên <em>Nature</em> tháng 1/2025 với tuyên bố thắng GBDT trên bảng nhỏ mà không cần huấn luyện. Nhưng nó bị chặn ở <b>10.000 mẫu, 500 đặc trưng, 10 lớp</b>, và <b>chi phí suy luận vượt cả thời gian huấn luyện cộng suy luận của XGBoost ngay ở context nhỏ</b>. <b>Điểm hoà vốn thật — theo cả độ chính xác lẫn tổng chi phí tính toán — nằm ở đâu?</b>",
   data:"OpenML-CC18 / AutoML Benchmark và TabArena — hàng chục dataset bảng chuẩn, mở hoàn toàn. Trọng số TabPFN v2 và TabPFN-2.5 mở trên HuggingFace. Rủi ro dữ liệu bằng 0.",
@@ -2048,182 +2072,182 @@ const TOPICS = [
 
 /* ═══════════ DI TRUYỀN NGƯỜI · HỆ GEN ═══════════ */
 {
-  id:"h01", n:105, src:"?", dom:"gen", diff:4, risk:"tb", compute:"tb", know:"cao", mobile:false, vn:true,
+  id:"h01", n:105, src:"ai:claude-opus-5", dom:"gen", diff:4, risk:"tb", compute:"tb", know:"cao", mobile:false, vn:true,
   t:"Điểm rủi ro đa gen chuyển sang người Việt được bao nhiêu?",
-  q:"Điểm rủi ro đa gen (PRS) được xây gần hết trên tổ tiên châu Âu, và khả năng dự đoán tụt mạnh khi áp sang tổ tiên khác. <b>Tụt bao nhiêu với tổ tiên Đông Á, và phương pháp đa tổ tiên nào cứu được bao nhiêu?</b>",
+  q:"Mức tụt của PRS khi sang tổ tiên Đông Á <b>đã được định lượng rồi</b> — độ chính xác tương đối thấp hơn khoảng 2,5 lần, và đã có đánh giá riêng cho quần thể Đông Á trên nhiều bệnh. Nên đừng hỏi lại câu đó. Câu còn mở: tần số alen của người Kinh <b>khác đáng kể so với mọi quần thể Đông Á khác</b>, nên dùng panel Đông Á gộp thay cho panel riêng người Kinh thì <b>bao nhiêu phần trăm người bị đổi nhóm phân vị rủi ro</b> — không phải R² đổi bao nhiêu?",
   data:"PGS Catalog và GWAS Catalog (bộ trọng số và summary statistics — mở hoàn toàn, tải trực tiếp), 1000 Genomes và các panel tham chiếu Đông Á (mở). UK Biobank / Biobank Japan nếu xin được, nhưng <b>phải thiết kế để chạy được mà không cần</b>: đường đi không credential là mô phỏng kiểu hình trên panel tham chiếu.",
-  contrib:"Định lượng sụt giảm PRS theo khoảng cách tổ tiên cho dân số Đông Á, so các phương pháp đa tổ tiên trên cùng điều kiện, và <b>phân rã nguyên nhân</b>: do khác tần số alen, do khác cấu trúc liên kết, hay do khác hiệu ứng thật.",
+  contrib:"Đo mức <b>đổi phân loại rủi ro</b> — ai rơi vào nhóm phân vị cao nhất — khi đổi panel tham chiếu từ Đông Á gộp sang Kinh, thay vì đo lại R² theo tổ tiên; cộng đường cong cần bao nhiêu mẫu Kinh trong panel thì phân loại mới ổn định. Phân loại là thứ đi vào quyết định lâm sàng, R² thì không.",
   d:{
-    method:"Tính PRS từ trọng số công bố trên các nhóm tổ tiên của panel tham chiếu. Vì không có kiểu hình thật cho người Việt: mô phỏng kiểu hình dưới mô hình di truyền có kiểm soát (heritability và kiến trúc di truyền đặt trước), rồi đo R² theo tổ tiên — cách này cho ground truth mà dữ liệu thật không có. So các phương pháp (PRS-CSx, LDpred2, clumping+thresholding). Phân rã bằng cách lần lượt cố định tần số alen, cố định LD, cố định hiệu ứng.",
-    why:"Đây là một trong những bất bình đẳng cụ thể và đo được nhất trong y học chính xác: công cụ xây cho một nhóm dân số rồi bán cho cả thế giới. Và nó cực hợp nền xác suất của bạn — PRS là một tổng có trọng số, toàn bộ vấn đề nằm ở LD và tần số alen, tức thống kê di truyền thật chứ không phải gọi <code>.fit()</code>. Cùng khuôn „hiệu năng sụp khi đổi quần thể” của #8, #11, #13 nhưng ở tầng di truyền người.",
+    method:"Tính PRS từ trọng số công bố trên các nhóm tổ tiên của panel tham chiếu. Vì không có kiểu hình thật cho người Việt: mô phỏng kiểu hình dưới mô hình di truyền có kiểm soát (heritability và kiến trúc di truyền đặt trước), rồi đo R² theo tổ tiên — cách này cho ground truth mà dữ liệu thật không có. So các phương pháp (PRS-CSx, LDpred2, clumping+thresholding). Phân rã bằng cách lần lượt cố định tần số alen, cố định LD, cố định hiệu ứng. <b>Thanh sai số (rubric R5):</b> khoảng tin cậy bootstrap cho tỉ lệ người đổi phân vị, và lặp mô phỏng ít nhất 5 lần với hạt giống khác nhau — kết luận là một chênh lệch tỉ lệ nên nó bắt buộc phải có thanh sai số.",
+    why:"Đây là một trong những bất bình đẳng cụ thể và đo được nhất trong y học chính xác: công cụ xây cho một nhóm dân số rồi bán cho cả thế giới. Và nó cực hợp nền xác suất của bạn — PRS là một tổng có trọng số, toàn bộ vấn đề nằm ở LD và tần số alen, tức thống kê di truyền thật chứ không phải gọi <code>.fit()</code>. Cùng khuôn „hiệu năng sụp khi đổi quần thể” của #8, #11, #13 nhưng ở tầng di truyền người. <b>Công trình gần nhất (B8, tra ngày 31/07/2026):</b> khoảng tụt theo tổ tiên và việc so các phương pháp đa tổ tiên (PRS-CSx, LDpred2) <b>đã được công bố</b>, kể cả phần quy cho khác biệt tần số alen và LD — nên phiên bản đầu của đề tài này đã bị y văn làm xong. Chỗ chen vào còn lại là mức <em>quần thể con</em>: người Kinh lệch khỏi các quần thể Đông Á khác, và không ai đo việc đó đổi phân loại rủi ro bao nhiêu. <b>Verdict rubric: PHẢI SIẾT LẠI → đã siết, đây là bản đã đổi câu hỏi.</b>",
     risk:"⚠️ Gánh nặng di truyền quần thể CAO — cần hiểu LD, tần số alen, heritability đủ để không phát biểu sai. Rủi ro dữ liệu thật: <b>không có bộ genotype kèm kiểu hình của người Việt công khai</b>, nên phần kết luận cho người Việt là <em>ngoại suy từ panel Đông Á cộng mô phỏng</em> — nói rõ điều đó, đừng hứa kết quả trên dân số Việt thật.",
     learn:"Di truyền quần thể, LD, cấu trúc PRS, heritability. ~6 tuần. Đây là chi phí thật và cao.",
     spike:"Ngày 1–2: tải một bộ trọng số từ PGS Catalog, tính điểm cho toàn bộ mẫu 1000 Genomes, vẽ phân bố điểm theo nhóm tổ tiên. <b>Nếu phân bố lệch hẳn giữa châu Âu và Đông Á, bạn đã thấy vấn đề bằng mắt ngay ngày 2</b> — và đó là hình mở đầu của luận văn."
   }
 },
 {
-  id:"h02", n:106, src:"?", dom:"gen", diff:4, risk:"thap", compute:"tb", know:"cao", mobile:false, vn:false,
+  id:"h02", n:106, src:"ai:claude-opus-5", dom:"gen", diff:4, risk:"thap", compute:"tb", know:"cao", mobile:false, vn:false,
   t:"Dự đoán biến thể gây bệnh: bao nhiêu bộ dự đoán đang vòng tròn với ClinVar?",
-  q:"Các bộ dự đoán tác động biến thể missense báo AUC rất cao trên ClinVar. Nhưng nhiều bộ được huấn luyện trên chính ClinVar hoặc dữ liệu dẫn xuất từ nó, và các biến thể <b>cùng một gen</b> thì tương quan mạnh. Sau khi chia tập theo gen và theo phiên bản ClinVar, còn lại bao nhiêu?",
+  q:"Vòng tròn trong bộ dự đoán biến thể <b>đã được đặt tên và đã có cách chữa</b>: vòng tròn loại 1, vòng tròn ở mức gen, chia theo gen, và cắt theo mốc thời gian ClinVar đều đã thành khuyến nghị công bố. Nên câu „có vòng tròn không” đã có đáp án. Câu còn mở: đổi bộ dự đoán thì <b>bao nhiêu phần trăm biến thể đổi hạng ACMG cuối cùng</b> — thước đo nhà di truyền thật sự tiêu thụ, chứ không phải AUC?",
   data:"ClinVar — mở, và <b>có lưu trữ theo phiên bản</b>, đây là chi tiết quyết định vì nó cho bạn một tập kiểm định theo thời gian. gnomAD cho tần số alen. dbNSFP cho điểm của hàng chục bộ dự đoán đã tính sẵn. Mở hoàn toàn.",
-  contrib:"Giao thức đánh giá chống vòng tròn: chia theo gen, <b>và chia theo thời gian</b> bằng lịch sử phiên bản ClinVar (huấn luyện trên phiên bản cũ, kiểm trên biến thể được thêm sau) — cộng bảng mức thổi phồng cho các bộ phổ biến.",
+  contrib:"Chuyển thước đo từ AUC sang <b>tỉ lệ biến thể đổi phân loại ACMG</b> khi đổi bộ dự đoán, đo trên tập đã chống vòng tròn theo đúng chuẩn hiện hành — cộng một lượt đếm trong y văn: bao nhiêu bài thực sự áp chia-theo-gen mà hướng dẫn đã khuyến nghị, và mức thổi phồng của những bài không áp.",
   d:{
-    method:"Dùng điểm đã công bố sẵn trong dbNSFP, <b>không train lại</b> — nhờ đó compute thấp bất thường so với giá trị. Ba cách chia: random theo biến thể / theo gen / theo phiên bản ClinVar. Đo AUC-PR (ClinVar lệch lớp nặng nên ROC-AUC sẽ nói dối). Phép thử quyết định: hiệu năng trên <em>gen chưa từng có biến thể nào trong tập huấn luyện</em> — đúng chế độ dùng thật trong lâm sàng.",
-    why:"„Hoàng đế cởi trần” ở một mảng có hậu quả lâm sàng trực tiếp: điểm của các bộ này được dùng làm bằng chứng trong quy trình phân loại biến thể ACMG. Cùng khuôn rò rỉ tương đồng của #9, nhưng ở đây rò rỉ đi qua <em>gen</em> và qua <em>thời gian</em>, hai trục cùng lúc.",
+    method:"Dùng điểm đã công bố sẵn trong dbNSFP, <b>không train lại</b> — nhờ đó compute thấp bất thường so với giá trị. Ba cách chia: random theo biến thể / theo gen / theo phiên bản ClinVar. Đo AUC-PR (ClinVar lệch lớp nặng nên ROC-AUC sẽ nói dối). Phép thử quyết định: hiệu năng trên <em>gen chưa từng có biến thể nào trong tập huấn luyện</em> — đúng chế độ dùng thật trong lâm sàng. <b>Thanh sai số (rubric R5):</b> khoảng tin cậy AUC-PR bằng bootstrap <em>theo gen</em>, không bootstrap theo biến thể — biến thể cùng gen là cùng nhóm, bootstrap sai đơn vị sẽ cho khoảng tin cậy hẹp giả.",
+    why:"„Hoàng đế cởi trần” ở một mảng có hậu quả lâm sàng trực tiếp: điểm của các bộ này được dùng làm bằng chứng trong quy trình phân loại biến thể ACMG. Cùng khuôn rò rỉ tương đồng của #9, nhưng ở đây rò rỉ đi qua <em>gen</em> và qua <em>thời gian</em>, hai trục cùng lúc. <b>Công trình gần nhất (B8, tra ngày 31/07/2026):</b> đã có hướng dẫn công bố về cách phát hành một bộ dự đoán biến thể, một benchmark 65 bộ dự đoán, và <b>chuẩn cắt dữ liệu ClinVar theo mốc thời gian đã thành thực hành phổ biến</b> — tức cả hai đóng góp mà bản đầu đề ra (chia theo gen, chia theo phiên bản) đều đã có. Chỗ còn mở là chuyển sang thước đo quyết định: hạng ACMG, không phải AUC. <b>Verdict rubric: PHẢI SIẾT LẠI → đã siết.</b>",
     risk:"Gánh nặng di truyền y học CAO — cần hiểu phân loại ACMG và khái niệm gen/transcript đủ để không nói sai. Rủi ro „đã có người làm”: mảng này <b>đã có phê phán về circularity</b>, nên đọc trước; chỗ chen vào là phần chia theo phiên bản ClinVar, vốn cần dựng lịch sử mà ít ai làm.",
     learn:"Di truyền y học cơ bản, ClinVar và tiêu chuẩn ACMG, biến thể missense. ~5 tuần.",
     spike:"Ngày 1–2: tải hai phiên bản ClinVar cách nhau 3 năm, đếm số biến thể được thêm mới và số biến thể <em>đổi phân loại</em>. <b>Hai con số đó quyết định bạn có tập kiểm định theo thời gian hay không</b> — làm trước khi viết một dòng model."
   }
 },
 {
-  id:"h03", n:107, src:"?", dom:"gen", diff:3, risk:"tb", compute:"thap", know:"tb", mobile:false, vn:true,
+  id:"h03", n:107, src:"ai:claude-opus-5", dom:"gen", diff:3, risk:"tb", compute:"thap", know:"tb", mobile:false, vn:true,
   t:"Dược lý di truyền: tần số alen người Việt đổi khuyến nghị liều bao nhiêu?",
   q:"Khuyến nghị liều theo kiểu gen được xây trên tần số alen của dân số châu Âu, và tần số ở Đông Á khác đáng kể. <b>Bao nhiêu phần trăm bệnh nhân Việt Nam sẽ nhận khuyến nghị khác nếu dùng tần số alen của chính dân số mình?</b>",
-  data:"gnomAD và các cơ sở tần số alen theo dân số (mở), hướng dẫn CPIC và PharmGKB (mở, có bảng kiểu gen → khuyến nghị). Tần số alen Đông Á / Việt Nam từ các công bố — <b>kiểm nguồn từng con số</b>, đây là chỗ dễ trích sai nhất.",
+  data:"gnomAD và các cơ sở tần số alen theo dân số (mở), hướng dẫn CPIC và PharmGKB (mở, có bảng kiểu gen → khuyến nghị). Tần số alen Đông Á / Việt Nam từ các công bố — <b>kiểm nguồn từng con số</b>, đây là chỗ dễ trích sai nhất. Và một mốc quan trọng tra được: <b>đã có công bố về bản đồ biến thể dược lý di truyền của người Kinh</b>, trong đó tần số alen của người Kinh <em>khác đáng kể so với mọi quần thể Đông Á khác</em> (Hán, Đại, Nhật gần nhau, Kinh thì lệch) — đây là nền cho câu hỏi và là nguồn nên tra trước ngày 1.",
   contrib:"Bảng „khuyến nghị đổi bao nhiêu” theo từng cặp thuốc–gen khi thay tần số alen tham chiếu, cộng ước lượng <b>số bệnh nhân bị ảnh hưởng trên mỗi 1.000 lượt kê đơn</b> — con số bệnh viện đọc được.",
   d:{
     method:"Dựng bảng kiểu gen → kiểu hình chuyển hoá theo hướng dẫn CPIC. Mô phỏng dân số theo hai bộ tần số alen (châu Âu vs Đông Á), tính phân bố kiểu hình chuyển hoá, map sang khuyến nghị liều, đo tỉ lệ khác biệt và xác định thuốc nào lệch nhiều nhất. <b>Lan truyền bất định</b>: nguồn tần số alen cho người Việt thưa, nên khoảng tin cậy của tần số phải đi vào kết luận cuối chứ không bị bỏ giữa đường.",
-    why:"Compute gần bằng không, dữ liệu mở, toán đơn giản — nhưng kết luận thì dùng được ngay và chưa ai làm cho Việt Nam. Đây là loại đề tài mà giá trị nằm hết ở việc <em>đặt đúng câu hỏi</em>, không ở độ phức tạp mô hình, và vì thế rất dễ bảo vệ.",
+    why:"Compute gần bằng không, dữ liệu mở, toán đơn giản — nhưng kết luận thì dùng được ngay và chưa ai làm cho Việt Nam. Đây là loại đề tài mà giá trị nằm hết ở việc <em>đặt đúng câu hỏi</em>, không ở độ phức tạp mô hình, và vì thế rất dễ bảo vệ. <b>Công trình gần nhất (B8, tra ngày 31/07/2026):</b> khuôn „tần số alen khác nhau thì khuyến nghị đổi” <b>đã được làm cho quần thể khác</b> (ví dụ so người Hmong với Đông Á gộp), nhưng <b>chưa làm cho người Kinh</b> — và chính việc người Kinh lệch khỏi các quần thể Đông Á khác làm câu hỏi này còn mở thật. Thước đo „bao nhiêu bệnh nhân trên 1.000 lượt kê đơn” là của riêng đề tài này. <b>Verdict rubric: ĐI ĐƯỢC CÓ ĐIỀU KIỆN — đề tài mạnh nhất trong 13 đề tài của bản 8, và là đề tài duy nhất mà B8 tra xong vẫn còn khoảng trống rõ.</b> Neo cụ thể để bắt đầu: HLA-B*15:02 ở mức 5–15% trong các quần thể gồm Việt Nam (liên quan carbamazepine), và CYP2C19 mất chức năng ở mức 15–20% trở lên ở Đông Á (liên quan clopidogrel).",
     risk:"Rủi ro thật: bị chê „chỉ là tính toán, không có học máy”. Chữa bằng hai phần có nội dung thống kê thật — suy kiểu hình chuyển hoá từ kiểu gen phức tạp (nhiều biến thể, biến thiên số bản sao gen), và lan truyền bất định của tần số alen thưa vào kết luận. Nếu bỏ hai phần đó thì lời chê là đúng.",
     learn:"Dược lý di truyền, kiểu hình chuyển hoá, hướng dẫn CPIC. ~3 tuần.",
     spike:"Ngày 1: lấy tần số alen CYP2C19 cho châu Âu và Đông Á từ gnomAD, tính tỉ lệ người chuyển hoá kém ở hai nhóm. <b>Nếu chênh lệch lớn, bạn có kết quả chính trong một buổi sáng.</b>"
   }
 },
 {
-  id:"h04", n:108, src:"?", dom:"gen", diff:3, risk:"thap", compute:"tb", know:"tb", mobile:false, vn:true,
+  id:"h04", n:108, src:"ai:claude-opus-5", dom:"gen", diff:3, risk:"thap", compute:"tb", know:"tb", mobile:false, vn:true,
   t:"Panel tham chiếu thiếu Đông Nam Á: suy luận tổ tiên lệch thế nào?",
   q:"Công cụ suy luận tổ tiên dựa vào panel tham chiếu, và các panel phổ biến có rất ít mẫu Đông Nam Á. <b>Một mẫu người Việt bị gán về nhóm nào — và độ lệch đó truyền vào phân tích hạ nguồn bao nhiêu?</b>",
   data:"1000 Genomes, HGDP, SGDP (mở hoàn toàn). Không cần credential, không cần xin phép.",
   contrib:"Đo độ lệch suy luận tổ tiên khi panel thiếu nhóm đích, rồi <b>truyền độ lệch đó xuống hiệu chỉnh PRS</b> — nối một lỗi kỹ thuật với một hậu quả đo được, thay vì chỉ báo cáo lỗi.",
   d:{
-    method:"PCA và ADMIXTURE, cộng một bộ suy luận tổ tiên hiện đại. Thí nghiệm can thiệp: <b>loại bỏ có kiểm soát</b> nhóm gần đích khỏi panel, xem mẫu bị chiếu về đâu và lệch bao nhiêu. Rồi truyền xuống: dùng thành phần chính đã lệch để hiệu chỉnh PRS, đo R² thay đổi.",
-    why:"Nối trực tiếp với #105 — và loại thí nghiệm „bỏ nhóm khỏi panel rồi xem gán về đâu” là can thiệp sạch, cho kết quả không thể tranh cãi. Dữ liệu mở, compute vừa, gánh nặng nền thấp hơn #105 rõ rệt, nên đây là cửa vào nhóm di truyền dễ nhất.",
+    method:"PCA và ADMIXTURE, cộng một bộ suy luận tổ tiên hiện đại. Thí nghiệm can thiệp: <b>loại bỏ có kiểm soát</b> nhóm gần đích khỏi panel, xem mẫu bị chiếu về đâu và lệch bao nhiêu. Rồi truyền xuống: dùng thành phần chính đã lệch để hiệu chỉnh PRS, đo R² thay đổi. <b>Thanh sai số (rubric R5):</b> lặp thí nghiệm loại-bỏ-nhóm với ít nhất 5 cách lấy mẫu panel khác nhau và báo cáo khoảng biến thiên của khoảng dịch chuyển — một lần chiếu không kết luận được gì.",
+    why:"Nối trực tiếp với #105 — và loại thí nghiệm „bỏ nhóm khỏi panel rồi xem gán về đâu” là can thiệp sạch, cho kết quả không thể tranh cãi. Dữ liệu mở, compute vừa, gánh nặng nền thấp hơn #105 rõ rệt, nên đây là cửa vào nhóm di truyền dễ nhất. <b>B8 chưa chạy (rubric mục 5b) — nói rõ thay vì để trống:</b> trong lượt chấm ngày 31/07/2026 tôi tra công trình gần nhất cho 11 trong 13 đề tài của bản 8; đề tài này là một trong <b>hai đề tài chưa tra</b>. Vì 9 trong 11 đề tài đã tra đều ra „y văn làm rồi”, xác suất tiên nghiệm ở đây <em>không</em> nên coi là thấp. Chạy B8 trước khi đưa vào shortlist, không phải sau.",
     risk:"⚠️ Tác động thật ở mức 3 và tôi để nguyên: đây là bài toán hạ tầng phương pháp, người dùng cuối là nhà nghiên cứu chứ không phải bệnh nhân. <b>Nếu bạn cần tác động cao hơn thì #105 hoặc #107 là chỗ nên đi.</b> Rủi ro thứ hai: kết luận „panel thiếu thì lệch” là điều đoán được — giá trị phải nằm ở phần định lượng và phần truyền xuống PRS.",
     learn:"Di truyền quần thể, PCA/ADMIXTURE, khái niệm hiệu chỉnh cấu trúc quần thể. ~4 tuần.",
     spike:"Ngày 1–2: chạy PCA trên 1000 Genomes, xem mẫu Đông Á nằm đâu. Ngày 3: bỏ toàn bộ mẫu Đông Á khỏi panel, chiếu lại chính chúng, xem chúng bị đẩy về đâu. Khoảng dịch chuyển đó là kết quả đầu tiên."
   }
 },
 {
-  id:"h05", n:109, src:"?", dom:"gen", diff:4, risk:"thap", compute:"tb", know:"cao", mobile:false, vn:false,
+  id:"h05", n:109, src:"ai:claude-opus-5", dom:"gen", diff:4, risk:"thap", compute:"tb", know:"cao", mobile:false, vn:false,
   t:"Đồng hồ biểu sinh: đang đo tuổi sinh học hay đo lô xét nghiệm?",
-  q:"Đồng hồ methylation dự đoán tuổi với sai số vài năm, và độ lệch so với tuổi thật được bán như một chỉ dấu sức khoẻ. <b>Bao nhiêu phần độ lệch đó là tín hiệu sinh học, bao nhiêu là hiệu ứng lô, loại mô, và nền tảng đo?</b>",
+  q:"Phần nhiễu do <b>thành phần loại tế bào đã được nghiên cứu rất kỹ</b> — đã có phân tích trên hơn mười nghìn mẫu máu cho sáu đồng hồ phổ biến, và đã có đồng hồ được thiết kế để miễn nhiễm với nó. Nên đừng hỏi lại câu đó. Câu còn mở: sau khi đã trừ thành phần loại tế bào, <b>độ lệch tuổi có sống sót khi chuyển sang cohort khác</b> không — và phần dư là hiệu ứng lô hay là sinh học?",
   data:"GEO có rất nhiều bộ methylation array công khai kèm metadata tuổi (mở), và các đồng hồ đã công bố đều có hệ số công khai nên bạn tính lại được mà không cần huấn luyện. Mở.",
-  contrib:"Phân rã độ lệch tuổi thành thành phần sinh học và thành phần kỹ thuật, cộng đánh giá <b>xuyên cohort</b> — huấn luyện ở cohort này, kiểm ở cohort khác, thứ rất ít bài trong mảng này làm.",
+  contrib:"Đánh giá <b>xuyên cohort</b> — huấn luyện ở cohort này, kiểm ở cohort khác — cho các đồng hồ phổ biến <em>sau khi</em> đã hiệu chỉnh loại tế bào, cộng phân rã phần dư thành hiệu ứng lô và sinh học. Đây đúng chỗ y văn còn tranh luận: có bên lập luận đồng hồ Horvath bền với hiệu ứng lô nhờ cách huấn luyện, chưa phải kết luận đã chốt.",
   d:{
     method:"Tính các đồng hồ có hệ số công khai trên nhiều cohort GEO. <b>Baseline tàn nhẫn:</b> hồi quy độ lệch tuổi lên <em>chỉ</em> biến kỹ thuật (nền tảng array, lô, loại mô, tỉ lệ loại tế bào ước lượng bằng deconvolution) — nếu chúng giải thích phần lớn phương sai thì „tuổi sinh học” đang đo cái khác. Sau đó huấn luyện đồng hồ mới có kiểm soát lô, so xuyên cohort.",
-    why:"„Tuổi sinh học” là một trong những khái niệm được thương mại hoá nhanh nhất mà kiểm chứng độc lập thì mỏng. Cùng khuôn baseline tàn nhẫn của #68 (tiếng ho và cái micro): nếu biến kỹ thuật giải thích được độ lệch thì cả một dòng nghiên cứu cần xem lại — và đó là kết quả không thể ra rỗng.",
+    why:"„Tuổi sinh học” là một trong những khái niệm được thương mại hoá nhanh nhất mà kiểm chứng độc lập thì mỏng. Cùng khuôn baseline tàn nhẫn của #68 (tiếng ho và cái micro): nếu biến kỹ thuật giải thích được độ lệch thì cả một dòng nghiên cứu cần xem lại — và đó là kết quả không thể ra rỗng. <b>Công trình gần nhất (B8, tra ngày 31/07/2026):</b> thành phần loại tế bào như một yếu tố gây nhiễu của độ lệch tuổi <b>đã được công bố nhiều lần</b>, và đã có đồng hồ dựng riêng để kháng nó — nên baseline tàn nhẫn của bản đầu đã bị làm trước. Đồng thời có lập luận ngược rằng đồng hồ Horvath bền với hiệu ứng lô, tức tiền đề của bản đầu <em>một phần bị phản bác</em>. Chỗ còn mở là chuyển cohort và phần dư sau hiệu chỉnh. <b>Verdict rubric: PHẢI SIẾT LẠI → đã siết.</b>",
     risk:"Gánh nặng nền CAO — cần hiểu methylation array, hiệu ứng lô, và deconvolution loại tế bào. Rủi ro dữ liệu: metadata GEO không đồng đều và nhiều bộ thiếu thông tin lô; <b>chọn bộ theo tiêu chí có metadata trước</b>, đừng gom bừa rồi mới phát hiện không kiểm soát được gì.",
     learn:"DNA methylation, array 450k/EPIC, hiệu ứng lô, deconvolution tế bào. ~5–6 tuần.",
     spike:"Ngày 1–2: tải 3 bộ GEO có tuổi, tính một đồng hồ công khai, vẽ độ lệch tuổi <b>theo cohort</b>. Nếu độ lệch phân tách rõ theo cohort chứ không theo cá thể, bạn có kết quả chính ngay ngày 2."
   }
 },
 {
-  id:"h06", n:110, src:"?", dom:"gen", diff:4, risk:"thap", compute:"tb", know:"cao", mobile:false, vn:false,
+  id:"h06", n:110, src:"ai:claude-opus-5", dom:"gen", diff:4, risk:"thap", compute:"tb", know:"cao", mobile:false, vn:false,
   t:"Dự đoán biến thể ảnh hưởng splicing: chuyển sang gen chưa thấy được không?",
   q:"Mô hình dự đoán ảnh hưởng của biến thể lên splicing báo hiệu năng cao. Nhưng train và test thường chia theo biến thể, và biến thể cùng gen chia sẻ ngữ cảnh chuỗi. <b>Chia theo gen và theo họ gen thì còn lại bao nhiêu?</b>",
-  data:"Annotation GENCODE/Ensembl, junction counts từ GTEx (mở), các bộ đo splicing thực nghiệm quy mô lớn (MFASS và tương tự, mở), điểm predictor công khai.",
+  data:"Annotation GENCODE/Ensembl, junction counts từ GTEx (mở), các bộ đo splicing thực nghiệm quy mô lớn (MFASS và tương tự, mở), điểm predictor công khai. <b>Đã xác minh MFASS tồn tại (mức CÓ NGUỒN, không còn CHƯA KIỂM):</b> assay đo splicing đa biến thể bằng sort-seq, công bố trên Molecular Cell, đo 27.733 biến thể ExAC trong và cạnh 2.198 exon người; 3,8% (1.050 biến thể) gây rối loạn splicing mạnh, và <b>83% số đó nằm ngoài điểm nối kinh điển</b> — chính con số biện hộ cho phần „vùng sâu trong intron” của đề tài này.",
   contrib:"Đánh giá chia theo gen và theo họ gen (theo tương đồng chuỗi), cộng <b>baseline kinh điển</b>: chỉ dùng khoảng cách tới điểm nối, độ mạnh motif, và mức bảo tồn tiến hoá — baseline này mạnh bất ngờ và ít ai báo cáo tử tế.",
   d:{
-    method:"Ưu tiên dùng điểm predictor công bố sẵn để giữ compute thấp; chỉ train mô hình nhỏ trên cửa sổ chuỗi nếu cần. Ba cách chia: theo biến thể / theo gen / theo họ gen. Đo AUC-PR, và <b>đo riêng ở vùng sâu trong intron</b> — nơi khó nhất và cũng là nơi có giá trị lâm sàng cao nhất vì biến thể splicing sâu bị bỏ sót khi chỉ soi vùng mã hoá.",
-    why:"Cùng khuôn rò rỉ tương đồng chuỗi của #9 nhưng ở phía DNA điều hoà. Và câu hỏi có hậu quả thật: một phần đáng kể bệnh di truyền chưa chẩn đoán được nằm ở biến thể ảnh hưởng splicing.",
+    method:"Ưu tiên dùng điểm predictor công bố sẵn để giữ compute thấp; chỉ train mô hình nhỏ trên cửa sổ chuỗi nếu cần. Ba cách chia: theo biến thể / theo gen / theo họ gen. Đo AUC-PR, và <b>đo riêng ở vùng sâu trong intron</b> — nơi khó nhất và cũng là nơi có giá trị lâm sàng cao nhất vì biến thể splicing sâu bị bỏ sót khi chỉ soi vùng mã hoá. <b>Thanh sai số (rubric R5):</b> khoảng tin cậy AUC-PR bằng bootstrap theo gen và theo họ gen — đúng đơn vị nhóm đã dùng để chia tập.",
+    why:"Cùng khuôn rò rỉ tương đồng chuỗi của #9 nhưng ở phía DNA điều hoà. Và câu hỏi có hậu quả thật: một phần đáng kể bệnh di truyền chưa chẩn đoán được nằm ở biến thể ảnh hưởng splicing. <b>Công trình gần nhất (B8, tra ngày 31/07/2026):</b> <b>đã có bài benchmark các bộ dự đoán splicing trên chính bộ MFASS</b> (trong dòng công trình CADD-Splice), nên phần „so các bộ dự đoán trên MFASS” không còn là đóng góp. Chỗ còn mở và phải nói thật hẹp: chia theo <em>họ gen</em> theo tương đồng chuỗi (không phải chỉ theo gen), tách riêng tầng <em>vùng sâu trong intron</em>, và baseline motif kinh điển được báo cáo tử tế. <b>Verdict rubric: ĐI ĐƯỢC CÓ ĐIỀU KIỆN, nhưng biên đóng góp hẹp hơn bản đầu tưởng</b> — nếu ba phần trên bị bỏ thì đề tài rơi về PHẢI SIẾT LẠI như chín đề tài kia của bản 8.",
     risk:"⚠️ Gánh nặng sinh học phân tử CAO (cơ chế splicing, annotation transcript). Thu hẹp bắt buộc: dùng điểm đã công bố, đóng góp nằm hết ở tầng đánh giá — nếu train từ đầu thì compute nhảy lên cao. <b>Không nhận nếu không có ai đỡ phần sinh học phân tử.</b>",
     learn:"Splicing, motif điểm nối, annotation transcript. ~6 tuần.",
     spike:"Ngày 1–2: lấy điểm predictor công khai cho một tập biến thể có nhãn thực nghiệm, tính AUC-PR với chia random. Ngày 3: chia lại theo gen, tính lại. Chênh lệch đó là toàn bộ đề tài."
   }
 },
 {
-  id:"h07", n:111, src:"?", dom:"gen", diff:4, risk:"thap", compute:"tb", know:"cao", mobile:false, vn:false,
+  id:"h07", n:111, src:"ai:claude-opus-5", dom:"gen", diff:4, risk:"thap", compute:"tb", know:"cao", mobile:false, vn:false,
   t:"Chữ ký đột biến ung thư: bao nhiêu là quá trình sinh học, bao nhiêu là tạo tác?",
-  q:"Phân rã chữ ký đột biến bằng NMF cho ra một số thành phần — và số đó <b>do người chọn</b>. Bao nhiêu chữ ký được công bố là quá trình sinh học thật, và bao nhiêu là tạo tác của quy trình xử lý?",
+  q:"Tính bất định của NMF và việc COSMIC chứa chữ ký khả năng cao là <b>tạo tác toán học đã được công bố</b> — đã có phân tích chỉ ra chữ ký nào dư thừa, đã có phương pháp chọn số thành phần bằng kiểm định chéo, và công cụ chuẩn đã có sẵn bước lấy mẫu lại để chọn theo độ bền. Câu còn mở: bất định đó <b>đổi kết luận hạ nguồn bao nhiêu</b> — cùng một khối u, đổi số thành phần thì bao nhiêu phần trăm bệnh nhân bị gán sang nhóm cơ chế khác?",
   data:"Dữ liệu đột biến ung thư mở (TCGA/ICGC qua cBioPortal), bộ chữ ký tham chiếu COSMIC (mở). Tầng open-access đủ dùng.",
-  contrib:"Nghiên cứu độ bền: thay đổi có kiểm soát các bước xử lý và số thành phần, đo <b>chữ ký nào bền và chữ ký nào biến mất</b> — kết quả là một danh sách có điều kiện, không phải một phán xét chung.",
+  contrib:"Truyền bất định của bước phân rã <b>xuống quyết định hạ nguồn</b>: tỉ lệ bệnh nhân đổi nhóm cơ chế (ví dụ có hay không khiếm khuyết sửa chữa tái tổ hợp) khi đổi số thành phần hoặc đổi ngưỡng lọc biến thể — thay vì báo cáo lại một lần nữa rằng phân rã không bền.",
   d:{
     method:"NMF và biến thể Bayes tự chọn số thành phần. Thí nghiệm can thiệp ba trục: đổi ngưỡng lọc biến thể, thêm nhiễu mô phỏng lỗi giải trình tự, đổi số thành phần k. Đo độ tương đồng cosine với COSMIC và độ bền qua bootstrap. Kèm kiểm tra: chữ ký nào giải thích được bằng tạo tác kỹ thuật đã biết.",
-    why:"Cực hợp nền xác suất: NMF là bài phân rã có <b>nhiều nghiệm</b>, và toàn bộ vấn đề là chọn k cùng tính không xác định của nghiệm — thống kê thật, giải thích được trên bảng. Và cộng đồng đã biết mảng này mong manh mà vẫn dùng chữ ký như dữ kiện đã chốt.",
+    why:"Cực hợp nền xác suất: NMF là bài phân rã có <b>nhiều nghiệm</b>, và toàn bộ vấn đề là chọn k cùng tính không xác định của nghiệm — thống kê thật, giải thích được trên bảng. Và cộng đồng đã biết mảng này mong manh mà vẫn dùng chữ ký như dữ kiện đã chốt. <b>Công trình gần nhất (B8, tra ngày 31/07/2026):</b> đã có công trình dùng phân tích archetypal để chỉ ra <b>chữ ký COSMIC nào dư thừa và khả năng là tạo tác toán học</b>, đã có phương pháp chọn số chữ ký bằng kiểm định chéo, và công cụ chuẩn đã lấy mẫu lại hàng trăm lần để chọn theo độ bền — nên nghiên cứu độ bền của bản đầu là việc đã làm rồi. Chỗ còn mở là hậu quả hạ nguồn trên phân nhóm bệnh nhân. <b>Verdict rubric: PHẢI SIẾT LẠI → đã siết.</b>",
     risk:"Gánh nặng nền CAO — cần hiểu quá trình đột biến và quy trình gọi biến thể đủ để phân biệt sinh học với tạo tác. Rủi ro thật: dễ ra kết luận „mọi thứ đều mong manh”, vô ích. <b>Chữa: kết luận phải là danh sách chữ ký nào bền, chữ ký nào không, kèm điều kiện cụ thể.</b>",
     learn:"Sinh học ung thư cơ bản, gọi biến thể, NMF và chọn số thành phần. ~5 tuần.",
     spike:"Ngày 1–2: chạy NMF trên ma trận đột biến một loại ung thư với k = 3…12, xem chữ ký nào xuất hiện ở <em>mọi</em> k. Danh sách bền đó là kết quả đầu tiên và là xương sống của luận văn."
   }
 },
 {
-  id:"h08", n:112, src:"?", dom:"gen", diff:4, risk:"tb", compute:"tb", know:"cao", mobile:false, vn:true,
+  id:"h08", n:112, src:"ai:claude-opus-5", dom:"gen", diff:4, risk:"tb", compute:"tb", know:"cao", mobile:false, vn:true,
   t:"Ưu tiên biến thể cho bệnh hiếm: xếp hạng dưới ngân sách xác minh",
-  q:"Một exome có hàng chục nghìn biến thể; nhà di truyền chỉ xác minh được vài chục. <b>Xếp hạng nào đưa biến thể gây bệnh vào top-N nhiều nhất — và bao nhiêu ca vẫn bị bỏ sót ở ngân sách thực tế?</b>",
+  q:"Xếp hạng biến thể ở ngân sách top-N <b>đã có benchmark và đã có khuyến nghị tối ưu công bố</b> — công cụ chuẩn đưa biến thể đúng vào top-10 ở khoảng 85–88% ca sau tối ưu, và benchmark trên exome mô phỏng đã có từ lâu. Câu còn mở, và là chỗ thực địa hay vỡ: <b>độ nhạy tụt bao nhiêu khi mô tả kiểu hình thiếu</b> — bỏ dần thuật ngữ HPO xuống 5, 3, rồi 1 thì tỉ lệ ca giải được ở top-10 còn bao nhiêu?",
   data:"<b>Exome mô phỏng</b>: lấy mẫu nền từ 1000 Genomes rồi cấy biến thể gây bệnh đã biết từ ClinVar — đây là cách chuẩn của mảng này và <b>không cần dữ liệu bệnh nhân</b>. HPO cho kiểu hình. Dữ liệu ca công khai (DECIPHER) nếu điều khoản cho phép.",
-  contrib:"So sánh các chiến lược ưu tiên trên cùng ngân sách xác minh (top-10 / top-50), đo bằng <b>tỉ lệ ca giải được</b> — không phải AUC trên từng biến thể, vì nhà di truyền tiêu thụ ca chứ không tiêu thụ biến thể.",
+  contrib:"Đường cong <b>tỉ lệ ca giải được theo mức đầy đủ của mô tả kiểu hình</b> (số thuật ngữ HPO còn lại), ở cùng ngân sách xác minh — thứ quyết định công cụ có dùng được ở tuyến chưa có nhà di truyền lâm sàng mô tả kiểu hình đầy đủ hay không. Đây là ràng buộc thực tế của Việt Nam, không phải một bảng số thêm.",
   d:{
-    method:"Pipeline lọc theo tần số alen (gnomAD), theo dự đoán tác động, theo khớp kiểu hình (HPO–gen), theo mô hình di truyền (trội/lặn/de novo). So các cách kết hợp và các bộ xếp hạng có sẵn. Metric: tỉ lệ ca có biến thể đúng trong top-N, và độ nhạy theo <em>mức đầy đủ của mô tả kiểu hình</em> — vì trong thực tế mô tả kiểu hình thường thiếu.",
-    why:"Đây là „quyết định dưới ngân sách” của #2 và #42, ở di truyền lâm sàng — và metric đúng (ca giải được ở top-N) khác hoàn toàn metric hay được báo (AUC biến thể). Kết luận nói được trực tiếp với nhà di truyền.",
+    method:"Pipeline lọc theo tần số alen (gnomAD), theo dự đoán tác động, theo khớp kiểu hình (HPO–gen), theo mô hình di truyền (trội/lặn/de novo). So các cách kết hợp và các bộ xếp hạng có sẵn. Metric: tỉ lệ ca có biến thể đúng trong top-N, và độ nhạy theo <em>mức đầy đủ của mô tả kiểu hình</em> — vì trong thực tế mô tả kiểu hình thường thiếu. <b>Thanh sai số (rubric R5):</b> mỗi điểm trên đường cong HPO lặp trên ít nhất 5 tập exome mô phỏng độc lập, báo cáo khoảng tin cậy của tỉ lệ ca giải được — mô phỏng có phương sai lấy mẫu thật.",
+    why:"Đây là „quyết định dưới ngân sách” của #2 và #42, ở di truyền lâm sàng — và metric đúng (ca giải được ở top-N) khác hoàn toàn metric hay được báo (AUC biến thể). Kết luận nói được trực tiếp với nhà di truyền. <b>Công trình gần nhất (B8, tra ngày 31/07/2026):</b> benchmark xếp hạng biến thể trên <b>exome mô phỏng</b> và thước đo tỉ lệ ca đúng ở top-N <b>đã là chuẩn của mảng này</b>, và năm 2025 đã có khuyến nghị tối ưu hoá công bố kèm số cụ thể — nên phần so sánh chiến lược của bản đầu đã bị làm xong. Chỗ còn mở là chính phần mà bản đầu chỉ nhắc qua: độ nhạy theo mức đầy đủ của mô tả kiểu hình. <b>Verdict rubric: PHẢI SIẾT LẠI → đã siết, và câu hỏi mới hợp bối cảnh Việt Nam hơn câu cũ.</b>",
     risk:"⚠️ Gánh nặng nền CAO. Và về dữ liệu: exome bệnh nhân thật là dữ liệu cá nhân nhạy cảm — <b>thiết kế toàn bộ trên exome mô phỏng ngay từ đầu</b>, coi dữ liệu ca thật là phần thưởng. Nêu rõ giới hạn: biến thể cấy vào mô phỏng dễ tìm hơn ca thật, nên con số của bạn là <em>trần trên</em>, không phải hiệu năng thực địa.",
     learn:"Di truyền y học, HPO, mô hình di truyền, quy trình lọc biến thể. ~6 tuần.",
     spike:"Ngày 1–2: dựng 20 exome mô phỏng có cấy biến thể, chạy lọc theo tần số alen thuần, xem biến thể cấy còn ở hạng bao nhiêu. Con số đó là baseline mà mọi cách xếp hạng phức tạp phải vượt."
   }
 },
 {
-  id:"h09", n:113, src:"?", dom:"gen", diff:3, risk:"thap", compute:"tb", know:"tb", mobile:false, vn:false,
+  id:"h09", n:113, src:"ai:claude-opus-5", dom:"gen", diff:3, risk:"thap", compute:"tb", know:"tb", mobile:false, vn:false,
   t:"Tái định vị thuốc từ biểu hiện gen: tín hiệu sinh học hay tương quan lô?",
-  q:"Tái định vị thuốc bằng cách tìm thuốc „đảo ngược” chữ ký biểu hiện của bệnh. Nhưng chữ ký thuốc và chữ ký bệnh đến từ nền tảng khác, mô khác, lô khác. <b>Bao nhiêu phần điểm tương đồng là sinh học?</b>",
+  q:"<b>Sửa tiền đề của bản đầu:</b> phân bố null bằng hoán vị <em>đã</em> nằm trong cách tính điểm chuẩn của CMap — 1.000 hoán vị cộng một bước hiệu chỉnh trên toàn bộ LINCS — nên đó <b>không phải khoảng trống như bản đầu tuyên bố</b>. Câu còn mở: L1000 chỉ <b>đo thật khoảng 1.000 gen</b> và suy ra phần còn lại của hệ phiên mã bằng một mô hình, vậy tín hiệu đảo ngược chữ ký nằm ở phần gen đo thật hay ở phần gen được suy ra?",
   data:"LINCS L1000 / CMap (mở, chữ ký thuốc quy mô rất lớn), GEO cho chữ ký bệnh, DrugBank/ChEMBL cho cặp thuốc–bệnh đã biết. Mở hoàn toàn.",
-  contrib:"Baseline tàn nhẫn (chỉ đặc trưng kỹ thuật của chữ ký, không dùng gen cụ thể nào) cộng <b>phân bố null bằng hoán vị nhãn gen</b> — bước đơn giản mà rất nhiều bài trong mảng này bỏ — và đánh giá cắt theo thời điểm phê duyệt thuốc.",
+  contrib:"Tách điểm đảo ngược chữ ký thành phần <b>gen đo thật</b> và phần <b>gen suy ra bằng mô hình imputation</b>, rồi đo recall các cặp thuốc–bệnh đã biết trên từng phần riêng. Nếu tín hiệu nằm ở phần suy ra thì đó là tín hiệu của mô hình imputation chứ không phải của sinh học — và đó là kết luận có hậu quả cho mọi phân tích dùng L1000.",
   d:{
     method:"Tính điểm đảo ngược chữ ký theo các cách phổ biến. Baseline: chỉ đặc trưng kỹ thuật (số gen thay đổi, độ mạnh chữ ký, nền tảng, loại tế bào). Kiểm soát: hoán vị nhãn gen để lấy phân bố null, rồi hỏi điểm thật có phân biệt được với null không. Đánh giá: recall các cặp đã biết, và cắt theo thời gian phê duyệt để có đánh giá tiến cứu mô phỏng.",
-    why:"Rẻ, dữ liệu mở rất lớn, và cùng khuôn „baseline không dùng tín hiệu chính” của #68 và #87. Điểm mạnh riêng: phân bố null bằng hoán vị biến câu hỏi mơ hồ thành một phép kiểm định dứt khoát.",
+    why:"Rẻ, dữ liệu mở rất lớn, và cùng khuôn „baseline không dùng tín hiệu chính” của #68 và #87. Điểm mạnh riêng: phân bố null bằng hoán vị biến câu hỏi mơ hồ thành một phép kiểm định dứt khoát. <b>Công trình gần nhất (B8, tra ngày 31/07/2026):</b> <b>bản đầu của đề tài này nói sai một dữ kiện:</b> nó coi phân bố null bằng hoán vị là bước mà „rất nhiều bài bỏ”, nhưng hoán vị là phần của quy trình tính điểm chuẩn. Ngoài ra việc đối chiếu nhiều loại điểm connectivity và độ bền của chúng với nhiễu đều đã được công bố, và đã có phân tích kiểm soát chất lượng hệ thống cho LINCS. Đây đúng kiểu hỏng mà rubric cảnh báo với đề tài <code>src: ai:*</code> — một phát biểu nghe đúng về hiện trạng ngành mà không ai tra. Chỗ còn mở là tầng imputation của L1000. <b>Verdict rubric: PHẢI SIẾT LẠI → đã siết và đã sửa tiền đề sai.</b>",
     risk:"Rủi ro là tín hiệu yếu ở cả hai phía: điểm tương đồng nhiễu và nhãn thưa. Chữa bằng cách <b>khung lại thành câu hỏi đo lường</b> — „phương pháp này có phân biệt được với null không” — vì cả hai câu trả lời đều là luận văn hoàn chỉnh.",
     learn:"Biểu hiện gen, chữ ký biểu hiện, nền tảng L1000. ~3 tuần. Gánh nặng nền thấp nhất trong nhóm di truyền.",
     spike:"Ngày 1: tính điểm đảo ngược cho 100 cặp thuốc–bệnh đã biết và 100 cặp ngẫu nhiên, vẽ hai histogram. <b>Nếu hai phân bố chồng nhau, bạn có kết quả chính ngay ngày 1.</b>"
   }
 },
 {
-  id:"h10", n:114, src:"?", dom:"gen", diff:4, risk:"tb", compute:"tb", know:"cao", mobile:false, vn:false,
+  id:"h10", n:114, src:"ai:claude-opus-5", dom:"gen", diff:4, risk:"tb", compute:"tb", know:"cao", mobile:false, vn:false,
   t:"Dự đoán neoantigen: khâu nào trong chuỗi đang giới hạn?",
   q:"Dự đoán neoantigen cho vắc-xin ung thư là một chuỗi nhiều khâu: gọi đột biến → định kiểu HLA → dự đoán liên kết → dự đoán trình diện → dự đoán sinh miễn dịch. <b>Sai số cộng dồn qua chuỗi bao nhiêu, và khâu nào đang giới hạn?</b>",
   data:"IEDB (dữ liệu epitope, mở), dữ liệu immunopeptidomics công khai, các bộ dự đoán liên kết HLA công khai, dữ liệu đột biến ung thư mở.",
   contrib:"Phân rã sai số <b>theo khâu</b> — đo tỉ lệ mất mát ở từng bước thay vì chỉ báo hiệu năng khâu cuối — cộng phân tích: alen HLA phổ biến ở Đông Á có được đại diện tốt trong dữ liệu huấn luyện không.",
   d:{
-    method:"Dựng chuỗi bằng công cụ công khai. Với mỗi khâu: đo hiệu năng riêng và mô phỏng sai số truyền xuống các khâu sau. Phân tích riêng theo alen HLA: vẽ hiệu năng theo <em>số mẫu huấn luyện của alen đó</em> — nếu hai thứ tương quan thì bạn đã có luận điểm về bất bình đẳng dữ liệu, cùng cơ chế của #105.",
-    why:"Bài toán chuỗi mà cộng đồng đo từng khâu riêng nhưng ít ai đo sai số cộng dồn — và tư duy hệ thống đó đúng sở trường một kỹ sư 7 năm. Đây là chỗ nền kỹ thuật của bạn bù được cho gánh nặng sinh học.",
+    method:"Dựng chuỗi bằng công cụ công khai. Với mỗi khâu: đo hiệu năng riêng và mô phỏng sai số truyền xuống các khâu sau. Phân tích riêng theo alen HLA: vẽ hiệu năng theo <em>số mẫu huấn luyện của alen đó</em> — nếu hai thứ tương quan thì bạn đã có luận điểm về bất bình đẳng dữ liệu, cùng cơ chế của #105. <b>Thanh sai số (rubric R5):</b> khoảng tin cậy bằng bootstrap cho hiệu năng từng alen; với alen ít mẫu thì báo khoảng tin cậy rộng thay vì báo một con số điểm.",
+    why:"Bài toán chuỗi mà cộng đồng đo từng khâu riêng nhưng ít ai đo sai số cộng dồn — và tư duy hệ thống đó đúng sở trường một kỹ sư 7 năm. Đây là chỗ nền kỹ thuật của bạn bù được cho gánh nặng sinh học. <b>B8 chưa chạy (rubric mục 5b) — nói rõ thay vì để trống:</b> đây là đề tài thứ hai trong bản 8 mà tôi chưa tra công trình gần nhất. Cảnh báo cụ thể: phần „hiệu năng theo alen HLA tương quan với số mẫu huấn luyện của alen” là quan sát dễ đã có người công bố. Chạy B8 trước, và nếu phần đó đã có thì đóng góp còn lại chỉ là phân rã sai số theo khâu.",
     risk:"Gánh nặng miễn dịch học CAO, và nhãn „sinh miễn dịch thật” rất thưa. Thu hẹp: <b>dừng ở khâu trình diện</b> nếu nhãn miễn dịch không đủ, và nói rõ là đã dừng ở đó thay vì suy diễn tiếp.",
     learn:"Miễn dịch cơ bản, HLA, trình diện kháng nguyên. ~6 tuần.",
     spike:"Ngày 1–2: chạy một bộ dự đoán liên kết HLA trên dữ liệu IEDB, tính hiệu năng <b>theo từng alen</b>. Nếu hiệu năng tương quan với số mẫu huấn luyện của alen, bạn đã có kết quả chính."
   }
 },
 {
-  id:"h11", n:115, src:"?", dom:"gen", diff:4, risk:"thap", compute:"tb", know:"cao", mobile:false, vn:false,
+  id:"h11", n:115, src:"ai:claude-opus-5", dom:"gen", diff:4, risk:"thap", compute:"tb", know:"cao", mobile:false, vn:false,
   t:"Dự đoán biểu hiện gen từ chuỗi DNA: học điều hoà hay học „gen này vốn cao”?",
-  q:"Mô hình dự đoán biểu hiện gen từ chuỗi DNA báo tương quan cao <b>giữa các gen</b>. Nhưng phần lớn tương quan đó có thể chỉ là „gen này nhìn chung biểu hiện cao”. Khi đo biến thiên <b>giữa các cá thể ở cùng một gen</b> — thứ mà di truyền cần — còn lại bao nhiêu?",
+  q:"<b>Câu hỏi gốc đã có đáp án công bố:</b> một nghiên cứu trên Nature Genetics (2023) đo đúng chế độ giữa-các-cá-thể trên dữ liệu hệ gen và hệ phiên mã ghép cặp của Geuvadis (n = 421) cho bốn mô hình — Enformer, Basenji2, ExPecto, Xpresso — và thấy hiệu năng kém, <em>kể cả sai chiều hiệu ứng của biến thể điều hoà</em>, tức cả phép thử eQTL mà bản đầu định dùng cũng đã được làm. Câu còn mở: <b>khoảng cách đó do dữ liệu huấn luyện hay do kiến trúc</b> — tinh chỉnh trực tiếp trên biến thiên giữa các cá thể thì thu hẹp được bao nhiêu, và có chuyển được sang mô khác không?",
   data:"GTEx (biểu hiện theo cá thể và theo mô, có tầng mở), ENCODE, điểm dự đoán từ mô hình công khai. Ưu tiên dùng dự đoán công bố sẵn để giữ compute vừa phải.",
-  contrib:"Tách bạch hai chế độ đánh giá — giữa các gen và giữa các cá thể — và định lượng khoảng cách, cộng <b>baseline „chỉ dùng biểu hiện trung bình của gen”</b> làm sàn.",
+  contrib:"Đo phần khoảng cách <b>đóng lại được bằng dữ liệu</b> so với phần không: tinh chỉnh trên biến thiên giữa cá thể ở một mô, rồi đánh giá ở mô khác — cộng tái lập kết quả đã công bố làm sàn thay vì báo cáo lại nó như phát hiện mới. Kết quả là một câu trả lời cho câu hỏi thiết kế: nên thu thêm dữ liệu cá thể hay nên đổi kiến trúc.",
   d:{
-    method:"Hai chế độ: tương quan giữa các gen (cách hay được báo) và tương quan giữa các cá thể trong cùng một gen (cách di truyền cần). Baseline sàn: trung bình theo gen, không dùng chuỗi. Phép thử độc lập: trên các biến thể eQTL đã biết, mô hình có dự đoán đúng <em>chiều</em> hiệu ứng không.",
-    why:"Cùng khuôn „baseline trung bình theo nhóm” của #10 (trung bình theo thuốc) — nhưng ở đây nó chạm vào một tuyên bố lớn hơn nhiều. Cực rõ ràng, cực dễ trình bày trước hội đồng: hai con số tương quan, một hình.",
+    method:"Hai chế độ: tương quan giữa các gen (cách hay được báo) và tương quan giữa các cá thể trong cùng một gen (cách di truyền cần). Baseline sàn: trung bình theo gen, không dùng chuỗi. Phép thử độc lập: trên các biến thể eQTL đã biết, mô hình có dự đoán đúng <em>chiều</em> hiệu ứng không. <b>Thanh sai số (rubric R5):</b> lặp tinh chỉnh ít nhất 5 hạt giống — tinh chỉnh có phương sai giữa các lần chạy — và báo khoảng tin cậy cho cả hai hệ số tương quan.",
+    why:"Cùng khuôn „baseline trung bình theo nhóm” của #10 (trung bình theo thuốc) — nhưng ở đây nó chạm vào một tuyên bố lớn hơn nhiều. Cực rõ ràng, cực dễ trình bày trước hội đồng: hai con số tương quan, một hình. <b>Công trình gần nhất (B8, tra ngày 31/07/2026):</b> <b>đây là ca B8 thất bại rõ nhất trong cả danh sách:</b> có một bài đúng câu hỏi, đúng chế độ đánh giá, đúng dữ liệu, và làm luôn cả phép thử chiều hiệu ứng trên eQTL — bản đầu chỉ ghi „vấn đề này đã được nêu trong y văn”, nói nhẹ hơn thực tế rất nhiều. Bài học ghi lại ở đây: một đề tài <code>src: ai:*</code> có thể mô tả đúng một khoảng trống <em>đã bị lấp</em>. Chỗ còn mở là phân tách dữ liệu so với kiến trúc, và chuyển mô. <b>Verdict rubric: PHẢI SIẾT LẠI → đã siết.</b>",
     risk:"Gánh nặng nền CAO (điều hoà biểu hiện, eQTL). Compute nhảy lên cao nếu train từ đầu — <b>dùng điểm công khai</b> là điều kiện để đề tài vừa sức. Rủi ro „đã có người chỉ ra”: vấn đề này đã được nêu trong y văn, nên đọc trước và chen vào ở phần eQTL và phần định lượng theo mô.",
     learn:"Điều hoà biểu hiện gen, eQTL, cấu trúc dữ liệu GTEx. ~6 tuần.",
     spike:"Ngày 1–2: lấy dự đoán công khai cho một tập gen, tính tương quan giữa các gen. Ngày 3: tính tương quan giữa các cá thể trong từng gen. <b>Chênh lệch hai con số là toàn bộ đề tài — và nó thường rất lớn.</b>"
   }
 },
 {
-  id:"h12", n:116, src:"?", dom:"gen", diff:4, risk:"tb", compute:"tb", know:"cao", mobile:false, vn:true,
+  id:"h12", n:116, src:"ai:claude-opus-5", dom:"gen", diff:4, risk:"tb", compute:"tb", know:"cao", mobile:false, vn:true,
   t:"Xét nghiệm phát hiện ung thư sớm từ máu: sớm thật hay chỉ bắt được ca muộn?",
-  q:"Xét nghiệm phát hiện ung thư từ DNA tự do trong máu đang được thương mại hoá. Độ nhạy được báo trên tập gồm nhiều ca giai đoạn muộn. <b>Ở giai đoạn sớm — nơi phát hiện mới có ích — độ nhạy còn bao nhiêu, và có bao nhiêu dương tính giả trên mỗi ca thật?</b>",
+  q:"<b>Đã công bố rồi:</b> độ nhạy theo giai đoạn (khoảng 18% ở giai đoạn I lên tới hơn 90% ở giai đoạn IV), phê phán tập trung vào giá trị dự đoán dương, tổng quan hệ thống về sàng lọc dân số chung, thiên lệch thời gian chờ, <em>và</em> cả một cohort sàng lọc ở Việt Nam. Câu còn mở: ở tỉ lệ mắc và <b>năng lực chẩn đoán xác nhận của Việt Nam</b>, mỗi 100.000 lượt sàng lọc sinh ra bao nhiêu lượt nội soi và chụp chiếu — và tuyến sau có hấp thụ được không?",
   data:"Dữ liệu cfDNA / methylation công khai trên GEO, dữ liệu từ các nghiên cứu phát hiện sớm đã công bố kèm dữ liệu mở. <b>Kiểm từng bộ xem có metadata giai đoạn hay không</b> — không có giai đoạn thì không trả lời được câu hỏi.",
-  contrib:"Đường <b>độ nhạy theo giai đoạn</b> thay cho một con số tổng, cộng tính giá trị dự đoán dương ở <b>tỉ lệ mắc của dân số sàng lọc thật</b> — không phải ở tỉ lệ trong tập nghiên cứu, nơi ca bệnh được làm giàu nhân tạo.",
+  contrib:"Phân tích quyết định cho bối cảnh Việt Nam: quy dương tính giả thành <b>khối lượng chẩn đoán xác nhận</b> — số lượt nội soi, số lượt chụp — trên mỗi 100.000 lượt sàng lọc, đối chiếu năng lực thật của tuyến sau, và ngưỡng độ đặc hiệu tối thiểu để một chương trình sàng lọc không làm nghẽn hệ thống. Đây là con số hội đồng chính sách cần, và nó chưa có cho Việt Nam.",
   d:{
-    method:"Mô hình phân loại trên đặc trưng cfDNA (methylation, mẫu phân mảnh). Đánh giá phân tầng theo giai đoạn và loại ung thư. Bước quyết định: quy đổi sang dân số sàng lọc — với tỉ lệ mắc thực tế, một xét nghiệm độ đặc hiệu 99% cho bao nhiêu dương tính giả trên mỗi ca thật. Kèm bàn về thiên lệch thời gian chờ: phát hiện sớm hơn không tự động là sống lâu hơn.",
-    why:"Đây là toán Bayes cơ bản mà cả một ngành thương mại đang tránh nói rõ: <b>giá trị dự đoán dương ở dân số sàng lọc thấp hơn nhiều so với trong tập nghiên cứu</b>. Rất hợp nền xác suất của bạn, và kết luận có hậu quả trực tiếp lên người được mời làm xét nghiệm.",
+    method:"Mô hình phân loại trên đặc trưng cfDNA (methylation, mẫu phân mảnh). Đánh giá phân tầng theo giai đoạn và loại ung thư. Bước quyết định: quy đổi sang dân số sàng lọc — với tỉ lệ mắc thực tế, một xét nghiệm độ đặc hiệu 99% cho bao nhiêu dương tính giả trên mỗi ca thật. Kèm bàn về thiên lệch thời gian chờ: phát hiện sớm hơn không tự động là sống lâu hơn. <b>Thanh sai số (rubric R5):</b> lan truyền bất định của độ nhạy và độ đặc hiệu công bố vào khối lượng chẩn đoán xác nhận; kết quả phải là một khoảng, không phải một con số.",
+    why:"Đây là toán Bayes cơ bản mà cả một ngành thương mại đang tránh nói rõ: <b>giá trị dự đoán dương ở dân số sàng lọc thấp hơn nhiều so với trong tập nghiên cứu</b>. Rất hợp nền xác suất của bạn, và kết luận có hậu quả trực tiếp lên người được mời làm xét nghiệm. <b>Công trình gần nhất (B8, tra ngày 31/07/2026):</b> cả hai đóng góp của bản đầu <b>đều đã được công bố</b>: đường độ nhạy theo giai đoạn có số cụ thể, và bài phê phán tập trung vào giá trị dự đoán dương đã có từ 2020. Đã có cả một cohort ở Việt Nam công bố tỉ lệ dương và giá trị dự đoán dương. Nên phần toán Bayes không còn là đóng góp — nó là kiến thức nền. Chỗ còn mở là <em>năng lực hệ thống</em>: dương tính giả quy ra bao nhiêu lượt chẩn đoán xâm lấn và tuyến sau chịu được không. <b>Verdict rubric: PHẢI SIẾT LẠI → đã siết, và bản siết lại có góc Việt Nam mạnh hơn bản đầu.</b>",
     risk:"Gánh nặng nền CAO, và dữ liệu cfDNA công khai thưa. <b>Kiểm ngay ngày 1</b> xem có bộ nào có metadata giai đoạn; nếu không, đề tài chuyển thành phân tích quyết định trên tham số lấy từ y văn — vẫn làm được và vẫn có giá trị, nhưng phải gọi đúng tên là phân tích quyết định, không phải mô hình mới.",
     learn:"cfDNA, sàng lọc ung thư, giá trị dự đoán dương, thiên lệch thời gian chờ. ~5 tuần.",
     spike:"Ngày 1: lấy độ nhạy và độ đặc hiệu công bố của một xét nghiệm, tính giá trị dự đoán dương ở tỉ lệ mắc dân số. <b>Con số đó thường gây sốc và là câu mở đầu của luận văn</b> — làm được trong một giờ."
   }
 },
 {
-  id:"x06", n:117, src:"?", dom:"sec", diff:4, risk:"thap", compute:"tb", know:"cao", mobile:false, vn:false,
+  id:"x06", n:117, src:"ai:claude-opus-5", dom:"sec", diff:4, risk:"thap", compute:"tb", know:"cao", mobile:false, vn:false,
   t:"Tái định danh từ dữ liệu hệ gen: chia sẻ đến mức nào là an toàn?",
-  q:"Dữ liệu hệ gen được chia sẻ dưới dạng tổng hợp (tần số alen, summary statistics) vì được coi là an toàn. <b>Bao nhiêu thông tin cá nhân còn rò ra — và ngưỡng nào thì chia sẻ được?</b>",
+  q:"<b>Đã công bố rồi:</b> tấn công Homer trên tần số alen — đủ mạnh để NIH và Wellcome Trust rút toàn bộ summary statistics hệ gen khỏi miền công khai — cộng tấn công suy luận thành viên theo haplotype, và cả nghiên cứu về đánh đổi riêng-tư ↔ hữu-dụng cho beacon và summary statistics. Câu còn mở, ở một dạng công bố chưa ai soi: <b>bộ trọng số PRS công khai</b> có rò thông tin thành viên của cohort huấn luyện không?",
   data:"1000 Genomes và các panel công khai (mở) — <b>dùng chính dữ liệu công khai để tự thử tấn công</b>, nên không cần và không dùng bất kỳ dữ liệu riêng tư nào.",
-  contrib:"Đo khả năng suy luận thành viên từ dữ liệu tổng hợp ở nhiều mức chi tiết, dẫn tới <b>ngưỡng vận hành</b>: công bố tới mức nào thì rủi ro dưới mức chấp nhận — cộng chi phí tính hữu dụng của từng cơ chế bảo vệ.",
+  contrib:"Đưa <b>bộ trọng số PRS đang được công bố tự do</b> vào diện đánh giá rò rỉ — dạng dữ liệu mà cả cộng đồng tải về dùng hằng ngày mà chưa được soi như summary statistics đã bị soi — cộng ngưỡng vận hành: bộ trọng số gồm tới bao nhiêu biến thể thì suy luận thành viên vượt mức chấp nhận. Nối trực tiếp với #105, vốn dùng đúng các bộ trọng số này.",
   d:{
-    method:"Áp các tấn công đã công bố (tỉ số hợp lý kiểu Homer, tấn công trên summary statistics) lên panel công khai. Quét ba trục: số biến thể được công bố, độ làm tròn tần số, kích thước cohort. Đo sức mạnh phát hiện thành viên ở mỗi cấu hình. So các cơ chế bảo vệ (làm tròn, ngưỡng đếm tối thiểu, differential privacy) — mỗi cơ chế mất bao nhiêu tính hữu dụng để đổi lấy bao nhiêu an toàn.",
-    why:"Nối di truyền với an ninh, và rất hợp nền xác suất: các tấn công này <em>là</em> kiểm định tỉ số hợp lý. Điểm mạnh về đạo đức: bạn tự tấn công dữ liệu công khai nên không có rủi ro với ai, mà kết quả lại là một ngưỡng vận hành mà mọi dự án chia sẻ dữ liệu gen đều cần.",
+    method:"Áp các tấn công đã công bố (tỉ số hợp lý kiểu Homer, tấn công trên summary statistics) lên panel công khai. Quét ba trục: số biến thể được công bố, độ làm tròn tần số, kích thước cohort. Đo sức mạnh phát hiện thành viên ở mỗi cấu hình. So các cơ chế bảo vệ (làm tròn, ngưỡng đếm tối thiểu, differential privacy) — mỗi cơ chế mất bao nhiêu tính hữu dụng để đổi lấy bao nhiêu an toàn. <b>Thanh sai số (rubric R5):</b> mỗi cấu hình quét lặp ít nhất 5 lần với tập mục tiêu khác nhau, báo khoảng tin cậy của sức mạnh phát hiện.",
+    why:"Nối di truyền với an ninh, và rất hợp nền xác suất: các tấn công này <em>là</em> kiểm định tỉ số hợp lý. Điểm mạnh về đạo đức: bạn tự tấn công dữ liệu công khai nên không có rủi ro với ai, mà kết quả lại là một ngưỡng vận hành mà mọi dự án chia sẻ dữ liệu gen đều cần. <b>Công trình gần nhất (B8, tra ngày 31/07/2026):</b> đóng góp của bản đầu — sức mạnh tấn công theo mức chi tiết công bố, cộng đánh đổi an toàn ↔ hữu dụng của từng cơ chế bảo vệ — <b>đã là một bài trên Genome Research</b>, và hệ quả chính sách của tấn công Homer đã xảy ra từ 2008. Nên phần đó là nền, không phải đóng góp. Chỗ còn mở là đổi <em>đối tượng</em>: bộ trọng số PRS, thứ đang được phát hành tự do và chưa được đánh giá rò rỉ. <b>Verdict rubric: PHẢI SIẾT LẠI → đã siết, và bản siết lại nối được với #105.</b>",
     risk:"Đây là nghiên cứu tấn công: <b>chỉ dùng dữ liệu công khai, không tấn công cơ sở dữ liệu thật</b>, công bố phần đo lường và cơ chế bảo vệ chứ không công bố công cụ tấn công đóng gói. Nêu rõ trong phần đạo đức. Gánh nặng nền CAO (di truyền quần thể cộng khái niệm privacy).",
     learn:"Di truyền quần thể, membership inference, differential privacy cơ bản. ~5 tuần.",
     spike:"Ngày 1–2: cài tấn công tỉ số hợp lý trên 1000 Genomes với 1.000 biến thể, đo sức mạnh phát hiện. Nếu nó hoạt động ở quy mô nhỏ, phần còn lại chỉ là quét tham số."
@@ -2614,7 +2638,7 @@ const TOPICS = [
   }
 },
 {
-  id:"r01", n:145, src:"mix:? ← literature (xem d.why)", dom:"macro", diff:4, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:true,
+  id:"r01", n:145, src:"mix:claude-opus-5 ← literature (xem d.why)", dom:"macro", diff:4, risk:"tb", compute:"tb", know:"tb", mobile:false, vn:true,
   t:"Bản đồ nghèo từ ảnh vệ tinh: bao nhiêu phần R² biến mất khi chia tập theo không gian thay vì chia ngẫu nhiên?",
   q:"Các mô hình lập bản đồ nghèo từ ảnh vệ tinh báo R² cao và được dùng để nhắm trợ cấp. Nhưng nghèo có <b>tự tương quan không gian rất mạnh</b>, nên chia ngẫu nhiên đặt các điểm cạnh nhau vào cả hai bên. Với chia tập theo khối không gian và theo tỉnh, R² còn lại bao nhiêu — và thứ hạng khu vực „cần trợ cấp nhất” đổi bao nhiêu?",
   data:"Khảo sát DHS (mở sau khi đăng ký nghiên cứu miễn phí, có toạ độ cụm đã làm nhiễu — <b>lưu ý chính mức nhiễu đó là một giới hạn phải nói rõ</b>), chỉ số giàu nghèo tương đối của Meta/WorldPop (mở), Sentinel-2 và Landsat (mở), ánh sáng ban đêm VIIRS (mở), OpenStreetMap (ODbL). Việt Nam: kết quả tổng điều tra và VHLSS ở mức tổng hợp công bố công khai; số liệu vi mô cần xin — <b>có phương án B là chỉ dùng mức tổng hợp</b>.",
@@ -2628,7 +2652,7 @@ const TOPICS = [
   }
 },
 {
-  id:"r02", n:146, src:"mix:? ← literature (xem d.why)", dom:"env", diff:3, risk:"thap", compute:"thap", know:"tb", mobile:false, vn:true,
+  id:"r02", n:146, src:"mix:claude-opus-5 ← literature (xem d.why)", dom:"env", diff:3, risk:"thap", compute:"thap", know:"tb", mobile:false, vn:true,
   t:"Giám sát dịch qua nước thải: cảnh báo sớm thật mấy ngày, sau khi trừ phần chậm trễ của báo cáo ca bệnh?",
   q:"Giám sát mầm bệnh trong nước thải được cho là cảnh báo sớm hơn số ca ghi nhận. Nhưng số ca ghi nhận <b>tự nó bị chậm</b> bởi hành vi đi khám, thời gian xét nghiệm, và quy trình báo cáo. Bao nhiêu ngày „sớm” là tín hiệu sinh học thật, và bao nhiêu chỉ là ta đang so với một thước đo bị chậm?",
   data:"Dashboard nước thải công khai có dữ liệu tải về: hệ thống giám sát nước thải quốc gia Hoa Kỳ (CDC NWSS, mở) và hệ thống của Hà Lan (RIVM, mở) là hai nguồn có chuỗi dài và metadata trạm. Số ca và số nhập viện từ các kho dữ liệu dịch tễ mở tương ứng. <b>Toàn bộ là dữ liệu tổng hợp cấp khu vực — không có dữ liệu cá nhân, không cần xét duyệt đạo đức.</b> Góc Việt Nam: nếu tiếp cận được số liệu giám sát nước thải trong nước thì tốt, nhưng không phụ thuộc vào nó.",
