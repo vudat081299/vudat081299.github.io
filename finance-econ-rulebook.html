@@ -25,7 +25,7 @@
   .rb-sub { color: var(--wb-fg-muted); font-size: 15px; max-width: 74ch; line-height: 1.6; margin: 0 0 12px; }
   .rb-meta { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); letter-spacing: .04em; }
 
-  .rb-layout { display: grid; grid-template-columns: 220px 1fr; gap: 32px; align-items: start; padding: 28px 0 60px; }
+  .rb-layout { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 32px; align-items: start; padding: 28px 0 60px; }
   @media (max-width: 860px) { .rb-layout { grid-template-columns: 1fr; } .rb-toc { display: none; } }
   .rb-toc-legend { padding: 6px 14px 4px; display: flex; flex-direction: column; gap: 7px; }
   .rb-toc-legend .row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--wb-fg-muted); }
