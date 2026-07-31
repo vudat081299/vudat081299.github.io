@@ -1,0 +1,858 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>Sổ tay quy tắc kinh tế &amp; tài chính</title>
+<meta name="description" content="Bản học tương tác — các ràng buộc &quot;nếu…thì…&quot; từ vi mô đến vĩ mô, gắn thẻ độ cứng T0–T4.">
+
+<!-- Web Builder — the minimalist UI kit that styles the rest of the site -->
+<link rel="stylesheet" href="web-builder/web-builder.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});"></script>
+
+<style>
+  /* Page-local layout only — every colour / radius / shadow comes from wb-* tokens. */
+  body { background: var(--wb-canvas); color: var(--wb-fg); margin: 0; font-family: var(--wb-font); -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--wb-fg); color: var(--wb-canvas); }
+
+  .rb-hero { padding: 28px 0 20px; }
+  .rb-eyebrow { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 10px; }
+  .rb-title { font-size: clamp(26px, 4.4vw, 38px); font-weight: 720; letter-spacing: -.02em; margin: 0 0 10px; line-height: 1.15; }
+  .rb-sub { color: var(--wb-fg-muted); font-size: 15px; max-width: 74ch; line-height: 1.6; margin: 0 0 12px; }
+  .rb-meta { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); letter-spacing: .04em; }
+
+  .rb-layout { display: grid; grid-template-columns: 220px 1fr; gap: 32px; align-items: start; padding: 28px 0 60px; }
+  @media (max-width: 860px) { .rb-layout { grid-template-columns: 1fr; } .rb-toc { display: none; } }
+  .rb-toc-legend { padding: 6px 14px 4px; display: flex; flex-direction: column; gap: 7px; }
+  .rb-toc-legend .row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--wb-fg-muted); }
+
+  section[id] { scroll-margin-top: 70px; }
+  .rb-sec-eyebrow { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin-bottom: 6px; }
+  .rb-sec-eyebrow b { color: var(--wb-fg); font-weight: 650; }
+  .rb-sec-title { font-size: 22px; font-weight: 700; letter-spacing: -.01em; margin: 0 0 10px; }
+  .rb-sec-intro { color: var(--wb-fg-muted); font-size: 14px; line-height: 1.65; max-width: 78ch; margin: 0 0 20px; }
+  .rb-sec-intro b { color: var(--wb-fg); }
+  h3.rb-sub-title { font-size: 16px; font-weight: 680; margin: 30px 0 12px; }
+
+  .rb-formula { background: var(--wb-surface-2); border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); padding: 16px 20px; margin: 10px 0; overflow-x: auto; text-align: center; }
+
+  .rb-rule { padding: 14px 18px; }
+  .rb-rule-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+  .rb-id { font-family: var(--wb-font-mono); font-size: 12px; font-weight: 650; color: var(--wb-fg); }
+  .rb-lag { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); margin-left: auto; }
+  .rb-body { font-size: 13.5px; color: var(--wb-fg); line-height: 1.6; margin: 0; }
+  .rb-note { font-size: 12.5px; color: var(--wb-fg-muted); line-height: 1.6; margin: 8px 0 0; padding-top: 8px; border-top: var(--wb-bw) solid var(--wb-border); }
+  .rb-note:before { content: "› "; color: var(--wb-fg-subtle); }
+  .rb-grid { display: flex; flex-direction: column; gap: 10px; }
+
+  .rb-filterbar { position: sticky; top: 68px; z-index: 5; background: color-mix(in srgb, var(--wb-canvas) 92%, transparent); backdrop-filter: blur(6px); border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); padding: 14px; margin-bottom: 18px; display: flex; flex-direction: column; gap: 10px; }
+  .rb-chip { cursor: pointer; user-select: none; }
+  .rb-chip[data-active="false"] { opacity: .6; }
+
+  .rb-mini-fanout .wb-card__foot { color: var(--wb-fg-muted); font-size: 12.5px; }
+</style>
+</head>
+<body>
+
+<div class="wb-navbar wb-navbar--sticky">
+  <a class="wb-navbar__brand" href="index.html"><span class="wb-navbar__mark">§</span> Sổ tay Kinh tế</a>
+  <span class="wb-navbar__spacer"></span>
+  <div class="wb-navbar__actions">
+    <a class="wb-btn wb-btn--ghost wb-btn--sm" href="index.html"><span class="wb-ico wb-ico--sm">arrow_back</span> Trang chủ</a>
+    <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" id="theme-toggle" aria-label="Sáng / Tối">
+      <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
+      <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
+    </button>
+  </div>
+</div>
+
+<main class="wb-container wb-container--wide">
+
+  <header class="rb-hero">
+    <p class="rb-eyebrow">Bản học tương tác · sổ tay quy tắc kinh tế &amp; tài chính</p>
+    <h1 class="rb-title">Đừng học quy tắc — học <u>độ cứng</u> của nó.</h1>
+    <p class="rb-sub">Tập hợp các ràng buộc "nếu… thì…" — từ vi mô đến vĩ mô, từ chỉ số thế giới suy ra chỉ số Việt Nam. Giá trị nằm ở <b style="color:var(--wb-fg)">cột thẻ</b>, không nằm ở nội dung quy tắc: biết quy tắc nào không bao giờ sai, quy tắc nào chỉ đúng "thường thường".</p>
+    <p class="rb-meta">CẬP NHẬT 31·07·2026 · SỐ LIỆU ĐẾN PHIÊN 29·07·2026 · MỤC ĐÍCH HỌC TẬP, KHÔNG PHẢI KHUYẾN NGHỊ ĐẦU TƯ</p>
+  </header>
+
+  <hr class="wb-divider">
+
+  <div class="rb-layout">
+    <nav class="wb-sidenav rb-toc wb-sticky" style="--wb-sticky-gap:68px">
+      <div class="wb-sidenav__section">Mục lục</div>
+      <a class="wb-sidenav__link" href="#s0-cach-doc">00 · Cách đọc sổ tay</a>
+      <a class="wb-sidenav__link" href="#s1-kien-truc">01 · Kiến trúc hệ thống</a>
+      <a class="wb-sidenav__link" href="#s2-node">02 · Kiểm kê node</a>
+      <a class="wb-sidenav__link" href="#s3-quytac">03 · Danh mục quy tắc</a>
+      <a class="wb-sidenav__link" href="#s4-chedo">04 · Lớp chế độ</a>
+      <a class="wb-sidenav__link" href="#s5-caunoi">05 · Cầu nối TG → VN</a>
+      <a class="wb-sidenav__link" href="#s6-meta">06 · Meta-quy tắc</a>
+      <a class="wb-sidenav__link" href="#s7-vimo">07 · Nền vi mô <em>(đào sâu)</em></a>
+      <a class="wb-sidenav__link" href="#s8-dangthuc">08 · Đẳng thức cứng <em>(tham khảo)</em></a>
+      <a class="wb-sidenav__link" href="#s9-kiemchung">09 · Kiểm chứng dữ liệu</a>
+      <div class="wb-sidenav__section" style="margin-top:14px">Thẻ độ cứng</div>
+      <div class="rb-toc-legend">
+        <span class="row"><span class="wb-cap wb-cap--success wb-cap--sm">T0</span> Định nghĩa</span>
+        <span class="row"><span class="wb-cap wb-cap--info wb-cap--sm">T1</span> No-arbitrage</span>
+        <span class="row"><span class="wb-cap wb-cap--sm">T2</span> Cơ chế cấu trúc</span>
+        <span class="row"><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span> Thống kê</span>
+        <span class="row"><span class="wb-cap wb-cap--danger wb-cap--sm">T4</span> Meta-quy tắc</span>
+      </div>
+    </nav>
+
+    <div class="wb-stack" style="--wb-stack-gap:52px">
+
+      <!-- ============ 00 — CÁCH ĐỌC ============ -->
+      <section id="s0-cach-doc">
+        <p class="rb-sec-eyebrow"><b>00</b> — Cách đọc sổ tay</p>
+        <h2 class="rb-sec-title">Nguyên tắc số một: đừng dùng một T3 như thể nó là T1</h2>
+        <p class="rb-sec-intro">Mỗi quy tắc được gắn một thẻ độ cứng — quan trọng hơn bản thân quy tắc, vì nó trả lời: <b>"tôi được phép tin điều này đến mức nào, và khi nào nó ngừng đúng?"</b> Đó là cách người ta cháy tài khoản: lấy một quan sát thống kê (T3) rồi đặt cược như thể nó là định luật vật lý (T1).</p>
+
+        <div class="wb-grid wb-grid--auto">
+          <div class="wb-card wb-card--flat"><div class="wb-card__body">
+            <span class="wb-cap wb-cap--success wb-cap--lg">T0</span>
+            <h4 class="wb-card__title" style="margin-top:10px;font-size:14px">Đẳng thức / định nghĩa</h4>
+            <p class="wb-help">Đúng theo cách các biến được định nghĩa. Không bao giờ sai — nếu mô hình vi phạm, mô hình sai.</p>
+          </div></div>
+          <div class="wb-card wb-card--flat"><div class="wb-card__body">
+            <span class="wb-cap wb-cap--info wb-cap--lg">T1</span>
+            <h4 class="wb-card__title" style="margin-top:10px;font-size:14px">Ràng buộc no-arbitrage</h4>
+            <p class="wb-help">Có thể lệch tạm do ma sát, nhưng arbitrage kéo nó về — trừ khi có rào cản cấu trúc chặn (T2).</p>
+          </div></div>
+          <div class="wb-card wb-card--flat"><div class="wb-card__body">
+            <span class="wb-cap wb-cap--lg">T2</span>
+            <h4 class="wb-card__title" style="margin-top:10px;font-size:14px">Cơ chế cấu trúc</h4>
+            <p class="wb-help">Cứng ở nơi cơ chế tồn tại (một thị trường, một chính sách cụ thể) — không tự động chuyển giao nơi khác.</p>
+          </div></div>
+          <div class="wb-card wb-card--flat"><div class="wb-card__body">
+            <span class="wb-cap wb-cap--warning wb-cap--lg">T3</span>
+            <h4 class="wb-card__title" style="margin-top:10px;font-size:14px">Quy luật thống kê</h4>
+            <p class="wb-help">Thường đúng trên dữ liệu lịch sử, nhưng có thể <b>đảo dấu</b> khi chế độ thay đổi. Loại nguy hiểm nhất khi hiểu nhầm thành T1.</p>
+          </div></div>
+          <div class="wb-card wb-card--flat"><div class="wb-card__body">
+            <span class="wb-cap wb-cap--danger wb-cap--lg">T4</span>
+            <h4 class="wb-card__title" style="margin-top:10px;font-size:14px">Meta-quy tắc</h4>
+            <p class="wb-help">Không mô tả thế giới — mô tả điều kiện làm mọi T3 ở trên hỏng: đuôi dày, phi dừng, phản thân…</p>
+          </div></div>
+        </div>
+
+        <div class="wb-alert wb-alert--danger" style="margin-top:16px">
+          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">error</span></span>
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Nguyên tắc số một</p>
+            <p class="wb-alert__msg">Đừng bao giờ dùng một quy tắc <span class="wb-cap wb-cap--warning wb-cap--sm">T3</span> như thể nó là <span class="wb-cap wb-cap--info wb-cap--sm">T1</span>. Toàn bộ giá trị của sổ tay nằm ở cột thẻ, không nằm ở nội dung quy tắc.</p>
+          </div>
+        </div>
+        <p class="wb-help" style="margin-top:14px">Ký hiệu thêm — <b style="color:var(--wb-fg-muted)">Δt</b>: độ trễ nhân quả · <b style="color:var(--wb-fg-muted)">⚠</b>: điều kiện làm quy tắc đảo dấu. <em>Tài liệu tổng hợp phục vụ học tập, không phải khuyến nghị đầu tư.</em> Phần 07–08 là nền toán học/cơ chế phía sau — đọc sau nếu muốn đào sâu, không cần để nắm cảm quan "cái gì phụ thuộc vào cái gì".</p>
+      </section>
+
+      <hr class="wb-divider">
+
+      <!-- ============ 01 — KIẾN TRÚC HỆ THỐNG ============ -->
+      <section id="s1-kien-truc">
+        <p class="rb-sec-eyebrow"><b>01</b> — Kiến trúc hệ thống</p>
+        <h2 class="rb-sec-title">Không phải một đồ thị phẳng</h2>
+        <p class="rb-sec-intro">Ba đặc điểm cấu trúc mà mọi mô hình phẳng (coi mọi node ngang hàng) bỏ sót: <b>thứ bậc nhân quả</b> (tầng trên tác động tầng dưới mạnh hơn nhiều so với chiều ngược lại), <b>lớp cầu nối</b> giữa thế giới và Việt Nam, và <b>vòng phản hồi</b> ở các node chính sách — nên hệ không phải một DAG thuần.</p>
+
+        <div class="wb-card"><div class="wb-card__body">
+          <ol class="wb-steps">
+            <li class="wb-steps__item is-todo"><span class="wb-steps__marker">A</span>
+              <div class="wb-steps__content"><p class="wb-steps__title">Ngoại sinh</p><p class="wb-steps__desc">Chiến tranh, thời tiết, chính trị, công nghệ</p></div></li>
+            <li class="wb-steps__item is-todo"><span class="wb-steps__marker">B</span>
+              <div class="wb-steps__content"><p class="wb-steps__title">Hàng hóa &amp; chi phí thực</p><p class="wb-steps__desc">Dầu, đồng, gạo, vận tải</p></div></li>
+            <li class="wb-steps__item is-todo"><span class="wb-steps__marker">C</span>
+              <div class="wb-steps__content"><p class="wb-steps__title">Lạm phát &amp; kỳ vọng</p><p class="wb-steps__desc">CPI, breakeven, tiền lương</p></div></li>
+            <li class="wb-steps__item is-active"><span class="wb-steps__marker">D</span>
+              <div class="wb-steps__content"><p class="wb-steps__title">Chính sách</p><p class="wb-steps__desc">Không phải node ngoại sinh — phản ứng ngược lại những gì nó quan sát</p>
+                <span class="wb-steps__note">BỘ ĐIỀU KHIỂN — có vòng phản hồi ngược</span></div></li>
+            <li class="wb-steps__item is-todo"><span class="wb-steps__marker">E</span>
+              <div class="wb-steps__content"><p class="wb-steps__title">Giá tài sản</p><p class="wb-steps__desc">Lãi suất thực, tỷ giá, vàng, cổ phiếu, spread</p></div></li>
+            <li class="wb-steps__item is-todo"><span class="wb-steps__marker">F</span>
+              <div class="wb-steps__content"><p class="wb-steps__title">Kênh nội địa Việt Nam</p><p class="wb-steps__desc">Tỷ giá, bank, bất động sản, margin</p></div></li>
+          </ol>
+        </div></div>
+
+        <div class="wb-alert wb-alert--info" style="margin-top:14px">
+          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span>
+          <div class="wb-alert__body"><p class="wb-alert__title">Vòng phản hồi</p>
+            <p class="wb-alert__msg">Tầng D (Fed, NHNN) không chỉ đẩy xuống — nó quan sát Tầng C/E rồi phản ứng ngược lại. Khi triển khai: giữ DAG có trọng số cho lớp truyền dẫn A→F, nhưng xử lý node chính sách riêng như một <em>controller có setpoint</em>.</p></div>
+        </div>
+        <div class="wb-alert wb-alert--plain" style="margin-top:10px">
+          <div class="wb-alert__body"><p class="wb-alert__title">Cạnh thế giới → Việt Nam luôn đi qua một lớp cầu nối</p>
+            <p class="wb-alert__msg">Node thế giới → <b>[Cầu nối: β, độ trễ, trần, ai điều khiển]</b> → Node VN → khuếch đại nội địa. Phần dư giữa hai vế (gap) không phải nhiễu — nó là <b>tín hiệu riêng của Việt Nam</b> (Phần 5.2).</p></div>
+        </div>
+
+        <h3 class="rb-sub-title">Cấu trúc dữ liệu đề xuất</h3>
+        <div class="wb-card"><div class="wb-table-scroll"><table class="wb-table">
+          <thead><tr><th>Thực thể</th><th>Trường</th></tr></thead>
+          <tbody>
+            <tr><td><code>Node</code></td><td class="wb-cell-muted">id, scope: world|vn, tier: A..F, class, freq, source</td></tr>
+            <tr><td><code>Bridge</code></td><td class="wb-cell-muted">from, to, type: A|B|C|D|E, beta, lag_days, cap, controller, regime_dependent</td></tr>
+            <tr><td><code>Rule</code></td><td class="wb-cell-muted">id, condition, consequence, hardness: T0..T4, lag, reversal_condition</td></tr>
+          </tbody>
+        </table></div></div>
+      </section>
+
+      <hr class="wb-divider">
+
+      <!-- ============ 02 — KIỂM KÊ NODE ============ -->
+      <section id="s2-node">
+        <p class="rb-sec-eyebrow"><b>02</b> — Kiểm kê node</p>
+        <h2 class="rb-sec-title">Mỗi node có phiên bản thế giới và phiên bản Việt Nam</h2>
+        <p class="rb-sec-intro">Phải tách, không gộp — sáu tầng A–F.</p>
+
+        <div class="wb-accordion">
+          <details class="wb-accordion__item" open><summary>Tầng A — Ngoại sinh</summary><div class="wb-accordion__body">
+            <div class="wb-card"><div class="wb-table-scroll"><table class="wb-table">
+              <thead><tr><th>Nhóm</th><th>Biến</th></tr></thead>
+              <tbody>
+                <tr><td>Địa chính trị</td><td>Chiến tranh, <b>điểm nghẽn hàng hải</b> (Hormuz ~20% dầu thế giới, Biển Đỏ/Suez, Malacca, Đài Loan/chip)</td></tr>
+                <tr><td>Chính sách thương mại</td><td>Thuế quan, kiểm soát xuất khẩu, cấm vận, chiến tranh công nghệ</td></tr>
+                <tr><td>Khí hậu</td><td>El Niño/La Niña → giá lương thực, thủy điện VN, thiếu điện</td></tr>
+                <tr><td>Khác</td><td>Dịch bệnh, thiên tai, bầu cử, chu kỳ công nghệ, nhân khẩu học</td></tr>
+              </tbody>
+            </table></div></div>
+            <div class="wb-alert wb-alert--plain" style="margin-top:12px"><div class="wb-alert__body"><p class="wb-alert__msg">Phân biệt <b>chiến tranh nổ súng</b> (cú sốc năng lượng cấp tính + phần bù rủi ro) với <b>chiến tranh thương mại</b> (cú sốc cung dai dẳng + phân mảnh chuỗi giá trị). Với VN, thuế quan quan trọng hơn vì xuất khẩu/GDP &gt; 90%.</p></div></div>
+          </div></details>
+
+          <details class="wb-accordion__item"><summary>Tầng B — Hàng hóa</summary><div class="wb-accordion__body">
+            <div class="wb-card"><div class="wb-table-scroll"><table class="wb-table">
+              <thead><tr><th>Nhóm</th><th>Thế giới</th><th>Việt Nam</th></tr></thead>
+              <tbody>
+                <tr><td>Năng lượng</td><td>Brent/WTI, LNG, than</td><td><b>Giá bán lẻ xăng</b> (điều hành), giá điện (điều hành)</td></tr>
+                <tr><td>Kim loại CN</td><td><b>Đồng</b> (proxy tăng trưởng tốt nhất), nhôm, quặng sắt</td><td>Giá thép nội địa</td></tr>
+                <tr><td>Kim loại quý</td><td><b>XAU/USD</b></td><td><b>Vàng miếng SJC</b>, <b>vàng nhẫn 9999</b></td></tr>
+                <tr><td>Nông sản</td><td>Lúa mì, ngô, đậu tương, phân bón</td><td><b>Gạo, thịt lợn</b> (trọng số CPI rất lớn)</td></tr>
+                <tr><td>Vận tải</td><td>Baltic Dry, giá container</td><td>Chi phí logistics nội địa</td></tr>
+                <tr><td>Bán dẫn</td><td>Giá chip, chu kỳ memory</td><td>Xuất khẩu điện tử (~35% tổng XK)</td></tr>
+              </tbody>
+            </table></div></div>
+          </div></details>
+
+          <details class="wb-accordion__item"><summary>Tầng C — Lạm phát: sáu node, không phải hai</summary><div class="wb-accordion__body">
+            <ul class="wb-list wb-list--flush">
+              <li class="wb-list__item"><span class="wb-list__title"><b>Thực hiện</b> vs <b>kỳ vọng</b><span class="wb-list__sub">Cái thứ hai mới điều khiển giá tài sản</span></span></li>
+              <li class="wb-list__item"><span class="wb-list__title"><b>Headline</b> vs <b>core</b><span class="wb-list__sub">Fed nhìn core PCE, không nhìn headline CPI</span></span></li>
+              <li class="wb-list__item"><span class="wb-list__title"><b>Breakeven 5y / 5y5y forward</b><span class="wb-list__sub">Kỳ vọng do thị trường định giá, quan sát trực tiếp từ TIPS</span></span></li>
+              <li class="wb-list__item"><span class="wb-list__title"><b>Tiền lương</b><span class="wb-list__sub">Quyết định lạm phát có "dính" hay không</span></span></li>
+              <li class="wb-list__item"><span class="wb-list__title"><b>Output gap</b><span class="wb-list__sub">Cầu kéo chỉ xuất hiện khi gap đóng</span></span></li>
+              <li class="wb-list__item"><span class="wb-list__title"><b>CPI VN</b><span class="wb-list__sub">Rổ riêng: lương thực–thực phẩm ~33–34%, nhà ở &amp; VLXD ~18%, giao thông ~9–10%</span></span></li>
+            </ul>
+            <div class="wb-alert wb-alert--warning" style="margin-top:12px"><span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">warning</span></span><div class="wb-alert__body"><p class="wb-alert__title">Khung Mỹ không chuyển giao trực tiếp</p><p class="wb-alert__msg">CPI Việt Nam nhạy với giá thịt lợn hơn với giá dầu. Ở Mỹ lương thực chỉ ~13% rổ.</p></div></div>
+          </div></details>
+
+          <details class="wb-accordion__item"><summary>Tầng D — Chính sách</summary><div class="wb-accordion__body">
+            <div class="wb-card"><div class="wb-table-scroll"><table class="wb-table">
+              <thead><tr><th>Chủ thể</th><th>Công cụ</th></tr></thead>
+              <tbody>
+                <tr><td>Fed</td><td>Fed funds, dot plot, <b>bảng cân đối (QE/QT)</b>, reverse repo, hàm phản ứng</td></tr>
+                <tr><td>NHTW khác</td><td>ECB, <b>BOJ</b> (carry trade yen — nguồn thanh khoản toàn cầu), PBoC</td></tr>
+                <tr><td>NHNN</td><td>Lãi suất điều hành, OMO, tín phiếu, <b>trần tăng trưởng tín dụng</b>, dự trữ ngoại hối, tỷ giá trung tâm ±5%</td></tr>
+                <tr><td>Tài khóa</td><td>Thâm hụt, phát hành TPCP, <b>giải ngân đầu tư công</b></td></tr>
+              </tbody>
+            </table></div></div>
+            <div class="wb-alert wb-alert--plain" style="margin-top:12px"><div class="wb-alert__body"><p class="wb-alert__msg">Lãi suất và <b>lượng tiền</b> là hai công cụ độc lập. 2020–2021 lãi suất bằng 0 nhưng biến chi phối giá tài sản là QE. Với VN, <b>trần tăng trưởng tín dụng</b> quan trọng hơn lãi suất.</p></div></div>
+          </div></details>
+
+          <details class="wb-accordion__item"><summary>Tầng E — Giá tài sản</summary><div class="wb-accordion__body">
+            <div class="wb-card"><div class="wb-table-scroll"><table class="wb-table">
+              <thead><tr><th>Nhóm</th><th>Biến</th></tr></thead>
+              <tbody>
+                <tr><td>Lãi suất</td><td>Fed funds, UST 2Y/10Y/30Y, <b>độ dốc 2s10s</b>, term premium</td></tr>
+                <tr><td><b>Lãi suất thực</b></td><td><b>TIPS = danh nghĩa − breakeven</b> ← biến chủ</td></tr>
+                <tr><td>Tín dụng</td><td><b>Spread IG, spread HY</b>, CDS chủ quyền</td></tr>
+                <tr><td>Tiền tệ</td><td>DXY, EUR/USD, <b>USD/JPY</b>, <b>USD/CNY</b></td></tr>
+                <tr><td>Cổ phiếu</td><td>S&amp;P 500, Nasdaq, <b>MSCI EM</b>, VN-Index; P/E, ERP</td></tr>
+                <tr><td>Biến động</td><td>VIX, <b>MOVE</b> (biến động trái phiếu — thường dẫn trước)</td></tr>
+              </tbody>
+            </table></div></div>
+          </div></details>
+
+          <details class="wb-accordion__item"><summary>Tầng F — Việt Nam</summary><div class="wb-accordion__body">
+            <div class="wb-card"><div class="wb-table-scroll"><table class="wb-table">
+              <thead><tr><th>Nhóm</th><th>Biến</th></tr></thead>
+              <tbody>
+                <tr><td>Cán cân thanh toán</td><td>Xuất khẩu, nhập khẩu, <b>FDI giải ngân</b>, FII, <b>kiều hối</b> (~16–20 tỷ USD/năm, ngược chu kỳ)</td></tr>
+                <tr><td>Tỷ giá</td><td><b>USD/VND</b> (cầu nối trung tâm), tỷ giá tự do, dự trữ ngoại hối theo tháng nhập khẩu</td></tr>
+                <tr><td>Lãi suất</td><td><b>Lãi suất liên ngân hàng ON</b>, lãi suất huy động, lợi suất TPCP</td></tr>
+                <tr><td>Bank</td><td>Tăng trưởng tín dụng, <b>NIM, NPL, LDR, CAR</b>, sở hữu chéo</td></tr>
+                <tr><td>Tài sản</td><td><b>Bất động sản</b>, trái phiếu doanh nghiệp, <b>dư nợ margin</b></td></tr>
+                <tr><td>Cấu trúc</td><td>Nâng hạng thị trường (FTSE/MSCI), tỷ trọng rổ chỉ số</td></tr>
+                <tr><td>Trung Quốc</td><td>CNY, tăng trưởng TQ, BĐS TQ, giá nguyên liệu nhập từ TQ</td></tr>
+              </tbody>
+            </table></div></div>
+            <div class="wb-alert wb-alert--danger" style="margin-top:12px"><span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">error</span></span><div class="wb-alert__body"><p class="wb-alert__title">Cầu nối trung tâm</p><p class="wb-alert__msg">Tỷ giá USD/VND không phải node ngang hàng — nó là cầu nối trung tâm mà gần như mọi cạnh thế giới → VN phải đi qua.</p></div></div>
+          </div></details>
+        </div>
+      </section>
+
+      <hr class="wb-divider">
+
+      <!-- ============ 03 — DANH MỤC QUY TẮC ============ -->
+      <section id="s3-quytac">
+        <p class="rb-sec-eyebrow"><b>03</b> — Danh mục quy tắc</p>
+        <h2 class="rb-sec-title">~60 quy tắc "nếu… thì…"</h2>
+        <p class="rb-sec-intro">Lọc theo thẻ, theo nhóm, hoặc tìm theo mã. Bấm một thẻ <span class="wb-cap wb-cap--warning wb-cap--sm">T3</span> để chỉ xem những quy tắc <b>có thể đảo dấu</b> — thường là những quy tắc đáng ngờ nhất khi ai đó phát biểu chúng chắc nịch.</p>
+
+        <div class="rb-filterbar">
+          <div class="wb-input-group">
+            <span class="wb-input-group__addon"><span class="wb-ico wb-ico--sm">search</span></span>
+            <input class="wb-input" type="search" id="ruleSearch" placeholder="Tìm theo mã (R-A03), từ khoá (vàng, Fed, CPI)…">
+          </div>
+          <div class="wb-filterbar" id="tagChips">
+            <button type="button" class="wb-cap wb-cap--success rb-chip" data-tag="T0" data-tone="wb-cap--success" data-active="true">T0</button>
+            <button type="button" class="wb-cap wb-cap--info rb-chip" data-tag="T1" data-tone="wb-cap--info" data-active="true">T1</button>
+            <button type="button" class="wb-cap rb-chip" data-tag="T2" data-tone="" data-active="true">T2</button>
+            <button type="button" class="wb-cap wb-cap--warning rb-chip" data-tag="T3" data-tone="wb-cap--warning" data-active="true">T3</button>
+            <button type="button" class="wb-cap wb-cap--danger rb-chip" data-tag="T4" data-tone="wb-cap--danger" data-active="true">T4</button>
+            <button type="button" class="wb-btn wb-btn--ghost wb-btn--sm" id="chipReset"><span class="wb-ico wb-ico--sm">restart_alt</span> Reset</button>
+            <span class="wb-filterbar__count"><b id="ruleCount">0</b>&nbsp;/&nbsp;<span id="ruleTotal">0</span> quy tắc</span>
+          </div>
+          <div class="wb-filterbar" id="catChips">
+            <button type="button" class="wb-cap wb-cap--elevated rb-chip" data-cat="A" data-active="true">A · Lãi suất</button>
+            <button type="button" class="wb-cap wb-cap--elevated rb-chip" data-cat="B" data-active="true">B · Lạm phát</button>
+            <button type="button" class="wb-cap wb-cap--elevated rb-chip" data-cat="C" data-active="true">C · Tiền tệ</button>
+            <button type="button" class="wb-cap wb-cap--elevated rb-chip" data-cat="D" data-active="true">D · Vàng</button>
+            <button type="button" class="wb-cap wb-cap--elevated rb-chip" data-cat="E" data-active="true">E · Cổ phiếu</button>
+            <button type="button" class="wb-cap wb-cap--elevated rb-chip" data-cat="F" data-active="true">F · Tín dụng</button>
+            <button type="button" class="wb-cap wb-cap--elevated rb-chip" data-cat="G" data-active="true">G · Địa chính trị</button>
+            <button type="button" class="wb-cap wb-cap--elevated rb-chip" data-cat="H" data-active="true">H · Cấu trúc VN</button>
+          </div>
+        </div>
+
+        <div class="rb-grid" id="ruleGrid">
+
+          <div class="wb-divider--label rb-cat-head" data-cat="A">A · Lãi suất &amp; chính sách tiền tệ</div>
+          <div class="wb-card rb-rule" id="R-A01" data-tag="T0" data-cat="A"><div class="rb-rule-head"><span class="rb-id">R-A01</span><span class="wb-cap wb-cap--success wb-cap--sm">T0</span></div><p class="rb-body"><b>Nếu</b> lãi suất danh nghĩa tăng chậm hơn lạm phát kỳ vọng, <b>thì</b> lãi suất thực giảm — dù báo chí gọi đó là "thắt chặt".</p><p class="rb-note">Lãi suất thực, không phải danh nghĩa, là biến chủ. Quy tắc quan trọng nhất trong sổ tay.</p></div>
+          <div class="wb-card rb-rule" id="R-A02" data-tag="T2" data-cat="A"><div class="rb-rule-head"><span class="rb-id">R-A02</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> Fed là bộ điều khiển phản hồi ($i = r^* + \pi + 0{,}5(\pi-\pi^*) + 0{,}5(y-y^*)$), <b>thì</b> Fed không phải node ngoại sinh và phản ứng của nó phụ thuộc <b>loại</b> cú sốc.</p></div>
+          <div class="wb-card rb-rule" id="R-A03" data-tag="T3" data-cat="A"><div class="rb-rule-head"><span class="rb-id">R-A03</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> tin xấu là về <b>tăng trưởng</b>, <b>thì</b> cổ phiếu có thể <b>tăng</b> (vì Fed sẽ nới). Nếu tin xấu là về <b>lạm phát</b>, <b>thì</b> cổ phiếu <b>luôn giảm</b>.</p><p class="rb-note">⚠ Chỉ đúng khi Fed còn dư địa nới và còn tín nhiệm.</p></div>
+          <div class="wb-card rb-rule" id="R-A04" data-tag="T1" data-cat="A"><div class="rb-rule-head"><span class="rb-id">R-A04</span><span class="wb-cap wb-cap--info wb-cap--sm">T1</span></div><p class="rb-body"><b>Nếu</b> Fed hành động <b>đúng như đã được định giá</b>, <b>thì</b> giá tài sản <b>không đổi</b>. Biến di chuyển giá là <b>sai số dự báo</b>, không phải mức tuyệt đối.</p></div>
+          <div class="wb-card rb-rule" id="R-A05" data-tag="T2" data-cat="A"><div class="rb-rule-head"><span class="rb-id">R-A05</span><span class="wb-cap wb-cap--sm">T2</span><span class="rb-lag">Δt: 12–18 tháng</span></div><p class="rb-body"><b>Nếu</b> lãi suất chính sách thay đổi, <b>thì</b> kinh tế thực phản ứng sau <b>12–18 tháng</b>.</p><p class="rb-note">Độ trễ này lớn hơn nhiệm kỳ quan sát của bộ điều khiển → Fed <b>luôn overshoot</b>.</p></div>
+          <div class="wb-card rb-rule" id="R-A06" data-tag="T3" data-cat="A"><div class="rb-rule-head"><span class="rb-id">R-A06</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span><span class="rb-lag">Δt: 6–18 tháng</span></div><p class="rb-body"><b>Nếu</b> đường cong lợi suất đảo (2s10s &lt; 0), <b>thì</b> suy thoái theo sau với độ trễ 6–18 tháng.</p><p class="rb-note">⚠ Đã có tiền lệ tín hiệu giả; độ trễ rất biến động.</p></div>
+          <div class="wb-card rb-rule" id="R-A07" data-tag="T2" data-cat="A"><div class="rb-rule-head"><span class="rb-id">R-A07</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> lãi suất bằng 0 nhưng bảng cân đối NHTW mở rộng, <b>thì</b> <b>thanh khoản</b> là biến chi phối giá tài sản, không phải lãi suất.</p><p class="rb-note">Lãi suất và lượng tiền là hai công cụ độc lập.</p></div>
+          <div class="wb-card rb-rule" id="R-A08" data-tag="T3" data-cat="A"><div class="rb-rule-head"><span class="rb-id">R-A08</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> biến động thị trường trái phiếu (MOVE) tăng, <b>thì</b> biến động cổ phiếu thường theo sau. Trái phiếu <b>dẫn trước</b>.</p></div>
+
+          <div class="wb-divider--label rb-cat-head" data-cat="B">B · Lạm phát &amp; hàng hóa</div>
+          <div class="wb-card rb-rule" id="R-B01" data-tag="T2" data-cat="B"><div class="rb-rule-head"><span class="rb-id">R-B01</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> cầu ngắn hạn không co giãn ($|\varepsilon|&lt;0{,}1$), <b>thì</b> mất 1% cung → giá tăng 10–20%. Xem mục 7.1.</p></div>
+          <div class="wb-card rb-rule" id="R-B02" data-tag="T2" data-cat="B"><div class="rb-rule-head"><span class="rb-id">R-B02</span><span class="wb-cap wb-cap--sm">T2</span><span class="rb-lag">Δt: 1–12 tháng</span></div><p class="rb-body"><b>Nếu</b> giá dầu tăng, <b>thì</b> CPI headline phản ứng sau <b>1–3 tháng</b>; CPI core sau <b>6–12 tháng</b> và <b>chỉ nếu</b> vòng hai truyền qua tiền lương.</p></div>
+          <div class="wb-card rb-rule" id="R-B03" data-tag="T2" data-cat="B"><div class="rb-rule-head"><span class="rb-id">R-B03</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> giá dầu tăng 10%, <b>thì</b> đóng góp <b>trực tiếp</b> vào CPI Việt Nam chỉ khoảng <b>0,5–0,9 điểm phần trăm</b> (trọng số giao thông ~9–10%).</p><p class="rb-note">β = trọng số rổ × tỷ lệ nhập khẩu × pass-through. Tính được trước khi xem dữ liệu.</p></div>
+          <div class="wb-card rb-rule" id="R-B04" data-tag="T2" data-cat="B"><div class="rb-rule-head"><span class="rb-id">R-B04</span><span class="wb-cap wb-cap--sm">T2</span><span class="rb-lag">Δt: gần tức thời</span></div><p class="rb-body"><b>Nếu</b> giá thịt lợn hoặc gạo tăng, <b>thì</b> CPI Việt Nam phản ứng <b>mạnh và gần như tức thời</b> (trọng số ~33–34%).</p><p class="rb-note">Với VN, quan trọng hơn R-B02.</p></div>
+          <div class="wb-card rb-rule" id="R-B05" data-tag="T2" data-cat="B"><div class="rb-rule-head"><span class="rb-id">R-B05</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> El Niño/La Niña xuất hiện, <b>thì</b> {giá lương thực ↑, thủy điện VN ↓, nguy cơ thiếu điện ↑} → CPI VN ↑ qua <b>hai</b> kênh.</p></div>
+          <div class="wb-card rb-rule" id="R-B06" data-tag="T3" data-cat="B"><div class="rb-rule-head"><span class="rb-id">R-B06</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> giá hàng hóa tăng <b>vì cầu</b> (đồng cũng tăng), <b>thì</b> cổ phiếu <b>tăng</b>. Nếu tăng <b>vì cung</b> (chỉ dầu tăng), <b>thì</b> cổ phiếu <b>giảm</b>.</p><p class="rb-note">Cùng một biến động giá, hai dấu ngược nhau. Dùng tỷ lệ đồng/dầu để phân tách.</p></div>
+          <div class="wb-card rb-rule" id="R-B07" data-tag="T1" data-cat="B"><div class="rb-rule-head"><span class="rb-id">R-B07</span><span class="wb-cap wb-cap--info wb-cap--sm">T1</span></div><p class="rb-body"><b>Nếu</b> USD mạnh, <b>thì</b> giá hàng hóa tính bằng USD giảm — kênh gần như thuần định giá.</p></div>
+          <div class="wb-card rb-rule" id="R-B08" data-tag="T3" data-cat="B"><div class="rb-rule-head"><span class="rb-id">R-B08</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> cú sốc là <b>cost-push</b>, <b>thì</b> lạm phát ↑ <b>và</b> sản lượng ↓ đồng thời → NHTW không có lựa chọn tốt.</p><p class="rb-note">Khác demand-pull, nơi lạm phát ↑ đi kèm sản lượng ↑.</p></div>
+          <div class="wb-card rb-rule" id="R-B09" data-tag="T2" data-cat="B"><div class="rb-rule-head"><span class="rb-id">R-B09</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> độ co giãn dài hạn &gt; ngắn hạn, <b>thì</b> giá hàng hóa <b>bật cao rồi hồi về</b>.</p></div>
+
+          <div class="wb-divider--label rb-cat-head" data-cat="C">C · Tiền tệ &amp; tỷ giá</div>
+          <div class="wb-card rb-rule" id="R-C01" data-tag="T1" data-cat="C"><div class="rb-rule-head"><span class="rb-id">R-C01</span><span class="wb-cap wb-cap--info wb-cap--sm">T1</span></div><p class="rb-body"><b>Nếu</b> chênh lệch <b>lãi suất thực</b> Mỹ với phần còn lại nới ra, <b>thì</b> USD mạnh lên.</p><p class="rb-note">Node đúng là $r_{thực}(Mỹ)-r_{thực}(khác)$, không phải "Fed tăng lãi suất".</p></div>
+          <div class="wb-card rb-rule" id="R-C02" data-tag="T3" data-cat="C"><div class="rb-rule-head"><span class="rb-id">R-C02</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> DXY mạnh, <b>thì</b> cổ phiếu thị trường mới nổi giảm. Quan hệ rất bền, ít khi đảo.</p></div>
+          <div class="wb-card rb-rule" id="R-C03" data-tag="T1" data-cat="C"><div class="rb-rule-head"><span class="rb-id">R-C03</span><span class="wb-cap wb-cap--info wb-cap--sm">T1</span></div><p class="rb-body"><b>Nếu</b> NHNN muốn giữ tỷ giá khi Fed neo lãi suất cao, <b>thì</b> buộc phải <b>hoặc</b> giữ lãi suất VND cao <b>hoặc</b> bán dự trữ ngoại hối (bộ ba bất khả thi).</p></div>
+          <div class="wb-card rb-rule" id="R-C04" data-tag="T0" data-cat="C"><div class="rb-rule-head"><span class="rb-id">R-C04</span><span class="wb-cap wb-cap--success wb-cap--sm">T0</span></div><p class="rb-body"><b>Nếu</b> tỷ giá bị neo, thâm hụt vãng lai lớn, và không hút được vốn, <b>thì</b> <b>dự trữ ngoại hối phải giảm</b>.</p><p class="rb-note">Cách dự đoán khi nào NHNN buộc phải để VND trượt.</p></div>
+          <div class="wb-card rb-rule" id="R-C05" data-tag="T2" data-cat="C"><div class="rb-rule-head"><span class="rb-id">R-C05</span><span class="wb-cap wb-cap--sm">T2</span><span class="rb-lag">Δt: 2–4 tháng</span></div><p class="rb-body"><b>Nếu</b> tỷ giá USD/VND tăng, <b>thì</b> CPI Việt Nam tăng sau <b>2–4 tháng</b> qua kênh nhập khẩu.</p></div>
+          <div class="wb-card rb-rule" id="R-C06" data-tag="T2" data-cat="C"><div class="rb-rule-head"><span class="rb-id">R-C06</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> kiều hối (~16–20 tỷ USD/năm) là <b>ngược chu kỳ</b>, <b>thì</b> VN có một tấm đệm tỷ giá mà các nước khu vực không có ở mức tương đương.</p></div>
+          <div class="wb-card rb-rule" id="R-C07" data-tag="T3" data-cat="C"><div class="rb-rule-head"><span class="rb-id">R-C07</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> chênh lệch tỷ giá tự do với tỷ giá niêm yết nới ra, <b>thì</b> áp lực thật lên VND đang lớn hơn mức tỷ giá chính thức thể hiện.</p></div>
+
+          <div class="wb-divider--label rb-cat-head" data-cat="D">D · Vàng — tách ba node</div>
+          <div class="wb-card rb-rule" id="R-D01" data-tag="T1" data-cat="D"><div class="rb-rule-head"><span class="rb-id">R-D01</span><span class="wb-cap wb-cap--info wb-cap--sm">T1</span></div><p class="rb-body"><b>Nếu</b> <b>lãi suất thực</b> tăng, <b>thì</b> vàng thế giới (XAU) giảm.</p><p class="rb-note">Vàng tương quan nghịch với <b>lãi suất thực</b>, không phải lạm phát. 2022: lạm phát Mỹ ~9% mà vàng đi ngang rồi giảm.</p></div>
+          <div class="wb-card rb-rule" id="R-D02" data-tag="T2" data-cat="D"><div class="rb-rule-head"><span class="rb-id">R-D02</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body">Vàng <b>không phải</b> hàng rào chống lạm phát — mà là hàng rào cho <b>lãi suất thực âm</b> và <b>mất niềm tin</b> vào tiền pháp định/hệ thống. Hai động lực này đôi khi xung đột.</p></div>
+          <div class="wb-card rb-rule" id="R-D03" data-tag="T3" data-cat="D"><div class="rb-rule-head"><span class="rb-id">R-D03</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> bình thường, <b>thì</b> vàng và USD nghịch nhau.</p><p class="rb-note">⚠ Khủng hoảng hệ thống/địa chính trị → cả hai cùng tăng.</p></div>
+          <div class="wb-card rb-rule" id="R-D04" data-tag="T2" data-cat="D"><div class="rb-rule-head"><span class="rb-id">R-D04</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> vàng miếng bị áp độc quyền sản xuất và hạn chế nhập khẩu, <b>thì</b> $\beta(XAU\to SJC)&lt;1$ và chênh lệch <b>tồn tại dai dẳng</b> — địa tô độc quyền.</p></div>
+          <div class="wb-card rb-rule" id="R-D05" data-tag="T2" data-cat="D"><div class="rb-rule-head"><span class="rb-id">R-D05</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body">$\beta(XAU\to\text{vàng nhẫn})>\beta(XAU\to SJC)$, vì nhẫn không bị ràng buộc độc quyền thương hiệu.</p></div>
+          <div class="wb-card rb-rule" id="R-D06" data-tag="T3" data-cat="D"><div class="rb-rule-head"><span class="rb-id">R-D06</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu cả</b> SJC <b>và</b> nhẫn cùng vượt giá thế giới quy đổi, <b>thì</b> đó là cầu trú ẩn <b>thật</b>. Nếu <b>chỉ</b> SJC vượt, đó là hiện tượng thương hiệu/độc quyền.</p><p class="rb-note">Quy tắc chỉ tồn tại được nhờ tách node.</p></div>
+          <div class="wb-card rb-rule" id="R-D07" data-tag="T1" data-cat="D"><div class="rb-rule-head"><span class="rb-id">R-D07</span><span class="wb-cap wb-cap--info wb-cap--sm">T1</span></div><p class="rb-body"><b>Nếu</b> rào cản nhập khẩu được nới, <b>thì</b> chênh lệch phải co về <b>chi phí nhập khẩu cận biên + chi phí giao dịch</b>.</p></div>
+          <div class="wb-card rb-rule" id="R-D08" data-tag="T3" data-cat="D"><div class="rb-rule-head"><span class="rb-id">R-D08</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> lãi suất thực tiền gửi VND âm, <b>thì</b> cầu vàng nội địa tăng (thay thế trong tiết kiệm hộ gia đình).</p></div>
+
+          <div class="wb-divider--label rb-cat-head" data-cat="E">E · Cổ phiếu &amp; định giá</div>
+          <div class="wb-card rb-rule" id="R-E01" data-tag="T1" data-cat="E"><div class="rb-rule-head"><span class="rb-id">R-E01</span><span class="wb-cap wb-cap--info wb-cap--sm">T1</span></div><p class="rb-body"><b>Nếu</b> $r$ tăng 1 điểm % với $r=10\%,g=4\%$, <b>thì</b> giá giảm khoảng <b>14%</b> — dòng tiền doanh nghiệp không đổi.</p><div class="rb-formula">$$\frac{1}{P}\frac{dP}{dr} = -\frac{1}{r-g}$$</div></div>
+          <div class="wb-card rb-rule" id="R-E02" data-tag="T1" data-cat="E"><div class="rb-rule-head"><span class="rb-id">R-E02</span><span class="wb-cap wb-cap--info wb-cap--sm">T1</span></div><p class="rb-body"><b>Nếu</b> spread $r-g$ nhỏ (cổ phiếu tăng trưởng), <b>thì</b> độ nhạy $1/(r-g)$ lớn → <b>growth bị đập mạnh hơn value</b> khi lãi suất tăng. Là đạo hàm, không phải tâm lý.</p></div>
+          <div class="wb-card rb-rule" id="R-E03" data-tag="T0" data-cat="E"><div class="rb-rule-head"><span class="rb-id">R-E03</span><span class="wb-cap wb-cap--success wb-cap--sm">T0</span></div><p class="rb-body"><b>Nếu</b> thị trường giảm mạnh mà lợi nhuận doanh nghiệp vẫn tăng, <b>thì</b> <b>100% cú giảm là de-rating</b> — tín hiệu về $r$, không phải doanh nghiệp.</p></div>
+          <div class="wb-card rb-rule" id="R-E04" data-tag="T3" data-cat="E"><div class="rb-rule-head"><span class="rb-id">R-E04</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> cú sốc là <b>tăng trưởng</b>, <b>thì</b> trái phiếu và cổ phiếu <b>nghịch</b> nhau. Nếu cú sốc là <b>lạm phát</b>, <b>thì cả hai cùng giảm</b> và 60/40 vỡ.</p><p class="rb-note">Biến chế độ quan trọng nhất cho xây dựng danh mục. 2022: cổ phiếu −18%, trái phiếu −13% cùng năm.</p></div>
+          <div class="wb-card rb-rule" id="R-E05" data-tag="T3" data-cat="E"><div class="rb-rule-head"><span class="rb-id">R-E05</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> spread HY giãn, <b>thì</b> cổ phiếu thường giảm <b>sau đó</b>. Credit <b>dẫn trước</b> equity.</p><p class="rb-note">Chỉ báo cảnh báo sớm tốt nhất.</p></div>
+          <div class="wb-card rb-rule" id="R-E06" data-tag="T3" data-cat="E"><div class="rb-rule-head"><span class="rb-id">R-E06</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> tự tương quan lợi nhuận ngày ≈ 0, <b>thì</b> <b>giá hôm qua không dự báo được giá hôm nay</b>.</p></div>
+          <div class="wb-card rb-rule" id="R-E07" data-tag="T3" data-cat="E"><div class="rb-rule-head"><span class="rb-id">R-E07</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> horizon 3–12 tháng → momentum; nếu 3–5 năm → mean reversion. Hai hiệu ứng ở hai khung thời gian khác nhau.</p></div>
+          <div class="wb-card rb-rule" id="R-E08" data-tag="T3" data-cat="E"><div class="rb-rule-head"><span class="rb-id">R-E08</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> phiên giảm kèm thanh khoản cao nhưng phiên hồi kèm thanh khoản thấp, <b>thì</b> chưa đủ cơ sở khẳng định tạo đáy.</p><p class="rb-note">⚠ Heuristic, sai thường xuyên.</p></div>
+          <div class="wb-card rb-rule" id="R-E09" data-tag="T3" data-cat="E"><div class="rb-rule-head"><span class="rb-id">R-E09</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> có khủng hoảng, <b>thì</b> tương quan giữa các tài sản <b>tiến về 1</b>. Đa dạng hóa tốt lúc bình thường, thất bại đúng lúc cần nó.</p></div>
+
+          <div class="wb-divider--label rb-cat-head" data-cat="F">F · Tín dụng &amp; ngân hàng</div>
+          <div class="wb-card rb-rule" id="R-F01" data-tag="T2" data-cat="F"><div class="rb-rule-head"><span class="rb-id">R-F01</span><span class="wb-cap wb-cap--sm">T2</span><span class="rb-lag">Δt: 18–36 tháng</span></div><p class="rb-body"><b>Nếu</b> tăng trưởng tín dụng cao hôm nay, <b>thì</b> nợ xấu tăng sau <b>18–36 tháng</b> (mục 7.7).</p></div>
+          <div class="wb-card rb-rule" id="R-F02" data-tag="T2" data-cat="F"><div class="rb-rule-head"><span class="rb-id">R-F02</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> "bank" được coi là <b>một</b> node, <b>thì</b> mất hết thông tin — NIM, NPL, LDR, CAR phản ứng <b>ngược chiều nhau</b> với cùng cú sốc lãi suất.</p></div>
+          <div class="wb-card rb-rule" id="R-F03" data-tag="T2" data-cat="F"><div class="rb-rule-head"><span class="rb-id">R-F03</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> bất động sản là tài sản thế chấp chính của bank, <b>thì</b> BĐS giảm → chất lượng tài sản giảm → tín dụng co → BĐS giảm thêm. Vòng phản hồi dương.</p></div>
+          <div class="wb-card rb-rule" id="R-F04" data-tag="T2" data-cat="F"><div class="rb-rule-head"><span class="rb-id">R-F04</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> bank Việt Nam gần như không có nợ ngoại tệ và tài khoản vốn chưa mở hoàn toàn, <b>thì</b> $\beta(\text{stress bank TG}\to\text{bank VN})\approx 0$.</p><p class="rb-note">Cầu nối đứt. Biết cầu nối nào đứt quan trọng ngang biết cầu nối nào thông.</p></div>
+          <div class="wb-card rb-rule" id="R-F05" data-tag="T2" data-cat="F"><div class="rb-rule-head"><span class="rb-id">R-F05</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> NHNN áp <b>trần tăng trưởng tín dụng</b>, <b>thì</b> công cụ định lượng này chi phối hơn lãi suất — đặc thù VN.</p></div>
+
+          <div class="wb-divider--label rb-cat-head" data-cat="G">G · Địa chính trị &amp; cú sốc</div>
+          <div class="wb-card rb-rule" id="R-G01" data-tag="T2" data-cat="G"><div class="rb-rule-head"><span class="rb-id">R-G01</span><span class="wb-cap wb-cap--sm">T2</span><span class="rb-lag">Δt: giờ–ngày</span></div><p class="rb-body"><b>Nếu</b> xung đột <b>thực sự chặn</b> một điểm nghẽn (Hormuz, Suez, Malacca), <b>thì</b> giá dầu phản ứng trong <b>giờ</b>. Nếu chỉ đe dọa, tan nhanh.</p></div>
+          <div class="wb-card rb-rule" id="R-G02" data-tag="T3" data-cat="G"><div class="rb-rule-head"><span class="rb-id">R-G02</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> xung đột bùng phát, <b>thì</b> thị trường giảm mạnh rồi <b>hồi phục nhanh</b> — <b>trừ khi</b> chặn được điểm nghẽn năng lượng/chuỗi cung ứng thực.</p><p class="rb-note">"Chiến tranh" không tác động trực tiếp lên chứng khoán — nó tác động qua dầu và phần bù rủi ro.</p></div>
+          <div class="wb-card rb-rule" id="R-G03" data-tag="T2" data-cat="G"><div class="rb-rule-head"><span class="rb-id">R-G03</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> là chiến tranh <b>thương mại</b>, <b>thì</b> cơ chế khác hẳn: cú sốc cung <b>dai dẳng</b> + phân mảnh chuỗi giá trị.</p><p class="rb-note">Với VN (XK/GDP &gt; 90%), thuế quan quan trọng hơn chiến tranh nổ súng.</p></div>
+
+          <div class="wb-divider--label rb-cat-head" data-cat="H">H · Cấu trúc thị trường Việt Nam</div>
+          <div class="wb-card rb-rule" id="R-H01" data-tag="T2" data-cat="H"><div class="rb-rule-head"><span class="rb-id">R-H01</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> có biên độ giá (HoSE ±7%, HNX ±10%, UPCoM ±15%), <b>thì</b> biên độ <b>không loại bỏ cú sốc mà rải nó ra nhiều phiên</b>.</p><p class="rb-note">Lý do chuỗi giảm sàn liên tiếp tồn tại ở VN mà không ở Mỹ.</p></div>
+          <div class="wb-card rb-rule" id="R-H02" data-tag="T2" data-cat="H"><div class="rb-rule-head"><span class="rb-id">R-H02</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> $\text{Tài sản ròng}/\text{Giá trị danh mục}&lt;\text{ngưỡng duy trì}$, <b>thì</b> bán cưỡng chế xảy ra <b>không quan tâm định giá</b>.</p><p class="rb-note">Hệ phi tuyến có ngưỡng: dưới ngưỡng phản ứng tỷ lệ với tin tức, trên ngưỡng phản ứng với chính nó.</p></div>
+          <div class="wb-card rb-rule" id="R-H03" data-tag="T2" data-cat="H"><div class="rb-rule-head"><span class="rb-id">R-H03</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> mã mất thanh khoản không bán được, <b>thì</b> công ty chứng khoán bán mã <b>còn</b> thanh khoản để thu hồi nợ → <b>call margin chéo</b> → lây sang cổ phiếu không liên quan.</p><p class="rb-note">Cùng topology với cascading failure trong hệ phân tán.</p></div>
+          <div class="wb-card rb-rule" id="R-H04" data-tag="T2" data-cat="H"><div class="rb-rule-head"><span class="rb-id">R-H04</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> chỉ số có trọng số vốn hóa free-float, <b>thì</b> <b>VN-Index không đo thị trường, nó đo nhóm trụ</b>.</p><p class="rb-note">Muốn đo sức khỏe thật: xem độ rộng và chỉ số bình quân giản đơn.</p></div>
+          <div class="wb-card rb-rule" id="R-H05" data-tag="T2" data-cat="H"><div class="rb-rule-head"><span class="rb-id">R-H05</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> thanh toán T+2, <b>thì</b> không bán được thứ vừa mua trong cùng phiên → thanh khoản mỏng hơn thị trường T+0.</p></div>
+          <div class="wb-card rb-rule" id="R-H06" data-tag="T2" data-cat="H"><div class="rb-rule-head"><span class="rb-id">R-H06</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> một mã vào/ra rổ MSCI hoặc FTSE, <b>thì</b> dòng tiền thụ động <b>buộc phải</b> mua/bán bất chấp giá.</p><p class="rb-note">Sự kiện biết trước lịch.</p></div>
+          <div class="wb-card rb-rule" id="R-H07" data-tag="T2" data-cat="H"><div class="rb-rule-head"><span class="rb-id">R-H07</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> tỷ lệ NĐT cá nhân rất cao (&gt;85% giá trị giao dịch), <b>thì</b> biên độ phản ứng lớn hơn cú sốc gốc.</p></div>
+          <div class="wb-card rb-rule" id="R-H08" data-tag="T2" data-cat="H"><div class="rb-rule-head"><span class="rb-id">R-H08</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> VN là nền kinh tế nhỏ mở, <b>thì</b> đồ thị <b>bất đối xứng</b>: $\beta(\text{TG}\to VN)$ lớn, $\beta(VN\to\text{TG})\approx0$. VN là price-taker gần như tuyệt đối.</p></div>
+
+        </div>
+        <div class="wb-empty" id="ruleEmpty" style="display:none">
+          <div class="wb-empty__icon">🔍</div>
+          <p class="wb-empty__title">Không có quy tắc nào khớp</p>
+          <p class="wb-empty__msg">Thử nới bộ lọc hoặc xoá từ khoá tìm kiếm.</p>
+        </div>
+      </section>
+
+      <hr class="wb-divider">
+
+      <!-- ============ 04 — LỚP CHẾ ĐỘ ============ -->
+      <section id="s4-chedo">
+        <p class="rb-sec-eyebrow"><b>04</b> — Lớp chế độ</p>
+        <h2 class="rb-sec-title">Nén một đồ thị 60 node xuống hai nhân tố</h2>
+        <p class="rb-sec-intro">Một đồ thị 60 node và 200 cạnh không phải mô hình — nó là danh sách. Câu hỏi đúng: <b>không gian này có bao nhiêu chiều?</b> Thực nghiệm: gần như toàn bộ biến động cross-asset span được bởi <b>hai nhân tố</b> — bất ngờ tăng trưởng và bất ngờ lạm phát — cộng thanh khoản/khẩu vị rủi ro. Chữ <b>"bất ngờ"</b> là then chốt: sai lệch so với kỳ vọng đã định giá, không phải mức.</p>
+
+        <div class="wb-cluster wb-cluster--between" style="font-family:var(--wb-font-mono);font-size:11px;color:var(--wb-fg-subtle);text-transform:uppercase;letter-spacing:.04em">
+          <span>← Lạm phát dưới kỳ vọng</span><span>Lạm phát trên kỳ vọng →</span>
+        </div>
+        <div class="wb-grid wb-grid--2" style="margin-top:8px">
+          <div class="wb-alert wb-alert--danger"><div class="wb-alert__body">
+            <p class="wb-alert__title">Đình lạm</p>
+            <p class="wb-alert__msg">Tăng trưởng dưới kỳ vọng + lạm phát trên kỳ vọng<br>Cổ phiếu ↓↓, TP ↓, vàng ↑, hàng hóa ↑, USD ↑</p>
+            <p class="wb-alert__msg"><b>VN: xấu nhất</b> — ba kênh cộng dồn (R-REG01)</p>
+          </div></div>
+          <div class="wb-alert wb-alert--warning"><div class="wb-alert__body">
+            <p class="wb-alert__title">Quá nóng</p>
+            <p class="wb-alert__msg">Tăng trưởng trên kỳ vọng + lạm phát trên kỳ vọng<br>Cổ phiếu ~, TP ↓↓, vàng tùy Fed, hàng hóa ↑↑</p>
+            <p class="wb-alert__msg">VN: trung bình, value dẫn</p>
+          </div></div>
+          <div class="wb-alert wb-alert--info"><div class="wb-alert__body">
+            <p class="wb-alert__title">Suy thoái</p>
+            <p class="wb-alert__msg">Tăng trưởng dưới kỳ vọng + lạm phát dưới kỳ vọng<br>Cổ phiếu ↓, TP ↑↑, vàng ~↑, hàng hóa ↓↓, USD ↑</p>
+            <p class="wb-alert__msg">VN: xuất khẩu giảm, chi phí dịu</p>
+          </div></div>
+          <div class="wb-alert wb-alert--success"><div class="wb-alert__body">
+            <p class="wb-alert__title">Goldilocks</p>
+            <p class="wb-alert__msg">Tăng trưởng trên kỳ vọng + lạm phát dưới kỳ vọng<br>Cổ phiếu ↑↑, TP ↑, vàng ~, hàng hóa ↓, USD ↓</p>
+            <p class="wb-alert__msg"><b>VN: tốt nhất</b></p>
+          </div></div>
+        </div>
+
+        <div class="wb-card rb-rule" id="R-REG01" data-tag="T3" style="margin-top:16px"><div class="rb-rule-head"><span class="rb-id">R-REG01</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> hệ ở góc <b>đình lạm</b>, <b>thì</b> Việt Nam bị trúng <b>ba kênh cộng dồn</b>: cầu xuất khẩu ↓, chi phí nhập khẩu ↑, dòng vốn rút. Phân bố lợi nhuận của VN <b>lệch nhất</b> trong bốn góc.</p></div>
+
+        <div class="wb-alert wb-alert--plain" style="margin-top:12px"><div class="wb-alert__body"><p class="wb-alert__title">Cách dùng</p><p class="wb-alert__msg">Đừng hỏi "dầu tăng thì chứng khoán thế nào" — câu đó thiếu điều kiện. Hỏi <b>"cú sốc này đẩy hệ về góc nào"</b>.</p></div></div>
+      </section>
+
+      <hr class="wb-divider">
+
+      <!-- ============ 05 — CẦU NỐI ============ -->
+      <section id="s5-caunoi">
+        <p class="rb-sec-eyebrow"><b>05</b> — Cầu nối Thế giới → Việt Nam</p>
+        <h2 class="rb-sec-title">Năm loại cầu nối — và vì sao "vẽ hết mọi cạnh" là vô nghĩa</h2>
+        <p class="rb-sec-intro">Mỗi cạnh thế giới → VN đi qua một trong năm loại cầu nối. Biết <b>loại</b> cầu nối quan trọng hơn biết con số β, vì nó nói cách β sẽ hành xử khi hoàn cảnh đổi.</p>
+
+        <div class="wb-card"><div class="wb-table-scroll"><table class="wb-table">
+          <thead><tr><th>Loại</th><th>Bản chất</th><th>β</th><th>Ví dụ</th></tr></thead>
+          <tbody>
+            <tr><td><b>A</b></td><td>Arbitrage</td><td>Nên ≈ 1, nhanh</td><td>XAU → vàng nhẫn (cao), → SJC (bị chặn)</td></tr>
+            <tr><td><b>B</b></td><td>Thương mại, có trọng số</td><td><code>w_rổ × tỷ lệ NK × pass-through</code></td><td>Hàng hóa → CPI VN</td></tr>
+            <tr><td><b>C</b></td><td>Dòng vốn</td><td>Biến động, <b>phình trong stress</b></td><td>DXY, VIX → FII → VN-Index</td></tr>
+            <tr><td><b>D</b></td><td>Chính sách</td><td><b>Là quyết định, có thể = 0</b></td><td>Fed → NHNN</td></tr>
+            <tr><td><b>E</b></td><td>Đứt</td><td>≈ 0</td><td>BĐS toàn cầu → BĐS VN; bank toàn cầu → bank VN</td></tr>
+          </tbody>
+        </table></div></div>
+
+        <div class="wb-card rb-rule" id="R-BR01" data-tag="T2" style="margin-top:14px"><div class="rb-rule-head"><span class="rb-id">R-BR01</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> cầu nối là loại <b>D</b>, <b>thì</b> đừng suy luận cơ học. Lãi suất VND liên ngân hàng qua đêm có lúc lên <b>11%/năm</b> cuối tháng 5 đầu tháng 6/2026 — không đến từ Fed mà từ thanh khoản nội địa.</p></div>
+
+        <h3 class="rb-sub-title">5.2 — Phần dư của cầu nối là tín hiệu nội địa</h3>
+        <p class="rb-sec-intro" style="margin-bottom:12px">Với mọi cầu nối loại A, đại lượng <code>gap = P_nội địa − P_thế giới × tỷ giá</code> <b>không phải nhiễu</b> — nó là biến trạng thái nội địa, quan sát được, miễn phí, hằng ngày.</p>
+        <div class="wb-card"><div class="wb-table-scroll"><table class="wb-table">
+          <thead><tr><th>Phần dư</th><th>Đo cái gì</th></tr></thead>
+          <tbody>
+            <tr><td>SJC − XAU quy đổi</td><td>Độ chặt kiểm soát nhập khẩu + niềm tin vào VND</td></tr>
+            <tr><td><b>SJC − vàng nhẫn</b></td><td>Tách phần "độc quyền thương hiệu" khỏi phần "cầu vàng thật"</td></tr>
+            <tr><td>Tỷ giá tự do − niêm yết</td><td>Áp lực thật lên VND, thứ tỷ giá chính thức che</td></tr>
+            <tr><td>Lợi suất TPCP VN − UST</td><td>Phần bù rủi ro chủ quyền + kỳ vọng mất giá VND</td></tr>
+          </tbody>
+        </table></div></div>
+
+        <h3 class="rb-sub-title">5.3 — Cardinality: chỉ vài hình dạng đáng vẽ thành sơ đồ</h3>
+        <p class="rb-sec-intro" style="margin-bottom:12px">Câu trả lời trực tiếp cho "vẽ sơ đồ liên kết được không": <b>có</b>, nhưng chỉ với hai hình dạng nhỏ (≤6 node) và bất đối xứng dưới đây. Hình dạng <b>n→n</b> (mọi thứ nối mọi thứ, chỉ khác trọng số) thì <b>không</b> đáng vẽ — xem hộp cảnh báo cuối mục.</p>
+
+        <div class="wb-grid wb-grid--2">
+          <div class="wb-card rb-mini-fanout">
+            <div class="wb-card__head"><h4 class="wb-card__title">1→n Fan-out — DXY ↑</h4></div>
+            <ul class="wb-list wb-list--flush">
+              <li class="wb-list__item"><span class="wb-list__title">Áp lực USD/VND</span><span class="wb-list__end"><span class="wb-cap wb-cap--danger wb-cap--sm">−VN</span></span></li>
+              <li class="wb-list__item"><span class="wb-list__title">Khối ngoại bán ròng</span><span class="wb-list__end"><span class="wb-cap wb-cap--danger wb-cap--sm">−VN</span></span></li>
+              <li class="wb-list__item"><span class="wb-list__title">Giá hàng hóa quy đổi VND ↑</span><span class="wb-list__end"><span class="wb-cap wb-cap--danger wb-cap--sm">−VN</span></span></li>
+              <li class="wb-list__item"><span class="wb-list__title">XAU ↓</span><span class="wb-list__end"><span class="wb-cap wb-cap--danger wb-cap--sm">−VN</span></span></li>
+              <li class="wb-list__item"><span class="wb-list__title">Dự trữ ngoại hối bị hao</span><span class="wb-list__end"><span class="wb-cap wb-cap--danger wb-cap--sm">−VN</span></span></li>
+            </ul>
+            <div class="wb-card__foot">Các nhánh phần lớn cùng dấu âm → cộng dồn. Vẽ được vì 1 nguồn, nhiều đích.</div>
+          </div>
+          <div class="wb-card rb-mini-fanout">
+            <div class="wb-card__head"><h4 class="wb-card__title">n→1 Fan-in — → CPI Việt Nam</h4></div>
+            <ul class="wb-list wb-list--flush">
+              <li class="wb-list__item"><span class="wb-list__title">Gạo</span></li>
+              <li class="wb-list__item"><span class="wb-list__title">Thịt lợn</span></li>
+              <li class="wb-list__item"><span class="wb-list__title">Xăng</span></li>
+              <li class="wb-list__item"><span class="wb-list__title">Tỷ giá</span></li>
+              <li class="wb-list__item"><span class="wb-list__title">Điện</span></li>
+              <li class="wb-list__item"><span class="wb-list__title">Giá dịch vụ điều hành</span></li>
+            </ul>
+            <div class="wb-card__foot">Trọng số rổ được công bố → hệ số biết trước, kiểm chứng được thay vì phải dò.</div>
+          </div>
+        </div>
+
+        <div class="wb-alert wb-alert--plain" style="margin-top:12px"><div class="wb-alert__body"><p class="wb-alert__title">n→1 dấu ngược nhau — node khó nhất</p><p class="wb-alert__msg"><code>USD/VND ← {DXY (+), chênh lệch lãi suất (+), cán cân TM (−), FDI (−), kiều hối (−), can thiệp NHNN (−)}</code>. Sáu đầu vào, ba dấu dương ba dấu âm. Một sơ đồ ở đây dễ gây ảo giác chắc chắn hơn là làm rõ — bảng liệt kê dấu trung thực hơn.</p></div></div>
+
+        <div class="wb-alert wb-alert--danger" style="margin-top:10px"><span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">error</span></span><div class="wb-alert__body"><p class="wb-alert__title">n→n (lớp chế độ) — không vẽ, và đây là lý do</p><p class="wb-alert__msg">Dựng n→n bằng cạnh riêng lẻ cho <code>O(n²)</code> tham số trên một chuỗi thời gian ngắn — bảo đảm overfit, và một sơ đồ với hàng trăm đường kẻ chỉ khác nhau ở độ đậm nhạt <b>không truyền đạt được trực giác nào</b>. Đây chính xác là trường hợp phụ thuộc n-n chỉ khác nhau ở trọng số: một sơ đồ đầy đủ cũng vô nghĩa với người đọc. Giải pháp đúng là đổi biểu diễn — nén sang <a href="#s4-chedo">ma trận 2 nhân tố ở Phần 4</a>.</p></div></div>
+
+        <h3 class="rb-sub-title">5.4 — Bảng cạnh chính</h3>
+        <div class="rb-filterbar" style="position:static">
+          <div class="wb-filterbar" id="edgeChips">
+            <button type="button" class="wb-cap wb-cap--elevated rb-chip" data-edge="A" data-active="true">A · Arbitrage</button>
+            <button type="button" class="wb-cap wb-cap--elevated rb-chip" data-edge="B" data-active="true">B · Thương mại</button>
+            <button type="button" class="wb-cap wb-cap--elevated rb-chip" data-edge="C" data-active="true">C · Dòng vốn</button>
+            <button type="button" class="wb-cap wb-cap--elevated rb-chip" data-edge="D" data-active="true">D · Chính sách</button>
+            <button type="button" class="wb-cap wb-cap--elevated rb-chip" data-edge="E" data-active="true">E · Đứt</button>
+            <button type="button" class="wb-cap wb-cap--elevated rb-chip" data-edge="X" data-active="true">— · Cơ chế nội địa</button>
+            <button type="button" class="wb-btn wb-btn--ghost wb-btn--sm" id="edgeReset"><span class="wb-ico wb-ico--sm">restart_alt</span> Reset</button>
+          </div>
+        </div>
+        <div class="wb-card"><div class="wb-table-scroll"><table class="wb-table wb-table--compact wb-table--striped" id="edgeTable">
+          <thead><tr><th>Từ</th><th>Đến</th><th>Dấu</th><th>Δt</th><th>Loại / Điều kiện</th></tr></thead>
+          <tbody>
+            <tr data-edge="X"><td>Chokepoint bị chặn</td><td>Dầu</td><td>+</td><td>Giờ–ngày</td><td class="wb-cell-muted">Chỉ nếu chặn thật</td></tr>
+            <tr data-edge="B"><td>Dầu</td><td>CPI headline VN</td><td>+</td><td>1–3 th</td><td class="wb-cell-muted">B</td></tr>
+            <tr data-edge="B"><td>Dầu</td><td>CPI core</td><td>+</td><td>6–12 th</td><td class="wb-cell-muted">B, chỉ nếu vòng hai qua lương</td></tr>
+            <tr data-edge="B"><td>Gạo, thịt lợn</td><td>CPI VN</td><td>+</td><td>Tức thời</td><td class="wb-cell-muted">B, trọng số ~33%</td></tr>
+            <tr data-edge="D"><td>Lạm phát kỳ vọng</td><td>Fed</td><td>+</td><td>1–2 họp</td><td class="wb-cell-muted">D</td></tr>
+            <tr data-edge="D"><td>Tăng trưởng</td><td>Fed</td><td>+</td><td>2–4 họp</td><td class="wb-cell-muted">D, dấu ngược kênh lạm phát</td></tr>
+            <tr data-edge="X"><td>Fed funds</td><td>Lãi suất thực</td><td>+</td><td>Tức thời</td><td class="wb-cell-muted">Nếu vượt kỳ vọng đã định giá</td></tr>
+            <tr data-edge="X"><td>Lãi suất thực</td><td>XAU</td><td>−</td><td>Ngày</td><td class="wb-cell-muted">⚠ đảo khi khủng hoảng niềm tin</td></tr>
+            <tr data-edge="A"><td>XAU</td><td>Vàng nhẫn</td><td>+</td><td>Ngày</td><td class="wb-cell-muted">A, β cao</td></tr>
+            <tr data-edge="A"><td>XAU</td><td>SJC</td><td>+</td><td>Ngày</td><td class="wb-cell-muted">A, β do chính sách quyết</td></tr>
+            <tr data-edge="A"><td>Δ r_thực Mỹ–TG</td><td>DXY</td><td>+</td><td>Ngày</td><td class="wb-cell-muted">A</td></tr>
+            <tr data-edge="C"><td>DXY</td><td>Cổ phiếu EM</td><td>−</td><td>Ngày</td><td class="wb-cell-muted">C, rất bền</td></tr>
+            <tr data-edge="A"><td>DXY</td><td>Giá hàng hóa</td><td>−</td><td>Ngày</td><td class="wb-cell-muted">A, định giá bằng USD</td></tr>
+            <tr data-edge="C"><td>DXY</td><td>USD/VND</td><td>+</td><td>Ngày–tuần</td><td class="wb-cell-muted">C/D, qua can thiệp</td></tr>
+            <tr data-edge="X"><td>Lãi suất thực</td><td>P/E</td><td>−</td><td>Tức thời</td><td class="wb-cell-muted">T1, độ nhạy 1/(r−g)</td></tr>
+            <tr data-edge="C"><td>Spread HY</td><td>Cổ phiếu</td><td>−</td><td>Dẫn trước</td><td class="wb-cell-muted">C, cảnh báo sớm tốt nhất</td></tr>
+            <tr data-edge="X"><td>Lãi suất</td><td>Kinh tế thực</td><td>−</td><td>12–18 th</td><td class="wb-cell-muted">Nguồn của overshoot</td></tr>
+            <tr data-edge="X"><td>Lãi suất</td><td>Bất động sản</td><td>−</td><td>12–24 th</td><td class="wb-cell-muted">—</td></tr>
+            <tr data-edge="X"><td>Tăng trưởng tín dụng</td><td>NPL</td><td>+</td><td>18–36 th</td><td class="wb-cell-muted">Mục 3.7</td></tr>
+            <tr data-edge="B"><td>Tăng trưởng TQ</td><td>Xuất khẩu VN</td><td>+</td><td>1–2 quý</td><td class="wb-cell-muted">B</td></tr>
+            <tr data-edge="B"><td>USD/VND</td><td>CPI VN</td><td>+</td><td>2–4 th</td><td class="wb-cell-muted">B</td></tr>
+            <tr data-edge="X"><td>Giá cổ phiếu</td><td>Call margin</td><td>−</td><td>Có ngưỡng</td><td class="wb-cell-muted">Phi tuyến</td></tr>
+            <tr data-edge="C"><td>Nâng hạng thị trường</td><td>Vốn thụ động</td><td>+</td><td>Biết trước lịch</td><td class="wb-cell-muted">C</td></tr>
+            <tr data-edge="D"><td>Fed</td><td>Lãi suất liên NH VN</td><td>~0</td><td>—</td><td class="wb-cell-muted">D, cầu nối gần đứt ngắn hạn</td></tr>
+            <tr data-edge="E"><td>BĐS toàn cầu</td><td>BĐS VN</td><td>~0</td><td>—</td><td class="wb-cell-muted">E, đứt</td></tr>
+            <tr data-edge="E"><td>Bank toàn cầu</td><td>Bank VN</td><td>~0</td><td>—</td><td class="wb-cell-muted">E, đứt</td></tr>
+          </tbody>
+        </table></div></div>
+
+        <h3 class="rb-sub-title">5.5 — Bốn đặc thù Việt Nam</h3>
+        <ol class="wb-help" style="font-size:13.5px;color:var(--wb-fg);line-height:1.8;padding-left:1.2em">
+          <li><b>Đồ thị bất đối xứng</b> — VN là price-taker; không cần vòng phản hồi ngược ra thế giới.</li>
+          <li><b>Nhưng có bộ khuếch đại nội địa</b> — margin có ngưỡng, liên kết BĐS–bank, tỷ lệ NĐT cá nhân &gt;85%. Cả ba là vòng phản hồi dương.</li>
+          <li><b>Rổ CPI khác Mỹ căn bản</b> — lương thực ~33–34% so với ~13%. Khung lạm phát Mỹ không chuyển giao trực tiếp.</li>
+          <li><b>Kênh Trung Quốc song song kênh Mỹ</b> — hai nguồn ngoại sinh gần như độc lập, có thể <b>xung đột</b> (Fed thắt trong khi PBoC nới).</li>
+        </ol>
+      </section>
+
+      <hr class="wb-divider">
+
+      <!-- ============ 06 — META-QUY TẮC ============ -->
+      <section id="s6-meta">
+        <p class="rb-sec-eyebrow"><b>06</b> — Meta-quy tắc</p>
+        <h2 class="rb-sec-title">T4 — điều kiện làm mọi thứ ở trên hỏng</h2>
+        <p class="rb-sec-intro">Không mô tả thị trường — mô tả <b>độ tin cậy của mọi quy tắc khác</b>.</p>
+
+        <div class="wb-grid wb-grid--auto">
+          <div class="wb-card rb-rule"><div class="rb-rule-head"><span class="rb-id">R-M01 — Phản thân</span><span class="wb-cap wb-cap--danger wb-cap--sm">T4</span></div><p class="rb-body"><b>Nếu</b> mô hình là <b>một phần của</b> đối tượng nó mô tả, <b>thì</b> hành động đồng bộ của những người dùng cùng mô hình <b>tạo ra</b> chính rủi ro mà mô hình chưa lường.</p><p class="rb-note">Khủng hoảng 2008: các mô hình không dự báo sai thế giới, chúng <b>tạo ra</b> thế giới chúng dự báo sai.</p></div>
+          <div class="wb-card rb-rule"><div class="rb-rule-head"><span class="rb-id">R-M02 — Suy giảm alpha</span><span class="wb-cap wb-cap--danger wb-cap--sm">T4</span></div><p class="rb-body"><b>Nếu</b> một quy luật được công bố, <b>thì</b> nó bị arbitrage đóng lại. Value premium yếu đi rõ rệt sau Fama-French.</p><p class="rb-note">Nếu bạn tìm được một quy luật trên Google, nó đã hết giá trị.</p></div>
+          <div class="wb-card rb-rule"><div class="rb-rule-head"><span class="rb-id">R-M03 — Phi dừng</span><span class="wb-cap wb-cap--danger wb-cap--sm">T4</span></div><p class="rb-body"><b>Nếu</b> tham số không cố định, <b>thì</b> mô hình fit 2015–2019 sẽ vỡ vào 2020. Không có "phân phối thật" để hội tụ về.</p><p class="rb-note">Lý do backtest luôn đẹp hơn thực tế.</p></div>
+          <div class="wb-card rb-rule"><div class="rb-rule-head"><span class="rb-id">R-M04 — Đuôi dày</span><span class="wb-cap wb-cap--danger wb-cap--sm">T4</span></div><p class="rb-body"><b>Nếu</b> kurtosis thực nghiệm là 5–10 (không phải 3), <b>thì</b> mọi VaR dựa trên Gaussian <b>đánh giá thấp rủi ro đúng lúc quan trọng nhất</b>.</p><p class="rb-note">Bẫy lớn nhất cho người từ nền toán vào tài chính. Dùng Student-t hoặc EVT.</p></div>
+          <div class="wb-card rb-rule"><div class="rb-rule-head"><span class="rb-id">R-M05 — Volatility clustering</span><span class="wb-cap wb-cap--danger wb-cap--sm">T4</span></div><p class="rb-body"><b>Nếu</b> biến động tự tương quan cao, <b>thì</b> sau phiên rơi mạnh, xác suất phiên sau biến động lớn cao hơn <b>theo cả hai chiều</b>.</p><p class="rb-note">Lý do cả họ mô hình GARCH tồn tại.</p></div>
+          <div class="wb-card rb-rule"><div class="rb-rule-head"><span class="rb-id">R-M06 — Skew âm</span><span class="wb-cap wb-cap--danger wb-cap--sm">T4</span></div><p class="rb-body"><b>Nếu</b> cú sốc âm làm tăng biến động nhiều hơn cú sốc dương cùng độ lớn, <b>thì</b> thị trường <b>rơi nhanh hơn khi lên</b>.</p></div>
+          <div class="wb-card rb-rule"><div class="rb-rule-head"><span class="rb-id">R-M07 — Đa giả thuyết</span><span class="wb-cap wb-cap--danger wb-cap--sm">T4</span></div><p class="rb-body"><b>Nếu</b> thử 100 chiến lược ở $\alpha=0{,}05$, <b>thì</b> kỳ vọng <b>5 cái "có ý nghĩa" hoàn toàn ngẫu nhiên</b>.</p><p class="rb-note">Chống lại: hold-out thật; hiệu chỉnh Bonferroni; ưu tiên cơ chế nhân quả trước khi xem dữ liệu (Phần 7).</p></div>
+          <div class="wb-card rb-rule" id="R-M08"><div class="rb-rule-head"><span class="rb-id">R-M08 — Phi ergodic</span><span class="wb-cap wb-cap--danger wb-cap--sm">T4</span></div><p class="rb-body"><b>Nếu</b> bạn chỉ đi <b>một</b> đường mẫu, <b>thì</b> một cược có kỳ vọng dương vẫn có thể dẫn tới phá sản gần như chắc chắn nếu đặt cược quá lớn.</p>
+            <div class="wb-alert wb-alert--success" style="margin-top:10px"><span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">check</span></span><div class="wb-alert__body"><p class="wb-alert__title">Insight sâu nhất trong sổ tay</p><p class="wb-alert__msg">Kỳ vọng theo tập hợp ≠ kỳ vọng theo thời gian — toàn bộ lý do tồn tại của Kelly criterion. <b>Bạn không tối đa hóa $E[\text{wealth}]$, bạn tối đa hóa $E[\log \text{wealth}]$.</b></p></div></div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="wb-divider">
+
+      <!-- ============ 07 — NỀN VI MÔ ============ -->
+      <section id="s7-vimo">
+        <p class="rb-sec-eyebrow"><b>07</b> — Nền vi mô</p>
+        <h2 class="rb-sec-title">Vì sao β có giá trị như vậy</h2>
+        <p class="rb-sec-intro">Đây là <b>cơ chế</b> đằng sau mọi con số ở Phần 3. Không có nó, các hệ số chỉ là tương quan quan sát được, không phải kiến thức. <span class="wb-cap wb-cap--dashed wb-cap--sm">Đào sâu — không bắt buộc</span> nếu bạn chỉ cần cảm quan phụ thuộc, phần này giải thích <em>vì sao</em> chứ không thêm quy tắc mới.</p>
+
+        <div class="wb-accordion">
+          <details class="wb-accordion__item" open><summary>7.1 — Độ co giãn quyết định biên độ cú sốc</summary><div class="wb-accordion__body">
+            <div class="rb-formula">$$\varepsilon_d = \frac{\%\Delta Q}{\%\Delta P} \quad \Rightarrow \quad \%\Delta P = \frac{\%\Delta Q}{\varepsilon_d}$$</div>
+            <p class="rb-body"><span class="wb-cap">T2</span>&nbsp; Với cầu rất <b>không co giãn</b>, một thay đổi cung nhỏ đòi hỏi thay đổi giá lớn để cân bằng. <b>Nếu</b> cầu ngắn hạn của dầu có độ co giãn khoảng −0,05 đến −0,1, <b>thì</b> mất 1% nguồn cung cần giá tăng khoảng 10–20%.</p>
+            <div class="wb-alert wb-alert--plain" style="margin-top:12px"><div class="wb-alert__body"><p class="wb-alert__msg">Đây là lý do cú sốc dầu dữ dội — không vì dầu "quan trọng", mà vì <b>mẫu số nhỏ</b>. Cùng logic áp dụng cho lương thực và điện. Độ co giãn dài hạn lớn hơn nhiều → giá hàng hóa <b>bật cao rồi hồi về</b> (mean reversion 3–5 năm).</p></div></div>
+          </div></details>
+
+          <details class="wb-accordion__item"><summary>7.2 — Cấu trúc thị trường quyết định pass-through</summary><div class="wb-accordion__body">
+            <div class="wb-card"><div class="wb-table-scroll"><table class="wb-table">
+              <thead><tr><th>Cấu trúc thị trường</th><th>Pass-through</th><th>Ai chịu cú sốc chi phí</th></tr></thead>
+              <tbody>
+                <tr><td>Độc quyền / thương hiệu mạnh</td><td>Cao</td><td>Người tiêu dùng</td></tr>
+                <tr><td>Cạnh tranh, hàng hóa đồng nhất</td><td>Thấp</td><td><b>Biên lợi nhuận doanh nghiệp</b></td></tr>
+                <tr><td>Giá điều hành (xăng, điện, y tế)</td><td>Do nhà nước quyết</td><td>Ngân sách hoặc người dân</td></tr>
+              </tbody>
+            </table></div></div>
+            <p class="rb-body" style="margin-top:12px"><span class="wb-cap">T2</span>&nbsp; <b>Nếu</b> giá đầu vào tăng, <b>thì</b> ngành bị tổn thương nặng nhất là ngành có <b>cầu co giãn cao và không có quyền định giá</b> — không phải ngành dùng nhiều đầu vào nhất.</p>
+          </div></details>
+
+          <details class="wb-accordion__item"><summary>7.3 — Độc quyền tạo chênh lệch giá: trường hợp vàng SJC</summary><div class="wb-accordion__body">
+            <p class="rb-body"><span class="wb-cap">T2</span>&nbsp; <b>Nếu</b> một mặt hàng có thể arbitrage bị áp đặt độc quyền sản xuất và hạn chế nhập khẩu, <b>thì</b> giá nội địa tách khỏi giá thế giới và phần chênh là <b>địa tô độc quyền</b>, không phải tín hiệu cung–cầu.</p>
+            <p class="wb-help" style="margin-top:10px">Nghị định 24/2012 cho Nhà nước độc quyền sản xuất vàng miếng. Chênh lệch SJC từng lên 18–20 triệu đồng/lượng (cuối 2023). Nghị định 232/2025 (hiệu lực 10/10/2025) sửa đổi NĐ 24 với kỳ vọng thu hẹp chênh lệch.</p>
+            <div class="wb-alert wb-alert--success" style="margin-top:12px"><span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">check</span></span><div class="wb-alert__body"><p class="wb-alert__title">Suy ra T1 — dự đoán khả bác</p><p class="wb-alert__msg">Khi rào cản được nới, chênh lệch phải co về <b>chi phí nhập khẩu cận biên + chi phí giao dịch</b>.</p></div></div>
+          </div></details>
+
+          <details class="wb-accordion__item"><summary>7.4 — Mô hình mạng nhện: chu kỳ thịt lợn Việt Nam</summary><div class="wb-accordion__body">
+            <div class="rb-formula">$$Q_t = f(P_{t-1}), \quad P_t = g(Q_t)$$</div>
+            <p class="rb-body"><span class="wb-cap">T2</span>&nbsp; Khi người sản xuất quyết định sản lượng dựa trên <b>giá kỳ trước</b> và có độ trễ sinh học: <b>nếu</b> $|f' \cdot g'| > 1$, <b>thì</b> dao động phân kỳ; nếu $&lt;1$ thì hội tụ. Chu kỳ lợn có độ trễ sinh học ~10–12 tháng, nên chu kỳ giá ~2–4 năm.</p>
+            <div class="wb-alert wb-alert--danger" style="margin-top:12px"><span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">error</span></span><div class="wb-alert__body"><p class="wb-alert__msg">Vì thịt lợn chiếm ~33–34% rổ CPI Việt Nam, <b>một mô hình mạng nhện trong sách giáo khoa vi mô là một trong những động lực lớn nhất của lạm phát Việt Nam.</b></p></div></div>
+          </div></details>
+
+          <details class="wb-accordion__item"><summary>7.5 — Người mua cận biên định giá</summary><div class="wb-accordion__body">
+            <p class="rb-body"><span class="wb-cap wb-cap--success">T0</span>&nbsp; <b>Nếu</b> thị trường thứ cấp cân bằng, <b>thì</b> giá do <b>giá bảo lưu của người mua cận biên</b> quyết định, không do "lượng tiền vào/ra".</p>
+            <div class="wb-alert wb-alert--plain" style="margin-top:12px"><div class="wb-alert__body"><p class="wb-alert__msg">"Dòng tiền rút khỏi thị trường" là cách nói lỏng: mỗi cổ phiếu bán ra đều có người mua vào. Khối ngoại bán ròng 13.000 tỷ nghĩa là nội địa mua đúng 13.000 tỷ — ở giá thấp hơn nhiều.</p></div></div>
+          </div></details>
+
+          <details class="wb-accordion__item"><summary>7.6 — Giá dính (sticky prices)</summary><div class="wb-accordion__body">
+            <p class="rb-body"><span class="wb-cap">T2</span>&nbsp; <b>Nếu</b> giá và tiền lương điều chỉnh chậm, <b>thì</b> chính sách tiền tệ có tác động <b>thực</b> trong ngắn hạn, và lạm phát có <b>quán tính</b>. Không có tính dính này, tiền tệ trung lập hoàn toàn và Fed vô nghĩa.</p>
+            <div class="wb-alert wb-alert--warning" style="margin-top:12px"><span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">warning</span></span><div class="wb-alert__body"><p class="wb-alert__title">Đặc thù VN</p><p class="wb-alert__msg">Giá điện, y tế, giáo dục, xăng là <b>giá điều hành</b> — truyền dẫn <b>theo bậc</b>, không liên tục. CPI Việt Nam có bước nhảy, không phản ứng trơn.</p></div></div>
+          </div></details>
+
+          <details class="wb-accordion__item"><summary>7.7 — Thông tin bất đối xứng → chu kỳ tín dụng</summary><div class="wb-accordion__body">
+            <p class="rb-body"><span class="wb-cap">T2</span>&nbsp; <b>Nếu</b> bên cho vay không phân biệt được người vay tốt/xấu (lựa chọn ngược) và người vay có động cơ mạo hiểm sau khi nhận vốn (rủi ro đạo đức), <b>thì</b> tăng trưởng tín dụng nhanh nhất thiết làm giảm chất lượng tài sản, độ trễ 18–36 tháng.</p>
+            <div class="wb-alert wb-alert--danger" style="margin-top:12px"><span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">error</span></span><div class="wb-alert__body"><p class="wb-alert__msg">Tín dụng nóng hôm nay là nợ xấu hai đến ba năm sau. Quy tắc dự báo NPL đáng tin nhất.</p></div></div>
+          </div></details>
+
+          <details class="wb-accordion__item"><summary>7.8 — Phối hợp và trò chơi</summary><div class="wb-accordion__body">
+            <p class="rb-body"><span class="wb-cap">T2</span>&nbsp; <b>Nếu</b> hành động tối ưu của mỗi cá nhân phụ thuộc kỳ vọng về hành động của người khác, <b>thì</b> hệ có <b>nhiều điểm cân bằng</b> và có thể nhảy đột ngột giữa chúng: rút tiền ồ ạt, thác call margin, OPEC giữ hạn ngạch, bán tháo.</p>
+            <div class="wb-alert wb-alert--warning" style="margin-top:12px"><span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">warning</span></span><div class="wb-alert__body"><p class="wb-alert__msg">Các hiện tượng này <b>không có cảnh báo tuyến tính</b> — chúng là chuyển pha, không phải xu hướng.</p></div></div>
+          </div></details>
+        </div>
+      </section>
+
+      <hr class="wb-divider">
+
+      <!-- ============ 08 — ĐẲNG THỨC CỨNG ============ -->
+      <section id="s8-dangthuc">
+        <p class="rb-sec-eyebrow"><b>08</b> — Đẳng thức cứng</p>
+        <h2 class="rb-sec-title">T0–T1: giới hạn không gian trạng thái khả thi</h2>
+        <p class="rb-sec-intro">Tương tự invariant trong phần mềm — nếu mô hình của bạn vi phạm những đẳng thức dưới đây, mô hình sai. <span class="wb-cap wb-cap--dashed wb-cap--sm">Tham khảo — không bắt buộc</span> đây là nền toán học đứng sau Phần 1–6; bỏ qua nếu bạn chỉ cần cảm quan phụ thuộc.</p>
+
+        <h3 class="rb-sub-title"><span class="wb-cap wb-cap--success">T0</span>&nbsp; Đúng theo định nghĩa</h3>
+        <div class="wb-card"><div class="wb-table-scroll"><table class="wb-table">
+          <thead><tr><th>Đẳng thức</th><th>Suy ra</th></tr></thead>
+          <tbody>
+            <tr><td><code>P = (P/E) × EPS</code></td><td>Mọi biến động giá = thay đổi định giá <b>hoặc</b> thay đổi lợi nhuận. Không có khả năng thứ ba</td></tr>
+            <tr><td><code>Return = div yield + earnings growth + Δ multiple</code></td><td>Dài hạn số hạng 3 → 0, nên lợi nhuận dài hạn <b>bị chặn trên</b> bởi hai số hạng đầu</td></tr>
+            <tr><td><code>CA + KA + ΔReserves ≈ 0</code></td><td>Không thể vừa thâm hụt vãng lai, vừa không hút vốn, vừa giữ tỷ giá, vừa không mất dự trữ</td></tr>
+            <tr><td><code>(S−I) + (T−G) + (X−M) = 0</code></td><td>Thâm hụt của một khu vực <b>là</b> thặng dư của khu vực khác</td></tr>
+            <tr><td><code>MV = PY</code></td><td>Đúng, nhưng <code>V</code> không ổn định → <b>không dùng để dự báo được</b></td></tr>
+            <tr><td>Tổng NĐT = lợi nhuận thị trường</td><td>Trừ phí/thuế/spread → NĐT chủ động <b>nhất thiết</b> thua thị trường theo tiền có trọng số</td></tr>
+          </tbody>
+        </table></div></div>
+        <div class="wb-alert wb-alert--plain" style="margin-top:12px"><div class="wb-alert__body"><p class="wb-alert__msg">Đẳng thức <code>MV = PY</code> là lý do dự đoán "in tiền nhiều tất yếu siêu lạm phát" sai suốt 2009–2019: <code>M</code> tăng mạnh nhưng <code>V</code> sụp.</p></div></div>
+
+        <h3 class="rb-sub-title"><span class="wb-cap wb-cap--info">T1</span>&nbsp; No-arbitrage</h3>
+        <div class="wb-card"><div class="wb-table-scroll"><table class="wb-table">
+          <thead><tr><th>Ràng buộc</th><th>Công thức</th><th>Ý nghĩa</th></tr></thead>
+          <tbody>
+            <tr><td>Chiết khấu</td><td>$P = \sum CF_t/(1+r)^t$</td><td>Nền tảng mọi định giá</td></tr>
+            <tr><td>Độ nhạy</td><td>$(1/P)(dP/dr) = -1/(r-g)$</td><td>Xem R-E01</td></tr>
+            <tr><td>Fisher</td><td>$i \approx r + \pi_{kỳ vọng}$</td><td>Định nghĩa lãi suất thực</td></tr>
+            <tr><td>Ngang giá lãi suất</td><td>$F/S \approx (1+r_{VND})/(1+r_{USD})$</td><td>NHNN không thể tự do hạ lãi suất khi Fed neo cao mà giữ tỷ giá</td></tr>
+            <tr><td>Put-call parity</td><td>$C - P = S - K e^{-rT}$</td><td>Gần như là định lý</td></tr>
+            <tr><td>Basis phái sinh</td><td>$F \approx S(1+r-d)^T$</td><td>Neo bởi arbitrage với rổ cơ sở</td></tr>
+            <tr><td>Bộ ba bất khả thi</td><td class="wb-cell-muted">Tỷ giá ổn định + vốn tự do + CSTT độc lập</td><td><b>Chọn hai</b></td></tr>
+          </tbody>
+        </table></div></div>
+      </section>
+
+      <hr class="wb-divider">
+
+      <!-- ============ 09 — KIỂM CHỨNG ============ -->
+      <section id="s9-kiemchung">
+        <p class="rb-sec-eyebrow"><b>09</b> — Kiểm chứng bằng dữ liệu</p>
+        <h2 class="rb-sec-title">Đừng tin sổ tay này — kiểm tra nó</h2>
+        <p class="rb-sec-intro">Ước lượng β cho từng cầu nối bằng mô hình phân phối trễ, rồi phân loại A–E theo <code>Σβ</code> thực nghiệm — <b>thay vì tin phân loại trong sổ tay này</b>.</p>
+        <div class="rb-formula">$$\Delta \text{VN}_t = \alpha + \sum_{k=0}^{K} \beta_k \, \Delta \text{World}_{t-k} + \varepsilon_t$$</div>
+
+        <h3 class="rb-sub-title">Năm bài tập theo thứ tự giá trị/công sức</h3>
+        <div class="wb-card"><div class="wb-card__body">
+          <ol class="wb-steps">
+            <li class="wb-steps__item is-todo"><span class="wb-steps__marker">1</span><div class="wb-steps__content">
+              <p class="wb-steps__title">Đuôi dày (làm trước)</p>
+              <p class="wb-steps__desc">Lấy log returns VN-Index → tính kurtosis → fit Student-t → so VaR 99% Gaussian với VaR thực nghiệm. Bài học dính lâu hơn mọi lý thuyết.</p>
+            </div></li>
+            <li class="wb-steps__item is-todo"><span class="wb-steps__marker">2</span><div class="wb-steps__content">
+              <p class="wb-steps__title">Thí nghiệm tự nhiên về vàng</p>
+              <p class="wb-steps__desc">Kiểm định toàn bộ khung ba lớp quanh mốc Nghị định 232/2025 (10/10/2025). Ba dự đoán khả bác:</p>
+              <ul style="margin:6px 0 0;padding-left:1.1em;font-size:13px;color:var(--wb-fg-muted)">
+                <li>Rolling β của <code>XAU→SJC</code> phải <b>nhảy bậc</b> quanh mốc</li>
+                <li>Phương sai chênh lệch SJC phải <b>co lại</b> sau mốc</li>
+                <li>β của <code>XAU→vàng nhẫn</code> phải <b>ít thay đổi hơn</b></li>
+              </ul>
+            </div></li>
+            <li class="wb-steps__item is-todo"><span class="wb-steps__marker">3</span><div class="wb-steps__content">
+              <p class="wb-steps__title">Xác nhận hai nhân tố</p>
+              <p class="wb-steps__desc">PCA trên ma trận lợi nhuận cross-asset {S&amp;P, UST 10Y, DXY, XAU, đồng, dầu, VN-Index}. Rolling correlation trái phiếu–cổ phiếu để nhìn thấy R-E04 đảo dấu bằng mắt.</p>
+            </div></li>
+            <li class="wb-steps__item is-todo"><span class="wb-steps__marker">4</span><div class="wb-steps__content">
+              <p class="wb-steps__title">Truyền dẫn vĩ mô</p>
+              <p class="wb-steps__desc">VAR + impulse response trên {VN-Index, UST 10Y, DXY, Brent, foreign net flow}.</p>
+            </div></li>
+            <li class="wb-steps__item is-todo"><span class="wb-steps__marker">5</span><div class="wb-steps__content">
+              <p class="wb-steps__title">Volatility clustering</p>
+              <p class="wb-steps__desc">Fit GARCH(1,1) trên VN-Index, kiểm tra <code>α+β</code>. So khả năng dự báo với rolling standard deviation.</p>
+            </div></li>
+          </ol>
+        </div></div>
+
+        <h3 class="rb-sub-title">Nguồn dữ liệu miễn phí</h3>
+        <div class="wb-card"><div class="wb-table-scroll"><table class="wb-table">
+          <thead><tr><th>Dữ liệu</th><th>Nguồn</th></tr></thead>
+          <tbody>
+            <tr><td>Lãi suất Mỹ, TIPS/breakeven, DXY, dầu, đồng</td><td>FRED</td></tr>
+            <tr><td>VN-Index, giá cổ phiếu, dữ liệu tài chính</td><td><code>vnstock</code> (Python)</td></tr>
+            <tr><td>Foreign net flow, dư nợ margin</td><td>vietstock, fireant</td></tr>
+            <tr><td>Giá vàng SJC, vàng nhẫn, tỷ giá</td><td>website doanh nghiệp vàng, NHNN</td></tr>
+            <tr><td>CPI VN và trọng số rổ</td><td>Tổng cục Thống kê</td></tr>
+            <tr><td>Lãi suất liên ngân hàng, dự trữ ngoại hối</td><td>NHNN, SBV</td></tr>
+          </tbody>
+        </table></div></div>
+      </section>
+
+      <hr class="wb-divider">
+      <p class="wb-help">Nguồn: so-tay-quy-tac-kinh-te-tai-chinh.md · cập nhật 31/7/2026, số liệu đến phiên 29/7/2026.<br>Tài liệu tổng hợp phục vụ mục đích học tập, không phải khuyến nghị đầu tư. Các mốc chính sách nên được kiểm tra lại tại thời điểm sử dụng.</p>
+
+    </div>
+  </div>
+</main>
+
+<footer class="wb-footer wb-footer--slim">
+  <div class="wb-footer__inner">
+    <div class="wb-footer__bottom">
+      <span class="wb-footer__copy">Sổ tay Kinh tế · một trang trong <a href="index.html">vudat081299 / collection</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  /* ---- theme: shared with the rest of the site ---- */
+  var root = document.documentElement;
+  function applyTheme(dark) { root.classList.toggle('dark', dark); }
+  var saved = null;
+  try { saved = localStorage.getItem('hub-theme'); } catch (e) {}
+  applyTheme(saved === 'dark');
+  var toggle = document.getElementById('theme-toggle');
+  if (toggle) toggle.addEventListener('click', function () {
+    var dark = !root.classList.contains('dark');
+    applyTheme(dark);
+    try { localStorage.setItem('hub-theme', dark ? 'dark' : 'light'); } catch (e) {}
+  });
+
+  /* ---- sidenav scrollspy ---- */
+  var links = [].slice.call(document.querySelectorAll('.rb-toc .wb-sidenav__link'));
+  var sections = links.map(function (l) { return document.querySelector(l.getAttribute('href')); }).filter(Boolean);
+  function onScroll() {
+    var active = sections[0];
+    for (var i = 0; i < sections.length; i++) { if (sections[i].getBoundingClientRect().top - 100 <= 0) active = sections[i]; }
+    links.forEach(function (l) { l.classList.remove('is-active'); });
+    var idx = sections.indexOf(active);
+    if (links[idx]) links[idx].classList.add('is-active');
+  }
+  document.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* ---- rule catalog filter (Part 5) ---- */
+  var cards = [].slice.call(document.querySelectorAll('#ruleGrid .rb-rule'));
+  document.getElementById('ruleTotal').textContent = cards.length;
+  var tagChips = [].slice.call(document.querySelectorAll('#tagChips .rb-chip[data-tag]'));
+  var catChips = [].slice.call(document.querySelectorAll('#catChips .rb-chip[data-cat]'));
+  var searchInput = document.getElementById('ruleSearch');
+  var countEl = document.getElementById('ruleCount');
+  var emptyEl = document.getElementById('ruleEmpty');
+  var catHeads = [].slice.call(document.querySelectorAll('#ruleGrid .rb-cat-head'));
+
+  function setChip(chip, active) {
+    chip.setAttribute('data-active', active ? 'true' : 'false');
+    var tone = chip.getAttribute('data-tone');
+    chip.classList.remove('wb-cap--dashed');
+    if (tone !== null) {
+      if (tone) chip.classList.remove(tone);
+      if (active) { if (tone) chip.classList.add(tone); }
+      else chip.classList.add('wb-cap--dashed');
+    } else {
+      chip.classList.remove('wb-cap--elevated');
+      if (active) chip.classList.add('wb-cap--elevated');
+      else chip.classList.add('wb-cap--dashed');
+    }
+  }
+
+  function applyRuleFilter() {
+    var activeTags = tagChips.filter(function (c) { return c.getAttribute('data-active') === 'true'; }).map(function (c) { return c.dataset.tag; });
+    var activeCats = catChips.filter(function (c) { return c.getAttribute('data-active') === 'true'; }).map(function (c) { return c.dataset.cat; });
+    var q = searchInput.value.trim().toLowerCase();
+    var visible = 0;
+    cards.forEach(function (card) {
+      var tag = card.dataset.tag, cat = card.dataset.cat;
+      var text = card.textContent.toLowerCase();
+      var show = activeTags.indexOf(tag) > -1 && activeCats.indexOf(cat) > -1 && (!q || text.indexOf(q) > -1);
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+    catHeads.forEach(function (head) {
+      var next = head.nextElementSibling, anyVisible = false;
+      while (next && !next.classList.contains('rb-cat-head')) {
+        if (next.classList.contains('rb-rule') && next.style.display !== 'none') anyVisible = true;
+        next = next.nextElementSibling;
+      }
+      head.style.display = anyVisible ? '' : 'none';
+    });
+    countEl.textContent = visible;
+    emptyEl.style.display = visible === 0 ? '' : 'none';
+  }
+  tagChips.forEach(function (c) { c.addEventListener('click', function () { setChip(c, c.getAttribute('data-active') !== 'true'); applyRuleFilter(); }); });
+  catChips.forEach(function (c) { c.addEventListener('click', function () { setChip(c, c.getAttribute('data-active') !== 'true'); applyRuleFilter(); }); });
+  searchInput.addEventListener('input', applyRuleFilter);
+  document.getElementById('chipReset').addEventListener('click', function () {
+    tagChips.concat(catChips).forEach(function (c) { setChip(c, true); });
+    searchInput.value = '';
+    applyRuleFilter();
+  });
+  applyRuleFilter();
+
+  /* ---- edge table filter (Part 7.4) ---- */
+  var edgeChips = [].slice.call(document.querySelectorAll('#edgeChips .rb-chip[data-edge]'));
+  var edgeRows = [].slice.call(document.querySelectorAll('#edgeTable tbody tr'));
+  function applyEdgeFilter() {
+    var active = edgeChips.filter(function (c) { return c.getAttribute('data-active') === 'true'; }).map(function (c) { return c.dataset.edge; });
+    edgeRows.forEach(function (r) { r.style.display = active.indexOf(r.dataset.edge) > -1 ? '' : 'none'; });
+  }
+  edgeChips.forEach(function (c) { c.addEventListener('click', function () { setChip(c, c.getAttribute('data-active') !== 'true'); applyEdgeFilter(); }); });
+  document.getElementById('edgeReset').addEventListener('click', function () {
+    edgeChips.forEach(function (c) { setChip(c, true); });
+    applyEdgeFilter();
+  });
+})();
+</script>
+</body>
+</html>
