@@ -716,7 +716,7 @@ RECIPES.push(
   why: 'Nhiều công đoạn và phải khử mùi ngan đúng cách. Món cỗ, không phải món ngày thường.',
   ing: [
     { n: 'Ngan', q: 1200, u: 'g', per: { n: 1200, l: 'nửa con ngan' }, note: 'Chặt miếng to sau khi luộc.', r: 'main' },
-    { n: 'Măng khô (hoặc măng tươi)', q: 250, u: 'g', per: { n: 250, l: 'nắm to' }, note: 'Măng khô phải ngâm trước 8–12 tiếng.', r: 'main' },
+    { n: 'Măng khô (hoặc măng tươi)', q: 250, u: 'g', per: { n: 250, l: 'nắm to' }, note: 'Măng khô phải ngâm trước tối thiểu 12 tiếng, thay nước 2–3 lần.', r: 'main' },
     { n: 'Gừng', q: 30, u: 'g', per: { n: 10, l: 'đốt ngón cái' }, r: 'season' },
     { n: 'Muối hạt', q: 2, u: 'thìa canh', note: 'Để xát ngan.', r: 'season' },
     { n: 'Rượu trắng', q: 2, u: 'thìa canh', r: 'season' },
@@ -725,14 +725,14 @@ RECIPES.push(
     { n: 'Mùi tàu + hành lá', q: 6, u: 'nhánh', r: 'herb' }
   ],
   steps: [
-    { t: 'Ngâm và luộc măng', d: 'Măng khô ngâm nước vo gạo 8–12 tiếng, rửa sạch, luộc 3 lần, mỗi lần 20 phút, thay nước mỗi lần. Xé sợi bằng đầu đũa.', m: 70, heat: 'Lửa to', cue: 'Nước luộc lần cuối <b>trong, không còn màu vàng đục và mùi hăng</b>. Măng bẻ thấy mềm.' },
+    { t: 'Ngâm và luộc măng', d: 'Măng khô ngâm nước vo gạo tối thiểu 12 tiếng, <b>thay nước 2–3 lần</b> trong lúc ngâm. Rửa sạch rồi luộc 3 lần, mỗi lần 20 phút, thay nước mỗi lần và <b>luôn mở vung</b>. Xé sợi bằng đầu đũa.', m: 70, heat: 'Lửa to', cue: 'Nước luộc lần cuối <b>trong, không còn màu vàng đục và mùi hăng</b>. Măng bẻ thấy mềm.' },
     { t: 'Khử mùi ngan', d: 'Xát muối hạt + gừng giã + rượu khắp mình ngan, để 10 phút rồi rửa lại thật sạch.', m: 12, heat: '—', cue: 'Ngửi sát da <b>không còn mùi hôi đặc trưng</b>, da sạch nhớt.' },
     { t: 'Luộc ngan', d: 'Luộc ngan với 1 củ gừng đập dập và 2 củ hành nướng, nước ngập mặt. Sôi thì hạ lửa, hớt bọt.', m: 35, heat: 'Liu riu', cue: 'Xiên đũa vào chỗ dày nhất ở đùi, <b>nước chảy ra trong không còn hồng</b>. Vớt ngan ra, giữ lại toàn bộ nước luộc.' },
     { t: 'Xào măng', d: 'Phi hành khô, cho măng vào xào với 2 thìa canh nước mắm và một muôi nước luộc ngan.', m: 10, heat: 'Lửa vừa', cue: 'Măng <b>ngấm màu vàng nâu, sợi bóng mỡ</b>, nếm đã thấy đậm.' },
     { t: 'Ninh măng với nước ngan', d: 'Trút măng vào nồi nước luộc ngan, ninh cho măng mềm và nước ngọt.', m: 30, heat: 'Liu riu', cue: 'Sợi măng <b>cắn thấy mềm nhưng còn dai nhẹ</b>, nước dùng ngả vàng và thơm.' },
     { t: 'Chặt ngan, chan canh', d: 'Chặt ngan miếng vừa, xếp vào bát, chan măng và nước dùng, rắc mùi tàu thái nhỏ.', m: 8, heat: 'Tắt bếp', cue: 'Nước dùng trong, nổi lớp mỡ vàng mỏng, dậy mùi mùi tàu.' }
   ],
-  tips: ['Măng khô <b>bắt buộc</b> luộc bỏ nước nhiều lần — đây là khâu an toàn, không phải khâu khẩu vị.', 'Không có thời gian ngâm măng khô thì dùng măng tươi, vẫn phải luộc 2 lần.', 'Nước luộc ngan là linh hồn của món — đừng đổ đi.'],
+  tips: ['Măng khô <b>bắt buộc</b> ngâm thay nước rồi luộc bỏ nước nhiều lần, và luộc phải <b>mở vung</b> để độc tố bay theo hơi nước — đây là khâu an toàn, không phải khâu khẩu vị.', 'Không có thời gian ngâm măng khô thì dùng măng tươi, vẫn phải luộc 2–3 lần, cũng mở vung.', 'Nước luộc ngan là linh hồn của món — đừng đổ đi.'],
   serveWith: 'Ăn kèm bún hoặc cơm, chấm ngan bằng mắm gừng.'
 },
 {
@@ -1248,7 +1248,7 @@ RECIPES.push(
   why: 'Món khó nhất trong danh sách: nhiều nguyên liệu sơ chế riêng, chuối dễ thâm, ốc dễ dai.',
   ing: [
     { n: 'Ốc nhồi (hoặc ốc bươu)', q: 700, u: 'g', per: { n: 700, l: 'bát tô ốc' }, note: 'Ngâm nước vo gạo + ớt 2 tiếng cho nhả bùn.', r: 'main' },
-    { n: 'Chuối xanh', q: 3, u: 'quả', note: 'Chọn chuối tiêu ương, cắt khúc 4 cm rồi bổ tư.', r: 'veg' },
+    { n: 'Chuối xanh', q: 3, u: 'quả', note: 'Chọn chuối tiêu còn xanh, vỏ căng cứng, bấm vào không lún — chuối đã ương thì nấu lên mềm nhũn và mất vị bùi. Cắt khúc 4 cm rồi bổ tư.', r: 'veg' },
     { n: 'Đậu phụ', q: 3, u: 'bìa', note: 'Cắt quân cờ, rán vàng trước.', r: 'main' },
     { n: 'Thịt ba chỉ', q: 150, u: 'g', per: { n: 110, l: 'miếng bằng lòng bàn tay' }, note: 'Thái mỏng.', r: 'main' },
     { n: 'Mẻ', q: 2, u: 'thìa canh', note: 'Lọc lấy nước; thay được bằng giấm bỗng.', r: 'season' },
@@ -1593,7 +1593,7 @@ RECIPES.push(
 {
   id: 'ca-nuc-kho-dua', name: 'Cá nục kho dứa', cat: 'kho', role: 'man', diff: 2, serves: 4, prep: 15,
   tags: ['cá'],
-  why: 'Dứa vừa khử tanh vừa làm mềm xương — kho đủ lâu thì xương cá nục ăn được cả.',
+  why: 'Dứa vừa khử tanh vừa làm mềm thịt cá. Công thức này kho vừa đủ để cá chắc và đậm — muốn rục cả xương thì phải kho lâu hơn nhiều (xem mẹo cuối).',
   ing: [
     { n: 'Cá nục tươi', q: 600, u: 'g', per: { n: 100, l: 'con bằng bàn tay' }, note: 'Bỏ ruột và mang, giữ nguyên con. Xát muối rồi rửa lại.', r: 'main' },
     { n: 'Dứa (thơm)', q: 0.5, u: 'quả', note: 'Thái lát dày bằng đốt ngón tay.', r: 'veg' },
@@ -1612,7 +1612,7 @@ RECIPES.push(
     { t: 'Kho cạn', d: 'Mở vung, tiếp tục để lửa nhỏ cho nước rút. Nghiêng nồi rưới nước kho lên mặt cá vài lần.', m: 18, heat: 'Lửa nhỏ', cue: 'Nước <b>còn sền sệt dưới đáy, kéo đũa thấy vệt</b>, thân cá bóng màu nâu đỏ. Kho cạn hẳn là cá khô xác.' },
     { t: 'Rắc tiêu, để nguội bớt', d: 'Tắt bếp, rắc tiêu, để nồi nghỉ 10 phút trước khi ăn.', m: 2, heat: 'Tắt bếp', cue: 'Nếm nước kho: <b>mặn đậm, ngọt hậu, thoảng chua của dứa</b>. Cá nguội bớt thì thịt chắc lại, gắp không nát.' }
   ],
-  tips: ['Muốn xương mềm hoàn toàn thì kho hai lửa: kho xong để nguội hẳn, hôm sau kho lại 15 phút nữa.', 'Không có dứa thì lót riềng hoặc mía chẻ — cùng công dụng chống cháy đáy.'],
+  tips: ['Muốn xương mềm rục thật sự thì cần <b>2–2,5 tiếng lửa nhỏ liên tục</b>, hoặc nồi áp suất khoảng 40 phút. Kho 40 phút như trên chỉ đủ mềm thịt, xương sống vẫn còn.', 'Kho hai lửa (để nguội hẳn, hôm sau kho lại 30 phút) làm vị đậm hơn hẳn và xương mềm thêm một bậc.', 'Không có dứa thì lót riềng hoặc mía chẻ — cùng công dụng chống cháy đáy.'],
   serveWith: 'Cơm trắng, rau luộc và một bát nước rau vắt chanh.'
 },
 {
@@ -1758,7 +1758,7 @@ RECIPES.push(
   steps: [
     { t: 'Làm mỡ hành', d: 'Cho hành lá thái nhỏ + muối + đường vào bát chịu nhiệt. Đun dầu thật nóng rồi dội thẳng lên.', m: 5, heat: 'Lửa to', cue: 'Nghe <b>tiếng xèo mạnh và hành chuyển xanh sẫm ngay lập tức</b>. Dội dầu chưa đủ nóng thì hành sống và hăng.' },
     { t: 'Làm nóng vỉ', d: 'Quạt than đến khi phủ tro trắng, hoặc làm nóng vỉ/chảo gang 5 phút.', m: 8, heat: 'Than hoa / chảo gang', cue: 'Vẩy giọt nước lên vỉ thấy <b>bốc hơi biến mất trong một giây</b>.' },
-    { t: 'Nướng tôm và sò', d: 'Xếp tôm và sò lên vỉ, không lật vội.', m: 6, heat: 'Than hoa', cue: 'Tôm <b>đỏ cam đều và cong thành chữ C</b>; sò <b>nước trong vỏ sôi lăn tăn và thịt rụt lại</b>. Cả hai đều phải gắp ra ngay lúc này.' },
+    { t: 'Nướng sò trước, tôm sau', d: 'Xếp sò lên vỉ trước, khoảng 2 phút sau mới xếp tôm vào cạnh. Không lật vội.', m: 6, heat: 'Than hoa', cue: 'Sò <b>nước trong vỏ sôi lăn tăn và thịt rụt lại</b>; tôm <b>đỏ cam đều và cong thành chữ C</b>. Con nào đạt thì gắp ngay con đó ra.' },
     { t: 'Nướng mực', d: 'Mực nướng sau cùng vì nhanh chín nhất.', m: 4, heat: 'Than hoa', cue: 'Thân mực <b>cong lại, các đường khứa nở bung thành vảy và chuyển trắng đục</b>. Quá 1 phút nữa là dai.' },
     { t: 'Rưới mỡ hành', d: 'Bày ra đĩa, rưới mỡ hành, rắc lạc giã và hành phi.', m: 2, heat: '—', cue: 'Mỡ hành <b>đọng trong các đường khứa và trong vỏ sò</b>, không chảy hết xuống đĩa.' }
   ],
