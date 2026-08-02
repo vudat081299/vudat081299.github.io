@@ -103,3 +103,171 @@
   border-radius: var(--wb-radius-sm);
   padding: 0 2px;
 }
+
+/* Nhãn "Tương tác" trên card — phân loại, nên giữ xám như mọi nhãn khác. */
+.fx-card__viz { display: inline-flex; align-items: center; gap: 3px; }
+
+/* ---------------------------------------------------------------------------
+   MODAL CHI TIẾT — .wb-modal mặc định rộng 460px, hợp cho hộp thoại xác nhận
+   nhưng hẹp với một bài đọc kèm minh hoạ. Ở đây chỉ nới kích thước và cho thân
+   modal cuộn; không đụng gì tới màu, viền hay bóng của component.
+   ------------------------------------------------------------------------- */
+.fx-modal {
+  max-width: 760px;
+  max-height: calc(100vh - 40px);
+  display: flex;
+  flex-direction: column;
+}
+.fx-modal__body { flex: 1 1 auto; min-height: 0; overflow-y: auto; }
+.fx-modal__foot { flex-wrap: wrap; align-items: center; }
+.fx-modal__foot .fx-drawer-pos { margin: 0 auto; }
+
+/* ---------------------------------------------------------------------------
+   MINH HOẠ TƯƠNG TÁC (viz.js). Khối đứng đầu thân modal, viền đứt để đọc ra
+   ngay rằng đây là chỗ nghịch được chứ không phải nội dung tĩnh.
+   ------------------------------------------------------------------------- */
+.fx-viz {
+  border: var(--wb-bw) dashed var(--wb-border);
+  border-radius: var(--wb-radius);
+  padding: 16px;
+  margin-bottom: 18px;
+  background: var(--wb-surface-2);
+}
+.fx-viz__note {
+  font-size: var(--wb-text-body);
+  color: var(--wb-fg-muted);
+  margin: 0 0 12px;
+  max-width: var(--wb-measure);
+}
+.fx-viz > .fx-viz__note:last-child { margin: 12px 0 0; }
+.fx-viz__ctl { margin-top: 12px; align-items: flex-end; }
+.fx-viz__field { display: flex; flex-direction: column; gap: 4px; min-width: 190px; }
+.fx-viz__label { font-size: var(--wb-text-caption); color: var(--wb-fg-subtle); }
+.fx-viz__out {
+  margin-top: 12px;
+  font-size: var(--wb-text-body);
+  color: var(--wb-fg);
+}
+.fx-viz__dim { color: var(--wb-fg-subtle); font-size: var(--wb-text-caption); }
+.fx-viz__flag { margin: 10px 0 0; font-size: var(--wb-text-body); color: var(--wb-fg); }
+.fx-viz__stage { margin-bottom: 4px; }
+.fx-viz__stage svg { display: block; width: 100%; height: auto; }
+.fx-viz__steps {
+  margin: 14px 0 0; padding-left: 20px;
+  font-size: var(--wb-text-body); color: var(--wb-fg-muted);
+}
+.fx-viz__steps li { margin-bottom: 5px; }
+.fx-viz__panel { margin-bottom: 14px; }
+.fx-viz__panel-title { margin: 0 0 4px; font-size: var(--wb-text-caption); color: var(--wb-fg-subtle); }
+.fx-viz .wb-table { margin-top: 10px; }
+.fx-table { width: 100%; }
+
+/* Điểm mù — sân nghịch, hai ngôi sao cách nhau một khoảng chỉnh được. */
+.fx-bs {
+  --fx-bs-gap: 260px;
+  display: flex; align-items: center; justify-content: center;
+  gap: var(--fx-bs-gap);
+  min-height: 140px; padding: 24px 8px;
+  background: var(--wb-surface);
+  border-radius: var(--wb-radius);
+  overflow: hidden;
+}
+.fx-bs__star { font-size: 30px; line-height: 1; }
+.fx-bs__star--a { color: var(--wb-chart-1); }
+.fx-bs__star--b { color: var(--wb-chart-3); }
+.fx-bs__star.is-fix {
+  outline: 2px solid var(--wb-neutral-strong);
+  outline-offset: 6px;
+  border-radius: 50%;
+}
+
+/* Ảo giác bàn cờ. */
+.fx-checker { border-radius: var(--wb-radius-sm); }
+.fx-checker__tag {
+  font-family: var(--wb-font); font-size: 15px; font-weight: 700;
+  fill: #ffffff; text-anchor: middle;
+}
+
+/* Stroop. */
+.fx-stroop__word {
+  min-height: 96px; display: flex; align-items: center; justify-content: center;
+  font-size: 46px; font-weight: 800; letter-spacing: .04em;
+  background: var(--wb-surface); border-radius: var(--wb-radius);
+}
+.fx-stroop__pad { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+
+/* Monty Hall. */
+.fx-doors { display: flex; gap: 12px; justify-content: center; }
+.fx-door {
+  flex: 1 1 0; max-width: 150px; min-height: 120px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  font: inherit; color: inherit; cursor: pointer;
+  background: var(--wb-surface);
+  border: var(--wb-bw) solid var(--wb-border);
+  border-radius: var(--wb-radius);
+}
+.fx-door__n { font-size: var(--wb-text-caption); color: var(--wb-fg-subtle); }
+.fx-door__face { font-size: 30px; line-height: 1; min-height: 32px; }
+.fx-door.is-pick   { border-color: var(--wb-neutral-ink); }
+.fx-door.is-open   { background: var(--wb-surface-2); cursor: default; }
+.fx-door.is-win    { border-color: var(--wb-success); }
+.fx-door.is-lose   { border-color: var(--wb-danger); }
+
+/* Lưới 1.000 người cho bài xét nghiệm. */
+.fx-grid1000 {
+  display: grid; grid-template-columns: repeat(50, 1fr); gap: 1px;
+  padding: 8px; background: var(--wb-surface); border-radius: var(--wb-radius);
+}
+.fx-grid1000__c { aspect-ratio: 1; background: var(--wb-neutral-weak); border-radius: 1px; }
+.fx-grid1000__c.is-tp { background: var(--wb-chart-1); }
+.fx-grid1000__c.is-fn { background: var(--wb-chart-4); }
+.fx-grid1000__c.is-fp { background: var(--wb-chart-3); }
+.fx-legend { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 8px; font-size: var(--wb-text-caption); }
+.fx-sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; }
+.fx-sw.is-tp { background: var(--wb-chart-1); }
+.fx-sw.is-fn { background: var(--wb-chart-4); }
+.fx-sw.is-fp { background: var(--wb-chart-3); }
+
+/* Chuỗi tung đồng xu. */
+.fx-coins { display: flex; flex-wrap: wrap; gap: 3px; }
+.fx-coin {
+  width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center;
+  font-size: 11px; font-family: var(--wb-font-mono);
+  color: var(--wb-fg-muted); background: var(--wb-neutral-weak);
+  border-radius: var(--wb-radius-sm);
+}
+.fx-coin.is-h { background: var(--wb-neutral); }
+.fx-coin.is-run { background: var(--wb-neutral-ink); color: var(--wb-surface); }
+
+/* Cột ngang dùng chung (histogram chuỗi dài nhất…). */
+.fx-bars { display: flex; flex-direction: column; gap: 4px; margin-top: 10px; }
+.fx-bars__row { display: flex; align-items: center; gap: 8px; font-size: var(--wb-text-caption); }
+.fx-bars__label { width: 72px; color: var(--wb-fg-subtle); flex: none; }
+.fx-bars__track { flex: 1; height: 12px; background: var(--wb-neutral-weak); border-radius: var(--wb-radius-sm); }
+.fx-bars__fill { height: 100%; background: var(--wb-chart-1); border-radius: var(--wb-radius-sm); }
+.fx-bars__val { width: 52px; text-align: right; color: var(--wb-fg-muted); flex: none;
+  font-variant-numeric: tabular-nums; }
+
+/* Biểu đồ SVG dùng chung. */
+.fx-line__grid { stroke: var(--wb-neutral-weak); stroke-width: 1; stroke-dasharray: 3 3; }
+.fx-line__axis { stroke: var(--wb-neutral); stroke-width: 1; }
+.fx-line__path { fill: none; stroke: var(--wb-chart-1); stroke-width: 2; }
+.fx-line__dot  { fill: var(--wb-chart-1); }
+.fx-line__bar  { fill: var(--wb-chart-1); }
+.fx-line__ref  { stroke: var(--wb-neutral-ink); stroke-width: 2; }
+.fx-line__cap  { font-family: var(--wb-font); font-size: 10px; fill: var(--wb-fg-subtle); }
+
+/* Lịch vũ trụ. */
+.fx-timeline { margin-top: 14px; display: flex; flex-direction: column; gap: 2px; }
+.fx-timeline__row { display: flex; gap: 12px; font-size: var(--wb-text-caption); }
+.fx-timeline__when { width: 82px; flex: none; color: var(--wb-fg-subtle);
+  font-variant-numeric: tabular-nums; }
+.fx-timeline__what { color: var(--wb-fg-muted); }
+
+/* Điện thoại: minh hoạ vẫn phải nằm trong khung, không đẩy ngang trang. */
+@media (max-width: 700px) {
+  .fx-viz { padding: 12px; }
+  .fx-viz__field { min-width: 100%; }
+  .fx-bs { --fx-bs-gap: 180px; }
+  .fx-stroop__word { font-size: 34px; min-height: 74px; }
+}

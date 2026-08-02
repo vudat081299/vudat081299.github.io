@@ -1,5 +1,5 @@
 {
-  "updated": "02/08/2026",
+  "updated": "03/08/2026",
   "note": "Thêm fact hàng tuần: tạo data/weekly/<năm>-w<tuần>.json rồi thêm tên file vào cuối mảng files. File đứng sau = fact mới hơn.",
   "categories": [
     { "id": "tu-duy",     "icon": "lightbulb",       "label": "Tư duy & Ra quyết định", "desc": "Mô hình tư duy để nghĩ đúng hơn dưới áp lực: đảo ngược vấn đề, nghĩ bậc hai, tách tương quan khỏi nhân quả." },
@@ -31,6 +31,20 @@
     "vu-tru.json",
     "cong-nghe.json",
     "lich-su.json",
-    "ngon-ngu.json"
+    "ngon-ngu.json",
+    "p2-tu-duy.json",
+    "p2-tam-ly.json",
+    "p2-giao-tiep.json",
+    "p2-kinh-te.json",
+    "p2-kinh-doanh.json",
+    "p2-so-hoc.json",
+    "p2-xa-hoi.json",
+    "p2-co-the.json",
+    "p2-suc-khoe.json",
+    "p2-sinh-vat.json",
+    "p2-vu-tru.json",
+    "p2-cong-nghe.json",
+    "p2-lich-su.json",
+    "p2-ngon-ngu.json"
   ]
 }
