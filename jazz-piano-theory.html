@@ -270,7 +270,29 @@ footer b{color:var(--text-muted); font-weight:400}
   #themeToggle .themeIco{display:inline-flex}
   #themeToggle .themeIco svg.licon{margin-right:0}
   /* tabular numerals — numeric UI (rule 3) */
-  th, td, code, .sb-prog, #progPct, .sb-link .k, .readout, #quizScore, #earProgScore, #styleBpmV, #rh1BpmV{ font-variant-numeric: tabular-nums; font-feature-settings:"tnum" 1; }
+  th, td, code, .sb-prog, #progPct, .sb-link .k, .readout, #quizScore, #earProgScore, #styleBpmV, #rh1BpmV, #notaBpmV{ font-variant-numeric: tabular-nums; font-feature-settings:"tnum" 1; }
+
+  /* ===== thanh độ dài tương đối (giá trị nốt) ===== */
+  .durbar{display:block; height:13px; border-radius:3px; background:rgba(var(--accent-identity-rgb),.10);
+    border:1px solid rgba(var(--accent-identity-rgb),.25); min-width:5px}
+  /* ===== chuỗi bậc của một gam (chip) ===== */
+  .deg{display:flex; flex-wrap:wrap; gap:5px; margin:var(--sp-3) 0}
+  .deg span{font-family:var(--font-mono); font-size:var(--fs-xs); padding:4px 9px; border-radius:var(--r-sm);
+    background:var(--card); border:1px solid var(--border); color:var(--text-secondary); white-space:nowrap}
+  .deg span.hi{background:rgba(var(--accent-identity-rgb),.10); border-color:rgba(var(--accent-identity-rgb),.25); color:var(--accent-identity)}
+  .deg span.off{opacity:.55}
+  .deg span small{display:block; font-size:9px; letter-spacing:.04em; color:var(--text-muted); margin-top:2px}
+  .deg span.hi small{color:var(--accent-identity)}
+  .deg span{text-align:center}
+  .deg-lbl{font-family:var(--font-mono); font-size:var(--fs-label); letter-spacing:.12em; text-transform:uppercase;
+    color:var(--text-muted); align-self:center; margin-right:2px; min-width:96px}
+  /* ===== khối so sánh cạnh nhau (sai vs đúng) ===== */
+  .vs{display:grid; grid-template-columns:1fr 1fr; gap:var(--sp-4); margin:var(--sp-5) 0}
+  @media(max-width:640px){.vs{grid-template-columns:1fr}}
+  .vs > div{border:1px solid var(--border); border-radius:var(--r-md); padding:14px 16px; background:var(--card)}
+  .vs .vs-h{font-family:var(--font-mono); font-size:var(--fs-label); letter-spacing:.12em; text-transform:uppercase; display:block; margin-bottom:6px}
+  .vs .bad{color:var(--accent-red)} .vs .good{color:var(--accent-green)}
+  .vs p{margin:0; font-size:var(--fs-sm); color:var(--text-secondary); max-width:none}
 </style>
 </head>
 <body>
@@ -306,7 +328,7 @@ footer b{color:var(--text-muted); font-weight:400}
 
   <div class="audio-cta reveal" id="audioCta">
     <span class="ico">🔊</span>
-    <p><b style="color:var(--text-primary)">Bật tiếng để bắt đầu.</b> Bấm nút bên phải một lần để trình duyệt cho phép phát âm thanh. Áp dụng cho <b>cả hai tài liệu</b> — bật một lần là dùng suốt.</p>
+    <p><b style="color:var(--text-primary)">Bật tiếng để bắt đầu.</b> Bấm nút bên phải một lần để trình duyệt cho phép phát âm thanh. Áp dụng cho <b>cả 5 tài liệu</b> — bật một lần là dùng suốt.</p>
     <button class="btn primary" id="enableAudio" style="margin-left:auto">Bật tiếng</button>
   </div>
 
@@ -324,7 +346,11 @@ footer b{color:var(--text-muted); font-weight:400}
   <section class="overview reveal" id="overview" data-title="Bức tranh lớn">
     <span class="sec-eyebrow">BẮT ĐẦU TỪ ĐÂY</span>
     <h2>Trụ nền — bảng chữ cái của mọi thứ</h2>
-    <p class="lead">Đây là gốc chung mà <b>mọi trụ khác</b> (đệm hát, cổ điển, jazz, cảm âm) đều dựa vào. Bạn đi từ nốt &amp; nhịp, qua quãng, gam, hợp âm &amp; thể đảo, tới vòng hòa thanh — đủ "bảng chữ cái" để đọc và hiểu bất kỳ bản nhạc nào. Nắm chắc đây, các tab kia chỉ là <em>ứng dụng</em> bộ nền này vào từng mục tiêu.</p>
+    <p class="lead">Đây là gốc chung mà <b>mọi trụ khác</b> (đệm hát, cổ điển, jazz, cảm âm) đều dựa vào. Bạn đi từ nốt &amp; nhịp, qua ký hiệu tiết tấu, quãng, các họ gam, hợp âm &amp; thể đảo, vòng hòa thanh &amp; cách kết câu, chuyển giọng, tới hình dạng cả bài — đủ "bảng chữ cái" để đọc và hiểu bất kỳ bản nhạc nào. Nắm chắc đây, các tab kia chỉ là <em>ứng dụng</em> bộ nền này vào từng mục tiêu.</p>
+    <div class="note-box">
+      <span class="tag">Đọc theo thứ tự nào</span>
+      <p>14 mục dưới đây xếp theo <b>thứ tự phụ thuộc</b>: mục sau dùng lại mục trước. Nếu bạn đã vững phần nào thì lướt nhanh, nhưng đừng nhảy cóc — đặc biệt là <b>mục 03 (ký hiệu tiết tấu)</b> và <b>mục 06 (ba gam thứ)</b>, hai chỗ mà người tự học hay bỏ sót nhất rồi mắc kẹt về sau. Mục <b>14</b> giải thích tầng vật lý dưới cùng; nó không cần thiết để chơi đàn, nhưng nó trả lời "tại sao" cho gần như mọi thứ ở trên.</p>
+    </div>
     <ol class="overview-map" id="ovMap"></ol>
   </section>
 
@@ -409,8 +435,59 @@ footer b{color:var(--text-muted); font-weight:400}
     </div>
   </section>
 
+  <section class="concept" id="s-notation" data-title="Giá trị nốt &amp; ký hiệu nhịp">
+    <span class="sec-eyebrow">PHẦN 03 · VIẾT NHỊP XUỐNG GIẤY</span>
+    <h2>Giá trị nốt — nhịp khi nó thành ký hiệu</h2>
+    <p class="lead">Phần trước dạy bạn <em>cảm</em> nhịp. Phần này dạy bạn <em>đọc</em> nhịp. Đây là hai việc khác nhau — và vì bạn đang tập sheet mỗi ngày, đây chính là thứ bạn gặp ở từng dòng.</p>
+    <p><b>Cả hệ thống chỉ có một ý tưởng:</b> hình nốt không nói cao độ, nó nói <b>nốt kéo dài mấy phách</b>. Và mỗi hình nốt luôn <b>dài gấp đôi</b> hình kế tiếp. Đó là một cây chia đôi, không hơn.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tên</th><th>Nhận mặt</th><th>Phách (trong 4/4)</th><th>Độ dài tương đối</th></tr></thead>
+        <tbody>
+          <tr><td><b>Nốt tròn</b></td><td>vòng tròn rỗng, không đuôi</td><td>4</td><td><i class="durbar" style="width:100%"></i></td></tr>
+          <tr><td><b>Nốt trắng</b></td><td>vòng tròn rỗng + đuôi</td><td>2</td><td><i class="durbar" style="width:50%"></i></td></tr>
+          <tr><td><b>Nốt đen</b></td><td>đầu <em>đặc</em> + đuôi</td><td>1</td><td><i class="durbar" style="width:25%"></i></td></tr>
+          <tr><td><b>Móc đơn</b></td><td>đầu đặc + đuôi + <b>1</b> móc</td><td>½</td><td><i class="durbar" style="width:12.5%"></i></td></tr>
+          <tr><td><b>Móc kép</b></td><td>đầu đặc + đuôi + <b>2</b> móc</td><td>¼</td><td><i class="durbar" style="width:6.25%"></i></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="key-def">
+      <span class="tag">Dấu lặng — nửa kia của tiết tấu</span>
+      Mỗi hình nốt có một <b>dấu lặng</b> cùng độ dài (lặng tròn, lặng trắng, lặng đen, lặng đơn…). Im lặng <em>cũng được đếm phách</em>. Người mới thường lướt qua dấu lặng cho nhanh — đó là lý do số một khiến một bài đúng nốt vẫn nghe sai nhịp.
+    </div>
+    <h3>Ba ký hiệu kéo dài / chia lẻ mà sheet nào cũng có</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Ký hiệu</th><th>Nhận mặt</th><th>Làm gì</th><th>Ví dụ trong 4/4</th></tr></thead>
+        <tbody>
+          <tr><td><b>Chấm dôi</b></td><td>một chấm sau đầu nốt</td><td>cộng thêm <b>một nửa</b> giá trị của chính nó (×1,5)</td><td>đen chấm dôi = 1 + ½ = <b>1,5 phách</b></td></tr>
+          <tr><td><b>Dấu nối</b> (tie)</td><td>vòng cung nối 2 nốt <em>cùng cao độ</em></td><td>gộp thành một tiếng dài; <b>không bấm lại</b> nốt sau</td><td>đen–nối–đen = ngân <b>2 phách</b>, gõ 1 lần</td></tr>
+          <tr><td><b>Chùm 3</b> (triplet)</td><td>số <b>3</b> trên chùm nốt</td><td>nhét <b>3</b> nốt vào chỗ vốn dành cho <b>2</b></td><td>3 móc đơn chùm 3 = <b>1 phách</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="warning">
+      <span class="tag">⚠ Rất dễ nhầm: dấu nối vs dấu luyến</span>
+      <p>Cùng là một vòng cung. <b>Dấu nối (tie)</b> nối hai nốt <em>cùng cao độ</em> → gộp trường độ, chỉ bấm một lần. <b>Dấu luyến (slur)</b> trùm lên nhiều nốt <em>khác cao độ</em> → không cộng trường độ gì cả, chỉ bảo bạn chơi liền tiếng (legato). Cùng hình vẽ, hai mệnh lệnh hoàn toàn khác nhau — nhìn cao độ hai đầu cung là phân biệt được ngay.</p>
+    </div>
+    <h3>Đảo phách &amp; nhịp lấy đà — hai thứ làm bạn "trôi"</h3>
+    <p><b>Đảo phách (syncopation)</b> = cố tình đặt nốt vào <em>chỗ yếu</em> (mốc "và"), rồi ngân nó vắt qua phách mạnh. Tai chờ một cú ở phách mạnh mà không có → sinh cảm giác "đẩy". Gần như mọi bài pop/latin/jazz đều sống nhờ nó.</p>
+    <p><b>Nhịp lấy đà (anacrusis / pickup)</b> = bài không bắt đầu ở phách 1 mà ở vài phách <em>cuối</em> ô nhịp trước đó. Ô đầu tiên vì thế bị thiếu phách — không phải in lỗi. Nếu bạn đếm 1-2-3-4 rồi vào ngay, bạn sẽ lệch cả bài.</p>
+    <div class="demo">
+      <span class="demo-label">Máy đọc tiết tấu · nghe từng giá trị nốt trên nền metronome</span>
+      <div class="btn-row" id="notaBtns"></div>
+      <div class="range-row"><label>Tempo</label><input type="range" id="notaBpm" min="50" max="130" value="84"><span class="rv" id="notaBpmV">84 BPM</span></div>
+      <div class="readout" id="notaReadout" style="min-height:60px">Mỗi nút phát <b>một ô đếm vào</b> (4 tiếng máy) rồi tới mẫu tiết tấu. Máy gõ chạy suốt bên dưới — việc của tai bạn là thấy nốt <em>rơi vào đâu</em> so với tiếng gõ.</div>
+    </div>
+    <div class="note-box">
+      <span class="tag">Cách đếm ra miệng — dùng được ngay hôm nay</span>
+      <p>Đọc to lưới thay vì đếm nốt: chia đôi thì đếm <b>"1 và 2 và 3 và 4 và"</b>; chia tư thì <b>"1 e và a"</b>; chùm 3 thì <b>"1 la li 2 la li"</b>. Khi vấp một ô nhịp, đừng dò lại từng nốt — <b>đọc lưới ra miệng trước, vỗ tay theo, rồi mới đặt tay lên đàn</b>. Ký hiệu nhịp là bài toán số học, giải trên miệng nhanh hơn giải trên ngón.</p>
+    </div>
+  </section>
+
   <section class="concept" id="s-interval" data-title="Quãng — đơn vị cảm âm">
-    <span class="sec-eyebrow">PHẦN 03 · NỀN CỦA TAI &amp; HỢP ÂM</span>
+    <span class="sec-eyebrow">PHẦN 04 · NỀN CỦA TAI &amp; HỢP ÂM</span>
     <h2>Quãng — đơn vị của cảm âm</h2>
     <p class="lead">Khoảng cách giữa hai nốt gọi là <b>quãng</b>, đo bằng số <em>nửa cung</em> (semitone = phím sát nhau kế tiếp, trắng hay đen). Quãng vừa là <b>viên gạch xây hợp âm</b>, vừa là <b>thứ tai bạn thực sự nhận ra</b> khi luyện cảm âm — chứ không phải tên nốt tuyệt đối.</p>
     <div class="key-def">
@@ -427,18 +504,32 @@ footer b{color:var(--text-muted); font-weight:400}
     </div>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Quãng</th><th>Nửa cung</th><th>Cảm giác</th><th>Bài hát mồi để nhớ</th></tr></thead>
+        <thead><tr><th>Quãng</th><th>Nửa cung</th><th>Tính chất</th><th>Cảm giác</th><th>Bài hát mồi để nhớ</th></tr></thead>
         <tbody>
-          <tr><td><b>2 trưởng</b></td><td>2</td><td>bước liền, sáng</td><td>"Happy Birthday" (nốt 2→3)</td></tr>
-          <tr><td><b>3 thứ</b></td><td>3</td><td>buồn, tối</td><td>"Greensleeves" · nhạc buồn</td></tr>
-          <tr><td><b>3 trưởng</b></td><td>4</td><td>vui, mở</td><td>"Oh When The Saints"</td></tr>
-          <tr><td><b>4 đúng</b></td><td>5</td><td>trang trọng</td><td>"Here Comes The Bride"</td></tr>
-          <tr><td><b>Tritone</b></td><td>6</td><td>căng, chông chênh</td><td>"The Simpsons" (2 nốt đầu)</td></tr>
-          <tr><td><b>5 đúng</b></td><td>7</td><td>rỗng, vững, "hùng"</td><td>"Twinkle Twinkle" (nốt 2→3)</td></tr>
-          <tr><td><b>Quãng 8</b></td><td>12</td><td>cùng tên, cao hơn</td><td>"Over the Rainbow" (2 nốt đầu)</td></tr>
+          <tr><td><b>1 đúng</b> (unison)</td><td>0</td><td>thuận tuyệt đối</td><td>cùng một nốt</td><td>—</td></tr>
+          <tr><td><b>2 thứ</b></td><td>1</td><td>nghịch mạnh</td><td>chói, rợn, "cọ xát"</td><td>nhạc phim kinh dị · "Jaws"</td></tr>
+          <tr><td><b>2 trưởng</b></td><td>2</td><td>nghịch nhẹ</td><td>bước liền, sáng</td><td>"Happy Birthday" (nốt 2→3)</td></tr>
+          <tr><td><b>3 thứ</b></td><td>3</td><td>thuận "mềm"</td><td>buồn, tối</td><td>"Greensleeves" · nhạc buồn</td></tr>
+          <tr><td><b>3 trưởng</b></td><td>4</td><td>thuận "mềm"</td><td>vui, mở</td><td>"Oh When The Saints"</td></tr>
+          <tr><td><b>4 đúng</b></td><td>5</td><td>tuỳ ngữ cảnh</td><td>trang trọng, treo lơ lửng</td><td>"Here Comes The Bride"</td></tr>
+          <tr><td><b>Tritone</b> (4 tăng / 5 giảm)</td><td>6</td><td>nghịch mạnh</td><td>căng, chông chênh</td><td>"The Simpsons" (2 nốt đầu)</td></tr>
+          <tr><td><b>5 đúng</b></td><td>7</td><td>thuận "cứng"</td><td>rỗng, vững, "hùng"</td><td>"Twinkle Twinkle" (nốt 2→3)</td></tr>
+          <tr><td><b>6 thứ</b></td><td>8</td><td>thuận "mềm"</td><td>u sầu, cổ điển</td><td>"The Entertainer" (nốt 1→2)</td></tr>
+          <tr><td><b>6 trưởng</b></td><td>9</td><td>thuận "mềm"</td><td>ấm, hoài niệm</td><td>"My Bonnie" (2 nốt đầu)</td></tr>
+          <tr><td><b>7 thứ</b></td><td>10</td><td>nghịch nhẹ</td><td>"bụi", chất blues/dominant</td><td>"Somewhere" (<i>West Side Story</i>)</td></tr>
+          <tr><td><b>7 trưởng</b></td><td>11</td><td>nghịch nhẹ</td><td>mơ màng, gần chạm tới</td><td>gần chạm quãng 8 mà hụt nửa cung</td></tr>
+          <tr><td><b>8 đúng</b> (octave)</td><td>12</td><td>thuận tuyệt đối</td><td>cùng tên, cao hơn</td><td>"Over the Rainbow" (2 nốt đầu)</td></tr>
         </tbody>
       </table>
     </div>
+    <div class="key-def">
+      <span class="tag">Thuận / nghịch không phải "hay / dở"</span>
+      <b>Thuận</b> (consonance) = nghe yên, tự đứng được. <b>Nghịch</b> (dissonance) = nghe căng, <em>muốn đi tiếp</em>. Nhạc hay cần cả hai: nghịch tạo lực, thuận là chỗ nghỉ. Jazz đơn giản là dùng <b>nhiều nghịch hơn</b> và <b>để nó treo lâu hơn</b> trước khi giải quyết — chứ không phải "hợp âm lạ hơn".
+    </div>
+    <h3>Phép đảo quãng: bí quyết chỉ cần thuộc một nửa bảng</h3>
+    <p>Lấy nốt dưới đẩy lên một quãng 8 (Đô–Mi ⇒ Mi–Đô). Quãng vừa <b>đảo</b> đó luôn thoả một luật gọn:</p>
+    <div class="formula"><b>số quãng + số quãng đảo = 9</b> &nbsp;<span class="op">·</span>&nbsp; <b>nửa cung + nửa cung đảo = 12</b> &nbsp;<span class="op">·</span>&nbsp; trưởng ↔ thứ, tăng ↔ giảm, đúng ↔ đúng</div>
+    <p>Ví dụ có số: quãng <b>3 trưởng</b> (4 nửa cung) đảo thành <b>6 thứ</b> — vì 3+6=9 và 4+8=12, và "trưởng" lật thành "thứ". Hệ quả rất thực dụng: bạn chỉ cần thuộc kỹ <b>6 quãng nhỏ</b>, phần còn lại suy ra. Riêng tritone tự đảo thành chính nó (6+6=12) — đó là lý do sâu xa của <em>tritone sub</em> ở phần jazz.</p>
     <div class="note-box">
       <span class="tag">Vì sao quan trọng cho jazz</span>
       <p>Hợp âm jazz = chồng các quãng 3 lên nhau, rồi thêm màu. Nghe ra quãng 3 (thứ/trưởng) và quãng 7 chính là nghe ra "chất" của một hợp âm. Tai quãng tốt ⇒ bạn "dịch" được bài ra hợp âm.</p>
@@ -446,7 +537,7 @@ footer b{color:var(--text-muted); font-weight:400}
   </section>
 
   <section class="concept" id="s-scale" data-title="Gam, giọng & vòng bậc 5">
-    <span class="sec-eyebrow">PHẦN 04 · BẢN ĐỒ CÁC GIỌNG</span>
+    <span class="sec-eyebrow">PHẦN 05 · BẢN ĐỒ CÁC GIỌNG</span>
     <h2>Gam, giọng &amp; vòng tròn bậc 5</h2>
     <p class="lead">Một <b>gam</b> (scale) là 7 nốt được chọn theo một công thức khoảng cách cố định. Chọn nốt bắt đầu (chủ âm) + công thức ⇒ ra một <b>giọng</b>. Vòng tròn bậc 5 là tấm bản đồ sắp xếp 12 giọng cho bạn thấy chúng "họ hàng" thế nào.</p>
     <p>Công thức gam trưởng (major) — thuộc lòng chuỗi nguyên/nửa cung này:</p>
@@ -477,8 +568,69 @@ footer b{color:var(--text-muted); font-weight:400}
     </details>
   </section>
 
+  <section class="concept" id="s-minor" data-title="Ba gam thứ &amp; nốt dẫn">
+    <span class="sec-eyebrow">PHẦN 06 · CHỖ AI CŨNG BỎ SÓT</span>
+    <h2>Ba gam thứ — và vì sao nhạc buồn lại dùng hợp âm trưởng</h2>
+    <p class="lead">Gam trưởng chỉ có một. <b>Gam thứ có ba</b>, và chúng không phải ba lựa chọn thẩm mỹ ngang nhau — chúng là <em>một bài toán và hai lời giải</em>. Hiểu chỗ này thì cả mảng nhạc buồn (tức phần lớn nhạc Việt) mở ra.</p>
+    <div class="deg"><span class="deg-lbl">Thứ tự nhiên</span><span class="hi">1</span><span>2</span><span class="hi">♭3</span><span>4</span><span>5</span><span class="hi">♭6</span><span class="hi">♭7</span></div>
+    <div class="deg"><span class="deg-lbl">Thứ hoà thanh</span><span class="hi">1</span><span>2</span><span class="hi">♭3</span><span>4</span><span>5</span><span class="hi">♭6</span><span class="hi">♮7</span></div>
+    <div class="deg"><span class="deg-lbl">Thứ giai điệu</span><span class="hi">1</span><span>2</span><span class="hi">♭3</span><span>4</span><span>5</span><span class="hi">♮6</span><span class="hi">♮7</span></div>
+    <div class="formula">nửa cung từ gốc &nbsp;·&nbsp; <b>tự nhiên</b> 0·2·3·5·7·8·10 &nbsp;|&nbsp; <b>hoà thanh</b> 0·2·3·5·7·8·<b>11</b> &nbsp;|&nbsp; <b>giai điệu</b> 0·2·3·5·7·<b>9</b>·<b>11</b></div>
+
+    <h3>Bài toán: gam thứ tự nhiên không có lực kéo về nhà</h3>
+    <p>Ở gam trưởng, bậc 7 nằm <b>sát ngay dưới</b> chủ âm (Si → Đô, cách nửa cung). Nốt đó gọi là <em>nốt dẫn</em> (leading tone): tai nghe nó là tự động đòi nốt chủ. Đó chính là thứ tạo cảm giác "về nhà".</p>
+    <p>Gam <b>La thứ tự nhiên</b> (A B C D E F G) có bậc 7 là <b>Sol</b> — cách chủ âm La <em>nguyên cung</em>, không phải nửa cung. Lực kéo biến mất. Hệ quả cụ thể: hợp âm bậc V dựng trên Mi là <b>Em</b> (E–G–B), một hợp âm <em>thứ</em>, nghe nhợt nhạt, không kết được câu.</p>
+    <div class="key-def">
+      <span class="tag">Lời giải 1 — thứ hoà thanh</span>
+      <b>Nâng bậc 7 lên nửa cung</b> (G → G♯). Nốt dẫn quay lại. Hợp âm bậc V thành <b>E–G♯–B = Mi trưởng</b>, thêm nốt D nữa là <b>E7</b>. Đây là lý do bạn thấy <em>E7 → Am</em> ở khắp nơi trong nhạc buồn, chứ gần như không bao giờ thấy Em → Am ở chỗ kết câu.
+    </div>
+    <div class="warning">
+      <span class="tag">⚠ Nhưng lời giải 1 sinh ra tác dụng phụ</span>
+      <p>Nâng G lên G♯ tạo ra một khoảng <b>3 nửa cung</b> giữa bậc ♭6 (F) và bậc 7 (G♯) — gọi là <b>quãng 2 tăng</b>. Nó nghe rất đặc trưng: "Ả Rập / Tây Ban Nha / phim cổ trang". Tuyệt cho màu sắc, nhưng <em>khó hát</em> và làm giai điệu gồ ghề.</p>
+    </div>
+    <div class="key-def">
+      <span class="tag">Lời giải 2 — thứ giai điệu</span>
+      <b>Nâng cả bậc 6 lẫn bậc 7</b> (F→F♯, G→G♯) khi đi lên. Cái hố 3-nửa-cung bị lấp, giai điệu đi lên mượt mà vẫn giữ được nốt dẫn. Trong <em>cổ điển</em>, khi đi xuống người ta thường hạ lại về tự nhiên (lúc đó không cần lực kéo nữa). Trong <em>jazz</em>, nâng luôn cả hai chiều — và gam này trở thành nguồn màu chính, bạn sẽ gặp lại ở tab Jazz.
+    </div>
+    <div class="demo">
+      <span class="demo-label">Nghe ba gam thứ (từ La) · rồi nghe cú kết Em→Am vs E7→Am</span>
+      <div class="btn-row" id="minorBtns"></div>
+      <div class="readout" id="minorReadout">Hai nút cuối là điểm mấu chốt của cả mục: cùng về Am, nhưng <b>E7→Am</b> có nốt dẫn G♯ nên "đóng cửa" dứt khoát, còn <b>Em→Am</b> nghe như câu chưa hết.</div>
+    </div>
+    <div class="note-box">
+      <span class="tag">Thu hoạch mang đi</span>
+      <p>Khi dò một bài buồn mà thấy một hợp âm <b>trưởng hoặc 7 nằm ở bậc V</b> trong giọng thứ (E7 trong Am, A7 trong Dm, B7 trong Em) — đừng nghĩ mình nghe nhầm. Đó là <b>mượn từ gam thứ hoà thanh</b>, và nó là chuẩn mực chứ không phải ngoại lệ.</p>
+    </div>
+  </section>
+
+  <section class="concept" id="s-pent" data-title="Pentatonic &amp; blues">
+    <span class="sec-eyebrow">PHẦN 07 · GAM DỄ NHẤT ĐỜI</span>
+    <h2>Pentatonic &amp; blues — gam mà bạn "không thể bấm sai"</h2>
+    <p class="lead">Trước khi leo lên modes và altered scale, có một bậc thang thấp hơn nhiều mà lại dùng được ngay: <b>gam 5 nốt</b>. Đây là gam mọi người ứng tác chạm vào đầu tiên, và là lý do một người chưa học lý thuyết vẫn "mò" ra được câu nghe hay.</p>
+    <h3>Vì sao 5 nốt lại an toàn hơn 7 nốt</h3>
+    <p>Lấy gam Đô trưởng và <b>bỏ đi bậc 4 (Fa) và bậc 7 (Si)</b> — đúng hai nốt hay chỏi nhất khi chồng lên hợp âm chủ:</p>
+    <div class="deg"><span class="deg-lbl">Đô trưởng</span><span class="hi">C</span><span class="hi">D</span><span class="hi">E</span><span class="off">F</span><span class="hi">G</span><span class="hi">A</span><span class="off">B</span></div>
+    <p>Còn lại <b>C D E G A</b> — gam <b>ngũ cung trưởng</b>. Điều đặc biệt: trong 5 nốt này <b>không có cặp nào cách nhau nửa cung</b>. Mà nửa cung chính là nguồn của gần như mọi cú "chỏi". Bỏ hết nửa cung đi ⇒ gõ bất kỳ nốt nào cũng không sai. Đó là toàn bộ bí mật.</p>
+    <div class="formula"><b>Ngũ cung trưởng:</b> 0·2·4·7·9 &nbsp;&nbsp;<span class="op">·</span>&nbsp;&nbsp; <b>Ngũ cung thứ:</b> 0·3·5·7·10 &nbsp;&nbsp;<span class="op">·</span>&nbsp;&nbsp; <b>Blues:</b> 0·3·5·<b>6</b>·7·10 &nbsp;<span class="muted">(ngũ cung thứ + nốt ♭5)</span></div>
+    <div class="key-def">
+      <span class="tag">Hai gam, thật ra là một</span>
+      <b>La ngũ cung thứ</b> (A C D E G) và <b>Đô ngũ cung trưởng</b> (C D E G A) là <em>cùng 5 nốt</em>, chỉ khác nốt bạn coi là "nhà" — hệt như quan hệ Am ↔ C ở vòng tròn bậc 5. Nghĩa là bạn chỉ phải học <b>một</b> hình bàn tay, dùng được cho cả hai.
+    </div>
+    <h3>Blue note: nốt "sai" cố ý</h3>
+    <p>Thêm một nốt <b>♭5</b> vào ngũ cung thứ ⇒ <b>gam blues</b>. Nốt ♭5 này (và cả ♭3, ♭7) gọi là <em>blue note</em> — chúng chỏi có chủ ý với hợp âm trưởng bên dưới, tạo ra chất "rên rỉ" đặc trưng. Cách dùng đúng: <b>lướt qua</b> nó để đi tới nốt kế, đừng đậu lại lâu.</p>
+    <div class="warning">
+      <span class="tag">⚠ Cái giá của sự an toàn</span>
+      <p>Pentatonic không thể bấm sai — nhưng chính vì thế nó cũng <b>không vẽ ra được hợp âm</b>. Chạy ngũ cung suốt một vòng ii–V–I thì cả ba hợp âm nghe như nhau, câu solo "trôi" trên bề mặt. Nó là bậc thang đầu tiên, không phải đích. Bậc tiếp theo — bám bậc 3 &amp; 7 để câu "dính" vào từng hợp âm — nằm ở tab Jazz.</p>
+    </div>
+    <div class="demo">
+      <span class="demo-label">Nghe 3 gam trên nền hợp âm C7 · so sánh độ "an toàn" và độ "có màu"</span>
+      <div class="btn-row" id="pentBtns"></div>
+      <div class="readout" id="pentReadout">Bấm lần lượt. Chú ý nốt <b>♭5 (F♯)</b> ở gam blues — nghe "sai" một cách rất đúng. Và so gam trưởng đủ 7 nốt với ngũ cung: nốt Fa trong gam trưởng là chỗ hơi gợn, ngũ cung bỏ đúng nốt đó.</div>
+    </div>
+  </section>
+
   <section class="concept" id="s-chord" data-title="Hợp âm: triad → jazz">
-    <span class="sec-eyebrow">PHẦN 05 · NGUYÊN LIỆU MÀU SẮC</span>
+    <span class="sec-eyebrow">PHẦN 08 · NGUYÊN LIỆU MÀU SẮC</span>
     <h2>Hợp âm: từ triad đến hợp âm jazz</h2>
     <p class="lead">Chồng vài nốt cùng lúc = <b>hợp âm</b>. Cách chồng chuẩn là <em>xếp quãng 3</em>: lấy một nốt, bỏ một nốt, lấy nốt kế… Càng chồng nhiều tầng 3, hợp âm càng "jazz".</p>
     <h3>Triad — 3 nốt nền tảng</h3>
@@ -507,7 +659,7 @@ footer b{color:var(--text-muted); font-weight:400}
   </section>
 
   <section class="concept" id="s-progression" data-title="Vòng hòa thanh & chức năng">
-    <span class="sec-eyebrow">PHẦN 06 · LUẬT CHƠI</span>
+    <span class="sec-eyebrow">PHẦN 09 · LUẬT CHƠI</span>
     <h2>Vòng hòa thanh &amp; chức năng</h2>
     <p class="lead">Trong một giọng, mỗi bậc của gam sinh ra một hợp âm, đánh số La Mã <b>I ii iii IV V vi vii°</b> (chữ hoa = trưởng, thường = thứ). Nghĩ theo số bậc thay vì tên nốt giúp bạn <b>nhìn ra bộ khung</b> của mọi bài — và đó là điều kiện để jazz hóa.</p>
     <p>Trong Đô trưởng, các bậc là:</p>
@@ -537,8 +689,39 @@ footer b{color:var(--text-muted); font-weight:400}
     </div>
   </section>
 
+  <section class="concept" id="s-cadence" data-title="Cadence — cách kết câu">
+    <span class="sec-eyebrow">PHẦN 10 · DẤU CHẤM CÂU</span>
+    <h2>Cadence: bốn cách kết một câu nhạc</h2>
+    <p class="lead">Một vòng hòa thanh không chỉ "đi", nó còn phải <b>dừng</b> — và cách nó dừng quyết định người nghe cảm thấy <em>hết câu</em>, <em>hết ý</em>, hay <em>bị bỏ lửng</em>. Hai hợp âm cuối của một câu gọi là <b>cadence</b>.</p>
+    <p><b>Ví von:</b> cadence là dấu chấm câu của nhạc. Kết trọn = dấu chấm. Kết nửa = dấu phẩy. Kết lừa = dấu ba chấm. <em>Chỗ ví von hỏng:</em> dấu chấm câu là quy ước thị giác thuần — phải học mới biết. Cadence thì <b>cảm được ngay cả khi không biết luật</b>, vì nó là hiệu ứng của lực căng hòa thanh; đó là lý do một người chưa học nhạc vẫn biết bài đã hết hay chưa.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Kiểu kết</th><th>Nước đi</th><th>Cảm giác</th><th>Gặp ở đâu</th></tr></thead>
+        <tbody>
+          <tr><td><b>Kết trọn</b> (authentic)</td><td><b>V → I</b></td><td>đóng cửa dứt khoát — "hết"</td><td>cuối bài, cuối điệp khúc</td></tr>
+          <tr><td><b>Kết nửa</b> (half)</td><td>bất kỳ <b>→ V</b>, dừng ở V</td><td>lửng, là một câu hỏi</td><td>giữa đoạn, cuối câu 4 ô đầu</td></tr>
+          <tr><td><b>Kết Amen</b> (plagal)</td><td><b>IV → I</b></td><td>dịu, ấm, không kịch tính</td><td>đuôi bài sau khi đã kết, thánh ca</td></tr>
+          <tr><td><b>Kết lừa</b> (deceptive)</td><td><b>V → vi</b></td><td>tưởng về nhà mà rẽ — hụt hẫng đẹp</td><td>kéo dài đoạn, đẩy cảm xúc trước điệp khúc cuối</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="key-def">
+      <span class="tag">Kết lừa hoạt động thế nào</span>
+      Hợp âm V (Sol) chứa nốt dẫn Si, tai đã "đặt cọc" là sắp về <b>C</b> (C–E–G). Nhưng bạn đưa <b>Am</b> (A–C–E) — vẫn chứa C và E nên <em>nghe hợp lý</em>, nhưng nốt gốc là La nên <em>chưa phải nhà</em>. Bài buộc phải đi tiếp. Đây là thủ pháp rẻ nhất để một điệp khúc dài thêm 8 ô mà không ai thấy thừa.
+    </div>
+    <div class="demo">
+      <span class="demo-label">Nghe bốn kiểu kết · cùng một câu dẫn vào (giọng Đô)</span>
+      <div class="btn-row" id="cadBtns"></div>
+      <div class="readout" id="cadReadout">Bấm lần lượt. Cách nghe: sau khi dứt tiếng, tự hỏi <b>"tôi có muốn nghe thêm không?"</b> — kết trọn: không. Kết nửa &amp; kết lừa: có, rất muốn.</div>
+    </div>
+    <div class="note-box">
+      <span class="tag">Dùng ngay khi đệm</span>
+      <p>Câu 4 ô đầu của một đoạn nên kết <b>nửa</b> (dừng ở V) — nó đặt một câu hỏi. Câu 4 ô sau kết <b>trọn</b> (về I) — nó trả lời. Cặp hỏi–đáp 8 ô này là khuôn xương của gần như mọi bài hát; bạn sẽ gặp lại nó ở mục <em>Hình dạng bài hát</em>.</p>
+    </div>
+  </section>
+
   <section class="concept" id="s-inversion" data-title="Thể đảo & nối hợp âm mượt">
-    <span class="sec-eyebrow">PHẦN 07 · NỐI HỢP ÂM</span>
+    <span class="sec-eyebrow">PHẦN 11 · NỐI HỢP ÂM</span>
     <h2>Thể đảo &amp; voice leading: bí quyết đệm "mượt"</h2>
     <p class="lead">Cùng một hợp âm có thể xếp nhiều kiểu tùy nốt nào nằm <b>dưới đáy</b> — gọi là <b>thể đảo (inversion)</b>. Đây chính là công cụ để đệm nghe êm: chọn thể đảo sao cho khi đổi hợp âm, tay <b>gần như không phải nhảy</b>.</p>
     <div class="key-def">
@@ -560,6 +743,129 @@ footer b{color:var(--text-muted); font-weight:400}
     <div class="note-box">
       <span class="tag">Tip ít người nói</span>
       <p>① <b>Nốt trên cùng là giai điệu thứ hai</b> — giữ nó mượt, đừng để nhảy lung tung cãi nhau với giọng hát. ② <b>Vùng vàng</b> ≈ quanh Đô giữa: thấp quá thành "bùn", cao quá thành "chói". ③ Khi có ca sĩ, <b>đừng chơi trùng nốt họ đang hát</b> — đệm các nốt xung quanh. Ba mẹo này là nền của cả trụ <em>Đệm hát</em> sắp tới.</p>
+    </div>
+  </section>
+
+  <section class="concept" id="s-modulation" data-title="Chuyển giọng giữa bài">
+    <span class="sec-eyebrow">PHẦN 12 · ĐỔI NHÀ GIỮA CHỪNG</span>
+    <h2>Chuyển giọng — và vì sao nó <em>không</em> phải dịch giọng</h2>
+    <p class="lead">Hai từ nghe giống nhau, làm hai việc hoàn toàn khác. Nhầm chỗ này là hiểu nhầm phổ biến nhất về hòa thanh, nên gỡ trước.</p>
+    <div class="vs">
+      <div><span class="vs-h bad">DỊCH GIỌNG (transpose)</span><p>Đẩy <b>toàn bộ bài</b> lên/xuống cùng một quãng, <b>một lần, trước khi chơi</b>. Bài không đổi gì về nội dung — chỉ vừa giọng ca sĩ hơn. Người nghe <b>không nhận ra</b> có gì xảy ra.</p></div>
+      <div><span class="vs-h good">CHUYỂN GIỌNG (modulation)</span><p>Đổi "nhà" <b>ở giữa bài</b>, có chủ ý, và bài <b>ở lại</b> nhà mới. Đây là một <b>sự kiện</b> trong bài. Người nghe <b>cảm nhận rõ</b> — thường là cảm giác "bừng sáng" hoặc "nâng lên".</p></div>
+    </div>
+    <p>Nói cách khác: dịch giọng là đổi <em>ống kính</em>; chuyển giọng là đổi <em>cảnh quay</em>.</p>
+    <h3>Ba cách chuyển giọng, từ mượt tới thô</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Cách</th><th>Cơ chế</th><th>Ví dụ C → G</th><th>Cảm giác</th></tr></thead>
+        <tbody>
+          <tr><td><b>Hợp âm cầu</b> (pivot)</td><td>tìm một hợp âm <b>thuộc cả hai giọng</b>, coi nó là bậc mới, rồi kết vào giọng mới</td><td>C – <b>Am</b> – D7 – G <span class="muted">(Am = vi của C = ii của G)</span></td><td>mượt tới mức không thấy đường nối</td></tr>
+          <tr><td><b>Qua dominant</b></td><td>chèn thẳng <b>V7 của giọng đích</b></td><td>C – <b>D7</b> – G</td><td>rõ ràng, dứt khoát, rất pop</td></tr>
+          <tr><td><b>Đẩy trực tiếp</b> (direct)</td><td>không nối gì cả, <b>nhảy nguyên khối</b> lên nửa cung / nguyên cung</td><td>…C – <b>D♭</b> (cả đoạn dịch lên)</td><td>thô, đầy năng lượng, "lên nhiệt"</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="key-def">
+      <span class="tag">Cách tìm hợp âm cầu trong 10 giây</span>
+      Viết ra 7 hợp âm của giọng cũ và 7 hợp âm của giọng đích, khoanh cái nào <b>xuất hiện ở cả hai danh sách</b>. Bất kỳ cái nào cũng dùng làm cầu được — cái nào có <b>chức năng hạ át (ii hoặc IV) trong giọng mới</b> thì mượt nhất, vì nó dẫn thẳng vào V rồi I của nhà mới.
+    </div>
+    <div class="demo">
+      <span class="demo-label">Nghe C → G bằng ba cách · và nghe cú "đẩy lên nửa cung" kinh điển</span>
+      <div class="btn-row" id="modBtns"></div>
+      <div class="readout" id="modReadout">Nút cuối là thứ bạn nghe ở điệp khúc cuối của hàng nghìn bài pop: cả đoạn bị đẩy lên <b>nửa cung</b>, không báo trước. Hiệu quả tức thì, nhưng dùng nhiều thì lộ.</div>
+    </div>
+    <div class="warning">
+      <span class="tag">⚠ Cách nhận ra đã chuyển giọng, không phải chỉ mượn hợp âm</span>
+      <p>Một hợp âm lạ xuất hiện rồi biến mất → đó chỉ là <b>mượn</b> (secondary dominant, modal interchange — tab Jazz). Chuyển giọng thật cần hai dấu hiệu: (1) có một <b>cadence</b> kết vào chủ âm mới, và (2) bài <b>ở lại</b> giọng mới ít nhất vài ô nhịp. Không có cadence thì chưa gọi là đổi nhà, mới chỉ là ghé chơi.</p>
+    </div>
+  </section>
+
+  <section class="concept" id="s-form" data-title="Hình dạng bài hát">
+    <span class="sec-eyebrow">PHẦN 13 · BẢN ĐỒ TOÀN BÀI</span>
+    <h2>Câu, đoạn, form — cái khung mà mọi bài đều nằm trong</h2>
+    <p class="lead">Tới đây bạn có nốt, hợp âm, vòng và cách kết. Còn thiếu một tầng: <b>bài hát được lắp ráp thế nào ở quy mô lớn</b>. Đây là thứ giúp bạn nghe một bài lần đầu mà vẫn đoán được cái gì sắp tới.</p>
+    <h3>Viên gạch nhỏ nhất: cặp câu hỏi – câu trả lời</h3>
+    <p>Nhạc được tổ chức thành <b>câu (phrase)</b>, thường dài <b>4 ô nhịp</b>. Hai câu ghép thành một <b>đoạn (period)</b> 8 ô, và chúng gần như luôn ở quan hệ hỏi–đáp:</p>
+    <div class="formula"><b>Câu 1 (4 ô)</b> → kết <b>nửa</b>, dừng ở V &nbsp;=&nbsp; <span class="op">câu hỏi</span> &nbsp;&nbsp;|&nbsp;&nbsp; <b>Câu 2 (4 ô)</b> → kết <b>trọn</b>, về I &nbsp;=&nbsp; <span class="op">câu trả lời</span></div>
+    <p>Hai câu thường có <b>mở đầu giống nhau, đuôi khác nhau</b> — giống hệt cách ta nói: "Hôm nay trời mưa <em>à?</em>" / "Hôm nay trời mưa <em>thật.</em>" Nghe ra được cặp này là bạn luôn biết mình đang ở đầu hay cuối một ý.</p>
+    <div class="demo">
+      <span class="demo-label">Nghe một đoạn 8 ô · câu hỏi rồi câu trả lời</span>
+      <div class="btn-row" id="formBtns"></div>
+      <div class="readout" id="formReadout">Nút đầu phát cả đoạn. Hai nút sau tách riêng từng câu — nghe câu 1 một mình sẽ thấy nó <b>treo lơ lửng</b>, vì nó dừng ở V.</div>
+    </div>
+    <h3>Ba bộ khung lớn bạn sẽ gặp</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Khung</th><th>Cấu trúc</th><th>Dùng ở đâu</th></tr></thead>
+        <tbody>
+          <tr><td><b>Verse – Chorus</b></td><td>intro · phiên khúc · (chuyển) · điệp khúc · phiên khúc · điệp khúc · <b>bridge</b> · điệp khúc · outro</td><td>gần như mọi bài pop/ballad hiện đại</td></tr>
+          <tr><td><b>AABA</b> (32 ô)</td><td>4 đoạn × 8 ô: A · A · <b>B (cầu, đổi màu/giọng)</b> · A</td><td>nhạc tiền chiến, jazz standard, nhạc Broadway</td></tr>
+          <tr><td><b>Blues 12 ô</b></td><td>3 câu × 4 ô: I · IV · I · V</td><td>blues, rock &amp; roll, nền jam của jazz</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <details>
+      <summary>Sâu hơn: form trong nhạc cổ điển (2 đoạn, 3 đoạn, rondo)</summary>
+      <div class="details-body">
+        <p>Cổ điển gọi tên theo cùng logic chữ cái: <b>2 đoạn (binary) AB</b> — hai nửa tương phản, hay gặp ở các điệu nhảy Baroque (minuet, gigue). <b>3 đoạn (ternary) ABA</b> — đi ra rồi quay về, khung của rất nhiều tiểu phẩm (nocturne, march). <b>Rondo ABACA</b> — một chủ đề A quay lại nhiều lần, xen kẽ các đoạn mới.</p>
+        <p>Điểm đáng để ý: <b>AABA của jazz và ABA của cổ điển là cùng một ý tưởng</b> — nêu chủ đề, đi lạc, quay về. Chỉ khác tỉ lệ và số lần lặp. Nắm được nguyên tắc "nêu – rời – về" là bạn có bản đồ chung cho cả hai thế giới.</p>
+      </div>
+    </details>
+    <div class="key-def">
+      <span class="tag">Vì sao phải nghĩ theo form</span>
+      Khi đệm: form cho bạn biết <b>chỗ nào nên thưa, chỗ nào nên dày</b> (phiên khúc thưa, điệp khúc dày) và <b>chỗ nào đặt fill</b> (cuối câu 4 ô, khi ca sĩ nghỉ). Khi solo jazz: form cho bạn biết <b>đang ở ô nào và còn mấy ô nữa thì hết vòng</b> — không có nó thì câu solo không có đích để đi tới.
+    </div>
+  </section>
+
+  <section class="concept" id="s-tuning" data-title="Vì sao có nốt thuận tai">
+    <span class="sec-eyebrow">PHẦN 14 · TẦNG DƯỚI CÙNG</span>
+    <h2>Bồi âm &amp; điều hòa đều: vì sao 12 nốt lại là 12</h2>
+    <p class="lead">Mọi thứ phía trên đứng trên một tầng vật lý mà hầu như không tài liệu nào nói. Nó trả lời hai câu: <b>vì sao hai nốt nào đó nghe "thuận"</b>, và <b>vì sao piano của bạn thật ra hơi sai — một cách cố ý</b>.</p>
+    <h3>① Một nốt không bao giờ chỉ là một nốt</h3>
+    <p>Khi bạn bấm một phím, dây đàn không chỉ rung nguyên sợi. Nó rung <b>đồng thời</b> nguyên sợi, nửa sợi, một phần ba sợi, một phần tư sợi… Mỗi cách rung sinh một tần số, chồng lên nhau thành một chồng âm gọi là <b>chuỗi bồi âm</b>:</p>
+    <div class="formula">f &nbsp;·&nbsp; 2f &nbsp;·&nbsp; 3f &nbsp;·&nbsp; 4f &nbsp;·&nbsp; 5f &nbsp;·&nbsp; 6f … &nbsp;&nbsp;<span class="muted">(f = tần số cơ bản, cái bạn nghe là "cao độ" của nốt)</span></div>
+    <p>Đây là chỗ mọi thứ khớp lại. Đặt các bồi âm cạnh nhau và hỏi chúng cách nhau quãng gì:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tỉ số</th><th>Ra quãng</th><th>Trên nốt Đô (C3 ≈ 130,8 Hz)</th></tr></thead>
+        <tbody>
+          <tr><td><b>2 : 1</b></td><td>quãng 8</td><td>130,8 → 261,6 Hz (Đô cao hơn)</td></tr>
+          <tr><td><b>3 : 2</b></td><td><b>quãng 5 đúng</b></td><td>261,6 → 392,4 Hz (Sol)</td></tr>
+          <tr><td><b>4 : 3</b></td><td>quãng 4 đúng</td><td>392,4 → 523,2 Hz (Đô)</td></tr>
+          <tr><td><b>5 : 4</b></td><td>quãng 3 trưởng</td><td>523,2 → 654,0 Hz (Mi)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="key-def">
+      <span class="tag">Câu trả lời cho "vì sao thuận"</span>
+      Hai nốt nghe <b>thuận</b> khi tần số chúng ở <b>tỉ số đơn giản</b> — vì khi đó bồi âm của hai nốt <em>trùng nhau ở nhiều điểm</em>, tai không phải xử lý xung đột. Tỉ số càng phức tạp, bồi âm càng cọ nhau, càng nghịch. Bảng "thuận/nghịch" ở phần 04 không phải quy ước văn hóa — nó là hệ quả của số học này.
+    </div>
+    <h3>② Vấn đề: vòng tròn bậc 5 không khép kín</h3>
+    <p>Ở phần 05 bạn đi 12 bước quãng 5 quanh vòng tròn và về đúng chỗ cũ. Nhưng nếu mỗi bước là quãng 5 <b>đúng</b> theo tỉ số 3:2, hãy nhân thử:</p>
+    <div class="formula">12 quãng 5 đúng: (3/2)<sup>12</sup> = <b>129,746</b> &nbsp;&nbsp;<span class="op">≠</span>&nbsp;&nbsp; 7 quãng 8: 2<sup>7</sup> = <b>128</b></div>
+    <p>Lệch <b>1,36%</b> — nghe thì bằng khoảng <b>23,5 cent</b> (gần một phần tư nửa cung), gọi là <em>comma Pythagoras</em>. Nói cách khác: <b>không thể vừa có 12 quãng 5 hoàn hảo, vừa có quãng 8 hoàn hảo.</b> Toán không cho phép. Ai đó phải chịu thiệt.</p>
+    <h3>③ Lời giải: rải đều sai số ra khắp nơi</h3>
+    <p><b>Điều hòa đều</b> (equal temperament) — hệ mà piano của bạn đang dùng — chọn cách chia quãng 8 thành <b>12 nửa cung bằng nhau tuyệt đối</b>, mỗi cái đúng 100 cent, tỉ số 2<sup>1/12</sup>. Hậu quả có thể đo được:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Quãng</th><th>Đúng theo tỉ số</th><th>Trên piano (điều hòa đều)</th><th>Lệch</th></tr></thead>
+        <tbody>
+          <tr><td>Quãng 8</td><td>1200,0 cent</td><td>1200,0 cent</td><td><b>0</b> — hoàn hảo</td></tr>
+          <tr><td>Quãng 5</td><td>701,96 cent</td><td>700,0 cent</td><td>hụt 1,96 — tai không nghe ra</td></tr>
+          <tr><td><b>Quãng 3 trưởng</b></td><td>386,31 cent</td><td>400,0 cent</td><td><b>dư 13,69</b> — nghe được</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Con số cuối là thứ đáng nhớ. Bấm một hợp âm <b>Đô trưởng</b> trên piano và giữ lâu: nốt Mi cao hơn "đúng" gần 14 cent. Bồi âm bậc 5 của Đô (≈1308 Hz) và bồi âm bậc 4 của Mi (≈1318 Hz) lệch nhau ~10 Hz ⇒ chúng <b>đập nhau khoảng 10 lần mỗi giây</b>. Đó là tiếng "rung nhè nhẹ" bạn vẫn nghe mà chưa gọi tên được. Hợp âm trưởng trên piano <em>không bao giờ</em> hoàn toàn sạch — và cả nền âm nhạc phương Tây đã đồng ý sống chung với nó.</p>
+    <div class="demo">
+      <span class="demo-label">Nghe tận tai · bồi âm, rồi quãng "đúng" so với quãng trên piano</span>
+      <div class="btn-row" id="tuneBtns"></div>
+      <div class="readout" id="tuneReadout">Nghe kỹ hai nút quãng 3: bản <b>tỉ số 5:4</b> đứng yên như đá; bản <b>piano</b> có một nhịp đập chậm bên trong. Cùng gọi là "quãng 3 trưởng".</div>
+    </div>
+    <div class="note-box">
+      <span class="tag">Ví von — và chỗ nó hỏng</span>
+      <p>Giống làm lịch: một năm mặt trời không chia chẵn cho số ngày, nên phải nhét năm nhuận vào. <b>Chỗ ví von hỏng:</b> lịch để sai số dồn lại rồi sửa một lần bằng một ngày thừa; điều hòa đều thì <b>rải sai số đều ra mọi quãng và không bao giờ sửa</b> — mọi quãng đều hơi sai một chút, mãi mãi. Đổi lại: bạn chuyển giọng tới bất kỳ đâu trong 12 giọng mà mọi thứ nghe y hệt nhau. Toàn bộ mục <em>Chuyển giọng</em> ở phần 12 tồn tại được là nhờ sự đánh đổi này.</p>
     </div>
   </section>
 
@@ -617,21 +923,47 @@ footer b{color:var(--text-muted); font-weight:400}
     <p class="lead">Đệm hát hiếm khi cần bản nhạc đầy đủ — bạn làm việc với <b>lead sheet</b> (giai điệu + ký hiệu hợp âm ghi phía trên) hoặc chỉ một <b>bảng hợp âm</b>. Bạn tự "dựng" phần đệm từ các ký hiệu đó. Vậy nên đọc trôi ký hiệu là kỹ năng số một.</p>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Ký hiệu</th><th>Nghĩa</th><th>Gồm nốt (ví dụ trên Đô)</th></tr></thead>
+        <thead><tr><th>Ký hiệu</th><th>Nghĩa</th><th>Gồm nốt (trên Đô)</th><th>Bậc</th></tr></thead>
         <tbody>
-          <tr><td><b>C</b></td><td>trưởng</td><td>C E G</td></tr>
-          <tr><td><b>Cm</b> (Cmin, C−)</td><td>thứ</td><td>C E♭ G</td></tr>
-          <tr><td><b>C7</b></td><td>bảy át (dominant)</td><td>C E G B♭</td></tr>
-          <tr><td><b>Cmaj7</b> (CM7, C△)</td><td>bảy trưởng</td><td>C E G B</td></tr>
-          <tr><td><b>Cm7</b></td><td>thứ bảy</td><td>C E♭ G B♭</td></tr>
-          <tr><td><b>Csus4</b></td><td>treo bậc 4 (bỏ bậc 3)</td><td>C F G</td></tr>
-          <tr><td><b>C/E</b></td><td>hợp âm C, <b>bass là E</b></td><td>= thể đảo 1 của C</td></tr>
+          <tr><td><b>C</b></td><td>trưởng</td><td>C E G</td><td>1 3 5</td></tr>
+          <tr><td><b>Cm</b> (Cmin, C−)</td><td>thứ</td><td>C E♭ G</td><td>1 ♭3 5</td></tr>
+          <tr><td><b>Cdim</b> (C°)</td><td>giảm</td><td>C E♭ G♭</td><td>1 ♭3 ♭5</td></tr>
+          <tr><td><b>Caug</b> (C+)</td><td>tăng</td><td>C E G♯</td><td>1 3 ♯5</td></tr>
+          <tr><td><b>Csus4</b></td><td>treo bậc 4 — <b>bỏ bậc 3</b></td><td>C F G</td><td>1 4 5</td></tr>
+          <tr><td><b>Csus2</b></td><td>treo bậc 2 — cũng bỏ bậc 3</td><td>C D G</td><td>1 2 5</td></tr>
+          <tr><td><b>C6</b></td><td>trưởng thêm bậc 6</td><td>C E G A</td><td>1 3 5 6</td></tr>
+          <tr><td><b>Cm6</b></td><td>thứ thêm bậc 6 <em>trưởng</em></td><td>C E♭ G A</td><td>1 ♭3 5 6</td></tr>
+          <tr><td><b>Cadd9</b></td><td>trưởng thêm bậc 9, <b>không có bậc 7</b></td><td>C E G D</td><td>1 3 5 9</td></tr>
+          <tr><td><b>C7</b></td><td>bảy át (dominant)</td><td>C E G B♭</td><td>1 3 5 ♭7</td></tr>
+          <tr><td><b>Cmaj7</b> (CM7, C△)</td><td>bảy trưởng</td><td>C E G B</td><td>1 3 5 7</td></tr>
+          <tr><td><b>Cm7</b></td><td>thứ bảy</td><td>C E♭ G B♭</td><td>1 ♭3 5 ♭7</td></tr>
+          <tr><td><b>Cm(maj7)</b></td><td>thứ nhưng bậc 7 <em>trưởng</em> — màu "phim gián điệp"</td><td>C E♭ G B</td><td>1 ♭3 5 7</td></tr>
+          <tr><td><b>Cm7♭5</b> (Cø7)</td><td>nửa giảm — hợp âm <b>ii của giọng thứ</b></td><td>C E♭ G♭ B♭</td><td>1 ♭3 ♭5 ♭7</td></tr>
+          <tr><td><b>C°7</b> (Cdim7)</td><td>giảm hoàn toàn — chồng toàn quãng 3 thứ</td><td>C E♭ G♭ B♭♭(=A)</td><td>1 ♭3 ♭5 ♭♭7</td></tr>
+          <tr><td><b>C9 / C11 / C13</b></td><td>C7 chồng tiếp tầng 3 lên</td><td>C E G B♭ + D / F / A</td><td>…9 / 11 / 13</td></tr>
+          <tr><td><b>C6/9</b></td><td>bậc 6 + bậc 9, không bậc 7 — hợp âm <b>kết</b> ưa dùng</td><td>C E G A D</td><td>1 3 5 6 9</td></tr>
+          <tr><td><b>C7alt</b></td><td>C7 với các bậc 5 &amp; 9 đều bị biến âm</td><td>xem tab Jazz · phần 06</td><td>1 3 ♭7 + ♭9♯9♯11♭13</td></tr>
+          <tr><td><b>C/E</b></td><td>hợp âm C, <b>bass là E</b></td><td>= thể đảo 1 của C</td><td>bass ≠ gốc</td></tr>
         </tbody>
       </table>
     </div>
     <div class="key-def">
+      <span class="tag">Ba luật đọc ký hiệu — dùng được cho cả ký hiệu bạn chưa từng thấy</span>
+      ① Chữ hoa đứng một mình = <b>trưởng</b>; có <b>m</b> hoặc <b>−</b> = thứ. ② Số đứng sau nói <b>chồng tới bậc nào</b> (7, 9, 11, 13) — và <b>7 trần = bậc 7 thứ</b> (dominant), muốn bậc 7 trưởng phải ghi <b>maj7</b>. ③ Cái gì ghi trong ngoặc hoặc sau dấu ♯/♭ là <b>sửa một nốt cụ thể</b> (C7♭9 = C7 nhưng nốt bậc 9 hạ nửa cung). Ba luật này ghép lại giải mã được mọi ký hiệu.
+    </div>
+    <div class="warning">
+      <span class="tag">⚠ Hai cặp cực dễ nhầm</span>
+      <p><b>Cm7♭5 (ø7) vs C°7:</b> khác nhau đúng một nốt — bậc 7. ø7 dùng B♭ (quãng 7 thứ), °7 dùng A (quãng 6 trưởng, gọi là "7 giảm"). ø7 là hợp âm <b>ii trong giọng thứ</b>, rất hay gặp; °7 là hợp âm <b>nối</b>, thường lướt qua.<br>
+      <b>Csus4 vs Cadd4:</b> sus <b>thay thế</b> bậc 3 (không có bậc 3), add <b>thêm vào</b> mà vẫn giữ bậc 3. Bấm nhầm là mất hẳn tính trưởng/thứ của hợp âm.</p>
+    </div>
+    <div class="demo">
+      <span class="demo-label">Bấm nghe từng ký hiệu · tất cả đều dựng trên nốt Đô</span>
+      <div class="btn-row" id="symBtns"></div>
+      <div class="readout" id="symReadout">Nghe theo cụm để tai bắt được khác biệt: <b>C → C6 → C6/9 → Cmaj7</b> (họ "trưởng, êm"), rồi <b>Cm7♭5 → C°7</b> (hai hợp âm hay bị nhầm nhất).</div>
+    </div>
+    <div class="key-def">
       <span class="tag">Mẹo: "gạch chéo" chính là thể đảo</span>
-      <b>C/E</b> nghĩa là bấm hợp âm Đô nhưng để <b>Mi ở bass</b> — chính là thể đảo 1 mà bạn học ở trụ nền. Người viết bài dùng gạch chéo để <b>vẽ đường bass đi mượt</b> (ví dụ C – C/E – F cho bass C→E→F đi lên từng bước).
+      <b>C/E</b> nghĩa là bấm hợp âm Đô nhưng để <b>Mi ở bass</b> — chính là thể đảo 1 bạn học ở trụ nền. Người viết bài dùng gạch chéo để <b>vẽ đường bass đi mượt</b> (ví dụ C – C/E – F cho bass C→E→F đi lên từng bước).
     </div>
   </section>
 
@@ -665,8 +997,41 @@ footer b{color:var(--text-muted); font-weight:400}
     </div>
   </section>
 
+  <section class="concept" id="s-dem-walk" data-title="Walking bass &amp; stride">
+    <span class="sec-eyebrow">PHẦN 04 · TAY TRÁI NÂNG CAO</span>
+    <h2>Walking bass &amp; stride — khi tay trái thành cả ban nhạc</h2>
+    <p class="lead">Bốn kiểu tay trái ở phần trước đủ để đệm sạch. Hai kiểu dưới đây là bậc tiếp theo: chúng làm tay trái <b>tự đi được</b>, không cần người chơi bass — đúng tình huống bạn ngồi một mình với cây đàn.</p>
+
+    <h3>① Walking bass — đường bass "đi bộ" từng phách</h3>
+    <p>Đây là thứ bạn nghe trong mọi bản jazz swing: một nốt bass mỗi phách, đi <b>đều như bước chân</b>, không nhảy cóc. Nghe thì như ngẫu hứng, nhưng nó có công thức 4 ô rất gọn.</p>
+    <div class="formula"><b>Phách 1</b> nốt gốc &nbsp;<span class="op">→</span>&nbsp; <b>Phách 2</b> nốt của hợp âm (3 hoặc 5) &nbsp;<span class="op">→</span>&nbsp; <b>Phách 3</b> nốt của hợp âm hoặc nốt trong gam &nbsp;<span class="op">→</span>&nbsp; <b>Phách 4</b> <em>nốt tiếp cận</em></div>
+    <div class="key-def">
+      <span class="tag">Phách 4 là toàn bộ bí quyết</span>
+      Ba phách đầu chỉ cần "không sai". <b>Phách 4</b> mới là thứ làm đường bass nghe như biết mình đi đâu: nó phải là một nốt <b>cách gốc của ô sau đúng nửa cung</b> (trên hoặc dưới), hoặc <b>quãng 5 trên</b> gốc đó. Tai nghe nốt ấy là đã biết trước ô sau sẽ rơi vào đâu — y hệt nốt dẫn trong gam.
+    </div>
+    <p><b>Ví dụ cụ thể, đi từ Dm7 sang G7:</b> gốc ô sau là <b>G</b>. Vậy phách 4 của ô Dm7 nên là <b>A♭</b> (nửa cung trên G), <b>F♯</b> (nửa cung dưới G), hoặc <b>D</b> (quãng 5 trên G). Chọn F♯ chẳng hạn, cả ô thành: <b>D – F – A – F♯</b> → rơi vào <b>G</b>. Nốt F♯ không thuộc Dm7 chút nào, nhưng vì nó chỉ nằm ở phách yếu và giải quyết ngay, tai nghe hoàn toàn thuận.</p>
+    <div class="warning">
+      <span class="tag">⚠ Ba lỗi làm walking bass "khập khiễng"</span>
+      <p>① <b>Nhảy quãng xa liên tục</b> — walking là "đi bộ", chủ yếu bước liền bậc và quãng 3, thỉnh thoảng mới nhảy. ② <b>Quên nốt gốc ở phách 1</b> — mất mốc, người nghe không biết đang ở hợp âm nào. ③ <b>Đánh không đều</b> — walking sống bằng sự đều đặn; thà đơn giản mà đều còn hơn hay mà lệch.</p>
+    </div>
+
+    <h3>② Stride — tay trái tự lo cả bass lẫn hợp âm</h3>
+    <p>Kiểu chơi của thời ragtime/swing sớm, và là giải pháp kinh điển cho <b>piano độc tấu</b>: tay trái <em>nhảy qua nhảy lại</em> giữa hai vùng.</p>
+    <div class="formula"><b>Phách 1 &amp; 3</b> → nốt <b>bass đơn</b> ở vùng trầm (gốc, hoặc gốc/quãng 5 luân phiên) &nbsp;&nbsp;|&nbsp;&nbsp; <b>Phách 2 &amp; 4</b> → <b>hợp âm</b> ở vùng giữa đàn</div>
+    <p>Chính cú nhảy đó tạo hai hiệu ứng cùng lúc: vùng trầm cho <b>nền bass</b>, vùng giữa cho <b>hòa thanh</b> — và vì hợp âm rơi vào phách 2 &amp; 4 nên nó tự động nhấn <b>backbeat</b>. Một tay trái làm việc của cả bass lẫn trống.</p>
+    <div class="note-box">
+      <span class="tag">Đây chính là "oom-pah" bạn đã biết</span>
+      <p>Kiểu <b>bass–hợp âm</b> ở phần 03 là stride đã giảm tốc và thu hẹp khoảng nhảy. Stride thật chỉ khác ở chỗ <b>nhảy xa hơn</b> (bass xuống sâu, hợp âm lên cao) và <b>nhanh hơn</b>. Nếu bạn đã đệm được oom-pah, bạn đang ở trên đúng con đường — việc còn lại là mở rộng khoảng cách dần dần.</p>
+    </div>
+    <div class="demo">
+      <span class="demo-label">Nghe trên vòng Dm7–G7–Cmaj7 · so bốn kiểu tay trái</span>
+      <div class="btn-row" id="walkBtns"></div>
+      <div class="readout" id="walkReadout">So sánh <b>bass chồng</b> (đứng yên) với <b>walking</b> (đi liên tục) — cùng vòng hợp âm mà walking làm bài "chảy" hẳn. Nút cuối tách riêng nốt tiếp cận ở phách 4 để bạn nghe rõ nó kéo về đâu.</div>
+    </div>
+  </section>
+
   <section class="concept" id="s-styles" data-title="Đệm nhạc & các điệu">
-    <span class="sec-eyebrow">PHẦN 04 · CÁC ĐIỆU (GROOVE)</span>
+    <span class="sec-eyebrow">PHẦN 05 · CÁC ĐIỆU (GROOVE)</span>
     <h2>Đệm nhạc &amp; phân biệt các điệu</h2>
     <p class="lead">"Điệu" (rhythm style) = một <b>khuôn mẫu tiết tấu</b> quy ước cho biết hai tay đặt nốt vào đâu trong ô nhịp. Cùng một vòng hợp âm, đổi điệu là đổi hẳn không khí bài. Tay trái thường lo <b>bass + nhịp</b>, tay phải lo <b>hợp âm/giai điệu</b>.</p>
     <div class="demo">
@@ -716,7 +1081,7 @@ footer b{color:var(--text-muted); font-weight:400}
   </section>
 
   <section class="concept" id="s-dem-tail" data-title="Dạo đầu, fill & kết">
-    <span class="sec-eyebrow">PHẦN 05 · MỞ, NỐI, ĐÓNG</span>
+    <span class="sec-eyebrow">PHẦN 06 · MỞ, NỐI, ĐÓNG</span>
     <h2>Dạo đầu, fill giữa câu &amp; kết</h2>
     <p class="lead">Ba "gia vị" biến chuỗi hợp âm thành một màn đệm ra dáng: <b>dạo đầu</b> (đưa ca sĩ vào), <b>fill</b> (lấp khoảng trống giữa các câu hát), và <b>kết</b> (báo hiệu bài xong). Nghe ba mẫu:</p>
     <div class="demo">
@@ -731,7 +1096,7 @@ footer b{color:var(--text-muted); font-weight:400}
   </section>
 
   <section class="concept" id="s-dem-transpose" data-title="Dịch giọng cho ca sĩ">
-    <span class="sec-eyebrow">PHẦN 06 · VỪA GIỌNG NGƯỜI HÁT</span>
+    <span class="sec-eyebrow">PHẦN 07 · VỪA GIỌNG NGƯỜI HÁT</span>
     <h2>Dịch giọng (transpose)</h2>
     <p class="lead">Bài gốc ở giọng này nhưng ca sĩ hát không tới nốt cao / xuống không nổi nốt thấp → bạn phải <b>dịch giọng</b>. Dịch giọng = <b>đẩy TẤT CẢ lên/xuống cùng một quãng</b>. Vòng hợp âm giữ nguyên "hình dạng", chỉ đổi tên.</p>
     <div class="demo">
@@ -746,7 +1111,7 @@ footer b{color:var(--text-muted); font-weight:400}
   </section>
 
   <section class="concept" id="s-dem-workflow" data-title="Quy trình & cheatsheet">
-    <span class="sec-eyebrow">PHẦN 07 · GÓI GỌN ĐỂ DÙNG</span>
+    <span class="sec-eyebrow">PHẦN 08 · GÓI GỌN ĐỂ DÙNG</span>
     <h2>Quy trình đệm một bài &amp; cheatsheet</h2>
     <p class="lead">Ráp tất cả thành quy trình áp lên bất kỳ bài nào:</p>
     <div class="table-wrap">
@@ -1072,8 +1437,70 @@ footer b{color:var(--text-muted); font-weight:400}
     </div>
   </section>
 
+  <section class="concept" id="s-cl-harmony" data-title="Hòa thanh 4 bè &amp; luật dẫn giọng">
+    <span class="sec-eyebrow">PHẦN 05 · LUẬT DẪN GIỌNG</span>
+    <h2>Hòa thanh 4 bè: luật đằng sau chữ "nghe mượt"</h2>
+    <p class="lead">Ở trụ nền, bạn học "nối hợp âm sao cho tay dời ít nhất". Đó là <em>kết quả</em>. Đây là <em>bộ luật</em> sinh ra kết quả đó — bộ luật mà nhạc cổ điển đã chưng cất trong ba thế kỷ, và jazz vay lại gần như nguyên vẹn.</p>
+    <p>Cách nghĩ: đừng coi một chuỗi hợp âm là <b>chuỗi các khối chồng nốt</b>. Hãy coi nó là <b>bốn ca sĩ hát cùng lúc</b>, mỗi người một đường giai điệu riêng: Soprano (cao nhất) · Alto · Tenor · Bass. Mọi luật dưới đây chỉ nhằm một mục tiêu: <b>giữ cho bốn người đó nghe như bốn người, chứ không dính thành một khối</b>.</p>
+
+    <h3>Luật 1 — cấm quãng 5 &amp; quãng 8 song song</h3>
+    <p>Hai bè đang cách nhau quãng 5, rồi cùng đi lên và <b>vẫn</b> cách nhau quãng 5 → cấm. Tương tự với quãng 8.</p>
+    <div class="key-def">
+      <span class="tag">Vì sao cấm — không phải vì "luật thế"</span>
+      Quãng 5 và quãng 8 là hai quãng <b>thuận nhất</b>, tức là hai nốt <em>hòa vào nhau</em> mạnh nhất (xem <em>Bồi âm</em>, trụ nền phần 14). Khi hai bè đi song song ở đúng hai quãng ấy, tai không còn nghe ra hai đường — nó nghe <b>một đường bị làm dày lên</b>. Bạn vừa mất một bè. Đó là toàn bộ lý do; không có gì thần bí.
+    </div>
+    <div class="vs">
+      <div><span class="vs-h bad">SONG SONG (mất bè)</span><p>Bass đi C→D, Soprano đi G→A. Cả hai cách nhau quãng 5, cùng đi lên một bước. Nghe như <b>một</b> giọng dày, phẳng lì.</p></div>
+      <div><span class="vs-h good">NGƯỢC CHIỀU (giữ được bè)</span><p>Bass đi C→D (lên), Soprano đi G→F♯ (xuống). Hai đường <b>đi ngược nhau</b> nên tai tách được chúng ra. Đây là cách sửa đơn giản nhất.</p></div>
+    </div>
+
+    <h3>Luật 2 &amp; 3 — hai nốt "có nghĩa vụ"</h3>
+    <p>Không phải nốt nào cũng tự do đi đâu tùy thích. Hai nốt sau đã <b>hứa</b> với tai một điều, và phải giữ lời:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Nốt</th><th>Là gì</th><th>Bắt buộc đi đâu</th><th>Ví dụ trong C</th></tr></thead>
+        <tbody>
+          <tr><td><b>Nốt dẫn</b></td><td>bậc 7 của <em>giọng</em> (nốt sát dưới chủ âm)</td><td><b>lên</b> nửa cung, vào chủ âm</td><td>B → C</td></tr>
+          <tr><td><b>Bậc 7 của hợp âm</b></td><td>nốt trên cùng của hợp âm 7</td><td><b>xuống</b> liền bậc</td><td>F (trong G7) → E</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Ghép hai luật này lại là bạn tự suy ra được vì sao <b>G7 → C</b> nghe khít đến thế: B nhích lên C, F nhích xuống E, hai nốt còn lại gần như đứng yên. Đây <em>chính là</em> guide-tone line ở tab Jazz, chỉ khác cái tên.</p>
+
+    <h3>Luật 4 — giữ nốt chung, còn lại đi bước nhỏ nhất</h3>
+    <p>Nốt nào có mặt ở cả hai hợp âm thì <b>giữ nguyên trong cùng một bè</b>. Các bè khác đi bước liền bậc nếu được. Riêng bè <b>Bass</b> được phép nhảy xa — nó là nền móng, không phải giai điệu.</p>
+    <div class="demo">
+      <span class="demo-label">Nghe C → G ba kiểu · song song, ngược chiều, và có giải quyết đúng</span>
+      <div class="btn-row" id="vlRuleBtns"></div>
+      <div class="readout" id="vlRuleReadout">Nghe kỹ bản <b>song song</b>: nó không "sai" tới mức chói, nó chỉ <b>nghèo</b> — mỏng và phẳng. Đó đúng là thứ luật này muốn tránh.</div>
+    </div>
+
+    <details>
+      <summary>Sâu hơn: ký hiệu figured bass cho thể đảo hợp âm 7</summary>
+      <div class="details-body">
+        <p>Hợp âm ba có 3 thể; hợp âm 7 có <b>4 thể</b> (vì có 4 nốt). Nhạc cổ điển đánh dấu chúng bằng con số ghi dưới nốt bass — số này là <b>quãng từ bass lên các nốt còn lại</b>:</p>
+        <p><b>7</b> = thế gốc (G–B–D–F) &nbsp;·&nbsp; <b>6/5</b> = đảo 1, bậc 3 ở bass (B–D–F–G) &nbsp;·&nbsp; <b>4/3</b> = đảo 2, bậc 5 ở bass (D–F–G–B) &nbsp;·&nbsp; <b>4/2</b> (hay <b>2</b>) = đảo 3, bậc 7 ở bass (F–G–B–D).</p>
+        <p>Mẹo nhớ: nhìn số <b>2</b> là biết ngay bậc 7 nằm ở bass — và theo Luật 3, nốt bass đó <b>phải đi xuống</b>. Vì thế hợp âm V4/2 luôn giải quyết về I ở thể đảo 1 (bass F→E). Bạn gặp đúng chuỗi này trong ký hiệu jazz dưới dạng <b>G7/F → C/E</b>.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Sâu hơn: hai màu cổ điển mà jazz mượn lại — Napoli &amp; sáu tăng</summary>
+      <div class="details-body">
+        <p><b>Hợp âm Napoli (♭II)</b> — hợp âm trưởng dựng trên bậc 2 <em>hạ</em>. Trong C: <b>D♭ trưởng</b> (D♭–F–A♭), hầu như luôn dùng ở thể đảo 1 (F ở bass, ký hiệu ♭II6) rồi đi về V. Màu: bi tráng, "sập xuống". Bạn đã gặp nó ở tab Jazz dưới tên khác — <b>tritone sub của V/V</b>.</p>
+        <p><b>Hợp âm sáu tăng</b> — ba biến thể, tất cả đều chứa cặp nốt cách nhau một <em>quãng 6 tăng</em> đang bung ra hai phía để kẹp lấy nốt bậc 5. Trong C, bản "Đức" (German) gồm <b>A♭–C–E♭–F♯</b>.</p>
+        <p>Và đây là chỗ đẹp nhất: A♭–C–E♭–F♯ <b>trùng phím</b> với <b>A♭7</b> (A♭–C–E♭–G♭). Mà A♭7 chính là <b>tritone sub của D7</b> — tức V của V. Nghĩa là cổ điển và jazz đã tìm ra <em>cùng một âm thanh</em> bằng hai lối suy nghĩ hoàn toàn khác nhau, cách nhau hơn một thế kỷ. Nếu chỉ mang một thứ từ mục này đi, hãy mang điều đó: hai hệ thống không mâu thuẫn, chúng là hai cách gọi tên cùng một vật lý.</p>
+      </div>
+    </details>
+
+    <div class="warning">
+      <span class="tag">⚠ Luật này áp dụng tới đâu</span>
+      <p>Bộ luật trên là chuẩn của <b>thời kỳ common practice</b> (khoảng 1650–1900). Nó <b>không</b> phải luật của mọi thứ âm nhạc: nhạc dân gian, rock, blues, impressionism (Debussy), và jazz hiện đại <b>cố tình</b> vi phạm nó — quãng 5 song song là <em>đặc trưng</em> của power chord rock và của voicing quartal ở tab Jazz. Học luật để biết mình đang phá cái gì; đừng học để tuân thủ mù quáng.</p>
+    </div>
+  </section>
+
   <section class="concept" id="s-cl-repertoire" data-title="Lộ trình repertoire">
-    <span class="sec-eyebrow">PHẦN 05 · CHƠI GÌ</span>
+    <span class="sec-eyebrow">PHẦN 06 · CHƠI GÌ</span>
     <h2>Lộ trình repertoire (bản công khai, theo cấp)</h2>
     <p class="lead">Học kỹ thuật suông sẽ chán — bạn cần <b>bài để chơi</b>. Dưới là lộ trình tham khảo với các tác phẩm <b>miền công khai</b> (public domain), xếp theo độ khó:</p>
     <div class="table-wrap">
@@ -1093,7 +1520,7 @@ footer b{color:var(--text-muted); font-weight:400}
   </section>
 
   <section class="concept" id="s-cl-workflow" data-title="Cách học một bản & routine">
-    <span class="sec-eyebrow">PHẦN 06 · GÓI GỌN ĐỂ TẬP</span>
+    <span class="sec-eyebrow">PHẦN 07 · GÓI GỌN ĐỂ TẬP</span>
     <h2>Cách học một bản nhạc &amp; lịch tập</h2>
     <p class="lead">Cách người giỏi học một bản — không phải "chơi từ đầu tới cuối nhiều lần", mà là <b>chia để trị</b>:</p>
     <div class="table-wrap">
@@ -1153,7 +1580,7 @@ footer b{color:var(--text-muted); font-weight:400}
   <section class="overview reveal" id="overview" data-title="Bức tranh lớn">
     <span class="sec-eyebrow">BẮT ĐẦU TỪ ĐÂY</span>
     <h2>Bức tranh lớn</h2>
-    <p class="lead">Jazz hóa không phải "thay đại hợp âm cho lạ tai" — nó là chuỗi quyết định có luật. Tài liệu này xây từ <em>hạt nhân</em> (guide tones: bậc 3 &amp; 7) ra ngoài: hạt nhân quyết định hợp âm là gì → chord-scale &amp; modes cho biết chơi nốt nào trên đó → voicings quyết định cách xếp cho "sang" → tensions thêm màu → và <b>kho reharmonization</b> là tập hợp các nước đi hợp lệ để thay/chèn hợp âm.</p>
+    <p class="lead">Jazz hóa không phải "thay đại hợp âm cho lạ tai" — nó là chuỗi quyết định có luật. Tài liệu này xây từ <em>hạt nhân</em> (guide tones: bậc 3 &amp; 7) ra ngoài: hạt nhân quyết định hợp âm là gì → chord-scale, modes &amp; gam đối xứng cho biết chơi nốt nào trên đó → voicings và block chords quyết định cách xếp cho "sang" → tensions thêm màu → <b>kho reharmonization</b> là tập hợp các nước đi hợp lệ để thay/chèn hợp âm. Nửa sau chuyển từ <em>hòa thanh</em> sang <em>chơi</em>: vốn câu, gam bebop, comping, solo piano, và bản đồ các thời kỳ jazz.</p>
     <div class="note-box">
       <span class="tag">Kim chỉ nam của cả tài liệu</span>
       <p>Nếu chỉ nhớ một câu: <b>bậc 3 và bậc 7 là linh hồn của hợp âm; gốc và bậc 5 gần như bỏ được.</b> Mọi kỹ thuật jazz phía dưới đều xoay quanh việc điều khiển cặp 3–7 này.</p>
@@ -1271,8 +1698,71 @@ footer b{color:var(--text-muted); font-weight:400}
     </div>
   </section>
 
+  <section class="concept" id="s-jz-sym" data-title="Gam đối xứng: giảm &amp; toàn cung">
+    <span class="sec-eyebrow">PHẦN 05 · GAM ĐỐI XỨNG</span>
+    <h2>Gam giảm &amp; toàn cung — hai gam "không có nhà"</h2>
+    <p class="lead">Altered scale ở phần trước là một trong <b>bốn</b> lựa chọn màu cho hợp âm dominant. Đây là hai lựa chọn còn lại — và chúng vận hành theo một logic khác hẳn mọi gam bạn đã học.</p>
+    <p>Mọi gam từ đầu tới giờ đều <b>không đều</b>: chúng có chỗ nguyên cung, chỗ nửa cung, và chính sự lệch đó tạo ra bậc 1, bậc 3, bậc 7 — tức tạo ra cảm giác "nhà". Hai gam dưới đây thì <b>đều tăm tắp</b>, và hậu quả rất lớn: chúng <em>không có chủ âm</em>. Nghe chúng, tai không biết đâu là gốc.</p>
+
+    <h3>① Gam toàn cung — 6 nốt, bước nào cũng bằng nhau</h3>
+    <div class="deg"><span class="deg-lbl">Toàn cung từ C</span><span class="hi">C</span><span>D</span><span>E</span><span>F♯</span><span>G♯</span><span>A♯</span></div>
+    <div class="formula"><b>Toàn cung:</b> 0·2·4·6·8·10 &nbsp;<span class="muted">— toàn bước nguyên cung, không một nửa cung nào</span></div>
+    <p>Vì không có nửa cung nên <b>không có nốt dẫn</b>, không có lực kéo, không có đích. Màu của nó: mơ hồ, không trọng lượng, "trôi" — đúng thứ nhạc phim dùng cho cảnh mơ hoặc hồi tưởng.</p>
+    <p><b>Dùng khi nào:</b> trên hợp âm <b>7♯5</b> (còn ghi là 7+ hay 7♭13). Nhìn vào bộ nốt là thấy ngay lý do: từ C, gam chứa E (bậc 3), A♯=B♭ (bậc ♭7) và G♯ (bậc ♯5) — vừa khít khung của C7♯5.</p>
+    <div class="note-box">
+      <span class="tag">Chi tiết đẹp: chỉ tồn tại đúng 2 gam toàn cung</span>
+      <p>Bắt đầu từ C hay từ D hay từ E — bạn vẫn được cùng một bộ 6 nốt. Bắt đầu từ C♯ thì được bộ 6 nốt còn lại. Cả 12 nốt chỉ chia được thành <b>hai</b> gam toàn cung, thế thôi. Đó là món quà cho người lười: học 2 hình bàn tay là xong 12 giọng.</p>
+    </div>
+
+    <h3>② Gam giảm — 8 nốt, xen kẽ nửa–nguyên</h3>
+    <p>Gam này có hai bản, khác nhau ở chỗ bạn bắt đầu bằng bước nào:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Bản</th><th>Mẫu bước</th><th>Nửa cung từ gốc</th><th>Dùng cho hợp âm</th></tr></thead>
+        <tbody>
+          <tr><td><b>Nửa – nguyên</b> (H–W)</td><td>½ N ½ N ½ N ½ N</td><td>0·1·3·4·6·7·9·10</td><td><b>7♭9</b> (dominant)</td></tr>
+          <tr><td><b>Nguyên – nửa</b> (W–H)</td><td>N ½ N ½ N ½ N ½</td><td>0·2·3·5·6·8·9·11</td><td><b>°7</b> (hợp âm giảm)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Bản <b>nửa–nguyên</b> là bản bạn cần thuộc. Soi nó trên hợp âm C7 để thấy vì sao nó khớp hoàn hảo:</p>
+    <div class="deg"><span class="deg-lbl">C H–W dim</span><span class="hi">C<br><small>1</small></span><span>D♭<br><small>♭9</small></span><span>E♭<br><small>♯9</small></span><span class="hi">E<br><small>3</small></span><span>F♯<br><small>♯11</small></span><span class="hi">G<br><small>5</small></span><span>A<br><small>13</small></span><span class="hi">B♭<br><small>♭7</small></span></div>
+    <p>Bốn nốt của C7 (1–3–5–♭7) đều có mặt, và bốn nốt xen giữa cho đúng bộ màu <b>♭9 · ♯9 · ♯11 · 13</b>.</p>
+    <div class="key-def">
+      <span class="tag">Phân biệt với altered — điểm khác duy nhất đáng nhớ</span>
+      Cả altered và H–W dim đều cho ♭9 và ♯9. Khác nhau ở <b>bậc 13</b>: <b>altered</b> dùng <b>♭13</b> (tối, gắt, có cả ♭5), còn <b>H–W dim</b> dùng <b>13 tự nhiên</b> và giữ nguyên bậc 5 (sáng hơn, tròn hơn, có chút "nhảy múa"). Chọn altered khi muốn căng và tối; chọn dim khi muốn căng mà vẫn lấp lánh.
+    </div>
+    <div class="note-box">
+      <span class="tag">Lại chỉ có 3 gam</span>
+      <p>Cũng như toàn cung, gam giảm lặp lại chính nó — dịch lên một quãng 3 thứ là ra đúng bộ nốt cũ. Nên cả 12 nốt chỉ sinh ra <b>ba</b> gam giảm phân biệt. Hệ quả thực dụng rất lớn: một hình bàn tay dùng được cho <b>bốn</b> hợp âm dominant khác nhau (C7♭9, E♭7♭9, F♯7♭9, A7♭9 dùng chung một gam).</p>
+    </div>
+
+    <h3>Bảng chọn màu cho hợp âm V7 — gộp cả bốn lựa chọn</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Gam</th><th>Cho ra tension</th><th>Độ căng</th><th>Chọn khi</th></tr></thead>
+        <tbody>
+          <tr><td><b>Mixolydian</b></td><td>9 · 13 (không biến âm)</td><td>thấp</td><td>pop, blues, gospel — muốn V7 "hiền"</td></tr>
+          <tr><td><b>Lydian dominant</b></td><td>9 · ♯11 · 13</td><td>thấp–vừa</td><td>V7 <em>không</em> giải quyết; tritone sub; màu phim</td></tr>
+          <tr><td><b>H–W giảm</b></td><td>♭9 · ♯9 · ♯11 · 13</td><td>vừa–cao</td><td>V7 <b>có</b> giải quyết, muốn căng mà vẫn sáng</td></tr>
+          <tr><td><b>Toàn cung</b></td><td>9 · ♯11 · <b>♯5</b></td><td>vừa (nhưng "trôi")</td><td>V7♯5, muốn cảm giác lơ lửng, mất trọng lực</td></tr>
+          <tr><td><b>Altered</b></td><td>♭9 · ♯9 · ♯11 · ♭13</td><td><b>cao nhất</b></td><td>V7 ngay trước I, muốn nổ tung rồi giải quyết</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="demo">
+      <span class="demo-label">Cùng một hợp âm C7 · phủ lần lượt năm gam · nghe độ căng leo thang</span>
+      <div class="btn-row" id="symBtns2"></div>
+      <div class="readout" id="symReadout2">Bấm theo đúng thứ tự nút để nghe thang độ căng. Hai nút cuối (toàn cung, altered) khác nhau về <em>chất</em> chứ không chỉ về mức: toàn cung <b>trôi</b>, altered <b>gắt</b>.</div>
+    </div>
+    <div class="warning">
+      <span class="tag">⚠ Bẫy của gam đối xứng</span>
+      <p>Vì chúng đều tăm tắp nên chạy lên chạy xuống rất <b>dễ</b> và nghe rất <b>"jazz"</b> ngay lập tức. Đó chính là bẫy: chúng cũng rất dễ thành <b>bài tập ngón vô hồn</b>, vì không có nốt nào là đích. Cách dùng đúng: lấy <b>một mẩu 3–4 nốt</b> từ gam, đặt nó ở phách yếu, rồi <b>giải quyết vào bậc 3 hoặc 7 của hợp âm kế</b>. Gam đối xứng là gia vị trên đường đi, không phải nơi để ở lại.</p>
+    </div>
+  </section>
+
   <section class="concept" id="s-voicing" data-title="Voicings: xếp nốt cho 'sang'">
-    <span class="sec-eyebrow">PHẦN 05 · CÁCH XẾP NỐT</span>
+    <span class="sec-eyebrow">PHẦN 06 · CÁCH XẾP NỐT</span>
     <h2>Voicings: cùng hợp âm, khác đẳng cấp</h2>
     <p class="lead">Đây là lý do một pianist jazz bấm Cmaj7 nghe "sang" còn bạn bấm nghe "học sinh". Cùng một hợp âm, cách <b>chọn nốt nào &amp; xếp ở đâu</b> (voicing) đổi hoàn toàn độ mượt và màu. Nguyên tắc vàng: <b>bỏ gốc &amp; bậc 5, giữ 3–7, thêm màu</b>.</p>
     <div class="table-wrap">
@@ -1300,8 +1790,43 @@ footer b{color:var(--text-muted); font-weight:400}
     </div>
   </section>
 
+  <section class="concept" id="s-jz-block" data-title="Block chords &amp; hòa âm giai điệu">
+    <span class="sec-eyebrow">PHẦN 07 · HÒA ÂM GIAI ĐIỆU</span>
+    <h2>Block chords: hòa âm <em>từng nốt</em> của giai điệu</h2>
+    <p class="lead">Voicing ở phần trước trả lời "bấm một hợp âm thế nào". Đây là câu hỏi khác: <b>khi tay phải đang chơi giai điệu, làm sao hòa âm cho <em>mỗi nốt</em> của nó</b> — để một cây piano nghe dày như cả một hàng kèn. Đây là kỹ thuật piano jazz mà người tự học hầu như không bao giờ gặp.</p>
+
+    <h3>① Locked hands — "hai bàn tay khóa vào nhau"</h3>
+    <p>Ý tưởng của George Shearing, và nó đơn giản đến bất ngờ:</p>
+    <div class="formula"><b>Ngón út tay phải</b> = nốt giai điệu &nbsp;<span class="op">·</span>&nbsp; <b>các ngón còn lại</b> = nhồi hợp âm ngay bên dưới &nbsp;<span class="op">·</span>&nbsp; <b>tay trái</b> = nhân đôi nốt giai điệu, thấp hơn <b>1 quãng 8</b></div>
+    <p>Kết quả là một khối 5 nốt <b>di chuyển song song</b> theo đúng đường giai điệu — hai tay "khóa" vào nhau, không tay nào đi riêng. Nốt giai điệu được nhân đôi ở hai đầu khối nên nó nổi bật hẳn lên, giống bè kèn saxophone dẫn đầu một section.</p>
+    <div class="note-box">
+      <span class="tag">Đây là chỗ luật cổ điển bị phá có chủ ý</span>
+      <p>Ở tab Cổ điển bạn vừa học "cấm quãng 8 song song vì mất bè". Locked hands <b>toàn quãng 8 song song</b>, từ đầu tới cuối. Không phải nó sai — mà là <b>mục tiêu ngược lại</b>: cổ điển muốn 4 bè độc lập; block chords muốn <em>một</em> bè dày, cố ý dính vào nhau. Cùng một hiện tượng vật lý, hai mục tiêu thẩm mỹ trái ngược. Đây đúng là ví dụ cho câu "học luật để biết mình đang phá cái gì".</p>
+    </div>
+
+    <h3>② Hệ 6-giảm của Barry Harris — cách chọn hợp âm cho từng nốt</h3>
+    <p>Locked hands nói bạn <em>xếp</em> thế nào, nhưng chưa nói <b>hợp âm nào</b> cho mỗi nốt giai điệu. Barry Harris đưa ra lời giải gọn nhất từng có: chỉ dùng <b>hai</b> hợp âm, luân phiên.</p>
+    <p>Lấy gam Đô trưởng và <b>chèn thêm một nốt G♯</b> vào giữa G và A ⇒ gam 8 nốt, gọi là <b>gam 6-giảm</b>:</p>
+    <div class="deg"><span class="deg-lbl">Gam 6-giảm</span><span class="hi">C</span><span>D</span><span class="hi">E</span><span>F</span><span class="hi">G</span><span>G♯</span><span class="hi">A</span><span>B</span></div>
+    <p>Giờ tô màu xen kẽ: các nốt <b>C · E · G · A</b> nhận hợp âm <b>C6</b> (chính là 4 nốt đó). Các nốt <b>D · F · G♯ · B</b> nhận hợp âm <b>B°7</b> (B–D–F–G♯ — cũng chính là 4 nốt đó).</p>
+    <div class="formula">giai điệu: C&nbsp; D&nbsp; E&nbsp; F&nbsp; G&nbsp; G♯&nbsp; A&nbsp; B<br>hợp âm:&nbsp;&nbsp; <span class="op">C6</span> <span class="op">B°7</span> <span class="op">C6</span> <span class="op">B°7</span> <span class="op">C6</span> <span class="op">B°7</span> <span class="op">C6</span> <span class="op">B°7</span></div>
+    <div class="key-def">
+      <span class="tag">Vì sao mẹo này hoạt động</span>
+      Vì gam có <b>8</b> nốt (chẵn), sự xen kẽ <em>không bao giờ lệch pha</em> — chạy bao nhiêu quãng tám thì nốt hợp âm vẫn luôn rơi vào C6 và nốt đi qua vẫn luôn rơi vào B°7. Với gam 7 nốt (lẻ) thì sau mỗi quãng tám nó đảo ngược, hỏng hết. Đây <b>cùng một lý do toán học</b> khiến gam bebop phải có 8 nốt — bạn sẽ gặp lại ở phần 14. Một ý tưởng, hai ứng dụng.
+    </div>
+    <div class="demo">
+      <span class="demo-label">Nghe cùng một giai điệu gam Đô · trần, rồi hòa âm block chords</span>
+      <div class="btn-row" id="blockBtns"></div>
+      <div class="readout" id="blockReadout">Nút 1 là giai điệu trần. Nút 2 hòa âm bằng hệ 6-giảm. Nút 3 thêm tay trái nhân đôi quãng 8 — đó là <b>locked hands</b> đầy đủ, nghe dày hẳn như một section kèn.</div>
+    </div>
+    <div class="warning">
+      <span class="tag">⚠ Dùng ít thôi</span>
+      <p>Block chords rất "đã" nên rất dễ lạm dụng. Nó <b>lấp kín mọi khoảng trống</b> — hoàn hảo cho một câu điệp khúc hoặc 4 ô cao trào, nhưng chơi cả bài thì thành đặc quánh, không thở được. Cách dùng của dân pro: chơi thưa suốt bài, rồi <b>bật block chords đúng một câu</b> để đẩy cao trào, rồi tắt.</p>
+    </div>
+  </section>
+
   <section class="concept" id="s-tension" data-title="Tensions & upper structures">
-    <span class="sec-eyebrow">PHẦN 06 · THÊM MÀU</span>
+    <span class="sec-eyebrow">PHẦN 08 · THÊM MÀU</span>
     <h2>Tensions: 9, 11, 13 &amp; biến âm dominant</h2>
     <p class="lead">Chồng tiếp tầng 3 lên hợp âm 7 ta được các nốt <b>9, 11, 13</b> (chính là 2, 4, 6 ở quãng tám trên). Chúng là "màu". Nhưng không phải màu nào cũng hợp mọi hợp âm — có <b>nốt nên tránh (avoid note)</b> gây chỏi.</p>
     <h3>Avoid note: vì sao IV phải là Lydian</h3>
@@ -1325,6 +1850,23 @@ footer b{color:var(--text-muted); font-weight:400}
       <div class="btn-row" id="usBtns"></div>
       <div class="readout" id="usReadout">Bấm để nghe. Tay trái giữ khung C7, tay phải chỉ là một hợp âm ba — nhưng tổng thể ra màu dày như hợp âm cao cấp.</div>
     </div>
+    <p>Có <b>năm</b> triad đáng thuộc. Tay trái luôn giữ nguyên khung C7 (gốc + bậc 3 + ♭7); chỉ tay phải đổi:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Triad tay phải</th><th>Nốt</th><th>Trên C7 thành</th><th>Chất</th><th>Đi với gam</th></tr></thead>
+        <tbody>
+          <tr><td><b>D</b> &nbsp;<span class="muted">(bậc II)</span></td><td>D · F♯ · A</td><td>9 · ♯11 · 13</td><td>sáng, mở, "màu phim"</td><td>Lydian dominant</td></tr>
+          <tr><td><b>E♭</b> &nbsp;<span class="muted">(bậc ♭III)</span></td><td>E♭ · G · B♭</td><td>♯9 · 5 · ♭7</td><td>gắt kiểu rock/blues (chất 7♯9)</td><td>Altered · H–W giảm</td></tr>
+          <tr><td><b>F♯</b> &nbsp;<span class="muted">(bậc ♯IV)</span></td><td>F♯ · A♯ · C♯</td><td>♯11 · ♭7 · ♭9</td><td>căng, mờ ảo</td><td>Altered · H–W giảm</td></tr>
+          <tr><td><b>A♭</b> &nbsp;<span class="muted">(bậc ♭VI)</span></td><td>A♭ · C · E♭</td><td>♭13 · 1 · ♯9</td><td>tối, nặng, rất "alt"</td><td>Altered</td></tr>
+          <tr><td><b>A</b> &nbsp;<span class="muted">(bậc VI)</span></td><td>A · C♯ · E</td><td>13 · ♭9 · 3</td><td>lấp lánh mà vẫn căng</td><td>H–W giảm</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="key-def">
+      <span class="tag">Vì sao mẹo này đáng giá với bạn</span>
+      Bạn <b>đã bấm được</b> cả năm hợp âm ba này từ năm đầu học piano. Upper structure biến vốn cũ đó thành hòa thanh cao cấp mà <em>không phải học hình bấm mới</em>: tay trái ba nốt cố định, tay phải một triad quen. Đây là con đường ngắn nhất từ chỗ bạn đang đứng tới âm thanh dominant "nghe pro".
+    </div>
     <div class="warning">
       <span class="tag">⚠ Đừng nhồi tất cả</span>
       <p>Có màu không có nghĩa dùng hết. Nhồi cả 9-11-13 + biến âm cùng lúc thường thành "bùn". Nghệ thuật là <b>chọn 1–2 màu</b> cho mỗi hợp âm để nó "nói" một điều rõ ràng. Ít mà đúng chỗ &gt; nhiều mà rối.</p>
@@ -1332,7 +1874,7 @@ footer b{color:var(--text-muted); font-weight:400}
   </section>
 
   <section class="concept" id="s-reharm" data-title="★ Kho reharmonization">
-    <span class="sec-eyebrow">PHẦN 07 · TRUNG TÂM · NƯỚC ĐI HỢP LỆ</span>
+    <span class="sec-eyebrow">PHẦN 09 · TRUNG TÂM · NƯỚC ĐI HỢP LỆ</span>
     <h2>Kho reharmonization đầy đủ</h2>
     <p class="lead">Đây là phần "để làm" của cả tài liệu. Mỗi kỹ thuật dưới là một <b>nước đi hợp lệ</b> để thay hoặc chèn hợp âm mà vẫn giữ được hướng đi của bài. Với mỗi nút, mình phát <b>bản gốc</b> rồi <b>bản đã reharm</b> — nghe để tai bạn "bắt" được sự khác biệt trước khi đọc lý do.</p>
     <div class="demo">
@@ -1373,7 +1915,7 @@ footer b{color:var(--text-muted); font-weight:400}
   </section>
 
   <section class="concept" id="s-forms" data-title="Form: blues & rhythm changes">
-    <span class="sec-eyebrow">PHẦN 08 · HAI KHUNG PHẢI THUỘC</span>
+    <span class="sec-eyebrow">PHẦN 10 · HAI KHUNG PHẢI THUỘC</span>
     <h2>Hai form nền: Jazz Blues &amp; Rhythm Changes</h2>
     <p class="lead">Jazz có vài "khung hợp âm" mà mọi người chơi đều thuộc nằm lòng — vào jam session, gọi tên là ai cũng chơi được. Hai khung quan trọng nhất: <b>jazz blues</b> (12 ô) và <b>rhythm changes</b> (32 ô, AABA). Thuộc chúng = có "sân chơi chung" với mọi nhạc công.</p>
     <h3>Jazz blues — blues 12 ô "có ii–V"</h3>
@@ -1406,7 +1948,7 @@ footer b{color:var(--text-muted); font-weight:400}
   </section>
 
   <section class="concept" id="s-workflow" data-title="Quy trình & cheatsheet">
-    <span class="sec-eyebrow">PHẦN 09 · GÓI GỌN ĐỂ DÙNG</span>
+    <span class="sec-eyebrow">PHẦN 11 · GÓI GỌN ĐỂ DÙNG</span>
     <h2>Quy trình reharm &amp; cheatsheet</h2>
     <p class="lead">Gộp tất cả thành một quy trình bạn có thể áp lên bất kỳ bài nào, và một trang tra cứu để dán cạnh đàn.</p>
     <h3>Quy trình jazz hóa một bài (bản đầy đủ)</h3>
@@ -1459,7 +2001,7 @@ footer b{color:var(--text-muted); font-weight:400}
   </section>
 
   <section class="concept" id="s-jz-improv-lang" data-title="Ngẫu hứng là ngôn ngữ">
-    <span class="sec-eyebrow">PHẦN 10 · ĐỔI TƯ DUY</span>
+    <span class="sec-eyebrow">PHẦN 12 · ĐỔI TƯ DUY</span>
     <h2>Ngẫu hứng = "nói" một ngôn ngữ, không phải bốc đồng</h2>
     <p class="lead">Hiểu lầm lớn nhất: ngẫu hứng là "cảm hứng bốc lên chơi nốt bừa cho hay". Sự thật: nó là <b>ghép lại các mảnh đã nằm sẵn trong tay/tai theo thời gian thực</b>. Giống học nói ngoại ngữ — bạn luyện từ vựng &amp; ngữ pháp (lặp), rồi <em>nói</em> trôi chảy; không phát minh từ mới, chỉ tổ hợp từ đã biết.</p>
     <div class="key-def">
@@ -1473,7 +2015,7 @@ footer b{color:var(--text-muted); font-weight:400}
   </section>
 
   <section class="concept" id="s-jz-vocab" data-title="Vốn câu solo">
-    <span class="sec-eyebrow">PHẦN 11 · "TỪ VỰNG"</span>
+    <span class="sec-eyebrow">PHẦN 13 · "TỪ VỰNG"</span>
     <h2>Vốn câu: nguyên liệu để "nói"</h2>
     <p class="lead">Đây là kho "từ" bạn nạp vào tay. Bốn nhóm nguyên liệu, xếp từ chắc-chắn tới hoa-mỹ:</p>
     <div class="table-wrap">
@@ -1499,8 +2041,66 @@ footer b{color:var(--text-muted); font-weight:400}
     </div>
   </section>
 
+  <section class="concept" id="s-jz-bebop" data-title="Gam bebop &amp; enclosure">
+    <span class="sec-eyebrow">PHẦN 14 · HAI CÔNG CỤ BEBOP</span>
+    <h2>Gam bebop &amp; enclosure — hai thứ làm câu solo "dính" vào hợp âm</h2>
+    <p class="lead">Bảng vốn câu ở phần trước liệt kê chúng bằng một dòng mỗi thứ. Chúng xứng đáng hơn thế: đây là hai công cụ giải quyết đúng vấn đề mà người tự học kêu nhất — <em>"tôi chơi đúng gam mà nghe vẫn không ra jazz"</em>.</p>
+
+    <h3>① Gam bebop: bài toán 7 nốt trong ô nhịp 8 phách</h3>
+    <p>Ở tempo swing, bạn chạy <b>móc đơn</b> — tức <b>8 nốt</b> trong một ô 4/4. Các vị trí <b>1, 3, 5, 7</b> rơi đúng vào phách (mạnh); vị trí 2, 4, 6, 8 rơi vào mốc "và" (yếu). Tai chỉ thực sự "nghe hợp âm" ở các vị trí mạnh.</p>
+    <p>Giờ chạy gam Mixolydian (7 nốt) từ C lên, mỗi nốt một móc đơn:</p>
+    <div class="deg"><span class="deg-lbl">7 nốt · ô 1</span><span class="hi">C<br><small>mạnh ✓</small></span><span>D</span><span class="hi">E<br><small>mạnh ✓</small></span><span>F</span><span class="hi">G<br><small>mạnh ✓</small></span><span>A</span><span class="hi">B♭<br><small>mạnh ✓</small></span><span>C</span></div>
+    <div class="deg"><span class="deg-lbl">7 nốt · ô 2</span><span class="off">D<br><small>mạnh ✗</small></span><span>E</span><span class="off">F<br><small>mạnh ✗</small></span><span>G</span><span class="off">A<br><small>mạnh ✗</small></span><span>B♭</span><span class="hi">C<br><small>mạnh ✓</small></span><span>D</span></div>
+    <p>Ô nhịp đầu hoàn hảo: cả bốn nốt của C7 (C·E·G·B♭) đều rơi vào phách mạnh. Nhưng vì gam chỉ có <b>7</b> nốt còn ô nhịp có <b>8</b> chỗ, ô thứ hai bị <b>lệch pha</b> — giờ D, F, A chiếm phách mạnh, mà cả ba đều <em>không thuộc</em> hợp âm. Chỉ còn 1 trên 4. Câu lập tức nghe "trôi", mất bám. Đó chính xác là cảm giác chạy gam mà không ra jazz.</p>
+    <div class="key-def">
+      <span class="tag">Lời giải: thêm đúng một nốt</span>
+      Chèn thêm <b>một nốt lướt</b> để gam thành <b>8 nốt</b>. Vì 8 chia hết cho 2, sự xen kẽ mạnh–yếu <b>khóa lại vĩnh viễn</b>: chạy bao nhiêu quãng tám thì nốt của hợp âm vẫn luôn rơi vào phách mạnh. Đây <em>cùng một nguyên lý</em> với hệ 6-giảm ở phần 07 — chỉ khác chỗ áp dụng: ở đó dùng để hòa âm, ở đây dùng để chạy câu.
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Gam bebop</th><th>Là gì</th><th>Nửa cung từ gốc</th><th>Dùng trên</th></tr></thead>
+        <tbody>
+          <tr><td><b>Bebop dominant</b></td><td>Mixolydian <b>+ bậc 7 trưởng</b></td><td>0·2·4·5·7·9·10·<b>11</b></td><td>hợp âm <b>7</b> (V) — vẽ ra 1·3·5·♭7</td></tr>
+          <tr><td><b>Bebop major</b></td><td>gam trưởng <b>+ bậc ♯5</b></td><td>0·2·4·5·7·<b>8</b>·9·11</td><td>hợp âm <b>6 / maj7</b> (I) — vẽ ra 1·3·5·6</td></tr>
+          <tr><td><b>Bebop thứ giai điệu</b></td><td>thứ giai điệu <b>+ bậc ♯5</b></td><td>0·2·3·5·7·<b>8</b>·9·11</td><td>hợp âm <b>m6 / m(maj7)</b> — vẽ ra 1·♭3·5·6</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note-box">
+      <span class="tag">Đọc bảng cho đúng — nốt thêm nằm ở đâu là có lý do</span>
+      <p>Cột cuối là điểm mấu chốt: mỗi gam bebop được thiết kế để vẽ ra <b>một hợp âm 4 nốt cụ thể</b>, và nốt thêm được đặt <em>đúng chỗ</em> để bốn nốt ấy rơi vào bậc 1, 3, 5, 7 <b>của gam</b> — tức là vào các vị trí mạnh. Bebop major vẽ ra hợp âm <b>6</b> chứ không phải maj7; đó chính là lý do hệ 6-giảm ở phần 07 dùng C6 chứ không dùng Cmaj7. Cùng một phát hiện, hai cách khai thác.</p>
+      <p>Bạn cũng sẽ gặp <b>"bebop dorian"</b> (Dorian thêm bậc 3 trưởng: 0·2·3·4·5·7·9·10). Nó có thật và dùng được trên m7 — chỉ là nó vẽ ra hợp âm khác: bộ nốt của <b>C bebop dorian trùng khít với F bebop dominant</b>. Hợp lý thôi, vì Cm7 chính là bậc ii của F. Nó không phải một gam thứ tư, mà là gam bebop dominant nhìn từ chỗ khác.</p>
+    </div>
+    <p><b>Kiểm chứng nhanh với bebop dominant, chạy xuống từ G (trên hợp âm G7):</b> G – F♯ – F – E – D – C – B – A. Vị trí mạnh là 1, 3, 5, 7 ⇒ rơi vào <b>G, F, D, B</b> — đúng bốn nốt của G7. Nốt thêm (F♯) chỉ lướt qua ở phách yếu. Đúng như quảng cáo — và bạn nghe được ngay ở demo dưới.</p>
+
+    <h3>② Enclosure: bao vây nốt đích rồi mới hạ cánh</h3>
+    <p>Đây là thứ khiến câu bebop nghe "xoắn xuýt" đặc trưng. Thay vì đi thẳng vào nốt đích, bạn <b>chạm nốt trên nó và nốt dưới nó trước</b>, rồi mới rơi vào.</p>
+    <div class="formula"><b>Đích:</b> nốt E (bậc 3 của Cmaj7) &nbsp;&nbsp;<span class="op">·</span>&nbsp;&nbsp; <b>Bao vây:</b> F <span class="op">→</span> D♯ <span class="op">→</span> <b>E</b> &nbsp;<span class="muted">(trên rồi dưới rồi vào)</span></div>
+    <p>Nốt <b>D♯</b> không thuộc giọng Đô trưởng chút nào — nhưng vì nó chỉ nằm ở phách yếu và giải quyết ngay nửa cung lên E ở phách mạnh, tai nghe hoàn toàn hợp lý. Nguyên tắc chung: <b>nốt ngoài giọng được tha thứ nếu nó ở phách yếu và giải quyết ngay</b>. Đây là cùng logic với "nốt tiếp cận ở phách 4" của walking bass tại tab Đệm hát.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Kiểu bao vây</th><th>Mẫu</th><th>Cảm giác</th></tr></thead>
+        <tbody>
+          <tr><td><b>Từ trên xuống</b></td><td>F → E &nbsp;<span class="muted">(1 nốt)</span></td><td>đơn giản, mượt</td></tr>
+          <tr><td><b>Từ dưới lên (nửa cung)</b></td><td>D♯ → E</td><td>nhọn hơn, có lực</td></tr>
+          <tr><td><b>Bao vây kép</b></td><td>F → D♯ → E</td><td>chất bebop rõ nhất</td></tr>
+          <tr><td><b>Bao vây kép ngược</b></td><td>D♯ → F → E</td><td>xoắn hơn, hay dùng ở tempo nhanh</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="demo">
+      <span class="demo-label">Nghe trên Dm7–G7–Cmaj7 · gam thường vs gam bebop vs có enclosure</span>
+      <div class="btn-row" id="bebopBtns"></div>
+      <div class="readout" id="bebopReadout">So hai nút đầu thật kỹ — cùng tốc độ, cùng hướng, chỉ khác một nốt thêm vào. Bản <b>bebop</b> nghe "đứng" hơn hẳn vì nốt hợp âm rơi đúng phách. Nút cuối thêm enclosure vào nốt đích của mỗi hợp âm.</div>
+    </div>
+    <div class="note-box">
+      <span class="tag">Cách tập hai thứ này (5 phút/ngày)</span>
+      <p>① Chọn một ô nhịp, chọn <b>một nốt đích</b> (bậc 3 hoặc 7 của hợp âm kế tiếp). ② Đếm ngược 3 nốt và cắm mẫu bao vây <b>F → D♯ → E</b> vào. ③ Ba nốt trước đó chạy gam bebop cho đủ 8 móc đơn. Chỉ vậy thôi — một ô nhịp mỗi ngày, qua 12 giọng. Đây là bài tập biến "biết lý thuyết" thành "tay tự chạy ra".</p>
+    </div>
+  </section>
+
   <section class="concept" id="s-jz-drill" data-title="Cách drill để ứng tác">
-    <span class="sec-eyebrow">PHẦN 12 · LẶP CÁI GÌ</span>
+    <span class="sec-eyebrow">PHẦN 15 · LẶP CÁI GÌ</span>
     <h2>Drill: lặp đúng thứ để tay tự "nói"</h2>
     <p class="lead">Bạn từng hỏi: "phải lặp cái gì đó thì mới ngẫu hứng được?" — <b>đúng</b>. Cơ chế: lặp một mảnh tới mức <b>phản xạ</b> → đầu óc được giải phóng khỏi phần cơ học → rảnh để <b>chọn &amp; tổ hợp</b> các mảnh trong lúc chơi. Đó chính là ngẫu hứng. Dưới là những thứ đáng lặp:</p>
     <div class="table-wrap">
@@ -1528,7 +2128,7 @@ footer b{color:var(--text-muted); font-weight:400}
   </section>
 
   <section class="concept" id="s-jz-feel" data-title="Chất swing & time">
-    <span class="sec-eyebrow">PHẦN 13 · "ĐUNG ĐƯA" & POCKET</span>
+    <span class="sec-eyebrow">PHẦN 16 · "ĐUNG ĐƯA" & POCKET</span>
     <h2>Chất swing, comping &amp; cảm nhịp</h2>
     <p class="lead">Đúng nốt, đúng câu mà <b>sai "feel"</b> thì không ra jazz. Ba thứ làm nên chất: <b>swing 8th</b> (cặp nốt dài–ngắn "đung đưa" thay vì đều), <b>comping có khoảng trống</b> (đừng đánh mọi phách), và <b>cảm nhịp chắc</b> (chơi "in the pocket", có thể hơi "lười" ra sau cho thư giãn).</p>
     <div class="demo">
@@ -1542,8 +2142,77 @@ footer b{color:var(--text-muted); font-weight:400}
     </div>
   </section>
 
+  <section class="concept" id="s-jz-comp" data-title="Comping: tiết tấu đệm">
+    <span class="sec-eyebrow">PHẦN 17 · ĐỆM CHO NGƯỜI KHÁC</span>
+    <h2>Comping: nghệ thuật của cái không đánh</h2>
+    <p class="lead">Phần trước nói comping cần "chừa khoảng trống". Đây là <b>cụ thể phải làm gì</b>. Comping (từ <em>accompany</em>) là việc pianist làm suốt 90% thời gian một bản jazz — nhiều hơn hẳn thời gian solo.</p>
+    <div class="key-def">
+      <span class="tag">Đổi tư duy — điều kiện tiên quyết</span>
+      Ở đệm hát pop, bạn giữ một <b>khuôn tiết tấu đều</b> suốt bài để người hát bám vào. Comping jazz thì ngược lại: nó <b>không đều, không đoán trước được</b>, và nó <em>phản ứng</em> với người đang solo — như hai người trò chuyện, không phải một người đọc và một người gõ nhịp.
+    </div>
+    <h3>Bốn khuôn tiết tấu để bắt đầu</h3>
+    <p>Comping ngẫu hứng bắt đầu từ vài khuôn cố định đã vào tay. Bốn khuôn dưới đây phủ gần hết mọi tình huống — vị trí ghi theo lưới móc đơn của một ô 4/4:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Khuôn</th><th>Đánh vào</th><th>Chất</th><th>Dùng khi</th></tr></thead>
+        <tbody>
+          <tr><td><b>Charleston</b></td><td>phách <b>1</b> và mốc <b>"và" của 2</b></td><td>khuôn kinh điển, đủ dùng cả đời</td><td>mặc định — khi phân vân thì chơi cái này</td></tr>
+          <tr><td><b>Charleston đảo</b></td><td>mốc <b>"và" của 4</b> (ô trước) rồi phách <b>3</b></td><td>đẩy về trước, có lực</td><td>muốn tăng nhiệt mà không tăng số nốt</td></tr>
+          <tr><td><b>Đón trước</b> (anticipation)</td><td>mốc <b>"và" của 4</b> — hợp âm của ô <em>sau</em> vào sớm nửa phách</td><td>trơn, "chuyên nghiệp" ngay</td><td>chỗ đổi hợp âm; dùng rất nhiều</td></tr>
+          <tr><td><b>Chấm câu thưa</b></td><td>chỉ <b>1–2 cú mỗi 2 ô</b>, đặt vào chỗ người solo nghỉ</td><td>tối giản, tôn người solo</td><td>người solo đang chơi dày</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="demo">
+      <span class="demo-label">Cùng vòng Dm7–G7–Cmaj7 (rootless voicing) · nghe bốn khuôn</span>
+      <div class="btn-row" id="compBtns"></div>
+      <div class="readout" id="compReadout">Nghe kỹ nút <b>Đón trước</b>: hợp âm mới vào sớm nửa phách so với vạch nhịp. Chính cú "vào sớm" đó tạo cảm giác trôi chảy mà bản đánh đúng vạch không có.</div>
+    </div>
+    <div class="warning">
+      <span class="tag">⚠ Ba lỗi comping của người mới</span>
+      <p>① <b>Đánh mọi phách</b> — biến piano thành bức tường, người solo không có chỗ. ② <b>Đánh cùng lúc với nốt người solo vừa chơi</b> — hai bên giẫm chân; hãy đánh vào <em>khoảng nghỉ</em> của họ. ③ <b>Chơi nốt gốc bằng tay trái</b> khi đã có người chơi bass — thành đục và thừa; dùng rootless voicing, để gốc cho bass.</p>
+    </div>
+    <div class="note-box">
+      <span class="tag">Bài tập một mình, không cần ban nhạc</span>
+      <p>Bật một bản thu jazz bất kỳ, <b>tắt tiếng phần piano trong đầu</b>, và comp theo. Vì bạn không điều khiển được người solo, bạn buộc phải <em>nghe</em> và <em>phản ứng</em> — đúng kỹ năng cần rèn. Đây là bài tập hiệu quả nhất cho comping, và nó miễn phí.</p>
+    </div>
+  </section>
+
+  <section class="concept" id="s-jz-solo" data-title="Solo piano: chơi một mình">
+    <span class="sec-eyebrow">PHẦN 18 · KHÔNG CÓ BAN NHẠC</span>
+    <h2>Solo piano: khi bạn phải là cả ban nhạc</h2>
+    <p class="lead">Đây là tình huống thật của bạn — một cây đàn, không bass, không trống. Mọi voicing "rootless" ở phần 06 đều giả định có người chơi bass lo nốt gốc. Khi ngồi một mình, <b>giả định đó sụp</b>, và bạn phải thiết kế lại từ đầu.</p>
+    <h3>Ba tầng phải cùng tồn tại</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tầng</th><th>Vùng đàn</th><th>Ai lo</th><th>Nguyên tắc</th></tr></thead>
+        <tbody>
+          <tr><td><b>Bass</b></td><td>dưới Đô giữa 1–2 quãng 8</td><td>tay trái, ngón út</td><td><b>thưa</b> — một nốt, cùng lắm gốc + quãng 5. Càng thấp càng phải thưa</td></tr>
+          <tr><td><b>Hòa thanh</b></td><td>quanh Đô giữa</td><td>tay trái (ngón 1–2) + tay phải</td><td>chỉ cần <b>bậc 3 &amp; 7</b> + một màu. Đây là vùng "vàng"</td></tr>
+          <tr><td><b>Giai điệu</b></td><td>trên Đô giữa</td><td>tay phải, nốt trên cùng</td><td>phải <b>nổi rõ nhất</b> — nhấn mạnh hơn hẳn các nốt dưới</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="key-def">
+      <span class="tag">Giải pháp rẻ nhất: shell tay trái</span>
+      Tay trái bấm <b>gốc + bậc 7</b> (hoặc gốc + bậc 3), cách nhau khoảng một quãng 10 — ví dụ Cmaj7 bấm <b>C2 + B3</b>. Chỉ hai nốt, nhưng đủ cho cả tầng bass lẫn một nửa tầng hòa thanh. Tay phải rảnh hoàn toàn cho giai điệu + màu. Đây là hình bấm đầu tiên nên thuộc qua 12 giọng.
+    </div>
+    <h3>Hai thứ chỉ solo piano mới có</h3>
+    <p><b>Dạo đầu tự do (rubato intro).</b> Không nhịp, không tempo. Cách làm chuẩn: bắt đầu bằng vài hợp âm <b>mơ hồ về giọng</b> (quartal, hoặc pedal point trên một nốt bass giữ), dần dần lộ ra chủ âm, rồi <b>kết bằng một cú V7 kéo dài</b> — chính cú đó báo hiệu tempo sắp vào. Người nghe sẽ tự động chuẩn bị.</p>
+    <p><b>Tag ending.</b> Cách kết đặc trưng jazz: khi tới hợp âm cuối, thay vì dừng, bạn <b>quay lại lặp 4 ô cuối thêm 2–3 lần</b> (thường là vòng I–vi–ii–V hoặc iii–VI–ii–V), mỗi lần đổi màu một chút, rồi mới thả xuống hợp âm cuối cùng. Hợp âm kết ưa dùng: <b>maj7♯11</b> hoặc <b>6/9</b> — cả hai đều "mở" chứ không đóng sập, để tiếng ngân tan dần.</p>
+    <div class="demo">
+      <span class="demo-label">Cùng 4 ô nhạc · từ "chỉ hợp âm" tới ba tầng đầy đủ</span>
+      <div class="btn-row" id="soloPBtns"></div>
+      <div class="readout" id="soloPReadout">Nghe theo thứ tự nút. Bản đầu chỉ có hợp âm — đúng nhưng trống. Bản cuối có đủ bass, hòa thanh và giai điệu nổi; vẫn một người chơi, nhưng nghe như ba.</div>
+    </div>
+    <div class="warning">
+      <span class="tag">⚠ Cái bẫy lớn nhất của solo piano</span>
+      <p>Vì không có trống, <b>tempo rất dễ trôi</b> — thường là nhanh dần ở chỗ dễ và chậm lại ở chỗ khó. Không ai giữ nhịp giúp bạn cả. Cách chữa duy nhất: tập với <b>metronome gõ ở phách 2 &amp; 4</b>, và <b>tự thu âm</b> rồi nghe lại. Bạn sẽ nghe ra chỗ trôi ngay — cái mà lúc đang chơi hoàn toàn không nhận ra.</p>
+    </div>
+  </section>
+
   <section class="concept" id="s-jz-standards" data-title="Standards & học một bài">
-    <span class="sec-eyebrow">PHẦN 14 · SÂN CHƠI CHUNG</span>
+    <span class="sec-eyebrow">PHẦN 19 · SÂN CHƠI CHUNG</span>
     <h2>Jazz standards &amp; cách học một bài</h2>
     <p class="lead">"Standards" = kho bài <b>ai chơi jazz cũng thuộc</b> — vào jam gọi tên là chơi được cùng nhau. Thuộc vài chục standard = có "vốn bài" để thực hành mọi thứ đã học. Một số bài <b>dễ vào</b> để bắt đầu:</p>
     <div class="note-box">
@@ -1568,8 +2237,43 @@ footer b{color:var(--text-muted); font-weight:400}
     </div>
   </section>
 
+  <section class="concept" id="s-jz-eras" data-title="Các thời kỳ &amp; phong cách">
+    <span class="sec-eyebrow">PHẦN 20 · BẢN ĐỒ PHONG CÁCH</span>
+    <h2>Các thời kỳ jazz — cái khung để "nghe chủ động" bám vào</h2>
+    <p class="lead">Mục sau bảo bạn nghe chủ động. Nhưng nghe mà không có bản đồ thì mọi bản thu đều là "nhạc jazz". Bản đồ này cho bạn biết <b>đang nghe cái gì, nó đang cố làm gì, và nghe ra nó bằng dấu hiệu nào</b>.</p>
+    <p><b>Sợi chỉ xuyên suốt lịch sử jazz chỉ có một:</b> mỗi thế hệ thấy thế hệ trước đã thành công thức, nên đẩy một thông số lên cực hạn — <em>tốc độ, mật độ hợp âm, sự tự do, hay chính nhịp điệu</em>. Nắm được điều đó thì cả bảng dưới trở nên logic thay vì là danh sách phải học thuộc.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Thời kỳ</th><th>Khoảng</th><th>Đẩy cái gì lên cực hạn</th><th>Nghe ra bằng dấu hiệu</th><th>Pianist</th></tr></thead>
+        <tbody>
+          <tr><td><b>Swing</b></td><td>1930s</td><td>tính khiêu vũ, dàn nhạc lớn</td><td>ban nhạc đông, tiết tấu đều &amp; nhún, có thể nhảy theo được</td><td>Count Basie, Teddy Wilson</td></tr>
+          <tr><td><b>Bebop</b></td><td>1940s</td><td><b>tốc độ &amp; mật độ hợp âm</b></td><td>nhanh, nhóm nhỏ, câu solo dài đặc nốt, ii–V dày đặc; <em>không</em> để nhảy</td><td>Bud Powell</td></tr>
+          <tr><td><b>Cool</b></td><td>1950s</td><td>sự tiết chế — phản ứng ngược với bebop</td><td>nhẹ, thưa, âm sắc mềm, nhiều khoảng trống</td><td>Lennie Tristano, Dave Brubeck</td></tr>
+          <tr><td><b>Hard bop</b></td><td>1950s</td><td>gốc blues &amp; gospel</td><td>bebop nhưng nặng blues hơn, giai điệu bắt tai, groove chắc</td><td>Horace Silver, Wynton Kelly, Red Garland</td></tr>
+          <tr><td><b>Modal</b></td><td>1959+</td><td><b>bỏ bớt hợp âm</b> — đảo ngược bebop</td><td>một hợp âm kéo 8–16 ô, voicing quartal, cảm giác lơ lửng không đích</td><td>Bill Evans, McCoy Tyner</td></tr>
+          <tr><td><b>Free</b></td><td>1960s</td><td>bỏ luôn cả vòng hợp âm</td><td>không changes cố định, có khi không cả tempo hay giọng</td><td>Cecil Taylor</td></tr>
+          <tr><td><b>Fusion</b></td><td>1970s</td><td>nhạc cụ điện &amp; nhịp <b>thẳng</b></td><td>đàn điện/synth, groove funk-rock, <b>không swing</b></td><td>Herbie Hancock, Chick Corea</td></tr>
+          <tr><td><b>Đương đại</b></td><td>1980s→</td><td>trộn mọi thứ + nhịp lẻ</td><td>số nhịp lạ (5/4, 7/8), hòa thanh vay từ cổ điển &amp; pop</td><td>Brad Mehldau, Robert Glasper</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="key-def">
+      <span class="tag">Hai câu hỏi phân loại được 80% bản thu</span>
+      ① <b>Nhịp thẳng hay swing?</b> Thẳng ⇒ fusion hoặc đương đại. Swing ⇒ mọi thứ trước 1970. ② <b>Hợp âm đổi nhanh hay chậm?</b> Đổi mỗi 1–2 phách ⇒ bebop/hard bop. Đổi mỗi 8–16 ô ⇒ modal. Hai câu này rẻ hơn nhiều so với học thuộc cả bảng, và cho bạn ngay 80% câu trả lời.
+    </div>
+    <div class="demo">
+      <span class="demo-label">Cùng một vòng ii–V–I · chơi theo bốn chất khác nhau</span>
+      <div class="btn-row" id="eraBtns"></div>
+      <div class="readout" id="eraReadout">Cùng ba hợp âm, bốn thế giới. Đây là bản phác rất thô bằng tiếng tổng hợp — đủ để tai bắt được <em>khác biệt về mật độ và nhịp</em>, không thay được việc nghe bản thu thật.</div>
+    </div>
+    <div class="note-box">
+      <span class="tag">Nghe theo thứ tự nào</span>
+      <p>Đừng nghe theo trình tự lịch sử — bebop ở tempo 300 rất khó vào với người mới. Thứ tự dễ vào nhất: <b>modal</b> (Miles Davis — <i>Kind of Blue</i>, ít hợp âm, nhiều không gian) → <b>hard bop</b> (giai điệu bắt tai, groove rõ) → <b>cool</b> → <b>swing</b> → <b>bebop</b> (để sau, khi tai đã quen tốc độ) → <b>fusion</b>. Trong lộ trình nghe ở mục sau, <i>Kind of Blue</i> đứng đầu chính vì lý do này.</p>
+    </div>
+  </section>
+
   <section class="concept" id="s-jz-listen" data-title="Nghe chủ động">
-    <span class="sec-eyebrow">PHẦN 15 · TAI QUYẾT ĐỊNH</span>
+    <span class="sec-eyebrow">PHẦN 21 · TAI QUYẾT ĐỊNH</span>
     <h2>Nghe chủ động: học nhanh nhất mà ít người làm</h2>
     <p class="lead">Jazz truyền qua <b>tai</b>, không qua sách. Nghe <b>chủ động</b> (không phải để nền) là đòn bẩy lớn nhất: gu, feel, vốn câu, cách "kể chuyện" — phần lớn thấm vào từ việc nghe kỹ người giỏi.</p>
     <div class="table-wrap">
@@ -1590,7 +2294,7 @@ footer b{color:var(--text-muted); font-weight:400}
   </section>
 
   <section class="concept" id="s-jz-routine" data-title="Routine jazz & khép bộ">
-    <span class="sec-eyebrow">PHẦN 16 · GHÉP TẤT CẢ</span>
+    <span class="sec-eyebrow">PHẦN 22 · GHÉP TẤT CẢ</span>
     <h2>Routine jazz &amp; cách 5 trụ ghép lại</h2>
     <p class="lead">Đây là nơi mọi thứ hội tụ về mục tiêu cuối của bạn — <b>jazz hóa &amp; chơi được một bài</b>. Một buổi tập jazz điển hình gói cả năm trụ:</p>
     <div class="table-wrap">
@@ -1641,8 +2345,9 @@ function audio(){
 function markAudioOn(){ const cta=document.getElementById('audioCta'); if(cta&&!cta.classList.contains('on')){ cta.classList.add('on'); const b=document.getElementById('enableAudio'); if(b){ b.textContent='Tiếng đã bật ✓'; b.disabled=true; b.style.opacity=.7; } } }
 function mtof(m){ return 440*Math.pow(2,(m-69)/12); }
 function noise(){ if(!noiseBuf){ const ac=audio(); noiseBuf=ac.createBuffer(1, ac.sampleRate, ac.sampleRate); const d=noiseBuf.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=Math.random()*2-1; } return noiseBuf; }
-function voice(midi,t0,dur,vel){
-  const ac=audio(); vel=vel==null?0.8:vel; const f=mtof(midi);
+function voice(midi,t0,dur,vel){ voiceF(mtof(midi),t0,dur,vel); }
+function voiceF(f,t0,dur,vel){
+  const ac=audio(); vel=vel==null?0.8:vel;
   const g=ac.createGain();
   const peak=0.20*vel, sus=Math.max(0.0001,peak*0.30);
   g.gain.setValueAtTime(0.0001,t0);
@@ -1825,7 +2530,7 @@ function setPlaying(btn,on){ if(btn) btn.classList.toggle('playing',on); }
 (function(){
   const wrap=document.getElementById('intervalBtns'), ro=document.getElementById('intReadout'), seg=document.getElementById('intModeSeg');
   if(!wrap) return; let mode='mel';
-  const data=[['2 trưởng',2],['3 thứ',3],['3 trưởng',4],['4 đúng',5],['Tritone',6],['5 đúng',7],['6 trưởng',9],['Quãng 8',12]];
+  const data=[['2 thứ',1],['2 trưởng',2],['3 thứ',3],['3 trưởng',4],['4 đúng',5],['Tritone',6],['5 đúng',7],['6 thứ',8],['6 trưởng',9],['7 thứ',10],['7 trưởng',11],['Quãng 8',12]];
   data.forEach(function(d){ const nm=d[0], semi=d[1]; const b=document.createElement('button'); b.className='btn sm'; b.textContent=nm; b.onclick=function(){
     audio(); markAudioOn(); const t=audio().currentTime, root=60;
     if(mode==='mel'){ voice(root,t,0.7,0.85); voice(root+semi,t+0.42,1.0,0.85); } else { voice(root,t,1.3,0.8); voice(root+semi,t,1.3,0.8); }
@@ -2503,6 +3208,505 @@ function mkBtns(containerId, defs, onClick){ const w=document.getElementById(con
     {label:'Swing (đung đưa)',f:swing,t:'cặp 8th dài–ngắn (~2/3+1/3) — chất jazz.'},
     {label:'Comping (Charleston)',f:comping,t:'walking bass + hợp âm điểm ở phách 1 &amp; "và" của 2 — chừa khoảng trống.'}
   ],function(x){ x.f(); ro.innerHTML='<b>'+x.label+'</b> — '+x.t; });
+})();
+
+/* ===================================================================
+   PHẦN BỔ SUNG — modules cho các mục mới (nhạc lý nền + jazz nâng cao)
+   =================================================================== */
+
+/* helper dùng chung cho các demo mới */
+function playSeq(items, step, lastMul){
+  const t0=audio().currentTime+0.06;
+  for(let i=0;i<items.length;i++){
+    const it=items[i], last=(i===items.length-1);
+    const d=step*(last?(lastMul||1):1);
+    if(it.b!=null) voice(it.b, t0+i*step, d*0.95, 0.5);
+    if(it.n) chord(it.n, t0+i*step, d*0.92, it.v==null?0.55:it.v);
+    if(it.m!=null) voice(it.m, t0+i*step, d*0.9, 0.85);
+  }
+}
+/* vị trí của móc đơn thứ i, có swing hoặc không (trả về số phách) */
+function e8(i, swing){ const b=Math.floor(i/2); return swing ? b+(i%2?2/3:0) : b+(i%2?0.5:0); }
+/* tiếng có nhiều bồi âm — cần cho demo điều hòa đều (nghe được nhịp đập) */
+function richTone(f,t0,dur,vel,n){
+  const ac=audio(); n=n||6; const g=ac.createGain();
+  const peak=0.15*(vel==null?1:vel);
+  g.gain.setValueAtTime(0.0001,t0);
+  g.gain.exponentialRampToValueAtTime(peak,t0+0.03);
+  g.gain.setValueAtTime(peak,Math.max(t0+0.04,t0+dur-0.35));
+  g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+  g.connect(master);
+  for(let k=1;k<=n;k++){
+    const o=ac.createOscillator(); o.type='sine'; o.frequency.value=f*k;
+    const og=ac.createGain(); og.gain.value=0.9/(k*k*0.6+1);
+    o.connect(og); og.connect(g); o.start(t0); o.stop(t0+dur+0.06);
+  }
+}
+
+/* ===== ① · GIÁ TRỊ NỐT / MÁY ĐỌC TIẾT TẤU ===== */
+(function(){
+  if(!document.getElementById('notaBtns')) return;
+  const ro=document.getElementById('notaReadout'),
+        bpmEl=document.getElementById('notaBpm'), bpmV=document.getElementById('notaBpmV');
+  bpmEl.oninput=function(){ bpmV.textContent=bpmEl.value+' BPM'; };
+  const MEL=[72,74,76,74,72,71,72,74,76,77,76,74,72,71,69,71];
+  const N=function(d){return {d:d};}, R=function(d){return {d:d,r:true};};
+  const T=1/3;
+  function play(def){
+    const spb=60/(+bpmEl.value), t0=audio().currentTime+0.1;
+    const pat=def.p, pre=def.pre||[];
+    let total=0; for(let i=0;i<pat.length;i++) total+=pat[i].d;
+    const bars=Math.max(1, Math.round(total/4));
+    for(let b=0;b<1+bars;b++) for(let k=0;k<4;k++) click(t0+(b*4+k)*spb, k===0);
+    let i=0;
+    let preLen=0; for(let k=0;k<pre.length;k++) preLen+=pre[k].d;
+    let pt=t0+(4-preLen)*spb;
+    for(let k=0;k<pre.length;k++){ voice(MEL[i%MEL.length],pt,pre[k].d*spb*0.9,0.8); i++; pt+=pre[k].d*spb; }
+    let t=t0+4*spb;
+    for(let k=0;k<pat.length;k++){
+      const x=pat[k];
+      if(!x.r){ voice(MEL[i%MEL.length], t, x.d*spb*0.9, 0.82); i++; }
+      t+=x.d*spb;
+    }
+  }
+  const defs=[
+    {label:'Nốt đen', p:[N(1),N(1),N(1),N(1)],
+     t:'4 nốt đen = 4 phách. Mỗi nốt rơi <b>đúng vào một tiếng máy</b>. Đây là mốc gốc để so mọi thứ còn lại.'},
+    {label:'Nốt trắng', p:[N(2),N(2)],
+     t:'2 nốt trắng = 4 phách. Mỗi nốt <b>giữ qua 2 tiếng máy</b> — bạn nghe tiếng máy thứ hai rơi vào <em>giữa</em> nốt.'},
+    {label:'Nốt tròn', p:[N(4)],
+     t:'1 nốt tròn phủ trọn cả ô nhịp. Bấm một lần, đếm bốn tiếng.'},
+    {label:'Móc đơn', p:[N(.5),N(.5),N(.5),N(.5),N(.5),N(.5),N(.5),N(.5)],
+     t:'8 móc đơn = 4 phách. Nốt lẻ rơi vào tiếng máy, nốt chẵn rơi vào mốc <b>"và"</b> ở giữa. Đếm: 1 và 2 và 3 và 4 và.'},
+    {label:'Móc kép', p:[N(.25),N(.25),N(.25),N(.25),N(.25),N(.25),N(.25),N(.25),N(.5),N(.5),N(1)],
+     t:'Bốn móc kép lấp trọn <b>một</b> phách. Đếm: <b>1 e và a</b>. Hai phách đầu là móc kép, sau đó thưa dần về móc đơn rồi nốt đen.'},
+    {label:'Chấm dôi', p:[N(1.5),N(.5),N(1.5),N(.5)],
+     t:'<b>Đen chấm dôi + móc đơn</b>, lặp 2 lần. Nốt dài chiếm 1,5 phách nên nốt ngắn bị đẩy vào mốc "và" — chính cái khập khiễng này là tiết tấu hành khúc.'},
+    {label:'Dấu lặng', p:[N(1),R(1),N(1),R(1)],
+     t:'Đen – <b>lặng đen</b> – đen – lặng đen. Tiếng máy vẫn chạy trong lúc im lặng: <b>dấu lặng cũng được đếm phách</b>.'},
+    {label:'Dấu nối', p:[N(1),N(2),N(1)],
+     t:'Nốt giữa là <b>hai nốt đen được nối lại</b> — bấm một lần, ngân 2 phách. Nếu bấm lại ở phách 3 là bạn đã đọc sai dấu nối thành hai nốt rời.'},
+    {label:'Chùm 3', p:[N(T),N(T),N(T),N(T),N(T),N(T),N(T),N(T),N(T),N(T),N(T),N(T)],
+     t:'Mỗi phách bị chia làm <b>3</b> thay vì 2. Đếm: <b>1 la li · 2 la li</b>. So với nút "Móc đơn" để nghe rõ sự khác nhau giữa chia đôi và chia ba.'},
+    {label:'Đảo phách', p:[N(.5),N(1),N(1),N(1),N(.5)],
+     t:'Nốt thứ hai bắt đầu ở mốc <b>"và" của phách 1</b> rồi ngân vắt qua phách 2. Tai chờ một cú ở phách 2 mà không có ⇒ sinh lực đẩy. Đây là đảo phách.'},
+    {label:'Nhịp lấy đà', pre:[N(1)], p:[N(1),N(1),N(1),N(1)],
+     t:'Có <b>một nốt vào trước</b> ở phách 4 của ô đếm vào — bài không bắt đầu ở phách 1. Nếu bạn đếm 1-2-3-4 rồi mới vào, bạn đã trễ đúng một phách so với cả bài.'}
+  ];
+  mkBtns('notaBtns', defs, function(d){ play(d); ro.innerHTML='<b>'+d.label+'</b> — '+d.t; });
+})();
+
+/* ===== ① · BA GAM THỨ ===== */
+(function(){
+  const ro=document.getElementById('minorReadout'); if(!document.getElementById('minorBtns')) return;
+  const A=57; /* A3 */
+  function sc(iv){ const t=audio().currentTime+0.06; scaleUp(A, iv, t, 0.24, 0.75); }
+  /* Am – Dm – (Em7|E7) – Am : hai bản chỉ khác đúng nốt G vs G♯ */
+  function cad(sharp){
+    playSeq([
+      {b:45,n:[57,60,64]},
+      {b:50,n:[57,62,65]},
+      {b:40,n:[59,62, sharp?68:67]},
+      {b:45,n:[57,60,64]}
+    ], 0.82, 2.2);
+  }
+  const defs=[
+    {label:'Thứ tự nhiên', f:function(){sc([0,2,3,5,7,8,10]);},
+     t:'A B C D E F G. Bậc 7 là <b>Sol</b> — cách chủ âm La một <em>nguyên cung</em>. Nghe êm, cổ, nhưng không có lực kéo về nhà.'},
+    {label:'Thứ hòa thanh', f:function(){sc([0,2,3,5,7,8,11]);},
+     t:'A B C D E F <b>G♯</b>. Nốt dẫn quay lại. Chú ý bước nhảy <b>F → G♯</b> (3 nửa cung) — chính nó cho màu "Ả Rập / Tây Ban Nha".'},
+    {label:'Thứ giai điệu', f:function(){sc([0,2,3,5,7,9,11]);},
+     t:'A B C D E <b>F♯ G♯</b>. Cái hố 3-nửa-cung bị lấp, đi lên mượt như gam trưởng mà vẫn giữ nốt dẫn. Đây là gam jazz sẽ dùng ở tab ⑤.'},
+    {label:'Kết Em7 → Am', f:function(){cad(false);},
+     t:'Nốt bậc 7 của giọng là <b>Sol tự nhiên</b>. Không có nốt dẫn ⇒ nghe như câu <em>chưa hết</em>, mềm oặt.'},
+    {label:'Kết E7 → Am', f:function(){cad(true);},
+     t:'Đúng một nốt đổi: Sol → <b>Sol♯</b>. Nốt dẫn nhích nửa cung lên La ⇒ cửa đóng dứt khoát. Đây là lý do 99% nhạc buồn dùng E7 chứ không dùng Em ở chỗ kết.'}
+  ];
+  mkBtns('minorBtns', defs, function(d){ d.f(); ro.innerHTML='<b>'+d.label+'</b> — '+d.t; });
+})();
+
+/* ===== ① · PENTATONIC & BLUES ===== */
+(function(){
+  const ro=document.getElementById('pentReadout'); if(!document.getElementById('pentBtns')) return;
+  const DR=[48,64,70]; /* nền C7: C3 + E4 + B♭4 */
+  function run(iv){ const t=audio().currentTime+0.06; chord(DR,t,3.4,0.34); scaleUp(60,iv,t+0.3,0.24,0.78); }
+  const defs=[
+    {label:'Ngũ cung trưởng', f:function(){run([0,2,4,7,9]);},
+     t:'C D E G A. <b>Không có cặp nào cách nửa cung</b> ⇒ không nốt nào chỏi. Đây là gam "gõ bừa cũng đúng".'},
+    {label:'Ngũ cung thứ', f:function(){run([0,3,5,7,10]);},
+     t:'C E♭ F G B♭. Cùng 5 nốt với ngũ cung trưởng của giọng song song — chỉ khác nốt bạn coi là nhà. Màu tối hơn, chất rock/blues.'},
+    {label:'Gam blues', f:function(){run([0,3,5,6,7,10]);},
+     t:'Ngũ cung thứ <b>+ nốt ♭5 (F♯)</b>. Nghe kỹ nốt thứ tư đi lên — nó "sai" một cách rất đúng. Lướt qua nó, đừng đậu lại.'},
+    {label:'Mixolydian (7 nốt) — để so', f:function(){run([0,2,4,5,7,9,10]);},
+     t:'C D E <b>F</b> G A B♭. Đầy đủ 7 nốt nên nhiều màu hơn, nhưng nốt <b>F</b> đè lên bậc 3 (E) đúng nửa cung ⇒ hơi gợn. Ngũ cung trưởng bỏ đúng nốt đó.'}
+  ];
+  mkBtns('pentBtns', defs, function(d){ d.f(); ro.innerHTML='<b>'+d.label+'</b> — '+d.t; });
+})();
+
+/* ===== ① · CADENCE ===== */
+(function(){
+  const ro=document.getElementById('cadReadout'); if(!document.getElementById('cadBtns')) return;
+  const C ={b:48,n:[60,64,67]}, Dm={b:50,n:[62,65,69]}, F={b:41,n:[60,65,69]},
+        G ={b:43,n:[59,62,67]}, Am={b:45,n:[60,64,69]};
+  const defs=[
+    {label:'Kết trọn (V→I)', s:[C,F,G,C],
+     t:'<b>G → C</b>. Nốt dẫn Si nhích lên Đô. Cửa đóng hẳn — nghe xong không muốn nghe thêm. Đây là cái kết mạnh nhất.'},
+    {label:'Kết nửa (→V)', s:[C,Am,Dm,G],
+     t:'Dừng lại <b>ở G</b>, không về nhà. Câu treo lơ lửng như một câu hỏi. Dùng ở cuối câu 4 ô đầu của một đoạn.'},
+    {label:'Kết Amen (IV→I)', s:[C,Am,F,C],
+     t:'<b>F → C</b>. Không có nốt dẫn nên không có kịch tính — chỉ là một cú hạ cánh êm. Hay dùng làm đuôi <em>sau khi</em> bài đã kết trọn.'},
+    {label:'Kết lừa (V→vi)', s:[C,F,G,Am],
+     t:'<b>G → Am</b> thay vì G → C. Am chứa cả C lẫn E nên nghe vẫn hợp lý, nhưng gốc là La ⇒ chưa phải nhà. Bài buộc phải đi tiếp.'}
+  ];
+  mkBtns('cadBtns', defs, function(d){ playSeq(d.s, 0.8, 2.4); ro.innerHTML='<b>'+d.label+'</b> — '+d.t; });
+})();
+
+/* ===== ① · CHUYỂN GIỌNG ===== */
+(function(){
+  const ro=document.getElementById('modReadout'); if(!document.getElementById('modBtns')) return;
+  const C={b:48,n:[60,64,67]}, Am={b:45,n:[60,64,69]}, F={b:41,n:[60,65,69]},
+        G={b:43,n:[59,62,67]}, D7={b:50,n:[60,66,69]};
+  function shift(it,s){ return {b:it.b+s, n:it.n.map(function(x){return x+s;})}; }
+  function phrase(s){ return [C,G,Am,F].map(function(x){return shift(x,s);}); }
+  const defs=[
+    {label:'Hợp âm cầu (pivot)', s:[C,F,Am,D7,G],
+     t:'<b>Am</b> là bậc vi của Đô <em>và</em> bậc ii của Sol — nó là bản lề. Qua Am rồi D7, tai đã ở nhà mới trước khi kịp nhận ra có gì xảy ra.'},
+    {label:'Qua dominant', s:[C,F,D7,G],
+     t:'Chèn thẳng <b>D7</b> = V7 của Sol. Không giấu giếm gì, nhưng rõ ràng và rất hiệu quả — cách phổ biến nhất trong nhạc pop.'},
+    {label:'Đẩy trực tiếp nửa cung', s:phrase(0).concat(phrase(1)),
+     t:'Bốn ô ở Đô, rồi <b>y hệt bốn ô đó dịch lên nửa cung</b>, không nối gì. Thô nhưng hiệu quả tức thì — đây là cú "lên nhiệt" ở điệp khúc cuối của hàng nghìn bài pop.'},
+    {label:'Đẩy trực tiếp nguyên cung', s:phrase(0).concat(phrase(2)),
+     t:'Cùng thủ pháp nhưng nhảy <b>nguyên cung</b>. Cú nhảy xa hơn nên rõ hơn, và cũng lộ hơn — dùng một lần trong bài là đủ.'}
+  ];
+  mkBtns('modBtns', defs, function(d){ playSeq(d.s, 0.78, 2.2); ro.innerHTML='<b>'+d.label+'</b> — '+d.t; });
+})();
+
+/* ===== ① · CÂU / ĐOẠN 8 Ô ===== */
+(function(){
+  const ro=document.getElementById('formReadout'); if(!document.getElementById('formBtns')) return;
+  /* câu hỏi: C Am Dm G  (kết nửa) · câu trả lời: C Am F  C  (kết trọn) — cùng mở đầu, khác đuôi */
+  const Q=[{b:48,n:[60,64],m:67},{b:45,n:[60,64],m:69},{b:50,n:[62,65],m:74},{b:43,n:[59,62],m:74}];
+  const A=[{b:48,n:[60,64],m:67},{b:45,n:[60,64],m:69},{b:41,n:[60,65],m:72},{b:48,n:[60,64],m:72}];
+  const defs=[
+    {label:'Cả đoạn 8 ô', s:Q.concat(A),
+     t:'Hai câu 4 ô. Chú ý: <b>mở đầu giống hệt nhau</b> (C – Am), chỉ hai ô cuối khác. Đó chính là cấu trúc hỏi–đáp.'},
+    {label:'Chỉ câu hỏi (4 ô)', s:Q,
+     t:'Kết ở <b>G</b> — kết nửa. Nghe một mình sẽ thấy nó <b>treo</b>, chưa xong. Tai bạn đang chờ 4 ô nữa.'},
+    {label:'Chỉ câu trả lời (4 ô)', s:A,
+     t:'Kết ở <b>C</b> — kết trọn. Nghe một mình thì trọn vẹn, nhưng hơi cụt vì thiếu câu hỏi dẫn vào.'}
+  ];
+  mkBtns('formBtns', defs, function(d){ playSeq(d.s, 0.72, 2.4); ro.innerHTML='<b>'+d.label+'</b> — '+d.t; });
+})();
+
+/* ===== ① · BỒI ÂM & ĐIỀU HÒA ĐỀU ===== */
+(function(){
+  const ro=document.getElementById('tuneReadout'); if(!document.getElementById('tuneBtns')) return;
+  const C3=130.81, C4=261.63;
+  function series(){
+    const t=audio().currentTime+0.08;
+    for(let k=1;k<=6;k++) richTone(C3*k, t+(k-1)*0.72, 0.68, 0.85, 1);
+    for(let k=1;k<=6;k++) richTone(C3*k, t+6*0.72+0.25, 2.6, 0.5, 1);
+  }
+  function dyad(f2){ const t=audio().currentTime+0.08; richTone(C4,t,4.0,0.85,6); richTone(f2,t,4.0,0.85,6); }
+  const defs=[
+    {label:'Chuỗi bồi âm', f:series,
+     t:'6 bồi âm đầu của nốt Đô, lần lượt rồi cùng lúc: f · 2f · 3f · 4f · 5f · 6f. Nghe cả chồng, tai bạn gộp chúng lại thành <b>một</b> nốt Đô — đó là điều xảy ra mỗi lần bạn bấm một phím.'},
+    {label:'Quãng 5 · tỉ số 3:2', f:function(){dyad(C4*1.5);},
+     t:'261,63 + 392,44 Hz. Đứng yên tuyệt đối, không một gợn — vì bồi âm hai nốt trùng nhau chính xác.'},
+    {label:'Quãng 5 · trên piano', f:function(){dyad(C4*Math.pow(2,7/12));},
+     t:'261,63 + 391,99 Hz. Hụt 1,96 cent so với bản trên. Nếu bạn không nghe ra khác biệt thì <b>đúng như dự đoán</b> — sai số này quá nhỏ để tai bắt.'},
+    {label:'Quãng 3 trưởng · tỉ số 5:4', f:function(){dyad(C4*1.25);},
+     t:'261,63 + 327,04 Hz. Cũng đứng yên như đá. Đây là quãng 3 "thật".'},
+    {label:'Quãng 3 trưởng · trên piano', f:function(){dyad(C4*Math.pow(2,4/12));},
+     t:'261,63 + 329,63 Hz — dư 13,69 cent. Nghe kỹ: có một <b>nhịp rung chậm khoảng 10 lần/giây</b> bên trong. Đó là bồi âm bậc 5 của Đô (~1308 Hz) đập với bồi âm bậc 4 của Mi (~1319 Hz). Mọi hợp âm trưởng trên piano đều mang tiếng rung này.'}
+  ];
+  mkBtns('tuneBtns', defs, function(d){ d.f(); ro.innerHTML='<b>'+d.label+'</b> — '+d.t; });
+})();
+
+/* ===== ② · BẢNG KÝ HIỆU HỢP ÂM ===== */
+(function(){
+  const ro=document.getElementById('symReadout'); if(!document.getElementById('symBtns')) return;
+  const defs=[
+    ['C',[60,64,67],'trưởng — 1 3 5'],
+    ['Cm',[60,63,67],'thứ — bậc 3 hạ nửa cung'],
+    ['C°',[60,63,66],'giảm — cả bậc 3 lẫn bậc 5 đều hạ'],
+    ['C+',[60,64,68],'tăng — bậc 5 nâng; nghe lơ lửng, không có nhà'],
+    ['Csus4',[60,65,67],'treo bậc 4 — <b>không có bậc 3</b> nên không trưởng cũng không thứ'],
+    ['Csus2',[60,62,67],'treo bậc 2 — cũng bỏ bậc 3, nhưng mở và sáng hơn sus4'],
+    ['C6',[60,64,67,69],'thêm bậc 6 — êm, cổ điển, rất hay dùng làm hợp âm kết'],
+    ['Cm6',[60,63,67,69],'thứ nhưng bậc 6 <b>trưởng</b> — màu vừa buồn vừa sang'],
+    ['Cadd9',[60,64,67,74],'thêm bậc 9 mà <b>không</b> có bậc 7 — chất pop/ballad hiện đại'],
+    ['C7',[60,64,67,70],'bảy át — bậc 7 <b>thứ</b>. Căng, muốn giải quyết'],
+    ['Cmaj7',[60,64,67,71],'bảy trưởng — bậc 7 <b>trưởng</b>. Mơ màng, đứng yên được'],
+    ['Cm7',[60,63,67,70],'thứ bảy — hợp âm ii quen thuộc nhất của jazz'],
+    ['Cm(maj7)',[60,63,67,71],'thứ + bậc 7 trưởng — căng thẳng ngầm, chất "phim gián điệp"'],
+    ['Cm7♭5',[60,63,66,70],'nửa giảm (ø7) — hợp âm <b>ii của giọng thứ</b>'],
+    ['C°7',[60,63,66,69],'giảm hoàn toàn — khác ø7 <b>đúng một nốt</b> (A thay vì B♭). Bấm liền hai nút này để so'],
+    ['C9',[60,64,67,70,74],'C7 chồng thêm bậc 9'],
+    ['C13',[60,64,67,70,74,81],'chồng tới bậc 13 — dày, đầy đặn, chất big band'],
+    ['C6/9',[60,64,67,69,74],'bậc 6 + bậc 9, không bậc 7 — hợp âm kết ưa dùng nhất của jazz'],
+    ['C/E',[64,67,72],'gạch chéo = đổi nốt bass. Vẫn hợp âm C, nhưng <b>Mi ở dưới cùng</b>']
+  ].map(function(x){ return {label:x[0], n:x[1], t:x[2]}; });
+  mkBtns('symBtns', defs, function(d){
+    chord(d.n, audio().currentTime+0.05, 2.2, 0.7);
+    ro.innerHTML='<b>'+d.label+'</b> — '+d.t;
+  });
+})();
+
+/* ===== ② · WALKING BASS & STRIDE ===== */
+(function(){
+  const ro=document.getElementById('walkReadout'); if(!document.getElementById('walkBtns')) return;
+  const spb=0.46;
+  const RH=[[65,69,72,76],[65,69,71,74],[64,67,71,74],[64,67,71,74]]; /* Dm7 G7 Cmaj7 Cmaj7 rootless */
+  const ROOT=[38,43,48,48];
+  const WALK=[[38,41,45,42],[43,47,50,49],[48,47,45,43],[48,null,null,null]];
+  function bars(fn){ const t0=audio().currentTime+0.06; for(let b=0;b<4;b++) fn(b, t0+b*4*spb); }
+  function block(){ bars(function(b,t){ voice(ROOT[b],t,4*spb*0.95,0.55); chord(RH[b],t,4*spb*0.9,0.42); }); }
+  function oompah(){ bars(function(b,t){
+    voice(ROOT[b],t,spb*0.9,0.55); chord(RH[b],t+spb,spb*0.85,0.36);
+    voice(ROOT[b]+7,t+2*spb,spb*0.9,0.5); chord(RH[b],t+3*spb,spb*0.85,0.36); }); }
+  function walking(){ bars(function(b,t){
+    for(let k=0;k<4;k++){ const n=WALK[b][k]; if(n!=null) voice(n,t+k*spb,spb*0.92,0.6); }
+    chord(RH[b],t,spb*1.6,0.3); if(b<3) chord(RH[b],t+2*spb,spb*1.6,0.26); }); }
+  function stride(){ bars(function(b,t){
+    const mid=RH[b].map(function(x){return x-12;});
+    voice(ROOT[b],t,spb*0.8,0.62); chord(mid,t+spb,spb*0.8,0.38);
+    voice(ROOT[b]+7,t+2*spb,spb*0.8,0.56); chord(mid,t+3*spb,spb*0.8,0.38); }); }
+  function approach(){ /* chỉ phách 4 + gốc ô sau, để nghe rõ lực kéo */
+    const t0=audio().currentTime+0.06;
+    const pairs=[[42,43],[49,48],[43,48]];
+    for(let i=0;i<pairs.length;i++){
+      const t=t0+i*2.0;
+      voice(pairs[i][0],t,0.7,0.7); voice(pairs[i][1],t+0.85,1.0,0.75);
+    }
+  }
+  const defs=[
+    {label:'Bass chồng (mốc)', f:block, t:'Một nốt gốc ngân cả ô. Đúng nhưng đứng yên — không có chuyển động nào.'},
+    {label:'Bass–hợp âm (oom-pah)', f:oompah, t:'Gốc ở phách 1 &amp; 3, hợp âm ở phách 2 &amp; 4. Đã có nhịp, nhưng đường bass vẫn nhảy tại chỗ.'},
+    {label:'Walking bass', f:walking, t:'Bốn nốt mỗi ô, đi liền mạch. Nghe cách nó <b>không bao giờ dừng</b> — và mỗi phách 4 đều nghiêng sẵn về ô kế tiếp.'},
+    {label:'Stride', f:stride, t:'Tay trái nhảy: bass sâu ở phách 1 &amp; 3, hợp âm giữa đàn ở phách 2 &amp; 4. Một tay lo cả bass lẫn backbeat.'},
+    {label:'Chỉ nốt tiếp cận', f:approach, t:'Ba cặp: <b>F♯→G</b>, <b>D♭→C</b>, <b>G→C</b>. Hai cặp đầu trượt nửa cung, cặp cuối rơi quãng 5. Nghe riêng thế này là rõ vì sao phách 4 quyết định cả đường bass.'}
+  ];
+  mkBtns('walkBtns', defs, function(d){ d.f(); ro.innerHTML='<b>'+d.label+'</b> — '+d.t; });
+})();
+
+/* ===== ④ · LUẬT DẪN GIỌNG 4 BÈ ===== */
+(function(){
+  const ro=document.getElementById('vlRuleReadout'); if(!document.getElementById('vlRuleBtns')) return;
+  function two(a,b){ const t=audio().currentTime+0.06; chord(a,t,1.5,0.6); chord(b,t+1.7,2.6,0.6); }
+  const defs=[
+    {label:'C → G · song song (xấu)', f:function(){ two([48,55,64,72],[43,50,59,67]); },
+     t:'Cả bốn bè cùng đi xuống một quãng 4. Bass–Tenor giữ nguyên quãng 5, Bass–Soprano giữ nguyên quãng 8 ⇒ <b>song song</b>. Nghe mỏng và phẳng: bạn vừa mất hai bè độc lập.'},
+    {label:'C → G · ngược chiều (tốt)', f:function(){ two([48,55,64,67],[43,59,62,67]); },
+     t:'Soprano <b>giữ nguyên</b> nốt Sol, Alto và Tenor đi xuống từng bước, Bass đi xuống. Các bè không còn song song ⇒ tai tách được từng đường. Dày và có chiều sâu hơn hẳn.'},
+    {label:'G7 → C · hai nốt giải quyết', f:function(){ two([43,62,65,71],[48,60,64,72]); },
+     t:'Nốt dẫn <b>Si → Đô</b> (lên nửa cung, ở bè Soprano) và bậc 7 <b>Fa → Mi</b> (xuống liền bậc, ở bè Alto). Hai nghĩa vụ được giữ đúng ⇒ cú kết khít. Đây chính là guide-tone line ở tab Jazz, gọi bằng tên cổ điển.'}
+  ];
+  mkBtns('vlRuleBtns', defs, function(d){ d.f(); ro.innerHTML='<b>'+d.label+'</b> — '+d.t; });
+})();
+
+/* ===== ⑤ · GAM ĐỐI XỨNG TRÊN C7 ===== */
+(function(){
+  const ro=document.getElementById('symReadout2'); if(!document.getElementById('symBtns2')) return;
+  const DR=[48,64,70];
+  function run(iv){ const t=audio().currentTime+0.06; chord(DR,t,3.6,0.34); scaleUp(60,iv,t+0.3,0.235,0.76); }
+  const defs=[
+    {label:'1 · Mixolydian', f:function(){run([0,2,4,5,7,9,10]);}, t:'Không biến âm nào. Đây là C7 "hiền" — pop, blues, gospel. Mốc 0 của thang căng thẳng.'},
+    {label:'2 · Lydian dominant', f:function(){run([0,2,4,6,7,9,10]);}, t:'Chỉ nâng bậc 4 lên <b>♯11</b>. Sáng và lơ lửng thay vì căng. Dùng cho C7 <em>không</em> giải quyết.'},
+    {label:'3 · H–W giảm', f:function(){run([0,1,3,4,6,7,9,10]);}, t:'8 nốt, xen kẽ nửa–nguyên. Cho cả <b>♭9 ♯9 ♯11 13</b> nhưng giữ bậc 5 tự nhiên ⇒ căng mà vẫn lấp lánh.'},
+    {label:'4 · Toàn cung', f:function(){run([0,2,4,6,8,10]);}, t:'6 nốt, bước nào cũng bằng nhau ⇒ <b>không có nhà</b>. Không căng theo kiểu muốn giải quyết — nó <em>trôi</em>, mất trọng lực.'},
+    {label:'5 · Altered', f:function(){run([0,1,3,4,6,8,10]);}, t:'<b>♭9 ♯9 ♯11 ♭13</b> — mọi biến âm cùng lúc, bậc 5 cũng bị đổi. Căng nhất trong năm. Để dành cho cú V7 ngay trước khi về I.'}
+  ];
+  mkBtns('symBtns2', defs, function(d){ d.f(); ro.innerHTML='<b>'+d.label+'</b> — '+d.t; });
+})();
+
+/* ===== ⑤ · BLOCK CHORDS / 6-GIẢM ===== */
+(function(){
+  const ro=document.getElementById('blockReadout'); if(!document.getElementById('blockBtns')) return;
+  const MEL=[60,62,64,65,67,68,69,71,72];      /* gam 6-giảm đi lên */
+  const C6=[0,4,7,9], B07=[11,2,5,8];
+  function under(top){
+    const pcs=(C6.indexOf(((top%12)+12)%12)>=0)?C6:B07;
+    const out=[top]; let n=top;
+    while(out.length<4){ n--; while(pcs.indexOf(((n%12)+12)%12)<0) n--; out.unshift(n); }
+    return out;
+  }
+  function play(mode){
+    const t0=audio().currentTime+0.06, st=0.42;
+    for(let i=0;i<MEL.length;i++){
+      const t=t0+i*st, dur=st*(i===MEL.length-1?3.2:0.92);
+      if(mode==='mel'){ voice(MEL[i],t,dur,0.82); continue; }
+      const v=under(MEL[i]);
+      for(let k=0;k<v.length;k++) voice(v[k],t,dur, k===v.length-1?0.85:0.42);
+      if(mode==='lock') voice(MEL[i]-12,t,dur,0.6);
+    }
+  }
+  const defs=[
+    {label:'Giai điệu trần', f:function(){play('mel');}, t:'Gam 6-giảm đi lên: C D E F G <b>G♯</b> A B C. Chỉ một bè — mốc để so.'},
+    {label:'Block chords (6-giảm)', f:function(){play('block');}, t:'Mỗi nốt được hòa âm bằng 4 nốt: nốt của gam trưởng nhận <b>C6</b>, nốt đi qua nhận <b>B°7</b>, xen kẽ đều tăm tắp. Giai điệu vẫn nằm trên cùng.'},
+    {label:'Locked hands (thêm quãng 8)', f:function(){play('lock');}, t:'Thêm tay trái nhân đôi giai điệu thấp hơn <b>một quãng 8</b>. Nốt giai điệu giờ xuất hiện ở cả hai đầu khối ⇒ nổi hẳn lên, dày như một section kèn.'}
+  ];
+  mkBtns('blockBtns', defs, function(d){ d.f(); ro.innerHTML='<b>'+d.label+'</b> — '+d.t; });
+})();
+
+/* ===== ⑤ · GAM BEBOP & ENCLOSURE ===== */
+(function(){
+  const ro=document.getElementById('bebopReadout'); if(!document.getElementById('bebopBtns')) return;
+  const st=0.26; /* móc đơn */
+  const COMP=[{b:50,n:[65,69,72,76]},{b:43,n:[65,69,71,74]},{b:48,n:[64,67,71,74]}];
+  function comp(t0,bars){ for(let i=0;i<bars;i++){ const c=COMP[Math.min(i,2)], t=t0+i*8*st;
+    voice(c.b,t,8*st*0.95,0.4); chord(c.n,t,8*st*0.9,0.26); } }
+  function line(notes,t0,accentEvery){
+    for(let i=0;i<notes.length;i++)
+      if(notes[i]!=null) voice(notes[i], t0+i*st, st*0.92, (accentEvery&&i%2===0)?0.85:0.6);
+  }
+  /* ô 1 Dm7 · ô 2 G7 · ô 3 Cmaj7 */
+  const PLAIN=[74,72,71,69,67,65,64,62,  79,77,76,74,72,71,69,67];
+  const BEBOP=[74,72,71,69,67,66,65,64,  79,78,77,76,74,72,71,69];
+  function play(kind){
+    const t0=audio().currentTime+0.08; comp(t0,3);
+    if(kind==='enc'){
+      /* bao vây nốt đích của từng hợp âm: F5 (Dm7) · B4 (G7) · E5 (Cmaj7) — đích luôn rơi phách mạnh */
+      const seq=[[74,72,79,76,77,76,74,72],   /* G–E bao vây → F ở móc thứ 5 (mạnh) */
+                 [72,74,72,70,71,74,77,76],   /* C–A♯ bao vây → B ở móc thứ 5 (mạnh) */
+                 [77,75,null,null,null,null,null,null]]; /* F–D♯ bao vây → E (nốt dài, đặt riêng dưới) */
+      for(let b=0;b<3;b++) line(seq[b], t0+b*8*st, true);
+      voice(76, t0+2*8*st+2*st, 6*st, 0.85);
+      return;
+    }
+    const src=(kind==='bebop')?BEBOP:PLAIN;
+    line(src.slice(0,8), t0, true);
+    line(src.slice(8,16), t0+8*st, true);
+    voice(67, t0+16*st, 8*st*0.9, 0.8);
+  }
+  const defs=[
+    {label:'Gam thường (7 nốt)', f:function(){play('plain');},
+     t:'Ô G7 chạy Mixolydian: các phách mạnh rơi vào <b>G · E · C · A</b> — chỉ 1 trong 4 là nốt của G7. Câu nghe trôi, không bám vào hợp âm.'},
+    {label:'Gam bebop (8 nốt)', f:function(){play('bebop');},
+     t:'Cùng tốc độ, cùng hướng, chỉ <b>thêm một nốt F♯</b>. Giờ phách mạnh rơi vào <b>G · F · D · B</b> — đúng cả bốn nốt của G7. Nghe "đứng" hẳn lên.'},
+    {label:'+ Enclosure vào nốt đích', f:function(){play('enc');},
+     t:'Ba lần bao vây: <b>G→E→F</b> (đích F, bậc 3 của Dm7) · <b>C→A♯→B</b> (đích B, bậc 3 của G7) · <b>F→D♯→E</b> (đích E, bậc 3 của Cmaj7). A♯ và D♯ đều ngoài giọng — nhưng ở phách yếu và giải quyết ngay nên tai chấp nhận.'}
+  ];
+  mkBtns('bebopBtns', defs, function(d){ d.f(); ro.innerHTML='<b>'+d.label+'</b> — '+d.t; });
+})();
+
+/* ===== ⑤ · COMPING ===== */
+(function(){
+  const ro=document.getElementById('compReadout'); if(!document.getElementById('compBtns')) return;
+  const spb=0.44;
+  const V=[{b:38,n:[65,69,72,76]},{b:43,n:[65,69,71,74]},{b:48,n:[64,67,71,74]},{b:48,n:[64,67,71,74]}];
+  /* mỗi khuôn: danh sách vị trí móc đơn (0..7) trong ô; số âm = lấn sang ô trước */
+  const PAT={
+    charleston:[0,3],
+    reverse:[-1,4],
+    anticip:[-1,2],
+    sparse:[1]
+  };
+  function play(kind){
+    const t0=audio().currentTime+0.1, hits=PAT[kind];
+    for(let b=0;b<4;b++){
+      const c=V[b], base=t0+b*4*spb;
+      voice(c.b-12, base, 4*spb*0.9, 0.42);              /* bass giữ nền */
+      if(kind==='sparse' && b%2===1) continue;            /* thưa: 2 ô một cú */
+      for(let h=0;h<hits.length;h++){
+        const pos=hits[h];
+        if(b===0 && pos<0) continue;
+        const t=base+e8(pos,true)*spb;
+        chord(c.n, t, spb*1.1, 0.5);
+      }
+    }
+  }
+  const defs=[
+    {label:'Charleston', f:function(){play('charleston');},
+     t:'Hai cú mỗi ô: phách <b>1</b> và mốc <b>"và" của 2</b>. Khuôn kinh điển — nếu chỉ học một khuôn thì học cái này.'},
+    {label:'Charleston đảo', f:function(){play('reverse');},
+     t:'Cú đầu <b>lấn sang từ ô trước</b> (mốc "và" của 4), cú sau ở phách 3. Cùng hai cú nhưng đẩy về trước, nghe nhiều năng lượng hơn.'},
+    {label:'Đón trước (anticipation)', f:function(){play('anticip');},
+     t:'Hợp âm mới vào <b>sớm nửa phách</b>, trước cả vạch nhịp. Chính cú vào sớm đó tạo cảm giác trôi chảy — thứ mà bản đánh đúng vạch không bao giờ có.'},
+    {label:'Chấm câu thưa', f:function(){play('sparse');},
+     t:'Chỉ <b>một cú mỗi hai ô</b>. Nghe như không đủ — nhưng khi có người solo, đây thường là lượng vừa đúng. Khoảng trống chính là phần đóng góp của bạn.'}
+  ];
+  mkBtns('compBtns', defs, function(d){ d.f(); ro.innerHTML='<b>'+d.label+'</b> — '+d.t; });
+})();
+
+/* ===== ⑤ · SOLO PIANO — BA TẦNG ===== */
+(function(){
+  const ro=document.getElementById('soloPReadout'); if(!document.getElementById('soloPBtns')) return;
+  const spb=0.5;
+  /* Cmaj7 · Am7 · Dm7 · G7 */
+  /* sh = shell tay trái: gốc + bậc 7 · mid = hòa thanh quanh Đô giữa · mel = giai điệu */
+  const CH=[{sh:[36,47],mid:[64,67,71],mel:[76,79]},   /* Cmaj7 : C2 + B2 */
+            {sh:[45,55],mid:[64,67,72],mel:[76,74]},   /* Am7   : A2 + G3 */
+            {sh:[38,48],mid:[65,69,72],mel:[74,72]},   /* Dm7   : D2 + C3 */
+            {sh:[43,53],mid:[65,69,71],mel:[71,74]}];  /* G7    : G2 + F3 */
+  function play(mode){
+    const t0=audio().currentTime+0.08;
+    for(let b=0;b<4;b++){
+      const c=CH[b], t=t0+b*4*spb, dur=4*spb;
+      if(mode==='chord'){ chord(c.mid, t, dur*0.92, 0.6); continue; }
+      chord(c.sh, t, dur*0.95, 0.55);                      /* tay trái: gốc + bậc 7 */
+      if(mode==='bass'){ chord(c.mid, t, dur*0.9, 0.5); continue; }
+      chord(c.mid, t, dur*0.9, 0.34);                      /* hòa thanh: nền, nhẹ */
+      voice(c.mel[0], t, spb*1.9, 0.9);                    /* giai điệu: nổi rõ */
+      voice(c.mel[1], t+2*spb, spb*1.9, 0.85);
+    }
+  }
+  const defs=[
+    {label:'Chỉ hợp âm', f:function(){play('chord');}, t:'Bốn hợp âm đúng, ngân đều. Không sai gì cả — nhưng trống rỗng: không có đáy, không có ai "hát".'},
+    {label:'+ Bass tay trái (shell)', f:function(){play('bass');}, t:'Thêm <b>gốc + bậc 7</b> ở tay trái, giãn rộng khoảng một quãng 10. Chỉ hai nốt mà bài lập tức có nền móng.'},
+    {label:'Đủ ba tầng', f:function(){play('full');}, t:'Hòa thanh <b>lùi xuống làm nền</b> (nhẹ hẳn đi), giai điệu nổi lên trên. Vẫn một người chơi, nhưng tai nghe ra ba lớp riêng biệt.'}
+  ];
+  mkBtns('soloPBtns', defs, function(d){ d.f(); ro.innerHTML='<b>'+d.label+'</b> — '+d.t; });
+})();
+
+/* ===== ⑤ · CÁC THỜI KỲ ===== */
+(function(){
+  const ro=document.getElementById('eraReadout'); if(!document.getElementById('eraBtns')) return;
+  const V=[{b:38,n:[65,69,72,76]},{b:43,n:[65,69,71,74]},{b:48,n:[64,67,71,74]}];
+  function swingEra(){
+    const spb=0.5, t0=audio().currentTime+0.08;
+    const walk=[[38,42,45,42],[43,47,50,47],[48,52,55,52]];
+    for(let b=0;b<3;b++){ const t=t0+b*4*spb;
+      for(let k=0;k<4;k++) voice(walk[b][k], t+k*spb, spb*0.9, 0.55);
+      chord(V[b].n, t+e8(0,true)*spb, spb*1.1, 0.42);
+      chord(V[b].n, t+e8(3,true)*spb, spb*1.1, 0.38);
+      for(let k=0;k<8;k++) hat(t+e8(k,true)*spb, k%2?0.25:0.5, false);
+    }
+  }
+  function bebopEra(){
+    const st=0.19, t0=audio().currentTime+0.08;
+    const ln=[74,72,71,69,67,66,65,64, 79,78,77,76,74,72,71,69, 76,74,72,71,72,null,null,null];
+    for(let b=0;b<3;b++){ const t=t0+b*8*st;
+      voice(V[b].b-12,t,8*st*0.9,0.4); chord(V[b].n,t,8*st*0.5,0.24); }
+    for(let i=0;i<ln.length;i++) if(ln[i]!=null) voice(ln[i], t0+i*st, st*0.9, i%2?0.55:0.8);
+  }
+  function modalEra(){
+    const t0=audio().currentTime+0.08;
+    /* Dm11 quartal (D G C F) giữ rất lâu, chỉ đổi màu nhẹ */
+    const q=[[62,67,72,77],[64,69,74,79],[62,67,72,77]];
+    for(let i=0;i<3;i++){ const t=t0+i*2.6;
+      voice(38,t,2.5,0.45); chord(q[i],t,2.5,0.5); }
+    const mel=[74,77,76,74,72,74,77,81];
+    for(let i=0;i<mel.length;i++) voice(mel[i], t0+0.5+i*0.9, 0.85, 0.7);
+  }
+  function fusionEra(){
+    const spb=0.34, t0=audio().currentTime+0.08;
+    for(let b=0;b<3;b++){ const t=t0+b*4*spb;
+      for(let k=0;k<8;k++){
+        const tt=t+e8(k,false)*spb;                       /* móc đơn THẲNG, không swing */
+        if(k===0||k===3||k===6) voice(V[b].b-12, tt, spb*0.45, 0.62);
+        if(k%2===1) chord(V[b].n, tt, spb*0.4, 0.34);
+      }
+      kick(t,0.9); kick(t+e8(3,false)*spb,0.7); snare(t+2*spb,0.8);
+    }
+  }
+  const defs=[
+    {label:'Swing (1930s)', f:swingEra, t:'Walking bass đều, hi-hat đung đưa, hợp âm điểm nhẹ. Nhịp <b>swing</b>, tempo vừa — nhảy theo được.'},
+    {label:'Bebop (1940s)', f:bebopEra, t:'Nhanh gấp đôi, câu solo <b>đặc nốt</b> chạy suốt, phần đệm lùi hẳn ra sau. Không còn để nhảy nữa — đây là nhạc để nghe.'},
+    {label:'Modal (1959+)', f:modalEra, t:'Chỉ <b>một</b> hợp âm kéo rất dài, voicing <b>quartal</b> (chồng quãng 4). Không có ii–V nào kéo đi đâu cả — cảm giác lơ lửng, mênh mông.'},
+    {label:'Fusion (1970s)', f:fusionEra, t:'Móc đơn <b>thẳng</b>, không swing chút nào; groove funk có kick &amp; snare. Đây là dấu hiệu dễ nhận nhất: nghe thấy nhịp thẳng ⇒ sau 1970.'}
+  ];
+  mkBtns('eraBtns', defs, function(d){ d.f(); ro.innerHTML='<b>'+d.label+'</b> — '+d.t; });
 })();
 
 /* ===================== DOC TABS · NAV · PROGRESS · THEME (merged, per-document) ===================== */
