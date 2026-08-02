@@ -1,0 +1,1162 @@
+<!doctype html>
+<!-- =============================================================================
+     Nói có cấu trúc — trang học.
+     Frame copied from web-builder/assets/templates/landing.html (public page:
+     wb-navbar + wb-container + wb-footer, no rail). Content, not aesthetics,
+     is what changed: every colour / gap / radius still comes from wb-* tokens.
+     Colour ladder: tier 1 everywhere except quiz đúng/sai, which is real status.
+     ========================================================================== -->
+<html lang="vi" class="wb-scrollbars">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="light dark" />
+<title>Nói có cấu trúc — chọn khung theo tình huống</title>
+<meta name="description" content="Không học thuộc 20 khung giao tiếp. Một câu hỏi duy nhất chọn ra khung đúng: sau khi nghe xong, bạn muốn người kia làm gì? Kèm bộ chọn khung, 7 nhóm tình huống, bài luyện tập và trình soạn nháp." />
+
+<!-- Web Builder — the minimalist UI kit that styles the rest of the site -->
+<link rel="stylesheet" href="web-builder/web-builder.css" />
+<script>
+  /* Theme before first paint, so a dark user never sees a white flash. */
+  try {
+    var t = localStorage.getItem('hub-theme');
+    if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches))
+      document.documentElement.classList.add('dark');
+  } catch (e) {}
+</script>
+
+<style>
+  /* Page-local: only things the kit has no equivalent for. No hex, no hand-picked greys. */
+
+  /* Prose measure — a teaching page reads as text, so paragraphs get a line length. */
+  .ct-prose { max-width: var(--wb-measure); }
+  .ct-prose p { margin: 0 0 12px; }
+  .ct-prose p:last-child { margin-bottom: 0; }
+
+  /* A quoted line of speech: the thing you would actually say out loud. */
+  .ct-say {
+    border-left: 3px solid var(--wb-neutral-strong);
+    padding: 2px 0 2px 14px; margin: 12px 0;
+    color: var(--wb-fg); font-style: italic;
+  }
+  .ct-say b { font-style: normal; }
+
+  /* Two-up compare (thứ tự sai / thứ tự đúng). Grid so both columns match height. */
+  .ct-vs .wb-card__head { gap: 8px; }
+
+  /* The goal picker: a plain <button> that borrows the card surface. Selection is
+     shown with aria-pressed, not a class, so nothing invented sneaks in. */
+  .ct-goal {
+    display: block; width: 100%; text-align: left; cursor: pointer;
+    font: inherit; color: inherit; background: var(--wb-surface);
+    border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius);
+    padding: 14px; transition: border-color .12s ease, background .12s ease;
+  }
+  .ct-goal:hover { border-color: var(--wb-border-strong); }
+  .ct-goal[aria-pressed="true"] {
+    border-color: var(--wb-neutral-ink); background: var(--wb-surface-2);
+  }
+  .ct-goal__n {
+    font-family: var(--wb-font-mono); font-size: var(--wb-text-label);
+    color: var(--wb-fg-subtle); display: block; margin-bottom: 4px;
+  }
+  .ct-goal__t { font-weight: 640; display: block; }
+  .ct-goal__s { color: var(--wb-fg-muted); font-size: var(--wb-text-help); display: block; margin-top: 3px; }
+
+  /* Quiz option = same borrowed surface, one per line. */
+  .ct-opt {
+    display: block; width: 100%; text-align: left; cursor: pointer; font: inherit; color: inherit;
+    background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border);
+    border-radius: var(--wb-radius-sm); padding: 10px 13px;
+  }
+  .ct-opt:hover { border-color: var(--wb-border-strong); }
+  .ct-opt[disabled] { cursor: default; }
+  .ct-opt[data-state="right"] { border-color: var(--wb-success); }
+  .ct-opt[data-state="wrong"] { border-color: var(--wb-danger); }
+
+  /* Mono labels reused in a few places (frame part names, counters). */
+  .ct-mono {
+    font-family: var(--wb-font-mono); font-size: var(--wb-text-label);
+    letter-spacing: .08em; text-transform: uppercase; color: var(--wb-fg-subtle);
+  }
+
+  /* Skeleton line of a frame: PART → PART → PART */
+  .ct-shape { font-family: var(--wb-font-mono); font-size: var(--wb-text-help); color: var(--wb-fg-muted); }
+  .ct-shape b { color: var(--wb-fg); font-weight: 640; }
+</style>
+</head>
+<body class="wb-app">
+
+<div class="wb-shell">
+
+<!-- ============================== TOP BAR ============================== -->
+<header class="wb-navbar wb-navbar--sticky wb-navbar--glass wb-navbar--collapse-lg">
+  <button class="wb-navbar__toggle wb-btn wb-btn--ghost wb-btn--icon" data-navbar-toggle
+          aria-label="Mở menu"><span class="wb-ico">menu</span></button>
+  <a class="wb-navbar__brand" href="index.html"><span class="wb-navbar__mark">V</span> Nói có cấu trúc</a>
+  <nav class="wb-nav wb-navbar__menu">
+    <a class="wb-nav__link" href="#chon-khung">Chọn khung</a>
+    <a class="wb-nav__link" href="#vi-sao">Vì sao</a>
+    <a class="wb-nav__link" href="#bay-nhom">Bảy nhóm</a>
+    <a class="wb-nav__link" href="#luyen-tap">Luyện tập</a>
+    <a class="wb-nav__link" href="#tra-cuu">Tra cứu</a>
+  </nav>
+  <span class="wb-navbar__spacer"></span>
+  <div class="wb-navbar__actions">
+    <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" aria-label="Đổi giao diện sáng/tối" title="Sáng / Tối">
+      <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
+      <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
+    </button>
+  </div>
+</header>
+
+<main class="wb-container wb-container--pad">
+
+  <!-- ========================= 1 · CÂU TRẢ LỜI ========================= -->
+  <div class="wb-page-head wb-page-head--lg">
+    <p class="wb-eyebrow">Kỹ năng trình bày</p>
+    <h1>Bạn không cần thuộc 20 khung</h1>
+    <p>Tất cả các khung giao tiếp — PREP, SCQA, STAR, SBI, NVC… — chỉ đang trả lời <b>một</b> câu hỏi:
+    <b>người nghe cần biết gì trước, để phần còn lại có nghĩa?</b> Trả lời được câu đó thì khung tự hiện
+    ra. Trang này dạy cách trả lời nó trong khoảng mười giây, rồi mới dạy từng khung.</p>
+  </div>
+
+  <section class="wb-section wb-section--flush">
+    <!-- No tone: a tip is not a status, so it stays on the neutral ladder (§1). -->
+    <div class="wb-alert">
+      <span class="wb-alert__icon"><span class="wb-ico wb-ico--sm">bolt</span></span>
+      <div class="wb-alert__body">
+        <p class="wb-alert__title">Nếu bạn chỉ đọc một đoạn, đọc đoạn này</p>
+        <p class="wb-alert__msg">Trước khi mở miệng, hỏi: <b>“Nói xong, tôi muốn người kia LÀM gì?”</b>
+        Hiểu ý tôi · Chọn một cách làm · Đồng ý bỏ tiền-công · Hình dung chuyện đã xảy ra · Đổi hành vi ·
+        Hạ căng thẳng · Giúp tôi một việc. Bảy câu trả lời đó chính là bảy nhóm khung bên dưới — chọn
+        nhóm trước, chọn khung sau.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= 2 · BỘ CHỌN KHUNG ======================= -->
+  <section class="wb-section" id="chon-khung">
+    <h2>Chọn khung trong mười giây</h2>
+    <p class="wb-section__desc">Bấm vào mục tiêu của bạn. Trang sẽ chỉ ra khung nên dùng, khung dự phòng,
+    và mở sẵn một chỗ để bạn soạn nháp ngay bên dưới.</p>
+
+    <div class="wb-grid wb-grid--auto" style="--wb-grid-min:250px" id="goals">
+      <button class="ct-goal" type="button" data-goal="1" aria-pressed="false">
+        <span class="ct-goal__n">Nhóm 1</span>
+        <span class="ct-goal__t">…hiểu điều tôi nghĩ</span>
+        <span class="ct-goal__s">Được hỏi quan điểm, đánh giá một lựa chọn, nêu nhận định.</span>
+      </button>
+      <button class="ct-goal" type="button" data-goal="2" aria-pressed="false">
+        <span class="ct-goal__n">Nhóm 2</span>
+        <span class="ct-goal__t">…chọn một cách làm</span>
+        <span class="ct-goal__s">Có vấn đề cần xử, hoặc cần người khác duyệt một hướng đi.</span>
+      </button>
+      <button class="ct-goal" type="button" data-goal="3" aria-pressed="false">
+        <span class="ct-goal__n">Nhóm 3</span>
+        <span class="ct-goal__t">…đồng ý bỏ tiền, thời gian, uy tín</span>
+        <span class="ct-goal__s">Thuyết phục, xin duyệt, bán một ý tưởng cho người chưa muốn nghe.</span>
+      </button>
+      <button class="ct-goal" type="button" data-goal="4" aria-pressed="false">
+        <span class="ct-goal__n">Nhóm 4</span>
+        <span class="ct-goal__t">…hình dung được chuyện đã xảy ra</span>
+        <span class="ct-goal__s">Phỏng vấn, báo cáo thành tích, kể lại một sự cố.</span>
+      </button>
+      <button class="ct-goal" type="button" data-goal="5" aria-pressed="false">
+        <span class="ct-goal__n">Nhóm 5</span>
+        <span class="ct-goal__t">…đổi hành vi mà không tự ái</span>
+        <span class="ct-goal__s">Góp ý cho đồng nghiệp, nhận xét định kỳ, retro.</span>
+      </button>
+      <button class="ct-goal" type="button" data-goal="6" aria-pressed="false">
+        <span class="ct-goal__n">Nhóm 6</span>
+        <span class="ct-goal__t">…hạ căng thẳng, giữ được quan hệ</span>
+        <span class="ct-goal__s">Xung đột, đặt ranh giới, nói ra điều khó nói.</span>
+      </button>
+      <button class="ct-goal" type="button" data-goal="7" aria-pressed="false">
+        <span class="ct-goal__n">Nhóm 7</span>
+        <span class="ct-goal__t">…làm giúp tôi một việc</span>
+        <span class="ct-goal__s">Nhờ vả, xin review, xin dữ liệu, xin thời gian.</span>
+      </button>
+    </div>
+
+    <!-- Result panel — filled by JS, empty state until a goal is picked. -->
+    <div class="wb-block" id="pick-out">
+      <div class="wb-card wb-card--dashed">
+        <div class="wb-empty">
+          <div class="wb-empty__icon"><span class="wb-ico wb-ico--xl">ads_click</span></div>
+          <p class="wb-empty__title">Chưa chọn mục tiêu</p>
+          <p class="wb-empty__msg">Chọn một ô ở trên để xem khung tương ứng.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= 3 · SOẠN NHÁP ========================== -->
+  <section class="wb-section" id="soan-nhap">
+    <h2>Soạn nháp theo khung</h2>
+    <p class="wb-section__desc">Chọn khung, điền từng ô, bấm ghép. Mục đích không phải là đọc nguyên văn
+    đoạn ghép ra — mà là ép bạn viết đủ các phần, và thấy ngay phần nào mình đang bỏ trống.</p>
+
+    <div class="wb-card">
+      <div class="wb-card__head">
+        <div class="wb-field" style="margin:0;min-width:min(320px,100%)">
+          <label class="wb-label" for="frame-pick">Khung</label>
+          <span class="wb-select-wrap">
+            <select class="wb-select" id="frame-pick"></select>
+            <span class="wb-ico">expand_more</span>
+          </span>
+        </div>
+      </div>
+      <div class="wb-card__body">
+        <p class="wb-help" id="frame-when" style="margin:0 0 14px"></p>
+        <div class="wb-stack" id="frame-fields"></div>
+      </div>
+      <div class="wb-card__foot">
+        <div class="wb-cluster wb-cluster--between">
+          <div class="wb-cluster wb-cluster--tight">
+            <button class="wb-btn" type="button" id="btn-join">Ghép lại</button>
+            <button class="wb-btn wb-btn--ghost" type="button" id="btn-clear">Xoá hết</button>
+          </div>
+          <button class="wb-btn wb-btn--outline wb-btn--sm" type="button" id="btn-copy">Chép</button>
+        </div>
+        <div class="wb-textarea-wrap" style="margin-top:12px">
+          <textarea class="wb-textarea" id="frame-out" rows="5" readonly
+                    placeholder="Đoạn ghép sẽ hiện ở đây."></textarea>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= 4 · VÌ SAO ============================= -->
+  <section class="wb-section" id="vi-sao">
+    <h2>Vì sao thứ tự lại quyết định</h2>
+    <p class="wb-section__desc">Phần này giải thích cơ chế. Bỏ qua được nếu bạn chỉ cần tra khung —
+    nhưng hiểu nó thì bạn tự chế được khung mới khi không cái nào vừa.</p>
+
+    <div class="wb-block">
+      <h3>Trước hết, gỡ một hiểu nhầm</h3>
+      <div class="ct-prose">
+        <p>Hiểu nhầm phổ biến: <b>“nói có cấu trúc là nói cứng nhắc, như đọc công thức.”</b> Nghe rất có
+        lý, vì mấy chữ viết tắt PREP, SCQA, STAR trông đúng như biểu mẫu điền chỗ trống, và ai cũng từng
+        nghe một người nói theo khung mà nghe như robot.</p>
+        <p>Chỗ nó sai: khung <b>không quy định từ ngữ</b>, nó chỉ quy định <b>thứ tự thả thông tin</b>.
+        Nó là mục lục, không phải kịch bản. Người nghe như robot là người đọc thuộc lòng một bản mẫu, chứ
+        không phải người biết mình cần nói kết luận trước hay sau. Bằng chứng ngược: những người nói tự
+        nhiên nhất mà bạn biết đều đang dùng khung — họ chỉ không gọi tên nó.</p>
+      </div>
+    </div>
+
+    <div class="wb-block">
+      <h3>Cái móc treo áo</h3>
+      <div class="ct-prose">
+        <p>Người nghe cần <b>một cái móc</b> trước khi bạn đưa <b>áo</b>. Móc là câu cho biết “thông tin
+        sắp tới thuộc về chuyện gì” — một kết luận, một bối cảnh, một đối tượng. Áo là chi tiết: số liệu,
+        lý do, ví dụ. Đưa áo trước khi có móc thì áo rơi xuống sàn: người ta nghe từng chi tiết mà không
+        biết cất vào đâu, tới cuối phải nhặt lên xếp lại từ đầu — và thường là xếp sai.</p>
+        <p><b>Chỗ ví von này hỏng:</b> cái móc thì đứng yên, còn người nghe thì <i>vừa nghe vừa xếp</i>.
+        Nghĩa là nếu bạn không đưa móc, họ không chờ — họ <b>tự bịa ra một cái móc</b> sau vài giây, rồi
+        treo mọi thứ bạn nói vào cái móc bịa đó. Nên thứ tự sai không chỉ làm họ chậm hiểu, nó làm họ
+        hiểu <b>lệch</b>, và bạn không hề biết vì họ vẫn gật đầu.</p>
+      </div>
+    </div>
+
+    <div class="wb-block">
+      <h3>Con số: bốn mảnh</h3>
+      <div class="ct-prose">
+        <p>Bộ nhớ làm việc của người nghe giữ được khoảng <b>bốn mảnh</b> thông tin cùng lúc. Một câu trả
+        lời sáu ý không có cấu trúc sẽ rớt từ ý thứ năm — không phải vì người nghe kém, mà vì họ đang phải
+        vừa giữ sáu mảnh rời vừa đoán xem chúng ghép thành hình gì. Khung làm giảm tải bằng cách <b>gộp
+        các mảnh thành cụm</b>: khi bạn nói “ba lý do” trước, sáu mảnh biến thành một cấu trúc ba ngăn, và
+        ba ngăn thì nhớ được.</p>
+      </div>
+    </div>
+
+    <div class="wb-block">
+      <h3>Cùng một nội dung, hai thứ tự</h3>
+      <p class="wb-block__desc">Bối cảnh: sếp hỏi trong họp — “Có nên hoãn release không?”</p>
+      <div class="wb-grid wb-grid--2 ct-vs">
+        <div class="wb-card">
+          <div class="wb-card__head">
+            <span class="wb-cap wb-cap--sm">Thứ tự khám phá</span>
+          </div>
+          <div class="wb-card__body">
+            <p class="ct-say">“Hôm qua em chạy lại bộ test thanh toán, thấy 3 ca hỏng. Em đào vào thì
+            phát hiện cái refactor tuần trước đổi kiểu trả về. Bên QA cũng báo màn hình giỏ hàng lag.
+            Với lại tuần này có 2 bạn nghỉ phép. Nên là… chắc mình nên hoãn ạ.”</p>
+            <p class="wb-help">Người nghe phải giữ 4 mảnh rời suốt 20 giây rồi mới biết chúng dùng để làm
+            gì. Nửa phòng họp đã bắt đầu tranh luận về chuyện lag trước khi biết bạn đang đề xuất hoãn.</p>
+          </div>
+        </div>
+        <div class="wb-card">
+          <div class="wb-card__head">
+            <span class="wb-cap wb-cap--sm wb-cap--solid">Thứ tự người nghe cần</span>
+          </div>
+          <div class="wb-card__body">
+            <p class="ct-say">“Em đề xuất <b>hoãn một tuần</b>. Ba lý do: <b>một</b>, luồng thanh toán
+            đang hỏng 3 ca test do refactor tuần trước; <b>hai</b>, QA còn một lỗi lag chưa rõ nguyên
+            nhân; <b>ba</b>, tuần này nhân sự thiếu 2 người nên vá gấp sẽ rủi ro. Nếu anh muốn giữ lịch,
+            em cần thêm một người vào luồng thanh toán từ mai.”</p>
+            <p class="wb-help">Móc được đưa ở câu đầu. Ba mảnh còn lại rơi đúng ngăn. Câu cuối cho người
+            nghe một lối ra khác — thứ mà bản trên hoàn toàn thiếu.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= 5 · BỘ XƯƠNG =========================== -->
+  <section class="wb-section" id="bo-xuong">
+    <h2>Bộ xương chung: Neo → Căng → Lối ra</h2>
+    <p class="wb-section__desc">Đây là phần đáng nhớ nhất của cả trang. Hai mươi khung không phải hai
+    mươi thứ khác nhau — chúng là các cách đặt tên khác nhau cho cùng ba mảnh.</p>
+
+    <ol class="wb-steps wb-steps--horizontal">
+      <li class="wb-steps__item">
+        <span class="wb-steps__marker">1</span>
+        <div class="wb-steps__content">
+          <p class="wb-steps__title">Neo</p>
+          <p class="wb-steps__desc">Điểm mà người nghe đứng cùng bạn: bối cảnh ai cũng công nhận, đối
+          tượng đang bàn, một quan sát không cãi được — hoặc chính kết luận của bạn.</p>
+        </div>
+      </li>
+      <li class="wb-steps__item">
+        <span class="wb-steps__marker">2</span>
+        <div class="wb-steps__content">
+          <p class="wb-steps__title">Căng</p>
+          <p class="wb-steps__desc">Cái làm cho phần Neo chưa đủ: vấn đề, biến cố, lý do, tác động,
+          cảm xúc. Không có Căng thì không ai thấy cần nghe tiếp.</p>
+        </div>
+      </li>
+      <li class="wb-steps__item">
+        <span class="wb-steps__marker">3</span>
+        <div class="wb-steps__content">
+          <p class="wb-steps__title">Lối ra</p>
+          <p class="wb-steps__desc">Thứ bạn muốn họ mang đi: giải pháp, đề xuất, yêu cầu, bài học, hành
+          động. Thiếu nó, người nghe hiểu xong rồi ngồi im — vì không biết phải làm gì.</p>
+        </div>
+      </li>
+    </ol>
+
+    <div class="wb-block">
+      <h3>Chiếu các khung về ba cột</h3>
+      <p class="wb-block__desc">Đọc bảng này một lần rồi quên tên khung cũng được — cái cần nhớ là mọi
+      dòng đều có đủ ba cột.</p>
+      <div class="wb-card">
+        <div class="wb-table-scroll">
+          <table class="wb-table wb-table--compact">
+            <thead>
+              <tr><th>Khung</th><th>Neo</th><th>Căng</th><th>Lối ra</th><th>Nhóm</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="wb-cell-strong">Ai – Như thế nào – Rồi làm sao</td><td>Ai / cái gì</td><td>Như thế nào</td><td>Rồi làm sao</td><td class="wb-cell-muted">1</td></tr>
+              <tr><td class="wb-cell-strong">PREP</td><td>Point</td><td>Reason + Example</td><td>Point (chốt lại)</td><td class="wb-cell-muted">1</td></tr>
+              <tr><td class="wb-cell-strong">What – So What – Now What</td><td>What</td><td>So What</td><td>Now What</td><td class="wb-cell-muted">1</td></tr>
+              <tr><td class="wb-cell-strong">Vấn đề – Giải pháp – Lợi ích</td><td class="wb-cell-muted">hiện trạng (ngầm)</td><td>Vấn đề</td><td>Giải pháp + Lợi ích</td><td class="wb-cell-muted">2</td></tr>
+              <tr><td class="wb-cell-strong">SCQA</td><td>Situation</td><td>Complication + Question</td><td>Answer</td><td class="wb-cell-muted">2</td></tr>
+              <tr><td class="wb-cell-strong">Situation – Options – Recommendation</td><td>Situation</td><td>Options (đánh đổi)</td><td>Recommendation</td><td class="wb-cell-muted">2</td></tr>
+              <tr><td class="wb-cell-strong">PAS</td><td class="wb-cell-muted">Problem (kiêm luôn Neo)</td><td>Agitate</td><td>Solve</td><td class="wb-cell-muted">2</td></tr>
+              <tr><td class="wb-cell-strong">BLUF / Kim tự tháp</td><td>Kết luận</td><td>Các lý do gộp nhóm</td><td class="wb-cell-muted">nằm ở Neo</td><td class="wb-cell-muted">3</td></tr>
+              <tr><td class="wb-cell-strong">AIDA</td><td>Attention</td><td>Interest + Desire</td><td>Action</td><td class="wb-cell-muted">3</td></tr>
+              <tr><td class="wb-cell-strong">BAB</td><td>Before</td><td class="wb-cell-muted">khoảng cách Before→After</td><td>After + Bridge</td><td class="wb-cell-muted">3</td></tr>
+              <tr><td class="wb-cell-strong">Monroe</td><td>Attention</td><td>Need</td><td>Satisfaction + Visualization + Action</td><td class="wb-cell-muted">3</td></tr>
+              <tr><td class="wb-cell-strong">STAR</td><td>Situation</td><td>Task</td><td>Action + Result</td><td class="wb-cell-muted">4</td></tr>
+              <tr><td class="wb-cell-strong">Context – Conflict – Resolution</td><td>Context</td><td>Conflict</td><td>Resolution</td><td class="wb-cell-muted">4</td></tr>
+              <tr><td class="wb-cell-strong">Pixar</td><td>Ngày xưa… Mỗi ngày…</td><td>Cho đến một hôm… Vì thế mà…</td><td>Cuối cùng thì…</td><td class="wb-cell-muted">4</td></tr>
+              <tr><td class="wb-cell-strong">SBI</td><td>Situation</td><td>Behavior</td><td>Impact</td><td class="wb-cell-muted">5</td></tr>
+              <tr><td class="wb-cell-strong">COIN</td><td>Context</td><td>Observation + Impact</td><td>Next steps</td><td class="wb-cell-muted">5</td></tr>
+              <tr><td class="wb-cell-strong">Start / Stop / Continue</td><td class="wb-cell-muted">kỳ vừa rồi (ngầm)</td><td>Stop</td><td>Start + Continue</td><td class="wb-cell-muted">5</td></tr>
+              <tr><td class="wb-cell-strong">I like / I wish / What if</td><td>I like</td><td>I wish</td><td>What if</td><td class="wb-cell-muted">5</td></tr>
+              <tr><td class="wb-cell-strong">NVC</td><td>Observation</td><td>Feeling + Need</td><td>Request</td><td class="wb-cell-muted">6</td></tr>
+              <tr><td class="wb-cell-strong">DESC</td><td>Describe</td><td>Express</td><td>Specify + Consequences</td><td class="wb-cell-muted">6</td></tr>
+              <tr><td class="wb-cell-strong">Context – Ask – Rationale</td><td>Context</td><td class="wb-cell-muted">Ask đảo lên trước</td><td>Ask + Rationale</td><td class="wb-cell-muted">7</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="wb-block">
+      <h3>Vậy các khung khác nhau ở đâu?</h3>
+      <p class="wb-block__desc">Đúng hai chỗ. Biết hai chỗ này là biết chọn khung, kể cả khung bạn chưa
+      từng nghe tên.</p>
+      <div class="wb-grid wb-grid--2">
+        <div class="wb-card wb-card--pad">
+          <p class="ct-mono">Khác biệt 1</p>
+          <p class="wb-card__title" style="margin-top:6px">Kết luận đứng trước hay đứng sau</p>
+          <p class="wb-card__sub">Kết luận <b>trước</b> (BLUF, PREP, Vấn đề–Giải pháp) khi người nghe đã
+          muốn nghe và chỉ thiếu thời gian — sếp bận, email, họp 15 phút. Kết luận <b>sau</b> (SCQA, AIDA,
+          Pixar, PAS) khi người nghe <b>chưa</b> muốn nghe: bạn phải tạo chỗ ngứa trước rồi mới gãi. Đặt
+          nhầm là lý do một email nội bộ viết theo AIDA nghe như quảng cáo, còn một bài pitch mở bằng
+          BLUF thì rơi vào im lặng.</p>
+        </div>
+        <div class="wb-card wb-card--pad">
+          <p class="ct-mono">Khác biệt 2</p>
+          <p class="wb-card__title" style="margin-top:6px">Phần Căng chạy bằng nhiên liệu gì</p>
+          <p class="wb-card__sub"><b>Lý lẽ</b> — PREP, SCQA, BLUF: dùng khi bất đồng là về dữ kiện.
+          <b>Sự việc quan sát được</b> — SBI, NVC, STAR: dùng khi bất đồng là về chuyện đã xảy ra, và bạn
+          cần người kia không phòng thủ. <b>Hậu quả / cảm xúc</b> — PAS, AIDA, DESC: dùng khi người nghe
+          đã biết sự thật nhưng chưa thấy nó quan trọng. Đổ nhầm nhiên liệu thì đúng nội dung vẫn trượt:
+          đưa lý lẽ vào một cuộc cãi vã, hoặc khoét cảm xúc trong một buổi review kỹ thuật.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= 6 · BẢY NHÓM =========================== -->
+  <section class="wb-section" id="bay-nhom">
+    <h2>Bảy nhóm, chi tiết</h2>
+    <p class="wb-section__desc">Mỗi nhóm: khi nào dùng, khung chính, một câu nói thật, lỗi hay gặp, và
+    khi nào <i>đừng</i> dùng. Mở nhóm bạn đang cần, đừng đọc hết một lượt.</p>
+
+    <div class="wb-accordion">
+
+      <!-- 1 -->
+      <details class="wb-accordion__item" open>
+        <summary>Nhóm 1 · Trình bày quan điểm — “bạn nghĩ sao?”</summary>
+        <div class="wb-accordion__body">
+          <p class="ct-shape"><b>Point</b> → Reason → Example → <b>Point</b></p>
+          <div class="ct-prose" style="margin-top:12px">
+            <p><b>Khi nào:</b> được hỏi ý kiến trong họp, đánh giá một lựa chọn kỹ thuật, nhận xét một
+            đề xuất. Đặc điểm chung: người hỏi muốn biết <i>bạn nghiêng về đâu</i>, không phải muốn nghe
+            toàn cảnh.</p>
+            <p><b>Khung chính — PREP.</b> Nêu ý chính → lý do → một ví dụ có thật → chốt lại ý chính.</p>
+          </div>
+          <p class="ct-say">“Nên tách module thanh toán ra khỏi app chính <b>(Point)</b> vì mỗi lần sửa
+          nó đang bắt cả team chờ build lại 12 phút <b>(Reason)</b> — sprint trước có 3 hotfix, mất gần
+          4 tiếng chỉ để ngồi chờ <b>(Example)</b>. Nên em đề xuất tách trước khi thêm tính năng mới
+          <b>(Point)</b>.”</p>
+          <div class="ct-prose">
+            <p><b>Biến thể:</b> <b>Ai – Như thế nào – Rồi làm sao</b> khi đối tượng là một người hoặc một
+            thứ cụ thể (“bạn này có năng lực nhưng trình bày còn yếu, nên cần kèm phần thuyết trình”).
+            <b>OREO</b> khi bạn cần nói rõ đây là quan điểm riêng chứ không phải kết luận của nhóm.
+            <b>What – So What – Now What</b> khi rút bài học sau một sự việc.</p>
+            <p><b>Lỗi hay gặp:</b> kể hết lý do rồi mới kết luận. Suốt lúc đó người nghe không biết bạn
+            đang bênh hay chống, nên họ phải nghe lại lần hai trong đầu.</p>
+            <p><b>Đừng dùng khi:</b> người hỏi chỉ cần một chữ có/không. Trả lời “có” rồi im — nếu họ
+            muốn lý do, họ sẽ hỏi.</p>
+          </div>
+        </div>
+      </details>
+
+      <!-- 2 -->
+      <details class="wb-accordion__item">
+        <summary>Nhóm 2 · Giải quyết vấn đề — đưa ra một cách làm</summary>
+        <div class="wb-accordion__body">
+          <p class="ct-shape">Situation → <b>Complication</b> → Question → <b>Answer</b></p>
+          <div class="ct-prose" style="margin-top:12px">
+            <p><b>Khi nào:</b> có gì đó hỏng, và người nghe hoặc đang chờ bạn xử, hoặc chưa biết là nó
+            hỏng.</p>
+            <p><b>Chọn trong bốn khung theo một câu hỏi:</b> người nghe <i>đã</i> biết có vấn đề chưa?</p>
+          </div>
+          <ul class="wb-list" style="margin:12px 0">
+            <li class="wb-list__item">
+              <span class="wb-list__title">Đã biết, chỉ chờ cách xử
+                <span class="wb-list__sub">Vấn đề → Giải pháp → Lợi ích. Nhanh, hợp nói nội bộ.</span></span>
+            </li>
+            <li class="wb-list__item">
+              <span class="wb-list__title">Chưa biết, cần dẫn vào
+                <span class="wb-list__sub">SCQA. Neo vào bối cảnh ai cũng công nhận rồi mới phá nó.</span></span>
+            </li>
+            <li class="wb-list__item">
+              <span class="wb-list__title">Biết rồi, nhưng phải tự ra quyết định
+                <span class="wb-list__sub">Situation → Options → Recommendation. Bắt buộc có ít nhất hai phương án kèm đánh đổi, nếu không đó là ép chứ không phải trình bày.</span></span>
+            </li>
+            <li class="wb-list__item">
+              <span class="wb-list__title">Biết, nhưng chưa thấy nó quan trọng
+                <span class="wb-list__sub">PAS. Khoét vào hậu quả nếu không xử.</span></span>
+            </li>
+          </ul>
+          <p class="ct-say">“Crash rate của mình giữ dưới 0,5% suốt sáu tháng <b>(S)</b>. Từ bản 3.2 nó
+          vọt lên 2,1% <b>(C)</b>. Vì sao? <b>(Q)</b> Ba nguyên nhân, và cái lớn nhất chiếm 70% số crash
+          là… <b>(A)</b>”</p>
+          <div class="ct-prose">
+            <p><b>Lỗi hay gặp:</b> nhảy thẳng vào giải pháp khi người nghe chưa đồng ý là <i>có</i> vấn
+            đề. Kết quả: họ phản biện giải pháp của bạn thay vì bàn cách làm, và bạn tưởng họ bảo thủ.</p>
+            <p><b>Về PAS:</b> khoét sâu vào cái đau khi hậu quả có thật và người nghe đang đánh giá thấp
+            nó là hợp lệ. Làm điều đó khi hậu quả không có thật thì không còn là kỹ năng trình bày nữa.
+            Ranh giới nằm ở chỗ: bạn có sẵn sàng cho họ xem con số bạn dựa vào không.</p>
+          </div>
+        </div>
+      </details>
+
+      <!-- 3 -->
+      <details class="wb-accordion__item">
+        <summary>Nhóm 3 · Thuyết phục — khi người nghe phải bỏ ra thứ gì đó</summary>
+        <div class="wb-accordion__body">
+          <p class="ct-shape"><b>Kết luận</b> → lý do 1 · lý do 2 · lý do 3</p>
+          <div class="ct-prose" style="margin-top:12px">
+            <p><b>Khi nào:</b> kết quả của cuộc nói chuyện là người kia phải chi tiền, chi thời gian, hoặc
+            đặt uy tín của họ vào việc bạn đề xuất.</p>
+            <p><b>Phân biệt quan trọng nhất của cả nhóm:</b> <b>BLUF</b> (kết luận lên đầu) dùng khi người
+            nghe <i>đã</i> muốn nghe và chỉ thiếu thời gian. <b>AIDA</b> dùng khi họ <i>chưa</i> muốn
+            nghe và bạn phải giành lấy sự chú ý. Đảo hai cái này là lỗi nặng nhất trong nhóm: viết email
+            xin duyệt theo kiểu AIDA thì sếp thấy như bị bán hàng, và mất tin cậy ngay từ dòng đầu.</p>
+          </div>
+          <p class="ct-say">“<b>Đề xuất: hoãn release một tuần.</b> Ba lý do: một, luồng thanh toán đang
+          hỏng; hai, còn một lỗi lag chưa rõ nguyên nhân; ba, tuần này thiếu hai người. Chi tiết từng
+          mục ở dưới.”</p>
+          <div class="ct-prose">
+            <p><b>BAB</b> hợp khi hiện trạng khó chịu rõ rệt và bạn có cách làm nó dễ chịu: mô tả Before
+            đủ thật để người nghe gật đầu → vẽ After → nói sản phẩm/ý tưởng của bạn chính là cây cầu.
+            <b>Monroe</b> là bản dài của BAB cho một bài nói: Attention → Need → Satisfaction →
+            Visualization → Action.</p>
+            <p><b>Lỗi hay gặp:</b> kết thúc mà không có lời kêu gọi cụ thể. “Mong anh cân nhắc” không
+            phải một hành động. “Anh duyệt giúp em trước thứ Sáu” mới là.</p>
+          </div>
+        </div>
+      </details>
+
+      <!-- 4 -->
+      <details class="wb-accordion__item">
+        <summary>Nhóm 4 · Kể chuyện — thuật lại một việc đã xảy ra</summary>
+        <div class="wb-accordion__body">
+          <p class="ct-shape">Situation → Task → <b>Action</b> → <b>Result</b></p>
+          <div class="ct-prose" style="margin-top:12px">
+            <p><b>Khi nào:</b> phỏng vấn (“kể một lần bạn…”), báo cáo thành tích, viết postmortem, kể lại
+            sự cố cho người không có mặt.</p>
+            <p><b>STAR</b> là chuẩn. Điều cần nhớ: <b>trọng lượng nằm ở chữ A</b>. Người ta hay kể S và T
+            rất dài rồi hết giờ ở A — trong khi người nghe chỉ muốn biết <i>bạn</i> đã làm gì. Tỷ lệ hợp
+            lý cho một câu chuyện 90 giây là khoảng 15 giây S+T, 50 giây A, 25 giây R.</p>
+          </div>
+          <p class="ct-say">“Bản 3.2 crash 2,1%, gấp bốn lần bình thường <b>(S)</b>. Em nhận việc tìm
+          nguyên nhân trong 24 tiếng <b>(T)</b>. Em lọc crash log theo phiên bản OS, khoanh được 70% rơi
+          vào iOS 18, dựng lại được ca lỗi ở luồng thanh toán, rồi đẩy một bản vá nóng kèm test hồi quy
+          cho ba ca đó <b>(A)</b>. Crash rate về 0,4% sau hai ngày, và bộ test đó giờ nằm trong CI
+          <b>(R)</b>.”</p>
+          <div class="ct-prose">
+            <p><b>And / But / Therefore</b> không phải khung sắp xếp mà là mẹo <i>sửa nhịp</i>: nối các
+            sự kiện bằng “và rồi… <b>nhưng</b>… <b>cho nên</b>…” thay vì “và rồi… và rồi…”. Nếu bạn kể mà
+            toàn “và rồi”, câu chuyện phẳng vì không có mâu thuẫn nào. Áp mẹo này lên bất kỳ khung nào
+            trong nhóm.</p>
+            <p><b>Pixar</b> (“Ngày xưa… Mỗi ngày… Cho đến một hôm… Vì thế mà… Cuối cùng thì…”) dựng được
+            cao trào chỉ trong sáu câu — hợp cho mở đầu một bài nói, không hợp cho báo cáo sự cố.</p>
+            <p><b>Lỗi hay gặp:</b> kể bằng “chúng em” trong buổi phỏng vấn. Người nghe đang đánh giá bạn,
+            không đánh giá nhóm cũ của bạn.</p>
+          </div>
+        </div>
+      </details>
+
+      <!-- 5 -->
+      <details class="wb-accordion__item">
+        <summary>Nhóm 5 · Phản hồi — góp ý mà người kia không phòng thủ</summary>
+        <div class="wb-accordion__body">
+          <p class="ct-shape">Situation → <b>Behavior</b> → Impact</p>
+          <div class="ct-prose" style="margin-top:12px">
+            <p><b>Cốt lõi của cả nhóm, quan trọng hơn tên khung:</b> tách <b>hành vi</b> khỏi <b>con
+            người</b>. “Bạn ngắt lời khách ba lần” là hành vi — đếm được, không cãi được, sửa được.
+            “Bạn thiếu tôn trọng” là kết luận về con người — nghe xong người ta phòng thủ, và cái được
+            bàn tiếp sẽ là <i>bạn có phải người thiếu tôn trọng không</i>, chứ không phải cuộc họp đó.</p>
+          </div>
+          <p class="ct-say">“Trong buổi họp với khách sáng nay <b>(S)</b>, mình thấy bạn ngắt lời anh ấy
+          ba lần khi anh đang nêu yêu cầu <b>(B)</b>; sau đó anh ấy nói ngắn hẳn lại và mình mất một phần
+          thông tin về phạm vi dự án <b>(I)</b>.”</p>
+          <div class="ct-prose">
+            <p><b>COIN</b> = SBI cộng thêm bước “bước tiếp theo” — dùng khi bạn muốn kèm hướng khắc phục
+            chứ không chỉ nêu vấn đề. <b>Start / Stop / Continue</b> cực gọn cho retro và đánh giá định
+            kỳ. <b>I like / I wish / What if</b> nhẹ nhất, hợp lúc góp ý bản thiết kế hoặc ý tưởng chưa
+            chín.</p>
+            <p><b>Về “bánh mì kẹp” (khen – chê – khen):</b> nhiều tài liệu quản trị khuyên tránh, lý do
+            là nếu bạn luôn mở bằng lời khen trước khi chê, người nghe sẽ học được rằng mọi lời khen đều
+            là màn dạo đầu — và cả hai vế cùng mất giá. Bên bênh vực thì nói nó giúp giữ thể diện, nhất
+            là trong môi trường ngại nói thẳng. Bằng chứng thực nghiệm chưa dứt khoát, nên đây là chỗ
+            còn tranh cãi chứ không phải chuyện đã ngã ngũ. Điều chắc chắn hơn: SBI <i>không cần</i>
+            sandwich, vì nó vốn đã không tấn công ai.</p>
+            <p><b>Lỗi hay gặp:</b> góp ý về một mẫu hành vi chung chung (“dạo này bạn hay…”) thay vì một
+            tình huống cụ thể. Không có S thì người nghe không nhớ nổi bạn đang nói lúc nào, và phản xạ
+            đầu tiên là chối.</p>
+          </div>
+        </div>
+      </details>
+
+      <!-- 6 -->
+      <details class="wb-accordion__item">
+        <summary>Nhóm 6 · Hội thoại khó — xung đột, ranh giới</summary>
+        <div class="wb-accordion__body">
+          <p class="ct-shape">Observation → Feeling → Need → <b>Request</b></p>
+          <div class="ct-prose" style="margin-top:12px">
+            <p><b>Chọn giữa hai khung:</b> <b>NVC</b> khi bạn muốn hiểu và giữ quan hệ — nó kết thúc bằng
+            một <i>yêu cầu</i> mà người kia được quyền từ chối. <b>DESC</b> khi bạn cần đặt ranh giới —
+            nó kết thúc bằng <i>hệ quả</i>. Nói ngắn gọn: DESC có răng, NVC không. Dùng DESC quá sớm thì
+            thành ra doạ; dùng NVC khi đã nhắc ba lần rồi thì thành ra nhu nhược.</p>
+            <p><b>Chỗ chết người của NVC:</b> chữ O phải là thứ <b>máy quay ghi được</b>. “Bạn không tôn
+            trọng deadline” không phải quan sát, đó là diễn giải — và người nghe sẽ cãi ngay ở câu đầu.
+            “Hai tuần liên tiếp deadline bị dời vào chiều thứ Sáu” mới là quan sát.</p>
+          </div>
+          <p class="ct-say">“Tuần này lịch bị dời hai lần <b>(quan sát)</b>, mình thấy lo <b>(cảm
+          xúc)</b>, mình cần một mốc chắc chắn để sắp việc <b>(nhu cầu)</b> — tụi mình chốt cứng ngày
+          được không? <b>(yêu cầu)</b>”</p>
+          <div class="ct-prose">
+            <p><b>Cảnh báo về giọng:</b> NVC nói sai giọng nghe rất giả, kiểu “mình cảm thấy bị tổn
+            thương khi bạn…”. Cách tránh: giữ đúng bốn bước nhưng dùng từ ngữ đời thường của chính bạn.
+            Khung quy định thứ tự, không quy định từ vựng — mà đây là chỗ người ta hay quên nhất.</p>
+            <p><b>Đừng dùng khi:</b> người kia đang rất giận. Lúc đó chưa ai nghe được cấu trúc nào cả;
+            việc cần làm trước là để họ nói hết, và bạn nhắc lại được ý của họ đủ đúng để họ công nhận.
+            Xong bước đó rồi mới đến NVC.</p>
+          </div>
+        </div>
+      </details>
+
+      <!-- 7 -->
+      <details class="wb-accordion__item">
+        <summary>Nhóm 7 · Nhờ vả — nói thẳng điều mình cần</summary>
+        <div class="wb-accordion__body">
+          <p class="ct-shape">Context → <b>Ask</b> → Rationale</p>
+          <div class="ct-prose" style="margin-top:12px">
+            <p><b>Khi nào:</b> xin review, xin dữ liệu, xin thời gian của người khác.</p>
+            <p><b>Lỗi kinh điển:</b> kể ba phút bối cảnh rồi mới nói cần gì. Suốt ba phút đó người nghe
+            không hề đang nghe — họ đang lo “cuối cùng nó định nhờ gì đây”. Chính sự lo đó ăn hết khả
+            năng nghe của họ, nên đến lúc bạn nói ra lời nhờ thì họ đã mệt.</p>
+          </div>
+          <p class="ct-say">“Em đang kẹt ở phần deploy <b>(bối cảnh)</b> — anh review giúp em PR này
+          trước 5h chiều nay được không ạ <b>(ask)</b>, vì mai khách nghiệm thu rồi <b>(lý do)</b>.”</p>
+          <div class="ct-prose">
+            <p><b>Mẹo:</b> nếu bối cảnh dài quá hai câu, đảo thành <b>Ask – Context – Rationale</b>. Nói
+            lời nhờ trước là một cách tôn trọng thời gian của người kia, không phải là thiếu lễ độ.</p>
+            <p><b>Luôn kèm ba thứ:</b> việc cụ thể, hạn cụ thể, và lý do. Thiếu hạn thì lời nhờ trôi vô
+            thời hạn; thiếu lý do thì người kia không tự cân được nó gấp đến mức nào so với việc của họ.</p>
+          </div>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <!-- ========================= 7 · LUYỆN TẬP ========================== -->
+  <section class="wb-section" id="luyen-tap">
+    <h2>Luyện tập</h2>
+    <p class="wb-section__desc">Bảy tình huống, mỗi tình huống rơi vào đúng một nhóm. Chọn xong sẽ hiện
+    lý do — phần lý do mới là chỗ đáng đọc, không phải điểm số.</p>
+
+    <div class="wb-cluster wb-cluster--between" style="margin-bottom:14px">
+      <span class="ct-mono" id="quiz-score">Đã trả lời 0 / 7</span>
+      <button class="wb-btn wb-btn--ghost wb-btn--sm" type="button" id="quiz-reset">Làm lại</button>
+    </div>
+
+    <div class="wb-stack" id="quiz"></div>
+  </section>
+
+  <!-- ========================= 8 · GIỚI HẠN =========================== -->
+  <section class="wb-section" id="gioi-han">
+    <h2>Khi nào khung phản tác dụng</h2>
+    <p class="wb-section__desc">Phần này không phải ghi chú phụ. Một công cụ không có ranh giới thì
+    người dùng sẽ mang nó vào chỗ nó phá hoại.</p>
+
+    <div class="wb-grid wb-grid--auto" style="--wb-grid-min:260px">
+      <div class="wb-card wb-card--pad">
+        <p class="wb-card__title">Khi bạn chưa biết mình nghĩ gì</p>
+        <p class="wb-card__sub">Khung là công cụ <i>trình bày</i>, không phải công cụ <i>suy nghĩ</i>. Ép
+        một ý chưa chín vào PREP sẽ cho ra một câu nghe rất gọn nhưng rỗng. Nghĩ cho xong trước, xếp sau.</p>
+      </div>
+      <div class="wb-card wb-card--pad">
+        <p class="wb-card__title">Khi người kia cần được nghe, chưa cần giải pháp</p>
+        <p class="wb-card__sub">Ai đó vừa kể một chuyện bực mình mà bạn đáp lại bằng Vấn đề–Giải pháp–Lợi
+        ích thì họ sẽ thấy bị gạt đi. Nghe trước, nhắc lại được ý họ, rồi mới hỏi họ có muốn nghe hướng
+        xử không.</p>
+      </div>
+      <div class="wb-card wb-card--pad">
+        <p class="wb-card__title">Trong hội thoại thân mật và brainstorm</p>
+        <p class="wb-card__sub">Nói chuyện với bạn bè, hay lúc cả nhóm đang bung ý tưởng — cấu trúc chặt
+        làm chết mạch. Khung sinh ra cho những cuộc nói chuyện <i>có mục tiêu</i>.</p>
+      </div>
+      <div class="wb-card wb-card--pad">
+        <p class="wb-card__title">Khi khung thành ra bản mẫu đọc thuộc</p>
+        <p class="wb-card__sub">Dấu hiệu: bạn nghe thấy chính mình nói “thứ nhất… thứ hai… thứ ba…” trong
+        một câu chuyện chỉ có một ý. Khung phải vô hình với người nghe; ai nhận ra bạn đang dùng khung
+        thì khung đã lộ quá mức.</p>
+      </div>
+    </div>
+
+    <div class="wb-alert wb-alert--plain" style="margin-top:18px">
+      <span class="wb-alert__icon"><span class="wb-ico wb-ico--sm">flag</span></span>
+      <div class="wb-alert__body">
+        <p class="wb-alert__title">Chốt</p>
+        <p class="wb-alert__msg">Cấu trúc không làm lời nói cứng đi. Nó cho bạn biết <b>bắt đầu và kết
+        thúc ở đâu là đủ</b> — bớt phải nghĩ giữa chừng, người nghe dễ theo, và bạn kiểm soát được lời
+        mình nói. Nếu chỉ nhớ được một thứ từ trang này, nhớ <b>Neo → Căng → Lối ra</b>; mọi tên viết tắt
+        còn lại đều suy ra được.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= 9 · TRA CỨU ============================ -->
+  <section class="wb-section" id="tra-cuu">
+    <h2>Tra cứu nhanh</h2>
+    <p class="wb-section__desc">Phần này để mở ra lúc sắp vào họp, không phải để đọc lần đầu.</p>
+    <div class="wb-card">
+      <div class="wb-table-scroll">
+        <table class="wb-table wb-table--compact wb-table--striped">
+          <thead><tr><th>Tình huống</th><th>Nhóm</th><th>Rút khung này ra</th></tr></thead>
+          <tbody>
+            <tr><td>Được hỏi quan điểm</td><td class="wb-cell-muted">1</td><td class="wb-cell-strong">PREP</td></tr>
+            <tr><td>Được hỏi cách giải quyết</td><td class="wb-cell-muted">2</td><td class="wb-cell-strong">Vấn đề – Giải pháp – Lợi ích</td></tr>
+            <tr><td>Mở đầu một bài trình bày</td><td class="wb-cell-muted">2</td><td class="wb-cell-strong">SCQA</td></tr>
+            <tr><td>Sếp / khách phải ra quyết định</td><td class="wb-cell-muted">2</td><td class="wb-cell-strong">Situation – Options – Recommendation</td></tr>
+            <tr><td>Email cho người bận</td><td class="wb-cell-muted">3</td><td class="wb-cell-strong">BLUF</td></tr>
+            <tr><td>Người nghe chưa quan tâm</td><td class="wb-cell-muted">3</td><td class="wb-cell-strong">AIDA · BAB</td></tr>
+            <tr><td>Phỏng vấn “kể một lần bạn…”</td><td class="wb-cell-muted">4</td><td class="wb-cell-strong">STAR</td></tr>
+            <tr><td>Kể lại sự cố cho người vắng mặt</td><td class="wb-cell-muted">4</td><td class="wb-cell-strong">Context – Conflict – Resolution</td></tr>
+            <tr><td>Góp ý một lần cụ thể</td><td class="wb-cell-muted">5</td><td class="wb-cell-strong">SBI</td></tr>
+            <tr><td>Góp ý kèm hướng sửa</td><td class="wb-cell-muted">5</td><td class="wb-cell-strong">COIN</td></tr>
+            <tr><td>Retro / đánh giá định kỳ</td><td class="wb-cell-muted">5</td><td class="wb-cell-strong">Start / Stop / Continue</td></tr>
+            <tr><td>Đối thoại căng, muốn giữ quan hệ</td><td class="wb-cell-muted">6</td><td class="wb-cell-strong">NVC</td></tr>
+            <tr><td>Cần đặt ranh giới</td><td class="wb-cell-muted">6</td><td class="wb-cell-strong">DESC</td></tr>
+            <tr><td>Nhờ một việc</td><td class="wb-cell-muted">7</td><td class="wb-cell-strong">Context – Ask – Rationale</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================== FOOTER =============================== -->
+<footer class="wb-footer wb-footer--slim">
+  <div class="wb-footer__inner">
+    <div class="wb-footer__bottom">
+      <span class="wb-footer__copy">Nói có cấu trúc · một trang trong <a href="index.html">Collection</a></span>
+      <div class="wb-footer__social">
+        <a class="wb-btn wb-btn--ghost wb-btn--icon" href="index.html" aria-label="Về trang chủ"><span class="wb-ico">home</span></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</div><!-- /wb-shell -->
+
+<script>
+(function () {
+  'use strict';
+
+  /* ------------------------------------------------------------------ *
+   * Chrome: navbar toggle + theme (same idiom as the other pages here)  *
+   * ------------------------------------------------------------------ */
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('[data-navbar-toggle]')) {
+      document.querySelector('.wb-navbar__menu').classList.toggle('is-open');
+    } else if (e.target.closest('.wb-theme-toggle')) {
+      var dark = document.documentElement.classList.toggle('dark');
+      try { localStorage.setItem('hub-theme', dark ? 'dark' : 'light'); } catch (err) {}
+    } else if (e.target.closest('.wb-navbar__menu .wb-nav__link')) {
+      document.querySelector('.wb-navbar__menu').classList.remove('is-open');
+    }
+  });
+
+  /* ------------------------------------------------------------------ *
+   * Data: the frames. `parts` drives BOTH the composer fields and the   *
+   * skeleton line, so the two can never disagree.                        *
+   * ------------------------------------------------------------------ */
+  var FRAMES = {
+    prep: {
+      name: 'PREP', group: 1,
+      when: 'Được hỏi quan điểm. Kết luận lên đầu, ví dụ có thật ở giữa, chốt lại ở cuối.',
+      parts: [
+        { k: 'Point',   hint: 'Ý chính, một câu, nói thẳng',       ph: 'Nên tách module thanh toán ra khỏi app chính.' },
+        { k: 'Reason',  hint: 'Vì sao — một lý do mạnh, không ba', ph: 'Mỗi lần sửa nó bắt cả team chờ build lại 12 phút.' },
+        { k: 'Example', hint: 'Một ca có thật, có số',             ph: 'Sprint trước 3 hotfix, mất gần 4 tiếng chỉ để chờ.' },
+        { k: 'Point',   hint: 'Chốt lại, thêm bước tiếp theo',     ph: 'Nên em đề xuất tách trước khi thêm tính năng mới.' }
+      ]
+    },
+    vgl: {
+      name: 'Vấn đề – Giải pháp – Lợi ích', group: 2,
+      when: 'Người nghe đã biết có vấn đề và đang chờ cách xử. Ngắn, hợp nói nội bộ.',
+      parts: [
+        { k: 'Vấn đề',   hint: 'Nêu đúng một vấn đề',          ph: 'Bộ test hồi quy chạy 40 phút nên không ai chạy trước khi push.' },
+        { k: 'Giải pháp',hint: 'Cách xử, đủ cụ thể để làm được', ph: 'Tách bộ test thành nhóm nhanh chạy mỗi PR và nhóm đầy đủ chạy đêm.' },
+        { k: 'Lợi ích',  hint: 'Người nghe được gì',            ph: 'Lỗi lộ ra trong 5 phút thay vì sau khi merge.' }
+      ]
+    },
+    scqa: {
+      name: 'SCQA', group: 2,
+      when: 'Mở đầu một bài trình bày cho người chưa biết là có vấn đề. Neo vào bối cảnh ai cũng công nhận rồi mới phá nó.',
+      parts: [
+        { k: 'Situation',    hint: 'Bối cảnh không ai cãi',        ph: 'Crash rate của mình giữ dưới 0,5% suốt sáu tháng.' },
+        { k: 'Complication', hint: 'Biến cố phá vỡ bối cảnh đó',   ph: 'Từ bản 3.2 nó vọt lên 2,1%.' },
+        { k: 'Question',     hint: 'Câu hỏi tự nảy ra trong đầu người nghe', ph: 'Vì sao, và có nên chặn bản phát hành kế tiếp không?' },
+        { k: 'Answer',       hint: 'Câu trả lời của bạn',          ph: 'Ba nguyên nhân; cái lớn nhất chiếm 70% số crash là…' }
+      ]
+    },
+    sor: {
+      name: 'Situation – Options – Recommendation', group: 2,
+      when: 'Người nghe phải tự ra quyết định. Bắt buộc có ít nhất hai phương án kèm đánh đổi.',
+      parts: [
+        { k: 'Situation',      hint: 'Tình hình + ràng buộc',        ph: 'Còn 3 tuần tới hạn nghiệm thu, thiếu 1 iOS dev.' },
+        { k: 'Option A',       hint: 'Phương án 1 + đánh đổi',       ph: 'Giữ lịch, cắt màn hình báo cáo — khách mất tính năng đã hứa.' },
+        { k: 'Option B',       hint: 'Phương án 2 + đánh đổi',       ph: 'Lùi 1 tuần, giữ đủ phạm vi — trễ hạn nhưng không nợ kỹ thuật.' },
+        { k: 'Recommendation', hint: 'Bạn chọn cái nào và vì sao',   ph: 'Em nghiêng về B vì phần báo cáo là lý do khách ký hợp đồng.' }
+      ]
+    },
+    bluf: {
+      name: 'BLUF / Kim tự tháp', group: 3,
+      when: 'Email hoặc báo cáo cho người bận. Kết luận ở dòng đầu, lý do gộp thành ba nhóm bên dưới.',
+      parts: [
+        { k: 'Kết luận', hint: 'Đề xuất / câu trả lời, một dòng', ph: 'Đề xuất: hoãn release một tuần.' },
+        { k: 'Lý do 1',  hint: 'Nhóm lý do mạnh nhất trước',      ph: 'Luồng thanh toán đang hỏng 3 ca test.' },
+        { k: 'Lý do 2',  hint: '',                                ph: 'Còn một lỗi lag chưa rõ nguyên nhân.' },
+        { k: 'Lý do 3',  hint: 'Bỏ trống được — ba là tối đa',    ph: 'Tuần này nhân sự thiếu 2 người.' },
+        { k: 'Việc cần',  hint: 'Bạn cần người đọc làm gì, có hạn', ph: 'Anh duyệt giúp em trước thứ Sáu.' }
+      ]
+    },
+    bab: {
+      name: 'BAB — Before / After / Bridge', group: 3,
+      when: 'Hiện trạng khó chịu rõ rệt và bạn có cách làm nó dễ chịu.',
+      parts: [
+        { k: 'Before', hint: 'Hiện trạng, đủ thật để người nghe gật đầu', ph: 'Mỗi lần lên bản mới, cả team ngồi canh log tới 11h đêm.' },
+        { k: 'After',  hint: 'Viễn cảnh sau khi có giải pháp',            ph: 'Bản mới tự rollback khi crash rate vượt ngưỡng; không ai phải canh.' },
+        { k: 'Bridge', hint: 'Cây cầu — chính là thứ bạn đề xuất',        ph: 'Cây cầu là bộ cờ tính năng cộng cảnh báo tự động em đang dựng.' }
+      ]
+    },
+    star: {
+      name: 'STAR', group: 4,
+      when: 'Phỏng vấn, báo cáo thành tích. Dồn trọng lượng vào Action — đó là phần người nghe muốn nghe.',
+      parts: [
+        { k: 'Situation', hint: 'Bối cảnh, ngắn thôi',           ph: 'Bản 3.2 crash 2,1%, gấp bốn lần bình thường.' },
+        { k: 'Task',      hint: 'Nhiệm vụ của BẠN, không của nhóm', ph: 'Em nhận việc tìm nguyên nhân trong 24 tiếng.' },
+        { k: 'Action',    hint: 'Bạn đã làm gì — phần dài nhất',  ph: 'Lọc log theo phiên bản OS, khoanh được 70% ở iOS 18, dựng lại ca lỗi, đẩy bản vá kèm test hồi quy.' },
+        { k: 'Result',    hint: 'Kết quả, có số nếu có',          ph: 'Crash rate về 0,4% sau hai ngày; bộ test đó giờ nằm trong CI.' }
+      ]
+    },
+    sbi: {
+      name: 'SBI', group: 5,
+      when: 'Góp ý về một lần cụ thể. Behavior phải là thứ máy quay ghi được, không phải nhận xét về con người.',
+      parts: [
+        { k: 'Situation', hint: 'Lúc nào, ở đâu — càng cụ thể càng khó chối', ph: 'Trong buổi họp với khách sáng nay,' },
+        { k: 'Behavior',  hint: 'Hành vi quan sát được, không phán xét',      ph: 'mình thấy bạn ngắt lời anh ấy ba lần khi anh đang nêu yêu cầu;' },
+        { k: 'Impact',    hint: 'Nó gây ra gì — cho bạn, cho việc',           ph: 'sau đó anh ấy nói ngắn hẳn lại và mình mất một phần thông tin về phạm vi.' }
+      ]
+    },
+    coin: {
+      name: 'COIN', group: 5,
+      when: 'Như SBI nhưng kèm hướng khắc phục. Dùng khi bạn có quyền hoặc trách nhiệm đề nghị bước tiếp theo.',
+      parts: [
+        { k: 'Context',    hint: 'Bối cảnh',                 ph: 'Về mấy PR tuần này,' },
+        { k: 'Observation',hint: 'Quan sát khách quan',      ph: 'có 4 PR được merge thẳng vào main không qua review;' },
+        { k: 'Impact',     hint: 'Tác động',                 ph: 'hai trong số đó phải revert, và mình mất buổi chiều thứ Năm để dò.' },
+        { k: 'Next steps', hint: 'Đề nghị cụ thể, có hạn',   ph: 'Từ tuần sau mình bật branch protection; PR gấp thì ping mình trực tiếp.' }
+      ]
+    },
+    nvc: {
+      name: 'NVC — Giao tiếp phi bạo lực', group: 6,
+      when: 'Đối thoại căng mà bạn muốn giữ quan hệ. Kết bằng một yêu cầu người kia được quyền từ chối.',
+      parts: [
+        { k: 'Quan sát', hint: 'Máy quay ghi được — không diễn giải', ph: 'Tuần này lịch bị dời hai lần.' },
+        { k: 'Cảm xúc',  hint: 'Của bạn, một từ là đủ',               ph: 'Mình thấy lo.' },
+        { k: 'Nhu cầu',  hint: 'Cái đứng sau cảm xúc đó',             ph: 'Mình cần một mốc chắc chắn để sắp việc.' },
+        { k: 'Yêu cầu',  hint: 'Cụ thể, và từ chối được',             ph: 'Tụi mình chốt cứng ngày được không?' }
+      ]
+    },
+    desc: {
+      name: 'DESC', group: 6,
+      when: 'Đặt ranh giới. Kết bằng hệ quả — dùng khi đã nhắc mà không đổi, không dùng ngay lần đầu.',
+      parts: [
+        { k: 'Describe',     hint: 'Mô tả sự việc, không quy kết',      ph: 'Ba lần gần đây việc được giao sau 5h chiều với hạn sáng hôm sau.' },
+        { k: 'Express',      hint: 'Bày tỏ cảm nhận',                   ph: 'Mình thấy mệt và bắt đầu làm ẩu ở những việc đó.' },
+        { k: 'Specify',      hint: 'Điều bạn muốn thay đổi, cụ thể',    ph: 'Mình mong việc gấp được báo trước 10h sáng.' },
+        { k: 'Consequences', hint: 'Hệ quả — tích cực nếu đổi, và ngược lại', ph: 'Làm vậy mình nhận được; còn sau 5h thì mình sẽ trả lời vào sáng hôm sau.' }
+      ]
+    },
+    car: {
+      name: 'Context – Ask – Rationale', group: 7,
+      when: 'Nhờ việc. Nếu bối cảnh dài quá hai câu thì đảo Ask lên trước.',
+      parts: [
+        { k: 'Context',   hint: 'Bối cảnh, tối đa hai câu',     ph: 'Em đang kẹt ở phần deploy.' },
+        { k: 'Ask',       hint: 'Việc cụ thể + hạn cụ thể',     ph: 'Anh review giúp em PR này trước 5h chiều nay được không ạ?' },
+        { k: 'Rationale', hint: 'Vì sao gấp / vì sao là anh',   ph: 'Mai khách nghiệm thu rồi, mà phần này anh viết ban đầu.' }
+      ]
+    }
+  };
+
+  /* Which frames each goal maps to: [khung chính, ...dự phòng] */
+  var GOALS = {
+    1: { title: 'Hiểu điều tôi nghĩ', main: 'prep',
+         alt: [], note: 'Biến thể: <b>Ai – Như thế nào – Rồi làm sao</b> khi đối tượng là một người hay một thứ cụ thể; <b>What – So What – Now What</b> khi rút bài học sau sự việc.' },
+    2: { title: 'Chọn một cách làm', main: 'vgl', alt: ['scqa', 'sor'],
+         note: 'Chọn theo một câu hỏi: người nghe <i>đã</i> biết có vấn đề chưa? Chưa biết → SCQA. Phải tự quyết → Situation–Options–Recommendation.' },
+    3: { title: 'Đồng ý bỏ tiền, thời gian, uy tín', main: 'bluf', alt: ['bab'],
+         note: 'BLUF khi người nghe <i>đã</i> muốn nghe và chỉ thiếu thời gian. Nếu họ <i>chưa</i> muốn nghe thì phải giành sự chú ý trước — AIDA hoặc BAB.' },
+    4: { title: 'Hình dung được chuyện đã xảy ra', main: 'star', alt: [],
+         note: 'Dồn trọng lượng vào Action. Nối các sự kiện bằng “nhưng… cho nên…” thay vì “và rồi… và rồi…”.' },
+    5: { title: 'Đổi hành vi mà không tự ái', main: 'sbi', alt: ['coin'],
+         note: 'Tách hành vi khỏi con người. SBI để nêu; COIN khi bạn kèm luôn hướng sửa.' },
+    6: { title: 'Hạ căng thẳng, giữ được quan hệ', main: 'nvc', alt: ['desc'],
+         note: 'NVC kết bằng <i>yêu cầu</i> (từ chối được); DESC kết bằng <i>hệ quả</i>. DESC có răng — để dành cho lúc đã nhắc mà không đổi.' },
+    7: { title: 'Làm giúp tôi một việc', main: 'car', alt: [],
+         note: 'Nói “ask” sớm. Luôn kèm ba thứ: việc cụ thể, hạn cụ thể, lý do.' }
+  };
+
+  /* ------------------------------------------------------------------ *
+   * Goal picker                                                         *
+   * ------------------------------------------------------------------ */
+  var out = document.getElementById('pick-out');
+  var goalBtns = [].slice.call(document.querySelectorAll('.ct-goal'));
+
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+
+  function frameCard(id, isMain) {
+    var f = FRAMES[id];
+    var shape = f.parts.map(function (p) { return esc(p.k); }).join(' → ');
+    return '' +
+      '<div class="wb-card wb-card--pad">' +
+        '<div class="wb-cluster wb-cluster--between">' +
+          '<p class="wb-card__title">' + esc(f.name) + '</p>' +
+          (isMain ? '<span class="wb-cap wb-cap--sm wb-cap--solid">Khung chính</span>'
+                  : '<span class="wb-cap wb-cap--sm">Dự phòng</span>') +
+        '</div>' +
+        '<p class="ct-shape" style="margin:8px 0 6px">' + shape + '</p>' +
+        '<p class="wb-card__sub">' + esc(f.when) + '</p>' +
+        '<button class="wb-btn wb-btn--outline wb-btn--sm" type="button" data-use="' + id + '" ' +
+                'style="margin-top:12px">Soạn thử khung này</button>' +
+      '</div>';
+  }
+
+  function renderGoal(n) {
+    var g = GOALS[n];
+    var cards = [frameCard(g.main, true)].concat(g.alt.map(function (id) { return frameCard(id, false); }));
+    out.innerHTML =
+      '<p class="ct-mono">Nhóm ' + n + ' · Mục tiêu: ' + esc(g.title) + '</p>' +
+      '<div class="wb-grid wb-grid--auto" style="--wb-grid-min:280px;margin-top:10px">' + cards.join('') + '</div>' +
+      '<div class="wb-alert wb-alert--plain" style="margin-top:14px">' +
+        '<span class="wb-alert__icon"><span class="wb-ico wb-ico--sm">tips_and_updates</span></span>' +
+        '<div class="wb-alert__body"><p class="wb-alert__msg">' + g.note + '</p></div>' +
+      '</div>';
+  }
+
+  goalBtns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      goalBtns.forEach(function (o) { o.setAttribute('aria-pressed', String(o === b)); });
+      renderGoal(b.getAttribute('data-goal'));
+    });
+  });
+
+  /* "Soạn thử khung này" → jump into the composer with that frame loaded. */
+  out.addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-use]');
+    if (!btn) return;
+    var sel = document.getElementById('frame-pick');
+    sel.value = btn.getAttribute('data-use');
+    renderFields();
+    document.getElementById('soan-nhap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  /* ------------------------------------------------------------------ *
+   * Composer                                                            *
+   * ------------------------------------------------------------------ */
+  var sel = document.getElementById('frame-pick');
+  var fieldsBox = document.getElementById('frame-fields');
+  var whenLine = document.getElementById('frame-when');
+  var outBox = document.getElementById('frame-out');
+
+  Object.keys(FRAMES).forEach(function (id) {
+    var o = document.createElement('option');
+    o.value = id;
+    o.textContent = 'Nhóm ' + FRAMES[id].group + ' · ' + FRAMES[id].name;
+    sel.appendChild(o);
+  });
+
+  function renderFields() {
+    var f = FRAMES[sel.value];
+    whenLine.textContent = f.when;
+    fieldsBox.innerHTML = f.parts.map(function (p, i) {
+      return '' +
+        '<div class="wb-field">' +
+          '<label class="wb-label" for="fp' + i + '">' + esc(p.k) +
+            (p.hint ? ' <span class="wb-label__opt">' + esc(p.hint) + '</span>' : '') +
+          '</label>' +
+          '<div class="wb-textarea-wrap">' +
+            '<textarea class="wb-textarea" id="fp' + i + '" rows="2" data-part ' +
+                      'placeholder="' + esc(p.ph) + '"></textarea>' +
+          '</div>' +
+        '</div>';
+    }).join('');
+    outBox.value = '';
+  }
+
+  sel.addEventListener('change', renderFields);
+
+  document.getElementById('btn-join').addEventListener('click', function () {
+    var vals = [].slice.call(fieldsBox.querySelectorAll('[data-part]'))
+      .map(function (t) { return t.value.trim(); })
+      .filter(Boolean);
+    outBox.value = vals.length ? vals.join(' ') : 'Chưa điền ô nào.';
+  });
+
+  document.getElementById('btn-clear').addEventListener('click', function () {
+    [].slice.call(fieldsBox.querySelectorAll('[data-part]')).forEach(function (t) { t.value = ''; });
+    outBox.value = '';
+  });
+
+  document.getElementById('btn-copy').addEventListener('click', function () {
+    var btn = this;
+    if (!outBox.value) return;
+    var done = function () {
+      btn.textContent = 'Đã chép';
+      setTimeout(function () { btn.textContent = 'Chép'; }, 1400);
+    };
+    if (navigator.clipboard) navigator.clipboard.writeText(outBox.value).then(done, function () {});
+    else { outBox.select(); try { document.execCommand('copy'); done(); } catch (err) {} }
+  });
+
+  renderFields();
+
+  /* ------------------------------------------------------------------ *
+   * Quiz — one item per group, so finishing it teaches the whole map.   *
+   * ------------------------------------------------------------------ */
+  var QUIZ = [
+    {
+      q: 'Trong họp, sếp quay sang hỏi: “Theo em mình có nên đổi sang SwiftData không?”',
+      opts: [
+        { t: 'Nhóm 1 — PREP', ok: true,
+          why: 'Câu hỏi là xin quan điểm. Nêu lập trường trước, một lý do, một ví dụ có thật, rồi chốt. Nếu bạn mở bằng “SwiftData thì nó có mấy điểm thế này…” thì hết ba phút vẫn chưa ai biết bạn nghiêng về đâu.' },
+        { t: 'Nhóm 2 — SCQA', ok: false,
+          why: 'SCQA để dẫn người nghe vào một vấn đề họ chưa thấy. Ở đây sếp đã đặt sẵn câu hỏi rồi, dẫn nhập nữa là thừa.' },
+        { t: 'Nhóm 3 — AIDA', ok: false,
+          why: 'AIDA để giành sự chú ý của người chưa muốn nghe. Sếp đang hỏi trực tiếp — sự chú ý đã có sẵn, dùng AIDA lúc này nghe như đang bán hàng.' },
+        { t: 'Nhóm 4 — STAR', ok: false,
+          why: 'STAR để thuật lại chuyện đã xảy ra. Đây là câu hỏi về tương lai nên làm gì.' }
+      ]
+    },
+    {
+      q: 'Bạn phát hiện crash rate tăng gấp bốn từ bản mới. Cả team chưa ai để ý, và bạn có 5 phút đầu buổi họp tuần.',
+      opts: [
+        { t: 'Nhóm 2 — SCQA', ok: true,
+          why: 'Người nghe chưa biết là có vấn đề. Phải neo vào cái họ đang tin (“crash rate mình vẫn ổn suốt sáu tháng”) rồi mới phá nó — nếu không, nửa phòng sẽ nghi ngờ con số của bạn trước khi nghe nguyên nhân.' },
+        { t: 'Nhóm 2 — Vấn đề–Giải pháp–Lợi ích', ok: false,
+          why: 'Khung này giả định người nghe đã công nhận có vấn đề. Ở đây họ chưa — nên bạn sẽ mất thời gian bảo vệ giải pháp trong khi tranh cãi thật nằm ở chỗ khác.' },
+        { t: 'Nhóm 1 — PREP', ok: false,
+          why: 'PREP hợp khi được hỏi ý kiến. Ở đây không ai hỏi bạn cả; việc của bạn là làm họ thấy có chuyện.' },
+        { t: 'Nhóm 7 — Context–Ask–Rationale', ok: false,
+          why: 'Bạn chưa nhờ ai làm gì. Lời nhờ có thể đến ở cuối, nhưng phần chính của 5 phút này là dựng vấn đề.' }
+      ]
+    },
+    {
+      q: 'Bạn viết email cho giám đốc — người trả lời mail trên điện thoại giữa hai cuộc họp — để xin duyệt thêm một license 40 triệu/năm.',
+      opts: [
+        { t: 'Nhóm 3 — BLUF', ok: true,
+          why: 'Người đọc bận, đã sẵn sàng nghe, chỉ thiếu thời gian. Dòng đầu là đề xuất và con số; ba lý do gộp nhóm bên dưới; câu cuối nói rõ cần họ làm gì trước khi nào.' },
+        { t: 'Nhóm 3 — AIDA', ok: false,
+          why: 'Đây là lỗi hay gặp nhất trong nhóm 3. AIDA dành cho người chưa muốn nghe; dùng nó với sếp thì hai dòng đầu nghe như quảng cáo, và bạn mất tin cậy trước khi tới phần số liệu.' },
+        { t: 'Nhóm 2 — SCQA', ok: false,
+          why: 'Không sai về nội dung, nhưng SCQA để kết luận ở cuối. Trên điện thoại, giữa hai cuộc họp, người đọc sẽ không cuộn tới đó.' },
+        { t: 'Nhóm 1 — PREP', ok: false,
+          why: 'Gần đúng — PREP cũng đặt kết luận trước. Nhưng đây là xin duyệt chi tiền, cần một lời kêu gọi hành động có hạn, thứ mà PREP không có chỗ dành riêng.' }
+      ]
+    },
+    {
+      q: 'Phỏng vấn. Người phỏng vấn hỏi: “Kể cho tôi một lần bạn xử lý sự cố production.”',
+      opts: [
+        { t: 'Nhóm 4 — STAR', ok: true,
+          why: 'Đúng chuẩn vàng cho câu hỏi hành vi. Nhớ dồn thời lượng vào Action: người nghe đang đánh giá <i>bạn</i> đã làm gì, không phải bối cảnh công ty cũ của bạn.' },
+        { t: 'Nhóm 2 — Vấn đề–Giải pháp–Lợi ích', ok: false,
+          why: 'Nghe rất giống, nhưng khung này nói về một vấn đề <i>đang tồn tại</i> và cách xử nó. Câu hỏi phỏng vấn hỏi về một chuyện <i>đã xong</i>, nên thiếu hẳn phần kết quả — chính là phần được chấm điểm.' },
+        { t: 'Nhóm 1 — PREP', ok: false,
+          why: 'PREP là để nêu quan điểm. Ở đây không ai hỏi bạn nghĩ gì về sự cố production.' },
+        { t: 'Nhóm 5 — SBI', ok: false,
+          why: 'SBI để góp ý cho người khác, không phải để kể lại việc mình làm.' }
+      ]
+    },
+    {
+      q: 'Một bạn mới trong nhóm đã ba lần push thẳng lên nhánh main. Bạn là người review chính.',
+      opts: [
+        { t: 'Nhóm 5 — COIN', ok: true,
+          why: 'Đây là góp ý về hành vi, và bạn có trách nhiệm đề nghị bước tiếp theo — nên SBI cộng thêm chữ N. Nêu tình huống cụ thể, hành vi đếm được (“ba PR”), tác động thật (“hai cái phải revert”), rồi đề nghị: bật branch protection từ tuần sau.' },
+        { t: 'Nhóm 6 — DESC', ok: false,
+          why: 'DESC là để đặt ranh giới và nêu hệ quả, dùng khi đã nhắc mà không đổi. Với một bạn mới chưa được nhắc lần nào, mở bằng hệ quả là doạ.' },
+        { t: 'Nhóm 2 — Vấn đề–Giải pháp–Lợi ích', ok: false,
+          why: 'Khung này biến người thành một “vấn đề” cần xử. Nó bỏ mất bước quan trọng nhất của nhóm 5: mô tả hành vi khách quan để người nghe không phòng thủ.' },
+        { t: 'Nhóm 1 — PREP', ok: false,
+          why: 'PREP là để nêu quan điểm, không có chỗ nào dành cho tác động lên người khác — mà đó chính là phần làm người ta chịu thay đổi.' }
+      ]
+    },
+    {
+      q: 'Một đồng nghiệp cùng cấp liên tục giao việc gấp sau 5h chiều với hạn sáng hôm sau. Bạn đã nhắc nhẹ một lần, không thay đổi.',
+      opts: [
+        { t: 'Nhóm 6 — DESC', ok: true,
+          why: 'Đã nhắc mà không đổi thì việc cần làm là đặt ranh giới, và ranh giới chỉ có thật khi kèm hệ quả: “việc gấp báo trước 10h thì mình nhận; sau 5h thì mình trả lời sáng hôm sau.” Đó là chữ C mà các khung khác không có.' },
+        { t: 'Nhóm 6 — NVC', ok: false,
+          why: 'Gần đúng, và là lựa chọn hợp lý cho <i>lần đầu</i>. Nhưng NVC kết bằng một yêu cầu người kia được quyền từ chối — bạn đã thử cách đó và nó không đổi được gì.' },
+        { t: 'Nhóm 5 — SBI', ok: false,
+          why: 'SBI dừng ở tác động, không nêu điều bạn muốn thay đổi lẫn hệ quả. Nó hợp cho góp ý một lần cụ thể, không hợp để chấm dứt một mẫu hành vi lặp lại.' },
+        { t: 'Nhóm 7 — Context–Ask–Rationale', ok: false,
+          why: 'Đây không phải nhờ vả. Bạn không xin một ân huệ mà đang thiết lập cách làm việc giữa hai người.' }
+      ]
+    },
+    {
+      q: 'Bạn cần anh senior review gấp một PR trước 5h chiều vì mai khách nghiệm thu.',
+      opts: [
+        { t: 'Nhóm 7 — Context–Ask–Rationale', ok: true,
+          why: 'Một câu bối cảnh, lời nhờ có hạn rõ ràng, rồi lý do. Nói “ask” sớm là tôn trọng thời gian người kia — họ biết ngay có nhận được không thay vì phải nghe hết rồi mới đoán.' },
+        { t: 'Nhóm 3 — BLUF', ok: false,
+          why: 'BLUF cũng đặt điều quan trọng lên đầu, nên không sai về thứ tự. Nhưng BLUF dựng cho việc thuyết phục bằng nhiều lý do gộp nhóm; một lời nhờ chỉ cần đúng ba mảnh và không nên dài hơn.' },
+        { t: 'Nhóm 2 — Vấn đề–Giải pháp–Lợi ích', ok: false,
+          why: 'Biến lời nhờ thành một bài trình bày. Người nghe phải tự suy ra rằng “giải pháp” chính là họ bỏ 20 phút ra làm giúp bạn — đừng bắt họ suy.' },
+        { t: 'Nhóm 6 — NVC', ok: false,
+          why: 'NVC dành cho lúc có căng thẳng. Ở đây không có xung đột nào, chỉ là một việc cần nhờ; đưa cảm xúc vào sẽ làm nó nặng nề quá mức.' }
+      ]
+    }
+  ];
+
+  var quizBox = document.getElementById('quiz');
+  var scoreEl = document.getElementById('quiz-score');
+  var answered = [];
+
+  function renderQuiz() {
+    answered = [];
+    quizBox.innerHTML = QUIZ.map(function (item, qi) {
+      return '' +
+        '<div class="wb-card" data-q="' + qi + '">' +
+          '<div class="wb-card__body">' +
+            '<p class="ct-mono">Tình huống ' + (qi + 1) + '</p>' +
+            '<p style="margin:6px 0 14px;font-weight:560">' + esc(item.q) + '</p>' +
+            '<div class="wb-stack wb-stack--tight">' +
+              item.opts.map(function (o, oi) {
+                return '<button class="ct-opt" type="button" data-q="' + qi + '" data-o="' + oi + '">' +
+                       esc(o.t) + '</button>';
+              }).join('') +
+            '</div>' +
+            '<div data-why></div>' +
+          '</div>' +
+        '</div>';
+    }).join('');
+    scoreEl.textContent = 'Đã trả lời 0 / ' + QUIZ.length;
+  }
+
+  quizBox.addEventListener('click', function (e) {
+    var btn = e.target.closest('.ct-opt');
+    if (!btn || btn.disabled) return;
+
+    var qi = +btn.getAttribute('data-q');
+    var oi = +btn.getAttribute('data-o');
+    var item = QUIZ[qi];
+    var card = quizBox.querySelector('[data-q="' + qi + '"]');
+
+    [].slice.call(card.querySelectorAll('.ct-opt')).forEach(function (b, i) {
+      b.disabled = true;
+      if (item.opts[i].ok) b.setAttribute('data-state', 'right');
+      else if (i === oi) b.setAttribute('data-state', 'wrong');
+    });
+
+    var picked = item.opts[oi];
+    var right = item.opts.filter(function (o) { return o.ok; })[0];
+    card.querySelector('[data-why]').innerHTML =
+      '<div class="wb-alert ' + (picked.ok ? 'wb-alert--success' : 'wb-alert--danger') + '" style="margin-top:14px">' +
+        '<span class="wb-alert__icon"><span class="wb-ico wb-ico--sm">' + (picked.ok ? 'check' : 'close') + '</span></span>' +
+        '<div class="wb-alert__body">' +
+          '<p class="wb-alert__title">' + (picked.ok ? 'Đúng' : 'Chưa đúng — đáp án: ' + esc(right.t)) + '</p>' +
+          '<p class="wb-alert__msg">' + picked.why + (picked.ok ? '' : '<br><br><b>Vì sao là ' + esc(right.t) + ':</b> ' + right.why) + '</p>' +
+        '</div>' +
+      '</div>';
+
+    if (answered.indexOf(qi) < 0) answered.push(qi);
+    scoreEl.textContent = 'Đã trả lời ' + answered.length + ' / ' + QUIZ.length;
+  });
+
+  document.getElementById('quiz-reset').addEventListener('click', renderQuiz);
+
+  renderQuiz();
+})();
+</script>
+</body>
+</html>
