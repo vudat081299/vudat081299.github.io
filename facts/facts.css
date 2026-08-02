@@ -1,0 +1,105 @@
+/* =============================================================================
+   facts.css — chrome riêng của trang Fact.
+   -----------------------------------------------------------------------------
+   Quy tắc: KHÔNG restyle component wb-*. Chỉ những mảnh mà web-builder chưa có
+   (card dạng <button>, cắt dòng, prose trong drawer). Prefix fx-* để không đụng
+   namespace wb-*, và mọi giá trị đều lấy từ token — không hex, không px tuỳ hứng.
+   ========================================================================== */
+
+/* [hidden] phải thắng display của utility. .wb-cluster/.wb-empty đặt display:flex với
+   cùng độ ưu tiên như quy tắc [hidden] mặc định của trình duyệt, nên phần tử ẩn bằng
+   thuộc tính hidden vẫn hiện. Đây là quy tắc chuẩn hoá chung, không restyle component nào. */
+[hidden] { display: none !important; }
+
+/* Hàng thao tác trên bộ lọc — cùng nhịp với --wb-block-gap, không phải margin chế ra. */
+.fx-actions { margin-bottom: var(--wb-block-gap); }
+.fx-sort { width: 200px; }
+
+/* Token bộ lọc do JS chèn: display:contents để chúng nằm thẳng trong .wb-filterbar,
+   đúng như markup gốc của filter bar, thay vì tạo thêm một hàng flex lồng. */
+.fx-tokens { display: contents; }
+
+/* ---------------------------------------------------------------------------
+   Card fact — cả card là một <button> (một điểm bấm, có bàn phím, không lồng
+   button bên trong). Reset phần trình bày mặc định của <button>, phần khung /
+   viền / bóng vẫn là .wb-card.
+   ------------------------------------------------------------------------- */
+.fx-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.fx-card > .wb-card__body { flex: 1; }
+.fx-card .wb-card__title { margin-top: 6px; }
+
+/* Số thứ tự fact — chữ nhỏ, xám, canh phải trên hàng đầu của card. */
+.fx-card__no {
+  font-size: var(--wb-text-caption);
+  color: var(--wb-fg-subtle);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Phần tóm tắt: cắt còn 5 dòng để mọi card cao đều nhau; bản đầy đủ nằm ở drawer. */
+.fx-card__text {
+  margin-top: 8px;
+  font-size: var(--wb-text-body);
+  color: var(--wb-fg-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.fx-card .wb-tags { margin-top: 12px; }
+
+/* Chân card: nguồn bên trái, gợi ý "đọc tiếp" bên phải. */
+.fx-card__src {
+  font-size: var(--wb-text-caption);
+  color: var(--wb-fg-subtle);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fx-card__more {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: var(--wb-text-caption);
+  color: var(--wb-fg-muted);
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------------------
+   Nội dung dài trong drawer.
+   ------------------------------------------------------------------------- */
+.fx-prose { max-width: var(--wb-measure); }
+.fx-prose p { margin: 0 0 12px; font-size: var(--wb-text-body); }
+.fx-prose p:last-child { margin-bottom: 0; }
+.fx-prose .fx-prose__lead { font-size: var(--wb-text-title); color: var(--wb-fg); }
+.fx-prose ul { margin: 0 0 12px; padding-left: 20px; font-size: var(--wb-text-body); }
+.fx-prose li { margin-bottom: 4px; }
+.fx-drawer-tags { margin-top: 16px; }
+.fx-drawer-pos {
+  margin: 0 auto;
+  font-size: var(--wb-text-caption);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Khung xương của rail trong lúc chờ data. */
+.fx-rail-skeleton { display: flex; flex-direction: column; gap: 14px; padding: 8px 4px; }
+
+/* Nút "Xem thêm" — cách lưới một nhịp block. */
+.fx-more { margin-top: var(--wb-block-gap); }
+
+/* Từ khoá khớp khi tìm kiếm: nền xám nhạt, không màu (không phải trạng thái). */
+.fx-hit {
+  background: var(--wb-neutral-weak);
+  border-radius: var(--wb-radius-sm);
+  padding: 0 2px;
+}

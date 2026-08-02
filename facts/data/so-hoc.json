@@ -1,0 +1,183 @@
+[
+  {
+    "id": "sh-001",
+    "cat": "so-hoc",
+    "t": "Chỉ cần 23 người trong phòng là xác suất có hai người trùng ngày sinh vượt 50%",
+    "s": "Trực giác sai vì ta nghĩ tới 'ai đó trùng với TÔI' (cần 253 người mới tới 50%), trong khi bài toán hỏi 'có bất kỳ cặp nào trùng nhau'. Với 23 người có 253 cặp. Với 70 người, xác suất vượt 99,9%.",
+    "d": "Bài học tổng quát vượt xa ngày sinh: số cặp tăng theo bình phương số phần tử. Đó là lý do trong một tập dữ liệu đủ lớn, các trùng hợp 'không thể ngẫu nhiên' xuất hiện liên tục — và là lý do vì sao dò tìm mô thức trong dữ liệu lớn mà không có giả thuyết trước sẽ luôn tìm ra thứ gì đó.",
+    "tags": ["xac-suat", "truc-giac", "du-lieu"],
+    "src": "Bài toán ngày sinh, kết quả tổ hợp cổ điển (Richard von Mises, 1939)"
+  },
+  {
+    "id": "sh-002",
+    "cat": "so-hoc",
+    "t": "Xét nghiệm chính xác 99% cho kết quả dương tính vẫn có thể chỉ đúng 9%",
+    "s": "Giả sử bệnh có tỉ lệ 1/1000, xét nghiệm bắt đúng 99% người bệnh và báo sai 1% người khoẻ. Trong 100.000 người: 100 người bệnh cho ~99 dương tính đúng, 99.900 người khoẻ cho ~999 dương tính giả. Xác suất bạn thật sự mắc bệnh khi có kết quả dương tính chỉ khoảng 9%.",
+    "d": "Đây là lý do tầm soát đại trà cho bệnh hiếm gây hại nhiều hơn lợi nếu không có bước xác nhận. Cùng phép tính này áp dụng cho hệ thống phát hiện gian lận, lọc thư rác, và mọi thuật toán 'phát hiện rủi ro': khi tỉ lệ nền thấp, đa số cảnh báo là cảnh báo giả.",
+    "tags": ["bayes", "y-te", "rui-ro"],
+    "src": "Định lý Bayes; Gigerenzer & Hoffrage, Psychological Review (1995)"
+  },
+  {
+    "id": "sh-003",
+    "cat": "so-hoc",
+    "t": "'Giảm 50% nguy cơ' có thể chỉ là giảm từ 2 phần nghìn xuống 1 phần nghìn",
+    "s": "Rủi ro tương đối nghe kêu, rủi ro tuyệt đối mới cho biết nó đáng giá bao nhiêu. Khi đọc bất kỳ tuyên bố nào về thuốc, thực phẩm hay chính sách, câu hỏi bắt buộc là: từ bao nhiêu xuống bao nhiêu? Và con số 'số người cần điều trị để có một người hưởng lợi' còn nói lên nhiều hơn nữa.",
+    "tags": ["y-te", "truyen-thong", "rui-ro"],
+    "src": "Gigerenzer et al., Psychological Science in the Public Interest (2007)"
+  },
+  {
+    "id": "sh-004",
+    "cat": "so-hoc",
+    "t": "p < 0,05 không có nghĩa là 'có 95% khả năng đúng'",
+    "s": "Giá trị p trả lời câu hỏi: nếu giả thuyết không có hiệu ứng là đúng, xác suất quan sát được dữ liệu cực đoan như thế này là bao nhiêu. Nó không nói xác suất giả thuyết của bạn đúng. Năm 2016, Hiệp hội Thống kê Hoa Kỳ phải ra tuyên bố chính thức để đính chính cách hiểu sai này.",
+    "d": "Kèm theo đó là hai bệnh phổ biến: p-hacking (thử nhiều phân tích tới khi ra p đẹp) và HARKing (đặt giả thuyết sau khi đã nhìn kết quả). Cách phòng đã thành chuẩn ở nhiều ngành: đăng ký thiết kế và phân tích trước khi thu dữ liệu.",
+    "tags": ["thong-ke", "khoa-hoc", "phan-bien"],
+    "src": "Wasserstein & Lazar, The American Statistician (2016), tuyên bố của ASA về giá trị p"
+  },
+  {
+    "id": "sh-005",
+    "cat": "so-hoc",
+    "t": "Khảo sát 1.000 người cho sai số khoảng ±3%, bất kể dân số là 5 triệu hay 100 triệu",
+    "s": "Độ chính xác của mẫu phụ thuộc vào cỡ mẫu chứ gần như không phụ thuộc vào quy mô tổng thể. Điều thật sự quyết định chất lượng khảo sát là mẫu có ngẫu nhiên không — tức mọi người đều có cơ hội được chọn — chứ không phải mẫu to bao nhiêu.",
+    "tags": ["khao-sat", "mau", "thong-ke"],
+    "src": "Lý thuyết chọn mẫu; sai số chuẩn ≈ 1/√n"
+  },
+  {
+    "id": "sh-006",
+    "cat": "so-hoc",
+    "t": "Năm 1936, một khảo sát 2,4 triệu người dự đoán sai bầu cử Mỹ; một khảo sát 50 nghìn người đoán đúng",
+    "s": "Tạp chí Literary Digest gửi phiếu qua danh sách chủ ô tô và thuê bao điện thoại — nhóm giàu hơn mức trung bình trong thời Đại khủng hoảng — và dự đoán Landon thắng. George Gallup với mẫu nhỏ nhưng đại diện hơn đã đoán đúng Roosevelt. Mẫu lệch không sửa được bằng cách tăng cỡ mẫu.",
+    "tags": ["khao-sat", "thien-lech", "lich-su"],
+    "src": "Squire, Public Opinion Quarterly (1988)"
+  },
+  {
+    "id": "sh-007",
+    "cat": "so-hoc",
+    "t": "Chữ số đầu tiên của dữ liệu thật thường là số 1, khoảng 30% số lần",
+    "s": "Định luật Benford mô tả phân bố chữ số đầu trong nhiều tập dữ liệu tự nhiên (dân số, hoá đơn, số liệu kế toán, độ dài sông): chữ số 1 xuất hiện khoảng 30,1%, chữ số 9 chỉ khoảng 4,6%. Kiểm toán viên dùng nó để đánh dấu các bộ sổ sách có dấu hiệu bịa số.",
+    "tags": ["gian-lan", "kiem-toan", "du-lieu"],
+    "src": "Simon Newcomb (1881); Frank Benford (1938); ứng dụng kiểm toán: Mark Nigrini (1999)"
+  },
+  {
+    "id": "sh-008",
+    "cat": "so-hoc",
+    "t": "Bốn tập dữ liệu có cùng trung bình, phương sai và hệ số tương quan nhưng trông hoàn toàn khác nhau",
+    "s": "Bộ tứ Anscombe (1973) là ví dụ kinh điển; phiên bản hiện đại 'Datasaurus' còn tạo được cả một con khủng long và mười hai hình khác cùng thống kê mô tả tới hai chữ số thập phân. Kết luận thực dụng: luôn vẽ dữ liệu ra trước khi tin vào các con số tóm tắt.",
+    "tags": ["du-lieu", "truc-quan", "phan-tich"],
+    "src": "Francis Anscombe, The American Statistician (1973); Matejka & Fitzmaurice, CHI (2017)"
+  },
+  {
+    "id": "sh-009",
+    "cat": "so-hoc",
+    "t": "Trung bình và trung vị nói hai câu chuyện khác nhau, và lương là ví dụ rõ nhất",
+    "s": "Khi phân phối lệch phải — thu nhập, giá nhà, doanh thu startup — vài giá trị cực lớn kéo trung bình lên cao hơn hẳn trung vị. Nếu ai đó chỉ đưa bạn con số trung bình về thu nhập hay lợi nhuận, họ đang che giấu hình dạng phân phối, dù cố ý hay không.",
+    "tags": ["thong-ke", "thu-nhap", "phan-tich"],
+    "src": "Thống kê mô tả cơ bản; xem Darrell Huff, How to Lie with Statistics (1954)"
+  },
+  {
+    "id": "sh-010",
+    "cat": "so-hoc",
+    "t": "Chuỗi sáu lần cùng mặt trong 100 lần tung đồng xu là chuyện bình thường",
+    "s": "Xác suất xuất hiện ít nhất một chuỗi dài từ 6 trở lên trong 100 lần tung công bằng vào khoảng 80%. Người bịa dãy ngẫu nhiên thường tránh các chuỗi dài, nên dãy do người viết ra lại dễ bị phát hiện là giả. Ngẫu nhiên thật trông vón cục hơn ta tưởng.",
+    "tags": ["xac-suat", "truc-giac", "ngau-nhien"],
+    "src": "Lý thuyết chuỗi (runs); xem Gilovich, Vallone & Tversky, Cognitive Psychology (1985)"
+  },
+  {
+    "id": "sh-011",
+    "cat": "so-hoc",
+    "t": "Nguỵ biện con bạc: đồng xu không nhớ nó vừa ra mặt gì",
+    "s": "Sau năm lần liên tiếp ra sấp, xác suất lần thứ sáu ra ngửa vẫn là 50%. Luật số lớn nói tỉ lệ hội tụ về 0,5 khi số lần tăng vô hạn, không nói có lực nào 'kéo về cho cân'. Cùng sai lầm này khiến người ta trung bình giá xuống với cổ phiếu đang giảm chỉ vì 'nó giảm nhiều rồi'.",
+    "tags": ["xac-suat", "thien-kien", "dau-tu"],
+    "src": "Laplace (1820); Tversky & Kahneman (1971)"
+  },
+  {
+    "id": "sh-012",
+    "cat": "so-hoc",
+    "t": "Bài toán Monty Hall: đổi cửa làm tăng cơ hội thắng từ 1/3 lên 2/3",
+    "s": "Ba cửa, một cửa có xe. Bạn chọn một cửa, người dẫn chương trình — vốn biết xe ở đâu — mở một cửa còn lại có dê. Đổi cửa thắng 2/3 số lần. Điểm mấu chốt mà hầu hết người ta bỏ qua: người dẫn có thông tin và hành động của ông ta không ngẫu nhiên, nên nó mang thêm tin tức vào bài toán.",
+    "tags": ["xac-suat", "truc-giac", "thong-tin"],
+    "src": "Selvin, The American Statistician (1975); Marilyn vos Savant, Parade (1990)"
+  },
+  {
+    "id": "sh-013",
+    "cat": "so-hoc",
+    "t": "Xác suất trúng giải đặc biệt xổ số 6/45 là 1 trên hơn 8,1 triệu",
+    "s": "Số cách chọn 6 số từ 45 là C(45,6) = 8.145.060. Mua thêm vé làm tăng cơ hội theo tỉ lệ tuyến tính rất nhỏ: mua 100 vé vẫn chỉ khoảng 1 trên 81.450. Về kỳ vọng toán học, xổ số là một loại thuế tự nguyện — điều đó không sai trái, chỉ cần biết mình đang mua cái gì.",
+    "tags": ["xac-suat", "co-bac", "ky-vong"],
+    "src": "Tổ hợp chập 6 của 45 phần tử"
+  },
+  {
+    "id": "sh-014",
+    "cat": "so-hoc",
+    "t": "Luật của những con số thật sự lớn: điều một-phần-triệu xảy ra mỗi ngày",
+    "s": "Với 100 triệu người, một sự kiện có xác suất một phần triệu mỗi ngày sẽ xảy ra khoảng 100 lần mỗi ngày ở đâu đó. Vì vậy 'trùng hợp không thể tin nổi' không phải bằng chứng của điều siêu nhiên — nó là hệ quả tất yếu của cỡ mẫu lớn.",
+    "tags": ["xac-suat", "trung-hop", "tu-duy-phan-bien"],
+    "src": "Diaconis & Mosteller, Journal of the American Statistical Association (1989)"
+  },
+  {
+    "id": "sh-015",
+    "cat": "so-hoc",
+    "t": "Nguỵ biện công tố: xác suất bằng chứng khi vô tội không phải xác suất vô tội khi có bằng chứng",
+    "s": "Trong vụ Sally Clark ở Anh, toà nghe con số '1 trên 73 triệu' cho khả năng hai đứa con cùng chết vì đột tử — con số vừa được tính sai (nhân xác suất như thể độc lập) vừa bị hiểu sai (nhầm với xác suất bà vô tội). Bà bị kết án oan và được huỷ án năm 2003.",
+    "d": "Đây là bài học sống còn về xác suất có điều kiện: P(bằng chứng | vô tội) và P(vô tội | bằng chứng) là hai đại lượng hoàn toàn khác nhau, và muốn chuyển từ cái này sang cái kia thì bắt buộc phải biết tỉ lệ nền. Hội Thống kê Hoàng gia Anh đã ra thông cáo phản đối cách dùng con số trong phiên toà này.",
+    "tags": ["bayes", "phap-ly", "sai-lam"],
+    "src": "Royal Statistical Society, thông cáo báo chí (2001); phán quyết phúc thẩm R v Clark (2003)"
+  },
+  {
+    "id": "sh-016",
+    "cat": "so-hoc",
+    "t": "Phân phối chuẩn: 68 – 95 – 99,7",
+    "s": "Trong phân phối chuẩn, khoảng 68% giá trị nằm trong một độ lệch chuẩn quanh trung bình, 95% trong hai và 99,7% trong ba. Đây là bộ số nên thuộc lòng — nhưng cũng nên nhớ rằng thu nhập, quy mô công ty, thiệt hại thiên tai và giá tài sản KHÔNG phân phối chuẩn.",
+    "tags": ["thong-ke", "phan-phoi", "rui-ro"],
+    "src": "Quy tắc thực nghiệm cho phân phối Gauss"
+  },
+  {
+    "id": "sh-017",
+    "cat": "so-hoc",
+    "t": "Nhiều hiện tượng quan trọng nhất theo luật luỹ thừa, không theo hình chuông",
+    "s": "Dân số thành phố, tần suất từ trong ngôn ngữ, quy mô động đất, thu nhập, số người theo dõi trên mạng — tất cả đều có đuôi dày: các giá trị cực đoan hiếm nhưng lớn đến mức chi phối tổng thể. Trong thế giới đuôi dày, 'trung bình' gần như vô nghĩa và một quan sát có thể lớn hơn tất cả phần còn lại cộng lại.",
+    "tags": ["phan-phoi", "rui-ro", "du-lieu"],
+    "src": "Định luật Zipf (1949); Clauset, Shalizi & Newman, SIAM Review (2009)"
+  },
+  {
+    "id": "sh-018",
+    "cat": "so-hoc",
+    "t": "Trung bình theo thời gian khác trung bình theo tập hợp — và bạn sống theo cái thứ nhất",
+    "s": "Một canh bạc có kỳ vọng dương cho cả đám đông vẫn có thể dẫn tới phá sản gần như chắc chắn cho một cá nhân chơi lặp lại, nếu mỗi lần thua ăn vào vốn. Đây là lý do quản trị rủi ro cá nhân phải ưu tiên 'không bị loại khỏi cuộc chơi' trước khi tối ưu lợi suất kỳ vọng.",
+    "d": "Ví dụ dễ hình dung: tung đồng xu, thắng thì tài sản tăng 50%, thua thì giảm 40%. Kỳ vọng mỗi lượt là +5%, nghe rất hời. Nhưng một lần thắng rồi một lần thua cho ra 1,5 × 0,6 = 0,9 — chơi lâu thì tài sản của một người co lại dần, dù trung bình của cả đám đông vẫn tăng.",
+    "tags": ["rui-ro", "dau-tu", "ergodic"],
+    "src": "Ole Peters, Nature Physics (2019)"
+  },
+  {
+    "id": "sh-019",
+    "cat": "so-hoc",
+    "t": "Độ nhạy và độ đặc hiệu không đủ để hiểu một xét nghiệm — phải biết cả tỉ lệ nền",
+    "s": "Độ nhạy trả lời 'trong số người mắc bệnh, xét nghiệm bắt được bao nhiêu phần trăm'. Giá trị dự báo dương tính trả lời 'trong số người có kết quả dương, bao nhiêu phần trăm thật sự mắc'. Câu thứ hai mới là câu bạn quan tâm, và nó thay đổi hoàn toàn theo mức phổ biến của bệnh trong nhóm được xét nghiệm.",
+    "tags": ["y-te", "bayes", "xet-nghiem"],
+    "src": "Dịch tễ học cơ bản; Gigerenzer, Reckoning with Risk (2002)"
+  },
+  {
+    "id": "sh-020",
+    "cat": "so-hoc",
+    "t": "Cách đặt câu hỏi khảo sát quyết định câu trả lời",
+    "s": "Người Mỹ ủng hộ 'giúp đỡ người nghèo' nhiều hơn hẳn 'phúc lợi xã hội', dù nội dung tương tự. Thay đổi thứ tự lựa chọn, thêm một từ mang sắc thái, hay đặt câu hỏi sau một câu hỏi gợi ý đều làm dịch chuyển kết quả vài chục phần trăm. Khi đọc bất kỳ khảo sát nào, hãy tìm bản gốc câu hỏi trước khi tin con số.",
+    "tags": ["khao-sat", "ngon-tu", "thien-lech"],
+    "src": "Schuman & Presser, Questions and Answers in Attitude Surveys (1981); Rasinski, Public Opinion Quarterly (1989)"
+  },
+  {
+    "id": "sh-021",
+    "cat": "so-hoc",
+    "t": "Dữ liệu thiếu thường mang nhiều thông tin hơn dữ liệu có",
+    "s": "Khách hài lòng ít khi viết đánh giá; dự án thất bại ít khi được viết case study; bệnh nhân bỏ giữa chừng ít khi có mặt trong kết quả cuối. Trước khi phân tích bất kỳ tập dữ liệu nào, câu hỏi đầu tiên nên là: ai đã bị loại khỏi bảng này, và họ khác những người còn lại ở điểm nào?",
+    "tags": ["du-lieu", "thien-lech", "phan-tich"],
+    "src": "Nguyên lý thiên lệch chọn mẫu và mất mẫu; xem Rothman, Modern Epidemiology"
+  },
+  {
+    "id": "sh-022",
+    "cat": "so-hoc",
+    "t": "Với dữ liệu đủ lớn, mọi khác biệt đều có ý nghĩa thống kê — kể cả khác biệt vô nghĩa",
+    "s": "Ý nghĩa thống kê chỉ nói hiệu ứng khác 0; nó không nói hiệu ứng đủ lớn để bạn quan tâm. Với một triệu người dùng, chênh lệch tỉ lệ nhấp 0,01% có thể cho p rất nhỏ mà chẳng đáng làm gì. Luôn hỏi thêm: độ lớn hiệu ứng là bao nhiêu, và khoảng tin cậy rộng cỡ nào?",
+    "tags": ["thong-ke", "ab-testing", "san-pham"],
+    "src": "Jacob Cohen, Statistical Power Analysis (1988); Sullivan & Feinn, Journal of Graduate Medical Education (2012)"
+  }
+]

@@ -1,0 +1,177 @@
+<!doctype html>
+<!-- =============================================================================
+     Fact — thư viện fact cho người trưởng thành
+     -----------------------------------------------------------------------------
+     Built from web-builder v0.6. Frame copied from assets/templates/list.html
+     (records list: filter bar → the list → paging), with the table swapped for a
+     card grid because each record is a paragraph, not a row of columns.
+     Data lives in data/*.json — see README.md for the weekly-add workflow.
+     ========================================================================== -->
+<html lang="vi" class="wb-scrollbars">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Fact · thư viện fact cho người trưởng thành</title>
+<meta name="description" content="Thư viện fact đã kiểm chứng về vũ trụ, con người, tâm lý, tư duy, kinh tế, kinh doanh và giao tiếp — lọc theo chủ đề, đọc chi tiết trong drawer." />
+<link rel="stylesheet" href="../web-builder/web-builder.css" />
+<link rel="stylesheet" href="facts.css" />
+<script>
+  /* Theme before first paint, so a dark user never sees a white flash. */
+  try {
+    var t = localStorage.getItem('theme');
+    if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches))
+      document.documentElement.classList.add('dark');
+  } catch (e) {}
+</script>
+</head>
+<body class="wb-app">
+
+<div class="wb-shell">
+
+  <!-- ============================== TOP BAR ================================ -->
+  <header class="wb-navbar wb-navbar--sticky wb-navbar--glass">
+    <button class="wb-btn wb-btn--ghost wb-btn--icon wb-shell__side-toggle" data-side-toggle
+            aria-label="Mở danh mục chủ đề"><span class="wb-ico">menu</span></button>
+    <a class="wb-navbar__brand" href="index.html"><span class="wb-navbar__mark">F</span> Fact</a>
+    <span class="wb-navbar__spacer"></span>
+    <div class="wb-navbar__actions">
+      <button class="wb-btn wb-btn--ghost wb-btn--icon" data-random aria-label="Mở một fact ngẫu nhiên" title="Fact ngẫu nhiên">
+        <span class="wb-ico">casino</span>
+      </button>
+      <button class="wb-btn wb-btn--ghost wb-btn--icon" data-focus-search aria-label="Tìm fact" title="Tìm (phím /)">
+        <span class="wb-ico">search</span>
+      </button>
+      <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" aria-label="Đổi giao diện sáng/tối" title="Sáng / Tối">
+        <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
+        <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="wb-shell__body">
+
+    <!-- ================================ RAIL ================================ -->
+    <aside class="wb-shell__side wb-scrollbars">
+      <nav class="wb-sidenav" data-cats aria-label="Chủ đề">
+        <!-- các mục do app.js dựng từ data/manifest.json -->
+        <div class="wb-sidenav__section">Chủ đề</div>
+        <div class="fx-rail-skeleton">
+          <div class="wb-skeleton wb-skeleton--text"></div>
+          <div class="wb-skeleton wb-skeleton--text"></div>
+          <div class="wb-skeleton wb-skeleton--text"></div>
+          <div class="wb-skeleton wb-skeleton--text"></div>
+          <div class="wb-skeleton wb-skeleton--text"></div>
+        </div>
+      </nav>
+    </aside>
+
+    <div class="wb-shell__main">
+      <!-- ============================== CONTENT ============================= -->
+      <main class="wb-container wb-container--wide wb-container--pad">
+
+        <div class="wb-page-head">
+          <p class="wb-eyebrow">Thư viện fact</p>
+          <h1 data-page-title>Tất cả fact</h1>
+          <p data-page-desc>Fact cho người trưởng thành: vũ trụ, sinh vật, cơ thể, tâm lý, tư duy, kinh tế,
+            kinh doanh, giao tiếp. Mỗi fact đều ghi nguồn — đọc để sắc hơn khi nghĩ, khi nói và khi làm ăn.</p>
+        </div>
+
+        <!-- Hàng thao tác của trang: sắp xếp + xáo trộn. -->
+        <div class="wb-cluster wb-cluster--end fx-actions">
+          <span class="wb-select-wrap fx-sort">
+            <select class="wb-select" data-sort aria-label="Sắp xếp">
+              <option value="new">Mới thêm trước</option>
+              <option value="az">Tiêu đề A → Z</option>
+              <option value="long">Fact dài trước</option>
+              <option value="rand">Ngẫu nhiên</option>
+            </select>
+            <span class="wb-ico">expand_more</span>
+          </span>
+          <button class="wb-btn wb-btn--outline wb-btn--sm" data-random>
+            <span class="wb-ico wb-ico--sm">casino</span> Fact ngẫu nhiên
+          </button>
+        </div>
+
+        <!-- 1 · BỘ LỌC — tìm kiếm + token gỡ được. Token ở đây là phân loại
+             (chủ đề / nhãn), không phải trạng thái ⇒ giữ xám (§1 colour ladder). -->
+        <section class="wb-section wb-section--flush">
+          <div class="wb-filterbar">
+            <div class="wb-input-group wb-filterbar__search">
+              <span class="wb-input-group__addon"><span class="wb-ico wb-ico--sm">search</span></span>
+              <input class="wb-input" type="search" data-search placeholder="Tìm trong fact, nhãn, nguồn…"
+                     aria-label="Tìm fact" autocomplete="off" />
+            </div>
+            <span class="wb-cluster wb-cluster--tight fx-tokens" data-tokens></span>
+            <span class="wb-filterbar__count" data-count>Đang tải…</span>
+          </div>
+        </section>
+
+        <!-- 2 · DANH SÁCH — mỗi fact một card; card dài mở drawer chi tiết. -->
+        <section class="wb-section wb-section--flush">
+          <div class="wb-grid wb-grid--auto fx-grid" data-grid style="--wb-grid-min:320px"></div>
+
+          <div class="wb-empty" data-empty hidden>
+            <div class="wb-empty__icon">🔍</div>
+            <p class="wb-empty__title">Không có fact nào khớp</p>
+            <p class="wb-empty__msg">Thử bỏ bớt bộ lọc, hoặc tìm bằng một từ khoá ngắn hơn.</p>
+            <button class="wb-btn wb-btn--secondary wb-btn--sm" data-clear>Xoá bộ lọc</button>
+          </div>
+
+          <div class="wb-cluster wb-cluster--center fx-more" data-more-wrap hidden>
+            <button class="wb-btn wb-btn--secondary" data-more>Xem thêm</button>
+          </div>
+        </section>
+
+      </main>
+
+      <footer class="wb-footer wb-footer--slim">
+        <div class="wb-footer__inner">
+          <div class="wb-footer__bottom">
+            <span class="wb-footer__copy">
+              Fact · <span data-total>0</span> fact đã kiểm chứng · cập nhật <span data-updated>—</span>
+            </span>
+            <span class="wb-footer__copy"><a href="../index.html">← Collection</a></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+</div>
+
+<!-- ============================ DRAWER CHI TIẾT ============================= -->
+<div class="wb-overlay" id="fact-detail">
+  <aside class="wb-drawer" role="dialog" aria-modal="true" aria-labelledby="fact-detail-title">
+    <div class="wb-drawer__head">
+      <div>
+        <span class="wb-cap" data-d-cat>—</span>
+        <h2 class="wb-drawer__title" id="fact-detail-title" data-d-title>—</h2>
+      </div>
+      <button class="wb-close" data-modal-close aria-label="Đóng"></button>
+    </div>
+    <div class="wb-drawer__body">
+      <div class="fx-prose" data-d-body></div>
+      <div class="wb-tags fx-drawer-tags" data-d-tags></div>
+      <hr class="wb-divider wb-divider--dashed" />
+      <p class="wb-help" data-d-src></p>
+    </div>
+    <div class="wb-drawer__foot">
+      <button class="wb-btn wb-btn--ghost wb-btn--sm" data-d-prev>
+        <span class="wb-ico wb-ico--sm">chevron_left</span> Trước
+      </button>
+      <span class="wb-cell-muted fx-drawer-pos" data-d-pos></span>
+      <button class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm" data-d-copy
+              aria-label="Sao chép link tới fact này" title="Sao chép link">
+        <span class="wb-ico wb-ico--sm">link</span>
+      </button>
+      <button class="wb-btn wb-btn--ghost wb-btn--sm" data-d-next>
+        Sau <span class="wb-ico wb-ico--sm">chevron_right</span>
+      </button>
+    </div>
+  </aside>
+</div>
+
+<div class="wb-toaster" data-toaster></div>
+
+<script src="app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+[
+  {
+    "id": "ls-001",
+    "cat": "lich-su",
+    "t": "Cleopatra sống gần thời điện thoại thông minh hơn là gần thời kim tự tháp Giza",
+    "s": "Kim tự tháp lớn ở Giza hoàn thành khoảng năm 2560 trước Công nguyên; Cleopatra mất năm 30 trước Công nguyên; iPhone ra mắt năm 2007. Khoảng cách từ bà tới kim tự tháp là khoảng 2.500 năm, còn tới chúng ta chỉ khoảng 2.050 năm.",
+    "tags": ["ai-cap", "thang-thoi-gian", "truc-giac"],
+    "src": "Niên đại Ai Cập cổ đại chuẩn (Shaw, The Oxford History of Ancient Egypt)"
+  },
+  {
+    "id": "ls-002",
+    "cat": "lich-su",
+    "t": "Đại học Oxford đã dạy học trước khi thành phố Tenochtitlan của người Aztec được lập",
+    "s": "Có bằng chứng về việc giảng dạy tại Oxford từ năm 1096; Tenochtitlan được thành lập năm 1325. Trực giác của chúng ta về 'cổ xưa' thường sai vì ta xếp mọi nền văn minh xa lạ vào cùng một ngăn quá khứ mơ hồ.",
+    "tags": ["giao-duc", "thang-thoi-gian", "aztec"],
+    "src": "University of Oxford, lịch sử chính thức; biên niên sử Mexica"
+  },
+  {
+    "id": "ls-003",
+    "cat": "lich-su",
+    "t": "Máy fax được cấp bằng sáng chế trước cả Nội chiến Hoa Kỳ",
+    "s": "Alexander Bain nhận bằng sáng chế cho thiết bị truyền hình ảnh qua dây năm 1843, gần hai thập kỷ trước năm 1861. Công nghệ hiếm khi xuất hiện theo đúng thứ tự mà trực giác chúng ta sắp xếp.",
+    "tags": ["phat-minh", "thang-thoi-gian", "truyen-thong"],
+    "src": "Bằng sáng chế Anh số 9745 (1843), Alexander Bain"
+  },
+  {
+    "id": "ls-004",
+    "cat": "lich-su",
+    "t": "Cuộc chiến ngắn nhất lịch sử kéo dài khoảng 38 phút",
+    "s": "Chiến tranh Anh – Zanzibar ngày 27/8/1896 kết thúc sau khoảng 38 đến 45 phút pháo kích. Cùng lúc đó, Chiến tranh Trăm Năm giữa Anh và Pháp thực tế kéo dài 116 năm (1337–1453) — hai cái tên đều là ví dụ về việc nhãn dán lịch sử hiếm khi chính xác.",
+    "tags": ["chien-tranh", "ky-luc", "ten-goi"],
+    "src": "Guinness World Records; hồ sơ Hải quân Hoàng gia Anh"
+  },
+  {
+    "id": "ls-005",
+    "cat": "lich-su",
+    "t": "Bê tông La Mã tự lành vết nứt, và cơ chế mới được giải mã năm 2023",
+    "s": "Các cục vôi trắng nhỏ trong bê tông La Mã từng bị coi là dấu hiệu trộn ẩu. Nghiên cứu ở MIT cho thấy chúng là kết quả của kỹ thuật trộn nóng: khi nước thấm vào vết nứt, vôi phản ứng và kết tinh lại, tự bịt vết nứt. Đó là lý do đê chắn sóng La Mã vẫn đứng sau 2.000 năm ngâm nước biển.",
+    "tags": ["la-ma", "vat-lieu", "khoa-hoc"],
+    "src": "Seymour, Maragh, Sabatini, Di Tommaso, Weaver & Masic, Science Advances (2023)"
+  },
+  {
+    "id": "ls-006",
+    "cat": "lich-su",
+    "t": "Người xây kim tự tháp Giza là thợ được trả công, không phải nô lệ",
+    "s": "Khai quật làng thợ cạnh kim tự tháp tìm thấy nhà ở, lò bánh mì, xưởng bia, khẩu phần thịt bò đều đặn và cả nghĩa trang có mộ được xây tử tế — không phù hợp với lao động nô lệ. Hình ảnh nô lệ kéo đá phần lớn đến từ Herodotus và điện ảnh Hollywood.",
+    "tags": ["ai-cap", "khao-co", "huyen-thoai"],
+    "src": "Mark Lehner & Zahi Hawass, khai quật Giza Plateau Mapping Project"
+  },
+  {
+    "id": "ls-007",
+    "cat": "lich-su",
+    "t": "Napoleon cao khoảng 1,68 m — mức trung bình của thời ông",
+    "s": "Số đo 5 foot 2 được ghi bằng đơn vị pouce của Pháp, dài hơn inch Anh, quy ra khoảng 1,68 m. Huyền thoại 'Napoleon lùn' phần lớn do tuyên truyền của báo chí Anh và do ông thường đứng cạnh lính cận vệ được tuyển theo tiêu chuẩn cao.",
+    "tags": ["napoleon", "huyen-thoai", "do-luong"],
+    "src": "Hồ sơ khám nghiệm tử thi năm 1821; nghiên cứu đơn vị đo lường Pháp trước cách mạng"
+  },
+  {
+    "id": "ls-008",
+    "cat": "lich-su",
+    "t": "Người Viking không đội mũ có sừng",
+    "s": "Không có mũ sừng nào được tìm thấy trong các di chỉ Viking. Hình ảnh này phổ biến từ thiết kế trang phục cho vở opera của Wagner năm 1876 và các hoạ sĩ lãng mạn thế kỷ 19. Một hình ảnh sai lặp lại đủ lâu sẽ mạnh hơn bằng chứng khảo cổ.",
+    "tags": ["viking", "huyen-thoai", "khao-co"],
+    "src": "Bảo tàng Quốc gia Đan Mạch; Frank, International Scandinavian and Medieval Studies (2000)"
+  },
+  {
+    "id": "ls-009",
+    "cat": "lich-su",
+    "t": "Bác sĩ đầu tiên yêu cầu rửa tay bị đồng nghiệp tẩy chay và chết trong nhà thương điên",
+    "s": "Năm 1847, Ignaz Semmelweis chứng minh việc rửa tay bằng dung dịch clo làm tỉ lệ tử vong do sốt hậu sản giảm mạnh. Vì chưa có lý thuyết vi khuẩn để giải thích, giới y khoa bác bỏ ông. Ông mất năm 1865 trong một trại tâm thần, khoảng hai thập kỷ trước khi Pasteur và Lister chứng minh ông đúng.",
+    "d": "Bài học không phải 'người đi trước thời đại luôn đúng' — đa số người bị bác bỏ thì bị bác bỏ vì họ sai. Bài học là: một kết quả thực nghiệm mạnh mà thiếu cơ chế giải thích sẽ bị chống lại rất lâu, và cái giá của độ trễ đó được trả bằng mạng người.",
+    "tags": ["y-hoc", "khoa-hoc", "khang-cu"],
+    "src": "Semmelweis, Die Ätiologie… des Kindbettfiebers (1861); Nuland, The Doctors' Plague (2003)"
+  },
+  {
+    "id": "ls-010",
+    "cat": "lich-su",
+    "t": "Bức tường Berlin sụp đổ một phần vì một câu trả lời họp báo sai",
+    "s": "Ngày 9/11/1989, phát ngôn viên Günter Schabowski công bố quy định đi lại mới mà chưa đọc kỹ ghi chú; khi phóng viên hỏi khi nào có hiệu lực, ông đáp 'ngay lập tức, không chậm trễ'. Truyền hình phát đi, hàng chục nghìn người kéo tới các chốt kiểm soát, và lính biên phòng không có lệnh nào để ngăn họ.",
+    "tags": ["berlin", "truyen-thong", "su-kien"],
+    "src": "Tư liệu họp báo 9/11/1989; Mary Elise Sarotte, The Collapse (2014)"
+  },
+  {
+    "id": "ls-011",
+    "cat": "lich-su",
+    "t": "Nokia khởi đầu là nhà máy giấy, Nintendo khởi đầu là hãng làm bài lá",
+    "s": "Nokia thành lập năm 1865 bên một dòng sông ở Phần Lan; Nintendo ra đời năm 1889 tại Kyoto để sản xuất bài hanafuda. Rất ít công ty trăm tuổi còn làm đúng thứ họ khởi nghiệp — điều đó nói rằng năng lực tổ chức chuyển đổi được, còn sản phẩm thì không sống mãi.",
+    "tags": ["doanh-nghiep", "chuyen-doi", "lich-su"],
+    "src": "Hồ sơ lịch sử doanh nghiệp của Nokia và Nintendo"
+  },
+  {
+    "id": "ls-012",
+    "cat": "lich-su",
+    "t": "Chiến thắng Bạch Đằng năm 938 dùng thuỷ triều làm vũ khí",
+    "s": "Ngô Quyền cho đóng cọc gỗ bịt sắt xuống lòng sông, nhử thuyền Nam Hán vào lúc triều lên rồi phản công khi triều rút, khiến thuyền địch mắc cọc và vỡ. Chiến thuật này được lặp lại thành công trên cùng dòng sông năm 1288 dưới thời Trần Hưng Đạo.",
+    "tags": ["viet-nam", "quan-su", "bach-dang"],
+    "src": "Đại Việt sử ký toàn thư; khảo cổ bãi cọc Cao Quỳ – Hải Phòng (2019–2020)"
+  },
+  {
+    "id": "ls-013",
+    "cat": "lich-su",
+    "t": "Bộ luật Hồng Đức cho phụ nữ quyền thừa kế và quyền ly hôn trong một số trường hợp",
+    "s": "Quốc triều hình luật thời Lê Thánh Tông (thế kỷ 15) có các điều khoản công nhận con gái được chia gia sản, vợ được giữ tài sản riêng mang về nhà chồng, và được bỏ chồng nếu chồng bỏ bê nghĩa vụ trong thời hạn nhất định — những quy định hiếm gặp ở Đông Á đương thời.",
+    "tags": ["viet-nam", "phap-luat", "phu-nu"],
+    "src": "Quốc triều hình luật (Luật Hồng Đức); Insun Yu, Law and Society in Seventeenth and Eighteenth Century Vietnam"
+  },
+  {
+    "id": "ls-014",
+    "cat": "lich-su",
+    "t": "Nạn đói năm Ất Dậu 1945 làm khoảng một đến hai triệu người chết",
+    "s": "Nguyên nhân chồng chất: chính sách trưng thu và ép trồng đay của Nhật – Pháp, thiên tai mất mùa ở đồng bằng Bắc Bộ, và việc vận chuyển gạo từ Nam ra Bắc bị cắt đứt do chiến tranh. Đây là một trong những thảm hoạ nhân đạo lớn nhất lịch sử Việt Nam hiện đại.",
+    "tags": ["viet-nam", "nan-doi", "the-chien"],
+    "src": "Văn Tạo & Furuta Motoo, Nạn đói năm 1945 ở Việt Nam (1995)"
+  },
+  {
+    "id": "ls-015",
+    "cat": "lich-su",
+    "t": "Kỳ thi Nho học cuối cùng ở Việt Nam diễn ra năm 1919",
+    "s": "Chế độ khoa cử kéo dài gần 900 năm kể từ khoa thi đầu tiên năm 1075 chấm dứt tại trường thi Huế. Chữ Quốc ngữ — vốn do các giáo sĩ phương Tây tạo ra từ thế kỷ 17 để phiên âm tiếng Việt — chỉ trở thành chữ viết phổ thông của cả nước trong vài thập kỷ sau đó.",
+    "tags": ["viet-nam", "giao-duc", "chu-viet"],
+    "src": "Đại Nam thực lục; nghiên cứu về khoa cử Việt Nam của Nguyễn Thị Chân Quỳnh"
+  },
+  {
+    "id": "ls-016",
+    "cat": "lich-su",
+    "t": "Cơn sốt hoa tulip nổi tiếng nhỏ hơn nhiều so với huyền thoại về nó",
+    "s": "Câu chuyện cả nước Hà Lan phá sản vì tulip năm 1637 chủ yếu đến từ các sách châm biếm đương thời và một cuốn sách phổ thông thế kỷ 19. Nghiên cứu hồ sơ lưu trữ của Anne Goldgar cho thấy số người tham gia thực sự khá nhỏ, tập trung ở giới thương nhân giàu, và không có làn sóng phá sản hàng loạt.",
+    "d": "Điều này đáng nhớ mỗi khi ai đó dùng 'tulip mania' làm bằng chứng cho một lập luận về bong bóng: giai thoại được lặp lại nhiều nhất trong tài chính lại là giai thoại được kiểm chứng ít nhất. Bong bóng là hiện tượng có thật; câu chuyện tulip chỉ là minh hoạ kém.",
+    "tags": ["tai-chinh", "bong-bong", "phan-bien"],
+    "src": "Anne Goldgar, Tulipmania: Money, Honor, and Knowledge in the Dutch Golden Age (2007)"
+  },
+  {
+    "id": "ls-017",
+    "cat": "lich-su",
+    "t": "Múi giờ ra đời vì đường sắt, không vì thiên văn",
+    "s": "Trước đó mỗi thị trấn dùng giờ mặt trời địa phương, và điều đó biến lịch tàu thành cơn ác mộng. Các công ty đường sắt Bắc Mỹ áp dụng hệ múi giờ chuẩn từ năm 1883, và hội nghị quốc tế năm 1884 tại Washington chọn Greenwich làm kinh tuyến gốc.",
+    "tags": ["thoi-gian", "duong-sat", "chuan-hoa"],
+    "src": "Hội nghị Kinh tuyến Quốc tế (1884); Ian Bartky, Selling the True Time (2000)"
+  },
+  {
+    "id": "ls-018",
+    "cat": "lich-su",
+    "t": "Bệnh đậu mùa là bệnh duy nhất của loài người đã bị xoá sổ hoàn toàn",
+    "s": "WHO tuyên bố thanh toán đậu mùa năm 1980 sau chiến dịch tiêm chủng và bao vây ổ dịch toàn cầu. Căn bệnh này từng giết khoảng 300 triệu người chỉ riêng trong thế kỷ 20. Bệnh dịch tả trâu bò cũng đã bị xoá sổ năm 2011, nhưng đó là bệnh của động vật.",
+    "tags": ["y-te", "vac-xin", "toan-cau"],
+    "src": "WHO, Declaration of Global Eradication of Smallpox (1980)"
+  },
+  {
+    "id": "ls-019",
+    "cat": "lich-su",
+    "t": "Titanic có đủ xuồng cứu sinh theo luật, và luật thì đã lỗi thời",
+    "s": "Quy định của Anh khi đó tính số xuồng theo trọng tải con tàu chứ không theo số người trên tàu, và ngưỡng cao nhất dừng ở mức 10.000 tấn — trong khi Titanic nặng hơn 46.000 tấn. Tàu mang 20 xuồng, nhiều hơn mức luật yêu cầu, nhưng chỉ đủ cho khoảng một nửa số người có mặt.",
+    "tags": ["titanic", "quy-dinh", "an-toan"],
+    "src": "Báo cáo điều tra của Uỷ ban Thương mại Anh (1912)"
+  },
+  {
+    "id": "ls-020",
+    "cat": "lich-su",
+    "t": "Thư viện Alexandria không cháy rụi trong một đêm",
+    "s": "Không có ghi chép đáng tin nào về một trận hoả hoạn duy nhất huỷ diệt toàn bộ. Các sử gia hiện nay cho rằng nó suy tàn dần qua nhiều thế kỷ: cắt ngân sách, trục xuất học giả, chiến tranh và việc trung tâm tri thức chuyển sang nơi khác. Tri thức thường mất đi vì bị bỏ bê chứ không vì bị đốt.",
+    "tags": ["tri-thuc", "huyen-thoai", "co-dai"],
+    "src": "Roger Bagnall, Proceedings of the American Philosophical Society (2002)"
+  },
+  {
+    "id": "ls-021",
+    "cat": "lich-su",
+    "t": "Không thể nhìn thấy Vạn Lý Trường Thành bằng mắt thường từ vũ trụ",
+    "s": "Bức tường rất dài nhưng chỉ rộng vài mét và có màu gần giống địa hình xung quanh. Phi hành gia Trung Quốc Dương Lợi Vĩ xác nhận ông không nhìn thấy nó trong chuyến bay năm 2003. Nhiều công trình khác — như đường cao tốc, sân bay, thành phố về đêm — thì lại dễ thấy hơn nhiều.",
+    "tags": ["huyen-thoai", "vu-tru", "trung-quoc"],
+    "src": "NASA Earth Observatory; phát biểu của Dương Lợi Vĩ (2003)"
+  },
+  {
+    "id": "ls-022",
+    "cat": "lich-su",
+    "t": "Ngân hàng lâu đời nhất còn hoạt động được lập năm 1472",
+    "s": "Monte dei Paschi di Siena ở Ý bắt đầu như một tổ chức cho vay cầm đồ hỗ trợ người nghèo, và vẫn hoạt động tới nay. Nó ra đời trước khi Columbus vượt Đại Tây Dương hai mươi năm — một lời nhắc rằng các định chế tài chính có thể sống lâu hơn cả đế chế.",
+    "tags": ["ngan-hang", "the-che", "y"],
+    "src": "Hồ sơ lịch sử Banca Monte dei Paschi di Siena"
+  }
+]

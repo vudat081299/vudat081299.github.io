@@ -1,0 +1,180 @@
+[
+  {
+    "id": "ct-001",
+    "cat": "co-the",
+    "t": "Số vi khuẩn trong người bạn xấp xỉ số tế bào người, không phải gấp mười lần",
+    "s": "Con số '10 vi khuẩn trên 1 tế bào người' được lặp lại suốt nhiều thập kỷ từ một ước lượng thô năm 1972. Tính lại cẩn thận năm 2016 cho tỉ lệ khoảng 1,3 trên 1 — tức khoảng 38 nghìn tỷ vi khuẩn so với 30 nghìn tỷ tế bào người, tổng khối lượng vi khuẩn chỉ khoảng 0,2 kg.",
+    "d": "Đây là ví dụ điển hình về cách một con số chưa được kiểm chứng trở thành 'kiến thức phổ thông' chỉ nhờ được nhắc lại. Điều thú vị là bản chất câu chuyện không đổi — hệ vi sinh vẫn cực kỳ quan trọng — nhưng con số gây sốc thì sai.",
+    "tags": ["vi-sinh", "huyen-thoai", "sinh-hoc"],
+    "src": "Sender, Fuchs & Milo, PLOS Biology (2016)"
+  },
+  {
+    "id": "ct-002",
+    "cat": "co-the",
+    "t": "Não chiếm 2% khối lượng cơ thể nhưng tiêu thụ khoảng 20% năng lượng",
+    "s": "Và mức tiêu thụ đó gần như không đổi dù bạn đang giải toán hay đang xem phim — phần lớn năng lượng dùng để duy trì hoạt động nền của nơ-ron. Nghĩa là 'suy nghĩ nhiều nên mệt' chủ yếu đến từ căng thẳng và tự kiểm soát, chứ không phải từ calo mà tư duy đốt thêm.",
+    "tags": ["nao", "nang-luong", "trao-doi-chat"],
+    "src": "Raichle & Gusnard, PNAS (2002)"
+  },
+  {
+    "id": "ct-003",
+    "cat": "co-the",
+    "t": "Huyền thoại 'chúng ta chỉ dùng 10% não bộ' là sai hoàn toàn",
+    "s": "Ảnh chụp chức năng cho thấy gần như toàn bộ vùng não đều có hoạt động trong ngày, và tổn thương ở hầu như bất kỳ vùng nào cũng gây hậu quả. Nếu 90% não là dự phòng, tiến hoá đã không nuôi một cơ quan tốn năng lượng đến thế.",
+    "tags": ["nao", "huyen-thoai", "than-kinh"],
+    "src": "Beyerstein trong Mind Myths (1999); Hiệp hội Thần kinh học Hoa Kỳ"
+  },
+  {
+    "id": "ct-004",
+    "cat": "co-the",
+    "t": "Nơ-ron vỏ não bạn đang dùng gần như là những nơ-ron bạn sinh ra đã có",
+    "s": "Bằng cách đo hàm lượng carbon-14 còn sót lại từ các vụ thử hạt nhân giữa thế kỷ 20 trong ADN tế bào, nhóm nghiên cứu Thuỵ Điển xác định nơ-ron vỏ não hầu như không được thay mới. Trong khi đó tế bào ruột thay sau vài ngày và hồng cầu sau khoảng 120 ngày.",
+    "d": "Cùng phương pháp cho thấy tế bào cơ tim có thay mới nhưng rất chậm, khoảng 1% mỗi năm ở tuổi 25 và giảm dần theo tuổi — nghĩa là qua cả đời, phần lớn quả tim của bạn vẫn là quả tim ban đầu. Đây cũng là lý do tổn thương tim và não khó phục hồi hơn tổn thương da hay ruột rất nhiều.",
+    "tags": ["te-bao", "nao", "tim"],
+    "src": "Spalding et al., Cell (2005); Bergmann et al., Science (2009)"
+  },
+  {
+    "id": "ct-005",
+    "cat": "co-the",
+    "t": "Ruột có khoảng 500 triệu nơ-ron và tự vận hành được",
+    "s": "Hệ thần kinh ruột nhiều nơ-ron hơn tuỷ sống và có thể điều phối nhu động ngay cả khi bị cắt liên hệ với não — nên nó được gọi là 'bộ não thứ hai'. Khoảng 90–95% serotonin của cơ thể nằm ở ruột, nhưng đó là serotonin ngoại vi, không phải serotonin điều chỉnh tâm trạng trong não.",
+    "tags": ["ruot", "than-kinh", "tieu-hoa"],
+    "src": "John Furness, Nature Reviews Gastroenterology & Hepatology (2012)"
+  },
+  {
+    "id": "ct-006",
+    "cat": "co-the",
+    "t": "Con người là một trong những động vật chạy bền tốt nhất trên cạn",
+    "s": "Chúng ta thua gần như mọi loài về tốc độ nhưng thắng phần lớn về quãng đường trong nắng nóng, nhờ khả năng thải nhiệt bằng mồ hôi trên da trần trong khi thú bốn chân phải thở hổn hển và không thể vừa chạy vừa hạ nhiệt hiệu quả. Giả thuyết săn đuổi bền bỉ cho rằng đây là lợi thế tiến hoá đã định hình cơ thể người.",
+    "tags": ["tien-hoa", "van-dong", "the-luc"],
+    "src": "Bramble & Lieberman, Nature (2004)"
+  },
+  {
+    "id": "ct-007",
+    "cat": "co-the",
+    "t": "Nhiệt độ cơ thể 'chuẩn' 37 độ đã lỗi thời",
+    "s": "Con số này đến từ khảo sát của Carl Wunderlich năm 1851. Phân tích dữ liệu Mỹ trải dài từ thế kỷ 19 tới nay cho thấy nhiệt độ trung bình đã giảm dần và hiện quanh mức 36,6 độ, có thể do giảm viêm nhiễm mạn tính và điều kiện sống tốt hơn.",
+    "tags": ["sinh-ly", "do-luong", "y-hoc"],
+    "src": "Protsiv, Ley, Lankester, Hastie & Parsonnet, eLife (2020)"
+  },
+  {
+    "id": "ct-008",
+    "cat": "co-the",
+    "t": "Bạn thấp đi khoảng 1–2 cm sau một ngày đứng và đi lại",
+    "s": "Đĩa đệm cột sống mất nước và bị nén dưới trọng lực suốt ngày, rồi hồi phục khi bạn nằm ngủ. Đó là lý do phi hành gia cao thêm vài centimet sau thời gian dài trong môi trường vi trọng lực — và cũng là lý do nên đo chiều cao vào cùng một thời điểm trong ngày.",
+    "tags": ["cot-song", "sinh-ly", "vu-tru"],
+    "src": "NASA, nghiên cứu về thay đổi chiều cao của phi hành gia; sinh cơ học đĩa đệm"
+  },
+  {
+    "id": "ct-009",
+    "cat": "co-the",
+    "t": "Gan có thể mọc lại sau khi bị cắt bỏ phần lớn",
+    "s": "Ở người hiến gan, phần gan còn lại có thể phục hồi phần lớn khối lượng trong vài tuần đến vài tháng. Nó không mọc lại hình dạng ban đầu như thằn lằn mọc đuôi, mà tăng sinh khối lượng để bù chức năng — một khả năng gần như độc nhất trong các cơ quan nội tạng của người.",
+    "tags": ["gan", "tai-tao", "y-hoc"],
+    "src": "Michalopoulos & DeFrances, Science (1997); dữ liệu ghép gan từ người sống"
+  },
+  {
+    "id": "ct-010",
+    "cat": "co-the",
+    "t": "Đa số người trưởng thành trên thế giới không tiêu hoá được sữa tươi",
+    "s": "Khả năng tiêu hoá lactose khi trưởng thành là một đột biến khá gần đây, lan rộng cùng với chăn nuôi trong vài nghìn năm qua và phổ biến ở Bắc Âu, hiếm ở Đông Á. Nghĩa là 'không hợp sữa' là trạng thái mặc định của loài người, còn uống được sữa mới là ngoại lệ tiến hoá.",
+    "tags": ["di-truyen", "dinh-duong", "tien-hoa"],
+    "src": "Itan, Powell, Beaumont, Burger & Thomas, PLOS Computational Biology (2009)"
+  },
+  {
+    "id": "ct-011",
+    "cat": "co-the",
+    "t": "Trẻ sơ sinh có khoảng 300 xương, người lớn còn 206",
+    "s": "Nhiều xương ở trẻ tồn tại dưới dạng các mảnh sụn và xương riêng biệt, sau đó hợp nhất trong quá trình lớn lên — ví dụ xương chậu hợp từ ba phần, xương sọ khép các thóp trong hai năm đầu. Cơ thể người không chỉ lớn lên, nó còn tự lắp ráp lại.",
+    "tags": ["xuong", "phat-trien", "giai-phau"],
+    "src": "Gray's Anatomy; tài liệu giải phẫu phát triển chuẩn"
+  },
+  {
+    "id": "ct-012",
+    "cat": "co-the",
+    "t": "Vân tay của hai anh em sinh đôi cùng trứng vẫn khác nhau",
+    "s": "Vân tay hình thành trong bào thai dưới tác động của các yếu tố ngẫu nhiên như áp lực dịch ối và vị trí thai — nên dù bộ gen giống hệt, hoa tay vẫn khác. Đây là ví dụ rõ ràng rằng gen không quy định mọi chi tiết; phần lớn hình thái là kết quả của gen cộng với nhiễu ngẫu nhiên trong phát triển.",
+    "tags": ["di-truyen", "phat-trien", "sinh-doi"],
+    "src": "Jain, Prabhakar & Pankanti, Pattern Recognition (2002)"
+  },
+  {
+    "id": "ct-013",
+    "cat": "co-the",
+    "t": "Bộ gen người chỉ có khoảng 20.000 gen mã hoá protein — ít hơn nhiều loài đơn giản hơn",
+    "s": "Trước khi Dự án Bộ gen Người hoàn tất, nhiều nhà khoa học đặt cược con số 100.000. Loài bọ nước Daphnia có khoảng 31.000 gen, nhiều hơn người. Độ phức tạp của sinh vật nằm ở cách điều hoà biểu hiện gen, không nằm ở số lượng gen.",
+    "tags": ["di-truyen", "bo-gen", "sinh-hoc"],
+    "src": "International Human Genome Sequencing Consortium, Nature (2004); Colbourne et al., Science (2011)"
+  },
+  {
+    "id": "ct-014",
+    "cat": "co-the",
+    "t": "Mắt bạn có một điểm mù, và não âm thầm vá nó lại",
+    "s": "Tại chỗ dây thần kinh thị giác rời khỏi võng mạc không có tế bào cảm quang, nên mỗi mắt có một vùng hoàn toàn không thấy gì. Bạn không nhận ra vì não điền vào bằng thông tin từ mắt kia và từ nền xung quanh. Bài học rộng hơn: trải nghiệm nhìn của bạn là một bản dựng, không phải một bản ghi.",
+    "tags": ["thi-giac", "nao", "nhan-thuc"],
+    "src": "Sinh lý thị giác cơ bản; Ramachandran, Nature (1992) về hiện tượng điền đầy"
+  },
+  {
+    "id": "ct-015",
+    "cat": "co-the",
+    "t": "Cơ thể người có khoảng 37 nghìn tỷ tế bào",
+    "s": "Ước lượng chi tiết nhất tới nay được xây bằng cách cộng từng loại mô riêng biệt thay vì suy từ khối lượng trung bình. Trong đó hồng cầu chiếm phần lớn về số lượng — khoảng 84% — dù chúng rất nhỏ và không có nhân.",
+    "tags": ["te-bao", "sinh-hoc", "do-luong"],
+    "src": "Bianconi et al., Annals of Human Biology (2013)"
+  },
+  {
+    "id": "ct-016",
+    "cat": "co-the",
+    "t": "Tín hiệu thần kinh nhanh nhất đi khoảng 120 m/s, chậm nhất chỉ hơn 1 m/s",
+    "s": "Sợi thần kinh có bao myelin dẫn truyền nhanh gấp hàng chục lần sợi không myelin. Đó là lý do bạn rụt tay khỏi vật nóng trước khi cảm nhận được cái đau âm ỉ: hai loại tín hiệu chạy trên hai loại đường khác nhau và về tới não vào hai thời điểm khác nhau.",
+    "tags": ["than-kinh", "dau", "sinh-ly"],
+    "src": "Sinh lý học thần kinh chuẩn; Erlanger & Gasser, Nobel Y học 1944"
+  },
+  {
+    "id": "ct-017",
+    "cat": "co-the",
+    "t": "Dạ dày tiết acid mạnh tới mức có thể ăn mòn kim loại, và tự bảo vệ bằng một lớp nhầy thay mới liên tục",
+    "s": "Dịch vị có pH khoảng 1,5–3,5. Thành dạ dày không bị tiêu hoá nhờ lớp chất nhầy kiềm và lớp tế bào biểu mô được thay mới liên tục trong vài ngày. Khi hàng rào đó hỏng — do vi khuẩn H. pylori hoặc thuốc kháng viêm — thì loét xuất hiện.",
+    "tags": ["tieu-hoa", "da-day", "y-hoc"],
+    "src": "Sinh lý tiêu hoá chuẩn; Marshall & Warren, Nobel Y học 2005"
+  },
+  {
+    "id": "ct-018",
+    "cat": "co-the",
+    "t": "Mất 2% nước cơ thể đã đủ làm giảm hiệu suất",
+    "s": "Các nghiên cứu về mất nước cho thấy mức thiếu hụt khoảng 2% khối lượng cơ thể làm giảm sức bền thể lực rõ rệt và ảnh hưởng tới tâm trạng, sự tập trung ở mức nhẹ hơn. Điều đó không có nghĩa phải uống theo lịch — cảm giác khát ở người khoẻ mạnh là tín hiệu đủ tốt.",
+    "tags": ["nuoc", "the-luc", "nhan-thuc"],
+    "src": "Cheuvront & Kenefick, Comprehensive Physiology (2014); Wittbrodt & Millard-Stafford, MSSE (2018)"
+  },
+  {
+    "id": "ct-019",
+    "cat": "co-the",
+    "t": "Khả năng phân biệt mùi của người lớn hơn nhiều so với con số '10.000 mùi' trong sách cũ",
+    "s": "Một nghiên cứu năm 2014 ước tính người có thể phân biệt tới hàng nghìn tỷ tổ hợp mùi, thay cho con số 10.000 vốn chỉ là ước lượng thô từ năm 1927. Con số nghìn tỷ sau đó bị phê phán về phương pháp, nhưng điểm chung mà cả hai phía đồng ý là: khứu giác người tinh hơn nhiều so với danh tiếng của nó.",
+    "tags": ["khuu-giac", "giac-quan", "phan-bien"],
+    "src": "Bushdid et al., Science (2014); phản biện: Meister, eLife (2015)"
+  },
+  {
+    "id": "ct-020",
+    "cat": "co-the",
+    "t": "Xương là mô sống, liên tục bị phá đi và xây lại",
+    "s": "Tế bào huỷ xương ăn mòn mô cũ trong khi tế bào tạo xương đắp mô mới; toàn bộ bộ xương người trưởng thành được thay mới dần trong khoảng một thập kỷ. Đây là lý do chịu lực — đi bộ, nâng tạ — làm xương chắc hơn, còn nằm lâu hoặc sống trong vi trọng lực làm xương mất chất nhanh chóng.",
+    "tags": ["xuong", "van-dong", "sinh-ly"],
+    "src": "Manolagas, Endocrine Reviews (2000); nghiên cứu mất xương ở phi hành gia của NASA"
+  },
+  {
+    "id": "ct-021",
+    "cat": "co-the",
+    "t": "ADN trong một tế bào duy nhất dài khoảng hai mét khi kéo thẳng",
+    "s": "Nó vừa trong một nhân tế bào đường kính vài micromet nhờ được quấn quanh các protein histone và gấp thành nhiều bậc. Nếu nối ADN của toàn bộ tế bào trong cơ thể lại, chiều dài đủ để đi tới Mặt Trời và quay về nhiều lần.",
+    "tags": ["adn", "te-bao", "sinh-hoc"],
+    "src": "Alberts et al., Molecular Biology of the Cell"
+  },
+  {
+    "id": "ct-022",
+    "cat": "co-the",
+    "t": "Người trưởng thành mất khoảng 50–100 sợi tóc mỗi ngày và đó là bình thường",
+    "s": "Mỗi nang tóc chạy theo chu kỳ mọc – ngưng – rụng độc lập với các nang khác, nên tóc không rụng đồng loạt. Rụng nhiều hơn mức đó kéo dài, hoặc rụng theo mảng, mới là dấu hiệu cần khám — chứ vài chục sợi trên gối mỗi sáng thì không nói lên điều gì.",
+    "tags": ["toc", "sinh-ly", "y-hoc"],
+    "src": "American Academy of Dermatology, hướng dẫn về rụng tóc"
+  }
+]

@@ -1,0 +1,180 @@
+[
+  {
+    "id": "sv-001",
+    "cat": "sinh-vat",
+    "t": "Bạch tuộc có ba quả tim và máu màu xanh",
+    "s": "Hai tim bơm máu qua mang, một tim bơm đi khắp cơ thể — và quả tim thứ ba ngừng đập khi bạch tuộc bơi, đó là lý do chúng thích bò hơn bơi. Máu xanh vì dùng hemocyanin chứa đồng thay cho hemoglobin chứa sắt, hiệu quả hơn trong nước lạnh ít oxy.",
+    "tags": ["bach-tuoc", "sinh-ly", "bien"],
+    "src": "Wells, Cephalopod Physiology; Bảo tàng Lịch sử Tự nhiên"
+  },
+  {
+    "id": "sv-002",
+    "cat": "sinh-vat",
+    "t": "Gấu nước sống sót sau khi bị phơi trực tiếp ra chân không vũ trụ",
+    "s": "Trong thí nghiệm TARDIS trên vệ tinh FOTON-M3 năm 2007, một số cá thể tardigrade sống sót sau 10 ngày trong chân không kèm bức xạ tia cực tím mặt trời, và một số còn sinh sản được sau khi trở về. Chúng làm được nhờ chuyển sang trạng thái khô kiệt gần như ngừng mọi trao đổi chất.",
+    "tags": ["tardigrade", "vu-tru", "sinh-ton"],
+    "src": "Jönsson, Rabbow, Schill, Harms-Ringdahl & Rettberg, Current Biology (2008)"
+  },
+  {
+    "id": "sv-003",
+    "cat": "sinh-vat",
+    "t": "Trên Trái Đất có khoảng 20 triệu tỷ con kiến",
+    "s": "Ước tính tổng hợp từ gần 500 nghiên cứu thực địa cho con số khoảng 2 × 10^16 cá thể, với tổng sinh khối carbon vượt tổng sinh khối của toàn bộ chim và thú hoang dã cộng lại. Một nhóm côn trùng nhỏ bé lại là một trong những lực lượng sinh thái lớn nhất hành tinh.",
+    "tags": ["kien", "sinh-thai", "do-luong"],
+    "src": "Schultheiss et al., PNAS (2022)"
+  },
+  {
+    "id": "sv-004",
+    "cat": "sinh-vat",
+    "t": "Ong mật ra quyết định tập thể bằng một cơ chế rất giống bỏ phiếu",
+    "s": "Khi đàn cần tổ mới, ong trinh sát đi khảo sát và nhảy múa quảng cáo địa điểm mình tìm được; địa điểm càng tốt thì điệu nhảy càng dài, thu hút thêm trinh sát tới kiểm tra độc lập. Khi số ong ủng hộ một địa điểm đạt ngưỡng nhất định, cả đàn cất cánh.",
+    "d": "Thomas Seeley chỉ ra ba đặc điểm khiến hệ này ra quyết định tốt: mỗi trinh sát tự đi xem chứ không tin lời đồn, cường độ vận động tỉ lệ với chất lượng thật, và không có cá thể nào ra lệnh. Đó cũng gần đúng với công thức để một cuộc họp ra được quyết định tử tế.",
+    "tags": ["ong", "quyet-dinh", "tap-the"],
+    "src": "Thomas Seeley, Honeybee Democracy (2010); von Frisch, Nobel Y sinh 1973"
+  },
+  {
+    "id": "sv-005",
+    "cat": "sinh-vat",
+    "t": "Quạ nhớ mặt người và truyền lại thông tin đó cho đồng loại",
+    "s": "Nhóm nghiên cứu ở Seattle đeo mặt nạ khi bắt quạ; nhiều năm sau, quạ trong khu vực vẫn la ó và tấn công người đeo đúng chiếc mặt nạ đó — kể cả những con chưa từng bị bắt và cả những con sinh ra sau sự kiện. Đây là bằng chứng về truyền tải thông tin xã hội qua thế hệ ở loài chim.",
+    "tags": ["qua", "nhan-thuc", "hoc-tap"],
+    "src": "Marzluff, Walls, Cornell, Withey & Craig, Animal Behaviour (2010)"
+  },
+  {
+    "id": "sv-006",
+    "cat": "sinh-vat",
+    "t": "Cá heo có 'tên riêng' và gọi nhau bằng tên đó",
+    "s": "Mỗi con cá heo mũi chai phát triển một tiếng huýt đặc trưng từ nhỏ. Thí nghiệm phát lại âm thanh cho thấy cá heo phản ứng khi nghe tiếng huýt của chính mình được phát tổng hợp lại, kể cả khi đã lọc bỏ đặc trưng giọng của con phát ra — tức chúng phản ứng với thông tin danh tính, không phải với giọng quen.",
+    "tags": ["ca-heo", "ngon-ngu", "nhan-thuc"],
+    "src": "King & Janik, PNAS (2013)"
+  },
+  {
+    "id": "sv-007",
+    "cat": "sinh-vat",
+    "t": "Chuột chũi trụi lông sống 18 phút không cần oxy",
+    "s": "Khi hết oxy, loài gặm nhấm này chuyển sang chuyển hoá fructose thay glucose — cơ chế vốn chỉ thấy ở thực vật — để nuôi tim và não. Chúng cũng gần như không mắc ung thư và có tỉ lệ tử vong không tăng theo tuổi, điều cực kỳ hiếm ở động vật có vú.",
+    "tags": ["tuoi-tho", "trao-doi-chat", "ung-thu"],
+    "src": "Park et al., Science (2017); Ruby, Smith & Buffenstein, eLife (2018)"
+  },
+  {
+    "id": "sv-008",
+    "cat": "sinh-vat",
+    "t": "Cá mập Greenland có thể sống 250–500 năm",
+    "s": "Định tuổi bằng đồng vị carbon trong nhân thuỷ tinh thể mắt cho thấy con lớn nhất trong mẫu khoảng 392 tuổi, với khoảng tin cậy từ 272 đến 512 năm — động vật có xương sống thọ nhất được biết. Chúng chỉ đạt tuổi sinh sản vào khoảng 150 tuổi.",
+    "tags": ["ca-map", "tuoi-tho", "bien"],
+    "src": "Nielsen et al., Science (2016)"
+  },
+  {
+    "id": "sv-009",
+    "cat": "sinh-vat",
+    "t": "Kiến cắt lá đã làm nông nghiệp trước loài người khoảng 50 triệu năm",
+    "s": "Chúng không ăn lá mà dùng lá làm giá thể nuôi một loài nấm chỉ sống được trong tổ kiến. Kiến còn nuôi cả vi khuẩn trên mình để tiết kháng sinh diệt nấm ký sinh cạnh tranh — tức là một hệ canh tác có cả kiểm soát dịch hại sinh học.",
+    "tags": ["kien", "nam", "tien-hoa"],
+    "src": "Schultz & Brady, PNAS (2008); Currie et al., Nature (1999)"
+  },
+  {
+    "id": "sv-010",
+    "cat": "sinh-vat",
+    "t": "Chim chính là khủng long còn sống",
+    "s": "Về phân loại học, chim là một nhánh của khủng long chân thú, cùng nhóm với Velociraptor và T. rex. Nghĩa là khủng long không tuyệt chủng hoàn toàn — có khoảng 11.000 loài của chúng vẫn đang bay quanh bạn, và bạn ăn chúng vào bữa trưa.",
+    "tags": ["tien-hoa", "khung-long", "chim"],
+    "src": "Xu et al., Nature (2014); đồng thuận cổ sinh vật học hiện đại"
+  },
+  {
+    "id": "sv-011",
+    "cat": "sinh-vat",
+    "t": "Sứa Turritopsis dohrnii có thể quay ngược vòng đời về giai đoạn non",
+    "s": "Khi bị thương, đói hoặc căng thẳng, cá thể trưởng thành có thể chuyển các tế bào của mình về trạng thái polyp và bắt đầu lại — về lý thuyết là vô hạn. Trong tự nhiên chúng vẫn bị ăn thịt và nhiễm bệnh, nên 'bất tử sinh học' không có nghĩa là không chết.",
+    "tags": ["sua", "tuoi-tho", "te-bao"],
+    "src": "Piraino, Boero, Aeschbach & Schmid, Biological Bulletin (1996)"
+  },
+  {
+    "id": "sv-012",
+    "cat": "sinh-vat",
+    "t": "Cây có trao đổi carbon qua mạng nấm rễ, nhưng câu chuyện 'mạng internet của rừng' đang bị nghi ngờ",
+    "s": "Việc các cây kết nối với nhau qua sợi nấm và chuyển được carbon là có thật, đã đo bằng đồng vị đánh dấu. Nhưng tổng quan năm 2023 chỉ ra rằng những tuyên bố phổ biến — cây mẹ chủ động nuôi cây con, cây gửi tín hiệu cảnh báo cho nhau — được lặp lại trong sách báo vượt xa mức bằng chứng thực địa.",
+    "d": "Đây là bài học tốt về cách một phát hiện thú vị bị khuếch đại: mỗi lần trích dẫn lại, các dè dặt khoa học rơi rụng dần cho tới khi giả thuyết trở thành 'sự thật ai cũng biết'. Với bất kỳ khẳng định hấp dẫn nào, hãy hỏi: bằng chứng gốc nói chính xác điều gì?",
+    "tags": ["thuc-vat", "nam", "phan-bien"],
+    "src": "Simard et al., Nature (1997); Karst, Jones & Hoeksema, Nature Ecology & Evolution (2023)"
+  },
+  {
+    "id": "sv-013",
+    "cat": "sinh-vat",
+    "t": "Muỗi là loài giết nhiều người nhất hành tinh",
+    "s": "Riêng sốt rét do muỗi Anopheles truyền gây khoảng 600 nghìn ca tử vong mỗi năm, phần lớn là trẻ em châu Phi, chưa kể sốt xuất huyết, Zika và viêm não Nhật Bản. Không loài động vật nào — kể cả chính con người — gây ra số ca tử vong tương đương.",
+    "tags": ["muoi", "y-te", "rui-ro"],
+    "src": "WHO, World Malaria Report (2023)"
+  },
+  {
+    "id": "sv-014",
+    "cat": "sinh-vat",
+    "t": "Voi nhận ra chính mình trong gương",
+    "s": "Chỉ một số ít loài vượt qua bài kiểm tra dấu vết trên gương: người, tinh tinh, đười ươi, cá heo, chim ác là và voi châu Á. Voi trong thí nghiệm dùng vòi sờ vào vết sơn trên đầu mình chỉ khi nhìn thấy nó trong gương — dấu hiệu của nhận thức về bản thân.",
+    "tags": ["voi", "nhan-thuc", "y-thuc"],
+    "src": "Plotnik, de Waal & Reiss, PNAS (2006)"
+  },
+  {
+    "id": "sv-015",
+    "cat": "sinh-vat",
+    "t": "Bạch tuộc gần như mù màu nhưng nguỵ trang theo màu nền cực giỏi",
+    "s": "Mắt chúng chỉ có một loại tế bào cảm quang, về lý thuyết không phân biệt được màu. Giả thuyết được ủng hộ hiện nay: chúng suy ra màu từ hiện tượng tán sắc qua đồng tử hình chữ W và bằng cách thay đổi tiêu cự — tức 'nhìn màu' bằng một cơ chế hoàn toàn khác với mắt người.",
+    "tags": ["bach-tuoc", "thi-giac", "nguy-trang"],
+    "src": "Stubbs & Stubbs, PNAS (2016)"
+  },
+  {
+    "id": "sv-016",
+    "cat": "sinh-vat",
+    "t": "Một loài chim bay liên tục 11 ngày không nghỉ, hơn 13.000 km",
+    "s": "Cá thể dẽ mỏ thẳng đuôi vằn được gắn thẻ vệ tinh đã bay thẳng từ Alaska tới Tasmania, quãng đường khoảng 13.560 km, không hạ cánh và không ăn uống. Trước chuyến đi chúng teo bớt cả nội tạng không cần thiết để giảm khối lượng và tăng dung tích chứa mỡ.",
+    "tags": ["chim", "di-cu", "sinh-ly"],
+    "src": "Global Flyway Network / BirdLife, dữ liệu theo dõi vệ tinh (2022)"
+  },
+  {
+    "id": "sv-017",
+    "cat": "sinh-vat",
+    "t": "Ve sầu Bắc Mỹ trồi lên mặt đất theo chu kỳ 13 hoặc 17 năm — hai số nguyên tố",
+    "s": "Giả thuyết được chấp nhận rộng rãi: chu kỳ là số nguyên tố khiến động vật ăn thịt có chu kỳ 2, 3, 4 hay 6 năm rất khó đồng bộ với chúng. Đây là một trong những ví dụ đẹp nhất về toán học xuất hiện trực tiếp trong chiến lược sinh tồn.",
+    "tags": ["con-trung", "toan-hoc", "tien-hoa"],
+    "src": "Goles, Schulz & Markus, Complexity (2001); Yoshimura, The American Naturalist (1997)"
+  },
+  {
+    "id": "sv-018",
+    "cat": "sinh-vat",
+    "t": "Có loài ếch đóng băng gần như hoàn toàn qua mùa đông rồi sống lại",
+    "s": "Ếch gỗ Bắc Mỹ để tới khoảng hai phần ba lượng nước trong cơ thể đóng thành đá, tim ngừng đập, không thở — nhờ dồn glucose và urê vào tế bào làm chất chống đông tự nhiên. Mùa xuân đến, chúng tan băng và nhảy đi trong vòng vài giờ.",
+    "tags": ["ech", "sinh-ton", "sinh-ly"],
+    "src": "Storey & Storey, Journal of Comparative Physiology B (2017)"
+  },
+  {
+    "id": "sv-019",
+    "cat": "sinh-vat",
+    "t": "Tim cá voi xanh nặng khoảng 180 kg và lưỡi nặng bằng một con voi",
+    "s": "Cá voi xanh là động vật lớn nhất từng tồn tại trên Trái Đất, lớn hơn mọi loài khủng long đã biết. Mẫu tim duy nhất được bảo quản trên thế giới, tại Bảo tàng Hoàng gia Ontario, cân nặng khoảng 180 kg — và động mạch chủ của nó rộng tới mức một người có thể chui vừa.",
+    "tags": ["ca-voi", "kich-thuoc", "bien"],
+    "src": "Royal Ontario Museum, dự án bảo quản tim cá voi xanh (2017)"
+  },
+  {
+    "id": "sv-020",
+    "cat": "sinh-vat",
+    "t": "Con lười xuống đất đi vệ sinh khoảng một lần mỗi tuần — và đó là lúc nguy hiểm nhất đời nó",
+    "s": "Hơn một nửa số lười bị săn khi đang ở dưới đất. Vì sao chúng vẫn làm vậy thay vì thải từ trên cây vẫn còn tranh cãi; một giả thuyết là để duy trì quan hệ cộng sinh với loài bướm đêm sống trong bộ lông và nuôi tảo mà lười ăn được.",
+    "tags": ["luoi", "hanh-vi", "cong-sinh"],
+    "src": "Pauli, Mendoza, Steffan, Carey, Weimer & Peery, Proceedings of the Royal Society B (2014)"
+  },
+  {
+    "id": "sv-021",
+    "cat": "sinh-vat",
+    "t": "Chim cánh cụt hoàng đế lặn sâu hơn 500 mét và nín thở hơn 20 phút",
+    "s": "Kỷ lục ghi nhận được là 564 mét và hơn 27 phút. Chúng làm được nhờ lượng myoglobin trong cơ cực cao để dự trữ oxy, khả năng làm chậm nhịp tim xuống vài nhịp mỗi phút, và chấp nhận cho một số mô hoạt động trong tình trạng thiếu oxy.",
+    "tags": ["chim-canh-cut", "lan", "sinh-ly"],
+    "src": "Wienecke, Robertson, Kirkwood & Lawton, Polar Biology (2007)"
+  },
+  {
+    "id": "sv-022",
+    "cat": "sinh-vat",
+    "t": "ADN người và tinh tinh giống nhau khoảng 98,8% ở vùng so sánh được",
+    "s": "Con số này chỉ tính thay thế từng nucleotide; nếu tính cả các đoạn chèn và mất, mức khác biệt lớn hơn. Điều quan trọng hơn con số: phần lớn khác biệt nằm ở vùng điều hoà — cùng một bộ công cụ gen được bật tắt theo cách khác nhau.",
+    "tags": ["tien-hoa", "di-truyen", "linh-truong"],
+    "src": "The Chimpanzee Sequencing and Analysis Consortium, Nature (2005)"
+  }
+]

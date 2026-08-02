@@ -1,0 +1,186 @@
+[
+  {
+    "id": "sk-001",
+    "cat": "suc-khoe",
+    "t": "Thức 17–19 tiếng làm suy giảm khả năng tương đương nồng độ cồn 0,05%",
+    "s": "Trong thí nghiệm của Dawson và Reid, hiệu suất vận động và phản xạ của người thức liên tục 17 giờ tương đương người có nồng độ cồn trong máu 0,05%; sau 24 giờ thức thì tương đương khoảng 0,10%. Ở Việt Nam, lái xe với bất kỳ nồng độ cồn nào đều bị cấm — nhưng thiếu ngủ thì không ai thổi được.",
+    "tags": ["giac-ngu", "an-toan", "lai-xe"],
+    "src": "Dawson & Reid, Nature 388 (1997)"
+  },
+  {
+    "id": "sk-002",
+    "cat": "suc-khoe",
+    "t": "Ngủ bù cuối tuần không trả hết nợ ngủ trong tuần",
+    "s": "Nghiên cứu trong phòng thí nghiệm cho nhóm thiếu ngủ được ngủ thoải mái cuối tuần rồi quay lại lịch thiếu ngủ: độ nhạy insulin không phục hồi, và nhóm ngủ bù còn ăn vặt đêm nhiều hơn. Ngủ đủ đều đặn tốt hơn ngủ ít rồi ngủ bù, dù tổng số giờ bằng nhau.",
+    "tags": ["giac-ngu", "trao-doi-chat", "thoi-quen"],
+    "src": "Depner et al., Current Biology (2019)"
+  },
+  {
+    "id": "sk-003",
+    "cat": "suc-khoe",
+    "t": "Nửa lượng caffeine của ly cà phê 3 giờ chiều vẫn còn trong máu lúc 9 giờ tối",
+    "s": "Thời gian bán thải của caffeine ở người trưởng thành khoảng 5–6 giờ, và dài hơn ở người dùng thuốc tránh thai hoặc có bệnh gan. Nó không ngăn bạn ngủ theo nghĩa nằm mãi không thiếp đi, nhưng làm giảm giấc ngủ sâu — nên bạn vẫn ngủ đủ giờ mà sáng dậy thấy không lại sức.",
+    "tags": ["caffeine", "giac-ngu", "thoi-quen"],
+    "src": "Institute of Medicine, Caffeine for the Sustainment of Mental Task Performance (2001); Drake et al., JCSM (2013)"
+  },
+  {
+    "id": "sk-004",
+    "cat": "suc-khoe",
+    "t": "Rượu giúp ngủ nhanh hơn nhưng phá cấu trúc giấc ngủ",
+    "s": "Cồn rút ngắn thời gian đi vào giấc và tăng giấc ngủ sâu nửa đầu đêm, rồi gây phân mảnh và ức chế giấc ngủ REM ở nửa sau. Kết quả là ngủ đủ giờ nhưng phục hồi kém, dễ tỉnh lúc 3–4 giờ sáng và ngày hôm sau uể oải.",
+    "tags": ["ruou", "giac-ngu", "suc-khoe"],
+    "src": "Ebrahim, Shapiro, Williams & Fenwick, Alcoholism: Clinical and Experimental Research (2013)"
+  },
+  {
+    "id": "sk-005",
+    "cat": "suc-khoe",
+    "t": "Người ngủ ít mà vẫn khoẻ thật sự tồn tại, nhưng cực hiếm",
+    "s": "Đã xác định được vài đột biến gen (DEC2, ADRB1, NPSR1) khiến người mang chúng ngủ 4–6 tiếng vẫn không bị suy giảm. Tỉ lệ ước tính dưới 1% dân số. Xác suất bạn là người như vậy thấp hơn nhiều so với xác suất bạn đang thiếu ngủ mà đã quen với việc đó.",
+    "tags": ["giac-ngu", "di-truyen", "huyen-thoai"],
+    "src": "He et al., Science (2009); Shi et al., Neuron (2019)"
+  },
+  {
+    "id": "sk-006",
+    "cat": "suc-khoe",
+    "t": "Mục tiêu 10.000 bước mỗi ngày khởi đầu là một chiến dịch quảng cáo",
+    "s": "Con số này đến từ tên chiếc máy đếm bước 'manpo-kei' (máy đo vạn bước) bán ở Nhật quanh Olympic Tokyo 1964. Nghiên cứu sau này cho thấy lợi ích về tử vong tăng rõ tới khoảng 7.000–8.000 bước rồi chững lại — nghĩa là mục tiêu thực tế hơn nhiều so với con số tròn trịa kia.",
+    "tags": ["van-dong", "huyen-thoai", "muc-tieu"],
+    "src": "Lee et al., JAMA Internal Medicine (2019); Paluch et al., Lancet Public Health (2022)"
+  },
+  {
+    "id": "sk-007",
+    "cat": "suc-khoe",
+    "t": "WHO khuyến nghị 150–300 phút vận động cường độ vừa mỗi tuần",
+    "s": "Cộng thêm hai buổi tập sức mạnh cho các nhóm cơ chính. Điểm ít người biết: khuyến nghị năm 2020 đã bỏ yêu cầu 'mỗi lần ít nhất 10 phút' — mọi vận động đều được tính, kể cả đi bộ lên cầu thang vài phút.",
+    "tags": ["van-dong", "khuyen-nghi", "suc-khoe"],
+    "src": "WHO, Guidelines on Physical Activity and Sedentary Behaviour (2020)"
+  },
+  {
+    "id": "sk-008",
+    "cat": "suc-khoe",
+    "t": "Ngồi nhiều có hại, nhưng vận động đủ nhiều thì bù lại được phần lớn",
+    "s": "Phân tích gộp trên hơn một triệu người cho thấy nguy cơ tử vong tăng theo thời gian ngồi, nhưng ở nhóm vận động 60–75 phút cường độ vừa mỗi ngày thì mức tăng đó gần như biến mất. Thông điệp 'ngồi là thuốc lá mới' đúng về hướng nhưng phóng đại về mức độ.",
+    "tags": ["van-dong", "cong-so", "rui-ro"],
+    "src": "Ekelund et al., The Lancet (2016)"
+  },
+  {
+    "id": "sk-009",
+    "cat": "suc-khoe",
+    "t": "Vitamin C không ngăn được cảm lạnh ở người bình thường",
+    "s": "Tổng quan Cochrane trên hàng chục thử nghiệm kết luận: bổ sung vitamin C thường xuyên không làm giảm tỉ lệ mắc cảm lạnh ở dân số chung, chỉ rút ngắn thời gian bệnh chút ít. Ngoại lệ có ý nghĩa là nhóm chịu stress thể chất cực đoan như vận động viên marathon và binh sĩ vùng lạnh.",
+    "tags": ["vitamin", "cam-lanh", "bang-chung"],
+    "src": "Hemilä & Chalker, Cochrane Database of Systematic Reviews (2013)"
+  },
+  {
+    "id": "sk-010",
+    "cat": "suc-khoe",
+    "t": "Quy tắc 'uống 8 ly nước mỗi ngày' không có nguồn khoa học rõ ràng",
+    "s": "Truy ngược lại, khuyến nghị này có lẽ bắt nguồn từ một tài liệu Mỹ năm 1945 vốn đã ghi rõ rằng phần lớn lượng nước đó nằm trong thức ăn — vế sau bị bỏ quên. Nhu cầu nước thay đổi theo cơ địa, thời tiết và vận động; ở người khoẻ mạnh, khát là chỉ báo đủ tốt.",
+    "tags": ["nuoc", "huyen-thoai", "dinh-duong"],
+    "src": "Heinz Valtin, American Journal of Physiology (2002)"
+  },
+  {
+    "id": "sk-011",
+    "cat": "suc-khoe",
+    "t": "'Thải độc' bằng nước ép là marketing; gan và thận đã làm việc đó cả đời",
+    "s": "Chưa có thử nghiệm lâm sàng chất lượng nào chứng minh các chế độ detox thương mại loại bỏ được chất độc cụ thể nào ra khỏi cơ thể. Điều đáng lo hơn: một số liệu trình gây hạ natri máu, hạ đường huyết hoặc quá tải oxalate ở thận.",
+    "tags": ["detox", "huyen-thoai", "dinh-duong"],
+    "src": "Klein & Kiat, Journal of Human Nutrition and Dietetics (2015)"
+  },
+  {
+    "id": "sk-012",
+    "cat": "suc-khoe",
+    "t": "Giãn cơ tĩnh trước khi tập không giảm chấn thương",
+    "s": "Các tổng quan hệ thống không tìm thấy bằng chứng cho việc giãn cơ tĩnh trước vận động làm giảm chấn thương, và nó còn giảm nhẹ sức mạnh tức thời. Cái có bằng chứng là khởi động động (tăng dần cường độ, mô phỏng động tác sắp làm) và tăng tải trọng luyện tập từ từ.",
+    "tags": ["van-dong", "chan-thuong", "bang-chung"],
+    "src": "Herbert & Gabriel, BMJ (2002); Behm et al., Applied Physiology, Nutrition, and Metabolism (2016)"
+  },
+  {
+    "id": "sk-013",
+    "cat": "suc-khoe",
+    "t": "Cảm lạnh do virus, nhưng trời lạnh thật sự làm mũi bạn phòng thủ kém hơn",
+    "s": "Câu 'ra gió lạnh nên bị cảm' bị bác bỏ suốt nhiều thập kỷ vì nguyên nhân là virus. Nghiên cứu năm 2022 cho thấy khi nhiệt độ trong mũi giảm khoảng 5 độ, phản ứng miễn dịch bẩm sinh ở niêm mạc mũi suy giảm đáng kể — nghĩa là dân gian đúng một nửa, và cơ chế thì khác với điều họ nghĩ.",
+    "tags": ["mien-dich", "cam-lanh", "sac-thai"],
+    "src": "Huang et al., Journal of Allergy and Clinical Immunology (2022)"
+  },
+  {
+    "id": "sk-014",
+    "cat": "suc-khoe",
+    "t": "Kháng sinh không có tác dụng với virus, và dùng bừa tạo ra vi khuẩn kháng thuốc",
+    "s": "Cảm cúm, viêm họng do virus, phần lớn viêm phế quản cấp đều không cần kháng sinh. Ước tính năm 2019 cho thấy kháng kháng sinh liên quan tới khoảng 4,95 triệu ca tử vong toàn cầu, trong đó khoảng 1,27 triệu ca do nó trực tiếp gây ra.",
+    "tags": ["khang-sinh", "y-te", "cong-dong"],
+    "src": "Antimicrobial Resistance Collaborators, The Lancet (2022)"
+  },
+  {
+    "id": "sk-015",
+    "cat": "suc-khoe",
+    "t": "Cô đơn kéo dài là yếu tố nguy cơ tử vong ngang tầm các yếu tố nguy cơ lớn khác",
+    "s": "Phân tích gộp 148 nghiên cứu trên hơn 300 nghìn người cho thấy quan hệ xã hội mạnh gắn với khả năng sống sót cao hơn khoảng 50%, mức tác động tương đương các yếu tố nguy cơ hành vi đã được công nhận. Đầu tư vào quan hệ không phải xa xỉ phẩm của người rảnh rỗi.",
+    "tags": ["quan-he", "tuoi-tho", "tam-ly"],
+    "src": "Holt-Lunstad, Smith & Layton, PLOS Medicine (2010)"
+  },
+  {
+    "id": "sk-016",
+    "cat": "suc-khoe",
+    "t": "WHO khuyến nghị dưới 5 g muối mỗi ngày, phần lớn người ăn gấp đôi",
+    "s": "Năm gam muối tương đương khoảng một thìa cà phê gạt bằng, và đa số lượng muối không đến từ lọ muối trên bàn ăn mà từ nước mắm, nước chấm, đồ khô, mì gói và thực phẩm chế biến. Giảm muối là một trong số ít can thiệp dinh dưỡng có bằng chứng mạnh về giảm huyết áp.",
+    "tags": ["dinh-duong", "huyet-ap", "khuyen-nghi"],
+    "src": "WHO, Guideline: Sodium Intake for Adults and Children (2012)"
+  },
+  {
+    "id": "sk-017",
+    "cat": "suc-khoe",
+    "t": "BMI là công cụ cho quần thể, không phải chẩn đoán cho cá nhân",
+    "s": "Chỉ số này do Adolphe Quetelet đề xuất từ thế kỷ 19 cho mục đích thống kê dân số, và nó không phân biệt được cơ với mỡ, cũng không cho biết mỡ nằm ở đâu. Vòng eo và tỉ lệ eo trên chiều cao dự báo rủi ro chuyển hoá tốt hơn ở cấp độ cá nhân.",
+    "tags": ["do-luong", "beo-phi", "y-hoc"],
+    "src": "Ashwell, Gunn & Gibson, Obesity Reviews (2012); tuyên bố của American Medical Association (2023) về hạn chế của BMI"
+  },
+  {
+    "id": "sk-018",
+    "cat": "suc-khoe",
+    "t": "Tầm soát quá mức có thể gây hại: chẩn đoán quá mức là một rủi ro thật",
+    "s": "Sau khi Hàn Quốc mở rộng siêu âm tuyến giáp, số ca ung thư tuyến giáp được chẩn đoán tăng khoảng 15 lần trong hai thập kỷ, trong khi tỉ lệ tử vong do bệnh này gần như không đổi. Nghĩa là phần lớn ca phát hiện thêm là những khối u sẽ không bao giờ gây hại, nhưng bệnh nhân vẫn chịu phẫu thuật và uống thuốc suốt đời.",
+    "tags": ["tam-soat", "ung-thu", "y-hoc"],
+    "src": "Ahn, Kim & Welch, New England Journal of Medicine (2014)"
+  },
+  {
+    "id": "sk-019",
+    "cat": "suc-khoe",
+    "t": "Nghe tai nghe theo quy tắc 60/60 để giữ thính lực",
+    "s": "Không quá 60% âm lượng tối đa và không quá 60 phút mỗi lần. Tổn thương thính lực do tiếng ồn tích luỹ dần và không hồi phục, vì tế bào lông ở ốc tai không tái sinh ở người. WHO ước tính hơn một tỉ người trẻ có nguy cơ do thói quen nghe không an toàn.",
+    "tags": ["thinh-luc", "thoi-quen", "phong-ngua"],
+    "src": "WHO – ITU, Safe Listening Standard (2019); WHO, World Report on Hearing (2021)"
+  },
+  {
+    "id": "sk-020",
+    "cat": "suc-khoe",
+    "t": "Giấc ngủ là lúc não củng cố trí nhớ, không phải lúc não nghỉ",
+    "s": "Trong giấc ngủ, các mẫu hoạt động thần kinh của ngày hôm đó được phát lại và chuyển dần từ hải mã sang vỏ não. Học rồi ngủ cho kết quả nhớ tốt hơn học rồi thức cùng khoảng thời gian — nên thức trắng đêm ôn thi là đánh đổi tệ.",
+    "tags": ["giac-ngu", "tri-nho", "hoc-tap"],
+    "src": "Rasch & Born, Physiological Reviews (2013)"
+  },
+  {
+    "id": "sk-021",
+    "cat": "suc-khoe",
+    "t": "Ngủ trưa 10–20 phút tỉnh táo hơn ngủ trưa 45 phút",
+    "s": "Giấc ngắn giữ bạn ở giai đoạn ngủ nông nên tỉnh dậy nhanh nhẹn; ngủ dài hơn dễ rơi vào giấc sâu và gây quán tính giấc ngủ — cảm giác nặng đầu kéo dài nửa tiếng. Nếu có thể ngủ trọn một chu kỳ khoảng 90 phút thì lại ổn, còn khoảng giữa là tệ nhất.",
+    "tags": ["giac-ngu", "nang-suat", "thoi-quen"],
+    "src": "Brooks & Lack, Sleep (2006); Tietzel & Lack, Journal of Sleep Research (2002)"
+  },
+  {
+    "id": "sk-022",
+    "cat": "suc-khoe",
+    "t": "Làm ca đêm dài hạn được xếp là 'có thể gây ung thư cho người'",
+    "s": "Cơ quan Nghiên cứu Ung thư Quốc tế xếp làm việc theo ca có phá vỡ nhịp sinh học vào nhóm 2A. Điều này không có nghĩa ai làm ca đêm cũng sẽ mắc ung thư, mà có nghĩa bằng chứng đủ mạnh để coi đây là rủi ro nghề nghiệp cần được bù đắp và quản lý.",
+    "tags": ["nhip-sinh-hoc", "nghe-nghiep", "rui-ro"],
+    "src": "IARC Monographs Vol. 124 (2020)"
+  },
+  {
+    "id": "sk-023",
+    "cat": "suc-khoe",
+    "t": "Vận động có hiệu quả đáng kể với trầm cảm mức nhẹ đến vừa",
+    "s": "Tổng quan các phân tích gộp trên BMJ cho thấy hoạt động thể chất có tác dụng giảm triệu chứng trầm cảm với độ lớn hiệu ứng đáng kể so với chăm sóc thông thường. Nó không thay thế điều trị chuyên khoa cho ca nặng, nhưng là một trong số ít can thiệp vừa rẻ vừa có bằng chứng ổn.",
+    "tags": ["tram-cam", "van-dong", "tam-ly"],
+    "src": "Noetel et al., BMJ (2024); Singh et al., British Journal of Sports Medicine (2023)"
+  }
+]

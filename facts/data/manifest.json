@@ -1,0 +1,36 @@
+{
+  "updated": "02/08/2026",
+  "note": "Thêm fact hàng tuần: tạo data/weekly/<năm>-w<tuần>.json rồi thêm tên file vào cuối mảng files. File đứng sau = fact mới hơn.",
+  "categories": [
+    { "id": "tu-duy",     "icon": "lightbulb",       "label": "Tư duy & Ra quyết định", "desc": "Mô hình tư duy để nghĩ đúng hơn dưới áp lực: đảo ngược vấn đề, nghĩ bậc hai, tách tương quan khỏi nhân quả." },
+    { "id": "tam-ly",     "icon": "psychology",      "label": "Tâm lý & Thiên kiến",    "desc": "Những lối tắt mà não bạn dùng mỗi ngày — và chỗ chúng phản bội bạn trong đàm phán, mua bán, đánh giá người khác." },
+    { "id": "giao-tiep",  "icon": "forum",           "label": "Giao tiếp & Quan hệ",    "desc": "Cách người trưởng thành nói chuyện, xin lỗi, từ chối, nhờ vả và giữ quan hệ — theo dữ liệu chứ không theo cảm tính." },
+    { "id": "kinh-te",    "icon": "payments",        "label": "Kinh tế & Tiền bạc",     "desc": "Lãi kép, lạm phát, rủi ro, động cơ. Phần lớn quyết định tiền bạc sai vì hiểu sai vài khái niệm rất cơ bản." },
+    { "id": "kinh-doanh", "icon": "work",            "label": "Kinh doanh & Sự nghiệp", "desc": "Quy luật vận hành của tổ chức, dự án, tuyển dụng và đàm phán — thứ không ai dạy nhưng ai cũng phải trả giá để học." },
+    { "id": "so-hoc",     "icon": "functions",       "label": "Thống kê & Xác suất",    "desc": "Đủ để không bị con số lừa: xác suất có điều kiện, cỡ mẫu, rủi ro tương đối, và vì sao p < 0,05 không có nghĩa là đúng." },
+    { "id": "xa-hoi",     "icon": "groups",          "label": "Xã hội & Thể chế",       "desc": "Luật chơi lớn hơn cá nhân: bầu cử, luật pháp, dân số, đô thị — bối cảnh mà mọi quyết định của bạn diễn ra trong đó." },
+    { "id": "co-the",     "icon": "cardiology",      "label": "Cơ thể người",           "desc": "Bộ máy bạn đang vận hành: nó tiêu tốn gì, tự sửa được gì, và những huyền thoại phổ biến nhất về nó." },
+    { "id": "suc-khoe",   "icon": "ecg_heart",       "label": "Sức khoẻ & Giấc ngủ",    "desc": "Giấc ngủ, caffeine, vận động, tầm soát — các khuyến nghị có bằng chứng, kèm chỗ bằng chứng còn yếu." },
+    { "id": "sinh-vat",   "icon": "pets",            "label": "Sinh vật & Động vật",    "desc": "Những giải pháp mà tiến hoá đã thử trước bạn hàng trăm triệu năm — kể cả bỏ phiếu tập thể và làm nông nghiệp." },
+    { "id": "vu-tru",     "icon": "rocket_launch",   "label": "Vũ trụ & Trái Đất",      "desc": "Thang bậc thật của không gian và thời gian — liều thuốc tốt nhất cho cảm giác mọi thứ đều khẩn cấp." },
+    { "id": "cong-nghe",  "icon": "memory",          "label": "Công nghệ & Internet",   "desc": "Cách hạ tầng số thật sự hoạt động, và những chỗ hiểu sai khiến người trưởng thành mất tiền hoặc mất dữ liệu." },
+    { "id": "lich-su",    "icon": "history_edu",     "label": "Lịch sử & Văn minh",     "desc": "Mốc thời gian làm bạn hiệu chỉnh trực giác — phần lớn thứ ta tưởng là cổ xưa thì rất gần, và ngược lại." },
+    { "id": "ngon-ngu",   "icon": "translate",       "label": "Ngôn ngữ & Chữ viết",    "desc": "Công cụ chính của tư duy và giao tiếp: nó ra đời để làm gì, nó bóp méo gì, và đọc/viết thế nào cho hiệu quả." }
+  ],
+  "files": [
+    "tu-duy.json",
+    "tam-ly.json",
+    "giao-tiep.json",
+    "kinh-te.json",
+    "kinh-doanh.json",
+    "so-hoc.json",
+    "xa-hoi.json",
+    "co-the.json",
+    "suc-khoe.json",
+    "sinh-vat.json",
+    "vu-tru.json",
+    "cong-nghe.json",
+    "lich-su.json",
+    "ngon-ngu.json"
+  ]
+}

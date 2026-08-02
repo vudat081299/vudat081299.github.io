@@ -1,0 +1,180 @@
+[
+  {
+    "id": "cn-001",
+    "cat": "cong-nghe",
+    "t": "Gần như toàn bộ Internet quốc tế đi qua cáp quang dưới đáy biển, không qua vệ tinh",
+    "s": "Khoảng 99% lưu lượng dữ liệu liên lục địa chạy trong các sợi cáp ngầm dày cỡ ống nước, tổng chiều dài hơn 1,4 triệu km. 'Đám mây' là một thứ rất vật lý — và đó là lý do một chiếc neo tàu hay một trận động đất có thể làm cả khu vực chậm mạng.",
+    "tags": ["ha-tang", "internet", "cap-quang"],
+    "src": "TeleGeography, Submarine Cable Map và báo cáo thường niên"
+  },
+  {
+    "id": "cn-002",
+    "cat": "cong-nghe",
+    "t": "Chuẩn mật khẩu hiện đại: dài quan trọng hơn ký tự đặc biệt, và đừng bắt đổi định kỳ",
+    "s": "Hướng dẫn NIST 800-63B từ 2017 khuyến nghị bỏ quy tắc bắt buộc đổi mật khẩu theo lịch và bỏ yêu cầu trộn ký tự phức tạp, thay bằng mật khẩu dài, kiểm tra với danh sách mật khẩu đã lộ. Lý do: các quy tắc rườm rà khiến người dùng chọn biến thể dễ đoán và ghi ra giấy.",
+    "d": "Ba việc có giá trị nhất theo thứ tự: dùng trình quản lý mật khẩu để mỗi dịch vụ một mật khẩu khác nhau; bật xác thực hai lớp bằng ứng dụng hoặc khoá vật lý thay vì SMS; và kiểm tra email của mình trong các vụ rò rỉ dữ liệu đã biết.",
+    "tags": ["bao-mat", "mat-khau", "khuyen-nghi"],
+    "src": "NIST Special Publication 800-63B, Digital Identity Guidelines (2017, cập nhật sau đó)"
+  },
+  {
+    "id": "cn-003",
+    "cat": "cong-nghe",
+    "t": "Xác thực hai lớp qua SMS yếu hơn nhiều so với qua ứng dụng",
+    "s": "Kẻ tấn công có thể chiếm số điện thoại bằng cách lừa nhà mạng cấp lại SIM — kỹ thuật SIM swap — hoặc chặn tin nhắn qua lỗ hổng mạng báo hiệu SS7. Mã sinh trong ứng dụng hoặc khoá bảo mật vật lý không đi qua nhà mạng nên không dính các đường tấn công này.",
+    "tags": ["bao-mat", "2fa", "lua-dao"],
+    "src": "NIST SP 800-63B; cảnh báo của FBI IC3 về SIM swapping (2022)"
+  },
+  {
+    "id": "cn-004",
+    "cat": "cong-nghe",
+    "t": "Ổ khoá trên thanh địa chỉ chỉ nói kết nối được mã hoá, không nói trang web đáng tin",
+    "s": "Chứng chỉ HTTPS ngày nay được cấp miễn phí và tự động, nên phần lớn trang lừa đảo cũng có ổ khoá xanh. Nó bảo đảm không ai đọc lén được dữ liệu trên đường truyền — nó không bảo đảm bên nhận dữ liệu là người tử tế.",
+    "tags": ["bao-mat", "https", "lua-dao"],
+    "src": "Anti-Phishing Working Group, báo cáo xu hướng lừa đảo; tài liệu Let's Encrypt"
+  },
+  {
+    "id": "cn-005",
+    "cat": "cong-nghe",
+    "t": "Xoá file không xoá dữ liệu, chỉ xoá cái mục lục trỏ tới nó",
+    "s": "Cho tới khi bị ghi đè, nội dung vẫn nằm nguyên trên ổ đĩa và các công cụ khôi phục lấy lại được. Đó là lý do bán hoặc cho lại điện thoại, laptop cần xoá theo cách mã hoá toàn bộ ổ rồi khôi phục cài đặt gốc, chứ không phải chỉ kéo file vào thùng rác.",
+    "tags": ["du-lieu", "rieng-tu", "thiet-bi"],
+    "src": "NIST SP 800-88, Guidelines for Media Sanitization"
+  },
+  {
+    "id": "cn-006",
+    "cat": "cong-nghe",
+    "t": "Chế độ ẩn danh chỉ ẩn với người dùng chung máy, không ẩn với ai khác",
+    "s": "Nó không lưu lịch sử, cookie và dữ liệu điền form trên thiết bị. Nhà mạng, quản trị mạng công ty, và chính trang web bạn truy cập vẫn thấy đầy đủ. Google đã phải trả tiền dàn xếp một vụ kiện tập thể ở Mỹ vì cách diễn đạt gây hiểu nhầm về chế độ này.",
+    "tags": ["rieng-tu", "trinh-duyet", "hieu-nham"],
+    "src": "Tài liệu Chrome/Firefox về chế độ riêng tư; vụ Brown v. Google, dàn xếp 2023–2024"
+  },
+  {
+    "id": "cn-007",
+    "cat": "cong-nghe",
+    "t": "Ảnh chụp bằng điện thoại thường mang theo toạ độ GPS chính xác tới vài mét",
+    "s": "Dữ liệu EXIF nhúng trong file ghi cả thiết bị, thời điểm và vị trí. Nhiều mạng xã hội gỡ nó khi đăng, nhưng gửi file gốc qua email hay ứng dụng nhắn tin ở chế độ 'gửi file' thì không. Trước khi gửi ảnh nhà, ảnh trường học của con, nên tắt gắn thẻ vị trí hoặc xoá EXIF.",
+    "tags": ["rieng-tu", "anh", "exif"],
+    "src": "Đặc tả EXIF (JEITA CP-3451); hướng dẫn quyền riêng tư của các nhà sản xuất"
+  },
+  {
+    "id": "cn-008",
+    "cat": "cong-nghe",
+    "t": "Mã QR vẫn đọc được khi bị hỏng tới 30% diện tích",
+    "s": "Nhờ mã sửa lỗi Reed–Solomon với bốn mức, mức cao nhất phục hồi được khoảng 30% dữ liệu bị mất. Đó là lý do nhiều mã QR để logo ở giữa mà vẫn quét được — và cũng là lý do đừng quét bừa mã dán đè trên bảng thanh toán ngoài đời.",
+    "tags": ["qr", "ma-hoa", "an-toan"],
+    "src": "Tiêu chuẩn ISO/IEC 18004; tài liệu kỹ thuật Denso Wave"
+  },
+  {
+    "id": "cn-009",
+    "cat": "cong-nghe",
+    "t": "Pin lithium thọ lâu hơn nếu bạn giữ nó trong khoảng 20–80% và tránh nóng",
+    "s": "Tuổi thọ pin đo bằng chu kỳ sạc đầy, và mức căng thẳng cho pin tăng mạnh ở hai đầu dải dung lượng cũng như ở nhiệt độ cao. Sạc qua đêm tới 100% mỗi ngày, hoặc để máy trong xe nắng, làm pin chai nhanh hơn nhiều so với việc sạc nhiều lần trong ngày.",
+    "tags": ["pin", "thiet-bi", "bao-tri"],
+    "src": "Battery University (Cadex); Keil et al., Journal of The Electrochemical Society (2016)"
+  },
+  {
+    "id": "cn-010",
+    "cat": "cong-nghe",
+    "t": "Định luật Moore là một quan sát kinh doanh, không phải định luật vật lý",
+    "s": "Gordon Moore năm 1965 nhận thấy số transistor trên một chip tăng gấp đôi khoảng mỗi năm, rồi hiệu chỉnh thành hai năm. Nó tự đúng một phần vì cả ngành lấy nó làm mục tiêu lập kế hoạch. Tốc độ này đã chậm lại rõ rệt, và hiệu năng ngày nay tăng chủ yếu nhờ kiến trúc chuyên dụng chứ không nhờ thu nhỏ thuần tuý.",
+    "tags": ["chip", "lich-su", "cong-nghe"],
+    "src": "Gordon Moore, Electronics Magazine (1965); dữ liệu ITRS/IEEE về chậm lại của thu nhỏ"
+  },
+  {
+    "id": "cn-011",
+    "cat": "cong-nghe",
+    "t": "Mô hình ngôn ngữ lớn sinh chữ theo xác suất, nên nó có thể bịa rất trơn tru",
+    "s": "Nó dự đoán mảnh chữ tiếp theo dựa trên phân bố học được, không tra cứu một cơ sở dữ liệu sự thật. Vì vậy văn phong tự tin không phải chỉ báo cho độ chính xác, và những thứ dễ bịa nhất lại đúng là thứ nghe thuyết phục nhất: số liệu, trích dẫn, tên tài liệu tham khảo.",
+    "d": "Cách dùng của người trưởng thành: dùng nó để soạn, tóm tắt, đặt câu hỏi ngược, tìm góc nhìn — rồi tự kiểm chứng mọi con số, tên riêng và điều khoản pháp lý ở nguồn gốc. Chi phí kiểm tra một dữ kiện luôn thấp hơn chi phí trích dẫn nhầm một dữ kiện.",
+    "tags": ["ai", "llm", "kiem-chung"],
+    "src": "Ji et al., ACM Computing Surveys (2023), khảo sát về ảo giác trong sinh ngôn ngữ"
+  },
+  {
+    "id": "cn-012",
+    "cat": "cong-nghe",
+    "t": "Máy tính lượng tử chưa phá được mã hoá hiện nay, nhưng dữ liệu hôm nay có thể bị giải mã sau",
+    "s": "Chiến thuật 'thu hoạch bây giờ, giải mã sau' là mối lo có thật: kẻ tấn công lưu lại lưu lượng mã hoá và chờ máy tính lượng tử đủ mạnh. Tháng 8/2024, NIST công bố bộ tiêu chuẩn mã hoá hậu lượng tử đầu tiên để các hệ thống bắt đầu chuyển đổi.",
+    "tags": ["luong-tu", "ma-hoa", "bao-mat"],
+    "src": "NIST FIPS 203/204/205 (2024)"
+  },
+  {
+    "id": "cn-013",
+    "cat": "cong-nghe",
+    "t": "Sự cố Y2K không xảy ra vì người ta đã bỏ ra hàng trăm tỷ đô để sửa nó",
+    "s": "Đây là một nghịch lý kinh điển của phòng ngừa: khi công tác chuẩn bị thành công, kết quả trông y hệt như thể vấn đề chưa từng tồn tại. Riêng Mỹ ước tính chi khoảng 100 tỷ đô cho việc rà soát và sửa mã. Mọi khoản đầu tư vào an toàn và dự phòng đều chịu chung số phận bị đánh giá thấp này.",
+    "tags": ["rui-ro", "lich-su", "phong-ngua"],
+    "src": "US Department of Commerce, The Economics of Y2K (2000)"
+  },
+  {
+    "id": "cn-014",
+    "cat": "cong-nghe",
+    "t": "Đường truyền 100 Mbps cho tốc độ tải khoảng 12,5 MB/s",
+    "s": "Nhà mạng bán theo bit, phần mềm hiển thị theo byte, và một byte bằng tám bit. Ngoài ra, ổ cứng 1 TB hiện dung lượng khoảng 931 GB trong máy tính vì nhà sản xuất tính 1 TB = 1.000 tỷ byte còn hệ điều hành đếm theo bội số 1.024.",
+    "tags": ["mang", "don-vi", "hieu-nham"],
+    "src": "Tiêu chuẩn IEC 80000-13 về tiền tố nhị phân"
+  },
+  {
+    "id": "cn-015",
+    "cat": "cong-nghe",
+    "t": "Email không được mã hoá đầu cuối theo mặc định",
+    "s": "Giao thức SMTP ra đời năm 1982 khi Internet còn là mạng học thuật tin nhau. Ngày nay hầu hết chặng truyền đã có TLS, nhưng nội dung vẫn nằm dạng đọc được trên máy chủ của cả bên gửi lẫn bên nhận. Với thông tin thật sự nhạy cảm, email là kênh sai.",
+    "tags": ["email", "bao-mat", "giao-thuc"],
+    "src": "RFC 821/5321 (SMTP); RFC 8314 về TLS cho email"
+  },
+  {
+    "id": "cn-016",
+    "cat": "cong-nghe",
+    "t": "Bluetooth được đặt theo tên một vị vua Viking, và logo là hai chữ rune ghép lại",
+    "s": "Harald Blåtand — vua Đan Mạch thế kỷ 10 — nổi tiếng vì thống nhất các bộ lạc, đúng điều mà chuẩn kết nối này muốn làm với các thiết bị. Logo ghép hai chữ rune tương ứng với H và B trong tên ông.",
+    "tags": ["bluetooth", "ten-goi", "lich-su"],
+    "src": "Bluetooth SIG, tài liệu lịch sử thương hiệu"
+  },
+  {
+    "id": "cn-017",
+    "cat": "cong-nghe",
+    "t": "Wi-Fi không phải viết tắt của cái gì cả",
+    "s": "Cái tên do một công ty thương hiệu nghĩ ra năm 1999 vì 'IEEE 802.11b Direct Sequence' quá khó bán. Cụm 'Wireless Fidelity' được thêm vào sau như một khẩu hiệu và về sau bị chính liên minh Wi-Fi bỏ đi vì gây hiểu nhầm.",
+    "tags": ["wifi", "ten-goi", "thuong-hieu"],
+    "src": "Phil Belanger, đồng sáng lập Wi-Fi Alliance, phỏng vấn (2005)"
+  },
+  {
+    "id": "cn-018",
+    "cat": "cong-nghe",
+    "t": "Con 'bug' đầu tiên trong máy tính là một con bướm đêm thật",
+    "s": "Năm 1947, nhóm vận hành máy Harvard Mark II gỡ một con bướm đêm kẹt trong rơ-le và dán nó vào nhật ký kèm dòng chữ 'trường hợp đầu tiên tìm thấy bug thật'. Chính câu đùa đó cho thấy từ 'bug' theo nghĩa lỗi kỹ thuật đã được dùng từ trước — Edison đã viết như vậy từ năm 1878.",
+    "tags": ["lich-su", "phan-mem", "ngon-ngu"],
+    "src": "Nhật ký nhóm Mark II, Smithsonian National Museum of American History"
+  },
+  {
+    "id": "cn-019",
+    "cat": "cong-nghe",
+    "t": "Quy tắc sao lưu 3-2-1 vẫn là tiêu chuẩn đáng tin nhất",
+    "s": "Ba bản sao dữ liệu, trên hai loại phương tiện khác nhau, trong đó một bản đặt ở nơi khác. Đồng bộ đám mây không phải sao lưu: nếu bạn xoá nhầm hoặc bị mã độc mã hoá, thay đổi đó đồng bộ ngay sang mọi thiết bị. Sao lưu thật là bản chụp tại một thời điểm mà bạn khôi phục lại được.",
+    "tags": ["sao-luu", "du-lieu", "rui-ro"],
+    "src": "US-CERT/CISA, khuyến nghị sao lưu dữ liệu"
+  },
+  {
+    "id": "cn-020",
+    "cat": "cong-nghe",
+    "t": "Trung tâm dữ liệu tiêu thụ khoảng 1–1,5% điện năng toàn cầu",
+    "s": "Con số này giữ khá ổn định suốt thập kỷ 2010 dù lưu lượng dữ liệu tăng hàng chục lần, nhờ hiệu suất máy chủ và làm mát cải thiện nhanh. Nhưng làn sóng huấn luyện mô hình AI đang đảo chiều xu hướng đó, và IEA dự báo mức tiêu thụ tăng đáng kể trong nửa cuối thập kỷ này.",
+    "tags": ["nang-luong", "ai", "moi-truong"],
+    "src": "IEA, Electricity 2024; Masanet et al., Science (2020)"
+  },
+  {
+    "id": "cn-021",
+    "cat": "cong-nghe",
+    "t": "Phần lớn vụ xâm nhập tài khoản không dùng kỹ thuật cao — chúng dùng mật khẩu bạn đã dùng ở chỗ khác",
+    "s": "Kỹ thuật nhồi thông tin đăng nhập lấy các cặp email–mật khẩu từ những vụ rò rỉ cũ rồi thử hàng loạt trên các dịch vụ khác. Nó hiệu quả chỉ vì người ta dùng lại mật khẩu. Một mật khẩu riêng cho mỗi dịch vụ vô hiệu hoá toàn bộ nhóm tấn công này.",
+    "tags": ["bao-mat", "mat-khau", "tan-cong"],
+    "src": "Verizon Data Breach Investigations Report (các năm gần đây)"
+  },
+  {
+    "id": "cn-022",
+    "cat": "cong-nghe",
+    "t": "Định luật Cunningham: cách nhanh nhất để có câu trả lời đúng trên mạng là đăng một câu trả lời sai",
+    "s": "Người ta lười trả lời câu hỏi nhưng rất hăng sửa lỗi người khác. Ngoài giá trị hài hước, nó mô tả một cơ chế thật của tri thức tập thể: hệ thống mở cải thiện bằng cách bị phản bác, chứ không bằng cách chờ ai đó nói đúng ngay từ đầu.",
+    "tags": ["internet", "tri-thuc", "hanh-vi"],
+    "src": "Đặt theo Ward Cunningham, người tạo ra wiki; được Steven McGeady phổ biến"
+  }
+]
