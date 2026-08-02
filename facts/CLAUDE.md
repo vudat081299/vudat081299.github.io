@@ -77,7 +77,27 @@ python3 facts/tools/factlint.py near "tiêu đề + tóm tắt bạn vừa viế
 | < 0,42 | chưa có | thêm được |
 
 **Điểm số chỉ so chữ, nó không hiểu nghĩa.** Hai fact cùng một ý mà diễn đạt khác nhau sẽ
-lọt lưới (`ct-014`/`ct-101` từng lọt ở mức 0,57). Nên sau khi chạy `near`, vẫn phải:
+lọt lưới (`ct-014`/`ct-101` từng lọt ở mức 0,57).
+
+Vì vậy khi thêm một **đợt** fact, đừng chỉ xem ngưỡng 0,62 — hãy rà mọi cặp **fact mới với
+fact cũ trong cùng chủ đề từ 0,45 trở lên** rồi đọc bằng mắt. Số liệu thực tế từ hai đợt đầu:
+ở ngưỡng 0,62 lọt 8 fact trùng trong đợt giao tiếp và 12 trong đợt sức khoẻ; hạ xuống 0,45 thì
+bắt được hết. Đoạn kiểm nhanh:
+
+```bash
+python3 -c "
+import sys; sys.path.insert(0,'facts/tools')
+import factlint as F
+man,facts=F.load(); v,_,_=F.build_index(facts)
+CAT,MOC='suc-khoe',201   # đổi chủ đề và mốc id của đợt mới
+g=[k for k,f in enumerate(facts) if f['cat']==CAT]
+new=[k for k in g if int(facts[k]['id'][3:])>=MOC]; old=[k for k in g if int(facts[k]['id'][3:])<MOC]
+for s,a,b in sorted(((F.cosine(v[x],v[y]),facts[x]['id'],facts[y]['id']) for x in new for y in old),reverse=True):
+  if s>=0.45: print('%.2f %s %s'%(s,a,b))
+"
+```
+
+Ngoài ra vẫn phải:
 
 ```bash
 python3 facts/tools/factlint.py stats     # xem cụm đó đang có bao nhiêu fact
