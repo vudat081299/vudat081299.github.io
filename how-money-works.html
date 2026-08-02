@@ -92,17 +92,32 @@
 </head>
 <body>
 
-<div class="wb-navbar wb-navbar--sticky">
+<header class="wb-navbar wb-navbar--sticky wb-navbar--collapse-lg">
+  <button class="wb-navbar__toggle wb-btn wb-btn--ghost wb-btn--icon" data-navbar-toggle
+          aria-label="Mở mục lục"><span class="wb-ico">menu</span></button>
   <a class="wb-navbar__brand" href="index.html"><span class="wb-navbar__mark">₵</span> How Money Works</a>
+  <!-- The part links live in __menu, the slot that collapses. __actions is icon-only
+       by kit contract — a text button there pushes the whole page sideways on a phone.
+       Doubles as the mobile table of contents, since .hw-toc is hidden under 900px. -->
+  <nav class="wb-nav wb-navbar__menu">
+    <a class="wb-nav__link" href="#p1">1 · Tiền</a>
+    <a class="wb-nav__link" href="#p2">2 · Doanh nghiệp</a>
+    <a class="wb-nav__link" href="#p3">3 · Chính phủ</a>
+    <a class="wb-nav__link" href="#p4">4 · Cá nhân</a>
+    <a class="wb-nav__link" href="#p5">5 · Mỹ</a>
+    <a class="wb-nav__link" href="#p6">A · Anh</a>
+    <a class="wb-nav__link" href="#ket">Kết</a>
+    <span class="wb-navbar__spacer"></span>
+    <a class="wb-nav__link" href="index.html"><span class="wb-ico wb-ico--sm">arrow_back</span> Trang chủ</a>
+  </nav>
   <span class="wb-navbar__spacer"></span>
   <div class="wb-navbar__actions">
-    <a class="wb-btn wb-btn--ghost wb-btn--sm" href="index.html"><span class="wb-ico wb-ico--sm">arrow_back</span> Trang chủ</a>
     <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" id="theme-toggle" aria-label="Sáng / Tối">
       <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
       <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
     </button>
   </div>
-</div>
+</header>
 
 <main class="wb-container wb-container--wide">
 
@@ -217,6 +232,9 @@
       <a class="wb-sidenav__link" href="#s6-2">A2 · Doanh nghiệp &amp; BOE</a>
       <a class="wb-sidenav__link" href="#s6-3">A3 · Thuế &amp; NI</a>
       <a class="wb-sidenav__link" href="#s6-4">A4 · Cá nhân &amp; lương hưu</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">Kết</div>
+      <a class="wb-sidenav__link" href="#s-ket">Sáu điều mang theo</a>
     </nav>
 
     <div class="wb-stack" style="--wb-stack-gap:48px">
@@ -3750,6 +3768,14 @@
     var dark = !root.classList.contains('dark');
     root.classList.toggle('dark', dark);
     try { localStorage.setItem('hub-theme', dark ? 'dark' : 'light'); } catch (e) {}
+  });
+
+  /* ---- navbar menu: open on ☰, close after picking a part ---- */
+  var menu = document.querySelector('.wb-navbar__menu');
+  document.addEventListener('click', function (e) {
+    if (!menu) return;
+    if (e.target.closest('[data-navbar-toggle]')) menu.classList.toggle('is-open');
+    else if (e.target.closest('.wb-navbar__menu .wb-nav__link')) menu.classList.remove('is-open');
   });
 
   /* ---- TOC: highlight the section currently in view ---- */
