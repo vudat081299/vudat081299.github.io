@@ -1,0 +1,1166 @@
+[
+  {
+    "id": "sk-201",
+    "cat": "suc-khoe",
+    "sub": "giac-ngu",
+    "t": "Giờ đi ngủ đều đặn dự báo sức khoẻ tốt hơn tổng số giờ ngủ",
+    "s": "Trong các nghiên cứu theo dõi bằng thiết bị đo, độ biến động của giờ đi ngủ và giờ thức tương quan với nguy cơ tim mạch và chuyển hoá độc lập với tổng thời lượng ngủ. Nghĩa là ngủ 6 tiếng đều đặn có thể tốt hơn ngủ 8 tiếng thất thường.",
+    "tags": [
+      "deu-dan",
+      "nhip-sinh-hoc"
+    ],
+    "src": "Huang & Redline, Diabetes Care (2019); Lunsford-Avery và cộng sự, Scientific Reports (2018)"
+  },
+  {
+    "id": "sk-202",
+    "cat": "suc-khoe",
+    "sub": "giac-ngu",
+    "t": "Ngủ theo hai giai đoạn từng là chuẩn ở châu Âu trước thời đèn điện",
+    "s": "Các ghi chép lịch sử mô tả giấc ngủ đầu và giấc ngủ hai, cách nhau một khoảng thức khoảng một tiếng dùng để cầu nguyện, nói chuyện hoặc làm việc nhẹ. Diễn giải này còn được tranh luận về mức phổ quát, nhưng nó gợi ý rằng thức giữa đêm không tự động là bệnh.",
+    "tags": [
+      "lich-su",
+      "ngu-hai-giai-doan"
+    ],
+    "src": "A. Roger Ekirch, At Day's Close (2005); Ekirch, American Historical Review (2001)"
+  },
+  {
+    "id": "sk-203",
+    "cat": "suc-khoe",
+    "sub": "giac-ngu",
+    "t": "Thức giấc vài lần mỗi đêm là bình thường, kể cả ở người ngủ tốt",
+    "s": "Đo bằng điện não cho thấy người trưởng thành có nhiều lần thức ngắn mỗi đêm mà phần lớn không được ghi nhớ. Vấn đề bắt đầu khi người ta nằm lo về việc mình đang thức — nên lo lắng về giấc ngủ là nguyên nhân mất ngủ phổ biến hơn bản thân việc thức.",
+    "tags": [
+      "thuc-giac",
+      "mat-ngu"
+    ],
+    "src": "Bonnet & Arand về arousal trong giấc ngủ; Harvey, Behaviour Research and Therapy (2002)"
+  },
+  {
+    "id": "sk-204",
+    "cat": "suc-khoe",
+    "sub": "giac-ngu",
+    "t": "Nhu cầu ngủ giảm nhẹ theo tuổi, nhưng khả năng ngủ giảm nhiều hơn",
+    "s": "Người lớn tuổi thường ngủ ít hơn không phải vì cần ít hơn mà vì giấc ngủ bị phân mảnh và giai đoạn sóng chậm giảm. Nghĩa là buồn ngủ ban ngày ở người cao tuổi nên được xem là dấu hiệu cần xử lý, không phải chuyện tự nhiên của tuổi.",
+    "tags": [
+      "tuoi",
+      "giac-ngu"
+    ],
+    "src": "Mander, Winer & Walker, Neuron (2017)"
+  },
+  {
+    "id": "sk-205",
+    "cat": "suc-khoe",
+    "sub": "giac-ngu",
+    "t": "Người mất ngủ thường ngủ nhiều hơn mức họ tự đánh giá",
+    "s": "Khi so lời tự báo cáo với đo bằng điện não, người mất ngủ ước lượng thời gian ngủ thấp hơn và thời gian nằm thức cao hơn thực tế — hiện tượng gọi là nhận thức sai về giấc ngủ. Đây là lý do điều trị mất ngủ có phần nhắm vào cách diễn giải, không chỉ vào giấc ngủ.",
+    "tags": [
+      "mat-ngu",
+      "nhan-thuc"
+    ],
+    "src": "Harvey & Tang, Psychological Bulletin (2012)"
+  },
+  {
+    "id": "sk-207",
+    "cat": "suc-khoe",
+    "sub": "giac-ngu",
+    "t": "Ngủ có nhiều chu kỳ, và tỉnh dậy dễ chịu nhất là ở cuối một chu kỳ",
+    "s": "Mỗi chu kỳ dài khoảng 90 phút nhưng biến động từ khoảng 70 tới 120 phút và thay đổi trong đêm, nên các phép tính chính xác kiểu 'ngủ đúng 6 tiếng để đủ 4 chu kỳ' không đáng tin. Điều dùng được là tránh đặt báo thức vào khoảng 30–60 phút sau khi ngủ.",
+    "tags": [
+      "chu-ky",
+      "thuc-giac"
+    ],
+    "src": "Carskadon & Dement trong Principles and Practice of Sleep Medicine (2011)"
+  },
+  {
+    "id": "sk-208",
+    "cat": "suc-khoe",
+    "sub": "giac-ngu",
+    "t": "Não dọn dẹp chất thải chuyển hoá hiệu quả hơn trong lúc ngủ",
+    "s": "Hệ glymphatic — dòng dịch dọc theo mạch máu trong não — hoạt động mạnh hơn khi ngủ, giúp loại các sản phẩm chuyển hoá bao gồm amyloid beta. Cơ chế được phát hiện ở chuột và bằng chứng ở người còn đang được xây, nên đây là giả thuyết mạnh chứ chưa phải kết luận.",
+    "tags": [
+      "nao",
+      "glymphatic"
+    ],
+    "src": "Xie và cộng sự, Science (2013); Nedergaard & Goldman, Science (2020)"
+  },
+  {
+    "id": "sk-209",
+    "cat": "suc-khoe",
+    "sub": "giac-ngu",
+    "t": "Ngủ ít làm bạn ăn nhiều hơn, và phần tăng thêm chủ yếu là đồ nhiều đường",
+    "s": "Trong các thí nghiệm giới hạn giấc ngủ, lượng calo nạp tăng và lựa chọn dịch sang thức ăn nhiều năng lượng, kèm thay đổi ở hormone ghrelin và leptin. Đây là một trong các đường liên hệ đo được giữa thiếu ngủ và tăng cân.",
+    "tags": [
+      "giac-ngu",
+      "an-uong"
+    ],
+    "src": "Spiegel, Tasali, Penev & Van Cauter, Annals of Internal Medicine (2004); St-Onge và cộng sự, AJCN (2011)"
+  },
+  {
+    "id": "sk-210",
+    "cat": "suc-khoe",
+    "sub": "giac-ngu",
+    "t": "Một đêm thiếu ngủ đã làm giảm đáp ứng insulin ở người khoẻ mạnh",
+    "s": "Trong các thí nghiệm ngắn hạn, chỉ vài đêm ngủ 4 giờ đã đủ đưa độ nhạy insulin xuống mức thấp hơn đáng kể. Hiệu ứng hồi phục sau khi ngủ bù, nhưng nó cho thấy giấc ngủ là biến số chuyển hoá chứ không chỉ là chuyện tỉnh táo.",
+    "tags": [
+      "insulin",
+      "chuyen-hoa"
+    ],
+    "src": "Donga và cộng sự, Journal of Clinical Endocrinology and Metabolism (2010)"
+  },
+  {
+    "id": "sk-211",
+    "cat": "suc-khoe",
+    "sub": "giac-ngu",
+    "t": "Ngủ trước khi học và ngủ sau khi học có hai tác dụng khác nhau",
+    "s": "Giấc ngủ trước giúp khả năng tiếp nhận thông tin mới, giấc ngủ sau giúp củng cố thứ vừa học. Vì vậy thức đêm ôn bài đánh vào cả hai đầu: bạn học kém hơn lúc thức và giữ được ít hơn sau đó.",
+    "tags": [
+      "hoc",
+      "cung-co"
+    ],
+    "src": "Walker & Stickgold, Annual Review of Psychology (2006); Yoo và cộng sự, Nature Neuroscience (2007)"
+  },
+  {
+    "id": "sk-212",
+    "cat": "suc-khoe",
+    "sub": "giac-ngu",
+    "t": "Tắm nước ấm trước khi ngủ giúp dễ ngủ vì nó làm cơ thể nguội đi sau đó",
+    "s": "Nghe nghịch lý nhưng cơ chế là giãn mạch ngoại vi: nước ấm đẩy máu ra da, nên sau khi ra khỏi bồn nhiệt độ lõi giảm nhanh hơn — và giảm nhiệt độ lõi là tín hiệu khởi động giấc ngủ. Phân tích tổng hợp cho thấy tắm khoảng 1–2 giờ trước khi ngủ có hiệu quả đo được.",
+    "tags": [
+      "nhiet-do",
+      "giac-ngu"
+    ],
+    "src": "Haghayegh và cộng sự, Sleep Medicine Reviews (2019)"
+  },
+  {
+    "id": "sk-213",
+    "cat": "suc-khoe",
+    "sub": "giac-ngu",
+    "t": "Người trẻ tuổi thật sự có nhịp sinh học muộn hơn, không phải chỉ do thói quen",
+    "s": "Ở tuổi dậy thì, thời điểm tiết melatonin dịch muộn khoảng một đến hai giờ, và nó trở lại sớm hơn sau tuổi hai mươi. Đây là cơ sở sinh học cho đề xuất lùi giờ vào học, và các nghiên cứu ở nơi đã lùi giờ ghi nhận thời lượng ngủ tăng và điểm số cải thiện.",
+    "tags": [
+      "tuoi-day-thi",
+      "gio-hoc"
+    ],
+    "src": "Carskadon, Sleep Medicine Clinics (2011); Dunster và cộng sự, Science Advances (2018)"
+  },
+  {
+    "id": "sk-214",
+    "cat": "suc-khoe",
+    "sub": "giac-ngu",
+    "t": "Kiểu ngủ sớm hay muộn có phần di truyền, và cố đổi nó thường thất bại",
+    "s": "Các nghiên cứu liên kết toàn bộ hệ gen đã tìm được hàng trăm biến thể liên quan tới thời điểm ưa thích của giấc ngủ. Điều can thiệp được là ánh sáng và giờ ăn, còn việc kỳ vọng một người kiểu muộn trở thành người dậy sớm tự nhiên thì không có cơ sở.",
+    "tags": [
+      "chronotype",
+      "di-truyen"
+    ],
+    "src": "Jones và cộng sự, Nature Communications (2019)"
+  },
+  {
+    "id": "sk-215",
+    "cat": "suc-khoe",
+    "sub": "giac-ngu",
+    "t": "Lệch nhịp xã hội — ngủ khác giờ vào cuối tuần — liên quan tới rủi ro chuyển hoá",
+    "s": "Chênh lệch giữa giờ ngủ ngày làm và ngày nghỉ tương quan với chỉ số khối cơ thể, mức triglyceride và nguy cơ chuyển hoá, độc lập với tổng thời lượng ngủ. Nghĩa là 'ngủ nướng bù' không trung tính về mặt sinh học.",
+    "tags": [
+      "lech-nhip",
+      "cuoi-tuan"
+    ],
+    "src": "Wong và cộng sự, Journal of Clinical Endocrinology and Metabolism (2015); Roenneberg về social jetlag"
+  },
+  {
+    "id": "sk-218",
+    "cat": "suc-khoe",
+    "sub": "giac-ngu",
+    "t": "Ngủ đủ làm tăng khả năng chống nhiễm, và điều này đo được bằng đáp ứng vaccine",
+    "s": "Trong các thử nghiệm, người bị giới hạn giấc ngủ quanh thời điểm tiêm tạo ra ít kháng thể hơn. Một nghiên cứu khác cho thấy người ngủ ít hơn 6 giờ có nguy cơ mắc cảm lạnh cao hơn khi được phơi nhiễm chủ động với virus.",
+    "tags": [
+      "mien-dich",
+      "vaccine"
+    ],
+    "src": "Spiegel, Sheridan & Van Cauter, JAMA (2002); Prather và cộng sự, Sleep (2015)"
+  },
+  {
+    "id": "sk-220",
+    "cat": "suc-khoe",
+    "sub": "giac-ngu",
+    "t": "Người làm ca đêm không thích nghi hoàn toàn dù làm nhiều năm",
+    "s": "Đo melatonin và nhiệt độ cơ thể ở người làm ca đêm lâu năm cho thấy phần lớn không dịch được đồng hồ sinh học sang trạng thái ổn định, vì họ vẫn tiếp xúc ánh sáng ban ngày vào ngày nghỉ. Điều này giải thích vì sao rủi ro sức khoẻ không giảm theo kinh nghiệm.",
+    "tags": [
+      "ca-dem",
+      "thich-nghi"
+    ],
+    "src": "Folkard, Chronobiology International (2008)"
+  },
+  {
+    "id": "sk-221",
+    "cat": "suc-khoe",
+    "sub": "giac-ngu",
+    "t": "Đo giấc ngủ bằng đồng hồ thông minh sai đáng kể ở các giai đoạn ngủ",
+    "s": "Các thiết bị đeo tay ước lượng tổng thời gian ngủ khá tốt nhưng phân biệt giai đoạn ngủ sâu và REM kém so với đo điện não. Với người lo về giấc ngủ, việc theo dõi số liệu sai lại có thể làm lo lắng tăng — hiện tượng đã được đặt tên là orthosomnia.",
+    "tags": [
+      "thiet-bi",
+      "do-luong"
+    ],
+    "src": "de Zambotti và cộng sự, Chronobiology International (2018); Baron và cộng sự, Journal of Clinical Sleep Medicine (2017)"
+  },
+  {
+    "id": "sk-223",
+    "cat": "suc-khoe",
+    "sub": "van-dong",
+    "t": "Lợi ích của vận động xuất hiện ở mức thấp hơn nhiều so với khuyến nghị chính thức",
+    "s": "Đường liên hệ giữa mức vận động và giảm nguy cơ tử vong có dạng cong: phần dốc nhất nằm ở đoạn từ gần như không vận động lên mức nhẹ. Nghĩa là người ít vận động nhất được lợi nhiều nhất từ mỗi đơn vị nỗ lực đầu tiên.",
+    "tags": [
+      "lieu-dap-ung",
+      "van-dong"
+    ],
+    "src": "Ekelund và cộng sự, BMJ (2019); Arem và cộng sự, JAMA Internal Medicine (2015)"
+  },
+  {
+    "id": "sk-224",
+    "cat": "suc-khoe",
+    "sub": "van-dong",
+    "t": "Tập nặng vài lần cuối tuần cho lợi ích gần bằng chia đều trong tuần",
+    "s": "Trong các nghiên cứu theo dõi lớn, nhóm dồn vận động vào một hoặc hai ngày có mức giảm nguy cơ tử vong tương đương nhóm chia đều, miễn tổng lượng như nhau. Điều này gỡ bỏ một rào cản thực tế cho người không thể tập hằng ngày.",
+    "tags": [
+      "chien-binh-cuoi-tuan",
+      "tong-luong"
+    ],
+    "src": "O'Donovan, Lee, Hamer & Stamatakis, JAMA Internal Medicine (2017); Khurshid và cộng sự, JAMA (2023)"
+  },
+  {
+    "id": "sk-225",
+    "cat": "suc-khoe",
+    "sub": "van-dong",
+    "t": "Tập sức mạnh làm tăng mật độ xương, và đây là điều đi bộ không làm được",
+    "s": "Xương đáp ứng với lực tác động, nên các bài chịu tải và kháng lực có tác dụng lên mật độ xương rõ hơn hoạt động nhịp điệu cường độ thấp. Với người sau tuổi trung niên, đây là lý do tập kháng lực không phải lựa chọn thẩm mỹ mà là phòng ngừa gãy xương.",
+    "tags": [
+      "xuong",
+      "khang-luc"
+    ],
+    "src": "Watson và cộng sự, Journal of Bone and Mineral Research (2018) — thử nghiệm LIFTMOR"
+  },
+  {
+    "id": "sk-226",
+    "cat": "suc-khoe",
+    "sub": "van-dong",
+    "t": "Khối cơ mất dần từ tuổi ba mươi nếu không tập, và mất cơ dự báo mất khả năng tự lập",
+    "s": "Sarcopenia — mất khối cơ và sức cơ theo tuổi — diễn ra khoảng 3–8% mỗi thập kỷ sau tuổi 30 và nhanh hơn sau 60. Nó là yếu tố dự báo mạnh cho té ngã và mất khả năng sinh hoạt độc lập, và nó đáp ứng với tập kháng lực ở mọi tuổi.",
+    "tags": [
+      "sarcopenia",
+      "tuoi"
+    ],
+    "src": "Cruz-Jentoft và cộng sự, Age and Ageing (2019); Fiatarone và cộng sự, NEJM (1994)"
+  },
+  {
+    "id": "sk-227",
+    "cat": "suc-khoe",
+    "sub": "van-dong",
+    "t": "Đau nhức sau tập không phải thước đo hiệu quả của buổi tập",
+    "s": "Mức đau muộn phụ thuộc chủ yếu vào việc bài tập mới lạ và có nhiều pha hạ tải, không phụ thuộc vào mức kích thích thích nghi. Vì vậy một buổi tập tốt có thể không đau gì, và một buổi gây đau ba ngày có thể chỉ là quá tải không cần thiết.",
+    "tags": [
+      "dau-co",
+      "hieu-qua"
+    ],
+    "src": "Schoenfeld & Contreras, Strength and Conditioning Journal (2013)"
+  },
+  {
+    "id": "sk-228",
+    "cat": "suc-khoe",
+    "sub": "van-dong",
+    "t": "Khởi động động hiệu quả hơn giãn cơ tĩnh trước khi vận động",
+    "s": "Giãn tĩnh giữ lâu trước khi tập làm giảm nhẹ sức mạnh và công suất trong buổi đó, còn khởi động động — các động tác tăng dần biên độ và nhịp tim — thì cải thiện hiệu suất. Giãn tĩnh vẫn có chỗ, nhưng là sau buổi tập hoặc như một buổi riêng.",
+    "tags": [
+      "khoi-dong",
+      "gian-co"
+    ],
+    "src": "Behm & Chaouachi, European Journal of Applied Physiology (2011)"
+  },
+  {
+    "id": "sk-229",
+    "cat": "suc-khoe",
+    "sub": "van-dong",
+    "t": "Bạn không thể chọn chỗ giảm mỡ bằng cách tập chỗ đó",
+    "s": "Các thử nghiệm tập một bên chi và đo mỡ dưới da hai bên cho thấy mỡ giảm toàn thân, không giảm cục bộ theo cơ được tập. Nghĩa là gập bụng làm khoẻ cơ bụng nhưng không làm mỏng lớp mỡ phía trên nó.",
+    "tags": [
+      "giam-mo",
+      "huyen-thoai"
+    ],
+    "src": "Ramírez-Campillo và cộng sự, Journal of Strength and Conditioning Research (2013); Katch và cộng sự (1984)"
+  },
+  {
+    "id": "sk-230",
+    "cat": "suc-khoe",
+    "sub": "van-dong",
+    "t": "Tập luyện gần như không hiệu quả để giảm cân nếu không đổi chế độ ăn",
+    "s": "Cơ thể bù trừ một phần năng lượng tiêu thêm bằng cách giảm hoạt động không chủ đích và tăng cảm giác đói. Vận động vẫn rất có giá trị — cho tim mạch, chuyển hoá, tâm trạng và duy trì cân sau khi giảm — nhưng nó là công cụ tồi để tạo thâm hụt năng lượng.",
+    "tags": [
+      "giam-can",
+      "bu-tru"
+    ],
+    "src": "Pontzer và cộng sự, Current Biology (2016); Thomas và cộng sự, Obesity Reviews (2012)"
+  },
+  {
+    "id": "sk-231",
+    "cat": "suc-khoe",
+    "sub": "van-dong",
+    "t": "Đi bộ nhanh có lợi hơn đi bộ lâu ở cùng số bước",
+    "s": "Trong các nghiên cứu dùng thiết bị đo, cường độ — đo bằng nhịp bước mỗi phút — liên quan tới giảm nguy cơ độc lập với tổng số bước. Nghĩa là hai người cùng đi 8.000 bước nhưng khác nhịp thì không có cùng lợi ích.",
+    "tags": [
+      "cuong-do",
+      "di-bo"
+    ],
+    "src": "Del Pozo Cruz và cộng sự, JAMA Internal Medicine (2022)"
+  },
+  {
+    "id": "sk-232",
+    "cat": "suc-khoe",
+    "sub": "van-dong",
+    "t": "Vận động có tác dụng lên nhận thức ở người lớn tuổi, và đây là một trong ít can thiệp có bằng chứng",
+    "s": "Các thử nghiệm ngẫu nhiên cho thấy tập nhịp điệu cải thiện một số chức năng điều hành và có liên hệ với thể tích vùng hải mã. Hiệu ứng vừa phải và không phải mọi nghiên cứu đều tìm thấy, nhưng nó vững hơn hầu hết sản phẩm 'luyện não'.",
+    "tags": [
+      "nhan-thuc",
+      "tuoi-gia"
+    ],
+    "src": "Erickson và cộng sự, PNAS (2011); Northey và cộng sự, British Journal of Sports Medicine (2018)"
+  },
+  {
+    "id": "sk-234",
+    "cat": "suc-khoe",
+    "sub": "van-dong",
+    "t": "Tập luyện cường độ cao ngắt quãng cho lợi ích tim mạch tương đương với ít thời gian hơn",
+    "s": "Các thử nghiệm so sánh cho thấy cải thiện VO2 max tương đương hoặc hơn với tổng thời gian tập ít hơn đáng kể. Nhược điểm là mức khó chịu cao hơn nên tỉ lệ duy trì thấp hơn — và chế độ duy trì được luôn thắng chế độ hiệu quả nhất trên giấy.",
+    "tags": [
+      "hiit",
+      "hieu-qua"
+    ],
+    "src": "Gibala và cộng sự, Journal of Physiology (2012); Weston, Wisløff & Coombes, BJSM (2014)"
+  },
+  {
+    "id": "sk-235",
+    "cat": "suc-khoe",
+    "sub": "van-dong",
+    "t": "Chạy không làm hỏng khớp gối ở người không có tổn thương sẵn",
+    "s": "Trái với lo lắng phổ biến, các nghiên cứu theo dõi dài hạn cho thấy người chạy giải trí có tỉ lệ thoái hoá khớp gối thấp hơn người ít vận động. Yếu tố nguy cơ thật là tăng tải quá nhanh và chấn thương trước đó, không phải bản thân việc chạy.",
+    "tags": [
+      "chay",
+      "khop"
+    ],
+    "src": "Alentorn-Geli và cộng sự, Journal of Orthopaedic and Sports Physical Therapy (2017)"
+  },
+  {
+    "id": "sk-236",
+    "cat": "suc-khoe",
+    "sub": "van-dong",
+    "t": "Sức bền tim mạch là một trong các yếu tố dự báo tử vong mạnh nhất từng được đo",
+    "s": "Trong các nghiên cứu theo dõi hàng chục nghìn người, mức thể lực đo bằng nghiệm pháp gắng sức dự báo tử vong mạnh hơn hút thuốc, tiểu đường hay huyết áp cao. Điều đáng chú ý là nó cải thiện được ở mọi tuổi.",
+    "tags": [
+      "the-luc",
+      "tu-vong"
+    ],
+    "src": "Mandsager và cộng sự, JAMA Network Open (2018); Blair và cộng sự, JAMA (1989)"
+  },
+  {
+    "id": "sk-238",
+    "cat": "suc-khoe",
+    "sub": "an-uong",
+    "t": "Đường và tinh bột đều làm tăng đường huyết, và phản ứng khác nhau rất nhiều giữa người với người",
+    "s": "Trong nghiên cứu theo dõi đường huyết liên tục ở hàng trăm người, cùng một loại thực phẩm gây phản ứng rất khác nhau — bánh mì làm người này tăng mạnh và người kia thì không. Điều này làm các bảng chỉ số đường huyết chung chỉ có giá trị định hướng.",
+    "tags": [
+      "duong-huyet",
+      "ca-nhan-hoa"
+    ],
+    "src": "Zeevi và cộng sự, Cell (2015); Berry và cộng sự, Nature Medicine (2020) — nghiên cứu PREDICT"
+  },
+  {
+    "id": "sk-239",
+    "cat": "suc-khoe",
+    "sub": "an-uong",
+    "t": "Chất xơ là thành phần dinh dưỡng có bằng chứng vững nhất và bị thiếu nhiều nhất",
+    "s": "Phân tích tổng hợp các nghiên cứu theo dõi và thử nghiệm cho thấy tăng chất xơ liên quan tới giảm nguy cơ tim mạch, tiểu đường type 2 và ung thư đại trực tràng, với đường liều đáp ứng rõ. Phần lớn dân số ăn dưới mức khuyến nghị khoảng 25–30 g mỗi ngày.",
+    "tags": [
+      "chat-xo",
+      "bang-chung"
+    ],
+    "src": "Reynolds và cộng sự, The Lancet (2019)"
+  },
+  {
+    "id": "sk-240",
+    "cat": "suc-khoe",
+    "sub": "an-uong",
+    "t": "Protein cần nhiều hơn khuyến nghị tối thiểu nếu bạn tập hoặc đã lớn tuổi",
+    "s": "Mức 0,8 g mỗi kg cân nặng là ngưỡng tránh thiếu, không phải mức tối ưu. Với người tập kháng lực hoặc người trên 65 tuổi, các tổng quan đề xuất khoảng 1,2–1,6 g mỗi kg để duy trì khối cơ — và phân bổ đều trong ngày quan trọng hơn tổng lượng.",
+    "tags": [
+      "protein",
+      "co"
+    ],
+    "src": "Morton và cộng sự, British Journal of Sports Medicine (2018); Bauer và cộng sự, JAMDA (2013)"
+  },
+  {
+    "id": "sk-242",
+    "cat": "suc-khoe",
+    "sub": "an-uong",
+    "t": "Muối làm tăng huyết áp ở phần lớn người nhưng mức đáp ứng rất khác nhau",
+    "s": "Khoảng một phần ba tới một nửa người tăng huyết áp thuộc nhóm nhạy với muối, và ở nhóm này giảm muối có tác dụng rõ. Với người không nhạy, tác dụng nhỏ hơn — nhưng vì không có xét nghiệm phổ thông để biết mình thuộc nhóm nào, khuyến nghị chung vẫn là giảm.",
+    "tags": [
+      "muoi",
+      "huyet-ap"
+    ],
+    "src": "He, Li & MacGregor, BMJ (2013); Elijovich và cộng sự, Hypertension (2016)"
+  },
+  {
+    "id": "sk-243",
+    "cat": "suc-khoe",
+    "sub": "an-uong",
+    "t": "Cà phê có liên hệ với giảm nguy cơ tử vong, kể cả loại đã lọc caffeine",
+    "s": "Các nghiên cứu theo dõi lớn cho thấy đường cong hình chữ U với đáy quanh 3–4 cốc mỗi ngày, và hiệu ứng tương tự với cà phê không caffeine — gợi ý rằng các hợp chất khác chứ không phải caffeine đứng sau. Đây là dữ liệu quan sát nên nhân quả chưa chắc.",
+    "tags": [
+      "ca-phe",
+      "tu-vong"
+    ],
+    "src": "Poole và cộng sự, BMJ (2017); Gunter và cộng sự, Annals of Internal Medicine (2017)"
+  },
+  {
+    "id": "sk-244",
+    "cat": "suc-khoe",
+    "sub": "an-uong",
+    "t": "Chất béo bão hoà là chủ đề mà bằng chứng yếu hơn mức tranh luận công khai giả định",
+    "s": "Các phân tích tổng hợp cho thấy thay chất béo bão hoà bằng chất béo không bão hoà đa làm giảm biến cố tim mạch, nhưng thay bằng tinh bột tinh chế thì không. Nghĩa là câu hỏi 'thay bằng gì' quan trọng hơn câu hỏi 'giảm bao nhiêu'.",
+    "tags": [
+      "chat-beo",
+      "tim-mach"
+    ],
+    "src": "Hooper và cộng sự, Cochrane Reviews (2020); Mozaffarian, Micha & Wallace, PLoS Medicine (2010)"
+  },
+  {
+    "id": "sk-245",
+    "cat": "suc-khoe",
+    "sub": "an-uong",
+    "t": "Bỏ bữa sáng không làm chuyển hoá chậm lại",
+    "s": "Trong các thử nghiệm ngẫu nhiên, việc ăn hay bỏ bữa sáng không tạo khác biệt về tổng năng lượng tiêu hao, và nhóm ăn bữa sáng có xu hướng nạp thêm calo trong ngày. Ý tưởng bữa sáng 'khởi động chuyển hoá' không có cơ sở thực nghiệm.",
+    "tags": [
+      "bua-sang",
+      "chuyen-hoa"
+    ],
+    "src": "Sievert và cộng sự, BMJ (2019); Betts và cộng sự, AJCN (2014)"
+  },
+  {
+    "id": "sk-246",
+    "cat": "suc-khoe",
+    "sub": "an-uong",
+    "t": "Cơ thể không cần 'thải độc' vì gan và thận đã làm việc đó liên tục",
+    "s": "Không có sản phẩm thương mại nào chứng minh được loại bỏ một chất độc cụ thể nào. Điều có tác dụng thật với chức năng gan thận thì nhàm chán: bớt rượu, đủ nước, đủ chất xơ, ngủ đủ và không dùng thực phẩm bổ sung không cần thiết.",
+    "tags": [
+      "thai-doc",
+      "huyen-thoai"
+    ],
+    "src": "Klein & Kiat, Journal of Human Nutrition and Dietetics (2015) — tổng quan về detox diets"
+  },
+  {
+    "id": "sk-247",
+    "cat": "suc-khoe",
+    "sub": "an-uong",
+    "t": "Nước nạp vào không chỉ từ nước uống — thức ăn cung cấp một phần đáng kể",
+    "s": "Rau quả, canh, cơm và cả cà phê đều tính vào lượng dịch nạp. Cơ chế điều hoà là cảm giác khát và độ đặc của nước tiểu, nên với người khoẻ mạnh thì uống theo khát là đủ; các con số cố định không có cơ sở sinh lý.",
+    "tags": [
+      "nuoc",
+      "khat"
+    ],
+    "src": "Institute of Medicine, Dietary Reference Intakes for Water (2004); Valtin, AJP (2002)"
+  },
+  {
+    "id": "sk-249",
+    "cat": "suc-khoe",
+    "sub": "an-uong",
+    "t": "Ăn chậm làm bạn ăn ít hơn vì tín hiệu no đến sau khoảng hai mươi phút",
+    "s": "Các hormone báo no được tiết theo độ trễ, nên tốc độ ăn quyết định lượng nạp trước khi tín hiệu tới. Trong các thử nghiệm, nhóm được yêu cầu ăn chậm nạp ít calo hơn ở cùng mức cảm giác no cuối bữa.",
+    "tags": [
+      "toc-do-an",
+      "no"
+    ],
+    "src": "Andrade, Greene & Melanson, Journal of the American Dietetic Association (2008)"
+  },
+  {
+    "id": "sk-250",
+    "cat": "suc-khoe",
+    "sub": "an-uong",
+    "t": "Kích cỡ khẩu phần và kích cỡ bát đĩa ảnh hưởng tới lượng ăn nhiều hơn cảm giác no",
+    "s": "Trong các thí nghiệm, người ta ăn nhiều hơn từ hộp lớn hơn mà không báo cáo no hơn — kể cả khi đồ ăn không ngon. Đây là can thiệp dễ áp dụng nhất trong nhà: đổi kích cỡ dụng cụ thay vì cố kiểm soát ý chí trong lúc ăn.",
+    "tags": [
+      "khau-phan",
+      "moi-truong"
+    ],
+    "src": "Wansink & Kim, Journal of Nutrition Education and Behavior (2005); Hollands và cộng sự, Cochrane Reviews (2015)"
+  },
+  {
+    "id": "sk-251",
+    "cat": "suc-khoe",
+    "sub": "an-uong",
+    "t": "Đường trong nước uống có hại hơn cùng lượng đường trong thức ăn đặc",
+    "s": "Đồ uống có đường không tạo cảm giác no tương ứng, nên năng lượng từ chúng gần như cộng thêm vào tổng nạp. Đây là lý do các nghiên cứu tìm thấy liên hệ giữa nước ngọt và tăng cân mạnh hơn so với đường nói chung.",
+    "tags": [
+      "nuoc-ngot",
+      "no"
+    ],
+    "src": "Malik, Schulze & Hu, AJCN (2006); Pan & Hu, Current Opinion in Clinical Nutrition (2011)"
+  },
+  {
+    "id": "sk-252",
+    "cat": "suc-khoe",
+    "sub": "an-uong",
+    "t": "Chất tạo ngọt không calo không làm tăng nguy cơ ung thư ở mức dùng thông thường",
+    "s": "Các cơ quan an toàn thực phẩm đã đánh giá lại nhiều lần và giữ nguyên kết luận về mức an toàn hằng ngày. Năm 2023, aspartame được IARC xếp nhóm 2B — 'có thể gây ung thư' — nhưng cùng lúc ban đánh giá liều lượng giữ nguyên mức chấp nhận được, một khác biệt thường bị nhập nhằng trong tin tức.",
+    "tags": [
+      "chat-tao-ngot",
+      "an-toan"
+    ],
+    "src": "IARC/JECFA đánh giá aspartame (2023); EFSA đánh giá lại (2013)"
+  },
+  {
+    "id": "sk-253",
+    "cat": "suc-khoe",
+    "sub": "an-uong",
+    "t": "Thực phẩm 'không đường' vẫn có thể nhiều calo, và 'ít béo' thường nhiều đường",
+    "s": "Khi bỏ một thành phần, nhà sản xuất phải bù bằng thành phần khác để giữ vị. Đây là lý do đọc bảng dinh dưỡng tổng thể có ích hơn tin vào nhãn nhấn mạnh một chất — và nhãn nhấn mạnh thường xuất hiện ở đúng những sản phẩm cần đọc kỹ nhất.",
+    "tags": [
+      "nhan-thuc-pham",
+      "doc-nhan"
+    ],
+    "src": "Nghiên cứu về health halo effect (Chandon & Wansink, Journal of Marketing Research 2007)"
+  },
+  {
+    "id": "sk-254",
+    "cat": "suc-khoe",
+    "sub": "an-uong",
+    "t": "Rau quả đông lạnh giữ dinh dưỡng tương đương hoặc hơn rau quả tươi để lâu",
+    "s": "Đông lạnh diễn ra ngay sau thu hoạch nên giữ được vitamin tốt hơn rau tươi đã qua vận chuyển và lưu kho vài ngày. Với vitamin C và folate, hàm lượng trong sản phẩm đông lạnh thường cao hơn sản phẩm 'tươi' mua ở siêu thị.",
+    "tags": [
+      "dong-lanh",
+      "vitamin"
+    ],
+    "src": "Bouzari, Holstege & Barrett, Journal of Agricultural and Food Chemistry (2015)"
+  },
+  {
+    "id": "sk-255",
+    "cat": "suc-khoe",
+    "sub": "an-uong",
+    "t": "Nấu ăn làm một số chất dinh dưỡng dễ hấp thu hơn, không phải luôn làm mất chất",
+    "s": "Lycopene trong cà chua và beta-carotene trong cà rốt hấp thu tốt hơn sau khi nấu, còn vitamin C và một số enzyme thì giảm. Nghĩa là câu 'ăn sống bổ hơn' đúng với một số chất và sai với số khác — cách ăn đa dạng cả hai là hợp lý.",
+    "tags": [
+      "nau-an",
+      "hap-thu"
+    ],
+    "src": "Dewanto và cộng sự, Journal of Agricultural and Food Chemistry (2002); Rock và cộng sự, AJCN (1998)"
+  },
+  {
+    "id": "sk-256",
+    "cat": "suc-khoe",
+    "sub": "an-uong",
+    "t": "Thịt đỏ chế biến sẵn được xếp nhóm 1 về gây ung thư, nhưng mức rủi ro tuyệt đối nhỏ",
+    "s": "IARC xếp thịt chế biến sẵn nhóm 1 — có bằng chứng đủ ở người — cùng nhóm với thuốc lá về mức chắc chắn của bằng chứng, không về mức nguy hiểm. Ăn thêm 50 g mỗi ngày liên quan tới tăng nguy cơ ung thư đại trực tràng tương đối khoảng 18%, tức tăng tuyệt đối nhỏ.",
+    "tags": [
+      "thit-che-bien",
+      "rui-ro"
+    ],
+    "src": "IARC Monograph 114 (2015); Bouvard và cộng sự, The Lancet Oncology (2015)"
+  },
+  {
+    "id": "sk-257",
+    "cat": "suc-khoe",
+    "sub": "chat-kich-thich",
+    "t": "Caffeine trong trà và cà phê được hấp thu khác nhau vì trà có L-theanine",
+    "s": "L-theanine trong trà làm giảm phần bồn chồn của caffeine trong các thí nghiệm ngắn hạn, nên cùng một liều caffeine cho trải nghiệm khác nhau. Đây là lý do một số người chịu được trà mà không chịu được cà phê ở cùng mức caffeine.",
+    "tags": [
+      "tra",
+      "l-theanine"
+    ],
+    "src": "Haskell và cộng sự, Biological Psychology (2008); Owen và cộng sự, Nutritional Neuroscience (2008)"
+  },
+  {
+    "id": "sk-258",
+    "cat": "suc-khoe",
+    "sub": "chat-kich-thich",
+    "t": "Uống caffeine sau khi thức khoảng một tiếng hợp lý hơn uống ngay khi vừa dậy",
+    "s": "Nồng độ cortisol tự nhiên cao nhất trong khoảng nửa giờ đến một giờ đầu sau khi thức, nên caffeine lúc đó thêm ít giá trị. Bằng chứng cho lịch trình cụ thể còn yếu, nhưng nguyên tắc chung — dùng caffeine khi độ tỉnh táo bắt đầu tụt — thì hợp lý.",
+    "tags": [
+      "cortisol",
+      "thoi-diem"
+    ],
+    "src": "Debono và cộng sự, Journal of Clinical Endocrinology and Metabolism (2009) về nhịp cortisol"
+  },
+  {
+    "id": "sk-259",
+    "cat": "suc-khoe",
+    "sub": "chat-kich-thich",
+    "t": "Cai caffeine gây triệu chứng thật, và nó đủ rõ để được xếp trong sổ tay chẩn đoán",
+    "s": "Đau đầu, mệt, khó tập trung và tâm trạng xấu xuất hiện trong khoảng 12–24 giờ sau liều cuối và có thể kéo dài vài ngày. Vì vậy 'không có caffeine thì không làm việc được' thường là mô tả về trạng thái cai, không phải về hiệu quả của caffeine.",
+    "tags": [
+      "cai-caffeine",
+      "trieu-chung"
+    ],
+    "src": "Juliano & Griffiths, Psychopharmacology (2004); DSM-5 (2013) có mục caffeine withdrawal"
+  },
+  {
+    "id": "sk-260",
+    "cat": "suc-khoe",
+    "sub": "chat-kich-thich",
+    "t": "Caffeine cải thiện hiệu suất thể chất một cách đo được, và đây là một trong ít chất bổ sung có bằng chứng vững",
+    "s": "Liều khoảng 3–6 mg mỗi kg cân nặng trước vận động làm tăng sức bền và giảm cảm giác gắng sức trong nhiều loại bài tập. Hiệu ứng nhất quán tới mức caffeine từng nằm trong danh sách chất bị kiểm soát của thể thao thi đấu.",
+    "tags": [
+      "the-thao",
+      "hieu-suat"
+    ],
+    "src": "Guest và cộng sự, International Journal of Sport Nutrition and Exercise Metabolism (2021)"
+  },
+  {
+    "id": "sk-261",
+    "cat": "suc-khoe",
+    "sub": "chat-kich-thich",
+    "t": "Nước tăng lực có hại nhiều hơn cà phê chủ yếu vì lượng đường và cách uống",
+    "s": "Hàm lượng caffeine trong nhiều loại nước tăng lực tương đương một cốc cà phê, nhưng chúng được uống nhanh, lạnh, nhiều đường và thường kèm rượu. Các báo cáo về biến cố tim mạch tập trung ở nhóm dùng liều cao và kết hợp, không ở mức dùng thông thường.",
+    "tags": [
+      "nuoc-tang-luc",
+      "duong"
+    ],
+    "src": "Higgins, Tuttle & Higgins, Mayo Clinic Proceedings (2010); EFSA (2015)"
+  },
+  {
+    "id": "sk-262",
+    "cat": "suc-khoe",
+    "sub": "chat-kich-thich",
+    "t": "Thuốc lá điện tử ít độc hơn thuốc lá nhưng không phải vô hại, và bằng chứng dài hạn còn thiếu",
+    "s": "Các cơ quan y tế Anh xem nó là lựa chọn giảm hại cho người đang hút, trong khi các cơ quan Mỹ nhấn mạnh rủi ro với người trẻ chưa từng hút. Cả hai lập trường dựa trên cùng bằng chứng nhưng đặt trọng số khác nhau cho hai nhóm dân số khác nhau.",
+    "tags": [
+      "thuoc-la-dien-tu",
+      "giam-hai"
+    ],
+    "src": "Public Health England evidence review (2018); US Surgeon General Report on E-cigarettes (2016)"
+  },
+  {
+    "id": "sk-263",
+    "cat": "suc-khoe",
+    "sub": "chat-kich-thich",
+    "t": "Nicotine gây nghiện nhưng phần lớn tác hại của thuốc lá đến từ khói",
+    "s": "Ung thư và bệnh phổi liên quan tới các sản phẩm cháy, không tới nicotine trực tiếp — đây là cơ sở của các liệu pháp thay thế nicotine. Nicotine vẫn không vô hại: nó ảnh hưởng tới tim mạch và tới phát triển não ở người trẻ.",
+    "tags": [
+      "nicotine",
+      "khoi"
+    ],
+    "src": "Royal College of Physicians, Nicotine without smoke (2016)"
+  },
+  {
+    "id": "sk-264",
+    "cat": "suc-khoe",
+    "sub": "chat-kich-thich",
+    "t": "Liệu pháp thay thế nicotine tăng khả năng cai thành công lên khoảng gấp rưỡi",
+    "s": "Tổng quan Cochrane cho thấy các dạng thay thế nicotine tăng tỉ lệ cai lâu dài khoảng 50–60% so với không dùng, và kết hợp hai dạng — miếng dán cộng dạng dùng nhanh — hiệu quả hơn một dạng. Tư vấn hành vi kèm theo làm tăng thêm.",
+    "tags": [
+      "cai-thuoc",
+      "dieu-tri"
+    ],
+    "src": "Hartmann-Boyce và cộng sự, Cochrane Database of Systematic Reviews (2018)"
+  },
+  {
+    "id": "sk-265",
+    "cat": "suc-khoe",
+    "sub": "chat-kich-thich",
+    "t": "Rượu ảnh hưởng tới giấc ngủ, gan và ung thư qua ba cơ chế khác nhau",
+    "s": "Với gan là do chuyển hoá ethanol, với ung thư là do acetaldehyde gây tổn thương ADN, với giấc ngủ là do ảnh hưởng lên hệ thần kinh trung ương. Vì các cơ chế khác nhau, không có một 'mức an toàn' chung cho cả ba.",
+    "tags": [
+      "ruou",
+      "co-che"
+    ],
+    "src": "Rumgay và cộng sự, The Lancet Oncology (2021); WHO tuyên bố về mức tiêu thụ an toàn (2023)"
+  },
+  {
+    "id": "sk-266",
+    "cat": "suc-khoe",
+    "sub": "chat-kich-thich",
+    "t": "Nghiên cứu cho thấy uống ít có lợi cho tim đã bị nghi ngờ mạnh vì lỗi phân nhóm",
+    "s": "Nhóm 'không uống' trong nhiều nghiên cứu bao gồm cả người đã bỏ vì bệnh, làm nhóm này trông kém khoẻ hơn. Khi loại nhóm này, lợi ích của việc uống ít giảm mạnh hoặc mất — và các phân tích dùng biến di truyền không tìm thấy lợi ích.",
+    "tags": [
+      "ruou",
+      "sai-lech"
+    ],
+    "src": "Stockwell và cộng sự, Journal of Studies on Alcohol and Drugs (2016); Millwood và cộng sự, The Lancet (2019)"
+  },
+  {
+    "id": "sk-268",
+    "cat": "suc-khoe",
+    "sub": "benh-va-tam-soat",
+    "t": "Tầm soát tốt phải giảm tử vong, không chỉ phát hiện sớm hơn",
+    "s": "Phát hiện sớm hơn tự động làm 'thời gian sống sau chẩn đoán' dài hơn dù không ai sống thêm ngày nào — hiện tượng thiên lệch thời gian dẫn. Vì vậy tỉ lệ sống 5 năm là chỉ số dễ gây nhầm, và tiêu chí đúng để đánh giá một chương trình tầm soát là tử vong do bệnh đó.",
+    "tags": [
+      "tam-soat",
+      "sai-lech"
+    ],
+    "src": "Welch, Schwartz & Woloshin, Overdiagnosed (2011); Gigerenzer và cộng sự, PSPI (2007)"
+  },
+  {
+    "id": "sk-270",
+    "cat": "suc-khoe",
+    "sub": "benh-va-tam-soat",
+    "t": "Huyết áp đo tại nhà nhiều lần đáng tin hơn một lần đo ở phòng khám",
+    "s": "Hiệu ứng áo choàng trắng làm huyết áp đo ở cơ sở y tế cao hơn thực tế ở nhiều người, và có cả hiện tượng ngược. Các hướng dẫn hiện nay khuyến nghị dùng đo tại nhà hoặc đo lưu động 24 giờ để chẩn đoán, không dựa vào một lần đo.",
+    "tags": [
+      "huyet-ap",
+      "do-luong"
+    ],
+    "src": "Whelton và cộng sự, ACC/AHA Guideline (2017); NICE guideline NG136 (2019)"
+  },
+  {
+    "id": "sk-272",
+    "cat": "suc-khoe",
+    "sub": "benh-va-tam-soat",
+    "t": "Chỉ số nguy cơ tim mạch 10 năm hữu ích hơn từng con số riêng lẻ",
+    "s": "Huyết áp, cholesterol, tuổi, giới, hút thuốc và tiểu đường tương tác với nhau, nên một chỉ số cao đơn lẻ có thể ít đáng lo hơn ba chỉ số ở mức ranh giới. Các thang tính nguy cơ tổng hợp là cơ sở để quyết định dùng thuốc, không phải từng ngưỡng riêng.",
+    "tags": [
+      "nguy-co",
+      "tim-mach"
+    ],
+    "src": "Goff và cộng sự, ACC/AHA Pooled Cohort Equations (2013); SCORE2, European Heart Journal (2021)"
+  },
+  {
+    "id": "sk-273",
+    "cat": "suc-khoe",
+    "sub": "benh-va-tam-soat",
+    "t": "Đột quỵ và nhồi máu cơ tim là hai bệnh khác nhau ở hai cơ quan, dù cùng cơ chế mạch máu",
+    "s": "Cả hai đều do dòng máu bị tắc, nhưng dấu hiệu và cách xử lý khác nhau hoàn toàn. Với đột quỵ, thời gian là yếu tố quyết định vì thuốc tiêu huyết khối chỉ hiệu quả trong cửa sổ vài giờ — nên nhận biết sớm có giá trị điều trị trực tiếp.",
+    "tags": [
+      "dot-quy",
+      "cap-cuu"
+    ],
+    "src": "American Heart Association / American Stroke Association guidelines (2019)"
+  },
+  {
+    "id": "sk-274",
+    "cat": "suc-khoe",
+    "sub": "benh-va-tam-soat",
+    "t": "Đau ngực không phải triệu chứng duy nhất của nhồi máu cơ tim, và ở nhiều người nó không có",
+    "s": "Một tỉ lệ đáng kể ca nhồi máu biểu hiện bằng khó thở, buồn nôn, đau lan lên hàm hoặc vai, hoặc mệt bất thường — và các biểu hiện không điển hình phổ biến hơn ở phụ nữ và người tiểu đường. Điều này làm chậm chẩn đoán ở đúng nhóm cần nhanh nhất.",
+    "tags": [
+      "nhoi-mau",
+      "trieu-chung"
+    ],
+    "src": "Canto và cộng sự, JAMA (2012); Mehta và cộng sự, Circulation (2016)"
+  },
+  {
+    "id": "sk-275",
+    "cat": "suc-khoe",
+    "sub": "benh-va-tam-soat",
+    "t": "Tiểu đường type 2 có thể vào giai đoạn thuyên giảm bằng giảm cân đáng kể",
+    "s": "Trong thử nghiệm DiRECT, gần một nửa người tham gia đạt thuyên giảm sau một năm với chương trình giảm cân có kiểm soát, và tỉ lệ phụ thuộc mạnh vào mức cân giảm được. Đây là thay đổi lớn so với quan niệm bệnh chỉ tiến triển một chiều.",
+    "tags": [
+      "tieu-duong",
+      "thuyen-giam"
+    ],
+    "src": "Lean và cộng sự, The Lancet (2018); Lean và cộng sự theo dõi 2 năm, Lancet Diabetes and Endocrinology (2019)"
+  },
+  {
+    "id": "sk-279",
+    "cat": "suc-khoe",
+    "sub": "benh-va-tam-soat",
+    "t": "Mất thính lực không điều trị liên quan tới suy giảm nhận thức và nguy cơ mất trí nhớ",
+    "s": "Các nghiên cứu theo dõi tìm thấy liên hệ rõ, và thử nghiệm ACHIEVE cho thấy dùng máy trợ thính làm chậm suy giảm nhận thức ở nhóm nguy cơ cao. Điều này biến máy trợ thính từ tiện nghi thành can thiệp sức khoẻ.",
+    "tags": [
+      "thinh-luc",
+      "nhan-thuc"
+    ],
+    "src": "Lin và cộng sự, JAMA Neurology (2011); Lin và cộng sự, The Lancet (2023) — thử nghiệm ACHIEVE"
+  },
+  {
+    "id": "sk-280",
+    "cat": "suc-khoe",
+    "sub": "benh-va-tam-soat",
+    "t": "Ô nhiễm không khí trong nhà ở nhiều nơi cao hơn ngoài trời",
+    "s": "Nấu bằng bếp than hoặc củi không thoát khí tốt là một trong các nguồn phơi nhiễm bụi mịn lớn nhất trên thế giới, và nó tác động nặng nhất tới người ở nhà nhiều. WHO xếp đây là một trong các yếu tố nguy cơ môi trường gây tử vong hàng đầu.",
+    "tags": [
+      "o-nhiem",
+      "trong-nha"
+    ],
+    "src": "WHO, Household air pollution and health (2022); Global Burden of Disease Study"
+  },
+  {
+    "id": "sk-283",
+    "cat": "suc-khoe",
+    "sub": "benh-va-tam-soat",
+    "t": "Đau kéo dài không tỉ lệ với mức tổn thương ở mô",
+    "s": "Đau là đầu ra của hệ thần kinh trung ương, không phải cảm biến trực tiếp về hư hỏng. Vì vậy hình ảnh 'sạch' không có nghĩa cơn đau là tưởng tượng, và hình ảnh có thay đổi cấu trúc không có nghĩa đó là nguyên nhân của cơn đau.",
+    "tags": [
+      "dau-keo-dai",
+      "co-che"
+    ],
+    "src": "Moseley & Butler, Journal of Pain (2015); IASP định nghĩa lại đau (2020)"
+  },
+  {
+    "id": "sk-285",
+    "cat": "suc-khoe",
+    "sub": "benh-va-tam-soat",
+    "t": "Máy khử rung tự động dùng được bởi người không có chuyên môn, và mỗi phút chậm làm giảm cơ hội sống",
+    "s": "Thiết bị tự phân tích nhịp tim và chỉ phóng điện khi cần, nên nguy cơ dùng sai rất thấp. Tỉ lệ sống sót giảm khoảng 7–10% cho mỗi phút chậm trễ, nên khoảng cách tới máy gần nhất là biến số quyết định.",
+    "tags": [
+      "aed",
+      "cap-cuu"
+    ],
+    "src": "Valenzuela và cộng sự, NEJM (2000); Hasselqvist-Ax và cộng sự, NEJM (2015)"
+  },
+  {
+    "id": "sk-286",
+    "cat": "suc-khoe",
+    "sub": "benh-va-tam-soat",
+    "t": "Sốt xuất huyết nặng thường xuất hiện đúng lúc hết sốt, không lúc sốt cao nhất",
+    "s": "Giai đoạn nguy hiểm bắt đầu khi nhiệt độ giảm, do thoát huyết tương làm cô đặc máu và tụt huyết áp. Vì vậy cảm giác 'đã đỡ' vào ngày thứ tư đến thứ sáu là thời điểm cần theo dõi sát nhất, không phải lúc được thả lỏng.",
+    "tags": [
+      "sot-xuat-huyet",
+      "canh-bao"
+    ],
+    "src": "WHO, Dengue Guidelines for Diagnosis, Treatment, Prevention and Control (2009)"
+  },
+  {
+    "id": "sk-287",
+    "cat": "suc-khoe",
+    "sub": "benh-va-tam-soat",
+    "t": "Mất nước ở trẻ bị tiêu chảy giết nhiều hơn bản thân nhiễm trùng",
+    "s": "Dung dịch bù nước đường uống với tỉ lệ muối và glucose thích hợp là một trong các can thiệp y tế công cộng hiệu quả nhất thế kỷ 20, ước tính đã cứu hàng chục triệu trẻ. Nó hoạt động vì glucose kéo natri và nước qua thành ruột dù ruột đang viêm.",
+    "tags": [
+      "bu-nuoc",
+      "tre-em"
+    ],
+    "src": "WHO/UNICEF về ORS; Ruxin, Medical History (1994) về lịch sử liệu pháp bù nước"
+  },
+  {
+    "id": "sk-288",
+    "cat": "suc-khoe",
+    "sub": "thuoc-va-vaccine",
+    "t": "Giả dược có tác dụng đo được trên triệu chứng chủ quan và gần như không có trên bệnh lý khách quan",
+    "s": "Nó làm giảm đau, buồn nôn và mệt được báo cáo, nhưng không làm khối u nhỏ lại hay xương liền nhanh hơn. Phân biệt này quan trọng: giả dược thay đổi trải nghiệm bệnh, không thay đổi tiến trình bệnh.",
+    "tags": [
+      "gia-duoc",
+      "trieu-chung"
+    ],
+    "src": "Hróbjartsson & Gøtzsche, NEJM (2001); Cochrane update (2010)"
+  },
+  {
+    "id": "sk-289",
+    "cat": "suc-khoe",
+    "sub": "thuoc-va-vaccine",
+    "t": "Giả dược vẫn hoạt động khi bệnh nhân biết đó là giả dược",
+    "s": "Trong các thử nghiệm giả dược công khai với hội chứng ruột kích thích, đau lưng và mệt mỏi, nhóm được nói rõ mình đang dùng viên không có hoạt chất vẫn báo cáo cải thiện hơn nhóm không điều trị. Cơ chế được cho là liên quan tới nghi thức điều trị và kỳ vọng.",
+    "tags": [
+      "gia-duoc-mo",
+      "ky-vong"
+    ],
+    "src": "Kaptchuk và cộng sự, PLoS ONE (2010); Carvalho và cộng sự, Pain (2016)"
+  },
+  {
+    "id": "sk-290",
+    "cat": "suc-khoe",
+    "sub": "thuoc-va-vaccine",
+    "t": "Paracetamol quá liều gây tổn thương gan không hồi phục, và khoảng cách giữa liều thường và liều độc hẹp hơn nhiều thuốc khác",
+    "s": "Ngộ độc paracetamol là một trong những nguyên nhân hàng đầu của suy gan cấp ở nhiều nước, thường do dùng đồng thời nhiều sản phẩm cùng chứa nó — thuốc cảm, thuốc giảm đau, thuốc ho. Đọc thành phần thay vì tên thương mại là biện pháp phòng chính.",
+    "tags": [
+      "paracetamol",
+      "qua-lieu"
+    ],
+    "src": "Larson và cộng sự, Hepatology (2005); FDA cảnh báo về acetaminophen kết hợp (2011)"
+  },
+  {
+    "id": "sk-291",
+    "cat": "suc-khoe",
+    "sub": "thuoc-va-vaccine",
+    "t": "Thuốc chống viêm không steroid có nguy cơ dạ dày và tim mạch, không chỉ là thuốc giảm đau thường",
+    "s": "Dùng kéo dài liên quan tới loét, xuất huyết tiêu hoá và tăng nguy cơ biến cố tim mạch, với mức khác nhau giữa các loại. Vì chúng bán không cần đơn ở nhiều nơi, mức rủi ro thường bị đánh giá thấp so với thuốc kê đơn cùng mức tác hại.",
+    "tags": [
+      "nsaid",
+      "tac-dung-phu"
+    ],
+    "src": "Coxib and traditional NSAID Trialists' Collaboration, The Lancet (2013)"
+  },
+  {
+    "id": "sk-292",
+    "cat": "suc-khoe",
+    "sub": "thuoc-va-vaccine",
+    "t": "Dùng aspirin hằng ngày để phòng bệnh tim không còn được khuyến nghị cho người chưa từng có biến cố",
+    "s": "Các thử nghiệm lớn cho thấy ở người nguy cơ trung bình, lợi ích giảm biến cố bị bù bởi tăng nguy cơ xuất huyết. Khuyến nghị đã đổi trong những năm gần đây, nên đây là ví dụ về một lời khuyên phổ biến bị đảo lại bởi bằng chứng mới.",
+    "tags": [
+      "aspirin",
+      "phong-ngua"
+    ],
+    "src": "ASPREE, ARRIVE và ASCEND trials (2018); USPSTF recommendation update (2022)"
+  },
+  {
+    "id": "sk-293",
+    "cat": "suc-khoe",
+    "sub": "thuoc-va-vaccine",
+    "t": "Kháng sinh không rút ngắn thời gian khỏi với phần lớn viêm xoang và viêm phế quản cấp",
+    "s": "Các tổng quan Cochrane cho thấy lợi ích nhỏ hoặc không có với các trường hợp không biến chứng, trong khi tác dụng phụ tiêu hoá thì thường gặp. Đây là một trong các nguồn kê đơn không cần thiết lớn nhất trong y tế cơ sở.",
+    "tags": [
+      "khang-sinh",
+      "hop-ly"
+    ],
+    "src": "Lemiengre và cộng sự, Cochrane (2018); Smith và cộng sự, Cochrane (2017)"
+  },
+  {
+    "id": "sk-295",
+    "cat": "suc-khoe",
+    "sub": "thuoc-va-vaccine",
+    "t": "Vaccine cúm phải làm lại mỗi năm vì virus thay đổi, không vì hiệu lực hết",
+    "s": "Các chủng lưu hành thay đổi liên tục qua đột biến điểm, nên thành phần vaccine được cập nhật hằng năm dựa trên giám sát toàn cầu. Hiệu quả dao động theo mức khớp giữa dự đoán và chủng thực tế, nên các năm khớp kém vẫn có hiệu quả nhưng thấp hơn.",
+    "tags": [
+      "cum",
+      "vaccine"
+    ],
+    "src": "WHO Global Influenza Surveillance and Response System; Osterholm và cộng sự, Lancet ID (2012)"
+  },
+  {
+    "id": "sk-297",
+    "cat": "suc-khoe",
+    "sub": "thuoc-va-vaccine",
+    "t": "Vitamin D bổ sung có bằng chứng cho xương ở người thiếu, và ít bằng chứng cho những thứ khác",
+    "s": "Các thử nghiệm lớn không tìm thấy tác dụng của bổ sung vitamin D lên ung thư, tim mạch hay nhiễm trùng ở người không thiếu. Đây là ví dụ điển hình về một chất có tương quan mạnh trong nghiên cứu quan sát mà không cho kết quả khi thử nghiệm can thiệp.",
+    "tags": [
+      "vitamin-d",
+      "bang-chung"
+    ],
+    "src": "Manson và cộng sự, NEJM (2019) — thử nghiệm VITAL; Bolland và cộng sự, Lancet Diabetes Endocrinol (2018)"
+  },
+  {
+    "id": "sk-298",
+    "cat": "suc-khoe",
+    "sub": "thuoc-va-vaccine",
+    "t": "Bổ sung beta-carotene liều cao làm tăng nguy cơ ung thư phổi ở người hút thuốc",
+    "s": "Hai thử nghiệm lớn phải dừng sớm vì nhóm dùng bổ sung có tỉ lệ ung thư phổi cao hơn nhóm giả dược. Đây là bài học kinh điển: một chất có lợi trong thực phẩm không tự động có lợi khi tách ra thành viên liều cao.",
+    "tags": [
+      "beta-carotene",
+      "bo-sung"
+    ],
+    "src": "ATBC Study Group, NEJM (1994); Omenn và cộng sự, NEJM (1996) — thử nghiệm CARET"
+  },
+  {
+    "id": "sk-299",
+    "cat": "suc-khoe",
+    "sub": "thuoc-va-vaccine",
+    "t": "Tác dụng phụ được báo cáo trong nhóm giả dược cũng rất cao",
+    "s": "Trong các thử nghiệm vaccine và thuốc, một tỉ lệ lớn triệu chứng được báo cáo ở nhóm dùng giả dược — hiệu ứng nocebo. Điều này không có nghĩa tác dụng phụ là tưởng tượng, mà có nghĩa muốn biết một triệu chứng do thuốc gây ra thì phải so với nhóm đối chứng.",
+    "tags": [
+      "nocebo",
+      "tac-dung-phu"
+    ],
+    "src": "Haas và cộng sự, JAMA Network Open (2022) — phân tích nhóm giả dược trong thử nghiệm vaccine COVID-19"
+  },
+  {
+    "id": "sk-300",
+    "cat": "suc-khoe",
+    "sub": "thuoc-va-vaccine",
+    "t": "Thuốc generic phải chứng minh tương đương sinh học, nên khác biệt với thuốc gốc rất nhỏ",
+    "s": "Yêu cầu quản lý là nồng độ trong máu nằm trong khoảng dung sai xác định so với thuốc gốc. Một số ít thuốc có khoảng điều trị hẹp cần cẩn thận khi đổi, nhưng với phần lớn thuốc thì chênh lệch giá không phản ánh chênh lệch hiệu quả.",
+    "tags": [
+      "generic",
+      "tuong-duong"
+    ],
+    "src": "FDA Orange Book và hướng dẫn về bioequivalence; Kesselheim và cộng sự, JAMA (2008)"
+  },
+  {
+    "id": "sk-301",
+    "cat": "suc-khoe",
+    "sub": "thuoc-va-vaccine",
+    "t": "Thuốc và thực phẩm tương tác thật, và nước ép bưởi là ví dụ mạnh nhất",
+    "s": "Nước ép bưởi ức chế enzyme CYP3A4 ở ruột, làm nồng độ hàng chục loại thuốc trong máu tăng lên đáng kể — với một số thuốc hạ mỡ máu, mức tăng đủ để gây tác dụng phụ nghiêm trọng. Hiệu ứng kéo dài nhiều giờ nên uống cách xa cũng không loại được.",
+    "tags": [
+      "tuong-tac",
+      "buoi"
+    ],
+    "src": "Bailey, Dresser & Arnold, CMAJ (2013)"
+  },
+  {
+    "id": "sk-302",
+    "cat": "suc-khoe",
+    "sub": "suc-khoe-tinh-than",
+    "t": "Trị liệu tâm lý và thuốc có hiệu quả tương đương với trầm cảm mức nhẹ đến vừa",
+    "s": "Các phân tích tổng hợp cho thấy hiệu quả gần nhau, và kết hợp hai phương pháp tốt hơn từng phương pháp riêng. Điều khác nhau là mô hình tái phát: hiệu quả của trị liệu có xu hướng bền hơn sau khi ngừng điều trị.",
+    "tags": [
+      "tram-cam",
+      "dieu-tri"
+    ],
+    "src": "Cuijpers và cộng sự, World Psychiatry (2020); Cuijpers, Journal of Affective Disorders (2013)"
+  },
+  {
+    "id": "sk-303",
+    "cat": "suc-khoe",
+    "sub": "suc-khoe-tinh-than",
+    "t": "Kích hoạt hành vi — làm lại các việc từng thấy có nghĩa — hiệu quả tương đương trị liệu nhận thức đầy đủ",
+    "s": "Trong các thử nghiệm so sánh, chỉ riêng phần lên lịch và thực hiện các hoạt động có giá trị đã cho kết quả tương đương với liệu pháp nhận thức hành vi hoàn chỉnh. Điều này quan trọng về thực hành vì nó đơn giản hơn và dễ triển khai rộng hơn.",
+    "tags": [
+      "kich-hoat-hanh-vi",
+      "tram-cam"
+    ],
+    "src": "Jacobson và cộng sự, Journal of Consulting and Clinical Psychology (1996); Richards và cộng sự, The Lancet (2016)"
+  },
+  {
+    "id": "sk-304",
+    "cat": "suc-khoe",
+    "sub": "suc-khoe-tinh-than",
+    "t": "Hỏi trực tiếp về ý định tự tử không làm tăng nguy cơ",
+    "s": "Đây là một trong các lo ngại phổ biến nhất và nó đã được kiểm định: các nghiên cứu cho thấy việc hỏi không làm tăng ý nghĩ tự tử và thường làm giảm căng thẳng ở người được hỏi. Vì vậy im lặng vì sợ 'gợi ý' là quyết định sai hướng.",
+    "tags": [
+      "tu-tu",
+      "phong-ngua"
+    ],
+    "src": "Dazzi và cộng sự, Psychological Medicine (2014); Blades và cộng sự, Journal of Affective Disorders (2018)"
+  },
+  {
+    "id": "sk-305",
+    "cat": "suc-khoe",
+    "sub": "suc-khoe-tinh-than",
+    "t": "Cách truyền thông đưa tin về tự tử ảnh hưởng tới tỉ lệ thật",
+    "s": "Đưa tin chi tiết về phương thức và địa điểm liên quan tới tăng số ca, còn đưa tin có nêu nguồn trợ giúp và câu chuyện hồi phục liên quan tới giảm. Hai hiệu ứng này được đặt tên là Werther và Papageno, và các hướng dẫn báo chí dựa trên chúng.",
+    "tags": [
+      "truyen-thong",
+      "tu-tu"
+    ],
+    "src": "Niederkrotenthaler và cộng sự, British Journal of Psychiatry (2010); WHO media guidelines"
+  },
+  {
+    "id": "sk-307",
+    "cat": "suc-khoe",
+    "sub": "suc-khoe-tinh-than",
+    "t": "Chất lượng quan hệ giữa người trị liệu và người được trị liệu dự báo kết quả mạnh hơn phương pháp",
+    "s": "Trong các phân tích tổng hợp, liên minh trị liệu tương quan ổn định với kết quả, và khác biệt giữa các trường phái trị liệu thì nhỏ. Về mặt thực dụng, điều này có nghĩa đổi người trị liệu khi không hợp là quyết định hợp lý chứ không phải bỏ cuộc.",
+    "tags": [
+      "tri-lieu",
+      "lien-minh"
+    ],
+    "src": "Flückiger, Del Re, Wampold & Horvath, Psychotherapy (2018)"
+  },
+  {
+    "id": "sk-308",
+    "cat": "suc-khoe",
+    "sub": "suc-khoe-tinh-than",
+    "t": "Thời gian dùng mạng xã hội có liên hệ với sức khoẻ tinh thần, nhưng hiệu ứng nhỏ và chiều nhân quả chưa rõ",
+    "s": "Các phân tích trên dữ liệu lớn cho tương quan rất nhỏ — nhỏ hơn nhiều so với mức tranh luận công khai giả định — và các nghiên cứu theo dõi cho thấy chiều ngược cũng có: người đang khó chịu dùng nhiều hơn. Cách dùng có thể quan trọng hơn thời lượng.",
+    "tags": [
+      "mang-xa-hoi",
+      "hieu-ung"
+    ],
+    "src": "Orben & Przybylski, Nature Human Behaviour (2019); Odgers & Jensen, Journal of Child Psychology and Psychiatry (2020)"
+  },
+  {
+    "id": "sk-309",
+    "cat": "suc-khoe",
+    "sub": "suc-khoe-tinh-than",
+    "t": "Trầm cảm biểu hiện bằng triệu chứng cơ thể ở nhiều người, không chỉ bằng tâm trạng",
+    "s": "Mất ngủ, đau không rõ nguyên nhân, thay đổi ăn uống và mệt kéo dài là những lý do đi khám phổ biến hơn là 'tôi buồn'. Đây là một trong các nguyên nhân trầm cảm bị bỏ sót ở y tế cơ sở, đặc biệt ở nam giới và người lớn tuổi.",
+    "tags": [
+      "tram-cam",
+      "trieu-chung-co-the"
+    ],
+    "src": "Simon và cộng sự, NEJM (1999) — nghiên cứu đa quốc gia về triệu chứng cơ thể trong trầm cảm"
+  },
+  {
+    "id": "sk-310",
+    "cat": "suc-khoe",
+    "sub": "suc-khoe-tinh-than",
+    "t": "Lo âu và trầm cảm hay đi cùng nhau, và điều đó ảnh hưởng tới cách điều trị",
+    "s": "Tỉ lệ đồng mắc cao tới mức nhiều nhà nghiên cứu cho rằng chúng chia sẻ một yếu tố nền chung. Về thực hành, điều này có nghĩa các can thiệp nhắm vào cả hai — như liệu pháp nhận thức hành vi xuyên chẩn đoán — thường phù hợp hơn điều trị riêng lẻ.",
+    "tags": [
+      "dong-mac",
+      "dieu-tri"
+    ],
+    "src": "Kessler và cộng sự, Archives of General Psychiatry (2005); Barlow và cộng sự về Unified Protocol (2017)"
+  },
+  {
+    "id": "sk-311",
+    "cat": "suc-khoe",
+    "sub": "suc-khoe-tinh-than",
+    "t": "Phần lớn người trải qua sự kiện sang chấn không phát triển rối loạn kéo dài",
+    "s": "Đa số hồi phục tự nhiên trong vài tháng, và các can thiệp tâm lý bắt buộc ngay sau sự kiện — như buổi trần thuật một lần — không cho thấy lợi ích và có thể gây hại. Điều được khuyến nghị là theo dõi rồi can thiệp cho người có triệu chứng kéo dài.",
+    "tags": [
+      "sang-chan",
+      "can-thiep"
+    ],
+    "src": "Rose và cộng sự, Cochrane Reviews (2002); Bonanno, American Psychologist (2004)"
+  },
+  {
+    "id": "sk-313",
+    "cat": "suc-khoe",
+    "sub": "huyen-thoai-suc-khoe",
+    "t": "Bẻ khớp ngón tay không gây viêm khớp",
+    "s": "Tiếng kêu là bọt khí trong dịch khớp bị xẹp, không phải xương cọ nhau. Các nghiên cứu so sánh người có và không có thói quen này không tìm thấy khác biệt về tỉ lệ viêm khớp — dù một nghiên cứu ghi nhận lực nắm tay yếu hơn ở nhóm bẻ nhiều.",
+    "tags": [
+      "be-khop",
+      "huyen-thoai"
+    ],
+    "src": "deWeber, Olszewski & Ortolano, Journal of the American Board of Family Medicine (2011)"
+  },
+  {
+    "id": "sk-315",
+    "cat": "suc-khoe",
+    "sub": "huyen-thoai-suc-khoe",
+    "t": "Không có bằng chứng cho việc 'thải độc gan' bằng thảo dược, và một số loại gây độc gan",
+    "s": "Nhiều ca viêm gan cấp do thực phẩm bổ sung đã được báo cáo, trong đó có các sản phẩm được quảng cáo là bổ gan. Đây là nghịch lý đáng biết: nhóm sản phẩm hứa bảo vệ gan lại nằm trong các nguyên nhân tổn thương gan do thuốc.",
+    "tags": [
+      "gan",
+      "thao-duoc"
+    ],
+    "src": "Navarro và cộng sự, Hepatology (2014) — Drug-Induced Liver Injury Network"
+  },
+  {
+    "id": "sk-316",
+    "cat": "suc-khoe",
+    "sub": "huyen-thoai-suc-khoe",
+    "t": "Ăn thêm gelatin hay collagen không đi trực tiếp vào khớp hay da của bạn",
+    "s": "Protein được tiêu hoá thành các axit amin rồi cơ thể dùng chúng theo nhu cầu của mình. Có một số thử nghiệm nhỏ cho thấy tác dụng lên đau khớp và độ ẩm da, nhưng cơ chế nếu có thì là qua tín hiệu peptide, không phải qua việc 'bù trực tiếp'.",
+    "tags": [
+      "collagen",
+      "co-che"
+    ],
+    "src": "Tổng quan về collagen peptide supplementation: García-Coronado và cộng sự, International Orthopaedics (2019)"
+  },
+  {
+    "id": "sk-317",
+    "cat": "suc-khoe",
+    "sub": "huyen-thoai-suc-khoe",
+    "t": "Nước kiềm không thay đổi được độ pH của máu",
+    "s": "Cơ thể giữ pH máu trong khoảng rất hẹp bằng hệ đệm, hô hấp và thận; nếu nó thay đổi được bằng đồ uống thì đó đã là tình trạng cấp cứu. Điều thay đổi được là pH nước tiểu, và nó không phản ánh trạng thái sức khoẻ theo cách các sản phẩm này mô tả.",
+    "tags": [
+      "ph",
+      "huyen-thoai"
+    ],
+    "src": "Fenton & Huang, BMJ Open (2016) — tổng quan về 'alkaline diet'"
+  },
+  {
+    "id": "sk-318",
+    "cat": "suc-khoe",
+    "sub": "huyen-thoai-suc-khoe",
+    "t": "Đổ mồ hôi không loại được 'độc tố' — nó gần như chỉ là nước và muối",
+    "s": "Phân tích thành phần mồ hôi cho thấy lượng kim loại nặng và các chất thải chuyển hoá thải qua da là rất nhỏ so với qua thận và gan. Xông hơi có một số lợi ích tim mạch được ghi nhận, nhưng cơ chế không phải thải độc.",
+    "tags": [
+      "mo-hoi",
+      "thai-doc"
+    ],
+    "src": "Genuis và cộng sự, Archives of Environmental Contamination (2011); Laukkanen và cộng sự, JAMA IM (2015) về xông hơi"
+  },
+  {
+    "id": "sk-319",
+    "cat": "suc-khoe",
+    "sub": "huyen-thoai-suc-khoe",
+    "t": "Không có bằng chứng cho việc 'giải độc' sau khi ăn nhiều bằng cách nhịn hôm sau",
+    "s": "Cơ thể không có bộ đếm bù trừ theo ngày; điều quan trọng là tổng lượng theo tuần và theo tháng. Nhưng chu kỳ ăn quá rồi nhịn bù lại có hại thật về mặt hành vi: nó củng cố mối quan hệ trừng phạt với thức ăn và dự báo ăn quá tiếp.",
+    "tags": [
+      "bu-tru",
+      "hanh-vi"
+    ],
+    "src": "Nghiên cứu về restraint theory và chu kỳ ăn quá (Herman & Polivy, 1980)"
+  },
+  {
+    "id": "sk-320",
+    "cat": "suc-khoe",
+    "sub": "huyen-thoai-suc-khoe",
+    "t": "Bổ sung men vi sinh không có tác dụng chung cho mọi người và mọi chủng",
+    "s": "Bằng chứng khá rõ cho một số chỉ định cụ thể — như tiêu chảy do kháng sinh với một số chủng nhất định — và yếu hoặc không có cho các lời hứa chung về miễn dịch và tâm trạng. Vì tác dụng phụ thuộc chủng và liều, 'men vi sinh' như một loại sản phẩm không nói được gì.",
+    "tags": [
+      "men-vi-sinh",
+      "bang-chung"
+    ],
+    "src": "Suez, Zmora, Segal & Elinav, Nature Medicine (2019)"
+  }
+]

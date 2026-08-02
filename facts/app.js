@@ -69,6 +69,14 @@
       .toLowerCase();
   }
 
+  /* Người dùng gõ có dấu ⇒ so trên chuỗi CÓ dấu. Gõ không dấu ⇒ so trên chuỗi
+     đã bỏ dấu. Nếu luôn bỏ dấu thì "ngủ" khớp cả "nguồn", "người", "nguyên" —
+     ở quy mô nghìn fact thì một từ hai ba chữ trả về gần hết thư viện. */
+  function hasTone(s) {
+    var low = String(s).toLowerCase();
+    return norm(low) !== low;
+  }
+
   function esc(s) {
     return String(s).replace(/[&<>"']/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
@@ -79,7 +87,9 @@
   function mark(text, q) {
     var out = esc(text);
     if (!q) return out;
-    var hay = norm(text), needle = norm(q);
+    var tone = hasTone(q);
+    var hay = tone ? String(text).toLowerCase() : norm(text);
+    var needle = tone ? String(q).toLowerCase() : norm(q);
     if (hay.length !== text.length) return out;           /* map lệch ⇒ bỏ tô */
     var pieces = [], last = 0, i = hay.indexOf(needle);
     while (i !== -1) {
@@ -123,8 +133,10 @@
         });
         state.facts.forEach(function (f, i) {
           f._n = i + 1;
-          f._blob = norm([f.t, f.s, f.d || '', (f.tags || []).join(' '), f.src || '',
-                          (state.catMap[f.cat] || {}).label || ''].join(' '));
+          var text = [f.t, f.s, f.d || '', (f.tags || []).join(' '), f.src || '',
+                      (state.catMap[f.cat] || {}).label || ''].join(' ');
+          f._blob = norm(text);              /* gõ không dấu */
+          f._blobT = text.toLowerCase();     /* gõ có dấu */
         });
       });
   }
@@ -153,11 +165,13 @@
   }
 
   function applyFilter() {
-    var q = norm(state.q.trim());
+    var raw = state.q.trim();
+    var tone = hasTone(raw);
+    var q = tone ? raw.toLowerCase() : norm(raw);
     state.view = state.facts.filter(function (f) {
       if (state.cat !== 'all' && f.cat !== state.cat) return false;
       if (state.tag && (f.tags || []).indexOf(state.tag) === -1) return false;
-      if (q && f._blob.indexOf(q) === -1) return false;
+      if (q && (tone ? f._blobT : f._blob).indexOf(q) === -1) return false;
       return true;
     });
 
