@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light dark">
-<title>Sổ tay quy tắc kinh tế &amp; tài chính</title>
-<meta name="description" content="Bản học tương tác — các ràng buộc &quot;nếu…thì…&quot; từ vi mô đến vĩ mô, gắn thẻ độ cứng T0–T4.">
+<title>Hiểu nền kinh tế → chứng khoán Việt Nam &amp; vàng</title>
+<meta name="description" content="Bản học tương tác cho người không có nền kinh tế học: vòng tiền chảy, lãi suất thực, chu kỳ, chứng khoán Việt Nam và vàng — kèm sổ tay ~60 quy tắc &quot;nếu…thì…&quot; gắn thẻ độ cứng T0–T4.">
 
 <!-- Web Builder — the minimalist UI kit that styles the rest of the site -->
 <link rel="stylesheet" href="web-builder/web-builder.css">
@@ -26,7 +26,8 @@
   .rb-meta { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); letter-spacing: .04em; }
 
   .rb-layout { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 32px; align-items: start; padding: 28px 0 60px; }
-  @media (max-width: 860px) { .rb-layout { grid-template-columns: 1fr; } .rb-toc { display: none; } }
+  /* minmax(0,…) is load-bearing: a plain 1fr keeps min-width:auto and a wide table/formula pushes the page sideways. */
+  @media (max-width: 860px) { .rb-layout { grid-template-columns: minmax(0, 1fr); } .rb-toc { display: none; } }
   .rb-toc-legend { padding: 6px 14px 4px; display: flex; flex-direction: column; gap: 7px; }
   .rb-toc-legend .row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--wb-fg-muted); }
 
@@ -54,6 +55,18 @@
   .rb-chip[data-active="false"] { opacity: .6; }
 
   .rb-mini-fanout .wb-card__foot { color: var(--wb-fg-muted); font-size: 12.5px; }
+
+  /* Reading layer — the "hiểu" half of the page reads at a larger, calmer size than the reference half. */
+  .rb-lede { font-size: 16.5px; line-height: 1.62; color: var(--wb-fg); max-width: 68ch; margin: 0 0 18px; font-weight: 500; }
+  .rb-lede b { font-weight: 700; }
+  .rb-prose { font-size: 14.5px; line-height: 1.75; color: var(--wb-fg); max-width: 72ch; margin: 0 0 14px; }
+  .rb-prose b { color: var(--wb-fg); }
+  .rb-prose + .rb-prose { margin-top: -2px; }
+  .rb-kicker { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 6px; }
+  .rb-part-head { padding: 6px 0 2px; }
+  .rb-part-head h2 { font-size: 15px; font-weight: 700; margin: 0 0 4px; letter-spacing: -.01em; }
+  .rb-part-head p { color: var(--wb-fg-muted); font-size: 13.5px; line-height: 1.6; margin: 0; max-width: 74ch; }
+  .rb-toc { max-height: calc(100vh - 88px); overflow-y: auto; }
 </style>
 </head>
 <body>
@@ -73,17 +86,48 @@
 <main class="wb-container wb-container--wide">
 
   <header class="rb-hero">
-    <p class="rb-eyebrow">Bản học tương tác · sổ tay quy tắc kinh tế &amp; tài chính</p>
-    <h1 class="rb-title">Đừng học quy tắc — học <u>độ cứng</u> của nó.</h1>
-    <p class="rb-sub">Tập hợp các ràng buộc "nếu… thì…" — từ vi mô đến vĩ mô, từ chỉ số thế giới suy ra chỉ số Việt Nam. Giá trị nằm ở <b style="color:var(--wb-fg)">cột thẻ</b>, không nằm ở nội dung quy tắc: biết quy tắc nào không bao giờ sai, quy tắc nào chỉ đúng "thường thường".</p>
+    <p class="rb-eyebrow">Bản học tương tác · kinh tế · chứng khoán Việt Nam · vàng</p>
+    <h1 class="rb-title">Từ nền kinh tế đến bảng giá — <u>một chuỗi nhân quả</u>, không phải một đống tin tức.</h1>
+    <p class="rb-sub">Trang này viết cho người <b style="color:var(--wb-fg)">không có nền kinh tế học</b>, đã có ít kinh nghiệm thực chiến với chứng khoán và vàng, và muốn hiểu <em>vì sao</em> giá chạy chứ không chỉ nhớ <em>giá đã chạy</em>. Đọc xong Phần A, bạn phải tự trả lời được: "Fed vừa làm X — chuyện gì sẽ đi qua những mắt xích nào để tới cổ phiếu tôi đang cầm, và mất bao lâu?"</p>
     <p class="rb-meta">CẬP NHẬT 31·07·2026 · SỐ LIỆU ĐẾN PHIÊN 29·07·2026 · MỤC ĐÍCH HỌC TẬP, KHÔNG PHẢI KHUYẾN NGHỊ ĐẦU TƯ</p>
   </header>
+
+  <div class="wb-grid wb-grid--2" style="margin-bottom:6px">
+    <div class="wb-card wb-card--pad">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">A</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Phần A — Hiểu hệ thống <span class="wb-cap wb-cap--sm">đọc theo thứ tự</span></p>
+          <p class="wb-media__text">Tám chương kể một mạch: tiền chảy thế nào → lãi suất thực là gì → vì sao có chu kỳ → Việt Nam đứng ở đâu → chứng khoán VN vận hành ra sao → vàng vận hành ra sao. Mỗi chương có một ví von, một ví dụ có số, và một hiểu nhầm được gỡ.</p>
+        </div>
+      </div>
+    </div>
+    <div class="wb-card wb-card--pad">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">B</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Phần B — Sổ tay tra cứu <span class="wb-cap wb-cap--dashed wb-cap--sm">tra khi cần</span></p>
+          <p class="wb-media__text">~60 quy tắc "nếu… thì…" có gắn thẻ độ cứng T0–T4, bảng cầu nối thế giới → VN, và nền toán học phía sau. Không đọc tuần tự — đọc sau khi đã nắm Phần A, hoặc tra khi gặp một tình huống cụ thể.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <hr class="wb-divider">
 
   <div class="rb-layout">
-    <nav class="wb-sidenav rb-toc wb-sticky" style="--wb-sticky-gap:68px">
-      <div class="wb-sidenav__section">Mục lục</div>
+    <nav class="wb-sidenav rb-toc wb-sticky wb-scroll-y" style="--wb-sticky-gap:68px">
+      <div class="wb-sidenav__section">Phần A — Hiểu hệ thống</div>
+      <a class="wb-sidenav__link" href="#a1-vong-tien">A1 · Vòng tiền chảy</a>
+      <a class="wb-sidenav__link" href="#a2-laisuat-thuc">A2 · Lãi suất thực</a>
+      <a class="wb-sidenav__link" href="#a3-chuky">A3 · Chu kỳ &amp; ngân hàng TW</a>
+      <a class="wb-sidenav__link" href="#a4-vietnam">A4 · Việt Nam đứng ở đâu</a>
+      <a class="wb-sidenav__link" href="#a5-chungkhoan">A5 · Chứng khoán Việt Nam</a>
+      <a class="wb-sidenav__link" href="#a6-vang">A6 · Vàng</a>
+      <a class="wb-sidenav__link" href="#a7-baochi">A7 · Bảy câu báo hay viết</a>
+      <a class="wb-sidenav__link" href="#a8-tudien">A8 · Từ điển thuật ngữ</a>
+
+      <div class="wb-sidenav__section" style="margin-top:14px">Phần B — Sổ tay tra cứu</div>
       <a class="wb-sidenav__link" href="#s0-cach-doc">00 · Cách đọc sổ tay</a>
       <a class="wb-sidenav__link" href="#s1-kien-truc">01 · Kiến trúc hệ thống</a>
       <a class="wb-sidenav__link" href="#s2-node">02 · Kiểm kê node</a>
@@ -105,6 +149,495 @@
     </nav>
 
     <div class="wb-stack" style="--wb-stack-gap:52px">
+
+      <div class="rb-part-head">
+        <p class="rb-kicker">Phần A · đọc theo thứ tự</p>
+        <h2>Hiểu hệ thống trước, tra quy tắc sau</h2>
+        <p>Tám chương dưới đây không giả định bạn biết bất cứ thuật ngữ kinh tế nào. Mỗi thuật ngữ bắt buộc phải dùng đều được định nghĩa ngay lần đầu xuất hiện; những từ còn lại nằm trong <a href="#a8-tudien">từ điển ở A8</a>.</p>
+      </div>
+
+      <!-- ============ A1 — VÒNG TIỀN CHẢY ============ -->
+      <section id="a1-vong-tien">
+        <p class="rb-sec-eyebrow"><b>A1</b> — Nền kinh tế</p>
+        <h2 class="rb-sec-title">Nền kinh tế không phải một kho tiền — nó là một vòng chảy</h2>
+        <p class="rb-lede">Chi tiêu của người này <b>chính là</b> thu nhập của người khác. Gần như toàn bộ kinh tế vĩ mô là hệ quả của một câu đó — kể cả lý do vì sao suy thoái tự nuôi chính nó, và vì sao ngân hàng lại là thứ quan trọng đến vậy.</p>
+
+        <div class="wb-alert wb-alert--plain">
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Ví von — hệ thống nước tuần hoàn trong một toà nhà</p>
+            <p class="wb-alert__msg">Đừng hình dung nền kinh tế như một cái két có nhiều hay ít tiền. Hình dung nó như nước chảy vòng trong ống: cùng một khối nước đi qua bơm, qua từng tầng, rồi quay lại. <b>GDP không đo lượng nước trong bể — nó đo lưu lượng chảy qua ống trong một năm.</b> Nước chảy nhanh hơn thì "kinh tế lớn hơn", dù tổng lượng nước không đổi.</p>
+            <p class="wb-alert__msg"><b>Chỗ ví von này hỏng:</b> nước không tự sinh ra, còn tiền thì có. Ngân hàng tạo thêm tiền mỗi khi cho vay — đó chính là đoạn tiếp theo, và là chỗ ví von phải dừng lại.</p>
+          </div>
+        </div>
+
+        <h3 class="rb-sub-title">Ví dụ có số — 100 triệu của bạn tạo ra 333 triệu GDP</h3>
+        <div class="wb-card"><div class="wb-card__body">
+          <ol class="wb-steps">
+            <li class="wb-steps__item is-done"><span class="wb-steps__marker">1</span><div class="wb-steps__content">
+              <p class="wb-steps__title">Bạn chi 100 triệu sửa nhà</p>
+              <p class="wb-steps__desc">Với bạn là chi tiêu. Với nhóm thợ, đúng 100 triệu đó là <b>thu nhập</b>.</p></div></li>
+            <li class="wb-steps__item is-done"><span class="wb-steps__marker">2</span><div class="wb-steps__content">
+              <p class="wb-steps__title">Nhóm thợ tiêu lại 70 triệu</p>
+              <p class="wb-steps__desc">Vật liệu, ăn uống, học phí cho con. Giữ lại 30 triệu tiết kiệm. 70 triệu đó là thu nhập của người bán vật liệu, quán ăn, nhà trường.</p></div></li>
+            <li class="wb-steps__item is-done"><span class="wb-steps__marker">3</span><div class="wb-steps__content">
+              <p class="wb-steps__title">Những người đó lại tiêu 70% của 70 triệu = 49 triệu</p>
+              <p class="wb-steps__desc">Rồi 34,3 triệu, rồi 24 triệu… vòng lặp cứ thế nhỏ dần.</p></div></li>
+            <li class="wb-steps__item is-active"><span class="wb-steps__marker">Σ</span><div class="wb-steps__content">
+              <p class="wb-steps__title">Tổng cộng: 100 ÷ (1 − 0,7) ≈ <b>333 triệu</b> được cộng vào GDP</p>
+              <p class="wb-steps__desc">Đây gọi là <b>số nhân chi tiêu</b>. Con số 0,7 là tỷ lệ người ta tiêu trên mỗi đồng nhận thêm — tiêu càng mạnh, số nhân càng lớn.</p>
+              <span class="wb-steps__note">100 / (1 − 0,7) = 333</span></div></li>
+          </ol>
+        </div></div>
+
+        <p class="rb-prose">Bây giờ chạy ngược chuỗi này: nếu ai cũng đồng loạt <b>giảm</b> tiêu vì lo tương lai, thì thu nhập của tất cả cùng giảm — kể cả thu nhập của chính người đang lo. Đó là <b>nghịch lý tiết kiệm</b>: hành vi hợp lý với một cá nhân trở thành tai hoạ khi mọi người cùng làm. Suy thoái không cần nguyên nhân bí ẩn nào; chỉ cần đủ nhiều người cùng thắt lưng buộc bụng một lúc.</p>
+
+        <h3 class="rb-sub-title">Tiền từ đâu mà có — chỗ hầu như ai cũng hiểu sai</h3>
+        <div class="wb-alert wb-alert--warning">
+          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">warning</span></span>
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Điều nhiều người tin: "ngân hàng lấy tiền người này gửi đem cho người kia vay"</p>
+            <p class="wb-alert__msg">Nghe rất hợp lý — đó là cách sách phổ thông kể, và nó khớp với trực giác về một cái két. Nhưng nó sai ở thứ tự nhân quả.</p>
+            <p class="wb-alert__msg"><b>Thực tế:</b> khi ngân hàng duyệt khoản vay 1 tỷ, nó <b>gõ số 1 tỷ vào tài khoản của bạn</b>. Khoản tiền gửi mới đó <em>được tạo ra cùng lúc</em> với khoản nợ mới — chứ không lấy từ tiền gửi của ai. Tiền trong nền kinh tế hiện đại phần lớn <b>chính là nợ của người khác</b>. Giới hạn không phải "có bao nhiêu tiền gửi", mà là vốn tự có của ngân hàng, quy định an toàn, và ở Việt Nam còn là <b>trần tăng trưởng tín dụng</b> mà Ngân hàng Nhà nước cấp cho từng ngân hàng mỗi năm.</p>
+          </div>
+        </div>
+
+        <p class="rb-prose">Hệ quả thực dụng: <b>tín dụng là xăng của nền kinh tế.</b> Tín dụng tăng nhanh nghĩa là tiền mới đang được bơm vào vòng chảy ở trên; tín dụng đứng lại nghĩa là vòng chảy chậm dần bất kể lãi suất công bố là bao nhiêu. Nếu muốn đoán 12 tháng tới kinh tế Việt Nam nóng hay nguội, con số nên nhìn trước tiên là <b>tăng trưởng tín dụng</b>, không phải lãi suất điều hành. Cái giá phải trả nằm ở độ trễ: tín dụng nóng hôm nay là <b>nợ xấu 18–36 tháng sau</b> — cùng một khoản vay, hai thời điểm khác nhau <span class="wb-cap wb-cap--sm">R-F01</span>.</p>
+
+        <h3 class="rb-sub-title">Ba cái túi, và một đẳng thức không thể cãi</h3>
+        <p class="rb-prose">Chia toàn bộ dòng chảy thành ba khu vực — <b>tư nhân</b> (hộ gia đình + doanh nghiệp), <b>nhà nước</b>, và <b>phần còn lại của thế giới</b>. Vì mỗi đồng chi ra của người này là đồng nhận vào của người kia, ba cái túi này <b>bắt buộc</b> cộng lại bằng không:</p>
+        <div class="rb-formula">$$\underbrace{(S-I)}_{\text{tư nhân}} \;+\; \underbrace{(T-G)}_{\text{nhà nước}} \;+\; \underbrace{(X-M)}_{\text{với thế giới}} \;=\; 0$$</div>
+        <p class="rb-prose">Đây không phải một lý thuyết có thể đúng hoặc sai — nó đúng <b>theo cách các biến được định nghĩa</b>, giống như một invariant trong phần mềm. Công dụng của nó là chặn những phát biểu bất khả thi: không thể vừa muốn tư nhân tiết kiệm nhiều hơn, vừa muốn nhà nước giảm thâm hụt, vừa muốn giảm xuất siêu — <b>cùng một lúc</b>. Ai hứa cả ba, người đó đang vi phạm một đẳng thức. Xem thêm <a href="#s8-dangthuc">Phần 08</a>.</p>
+      </section>
+
+      <hr class="wb-divider">
+
+      <!-- ============ A2 — LÃI SUẤT THỰC ============ -->
+      <section id="a2-laisuat-thuc">
+        <p class="rb-sec-eyebrow"><b>A2</b> — Biến quan trọng nhất</p>
+        <h2 class="rb-sec-title">Lãi suất thực: giá của việc chờ đợi</h2>
+        <p class="rb-lede">Nếu chỉ được nhớ một điều từ cả trang này, hãy nhớ điều này. Mọi tài sản — cổ phiếu, nhà, trái phiếu, cả vàng — đều là <b>một lời hứa về tiền trong tương lai</b>. Lãi suất thực là <b>giá của việc chờ</b>. Khi giá chờ thay đổi, giá của mọi lời hứa thay đổi theo — <b>kể cả khi bản thân lời hứa không đổi một chữ</b>.</p>
+
+        <div class="wb-alert wb-alert--plain">
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Ví von — cho bạn vay 100 triệu</p>
+            <p class="wb-alert__msg">Bạn cho một người bạn vay 100 triệu, một năm sau nhận lại 108 triệu. Lãi 8%. Nhưng trong năm đó mọi thứ đắt lên 6%, nên 108 triệu chỉ mua được bằng khoảng 102 triệu của năm ngoái. <b>Sức mua bạn thực sự kiếm thêm là 2%, không phải 8%.</b></p>
+            <p class="wb-alert__msg">8% là <b>lãi suất danh nghĩa</b> — con số in trên hợp đồng. 2% là <b>lãi suất thực</b> — con số quyết định hành vi. Ngân hàng quảng cáo cái thứ nhất; nền kinh tế phản ứng với cái thứ hai.</p>
+            <p class="wb-alert__msg"><b>Chỗ ví von này hỏng:</b> "mọi thứ đắt lên 6%" ở đây là chuyện đã xảy ra. Trong thực tế, quyết định gửi hay vay hôm nay dựa trên <b>lạm phát bạn dự đoán cho năm tới</b>, chứ không phải năm vừa rồi. Vì thế công thức đúng dùng <em>lạm phát kỳ vọng</em>.</p>
+          </div>
+        </div>
+
+        <div class="rb-formula">$$r_{\text{thực}} \;\approx\; i_{\text{danh nghĩa}} \;-\; \pi_{\text{kỳ vọng}}$$</div>
+        <p class="rb-prose">Hệ quả ngay lập tức, và nó đi ngược trực giác báo chí: <b>ngân hàng trung ương tăng lãi suất không nhất thiết là thắt chặt.</b> Nếu lãi suất danh nghĩa tăng 1 điểm % mà lạm phát kỳ vọng tăng 2 điểm %, thì lãi suất thực <b>giảm</b> — tiền vẫn đang rẻ đi, dù tít báo viết "thắt chặt mạnh tay" <span class="wb-cap wb-cap--success wb-cap--sm">R-A01</span>.</p>
+
+        <h3 class="rb-sub-title">Vì sao nó điều khiển giá mọi tài sản — ví dụ chạy hết</h3>
+        <p class="rb-prose">Lấy một thứ dễ hình dung: căn nhà cho thuê 100 triệu/năm, tiền thuê tăng đều 4%/năm. Bạn sẵn lòng trả bao nhiêu để mua nó? Câu trả lời phụ thuộc vào lợi suất bạn đòi hỏi — gọi là $r$. Với dòng tiền tăng đều mãi, giá trị là:</p>
+        <div class="rb-formula">$$P = \frac{CF}{r-g}$$</div>
+        <div class="wb-card">
+          <div class="wb-card__head"><h4 class="wb-card__title">Cùng một căn nhà, cùng một người thuê — chỉ đổi giá của việc chờ</h4></div>
+          <div class="wb-table-scroll"><table class="wb-table">
+            <thead><tr><th>Tình huống</th><th>Tiền thuê</th><th>r</th><th>g</th><th>Giá căn nhà</th><th>Thay đổi</th></tr></thead>
+            <tbody>
+              <tr><td>Ban đầu</td><td>100 tr/năm</td><td>10%</td><td>4%</td><td>100 / 0,06 = <b>1.667 tr</b></td><td class="wb-cell-muted">—</td></tr>
+              <tr><td>Lãi suất thực tăng 1 điểm %</td><td>100 tr/năm</td><td>11%</td><td>4%</td><td>100 / 0,07 = <b>1.429 tr</b></td><td><span class="wb-cap wb-cap--danger wb-cap--sm">−14%</span></td></tr>
+            </tbody>
+          </table></div>
+          <div class="wb-card__foot"><span>Người thuê không dọn đi. Tiền thuê không giảm một đồng. Căn nhà vẫn nguyên. Vậy mà tài sản mất 14% giá trị — <b>toàn bộ đến từ mẫu số</b>.</span></div>
+        </div>
+
+        <p class="rb-prose">Đây chính xác là chuyện đã xảy ra với cổ phiếu toàn cầu năm 2022, và là lý do câu "doanh nghiệp vẫn lãi tốt mà giá vẫn rơi" không hề vô lý. Nó cũng giải thích một hiện tượng người ta hay quy cho tâm lý:</p>
+
+        <div class="wb-card">
+          <div class="wb-card__head"><h4 class="wb-card__title">Vì sao cổ phiếu tăng trưởng bị đập mạnh hơn — đây là đạo hàm, không phải tâm lý</h4></div>
+          <div class="wb-table-scroll"><table class="wb-table">
+            <thead><tr><th>Loại cổ phiếu</th><th>g</th><th>r − g ban đầu</th><th>Độ nhạy 1/(r−g)</th><th>Mất bao nhiêu khi r +1 điểm %</th></tr></thead>
+            <tbody>
+              <tr><td>Giá trị (tăng trưởng chậm)</td><td>4%</td><td>6%</td><td>16,7</td><td><span class="wb-cap wb-cap--warning wb-cap--sm">−14%</span></td></tr>
+              <tr><td>Tăng trưởng (kỳ vọng cao)</td><td>8%</td><td>2%</td><td>50,0</td><td><span class="wb-cap wb-cap--danger wb-cap--sm">−33%</span></td></tr>
+            </tbody>
+          </table></div>
+          <div class="wb-card__foot"><span>Lời hứa càng ở xa trong tương lai, giá của việc chờ càng cắn mạnh vào nó. <b>Cổ phiếu tăng trưởng là lời hứa xa nhất</b> — nên nó nhạy nhất.</span></div>
+        </div>
+
+        <p class="rb-prose"><b>Giới hạn của mô hình này:</b> công thức giả định $g$ và $r$ cố định mãi mãi, điều không bao giờ đúng. Nó cho bạn <b>độ lớn đúng</b> của phản ứng — "khoảng chục phần trăm", "gấp đôi mức của cổ phiếu giá trị" — chứ không cho con số chính xác để đặt lệnh. Và khi $g$ tiến sát $r$, công thức nổ tung về vô cực; đó là dấu hiệu mô hình đã ra khỏi vùng dùng được, không phải cổ phiếu đó vô giá.</p>
+      </section>
+
+      <hr class="wb-divider">
+
+      <!-- ============ A3 — CHU KỲ ============ -->
+      <section id="a3-chuky">
+        <p class="rb-sec-eyebrow"><b>A3</b> — Ai đặt lãi suất</p>
+        <h2 class="rb-sec-title">Ngân hàng trung ương là một bộ điều khiển bị mù 12 tháng</h2>
+        <p class="rb-lede">Ngân hàng trung ương không "quyết định" nền kinh tế. Nó là một <b>bộ điều khiển phản hồi</b> nhìn vào đồng hồ đo bị trễ, và vì độ trễ đó lớn hơn tầm quan sát của nó, <b>nó gần như luôn đạp quá đà theo cả hai chiều</b>. Chu kỳ kinh tế không cần tâm lý đám đông để tồn tại — chỉ cần một hệ có phản hồi âm với độ trễ lớn.</p>
+
+        <div class="wb-alert wb-alert--plain">
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Ví von — lái xe mà vô-lăng chỉ ăn sau 15 giây</p>
+            <p class="wb-alert__msg">Bạn thấy xe lệch trái, đánh lái sang phải. 15 giây trôi qua, xe vẫn lệch trái — nên bạn đánh phải thêm. Rồi thêm nữa. Đột nhiên cả ba cú lái cùng ăn một lúc và xe quật sang phải quá đà. Bạn vội đánh trái, và vòng lặp lại từ đầu.</p>
+            <p class="wb-alert__msg">Đó <b>chính xác</b> là chu kỳ chính sách tiền tệ. Lãi suất thay đổi hôm nay tác động tới kinh tế thực sau <b>12–18 tháng</b> <span class="wb-cap wb-cap--sm">R-A05</span>. Ai từng chỉnh một bộ điều khiển PID đều biết ngay: độ trễ lớn + phản hồi mạnh = dao động là điều bảo đảm, không phải rủi ro.</p>
+            <p class="wb-alert__msg"><b>Chỗ ví von này hỏng:</b> tài xế chỉ có một mục tiêu — giữ xe giữa làn. Ngân hàng trung ương có <b>hai mục tiêu thường xuyên xung đột</b>: ghìm lạm phát và giữ việc làm. Khi một cú sốc đẩy hai mục tiêu về hai hướng ngược nhau (giá tăng <em>đồng thời</em> sản lượng giảm), không có cú đánh lái nào đúng cả — chỉ có lựa chọn hy sinh cái nào.</p>
+          </div>
+        </div>
+
+        <h3 class="rb-sub-title">Hai loại cú sốc, hai phản ứng trái ngược</h3>
+        <p class="rb-prose">Đây là phân biệt quan trọng nhất để đọc tin tức mà không bị dắt mũi. Cùng là "giá tăng", nhưng nguyên nhân khác nhau dẫn tới hành vi hoàn toàn khác:</p>
+        <div class="wb-card"><div class="wb-table-scroll"><table class="wb-table">
+          <thead><tr><th>Loại cú sốc</th><th>Chuyện gì xảy ra</th><th>Lạm phát</th><th>Sản lượng</th><th>NHTW làm gì</th></tr></thead>
+          <tbody>
+            <tr><td><b>Cầu kéo</b><br><span class="wb-cell-muted">demand-pull</span></td><td>Ai cũng muốn mua nhiều hơn khả năng sản xuất</td><td>↑</td><td>↑</td><td class="wb-cell-muted">Dễ: thắt chặt. Cả hai mục tiêu cùng nói một hướng.</td></tr>
+            <tr><td><b>Chi phí đẩy</b><br><span class="wb-cell-muted">cost-push</span></td><td>Đầu vào đắt lên (dầu, vận tải, đứt chuỗi cung)</td><td>↑</td><td>↓</td><td><b>Không có lựa chọn tốt.</b> Thắt thì giết tăng trưởng, nới thì lạm phát bám rễ. <span class="wb-cap wb-cap--warning wb-cap--sm">R-B08</span></td></tr>
+          </tbody>
+        </table></div></div>
+        <p class="rb-prose">Vì thế câu hỏi "giá dầu tăng thì chứng khoán thế nào?" là câu hỏi <b>thiếu điều kiện</b>. Nếu dầu tăng vì kinh tế thế giới đang khoẻ (giá đồng cũng tăng) — cổ phiếu tăng. Nếu dầu tăng vì nguồn cung bị chặn (chỉ dầu tăng, đồng đứng yên) — cổ phiếu giảm. <b>Cùng một biến động giá, hai dấu ngược nhau</b>; tỷ lệ giá đồng trên giá dầu là cách rẻ nhất để phân biệt <span class="wb-cap wb-cap--warning wb-cap--sm">R-B06</span>.</p>
+
+        <h3 class="rb-sub-title">Điều thị trường thực sự phản ứng: bất ngờ, không phải mức</h3>
+        <div class="wb-alert wb-alert--danger">
+          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">error</span></span>
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Hiểu nhầm tốn tiền nhất với người đọc báo</p>
+            <p class="wb-alert__msg">"Fed tăng lãi suất → thị trường giảm" nghe như một định luật. Nó không phải. Giá hôm nay <b>đã chứa sẵn</b> mọi thứ thị trường tin là sẽ xảy ra.</p>
+            <p class="wb-alert__msg">Thị trường tin chắc Fed tăng 0,25% → Fed tăng đúng 0,25% → <b>giá gần như không nhúc nhích</b>. Cùng tin đó, nếu Fed giữ nguyên → giá bật mạnh. Cái di chuyển giá là <b>sai số giữa thực tế và kỳ vọng đã được định giá</b>, không phải bản thân con số <span class="wb-cap wb-cap--info wb-cap--sm">R-A04</span>.</p>
+            <p class="wb-alert__msg">Đây là lý do đọc tin xong mới hành động gần như luôn muộn: tin đã nằm trong giá trước khi nó thành tít báo.</p>
+          </div>
+        </div>
+        <p class="rb-prose">Cùng logic, cùng một mẩu "tin xấu" có thể đẩy giá theo hai hướng. Tin xấu về <b>tăng trưởng</b> có thể làm cổ phiếu <b>tăng</b>, vì nó có nghĩa ngân hàng trung ương sẽ nới sớm hơn. Tin xấu về <b>lạm phát</b> thì luôn làm cổ phiếu giảm, vì nó đẩy ngân hàng trung ương theo hướng ngược lại <span class="wb-cap wb-cap--warning wb-cap--sm">R-A03</span>. Chỉ khi ngân hàng trung ương còn dư địa nới và còn được tin tưởng thì vế đầu mới đúng — cạn dư địa thì tin xấu chỉ còn là tin xấu.</p>
+      </section>
+
+      <hr class="wb-divider">
+
+      <!-- ============ A4 — VIỆT NAM ============ -->
+      <section id="a4-vietnam">
+        <p class="rb-sec-eyebrow"><b>A4</b> — Việt Nam đứng ở đâu</p>
+        <h2 class="rb-sec-title">Một nền kinh tế nhỏ, mở, và chỉ có một cái cửa</h2>
+        <p class="rb-lede">Việt Nam nhận gần trọn vẹn cú sốc từ thế giới nhưng gần như không đẩy ngược ra được gì — và <b>hầu hết cú sốc đó đi vào qua đúng một cái cửa: tỷ giá USD/VND</b>. Hiểu cái cửa này là hiểu 80% chuyện gì nối thế giới với bảng giá ở Sài Gòn.</p>
+
+        <p class="rb-prose">Con số neo: xuất khẩu của Việt Nam tương đương <b>hơn 90% GDP</b> — với Mỹ con số đó khoảng 11%. Nghĩa là một cú giảm cầu ở Mỹ, châu Âu hay Trung Quốc không phải "tin quốc tế"; nó đi thẳng vào đơn hàng của nhà máy ở Bình Dương trong vòng một đến hai quý. Đồ thị nhân quả vì thế <b>bất đối xứng</b>: ảnh hưởng của thế giới lên Việt Nam thì lớn, chiều ngược lại xấp xỉ bằng không. Việt Nam là <b>người nhận giá</b>, gần như tuyệt đối <span class="wb-cap wb-cap--sm">R-H08</span>.</p>
+
+        <h3 class="rb-sub-title">Bộ ba bất khả thi — chọn hai trong ba</h3>
+        <div class="wb-grid wb-grid--3">
+          <div class="wb-card wb-card--pad"><p class="wb-media__title">1 · Tỷ giá ổn định</p><p class="wb-help">VND không nhảy múa, doanh nghiệp xuất nhập khẩu lập kế hoạch được.</p></div>
+          <div class="wb-card wb-card--pad"><p class="wb-media__title">2 · Vốn tự do ra vào</p><p class="wb-help">Nhà đầu tư nước ngoài đem tiền vào, rút ra không hạn chế.</p></div>
+          <div class="wb-card wb-card--pad"><p class="wb-media__title">3 · Tự quyết lãi suất</p><p class="wb-help">Đặt lãi suất theo nhu cầu trong nước, không phải theo Fed.</p></div>
+        </div>
+        <div class="wb-alert wb-alert--plain" style="margin-top:12px">
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Ví von — cái bồn nước nối với biển bằng một cái ống</p>
+            <p class="wb-alert__msg">Bạn muốn giữ mực nước trong bồn cố định (tỷ giá ổn định), vừa muốn cái ống nối ra biển mở toang (vốn tự do), vừa muốn tự bơm hút theo ý mình (lãi suất riêng). Không thể có cả ba: ống mở thì mực nước bồn bị biển quyết định, muốn tự bơm thì phải chấp nhận mực nước đổi, muốn giữ mực nước thì phải bơm đúng theo biển.</p>
+            <p class="wb-alert__msg"><b>Chỗ ví von này hỏng:</b> nước chảy theo chênh lệch áp suất hiện tại, còn dòng vốn chảy theo <b>kỳ vọng</b> về tương lai. Vốn có thể ào ra <em>trước khi</em> có bất kỳ chênh lệch nào, chỉ vì người ta tin sắp có. Không có hiện tượng nào tương ứng ở cái bồn.</p>
+          </div>
+        </div>
+
+        <p class="rb-prose">Việt Nam chọn <b>(1) + (3)</b>, hy sinh (2) — tài khoản vốn chưa mở hoàn toàn. Lựa chọn đó có hai mặt, và cả hai đều quan trọng với bạn:</p>
+        <ul class="wb-list wb-list--flush">
+          <li class="wb-list__item"><span class="wb-list__title"><b>Mặt được — một số cầu nối bị đứt hẳn</b><span class="wb-list__sub">Ngân hàng Việt Nam gần như không vay ngoại tệ và vốn chưa tự do ra vào, nên khủng hoảng ngân hàng ở nước ngoài gần như không chạm tới ngân hàng Việt Nam. Biết cầu nối nào <em>đứt</em> quan trọng ngang biết cầu nối nào thông <span class="wb-cap wb-cap--sm">R-F04</span>.</span></span></li>
+          <li class="wb-list__item"><span class="wb-list__title"><b>Mặt mất — thế kẹt khi Fed giữ lãi suất cao lâu</b><span class="wb-list__sub">Muốn giữ tỷ giá thì buộc phải <em>hoặc</em> giữ lãi suất VND cao (kìm tăng trưởng trong nước) <em>hoặc</em> bán dự trữ ngoại hối (có giới hạn cứng). Không có cửa thứ ba <span class="wb-cap wb-cap--info wb-cap--sm">R-C03</span>.</span></span></li>
+        </ul>
+
+        <h3 class="rb-sub-title">Rổ hàng hoá của người Việt khác căn bản</h3>
+        <p class="rb-prose">Lạm phát được đo bằng <b>CPI</b> — lấy một giỏ hàng hoá cố định, mỗi tháng đi mua đúng giỏ đó và so tổng tiền. Nhưng giỏ hàng của mỗi nước khác nhau, nên khung phân tích của Mỹ chép sang Việt Nam thì chạy sai:</p>
+        <div class="wb-card"><div class="wb-table-scroll"><table class="wb-table">
+          <thead><tr><th>Nhóm trong rổ CPI</th><th>Việt Nam</th><th>Mỹ</th><th>Nghĩa là</th></tr></thead>
+          <tbody>
+            <tr><td>Lương thực &amp; thực phẩm</td><td><b>~33–34%</b></td><td>~13%</td><td class="wb-cell-muted">Giá thịt lợn và gạo quan trọng hơn giá dầu với lạm phát VN</td></tr>
+            <tr><td>Nhà ở &amp; vật liệu xây dựng</td><td>~18%</td><td class="wb-cell-muted">—</td><td class="wb-cell-muted">Gồm cả điện, nước — đều là giá điều hành</td></tr>
+            <tr><td>Giao thông</td><td>~9–10%</td><td class="wb-cell-muted">—</td><td class="wb-cell-muted">Dầu tăng 10% chỉ đóng góp trực tiếp ~0,5–0,9 điểm % vào CPI <span class="wb-cap wb-cap--sm">R-B03</span></td></tr>
+          </tbody>
+        </table></div></div>
+        <p class="rb-prose">Thêm một đặc thù: nhiều mặt hàng nặng ký trong rổ — điện, xăng, y tế, giáo dục — là <b>giá điều hành</b>, do nhà nước quyết định thời điểm điều chỉnh. Truyền dẫn vì thế đi <b>theo bậc thang chứ không liên tục</b>: CPI Việt Nam có những bước nhảy vào tháng có quyết định tăng giá, thay vì trôi mượt theo thị trường thế giới <span class="wb-cap wb-cap--sm">7.6</span>.</p>
+      </section>
+
+      <hr class="wb-divider">
+
+      <!-- ============ A5 — CHỨNG KHOÁN VN ============ -->
+      <section id="a5-chungkhoan">
+        <p class="rb-sec-eyebrow"><b>A5</b> — Chứng khoán Việt Nam</p>
+        <h2 class="rb-sec-title">Giá cổ phiếu chỉ có hai bộ phận — và ở Việt Nam, bộ phận thứ hai quậy mạnh hơn</h2>
+        <p class="rb-lede">Giá một cổ phiếu = <b>lợi nhuận doanh nghiệp làm ra trên mỗi cổ phiếu</b> × <b>số tiền thị trường sẵn lòng trả cho mỗi đồng lợi nhuận đó</b>. Chỉ có hai thứ, nên mọi biến động giá phải quy về một trong hai. Không có khả năng thứ ba.</p>
+
+        <div class="rb-formula">$$P \;=\; \underbrace{\frac{P}{E}}_{\text{thị trường trả bao nhiêu}} \times \underbrace{EPS}_{\text{doanh nghiệp lãi bao nhiêu}}$$</div>
+        <p class="rb-prose">Đây là đẳng thức <span class="wb-cap wb-cap--success wb-cap--sm">T0</span> — đúng theo định nghĩa, giống <code>a = b × (a/b)</code>. Giá trị của nó là chẩn đoán: khi giá đổi, hỏi <b>bộ phận nào đổi</b>. <b>EPS</b> nói về doanh nghiệp. <b>P/E</b> nói về giá của việc chờ — tức là quay về A2.</p>
+
+        <div class="wb-card">
+          <div class="wb-card__head"><h4 class="wb-card__title">Ví dụ có số — lợi nhuận tăng 20%, giá vẫn giảm 10%</h4></div>
+          <div class="wb-table-scroll"><table class="wb-table">
+            <thead><tr><th>Thời điểm</th><th>EPS</th><th>P/E</th><th>Giá</th></tr></thead>
+            <tbody>
+              <tr><td>Năm nay</td><td>5.000 đ</td><td>12</td><td><b>60.000 đ</b></td></tr>
+              <tr><td>Năm sau</td><td>6.000 đ <span class="wb-cap wb-cap--success wb-cap--sm">+20%</span></td><td>9 <span class="wb-cap wb-cap--danger wb-cap--sm">−25%</span></td><td><b>54.000 đ</b> <span class="wb-cap wb-cap--danger wb-cap--sm">−10%</span></td></tr>
+            </tbody>
+          </table></div>
+          <div class="wb-card__foot"><span>Doanh nghiệp làm ăn tốt hơn thật. Cổ đông vẫn lỗ. Cú giảm hoàn toàn nằm ở P/E co lại — gọi là <b>de-rating</b>, và nó là tín hiệu về lãi suất chứ không phải về doanh nghiệp <span class="wb-cap wb-cap--success wb-cap--sm">R-E03</span>.</span></div>
+        </div>
+
+        <h3 class="rb-sub-title">Bốn thứ làm thị trường Việt Nam hành xử khác</h3>
+        <p class="rb-prose">Bốn đặc điểm dưới đây không phải chi tiết kỹ thuật vụn vặt — chúng giải thích phần lớn những chuyện "vô lý" mà nhà đầu tư cá nhân gặp phải.</p>
+
+        <div class="wb-accordion">
+          <details class="wb-accordion__item" open><summary>1 · Biên độ giá — không chặn cú sốc, chỉ rải nó ra nhiều phiên</summary><div class="wb-accordion__body">
+            <p class="rb-prose">Mỗi phiên, một cổ phiếu chỉ được phép biến động trong biên độ cố định: <b>HoSE ±7%, HNX ±10%, UPCoM ±15%</b>. Nghe như một tấm đệm bảo vệ. Thực tế nó chỉ <b>hoãn</b>, không <b>hoá giải</b>.</p>
+            <p class="rb-prose">Nếu một tin xấu đáng giá −25%, thị trường Mỹ làm xong trong một phiên và ngày hôm sau đi tìm mức cân bằng mới. Ở HoSE, cần <b>bốn phiên giảm sàn liên tiếp</b> mới tới cùng chỗ đó. Trong bốn phiên ấy, người muốn bán không bán được (không có người mua ở giá trần dưới), nên nỗi sợ được nuôi thêm ba ngày. <b>Đó là lý do chuỗi giảm sàn liên tiếp là hiện tượng đặc trưng Việt Nam</b> <span class="wb-cap wb-cap--sm">R-H01</span>.</p>
+          </div></details>
+
+          <details class="wb-accordion__item"><summary>2 · Margin — hệ có ngưỡng, và đây là điểm phi tuyến nguy hiểm nhất</summary><div class="wb-accordion__body">
+            <p class="rb-prose"><b>Margin</b> là vay tiền công ty chứng khoán để mua thêm cổ phiếu, lấy chính cổ phiếu làm tài sản bảo đảm. Chừng nào tỷ lệ <em>tài sản ròng / giá trị danh mục</em> còn trên ngưỡng duy trì, mọi thứ bình thường: giá phản ứng tỷ lệ với tin tức.</p>
+            <p class="rb-prose">Chạm ngưỡng thì hệ đổi chế độ. Công ty chứng khoán <b>bán cưỡng chế, không quan tâm định giá</b> — họ không hỏi cổ phiếu rẻ hay đắt, họ thu nợ. Việc bán đó đẩy giá xuống, kéo thêm tài khoản khác chạm ngưỡng, gây thêm lệnh bán. <b>Vòng phản hồi dương</b>, cùng cấu trúc với cascading failure trong hệ phân tán <span class="wb-cap wb-cap--sm">R-H02</span>.</p>
+            <div class="wb-alert wb-alert--danger" style="margin-top:12px"><span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">error</span></span><div class="wb-alert__body">
+              <p class="wb-alert__title">Call margin chéo — lý do "cổ phiếu tôi tốt mà vẫn sàn"</p>
+              <p class="wb-alert__msg">Khi mã đang lỗ bị mất thanh khoản (không ai mua), công ty chứng khoán không bán được nó. Họ bèn bán <b>mã khác trong tài khoản còn thanh khoản</b> để thu hồi nợ. Kết quả: một cổ phiếu tốt, không dính tin xấu nào, bị bán tháo chỉ vì nó nằm cùng tài khoản với một mã đang cháy. Cú giảm lúc này <b>đã tách rời hoàn toàn khỏi tin gốc</b> <span class="wb-cap wb-cap--sm">R-H03</span>.</p>
+            </div></div>
+          </div></details>
+
+          <details class="wb-accordion__item"><summary>3 · VN-Index không đo thị trường — nó đo nhóm trụ</summary><div class="wb-accordion__body">
+            <p class="rb-prose">VN-Index có <b>trọng số theo vốn hoá free-float</b> — cổ phiếu càng lớn càng nặng ký. Vài mã đầu bảng vì thế quyết định con số bạn thấy trên tin tức. Phiên "VN-Index xanh 5 điểm" mà 70% số mã trên sàn giảm giá là chuyện hoàn toàn bình thường và xảy ra thường xuyên.</p>
+            <p class="rb-prose">Muốn biết sức khoẻ thật của thị trường, nhìn <b>độ rộng</b> — số mã tăng so với số mã giảm — hoặc một chỉ số bình quân giản đơn, nơi mọi mã có trọng số bằng nhau. Chỉ số có trọng số vốn hoá trả lời câu hỏi "nhóm trụ hôm nay thế nào", không trả lời "danh mục của tôi hôm nay thế nào" <span class="wb-cap wb-cap--sm">R-H04</span>.</p>
+          </div></details>
+
+          <details class="wb-accordion__item"><summary>4 · Hơn 85% giao dịch là cá nhân, và thanh toán T+2</summary><div class="wb-accordion__body">
+            <p class="rb-prose">Nhà đầu tư cá nhân chiếm <b>trên 85% giá trị giao dịch</b>. Cá nhân đọc cùng nguồn tin, phản ứng cùng lúc, và ít bị ràng buộc bởi quy trình quản trị rủi ro — nên phản ứng của thị trường thường <b>lớn hơn cú sốc gốc</b>, cả khi lên lẫn khi xuống <span class="wb-cap wb-cap--sm">R-H07</span>.</p>
+            <p class="rb-prose">Thêm vào đó, thanh toán <b>T+2</b>: cổ phiếu mua hôm nay chưa bán lại được trong cùng phiên. Điều này cắt bớt một lớp người sẵn sàng mua-bán liên tục, nên sổ lệnh mỏng hơn thị trường T+0 — cùng một lệnh lớn đẩy giá đi xa hơn <span class="wb-cap wb-cap--sm">R-H05</span>.</p>
+          </div></details>
+        </div>
+
+        <h3 class="rb-sub-title">Chạy hết một ví dụ: Fed bất ngờ cứng rắn → danh mục của bạn</h3>
+        <p class="rb-prose">Đây là bài kiểm tra xem bạn đã nắm A1–A5 chưa. Giả sử Fed họp và <b>bất ngờ</b> phát tín hiệu giữ lãi suất cao lâu hơn thị trường đang định giá. Chuỗi sự kiện:</p>
+        <div class="wb-card"><div class="wb-card__body">
+          <ol class="wb-steps">
+            <li class="wb-steps__item is-done"><span class="wb-steps__marker">1</span><div class="wb-steps__content">
+              <p class="wb-steps__title">Trong vài phút — lãi suất thực Mỹ tăng, USD mạnh lên</p>
+              <p class="wb-steps__desc">Lợi suất trái phiếu Mỹ tăng. Vì đây là <em>bất ngờ</em> so với kỳ vọng, giá phải điều chỉnh. Chênh lệch lãi suất thực Mỹ với phần còn lại nới ra → DXY (chỉ số sức mạnh USD) tăng.</p>
+              <span class="wb-steps__note">R-A04 · R-C01</span></div></li>
+            <li class="wb-steps__item is-done"><span class="wb-steps__marker">2</span><div class="wb-steps__content">
+              <p class="wb-steps__title">Cùng ngày — vàng thế giới giảm, cổ phiếu mới nổi giảm</p>
+              <p class="wb-steps__desc">Giữ vàng giờ tốn kém hơn (A6). Đồng thời USD mạnh khiến tài sản thị trường mới nổi kém hấp dẫn.</p>
+              <span class="wb-steps__note">R-D01 · R-C02</span></div></li>
+            <li class="wb-steps__item is-done"><span class="wb-steps__marker">3</span><div class="wb-steps__content">
+              <p class="wb-steps__title">Ngày → tuần — áp lực dồn lên cái cửa duy nhất: USD/VND</p>
+              <p class="wb-steps__desc">Ngân hàng Nhà nước phải chọn một trong ba: để VND trượt, bán dự trữ ngoại hối, hoặc hút VND về để nâng lãi suất trong nước. Bộ ba bất khả thi đang thu tiền.</p>
+              <span class="wb-steps__note">R-C03</span></div></li>
+            <li class="wb-steps__item is-active"><span class="wb-steps__marker">4</span><div class="wb-steps__content">
+              <p class="wb-steps__title">Nếu chọn hút VND — chi phí vốn margin tăng, thanh khoản co</p>
+              <p class="wb-steps__desc">Lãi suất liên ngân hàng tăng → tiền vay để đầu cơ đắt lên → dòng tiền vào thị trường mỏng đi. Chưa cần ai bán, giá đã yếu vì lực mua rút.</p></div></li>
+            <li class="wb-steps__item is-todo"><span class="wb-steps__marker">5</span><div class="wb-steps__content">
+              <p class="wb-steps__title">Song song — khối ngoại bán ròng</p>
+              <p class="wb-steps__desc">Kênh dòng vốn là loại cầu nối <em>phình to ra đúng lúc căng thẳng</em>, khác hẳn kênh thương mại vốn ổn định.</p>
+              <span class="wb-steps__note">Cầu nối loại C · Phần 05</span></div></li>
+            <li class="wb-steps__item is-todo"><span class="wb-steps__marker">6</span><div class="wb-steps__content">
+              <p class="wb-steps__title">2–4 tháng sau — nếu VND trượt thật, CPI Việt Nam nhích lên</p>
+              <p class="wb-steps__desc">Hàng nhập khẩu quy ra VND đắt hơn. Đây là mắt xích chậm nhất trong chuỗi.</p>
+              <span class="wb-steps__note">R-C05</span></div></li>
+            <li class="wb-steps__item is-todo"><span class="wb-steps__marker">7</span><div class="wb-steps__content">
+              <p class="wb-steps__title">Nếu giá giảm đủ sâu — margin chạm ngưỡng và cú giảm tự nuôi nó</p>
+              <p class="wb-steps__desc">Từ điểm này trở đi, biên độ giảm không còn liên quan gì tới quy mô của tin gốc.</p>
+              <span class="wb-steps__note">R-H02 · R-H03</span></div></li>
+          </ol>
+        </div></div>
+        <div class="wb-alert wb-alert--success" style="margin-top:12px"><span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">check</span></span><div class="wb-alert__body">
+          <p class="wb-alert__title">Điểm mấu chốt của cả chuỗi</p>
+          <p class="wb-alert__msg">Không có bước nào trong bảy bước trên là "Fed → cổ phiếu Việt Nam". <b>Fed không nhìn thấy Việt Nam.</b> Mọi thứ phải đi qua tỷ giá, lãi suất trong nước, và dòng vốn — mỗi mắt xích có độ trễ riêng và có thể bị chặn bởi một quyết định chính sách. Đó là lý do "Fed diều hâu" đôi khi làm VN-Index sập, đôi khi không làm gì cả.</p>
+        </div></div>
+      </section>
+
+      <hr class="wb-divider">
+
+      <!-- ============ A6 — VÀNG ============ -->
+      <section id="a6-vang">
+        <p class="rb-sec-eyebrow"><b>A6</b> — Vàng</p>
+        <h2 class="rb-sec-title">Vàng không trả bạn đồng nào — nên giá nó là câu chuyện về chi phí cơ hội</h2>
+        <p class="rb-lede">Cổ phiếu trả cổ tức, trái phiếu trả lãi, nhà cho thuê ra tiền. <b>Vàng không sinh ra dòng tiền nào cả.</b> Vì thế thứ duy nhất quyết định giá nó là: <b>bạn mất gì khi giữ vàng thay vì giữ một tài sản có lãi?</b> Cái "mất gì" đó chính là lãi suất thực ở A2.</p>
+
+        <div class="wb-alert wb-alert--warning">
+          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">warning</span></span>
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Điều gần như ai cũng tin: "lạm phát cao thì mua vàng"</p>
+            <p class="wb-alert__msg">Nghe cực kỳ hợp lý — vàng là tài sản thật, tiền giấy in ra được, nên tiền mất giá thì vàng phải lên. Trực giác này đủ mạnh để tồn tại hàng chục năm.</p>
+            <p class="wb-alert__msg"><b>Nhưng năm 2022, lạm phát Mỹ chạm ~9% — cao nhất trong 40 năm — và vàng đi ngang rồi giảm.</b> Vì sao? Vì Fed nâng lãi suất danh nghĩa <em>nhanh hơn</em> lạm phát, nên lãi suất thực tăng vọt. Giữ vàng bỗng tốn kém: cùng số tiền đó gửi đi đã sinh lãi thực dương.</p>
+            <p class="wb-alert__msg">Phát biểu đúng là: <b>vàng nghịch với lãi suất thực, không phải thuận với lạm phát</b> <span class="wb-cap wb-cap--info wb-cap--sm">R-D01</span>. Lạm phát cao <em>đi kèm</em> lãi suất bị giữ thấp — tức lãi suất thực âm — mới là môi trường của vàng. Lạm phát cao mà ngân hàng trung ương phản ứng mạnh tay thì không.</p>
+          </div>
+        </div>
+
+        <p class="rb-prose">Vàng thật ra là hàng rào cho <b>hai</b> thứ khác nhau, và đây là chỗ hay gây rối:</p>
+        <ul class="wb-list wb-list--flush">
+          <li class="wb-list__item"><span class="wb-list__title"><b>Lãi suất thực âm</b><span class="wb-list__sub">Khi giữ tiền là chắc chắn mất sức mua, chi phí cơ hội của vàng bằng không hoặc âm. Đây là động lực "bình thường", chạy hằng ngày.</span></span></li>
+          <li class="wb-list__item"><span class="wb-list__title"><b>Mất niềm tin vào tiền pháp định hoặc hệ thống</b><span class="wb-list__sub">Chiến tranh, cấm vận, ngân hàng trung ương các nước gom vàng dự trữ. Đây là động lực "khủng hoảng", chạy theo đợt.</span></span></li>
+        </ul>
+        <p class="rb-prose">Hai động lực này <b>đôi khi kéo ngược nhau</b>, và đó là lý do quy tắc "vàng và USD nghịch nhau" thỉnh thoảng vỡ: trong một cuộc khủng hoảng hệ thống, cả vàng lẫn USD cùng tăng vì cả hai đều là nơi trú ẩn <span class="wb-cap wb-cap--warning wb-cap--sm">R-D03</span>. Ai chỉ nhớ một quy tắc sẽ bối rối đúng vào lúc quan trọng nhất.</p>
+
+        <h3 class="rb-sub-title">Ba loại vàng là ba thứ khác nhau — và đây là đặc thù Việt Nam quan trọng nhất</h3>
+        <p class="rb-prose">Sai lầm phổ biến của người mua vàng ở Việt Nam là coi "giá vàng" là một con số. Thực tế có <b>ba node độc lập</b>, và chênh lệch giữa chúng chứa nhiều thông tin hơn bản thân mức giá:</p>
+        <div class="wb-card"><div class="wb-table-scroll"><table class="wb-table">
+          <thead><tr><th>Node</th><th>Là gì</th><th>Bị chi phối bởi</th><th>Bám giá thế giới</th></tr></thead>
+          <tbody>
+            <tr><td><b>XAU/USD</b></td><td>Vàng thế giới, tính bằng USD/ounce</td><td>Lãi suất thực Mỹ, niềm tin vào hệ thống</td><td class="wb-cell-muted">— là chuẩn</td></tr>
+            <tr><td><b>Vàng nhẫn 9999</b></td><td>Vàng trơn, không thương hiệu độc quyền</td><td>XAU × tỷ giá + phí gia công</td><td><span class="wb-cap wb-cap--success wb-cap--sm">Bám khá sát</span></td></tr>
+            <tr><td><b>Vàng miếng SJC</b></td><td>Thương hiệu do Nhà nước độc quyền sản xuất</td><td>XAU × tỷ giá + phí + <b>địa tô độc quyền</b></td><td><span class="wb-cap wb-cap--danger wb-cap--sm">Lệch dai dẳng</span></td></tr>
+          </tbody>
+        </table></div></div>
+
+        <div class="wb-card" style="margin-top:14px">
+          <div class="wb-card__head"><h4 class="wb-card__title">Ví dụ có số — tự quy đổi giá thế giới ra "triệu đồng mỗi lượng"</h4></div>
+          <div class="wb-card__body">
+            <p class="rb-prose" style="margin-bottom:10px">Một lượng vàng = 37,5 gam = <b>1,20565 ounce troy</b>. Đây là hằng số, không phải ước lượng. Giả sử một hôm bạn thấy XAU = 3.300 USD/ounce và tỷ giá 26.000 đ/USD:</p>
+            <div class="rb-formula">$$3{.}300 \times 1{,}20565 \times 26{.}000 \;\approx\; \textbf{103,4 triệu đồng / lượng}$$</div>
+            <p class="rb-prose" style="margin:10px 0 0">Nếu bảng niêm yết SJC hôm đó là 120 triệu, chênh lệch là <b>~16,6 triệu/lượng</b>. Số tiền đó <b>không phải "cầu vàng đang rất mạnh"</b> — nó là giá của việc gần như không ai được nhập vàng về để kéo giá xuống. Bạn đang trả tiền cho một hàng rào hành chính, không phải cho vàng.</p>
+          </div>
+          <div class="wb-card__foot">Con số minh hoạ cho cách tính. Thay giá XAU và tỷ giá của ngày bạn đọc để có kết quả thật.</div>
+        </div>
+
+        <div class="wb-alert wb-alert--success" style="margin-top:14px"><span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">check</span></span><div class="wb-alert__body">
+          <p class="wb-alert__title">Quy tắc chẩn đoán — chỉ có được nhờ tách ba node</p>
+          <p class="wb-alert__msg">Khi thấy vàng trong nước "sốt", so <b>cả hai</b> loại với giá thế giới quy đổi:</p>
+          <p class="wb-alert__msg">· <b>Cả SJC và nhẫn cùng vượt</b> → cầu trú ẩn <b>thật</b>, người dân đang thực sự chuyển tài sản sang vàng.<br>· <b>Chỉ SJC vượt, nhẫn bám sát</b> → hiện tượng <b>thương hiệu và độc quyền</b>, không phải tín hiệu kinh tế. <span class="wb-cap wb-cap--warning wb-cap--sm">R-D06</span></p>
+        </div></div>
+
+        <h3 class="rb-sub-title">Vì sao chênh lệch tồn tại, và điều kiện để nó biến mất</h3>
+        <p class="rb-prose">Thông thường, chênh lệch giá giữa hai thị trường bị <b>arbitrage</b> — mua rẻ ở nơi này, bán đắt ở nơi kia — kéo về sát nhau. Cơ chế đó chỉ chạy khi hàng hoá <em>di chuyển được</em>. Nghị định 24/2012 trao cho Nhà nước độc quyền sản xuất vàng miếng và siết nhập khẩu, tức là <b>chặn đúng cái chân của arbitrage</b>. Chênh lệch SJC vì thế không tự đóng, và từng lên tới 18–20 triệu đồng/lượng vào cuối 2023.</p>
+        <p class="rb-prose">Nghị định 232/2025 (hiệu lực 10/10/2025) sửa đổi Nghị định 24 với kỳ vọng thu hẹp chênh lệch. Điều này cho một <b>dự đoán khả bác</b> — loại phát biểu tốt nhất bạn có thể có: nếu rào cản nhập khẩu thực sự được nới, chênh lệch <b>phải</b> co về mức chi phí nhập khẩu cận biên cộng chi phí giao dịch <span class="wb-cap wb-cap--info wb-cap--sm">R-D07</span>. Nếu sau một thời gian đủ dài mà nó không co, kết luận đúng là <em>rào cản chưa thực sự được nới</em>, chứ không phải "thị trường bất hợp lý". Cách kiểm chứng bằng dữ liệu nằm ở <a href="#s9-kiemchung">Phần 09</a>.</p>
+        <p class="rb-prose">Còn một kênh nội địa nữa, độc lập với thế giới: khi <b>lãi suất tiết kiệm VND thấp hơn lạm phát</b> — tức lãi thực âm — hộ gia đình chuyển một phần tiết kiệm sang vàng đơn giản vì gửi ngân hàng là chắc chắn mất sức mua. Cầu vàng trong nước có thể tăng ngay cả khi giá thế giới đứng yên <span class="wb-cap wb-cap--warning wb-cap--sm">R-D08</span>.</p>
+      </section>
+
+      <hr class="wb-divider">
+
+      <!-- ============ A7 — BÁO CHÍ ============ -->
+      <section id="a7-baochi">
+        <p class="rb-sec-eyebrow"><b>A7</b> — Kiểm tra lại trực giác</p>
+        <h2 class="rb-sec-title">Bảy câu hay đọc được, và điều thực sự đang xảy ra</h2>
+        <p class="rb-lede">Nếu kiến thức của bạn đến từ báo chí, bảy câu dưới đây gần như chắc chắn đã nằm sẵn trong đầu. Không câu nào <em>hoàn toàn</em> vô lý — mỗi câu đều có một logic nghe được, nếu không nó đã không lan rộng. Nhưng mỗi câu đều hỏng ở một chỗ cụ thể.</p>
+
+        <div class="wb-card"><div class="wb-table-scroll"><table class="wb-table wb-table--striped">
+          <thead><tr><th style="min-width:200px">Câu hay đọc được</th><th>Vì sao nghe có lý</th><th>Chỗ nó hỏng</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><b>"Tiền đang rút khỏi thị trường"</b></td>
+              <td class="wb-cell-muted">Thấy giá giảm và khối ngoại bán ròng, hình dung một cái bể đang cạn nước.</td>
+              <td>Mỗi cổ phiếu bán ra <b>đều có người mua vào</b>. Khối ngoại bán ròng 13.000 tỷ nghĩa là nhà đầu tư trong nước đã mua đúng 13.000 tỷ — chỉ là ở mức giá thấp hơn. Cái thay đổi là <b>giá</b>, không phải "lượng tiền trong thị trường" <span class="wb-cap wb-cap--sm">7.5</span></td>
+            </tr>
+            <tr>
+              <td><b>"Fed tăng lãi suất nên thị trường giảm"</b></td>
+              <td class="wb-cell-muted">Quan hệ này đúng rất nhiều lần trong quá khứ.</td>
+              <td>Nếu thị trường <b>đã định giá đúng</b> mức tăng đó, giá không đổi. Chỉ <b>sai số so với kỳ vọng</b> mới di chuyển giá — nên Fed tăng mạnh mà thị trường tăng là chuyện hoàn toàn bình thường <span class="wb-cap wb-cap--info wb-cap--sm">R-A04</span></td>
+            </tr>
+            <tr>
+              <td><b>"Lạm phát cao, nên mua vàng"</b></td>
+              <td class="wb-cell-muted">Vàng là tài sản thật; tiền giấy in được nên mất giá.</td>
+              <td>Vàng đi theo <b>lãi suất thực</b>. Năm 2022 lạm phát Mỹ ~9% mà vàng đi ngang rồi giảm, vì Fed nâng lãi suất nhanh hơn lạm phát <span class="wb-cap wb-cap--info wb-cap--sm">R-D01</span></td>
+            </tr>
+            <tr>
+              <td><b>"In tiền nhiều thì tất yếu siêu lạm phát"</b></td>
+              <td class="wb-cell-muted">Đẳng thức <code>MV = PY</code> có thật, và các ca siêu lạm phát lịch sử đều đi kèm in tiền.</td>
+              <td>Đẳng thức đúng nhưng <b>V (vòng quay tiền) không ổn định</b>. Giai đoạn 2009–2019: M tăng rất mạnh, V sụp, nên không có siêu lạm phát. Một đẳng thức đúng vẫn có thể <b>vô dụng để dự báo</b> <span class="wb-cap wb-cap--success wb-cap--sm">T0</span></td>
+            </tr>
+            <tr>
+              <td><b>"Chiến tranh nổ ra, chứng khoán sẽ sập"</b></td>
+              <td class="wb-cell-muted">Cảm giác rủi ro tăng vọt, và phiên đầu tiên thường đỏ thật.</td>
+              <td>Lịch sử cho thấy giảm mạnh rồi <b>hồi nhanh</b> — <b>trừ khi</b> chặn được một điểm nghẽn năng lượng hoặc chuỗi cung ứng thật. Chiến tranh không tác động trực tiếp; nó tác động <b>qua giá dầu và phần bù rủi ro</b> <span class="wb-cap wb-cap--warning wb-cap--sm">R-G02</span></td>
+            </tr>
+            <tr>
+              <td><b>"Doanh nghiệp lãi kỷ lục mà cổ phiếu vẫn giảm — vô lý"</b></td>
+              <td class="wb-cell-muted">Giá cổ phiếu lẽ ra phản ánh kết quả kinh doanh.</td>
+              <td><code>P = (P/E) × EPS</code>. EPS tăng nhưng P/E co mạnh hơn thì giá vẫn giảm. Đó là tín hiệu về <b>lãi suất chiết khấu</b>, không phải về doanh nghiệp <span class="wb-cap wb-cap--success wb-cap--sm">R-E03</span></td>
+            </tr>
+            <tr>
+              <td><b>"Cổ phiếu tôi có tin xấu gì đâu mà sàn"</b></td>
+              <td class="wb-cell-muted">Giá lẽ ra phản ánh thông tin về chính doanh nghiệp đó.</td>
+              <td><b>Call margin chéo.</b> Công ty chứng khoán bán mã còn thanh khoản để thu nợ từ mã đã kẹt. Cổ phiếu của bạn bị bán vì nó <em>bán được</em>, không phải vì nó xấu <span class="wb-cap wb-cap--sm">R-H03</span></td>
+            </tr>
+          </tbody>
+        </table></div></div>
+
+        <div class="wb-alert wb-alert--plain" style="margin-top:14px"><div class="wb-alert__body">
+          <p class="wb-alert__title">Tự kiểm — nếu trả lời được ba câu này, Phần A đã xong việc của nó</p>
+          <p class="wb-alert__msg">1. Ngân hàng Nhà nước hạ lãi suất điều hành 0,5 điểm % nhưng lạm phát kỳ vọng cũng tăng 0,5 điểm % — tiền đang rẻ đi hay đắt lên?<br>2. Giá dầu tăng 15%. Cần biết thêm <em>một</em> con số nào nữa mới đoán được cổ phiếu sẽ lên hay xuống?<br>3. Vàng nhẫn bám sát giá thế giới quy đổi, còn SJC vượt 15 triệu/lượng. Đây là tín hiệu về nhu cầu trú ẩn hay về chính sách?</p>
+        </div></div>
+      </section>
+
+      <hr class="wb-divider">
+
+      <!-- ============ A8 — TỪ ĐIỂN ============ -->
+      <section id="a8-tudien">
+        <p class="rb-sec-eyebrow"><b>A8</b> — Từ điển</p>
+        <h2 class="rb-sec-title">Thuật ngữ, mỗi từ một dòng — và vì sao nó đáng quan tâm</h2>
+        <p class="rb-sec-intro">Tra khi gặp một từ lạ ở Phần B. Cột thứ ba là phần quan trọng: một định nghĩa không nói cho bạn biết <b>khi nào thì cần đến nó</b>.</p>
+
+        <div class="wb-accordion">
+          <details class="wb-accordion__item" open><summary>Lãi suất &amp; lạm phát</summary><div class="wb-accordion__body">
+            <div class="wb-card"><div class="wb-table-scroll"><table class="wb-table wb-table--compact">
+              <thead><tr><th style="min-width:150px">Thuật ngữ</th><th>Nghĩa</th><th>Vì sao cần quan tâm</th></tr></thead>
+              <tbody>
+                <tr><td><b>Lãi suất danh nghĩa</b></td><td>Con số in trên hợp đồng, chưa trừ lạm phát</td><td class="wb-cell-muted">Cái báo chí trích dẫn</td></tr>
+                <tr><td><b>Lãi suất thực</b></td><td>Danh nghĩa − lạm phát kỳ vọng</td><td class="wb-cell-muted"><b>Biến chủ của cả trang này</b> (A2)</td></tr>
+                <tr><td><b>Lạm phát kỳ vọng</b></td><td>Mức lạm phát thị trường tin sẽ xảy ra</td><td class="wb-cell-muted">Quyết định hành vi hôm nay, khác lạm phát đã xảy ra</td></tr>
+                <tr><td><b>CPI</b></td><td>Giá của một giỏ hàng hoá cố định, so theo thời gian</td><td class="wb-cell-muted">Rổ VN khác rổ Mỹ căn bản (A4)</td></tr>
+                <tr><td><b>Headline vs core</b></td><td>Core loại bỏ thực phẩm và năng lượng (hai nhóm nhiễu nhất)</td><td class="wb-cell-muted">Fed nhìn core, không nhìn headline</td></tr>
+                <tr><td><b>Breakeven / TIPS</b></td><td>Lạm phát kỳ vọng do <em>thị trường</em> định giá, đọc trực tiếp từ trái phiếu chống lạm phát Mỹ</td><td class="wb-cell-muted">Cách quan sát kỳ vọng mà không cần khảo sát ai</td></tr>
+                <tr><td><b>Output gap</b></td><td>Khoảng cách giữa sản lượng thực tế và mức tối đa bền vững</td><td class="wb-cell-muted">Lạm phát cầu kéo chỉ xuất hiện khi khoảng này đóng lại</td></tr>
+                <tr><td><b>Đường cong lợi suất</b></td><td>Lãi suất theo kỳ hạn. "Đảo ngược" = lãi ngắn hạn cao hơn dài hạn</td><td class="wb-cell-muted">Tín hiệu suy thoái trễ 6–18 tháng, và đã từng báo giả</td></tr>
+              </tbody>
+            </table></div></div>
+          </div></details>
+
+          <details class="wb-accordion__item"><summary>Tiền tệ, dòng vốn &amp; chính sách</summary><div class="wb-accordion__body">
+            <div class="wb-card"><div class="wb-table-scroll"><table class="wb-table wb-table--compact">
+              <thead><tr><th style="min-width:150px">Thuật ngữ</th><th>Nghĩa</th><th>Vì sao cần quan tâm</th></tr></thead>
+              <tbody>
+                <tr><td><b>DXY</b></td><td>Chỉ số đo sức mạnh USD so với rổ tiền tệ lớn</td><td class="wb-cell-muted">DXY mạnh gần như luôn xấu với tài sản thị trường mới nổi</td></tr>
+                <tr><td><b>XAU</b></td><td>Ký hiệu vàng thế giới, tính USD/ounce</td><td class="wb-cell-muted">Chuẩn để quy đổi ra giá vàng trong nước (A6)</td></tr>
+                <tr><td><b>QE / QT</b></td><td>Ngân hàng trung ương mua (QE) hoặc bán (QT) tài sản để bơm/hút thanh khoản</td><td class="wb-cell-muted">Công cụ <em>độc lập</em> với lãi suất — 2020–2021 lãi suất bằng 0 nhưng QE mới là biến chi phối</td></tr>
+                <tr><td><b>Trần tăng trưởng tín dụng</b></td><td>Hạn mức NHNN cấp cho từng ngân hàng mỗi năm</td><td class="wb-cell-muted">Với VN, công cụ này chi phối hơn cả lãi suất</td></tr>
+                <tr><td><b>Bộ ba bất khả thi</b></td><td>Tỷ giá ổn định + vốn tự do + lãi suất độc lập: chọn hai</td><td class="wb-cell-muted">Khung giải thích mọi thế kẹt của NHNN (A4)</td></tr>
+                <tr><td><b>Dự trữ ngoại hối</b></td><td>Kho USD của NHNN, hay đo bằng "đủ bao nhiêu tháng nhập khẩu"</td><td class="wb-cell-muted">Đạn để giữ tỷ giá — hữu hạn, nên đếm được</td></tr>
+                <tr><td><b>FDI / FII</b></td><td>Vốn ngoại vào nhà máy (FDI) và vào chứng khoán (FII)</td><td class="wb-cell-muted">FDI dính chặt, FII rút trong một phiên</td></tr>
+                <tr><td><b>Kiều hối</b></td><td>Tiền người Việt ở nước ngoài gửi về, ~16–20 tỷ USD/năm</td><td class="wb-cell-muted"><b>Ngược chu kỳ</b> — tăng đúng lúc khó khăn, một tấm đệm tỷ giá hiếm có</td></tr>
+              </tbody>
+            </table></div></div>
+          </div></details>
+
+          <details class="wb-accordion__item"><summary>Cổ phiếu, định giá &amp; rủi ro</summary><div class="wb-accordion__body">
+            <div class="wb-card"><div class="wb-table-scroll"><table class="wb-table wb-table--compact">
+              <thead><tr><th style="min-width:150px">Thuật ngữ</th><th>Nghĩa</th><th>Vì sao cần quan tâm</th></tr></thead>
+              <tbody>
+                <tr><td><b>EPS</b></td><td>Lợi nhuận sau thuế chia cho số cổ phiếu</td><td class="wb-cell-muted">Nửa "doanh nghiệp" của giá</td></tr>
+                <tr><td><b>P/E</b></td><td>Giá chia cho EPS — trả bao nhiêu đồng cho mỗi đồng lãi</td><td class="wb-cell-muted">Nửa "lãi suất" của giá</td></tr>
+                <tr><td><b>De-rating</b></td><td>P/E co lại dù lợi nhuận không xấu đi</td><td class="wb-cell-muted">Chẩn đoán: cú giảm là về lãi suất, không về doanh nghiệp</td></tr>
+                <tr><td><b>Chiết khấu</b></td><td>Quy tiền tương lai về giá trị hôm nay bằng cách chia cho $(1+r)^t$</td><td class="wb-cell-muted">Nền tảng của mọi định giá</td></tr>
+                <tr><td><b>Spread tín dụng (IG / HY)</b></td><td>Phần lãi suất tăng thêm mà doanh nghiệp phải trả so với chính phủ. HY = nhóm rủi ro cao</td><td class="wb-cell-muted"><b>Giãn ra trước khi cổ phiếu giảm</b> — chỉ báo cảnh báo sớm tốt nhất</td></tr>
+                <tr><td><b>VIX / MOVE</b></td><td>Thước đo biến động kỳ vọng của cổ phiếu (VIX) và trái phiếu (MOVE)</td><td class="wb-cell-muted">MOVE thường động trước VIX — trái phiếu dẫn đường</td></tr>
+                <tr><td><b>Đuôi dày</b></td><td>Biến động cực đoan xảy ra thường xuyên hơn nhiều so với phân phối chuẩn dự đoán</td><td class="wb-cell-muted">Bẫy lớn nhất với người từ nền toán/kỹ thuật bước vào tài chính</td></tr>
+                <tr><td><b>Free-float</b></td><td>Phần cổ phiếu thực sự tự do giao dịch</td><td class="wb-cell-muted">Cơ sở tính trọng số VN-Index — lý do chỉ số đo nhóm trụ</td></tr>
+                <tr><td><b>Margin / call margin</b></td><td>Vay tiền công ty chứng khoán để mua; bị bán cưỡng chế khi tỷ lệ ký quỹ thủng ngưỡng</td><td class="wb-cell-muted">Nguồn phi tuyến lớn nhất của thị trường VN (A5)</td></tr>
+                <tr><td><b>Nâng hạng thị trường</b></td><td>Được FTSE/MSCI xếp lên nhóm cao hơn</td><td class="wb-cell-muted">Quỹ chỉ số <em>buộc phải</em> mua bất kể giá — sự kiện biết trước lịch</td></tr>
+              </tbody>
+            </table></div></div>
+          </div></details>
+
+          <details class="wb-accordion__item"><summary>Cơ chế truyền dẫn &amp; ngân hàng</summary><div class="wb-accordion__body">
+            <div class="wb-card"><div class="wb-table-scroll"><table class="wb-table wb-table--compact">
+              <thead><tr><th style="min-width:150px">Thuật ngữ</th><th>Nghĩa</th><th>Vì sao cần quan tâm</th></tr></thead>
+              <tbody>
+                <tr><td><b>Arbitrage</b></td><td>Mua rẻ nơi này bán đắt nơi kia, khoá lời không rủi ro</td><td class="wb-cell-muted">Cơ chế kéo hai giá về sát nhau — chặn nó thì chênh lệch tồn tại mãi (vàng SJC)</td></tr>
+                <tr><td><b>β (beta truyền dẫn)</b></td><td>Biến ở đây đổi 1%, biến ở kia đổi bao nhiêu %</td><td class="wb-cell-muted">Đơn vị đo của mọi "cầu nối" ở Phần 05</td></tr>
+                <tr><td><b>Pass-through</b></td><td>Bao nhiêu phần chi phí đầu vào được đẩy sang giá bán</td><td class="wb-cell-muted">Cao khi có quyền định giá; thấp thì <b>biên lợi nhuận</b> gánh cú sốc</td></tr>
+                <tr><td><b>Độ co giãn</b></td><td>Cầu giảm bao nhiêu % khi giá tăng 1%</td><td class="wb-cell-muted">Cầu càng ít co giãn, cú sốc cung càng dữ dội (dầu, điện, gạo)</td></tr>
+                <tr><td><b>NIM</b></td><td>Chênh lệch lãi cho vay và lãi huy động của ngân hàng</td><td class="wb-cell-muted">Bốn chỉ số ngân hàng này <b>phản ứng ngược chiều nhau</b> với cùng một cú sốc lãi suất — gộp "bank" thành một node là mất hết thông tin</td></tr>
+                <tr><td><b>NPL</b></td><td>Tỷ lệ nợ xấu</td><td class="wb-cell-muted">Đi sau tăng trưởng tín dụng 18–36 tháng</td></tr>
+                <tr><td><b>LDR</b></td><td>Dư nợ cho vay trên tiền gửi — đo mức căng thanh khoản</td><td class="wb-cell-muted">Cao thì ngân hàng hết dư địa cho vay thêm</td></tr>
+                <tr><td><b>CAR</b></td><td>Tỷ lệ an toàn vốn — vốn tự có so với tài sản rủi ro</td><td class="wb-cell-muted">Trần cứng cho tăng trưởng tín dụng</td></tr>
+              </tbody>
+            </table></div></div>
+          </div></details>
+        </div>
+
+        <div class="wb-alert wb-alert--info" style="margin-top:16px"><span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span><div class="wb-alert__body">
+          <p class="wb-alert__title">Hết Phần A — từ đây trở xuống là sổ tay tra cứu</p>
+          <p class="wb-alert__msg">Phần B nén những cơ chế vừa đọc thành ~60 mệnh đề "nếu… thì…", mỗi mệnh đề gắn một <b>thẻ độ cứng</b> nói cho bạn biết được phép tin nó đến mức nào. Đọc <a href="#s0-cach-doc">mục 00</a> trước để hiểu hệ thẻ, rồi dùng bộ lọc ở <a href="#s3-quytac">mục 03</a>.</p>
+        </div></div>
+      </section>
+
+      <hr class="wb-divider">
+
+      <div class="rb-part-head">
+        <p class="rb-kicker">Phần B · tra khi cần</p>
+        <h2>Sổ tay quy tắc — nén cơ chế thành mệnh đề kiểm chứng được</h2>
+        <p>Cùng nội dung với Phần A nhưng ở dạng đặc: mỗi quy tắc một dòng, có thẻ độ cứng, có độ trễ, có điều kiện đảo dấu. Phần này viết để <b>tra</b>, không để đọc tuần tự.</p>
+      </div>
 
       <!-- ============ 00 — CÁCH ĐỌC ============ -->
       <section id="s0-cach-doc">
@@ -740,16 +1273,58 @@
       </section>
 
       <hr class="wb-divider">
-      <p class="wb-help">Nguồn: so-tay-quy-tac-kinh-te-tai-chinh.md · cập nhật 31/7/2026, số liệu đến phiên 29/7/2026.<br>Tài liệu tổng hợp phục vụ mục đích học tập, không phải khuyến nghị đầu tư. Các mốc chính sách nên được kiểm tra lại tại thời điểm sử dụng.</p>
+
+      <div class="wb-alert wb-alert--plain">
+        <div class="wb-alert__body">
+          <p class="wb-alert__title">Về tài liệu này</p>
+          <p class="wb-alert__msg">Tổng hợp phục vụ <b>mục đích học tập</b> — không phải khuyến nghị đầu tư. Các mốc chính sách và con số thị trường nên được kiểm tra lại tại thời điểm sử dụng; cách tự kiểm chứng bằng dữ liệu nằm ở <a href="#s9-kiemchung">Phần 09</a>. Nguồn: <code>so-tay-quy-tac-kinh-te-tai-chinh.md</code> · cập nhật 31/7/2026, số liệu đến phiên 29/7/2026.</p>
+        </div>
+      </div>
 
     </div>
   </div>
 </main>
 
-<footer class="wb-footer wb-footer--slim">
+<footer class="wb-footer">
   <div class="wb-footer__inner">
+    <div class="wb-footer__top">
+      <div class="wb-footer__brand">
+        <span class="wb-footer__mark">§</span>
+        <div>
+          <div class="wb-footer__name">Sổ tay Kinh tế</div>
+          <p class="wb-footer__tagline">Hiểu chuỗi nhân quả từ nền kinh tế tới bảng giá — chứng khoán Việt Nam và vàng.</p>
+        </div>
+      </div>
+      <nav class="wb-footer__cols" aria-label="Mục lục chân trang">
+        <div class="wb-footer__col">
+          <h4 class="wb-footer__title">Phần A — Hiểu</h4>
+          <a class="wb-footer__link" href="#a1-vong-tien">Vòng tiền chảy</a>
+          <a class="wb-footer__link" href="#a2-laisuat-thuc">Lãi suất thực</a>
+          <a class="wb-footer__link" href="#a3-chuky">Chu kỳ &amp; ngân hàng TW</a>
+          <a class="wb-footer__link" href="#a4-vietnam">Việt Nam đứng ở đâu</a>
+        </div>
+        <div class="wb-footer__col">
+          <h4 class="wb-footer__title">Thị trường</h4>
+          <a class="wb-footer__link" href="#a5-chungkhoan">Chứng khoán Việt Nam</a>
+          <a class="wb-footer__link" href="#a6-vang">Vàng</a>
+          <a class="wb-footer__link" href="#a7-baochi">Bảy câu báo hay viết</a>
+          <a class="wb-footer__link" href="#a8-tudien">Từ điển thuật ngữ</a>
+        </div>
+        <div class="wb-footer__col">
+          <h4 class="wb-footer__title">Phần B — Tra cứu</h4>
+          <a class="wb-footer__link" href="#s3-quytac">Danh mục quy tắc</a>
+          <a class="wb-footer__link" href="#s4-chedo">Lớp chế độ</a>
+          <a class="wb-footer__link" href="#s5-caunoi">Cầu nối TG → VN</a>
+          <a class="wb-footer__link" href="#s9-kiemchung">Kiểm chứng dữ liệu</a>
+        </div>
+      </nav>
+    </div>
     <div class="wb-footer__bottom">
-      <span class="wb-footer__copy">Sổ tay Kinh tế · một trang trong <a href="index.html">vudat081299 / collection</a></span>
+      <span class="wb-footer__copy">Một trang trong <a href="index.html">vudat081299 / collection</a> · tài liệu học tập, không phải khuyến nghị đầu tư</span>
+      <div class="wb-footer__social">
+        <a class="wb-btn wb-btn--ghost wb-btn--icon" href="index.html" aria-label="Trang chủ"><span class="wb-ico">home</span></a>
+        <a class="wb-btn wb-btn--ghost wb-btn--icon" href="#" aria-label="Lên đầu trang"><span class="wb-ico">arrow_upward</span></a>
+      </div>
     </div>
   </div>
 </footer>
