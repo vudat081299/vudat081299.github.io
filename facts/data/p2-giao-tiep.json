@@ -4,7 +4,7 @@
     "cat": "giao-tiep",
     "sub": "quan-he",
     "t": "Tỉ lệ 5 tích cực trên 1 tiêu cực phân biệt cặp đôi bền với cặp đôi tan",
-    "s": "Quan sát các cặp vợ chồng tranh cãi trong phòng thí nghiệm, nhóm nghiên cứu đếm số tương tác tích cực và tiêu cực. Cặp trụ được có tỉ lệ khoảng 5:1 ngay trong lúc cãi nhau; cặp về sau ly hôn rơi xuống quanh 0,8:1. Điều quan trọng: không phải ít cãi hơn, mà là nhiều sửa chữa hơn.",
+    "s": "Quan sát các cặp vợ chồng tranh cãi trong phòng thí nghiệm, nhóm nghiên cứu đếm số tương tác tích cực và tiêu cực. Cặp trụ được có tỉ lệ khoảng 5:1 ngay trong lúc cãi nhau; cặp về sau ly hôn rơi xuống quanh 0,8:1. Điều quan trọng: không phải ít cãi hơn, mà là nhiều sửa chữa hơn. Con số tỉ lệ chính xác cần đọc thận trọng — nó đến từ mẫu nhỏ và đã bị phê phán về phương pháp — nhưng chiều của kết quả thì vững.",
     "tags": [
       "quan-he",
       "xung-dot",
@@ -547,7 +547,7 @@
     "cat": "giao-tiep",
     "sub": "viet-va-noi",
     "t": "Nhắc lại một thông tin sai để bác bỏ nó có thể làm nó dễ nhớ hơn",
-    "s": "Với thời gian, người ta nhớ nội dung nhưng quên ngữ cảnh 'đây là điều sai'. Vì vậy hướng dẫn về chống tin giả khuyên: dẫn với sự thật, nhắc thông tin sai một lần duy nhất và gắn cảnh báo rõ, rồi giải thích cơ chế vì sao nó sai.",
+    "s": "Với thời gian, người ta nhớ nội dung nhưng quên ngữ cảnh 'đây là điều sai'. Vì vậy hướng dẫn về chống tin giả khuyên: dẫn với sự thật, nhắc thông tin sai một lần duy nhất và gắn cảnh báo rõ, rồi giải thích cơ chế vì sao nó sai. Cấu trúc bác bỏ hiệu quả: nêu sự thật trước, cảnh báo sắp nhắc tin sai, nhắc đúng một lần, rồi giải thích vì sao nó sai và nó phục vụ cho ai.",
     "tags": [
       "tin-gia",
       "tri-nho",
