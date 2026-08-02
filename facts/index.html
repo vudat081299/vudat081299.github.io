@@ -89,6 +89,7 @@
           </span>
           <button class="wb-btn wb-btn--outline wb-btn--sm" data-random>
             <span class="wb-ico wb-ico--sm">casino</span> Fact ngẫu nhiên
+            <kbd class="wb-kbd">R</kbd>
           </button>
         </div>
 
@@ -106,9 +107,10 @@
           </div>
         </section>
 
-        <!-- 2 · DANH SÁCH — mỗi fact một card; card dài mở drawer chi tiết. -->
-        <section class="wb-section wb-section--flush">
-          <div class="wb-grid wb-grid--auto fx-grid" data-grid style="--wb-grid-min:320px"></div>
+        <!-- 2 · DANH SÁCH — mỗi fact một card; bấm card mở modal chi tiết.
+             Section thường (không --flush) để --wb-section-gap tách nó khỏi bộ lọc. -->
+        <section class="wb-section">
+          <div class="wb-grid wb-grid--auto" data-grid style="--wb-grid-min:320px"></div>
 
           <div class="wb-empty" data-empty hidden>
             <div class="wb-empty__icon">🔍</div>
@@ -138,23 +140,26 @@
   </div>
 </div>
 
-<!-- ============================ DRAWER CHI TIẾT ============================= -->
-<div class="wb-overlay" id="fact-detail">
-  <aside class="wb-drawer" role="dialog" aria-modal="true" aria-labelledby="fact-detail-title">
-    <div class="wb-drawer__head">
+<!-- ============================= MODAL CHI TIẾT =============================
+     Đặt giữa màn hình (không phải drawer bên phải) để mắt không phải chạy ngang,
+     và để chỗ minh hoạ tương tác có đủ bề ngang. -->
+<div class="wb-overlay wb-overlay--blur" id="fact-detail">
+  <div class="wb-modal fx-modal" role="dialog" aria-modal="true" aria-labelledby="fact-detail-title">
+    <div class="wb-modal__head">
       <div>
         <span class="wb-cap" data-d-cat>—</span>
-        <h2 class="wb-drawer__title" id="fact-detail-title" data-d-title>—</h2>
+        <h2 class="wb-modal__title" id="fact-detail-title" data-d-title>—</h2>
       </div>
       <button class="wb-close" data-modal-close aria-label="Đóng"></button>
     </div>
-    <div class="wb-drawer__body">
+    <div class="wb-modal__body fx-modal__body wb-scroll-y">
+      <div class="fx-viz" data-d-viz hidden></div>
       <div class="fx-prose" data-d-body></div>
       <div class="wb-tags fx-drawer-tags" data-d-tags></div>
       <hr class="wb-divider wb-divider--dashed" />
       <p class="wb-help" data-d-src></p>
     </div>
-    <div class="wb-drawer__foot">
+    <div class="wb-modal__foot fx-modal__foot">
       <button class="wb-btn wb-btn--ghost wb-btn--sm" data-d-prev>
         <span class="wb-ico wb-ico--sm">chevron_left</span> Trước
       </button>
@@ -163,15 +168,21 @@
               aria-label="Sao chép link tới fact này" title="Sao chép link">
         <span class="wb-ico wb-ico--sm">link</span>
       </button>
+      <button class="wb-btn wb-btn--secondary wb-btn--sm" data-random
+              title="Fact ngẫu nhiên khác (phím R)">
+        <span class="wb-ico wb-ico--sm">casino</span> Ngẫu nhiên
+        <kbd class="wb-kbd">R</kbd>
+      </button>
       <button class="wb-btn wb-btn--ghost wb-btn--sm" data-d-next>
         Sau <span class="wb-ico wb-ico--sm">chevron_right</span>
       </button>
     </div>
-  </aside>
+  </div>
 </div>
 
 <div class="wb-toaster" data-toaster></div>
 
+<script src="viz.js" defer></script>
 <script src="app.js" defer></script>
 </body>
 </html>

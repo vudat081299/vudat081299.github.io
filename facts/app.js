@@ -46,6 +46,7 @@
     overlay:  $('#fact-detail'),
     dCat:     $('[data-d-cat]'),
     dTitle:   $('[data-d-title]'),
+    dViz:     $('[data-d-viz]'),
     dBody:    $('[data-d-body]'),
     dTags:    $('[data-d-tags]'),
     dSrc:     $('[data-d-src]'),
@@ -206,7 +207,9 @@
       '<div class="wb-card__body">' +
         '<div class="wb-cluster wb-cluster--between wb-cluster--tight">' +
           '<span class="wb-cap wb-cap--sm">' + esc(cat.label) + '</span>' +
-          '<span class="fx-card__no">#' + f._n + '</span>' +
+          (f.viz
+            ? '<span class="wb-cap wb-cap--sm fx-card__viz"><span class="wb-ico wb-ico--xs">touch_app</span> Tương tác</span>'
+            : '<span class="fx-card__no">#' + f._n + '</span>') +
         '</div>' +
         '<p class="wb-card__title">' + mark(f.t, state.q) + '</p>' +
         '<p class="fx-card__text">' + mark(f.s, state.q) + '</p>' +
@@ -218,7 +221,7 @@
       '</div>' +
       '<div class="wb-card__foot">' +
         '<span class="fx-card__src">' + esc(f.src || '') + '</span>' +
-        '<span class="fx-card__more">' + (f.d ? 'Đọc tiếp' : 'Chi tiết') +
+        '<span class="fx-card__more">' + (f.viz ? 'Thử ngay' : (f.d ? 'Đọc tiếp' : 'Chi tiết')) +
           '<span class="wb-ico wb-ico--xs">chevron_right</span></span>' +
       '</div>';
     return node;
@@ -251,7 +254,21 @@
     }
   }
 
-  /* ---------------------------------------------------------------- drawer */
+  /* ----------------------------------------------------------------- modal */
+
+  /* Minh hoạ tương tác: fact có trường "viz" và viz.js có hàm cùng tên thì dựng
+     vào đầu thân modal. Hỏng một minh hoạ không được làm hỏng cả modal. */
+  function renderViz(f) {
+    el.dViz.innerHTML = '';
+    var fn = f.viz && window.FactViz && window.FactViz[f.viz];
+    el.dViz.hidden = !fn;
+    if (!fn) return;
+    try {
+      fn(el.dViz);
+    } catch (err) {
+      el.dViz.innerHTML = '<p class="wb-help">Không dựng được minh hoạ cho fact này.</p>';
+    }
+  }
 
   function openFact(id, pushHash) {
     var f = null, i;
@@ -262,6 +279,8 @@
     var cat = state.catMap[f.cat] || { label: f.cat };
     el.dCat.textContent = cat.label;
     el.dTitle.textContent = f.t;
+
+    renderViz(f);
 
     var body = '<p class="fx-prose__lead">' + esc(f.s) + '</p>';
     if (f.d) {
@@ -281,8 +300,19 @@
     el.dNext.disabled = pos === -1 || pos >= state.view.length - 1;
 
     el.overlay.classList.add('is-open');
+    el.dBody.parentNode.scrollTop = 0;
     if (pushHash !== false) location.hash = '#/' + state.cat + '/' + f.id;
     $('.wb-close', el.overlay).focus();
+  }
+
+  /* Fact ngẫu nhiên — ưu tiên tập đang lọc, và không bốc trúng fact đang mở. */
+  function randomFact() {
+    var pool = state.view.length ? state.view : state.facts;
+    if (!pool.length) return;
+    if (pool.length > 1) {
+      pool = pool.filter(function (f) { return f.id !== state.openId; });
+    }
+    openFact(pool[Math.floor(Math.random() * pool.length)].id);
   }
 
   function closeFact() {
@@ -384,13 +414,8 @@
       }
     });
 
-    /* fact ngẫu nhiên — lấy trong tập đang lọc nếu có */
     $$('[data-random]').forEach(function (b) {
-      b.addEventListener('click', function () {
-        var pool = state.view.length ? state.view : state.facts;
-        if (!pool.length) return;
-        openFact(pool[Math.floor(Math.random() * pool.length)].id);
-      });
+      b.addEventListener('click', randomFact);
     });
 
     $('[data-focus-search]').addEventListener('click', function () {
@@ -418,7 +443,8 @@
       if (e.target.closest('[data-cat]')) shell.classList.remove('is-side-open');
     });
 
-    /* phím tắt: / tìm · Esc đóng · ← → lật fact khi drawer mở */
+    /* phím tắt: R fact ngẫu nhiên · / tìm · Esc đóng · ← → lật fact khi modal mở.
+       R chạy được cả khi modal đang mở — mỗi lần bấm là một fact mới. */
     document.addEventListener('keydown', function (e) {
       var typing = /^(input|textarea|select)$/i.test(e.target.tagName) || e.target.isContentEditable;
       if (e.key === 'Escape') {
@@ -426,7 +452,8 @@
         closeFact();
         return;
       }
-      if (typing) return;
+      if (typing || e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.key === 'r' || e.key === 'R') { e.preventDefault(); randomFact(); return; }
       if (e.key === '/') { e.preventDefault(); el.search.focus(); return; }
       if (!el.overlay.classList.contains('is-open')) return;
       if (e.key === 'ArrowLeft')  step(-1);
