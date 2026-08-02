@@ -209,8 +209,14 @@
     .mc-flabel { width: 100%; }
     .mc-search { max-width: none; flex: 1 1 150px; }
     .mc-count { flex: none; }
-    .mc-fpanel { max-height: 50vh; overflow-y: auto; }
+    /* Panel cuộn được, nên nó cắt mọi thứ tràn ra mép — mà ô "Sắp xếp" lại nằm đúng
+       góc trên-trái: vòng focus 3px của nó bị xén hai cạnh, trông như bị gọt. Chừa 4px
+       đệm trong rồi kéo lại bằng margin âm để nội dung vẫn thẳng hàng như cũ. */
+    .mc-fpanel { max-height: 50vh; overflow-y: auto; padding: 4px; margin: -4px -4px 0; }
     .mc-fmore { display: flex; gap: 8px; flex-wrap: wrap; }
+    /* .mc-frow + .mc-frow không bắt được vì đứng trước là <span class="mc-fmore">,
+       nên hàng "Loại món" dính sát ô Sắp xếp — vòng focus đè lên chữ. */
+    .mc-fpanel > .mc-fmore + .mc-frow { margin-top: 11px; }
     .mc-chip { min-height: 32px; }                    /* ngón tay, không phải con trỏ */
     .mc-grid { gap: 10px; }
 
