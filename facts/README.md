@@ -3,7 +3,10 @@
 Trang tĩnh, không build, không phụ thuộc. Dựng bằng [web-builder](../web-builder/) v0.6
 (`../web-builder/web-builder.css`) + `facts.css` (chrome riêng, prefix `fx-*`) + `app.js`.
 
-**1.003 fact** trên 14 chủ đề, trong đó 13 fact có minh hoạ tương tác.
+**956 fact** trên 14 chủ đề, chia thành 118 cụm nhỏ, trong đó 13 fact có minh hoạ tương tác.
+
+> Sửa hoặc thêm fact thì đọc [CLAUDE.md](CLAUDE.md) trước — ở đó có pipeline thêm fact và
+> cơ chế chống trùng. File này chỉ nói về kiến trúc.
 
 ```
 facts/
@@ -11,10 +14,12 @@ facts/
   app.js            nạp data, lọc/sắp xếp, render, routing bằng hash
   viz.js            minh hoạ tương tác — một hàm cho mỗi giá trị của trường "viz"
   facts.css         phần web-builder chưa có: card dạng <button>, cắt dòng, khung minh hoạ
+  tools/
+    factlint.py     kiểm cấu trúc + tìm fact gần trùng + tra fact sắp thêm
   data/
-    manifest.json   danh sách chủ đề + danh sách file fact (thứ tự file = thứ tự thêm)
-    <chu-de>.json   đợt fact đầu (311 fact)
-    p2-<chu-de>.json đợt fact thứ hai (692 fact)
+    manifest.json   chủ đề + cụm (clusters) + danh sách file fact (thứ tự file = thứ tự thêm)
+    <chu-de>.json   đợt fact đầu
+    p2-<chu-de>.json đợt fact thứ hai
 ```
 
 ## Chạy tại máy
@@ -42,6 +47,7 @@ File đứng sau trong `files` = fact mới hơn, và chế độ sắp xếp m�
 {
   "id": "td-023",                       // duy nhất toàn thư viện, tiền tố theo chủ đề
   "cat": "tu-duy",                      // phải khớp một id trong manifest.categories
+  "sub": "mo-hinh-tu-duy",              // cụm nhỏ trong chủ đề — phải khớp manifest.clusters[cat]
   "t": "Tiêu đề — một câu khẳng định",
   "s": "Tóm tắt hiện trên card, 1–3 câu. Đây là phần bắt buộc.",
   "d": "Phần dài, tuỳ chọn. Ngăn đoạn bằng \n\n. Chỉ hiện trong modal chi tiết.",
@@ -54,13 +60,12 @@ File đứng sau trong `files` = fact mới hơn, và chế độ sắp xếp m�
 Chạy lại bộ kiểm tra sau khi thêm:
 
 ```bash
-python3 -c "import json,os;m=json.load(open('facts/data/manifest.json'));c={x['id'] for x in m['categories']};i=set();n=0
-for f in m['files']:
- d=json.load(open('facts/data/'+f))
- for it in d:
-  n+=1; assert it['cat'] in c, it['id']; assert it['id'] not in i, it['id']; assert it['src']; i.add(it['id'])
-print('OK', n, 'fact')"
+python3 facts/tools/factlint.py check
 ```
+
+Nó kiểm id trùng, `cat`/`sub` sai, thiếu `src`, `viz` trỏ vào hàm không tồn tại, và quét cả
+thư viện tìm các cặp fact gần trùng nhau. Xem thêm `stats` (phân bố theo cụm) và
+`near "<văn bản>"` (tra một fact sắp thêm) — chi tiết trong [CLAUDE.md](CLAUDE.md).
 
 ## Quy tắc kiểm chứng (bắt buộc)
 

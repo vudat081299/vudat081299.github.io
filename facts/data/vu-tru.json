@@ -2,178 +2,288 @@
   {
     "id": "vt-001",
     "cat": "vu-tru",
+    "sub": "he-mat-troi",
     "t": "Ánh sáng bạn đang thấy từ Mặt Trời rời khỏi đó 8 phút 20 giây trước",
     "s": "Nhưng năng lượng trong photon ấy đã mất hàng chục nghìn đến hàng trăm nghìn năm để thoát ra từ lõi Mặt Trời, do liên tục bị hấp thụ và phát lại trong lớp vật chất dày đặc. Nắng sáng nay là năng lượng được sinh ra từ trước khi loài người biết viết chữ.",
-    "tags": ["mat-troi", "anh-sang", "thoi-gian"],
+    "tags": [
+      "mat-troi",
+      "anh-sang",
+      "thoi-gian"
+    ],
     "src": "NASA Solar Physics; Mitalas & Sills, Astrophysical Journal (1992)"
   },
   {
     "id": "vt-002",
     "cat": "vu-tru",
+    "sub": "mat-trang-thuy-trieu",
     "t": "Mặt Trăng đang rời xa Trái Đất khoảng 3,8 cm mỗi năm",
     "s": "Con số này đo trực tiếp bằng cách bắn laser lên các gương phản xạ mà các phi hành đoàn Apollo đặt trên Mặt Trăng. Ma sát thuỷ triều lấy dần năng lượng quay của Trái Đất và đẩy Mặt Trăng ra xa — nên ngày trên Trái Đất cũng dài dần, khoảng 1,7 mili giây mỗi thế kỷ.",
-    "tags": ["mat-trang", "thuy-trieu", "do-luong"],
+    "tags": [
+      "mat-trang",
+      "thuy-trieu",
+      "do-luong"
+    ],
     "src": "Lunar Laser Ranging, NASA/JPL; Stephenson & Morrison, Philosophical Transactions A (1995)"
   },
   {
     "id": "vt-003",
     "cat": "vu-tru",
+    "sub": "thang-khong-gian",
     "t": "Vũ trụ quan sát được rộng khoảng 93 tỷ năm ánh sáng dù mới 13,8 tỷ năm tuổi",
     "s": "Không mâu thuẫn với giới hạn tốc độ ánh sáng: bản thân không gian giãn nở, nên các vùng phát ra ánh sáng mà ta đang thấy hôm nay giờ đã ở xa hơn nhiều so với quãng đường ánh sáng đã đi. Giới hạn tốc độ áp cho vật thể di chuyển trong không gian, không áp cho sự giãn nở của chính không gian.",
-    "tags": ["vu-tru-hoc", "gian-no", "khoang-cach"],
+    "tags": [
+      "vu-tru-hoc",
+      "gian-no",
+      "khoang-cach"
+    ],
     "src": "Planck Collaboration (2018); Lineweaver & Davis, Scientific American (2005)"
   },
   {
     "id": "vt-004",
     "cat": "vu-tru",
+    "sub": "he-mat-troi",
     "t": "Một ngày trên sao Kim dài hơn một năm của nó",
-    "s": "Sao Kim quay quanh trục mất khoảng 243 ngày Trái Đất, trong khi quay hết một vòng quanh Mặt Trời chỉ mất khoảng 225 ngày. Nó còn quay ngược chiều so với hầu hết hành tinh, nên nếu đứng trên bề mặt, bạn sẽ thấy Mặt Trời mọc ở hướng tây.",
-    "tags": ["sao-kim", "hanh-tinh", "thoi-gian"],
+    "s": "Sao Kim quay quanh trục mất khoảng 243 ngày Trái Đất, trong khi quay hết một vòng quanh Mặt Trời chỉ mất khoảng 225 ngày. Nó còn quay ngược chiều so với hầu hết hành tinh, nên nếu đứng trên bề mặt, bạn sẽ thấy Mặt Trời mọc ở hướng tây. Vì sao nó quay ngược thì chưa dứt điểm: giả thuyết là một va chạm khổng lồ, hoặc thuỷ triều khí quyển đặc làm lật trục.",
+    "tags": [
+      "sao-kim",
+      "hanh-tinh",
+      "thoi-gian"
+    ],
     "src": "NASA Planetary Fact Sheet"
   },
   {
     "id": "vt-005",
     "cat": "vu-tru",
+    "sub": "he-mat-troi",
     "t": "Mặt Trời chiếm 99,86% khối lượng của toàn hệ Mặt Trời",
     "s": "Tất cả hành tinh, mặt trăng, tiểu hành tinh và sao chổi cộng lại chỉ chiếm phần còn lại. Trong phần nhỏ nhoi đó, riêng sao Mộc đã nặng hơn tất cả các hành tinh khác cộng lại khoảng 2,5 lần.",
-    "tags": ["mat-troi", "he-mat-troi", "khoi-luong"],
+    "tags": [
+      "mat-troi",
+      "he-mat-troi",
+      "khoi-luong"
+    ],
     "src": "NASA Planetary Fact Sheet"
   },
   {
     "id": "vt-006",
     "cat": "vu-tru",
+    "sub": "vat-ly-vu-tru",
     "t": "GPS sẽ sai khoảng 10 km mỗi ngày nếu không hiệu chỉnh theo thuyết tương đối",
     "s": "Đồng hồ trên vệ tinh chạy nhanh hơn đồng hồ mặt đất khoảng 38 micro giây mỗi ngày: nhanh 45 µs do hấp dẫn yếu hơn (tương đối rộng), chậm 7 µs do vận tốc quỹ đạo (tương đối hẹp). Nếu bỏ qua, sai số vị trí tích luỹ tới cả chục km trong 24 giờ.",
     "d": "Đây là câu trả lời cụ thể nhất cho câu hỏi 'thuyết tương đối thì có ích gì cho đời sống': mỗi lần bạn mở bản đồ trên điện thoại, thiết bị của bạn đang dùng kết quả của cả hai thuyết tương đối cùng lúc.",
-    "tags": ["gps", "tuong-doi", "cong-nghe"],
+    "tags": [
+      "gps",
+      "tuong-doi",
+      "cong-nghe"
+    ],
     "src": "Neil Ashby, Relativity in the Global Positioning System, Living Reviews in Relativity (2003)"
   },
   {
     "id": "vt-007",
     "cat": "vu-tru",
+    "sub": "ngoi-sao-thien-ha",
     "t": "Sắt trong máu bạn được tạo ra trong các ngôi sao",
     "s": "Vũ trụ sơ khai chỉ có hydro, heli và một chút lithium. Mọi nguyên tố nặng hơn — carbon trong ADN, oxy bạn đang thở, canxi trong xương, sắt trong hemoglobin — đều được tổng hợp trong lòng các ngôi sao rồi phát tán khi chúng chết. Câu 'chúng ta là bụi sao' là mô tả kỹ thuật chính xác.",
-    "tags": ["nguyen-to", "sao", "nguon-goc"],
+    "tags": [
+      "nguyen-to",
+      "sao",
+      "nguon-goc"
+    ],
     "src": "Burbidge, Burbidge, Fowler & Hoyle, Reviews of Modern Physics (1957)"
   },
   {
     "id": "vt-008",
     "cat": "vu-tru",
+    "sub": "trai-dat",
     "t": "Điểm trên bề mặt Trái Đất xa tâm nhất không phải đỉnh Everest",
     "s": "Vì Trái Đất phình ở xích đạo (bán kính xích đạo lớn hơn bán kính cực khoảng 21 km), đỉnh Chimborazo ở Ecuador — chỉ cao 6.263 m so với mực nước biển — lại xa tâm Trái Đất hơn Everest khoảng 2 km. 'Cao nhất' phụ thuộc vào việc bạn đo từ đâu.",
-    "tags": ["trai-dat", "dia-ly", "do-luong"],
+    "tags": [
+      "trai-dat",
+      "dia-ly",
+      "do-luong"
+    ],
     "src": "Instituto Geográfico Militar Ecuador; NOAA"
   },
   {
     "id": "vt-009",
     "cat": "vu-tru",
+    "sub": "trai-dat",
     "t": "Áp suất ở đáy rãnh Mariana gấp hơn 1.000 lần áp suất khí quyển",
     "s": "Khoảng 1.086 bar ở độ sâu gần 11 km — tương đương đặt hơn một tấn lên mỗi centimet vuông. Vậy mà vẫn có sinh vật sống ở đó. Chúng ta đã lập bản đồ bề mặt sao Hoả chi tiết hơn đáy đại dương của chính hành tinh mình.",
-    "tags": ["dai-duong", "ap-suat", "kham-pha"],
+    "tags": [
+      "dai-duong",
+      "ap-suat",
+      "kham-pha"
+    ],
     "src": "NOAA Ocean Exploration; dữ liệu tàu lặn Challenger Deep"
   },
   {
     "id": "vt-010",
     "cat": "vu-tru",
+    "sub": "trai-dat",
     "t": "Tia sét nóng hơn bề mặt Mặt Trời khoảng năm lần",
     "s": "Kênh plasma của một tia sét có thể đạt gần 30.000 K, trong khi bề mặt Mặt Trời khoảng 5.800 K. Tiếng sấm chính là sóng xung kích từ khối không khí bị nung nóng đột ngột và giãn nở nhanh hơn tốc độ âm thanh.",
-    "tags": ["set", "nhiet-do", "khi-quyen"],
+    "tags": [
+      "set",
+      "nhiet-do",
+      "khi-quyen"
+    ],
     "src": "Uman, The Lightning Discharge; NOAA National Severe Storms Laboratory"
   },
   {
     "id": "vt-011",
     "cat": "vu-tru",
+    "sub": "mat-trang-thuy-trieu",
     "t": "Ta luôn thấy một mặt của Mặt Trăng, nhưng tổng cộng thấy được 59% bề mặt nó",
     "s": "Mặt Trăng bị khoá thuỷ triều nên luôn hướng một phía về Trái Đất. Tuy nhiên do quỹ đạo hình elip và trục nghiêng, nó lắc lư nhẹ — hiện tượng gọi là chuyển động thư sai — nên qua thời gian ta nhìn được thêm phần rìa, tổng cộng khoảng 59%.",
-    "tags": ["mat-trang", "quy-dao", "quan-sat"],
+    "tags": [
+      "mat-trang",
+      "quy-dao",
+      "quan-sat"
+    ],
     "src": "NASA Scientific Visualization Studio, Moon Phase and Libration"
   },
   {
     "id": "vt-012",
     "cat": "vu-tru",
+    "sub": "kham-pha-khong-gian",
     "t": "Voyager 1 là vật thể nhân tạo xa nhất, và nó vẫn đang liên lạc về",
     "s": "Phóng năm 1977, tàu rời khỏi nhật quyển vào năm 2012 và hiện cách Trái Đất hơn 24 tỷ km — tín hiệu vô tuyến mất hơn 22 giờ để về tới đây. Nó chạy bằng nguồn nhiệt điện đồng vị phóng xạ với công suất còn lại chỉ vài trăm watt.",
-    "tags": ["voyager", "kham-pha", "cong-nghe"],
+    "tags": [
+      "voyager",
+      "kham-pha",
+      "cong-nghe"
+    ],
     "src": "NASA/JPL, Voyager Mission Status"
   },
   {
     "id": "vt-013",
     "cat": "vu-tru",
+    "sub": "vat-ly-vu-tru",
     "t": "Trong chân không không có âm thanh, nhưng có 'tiếng động' của plasma",
     "s": "Sóng âm cần môi trường vật chất để lan truyền, nên vụ nổ trong không gian là im lặng. Tuy nhiên các tàu vũ trụ vẫn ghi được dao động plasma và sóng vô tuyến rồi chuyển sang tần số nghe được — đó là 'âm thanh vũ trụ' mà NASA công bố, một bản dịch chứ không phải bản ghi.",
-    "tags": ["am-thanh", "vat-ly", "vu-tru"],
+    "tags": [
+      "am-thanh",
+      "vat-ly",
+      "vu-tru"
+    ],
     "src": "NASA, dữ liệu sóng plasma từ Voyager và Juno"
   },
   {
     "id": "vt-014",
     "cat": "vu-tru",
+    "sub": "kham-pha-khong-gian",
     "t": "Trạm Vũ trụ Quốc tế bay quanh Trái Đất mỗi 90 phút — 16 lần bình minh mỗi ngày",
     "s": "Ở độ cao khoảng 400 km, ISS di chuyển với tốc độ khoảng 7,66 km/s. Phi hành đoàn vì thế thấy mặt trời mọc và lặn 16 lần trong 24 giờ, và phải sống theo giờ UTC quy ước để giữ nhịp sinh học.",
-    "tags": ["iss", "quy-dao", "phi-hanh-gia"],
+    "tags": [
+      "iss",
+      "quy-dao",
+      "phi-hanh-gia"
+    ],
     "src": "NASA, International Space Station Facts and Figures"
   },
   {
     "id": "vt-015",
     "cat": "vu-tru",
+    "sub": "ngoi-sao-thien-ha",
     "t": "Một thìa cà phê vật chất sao neutron nặng khoảng một tỷ tấn",
     "s": "Sao neutron nén khối lượng lớn hơn Mặt Trời vào quả cầu đường kính chỉ khoảng 20 km. Ở mật độ đó, vật chất đã bị ép tới mức electron và proton hợp lại thành neutron — một trạng thái không thể tạo ra ở bất kỳ phòng thí nghiệm nào trên Trái Đất.",
-    "tags": ["sao-neutron", "mat-do", "vat-ly"],
+    "tags": [
+      "sao-neutron",
+      "mat-do",
+      "vat-ly"
+    ],
     "src": "NASA Goddard, Neutron Stars; Lattimer & Prakash, Science (2004)"
   },
   {
     "id": "vt-016",
     "cat": "vu-tru",
+    "sub": "ngoi-sao-thien-ha",
     "t": "Ngân Hà và thiên hà Andromeda sẽ va vào nhau sau khoảng 4,5 tỷ năm",
     "s": "Andromeda đang lao về phía chúng ta với tốc độ khoảng 110 km/s. Nhưng 'va chạm' ở đây gần như không có va chạm thật: khoảng cách giữa các ngôi sao lớn tới mức xác suất hai sao đâm nhau là cực thấp — hai thiên hà chủ yếu đi xuyên qua nhau và hợp nhất dần bằng lực hấp dẫn.",
-    "tags": ["thien-ha", "tuong-lai", "hap-dan"],
+    "tags": [
+      "thien-ha",
+      "tuong-lai",
+      "hap-dan"
+    ],
     "src": "van der Marel, Besla, Cox, Sohn & Anderson, Astrophysical Journal (2012)"
   },
   {
     "id": "vt-017",
     "cat": "vu-tru",
+    "sub": "he-mat-troi",
     "t": "Sao Thổ nhẹ tới mức về lý thuyết nổi được trên nước",
     "s": "Khối lượng riêng trung bình của nó khoảng 0,687 g/cm³, thấp hơn nước. Hành tinh này chủ yếu là hydro và heli, và nó cũng dẹt nhất trong hệ Mặt Trời do quay rất nhanh — một ngày ở đó chỉ khoảng 10,7 giờ.",
-    "tags": ["sao-tho", "hanh-tinh", "mat-do"],
+    "tags": [
+      "sao-tho",
+      "hanh-tinh",
+      "mat-do"
+    ],
     "src": "NASA Planetary Fact Sheet"
   },
   {
     "id": "vt-018",
     "cat": "vu-tru",
+    "sub": "trai-dat",
     "t": "Lõi Trái Đất nóng gần bằng bề mặt Mặt Trời",
     "s": "Nhiệt độ lõi trong ước tính khoảng 5.200–6.000 K, tương đương bề mặt Mặt Trời. Nhiệt này đến từ nhiệt còn sót lại lúc hành tinh hình thành và từ phân rã phóng xạ; chính nó duy trì dòng đối lưu tạo ra từ trường bảo vệ chúng ta khỏi gió mặt trời.",
-    "tags": ["trai-dat", "dia-chat", "tu-truong"],
+    "tags": [
+      "trai-dat",
+      "dia-chat",
+      "tu-truong"
+    ],
     "src": "Anzellini, Dewaele, Mezouar, Loubeyre & Morard, Science (2013)"
   },
   {
     "id": "vt-019",
     "cat": "vu-tru",
+    "sub": "trai-dat",
     "t": "Bầu khí quyển bạn đang thở là sản phẩm thải của vi khuẩn",
     "s": "Khí quyển Trái Đất sơ khai gần như không có oxy tự do. Khoảng 2,4 tỷ năm trước, vi khuẩn lam quang hợp thải ra oxy nhiều tới mức gây ra 'Sự kiện Oxy hoá Lớn' — một cuộc tuyệt chủng hàng loạt với các sinh vật kỵ khí lúc đó, và là điều kiện cho mọi sự sống phức tạp sau này.",
-    "tags": ["khi-quyen", "tien-hoa", "trai-dat"],
+    "tags": [
+      "khi-quyen",
+      "tien-hoa",
+      "trai-dat"
+    ],
     "src": "Lyons, Reinhard & Planavsky, Nature (2014)"
   },
   {
     "id": "vt-020",
     "cat": "vu-tru",
+    "sub": "he-mat-troi",
     "t": "Ngọn núi cao nhất hệ Mặt Trời cao gấp gần ba lần Everest",
     "s": "Olympus Mons trên sao Hoả cao khoảng 22 km và rộng cỡ nước Pháp. Nó lớn được như vậy vì sao Hoả không có kiến tạo mảng: điểm nóng núi lửa nằm yên một chỗ và cứ chồng chất dung nham suốt hàng tỉ năm, thay vì trượt đi tạo thành chuỗi đảo như ở Hawaii.",
-    "tags": ["sao-hoa", "nui-lua", "dia-chat"],
+    "tags": [
+      "sao-hoa",
+      "nui-lua",
+      "dia-chat"
+    ],
     "src": "NASA Mars Exploration Program; dữ liệu Mars Global Surveyor"
   },
   {
     "id": "vt-021",
     "cat": "vu-tru",
+    "sub": "thang-khong-gian",
     "t": "Một năm ánh sáng là 9,46 nghìn tỷ km — và ngôi sao gần nhất cách ta 4,24 năm ánh sáng",
     "s": "Nếu thu nhỏ Mặt Trời còn bằng quả bóng bàn, Trái Đất là hạt cát cách đó khoảng 4 mét, còn Proxima Centauri sẽ ở cách hơn 1.000 km. Khoảng trống chiếm gần như toàn bộ vũ trụ; vật chất là ngoại lệ hiếm hoi.",
-    "tags": ["khoang-cach", "ty-le", "sao"],
+    "tags": [
+      "khoang-cach",
+      "ty-le",
+      "sao"
+    ],
     "src": "ESA Gaia mission; International Astronomical Union"
   },
   {
     "id": "vt-022",
     "cat": "vu-tru",
+    "sub": "thang-thoi-gian",
     "t": "Trái Đất đã từng có ngày chỉ dài khoảng 18 giờ",
     "s": "Phân tích các lớp trầm tích chu kỳ và hoá thạch san hô cho thấy khoảng 1,4 tỷ năm trước, một ngày trên Trái Đất chỉ khoảng 18 tiếng, và Mặt Trăng ở gần hơn nhiều. Thời gian một ngày không phải hằng số — nó là kết quả của một quá trình vật lý vẫn đang tiếp diễn.",
-    "tags": ["trai-dat", "thoi-gian", "dia-chat"],
+    "tags": [
+      "trai-dat",
+      "thoi-gian",
+      "dia-chat"
+    ],
     "src": "Meyers & Malinverno, PNAS (2018)"
   }
 ]

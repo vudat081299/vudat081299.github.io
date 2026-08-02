@@ -17,6 +17,22 @@
     { "id": "lich-su",    "icon": "history_edu",     "label": "Lịch sử & Văn minh",     "desc": "Mốc thời gian làm bạn hiệu chỉnh trực giác — phần lớn thứ ta tưởng là cổ xưa thì rất gần, và ngược lại." },
     { "id": "ngon-ngu",   "icon": "translate",       "label": "Ngôn ngữ & Chữ viết",    "desc": "Công cụ chính của tư duy và giao tiếp: nó ra đời để làm gì, nó bóp méo gì, và đọc/viết thế nào cho hiệu quả." }
   ],
+  "clusters": {
+    "tu-duy":    ["mo-hinh-tu-duy", "nhan-qua", "ra-quyet-dinh", "du-doan", "lap-luan-sai", "hoc-va-nho", "sang-tao", "rui-ro"],
+    "tam-ly":    ["thien-kien", "dong-luc", "cam-xuc", "tri-nho", "ban-than", "nhin-nguoi-khac", "nhan-cach", "huyen-thoai-tam-ly"],
+    "giao-tiep": ["lang-nghe", "xung-dot-xin-loi", "thuyet-phuc", "phi-ngon-ngu", "quan-he", "viet-va-noi", "nhom-va-hop", "huyen-thoai-giao-tiep"],
+    "kinh-te":   ["lai-va-no", "lam-phat-tien", "dau-tu", "chi-tieu-tiet-kiem", "gia-va-thi-truong", "dong-co-kinh-te", "bao-hiem-rui-ro", "thue-chinh-sach"],
+    "kinh-doanh":["to-chuc", "tuyen-dung", "du-an", "dam-phan", "ban-hang-marketing", "su-nghiep", "khoi-nghiep", "do-luong"],
+    "so-hoc":    ["xac-suat-co-dieu-kien", "co-mau-p-value", "trung-binh-phan-bo", "tuong-quan", "nghich-ly-xac-suat", "so-lieu-lua", "ngau-nhien", "dem-va-to-hop"],
+    "xa-hoi":    ["bau-cu-chinh-tri", "luat-phap", "dan-so", "do-thi-giao-thong", "bat-binh-dang", "the-che-hop-tac", "toi-pham-an-toan", "van-hoa-truyen-thong"],
+    "co-the":    ["thi-giac", "giac-quan-khac", "nao-than-kinh", "tim-mach-mau", "co-xuong", "tieu-hoa-chuyen-hoa", "da-toc-mong", "sinh-san-di-truyen", "mien-dich-vi-sinh"],
+    "suc-khoe":  ["giac-ngu", "van-dong", "an-uong", "chat-kich-thich", "benh-va-tam-soat", "thuoc-va-vaccine", "suc-khoe-tinh-than", "huyen-thoai-suc-khoe"],
+    "sinh-vat":  ["hanh-vi-dong-vat", "giac-quan-dong-vat", "tien-hoa", "thuc-vat-nam", "vi-khuan-virus", "bien-va-nuoc", "chim-va-bay", "con-trung", "co-the-dong-vat"],
+    "vu-tru":    ["he-mat-troi", "ngoi-sao-thien-ha", "thang-khong-gian", "thang-thoi-gian", "trai-dat", "vat-ly-vu-tru", "kham-pha-khong-gian", "mat-trang-thuy-trieu"],
+    "cong-nghe": ["internet-mang", "bao-mat-mat-khau", "du-lieu-luu-tru", "may-tinh-chip", "ai-thuat-toan", "dien-thoai-pin", "rieng-tu-quang-cao", "huyen-thoai-cong-nghe"],
+    "lich-su":   ["co-dai", "trung-dai", "can-hien-dai", "chien-tranh", "phat-minh", "y-te-lich-su", "viet-nam", "huyen-thoai-lich-su"],
+    "ngon-ngu":  ["chu-viet", "ngu-phap-tu-vung", "hoc-ngoai-ngu", "doc-va-viet", "goc-tu-lich-su", "ngon-ngu-va-tu-duy", "tieng-viet", "ngon-ngu-ky-hieu"]
+  },
   "files": [
     "tu-duy.json",
     "tam-ly.json",

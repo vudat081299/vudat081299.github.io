@@ -2,180 +2,290 @@
   {
     "id": "xh-001",
     "cat": "xa-hoi",
+    "sub": "the-che-hop-tac",
     "t": "Tuỳ chọn mặc định quyết định hành vi của cả một quốc gia",
     "s": "Ở các nước mà hiến tạng là mặc định phải đăng ký (opt-in), tỉ lệ đồng ý thường dưới 30%; ở các nước mặc định là đồng ý trừ khi từ chối (opt-out), tỉ lệ trên 90%. Người dân hai nhóm nước không khác nhau về đạo đức — chỉ khác nhau ở ô tick mặc định trên tờ khai.",
     "d": "Bài học áp dụng được ngay cho đời cá nhân: thay vì dựa vào ý chí, hãy đổi mặc định. Trích lương tự động sang tài khoản tiết kiệm ngay ngày nhận lương, đặt điện thoại ngoài phòng ngủ, huỷ tự động gia hạn ngay khi mua. Ý chí là nguồn lực có hạn; mặc định thì chạy 24/7.",
-    "tags": ["hanh-vi", "chinh-sach", "thoi-quen"],
+    "tags": [
+      "hanh-vi",
+      "chinh-sach",
+      "thoi-quen"
+    ],
     "src": "Johnson & Goldstein, Science 302 (2003)"
   },
   {
     "id": "xh-002",
     "cat": "xa-hoi",
+    "sub": "bau-cu-chinh-tri",
     "t": "Không có hệ thống bầu cử nào vừa công bằng vừa nhất quán về mặt toán học",
     "s": "Định lý bất khả thi của Kenneth Arrow chứng minh: với từ ba lựa chọn trở lên, không tồn tại quy tắc gộp ý kiến cá nhân thành ý kiến tập thể mà thoả mãn đồng thời một nhóm nhỏ tiêu chí hợp lý. Mọi hệ thống bầu cử thực tế đều là một tập hợp các đánh đổi, không phải một hệ hoàn hảo bị cài đặt sai.",
-    "tags": ["bau-cu", "lua-chon-tap-the", "the-che"],
+    "tags": [
+      "bau-cu",
+      "lua-chon-tap-the",
+      "the-che"
+    ],
     "src": "Kenneth Arrow, Social Choice and Individual Values (1951); Nobel Kinh tế 1972"
   },
   {
     "id": "xh-003",
     "cat": "xa-hoi",
+    "sub": "bau-cu-chinh-tri",
     "t": "Định luật Duverger: bầu một vòng, một ghế thì dẫn tới hệ hai đảng",
     "s": "Khi mỗi khu vực chỉ chọn một người thắng theo đa số tương đối, cử tri có động cơ bỏ phiếu chiến lược cho một trong hai ứng viên dẫn đầu thay vì cho lựa chọn mình thích nhất. Cấu trúc luật chơi định hình kết quả chính trị mạnh hơn nhiều so với sở thích của cử tri.",
-    "tags": ["bau-cu", "chinh-tri", "the-che"],
+    "tags": [
+      "bau-cu",
+      "chinh-tri",
+      "the-che"
+    ],
     "src": "Maurice Duverger, Political Parties (1954)"
   },
   {
     "id": "xh-004",
     "cat": "xa-hoi",
+    "sub": "do-thi-giao-thong",
     "t": "Thêm đường có thể làm giao thông tắc hơn",
     "s": "Nghịch lý Braess: trong một mạng lưới mà mỗi người tự chọn tuyến nhanh nhất cho mình, việc mở thêm một tuyến mới có thể khiến thời gian đi lại của tất cả tăng lên. Hiện tượng ngược lại cũng đã được ghi nhận: đóng một số trục đường ở Seoul và New York làm giao thông tốt lên.",
-    "tags": ["giao-thong", "he-thong", "do-thi"],
+    "tags": [
+      "giao-thong",
+      "he-thong",
+      "do-thi"
+    ],
     "src": "Dietrich Braess (1968); Youn, Gastner & Jeong, Physical Review Letters (2008)"
   },
   {
     "id": "xh-005",
     "cat": "xa-hoi",
+    "sub": "bat-binh-dang",
     "t": "Tỉ lệ nghèo cùng cực toàn cầu đã giảm từ khoảng 38% xuống dưới 10% trong ba thập kỷ",
     "s": "Theo dữ liệu Ngân hàng Thế giới, tỉ lệ dân số sống dưới chuẩn nghèo cùng cực giảm mạnh từ năm 1990 tới trước đại dịch, chủ yếu nhờ tăng trưởng ở Đông Á và Nam Á. Đây là một trong những thay đổi lớn nhất của thế kỷ, và cũng là một trong những sự thật ít người đoán đúng nhất trong các khảo sát nhận thức.",
-    "tags": ["ngheo-doi", "phat-trien", "toan-cau"],
+    "tags": [
+      "ngheo-doi",
+      "phat-trien",
+      "toan-cau"
+    ],
     "src": "World Bank, Poverty and Shared Prosperity; Hans Rosling, Factfulness (2018)"
   },
   {
     "id": "xh-006",
     "cat": "xa-hoi",
+    "sub": "do-thi-giao-thong",
     "t": "Hơn một nửa nhân loại đã sống ở đô thị, và tỉ lệ đó vẫn đang tăng",
     "s": "Liên Hợp Quốc ước tính khoảng 55% dân số thế giới sống ở khu vực đô thị năm 2018, dự báo lên khoảng 68% vào năm 2050. Đô thị hoá kéo theo năng suất cao hơn nhưng cũng kéo theo giá nhà, tắc nghẽn và khoảng cách giàu nghèo trong cùng một thành phố.",
-    "tags": ["do-thi", "dan-so", "phat-trien"],
+    "tags": [
+      "do-thi",
+      "dan-so",
+      "phat-trien"
+    ],
     "src": "UN DESA, World Urbanization Prospects (2018)"
   },
   {
     "id": "xh-007",
     "cat": "xa-hoi",
+    "sub": "dan-so",
     "t": "Dân số thế giới vượt mốc 8 tỷ vào tháng 11 năm 2022",
     "s": "Nhưng tốc độ tăng đang chậm lại rõ rệt: tỉ suất sinh toàn cầu giảm từ khoảng 5 con/phụ nữ năm 1950 xuống quanh mức 2,3 hiện nay. Vấn đề nhân khẩu của nửa sau thế kỷ 21 ở phần lớn quốc gia sẽ là già hoá và thiếu lao động, chứ không phải bùng nổ dân số.",
-    "tags": ["dan-so", "gia-hoa", "toan-cau"],
+    "tags": [
+      "dan-so",
+      "gia-hoa",
+      "toan-cau"
+    ],
     "src": "UN DESA, World Population Prospects (2022)"
   },
   {
     "id": "xh-008",
     "cat": "xa-hoi",
+    "sub": "dan-so",
     "t": "Việt Nam có khoảng 100 triệu dân và đang già hoá nhanh vào loại nhất thế giới",
     "s": "Tổng cục Thống kê xác nhận dân số vượt 100 triệu vào năm 2023. Thời kỳ 'dân số vàng' — số người trong tuổi lao động lớn hơn nhiều số người phụ thuộc — được các dự báo đặt kết thúc vào khoảng thập niên 2030, sớm hơn nhiều nước có cùng mức thu nhập.",
     "d": "Ý nghĩa với một người đang đi làm: hệ thống hưu trí và y tế sẽ chịu áp lực đúng vào lúc thế hệ hiện tại nghỉ hưu, nên kế hoạch tài chính cá nhân không nên giả định mức chi trả hưu trí giữ nguyên như hôm nay. Đây là lý do thực dụng để bắt đầu tích luỹ sớm chứ không phải để bi quan.",
-    "tags": ["viet-nam", "dan-so", "huu-tri"],
+    "tags": [
+      "viet-nam",
+      "dan-so",
+      "huu-tri"
+    ],
     "src": "Tổng cục Thống kê Việt Nam (2023); UNFPA Việt Nam, báo cáo già hoá dân số"
   },
   {
     "id": "xh-009",
     "cat": "xa-hoi",
+    "sub": "dan-so",
     "t": "Tuổi nghỉ hưu ở Việt Nam đang tăng dần theo lộ trình tới 62 và 60",
     "s": "Bộ luật Lao động 2019 quy định lộ trình tăng tuổi nghỉ hưu trong điều kiện lao động bình thường: nam đạt 62 tuổi vào năm 2028, nữ đạt 60 tuổi vào năm 2035, mỗi năm tăng thêm 3 tháng với nam và 4 tháng với nữ.",
-    "tags": ["viet-nam", "huu-tri", "phap-luat"],
+    "tags": [
+      "viet-nam",
+      "huu-tri",
+      "phap-luat"
+    ],
     "src": "Bộ luật Lao động số 45/2019/QH14, Điều 169"
   },
   {
     "id": "xh-010",
     "cat": "xa-hoi",
+    "sub": "luat-phap",
     "t": "Việt Nam theo hệ dân luật, không theo hệ án lệ như phim Mỹ",
     "s": "Trong hệ dân luật, nguồn luật chính là văn bản quy phạm pháp luật do cơ quan lập pháp ban hành; thẩm phán áp dụng luật chứ không tạo ra luật. Việt Nam có công nhận án lệ từ 2015 nhưng ở vai trò bổ trợ, khác hẳn vai trò trung tâm của tiền lệ trong hệ thống Anh – Mỹ.",
-    "tags": ["viet-nam", "phap-luat", "the-che"],
+    "tags": [
+      "viet-nam",
+      "phap-luat",
+      "the-che"
+    ],
     "src": "Nghị quyết 03/2015/NQ-HĐTP của Hội đồng Thẩm phán TAND Tối cao về án lệ"
   },
   {
     "id": "xh-011",
     "cat": "xa-hoi",
+    "sub": "luat-phap",
     "t": "Suy đoán vô tội là nguyên tắc hiến định, không phải câu thoại trong phim",
     "s": "Hiến pháp Việt Nam 2013 quy định người bị buộc tội được coi là không có tội cho đến khi được chứng minh theo trình tự luật định và có bản án kết tội của toà án đã có hiệu lực. Hệ quả thực tế: nghĩa vụ chứng minh thuộc về bên buộc tội, và im lặng không phải bằng chứng của tội lỗi.",
-    "tags": ["viet-nam", "phap-luat", "quyen"],
+    "tags": [
+      "viet-nam",
+      "phap-luat",
+      "quyen"
+    ],
     "src": "Hiến pháp nước CHXHCN Việt Nam (2013), Điều 31"
   },
   {
     "id": "xh-012",
     "cat": "xa-hoi",
+    "sub": "the-che-hop-tac",
     "t": "Chỉ số cảm nhận tham nhũng đo cảm nhận, không đo tham nhũng",
     "s": "CPI của Tổ chức Minh bạch Quốc tế tổng hợp đánh giá của chuyên gia và doanh nhân về mức độ tham nhũng khu vực công. Chính tổ chức này nhấn mạnh nó không đo lượng tham nhũng thực tế — thứ về bản chất là ẩn. Đọc mọi bảng xếp hạng quốc gia với câu hỏi: chỉ số này thật sự đo cái gì?",
-    "tags": ["do-luong", "the-che", "phan-bien"],
+    "tags": [
+      "do-luong",
+      "the-che",
+      "phan-bien"
+    ],
     "src": "Transparency International, ghi chú phương pháp luận CPI"
   },
   {
     "id": "xh-013",
     "cat": "xa-hoi",
+    "sub": "bat-binh-dang",
     "t": "Khoảng 6 trên 10 lao động toàn cầu làm việc trong khu vực phi chính thức",
     "s": "Tổ chức Lao động Quốc tế ước tính khoảng 60% lực lượng lao động thế giới làm việc phi chính thức — không hợp đồng, không bảo hiểm xã hội, không được luật lao động bảo vệ đầy đủ. Ở nhiều nền kinh tế đang phát triển, đây là chuẩn mực chứ không phải ngoại lệ.",
-    "tags": ["lao-dong", "kinh-te", "toan-cau"],
+    "tags": [
+      "lao-dong",
+      "kinh-te",
+      "toan-cau"
+    ],
     "src": "ILO, Women and Men in the Informal Economy (2018)"
   },
   {
     "id": "xh-014",
     "cat": "xa-hoi",
+    "sub": "toi-pham-an-toan",
     "t": "Thuyết 'cửa sổ vỡ' nổi tiếng hơn nhiều so với mức bằng chứng ủng hộ nó",
     "s": "Ý tưởng rằng dẹp các vi phạm nhỏ sẽ ngăn tội phạm lớn đã định hình chính sách cảnh sát ở nhiều thành phố. Nhưng các phân tích lại dữ liệu New York thập niên 1990 cho thấy phần lớn mức giảm tội phạm không giải thích được bằng chiến thuật này, và tội phạm cũng giảm ở những nơi không áp dụng nó.",
-    "tags": ["chinh-sach", "toi-pham", "phan-bien"],
+    "tags": [
+      "chinh-sach",
+      "toi-pham",
+      "phan-bien"
+    ],
     "src": "Wilson & Kelling, The Atlantic (1982); Harcourt & Ludwig, University of Chicago Law Review (2006)"
   },
   {
     "id": "xh-015",
     "cat": "xa-hoi",
+    "sub": "van-hoa-truyen-thong",
     "t": "Cửa sổ Overton: cái gì được coi là 'nói ra được' thay đổi trước khi luật thay đổi",
     "s": "Trong mọi xã hội tồn tại một dải quan điểm được xem là chấp nhận được để bàn công khai. Các phong trào chính trị hiếm khi thuyết phục trực tiếp người phản đối; họ dịch chuyển dải này bằng cách đưa ra lập trường xa hơn để lập trường của mình trở nên ôn hoà. Nhận ra chiến thuật đó giúp bạn đọc tin tức tỉnh táo hơn.",
-    "tags": ["chinh-tri", "truyen-thong", "du-luan"],
+    "tags": [
+      "chinh-tri",
+      "truyen-thong",
+      "du-luan"
+    ],
     "src": "Joseph Overton, Mackinac Center for Public Policy (thập niên 1990)"
   },
   {
     "id": "xh-016",
     "cat": "xa-hoi",
+    "sub": "bau-cu-chinh-tri",
     "t": "New Zealand là nước đầu tiên cho phụ nữ đi bầu, năm 1893",
     "s": "Quyền bầu cử phổ thông là một hiện tượng rất mới trong lịch sử loài người: Pháp cho phụ nữ bầu cử năm 1944, Thuỵ Sĩ ở cấp liên bang năm 1971, và một bang Thuỵ Sĩ chỉ chấp nhận ở cấp địa phương sau phán quyết toà án năm 1990. Các quyền tưởng như hiển nhiên đều trẻ hơn nhiều so với cảm giác của chúng ta.",
-    "tags": ["lich-su", "quyen", "bau-cu"],
+    "tags": [
+      "lich-su",
+      "quyen",
+      "bau-cu"
+    ],
     "src": "Thư viện Quốc gia New Zealand; hồ sơ Liên minh Nghị viện Thế giới (IPU)"
   },
   {
     "id": "xh-017",
     "cat": "xa-hoi",
+    "sub": "bat-binh-dang",
     "t": "Bất bình đẳng trong một quốc gia đo bằng hệ số Gini, nhưng con số này giấu nhiều thứ",
     "s": "Gini bằng 0 nghĩa là mọi người thu nhập như nhau, bằng 1 nghĩa là một người lấy hết. Hai nước cùng Gini có thể có cấu trúc hoàn toàn khác nhau: một nơi tầng lớp trung lưu rỗng, nơi kia có nhóm siêu giàu rất nhỏ. Luôn nhìn thêm tỉ trọng thu nhập của nhóm 10% trên cùng và 40% dưới cùng.",
-    "tags": ["bat-binh-dang", "do-luong", "kinh-te"],
+    "tags": [
+      "bat-binh-dang",
+      "do-luong",
+      "kinh-te"
+    ],
     "src": "Corrado Gini (1912); ghi chú phương pháp của World Inequality Lab"
   },
   {
     "id": "xh-018",
     "cat": "xa-hoi",
+    "sub": "the-che-hop-tac",
     "t": "Quyền sở hữu được ghi nhận rõ ràng là điều kiện để tài sản trở thành vốn",
     "s": "Hernando de Soto lập luận rằng người nghèo ở các nước đang phát triển không thiếu tài sản — họ thiếu giấy tờ hợp pháp cho tài sản đó, nên không thể thế chấp, chuyển nhượng hay dùng nó làm nền cho tín dụng. Bằng chứng thực nghiệm về hiệu quả của các chương trình cấp giấy chứng nhận là hỗn hợp, nhưng cơ chế thì đã được kiểm chứng ở nhiều nơi.",
-    "tags": ["so-huu", "phat-trien", "the-che"],
+    "tags": [
+      "so-huu",
+      "phat-trien",
+      "the-che"
+    ],
     "src": "Hernando de Soto, The Mystery of Capital (2000); Galiani & Schargrodsky, Journal of Public Economics (2010)"
   },
   {
     "id": "xh-019",
     "cat": "xa-hoi",
+    "sub": "dan-so",
     "t": "Tuổi thọ trung bình toàn cầu tăng hơn gấp đôi trong khoảng một thế kỷ rưỡi",
     "s": "Từ mức khoảng 30 tuổi ở giữa thế kỷ 19, tuổi thọ trung bình toàn cầu đã lên khoảng 73 tuổi trước đại dịch COVID-19 (và giảm khoảng 1,8 năm trong giai đoạn 2019–2021 trước khi hồi phục). Phần lớn mức tăng lịch sử đến từ giảm tử vong trẻ em, chứ không phải từ việc người già sống lâu hơn nhiều.",
-    "tags": ["y-te", "dan-so", "lich-su"],
+    "tags": [
+      "y-te",
+      "dan-so",
+      "lich-su"
+    ],
     "src": "WHO, World Health Statistics (2024); Our World in Data"
   },
   {
     "id": "xh-020",
     "cat": "xa-hoi",
+    "sub": "the-che-hop-tac",
     "t": "Chuẩn mực xã hội thay đổi hành vi mạnh hơn thông tin và lời kêu gọi đạo đức",
     "s": "Trong thí nghiệm tiết kiệm điện ở California, các thông điệp về bảo vệ môi trường, tiết kiệm tiền hay trách nhiệm xã hội đều gần như không có tác dụng. Thông điệp duy nhất làm giảm tiêu thụ đáng kể là cho biết hàng xóm dùng bao nhiêu điện.",
     "d": "Điều đáng chú ý hơn: khi được hỏi cái gì ảnh hưởng tới mình, người tham gia xếp 'hàng xóm làm gì' ở vị trí cuối. Con người vừa bị chuẩn mực xã hội chi phối mạnh, vừa không nhận ra điều đó — nên đừng thiết kế chính sách hay chương trình dựa trên việc hỏi người ta cái gì sẽ tác động tới họ.",
-    "tags": ["hanh-vi", "chuan-muc", "chinh-sach"],
+    "tags": [
+      "hanh-vi",
+      "chuan-muc",
+      "chinh-sach"
+    ],
     "src": "Nolan, Schultz, Cialdini, Goldstein & Griskevicius, Personality and Social Psychology Bulletin (2008)"
   },
   {
     "id": "xh-021",
     "cat": "xa-hoi",
+    "sub": "van-hoa-truyen-thong",
     "t": "Tỉ lệ biết chữ của người trưởng thành toàn cầu đã vượt 85%",
     "s": "Năm 1820, ước tính chỉ khoảng 12% người trưởng thành trên thế giới biết đọc biết viết; con số hiện nay là trên 85%. Đây có lẽ là thay đổi âm thầm quan trọng nhất trong lịch sử loài người, và nó xảy ra chủ yếu trong vòng bốn thế hệ gần đây.",
-    "tags": ["giao-duc", "lich-su", "phat-trien"],
+    "tags": [
+      "giao-duc",
+      "lich-su",
+      "phat-trien"
+    ],
     "src": "UNESCO Institute for Statistics; Our World in Data, Literacy"
   },
   {
     "id": "xh-022",
     "cat": "xa-hoi",
+    "sub": "luat-phap",
     "t": "Hợp đồng tốt không phải hợp đồng chi tiết nhất mà là hợp đồng xử lý được lúc trục trặc",
     "s": "Lý thuyết hợp đồng không đầy đủ chỉ ra: không thể liệt kê trước mọi tình huống, nên điều quan trọng là quy định ai có quyền quyết định khi tình huống ngoài dự liệu xảy ra. Khi ký bất kỳ thoả thuận nào — thuê nhà, hợp tác, góp vốn — hãy đọc kỹ phần chấm dứt và giải quyết tranh chấp trước phần quyền lợi.",
-    "tags": ["hop-dong", "phap-ly", "kinh-doanh"],
+    "tags": [
+      "hop-dong",
+      "phap-ly",
+      "kinh-doanh"
+    ],
     "src": "Oliver Hart & Bengt Holmström, Nobel Kinh tế 2016"
   }
 ]

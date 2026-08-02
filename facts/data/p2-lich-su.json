@@ -1,242 +1,561 @@
 [
-  { "id": "ls-101", "cat": "lich-su",
+  {
+    "id": "ls-101",
+    "cat": "lich-su",
+    "sub": "co-dai",
     "t": "Voi ma mút vẫn còn sống khi kim tự tháp Giza đã được xây xong",
     "s": "Một quần thể nhỏ sống sót trên đảo Wrangel ở Bắc Băng Dương tới khoảng năm 1650 trước Công nguyên. Nghĩa là khi các pharaoh của Vương triều thứ 12 đang trị vì Ai Cập, voi ma mút vẫn đi lại trên Trái Đất.",
-    "tags": ["moc-thoi-gian", "truc-giac", "tuyet-chung"],
-    "src": "Vartanyan và cộng sự, Nature (1993); dữ liệu định tuổi carbon phóng xạ" },
-  { "id": "ls-102", "cat": "lich-su",
-    "t": "Đại học Oxford già hơn đế chế Aztec",
-    "s": "Oxford dạy học từ khoảng năm 1096; thành phố Tenochtitlan được lập năm 1325. Cảm giác rằng các nền văn minh 'cổ đại' của châu Mỹ có trước châu Âu trung cổ là một sai lệch trực giác phổ biến.",
-    "tags": ["moc-thoi-gian", "truc-giac", "so-sanh"],
-    "src": "Niên đại Đại học Oxford; niên đại thành lập Tenochtitlan" },
-  { "id": "ls-103", "cat": "lich-su",
+    "tags": [
+      "moc-thoi-gian",
+      "truc-giac",
+      "tuyet-chung"
+    ],
+    "src": "Vartanyan và cộng sự, Nature (1993); dữ liệu định tuổi carbon phóng xạ"
+  },
+  {
+    "id": "ls-103",
+    "cat": "lich-su",
+    "sub": "co-dai",
     "t": "Cá mập đã tồn tại lâu hơn cây cối",
     "s": "Cá mập xuất hiện khoảng 400 triệu năm trước; cây thân gỗ đầu tiên khoảng 350 triệu năm trước. Cá mập cũng cổ hơn vành đai của Sao Thổ theo nhiều ước tính về tuổi của vành đai đó.",
-    "tags": ["moc-thoi-gian", "tien-hoa", "truc-giac"],
-    "src": "Hồ sơ hoá thạch Chondrichthyes; Iess và cộng sự, Science (2019) về tuổi vành đai Sao Thổ" },
-  { "id": "ls-104", "cat": "lich-su",
+    "tags": [
+      "moc-thoi-gian",
+      "tien-hoa",
+      "truc-giac"
+    ],
+    "src": "Hồ sơ hoá thạch Chondrichthyes; Iess và cộng sự, Science (2019) về tuổi vành đai Sao Thổ"
+  },
+  {
+    "id": "ls-104",
+    "cat": "lich-su",
+    "sub": "co-dai",
     "t": "Khoảng thời gian giữa T-Rex và Stegosaurus dài hơn giữa T-Rex và bạn",
     "s": "Stegosaurus sống khoảng 150 triệu năm trước, T-Rex khoảng 68 triệu năm trước, còn hiện tại cách T-Rex 66 triệu năm. Việc gộp mọi khủng long vào một 'thời khủng long' bỏ qua hàng trăm triệu năm lịch sử.",
-    "tags": ["khung-long", "moc-thoi-gian", "truc-giac"],
-    "src": "Thang địa chất; hồ sơ hoá thạch khủng long" },
-  { "id": "ls-105", "cat": "lich-su",
-    "t": "Trận Bạch Đằng năm 1288 và trận năm 938 dùng cùng một chiến thuật cách nhau 350 năm",
-    "s": "Ngô Quyền đóng cọc nhọn bịt sắt đánh quân Nam Hán năm 938; Trần Hưng Đạo lặp lại nguyên lý đó với quân Nguyên năm 1288. Cả hai đều khai thác biên độ thuỷ triều lớn của sông Bạch Đằng để biến địa hình thành vũ khí.",
-    "tags": ["viet-nam", "quan-su", "dia-ly"],
-    "src": "Đại Việt sử ký toàn thư; nghiên cứu khảo cổ bãi cọc Bạch Đằng" },
-  { "id": "ls-106", "cat": "lich-su",
+    "tags": [
+      "khung-long",
+      "moc-thoi-gian",
+      "truc-giac"
+    ],
+    "src": "Thang địa chất; hồ sơ hoá thạch khủng long"
+  },
+  {
+    "id": "ls-106",
+    "cat": "lich-su",
+    "sub": "viet-nam",
     "t": "Nhà Trần ba lần đánh bại đế quốc Mông Cổ, đế quốc lớn nhất lịch sử tính theo lãnh thổ liền kề",
     "s": "Các cuộc xâm lược năm 1258, 1285 và 1287–1288 đều thất bại. Cùng thời kỳ, quân Mông Cổ chinh phục Trung Á, Ba Tư, phần lớn Nga và Trung Quốc — khiến chuỗi thất bại ở Đại Việt trở thành ngoại lệ đáng chú ý trong lịch sử quân sự thế giới.",
-    "tags": ["viet-nam", "mong-co", "quan-su"],
-    "src": "Đại Việt sử ký toàn thư; Nguyên sử; nghiên cứu về các chiến dịch Mông Cổ ở Đông Nam Á" },
-  { "id": "ls-107", "cat": "lich-su",
+    "tags": [
+      "viet-nam",
+      "mong-co",
+      "quan-su"
+    ],
+    "src": "Đại Việt sử ký toàn thư; Nguyên sử; nghiên cứu về các chiến dịch Mông Cổ ở Đông Nam Á"
+  },
+  {
+    "id": "ls-107",
+    "cat": "lich-su",
+    "sub": "viet-nam",
     "t": "Chữ Quốc ngữ ban đầu là công cụ truyền giáo, không phải công cụ phổ cập giáo dục",
     "s": "Các giáo sĩ Dòng Tên phát triển hệ chữ Latinh ghi âm tiếng Việt từ đầu thế kỷ 17 để học tiếng và giảng đạo. Phải hơn hai thế kỷ sau nó mới trở thành chữ viết hành chính và giáo dục, và việc phổ cập nó gắn liền với các phong trào đầu thế kỷ 20.",
-    "tags": ["viet-nam", "chu-viet", "lich-su"],
-    "src": "Alexandre de Rhodes, Dictionarium Annamiticum Lusitanum et Latinum (1651); nghiên cứu lịch sử chữ Quốc ngữ" },
-  { "id": "ls-108", "cat": "lich-su",
+    "tags": [
+      "viet-nam",
+      "chu-viet",
+      "lich-su"
+    ],
+    "src": "Alexandre de Rhodes, Dictionarium Annamiticum Lusitanum et Latinum (1651); nghiên cứu lịch sử chữ Quốc ngữ"
+  },
+  {
+    "id": "ls-108",
+    "cat": "lich-su",
+    "sub": "viet-nam",
     "t": "Trước chữ Quốc ngữ, người Việt viết bằng chữ Hán và chữ Nôm suốt gần một nghìn năm",
     "s": "Chữ Nôm dùng các bộ phận chữ Hán để ghi âm tiếng Việt và cần biết chữ Hán trước mới đọc được — nên nó khó học hơn cả chữ Hán. Truyện Kiều, một trong những tác phẩm lớn nhất của văn học Việt, được viết bằng chữ Nôm.",
-    "tags": ["viet-nam", "chu-viet", "van-hoc"],
-    "src": "Nghiên cứu về chữ Nôm; Nguyễn Du, Truyện Kiều (đầu thế kỷ 19)" },
-  { "id": "ls-109", "cat": "lich-su",
-    "t": "Bộ luật Hồng Đức thế kỷ 15 có những quy định về quyền phụ nữ đi trước nhiều bộ luật châu Âu cùng thời",
-    "s": "Quốc triều hình luật cho phép con gái được hưởng thừa kế, công nhận tài sản riêng của người vợ, và cho phép người vợ xin ly hôn trong một số trường hợp như chồng bỏ bê nhiều tháng. Điều này không có nghĩa xã hội bình đẳng, nhưng văn bản pháp lý thì đáng chú ý.",
-    "tags": ["viet-nam", "phap-luat", "phu-nu"],
-    "src": "Quốc triều hình luật (Luật Hồng Đức), thời Lê Thánh Tông" },
-  { "id": "ls-110", "cat": "lich-su",
+    "tags": [
+      "viet-nam",
+      "chu-viet",
+      "van-hoc"
+    ],
+    "src": "Nghiên cứu về chữ Nôm; Nguyễn Du, Truyện Kiều (đầu thế kỷ 19)"
+  },
+  {
+    "id": "ls-110",
+    "cat": "lich-su",
+    "sub": "viet-nam",
     "t": "Người Việt đã ăn nước mắm ít nhất từ thời có ghi chép của người La Mã về garum",
     "s": "Nước mắm lên men từ cá là kỹ thuật độc lập xuất hiện ở nhiều nền văn hoá ven biển; garum của La Mã và nước mắm Đông Nam Á có nguyên lý gần giống nhau. Ở châu Âu, kỹ thuật này biến mất sau khi đế chế sụp đổ và chỉ còn lại ở dạng vết tích.",
-    "tags": ["am-thuc", "lich-su", "so-sanh"],
-    "src": "Nghiên cứu khảo cổ về garum La Mã; lịch sử nước mắm Đông Nam Á" },
-  { "id": "ls-111", "cat": "lich-su",
+    "tags": [
+      "am-thuc",
+      "lich-su",
+      "so-sanh"
+    ],
+    "src": "Nghiên cứu khảo cổ về garum La Mã; lịch sử nước mắm Đông Nam Á"
+  },
+  {
+    "id": "ls-111",
+    "cat": "lich-su",
+    "sub": "can-hien-dai",
     "t": "Ớt, cà chua, khoai tây và ngô đều chỉ tới châu Á sau thế kỷ 16",
     "s": "Chúng có nguồn gốc châu Mỹ và lan ra thế giới sau các chuyến đi của người châu Âu. Nghĩa là món ăn 'truyền thống' của Ấn Độ, Thái Lan, Hàn Quốc hay Tứ Xuyên gắn với ớt đều trẻ hơn nhiều so với cảm giác — chưa tới 500 năm.",
-    "tags": ["am-thuc", "trao-doi-columbus", "lich-su"],
-    "src": "Crosby, The Columbian Exchange (1972); lịch sử phát tán cây trồng châu Mỹ" },
-  { "id": "ls-112", "cat": "lich-su",
+    "tags": [
+      "am-thuc",
+      "trao-doi-columbus",
+      "lich-su"
+    ],
+    "src": "Crosby, The Columbian Exchange (1972); lịch sử phát tán cây trồng châu Mỹ"
+  },
+  {
+    "id": "ls-112",
+    "cat": "lich-su",
+    "sub": "can-hien-dai",
     "t": "Trao đổi Columbus mang khoai tây sang châu Âu và làm dân số tăng vọt",
     "s": "Khoai tây cho nhiều calo trên một đơn vị diện tích hơn ngũ cốc và trồng được trên đất kém. Các nghiên cứu kinh tế lượng ước tính nó giải thích một phần đáng kể mức tăng dân số và đô thị hoá châu Âu từ thế kỷ 18.",
-    "tags": ["nong-nghiep", "dan-so", "kinh-te"],
-    "src": "Nunn & Qian, Quarterly Journal of Economics (2011)" },
-  { "id": "ls-113", "cat": "lich-su",
+    "tags": [
+      "nong-nghiep",
+      "dan-so",
+      "kinh-te"
+    ],
+    "src": "Nunn & Qian, Quarterly Journal of Economics (2011)"
+  },
+  {
+    "id": "ls-113",
+    "cat": "lich-su",
+    "sub": "y-te-lich-su",
     "t": "Bệnh tật giết nhiều người bản địa châu Mỹ hơn vũ khí rất nhiều lần",
     "s": "Đậu mùa, sởi và các bệnh mà người châu Âu đã có miễn dịch một phần đã quét qua các quần thể chưa từng tiếp xúc. Ước tính về mức suy giảm dân số dao động lớn, nhưng phần lớn nghiên cứu đồng ý rằng dịch bệnh là nguyên nhân chính.",
-    "tags": ["dich-benh", "chau-my", "dan-so"],
-    "src": "Crosby (1972); Koch và cộng sự, Quaternary Science Reviews (2019)" },
-  { "id": "ls-114", "cat": "lich-su",
+    "tags": [
+      "dich-benh",
+      "chau-my",
+      "dan-so"
+    ],
+    "src": "Crosby (1972); Koch và cộng sự, Quaternary Science Reviews (2019)"
+  },
+  {
+    "id": "ls-114",
+    "cat": "lich-su",
+    "sub": "y-te-lich-su",
     "t": "Cái chết Đen giết khoảng một phần ba dân số châu Âu và làm tăng lương người sống sót",
     "s": "Thiếu lao động nghiêm trọng khiến nông nô có sức mặc cả chưa từng có, đẩy nhanh sự tan rã của chế độ trang viên ở Tây Âu. Đây là một trong những ví dụ rõ nhất về việc một thảm hoạ nhân khẩu học có thể định hình lại cấu trúc kinh tế.",
-    "tags": ["dich-benh", "kinh-te", "chau-au"],
-    "src": "Herlihy, The Black Death and the Transformation of the West (1997); Pamuk, European Review of Economic History (2007)" },
-  { "id": "ls-115", "cat": "lich-su",
+    "tags": [
+      "dich-benh",
+      "kinh-te",
+      "chau-au"
+    ],
+    "src": "Herlihy, The Black Death and the Transformation of the West (1997); Pamuk, European Review of Economic History (2007)"
+  },
+  {
+    "id": "ls-115",
+    "cat": "lich-su",
+    "sub": "y-te-lich-su",
     "t": "Đại dịch cúm 1918 giết nhiều người hơn cả Thế chiến thứ nhất",
     "s": "Ước tính từ 50 tới 100 triệu người chết trên toàn thế giới, so với khoảng 20 triệu người chết trong chiến tranh. Nó được gọi là 'cúm Tây Ban Nha' chỉ vì Tây Ban Nha trung lập nên báo chí không bị kiểm duyệt và đưa tin đầy đủ nhất.",
-    "tags": ["dich-benh", "chien-tranh", "ten-goi"],
-    "src": "Johnson & Mueller, Bulletin of the History of Medicine (2002)" },
-  { "id": "ls-116", "cat": "lich-su",
+    "tags": [
+      "dich-benh",
+      "chien-tranh",
+      "ten-goi"
+    ],
+    "src": "Johnson & Mueller, Bulletin of the History of Medicine (2002)"
+  },
+  {
+    "id": "ls-116",
+    "cat": "lich-su",
+    "sub": "chien-tranh",
     "t": "Một sĩ quan Liên Xô có thể đã ngăn chiến tranh hạt nhân năm 1983",
     "s": "Hệ thống cảnh báo sớm báo có tên lửa Mỹ đang bay tới; Stanislav Petrov đánh giá đó là lỗi hệ thống và không báo cáo lên trên. Ông đúng — nguyên nhân là ánh sáng mặt trời phản chiếu trên mây bị vệ tinh nhận diện nhầm.",
-    "tags": ["hat-nhan", "chien-tranh-lanh", "quyet-dinh"],
-    "src": "Hồ sơ và phỏng vấn về sự kiện ngày 26 tháng 9 năm 1983" },
-  { "id": "ls-117", "cat": "lich-su",
+    "tags": [
+      "hat-nhan",
+      "chien-tranh-lanh",
+      "quyet-dinh"
+    ],
+    "src": "Hồ sơ và phỏng vấn về sự kiện ngày 26 tháng 9 năm 1983"
+  },
+  {
+    "id": "ls-117",
+    "cat": "lich-su",
+    "sub": "chien-tranh",
     "t": "Khủng hoảng tên lửa Cuba suýt nổ vì một tàu ngầm mất liên lạc",
     "s": "Tàu ngầm Liên Xô B-59 bị thả bom chìm cảnh cáo, mất liên lạc với Moskva và tưởng chiến tranh đã bắt đầu. Việc phóng ngư lôi hạt nhân cần ba sĩ quan đồng ý; Vasili Arkhipov là người duy nhất phản đối và ngăn được quyết định đó.",
-    "tags": ["hat-nhan", "chien-tranh-lanh", "quyet-dinh"],
-    "src": "Tài liệu giải mật về khủng hoảng tên lửa Cuba; National Security Archive" },
-  { "id": "ls-118", "cat": "lich-su",
+    "tags": [
+      "hat-nhan",
+      "chien-tranh-lanh",
+      "quyet-dinh"
+    ],
+    "src": "Tài liệu giải mật về khủng hoảng tên lửa Cuba; National Security Archive"
+  },
+  {
+    "id": "ls-118",
+    "cat": "lich-su",
+    "sub": "chien-tranh",
     "t": "Hiệp ước cấm vũ khí hoá học ra đời sau khi chính người phát minh phân bón nitơ tạo ra khí độc",
     "s": "Fritz Haber phát triển quy trình tổng hợp amoniac giúp nuôi sống hàng tỷ người, và cũng chỉ đạo việc dùng khí clo trong Thế chiến thứ nhất. Ông nhận Nobel Hoá học năm 1918 — một trong những cặp di sản mâu thuẫn nhất trong lịch sử khoa học.",
-    "tags": ["khoa-hoc", "dao-duc", "chien-tranh"],
-    "src": "Tiểu sử Fritz Haber; lịch sử quy trình Haber-Bosch" },
-  { "id": "ls-119", "cat": "lich-su",
+    "tags": [
+      "khoa-hoc",
+      "dao-duc",
+      "chien-tranh"
+    ],
+    "src": "Tiểu sử Fritz Haber; lịch sử quy trình Haber-Bosch"
+  },
+  {
+    "id": "ls-119",
+    "cat": "lich-su",
+    "sub": "phat-minh",
     "t": "Quy trình Haber-Bosch nuôi sống khoảng một nửa dân số thế giới hiện nay",
     "s": "Nó lấy nitơ từ không khí để làm phân bón, phá vỡ giới hạn tự nhiên về sản lượng nông nghiệp. Ước tính rằng nếu không có nó, Trái Đất không thể nuôi số người đang sống. Nó cũng tiêu thụ khoảng 1–2% năng lượng toàn cầu.",
-    "tags": ["nong-nghiep", "hoa-hoc", "dan-so"],
-    "src": "Erisman và cộng sự, Nature Geoscience (2008); Smil, Enriching the Earth (2001)" },
-  { "id": "ls-120", "cat": "lich-su",
+    "tags": [
+      "nong-nghiep",
+      "hoa-hoc",
+      "dan-so"
+    ],
+    "src": "Erisman và cộng sự, Nature Geoscience (2008); Smil, Enriching the Earth (2001)"
+  },
+  {
+    "id": "ls-120",
+    "cat": "lich-su",
+    "sub": "phat-minh",
     "t": "Cách mạng Xanh có thể đã cứu hàng trăm triệu người khỏi nạn đói",
     "s": "Các giống lúa mì và lúa gạo năng suất cao lan ra châu Á và Mỹ Latinh từ thập niên 1960 đã đảo ngược các dự báo về nạn đói hàng loạt. Norman Borlaug nhận Nobel Hoà bình năm 1970. Chi phí đi kèm là phụ thuộc phân bón, thuốc trừ sâu và mất đa dạng giống.",
-    "tags": ["nong-nghiep", "tien-bo", "danh-doi"],
-    "src": "Evenson & Gollin, Science (2003); Nobel Hoà bình 1970" },
-  { "id": "ls-121", "cat": "lich-su",
+    "tags": [
+      "nong-nghiep",
+      "tien-bo",
+      "danh-doi"
+    ],
+    "src": "Evenson & Gollin, Science (2003); Nobel Hoà bình 1970"
+  },
+  {
+    "id": "ls-121",
+    "cat": "lich-su",
+    "sub": "can-hien-dai",
     "t": "Cuộc cá cược nổi tiếng giữa một nhà sinh thái và một nhà kinh tế đã kết thúc bằng phần thắng cho phía lạc quan",
     "s": "Paul Ehrlich dự đoán giá năm kim loại sẽ tăng do khan hiếm; Julian Simon cược ngược lại. Sau mười năm, giá cả năm loại đều giảm. Bài học không phải là tài nguyên vô hạn, mà là con người phản ứng với giá bằng thay thế và đổi mới.",
-    "tags": ["tai-nguyen", "du-bao", "kinh-te"],
-    "src": "Cuộc cược Simon–Ehrlich (1980–1990); Sabin, The Bet (2013)" },
-  { "id": "ls-122", "cat": "lich-su",
+    "tags": [
+      "tai-nguyen",
+      "du-bao",
+      "kinh-te"
+    ],
+    "src": "Cuộc cược Simon–Ehrlich (1980–1990); Sabin, The Bet (2013)"
+  },
+  {
+    "id": "ls-122",
+    "cat": "lich-su",
+    "sub": "can-hien-dai",
     "t": "Nghị định thư Montreal về tầng ozone là hiệp ước môi trường thành công nhất từng có",
     "s": "Nó được mọi quốc gia thành viên Liên Hợp Quốc phê chuẩn và đã giúp lỗ thủng ozone thu hẹp dần. Lý do thành công: có chất thay thế khả thi về kinh tế, số lượng doanh nghiệp sản xuất ít, và bằng chứng khoa học rất rõ ràng.",
-    "tags": ["moi-truong", "hiep-uoc", "thanh-cong"],
-    "src": "Nghị định thư Montreal (1987); đánh giá khoa học về tầng ozone của WMO/UNEP" },
-  { "id": "ls-123", "cat": "lich-su",
+    "tags": [
+      "moi-truong",
+      "hiep-uoc",
+      "thanh-cong"
+    ],
+    "src": "Nghị định thư Montreal (1987); đánh giá khoa học về tầng ozone của WMO/UNEP"
+  },
+  {
+    "id": "ls-123",
+    "cat": "lich-su",
+    "sub": "can-hien-dai",
     "t": "Xăng pha chì tồn tại nửa thế kỷ dù người ta đã biết chì độc từ thời La Mã",
     "s": "Nó được thêm vào để chống kích nổ động cơ, và ngành công nghiệp đã chống lại các bằng chứng về tác hại trong nhiều thập kỷ. Clair Patterson, nhà khoa học đo tuổi Trái Đất, là người dẫn đầu cuộc chiến khoa học chống lại nó.",
-    "tags": ["o-nhiem", "khoa-hoc", "chinh-sach"],
-    "src": "Nriagu, Science of the Total Environment (1990); tiểu sử khoa học Clair Patterson" },
-  { "id": "ls-124", "cat": "lich-su",
+    "tags": [
+      "o-nhiem",
+      "khoa-hoc",
+      "chinh-sach"
+    ],
+    "src": "Nriagu, Science of the Total Environment (1990); tiểu sử khoa học Clair Patterson"
+  },
+  {
+    "id": "ls-124",
+    "cat": "lich-su",
+    "sub": "can-hien-dai",
     "t": "Mức chì trong máu trẻ em giảm mạnh sau khi cấm xăng pha chì, và tội phạm bạo lực giảm theo sau",
     "s": "Giả thuyết chì–tội phạm chỉ ra rằng độ trễ khoảng hai thập kỷ giữa hai đường cong khớp ở nhiều quốc gia. Đây là tương quan mạnh với cơ chế sinh học hợp lý, nhưng mức đóng góp chính xác vẫn còn tranh cãi trong giới nghiên cứu.",
-    "tags": ["o-nhiem", "toi-pham", "tranh-cai"],
-    "src": "Nevin, Environmental Research (2007); phê bình trong Higney, Hanley & Moro (2022)" },
-  { "id": "ls-125", "cat": "lich-su",
+    "tags": [
+      "o-nhiem",
+      "toi-pham",
+      "tranh-cai"
+    ],
+    "src": "Nevin, Environmental Research (2007); phê bình trong Higney, Hanley & Moro (2022)"
+  },
+  {
+    "id": "ls-125",
+    "cat": "lich-su",
+    "sub": "phat-minh",
     "t": "Máy tính đầu tiên là những người phụ nữ làm phép tính bằng tay",
     "s": "Từ 'computer' vốn chỉ nghề nghiệp. Các nhóm nữ tính toán đã làm bảng đạn đạo, quỹ đạo tên lửa và tính toán cho chương trình Apollo. Sáu phụ nữ lập trình cho ENIAC — cỗ máy điện tử đa dụng đầu tiên — và tên họ không xuất hiện trong các bức ảnh công bố ban đầu.",
-    "tags": ["may-tinh", "phu-nu", "lich-su"],
-    "src": "Light, Technology and Culture (1999); Shetterly, Hidden Figures (2016)" },
-  { "id": "ls-126", "cat": "lich-su",
+    "tags": [
+      "may-tinh",
+      "phu-nu",
+      "lich-su"
+    ],
+    "src": "Light, Technology and Culture (1999); Shetterly, Hidden Figures (2016)"
+  },
+  {
+    "id": "ls-126",
+    "cat": "lich-su",
+    "sub": "phat-minh",
     "t": "Lập trình viên đầu tiên có thể là Ada Lovelace, một thế kỷ trước khi máy tính tồn tại",
     "s": "Ghi chú của bà về Máy phân tích của Babbage năm 1843 chứa thuật toán tính dãy Bernoulli và mô tả ý tưởng rằng máy có thể xử lý ký hiệu chứ không chỉ số. Cỗ máy đó chưa bao giờ được chế tạo hoàn chỉnh trong đời họ.",
-    "tags": ["may-tinh", "lich-su", "phu-nu"],
-    "src": "Ghi chú của Ada Lovelace về bài viết của Menabrea (1843)" },
-  { "id": "ls-127", "cat": "lich-su",
+    "tags": [
+      "may-tinh",
+      "lich-su",
+      "phu-nu"
+    ],
+    "src": "Ghi chú của Ada Lovelace về bài viết của Menabrea (1843)"
+  },
+  {
+    "id": "ls-127",
+    "cat": "lich-su",
+    "sub": "phat-minh",
     "t": "Bản đồ thế giới quen thuộc bóp méo diện tích nghiêm trọng",
     "s": "Phép chiếu Mercator giữ đúng góc để phục vụ hàng hải, đổi lại làm phình các vùng gần cực. Greenland trông to bằng châu Phi trong khi diện tích thật chỉ khoảng một phần mười bốn. Không phép chiếu phẳng nào giữ được cả hình dạng lẫn diện tích.",
-    "tags": ["ban-do", "bop-meo", "dia-ly"],
-    "src": "Nguyên lý phép chiếu bản đồ; định lý Gauss về mặt cong" },
-  { "id": "ls-128", "cat": "lich-su",
+    "tags": [
+      "ban-do",
+      "bop-meo",
+      "dia-ly"
+    ],
+    "src": "Nguyên lý phép chiếu bản đồ; định lý Gauss về mặt cong"
+  },
+  {
+    "id": "ls-128",
+    "cat": "lich-su",
+    "sub": "huyen-thoai-lich-su",
     "t": "Người ta biết Trái Đất tròn từ thời Hy Lạp cổ, và huyền thoại 'thời trung cổ tin Trái Đất phẳng' là bịa đặt thế kỷ 19",
     "s": "Eratosthenes đo được chu vi Trái Đất khá chính xác vào thế kỷ 3 trước Công nguyên. Câu chuyện Columbus phải thuyết phục các học giả rằng Trái Đất tròn đến từ một cuốn tiểu sử hư cấu của Washington Irving năm 1828.",
-    "tags": ["huyen-thoai", "khoa-hoc", "trung-co"],
-    "src": "Russell, Inventing the Flat Earth (1991)" },
-  { "id": "ls-129", "cat": "lich-su",
+    "tags": [
+      "huyen-thoai",
+      "khoa-hoc",
+      "trung-co"
+    ],
+    "src": "Russell, Inventing the Flat Earth (1991)"
+  },
+  {
+    "id": "ls-129",
+    "cat": "lich-su",
+    "sub": "huyen-thoai-lich-su",
     "t": "Thời Trung cổ không phải là 'thời kỳ đen tối' như tên gọi gợi ý",
     "s": "Đó là giai đoạn ra đời của đại học, cối xay nước quy mô lớn, kính đeo mắt, đồng hồ cơ và kỹ thuật xây nhà thờ Gothic. Thuật ngữ 'Dark Ages' do các học giả Phục hưng đặt ra để tự đề cao thời đại của chính họ.",
-    "tags": ["trung-co", "huyen-thoai", "cong-nghe"],
-    "src": "Gies & Gies, Cathedral, Forge, and Waterwheel (1994); sử học trung cổ hiện đại" },
-  { "id": "ls-130", "cat": "lich-su",
-    "t": "Người Ai Cập cổ không dùng nô lệ Do Thái để xây kim tự tháp",
-    "s": "Bằng chứng khảo cổ từ làng thợ ở Giza cho thấy đội xây dựng là lao động được trả công, có khẩu phần bia và thịt, có chăm sóc y tế và được chôn cất trang trọng gần công trình. Thời điểm xây kim tự tháp cũng cách xa thời kỳ được mô tả trong các văn bản tôn giáo.",
-    "tags": ["ai-cap", "huyen-thoai", "khao-co"],
-    "src": "Khai quật làng thợ Giza của Zahi Hawass và Mark Lehner" },
-  { "id": "ls-131", "cat": "lich-su",
+    "tags": [
+      "trung-co",
+      "huyen-thoai",
+      "cong-nghe"
+    ],
+    "src": "Gies & Gies, Cathedral, Forge, and Waterwheel (1994); sử học trung cổ hiện đại"
+  },
+  {
+    "id": "ls-131",
+    "cat": "lich-su",
+    "sub": "huyen-thoai-lich-su",
     "t": "Tượng và đền Hy Lạp cổ vốn được sơn màu rực rỡ",
     "s": "Vẻ trắng tinh khiết mà ta gắn với nghệ thuật cổ điển là kết quả của việc màu bị bào mòn qua hàng nghìn năm — và của thẩm mỹ tân cổ điển thế kỷ 18 vốn ưa chuộng đá trắng. Phân tích quang phổ đã phục dựng lại nhiều bảng màu gốc.",
-    "tags": ["nghe-thuat", "hy-lap", "hieu-lam"],
-    "src": "Brinkmann & Wünsche, Gods in Color (2007)" },
-  { "id": "ls-132", "cat": "lich-su",
+    "tags": [
+      "nghe-thuat",
+      "hy-lap",
+      "hieu-lam"
+    ],
+    "src": "Brinkmann & Wünsche, Gods in Color (2007)"
+  },
+  {
+    "id": "ls-132",
+    "cat": "lich-su",
+    "sub": "huyen-thoai-lich-su",
     "t": "Đấu sĩ La Mã hiếm khi đánh tới chết vì họ quá đắt",
     "s": "Huấn luyện một đấu sĩ tốn nhiều năm và nhiều tiền, nên chủ trường đấu có động cơ mạnh để giữ họ sống. Nhiều trận kết thúc khi một bên đầu hàng, và tỉ lệ tử vong ước tính thấp hơn nhiều so với hình dung phổ biến.",
-    "tags": ["la-ma", "huyen-thoai", "kinh-te"],
-    "src": "Nghiên cứu về nghĩa trang đấu sĩ ở Ephesus; Kyle, Spectacles of Death in Ancient Rome (1998)" },
-  { "id": "ls-133", "cat": "lich-su",
+    "tags": [
+      "la-ma",
+      "huyen-thoai",
+      "kinh-te"
+    ],
+    "src": "Nghiên cứu về nghĩa trang đấu sĩ ở Ephesus; Kyle, Spectacles of Death in Ancient Rome (1998)"
+  },
+  {
+    "id": "ls-133",
+    "cat": "lich-su",
+    "sub": "trung-dai",
     "t": "Đế chế La Mã phương Đông tồn tại thêm gần một nghìn năm sau khi Rome sụp đổ",
     "s": "Constantinople chỉ thất thủ năm 1453, cùng thời với việc Gutenberg đang hoàn thiện máy in. Cư dân của nó tự gọi mình là người La Mã; cái tên 'Byzantine' do các sử gia phương Tây đặt ra hàng thế kỷ sau khi đế chế này biến mất.",
-    "tags": ["la-ma", "byzantine", "ten-goi"],
-    "src": "Sử học Byzantine; niên đại 476 và 1453" },
-  { "id": "ls-134", "cat": "lich-su",
+    "tags": [
+      "la-ma",
+      "byzantine",
+      "ten-goi"
+    ],
+    "src": "Sử học Byzantine; niên đại 476 và 1453"
+  },
+  {
+    "id": "ls-134",
+    "cat": "lich-su",
+    "sub": "phat-minh",
     "t": "Máy in của Gutenberg lan nhanh hơn hầu hết công nghệ trước đó và làm thay đổi cấu trúc quyền lực",
     "s": "Trong 50 năm sau 1450, hàng triệu bản sách đã được in ở châu Âu. Nó làm sụp đổ độc quyền tri thức, cho phép Cải cách Tin Lành lan rộng, và tạo ra khái niệm dư luận. Các thành phố có xưởng in sớm cũng tăng trưởng nhanh hơn về sau.",
-    "tags": ["in-an", "thong-tin", "kinh-te"],
-    "src": "Eisenstein, The Printing Press as an Agent of Change (1979); Dittmar, Quarterly Journal of Economics (2011)" },
-  { "id": "ls-135", "cat": "lich-su",
+    "tags": [
+      "in-an",
+      "thong-tin",
+      "kinh-te"
+    ],
+    "src": "Eisenstein, The Printing Press as an Agent of Change (1979); Dittmar, Quarterly Journal of Economics (2011)"
+  },
+  {
+    "id": "ls-135",
+    "cat": "lich-su",
+    "sub": "phat-minh",
     "t": "Người Trung Hoa phát minh in ấn trước Gutenberg hàng thế kỷ nhưng tác động khác hẳn",
     "s": "In khắc gỗ và cả chữ rời đã có từ thời Tống. Nhưng với hệ chữ hàng nghìn ký tự, lợi thế của chữ rời nhỏ hơn nhiều so với bảng chữ cái — một minh hoạ cho việc cùng một công nghệ có sức mạnh khác nhau tuỳ hạ tầng sẵn có.",
-    "tags": ["in-an", "trung-quoc", "cong-nghe"],
-    "src": "Needham, Science and Civilisation in China, tập 5; lịch sử kỹ thuật in Đông Á" },
-  { "id": "ls-136", "cat": "lich-su",
+    "tags": [
+      "in-an",
+      "trung-quoc",
+      "cong-nghe"
+    ],
+    "src": "Needham, Science and Civilisation in China, tập 5; lịch sử kỹ thuật in Đông Á"
+  },
+  {
+    "id": "ls-136",
+    "cat": "lich-su",
+    "sub": "phat-minh",
     "t": "Giấy, la bàn, thuốc súng và in ấn đều tới châu Âu từ phương Đông",
     "s": "Francis Bacon viết rằng ba phát minh — in ấn, thuốc súng và la bàn — đã thay đổi bộ mặt thế giới, mà không biết cả ba đều có nguồn gốc Trung Hoa. Lịch sử công nghệ hiếm khi là chuyện của một nền văn minh.",
-    "tags": ["cong-nghe", "trung-quoc", "lan-toa"],
-    "src": "Francis Bacon, Novum Organum (1620); Needham, Science and Civilisation in China" },
-  { "id": "ls-137", "cat": "lich-su",
+    "tags": [
+      "cong-nghe",
+      "trung-quoc",
+      "lan-toa"
+    ],
+    "src": "Francis Bacon, Novum Organum (1620); Needham, Science and Civilisation in China"
+  },
+  {
+    "id": "ls-137",
+    "cat": "lich-su",
+    "sub": "phat-minh",
     "t": "Số 'Ả Rập' bạn đang dùng có nguồn gốc Ấn Độ",
     "s": "Hệ thập phân với số không ra đời ở Ấn Độ, được các học giả Ả Rập tiếp nhận và truyền sang châu Âu qua Fibonacci vào thế kỷ 13. Việc châu Âu chuyển từ số La Mã sang hệ này mất hàng trăm năm vì các thành phố lo ngại số mới dễ bị sửa trong sổ sách.",
-    "tags": ["toan-hoc", "lan-toa", "so-hoc"],
-    "src": "Fibonacci, Liber Abaci (1202); lịch sử hệ số Hindu-Ả Rập" },
-  { "id": "ls-138", "cat": "lich-su",
+    "tags": [
+      "toan-hoc",
+      "lan-toa",
+      "so-hoc"
+    ],
+    "src": "Fibonacci, Liber Abaci (1202); lịch sử hệ số Hindu-Ả Rập"
+  },
+  {
+    "id": "ls-138",
+    "cat": "lich-su",
+    "sub": "phat-minh",
     "t": "Con số không mất rất lâu mới được chấp nhận là một con số",
     "s": "Ghi chép sớm nhất về số không như một con số độc lập có quy tắc tính toán đến từ Brahmagupta ở Ấn Độ năm 628. Nhiều nền văn hoá trước đó có ký hiệu chỗ trống nhưng không coi 'không có gì' là một đại lượng — đó là một bước nhảy khái niệm, không phải ký hiệu.",
-    "tags": ["toan-hoc", "khai-niem", "lich-su"],
-    "src": "Brahmagupta, Brāhmasphuṭasiddhānta (628); lịch sử số không" },
-  { "id": "ls-139", "cat": "lich-su",
+    "tags": [
+      "toan-hoc",
+      "khai-niem",
+      "lich-su"
+    ],
+    "src": "Brahmagupta, Brāhmasphuṭasiddhānta (628); lịch sử số không"
+  },
+  {
+    "id": "ls-139",
+    "cat": "lich-su",
+    "sub": "phat-minh",
     "t": "Đơn vị đo lường quốc tế ra đời từ Cách mạng Pháp để phá bỏ hệ thống đo lường địa phương",
     "s": "Trước đó, mỗi vùng có đơn vị riêng và thương nhân lợi dụng sự hỗn loạn đó. Mét ban đầu được định nghĩa là một phần mười triệu khoảng cách từ xích đạo tới cực Bắc — một định nghĩa mang tính chính trị nhiều như khoa học.",
-    "tags": ["do-luong", "cach-mang", "chuan-hoa"],
-    "src": "Lịch sử hệ mét; Alder, The Measure of All Things (2002)" },
-  { "id": "ls-140", "cat": "lich-su",
+    "tags": [
+      "do-luong",
+      "cach-mang",
+      "chuan-hoa"
+    ],
+    "src": "Lịch sử hệ mét; Alder, The Measure of All Things (2002)"
+  },
+  {
+    "id": "ls-140",
+    "cat": "lich-su",
+    "sub": "phat-minh",
     "t": "Kilogram là đơn vị cuối cùng được định nghĩa bằng một vật thể, và điều đó chấm dứt năm 2019",
     "s": "Suốt hơn một thế kỷ, một khối hợp kim ở Pháp là chuẩn của kilogram — và khối lượng của nó thay đổi rất nhẹ theo thời gian. Từ 2019, kilogram được định nghĩa qua hằng số Planck, nên chuẩn không còn có thể bị xước hay bị mất.",
-    "tags": ["do-luong", "vat-ly", "chuan-hoa"],
-    "src": "Nghị quyết của Hội nghị Cân đo Quốc tế lần thứ 26 (2018), hiệu lực 2019" },
-  { "id": "ls-141", "cat": "lich-su",
+    "tags": [
+      "do-luong",
+      "vat-ly",
+      "chuan-hoa"
+    ],
+    "src": "Nghị quyết của Hội nghị Cân đo Quốc tế lần thứ 26 (2018), hiệu lực 2019"
+  },
+  {
+    "id": "ls-141",
+    "cat": "lich-su",
+    "sub": "phat-minh",
     "t": "Lịch Gregory bỏ hẳn 10 ngày trong năm 1582, và nhiều nước áp dụng muộn hàng thế kỷ",
     "s": "Sau ngày 4 tháng 10 năm 1582 là ngày 15 tháng 10. Nước Anh và thuộc địa chỉ chuyển năm 1752, Nga sau Cách mạng 1917. Điều này khiến các mốc lịch sử trong cùng một thời kỳ có thể ghi hai ngày khác nhau tuỳ nguồn.",
-    "tags": ["lich", "chuan-hoa", "lich-su"],
-    "src": "Sắc chỉ Inter gravissimas của Giáo hoàng Gregory XIII (1582); lịch sử áp dụng lịch Gregory" },
-  { "id": "ls-142", "cat": "lich-su",
+    "tags": [
+      "lich",
+      "chuan-hoa",
+      "lich-su"
+    ],
+    "src": "Sắc chỉ Inter gravissimas của Giáo hoàng Gregory XIII (1582); lịch sử áp dụng lịch Gregory"
+  },
+  {
+    "id": "ls-142",
+    "cat": "lich-su",
+    "sub": "can-hien-dai",
     "t": "Giờ tiết kiệm ánh sáng ra đời vì chiến tranh, không vì nông dân",
     "s": "Đức áp dụng đầu tiên năm 1916 để tiết kiệm than cho chiến tranh, và các nước khác làm theo. Nông dân thực tế phản đối vì gia súc và cây trồng theo mặt trời chứ không theo đồng hồ. Bằng chứng về lợi ích tiết kiệm năng lượng hiện nay rất yếu.",
-    "tags": ["thoi-gian", "chinh-sach", "hieu-lam"],
-    "src": "Prerau, Seize the Daylight (2005); Kotchen & Grant, Review of Economics and Statistics (2011)" },
-  { "id": "ls-143", "cat": "lich-su",
+    "tags": [
+      "thoi-gian",
+      "chinh-sach",
+      "hieu-lam"
+    ],
+    "src": "Prerau, Seize the Daylight (2005); Kotchen & Grant, Review of Economics and Statistics (2011)"
+  },
+  {
+    "id": "ls-143",
+    "cat": "lich-su",
+    "sub": "phat-minh",
     "t": "Nhiều phát minh lớn được tạo ra độc lập bởi nhiều người gần như cùng lúc",
     "s": "Vi tích phân, thuyết tiến hoá bằng chọn lọc tự nhiên, điện thoại, bóng đèn — tất cả đều có nhiều người khám phá song song. Điều này gợi ý rằng phát minh phụ thuộc vào việc các mảnh ghép đã sẵn sàng hơn là vào thiên tài cá nhân.",
-    "tags": ["phat-minh", "dong-thoi", "khoa-hoc"],
-    "src": "Ogburn & Thomas, Political Science Quarterly (1922); Kevin Kelly, What Technology Wants (2010)" },
-  { "id": "ls-144", "cat": "lich-su",
+    "tags": [
+      "phat-minh",
+      "dong-thoi",
+      "khoa-hoc"
+    ],
+    "src": "Ogburn & Thomas, Political Science Quarterly (1922); Kevin Kelly, What Technology Wants (2010)"
+  },
+  {
+    "id": "ls-144",
+    "cat": "lich-su",
+    "sub": "y-te-lich-su",
     "t": "Penicillin được phát hiện tình cờ, và bị bỏ quên hơn mười năm",
     "s": "Fleming quan sát hiện tượng năm 1928 nhưng không phát triển được thành thuốc. Phải tới khi Florey và Chain tinh chế được nó vào đầu thập niên 1940 thì nó mới cứu người — và họ chia chung giải Nobel năm 1945. Phát hiện và ứng dụng là hai việc rất khác nhau.",
-    "tags": ["y-hoc", "phat-minh", "tinh-co"],
-    "src": "Nobel Y sinh 1945; lịch sử phát triển penicillin" },
-  { "id": "ls-145", "cat": "lich-su",
+    "tags": [
+      "y-hoc",
+      "phat-minh",
+      "tinh-co"
+    ],
+    "src": "Nobel Y sinh 1945; lịch sử phát triển penicillin"
+  },
+  {
+    "id": "ls-145",
+    "cat": "lich-su",
+    "sub": "y-te-lich-su",
     "t": "Vaccine đầu tiên ra đời từ quan sát rằng thợ vắt sữa không bị đậu mùa",
     "s": "Edward Jenner để ý các cô gái vắt sữa mắc đậu bò nhẹ rồi miễn nhiễm với đậu mùa, và thử nghiệm ý tưởng đó năm 1796. Từ 'vaccine' bắt nguồn từ 'vacca' — con bò trong tiếng Latinh.",
-    "tags": ["vac-xin", "y-hoc", "tu-nguyen"],
-    "src": "Jenner, An Inquiry into the Causes and Effects of the Variolae Vaccinae (1798)" },
-  { "id": "ls-146", "cat": "lich-su",
+    "tags": [
+      "vac-xin",
+      "y-hoc",
+      "tu-nguyen"
+    ],
+    "src": "Jenner, An Inquiry into the Causes and Effects of the Variolae Vaccinae (1798)"
+  },
+  {
+    "id": "ls-146",
+    "cat": "lich-su",
+    "sub": "y-te-lich-su",
     "t": "Kỹ thuật chủng đậu đã có ở châu Á và châu Phi trước khi tới châu Âu",
     "s": "Việc cấy vảy đậu mùa để tạo miễn dịch nhẹ được thực hành ở Trung Quốc và vùng Ottoman từ trước. Nó được đưa vào Anh phần lớn nhờ Lady Mary Wortley Montagu, người đã chứng kiến kỹ thuật này ở Constantinople.",
-    "tags": ["y-hoc", "lan-toa", "lich-su"],
-    "src": "Thư từ của Lady Mary Wortley Montagu (1717); lịch sử variolation" },
-  { "id": "ls-147", "cat": "lich-su",
-    "t": "Thư viện lớn nhất thời cổ đại có lẽ suy tàn vì mất ngân sách, không vì một trận cháy",
-    "s": "Thư viện Alexandria bị hư hại nhiều lần qua nhiều thế kỷ, nhưng nguyên nhân chính của sự suy tàn là mất bảo trợ hoàng gia, mất học giả và thay đổi trung tâm tri thức. Hình ảnh một đêm lửa xoá sạch tri thức nhân loại là câu chuyện hấp dẫn hơn sự thật.",
-    "tags": ["thu-vien", "huyen-thoai", "suy-tan"],
-    "src": "Bagnall, Proceedings of the American Philosophical Society (2002)" },
-  { "id": "ls-148", "cat": "lich-su",
+    "tags": [
+      "y-hoc",
+      "lan-toa",
+      "lich-su"
+    ],
+    "src": "Thư từ của Lady Mary Wortley Montagu (1717); lịch sử variolation"
+  },
+  {
+    "id": "ls-148",
+    "cat": "lich-su",
+    "sub": "co-dai",
     "t": "Chúng ta biết về nhiều nền văn minh cổ nhờ những thứ họ không định lưu lại",
     "s": "Rác thải, hoá đơn, danh sách hàng tồn và bài tập của học trò cung cấp nhiều thông tin hơn bia đá ca ngợi vua. Các văn bản chính thức mô tả điều người cầm quyền muốn hậu thế tin; bảng đất sét ghi nợ mô tả điều thật sự xảy ra.",
-    "tags": ["khao-co", "phuong-phap", "nguon"],
-    "src": "Phương pháp khảo cổ học và văn bản học cổ đại; nghiên cứu bảng đất sét Lưỡng Hà" }
+    "tags": [
+      "khao-co",
+      "phuong-phap",
+      "nguon"
+    ],
+    "src": "Phương pháp khảo cổ học và văn bản học cổ đại; nghiên cứu bảng đất sét Lưỡng Hà"
+  }
 ]

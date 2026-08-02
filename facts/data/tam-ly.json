@@ -2,184 +2,294 @@
   {
     "id": "tl-001",
     "cat": "tam-ly",
+    "sub": "thien-kien",
     "t": "Mất 100 nghìn đau hơn được 100 nghìn vui, khoảng gấp đôi",
     "s": "Đây là né tránh mất mát (loss aversion) — nền tảng của thuyết triển vọng, công trình đưa Kahneman tới giải Nobel Kinh tế 2002. Nó giải thích vì sao người ta ôm cổ phiếu lỗ quá lâu, sợ đổi việc dù việc hiện tại tệ, và vì sao 'dùng thử miễn phí rồi tự động gia hạn' hiệu quả đến vậy.",
     "d": "Hệ số 'gấp đôi' là ước lượng trung bình chứ không phải hằng số; mức độ khác nhau theo bối cảnh và có nghiên cứu cho thấy nó yếu đi khi giá trị nhỏ. Nhưng chiều của hiệu ứng thì rất vững: khi đóng khung một đề nghị, nói về cái người ta sẽ mất nếu không làm thường mạnh hơn nói về cái họ sẽ được nếu làm.",
-    "tags": ["thien-kien", "kinh-te-hanh-vi", "quyet-dinh"],
+    "tags": [
+      "thien-kien",
+      "kinh-te-hanh-vi",
+      "quyet-dinh"
+    ],
     "src": "Kahneman & Tversky, Econometrica (1979)"
   },
   {
     "id": "tl-002",
     "cat": "tam-ly",
+    "sub": "thien-kien",
     "t": "Con số đầu tiên được nêu ra sẽ neo mọi con số sau đó — kể cả khi nó vô nghĩa",
     "s": "Trong thí nghiệm gốc, người tham gia quay một vòng quay số ngẫu nhiên rồi được hỏi ước lượng tỉ lệ các nước châu Phi trong Liên Hợp Quốc. Nhóm quay ra số lớn ước lượng cao hơn hẳn nhóm quay ra số nhỏ. Cái neo hoạt động ngay cả khi ai cũng biết nó ngẫu nhiên.",
     "d": "Ứng dụng: trong đàm phán lương hay báo giá, người nêu số trước thường có lợi, miễn là con số nằm trong vùng còn đáng tin. Cách phòng thủ khi bị neo: đừng phản ứng quanh con số của họ, hãy nêu lại cơ sở của bạn (dữ liệu thị trường, khối lượng công việc) rồi mới nói số của mình.",
-    "tags": ["thien-kien", "dam-phan", "gia-ca"],
+    "tags": [
+      "thien-kien",
+      "dam-phan",
+      "gia-ca"
+    ],
     "src": "Tversky & Kahneman, Science 185 (1974)"
   },
   {
     "id": "tl-003",
     "cat": "tam-ly",
+    "sub": "thien-kien",
     "t": "Ta ước lượng xác suất bằng độ dễ nhớ, không bằng dữ liệu",
     "s": "Heuristic sẵn có khiến người ta sợ tai nạn máy bay hơn tai nạn giao thông, sợ bắt cóc hơn đuối nước, sợ khủng bố hơn bệnh tim — vì cái trước lên báo còn cái sau thì không. Bất cứ khi nào bạn thấy sợ một rủi ro vừa xem trên mạng, hãy đi tìm con số thật.",
-    "tags": ["thien-kien", "rui-ro", "truyen-thong"],
+    "tags": [
+      "thien-kien",
+      "rui-ro",
+      "truyen-thong"
+    ],
     "src": "Tversky & Kahneman, Cognitive Psychology (1973)"
   },
   {
     "id": "tl-004",
     "cat": "tam-ly",
+    "sub": "nhin-nguoi-khac",
     "t": "Lỗi của người khác là do tính cách, lỗi của mình là do hoàn cảnh",
     "s": "Sai lệch quy kết cơ bản: đồng nghiệp trễ hẹn thì 'vô trách nhiệm', mình trễ hẹn thì 'kẹt xe'. Nhận ra nó không làm bạn thánh thiện hơn, nhưng giúp bạn hỏi thêm một câu trước khi kết luận về một con người — và câu hỏi đó nhiều khi cứu cả một mối quan hệ làm ăn.",
-    "tags": ["thien-kien", "quan-he", "danh-gia"],
+    "tags": [
+      "thien-kien",
+      "quan-he",
+      "danh-gia"
+    ],
     "src": "Ross, Advances in Experimental Social Psychology (1977)"
   },
   {
     "id": "tl-005",
     "cat": "tam-ly",
+    "sub": "thien-kien",
     "t": "Sau khi biết kết quả, ta tin rằng mình đã đoán trước được",
     "s": "Thiên kiến nhận thức muộn làm quá khứ trông tất yếu hơn thực tế, khiến ta đánh giá quá khắt khe người ra quyết định trong lúc còn mù mờ — kể cả chính mình. Cách chữa rẻ nhất: viết dự đoán ra giấy kèm ngày tháng, rồi đọc lại. Sổ dự đoán là liều thuốc khiêm tốn hiệu quả nhất từng có.",
-    "tags": ["thien-kien", "tri-nho", "quyet-dinh"],
+    "tags": [
+      "thien-kien",
+      "tri-nho",
+      "quyet-dinh"
+    ],
     "src": "Baruch Fischhoff, Journal of Experimental Psychology (1975)"
   },
   {
     "id": "tl-006",
     "cat": "tam-ly",
+    "sub": "ban-than",
     "t": "Người ta chú ý tới bạn ít hơn bạn tưởng rất nhiều",
     "s": "Hiệu ứng ánh đèn sân khấu: sinh viên mặc áo phông quê mùa bước vào phòng ước lượng khoảng một nửa số người sẽ để ý, thực tế chỉ khoảng một phần tư nhận ra. Cùng cơ chế đó khiến bạn nhớ mãi câu nói vụng về trong cuộc họp mà không ai khác còn nhớ.",
-    "tags": ["thien-kien", "tu-tin", "xa-hoi"],
+    "tags": [
+      "thien-kien",
+      "tu-tin",
+      "xa-hoi"
+    ],
     "src": "Gilovich, Medvec & Savitsky, Journal of Personality and Social Psychology (2000)"
   },
   {
     "id": "tl-007",
     "cat": "tam-ly",
+    "sub": "cam-xuc",
     "t": "Xấu mạnh hơn tốt: một phản hồi tiêu cực nặng hơn nhiều lời khen",
     "s": "Tổng quan kinh điển 'Bad is stronger than good' cho thấy trong hầu hết lĩnh vực — quan hệ, học tập, ấn tượng đầu tiên, cảm xúc — sự kiện tiêu cực có tác động mạnh và dai hơn sự kiện tích cực cùng cường độ. Đó là lý do quản lý chỉ khen chung chung nhưng chê cụ thể sẽ phá vỡ động lực nhóm.",
-    "tags": ["cam-xuc", "quan-ly", "phan-hoi"],
+    "tags": [
+      "cam-xuc",
+      "quan-ly",
+      "phan-hoi"
+    ],
     "src": "Baumeister, Bratslavsky, Finkenauer & Vohs, Review of General Psychology (2001)"
   },
   {
     "id": "tl-008",
     "cat": "tam-ly",
+    "sub": "tri-nho",
     "t": "Ta nhớ một trải nghiệm bằng đỉnh điểm và đoạn kết, không bằng tổng thể",
     "s": "Trong thí nghiệm nội soi, nhóm bệnh nhân có thêm vài phút cuối bớt đau (tức tổng lượng đau NHIỀU hơn) lại nhớ toàn bộ ca ít đau hơn và sẵn sàng quay lại khám hơn. Quy tắc đỉnh–kết giải thích vì sao kết thúc một cuộc họp, một chuyến đi hay một mối quan hệ tử tế lại quan trọng đến thế.",
-    "tags": ["tri-nho", "trai-nghiem", "dich-vu"],
+    "tags": [
+      "tri-nho",
+      "trai-nghiem",
+      "dich-vu"
+    ],
     "src": "Redelmeier & Kahneman, Pain (1996)"
   },
   {
     "id": "tl-009",
     "cat": "tam-ly",
+    "sub": "thien-kien",
     "t": "Sở hữu một thứ trong 5 phút đã đủ làm bạn định giá nó cao hơn",
     "s": "Hiệu ứng sở hữu: người được phát một chiếc cốc đòi giá bán cao hơn khoảng gấp đôi mức người khác sẵn sàng trả cho đúng chiếc cốc đó. Đây là lý do 'dùng thử 30 ngày' bán hàng tốt, và là lý do bạn khó thanh lý đồ cũ đúng giá thị trường.",
-    "tags": ["thien-kien", "kinh-te-hanh-vi", "mua-ban"],
+    "tags": [
+      "thien-kien",
+      "kinh-te-hanh-vi",
+      "mua-ban"
+    ],
     "src": "Kahneman, Knetsch & Thaler, Journal of Political Economy (1990)"
   },
   {
     "id": "tl-010",
     "cat": "tam-ly",
+    "sub": "thien-kien",
     "t": "Cùng một sự thật, đổi cách đóng khung là đổi quyết định",
     "s": "Bác sĩ được cho biết ca mổ có '90% sống sót' chọn mổ nhiều hơn hẳn khi được cho biết ca đó có '10% tử vong' — dù hai câu là một. Đóng khung không phải mánh khoé xấu; nó là điều không thể tránh. Người trưởng thành nên tập thói quen tự dịch mọi con số sang khung ngược lại trước khi quyết.",
-    "tags": ["thien-kien", "truyen-dat", "quyet-dinh"],
+    "tags": [
+      "thien-kien",
+      "truyen-dat",
+      "quyet-dinh"
+    ],
     "src": "Tversky & Kahneman, Science 211 (1981); McNeil et al., NEJM (1982)"
   },
   {
     "id": "tl-011",
     "cat": "tam-ly",
+    "sub": "thien-kien",
     "t": "Chỉ cần nhìn thấy nhiều lần là đủ để thấy thích hơn",
-    "s": "Hiệu ứng tiếp xúc đơn thuần: các kích thích được lặp lại nhiều lần được đánh giá dễ chịu hơn, ngay cả khi người xem không nhớ đã thấy chúng. Đó là cơ chế của quảng cáo hiển thị, và cũng là lý do người quen mặt trong công ty được tin tưởng hơn người giỏi hơn nhưng ít xuất hiện.",
-    "tags": ["thien-kien", "thuong-hieu", "quan-he"],
-    "src": "Robert Zajonc, Journal of Personality and Social Psychology (1968)"
+    "s": "Hiệu ứng tiếp xúc đơn thuần: các kích thích được lặp lại nhiều lần được đánh giá dễ chịu hơn, ngay cả khi người xem không nhớ đã thấy chúng. Đó là cơ chế của quảng cáo hiển thị, và cũng là lý do người quen mặt trong công ty được tin tưởng hơn người giỏi hơn nhưng ít xuất hiện. Phần ít biết mà đáng giá hơn: hiệu ứng mạnh nhất khi người ta không ý thức được là mình đã tiếp xúc — nên quảng cáo hiển thị vẫn hiệu quả với người tự tin rằng mình không bao giờ để ý quảng cáo.",
+    "tags": [
+      "thien-kien",
+      "thuong-hieu",
+      "quan-he"
+    ],
+    "src": "Robert Zajonc, Journal of Personality and Social Psychology (1968); Bornstein & D'Agostino, JPSP (1992)"
   },
   {
     "id": "tl-012",
     "cat": "tam-ly",
+    "sub": "tri-nho",
     "t": "Trí nhớ không phải bản ghi, nó là bản dựng lại — và có thể bị cấy",
     "s": "Elizabeth Loftus cho thấy chỉ cần đổi một động từ trong câu hỏi ('đâm sầm' thay vì 'chạm vào') là nhân chứng nhớ tốc độ xe cao hơn và thậm chí nhớ thấy kính vỡ dù không có. Hệ quả nghiêm túc: sự tự tin của một người về ký ức không phải là bằng chứng cho độ chính xác của ký ức đó.",
     "d": "Trong đời sống công sở, điều này nghĩa là biên bản họp viết ngay sau cuộc họp có giá trị hơn ba người cùng nhớ lại sau một tháng. Trong quan hệ, nó nghĩa là hai người thật lòng nhớ khác nhau về cùng một cuộc cãi vã — và không ai đang nói dối.",
-    "tags": ["tri-nho", "phap-ly", "giao-tiep"],
+    "tags": [
+      "tri-nho",
+      "phap-ly",
+      "giao-tiep"
+    ],
     "src": "Loftus & Palmer, Journal of Verbal Learning and Verbal Behavior (1974)"
   },
   {
     "id": "tl-013",
     "cat": "tam-ly",
+    "sub": "ban-than",
     "t": "Phần lớn tài xế tin mình lái xe trên mức trung bình",
     "s": "Trong nghiên cứu kinh điển của Ola Svenson, khoảng 90% tài xế Mỹ tự xếp mình vào nhóm an toàn hơn mức trung vị. Hiệu ứng 'trên trung bình' xuất hiện ở kỹ năng lái xe, khả năng lãnh đạo, khiếu hài hước, và đặc biệt nguy hiểm ở kỹ năng đầu tư.",
-    "tags": ["thien-kien", "tu-tin", "dau-tu"],
+    "tags": [
+      "thien-kien",
+      "tu-tin",
+      "dau-tu"
+    ],
     "src": "Ola Svenson, Acta Psychologica (1981)"
   },
   {
     "id": "tl-014",
     "cat": "tam-ly",
+    "sub": "huyen-thoai-tam-ly",
     "t": "Hiệu ứng Dunning–Kruger có thật, nhưng nhỏ hơn và khác với cách nó bị kể lại",
     "s": "Nghiên cứu gốc cho thấy người làm kém nhất đánh giá bản thân sát mức trung bình, tức lệch nhiều nhất. Nhưng phần lớn mọi người, kể cả người giỏi, đều dự đoán mình gần mức trung bình — và một phần hiệu ứng đến từ hiện tượng thống kê chứ không hoàn toàn từ 'ngu mà không biết mình ngu'.",
     "d": "Đây là ví dụ tốt về cách một phát hiện thật bị biến thành câu chửi trên mạng. Bài học dùng được: mức tự tin của một người là tín hiệu rất yếu về năng lực của họ; hãy hỏi họ mô tả cách làm cụ thể, chứ đừng nghe họ tự đánh giá.",
-    "tags": ["thien-kien", "nang-luc", "danh-gia"],
+    "tags": [
+      "thien-kien",
+      "nang-luc",
+      "danh-gia"
+    ],
     "src": "Kruger & Dunning, JPSP (1999); phê bình phương pháp: Nuhfer et al., Numeracy (2017)"
   },
   {
     "id": "tl-015",
     "cat": "tam-ly",
+    "sub": "huyen-thoai-tam-ly",
     "t": "Nhiều kết quả tâm lý học nổi tiếng đã không lặp lại được",
     "s": "Dự án Reproducibility Project công bố trên Science (2015) thử lặp lại 100 nghiên cứu tâm lý học và chỉ khoảng 36% cho kết quả có ý nghĩa thống kê như bản gốc. Các hiệu ứng từng rất nổi như 'tư thế quyền lực' hay 'cạn kiệt ý chí' nay đứng trên nền bằng chứng rất yếu.",
     "d": "Đây không phải lý do để vứt bỏ tâm lý học, mà là lý do để đọc nó như người trưởng thành: ưu tiên hiệu ứng đã được lặp lại nhiều lần, ở nhiều nhóm dân cư, với cỡ mẫu lớn và tiền đăng ký thiết kế. Và nghi ngờ mọi kết luận gọn ghẽ được rút ra từ một nghiên cứu duy nhất trên 40 sinh viên.",
-    "tags": ["khoa-hoc", "phan-bien", "khung-hoang-nhan-ban"],
+    "tags": [
+      "khoa-hoc",
+      "phan-bien",
+      "khung-hoang-nhan-ban"
+    ],
     "src": "Open Science Collaboration, Science 349 (2015)"
   },
   {
     "id": "tl-016",
     "cat": "tam-ly",
+    "sub": "nhin-nguoi-khac",
     "t": "Hiệu ứng người ngoài cuộc có thật, nhưng trong nguy hiểm thật người ta thường ra tay",
     "s": "Sách giáo khoa dạy rằng càng đông người chứng kiến thì càng ít người giúp. Phân tích video giám sát các vụ xung đột thật ở ba quốc gia (2019) cho thấy có người can thiệp trong khoảng 9 trên 10 vụ, và càng đông người thì khả năng có ít nhất một người ra tay càng cao.",
-    "tags": ["xa-hoi", "hanh-vi", "phan-bien"],
+    "tags": [
+      "xa-hoi",
+      "hanh-vi",
+      "phan-bien"
+    ],
     "src": "Philpot, Liebst, Levine, Bernasco & Lindegaard, American Psychologist (2020)"
   },
   {
     "id": "tl-017",
     "cat": "tam-ly",
+    "sub": "ban-than",
     "t": "Cái tên của bạn xuyên qua được tiếng ồn",
     "s": "Trong môi trường nhiều người nói cùng lúc, người ta lọc gần hết nội dung xung quanh nhưng vẫn phát hiện tên riêng của mình ở kênh không được chú ý — khoảng một phần ba số người trong các thí nghiệm nghe bóng. Não duy trì một bộ lọc ưu tiên cho thông tin liên quan tới bản thân.",
-    "tags": ["chu-y", "giao-tiep", "nhan-thuc"],
+    "tags": [
+      "chu-y",
+      "giao-tiep",
+      "nhan-thuc"
+    ],
     "src": "Moray, Quarterly Journal of Experimental Psychology (1959); Conway, Cowan & Bunting (2001)"
   },
   {
     "id": "tl-018",
     "cat": "tam-ly",
+    "sub": "nhin-nguoi-khac",
     "t": "Ấn tượng đầu tiên hình thành trong khoảng một phần mười giây",
-    "s": "Khi cho xem ảnh khuôn mặt chỉ 100 mili giây, người xem đã đưa ra phán đoán về độ đáng tin, năng lực và mức hấp dẫn gần như trùng khớp với phán đoán khi được nhìn thoải mái. Thời gian dài hơn chủ yếu làm tăng sự tự tin chứ không đổi nội dung phán đoán.",
+    "s": "Khi cho xem ảnh khuôn mặt chỉ 100 mili giây, người xem đã đưa ra phán đoán về độ đáng tin, năng lực và mức hấp dẫn gần như trùng khớp với phán đoán khi được nhìn thoải mái. Thời gian dài hơn chủ yếu làm tăng sự tự tin chứ không đổi nội dung phán đoán. Những phán đoán này dự báo hành vi thật khá kém, nhưng lại dự báo kết quả bầu cử khá tốt.",
     "d": "Điều này không có nghĩa ấn tượng đầu chính xác — nó chỉ nhanh. Trong tuyển dụng, đó chính là lý do phỏng vấn tự do dễ biến thành nghi thức hợp thức hoá cảm giác 10 giây đầu, và vì sao bài kiểm tra thực hành lại dự báo hiệu suất tốt hơn nhiều.",
-    "tags": ["an-tuong", "tuyen-dung", "xa-hoi"],
+    "tags": [
+      "an-tuong",
+      "tuyen-dung",
+      "xa-hoi"
+    ],
     "src": "Willis & Todorov, Psychological Science (2006)"
   },
   {
     "id": "tl-019",
     "cat": "tam-ly",
+    "sub": "nhin-nguoi-khac",
     "t": "Hiệu ứng hào quang: giỏi một thứ dễ thấy thì bị cho là giỏi cả những thứ không liên quan",
     "s": "Người ngoại hình ưa nhìn được đánh giá là thông minh và tử tế hơn; công ty có logo đẹp được cho là sản phẩm tốt hơn; một nhân sự nói năng lưu loát được cho là năng lực chuyên môn cao hơn. Cách phòng vệ trong tuyển dụng và mua bán: chấm từng tiêu chí riêng lẻ trước khi hình thành ấn tượng tổng.",
-    "tags": ["thien-kien", "tuyen-dung", "danh-gia"],
+    "tags": [
+      "thien-kien",
+      "tuyen-dung",
+      "danh-gia"
+    ],
     "src": "Edward Thorndike (1920); Nisbett & Wilson, JPSP (1977)"
   },
   {
     "id": "tl-020",
     "cat": "tam-ly",
+    "sub": "cam-xuc",
     "t": "Cảm giác đau đớn của bất công phi lý mạnh tới mức người ta chịu mất tiền để trừng phạt",
     "s": "Trong trò chơi tối hậu thư, người chia đề nghị mức chia; người nhận chỉ có thể đồng ý (cả hai nhận tiền) hoặc từ chối (cả hai nhận 0). Về lý trí, nhận bất cứ mức nào cũng hơn không. Thực tế, các đề nghị dưới khoảng 20–30% bị từ chối rất thường xuyên, ở nhiều nền văn hoá.",
     "d": "Với người làm kinh doanh, đây là dữ kiện có giá trị tiền bạc: một thoả thuận bị đối tác cảm thấy bất công sẽ bị phá vỡ ngay cả khi phá vỡ khiến họ thiệt. Cảm nhận công bằng không phải chuyện đạo đức suông, nó là biến số vận hành.",
-    "tags": ["cong-bang", "dam-phan", "kinh-te-hanh-vi"],
+    "tags": [
+      "cong-bang",
+      "dam-phan",
+      "kinh-te-hanh-vi"
+    ],
     "src": "Güth, Schmittberger & Schwarze, Journal of Economic Behavior & Organization (1982); Henrich et al. (2001)"
   },
   {
     "id": "tl-021",
     "cat": "tam-ly",
+    "sub": "ban-than",
     "t": "Bạn tin rằng cảm xúc của mình lộ rõ hơn thực tế nhiều",
     "s": "Ảo tưởng minh bạch: người nói dối tin rằng khoảng một nửa khán giả nhận ra, thực tế chỉ khoảng một phần tư đoán đúng; người hồi hộp khi thuyết trình tin rằng ai cũng thấy run. Biết điều này giúp giảm chính cái vòng xoáy lo lắng khiến bạn run thật.",
-    "tags": ["cam-xuc", "thuyet-trinh", "tu-tin"],
+    "tags": [
+      "cam-xuc",
+      "thuyet-trinh",
+      "tu-tin"
+    ],
     "src": "Gilovich, Savitsky & Medvec, JPSP (1998)"
   },
   {
     "id": "tl-022",
     "cat": "tam-ly",
+    "sub": "tri-nho",
     "t": "Người ta nhớ việc chưa xong dai hơn việc đã xong",
     "s": "Hiệu ứng Zeigarnik: nhiệm vụ bị gián đoạn được nhớ tốt hơn nhiệm vụ hoàn thành. Bằng chứng hiện đại về hiệu ứng này không đồng nhất, nhưng có một ứng dụng đã được kiểm chứng riêng: viết ra kế hoạch cụ thể cho việc còn dang dở giúp giảm suy nghĩ lởn vởn về nó.",
-    "tags": ["tri-nho", "nang-suat", "tap-trung"],
+    "tags": [
+      "tri-nho",
+      "nang-suat",
+      "tap-trung"
+    ],
     "src": "Bluma Zeigarnik (1927); Masicampo & Baumeister, JPSP (2011)"
   }
 ]

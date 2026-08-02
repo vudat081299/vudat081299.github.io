@@ -2,195 +2,315 @@
   {
     "id": "kt-001",
     "cat": "kinh-te",
+    "sub": "lai-va-no",
     "t": "Quy tắc 72: chia 72 cho lãi suất là ra số năm nhân đôi tiền",
-    "s": "Lãi 6%/năm thì tiền nhân đôi sau khoảng 12 năm; 9% thì khoảng 8 năm; 12% thì khoảng 6 năm. Phép nhẩm này cũng chạy ngược cho lạm phát: lạm phát 4%/năm làm sức mua giảm một nửa sau khoảng 18 năm.",
-    "tags": ["lai-kep", "nham", "lam-phat"],
+    "s": "Lãi 6%/năm thì tiền nhân đôi sau khoảng 12 năm; 9% thì khoảng 8 năm; 12% thì khoảng 6 năm. Phép nhẩm này cũng chạy ngược cho lạm phát: lạm phát 4%/năm làm sức mua giảm một nửa sau khoảng 18 năm. Chạy ngược như vậy cũng cho thấy 'giữ tiền mặt cho an toàn' là một quyết định có rủi ro — chỉ là rủi ro chậm và không có thông báo.",
+    "tags": [
+      "lai-kep",
+      "nham",
+      "lam-phat"
+    ],
     "src": "Xấp xỉ toán học của hàm mũ; xuất hiện trong Summa de Arithmetica của Luca Pacioli (1494)"
   },
   {
     "id": "kt-002",
     "cat": "kinh-te",
+    "sub": "chi-tieu-tiet-kiem",
     "t": "Gửi đều 5 triệu mỗi tháng trong 30 năm ở mức 8%/năm cho ra khoảng 7,4 tỷ",
     "s": "Tổng số tiền bạn thực sự bỏ ra là 1,8 tỷ. Phần còn lại — hơn 5,6 tỷ — là do lãi kép, và phần lớn của nó sinh ra trong mười năm cuối. Đó là lý do việc bắt đầu sớm quan trọng hơn việc chọn được sản phẩm tối ưu.",
     "d": "Cùng công thức nhưng bắt đầu muộn 10 năm (chỉ đóng 20 năm) cho ra khoảng 2,9 tỷ — chưa tới một nửa, dù tổng tiền bạn bỏ ra (1,2 tỷ) chỉ ít hơn có một phần ba. Lãi kép không thưởng cho người thông minh nhất mà thưởng cho người ở lại lâu nhất.\n\nLưu ý trung thực: 8%/năm là giả định danh nghĩa dài hạn, chưa trừ lạm phát và thuế phí. Với lạm phát 3,5%, sức mua thật của 7,4 tỷ sau 30 năm chỉ tương đương khoảng 2,6 tỷ tiền hôm nay.",
-    "tags": ["lai-kep", "tiet-kiem", "dau-tu"],
+    "tags": [
+      "lai-kep",
+      "tiet-kiem",
+      "dau-tu"
+    ],
     "src": "Công thức giá trị tương lai của dòng tiền đều: FV = P × ((1+r)^n − 1) / r"
   },
   {
     "id": "kt-003",
     "cat": "kinh-te",
+    "sub": "lai-va-no",
     "t": "Nợ thẻ tín dụng 2,5%/tháng không phải 30%/năm mà là 34,5%/năm",
     "s": "Vì lãi nhập gốc mỗi kỳ: 1,025 mũ 12 bằng khoảng 1,345. Cùng cơ chế lãi kép giúp bạn giàu khi đầu tư sẽ nghiền bạn khi mắc nợ tiêu dùng. Đây cũng là lý do trả hết nợ lãi cao là 'khoản đầu tư' có suất sinh lời chắc chắn cao nhất mà một người bình thường có thể tiếp cận.",
-    "tags": ["no", "lai-kep", "the-tin-dung"],
+    "tags": [
+      "no",
+      "lai-kep",
+      "the-tin-dung"
+    ],
     "src": "Công thức lãi kép; quy đổi APR sang lãi suất hiệu dụng (EAR)"
   },
   {
     "id": "kt-004",
     "cat": "kinh-te",
+    "sub": "dau-tu",
     "t": "Phí 1%/năm ăn mất khoảng một phần tư số tiền cuối cùng sau 30 năm",
     "s": "So sánh 8% với 7% trên cùng một khoản đầu tư 30 năm: khoản 8% nhân lên khoảng 10,1 lần, khoản 7% khoảng 7,6 lần — chênh khoảng 24%. Phí không cảm thấy đau vì nó bị trừ âm thầm, nhưng nó cũng cộng gộp đúng như lãi.",
-    "tags": ["phi", "dau-tu", "quy"],
+    "tags": [
+      "phi",
+      "dau-tu",
+      "quy"
+    ],
     "src": "Phép tính lãi kép; xem thêm báo cáo SPIVA của S&P Dow Jones Indices"
   },
   {
     "id": "kt-005",
     "cat": "kinh-te",
+    "sub": "dau-tu",
     "t": "Đa số quỹ chủ động thua chỉ số tham chiếu sau khi trừ phí, và càng dài càng thua",
     "s": "Báo cáo SPIVA theo dõi việc này hàng năm ở nhiều thị trường: trong khung 10–20 năm, tỉ lệ quỹ cổ phiếu chủ động thua chỉ số của chính nhóm mình thường ở mức 80–95%. Điều đó không có nghĩa không ai thắng được thị trường, mà có nghĩa xác suất bạn chọn đúng người thắng trước là rất thấp.",
-    "tags": ["dau-tu", "quy", "chi-so"],
+    "tags": [
+      "dau-tu",
+      "quy",
+      "chi-so"
+    ],
     "src": "S&P Dow Jones Indices, SPIVA Scorecards (công bố định kỳ)"
   },
   {
     "id": "kt-006",
     "cat": "kinh-te",
+    "sub": "lam-phat-tien",
     "t": "Lãi suất thực bằng lãi suất danh nghĩa trừ lạm phát",
     "s": "Gửi tiết kiệm 6%/năm trong khi lạm phát 4% nghĩa là bạn thực sự giàu thêm khoảng 2%/năm, không phải 6%. Rất nhiều quyết định tài chính sai vì so sánh các con số danh nghĩa ở những thời điểm có mức lạm phát khác nhau.",
-    "tags": ["lam-phat", "lai-suat", "tiet-kiem"],
+    "tags": [
+      "lam-phat",
+      "lai-suat",
+      "tiet-kiem"
+    ],
     "src": "Phương trình Fisher (Irving Fisher, 1930)"
   },
   {
     "id": "kt-007",
     "cat": "kinh-te",
+    "sub": "lam-phat-tien",
     "t": "Ảo giác tiền tệ: người ta phản ứng theo con số trên hợp đồng, không theo sức mua",
     "s": "Đa số thấy 'tăng lương 2% khi lạm phát 4%' dễ chấp nhận hơn 'giảm lương 2% khi lạm phát 0%', dù hai tình huống là một về sức mua. Đó là lý do doanh nghiệp thường cắt giảm thực tế bằng cách đóng băng lương thay vì giảm lương danh nghĩa.",
-    "tags": ["lam-phat", "luong", "kinh-te-hanh-vi"],
+    "tags": [
+      "lam-phat",
+      "luong",
+      "kinh-te-hanh-vi"
+    ],
     "src": "Shafir, Diamond & Tversky, Quarterly Journal of Economics (1997)"
   },
   {
     "id": "kt-008",
     "cat": "kinh-te",
+    "sub": "gia-va-thi-truong",
     "t": "Lợi thế so sánh: hai bên vẫn có lợi khi trao đổi ngay cả khi một bên giỏi hơn ở mọi việc",
     "s": "Một luật sư đánh máy nhanh hơn thư ký của mình vẫn nên thuê thư ký, vì mỗi giờ đánh máy là một giờ không hành nghề luật. Nguyên tắc này của David Ricardo là nền tảng của thương mại quốc tế, và cũng là lý lẽ mạnh nhất cho việc thuê ngoài những việc bạn làm được nhưng không nên làm.",
-    "tags": ["thuong-mai", "nang-suat", "chi-phi-co-hoi"],
+    "tags": [
+      "thuong-mai",
+      "nang-suat",
+      "chi-phi-co-hoi"
+    ],
     "src": "David Ricardo, On the Principles of Political Economy and Taxation (1817)"
   },
   {
     "id": "kt-009",
     "cat": "kinh-te",
+    "sub": "dong-co-kinh-te",
     "t": "Thị trường xe cũ dạy ta vì sao thông tin bất cân xứng giết chết cả thị trường",
     "s": "George Akerlof chỉ ra: nếu người mua không phân biệt được xe tốt và xe hỏng, họ chỉ trả giá trung bình; người bán xe tốt rút lui; chất lượng còn lại giảm; giá lại giảm tiếp. Giải pháp trong thực tế là các cơ chế phát tín hiệu: bảo hành, kiểm định bên thứ ba, danh tiếng, hợp đồng ràng buộc.",
     "d": "Đây là mô hình dùng được cho mọi thị trường mà bạn tham gia: tuyển dụng, thuê nhà thầu, mua bảo hiểm, gọi vốn. Hỏi đúng một câu — 'bên nào đang biết nhiều hơn, và cơ chế nào buộc họ phải trung thực?' — thường đủ để tránh phần lớn giao dịch tệ.",
-    "tags": ["thong-tin", "thi-truong", "rui-ro"],
+    "tags": [
+      "thong-tin",
+      "thi-truong",
+      "rui-ro"
+    ],
     "src": "George Akerlof, The Market for Lemons, QJE (1970); Nobel Kinh tế 2001"
   },
   {
     "id": "kt-010",
     "cat": "kinh-te",
+    "sub": "dong-co-kinh-te",
     "t": "Bi kịch của tài sản chung có lối thoát — và Elinor Ostrom đã tìm ra nó",
     "s": "Lý thuyết cổ điển nói tài nguyên dùng chung tất yếu bị khai thác cạn. Ostrom khảo sát hàng trăm cộng đồng thật (thuỷ lợi, ngư trường, rừng) và cho thấy nhiều nơi tự quản trị bền vững hàng trăm năm nhờ ranh giới rõ ràng, luật do chính người dùng đặt ra, cơ chế giám sát và chế tài tăng dần.",
-    "tags": ["tai-nguyen", "the-che", "hop-tac"],
+    "tags": [
+      "tai-nguyen",
+      "the-che",
+      "hop-tac"
+    ],
     "src": "Garrett Hardin, Science (1968); Elinor Ostrom, Governing the Commons (1990), Nobel Kinh tế 2009"
   },
   {
     "id": "kt-011",
     "cat": "kinh-te",
+    "sub": "dong-co-kinh-te",
     "t": "Rủi ro đạo đức: người được bảo vệ khỏi hậu quả sẽ hành xử liều hơn",
     "s": "Có bảo hiểm cháy nổ thì ít kiểm tra hệ thống điện hơn; được nhà nước bảo lãnh thì ngân hàng cho vay mạo hiểm hơn; lương cứng không gắn kết quả thì nỗ lực giảm. Đây không phải đánh giá đạo đức cá nhân mà là dự báo hành vi dựa trên cấu trúc động cơ.",
-    "tags": ["dong-co", "bao-hiem", "the-che"],
+    "tags": [
+      "dong-co",
+      "bao-hiem",
+      "the-che"
+    ],
     "src": "Kenneth Arrow, American Economic Review (1963)"
   },
   {
     "id": "kt-012",
     "cat": "kinh-te",
+    "sub": "thue-chinh-sach",
     "t": "GDP chưa bao giờ được thiết kế để đo hạnh phúc — chính tác giả đã cảnh báo",
     "s": "Simon Kuznets, người xây dựng hệ thống tài khoản quốc gia cho Mỹ, viết trong báo cáo gửi Quốc hội năm 1934 rằng phúc lợi của một quốc gia khó có thể suy ra từ chỉ số thu nhập quốc dân. GDP không đếm công việc nội trợ, không trừ ô nhiễm, và cộng cả chi phí khắc phục thiên tai vào phần tăng trưởng.",
-    "tags": ["do-luong", "vi-mo", "chinh-sach"],
+    "tags": [
+      "do-luong",
+      "vi-mo",
+      "chinh-sach"
+    ],
     "src": "Simon Kuznets, National Income 1929–1932, báo cáo gửi Thượng viện Hoa Kỳ (1934)"
   },
   {
     "id": "kt-013",
     "cat": "kinh-te",
+    "sub": "dau-tu",
     "t": "Đa dạng hoá là bữa trưa miễn phí duy nhất trong đầu tư",
     "s": "Câu của Harry Markowitz. Ghép các tài sản không biến động cùng nhịp làm giảm biến động của cả danh mục mà không nhất thiết giảm lợi suất kỳ vọng. Nhưng phần rủi ro hệ thống — cái tác động lên toàn thị trường — thì không đa dạng hoá đi đâu được.",
-    "tags": ["dau-tu", "rui-ro", "danh-muc"],
+    "tags": [
+      "dau-tu",
+      "rui-ro",
+      "danh-muc"
+    ],
     "src": "Harry Markowitz, Portfolio Selection, Journal of Finance (1952); Nobel 1990"
   },
   {
     "id": "kt-014",
     "cat": "kinh-te",
+    "sub": "gia-va-thi-truong",
     "t": "Giá trần tạo ra thiếu hàng, không tạo ra hàng rẻ",
     "s": "Khi giá bị ép xuống dưới mức cân bằng, lượng cầu tăng còn lượng cung giảm; phần chênh lệch chuyển sang các hình thức phân phối khác: xếp hàng, quen biết, chợ đen, chất lượng đi xuống. Các nghiên cứu về kiểm soát giá thuê nhà ở Mỹ và châu Âu cho thấy mô thức này lặp lại đáng tin cậy.",
-    "tags": ["gia", "cung-cau", "chinh-sach"],
+    "tags": [
+      "gia",
+      "cung-cau",
+      "chinh-sach"
+    ],
     "src": "Diamond, McQuade & Qian, American Economic Review (2019); tổng quan của Jenkins, Cato Journal (2009)"
   },
   {
     "id": "kt-015",
     "cat": "kinh-te",
+    "sub": "dong-co-kinh-te",
     "t": "Chi phí cơ hội là chi phí thật, kể cả khi không ai xuất hoá đơn",
     "s": "Học thạc sĩ toàn thời gian hai năm không chỉ tốn học phí mà tốn cả thu nhập hai năm không đi làm. Mở cửa hàng bằng mặt bằng nhà mình vẫn phải tính tiền thuê mà bạn đang từ chối nhận. Rất nhiều mô hình kinh doanh 'có lãi' sẽ lỗ ngay khi tính đúng chi phí cơ hội.",
-    "tags": ["chi-phi", "quyet-dinh", "kinh-doanh"],
+    "tags": [
+      "chi-phi",
+      "quyet-dinh",
+      "kinh-doanh"
+    ],
     "src": "Khái niệm nền tảng kinh tế học vi mô; Friedrich von Wieser (1914)"
   },
   {
     "id": "kt-016",
     "cat": "kinh-te",
+    "sub": "dong-co-kinh-te",
     "t": "Ngoại tác: giá thị trường không phản ánh chi phí mà bên thứ ba gánh",
     "s": "Nhà máy xả thải không trả tiền cho người sống ở hạ nguồn, nên hàng của họ rẻ hơn giá trị thật. Công cụ kinh tế học cho việc này là đưa chi phí đó vào giá — thuế Pigou, phí phát thải, hoặc phân bổ quyền tài sản rõ ràng để hai bên tự thương lượng.",
-    "tags": ["moi-truong", "chinh-sach", "gia"],
+    "tags": [
+      "moi-truong",
+      "chinh-sach",
+      "gia"
+    ],
     "src": "Arthur Pigou, The Economics of Welfare (1920); Ronald Coase, The Problem of Social Cost (1960)"
   },
   {
     "id": "kt-017",
     "cat": "kinh-te",
+    "sub": "bao-hiem-rui-ro",
     "t": "Bảo hiểm có kỳ vọng âm nhưng vẫn là quyết định đúng",
     "s": "Về trung bình, người mua bảo hiểm nhận lại ít hơn số phí đã đóng — nếu không thì công ty bảo hiểm đã phá sản. Nó vẫn hợp lý vì hữu dụng của tiền là hàm lõm: mất 100% tài sản đau hơn nhiều lần so với việc mất vài phần trăm mỗi năm. Nguyên tắc: bảo hiểm cho những gì bạn không thể tự gánh, tự gánh những gì bạn chịu được.",
-    "tags": ["bao-hiem", "rui-ro", "quyet-dinh"],
+    "tags": [
+      "bao-hiem",
+      "rui-ro",
+      "quyet-dinh"
+    ],
     "src": "Daniel Bernoulli, nghịch lý St. Petersburg (1738); lý thuyết hữu dụng kỳ vọng"
   },
   {
     "id": "kt-018",
     "cat": "kinh-te",
+    "sub": "lam-phat-tien",
     "t": "Tiền xấu đuổi tiền tốt ra khỏi lưu thông",
     "s": "Định luật Gresham: khi hai loại tiền cùng được luật công nhận ngang giá nhưng một loại có giá trị nội tại cao hơn, người ta tiêu loại kém và cất giữ loại tốt. Cùng logic đó giải thích vì sao khi lạm phát cao, người ta tiêu nội tệ thật nhanh và giữ ngoại tệ hoặc vàng.",
-    "tags": ["tien-te", "lam-phat", "lich-su"],
+    "tags": [
+      "tien-te",
+      "lam-phat",
+      "lich-su"
+    ],
     "src": "Được đặt theo Thomas Gresham (thế kỷ 16); mô tả bởi Henry Macleod (1858)"
   },
   {
     "id": "kt-019",
     "cat": "kinh-te",
+    "sub": "gia-va-thi-truong",
     "t": "Cầu của bạn co giãn hơn bạn tưởng — trừ khi đó là hàng thiết yếu",
     "s": "Độ co giãn giá của cầu đo phần trăm thay đổi lượng mua khi giá đổi 1%. Xăng, thuốc chữa bệnh, điện có cầu kém co giãn trong ngắn hạn nên tăng giá vẫn thu thêm tiền; đồ ăn ngoài, du lịch, hàng hiệu thì rất co giãn. Đây là biến số quyết định khi bạn đặt giá cho sản phẩm của chính mình.",
-    "tags": ["gia", "cung-cau", "kinh-doanh"],
+    "tags": [
+      "gia",
+      "cung-cau",
+      "kinh-doanh"
+    ],
     "src": "Alfred Marshall, Principles of Economics (1890)"
   },
   {
     "id": "kt-020",
     "cat": "kinh-te",
+    "sub": "dong-co-kinh-te",
     "t": "Cân bằng Nash: nơi không ai có lợi khi đơn phương đổi chiến lược — và nó có thể tệ cho tất cả",
     "s": "Trong thế lưỡng nan của người tù, cả hai cùng khai là cân bằng Nash, dù cả hai cùng im lặng thì tốt hơn cho cả hai. Rất nhiều tình huống đời thật có cấu trúc này: chạy đua khuyến mãi, chạy đua quảng cáo, chạy đua làm thêm giờ. Lối thoát không nằm ở việc chơi giỏi hơn mà ở việc đổi luật chơi.",
-    "tags": ["ly-thuyet-tro-choi", "canh-tranh", "hop-tac"],
+    "tags": [
+      "ly-thuyet-tro-choi",
+      "canh-tranh",
+      "hop-tac"
+    ],
     "src": "John Nash, PNAS (1950); Nobel Kinh tế 1994"
   },
   {
     "id": "kt-021",
     "cat": "kinh-te",
+    "sub": "dong-co-kinh-te",
     "t": "Trong giải đấu lặp lại, chiến lược thắng là ăn miếng trả miếng nhưng biết tha thứ",
     "s": "Robert Axelrod tổ chức giải đấu máy tính cho thế lưỡng nan lặp lại; chương trình thắng cuộc, Tit for Tat, chỉ dài bốn dòng: bắt đầu bằng hợp tác, sau đó lặp lại nước đi trước của đối thủ. Đặc điểm chung của các chiến lược mạnh: tử tế trước, phản ứng rõ ràng khi bị chơi xấu, và không thù dai.",
-    "tags": ["ly-thuyet-tro-choi", "hop-tac", "danh-tieng"],
+    "tags": [
+      "ly-thuyet-tro-choi",
+      "hop-tac",
+      "danh-tieng"
+    ],
     "src": "Robert Axelrod, The Evolution of Cooperation (1984)"
   },
   {
     "id": "kt-022",
     "cat": "kinh-te",
+    "sub": "thue-chinh-sach",
     "t": "Không thể vừa cố định tỉ giá, vừa tự do dòng vốn, vừa độc lập chính sách tiền tệ",
     "s": "Đây là 'bộ ba bất khả thi' trong kinh tế vĩ mô: mỗi quốc gia chỉ chọn được hai trong ba. Nó giải thích vì sao ngân hàng trung ương ở các nền kinh tế mở phải đánh đổi giữa giữ tỉ giá và hạ lãi suất, thay vì làm cả hai như báo chí thường đòi hỏi.",
-    "tags": ["vi-mo", "ty-gia", "chinh-sach"],
+    "tags": [
+      "vi-mo",
+      "ty-gia",
+      "chinh-sach"
+    ],
     "src": "Mô hình Mundell–Fleming (Robert Mundell, Marcus Fleming, thập niên 1960)"
   },
   {
     "id": "kt-023",
     "cat": "kinh-te",
+    "sub": "chi-tieu-tiet-kiem",
     "t": "Hữu dụng biên giảm dần: đồng thứ mười triệu không sướng bằng đồng thứ nhất",
     "s": "Mỗi đơn vị tăng thêm của cùng một thứ mang lại ít thoả mãn hơn đơn vị trước. Đây là nền tảng cho hầu hết lý thuyết về rủi ro, thuế luỹ tiến, và cũng là lời giải thích kinh tế học cho hiện tượng thu nhập tăng nhưng cảm giác hài lòng không tăng tương ứng.",
-    "tags": ["huu-dung", "tieu-dung", "hanh-phuc"],
+    "tags": [
+      "huu-dung",
+      "tieu-dung",
+      "hanh-phuc"
+    ],
     "src": "Hermann Gossen (1854); Daniel Bernoulli (1738)"
   },
   {
     "id": "kt-024",
     "cat": "kinh-te",
+    "sub": "chi-tieu-tiet-kiem",
     "t": "Quỹ dự phòng nên tính bằng tháng chi tiêu, không phải bằng phần trăm thu nhập",
     "s": "Rủi ro tài chính lớn nhất của một người đi làm không phải đầu tư sai mà là mất thu nhập trong lúc chi phí cố định vẫn chạy. Vì vậy đơn vị đo đúng là 'bao nhiêu tháng sống được nếu mất việc hôm nay' — con số phổ biến trong các khuyến nghị là 3–6 tháng, dài hơn nếu thu nhập bấp bênh hoặc bạn là nguồn thu duy nhất của gia đình.",
-    "tags": ["tiet-kiem", "rui-ro", "ke-hoach"],
+    "tags": [
+      "tiet-kiem",
+      "rui-ro",
+      "ke-hoach"
+    ],
     "src": "Khuyến nghị phổ biến của các cơ quan bảo vệ người tiêu dùng tài chính (ví dụ CFPB, Hoa Kỳ)"
   }
 ]

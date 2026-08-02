@@ -2,184 +2,294 @@
   {
     "id": "gt-001",
     "cat": "giao-tiep",
+    "sub": "huyen-thoai-giao-tiep",
     "t": "Câu '93% giao tiếp là phi ngôn ngữ' là hiểu sai chính nghiên cứu gốc",
     "s": "Con số 7% – 38% – 55% của Albert Mehrabian chỉ áp dụng cho một tình huống rất hẹp: khi người nghe đoán CẢM XÚC của người nói và lời nói mâu thuẫn với giọng điệu, nét mặt. Chính Mehrabian đã nhiều lần cải chính rằng nó không dùng được cho giao tiếp nói chung.",
     "d": "Vì sao đáng bận tâm: cả một ngành đào tạo kỹ năng mềm được xây trên con số bị hiểu sai này, dẫn tới lời khuyên kiểu 'nội dung không quan trọng, phong thái mới quan trọng'. Trong thực tế công việc, nội dung sai thì phong thái nào cũng không cứu được — nhưng nội dung đúng mà trình bày rối thì cũng không tới được người nghe.",
-    "tags": ["huyen-thoai", "thuyet-trinh", "phi-ngon-ngu"],
+    "tags": [
+      "huyen-thoai",
+      "thuyet-trinh",
+      "phi-ngon-ngu"
+    ],
     "src": "Albert Mehrabian, Silent Messages (1971) và các đính chính của chính tác giả"
   },
   {
     "id": "gt-002",
     "cat": "giao-tiep",
+    "sub": "lang-nghe",
     "t": "Hỏi thêm câu hỏi nối tiếp làm người ta quý bạn hơn — đã đo được",
     "s": "Phân tích các cuộc trò chuyện thật và hẹn hò tốc độ tại Harvard cho thấy người đặt nhiều câu hỏi hơn, đặc biệt là câu hỏi tiếp nối ('rồi sao nữa?', 'vì sao anh chọn hướng đó?'), được đánh giá dễ mến hơn rõ rệt. Người ta cũng gần như không nhận ra đó là lý do mình thấy quý đối phương.",
-    "tags": ["lang-nghe", "quan-he", "an-tuong"],
+    "tags": [
+      "lang-nghe",
+      "quan-he",
+      "an-tuong"
+    ],
     "src": "Huang, Yeomans, Brooks, Minson & Gino, JPSP (2017)"
   },
   {
     "id": "gt-003",
     "cat": "giao-tiep",
+    "sub": "quan-he",
     "t": "Khinh miệt là dự báo mạnh nhất cho một mối quan hệ tan vỡ",
     "s": "Trong bốn kiểu hành vi mà John Gottman gọi là 'tứ kỵ sĩ' — chỉ trích, phòng thủ, khinh miệt, đóng băng — thì khinh miệt (mỉa mai, đảo mắt, hạ thấp) là chỉ báo mạnh nhất cho ly hôn. Nó khác chỉ trích ở chỗ nó nhắm vào giá trị của con người chứ không vào hành vi.",
     "d": "Gottman cũng quan sát thấy các cặp bền vững duy trì tỉ lệ khoảng 5 tương tác tích cực trên 1 tương tác tiêu cực trong lúc xung đột. Lưu ý: các mô hình dự báo ly hôn của ông đạt độ chính xác rất cao trên chính mẫu đã dùng để xây mô hình, nên con số 'dự đoán 90%' cần đọc thận trọng; nhưng bốn hành vi trên thì được tái xác nhận rộng rãi.",
-    "tags": ["hon-nhan", "xung-dot", "quan-he"],
+    "tags": [
+      "hon-nhan",
+      "xung-dot",
+      "quan-he"
+    ],
     "src": "Gottman & Levenson, Journal of Marriage and Family (1992, 2000)"
   },
   {
     "id": "gt-004",
     "cat": "giao-tiep",
+    "sub": "thuyet-phuc",
     "t": "Nhờ người khác một việc nhỏ khiến họ quý bạn hơn",
     "s": "Hiệu ứng Benjamin Franklin: người vừa giúp bạn một việc sẽ có xu hướng đánh giá bạn tích cực hơn, vì họ tự giải thích hành động của mình ('tôi giúp anh ta, chắc tôi thấy anh ta ổn'). Đây là công cụ xây quan hệ ngược trực giác: đừng chỉ cho, hãy biết cách nhận.",
-    "tags": ["quan-he", "thuyet-phuc", "nhat-quan"],
+    "tags": [
+      "quan-he",
+      "thuyet-phuc",
+      "nhat-quan"
+    ],
     "src": "Jecker & Landy, Human Relations (1969)"
   },
   {
     "id": "gt-005",
     "cat": "giao-tiep",
+    "sub": "quan-he",
     "t": "Nói xấu người khác khiến người nghe gán chính tính xấu đó cho bạn",
     "s": "Hiện tượng 'chuyển giao đặc điểm tự phát': khi bạn mô tả ai đó là keo kiệt hay xảo trá, người nghe vô thức liên kết đặc điểm ấy với chính người kể — và họ không hề ý thức được điều đó. Hiệu ứng vẫn xuất hiện cả khi người nghe biết rõ bạn đang nói về người khác.",
     "d": "Đây là một trong những dữ kiện có ích nhất cho đời sống công sở: nói xấu đồng nghiệp trước mặt sếp gần như luôn là giao dịch lỗ. Nếu buộc phải nêu vấn đề về một người, hãy mô tả sự việc và tác động cụ thể ('deadline lùi 2 tuần vì phần A chưa xong') thay vì gán tính từ cho con người.",
-    "tags": ["cong-so", "danh-tieng", "quan-he"],
+    "tags": [
+      "cong-so",
+      "danh-tieng",
+      "quan-he"
+    ],
     "src": "Skowronski, Carlston, Mae & Crawford, JPSP (1998)"
   },
   {
     "id": "gt-006",
     "cat": "giao-tiep",
+    "sub": "viet-va-noi",
     "t": "Người gửi email tin mình rõ ràng hơn nhiều so với thực tế",
     "s": "Trong thí nghiệm của Justin Kruger, người viết email tin rằng người nhận sẽ hiểu đúng giọng điệu (mỉa mai hay nghiêm túc) khoảng 90% số lần; tỉ lệ hiểu đúng thực tế xấp xỉ mức đoán mò 50%. Lý do: bạn 'nghe' giọng của mình khi viết, còn người nhận thì không.",
-    "tags": ["email", "cong-so", "hieu-nham"],
+    "tags": [
+      "email",
+      "cong-so",
+      "hieu-nham"
+    ],
     "src": "Kruger, Epley, Parker & Ng, JPSP (2005)"
   },
   {
     "id": "gt-007",
     "cat": "giao-tiep",
+    "sub": "quan-he",
     "t": "Sau một cuộc trò chuyện, người ta thích bạn hơn bạn nghĩ",
     "s": "Khoảng cách thiện cảm (liking gap): sau khi nói chuyện với người lạ, cả hai bên đều đánh giá thấp mức độ đối phương thích mình và muốn gặp lại mình. Hiệu ứng này được lặp lại ở người lớn, sinh viên mới nhập học và đồng nghiệp mới, kéo dài hàng tháng.",
-    "tags": ["quan-he", "tu-tin", "lam-quen"],
+    "tags": [
+      "quan-he",
+      "tu-tin",
+      "lam-quen"
+    ],
     "src": "Boothby, Cooney, Sandstrom & Clark, Psychological Science (2018)"
   },
   {
     "id": "gt-008",
     "cat": "giao-tiep",
+    "sub": "thuyet-phuc",
     "t": "Người ta đồng ý giúp nhiều gấp đôi so với mức bạn dự đoán",
     "s": "Khi được yêu cầu ước lượng bao nhiêu người lạ sẽ đồng ý giúp một việc nhỏ (mượn điện thoại, chỉ đường, điền khảo sát), người tham gia đoán thấp hơn thực tế khoảng một nửa. Chúng ta đánh giá quá cao cái giá của lời từ chối và đánh giá quá thấp sự khó xử khi từ chối trực tiếp.",
     "d": "Hệ quả thực dụng cho sự nghiệp: phần lớn cơ hội bị bỏ lỡ không phải vì bị từ chối, mà vì không hỏi. Xin một cuộc cà phê 20 phút, xin giới thiệu, xin phản hồi về hồ sơ — tỉ lệ đồng ý trong đời thực cao hơn nhiều so với con số trong đầu bạn.",
-    "tags": ["nho-va", "su-nghiep", "mang-luoi"],
+    "tags": [
+      "nho-va",
+      "su-nghiep",
+      "mang-luoi"
+    ],
     "src": "Flynn & Lake (Bohns), JPSP (2008); Bohns, Current Directions in Psychological Science (2016)"
   },
   {
     "id": "gt-009",
     "cat": "giao-tiep",
+    "sub": "thuyet-phuc",
     "t": "Chỉ thêm chữ 'vì' đã làm tăng tỉ lệ đồng ý — với đề nghị nhỏ",
     "s": "Ellen Langer thử chen hàng photocopy với ba cách nói. 'Cho tôi dùng máy trước được không?' được 60% đồng ý. Thêm lý do thật hoặc thậm chí lý do rỗng ('vì tôi cần photo') đẩy tỉ lệ lên trên 90%. Nhưng khi đề nghị lớn hơn (20 trang), lý do rỗng hết tác dụng — người ta bắt đầu thật sự suy nghĩ.",
-    "tags": ["thuyet-phuc", "ngon-tu", "hanh-vi"],
+    "tags": [
+      "thuyet-phuc",
+      "ngon-tu",
+      "hanh-vi"
+    ],
     "src": "Langer, Blank & Chanowitz, JPSP (1978)"
   },
   {
     "id": "gt-010",
     "cat": "giao-tiep",
+    "sub": "xung-dot-xin-loi",
     "t": "Lời xin lỗi có sáu thành phần, và 'nhận trách nhiệm' là thành phần nặng nhất",
     "s": "Nghiên cứu của Roy Lewicki tách lời xin lỗi thành: bày tỏ hối tiếc, giải thích chuyện gì đã xảy ra, thừa nhận trách nhiệm, tuyên bố hối hận, đề nghị sửa chữa, và xin được tha thứ. Trong đó thừa nhận trách nhiệm có sức nặng lớn nhất, còn xin được tha thứ có sức nặng nhỏ nhất.",
-    "tags": ["xin-loi", "xung-dot", "long-tin"],
+    "tags": [
+      "xin-loi",
+      "xung-dot",
+      "long-tin"
+    ],
     "src": "Lewicki, Polin & Lount, Negotiation and Conflict Management Research (2016)"
   },
   {
     "id": "gt-011",
     "cat": "giao-tiep",
+    "sub": "lang-nghe",
     "t": "Khoảng lặng giữa hai lượt nói chỉ khoảng 0,2 giây, ở mọi ngôn ngữ đã đo",
     "s": "Khảo sát hội thoại tự nhiên ở mười ngôn ngữ trên năm châu lục cho thấy độ trễ trung bình khi chuyển lượt nói chỉ khoảng 200 mili giây — ngắn hơn thời gian cần để lên kế hoạch một câu nói. Nghĩa là người nghe đã soạn sẵn câu trả lời TRONG LÚC bạn còn đang nói.",
     "d": "Đây là cơ sở khoa học cho lời khuyên 'ngừng lại 2 giây trước khi đáp': khoảng lặng dài bất thường buộc chính bạn phải nghe hết, và trong đàm phán nó tạo áp lực khiến đối phương thường tự nói thêm thông tin.",
-    "tags": ["hoi-thoai", "lang-nghe", "dam-phan"],
+    "tags": [
+      "hoi-thoai",
+      "lang-nghe",
+      "dam-phan"
+    ],
     "src": "Stivers et al., PNAS (2009)"
   },
   {
     "id": "gt-012",
     "cat": "giao-tiep",
+    "sub": "quan-he",
     "t": "Trò chuyện sâu ít khó xử hơn ta tưởng",
     "s": "Qua 12 thí nghiệm, người tham gia dự đoán các câu hỏi sâu ('lần gần nhất anh khóc trước mặt người khác là khi nào?') sẽ gây gượng gạo, nhưng thực tế họ thấy dễ chịu hơn và kết nối hơn so với các câu xã giao. Ta đánh giá quá thấp mức độ người khác quan tâm tới mình.",
-    "tags": ["quan-he", "hoi-thoai", "ket-noi"],
+    "tags": [
+      "quan-he",
+      "hoi-thoai",
+      "ket-noi"
+    ],
     "src": "Kardas, Kumar & Epley, JPSP (2022)"
   },
   {
     "id": "gt-013",
     "cat": "giao-tiep",
+    "sub": "thuyet-phuc",
     "t": "Sáu nguyên tắc thuyết phục của Cialdini, cộng thêm cái thứ bảy",
     "s": "Có đi có lại, cam kết và nhất quán, bằng chứng xã hội, thiện cảm, thẩm quyền, khan hiếm — và trong bản mở rộng năm 2016, Cialdini thêm 'sự đồng nhất' (cảm giác cùng một nhóm: đồng hương, cùng trường, cùng nghề). Biết chúng có hai công dụng: dùng chúng, và nhận ra khi mình đang bị dùng.",
-    "tags": ["thuyet-phuc", "ban-hang", "anh-huong"],
+    "tags": [
+      "thuyet-phuc",
+      "ban-hang",
+      "anh-huong"
+    ],
     "src": "Robert Cialdini, Influence (1984); Pre-Suasion (2016)"
   },
   {
     "id": "gt-014",
     "cat": "giao-tiep",
+    "sub": "thuyet-phuc",
     "t": "Xin nhiều rồi rút xuống hiệu quả hơn xin thẳng cái nhỏ",
     "s": "Kỹ thuật 'đóng sập cửa vào mặt': đề nghị lớn bị từ chối trước sẽ làm tăng đáng kể tỉ lệ đồng ý cho đề nghị nhỏ tiếp theo. Kỹ thuật ngược lại — 'chân trong cửa' — bắt đầu bằng đề nghị nhỏ để tạo cam kết rồi mới xin cái lớn. Cả hai đều đã được kiểm chứng nhiều lần.",
-    "tags": ["thuyet-phuc", "dam-phan", "ban-hang"],
+    "tags": [
+      "thuyet-phuc",
+      "dam-phan",
+      "ban-hang"
+    ],
     "src": "Cialdini et al., JPSP (1975); Freedman & Fraser, JPSP (1966)"
   },
   {
     "id": "gt-015",
     "cat": "giao-tiep",
+    "sub": "quan-he",
     "t": "Người có năng lực mắc lỗi vụng về nhỏ thì được yêu thích hơn",
     "s": "Hiệu ứng vụng về (pratfall): khi một người rõ ràng giỏi làm đổ ly cà phê, họ được đánh giá dễ mến hơn; nhưng khi người bị coi là kém làm đúng việc đó, họ bị đánh giá thấp đi. Sự hoàn hảo tạo khoảng cách, sơ suất nhỏ tạo tính người — với điều kiện năng lực đã được chứng minh trước.",
-    "tags": ["an-tuong", "quan-he", "thuyet-trinh"],
+    "tags": [
+      "an-tuong",
+      "quan-he",
+      "thuyet-trinh"
+    ],
     "src": "Elliot Aronson, Willerman & Floyd, Psychonomic Science (1966)"
   },
   {
     "id": "gt-016",
     "cat": "giao-tiep",
+    "sub": "thuyet-phuc",
     "t": "Trong đàm phán, người ta thường tưởng nhầm rằng chiếc bánh cố định",
     "s": "Nghiên cứu đàm phán cho thấy phần lớn người đi vào bàn với giả định 'anh được thì tôi mất', nên bỏ lỡ các trao đổi cùng có lợi — nơi hai bên coi trọng những thứ khác nhau (thời gian giao hàng, điều khoản thanh toán, phạm vi bảo hành). Câu hỏi mở đầu tốt nhất không phải 'giá bao nhiêu' mà 'điều gì quan trọng nhất với anh trong thoả thuận này'.",
-    "tags": ["dam-phan", "kinh-doanh", "loi-ich"],
+    "tags": [
+      "dam-phan",
+      "kinh-doanh",
+      "loi-ich"
+    ],
     "src": "Fisher & Ury, Getting to Yes (1981); Thompson & Hastie, OBHDP (1990)"
   },
   {
     "id": "gt-017",
     "cat": "giao-tiep",
+    "sub": "thuyet-phuc",
     "t": "Nói 'tôi không làm việc đó' mạnh hơn 'tôi không thể làm việc đó'",
     "s": "Trong loạt thí nghiệm về từ chối cám dỗ, người dùng cách nói 'tôi không ăn cái này' (I don't) giữ được mục tiêu tốt hơn nhóm nói 'tôi không thể' (I can't), vì cách nói thứ nhất phát biểu một danh tính, còn cách thứ hai ngụ ý một sự cấm cản từ bên ngoài. Cùng nguyên tắc dùng được khi từ chối lời mời và yêu cầu ngoài giờ.",
-    "tags": ["tu-choi", "ranh-gioi", "ky-luat"],
+    "tags": [
+      "tu-choi",
+      "ranh-gioi",
+      "ky-luat"
+    ],
     "src": "Patrick & Hagtvedt, Journal of Consumer Research (2012)"
   },
   {
     "id": "gt-018",
     "cat": "giao-tiep",
+    "sub": "quan-he",
     "t": "Buôn chuyện chiếm phần lớn hội thoại đời thường — và nó có chức năng",
     "s": "Quan sát hội thoại nơi công cộng cho thấy khoảng hai phần ba thời gian nói chuyện dành cho các chủ đề xã hội: ai làm gì với ai. Robin Dunbar lập luận đây là phiên bản ngôn ngữ của việc chải lông ở linh trưởng — công cụ duy trì mạng lưới và giám sát người không đáng tin.",
     "d": "Hiểu điều này giúp bạn nghiêm túc hơn với danh tiếng của mình: trong bất kỳ tổ chức nào, thông tin về việc bạn có giữ lời hay không di chuyển nhanh và xa hơn nhiều so với thông tin về việc bạn giỏi tới đâu.",
-    "tags": ["danh-tieng", "xa-hoi", "cong-so"],
+    "tags": [
+      "danh-tieng",
+      "xa-hoi",
+      "cong-so"
+    ],
     "src": "Dunbar, Marriott & Duncan, Human Nature (1997); Dunbar, Grooming, Gossip and the Evolution of Language (1996)"
   },
   {
     "id": "gt-019",
     "cat": "giao-tiep",
+    "sub": "xung-dot-xin-loi",
     "t": "Phản hồi mà không nói rõ hành vi cụ thể thì thường vô dụng",
     "s": "Phân tích tổng hợp 607 hiệu ứng của Kluger và DeNisi cho thấy can thiệp phản hồi trung bình có cải thiện hiệu suất, nhưng trong khoảng một phần ba số trường hợp nó LÀM GIẢM hiệu suất — đặc biệt khi phản hồi hướng vào con người ('em thiếu chủ động') thay vì vào nhiệm vụ ('báo cáo này thiếu phần rủi ro').",
-    "tags": ["phan-hoi", "quan-ly", "hieu-suat"],
+    "tags": [
+      "phan-hoi",
+      "quan-ly",
+      "hieu-suat"
+    ],
     "src": "Kluger & DeNisi, Psychological Bulletin (1996)"
   },
   {
     "id": "gt-020",
     "cat": "giao-tiep",
+    "sub": "xung-dot-xin-loi",
     "t": "Gọi tên cảm xúc làm dịu chính cảm xúc đó",
     "s": "Chụp cộng hưởng từ cho thấy khi người ta đặt tên cho cảm xúc đang trải qua ('tôi đang thấy bực'), hoạt động ở hạch hạnh nhân giảm và vùng vỏ não trước trán bụng-bên tăng. Trong xung đột, gọi tên cảm xúc của đối phương ('có vẻ anh thấy bị đặt vào thế đã rồi') là một trong những cách hạ nhiệt rẻ nhất.",
-    "tags": ["cam-xuc", "xung-dot", "dam-phan"],
+    "tags": [
+      "cam-xuc",
+      "xung-dot",
+      "dam-phan"
+    ],
     "src": "Lieberman et al., Psychological Science (2007)"
   },
   {
     "id": "gt-021",
     "cat": "giao-tiep",
+    "sub": "thuyet-phuc",
     "t": "Chuẩn bị BATNA quan trọng hơn chuẩn bị lý lẽ",
     "s": "BATNA là phương án tốt nhất của bạn nếu không đạt thoả thuận. Sức mạnh đàm phán thực chất đến từ chất lượng BATNA chứ không từ kỹ thuật nói. Muốn tăng lương hiệu quả, việc đáng làm nhất trước cuộc nói chuyện là có một lựa chọn thật ở bên ngoài, chứ không phải học thêm câu chữ.",
-    "tags": ["dam-phan", "luong", "su-nghiep"],
+    "tags": [
+      "dam-phan",
+      "luong",
+      "su-nghiep"
+    ],
     "src": "Fisher & Ury, Getting to Yes (1981)"
   },
   {
     "id": "gt-022",
     "cat": "giao-tiep",
+    "sub": "viet-va-noi",
     "t": "Người nghe đánh giá bạn thông minh hơn khi bạn nói, so với khi họ chỉ đọc",
     "s": "Cùng một nội dung tự giới thiệu, khi được nghe bằng giọng nói thay vì đọc bằng chữ, ứng viên được nhà tuyển dụng đánh giá là thông minh hơn, chu đáo hơn và có nhiều khả năng được mời phỏng vấn hơn. Giọng nói mang tín hiệu về tư duy mà văn bản làm mất.",
     "d": "Ứng dụng ngay: với những thông điệp nhạy cảm hoặc dễ gây hiểu nhầm — từ chối, thương lượng, xin lỗi — hãy chọn gọi điện hoặc ghi âm ngắn thay vì nhắn tin. Giữ văn bản cho những gì cần chính xác và cần lưu vết.",
-    "tags": ["giong-noi", "tuyen-dung", "kenh-giao-tiep"],
+    "tags": [
+      "giong-noi",
+      "tuyen-dung",
+      "kenh-giao-tiep"
+    ],
     "src": "Schroeder & Epley, Psychological Science (2015)"
   }
 ]

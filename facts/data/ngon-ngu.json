@@ -2,181 +2,277 @@
   {
     "id": "nn-001",
     "cat": "ngon-ngu",
+    "sub": "chu-viet",
     "t": "Chữ viết được phát minh để ghi sổ nợ và hàng tồn, không phải để làm thơ",
     "s": "Hệ chữ hình nêm ở Lưỡng Hà tiến hoá từ các thẻ đất sét dùng đếm cừu, lúa mì và dầu. Những văn bản sớm nhất là hoá đơn, biên nhận và danh mục kho. Văn học xuất hiện sau đó hàng trăm năm — kế toán mới là ứng dụng đầu tiên của công nghệ vĩ đại nhất loài người.",
-    "tags": ["chu-viet", "lich-su", "ke-toan"],
+    "tags": [
+      "chu-viet",
+      "lich-su",
+      "ke-toan"
+    ],
     "src": "Denise Schmandt-Besserat, Before Writing (1992)"
   },
   {
     "id": "nn-002",
     "cat": "ngon-ngu",
+    "sub": "goc-tu-lich-su",
     "t": "Thế giới có khoảng 7.000 ngôn ngữ và gần một nửa đang có nguy cơ biến mất",
     "s": "Ước tính phổ biến là cứ vài tuần lại có một ngôn ngữ mất người nói cuối cùng. Mỗi ngôn ngữ mất đi kéo theo một hệ phân loại tri thức bản địa — về cây thuốc, thời tiết, quan hệ họ hàng — thường chưa từng được ghi lại ở đâu khác.",
-    "tags": ["da-dang", "bao-ton", "toan-cau"],
+    "tags": [
+      "da-dang",
+      "bao-ton",
+      "toan-cau"
+    ],
     "src": "Ethnologue; UNESCO Atlas of the World's Languages in Danger"
   },
   {
     "id": "nn-003",
     "cat": "ngon-ngu",
+    "sub": "ngu-phap-tu-vung",
     "t": "Hơn 40% ngôn ngữ trên thế giới có thanh điệu",
     "s": "Tiếng Việt với sáu thanh ở giọng Bắc không phải ngoại lệ kỳ lạ mà thuộc về một nhóm rất lớn, tập trung ở Đông Á, Đông Nam Á và châu Phi hạ Sahara. Điều 'lạ' với người nói tiếng Anh chưa chắc lạ trên bình diện thế giới.",
-    "tags": ["thanh-dieu", "tieng-viet", "loai-hinh"],
+    "tags": [
+      "thanh-dieu",
+      "tieng-viet",
+      "loai-hinh"
+    ],
     "src": "World Atlas of Language Structures (WALS), chương Tone"
   },
   {
     "id": "nn-004",
     "cat": "ngon-ngu",
+    "sub": "ngon-ngu-va-tu-duy",
     "t": "Ngôn ngữ bạn nói ảnh hưởng tới tốc độ bạn phân biệt màu",
     "s": "Tiếng Nga có hai từ riêng cho xanh nhạt và xanh đậm. Người nói tiếng Nga phân biệt hai sắc xanh nhanh hơn người nói tiếng Anh khi hai màu nằm ở hai bên ranh giới từ vựng đó, và lợi thế này biến mất khi họ phải làm nhiệm vụ ngôn ngữ cùng lúc.",
     "d": "Đây là bằng chứng cho phiên bản yếu của giả thuyết Sapir–Whorf: ngôn ngữ ảnh hưởng tới tốc độ và cách ta xử lý, chứ không giam hãm tư duy như phiên bản mạnh vốn đã bị bác bỏ. Bạn vẫn nghĩ được điều mà ngôn ngữ của bạn chưa có từ — chỉ tốn công hơn.",
-    "tags": ["mau-sac", "tri-giac", "sapir-whorf"],
+    "tags": [
+      "mau-sac",
+      "tri-giac",
+      "sapir-whorf"
+    ],
     "src": "Winawer, Witthoft, Frank, Wu, Wade & Boroditsky, PNAS (2007)"
   },
   {
     "id": "nn-005",
     "cat": "ngon-ngu",
+    "sub": "ngon-ngu-ky-hieu",
     "t": "Ngôn ngữ ký hiệu là ngôn ngữ đầy đủ, không phải bản dịch bằng tay của tiếng nói",
-    "s": "Chúng có ngữ pháp riêng, có phương ngữ, có thơ ca, và không tương ứng một-một với ngôn ngữ nói cùng vùng: ngôn ngữ ký hiệu Mỹ gần với ngôn ngữ ký hiệu Pháp hơn là với ngôn ngữ ký hiệu Anh. Trẻ điếc học chúng theo đúng các mốc phát triển như trẻ nghe học tiếng nói.",
-    "tags": ["ky-hieu", "ngu-phap", "ngon-ngu-hoc"],
+    "s": "Chúng có ngữ pháp riêng, có phương ngữ, có thơ ca, và không tương ứng một-một với ngôn ngữ nói cùng vùng: ngôn ngữ ký hiệu Mỹ gần với ngôn ngữ ký hiệu Pháp hơn là với ngôn ngữ ký hiệu Anh. Trẻ điếc học chúng theo đúng các mốc phát triển như trẻ nghe học tiếng nói. Việt Nam cũng có nhiều hệ ký hiệu địa phương khác nhau, nên giả định 'người điếc khắp nơi hiểu nhau' là sai.",
+    "tags": [
+      "ky-hieu",
+      "ngu-phap",
+      "ngon-ngu-hoc"
+    ],
     "src": "William Stokoe, Sign Language Structure (1960); Petitto & Marentette, Science (1991)"
   },
   {
     "id": "nn-006",
     "cat": "ngon-ngu",
+    "sub": "doc-va-viet",
     "t": "Mắt bạn không lướt đều khi đọc — nó nhảy giật từng bước",
     "s": "Mắt đứng yên khoảng một phần tư giây rồi nhảy sang vị trí mới; bạn chỉ thu nhận thông tin trong lúc đứng yên. Vì thế 'đọc lướt cả dòng bằng một cái nhìn' là bất khả thi về mặt sinh lý: vùng nhìn rõ trên võng mạc chỉ rộng vài ký tự.",
-    "tags": ["doc", "thi-giac", "nhan-thuc"],
+    "tags": [
+      "doc",
+      "thi-giac",
+      "nhan-thuc"
+    ],
     "src": "Keith Rayner, Psychological Bulletin (1998)"
   },
   {
     "id": "nn-007",
     "cat": "ngon-ngu",
+    "sub": "doc-va-viet",
     "t": "Đọc nhanh trên 1.000 từ mỗi phút luôn đánh đổi bằng mức hiểu",
     "s": "Tổng quan của Rayner và cộng sự kết luận: không có kỹ thuật nào vượt qua giới hạn sinh lý của mắt và của việc xử lý ngôn ngữ. Cái mà các khoá 'đọc siêu tốc' thực sự dạy là đọc lướt có chọn lọc — hữu ích, nhưng khác hẳn với đọc hiểu, và không nên dùng cho hợp đồng.",
-    "tags": ["doc", "hoc-tap", "huyen-thoai"],
+    "tags": [
+      "doc",
+      "hoc-tap",
+      "huyen-thoai"
+    ],
     "src": "Rayner, Schotter, Masson, Potter & Treiman, Psychological Science in the Public Interest (2016)"
   },
   {
     "id": "nn-008",
     "cat": "ngon-ngu",
+    "sub": "doc-va-viet",
     "t": "Tự kiểm tra lại nhớ lâu hơn đọc lại nhiều lần",
     "s": "Trong thí nghiệm kinh điển, nhóm đọc bài rồi làm bài kiểm tra nhớ tốt hơn hẳn nhóm đọc đi đọc lại, khi kiểm tra sau một tuần — dù chính nhóm đọc lại lại tự tin hơn về mức thuộc bài của mình. Cảm giác trôi chảy khi đọc lại là ảo giác về việc đã biết.",
     "d": "Kết hợp hai kỹ thuật có bằng chứng mạnh nhất: tự kiểm tra (gấp sách lại, viết ra những gì nhớ được) và giãn cách (ôn lại sau vài ngày thay vì dồn một buổi). Cả hai đều khiến việc học có cảm giác khó hơn — và đó chính là lý do chúng hiệu quả hơn.",
-    "tags": ["hoc-tap", "tri-nho", "phuong-phap"],
+    "tags": [
+      "hoc-tap",
+      "tri-nho",
+      "phuong-phap"
+    ],
     "src": "Roediger & Karpicke, Psychological Science (2006); Dunlosky et al., PSPI (2013)"
-  },
-  {
-    "id": "nn-009",
-    "cat": "ngon-ngu",
-    "t": "Lời nguyền tri thức: khi đã biết, bạn không thể tưởng tượng lại cảm giác chưa biết",
-    "s": "Trong thí nghiệm gõ nhịp bài hát, người gõ dự đoán khoảng một nửa người nghe sẽ đoán ra bài; thực tế chỉ khoảng 2,5% đoán được. Người gõ nghe cả giai điệu trong đầu, người nghe chỉ nghe những tiếng gõ rời rạc.",
-    "d": "Đây là nguyên nhân gốc của phần lớn văn bản kỹ thuật khó hiểu, bài thuyết trình rối và hướng dẫn nội bộ vô dụng: người viết không còn nhớ mình đã từng không biết điều gì. Cách chữa duy nhất đáng tin là đưa cho một người ngoài đọc và im lặng quan sát chỗ họ vấp.",
-    "tags": ["viet", "giao-tiep", "thien-kien"],
-    "src": "Elizabeth Newton, luận án Stanford (1990); Steven Pinker, The Sense of Style (2014)"
   },
   {
     "id": "nn-010",
     "cat": "ngon-ngu",
+    "sub": "tieng-viet",
     "t": "Khoảng 60% vốn từ tiếng Việt có gốc Hán",
     "s": "Từ Hán-Việt chiếm phần lớn vốn từ trừu tượng, học thuật và hành chính, dù các từ dùng hằng ngày thì phần lớn là từ thuần Việt. Điều tương tự xảy ra với tiếng Anh, nơi lớp từ trang trọng chủ yếu đến từ tiếng Pháp và Latin sau cuộc chinh phục Norman.",
-    "tags": ["tieng-viet", "tu-vung", "han-viet"],
+    "tags": [
+      "tieng-viet",
+      "tu-vung",
+      "han-viet"
+    ],
     "src": "Nguyễn Tài Cẩn, Nguồn gốc và quá trình hình thành cách đọc Hán Việt (1979)"
   },
   {
     "id": "nn-011",
     "cat": "ngon-ngu",
+    "sub": "tieng-viet",
     "t": "Tiếng Việt dùng danh xưng thân tộc để xưng hô, và điều đó buộc mỗi câu phải định vị quan hệ",
     "s": "Không có cặp 'tôi – bạn' trung tính dùng được với mọi người: bạn phải chọn anh, chị, em, cô, chú, bác, cháu. Nghĩa là mỗi lần mở miệng, người nói phải quyết định vị thế tương đối giữa hai bên — một đặc điểm khiến giao tiếp tiếng Việt gắn chặt với tuổi tác và thứ bậc hơn nhiều ngôn ngữ khác.",
-    "tags": ["tieng-viet", "xung-ho", "van-hoa"],
+    "tags": [
+      "tieng-viet",
+      "xung-ho",
+      "van-hoa"
+    ],
     "src": "Luong Hy Van, Discursive Practices and Linguistic Meanings (1990)"
   },
   {
     "id": "nn-012",
     "cat": "ngon-ngu",
+    "sub": "goc-tu-lich-su",
     "t": "'OK' có lẽ bắt nguồn từ một trò chơi chữ trên báo Boston năm 1839",
     "s": "Nó là viết tắt đùa của 'oll korrect' — cách viết sai cố ý của 'all correct' — trong trào lưu viết tắt hài hước thời đó, rồi được củng cố nhờ khẩu hiệu tranh cử 'Old Kinderhook' của Martin Van Buren năm 1840. Ngày nay đây có thể là từ được hiểu rộng rãi nhất thế giới.",
-    "tags": ["tu-nguyen", "lich-su", "tieng-anh"],
+    "tags": [
+      "tu-nguyen",
+      "lich-su",
+      "tieng-anh"
+    ],
     "src": "Allen Walker Read, American Speech (1963–1964)"
   },
   {
     "id": "nn-013",
     "cat": "ngon-ngu",
+    "sub": "hoc-ngoai-ngu",
     "t": "Lợi thế nhận thức của người song ngữ yếu hơn nhiều so với danh tiếng",
     "s": "Hàng loạt nghiên cứu từng báo cáo người song ngữ có chức năng điều hành tốt hơn. Khi phân tích lại, các nghiên cứu tìm thấy hiệu ứng được công bố nhiều hơn hẳn nghiên cứu không tìm thấy — dấu hiệu điển hình của thiên lệch xuất bản, và các nghiên cứu cỡ mẫu lớn sau này phần lớn không tái lập được.",
     "d": "Điều này không làm giảm giá trị của việc biết thêm ngôn ngữ: lợi ích về nghề nghiệp, về tiếp cận thông tin và về quan hệ thì rõ ràng và không cần dựa vào tuyên bố 'não khoẻ hơn'. Không nên bảo vệ một điều tốt bằng một lập luận yếu.",
-    "tags": ["song-ngu", "phan-bien", "nhan-thuc"],
+    "tags": [
+      "song-ngu",
+      "phan-bien",
+      "nhan-thuc"
+    ],
     "src": "de Bruin, Treccani & Della Sala, Psychological Science (2015); Paap & Greenberg, Cognitive Psychology (2013)"
   },
   {
     "id": "nn-014",
     "cat": "ngon-ngu",
+    "sub": "hoc-ngoai-ngu",
     "t": "Người lớn học ngoại ngữ vẫn tốt, chỉ thua trẻ con ở phát âm",
     "s": "Về từ vựng và ngữ pháp, người lớn học nhanh hơn trẻ em trong giai đoạn đầu nhờ có sẵn chiến lược học. Cái thật sự khó gỡ theo tuổi là ngữ âm — khả năng nghe và tạo ra các âm không có trong tiếng mẹ đẻ suy giảm dần từ khoảng năm đầu đời.",
-    "tags": ["hoc-ngoai-ngu", "phat-am", "nguoi-lon"],
+    "tags": [
+      "hoc-ngoai-ngu",
+      "phat-am",
+      "nguoi-lon"
+    ],
     "src": "Snow & Hoefnagel-Höhle, Child Development (1978); Kuhl, Nature Reviews Neuroscience (2004)"
   },
   {
     "id": "nn-015",
     "cat": "ngon-ngu",
+    "sub": "ngu-phap-tu-vung",
     "t": "Người trưởng thành bản ngữ biết khoảng 15.000–20.000 họ từ",
     "s": "Nhưng chỉ khoảng 2.000–3.000 từ phổ biến nhất đã bao phủ trên 90% văn bản đời thường. Đó là lý do chiến lược học ngoại ngữ hiệu quả nhất cho người bận rộn là nắm chắc lõi tần suất cao trước, thay vì học từ vựng theo chủ đề rời rạc.",
-    "tags": ["tu-vung", "hoc-ngoai-ngu", "tan-suat"],
+    "tags": [
+      "tu-vung",
+      "hoc-ngoai-ngu",
+      "tan-suat"
+    ],
     "src": "Nation, Learning Vocabulary in Another Language (2001); Goulden, Nation & Read, Applied Linguistics (1990)"
   },
   {
     "id": "nn-016",
     "cat": "ngon-ngu",
+    "sub": "chu-viet",
     "t": "Bảng chữ cái Latinh mà bạn đang đọc bắt nguồn từ chữ Phoenicia của thương nhân",
     "s": "Dòng chảy là Phoenicia → Hy Lạp → Etruscan → Latinh. Chữ A ban đầu là hình đầu bò lộn ngược ('aleph' nghĩa là con bò), chữ B từ hình ngôi nhà ('beth'). Hệ chữ cái lan rộng vì nó dễ học — thứ mà giới thương nhân cần, khác với chữ tượng hình vốn là đặc quyền của giới thầy tu và thư lại.",
-    "tags": ["chu-viet", "lich-su", "bang-chu-cai"],
+    "tags": [
+      "chu-viet",
+      "lich-su",
+      "bang-chu-cai"
+    ],
     "src": "Bảo tàng Anh, bộ sưu tập chữ viết cổ; Robinson, The Story of Writing (1995)"
   },
   {
     "id": "nn-017",
     "cat": "ngon-ngu",
+    "sub": "chu-viet",
     "t": "Đọc thông một tờ báo tiếng Trung cần khoảng 3.000 chữ Hán",
     "s": "Bảng chữ thông dụng của Trung Quốc gồm 3.500 chữ được coi là đủ cho khoảng 99% văn bản thường gặp. Trong khi đó tiếng Việt chỉ cần thuộc 29 chữ cái và quy tắc thanh điệu — một trong những lợi thế lớn nhất mà việc chuyển sang chữ Quốc ngữ mang lại cho tỉ lệ biết chữ.",
-    "tags": ["chu-han", "biet-chu", "so-sanh"],
+    "tags": [
+      "chu-han",
+      "biet-chu",
+      "so-sanh"
+    ],
     "src": "Bảng chữ Hán thông dụng của Bộ Giáo dục Trung Quốc (2013)"
   },
   {
     "id": "nn-018",
     "cat": "ngon-ngu",
+    "sub": "chu-viet",
     "t": "Emoji đầu tiên do một kỹ sư Nhật thiết kế năm 1999, chỉ 12×12 điểm ảnh",
     "s": "Shigetaka Kurita tạo 176 biểu tượng cho dịch vụ i-mode của NTT DoCoMo để truyền cảm xúc trong tin nhắn ngắn. Bộ gốc hiện nằm trong bộ sưu tập của Bảo tàng Nghệ thuật Hiện đại New York. Nhu cầu bù lại phần phi ngôn ngữ bị mất trong văn bản là có thật và cũ hơn mạng xã hội.",
-    "tags": ["emoji", "thiet-ke", "giao-tiep"],
+    "tags": [
+      "emoji",
+      "thiet-ke",
+      "giao-tiep"
+    ],
     "src": "MoMA, bộ sưu tập thiết kế; NTT DoCoMo, tư liệu i-mode"
   },
   {
     "id": "nn-019",
     "cat": "ngon-ngu",
+    "sub": "doc-va-viet",
     "t": "Câu chủ động thường dễ hiểu hơn, nhưng câu bị động không phải lỗi",
     "s": "Bị động là công cụ đúng khi chủ thể không quan trọng, chưa biết, hoặc khi bạn muốn giữ mạch chủ đề cho câu. Lời khuyên 'không bao giờ dùng bị động' là quy tắc học vẹt; nguyên tắc thật là đặt thông tin cũ ở đầu câu và thông tin mới ở cuối câu.",
-    "tags": ["viet", "van-phong", "ngu-phap"],
+    "tags": [
+      "viet",
+      "van-phong",
+      "ngu-phap"
+    ],
     "src": "Steven Pinker, The Sense of Style (2014); Geoffrey Pullum, English Today (2014)"
   },
   {
     "id": "nn-020",
     "cat": "ngon-ngu",
+    "sub": "ngu-phap-tu-vung",
     "t": "Chuẩn chính tả là quy ước xã hội, không phải chân lý ngôn ngữ học",
     "s": "Ngôn ngữ học mô tả cách người ta thật sự nói và viết; chuẩn mực là lựa chọn của các thiết chế trong từng giai đoạn. Điều đó không có nghĩa viết sao cũng được — quy ước có giá trị thực dụng rất lớn trong văn bản chính thức — mà có nghĩa 'sai' ở đây là sai với quy ước, không phải sai về bản chất.",
-    "tags": ["chinh-ta", "chuan-muc", "ngon-ngu-hoc"],
+    "tags": [
+      "chinh-ta",
+      "chuan-muc",
+      "ngon-ngu-hoc"
+    ],
     "src": "Nguyên lý ngôn ngữ học mô tả; xem Crystal, The Cambridge Encyclopedia of Language"
   },
   {
     "id": "nn-021",
     "cat": "ngon-ngu",
+    "sub": "doc-va-viet",
     "t": "Viết tay ghi nhớ tốt hơn gõ máy khi mục tiêu là hiểu",
     "s": "Nghiên cứu ban đầu cho rằng sinh viên chép bài bằng tay hiểu khái niệm tốt hơn nhóm gõ laptop, vì viết chậm buộc phải diễn đạt lại thay vì chép nguyên văn. Một nghiên cứu nhân bản quy mô lớn hơn không tìm thấy hiệu ứng đó, nên hãy coi đây là gợi ý hợp lý chứ chưa phải kết luận chắc chắn.",
-    "tags": ["ghi-chep", "hoc-tap", "phan-bien"],
+    "tags": [
+      "ghi-chep",
+      "hoc-tap",
+      "phan-bien"
+    ],
     "src": "Mueller & Oppenheimer, Psychological Science (2014); Morehead, Dunlosky & Rawson, Educational Psychology Review (2019)"
   },
   {
     "id": "nn-022",
     "cat": "ngon-ngu",
+    "sub": "doc-va-viet",
     "t": "Viết ra là cách rẻ nhất để phát hiện mình chưa hiểu",
     "s": "Ý tưởng trong đầu luôn có vẻ mạch lạc vì nó chưa bị buộc phải đi theo trình tự tuyến tính. Văn bản không cho phép nhảy cóc: chỗ lập luận đứt gãy sẽ hiện ra thành một câu không viết nổi. Đó là lý do các tổ chức ra quyết định tốt thường yêu cầu một bản viết trước cuộc họp, thay vì slide.",
-    "tags": ["viet", "tu-duy", "quyet-dinh"],
+    "tags": [
+      "viet",
+      "tu-duy",
+      "quyet-dinh"
+    ],
     "src": "Nguyên tắc memo sáu trang tại Amazon; xem Paul Graham, Putting Ideas into Words (2022)"
   }
 ]

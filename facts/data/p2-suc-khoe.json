@@ -1,242 +1,587 @@
 [
-  { "id": "sk-101", "cat": "suc-khoe",
+  {
+    "id": "sk-101",
+    "cat": "suc-khoe",
+    "sub": "giac-ngu",
     "t": "Thiếu ngủ mạn tính làm bạn không còn nhận ra là mình đang suy giảm",
     "s": "Trong thí nghiệm hạn chế ngủ 6 tiếng mỗi đêm trong hai tuần, hiệu suất nhận thức tụt xuống ngang mức thức trắng hai đêm liền — nhưng người tham gia tự đánh giá chỉ hơi buồn ngủ. Cảm giác chủ quan thích nghi, còn năng lực thì không.",
-    "tags": ["giac-ngu", "nhan-thuc", "canh-bao"],
-    "src": "Van Dongen và cộng sự, Sleep (2003)" },
-  { "id": "sk-102", "cat": "suc-khoe",
+    "tags": [
+      "giac-ngu",
+      "nhan-thuc",
+      "canh-bao"
+    ],
+    "src": "Van Dongen và cộng sự, Sleep (2003)"
+  },
+  {
+    "id": "sk-102",
+    "cat": "suc-khoe",
+    "sub": "giac-ngu",
     "t": "Ánh sáng buổi sáng là tín hiệu chỉnh đồng hồ sinh học mạnh nhất",
     "s": "Vài nghìn lux ánh sáng ngoài trời trong 20–30 phút sau khi thức có tác động lên nhịp sinh học mạnh hơn nhiều so với đèn trong nhà, vốn chỉ vài trăm lux. Đây là can thiệp rẻ nhất cho người khó ngủ đúng giờ và cho người vừa lệch múi giờ.",
-    "tags": ["giac-ngu", "anh-sang", "nhip-sinh-hoc"],
-    "src": "Czeisler và cộng sự, Science (1986); Duffy & Czeisler, Sleep Medicine Clinics (2009)" },
-  { "id": "sk-103", "cat": "suc-khoe",
+    "tags": [
+      "giac-ngu",
+      "anh-sang",
+      "nhip-sinh-hoc"
+    ],
+    "src": "Czeisler và cộng sự, Science (1986); Duffy & Czeisler, Sleep Medicine Clinics (2009)"
+  },
+  {
+    "id": "sk-103",
+    "cat": "suc-khoe",
+    "sub": "giac-ngu",
     "t": "Ánh sáng xanh từ màn hình có ảnh hưởng, nhưng nhỏ hơn nhiều so với quảng cáo",
     "s": "Thí nghiệm so sánh đọc sách giấy với đọc máy tính bảng cho thấy thời điểm buồn ngủ chỉ lệch khoảng 10 phút. Yếu tố ảnh hưởng lớn hơn là nội dung gây kích thích và việc màn hình giữ bạn thức lâu hơn — không phải bước sóng.",
-    "tags": ["giac-ngu", "man-hinh", "hieu-lam"],
-    "src": "Chang và cộng sự, PNAS (2015); phân tích tổng hợp của Silvani và cộng sự, Sleep Medicine Reviews (2022)" },
-  { "id": "sk-104", "cat": "suc-khoe",
+    "tags": [
+      "giac-ngu",
+      "man-hinh",
+      "hieu-lam"
+    ],
+    "src": "Chang và cộng sự, PNAS (2015); phân tích tổng hợp của Silvani và cộng sự, Sleep Medicine Reviews (2022)"
+  },
+  {
+    "id": "sk-104",
+    "cat": "suc-khoe",
+    "sub": "giac-ngu",
     "t": "Nhiệt độ phòng mát giúp ngủ sâu hơn vì cơ thể phải hạ nhiệt để vào giấc",
     "s": "Thân nhiệt lõi giảm khoảng 1 độ khi bạn chìm vào giấc ngủ, và quá trình đó bị cản khi phòng quá nóng. Khoảng 18–20 độ được khuyến nghị trong hầu hết hướng dẫn giấc ngủ — và tắm nước ấm trước khi ngủ có tác dụng vì nó đẩy máu ra da, giúp hạ nhiệt lõi nhanh hơn.",
-    "tags": ["giac-ngu", "nhiet-do", "thuc-hanh"],
-    "src": "Okamoto-Mizuno & Mizuno, Journal of Physiological Anthropology (2012); Haghayegh và cộng sự, Sleep Medicine Reviews (2019)" },
-  { "id": "sk-105", "cat": "suc-khoe",
+    "tags": [
+      "giac-ngu",
+      "nhiet-do",
+      "thuc-hanh"
+    ],
+    "src": "Okamoto-Mizuno & Mizuno, Journal of Physiological Anthropology (2012); Haghayegh và cộng sự, Sleep Medicine Reviews (2019)"
+  },
+  {
+    "id": "sk-105",
+    "cat": "suc-khoe",
+    "sub": "giac-ngu",
     "t": "Liệu pháp hành vi nhận thức cho mất ngủ hiệu quả hơn thuốc ngủ về dài hạn",
     "s": "Các hướng dẫn lâm sàng ở Mỹ và châu Âu đều đặt CBT-I là điều trị đầu tay cho mất ngủ mạn tính, trên cả thuốc. Thuốc tác dụng nhanh hơn trong vài tuần đầu nhưng hiệu quả mất dần và có nguy cơ lệ thuộc; CBT-I giữ hiệu quả sau khi ngừng điều trị.",
-    "tags": ["mat-ngu", "dieu-tri", "bang-chung"],
-    "src": "Qaseem và cộng sự, Annals of Internal Medicine (2016), hướng dẫn ACP" },
-  { "id": "sk-106", "cat": "suc-khoe",
+    "tags": [
+      "mat-ngu",
+      "dieu-tri",
+      "bang-chung"
+    ],
+    "src": "Qaseem và cộng sự, Annals of Internal Medicine (2016), hướng dẫn ACP"
+  },
+  {
+    "id": "sk-106",
+    "cat": "suc-khoe",
+    "sub": "giac-ngu",
     "t": "Nằm trên giường khi không ngủ được làm mất ngủ nặng thêm",
     "s": "Một trong những thành phần hiệu quả nhất của CBT-I là kiểm soát kích thích: nếu không ngủ được sau khoảng 20 phút, hãy rời giường và chỉ quay lại khi buồn ngủ. Mục tiêu là để não liên kết giường với ngủ, chứ không với việc nằm lo lắng.",
-    "tags": ["mat-ngu", "thuc-hanh", "hanh-vi"],
-    "src": "Bootzin, kỹ thuật stimulus control (1972); hướng dẫn AASM về CBT-I" },
-  { "id": "sk-107", "cat": "suc-khoe",
+    "tags": [
+      "mat-ngu",
+      "thuc-hanh",
+      "hanh-vi"
+    ],
+    "src": "Bootzin, kỹ thuật stimulus control (1972); hướng dẫn AASM về CBT-I"
+  },
+  {
+    "id": "sk-107",
+    "cat": "suc-khoe",
+    "sub": "giac-ngu",
     "t": "Melatonin là tín hiệu thời gian, không phải thuốc ngủ",
     "s": "Liều rất nhỏ uống đúng thời điểm — thường vài giờ trước giờ ngủ mong muốn — giúp dịch chuyển đồng hồ sinh học. Liều lớn uống ngay trước khi ngủ ít tác dụng hơn nhiều so với kỳ vọng và không giải quyết được mất ngủ mạn tính.",
-    "tags": ["melatonin", "giac-ngu", "hieu-lam"],
-    "src": "Burgess và cộng sự, Journal of Clinical Endocrinology & Metabolism (2010); Auld và cộng sự, Sleep Medicine Reviews (2017)" },
-  { "id": "sk-108", "cat": "suc-khoe",
+    "tags": [
+      "melatonin",
+      "giac-ngu",
+      "hieu-lam"
+    ],
+    "src": "Burgess và cộng sự, Journal of Clinical Endocrinology & Metabolism (2010); Auld và cộng sự, Sleep Medicine Reviews (2017)"
+  },
+  {
+    "id": "sk-108",
+    "cat": "suc-khoe",
+    "sub": "giac-ngu",
     "t": "Ngưng thở khi ngủ rất phổ biến và phần lớn người mắc chưa được chẩn đoán",
     "s": "Ước tính gần một tỷ người trên thế giới ở độ tuổi 30–69 mắc ngưng thở tắc nghẽn khi ngủ ở mức từ nhẹ trở lên. Nó làm tăng nguy cơ tăng huyết áp, đột quỵ và tai nạn giao thông. Ngáy to kèm buồn ngủ ban ngày là lý do chính đáng để đi đo giấc ngủ.",
-    "tags": ["ngung-tho", "giac-ngu", "canh-bao"],
-    "src": "Benjafield và cộng sự, The Lancet Respiratory Medicine (2019)" },
-  { "id": "sk-109", "cat": "suc-khoe",
-    "t": "Người ngủ trưa dài hơn 30 phút thường tỉnh dậy mụ mị vì rơi vào giấc ngủ sâu",
-    "s": "Quán tính giấc ngủ mạnh nhất khi bạn bị đánh thức từ giai đoạn sóng chậm, thường bắt đầu sau khoảng 25–30 phút. Vì vậy hoặc ngủ 10–20 phút, hoặc ngủ trọn một chu kỳ khoảng 90 phút — khoảng giữa là tệ nhất.",
-    "tags": ["ngu-trua", "thuc-hanh", "giac-ngu"],
-    "src": "Brooks & Lack, Sleep (2006); Tassi & Muzet, Sleep Medicine Reviews (2000)" },
-  { "id": "sk-110", "cat": "suc-khoe",
+    "tags": [
+      "ngung-tho",
+      "giac-ngu",
+      "canh-bao"
+    ],
+    "src": "Benjafield và cộng sự, The Lancet Respiratory Medicine (2019)"
+  },
+  {
+    "id": "sk-110",
+    "cat": "suc-khoe",
+    "sub": "chat-kich-thich",
     "t": "Caffeine không tạo ra năng lượng — nó chặn tín hiệu buồn ngủ",
     "s": "Adenosine tích tụ suốt ngày và tạo áp lực ngủ; caffeine chiếm chỗ thụ thể của nó. Adenosine vẫn tiếp tục tích, nên khi caffeine hết tác dụng bạn cảm nhận toàn bộ khoản nợ cùng lúc. Đây là cơ chế của cú sập buổi chiều.",
-    "tags": ["caffeine", "giac-ngu", "co-che"],
-    "src": "Fredholm và cộng sự, Pharmacological Reviews (1999)" },
-  { "id": "sk-111", "cat": "suc-khoe",
+    "tags": [
+      "caffeine",
+      "giac-ngu",
+      "co-che"
+    ],
+    "src": "Fredholm và cộng sự, Pharmacological Reviews (1999)"
+  },
+  {
+    "id": "sk-111",
+    "cat": "suc-khoe",
+    "sub": "chat-kich-thich",
     "t": "Tốc độ chuyển hoá caffeine khác nhau tới nhiều lần giữa người với người",
     "s": "Biến thể gen CYP1A2 quyết định bạn là người chuyển hoá nhanh hay chậm. Người chuyển hoá chậm uống cà phê chiều sẽ mất ngủ, và một số nghiên cứu gợi ý họ cũng có nguy cơ tim mạch khác biệt khi uống nhiều. Đây là lý do lời khuyên về cà phê không thể có một con số chung.",
-    "tags": ["caffeine", "di-truyen", "ca-nhan-hoa"],
-    "src": "Cornelis và cộng sự, JAMA (2006)" },
-  { "id": "sk-112", "cat": "suc-khoe",
+    "tags": [
+      "caffeine",
+      "di-truyen",
+      "ca-nhan-hoa"
+    ],
+    "src": "Cornelis và cộng sự, JAMA (2006)"
+  },
+  {
+    "id": "sk-112",
+    "cat": "suc-khoe",
+    "sub": "chat-kich-thich",
     "t": "Không có mức tiêu thụ rượu nào được chứng minh là có lợi cho sức khoẻ",
     "s": "Các nghiên cứu cũ cho thấy người uống ít sống thọ hơn người không uống, nhưng phân tích sau đó chỉ ra nhóm 'không uống' lẫn nhiều người đã bỏ rượu vì bệnh. Các phân tích Mendelian randomization gần đây không tìm thấy ngưỡng bảo vệ.",
-    "tags": ["ruou", "bang-chung", "hieu-lam"],
-    "src": "GBD 2016 Alcohol Collaborators, The Lancet (2018); Millwood và cộng sự, The Lancet (2019)" },
-  { "id": "sk-113", "cat": "suc-khoe",
+    "tags": [
+      "ruou",
+      "bang-chung",
+      "hieu-lam"
+    ],
+    "src": "GBD 2016 Alcohol Collaborators, The Lancet (2018); Millwood và cộng sự, The Lancet (2019)"
+  },
+  {
+    "id": "sk-113",
+    "cat": "suc-khoe",
+    "sub": "chat-kich-thich",
     "t": "Rượu là chất gây ung thư nhóm 1, cùng nhóm với thuốc lá và amiăng",
     "s": "IARC xếp đồ uống có cồn vào nhóm gây ung thư ở người từ năm 1988, với bằng chứng rõ cho ung thư miệng, họng, thực quản, gan, đại trực tràng và vú. Phân loại này nói về mức độ chắc chắn của bằng chứng, không nói về mức độ nguy hiểm tương đối.",
-    "tags": ["ruou", "ung-thu", "phan-loai"],
-    "src": "IARC Monographs, Volume 100E (2012)" },
-  { "id": "sk-114", "cat": "suc-khoe",
+    "tags": [
+      "ruou",
+      "ung-thu",
+      "phan-loai"
+    ],
+    "src": "IARC Monographs, Volume 100E (2012)"
+  },
+  {
+    "id": "sk-114",
+    "cat": "suc-khoe",
+    "sub": "van-dong",
     "t": "Tập luyện sức mạnh quan trọng với người lớn tuổi ít nhất ngang với tập tim mạch",
     "s": "Mất khối cơ theo tuổi bắt đầu từ khoảng 30 và tăng tốc sau 60, dẫn tới yếu, dễ ngã và mất tự chủ. Khuyến nghị của WHO gồm ít nhất hai buổi tập tăng cường cơ mỗi tuần — phần thường bị bỏ qua nhất trong các hướng dẫn vận động.",
-    "tags": ["van-dong", "tuoi-gia", "co-bap"],
-    "src": "WHO Guidelines on Physical Activity and Sedentary Behaviour (2020)" },
-  { "id": "sk-115", "cat": "suc-khoe",
+    "tags": [
+      "van-dong",
+      "tuoi-gia",
+      "co-bap"
+    ],
+    "src": "WHO Guidelines on Physical Activity and Sedentary Behaviour (2020)"
+  },
+  {
+    "id": "sk-115",
+    "cat": "suc-khoe",
+    "sub": "van-dong",
     "t": "Lực nắm tay dự báo tử vong tốt hơn huyết áp tâm thu trong một nghiên cứu lớn",
     "s": "Theo dõi gần 140.000 người ở 17 quốc gia, mỗi mức giảm 5 kg lực nắm tay liên quan tới tăng nguy cơ tử vong do mọi nguyên nhân. Đây là chỉ dấu chứ không phải nguyên nhân — nhưng nó là một phép đo rẻ và nhanh cho sức khoẻ tổng thể.",
-    "tags": ["van-dong", "chi-dau", "so-lieu"],
-    "src": "Leong và cộng sự, The Lancet (2015), nghiên cứu PURE" },
-  { "id": "sk-116", "cat": "suc-khoe",
+    "tags": [
+      "van-dong",
+      "chi-dau",
+      "so-lieu"
+    ],
+    "src": "Leong và cộng sự, The Lancet (2015), nghiên cứu PURE"
+  },
+  {
+    "id": "sk-116",
+    "cat": "suc-khoe",
+    "sub": "van-dong",
     "t": "Lợi ích lớn nhất của vận động nằm ở đoạn từ 'không làm gì' lên 'làm một chút'",
     "s": "Đường cong liều–đáp ứng dốc nhất ở phần đầu: đi từ hoàn toàn ít vận động lên khoảng 15 phút mỗi ngày đã giảm nguy cơ tử vong đáng kể. Từ nhiều lên rất nhiều thì lợi ích thêm nhỏ dần. Với người đang ngồi cả ngày, ngưỡng để bắt đầu thấp hơn nhiều so với hình dung.",
-    "tags": ["van-dong", "lieu-dap-ung", "dong-luc"],
-    "src": "Wen và cộng sự, The Lancet (2011); Arem và cộng sự, JAMA Internal Medicine (2015)" },
-  { "id": "sk-117", "cat": "suc-khoe",
-    "t": "Đi bộ khoảng 7.000–8.000 bước mỗi ngày đã đạt phần lớn lợi ích đo được",
-    "s": "Các nghiên cứu theo dõi bằng máy đếm bước cho thấy nguy cơ tử vong giảm mạnh tới quanh mức này rồi bằng phẳng dần, và ngưỡng thấp hơn ở người lớn tuổi. Con số 10.000 không sai nhưng cũng không thần thánh — nó vốn là khẩu hiệu quảng cáo.",
-    "tags": ["di-bo", "so-lieu", "muc-tieu"],
-    "src": "Paluch và cộng sự, The Lancet Public Health (2022); Saint-Maurice và cộng sự, JAMA (2020)" },
-  { "id": "sk-118", "cat": "suc-khoe",
+    "tags": [
+      "van-dong",
+      "lieu-dap-ung",
+      "dong-luc"
+    ],
+    "src": "Wen và cộng sự, The Lancet (2011); Arem và cộng sự, JAMA Internal Medicine (2015)"
+  },
+  {
+    "id": "sk-118",
+    "cat": "suc-khoe",
+    "sub": "an-uong",
     "t": "Chế độ ăn tốt nhất là chế độ bạn duy trì được",
     "s": "Các thử nghiệm so sánh trực tiếp low-carb, low-fat và các chế độ khác thường cho khác biệt nhỏ về cân nặng sau một năm, trong khi mức tuân thủ giải thích phần lớn khác biệt giữa các cá nhân. Cuộc tranh cãi về tỉ lệ dinh dưỡng đa lượng lớn hơn nhiều so với tác động thực tế của nó.",
-    "tags": ["dinh-duong", "giam-can", "tuan-thu"],
-    "src": "Gardner và cộng sự, JAMA (2018), nghiên cứu DIETFITS; Johnston và cộng sự, JAMA (2014)" },
-  { "id": "sk-119", "cat": "suc-khoe",
+    "tags": [
+      "dinh-duong",
+      "giam-can",
+      "tuan-thu"
+    ],
+    "src": "Gardner và cộng sự, JAMA (2018), nghiên cứu DIETFITS; Johnston và cộng sự, JAMA (2014)"
+  },
+  {
+    "id": "sk-119",
+    "cat": "suc-khoe",
+    "sub": "an-uong",
     "t": "Nhịn ăn gián đoạn không hiệu quả hơn giảm calo thông thường khi so cùng mức năng lượng",
     "s": "Các thử nghiệm có kiểm soát cho thấy kết quả giảm cân tương đương khi tổng calo bằng nhau. Nó vẫn là công cụ hữu ích với người thấy dễ tuân thủ hơn khi có khung giờ rõ ràng — nhưng lợi ích đến từ việc ăn ít hơn, không từ khung giờ tự nó.",
-    "tags": ["dinh-duong", "nhin-an", "bang-chung"],
-    "src": "Lowe và cộng sự, JAMA Internal Medicine (2020); Liu và cộng sự, NEJM (2022)" },
-  { "id": "sk-120", "cat": "suc-khoe",
+    "tags": [
+      "dinh-duong",
+      "nhin-an",
+      "bang-chung"
+    ],
+    "src": "Lowe và cộng sự, JAMA Internal Medicine (2020); Liu và cộng sự, NEJM (2022)"
+  },
+  {
+    "id": "sk-120",
+    "cat": "suc-khoe",
+    "sub": "an-uong",
     "t": "Thực phẩm siêu chế biến khiến người ta ăn nhiều hơn khoảng 500 kcal mỗi ngày",
     "s": "Trong thử nghiệm nội trú có kiểm soát chặt, cùng nhóm người ăn tự do trong hai giai đoạn với thực đơn khớp về dinh dưỡng đa lượng; giai đoạn siêu chế biến khiến họ ăn nhiều hơn và tăng cân. Cỡ mẫu nhỏ, nhưng thiết kế rất chặt.",
-    "tags": ["dinh-duong", "che-bien", "thi-nghiem"],
-    "src": "Hall và cộng sự, Cell Metabolism (2019)" },
-  { "id": "sk-121", "cat": "suc-khoe",
+    "tags": [
+      "dinh-duong",
+      "che-bien",
+      "thi-nghiem"
+    ],
+    "src": "Hall và cộng sự, Cell Metabolism (2019)"
+  },
+  {
+    "id": "sk-121",
+    "cat": "suc-khoe",
+    "sub": "huyen-thoai-suc-khoe",
     "t": "Đường không gây tăng động ở trẻ em",
     "s": "Nhiều thử nghiệm mù đôi không tìm thấy khác biệt hành vi giữa nhóm dùng đường và nhóm dùng chất tạo ngọt. Điều thay đổi là đánh giá của cha mẹ: khi được nói con vừa ăn đường, họ chấm con mình tăng động hơn — dù thực tế không có đường.",
-    "tags": ["duong", "tre-em", "huyen-thoai"],
-    "src": "Wolraich, Wilson & White, JAMA (1995); Hoover & Milich, Journal of Abnormal Child Psychology (1994)" },
-  { "id": "sk-122", "cat": "suc-khoe",
+    "tags": [
+      "duong",
+      "tre-em",
+      "huyen-thoai"
+    ],
+    "src": "Wolraich, Wilson & White, JAMA (1995); Hoover & Milich, Journal of Abnormal Child Psychology (1994)"
+  },
+  {
+    "id": "sk-122",
+    "cat": "suc-khoe",
+    "sub": "an-uong",
     "t": "Ăn trứng không làm tăng cholesterol máu ở phần lớn người như từng nghĩ",
     "s": "Cholesterol trong thức ăn ảnh hưởng tới cholesterol máu ít hơn nhiều so với chất béo bão hoà và chất béo chuyển hoá. Nhiều hướng dẫn dinh dưỡng đã bỏ giới hạn cứng về cholesterol ăn vào — dù người tiểu đường và một số nhóm vẫn cần thận trọng.",
-    "tags": ["dinh-duong", "cholesterol", "cap-nhat"],
-    "src": "Dietary Guidelines for Americans (2015–2020); Blesso & Fernandez, Nutrients (2018)" },
-  { "id": "sk-123", "cat": "suc-khoe",
+    "tags": [
+      "dinh-duong",
+      "cholesterol",
+      "cap-nhat"
+    ],
+    "src": "Dietary Guidelines for Americans (2015–2020); Blesso & Fernandez, Nutrients (2018)"
+  },
+  {
+    "id": "sk-123",
+    "cat": "suc-khoe",
+    "sub": "an-uong",
     "t": "Chất béo chuyển hoá công nghiệp là một trong số ít thành phần thực phẩm bị WHO kêu gọi loại bỏ hoàn toàn",
     "s": "Không có ngưỡng an toàn được xác lập, và nó làm tăng LDL đồng thời giảm HDL. Nhiều quốc gia đã cấm hoặc giới hạn nghiêm ngặt, và WHO đặt mục tiêu loại bỏ khỏi chuỗi thực phẩm toàn cầu.",
-    "tags": ["dinh-duong", "chinh-sach", "chat-beo"],
-    "src": "WHO REPLACE action package (2018); Mozaffarian và cộng sự, NEJM (2006)" },
-  { "id": "sk-124", "cat": "suc-khoe",
+    "tags": [
+      "dinh-duong",
+      "chinh-sach",
+      "chat-beo"
+    ],
+    "src": "WHO REPLACE action package (2018); Mozaffarian và cộng sự, NEJM (2006)"
+  },
+  {
+    "id": "sk-124",
+    "cat": "suc-khoe",
+    "sub": "an-uong",
     "t": "Muối ăn có iod là một trong những can thiệp y tế công cộng hiệu quả nhất lịch sử",
     "s": "Thiếu iod là nguyên nhân hàng đầu có thể phòng ngừa được của thiểu năng trí tuệ. Bổ sung iod vào muối đã nâng chỉ số nhận thức trung bình ở nhiều vùng thiếu iod và gần như xoá sổ bướu cổ địa phương ở những nơi thực hiện tốt.",
-    "tags": ["iod", "y-te-cong-cong", "dinh-duong"],
-    "src": "Zimmermann, Endocrine Reviews (2009); chương trình phòng chống rối loạn thiếu iod của WHO/UNICEF" },
-  { "id": "sk-125", "cat": "suc-khoe",
+    "tags": [
+      "iod",
+      "y-te-cong-cong",
+      "dinh-duong"
+    ],
+    "src": "Zimmermann, Endocrine Reviews (2009); chương trình phòng chống rối loạn thiếu iod của WHO/UNICEF"
+  },
+  {
+    "id": "sk-125",
+    "cat": "suc-khoe",
+    "sub": "thuoc-va-vaccine",
     "t": "Đa số người khoẻ mạnh ăn đủ không cần vitamin tổng hợp",
     "s": "Các thử nghiệm lớn không tìm thấy lợi ích rõ ràng của vitamin tổng hợp lên tử vong, bệnh tim hay ung thư ở người không thiếu chất. Ngoại lệ quan trọng: axit folic cho phụ nữ chuẩn bị mang thai, vitamin D ở vùng thiếu nắng, và B12 cho người ăn chay trường.",
-    "tags": ["vitamin", "bang-chung", "bo-sung"],
-    "src": "US Preventive Services Task Force, JAMA (2022); Guallar và cộng sự, Annals of Internal Medicine (2013)" },
-  { "id": "sk-126", "cat": "suc-khoe",
+    "tags": [
+      "vitamin",
+      "bang-chung",
+      "bo-sung"
+    ],
+    "src": "US Preventive Services Task Force, JAMA (2022); Guallar và cộng sự, Annals of Internal Medicine (2013)"
+  },
+  {
+    "id": "sk-126",
+    "cat": "suc-khoe",
+    "sub": "thuoc-va-vaccine",
     "t": "Thực phẩm chức năng ở nhiều nước không phải chịu kiểm định hiệu quả trước khi bán",
     "s": "Khác với thuốc, chúng thường chỉ cần đăng ký công bố. Các phân tích độc lập nhiều lần phát hiện sản phẩm chứa ít hoặc không chứa hoạt chất ghi trên nhãn, hoặc chứa thêm dược chất không khai báo. Đây là vấn đề quy định, không phải vấn đề của từng thương hiệu.",
-    "tags": ["thuc-pham-chuc-nang", "quy-dinh", "canh-bao"],
-    "src": "Cohen, NEJM (2009, 2014); các đợt thu hồi do phát hiện dược chất ẩn của FDA" },
-  { "id": "sk-127", "cat": "suc-khoe",
+    "tags": [
+      "thuc-pham-chuc-nang",
+      "quy-dinh",
+      "canh-bao"
+    ],
+    "src": "Cohen, NEJM (2009, 2014); các đợt thu hồi do phát hiện dược chất ẩn của FDA"
+  },
+  {
+    "id": "sk-127",
+    "cat": "suc-khoe",
+    "sub": "thuoc-va-vaccine",
     "t": "Vắc-xin không gây tự kỷ — nghiên cứu gốc là gian lận và đã bị rút",
     "s": "Bài báo năm 1998 dựa trên 12 trẻ đã bị tạp chí rút lại và tác giả bị tước giấy phép hành nghề vì thao túng dữ liệu. Các nghiên cứu sau đó trên hàng triệu trẻ ở nhiều nước không tìm thấy bất kỳ liên hệ nào.",
-    "tags": ["vac-xin", "tu-ky", "gian-lan"],
-    "src": "Wakefield và cộng sự (1998), rút lại bởi The Lancet (2010); Hviid và cộng sự, Annals of Internal Medicine (2019)" },
-  { "id": "sk-128", "cat": "suc-khoe",
+    "tags": [
+      "vac-xin",
+      "tu-ky",
+      "gian-lan"
+    ],
+    "src": "Wakefield và cộng sự (1998), rút lại bởi The Lancet (2010); Hviid và cộng sự, Annals of Internal Medicine (2019)"
+  },
+  {
+    "id": "sk-128",
+    "cat": "suc-khoe",
+    "sub": "thuoc-va-vaccine",
     "t": "Miễn dịch cộng đồng cần tỉ lệ tiêm khác nhau tuỳ bệnh",
     "s": "Sởi lây rất mạnh nên cần khoảng 95% dân số có miễn dịch để chặn lây lan; các bệnh lây yếu hơn cần tỉ lệ thấp hơn. Đây là lý do một tỉ lệ tiêm 'khá cao' vẫn có thể dẫn tới bùng dịch sởi trong khi đủ cho bệnh khác.",
-    "tags": ["vac-xin", "dich-te", "nguong"],
-    "src": "Fine, Eames & Heymann, Clinical Infectious Diseases (2011)" },
-  { "id": "sk-129", "cat": "suc-khoe",
-    "t": "Kháng kháng sinh được WHO xếp là một trong những mối đe doạ lớn nhất với sức khoẻ toàn cầu",
-    "s": "Ước tính hàng triệu ca tử vong mỗi năm liên quan tới nhiễm khuẩn kháng thuốc. Nguồn chính không chỉ là kê đơn quá tay ở người mà còn là sử dụng kháng sinh trong chăn nuôi. Uống đủ liều đủ ngày là việc cá nhân duy nhất có tác dụng thật.",
-    "tags": ["khang-sinh", "toan-cau", "canh-bao"],
-    "src": "Murray và cộng sự, The Lancet (2022); WHO Global Action Plan on AMR" },
-  { "id": "sk-130", "cat": "suc-khoe",
+    "tags": [
+      "vac-xin",
+      "dich-te",
+      "nguong"
+    ],
+    "src": "Fine, Eames & Heymann, Clinical Infectious Diseases (2011)"
+  },
+  {
+    "id": "sk-130",
+    "cat": "suc-khoe",
+    "sub": "benh-va-tam-soat",
     "t": "Rửa tay bằng xà phòng hiệu quả hơn nước rửa tay khô trong nhiều tình huống",
     "s": "Cồn diệt được nhiều loại vi khuẩn và virus nhưng kém hiệu quả với norovirus, bào tử Clostridioides difficile, và khi tay bẩn nhìn thấy được. Xà phòng hoạt động bằng cách cuốn trôi, nên nó không có điểm mù đó.",
-    "tags": ["ve-sinh", "phong-benh", "thuc-hanh"],
-    "src": "Hướng dẫn vệ sinh tay của CDC; Liu và cộng sự, Applied and Environmental Microbiology (2010)" },
-  { "id": "sk-131", "cat": "suc-khoe",
+    "tags": [
+      "ve-sinh",
+      "phong-benh",
+      "thuc-hanh"
+    ],
+    "src": "Hướng dẫn vệ sinh tay của CDC; Liu và cộng sự, Applied and Environmental Microbiology (2010)"
+  },
+  {
+    "id": "sk-131",
+    "cat": "suc-khoe",
+    "sub": "benh-va-tam-soat",
     "t": "Ô nhiễm không khí là yếu tố nguy cơ môi trường gây tử vong hàng đầu",
     "s": "WHO ước tính hàng triệu ca tử vong sớm mỗi năm liên quan tới bụi mịn PM2.5. Hạt đủ nhỏ để đi sâu vào phế nang và vào máu, và tác động không chỉ ở phổi mà cả tim mạch và thần kinh. Ở đô thị lớn, đây là rủi ro sức khoẻ bị coi nhẹ nhất so với mức độ thật.",
-    "tags": ["o-nhiem", "moi-truong", "canh-bao"],
-    "src": "WHO Global Air Quality Guidelines (2021); GBD Risk Factors Collaborators" },
-  { "id": "sk-132", "cat": "suc-khoe",
+    "tags": [
+      "o-nhiem",
+      "moi-truong",
+      "canh-bao"
+    ],
+    "src": "WHO Global Air Quality Guidelines (2021); GBD Risk Factors Collaborators"
+  },
+  {
+    "id": "sk-132",
+    "cat": "suc-khoe",
+    "sub": "benh-va-tam-soat",
     "t": "Khẩu trang N95 và tương đương lọc bụi mịn hiệu quả; khẩu trang vải thì rất ít",
     "s": "Hiệu quả phụ thuộc vào cả vật liệu lẫn độ kín. Khẩu trang y tế thường hở nhiều ở gò má, còn N95/KN95 đeo đúng cách lọc được phần lớn hạt siêu nhỏ. Với ngày chỉ số ô nhiễm cao, loại khẩu trang bạn chọn tạo khác biệt thật.",
-    "tags": ["o-nhiem", "khau-trang", "thuc-hanh"],
-    "src": "Cherrie và cộng sự, Occupational and Environmental Medicine (2018); tiêu chuẩn NIOSH N95" },
-  { "id": "sk-133", "cat": "suc-khoe",
+    "tags": [
+      "o-nhiem",
+      "khau-trang",
+      "thuc-hanh"
+    ],
+    "src": "Cherrie và cộng sự, Occupational and Environmental Medicine (2018); tiêu chuẩn NIOSH N95"
+  },
+  {
+    "id": "sk-133",
+    "cat": "suc-khoe",
+    "sub": "benh-va-tam-soat",
     "t": "Tiếng ồn giao thông kéo dài liên quan tới tăng huyết áp và bệnh tim",
     "s": "Ngưỡng khuyến nghị của WHO cho tiếng ồn giao thông ban ngày là dưới 53 dB; nhiều tuyến phố đô thị vượt xa mức đó. Cơ chế được cho là phản ứng căng thẳng mạn tính và gián đoạn giấc ngủ, kể cả khi bạn đã 'quen' và không còn để ý.",
-    "tags": ["tieng-on", "do-thi", "tim-mach"],
-    "src": "WHO Environmental Noise Guidelines for the European Region (2018); Münzel và cộng sự, European Heart Journal (2018)" },
-  { "id": "sk-134", "cat": "suc-khoe",
+    "tags": [
+      "tieng-on",
+      "do-thi",
+      "tim-mach"
+    ],
+    "src": "WHO Environmental Noise Guidelines for the European Region (2018); Münzel và cộng sự, European Heart Journal (2018)"
+  },
+  {
+    "id": "sk-134",
+    "cat": "suc-khoe",
+    "sub": "benh-va-tam-soat",
     "t": "Mất thính lực do tiếng ồn là vĩnh viễn và tích luỹ",
     "s": "Tế bào lông trong ốc tai không tái tạo ở người. Tổn thương phụ thuộc vào cả cường độ lẫn thời gian: 85 dB trong 8 giờ tương đương 100 dB trong 15 phút. Ù tai sau một buổi hoà nhạc là dấu hiệu đã có tổn thương, không phải chuyện qua đêm là hết.",
-    "tags": ["thinh-luc", "tieng-on", "canh-bao"],
-    "src": "Tiêu chuẩn phơi nhiễm tiếng ồn của NIOSH; WHO Make Listening Safe" },
-  { "id": "sk-135", "cat": "suc-khoe",
+    "tags": [
+      "thinh-luc",
+      "tieng-on",
+      "canh-bao"
+    ],
+    "src": "Tiêu chuẩn phơi nhiễm tiếng ồn của NIOSH; WHO Make Listening Safe"
+  },
+  {
+    "id": "sk-135",
+    "cat": "suc-khoe",
+    "sub": "benh-va-tam-soat",
     "t": "Cận thị ở trẻ liên quan chặt tới thời gian ở ngoài trời, không chỉ tới việc nhìn gần",
     "s": "Các thử nghiệm ở Đài Loan và Trung Quốc cho thấy tăng thời gian hoạt động ngoài trời làm giảm tỉ lệ cận thị mới ở trẻ. Cơ chế được cho là liên quan tới cường độ ánh sáng và dopamine võng mạc, chứ không đơn thuần là 'nghỉ mắt'.",
-    "tags": ["can-thi", "tre-em", "phong-ngua"],
-    "src": "Wu và cộng sự, Ophthalmology (2013); He và cộng sự, JAMA (2015)" },
-  { "id": "sk-136", "cat": "suc-khoe",
+    "tags": [
+      "can-thi",
+      "tre-em",
+      "phong-ngua"
+    ],
+    "src": "Wu và cộng sự, Ophthalmology (2013); He và cộng sự, JAMA (2015)"
+  },
+  {
+    "id": "sk-136",
+    "cat": "suc-khoe",
+    "sub": "benh-va-tam-soat",
     "t": "Kem chống nắng có tác dụng phòng ung thư da, và mức SPF cao có lợi ích giảm dần",
     "s": "SPF 30 chặn khoảng 97% tia UVB, SPF 50 chặn khoảng 98%. Yếu tố quan trọng hơn con số là lượng bôi đủ và bôi lại — hầu hết người dùng bôi ít hơn nhiều so với lượng dùng trong thử nghiệm, nên SPF thực tế thấp hơn nhãn ghi.",
-    "tags": ["da", "ung-thu", "thuc-hanh"],
-    "src": "Green và cộng sự, Journal of Clinical Oncology (2011); tài liệu kỹ thuật về SPF của FDA" },
-  { "id": "sk-137", "cat": "suc-khoe",
+    "tags": [
+      "da",
+      "ung-thu",
+      "thuc-hanh"
+    ],
+    "src": "Green và cộng sự, Journal of Clinical Oncology (2011); tài liệu kỹ thuật về SPF của FDA"
+  },
+  {
+    "id": "sk-137",
+    "cat": "suc-khoe",
+    "sub": "benh-va-tam-soat",
     "t": "Tầm soát ung thư tiền liệt tuyến bằng PSA gây tranh cãi vì chẩn đoán quá mức",
     "s": "Nhiều khối u phát hiện được sẽ không bao giờ gây hại trong đời người bệnh, nhưng việc phát hiện dẫn tới sinh thiết và điều trị có biến chứng. Các hướng dẫn hiện nay khuyến nghị quyết định chung giữa bác sĩ và người bệnh thay vì tầm soát đại trà.",
-    "tags": ["tam-soat", "ung-thu", "danh-doi"],
-    "src": "US Preventive Services Task Force, JAMA (2018)" },
-  { "id": "sk-138", "cat": "suc-khoe",
+    "tags": [
+      "tam-soat",
+      "ung-thu",
+      "danh-doi"
+    ],
+    "src": "US Preventive Services Task Force, JAMA (2018)"
+  },
+  {
+    "id": "sk-138",
+    "cat": "suc-khoe",
+    "sub": "benh-va-tam-soat",
     "t": "Kiểm tra sức khoẻ tổng quát hằng năm cho người khoẻ mạnh không giảm tử vong",
     "s": "Một tổng quan Cochrane trên hơn 180.000 người không tìm thấy lợi ích về tử vong do mọi nguyên nhân, tử vong do tim mạch hay ung thư. Điều có bằng chứng là các sàng lọc cụ thể theo tuổi và nguy cơ — chứ không phải gói khám đại trà.",
-    "tags": ["tam-soat", "bang-chung", "nguoc-truc-giac"],
-    "src": "Krogsbøll và cộng sự, Cochrane Database of Systematic Reviews (2019)" },
-  { "id": "sk-139", "cat": "suc-khoe",
+    "tags": [
+      "tam-soat",
+      "bang-chung",
+      "nguoc-truc-giac"
+    ],
+    "src": "Krogsbøll và cộng sự, Cochrane Database of Systematic Reviews (2019)"
+  },
+  {
+    "id": "sk-139",
+    "cat": "suc-khoe",
+    "sub": "benh-va-tam-soat",
     "t": "Sức khoẻ răng miệng liên quan tới sức khoẻ tim mạch, nhưng nhân quả chưa rõ",
     "s": "Viêm nha chu tương quan với bệnh tim mạch trong nhiều nghiên cứu quan sát, song các thử nghiệm can thiệp chưa chứng minh được rằng điều trị nha chu làm giảm biến cố tim mạch. Đây là ví dụ mẫu mực về khoảng cách giữa tương quan và khuyến nghị.",
-    "tags": ["rang-mieng", "tim-mach", "than-trong"],
-    "src": "Tuyên bố khoa học của American Heart Association, Circulation (2012)" },
-  { "id": "sk-140", "cat": "suc-khoe",
+    "tags": [
+      "rang-mieng",
+      "tim-mach",
+      "than-trong"
+    ],
+    "src": "Tuyên bố khoa học của American Heart Association, Circulation (2012)"
+  },
+  {
+    "id": "sk-140",
+    "cat": "suc-khoe",
+    "sub": "suc-khoe-tinh-than",
     "t": "Quan hệ xã hội chất lượng là yếu tố dự báo mạnh nhất cho hạnh phúc và sức khoẻ dài hạn",
     "s": "Nghiên cứu theo dõi cùng một nhóm người suốt hơn 80 năm kết luận rằng chất lượng các mối quan hệ ở tuổi 50 dự báo sức khoẻ ở tuổi 80 tốt hơn mức cholesterol. Đây là một trong những nghiên cứu dọc dài nhất từng được thực hiện.",
-    "tags": ["quan-he", "tuoi-tho", "hanh-phuc"],
-    "src": "Harvard Study of Adult Development; Waldinger & Schulz, The Good Life (2023)" },
-  { "id": "sk-141", "cat": "suc-khoe",
+    "tags": [
+      "quan-he",
+      "tuoi-tho",
+      "hanh-phuc"
+    ],
+    "src": "Harvard Study of Adult Development; Waldinger & Schulz, The Good Life (2023)"
+  },
+  {
+    "id": "sk-141",
+    "cat": "suc-khoe",
+    "sub": "van-dong",
     "t": "Ngồi lâu liên tục có hại độc lập với việc bạn có tập thể dục hay không",
     "s": "Thời gian ngồi tổng cộng liên quan tới nguy cơ tim mạch và chuyển hoá ngay cả ở người đạt khuyến nghị vận động — dù mức vận động cao làm giảm đáng kể tác động. Can thiệp có bằng chứng đơn giản nhất là ngắt quãng: đứng dậy vài phút mỗi 30–60 phút.",
-    "tags": ["ngoi-lau", "van-dong", "van-phong"],
-    "src": "Ekelund và cộng sự, The Lancet (2016); Dunstan và cộng sự, Diabetes Care (2012)" },
-  { "id": "sk-142", "cat": "suc-khoe",
+    "tags": [
+      "ngoi-lau",
+      "van-dong",
+      "van-phong"
+    ],
+    "src": "Ekelund và cộng sự, The Lancet (2016); Dunstan và cộng sự, Diabetes Care (2012)"
+  },
+  {
+    "id": "sk-142",
+    "cat": "suc-khoe",
+    "sub": "van-dong",
     "t": "Tập thể dục cải thiện giấc ngủ, nhưng tập nặng sát giờ ngủ thì tuỳ người",
     "s": "Phân tích tổng hợp cho thấy vận động đều đặn cải thiện chất lượng giấc ngủ, và tập buổi tối không gây hại với đa số người. Ngoại lệ là tập cường độ rất cao trong khoảng một giờ trước khi ngủ, vốn có thể làm chậm vào giấc ở người nhạy cảm.",
-    "tags": ["van-dong", "giac-ngu", "thuc-hanh"],
-    "src": "Kredlow và cộng sự, Journal of Behavioral Medicine (2015); Stutz và cộng sự, Sports Medicine (2019)" },
-  { "id": "sk-143", "cat": "suc-khoe",
+    "tags": [
+      "van-dong",
+      "giac-ngu",
+      "thuc-hanh"
+    ],
+    "src": "Kredlow và cộng sự, Journal of Behavioral Medicine (2015); Stutz và cộng sự, Sports Medicine (2019)"
+  },
+  {
+    "id": "sk-143",
+    "cat": "suc-khoe",
+    "sub": "suc-khoe-tinh-than",
     "t": "Thiền chánh niệm có hiệu quả vừa phải với lo âu và đau, không phải thuốc chữa bách bệnh",
     "s": "Tổng quan có hệ thống tìm thấy bằng chứng chất lượng vừa cho cải thiện lo âu, trầm cảm và đau, nhưng bằng chứng yếu hoặc không có cho nhiều tuyên bố khác. Kích thước hiệu ứng tương đương các can thiệp tâm lý khác — tốt, nhưng không kỳ diệu.",
-    "tags": ["thien", "bang-chung", "suc-khoe-tinh-than"],
-    "src": "Goyal và cộng sự, JAMA Internal Medicine (2014)" },
-  { "id": "sk-144", "cat": "suc-khoe",
+    "tags": [
+      "thien",
+      "bang-chung",
+      "suc-khoe-tinh-than"
+    ],
+    "src": "Goyal và cộng sự, JAMA Internal Medicine (2014)"
+  },
+  {
+    "id": "sk-144",
+    "cat": "suc-khoe",
+    "sub": "benh-va-tam-soat",
     "t": "Đau lưng dưới cấp tính thường không cần chụp chiếu",
     "s": "Các hướng dẫn khuyến nghị không chụp trong 4–6 tuần đầu nếu không có dấu hiệu cảnh báo, vì hình ảnh thường phát hiện các thay đổi thoái hoá có ở cả người không đau — và việc thấy chúng làm tăng lo lắng, tăng can thiệp mà không cải thiện kết quả.",
-    "tags": ["dau-lung", "chan-doan", "qua-muc"],
-    "src": "Chou và cộng sự, The Lancet (2009); Brinjikji và cộng sự, AJNR (2015)" },
-  { "id": "sk-145", "cat": "suc-khoe",
+    "tags": [
+      "dau-lung",
+      "chan-doan",
+      "qua-muc"
+    ],
+    "src": "Chou và cộng sự, The Lancet (2009); Brinjikji và cộng sự, AJNR (2015)"
+  },
+  {
+    "id": "sk-145",
+    "cat": "suc-khoe",
+    "sub": "huyen-thoai-suc-khoe",
     "t": "Nghỉ ngơi hoàn toàn không phải cách xử lý tốt cho phần lớn đau lưng",
     "s": "Bằng chứng nhất quán cho thấy duy trì hoạt động trong khả năng chịu đựng cho phục hồi nhanh hơn nằm nghỉ. Đây là một trong những lời khuyên y tế bị đảo ngược hoàn toàn so với thực hành phổ biến vài chục năm trước.",
-    "tags": ["dau-lung", "phuc-hoi", "cap-nhat"],
-    "src": "Dahm và cộng sự, Cochrane Database of Systematic Reviews (2010)" },
-  { "id": "sk-146", "cat": "suc-khoe",
+    "tags": [
+      "dau-lung",
+      "phuc-hoi",
+      "cap-nhat"
+    ],
+    "src": "Dahm và cộng sự, Cochrane Database of Systematic Reviews (2010)"
+  },
+  {
+    "id": "sk-146",
+    "cat": "suc-khoe",
+    "sub": "benh-va-tam-soat",
     "t": "Hồi sức tim phổi chỉ ép tim cũng hiệu quả với người ngoài ngành y",
     "s": "Với ngừng tim ngoài bệnh viện ở người lớn, ép tim liên tục không thổi ngạt cho kết quả sống sót tương đương hoặc tốt hơn so với CPR truyền thống do người không chuyên thực hiện — chủ yếu vì nó dễ nhớ, dễ làm và ít gián đoạn hơn.",
-    "tags": ["cap-cuu", "cpr", "thuc-hanh"],
-    "src": "Rea và cộng sự, NEJM (2010); hướng dẫn của American Heart Association" },
-  { "id": "sk-147", "cat": "suc-khoe",
+    "tags": [
+      "cap-cuu",
+      "cpr",
+      "thuc-hanh"
+    ],
+    "src": "Rea và cộng sự, NEJM (2010); hướng dẫn của American Heart Association"
+  },
+  {
+    "id": "sk-147",
+    "cat": "suc-khoe",
+    "sub": "benh-va-tam-soat",
     "t": "Nguy cơ tử vong khi đi xe máy cao hơn nhiều lần so với ô tô trên cùng quãng đường",
     "s": "Số liệu ở nhiều quốc gia cho thấy tỉ lệ tử vong trên mỗi km của người đi xe máy cao gấp hàng chục lần so với ô tô. Với đa số người trưởng thành, đây là rủi ro lớn nhất trong ngày — lớn hơn nhiều so với các rủi ro thực phẩm và môi trường mà ta lo lắng nhiều hơn.",
-    "tags": ["an-toan", "giao-thong", "rui-ro"],
-    "src": "WHO Global Status Report on Road Safety; số liệu NHTSA về tử vong theo phương tiện" },
-  { "id": "sk-148", "cat": "suc-khoe",
+    "tags": [
+      "an-toan",
+      "giao-thong",
+      "rui-ro"
+    ],
+    "src": "WHO Global Status Report on Road Safety; số liệu NHTSA về tử vong theo phương tiện"
+  },
+  {
+    "id": "sk-148",
+    "cat": "suc-khoe",
+    "sub": "suc-khoe-tinh-than",
     "t": "Trầm cảm không phải do 'thiếu serotonin', và điều đó không có nghĩa thuốc không hiệu quả",
     "s": "Một tổng quan lớn kết luận không có bằng chứng nhất quán cho giả thuyết mất cân bằng serotonin. Nhưng thuốc chống trầm cảm vẫn cho hiệu quả hơn giả dược trong các phân tích tổng hợp — cơ chế chưa rõ không đồng nghĩa với không tác dụng.",
-    "tags": ["tram-cam", "co-che", "than-trong"],
-    "src": "Moncrieff và cộng sự, Molecular Psychiatry (2022); Cipriani và cộng sự, The Lancet (2018)" }
+    "tags": [
+      "tram-cam",
+      "co-che",
+      "than-trong"
+    ],
+    "src": "Moncrieff và cộng sự, Molecular Psychiatry (2022); Cipriani và cộng sự, The Lancet (2018)"
+  }
 ]

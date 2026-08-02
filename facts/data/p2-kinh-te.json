@@ -1,243 +1,601 @@
 [
-  { "id": "kt-101", "cat": "kinh-te",
+  {
+    "id": "kt-101",
+    "cat": "kinh-te",
+    "sub": "lai-va-no",
     "t": "Lãi tính trên dư nợ gốc đắt gần gấp đôi lãi tính trên dư nợ giảm dần",
     "s": "Vay 100 triệu, 12 tháng, 'lãi suất 1%/tháng'. Nếu tính trên dư nợ gốc, mỗi tháng bạn trả 1 triệu tiền lãi suốt 12 tháng dù nợ đã giảm dần — lãi suất thực tế khoảng 21,5%/năm chứ không phải 12%. Đây là chỗ mà cùng một con số quảng cáo giấu hai sản phẩm rất khác nhau.",
     "d": "Cách kiểm tra trong 10 giây: nếu tiền lãi mỗi kỳ bằng nhau suốt kỳ vay, đó là lãi trên dư nợ gốc. Nếu tiền lãi giảm dần theo tháng, đó là lãi trên dư nợ giảm dần.\n\nQuy tắc nhẩm: lãi suất thực của hình thức tính trên dư nợ gốc xấp xỉ gấp 1,8 tới 1,9 lần con số được công bố với khoản vay trả đều trong 12 tháng.",
-    "tags": ["vay-no", "lai-suat", "viet-nam"],
-    "src": "Nguyên lý tính lãi flat rate vs reducing balance; hướng dẫn công bố lãi suất thực của Ngân hàng Nhà nước Việt Nam" },
-  { "id": "kt-102", "cat": "kinh-te",
+    "tags": [
+      "vay-no",
+      "lai-suat",
+      "viet-nam"
+    ],
+    "src": "Nguyên lý tính lãi flat rate vs reducing balance; hướng dẫn công bố lãi suất thực của Ngân hàng Nhà nước Việt Nam"
+  },
+  {
+    "id": "kt-102",
+    "cat": "kinh-te",
+    "sub": "lai-va-no",
     "t": "'Trả góp 0%' hầu như luôn có ai đó trả phần lãi đó",
     "s": "Chi phí vốn không biến mất. Nó nằm ở một trong ba chỗ: giá bán đã cộng sẵn, khoản phí chuyển đổi trả góp, hoặc phần chiết khấu bạn mất khi không trả thẳng. Cách kiểm tra duy nhất đáng tin là hỏi giá tiền mặt trả ngay và so hai con số.",
-    "tags": ["tra-gop", "tieu-dung", "viet-nam"],
-    "src": "Nguyên lý chi phí vốn; quy định về phí chuyển đổi trả góp của các tổ chức phát hành thẻ" },
-  { "id": "kt-103", "cat": "kinh-te",
+    "tags": [
+      "tra-gop",
+      "tieu-dung",
+      "viet-nam"
+    ],
+    "src": "Nguyên lý chi phí vốn; quy định về phí chuyển đổi trả góp của các tổ chức phát hành thẻ"
+  },
+  {
+    "id": "kt-103",
+    "cat": "kinh-te",
+    "sub": "dau-tu",
     "t": "Bỏ lỡ 10 ngày tăng mạnh nhất trong 20 năm cắt hơn nửa lợi nhuận của bạn",
     "s": "Các phân tích trên nhiều thị trường đều cho cùng hình dạng: lợi nhuận dài hạn tập trung vào một số rất nhỏ các ngày, và những ngày đó thường nằm sát ngay sau các ngày giảm mạnh. Nghĩa là việc 'nhảy ra tránh bão rồi vào lại' phá hỏng đúng cơ chế tạo ra lợi nhuận.",
-    "tags": ["dau-tu", "thi-truong", "kien-nhan"],
-    "src": "Phân tích của J.P. Morgan Asset Management, Guide to Retirement (nhiều năm); Bhardwaj, Financial Analysts Journal" },
-  { "id": "kt-104", "cat": "kinh-te",
+    "tags": [
+      "dau-tu",
+      "thi-truong",
+      "kien-nhan"
+    ],
+    "src": "Phân tích của J.P. Morgan Asset Management, Guide to Retirement (nhiều năm); Bhardwaj, Financial Analysts Journal"
+  },
+  {
+    "id": "kt-104",
+    "cat": "kinh-te",
+    "sub": "dau-tu",
     "t": "Giảm 50% cần tăng 100% mới hoà vốn",
     "s": "Phần trăm không đối xứng. Danh mục mất một nửa phải nhân đôi để về chỗ cũ; mất 80% thì phải tăng 400%. Đây là lý do bảo toàn vốn quan trọng hơn tìm lợi nhuận cao, và vì sao một khoản lỗ lớn duy nhất huỷ hoại nhiều năm tích luỹ.",
-    "tags": ["dau-tu", "rui-ro", "toan"],
-    "src": "Tính chất của trung bình hình học; nguyên lý quản trị rủi ro cơ bản" },
-  { "id": "kt-105", "cat": "kinh-te",
+    "tags": [
+      "dau-tu",
+      "rui-ro",
+      "toan"
+    ],
+    "src": "Tính chất của trung bình hình học; nguyên lý quản trị rủi ro cơ bản"
+  },
+  {
+    "id": "kt-105",
+    "cat": "kinh-te",
+    "sub": "dau-tu",
     "t": "Đầu tư một lần thắng chia nhỏ theo tháng khoảng hai phần ba số thời điểm",
     "s": "Vì thị trường đi lên trong đa số các quãng thời gian, việc để tiền ngoài thị trường lâu hơn thường tốn kém. Chia nhỏ vẫn hợp lý — nhưng lý do là quản trị cảm xúc và rủi ro thời điểm, không phải vì nó cho lợi nhuận cao hơn.",
-    "tags": ["dau-tu", "chien-luoc", "so-lieu"],
-    "src": "Vanguard, 'Dollar-cost averaging just means taking risk later' (2012, cập nhật 2023)" },
-  { "id": "kt-106", "cat": "kinh-te",
+    "tags": [
+      "dau-tu",
+      "chien-luoc",
+      "so-lieu"
+    ],
+    "src": "Vanguard, 'Dollar-cost averaging just means taking risk later' (2012, cập nhật 2023)"
+  },
+  {
+    "id": "kt-106",
+    "cat": "kinh-te",
+    "sub": "dau-tu",
     "t": "Nhà đầu tư cá nhân giao dịch nhiều nhất kiếm ít nhất",
     "s": "Nghiên cứu trên 66.000 tài khoản môi giới cho thấy nhóm giao dịch nhiều nhất có lợi nhuận ròng thấp hơn nhóm ít giao dịch nhất khoảng 6,5 điểm phần trăm mỗi năm. Nguyên nhân chính là chi phí giao dịch cộng dồn và việc chọn sai thời điểm.",
-    "tags": ["dau-tu", "hanh-vi", "chi-phi"],
-    "src": "Barber & Odean, Journal of Finance (2000)" },
-  { "id": "kt-107", "cat": "kinh-te",
+    "tags": [
+      "dau-tu",
+      "hanh-vi",
+      "chi-phi"
+    ],
+    "src": "Barber & Odean, Journal of Finance (2000)"
+  },
+  {
+    "id": "kt-107",
+    "cat": "kinh-te",
+    "sub": "dau-tu",
     "t": "Người ta bán cổ phiếu đang lãi và giữ cổ phiếu đang lỗ — ngược hẳn cái nên làm",
     "s": "Hiệu ứng bố trí xuất hiện ở mọi thị trường được nghiên cứu. Bán khoản lãi cho cảm giác 'đúng', giữ khoản lỗ tránh phải thừa nhận sai. Về mặt thuế và về mặt xu hướng giá, cả hai đều thường là quyết định kém.",
-    "tags": ["dau-tu", "hanh-vi", "thien-kien"],
-    "src": "Shefrin & Statman, Journal of Finance (1985); Odean, Journal of Finance (1998)" },
-  { "id": "kt-108", "cat": "kinh-te",
+    "tags": [
+      "dau-tu",
+      "hanh-vi",
+      "thien-kien"
+    ],
+    "src": "Shefrin & Statman, Journal of Finance (1985); Odean, Journal of Finance (1998)"
+  },
+  {
+    "id": "kt-108",
+    "cat": "kinh-te",
+    "sub": "chi-tieu-tiet-kiem",
     "t": "Kế toán trong đầu: bạn tiêu tiền thưởng khác hẳn tiền lương, dù nó là cùng một loại tiền",
     "s": "Người ta chia tiền vào các ngăn tinh thần — tiền lương, tiền thưởng, tiền trúng, tiền lì xì — và áp quy tắc chi tiêu khác nhau cho từng ngăn. Điều này giải thích vì sao người có nợ thẻ 30%/năm vẫn giữ sổ tiết kiệm 5%/năm và thấy hợp lý.",
-    "tags": ["hanh-vi", "chi-tieu", "thaler"],
-    "src": "Richard Thaler, Journal of Behavioral Decision Making (1999)" },
-  { "id": "kt-109", "cat": "kinh-te",
-    "t": "Lạm phát 7%/năm cắt một nửa sức mua sau đúng 10 năm",
-    "s": "Quy tắc 72 chạy theo chiều ngược lại cũng đúng: chia 72 cho tỉ lệ lạm phát ra số năm để tiền mất nửa giá trị. Với mức 4%/năm thì là 18 năm. Đây là lý do 'giữ tiền mặt cho an toàn' là một quyết định có rủi ro, chỉ là rủi ro chậm và im lặng.",
-    "tags": ["lam-phat", "tien-mat", "quy-tac-72"],
-    "src": "Quy tắc 72 áp dụng cho suy giảm; số liệu lạm phát của Tổng cục Thống kê Việt Nam" },
-  { "id": "kt-110", "cat": "kinh-te",
+    "tags": [
+      "hanh-vi",
+      "chi-tieu",
+      "thaler"
+    ],
+    "src": "Richard Thaler, Journal of Behavioral Decision Making (1999)"
+  },
+  {
+    "id": "kt-110",
+    "cat": "kinh-te",
+    "sub": "lam-phat-tien",
     "t": "Lạm phát không phải là giá cao — nó là giá đang tăng",
     "s": "Khi lạm phát giảm từ 8% về 3%, giá vẫn tăng, chỉ tăng chậm hơn. Giá quay lại mức cũ đòi hỏi giảm phát, mà giảm phát thì gây ra vấn đề nghiêm trọng hơn nhiều. Hiểu nhầm này là nguồn gốc của rất nhiều bực bội khi đọc tin kinh tế.",
-    "tags": ["lam-phat", "hieu-lam", "vi-mo"],
-    "src": "Định nghĩa chỉ số giá tiêu dùng; tài liệu giải thích của các ngân hàng trung ương" },
-  { "id": "kt-111", "cat": "kinh-te",
+    "tags": [
+      "lam-phat",
+      "hieu-lam",
+      "vi-mo"
+    ],
+    "src": "Định nghĩa chỉ số giá tiêu dùng; tài liệu giải thích của các ngân hàng trung ương"
+  },
+  {
+    "id": "kt-111",
+    "cat": "kinh-te",
+    "sub": "lam-phat-tien",
     "t": "Giảm phát nguy hiểm hơn lạm phát vừa phải",
     "s": "Nếu giá được kỳ vọng giảm, người ta hoãn mua, doanh nghiệp hoãn đầu tư, doanh thu giảm, sa thải tăng, và vòng xoáy tự nuôi nó. Thêm nữa, nợ giữ nguyên trong khi thu nhập giảm nên gánh nặng nợ thật tăng lên. Đó là lý do ngân hàng trung ương nhắm lạm phát dương chứ không nhắm số không.",
-    "tags": ["giam-phat", "vi-mo", "nguoc-truc-giac"],
-    "src": "Irving Fisher, 'The Debt-Deflation Theory of Great Depressions', Econometrica (1933)" },
-  { "id": "kt-112", "cat": "kinh-te",
+    "tags": [
+      "giam-phat",
+      "vi-mo",
+      "nguoc-truc-giac"
+    ],
+    "src": "Irving Fisher, 'The Debt-Deflation Theory of Great Depressions', Econometrica (1933)"
+  },
+  {
+    "id": "kt-112",
+    "cat": "kinh-te",
+    "sub": "dau-tu",
     "t": "Giá trái phiếu và lợi suất luôn đi ngược chiều nhau",
     "s": "Trái phiếu trả một dòng tiền cố định. Nếu lãi suất thị trường tăng, trái phiếu cũ trở nên kém hấp dẫn nên giá của nó phải giảm để lợi suất tương đương. Đây là lý do 'kênh an toàn' vẫn có thể lỗ nặng trong năm lãi suất tăng nhanh.",
-    "tags": ["trai-phieu", "lai-suat", "dau-tu"],
-    "src": "Nguyên lý định giá trái phiếu; ví dụ thực tế: thị trường trái phiếu toàn cầu năm 2022" },
-  { "id": "kt-113", "cat": "kinh-te",
+    "tags": [
+      "trai-phieu",
+      "lai-suat",
+      "dau-tu"
+    ],
+    "src": "Nguyên lý định giá trái phiếu; ví dụ thực tế: thị trường trái phiếu toàn cầu năm 2022"
+  },
+  {
+    "id": "kt-113",
+    "cat": "kinh-te",
+    "sub": "dau-tu",
     "t": "Phí quản lý 2% nghe nhỏ vì nó được so với tài sản, không so với lợi nhuận",
     "s": "Nếu danh mục sinh lời 8% và bạn trả phí 2% trên tổng tài sản, bạn đang trả một phần tư lợi nhuận. Cách trình bày phí theo phần trăm tài sản là hợp lý về kỹ thuật nhưng làm trực giác lệch mạnh về phía đánh giá thấp chi phí.",
-    "tags": ["phi", "dau-tu", "trinh-bay"],
-    "src": "John Bogle, The Little Book of Common Sense Investing (2007); phân tích chi phí quỹ của Morningstar" },
-  { "id": "kt-114", "cat": "kinh-te",
+    "tags": [
+      "phi",
+      "dau-tu",
+      "trinh-bay"
+    ],
+    "src": "John Bogle, The Little Book of Common Sense Investing (2007); phân tích chi phí quỹ của Morningstar"
+  },
+  {
+    "id": "kt-114",
+    "cat": "kinh-te",
+    "sub": "chi-tieu-tiet-kiem",
     "t": "Tỉ lệ tiết kiệm quan trọng hơn tỉ suất sinh lời trong khoảng 10 năm đầu",
     "s": "Với số vốn còn nhỏ, chênh lệch giữa 6% và 10% lợi nhuận nhỏ hơn nhiều so với chênh lệch giữa tiết kiệm 10% và 25% thu nhập. Trọng số đảo lại về sau, khi vốn tích luỹ đủ lớn để lãi kép vượt qua đóng góp mới.",
-    "tags": ["tiet-kiem", "dau-tu", "uu-tien"],
-    "src": "Toán học của dòng tiền tích luỹ; minh hoạ phổ biến trong tài liệu hoạch định tài chính cá nhân" },
-  { "id": "kt-115", "cat": "kinh-te",
+    "tags": [
+      "tiet-kiem",
+      "dau-tu",
+      "uu-tien"
+    ],
+    "src": "Toán học của dòng tiền tích luỹ; minh hoạ phổ biến trong tài liệu hoạch định tài chính cá nhân"
+  },
+  {
+    "id": "kt-115",
+    "cat": "kinh-te",
+    "sub": "chi-tieu-tiet-kiem",
     "t": "Quy tắc 4%: rút 4% danh mục năm đầu rồi điều chỉnh theo lạm phát",
     "s": "Nghiên cứu gốc trên dữ liệu Mỹ 1926–1976 cho thấy mức rút này sống sót 30 năm trong mọi giai đoạn lịch sử được kiểm. Nhưng nó dựa trên một thị trường, một giai đoạn, và danh mục cổ phiếu–trái phiếu cụ thể. Coi nó là điểm khởi đầu để tính, không phải hằng số.",
-    "tags": ["huu-tri", "rut-von", "gioi-han"],
-    "src": "William Bengen, Journal of Financial Planning (1994); Trinity Study (1998); phê bình của Pfau (2010) với dữ liệu quốc tế" },
-  { "id": "kt-116", "cat": "kinh-te",
+    "tags": [
+      "huu-tri",
+      "rut-von",
+      "gioi-han"
+    ],
+    "src": "William Bengen, Journal of Financial Planning (1994); Trinity Study (1998); phê bình của Pfau (2010) với dữ liệu quốc tế"
+  },
+  {
+    "id": "kt-116",
+    "cat": "kinh-te",
+    "sub": "thue-chinh-sach",
     "t": "Đường cong lợi suất đảo ngược đi trước gần như mọi cuộc suy thoái Mỹ nửa thế kỷ qua",
     "s": "Khi lãi suất trái phiếu ngắn hạn cao hơn dài hạn, thị trường đang định giá rằng lãi suất sẽ phải giảm — thường vì kinh tế yếu đi. Tín hiệu này có thành tích tốt bất thường, nhưng độ trễ giữa tín hiệu và suy thoái dao động từ 6 tới 24 tháng, nên nó vô dụng cho việc chọn thời điểm.",
-    "tags": ["vi-mo", "du-bao", "trai-phieu"],
-    "src": "Estrella & Mishkin, Review of Economics and Statistics (1998); dữ liệu Fed St. Louis" },
-  { "id": "kt-117", "cat": "kinh-te",
+    "tags": [
+      "vi-mo",
+      "du-bao",
+      "trai-phieu"
+    ],
+    "src": "Estrella & Mishkin, Review of Economics and Statistics (1998); dữ liệu Fed St. Louis"
+  },
+  {
+    "id": "kt-117",
+    "cat": "kinh-te",
+    "sub": "gia-va-thi-truong",
     "t": "Chi phí biên gần bằng không là thứ khiến kinh tế số hành xử khác hẳn",
     "s": "Bán thêm một bản sao phần mềm gần như không tốn gì, trong khi bán thêm một tô phở thì tốn. Điều này dẫn tới cấu trúc thị trường người thắng lấy phần lớn, định giá theo giá trị chứ không theo chi phí, và việc miễn phí trở thành chiến lược chứ không phải hào phóng.",
-    "tags": ["kinh-te-so", "gia-ca", "canh-tranh"],
-    "src": "Shapiro & Varian, Information Rules (1998)" },
-  { "id": "kt-118", "cat": "kinh-te",
+    "tags": [
+      "kinh-te-so",
+      "gia-ca",
+      "canh-tranh"
+    ],
+    "src": "Shapiro & Varian, Information Rules (1998)"
+  },
+  {
+    "id": "kt-118",
+    "cat": "kinh-te",
+    "sub": "gia-va-thi-truong",
     "t": "Hiệu ứng mạng lưới: giá trị sản phẩm tăng theo số người dùng, không theo tính năng",
     "s": "Một mạng xã hội hay một ví điện tử không hơn đối thủ vì làm tốt hơn mà vì có nhiều người hơn. Hệ quả: chất lượng sản phẩm ngừng là yếu tố quyết định sau một ngưỡng, và người đến sau phải tìm một nhóm nhỏ chưa được phục vụ thay vì đối đầu trực diện.",
-    "tags": ["kinh-te-so", "canh-tranh", "khoi-nghiep"],
-    "src": "Katz & Shapiro, American Economic Review (1985)" },
-  { "id": "kt-119", "cat": "kinh-te",
+    "tags": [
+      "kinh-te-so",
+      "canh-tranh",
+      "khoi-nghiep"
+    ],
+    "src": "Katz & Shapiro, American Economic Review (1985)"
+  },
+  {
+    "id": "kt-119",
+    "cat": "kinh-te",
+    "sub": "gia-va-thi-truong",
     "t": "Chi phí chuyển đổi là thứ giữ khách, không phải sự hài lòng",
     "s": "Số tài khoản đã liên kết, dữ liệu lịch sử, thói quen thao tác, hợp đồng còn hạn — tất cả tạo ra một hàng rào mà khách phải trèo qua để rời đi. Rất nhiều doanh nghiệp có tỉ lệ giữ chân cao đang đo hàng rào của mình chứ không đo tình cảm của khách.",
-    "tags": ["kinh-doanh", "khach-hang", "canh-tranh"],
-    "src": "Klemperer, Review of Economic Studies (1995)" },
-  { "id": "kt-120", "cat": "kinh-te",
+    "tags": [
+      "kinh-doanh",
+      "khach-hang",
+      "canh-tranh"
+    ],
+    "src": "Klemperer, Review of Economic Studies (1995)"
+  },
+  {
+    "id": "kt-120",
+    "cat": "kinh-te",
+    "sub": "gia-va-thi-truong",
     "t": "Bệnh chi phí Baumol: cắt tóc đắt lên không phải vì thợ cắt tóc giỏi hơn",
     "s": "Năng suất trong sản xuất tăng nhanh, còn trong dịch vụ cần con người trực tiếp — cắt tóc, dạy học, chăm sóc, biểu diễn — thì gần như không tăng. Nhưng lương phải theo kịp mặt bằng chung, nên giá của các dịch vụ đó tăng liên tục so với hàng hoá. Đây là lý do giáo dục và y tế đắt lên ở mọi nước phát triển.",
-    "tags": ["nang-suat", "gia-ca", "vi-mo"],
-    "src": "Baumol & Bowen, Performing Arts: The Economic Dilemma (1966)" },
-  { "id": "kt-121", "cat": "kinh-te",
+    "tags": [
+      "nang-suat",
+      "gia-ca",
+      "vi-mo"
+    ],
+    "src": "Baumol & Bowen, Performing Arts: The Economic Dilemma (1966)"
+  },
+  {
+    "id": "kt-121",
+    "cat": "kinh-te",
+    "sub": "thue-chinh-sach",
     "t": "Lời nguyền tài nguyên: nước giàu khoáng sản thường tăng trưởng chậm hơn",
     "s": "Các phân tích so sánh cho thấy quốc gia phụ thuộc nặng vào xuất khẩu tài nguyên có xu hướng tăng trưởng dài hạn kém hơn, do tỉ giá bị đẩy lên làm chết ngành sản xuất, do nguồn thu dễ dãi làm suy yếu thể chế, và do giá hàng hoá biến động mạnh. Không phải định mệnh — Na Uy và Botswana là phản ví dụ.",
-    "tags": ["phat-trien", "the-che", "vi-mo"],
-    "src": "Sachs & Warner, NBER (1995); phản biện và điều kiện hoá trong Mehlum, Moene & Torvik (2006)" },
-  { "id": "kt-122", "cat": "kinh-te",
+    "tags": [
+      "phat-trien",
+      "the-che",
+      "vi-mo"
+    ],
+    "src": "Sachs & Warner, NBER (1995); phản biện và điều kiện hoá trong Mehlum, Moene & Torvik (2006)"
+  },
+  {
+    "id": "kt-122",
+    "cat": "kinh-te",
+    "sub": "thue-chinh-sach",
     "t": "Thuế đánh vào ai không quyết định bởi luật mà bởi độ co giãn",
     "s": "Luật có thể ghi rằng doanh nghiệp nộp thuế, nhưng gánh nặng thật rơi vào bên nào ít nhạy cảm với giá hơn. Đó là lý do thuế thuốc lá phần lớn do người hút chịu, còn thuế đánh vào mặt hàng dễ thay thế thì phần lớn do người bán chịu.",
-    "tags": ["thue", "gia-ca", "chinh-sach"],
-    "src": "Nguyên lý tax incidence trong kinh tế học công cộng; Harberger (1962)" },
-  { "id": "kt-123", "cat": "kinh-te",
+    "tags": [
+      "thue",
+      "gia-ca",
+      "chinh-sach"
+    ],
+    "src": "Nguyên lý tax incidence trong kinh tế học công cộng; Harberger (1962)"
+  },
+  {
+    "id": "kt-123",
+    "cat": "kinh-te",
+    "sub": "thue-chinh-sach",
     "t": "Trợ giá cho người mua thường chảy một phần vào túi người bán",
     "s": "Khi nguồn cung không co giãn nhanh — nhà ở, học phí, một số mặt hàng thiết yếu — trợ cấp cho bên mua đẩy cầu lên và giá tăng theo. Người nhận trợ cấp vẫn có lợi nhưng ít hơn con số trên giấy, phần còn lại thuộc về bên bán.",
-    "tags": ["chinh-sach", "gia-ca", "tro-cap"],
-    "src": "Nguyên lý tax/subsidy incidence; nghiên cứu về học phí và trợ cấp tín dụng sinh viên (Lucca, Nadauld & Shen, 2019)" },
-  { "id": "kt-124", "cat": "kinh-te",
+    "tags": [
+      "chinh-sach",
+      "gia-ca",
+      "tro-cap"
+    ],
+    "src": "Nguyên lý tax/subsidy incidence; nghiên cứu về học phí và trợ cấp tín dụng sinh viên (Lucca, Nadauld & Shen, 2019)"
+  },
+  {
+    "id": "kt-124",
+    "cat": "kinh-te",
+    "sub": "gia-va-thi-truong",
     "t": "Hàng Veblen: giá cao hơn làm cầu tăng lên",
     "s": "Với một số hàng hoá, giá chính là sản phẩm — nó phát tín hiệu về địa vị. Giảm giá làm giảm giá trị tín hiệu và có thể giảm doanh số. Đây là lý do các thương hiệu xa xỉ thà tiêu huỷ hàng tồn còn hơn bán rẻ.",
-    "tags": ["gia-ca", "tieu-dung", "dia-vi"],
-    "src": "Thorstein Veblen, The Theory of the Leisure Class (1899)" },
-  { "id": "kt-125", "cat": "kinh-te",
-    "t": "Định giá theo giá trị chứ không theo chi phí là chỗ khác biệt lớn nhất giữa hai doanh nghiệp cùng ngành",
-    "s": "Chi phí cho bạn biết sàn giá; giá trị với khách hàng cho bạn biết trần. Doanh nghiệp định giá theo chi phí cộng biên lợi nhuận đang tự nguyện từ bỏ toàn bộ khoảng ở giữa — và khoảng đó thường lớn hơn nhiều so với biên họ đang cộng vào.",
-    "tags": ["gia-ca", "kinh-doanh", "loi-nhuan"],
-    "src": "Nagle & Müller, The Strategy and Tactics of Pricing (nhiều lần tái bản)" },
-  { "id": "kt-126", "cat": "kinh-te",
+    "tags": [
+      "gia-ca",
+      "tieu-dung",
+      "dia-vi"
+    ],
+    "src": "Thorstein Veblen, The Theory of the Leisure Class (1899)"
+  },
+  {
+    "id": "kt-126",
+    "cat": "kinh-te",
+    "sub": "gia-va-thi-truong",
     "t": "Phân biệt giá không phải là bất công — nó là cách nhiều người được phục vụ hơn",
     "s": "Vé máy bay, giá phần mềm theo gói, giá sinh viên, giờ vàng rạp chiếu phim đều là cùng một cơ chế: bán cùng thứ với giá khác nhau cho người sẵn lòng trả khác nhau. Nếu buộc bán một giá duy nhất, giá đó thường cao hơn và nhóm ít tiền bị loại hoàn toàn.",
-    "tags": ["gia-ca", "kinh-doanh", "nguoc-truc-giac"],
-    "src": "Arthur Pigou, The Economics of Welfare (1920); Varian, Handbook of Industrial Organization (1989)" },
-  { "id": "kt-127", "cat": "kinh-te",
+    "tags": [
+      "gia-ca",
+      "kinh-doanh",
+      "nguoc-truc-giac"
+    ],
+    "src": "Arthur Pigou, The Economics of Welfare (1920); Varian, Handbook of Industrial Organization (1989)"
+  },
+  {
+    "id": "kt-127",
+    "cat": "kinh-te",
+    "sub": "gia-va-thi-truong",
     "t": "Chi phí cố định cao là lý do một số ngành chỉ còn vài người chơi",
     "s": "Khi phải bỏ ra rất nhiều tiền trước khi bán được đơn hàng đầu tiên — chip bán dẫn, hàng không, viễn thông — thị trường tự nhiên hội tụ về số ít doanh nghiệp lớn. Đây là cấu trúc chi phí quyết định cấu trúc ngành, không phải do ai đó độc quyền một cách xấu xa.",
-    "tags": ["canh-tranh", "nganh", "chi-phi"],
-    "src": "Sutton, Sunk Costs and Market Structure (1991)" },
-  { "id": "kt-128", "cat": "kinh-te",
+    "tags": [
+      "canh-tranh",
+      "nganh",
+      "chi-phi"
+    ],
+    "src": "Sutton, Sunk Costs and Market Structure (1991)"
+  },
+  {
+    "id": "kt-128",
+    "cat": "kinh-te",
+    "sub": "gia-va-thi-truong",
     "t": "Thị trường hai phía phải trợ giá cho một bên để bên kia có giá trị",
     "s": "Sàn thương mại điện tử, ứng dụng gọi xe, thẻ tín dụng đều đối mặt bài toán con gà quả trứng. Lời giải chung là làm gần như miễn phí cho phía nhạy cảm với giá hơn, rồi thu tiền của phía kia. Ai không hiểu điều này thường thắc mắc vì sao đối thủ 'đốt tiền' mà vẫn sống.",
-    "tags": ["nen-tang", "kinh-doanh", "gia-ca"],
-    "src": "Rochet & Tirole, Journal of the European Economic Association (2003)" },
-  { "id": "kt-129", "cat": "kinh-te",
+    "tags": [
+      "nen-tang",
+      "kinh-doanh",
+      "gia-ca"
+    ],
+    "src": "Rochet & Tirole, Journal of the European Economic Association (2003)"
+  },
+  {
+    "id": "kt-129",
+    "cat": "kinh-te",
+    "sub": "dau-tu",
     "t": "Thiên kiến quê nhà: nhà đầu tư ở đâu cũng dồn tiền vào thị trường nước mình",
     "s": "Ở gần như mọi quốc gia, tỉ trọng cổ phiếu nội địa trong danh mục cá nhân cao hơn nhiều so với tỉ trọng nước đó trong tổng vốn hoá toàn cầu. Cảm giác quen thuộc bị nhầm với hiểu biết, và kết quả là danh mục kém đa dạng đúng chỗ nó cần đa dạng nhất.",
-    "tags": ["dau-tu", "da-dang-hoa", "thien-kien"],
-    "src": "French & Poterba, American Economic Review (1991); cập nhật trong báo cáo Vanguard (2021)" },
-  { "id": "kt-130", "cat": "kinh-te",
+    "tags": [
+      "dau-tu",
+      "da-dang-hoa",
+      "thien-kien"
+    ],
+    "src": "French & Poterba, American Economic Review (1991); cập nhật trong báo cáo Vanguard (2021)"
+  },
+  {
+    "id": "kt-130",
+    "cat": "kinh-te",
+    "sub": "bao-hiem-rui-ro",
     "t": "Bảo hiểm nên mua cho thảm hoạ, không mua cho phiền toái",
     "s": "Bảo hiểm chuyển rủi ro với một khoản phí, nên về kỳ vọng bạn luôn lỗ. Nó đáng tiền khi tổn thất sẽ phá vỡ tài chính của bạn, và không đáng khi bạn tự chịu được — đó là lý do bảo hiểm màn hình điện thoại thường là món hàng tệ còn bảo hiểm y tế và nhân thọ thì không.",
-    "tags": ["bao-hiem", "rui-ro", "nguyen-tac"],
-    "src": "Nguyên lý hữu dụng kỳ vọng; hướng dẫn tiêu dùng của các cơ quan bảo vệ người tiêu dùng" },
-  { "id": "kt-131", "cat": "kinh-te",
+    "tags": [
+      "bao-hiem",
+      "rui-ro",
+      "nguyen-tac"
+    ],
+    "src": "Nguyên lý hữu dụng kỳ vọng; hướng dẫn tiêu dùng của các cơ quan bảo vệ người tiêu dùng"
+  },
+  {
+    "id": "kt-131",
+    "cat": "kinh-te",
+    "sub": "bao-hiem-rui-ro",
     "t": "Sản phẩm bảo hiểm gắn đầu tư trộn hai thứ nên khó so sánh cả hai",
     "s": "Khi bảo vệ và đầu tư nằm chung một hợp đồng, bạn không nhìn thấy riêng chi phí bảo vệ, riêng phí quản lý quỹ, và riêng tỉ suất thật của phần đầu tư. Cách kiểm tra là hỏi bảng minh hoạ dòng tiền theo từng năm và tách ba khoản đó ra.",
-    "tags": ["bao-hiem", "dau-tu", "minh-bach"],
-    "src": "Khuyến nghị tách bảo vệ và đầu tư trong tài liệu giáo dục tài chính của OECD/INFE" },
-  { "id": "kt-132", "cat": "kinh-te",
+    "tags": [
+      "bao-hiem",
+      "dau-tu",
+      "minh-bach"
+    ],
+    "src": "Khuyến nghị tách bảo vệ và đầu tư trong tài liệu giáo dục tài chính của OECD/INFE"
+  },
+  {
+    "id": "kt-132",
+    "cat": "kinh-te",
+    "sub": "dau-tu",
     "t": "Vàng bảo toàn sức mua rất dài hạn nhưng lợi suất thực thấp hơn cổ phiếu nhiều",
     "s": "Trên các chuỗi dữ liệu hơn một thế kỷ, vàng cho lợi suất thực dương nhỏ, còn cổ phiếu cho khoảng 5–7%/năm sau lạm phát. Vàng không tạo ra dòng tiền, nên giá trị của nó hoàn toàn là điều người sau sẵn lòng trả — công dụng thật của nó là phòng thủ, không phải tích luỹ.",
-    "tags": ["vang", "dau-tu", "so-sanh"],
-    "src": "Dimson, Marsh & Staunton, Credit Suisse Global Investment Returns Yearbook (nhiều năm)" },
-  { "id": "kt-133", "cat": "kinh-te",
+    "tags": [
+      "vang",
+      "dau-tu",
+      "so-sanh"
+    ],
+    "src": "Dimson, Marsh & Staunton, Credit Suisse Global Investment Returns Yearbook (nhiều năm)"
+  },
+  {
+    "id": "kt-133",
+    "cat": "kinh-te",
+    "sub": "dau-tu",
     "t": "Bất động sản có chi phí giao dịch cao tới mức đổi ý là rất đắt",
     "s": "Thuế, phí, môi giới, thời gian bán và chi phí sửa chữa cộng lại thường chiếm nhiều phần trăm giá trị tài sản mỗi lần mua bán. Điều này khiến bất động sản là khoản đầu tư tệ cho ngắn hạn dù có thể tốt cho dài hạn, và làm cho việc so sánh lợi nhuận với cổ phiếu bằng giá niêm yết là sai lệch.",
-    "tags": ["bat-dong-san", "chi-phi", "thanh-khoan"],
-    "src": "Nguyên lý chi phí giao dịch; phân tích so sánh tài sản của Jordà và cộng sự, 'The Rate of Return on Everything' (2019)" },
-  { "id": "kt-134", "cat": "kinh-te",
+    "tags": [
+      "bat-dong-san",
+      "chi-phi",
+      "thanh-khoan"
+    ],
+    "src": "Nguyên lý chi phí giao dịch; phân tích so sánh tài sản của Jordà và cộng sự, 'The Rate of Return on Everything' (2019)"
+  },
+  {
+    "id": "kt-134",
+    "cat": "kinh-te",
+    "sub": "dau-tu",
     "t": "Giá thuê nhà cho biết thị trường đang định giá dòng tiền hay định giá kỳ vọng",
     "s": "Tỉ số giá bán trên tiền thuê một năm là thước đo nhanh. Tỉ số cao bất thường nghĩa là người mua đang trả tiền cho kỳ vọng tăng giá chứ không cho dòng tiền — điều đó có thể đúng, nhưng nó là một loại rủi ro khác hẳn.",
-    "tags": ["bat-dong-san", "dinh-gia", "cong-cu"],
-    "src": "Nguyên lý định giá tài sản sinh dòng tiền; Case & Shiller (2003)" },
-  { "id": "kt-135", "cat": "kinh-te",
+    "tags": [
+      "bat-dong-san",
+      "dinh-gia",
+      "cong-cu"
+    ],
+    "src": "Nguyên lý định giá tài sản sinh dòng tiền; Case & Shiller (2003)"
+  },
+  {
+    "id": "kt-135",
+    "cat": "kinh-te",
+    "sub": "lai-va-no",
     "t": "Giá trị hiện tại: một tỷ nhận sau 10 năm không phải là một tỷ",
     "s": "Với chiết khấu 8%/năm, một tỷ sau 10 năm chỉ tương đương khoảng 463 triệu hôm nay. Đây là phép tính đứng sau mọi quyết định về hợp đồng dài hạn, tiền bồi thường trả góp, và các lời hứa 'sau này sẽ trả nhiều hơn'.",
-    "tags": ["chiet-khau", "gia-tri-hien-tai", "cong-cu"],
-    "src": "Nguyên lý giá trị thời gian của tiền tệ" },
-  { "id": "kt-136", "cat": "kinh-te",
+    "tags": [
+      "chiet-khau",
+      "gia-tri-hien-tai",
+      "cong-cu"
+    ],
+    "src": "Nguyên lý giá trị thời gian của tiền tệ"
+  },
+  {
+    "id": "kt-136",
+    "cat": "kinh-te",
+    "sub": "chi-tieu-tiet-kiem",
     "t": "Trực giác của con người về chiết khấu không nhất quán theo thời gian",
     "s": "Người ta chiết khấu rất mạnh trong ngắn hạn và rất nhẹ trong dài hạn, tạo ra đường cong hypebol thay vì đường mũ. Hệ quả đo được: cùng một người sẽ đưa ra hai quyết định mâu thuẫn nhau về cùng một khoản tiền, chỉ vì khoảng cách tới hiện tại khác nhau.",
-    "tags": ["hanh-vi", "chiet-khau", "thoi-gian"],
-    "src": "Ainslie (1975); Laibson, Quarterly Journal of Economics (1997)" },
-  { "id": "kt-137", "cat": "kinh-te",
+    "tags": [
+      "hanh-vi",
+      "chiet-khau",
+      "thoi-gian"
+    ],
+    "src": "Ainslie (1975); Laibson, Quarterly Journal of Economics (1997)"
+  },
+  {
+    "id": "kt-137",
+    "cat": "kinh-te",
+    "sub": "lai-va-no",
     "t": "Quy tắc 28/36 cho biết bạn vay mua nhà tới đâu là an toàn",
     "s": "Chi phí nhà ở hằng tháng không quá 28% thu nhập trước thuế, và tổng mọi khoản trả nợ không quá 36%. Đây là quy ước của ngành cho vay Mỹ, không phải luật tự nhiên, nhưng nó bắt bạn tính bằng dòng tiền thay vì bằng cảm giác 'trả được'.",
-    "tags": ["vay-mua-nha", "no", "quy-tac"],
-    "src": "Chuẩn bảo lãnh phát hành của Fannie Mae/Freddie Mac; phổ biến trong hoạch định tài chính cá nhân" },
-  { "id": "kt-138", "cat": "kinh-te",
+    "tags": [
+      "vay-mua-nha",
+      "no",
+      "quy-tac"
+    ],
+    "src": "Chuẩn bảo lãnh phát hành của Fannie Mae/Freddie Mac; phổ biến trong hoạch định tài chính cá nhân"
+  },
+  {
+    "id": "kt-138",
+    "cat": "kinh-te",
+    "sub": "lai-va-no",
     "t": "Trả nợ lãi cao là khoản 'đầu tư' có lợi suất chắc chắn cao nhất bạn tìm được",
     "s": "Trả sớm khoản nợ 20%/năm tương đương kiếm được 20%/năm không rủi ro và không thuế. Không thị trường nào chào mức đó. Vì vậy thứ tự hợp lý gần như luôn là: quỹ khẩn cấp tối thiểu, rồi nợ lãi cao, rồi mới tới đầu tư.",
-    "tags": ["no", "uu-tien", "dau-tu"],
-    "src": "Nguyên lý so sánh lợi suất điều chỉnh rủi ro; hướng dẫn tài chính cá nhân phổ biến" },
-  { "id": "kt-139", "cat": "kinh-te",
+    "tags": [
+      "no",
+      "uu-tien",
+      "dau-tu"
+    ],
+    "src": "Nguyên lý so sánh lợi suất điều chỉnh rủi ro; hướng dẫn tài chính cá nhân phổ biến"
+  },
+  {
+    "id": "kt-139",
+    "cat": "kinh-te",
+    "sub": "dau-tu",
     "t": "Đòn bẩy nhân cả lãi lẫn lỗ, nhưng chỉ có lỗ mới giết bạn",
     "s": "Vay để đầu tư làm tăng lợi nhuận kỳ vọng, nhưng cũng tạo ra khả năng bị buộc bán ở đúng đáy. Rủi ro thật của đòn bẩy không phải là thua nhiều hơn — mà là bạn không còn được quyền chờ đợi, điều kiện tiên quyết của mọi chiến lược dài hạn.",
-    "tags": ["don-bay", "rui-ro", "dau-tu"],
-    "src": "Nguyên lý rủi ro thanh khoản; phân tích các vụ đổ vỡ đòn bẩy như LTCM (1998)" },
-  { "id": "kt-140", "cat": "kinh-te",
+    "tags": [
+      "don-bay",
+      "rui-ro",
+      "dau-tu"
+    ],
+    "src": "Nguyên lý rủi ro thanh khoản; phân tích các vụ đổ vỡ đòn bẩy như LTCM (1998)"
+  },
+  {
+    "id": "kt-140",
+    "cat": "kinh-te",
+    "sub": "dong-co-kinh-te",
     "t": "Người bán biết nhiều hơn người mua ở gần như mọi giao dịch quan trọng của đời bạn",
     "s": "Xe, nhà, bảo hiểm, khoá học, dịch vụ y tế — bên bán có thông tin về chất lượng mà bên mua phải suy đoán. Cách hạ bất cân xứng không phải là đọc nhiều quảng cáo hơn, mà là tìm tín hiệu tốn kém: bảo hành, cam kết hoàn tiền, danh tiếng lặp lại, bên thứ ba kiểm định.",
-    "tags": ["thong-tin", "mua-ban", "tin-hieu"],
-    "src": "Akerlof (1970); Spence, Quarterly Journal of Economics (1973)" },
-  { "id": "kt-141", "cat": "kinh-te",
+    "tags": [
+      "thong-tin",
+      "mua-ban",
+      "tin-hieu"
+    ],
+    "src": "Akerlof (1970); Spence, Quarterly Journal of Economics (1973)"
+  },
+  {
+    "id": "kt-141",
+    "cat": "kinh-te",
+    "sub": "bao-hiem-rui-ro",
     "t": "Bảo hành đắt là một tín hiệu, không phải một dịch vụ",
     "s": "Doanh nghiệp chỉ dám cho bảo hành dài nếu sản phẩm thật sự bền, vì nếu không họ sẽ lỗ. Vì vậy điều bạn mua khi thấy bảo hành 5 năm không hẳn là quyền sửa chữa — mà là thông tin đáng tin về chất lượng, thứ mà quảng cáo không cung cấp được.",
-    "tags": ["tin-hieu", "chat-luong", "mua-ban"],
-    "src": "Spence, 'Job Market Signaling' (1973); lý thuyết tín hiệu bảo hành của Grossman (1981)" },
-  { "id": "kt-142", "cat": "kinh-te",
+    "tags": [
+      "tin-hieu",
+      "chat-luong",
+      "mua-ban"
+    ],
+    "src": "Spence, 'Job Market Signaling' (1973); lý thuyết tín hiệu bảo hành của Grossman (1981)"
+  },
+  {
+    "id": "kt-142",
+    "cat": "kinh-te",
+    "sub": "bao-hiem-rui-ro",
     "t": "Lựa chọn ngược: khi giá bảo hiểm tăng, người khoẻ rời đi trước",
     "s": "Người biết mình rủi ro cao sẵn lòng trả nhiều hơn, nên khi phí tăng, nhóm còn lại ngày càng rủi ro, khiến phí phải tăng tiếp. Vòng xoáy này là lý do mọi hệ thống bảo hiểm y tế hoạt động được đều cần một cơ chế gom cả người khoẻ vào.",
-    "tags": ["bao-hiem", "thong-tin", "chinh-sach"],
-    "src": "Rothschild & Stiglitz, Quarterly Journal of Economics (1976)" },
-  { "id": "kt-143", "cat": "kinh-te",
+    "tags": [
+      "bao-hiem",
+      "thong-tin",
+      "chinh-sach"
+    ],
+    "src": "Rothschild & Stiglitz, Quarterly Journal of Economics (1976)"
+  },
+  {
+    "id": "kt-143",
+    "cat": "kinh-te",
+    "sub": "gia-va-thi-truong",
     "t": "Người ta chấp nhận một mức giá tuỳ theo cái họ so sánh, không theo giá trị tuyệt đối",
     "s": "Cùng một chai bia được định giá cao hơn khi người ta tưởng nó mua ở khách sạn sang so với khi mua ở tạp hoá — dù họ uống nó ở cùng một chỗ trên bãi biển. Giá tham chiếu nội bộ này là thứ mọi chiến lược định giá đều đang cố tác động vào.",
-    "tags": ["gia-ca", "hanh-vi", "tham-chieu"],
-    "src": "Richard Thaler, Marketing Science (1985)" },
-  { "id": "kt-144", "cat": "kinh-te",
+    "tags": [
+      "gia-ca",
+      "hanh-vi",
+      "tham-chieu"
+    ],
+    "src": "Richard Thaler, Marketing Science (1985)"
+  },
+  {
+    "id": "kt-144",
+    "cat": "kinh-te",
+    "sub": "gia-va-thi-truong",
     "t": "Miễn phí không phải là giá thấp — nó là một loại giá khác hẳn",
     "s": "Khi giá giảm từ 1 xu xuống 0, nhu cầu nhảy vọt phi tuyến. Trong thí nghiệm, hạ giá cả hai loại sô cô la đi 1 xu làm đảo ngược hoàn toàn lựa chọn của người mua, dù chênh lệch giữa hai loại không đổi. Con số không có sức mạnh riêng của nó.",
-    "tags": ["gia-ca", "hanh-vi", "mien-phi"],
-    "src": "Shampanier, Mazar & Ariely, Marketing Science (2007)" },
-  { "id": "kt-145", "cat": "kinh-te",
+    "tags": [
+      "gia-ca",
+      "hanh-vi",
+      "mien-phi"
+    ],
+    "src": "Shampanier, Mazar & Ariely, Marketing Science (2007)"
+  },
+  {
+    "id": "kt-145",
+    "cat": "kinh-te",
+    "sub": "lai-va-no",
     "t": "Quy tắc 114 và 144: nhân ba và nhân bốn số tiền",
     "s": "Chia 114 cho lãi suất ra số năm để tiền gấp ba; chia 144 ra số năm để gấp bốn. Ở mức 9%/năm: gấp đôi sau 8 năm, gấp ba sau khoảng 13 năm, gấp bốn sau 16 năm. Bộ ba quy tắc này đủ để bạn kiểm tra nhanh mọi lời hứa lợi nhuận mà không cần máy tính.",
-    "tags": ["lai-kep", "quy-tac", "cong-cu"],
-    "src": "Suy ra từ công thức lãi kép, họ hàng của quy tắc 72" },
-  { "id": "kt-146", "cat": "kinh-te",
+    "tags": [
+      "lai-kep",
+      "quy-tac",
+      "cong-cu"
+    ],
+    "src": "Suy ra từ công thức lãi kép, họ hàng của quy tắc 72"
+  },
+  {
+    "id": "kt-146",
+    "cat": "kinh-te",
+    "sub": "lai-va-no",
     "t": "Trực giác của bạn về tăng trưởng luỹ thừa sai theo một hướng cố định: luôn thấp hơn thực tế",
     "s": "Khi được yêu cầu ước lượng kết quả của tăng trưởng kép, người ta đưa con số thấp hơn nhiều so với đáp án đúng, và sai lệch tăng theo số kỳ. Điều này lý giải cả việc coi thường lãi kép khi tiết kiệm lẫn việc coi thường tốc độ lan của dịch bệnh hay nợ.",
-    "tags": ["lai-kep", "truc-giac", "tang-truong"],
-    "src": "Wagenaar & Sagaria, Perception & Psychophysics (1975); Stango & Zinman, Journal of Finance (2009)" },
-  { "id": "kt-147", "cat": "kinh-te",
+    "tags": [
+      "lai-kep",
+      "truc-giac",
+      "tang-truong"
+    ],
+    "src": "Wagenaar & Sagaria, Perception & Psychophysics (1975); Stango & Zinman, Journal of Finance (2009)"
+  },
+  {
+    "id": "kt-147",
+    "cat": "kinh-te",
+    "sub": "chi-tieu-tiet-kiem",
     "t": "Người nghèo trả nhiều hơn cho cùng một thứ",
     "s": "Mua lẻ đắt hơn mua sỉ, không có tiền cọc thì phải thuê giá cao hơn, không có tài khoản tốt thì vay lãi cao hơn, không mua nổi đồ bền thì phải mua đi mua lại đồ rẻ. Cái nghèo tự tạo ra một khoản phụ phí — và khoản đó không xuất hiện trong bất kỳ thống kê thu nhập nào.",
-    "tags": ["ngheo", "chi-phi", "xa-hoi"],
-    "src": "David Caplovitz, The Poor Pay More (1963); Mullainathan & Shafir, Scarcity (2013)" },
-  { "id": "kt-148", "cat": "kinh-te",
+    "tags": [
+      "ngheo",
+      "chi-phi",
+      "xa-hoi"
+    ],
+    "src": "David Caplovitz, The Poor Pay More (1963); Mullainathan & Shafir, Scarcity (2013)"
+  },
+  {
+    "id": "kt-148",
+    "cat": "kinh-te",
+    "sub": "thue-chinh-sach",
     "t": "Tăng trưởng kinh tế chủ yếu đến từ ý tưởng, không từ việc thêm người và thêm máy",
     "s": "Phân rã tăng trưởng dài hạn cho thấy phần lớn không giải thích được bằng lượng lao động và vốn — phần dư đó là tiến bộ công nghệ và tổ chức. Ý tưởng khác mọi nguồn lực khác ở chỗ dùng không hết: một người dùng không làm người khác mất phần.",
-    "tags": ["tang-truong", "cong-nghe", "vi-mo"],
-    "src": "Robert Solow, Review of Economics and Statistics (1957); Paul Romer, Journal of Political Economy (1990)" }
+    "tags": [
+      "tang-truong",
+      "cong-nghe",
+      "vi-mo"
+    ],
+    "src": "Robert Solow, Review of Economics and Statistics (1957); Paul Romer, Journal of Political Economy (1990)"
+  }
 ]
