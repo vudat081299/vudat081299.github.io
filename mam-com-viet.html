@@ -43,17 +43,20 @@
   .mc-conv__v b { color: var(--wb-fg); font-weight: 620; font-variant-numeric: tabular-nums; }
 
   /* ---------- filter bar ---------- */
-  .mc-filterwrap { position: sticky; top: 60px; z-index: 6; padding: 12px 0 10px; margin-bottom: 16px;
+  .mc-filterwrap { position: sticky; top: 56px; z-index: 6; padding: 12px 0 10px; margin-bottom: 16px;
     background: color-mix(in srgb, var(--wb-canvas) 94%, transparent); backdrop-filter: blur(8px);
     border-bottom: var(--wb-bw) solid var(--wb-border); }
   .mc-frow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .mc-frow + .mc-frow { margin-top: 9px; }
   .mc-flabel { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase;
     color: var(--wb-fg-subtle); flex: none; width: 74px; }
-  @media (max-width: 720px) { .mc-flabel { width: 100%; } .mc-filterwrap { top: 56px; } }
   .mc-chip { cursor: pointer; user-select: none; border: none; font: inherit; font-size: 12.5px; }
   .mc-search { max-width: 300px; width: 100%; }
   .mc-count { margin-left: auto; font-family: var(--wb-font-mono); font-size: 11.5px; color: var(--wb-fg-subtle); }
+  .mc-fpanel > .mc-frow:first-child { margin-top: 9px; }
+  .mc-fmore { display: contents; }
+  .mc-ftoggle { display: none; }            /* điện thoại mới cần — xem khối mobile ở cuối */
+  .mc-ftoggle__n { font-family: var(--wb-font-mono); font-size: 11px; }
 
   /* ---------- recipe grid ---------- */
   .mc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(272px, 1fr)); gap: 12px; }
@@ -77,6 +80,7 @@
   .mc-dhead { position: relative; padding: 18px 22px 14px; border-bottom: var(--wb-bw) solid var(--wb-border); flex: none; }
   .mc-dhead .wb-close { position: absolute; top: 14px; right: 16px; }
   .mc-dtitle { font-size: 21px; font-weight: 700; letter-spacing: -.015em; margin: 0 0 9px; padding-right: 34px; }
+  .mc-dtabs { display: none; }              /* điện thoại mới cần — xem khối mobile ở cuối */
   .mc-detail { display: grid; grid-template-columns: minmax(0, 330px) minmax(0, 1fr); align-items: start; }
   .mc-detail__ing { padding: 18px 20px 24px; border-right: var(--wb-bw) solid var(--wb-border); }
   .mc-detail__steps { padding: 18px 22px 24px; }
@@ -121,6 +125,39 @@
   .mc-serve { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .mc-serve .wb-tabs { border-bottom: 0; gap: 2px; }
 
+  /* ---------- hẹn giờ ----------
+     Một đồng hồ duy nhất chạy cho cả trang: gắn vào một bước, đếm theo mốc kết thúc
+     (không trừ dần), nên khoá màn hình hay chuyển tab vẫn đúng giờ. */
+  .mc-tdock { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 8px 0 2px; }
+  .mc-tdock .wb-btn { padding: 7px 12px; }
+  .mc-live { font-family: var(--wb-font-mono); font-size: 20px; font-weight: 600; font-variant-numeric: tabular-nums;
+    letter-spacing: -.02em; flex: none; min-width: 68px; }
+  .mc-tdock .wb-progress { flex: 1 1 90px; min-width: 70px; }
+  .mc-tdock.is-done .mc-live { color: var(--wb-warning-text); }
+
+  .mc-timerbar { position: fixed; z-index: 130; right: 20px; bottom: 20px; width: 380px; max-width: calc(100vw - 24px); box-sizing: border-box;
+    display: flex; align-items: center; gap: 10px; padding: 11px 10px 11px 14px; overflow: hidden;
+    font-family: var(--wb-font); background: var(--wb-surface);
+    border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); box-shadow: var(--wb-shadow-md); }
+  .mc-timerbar[hidden] { display: none; }
+  .mc-timerbar__time { font-family: var(--wb-font-mono); font-size: 21px; font-weight: 620; font-variant-numeric: tabular-nums;
+    letter-spacing: -.03em; flex: none; }
+  .mc-timerbar__label { flex: 1 1 auto; min-width: 0; text-align: left; border: 0; background: none; font: inherit;
+    padding: 0; cursor: pointer; color: var(--wb-fg); }
+  .mc-timerbar__dish { display: block; font-size: 12.5px; font-weight: 620; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mc-timerbar__step { display: block; font-size: 11.5px; color: var(--wb-fg-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mc-timerbar__btns { display: flex; align-items: center; gap: 4px; flex: none; }
+  .mc-timerbar__btns > [hidden] { display: none; }   /* [hidden] một mình thua display của .wb-btn */
+  .mc-timerbar__prog { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--wb-surface-2); }
+  .mc-timerbar__prog i { display: block; height: 100%; background: var(--wb-fg); transition: width .25s linear; }
+  .mc-timerbar.is-done { border-color: var(--wb-warning); animation: mc-ring 1.1s ease-in-out infinite; }
+  .mc-timerbar.is-done .mc-timerbar__time { color: var(--wb-warning-text); font-size: 15px; }
+  .mc-timerbar.is-done .mc-timerbar__prog i { background: var(--wb-warning); }
+  @keyframes mc-ring { 0%, 100% { box-shadow: var(--wb-shadow-md); } 50% { box-shadow: 0 0 0 4px var(--wb-warning-soft); } }
+  /* thanh đồng hồ nổi che mất mép dưới — chừa chỗ cho nó */
+  .mc-has-timer .mc-detail__ing, .mc-has-timer .mc-detail__steps { padding-bottom: 96px; }
+  @media (prefers-reduced-motion: reduce) { .mc-timerbar.is-done { animation: none; } }
+
   /* combo */
   .mc-combo__list { display: flex; flex-direction: column; gap: 2px; margin: 10px 0 0; }
   .mc-combo__row { display: flex; align-items: center; gap: 8px; padding: 7px 0; border-top: var(--wb-bw) dashed var(--wb-border); cursor: pointer; }
@@ -133,6 +170,82 @@
   .mc-foot a:hover { color: var(--wb-fg); }
 
   .is-hidden { display: none !important; }
+
+  /* =========================================================================
+     ĐIỆN THOẠI — phần lớn người đọc trang này đứng trong bếp với cái máy trong tay.
+     Bốn chỗ dễ vỡ nhất: thanh nav (tràn ngang), thanh lọc (cao 470px, dính trên
+     đầu màn hình), modal (cuộn qua hết nguyên liệu mới tới bước), và mọi nút bấm
+     cao 22–27px. Xử lý lần lượt.
+     ====================================================================== */
+
+  /* nav: 4 nút chữ tràn ra ngoài 390px → chỉ giữ icon về trang chủ + đổi nền */
+  @media (max-width: 720px) {
+    .wb-navbar { padding: 0 14px; gap: 10px; }
+    .wb-navbar__actions { min-width: 0; }
+    .mc-navhide { display: none; }
+  }
+
+  /* Stepper ngang: đường nối chạy ngang qua đúng tâm marker, mà marker của bước
+     "chưa làm" lại để nền trong suốt → nhìn thấy vạch xuyên qua giữa vòng tròn.
+     Lấp nền bằng màu thẻ để vòng tròn che được đường nối. */
+  .wb-steps--horizontal .wb-steps__item.is-todo .wb-steps__marker,
+  .dark .wb-steps--horizontal .wb-steps__item.is-todo .wb-steps__marker { background: var(--wb-surface); }
+
+  /* stepper ngang 4 chặng: mỗi cột còn 78px → dựng lại thành dọc */
+  @media (max-width: 640px) {
+    .wb-steps--horizontal { flex-direction: column; }
+    .wb-steps--horizontal .wb-steps__item { flex-direction: row; align-items: flex-start; text-align: left;
+      gap: 14px; padding-bottom: 18px; }
+    .wb-steps--horizontal .wb-steps__item:last-child { padding-bottom: 0; }
+    .wb-steps--horizontal .wb-steps__item::before { left: calc(var(--wb-steps-size) / 2); top: var(--wb-steps-size);
+      bottom: 0; right: auto; width: var(--wb-bw); height: auto; transform: none; }
+    .wb-steps--horizontal .wb-steps__content { padding-top: 4px; }
+  }
+
+  @media (max-width: 480px) {
+    .mc-conv { flex-direction: column; align-items: flex-start; gap: 2px; }
+    .mc-conv__k { min-width: 0; }
+  }
+
+  @media (max-width: 720px) {
+    /* thanh lọc: chỉ ô tìm kiếm dính lại, 33 capsule gấp vào sau nút Bộ lọc */
+    .mc-flabel { width: 100%; }
+    .mc-ftoggle { display: inline-flex; }
+    .mc-search { max-width: none; flex: 1 1 150px; }
+    .mc-count { flex: none; }
+    .mc-fpanel { display: none; margin-top: 10px; max-height: 50vh; overflow-y: auto; }
+    .mc-filterwrap.is-open .mc-fpanel { display: block; }
+    .mc-fmore { display: flex; gap: 8px; flex-wrap: wrap; }
+    .mc-chip { min-height: 32px; }                    /* ngón tay, không phải con trỏ */
+    .mc-grid { gap: 10px; }
+
+    /* modal: mở toàn màn hình, nguyên liệu / các bước tách thành hai tab */
+    .wb-overlay { padding: 0; }
+    .mc-modal { max-width: 100%; height: 100vh; height: 100dvh; max-height: 100dvh;
+      border-radius: 0; border-width: 0; }
+    .mc-dhead { padding: 12px 14px 0; }
+    .mc-dtitle { font-size: 18px; margin-bottom: 8px; padding-right: 40px; }
+    .mc-dhead .wb-close { top: 8px; right: 8px; width: 36px; height: 36px; margin: 0; }
+    .mc-dtabs { display: flex; width: 100%; margin: 10px 0 0; border-radius: var(--wb-radius) var(--wb-radius) 0 0; }
+    .mc-dtabs .wb-tab { flex: 1 1 0; padding: 9px 10px; }
+    .mc-detail__ing, .mc-detail__steps { padding: 14px 14px 30px; }
+    .mc-detail.is-steps .mc-detail__ing { display: none; }
+    .mc-detail.is-ing .mc-detail__steps { display: none; }
+    .mc-detail.is-ing .mc-detail__ing { border-bottom: 0; }
+    .mc-ing.wb-check { padding: 10px 0; }
+
+    /* nút "xong bước này" phải luôn với tới được, kể cả khi đã cuộn xuống bước 7 */
+    .mc-cook { position: sticky; top: 0; z-index: 3; flex-wrap: wrap; row-gap: 9px;
+      margin: -14px -14px 12px; padding: 11px 14px;
+      background: var(--wb-surface); border-bottom: var(--wb-bw) solid var(--wb-border); }
+    .mc-cook #d-next { flex: 1 1 100%; justify-content: center; }
+    .mc-detail .wb-btn--sm, .mc-timerbar .wb-btn--sm { padding: 9px 13px; }
+    .mc-detail .wb-tabs--pill .wb-tab { padding: 8px 14px; }
+
+    .mc-timerbar { left: 8px; right: 8px; width: auto; bottom: calc(8px + env(safe-area-inset-bottom, 0px)); }
+  }
+  /* máy hẹp quá thì bỏ +1′ ở thanh nổi (bước vẫn còn nút "+1 phút") để tên món đủ chỗ */
+  @media (max-width: 380px) { .mc-timerbar:not(.is-done) #tb-plus { display: none; } }
 </style>
 </head>
 <body>
@@ -141,9 +254,9 @@
   <a class="wb-navbar__brand" href="index.html"><span class="wb-navbar__mark">飯</span> Mâm cơm Việt</a>
   <span class="wb-navbar__spacer"></span>
   <div class="wb-navbar__actions">
-    <a class="wb-btn wb-btn--ghost wb-btn--sm" href="#mon-an">Món ăn</a>
-    <a class="wb-btn wb-btn--ghost wb-btn--sm" href="#quy-doi">Quy đổi</a>
-    <a class="wb-btn wb-btn--ghost wb-btn--sm" href="index.html"><span class="wb-ico wb-ico--sm">arrow_back</span> Trang chủ</a>
+    <a class="wb-btn wb-btn--ghost wb-btn--sm mc-navhide" href="#mon-an">Món ăn</a>
+    <a class="wb-btn wb-btn--ghost wb-btn--sm mc-navhide" href="#quy-doi">Quy đổi</a>
+    <a class="wb-btn wb-btn--ghost wb-btn--sm" href="index.html"><span class="wb-ico wb-ico--sm">arrow_back</span> <span class="mc-navhide">Trang chủ</span></a>
     <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" id="theme-toggle" aria-label="Sáng / Tối">
       <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
       <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
@@ -179,7 +292,7 @@
         <div class="wb-card wb-card--flat"><div class="wb-card__body">
           <span class="wb-cap wb-cap--lg"><span class="wb-ico wb-ico--xs">check_circle</span> Dấu hiệu</span>
           <h4 class="wb-card__title" style="margin-top:10px;font-size:14px">Bước xong khi nào?</h4>
-          <p class="wb-help">Mỗi bước có dòng <b style="color:var(--wb-fg)">Đạt khi…</b> — mùi, màu, tiếng, độ sánh. Đó mới là điều kiện dừng thật sự.</p>
+          <p class="wb-help">Mỗi bước có dòng <b style="color:var(--wb-fg)">Đạt khi…</b> — mùi, màu, tiếng, độ sánh. Đó mới là điều kiện dừng thật sự. Bước nào phải canh giờ thì bấm <b style="color:var(--wb-fg)">Hẹn giờ</b>: hết giờ máy kêu và rung, và trong lúc chạy màn hình không tự tắt.</p>
         </div></div>
         <div class="wb-card wb-card--flat"><div class="wb-card__body">
           <span class="wb-cap wb-cap--lg"><span class="wb-ico wb-ico--xs">signal_cellular_alt</span> Thứ tự</span>
@@ -292,24 +405,31 @@
             <span class="wb-input-group__addon"><span class="wb-ico wb-ico--sm">search</span></span>
             <input class="wb-input" type="search" id="q" placeholder="Tìm món, nguyên liệu, loại…" aria-label="Tìm kiếm">
           </div>
-          <span class="wb-select-wrap">
-            <select class="wb-select" id="sort" aria-label="Sắp xếp">
-              <option value="diff">Dễ → khó</option>
-              <option value="time">Nhanh → lâu</option>
-              <option value="few">Ít nguyên liệu nhất</option>
-              <option value="az">Tên A → Z</option>
-            </select>
-            <span class="wb-ico">expand_more</span>
+          <button class="wb-btn wb-btn--sm mc-ftoggle" id="ftoggle" aria-expanded="false" aria-controls="fpanel">
+            <span class="wb-ico wb-ico--sm">tune</span> Bộ lọc<span class="mc-ftoggle__n" id="ftoggle-n"></span>
+          </button>
+          <span class="mc-fmore" id="fmore">
+            <span class="wb-select-wrap">
+              <select class="wb-select" id="sort" aria-label="Sắp xếp">
+                <option value="diff">Dễ → khó</option>
+                <option value="time">Nhanh → lâu</option>
+                <option value="few">Ít nguyên liệu nhất</option>
+                <option value="az">Tên A → Z</option>
+              </select>
+              <span class="wb-ico">expand_more</span>
+            </span>
+            <button class="wb-btn wb-btn--ghost wb-btn--sm" id="reset"><span class="wb-ico wb-ico--sm">restart_alt</span> Xoá lọc</button>
           </span>
-          <button class="wb-btn wb-btn--ghost wb-btn--sm" id="reset"><span class="wb-ico wb-ico--sm">restart_alt</span> Xoá lọc</button>
           <span class="mc-count"><b id="count">38</b> / 38 món</span>
         </div>
 
-        <div class="mc-frow"><span class="mc-flabel">Loại món</span><span id="fcat" class="mc-frow" style="gap:6px"></span></div>
-        <div class="mc-frow"><span class="mc-flabel">Trong mâm</span><span id="frole" class="mc-frow" style="gap:6px"></span></div>
-        <div class="mc-frow"><span class="mc-flabel">Nguyên liệu</span><span id="ftag" class="mc-frow" style="gap:6px"></span></div>
-        <div class="mc-frow"><span class="mc-flabel">Độ khó</span><span id="fdiff" class="mc-frow" style="gap:6px"></span>
-          <span class="mc-flabel" style="width:auto;margin-left:14px">Thời gian</span><span id="ftime" class="mc-frow" style="gap:6px"></span></div>
+        <div class="mc-fpanel" id="fpanel">
+          <div class="mc-frow"><span class="mc-flabel">Loại món</span><span id="fcat" class="mc-frow" style="gap:6px"></span></div>
+          <div class="mc-frow"><span class="mc-flabel">Trong mâm</span><span id="frole" class="mc-frow" style="gap:6px"></span></div>
+          <div class="mc-frow"><span class="mc-flabel">Nguyên liệu</span><span id="ftag" class="mc-frow" style="gap:6px"></span></div>
+          <div class="mc-frow"><span class="mc-flabel">Độ khó</span><span id="fdiff" class="mc-frow" style="gap:6px"></span>
+            <span class="mc-flabel" style="width:auto;margin-left:14px">Thời gian</span><span id="ftime" class="mc-frow" style="gap:6px"></span></div>
+        </div>
       </div>
 
       <div class="mc-grid" id="grid"></div>
@@ -341,9 +461,14 @@
       <button class="wb-close" data-modal-close aria-label="Đóng"></button>
       <h3 class="mc-dtitle" id="d-name">—</h3>
       <div class="wb-cluster" style="gap:6px" id="d-caps"></div>
+      <!-- điện thoại: hai panel không đứng cạnh nhau được, nên cho chuyển tab -->
+      <div class="wb-tabs wb-tabs--pill mc-dtabs" id="d-tabs">
+        <button class="wb-tab is-active" data-p="ing">Nguyên liệu</button>
+        <button class="wb-tab" data-p="steps">Các bước</button>
+      </div>
     </div>
     <div class="mc-modal__body">
-      <div class="mc-detail">
+      <div class="mc-detail is-ing" id="d-detail">
         <div class="mc-detail__ing">
           <div class="mc-panel-h">
             <span class="wb-ico wb-ico--sm">shopping_basket</span>
@@ -379,6 +504,22 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- ============ HẸN GIỜ (nổi, sống lâu hơn modal) ============ -->
+<div class="mc-timerbar" id="tbar" hidden role="status" aria-live="polite">
+  <span class="mc-timerbar__time" id="tb-time">00:00</span>
+  <button class="mc-timerbar__label" id="tb-go" type="button">
+    <span class="mc-timerbar__dish" id="tb-dish"></span>
+    <span class="mc-timerbar__step" id="tb-step"></span>
+  </button>
+  <div class="mc-timerbar__btns">
+    <button class="wb-btn wb-btn--sm" id="tb-done" hidden>Xong bước</button>
+    <button class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm" id="tb-pause" aria-label="Tạm dừng"><span class="wb-ico wb-ico--sm">pause</span></button>
+    <button class="wb-btn wb-btn--ghost wb-btn--sm" id="tb-plus">+1′</button>
+    <button class="wb-close" id="tb-stop" aria-label="Tắt hẹn giờ"></button>
+  </div>
+  <span class="mc-timerbar__prog"><i id="tb-bar" style="width:0%"></i></span>
 </div>
 
 <footer class="mc-foot">
@@ -1558,7 +1699,33 @@ var COMBOS = [
     list.forEach(function (r) { grid.appendChild(card(r)); });
     count.textContent = list.length;
     empty.classList.toggle('is-hidden', list.length > 0);
+    var on = state.cat.length + state.role.length + state.tag.length + state.diff.length + state.time.length;
+    byId('ftoggle-n').textContent = on ? ' · ' + on : '';
   }
+
+  /* ---- thanh lọc trên điện thoại ----
+     Đủ 33 capsule thì hàng lọc cao gần 470px và nó lại dính trên đầu màn hình —
+     mất hơn nửa màn. Trên máy nhỏ chỉ giữ ô tìm kiếm, phần còn lại gấp vào nút
+     "Bộ lọc" (có đếm số bộ lọc đang bật để không ai quên mình đang lọc gì). */
+  var fwrap = document.querySelector('.mc-filterwrap');
+  var fpanel = byId('fpanel'), fmore = byId('fmore'), ftoggle = byId('ftoggle'), frow1 = fmore.parentNode;
+  var mqNarrow = window.matchMedia('(max-width: 720px)');
+  function placeFmore() {
+    if (mqNarrow.matches) {
+      if (fmore.parentNode !== fpanel) fpanel.insertBefore(fmore, fpanel.firstChild);
+    } else if (fmore.parentNode !== frow1) {
+      frow1.insertBefore(fmore, ftoggle.nextSibling);
+      fwrap.classList.remove('is-open');
+      ftoggle.setAttribute('aria-expanded', 'false');
+    }
+  }
+  placeFmore();
+  if (mqNarrow.addEventListener) mqNarrow.addEventListener('change', placeFmore);
+  ftoggle.addEventListener('click', function () {
+    var isOpen = !fwrap.classList.contains('is-open');
+    fwrap.classList.toggle('is-open', isOpen);
+    ftoggle.setAttribute('aria-expanded', String(isOpen));
+  });
 
   byId('q').addEventListener('input', function () { state.q = this.value.trim().toLowerCase(); render(); });
   byId('sort').addEventListener('change', function () { state.sort = this.value; render(); });
@@ -1603,6 +1770,26 @@ var COMBOS = [
     byId('d-ingn').textContent = current.ing.length + ' thứ';
   }
 
+  /* Đồng hồ chỉ hiện ở bước đang làm — trừ khi nó đang chạy cho một bước khác,
+     lúc đó bước ấy giữ luôn mặt đồng hồ để không phải đi tìm. */
+  function tdock(r, n, s) {
+    if (!(T.rid === r.id && T.step === n)) {
+      if (n !== stepIdx) return '';
+      return '<div class="mc-tdock">' +
+        '<button class="wb-btn wb-btn--sm" data-t="start"><span class="wb-ico wb-ico--sm">timer</span> Hẹn giờ ' + s.m + ' phút</button>' +
+        '<span class="wb-help" style="margin:0">Hết giờ sẽ kêu &amp; rung</span></div>';
+    }
+    var ms = tLeft(), pct = Math.max(0, Math.min(100, Math.round((1 - ms / (T.total || 1)) * 100)));
+    return '<div class="mc-tdock' + (T.done ? ' is-done' : '') + '">' +
+      '<span class="mc-live" id="t-live">' + (T.done ? 'Hết giờ' : clock(ms)) + '</span>' +
+      '<div class="wb-progress"><div class="wb-progress__bar" id="t-livebar" style="width:' + pct + '%"></div></div>' +
+      (T.done ? '' : '<button class="wb-btn wb-btn--ghost wb-btn--sm" data-t="toggle">' +
+        '<span class="wb-ico wb-ico--sm">' + (T.run ? 'pause' : 'play_arrow') + '</span> ' + (T.run ? 'Dừng' : 'Chạy tiếp') + '</button>') +
+      '<button class="wb-btn wb-btn--ghost wb-btn--sm" data-t="plus">+1 phút</button>' +
+      '<button class="wb-btn wb-btn--ghost wb-btn--sm" data-t="stop">Tắt</button>' +
+      '</div>';
+  }
+
   function renderSteps() {
     var host = byId('d-steps');
     host.innerHTML = '';
@@ -1617,8 +1804,18 @@ var COMBOS = [
           '<div class="mc-step-caps">' + caps + '</div>' +
           '<p class="mc-step-d">' + s.d + '</p>' +
           (s.cue ? '<p class="mc-step-cue"><b>Đạt khi:</b> ' + s.cue + '</p>' : '') +
+          tdock(current, n, s) +
         '</div>';
-      li.addEventListener('click', function () { stepIdx = n; renderSteps(); });
+      li.addEventListener('click', function (e) {
+        var tb = e.target.closest('[data-t]');
+        if (!tb) { stepIdx = n; renderSteps(); return; }
+        e.stopPropagation();
+        var a = tb.getAttribute('data-t');
+        if (a === 'start') tStart(current, n);
+        else if (a === 'toggle') { if (T.run) { tPause(); } else { tResume(); } }
+        else if (a === 'plus') tPlus();
+        else if (a === 'stop') tStop();
+      });
       host.appendChild(li);
     });
     var n = current.steps.length;
@@ -1628,9 +1825,31 @@ var COMBOS = [
     byId('d-stepn').textContent = timeText(current.total);
   }
 
+  function scrollActive() {
+    var a = byId('d-steps').querySelector('.is-active');
+    if (a) a.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }
+
   byId('d-next').addEventListener('click', function () {
     stepIdx = stepIdx >= current.steps.length ? 0 : stepIdx + 1;
     renderSteps();
+    scrollActive();
+  });
+
+  /* ---- điện thoại: nguyên liệu / các bước là hai tab ---- */
+  var dTabs = byId('d-tabs'), dDetail = byId('d-detail');
+  function showPanel(p) {
+    dDetail.classList.toggle('is-ing', p === 'ing');
+    dDetail.classList.toggle('is-steps', p === 'steps');
+    [].slice.call(dTabs.children).forEach(function (b) {
+      b.classList.toggle('is-active', b.getAttribute('data-p') === p);
+    });
+  }
+  [].slice.call(dTabs.children).forEach(function (b) {
+    b.addEventListener('click', function () {
+      showPanel(b.getAttribute('data-p'));
+      byId('detail').querySelector('.mc-modal__body').scrollTop = 0;
+    });
   });
 
   function renderServe() {
@@ -1667,6 +1886,7 @@ var COMBOS = [
         '<p class="wb-alert__title">Ăn cùng gì</p><p class="wb-alert__msg">' + r.serveWith + '</p></div></div>';
     }
     byId('d-extra').innerHTML = extra;
+    showPanel('ing');
     renderServe(); renderIng(); renderSteps();
     overlay.classList.add('is-open');
     document.body.style.overflow = 'hidden';
@@ -1687,13 +1907,177 @@ var COMBOS = [
     if (overlay.classList.contains('is-open') && (e.key === 'j' || e.key === 'ArrowDown')) {
       if (document.activeElement.tagName === 'INPUT') return;
       e.preventDefault();
-      if (stepIdx < current.steps.length) { stepIdx++; renderSteps(); }
+      if (stepIdx < current.steps.length) { stepIdx++; renderSteps(); scrollActive(); }
     }
     if (overlay.classList.contains('is-open') && (e.key === 'k' || e.key === 'ArrowUp')) {
       if (document.activeElement.tagName === 'INPUT') return;
       e.preventDefault();
-      if (stepIdx > 0) { stepIdx--; renderSteps(); }
+      if (stepIdx > 0) { stepIdx--; renderSteps(); scrollActive(); }
     }
+  });
+
+  /* =========================================================================
+     HẸN GIỜ
+     Một đồng hồ duy nhất cho cả trang. Ba quyết định đáng nói:
+     · Đếm theo mốc kết thúc (endAt) chứ không trừ dần mỗi giây — tắt màn hình,
+       chuyển tab hay bị trình duyệt bóp setInterval thì quay lại vẫn đúng giờ.
+     · Thanh đồng hồ nổi sống lâu hơn modal: đóng công thức, cuộn đi đâu vẫn thấy,
+       bấm vào là quay lại đúng bước đang canh.
+     · Hết giờ thì kêu + rung + đổi tiêu đề tab, và nhắc lại vài lần — người nấu
+       thường đang ở phòng khác chứ không nhìn màn hình.
+     ====================================================================== */
+  var T = { rid: null, dish: '', step: -1, title: '', total: 0, endAt: 0, left: 0, run: false, done: false };
+  var tickId = null, nagId = null, actx = null, wakeLock = null;
+  var pageTitle = document.title, tbar = byId('tbar');
+
+  function two(n) { return (n < 10 ? '0' : '') + n; }
+  function clock(ms) {
+    var s = Math.max(0, Math.round(ms / 1000)), h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60);
+    return (h ? h + ':' : '') + two(m) + ':' + two(s % 60);
+  }
+  /* Kẹp trong [0, total]: đồng hồ máy có thể bị chỉnh lùi (đổi múi giờ, đồng bộ
+     mạng) — không kẹp thì hẹn 2 phút hiện thành 33 phút. */
+  function tLeft() {
+    var ms = T.run ? T.endAt - Date.now() : T.left;
+    return Math.max(0, Math.min(ms, T.total));
+  }
+
+  function unlockAudio() {
+    try {
+      if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+      if (actx.state === 'suspended') actx.resume();
+    } catch (e) { actx = null; }
+  }
+  /* Ba tiếng "bíp" dựng bằng WebAudio — không tải file, chạy được cả khi mở bằng file:// */
+  function beep() {
+    if (!actx) return;
+    try {
+      if (actx.state === 'suspended') actx.resume();
+      var t0 = actx.currentTime;
+      [0, .42, .84].forEach(function (off) {
+        var o = actx.createOscillator(), g = actx.createGain();
+        o.type = 'sine'; o.frequency.setValueAtTime(880, t0 + off);
+        g.gain.setValueAtTime(0.0001, t0 + off);
+        g.gain.exponentialRampToValueAtTime(.3, t0 + off + .03);
+        g.gain.exponentialRampToValueAtTime(.0001, t0 + off + .34);
+        o.connect(g); g.connect(actx.destination);
+        o.start(t0 + off); o.stop(t0 + off + .36);
+      });
+    } catch (e) {}
+  }
+  function buzz() { try { if (navigator.vibrate) navigator.vibrate([320, 140, 320, 140, 520]); } catch (e) {} }
+
+  /* Tay dính dầu mỡ, không ai muốn chạm màn hình chỉ để nó khỏi tắt. */
+  function keepAwake(on) {
+    try {
+      if (on) {
+        if (wakeLock || !navigator.wakeLock) return;
+        navigator.wakeLock.request('screen').then(function (s) {
+          wakeLock = s;
+          s.addEventListener('release', function () { wakeLock = null; });
+        }).catch(function () {});
+      } else if (wakeLock) {
+        wakeLock.release(); wakeLock = null;
+      }
+    } catch (e) { wakeLock = null; }
+  }
+
+  function loop() { stopLoop(); tickId = setInterval(pulse, 250); }
+  function stopLoop() { if (tickId) { clearInterval(tickId); tickId = null; } }
+  function stopNag() { if (nagId) { clearInterval(nagId); nagId = null; } document.title = pageTitle; }
+  function pulse() {
+    if (T.run && Date.now() >= T.endAt) { tFinish(); return; }
+    paintTimer();
+  }
+
+  function tStart(r, n) {
+    var s = r.steps[n];
+    T.rid = r.id; T.dish = r.name; T.step = n; T.title = s.t;
+    T.total = s.m * 60000; T.left = T.total; T.endAt = Date.now() + T.total;
+    T.run = true; T.done = false;
+    tbar.classList.remove('is-done');
+    stopNag(); unlockAudio(); keepAwake(true); loop();
+    paintTimer(); renderSteps();
+  }
+  function tPause() {
+    if (!T.run) return;
+    T.left = tLeft(); T.run = false;
+    stopLoop(); keepAwake(false); paintTimer(); renderSteps();
+  }
+  function tResume() {
+    if (T.run || T.done || !T.rid) return;
+    T.endAt = Date.now() + T.left; T.run = true;
+    keepAwake(true); loop(); paintTimer(); renderSteps();
+  }
+  function tPlus() {
+    if (!T.rid) return;
+    T.total += 60000;
+    if (T.done) {
+      T.done = false; T.run = true; T.left = 60000; T.endAt = Date.now() + 60000;
+      tbar.classList.remove('is-done');
+      stopNag(); keepAwake(true); loop();
+    } else if (T.run) { T.endAt += 60000; } else { T.left += 60000; }
+    paintTimer(); renderSteps();
+  }
+  function tStop() {
+    T.rid = null; T.step = -1; T.run = false; T.done = false;
+    stopLoop(); stopNag(); keepAwake(false);
+    tbar.hidden = true; tbar.classList.remove('is-done');
+    document.body.classList.remove('mc-has-timer');
+    if (current) renderSteps();
+  }
+  function tFinish() {
+    T.run = false; T.left = 0; T.done = true;
+    stopLoop(); keepAwake(false);
+    tbar.classList.add('is-done');
+    document.title = '⏰ Hết giờ — ' + T.title;
+    beep(); buzz();
+    var k = 0;
+    nagId = setInterval(function () {
+      if (++k > 4) { if (nagId) { clearInterval(nagId); nagId = null; } return; }
+      beep(); buzz();
+    }, 15000);
+    paintTimer();
+    if (current && current.id === T.rid) renderSteps();
+  }
+
+  /* Chỉ sửa text, không dựng lại DOM — chạy 4 lần/giây. */
+  function paintTimer() {
+    if (!T.rid) { tbar.hidden = true; document.body.classList.remove('mc-has-timer'); return; }
+    var ms = tLeft(), txt = T.done ? 'Hết giờ' : clock(ms);
+    var pct = Math.max(0, Math.min(100, Math.round((1 - ms / (T.total || 1)) * 100)));
+    tbar.hidden = false;
+    document.body.classList.add('mc-has-timer');
+    byId('tb-time').textContent = txt;
+    byId('tb-dish').textContent = T.dish;
+    byId('tb-step').textContent = 'Bước ' + (T.step + 1) + ' · ' + T.title + (!T.run && !T.done ? ' · đang dừng' : '');
+    byId('tb-bar').style.width = pct + '%';
+    byId('tb-done').hidden = !T.done;
+    var p = byId('tb-pause');
+    p.hidden = T.done;
+    p.querySelector('.wb-ico').textContent = T.run ? 'pause' : 'play_arrow';
+    p.setAttribute('aria-label', T.run ? 'Tạm dừng' : 'Chạy tiếp');
+    var live = byId('t-live'); if (live) live.textContent = txt;
+    var lbar = byId('t-livebar'); if (lbar) lbar.style.width = pct + '%';
+  }
+
+  function gotoTimerStep(advance) {
+    var r = byIdMap[T.rid], n = T.step;
+    if (!r) return;
+    if (current !== r || !overlay.classList.contains('is-open')) open(r);
+    stepIdx = advance ? Math.min(n + 1, r.steps.length) : n;
+    renderSteps(); showPanel('steps'); scrollActive();
+  }
+
+  byId('tb-pause').addEventListener('click', function () { if (T.run) { tPause(); } else { tResume(); } });
+  byId('tb-plus').addEventListener('click', tPlus);
+  byId('tb-stop').addEventListener('click', tStop);
+  byId('tb-go').addEventListener('click', function () { stopNag(); gotoTimerStep(false); });
+  byId('tb-done').addEventListener('click', function () { stopNag(); gotoTimerStep(true); tStop(); });
+
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState !== 'visible') return;
+    if (T.run) { keepAwake(true); pulse(); }
   });
 
   /* ---- combos ---- */
