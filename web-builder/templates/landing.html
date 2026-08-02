@@ -1,0 +1,337 @@
+<!doctype html>
+<!-- =============================================================================
+     TEMPLATE · Landing / marketing  —  catalog recipe "Landing / marketing"
+     -----------------------------------------------------------------------------
+     A whole screen, assembled only from shipped wb-* parts. START HERE instead of
+     composing a page from scratch: replace the copy and the data, keep the frame,
+     the order and the rhythm.
+
+     The ONE public screen: no rail, no wb-shell. A visitor is not logged in, has
+     no data and no navigation state, so the shell's rail would be an empty frame.
+     Structure is a plain wb-navbar + wb-container + wb-footer, exactly what the
+     catalog's "A public/marketing page drops the rail" note describes.
+
+     Order answers a stranger's questions in the order they ask them:
+       what is it → is it real → how does it work → what does it cost → but what
+       about… → ok, how do I start.
+     Each section is one wb-section, so the vertical rhythm is the same
+     --wb-section-gap the app screens use. A landing is not a licence to freestyle.
+
+     COLOUR (§1): a marketing page is where the ladder is most tempting to break.
+     Everything here is tier 1 — white/black/grey. The emphasis you want comes
+     from CONTRAST (one solid-black primary button per section at most, a small
+     solid capsule) and from SIZE, never from a hue. There is no status on this
+     page: nothing is paid, overdue or due soon, so nothing earns colour.
+
+     What you may change: text, numbers, icon ligatures, how many features/plans/
+     questions, which sections you keep (a short landing = hero + features + CTA).
+     What you should NOT change: the wb-page-head → wb-section nesting, the
+     spacing (tokens — set --wb-section-gap, never a margin on one element), or
+     the colour rule above.
+     ========================================================================== -->
+<html lang="vi" class="wb-scrollbars">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cashy — Quản lý tài chính cá nhân, gọn gàng</title>
+<!-- The one file this library ships. Everything below is plain markup. -->
+<link rel="stylesheet" href="../web-builder.css" />
+<script>
+  /* Theme before first paint, so a dark user never sees a white flash. */
+  try {
+    var t = localStorage.getItem('theme');
+    if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches))
+      document.documentElement.classList.add('dark');
+  } catch (e) {}
+</script>
+</head>
+<body class="wb-app">
+
+<!-- ============================== TOP BAR ==================================
+     Public bar: inline links + wb-navbar__toggle (collapses on the BAR's own
+     width, ~640px). NOT wb-shell__side-toggle — there is no rail to open. -->
+<header class="wb-navbar wb-navbar--sticky wb-navbar--glass wb-navbar--collapse-lg">
+  <button class="wb-navbar__toggle wb-btn wb-btn--ghost wb-btn--icon" data-navbar-toggle
+          aria-label="Menu"><span class="wb-ico">menu</span></button>
+  <a class="wb-navbar__brand" href="landing.html"><span class="wb-navbar__mark">C</span> Cashy</a>
+  <!-- The two text CTAs live at the END of __menu, after a nested __spacer that pushes
+       them hard right. They must NOT sit in __actions: that slot never collapses, so a
+       text button there keeps its full width at 390px and scrolls the whole page
+       sideways (this template did exactly that — 116px of overflow). __actions is
+       icon-only; __menu is the slot that tucks into the ☰ panel. -->
+  <nav class="wb-nav wb-navbar__menu">
+    <a class="wb-nav__link" href="#tinh-nang">Tính năng</a>
+    <a class="wb-nav__link" href="#cach-dung">Cách dùng</a>
+    <a class="wb-nav__link" href="#bang-gia">Bảng giá</a>
+    <a class="wb-nav__link" href="#hoi-dap">Hỏi đáp</a>
+    <span class="wb-navbar__spacer"></span>
+    <a class="wb-btn wb-btn--ghost" href="auth.html">Đăng nhập</a>
+    <a class="wb-btn" href="auth.html">Dùng thử miễn phí</a>
+  </nav>
+  <span class="wb-navbar__spacer"></span>
+  <div class="wb-navbar__actions">
+    <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" aria-label="Đổi giao diện sáng/tối" title="Sáng / Tối">
+      <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
+      <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
+    </button>
+  </div>
+</header>
+
+<main class="wb-container wb-container--pad">
+
+  <!-- 1 · HERO — what is it.
+       wb-page-head--lg is the shipped hero (display-size title). Left-aligned
+       like every other page in the system: the measure token keeps the line
+       length readable, which centred text at this width would lose. -->
+  <div class="wb-page-head wb-page-head--lg">
+    <h1>Biết tiền của bạn đang đi đâu</h1>
+    <p>Cashy gom mọi tài khoản về một chỗ, tự phân loại giao dịch và cho bạn biết
+    còn tiêu được bao nhiêu trước cuối tháng. Không quảng cáo, không bán dữ liệu.</p>
+    <div class="wb-cluster" style="margin-top:20px">
+      <a class="wb-btn wb-btn--lg" href="auth.html">Bắt đầu miễn phí</a>
+      <a class="wb-btn wb-btn--outline wb-btn--lg" href="#cach-dung">Xem cách hoạt động</a>
+    </div>
+    <p class="wb-help" style="margin-top:12px">Miễn phí 14 ngày · không cần thẻ · huỷ bất cứ lúc nào</p>
+  </div>
+
+  <!-- 2 · PROOF — is it real. Numbers, not adjectives.
+       wb-stat WITHOUT __delta: a delta means "vs last month", which is an app
+       reading, not a marketing claim. -->
+  <section class="wb-section">
+    <div class="wb-stat-grid">
+      <div class="wb-stat">
+        <div class="wb-stat__top"><span class="wb-stat__label">Người dùng thường xuyên</span></div>
+        <div class="wb-stat__value">28.400</div>
+      </div>
+      <div class="wb-stat">
+        <div class="wb-stat__top"><span class="wb-stat__label">Giao dịch đã phân loại</span></div>
+        <div class="wb-stat__value">19,2 triệu</div>
+      </div>
+      <div class="wb-stat">
+        <div class="wb-stat__top"><span class="wb-stat__label">Ngân hàng kết nối được</span></div>
+        <div class="wb-stat__value">42</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · FEATURES — what it does.
+       wb-grid--auto reflows by itself; --wb-grid-min sets the smallest a card
+       may get before the row rewraps. --auto is required for the min to apply. -->
+  <section class="wb-section" id="tinh-nang">
+    <h2>Đủ dùng, không thừa</h2>
+    <p class="wb-section__desc">Sáu việc mà một app tài chính cá nhân thật sự phải làm tốt.
+    Chúng tôi không làm việc thứ bảy.</p>
+    <div class="wb-grid wb-grid--auto" style="--wb-grid-min:240px">
+      <div class="wb-card wb-card--pad">
+        <span class="wb-ico">sync</span>
+        <p class="wb-card__title" style="margin-top:8px">Tự động đồng bộ</p>
+        <p class="wb-card__sub">Kết nối đọc-chỉ tới 42 ngân hàng. Giao dịch về trong vài phút,
+        không phải nhập tay.</p>
+      </div>
+      <div class="wb-card wb-card--pad">
+        <span class="wb-ico">label</span>
+        <p class="wb-card__title" style="margin-top:8px">Phân loại thông minh</p>
+        <p class="wb-card__sub">Học từ cách bạn sửa. Sau một tháng, hơn 90% giao dịch vào đúng
+        danh mục ngay lần đầu.</p>
+      </div>
+      <div class="wb-card wb-card--pad">
+        <span class="wb-ico">savings</span>
+        <p class="wb-card__title" style="margin-top:8px">Ngân sách theo danh mục</p>
+        <p class="wb-card__sub">Đặt hạn mức tuần hoặc tháng. Cảnh báo khi sắp chạm, không phải
+        sau khi đã vượt.</p>
+      </div>
+      <div class="wb-card wb-card--pad">
+        <span class="wb-ico">receipt_long</span>
+        <p class="wb-card__title" style="margin-top:8px">Hoá đơn &amp; công nợ</p>
+        <p class="wb-card__sub">Theo dõi khoản phải thu, phải trả và ngày đến hạn ở cùng một chỗ
+        với chi tiêu.</p>
+      </div>
+      <div class="wb-card wb-card--pad">
+        <span class="wb-ico">insights</span>
+        <p class="wb-card__title" style="margin-top:8px">Báo cáo dễ đọc</p>
+        <p class="wb-card__sub">Biểu đồ trả lời một câu hỏi mỗi cái. Không có dashboard 20 widget
+        mà không nói lên điều gì.</p>
+      </div>
+      <div class="wb-card wb-card--pad">
+        <span class="wb-ico">download</span>
+        <p class="wb-card__title" style="margin-top:8px">Dữ liệu là của bạn</p>
+        <p class="wb-card__sub">Xuất CSV bất cứ lúc nào, xoá tài khoản là xoá thật. Chúng tôi
+        không bán dữ liệu cho ai.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · HOW — how does it work. A 3-step flow is wb-steps--horizontal, not
+       three hand-numbered cards. It collapses to a column on narrow screens.
+       No .is-done / .is-todo here: those mark PROGRESS through a real flow (see
+       detail.html's history). Marketing steps are instructions — all three read
+       the same, which is the marker's default. -->
+  <section class="wb-section" id="cach-dung">
+    <h2>Ba bước, khoảng năm phút</h2>
+    <ol class="wb-steps wb-steps--horizontal">
+      <li class="wb-steps__item">
+        <span class="wb-steps__marker">1</span>
+        <div class="wb-steps__content">
+          <p class="wb-steps__title">Kết nối tài khoản</p>
+          <p class="wb-steps__desc">Chọn ngân hàng, cấp quyền đọc-chỉ. Chúng tôi không lưu mật khẩu
+          ngân hàng của bạn.</p>
+        </div>
+      </li>
+      <li class="wb-steps__item">
+        <span class="wb-steps__marker">2</span>
+        <div class="wb-steps__content">
+          <p class="wb-steps__title">Xem lại phân loại</p>
+          <p class="wb-steps__desc">Lướt qua vài chục giao dịch đầu, sửa cái nào sai. Đó là toàn bộ
+          phần "dạy" mà bạn phải làm.</p>
+        </div>
+      </li>
+      <li class="wb-steps__item">
+        <span class="wb-steps__marker">3</span>
+        <div class="wb-steps__content">
+          <p class="wb-steps__title">Đặt ngân sách</p>
+          <p class="wb-steps__desc">Một hạn mức cho vài danh mục hay vượt. Từ đó trở đi app tự chạy.</p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- 5 · PRICING — what does it cost.
+       The featured plan is marked with CONTRAST, not colour (§1): a small solid
+       neutral capsule + the only solid button in the row. The others take
+       --outline. Do NOT reach for a green "recommended" tint — recommended is
+       not a status.
+       The price is .wb-stat__value (a big standalone number), NOT .wb-num —
+       .wb-num is text-align:right on purpose, for money in a TABLE column where
+       the digits must line up. In a card it just shoves the price to the edge. -->
+  <section class="wb-section" id="bang-gia">
+    <h2>Giá rõ ràng</h2>
+    <p class="wb-section__desc">Một mức trả tiền. Không bậc ẩn, không phụ phí theo số giao dịch.</p>
+    <div class="wb-grid wb-grid--3">
+      <div class="wb-card wb-card--pad">
+        <p class="wb-card__title">Miễn phí</p>
+        <p class="wb-stat__value" style="margin:10px 0 2px">0&nbsp;₫</p>
+        <p class="wb-card__sub">Một tài khoản ngân hàng · lịch sử 3 tháng · ngân sách cơ bản.</p>
+        <a class="wb-btn wb-btn--outline wb-btn--block" href="auth.html" style="margin-top:16px">Dùng bản miễn phí</a>
+      </div>
+      <div class="wb-card wb-card--pad">
+        <div class="wb-cluster wb-cluster--between">
+          <p class="wb-card__title">Cá nhân</p>
+          <span class="wb-cap wb-cap--solid">Phổ biến</span>
+        </div>
+        <p class="wb-stat__value" style="margin:10px 0 2px">79.000&nbsp;₫<span class="wb-help">/tháng</span></p>
+        <p class="wb-card__sub">Không giới hạn tài khoản · toàn bộ lịch sử · công nợ · xuất CSV.</p>
+        <a class="wb-btn wb-btn--block" href="auth.html" style="margin-top:16px">Dùng thử 14 ngày</a>
+      </div>
+      <div class="wb-card wb-card--pad">
+        <p class="wb-card__title">Gia đình</p>
+        <p class="wb-stat__value" style="margin:10px 0 2px">129.000&nbsp;₫<span class="wb-help">/tháng</span></p>
+        <p class="wb-card__sub">Mọi thứ của gói Cá nhân · 5 thành viên · ngân sách chung.</p>
+        <a class="wb-btn wb-btn--outline wb-btn--block" href="auth.html" style="margin-top:16px">Dùng thử 14 ngày</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · FAQ — but what about…
+       wb-accordion is <details>/<summary>: it opens with zero JS and is
+       searchable/linkable by the browser. Don't rebuild it with click handlers. -->
+  <section class="wb-section" id="hoi-dap">
+    <h2>Câu hỏi thường gặp</h2>
+    <div class="wb-accordion">
+      <details class="wb-accordion__item" open>
+        <summary>Cashy lấy dữ liệu ngân hàng thế nào?</summary>
+        <div class="wb-accordion__body">Qua kết nối đọc-chỉ (read-only) do bạn cấp quyền, theo chuẩn
+        của từng ngân hàng. Cashy không lưu mật khẩu ngân hàng và không thể chuyển tiền.</div>
+      </details>
+      <details class="wb-accordion__item">
+        <summary>Nếu ngân hàng của tôi chưa được hỗ trợ?</summary>
+        <div class="wb-accordion__body">Bạn vẫn nhập tay hoặc nạp file CSV sao kê được; mọi tính năng
+        còn lại hoạt động bình thường. Danh sách ngân hàng cập nhật hằng tháng.</div>
+      </details>
+      <details class="wb-accordion__item">
+        <summary>Huỷ gói thì dữ liệu còn không?</summary>
+        <div class="wb-accordion__body">Còn. Tài khoản chuyển về bản miễn phí, dữ liệu giữ nguyên và
+        bạn xuất CSV bất cứ lúc nào. Xoá tài khoản là xoá thật, trong 30 ngày.</div>
+      </details>
+      <details class="wb-accordion__item">
+        <summary>Có ứng dụng di động không?</summary>
+        <div class="wb-accordion__body">Web chạy tốt trên điện thoại và cài được như một app (PWA).
+        Bản native đang làm.</div>
+      </details>
+    </div>
+  </section>
+
+  <!-- 7 · CLOSING CTA — ok, how do I start.
+       One card, one button. The page's second and last solid button. -->
+  <section class="wb-section">
+    <div class="wb-card wb-card--pad">
+      <h3 style="margin:0">Thử trong năm phút</h3>
+      <p class="wb-section__desc" style="margin-top:6px">Không cần thẻ. Nếu không hợp, xoá tài khoản
+      là xong — không phải gọi ai cả.</p>
+      <div class="wb-cluster" style="margin-top:16px">
+        <a class="wb-btn wb-btn--lg" href="auth.html">Bắt đầu miễn phí</a>
+        <a class="wb-btn wb-btn--ghost wb-btn--lg" href="#hoi-dap">Đọc câu hỏi thường gặp</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================== FOOTER ===================================
+     The FULL footer (columns + brand) belongs here — a marketing page is where
+     a visitor looks for company/legal links. App screens use --slim instead. -->
+<footer class="wb-footer">
+  <div class="wb-footer__inner">
+    <div class="wb-footer__top">
+      <div class="wb-footer__brand">
+        <span class="wb-footer__mark">C</span>
+        <div>
+          <div class="wb-footer__name">Cashy</div>
+          <p class="wb-footer__tagline">Quản lý tài chính cá nhân minh bạch, gọn gàng.</p>
+        </div>
+      </div>
+      <nav class="wb-footer__cols" aria-label="Liên kết">
+        <div class="wb-footer__col">
+          <h4 class="wb-footer__title">Sản phẩm</h4>
+          <a class="wb-footer__link" href="#tinh-nang">Tính năng</a>
+          <a class="wb-footer__link" href="#bang-gia">Bảng giá</a>
+          <a class="wb-footer__link" href="#hoi-dap">Bảo mật</a>
+        </div>
+        <div class="wb-footer__col">
+          <h4 class="wb-footer__title">Công ty</h4>
+          <a class="wb-footer__link" href="#">Giới thiệu</a>
+          <a class="wb-footer__link" href="#">Tuyển dụng</a>
+          <a class="wb-footer__link" href="#">Liên hệ</a>
+        </div>
+        <div class="wb-footer__col">
+          <h4 class="wb-footer__title">Hỗ trợ</h4>
+          <a class="wb-footer__link" href="#">Trợ giúp</a>
+          <a class="wb-footer__link" href="#">Điều khoản</a>
+          <a class="wb-footer__link" href="#">Quyền riêng tư</a>
+        </div>
+      </nav>
+    </div>
+    <div class="wb-footer__bottom">
+      <span class="wb-footer__copy">© 2026 Cashy. Bảo lưu mọi quyền.</span>
+      <div class="wb-footer__social">
+        <a class="wb-btn wb-btn--ghost wb-btn--icon" href="#" aria-label="Email"><span class="wb-ico">mail</span></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* Two toggles, same as the shell templates — but the menu one targets
+   .wb-navbar__menu (the bar's own inline links), NOT a rail. */
+(function () {
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('[data-navbar-toggle]')) {
+      document.querySelector('.wb-navbar__menu').classList.toggle('is-open');
+    } else if (e.target.closest('.wb-theme-toggle')) {
+      var dark = document.documentElement.classList.toggle('dark');
+      try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (err) {}
+    }
+  });
+})();
+</script>
+</body>
+</html>

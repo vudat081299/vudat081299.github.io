@@ -1,0 +1,563 @@
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Foundation</p>
+  <h2>Nguyên tắc thiết kế (§1 → §25)</h2>
+  <p>Những quyết định thẩm mỹ đã <b>chốt sẵn</b>, để không phải review lại trên từng trang. Mỗi nguyên tắc mang
+  một số hiệu <b>§N</b> — bất cứ đâu trong repo nhắc "§N" là trỏ về đúng mục ở đây. Đây là <b>bản đầy đủ, đọc
+  ngay trên site</b> (không phải bản tóm tắt): mỗi § là một mục mở/gập bằng <a href="#/accordion">accordion</a>,
+  bấm để xem chi tiết. Bản song song cho AI đọc là <code>references/design-principles.md</code> (cùng số §N),
+  giữ khớp nhau qua guardrail. Trang <a href="#/overview">Tổng quan</a> chỉ giữ một index gọn trỏ về đây.</p>
+</div>
+
+<section class="wb-section">
+  <div class="wb-alert wb-alert--info doc-note">
+    <span aria-hidden="true">🎯</span>
+    <div><b>Luật va nhau thì cái trên thắng.</b> Thứ tự ưu tiên khi hai nguyên tắc mâu thuẫn: <b>reuse-first</b> →
+    <b>thang màu (§1)</b> → <b>token thay số ma thuật (§18)</b> → <b>skill không nói dối (đồng bộ 7 nơi)</b> →
+    <b>dogfood (§16)</b>. Và thứ <b>ship</b> là skill (<code>web-builder.css</code> + <code>SKILL.md</code> +
+    references); một thay đổi làm demo đẹp lên nhưng <i>component ship</i> tệ đi — hoặc làm CSS lệch với điều
+    SKILL/catalog hứa — là <b>hỏng</b>, dù trang trông đẹp cỡ nào.</div>
+  </div>
+
+  <div class="wb-accordion" style="margin-top:18px">
+
+    <details class="wb-accordion__item" open>
+      <summary>§1 · Thang màu — luật thị giác số 1</summary>
+      <div class="wb-accordion__body">
+        <p>Màu được <b>chi tiêu</b>, không rắc bừa. Luôn với tới <b>tầng thấp nhất đủ dùng</b>. Ba tầng là ba
+        <b>mức chi màu</b>, không phải style riêng của component — tier 2 và tier 3 cưỡi được lên <b>bất kỳ</b> thứ
+        gì (capsule, tag, con số, viền, nền hàng, card, chart), không chỉ status capsule.</p>
+        <div class="tier">
+          <div class="tier__item">
+            <p class="tier__n">TIER 1 · mặc định</p>
+            <p class="tier__t">Trắng / đen / xám</p>
+            <p class="tier__d">Gần như mọi thứ: nền, chữ, viền, đa số capsule, đa số con số.</p>
+          </div>
+          <div class="tier__item">
+            <p class="tier__n">TIER 2 · màu đậm</p>
+            <p class="tier__t">Solid, có nghĩa</p>
+            <p class="tier__d">Chỉ khi status phải rõ không nhầm: trả = xanh lá, quá hạn/nợ xấu = đỏ, sắp đến hạn = hổ phách, info/đang xử lý = xanh dương.</p>
+          </div>
+          <div class="tier__item">
+            <p class="tier__n">TIER 3 · màu nhạt</p>
+            <p class="tier__t">Soft, có nghĩa</p>
+            <p class="tier__d">Bản êm của tier 2 — cùng nghĩa, vặn nhỏ (nền tint nhạt + chữ cùng hue). Khi tín hiệu cần hiện diện mà vẫn êm.</p>
+          </div>
+        </div>
+        <p style="margin-top:14px"><b>Luật quyết định:</b> màu không mang nghĩa thì không nên có. Một tag phân loại
+        ("Ăn uống", "Nhà ở") là <i>phân loại, không phải status</i> → để xám (tier 1). Một trạng thái thanh toán
+        ("Đã trả", "Quá hạn") <i>là</i> status → tier 2/3. <code>#</code>-tag (<code>.wb-tag</code>) cũng vậy: mặc
+        định trung tính, chỉ cho hue khi category thật sự sở hữu một màu (đặt một lần qua <code>--wb-tag-color</code>).</p>
+        <p>Đừng phản xạ tô mọi khoản chi đỏ / mọi khoản thu xanh. Trong bảng giao dịch, khoản chi để trung tính đậm
+        (<code>.wb-num--strong</code>); dành xanh (<code>.wb-num--pos</code>) cho dòng tiền vào thật và đỏ
+        (<code>.wb-num--neg</code>) cho vấn đề thật (vượt ngân sách, lỗ).</p>
+        <p><b>Nhấn đậm bằng trung tính (solid) chỉ cho phần tử NHỎ.</b> Nền đen đặc chữ trắng
+        (<code>.wb-tag--solid</code>, <code>.wb-avatar--solid</code>, nút nhỏ, thanh progress <code>--loading</code>)
+        vẫn là <b>tier 1</b> — nó chi <i>tương phản</i>, không chi màu. Chỉ dùng cho phần nhỏ; <b>không</b> biến một
+        bề mặt lớn (card, alert, dropzone, cả một chart) thành khối đen to — cỡ đó tương phản gắt, đọc mỏi. Bề mặt
+        lớn giữ trung tính bằng xám + outline.</p>
+        <p><b>Lựa chọn của picker</b> cũng theo idiom này: ngày/giờ được chọn (<code>.is-selected</code>) là chip
+        trung tính solid (nhỏ = ổn), một <b>khoảng</b> ngày là dải trung tính <i>nhạt</i> (<code>.is-in-range</code>),
+        hôm nay là <b>vòng</b> trung tính — không bao giờ là hue rực. Chọn một giá trị là <i>lựa chọn</i>, không
+        phải status → giữ tier 1.</p>
+        <p><b>Phần một-màu lấy từ thang trung tính.</b> Divider, track progress, icon mờ, dấu tick, thumb thanh cuộn…
+        mặc định lấy một trong bốn token <b>neutral-ladder</b> (<code>--wb-neutral-weak</code> /
+        <code>--wb-neutral</code> / <code>--wb-neutral-strong</code> / <code>--wb-neutral-ink</code> = xám
+        <i>nhẹ / vừa / đậm / đen</i>), <b>không</b> tự chọn xám tay — đây là luật chặn một trang vẽ ba divider ba màu
+        xám khác nhau; thang tự lật đúng ở dark. Phần <i>cũng</i> mang status (progress có thể đỏ/hổ phách/xanh) thì
+        cưỡi màu tier-2 lên trên. Cỡ icon cũng từ một thang (<code>.wb-ico--xs…--xl</code>: 16/18/20/24/32), không
+        <code>font-size</code> tuỳ hứng.</p>
+        <p><b>Hover của control TRONG SUỐT là mực mờ, không phải xám đặc</b> (<code>--wb-ink-hover</code>). Nút
+        ghost, nút outline, nút × đóng — chúng không có nền riêng nên đội luôn nền phía sau: card trắng, canvas app,
+        alert nền mềm, chip có tone. Một màu <i>đặc</i> chỉ đúng được ở một trong số đó. <code>--wb-surface-2</code>
+        <i>đúng bằng</i> <code>--wb-canvas</code>, nên hover xám đặc <b>tàng hình</b> ngay khi nút nằm trên canvas —
+        đúng chỗ thanh công cụ và ô hành động trong bảng hay nằm — còn trên alert nền mềm thì nó đục một lỗ xám giữa
+        vùng màu. Một lớp mực mờ đọc được trên cả bốn nền và tự lật ở dark, khỏi cần override <code>.dark</code>.
+        <code>--wb-surface-hover</code> đặc vẫn đúng cho control nằm trên bề mặt <b>đã biết</b> (mục menu, dòng bảng,
+        ô ngày lịch).</p>
+        <p><b>Demo trung tính trước.</b> Khi component có cả bản trung tính lẫn bản màu, đặt ví dụ xám <i>trước</i>
+        ví dụ màu — người đọc gặp mặc định tier-1 trước, thấy màu là ngoại lệ, đúng như thang màu muốn.</p>
+      </div>
+    </details>
+
+    <details class="wb-accordion__item">
+      <summary>§2 · Bóng &amp; tương phản trung tính — dark lật sáng</summary>
+      <div class="wb-accordion__body">
+        <p>Chữ ký thị giác cho phần tử trung tính:</p>
+        <ul class="doc-list">
+          <li><b>Nền sáng:</b> phần tử trắng/sáng (<code>.wb-cap--elevated</code>, <code>.wb-card</code>) nằm trên
+          bề mặt với <b>bóng xám mềm</b> (mực tối alpha thấp), <b>viền hairline xám</b>, chữ <b>gần đen</b>. Không
+          bao giờ <code>#000</code> thuần — dùng <code>--wb-gray-900</code>.</li>
+          <li><b>Nền tối:</b> đảo lại — bề mặt tối, viền sáng nhẹ, chữ xám sáng / gần trắng. Bóng <b>đổi màu</b>:
+          bóng đen tàng hình trên nền tối (bóng == nền) nên <code>--wb-shadow-sm|md</code> thành một <b>vệt sáng
+          nhẹ</b> (trắng/xám alpha thấp), không bao giờ đen-trên-đen. Viền hairline vẫn vẽ cạnh cứng; bóng sáng lo
+          độ nâng nhẹ (chỉnh mạnh hơn ở Config → "Đổ bóng component").</li>
+        </ul>
+        <p><b>Luật:</b> màu của bóng phải <i>tương phản</i> với bề mặt sau nó — mực tối trên sáng, sáng trên tối —
+        không bao giờ cùng tông với nền. Cả hai chiều đã nối sẵn qua token, nên dựng bằng token là được miễn phí ở
+        cả hai theme. Đừng hardcode hex nơi đã có token.</p>
+      </div>
+    </details>
+
+    <details class="wb-accordion__item">
+      <summary>§3 · Con số là dữ liệu tài chính — xử lý cho đúng</summary>
+      <div class="wb-accordion__body">
+        <ul class="doc-list">
+          <li>Căn <b>phải</b> mọi cột số/tiền: thêm <code>wb-num</code> vào <code>&lt;th&gt;</code> và <code>&lt;td&gt;</code>.</li>
+          <li><code>wb-num</code> bật <code>tabular-nums</code> để chữ số thẳng cột theo cột. Giữ nó.</li>
+          <li>Nhấn không cần màu: <code>.wb-num--strong</code> (chỉ weight). Có nghĩa: <code>.wb-num--pos</code>
+          (xanh, tiền vào), <code>.wb-num--neg</code> (đỏ, vấn đề).</li>
+          <li>Dùng đúng format locale của app (<code>1.234.567 ₫</code>), và một khoảng trắng không ngắt trước <code>₫</code>.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="wb-accordion__item">
+      <summary>§4 · Typography &amp; mật độ</summary>
+      <div class="wb-accordion__body">
+        <ul class="doc-list">
+          <li>Một họ chữ (<code>--wb-font</code>, system stack). Đừng thêm font mới tuỳ tiện.</li>
+          <li>Phân cấp bằng <b>weight + màu</b>, không phải bằng cỡ chữ nổ tung: mạnh = <code>--wb-fg</code> @ 600–650,
+          phụ = <code>--wb-fg-muted</code>, cấp ba/label = <code>--wb-fg-subtle</code>.</li>
+          <li>Header bảng nhỏ, IN HOA, giãn chữ, mờ — giàn giáo im lặng để dữ liệu là thứ to tiếng nhất.</li>
+          <li>Ưu tiên bảng <code>--compact</code> cho view tài chính dày dữ liệu; mật độ mặc định cho list hero.</li>
+          <li>Thang chữ và lựa chọn font có trang riêng (<a href="#/typography">Typography</a>, <a href="#/fonts">Fonts</a>).
+          Mặc định là system stack; muốn font hợp tài chính (Inter là khuyến nghị — cũng Plus Jakarta Sans / IBM Plex
+          Sans / Manrope) thì nạp nó rồi đổi <b>một</b> token <code>--wb-font</code>, mọi component theo sau. Giữ
+          <code>tabular-nums</code> ở cột số.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="wb-accordion__item">
+      <summary>§5 · Elevation &amp; hình khối</summary>
+      <div class="wb-accordion__body">
+        <ul class="doc-list">
+          <li>Bo góc từ token: <code>--wb-radius-sm|radius|radius-lg</code>, và <code>--wb-radius-pill</code> cho
+          capsule. Capsule mặc định là viên thuốc (pill) — đúng "capsule" user yêu cầu.</li>
+          <li>Chỉ <b>hai mức bóng</b>: <code>--wb-shadow-sm</code> (card/bảng nghỉ) và <code>--wb-shadow-md</code>
+          (nổi/trôi — menu, popover). Đừng chế thêm.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="wb-accordion__item">
+      <summary>§6 · Theming — mọi màu từ token, coi chừng bẫy dark</summary>
+      <div class="wb-accordion__body">
+        <ul class="doc-list">
+          <li>Sáng là mặc định (<code>:root</code>). Tối là class <code>.dark</code> trên phần tử gốc — đúng model
+          của mọi theme toggle theo class (vd next-themes), nên lib và app đồng ý với nhau.</li>
+          <li>Mọi màu phải từ token để cả hai theme đúng. Cần màu mới → thêm token vào <b>cả</b> <code>:root</code> và
+          <code>.dark</code>, rồi dùng token.</li>
+          <li><b>Đừng để rule base ở dark đè lên màu variant.</b> <code>.dark .wb-cap { color: … }</code>
+          (specificity 0-2-0) thắng một variant như <code>.wb-cap--success</code> (0-1-0) và âm thầm làm nó xám đi ở
+          dark. Bọc class base trong <code>:where()</code>: <code>.dark :where(.wb-cap) { … }</code> giữ ở 0-1-0 để
+          rule tone/variant thắng. Đã áp cho <code>.wb-btn</code>, <code>.wb-cap</code>, <code>.wb-tag</code>,
+          <code>.wb-bar</code>, <code>.wb-progress__bar</code>; làm y hệt cho mọi component tương lai có base ở dark
+          đặt <code>color</code>/<code>background</code> mà variant cũng đặt. (<i>Triệu chứng bẫy:</i> một tone hiện
+          xám/gần-trắng ở dark — vd bar thu/chi hay progress success/warning/danger mất màu.)</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="wb-accordion__item">
+      <summary>§7 · Khi cần thứ lib chưa có</summary>
+      <div class="wb-accordion__body">
+        <ol class="doc-list">
+          <li>Trước hết tra <code>components-catalog.md</code> — có thể đã tồn tại.</li>
+          <li>Chưa có thì dựng <b>từ token sẵn có, đúng tinh thần sẵn có</b> (trung tính trước, màu chỉ cho nghĩa).
+          Thêm vào <code>web-builder.css</code> với prefix <code>wb-</code> + một demo + snippet, rồi ghi vào catalog.</li>
+          <li>Giữ thay đổi <b>nhỏ và ghép được</b> (modifier hơn là component một-lần), như bảng dùng
+          <code>--striped</code>, <code>--compact</code>, <code>--bordered</code>.</li>
+        </ol>
+        <p>Mục tiêu luôn là: trang kế tiếp được <b>ráp từ phần đã duyệt</b>, để user review <i>nội dung và bố cục</i>,
+        không phải màu và padding, không bao giờ nữa.</p>
+      </div>
+    </details>
+
+    <details class="wb-accordion__item">
+      <summary>§8 · Component tương tác — style ở đây, behaviour ở app</summary>
+      <div class="wb-accordion__body">
+        <p>Web Builder sở hữu <i>vẻ ngoài</i> của phần tương tác (dropdown, modal/dialog, tabs, toast, tooltip).
+        Trong docs chúng chạy trên một toggle vanilla tí hon chỉ để demo. Trong app thật, hãy lái bằng một primitive
+        có a11y — <b>Radix/shadcn</b> Dialog, DropdownMenu, Tabs, Tooltip, và <b>sonner</b> cho toast (hoặc tương
+        đương của framework bạn) — và giữ class <code>wb-*</code> để tạo hình. <b>Đừng</b> tự viết focus-trap,
+        portal, hay điều hướng bàn phím. <b>Accordion là ngoại lệ:</b> dựng trên <code>&lt;details&gt;</code> gốc nên
+        không cần JS ở đâu cả. Xem <code>integration.md</code> cho bảng map component → primitive.</p>
+      </div>
+    </details>
+
+    <details class="wb-accordion__item">
+      <summary>§9 · Viền — outline + nền nhạt, KHÔNG thanh viền trái</summary>
+      <div class="wb-accordion__body">
+        <p>Ở site này, một tone thể hiện bằng <b>outline kín màu tone + nền soft cùng hue</b> — idiom capsule — áp
+        nhất quán cho alert, toast, note. <b>Không dùng thanh viền trái</b> (<code>border-left: 3px …</code> hay
+        <code>box-shadow: inset 3px 0 …</code>); pattern đó đã bị bỏ để nhường idiom outline. Thanh viền trái được
+        <b>tài liệu hoá như biến thể không-mặc-định</b> ở trang Border — một marker tone mảnh hợp cho feed/notification
+        list hoặc trích dẫn — dùng có chủ đích, nhưng không bao giờ là mặc định ở đây.</p>
+        <p>Độ dày viền từ <code>--wb-border</code> (hairline) / <code>--wb-border-strong</code>; bo góc từ
+        <code>--wb-radius-*</code> (hoặc <code>0</code> cho khối vuông sắc có chủ đích). <b>Mọi bo góc của control là
+        token</b> — switch, checkbox, range, pill — nên một chỉnh (Config → <i>Kiểu góc → Vuông sắc</i>) vuông hoá cả
+        hệ cùng lúc. Checkbox/radio vẽ trên input gốc (<code>appearance:none</code>, giữ a11y) với knob độ dày viền
+        (<code>--wb-check-bw</code>). Dùng viền <b>dashed</b> như một affordance — "trống / thả được / tuỳ chọn /
+        thêm mới" (<code>.wb-card--dashed</code>, <code>.wb-divider--dashed</code>, placeholder sortable, chip
+        <code>.wb-cap--dashed</code>, bước <code>.wb-steps__item--dashed</code>); dashed đọc là "chưa chốt", giúp
+        parse UI nhanh.</p>
+      </div>
+    </details>
+
+    <details class="wb-accordion__item">
+      <summary>§10 · Icon từ icon font — không vẽ tay</summary>
+      <div class="wb-accordion__body">
+        <p>Dùng một <b>icon font</b> thật (Material Symbols Rounded, <code>@import</code> ở đầu
+        <code>web-builder.css</code>) — không bao giờ hình vẽ bằng CSS hay SVG tay. Đặt inline bằng
+        <code>&lt;span class="wb-ico"&gt;name&lt;/span&gt;</code> (name là ligature: <code>expand_more</code>,
+        <code>close</code>, <code>drag_indicator</code>, <code>search</code>…); vài component tự chèn qua codepoint
+        <code>::before</code> và để trống trong markup (caret accordion, toggle tree, × đóng), còn
+        <code>&lt;select&gt;</code> lấy chevron từ một <code>.wb-ico</code> trong <code>.wb-select-wrap</code>. Giữ
+        icon hơi đậm để không mảnh như tóc — <code>--wb-ico-weight</code> mặc định 600, cỡ là <code>--wb-ico-size</code>;
+        cả hai là knob đơn Config chỉnh được, và <code>--wb-icon-font</code> đổi sang bộ khác (vd lucide) trong app.
+        Khi icon thật sự mang tính pictogram (thư mục, hoá đơn, danh mục), một <b>emoji</b> (📁 🧾 🍜) vẫn ổn — zero
+        dependency. Docs là online-first nên icon font qua CDN chấp nhận được; giữ <b>một</b> font, đừng làm trang nặng.</p>
+      </div>
+    </details>
+
+    <details class="wb-accordion__item">
+      <summary>§11 · Đặt tên: <code>wb-block__element--modifier</code> + <code>.is-*</code> cho trạng thái</summary>
+      <div class="wb-accordion__body">
+        <p>Class cấu trúc theo <b>block / element / modifier</b>: <code>.wb-input-group</code> (block),
+        <code>.wb-input-group__addon</code> (element), <code>.wb-btn--outline</code> (modifier <i>variant</i>).
+        <b>Trạng thái runtime</b> — bất cứ gì bật/tắt lúc app chạy, <i>kể cả validate form</i> — dùng prefix
+        <code>.is-*</code>: <code>.is-active</code>, <code>.is-open</code>, <code>.is-collapsed</code>,
+        <code>.is-dragging</code>, và <b><code>.is-invalid</code></b> trên một control
+        (<code>&lt;input class="wb-input is-invalid" aria-invalid="true"&gt;</code>). Validate <i>là</i> trạng thái
+        nên là <code>.is-invalid</code>, không phải modifier <code>--invalid</code> — giữ lằn ranh "variant vs state"
+        sạch và đọc y hệt trên mọi control (input / select / textarea). Field lỗi hiện <b>viền đỏ và giữ đỏ khi
+        focus</b> (vòng đỏ, không phải vòng trung tính) — field sai vẫn đọc là sai trong lúc gõ. Giữ đúng hai pattern
+        này; đừng thêm pattern thứ ba.</p>
+      </div>
+    </details>
+
+    <details class="wb-accordion__item">
+      <summary>§12 · Màu biểu đồ</summary>
+      <div class="wb-accordion__body">
+        <p>Chart có palette riêng để đọc liền mạch với phần còn lại của UI: <b>thu = xanh, chi = đỏ</b> — nhưng token
+        chart <code>--wb-chart-income</code> / <code>--wb-chart-expense</code> là bản <b>sáng hơn ~*-500</b>
+        (<code>#22c55e</code> / <code>#ef4444</code>), <i>không</i> phải <code>--wb-success/-danger</code> sâu hơn, vì
+        cả một bar tô bằng shade -600 đọc đục/nặng. Thêm bộ categorical <code>--wb-chart-1…8</code> cho slice/series
+        (bộ ~*-500 hài hoà), tất cả sáng hơn ở dark. Lưới/trục dùng <code>--wb-chart-grid</code> /
+        <code>--wb-chart-axis</code>. Đừng tự chọn hex chart; dùng token này (và feed cùng token cho Recharts trong
+        app) để mọi chart chung một khoá màu.</p>
+        <p>Khi nhiều màu quá rối, bọc chart trong <code>.wb-chart-scheme--mono</code> (xám) hay <code>--blue</code>
+        (một-hue) — mỗi series trộn từ một mực về phía canvas. <b>Giãn độ đậm theo số lượng:</b> thêm
+        <code>.wb-chart-ramp--N</code> (N = số series) để chúng xoè đều 100% → 25% và không hai bước nào giống nhau.
+        Cả hai đảo sáng↔tối. Cho slice donut một khe ~1 đơn vị trên track màu-bề-mặt để đọc rõ — và với donut
+        <b>mảnh bo tròn</b> (<code>.wb-arc--round</code>), giãn khe (~5 đơn vị) để mũ hình viên thuốc hiện ra. Một
+        <b>vòng progress</b> một giá trị theo tone của progress-bar (trung tính/<code>chart-1</code> &lt; ~80% ·
+        warning ~80–99% · danger ≥100%) — đừng tô vòng 68% màu hổ phách.</p>
+        <p><i>Kiểu</i> chart là SVG/CSS thuần — tái dùng primitive trước khi chế: line/area, bar nhóm, <b>combo</b>
+        (vẽ <code>&lt;rect&gt;</code> bar trước, rồi phủ <code>.wb-series-line</code> + điểm), <b>bar xếp hạng ngang</b>
+        (chỉ là hàng <code>.wb-progress</code> trong <code>.wb-stack</code>), donut / donut mảnh / vòng progress,
+        sparkline.</p>
+      </div>
+    </details>
+
+    <details class="wb-accordion__item">
+      <summary>§13 · Vùng cuộn — thanh cuộn theo theme + chừa đuôi</summary>
+      <div class="wb-accordion__body">
+        <p>Mọi vùng cuộn theo hai thói quen (đều nướng sẵn trong <code>.wb-scroll-y</code>):</p>
+        <ol class="doc-list">
+          <li><b>Thanh cuộn theo theme</b> — thanh mảnh, <b>track trong suốt</b>, thumb viền trung tính, để nó theo
+          theme thay vì hiện thanh OS sáng chói chọi trên nền tối hoặc đọc như một divider thứ hai. (Các vùng cuộn
+          dựng sẵn — thân bảng, menu dropdown — đã mang sẵn.)</li>
+          <li><b>Khoảng thở sau item cuối</b> — <code>scroll-padding</code> + pad đáy để hàng cuối cuộn thoát khỏi
+          cạnh, dễ đọc và chạm/chọn, thay vì bị ghim vào khung.</li>
+        </ol>
+        <p>Co đuôi theo tình huống: menu ngắn cần ít, list danh mục dài hay sidebar muốn nhiều hơn
+        (<code>.wb-scroll-y--pad</code>). Đừng để một list dài sát đáy container.</p>
+      </div>
+    </details>
+
+    <details class="wb-accordion__item">
+      <summary>§14 · Disabled ≠ locked — hai trạng thái khác nhau</summary>
+      <div class="wb-accordion__body">
+        <p>Cả hai đều là "giờ bạn không đổi được", nhưng nói điều khác nhau và trông khác nhau:</p>
+        <ul class="doc-list">
+          <li><b>Disabled</b> = <i>không áp dụng ở đây.</i> Control đọc là trơ: track trung tính mờ (không bao giờ
+          màu on/off), <code>cursor: not-allowed</code>. Nó không tự nhận là đang giữ một giá trị có nghĩa.</li>
+          <li><b>Locked</b> (<code>--locked</code>) = <i>có giá trị thật mà bạn không được đổi</i> (chặn bởi gói,
+          vai trò, một điều kiện tiên quyết). Vẫn hiện đúng trạng thái on/off thật, và đặt một ổ khoá nhỏ <b>bên
+          cạnh</b> control (mờ, sáng lên khi hover). Khi user thử đổi, ổ khoá bật full-opacity trung tính
+          (<code>--wb-fg</code>) và <b>rung</b> ~0.4s rồi lắng — phản hồi đúng lúc họ thao tác, không có rác "LOCKED"
+          thường trực.</li>
+        </ul>
+        <p><b>Không bao giờ phủ ổ khoá lên chính control</b> (vd lên thumb switch) — chật và xấu ở 16–20px; cách phủ
+        glyph lên thumb trước đây đã bị bỏ. Giữ khoá là một phần tử anh em để layout đặt trái hay phải. Trong app,
+        logic form/quyền thật lo phần chặn; class chỉ tạo hình + phản hồi từ chối.</p>
+      </div>
+    </details>
+
+    <details class="wb-accordion__item">
+      <summary>§15 · Nút đóng × nằm góc phải-trên</summary>
+      <div class="wb-accordion__body">
+        <p>Mọi nút đóng/dismiss (<code>.wb-close</code>) thuộc góc <b>phải-trên</b> của container — alert, toast,
+        modal, drawer. Nó <code>align-self: flex-start</code> (trên) và đẩy sang phải (body flex để lấp, hoặc
+        <code>margin-left:auto</code>). Đừng để nó trôi xuống giữa hàng theo chiều dọc: user với tay tới góc
+        phải-trên, và một dấu × căn giữa cạnh chữ wrap đọc như bị đặt nhầm.</p>
+      </div>
+    </details>
+
+    <details class="wb-accordion__item">
+      <summary>§16 · Docs ăn chính món của mình (dogfood)</summary>
+      <div class="wb-accordion__body">
+        <p>Docs site dựng <b>từ chính các primitive nó tài liệu hoá.</b> Markup demo nên dùng <code>.wb-stack</code> /
+        <code>.wb-cluster</code> / <code>.wb-grid</code> / <code>.wb-container</code> cho layout thay vì
+        <code>style="display:flex…"</code> một-lần, và tái dùng component thật (một "chart" thực ra là hàng
+        <code>.wb-progress</code>, một header hàng là <code>.wb-cluster--between</code>). Nếu một demo cần layout mà
+        utility không diễn đạt được, đó là tín hiệu bộ utility có lỗ hổng — <b>thêm utility, đừng</b> chế inline style.
+        <code>docs.css</code> chỉ giữ chrome mà lib không có primitive (cây sidebar, code block, config drawer,
+        specimen); mọi thứ khác trên trang là <code>wb-*</code>.</p>
+      </div>
+    </details>
+
+    <details class="wb-accordion__item">
+      <summary>§17 · Layout là bộ utility nhỏ (+ một khung trang) — không phải "nền tảng" lưới</summary>
+      <div class="wb-accordion__body">
+        <p>Bootstrap biến <b>layout thành nền tảng</b>: lưới 12 cột responsive (<code>.container</code> →
+        <code>.row</code> → <code>.col-*</code>), năm breakpoint (sm–xxl), và tiện ích gutter mà bạn scaffold hầu hết
+        trang lên đó. Web Builder cố ý <b>không</b> chép, vì ba lý do:</p>
+        <ol class="doc-list">
+          <li><b>Nền 12-cột là phản-tối-giản.</b> Năm breakpoint × mười hai cột × gutter là một từ vựng lớn để mang
+          trong một lib mà mục đích là <i>ít hơn</i>. Lớp layout của WB giữ năm utility một-mục-đích — và chúng
+          <b>tự đủ</b>: không cần Tailwind, Bootstrap hay framework nào để dựng một trang thật.</li>
+          <li><b>Trang thật hiếm khi cần 12 cột.</b> Cái chúng cần: chip/nút wrap (<code>.wb-cluster</code>), một
+          form/section xếp dọc (<code>.wb-stack</code>), một lưới card đều tự reflow (<code>.wb-grid--auto/-2/-3</code>),
+          một cột trang căn giữa (<code>.wb-container</code>), một tỉ lệ media cố định (<code>.wb-ratio</code>) — mỗi
+          cái tự xuống cấp gọn trên mobile, không phải sổ sách breakpoint.</li>
+          <li><b>Ít để học, ít để dùng sai.</b> Lưới 12-cột mời gọi lồng row-trong-col và toán cột lệch một; utility
+          flex-first giữ trang dễ đọc.</li>
+        </ol>
+        <p>Nên câu trả lời cho "layout có nên thành nền tảng như Bootstrap không?" là <b>không</b>: giữ utility
+        flex/grid nhỏ gọn. Chỉ thêm utility khi một màn thật không diễn đạt được (xem §16) — không phải để soi
+        gương Bootstrap.</p>
+        <p><b>Nhưng CÓ một lớp nằm trên chúng: khung trang (<a href="#/shell"><code>.wb-shell</code></a>) và nhịp tiêu
+        đề (<code>.wb-page-head</code> → <code>.wb-section</code> → <code>.wb-block</code>).</b> Từ chối lưới 12-cột
+        không đồng nghĩa bỏ trống cấp-cả-trang — mà đã có thời gian dài nó bị bỏ trống, và đó chính là lý do một bản
+        build ráp từ component đúng vẫn không giống hệ thống này: nó phải tự nghĩ ra khung và khoảng cách riêng.
+        Hai luật đi kèm lớp đó:</p>
+        <ul class="doc-list">
+          <li><b>Nhịp dọc giữa các phần của trang là của scaffold, không bao giờ là margin nhặt tay.</b> Lồng ba mức
+          tiêu đề đúng thứ tự là khoảng cách đã đúng. Thấy sai thì dịch token (<code>--wb-section-gap</code> /
+          <code>--wb-block-gap</code> / <code>--wb-page-pad-*</code>), đừng thêm <code>style="margin-top:…"</code> cho
+          một trang — đó là luật §18 áp cho <i>khoảng cách</i> thay vì màu, và là đường trôi nhanh nhất.</li>
+          <li><b><code>.wb-shell__side</code> là ngoại lệ <i>duy nhất</i> được phép của luật "layout sắp chỗ, không
+          bao giờ sơn".</b> Khe rail mang nền và một hairline bên phải, vì một cái rail không có chúng thì không phải
+          rail. Phần còn lại của lớp layout vẫn vô sắc, vô nghĩa — đó là thứ giữ cho nó thay được bằng utility của
+          Tailwind, còn shell thì cố ý không.</li>
+        </ul>
+        <p><b>Căn chỉnh là một phần của bộ nhỏ này, không phải thứ thêm bên ngoài.</b> Utility flex mang đủ điều khiển
+        trục chính và trục chéo: <code>.wb-cluster</code> justify với <code>--start/end/center/between/around/evenly</code>
+        và align với <code>--top/middle/bottom/baseline</code>; <code>.wb-stack</code> align items với
+        <code>--start/center/end</code>; <code>.wb-grow</code> để một con ăn phần dư và <code>.wb-self--*</code> ghi đè
+        một item. Nên "xếp hàng ngang rồi căn trên" luôn là một class, không bao giờ inline
+        <code>style="align-items:…"</code>. Cái ở ngoài là <i>vòi rồng spacing/sizing</i> (cả thang
+        <code>m-*/p-*/w-*</code>) — còn <b>căn chỉnh là năng lực cốt lõi mà một bộ utility flex phải có</b>.</p>
+      </div>
+    </details>
+
+    <details class="wb-accordion__item">
+      <summary>§18 · Kỷ luật tối giản: token thay cho số ma thuật</summary>
+      <div class="wb-accordion__body">
+        <p>Phần thẩm mỹ (trắng-đen-xám trước, màu chỉ cho nghĩa, một thang bóng mềm) là nửa dễ. Nửa khó hơn là
+        <b>tính hệ thống</b>: ưu tiên một token hơn một giá trị thô để một knob dịch chuyển cả hệ. Hairline là
+        <code>var(--wb-bw)</code>, pill là <code>var(--wb-radius-pill)</code>, bo góc / bóng / màu đều từ
+        <code>--wb-*</code>. Nếu bạn đang gõ một hex, một <code>999px</code>, hay một <code>1px solid</code> trần,
+        tra token trước. Thứ trang trí thuần duy nhất được phép là <code>--notch</code> của tag (khấc thẻ hành lý +
+        lỗ đục) — opt-in, không bao giờ mặc định; mọi thứ khác kiếm pixel của mình bằng cách mang nghĩa hoặc cấu trúc.</p>
+      </div>
+    </details>
+
+    <details class="wb-accordion__item">
+      <summary>§19 · Nền a11y (accessibility baseline)</summary>
+      <div class="wb-accordion__body">
+        <p>Style không được đánh đổi semantic. Sàn mà mọi component giữ:</p>
+        <ul class="doc-list">
+          <li><b>Control chỉ-icon mang <code>aria-label</code></b> (× đóng, nút ghost-icon, nút search) — glyph là
+          một bức tranh, không phải một cái tên. Nút có chữ thì không cần.</li>
+          <li><b>Dựng trên phần tử native</b> để bàn phím + role có sẵn: checkbox/radio/switch là
+          <code>&lt;input&gt;</code> thật với <code>appearance:none</code> (không phải <code>&lt;div&gt;</code> giả
+          control), select là <code>&lt;select&gt;</code> thật, accordion là <code>&lt;details&gt;</code>. Đây là lý
+          do lib vẽ <i>trên</i> input thay vì thay thế nó.</li>
+          <li><b>Validate được thông báo, không chỉ tô màu:</b> field lỗi đặt <code>aria-invalid="true"</code> cạnh
+          <code>.is-invalid</code> (§11) — viền đỏ là nửa thị giác, thuộc tính là nửa cho công nghệ hỗ trợ.</li>
+          <li><b>Overlay/dialog/search</b> mang đúng <code>role</code> + <code>aria-*</code> và được lái bởi một
+          behaviour engine sở hữu focus-trap và điều hướng bàn phím (§8) — class <code>wb-*</code> không được chống
+          lại nó (không bẫy <code>tabindex</code>, không <code>outline:none</code> mà không có ring thay thế). Tôn
+          trọng <code>prefers-reduced-motion</code> cho mọi thứ có animation.</li>
+        </ul>
+        <p>Luật: nếu bỏ styling đi mà vẫn còn một control dùng được, thao tác được, thì styling đúng; nếu còn lại một
+        control không nhãn hoặc không tới được, sửa markup, không phải CSS.</p>
+      </div>
+    </details>
+
+    <details class="wb-accordion__item">
+      <summary>§20 · Copy &amp; locale — Việt trước, và copy là dữ liệu</summary>
+      <div class="wb-accordion__body">
+        <p>Lib viết <b>tiếng Việt trước</b>: nhãn và status trong mọi snippet là tiếng Việt thật ("Lưu giao dịch",
+        "Quá hạn", "Ngân sách"), vì use-case chủ đạo là app tài chính Việt. Coi copy là <b>dữ liệu, không phải
+        style</b> — đổi tự do sang ngôn ngữ bất kỳ mà không đụng một class. Thứ phải nhất quán trên một màn là
+        <b>format, không phải ngôn ngữ</b>: tiền dùng format locale của app (<code>1.234.567 ₫</code>, một khoảng
+        trắng không ngắt trước <code>₫</code>, theo §3), ngày/giờ dùng một locale, cột số giữ <code>tabular-nums</code>
+        (<code>.wb-num</code>). Đừng trộn <code>1,234.56</code> và <code>1.234,56</code> trên cùng một trang.</p>
+        <p>Hệ quả, và cũng là lằn ranh docs site tự vạch: <b>chrome không phải copy</b>. Tên của <i>thứ</i> —
+        model điều hướng của docs, nhãn nhóm intent, thanh trên cùng, bảng Tweak, và các mục scope trong
+        <code>SKILL.md</code> — viết <b>tiếng Anh</b>, vì đó là từ vựng dùng chung giữa thư viện, skill và người
+        đọc repo. Còn mọi thứ một màn <i>nói với người dùng</i> thì tiếng Việt trước. App của bạn cũng vậy: giữ
+        từ vựng component (<code>wb-*</code>, tên token, tên nhóm) một ngôn ngữ và copy người dùng một ngôn ngữ,
+        đừng để rò sang nhau.</p>
+      </div>
+    </details>
+
+    <details class="wb-accordion__item">
+      <summary>§21 · Responsive — tự co duyên dáng, không kế toán breakpoint</summary>
+      <div class="wb-accordion__body">
+        <p>Component tự xuống cấp trên màn hẹp <b>một mình</b>, không cần một lưới-breakpoint để quản (§17). Các thói quen:</p>
+        <ul class="doc-list">
+          <li><b>Reflow, đừng cuộn:</b> <code>.wb-grid--auto/-2/-3</code> rớt xuống ít cột/một cột,
+          <code>.wb-cluster</code> wrap, một <code>wb-breadcrumb</code> dài wrap xuống dòng mới — nội dung vẫn đọc
+          được thay vì tràn ngang.</li>
+          <li><b>Gập, đừng nhồi:</b> navbar giấu menu vào một <code>☰</code> <code>wb-navbar__toggle</code> qua một
+          <b>container query</b> (thanh phản ứng theo bề rộng của chính nó, không phải viewport), và sidebar docs
+          thành drawer off-canvas dưới ~900px. Pager xếp dọc dưới ~460px.</li>
+          <li><b>Thiết kế màn nhỏ như bản co mặc định</b>, không phải một ca đặc biệt bắt vít vào. Ưu tiên hành vi
+          nội tại (<code>flex-wrap</code>, lưới <code>auto-fit</code>, container query) hơn <code>@media</code> cứng;
+          chỉ với tới media/container query khi reflow thật sự không diễn đạt được thay đổi.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="wb-accordion__item">
+      <summary>§22 · Mật độ demo — một code block mỗi pattern; một stage nhiều specimen</summary>
+      <div class="wb-accordion__body">
+        <p>Một trang demo cho thấy <b>nhiều ca nhất trong ít mẫu nhất</b>. Đơn vị demo là <code>demo__stage</code>
+        (sống) + <code>demo__code</code> (copy-paste) — nhưng chúng <b>không 1:1</b>: một <code>demo__stage</code> có
+        thể chứa <b>nhiều specimen</b>, và một <code>demo__code</code> chỉ in <b>pattern một lần</b>.</p>
+        <p>Khi một biến thể <b>không cần markup/class mới</b> — cùng component, chỉ khác <i>nội dung, độ dài, hay ngữ
+        cảnh</i> (một breadcrumb nhiều cấp hơn, một bảng nhiều hàng hơn, một <code>.wb-cluster</code> nhiều chip hơn)
+        — hãy đặt specimen thêm vào <b>cùng stage</b> và <b>đừng thêm code block thứ hai</b>. In pattern một lần; một
+        comment lo phần "và cứ thế" (<code>&lt;!-- thêm cấp = lặp &lt;a&gt; + __sep --&gt;</code>). Mở một
+        <b><code>.demo</code> card thứ hai</b>, hay một <code>wb-section</code>/<code>wb-block</code> mới có heading và
+        prose riêng, chỉ để in lại code gần y hệt là <b>độ dài, không phải thông tin</b>.</p>
+        <p>Chỉ tiêu một code block / sample <b>mới</b> khi người đọc phải <b>viết khác đi</b>: một modifier
+        (<code>--striped</code>, <code>--compact</code>, <code>--range</code>), một cấu trúc khác, hay một cách dùng
+        thật sự khác. <b>Litmus: snippet copy-paste có đổi không?</b> Không → cùng sample, một <code>demo__code</code>,
+        specimen thêm chung stage. Có → một cái mới. Đây là mặt "tác giả demo" của §16 — đừng chế tay, và đừng in
+        lại, thứ primitive đã cho bạn sẵn.</p>
+      </div>
+    </details>
+
+    <details class="wb-accordion__item">
+      <summary>§23 · Docs site tự chứa nội dung — render, đừng đẩy ra file thô</summary>
+      <div class="wb-accordion__body">
+        <p><b>Hai bề mặt tài liệu, hai luật ngược nhau.</b> Docs <b>cho AI</b> (<code>SKILL.md</code> +
+        <code>references/*.md</code>) cố ý <i>xếp lớp</i>: một cửa vào gọn trỏ sâu dần (SKILL.md → catalog → file
+        này). Deferral đó là thiết kế tiết kiệm token — AI chỉ đọc thứ nó cần — và <b>đúng</b>; đừng "sửa" bằng cách
+        nhồi mọi thứ vào SKILL.md. Docs <b>cho người</b> — chính docs <i>site</i> (<code>pages/*.html</code>) —
+        thì ngược lại: người đang xem một trang phải thấy <b>trọn câu chuyện ngay tại đó</b>, không bị đá ra một file
+        <code>.md</code> thô (trên site live là ngõ cụt không mở được).</p>
+        <p>Nên một trang docs-site phải <b>tự chứa nội dung cho chủ đề nó phụ trách</b>. <b>Đừng bao giờ</b> viết
+        "đọc bản đầy đủ ở <code>X.md</code>" / "roster đầy đủ ở <code>X.md</code>" như một <i>thứ thay cho nội
+        dung</i> — đó là bẫy docs-thiếu (chính cái từng làm bản đồ §N của overview thành một teaser trỏ về file này).
+        Lo trang dài? Đó là việc của primitive ẩn/hiện: bỏ nội dung đầy đủ vào <code>&lt;details&gt;</code>/accordion
+        hoặc một trang riêng và link <b>in-site</b> — như §1–§25 giờ nằm đầy đủ (gập được) ở chính trang này, còn
+        overview chỉ giữ index gọn trỏ tới. Link sang một <b>trang in-site khác</b> là điều hướng, không phải
+        deferral; đẩy người đọc ra một file reference thô để lấy nội dung mà site đã nhận phụ trách mới là anti-pattern.</p>
+        <p>Vẫn được phép <b>nêu tên</b> một <code>.md</code> như bản song song cho AI ("cùng luật, cho AI, ở
+        <code>design-principles.md</code>") — đó là ngữ cảnh, không phải đẩy nội dung. Và chi tiết thật sự ngoài phạm
+        vi thì trỏ là hợp lệ: behaviour sống ở app (§8) nói "xem <code>integration.md</code>" là đúng, vì phần
+        <i>nhìn</i> — việc thật của trang — đã đủ. <b>Phép thử:</b> xoá mọi câu "xem <code>X.md</code>" đi, trang còn
+        đủ về chủ đề của nó không? Còn → chỉ là ngữ cảnh. Thủng → bạn đã đẩy nội dung; render nó in-site.</p>
+        <p><code>validate-sync.sh</code> gác điều này: CHECK 11 buộc trang principles render đủ §1…§N (không chỉ
+        index); CHECK 13 buộc mọi trade-off <code>T#</code> ở README được mirror lên trang riêng
+        <a href="#/decisions">decisions</a> (cùng pattern, một thể hiện thứ hai); và một advisory cảnh báo trang
+        nào đẩy phần "đầy đủ" ra một <code>.md</code>. Xem <a href="#/tooling">Tooling</a>.</p>
+      </div>
+    </details>
+
+    <details class="wb-accordion__item">
+      <summary>§24 · Góc lồng nhau phải đồng tâm — bán kính trong = bán kính ngoài − gap</summary>
+      <div class="wb-accordion__body">
+        <p>Khi một element bo góc nằm <b>bên trong</b> một element bo góc khác, hai góc nên <b>chung một tâm</b> để
+        hai đường cong song song và khe hở nhìn <b>đều</b> quanh viền. Luật:</p>
+        <p class="wb-block__desc" style="font-size:14px"><b>bán kính trong = bán kính ngoài − gap</b> &nbsp;(gap =
+        padding/khoảng hở giữa hai mép tại đúng góc đó).</p>
+        <p>Để bán kính trong <i>bằng</i> ngoài thì góc trong <b>phình</b> ra — cong quá gắt so với chỗ nó ngồi. Chạy
+        cả hai chiều: ngoài 12px + padding 8px → trong <code>12 − 8 = 4px</code>; một ô trong bán kính 8px cần chừa
+        4px quanh nó → ngoài <code>8 + 4 = 12px</code> (đúng nút <b>W</b> ở docs: mark 8px, gap 4px → nút cần 12px,
+        không phải 6px).</p>
+        <p><b>Áp dụng khi — và khi bỏ qua.</b> Đây là quy tắc <b>có điều kiện</b>, không phải "child nào cũng chép
+        parent". Chỉ áp khi góc child thật sự <i>cặp</i> với góc parent: (a) child <b>có góc bo nhìn thấy</b>;
+        (b) <b>nằm sát một góc parent</b> với <b>gap nhỏ, đều</b> ở hai cạnh gặp nhau; (c) <b>nằm trong</b> khung bo;
+        (d) bán kính child là <b>trang trí</b>, cùng kiểu góc với parent. <b>Bỏ qua</b> khi:</p>
+        <ul>
+          <li><b>Bán kính ngữ nghĩa</b> — pill (<code>--wb-radius-pill</code>, = height/2) hay tròn (avatar, 50%).
+          Bán kính do <b>hình</b> quyết định, ép concentric là <b>phá hình</b> → giữ nguyên (capsule, tag, avatar được miễn).</li>
+          <li><b>Xa góc parent</b> — child canh giữa, padding lớn, row giữa list. Hai góc không cặp nhau → cho child
+          bán kính riêng hợp lý.</li>
+          <li><b>Full-bleed (gap = 0)</b> — media dán sát mép card: <code>ngoài − 0 = ngoài</code> → <b>bằng đúng</b>
+          parent (ca suy biến, không phải "trừ gap").</li>
+          <li><b>Chỉ chạm 1 cạnh</b> — child full-width inset trục kia (thanh, row): góc phía mép theo parent (hoặc
+          vuông giữa list), góc còn lại không phải của parent → xét <b>từng góc</b>, không một bán kính chung.</li>
+          <li><b>Cố ý tràn / để vuông</b> — child nhô khỏi khung, hoặc góc trong giữ vuông để tương phản. Không phải ca concentric.</li>
+        </ul>
+        <p class="wb-block__desc" style="margin:0 0 6px">Quy tắc nhớ: bán kính <b>suy ra</b> (chọn cho đẹp) thì
+        theo công thức; bán kính <b>ngữ nghĩa</b> (pill/tròn, do hình) thì miễn. Khi đã đủ điều kiện, cơ chế:</p>
+        <ul>
+          <li><b>Là gap, không phải chiều cao.</b> Cái quyết định là khoảng inset, <b>từng góc</b> — góc trên-trái
+          dùng gap trên + trái, có thể khác phải/dưới. Con canh giữa dọc thì gap dọc = <code>(h_ngoài − h_trong)/2</code>;
+          dạng theo chiều cao <code>r = R − (h_ngoài − h_trong)/2</code> chỉ đúng khi inset ngang bằng đúng nó.</li>
+          <li><b>Chặn ở 0.</b> Nếu <code>ngoài − gap ≤ 0</code> (padding lớn hơn bán kính ngoài) thì góc trong
+          <b>vuông</b> (bán kính <code>0</code>) — không âm, và không "kế thừa bán kính ngoài".</li>
+          <li><b>Suy ra, đừng canh mắt.</b> Bằng token: <code>border-radius: calc(var(--wb-radius) - var(--gap))</code>
+          ở element trong — đổi token bán kính hay padding thì cặp góc vẫn tự đồng tâm.</li>
+        </ul>
+        <p>Đây là mặt "góc" của §5 (elevation &amp; bo góc) và §18 (token, không magic number): bán kính trong là giá
+        trị <b>suy ra</b> — viết <code>ngoài − gap</code>, đừng đặt một hằng số thứ hai canh tay rồi lệch khi chỉnh
+        lại bán kính/padding. (Native đang tới — iOS "concentric corners", CSS <code>corner-shape</code> — nhưng khi
+        chưa phổ biến thì cứ tính.)</p>
+      </div>
+    </details>
+
+    <details class="wb-accordion__item">
+      <summary>§25 · Ship cả nền móng, không chỉ linh kiện</summary>
+      <div class="wb-accordion__body">
+        <p>Một thư viện component được chấm bằng <b>màn hình</b> người ta dựng ra, không phải bằng component đứng
+        một mình. Có hai lớp "vì sao docs đẹp" rất dễ nằm <b>ngoài</b> phần ship — và ở đây đã từng nằm ngoài cả hai:</p>
+        <ul class="doc-list">
+          <li><b>Nền tảng (baseline)</b> — box-sizing, font, màu nền/chữ, line-height, link không xanh mặc định
+          trình duyệt. Nó nằm trong stylesheet riêng của docs, nên mọi build khác rơi về mặc định trình duyệt:
+          chữ serif, link xanh gạch chân, line-height rộng, body thừa 8px margin. Đó là <b>lý do lớn nhất</b>
+          khiến một build không giống docs. Giờ ship dưới dạng <code>.wb-app</code> (CSS section 53), bật bằng
+          class chứ không phải rule <code>body {}</code> trần — để file vẫn thả được vào trang chỉ cần một component.</li>
+          <li><b>Màn hình hoàn chỉnh</b> — danh sách part cộng bảng recipe vẫn còn hàng trăm quyết định nhỏ mỗi
+          trang: cấp heading nào, breadcrumb đặt đâu, khi nào một hàng là <code>--2</code> thay vì
+          <code>--auto</code>, bao nhiêu màu là đủ. Nên thư viện ship <b>page template</b>
+          (<code>assets/templates/*.html</code>), và <code>SKILL.md</code> đặt luật cứng phải bắt đầu từ đó.
+          <code>validate-sync.sh</code> CHECK 14 khoá recipe ↔ template hai chiều.</li>
+        </ul>
+        <p>Phép thử: <b>dựng một màn thật chỉ bằng những gì được ship, xem phải tự chế ra cái gì.</b> Thứ bạn với
+        tay tìm mà không có là <i>lỗ hổng của thư viện</i>, không phải giới hạn kiên nhẫn của bạn. Viết 6 template
+        đã lộ ra ba lỗ trong một lượt — <code>.wb-container</code> tràn ra ngoài cha vì thiếu
+        <code>box-sizing</code>, rail gập ở 900px mà không có nút mở, và toàn bộ baseline ở trên. Không cái nào
+        nhìn thấy được từ bên trong docs, vì docs đã vá sẵn cả ba trong một file không bao giờ ship.</p>
+        <p>Hệ quả cho mọi thứ bạn thêm: nếu một luật là <b>cần thiết để chính showroom của thư viện trông đúng</b>,
+        luật đó thuộc về <b>thư viện</b>. Luật chỉ sống trong showroom là luật mà build kế tiếp sẽ không nhận được.</p>
+      </div>
+    </details>
+
+  </div>
+
+  <p class="wb-section__desc" style="margin-top:18px">Xem trực tiếp vài nguyên tắc thành hình: <a href="#/color">Triết
+  lý màu (§1)</a> · <a href="#/tokens">Design tokens (§18)</a> · <a href="#/border">Border &amp; bo góc (§9)</a> ·
+  <a href="#/config">Config playground (§6)</a>. Quy trình giữ các § này khỏi lệch: <a href="#/tooling">Tooling:
+  verify · hook</a>.</p>
+</section>

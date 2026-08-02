@@ -1,27 +1,27 @@
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Nền tảng</p>
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Foundation</p>
   <h2>Config / Tweak</h2>
   <p>Bảng tinh chỉnh trượt ra từ bên phải (nút <span class="wb-ico wb-ico--sm" style="vertical-align:-5px">tune</span>
   trên thanh trên cùng). Kéo các thông số và xem giao diện đổi <b>ngay lập tức</b>. Việc chỉnh ở đây
   <b>chỉ ảnh hưởng bản docs</b> đang mở — hoàn toàn không đụng tới <code>web-builder.css</code> hay component gốc.
-  Chỉnh xong bấm <b>Xuất .md</b> để lấy khối token, rồi dán vào source (hoặc đưa cho AI cập nhật).</p>
+  Chỉnh xong bấm <b>Export .md</b> để lấy khối token, rồi dán vào source (hoặc đưa cho AI cập nhật).</p>
 </div>
 
-<section class="doc-sec">
+<section class="wb-section">
   <button class="wb-btn wb-btn--lg" data-config-open>
     <span class="wb-ico wb-ico--sm">tune</span> Mở bảng tinh chỉnh
   </button>
 
-  <div class="doc-note" style="margin-top:20px">
+  <div class="wb-alert wb-alert--info doc-note" style="margin-top:20px">
     <span class="wb-ico" style="color:var(--wb-info-text)">info</span>
     <div>Cơ chế: bảng chỉ ghi các biến CSS (<code>--wb-*</code>) lên <code>:root</code> của trang docs. Vì component
     dùng biến, chúng đổi theo tức thì; còn file thư viện thì <b>bất biến</b>. Màu áp dụng cho <b>theme đang xem</b> —
     muốn chỉnh cả sáng &amp; tối thì đổi theme rồi xuất thêm một lần nữa.</div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Xem trực tiếp khi chỉnh</h4>
-    <p class="doc-block__desc">Mở bảng và thử preset "Kiểu góc" (Vuông sắc), "Độ dày viền", "Viền checkbox", "Cỡ/đậm icon" hay đổi màu — cụm dưới đây đổi theo.</p>
+    <p class="wb-block__desc">Mở bảng và thử preset <b>Corner style</b> (Sharp), <b>Border width</b>, <b>Checkbox border</b>, <b>Icon size/weight</b> hay đổi màu — cụm dưới đây đổi theo.</p>
     <div class="demo">
       <div class="demo__stage">
         <div class="wb-cluster">
@@ -46,26 +46,26 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Chỉnh được những gì</h4>
     <div class="wb-card" style="max-width:640px">
       <div class="wb-table-scroll">
         <table class="wb-table wb-table--compact">
           <thead><tr><th>Nhóm</th><th>Thông số</th></tr></thead>
           <tbody>
-            <tr><td class="wb-cell-strong">Kiểu góc (bo góc)</td><td>Preset <b>Bo tròn / Vuông sắc (0) / Bo nhiều</b> đổi mọi radius cùng lúc, + slider riêng cho radius nhỏ/vừa/lớn/nút/card/input <b>và từng component</b>: rãnh &amp; núm switch, thanh &amp; núm slider, checkbox (kéo về 0 = vuông)</td></tr>
-            <tr><td class="wb-cell-strong">Viền</td><td>Độ dày viền, <b>viền checkbox</b>, màu viền, màu viền đậm</td></tr>
-            <tr><td class="wb-cell-strong">Đổ bóng</td><td>Đổ bóng component</td></tr>
-            <tr><td class="wb-cell-strong">Màu nền &amp; chữ</td><td>Canvas, surface, surface phụ, chữ chính/phụ/mờ — theo theme đang xem</td></tr>
-            <tr><td class="wb-cell-strong">Màu trạng thái</td><td>success / danger / warning / info</td></tr>
-            <tr><td class="wb-cell-strong">Chữ &amp; icon</td><td>Font (10 font đẹp + font hệ thống), cỡ icon, độ đậm icon</td></tr>
-            <tr><td class="wb-cell-strong">Biểu đồ</td><td>Thang màu (đa sắc / xám / một tông xanh), màu Thu &amp; Chi</td></tr>
-            <tr><td class="wb-cell-strong">Chỉ trong docs</td><td>Viền &amp; đổ bóng của sample, màu divider</td></tr>
+            <tr><td class="wb-cell-strong">Corner style</td><td>Preset <b>Rounded / Sharp (0) / Extra round</b> đổi mọi radius cùng lúc, + slider riêng cho radius nhỏ/vừa/lớn/nút/card/input <b>và từng component</b>: rãnh &amp; núm switch, thanh &amp; núm slider, checkbox (kéo về 0 = vuông)</td></tr>
+            <tr><td class="wb-cell-strong">Borders</td><td>Độ dày viền, <b>viền checkbox</b>, màu viền, màu viền đậm</td></tr>
+            <tr><td class="wb-cell-strong">Shadow</td><td>Đổ bóng component</td></tr>
+            <tr><td class="wb-cell-strong">Surfaces &amp; text</td><td>Canvas, surface, surface phụ, chữ chính/phụ/mờ — theo theme đang xem</td></tr>
+            <tr><td class="wb-cell-strong">Status colours</td><td>success / danger / warning / info</td></tr>
+            <tr><td class="wb-cell-strong">Type &amp; icons</td><td>Font (10 font đẹp + font hệ thống), cỡ icon, độ đậm icon</td></tr>
+            <tr><td class="wb-cell-strong">Charts</td><td>Thang màu (đa sắc / xám / một tông xanh), màu Thu &amp; Chi</td></tr>
+            <tr><td class="wb-cell-strong">Docs only</td><td>Viền &amp; đổ bóng của sample, màu divider</td></tr>
           </tbody>
         </table>
       </div>
     </div>
-    <p class="doc-block__desc" style="margin-top:12px">Nút <b>Đặt lại</b> trả mọi thứ về mặc định. Nút <b>Xuất .md</b> tải
+    <p class="wb-block__desc" style="margin-top:12px">Nút <b>Reset</b> trả mọi thứ về mặc định. Nút <b>Export .md</b> tải
     về file <code>web-builder-tweaks.md</code> chứa khối <code>:root { … }</code> đúng các giá trị bạn đã đổi.</p>
   </div>
 </section>

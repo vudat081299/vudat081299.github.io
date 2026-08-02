@@ -1,0 +1,251 @@
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Layout &amp; utilities</p>
+  <h2>App shell &amp; nhịp trang</h2>
+  <p>Lớp <b>trên</b> component. Component trả lời “cái gì nằm đây”; phần này trả lời “nó nằm ở đâu và cách nhau bao xa”.
+  Thiếu nó thì mỗi màn hình mới lại tự nghĩ ra khung và khoảng cách riêng — đó chính là lúc bản build thôi giống phần
+  còn lại của hệ thống. Chính trang docs bạn đang đọc chạy trên đúng bộ class này.</p>
+</div>
+
+<section class="wb-section">
+  <h3>Nền tảng — <code>.wb-app</code></h3>
+  <p class="wb-section__desc">Mặt đất mà mọi component đứng lên: <code>box-sizing: border-box</code> cho mọi
+  phần tử <code>wb-*</code>, font, màu nền/chữ, <code>line-height</code>, và link <b>thừa hưởng màu</b> thay vì
+  xanh mặc định trình duyệt. Đặt lên <code>&lt;body&gt;</code>.</p>
+
+  <div class="wb-block">
+    <h4>Khi nào phải viết ra</h4>
+    <p class="wb-block__desc"><code>.wb-shell</code> đã mang sẵn đúng những khai báo đó, nên màn có shell không
+    cần thêm gì. Màn <b>không</b> có shell — đăng nhập, landing, widget nhúng — phải tự khai
+    <code>class="wb-app"</code>, nếu không sẽ rơi về mặc định trình duyệt: chữ serif, link xanh gạch chân,
+    line-height rộng, body thừa 8px margin. Đây cố tình là <b>opt-in bằng class</b> chứ không phải rule
+    <code>body {}</code> trần — để thả file CSS này vào một trang chỉ cần một component thì không phá trang đó.</p>
+    <div class="demo">
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;body class="wb-app"&gt;                &lt;!-- màn không shell: bắt buộc --&gt;
+  &lt;main class="wb-container wb-container--narrow"&gt; … &lt;/main&gt;
+&lt;/body&gt;
+
+&lt;body class="wb-app"&gt;                &lt;!-- màn có shell: .wb-shell mang sẵn, để đây cho nhất quán --&gt;
+  &lt;div class="wb-shell"&gt; … &lt;/div&gt;
+&lt;/body&gt;</code></pre></div>
+    </div>
+  </div>
+</section>
+
+<section class="wb-section">
+  <h3>Khung app-shell</h3>
+  <p class="wb-section__desc">Bốn khe: thanh trên (<code>.wb-navbar</code>), hàng thân (<code>.wb-shell__body</code>)
+  gồm rail trái (<code>.wb-shell__side</code>) cạnh cột nội dung (<code>.wb-shell__main</code>), và footer.
+  Rail đã tự dính, tự cuộn, và tự gập thành ngăn kéo trên màn hẹp — không phải ráp thêm gì.</p>
+
+  <div class="wb-block">
+    <h4>Toàn bộ khung</h4>
+    <p class="wb-block__desc">Demo dưới đây hạ <code>--wb-shell-h</code> xuống 320px để vừa khung xem;
+    trong app cứ để mặc định (<code>100dvh</code>).</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-shell" style="--wb-shell-h:320px; --wb-navbar-h:44px; --wb-sidenav-w:150px; --wb-text-page:17px; border:var(--wb-bw) solid var(--wb-border); border-radius:var(--wb-radius); overflow:hidden">
+          <header class="wb-navbar wb-navbar--sticky wb-navbar--glass">
+            <span class="wb-navbar__brand"><span class="wb-navbar__mark">C</span> Cashy</span>
+            <div class="wb-navbar__spacer"></div>
+            <button class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm" aria-label="Giao diện"><span class="wb-ico wb-ico--sm">dark_mode</span></button>
+          </header>
+          <div class="wb-shell__body">
+            <aside class="wb-shell__side">
+              <div class="wb-sidenav">
+                <div class="wb-sidenav__section">Sổ tiền</div>
+                <a class="wb-sidenav__link is-active" href="#/shell"><span class="wb-ico wb-ico--sm">dashboard</span> Tổng quan</a>
+                <a class="wb-sidenav__link" href="#/shell"><span class="wb-ico wb-ico--sm">receipt_long</span> Giao dịch</a>
+                <a class="wb-sidenav__link" href="#/shell"><span class="wb-ico wb-ico--sm">savings</span> Ngân sách</a>
+              </div>
+            </aside>
+            <div class="wb-shell__main">
+              <main class="wb-container wb-container--pad" style="--wb-page-pad-block:18px; --wb-page-pad-end:18px">
+                <div class="wb-page-head">
+                  <p class="wb-eyebrow">Tháng 8</p>
+                  <h2>Tổng quan</h2>
+                </div>
+                <div class="wb-stat">
+                  <div class="wb-stat__label">Số dư</div>
+                  <div class="wb-stat__value">12.480.000&nbsp;₫</div>
+                </div>
+              </main>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-shell"&gt;
+  &lt;header class="wb-navbar wb-navbar--sticky wb-navbar--glass"&gt; … &lt;/header&gt;
+
+  &lt;div class="wb-shell__body"&gt;
+    &lt;aside class="wb-shell__side"&gt;
+      &lt;div class="wb-sidenav"&gt; … &lt;/div&gt;   &lt;!-- khe đã sơn nền + viền, sidenav chỉ góp phần link --&gt;
+    &lt;/aside&gt;
+
+    &lt;div class="wb-shell__main"&gt;
+      &lt;main class="wb-container wb-container--pad"&gt; … nội dung trang … &lt;/main&gt;
+      &lt;footer class="wb-footer"&gt; … &lt;/footer&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Trang public/marketing: bỏ rail — navbar + .wb-container--pad + footer là đủ. --&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="wb-alert wb-alert--info doc-note">
+    <span class="wb-ico" style="color:var(--wb-info-text)">info</span>
+    <div><b><code>min-width:0</code> trên <code>.wb-shell__main</code> là thứ chịu lực</b>: thiếu nó, một bảng rộng hay
+    một chuỗi dài không ngắt sẽ đẩy cột nội dung tràn khỏi màn hình thay vì cuộn bên trong. Đây là lỗi bố cục hay gặp
+    nhất khi tự dựng shell bằng tay.</div>
+  </div>
+</section>
+
+<section class="wb-section">
+  <h3>Nhịp trang — page-head · section · block</h3>
+  <p class="wb-section__desc">Ba mức tiêu đề, mỗi mức tự mang cỡ chữ và khoảng cách trên của nó. Ráp đúng thứ tự là
+  ra đúng nhịp — không cần chọn margin. <b>Thẻ heading tuỳ bạn</b>: các class này style thẳng thẻ <code>h1…h6</code>
+  nằm trực tiếp bên trong, nên app giữ được cây tiêu đề đúng chuẩn mà vẫn có thang chữ. Cần một section mở trang
+  ngay sát page-head thì dùng <code>.wb-section--flush</code> (bỏ khoảng trên) — <b>đừng</b> gõ
+  <code>style="margin-top:…"</code>.</p>
+
+  <div class="wb-block">
+    <h4>Ba mức, xếp lồng</h4>
+    <p class="wb-block__desc"><code>.wb-eyebrow</code> là dòng nhãn nhỏ phía trên tiêu đề trang.
+    Đoạn mô tả tự giới hạn bề rộng đọc (<code>--wb-measure</code>) nên không bao giờ chạy dài quá tầm mắt.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-page-head">
+          <p class="wb-eyebrow">Tài chính</p>
+          <h2>Giao dịch</h2>
+          <p>Mọi khoản thu chi trong kỳ, gần nhất lên đầu.</p>
+        </div>
+        <section class="wb-section">
+          <h3>Trong tháng này</h3>
+          <p class="wb-section__desc">Tổng hợp theo danh mục, chưa gồm khoản chờ đối soát.</p>
+          <div class="wb-block">
+            <h4>Ăn uống</h4>
+            <p class="wb-block__desc">18 giao dịch · 2.140.000 ₫</p>
+            <div class="wb-progress"><div class="wb-progress__bar" style="width:54%"></div></div>
+          </div>
+        </section>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-page-head"&gt;            &lt;!-- --lg = cỡ hero cho landing --&gt;
+  &lt;p class="wb-eyebrow"&gt;Tài chính&lt;/p&gt;
+  &lt;h1&gt;Giao dịch&lt;/h1&gt;
+  &lt;p&gt;Mọi khoản thu chi trong kỳ.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;section class="wb-section"&gt;
+  &lt;h2&gt;Trong tháng này&lt;/h2&gt;
+  &lt;p class="wb-section__desc"&gt;Tổng hợp theo danh mục.&lt;/p&gt;
+
+  &lt;div class="wb-block"&gt;
+    &lt;h3&gt;Ăn uống&lt;/h3&gt;
+    &lt;p class="wb-block__desc"&gt;18 giao dịch&lt;/p&gt;
+    …
+  &lt;/div&gt;
+&lt;/section&gt;
+
+&lt;!-- Không dùng thẻ heading? __title / __desc nói y hệt, tường minh:
+     &lt;div class="wb-page-head__title"&gt; · &lt;p class="wb-page-head__desc"&gt; --&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="wb-block">
+    <h4>Hero — <code>.wb-page-head--lg</code></h4>
+    <p class="wb-block__desc">Cùng một khối, tiêu đề lên một bậc thang chữ. Dùng cho trang mở đầu / landing.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-page-head wb-page-head--lg">
+          <h2>Quản lý tiền, không quản lý bảng tính</h2>
+          <p>Ghi chi tiêu trong vài giây, xem ngân sách còn lại theo thời gian thực.</p>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-page-head wb-page-head--lg"&gt;
+  &lt;h1&gt;Quản lý tiền, không quản lý bảng tính&lt;/h1&gt;
+  &lt;p&gt;Ghi chi tiêu trong vài giây.&lt;/p&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+</section>
+
+<section class="wb-section">
+  <h3>Trạng thái rail</h3>
+  <p class="wb-section__desc">Hành vi là việc của app — một class bật/tắt trên <code>.wb-shell</code>, đúng kiểu
+  “style ở đây, behaviour trong app” của cả thư viện. Trang docs này dùng đúng hai class đó (nút chữ W trên thanh trên).</p>
+
+  <div class="wb-block">
+    <h4>Hai class, hai ngữ cảnh</h4>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-stack">
+          <div class="wb-cluster"><span class="wb-cap wb-cap--outline">.is-side-collapsed</span>
+            <span class="wb-cell-muted">Desktop — giấu hẳn rail, cột nội dung giãn hết bề ngang.</span></div>
+          <div class="wb-cluster"><span class="wb-cap wb-cap--outline">.is-side-open</span>
+            <span class="wb-cell-muted">Màn hẹp (&lt; 900px) — rail trượt ra <b>đè lên</b> trang kèm lớp phủ tối; chạm ra ngoài để đóng.</span></div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>const shell = document.querySelector(".wb-shell");
+const narrow = window.matchMedia("(max-width: 900px)").matches;
+shell.classList.toggle(narrow ? "is-side-open" : "is-side-collapsed");</code></pre></div>
+    </div>
+  </div>
+
+  <div class="wb-block">
+    <h4>Nút mở rail — <code>.wb-shell__side-toggle</code></h4>
+    <p class="wb-block__desc">Đặt nó <b>đầu thanh trên</b>. Nút chỉ hiện đúng lúc rail gập thành ngăn kéo
+    (≤ 900px) và tự ẩn ở màn rộng — nút và ngăn kéo dùng chung một mốc nên không bao giờ lệch nhau.
+    Đừng nhầm với <code>.wb-navbar__toggle</code>: cái đó gập <i>link inline của thanh</i> theo bề ngang
+    của chính thanh. Trong shell, điều hướng nằm ở rail — dùng cái này.</p>
+    <div class="demo">
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;header class="wb-navbar wb-navbar--sticky wb-navbar--glass"&gt;
+  &lt;button class="wb-btn wb-btn--ghost wb-btn--icon wb-shell__side-toggle"
+          data-side-toggle aria-label="Mở thanh điều hướng"&gt;
+    &lt;span class="wb-ico"&gt;menu&lt;/span&gt;
+  &lt;/button&gt;
+  …
+&lt;/header&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="wb-alert wb-alert--info doc-note">
+    <span class="wb-ico" style="color:var(--wb-info-text)">info</span>
+    <div>Đây là <b>chỗ duy nhất</b> trong thư viện đo theo <b>viewport</b> thay vì container
+    (<a href="#/navbar">navbar</a> và <a href="#/footer">pager</a> dùng container query).
+    Đúng ở đây, vì shell <i>chính là</i> viewport — không có container ngoài nào để hỏi.
+    Mốc 900px lặp lại trong driver của docs; đổi một nơi thì đổi cả hai.</div>
+  </div>
+</section>
+
+<section class="wb-section">
+  <h3>Các knob</h3>
+  <p class="wb-section__desc">Nhịp của cả màn hình nằm trong vài token — chỉnh một lần cho toàn app,
+  đừng chỉnh margin từng trang.</p>
+
+  <div class="wb-block">
+    <div class="wb-card">
+      <table class="wb-table">
+        <thead><tr><th>Token</th><th>Mặc định</th><th>Điều khiển</th></tr></thead>
+        <tbody>
+          <tr><td><code>--wb-shell-h</code></td><td>100dvh</td><td>Chiều cao shell (hạ xuống khi nhúng, hoặc khi trang có <code>zoom</code>)</td></tr>
+          <tr><td><code>--wb-navbar-h</code></td><td>56px</td><td>Chiều cao thanh trên — rail dính ngay dưới mốc này</td></tr>
+          <tr><td><code>--wb-sidenav-w</code></td><td>240px</td><td>Bề ngang rail</td></tr>
+          <tr><td><code>--wb-page-pad-block</code></td><td>36px</td><td>Khoảng trống trên tiêu đề trang</td></tr>
+          <tr><td><code>--wb-page-pad-end</code></td><td>120px</td><td>Đuôi trang, để khối cuối cuộn thoát khỏi mép</td></tr>
+          <tr><td><code>--wb-section-gap</code></td><td>44px</td><td>Giữa hai <code>.wb-section</code></td></tr>
+          <tr><td><code>--wb-block-gap</code></td><td>28px</td><td>Giữa hai <code>.wb-block</code></td></tr>
+          <tr><td><code>--wb-measure</code></td><td>68ch</td><td>Bề rộng đọc tối đa của đoạn mô tả (<code>-tight</code> = 62ch)</td></tr>
+          <tr><td><code>--wb-text-page</code> …</td><td>27px …</td><td>Thang chữ — xem <a href="#/typography">Typography</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="wb-alert wb-alert--info doc-note">
+    <span class="wb-ico" style="color:var(--wb-info-text)">info</span>
+    <div>Cột nội dung mặc định rộng 1120px (<code>.wb-container</code>). Trang form / auth / đọc dài dùng
+    <code>--narrow</code> (720), bảng dày dữ liệu dùng <code>--wide</code> (1320). <code>--pad</code> chỉ thêm
+    khoảng trống <b>dọc</b>, nên container lồng bên trong một trang vẫn phẳng lì. Xem thêm
+    <a href="#/recipes">Dựng trang (recipes)</a> để biết nên nhét gì vào cột đó.</div>
+  </div>
+</section>

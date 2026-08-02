@@ -1,12 +1,12 @@
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Phản hồi</p>
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Feedback</p>
   <h2>Progress</h2>
   <p>Thanh tiến độ — rất hợp thể hiện <b>đã chi / ngân sách</b>. Neutral mặc định; dùng màu khi mức chi
   chạm ngưỡng cảnh báo/vượt (đúng thang màu).</p>
 </div>
 
-<section class="doc-sec">
-  <div class="doc-block">
+<section class="wb-section">
+  <div class="wb-block">
     <h4>Màu &amp; kích thước</h4>
     <div class="demo demo--plain">
       <div class="demo__stage">
@@ -29,8 +29,10 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Trong card ngân sách</h4>
+    <p class="wb-block__desc">Cùng thanh trên, đặt trong một <a href="#/card">card</a> — không có class mới, nên
+    chỉ minh hoạ bố cục (không lặp lại snippet).</p>
     <div class="demo">
       <div class="demo__stage">
         <div class="wb-card" style="max-width:360px">
@@ -43,13 +45,12 @@
           </div>
         </div>
       </div>
-      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-progress"&gt;&lt;div class="wb-progress__bar wb-progress__bar--warning" style="width:82%"&gt;&lt;/div&gt;&lt;/div&gt;</code></pre></div>
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Loading — đang tải (fill % + vệt shimmer) <span class="wb-cap wb-cap--sm wb-cap--outline">animation</span></h4>
-    <p class="doc-block__desc">Thanh vẫn hiện <b>% thật</b> (đúng thẻ <code>__bar</code>), nhưng phần <b>đã lấp</b> có một vệt sáng
+    <p class="wb-block__desc">Thanh vẫn hiện <b>% thật</b> (đúng thẻ <code>__bar</code>), nhưng phần <b>đã lấp</b> có một vệt sáng
     kiểu skeleton chạy qua — báo "đang xử lý". Vệt chỉ chạy trong phần có màu (0 → đúng width của bar). Đổi
     <b>màu vệt</b> bằng <code>--wb-progress-shimmer</code>, <b>độ rộng dải chạy</b> bằng <code>--wb-progress-band</code>;
     tôn trọng <code>prefers-reduced-motion</code>.</p>

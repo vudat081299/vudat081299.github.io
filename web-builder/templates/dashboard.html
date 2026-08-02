@@ -1,0 +1,297 @@
+<!doctype html>
+<!-- =============================================================================
+     TEMPLATE · Dashboard / home  —  catalog recipe "Dashboard / home"
+     -----------------------------------------------------------------------------
+     A whole screen, assembled only from shipped wb-* parts. START HERE instead of
+     composing a page from scratch: replace the copy and the data, keep the frame,
+     the order and the rhythm.
+
+     Order is the recipe's, not a taste call: summary (KPIs) → trend (charts) →
+     detail (recent rows). Loudest number highest.
+
+     What you may change: text, numbers, icon ligatures, how many KPIs/rows, which
+     sections you keep. What you should NOT change: the wb-shell frame, the
+     wb-page-head → wb-section → wb-block nesting, and spacing (it comes from
+     tokens — if a gap feels wrong, set --wb-section-gap / --wb-block-gap, never a
+     margin on one element).
+     ========================================================================== -->
+<html lang="vi" class="wb-scrollbars">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bảng điều khiển · Cashy</title>
+<!-- The one file this library ships. Everything below is plain markup. -->
+<link rel="stylesheet" href="../web-builder.css" />
+<script>
+  /* Theme before first paint, so a dark user never sees a white flash. */
+  try {
+    var t = localStorage.getItem('theme');
+    if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches))
+      document.documentElement.classList.add('dark');
+  } catch (e) {}
+</script>
+</head>
+<body class="wb-app">
+
+<div class="wb-shell">
+
+  <!-- ============================ TOP BAR ================================== -->
+  <header class="wb-navbar wb-navbar--sticky wb-navbar--glass">
+    <!-- Opens the rail once it folds to a drawer (≤900px); hidden above that. -->
+    <button class="wb-btn wb-btn--ghost wb-btn--icon wb-shell__side-toggle" data-side-toggle
+            aria-label="Mở thanh điều hướng"><span class="wb-ico">menu</span></button>
+    <a class="wb-navbar__brand" href="dashboard.html"><span class="wb-navbar__mark">C</span> Cashy</a>
+    <span class="wb-navbar__spacer"></span>
+    <div class="wb-navbar__actions">
+      <button class="wb-btn wb-btn--ghost wb-btn--icon" aria-label="Tìm kiếm"><span class="wb-ico">search</span></button>
+      <button class="wb-btn wb-btn--ghost wb-btn--icon" aria-label="Thông báo"><span class="wb-ico">notifications</span></button>
+      <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" aria-label="Đổi giao diện sáng/tối" title="Sáng / Tối">
+        <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
+        <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
+      </button>
+      <span class="wb-avatar wb-avatar--sm">DV</span>
+    </div>
+  </header>
+
+  <div class="wb-shell__body">
+
+    <!-- ============================ RAIL =================================== -->
+    <!-- The slot owns the surface, the sticky offset, its own scroll and the
+         mobile drawer. The wb-sidenav inside contributes link styling only. -->
+    <aside class="wb-shell__side wb-scrollbars">
+      <nav class="wb-sidenav">
+        <div class="wb-sidenav__section">Tổng quan</div>
+        <a class="wb-sidenav__link is-active" href="dashboard.html"><span class="wb-ico">dashboard</span> Bảng điều khiển</a>
+        <a class="wb-sidenav__link" href="list.html"><span class="wb-ico">receipt_long</span> Giao dịch <span class="wb-sidenav__badge">128</span></a>
+        <a class="wb-sidenav__link" href="list.html"><span class="wb-ico">savings</span> Ngân sách</a>
+        <a class="wb-sidenav__link" href="list.html"><span class="wb-ico">insights</span> Báo cáo</a>
+        <div class="wb-sidenav__section">Tài khoản</div>
+        <a class="wb-sidenav__link" href="list.html"><span class="wb-ico">account_balance_wallet</span> Ví &amp; ngân hàng</a>
+        <a class="wb-sidenav__link" href="list.html"><span class="wb-ico">flag</span> Mục tiêu <span class="wb-sidenav__badge">3</span></a>
+        <a class="wb-sidenav__link" href="settings.html"><span class="wb-ico">settings</span> Cài đặt</a>
+      </nav>
+    </aside>
+
+    <div class="wb-shell__main">
+      <!-- ========================= CONTENT ================================= -->
+      <main class="wb-container wb-container--pad">
+
+        <div class="wb-page-head">
+          <p class="wb-eyebrow">Tháng 7, 2026</p>
+          <h1>Bảng điều khiển</h1>
+          <p>Tình hình thu chi trong kỳ, số dư các ví và những khoản cần chú ý.</p>
+        </div>
+
+        <!-- 1 · SUMMARY — the KPI row. Colour only where it carries status (§1). -->
+        <section class="wb-section wb-section--flush">
+          <div class="wb-stat-grid">
+            <div class="wb-stat">
+              <div class="wb-stat__top">
+                <span class="wb-stat__label">Tổng số dư</span>
+                <span class="wb-stat__icon" aria-hidden="true"><span class="wb-ico wb-ico--sm">account_balance_wallet</span></span>
+              </div>
+              <div class="wb-stat__value">47.590.000&nbsp;₫</div>
+              <div class="wb-stat__foot"><span class="wb-stat__delta wb-stat__delta--up">↑ 12,4%</span> so với tháng trước</div>
+            </div>
+            <div class="wb-stat">
+              <div class="wb-stat__top">
+                <span class="wb-stat__label">Chi tiêu tháng 7</span>
+                <span class="wb-stat__icon" aria-hidden="true"><span class="wb-ico wb-ico--sm">shopping_cart</span></span>
+              </div>
+              <div class="wb-stat__value">11.840.000&nbsp;₫</div>
+              <div class="wb-stat__foot"><span class="wb-stat__delta wb-stat__delta--down">↓ 3,2%</span> so với tháng trước</div>
+            </div>
+            <div class="wb-stat">
+              <div class="wb-stat__top">
+                <span class="wb-stat__label">Thu nhập</span>
+                <span class="wb-stat__icon" aria-hidden="true"><span class="wb-ico wb-ico--sm">payments</span></span>
+              </div>
+              <div class="wb-stat__value">25.000.000&nbsp;₫</div>
+              <div class="wb-stat__foot">1 nguồn · nhận ngày 14/07</div>
+            </div>
+            <div class="wb-stat">
+              <div class="wb-stat__top">
+                <span class="wb-stat__label">Nợ phải thu</span>
+                <span class="wb-stat__icon" aria-hidden="true"><span class="wb-ico wb-ico--sm">schedule</span></span>
+              </div>
+              <div class="wb-stat__value">6.800.000&nbsp;₫</div>
+              <!-- The only colour in the row: two overdue items is real status. -->
+              <div class="wb-stat__foot"><span class="wb-cap wb-cap--danger wb-cap--sm">2 quá hạn</span></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2 · TREND — charts. Keep to one or two; a dashboard is not a colour parade. -->
+        <section class="wb-section">
+          <h2>Xu hướng</h2>
+          <p class="wb-section__desc">Chi tiêu 6 tháng gần nhất và tương quan thu / chi theo tháng.</p>
+
+          <div class="wb-grid wb-grid--auto" style="--wb-grid-min:320px">
+            <div class="wb-card"><div class="wb-card__body">
+              <p class="wb-chart__title">Chi tiêu 6 tháng</p>
+              <p class="wb-chart__sub">Đơn vị: triệu ₫</p>
+              <div class="wb-chart">
+                <svg class="wb-chart__svg" viewBox="0 0 340 172" aria-label="Biểu đồ đường chi tiêu 6 tháng">
+                  <line class="wb-grid-line" x1="40" y1="22"  x2="320" y2="22"/>
+                  <line class="wb-grid-line" x1="40" y1="81"  x2="320" y2="81"/>
+                  <line class="wb-axis-line" x1="40" y1="140" x2="320" y2="140"/>
+                  <text class="wb-axis-label" x="2"  y="26">12</text>
+                  <text class="wb-axis-label" x="8"  y="85">6</text>
+                  <text class="wb-axis-label" x="14" y="144">0</text>
+                  <path class="wb-series-area" style="fill:var(--wb-chart-expense)" d="M40,58 L96,49 L152,66 L208,22 L264,38 L320,22 L320,140 L40,140 Z"/>
+                  <polyline class="wb-series-line" style="stroke:var(--wb-chart-expense)" points="40,58 96,49 152,66 208,22 264,38 320,22"/>
+                  <g class="wb-point"><circle class="wb-point__hit" cx="208" cy="22" r="14"/><circle class="wb-series-dot" style="fill:var(--wb-chart-expense)" cx="208" cy="22" r="4"/><g class="wb-point__tip" transform="translate(208,22)"><rect x="-20" y="-26" width="40" height="17" rx="4"/><text x="0" y="-14" text-anchor="middle">11,8tr</text></g></g>
+                  <text class="wb-axis-label" x="40"  y="158" text-anchor="middle">T2</text>
+                  <text class="wb-axis-label" x="96"  y="158" text-anchor="middle">T3</text>
+                  <text class="wb-axis-label" x="152" y="158" text-anchor="middle">T4</text>
+                  <text class="wb-axis-label" x="208" y="158" text-anchor="middle">T5</text>
+                  <text class="wb-axis-label" x="264" y="158" text-anchor="middle">T6</text>
+                  <text class="wb-axis-label" x="320" y="158" text-anchor="middle">T7</text>
+                </svg>
+              </div>
+            </div></div>
+
+            <div class="wb-card"><div class="wb-card__body">
+              <div class="wb-cluster wb-cluster--between" style="margin-bottom:14px">
+                <p class="wb-chart__title" style="margin:0">Thu &amp; Chi</p>
+                <div class="wb-legend">
+                  <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-income)"></span>Thu</span>
+                  <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-expense)"></span>Chi</span>
+                </div>
+              </div>
+              <div class="wb-bars">
+                <div class="wb-bars__col"><span class="wb-bar__val">16,6 / 3,3tr</span><div class="wb-bar wb-bar--income" style="height:83%"></div><div class="wb-bar wb-bar--expense" style="height:27%"></div><span class="wb-bars__label">T3</span></div>
+                <div class="wb-bars__col"><span class="wb-bar__val">18,2 / 5,1tr</span><div class="wb-bar wb-bar--income" style="height:91%"></div><div class="wb-bar wb-bar--expense" style="height:42%"></div><span class="wb-bars__label">T4</span></div>
+                <div class="wb-bars__col"><span class="wb-bar__val">20,0 / 4,7tr</span><div class="wb-bar wb-bar--income" style="height:100%"></div><div class="wb-bar wb-bar--expense" style="height:39%"></div><span class="wb-bars__label">T5</span></div>
+                <div class="wb-bars__col"><span class="wb-bar__val">19,4 / 6,0tr</span><div class="wb-bar wb-bar--income" style="height:97%"></div><div class="wb-bar wb-bar--expense" style="height:50%"></div><span class="wb-bars__label">T6</span></div>
+                <div class="wb-bars__col"><span class="wb-bar__val">25,0 / 11,8tr</span><div class="wb-bar wb-bar--income" style="height:100%"></div><div class="wb-bar wb-bar--expense" style="height:59%"></div><span class="wb-bars__label">T7</span></div>
+              </div>
+            </div></div>
+          </div>
+        </section>
+
+        <!-- 3 · BUDGETS — progress. Tone follows the number: <80 success, 80–99 warning, ≥100 danger. -->
+        <section class="wb-section">
+          <h2>Ngân sách tháng này</h2>
+          <p class="wb-section__desc">Hạn mức đã đặt cho từng nhóm chi. Màu chỉ xuất hiện khi sắp hoặc đã vượt.</p>
+          <div class="wb-card"><div class="wb-card__body">
+            <div class="wb-stack">
+              <div>
+                <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:6px"><span class="wb-cell-strong">Ăn uống</span><span class="wb-cell-muted">3,28tr / 4,0tr</span></div>
+                <div class="wb-progress"><div class="wb-progress__bar wb-progress__bar--warning" style="width:82%"></div></div>
+              </div>
+              <div>
+                <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:6px"><span class="wb-cell-strong">Di chuyển</span><span class="wb-cell-muted">0,84tr / 2,0tr</span></div>
+                <div class="wb-progress"><div class="wb-progress__bar wb-progress__bar--success" style="width:42%"></div></div>
+              </div>
+              <div>
+                <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:6px"><span class="wb-cell-strong">Giải trí</span><span class="wb-cell-muted">1,12tr / 1,0tr</span></div>
+                <div class="wb-progress"><div class="wb-progress__bar wb-progress__bar--danger" style="width:100%"></div></div>
+              </div>
+            </div>
+          </div></div>
+        </section>
+
+        <!-- 4 · DETAIL — recent rows. The transaction table is the hero pattern. -->
+        <section class="wb-section">
+          <h2>Giao dịch gần đây</h2>
+          <div class="wb-card">
+            <div class="wb-table-head">
+              <div>
+                <h3 class="wb-table-head__title">6 giao dịch mới nhất</h3>
+                <p class="wb-table-head__sub">Tháng 7, 2026</p>
+              </div>
+              <div class="wb-table-head__actions">
+                <a class="wb-btn wb-btn--outline wb-btn--sm" href="list.html">Xem tất cả</a>
+              </div>
+            </div>
+            <div class="wb-table-scroll">
+              <table class="wb-table">
+                <thead>
+                  <tr><th>Ngày</th><th>Nội dung</th><th>Danh mục</th><th class="wb-num">Số tiền</th><th>Trạng thái</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="wb-cell-muted">14/07</td>
+                    <td><span class="wb-cell-strong">Lương tháng 7</span><span class="wb-cell-sub">Công ty ABC</span></td>
+                    <td><span class="wb-cap">Thu nhập</span></td>
+                    <td class="wb-num wb-num--pos">+25.000.000&nbsp;₫</td>
+                    <td><span class="wb-cap wb-cap--success"><span class="wb-cap__dot"></span> Đã nhận</span></td>
+                  </tr>
+                  <tr>
+                    <td class="wb-cell-muted">13/07</td>
+                    <td><span class="wb-cell-strong">Siêu thị WinMart</span><span class="wb-cell-sub">Đi chợ tuần</span></td>
+                    <td><span class="wb-cap">Ăn uống</span></td>
+                    <td class="wb-num wb-num--strong">−1.280.000&nbsp;₫</td>
+                    <td><span class="wb-cap wb-cap--success"><span class="wb-cap__dot"></span> Hoàn tất</span></td>
+                  </tr>
+                  <tr>
+                    <td class="wb-cell-muted">12/07</td>
+                    <td><span class="wb-cell-strong">Tiền nhà</span><span class="wb-cell-sub">Kỳ tháng 7</span></td>
+                    <td><span class="wb-cap">Nhà ở</span></td>
+                    <td class="wb-num wb-num--strong">−6.500.000&nbsp;₫</td>
+                    <td><span class="wb-cap wb-cap--warning"><span class="wb-cap__dot"></span> Chờ xác nhận</span></td>
+                  </tr>
+                  <tr>
+                    <td class="wb-cell-muted">11/07</td>
+                    <td><span class="wb-cell-strong">Netflix</span><span class="wb-cell-sub">Gói Premium</span></td>
+                    <td><span class="wb-cap">Giải trí</span></td>
+                    <td class="wb-num wb-num--strong">−260.000&nbsp;₫</td>
+                    <td><span class="wb-cap wb-cap--danger wb-cap--solid">Thất bại</span></td>
+                  </tr>
+                  <tr>
+                    <td class="wb-cell-muted">10/07</td>
+                    <td><span class="wb-cell-strong">Mua chứng chỉ quỹ</span><span class="wb-cell-sub">VN-Index ETF</span></td>
+                    <td><span class="wb-cap">Đầu tư</span></td>
+                    <td class="wb-num wb-num--strong">−12.000.000&nbsp;₫</td>
+                    <td><span class="wb-cap wb-cap--info"><span class="wb-cap__dot"></span> Đang xử lý</span></td>
+                  </tr>
+                  <tr>
+                    <td class="wb-cell-muted">09/07</td>
+                    <td><span class="wb-cell-strong">Hoàn tiền Shopee</span><span class="wb-cell-sub">Huỷ đơn</span></td>
+                    <td><span class="wb-cap">Hoàn tiền</span></td>
+                    <td class="wb-num wb-num--pos">+180.000&nbsp;₫</td>
+                    <td><span class="wb-cap wb-cap--success"><span class="wb-cap__dot"></span> Đã nhận</span></td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr><td colspan="3">Ròng trong kỳ</td><td class="wb-num wb-num--pos">+5.140.000&nbsp;₫</td><td></td></tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+      <footer class="wb-footer wb-footer--slim">
+        <div class="wb-footer__inner">
+          <div class="wb-footer__bottom">
+            <span class="wb-footer__copy">© 2026 Cashy. Bảo lưu mọi quyền.</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+</div>
+
+<script>
+/* The whole behaviour contract of a shell: two class toggles. Nothing here is
+   layout — the CSS owns the drawer, the scrim and the breakpoint. Swap this for
+   your framework's state when you port the template. */
+(function () {
+  var shell = document.querySelector('.wb-shell');
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('[data-side-toggle]')) {
+      shell.classList.toggle('is-side-open');
+    } else if (e.target.closest('.wb-theme-toggle')) {
+      var dark = document.documentElement.classList.toggle('dark');
+      try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (err) {}
+    } else if (shell.classList.contains('is-side-open') && !e.target.closest('.wb-shell__side')) {
+      shell.classList.remove('is-side-open');     /* tap the scrim → close */
+    }
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!doctype html>
+<!-- =============================================================================
+     TEMPLATE · Add / edit form  —  catalog recipe "Add / edit form"
+     -----------------------------------------------------------------------------
+     A create-or-edit screen. --narrow container (a form is reading width, not
+     table width), fields stacked one per row, and a sticky action bar so Save is
+     always reachable. The invalid-field pattern is included — .is-invalid on the
+     control plus a .wb-error message, never a border you paint by hand.
+     What you may change: text, data, icon ligatures, how many rows/fields/sections.
+     What you should NOT change: the wb-shell frame, the wb-page-head → wb-section
+     → wb-block nesting, and spacing (it comes from tokens — if a gap feels wrong,
+     set --wb-section-gap / --wb-block-gap, never a margin on one element).
+     ========================================================================== -->
+<html lang="vi" class="wb-scrollbars">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Thêm giao dịch · Cashy</title>
+<!-- The one file this library ships. Everything below is plain markup. -->
+<link rel="stylesheet" href="../web-builder.css" />
+<script>
+  /* Theme before first paint, so a dark user never sees a white flash. */
+  try {
+    var t = localStorage.getItem('theme');
+    if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches))
+      document.documentElement.classList.add('dark');
+  } catch (e) {}
+</script>
+</head>
+<body class="wb-app">
+
+<div class="wb-shell">
+
+  <!-- ============================ TOP BAR ================================== -->
+  <header class="wb-navbar wb-navbar--sticky wb-navbar--glass">
+    <!-- Opens the rail once it folds to a drawer (≤900px); hidden above that. -->
+    <button class="wb-btn wb-btn--ghost wb-btn--icon wb-shell__side-toggle" data-side-toggle
+            aria-label="Mở thanh điều hướng"><span class="wb-ico">menu</span></button>
+    <a class="wb-navbar__brand" href="dashboard.html"><span class="wb-navbar__mark">C</span> Cashy</a>
+    <span class="wb-navbar__spacer"></span>
+    <div class="wb-navbar__actions">
+      <button class="wb-btn wb-btn--ghost wb-btn--icon" aria-label="Tìm kiếm"><span class="wb-ico">search</span></button>
+      <button class="wb-btn wb-btn--ghost wb-btn--icon" aria-label="Thông báo"><span class="wb-ico">notifications</span></button>
+      <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" aria-label="Đổi giao diện sáng/tối" title="Sáng / Tối">
+        <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
+        <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
+      </button>
+      <span class="wb-avatar wb-avatar--sm">DV</span>
+    </div>
+  </header>
+
+  <div class="wb-shell__body">
+
+    <!-- ============================ RAIL =================================== -->
+    <!-- The slot owns the surface, the sticky offset, its own scroll and the
+         mobile drawer. The wb-sidenav inside contributes link styling only. -->
+    <aside class="wb-shell__side wb-scrollbars">
+      <nav class="wb-sidenav">
+        <div class="wb-sidenav__section">Tổng quan</div>
+        <a class="wb-sidenav__link" href="dashboard.html"><span class="wb-ico">dashboard</span> Bảng điều khiển</a>
+        <a class="wb-sidenav__link is-active" href="list.html"><span class="wb-ico">receipt_long</span> Giao dịch <span class="wb-sidenav__badge">128</span></a>
+        <a class="wb-sidenav__link" href="list.html"><span class="wb-ico">savings</span> Ngân sách</a>
+        <a class="wb-sidenav__link" href="list.html"><span class="wb-ico">insights</span> Báo cáo</a>
+        <div class="wb-sidenav__section">Tài khoản</div>
+        <a class="wb-sidenav__link" href="list.html"><span class="wb-ico">account_balance_wallet</span> Ví &amp; ngân hàng</a>
+        <a class="wb-sidenav__link" href="list.html"><span class="wb-ico">flag</span> Mục tiêu <span class="wb-sidenav__badge">3</span></a>
+        <a class="wb-sidenav__link" href="settings.html"><span class="wb-ico">settings</span> Cài đặt</a>
+      </nav>
+    </aside>
+
+    <div class="wb-shell__main">
+      <!-- ========================= CONTENT ================================= -->
+      <main class="wb-container wb-container--narrow wb-container--pad">
+
+        <div class="wb-page-head">
+          <nav class="wb-breadcrumb" aria-label="Breadcrumb">
+            <a href="dashboard.html">Bảng điều khiển</a>
+            <span class="wb-breadcrumb__sep">/</span>
+            <a href="list.html">Giao dịch</a>
+            <span class="wb-breadcrumb__sep">/</span>
+            <span class="wb-breadcrumb__current">Thêm mới</span>
+          </nav>
+          <p class="wb-eyebrow">Giao dịch</p>
+          <h1>Thêm giao dịch</h1>
+          <p>Ghi lại một khoản thu hoặc chi. Chỉ ba trường đầu là bắt buộc.</p>
+        </div>
+
+        <form>
+          <!-- 1 · The essentials. One wb-field per row: label → control → help.
+               A form is a wb-stack of fields, never hand-spaced divs. -->
+          <section class="wb-section">
+            <h2>Thông tin chính</h2>
+            <p class="wb-section__desc">Số tiền, ngày và nội dung — đủ để giao dịch hiện đúng trong sổ và báo cáo.</p>
+
+            <div class="wb-card"><div class="wb-card__body">
+              <div class="wb-stack">
+
+                <div class="wb-field">
+                  <label class="wb-label" for="f-kind">Loại</label>
+                  <div class="wb-cluster">
+                    <label class="wb-radio"><input type="radio" name="kind" checked /> Chi</label>
+                    <label class="wb-radio"><input type="radio" name="kind" /> Thu</label>
+                    <label class="wb-radio"><input type="radio" name="kind" /> Chuyển khoản</label>
+                  </div>
+                </div>
+
+                <div class="wb-field">
+                  <label class="wb-label" for="f-amount">Số tiền</label>
+                  <div class="wb-input-group">
+                    <span class="wb-input-group__addon">₫</span>
+                    <input class="wb-input" id="f-amount" value="1.280.000" inputmode="numeric" />
+                  </div>
+                  <span class="wb-help">Nhập số nguyên, không cần dấu chấm — hệ thống tự định dạng.</span>
+                </div>
+
+                <div class="wb-field">
+                  <label class="wb-label" for="f-date">Ngày</label>
+                  <!-- Type it OR pick it: data-mask formats while typing, no popup. -->
+                  <input class="wb-input" id="f-date" data-mask="date" inputmode="numeric" placeholder="dd/mm/yyyy" value="13/07/2026" />
+                </div>
+
+                <div class="wb-field">
+                  <label class="wb-label" for="f-title">Nội dung</label>
+                  <input class="wb-input" id="f-title" placeholder="VD: Siêu thị WinMart" value="Siêu thị WinMart" />
+                </div>
+
+                <!-- 2 · The error state. .is-invalid on the control + a .wb-error
+                     message under it — never a red border you paint yourself. -->
+                <div class="wb-field">
+                  <label class="wb-label" for="f-email">Email nhắc nợ <span class="wb-label__opt">(tuỳ chọn)</span></label>
+                  <input class="wb-input is-invalid" id="f-email" value="sai-email" aria-invalid="true" />
+                  <span class="wb-error">Email không hợp lệ.</span>
+                </div>
+
+              </div>
+            </div></div>
+          </section>
+
+          <!-- 3 · Secondary fields. A second section, not a second page. -->
+          <section class="wb-section">
+            <h2>Phân loại</h2>
+            <p class="wb-section__desc">Giúp báo cáo gom nhóm đúng. Có thể bỏ trống và sửa sau.</p>
+
+            <div class="wb-card"><div class="wb-card__body">
+              <div class="wb-stack">
+
+                <div class="wb-field">
+                  <label class="wb-label" for="f-cat">Danh mục</label>
+                  <span class="wb-select-wrap">
+                    <select class="wb-select" id="f-cat">
+                      <option>Ăn uống</option>
+                      <option>Di chuyển</option>
+                      <option>Nhà ở</option>
+                      <option>Giải trí</option>
+                      <option>Đầu tư</option>
+                    </select>
+                    <span class="wb-ico">expand_more</span>
+                  </span>
+                </div>
+
+                <div class="wb-field">
+                  <label class="wb-label">Nhãn <span class="wb-label__opt">(tuỳ chọn)</span></label>
+                  <div class="wb-tags">
+                    <span class="wb-tag">hang-ngay<button class="wb-tag__x" aria-label="Xoá nhãn hang-ngay"></button></span>
+                    <span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#0d9488">di-cho<button class="wb-tag__x" aria-label="Xoá nhãn di-cho"></button></span>
+                    <button type="button" class="wb-cap wb-cap--dashed">+ Thêm nhãn</button>
+                  </div>
+                </div>
+
+                <div class="wb-field">
+                  <label class="wb-label" for="f-note">Ghi chú <span class="wb-label__opt">(tuỳ chọn)</span></label>
+                  <div class="wb-textarea-wrap">
+                    <textarea class="wb-textarea" id="f-note" placeholder="Thêm mô tả giao dịch…"></textarea>
+                  </div>
+                </div>
+
+                <div class="wb-field">
+                  <label class="wb-switch">
+                    <input type="checkbox" />
+                    <span class="wb-switch__track"></span> Lặp lại hằng tháng
+                  </label>
+                  <span class="wb-help">Tự tạo một bản sao vào cùng ngày mỗi tháng.</span>
+                </div>
+
+              </div>
+            </div></div>
+          </section>
+        </form>
+
+      </main>
+
+      <!-- 4 · The action bar pins to the bottom of the viewport so Save is always
+           reachable on a long form. --wb-sticky-gap clears a sticky top bar. -->
+      <div class="wb-sticky wb-sticky--bottom" style="background:var(--wb-surface);border-top:var(--wb-bw) solid var(--wb-border);padding:12px 16px">
+        <div class="wb-cluster wb-cluster--end">
+          <a class="wb-btn wb-btn--ghost" href="list.html">Huỷ</a>
+          <button class="wb-btn" type="submit" form="">Lưu giao dịch</button>
+        </div>
+      </div>
+
+      <footer class="wb-footer wb-footer--slim">
+        <div class="wb-footer__inner">
+          <div class="wb-footer__bottom">
+            <span class="wb-footer__copy">© 2026 Cashy. Bảo lưu mọi quyền.</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+</div>
+
+<script>
+/* The whole behaviour contract of a shell: two class toggles. Nothing here is
+   layout — the CSS owns the drawer, the scrim and the breakpoint. Swap this for
+   your framework's state when you port the template. */
+(function () {
+  var shell = document.querySelector('.wb-shell');
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('[data-side-toggle]')) {
+      shell.classList.toggle('is-side-open');
+    } else if (e.target.closest('.wb-theme-toggle')) {
+      var dark = document.documentElement.classList.toggle('dark');
+      try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (err) {}
+    } else if (shell.classList.contains('is-side-open') && !e.target.closest('.wb-shell__side')) {
+      shell.classList.remove('is-side-open');     /* tap the scrim → close */
+    }
+  });
+})();
+</script>
+</body>
+</html>

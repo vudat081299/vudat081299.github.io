@@ -1,5 +1,5 @@
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Bố cục &amp; tiện ích</p>
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Layout &amp; utilities</p>
   <h2>Sticky</h2>
   <p>Tiện ích bố cục để <b>ghim một phần tử theo cạnh trên hoặc dưới</b> khi cuộn — thanh công cụ, thẻ,
   nút hành động hay menu bám mép trong lúc phần còn lại trôi qua. Chạy trên <code>position: sticky</code> nên
@@ -7,10 +7,10 @@
   Cần một vùng cuộn / trang đủ dài mới thấy nó ghim.</p>
 </div>
 
-<section class="doc-sec">
-  <div class="doc-block">
+<section class="wb-section">
+  <div class="wb-block">
     <h4>Ghim mép trên</h4>
-    <p class="doc-block__desc"><code>.wb-sticky</code> dính vào cạnh trên của vùng cuộn. Cho nền (<code>--wb-surface</code>) để nội dung
+    <p class="wb-block__desc"><code>.wb-sticky</code> dính vào cạnh trên của vùng cuộn. Cho nền (<code>--wb-surface</code>) để nội dung
     không lộ ra sau khi trôi bên dưới. Cuộn ô dưới để thấy tiêu đề ở lại.</p>
     <div class="demo">
       <div class="demo__stage">
@@ -34,7 +34,7 @@
         </div>
       </div>
       <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-scroll-y" style="max-height:240px"&gt;
-  &lt;div class="wb-sticky" style="background:var(--wb-surface);border-bottom:1px solid var(--wb-border);padding:12px 16px"&gt;
+  &lt;div class="wb-sticky" style="background:var(--wb-surface);border-bottom:var(--wb-bw) solid var(--wb-border);padding:12px 16px"&gt;
     &lt;b&gt;Giao dịch tháng 7&lt;/b&gt;
   &lt;/div&gt;
   &lt;!-- danh sách dài --&gt;
@@ -42,9 +42,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Ghim mép dưới (thanh hành động)</h4>
-    <p class="doc-block__desc"><code>.wb-sticky--bottom</code> dính vào cạnh dưới — hợp cho thanh nút “Lưu / Huỷ” luôn thấy được khi cuộn form dài.</p>
+    <p class="wb-block__desc"><code>.wb-sticky--bottom</code> dính vào cạnh dưới — hợp cho thanh nút “Lưu / Huỷ” luôn thấy được khi cuộn form dài.</p>
     <div class="demo demo--plain">
       <div class="demo__stage">
         <div class="wb-scroll-y" style="max-height:240px;border:var(--wb-bw) solid var(--wb-border);border-radius:var(--wb-radius)">
@@ -63,7 +63,7 @@
           </div>
         </div>
       </div>
-      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-sticky wb-sticky--bottom" style="background:var(--wb-surface);border-top:1px solid var(--wb-border);padding:12px 16px"&gt;
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-sticky wb-sticky--bottom" style="background:var(--wb-surface);border-top:var(--wb-bw) solid var(--wb-border);padding:12px 16px"&gt;
   &lt;div class="wb-cluster wb-cluster--end"&gt;
     &lt;button class="wb-btn wb-btn--ghost wb-btn--sm"&gt;Huỷ&lt;/button&gt;
     &lt;button class="wb-btn wb-btn--sm"&gt;Lưu giao dịch&lt;/button&gt;
@@ -72,9 +72,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Tóm tắt bám theo nội dung (brief)</h4>
-    <p class="doc-block__desc">Cột nội dung dài cuộn, còn <b>thẻ tóm tắt</b> bên cạnh dùng <code>.wb-sticky</code> +
+    <p class="wb-block__desc">Cột nội dung dài cuộn, còn <b>thẻ tóm tắt</b> bên cạnh dùng <code>.wb-sticky</code> +
     <code>.wb-self--top</code> (để ô lưới không giãn cao) nên ở lại trong tầm mắt — kiểu tóm tắt số liệu của một
     báo cáo / đơn hàng. Cuộn ô để thấy nó bám theo.</p>
     <div class="demo">
@@ -120,9 +120,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Tiêu đề nhóm dính (danh sách dài)</h4>
-    <p class="doc-block__desc">Nhiều <code>.wb-sticky</code> trong một danh sách: mỗi tiêu đề nhóm dính ở mép trên cho tới khi
+    <p class="wb-block__desc">Nhiều <code>.wb-sticky</code> trong một danh sách: mỗi tiêu đề nhóm dính ở mép trên cho tới khi
     nhóm sau đẩy nó lên — kiểu danh sách giao dịch gộp theo ngày. Cuộn để thấy tiêu đề đổi.</p>
     <div class="demo demo--plain">
       <div class="demo__stage">
@@ -150,7 +150,7 @@
     </div>
   </div>
 
-  <div class="doc-note">
+  <div class="wb-alert wb-alert--info doc-note">
     <span class="wb-ico" style="color:var(--wb-info-text)">info</span>
     <div>Dưới một thanh app cố định (navbar), đặt khoảng hở đúng chiều cao navbar:
     <code>style="--wb-sticky-gap:56px"</code>. <code>z-index</code> của <code>.wb-sticky</code> (20) nằm dưới navbar (30)

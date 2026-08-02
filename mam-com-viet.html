@@ -15,8 +15,6 @@
   body { background: var(--wb-canvas); color: var(--wb-fg); margin: 0; font-family: var(--wb-font); -webkit-font-smoothing: antialiased; }
   ::selection { background: var(--wb-fg); color: var(--wb-canvas); }
   body { --wb-ico-weight: 400; }
-  /* the kit's container is content-box, so width:100% + 20px padding overflows a narrow viewport */
-  .wb-container { box-sizing: border-box; }
 
   /* ---------- hero ---------- */
   .mc-hero { padding: 26px 0 18px; }
@@ -189,12 +187,6 @@
     .wb-navbar__actions { min-width: 0; }
     .mc-navhide { display: none; }
   }
-
-  /* Stepper ngang: đường nối chạy ngang qua đúng tâm marker, mà marker của bước
-     "chưa làm" lại để nền trong suốt → nhìn thấy vạch xuyên qua giữa vòng tròn.
-     Lấp nền bằng màu thẻ để vòng tròn che được đường nối. */
-  .wb-steps--horizontal .wb-steps__item.is-todo .wb-steps__marker,
-  .dark .wb-steps--horizontal .wb-steps__item.is-todo .wb-steps__marker { background: var(--wb-surface); }
 
   /* stepper ngang 4 chặng: mỗi cột còn 78px → dựng lại thành dọc */
   @media (max-width: 640px) {

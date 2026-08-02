@@ -1,0 +1,150 @@
+<div class="wb-page-head">
+  <div class="wb-eyebrow">Project &amp; skill</div>
+  <h2>Workflow — pipeline <code>/wb-change</code></h2>
+  <p>Một thay đổi component chạm nhiều file, lệch một nơi là skill nói dối AI kế tiếp — nên có
+  quy trình chuẩn: <b>10 bước · 4 giai đoạn</b>, đồng bộ <b>6 nơi</b>, <b>2 hook</b> gác. Việc đọc rộng (discover ·
+  verify nhiều trang · review chéo) đẩy cho subagent để tiết kiệm token. (Stepper dưới đây dogfood
+  <a href="#/steps">wb-steps</a>.)</p>
+</div>
+
+<section class="wb-section wb-section--flush">
+  <div class="wb-cluster" style="row-gap:8px;margin:6px 0 4px">
+    <span class="wb-cap wb-cap--elevated">A · Hiểu &amp; chốt</span>
+    <span class="doc-sep" aria-hidden="true">→</span>
+    <span class="wb-cap wb-cap--elevated">B · Làm</span>
+    <span class="doc-sep" aria-hidden="true">→</span>
+    <span class="wb-cap wb-cap--elevated">C · Kiểm chứng</span>
+    <span class="doc-sep" aria-hidden="true">→</span>
+    <span class="wb-cap wb-cap--elevated">D · Soát &amp; chốt</span>
+  </div>
+
+  <p class="wb-eyebrow" style="margin-top:20px">Giai đoạn A — Hiểu &amp; chốt</p>
+  <ol class="wb-steps">
+    <li class="wb-steps__item">
+      <span class="wb-steps__marker">1</span>
+      <div class="wb-steps__content">
+        <p class="wb-steps__title">Discover + khả thi</p>
+        <p class="wb-steps__desc">Đọc <code>components-catalog.md</code> + <code>design-principles.md</code> trước — có thể đã tồn tại
+        (reuse) hoặc ghép được từ primitive sẵn có. Đọc rộng → subagent Explore.</p>
+      </div>
+    </li>
+    <li class="wb-steps__item">
+      <span class="wb-steps__marker">2</span>
+      <div class="wb-steps__content">
+        <p class="wb-steps__title">Plan + confirm</p>
+        <p class="wb-steps__desc">Nêu gọn: đổi gì · chạm nơi nào trong 6 · ghép từ primitive nào · tier màu. Mơ hồ thì hỏi
+        1–2 câu <b>trước khi</b> code; rõ thì đi tiếp.</p>
+      </div>
+    </li>
+  </ol>
+
+  <p class="wb-eyebrow" style="margin-top:24px">Giai đoạn B — Làm</p>
+  <ol class="wb-steps">
+    <li class="wb-steps__item">
+      <span class="wb-steps__marker">3</span>
+      <div class="wb-steps__content">
+        <p class="wb-steps__title">Implement</p>
+        <p class="wb-steps__desc">CSS trước (token, không magic number) → demo page → NAV → catalog → SKILL.md → (docs phụ nếu
+        cần). Hook PostToolUse tự nhắc checklist 6 nơi ngay khi chạm <code>web-builder.css</code>.</p>
+      </div>
+    </li>
+    <li class="wb-steps__item">
+      <span class="wb-steps__marker">4</span>
+      <div class="wb-steps__content">
+        <p class="wb-steps__title">Check lỗi</p>
+        <p class="wb-steps__desc"><code>validate-sync.sh</code>: routes == pages · không <code>&lt;style&gt;</code> lạc · <code>app.js</code> parse.</p>
+        <span class="wb-steps__note">↺ Lỗi → sửa đúng chỗ đó (quay bước 3), không xoá làm lại</span>
+      </div>
+    </li>
+  </ol>
+
+  <p class="wb-eyebrow" style="margin-top:24px">Giai đoạn C — Kiểm chứng</p>
+  <ol class="wb-steps">
+    <li class="wb-steps__item">
+      <span class="wb-steps__marker">5</span>
+      <div class="wb-steps__content">
+        <p class="wb-steps__title">Verify (xem thật)</p>
+        <p class="wb-steps__desc"><code>python3 serve.py</code> → mở <code>#/&lt;id&gt;</code> trong Browser; kiểm cả <b>sáng &amp; tối</b>.
+        Xem nhiều trang → subagent, trả kết luận gọn.</p>
+      </div>
+    </li>
+    <li class="wb-steps__item">
+      <span class="wb-steps__marker">6</span>
+      <div class="wb-steps__content">
+        <p class="wb-steps__title">Rà soát tái dùng (reuse sweep) — <b>bắt buộc</b></p>
+        <p class="wb-steps__desc">Rà toàn repo tìm chỗ đang làm cách cũ mà nay thay được bằng bản mới, hoặc nên áp biến thể/token
+        vừa thêm. Quét rộng → subagent (trả <code>file:line</code> + đề xuất).</p>
+        <span class="wb-steps__note">↺ Áp thay thế → verify lại đúng chỗ vừa đổi (quay bước 5)</span>
+      </div>
+    </li>
+  </ol>
+
+  <p class="wb-eyebrow" style="margin-top:24px">Giai đoạn D — Soát &amp; chốt</p>
+  <ol class="wb-steps">
+    <li class="wb-steps__item">
+      <span class="wb-steps__marker">7</span>
+      <div class="wb-steps__content">
+        <p class="wb-steps__title">Review code</p>
+        <p class="wb-steps__desc">Chạy <code>/code-review</code> trên diff.</p>
+      </div>
+    </li>
+    <li class="wb-steps__item">
+      <span class="wb-steps__marker">8</span>
+      <div class="wb-steps__content">
+        <p class="wb-steps__title">Review docs liên đới</p>
+        <p class="wb-steps__desc">Đối chiếu 6 nơi có nhất quán không (catalog ↔ SKILL.md ↔ CSS ↔ comparison). Giao subagent đọc
+        chéo, trả danh sách lệch → sửa.</p>
+      </div>
+    </li>
+    <li class="wb-steps__item">
+      <span class="wb-steps__marker">9</span>
+      <div class="wb-steps__content">
+        <p class="wb-steps__title">Guardrails</p>
+        <p class="wb-steps__desc"><code>validate-sync.sh</code> (cũng là PreToolUse gate) kiểm cả docs lẫn skill deliverable. Rồi soi
+        mắt: color-ladder · token-over-magic-number · × top-right · no left-accent bar · dark = light-lift shadow.</p>
+      </div>
+    </li>
+    <li class="wb-steps__item">
+      <span class="wb-steps__marker">10</span>
+      <div class="wb-steps__content">
+        <p class="wb-steps__title">Commit + push</p>
+        <p class="wb-steps__desc">Commit thẳng <code>main</code> (workflow solo). Message kết bằng dòng
+        <code>Co-Authored-By</code>. Rồi push.</p>
+      </div>
+    </li>
+  </ol>
+
+  <div class="wb-block">
+    <h4>Đồng bộ 6 nơi (cascade)</h4>
+    <p class="wb-block__desc">Sửa một component = cập nhật tối đa 6 nơi cùng một lần. Lệch một nơi = skill nói dối AI
+    kế tiếp.</p>
+    <div class="wb-cluster" style="row-gap:8px">
+      <span class="wb-cap">web-builder.css</span>
+      <span class="doc-sep" aria-hidden="true">↔</span>
+      <span class="wb-cap">pages/&lt;id&gt;.html</span>
+      <span class="doc-sep" aria-hidden="true">↔</span>
+      <span class="wb-cap">app.js (NAV)</span>
+      <span class="doc-sep" aria-hidden="true">↔</span>
+      <span class="wb-cap">components-catalog.md</span>
+      <span class="doc-sep" aria-hidden="true">↔</span>
+      <span class="wb-cap">SKILL.md</span>
+      <span class="doc-sep" aria-hidden="true">↔</span>
+      <span class="wb-cap">principles / integration / comparison</span>
+    </div>
+  </div>
+
+  <div class="wb-block">
+    <h4>2 hook gác (chạy tự động)</h4>
+    <div class="wb-grid wb-grid--2" style="margin-top:6px">
+      <div class="wb-card wb-card--pad">
+        <p class="wb-card__title">PostToolUse — nhắc cascade</p>
+        <p class="wb-card__sub">Vừa chạm <code>web-builder.css</code> là hook chèn checklist 6 nơi, để không quên đồng bộ chỗ nào.</p>
+      </div>
+      <div class="wb-card wb-card--pad">
+        <p class="wb-card__title">PreToolUse — cổng commit</p>
+        <p class="wb-card__sub"><code>git commit</code>/<code>push</code> bị chặn nếu <code>validate-sync.sh</code> fail (routes==pages ·
+        SKILL.md có frontmatter · catalog không khai class CSS thiếu · CSS cân ngoặc…).</p>
+      </div>
+    </div>
+  </div>
+</section>

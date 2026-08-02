@@ -1,5 +1,5 @@
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Bố cục &amp; tiện ích</p>
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Layout &amp; utilities</p>
   <h2>Scroll / thanh cuộn</h2>
   <p>Thanh cuộn <b>theme-aware</b> dùng lại được: một bar mảnh, track trong suốt, thumb màu
   <code>--wb-border-strong</code> bo pill (hover → <code>--wb-fg-subtle</code>) — thay cho bar OS chói trên nền
@@ -8,17 +8,17 @@
   dropdown cũng tự mang kiểu này.</p>
 </div>
 
-<section class="doc-sec">
-  <div class="doc-note">
+<section class="wb-section">
+  <div class="wb-alert wb-alert--info doc-note">
     <span aria-hidden="true">🖥️</span>
     <div>Thanh cuộn <b>cả trang (viewport)</b>: thêm class vào thẻ gốc —
     <code>&lt;html class="wb-scrollbars"&gt;</code>. Chính trang docs này đang dùng nó, nên bar bên phải cửa sổ
     khớp theme sáng/tối thay vì dùng bar mặc định của trình duyệt.</div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Vùng cuộn dọc — <code>.wb-scroll-y</code></h4>
-    <p class="doc-block__desc">Đặt trên bất kỳ vùng <code>overflow-y</code>. Kèm <code>scroll-padding</code> để dòng
+    <p class="wb-block__desc">Đặt trên bất kỳ vùng <code>overflow-y</code>. Kèm <code>scroll-padding</code> để dòng
     cuối cuộn thoát mép.</p>
     <div class="demo">
       <div class="demo__stage">
@@ -41,9 +41,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Vùng cuộn ngang — <code>.wb-scroll-x</code></h4>
-    <p class="doc-block__desc">Cho hàng thẻ / nội dung rộng hơn khung. Thanh cuộn ngang cùng kiểu mảnh.</p>
+    <p class="wb-block__desc">Cho hàng thẻ / nội dung rộng hơn khung. Thanh cuộn ngang cùng kiểu mảnh.</p>
     <div class="demo demo--plain">
       <div class="demo__stage">
         <div class="wb-scroll-x" style="max-width:520px">
@@ -61,9 +61,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Danh sách dài — <code>--pad</code> (chừa đuôi)</h4>
-    <p class="doc-block__desc">Thêm <code>.wb-scroll-y--pad</code> cho khoảng đệm đáy lớn hơn, để item cuối cuộn thoát
+    <p class="wb-block__desc">Thêm <code>.wb-scroll-y--pad</code> cho khoảng đệm đáy lớn hơn, để item cuối cuộn thoát
     hẳn mép (dễ đọc / chạm) thay vì dán sát khung.</p>
     <div class="demo demo--plain">
       <div class="demo__stage">

@@ -1,14 +1,14 @@
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Nhập liệu</p>
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Inputs</p>
   <h2>File / Upload</h2>
   <p>Chọn tệp để đính kèm — sao kê, hoá đơn, ảnh chứng từ. Hai kiểu: nút chọn tệp gọn, và vùng thả
   (dropzone) nét đứt cho kéo–thả.</p>
 </div>
 
-<section class="doc-sec">
-  <div class="doc-block">
+<section class="wb-section">
+  <div class="wb-block">
     <h4>Nút chọn tệp — <code>wb-file</code></h4>
-    <p class="doc-block__desc">Bọc gọn <code>&lt;input type="file"&gt;</code> gốc: nút "Chọn tệp" + tên tệp bên cạnh. Thêm <code>--solid</code> cho nút <b>đen nhấn mạnh</b> (đảo ở dark).</p>
+    <p class="wb-block__desc">Bọc gọn <code>&lt;input type="file"&gt;</code> gốc: nút "Chọn tệp" + tên tệp bên cạnh. Thêm <code>--solid</code> cho nút <b>đen nhấn mạnh</b> (đảo ở dark).</p>
     <div class="demo">
       <div class="demo__stage">
         <div class="wb-stack" style="--wb-stack-gap:12px">
@@ -21,9 +21,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Vùng thả — <code>wb-dropzone</code></h4>
-    <p class="doc-block__desc">Nét đứt = "thả được vào đây" (cùng ngôn ngữ với ô kéo–thả). Là một <code>&lt;label&gt;</code> bọc
+    <p class="wb-block__desc">Nét đứt = "thả được vào đây" (cùng ngôn ngữ với ô kéo–thả). Là một <code>&lt;label&gt;</code> bọc
     input ẩn; trong app gắn thêm sự kiện drag-and-drop và trạng thái <code>.is-dragover</code>.</p>
     <div class="demo">
       <div class="demo__stage">
@@ -42,7 +42,7 @@
     </div>
   </div>
 
-  <div class="doc-note">
+  <div class="wb-alert wb-alert--info doc-note">
     <span>💡</span>
     <div>Sau khi chọn, hiện tệp đã đính bằng <b>tag</b> (<code>.wb-tag</code> có nút ×) hoặc một dòng
     <code>.wb-list__item</code> kèm dung lượng — để người dùng bỏ bớt trước khi lưu.</div>

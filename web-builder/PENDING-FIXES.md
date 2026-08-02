@@ -1,144 +1,86 @@
-# web-builder.css — lỗi đang chờ sửa
+# web-builder — trạng thái sau khi đồng bộ v0.6
 
-Bản trong repo: `web-builder/web-builder.css` (2826 dòng — số dòng dưới đây theo bản này).
-Bản mới nhất của skill `anthropic-skills:web-builder`: 2947 dòng.
-**Lỗi 1 và 3 vẫn còn nguyên trong bản mới nhất** → phải sửa thật, không phải chỉ đồng bộ file.
-Lỗi 2 thì bản mới đã có sẵn → chỉ cần port sang.
+**Cập nhật 2026-08-02.** Bốn lỗi trong bản rà soát trước **đã đóng hết**. File này giờ chỉ giữ những gì
+*còn lại*, và toàn bộ là việc **phía trang**, không phải phía kit.
 
-Trang đang dùng kit: `index.html`, `finance-econ-rulebook.html`, `mam-com-viet.html`.
+Bản kit trong repo: **v0.6** — đọc được lúc chạy, không cần đoán theo số dòng nữa:
+
+```js
+getComputedStyle(document.documentElement).getPropertyValue('--wb-version').replace(/"/g, '')   // → 0.6
+```
 
 ---
 
-## 1. `.wb-container` là content-box → tràn ngang 40px
+## Đã đóng
 
-**Dòng 2109:**
+| # | Lỗi | Đóng bằng |
+|---|---|---|
+| 1 | `.wb-container` là content-box → tràn 40px | kit v0.6: `box-sizing` trên `.wb-container` **và** một rule chung cho mọi phần tử `wb-*` (CSS section 53) |
+| 2 | Thiếu hẳn nhóm `.wb-footer*` | kit v0.6 có đủ (`__inner`, `__top`, `__brand`, `__cols`, `__bottom`, `__copy`, `--slim`…) |
+| 3 | Rail stepper ngang xuyên qua marker | kit v0.6: rail vẽ vào **khe giữa** hai marker (`left: calc(50% + size/2)`, `width: calc(100% - size)`) thay vì che bằng nền đục — nên đúng luôn cho `.is-todo`, `--dashed`, `--dot` và dark |
+| 4 | `__actions` không thu hẹp | kit v0.6 ghi rõ **hợp đồng slot**: `__actions` **chỉ chứa nút icon** (nó không bao giờ gập, vì theme toggle / tìm kiếm / avatar phải còn bấm được trên điện thoại); nút **chữ** đặt cuối `__menu`, sau một `__spacer` lồng bên trong — `__menu` giờ `flex: 1 1 auto` nên spacer đó đẩy CTA sang phải khi thanh rộng, và CTA tự chui vào ☰ khi thanh hẹp |
+
+**Bản vá page-local đã gỡ** khỏi `mam-com-viet.html` (kit lo rồi):
+
+- `.wb-container { box-sizing: border-box }`
+- `.wb-steps--horizontal .wb-steps__item.is-todo .wb-steps__marker { background: var(--wb-surface) }` (+ `.dark`).
+  Đây là bản vá **kém hơn** cách kit sửa: nó lấp nền vòng tròn, sẽ lộ mảng sai màu nếu stepper đặt trên
+  canvas hay trong thẻ khác nền — nên để lại thì fix của kit không hiện ra.
+
+`.mc-timerbar { box-sizing: border-box }` **giữ nguyên** — component riêng của trang.
+
+**Số đo trước/sau** (cùng trang, chỉ khác file CSS):
+
+| Trang | Bề rộng | CSS cũ | v0.6 |
+|---|---|---|---|
+| `mam-com-viet.html` | 1280 | tràn 40px | **0** |
+| `mam-com-viet.html` | 390 | tràn 40px | **0** |
+| `finance-econ-rulebook.html` | 1280 | tràn 40px | **0** |
+
+---
+
+## Còn lại — việc phía trang
+
+### A. `finance-econ-rulebook.html` tràn ngang ở màn hẹp — **không phải lỗi kit**
+
+Tràn **66px ở 390**, **136px ở 320**. Đo với CSS cũ và CSS v0.6 ra **y hệt** → có sẵn từ trước, kit không
+liên quan.
+
+Thủ phạm là **công thức KaTeX**: phần tử sâu nhất còn thò ra là một `span.mord` (`white-space: nowrap`) —
+công thức dài không xuống dòng được nên kéo giãn cả `section` lên 436px trong khung 390px.
+
+Sửa: cho khối toán tự cuộn ngang thay vì đẩy cả trang:
 
 ```css
-.wb-container { width: 100%; max-width: var(--wb-container-max, 1120px); margin-inline: auto; padding-inline: 20px; }
+.katex-display { overflow-x: auto; overflow-y: hidden; max-width: 100%; }
 ```
 
-File **không có** `box-sizing: border-box` toàn cục (chỉ 1 chỗ ở dòng 883 cho `.wb-check input`).
-Nên `width: 100%` + `padding-inline: 20px` = tràn 40px ở mọi viewport hẹp hơn `max-width`.
+### B. `json-analysis/index.html` đang dùng **một bản kit riêng, cũ hơn**
 
-**Đo được:** viewport 1280px, `<main class="wb-container wb-container--wide">` rộng 1320px →
-`documentElement.scrollWidth` 1320 vs `clientWidth` 1280, có thanh cuộn ngang, nội dung mép phải bị cắt.
+Nó link `web-builder.css` **tương đối trong thư mục nó** → `json-analysis/web-builder.css` (16/07, 112KB,
+không có `--wb-version`), chứ không dùng bản chung ở `web-builder/`. Nên nó **không** được hưởng lần đồng bộ
+này, và đang tràn 32px ở 390/320.
 
-**Sửa:** thêm `box-sizing: border-box` vào `.wb-container`, hoặc đặt reset
-`*, *::before, *::after { box-sizing: border-box }` toàn file (cần rà lại vì nhiều component
-đang tính theo content-box).
+Hai lựa chọn: trỏ nó sang `../web-builder/web-builder.css` (một bản kit cho cả site — nên làm), hoặc copy
+bản mới đè lên. Trỏ sang bản chung thì lần sau không phải nhớ có hai chỗ.
 
-**Ảnh hưởng:** `finance-econ-rulebook.html`, `mam-com-viet.html`.
+### C. `mam-com-viet.html` — `.mc-navhide` giờ đã có cách làm chuẩn
+
+Trang đang ẩn chữ trong `.wb-navbar__actions` dưới 720px để né lỗi #4. Cách này **vẫn chạy đúng**, không gấp.
+Nhưng đúng bài của kit bây giờ là bỏ `.mc-navhide` và **chuyển 3 nút chữ vào cuối `.wb-navbar__menu`** sau một
+`__spacer` lồng trong: khi hẹp chúng chui vào ☰ (vẫn bấm được) thay vì biến mất.
 
 ---
 
-## 2. Thiếu hẳn nhóm `.wb-footer*`
+## Kiểm lại sau mỗi lần đồng bộ kit
 
-`grep -c wb-footer` trong CSS repo = **0**.
+Mở 3 trang ở 320 / 390 / 1280, cả sáng lẫn tối:
 
-Class đang dùng trong `finance-econ-rulebook.html` nhưng không tồn tại:
-`wb-footer`, `wb-footer--slim`, `wb-footer__inner`, `wb-footer__bottom`, `wb-footer__copy`
-→ footer trang đó hiện render không style.
-
-**Sửa:** port nhóm `.wb-footer*` từ bản skill 2947 dòng (bắt đầu ở dòng 2916 bản đó:
-`.wb-footer`, `__inner`, `__top`, `__brand`, `__mark`, `__name`, `__tagline`, `__cols`,
-`__col`, `__title`, `__bottom`, `__copy`, `--slim`).
-
----
-
-## 3. Rail của stepper ngang chạy xuyên qua marker
-
-**Triệu chứng:** ở `.wb-steps--horizontal`, các bước `.is-todo` bị đường nối cắt ngang qua **giữa** vòng tròn.
-
-**Nguyên nhân — hai geometry khác nhau, state rule chỉ đúng với một cái.**
-
-Rail dọc (mặc định, dòng 2592) bắt đầu **dưới** marker nên không bao giờ chồng lên nó:
-
-```css
-.wb-steps__item::before { top: var(--wb-steps-size); bottom: 0; ... }
+```js
+document.documentElement.scrollWidth - document.documentElement.clientWidth   // phải = 0
 ```
 
-Rail ngang (**dòng 2646–2649**) chạy từ tâm marker này sang tâm marker kế → xuyên thẳng qua
-vòng tròn tiếp theo:
-
-```css
-.wb-steps--horizontal .wb-steps__item::before {
-  left: 50%; top: calc(var(--wb-steps-size) / 2); right: auto; bottom: auto;
-  width: 100%; height: var(--wb-bw); transform: translateY(-50%);
-}
-```
-
-Nó chỉ *trông* đúng nhờ `.wb-steps__marker` có `z-index: 1` + nền đục
-`background: var(--wb-gray-900)` (dòng 2598–2605) che đi. Nhưng đúng những state cố tình
-bỏ nền lại gỡ mất tấm che đó:
-
-- dòng 2618–2621 `.wb-steps__item.is-todo .wb-steps__marker { background: transparent; … }`
-- dòng 2622 `.dark .wb-steps__item.is-todo .wb-steps__marker { background: transparent; … }`
-- dòng 2628–2632 `.wb-steps__item--dashed .wb-steps__marker { background: transparent; … }` (dính cùng lỗi)
-- `--dot` + `.is-todo` cũng vậy
-
-Demo state mặc định (marker đen đục) thì đẹp nên không ai bắt được.
-
-**Sửa — chữa geometry thay vì che bằng nền:**
-
-```css
-.wb-steps--horizontal .wb-steps__item::before {
-  left: calc(50% + var(--wb-steps-size) / 2);
-  top: calc(var(--wb-steps-size) / 2); right: auto; bottom: auto;
-  width: calc(100% - var(--wb-steps-size));
-  height: var(--wb-bw); transform: translateY(-50%);
-}
-```
-
-Vì `.wb-steps--horizontal .wb-steps__item` là `flex: 1 1 0` (rộng bằng nhau) và marker căn giữa,
-khoảng cách hai tâm = đúng 100% chiều rộng item, nên rail vẽ đúng vào khe giữa hai vòng tròn.
-
-**Số đo sau khi áp dụng** (stepper "Lộ trình học nấu" trong `mam-com-viet.html`, viewport 1280):
-
-```
-item0: marker[173,205]  rail[204,475]  next marker starts 474
-item1: marker[474,506]  rail[505,775]  next marker starts 774
-item2: marker[774,806]  rail[805,1076] next marker starts 1075
-```
-
-Rail không đè lên marker nào → `is-todo` để nền trong suốt cũng đúng, và tự động đúng luôn
-cho `--dashed`, `--dot` và dark mode.
-
-**Docs không sai:** `references/components-catalog.md:979–998` mô tả `--horizontal` và
-`.is-todo (muted outline)` là tổ hợp hợp lệ, ví dụ markup y hệt cách đang dùng. Chỉ CSS sai.
-
----
-
-## 4. (nhẹ hơn) `.wb-navbar__actions` không có cơ chế thu hẹp
-
-`.wb-navbar__actions { display: flex; align-items: center; gap: 8px; flex: none; }`
-
-Container query `@container (max-width: 640px)` của navbar chỉ xử lý `.wb-navbar__menu`
-(gập vào hamburger), **không** xử lý `__actions`. Navbar có 3–4 nút chữ trong `__actions`
-sẽ tràn khỏi viewport mà kit không có lối thoát nào.
-
-**Đo được:** `mam-com-viet.html` ở 390px, `scrollWidth` = 512 vs `clientWidth` = 390
-(tràn 122px), thủ phạm là `.wb-navbar__actions`.
-
-**Đề xuất:** cho `__actions` một hành vi thu hẹp trong container query (ví dụ chỉ giữ icon),
-hoặc ít nhất ghi rõ trong docs rằng `__actions` phải là icon-only và mọi nút chữ phải nằm
-trong `__menu`.
-
----
-
-## Sau khi sửa lib, gỡ các bản vá page-local
-
-Trong `mam-com-viet.html`:
-
-- `.wb-container { box-sizing: border-box; }` — gỡ khi lỗi 1 xong
-- `.wb-steps--horizontal .wb-steps__item.is-todo .wb-steps__marker { background: var(--wb-surface) }`
-  (+ biến thể `.dark`) — gỡ khi lỗi 3 xong. Bản vá này **kém hơn** cách sửa ở lib vì nó lấp nền
-  bằng `--wb-surface`, sẽ lộ mảng sai màu nếu stepper ngang được đặt trên nền canvas hoặc trong
-  thẻ có nền khác.
-- `.mc-timerbar { box-sizing: border-box }` — **giữ nguyên**, đó là component riêng của trang.
-
-Trong `mam-com-viet.html` còn một chỗ né lỗi 4: các class `.mc-navhide` ẩn chữ trong
-`.wb-navbar__actions` dưới 720px.
-
-**Kiểm tra lại sau khi sửa:** mở cả 3 trang ở 320 / 390 / 1280px, xác nhận
-`document.documentElement.scrollWidth === clientWidth`; xem stepper "Lộ trình học nấu — bốn chặng"
-trong `mam-com-viet.html` ở cả light và dark; xem footer `finance-econ-rulebook.html`.
+Cẩn thận một cái bẫy: **so hai hình chữ nhật theo trục ngang thôi thì báo nhầm.** Ở ≤640px trang
+`mam-com-viet.html` tự dựng stepper thành **dọc**, mọi bước cùng toạ độ x — kiểm 1 chiều sẽ kêu "rail xuyên
+marker" trong khi thực tế chúng cách nhau theo trục y. Kiểm cả hai trục, hoặc chỉ kiểm khi
+`flex-direction` thật sự là `row`.

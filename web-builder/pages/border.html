@@ -1,14 +1,14 @@
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Nền tảng</p>
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Foundation</p>
   <h2>Border &amp; bo góc</h2>
   <p>Quy ước về đường viền và bo góc để mọi component nhất quán. Bộ này thể hiện “tone/ý nghĩa”
   bằng <b>viền bao quanh (outline) + nền mờ</b> giống capsule, thay cho kiểu <b>vạch màu bên trái</b> —
   để màu nhấn không lệch hẳn về một phía và giữ nhịp bo góc đều nhau.</p>
 </div>
 
-<section class="doc-sec">
+<section class="wb-section">
   <h3>Độ dày &amp; màu viền</h3>
-  <p class="doc-sec__desc">Hai mức: <code>--wb-border</code> (hairline, mặc định) và <code>--wb-border-strong</code> (đậm hơn, cho phần cần nổi). Viền đổi màu theo theme.</p>
+  <p class="wb-section__desc">Hai mức: <code>--wb-border</code> (hairline, mặc định) và <code>--wb-border-strong</code> (đậm hơn, cho phần cần nổi). Viền đổi màu theo theme.</p>
   <div class="demo">
     <div class="demo__stage">
       <div class="wb-cluster wb-cluster--loose">
@@ -29,9 +29,9 @@ border: 2px solid var(--wb-border-strong);   /* khối lớn cần nổi */</cod
   </div>
 </section>
 
-<section class="doc-sec">
+<section class="wb-section">
   <h3>Bo góc</h3>
-  <p class="doc-sec__desc">Thang bo góc dùng lại qua token thay vì gõ px trực tiếp.</p>
+  <p class="wb-section__desc">Thang bo góc dùng lại qua token thay vì gõ px trực tiếp.</p>
   <div class="demo">
     <div class="demo__stage">
       <div class="wb-cluster wb-cluster--loose wb-cluster--bottom">
@@ -50,9 +50,9 @@ border-radius: 0;                        /* vuông — tab boxed */</code></pre>
   </div>
 </section>
 
-<section class="doc-sec">
+<section class="wb-section">
   <h3>Đặc vs đứt nét (dashed)</h3>
-  <p class="doc-sec__desc">Viền <b>đứt nét</b> báo hiệu “chỗ trống / có thể thả / tuỳ chọn / nháp”. Dùng nhất quán giúp người
+  <p class="wb-section__desc">Viền <b>đứt nét</b> báo hiệu “chỗ trống / có thể thả / tuỳ chọn / nháp”. Dùng nhất quán giúp người
   dùng nắm UI nhanh: chỗ nào thêm được, chỗ nào đang kéo–thả. Sẵn có: <code>.wb-card--dashed</code>,
   <code>.wb-divider--dashed</code>, và ô thả <code>.wb-sortable__ph</code>.</p>
   <div class="demo">
@@ -75,9 +75,9 @@ border-radius: 0;                        /* vuông — tab boxed */</code></pre>
   </div>
 </section>
 
-<section class="doc-sec">
+<section class="wb-section">
   <h3>Kiểu nhấn: outline + nền mờ (như capsule)</h3>
-  <p class="doc-sec__desc">Đây là cách site này thể hiện “tone/ý nghĩa” — viền màu bao quanh + nền mờ cùng màu,
+  <p class="wb-section__desc">Đây là cách site này thể hiện “tone/ý nghĩa” — viền màu bao quanh + nền mờ cùng màu,
   thay cho vạch bên trái. Alert, toast, note đều theo kiểu này.</p>
   <div class="demo demo--plain">
     <div class="demo__stage">
@@ -93,9 +93,9 @@ border-radius: var(--wb-radius);</code></pre></div>
   </div>
 </section>
 
-<section class="doc-sec">
+<section class="wb-section">
   <h3>Vạch nhấn bên trái — biến thể không mặc định</h3>
-  <p class="doc-sec__desc">Vạch màu bên trái là một cách nhấn tone khác. Bộ này <b>không dùng làm mặc định</b> (đã có
+  <p class="wb-section__desc">Vạch màu bên trái là một cách nhấn tone khác. Bộ này <b>không dùng làm mặc định</b> (đã có
   outline + nền mờ ở trên), nhưng nó hợp lý cho <b>danh sách thông báo / feed</b> hoặc <b>trích dẫn</b> —
   khi cần một dấu tone mảnh mà không tô cả khối. Dùng có chủ đích đúng ngữ cảnh, không rải lên mọi component.</p>
   <div class="demo demo--plain">

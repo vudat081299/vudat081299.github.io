@@ -3,17 +3,53 @@
 <link rel="stylesheet"
   href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:wght@400;500;700&family=DM+Sans:wght@400;500;700&family=Public+Sans:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&family=Manrope:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&family=Lexend:wght@400;500;700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&family=Roboto+Mono:wght@400;600&display=swap" />
 
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Nền tảng</p>
-  <h2>Fonts</h2>
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Foundation</p>
+  <h2>Fonts &amp; icons</h2>
   <p>Mặc định hệ đang dùng <b>font hệ thống</b> (tải tức thì, cảm giác “native”). Dưới đây là các typeface
   đẹp — gồm cả những font các hãng lớn (Apple, Google, GitHub, Microsoft…) dùng cho web của họ. Muốn đổi
-  mặc định chỉ cần sửa <b>một token</b>.</p>
+  mặc định chỉ cần sửa <b>một token</b>. Ngay dưới là <b>bộ icon &amp; thang kích thước chuẩn</b> dùng chung cả hệ.</p>
 </div>
 
-<section class="doc-sec">
+<section class="wb-section">
+  <h3>Icon — một bộ, kích thước thống nhất</h3>
+  <p class="wb-section__desc">Cả hệ dùng <b>Material Symbols Rounded</b> qua <code>.wb-ico</code> (ligature — viết tên icon là ra).
+  Cỡ lấy từ <b>một thang token</b>, không hard-code <code>font-size</code>: <code>--wb-ico-xs…xl</code> (mặc định
+  <code>--wb-ico-md</code> = 20px). Đổi cỡ bằng lớp <code>.wb-ico--xs / --sm / --md / --lg / --xl</code>.</p>
+  <div class="demo">
+    <div class="demo__stage">
+      <div class="wb-cluster wb-cluster--loose wb-cluster--bottom">
+        <div class="wb-stack" style="--wb-stack-gap:8px;align-items:center"><span class="wb-ico wb-ico--xs">savings</span><span class="wb-help">xs · 16</span></div>
+        <div class="wb-stack" style="--wb-stack-gap:8px;align-items:center"><span class="wb-ico wb-ico--sm">savings</span><span class="wb-help">sm · 18</span></div>
+        <div class="wb-stack" style="--wb-stack-gap:8px;align-items:center"><span class="wb-ico wb-ico--md">savings</span><span class="wb-help">md · 20 · mặc định</span></div>
+        <div class="wb-stack" style="--wb-stack-gap:8px;align-items:center"><span class="wb-ico wb-ico--lg">savings</span><span class="wb-help">lg · 24</span></div>
+        <div class="wb-stack" style="--wb-stack-gap:8px;align-items:center"><span class="wb-ico wb-ico--xl">savings</span><span class="wb-help">xl · 32</span></div>
+      </div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="wb-ico"&gt;savings&lt;/span&gt;             &lt;!-- md · 20px · mặc định --&gt;
+&lt;span class="wb-ico wb-ico--xs"&gt;savings&lt;/span&gt;   &lt;!-- 16 · 18 · 20 · 24 · 32 --&gt;
+&lt;span class="wb-ico wb-ico--lg"&gt;savings&lt;/span&gt;</code></pre></div>
+  </div>
+
+  <h3>Tông xám cho icon phụ</h3>
+  <p class="wb-section__desc">Icon nền/phụ dùng thang xám trung tính thay vì đen đặc: <code>.wb-ico--strong / --muted / --faint</code>
+  (màu status chỉ khi thật sự là trạng thái — xem <a href="#/overview">Triết lý màu</a>).</p>
+  <div class="demo">
+    <div class="demo__stage">
+      <div class="wb-cluster wb-cluster--loose">
+        <div class="wb-stack" style="--wb-stack-gap:8px;align-items:center"><span class="wb-ico wb-ico--lg">account_balance_wallet</span><span class="wb-help">mặc định (đen)</span></div>
+        <div class="wb-stack" style="--wb-stack-gap:8px;align-items:center"><span class="wb-ico wb-ico--lg wb-ico--strong">account_balance_wallet</span><span class="wb-help">--strong</span></div>
+        <div class="wb-stack" style="--wb-stack-gap:8px;align-items:center"><span class="wb-ico wb-ico--lg wb-ico--muted">account_balance_wallet</span><span class="wb-help">--muted</span></div>
+        <div class="wb-stack" style="--wb-stack-gap:8px;align-items:center"><span class="wb-ico wb-ico--lg wb-ico--faint">account_balance_wallet</span><span class="wb-help">--faint</span></div>
+      </div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="wb-ico wb-ico--lg wb-ico--muted"&gt;account_balance_wallet&lt;/span&gt;</code></pre></div>
+  </div>
+</section>
+
+<section class="wb-section">
   <h3>Khuyến nghị cho app tài chính</h3>
-  <p class="doc-sec__desc">Tiêu chí: dễ đọc ở cỡ nhỏ, chữ số <b>tabular</b> thẳng cột, và có “số 0 gạch” để không nhầm với chữ O.</p>
+  <p class="wb-section__desc">Tiêu chí: dễ đọc ở cỡ nhỏ, chữ số <b>tabular</b> thẳng cột, và có “số 0 gạch” để không nhầm với chữ O.</p>
 
   <div class="font-card">
     <div class="font-card__top">
@@ -71,9 +107,9 @@
   </div>
 </section>
 
-<section class="doc-sec">
+<section class="wb-section">
   <h3>Top thế giới — các hãng lớn dùng gì</h3>
-  <p class="doc-sec__desc">Nhiều font “thương hiệu” là <b>độc quyền</b> (không tải tự do) — cột cuối là bản mở tương đương để dùng ngay.</p>
+  <p class="wb-section__desc">Nhiều font “thương hiệu” là <b>độc quyền</b> (không tải tự do) — cột cuối là bản mở tương đương để dùng ngay.</p>
   <div class="wb-card" style="margin-bottom:22px">
     <div class="wb-table-scroll">
       <table class="wb-table wb-table--compact">
@@ -145,9 +181,9 @@
   </div>
 </section>
 
-<section class="doc-sec">
+<section class="wb-section">
   <h3>Chữ số — font mono cho tiền &amp; bảng</h3>
-  <p class="doc-sec__desc">Cân nhắc dùng một font mono cho <b>cột số tiền</b>: mọi chữ số cùng bề rộng nên số thẳng tắp, dễ soát.</p>
+  <p class="wb-section__desc">Cân nhắc dùng một font mono cho <b>cột số tiền</b>: mọi chữ số cùng bề rộng nên số thẳng tắp, dễ soát.</p>
 
   <div class="font-card">
     <div class="font-card__top">
@@ -172,9 +208,9 @@
   </div>
 </section>
 
-<section class="doc-sec">
+<section class="wb-section">
   <h3>Đổi font toàn hệ — sửa 1 token</h3>
-  <p class="doc-sec__desc">Mọi component đọc <code>--wb-font</code>, nên đổi 1 dòng là đổi cả app. Ví dụ chuyển sang Inter:</p>
+  <p class="wb-section__desc">Mọi component đọc <code>--wb-font</code>, nên đổi 1 dòng là đổi cả app. Ví dụ chuyển sang Inter:</p>
   <div class="demo">
     <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>/* 1. Nạp font (index.html hoặc app của bạn) */
 &lt;link rel="stylesheet"
@@ -187,7 +223,7 @@
 }
 /* Xong. Toàn bộ button/table/capsule/số… tự đổi theo. */</code></pre></div>
   </div>
-  <div class="doc-note">
+  <div class="wb-alert wb-alert--info doc-note">
     <span>💡</span>
     <div>Trong app của bạn (Vite), nên tự host font (vd gói <code>@fontsource/inter</code>, <code>@fontsource/jetbrains-mono</code>)
     thay vì gọi Google Fonts để nhanh &amp; ổn định. Bật <code>font-feature-settings: "tnum" 1</code> cho vùng số nếu font hỗ trợ.</div>

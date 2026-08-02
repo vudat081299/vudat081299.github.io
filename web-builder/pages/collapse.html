@@ -1,5 +1,5 @@
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Đóng/mở (Disclosure)</p>
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Disclosure</p>
   <h2>Collapse</h2>
   <p>Một vùng <b>ẩn/hiện độc lập</b> — “xem thêm”, một mục tuỳ chọn trong form, hay ngăn chi tiết trong thẻ.
   Khác <a href="#/accordion">Accordion</a> (một cụm nhiều mục dùng <code>&lt;details&gt;</code> gốc): collapse là <b>một</b> khối bật/tắt,
@@ -7,10 +7,10 @@
   Bật/tắt bằng <code>.is-open</code> trên <code>.wb-collapse</code>.</p>
 </div>
 
-<section class="doc-sec">
-  <div class="doc-block">
+<section class="wb-section">
+  <div class="wb-block">
     <h4>Cơ bản — xem thêm</h4>
-    <p class="doc-block__desc">Nút mang <code>data-collapse-toggle</code>; thêm <code>.wb-collapse__caret</code> vào icon để nó tự xoay khi mở.</p>
+    <p class="wb-block__desc">Nút mang <code>data-collapse-toggle</code>; thêm <code>.wb-collapse__caret</code> vào icon để nó tự xoay khi mở.</p>
     <div class="demo">
       <div class="demo__stage">
         <div class="wb-collapse" style="max-width:420px">
@@ -39,9 +39,10 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Mục nâng cao trong thẻ</h4>
-    <p class="doc-block__desc">Gói một phần form không bắt buộc để mặc định gọn gàng — mở ra khi cần.</p>
+    <p class="wb-block__desc">Cùng skeleton <code>wb-collapse</code> ở trên, chỉ khác nội dung bên trong — gói một
+    phần form không bắt buộc để mặc định gọn gàng, mở ra khi cần (không lặp lại snippet).</p>
     <div class="demo demo--plain">
       <div class="demo__stage">
         <div class="wb-card" style="max-width:380px">
@@ -73,26 +74,18 @@
           </div>
         </div>
       </div>
-      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-collapse"&gt;
-  &lt;button class="wb-btn wb-btn--ghost wb-btn--sm" data-collapse-toggle&gt;
-    &lt;span class="wb-ico wb-ico--sm wb-collapse__caret"&gt;expand_more&lt;/span&gt; Tuỳ chọn nâng cao
-  &lt;/button&gt;
-  &lt;div class="wb-collapse__panel"&gt;&lt;div class="wb-collapse__inner"&gt;
-    &lt;!-- các trường không bắt buộc --&gt;
-  &lt;/div&gt;&lt;/div&gt;
-&lt;/div&gt;</code></pre></div>
     </div>
   </div>
 
-  <div class="doc-note">
+  <div class="wb-alert wb-alert--info doc-note">
     <span class="wb-ico" style="color:var(--wb-info-text)">info</span>
     <div>Cần một cụm nhiều mục chỉ mở một mục tại một thời điểm? Dùng <a href="#/accordion">Accordion</a>.
     Collapse hợp cho <b>một</b> vùng bật/tắt riêng lẻ, hoặc nhiều vùng độc lập cùng mở.</div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Light &amp; Dark</h4>
-    <p class="doc-block__desc">Collapse chỉ ẩn/hiện — màu chữ &amp; nền theo token nên tự đúng ở cả hai theme.</p>
+    <p class="wb-block__desc">Collapse chỉ ẩn/hiện — màu chữ &amp; nền theo token nên tự đúng ở cả hai theme.</p>
     <div class="dual" data-dual data-pad="24px">
       <template>
         <div class="wb-collapse is-open" style="width:260px">

@@ -1,19 +1,20 @@
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Bố cục &amp; tiện ích</p>
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Layout &amp; utilities</p>
   <h2>Grid / Layout</h2>
   <p>Vài lớp bố cục nhỏ để <b>lắp ghép</b> mà không style tay: <code>.wb-cluster</code> (hàng ngang, wrap),
   <code>.wb-grid</code> (lưới 2 chiều), <code>.wb-stack</code> (xếp dọc), <code>.wb-container</code> (cột giữa) và
-  <code>.wb-ratio</code> (giữ tỉ lệ khung). Đủ cho phần lớn màn hình tài chính.</p>
+  <code>.wb-ratio</code> (giữ tỉ lệ khung). Đủ để sắp chỗ <i>bên trong</i> một màn hình; khung của <b>cả</b>
+  màn hình (shell · rail · nhịp tiêu đề) nằm ở <a href="#/shell">App shell &amp; nhịp trang</a>.</p>
 </div>
 
-<section class="doc-sec">
+<section class="wb-section">
   <h3>Cluster — hàng ngang, tự xuống dòng (wrap)</h3>
-  <p class="doc-sec__desc"><b>Trục ngang</b> (justify — dồn theo hàng): mặc định trái · <code>--end</code> (phải) ·
+  <p class="wb-section__desc"><b>Trục ngang</b> (justify — dồn theo hàng): mặc định trái · <code>--end</code> (phải) ·
   <code>--center</code> · <code>--between</code> · <code>--around</code> · <code>--evenly</code> · <code>--stretch</code> (các item bằng nhau, phủ kín hàng).
   <b>Trục dọc</b> (align — khi item cao thấp khác nhau): <code>--top</code> · <code>--middle</code> (giữa · mặc định) · <code>--bottom</code> · <code>--baseline</code>.
   Khoảng cách: <code>--tight</code> / <code>--loose</code>; <code>--nowrap</code> để không xuống dòng.</p>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Wrap (mặc định)</h4>
     <div class="demo">
       <div class="demo__stage">
@@ -30,7 +31,7 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Căn phải · giãn đều · hai đầu</h4>
     <div class="demo">
       <div class="demo__stage">
@@ -56,9 +57,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Căn trục dọc — khi các item cao thấp khác nhau</h4>
-    <p class="doc-block__desc">Mặc định căn <b>giữa</b>. Đổi bằng <code>--top</code> (căn trên) · <code>--bottom</code> (căn dưới) ·
+    <p class="wb-block__desc">Mặc định căn <b>giữa</b>. Đổi bằng <code>--top</code> (căn trên) · <code>--bottom</code> (căn dưới) ·
     <code>--baseline</code> (thẳng chân chữ). Đây là mảnh trước đây hay phải chèn <code>style="align-items:…"</code> tay.</p>
     <div class="demo">
       <div class="demo__stage">
@@ -88,9 +89,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Rải đều · một item chiếm phần dư · căn riêng từng item</h4>
-    <p class="doc-block__desc"><code>--around</code> / <code>--evenly</code> rải đều khoảng cách. <code>.wb-grow</code> cho <b>một</b> item
+    <p class="wb-block__desc"><code>--around</code> / <code>--evenly</code> rải đều khoảng cách. <code>.wb-grow</code> cho <b>một</b> item
     chiếm hết chỗ trống còn lại (ô tìm kiếm co giãn, nút giữ nguyên). <code>.wb-self--top/--center/--bottom</code> căn riêng một item, ghi đè căn chung.</p>
     <div class="demo">
       <div class="demo__stage">
@@ -121,12 +122,12 @@
   </div>
 </section>
 
-<section class="doc-sec">
+<section class="wb-section">
   <h3>Grid — lưới đều</h3>
-  <p class="doc-sec__desc"><code>--auto</code> tự lấp đầy theo bề rộng tối thiểu (chỉnh qua <code>--wb-grid-min</code>) và tự xuống dòng ·
+  <p class="wb-section__desc"><code>--auto</code> tự lấp đầy theo bề rộng tối thiểu (chỉnh qua <code>--wb-grid-min</code>) và tự xuống dòng ·
   <code>--2/--3/--4</code> số cột cố định (về 1 cột trên mobile) · <code>--equal</code> chia đều các cột trong <b>một</b> hàng.</p>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Auto-fill (wrap theo bề rộng)</h4>
     <div class="demo">
       <div class="demo__stage">
@@ -143,7 +144,7 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Cột cố định · chia đều một hàng</h4>
     <div class="demo">
       <div class="demo__stage">
@@ -161,21 +162,23 @@
     </div>
   </div>
 
-  <div class="doc-note">
+  <div class="wb-alert wb-alert--info doc-note">
     <span class="wb-ico" style="color:var(--wb-info-text)">info</span>
-    <div>Đây là tiện ích bố cục thuần (flex/grid) nên có thể dùng trực tiếp trong app — hoặc thay bằng utility của Tailwind
-    (<code>flex flex-wrap gap-*</code>, <code>grid grid-cols-*</code>) nếu muốn. Chúng không mang màu/nghĩa, chỉ sắp chỗ.</div>
+    <div>Năm lớp trên trang này là tiện ích bố cục <b>thuần</b> (flex/grid) nên có thể dùng trực tiếp trong app — hoặc thay bằng utility của Tailwind
+    (<code>flex flex-wrap gap-*</code>, <code>grid grid-cols-*</code>) nếu muốn. Chúng không mang màu/nghĩa, chỉ sắp chỗ.
+    Ngược lại, <a href="#/shell">app shell &amp; nhịp trang</a> <i>có</i> mang nền, viền và cỡ chữ — đó là phần
+    “taste” của hệ thống, không phải thứ nên thay bằng utility chung.</div>
   </div>
 </section>
 
-<section class="doc-sec">
+<section class="wb-section">
   <h3>Stack · Container · Ratio</h3>
-  <p class="doc-sec__desc">Ba mảnh bố cục hay thiếu: <code>.wb-stack</code> (xếp dọc có gap — cặp đôi dọc của cluster),
+  <p class="wb-section__desc">Ba mảnh bố cục hay thiếu: <code>.wb-stack</code> (xếp dọc có gap — cặp đôi dọc của cluster),
   <code>.wb-container</code> (cột giữa, giới hạn bề rộng) và <code>.wb-ratio</code> (giữ tỉ lệ khung cho ảnh/nhúng).</p>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Stack — xếp dọc</h4>
-    <p class="doc-block__desc">Khoảng cách đều theo chiều dọc; <code>--tight</code> / <code>--loose</code> đổi gap.</p>
+    <p class="wb-block__desc">Khoảng cách đều theo chiều dọc; <code>--tight</code> / <code>--loose</code> đổi gap.</p>
     <div class="demo">
       <div class="demo__stage">
         <div class="wb-stack" style="max-width:360px">
@@ -190,9 +193,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Stack — căn ngang các item</h4>
-    <p class="doc-block__desc">Mặc định item giãn hết bề ngang. <code>--start</code> (trái) · <code>--center</code> (giữa) ·
+    <p class="wb-block__desc">Mặc định item giãn hết bề ngang. <code>--start</code> (trái) · <code>--center</code> (giữa) ·
     <code>--end</code> (phải) — vd căn giữa một nút, hay dồn phải một cụm nhỏ.</p>
     <div class="demo">
       <div class="demo__stage">
@@ -220,23 +223,27 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Container — cột giữa, giới hạn bề rộng</h4>
+    <p class="wb-block__desc">Mặc định chỉ có padding <b>ngang</b>, nên container lồng trong một trang vẫn phẳng.
+    Thêm <code>--pad</code> khi nó là cột nội dung <b>của cả trang</b>: có khoảng trống trên và đuôi dưới
+    (<code>--wb-page-pad-block</code> / <code>--wb-page-pad-end</code>).</p>
     <div class="demo">
       <div class="demo__stage">
-        <div class="wb-container wb-container--narrow" style="background:var(--wb-surface-2);border:var(--wb-bw) dashed var(--wb-border-strong);border-radius:var(--wb-radius);padding-block:16px">
+        <div class="wb-container wb-container--narrow wb-container--pad" style="background:var(--wb-surface-2);border:var(--wb-bw) dashed var(--wb-border-strong);border-radius:var(--wb-radius);--wb-page-pad-block:16px;--wb-page-pad-end:16px">
           <div class="wb-cell-strong"><code>.wb-container--narrow</code></div>
           <div class="wb-cell-muted" style="font-size:12.5px">tối đa 720px, tự căn giữa · mặc định 1120px · <code>--wide</code> 1320px</div>
         </div>
       </div>
       <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-container"&gt; … &lt;/div&gt;                       &lt;!-- 1120px --&gt;
-&lt;div class="wb-container wb-container--narrow"&gt; … &lt;/div&gt;   &lt;!-- 720px --&gt;</code></pre></div>
+&lt;div class="wb-container wb-container--narrow"&gt; … &lt;/div&gt;   &lt;!-- 720px --&gt;
+&lt;div class="wb-container wb-container--pad"&gt; … &lt;/div&gt;      &lt;!-- + nhịp dọc của cột nội dung --&gt;</code></pre></div>
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Ratio — giữ tỉ lệ khung</h4>
-    <p class="doc-block__desc">Ô giữ đúng tỉ lệ (16:9 / 4:3 / 1:1) cho ảnh biên lai, bản đồ, khối nhúng — con bên trong phủ kín.</p>
+    <p class="wb-block__desc">Ô giữ đúng tỉ lệ (16:9 / 4:3 / 1:1) cho ảnh biên lai, bản đồ, khối nhúng — con bên trong phủ kín.</p>
     <div class="demo">
       <div class="demo__stage">
         <div class="wb-grid wb-grid--3">

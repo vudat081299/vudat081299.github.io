@@ -1,5 +1,5 @@
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Lớp phủ (Overlay)</p>
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Overlays</p>
   <h2>Popover</h2>
   <p>Một tấm thẻ nổi <b>bấm để mở</b>, neo vào nút kích hoạt, có mũi tên chỉ về nút và nút đóng <b>×</b> ở góc trên phải.
   Giàu hơn <a href="#/tooltip">tooltip</a> (chỉ hover, chỉ chữ) và không phải danh sách thao tác như
@@ -7,10 +7,10 @@
   trong docs là vanilla JS, trong app dùng Radix Popover / Floating UI để tự né mép màn hình.</p>
 </div>
 
-<section class="doc-sec">
-  <div class="doc-block">
+<section class="wb-section">
+  <div class="wb-block">
     <h4>Cơ bản</h4>
-    <p class="doc-block__desc">Mặc định popover nổi <b>phía trên</b> nút, canh giữa. Bấm nút để mở; bấm ra ngoài hoặc <b>×</b> để đóng.</p>
+    <p class="wb-block__desc">Mặc định popover nổi <b>phía trên</b> nút, canh giữa. Bấm nút để mở; bấm ra ngoài hoặc <b>×</b> để đóng.</p>
     <div class="demo demo--pop">
       <div class="demo__stage" style="padding-top:120px">
         <span class="wb-popover is-open">
@@ -35,9 +35,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Hướng đặt</h4>
-    <p class="doc-block__desc"><code>--bottom</code> · <code>--left</code> · <code>--right</code> đổi vị trí (mặc định là trên).
+    <p class="wb-block__desc"><code>--bottom</code> · <code>--left</code> · <code>--right</code> đổi vị trí (mặc định là trên).
     Mũi tên tự đổi cạnh theo hướng.</p>
     <div class="demo demo--plain demo--pop">
       <div class="demo__stage" style="padding:44px 150px 128px">
@@ -65,9 +65,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Có thao tác bên trong</h4>
-    <p class="doc-block__desc">Popover chứa được nội dung tương tác (nút, liên kết) — bấm bên trong không làm nó đóng, chỉ <b>×</b> hoặc bấm ra ngoài mới đóng.</p>
+    <p class="wb-block__desc">Popover chứa được nội dung tương tác (nút, liên kết) — bấm bên trong không làm nó đóng, chỉ <b>×</b> hoặc bấm ra ngoài mới đóng.</p>
     <div class="demo demo--plain demo--pop">
       <div class="demo__stage" style="padding:26px 26px 190px">
         <span class="wb-popover wb-popover--bottom is-open">
@@ -98,15 +98,15 @@
     </div>
   </div>
 
-  <div class="doc-note">
+  <div class="wb-alert wb-alert--info doc-note">
     <span class="wb-ico" style="color:var(--wb-info-text)">info</span>
     <div>Tài liệu này chỉ trình bày <b>kiểu dáng</b>; hành vi mở/đóng &amp; né mép là việc của app. Popover ở đây đặt tĩnh theo modifier —
     khi tích hợp thật, dùng bộ định vị (Radix / Floating UI) để tự lật hướng khi chạm mép màn hình.</div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Light &amp; Dark</h4>
-    <p class="doc-block__desc">Thẻ dùng <code>--wb-surface</code> + viền + <code>--wb-shadow-md</code>; ở dark bóng đổi sang viền sáng mờ tự động.</p>
+    <p class="wb-block__desc">Thẻ dùng <code>--wb-surface</code> + viền + <code>--wb-shadow-md</code>; ở dark bóng đổi sang viền sáng mờ tự động.</p>
     <div class="dual" data-dual data-pad="20px 20px 128px">
       <template>
         <div style="text-align:center">

@@ -1,15 +1,15 @@
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Bộ chọn</p>
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Pickers</p>
   <h2>Bộ chọn màu</h2>
   <p>Hai cách chọn màu, đúng thang màu: một lưới ô <b>preset</b> (<code>.wb-swatches</code>) để chọn từ các hue đã duyệt,
   và một panel <b>tự do</b> (<code>.wb-colorpicker</code>) thay hẳn hộp thoại màu của hệ điều hành. Thư viện lo <i>giao diện</i>;
   phần kéo-chọn + quy đổi HSV do một handler nhỏ đảm nhiệm (bản docs này có sẵn) hoặc một lib headless.</p>
 </div>
 
-<section class="doc-sec">
-  <div class="doc-block">
+<section class="wb-section">
+  <div class="wb-block">
     <h4>Bảng màu — <code>wb-swatches</code></h4>
-    <p class="doc-block__desc">Picker tối giản, thuần CSS: một lưới ô màu <b>preset</b> để chọn từ — giữ lựa chọn trong các hue đã duyệt (đúng
+    <p class="wb-block__desc">Picker tối giản, thuần CSS: một lưới ô màu <b>preset</b> để chọn từ — giữ lựa chọn trong các hue đã duyệt (đúng
     thang màu), thay vì mở hộp chọn màu của hệ điều hành. Đặt hue mỗi ô bằng <code>--wb-swatch-color</code>; ô đang chọn thêm
     <code>.is-selected</code> (viền nhấn theo màu chữ, đọc rõ trên mọi hue). Biến thể <code>--round</code> (tròn) · <code>--sm</code> (nhỏ).
     Cần màu tự do thì dùng <code>.wb-colorpicker</code> bên dưới.</p>
@@ -49,9 +49,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Panel màu tự do — <code>wb-colorpicker</code></h4>
-    <p class="doc-block__desc">Panel custom <b>thay hẳn hộp thoại màu của hệ điều hành</b> (hộp màu mặc định của trình duyệt) — tối giản, đúng tông:
+    <p class="wb-block__desc">Panel custom <b>thay hẳn hộp thoại màu của hệ điều hành</b> (hộp màu mặc định của trình duyệt) — tối giản, đúng tông:
     vùng <b>SV</b> (đậm/sáng) + thanh <b>hue</b> cầu vồng + ô nhập <b>hex</b> + hàng <b>preset</b> (tái dùng <code>wb-swatches</code>). Kéo thử vùng màu / thanh hue, gõ hex, hay bấm preset:</p>
     <div class="demo">
       <div class="demo__stage">
@@ -92,9 +92,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Bấm để mở (popover)</h4>
-    <p class="doc-block__desc">Ghép <code>.wb-colorpicker</code> trong <code>.wb-popover</code> để có pattern <b>bấm ô màu → hiện panel</b>. Nút mở là một ô
+    <p class="wb-block__desc">Ghép <code>.wb-colorpicker</code> trong <code>.wb-popover</code> để có pattern <b>bấm ô màu → hiện panel</b>. Nút mở là một ô
     màu nhỏ; panel bỏ khung riêng (đã có khung của popover). Đây đúng là cách trang <b>Config</b> dùng để chỉnh token màu.</p>
     <div class="demo">
       <div class="demo__stage">

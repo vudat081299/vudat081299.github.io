@@ -1,14 +1,14 @@
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Hiển thị dữ liệu</p>
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Data display</p>
   <h2>Tags <span style="color:var(--wb-fg-subtle);font-weight:600">(#)</span></h2>
   <p>Nhãn tự do người dùng gắn vào giao dịch — <b>luôn có “#” phía trước</b>. Cùng hệ với capsule nhưng
   thêm 3 hình dạng (pill · chữ nhật · thẻ có khía) và màu tùy chọn cho từng danh mục.</p>
 </div>
 
-<section class="doc-sec">
-  <div class="doc-block">
+<section class="wb-section">
+  <div class="wb-block">
     <h4>Hình dạng</h4>
-    <p class="doc-block__desc">Mặc định là <b>pill</b>. Thêm <code>--rect</code> cho chữ nhật, <code>--notch</code> cho dáng “thẻ” (có khía + lỗ bấm).</p>
+    <p class="wb-block__desc">Mặc định là <b>pill</b>. Thêm <code>--rect</code> cho chữ nhật, <code>--notch</code> cho dáng “thẻ” (có khía + lỗ bấm).</p>
     <div class="demo demo--plain">
       <div class="demo__stage">
         <div class="wb-cluster">
@@ -23,9 +23,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Không màu &amp; có màu</h4>
-    <p class="doc-block__desc">Neutral (mặc định) cho nhãn thường. Dùng tone semantic, gán màu riêng qua <code>--wb-tag-color</code>, hoặc <code>--solid</code> để nhấn mạnh — <code>--solid</code> đứng một mình là <b>đen chữ trắng</b> (đảo ở dark).</p>
+    <p class="wb-block__desc">Neutral (mặc định) cho nhãn thường. Dùng tone semantic, gán màu riêng qua <code>--wb-tag-color</code>, hoặc <code>--solid</code> để nhấn mạnh — <code>--solid</code> đứng một mình là <b>đen chữ trắng</b> (đảo ở dark).</p>
     <div class="demo demo--plain">
       <div class="demo__stage">
         <div class="cap-row"><span class="cap-row__label">Neutral</span>
@@ -65,10 +65,11 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Bảng màu danh mục — mỗi danh mục một sắc</h4>
-    <p class="doc-block__desc">Chỉ cần đổi <code>--wb-tag-color</code> là ra vô số màu. Đây là một bảng gợi ý (dịu, phân biệt tốt),
-    hợp làm khoá màu cho danh mục người dùng tự đặt.</p>
+    <p class="wb-block__desc">Chỉ cần đổi <code>--wb-tag-color</code> là ra vô số màu — <b>tham chiếu trực quan</b> một
+    bảng gợi ý (dịu, phân biệt tốt) làm khoá màu cho danh mục người dùng tự đặt (dùng <code>--tinted</code> +
+    hình dạng đã có ở trên, nên không lặp snippet).</p>
     <div class="demo demo--plain">
       <div class="demo__stage">
         <div class="wb-tags" style="gap:8px">
@@ -92,15 +93,12 @@
           <span class="wb-tag wb-tag--tinted wb-tag--notch" style="--wb-tag-color:#d97706">dau-tu</span>
         </div>
       </div>
-      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#4f46e5"&gt;an-uong&lt;/span&gt;
-&lt;span class="wb-tag wb-tag--tinted wb-tag--rect"  style="--wb-tag-color:#7c3aed"&gt;gia-dinh&lt;/span&gt;
-&lt;span class="wb-tag wb-tag--tinted wb-tag--notch" style="--wb-tag-color:#d97706"&gt;dau-tu&lt;/span&gt;</code></pre></div>
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Emoji + chữ</h4>
-    <p class="doc-block__desc">Gắn emoji ngay sau dấu <code>#</code> (do <code>.wb-tag</code> tự thêm) để nhãn danh mục dễ nhận ra. Chạy với mọi hình dạng, màu &amp; nút xoá.</p>
+    <p class="wb-block__desc">Gắn emoji ngay sau dấu <code>#</code> (do <code>.wb-tag</code> tự thêm) để nhãn danh mục dễ nhận ra. Chạy với mọi hình dạng, màu &amp; nút xoá.</p>
     <div class="demo demo--plain">
       <div class="demo__stage">
         <div class="wb-cluster" style="gap:8px;margin-bottom:12px">
@@ -118,14 +116,12 @@
           <span class="wb-tag wb-tag--info">🏊 bơi<button class="wb-tag__x" aria-label="Xoá"></button></span>
         </div>
       </div>
-      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="wb-tag"&gt;🎾 tennis&lt;/span&gt;                       &lt;!-- # tự thêm → "#🎾 tennis" --&gt;
-&lt;span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#0d9488"&gt;🚴 đạp-xe&lt;/span&gt;</code></pre></div>
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Kích thước &amp; xoá được</h4>
-    <p class="doc-block__desc">Ba cỡ như capsule. Thêm nút <code>×</code> để làm tag có thể gỡ (bộ lọc, ô nhập tag).</p>
+    <p class="wb-block__desc">Ba cỡ như capsule. Thêm nút <code>×</code> để làm tag có thể gỡ (bộ lọc, ô nhập tag).</p>
     <div class="demo demo--plain">
       <div class="demo__stage">
         <div class="cap-row"><span class="cap-row__label">Size</span>
@@ -145,9 +141,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Trên một giao dịch</h4>
-    <p class="doc-block__desc">Gom nhiều tag bằng <code>.wb-tags</code> (tự xuống dòng).</p>
+    <p class="wb-block__desc">Gom nhiều tag bằng <code>.wb-tags</code> (tự xuống dòng).</p>
     <div class="demo">
       <div class="demo__stage">
         <div class="wb-card" style="max-width:460px;padding:16px">
@@ -169,9 +165,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Xem đồng thời ở Light &amp; Dark</h4>
-    <p class="doc-block__desc">Màu tag hiển thị đúng ở cả hai chế độ — xem cạnh nhau bên dưới.</p>
+    <p class="wb-block__desc">Màu tag hiển thị đúng ở cả hai chế độ — xem cạnh nhau bên dưới.</p>
     <div class="dual" data-dual data-pad="18px">
       <template>
         <div class="wb-cluster" style="gap:8px">

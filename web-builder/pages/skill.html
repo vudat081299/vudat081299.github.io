@@ -1,0 +1,46 @@
+<div class="wb-page-head">
+  <div class="wb-eyebrow">Project &amp; skill</div>
+  <h2>Sản phẩm là skill — mọi thứ khác phục vụ nó</h2>
+  <p>Một thư viện component để một AI vừa <b>dùng</b> (ráp UI) vừa <b>mở rộng</b> (thêm/sửa
+  component) — không chỉ để tra cứu. Repo là gì · ba lớp skill / docs / tooling, mỗi lớp cho ai.</p>
+</div>
+
+<section class="wb-section wb-section--flush">
+  <h3>Repo này là gì</h3>
+  <div class="wb-alert wb-alert--info doc-note">
+    <span aria-hidden="true">🎯</span>
+    <div><b>Sản phẩm cuối cùng của repo = bộ skill <code>web-builder</code></b> (một file CSS drop-in
+    <code>web-builder.css</code> + <code>SKILL.md</code> + <code>references/</code>) — thứ <b>duy nhất “ship”</b>
+    vào app của bạn. Trang docs bạn đang xem, <code>/wb-change</code> và các hook <b>không ship</b> — chúng chỉ
+    để dựng, review, dogfood và bảo vệ chất lượng skill. Mọi thay đổi đo bằng một câu: <i>skill có tốt lên và
+    còn nhất quán không?</i></div>
+  </div>
+  <p class="wb-section__desc">Cách lib hoạt động: CSS viết tay, <b>token-based</b> (đổi <a href="#/tokens">token</a>
+  là đổi cả hệ), <b>không cần build</b>, một file duy nhất, prefix <code>wb-*</code> nên ghép với mọi stack mà
+  không xung đột. Ưu tiên trắng–đen–xám, có dark mode. Khi build web thì <b>ráp lại từ catalog</b> thay vì
+  thiết kế lại — nguyên tắc reuse-first.</p>
+</section>
+
+<section class="wb-section">
+  <h3>Ba lớp — mỗi lớp cho ai</h3>
+  <div class="wb-grid wb-grid--auto" style="--wb-grid-min:230px;margin-top:8px">
+    <div class="wb-card wb-card--pad">
+      <p class="wb-card__title">Skill — <b>ship</b></p>
+      <p class="wb-card__sub"><code>web-builder.css</code> + <code>SKILL.md</code> + <code>references/</code>. Cho <b>AI dựng UI web</b>:
+      drop-in một file rồi ráp từ class <code>wb-*</code> + token. Đây là thứ đi vào app của bạn.</p>
+    </div>
+    <div class="wb-card wb-card--pad">
+      <p class="wb-card__title">Docs site — không ship</p>
+      <p class="wb-card__sub"><code>index.html</code> · <code>app.js</code> · <code>pages/</code> (trang này). Cho <b>người &amp; AI</b> tra cứu,
+      xem thật từng component ở light/dark và verify trước khi tin.</p>
+    </div>
+    <div class="wb-card wb-card--pad">
+      <p class="wb-card__title">Tooling — không ship</p>
+      <p class="wb-card__sub"><code>/wb-change</code> · hook · <code>validate-sync.sh</code>. Để <b>thêm/sửa component an toàn</b> và giữ
+      6 nơi (CSS ↔ demo ↔ NAV ↔ catalog ↔ SKILL ↔ principles) không lệch nhau.</p>
+    </div>
+  </div>
+  <p class="wb-section__desc" style="margin-top:18px">Đi tiếp: <a href="#/workflow">Workflow <code>/wb-change</code></a> ·
+  <a href="#/onefile">Một file CSS · đọc repo rẻ token</a> · <a href="#/ai-repo">AI làm gì với repo</a> ·
+  <a href="#/tooling">Tooling</a> · <a href="#/decisions">Quyết định &amp; đánh đổi</a>.</p>
+</section>

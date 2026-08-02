@@ -1,14 +1,14 @@
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Cấu trúc</p>
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Structure</p>
   <h2>Tree danh mục</h2>
   <p>Cây danh mục giao dịch — <b>độ sâu tùy ý</b>, xổ ra/thu vào, và <b>kéo–thả</b> để đổi vị trí hoặc
   đổi cấp cha. Cùng một cấu trúc <code>.wb-tree</code> ra được nhiều kiểu: quản lý (kéo–thả), điều hướng
   (guide lines), ngân sách (màu + số tiền), chọn lọc (checkbox), ký hiệu mở bên phải, và cây tĩnh không thu gọn.</p>
 </div>
 
-<section class="doc-sec">
+<section class="wb-section">
   <h3>Quản lý danh mục — kéo &amp; thả <span class="wb-cap wb-cap--solid wb-cap--sm">Hero</span></h3>
-  <p class="doc-sec__desc">Kéo bằng tay nắm (chấm) để đổi vị trí. Thả vào <b>giữa</b> một mục để đưa vào làm con
+  <p class="wb-section__desc">Kéo bằng tay nắm (chấm) để đổi vị trí. Thả vào <b>giữa</b> một mục để đưa vào làm con
   (reparent); thả vào <b>mép trên/dưới</b> để chèn trước/sau. Không cho thả vào chính con của nó.
   Nút hành động (<code>.wb-tree__actions</code>) mặc định <b>hiện khi rê chuột / focus</b>; muốn
   <b>luôn hiện</b> thì thêm <code>.wb-tree--actions-shown</code> (xem bên dưới).</p>
@@ -79,9 +79,9 @@
   &lt;/li&gt;
 &lt;/ul&gt;</code></pre></div>
   </div>
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Nút hành động luôn hiện — <code>--actions-shown</code></h4>
-    <p class="doc-block__desc">Mặc định nút thêm/sửa chỉ hiện khi rê chuột hoặc focus (giữ cây gọn). Cho màn
+    <p class="wb-block__desc">Mặc định nút thêm/sửa chỉ hiện khi rê chuột hoặc focus (giữ cây gọn). Cho màn
     <b>quản lý</b> hoặc thiết bị <b>cảm ứng</b> (không có hover), thêm <code>.wb-tree--actions-shown</code> để nút luôn hiển thị.</p>
     <div class="demo">
       <div class="demo__stage">
@@ -104,7 +104,7 @@
     </div>
   </div>
 
-  <div class="doc-note">
+  <div class="wb-alert wb-alert--info doc-note">
     <span>💡</span>
     <div>Chevron, tay nắm và icon hành động đều dùng <b>icon-font Material Symbols</b> (đậm &amp; sắc, đổi cỡ/độ đậm
     qua token) — nút/thẻ để rỗng, icon được chèn bằng CSS. Ở tài liệu này, kéo–thả dùng HTML5 drag-and-drop thuần (reorder +
@@ -113,9 +113,9 @@
   </div>
 </section>
 
-<section class="doc-sec">
+<section class="wb-section">
   <h3>Điều hướng — guide lines + số đếm</h3>
-  <p class="doc-sec__desc">Thêm <code>--lines</code> để có đường dẫn dọc; bỏ tay nắm khi chỉ để xem/điều hướng. Mục đang chọn dùng <code>.is-selected</code>.</p>
+  <p class="wb-section__desc">Thêm <code>--lines</code> để có đường dẫn dọc; bỏ tay nắm khi chỉ để xem/điều hướng. Mục đang chọn dùng <code>.is-selected</code>.</p>
   <div class="demo">
     <div class="demo__stage">
       <ul class="wb-tree wb-tree--lines" data-tree style="max-width:340px">
@@ -140,9 +140,9 @@
   </div>
 </section>
 
-<section class="doc-sec">
+<section class="wb-section">
   <h3>Ngân sách — chấm màu + số tiền</h3>
-  <p class="doc-sec__desc">Gắn <code>.wb-tree__dot</code> (màu danh mục qua <code>background</code>) và để số tiền trong <code>.wb-tree__meta</code>.</p>
+  <p class="wb-section__desc">Gắn <code>.wb-tree__dot</code> (màu danh mục qua <code>background</code>) và để số tiền trong <code>.wb-tree__meta</code>.</p>
   <div class="demo">
     <div class="demo__stage">
       <ul class="wb-tree" data-tree style="max-width:380px">
@@ -170,9 +170,9 @@
   </div>
 </section>
 
-<section class="doc-sec">
+<section class="wb-section">
   <h3>Chọn lọc — checkbox</h3>
-  <p class="doc-sec__desc">Thêm <code>.wb-tree__check</code> để lọc theo danh mục (vd lọc giao dịch, chọn danh mục xuất báo cáo).</p>
+  <p class="wb-section__desc">Thêm <code>.wb-tree__check</code> để lọc theo danh mục (vd lọc giao dịch, chọn danh mục xuất báo cáo).</p>
   <div class="demo">
     <div class="demo__stage">
       <ul class="wb-tree" data-tree style="max-width:320px">
@@ -193,12 +193,12 @@
   </div>
 </section>
 
-<section class="doc-sec">
+<section class="wb-section">
   <h3>Kiểu mở/thu gọn</h3>
-  <p class="doc-sec__desc">Ba lựa chọn cho ký hiệu xổ ra: mặc định (bên trái), <b>bên phải</b> (<code>--right</code>),
+  <p class="wb-section__desc">Ba lựa chọn cho ký hiệu xổ ra: mặc định (bên trái), <b>bên phải</b> (<code>--right</code>),
   hoặc <b>không thu gọn</b> / bỏ hẳn icon (<code>--flat</code>, cây tĩnh chỉ để đọc).</p>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Ký hiệu mở bên phải — <code>--right</code></h4>
     <div class="demo">
       <div class="demo__stage">
@@ -229,9 +229,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Không thu gọn / bỏ icon — <code>--flat</code></h4>
-    <p class="doc-block__desc">Không có toggle nên không thu gọn được — một bản phác danh mục để đọc. Ghép với <code>--lines</code> cho có đường dẫn.</p>
+    <p class="wb-block__desc">Không có toggle nên không thu gọn được — một bản phác danh mục để đọc. Ghép với <code>--lines</code> cho có đường dẫn.</p>
     <div class="demo">
       <div class="demo__stage">
         <ul class="wb-tree wb-tree--flat wb-tree--lines" style="max-width:320px">
@@ -255,9 +255,9 @@
   </div>
 </section>
 
-<section class="doc-sec">
+<section class="wb-section">
   <h3>Trình duyệt thư mục — icon emoji</h3>
-  <p class="doc-sec__desc">Thêm <code>.wb-tree__ico</code> (dùng emoji sẵn có, không cần bộ icon ngoài) trước nhãn để ra dáng “file explorer”. Ở đây kết hợp với ký hiệu mở bên phải.</p>
+  <p class="wb-section__desc">Thêm <code>.wb-tree__ico</code> (dùng emoji sẵn có, không cần bộ icon ngoài) trước nhãn để ra dáng “file explorer”. Ở đây kết hợp với ký hiệu mở bên phải.</p>
   <div class="demo">
     <div class="demo__stage">
       <ul class="wb-tree wb-tree--right" data-tree style="max-width:340px">

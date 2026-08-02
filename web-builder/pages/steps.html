@@ -1,5 +1,5 @@
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Điều hướng</p>
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Navigation</p>
   <h2>Steps / Stepper</h2>
   <p>Một chuỗi bước có đánh số (hoặc chấm) với đường nối — cho wizard nhiều bước, onboarding, hay
   timeline tiến trình. Marker là chip trung tính tương phản cao (tier 1 — tiêu <i>contrast</i>, không
@@ -7,16 +7,16 @@
   cho hàng ngang, <code>--dot</code> cho timeline mảnh.</p>
 </div>
 
-<section class="doc-sec">
-  <div class="doc-note">
+<section class="wb-section">
+  <div class="wb-alert wb-alert--info doc-note">
     <span aria-hidden="true">ℹ️</span>
     <div>Chuyển bước là <b>logic của app</b>; class chỉ lo phần nhìn — đánh dấu trạng thái mỗi bước bằng
     <code>.is-done</code> / <code>.is-active</code> / <code>.is-todo</code>.</div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Dọc — có trạng thái (done · active · todo)</h4>
-    <p class="doc-block__desc">Bước xong dùng <code>.is-done</code> (đặt icon <code>check</code> trong marker),
+    <p class="wb-block__desc">Bước xong dùng <code>.is-done</code> (đặt icon <code>check</code> trong marker),
     bước hiện tại <code>.is-active</code> (viền ring trung tính), bước chưa tới <code>.is-todo</code> (marker rỗng, mờ).</p>
     <div class="demo">
       <div class="demo__stage">
@@ -64,9 +64,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Bước tạm / chưa chốt — nét đứt (<code>--dashed</code>)</h4>
-    <p class="doc-block__desc">Thêm <code>--dashed</code> vào một <code>.wb-steps__item</code>: marker số + đường nối thành
+    <p class="wb-block__desc">Thêm <code>--dashed</code> vào một <code>.wb-steps__item</code>: marker số + đường nối thành
     <b>gạch đứt</b> — đọc là bước <b>tuỳ chọn / dự kiến / chưa chốt</b> (đúng idiom “nét đứt = chưa cuối cùng”, §9). Chạy cả ở <code>--horizontal</code>.</p>
     <div class="demo demo--plain">
       <div class="demo__stage">
@@ -99,9 +99,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Dọc — đánh số + ghi chú (<code>__note</code>)</h4>
-    <p class="doc-block__desc">Mọi bước cùng cấp (không trạng thái) — marker số đặc. Treo một pill gạch đứt
+    <p class="wb-block__desc">Mọi bước cùng cấp (không trạng thái) — marker số đặc. Treo một pill gạch đứt
     <code>.wb-steps__note</code> dưới bước để ghi nhánh lặp / lưu ý.</p>
     <div class="demo demo--plain">
       <div class="demo__stage">
@@ -149,9 +149,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Timeline mảnh (<code>--dot</code>)</h4>
-    <p class="doc-block__desc">Marker thành chấm nhỏ (bỏ số) — hợp mốc thời gian / nhật ký giao dịch.</p>
+    <p class="wb-block__desc">Marker thành chấm nhỏ (bỏ số) — hợp mốc thời gian / nhật ký giao dịch.</p>
     <div class="demo demo--plain">
       <div class="demo__stage">
         <ol class="wb-steps wb-steps--dot">
@@ -191,9 +191,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Ngang (<code>--horizontal</code>)</h4>
-    <p class="doc-block__desc">Marker trên, nhãn dưới, đường nối chạy giữa các marker — cho wizard checkout / nhiều bước.</p>
+    <p class="wb-block__desc">Marker trên, nhãn dưới, đường nối chạy giữa các marker — cho wizard checkout / nhiều bước.</p>
     <div class="demo demo--plain">
       <div class="demo__stage">
         <ol class="wb-steps wb-steps--horizontal">

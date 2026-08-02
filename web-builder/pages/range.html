@@ -1,12 +1,12 @@
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Nhập liệu</p>
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Inputs</p>
   <h2>Range / Slider</h2>
   <p>Thanh trượt chọn một giá trị trong khoảng — hạn mức ngân sách, ngưỡng cảnh báo, mức lọc số tiền.
   Track + thumb trung tính, tự đảo màu theo theme.</p>
 </div>
 
-<section class="doc-sec">
-  <div class="doc-block">
+<section class="wb-section">
+  <div class="wb-block">
     <h4>Cơ bản + hiện giá trị</h4>
     <div class="demo">
       <div class="demo__stage">
@@ -21,9 +21,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Có nấc chia vạch — <code>.wb-range-ticks</code></h4>
-    <p class="doc-block__desc">Thêm các <b>vạch mốc</b> (và nhãn) dưới track cho các mức rời rạc. Đặt <code>step</code> khớp
+    <p class="wb-block__desc">Thêm các <b>vạch mốc</b> (và nhãn) dưới track cho các mức rời rạc. Đặt <code>step</code> khớp
     số vạch để thumb <b>búng đúng vào từng nấc</b>. Vạch dùng thang xám trung tính.</p>
     <div class="demo">
       <div class="demo__stage">
@@ -46,9 +46,48 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
+    <h4>Canh nhãn theo vạch — 3 kiểu</h4>
+    <p class="wb-block__desc">Chọn cách nhãn đặt so với vạch: <b>căn giữa vạch</b> (mặc định) · <b>nằm bên trái vạch, align phải</b>
+    (<code>--labels-left</code>) · <b>nằm bên phải vạch, align trái</b> (<code>--labels-right</code>).</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-stack" style="--wb-stack-gap:24px; max-width:380px">
+          <div class="wb-field">
+            <label class="wb-label">Căn giữa vạch (mặc định)</label>
+            <div class="wb-range-ticks">
+              <input class="wb-range" type="range" min="0" max="10000000" step="2500000" value="5000000" aria-label="Giữa" />
+              <div class="wb-range-ticks__marks"><span></span><span></span><span></span><span></span><span></span></div>
+              <div class="wb-range-ticks__labels"><span>0</span><span>2,5tr</span><span>5tr</span><span>7,5tr</span><span>10tr</span></div>
+            </div>
+          </div>
+          <div class="wb-field">
+            <label class="wb-label">Bên trái vạch · align phải — <code>--labels-left</code></label>
+            <div class="wb-range-ticks wb-range-ticks--labels-left">
+              <input class="wb-range" type="range" min="0" max="10000000" step="2500000" value="5000000" aria-label="Trái" />
+              <div class="wb-range-ticks__marks"><span></span><span></span><span></span><span></span><span></span></div>
+              <div class="wb-range-ticks__labels"><span>0</span><span>2,5tr</span><span>5tr</span><span>7,5tr</span><span>10tr</span></div>
+            </div>
+          </div>
+          <div class="wb-field">
+            <label class="wb-label">Bên phải vạch · align trái — <code>--labels-right</code></label>
+            <div class="wb-range-ticks wb-range-ticks--labels-right">
+              <input class="wb-range" type="range" min="0" max="10000000" step="2500000" value="5000000" aria-label="Phải" />
+              <div class="wb-range-ticks__marks"><span></span><span></span><span></span><span></span><span></span></div>
+              <div class="wb-range-ticks__labels"><span>0</span><span>2,5tr</span><span>5tr</span><span>7,5tr</span><span>10tr</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-range-ticks wb-range-ticks--labels-left"&gt; … &lt;/div&gt;   &lt;!-- nằm trái vạch, align phải --&gt;
+&lt;div class="wb-range-ticks"&gt; … &lt;/div&gt;                          &lt;!-- căn giữa vạch (mặc định) --&gt;
+&lt;div class="wb-range-ticks wb-range-ticks--labels-right"&gt; … &lt;/div&gt;  &lt;!-- nằm phải vạch, align trái --&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="wb-block">
     <h4>Track có phần "đã chọn" (filled)</h4>
-    <p class="doc-block__desc">Tô đậm phần bên trái thumb bằng gradient nội tuyến — đặt mốc % bằng giá trị hiện tại.</p>
+    <p class="wb-block__desc">Tô đậm phần bên trái thumb bằng gradient nội tuyến — đặt mốc % bằng giá trị hiện tại.</p>
     <div class="demo">
       <div class="demo__stage">
         <input class="wb-range" type="range" min="0" max="100" value="65"
@@ -59,9 +98,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Hai đầu — chọn khoảng (min–max) <span class="wb-cap wb-cap--sm wb-cap--outline">mới</span></h4>
-    <p class="doc-block__desc">Hai thumb trên một track, phần giữa được tô — chuẩn UX lọc khoảng số tiền/giá.
+    <p class="wb-block__desc">Hai thumb trên một track, phần giữa được tô — chuẩn UX lọc khoảng số tiền/giá.
     Ghép <b>thanh trượt + 2 ô min/max + một câu tóm tắt</b>, tất cả đồng bộ (kéo thumb ↔ gõ số ↔ chữ đổi theo).
     Thử kéo hai đầu hoặc gõ số.</p>
     <div class="demo">
@@ -97,7 +136,7 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Nhỏ · vô hiệu</h4>
     <div class="demo">
       <div class="demo__stage">
@@ -111,7 +150,7 @@
     </div>
   </div>
 
-  <div class="doc-note">
+  <div class="wb-alert wb-alert--info doc-note">
     <span>💡</span>
     <div>Bản <b>hai đầu</b> (<code>wb-range-dual</code>) ở trên đã đủ cho lọc khoảng; trong app có thể thay lõi bằng
     Radix <b>Slider</b> cho chắc tay về bàn phím/độ chính xác, vẫn giữ class <code>wb-range</code> / <code>wb-range-dual</code> cho phần nhìn.</div>

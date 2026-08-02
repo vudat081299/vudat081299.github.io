@@ -1,12 +1,12 @@
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Hiển thị dữ liệu</p>
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Data display</p>
   <h2>Capsules / Badges</h2>
   <p>Hai trục kết hợp tự do: <b>FILL</b> (soft · solid · outline · elevated) và
   <b>TONE</b> (neutral · success · danger · warning · info). Mặc định là soft-xám (tầng 1).</p>
 </div>
 
-<section class="doc-sec">
-  <div class="doc-block">
+<section class="wb-section">
+  <div class="wb-block">
     <h4>Neutral — trắng/đen/xám (tầng 1, dùng nhiều nhất)</h4>
     <div class="demo demo--plain">
       <div class="demo__stage">
@@ -25,9 +25,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Nét đứt — tuỳ chọn / nháp / thêm-mới (<code>--dashed</code>)</h4>
-    <p class="doc-block__desc">Viền gạch đứt đọc là <b>“chưa chốt”</b> (đúng idiom §9) — hợp cho chip <b>thêm-mới</b>,
+    <p class="wb-block__desc">Viền gạch đứt đọc là <b>“chưa chốt”</b> (đúng idiom §9) — hợp cho chip <b>thêm-mới</b>,
     <b>nháp</b>, hay tuỳ chọn. Trung tính mặc định; ghép được với tone để viền theo màu status, như <code>--outline</code>.</p>
     <div class="demo demo--plain">
       <div class="demo__stage">
@@ -49,9 +49,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Semantic — soft (tầng 3) và solid (tầng 2)</h4>
-    <p class="doc-block__desc">Thêm tone; mặc định là bản soft mờ. Thêm <code>--solid</code> để thành bản đặc, nhấn mạnh.</p>
+    <p class="wb-block__desc">Thêm tone; mặc định là bản soft mờ. Thêm <code>--solid</code> để thành bản đặc, nhấn mạnh.</p>
     <div class="demo demo--plain">
       <div class="demo__stage">
         <div class="cap-row"><span class="cap-row__label">Soft</span>
@@ -78,9 +78,10 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Bảng màu đầy đủ — 4 tone × 3 fill</h4>
-    <p class="doc-block__desc">Bốn tone semantic, mỗi tone ở ba kiểu fill. Đây là toàn bộ dải màu “trạng thái”.</p>
+    <p class="wb-block__desc">Bốn tone semantic, mỗi tone ở ba kiểu fill — <b>tham chiếu trực quan</b> toàn bộ dải màu
+    “trạng thái” (cùng class như phần trên, nên không lặp lại snippet).</p>
     <div class="demo demo--plain">
       <div class="demo__stage">
         <div class="cap-row"><span class="cap-row__label">Success</span>
@@ -104,15 +105,12 @@
           <span class="wb-cap wb-cap--info wb-cap--outline">Outline</span>
         </div>
       </div>
-      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="wb-cap wb-cap--success"&gt;Soft&lt;/span&gt;
-&lt;span class="wb-cap wb-cap--success wb-cap--solid"&gt;Solid&lt;/span&gt;
-&lt;span class="wb-cap wb-cap--success wb-cap--outline"&gt;Outline&lt;/span&gt;</code></pre></div>
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Màu danh mục — <code>--tinted</code> + một biến</h4>
-    <p class="doc-block__desc">Khi cần một chip <b>phân loại có màu</b> (vd chú thích danh mục cho biểu đồ), dùng
+    <p class="wb-block__desc">Khi cần một chip <b>phân loại có màu</b> (vd chú thích danh mục cho biểu đồ), dùng
     <code>--tinted</code> và gán màu qua <code>--wb-cap-color</code>. Lưu ý: <b>trạng thái</b> vẫn dùng 4 tone ở trên;
     màu tự do chỉ cho <b>phân loại</b>.</p>
     <div class="demo demo--plain">
@@ -140,9 +138,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Emoji + chữ — nhãn danh mục thân thiện</h4>
-    <p class="doc-block__desc">Emoji là cách nhẹ (không cần icon-font) giúp danh mục do người dùng tự đặt trông sinh động hơn. Đặt emoji ngay trước chữ; chạy với mọi fill / tone / màu <code>--tinted</code>.</p>
+    <p class="wb-block__desc">Emoji là cách nhẹ (không cần icon-font) giúp danh mục do người dùng tự đặt trông sinh động hơn. Đặt emoji ngay trước chữ; chạy với mọi fill / tone / màu <code>--tinted</code>.</p>
     <div class="demo demo--plain">
       <div class="demo__stage">
         <div class="wb-cluster" style="margin-bottom:12px">
@@ -161,15 +159,12 @@
           <span class="wb-cap wb-cap--tinted wb-cap--solid" style="--wb-cap-color:#16a34a">💰 Tiết kiệm</span>
         </div>
       </div>
-      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="wb-cap"&gt;🚴 Đạp xe&lt;/span&gt;
-&lt;span class="wb-cap wb-cap--tinted" style="--wb-cap-color:#0d9488"&gt;🎾 Tennis&lt;/span&gt;
-&lt;span class="wb-cap wb-cap--tinted wb-cap--solid" style="--wb-cap-color:#16a34a"&gt;💰 Tiết kiệm&lt;/span&gt;</code></pre></div>
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Token gỡ được — có nút <code>×</code> bên phải</h4>
-    <p class="doc-block__desc">Capsule dạng <b>[ khoá : giá trị × ]</b>: một chip <b>gỡ được</b> cho bộ lọc / lựa chọn đã áp
+    <p class="wb-block__desc">Capsule dạng <b>[ khoá : giá trị × ]</b>: một chip <b>gỡ được</b> cho bộ lọc / lựa chọn đã áp
     dụng. Xám mặc định (phân loại — tầng 1); chỉ mượn tông <b>mềm</b> khi token là một <b>trạng thái</b>. Nút
     <code>×</code> là icon-font <code>close</code> (chung một dấu với modal / tag). Bộ đầy đủ + ô tìm kiếm nằm ở
     trang <a href="#/filterbar">Filter bar</a>.</p>
@@ -203,9 +198,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Xem đồng thời ở Light &amp; Dark</h4>
-    <p class="doc-block__desc">Cùng một bộ capsule, render ở cả hai chế độ cạnh nhau — để thấy ngay dải màu ở chế độ còn lại
+    <p class="wb-block__desc">Cùng một bộ capsule, render ở cả hai chế độ cạnh nhau — để thấy ngay dải màu ở chế độ còn lại
     mà không cần bật đổi theme. (Neutral <code>--solid</code> cố ý đảo: đen ở light ↔ trắng ở dark; màu semantic giữ tông ở cả hai.)</p>
     <div class="dual" data-dual data-pad="18px">
       <template>
@@ -221,7 +216,7 @@
     </div>
   </div>
 
-  <div class="doc-note">
+  <div class="wb-alert wb-alert--info doc-note">
     <span>💡</span>
     <div><b>Phân loại</b> (Ăn uống, Nhà ở) là classification → giữ xám. <b>Trạng thái</b> (Đã trả, Quá hạn)
     mới được dùng màu. Mapping dùng chung: đã trả/nhận/hoàn tất → success · chờ/sắp hạn → warning ·

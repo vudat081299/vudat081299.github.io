@@ -1,7 +1,8 @@
 /* =============================================================================
    Web Builder docs — shared shell (defined ONCE, reused by every page)
    -----------------------------------------------------------------------------
-   • Renders the tree sidebar from NAV (group heading = primary line, items dimmer).
+   • Renders the tree sidebar per SECTION (a switcher dropdown swaps sections;
+     group heading = primary line, items dimmer).
    • Hash router: #/<id> loads pages/<id>.html into the main column, so each
      group shows in isolation (pick "Tables" → only tables render).
    • Theme toggle, code-copy, token swatches, sticky-table fill, dual light/dark
@@ -10,99 +11,238 @@
    Serve the folder (fetch needs http) — e.g. `python3 -m http.server`.
    ========================================================================== */
 
-/* ---- Navigation model — the single source of truth for the sidebar tree --- */
-const NAV = [
-  { group: "Nền tảng", items: [
-    { id: "overview",   label: "Tổng quan" },
-    { id: "color",      label: "Triết lý màu" },
+/* ---- Navigation model — SECTIONS. Each section is its OWN sidebar tree, switched
+   by the dropdown at the top of the sidebar. Only the `components` section carries
+   grouped `group:` headings — those labels are the SKILL.md "Current scope" list
+   that validate-sync CHECK 10 guards, so keep them verbatim. `design` / `project`
+   are flat `items:` lists (no `group:` → not scope-checked).
+   LOCALE: the docs *chrome* (this nav, the topbar, the Config panel) is ENGLISH;
+   page bodies and every component's sample copy stay Vietnamese-first (§20 — copy
+   is data). A page's `wb-eyebrow` echoes its group label here, so the two must
+   match: rename a group and you rename the eyebrow on its pages. --------------- */
+const SECTIONS = [
+  { id: "design", title: "Design", icon: "format_paint", items: [
+    { id: "overview",   label: "Overview" },
+    { id: "recipes",    label: "Page recipes" },
+    { id: "templates",  label: "Page templates" },
+    { id: "principles", label: "Principles (§1–§25)" },
+    { id: "color",      label: "Colour philosophy" },
     { id: "tokens",     label: "Design tokens" },
     { id: "typography", label: "Typography" },
-    { id: "fonts",      label: "Fonts" },
-    { id: "border",     label: "Border & bo góc" },
+    { id: "fonts",      label: "Fonts & icons" },
+    { id: "border",     label: "Border & radius" },
     { id: "config",     label: "Config / Tweak" },
   ]},
-  { group: "Bố cục & tiện ích", items: [
-    { id: "layout",     label: "Grid / Layout" },
-    { id: "sticky",     label: "Sticky" },
-    { id: "scroll",     label: "Scroll / thanh cuộn" },
-    { id: "divider",    label: "Divider" },
+  { id: "components", title: "Components", icon: "widgets", groups: [
+    { group: "Layout & utilities", items: [
+      { id: "shell",      label: "App shell & page rhythm" },
+      { id: "layout",     label: "Grid / Layout" },
+      { id: "sticky",     label: "Sticky" },
+      { id: "scroll",     label: "Scroll / scrollbars" },
+      { id: "divider",    label: "Divider" },
+    ]},
+    { group: "Actions", items: [
+      { id: "buttons",  label: "Buttons" },
+      { id: "dropdown", label: "Dropdown / Menu" },
+    ]},
+    { group: "Inputs", items: [
+      { id: "input",    label: "Text input" },
+      { id: "select",   label: "Select" },
+      { id: "textarea", label: "Textarea" },
+      { id: "richtext", label: "Rich text (format bar)" },
+      { id: "choice",   label: "Checkbox & Radio" },
+      { id: "switch",   label: "Switch" },
+      { id: "range",    label: "Range / Slider" },
+      { id: "file",     label: "File / Upload" },
+    ]},
+    { group: "Pickers", items: [
+      { id: "calendar",    label: "Calendar" },
+      { id: "timepicker",  label: "Time picker" },
+      { id: "colorpicker", label: "Colour picker" },
+    ]},
+    { group: "Data display", items: [
+      { id: "card",     label: "Card" },
+      { id: "receipt",  label: "Receipt" },
+      { id: "tables",   label: "Tables" },
+      { id: "filterbar",label: "Filter bar" },
+      { id: "list",     label: "List group" },
+      { id: "stats",    label: "Stat / KPI cards" },
+      { id: "capsules", label: "Capsules / Badges" },
+      { id: "tags",     label: "Tags (#)" },
+      { id: "avatar",   label: "Avatar" },
+      { id: "charts",   label: "Charts" },
+    ]},
+    { group: "Feedback", items: [
+      { id: "alert",    label: "Alert / Banner" },
+      { id: "toast",    label: "Toast" },
+      { id: "progress", label: "Progress" },
+      { id: "skeleton", label: "Skeleton" },
+      { id: "empty",    label: "Empty state" },
+    ]},
+    { group: "Overlays", items: [
+      { id: "modal",    label: "Modal / Dialog" },
+      { id: "drawer",   label: "Drawer / Offcanvas" },
+      { id: "tooltip",  label: "Tooltip" },
+      { id: "popover",  label: "Popover" },
+    ]},
+    { group: "Navigation", items: [
+      { id: "navbar",     label: "Navbar & menu" },
+      { id: "sidenav",    label: "Sidebar (side-nav)" },
+      { id: "tabs",       label: "Tabs" },
+      { id: "steps",      label: "Steps / Stepper" },
+      { id: "breadcrumb", label: "Breadcrumb" },
+      { id: "pagination", label: "Pagination" },
+      { id: "footer",     label: "Footer & pager" },
+    ]},
+    { group: "Disclosure", items: [
+      { id: "accordion",  label: "Accordion" },
+      { id: "collapse",   label: "Collapse" },
+    ]},
+    { group: "Structure", items: [
+      { id: "tree",     label: "Tree" },
+      { id: "sortable", label: "Drag & drop list / grid" },
+      { id: "slotgrid", label: "Slot grid" },
+    ]},
   ]},
-  { group: "Hành động", items: [
-    { id: "buttons",  label: "Buttons" },
-    { id: "dropdown", label: "Dropdown / Menu" },
-  ]},
-  { group: "Nhập liệu", items: [
-    { id: "input",    label: "Text input" },
-    { id: "select",   label: "Select" },
-    { id: "textarea", label: "Textarea" },
-    { id: "richtext", label: "Rich text (format bar)" },
-    { id: "choice",   label: "Checkbox & Radio" },
-    { id: "switch",   label: "Switch" },
-    { id: "range",    label: "Range / Slider" },
-    { id: "file",     label: "File / Upload" },
-  ]},
-  { group: "Bộ chọn", items: [
-    { id: "calendar",    label: "Lịch (calendar)" },
-    { id: "timepicker",  label: "Chọn giờ (time)" },
-    { id: "colorpicker", label: "Bộ chọn màu" },
-  ]},
-  { group: "Hiển thị dữ liệu", items: [
-    { id: "card",     label: "Card" },
-    { id: "receipt",  label: "Hoá đơn (receipt)" },
-    { id: "tables",   label: "Tables" },
-    { id: "filterbar",label: "Filter bar" },
-    { id: "list",     label: "List group" },
-    { id: "stats",    label: "Stat / KPI cards" },
-    { id: "capsules", label: "Capsules / Badges" },
-    { id: "tags",     label: "Tags (#)" },
-    { id: "avatar",   label: "Avatar" },
-    { id: "charts",   label: "Charts" },
-  ]},
-  { group: "Phản hồi", items: [
-    { id: "alert",    label: "Alert / Banner" },
-    { id: "toast",    label: "Toast" },
-    { id: "progress", label: "Progress" },
-    { id: "skeleton", label: "Skeleton" },
-    { id: "empty",    label: "Empty state" },
-  ]},
-  { group: "Lớp phủ (Overlay)", items: [
-    { id: "modal",    label: "Modal / Dialog" },
-    { id: "drawer",   label: "Drawer / Offcanvas" },
-    { id: "tooltip",  label: "Tooltip" },
-    { id: "popover",  label: "Popover" },
-  ]},
-  { group: "Điều hướng", items: [
-    { id: "navbar",     label: "Navbar & menu" },
-    { id: "sidenav",    label: "Sidebar (side-nav)" },
-    { id: "tabs",       label: "Tabs" },
-    { id: "steps",      label: "Steps / Stepper" },
-    { id: "breadcrumb", label: "Breadcrumb" },
-    { id: "pagination", label: "Pagination" },
-  ]},
-  { group: "Đóng/mở (Disclosure)", items: [
-    { id: "accordion",  label: "Accordion" },
-    { id: "collapse",   label: "Collapse" },
-  ]},
-  { group: "Cấu trúc", items: [
-    { id: "tree",     label: "Tree danh mục" },
-    { id: "sortable", label: "List / Grid kéo–thả" },
-    { id: "slotgrid", label: "Lưới ô cố định" },
+  { id: "project", title: "Project & skill", icon: "deployed_code", items: [
+    { id: "skill",     label: "Product & skill" },
+    { id: "workflow",  label: "Workflow (/wb-change)" },
+    { id: "onefile",   label: "One CSS file · tokens" },
+    { id: "ai-repo",   label: "AI & this repo" },
+    { id: "tooling",   label: "Tooling (verify · hooks)" },
+    { id: "decisions", label: "Decisions & trade-offs" },
   ]},
 ];
 
+/* Normalize a section to [{group, items}] (a flat section → one headingless group),
+   plus flatten helpers used by the router / search / pager. */
+function groupsOf(s) { return s.groups || [{ group: "", items: s.items || [] }]; }
+function itemsOf(s) { return groupsOf(s).flatMap((g) => g.items).filter((it) => !it.coming); }
+
 const ROUTES = {};
-NAV.forEach((g) => g.items.forEach((it) => (ROUTES[it.id] = it)));
+const SECTION_OF = {};        // page id → section id
+const SECTION_FIRST = {};     // section id → its first page id (where the switcher lands)
+SECTIONS.forEach((s) => {
+  const items = itemsOf(s);
+  SECTION_FIRST[s.id] = items[0] ? items[0].id : "";
+  items.forEach((it) => { ROUTES[it.id] = it; SECTION_OF[it.id] = s.id; });
+});
 const DEFAULT_ROUTE = "overview";
 
-/* ---- Sidebar tree — heading + dimmer items. The heading is a button that
-   collapses its group; the caret sits on the RIGHT (no leading triangle). ---- */
-function renderNav() {
+/* page id → group label (or the section label when the section is flat) — used for
+   the search-result + pager meta line. */
+const GROUP_OF = {};
+SECTIONS.forEach((s) => groupsOf(s).forEach((g) =>
+  g.items.forEach((it) => { GROUP_OF[it.id] = g.group || s.title; })));
+
+/* ---- Pager (prev / next) — dogfoods the .wb-pager primitive at the FOOT of every
+   page, in the CURRENT SECTION's order (cross-section jumps go through the switcher).
+   The [ and ] shortcuts jump between pages (guarded so typing in a field never
+   triggers them). This IS the app.js driver an app would write. ------------------- */
+function sectionOrder(id) {
+  const sec = SECTIONS.find((s) => s.id === SECTION_OF[id]);
+  return sec ? itemsOf(sec).map((it) => it.id) : [];
+}
+let pagerPrev = null, pagerNext = null;
+function renderPager(id) {
+  const order = sectionOrder(id);
+  const i = order.indexOf(id);
+  const prev = i > 0 ? ROUTES[order[i - 1]] : null;
+  const next = i >= 0 && i < order.length - 1 ? ROUTES[order[i + 1]] : null;
+  pagerPrev = prev ? prev.id : null;
+  pagerNext = next ? next.id : null;
+  if (!prev && !next) return "";
+  const prevHtml = prev ? `<a class="wb-pager__link wb-pager__link--prev" data-pager-prev href="#/${prev.id}">
+      <span class="wb-ico wb-pager__arrow">chevron_left</span>
+      <span class="wb-pager__text"><span class="wb-pager__dir">Previous <kbd class="wb-kbd">[</kbd></span>
+      <span class="wb-pager__title">${prev.label}</span>
+      <span class="wb-pager__meta">${GROUP_OF[prev.id] || ""}</span></span></a>` : "";
+  const nextHtml = next ? `<a class="wb-pager__link wb-pager__link--next" data-pager-next href="#/${next.id}">
+      <span class="wb-pager__text"><span class="wb-pager__dir"><kbd class="wb-kbd">]</kbd> Next</span>
+      <span class="wb-pager__title">${next.label}</span>
+      <span class="wb-pager__meta">${GROUP_OF[next.id] || ""}</span></span>
+      <span class="wb-ico wb-pager__arrow">chevron_right</span></a>` : "";
+  return `<nav class="wb-pager" data-pager aria-label="Page navigation">${prevHtml}${nextHtml}</nav>`;
+}
+function renderFooter() {
+  const REPO = "https://github.com/vudat081299/web-builder-skill";
+  return `<footer class="wb-footer">
+    <div class="wb-footer__inner">
+      <div class="wb-footer__top">
+        <div class="wb-footer__brand">
+          <span class="wb-footer__mark">W</span>
+          <div><div class="wb-footer__name">Web Builder</div>
+          <p class="wb-footer__tagline">A minimalist, zero-build CSS component kit — one drop-in file, wb-* prefixed, dark mode included, pairs with any stack. Shipped as a Claude Code skill.</p></div>
+        </div>
+        <nav class="wb-footer__cols" aria-label="Footer links">
+          <div class="wb-footer__col"><h4 class="wb-footer__title">Get started</h4>
+            <a class="wb-footer__link" href="#/overview">Overview</a>
+            <a class="wb-footer__link" href="#/color">Colour philosophy</a>
+            <a class="wb-footer__link" href="#/tokens">Design tokens</a></div>
+          <div class="wb-footer__col"><h4 class="wb-footer__title">Build &amp; customise</h4>
+            <a class="wb-footer__link" href="#/layout">Grid / Layout</a>
+            <a class="wb-footer__link" href="#/fonts">Fonts &amp; icons</a>
+            <a class="wb-footer__link" href="#/config">Config / Tweak</a></div>
+          <div class="wb-footer__col"><h4 class="wb-footer__title">Project</h4>
+            <a class="wb-footer__link" href="${REPO}" target="_blank" rel="noreferrer">Source</a>
+            <a class="wb-footer__link" href="${REPO}#readme" target="_blank" rel="noreferrer">README</a>
+            <a class="wb-footer__link" href="${REPO}/issues" target="_blank" rel="noreferrer">Report an issue</a></div>
+        </nav>
+      </div>
+      <div class="wb-footer__bottom">
+        <span class="wb-footer__copy">© 2026 Web Builder · Minimalist UI kit · v0.6</span>
+        <div class="wb-footer__social">
+          <a class="wb-btn wb-btn--ghost wb-btn--icon" href="${REPO}" target="_blank" rel="noreferrer" aria-label="GitHub — project source">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 2.9-.39c.98 0 1.97.13 2.9.39 2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14 0 1.55-.01 2.8-.01 3.18 0 .31.21.68.8.56A10.52 10.52 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>`;
+}
+function onPagerKey(e) {
+  if (e.metaKey || e.ctrlKey || e.altKey || e.shiftKey) return;
+  if (e.target && e.target.closest && e.target.closest('input, textarea, select, [contenteditable="true"]')) return;
+  if ((e.key === "[") && pagerPrev) { e.preventDefault(); location.hash = "#/" + pagerPrev; }
+  else if ((e.key === "]") && pagerNext) { e.preventDefault(); location.hash = "#/" + pagerNext; }
+}
+
+/* ---- Section switcher — the dropdown at the top of the sidebar. Dogfoods
+   .wb-dropdown + .wb-menu; picking a section navigates to its first page and the
+   router (loadRoute) swaps the tree + relabels this button. ------------------- */
+function renderSecSwitch(activeId) {
+  const wrap = document.getElementById("secswitch");
+  if (!wrap) return;
+  const active = SECTIONS.find((s) => s.id === activeId) || SECTIONS[0];
+  wrap.innerHTML =
+    '<div class="wb-dropdown doc-secswitch">' +
+      '<button class="doc-secswitch__btn" data-dd-toggle aria-haspopup="menu" aria-label="Switch docs section">' +
+        '<span class="wb-ico doc-secswitch__ico" aria-hidden="true">' + active.icon + '</span>' +
+        '<span class="doc-secswitch__label">' + active.title + '</span>' +
+        '<span class="wb-ico wb-dropdown__caret" aria-hidden="true">expand_more</span>' +
+      '</button>' +
+      '<div class="wb-dropdown__menu"><div class="wb-menu">' +
+        SECTIONS.map((s) =>
+          '<a class="wb-menu__item' + (s.id === active.id ? ' is-active' : '') +
+            '" href="#/' + SECTION_FIRST[s.id] + '" data-sec="' + s.id + '">' +
+            '<span class="wb-menu__ico"><span class="wb-ico wb-ico--xs" aria-hidden="true">' + s.icon + '</span></span> ' +
+            s.title +
+          '</a>').join("") +
+      '</div></div>' +
+    '</div>';
+}
+
+/* ---- Sidebar tree for ONE section — heading + dimmer items. The heading is a
+   button that collapses its group; the caret sits on the RIGHT (no leading
+   triangle). A flat section (design/project) renders one headingless group. ---- */
+function renderNav(sectionId) {
+  const section = SECTIONS.find((s) => s.id === sectionId) || SECTIONS[0];
   const nav = document.getElementById("nav");
-  nav.innerHTML = NAV.map((g) => `
-    <div class="doc-tree__group">
-      <button class="doc-tree__head" data-group-toggle aria-expanded="true">
+  nav.innerHTML = groupsOf(section).map((g) => `
+    <div class="doc-tree__group${g.group ? "" : " doc-tree__group--flat"}">
+      ${g.group ? `<button class="doc-tree__head" data-group-toggle aria-expanded="true">
         <span>${g.group}</span><span class="doc-tree__caret" aria-hidden="true"></span>
-      </button>
+      </button>` : ""}
       <div class="doc-tree__items">
         ${g.items.map((it) => it.coming
           ? `<span class="doc-tree__link is-coming">${it.label}<span class="doc-tree__badge">soon</span></span>`
@@ -113,6 +253,7 @@ function renderNav() {
 }
 
 /* ---- Router --------------------------------------------------------------- */
+let currentSection = null;                 // which section's tree is mounted right now
 async function loadRoute() {
   const id = location.hash.replace(/^#\/?/, "") || DEFAULT_ROUTE;
   const route = ROUTES[id];
@@ -120,6 +261,13 @@ async function loadRoute() {
 
   if (!route || route.coming) { location.hash = "#/" + DEFAULT_ROUTE; return; }
 
+  /* Entered a page in a different section → swap the switcher label + the tree. */
+  const sec = SECTION_OF[id];
+  if (sec !== currentSection) {
+    currentSection = sec;
+    renderSecSwitch(sec);
+    renderNav(sec);
+  }
   document.querySelectorAll(".doc-tree__link").forEach((a) =>
     a.classList.toggle("is-active", a.dataset.id === id));
   document.title = route.label + " · Web Builder";
@@ -128,11 +276,12 @@ async function loadRoute() {
     const res = await fetch("pages/" + id + ".html", { cache: "no-store" });
     if (!res.ok) throw new Error(res.status);
     view.innerHTML = await res.text();
+    view.insertAdjacentHTML("beforeend", renderPager(id));   // dogfood the pager at the foot of every page
   } catch (err) {
     view.innerHTML =
-      '<div class="doc-coming"><h3>Không tải được trang</h3>' +
-      "<p>Docs cần chạy qua HTTP server (fetch không hoạt động với <code>file://</code>).<br>" +
-      "Chạy: <code>cd web-builder/assets &amp;&amp; python3 -m http.server 8777</code> rồi mở " +
+      '<div class="doc-coming"><h3>Could not load this page</h3>' +
+      "<p>The docs need an HTTP server (fetch does not work over <code>file://</code>).<br>" +
+      "Run <code>cd web-builder/assets &amp;&amp; python3 -m http.server 8777</code>, then open " +
       "<code>http://localhost:8777</code>.</p></div>";
     return;
   }
@@ -851,6 +1000,22 @@ document.addEventListener("keydown", (e) => {
   const prev = segs[segs.indexOf(seg) - 1];
   if (prev) { e.preventDefault(); prev.focus(); prev.setSelectionRange(prev.value.length, prev.value.length); }
 });
+/* Tap the field on a separator / the padding (not a specific segment) → route focus to
+   the FIRST segment when the whole field is empty, else the LAST non-empty one (caret at
+   its end), so a click lands where you'd resume instead of on dead space. Clicking a
+   specific segment is left alone. */
+document.addEventListener("mousedown", (e) => {
+  const field = e.target.closest && e.target.closest(".wb-input-tpl");
+  if (!field || (e.target.closest && e.target.closest(".wb-input-tpl__seg"))) return;
+  const segs = [...field.querySelectorAll(".wb-input-tpl__seg")];
+  if (!segs.length) return;
+  e.preventDefault();                                   // don't blur onto the dead padding
+  let target = segs[0];                                 // all empty → first
+  for (let i = segs.length - 1; i >= 0; i--) { if (segs[i].value) { target = segs[i]; break; } }
+  target.focus();
+  const end = target.value.length;
+  target.setSelectionRange && target.setSelectionRange(end, end);
+});
 
 /* ---- Interactive demos (delegated, so injected pages just work) ----------- */
 document.addEventListener("click", (e) => {
@@ -861,28 +1026,28 @@ document.addEventListener("click", (e) => {
     groupTog.setAttribute("aria-expanded", String(!collapsed));
     return;
   }
-  /* Sidebar toggle. On DESKTOP it collapses the panel (.is-side-hidden). On a small
+  /* Sidebar toggle. On DESKTOP it collapses the panel (.is-side-collapsed). On a small
      screen the panel is an off-canvas drawer, so the toggle OPENS it (.is-side-open)
      over a backdrop instead — otherwise a phone could never reveal the menu. */
   const sideTog = e.target.closest("[data-side-toggle]");
   if (sideTog) {
-    const shell = document.querySelector(".doc-shell");
-    const ico = sideTog.querySelector(".wb-ico");
-    if (window.matchMedia("(max-width: 900px)").matches) {
-      const open = shell.classList.toggle("is-side-open");
-      if (ico) ico.textContent = open ? "menu_open" : "menu";
-    } else {
-      const hidden = shell.classList.toggle("is-side-hidden");
-      if (ico) ico.textContent = hidden ? "menu" : "menu_open";
-    }
+    const shell = document.querySelector(".wb-shell");
+    /* The W brand IS the toggle (no icon to swap) — reflect state via aria-expanded.
+       Both state classes are the shipped shell's (web-builder.css §52); this is the
+       "tiny driver in docs, behaviour engine in your app" split. The 900px breakpoint
+       is duplicated from that section's media query — keep the two in step. */
+    const shown = window.matchMedia("(max-width: 900px)").matches
+      ? shell.classList.toggle("is-side-open")         // mobile: drawer open = shown
+      : !shell.classList.toggle("is-side-collapsed");  // desktop: collapsed = not shown
+    sideTog.setAttribute("aria-expanded", String(shown));
     return;
   }
   /* Close the mobile drawer when a nav link is picked or the backdrop is tapped. */
-  const shellOpen = document.querySelector(".doc-shell.is-side-open");
-  if (shellOpen && (e.target.closest(".doc-tree__link") || !e.target.closest(".doc-side"))) {
+  const shellOpen = document.querySelector(".wb-shell.is-side-open");
+  if (shellOpen && (e.target.closest(".doc-tree__link") || !e.target.closest(".wb-shell__side"))) {
     shellOpen.classList.remove("is-side-open");
-    const stIco = document.querySelector("[data-side-toggle] .wb-ico");
-    if (stIco) stIco.textContent = "menu";
+    const brand = document.querySelector("[data-side-toggle]");
+    if (brand) brand.setAttribute("aria-expanded", "false");
   }
 
   /* Config: open the tweak drawer from an in-page button. */
@@ -1006,63 +1171,63 @@ function spawnToast(d) {
    the user hands to an AI (or applies by hand). It ONLY sets CSS variables on the
    docs root — it never edits web-builder.css, so the shipped primitives are untouched. */
 const CONFIG_GROUPS = [
-  { title: "Kiểu góc (bo góc)", rows: [
-    { k: "corner-preset", label: "Kiểu góc", type: "corner",
-      options: [["", "Bo tròn (mặc định)"], ["sharp", "Vuông sắc (0)"], ["soft", "Bo nhiều"]] },
-    { k: "--wb-radius-sm", label: "Radius nhỏ", type: "range", min: 0, max: 16, step: 1, unit: "px" },
-    { k: "--wb-radius", label: "Radius vừa", type: "range", min: 0, max: 22, step: 1, unit: "px" },
-    { k: "--wb-radius-lg", label: "Radius lớn", type: "range", min: 0, max: 28, step: 1, unit: "px" },
-    { k: "--wb-btn-radius", label: "Radius nút", type: "range", min: 0, max: 22, step: 1, unit: "px" },
-    { k: "--wb-card-radius", label: "Radius card", type: "range", min: 0, max: 28, step: 1, unit: "px" },
-    { k: "--wb-input-radius", label: "Radius input", type: "range", min: 0, max: 22, step: 1, unit: "px" },
-    { k: "--wb-switch-radius", label: "Bo switch (rãnh)", type: "range", min: 0, max: 12, step: 1, unit: "px" },
-    { k: "--wb-switch-thumb-radius", label: "Bo núm switch", type: "range", min: 0, max: 10, step: 1, unit: "px" },
-    { k: "--wb-range-radius", label: "Bo thanh slider", type: "range", min: 0, max: 8, step: 1, unit: "px" },
-    { k: "--wb-range-thumb-radius", label: "Bo núm slider", type: "range", min: 0, max: 9, step: 1, unit: "px" },
-    { k: "--wb-check-radius", label: "Bo checkbox", type: "range", min: 0, max: 10, step: 1, unit: "px" },
+  { title: "Corner style", rows: [
+    { k: "corner-preset", label: "Preset", type: "corner",
+      options: [["", "Rounded (default)"], ["sharp", "Sharp (0)"], ["soft", "Extra round"]] },
+    { k: "--wb-radius-sm", label: "Radius — small", type: "range", min: 0, max: 16, step: 1, unit: "px" },
+    { k: "--wb-radius", label: "Radius — medium", type: "range", min: 0, max: 22, step: 1, unit: "px" },
+    { k: "--wb-radius-lg", label: "Radius — large", type: "range", min: 0, max: 28, step: 1, unit: "px" },
+    { k: "--wb-btn-radius", label: "Radius — button", type: "range", min: 0, max: 22, step: 1, unit: "px" },
+    { k: "--wb-card-radius", label: "Radius — card", type: "range", min: 0, max: 28, step: 1, unit: "px" },
+    { k: "--wb-input-radius", label: "Radius — input", type: "range", min: 0, max: 22, step: 1, unit: "px" },
+    { k: "--wb-switch-radius", label: "Switch track", type: "range", min: 0, max: 12, step: 1, unit: "px" },
+    { k: "--wb-switch-thumb-radius", label: "Switch thumb", type: "range", min: 0, max: 10, step: 1, unit: "px" },
+    { k: "--wb-range-radius", label: "Slider track", type: "range", min: 0, max: 8, step: 1, unit: "px" },
+    { k: "--wb-range-thumb-radius", label: "Slider thumb", type: "range", min: 0, max: 9, step: 1, unit: "px" },
+    { k: "--wb-check-radius", label: "Checkbox", type: "range", min: 0, max: 10, step: 1, unit: "px" },
   ]},
-  { title: "Viền", rows: [
-    { k: "--wb-bw", label: "Độ dày viền", type: "range", min: 0, max: 3, step: 1, unit: "px" },
-    { k: "--wb-check-bw", label: "Viền checkbox", type: "range", min: 1, max: 4, step: 1, unit: "px" },
-    { k: "--wb-border", label: "Màu viền", type: "color" },
-    { k: "--wb-border-strong", label: "Màu viền đậm", type: "color" },
+  { title: "Borders", rows: [
+    { k: "--wb-bw", label: "Border width", type: "range", min: 0, max: 3, step: 1, unit: "px" },
+    { k: "--wb-check-bw", label: "Checkbox border", type: "range", min: 1, max: 4, step: 1, unit: "px" },
+    { k: "--wb-border", label: "Border colour", type: "color" },
+    { k: "--wb-border-strong", label: "Border colour — strong", type: "color" },
   ]},
-  { title: "Đổ bóng", rows: [
-    { k: "--wb-shadow-sm", label: "Đổ bóng component", type: "shadow" },
+  { title: "Shadow", rows: [
+    { k: "--wb-shadow-sm", label: "Component shadow", type: "shadow" },
   ]},
-  { title: "Màu nền & chữ", rows: [
-    { k: "--wb-canvas", label: "Canvas (nền ngoài)", type: "color" },
-    { k: "--wb-surface", label: "Surface (thẻ)", type: "color" },
-    { k: "--wb-surface-2", label: "Surface phụ", type: "color" },
-    { k: "--wb-fg", label: "Chữ chính", type: "color" },
-    { k: "--wb-fg-muted", label: "Chữ phụ", type: "color" },
-    { k: "--wb-fg-subtle", label: "Chữ mờ", type: "color" },
+  { title: "Surfaces & text", rows: [
+    { k: "--wb-canvas", label: "Canvas (page)", type: "color" },
+    { k: "--wb-surface", label: "Surface (card)", type: "color" },
+    { k: "--wb-surface-2", label: "Surface — secondary", type: "color" },
+    { k: "--wb-fg", label: "Text — primary", type: "color" },
+    { k: "--wb-fg-muted", label: "Text — muted", type: "color" },
+    { k: "--wb-fg-subtle", label: "Text — subtle", type: "color" },
   ]},
-  { title: "Màu trạng thái", rows: [
+  { title: "Status colours", rows: [
     { k: "--wb-success", label: "Success", type: "color" },
     { k: "--wb-danger", label: "Danger", type: "color" },
     { k: "--wb-warning", label: "Warning", type: "color" },
     { k: "--wb-info", label: "Info", type: "color" },
   ]},
-  { title: "Chữ & icon", rows: [
+  { title: "Type & icons", rows: [
     { k: "--wb-font", label: "Font", type: "font" },
-    { k: "--wb-ico-size", label: "Cỡ icon", type: "range", min: 14, max: 28, step: 1, unit: "px" },
-    { k: "--wb-ico-weight", label: "Độ đậm icon", type: "range", min: 300, max: 700, step: 100 },
+    { k: "--wb-ico-size", label: "Icon size", type: "range", min: 14, max: 28, step: 1, unit: "px" },
+    { k: "--wb-ico-weight", label: "Icon weight", type: "range", min: 300, max: 700, step: 100 },
   ]},
-  { title: "Biểu đồ", rows: [
-    { k: "chart-scheme", label: "Thang màu", type: "select",
-      options: [["", "Đa sắc"], ["mono", "Thang xám"], ["blue", "Một tông xanh"]] },
-    { k: "--wb-chart-income", label: "Màu Thu", type: "color" },
-    { k: "--wb-chart-expense", label: "Màu Chi", type: "color" },
+  { title: "Charts", rows: [
+    { k: "chart-scheme", label: "Colour scheme", type: "select",
+      options: [["", "Multicolour"], ["mono", "Greyscale"], ["blue", "Single blue"]] },
+    { k: "--wb-chart-income", label: "Income colour", type: "color" },
+    { k: "--wb-chart-expense", label: "Expense colour", type: "color" },
   ]},
-  { title: "Chỉ trong docs", rows: [
-    { k: "--wb-demo-bw", label: "Viền sample", type: "range", min: 0, max: 3, step: 1, unit: "px" },
-    { k: "--wb-demo-shadow", label: "Đổ bóng sample", type: "shadow" },
-    { k: "--wb-doc-divider", label: "Màu divider", type: "color" },
+  { title: "Docs only", rows: [
+    { k: "--wb-demo-bw", label: "Sample border", type: "range", min: 0, max: 3, step: 1, unit: "px" },
+    { k: "--wb-demo-shadow", label: "Sample shadow", type: "shadow" },
+    { k: "--wb-doc-divider", label: "Divider colour", type: "color" },
   ]},
 ];
 const FONT_OPTIONS = [
-  ["", "Hệ thống (mặc định)"],
+  ["", "System (default)"],
   ["Inter, sans-serif", "Inter"],
   ['"Plus Jakarta Sans", sans-serif', "Plus Jakarta Sans"],
   ['"IBM Plex Sans", sans-serif', "IBM Plex Sans"],
@@ -1172,7 +1337,7 @@ function renderConfigRow(r) {
     const seed = cur.charAt(0) === "#" ? cur.slice(1).toUpperCase() : cur;
     ctrl =
       '<span class="wb-popover wb-popover--left doc-config__color">' +
-        '<button type="button" class="doc-config__swatch" data-pop-toggle aria-label="Chọn màu ' + r.label + '" style="background:' + cur + '"></button>' +
+        '<button type="button" class="doc-config__swatch" data-pop-toggle aria-label="Pick colour — ' + r.label + '" style="background:' + cur + '"></button>' +
         '<div class="wb-popover__panel">' +
           '<div class="wb-popover__arrow"></div>' +
           '<div class="wb-colorpicker" data-colorpicker data-k="' + r.k + '" data-type="color">' +
@@ -1180,9 +1345,9 @@ function renderConfigRow(r) {
             '<div class="wb-colorpicker__hue"><span class="wb-colorpicker__thumb"></span></div>' +
             '<div class="wb-colorpicker__foot"><span class="wb-colorpicker__preview"></span>' +
               '<div class="wb-input-group"><span class="wb-input-group__addon">#</span>' +
-              '<input class="wb-input" data-cp-hex value="' + seed + '" spellcheck="false" aria-label="Mã màu hex"></div>' +
+              '<input class="wb-input" data-cp-hex value="' + seed + '" spellcheck="false" aria-label="Hex colour code"></div>' +
             '</div>' +
-            '<div class="wb-swatches wb-swatches--sm" role="group" aria-label="Màu gợi ý">' +
+            '<div class="wb-swatches wb-swatches--sm" role="group" aria-label="Suggested colours">' +
               [1, 2, 3, 4, 5, 6, 8].map(function (n) { return '<button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-' + n + ')"></button>'; }).join("") +
             '</div>' +
           '</div>' +
@@ -1192,7 +1357,7 @@ function renderConfigRow(r) {
     ctrl = selectCtrl("--wb-font", "raw", opts(FONT_OPTIONS, "'"));
   } else if (r.type === "shadow") {
     ctrl = selectCtrl(r.k, "shadow",
-      '<option value="soft">Nhẹ</option><option value="medium">Vừa</option><option value="none">Tắt</option>');
+      '<option value="soft">Soft</option><option value="medium">Medium</option><option value="none">Off</option>');
   } else if (r.type === "select") {
     ctrl = selectCtrl(r.k, r.k === "chart-scheme" ? "scheme" : "raw", opts(r.options));
   } else if (r.type === "corner") {
@@ -1237,17 +1402,17 @@ function onConfigInput(e) {
 function exportConfig() {
   const keys = Object.keys(tweak).filter((k) => k.startsWith("--"));
   const theme = document.documentElement.classList.contains("dark") ? "dark" : "light";
-  const L = ["# Web Builder — tinh chỉnh (tweak) tokens", ""];
+  const L = ["# Web Builder — token tweaks", ""];
   if (!keys.length && !tweak["chart-scheme"]) {
-    L.push("_Chưa chỉnh gì._");
+    L.push("_Nothing tweaked yet._");
   } else {
-    L.push("Dán khối này vào `:root` trong `web-builder.css` (hoặc đưa cho AI để cập nhật source):", "");
+    L.push("Paste this block into `:root` in `web-builder.css` (or hand it to an AI to apply):", "");
     L.push("```css", (theme === "dark" ? ".dark {" : ":root {"));
     keys.forEach((k) => L.push("  " + k + ": " + tweak[k] + ";"));
     L.push("}", "```", "");
-    if (tweak["chart-scheme"]) L.push("- Thang màu biểu đồ: **" + tweak["chart-scheme"] +
-      "** → thêm class `.wb-chart-scheme--" + tweak["chart-scheme"] + "` lên wrapper của chart.", "");
-    L.push("> Màu ở trên áp dụng cho theme **" + theme + "**. Muốn chỉnh theme còn lại: đổi theme rồi xuất tiếp.");
+    if (tweak["chart-scheme"]) L.push("- Chart colour scheme: **" + tweak["chart-scheme"] +
+      "** → add the class `.wb-chart-scheme--" + tweak["chart-scheme"] + "` to the chart wrapper.", "");
+    L.push("> The colours above apply to the **" + theme + "** theme. To tune the other one: switch theme, then export again.");
   }
   const a = document.createElement("a");
   a.href = URL.createObjectURL(new Blob([L.join("\n")], { type: "text/markdown" }));
@@ -1299,7 +1464,7 @@ function applyTheme(mode) {
   root.classList.toggle("dark", mode === "dark" || (mode === "system" && themeMQ.matches));
 }
 function applyThemeLabel() {
-  const map = { system: ["◐", "Tự động"], light: ["☀", "Sáng"], dark: ["☾", "Tối"] };
+  const map = { system: ["◐", "Auto"], light: ["☀", "Light"], dark: ["☾", "Dark"] };
   const [icon, label] = map[themeMode()] || map.system;
   document.getElementById("themeIcon").textContent = icon;
   document.getElementById("themeLabel").textContent = label;
@@ -1321,8 +1486,7 @@ themeMQ.addEventListener("change", () => { if (themeMode() === "system") applyTh
    then body). A command-palette dialog: ↑/↓ move the highlighted row, ↵ opens it. */
 let SEARCH_INDEX = null, searchBuilding = null;
 let searchHits = [], searchActive = 0;                 // current results + highlighted row
-const GROUP_OF = {};                                   // page id → its NAV group label
-NAV.forEach((g) => g.items.forEach((it) => { GROUP_OF[it.id] = g.group; }));
+/* GROUP_OF (page id → group/section label) is defined once with the nav model above. */
 
 function sEsc(s) { return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
 function pageText(html) {
@@ -1333,7 +1497,7 @@ function pageText(html) {
 }
 function buildSearchIndex() {
   if (SEARCH_INDEX || searchBuilding) return;
-  const items = NAV.flatMap((g) => g.items).filter((it) => !it.coming);
+  const items = SECTIONS.flatMap(itemsOf);          // global: search spans every section
   searchBuilding = Promise.all(items.map((it) =>
     fetch("pages/" + it.id + ".html", { cache: "no-store" })
       .then((r) => (r.ok ? r.text() : ""))
@@ -1356,8 +1520,8 @@ function renderSearch(q) {
   const box = document.getElementById("searchResults");
   q = (q || "").trim();
   searchHits = []; searchActive = 0;
-  if (!SEARCH_INDEX) { box.innerHTML = searchHint("hourglass_empty", "Đang lập chỉ mục…"); setSearchCount(""); return; }
-  if (!q) { box.innerHTML = searchHint("search", "Gõ để tìm trong <b>tiêu đề</b> và <b>nội dung</b> mọi trang."); setSearchCount(""); return; }
+  if (!SEARCH_INDEX) { box.innerHTML = searchHint("hourglass_empty", "Building the index…"); setSearchCount(""); return; }
+  if (!q) { box.innerHTML = searchHint("search", "Type to search the <b>title</b> and <b>body</b> of every page."); setSearchCount(""); return; }
   const ql = q.toLowerCase();
   for (const p of SEARCH_INDEX) {
     const inLabel = p.label.toLowerCase().includes(ql);
@@ -1365,7 +1529,7 @@ function renderSearch(q) {
     if (inLabel || i >= 0) searchHits.push({ p, i, inLabel });
   }
   searchHits.sort((a, b) => (b.inLabel - a.inLabel) || (a.i - b.i));
-  if (!searchHits.length) { box.innerHTML = searchHint("search_off", "Không thấy kết quả cho “<b>" + sEsc(q) + "</b>”."); setSearchCount("0 kết quả"); return; }
+  if (!searchHits.length) { box.innerHTML = searchHint("search_off", "No results for “<b>" + sEsc(q) + "</b>”."); setSearchCount("0 results"); return; }
   box.innerHTML = searchHits.map(({ p, i }, idx) =>
     '<a class="doc-search__hit' + (idx === 0 ? " is-active" : "") + '" href="#/' + p.id + '" role="option" data-search-go data-idx="' + idx + '"' + (idx === 0 ? ' aria-selected="true"' : "") + ">" +
       '<span class="wb-ico doc-search__hit-ico" aria-hidden="true">description</span>' +
@@ -1378,7 +1542,7 @@ function renderSearch(q) {
         '<span class="doc-search__hit-snip">' + searchSnippet(p.text, i, q.length) + "</span>" +
       "</span>" +
     "</a>").join("");
-  setSearchCount(searchHits.length + " kết quả");
+  setSearchCount(searchHits.length + (searchHits.length === 1 ? " result" : " results"));
 }
 function searchRows() { return document.querySelectorAll("#searchResults .doc-search__hit"); }
 function setActiveHit(idx, scroll) {
@@ -1402,10 +1566,15 @@ function openSearch() {
 function closeSearch() { document.getElementById("searchModal").classList.remove("is-open"); }
 
 /* ---- Boot ----------------------------------------------------------------- */
-renderNav();
+/* The switcher + tree are mounted by loadRoute() (below) for the initial route's
+   section — no upfront renderNav() needed. */
 applyTheme(themeMode());
 applyThemeLabel();
 initConfig();
+/* Site footer (dogfoods .wb-footer) rendered once; [ / ] jump prev/next page. */
+const docFooterEl = document.getElementById("docfooter");
+if (docFooterEl) docFooterEl.innerHTML = renderFooter();
+document.addEventListener("keydown", onPagerKey);
 document.getElementById("themeBtn").addEventListener("click", cycleTheme);
 /* Any .wb-theme-toggle inside a demo (e.g. the navbar's) flips light ⇄ dark. */
 document.addEventListener("click", (e) => {

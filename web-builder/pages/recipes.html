@@ -1,0 +1,98 @@
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Foundation</p>
+  <h2>Dựng trang (recipes)</h2>
+  <p>Decision-guide chọn <b>một</b> phần; trang này chọn <b>bộ</b> phần cho cả một màn hình — bước "bắt đầu trang
+  từ con số 0". Nguyên tắc không đổi: <b>ráp phần đã duyệt, đừng thiết kế lại</b>. Chọn một recipe, đặt vào khung
+  app-shell, đổ nội dung bằng các component tương ứng — <b>mỗi phần có trang riêng với markup đầy đủ</b> (link ngay
+  trong bảng bên dưới). Bản tra cứu song song cho AI ở <code>references/components-catalog.md</code>.</p>
+</div>
+
+<section class="wb-section">
+  <h3>Khung app-shell — mọi trang nằm trong này</h3>
+  <p class="wb-section__desc">Navbar trên · rail trái · cột nội dung cuộn · footer. Khung này là một
+  <b>primitive đã ship</b> — <a href="#/shell"><code>.wb-shell</code></a> và ba khe của nó — nên không phải
+  ráp bằng utility với inline style nữa; rail tự dính, tự cuộn, tự gập trên màn hẹp. Trang public bỏ rail:
+  chỉ navbar + <code>.wb-container--pad</code> + footer.</p>
+  <div class="demo demo--plain">
+    <div class="demo__stage" style="padding:0">
+      <div class="wb-shell" style="--wb-shell-h:300px; --wb-navbar-h:48px; --wb-sidenav-w:190px">
+        <div class="wb-navbar">
+          <a class="wb-navbar__brand"><span class="wb-navbar__mark">C</span> Cashy</a>
+          <span class="wb-navbar__spacer"></span>
+          <div class="wb-navbar__actions"><span class="wb-avatar wb-avatar--sm">DV</span></div>
+        </div>
+        <div class="wb-shell__body">
+          <aside class="wb-shell__side">
+            <nav class="wb-sidenav">
+              <div class="wb-sidenav__section">Tổng quan</div>
+              <a class="wb-sidenav__link is-active"><span class="wb-ico">dashboard</span> Bảng điều khiển</a>
+              <a class="wb-sidenav__link"><span class="wb-ico">receipt_long</span> Giao dịch</a>
+              <a class="wb-sidenav__link"><span class="wb-ico">savings</span> Ngân sách</a>
+            </nav>
+          </aside>
+          <div class="wb-shell__main">
+            <main class="wb-container wb-container--pad" style="--wb-page-pad-block:18px; --wb-page-pad-end:18px">
+              <div class="wb-grid wb-grid--3">
+                <div class="wb-stat"><div class="wb-stat__label">Thu</div><div class="wb-stat__value" style="font-size:18px">20,0tr</div></div>
+                <div class="wb-stat"><div class="wb-stat__label">Chi</div><div class="wb-stat__value" style="font-size:18px">11,8tr</div></div>
+                <div class="wb-stat"><div class="wb-stat__label">Còn</div><div class="wb-stat__value" style="font-size:18px">8,2tr</div></div>
+              </div>
+            </main>
+            <footer class="wb-footer wb-footer--slim">
+              <div class="wb-footer__inner"><div class="wb-footer__bottom">
+                <span class="wb-footer__copy">© 2026 Cashy · dựng bằng web-builder</span>
+              </div></div>
+            </footer>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-shell"&gt;
+  &lt;header class="wb-navbar wb-navbar--sticky"&gt; … brand · nav · actions … &lt;/header&gt;
+
+  &lt;div class="wb-shell__body"&gt;
+    &lt;aside class="wb-shell__side"&gt;
+      &lt;nav class="wb-sidenav"&gt; … rail … &lt;/nav&gt;
+    &lt;/aside&gt;
+
+    &lt;div class="wb-shell__main"&gt;
+      &lt;main class="wb-container wb-container--pad"&gt;   &lt;!-- --narrow: form · --wide: bảng dày --&gt;
+        …nội dung (một recipe bên dưới)…
+      &lt;/main&gt;
+      &lt;footer class="wb-footer"&gt; … &lt;/footer&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+  </div>
+</section>
+
+<section class="wb-section">
+  <h3>Recipe — nội dung cho vùng container</h3>
+  <p class="wb-section__desc">Mỗi màn hình = một bộ phần theo thứ tự; đổ vào vùng <code>main</code> ở trên.</p>
+  <table class="wb-table">
+    <thead><tr><th>Màn hình</th><th>= các phần (theo thứ tự)</th></tr></thead>
+    <tbody>
+      <tr><td><b>Dashboard / trang chủ</b></td><td>hàng <a href="#/stats">stat KPI</a> → 1–2 thẻ <a href="#/charts">chart</a> (card bọc chart) → bảng <a href="#/tables">giao dịch</a> gần đây</td></tr>
+      <tr><td><b>Danh sách / giao dịch</b></td><td><a href="#/filterbar">filter bar</a> → bảng <a href="#/tables">giao dịch</a> (<code>--sticky</code> header cho list dài) → <a href="#/pagination">pagination</a> / <a href="#/footer">pager</a></td></tr>
+      <tr><td><b>Form thêm / sửa</b></td><td>field trong <code>wb-stack</code> trong <a href="#/card">card</a> (container <code>--narrow</code>) → thanh <a href="#/sticky">sticky</a> đáy chứa Lưu / Huỷ</td></tr>
+      <tr><td><b>Chi tiết bản ghi</b></td><td><a href="#/shell">page-head</a> (thêm <code>wb-cluster--between</code> nếu cần nút bên phải) → <code>wb-grid--2</code> các <a href="#/card">card</a> → <a href="#/list">list</a> dòng mục, hoặc <a href="#/receipt">receipt</a> cho một hoá đơn</td></tr>
+      <tr><td><b>Đăng nhập</b></td><td>container <code>--narrow</code> căn giữa (bỏ sidenav) → <a href="#/card">card</a> → <code>wb-stack</code> input + nút chính → <a href="#/buttons">social-login</a></td></tr>
+      <tr><td><b>Cài đặt</b></td><td><a href="#/sidenav">sidenav</a> / <a href="#/tabs">tabs</a> chia mục → mỗi mục <code>wb-stack</code> các hàng <a href="#/list">list</a> + control (<a href="#/switch">switch</a> mỗi toggle)</td></tr>
+      <tr><td><b>Rỗng / lần đầu</b></td><td><a href="#/empty">empty state</a> căn giữa container tới khi có dữ liệu</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="wb-section">
+  <h3>Nhịp trang — để không phải quyết lại</h3>
+  <div class="wb-alert wb-alert--info doc-note"><span class="wb-ico">straighten</span><div>
+  <b>Bề rộng:</b> mặc định <code>wb-container</code>; <code>--narrow</code> cho form/đọc/auth; <code>--wide</code>
+  chỉ cho bảng dày. Một container mỗi vùng — đừng lồng. &nbsp;<b>Thứ tự:</b> tóm tắt (KPI / số dư) trước → chi
+  tiết (bảng / list) → card phụ; số to nhất lên cao nhất. &nbsp;<b>Neutral-first ở cấp trang:</b> cả màn chủ
+  yếu trắng-đen-xám, màu chỉ ở vài ô status có nghĩa (design-principles §1) — dashboard <i>không</i> phải sân
+  khấu màu. &nbsp;<b>Khoảng cách dọc là của <a href="#/shell">scaffold</a></b>: xếp
+  <code>wb-page-head</code> → <code>wb-section</code> → <code>wb-block</code> thì nhịp tự đúng; trong một khối
+  thì dùng gap của utility (<code>wb-stack</code> / <code>wb-grid</code>). Không nơi nào nhặt margin bằng tay —
+  thấy nhịp sai thì chỉnh token (<code>--wb-section-gap</code>…), đừng vá một trang. Một tông divider · một
+  thang icon · một thang bóng — tất cả từ token.</div></div>
+</section>

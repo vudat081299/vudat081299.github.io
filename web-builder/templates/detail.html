@@ -1,0 +1,248 @@
+<!doctype html>
+<!-- =============================================================================
+     TEMPLATE · Detail / record view  —  catalog recipe "Detail / record view"
+     -----------------------------------------------------------------------------
+     One record, in full. Head (title + status + actions) → summary and meta cards
+     → line items → history (a wb-steps timeline, not a hand-drawn list) → related
+     records → the destructive action, last and alone.
+     What you may change: text, data, icon ligatures, how many rows/fields/sections.
+     What you should NOT change: the wb-shell frame, the wb-page-head → wb-section
+     → wb-block nesting, and spacing (it comes from tokens — if a gap feels wrong,
+     set --wb-section-gap / --wb-block-gap, never a margin on one element).
+     ========================================================================== -->
+<html lang="vi" class="wb-scrollbars">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Chi tiết giao dịch · Cashy</title>
+<!-- The one file this library ships. Everything below is plain markup. -->
+<link rel="stylesheet" href="../web-builder.css" />
+<script>
+  /* Theme before first paint, so a dark user never sees a white flash. */
+  try {
+    var t = localStorage.getItem('theme');
+    if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches))
+      document.documentElement.classList.add('dark');
+  } catch (e) {}
+</script>
+</head>
+<body class="wb-app">
+
+<div class="wb-shell">
+
+  <!-- ============================ TOP BAR ================================== -->
+  <header class="wb-navbar wb-navbar--sticky wb-navbar--glass">
+    <!-- Opens the rail once it folds to a drawer (≤900px); hidden above that. -->
+    <button class="wb-btn wb-btn--ghost wb-btn--icon wb-shell__side-toggle" data-side-toggle
+            aria-label="Mở thanh điều hướng"><span class="wb-ico">menu</span></button>
+    <a class="wb-navbar__brand" href="dashboard.html"><span class="wb-navbar__mark">C</span> Cashy</a>
+    <span class="wb-navbar__spacer"></span>
+    <div class="wb-navbar__actions">
+      <button class="wb-btn wb-btn--ghost wb-btn--icon" aria-label="Tìm kiếm"><span class="wb-ico">search</span></button>
+      <button class="wb-btn wb-btn--ghost wb-btn--icon" aria-label="Thông báo"><span class="wb-ico">notifications</span></button>
+      <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" aria-label="Đổi giao diện sáng/tối" title="Sáng / Tối">
+        <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
+        <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
+      </button>
+      <span class="wb-avatar wb-avatar--sm">DV</span>
+    </div>
+  </header>
+
+  <div class="wb-shell__body">
+
+    <!-- ============================ RAIL =================================== -->
+    <!-- The slot owns the surface, the sticky offset, its own scroll and the
+         mobile drawer. The wb-sidenav inside contributes link styling only. -->
+    <aside class="wb-shell__side wb-scrollbars">
+      <nav class="wb-sidenav">
+        <div class="wb-sidenav__section">Tổng quan</div>
+        <a class="wb-sidenav__link" href="dashboard.html"><span class="wb-ico">dashboard</span> Bảng điều khiển</a>
+        <a class="wb-sidenav__link is-active" href="list.html"><span class="wb-ico">receipt_long</span> Giao dịch <span class="wb-sidenav__badge">128</span></a>
+        <a class="wb-sidenav__link" href="list.html"><span class="wb-ico">savings</span> Ngân sách</a>
+        <a class="wb-sidenav__link" href="list.html"><span class="wb-ico">insights</span> Báo cáo</a>
+        <div class="wb-sidenav__section">Tài khoản</div>
+        <a class="wb-sidenav__link" href="list.html"><span class="wb-ico">account_balance_wallet</span> Ví &amp; ngân hàng</a>
+        <a class="wb-sidenav__link" href="list.html"><span class="wb-ico">flag</span> Mục tiêu <span class="wb-sidenav__badge">3</span></a>
+        <a class="wb-sidenav__link" href="settings.html"><span class="wb-ico">settings</span> Cài đặt</a>
+      </nav>
+    </aside>
+
+    <div class="wb-shell__main">
+      <!-- ========================= CONTENT ================================= -->
+      <main class="wb-container wb-container--pad">
+
+        <!-- 1 · HEAD — breadcrumb nests INSIDE the head (the scaffold owns its
+             gap); the status capsule sits right under the lede, because it is the
+             one thing a reader looks for; actions get their own right-aligned row. -->
+        <div class="wb-page-head">
+          <nav class="wb-breadcrumb" aria-label="Breadcrumb">
+            <a href="dashboard.html">Bảng điều khiển</a>
+            <span class="wb-breadcrumb__sep">/</span>
+            <a href="list.html">Giao dịch</a>
+            <span class="wb-breadcrumb__sep">/</span>
+            <span class="wb-breadcrumb__current">#1042</span>
+          </nav>
+          <p class="wb-eyebrow">Giao dịch #1042</p>
+          <h1>Tiền nhà · kỳ tháng 7</h1>
+          <p>Khoản chi cố định hằng tháng, trích từ Vietcombank •••• 8842.</p>
+        </div>
+
+        <div class="wb-cluster wb-cluster--between" style="margin-top:14px">
+          <div class="wb-cluster">
+            <span class="wb-cap wb-cap--warning"><span class="wb-cap__dot"></span> Chờ xác nhận</span>
+            <span class="wb-cap">Nhà ở</span>
+            <div class="wb-tags"><span class="wb-tag">co-dinh</span><span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#7c3aed">gia-dinh</span></div>
+          </div>
+          <div class="wb-cluster">
+            <button class="wb-btn wb-btn--outline wb-btn--sm"><span class="wb-ico wb-ico--sm">edit</span> Sửa</button>
+            <button class="wb-btn wb-btn--sm">Xác nhận đã trả</button>
+          </div>
+        </div>
+
+        <!-- A status that needs explaining gets an alert, not a longer capsule. -->
+        <section class="wb-section">
+          <div class="wb-alert wb-alert--warning">
+            <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">warning</span></span>
+            <div class="wb-alert__body">
+              <p class="wb-alert__title">Chưa đối soát với sao kê</p>
+              <p class="wb-alert__msg">Ngân hàng chưa trả về mã tham chiếu. Thường mất 1–2 ngày làm việc.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2 · SUMMARY + META — two cards side by side. -->
+        <section class="wb-section">
+          <div class="wb-grid wb-grid--2">
+            <div class="wb-card">
+              <div class="wb-card__head"><h2 class="wb-card__title">Số tiền</h2></div>
+              <div class="wb-card__body">
+                <p class="wb-stat__value" style="margin:0">−6.500.000&nbsp;₫</p>
+                <p class="wb-cell-muted" style="margin:6px 0 0;font-size:13px">Đã bao gồm phí quản lý 200.000&nbsp;₫</p>
+              </div>
+            </div>
+            <div class="wb-card">
+              <div class="wb-card__head"><h2 class="wb-card__title">Thông tin</h2></div>
+              <ul class="wb-list wb-list--flush" style="padding:2px 18px 10px">
+                <li class="wb-list__item"><span class="wb-list__title">Ngày</span><span class="wb-list__end">12/07/2026</span></li>
+                <li class="wb-list__item"><span class="wb-list__title">Tài khoản</span><span class="wb-list__end">Vietcombank •••• 8842</span></li>
+                <li class="wb-list__item"><span class="wb-list__title">Người nhận</span><span class="wb-list__end">Nguyễn Văn A</span></li>
+                <li class="wb-list__item"><span class="wb-list__title">Kỳ</span><span class="wb-list__end">01/07 – 31/07</span></li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3 · LINE ITEMS — what the record is made of. -->
+        <section class="wb-section">
+          <h2>Thành phần</h2>
+          <div class="wb-card">
+            <div class="wb-table-scroll">
+              <table class="wb-table wb-table--compact">
+                <thead><tr><th>Khoản mục</th><th class="wb-num">Số tiền</th></tr></thead>
+                <tbody>
+                  <tr><td><span class="wb-cell-strong">Tiền thuê</span></td><td class="wb-num">6.000.000&nbsp;₫</td></tr>
+                  <tr><td><span class="wb-cell-strong">Phí quản lý</span></td><td class="wb-num">200.000&nbsp;₫</td></tr>
+                  <tr><td><span class="wb-cell-strong">Gửi xe</span><span class="wb-cell-sub">2 xe máy</span></td><td class="wb-num">300.000&nbsp;₫</td></tr>
+                </tbody>
+                <tfoot><tr><td>Tổng</td><td class="wb-num wb-num--strong">6.500.000&nbsp;₫</td></tr></tfoot>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4 · HISTORY — a timeline is wb-steps, not a hand-drawn list. -->
+        <section class="wb-section">
+          <h2>Lịch sử</h2>
+          <p class="wb-section__desc">Mọi thay đổi trạng thái của khoản chi này, mới nhất ở dưới.</p>
+          <div class="wb-card"><div class="wb-card__body">
+            <ol class="wb-steps wb-steps--dot">
+              <li class="wb-steps__item is-done">
+                <span class="wb-steps__marker"></span>
+                <div class="wb-steps__content">
+                  <p class="wb-steps__title">Tạo giao dịch</p>
+                  <p class="wb-steps__desc">12/07 · 09:41 · tự động từ lịch định kỳ</p>
+                </div>
+              </li>
+              <li class="wb-steps__item is-done">
+                <span class="wb-steps__marker"></span>
+                <div class="wb-steps__content">
+                  <p class="wb-steps__title">Gửi lệnh chuyển khoản</p>
+                  <p class="wb-steps__desc">12/07 · 09:42 · Vietcombank</p>
+                </div>
+              </li>
+              <li class="wb-steps__item is-active">
+                <span class="wb-steps__marker"></span>
+                <div class="wb-steps__content">
+                  <p class="wb-steps__title">Chờ đối soát sao kê</p>
+                  <p class="wb-steps__desc">Đang thực hiện…</p>
+                </div>
+              </li>
+              <li class="wb-steps__item is-todo">
+                <span class="wb-steps__marker"></span>
+                <div class="wb-steps__content">
+                  <p class="wb-steps__title">Đánh dấu đã trả</p>
+                  <p class="wb-steps__desc">Tự động khi khớp mã tham chiếu</p>
+                </div>
+              </li>
+            </ol>
+          </div></div>
+        </section>
+
+        <!-- 5 · RELATED — where the user goes next. -->
+        <section class="wb-section">
+          <h2>Liên quan</h2>
+          <div class="wb-card">
+            <ul class="wb-list wb-list--flush" style="padding:2px 18px 8px">
+              <a class="wb-list__item wb-list__item--link" href="detail.html"><span class="wb-list__title">Tiền nhà · kỳ tháng 6<span class="wb-list__sub">12/06/2026</span></span><span class="wb-list__end wb-num--strong">6.500.000&nbsp;₫</span></a>
+              <a class="wb-list__item wb-list__item--link" href="detail.html"><span class="wb-list__title">Tiền nhà · kỳ tháng 5<span class="wb-list__sub">12/05/2026</span></span><span class="wb-list__end wb-num--strong">6.500.000&nbsp;₫</span></a>
+              <a class="wb-list__item wb-list__item--link" href="detail.html"><span class="wb-list__title">Điện nước tháng 6<span class="wb-list__sub">07/07/2026</span></span><span class="wb-list__end wb-num--strong">890.000&nbsp;₫</span></a>
+            </ul>
+          </div>
+        </section>
+
+        <!-- 6 · DESTRUCTIVE ACTION — last, alone, and the only red button on the page. -->
+        <section class="wb-section">
+          <div class="wb-card wb-card--pad">
+            <div class="wb-cluster wb-cluster--between">
+              <div>
+                <p class="wb-card__title">Xoá giao dịch</p>
+                <p class="wb-card__sub">Không thể hoàn tác. Báo cáo tháng 7 sẽ được tính lại.</p>
+              </div>
+              <button class="wb-btn wb-btn--danger wb-btn--sm">Xoá</button>
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+      <footer class="wb-footer wb-footer--slim">
+        <div class="wb-footer__inner">
+          <div class="wb-footer__bottom">
+            <span class="wb-footer__copy">© 2026 Cashy. Bảo lưu mọi quyền.</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+</div>
+
+<script>
+/* The whole behaviour contract of a shell: two class toggles. Nothing here is
+   layout — the CSS owns the drawer, the scrim and the breakpoint. Swap this for
+   your framework's state when you port the template. */
+(function () {
+  var shell = document.querySelector('.wb-shell');
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('[data-side-toggle]')) {
+      shell.classList.toggle('is-side-open');
+    } else if (e.target.closest('.wb-theme-toggle')) {
+      var dark = document.documentElement.classList.toggle('dark');
+      try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (err) {}
+    } else if (shell.classList.contains('is-side-open') && !e.target.closest('.wb-shell__side')) {
+      shell.classList.remove('is-side-open');     /* tap the scrim → close */
+    }
+  });
+})();
+</script>
+</body>
+</html>

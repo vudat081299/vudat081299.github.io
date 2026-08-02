@@ -1,0 +1,65 @@
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Project &amp; skill</p>
+  <h2>Quyết định &amp; đánh đổi</h2>
+  <p>Những đánh đổi và quyết định <b>hoãn/không làm</b> — ghi lại để người sau (hoặc AI) hiểu chúng là lựa chọn
+  <b>có chủ đích</b>, không phải bỏ sót; đừng "phát hiện lại" như bug. Chỉ xét lại khi <i>lý do nêu ra không còn
+  đúng</i>. Mỗi mục có khoá <b>T#</b> ổn định. Đây là bản mirror <b>đầy đủ</b> trên site của danh sách trong
+  <code>README</code> § <i>Deliberate trade-offs</i>; <code>validate-sync.sh</code> <b>CHECK 13</b> chặn commit
+  nếu một <code>T#</code> ở README chưa được render tại đây — nên danh sách này <b>không thể lại lặng lẽ biến mất
+  khỏi site</b> (§23: docs site tự chứa).</p>
+</div>
+
+<section class="wb-section">
+  <div class="wb-alert wb-alert--info doc-note">
+    <span class="wb-ico" style="color:var(--wb-info-text)">info</span>
+    <div>Nguyên tắc chung: <b>tự động hoá chỉ khi tín hiệu sạch</b>. Một guardrail nhiễu (báo oan) còn tệ hơn không
+    có — nó tập cho người bỏ qua. Vì thế vài thứ dưới đây <b>cố tình</b> vẫn là "eyeball" của model/người thay vì
+    một gate cơ học. Chi tiết tooling: xem thêm <a href="#/tooling">Tooling</a>.</div>
+  </div>
+
+  <div class="wb-accordion" style="max-width:760px;margin-top:14px">
+    <details class="wb-accordion__item" open>
+      <summary>T1 · CSS ship là một file ~176 KB, không tree-shaking — <b>Giữ</b></summary>
+      <div class="wb-accordion__body">Zero-build, drop-in một thẻ <code>&lt;link&gt;</code> là <b>toàn bộ mục
+      đích</b>; kích thước mỗi consumer là cái giá công bằng. Ai thật sự cần có thể xoá các section đánh số không
+      dùng (mỗi section <b>tự chứa</b>) hoặc minify. Tách thành module sẽ mang lại đúng cái <b>bước build</b> mà
+      thư viện sinh ra để loại bỏ.</div>
+    </details>
+    <details class="wb-accordion__item">
+      <summary>T2 · CSS <code>@import</code> Material Symbols từ Google Fonts (một request ngoài) — <b>Giữ, có ghi</b></summary>
+      <div class="wb-accordion__body">Docs và phần lớn app là online-first; đường <b>self-host</b> cho
+      offline/air-gapped/quyền riêng tư đã viết trong <code>integration.md</code> (mục "Offline / privacy"). Không
+      bỏ mặc định để bản drop-in giữ đúng nghĩa <b>một dòng</b>.</div>
+    </details>
+    <details class="wb-accordion__item">
+      <summary>T3 · <code>web-builder.skill</code> đóng gói tay — không build script, không check source↔artifact — <b>Hoãn</b></summary>
+      <div class="wb-accordion__body">Nguồn (<code>web-builder/</code>) mới là sự thật; <code>.skill</code> chỉ là
+      một zip snapshot đóng lại khi cần (gitignore). Pipeline build+verify có <b>ROI thấp</b> so với bề mặt bảo trì
+      nó thêm vào; xét lại nếu việc đóng gói cần tự động hoá / phát hành theo nhịp.</div>
+    </details>
+    <details class="wb-accordion__item">
+      <summary>T4 · <code>CLAUDE.md</code> không nhúng bản <code>/wb-change</code> thủ công từng bước cho người ngoài Claude Code — <b>Hoãn (nhỏ)</b></summary>
+      <div class="wb-accordion__body">Mục "Adding a primitive" trong README, note trigger, và các trang
+      <a href="#/tooling">#/tooling</a> + <a href="#/overview">overview</a> đã bày sẵn flow thủ công, hai hook, và
+      các bước verify cho một người đọc — nên bản inline trong <code>CLAUDE.md</code> là dư thừa.</div>
+    </details>
+    <details class="wb-accordion__item">
+      <summary>T5 · Có locator read-only (<code>wb.sh</code>), nhưng KHÔNG auto-gate §18 / coherence — <b>Chọn</b></summary>
+      <div class="wb-accordion__body">
+        <p style="margin:0 0 10px"><code>wb locate &lt;class&gt;</code> làm hộ vũ điệu "grep → cụm <code>Read</code>
+        offset/limit + blast-radius" của <a href="#/tooling">/wb-change bước 1</a> bằng shell → discover đỡ tốn
+        token. Nó <b>chỉ in</b>, không sửa/không phán → không thể chặn oan hay nói sai.</p>
+        <p style="margin:0 0 10px">Nhưng đã <b>cố tình không</b> biến §18 (token thay magic-number) hay coherence
+        "6 nơi" thành <b>gate</b>: thử trên CSS thật, cả hai <b>quá nhiễu</b>. §18 hex thô: <b>26</b> hit (luật
+        lỏng) / <b>8</b> hit (luật trùng-giá-trị-token) — gần như đều hợp lệ (mask-alpha <code>#000/#0000</code>,
+        bánh xe màu của color-picker, fallback <code>var(--x,#hex)</code>, chart-scheme có giá trị trùng token một
+        cách ngẫu nhiên). "Class dùng nhưng chưa định nghĩa": <b>81</b> hit, ~toàn false (token
+        <code>--wb-border</code>, prose <code>/wb-change</code>, ví dụ BEM trong <code>&lt;code&gt;</code>).</p>
+        <p style="margin:0"><b>Trade-off:</b> tách "magic-number" khỏi "raw-hex bắt buộc" cần phán đoán ngữ nghĩa,
+        nên §18 và coherence "6 nơi" vẫn là <b>eyeball</b> của model/người (<code>/wb-change</code> bước 8–9), không
+        phải bảo đảm cơ học. Xét lại nếu raw-hex lạm dụng thật sự xuất hiện, hoặc khi tách sạch được base vs
+        <code>--modifier</code> để làm một <i>advisory</i> (không phải gate).</p>
+      </div>
+    </details>
+  </div>
+</section>

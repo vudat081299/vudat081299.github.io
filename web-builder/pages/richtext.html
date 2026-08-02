@@ -1,5 +1,5 @@
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Nhập liệu</p>
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Inputs</p>
   <h2>Rich text — thanh định dạng (format bar)</h2>
   <p>Thanh nút <b>nằm ngang</b> đặt trên một <code>.wb-textarea</code> để người dùng viết kiểu <b>markdown</b>:
   văn bản thường (Aa), tiêu đề (H1/H2), <b>đậm</b> · <i>nghiêng</i> · gạch dưới · gạch ngang, tô nền (highlight) +
@@ -7,10 +7,10 @@
   markdown) là một driver nhỏ trong <code>app.js</code> — app thật thay bằng trình soạn thảo thực (TipTap, Lexical…).</p>
 </div>
 
-<section class="doc-sec">
-  <div class="doc-block">
+<section class="wb-section">
+  <div class="wb-block">
     <h4>Thanh định dạng gắn trên textarea</h4>
-    <p class="doc-block__desc">Bôi đen một đoạn rồi bấm nút — ký hiệu markdown tự bọc quanh đoạn chọn (H1/H2 thêm ở đầu dòng).
+    <p class="wb-block__desc">Bôi đen một đoạn rồi bấm nút — ký hiệu markdown tự bọc quanh đoạn chọn (H1/H2 thêm ở đầu dòng).
     Nút đang bật dùng nền <b>đặc trung tính</b> (tầng 1). <code>--attached</code> ghép liền mép trên của textarea.</p>
     <div class="demo">
       <div class="demo__stage">
@@ -48,9 +48,11 @@
             <span class="wb-toolbar__sep"></span>
             <button type="button" class="wb-toolbar__btn" data-cmd="clear" title="Xoá định dạng" aria-label="Xoá toàn bộ định dạng"><span class="wb-ico">format_clear</span></button>
           </div>
-          <textarea class="wb-textarea" id="note-ta" rows="6" placeholder="Bôi đen chữ rồi bấm nút định dạng…">## Ăn trưa với khách hàng
+          <div class="wb-textarea-wrap">
+            <textarea class="wb-textarea" id="note-ta" rows="6" placeholder="Bôi đen chữ rồi bấm nút định dạng…">## Ăn trưa với khách hàng
 
 Nhà hàng **The Deck**, thanh toán bằng thẻ. Cần ==xuất hoá đơn== trước cuối tháng.</textarea>
+          </div>
           <span class="wb-help">Nội dung lưu ở dạng markdown; render khi hiển thị.</span>
         </div>
       </div>
@@ -73,13 +75,13 @@ Nhà hàng **The Deck**, thanh toán bằng thẻ. Cần ==xuất hoá đơn== t
   &lt;span class="wb-toolbar__sep"&gt;&lt;/span&gt;
   &lt;button class="wb-toolbar__btn" data-cmd="clear"&gt;&lt;span class="wb-ico"&gt;format_clear&lt;/span&gt;&lt;/button&gt;
 &lt;/div&gt;
-&lt;textarea class="wb-textarea" id="note-ta"&gt;…markdown…&lt;/textarea&gt;</code></pre></div>
+&lt;div class="wb-textarea-wrap"&gt;&lt;textarea class="wb-textarea" id="note-ta"&gt;…markdown…&lt;/textarea&gt;&lt;/div&gt;</code></pre></div>
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Thanh rời (không gắn textarea)</h4>
-    <p class="doc-block__desc">Bỏ <code>--attached</code> để dùng như một thanh công cụ độc lập (bo góc đủ 4 cạnh). Nhóm nút bằng
+    <p class="wb-block__desc">Bỏ <code>--attached</code> để dùng như một thanh công cụ độc lập (bo góc đủ 4 cạnh). Nhóm nút bằng
     <code>__group</code> + <code>__sep</code>; nút bật thêm <code>.is-active</code>.</p>
     <div class="demo">
       <div class="demo__stage">

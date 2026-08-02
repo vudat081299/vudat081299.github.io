@@ -1,0 +1,264 @@
+<!doctype html>
+<!-- =============================================================================
+     TEMPLATE · Settings  —  catalog recipe "Settings"
+     -----------------------------------------------------------------------------
+     Grouped preferences. Tabs split the sections; each panel is a wb-list of
+     labelled rows with exactly one control per row. A setting the current plan
+     doesn't allow stays visible but --locked, which reads clearer than hiding it.
+     The destructive action lives at the bottom of the last tab.
+     What you may change: text, data, icon ligatures, how many rows/fields/sections.
+     What you should NOT change: the wb-shell frame, the wb-page-head → wb-section
+     → wb-block nesting, and spacing (it comes from tokens — if a gap feels wrong,
+     set --wb-section-gap / --wb-block-gap, never a margin on one element).
+     ========================================================================== -->
+<html lang="vi" class="wb-scrollbars">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cài đặt · Cashy</title>
+<!-- The one file this library ships. Everything below is plain markup. -->
+<link rel="stylesheet" href="../web-builder.css" />
+<script>
+  /* Theme before first paint, so a dark user never sees a white flash. */
+  try {
+    var t = localStorage.getItem('theme');
+    if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches))
+      document.documentElement.classList.add('dark');
+  } catch (e) {}
+</script>
+</head>
+<body class="wb-app">
+
+<div class="wb-shell">
+
+  <!-- ============================ TOP BAR ================================== -->
+  <header class="wb-navbar wb-navbar--sticky wb-navbar--glass">
+    <!-- Opens the rail once it folds to a drawer (≤900px); hidden above that. -->
+    <button class="wb-btn wb-btn--ghost wb-btn--icon wb-shell__side-toggle" data-side-toggle
+            aria-label="Mở thanh điều hướng"><span class="wb-ico">menu</span></button>
+    <a class="wb-navbar__brand" href="dashboard.html"><span class="wb-navbar__mark">C</span> Cashy</a>
+    <span class="wb-navbar__spacer"></span>
+    <div class="wb-navbar__actions">
+      <button class="wb-btn wb-btn--ghost wb-btn--icon" aria-label="Tìm kiếm"><span class="wb-ico">search</span></button>
+      <button class="wb-btn wb-btn--ghost wb-btn--icon" aria-label="Thông báo"><span class="wb-ico">notifications</span></button>
+      <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" aria-label="Đổi giao diện sáng/tối" title="Sáng / Tối">
+        <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
+        <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
+      </button>
+      <span class="wb-avatar wb-avatar--sm">DV</span>
+    </div>
+  </header>
+
+  <div class="wb-shell__body">
+
+    <!-- ============================ RAIL =================================== -->
+    <!-- The slot owns the surface, the sticky offset, its own scroll and the
+         mobile drawer. The wb-sidenav inside contributes link styling only. -->
+    <aside class="wb-shell__side wb-scrollbars">
+      <nav class="wb-sidenav">
+        <div class="wb-sidenav__section">Tổng quan</div>
+        <a class="wb-sidenav__link" href="dashboard.html"><span class="wb-ico">dashboard</span> Bảng điều khiển</a>
+        <a class="wb-sidenav__link" href="list.html"><span class="wb-ico">receipt_long</span> Giao dịch <span class="wb-sidenav__badge">128</span></a>
+        <a class="wb-sidenav__link" href="list.html"><span class="wb-ico">savings</span> Ngân sách</a>
+        <a class="wb-sidenav__link" href="list.html"><span class="wb-ico">insights</span> Báo cáo</a>
+        <div class="wb-sidenav__section">Tài khoản</div>
+        <a class="wb-sidenav__link" href="list.html"><span class="wb-ico">account_balance_wallet</span> Ví &amp; ngân hàng</a>
+        <a class="wb-sidenav__link" href="list.html"><span class="wb-ico">flag</span> Mục tiêu <span class="wb-sidenav__badge">3</span></a>
+        <a class="wb-sidenav__link is-active" href="settings.html"><span class="wb-ico">settings</span> Cài đặt</a>
+      </nav>
+    </aside>
+
+    <div class="wb-shell__main">
+      <!-- ========================= CONTENT ================================= -->
+      <main class="wb-container wb-container--pad">
+
+        <div class="wb-page-head">
+          <p class="wb-eyebrow">Tài khoản</p>
+          <h1>Cài đặt</h1>
+          <p>Tuỳ chỉnh hiển thị, thông báo và bảo mật cho tài khoản của bạn.</p>
+        </div>
+
+        <!-- Sections of settings are TABS (or a second rail on a very long page).
+             Each panel is a wb-list of labelled rows — one control per row. -->
+        <div data-tabs>
+          <div class="wb-tabs">
+            <button class="wb-tab is-active" data-tab="general">Chung</button>
+            <button class="wb-tab" data-tab="notify">Thông báo</button>
+            <button class="wb-tab" data-tab="security">Bảo mật</button>
+          </div>
+
+          <!-- ------------------------------------------------ GENERAL -->
+          <div class="wb-tab-panel" data-panel="general">
+            <section class="wb-section">
+              <h2>Hồ sơ</h2>
+              <p class="wb-section__desc">Tên và ảnh đại diện hiển thị trong mọi báo cáo bạn chia sẻ.</p>
+              <div class="wb-card"><div class="wb-card__body">
+                <div class="wb-stack">
+                  <div class="wb-media">
+                    <span class="wb-avatar wb-avatar--lg">DV</span>
+                    <div class="wb-media__body">
+                      <p class="wb-media__title">Đạt Vũ</p>
+                      <p class="wb-media__text">dat@example.com</p>
+                    </div>
+                    <button class="wb-btn wb-btn--outline wb-btn--sm" style="margin-left:auto">Đổi ảnh</button>
+                  </div>
+                  <div class="wb-field">
+                    <label class="wb-label" for="s-name">Tên hiển thị</label>
+                    <input class="wb-input" id="s-name" value="Đạt Vũ" />
+                  </div>
+                </div>
+              </div></div>
+            </section>
+
+            <section class="wb-section">
+              <h2>Hiển thị</h2>
+              <p class="wb-section__desc">Áp dụng cho toàn bộ số liệu trong ứng dụng.</p>
+              <div class="wb-card">
+                <ul class="wb-list wb-list--flush" style="padding:2px 18px 8px">
+                  <li class="wb-list__item">
+                    <span class="wb-list__title">Đơn vị tiền<span class="wb-list__sub">Ảnh hưởng cách định dạng mọi con số</span></span>
+                    <span class="wb-list__end">
+                      <span class="wb-select-wrap">
+                        <select class="wb-select"><option>VND (₫)</option><option>USD ($)</option></select>
+                        <span class="wb-ico">expand_more</span>
+                      </span>
+                    </span>
+                  </li>
+                  <li class="wb-list__item">
+                    <span class="wb-list__title">Ngày bắt đầu kỳ<span class="wb-list__sub">Dùng để cắt báo cáo theo tháng</span></span>
+                    <span class="wb-list__end">
+                      <span class="wb-select-wrap">
+                        <select class="wb-select"><option>Ngày 1</option><option>Ngày 15</option><option>Ngày 25</option></select>
+                        <span class="wb-ico">expand_more</span>
+                      </span>
+                    </span>
+                  </li>
+                  <li class="wb-list__item">
+                    <span class="wb-list__title">Ẩn số dư<span class="wb-list__sub">Che các con số khi mở ở nơi công cộng</span></span>
+                    <span class="wb-list__end"><label class="wb-switch"><input type="checkbox" /><span class="wb-switch__track"></span></label></span>
+                  </li>
+                </ul>
+              </div>
+            </section>
+          </div>
+
+          <!-- ------------------------------------------------ NOTIFICATIONS -->
+          <div class="wb-tab-panel" data-panel="notify" hidden>
+            <section class="wb-section">
+              <h2>Nhắc nhở</h2>
+              <p class="wb-section__desc">Mỗi hàng một công tắc — không gộp nhiều lựa chọn vào một dòng.</p>
+              <div class="wb-card">
+                <ul class="wb-list wb-list--flush" style="padding:2px 18px 8px">
+                  <li class="wb-list__item">
+                    <span class="wb-list__title">Thông báo đẩy<span class="wb-list__sub">Nhắc hạn thanh toán</span></span>
+                    <span class="wb-list__end"><label class="wb-switch"><input type="checkbox" checked /><span class="wb-switch__track"></span></label></span>
+                  </li>
+                  <li class="wb-list__item">
+                    <span class="wb-list__title">Email tuần<span class="wb-list__sub">Tổng kết thu chi mỗi sáng thứ Hai</span></span>
+                    <span class="wb-list__end"><label class="wb-switch"><input type="checkbox" checked /><span class="wb-switch__track"></span></label></span>
+                  </li>
+                  <li class="wb-list__item">
+                    <span class="wb-list__title">Cảnh báo vượt ngân sách</span>
+                    <span class="wb-list__end"><label class="wb-switch"><input type="checkbox" /><span class="wb-switch__track"></span></label></span>
+                  </li>
+                  <!-- A setting the plan doesn't allow stays visible but locked —
+                       clearer than hiding it. -->
+                  <li class="wb-list__item">
+                    <span class="wb-list__title">Đồng bộ ngân hàng tự động<span class="wb-list__sub">Có ở gói Pro</span></span>
+                    <span class="wb-list__end">
+                      <label class="wb-switch wb-switch--locked"><input type="checkbox" /><span class="wb-switch__track"></span><span class="wb-switch__lock" aria-hidden="true">lock</span></label>
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </section>
+          </div>
+
+          <!-- ------------------------------------------------ SECURITY -->
+          <div class="wb-tab-panel" data-panel="security" hidden>
+            <section class="wb-section">
+              <h2>Đăng nhập</h2>
+              <div class="wb-card"><div class="wb-card__body">
+                <div class="wb-stack">
+                  <div class="wb-field">
+                    <label class="wb-label" for="s-pass">Mật khẩu</label>
+                    <div class="wb-input-group">
+                      <input class="wb-input" id="s-pass" type="password" value="s3cret-pass" />
+                      <button type="button" class="wb-input-group__btn" data-reveal aria-label="Hiện/ẩn mật khẩu" aria-pressed="false"><span class="wb-ico wb-ico--sm">visibility</span></button>
+                    </div>
+                    <span class="wb-help">Đổi lần cuối 4 tháng trước.</span>
+                  </div>
+                  <label class="wb-check"><input type="checkbox" checked /> Yêu cầu xác thực 2 lớp khi đăng nhập từ thiết bị mới</label>
+                </div>
+              </div></div>
+            </section>
+
+            <section class="wb-section">
+              <h2>Phiên đang mở</h2>
+              <div class="wb-card">
+                <ul class="wb-list wb-list--flush" style="padding:2px 18px 8px">
+                  <li class="wb-list__item"><span class="wb-list__title">MacBook Pro · Chrome<span class="wb-list__sub">TP.HCM · thiết bị này</span></span><span class="wb-list__end"><span class="wb-cap wb-cap--success wb-cap--sm">Đang hoạt động</span></span></li>
+                  <li class="wb-list__item"><span class="wb-list__title">iPhone 15 · Safari<span class="wb-list__sub">TP.HCM · 2 giờ trước</span></span><span class="wb-list__end"><button class="wb-btn wb-btn--ghost wb-btn--sm">Đăng xuất</button></span></li>
+                </ul>
+              </div>
+            </section>
+
+            <section class="wb-section">
+              <div class="wb-card wb-card--pad">
+                <div class="wb-cluster wb-cluster--between">
+                  <div>
+                    <p class="wb-card__title">Xoá tài khoản</p>
+                    <p class="wb-card__sub">Xoá vĩnh viễn mọi giao dịch, ngân sách và báo cáo. Không thể hoàn tác.</p>
+                  </div>
+                  <button class="wb-btn wb-btn--danger wb-btn--sm">Xoá tài khoản</button>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+
+      </main>
+
+      <footer class="wb-footer wb-footer--slim">
+        <div class="wb-footer__inner">
+          <div class="wb-footer__bottom">
+            <span class="wb-footer__copy">© 2026 Cashy. Bảo lưu mọi quyền.</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+</div>
+
+<script>
+/* The whole behaviour contract of a shell: two class toggles. Nothing here is
+   layout — the CSS owns the drawer, the scrim and the breakpoint. Swap this for
+   your framework's state when you port the template. */
+(function () {
+  var shell = document.querySelector('.wb-shell');
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('[data-side-toggle]')) {
+      shell.classList.toggle('is-side-open');
+    } else if (e.target.closest('.wb-theme-toggle')) {
+      var dark = document.documentElement.classList.toggle('dark');
+      try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (err) {}
+    } else if (shell.classList.contains('is-side-open') && !e.target.closest('.wb-shell__side')) {
+      shell.classList.remove('is-side-open');     /* tap the scrim → close */
+    }
+  });
+})();
+</script>
+<script>
+/* Tabs — the second and last behaviour in this template. Same shape as the shell
+   toggle: flip a class, flip `hidden`. Swap for your framework's tab primitive. */
+document.querySelectorAll('[data-tabs]').forEach(function (root) {
+  root.addEventListener('click', function (e) {
+    var btn = e.target.closest('.wb-tab');
+    if (!btn) return;
+    root.querySelectorAll('.wb-tab').forEach(function (b) { b.classList.toggle('is-active', b === btn); });
+    root.querySelectorAll('.wb-tab-panel').forEach(function (p) { p.hidden = p.dataset.panel !== btn.dataset.tab; });
+  });
+});
+</script>
+</body>
+</html>

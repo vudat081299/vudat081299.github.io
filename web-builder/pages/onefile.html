@@ -1,0 +1,95 @@
+<div class="wb-page-head">
+  <div class="wb-eyebrow">Project &amp; skill</div>
+  <h2>Một file CSS — và đọc repo cho rẻ token</h2>
+  <p>Phần lý-do đằng sau <a href="#/workflow">quy trình</a>: vì sao thư viện gói trong <b>một</b> file, vì sao
+  <b>không</b> tách nhỏ, và cách AI nên đọc file lớn để mỗi lần thêm/sửa không đốt token vô ích.</p>
+</div>
+
+<section class="wb-section wb-section--flush">
+  <div class="wb-alert wb-alert--info doc-note">
+    <span aria-hidden="true">📦</span>
+    <div><b>Một file là lời hứa sản phẩm — không phải lười gom.</b> <code>web-builder.css</code> tự quảng cáo
+    “self-contained · no build · drop-in một file”. Tách nó ra nhiều file sẽ buộc app dùng phải
+    <code>@import</code> nhiều lần (thêm request, render-blocking) hoặc dựng một bước build — phá đúng thứ skill
+    đang bán. Thứ tách được là <b>demo docs</b> (<code>pages/*.html</code>) vì chúng <b>không ship</b>; còn CSS thì
+    ở nguyên một file.</div>
+  </div>
+
+  <div class="wb-block">
+    <h4>Vì sao không tách CSS theo từng component</h4>
+    <p class="wb-block__desc">Rule của một component không nằm gọn một khối — nó <b>rải khắp file</b>: token trong
+    <code>:root</code> · khối chính ở giữa · <code>.dark</code>/<code>:where()</code> override chỗ khác · rồi
+    component khác tái dùng nó (hoá đơn tái dùng card). Đo khoảng cách dòng đầu ↔ dòng cuối của mỗi class:</p>
+    <div class="wb-cluster" style="row-gap:8px;margin-top:4px">
+      <span class="wb-cap">receipt · gọn ~145 dòng</span>
+      <span class="wb-cap">colorpicker · ~64</span>
+      <span class="wb-cap">input · rải ~2340</span>
+      <span class="wb-cap">card · rải ~2319</span>
+      <span class="wb-cap">chart · rải ~1463</span>
+    </div>
+    <p class="wb-block__desc" style="margin-top:10px"><code>input</code>/<code>card</code> rải gần cả file — tách
+    vật lý sẽ phải nhân đôi cascade dùng chung hoặc dựng chuỗi <code>@import</code> phụ thuộc thứ tự mong manh. Một
+    file là <b>biểu diễn trung thực</b> của một cascade gắn chặt, không phải nợ kỹ thuật.</p>
+  </div>
+
+  <div class="wb-block">
+    <h4>AI không đọc lại cả repo mỗi lần</h4>
+    <p class="wb-block__desc">Mỗi phiên chỉ <b>tự nạp</b> <code>CLAUDE.md</code> + bộ nhớ (nhỏ); còn lại đọc theo
+    nhu cầu. Kẻ đốt token thật là 3 file lớn khi lỡ đọc full — nên đừng bảo AI “đọc repo cho hiểu”:</p>
+    <div class="wb-grid wb-grid--auto" style="--wb-grid-min:200px;margin-top:8px">
+      <div class="wb-card wb-card--pad">
+        <p class="wb-card__title">web-builder.css</p>
+        <p class="wb-card__sub">~2900 dòng ≈ <b>~40k token</b> nếu đọc full.</p>
+      </div>
+      <div class="wb-card wb-card--pad">
+        <p class="wb-card__title">app.js · catalog</p>
+        <p class="wb-card__sub"><b>~16k token</b> mỗi file.</p>
+      </div>
+      <div class="wb-card wb-card--pad">
+        <p class="wb-card__title">Đọc “ngây thơ” cả ba</p>
+        <p class="wb-card__sub"><b>~70k token</b> trước khi viết một dòng.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="wb-block">
+    <h4>Đọc theo cụm — để <code>grep</code> làm bản đồ</h4>
+    <p class="wb-block__desc">Không Read full <code>web-builder.css</code>. Thay vào đó:</p>
+    <ol class="wb-steps">
+      <li class="wb-steps__item">
+        <span class="wb-steps__marker">1</span>
+        <div class="wb-steps__content">
+          <p class="wb-steps__title"><code>grep -n 'wb-&lt;comp&gt;'</code></p>
+          <p class="wb-steps__desc">Ra <b>toàn bộ</b> dòng của component — kể cả token, dark override và chỗ tái dùng rải rác.</p>
+        </div>
+      </li>
+      <li class="wb-steps__item">
+        <span class="wb-steps__marker">2</span>
+        <div class="wb-steps__content">
+          <p class="wb-steps__title">Gom cụm</p>
+          <p class="wb-steps__desc">Nhóm các dòng liền nhau thành vài cụm (khối chính · token · override).</p>
+        </div>
+      </li>
+      <li class="wb-steps__item">
+        <span class="wb-steps__marker">3</span>
+        <div class="wb-steps__content">
+          <p class="wb-steps__title">Read từng cụm</p>
+          <p class="wb-steps__desc">Bằng <code>offset/limit</code> (+vài dòng đệm) — <b>không</b> đọc cửa sổ cố định ±N dòng.</p>
+        </div>
+      </li>
+    </ol>
+    <p class="wb-block__desc" style="margin-top:12px"><b><code>.claude/tools/wb.sh locate &lt;class&gt;</code> làm hộ
+    cả 3 bước trên</b> — in sẵn lệnh <code>Read</code> theo cụm + bản đồ blast-radius (xem <a href="#/tooling">Tooling</a>
+    §3). <code>grep</code> tìm <b>mọi</b> lần xuất hiện nên bất chấp component dài hay rải rác; cửa sổ cố định ±N
+    dòng thì sẽ <b>sót rule</b>. <code>receipt</code> đọc ~2k token thay vì 40k (thắng ~20×); <code>input</code> rải
+    rác đọc ~3 cụm ~300 dòng (vẫn thắng ~8×). Việc đọc rộng thì đẩy cho <b>subagent</b> — 40k đó nằm trong context
+    riêng của nó, chỉ bản tóm tắt trở về luồng chính.</p>
+  </div>
+
+  <div class="wb-alert wb-alert--info doc-note">
+    <span aria-hidden="true">🛟</span>
+    <div><b>Lỡ đọc sót một lát thì sao?</b> Không ship lỗi âm thầm: <code>validate-sync.sh</code> lúc commit và bước
+    verify sáng/tối làm demo page <b>vỡ mắt thường</b> nếu thiếu token hay dark override — worst case là đọc lại
+    một lượt, không phải bug lọt ra.</div>
+  </div>
+</section>

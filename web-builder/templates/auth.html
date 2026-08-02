@@ -1,0 +1,94 @@
+<!doctype html>
+<!-- =============================================================================
+     TEMPLATE · Auth / login  —  catalog recipe "Auth / login"
+     -----------------------------------------------------------------------------
+     The one screen with NO shell: no rail, no top bar, no footer columns. A person
+     who lands here has exactly one job, so everything that isn't that job is gone.
+
+     Structure: a --narrow container, centred in the viewport → a card → a stack of
+     fields → one primary full-width button → the social stack → one line of
+     secondary links. Nothing else.
+
+     Note the centring: `place-content:center` on the body plus `min-height`. That
+     is the one bit of framing the page scaffold does not cover, because it is the
+     one screen that is a single object in space rather than a column of sections.
+
+     What you may change: text, which providers you offer, whether you keep the
+     "remember me" row. What you should NOT change: the width (a login form wider
+     than --narrow reads as a mistake) or the button hierarchy — exactly one
+     primary button on this page.
+     ========================================================================== -->
+<html lang="vi" class="wb-scrollbars">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Đăng nhập · Cashy</title>
+<!-- The one file this library ships. Everything below is plain markup. -->
+<link rel="stylesheet" href="../web-builder.css" />
+<script>
+  /* Theme before first paint, so a dark user never sees a white flash. */
+  try {
+    var t = localStorage.getItem('theme');
+    if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches))
+      document.documentElement.classList.add('dark');
+  } catch (e) {}
+</script>
+</head>
+<!-- .wb-app is the document baseline: font, colours, line-height, border-box,
+     links that inherit. A shell implies it; a shell-less screen must say it. -->
+<body class="wb-app" style="min-height:100dvh;display:grid;place-content:center;padding:24px 0">
+
+<main class="wb-container wb-container--narrow" style="max-width:420px">
+
+  <!-- Brand, not a navbar. One mark + one name, centred above the card. -->
+  <div class="wb-stack" style="align-items:center;text-align:center;margin-bottom:22px">
+    <span class="wb-navbar__mark" style="width:38px;height:38px;font-size:17px">C</span>
+    <div>
+      <p class="wb-page-head__title" style="font-size:var(--wb-text-section);margin-bottom:4px">Đăng nhập Cashy</p>
+      <p class="wb-page-head__desc" style="font-size:var(--wb-text-body)">Quản lý thu chi cá nhân, gọn và minh bạch.</p>
+    </div>
+  </div>
+
+  <div class="wb-card"><div class="wb-card__body">
+    <form class="wb-stack">
+
+      <div class="wb-field">
+        <label class="wb-label" for="a-email">Email</label>
+        <input class="wb-input" id="a-email" type="email" autocomplete="email" placeholder="ban@example.com" />
+      </div>
+
+      <div class="wb-field">
+        <label class="wb-label" for="a-pass">Mật khẩu</label>
+        <div class="wb-input-group">
+          <input class="wb-input" id="a-pass" type="password" autocomplete="current-password" />
+          <button type="button" class="wb-input-group__btn" data-reveal aria-label="Hiện/ẩn mật khẩu" aria-pressed="false"><span class="wb-ico wb-ico--sm">visibility</span></button>
+        </div>
+      </div>
+
+      <div class="wb-cluster wb-cluster--between">
+        <label class="wb-check"><input type="checkbox" /> Ghi nhớ tôi</label>
+        <a href="#" style="font-size:var(--wb-text-help)">Quên mật khẩu?</a>
+      </div>
+
+      <!-- The ONE primary button on the page. --block, because on a form this
+           narrow a half-width button just looks stranded. -->
+      <button class="wb-btn wb-btn--block" type="submit">Đăng nhập</button>
+    </form>
+
+    <!-- A divider with a label, not a bare line + centred text you position by hand. -->
+    <div class="wb-divider--label">HOẶC</div>
+
+    <div class="wb-stack">
+      <button class="wb-btn wb-btn--secondary wb-btn--block">Tiếp tục với Google</button>
+      <button class="wb-btn wb-btn--secondary wb-btn--block">Tiếp tục với Apple</button>
+    </div>
+  </div></div>
+
+  <p class="wb-cell-muted" style="text-align:center;margin-top:18px;font-size:var(--wb-text-help)">
+    Chưa có tài khoản? <a href="#">Đăng ký</a>
+  </p>
+
+</main>
+
+</body>
+</html>

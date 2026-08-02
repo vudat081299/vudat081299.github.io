@@ -1,13 +1,13 @@
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Hành động</p>
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Actions</p>
   <h2>Dropdown / Menu</h2>
   <p>Menu nổi gắn với một nút. <code>.wb-dropdown</code> bọc trigger + <code>.wb-dropdown__menu</code>;
   bật/tắt bằng class <code>.is-open</code> (JS ở docs, hoặc Radix DropdownMenu trong app).
   <code>.wb-menu</code> cũng dùng độc lập được.</p>
 </div>
 
-<section class="doc-sec">
-  <div class="doc-block">
+<section class="wb-section">
+  <div class="wb-block">
     <h4>Bấm để mở</h4>
     <div class="demo">
       <div class="demo__stage" style="min-height:280px">
@@ -39,9 +39,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Dòng mở rộng — có sub-list thu gọn được</h4>
-    <p class="doc-block__desc">Một dòng trong menu tự <b>bung/gập</b> một danh sách con — bấm dòng đó (mũi tên <b>chữ “v”</b>
+    <p class="wb-block__desc">Một dòng trong menu tự <b>bung/gập</b> một danh sách con — bấm dòng đó (mũi tên <b>chữ “v”</b>
     <code>expand_more</code> bên phải, xoay khi mở) chỉ mở sub-list, <b>không đóng dropdown</b>. Bọc dòng + sub trong
     <code>.wb-menu__group</code>; toggle <code>.is-open</code>.</p>
     <div class="demo">
@@ -90,7 +90,7 @@
     </div>
   </div>
 
-  <div class="doc-note">
+  <div class="wb-alert wb-alert--info doc-note">
     <span>💡</span>
     <div>Ở tài liệu này, JS chỉ toggle <code>.is-open</code> và đóng khi bấm ra ngoài. Trong app dùng
     <b>Radix DropdownMenu</b> để có focus-trap, điều hướng bàn phím và portal — rồi gắn class

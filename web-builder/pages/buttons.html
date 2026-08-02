@@ -1,12 +1,12 @@
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Hành động</p>
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Actions</p>
   <h2>Buttons</h2>
   <p>Nút chính là <b>trung tính</b> (đen ở light, trắng ở dark) — theo gu trắng-đen-xám, hành động chính
   không dùng màu thương hiệu. Màu chỉ dành cho hành động có ý nghĩa: xoá (đỏ), xác nhận đã trả (xanh).</p>
 </div>
 
-<section class="doc-sec">
-  <div class="doc-block">
+<section class="wb-section">
+  <div class="wb-block">
     <h4>Kiểu (fill)</h4>
     <div class="demo demo--plain">
       <div class="demo__stage">
@@ -28,7 +28,7 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Kích thước, icon, trạng thái</h4>
     <div class="demo demo--plain">
       <div class="demo__stage">
@@ -57,9 +57,51 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
+    <h4>Nút icon “ẩn nền” — nền chỉ hiện khi hover (<code>--ghost --icon</code>, thêm <code>--round</code> để tròn)</h4>
+    <p class="wb-block__desc">Lúc nghỉ chỉ có mỗi icon (không nền, không viền); <b>rê chuột vào mới hiện nền</b> chip xám. Mặc định là
+    <b>vuông bo góc</b> — thêm <code>wb-btn--round</code> để thành <b>tròn xoe</b>. Hợp cho thanh công cụ, ô hành động trong bảng,
+    nút đóng. <code>--round</code> cũng bo <b>pill</b> cho nút chữ. Nút chỉ-icon <b>bắt buộc</b> có <code>aria-label</code>.
+    Chip hover dùng <code>--wb-ink-hover</code> — mực <b>mờ</b>, nên hiện rõ dù nút nằm trên card trắng, trên canvas app
+    hay trên một dòng có tone màu (xám đặc sẽ tàng hình trên canvas).</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="cap-row"><span class="cap-row__label">Vuông</span>
+          <button class="wb-btn wb-btn--ghost wb-btn--icon" aria-label="Sửa"><span class="wb-ico wb-ico--sm">edit</span></button>
+          <button class="wb-btn wb-btn--ghost wb-btn--icon" aria-label="Nhân bản"><span class="wb-ico wb-ico--sm">content_copy</span></button>
+          <button class="wb-btn wb-btn--ghost wb-btn--icon" aria-label="Thêm nữa"><span class="wb-ico wb-ico--sm">more_horiz</span></button>
+          <button class="wb-btn wb-btn--ghost wb-btn--icon" aria-label="Đóng"><span class="wb-ico wb-ico--sm">close</span></button>
+        </div>
+        <div class="cap-row"><span class="cap-row__label">Tròn</span>
+          <button class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--round" aria-label="Sửa"><span class="wb-ico wb-ico--sm">edit</span></button>
+          <button class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--round" aria-label="Nhân bản"><span class="wb-ico wb-ico--sm">content_copy</span></button>
+          <button class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--round" aria-label="Thêm nữa"><span class="wb-ico wb-ico--sm">more_horiz</span></button>
+          <button class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--round" aria-label="Đóng"><span class="wb-ico wb-ico--sm">close</span></button>
+        </div>
+        <div class="cap-row"><span class="cap-row__label">Kích thước</span>
+          <button class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--round wb-btn--sm" aria-label="Sửa"><span class="wb-ico wb-ico--sm">edit</span></button>
+          <button class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--round" aria-label="Sửa"><span class="wb-ico wb-ico--sm">edit</span></button>
+          <button class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--round wb-btn--lg" aria-label="Sửa"><span class="wb-ico">edit</span></button>
+        </div>
+        <div class="cap-row"><span class="cap-row__label">Pill (chữ)</span>
+          <button class="wb-btn wb-btn--round">Theo dõi</button>
+          <button class="wb-btn wb-btn--outline wb-btn--round">Bộ lọc</button>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;!-- ẩn nền, chỉ hiện khi hover · vuông bo góc --&gt;
+&lt;button class="wb-btn wb-btn--ghost wb-btn--icon" aria-label="Sửa"&gt;&lt;span class="wb-ico wb-ico--sm"&gt;edit&lt;/span&gt;&lt;/button&gt;
+
+&lt;!-- thêm --round để tròn xoe --&gt;
+&lt;button class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--round" aria-label="Đóng"&gt;&lt;span class="wb-ico wb-ico--sm"&gt;close&lt;/span&gt;&lt;/button&gt;
+
+&lt;!-- --round cũng bo pill cho nút chữ --&gt;
+&lt;button class="wb-btn wb-btn--round"&gt;Theo dõi&lt;/button&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="wb-block">
     <h4>Nhóm nút (segmented) — <code>wb-btn-group</code></h4>
-    <p class="doc-block__desc">Ghép các nút thành một khối liền mạch cho bộ chọn khoảng thời gian / kiểu lọc. Mục đang chọn thêm
+    <p class="wb-block__desc">Ghép các nút thành một khối liền mạch cho bộ chọn khoảng thời gian / kiểu lọc. Mục đang chọn thêm
     <code>.is-active</code>. Hợp với <code>--outline</code>/<code>--secondary</code>; muốn toggle êm hơn thì cân nhắc <code>.wb-tabs--pill</code>.</p>
     <div class="demo demo--plain">
       <div class="demo__stage">
@@ -85,9 +127,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Đăng nhập mạng xã hội (social login)</h4>
-    <p class="doc-block__desc">Nút đăng nhập với nhà cung cấp: dùng lại <code>wb-btn</code> + logo thương hiệu đặt bên trái, thường để
+    <p class="wb-block__desc">Nút đăng nhập với nhà cung cấp: dùng lại <code>wb-btn</code> + logo thương hiệu đặt bên trái, thường để
     <b>full-width</b> (<code>--block</code>) xếp dọc bằng <code>.wb-stack</code>. Apple theo chuẩn nền tối/chữ trắng (đúng luôn với
     primary trắng-đen mặc định); Google giữ chữ “G” 4 màu trên nền sáng (<code>--secondary</code>).</p>
     <div class="demo demo--plain">
@@ -116,7 +158,7 @@
     </div>
   </div>
 
-  <div class="doc-note">
+  <div class="wb-alert wb-alert--info doc-note">
     <span>💡</span>
     <div>Một <b>primary</b> mỗi màn hình (hành động chính) → <code>wb-btn</code>. Còn lại dùng
     <code>--secondary</code>/<code>--outline</code>/<code>--ghost</code>. Nút chỉ-icon <b>bắt buộc</b> có <code>aria-label</code>.

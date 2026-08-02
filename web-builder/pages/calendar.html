@@ -1,5 +1,5 @@
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Bộ chọn</p>
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Pickers</p>
   <h2>Lịch (calendar)</h2>
   <p>Lưới tháng để chọn <b>một ngày</b> hoặc <b>một khoảng ngày</b> (<code>--range</code>). Ngày được chọn là một chip
   <b>đậm trung tính</b> — dùng tương phản, <i>không</i> dùng màu status; hôm nay là viền trung tính, khoảng ngày là dải xám
@@ -7,16 +7,16 @@
   một lib như <code>react-day-picker</code>.</p>
 </div>
 
-<section class="doc-sec">
-  <div class="doc-note">
+<section class="wb-section">
+  <div class="wb-alert wb-alert--info doc-note">
     <span class="wb-ico">info</span>
     <p>Ngày/hôm nay tô bằng <b>tương phản trung tính</b> (đen–trắng), đúng thang màu §1 — chọn ngày là <i>lựa chọn</i>, không
     phải trạng thái, nên không nhuộm xanh/đỏ. Cần popup gắn với ô nhập thì bọc trong <code>.wb-popover</code> (xem cuối trang).</p>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Chọn một ngày</h4>
-    <p class="doc-block__desc">Bấm một ngày để chọn; mũi tên đổi tháng. Đặt sẵn ngày bằng <code>data-value="dd/mm/yyyy"</code>.</p>
+    <p class="wb-block__desc">Bấm một ngày để chọn; mũi tên đổi tháng. Đặt sẵn ngày bằng <code>data-value="dd/mm/yyyy"</code>.</p>
     <div class="demo">
       <div class="demo__stage">
         <div class="wb-calendar" data-calendar data-value="14/07/2026">
@@ -40,9 +40,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Chọn khoảng ngày — <code>--range</code></h4>
-    <p class="doc-block__desc">Thêm <code>data-range</code>: bấm ngày đầu rồi bấm ngày cuối. Hai đầu là chip đậm, các ngày ở giữa là
+    <p class="wb-block__desc">Thêm <code>data-range</code>: bấm ngày đầu rồi bấm ngày cuối. Hai đầu là chip đậm, các ngày ở giữa là
     dải <b>xám mềm</b> liền mạch. Bấm lại sẽ bắt đầu khoảng mới.</p>
     <div class="demo">
       <div class="demo__stage">
@@ -63,9 +63,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Gõ hoặc chọn (field + popover)</h4>
-    <p class="doc-block__desc">Ô nhập cho phép <b>gõ trực tiếp</b> — tự định dạng <code>dd/mm/yyyy</code> nhờ <code>data-mask="date"</code> — <b>hoặc</b> bấm icon lịch mở
+    <p class="wb-block__desc">Ô nhập cho phép <b>gõ trực tiếp</b> — tự định dạng <code>dd/mm/yyyy</code> nhờ <code>data-mask="date"</code> — <b>hoặc</b> bấm icon lịch mở
     <code>.wb-popover</code> để chọn. Gõ và chọn <b>đồng bộ hai chiều</b>; chọn xong ngày điền vào ô (<code>data-picker-out</code>) và popover đóng lại.</p>
     <div class="demo">
       <div class="demo__stage">

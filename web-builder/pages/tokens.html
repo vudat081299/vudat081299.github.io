@@ -1,17 +1,17 @@
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Nền tảng</p>
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Foundation</p>
   <h2>Design tokens</h2>
   <p>Tất cả màu đến từ CSS variables. Đổi token → đổi toàn hệ. Đây là các token hay dùng nhất
   (xem đủ trong <code>web-builder.css</code>). Bảng dưới đổi theo Light/Dark bạn đang bật.</p>
 </div>
 
-<section class="doc-sec">
+<section class="wb-section">
   <div class="wb-grid wb-grid--auto" data-swatches style="--wb-grid-min:116px;gap:12px"><!-- rendered by app.js --></div>
 </section>
 
-<section class="doc-sec">
+<section class="wb-section">
   <h3>Nhóm token chính</h3>
-  <p class="doc-sec__desc">Tham chiếu các token “semantic” này thay vì thang xám thô, để cả 2 theme luôn đúng.</p>
+  <p class="wb-section__desc">Tham chiếu các token “semantic” này thay vì thang xám thô, để cả 2 theme luôn đúng.</p>
   <div class="demo">
     <div class="demo__code">
       <pre><code>/* Bề mặt &amp; chữ */
@@ -19,6 +19,10 @@
 --wb-surface     /* card, table      */   --wb-fg-muted   /* chữ phụ       */
 --wb-surface-2   /* header, sọc      */   --wb-fg-subtle  /* chữ mờ nhất   */
 --wb-border      /* viền hairline    */   --wb-border-strong
+--wb-surface-hover  /* hover trên bề mặt ĐÃ BIẾT: mục menu, dòng bảng, ô lịch */
+--wb-ink-hover      /* hover của control TRONG SUỐT (ghost, outline, nút ×):
+                       mực MỜ nên đọc được trên card / canvas / alert có tone —
+                       xám đặc sẽ tàng hình vì --wb-surface-2 == --wb-canvas */
 
 /* Thang xám ngữ nghĩa — mặc định cho phần ĐƠN MÀU (divider, track
    progress, icon mờ, vạch chia…). Chọn theo NGHĨA, tự đảo ở dark. */
@@ -37,12 +41,33 @@
 /* Hình khối &amp; đổ bóng */
 --wb-radius-sm | --wb-radius | --wb-radius-lg | --wb-radius-pill
 --wb-shadow-sm (nghỉ) | --wb-shadow-md (nổi)
+--wb-ring   /* vòng focus */   |   --wb-scrim  /* MỘT lớp mờ cho mọi thứ phủ trang:
+                                     modal · drawer · rail mobile của shell */
+
+/* Thang chữ + bề rộng đọc — xem trang Typography */
+--wb-text-display 31 | --wb-text-page 27 | --wb-text-section 19 | --wb-text-title 15
+--wb-text-body 14 | --wb-text-help 13 | --wb-text-caption 12 | --wb-text-label 11
+--wb-measure 68ch | --wb-measure-tight 62ch
+
+/* Khung trang &amp; nhịp dọc — xem trang App shell */
+--wb-shell-h 100dvh | --wb-navbar-h 56 | --wb-sidenav-w 240
+--wb-page-pad-block 36 | --wb-page-pad-end 120 | --wb-section-gap 44 | --wb-block-gap 28
+
+/* Bản dựng — token DUY NHẤT không phải để tạo kiểu. File CSS này thường được
+   COPY vào dự án chứ không cài qua package manager, nên không có package.json
+   để tra; đọc thẳng lúc chạy để biết app đang cầm bản nào (nó là CSS *string* nên
+   trả về kèm dấu nháy — nhớ bỏ đi):
+     getComputedStyle(document.documentElement)
+       .getPropertyValue('--wb-version').replace(/"/g, '')   // → 0.6
+   Số này phải khớp CHANGELOG + header CSS + docs (CHECK 15 chặn commit nếu lệch). */
+--wb-version   /* "0.6" */
 
 /* Font — đổi 1 dòng này là đổi toàn bộ chữ (xem trang Fonts) */
---wb-font</code></pre>
+--wb-font
+--wb-font-mono   /* chữ đều bề rộng — ô ngày/giờ (.wb-input-tpl) canh theo ô ký tự */</code></pre>
     </div>
   </div>
-  <div class="doc-note">
+  <div class="wb-alert wb-alert--info doc-note">
     <span>💡</span>
     <div>Cần một màu mới? Thêm token ở <b>cả</b> <code>:root</code> và <code>.dark</code>, rồi dùng token —
     đừng bao giờ viết mã hex thẳng vào component.</div>

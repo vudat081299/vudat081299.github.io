@@ -1,6 +1,12 @@
 /* =============================================================================
-   Web Builder — component library for personal finance web apps
+   Web Builder v0.6 — a minimalist, zero-build CSS component library for web UIs
    -----------------------------------------------------------------------------
+   • Deepest on money screens (amount tables, balances, budgets, debts, receipts)
+     — that is where the set is strongest, not where it stops. Anything suited to
+     a white-black-grey ladder builds from the same parts: dashboards, lists,
+     forms, settings, auth, landing pages.
+   • Version: also readable at runtime as var(--wb-version) — this file is usually
+     copied, not installed, so there is no package.json to check. See CHANGELOG.md.
    • Self-contained: link this one file, no build step required.
    • Themed entirely through CSS custom properties (design tokens).
    • Light is the default; add class="dark" on <html> (or any ancestor) for dark.
@@ -19,6 +25,16 @@
    1. DESIGN TOKENS
    -------------------------------------------------------------------------- */
 :root {
+  /* Which build of this file an app is holding. A CSS *string*, so it also works in
+     `content:` — which means reading it in JS gives you the quotes back, strip them:
+       getComputedStyle(document.documentElement)
+         .getPropertyValue('--wb-version').replace(/"/g, '')      // → 0.6
+     The one shipped file is normally COPIED into a project, not installed, so there
+     is no package.json to read — without this a consumer cannot tell v0.5 from v0.6
+     while looking at a running app. Cut in step with CHANGELOG.md (CHECK 15 blocks
+     a commit if this, the header above, the docs brand and the footer disagree). */
+  --wb-version: "0.6";
+
   /* Neutral scale — the backbone. Near-black instead of pure #000 reads softer. */
   --wb-white:      #ffffff;
   --wb-gray-50:    #f7f7f8;
@@ -39,6 +55,12 @@
   --wb-surface:      var(--wb-white);     /* cards, tables             */
   --wb-surface-2:    var(--wb-gray-50);   /* header rows, striped rows */
   --wb-surface-hover:var(--wb-gray-100);  /* row hover                 */
+  /* Hover tint for a TRANSPARENT control (ghost button, tag ×). Translucent ink,
+     NOT an opaque grey: --wb-surface-2 equals --wb-canvas, so an opaque hover is
+     literally invisible whenever the control sits on the app canvas — which is
+     exactly where toolbar / row-action / close buttons live. Alpha composites on
+     ANY background (canvas, card, tinted row) and carries its own dark flip. */
+  --wb-ink-hover:    rgba(9, 9, 11, .07);
   --wb-fg:           var(--wb-gray-900);  /* primary text              */
   --wb-fg-muted:     var(--wb-gray-500);  /* secondary text            */
   --wb-fg-subtle:    var(--wb-gray-400);  /* tertiary / placeholder    */
@@ -61,6 +83,10 @@
 
   /* Focus ring — neutral, used by buttons and inputs. */
   --wb-ring: rgba(24, 24, 27, .30);
+
+  /* Scrim — the ONE dim behind anything that covers the page (modal · drawer ·
+     the shell's mobile rail, §52). One value so two overlays never dim differently. */
+  --wb-scrim: rgba(9, 9, 11, .5);
 
   /* Semantic colours — tier 2 (solid) and tier 3 (soft = alpha tint). */
   --wb-success:        #16a34a;
@@ -137,6 +163,34 @@
      overrides below inherit this by default). */
   --wb-bw: 1px;
 
+  /* Type scale — ONE ladder of text sizes, the steps shown on the Typography page.
+     The page scaffold (§52) is built on them, so a screen's headings can never
+     drift into ad-hoc px. Components still carry their own literal size; retrofitting
+     the whole set onto these tokens is a deliberate later sweep, not a silent one. */
+  --wb-text-display: 31px;   /* hero / landing headline */
+  --wb-text-page:    27px;   /* page title */
+  --wb-text-section: 19px;   /* section heading inside a page */
+  --wb-text-title:   15px;   /* card / block title, page lede */
+  --wb-text-body:    14px;   /* body copy */
+  --wb-text-help:    13px;   /* help / description text */
+  --wb-text-caption: 12px;   /* caption */
+  --wb-text-label:   11px;   /* eyebrow / uppercase label */
+
+  /* Measure — how far a line of prose may run before it gets tiring to read.
+     Applies to lede/description text, never to tables or data. */
+  --wb-measure:       68ch;
+  --wb-measure-tight: 62ch;
+
+  /* App shell + page rhythm (§52) — the vertical breathing of a whole screen,
+     as knobs, so it is tuned once globally instead of per page. */
+  --wb-shell-h:    100dvh;   /* shell height; override if the page is zoomed or embedded */
+  --wb-navbar-h:   56px;     /* the top bar — the rail sticks just below it */
+  --wb-sidenav-w:  240px;
+  --wb-page-pad-block: 36px; /* content column: room above the page title… */
+  --wb-page-pad-end:   120px;/* …and tail room so the last block scrolls clear */
+  --wb-section-gap: 44px;    /* between .wb-section blocks */
+  --wb-block-gap:   28px;    /* between .wb-block sub-blocks */
+
   /* Per-component radii — default to the global scale; override to taste. */
   --wb-btn-radius:   var(--wb-radius-sm);
   --wb-card-radius:  var(--wb-radius-lg);
@@ -160,6 +214,7 @@
   --wb-surface:      #131316;
   --wb-surface-2:    #1a1a1e;
   --wb-surface-hover:#212127;
+  --wb-ink-hover:    rgba(255, 255, 255, .12);
   --wb-fg:           var(--wb-gray-50);
   --wb-fg-muted:     var(--wb-gray-400);
   --wb-fg-subtle:    var(--wb-gray-500);
@@ -451,8 +506,7 @@
   background: transparent; color: inherit; opacity: .6;
 }
 .wb-tag__x::before { content: "\e5cd"; font-size: 14px; }   /* close */
-.wb-tag__x:hover { opacity: 1; background: rgba(0, 0, 0, .08); }
-.dark .wb-tag__x:hover { background: rgba(255, 255, 255, .14); }
+.wb-tag__x:hover { opacity: 1; background: var(--wb-ink-hover); }
 
 /* A tidy wrapper when several tags sit together (transaction row, filter bar). */
 .wb-tags { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; }
@@ -586,7 +640,7 @@
    (white-black-grey first: the primary action isn't a brand colour).
    FILL:  (default solid neutral) · --secondary · --outline · --ghost
    TONE:  --danger · --success   (only for meaningful actions: delete, confirm pay)
-   SIZE:  (default) · --sm · --lg     SHAPE: --icon (square) · --block (full width)
+   SIZE:  (default) · --sm · --lg   SHAPE: --icon (square) · --round (pill / circle when +--icon) · --block (full width)
    STATE: :disabled / .is-disabled · .is-loading (add a <span class="wb-spinner">)
    -------------------------------------------------------------------------- */
 .wb-btn {
@@ -617,13 +671,15 @@
 .dark .wb-btn--secondary { background: var(--wb-surface-2); }
 .dark .wb-btn--secondary:hover { background: var(--wb-surface-hover); }
 
+/* Transparent variants hover to --wb-ink-hover (translucent), never to an opaque
+   surface: --wb-surface-2 IS --wb-canvas, so an opaque hover vanishes the moment
+   the button sits on the app canvas instead of inside a white card. The alpha
+   token also flips itself in dark, so neither needs a .dark override. */
 .wb-btn--outline { background: transparent; color: var(--wb-fg); border-color: var(--wb-border-strong); }
-.wb-btn--outline:hover { background: var(--wb-surface-2); }
-.dark .wb-btn--outline:hover { background: var(--wb-surface-hover); }
+.wb-btn--outline:hover { background: var(--wb-ink-hover); }
 
 .wb-btn--ghost { background: transparent; color: var(--wb-fg-muted); }
-.wb-btn--ghost:hover { background: var(--wb-surface-2); color: var(--wb-fg); }
-.dark .wb-btn--ghost:hover { background: var(--wb-surface-hover); }
+.wb-btn--ghost:hover { background: var(--wb-ink-hover); color: var(--wb-fg); }
 
 .wb-btn--danger  { background: var(--wb-danger);  color: var(--wb-danger-fg);  }
 .wb-btn--success { background: var(--wb-success); color: var(--wb-success-fg); }
@@ -638,6 +694,11 @@
 .wb-btn--icon { padding: 9px; }
 .wb-btn--icon.wb-btn--sm { padding: 6px; }
 .wb-btn--icon.wb-btn--lg { padding: 12px; }
+/* Round shape: pill for a text button, a perfect CIRCLE for an --icon button (its box
+   is already square). Placed after --sm/--lg so it wins the border-radius. Pair with
+   --ghost + --icon for the classic "reveal a background chip only on hover" icon button
+   (toolbar / row-action / close), square by default → circle with --round. */
+.wb-btn--round { border-radius: var(--wb-radius-pill); }
 .wb-btn--block { width: 100%; }
 
 .wb-btn:disabled, .wb-btn.is-disabled { opacity: .5; cursor: not-allowed; pointer-events: none; }
@@ -814,10 +875,10 @@
 .wb-input-group--seamless > .wb-input:focus { box-shadow: none; }   /* group shows focus, not the inner input */
 .wb-input-group--seamless.is-invalid { border-color: var(--wb-danger); }
 
-/* Templated field — the separators are REAL inked characters ("dd / mm / yyyy"),
+/* Templated field — the separators are REAL inked characters ("dd/mm/yyyy"),
    each segment its own tiny input so the unfilled parts show a GREY placeholder
-   while the " / " · " : " · " – " stay inked (with spaces around them). Looks like
-   one .wb-input; a tiny driver (app.js) auto-advances segment→segment as each fills. */
+   while the "/" · ":" · "–" stay inked, tight against the segments (no spaces). Looks
+   like one .wb-input; a tiny driver (app.js) auto-advances segment→segment as each fills. */
 .wb-input-tpl {
   display: inline-flex; align-items: center; width: auto; max-width: 100%;
   font-family: var(--wb-font-mono); font-size: 14px; color: var(--wb-fg);
@@ -831,12 +892,16 @@
 .wb-input-tpl.is-invalid { border-color: var(--wb-danger); }
 .wb-input-tpl__seg {
   border: 0; background: transparent; padding: 1px 1px; margin: 0; font: inherit; color: var(--wb-fg);
-  text-align: center; outline: none; -webkit-appearance: none; appearance: none; width: 2.6ch;
+  text-align: left; outline: none; -webkit-appearance: none; appearance: none; width: 2.2ch;
 }
-.wb-input-tpl__seg--y { width: 4.6ch; }   /* yyyy */
+.wb-input-tpl__seg--y { width: 4.2ch; }   /* yyyy */
 .wb-input-tpl__seg::placeholder { color: var(--wb-fg-subtle); }
 .wb-input-tpl__seg:focus { background: var(--wb-surface-hover); border-radius: 4px; }
-.wb-input-tpl__sep { color: var(--wb-fg); padding: 0 5px; user-select: none; }   /* inked separator + spaces */
+.wb-input-tpl__sep { color: var(--wb-fg); padding: 0; user-select: none; }   /* inked separator, tight (no spaces) */
+/* --gap: breathing room on both sides — for a separator BETWEEN two clusters (the "–"
+   in a date-range dd/mm/yyyy – dd/mm/yyyy), where a real space each side reads better
+   than the tight within-date "/" · ":". */
+.wb-input-tpl__sep--gap { padding-inline: 0.55ch; }
 
 /* -----------------------------------------------------------------------------
    FORMAT TOOLBAR  (rich-text / markdown format bar for a textarea)
@@ -879,27 +944,29 @@
    (--wb-check-bw, so the box can be bolder) and the corner follows the radius tokens,
    so both track the Config panel. Checked = solid ink, which auto-flips on dark. */
 .wb-check, .wb-radio { display: inline-flex; align-items: center; gap: 9px; font-size: 14px; color: var(--wb-fg); cursor: pointer; }
-.wb-check input, .wb-radio input {
+/* .wb-tree__check rides these same rules so a tree checkbox is the ONE unified control
+   size (--wb-check-size), not a tiny native box — see §Tree. */
+.wb-check input, .wb-radio input, .wb-tree__check {
   appearance: none; -webkit-appearance: none; box-sizing: border-box; flex: none; margin: 0; cursor: pointer;
   width: var(--wb-check-size); height: var(--wb-check-size);
   border: var(--wb-check-bw) solid var(--wb-fg); background: var(--wb-surface);
   background-repeat: no-repeat; background-position: center;
   transition: background-color .12s ease, border-color .12s ease, box-shadow .12s ease;
 }
-.wb-check input { border-radius: var(--wb-check-radius); }
+.wb-check input, .wb-tree__check { border-radius: var(--wb-check-radius); }
 .wb-radio input { border-radius: 50%; }
-.wb-check input:checked, .wb-radio input:checked { background-color: var(--wb-fg); border-color: var(--wb-fg); }
-.wb-check input:checked {
+.wb-check input:checked, .wb-radio input:checked, .wb-tree__check:checked { background-color: var(--wb-fg); border-color: var(--wb-fg); }
+.wb-check input:checked, .wb-tree__check:checked {
   /* Tick traces the Material "check" glyph (same shape stepper/steps use), so a
      ticked box and a done step read as one checkmark. */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19.5 6.5'/%3E%3C/svg%3E");
   background-size: 76% 76%;
 }
 .wb-radio input:checked { background-image: radial-gradient(circle at center, var(--wb-surface) 0 30%, transparent 34%); }
-.wb-check input:focus-visible, .wb-radio input:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
-.wb-check input:disabled, .wb-radio input:disabled { opacity: .45; cursor: not-allowed; }
+.wb-check input:focus-visible, .wb-radio input:focus-visible, .wb-tree__check:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
+.wb-check input:disabled, .wb-radio input:disabled, .wb-tree__check:disabled { opacity: .45; cursor: not-allowed; }
 /* Dark: box turns white, so the tick flips to dark ink (SVG colour is baked in). */
-.dark .wb-check input:checked {
+.dark .wb-check input:checked, .dark .wb-tree__check:checked {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2318181b' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19.5 6.5'/%3E%3C/svg%3E");
 }
 
@@ -1012,7 +1079,9 @@
   cursor: pointer; font-size: 0; line-height: 1;
 }
 .wb-close::before { content: "\e5cd"; font-size: 19px; }   /* close */
-.wb-close:hover { background: var(--wb-surface-hover); color: var(--wb-fg); }
+/* Ink tint, not an opaque grey: a × lives on a card header AND on a tinted alert
+   (--wb-*-soft), where an opaque hover would punch a grey hole in the colour. */
+.wb-close:hover { background: var(--wb-ink-hover); color: var(--wb-fg); }
 
 /* -----------------------------------------------------------------------------
    7. CARD
@@ -1020,7 +1089,8 @@
    .wb-card is the surface (border + radius + soft shadow). It already wraps
    tables; these parts make it a general content card. Compose head/body/foot.
      VARIANTS: --dashed (dashed hairline, no shadow) · --flat (no shadow) ·
-               --hover (lifts on hover — for clickable cards)
+               --hover (lifts on hover — for clickable cards) ·
+               --pad (padding on the card itself, for content with no head/body/foot)
    -------------------------------------------------------------------------- */
 .wb-card__head {
   display: flex; align-items: flex-start; gap: 12px;
@@ -1035,6 +1105,9 @@
   padding: 14px 18px; border-top: var(--wb-bw) solid var(--wb-border); background: var(--wb-surface-2);
 }
 .wb-card--flat   { box-shadow: none; }
+/* One-part card: content sits straight in the card, so the padding lives on the card
+   instead of a __body wrapper. Use for link groups, callout tiles, small summaries. */
+.wb-card--pad    { padding: 18px; }
 .wb-card--dashed { border-style: dashed; border-color: var(--wb-border-strong); box-shadow: none; }
 .wb-card--hover  { transition: border-color .13s ease, box-shadow .13s ease, transform .06s ease; cursor: pointer; }
 .wb-card--hover:hover { border-color: var(--wb-border-strong); box-shadow: var(--wb-shadow-md); transform: translateY(-1px); }
@@ -1131,7 +1204,7 @@
 .wb-overlay {
   position: fixed; inset: 0; z-index: 100; display: none;
   align-items: center; justify-content: center; padding: 20px;
-  background: rgba(9, 9, 11, .5); backdrop-filter: blur(2px);
+  background: var(--wb-scrim); backdrop-filter: blur(2px);
 }
 .wb-overlay.is-open { display: flex; }
 /* Backdrop options. Default = modal: dims + light blur, blocks the page, click-
@@ -1338,13 +1411,16 @@
 .wb-accordion__item { border-bottom: var(--wb-bw) solid var(--wb-border); }
 .wb-accordion__item:last-child { border-bottom: 0; }
 .wb-accordion__item > summary {
-  list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px;
-  padding: 14px 16px; font-size: 14px; font-weight: 600; color: var(--wb-fg);
+  list-style: none; cursor: pointer; position: relative; line-height: 1.4;
+  padding: 14px 44px 14px 16px; font-size: 14px; font-weight: 600; color: var(--wb-fg);
 }
 .wb-accordion__item > summary::-webkit-details-marker { display: none; }
-/* A real chevron icon. Points down when closed, rotates up when open. */
+/* A real chevron icon, pinned top-right so a long / multi-element title (inline
+   <code>/<b>) flows as normal wrapping text — NOT flex, which would make every
+   inline child its own item and shrink each to min-content (the "· jumps to the
+   next line" bug). Points down when closed, rotates up when open. */
 .wb-accordion__item > summary::after {
-  content: "\e5cf"; margin-left: auto; flex: none; color: var(--wb-fg-muted);
+  content: "\e5cf"; position: absolute; right: 14px; top: 11px; color: var(--wb-fg-muted);
   font-size: 22px; transition: transform .18s ease;
 }
 .wb-accordion__item[open] > summary::after { transform: rotate(180deg); }
@@ -1472,20 +1548,20 @@
 .wb-tree__ico   { flex: none; font-size: 14px; line-height: 1; }
 .wb-tree__label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .wb-tree__meta  { margin-left: auto; color: var(--wb-fg-muted); font-size: 12.5px; font-variant-numeric: tabular-nums; }
-.wb-tree__check { margin: 0 2px 0 0; accent-color: var(--wb-gray-900); }
-.dark .wb-tree__check { accent-color: var(--wb-gray-100); }
+.wb-tree__check { margin: 0 2px 0 0; }   /* box style + size come from the unified checkbox rules (§10) */
 
 /* Row actions (add / edit / …). Two modes:
      • default        reveal on hover or keyboard focus (keeps the tree calm)
      • --actions-shown always visible (touch, or a management screen where
                        add/edit is the primary job) — put it on .wb-tree. */
-.wb-tree__actions { display: inline-flex; gap: 2px; opacity: 0; transition: opacity .12s ease; }
+/* Hidden with display:none (not opacity) so the actions take NO space when absent — the
+   __meta/label then flows to the far right, and only shifts left when the button appears. */
+.wb-tree__actions { display: none; gap: 2px; margin-left: auto; }
 .wb-tree__row:hover .wb-tree__actions,
 .wb-tree__row:focus-within .wb-tree__actions,
-.wb-tree--actions-shown .wb-tree__actions { opacity: 1; }
-/* when __meta is present it already pushed right; actions sit after it. If no __meta,
-   push actions right: */
-.wb-tree__row > .wb-tree__actions:not(:last-child) { margin-left: auto; }
+.wb-tree--actions-shown .wb-tree__actions { display: inline-flex; }
+/* If a __meta already pushed itself right, the actions sit snug after it (no double auto). */
+.wb-tree__meta ~ .wb-tree__actions { margin-left: 0; }
 
 /* --- VARIANT: chevron on the RIGHT (toggle sits at the end of the row) ------
    Expanded points up, collapsed points down — a "disclosure on the right" look. */
@@ -1875,9 +1951,12 @@
 .wb-range-ticks__marks { margin-top: -1px; }
 .wb-range-ticks__marks > span { width: var(--wb-bw); height: 7px; background: var(--wb-neutral); border-radius: var(--wb-bw); }
 .wb-range-ticks__labels { margin-top: 5px; font-size: 11px; color: var(--wb-fg-muted); font-variant-numeric: tabular-nums; }
-/* Each label is a zero-width anchor sitting on its mark, its text grid-centred on that
-   point — so every label reads centred under its tick (not spread edge-to-edge). */
-.wb-range-ticks__labels > span { display: grid; justify-items: center; width: 0; white-space: nowrap; }
+/* Each label is a zero-width anchor sitting on its mark; how its text lands on that point
+   is a knob. Default = centred on the tick. `--labels-left`  = text sits to the LEFT of
+   the tick (right-aligned to it); `--labels-right` = text sits to the RIGHT (left-aligned). */
+.wb-range-ticks__labels > span { display: flex; justify-content: center; width: 0; white-space: nowrap; }
+.wb-range-ticks--labels-left  .wb-range-ticks__labels > span { justify-content: flex-end; }
+.wb-range-ticks--labels-right .wb-range-ticks__labels > span { justify-content: flex-start; }
 
 /* Dual-handle — pick a MIN + MAX band (the standard price / amount filter). Two native
    range inputs are stacked so each thumb keeps native keyboard support; the coloured fill
@@ -2106,7 +2185,11 @@
 .wb-stack--start  { align-items: flex-start; }   /* left  */
 .wb-stack--center { align-items: center; }        /* horizontally centered */
 .wb-stack--end    { align-items: flex-end; }      /* right */
-.wb-container { width: 100%; max-width: var(--wb-container-max, 1120px); margin-inline: auto; padding-inline: 20px; }
+/* box-sizing is load-bearing, not tidiness: without it `width:100%` + the inline
+   padding makes the container 40px WIDER than its parent, so any column narrower
+   than --wb-container-max (a shell's main next to a 240px rail) overflows
+   horizontally. The docs never saw it — they cap the max below the column. */
+.wb-container { width: 100%; box-sizing: border-box; max-width: var(--wb-container-max, 1120px); margin-inline: auto; padding-inline: 20px; }
 .wb-container--narrow { --wb-container-max: 720px; }
 .wb-container--wide   { --wb-container-max: 1320px; }
 .wb-ratio { position: relative; width: 100%; }
@@ -2293,11 +2376,14 @@
    -----------------------------------------------------------------------------
    A horizontal bar for the top of an app shell. Compose the middle links from
    the NAV primitive (§38): <nav class="wb-nav"> inside .wb-navbar__nav.
-   --sticky pins it; behaviour (mobile menu toggle) is the app's job.
+   --sticky pins it, --glass makes it translucent over scrolling content;
+   behaviour (mobile menu toggle) is the app's job.
    -------------------------------------------------------------------------- */
 .wb-navbar {
   display: flex; align-items: center; gap: 16px;
-  height: 56px; padding: 0 18px;
+  /* min-height (not height): the bar grows if a taller control lands in it, and
+     the shell rail reads the same token for its sticky offset (§52). */
+  min-height: var(--wb-navbar-h); box-sizing: border-box; padding: 0 18px;
   background: var(--wb-surface);
   border-bottom: var(--wb-bw) solid var(--wb-border);
   font-family: var(--wb-font);
@@ -2305,22 +2391,51 @@
   container-type: inline-size;   /* collapse by OWN width, not the viewport */
 }
 .wb-navbar--sticky { position: sticky; top: 0; z-index: 30; }
+/* Translucent bar — content scrolls UNDER it and stays faintly readable, instead of
+   hitting an opaque band. Pair with --sticky; on a static bar it has nothing to reveal. */
+.wb-navbar--glass {
+  background: color-mix(in srgb, var(--wb-canvas) 82%, transparent);
+  backdrop-filter: saturate(1.1) blur(8px);
+}
 /* Hamburger toggle — hidden until the bar is too narrow for inline links. */
 .wb-navbar__toggle { display: none; }
 /* When the bar itself gets narrow: hide the inline links, show the hamburger, and
    turn the nav into a dropdown panel under the bar (toggle .is-open on it). This is
-   the standard app-bar collapse — no overlap, links tuck into a menu. */
+   the standard app-bar collapse — no overlap, links tuck into a menu.
+   -----------------------------------------------------------------------------
+   TWO thresholds, because how much room a bar needs depends on what it carries:
+     default (640)  — an APP bar: brand + a couple of links + icon actions.
+     --collapse-lg  — a PUBLIC bar: brand + a full link menu + one or two text CTA
+                      buttons. That needs ~840px, so at 640 it has already wrapped
+                      to two rows — a broken state this collapse exists to prevent.
+   900 is deliberately the same width the shell rail folds at (§52), so a page
+   makes ONE layout shift, not two. A container query can't read a custom property,
+   so this is a modifier rather than a token. */
+@container (max-width: 900px) {
+  /* The panel look, written ONCE for both thresholds: it is only reachable while
+     the ☰ is visible, i.e. when one of the two rules below has collapsed the bar.
+     A COMPACT dropdown pinned under the ☰ (top-left), sized to its own content —
+     not a full-width sheet. `.wb-navbar .` raises specificity above `.wb-nav`
+     (align-items:center) so the links stretch + left-align like a normal menu. */
+  .wb-navbar .wb-navbar__menu.is-open {
+    position: absolute; top: calc(100% + 4px); left: 14px; right: auto; z-index: 40;
+    flex-direction: column; align-items: stretch; flex-wrap: nowrap; gap: 2px; padding: 6px;
+    min-width: 176px; width: max-content; max-width: calc(100% - 28px);
+    background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border);
+    border-radius: var(--wb-radius); box-shadow: var(--wb-shadow-md);
+  }
+  .wb-navbar__menu.is-open .wb-nav__link { justify-content: flex-start; padding: 8px 12px; border-radius: var(--wb-radius-sm); }
+  .wb-navbar__menu.is-open .wb-nav__link.is-active { background: var(--wb-surface-hover); }
+  /* A __spacer nested in the menu (what pushes a CTA right while the bar is wide)
+     has no job in a stacked panel — drop it so it doesn't leave a stray gap row. */
+  .wb-navbar__menu.is-open > .wb-navbar__spacer { display: none; }
+  /* …and the lg threshold itself. */
+  .wb-navbar--collapse-lg > .wb-navbar__toggle { display: inline-flex; order: -1; }
+  .wb-navbar--collapse-lg > .wb-navbar__menu:not(.is-open) { display: none; }
+}
 @container (max-width: 640px) {
   .wb-navbar__toggle { display: inline-flex; order: -1; }   /* leads the row */
-  .wb-navbar__menu {
-    position: absolute; top: calc(100% + var(--wb-bw)); left: 0; right: 0; z-index: 40;
-    flex-direction: column; align-items: stretch; gap: 2px; padding: 8px;
-    background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border); border-top: 0;
-    border-radius: 0 0 var(--wb-radius) var(--wb-radius); box-shadow: var(--wb-shadow-md);
-  }
   .wb-navbar__menu:not(.is-open) { display: none; }
-  .wb-navbar__menu .wb-nav__link { padding: 9px 10px; border-radius: var(--wb-radius-sm); }
-  .wb-navbar__menu .wb-nav__link.is-active { background: var(--wb-surface-hover); }
 }
 .wb-navbar__brand {
   display: inline-flex; align-items: center; gap: 9px; flex: none;
@@ -2334,6 +2449,24 @@
 }
 .dark .wb-navbar__mark { background: var(--wb-gray-100); color: var(--wb-gray-900); }
 .wb-navbar__spacer { margin-left: auto; }
+/* The link menu eats the free width. Two reasons, and the second is the load-bearing one:
+   1. it changes nothing for a bar without a CTA — links stay left-aligned, __actions stays
+      hard right, the outer __spacer simply has no free space left to claim;
+   2. it lets a text CTA live at the END of __menu (after a nested __spacer, which now has
+      room to push) instead of in __actions — and __menu is the slot that COLLAPSES.
+   That distinction is the whole contract below: __actions never collapses, so anything
+   in it must fit at 360px, i.e. icon buttons. A text CTA there overflows the page.
+   min-width: 0 so long link text shrinks the menu instead of the bar. */
+.wb-navbar__menu { flex: 1 1 auto; min-width: 0; }
+/* --------------------------------------------------------------------------
+   __actions is the slot that stays VISIBLE at every width — it is never
+   collapsed by the container queries above, because the things that belong in
+   it (theme toggle, search, notifications, avatar) must stay reachable on a
+   phone. That makes it ICON-ONLY by contract: `flex: none` plus a text button
+   is how a bar pushes the whole page sideways (the shipped landing template
+   did exactly that — 116px of horizontal scroll at 390px).
+   Text buttons — Đăng nhập / Dùng thử / any CTA — go at the end of __menu.
+   -------------------------------------------------------------------------- */
 .wb-navbar__actions { display: flex; align-items: center; gap: 8px; flex: none; }
 
 /* Theme (sáng/tối) toggle — an icon button that shows the glyph for the mode you'd switch TO.
@@ -2380,11 +2513,13 @@
    -----------------------------------------------------------------------------
    A left navigation column for an app shell: sections + icon links + count
    badges. Icons are .wb-ico; active is a plain highlight (matches §38 / the
-   docs tree). Give it a height + let it scroll with §27 .wb-scroll if long.
+   docs tree). Standalone it needs a height + §27 .wb-scroll if long; inside an
+   app shell drop it in the .wb-shell__side slot (§52), which already sticks,
+   scrolls and folds to an off-canvas drawer on narrow screens.
    -------------------------------------------------------------------------- */
 .wb-sidenav {
   display: flex; flex-direction: column; gap: 1px;
-  width: 240px; padding: 12px 10px;
+  width: var(--wb-sidenav-w); padding: 12px 10px;
   background: var(--wb-surface);
   border-right: var(--wb-bw) solid var(--wb-border);
   font-family: var(--wb-font);
@@ -2458,7 +2593,7 @@
   background: none; color: var(--wb-fg-subtle); cursor: pointer;
 }
 .wb-filter-token__x::before { content: "\e5cd"; font-size: 14px; line-height: 1; }   /* Material "close" — one × across the whole system */
-.wb-filter-token__x:hover { background: var(--wb-surface-hover); color: var(--wb-fg); }
+.wb-filter-token__x:hover { background: var(--wb-ink-hover); color: var(--wb-fg); }   /* ink: the token itself may be tinted */
 
 /* Soft status tones — use ONLY when the token stands for a status filter. */
 .wb-filter-token--success { --wb-ft-c: var(--wb-success-text); border-color: var(--wb-success); background: var(--wb-success-soft); }
@@ -2577,7 +2712,7 @@
    Per-item state classes drive a live flow:
      .is-todo    → upcoming (muted outline marker)
      .is-active  → current  (filled + neutral ring)
-     default / .is-done → filled  (put <span class="wb-ico">check</span> in a done marker)
+     .is-done    → finished (filled — also the default look; put <span class="wb-ico">check</span> inside)
    .wb-steps__note is a dashed annotation pill hung under a step (e.g. a loop-back).
    Marker size is one knob: --wb-steps-size.
    -------------------------------------------------------------------------- */
@@ -2614,6 +2749,15 @@
   border: var(--wb-bw) dashed var(--wb-border-strong);
   border-radius: var(--wb-radius-pill); padding: 3px 11px;
 }
+/* State: done — the marker's default look, named explicitly. The triad the docs and
+   the catalog promise (.is-done / .is-active / .is-todo) must ALL be real classes:
+   leaning on "the default happens to look done" makes `is-done` read as an invented
+   class in any markup audit (it did), and it breaks silently the day the default
+   marker changes. Same declarations as the base marker, on purpose. */
+.wb-steps__item.is-done .wb-steps__marker {
+  background: var(--wb-gray-900); color: var(--wb-white); border-color: transparent;
+}
+.dark .wb-steps__item.is-done .wb-steps__marker { background: var(--wb-gray-100); color: var(--wb-gray-900); }
 /* State: upcoming — a muted outline marker. */
 .wb-steps__item.is-todo .wb-steps__marker {
   background: transparent; color: var(--wb-fg-subtle); border-color: var(--wb-border-strong);
@@ -2643,9 +2787,18 @@
   flex: 1 1 0; flex-direction: column; align-items: center; text-align: center;
   gap: 8px; padding: 0;
 }
+/* The rail spans the GAP between two markers, not centre-to-centre. Centre-to-centre
+   (left:50%; width:100%) only looked right because the default marker is opaque and
+   sits on z-index 1 — it hid the half-line crossing it. Every state that deliberately
+   drops that fill (.is-todo, --dashed, --dot + .is-todo, and all of them in dark) tore
+   the mask off and the line ran straight through the circle. Geometry, not a mask:
+   items are `flex: 1 1 0` with the marker centred, so centre-to-centre is exactly one
+   item width — inset both ends by the marker's radius and the rail lands in the gap. */
 .wb-steps--horizontal .wb-steps__item::before {
-  left: 50%; top: calc(var(--wb-steps-size) / 2); right: auto; bottom: auto;
-  width: 100%; height: var(--wb-bw); transform: translateY(-50%);
+  left: calc(50% + var(--wb-steps-size) / 2); top: calc(var(--wb-steps-size) / 2);
+  right: auto; bottom: auto;
+  width: calc(100% - var(--wb-steps-size)); height: var(--wb-bw);
+  transform: translateY(-50%);
 }
 .wb-steps--horizontal .wb-steps__content { padding-top: 0; }
 
@@ -2812,8 +2965,11 @@
   border: 1.5px dashed transparent; border-radius: var(--wb-radius-sm);
 }
 .wb-slotgrid__cell:not(:has(*)) { border-color: var(--wb-border-strong); background: var(--wb-surface-2); }
-.wb-slotgrid__cell.is-over { border-color: var(--wb-fg-subtle); background: var(--wb-surface-2); }
-.wb-slotgrid__cell.is-over .wb-slotgrid__item { outline: 2px dashed var(--wb-fg-subtle); outline-offset: 2px; }  /* swap hint */
+/* Drag-over. EMPTY cell → just darken its own dashed slot (one line, stronger). FILLED cell
+   (a swap target) → restyle the card's OWN border to dashed+strong rather than stacking a
+   second outline on top of it — so you never see two frames at once. */
+.wb-slotgrid__cell.is-over:not(:has(*)) { border-color: var(--wb-fg-subtle); background: var(--wb-surface-2); }
+.wb-slotgrid__cell.is-over .wb-slotgrid__item { border-color: var(--wb-fg-subtle); border-style: dashed; }
 /* The draggable card fills its slot. */
 .wb-slotgrid__item {
   flex: 1 1 auto; min-width: 0;
@@ -2824,3 +2980,288 @@
 }
 .wb-slotgrid__item:active { cursor: grabbing; }
 .wb-slotgrid__item.is-dragging { opacity: .4; }
+
+/* -----------------------------------------------------------------------------
+   49. KEYCAP  (.wb-kbd — a small keyboard-key chip for shortcut hints)
+   -----------------------------------------------------------------------------
+   A monospace keycap with a slightly heavier bottom edge (the "3-D key" cue).
+   Use inline in menus, tooltips, the pager — anywhere you show a shortcut.
+   -------------------------------------------------------------------------- */
+.wb-kbd {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 20px; height: 20px; padding: 0 5px;
+  font-family: var(--wb-font-mono); font-size: 11px; font-weight: 600; line-height: 1;
+  color: var(--wb-fg-muted); background: var(--wb-surface-2);
+  border: var(--wb-bw) solid var(--wb-border); border-bottom-width: 2px;
+  border-radius: 5px;
+}
+
+/* -----------------------------------------------------------------------------
+   50. PAGER  (.wb-pager — prev / next page navigation for the FOOT of a page)
+   -----------------------------------------------------------------------------
+   Two cards: previous on the left, next on the right (each shows a direction
+   label + the target page's title). Add `data-pager` and the app.js driver binds
+   [ ] (and ← →) to the __link--prev / --next hrefs — only when not typing in a
+   field. Collapses to one column when the pager itself gets narrow.
+   -------------------------------------------------------------------------- */
+.wb-pager {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  margin-top: 44px; padding-top: 22px; border-top: var(--wb-bw) solid var(--wb-border);
+  font-family: var(--wb-font); container-type: inline-size;
+}
+.wb-pager__link {
+  display: flex; align-items: center; justify-content: space-between; gap: 14px; min-width: 0;
+  padding: 14px 16px; text-decoration: none; color: var(--wb-fg);
+  background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border);
+  border-radius: var(--wb-radius);
+  transition: border-color .13s ease, background .13s ease, box-shadow .13s ease;
+}
+.wb-pager__link--prev { grid-column: 1; }
+.wb-pager__link--next { grid-column: 2; }
+.wb-pager__link:hover { border-color: var(--wb-border-strong); background: var(--wb-surface-hover); box-shadow: var(--wb-shadow-sm); }
+.wb-pager__link:focus-visible { outline: none; border-color: var(--wb-border-strong); box-shadow: 0 0 0 3px var(--wb-ring); }
+/* A plain chevron at the OUTER edge of the card (prev → far left, next → far right) —
+   no box, no border; space-between pushes the text to the centre-facing edge so the
+   card still reads full end-to-end instead of leaving one big empty gap. */
+.wb-pager__arrow {
+  flex: none; color: var(--wb-fg-subtle); font-size: var(--wb-ico-lg);
+  transition: color .13s ease;
+}
+.wb-pager__link:hover .wb-pager__arrow { color: var(--wb-fg); }
+.wb-pager__text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.wb-pager__link--prev .wb-pager__text { align-items: flex-end; text-align: right; }
+.wb-pager__dir { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; color: var(--wb-fg-muted); }
+.wb-pager__title { font-weight: 600; font-size: 15px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wb-pager__meta { font-size: 12px; color: var(--wb-fg-subtle); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@container (max-width: 460px) {
+  .wb-pager { grid-template-columns: 1fr; }
+  .wb-pager__link--prev, .wb-pager__link--next { grid-column: 1; }
+}
+
+/* -----------------------------------------------------------------------------
+   51. FOOTER  (.wb-footer — the site footer: brand + link columns + bottom bar)
+   -----------------------------------------------------------------------------
+   A full-width band (border-top hairline, surface fill); `__inner` centres the
+   content. Links are muted → ink on hover (tier-1). `--slim` drops the columns
+   for a one-line footer. No brand colour — house greyscale.
+   -------------------------------------------------------------------------- */
+.wb-footer {
+  border-top: var(--wb-bw) solid var(--wb-border);
+  background: var(--wb-surface); color: var(--wb-fg);
+  font-family: var(--wb-font); font-size: 14px;
+}
+.wb-footer__inner { max-width: 1080px; margin: 0 auto; padding: 40px 24px 26px; }
+.wb-footer__top { display: flex; flex-wrap: wrap; gap: 30px 56px; justify-content: space-between; }
+.wb-footer__brand { display: flex; align-items: flex-start; gap: 12px; max-width: 320px; }
+.wb-footer__mark {
+  width: 30px; height: 30px; border-radius: var(--wb-radius-sm); flex: none;
+  display: grid; place-items: center; font-size: 15px; font-weight: 700;
+  background: var(--wb-gray-900); color: var(--wb-white);
+}
+.dark .wb-footer__mark { background: var(--wb-gray-100); color: var(--wb-gray-900); }
+.wb-footer__name { font-weight: 700; font-size: 15px; letter-spacing: -.01em; }
+.wb-footer__tagline { color: var(--wb-fg-muted); font-size: 13px; margin: 4px 0 0; line-height: 1.5; }
+.wb-footer__cols { display: flex; flex-wrap: wrap; gap: 26px 52px; }
+.wb-footer__col { display: flex; flex-direction: column; gap: 9px; min-width: 118px; }
+.wb-footer__title {
+  font-size: 12px; font-weight: 650; letter-spacing: .04em; text-transform: uppercase;
+  color: var(--wb-fg-muted); margin: 0 0 3px;
+}
+.wb-footer__link { color: var(--wb-fg-muted); text-decoration: none; font-size: 13.5px; transition: color .12s ease; }
+.wb-footer__link:hover { color: var(--wb-fg); }
+.wb-footer__bottom {
+  display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between;
+  margin-top: 30px; padding-top: 18px; border-top: var(--wb-bw) solid var(--wb-border);
+}
+.wb-footer__copy { color: var(--wb-fg-subtle); font-size: 12.5px; }
+.wb-footer__social { display: flex; align-items: center; gap: 2px; }
+.wb-footer--slim .wb-footer__inner { padding: 18px 24px; }
+.wb-footer--slim .wb-footer__bottom { margin-top: 0; padding-top: 0; border-top: 0; }
+
+/* -----------------------------------------------------------------------------
+   52. APP SHELL & PAGE SCAFFOLD  (the frame of a screen + the rhythm inside it)
+   -----------------------------------------------------------------------------
+   The layer ABOVE components. Components answer "what goes here"; this answers
+   "where does it go, and how far apart". Without it every new screen re-derives
+   its own frame and spacing by hand, which is where a build stops looking like
+   the rest of the system. Composes with §34 container, §37 navbar, §39 sidenav,
+   §51 footer — this section only adds the slots and the vertical rhythm.
+
+     <div class="wb-shell">
+       <header class="wb-navbar wb-navbar--sticky wb-navbar--glass"> … </header>
+       <div class="wb-shell__body">
+         <aside class="wb-shell__side"> … .wb-sidenav__link children … </aside>
+         <div class="wb-shell__main">
+           <main class="wb-container wb-container--pad">
+             <div class="wb-page-head"><p class="wb-eyebrow">…</p><h1>…</h1><p>…</p></div>
+             <section class="wb-section"> <h2>…</h2> <p>…</p>
+               <div class="wb-block"> <h3>…</h3> <p>…</p> … </div>
+             </section>
+           </main>
+           <footer class="wb-footer"> … </footer>
+         </div>
+       </div>
+     </div>
+
+   HEADING LEVELS ARE FREE. .wb-page-head / .wb-section / .wb-block style whatever
+   heading tag sits directly inside them, so an app keeps a correct document
+   outline (h1 → h2 → h3) and still gets the scale. The __title / __desc children
+   say the same thing explicitly when the element isn't a heading tag.
+
+   RAIL BEHAVIOUR IS THE APP'S — one class toggle on .wb-shell, like every other
+   interactive part of this library: .is-side-collapsed hides the rail on desktop,
+   .is-side-open slides it in over the page on narrow screens.
+
+   Z-INDEX LADDER, so the shell can't fight the overlays: sticky bar 30 (§37) ·
+   rail scrim 55 · off-canvas rail 60 · drawer 101 (§33) · toast 120 (§20).
+   -------------------------------------------------------------------------- */
+.wb-shell { display: flex; flex-direction: column; min-height: var(--wb-shell-h); font-family: var(--wb-font); }
+/* The bar sits ABOVE this row, so it always spans the full width and the rail
+   never eats into it. */
+.wb-shell__body { display: flex; flex: 1 1 auto; min-height: 0; }
+.wb-shell__side {
+  position: sticky; top: var(--wb-navbar-h); align-self: flex-start; flex: none;
+  width: var(--wb-sidenav-w); height: calc(var(--wb-shell-h) - var(--wb-navbar-h));
+  padding: 14px 12px 56px;              /* tail room so the last link scrolls clear */
+  background: var(--wb-surface);
+  border-right: var(--wb-bw) solid var(--wb-border);   /* the ONE divider — on the right */
+  overflow-y: auto; scroll-padding-block-end: 12px;
+  overscroll-behavior: contain;         /* the rail's scroll stays put — no chaining to the page behind it */
+}
+/* The slot already paints the rail surface, so a .wb-sidenav dropped inside it
+   contributes its link styling only — no second border, width or background. */
+.wb-shell__side > .wb-sidenav { width: 100%; padding: 0; background: none; border-right: 0; }
+/* min-width:0 is load-bearing: without it a wide table or a long unbroken string
+   pushes the main column past the viewport instead of scrolling inside it. */
+.wb-shell__main { flex: 1 1 auto; min-width: 0; }
+.wb-shell.is-side-collapsed > .wb-shell__body > .wb-shell__side { display: none; }
+
+/* The ☰ that opens the folded rail — put it first in the bar and hang
+   .is-side-open off it. It appears at exactly the width the rail folds at, so the
+   button and the drawer can never disagree. (The navbar's own --toggle is a
+   different job: it collapses that bar's INLINE links, by the bar's own width.
+   In a shell the navigation lives in the rail, so this is the one you want.) */
+.wb-shell__side-toggle { display: none; }
+
+/* The content column's vertical rhythm. Kept off the base .wb-container so a
+   container used *inside* a page (a section band, a card row) stays flush. */
+.wb-container--pad { padding-block: var(--wb-page-pad-block) var(--wb-page-pad-end); }
+
+/* Overline above a page title — the section/category the screen belongs to. */
+.wb-eyebrow {
+  font-size: var(--wb-text-label); font-weight: 700; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 8px;
+}
+
+/* Page header — the title + one-line lede that opens a screen. */
+.wb-page-head { margin-bottom: 8px; }
+/* A breadcrumb belongs to the head, above the eyebrow — a `.wb-breadcrumb` carries
+   no margin of its own (it's also used inline, in a card, in a bar), so the
+   scaffold owns the gap here, exactly like it owns eyebrow→title→desc. Nest it
+   INSIDE .wb-page-head; a sibling above would collide. */
+.wb-page-head > .wb-breadcrumb { margin-bottom: 12px; }
+.wb-page-head__title,
+.wb-page-head > :where(h1, h2, h3, h4, h5, h6) {
+  font-size: var(--wb-text-page); font-weight: 700; letter-spacing: -.02em; margin: 0 0 8px;
+}
+.wb-page-head__desc,
+.wb-page-head > :where(p):not(.wb-eyebrow) {
+  font-size: var(--wb-text-title); color: var(--wb-fg-muted); margin: 0; max-width: var(--wb-measure-tight);
+}
+/* --lg = the landing/hero size of the same block (one step up, nothing else changes). */
+.wb-page-head--lg .wb-page-head__title,
+.wb-page-head--lg > :where(h1, h2, h3, h4, h5, h6) { font-size: var(--wb-text-display); margin-bottom: 10px; }
+
+/* Section — a titled band of a page. The gap ABOVE it is the page's main rhythm. */
+.wb-section { margin-top: var(--wb-section-gap); }
+/* --flush drops that gap, for a section that opens the page directly under the head
+   (the lede already introduced it, so a full section gap reads as a hole). Reach for
+   this instead of a one-off margin — that's the whole point of the ladder. */
+.wb-section--flush { margin-top: 0; }
+.wb-section__title,
+.wb-section > :where(h1, h2, h3, h4, h5, h6) {
+  font-size: var(--wb-text-section); font-weight: 700; letter-spacing: -.01em; margin: 0 0 6px;
+}
+.wb-section__desc,
+.wb-section > :where(p):not(.wb-eyebrow) {
+  font-size: var(--wb-text-body); color: var(--wb-fg-muted); margin: 0 0 20px; max-width: var(--wb-measure);
+}
+
+/* Block — a labelled sub-part inside a section (one example, one field group). */
+.wb-block { margin-top: var(--wb-block-gap); }
+.wb-block__title,
+.wb-block > :where(h1, h2, h3, h4, h5, h6) {
+  font-size: var(--wb-text-body); font-weight: 600; margin: 0 0 3px;
+}
+.wb-block__desc,
+.wb-block > :where(p):not(.wb-eyebrow) {
+  font-size: var(--wb-text-help); color: var(--wb-fg-muted); margin: 0 0 14px;
+}
+
+/* Narrow screens: the rail leaves the flow and becomes an off-canvas drawer over
+   the page. This is the ONE place the library measures the viewport instead of a
+   container (§37 navbar, §50 pager use container queries) — correct here, because
+   the shell IS the viewport; there is no outer container to ask. */
+@media (max-width: 900px) {
+  .wb-shell__side {
+    position: fixed; top: 0; left: 0; z-index: 60;
+    width: 264px; max-width: 82vw; height: var(--wb-shell-h);
+    transform: translateX(-100%); transition: transform .22s ease;
+    box-shadow: var(--wb-shadow-md);
+  }
+  /* Collapsed is a desktop idea — on mobile the rail is hidden by default anyway,
+     and hiding it here would make the ☰ toggle do nothing. */
+  .wb-shell.is-side-collapsed > .wb-shell__body > .wb-shell__side { display: block; }
+  .wb-shell.is-side-open > .wb-shell__body > .wb-shell__side { transform: translateX(0); }
+  /* Scrim — dims the page under the open rail and swallows the tap that closes it.
+     Same --wb-scrim as the modal/drawer overlay: one dim across the system. */
+  .wb-shell.is-side-open::before {
+    content: ""; position: fixed; inset: 0; z-index: 55; background: var(--wb-scrim);
+  }
+  /* Same breakpoint as the fold, deliberately: the ☰ exists exactly while the
+     rail is a drawer. Below this width the rail can only be reached through it. */
+  .wb-shell__side-toggle { display: inline-flex; }
+  .wb-container--pad { padding-block: 26px 90px; }
+}
+
+/* -----------------------------------------------------------------------------
+   53. APP BASELINE  (.wb-app — the ground every screen stands on)
+   -----------------------------------------------------------------------------
+   Numbered last (sections are append-only) but conceptually FIRST: this is the
+   document baseline the components assume — border-box, the font, the canvas and
+   ink colours, line-height, and links that don't go browser-blue.
+
+     <body class="wb-app">                 ← a screen with no shell (auth, landing)
+     <body><div class="wb-shell"> …        ← a shell already IS a baseline
+
+   Why it exists: the library used to leave this to the host page, so the docs
+   carried it in their own stylesheet and every OTHER build fell through to the
+   browser defaults — serif text, blue underlined links, a loose line-height and
+   an 8px body margin. That, not the components, was the biggest reason a build
+   didn't look like the docs. It ships now.
+
+   Deliberately NOT a bare `body {}` rule: this is a drop-in stylesheet and must
+   not restyle a host page that only wanted one component. You opt in with the
+   class — except box-sizing, which is scoped to wb-* elements only (below), since
+   a component with the wrong box model is broken rather than merely unstyled.
+   -------------------------------------------------------------------------- */
+
+/* Every wb-* element is border-box; nothing of the host app is touched. Zero
+   specificity (:where), so an app rule always wins. Without this a padded,
+   width:100% part overflows its parent — `.wb-container` did exactly that. */
+:where([class^="wb-"], [class*=" wb-"]) { box-sizing: border-box; }
+
+.wb-app,
+.wb-shell {
+  font-family: var(--wb-font);
+  background: var(--wb-canvas);
+  color: var(--wb-fg);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+/* Only meaningful on <body>, which is where .wb-app belongs. */
+.wb-app { margin: 0; }
+/* Links inherit their colour — the colour ladder (§1) says a link is tier-1 ink,
+   distinguished by weight or underline, never by a stock blue. Zero specificity,
+   so .wb-nav__link / .wb-footer__link / an app's own rule all still win. */
+:where(.wb-app, .wb-shell) :where(a) { color: inherit; }

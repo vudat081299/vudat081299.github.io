@@ -1,12 +1,12 @@
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Điều hướng</p>
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Navigation</p>
   <h2>Sidebar (side-nav)</h2>
   <p>Cột điều hướng dọc cho <b>app shell</b> — có nhóm (<code>__section</code>), liên kết kèm icon, và số đếm (<code>__badge</code>).
   Đây là bản <b>dùng được trong app</b> của chính thanh bên trái tài liệu này. Active là highlight phẳng (đồng bộ với <a href="#/navbar">Nav</a> &amp; cây thư mục).</p>
 </div>
 
-<section class="doc-sec">
-  <div class="doc-block">
+<section class="wb-section">
+  <div class="wb-block">
     <h4>Rail cơ bản</h4>
     <div class="demo demo--plain">
       <div class="demo__stage">
@@ -32,12 +32,13 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Ghép thành app shell</h4>
-    <p class="doc-block__desc">Navbar (§<a href="#/navbar">Navbar</a>) trên cùng + sidebar bên trái + vùng nội dung — ba primitive lắp thành khung một app tài chính.</p>
+    <p class="wb-block__desc"><a href="#/navbar">Navbar</a> trên cùng + rail bên trái + vùng nội dung. Khung là
+    <a href="#/shell"><code>.wb-shell</code></a>; sidenav chỉ lo phần link bên trong khe rail.</p>
     <div class="demo">
       <div class="demo__stage" style="padding:0">
-        <div style="height:340px;display:flex;flex-direction:column">
+        <div class="wb-shell" style="--wb-shell-h:340px; --wb-navbar-h:48px; --wb-sidenav-w:210px">
           <div class="wb-navbar">
             <a class="wb-navbar__brand"><span class="wb-navbar__mark">C</span> Ledger</a>
             <span class="wb-navbar__spacer"></span>
@@ -46,16 +47,18 @@
               <span class="wb-avatar wb-avatar--sm">DV</span>
             </div>
           </div>
-          <div style="display:flex;flex:1;min-height:0">
-            <nav class="wb-sidenav wb-scroll-y" style="width:210px">
-              <div class="wb-sidenav__section">Tổng quan</div>
-              <a class="wb-sidenav__link is-active"><span class="wb-ico">dashboard</span> Bảng điều khiển</a>
-              <a class="wb-sidenav__link"><span class="wb-ico">receipt_long</span> Giao dịch <span class="wb-sidenav__badge">128</span></a>
-              <a class="wb-sidenav__link"><span class="wb-ico">savings</span> Ngân sách</a>
-              <a class="wb-sidenav__link"><span class="wb-ico">insights</span> Báo cáo</a>
-              <a class="wb-sidenav__link"><span class="wb-ico">settings</span> Cài đặt</a>
-            </nav>
-            <div class="wb-container wb-scrollbars" style="flex:1;padding:22px;overflow:auto">
+          <div class="wb-shell__body">
+            <aside class="wb-shell__side">
+              <nav class="wb-sidenav">
+                <div class="wb-sidenav__section">Tổng quan</div>
+                <a class="wb-sidenav__link is-active"><span class="wb-ico">dashboard</span> Bảng điều khiển</a>
+                <a class="wb-sidenav__link"><span class="wb-ico">receipt_long</span> Giao dịch <span class="wb-sidenav__badge">128</span></a>
+                <a class="wb-sidenav__link"><span class="wb-ico">savings</span> Ngân sách</a>
+                <a class="wb-sidenav__link"><span class="wb-ico">insights</span> Báo cáo</a>
+                <a class="wb-sidenav__link"><span class="wb-ico">settings</span> Cài đặt</a>
+              </nav>
+            </aside>
+            <div class="wb-shell__main wb-container wb-container--pad wb-scrollbars" style="--wb-page-pad-block:22px;--wb-page-pad-end:22px;overflow:auto">
               <div class="wb-cluster wb-cluster--between wb-cluster--bottom" style="margin-bottom:16px">
                 <div>
                   <div class="wb-cell-muted" style="font-size:12px">Số dư khả dụng</div>
@@ -72,17 +75,23 @@
           </div>
         </div>
       </div>
-      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-navbar"&gt; … &lt;/div&gt;
-&lt;div style="display:flex"&gt;                &lt;!-- khung shell: sidebar + nội dung --&gt;
-  &lt;nav class="wb-sidenav wb-scroll-y"&gt; … &lt;/nav&gt;
-  &lt;main&gt; … nội dung … &lt;/main&gt;
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-shell"&gt;
+  &lt;header class="wb-navbar"&gt; … &lt;/header&gt;
+  &lt;div class="wb-shell__body"&gt;
+    &lt;aside class="wb-shell__side"&gt;                &lt;!-- khe đã dính + cuộn + gập mobile --&gt;
+      &lt;nav class="wb-sidenav"&gt; … &lt;/nav&gt;
+    &lt;/aside&gt;
+    &lt;main class="wb-shell__main"&gt; … nội dung … &lt;/main&gt;
+  &lt;/div&gt;
 &lt;/div&gt;</code></pre></div>
     </div>
   </div>
 
-  <div class="doc-note">
+  <div class="wb-alert wb-alert--info doc-note">
     <span class="wb-ico" style="color:var(--wb-info-text)">info</span>
-    <div>Thanh sidebar của <b>tài liệu này</b> có thêm hành vi (thu/gọn nhóm) nên dùng chrome riêng; <code>.wb-sidenav</code> là bản gọn, tĩnh để mang thẳng vào app.
-    Cho cuộn dài, thêm <code>.wb-scroll-y</code> (§Scroll areas). Thu gọn/đóng-mở trên mobile là việc của app.</div>
+    <div>Thanh sidebar của <b>tài liệu này</b> có thêm hành vi (thu/gọn nhóm) nên phần cây là chrome riêng — nhưng
+    cái <b>khe</b> chứa nó thì đúng là <a href="#/shell"><code>.wb-shell__side</code></a> đã ship.
+    Đứng một mình (ngoài shell), <code>.wb-sidenav</code> cần bạn cho chiều cao + <code>.wb-scroll-y</code>
+    (<a href="#/scroll">Scroll areas</a>); trong shell thì dính, cuộn và gập ngăn kéo mobile là có sẵn.</div>
   </div>
 </section>

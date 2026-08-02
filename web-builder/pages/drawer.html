@@ -1,12 +1,12 @@
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Lớp phủ (Overlay)</p>
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Overlays</p>
   <h2>Drawer / Offcanvas</h2>
   <p>Bảng trượt vào từ cạnh màn hình trên nền mờ — cho bộ lọc, chi tiết giao dịch, hay menu phụ.
   Dùng chung lớp phủ <code>.wb-overlay</code> với modal; đổi <code>.is-open</code> để mở.</p>
 </div>
 
-<section class="doc-sec">
-  <div class="doc-block">
+<section class="wb-section">
+  <div class="wb-block">
     <h4>Mở thử — phải &amp; trái</h4>
     <div class="demo">
       <div class="demo__stage">
@@ -28,12 +28,12 @@
     </div>
   </div>
 
-  <div class="doc-note">
+  <div class="wb-alert wb-alert--info doc-note">
     <span>💡</span>
     <div>Ở tài liệu này, drawer mở/đóng bằng đúng JS của modal (<code>data-modal-open</code>/<code>-close</code>, bấm nền để đóng). Trong app
     dùng Radix <b>Dialog</b> hoặc <b>vaul</b> để có focus-trap, khoá cuộn nền và kéo mượt — giữ nguyên class <code>wb-drawer*</code>.</div>
   </div>
-  <div class="doc-note">
+  <div class="wb-alert wb-alert--info doc-note">
     <span class="wb-ico" style="color:var(--wb-info-text)">info</span>
     <div>Lớp phủ dùng chung với modal nên nhận cùng tuỳ chọn backdrop:
     <code>--blur</code> (kính mờ) · <code>--clear</code> (không làm mờ) · <code>--pass</code> (non-modal — vẫn thao tác được trang dưới).

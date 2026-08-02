@@ -1,0 +1,265 @@
+<!doctype html>
+<!-- =============================================================================
+     TEMPLATE · Records list  —  catalog recipe "Records / transactions list"
+     -----------------------------------------------------------------------------
+     A filtered, paginated table of records — the workhorse screen of most apps.
+
+     Order is the recipe's: filter bar on top → the table (--sticky header, so the
+     columns stay readable on a long list) → pagination in the card foot. The
+     zero-data case is included at the bottom, commented out.
+     What you may change: text, data, icon ligatures, how many rows/fields/sections.
+     What you should NOT change: the wb-shell frame, the wb-page-head → wb-section
+     → wb-block nesting, and spacing (it comes from tokens — if a gap feels wrong,
+     set --wb-section-gap / --wb-block-gap, never a margin on one element).
+     ========================================================================== -->
+<html lang="vi" class="wb-scrollbars">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Giao dịch · Cashy</title>
+<!-- The one file this library ships. Everything below is plain markup. -->
+<link rel="stylesheet" href="../web-builder.css" />
+<script>
+  /* Theme before first paint, so a dark user never sees a white flash. */
+  try {
+    var t = localStorage.getItem('theme');
+    if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches))
+      document.documentElement.classList.add('dark');
+  } catch (e) {}
+</script>
+</head>
+<body class="wb-app">
+
+<div class="wb-shell">
+
+  <!-- ============================ TOP BAR ================================== -->
+  <header class="wb-navbar wb-navbar--sticky wb-navbar--glass">
+    <!-- Opens the rail once it folds to a drawer (≤900px); hidden above that. -->
+    <button class="wb-btn wb-btn--ghost wb-btn--icon wb-shell__side-toggle" data-side-toggle
+            aria-label="Mở thanh điều hướng"><span class="wb-ico">menu</span></button>
+    <a class="wb-navbar__brand" href="dashboard.html"><span class="wb-navbar__mark">C</span> Cashy</a>
+    <span class="wb-navbar__spacer"></span>
+    <div class="wb-navbar__actions">
+      <button class="wb-btn wb-btn--ghost wb-btn--icon" aria-label="Tìm kiếm"><span class="wb-ico">search</span></button>
+      <button class="wb-btn wb-btn--ghost wb-btn--icon" aria-label="Thông báo"><span class="wb-ico">notifications</span></button>
+      <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" aria-label="Đổi giao diện sáng/tối" title="Sáng / Tối">
+        <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
+        <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
+      </button>
+      <span class="wb-avatar wb-avatar--sm">DV</span>
+    </div>
+  </header>
+
+  <div class="wb-shell__body">
+
+    <!-- ============================ RAIL =================================== -->
+    <!-- The slot owns the surface, the sticky offset, its own scroll and the
+         mobile drawer. The wb-sidenav inside contributes link styling only. -->
+    <aside class="wb-shell__side wb-scrollbars">
+      <nav class="wb-sidenav">
+        <div class="wb-sidenav__section">Tổng quan</div>
+        <a class="wb-sidenav__link" href="dashboard.html"><span class="wb-ico">dashboard</span> Bảng điều khiển</a>
+        <a class="wb-sidenav__link is-active" href="list.html"><span class="wb-ico">receipt_long</span> Giao dịch <span class="wb-sidenav__badge">128</span></a>
+        <a class="wb-sidenav__link" href="list.html"><span class="wb-ico">savings</span> Ngân sách</a>
+        <a class="wb-sidenav__link" href="list.html"><span class="wb-ico">insights</span> Báo cáo</a>
+        <div class="wb-sidenav__section">Tài khoản</div>
+        <a class="wb-sidenav__link" href="list.html"><span class="wb-ico">account_balance_wallet</span> Ví &amp; ngân hàng</a>
+        <a class="wb-sidenav__link" href="list.html"><span class="wb-ico">flag</span> Mục tiêu <span class="wb-sidenav__badge">3</span></a>
+        <a class="wb-sidenav__link" href="settings.html"><span class="wb-ico">settings</span> Cài đặt</a>
+      </nav>
+    </aside>
+
+    <div class="wb-shell__main">
+      <!-- ========================= CONTENT ================================= -->
+      <main class="wb-container wb-container--wide wb-container--pad">
+
+        <div class="wb-page-head">
+          <nav class="wb-breadcrumb" aria-label="Breadcrumb">
+            <a href="dashboard.html">Bảng điều khiển</a>
+            <span class="wb-breadcrumb__sep">/</span>
+            <span class="wb-breadcrumb__current">Giao dịch</span>
+          </nav>
+          <p class="wb-eyebrow">Sổ giao dịch</p>
+          <h1>Giao dịch</h1>
+          <p>Toàn bộ khoản thu chi đã ghi nhận. Lọc theo nhãn, trạng thái hoặc số tiền để thu hẹp danh sách.</p>
+        </div>
+
+        <!-- Page-level actions sit on the head row, not floating above the table. -->
+        <div class="wb-cluster wb-cluster--end" style="margin-bottom:18px">
+          <button class="wb-btn wb-btn--outline wb-btn--sm"><span class="wb-ico wb-ico--sm">download</span> Xuất CSV</button>
+          <a class="wb-btn wb-btn--sm" href="form.html"><span class="wb-ico wb-ico--sm">add</span> Thêm giao dịch</a>
+        </div>
+
+        <!-- 1 · FILTER BAR — search + removable tokens. A token is soft-toned only
+             when it filters a real STATUS; a category filter stays grey (§1). -->
+        <section class="wb-section wb-section--flush">
+          <div class="wb-filterbar">
+            <div class="wb-input-group wb-filterbar__search">
+              <span class="wb-input-group__addon"><span class="wb-ico wb-ico--sm">search</span></span>
+              <input class="wb-input" type="search" placeholder="Tìm giao dịch…" />
+            </div>
+            <span class="wb-filter-token wb-filter-token--success">
+              <span class="wb-filter-token__key">Trạng thái</span>
+              <span class="wb-filter-token__val">Đã trả</span>
+              <button class="wb-filter-token__x" aria-label="Bỏ lọc trạng thái"></button>
+            </span>
+            <span class="wb-filter-token">
+              <span class="wb-filter-token__key">Nhãn</span>
+              <span class="wb-filter-token__val">#dinh-ky</span>
+              <button class="wb-filter-token__x" aria-label="Bỏ lọc nhãn"></button>
+            </span>
+            <span class="wb-filter-token">
+              <span class="wb-filter-token__key">Số tiền</span>
+              <span class="wb-filter-token__val">≥&nbsp;1.000.000&nbsp;₫</span>
+              <button class="wb-filter-token__x" aria-label="Bỏ lọc số tiền"></button>
+            </span>
+            <button class="wb-filter-add"><span class="wb-ico wb-ico--sm">add</span> Thêm bộ lọc</button>
+            <span class="wb-filterbar__count">24 giao dịch</span>
+          </div>
+        </section>
+
+        <!-- 2 · THE TABLE — --sticky keeps the header visible on a long list.
+             Cap the scroll box; the rest of the page keeps scrolling normally. -->
+        <section class="wb-section">
+          <div class="wb-card">
+            <div class="wb-table-scroll" style="max-height:520px">
+              <table class="wb-table wb-table--sticky">
+                <thead>
+                  <tr><th>Ngày</th><th>Nội dung</th><th>Danh mục</th><th>Nhãn</th><th class="wb-num">Số tiền</th><th>Trạng thái</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="wb-cell-muted">14/07</td>
+                    <td><a class="wb-cell-strong" href="detail.html">Lương tháng 7</a><span class="wb-cell-sub">Công ty ABC</span></td>
+                    <td><span class="wb-cap">Thu nhập</span></td>
+                    <td><div class="wb-tags"><span class="wb-tag wb-tag--info">dinh-ky</span><span class="wb-tag">luong</span></div></td>
+                    <td class="wb-num wb-num--pos">+25.000.000&nbsp;₫</td>
+                    <td><span class="wb-cap wb-cap--success"><span class="wb-cap__dot"></span> Đã nhận</span></td>
+                  </tr>
+                  <tr>
+                    <td class="wb-cell-muted">13/07</td>
+                    <td><a class="wb-cell-strong" href="detail.html">Siêu thị WinMart</a><span class="wb-cell-sub">Đi chợ tuần</span></td>
+                    <td><span class="wb-cap">Ăn uống</span></td>
+                    <td><div class="wb-tags"><span class="wb-tag">hang-ngay</span></div></td>
+                    <td class="wb-num wb-num--strong">−1.280.000&nbsp;₫</td>
+                    <td><span class="wb-cap wb-cap--success"><span class="wb-cap__dot"></span> Hoàn tất</span></td>
+                  </tr>
+                  <tr>
+                    <td class="wb-cell-muted">12/07</td>
+                    <td><a class="wb-cell-strong" href="detail.html">Tiền nhà</a><span class="wb-cell-sub">Kỳ tháng 7</span></td>
+                    <td><span class="wb-cap">Nhà ở</span></td>
+                    <td><div class="wb-tags"><span class="wb-tag">co-dinh</span><span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#7c3aed">gia-dinh</span></div></td>
+                    <td class="wb-num wb-num--strong">−6.500.000&nbsp;₫</td>
+                    <td><span class="wb-cap wb-cap--warning"><span class="wb-cap__dot"></span> Chờ xác nhận</span></td>
+                  </tr>
+                  <!-- A row that needs the eye gets a tint — one row, not a rainbow. -->
+                  <tr class="wb-row--danger">
+                    <td class="wb-cell-muted">11/07</td>
+                    <td><a class="wb-cell-strong" href="detail.html">Netflix</a><span class="wb-cell-sub">Gói Premium</span></td>
+                    <td><span class="wb-cap">Giải trí</span></td>
+                    <td><div class="wb-tags"><span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#db2777">giai-tri</span></div></td>
+                    <td class="wb-num wb-num--strong">−260.000&nbsp;₫</td>
+                    <td><span class="wb-cap wb-cap--danger wb-cap--solid">Thất bại</span></td>
+                  </tr>
+                  <tr>
+                    <td class="wb-cell-muted">10/07</td>
+                    <td><a class="wb-cell-strong" href="detail.html">Mua chứng chỉ quỹ</a><span class="wb-cell-sub">VN-Index ETF</span></td>
+                    <td><span class="wb-cap">Đầu tư</span></td>
+                    <td><div class="wb-tags"><span class="wb-tag">dau-tu</span></div></td>
+                    <td class="wb-num wb-num--strong">−12.000.000&nbsp;₫</td>
+                    <td><span class="wb-cap wb-cap--info"><span class="wb-cap__dot"></span> Đang xử lý</span></td>
+                  </tr>
+                  <tr>
+                    <td class="wb-cell-muted">09/07</td>
+                    <td><a class="wb-cell-strong" href="detail.html">Hoàn tiền Shopee</a><span class="wb-cell-sub">Huỷ đơn</span></td>
+                    <td><span class="wb-cap">Hoàn tiền</span></td>
+                    <td><div class="wb-tags"><span class="wb-tag wb-tag--success">hoan-tien</span></div></td>
+                    <td class="wb-num wb-num--pos">+180.000&nbsp;₫</td>
+                    <td><span class="wb-cap wb-cap--success"><span class="wb-cap__dot"></span> Đã nhận</span></td>
+                  </tr>
+                  <tr>
+                    <td class="wb-cell-muted">08/07</td>
+                    <td><a class="wb-cell-strong" href="detail.html">Grab đi làm</a><span class="wb-cell-sub">Tuần 28</span></td>
+                    <td><span class="wb-cap">Di chuyển</span></td>
+                    <td><div class="wb-tags"><span class="wb-tag">hang-ngay</span></div></td>
+                    <td class="wb-num wb-num--strong">−420.000&nbsp;₫</td>
+                    <td><span class="wb-cap wb-cap--success"><span class="wb-cap__dot"></span> Hoàn tất</span></td>
+                  </tr>
+                  <tr>
+                    <td class="wb-cell-muted">07/07</td>
+                    <td><a class="wb-cell-strong" href="detail.html">Điện nước tháng 6</a><span class="wb-cell-sub">EVN + Sawaco</span></td>
+                    <td><span class="wb-cap">Nhà ở</span></td>
+                    <td><div class="wb-tags"><span class="wb-tag">co-dinh</span></div></td>
+                    <td class="wb-num wb-num--strong">−890.000&nbsp;₫</td>
+                    <td><span class="wb-cap wb-cap--success"><span class="wb-cap__dot"></span> Hoàn tất</span></td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr><td colspan="4">Ròng trong kỳ</td><td class="wb-num wb-num--pos">+3.830.000&nbsp;₫</td><td></td></tr>
+                </tfoot>
+              </table>
+            </div>
+            <!-- 3 · PAGINATION — pages through ROWS. (wb-pager pages through VIEWS.) -->
+            <div class="wb-card__foot">
+              <span class="wb-cell-muted" style="font-size:13px">Trang 1 / 12</span>
+              <nav class="wb-pagination" aria-label="Phân trang" style="margin-left:auto">
+                <button class="wb-page" disabled aria-label="Trước"><span class="wb-ico wb-ico--sm">chevron_left</span></button>
+                <a class="wb-page is-active" href="#" aria-current="page">1</a>
+                <a class="wb-page" href="#">2</a>
+                <a class="wb-page" href="#">3</a>
+                <span class="wb-page wb-page--gap">…</span>
+                <a class="wb-page" href="#">12</a>
+                <button class="wb-page" aria-label="Sau"><span class="wb-ico wb-ico--sm">chevron_right</span></button>
+              </nav>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4 · THE EMPTY STATE — the same screen with no data. Keep ONE of the two
+             (this or the table above) in your build; shown together here so you
+             don't have to invent the zero-data case later.
+        <section class="wb-section">
+          <div class="wb-card"><div class="wb-card__body">
+            <div class="wb-empty">
+              <div class="wb-empty__icon">🔍</div>
+              <p class="wb-empty__title">Không tìm thấy giao dịch</p>
+              <p class="wb-empty__msg">Thử đổi bộ lọc hoặc khoảng thời gian.</p>
+              <button class="wb-btn wb-btn--secondary wb-btn--sm">Xoá bộ lọc</button>
+            </div>
+          </div></div>
+        </section>
+        -->
+
+      </main>
+
+      <footer class="wb-footer wb-footer--slim">
+        <div class="wb-footer__inner">
+          <div class="wb-footer__bottom">
+            <span class="wb-footer__copy">© 2026 Cashy. Bảo lưu mọi quyền.</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+</div>
+
+<script>
+/* The whole behaviour contract of a shell: two class toggles. Nothing here is
+   layout — the CSS owns the drawer, the scrim and the breakpoint. Swap this for
+   your framework's state when you port the template. */
+(function () {
+  var shell = document.querySelector('.wb-shell');
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('[data-side-toggle]')) {
+      shell.classList.toggle('is-side-open');
+    } else if (e.target.closest('.wb-theme-toggle')) {
+      var dark = document.documentElement.classList.toggle('dark');
+      try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (err) {}
+    } else if (shell.classList.contains('is-side-open') && !e.target.closest('.wb-shell__side')) {
+      shell.classList.remove('is-side-open');     /* tap the scrim → close */
+    }
+  });
+})();
+</script>
+</body>
+</html>

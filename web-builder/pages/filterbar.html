@@ -1,5 +1,5 @@
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Hiển thị dữ liệu</p>
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Data display</p>
   <h2>Filter bar</h2>
   <p>Thanh lọc gắn trên đầu <b>bảng / danh sách giao dịch</b>: ô tìm kiếm, dropdown chọn nhiều trường,
   và các <b>token lọc gỡ được</b> — lọc theo <b>nhãn</b>, theo <b>trạng thái</b> (capsule), theo <b>số tiền</b>
@@ -7,10 +7,10 @@
   <code>cap</code>, <code>tag</code>. Phần này chỉ thêm thanh, token và nút “thêm bộ lọc”.</p>
 </div>
 
-<section class="doc-sec">
-  <div class="doc-block">
+<section class="wb-section">
+  <div class="wb-block">
     <h4>Thanh lọc — ví dụ đầy đủ</h4>
-    <p class="doc-block__desc">Tìm kiếm + token đang áp dụng + nút thêm lọc + số kết quả. Token mang tông
+    <p class="wb-block__desc">Tìm kiếm + token đang áp dụng + nút thêm lọc + số kết quả. Token mang tông
     <b>mềm</b> chỉ khi nó là bộ lọc <b>trạng thái</b>; còn lại giữ xám (đúng thang màu).</p>
     <div class="demo">
       <div class="demo__stage">
@@ -58,9 +58,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Token lọc</h4>
-    <p class="doc-block__desc"><code>[ khoá : giá trị × ]</code>. Xám mặc định; giá trị có thể là khoảng số,
+    <p class="wb-block__desc"><code>[ khoá : giá trị × ]</code>. Xám mặc định; giá trị có thể là khoảng số,
     một <code>#nhãn</code>, một trạng thái, một mốc ngày. Chỉ mượn tông mềm khi token là bộ lọc trạng thái.</p>
     <div class="demo">
       <div class="demo__stage">
@@ -98,9 +98,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Chọn trường lọc — dropdown nhiều lựa chọn</h4>
-    <p class="doc-block__desc">Nút “Thêm bộ lọc” mở <code>.wb-menu</code> (đặt trong
+    <p class="wb-block__desc">Nút “Thêm bộ lọc” mở <code>.wb-menu</code> (đặt trong
     <code>.wb-dropdown__menu</code>, bật <code>.is-open</code>). Mỗi dòng là một checkbox nên chọn được
     nhiều trường cùng lúc.</p>
     <div class="demo">
@@ -133,9 +133,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Bộ chỉnh theo kiểu dữ liệu</h4>
-    <p class="doc-block__desc">Mỗi trường mở một popover riêng — <b>số tiền</b> (thanh trượt 2 đầu + ô min/max
+    <p class="wb-block__desc">Mỗi trường mở một popover riêng — <b>số tiền</b> (thanh trượt 2 đầu + ô min/max
     + câu tóm tắt, đồng bộ nhau), <b>nhãn</b> và <b>trạng thái</b> (chọn nhiều, hiện đúng bằng
     <code>tag</code> / <code>cap</code>). Tất cả là <code>.wb-menu.wb-filter-pop</code>.</p>
     <div class="demo">

@@ -1,5 +1,5 @@
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Hiển thị dữ liệu</p>
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Data display</p>
   <h2>Hoá đơn (Receipt)</h2>
   <p>Một mảnh giấy biên lai với <b>cạnh khía bán nguyệt (scallop)</b> ở trên &amp; dưới — những vết lõm nửa hình tròn
   <b>khoét vào giấy</b>, cách nhau bởi một đoạn phẳng, dáng tờ vé xé / cuống biên lai. Hợp để in một giao dịch,
@@ -9,10 +9,10 @@
   Thêm <code>--ticket</code> để thành <b>vé xé</b>: đường xé ngang có bán nguyệt khoét vào hai cạnh.</p>
 </div>
 
-<section class="doc-sec">
-  <div class="doc-block">
+<section class="wb-section">
+  <div class="wb-block">
     <h4>Cơ bản</h4>
-    <p class="doc-block__desc">Hai lớp: <code>.wb-receipt</code> (bọc ngoài — đổ bóng ôm theo mép xé) &gt; <code>.wb-receipt__paper</code> (tờ giấy — nền + mask + nội dung).</p>
+    <p class="wb-block__desc">Hai lớp: <code>.wb-receipt</code> (bọc ngoài — đổ bóng ôm theo mép xé) &gt; <code>.wb-receipt__paper</code> (tờ giấy — nền + mask + nội dung).</p>
     <div class="demo">
       <div class="demo__stage">
         <div class="wb-receipt">
@@ -51,9 +51,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Kiểu cạnh xé — chọn 1</h4>
-    <p class="doc-block__desc">Ba kiểu mép để lựa chọn: <b>mặc định</b> (khía bán nguyệt lõm vào, cách nhau đoạn phẳng) · <code>--wave</code> (khía to &amp; thưa hơn)
+    <p class="wb-block__desc">Ba kiểu mép để lựa chọn: <b>mặc định</b> (khía bán nguyệt lõm vào, cách nhau đoạn phẳng) · <code>--wave</code> (khía to &amp; thưa hơn)
     · <code>--dashed</code> (mép thẳng, chỉ có đường răng kim — kiểu voucher).
     Chỉnh <b>đường kính vết lõm</b> qua <code>--wb-receipt-d</code> và <b>khoảng phẳng giữa hai vết</b> qua <code>--wb-receipt-gap</code>.</p>
     <div class="demo demo--plain">
@@ -98,9 +98,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Chỉnh vết lõm — <code>--wb-receipt-d</code> &amp; <code>--wb-receipt-gap</code></h4>
-    <p class="doc-block__desc">Hai biến điều khiển hình học: <code>--wb-receipt-d</code> = <b>đường kính</b> mỗi vết lõm (độ sâu = một nửa số đó),
+    <p class="wb-block__desc">Hai biến điều khiển hình học: <code>--wb-receipt-d</code> = <b>đường kính</b> mỗi vết lõm (độ sâu = một nửa số đó),
     <code>--wb-receipt-gap</code> = <b>đoạn phẳng</b> giữa hai vết. Chu kỳ danh định = <code>d + gap</code>, nhưng cạnh dùng
     <code>mask-repeat:round</code> nên <b>luôn khớp đúng số nguyên vết lõm và căn giữa</b> — không bao giờ bị cụt nửa vết ở đầu/cuối
     (đoạn phẳng co giãn nhẹ quanh <code>gap</code> để vừa khít). Không cần đếm số vết.
@@ -135,9 +135,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Chứng minh mask — trên nền gradient</h4>
-    <p class="doc-block__desc">Cạnh scallop là <code>mask</code> thật (không phải hình nền cùng màu tô giả): đặt tờ giấy lên một nền
+    <p class="wb-block__desc">Cạnh scallop là <code>mask</code> thật (không phải hình nền cùng màu tô giả): đặt tờ giấy lên một nền
     <b>gradient / ảnh bất kỳ</b> — các vết lõm bán nguyệt <b>cắt xuyên</b> để lộ nền phía sau, và bóng vẫn ôm theo mép. Đây chính là lý do
     dùng <code>mask</code> (không vẽ cạnh bằng <code>linear-gradient</code> nền, không pseudo-element phủ màu) — và bóng đặt ở lớp
     bọc ngoài bằng <code>filter: drop-shadow</code> để theo đúng đường scallop (<code>box-shadow</code> sẽ vẫn là hình chữ nhật).</p>
@@ -164,9 +164,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Xé mép dưới · bỏ bóng</h4>
-    <p class="doc-block__desc"><code>--bottom</code> chỉ xé mép dưới (đầu trang phẳng — hợp khi có logo) · <code>--flat</code> bỏ đổ bóng.
+    <p class="wb-block__desc"><code>--bottom</code> chỉ xé mép dưới (đầu trang phẳng — hợp khi có logo) · <code>--flat</code> bỏ đổ bóng.
     Ghép được với bất kỳ kiểu xé nào ở trên, và thêm <code>.wb-cap</code> vào header để gắn trạng thái.</p>
     <div class="demo demo--plain">
       <div class="demo__stage">
@@ -212,9 +212,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Hoá đơn đầy đủ + mã vạch</h4>
-    <p class="doc-block__desc">Bản kê nhiều dòng: tạm tính · giảm giá · VAT rồi <b>Tổng</b>, đóng bằng dải mã vạch
+    <p class="wb-block__desc">Bản kê nhiều dòng: tạm tính · giảm giá · VAT rồi <b>Tổng</b>, đóng bằng dải mã vạch
     <code>.wb-receipt__barcode</code> + mã số <code>.wb-receipt__code</code> (thuần CSS, ăn màu <code>--wb-fg</code> nên tự lật ở dark).</p>
     <div class="demo">
       <div class="demo__stage">
@@ -256,9 +256,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Phiếu chuyển khoản</h4>
-    <p class="doc-block__desc">Cùng bộ khung cho một biên lai chuyển tiền: trạng thái ở đầu, số tiền lớn làm tâm điểm,
+    <p class="wb-block__desc">Cùng bộ khung cho một biên lai chuyển tiền: trạng thái ở đầu, số tiền lớn làm tâm điểm,
     rồi Từ / Đến / Nội dung / Mã GD ở phần thân.</p>
     <div class="demo demo--plain">
       <div class="demo__stage">
@@ -298,9 +298,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Voucher / mã giảm giá</h4>
-    <p class="doc-block__desc">Mép <code>--dashed</code> hợp cho phiếu cắt rời: mã lớn ở giữa, điều kiện &amp; hạn dùng bên dưới.</p>
+    <p class="wb-block__desc">Mép <code>--dashed</code> hợp cho phiếu cắt rời: mã lớn ở giữa, điều kiện &amp; hạn dùng bên dưới.</p>
     <div class="demo demo--plain">
       <div class="demo__stage">
         <div class="wb-receipt wb-receipt--dashed">
@@ -324,9 +324,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Vé xé — khoét bán nguyệt 2 cạnh (<code>--ticket</code>)</h4>
-    <p class="doc-block__desc">Kiểu vé xé / cuống rời: một <b>đường xé ngang</b> (dash) với một <b>bán nguyệt khoét vào cả hai cạnh</b> đúng ở hai
+    <p class="wb-block__desc">Kiểu vé xé / cuống rời: một <b>đường xé ngang</b> (dash) với một <b>bán nguyệt khoét vào cả hai cạnh</b> đúng ở hai
     đầu đường dash. Hai vết khoét cạnh là <b>cắt mask thật</b> (để lộ nền, y như răng trên/dưới). Chỉnh <b>đường kính</b> bằng
     <code>--wb-receipt-side-d</code> và <b>vị trí đường xé</b> bằng <code>--wb-receipt-tear</code> (đặt trên <code>.wb-receipt</code>).
     Chừa một khoảng trống trong nội dung ngay tại đường xé để chữ không bị cắt.</p>
@@ -371,15 +371,15 @@
     </div>
   </div>
 
-  <div class="doc-note">
+  <div class="wb-alert wb-alert--info doc-note">
     <span class="wb-ico" style="color:var(--wb-info-text)">info</span>
     <div>Cạnh xé dùng CSS <code>mask</code> nên bóng đổ được đặt ở lớp bọc ngoài để ôm theo mép xé (bóng trên chính tờ giấy sẽ bị mask cắt).
     Bề rộng mặc định 300px — chỉnh bằng <code>.wb-receipt__paper { width: … }</code>.</div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Light &amp; Dark</h4>
-    <p class="doc-block__desc">Nền tờ giấy dùng <code>--wb-surface</code>; ở dark bóng đen biến mất nên chuyển sang viền sáng mờ — tự động theo theme.</p>
+    <p class="wb-block__desc">Nền tờ giấy dùng <code>--wb-surface</code>; ở dark bóng đen biến mất nên chuyển sang viền sáng mờ — tự động theo theme.</p>
     <div class="dual" data-dual data-pad="24px">
       <template>
         <div class="wb-receipt">

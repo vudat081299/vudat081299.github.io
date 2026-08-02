@@ -1,14 +1,14 @@
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Hiển thị dữ liệu</p>
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Data display</p>
   <h2>Charts</h2>
   <p>Biểu đồ tài chính dựng bằng <b>SVG/CSS thuần</b> (không thêm thư viện vào skill) — đủ để chốt phần nhìn:
   bảng màu, trục, lưới, chú thích (legend), tooltip. Trong app của bạn map sang <b>Recharts</b> và truyền
   đúng bộ token màu <code>--wb-chart-*</code> để trông y hệt.</p>
 </div>
 
-<section class="doc-sec">
+<section class="wb-section">
   <h3>Đường / vùng — xu hướng chi tiêu</h3>
-  <p class="doc-sec__desc">Chi theo tháng. Đường + vùng tô mờ, có lưới ngang, nhãn trục, điểm mốc và <b>tooltip hiện khi rê chuột</b> vào điểm.</p>
+  <p class="wb-section__desc">Chi theo tháng. Đường + vùng tô mờ, có lưới ngang, nhãn trục, điểm mốc và <b>tooltip hiện khi rê chuột</b> vào điểm.</p>
   <div class="demo">
     <div class="demo__stage">
       <div class="wb-grid wb-grid--2">
@@ -90,9 +90,9 @@
   </div>
 </section>
 
-<section class="doc-sec">
+<section class="wb-section">
   <h3>Cột — thu vs chi theo tháng</h3>
-  <p class="doc-sec__desc">Cột nhóm bằng CSS (<code>.wb-bars</code>): mỗi tháng một cặp cột thu (xanh) / chi (đỏ), có lưới ngang mờ.
+  <p class="wb-section__desc">Cột nhóm bằng CSS (<code>.wb-bars</code>): mỗi tháng một cặp cột thu (xanh) / chi (đỏ), có lưới ngang mờ.
   Cột mảnh, bo góc nhẹ; rê chuột vào một tháng để hiện số. Chiều cao là % của trục.</p>
   <div class="demo">
     <div class="demo__stage">
@@ -126,9 +126,9 @@
   </div>
 </section>
 
-<section class="doc-sec">
+<section class="wb-section">
   <h3>Cột + đường (combo) — chi (cột) so với thu (đường)</h3>
-  <p class="doc-sec__desc">Kết hợp <b>hai loại</b> trên cùng một hệ trục: cột cho <b>chi</b> từng tháng, đường cho <b>thu</b> — thấy
+  <p class="wb-section__desc">Kết hợp <b>hai loại</b> trên cùng một hệ trục: cột cho <b>chi</b> từng tháng, đường cho <b>thu</b> — thấy
   ngay tháng nào thu &gt; chi (đường nằm trên cột). Kỹ thuật: vẽ <code>&lt;rect&gt;</code> cột trước, rồi phủ <code>.wb-series-line</code> +
   điểm (có tooltip khi rê) lên trên, dùng chung lưới &amp; trục.</p>
   <div class="demo">
@@ -187,9 +187,9 @@
   </div>
 </section>
 
-<section class="doc-sec">
+<section class="wb-section">
   <h3>Thanh ngang — xếp hạng danh mục</h3>
-  <p class="doc-sec__desc">Khi cần <b>so sánh &amp; xếp hạng</b> nhiều mục (top chi tiêu, top công nợ…), thanh ngang dễ đọc hơn donut. Đây không
+  <p class="wb-section__desc">Khi cần <b>so sánh &amp; xếp hạng</b> nhiều mục (top chi tiêu, top công nợ…), thanh ngang dễ đọc hơn donut. Đây không
   phải component mới — chỉ là <code>.wb-progress</code> (đã có) xếp dọc bằng <code>.wb-stack</code>, tô theo màu danh mục. Dài nhất = 100%.</p>
   <div class="demo">
     <div class="demo__stage">
@@ -225,9 +225,9 @@
   </div>
 </section>
 
-<section class="doc-sec">
+<section class="wb-section">
   <h3>Donut — cơ cấu chi theo danh mục</h3>
-  <p class="doc-sec__desc">Vòng tròn <code>stroke-dasharray</code> với <code>pathLength="100"</code> (mỗi lát = số %), có khe hở mảnh
+  <p class="wb-section__desc">Vòng tròn <code>stroke-dasharray</code> với <code>pathLength="100"</code> (mỗi lát = số %), có khe hở mảnh
   giữa các lát cho sạch. Bảng màu <code>--wb-chart-*</code> đã tinh lại (tông ~500, hài hoà). Chú thích kèm số tiền bên cạnh.</p>
   <div class="demo">
     <div class="demo__stage">
@@ -266,14 +266,14 @@
   </div>
 </section>
 
-<section class="doc-sec">
+<section class="wb-section">
   <h3>Donut mảnh, bo tròn — &amp; vòng tiến độ</h3>
-  <p class="doc-sec__desc">Vòng <b>mảnh</b> hơn (giảm <code>stroke-width</code>) với đầu lát <b>bo tròn</b> (<code>.wb-arc--round</code>) và khe hở rộng hơn —
+  <p class="wb-section__desc">Vòng <b>mảnh</b> hơn (giảm <code>stroke-width</code>) với đầu lát <b>bo tròn</b> (<code>.wb-arc--round</code>) và khe hở rộng hơn —
   cảm giác nhẹ, hiện đại. Cùng kỹ thuật cho <b>vòng tiến độ</b> một giá trị (ngân sách, mục tiêu tiết kiệm): một lát bo tròn trên
   <code>.wb-ring__track</code>.</p>
   <div class="demo">
     <div class="demo__stage">
-      <div style="display:flex;gap:20px;align-items:stretch;flex-wrap:wrap">
+      <div class="wb-cluster" style="gap:20px;align-items:stretch">
         <div class="wb-card" style="flex:2;min-width:280px"><div class="wb-card__body">
           <p class="wb-chart__title" style="margin-bottom:12px">Cơ cấu chi (mảnh, bo tròn)</p>
           <div class="wb-cluster" style="gap:20px">
@@ -326,9 +326,9 @@
   </div>
 </section>
 
-<section class="doc-sec">
+<section class="wb-section">
   <h3>Tiến độ ngân sách — đã chi / hạn mức</h3>
-  <p class="doc-sec__desc">Dùng lại <code>.wb-progress</code>: xanh khi còn thoải mái, vàng khi sắp chạm, đỏ khi chạm/vượt. Thanh vượt hạn mức chốt ở 100% và ghi rõ % vượt.</p>
+  <p class="wb-section__desc">Dùng lại <code>.wb-progress</code>: xanh khi còn thoải mái, vàng khi sắp chạm, đỏ khi chạm/vượt. Thanh vượt hạn mức chốt ở 100% và ghi rõ % vượt.</p>
   <div class="demo">
     <div class="demo__stage">
       <div class="wb-card" style="max-width:480px"><div class="wb-card__body wb-stack" style="--wb-stack-gap:16px">
@@ -357,9 +357,9 @@
   </div>
 </section>
 
-<section class="doc-sec">
+<section class="wb-section">
   <h3>Sparkline — trong thẻ KPI</h3>
-  <p class="doc-sec__desc">Đường xu hướng tí hon (<code>.wb-spark</code>) nhét gọn trong thẻ số liệu — thấy ngay đang lên hay xuống.</p>
+  <p class="wb-section__desc">Đường xu hướng tí hon (<code>.wb-spark</code>) nhét gọn trong thẻ số liệu — thấy ngay đang lên hay xuống.</p>
   <div class="demo">
     <div class="demo__stage">
       <div class="wb-stat-grid" style="max-width:460px">
@@ -389,9 +389,9 @@
   </div>
 </section>
 
-<section class="doc-sec">
+<section class="wb-section">
   <h3>Thang màu thay thế — xám &amp; một tông</h3>
-  <p class="doc-sec__desc">Khi đa sắc quá rối, bọc chart trong <code>.wb-chart-scheme--mono</code> (thang xám) hoặc
+  <p class="wb-section__desc">Khi đa sắc quá rối, bọc chart trong <code>.wb-chart-scheme--mono</code> (thang xám) hoặc
   <code>.wb-chart-scheme--blue</code> (một tông xanh). Mỗi lát trộn từ <b>một màu mực</b> ra nền và <b>giãn đều theo số
   lát</b>: thêm <code>.wb-chart-ramp--N</code> (N = số lát) để N series trải đều từ 100% → 25% cường độ, nên không hai
   lát nào nhìn giống nhau — donut dưới đây 4 lát nên dùng <code>--4</code>. Tự đảo sáng/tối theo theme; đặt lên
@@ -449,9 +449,9 @@
   </div>
 </section>
 
-<section class="doc-sec">
+<section class="wb-section">
   <h3>Bảng màu biểu đồ</h3>
-  <p class="doc-sec__desc">Bộ màu phân loại (dịu, phân biệt tốt) + <b>thu = xanh</b>, <b>chi = đỏ</b> để biểu đồ đọc như phần còn lại của giao diện. Tất cả sáng hơn ở dark mode.</p>
+  <p class="wb-section__desc">Bộ màu phân loại (dịu, phân biệt tốt) + <b>thu = xanh</b>, <b>chi = đỏ</b> để biểu đồ đọc như phần còn lại của giao diện. Tất cả sáng hơn ở dark mode.</p>
   <div class="demo demo--plain">
     <div class="demo__stage">
       <div class="wb-legend" style="gap:12px 18px">
@@ -471,7 +471,7 @@
 --wb-chart-1 … --wb-chart-8              /* lát/loạt phân loại */
 --wb-chart-grid / --wb-chart-axis        /* lưới / trục */</code></pre></div>
   </div>
-  <div class="doc-note">
+  <div class="wb-alert wb-alert--info doc-note">
     <span>💡</span>
     <div>Trong app của bạn, cho <b>Recharts</b> đọc đúng các token này (vd <code>fill="var(--wb-chart-1)"</code>,
     <code>&lt;CartesianGrid stroke="var(--wb-chart-grid)"/&gt;</code>, tooltip bọc bằng class <code>wb-chart__tip</code>).

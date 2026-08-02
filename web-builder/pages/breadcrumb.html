@@ -1,24 +1,42 @@
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Điều hướng</p>
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Navigation</p>
   <h2>Breadcrumb</h2>
-  <p>Đường dẫn phân cấp — cho biết đang ở đâu và quay lại nhanh. Mục cuối là trang hiện tại (đậm, không link).</p>
+  <p>Đường dẫn phân cấp — cho biết đang ở đâu và quay lại nhanh. Mục cuối là trang hiện tại (đậm, không link).
+  Thêm cấp = lặp thêm một cặp <code>&lt;a&gt;</code> + <code>__sep</code>; đường dẫn dài tự <b>xuống dòng</b> khi hẹp.</p>
 </div>
 
-<section class="doc-sec">
+<section class="wb-section">
   <div class="demo demo--plain">
     <div class="demo__stage">
-      <nav class="wb-breadcrumb" aria-label="Breadcrumb">
-        <a href="#/overview">Trang chủ</a>
-        <span class="wb-breadcrumb__sep">/</span>
-        <a href="#/tables">Giao dịch</a>
-        <span class="wb-breadcrumb__sep">/</span>
-        <span class="wb-breadcrumb__current">Chi tiết #1042</span>
-      </nav>
+      <div class="wb-stack wb-stack--loose">
+        <nav class="wb-breadcrumb" aria-label="Breadcrumb">
+          <a href="#/overview">Trang chủ</a>
+          <span class="wb-breadcrumb__sep">/</span>
+          <a href="#/tables">Giao dịch</a>
+          <span class="wb-breadcrumb__sep">/</span>
+          <span class="wb-breadcrumb__current">Chi tiết #1042</span>
+        </nav>
+        <nav class="wb-breadcrumb" aria-label="Breadcrumb — đường dẫn dài">
+          <a href="#/overview">Trang chủ</a>
+          <span class="wb-breadcrumb__sep">/</span>
+          <a href="#/tables">Ngân sách</a>
+          <span class="wb-breadcrumb__sep">/</span>
+          <a href="#/tables">2026</a>
+          <span class="wb-breadcrumb__sep">/</span>
+          <a href="#/tables">Tháng 7</a>
+          <span class="wb-breadcrumb__sep">/</span>
+          <a href="#/tables">Danh mục chi</a>
+          <span class="wb-breadcrumb__sep">/</span>
+          <a href="#/tables">Ăn uống ngoài</a>
+          <span class="wb-breadcrumb__sep">/</span>
+          <span class="wb-breadcrumb__current">Hoá đơn #10428 · Nhà hàng Sen</span>
+        </nav>
+      </div>
     </div>
     <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;nav class="wb-breadcrumb" aria-label="Breadcrumb"&gt;
   &lt;a href="…"&gt;Trang chủ&lt;/a&gt;
   &lt;span class="wb-breadcrumb__sep"&gt;/&lt;/span&gt;
-  &lt;a href="…"&gt;Giao dịch&lt;/a&gt;
+  &lt;a href="…"&gt;Giao dịch&lt;/a&gt;    &lt;!-- thêm cấp = lặp &lt;a&gt; + __sep tuỳ ý; dài quá tự wrap --&gt;
   &lt;span class="wb-breadcrumb__sep"&gt;/&lt;/span&gt;
   &lt;span class="wb-breadcrumb__current"&gt;Chi tiết #1042&lt;/span&gt;
 &lt;/nav&gt;</code></pre></div>

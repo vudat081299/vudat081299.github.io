@@ -1,0 +1,195 @@
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Navigation</p>
+  <h2>Footer &amp; chuyển trang</h2>
+  <p>Hai primitive cho <b>chân trang</b>: <code>.wb-footer</code> (footer site — thương hiệu + cột liên kết + dòng bản quyền)
+  và <code>.wb-pager</code> (nút <b>Trang trước / Trang sau</b> đặt cuối mỗi trang). Pager có <b>phím tắt</b>:
+  bấm <kbd class="wb-kbd">[</kbd> về trang trước, <kbd class="wb-kbd">]</kbd> sang trang sau — thử ngay ở
+  <b>pager thật cuối trang này</b> (docs tự gắn vào mọi trang). Đi kèm là keycap nhỏ <code>.wb-kbd</code>.</p>
+</div>
+
+<section class="wb-section">
+  <div class="wb-block">
+    <h4>Chuyển trang — <code>.wb-pager</code></h4>
+    <p class="wb-block__desc">Hai thẻ: <b>trước</b> bên trái, <b>sau</b> bên phải; mỗi thẻ có nhãn hướng + tên trang đích + gợi ý phím.
+    Thêm <code>data-pager</code> rồi để driver (app.js) map <kbd class="wb-kbd">[</kbd> <kbd class="wb-kbd">]</kbd> vào 2 link
+    <code>data-pager-prev</code> / <code>data-pager-next</code> (bỏ qua khi đang gõ trong ô nhập). Thanh tự xuống 1 cột khi hẹp.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <nav class="wb-pager" aria-label="Chuyển trang (ví dụ)">
+          <a class="wb-pager__link wb-pager__link--prev" href="#/pagination">
+            <span class="wb-ico wb-pager__arrow">chevron_left</span>
+            <span class="wb-pager__text"><span class="wb-pager__dir">Trang trước <kbd class="wb-kbd">[</kbd></span>
+            <span class="wb-pager__title">Pagination</span>
+            <span class="wb-pager__meta">Điều hướng</span></span>
+          </a>
+          <a class="wb-pager__link wb-pager__link--next" href="#/accordion">
+            <span class="wb-pager__text"><span class="wb-pager__dir"><kbd class="wb-kbd">]</kbd> Trang sau</span>
+            <span class="wb-pager__title">Accordion</span>
+            <span class="wb-pager__meta">Đóng/mở</span></span>
+            <span class="wb-ico wb-pager__arrow">chevron_right</span>
+          </a>
+        </nav>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;nav class="wb-pager" data-pager aria-label="Chuyển trang"&gt;
+  &lt;a class="wb-pager__link wb-pager__link--prev" data-pager-prev href="/pagination"&gt;
+    &lt;span class="wb-ico wb-pager__arrow"&gt;chevron_left&lt;/span&gt;   &lt;!-- mũi tên ở mép ngoài (trái) --&gt;
+    &lt;span class="wb-pager__text"&gt;
+      &lt;span class="wb-pager__dir"&gt;Trang trước &lt;kbd class="wb-kbd"&gt;[&lt;/kbd&gt;&lt;/span&gt;
+      &lt;span class="wb-pager__title"&gt;Pagination&lt;/span&gt;
+      &lt;span class="wb-pager__meta"&gt;Điều hướng&lt;/span&gt;       &lt;!-- nhóm/mô tả trang đích --&gt;
+    &lt;/span&gt;
+  &lt;/a&gt;
+  &lt;a class="wb-pager__link wb-pager__link--next" data-pager-next href="/accordion"&gt;
+    &lt;span class="wb-pager__text"&gt;
+      &lt;span class="wb-pager__dir"&gt;&lt;kbd class="wb-kbd"&gt;]&lt;/kbd&gt; Trang sau&lt;/span&gt;
+      &lt;span class="wb-pager__title"&gt;Accordion&lt;/span&gt;
+      &lt;span class="wb-pager__meta"&gt;Đóng/mở&lt;/span&gt;
+    &lt;/span&gt;
+    &lt;span class="wb-ico wb-pager__arrow"&gt;chevron_right&lt;/span&gt;  &lt;!-- mũi tên ở mép ngoài (phải) --&gt;
+  &lt;/a&gt;
+&lt;/nav&gt;
+
+&lt;!-- driver: [ và ] nhảy prev/next (bỏ qua khi đang gõ trong field) --&gt;
+addEventListener("keydown", (e) =&gt; {
+  if (e.metaKey||e.ctrlKey||e.altKey) return;
+  if (e.target.closest("input,textarea,select,[contenteditable]")) return;
+  const p = document.querySelector("[data-pager-prev]"), n = document.querySelector("[data-pager-next]");
+  if (e.key === "[" &amp;&amp; p) location.href = p.href;
+  if (e.key === "]" &amp;&amp; n) location.href = n.href;
+});</code></pre></div>
+    </div>
+  </div>
+
+  <div class="wb-block">
+    <h4>Chỉ một phía — đầu / cuối danh sách</h4>
+    <p class="wb-block__desc">Trang <b>đầu</b> bỏ thẻ <i>trước</i>, trang <b>cuối</b> bỏ thẻ <i>sau</i> — thẻ còn lại vẫn nằm đúng cột
+    (grid 2 cột), không bị nhảy sang giữa.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-stack" style="--wb-stack-gap:12px">
+          <nav class="wb-pager" aria-label="Trang đầu">
+            <a class="wb-pager__link wb-pager__link--next" href="#/tokens">
+              <span class="wb-pager__text"><span class="wb-pager__dir"><kbd class="wb-kbd">]</kbd> Trang sau</span>
+              <span class="wb-pager__title">Design tokens</span>
+              <span class="wb-pager__meta">Foundation</span></span>
+              <span class="wb-ico wb-pager__arrow">chevron_right</span>
+            </a>
+          </nav>
+          <nav class="wb-pager" aria-label="Trang cuối">
+            <a class="wb-pager__link wb-pager__link--prev" href="#/slotgrid">
+              <span class="wb-ico wb-pager__arrow">chevron_left</span>
+              <span class="wb-pager__text"><span class="wb-pager__dir">Trang trước <kbd class="wb-kbd">[</kbd></span>
+              <span class="wb-pager__title">Lưới ô cố định</span>
+              <span class="wb-pager__meta">Cấu trúc</span></span>
+            </a>
+          </nav>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;!-- trang đầu: chỉ có --next (giữ nguyên cột phải) --&gt;
+&lt;nav class="wb-pager"&gt;&lt;a class="wb-pager__link wb-pager__link--next" …&gt; … &lt;/a&gt;&lt;/nav&gt;
+
+&lt;!-- trang cuối: chỉ có --prev (giữ nguyên cột trái) --&gt;
+&lt;nav class="wb-pager"&gt;&lt;a class="wb-pager__link wb-pager__link--prev" …&gt; … &lt;/a&gt;&lt;/nav&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="wb-block">
+    <h4>Footer — <code>.wb-footer</code></h4>
+    <p class="wb-block__desc">Dải full-width (viền trên hairline), <code>__inner</code> căn giữa nội dung: thương hiệu + tagline ·
+    các <b>cột liên kết</b> (<code>__col</code> · <code>__title</code> · <code>__link</code>) · dòng dưới có bản quyền + icon xã hội
+    (tái dùng <code>.wb-btn--ghost.wb-btn--icon</code>). Không màu thương hiệu — theo gu xám (link mờ → đậm khi hover).</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage" style="padding:0">
+        <footer class="wb-footer">
+          <div class="wb-footer__inner">
+            <div class="wb-footer__top">
+              <div class="wb-footer__brand">
+                <span class="wb-footer__mark">C</span>
+                <div><div class="wb-footer__name">Cashy</div>
+                <p class="wb-footer__tagline">Quản lý tài chính cá nhân minh bạch, gọn gàng.</p></div>
+              </div>
+              <nav class="wb-footer__cols" aria-label="Liên kết">
+                <div class="wb-footer__col"><h4 class="wb-footer__title">Sản phẩm</h4>
+                  <a class="wb-footer__link" href="#/footer">Tính năng</a>
+                  <a class="wb-footer__link" href="#/footer">Bảng giá</a>
+                  <a class="wb-footer__link" href="#/footer">Bảo mật</a></div>
+                <div class="wb-footer__col"><h4 class="wb-footer__title">Công ty</h4>
+                  <a class="wb-footer__link" href="#/footer">Giới thiệu</a>
+                  <a class="wb-footer__link" href="#/footer">Tuyển dụng</a>
+                  <a class="wb-footer__link" href="#/footer">Liên hệ</a></div>
+                <div class="wb-footer__col"><h4 class="wb-footer__title">Hỗ trợ</h4>
+                  <a class="wb-footer__link" href="#/footer">Trợ giúp</a>
+                  <a class="wb-footer__link" href="#/footer">Điều khoản</a>
+                  <a class="wb-footer__link" href="#/footer">Quyền riêng tư</a></div>
+              </nav>
+            </div>
+            <div class="wb-footer__bottom">
+              <span class="wb-footer__copy">© 2026 Cashy. Bảo lưu mọi quyền.</span>
+              <div class="wb-footer__social">
+                <a class="wb-btn wb-btn--ghost wb-btn--icon" href="#/footer" aria-label="GitHub"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 2.9-.39c.98 0 1.97.13 2.9.39 2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14 0 1.55-.01 2.8-.01 3.18 0 .31.21.68.8.56A10.52 10.52 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5z"/></svg></a>
+                <a class="wb-btn wb-btn--ghost wb-btn--icon" href="#/footer" aria-label="Email"><span class="wb-ico">mail</span></a>
+              </div>
+            </div>
+          </div>
+        </footer>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;footer class="wb-footer"&gt;
+  &lt;div class="wb-footer__inner"&gt;
+    &lt;div class="wb-footer__top"&gt;
+      &lt;div class="wb-footer__brand"&gt;
+        &lt;span class="wb-footer__mark"&gt;C&lt;/span&gt;
+        &lt;div&gt;&lt;div class="wb-footer__name"&gt;Cashy&lt;/div&gt;
+        &lt;p class="wb-footer__tagline"&gt;Quản lý tài chính cá nhân minh bạch.&lt;/p&gt;&lt;/div&gt;
+      &lt;/div&gt;
+      &lt;nav class="wb-footer__cols"&gt;
+        &lt;div class="wb-footer__col"&gt;
+          &lt;h4 class="wb-footer__title"&gt;Sản phẩm&lt;/h4&gt;
+          &lt;a class="wb-footer__link" href="…"&gt;Tính năng&lt;/a&gt; …
+        &lt;/div&gt; …
+      &lt;/nav&gt;
+    &lt;/div&gt;
+    &lt;div class="wb-footer__bottom"&gt;
+      &lt;span class="wb-footer__copy"&gt;© 2026 Cashy&lt;/span&gt;
+      &lt;div class="wb-footer__social"&gt;
+        &lt;!-- GitHub: logo thương hiệu là &lt;svg&gt; inline (Material Symbols không có), mở tab mới --&gt;
+        &lt;a class="wb-btn wb-btn--ghost wb-btn--icon" href="https://github.com/…" target="_blank" rel="noreferrer" aria-label="GitHub"&gt;&lt;svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"&gt;&lt;path d="…github…"/&gt;&lt;/svg&gt;&lt;/a&gt;
+        &lt;a class="wb-btn wb-btn--ghost wb-btn--icon" aria-label="Email"&gt;&lt;span class="wb-ico"&gt;mail&lt;/span&gt;&lt;/a&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/footer&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="wb-block">
+    <h4>Footer gọn — <code>--slim</code></h4>
+    <p class="wb-block__desc">Bỏ phần cột, còn <b>một dòng</b> bản quyền + icon — hợp app nhỏ hoặc trang trong.</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage" style="padding:0">
+        <footer class="wb-footer wb-footer--slim">
+          <div class="wb-footer__inner">
+            <div class="wb-footer__bottom">
+              <span class="wb-footer__copy">© 2026 Cashy. Bảo lưu mọi quyền.</span>
+              <div class="wb-footer__social">
+                <a class="wb-btn wb-btn--ghost wb-btn--icon" href="#/footer" aria-label="GitHub"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 2.9-.39c.98 0 1.97.13 2.9.39 2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14 0 1.55-.01 2.8-.01 3.18 0 .31.21.68.8.56A10.52 10.52 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5z"/></svg></a>
+                <a class="wb-btn wb-btn--ghost wb-btn--icon" href="#/footer" aria-label="Email"><span class="wb-ico">mail</span></a>
+              </div>
+            </div>
+          </div>
+        </footer>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;footer class="wb-footer wb-footer--slim"&gt;
+  &lt;div class="wb-footer__inner"&gt;&lt;div class="wb-footer__bottom"&gt;
+    &lt;span class="wb-footer__copy"&gt;© 2026 Cashy&lt;/span&gt;
+    &lt;div class="wb-footer__social"&gt; … &lt;/div&gt;
+  &lt;/div&gt;&lt;/div&gt;
+&lt;/footer&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="wb-alert wb-alert--info doc-note">
+    <span class="wb-ico" style="color:var(--wb-info-text)">keyboard</span>
+    <div>Phím tắt <kbd class="wb-kbd">[</kbd> / <kbd class="wb-kbd">]</kbd> đang chạy trên chính docs này — mỗi trang có
+    một <code>.wb-pager</code> ở cuối (dựng theo thứ tự menu). Cuộn xuống hoặc bấm thử ngay.</div>
+  </div>
+</section>

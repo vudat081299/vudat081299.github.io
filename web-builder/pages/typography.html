@@ -1,52 +1,62 @@
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Nền tảng</p>
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Foundation</p>
   <h2>Typography</h2>
   <p>Một họ chữ duy nhất, phân cấp bằng <b>cỡ + độ đậm + màu</b> chứ không “bùng nổ” kích thước.
   Chữ nền nã để dữ liệu tiền là thứ nổi bật nhất trên màn hình.</p>
 </div>
 
-<section class="doc-sec">
+<section class="wb-section">
   <h3>Thang cỡ chữ</h3>
-  <p class="doc-sec__desc">Các cỡ dùng thật trong hệ. Giữ số bước ít và có mục đích rõ ràng.</p>
+  <p class="wb-section__desc">Các cỡ dùng thật trong hệ, giờ là <b>token</b> chứ không còn là quy ước đọc bằng mắt:
+  <code>--wb-text-*</code>. Giữ số bước ít và có mục đích rõ ràng. Scaffold trang
+  (<a href="#/shell">page-head · section · block</a>) là nơi đầu tiên tiêu thụ chúng, nên tiêu đề của một
+  màn hình không thể trôi ra px tự chế.</p>
   <div class="type-scale">
     <div class="type-row">
-      <div class="type-row__meta">Display · 30 / 700</div>
-      <div class="type-row__sample" style="font-size:30px;font-weight:700;letter-spacing:-.02em">47.590.000&nbsp;₫</div>
+      <div class="type-row__meta"><code>--wb-text-display</code> · 31 / 700</div>
+      <div class="type-row__sample" style="font-size:var(--wb-text-display);font-weight:700;letter-spacing:-.02em">47.590.000&nbsp;₫</div>
     </div>
     <div class="type-row">
-      <div class="type-row__meta">Tiêu đề trang · 27 / 700</div>
-      <div class="type-row__sample" style="font-size:27px;font-weight:700;letter-spacing:-.02em">Tổng quan tài chính</div>
+      <div class="type-row__meta"><code>--wb-text-page</code> · 27 / 700</div>
+      <div class="type-row__sample" style="font-size:var(--wb-text-page);font-weight:700;letter-spacing:-.02em">Tổng quan tài chính</div>
     </div>
     <div class="type-row">
-      <div class="type-row__meta">Mục lớn · 20 / 650</div>
-      <div class="type-row__sample" style="font-size:20px;font-weight:650">Giao dịch gần đây</div>
+      <div class="type-row__meta"><code>--wb-text-section</code> · 19 / 700</div>
+      <div class="type-row__sample" style="font-size:var(--wb-text-section);font-weight:700;letter-spacing:-.01em">Giao dịch gần đây</div>
     </div>
     <div class="type-row">
-      <div class="type-row__meta">Tiêu đề thẻ · 15 / 650</div>
-      <div class="type-row__sample" style="font-size:15px;font-weight:650">Khoản phải thu</div>
+      <div class="type-row__meta"><code>--wb-text-title</code> · 15 / 650</div>
+      <div class="type-row__sample" style="font-size:var(--wb-text-title);font-weight:650">Khoản phải thu</div>
     </div>
     <div class="type-row">
-      <div class="type-row__meta">Body · 14 / 400</div>
-      <div class="type-row__sample" style="font-size:14px">Lương tháng 7 từ Công ty ABC, đã ghi nhận vào tài khoản Vietcombank.</div>
+      <div class="type-row__meta"><code>--wb-text-body</code> · 14 / 400</div>
+      <div class="type-row__sample" style="font-size:var(--wb-text-body)">Lương tháng 7 từ Công ty ABC, đã ghi nhận vào tài khoản Vietcombank.</div>
     </div>
     <div class="type-row">
-      <div class="type-row__meta">Phụ / help · 13 / 400</div>
-      <div class="type-row__sample" style="font-size:13px;color:var(--wb-fg-muted)">Tối đa 200 ký tự.</div>
+      <div class="type-row__meta"><code>--wb-text-help</code> · 13 / 400</div>
+      <div class="type-row__sample" style="font-size:var(--wb-text-help);color:var(--wb-fg-muted)">Tối đa 200 ký tự.</div>
     </div>
     <div class="type-row">
-      <div class="type-row__meta">Caption · 12 / 500</div>
-      <div class="type-row__sample" style="font-size:12px;color:var(--wb-fg-muted)">Cập nhật 2 phút trước</div>
+      <div class="type-row__meta"><code>--wb-text-caption</code> · 12 / 500</div>
+      <div class="type-row__sample" style="font-size:var(--wb-text-caption);color:var(--wb-fg-muted)">Cập nhật 2 phút trước</div>
     </div>
     <div class="type-row">
-      <div class="type-row__meta">Label bảng · 11.5 / 600</div>
-      <div class="type-row__sample" style="font-size:11.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--wb-fg-muted)">Số tiền</div>
+      <div class="type-row__meta"><code>--wb-text-label</code> · 11 / 700</div>
+      <div class="type-row__sample" style="font-size:var(--wb-text-label);font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--wb-fg-subtle)">Số tiền</div>
     </div>
+  </div>
+
+  <div class="wb-alert wb-alert--info doc-note">
+    <span class="wb-ico" style="color:var(--wb-info-text)">info</span>
+    <div>Các component <b>đã có</b> (card, table, alert…) vẫn giữ cỡ chữ viết thẳng bằng px — chúng khớp với
+    thang này nhưng chưa trỏ vào token. Chuyển hết sang <code>--wb-text-*</code> là một đợt quét riêng, có chủ
+    đích, để diff không phình ra cả thư viện trong một lần. Code <b>mới</b> thì dùng token.</div>
   </div>
 </section>
 
-<section class="doc-sec">
+<section class="wb-section">
   <h3>Độ đậm — phân cấp bằng weight, không đổi cỡ</h3>
-  <p class="doc-sec__desc">Mạnh = <code>--wb-fg</code> @ 600–650, phụ = <code>--wb-fg-muted</code>, mờ = <code>--wb-fg-subtle</code>.</p>
+  <p class="wb-section__desc">Mạnh = <code>--wb-fg</code> @ 600–650, phụ = <code>--wb-fg-muted</code>, mờ = <code>--wb-fg-subtle</code>.</p>
   <div class="wb-grid wb-grid--auto" style="--wb-grid-min:150px;gap:12px">
     <div class="weight-cell"><div class="weight-cell__n">400 · Regular</div><div class="weight-cell__s" style="font-weight:400">Số dư khả dụng</div></div>
     <div class="weight-cell"><div class="weight-cell__n">500 · Medium</div><div class="weight-cell__s" style="font-weight:500">Số dư khả dụng</div></div>
@@ -55,9 +65,9 @@
   </div>
 </section>
 
-<section class="doc-sec">
+<section class="wb-section">
   <h3>Số là dữ liệu tài chính — đối xử tử tế</h3>
-  <p class="doc-sec__desc">Căn phải, dùng chữ số tabular (<code>tabular-nums</code>) để các cột thẳng hàng.</p>
+  <p class="wb-section__desc">Căn phải, dùng chữ số tabular (<code>tabular-nums</code>) để các cột thẳng hàng.</p>
   <div class="demo demo--plain">
     <div class="demo__stage">
       <div class="wb-grid wb-grid--2" style="gap:24px;max-width:520px">
@@ -76,7 +86,7 @@
       </div>
     </div>
   </div>
-  <div class="doc-note">
+  <div class="wb-alert wb-alert--info doc-note">
     <span>💡</span>
     <div>Dùng locale của app (<code>1.234.567&nbsp;₫</code>) và một <b>non-breaking space</b> trước <code>₫</code>.
     Class <code>.wb-num</code> đã bật sẵn tabular + căn phải — cứ thêm vào <code>&lt;th&gt;</code>/<code>&lt;td&gt;</code> cột tiền.</div>

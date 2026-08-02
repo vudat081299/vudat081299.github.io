@@ -1,15 +1,15 @@
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Bộ chọn</p>
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Pickers</p>
   <h2>Chọn giờ (time)</h2>
   <p>Chọn giờ bằng <b>cột cuộn</b> kiểu iOS: một cột <b>giờ</b> và một cột <b>phút</b> (thêm <code>--ampm</code> để có cột
   AM/PM 12 giờ; mặc định 24 giờ). Ô đang chọn là chip <b>đậm trung tính</b> như calendar. Mỗi cột ghép với
   <code>.wb-scroll-y</code> để có thanh cuộn theo theme.</p>
 </div>
 
-<section class="doc-sec">
-  <div class="doc-block">
+<section class="wb-section">
+  <div class="wb-block">
     <h4>24 giờ</h4>
-    <p class="doc-block__desc">Giờ <code>00–23</code>, phút theo bước <code>data-minute-step</code> (mặc định 1 phút; ở đây để 5 cho gọn).
+    <p class="wb-block__desc">Giờ <code>00–23</code>, phút theo bước <code>data-minute-step</code> (mặc định 1 phút; ở đây để 5 cho gọn).
     Đặt sẵn giờ bằng <code>data-value="HH:MM"</code>.</p>
     <div class="demo">
       <div class="demo__stage">
@@ -28,9 +28,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>12 giờ AM/PM — <code>--ampm</code></h4>
-    <p class="doc-block__desc">Thêm <code>data-ampm</code>: giờ <code>1–12</code> và một cột <b>AM/PM</b>. Ở đây phút để mặc định (mỗi phút).</p>
+    <p class="wb-block__desc">Thêm <code>data-ampm</code>: giờ <code>1–12</code> và một cột <b>AM/PM</b>. Ở đây phút để mặc định (mỗi phút).</p>
     <div class="demo">
       <div class="demo__stage">
         <div class="wb-timepicker" data-timepicker data-ampm data-value="02:15 PM">
@@ -49,9 +49,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Gõ hoặc chọn (field + popover)</h4>
-    <p class="doc-block__desc">Cùng pattern như calendar: ô nhập <b>gõ được</b> (tự định dạng <code>HH:MM</code> qua <code>data-mask="time"</code>) <b>hoặc</b> bấm icon đồng hồ mở
+    <p class="wb-block__desc">Cùng pattern như calendar: ô nhập <b>gõ được</b> (tự định dạng <code>HH:MM</code> qua <code>data-mask="time"</code>) <b>hoặc</b> bấm icon đồng hồ mở
     <code>.wb-popover</code> chứa time picker. Giờ chọn điền vào ô (<code>data-picker-out</code>); popover <b>không</b> tự đóng để còn chỉnh cả giờ lẫn phút.</p>
     <div class="demo">
       <div class="demo__stage">
@@ -83,9 +83,9 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Ngày + giờ (datetime)</h4>
-    <p class="doc-block__desc">Cần chọn cả <b>ngày lẫn giờ</b>? Đặt <code>.wb-calendar</code> cạnh <code>.wb-timepicker</code> bằng
+    <p class="wb-block__desc">Cần chọn cả <b>ngày lẫn giờ</b>? Đặt <code>.wb-calendar</code> cạnh <code>.wb-timepicker</code> bằng
     <code>.wb-cluster</code> — hai primitive rời, ghép lại thành bộ chọn datetime.</p>
     <div class="demo">
       <div class="demo__stage">
