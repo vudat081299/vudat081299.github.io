@@ -108,6 +108,14 @@
 
   /* Thuật ngữ có giải thích khi rê chuột / bấm — để không phải ngắt mạch đọc đi tra. */
   .rb-term { border-bottom: 1px dashed var(--wb-border-strong); cursor: help; }
+
+  /* Nav bar ở màn hẹp. Hợp đồng của kit: __actions không bao giờ co, nên thứ nằm
+     trong đó phải vừa ở 360px — tức nút icon. Vậy nhãn chữ ẩn đi, và tên trang
+     cho phép co + cắt bằng ellipsis thay vì đẩy cả thanh tràn ra ngoài trang. */
+  @media (max-width: 560px) {
+    .rb-navhide { display: none; }
+    .wb-navbar__brand { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  }
 </style>
 </head>
 <body>
@@ -116,7 +124,7 @@
   <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">§</span> Economics Handbook</a>
   <span class="wb-navbar__spacer"></span>
   <div class="wb-navbar__actions">
-    <a class="wb-btn wb-btn--ghost wb-btn--sm" href="../index.html"><span class="wb-ico wb-ico--sm">arrow_back</span> Trang chủ</a>
+    <a class="wb-btn wb-btn--ghost wb-btn--sm" href="../index.html"><span class="wb-ico wb-ico--sm">arrow_back</span> <span class="rb-navhide">Trang chủ</span></a>
     <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" id="theme-toggle" aria-label="Sáng / Tối">
       <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
       <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
@@ -298,14 +306,15 @@
           <tbody>
             <tr><td><b>Tư nhân</b></td><td class="wb-cell-muted">Dân và doanh nghiệp gửi tiết kiệm nhiều hơn số đi vay để làm ăn</td><td><span class="wb-num wb-num--pos">+8</span> đơn vị</td></tr>
             <tr><td><b>Nhà nước</b></td><td class="wb-cell-muted">Thu thuế nhiều hơn chi ngân sách. Số âm = thâm hụt, phải vay</td><td><span class="wb-num wb-num--neg">−5</span> đơn vị</td></tr>
-            <tr><td><b>Nước ngoài</b></td><td class="wb-cell-muted">Họ dư so với ta, tức là ta <em>nhập</em> nhiều hơn xuất</td><td><span class="wb-num wb-num--neg">−3</span> đơn vị</td></tr>
+            <tr><td><b>Nước ngoài</b></td><td class="wb-cell-muted">Dư nghĩa là họ thu của ta nhiều hơn chi cho ta — tức ta <em>nhập</em> nhiều hơn xuất. Số âm = ngược lại: ta <em>xuất</em> nhiều hơn nhập, đúng trường hợp Việt Nam</td><td><span class="wb-num wb-num--neg">−3</span> đơn vị</td></tr>
           </tbody>
         </table></div>
           <div class="wb-card__foot"><span>8 − 5 − 3 = 0. Không phải trùng hợp, và cũng không phải một quy luật kinh tế có thể sai — đây là <b>cách ba con số được định nghĩa</b>, giống như tổng tiền vào ví bạn trừ tổng tiền ra khỏi ví thì buộc phải bằng số dư còn lại.</span></div>
         </div>
         <p class="rb-prose">Công dụng thực dụng: nó <b>chặn những lời hứa bất khả thi</b>. Không thể cùng lúc muốn dân tiết kiệm nhiều hơn, muốn nhà nước giảm thâm hụt, <em>và</em> muốn giảm xuất siêu. Ba mong muốn đó là ba con số phải cộng bằng không — được hai thì hỏng cái thứ ba. Ai hứa cả ba, người đó đang mắc lỗi cộng trừ, không phải đang có tầm nhìn khác.</p>
-        <p class="rb-prose">Viết gọn lại, đây là dạng bạn sẽ gặp trong sách — <b>chỉ là cách viết tắt của bảng trên</b>, không phải kiến thức mới: $S$ tiết kiệm, $I$ đầu tư, $T$ thuế, $G$ chi ngân sách, $X$ xuất khẩu, $M$ nhập khẩu.</p>
-        <div class="rb-formula">$$\underbrace{(S-I)}_{\text{túi tư nhân}} \;+\; \underbrace{(T-G)}_{\text{túi nhà nước}} \;+\; \underbrace{(X-M)}_{\text{túi nước ngoài, đảo dấu}} \;=\; 0$$</div>
+        <p class="rb-prose">Viết gọn lại, đây là dạng bạn sẽ gặp trong sách — <b>chỉ là cách viết tắt của bảng trên</b>, không phải kiến thức mới: $S$ tiết kiệm, $I$ đầu tư, $T$ thuế, $G$ chi ngân sách, $X$ xuất khẩu, $M$ nhập khẩu. Để ý túi nước ngoài viết là $M-X$ chứ không phải $X-M$: <b>phần dư của họ chính là phần ta nhập trội</b>.</p>
+        <div class="rb-formula">$$\underbrace{(S-I)}_{\text{túi tư nhân}} \;+\; \underbrace{(T-G)}_{\text{túi nhà nước}} \;+\; \underbrace{(M-X)}_{\text{túi nước ngoài}} \;=\; 0$$</div>
+        <p class="rb-prose" style="color:var(--wb-fg-muted);font-size:13.5px">Chuyển vế thì ra dạng hay gặp hơn: $(S-I)+(T-G)=(X-M)$ — nước xuất siêu như Việt Nam <b>bắt buộc</b> có tổng hai túi trong nước dương, tức đang cho phần còn lại của thế giới vay ròng.</p>
         <p class="rb-prose" style="color:var(--wb-fg-muted);font-size:13.5px">Không cần nhớ công thức này. Cần nhớ đúng một câu: <b>dư của người này là thiếu của người kia.</b> Danh sách các phép cộng cùng loại nằm ở <a href="#s8-dangthuc">Phần 08</a>.</p>
       </section>
 
@@ -562,9 +571,9 @@
         <div class="wb-card"><div class="wb-table-scroll"><table class="wb-table">
           <thead><tr><th>Nhóm trong rổ CPI</th><th>Việt Nam</th><th>Mỹ</th><th>Nghĩa là</th></tr></thead>
           <tbody>
-            <tr><td>Lương thực &amp; thực phẩm</td><td><b>~33–34%</b></td><td>~13%</td><td class="wb-cell-muted">Giá thịt lợn và gạo quan trọng hơn giá dầu với lạm phát VN</td></tr>
-            <tr><td>Nhà ở &amp; vật liệu xây dựng</td><td>~18%</td><td class="wb-cell-muted">—</td><td class="wb-cell-muted">Gồm cả điện, nước — đều là giá điều hành</td></tr>
-            <tr><td>Giao thông</td><td>~9–10%</td><td class="wb-cell-muted">—</td><td class="wb-cell-muted">Dầu tăng 10% chỉ đóng góp trực tiếp ~0,5–0,9 điểm % vào CPI <span class="wb-cap wb-cap--sm">R-B03</span></td></tr>
+            <tr><td>Hàng ăn &amp; dịch vụ ăn uống<br><span class="wb-cell-muted">gồm cả ăn uống ngoài gia đình</span></td><td><b>~33–34%</b></td><td>~13%</td><td class="wb-cell-muted">Giá thịt lợn và gạo quan trọng hơn giá dầu với lạm phát VN. Riêng <b>thịt lợn ~3–4%</b>, <b>gạo ~3%</b> — đừng gán trọng số cả nhóm cho một mặt hàng</td></tr>
+            <tr><td>Nhà ở, điện nước &amp; vật liệu xây dựng</td><td>~18–19%</td><td class="wb-cell-muted">—</td><td class="wb-cell-muted">Gồm cả điện, nước — đều là giá điều hành</td></tr>
+            <tr><td>Giao thông<br><span class="wb-cell-muted">riêng xăng dầu ~3,6%</span></td><td>~9–10%</td><td class="wb-cell-muted">—</td><td class="wb-cell-muted">Giá xăng dầu bán lẻ tăng 10% chỉ đóng góp trực tiếp <b>~0,36 điểm %</b> vào CPI — không phải cả trọng số nhóm giao thông <span class="wb-cap wb-cap--sm">R-B03</span></td></tr>
           </tbody>
         </table></div></div>
         <p class="rb-prose">Thêm một đặc thù: nhiều mặt hàng nặng ký trong rổ — điện, xăng, y tế, giáo dục — là <b>giá điều hành</b>, do nhà nước quyết định thời điểm điều chỉnh. Truyền dẫn vì thế đi <b>theo bậc thang chứ không liên tục</b>: CPI Việt Nam có những bước nhảy vào tháng có quyết định tăng giá, thay vì trôi mượt theo thị trường thế giới <span class="wb-cap wb-cap--sm">7.6</span>.</p>
@@ -727,7 +736,7 @@
           </div></details>
 
           <details class="wb-accordion__item"><summary>3 · VN-Index không đo thị trường — nó đo nhóm trụ</summary><div class="wb-accordion__body">
-            <p class="rb-prose">VN-Index có <b>trọng số theo vốn hoá free-float</b> — cổ phiếu càng lớn càng nặng ký. Vài mã đầu bảng vì thế quyết định con số bạn thấy trên tin tức. Phiên "VN-Index xanh 5 điểm" mà 70% số mã trên sàn giảm giá là chuyện hoàn toàn bình thường và xảy ra thường xuyên.</p>
+            <p class="rb-prose">VN-Index có <b>trọng số theo vốn hoá toàn phần</b> — tính trên <em>toàn bộ</em> số cổ phiếu niêm yết, không cắt bớt phần bị hạn chế chuyển nhượng. (Các rổ con như VN30, VNAllshare mới điều chỉnh theo free-float; VN-Index thì không, nên vài mã vốn hoá lớn còn nặng ký hơn nữa.) Vài mã đầu bảng vì thế quyết định con số bạn thấy trên tin tức. Phiên "VN-Index xanh 5 điểm" mà 70% số mã trên sàn giảm giá là chuyện hoàn toàn bình thường và xảy ra thường xuyên.</p>
             <p class="rb-prose">Muốn biết sức khoẻ thật của thị trường, nhìn <b>độ rộng</b> — số mã tăng so với số mã giảm — hoặc một chỉ số bình quân giản đơn, nơi mọi mã có trọng số bằng nhau. Chỉ số có trọng số vốn hoá trả lời câu hỏi "nhóm trụ hôm nay thế nào", không trả lời "danh mục của tôi hôm nay thế nào" <span class="wb-cap wb-cap--sm">R-H04</span>.</p>
           </div></details>
 
@@ -943,7 +952,7 @@
                 <tr><td><b>Lãi suất thực</b></td><td>Danh nghĩa − lạm phát kỳ vọng</td><td class="wb-cell-muted"><b>Biến chủ của cả trang này</b> (A2)</td></tr>
                 <tr><td><b>Lạm phát kỳ vọng</b></td><td>Mức lạm phát thị trường tin sẽ xảy ra</td><td class="wb-cell-muted">Quyết định hành vi hôm nay, khác lạm phát đã xảy ra</td></tr>
                 <tr><td><b>CPI</b></td><td>Giá của một giỏ hàng hoá cố định, so theo thời gian</td><td class="wb-cell-muted">Rổ VN khác rổ Mỹ căn bản (A4)</td></tr>
-                <tr><td><b>Headline vs core</b></td><td>Core loại bỏ thực phẩm và năng lượng (hai nhóm nhiễu nhất)</td><td class="wb-cell-muted">Fed nhìn core, không nhìn headline</td></tr>
+                <tr><td><b>Headline vs core</b></td><td>Core loại bỏ thực phẩm và năng lượng (hai nhóm nhiễu nhất)</td><td class="wb-cell-muted">Mục tiêu chính thức của Fed là <b>PCE tổng thể 2%</b>; core PCE là thứ nó theo dõi để đọc xu hướng nền</td></tr>
                 <tr><td><b>Breakeven / TIPS</b></td><td>Lạm phát kỳ vọng do <em>thị trường</em> định giá, đọc trực tiếp từ trái phiếu chống lạm phát Mỹ</td><td class="wb-cell-muted">Cách quan sát kỳ vọng mà không cần khảo sát ai</td></tr>
                 <tr><td><b>Output gap</b></td><td>Khoảng cách giữa sản lượng thực tế và mức tối đa bền vững</td><td class="wb-cell-muted">Lạm phát cầu kéo chỉ xuất hiện khi khoảng này đóng lại</td></tr>
                 <tr><td><b>Đường cong lợi suất</b></td><td>Lãi suất theo kỳ hạn. "Đảo ngược" = lãi ngắn hạn cao hơn dài hạn</td><td class="wb-cell-muted">Tín hiệu suy thoái trễ 6–18 tháng, và đã từng báo giả</td></tr>
@@ -986,7 +995,7 @@
                 <tr><td><b>Spread tín dụng (IG / HY)</b></td><td>Phần lãi suất tăng thêm mà doanh nghiệp phải trả so với chính phủ. HY = nhóm rủi ro cao</td><td class="wb-cell-muted"><b>Giãn ra trước khi cổ phiếu giảm</b> — chỉ báo cảnh báo sớm tốt nhất</td></tr>
                 <tr><td><b>VIX / MOVE</b></td><td>Thước đo biến động kỳ vọng của cổ phiếu (VIX) và trái phiếu (MOVE)</td><td class="wb-cell-muted">MOVE thường động trước VIX — trái phiếu dẫn đường</td></tr>
                 <tr><td><b>Đuôi dày</b></td><td>Biến động cực đoan xảy ra thường xuyên hơn nhiều so với phân phối chuẩn dự đoán</td><td class="wb-cell-muted">Bẫy lớn nhất với người từ nền toán/kỹ thuật bước vào tài chính</td></tr>
-                <tr><td><b>Free-float</b></td><td>Phần cổ phiếu thực sự tự do giao dịch</td><td class="wb-cell-muted">Cơ sở tính trọng số VN-Index — lý do chỉ số đo nhóm trụ</td></tr>
+                <tr><td><b>Free-float</b></td><td>Phần cổ phiếu thực sự tự do giao dịch</td><td class="wb-cell-muted">Cơ sở tính trọng số của VN30/VNAllshare — <b>không phải</b> của VN-Index, vốn dùng vốn hoá toàn phần</td></tr>
                 <tr><td><b>Margin / call margin</b></td><td>Vay tiền công ty chứng khoán để mua; bị bán cưỡng chế khi tỷ lệ ký quỹ thủng ngưỡng</td><td class="wb-cell-muted">Nguồn phi tuyến lớn nhất của thị trường VN (A5)</td></tr>
                 <tr><td><b>Nâng hạng thị trường</b></td><td>Được FTSE/MSCI xếp lên nhóm cao hơn</td><td class="wb-cell-muted">Quỹ chỉ số <em>buộc phải</em> mua bất kể giá — sự kiện biết trước lịch</td></tr>
                 <tr><td><b>ERP</b><br><span class="wb-cell-muted">phần bù rủi ro cổ phiếu</span></td><td>Phần lời cộng thêm nhà đầu tư đòi khi mua cổ phiếu thay vì trái phiếu chính phủ</td><td class="wb-cell-muted">Nó co lại nghĩa là thị trường đang <b>ít sợ</b>, tức đắt hơn vẻ ngoài</td></tr>
@@ -1224,13 +1233,13 @@
           <details class="wb-accordion__item"><summary>Tầng C — Lạm phát: sáu biến, không phải hai</summary><div class="wb-accordion__body">
             <ul class="wb-list wb-list--flush">
               <li class="wb-list__item"><span class="wb-list__title"><b>Thực hiện</b> vs <b>kỳ vọng</b><span class="wb-list__sub">Cái thứ hai mới điều khiển giá tài sản</span></span></li>
-              <li class="wb-list__item"><span class="wb-list__title"><b>Headline</b> vs <b>core</b><span class="wb-list__sub">Fed nhìn core PCE, không nhìn headline CPI</span></span></li>
+              <li class="wb-list__item"><span class="wb-list__title"><b>Headline</b> vs <b>core</b><span class="wb-list__sub">Fed đặt mục tiêu trên PCE tổng thể, nhưng đọc xu hướng bằng core PCE — không phải headline CPI</span></span></li>
               <li class="wb-list__item"><span class="wb-list__title"><b>Breakeven 5y / 5y5y forward</b><span class="wb-list__sub">Kỳ vọng do thị trường định giá, quan sát trực tiếp từ TIPS</span></span></li>
               <li class="wb-list__item"><span class="wb-list__title"><b>Tiền lương</b><span class="wb-list__sub">Quyết định lạm phát có "dính" hay không</span></span></li>
               <li class="wb-list__item"><span class="wb-list__title"><b>Output gap</b><span class="wb-list__sub">Cầu kéo chỉ xuất hiện khi gap đóng</span></span></li>
-              <li class="wb-list__item"><span class="wb-list__title"><b>CPI VN</b><span class="wb-list__sub">Rổ riêng: lương thực–thực phẩm ~33–34%, nhà ở &amp; VLXD ~18%, giao thông ~9–10%</span></span></li>
+              <li class="wb-list__item"><span class="wb-list__title"><b>CPI VN</b><span class="wb-list__sub">Rổ riêng: hàng ăn &amp; dịch vụ ăn uống ~33–34%, nhà ở–điện nước–VLXD ~18–19%, giao thông ~9–10% (riêng xăng dầu ~3,6%)</span></span></li>
             </ul>
-            <div class="wb-alert wb-alert--warning" style="margin-top:12px"><span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">warning</span></span><div class="wb-alert__body"><p class="wb-alert__title">Khung Mỹ không chuyển giao trực tiếp</p><p class="wb-alert__msg">CPI Việt Nam nhạy với giá thịt lợn hơn với giá dầu. Ở Mỹ lương thực chỉ ~13% rổ.</p></div></div>
+            <div class="wb-alert wb-alert--warning" style="margin-top:12px"><span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">warning</span></span><div class="wb-alert__body"><p class="wb-alert__title">Khung Mỹ không chuyển giao trực tiếp</p><p class="wb-alert__msg">CPI Việt Nam nhạy với giá thịt lợn hơn với giá xăng dầu (~3–4% so với ~3,6% trọng số, nhưng thịt lợn dao động mạnh hơn nhiều). Ở Mỹ nhóm thực phẩm chỉ ~13% rổ.</p></div></div>
           </div></details>
 
           <details class="wb-accordion__item"><summary>Tầng D — Chính sách</summary><div class="wb-accordion__body">
@@ -1318,7 +1327,7 @@
           <div class="wb-divider--label rb-cat-head" data-cat="A">A · Lãi suất &amp; chính sách tiền tệ</div>
           <div class="wb-card rb-rule" id="R-A01" data-tag="T0" data-cat="A"><div class="rb-rule-head"><span class="rb-id">R-A01</span><span class="wb-cap wb-cap--success wb-cap--sm">T0</span></div><p class="rb-body"><b>Nếu</b> lãi suất danh nghĩa tăng chậm hơn lạm phát kỳ vọng, <b>thì</b> lãi suất thực giảm — dù báo chí gọi đó là "thắt chặt".</p><p class="rb-note">Lãi suất thực, không phải danh nghĩa, là biến chủ. Quy tắc quan trọng nhất trong sổ tay.</p></div>
           <div class="wb-card rb-rule" id="R-A02" data-tag="T2" data-cat="A"><div class="rb-rule-head"><span class="rb-id">R-A02</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> Fed là bộ điều khiển phản hồi ($i = r^* + \pi + 0{,}5(\pi-\pi^*) + 0{,}5(y-y^*)$), <b>thì</b> Fed không phải nguyên nhân độc lập — nó <b>phản ứng lại</b> nền kinh tế, và phản ứng đó phụ thuộc vào <b>loại</b> cú sốc.</p></div>
-          <div class="wb-card rb-rule" id="R-A03" data-tag="T3" data-cat="A"><div class="rb-rule-head"><span class="rb-id">R-A03</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> tin xấu là về <b>tăng trưởng</b>, <b>thì</b> cổ phiếu có thể <b>tăng</b> (vì Fed sẽ nới). Nếu tin xấu là về <b>lạm phát</b>, <b>thì</b> cổ phiếu <b>luôn giảm</b>.</p><p class="rb-note">⚠ Chỉ đúng khi Fed còn dư địa nới và còn tín nhiệm.</p></div>
+          <div class="wb-card rb-rule" id="R-A03" data-tag="T3" data-cat="A"><div class="rb-rule-head"><span class="rb-id">R-A03</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> tin xấu là về <b>tăng trưởng</b>, <b>thì</b> cổ phiếu có thể <b>tăng</b> (vì Fed sẽ nới). Nếu tin xấu là về <b>lạm phát</b>, <b>thì</b> cổ phiếu <b>gần như luôn giảm</b>.</p><p class="rb-note">⚠ Vế đầu chỉ đúng khi Fed còn dư địa nới và còn tín nhiệm; cạn dư địa thì tin xấu chỉ còn là tin xấu. Vế sau là quy tắc T3, không phải định luật — đừng đọc chữ "luôn" theo nghĩa tuyệt đối.</p></div>
           <div class="wb-card rb-rule" id="R-A04" data-tag="T1" data-cat="A"><div class="rb-rule-head"><span class="rb-id">R-A04</span><span class="wb-cap wb-cap--info wb-cap--sm">T1</span></div><p class="rb-body"><b>Nếu</b> Fed hành động <b>đúng như đã được định giá</b>, <b>thì</b> giá tài sản <b>không đổi</b>. Biến di chuyển giá là <b>sai số dự báo</b>, không phải mức tuyệt đối.</p></div>
           <div class="wb-card rb-rule" id="R-A05" data-tag="T2" data-cat="A"><div class="rb-rule-head"><span class="rb-id">R-A05</span><span class="wb-cap wb-cap--sm">T2</span><span class="rb-lag">Δt: 12–18 tháng</span></div><p class="rb-body"><b>Nếu</b> lãi suất chính sách thay đổi, <b>thì</b> kinh tế thực phản ứng sau <b>12–18 tháng</b>.</p><p class="rb-note">Độ trễ này lớn hơn nhiệm kỳ quan sát của bộ điều khiển → Fed <b>luôn overshoot</b>.</p></div>
           <div class="wb-card rb-rule" id="R-A06" data-tag="T3" data-cat="A"><div class="rb-rule-head"><span class="rb-id">R-A06</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span><span class="rb-lag">Δt: 6–18 tháng</span></div><p class="rb-body"><b>Nếu</b> đường cong lợi suất đảo (2s10s &lt; 0), <b>thì</b> suy thoái theo sau với độ trễ 6–18 tháng.</p><p class="rb-note">⚠ Đã có tiền lệ tín hiệu giả; độ trễ rất biến động.</p></div>
@@ -1328,8 +1337,8 @@
           <div class="wb-divider--label rb-cat-head" data-cat="B">B · Lạm phát &amp; hàng hóa</div>
           <div class="wb-card rb-rule" id="R-B01" data-tag="T2" data-cat="B"><div class="rb-rule-head"><span class="rb-id">R-B01</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> cầu ngắn hạn không co giãn ($|\varepsilon|&lt;0{,}1$), <b>thì</b> mất 1% cung → giá tăng 10–20%. Xem mục 7.1.</p></div>
           <div class="wb-card rb-rule" id="R-B02" data-tag="T2" data-cat="B"><div class="rb-rule-head"><span class="rb-id">R-B02</span><span class="wb-cap wb-cap--sm">T2</span><span class="rb-lag">Δt: 1–12 tháng</span></div><p class="rb-body"><b>Nếu</b> giá dầu tăng, <b>thì</b> CPI headline phản ứng sau <b>1–3 tháng</b>; CPI core sau <b>6–12 tháng</b> và <b>chỉ nếu</b> vòng hai truyền qua tiền lương.</p></div>
-          <div class="wb-card rb-rule" id="R-B03" data-tag="T2" data-cat="B"><div class="rb-rule-head"><span class="rb-id">R-B03</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> giá dầu tăng 10%, <b>thì</b> đóng góp <b>trực tiếp</b> vào CPI Việt Nam chỉ khoảng <b>0,5–0,9 điểm phần trăm</b> (trọng số giao thông ~9–10%).</p><p class="rb-note">β = trọng số rổ × tỷ lệ nhập khẩu × pass-through. Tính được trước khi xem dữ liệu.</p></div>
-          <div class="wb-card rb-rule" id="R-B04" data-tag="T2" data-cat="B"><div class="rb-rule-head"><span class="rb-id">R-B04</span><span class="wb-cap wb-cap--sm">T2</span><span class="rb-lag">Δt: gần tức thời</span></div><p class="rb-body"><b>Nếu</b> giá thịt lợn hoặc gạo tăng, <b>thì</b> CPI Việt Nam phản ứng <b>mạnh và gần như tức thời</b> (trọng số ~33–34%).</p><p class="rb-note">Với VN, quan trọng hơn R-B02.</p></div>
+          <div class="wb-card rb-rule" id="R-B03" data-tag="T2" data-cat="B"><div class="rb-rule-head"><span class="rb-id">R-B03</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> giá xăng dầu bán lẻ tăng 10%, <b>thì</b> đóng góp <b>trực tiếp</b> vào CPI Việt Nam chỉ khoảng <b>0,36 điểm phần trăm</b> — vì trọng số của riêng xăng dầu chỉ ~3,6%, không phải cả nhóm giao thông ~9–10%.</p><p class="rb-note">β = trọng số rổ × tỷ lệ nhập khẩu × pass-through. Tính được trước khi xem dữ liệu. Lỗi hay gặp: lấy trọng số cả nhóm nhân với mức tăng của một mặt hàng trong nhóm.</p></div>
+          <div class="wb-card rb-rule" id="R-B04" data-tag="T2" data-cat="B"><div class="rb-rule-head"><span class="rb-id">R-B04</span><span class="wb-cap wb-cap--sm">T2</span><span class="rb-lag">Δt: gần tức thời</span></div><p class="rb-body"><b>Nếu</b> giá thịt lợn hoặc gạo tăng, <b>thì</b> CPI Việt Nam phản ứng <b>mạnh và gần như tức thời</b> — riêng thịt lợn ~3–4% và gạo ~3% rổ CPI, đã lớn hơn cả xăng dầu (~3,6%).</p><p class="rb-note">Với VN, quan trọng hơn R-B02. ⚠ Con số ~33–34% hay bị trích nhầm cho riêng thịt lợn — đó là trọng số của <b>cả nhóm</b> hàng ăn &amp; dịch vụ ăn uống.</p></div>
           <div class="wb-card rb-rule" id="R-B05" data-tag="T2" data-cat="B"><div class="rb-rule-head"><span class="rb-id">R-B05</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> El Niño/La Niña xuất hiện, <b>thì</b> {giá lương thực ↑, thủy điện VN ↓, nguy cơ thiếu điện ↑} → CPI VN ↑ qua <b>hai</b> kênh.</p></div>
           <div class="wb-card rb-rule" id="R-B06" data-tag="T3" data-cat="B"><div class="rb-rule-head"><span class="rb-id">R-B06</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> giá hàng hóa tăng <b>vì cầu</b> (đồng cũng tăng), <b>thì</b> cổ phiếu <b>tăng</b>. Nếu tăng <b>vì cung</b> (chỉ dầu tăng), <b>thì</b> cổ phiếu <b>giảm</b>.</p><p class="rb-note">Cùng một biến động giá, hai dấu ngược nhau. Dùng tỷ lệ đồng/dầu để phân tách.</p></div>
           <div class="wb-card rb-rule" id="R-B07" data-tag="T1" data-cat="B"><div class="rb-rule-head"><span class="rb-id">R-B07</span><span class="wb-cap wb-cap--info wb-cap--sm">T1</span></div><p class="rb-body"><b>Nếu</b> USD mạnh, <b>thì</b> giá hàng hóa tính bằng USD giảm — kênh gần như thuần định giá.</p></div>
@@ -1521,7 +1530,7 @@
             <tr data-edge="X"><td>Chokepoint bị chặn</td><td>Dầu</td><td>+</td><td>Giờ–ngày</td><td class="wb-cell-muted">Chỉ nếu chặn thật</td></tr>
             <tr data-edge="B"><td>Dầu</td><td>CPI headline VN</td><td>+</td><td>1–3 th</td><td class="wb-cell-muted">B</td></tr>
             <tr data-edge="B"><td>Dầu</td><td>CPI core</td><td>+</td><td>6–12 th</td><td class="wb-cell-muted">B, chỉ nếu vòng hai qua lương</td></tr>
-            <tr data-edge="B"><td>Gạo, thịt lợn</td><td>CPI VN</td><td>+</td><td>Tức thời</td><td class="wb-cell-muted">B, trọng số ~33%</td></tr>
+            <tr data-edge="B"><td>Gạo, thịt lợn</td><td>CPI VN</td><td>+</td><td>Tức thời</td><td class="wb-cell-muted">B, gạo+thịt lợn ~6–7% (cả nhóm hàng ăn ~33%)</td></tr>
             <tr data-edge="D"><td>Lạm phát kỳ vọng</td><td>Fed</td><td>+</td><td>1–2 họp</td><td class="wb-cell-muted">D</td></tr>
             <tr data-edge="D"><td>Tăng trưởng</td><td>Fed</td><td>+</td><td>2–4 họp</td><td class="wb-cell-muted">D, dấu ngược kênh lạm phát</td></tr>
             <tr data-edge="X"><td>Fed funds</td><td>Lãi suất thực</td><td>+</td><td>Tức thời</td><td class="wb-cell-muted">Nếu vượt kỳ vọng đã định giá</td></tr>
@@ -1551,7 +1560,7 @@
         <ol class="wb-help" style="font-size:13.5px;color:var(--wb-fg);line-height:1.8;padding-left:1.2em">
           <li><b>Một chiều</b> — thế giới tác động mạnh vào Việt Nam, chiều ngược lại gần như bằng không. Không cần bận tâm "Việt Nam ảnh hưởng thế giới thế nào".</li>
           <li><b>Nhưng cú sốc vào rồi thì bị khuếch đại lên</b> — ba bộ khuếch đại: margin có ngưỡng, bất động sản dính chặt với ngân hàng, và hơn 85% giao dịch là nhà đầu tư cá nhân. Cả ba đều thuộc kiểu <b>càng xấu lại càng làm nó xấu thêm</b>.</li>
-          <li><b>Rổ CPI khác Mỹ căn bản</b> — lương thực ~33–34% so với ~13%. Khung lạm phát Mỹ không chuyển giao trực tiếp.</li>
+          <li><b>Rổ CPI khác Mỹ căn bản</b> — nhóm hàng ăn ~33–34% so với ~13%. Khung lạm phát Mỹ không chuyển giao trực tiếp.</li>
           <li><b>Kênh Trung Quốc song song kênh Mỹ</b> — hai nguồn ngoại sinh gần như độc lập, có thể <b>xung đột</b> (Fed thắt trong khi PBoC nới).</li>
         </ol>
       </section>
@@ -1758,7 +1767,7 @@
           <details class="wb-accordion__item"><summary>7.4 — Mô hình mạng nhện: chu kỳ thịt lợn Việt Nam</summary><div class="wb-accordion__body">
             <div class="rb-formula">$$Q_t = f(P_{t-1}), \quad P_t = g(Q_t)$$</div>
             <p class="rb-body"><span class="wb-cap">T2</span>&nbsp; Khi người sản xuất quyết định sản lượng dựa trên <b>giá kỳ trước</b> và có độ trễ sinh học: <b>nếu</b> $|f' \cdot g'| > 1$, <b>thì</b> dao động phân kỳ; nếu $&lt;1$ thì hội tụ. Chu kỳ lợn có độ trễ sinh học ~10–12 tháng, nên chu kỳ giá ~2–4 năm.</p>
-            <div class="wb-alert wb-alert--danger" style="margin-top:12px"><span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">error</span></span><div class="wb-alert__body"><p class="wb-alert__msg">Vì thịt lợn chiếm ~33–34% rổ CPI Việt Nam, <b>một mô hình mạng nhện trong sách giáo khoa vi mô là một trong những động lực lớn nhất của lạm phát Việt Nam.</b></p></div></div>
+            <div class="wb-alert wb-alert--danger" style="margin-top:12px"><span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">error</span></span><div class="wb-alert__body"><p class="wb-alert__msg">Thịt lợn chiếm ~3–4% rổ CPI Việt Nam — nghe nhỏ, nhưng đó là <b>một trong những mặt hàng đơn lẻ nặng ký nhất</b>, hơn cả xăng dầu, và biên độ dao động giá của nó thì gấp nhiều lần. Nên <b>một mô hình mạng nhện trong sách giáo khoa vi mô là một trong những động lực lớn nhất của lạm phát Việt Nam.</b></p></div></div>
           </div></details>
 
           <details class="wb-accordion__item"><summary>7.5 — Người mua cận biên định giá</summary><div class="wb-accordion__body">
@@ -1798,7 +1807,7 @@
             <tr><td><code>P = (P/E) × EPS</code></td><td>Mọi biến động giá = thay đổi định giá <b>hoặc</b> thay đổi lợi nhuận. Không có khả năng thứ ba</td></tr>
             <tr><td><code>Return = div yield + earnings growth + Δ multiple</code></td><td>Dài hạn số hạng 3 → 0, nên lợi nhuận dài hạn <b>bị chặn trên</b> bởi hai số hạng đầu</td></tr>
             <tr><td><code>CA + KA + ΔReserves ≈ 0</code></td><td>Không thể vừa thâm hụt vãng lai, vừa không hút vốn, vừa giữ tỷ giá, vừa không mất dự trữ</td></tr>
-            <tr><td><code>(S−I) + (T−G) + (X−M) = 0</code></td><td>Thâm hụt của một khu vực <b>là</b> thặng dư của khu vực khác</td></tr>
+            <tr><td><code>(S−I) + (T−G) + (M−X) = 0</code></td><td>Thâm hụt của một khu vực <b>là</b> thặng dư của khu vực khác. Chuyển vế: <code>(S−I) + (T−G) = (X−M)</code></td></tr>
             <tr><td><code>MV = PY</code></td><td>Đúng, nhưng <code>V</code> không ổn định → <b>không dùng để dự báo được</b></td></tr>
             <tr><td>Tổng NĐT = lợi nhuận thị trường</td><td>Trừ phí/thuế/spread → NĐT chủ động <b>nhất thiết</b> thua thị trường theo tiền có trọng số</td></tr>
           </tbody>
