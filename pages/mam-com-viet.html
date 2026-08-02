@@ -1,0 +1,2581 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>Mâm cơm Việt · công thức cơ bản</title>
+<meta name="description" content="Công thức các món cơ bản trên mâm cơm Việt — xếp theo độ dễ, lọc theo loại món và nguyên liệu, nguyên liệu quy đổi bằng tay/mắt, các bước dạng stepper.">
+
+<!-- Web Builder — the minimalist UI kit that styles the rest of the site -->
+<link rel="stylesheet" href="../web-builder/web-builder.css">
+
+<style>
+  /* Page-local layout only — every colour / radius / shadow comes from wb-* tokens. */
+  body { background: var(--wb-canvas); color: var(--wb-fg); margin: 0; font-family: var(--wb-font); -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--wb-fg); color: var(--wb-canvas); }
+  body { --wb-ico-weight: 400; }
+
+  /* ---------- hero ---------- */
+  .mc-hero { padding: 26px 0 18px; }
+  .mc-eyebrow { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 10px; }
+  .mc-title { font-size: clamp(26px, 4.4vw, 38px); font-weight: 720; letter-spacing: -.02em; margin: 0 0 10px; line-height: 1.15; }
+  .mc-sub { color: var(--wb-fg-muted); font-size: 15px; max-width: 76ch; line-height: 1.65; margin: 0 0 12px; }
+  .mc-sub b { color: var(--wb-fg); font-weight: 620; }
+  .mc-meta { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); letter-spacing: .04em; }
+
+  /* ---------- sections ---------- */
+  section[id] { scroll-margin-top: 76px; }
+  .mc-sec-eyebrow { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 6px; }
+  .mc-sec-eyebrow b { color: var(--wb-fg); font-weight: 650; }
+  .mc-sec-title { font-size: 22px; font-weight: 700; letter-spacing: -.01em; margin: 0 0 10px; }
+  .mc-sec-intro { color: var(--wb-fg-muted); font-size: 14px; line-height: 1.7; max-width: 80ch; margin: 0 0 20px; }
+  .mc-sec-intro b { color: var(--wb-fg); font-weight: 620; }
+  h3.mc-sub-title { font-size: 15px; font-weight: 680; margin: 26px 0 12px; }
+
+  /* ---------- conversion cards ---------- */
+  .mc-conv { display: flex; align-items: baseline; gap: 10px; padding: 9px 0; border-bottom: var(--wb-bw) dashed var(--wb-border); }
+  .mc-conv:last-child { border-bottom: 0; }
+  .mc-conv__k { font-size: 13.5px; font-weight: 620; flex: none; min-width: 116px; }
+  .mc-conv__v { font-size: 13px; color: var(--wb-fg-muted); line-height: 1.5; }
+  .mc-conv__v b { color: var(--wb-fg); font-weight: 620; font-variant-numeric: tabular-nums; }
+
+  /* ---------- filter bar ---------- */
+  .mc-filterwrap { position: sticky; top: 56px; z-index: 6; padding: 12px 0 10px; margin-bottom: 16px;
+    background: color-mix(in srgb, var(--wb-canvas) 94%, transparent); backdrop-filter: blur(8px);
+    border-bottom: var(--wb-bw) solid var(--wb-border); }
+  .mc-frow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .mc-frow + .mc-frow { margin-top: 9px; }
+  .mc-flabel { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--wb-fg-subtle); flex: none; width: 74px; }
+  .mc-chip { cursor: pointer; user-select: none; border: none; font: inherit; font-size: 12.5px; }
+  .mc-search { max-width: 300px; width: 100%; }
+  .mc-count { margin-left: auto; font-family: var(--wb-font-mono); font-size: 11.5px; color: var(--wb-fg-subtle); }
+  /* Cả rổ capsule gấp lại được ở mọi khổ màn hình — mở ra chỉ khi cần lọc, còn lại
+     nhường chỗ cho danh sách món. */
+  .mc-fpanel { display: none; }
+  .mc-filterwrap.is-open .mc-fpanel { display: block; }
+  .mc-fpanel > .mc-frow:first-child { margin-top: 9px; }
+  .mc-fmore { display: contents; }
+  .mc-ftoggle__n { font-family: var(--wb-font-mono); font-size: 11px; }
+  .mc-ftoggle .wb-ico:last-child { transition: transform .15s ease; }
+  .mc-filterwrap.is-open .mc-ftoggle .wb-ico:last-child { transform: rotate(180deg); }
+
+  /* ---------- recipe grid ---------- */
+  .mc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(272px, 1fr)); gap: 12px; }
+  .mc-card { display: flex; flex-direction: column; gap: 9px; padding: 15px; text-align: left; cursor: pointer;
+    font: inherit; color: var(--wb-fg); width: 100%; }
+  .mc-card__top { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .mc-card__name { font-size: 15.5px; font-weight: 660; line-height: 1.3; margin: 0; letter-spacing: -.01em; }
+  .mc-card__why { font-size: 12.5px; color: var(--wb-fg-muted); line-height: 1.5; margin: 0; }
+  .mc-card__foot { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: auto; padding-top: 4px;
+    font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); }
+  .mc-card__foot .wb-ico { font-size: 14px; vertical-align: -2px; }
+
+  /* difficulty dots — neutral, classification not status */
+  .mc-dots { display: inline-flex; gap: 3px; align-items: center; }
+  .mc-dots i { width: 5px; height: 5px; border-radius: 50%; background: var(--wb-neutral-weak); display: block; }
+  .mc-dots i.on { background: currentColor; }
+
+  /* ---------- detail modal ---------- */
+  .mc-modal { width: 100%; max-width: min(1080px, 96vw); max-height: 92vh; display: flex; flex-direction: column; }
+  .mc-modal__body { overflow: auto; padding: 0; min-height: 0; }
+  .mc-dhead { position: relative; padding: 18px 22px 14px; border-bottom: var(--wb-bw) solid var(--wb-border); flex: none; }
+  .mc-dhead .wb-close { position: absolute; top: 14px; right: 16px; }
+  .mc-dtitle { font-size: 21px; font-weight: 700; letter-spacing: -.015em; margin: 0 0 9px; padding-right: 34px; }
+  .mc-dtabs { display: none; }              /* điện thoại mới cần — xem khối mobile ở cuối */
+  .mc-detail { display: grid; grid-template-columns: minmax(0, 330px) minmax(0, 1fr); align-items: start; }
+  .mc-detail__ing { padding: 18px 20px 24px; border-right: var(--wb-bw) solid var(--wb-border); }
+  .mc-detail__steps { padding: 18px 22px 24px; }
+  @media (max-width: 860px) {
+    .mc-detail { grid-template-columns: 1fr; }
+    .mc-detail__ing { border-right: 0; border-bottom: var(--wb-bw) solid var(--wb-border); }
+  }
+  .mc-panel-h { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .mc-panel-h__t { font-size: 13px; font-weight: 680; letter-spacing: .02em; }
+  .mc-panel-h__n { margin-left: auto; font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); }
+
+  .mc-group { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--wb-fg-subtle); margin: 16px 0 7px; }
+  .mc-group:first-of-type { margin-top: 4px; }
+  /* .wb-check gives the input the kit's box + tick; the grid below overrides its inline-flex row */
+  .mc-ing.wb-check { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 4px 9px; align-items: baseline;
+    padding: 7px 0; border-bottom: var(--wb-bw) dashed var(--wb-border); cursor: pointer; font-size: inherit; }
+  .mc-ing:last-child { border-bottom: 0; }
+  .mc-ing input { grid-row: span 2; align-self: center; }
+  .mc-ing__n { font-size: 13.5px; font-weight: 560; }
+  .mc-ing__q { font-size: 13px; font-weight: 640; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .mc-ing__vis { grid-column: 2 / -1; font-size: 12px; color: var(--wb-fg-muted); line-height: 1.45; }
+  .mc-ing__vis .mc-eq { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg); }
+  .mc-ing.is-got .mc-ing__n, .mc-ing.is-got .mc-ing__q { text-decoration: line-through; color: var(--wb-fg-subtle); }
+  .mc-ing.is-got .mc-ing__vis { opacity: .5; }
+
+  /* steps */
+  .mc-steps .wb-steps__item { cursor: pointer; }
+  .mc-step-caps { display: flex; gap: 6px; flex-wrap: wrap; margin: 5px 0 6px; }
+  .mc-step-d { font-size: 13.5px; line-height: 1.6; color: var(--wb-fg); margin: 0; }
+  .mc-step-cue { font-size: 12.5px; color: var(--wb-fg-muted); line-height: 1.55; margin: 7px 0 0; }
+  .mc-step-cue b { color: var(--wb-fg); font-weight: 620; }
+  .mc-steps .wb-steps__item.is-todo .mc-step-d { color: var(--wb-fg-muted); }
+  .mc-cook { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .mc-cook .wb-progress { flex: 1 1 auto; }
+  .mc-cookn { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); flex: none; }
+
+  .mc-tip { font-size: 13px; line-height: 1.6; margin: 0 0 6px; padding-left: 16px; position: relative; color: var(--wb-fg-muted); }
+  .mc-tip:before { content: "›"; position: absolute; left: 2px; color: var(--wb-fg-subtle); }
+  .mc-tip b { color: var(--wb-fg); font-weight: 620; }
+
+  .mc-serve { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .mc-serve .wb-tabs { border-bottom: 0; gap: 2px; }
+
+  /* ---------- hẹn giờ ----------
+     Một đồng hồ duy nhất chạy cho cả trang: gắn vào một bước, đếm theo mốc kết thúc
+     (không trừ dần), nên khoá màn hình hay chuyển tab vẫn đúng giờ. */
+  .mc-tdock { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 8px 0 2px; }
+  .mc-tdock .wb-btn { padding: 7px 12px; }
+  .mc-live { font-family: var(--wb-font-mono); font-size: 20px; font-weight: 600; font-variant-numeric: tabular-nums;
+    letter-spacing: -.02em; flex: none; min-width: 68px; }
+  .mc-tdock .wb-progress { flex: 1 1 90px; min-width: 70px; }
+  .mc-tdock.is-done .mc-live { color: var(--wb-warning-text); }
+
+  .mc-timerbar { position: fixed; z-index: 130; right: 20px; bottom: 20px; width: 380px; max-width: calc(100vw - 24px); box-sizing: border-box;
+    display: flex; align-items: center; gap: 10px; padding: 11px 10px 11px 14px; overflow: hidden;
+    font-family: var(--wb-font); background: var(--wb-surface);
+    border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); box-shadow: var(--wb-shadow-md); }
+  .mc-timerbar[hidden] { display: none; }
+  .mc-timerbar__time { font-family: var(--wb-font-mono); font-size: 21px; font-weight: 620; font-variant-numeric: tabular-nums;
+    letter-spacing: -.03em; flex: none; }
+  .mc-timerbar__label { flex: 1 1 auto; min-width: 0; text-align: left; border: 0; background: none; font: inherit;
+    padding: 0; cursor: pointer; color: var(--wb-fg); }
+  .mc-timerbar__dish { display: block; font-size: 12.5px; font-weight: 620; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mc-timerbar__step { display: block; font-size: 11.5px; color: var(--wb-fg-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mc-timerbar__btns { display: flex; align-items: center; gap: 4px; flex: none; }
+  .mc-timerbar__btns > [hidden] { display: none; }   /* [hidden] một mình thua display của .wb-btn */
+  .mc-timerbar__prog { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--wb-surface-2); }
+  .mc-timerbar__prog i { display: block; height: 100%; background: var(--wb-fg); transition: width .25s linear; }
+  .mc-timerbar.is-done { border-color: var(--wb-warning); animation: mc-ring 1.1s ease-in-out infinite; }
+  .mc-timerbar.is-done .mc-timerbar__time { color: var(--wb-warning-text); font-size: 15px; }
+  .mc-timerbar.is-done .mc-timerbar__prog i { background: var(--wb-warning); }
+  @keyframes mc-ring { 0%, 100% { box-shadow: var(--wb-shadow-md); } 50% { box-shadow: 0 0 0 4px var(--wb-warning-soft); } }
+  /* thanh đồng hồ nổi che mất mép dưới — chừa chỗ cho nó */
+  .mc-has-timer .mc-detail__ing, .mc-has-timer .mc-detail__steps { padding-bottom: 96px; }
+  @media (prefers-reduced-motion: reduce) { .mc-timerbar.is-done { animation: none; } }
+
+  /* combo */
+  .mc-combo__list { display: flex; flex-direction: column; gap: 2px; margin: 10px 0 0; }
+  .mc-combo__row { display: flex; align-items: center; gap: 8px; padding: 7px 0; border-top: var(--wb-bw) dashed var(--wb-border); cursor: pointer; }
+  .mc-combo__row:hover .mc-combo__n { text-decoration: underline; }
+  .mc-combo__n { font-size: 13.5px; font-weight: 560; }
+  .mc-combo__t { margin-left: auto; font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); }
+
+  .mc-foot { border-top: var(--wb-bw) solid var(--wb-border); padding: 18px 0 28px; color: var(--wb-fg-muted); font-size: 13px; }
+  .mc-foot a { color: var(--wb-fg-muted); text-decoration: none; }
+  .mc-foot a:hover { color: var(--wb-fg); }
+
+  .is-hidden { display: none !important; }
+
+  /* =========================================================================
+     ĐIỆN THOẠI — phần lớn người đọc trang này đứng trong bếp với cái máy trong tay.
+     Bốn chỗ dễ vỡ nhất: thanh nav (tràn ngang), thanh lọc (cao 470px, dính trên
+     đầu màn hình), modal (cuộn qua hết nguyên liệu mới tới bước), và mọi nút bấm
+     cao 22–27px. Xử lý lần lượt.
+     ====================================================================== */
+
+  /* nav: 4 nút chữ tràn ra ngoài 390px → chỉ giữ icon về trang chủ + đổi nền */
+  @media (max-width: 720px) {
+    .wb-navbar { padding: 0 14px; gap: 10px; }
+    .wb-navbar__actions { min-width: 0; }
+    .mc-navhide { display: none; }
+  }
+
+  /* stepper ngang 4 chặng: mỗi cột còn 78px → dựng lại thành dọc */
+  @media (max-width: 640px) {
+    .wb-steps--horizontal { flex-direction: column; }
+    .wb-steps--horizontal .wb-steps__item { flex-direction: row; align-items: flex-start; text-align: left;
+      gap: 14px; padding-bottom: 18px; }
+    .wb-steps--horizontal .wb-steps__item:last-child { padding-bottom: 0; }
+    .wb-steps--horizontal .wb-steps__item::before { left: calc(var(--wb-steps-size) / 2); top: var(--wb-steps-size);
+      bottom: 0; right: auto; width: var(--wb-bw); height: auto; transform: none; }
+    .wb-steps--horizontal .wb-steps__content { padding-top: 4px; }
+  }
+
+  @media (max-width: 480px) {
+    .mc-conv { flex-direction: column; align-items: flex-start; gap: 2px; }
+    .mc-conv__k { min-width: 0; }
+  }
+
+  @media (max-width: 720px) {
+    /* thanh lọc: chỉ ô tìm kiếm dính lại, sort/xoá lọc cũng gấp vào trong panel */
+    .mc-flabel { width: 100%; }
+    .mc-search { max-width: none; flex: 1 1 150px; }
+    .mc-count { flex: none; }
+    /* Panel cuộn được, nên nó cắt mọi thứ tràn ra mép — mà ô "Sắp xếp" lại nằm đúng
+       góc trên-trái: vòng focus 3px của nó bị xén hai cạnh, trông như bị gọt. Chừa 4px
+       đệm trong rồi kéo lại bằng margin âm để nội dung vẫn thẳng hàng như cũ. */
+    .mc-fpanel { max-height: 50vh; overflow-y: auto; padding: 4px; margin: -4px -4px 0; }
+    .mc-fmore { display: flex; gap: 8px; flex-wrap: wrap; }
+    /* .mc-frow + .mc-frow không bắt được vì đứng trước là <span class="mc-fmore">,
+       nên hàng "Loại món" dính sát ô Sắp xếp — vòng focus đè lên chữ. */
+    .mc-fpanel > .mc-fmore + .mc-frow { margin-top: 11px; }
+    .mc-chip { min-height: 32px; }                    /* ngón tay, không phải con trỏ */
+    .mc-grid { gap: 10px; }
+
+    /* modal: mở toàn màn hình, nguyên liệu / các bước tách thành hai tab */
+    .wb-overlay { padding: 0; }
+    .mc-modal { max-width: 100%; height: 100vh; height: 100dvh; max-height: 100dvh;
+      border-radius: 0; border-width: 0; }
+    .mc-dhead { padding: 12px 14px 0; }
+    .mc-dtitle { font-size: 18px; margin-bottom: 8px; padding-right: 40px; }
+    .mc-dhead .wb-close { top: 8px; right: 8px; width: 36px; height: 36px; margin: 0; }
+    .mc-dtabs { display: flex; width: 100%; margin: 10px 0 0; border-radius: var(--wb-radius) var(--wb-radius) 0 0; }
+    .mc-dtabs .wb-tab { flex: 1 1 0; padding: 9px 10px; }
+    .mc-detail__ing, .mc-detail__steps { padding: 14px 14px 30px; }
+    .mc-detail.is-steps .mc-detail__ing { display: none; }
+    .mc-detail.is-ing .mc-detail__steps { display: none; }
+    .mc-detail.is-ing .mc-detail__ing { border-bottom: 0; }
+    .mc-ing.wb-check { padding: 10px 0; }
+
+    /* nút "xong bước này" phải luôn với tới được, kể cả khi đã cuộn xuống bước 7 */
+    .mc-cook { position: sticky; top: 0; z-index: 3; flex-wrap: wrap; row-gap: 9px;
+      margin: -14px -14px 12px; padding: 11px 14px;
+      background: var(--wb-surface); border-bottom: var(--wb-bw) solid var(--wb-border); }
+    .mc-cook #d-next { flex: 1 1 100%; justify-content: center; }
+    .mc-detail .wb-btn--sm, .mc-timerbar .wb-btn--sm { padding: 9px 13px; }
+    .mc-detail .wb-tabs--pill .wb-tab { padding: 8px 14px; }
+
+    .mc-timerbar { left: 8px; right: 8px; width: auto; bottom: calc(8px + env(safe-area-inset-bottom, 0px)); }
+  }
+  /* máy hẹp quá thì bỏ +1′ ở thanh nổi (bước vẫn còn nút "+1 phút") để tên món đủ chỗ */
+  @media (max-width: 380px) { .mc-timerbar:not(.is-done) #tb-plus { display: none; } }
+</style>
+</head>
+<body>
+
+<div class="wb-navbar wb-navbar--sticky">
+  <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">飯</span> Mâm cơm Việt</a>
+  <span class="wb-navbar__spacer"></span>
+  <div class="wb-navbar__actions">
+    <a class="wb-btn wb-btn--ghost wb-btn--sm mc-navhide" href="#mon-an">Món ăn</a>
+    <a class="wb-btn wb-btn--ghost wb-btn--sm mc-navhide" href="#quy-doi">Quy đổi</a>
+    <a class="wb-btn wb-btn--ghost wb-btn--sm" href="../index.html"><span class="wb-ico wb-ico--sm">arrow_back</span> <span class="mc-navhide">Trang chủ</span></a>
+    <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" id="theme-toggle" aria-label="Sáng / Tối">
+      <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
+      <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
+    </button>
+  </div>
+</div>
+
+<main class="wb-container wb-container--wide">
+
+  <header class="mc-hero">
+    <p class="mc-eyebrow">Bếp cơ bản · mâm cơm hằng ngày</p>
+    <h1 class="mc-title">Không đo bằng cân — đo bằng <u>bàn tay</u> và <u>con mắt</u>.</h1>
+    <p class="mc-sub">Công thức mâm cơm Việt hằng ngày, thêm <b>hải sản biển</b> và những món <b>ngoài mâm</b> (lẩu, nướng, món nhậu) cho cuối tuần — xếp từ <b>dễ đến khó</b>. Hai thứ được làm kỹ nhất ở đây là <b>nguyên liệu</b> (mỗi thứ đều có cách ước lượng bằng thìa, nắm tay, bìa đậu, đốt ngón tay — không cần cân) và <b>các bước</b> (mỗi bước có thời gian, mức lửa, <b>dấu hiệu nhận biết đã đạt</b>, và một nút <b>hẹn giờ</b> — vì bếp nhà bạn không giống bếp người viết).</p>
+    <p class="mc-meta">56 MÓN · 10 LOẠI · LỌC THEO TÊN · NGUYÊN LIỆU · LOẠI MÓN · ĐỘ KHÓ · THỜI GIAN</p>
+  </header>
+
+  <hr class="wb-divider">
+
+  <div class="wb-stack" style="--wb-stack-gap:48px; padding: 26px 0 60px">
+
+    <!-- ============ 00 — CÁCH DÙNG ============ -->
+    <section id="cach-dung">
+      <p class="mc-sec-eyebrow"><b>00</b> — Cách dùng trang này</p>
+      <h2 class="mc-sec-title">Đừng đọc công thức. Đọc <em>dấu hiệu</em>.</h2>
+      <p class="mc-sec-intro">Người mới nấu hỏng món không phải vì thiếu công thức, mà vì công thức nói <b>"xào 3 phút"</b> trong khi bếp từ nhà bạn nóng gấp đôi bếp gas nhà người viết. Mỗi bước ở đây vì thế đều gắn ba thứ: <b>thời gian ước chừng</b> (để canh), <b>mức lửa</b> (để chỉnh), và <b>dấu hiệu đúng</b> (để quyết định) — khi ba thứ đá nhau, luôn tin dấu hiệu.</p>
+
+      <div class="wb-grid wb-grid--3">
+        <div class="wb-card wb-card--flat"><div class="wb-card__body">
+          <span class="wb-cap wb-cap--lg"><span class="wb-ico wb-ico--xs">back_hand</span> Ước lượng</span>
+          <h4 class="wb-card__title" style="margin-top:10px;font-size:14px">Không cân, dùng tay</h4>
+          <p class="wb-help">Mỗi nguyên liệu có một dòng <b style="color:var(--wb-fg)">≈</b>: bao nhiêu thìa, mấy nắm, mấy bìa, to bằng cái gì. Số gam chỉ để tham khảo khi bạn có cân.</p>
+        </div></div>
+        <div class="wb-card wb-card--flat"><div class="wb-card__body">
+          <span class="wb-cap wb-cap--lg"><span class="wb-ico wb-ico--xs">check_circle</span> Dấu hiệu</span>
+          <h4 class="wb-card__title" style="margin-top:10px;font-size:14px">Bước xong khi nào?</h4>
+          <p class="wb-help">Mỗi bước có dòng <b style="color:var(--wb-fg)">Đạt khi…</b> — mùi, màu, tiếng, độ sánh. Đó mới là điều kiện dừng thật sự. Bước nào phải canh giờ thì bấm <b style="color:var(--wb-fg)">Hẹn giờ</b>: hết giờ máy kêu và rung, và trong lúc chạy màn hình không tự tắt.</p>
+        </div></div>
+        <div class="wb-card wb-card--flat"><div class="wb-card__body">
+          <span class="wb-cap wb-cap--lg"><span class="wb-ico wb-ico--xs">signal_cellular_alt</span> Thứ tự</span>
+          <h4 class="wb-card__title" style="margin-top:10px;font-size:14px">Dễ trước, khó sau</h4>
+          <p class="wb-help">Mặc định danh sách xếp từ dễ đến khó. Nấu hết nhóm <b style="color:var(--wb-fg)">Dễ</b> rồi hãy sang <b style="color:var(--wb-fg)">Vừa</b> — kỹ năng cộng dồn, không nhảy cóc được.</p>
+        </div></div>
+      </div>
+
+      <h3 class="mc-sub-title">Lộ trình học nấu — bốn chặng</h3>
+      <div class="wb-card"><div class="wb-card__body">
+        <ol class="wb-steps wb-steps--horizontal">
+          <li class="wb-steps__item is-done"><span class="wb-steps__marker">1</span>
+            <div class="wb-steps__content"><p class="wb-steps__title">Luộc &amp; canh rau</p>
+              <p class="wb-steps__desc">Học cách nêm và nhận biết rau chín tới. Không có gì cháy được.</p></div></li>
+          <li class="wb-steps__item is-active"><span class="wb-steps__marker">2</span>
+            <div class="wb-steps__content"><p class="wb-steps__title">Xào &amp; rán</p>
+              <p class="wb-steps__desc">Học lửa: chảo phải nóng già, tay phải nhanh.</p>
+              <span class="wb-steps__note">ĐÂY LÀ CHẶNG NGƯỜI MỚI HAY BỎ CUỘC</span></div></li>
+          <li class="wb-steps__item is-todo"><span class="wb-steps__marker">3</span>
+            <div class="wb-steps__content"><p class="wb-steps__title">Kho &amp; rim</p>
+              <p class="wb-steps__desc">Học vị: tỉ lệ mặn–ngọt, nước hàng, và sự kiên nhẫn với lửa liu riu.</p></div></li>
+          <li class="wb-steps__item is-todo"><span class="wb-steps__marker">4</span>
+            <div class="wb-steps__content"><p class="wb-steps__title">Món nhiều công đoạn</p>
+              <p class="wb-steps__desc">Ốc chuối đậu, canh măng ngan, nem rán, gà luộc — nhiều việc chạy song song.</p></div></li>
+        </ol>
+      </div></div>
+
+      <div class="wb-alert wb-alert--plain" style="margin-top:14px">
+        <div class="wb-alert__body">
+          <p class="wb-alert__title">Một mâm cơm Bắc chuẩn tối thiểu có bốn vai</p>
+          <p class="wb-alert__msg">
+            <span class="wb-cap wb-cap--sm">Món mặn</span> (kho / rán / xào thịt cá) ·
+            <span class="wb-cap wb-cap--sm">Món rau</span> (luộc / xào / nộm) ·
+            <span class="wb-cap wb-cap--sm">Canh</span> (chan cơm) ·
+            <span class="wb-cap wb-cap--sm">Đồ chấm</span> (mắm / dưa).
+            Lọc theo <b>vai trò trong mâm</b> ở dưới để ráp đủ bốn thứ này thay vì nấu ba món mặn.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <hr class="wb-divider">
+
+    <!-- ============ 01 — QUY ĐỔI ============ -->
+    <section id="quy-doi">
+      <p class="mc-sec-eyebrow"><b>01</b> — Quy đổi bằng mắt &amp; tay</p>
+      <h2 class="mc-sec-title">Bảng quy đổi dùng chung cho mọi công thức bên dưới</h2>
+      <p class="mc-sec-intro">Mọi con số <b>≈</b> trong các công thức đều quy về bảng này. Học thuộc một lần, dùng mãi. Sai số ±20% với đồ tươi là <b>không sao</b>; chỉ có muối, đường và bột nở là phải tương đối chuẩn.</p>
+
+      <div class="wb-grid wb-grid--3">
+        <div class="wb-card"><div class="wb-card__head"><h4 class="wb-card__title">Dụng cụ trong bếp nhà</h4></div>
+          <div class="wb-card__body" style="padding-top:4px">
+            <div class="mc-conv"><span class="mc-conv__k">1 thìa canh</span><span class="mc-conv__v">thìa ăn phở loại to · <b>15 ml</b> · = 3 thìa cà phê. Đường: <b>~12 g</b>, muối: <b>~15 g</b>.</span></div>
+            <div class="mc-conv"><span class="mc-conv__k">1 thìa cà phê</span><span class="mc-conv__v">thìa nhỏ khuấy cà phê · <b>5 ml</b> · muối: <b>~6 g</b>, hạt nêm: <b>~4 g</b>.</span></div>
+            <div class="mc-conv"><span class="mc-conv__k">1 bát con</span><span class="mc-conv__v">bát ăn cơm · <b>~250 ml</b> · dùng để đong nước canh: 4 bát ≈ 1 lít.</span></div>
+            <div class="mc-conv"><span class="mc-conv__k">1 muôi canh</span><span class="mc-conv__v">muôi chan · <b>~60 ml</b> · ≈ 4 thìa canh.</span></div>
+            <div class="mc-conv"><span class="mc-conv__k">Chảo 24 cm</span><span class="mc-conv__v">cỡ thường ở nhà · xào tối đa <b>300 g</b> rau một lượt, quá tay là rau ra nước.</span></div>
+          </div></div>
+
+        <div class="wb-card"><div class="wb-card__head"><h4 class="wb-card__title">Đồ tươi — ước bằng tay</h4></div>
+          <div class="wb-card__body" style="padding-top:4px">
+            <div class="mc-conv"><span class="mc-conv__k">Thịt / cá</span><span class="mc-conv__v">miếng bằng <b>lòng bàn tay</b>, dày 1 đốt ngón ≈ <b>110 g</b>. Bốn người ăn ≈ 4–5 miếng.</span></div>
+            <div class="mc-conv"><span class="mc-conv__k">Thịt băm</span><span class="mc-conv__v">nắm chặt trong lòng bàn tay, to bằng quả trứng ≈ <b>50 g</b>.</span></div>
+            <div class="mc-conv"><span class="mc-conv__k">Rau lá</span><span class="mc-conv__v">1 mớ (bó ở chợ) ≈ <b>250–300 g</b> · 1 nắm tay ≈ <b>45 g</b>.</span></div>
+            <div class="mc-conv"><span class="mc-conv__k">Cà chua</span><span class="mc-conv__v">1 quả vừa ≈ <b>100 g</b> (to bằng nắm tay trẻ con).</span></div>
+            <div class="mc-conv"><span class="mc-conv__k">Đậu phụ</span><span class="mc-conv__v">1 bìa (miếng bán sẵn) ≈ <b>110 g</b>.</span></div>
+            <div class="mc-conv"><span class="mc-conv__k">Hành / tỏi</span><span class="mc-conv__v">1 củ hành khô ≈ <b>10 g</b> · 1 tép tỏi ≈ <b>3 g</b> · gừng bằng đốt ngón cái ≈ <b>10 g</b>.</span></div>
+            <div class="mc-conv"><span class="mc-conv__k">Trứng gà</span><span class="mc-conv__v">1 quả ≈ <b>55 g</b> (không tính vỏ ≈ 50 g).</span></div>
+          </div></div>
+
+        <div class="wb-card"><div class="wb-card__head"><h4 class="wb-card__title">Lửa &amp; mực nước</h4></div>
+          <div class="wb-card__body" style="padding-top:4px">
+            <div class="mc-conv"><span class="mc-conv__k"><span class="wb-cap wb-cap--sm">Lửa to</span></span><span class="mc-conv__v">ngọn lửa trùm đáy nồi · nước sôi <b>sùng sục</b> · dùng để xào, luộc rau, làm sôi lại.</span></div>
+            <div class="mc-conv"><span class="mc-conv__k"><span class="wb-cap wb-cap--sm">Lửa vừa</span></span><span class="mc-conv__v">lửa bằng <b>2/3 đáy nồi</b> · nước sôi đều nhưng không trào · dùng để phi hành, rán, đun canh.</span></div>
+            <div class="mc-conv"><span class="mc-conv__k"><span class="wb-cap wb-cap--sm">Liu riu</span></span><span class="mc-conv__v">mặt nước chỉ <b>lăn tăn</b>, thỉnh thoảng nổi một bong bóng · dùng để kho, ninh. Sôi bùng là thịt bị dai và cạn nước.</span></div>
+            <div class="mc-conv"><span class="mc-conv__k">Xâm xấp</span><span class="mc-conv__v">nước vừa chạm mặt nguyên liệu, <b>chưa ngập</b> — mực nước để kho.</span></div>
+            <div class="mc-conv"><span class="mc-conv__k">Ngập mặt</span><span class="mc-conv__v">nước trên mặt nguyên liệu <b>1 đốt ngón tay</b> — mực nước để ninh, luộc thịt.</span></div>
+            <div class="mc-conv"><span class="mc-conv__k">Dầu chiên ngập</span><span class="mc-conv__v">thả một đầu đũa gỗ vào: <b>sủi tăm quanh đũa</b> là dầu đủ nóng (~170 °C).</span></div>
+          </div></div>
+      </div>
+
+      <h3 class="mc-sub-title">Ba tỉ lệ nêm nếm đáng thuộc lòng</h3>
+      <div class="wb-grid wb-grid--3">
+        <div class="wb-card wb-card--flat"><div class="wb-card__body">
+          <p class="wb-card__title" style="font-size:14px;margin:0 0 6px">Nước kho — mặn ngọt</p>
+          <p class="wb-help"><b style="color:var(--wb-fg)">2 mắm : 1 đường : 1 nước hàng</b> (thìa canh), cho 500 g thịt. Kho miền Nam ngọt hơn: 2 : 2 : 1.</p>
+        </div></div>
+        <div class="wb-card wb-card--flat"><div class="wb-card__body">
+          <p class="wb-card__title" style="font-size:14px;margin:0 0 6px">Nước chấm chua ngọt</p>
+          <p class="wb-help"><b style="color:var(--wb-fg)">1 mắm : 1 đường : 1 chanh/giấm : 4 nước ấm</b>, rồi mới cho tỏi ớt băm (thả sau để nổi lên trên).</p>
+        </div></div>
+        <div class="wb-card wb-card--flat"><div class="wb-card__body">
+          <p class="wb-card__title" style="font-size:14px;margin:0 0 6px">Canh — nêm cuối</p>
+          <p class="wb-help">Cho <b style="color:var(--wb-fg)">1 thìa cà phê muối/lít</b> lúc đầu, nêm mắm <b style="color:var(--wb-fg)">sau khi tắt bếp</b> — mắm đun lâu sẽ chua và mất mùi thơm.</p>
+        </div></div>
+      </div>
+    </section>
+
+    <hr class="wb-divider">
+
+    <!-- ============ 02 — MÓN ĂN ============ -->
+    <section id="mon-an">
+      <p class="mc-sec-eyebrow"><b>02</b> — Danh mục món</p>
+      <h2 class="mc-sec-title">56 món, xếp từ dễ đến khó</h2>
+      <p class="mc-sec-intro">Gõ tên món, tên nguyên liệu (<em>"cà chua"</em>, <em>"ghẹ"</em>, <em>"ngao"</em>) hay loại món (<em>"kho"</em>, <em>"lẩu"</em>) vào ô tìm kiếm — hoặc bấm <b>Bộ lọc</b> để mở rổ capsule. Ngoài các món mâm cơm hằng ngày còn có <b>hải sản biển</b> và nhóm <b>Ngoài mâm</b> (lẩu, nướng, món nhậu) — lọc theo <em>Trong mâm</em> nếu chỉ muốn xem một nhóm. Bấm vào thẻ món để mở <b>nguyên liệu + các bước</b>.</p>
+
+      <div class="mc-filterwrap">
+        <div class="mc-frow">
+          <div class="wb-input-group mc-search">
+            <span class="wb-input-group__addon"><span class="wb-ico wb-ico--sm">search</span></span>
+            <input class="wb-input" type="search" id="q" placeholder="Tìm món, nguyên liệu, loại…" aria-label="Tìm kiếm">
+          </div>
+          <button class="wb-btn wb-btn--ghost wb-btn--sm mc-ftoggle" id="ftoggle" aria-expanded="false" aria-controls="fpanel">
+            <span class="wb-ico wb-ico--sm">tune</span> Bộ lọc<span class="mc-ftoggle__n" id="ftoggle-n"></span>
+            <span class="wb-ico wb-ico--sm">expand_more</span>
+          </button>
+          <span class="mc-fmore" id="fmore">
+            <span class="wb-select-wrap">
+              <select class="wb-select" id="sort" aria-label="Sắp xếp">
+                <option value="diff">Dễ → khó</option>
+                <option value="time">Nhanh → lâu</option>
+                <option value="few">Ít nguyên liệu nhất</option>
+                <option value="az">Tên A → Z</option>
+              </select>
+              <span class="wb-ico">expand_more</span>
+            </span>
+            <button class="wb-btn wb-btn--ghost wb-btn--sm" id="reset"><span class="wb-ico wb-ico--sm">restart_alt</span> Xoá lọc</button>
+          </span>
+          <span class="mc-count"><b id="count">–</b> / <span id="total">–</span> món</span>
+        </div>
+
+        <div class="mc-fpanel" id="fpanel">
+          <div class="mc-frow"><span class="mc-flabel">Loại món</span><span id="fcat" class="mc-frow" style="gap:6px"></span></div>
+          <div class="mc-frow"><span class="mc-flabel">Trong mâm</span><span id="frole" class="mc-frow" style="gap:6px"></span></div>
+          <div class="mc-frow"><span class="mc-flabel">Nguyên liệu</span><span id="ftag" class="mc-frow" style="gap:6px"></span></div>
+          <div class="mc-frow"><span class="mc-flabel">Độ khó</span><span id="fdiff" class="mc-frow" style="gap:6px"></span>
+            <span class="mc-flabel" style="width:auto;margin-left:14px">Thời gian</span><span id="ftime" class="mc-frow" style="gap:6px"></span></div>
+        </div>
+      </div>
+
+      <div class="mc-grid" id="grid"></div>
+
+      <div class="wb-empty is-hidden" id="empty">
+        <div class="wb-empty__icon"><span class="wb-ico wb-ico--xl">search_off</span></div>
+        <p class="wb-empty__title">Không có món nào khớp</p>
+        <p class="wb-empty__msg">Thử bỏ bớt một bộ lọc, hoặc tìm bằng tên nguyên liệu chính.</p>
+      </div>
+    </section>
+
+    <hr class="wb-divider">
+
+    <!-- ============ 03 — MÂM GỢI Ý ============ -->
+    <section id="mam-goi-y">
+      <p class="mc-sec-eyebrow"><b>03</b> — Ráp mâm</p>
+      <h2 class="mc-sec-title">Bốn mâm cơm ráp sẵn, kèm thứ tự nấu</h2>
+      <p class="mc-sec-intro">Nấu ba món cùng lúc không khó — chỉ cần <b>bắt đầu món lâu nhất trước</b>, và chen món nhanh vào lúc món lâu đang tự chín. Thứ tự dưới đây đã tính sẵn phần chen đó; bấm tên món để mở công thức.</p>
+      <div class="wb-grid wb-grid--2" id="combos"></div>
+    </section>
+
+  </div>
+</main>
+
+<!-- ============ DETAIL MODAL ============ -->
+<div class="wb-overlay" id="detail">
+  <div class="wb-modal mc-modal">
+    <div class="mc-dhead">
+      <button class="wb-close" data-modal-close aria-label="Đóng"></button>
+      <h3 class="mc-dtitle" id="d-name">—</h3>
+      <div class="wb-cluster" style="gap:6px" id="d-caps"></div>
+      <!-- điện thoại: hai panel không đứng cạnh nhau được, nên cho chuyển tab -->
+      <div class="wb-tabs wb-tabs--pill mc-dtabs" id="d-tabs">
+        <button class="wb-tab is-active" data-p="ing">Nguyên liệu</button>
+        <button class="wb-tab" data-p="steps">Các bước</button>
+      </div>
+    </div>
+    <div class="mc-modal__body">
+      <div class="mc-detail is-ing" id="d-detail">
+        <div class="mc-detail__ing">
+          <div class="mc-panel-h">
+            <span class="wb-ico wb-ico--sm">shopping_basket</span>
+            <span class="mc-panel-h__t">Nguyên liệu</span>
+            <span class="mc-panel-h__n" id="d-ingn"></span>
+          </div>
+          <div class="mc-serve" style="margin-bottom:12px">
+            <span class="wb-help" style="margin:0">Khẩu phần</span>
+            <div class="wb-tabs wb-tabs--pill" id="d-serve">
+              <button class="wb-tab" data-s="2">2 người</button>
+              <button class="wb-tab is-active" data-s="4">4 người</button>
+              <button class="wb-tab" data-s="6">6 người</button>
+            </div>
+          </div>
+          <div id="d-ing"></div>
+          <p class="wb-help" style="margin-top:14px">Tích vào ô vuông để đánh dấu thứ đã có — dùng như danh sách đi chợ.</p>
+        </div>
+
+        <div class="mc-detail__steps">
+          <div class="mc-panel-h">
+            <span class="wb-ico wb-ico--sm">format_list_numbered</span>
+            <span class="mc-panel-h__t">Các bước</span>
+            <span class="mc-panel-h__n" id="d-stepn"></span>
+          </div>
+          <div class="mc-cook">
+            <div class="wb-progress"><div class="wb-progress__bar" id="d-prog" style="width:0%"></div></div>
+            <span class="mc-cookn" id="d-progn">bước 1</span>
+            <button class="wb-btn wb-btn--sm" id="d-next">Xong bước này</button>
+          </div>
+          <ol class="wb-steps mc-steps" id="d-steps"></ol>
+          <div id="d-extra"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ HẸN GIỜ (nổi, sống lâu hơn modal) ============ -->
+<div class="mc-timerbar" id="tbar" hidden role="status" aria-live="polite">
+  <span class="mc-timerbar__time" id="tb-time">00:00</span>
+  <button class="mc-timerbar__label" id="tb-go" type="button">
+    <span class="mc-timerbar__dish" id="tb-dish"></span>
+    <span class="mc-timerbar__step" id="tb-step"></span>
+  </button>
+  <div class="mc-timerbar__btns">
+    <button class="wb-btn wb-btn--sm" id="tb-done" hidden>Xong bước</button>
+    <button class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm" id="tb-pause" aria-label="Tạm dừng"><span class="wb-ico wb-ico--sm">pause</span></button>
+    <button class="wb-btn wb-btn--ghost wb-btn--sm" id="tb-plus">+1′</button>
+    <button class="wb-close" id="tb-stop" aria-label="Tắt hẹn giờ"></button>
+  </div>
+  <span class="mc-timerbar__prog"><i id="tb-bar" style="width:0%"></i></span>
+</div>
+
+<footer class="mc-foot">
+  <div class="wb-container wb-container--wide">
+    Mâm cơm Việt · một trang trong <a href="../index.html">vudat081299 / collection</a>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   DỮ LIỆU
+   ing: { n: tên, q: số lượng (cho 4 người), u: đơn vị,
+          per: {n: gam mỗi "cái", l: nhãn hình dung}, note, r: nhóm }
+        r: 'main' chính · 'veg' rau củ · 'season' gia vị · 'herb' rau thơm/phụ
+   steps: { t: tên bước, d: mô tả, m: phút, heat: mức lửa, cue: dấu hiệu đạt }
+   ============================================================ */
+var CATS = [
+  { k: 'canh', l: 'Canh',        i: 'soup_kitchen' },
+  { k: 'kho',  l: 'Kho / rim',   i: 'rice_bowl' },
+  { k: 'xao',  l: 'Xào',         i: 'local_fire_department' },
+  { k: 'luoc', l: 'Luộc',        i: 'waves' },
+  { k: 'ran',  l: 'Rán / chiên', i: 'outdoor_grill' },
+  { k: 'om',   l: 'Om / hấp / sốt', i: 'set_meal' },
+  { k: 'nom',  l: 'Nộm / dưa',   i: 'grass' },
+  { k: 'cham', l: 'Nước chấm',   i: 'water_drop' },
+  { k: 'lau',  l: 'Lẩu',         i: 'ramen_dining' },
+  { k: 'nuong', l: 'Nướng',      i: 'kebab_dining' }
+];
+var ROLES = [
+  { k: 'man',  l: 'Món mặn' },
+  { k: 'rau',  l: 'Món rau' },
+  { k: 'canh', l: 'Canh' },
+  { k: 'cham', l: 'Đồ chấm' },
+  { k: 'ngoai', l: 'Ngoài mâm' }   /* lẩu, nướng, món nhậu — không ăn cùng cơm */
+];
+var DIFFS = [
+  { k: 1, l: 'Dễ' }, { k: 2, l: 'Vừa' }, { k: 3, l: 'Khó' }
+];
+var TIMES = [
+  { k: 'a', l: '≤ 20 phút', max: 20 },
+  { k: 'b', l: '20–45 phút', max: 45 },
+  { k: 'c', l: '> 45 phút', max: 9999 }
+];
+
+var RECIPES = [];
+/* ---------- CANH ---------- */
+RECIPES.push(
+{
+  id: 'canh-cai-thit-bam', name: 'Canh cải nấu thịt băm', cat: 'canh', role: 'canh', diff: 1, serves: 4, prep: 8,
+  tags: ['thịt lợn', 'rau lá'],
+  why: 'Món canh dễ nhất để tập nêm. Rau thả vào là gần như xong.',
+  ing: [
+    { n: 'Thịt lợn xay', q: 120, u: 'g', per: { n: 50, l: 'nắm bằng quả trứng' }, r: 'main' },
+    { n: 'Cải ngọt (hoặc cải xanh)', q: 300, u: 'g', per: { n: 280, l: 'mớ' }, note: 'Cắt khúc 4–5 cm, bằng nửa gang tay.', r: 'veg' },
+    { n: 'Nước', q: 1000, u: 'ml', per: { n: 250, l: 'bát con' }, r: 'main' },
+    { n: 'Hành khô', q: 1, u: 'củ', r: 'season' },
+    { n: 'Nước mắm', q: 1, u: 'thìa canh', r: 'season' },
+    { n: 'Muối', q: 1, u: 'thìa cà phê', r: 'season' },
+    { n: 'Hành lá', q: 2, u: 'nhánh', r: 'herb' },
+    { n: 'Hạt tiêu', q: 1, u: 'nhúm', r: 'season' }
+  ],
+  steps: [
+    { t: 'Ướp và phi hành', d: 'Ướp thịt băm với ½ thìa cà phê nước mắm + chút tiêu, để 5 phút. Băm hành khô, phi với 1 thìa canh dầu.', m: 5, heat: 'Lửa vừa', cue: 'Hành chuyển vàng nhạt và dậy mùi — <b>vàng nhạt là tắt</b>, để đến vàng sậm sẽ đắng.' },
+    { t: 'Xào thịt cho săn', d: 'Cho thịt vào đảo tơi, tán đều để không vón cục.', m: 2, heat: 'Lửa vừa', cue: 'Thịt <b>đổi hết màu hồng sang trắng ngà</b>, không còn mảng đỏ.' },
+    { t: 'Đổ nước, hớt bọt', d: 'Đổ 4 bát con nước, cho muối, đun sôi rồi hớt hết bọt xám nổi lên.', m: 6, heat: 'Lửa to', cue: 'Nước sôi sùng sục và <b>mặt nước trong lại</b> sau khi hớt bọt.' },
+    { t: 'Thả rau', d: 'Thả cải vào, dùng đũa ấn cho ngập nước. Không đậy vung.', m: 2, heat: 'Lửa to', cue: 'Rau <b>chuyển xanh trong và mềm cọng nhưng chưa ngả vàng</b> — đúng lúc này là tắt bếp.' },
+    { t: 'Nêm cuối', d: 'Tắt bếp rồi mới cho nước mắm và hành lá thái nhỏ, khuấy nhẹ.', m: 1, heat: 'Tắt bếp', cue: 'Nếm thấy vị ngọt thịt rõ, mặn vừa. Nhạt thì thêm ¼ thìa cà phê muối, đừng thêm mắm nữa.' }
+  ],
+  tips: ['Đậy vung khi luộc/nấu rau xanh sẽ làm rau <b>xỉn màu</b> — luôn mở vung.', 'Muốn nước ngọt hơn mà không dùng mì chính: cho thêm 3–4 con tôm khô lúc đun nước.'],
+  serveWith: 'Hợp với mọi món kho hoặc rán mặn.'
+},
+{
+  id: 'canh-thit-bam-ca-chua', name: 'Canh thịt băm cà chua', cat: 'canh', role: 'canh', diff: 1, serves: 4, prep: 8,
+  tags: ['thịt lợn', 'cà chua'],
+  why: 'Chua nhẹ, dễ ăn, nguyên liệu lúc nào cũng có trong tủ lạnh.',
+  ing: [
+    { n: 'Thịt lợn xay', q: 150, u: 'g', per: { n: 50, l: 'nắm bằng quả trứng' }, r: 'main' },
+    { n: 'Cà chua', q: 3, u: 'quả', note: 'Bổ múi cau, mỗi quả 6 múi.', r: 'veg' },
+    { n: 'Nước', q: 1000, u: 'ml', per: { n: 250, l: 'bát con' }, r: 'main' },
+    { n: 'Hành khô', q: 1, u: 'củ', r: 'season' },
+    { n: 'Nước mắm', q: 1, u: 'thìa canh', r: 'season' },
+    { n: 'Đường', q: 0.5, u: 'thìa cà phê', note: 'Chỉ để cân vị chua, không làm canh ngọt.', r: 'season' },
+    { n: 'Muối', q: 1, u: 'thìa cà phê', r: 'season' },
+    { n: 'Hành lá + thì là', q: 3, u: 'nhánh', r: 'herb' }
+  ],
+  steps: [
+    { t: 'Phi hành, xào cà chua', d: 'Phi hành khô băm, cho cà chua vào cùng ¼ thìa cà phê muối, dằm nhẹ.', m: 4, heat: 'Lửa vừa', cue: 'Cà chua <b>mềm nhũn, tiết ra nước sốt đỏ cam</b> quanh chảo — chưa đủ màu thì chưa đổ nước.' },
+    { t: 'Cho thịt băm', d: 'Trút thịt vào đảo tơi cùng cà chua.', m: 2, heat: 'Lửa vừa', cue: 'Thịt trắng đều và <b>bám màu đỏ của cà chua</b>.' },
+    { t: 'Đổ nước, hớt bọt', d: 'Đổ 4 bát nước, thêm muối còn lại, đun sôi và hớt bọt.', m: 7, heat: 'Lửa to → vừa', cue: 'Nước ngả màu <b>cam nhạt trong</b>, không đục.' },
+    { t: 'Nêm và thả rau thơm', d: 'Nêm mắm + đường, tắt bếp, rắc hành lá và thì là thái nhỏ.', m: 1, heat: 'Tắt bếp', cue: 'Vị <b>chua trước, ngọt sau, mặn cuối</b>. Chua gắt thì thêm ¼ thìa cà phê đường.' }
+  ],
+  tips: ['Muốn canh có sợi trứng: đánh tan 1 quả trứng, rót thành dòng mỏng vào nồi <b>đang sôi mà không khuấy</b>, đợi 10 giây rồi mới khuấy nhẹ.', 'Cà chua bổ múi cau giữ được hình; băm nhỏ thì nước canh sánh hơn nhưng nát.'],
+  serveWith: 'Ăn với đậu phụ rán, thịt kho, hoặc trứng rán.'
+},
+{
+  id: 'canh-rau-ngot-thit-bam', name: 'Canh rau ngót thịt băm', cat: 'canh', role: 'canh', diff: 1, serves: 4, prep: 10,
+  tags: ['thịt lợn', 'rau lá'],
+  why: 'Nấu 10 phút. Khó nhất là khâu tuốt lá và vò rau cho hết chát.',
+  ing: [
+    { n: 'Rau ngót', q: 300, u: 'g', per: { n: 300, l: 'mớ' }, note: 'Tuốt lấy lá, bỏ cọng già.', r: 'veg' },
+    { n: 'Thịt lợn xay', q: 100, u: 'g', per: { n: 50, l: 'nắm bằng quả trứng' }, r: 'main' },
+    { n: 'Nước', q: 1000, u: 'ml', per: { n: 250, l: 'bát con' }, r: 'main' },
+    { n: 'Hành khô', q: 1, u: 'củ', r: 'season' },
+    { n: 'Nước mắm', q: 1, u: 'thìa canh', r: 'season' },
+    { n: 'Muối', q: 1, u: 'thìa cà phê', r: 'season' }
+  ],
+  steps: [
+    { t: 'Vò rau', d: 'Cho lá rau ngót vào rổ, rắc chút muối, vò nhẹ khoảng 20 lần rồi rửa lại.', m: 5, heat: '—', cue: 'Lá <b>hơi mềm và sẫm lại</b>, không còn cứng như lúc mới tuốt. Vò kỹ thì canh mới ngọt, không chát.' },
+    { t: 'Xào thịt', d: 'Phi hành, xào thịt băm cho săn.', m: 3, heat: 'Lửa vừa', cue: 'Thịt tơi, trắng đều, dậy mùi hành.' },
+    { t: 'Đun nước, thả rau', d: 'Đổ nước, đun sôi, hớt bọt rồi thả rau ngót vào, khuấy đều.', m: 5, heat: 'Lửa to', cue: 'Rau <b>chìm xuống và chuyển màu xanh đậm</b> — chỉ cần sôi lại 2 phút là chín.' },
+    { t: 'Nêm', d: 'Nêm muối, tắt bếp rồi thêm nước mắm.', m: 1, heat: 'Tắt bếp', cue: 'Nước canh xanh trong, ngọt tự nhiên.' }
+  ],
+  tips: ['Rau ngót nấu quá 5 phút sẽ <b>nồng và ngả vàng</b>. Sôi lại là tắt.', 'Không vò rau = canh chát. Đây là lỗi phổ biến nhất của món này.'],
+  serveWith: 'Cặp kinh điển với thịt kho tàu hoặc đậu phụ rán.'
+},
+{
+  id: 'canh-bi-dao-tom-kho', name: 'Canh bí đao nấu tôm khô', cat: 'canh', role: 'canh', diff: 1, serves: 4, prep: 10,
+  tags: ['tôm', 'củ quả'],
+  why: 'Ngọt nước mà không cần thịt. Rất hợp ngày nóng.',
+  ing: [
+    { n: 'Bí đao', q: 500, u: 'g', per: { n: 500, l: 'khúc bằng cẳng tay' }, note: 'Gọt vỏ, bỏ ruột, thái miếng dày 1 cm.', r: 'veg' },
+    { n: 'Tôm khô', q: 25, u: 'g', per: { n: 12, l: 'thìa canh đầy' }, note: 'Ngâm nước ấm 15 phút, giữ lại nước ngâm.', r: 'main' },
+    { n: 'Nước', q: 1000, u: 'ml', per: { n: 250, l: 'bát con' }, r: 'main' },
+    { n: 'Hành khô', q: 1, u: 'củ', r: 'season' },
+    { n: 'Nước mắm', q: 1, u: 'thìa canh', r: 'season' },
+    { n: 'Muối', q: 0.5, u: 'thìa cà phê', r: 'season' },
+    { n: 'Hành lá', q: 2, u: 'nhánh', r: 'herb' }
+  ],
+  steps: [
+    { t: 'Ngâm tôm khô', d: 'Ngâm tôm khô trong bát nước ấm. Giữ nguyên nước ngâm để nấu — đó là phần ngọt nhất.', m: 15, heat: '—', cue: 'Tôm <b>nở mềm, bóp thấy không còn lõi cứng</b>.' },
+    { t: 'Phi hành, xào tôm', d: 'Phi hành khô, cho tôm khô đã ráo vào xào thơm.', m: 3, heat: 'Lửa vừa', cue: 'Tôm <b>dậy mùi thơm và hơi co lại</b>.' },
+    { t: 'Đun nước dùng', d: 'Đổ nước ngâm tôm (gạn bỏ cặn) + nước lọc, đun sôi 5 phút cho ra chất ngọt.', m: 6, heat: 'Lửa to → vừa', cue: 'Nước ngả màu hồng nhạt, thơm mùi tôm.' },
+    { t: 'Thả bí đao', d: 'Cho bí vào, nêm muối, đun đến khi bí trong.', m: 7, heat: 'Lửa vừa', cue: 'Miếng bí <b>chuyển từ trắng đục sang trong như thạch</b>, xiên đũa qua dễ. Quá tay thì bí nát.' },
+    { t: 'Nêm cuối', d: 'Tắt bếp, cho nước mắm và hành lá.', m: 1, heat: 'Tắt bếp', cue: 'Nước ngọt thanh, không cần mì chính.' }
+  ],
+  tips: ['Bí đao thái dày 1 cm là vừa: mỏng quá nát, dày quá lâu chín.', 'Không có tôm khô thì thay bằng 150 g sườn non ninh 20 phút.'],
+  serveWith: 'Hợp món kho đậm như cá kho, thịt kho tiêu.'
+},
+{
+  id: 'canh-suon-khoai-tay-ca-rot', name: 'Canh sườn khoai tây cà rốt', cat: 'canh', role: 'canh', diff: 2, serves: 4, prep: 15,
+  tags: ['thịt lợn', 'củ quả'],
+  why: 'Chỉ khó ở khâu chần sườn và canh thời gian ninh cho củ không nát.',
+  ing: [
+    { n: 'Sườn non', q: 400, u: 'g', per: { n: 100, l: 'miếng bằng 2 ngón tay' }, note: 'Chặt miếng 3–4 cm.', r: 'main' },
+    { n: 'Khoai tây', q: 2, u: 'củ', note: 'Bổ miếng vuông 3 cm, ngâm nước cho khỏi thâm.', r: 'veg' },
+    { n: 'Cà rốt', q: 1, u: 'củ', note: 'Thái khúc vát 2 cm.', r: 'veg' },
+    { n: 'Nước', q: 1200, u: 'ml', per: { n: 250, l: 'bát con' }, r: 'main' },
+    { n: 'Hành khô', q: 2, u: 'củ', r: 'season' },
+    { n: 'Muối', q: 1.5, u: 'thìa cà phê', r: 'season' },
+    { n: 'Nước mắm', q: 1, u: 'thìa canh', r: 'season' },
+    { n: 'Hành lá + mùi ta', q: 3, u: 'nhánh', r: 'herb' }
+  ],
+  steps: [
+    { t: 'Chần sườn', d: 'Cho sườn vào nồi nước lạnh có 1 thìa cà phê muối, đun sôi 2 phút rồi đổ ra rửa sạch.', m: 7, heat: 'Lửa to', cue: 'Nước chần <b>đục và nổi váng nâu</b> — đó chính là thứ làm canh hôi, phải bỏ đi và rửa lại sườn bằng nước ấm.' },
+    { t: 'Xào sườn', d: 'Phi hành khô, cho sườn vào xào cùng ½ thìa cà phê muối.', m: 4, heat: 'Lửa vừa', cue: 'Mặt sườn <b>se lại, hơi vàng cạnh</b>.' },
+    { t: 'Ninh sườn', d: 'Đổ nước ngập mặt, đun sôi rồi hạ nhỏ lửa, hớt bọt, ninh cho mềm.', m: 25, heat: 'Liu riu', cue: 'Xiên đũa vào miếng sườn <b>ngập dễ, thịt bắt đầu tách khỏi xương</b>.' },
+    { t: 'Cho củ', d: 'Thả cà rốt trước 5 phút, rồi mới đến khoai tây.', m: 12, heat: 'Lửa vừa', cue: 'Khoai <b>xiên đũa qua nhẹ nhưng miếng vẫn nguyên</b>. Khoai vỡ ra là quá lửa — nước sẽ đục và sánh.' },
+    { t: 'Nêm cuối', d: 'Nêm mắm, tắt bếp, rắc hành mùi.', m: 1, heat: 'Tắt bếp', cue: 'Nước trong, ngọt xương, thấy rõ vị củ.' }
+  ],
+  tips: ['Chần sườn bằng <b>nước lạnh</b> (không phải nước sôi) thì bọt bẩn mới ra hết.', 'Muốn nước trong: ninh liu riu, không bao giờ để sôi bùng.'],
+  serveWith: 'Một mâm chỉ cần thêm món xào là đủ.'
+},
+{
+  id: 'canh-cua-rau-day-muop', name: 'Canh cua rau đay mướp', cat: 'canh', role: 'canh', diff: 3, serves: 4, prep: 25,
+  tags: ['cua', 'rau lá'],
+  why: 'Khó ở chỗ giữ cho gạch cua đóng thành tảng, không bị vỡ vụn.',
+  ing: [
+    { n: 'Cua đồng xay', q: 300, u: 'g', per: { n: 300, l: 'gói bán sẵn ở chợ' }, r: 'main' },
+    { n: 'Rau đay', q: 200, u: 'g', per: { n: 200, l: 'mớ' }, r: 'veg' },
+    { n: 'Mồng tơi', q: 150, u: 'g', per: { n: 250, l: 'mớ' }, r: 'veg' },
+    { n: 'Mướp hương', q: 1, u: 'quả', note: 'Gọt vỏ, thái vát dày 1 cm.', r: 'veg' },
+    { n: 'Nước', q: 1200, u: 'ml', per: { n: 250, l: 'bát con' }, r: 'main' },
+    { n: 'Muối', q: 1, u: 'thìa cà phê', r: 'season' },
+    { n: 'Nước mắm', q: 1, u: 'thìa canh', r: 'season' },
+    { n: 'Hành khô', q: 2, u: 'củ', note: 'Để phi chưng gạch.', r: 'season' }
+  ],
+  steps: [
+    { t: 'Lọc cua', d: 'Hoà cua xay với 1 lít nước + ½ thìa cà phê muối, bóp kỹ rồi lọc qua rây 2 lần, bỏ bã.', m: 10, heat: '—', cue: 'Nước lọc <b>đục như nước gạo, không còn sạn</b> khi miết tay dưới đáy.' },
+    { t: 'Đun cho gạch nổi', d: 'Đun nước cua, khuấy nhẹ đúng <b>một lần lúc chưa nóng</b> rồi tuyệt đối không khuấy nữa.', m: 8, heat: 'Lửa vừa', cue: 'Thịt cua <b>kết thành tảng nổi lên mặt</b>. Khuấy lúc đang nóng là tảng vỡ vụn — hỏng.' },
+    { t: 'Vớt gạch ra', d: 'Dùng muôi thủng vớt tảng gạch ra bát riêng.', m: 2, heat: 'Lửa nhỏ', cue: 'Nồi chỉ còn nước trong ngả vàng.' },
+    { t: 'Nấu rau', d: 'Thả mướp vào trước, sôi 2 phút rồi cho rau đay và mồng tơi, nêm muối.', m: 6, heat: 'Lửa to', cue: 'Rau <b>chín mềm, nước hơi sánh nhớt</b> — đó là dấu hiệu đúng của canh rau đay.' },
+    { t: 'Trả gạch, chưng hành', d: 'Nhẹ nhàng thả tảng gạch trở lại, tắt bếp. Phi hành khô với chút mỡ rồi rưới lên trên.', m: 3, heat: 'Tắt bếp', cue: 'Tảng gạch nổi nguyên trên mặt canh, dậy mùi hành phi.' }
+  ],
+  tips: ['Ba điều cấm: <b>khuấy khi đang nóng</b>, <b>đun lửa to</b>, <b>đậy vung</b> — cả ba đều làm vỡ gạch.', 'Canh cua ăn nguội mới đúng vị; nấu xong để ra ngoài 15 phút.'],
+  serveWith: 'Bắt buộc có cà pháo muối và một bát nước mắm.'
+},
+{
+  id: 'canh-mang-ngan', name: 'Canh măng ngan', cat: 'canh', role: 'canh', diff: 3, serves: 6, prep: 40,
+  tags: ['ngan/vịt', 'măng'],
+  why: 'Nhiều công đoạn và phải khử mùi ngan đúng cách. Món cỗ, không phải món ngày thường.',
+  ing: [
+    { n: 'Ngan', q: 1200, u: 'g', per: { n: 1200, l: 'nửa con ngan' }, note: 'Chặt miếng to sau khi luộc.', r: 'main' },
+    { n: 'Măng khô (hoặc măng tươi)', q: 250, u: 'g', per: { n: 250, l: 'nắm to' }, note: 'Măng khô phải ngâm trước tối thiểu 12 tiếng, thay nước 2–3 lần.', r: 'main' },
+    { n: 'Gừng', q: 30, u: 'g', per: { n: 10, l: 'đốt ngón cái' }, r: 'season' },
+    { n: 'Muối hạt', q: 2, u: 'thìa canh', note: 'Để xát ngan.', r: 'season' },
+    { n: 'Rượu trắng', q: 2, u: 'thìa canh', r: 'season' },
+    { n: 'Hành khô', q: 4, u: 'củ', r: 'season' },
+    { n: 'Nước mắm', q: 3, u: 'thìa canh', r: 'season' },
+    { n: 'Mùi tàu + hành lá', q: 6, u: 'nhánh', r: 'herb' }
+  ],
+  steps: [
+    { t: 'Ngâm và luộc măng', d: 'Măng khô ngâm nước vo gạo tối thiểu 12 tiếng, <b>thay nước 2–3 lần</b> trong lúc ngâm. Rửa sạch rồi luộc 3 lần, mỗi lần 20 phút, thay nước mỗi lần và <b>luôn mở vung</b>. Xé sợi bằng đầu đũa.', m: 70, heat: 'Lửa to', cue: 'Nước luộc lần cuối <b>trong, không còn màu vàng đục và mùi hăng</b>. Măng bẻ thấy mềm.' },
+    { t: 'Khử mùi ngan', d: 'Xát muối hạt + gừng giã + rượu khắp mình ngan, để 10 phút rồi rửa lại thật sạch.', m: 12, heat: '—', cue: 'Ngửi sát da <b>không còn mùi hôi đặc trưng</b>, da sạch nhớt.' },
+    { t: 'Luộc ngan', d: 'Luộc ngan với 1 củ gừng đập dập và 2 củ hành nướng, nước ngập mặt. Sôi thì hạ lửa, hớt bọt.', m: 35, heat: 'Liu riu', cue: 'Xiên đũa vào chỗ dày nhất ở đùi, <b>nước chảy ra trong không còn hồng</b>. Vớt ngan ra, giữ lại toàn bộ nước luộc.' },
+    { t: 'Xào măng', d: 'Phi hành khô, cho măng vào xào với 2 thìa canh nước mắm và một muôi nước luộc ngan.', m: 10, heat: 'Lửa vừa', cue: 'Măng <b>ngấm màu vàng nâu, sợi bóng mỡ</b>, nếm đã thấy đậm.' },
+    { t: 'Ninh măng với nước ngan', d: 'Trút măng vào nồi nước luộc ngan, ninh cho măng mềm và nước ngọt.', m: 30, heat: 'Liu riu', cue: 'Sợi măng <b>cắn thấy mềm nhưng còn dai nhẹ</b>, nước dùng ngả vàng và thơm.' },
+    { t: 'Chặt ngan, chan canh', d: 'Chặt ngan miếng vừa, xếp vào bát, chan măng và nước dùng, rắc mùi tàu thái nhỏ.', m: 8, heat: 'Tắt bếp', cue: 'Nước dùng trong, nổi lớp mỡ vàng mỏng, dậy mùi mùi tàu.' }
+  ],
+  tips: ['Măng khô <b>bắt buộc</b> ngâm thay nước rồi luộc bỏ nước nhiều lần, và luộc phải <b>mở vung</b> để độc tố bay theo hơi nước — đây là khâu an toàn, không phải khâu khẩu vị.', 'Không có thời gian ngâm măng khô thì dùng măng tươi, vẫn phải luộc 2–3 lần, cũng mở vung.', 'Nước luộc ngan là linh hồn của món — đừng đổ đi.'],
+  serveWith: 'Ăn kèm bún hoặc cơm, chấm ngan bằng mắm gừng.'
+},
+{
+  id: 'canh-chua-ca', name: 'Canh chua cá', cat: 'canh', role: 'canh', diff: 2, serves: 4, prep: 20,
+  tags: ['cá', 'cà chua', 'củ quả'],
+  why: 'Cần cho nguyên liệu đúng thứ tự để mỗi thứ chín tới, và cá không nát.',
+  ing: [
+    { n: 'Cá basa (hoặc cá lóc)', q: 500, u: 'g', per: { n: 120, l: 'khúc dày 2 đốt tay' }, r: 'main' },
+    { n: 'Me chua', q: 40, u: 'g', per: { n: 40, l: 'vắt me nhỏ' }, note: 'Dầm với nước nóng, lọc bỏ hạt.', r: 'season' },
+    { n: 'Dứa (thơm)', q: 150, u: 'g', per: { n: 150, l: '¼ quả' }, r: 'veg' },
+    { n: 'Cà chua', q: 2, u: 'quả', r: 'veg' },
+    { n: 'Đậu bắp', q: 6, u: 'quả', r: 'veg' },
+    { n: 'Dọc mùng', q: 150, u: 'g', per: { n: 75, l: 'cây' }, note: 'Tước vỏ, bóp muối, vắt kiệt, chần qua.', r: 'veg' },
+    { n: 'Giá đỗ', q: 100, u: 'g', per: { n: 45, l: 'nắm tay' }, r: 'veg' },
+    { n: 'Nước mắm', q: 2, u: 'thìa canh', r: 'season' },
+    { n: 'Đường', q: 1.5, u: 'thìa canh', r: 'season' },
+    { n: 'Rau om + ngò gai + tỏi phi', q: 1, u: 'phần', r: 'herb' }
+  ],
+  steps: [
+    { t: 'Sơ chế cá và dọc mùng', d: 'Cá xát muối gừng, rửa sạch, ướp 1 thìa canh mắm. Dọc mùng bóp muối, vắt kiệt, chần nước sôi rồi xả lạnh.', m: 15, heat: '—', cue: 'Dọc mùng <b>mềm và trong</b>, vắt không còn ra nước — làm ẩu sẽ bị ngứa.' },
+    { t: 'Nấu nước me', d: 'Đun 1,2 lít nước, cho nước me lọc + dứa + cà chua, nêm đường và mắm.', m: 8, heat: 'Lửa vừa', cue: 'Nước có vị <b>chua trước ngọt sau</b>, cân được rồi mới cho cá.' },
+    { t: 'Thả cá', d: 'Thả cá vào, không khuấy, hớt bọt.', m: 8, heat: 'Lửa vừa', cue: 'Thịt cá <b>đục hẳn và tách nhẹ khỏi xương</b> khi lấy đũa gạt. Khuấy mạnh là nát cá.' },
+    { t: 'Cho rau theo thứ tự', d: 'Đậu bắp trước (2 phút), rồi dọc mùng (1 phút), giá đỗ cuối cùng rồi tắt bếp ngay.', m: 4, heat: 'Lửa to', cue: 'Giá <b>vẫn còn giòn</b>, dọc mùng còn trong. Cho cùng lúc là giá nhũn.' },
+    { t: 'Hoàn thiện', d: 'Rắc rau om, ngò gai thái nhỏ và tỏi phi lên trên.', m: 1, heat: 'Tắt bếp', cue: 'Mùi rau om bốc lên rõ rệt — thiếu rau om thì không còn là canh chua.' }
+  ],
+  tips: ['Nêm chua–ngọt <b>trước khi</b> cho cá; sau khi có cá thì rất khó chỉnh vị.', 'Thứ tự thả rau chính là toàn bộ độ khó của món này.'],
+  serveWith: 'Ăn với cá kho tộ và cơm trắng — cặp đôi kinh điển miền Nam.'
+}
+);
+
+/* ---------- KHO / RIM ---------- */
+RECIPES.push(
+{
+  id: 'thit-kho-tau', name: 'Thịt kho tàu (thịt kho trứng)', cat: 'kho', role: 'man', diff: 2, serves: 4, prep: 20,
+  tags: ['thịt lợn', 'trứng'],
+  why: 'Kỹ thuật đơn giản nhưng cần kiên nhẫn: gần một tiếng lửa liu riu và không đụng vào.',
+  ing: [
+    { n: 'Thịt ba chỉ (hoặc chân giò)', q: 700, u: 'g', per: { n: 110, l: 'miếng bằng lòng bàn tay' }, note: 'Thái miếng vuông 4 cm — to bằng bao diêm.', r: 'main' },
+    { n: 'Trứng gà (hoặc trứng vịt)', q: 6, u: 'quả', note: 'Luộc chín, bóc vỏ.', r: 'main' },
+    { n: 'Nước dừa tươi', q: 500, u: 'ml', per: { n: 250, l: 'bát con' }, note: 'Không có thì thay bằng nước lọc + 1 thìa canh đường.', r: 'main' },
+    { n: 'Nước mắm', q: 3, u: 'thìa canh', r: 'season' },
+    { n: 'Đường', q: 2, u: 'thìa canh', note: '1 thìa để ướp, 1 thìa để thắng nước hàng.', r: 'season' },
+    { n: 'Hành khô', q: 3, u: 'củ', r: 'season' },
+    { n: 'Hạt tiêu', q: 1, u: 'thìa cà phê', r: 'season' }
+  ],
+  steps: [
+    { t: 'Ướp thịt', d: 'Ướp thịt với 2 thìa canh mắm, 1 thìa canh đường, hành khô băm, tiêu. Trộn đều, để ngấm.', m: 30, heat: '—', cue: 'Miếng thịt <b>chuyển màu sẫm hơn và hơi ướt bóng</b>, không còn khô ráo.' },
+    { t: 'Thắng nước hàng', d: 'Cho 1 thìa canh đường + 1 thìa canh nước vào nồi, đun đến khi chuyển màu.', m: 4, heat: 'Lửa vừa', cue: 'Đường chuyển màu <b>cánh gián (nâu đỏ) và bốc khói nhẹ</b> — đến màu nâu đen là đắng, phải đổ đi làm lại.' },
+    { t: 'Xào thịt săn', d: 'Trút thịt vào đảo nhanh cho áo đều nước hàng.', m: 5, heat: 'Lửa to', cue: 'Mặt ngoài miếng thịt <b>se lại, ngả nâu bóng</b>, mỡ bắt đầu chảy ra.' },
+    { t: 'Đổ nước dừa, kho lần một', d: 'Đổ nước dừa xâm xấp mặt thịt, đun sôi, hớt bọt rồi hạ lửa nhỏ nhất.', m: 35, heat: 'Liu riu', cue: 'Mặt nước chỉ <b>lăn tăn</b>. Nếu thấy sôi bùng thì hạ ngay — sôi mạnh làm thịt co và dai.' },
+    { t: 'Cho trứng', d: 'Thả trứng đã bóc vỏ vào, kho tiếp, thỉnh thoảng nghiêng nồi cho ngập đều (không đảo).', m: 20, heat: 'Liu riu', cue: 'Trứng <b>ngả màu nâu cánh gián đều</b>, nước kho sánh lại còn khoảng ⅓.' },
+    { t: 'Kết thúc', d: 'Nêm lại bằng 1 thìa canh mắm, rắc tiêu, tắt bếp và để ngấm thêm 15 phút.', m: 3, heat: 'Tắt bếp', cue: 'Miếng thịt <b>dùng đũa gắp lên thấy mềm rung, mỡ trong veo</b>; nước kho sánh áo được mặt thìa.' }
+  ],
+  tips: ['Nồi càng nhỏ càng tốt — thịt xếp một lớp, nước dừa xâm xấp là chuẩn.', 'Kho xong để nguội rồi <b>kho lại lần hai</b> hôm sau sẽ ngon hơn hẳn.', 'Đảo nhiều lần trong lúc kho làm thịt nát và trứng tróc mặt.'],
+  serveWith: 'Ăn với dưa cải muối hoặc dưa góp để cắt ngấy.'
+},
+{
+  id: 'thit-kho-tieu', name: 'Thịt ba chỉ kho tiêu', cat: 'kho', role: 'man', diff: 2, serves: 4, prep: 15,
+  tags: ['thịt lợn'],
+  why: 'Kho khô, nhanh hơn kho tàu, chỉ cần canh lúc nước cạn để không cháy.',
+  ing: [
+    { n: 'Thịt ba chỉ', q: 500, u: 'g', per: { n: 110, l: 'miếng bằng lòng bàn tay' }, note: 'Thái miếng mỏng 1 cm, dài 4 cm.', r: 'main' },
+    { n: 'Nước mắm', q: 2, u: 'thìa canh', r: 'season' },
+    { n: 'Đường', q: 1.5, u: 'thìa canh', r: 'season' },
+    { n: 'Hạt tiêu xay', q: 1.5, u: 'thìa cà phê', note: 'Nửa để ướp, nửa rắc cuối.', r: 'season' },
+    { n: 'Hành khô', q: 2, u: 'củ', r: 'season' },
+    { n: 'Nước lọc', q: 200, u: 'ml', per: { n: 250, l: 'bát con' }, r: 'main' },
+    { n: 'Hành lá', q: 2, u: 'nhánh', r: 'herb' }
+  ],
+  steps: [
+    { t: 'Ướp thịt', d: 'Ướp thịt với mắm, ½ thìa canh đường, tiêu, hành khô băm.', m: 20, heat: '—', cue: 'Thịt ngấm, bề mặt ướt bóng.' },
+    { t: 'Thắng đường', d: 'Đun 1 thìa canh đường với chút nước đến màu cánh gián.', m: 3, heat: 'Lửa vừa', cue: 'Màu <b>nâu đỏ, bốc khói nhẹ, thơm mùi caramel</b>.' },
+    { t: 'Kho', d: 'Cho thịt vào đảo săn, thêm nước xâm xấp, đun sôi rồi hạ lửa.', m: 20, heat: 'Liu riu', cue: 'Nước kho <b>rút xuống còn một lớp mỏng dưới đáy, sánh và bóng</b>.' },
+    { t: 'Rim cạn', d: 'Mở vung, đảo nhẹ liên tục cho tới khi thịt cháy cạnh.', m: 5, heat: 'Lửa vừa', cue: 'Miếng thịt <b>ngả nâu sậm, cạnh hơi cong và bóng mỡ</b>, nước gần như hết. Đây là lúc dễ cháy nhất — không rời bếp.' },
+    { t: 'Hoàn thiện', d: 'Tắt bếp, rắc nốt tiêu và hành lá.', m: 1, heat: 'Tắt bếp', cue: 'Mùi tiêu nồng bốc lên.' }
+  ],
+  tips: ['Rắc tiêu <b>sau khi tắt bếp</b> mới thơm; tiêu đun lâu sẽ đắng.', 'Món này ăn nguội vẫn ngon, hợp mang cơm trưa.'],
+  serveWith: 'Cần một bát canh rau để cân lại vị mặn.'
+},
+{
+  id: 'ca-kho-rieng', name: 'Cá kho riềng', cat: 'kho', role: 'man', diff: 3, serves: 4, prep: 25,
+  tags: ['cá'],
+  why: 'Kho lâu, phải xếp nồi đúng cách và tuyệt đối không đảo, nếu không cá nát bét.',
+  ing: [
+    { n: 'Cá trắm/cá chép khúc', q: 700, u: 'g', per: { n: 120, l: 'khúc dày 2 đốt tay' }, r: 'main' },
+    { n: 'Riềng', q: 60, u: 'g', per: { n: 30, l: 'củ nhỏ' }, note: 'Nửa thái lát, nửa giã nhỏ.', r: 'season' },
+    { n: 'Thịt ba chỉ', q: 100, u: 'g', per: { n: 110, l: 'miếng bằng lòng bàn tay' }, note: 'Thái mỏng, lót đáy nồi.', r: 'main' },
+    { n: 'Nước mắm', q: 3, u: 'thìa canh', r: 'season' },
+    { n: 'Đường', q: 1, u: 'thìa canh', r: 'season' },
+    { n: 'Nước hàng', q: 1, u: 'thìa canh', r: 'season' },
+    { n: 'Nước chè xanh (hoặc nước dừa)', q: 300, u: 'ml', per: { n: 250, l: 'bát con' }, r: 'main' },
+    { n: 'Ớt + hành khô', q: 3, u: 'củ', r: 'season' }
+  ],
+  steps: [
+    { t: 'Sơ chế cá', d: 'Xát muối và gừng lên khúc cá, rửa sạch, để thật ráo rồi ướp với mắm, đường, nước hàng, riềng giã.', m: 30, heat: '—', cue: 'Cá <b>ráo mặt, không đọng nước</b> — cá ướt thì kho sẽ tanh và bở.' },
+    { t: 'Xếp nồi', d: 'Lót lát riềng + thịt ba chỉ xuống đáy nồi, xếp cá lên trên, rưới hết nước ướp.', m: 5, heat: '—', cue: 'Cá xếp <b>một lớp, khít nhau, không chồng lên nhau</b> — đây là điều kiện để không phải đảo.' },
+    { t: 'Kho lần một', d: 'Đun sôi, hớt bọt, đổ nước chè xanh xâm xấp rồi hạ lửa nhỏ nhất.', m: 45, heat: 'Liu riu', cue: 'Nước sôi lăn tăn quanh mép nồi. <b>Tuyệt đối không dùng đũa đảo</b>; muốn đều thì nghiêng nồi.' },
+    { t: 'Kho lần hai', d: 'Khi nước cạn hơn nửa, nêm lại rồi kho tiếp cho tới khi nước sánh.', m: 35, heat: 'Liu riu', cue: 'Khúc cá <b>chắc lại, ngả màu nâu cánh gián, xương sống mềm</b>; nước kho còn xâm xấp đáy và sánh.' },
+    { t: 'Om cuối', d: 'Tắt bếp, đậy vung để om thêm 20 phút cho ngấm.', m: 5, heat: 'Tắt bếp', cue: 'Gắp thử một khúc: thịt cá <b>không rời ra mà giữ nguyên khối</b>.' }
+  ],
+  tips: ['Lớp thịt ba chỉ lót đáy vừa chống cháy, vừa làm cá béo — đừng bỏ qua.', 'Nước chè xanh làm thịt cá săn chắc và bớt tanh; thay được bằng nước dừa.'],
+  serveWith: 'Ăn với canh rau và dưa muối.'
+},
+{
+  id: 'tom-rim-thit-ba-chi', name: 'Tôm rim thịt ba chỉ', cat: 'kho', role: 'man', diff: 2, serves: 4, prep: 15,
+  tags: ['tôm', 'thịt lợn'],
+  why: 'Nhanh, chỉ cần rim cho tới lúc nước sánh áo tôm là dừng.',
+  ing: [
+    { n: 'Tôm tươi', q: 300, u: 'g', per: { n: 20, l: 'con tôm cỡ vừa' }, note: 'Cắt râu, rút chỉ đen trên lưng.', r: 'main' },
+    { n: 'Thịt ba chỉ', q: 200, u: 'g', per: { n: 110, l: 'miếng bằng lòng bàn tay' }, note: 'Thái con chì bằng ngón tay út.', r: 'main' },
+    { n: 'Nước mắm', q: 2, u: 'thìa canh', r: 'season' },
+    { n: 'Đường', q: 1, u: 'thìa canh', r: 'season' },
+    { n: 'Hành khô', q: 2, u: 'củ', r: 'season' },
+    { n: 'Hạt tiêu', q: 1, u: 'thìa cà phê', r: 'season' },
+    { n: 'Hành lá', q: 2, u: 'nhánh', r: 'herb' }
+  ],
+  steps: [
+    { t: 'Rán thịt ra mỡ', d: 'Cho thịt ba chỉ vào chảo khô, rán cho ra mỡ và vàng cạnh.', m: 7, heat: 'Lửa vừa', cue: 'Miếng thịt <b>vàng ruộm hai mặt, đáy chảo có một lớp mỡ trong</b>.' },
+    { t: 'Thắng đường, cho tôm', d: 'Cho đường vào chảo mỡ, đảo tan tới màu cánh gián rồi trút tôm vào.', m: 4, heat: 'Lửa to', cue: 'Tôm <b>chuyển đỏ cam và cong lại thành hình chữ C</b> — cong thành chữ O là đã quá lửa, thịt bị khô.' },
+    { t: 'Rim', d: 'Cho mắm và 3 thìa canh nước, rim cho tới khi nước sánh áo tôm.', m: 6, heat: 'Lửa vừa', cue: 'Nước rim <b>kéo thành sợi bóng bám quanh con tôm</b>, đáy chảo gần cạn.' },
+    { t: 'Hoàn thiện', d: 'Tắt bếp, rắc tiêu và hành lá.', m: 1, heat: 'Tắt bếp', cue: 'Tôm bóng, mặn ngọt cân, không ướt nước.' }
+  ],
+  tips: ['Rút chỉ đen trên lưng tôm là khâu ai cũng bỏ nhưng nó quyết định vị đắng hay không.', 'Tôm chín rất nhanh — tính từ lúc chuyển đỏ chỉ còn khoảng 2 phút.'],
+  serveWith: 'Rất hợp canh bí đao hoặc canh rau ngót.'
+},
+{
+  id: 'suon-kho-man-ngot', name: 'Sườn kho mặn ngọt', cat: 'kho', role: 'man', diff: 2, serves: 4, prep: 20,
+  tags: ['thịt lợn'],
+  why: 'Chỉ khó ở khâu chần sườn và canh lửa lúc rim cạn.',
+  ing: [
+    { n: 'Sườn non', q: 600, u: 'g', per: { n: 100, l: 'miếng bằng 2 ngón tay' }, note: 'Chặt miếng 4 cm.', r: 'main' },
+    { n: 'Nước mắm', q: 2.5, u: 'thìa canh', r: 'season' },
+    { n: 'Đường', q: 2, u: 'thìa canh', r: 'season' },
+    { n: 'Hành khô + tỏi', q: 4, u: 'củ/tép', r: 'season' },
+    { n: 'Nước lọc', q: 300, u: 'ml', per: { n: 250, l: 'bát con' }, r: 'main' },
+    { n: 'Hạt tiêu', q: 1, u: 'thìa cà phê', r: 'season' }
+  ],
+  steps: [
+    { t: 'Chần sườn', d: 'Chần sườn từ nước lạnh có muối, sôi 2 phút, rửa lại bằng nước ấm.', m: 8, heat: 'Lửa to', cue: 'Miếng sườn <b>trắng sạch, không còn máu đọng ở đầu xương</b>.' },
+    { t: 'Ướp', d: 'Ướp sườn với mắm, 1 thìa canh đường, hành tỏi băm.', m: 20, heat: '—', cue: 'Sườn ngấm, có màu nâu nhạt.' },
+    { t: 'Thắng đường và xào', d: 'Thắng 1 thìa canh đường tới màu cánh gián, cho sườn vào đảo săn.', m: 6, heat: 'Lửa to', cue: 'Sườn <b>áo đều màu nâu bóng</b>, dậy mùi thơm.' },
+    { t: 'Kho', d: 'Đổ nước xâm xấp, đun sôi rồi hạ lửa kho tới khi sườn mềm.', m: 30, heat: 'Liu riu', cue: 'Dùng đũa xiên vào phần thịt dày <b>ngập dễ dàng</b>, thịt hơi tách khỏi xương.' },
+    { t: 'Rim cạn', d: 'Mở vung, tăng lửa vừa, đảo đều cho nước sánh lại bám sườn.', m: 6, heat: 'Lửa vừa', cue: 'Nước kho <b>đặc lại thành lớp bóng áo quanh sườn</b>, kéo muôi thấy vệt đáy nồi.' },
+    { t: 'Hoàn thiện', d: 'Rắc tiêu, tắt bếp.', m: 1, heat: 'Tắt bếp', cue: 'Sườn bóng, ngọt mặn hài hoà.' }
+  ],
+  tips: ['Sườn non ngon nhất là loại có <b>xương dẹt, thịt dày một đốt ngón tay</b>.', 'Kho quá lâu sườn sẽ bã; mềm là dừng.'],
+  serveWith: 'Cơm nóng + canh cải là đủ một mâm đơn giản.'
+},
+{
+  id: 'ga-kho-gung', name: 'Gà kho gừng', cat: 'kho', role: 'man', diff: 2, serves: 4, prep: 15,
+  tags: ['thịt gà'],
+  why: 'Ít bước, nhưng cần đủ gừng và đủ thời gian để miếng gà thấm.',
+  ing: [
+    { n: 'Đùi gà (hoặc gà ta chặt miếng)', q: 700, u: 'g', per: { n: 120, l: 'miếng bằng lòng bàn tay' }, r: 'main' },
+    { n: 'Gừng', q: 40, u: 'g', per: { n: 10, l: 'đốt ngón cái' }, note: 'Nửa thái sợi, nửa giã.', r: 'season' },
+    { n: 'Nước mắm', q: 2, u: 'thìa canh', r: 'season' },
+    { n: 'Đường', q: 1, u: 'thìa canh', r: 'season' },
+    { n: 'Hành khô', q: 2, u: 'củ', r: 'season' },
+    { n: 'Nước lọc', q: 150, u: 'ml', per: { n: 250, l: 'bát con' }, r: 'main' },
+    { n: 'Hạt tiêu + ớt', q: 1, u: 'thìa cà phê', r: 'season' }
+  ],
+  steps: [
+    { t: 'Ướp gà', d: 'Ướp gà với mắm, đường, gừng giã, hành băm, tiêu.', m: 20, heat: '—', cue: 'Miếng gà <b>ngả vàng nhạt và ướt bóng</b>.' },
+    { t: 'Áp chảo', d: 'Cho gà vào chảo nóng có chút dầu, áp cho vàng đều hai mặt.', m: 8, heat: 'Lửa vừa', cue: 'Da gà <b>vàng ruộm và co lại</b>, không còn dính chảo.' },
+    { t: 'Kho', d: 'Đổ nước ướp + nước lọc xâm xấp, thả gừng sợi, kho liu riu.', m: 20, heat: 'Liu riu', cue: 'Nước kho <b>còn khoảng ⅓ và sánh</b>, gừng thơm nồng.' },
+    { t: 'Rim cạn', d: 'Mở vung, đảo đều cho nước bám vào miếng gà.', m: 5, heat: 'Lửa vừa', cue: 'Miếng gà <b>bóng, màu nâu vàng, đáy chảo còn một lớp nước sánh mỏng</b>.' },
+    { t: 'Hoàn thiện', d: 'Rắc tiêu và ớt, tắt bếp.', m: 1, heat: 'Tắt bếp', cue: 'Thơm nồng gừng, cay nhẹ.' }
+  ],
+  tips: ['Gừng cho ít thì món này mất bản sắc — đừng tiếc gừng.', 'Dùng đùi/cánh chứ đừng dùng ức: ức gà kho sẽ khô xác.'],
+  serveWith: 'Hợp mùa lạnh, ăn với canh cải và cơm nóng.'
+}
+);
+/* ---------- XÀO ---------- */
+RECIPES.push(
+{
+  id: 'rau-muong-xao-toi', name: 'Rau muống xào tỏi', cat: 'xao', role: 'rau', diff: 1, serves: 4, prep: 10,
+  tags: ['rau lá', 'chay'],
+  why: 'Món xào đầu tiên nên học: chỉ có hai biến số là lửa và tốc độ tay.',
+  ing: [
+    { n: 'Rau muống', q: 500, u: 'g', per: { n: 280, l: 'mớ' }, note: 'Nhặt cọng non, ngắt khúc bằng ngón tay.', r: 'veg' },
+    { n: 'Tỏi', q: 5, u: 'tép', note: 'Băm nhỏ, chia hai phần.', r: 'season' },
+    { n: 'Dầu ăn', q: 2, u: 'thìa canh', r: 'season' },
+    { n: 'Muối', q: 0.5, u: 'thìa cà phê', r: 'season' },
+    { n: 'Nước mắm', q: 1, u: 'thìa cà phê', r: 'season' }
+  ],
+  steps: [
+    { t: 'Chần rau (bước ăn gian)', d: 'Đun nồi nước sôi có ½ thìa cà phê muối, trần rau 40 giây rồi vớt ra xả nước lạnh, để thật ráo.', m: 6, heat: 'Lửa to', cue: 'Rau <b>xanh mướt và mềm cọng</b> nhưng vẫn giòn. Xả lạnh ngay để rau không chín tiếp.' },
+    { t: 'Làm nóng chảo', d: 'Đun chảo khô cho thật nóng rồi mới cho dầu và một nửa tỏi.', m: 2, heat: 'Lửa to', cue: 'Nhỏ giọt nước vào chảo thấy <b>bốc hơi tức thì</b>; tỏi thả vào sủi lăn tăn ngay lập tức.' },
+    { t: 'Xào nhanh', d: 'Trút rau vào, đảo liên tục bằng hai tay, nêm muối.', m: 2, heat: 'Lửa to', cue: 'Rau <b>bóng dầu, vẫn xanh, chưa ra nước ở đáy chảo</b>. Thấy nước ứa ra là đã quá lâu.' },
+    { t: 'Cho tỏi lần hai', d: 'Rắc nốt tỏi băm còn lại, đảo 10 giây, nêm mắm rồi tắt bếp.', m: 1, heat: 'Lửa to', cue: 'Mùi tỏi sống vừa chín tới, thơm gắt — đây là mẹo làm món xào tỏi dậy mùi.' }
+  ],
+  tips: ['Chảo chưa đủ nóng = rau ra nước = rau luộc dở. Đây là lỗi số một khi xào.', 'Xào tối đa <b>300 g một lượt</b> với chảo 24 cm; nhiều hơn thì chia hai mẻ.'],
+  serveWith: 'Đi với mọi món kho.'
+},
+{
+  id: 'trung-xao-ca-chua', name: 'Trứng xào cà chua', cat: 'xao', role: 'man', diff: 1, serves: 4, prep: 8,
+  tags: ['trứng', 'cà chua', 'chay'],
+  why: '10 phút, hai nguyên liệu, gần như không thể hỏng.',
+  ing: [
+    { n: 'Trứng gà', q: 4, u: 'quả', r: 'main' },
+    { n: 'Cà chua', q: 3, u: 'quả', note: 'Bổ múi cau.', r: 'veg' },
+    { n: 'Hành lá', q: 3, u: 'nhánh', r: 'herb' },
+    { n: 'Nước mắm', q: 1, u: 'thìa cà phê', r: 'season' },
+    { n: 'Muối', q: 0.5, u: 'thìa cà phê', r: 'season' },
+    { n: 'Đường', q: 0.5, u: 'thìa cà phê', r: 'season' },
+    { n: 'Dầu ăn', q: 2, u: 'thìa canh', r: 'season' }
+  ],
+  steps: [
+    { t: 'Đánh trứng', d: 'Đánh tan trứng với ¼ thìa cà phê muối và 1 thìa canh nước lọc.', m: 2, heat: '—', cue: 'Hỗn hợp <b>đồng màu vàng, có bọt lăn tăn trên mặt</b>. Thêm nước làm trứng mềm hơn.' },
+    { t: 'Xào trứng tái', d: 'Đổ trứng vào chảo nóng nhiều dầu, đợi 10 giây rồi khoắng nhanh, đổ ra bát khi còn hơi ướt.', m: 2, heat: 'Lửa to', cue: 'Trứng <b>đóng thành mảng lớn mềm, mặt còn bóng ướt</b> — chín hẳn ở bước này thì cuối cùng sẽ khô.' },
+    { t: 'Xào cà chua', d: 'Cho cà chua vào chảo cùng muối, đường, dằm nhẹ cho ra sốt.', m: 4, heat: 'Lửa vừa', cue: 'Cà chua <b>mềm nhũn, ra nước sốt đỏ sánh</b>.' },
+    { t: 'Trộn lại', d: 'Trút trứng vào, đảo nhẹ 30 giây, nêm mắm, rắc hành lá rồi tắt bếp.', m: 2, heat: 'Lửa to', cue: 'Trứng <b>ngấm sốt đỏ nhưng vẫn thành mảng riêng</b>, không nát vụn.' }
+  ],
+  tips: ['Trứng xào <b>hai lần</b> (tái ra bát, cuối cùng mới trộn lại) là bí quyết duy nhất của món này.', 'Không xào trứng lẫn cà chua từ đầu — trứng sẽ bị dai và tối màu.'],
+  serveWith: 'Món cứu đói khi tủ lạnh trống.'
+},
+{
+  id: 'cai-chip-xao-nam', name: 'Cải chíp xào nấm hương', cat: 'xao', role: 'rau', diff: 1, serves: 4, prep: 12,
+  tags: ['rau lá', 'nấm', 'chay'],
+  why: 'Món chay dễ, đẹp mâm. Chỉ cần nhớ cho cọng trước, lá sau.',
+  ing: [
+    { n: 'Cải chíp', q: 400, u: 'g', per: { n: 60, l: 'cây' }, note: 'Bổ đôi theo chiều dọc.', r: 'veg' },
+    { n: 'Nấm hương tươi', q: 150, u: 'g', per: { n: 15, l: 'cái' }, note: 'Khía chữ thập trên mũ nấm.', r: 'main' },
+    { n: 'Tỏi', q: 4, u: 'tép', r: 'season' },
+    { n: 'Dầu hào', q: 1, u: 'thìa canh', r: 'season' },
+    { n: 'Nước tương', q: 1, u: 'thìa cà phê', r: 'season' },
+    { n: 'Bột năng', q: 1, u: 'thìa cà phê', note: 'Hoà với 3 thìa canh nước.', r: 'season' },
+    { n: 'Dầu ăn', q: 1.5, u: 'thìa canh', r: 'season' }
+  ],
+  steps: [
+    { t: 'Chần cải', d: 'Chần cải chíp trong nước sôi có muối và vài giọt dầu 40 giây, vớt ra xếp đĩa.', m: 5, heat: 'Lửa to', cue: 'Cọng cải <b>trong lại, lá xanh đậm và mềm rũ</b>. Vài giọt dầu giúp rau bóng.' },
+    { t: 'Xào nấm', d: 'Phi tỏi, cho nấm vào xào tới khi ra nước rồi cạn lại.', m: 5, heat: 'Lửa to', cue: 'Nấm <b>quắt lại, cạnh hơi vàng, hết nước trong chảo</b> — nấm còn ướt thì món sẽ nhạt.' },
+    { t: 'Làm sốt', d: 'Nêm dầu hào, nước tương, thêm 3 thìa canh nước, đun sôi rồi rưới bột năng đã hoà.', m: 2, heat: 'Lửa vừa', cue: 'Sốt <b>sánh lại, kéo được thành dòng khi đổ từ muôi</b>.' },
+    { t: 'Rưới lên cải', d: 'Rưới nấm và sốt lên đĩa cải chíp đã xếp.', m: 1, heat: 'Tắt bếp', cue: 'Sốt bám đều mặt rau, không chảy loang ra đĩa.' }
+  ],
+  tips: ['Chần rau riêng rồi rưới sốt lên (thay vì xào chung) giữ được màu xanh và dáng cây cải.', 'Nấm hương khô ngâm nở cũng dùng được, giữ nước ngâm để pha vào sốt.'],
+  serveWith: 'Hợp mâm chay hoặc ăn cùng món kho đậm.'
+},
+{
+  id: 'dau-cove-xao-thit-bo', name: 'Đậu cove xào thịt bò', cat: 'xao', role: 'man', diff: 1, serves: 4, prep: 15,
+  tags: ['thịt bò', 'củ quả'],
+  why: 'Dễ, nhưng phải xào bò và đậu riêng rồi mới trộn — nếu không bò sẽ dai.',
+  ing: [
+    { n: 'Thịt bò thăn', q: 250, u: 'g', per: { n: 110, l: 'miếng bằng lòng bàn tay' }, note: 'Thái lát mỏng ngang thớ.', r: 'main' },
+    { n: 'Đậu cove', q: 300, u: 'g', per: { n: 45, l: 'nắm tay' }, note: 'Tước xơ, cắt khúc 4 cm.', r: 'veg' },
+    { n: 'Tỏi', q: 4, u: 'tép', r: 'season' },
+    { n: 'Dầu hào', q: 1, u: 'thìa canh', r: 'season' },
+    { n: 'Nước mắm', q: 1, u: 'thìa cà phê', r: 'season' },
+    { n: 'Dầu ăn', q: 2, u: 'thìa canh', r: 'season' },
+    { n: 'Hạt tiêu', q: 1, u: 'nhúm', r: 'season' }
+  ],
+  steps: [
+    { t: 'Ướp bò', d: 'Ướp bò với ½ thìa canh dầu hào, 1 tép tỏi băm, tiêu và 1 thìa cà phê dầu ăn.', m: 15, heat: '—', cue: 'Lát bò <b>bóng dầu, không đọng nước dưới đáy bát</b>. Lớp dầu giúp bò không bị dai khi xào.' },
+    { t: 'Chần đậu', d: 'Chần đậu cove 2 phút trong nước sôi có muối rồi xả nước lạnh.', m: 5, heat: 'Lửa to', cue: 'Đậu <b>xanh mướt, bẻ thấy giòn gãy chứ không mềm oặt</b>.' },
+    { t: 'Xào bò', d: 'Chảo thật nóng, xào bò 60–90 giây rồi trút ra bát.', m: 2, heat: 'Lửa to', cue: 'Bò <b>vừa đổi màu nâu bên ngoài, bên trong còn hồng</b>. Xào tiếp trong chảo là dai.' },
+    { t: 'Xào đậu và trộn', d: 'Phi tỏi, xào đậu 2 phút, nêm dầu hào và mắm, rồi trút bò vào đảo 20 giây.', m: 3, heat: 'Lửa to', cue: 'Tất cả bóng đều, <b>đáy chảo khô không đọng nước</b>.' }
+  ],
+  tips: ['Thái bò <b>ngang thớ</b> (vuông góc với các đường sợi) mới mềm.', 'Bò phải là thứ cho vào chảo cuối cùng, luôn luôn.'],
+  serveWith: 'Một món xào đủ chất, chỉ cần thêm canh.'
+},
+{
+  id: 'thit-bo-xao-hanh-tay', name: 'Thịt bò xào hành tây', cat: 'xao', role: 'man', diff: 2, serves: 4, prep: 15,
+  tags: ['thịt bò', 'củ quả'],
+  why: 'Cần chảo thật nóng và tay thật nhanh — quá 2 phút là bò dai.',
+  ing: [
+    { n: 'Thịt bò thăn', q: 300, u: 'g', per: { n: 110, l: 'miếng bằng lòng bàn tay' }, note: 'Thái lát mỏng 3 mm, ngang thớ.', r: 'main' },
+    { n: 'Hành tây', q: 1, u: 'củ', note: 'Bổ múi cau dày 1 cm.', r: 'veg' },
+    { n: 'Cần tây (hoặc tỏi tây)', q: 100, u: 'g', per: { n: 50, l: 'cây' }, r: 'veg' },
+    { n: 'Tỏi', q: 4, u: 'tép', r: 'season' },
+    { n: 'Dầu hào', q: 1, u: 'thìa canh', r: 'season' },
+    { n: 'Nước mắm', q: 1, u: 'thìa cà phê', r: 'season' },
+    { n: 'Bột năng', q: 1, u: 'thìa cà phê', note: 'Ướp cùng bò cho mềm.', r: 'season' },
+    { n: 'Dầu ăn', q: 2, u: 'thìa canh', r: 'season' }
+  ],
+  steps: [
+    { t: 'Ướp bò', d: 'Ướp bò với dầu hào, bột năng, tỏi băm, 1 thìa canh dầu ăn.', m: 15, heat: '—', cue: 'Bò <b>bám một lớp áo mỏng hơi dính tay</b> — lớp bột năng này giữ nước cho thịt.' },
+    { t: 'Xào bò lần một', d: 'Chảo nóng già, dàn bò thành một lớp, để yên 20 giây rồi mới đảo. Trút ra bát khi còn tái.', m: 2, heat: 'Lửa to', cue: 'Nghe tiếng <b>xèo mạnh ngay khi thịt chạm chảo</b>; bò se mặt, bên trong còn hồng.' },
+    { t: 'Xào hành tây', d: 'Cho hành tây vào chảo, xào 90 giây, thêm cần tây.', m: 3, heat: 'Lửa to', cue: 'Hành tây <b>trong ở mép, giữa vẫn còn trắng đục và giòn</b> — hành mềm nhũn là mất ngon.' },
+    { t: 'Trộn và nêm', d: 'Trút bò trở lại, nêm mắm, đảo 20–30 giây rồi tắt bếp ngay.', m: 1, heat: 'Lửa to', cue: 'Bò vừa chín tới, đĩa <b>không có nước đọng</b>. Có nước đọng = đã xào quá lâu.' }
+  ],
+  tips: ['Không bao giờ xào bò lẫn rau từ đầu: rau ra nước, bò luộc trong nước đó và trở nên dai.', 'Bò để ra ngoài tủ lạnh 20 phút trước khi xào thì chín đều hơn.'],
+  serveWith: 'Ăn kèm canh chua hoặc canh rau.'
+},
+{
+  id: 'muc-xao-can-toi', name: 'Mực xào cần tỏi', cat: 'xao', role: 'man', diff: 2, serves: 4, prep: 20,
+  tags: ['mực', 'củ quả'],
+  why: 'Mực chỉ có hai trạng thái: chín tới trong 90 giây, hoặc dai như cao su.',
+  ing: [
+    { n: 'Mực tươi', q: 400, u: 'g', per: { n: 200, l: 'con cỡ bàn tay' }, note: 'Khía vảy rồng mặt trong, cắt miếng 3×4 cm.', r: 'main' },
+    { n: 'Cần ta', q: 150, u: 'g', per: { n: 150, l: 'mớ' }, note: 'Cắt khúc 4 cm.', r: 'veg' },
+    { n: 'Tỏi tây (hành boa rô)', q: 1, u: 'cây', r: 'veg' },
+    { n: 'Cà chua', q: 1, u: 'quả', r: 'veg' },
+    { n: 'Gừng', q: 10, u: 'g', per: { n: 10, l: 'đốt ngón cái' }, r: 'season' },
+    { n: 'Tỏi', q: 4, u: 'tép', r: 'season' },
+    { n: 'Nước mắm', q: 1, u: 'thìa canh', r: 'season' },
+    { n: 'Hạt tiêu', q: 1, u: 'nhúm', r: 'season' }
+  ],
+  steps: [
+    { t: 'Sơ chế mực', d: 'Bóp mực với gừng giã + chút rượu hoặc muối, rửa sạch, để thật ráo. Khía vảy rồng ở mặt trong.', m: 12, heat: '—', cue: 'Mực <b>ráo nước hoàn toàn</b> — mực ướt cho vào chảo sẽ luộc chứ không xào.' },
+    { t: 'Chần mực', d: 'Chần mực trong nước sôi có gừng đúng 20 giây rồi vớt ra ngay.', m: 3, heat: 'Lửa to', cue: 'Miếng mực <b>cong lại thành hình vảy rồng, trắng đục</b>. Chần lâu hơn là dai.' },
+    { t: 'Xào rau', d: 'Phi tỏi, xào cà chua và tỏi tây trước, rồi cho cần ta.', m: 3, heat: 'Lửa to', cue: 'Cần <b>chuyển xanh đậm, cọng vẫn giòn</b>.' },
+    { t: 'Trút mực, nêm', d: 'Cho mực vào, nêm mắm và tiêu, đảo 30 giây rồi tắt bếp.', m: 1, heat: 'Lửa to', cue: 'Mực bóng, cong đều; <b>đĩa không có nước</b>.' }
+  ],
+  tips: ['Hai lần nhiệt ngắn (chần 20 giây + xào 30 giây) an toàn hơn một lần xào dài.', 'Mực đông lạnh phải rã đông hoàn toàn và thấm khô, nếu không sẽ ra nước.'],
+  serveWith: 'Hợp canh chua và cơm trắng.'
+}
+);
+
+/* ---------- LUỘC ---------- */
+RECIPES.push(
+{
+  id: 'rau-muong-luoc', name: 'Rau muống luộc dầm sấu', cat: 'luoc', role: 'rau', diff: 1, serves: 4, prep: 8,
+  tags: ['rau lá', 'chay'],
+  why: 'Món dễ nhất trong nhà, nhưng luộc đúng cách thì rau xanh và nước ngọt.',
+  ing: [
+    { n: 'Rau muống', q: 500, u: 'g', per: { n: 280, l: 'mớ' }, r: 'veg' },
+    { n: 'Nước', q: 1500, u: 'ml', per: { n: 250, l: 'bát con' }, note: 'Nhiều nước thì rau mới xanh.', r: 'main' },
+    { n: 'Muối', q: 1, u: 'thìa cà phê', r: 'season' },
+    { n: 'Sấu', q: 3, u: 'quả', note: 'Mùa hè; thay bằng chanh hoặc me khi trái mùa.', r: 'season' }
+  ],
+  steps: [
+    { t: 'Đun nước thật sôi', d: 'Đun 6 bát nước với muối, đợi sôi sùng sục mới thả rau.', m: 6, heat: 'Lửa to', cue: 'Nước <b>sôi trào bọt trắng</b>. Thả rau vào nước chưa sôi là rau thâm.' },
+    { t: 'Luộc mở vung', d: 'Thả rau, dùng đũa dìm cho ngập, luộc mở vung.', m: 3, heat: 'Lửa to', cue: 'Cọng rau <b>chuyển xanh trong, bẻ thấy gãy giòn</b> — khoảng 2–3 phút, đừng luộc quá.' },
+    { t: 'Vớt và xả', d: 'Vớt rau ra rổ, xả ngay dưới vòi nước lạnh hoặc thả vào bát nước đá.', m: 1, heat: '—', cue: 'Rau <b>nguội hẳn và xanh mướt</b>. Không xả lạnh thì rau tiếp tục chín trong rổ và ngả vàng.' },
+    { t: 'Làm nước rau', d: 'Thả sấu vào nồi nước luộc, đun 2 phút rồi dầm ra, nêm chút muối.', m: 3, heat: 'Lửa vừa', cue: 'Nước rau <b>xanh nhạt, chua thanh</b>. Không dầm sấu quá sớm kẻo nước đục.' }
+  ],
+  tips: ['Ba điều kiện của rau luộc xanh: <b>nhiều nước, sôi già, mở vung</b>. Cộng thêm xả lạnh.', 'Nước rau muống luộc vắt chanh là bát canh miễn phí của mâm cơm Bắc.'],
+  serveWith: 'Chấm nước mắm tỏi ớt hoặc tương bần.'
+},
+{
+  id: 'trung-luoc', name: 'Trứng luộc (lòng đào → chín kỹ)', cat: 'luoc', role: 'man', diff: 1, serves: 4, prep: 3,
+  tags: ['trứng', 'chay'],
+  why: 'Không có gì để hỏng ngoài thời gian — nên đây là bài tập canh giờ.',
+  ing: [
+    { n: 'Trứng gà', q: 4, u: 'quả', note: 'Để ra ngoài tủ lạnh 10 phút trước khi luộc.', r: 'main' },
+    { n: 'Nước', q: 800, u: 'ml', per: { n: 250, l: 'bát con' }, r: 'main' },
+    { n: 'Muối', q: 1, u: 'thìa cà phê', note: 'Giúp trứng nứt thì không chảy ra ngoài.', r: 'season' },
+    { n: 'Đá lạnh', q: 1, u: 'bát', note: 'Để ngâm sau khi luộc.', r: 'season' }
+  ],
+  steps: [
+    { t: 'Đun sôi nước', d: 'Đun nước ngập trứng 2 cm cùng muối. Đợi sôi mới thả trứng bằng muôi.', m: 5, heat: 'Lửa to', cue: 'Nước sôi lăn tăn to. Thả trứng từ nước sôi giúp <b>canh giờ chính xác</b> và dễ bóc vỏ.' },
+    { t: 'Canh giờ', d: 'Hạ lửa vừa và tính giờ: 6 phút = lòng đào chảy · 8 phút = lòng đào sệt · 10 phút = chín tới · 12 phút = chín kỹ.', m: 9, heat: 'Lửa vừa', cue: 'Trứng <b>lắc nhẹ không nghe tiếng óc ách</b> nghĩa là đã chín từ 10 phút trở lên.' },
+    { t: 'Ngâm đá', d: 'Vớt trứng thả ngay vào bát nước đá 3 phút.', m: 3, heat: '—', cue: 'Vỏ nguội hẳn khi cầm. Sốc nhiệt làm <b>màng trong tách khỏi vỏ</b> nên bóc rất dễ.' },
+    { t: 'Bóc vỏ', d: 'Đập nhẹ đầu to, lăn trứng trên mặt bàn rồi bóc từ đầu to xuống.', m: 2, heat: '—', cue: 'Vỏ <b>tróc thành mảng lớn</b>, lòng trắng nhẵn không rỗ.' }
+  ],
+  tips: ['Trứng càng tươi càng khó bóc; trứng mua 3–5 ngày lại dễ bóc hơn.', 'Không ngâm đá = bóc nát trứng. Bước này không bỏ được.'],
+  serveWith: 'Chấm muối tiêu chanh, hoặc thả vào nồi thịt kho.'
+},
+{
+  id: 'thit-ba-chi-luoc', name: 'Thịt ba chỉ luộc', cat: 'luoc', role: 'man', diff: 1, serves: 4, prep: 10,
+  tags: ['thịt lợn'],
+  why: 'Dễ, nhưng nhiều người luộc quá tay khiến thịt khô và bã.',
+  ing: [
+    { n: 'Thịt ba chỉ', q: 600, u: 'g', per: { n: 110, l: 'miếng bằng lòng bàn tay' }, note: 'Để nguyên miếng dài, luộc xong mới thái.', r: 'main' },
+    { n: 'Nước', q: 1500, u: 'ml', per: { n: 250, l: 'bát con' }, r: 'main' },
+    { n: 'Muối hạt', q: 1, u: 'thìa canh', r: 'season' },
+    { n: 'Hành khô', q: 2, u: 'củ', note: 'Đập dập, cho vào nước luộc.', r: 'season' },
+    { n: 'Gừng', q: 10, u: 'g', per: { n: 10, l: 'đốt ngón cái' }, r: 'season' },
+    { n: 'Giấm', q: 1, u: 'thìa canh', note: 'Cho vào nước luộc để thịt trắng.', r: 'season' }
+  ],
+  steps: [
+    { t: 'Rửa và chần', d: 'Xát muối hạt lên miếng thịt, rửa sạch. Chần qua nước sôi 2 phút rồi đổ bỏ nước đó.', m: 6, heat: 'Lửa to', cue: 'Nước chần <b>nổi váng bẩn</b>; miếng thịt trắng se mặt.' },
+    { t: 'Luộc', d: 'Cho thịt vào nồi nước mới cùng hành, gừng, giấm, muối. Đun sôi rồi hạ lửa.', m: 22, heat: 'Liu riu', cue: 'Xiên đũa vào chỗ dày nhất, <b>nước chảy ra trong không hồng</b>. Với miếng dày 4 cm là khoảng 20–25 phút.' },
+    { t: 'Ngâm nước lạnh', d: 'Vớt thịt thả ngay vào bát nước đun sôi để nguội có đá 5 phút.', m: 5, heat: '—', cue: 'Miếng thịt <b>săn chắc, bì trong và giòn</b>. Bỏ qua bước này thì bì mềm oặt và thịt xỉn màu.' },
+    { t: 'Thái', d: 'Để ráo rồi thái lát mỏng 3 mm ngang thớ, bày ra đĩa.', m: 4, heat: '—', cue: 'Lát thịt <b>không vỡ, thấy rõ ba lớp nạc–mỡ–bì</b>. Thịt còn nóng mà thái sẽ nát.' }
+  ],
+  tips: ['Luộc quá 30 phút thì phần nạc sẽ bã. Đúng thời gian rồi tắt.', 'Nước luộc thịt lọc lại có thể dùng nấu canh rau ngay.'],
+  serveWith: 'Bắt buộc có mắm tôm chanh ớt hoặc mắm tép, kèm rau sống.'
+},
+{
+  id: 'ga-luoc', name: 'Gà luộc (da vàng, không nứt)', cat: 'luoc', role: 'man', diff: 3, serves: 6, prep: 20,
+  tags: ['thịt gà'],
+  why: 'Cả món chỉ là nước sôi, nhưng để da không nứt và thịt không đỏ xương thì cần đúng nhiệt.',
+  ing: [
+    { n: 'Gà ta nguyên con', q: 1500, u: 'g', per: { n: 1500, l: 'con gà ta' }, r: 'main' },
+    { n: 'Muối hạt', q: 2, u: 'thìa canh', r: 'season' },
+    { n: 'Gừng', q: 30, u: 'g', per: { n: 10, l: 'đốt ngón cái' }, r: 'season' },
+    { n: 'Hành khô', q: 3, u: 'củ', note: 'Nướng thơm.', r: 'season' },
+    { n: 'Mỡ gà + nghệ', q: 1, u: 'thìa canh', note: 'Để quét da cho vàng bóng.', r: 'season' },
+    { n: 'Lá chanh', q: 5, u: 'lá', r: 'herb' }
+  ],
+  steps: [
+    { t: 'Sơ chế', d: 'Xát muối hạt + gừng khắp trong ngoài, rửa sạch. Buộc gọn chân và cánh cho dáng đẹp.', m: 15, heat: '—', cue: 'Da gà <b>sạch nhớt, không còn lông tơ</b>.' },
+    { t: 'Đặt gà vào nước lạnh', d: 'Đặt gà vào nồi, đổ nước lạnh vừa ngập, thêm gừng đập dập và hành nướng.', m: 3, heat: '—', cue: 'Nước <b>ngập vừa đủ mặt gà</b>. Thả gà vào nước đang sôi là da co và nứt ngay.' },
+    { t: 'Đun tới sôi rồi hạ lửa', d: 'Đun tới khi nước bắt đầu sôi thì hạ nhỏ ngay, hớt bọt.', m: 12, heat: 'Lửa to → liu riu', cue: 'Mặt nước chỉ <b>lăn tăn, không nổi bong bóng lớn</b>. Sôi bùng làm nứt da và thịt bã.' },
+    { t: 'Luộc và ủ', d: 'Luộc liu riu 20 phút, tắt bếp rồi đậy vung ủ tiếp 15 phút trong nồi.', m: 35, heat: 'Liu riu → tắt bếp', cue: 'Xiên đũa vào đùi <b>nước chảy ra trong</b>. Phần ủ mới là phần làm chín tận xương mà không nát da.' },
+    { t: 'Ngâm nước đá', d: 'Vớt gà thả vào chậu nước đá 5 phút, rồi để ráo.', m: 6, heat: '—', cue: 'Da <b>căng, giòn, vàng bóng và không nhăn</b>.' },
+    { t: 'Quét mỡ nghệ, chặt', d: 'Quét hỗn hợp mỡ gà + nghệ lên da, để nguội hẳn rồi mới chặt.', m: 10, heat: '—', cue: 'Da vàng óng. Chặt lúc gà <b>đã nguội</b> thì miếng mới gọn, không bắn thịt.' }
+  ],
+  tips: ['Ba mốc quyết định: <b>nước lạnh lúc bắt đầu</b>, <b>liu riu lúc luộc</b>, <b>nước đá lúc vớt</b>.', 'Gà công nghiệp chỉ cần 15 phút luộc + 10 phút ủ.'],
+  serveWith: 'Chấm muối tiêu chanh hoặc muối lá chanh; nước luộc nấu canh miến hoặc canh rau.'
+}
+);
+
+/* ---------- RÁN / CHIÊN ---------- */
+RECIPES.push(
+{
+  id: 'dau-phu-ran', name: 'Đậu phụ rán giòn', cat: 'ran', role: 'man', diff: 1, serves: 4, prep: 5,
+  tags: ['đậu phụ', 'chay'],
+  why: 'Rẻ, nhanh, và là bài tập tốt để hiểu thế nào là "dầu đủ nóng".',
+  ing: [
+    { n: 'Đậu phụ', q: 4, u: 'bìa', note: 'Cắt đôi theo đường chéo hoặc để nguyên bìa.', r: 'main' },
+    { n: 'Dầu ăn', q: 100, u: 'ml', per: { n: 15, l: 'thìa canh' }, note: 'Đủ ngập nửa miếng đậu.', r: 'season' },
+    { n: 'Muối', q: 0.5, u: 'thìa cà phê', note: 'Rắc vào chảo dầu để chống bắn.', r: 'season' }
+  ],
+  steps: [
+    { t: 'Thấm khô đậu', d: 'Dùng giấy hoặc khăn sạch thấm hết nước trên mặt bìa đậu.', m: 3, heat: '—', cue: 'Mặt đậu <b>khô hẳn khi sờ tay</b>. Đậu ướt gặp dầu nóng sẽ nổ bắn tung toé.' },
+    { t: 'Làm nóng dầu', d: 'Đun dầu, thả một đầu đũa gỗ vào để thử.', m: 3, heat: 'Lửa vừa', cue: 'Quanh đầu đũa <b>sủi tăm đều và liên tục</b> — đó là khoảng 170 °C, đúng nhiệt để rán.' },
+    { t: 'Rán mặt thứ nhất', d: 'Thả đậu vào, để yên không động vào.', m: 4, heat: 'Lửa vừa', cue: 'Mặt dưới <b>vàng ruộm và tự tách khỏi đáy chảo</b> khi lắc nhẹ. Còn dính là chưa đến lúc lật.' },
+    { t: 'Lật và rán nốt', d: 'Lật từng miếng, rán nốt các mặt còn lại.', m: 4, heat: 'Lửa vừa', cue: 'Vỏ <b>vàng đều, gõ đũa nghe tiếng cứng nhẹ</b>, ruột vẫn mềm.' },
+    { t: 'Để ráo dầu', d: 'Vớt ra vỉ hoặc giấy thấm, không xếp chồng lên nhau.', m: 1, heat: '—', cue: 'Miếng đậu ráo, không ỉu. Xếp chồng lúc còn nóng là hấp hơi, mất giòn.' }
+  ],
+  tips: ['Đảo sớm là nguyên nhân duy nhất làm đậu nát và tróc vỏ. Cứ để yên.', 'Rán xong rắc chút hành lá thái nhỏ đã dội dầu nóng lên trên là thành món khác hẳn.'],
+  serveWith: 'Chấm mắm tôm hoặc nước mắm tỏi ớt; ăn với canh cua thì đúng bài.'
+},
+{
+  id: 'trung-ran-thit-bam', name: 'Trứng rán thịt băm (chả trứng)', cat: 'ran', role: 'man', diff: 1, serves: 4, prep: 10,
+  tags: ['trứng', 'thịt lợn'],
+  why: 'Chỉ cần lửa nhỏ và kiên nhẫn — vội là cháy mặt mà sống ruột.',
+  ing: [
+    { n: 'Trứng gà', q: 4, u: 'quả', r: 'main' },
+    { n: 'Thịt lợn xay', q: 100, u: 'g', per: { n: 50, l: 'nắm bằng quả trứng' }, r: 'main' },
+    { n: 'Hành lá', q: 3, u: 'nhánh', r: 'herb' },
+    { n: 'Hành khô', q: 1, u: 'củ', r: 'season' },
+    { n: 'Nước mắm', q: 1, u: 'thìa cà phê', r: 'season' },
+    { n: 'Hạt tiêu', q: 1, u: 'nhúm', r: 'season' },
+    { n: 'Dầu ăn', q: 2, u: 'thìa canh', r: 'season' }
+  ],
+  steps: [
+    { t: 'Trộn hỗn hợp', d: 'Đánh tan trứng, cho thịt băm, hành lá, hành khô băm, mắm, tiêu, khuấy cho thịt tơi hẳn.', m: 5, heat: '—', cue: 'Hỗn hợp <b>đồng nhất, không còn vón cục thịt</b> — vón cục thì chỗ sống chỗ chín.' },
+    { t: 'Đổ vào chảo', d: 'Chảo nóng vừa, tráng dầu đều rồi đổ hỗn hợp vào, dàn phẳng.', m: 1, heat: 'Lửa vừa', cue: 'Mép trứng <b>sủi nhẹ ngay khi chạm chảo</b>, không xèo mạnh.' },
+    { t: 'Rán mặt một', d: 'Hạ lửa nhỏ, đậy vung, rán chậm cho chín từ dưới lên.', m: 6, heat: 'Lửa nhỏ', cue: 'Mặt trên <b>se lại, không còn ướt lỏng</b>; mặt dưới vàng nhạt khi nhấc mép xem.' },
+    { t: 'Lật và rán nốt', d: 'Úp đĩa lên chảo, lật ngược, rồi trượt trở lại chảo để rán mặt kia.', m: 4, heat: 'Lửa nhỏ', cue: 'Hai mặt <b>vàng đều, ấn ngón tay thấy đàn hồi</b>, không có nước chảy ra.' }
+  ],
+  tips: ['Lửa nhỏ + đậy vung là công thức để trứng dày mà vẫn chín đều.', 'Thêm 1 thìa canh nước vào hỗn hợp cho trứng mềm hơn.'],
+  serveWith: 'Ăn với canh cà chua thịt băm hoặc rau luộc.'
+},
+{
+  id: 'cha-la-lot', name: 'Chả lá lốt', cat: 'ran', role: 'man', diff: 2, serves: 4, prep: 25,
+  tags: ['thịt lợn', 'rau lá'],
+  why: 'Không khó về nhiệt, khó ở khâu cuốn chặt tay để chả không bung.',
+  ing: [
+    { n: 'Thịt lợn xay (nạc vai)', q: 400, u: 'g', per: { n: 50, l: 'nắm bằng quả trứng' }, note: 'Chọn loại có chút mỡ, không dùng thịt quá nạc.', r: 'main' },
+    { n: 'Lá lốt', q: 25, u: 'lá', note: 'Chọn lá to bằng bàn tay, rửa để ráo.', r: 'veg' },
+    { n: 'Hành khô', q: 3, u: 'củ', r: 'season' },
+    { n: 'Nước mắm', q: 1, u: 'thìa canh', r: 'season' },
+    { n: 'Hạt tiêu', q: 1, u: 'thìa cà phê', r: 'season' },
+    { n: 'Dầu ăn', q: 3, u: 'thìa canh', r: 'season' }
+  ],
+  steps: [
+    { t: 'Ướp nhân', d: 'Trộn thịt với hành khô băm, mắm, tiêu và vài lá lốt thái chỉ. Quật thịt vào bát 20 lần cho dẻo.', m: 10, heat: '—', cue: 'Thịt <b>kết dính thành khối, nắm lại không rời</b> — quật đủ thì chả mới chắc.' },
+    { t: 'Cuốn chả', d: 'Đặt lá lốt mặt xanh đậm xuống dưới, cho một thìa cà phê nhân, gấp hai mép rồi cuốn chặt, gài cuống lá.', m: 12, heat: '—', cue: 'Cuốn <b>chắc tay, không hở nhân ở hai đầu</b>; cuốn lỏng thì rán sẽ bung.' },
+    { t: 'Rán mối gấp trước', d: 'Chảo nóng vừa với chút dầu, xếp chả úp mối gấp xuống dưới.', m: 4, heat: 'Lửa vừa', cue: 'Mối gấp <b>dính chặt lại</b> nhờ nhiệt — đây là bước khoá mép.' },
+    { t: 'Rán chín', d: 'Lật đều các mặt, rán tới khi lá sẫm và thơm.', m: 8, heat: 'Lửa vừa', cue: 'Lá lốt <b>chuyển màu xanh đen, hơi quăn mép</b> và dậy mùi rất rõ; ấn thấy chắc tay.' }
+  ],
+  tips: ['Rán lửa vừa: lửa to thì lá cháy đen mà nhân còn sống.', 'Chả ăn nóng mới ngon; nguội thì lá bị dai.'],
+  serveWith: 'Chấm nước mắm chua ngọt, ăn kèm bún và rau sống.'
+},
+{
+  id: 'ca-ran-gion', name: 'Cá rán giòn', cat: 'ran', role: 'man', diff: 2, serves: 4, prep: 15,
+  tags: ['cá'],
+  why: 'Phải để cá thật khô và đừng lật sớm — hai điều này quyết định tất cả.',
+  ing: [
+    { n: 'Cá (rô phi, diêu hồng, trích)', q: 600, u: 'g', per: { n: 300, l: 'con cỡ bàn tay' }, note: 'Khía chéo hai bên thân, sâu tới xương.', r: 'main' },
+    { n: 'Muối', q: 1, u: 'thìa cà phê', r: 'season' },
+    { n: 'Bột chiên giòn (hoặc bột mì)', q: 3, u: 'thìa canh', r: 'season' },
+    { n: 'Gừng', q: 10, u: 'g', per: { n: 10, l: 'đốt ngón cái' }, r: 'season' },
+    { n: 'Dầu ăn', q: 150, u: 'ml', per: { n: 15, l: 'thìa canh' }, r: 'season' }
+  ],
+  steps: [
+    { t: 'Làm sạch và thấm khô', d: 'Xát muối + gừng lên cá, rửa sạch, dùng giấy thấm thật khô cả trong bụng.', m: 10, heat: '—', cue: 'Da cá <b>khô ráp khi sờ</b>. Còn ẩm là dầu sẽ nổ và da dính chảo.' },
+    { t: 'Áo bột mỏng', d: 'Xoa một lớp bột thật mỏng lên da cá, phủi bớt phần thừa.', m: 3, heat: '—', cue: 'Lớp bột <b>mờ như phấn, không đóng cục trắng</b>. Bột dày sẽ bong khỏi da khi rán.' },
+    { t: 'Rán mặt một', d: 'Dầu nóng già (thử đũa thấy sủi tăm), thả cá vào và <b>không động vào trong 5 phút</b>.', m: 6, heat: 'Lửa vừa', cue: 'Nghiêng chảo thấy mặt dưới <b>vàng nâu và cá tự trượt được</b> — lúc đó mới lật.' },
+    { t: 'Lật, rán nốt', d: 'Lật một lần duy nhất, rán tiếp mặt còn lại.', m: 6, heat: 'Lửa vừa', cue: 'Hai mặt vàng giòn, <b>vây và đuôi cứng lại</b>, xiên đũa vào lưng thấy thịt tách khỏi xương.' },
+    { t: 'Ráo dầu', d: 'Vớt ra vỉ, không xếp chồng.', m: 1, heat: '—', cue: 'Da giữ được độ giòn khi bày ra đĩa.' }
+  ],
+  tips: ['Chảo phải đủ rộng để cá không chạm nhau; chật thì rán từng con.', 'Cho vào chảo một nhúm muối trước khi thả cá sẽ đỡ bắn dầu và đỡ dính.'],
+  serveWith: 'Chấm mắm gừng hoặc mắm tỏi ớt, ăn với dưa góp.'
+},
+{
+  id: 'nem-ran', name: 'Nem rán (chả giò)', cat: 'ran', role: 'man', diff: 3, serves: 6, prep: 45,
+  tags: ['thịt lợn', 'tôm', 'trứng'],
+  why: 'Nhiều nguyên liệu, cuốn mất thời gian, và phải rán hai lửa mới giòn lâu.',
+  ing: [
+    { n: 'Thịt lợn xay', q: 300, u: 'g', per: { n: 50, l: 'nắm bằng quả trứng' }, r: 'main' },
+    { n: 'Tôm tươi bóc vỏ', q: 150, u: 'g', per: { n: 20, l: 'con tôm cỡ vừa' }, note: 'Băm thô.', r: 'main' },
+    { n: 'Miến dong', q: 50, u: 'g', per: { n: 50, l: 'nắm nhỏ' }, note: 'Ngâm mềm, cắt khúc 2 cm.', r: 'main' },
+    { n: 'Mộc nhĩ + nấm hương', q: 30, u: 'g', per: { n: 30, l: 'nắm nhỏ khô' }, note: 'Ngâm nở, thái chỉ.', r: 'veg' },
+    { n: 'Cà rốt + su hào', q: 150, u: 'g', per: { n: 100, l: 'củ' }, note: 'Thái sợi nhỏ, bóp muối vắt khô.', r: 'veg' },
+    { n: 'Giá đỗ', q: 80, u: 'g', per: { n: 45, l: 'nắm tay' }, r: 'veg' },
+    { n: 'Trứng gà', q: 1, u: 'quả', r: 'main' },
+    { n: 'Bánh đa nem', q: 25, u: 'lá', r: 'main' },
+    { n: 'Hành khô + hạt tiêu', q: 3, u: 'củ', r: 'season' },
+    { n: 'Nước mắm', q: 1.5, u: 'thìa canh', r: 'season' },
+    { n: 'Dầu ăn', q: 400, u: 'ml', per: { n: 250, l: 'bát con' }, note: 'Rán ngập.', r: 'season' }
+  ],
+  steps: [
+    { t: 'Sơ chế và vắt khô rau củ', d: 'Ngâm mộc nhĩ, miến; thái sợi rau củ, bóp muối rồi vắt thật kiệt nước.', m: 25, heat: '—', cue: 'Nắm rau củ trong tay <b>không còn nhỏ giọt nước</b>. Nhân ướt là nem bị mềm và nổ khi rán.' },
+    { t: 'Trộn nhân', d: 'Trộn tất cả với trứng, mắm, tiêu, hành khô băm. Trộn nhẹ tay theo một chiều.', m: 6, heat: '—', cue: 'Nhân <b>tơi, quyện nhưng không nhão</b>. Nếu thấy ướt thì thêm chút miến khô.' },
+    { t: 'Cuốn nem', d: 'Nhúng nhanh bánh đa qua nước pha chút giấm/bia, đặt nhân, gấp hai mép và cuốn vừa tay.', m: 20, heat: '—', cue: 'Cuốn <b>chặt vừa phải — chặt quá thì nứt khi rán, lỏng quá thì bung</b>. Bánh đa còn hơi cứng khi cuốn là đúng, nó sẽ tự mềm.' },
+    { t: 'Rán lửa một', d: 'Rán ngập dầu ở lửa vừa cho nem chín và vàng nhạt, vớt ra để nguội.', m: 12, heat: 'Lửa vừa', cue: 'Vỏ <b>vàng nhạt, nem nổi lên mặt dầu</b>. Chưa cần giòn ở bước này.' },
+    { t: 'Rán lửa hai', d: 'Ngay trước khi ăn, đun dầu nóng già và rán lại 2 phút.', m: 5, heat: 'Lửa to', cue: 'Vỏ <b>vàng sậm, nổi bong bóng nhỏ li ti và cứng giòn</b> khi gõ đũa. Rán hai lửa giữ giòn lâu gấp đôi.' }
+  ],
+  tips: ['Nhúng bánh đa quá ướt là lỗi phổ biến — nhúng lướt qua rồi để 30 giây cho tự ngấm.', 'Xếp nem vào chảo <b>cách nhau</b>, chạm nhau là dính và rách vỏ.', 'Có thể cuốn sẵn và cấp đông; rán thẳng từ đông lạnh, không cần rã.'],
+  serveWith: 'Nước mắm chua ngọt, bún, rau sống và dưa góp.'
+}
+);
+/* ---------- OM / HẤP / SỐT ---------- */
+RECIPES.push(
+{
+  id: 'oc-chuoi-dau', name: 'Ốc chuối đậu', cat: 'om', role: 'man', diff: 3, serves: 4, prep: 45,
+  tags: ['ốc', 'đậu phụ', 'thịt lợn', 'củ quả'],
+  why: 'Món khó nhất trong danh sách: nhiều nguyên liệu sơ chế riêng, chuối dễ thâm, ốc dễ dai.',
+  ing: [
+    { n: 'Ốc nhồi (hoặc ốc bươu)', q: 700, u: 'g', per: { n: 700, l: 'bát tô ốc' }, note: 'Ngâm nước vo gạo + ớt 2 tiếng cho nhả bùn.', r: 'main' },
+    { n: 'Chuối xanh', q: 3, u: 'quả', note: 'Chọn chuối tiêu còn xanh, vỏ căng cứng, bấm vào không lún — chuối đã ương thì nấu lên mềm nhũn và mất vị bùi. Cắt khúc 4 cm rồi bổ tư.', r: 'veg' },
+    { n: 'Đậu phụ', q: 3, u: 'bìa', note: 'Cắt quân cờ, rán vàng trước.', r: 'main' },
+    { n: 'Thịt ba chỉ', q: 150, u: 'g', per: { n: 110, l: 'miếng bằng lòng bàn tay' }, note: 'Thái mỏng.', r: 'main' },
+    { n: 'Mẻ', q: 2, u: 'thìa canh', note: 'Lọc lấy nước; thay được bằng giấm bỗng.', r: 'season' },
+    { n: 'Nghệ tươi', q: 20, u: 'g', per: { n: 10, l: 'củ nhỏ' }, note: 'Giã lấy nước.', r: 'season' },
+    { n: 'Mắm tôm', q: 1, u: 'thìa cà phê', r: 'season' },
+    { n: 'Nước mắm', q: 1.5, u: 'thìa canh', r: 'season' },
+    { n: 'Hành khô', q: 3, u: 'củ', r: 'season' },
+    { n: 'Tía tô + lá lốt + hành lá', q: 1, u: 'mớ', note: 'Thái nhỏ, cho vào cuối.', r: 'herb' }
+  ],
+  steps: [
+    { t: 'Ngâm và luộc ốc', d: 'Ngâm ốc 2 tiếng cho sạch bùn. Luộc với vài lá chanh đến khi ốc há miệng, khều lấy ruột, bỏ phần đuôi đen.', m: 25, heat: 'Lửa to', cue: 'Ốc <b>bung mày và ruột tách khỏi vỏ dễ dàng</b>. Luộc quá lâu ốc sẽ dai — vừa há miệng là tắt.' },
+    { t: 'Bóp ốc cho sạch nhớt', d: 'Bóp ruột ốc với muối hạt + giấm (hoặc mẻ) 2 lần, rửa lại, ướp với nghệ, mắm tôm, chút mắm.', m: 10, heat: '—', cue: 'Ruột ốc <b>hết nhớt, sờ không còn trơn</b>, ngả màu vàng nghệ.' },
+    { t: 'Xử lý chuối xanh', d: 'Gọt vỏ, cắt khúc, ngâm ngay vào nước có pha mẻ hoặc giấm 10 phút rồi luộc sơ 5 phút, đổ bỏ nước.', m: 15, heat: 'Lửa to', cue: 'Miếng chuối <b>không thâm đen và hết nhựa</b> — nước luộc đổ đi phải đục và chát.' },
+    { t: 'Rán đậu', d: 'Rán đậu phụ vàng các mặt, để ráo.', m: 10, heat: 'Lửa vừa', cue: 'Vỏ đậu vàng, còn mềm bên trong.' },
+    { t: 'Xào thịt và ốc', d: 'Phi hành khô, xào thịt ba chỉ ra mỡ, cho ốc vào đảo nhanh 2 phút rồi trút riêng ra bát.', m: 6, heat: 'Lửa to', cue: 'Ốc <b>săn lại, thơm nghệ</b> — để trong chảo lâu hơn là dai, phải trút ra.' },
+    { t: 'Om chuối', d: 'Cho chuối vào chảo mỡ đó, thêm nước mẻ và nước xâm xấp, om cho chuối mềm.', m: 18, heat: 'Liu riu', cue: 'Miếng chuối <b>mềm bở, ngả màu vàng nghệ, nước sánh lại</b> do bột chuối tan ra.' },
+    { t: 'Ráp lại', d: 'Cho đậu rán vào om 5 phút, trả ốc về, nêm lại, đun sôi rồi tắt bếp và thả rau thơm.', m: 7, heat: 'Lửa vừa → tắt', cue: 'Nước om <b>sánh, màu vàng nghệ, dậy mùi tía tô và lá lốt</b>; ốc vẫn giòn. Ốc chỉ ở trong nồi tối đa 3 phút ở bước này.' }
+  ],
+  tips: ['Nguyên tắc sống còn: <b>ốc vào sau cùng</b>. Om ốc lâu = ốc dai như cao su.', 'Không có mẻ thì dùng giấm bỗng hoặc me; nhưng thiếu vị chua thì món này mất hồn.', 'Chuối phải ngâm nước chua ngay sau khi gọt, chậm 2 phút là thâm.'],
+  serveWith: 'Ăn với bún hoặc cơm; cần rất nhiều tía tô.'
+},
+{
+  id: 'dau-sot-ca-chua', name: 'Đậu phụ sốt cà chua', cat: 'om', role: 'man', diff: 1, serves: 4, prep: 8,
+  tags: ['đậu phụ', 'cà chua', 'chay'],
+  why: 'Chỉ hai nguyên liệu chính, hỏng cũng khó. Món tủ của sinh viên.',
+  ing: [
+    { n: 'Đậu phụ', q: 4, u: 'bìa', note: 'Cắt quân cờ.', r: 'main' },
+    { n: 'Cà chua', q: 4, u: 'quả', note: 'Băm nhỏ để sốt sánh.', r: 'veg' },
+    { n: 'Hành khô', q: 2, u: 'củ', r: 'season' },
+    { n: 'Nước mắm', q: 1, u: 'thìa canh', r: 'season' },
+    { n: 'Đường', q: 1, u: 'thìa cà phê', r: 'season' },
+    { n: 'Hành lá', q: 3, u: 'nhánh', r: 'herb' },
+    { n: 'Dầu ăn', q: 3, u: 'thìa canh', r: 'season' }
+  ],
+  steps: [
+    { t: 'Rán đậu', d: 'Thấm khô đậu, rán vàng các mặt, vớt ra để ráo.', m: 10, heat: 'Lửa vừa', cue: 'Vỏ vàng và <b>tự tách khỏi chảo</b> khi lắc.' },
+    { t: 'Làm sốt cà chua', d: 'Phi hành, cho cà chua băm + ¼ thìa cà phê muối, đun tới khi nhuyễn.', m: 7, heat: 'Lửa vừa', cue: 'Cà chua <b>tan thành sốt sệt, màu đỏ cam đậm, dầu nổi tách ra ở mép chảo</b> — đây mới là lúc sốt đủ đậm.' },
+    { t: 'Om đậu vào sốt', d: 'Cho đậu vào, thêm ½ bát nước, nêm mắm và đường, om cho ngấm.', m: 6, heat: 'Lửa nhỏ', cue: 'Miếng đậu <b>ngả màu cam và phồng nhẹ</b>, nước sốt bám quanh chứ không loãng.' },
+    { t: 'Hoàn thiện', d: 'Rắc hành lá, tắt bếp.', m: 1, heat: 'Tắt bếp', cue: 'Sốt sánh áo được mặt thìa.' }
+  ],
+  tips: ['Cà chua băm nhỏ cho sốt sánh; bổ múi cau thì hợp món canh hơn.', 'Muốn đậm đà hơn: thêm 100 g thịt băm vào lúc xào cà chua.'],
+  serveWith: 'Ăn với rau muống luộc là tròn mâm.'
+},
+{
+  id: 'trung-hap-thit', name: 'Trứng hấp thịt băm', cat: 'om', role: 'man', diff: 1, serves: 4, prep: 10,
+  tags: ['trứng', 'thịt lợn'],
+  why: 'Không cần đảo, không cần canh lửa — chỉ cần hấp đủ và đừng để nước rơi vào.',
+  ing: [
+    { n: 'Trứng gà', q: 4, u: 'quả', note: 'Chừa 1 lòng đỏ để phết mặt.', r: 'main' },
+    { n: 'Thịt lợn xay', q: 200, u: 'g', per: { n: 50, l: 'nắm bằng quả trứng' }, r: 'main' },
+    { n: 'Miến dong', q: 30, u: 'g', per: { n: 30, l: 'nắm nhỏ' }, note: 'Ngâm mềm, cắt ngắn.', r: 'main' },
+    { n: 'Mộc nhĩ', q: 20, u: 'g', per: { n: 20, l: 'nắm nhỏ khô' }, note: 'Ngâm nở, thái chỉ.', r: 'veg' },
+    { n: 'Hành khô', q: 2, u: 'củ', r: 'season' },
+    { n: 'Nước mắm', q: 1, u: 'thìa canh', r: 'season' },
+    { n: 'Hạt tiêu', q: 1, u: 'nhúm', r: 'season' }
+  ],
+  steps: [
+    { t: 'Trộn hỗn hợp', d: 'Trộn thịt, miến, mộc nhĩ, hành khô băm, trứng (giữ lại 1 lòng đỏ), mắm, tiêu.', m: 8, heat: '—', cue: 'Hỗn hợp <b>sánh, đổ từ muôi xuống thành dòng liền</b>.' },
+    { t: 'Vào khuôn', d: 'Đổ vào bát tô hoặc khay, dàn phẳng mặt.', m: 2, heat: '—', cue: 'Mặt phẳng, không có bọt khí lớn (gõ nhẹ khay xuống bàn cho vỡ bọt).' },
+    { t: 'Hấp', d: 'Hấp cách thuỷ, phủ một lớp màng bọc hoặc lót khăn dưới vung để hứng nước.', m: 20, heat: 'Lửa vừa', cue: 'Xiên tăm vào giữa <b>rút ra khô, không dính hỗn hợp lỏng</b>. Nước từ vung nhỏ xuống sẽ làm rỗ mặt.' },
+    { t: 'Phết lòng đỏ', d: 'Mở vung, phết lòng đỏ còn lại lên mặt, hấp thêm 3 phút.', m: 4, heat: 'Lửa vừa', cue: 'Mặt <b>vàng bóng, mịn</b> — bước này chỉ để đẹp, nhưng đẹp thật.' }
+  ],
+  tips: ['Lót khăn dưới vung nồi hấp là mẹo giữ mặt trứng mịn không rỗ.', 'Cắt miếng khi đã nguội bớt thì miếng mới gọn.'],
+  serveWith: 'Ăn với canh rau và cơm nóng.'
+},
+{
+  id: 'ca-hap-hanh-gung', name: 'Cá hấp hành gừng', cat: 'om', role: 'man', diff: 2, serves: 4, prep: 20,
+  tags: ['cá'],
+  why: 'Nhẹ nhàng nhưng phải canh phút — cá hấp quá 2 phút là bở.',
+  ing: [
+    { n: 'Cá diêu hồng (hoặc cá chép) nguyên con', q: 800, u: 'g', per: { n: 800, l: 'con vừa' }, note: 'Khía 3 đường mỗi bên.', r: 'main' },
+    { n: 'Gừng', q: 40, u: 'g', per: { n: 10, l: 'đốt ngón cái' }, note: 'Nửa thái lát, nửa thái chỉ.', r: 'season' },
+    { n: 'Hành lá', q: 6, u: 'nhánh', note: 'Cắt khúc để lót, thái chỉ để rắc.', r: 'herb' },
+    { n: 'Nước tương', q: 2, u: 'thìa canh', r: 'season' },
+    { n: 'Đường', q: 1, u: 'thìa cà phê', r: 'season' },
+    { n: 'Rượu trắng', q: 1, u: 'thìa canh', r: 'season' },
+    { n: 'Dầu ăn', q: 2, u: 'thìa canh', note: 'Đun nóng già để dội lên cá.', r: 'season' },
+    { n: 'Thì là + ớt', q: 3, u: 'nhánh', r: 'herb' }
+  ],
+  steps: [
+    { t: 'Khử tanh', d: 'Xát muối + gừng + rượu lên cá, rửa sạch, thấm khô.', m: 10, heat: '—', cue: 'Cá <b>hết nhớt, không còn mùi tanh khi ngửi sát mang</b>.' },
+    { t: 'Xếp đĩa hấp', d: 'Lót hành lá khúc và lát gừng xuống dưới để cá không dính đĩa, đặt cá lên, nhét gừng vào bụng và các đường khía.', m: 5, heat: '—', cue: 'Cá <b>nằm trên lớp đệm hành gừng</b>, không chạm mặt đĩa — hơi nước lưu thông được cả dưới bụng.' },
+    { t: 'Hấp', d: 'Hấp trong nồi nước đã sôi sẵn, đậy kín.', m: 12, heat: 'Lửa to', cue: 'Xiên đũa vào phần dày nhất <b>xuyên qua dễ và thịt tách trắng đục</b>. Cá 800 g khoảng 10–12 phút; quá tay là bở nát.' },
+    { t: 'Chan sốt và dội dầu nóng', d: 'Chắt bỏ nước tanh dưới đĩa. Rắc gừng chỉ, hành chỉ lên mặt, rưới nước tương pha đường, rồi dội dầu đang bốc khói lên trên.', m: 4, heat: 'Lửa to', cue: 'Nghe tiếng <b>xèo và mùi hành gừng bốc lên tức thì</b> — đó là dấu hiệu dầu đủ nóng.' }
+  ],
+  tips: ['<b>Chắt bỏ nước đọng dưới đĩa</b> sau khi hấp, đó là phần tanh nhất.', 'Nước trong nồi phải sôi sẵn trước khi cho cá vào; hấp từ nước lạnh làm cá bở.'],
+  serveWith: 'Chấm nước tương gừng, ăn với cơm và rau luộc.'
+}
+);
+
+/* ---------- NỘM / DƯA ---------- */
+RECIPES.push(
+{
+  id: 'nom-su-hao-ca-rot', name: 'Nộm su hào cà rốt', cat: 'nom', role: 'rau', diff: 1, serves: 4, prep: 25,
+  tags: ['củ quả', 'chay'],
+  why: 'Không cần bếp. Chỉ cần vắt kiệt nước và trộn đúng lúc ăn.',
+  ing: [
+    { n: 'Su hào', q: 1, u: 'củ', note: 'Thái sợi bằng que tăm.', r: 'veg' },
+    { n: 'Cà rốt', q: 1, u: 'củ', note: 'Thái sợi tương tự.', r: 'veg' },
+    { n: 'Lạc rang', q: 50, u: 'g', per: { n: 15, l: 'thìa canh' }, note: 'Giã thô.', r: 'main' },
+    { n: 'Nước mắm', q: 2, u: 'thìa canh', r: 'season' },
+    { n: 'Đường', q: 2, u: 'thìa canh', r: 'season' },
+    { n: 'Chanh', q: 1, u: 'quả', r: 'season' },
+    { n: 'Tỏi + ớt', q: 3, u: 'tép', r: 'season' },
+    { n: 'Rau mùi + kinh giới', q: 1, u: 'mớ', r: 'herb' },
+    { n: 'Muối', q: 1, u: 'thìa canh', note: 'Để bóp rau củ.', r: 'season' }
+  ],
+  steps: [
+    { t: 'Bóp muối', d: 'Trộn su hào + cà rốt với 1 thìa canh muối, để 15 phút.', m: 16, heat: '—', cue: 'Rau củ <b>tiết ra một bát nước và sợi mềm rũ xuống</b>.' },
+    { t: 'Vắt kiệt', d: 'Rửa lại bằng nước sạch 2 lần rồi vắt thật kiệt, dùng khăn xô càng tốt.', m: 5, heat: '—', cue: 'Nắm sợi trong tay <b>không nhỏ giọt nước nào</b>. Đây là bước quyết định nộm giòn hay nhũn.' },
+    { t: 'Pha nước trộn', d: 'Pha 2 mắm : 2 đường : 2 nước cốt chanh, khuấy tan rồi cho tỏi ớt băm.', m: 3, heat: '—', cue: 'Nếm thấy <b>chua ngọt rõ, mặn nhẹ</b> — nộm sẽ nhạt đi khi rau ra nước.' },
+    { t: 'Trộn ngay trước khi ăn', d: 'Trộn rau củ với nước trộn, để 5 phút, rồi thêm rau thơm và lạc rang.', m: 6, heat: '—', cue: 'Sợi rau <b>bóng, ngấm vị, vẫn cứng khi cắn</b>. Trộn sớm quá thì nộm ra nước và ỉu.' }
+  ],
+  tips: ['Rắc lạc <b>lúc bưng ra bàn</b>, không sớm hơn — lạc ngấm nước là mất giòn.', 'Thái sợi bằng nạo thì nhanh nhưng dao thái tay cho sợi cứng và đẹp hơn.'],
+  serveWith: 'Cắt ngấy cho các món rán, kho.'
+},
+{
+  id: 'dua-gop', name: 'Dưa góp ăn liền', cat: 'nom', role: 'cham', diff: 1, serves: 4, prep: 15,
+  tags: ['củ quả', 'chay'],
+  why: '15 phút là ăn được, không cần muối chua nhiều ngày.',
+  ing: [
+    { n: 'Su hào (hoặc đu đủ xanh)', q: 200, u: 'g', per: { n: 200, l: 'nửa củ' }, note: 'Thái lát mỏng 2 mm.', r: 'veg' },
+    { n: 'Cà rốt', q: 1, u: 'củ', note: 'Thái lát hoa.', r: 'veg' },
+    { n: 'Giấm (hoặc chanh)', q: 3, u: 'thìa canh', r: 'season' },
+    { n: 'Đường', q: 3, u: 'thìa canh', r: 'season' },
+    { n: 'Nước ấm', q: 100, u: 'ml', per: { n: 15, l: 'thìa canh' }, r: 'season' },
+    { n: 'Muối', q: 1, u: 'thìa cà phê', r: 'season' },
+    { n: 'Tỏi + ớt', q: 3, u: 'tép', r: 'season' }
+  ],
+  steps: [
+    { t: 'Bóp muối', d: 'Trộn rau củ với muối, để 10 phút rồi rửa và vắt ráo.', m: 12, heat: '—', cue: 'Lát rau củ <b>dẻo lại, uốn cong không gãy</b>.' },
+    { t: 'Pha nước ngâm', d: 'Hoà giấm + đường + nước ấm cho tan hết, nếm thấy chua ngọt cân.', m: 3, heat: '—', cue: 'Nước <b>trong, không còn hạt đường lắng đáy</b>.' },
+    { t: 'Ngâm', d: 'Cho rau củ, tỏi ớt vào ngâm.', m: 15, heat: '—', cue: 'Sau 15 phút <b>lát rau củ trong hơn, cắn giòn và đã chua</b>. Để tủ lạnh dùng trong 3 ngày.' }
+  ],
+  tips: ['Nước ngâm phải <b>ngập hoàn toàn</b>, phần nổi lên trên sẽ bị thâm.', 'Thêm vài lát ớt và tỏi đập dập cho thơm, đừng băm nhuyễn kẻo đục nước.'],
+  serveWith: 'Đi với nem rán, thịt kho, cá rán — bất cứ món nào béo.'
+}
+);
+
+/* ---------- NƯỚC CHẤM ---------- */
+RECIPES.push(
+{
+  id: 'nuoc-mam-chua-ngot', name: 'Nước mắm chua ngọt', cat: 'cham', role: 'cham', diff: 1, serves: 4, prep: 5,
+  tags: ['chay'],
+  why: 'Một công thức tỉ lệ, thuộc rồi thì pha được mọi lúc mà không cần nếm.',
+  ing: [
+    { n: 'Nước mắm', q: 2, u: 'thìa canh', r: 'main' },
+    { n: 'Đường', q: 2, u: 'thìa canh', r: 'main' },
+    { n: 'Nước cốt chanh (hoặc giấm)', q: 2, u: 'thìa canh', r: 'main' },
+    { n: 'Nước ấm', q: 8, u: 'thìa canh', note: 'Tỉ lệ 1 : 1 : 1 : 4.', r: 'main' },
+    { n: 'Tỏi', q: 3, u: 'tép', note: 'Băm nhuyễn.', r: 'season' },
+    { n: 'Ớt', q: 1, u: 'quả', note: 'Băm nhỏ.', r: 'season' }
+  ],
+  steps: [
+    { t: 'Hoà đường với nước ấm', d: 'Khuấy đường tan hoàn toàn trong nước ấm trước.', m: 2, heat: '—', cue: 'Nước <b>trong, không còn hạt đường ở đáy bát</b>. Đây là lý do phải dùng nước ấm.' },
+    { t: 'Cho mắm và chanh', d: 'Thêm nước mắm rồi nước cốt chanh, khuấy đều.', m: 1, heat: '—', cue: 'Nếm thấy <b>ngọt trước, chua giữa, mặn cuối</b>; nếu gắt mặn thì thêm 1 thìa canh nước.' },
+    { t: 'Thả tỏi ớt cuối cùng', d: 'Cho tỏi ớt băm vào sau cùng, không khuấy mạnh.', m: 1, heat: '—', cue: 'Tỏi ớt <b>nổi lên mặt bát</b> — đó là dấu hiệu pha đúng tỉ lệ, đủ độ đặc.' }
+  ],
+  tips: ['Tỏi ớt <b>chìm</b> nghĩa là nước chấm loãng quá hoặc đường chưa tan.', 'Muốn để tủ lạnh dùng dần: bỏ chanh, dùng giấm, và cho tỏi ớt khi ăn.'],
+  serveWith: 'Nem rán, bún chả, chả lá lốt, cá rán, đậu rán.'
+},
+{
+  id: 'mam-gung', name: 'Mắm gừng', cat: 'cham', role: 'cham', diff: 1, serves: 4, prep: 5,
+  tags: ['chay'],
+  why: 'Ba nguyên liệu, giã và trộn. Không có gì để sai.',
+  ing: [
+    { n: 'Gừng', q: 30, u: 'g', per: { n: 10, l: 'đốt ngón cái' }, note: 'Gừng già, cạo vỏ.', r: 'main' },
+    { n: 'Nước mắm', q: 3, u: 'thìa canh', r: 'main' },
+    { n: 'Đường', q: 1.5, u: 'thìa canh', r: 'main' },
+    { n: 'Nước cốt chanh', q: 1, u: 'thìa canh', r: 'main' },
+    { n: 'Tỏi + ớt', q: 3, u: 'tép', r: 'season' }
+  ],
+  steps: [
+    { t: 'Giã gừng', d: 'Giã gừng với tỏi ớt và đường trong cối cho nhuyễn.', m: 3, heat: '—', cue: 'Hỗn hợp <b>nhuyễn thành bột nhão, dậy mùi gừng nồng</b>. Băm dao thì không thơm bằng giã.' },
+    { t: 'Pha mắm', d: 'Cho nước mắm và nước cốt chanh vào, khuấy đều.', m: 2, heat: '—', cue: 'Sánh, gừng lơ lửng đều trong bát chứ không lắng hết xuống đáy.' }
+  ],
+  tips: ['Mắm gừng chấm thịt luộc, ngan, vịt, ốc — càng nồng càng hợp món tanh.', 'Giã, đừng băm. Cối giã làm gừng ra tinh dầu.'],
+  serveWith: 'Ngan luộc, vịt luộc, thịt ba chỉ luộc, ốc.'
+},
+{
+  id: 'mam-tom-chanh-ot', name: 'Mắm tôm đánh chanh ớt', cat: 'cham', role: 'cham', diff: 2, serves: 4, prep: 5,
+  tags: [],
+  why: 'Dễ về thao tác nhưng cần đánh đúng cách cho bông, nếu không sẽ nồng gắt.',
+  ing: [
+    { n: 'Mắm tôm', q: 2, u: 'thìa canh', r: 'main' },
+    { n: 'Đường', q: 1, u: 'thìa canh', r: 'main' },
+    { n: 'Nước cốt chanh (hoặc quất)', q: 1.5, u: 'thìa canh', r: 'main' },
+    { n: 'Rượu trắng', q: 1, u: 'thìa cà phê', note: 'Khử mùi gắt.', r: 'season' },
+    { n: 'Mỡ nóng (hoặc dầu)', q: 1, u: 'thìa canh', note: 'Dội lên cuối.', r: 'season' },
+    { n: 'Ớt tươi', q: 1, u: 'quả', r: 'season' }
+  ],
+  steps: [
+    { t: 'Trộn khô trước', d: 'Cho mắm tôm, đường, rượu vào bát, khuấy đều trước khi cho chanh.', m: 1, heat: '—', cue: 'Đường tan hết, hỗn hợp mịn.' },
+    { t: 'Đánh bông', d: 'Vắt chanh vào rồi dùng đũa đánh nhanh và mạnh theo một chiều.', m: 2, heat: '—', cue: 'Mắm tôm <b>nổi bọt bông, chuyển từ tím sẫm sang tím nhạt và nở gần gấp đôi</b>. Chưa bông là chưa đạt.' },
+    { t: 'Dội mỡ nóng', d: 'Đun một thìa mỡ nóng già rồi dội vào bát, thêm ớt thái lát.', m: 2, heat: 'Lửa to', cue: 'Nghe tiếng xèo, mùi <b>dịu hẳn lại</b> và bát mắm bóng mặt.' }
+  ],
+  tips: ['Chanh phải cho <b>sau</b> đường và rượu, và phải đánh ngay thì mới bông.', 'Không có mỡ nóng thì mắm tôm sẽ gắt hơn — bước này rất đáng làm.'],
+  serveWith: 'Thịt ba chỉ luộc, đậu phụ rán, bún đậu, chả cá.'
+}
+);
+
+/* ---------- HẢI SẢN BIỂN ----------
+   Hải sản khác thịt ở một chỗ: nấu quá tay là hỏng ngay, không cứu được. Nên các
+   "Đạt khi" ở nhóm này gần như đều là dấu hiệu để TẮT BẾP, không phải để nấu tiếp. */
+RECIPES.push(
+{
+  id: 'ngao-hap-sa', name: 'Ngao (nghêu) hấp sả', cat: 'luoc', role: 'man', diff: 1, serves: 4, prep: 25,
+  tags: ['ngao/sò'],
+  why: 'Món hải sản dễ nhất — nồi chỉ có ngao và sả, và dấu hiệu chín thì nhìn bằng mắt: con nào há miệng là con đó xong.',
+  ing: [
+    { n: 'Ngao (nghêu) tươi', q: 1000, u: 'g', per: { n: 35, l: 'con to bằng miệng chén' }, note: 'Con nào há sẵn mà gõ không khép lại là đã chết — bỏ ngay, một con thối hỏng cả nồi.', r: 'main' },
+    { n: 'Sả', q: 5, u: 'cây', note: 'Đập dập, cắt khúc bằng đốt ngón tay.', r: 'veg' },
+    { n: 'Gừng', q: 1, u: 'củ', note: 'To bằng ngón cái, thái lát mỏng.', r: 'season' },
+    { n: 'Lá chanh', q: 6, u: 'lá', note: 'Vò nhẹ cho ra tinh dầu.', r: 'herb' },
+    { n: 'Ớt tươi', q: 2, u: 'quả', r: 'season' },
+    { n: 'Nước', q: 100, u: 'ml', per: { n: 250, l: 'bát con' }, note: 'Chỉ để tạo hơi lúc đầu — ngao sẽ tự tiết ra rất nhiều nước.', r: 'main' }
+  ],
+  steps: [
+    { t: 'Ngâm nhả cát', d: 'Ngâm ngao trong nước vo gạo pha 1 thìa canh muối, thả 2 quả ớt đập dập vào cùng.', m: 20, heat: '—', cue: 'Đáy chậu <b>lắng một lớp cát mịn</b> và ngao thò vòi ra ngoài vỏ. Chưa thấy cát dưới đáy là ngâm chưa đủ.' },
+    { t: 'Xếp nồi', d: 'Rải sả và gừng xuống đáy nồi, đổ 100 ml nước, xếp ngao lên trên rồi rắc lá chanh.', m: 3, heat: '—', cue: 'Ngao nằm trên lớp sả chứ không chạm đáy nồi — như vậy ngao chín bằng hơi, không bị sát đáy.' },
+    { t: 'Hấp mở nắp một lần', d: 'Đậy vung, bật lửa to. Khi nghe tiếng lách tách thì mở ra đảo một lần cho ngao ở dưới lên trên.', m: 7, heat: 'Lửa to', cue: '<b>Toàn bộ vỏ há hết miệng, thịt ngao rụt lại và săn</b>. Tắt ngay lúc này — hấp thêm 2 phút nữa là thịt dai như cao su.' },
+    { t: 'Nhặt con không mở', d: 'Vớt ngao ra đĩa, bỏ những con vẫn khép chặt.', m: 1, heat: 'Tắt bếp', cue: 'Không con nào còn ngậm miệng trên đĩa. Nước trong nồi <b>trong, ngọt và hơi mặn sẵn</b> — chan lại lên ngao.' }
+  ],
+  tips: ['Không cho muối vào nồi hấp: ngao đã mặn sẵn, nêm thêm là hỏng.', 'Con nào há miệng trước thì gắp ra trước nếu bạn kỹ tính — chênh nhau 2 phút là đủ để con nhỏ bị dai.'],
+  serveWith: 'Chấm muối tiêu chanh hoặc mắm gừng. Nước ngao còn lại đừng đổ — nấu canh chua rất ngọt.'
+},
+{
+  id: 'ghe-hap-bia', name: 'Ghẹ (hoặc cua biển) hấp bia', cat: 'luoc', role: 'man', diff: 1, serves: 4, prep: 15,
+  tags: ['ghẹ', 'cua'],
+  why: 'Chỉ có hai việc thật sự cần làm đúng: giết ghẹ trước khi hấp để nó không rụng càng, và canh màu vỏ để tắt bếp.',
+  ing: [
+    { n: 'Ghẹ (hoặc cua biển)', q: 1200, u: 'g', per: { n: 300, l: 'con bằng bàn tay xoè' }, note: 'Bấm yếm thấy chắc, không lún. Ghẹ óp thì nhẹ bẫng và ấn vào là mềm.', r: 'main' },
+    { n: 'Bia', q: 330, u: 'ml', per: { n: 330, l: 'lon' }, note: 'Thay bằng nước cũng được, bia chỉ để bớt tanh.', r: 'main' },
+    { n: 'Sả', q: 6, u: 'cây', note: 'Đập dập, lót đáy nồi.', r: 'veg' },
+    { n: 'Gừng', q: 1, u: 'củ', note: 'Bằng ngón cái, thái lát.', r: 'season' },
+    { n: 'Muối', q: 1, u: 'thìa cà phê', r: 'season' }
+  ],
+  steps: [
+    { t: 'Giết ghẹ trước khi hấp', d: 'Lật ngửa con ghẹ, dùng mũi dao nhọn đâm dứt khoát vào điểm lõm giữa yếm, giữ 3 giây.', m: 5, heat: '—', cue: 'Ghẹ <b>duỗi thẳng càng ra rồi mềm hẳn</b>. Bỏ qua bước này thì lúc gặp hơi nóng nó sẽ giãy và rụng hết càng.' },
+    { t: 'Rửa và xếp nồi', d: 'Dùng bàn chải cọ sạch mai và kẽ càng dưới vòi nước. Lót sả gừng xuống đáy, đổ bia, xếp ghẹ úp mai xuống.', m: 5, heat: '—', cue: 'Nước rửa cuối cùng <b>trong, không còn cặn đen ở kẽ chân</b>. Ghẹ úp mai để gạch không chảy ra ngoài.' },
+    { t: 'Hấp', d: 'Đậy vung, lửa to cho sôi rồi hạ vừa. Không mở vung giữa chừng.', m: 14, heat: 'Lửa to → vừa', cue: 'Mai chuyển <b>đỏ cam đều, kể cả phần khớp nối càng</b> — chỗ khớp là nơi đổi màu sau cùng, còn xám là chưa chín tới.' },
+    { t: 'Để nghỉ rồi bày', d: 'Tắt bếp, để yên trong nồi 2 phút cho thịt se lại rồi mới gắp ra.', m: 2, heat: 'Tắt bếp', cue: 'Bẻ thử một càng: thịt <b>trắng đục, tróc khỏi vỏ thành thớ</b>. Còn trong và dính vỏ là chưa đủ.' }
+  ],
+  tips: ['Ghẹ nhiều thịt nhất vào đầu và cuối tháng âm lịch; giữa tháng hay óp.', 'Đừng hấp quá 18 phút với ghẹ cỡ bàn tay — thịt sẽ bã và mất ngọt.'],
+  serveWith: 'Muối tiêu chanh, hoặc muối ớt xanh. Ăn kèm rau răm.'
+},
+{
+  id: 'canh-ngao-chua', name: 'Canh ngao nấu chua', cat: 'canh', role: 'canh', diff: 1, serves: 4, prep: 25,
+  tags: ['ngao/sò', 'cà chua'],
+  why: 'Ngọt nước mà không cần ninh xương — con ngao tự lo phần nước dùng. Chỉ cần nhớ lọc cát.',
+  ing: [
+    { n: 'Ngao tươi', q: 700, u: 'g', per: { n: 35, l: 'con to bằng miệng chén' }, note: 'Đã ngâm nhả cát 20 phút.', r: 'main' },
+    { n: 'Cà chua', q: 3, u: 'quả', note: 'Bổ múi cau, mỗi quả 6 múi.', r: 'veg' },
+    { n: 'Dứa (thơm)', q: 0.25, u: 'quả', note: 'Thái lát mỏng. Không có thì thay bằng 1 thìa canh nước me.', r: 'veg' },
+    { n: 'Nước', q: 1000, u: 'ml', per: { n: 250, l: 'bát con' }, r: 'main' },
+    { n: 'Hành khô', q: 1, u: 'củ', r: 'season' },
+    { n: 'Nước mắm', q: 1, u: 'thìa canh', r: 'season' },
+    { n: 'Thì là + hành lá', q: 4, u: 'nhánh', r: 'herb' },
+    { n: 'Ớt tươi', q: 1, u: 'quả', r: 'season' }
+  ],
+  steps: [
+    { t: 'Luộc ngao lấy nước', d: 'Cho ngao vào nồi với 1 lít nước, đun đến khi ngao há hết miệng thì vớt ngao ra.', m: 8, heat: 'Lửa to', cue: '<b>Toàn bộ ngao há miệng</b>. Vớt ra ngay — để lại trong nồi là thịt teo và dai.' },
+    { t: 'Lọc cát khỏi nước luộc', d: 'Để nồi nước đứng yên 2 phút, rồi chắt nhẹ phần trong sang nồi khác, bỏ khoảng một bát đáy.', m: 3, heat: 'Tắt bếp', cue: 'Nước chắt sang <b>trong veo, không lợn cợn khi nghiêng bát</b>. Đây là bước quyết định canh có sạn hay không.' },
+    { t: 'Xào cà chua và dứa', d: 'Phi hành khô, cho cà chua và dứa vào xào cùng ¼ thìa cà phê muối, dằm nhẹ.', m: 5, heat: 'Lửa vừa', cue: 'Cà chua <b>mềm nhũn và ra sốt đỏ cam</b>, dứa trong lại ở mép.' },
+    { t: 'Nấu và trả ngao về', d: 'Đổ nước ngao đã lọc vào, sôi thì nêm mắm, thả thịt ngao và rau thơm rồi tắt bếp.', m: 4, heat: 'Lửa to → tắt', cue: 'Vị <b>chua nhẹ trước, ngọt ngao sau</b> và không cần mì chính. Ngao chỉ trả vào lúc cuối, đun lại là hỏng.' }
+  ],
+  tips: ['Có thể để nguyên vỏ vài con cho đẹp bát canh, nhưng phần lớn nên tách ra để ăn cho dễ.', 'Ngao đã mặn sẵn — nêm mắm sau cùng và nếm trước khi thêm.'],
+  serveWith: 'Ăn với thịt luộc, đậu rán hay bất kỳ món kho nào.'
+},
+{
+  id: 'canh-bau-tom', name: 'Canh bầu nấu tôm', cat: 'canh', role: 'canh', diff: 1, serves: 4, prep: 10,
+  tags: ['tôm', 'củ quả'],
+  why: 'Bát canh mùa hè nhanh nhất: bầu chín trong ba phút, tôm giã dập là đủ ngọt nước.',
+  ing: [
+    { n: 'Tôm tươi', q: 200, u: 'g', per: { n: 17, l: 'con bằng ngón tay trỏ' }, note: 'Bóc vỏ, bỏ chỉ đen ở lưng.', r: 'main' },
+    { n: 'Bầu', q: 500, u: 'g', per: { n: 500, l: 'nửa quả bầu' }, note: 'Gọt vỏ, thái miếng mỏng bằng đốt ngón tay.', r: 'veg' },
+    { n: 'Nước', q: 900, u: 'ml', per: { n: 250, l: 'bát con' }, r: 'main' },
+    { n: 'Hành khô', q: 1, u: 'củ', r: 'season' },
+    { n: 'Nước mắm', q: 1, u: 'thìa canh', r: 'season' },
+    { n: 'Muối', q: 0.5, u: 'thìa cà phê', r: 'season' },
+    { n: 'Hành lá', q: 3, u: 'nhánh', r: 'herb' },
+    { n: 'Hạt tiêu', q: 1, u: 'nhúm', r: 'season' }
+  ],
+  steps: [
+    { t: 'Giã dập tôm', d: 'Băm hoặc giã dập phần tôm (không nhuyễn), ướp với ¼ thìa cà phê mắm và chút tiêu.', m: 4, heat: '—', cue: 'Tôm <b>vỡ thành sợi chứ không thành bột</b> — như vậy ăn vẫn còn miếng mà nước vẫn ngọt.' },
+    { t: 'Xào tôm với hành', d: 'Phi hành khô, trút tôm vào đảo nhanh.', m: 2, heat: 'Lửa vừa', cue: 'Tôm <b>chuyển hồng cam hết và bốc mùi thơm</b>, chưa đến mức cong cứng.' },
+    { t: 'Đổ nước, hớt bọt', d: 'Đổ nước vào, cho muối, đun sôi và hớt bọt.', m: 5, heat: 'Lửa to', cue: 'Nước sôi và <b>mặt nước trong lại</b> sau khi hớt.' },
+    { t: 'Thả bầu', d: 'Thả bầu vào, không đậy vung.', m: 3, heat: 'Lửa to', cue: 'Bầu <b>chuyển từ trắng đục sang trong</b> và vẫn còn giòn khi cắn. Bầu nấu quá là nhũn và mất mùi.' },
+    { t: 'Nêm cuối', d: 'Tắt bếp, cho nước mắm và hành lá.', m: 1, heat: 'Tắt bếp', cue: 'Nếm thấy ngọt tôm rõ, mặn vừa.' }
+  ],
+  tips: ['Vỏ tôm đừng vứt: rang thơm rồi đun với nước 5 phút, lọc lấy nước nấu canh sẽ ngọt gấp đôi.', 'Bầu thái càng mỏng càng nhanh chín và càng ngọt.'],
+  serveWith: 'Hợp nhất với món kho mặn hoặc cá rán.'
+},
+{
+  id: 'tom-rang-me', name: 'Tôm rang me', cat: 'xao', role: 'man', diff: 2, serves: 4, prep: 15,
+  tags: ['tôm'],
+  why: 'Cái khó không nằm ở con tôm mà ở nồi sốt: phải rim đến đúng độ keo thì sốt mới bám được vào vỏ.',
+  ing: [
+    { n: 'Tôm sú (hoặc tôm thẻ to)', q: 500, u: 'g', per: { n: 33, l: 'con bằng ngón tay cái' }, note: 'Để nguyên vỏ, cắt râu, khía lưng rút chỉ đen.', r: 'main' },
+    { n: 'Me vắt', q: 40, u: 'g', per: { n: 40, l: 'cục bằng quả trứng cút' }, note: 'Dầm với 100 ml nước ấm, lọc bỏ hạt.', r: 'main' },
+    { n: 'Đường', q: 2, u: 'thìa canh', r: 'season' },
+    { n: 'Nước mắm', q: 1.5, u: 'thìa canh', r: 'season' },
+    { n: 'Tỏi', q: 5, u: 'tép', r: 'season' },
+    { n: 'Dầu ăn', q: 3, u: 'thìa canh', r: 'season' },
+    { n: 'Hành lá', q: 3, u: 'nhánh', r: 'herb' },
+    { n: 'Hạt tiêu', q: 1, u: 'nhúm', r: 'season' }
+  ],
+  steps: [
+    { t: 'Pha sẵn nước sốt', d: 'Trộn nước me lọc + đường + mắm vào một bát, khuấy tan hết đường. Nếm thử: phải chua – ngọt – mặn rõ cả ba.', m: 4, heat: '—', cue: 'Đường tan hoàn toàn, bát sốt <b>nếm gắt hơn mức bạn muốn ăn</b> — vì lát nữa nó sẽ được pha loãng bởi nước tôm.' },
+    { t: 'Rán tôm', d: 'Chảo thật nóng với 3 thìa dầu, xếp tôm một lớp, rán mỗi mặt cho tới khi vỏ đỏ và giòn. Vớt ra.', m: 6, heat: 'Lửa to', cue: 'Vỏ <b>đỏ cam, hơi cong lại thành chữ C</b> — cong thành chữ O là đã quá lửa, thịt sẽ khô.' },
+    { t: 'Phi tỏi, rim sốt', d: 'Hạ lửa, phi tỏi băm trong chỗ dầu còn lại rồi đổ bát sốt vào.', m: 4, heat: 'Lửa vừa', cue: 'Sốt <b>sôi lăn tăn và sánh lại, kéo đũa qua thấy vệt đáy chảo đọng khoảng một giây</b>. Đây là điểm quyết định.' },
+    { t: 'Trả tôm vào áo sốt', d: 'Trút tôm vào đảo nhanh cho sốt bám đều, rắc tiêu và hành lá rồi tắt bếp.', m: 2, heat: 'Lửa to', cue: 'Sốt <b>bám thành lớp bóng trên lưng tôm</b>, dưới chảo gần như không còn nước chảy.' }
+  ],
+  tips: ['Rán tôm trước rồi mới rim — cho tôm sống vào sốt thì tôm ra nước và sốt loãng, không bao giờ keo lại được.', 'Sốt loãng thì rim thêm; sốt quá keo thì thêm 1 thìa nước nóng, đừng thêm nước lạnh.'],
+  serveWith: 'Cơm trắng. Món này đủ đậm nên chỉ cần thêm một bát canh nhạt.'
+},
+{
+  id: 'ca-thu-sot-ca-chua', name: 'Cá thu sốt cà chua', cat: 'om', role: 'man', diff: 2, serves: 4, prep: 15,
+  tags: ['cá', 'cà chua'],
+  why: 'Cá biển thịt chắc nên không nát như cá đồng — nhưng vẫn phải rán se mặt trước, nếu không om xong sẽ tanh.',
+  ing: [
+    { n: 'Cá thu cắt khoanh', q: 600, u: 'g', per: { n: 150, l: 'khoanh dày 2 đốt ngón tay' }, note: 'Xát muối và rửa lại, thấm thật khô bằng giấy.', r: 'main' },
+    { n: 'Cà chua', q: 4, u: 'quả', note: 'Hai quả thái hạt lựu để tan thành sốt, hai quả bổ múi cau để còn miếng.', r: 'veg' },
+    { n: 'Hành khô', q: 2, u: 'củ', r: 'season' },
+    { n: 'Nước mắm', q: 1.5, u: 'thìa canh', r: 'season' },
+    { n: 'Đường', q: 1, u: 'thìa cà phê', r: 'season' },
+    { n: 'Nước', q: 200, u: 'ml', per: { n: 250, l: 'bát con' }, r: 'main' },
+    { n: 'Dầu ăn', q: 3, u: 'thìa canh', r: 'season' },
+    { n: 'Thì là + hành lá', q: 5, u: 'nhánh', r: 'herb' },
+    { n: 'Hạt tiêu', q: 1, u: 'nhúm', r: 'season' }
+  ],
+  steps: [
+    { t: 'Ướp cá', d: 'Ướp cá với ½ thìa canh mắm, chút tiêu và một nửa chỗ hành khô băm. Để 10 phút.', m: 10, heat: '—', cue: 'Mặt cá <b>ráo, không còn đọng nước ướp</b> — ướt là lúc rán sẽ bắn dầu và bong da.' },
+    { t: 'Rán se hai mặt', d: 'Dầu nóng già, thả cá vào, để yên không đụng đũa. Lật một lần duy nhất.', m: 7, heat: 'Lửa to → vừa', cue: 'Mặt cá <b>vàng se và tự tróc khỏi chảo khi lắc nhẹ</b>. Còn dính chảo là chưa đến lúc lật.' },
+    { t: 'Làm sốt cà chua', d: 'Gắp cá ra. Phi nốt hành, cho cà chua hạt lựu vào dằm nhuyễn với ½ thìa cà phê muối.', m: 6, heat: 'Lửa vừa', cue: 'Cà chua <b>tan hết thành sốt đặc màu đỏ cam, dầu tách ra nổi lên mặt</b>. Chưa tách dầu là chưa đủ.' },
+    { t: 'Om cá', d: 'Xếp cá lại vào chảo, đổ 200 ml nước, thêm cà chua bổ múi, mắm và đường. Đun liu riu, thỉnh thoảng múc sốt rưới lên mặt cá.', m: 15, heat: 'Lửa liu riu', cue: 'Nước <b>rút còn khoảng một phần ba và sánh lại</b>, khoanh cá ngấm màu đỏ cam ở rìa.' },
+    { t: 'Rắc rau thơm', d: 'Tắt bếp, rắc thì là và hành lá cắt khúc, đậy vung 1 phút.', m: 1, heat: 'Tắt bếp', cue: 'Mở vung thấy mùi thì là bốc lên rõ — đó là mùi đặc trưng của món này.' }
+  ],
+  tips: ['Không đảo cá bằng đũa khi om — muốn trở thì lắc cả chảo hoặc dùng hai chiếc xẻng.', 'Cá thu đông lạnh phải rã đông hẳn và thấm khô, nếu không nước đá sẽ làm chảo nguội và cá bị luộc chứ không rán.'],
+  serveWith: 'Cơm nóng và một bát canh rau nhạt để cân lại vị đậm.'
+},
+{
+  id: 'ca-nuc-kho-dua', name: 'Cá nục kho dứa', cat: 'kho', role: 'man', diff: 2, serves: 4, prep: 15,
+  tags: ['cá'],
+  why: 'Dứa vừa khử tanh vừa làm mềm thịt cá. Công thức này kho vừa đủ để cá chắc và đậm — muốn rục cả xương thì phải kho lâu hơn nhiều (xem mẹo cuối).',
+  ing: [
+    { n: 'Cá nục tươi', q: 600, u: 'g', per: { n: 100, l: 'con bằng bàn tay' }, note: 'Bỏ ruột và mang, giữ nguyên con. Xát muối rồi rửa lại.', r: 'main' },
+    { n: 'Dứa (thơm)', q: 0.5, u: 'quả', note: 'Thái lát dày bằng đốt ngón tay.', r: 'veg' },
+    { n: 'Nước hàng (nước màu)', q: 1, u: 'thìa canh', note: 'Hoặc thắng 1 thìa canh đường đến màu cánh gián.', r: 'season' },
+    { n: 'Nước mắm', q: 2, u: 'thìa canh', r: 'season' },
+    { n: 'Đường', q: 1, u: 'thìa cà phê', r: 'season' },
+    { n: 'Hành khô', q: 2, u: 'củ', r: 'season' },
+    { n: 'Ớt tươi', q: 2, u: 'quả', r: 'season' },
+    { n: 'Nước', q: 300, u: 'ml', per: { n: 250, l: 'bát con' }, note: 'Xâm xấp mặt cá là đủ.', r: 'main' },
+    { n: 'Hạt tiêu', q: 1, u: 'thìa cà phê', r: 'season' }
+  ],
+  steps: [
+    { t: 'Ướp cá', d: 'Ướp cá với mắm, đường, nước hàng, hành khô băm và tiêu. Trở nhẹ cho đều.', m: 20, heat: '—', cue: 'Thân cá <b>ngả màu nâu cánh gián đều</b>, nước ướp sánh lại dưới đáy tô.' },
+    { t: 'Lót đáy nồi', d: 'Xếp một lớp dứa xuống đáy nồi, xếp cá lên trên, phần dứa còn lại rải mặt cùng ớt.', m: 3, heat: '—', cue: 'Cá <b>không chạm trực tiếp đáy nồi</b> — lớp dứa là thứ chống cháy và làm mềm xương.' },
+    { t: 'Kho lần một', d: 'Đổ nước xâm xấp, đun sôi rồi hạ nhỏ hết cỡ, đậy hé vung.', m: 25, heat: 'Lửa liu riu', cue: 'Nước sôi <b>lăn tăn ở mép nồi chứ không sùng sục</b>. Sôi mạnh là cá nát và nước đục.' },
+    { t: 'Kho cạn', d: 'Mở vung, tiếp tục để lửa nhỏ cho nước rút. Nghiêng nồi rưới nước kho lên mặt cá vài lần.', m: 18, heat: 'Lửa nhỏ', cue: 'Nước <b>còn sền sệt dưới đáy, kéo đũa thấy vệt</b>, thân cá bóng màu nâu đỏ. Kho cạn hẳn là cá khô xác.' },
+    { t: 'Rắc tiêu, để nguội bớt', d: 'Tắt bếp, rắc tiêu, để nồi nghỉ 10 phút trước khi ăn.', m: 2, heat: 'Tắt bếp', cue: 'Nếm nước kho: <b>mặn đậm, ngọt hậu, thoảng chua của dứa</b>. Cá nguội bớt thì thịt chắc lại, gắp không nát.' }
+  ],
+  tips: ['Muốn xương mềm rục thật sự thì cần <b>2–2,5 tiếng lửa nhỏ liên tục</b>, hoặc nồi áp suất khoảng 40 phút. Kho 40 phút như trên chỉ đủ mềm thịt, xương sống vẫn còn.', 'Kho hai lửa (để nguội hẳn, hôm sau kho lại 30 phút) làm vị đậm hơn hẳn và xương mềm thêm một bậc.', 'Không có dứa thì lót riềng hoặc mía chẻ — cùng công dụng chống cháy đáy.'],
+  serveWith: 'Cơm trắng, rau luộc và một bát nước rau vắt chanh.'
+},
+{
+  id: 'ca-chien-sot-mam-toi', name: 'Cá chiên sốt mắm tỏi', cat: 'ran', role: 'man', diff: 2, serves: 4, prep: 15,
+  tags: ['cá'],
+  why: 'Hai kỹ thuật gộp làm một: chiên cho giòn, rồi rưới sốt lúc cá còn nóng để sốt bám mà vỏ chưa kịp ỉu.',
+  ing: [
+    { n: 'Cá nguyên con (diêu hồng, bạc má, sòng)', q: 700, u: 'g', per: { n: 700, l: 'con bằng cả bàn tay và cổ tay' }, note: 'Khứa chéo hai mặt, sâu tới xương, cách nhau 2 đốt ngón tay.', r: 'main' },
+    { n: 'Bột chiên giòn (hoặc bột năng)', q: 3, u: 'thìa canh', note: 'Chỉ áo một lớp mỏng.', r: 'main' },
+    { n: 'Nước mắm', q: 3, u: 'thìa canh', r: 'season' },
+    { n: 'Đường', q: 2, u: 'thìa canh', r: 'season' },
+    { n: 'Nước cốt chanh', q: 1, u: 'thìa canh', r: 'season' },
+    { n: 'Tỏi', q: 6, u: 'tép', r: 'season' },
+    { n: 'Ớt tươi', q: 2, u: 'quả', r: 'season' },
+    { n: 'Dầu ăn', q: 200, u: 'ml', per: { n: 250, l: 'bát con' }, note: 'Ngập khoảng nửa thân cá.', r: 'season' }
+  ],
+  steps: [
+    { t: 'Làm khô và áo bột', d: 'Thấm cá thật khô bằng giấy, xát chút muối vào các đường khứa, rồi áo một lớp bột mỏng, phủi bớt.', m: 8, heat: '—', cue: 'Bột <b>bám thành lớp mờ như phấn</b>, không đóng cục trắng. Bột dày là vỏ bị bở chứ không giòn.' },
+    { t: 'Chiên vàng', d: 'Dầu nóng già, thả cá vào, để yên 5 phút rồi mới lật. Lật đúng một lần.', m: 12, heat: 'Lửa to → vừa', cue: 'Nhúng đầu đũa vào dầu thấy <b>sủi tăm quanh đũa ngay lập tức</b> thì mới thả cá. Cá đạt khi hai mặt vàng nâu và <b>đuôi cứng, dựng lên được</b>.' },
+    { t: 'Pha và đun sốt', d: 'Đổ bớt dầu, chỉ để lại 1 thìa. Phi tỏi băm và ớt, đổ mắm + đường vào đun sôi.', m: 4, heat: 'Lửa vừa', cue: 'Sốt <b>sủi bọt to và sánh lại</b>, tỏi nổi vàng lên mặt. Tắt bếp rồi mới vắt chanh — vắt lúc còn nóng trên bếp là sốt bị đắng.' },
+    { t: 'Rưới lúc cá còn nóng', d: 'Đặt cá ra đĩa, rưới sốt lên khắp mặt và vào các đường khứa.', m: 1, heat: 'Tắt bếp', cue: 'Nghe tiếng <b>xèo nhẹ</b> khi sốt chạm cá. Không nghe thấy gì là cá đã nguội, sốt sẽ chỉ nằm dưới đáy đĩa.' }
+  ],
+  tips: ['Không đậy vung khi chiên — hơi nước đọng lại rơi xuống làm vỏ ỉu ngay.', 'Cá phải khô tuyệt đối trước khi vào chảo, đây là lý do phổ biến nhất khiến dầu bắn.'],
+  serveWith: 'Cơm nóng, dưa góp và rau sống.'
+},
+{
+  id: 'muc-nhoi-thit', name: 'Mực nhồi thịt sốt cà', cat: 'om', role: 'man', diff: 3, serves: 4, prep: 30,
+  tags: ['mực', 'thịt lợn', 'cà chua'],
+  why: 'Khó ở chỗ nhồi: nhồi chặt là mực nứt bung khi gặp nhiệt, nhồi lỏng thì nhân rời ra trong nồi.',
+  ing: [
+    { n: 'Mực ống tươi', q: 480, u: 'g', per: { n: 80, l: 'con dài một gang tay' }, note: 'Rút đầu và túi mực, lột màng, giữ nguyên ống.', r: 'main' },
+    { n: 'Thịt lợn xay', q: 200, u: 'g', per: { n: 50, l: 'nắm bằng quả trứng' }, note: 'Chọn nạc vai có chút mỡ.', r: 'main' },
+    { n: 'Mộc nhĩ', q: 4, u: 'tai', note: 'Ngâm nở, băm nhỏ.', r: 'veg' },
+    { n: 'Miến khô', q: 20, u: 'g', per: { n: 20, l: 'nhúm bằng hai ngón tay' }, note: 'Ngâm mềm, cắt ngắn 2 cm.', r: 'main' },
+    { n: 'Cà chua', q: 3, u: 'quả', r: 'veg' },
+    { n: 'Hành khô', q: 2, u: 'củ', r: 'season' },
+    { n: 'Nước mắm', q: 1.5, u: 'thìa canh', r: 'season' },
+    { n: 'Hạt tiêu', q: 1, u: 'thìa cà phê', r: 'season' },
+    { n: 'Thì là + hành lá', q: 5, u: 'nhánh', r: 'herb' }
+  ],
+  steps: [
+    { t: 'Sơ chế mực', d: 'Rửa mực với muối và gừng, lộn trong ra rửa sạch rồi lộn lại. Băm nhỏ phần râu mực để trộn vào nhân.', m: 12, heat: '—', cue: 'Ống mực <b>trắng ngà, sờ không còn nhớt</b>, bên trong không còn sạn.' },
+    { t: 'Trộn nhân', d: 'Trộn thịt xay + râu mực băm + mộc nhĩ + miến + hành khô băm + ½ thìa canh mắm + tiêu. Trộn một chiều.', m: 6, heat: '—', cue: 'Nhân <b>quyện dẻo, nắm lại thành khối không rời</b>. Rời rạc là chưa trộn đủ.' },
+    { t: 'Nhồi hai phần ba', d: 'Nhồi nhân vào ống mực, chỉ đầy khoảng hai phần ba, dùng tăm ghim miệng lại rồi xăm vài lỗ trên thân.', m: 8, heat: '—', cue: 'Bóp nhẹ thân mực <b>vẫn còn lún</b>. Căng cứng là chắc chắn sẽ nứt khi rán — nhân nở ra còn mực co lại.' },
+    { t: 'Rán se vỏ', d: 'Rán mực trong 2 thìa dầu, trở đều các mặt.', m: 6, heat: 'Lửa vừa', cue: 'Vỏ mực <b>săn lại, ngả vàng nhạt và tiết ra ít nước trong</b>. Gắp ra.' },
+    { t: 'Làm sốt và om', d: 'Phi hành, xào cà chua nhuyễn thành sốt, nêm mắm, thả mực vào om, thỉnh thoảng rưới sốt lên.', m: 12, heat: 'Lửa nhỏ', cue: 'Sốt <b>sánh và bám áo quanh thân mực</b>, xiên tăm vào thân thấy nhân chín và không còn nước hồng chảy ra.' },
+    { t: 'Thái khoanh', d: 'Rút tăm, để nghỉ 3 phút rồi thái khoanh dày bằng đốt ngón tay, rắc thì là.', m: 3, heat: 'Tắt bếp', cue: 'Mặt cắt <b>tròn đầy, nhân dính liền với thành mực</b>, không có khoảng rỗng ở giữa.' }
+  ],
+  tips: ['Xăm lỗ trên thân mực là bước hay bị bỏ qua — nó cho hơi thoát ra, giảm hẳn nguy cơ nứt.', 'Để nghỉ trước khi thái, cắt ngay lúc nóng thì nhân rơi ra hết.'],
+  serveWith: 'Cơm trắng; món này đủ đậm để đứng một mình trong mâm.'
+},
+{
+  id: 'ghe-rang-muoi', name: 'Ghẹ (hoặc tôm) rang muối', cat: 'xao', role: 'man', diff: 3, serves: 4, prep: 20,
+  tags: ['ghẹ', 'tôm'],
+  why: 'Khó vì phải làm ba việc gần như cùng lúc: chiên giòn, rang muối cho khô, và đảo áo mà không để tỏi cháy.',
+  ing: [
+    { n: 'Ghẹ (hoặc tôm sú to)', q: 1000, u: 'g', per: { n: 250, l: 'con bằng bàn tay xoè' }, note: 'Ghẹ tách mai, chặt đôi. Tôm thì để nguyên vỏ.', r: 'main' },
+    { n: 'Bột chiên giòn', q: 4, u: 'thìa canh', r: 'main' },
+    { n: 'Muối hạt', q: 2, u: 'thìa canh', note: 'Rang khô trước cho tơi.', r: 'season' },
+    { n: 'Tỏi', q: 1, u: 'củ', note: 'Băm nhỏ, chia hai phần.', r: 'season' },
+    { n: 'Ớt tươi', q: 2, u: 'quả', r: 'season' },
+    { n: 'Hành lá', q: 4, u: 'nhánh', note: 'Chỉ lấy phần trắng, thái nhỏ.', r: 'herb' },
+    { n: 'Đường', q: 1, u: 'thìa cà phê', note: 'Cân lại vị mặn của muối.', r: 'season' },
+    { n: 'Dầu ăn', q: 300, u: 'ml', per: { n: 250, l: 'bát con' }, r: 'season' }
+  ],
+  steps: [
+    { t: 'Rang muối cho tơi', d: 'Rang muối hạt trong chảo khô, đảo liên tục.', m: 4, heat: 'Lửa vừa', cue: 'Muối <b>kêu lách tách, chuyển trắng đục và tơi rời</b>, không còn vón. Đổ ra bát riêng.' },
+    { t: 'Phi tỏi vàng để riêng', d: 'Phi một nửa chỗ tỏi băm trong dầu cho vàng rồi vớt ra giấy thấm.', m: 3, heat: 'Lửa vừa', cue: 'Tỏi <b>vàng nhạt thì vớt ngay</b> — nó sẽ tiếp tục vàng thêm trên giấy. Vớt lúc đã vàng sậm là sẽ đắng.' },
+    { t: 'Áo bột và chiên', d: 'Thấm khô ghẹ, áo một lớp bột mỏng, chiên ngập dầu từng mẻ nhỏ.', m: 10, heat: 'Lửa to', cue: 'Vỏ <b>đỏ cam và cứng, gõ vào nghe tiếng khô</b>. Chiên chồng chất là hạ nhiệt dầu, vỏ sẽ ngấm dầu và mềm.' },
+    { t: 'Rang áo muối', d: 'Đổ hết dầu, chỉ chừa 1 thìa. Phi nốt tỏi tươi và ớt, rắc muối rang + đường, trút ghẹ vào đảo nhanh và mạnh.', m: 3, heat: 'Lửa to', cue: 'Muối <b>bám thành lớp mờ khắp vỏ và đáy chảo khô hoàn toàn</b>, không có chỗ nào ướt. Đảo quá 3 phút là vỏ hút ẩm và mềm lại.' },
+    { t: 'Rắc tỏi phi', d: 'Tắt bếp, rắc tỏi phi và hành lá, đảo hai vòng rồi bày đĩa ngay.', m: 1, heat: 'Tắt bếp', cue: 'Đĩa ghẹ <b>khô ráo, không đọng dầu ở đáy đĩa</b>.' }
+  ],
+  tips: ['Muối rang riêng và cho vào sau cùng — rang chung với ghẹ từ đầu thì muối tan ra và món bị mặn chát.', 'Ăn ngay khi vừa làm xong; để 15 phút là hết giòn, không cứu được.'],
+  serveWith: 'Món nhậu hoặc ăn với cơm. Chấm muối tiêu chanh.'
+}
+);
+
+/* ---------- NGOÀI MÂM CƠM: LẨU, NƯỚNG, MÓN NHẬU ----------
+   Nhóm này không đi cùng mâm cơm hằng ngày — nấu cho cuối tuần, đông người, ăn quanh
+   nồi hoặc quanh bếp than. Thời gian ghi ở đây là thời gian CHUẨN BỊ tới lúc bưng ra,
+   không tính lúc ngồi ăn. */
+RECIPES.push(
+{
+  id: 'oc-luoc-sa-ot', name: 'Ốc luộc sả ớt', cat: 'luoc', role: 'ngoai', diff: 1, serves: 4, prep: 65,
+  tags: ['ốc'],
+  why: 'Món nhậu dễ nhất và cũng là món hay bị làm hỏng nhất — vì người ta luộc quá lâu, ốc teo lại không khều ra được.',
+  ing: [
+    { n: 'Ốc mít (hoặc ốc đá, ốc hương)', q: 1000, u: 'g', per: { n: 25, l: 'con bằng đầu ngón tay cái' }, note: 'Ngâm nước vo gạo với ớt đập 1 tiếng cho nhả bùn.', r: 'main' },
+    { n: 'Sả', q: 6, u: 'cây', note: 'Bốn cây đập dập lót nồi, hai cây thái lát cho vào nước chấm.', r: 'veg' },
+    { n: 'Lá chanh', q: 10, u: 'lá', r: 'herb' },
+    { n: 'Gừng', q: 1, u: 'củ', r: 'season' },
+    { n: 'Ớt tươi', q: 3, u: 'quả', r: 'season' },
+    { n: 'Muối', q: 1, u: 'thìa cà phê', r: 'season' },
+    { n: 'Nước', q: 150, u: 'ml', per: { n: 250, l: 'bát con' }, note: 'Rất ít — ốc là hấp chứ không phải luộc chìm.', r: 'main' }
+  ],
+  steps: [
+    { t: 'Ngâm nhả bùn', d: 'Ngâm ốc trong nước vo gạo, thả vài quả ớt đập dập và một cái thìa kim loại.', m: 60, heat: '—', cue: 'Ốc <b>thò hết mình ra ngoài vỏ</b> và đáy chậu có lớp bùn. Chạm vào thấy rụt lại nhanh là ốc còn khoẻ.' },
+    { t: 'Xếp nồi', d: 'Lót sả đập dập và gừng thái lát xuống đáy, đổ 150 ml nước, xếp ốc lên, rắc lá chanh vò và muối.', m: 4, heat: '—', cue: 'Nước <b>chỉ ngập lớp sả dưới đáy</b>, không ngập ốc.' },
+    { t: 'Luộc và đảo một lần', d: 'Đậy vung, lửa to. Khi bốc hơi mạnh thì mở ra đảo một lần rồi đậy lại.', m: 6, heat: 'Lửa to', cue: '<b>Mày ốc bung ra và nổi lềnh bềnh trên mặt</b> — thấy phần lớn mày bung là tắt bếp ngay. Luộc thêm 3 phút nữa là ốc teo tụt sâu vào vỏ, khều không ra.' },
+    { t: 'Ủ trong nồi', d: 'Tắt bếp, đậy vung ủ 2 phút cho ngấm mùi sả và lá chanh.', m: 2, heat: 'Tắt bếp', cue: 'Khều thử một con: thịt <b>ra nguyên cả đuôi, không đứt</b>. Đứt đuôi nghĩa là quá lửa.' }
+  ],
+  tips: ['Nước chấm mới là linh hồn: mắm + đường + nước cốt chanh/quất tỉ lệ 1 : 1 : 1, thêm sả, gừng, lá chanh thái chỉ và ớt.', 'Cho một cái thìa kim loại vào chậu ngâm — mẹo dân gian, ốc nhả bùn nhanh hơn hẳn.'],
+  serveWith: 'Nước mắm gừng sả. Món để nhâm nhi, không ăn với cơm.'
+},
+{
+  id: 'ga-nuong-muoi-ot', name: 'Cánh gà nướng muối ớt', cat: 'nuong', role: 'ngoai', diff: 1, serves: 4, prep: 70,
+  tags: ['thịt gà'],
+  why: 'Món nướng dễ nhất để bắt đầu: cánh gà mỏng đều nên khó bị ngoài cháy trong sống như đùi hay cả con.',
+  ing: [
+    { n: 'Cánh gà', q: 900, u: 'g', per: { n: 75, l: 'chiếc cánh cả khúc' }, note: 'Khứa hai đường ở mặt dày để thấm và chín đều.', r: 'main' },
+    { n: 'Sa tế (hoặc ớt bột)', q: 1.5, u: 'thìa canh', r: 'season' },
+    { n: 'Muối', q: 1, u: 'thìa cà phê', r: 'season' },
+    { n: 'Đường', q: 1, u: 'thìa canh', note: 'Là thứ tạo màu cánh gián lúc nướng.', r: 'season' },
+    { n: 'Nước mắm', q: 1, u: 'thìa canh', r: 'season' },
+    { n: 'Tỏi', q: 5, u: 'tép', r: 'season' },
+    { n: 'Sả', q: 2, u: 'cây', note: 'Băm thật nhỏ.', r: 'veg' },
+    { n: 'Mật ong', q: 1, u: 'thìa canh', note: 'Phết ở 5 phút cuối, không ướp từ đầu.', r: 'season' },
+    { n: 'Dầu ăn', q: 1, u: 'thìa canh', r: 'season' }
+  ],
+  steps: [
+    { t: 'Ướp', d: 'Trộn tất cả gia vị (trừ mật ong) với cánh gà, bóp kỹ vào các đường khứa. Bọc kín để ngăn mát.', m: 60, heat: '—', cue: 'Cánh gà <b>ngả màu đỏ cam đều và nước ướp sánh bám vào da</b>, không còn đọng lỏng dưới đáy tô.' },
+    { t: 'Làm nóng bếp trước', d: 'Bật lò 200 °C trước 10 phút, hoặc quạt than đến khi than phủ lớp tro trắng.', m: 10, heat: 'Lò 200 °C / than hoa', cue: 'Than <b>phủ tro trắng, không còn ngọn lửa</b>. Còn lửa ngọn là gà sẽ cháy đen bên ngoài mà bên trong còn đỏ.' },
+    { t: 'Nướng mặt một', d: 'Xếp cánh gà, nướng mặt da xuống trước.', m: 10, heat: 'Lò 200 °C / than hoa', cue: 'Da <b>se lại, ngả vàng và bắt đầu có vệt cháy xém nhỏ</b> — vệt xém nhỏ là đúng, mảng đen là quá.' },
+    { t: 'Lật và phết mật ong', d: 'Lật mặt còn lại, nướng tiếp rồi phết mật ong pha chút nước ướp lên cả hai mặt ở 5 phút cuối.', m: 12, heat: 'Lò 200 °C / than hoa', cue: 'Bề mặt <b>bóng màu cánh gián</b>. Phết mật ong sớm hơn là chắc chắn cháy đen vì đường cháy rất nhanh.' },
+    { t: 'Kiểm tra chín', d: 'Xiên que vào chỗ dày nhất sát xương.', m: 2, heat: '—', cue: 'Nước chảy ra <b>trong, không hồng</b>. Còn hồng thì nướng thêm 4 phút rồi thử lại — đừng đoán.' }
+  ],
+  tips: ['Ướp tối thiểu 1 tiếng; ướp qua đêm thì ngon hơn hẳn và không cần thay đổi gì khác.', 'Không có lò và than thì áp chảo gang cũng được: lửa vừa, 8 phút mỗi mặt, đậy vung.'],
+  serveWith: 'Muối tiêu chanh, dưa chuột chẻ. Món để nhâm nhi hoặc ăn với xôi.'
+},
+{
+  id: 'hai-san-nuong-mo-hanh', name: 'Hải sản nướng mỡ hành', cat: 'nuong', role: 'ngoai', diff: 1, serves: 4, prep: 25,
+  tags: ['tôm', 'mực', 'ngao/sò'],
+  why: 'Không cần ướp, không cần canh giờ chính xác — chỉ cần biết lúc nào thịt chuyển đục là gắp ra.',
+  ing: [
+    { n: 'Hải sản hỗn hợp (tôm, mực, sò)', q: 1000, u: 'g', per: { n: 250, l: 'phần cho một người' }, note: 'Tôm để nguyên vỏ; mực khứa vảy rồng; sò tách nửa vỏ.', r: 'main' },
+    { n: 'Hành lá', q: 10, u: 'nhánh', note: 'Thái thật nhỏ, cả phần trắng.', r: 'herb' },
+    { n: 'Dầu ăn', q: 4, u: 'thìa canh', note: 'Để làm mỡ hành.', r: 'season' },
+    { n: 'Lạc rang', q: 40, u: 'g', per: { n: 40, l: 'nắm nhỏ trong lòng bàn tay' }, note: 'Giã dập.', r: 'main' },
+    { n: 'Muối', q: 0.5, u: 'thìa cà phê', r: 'season' },
+    { n: 'Đường', q: 0.5, u: 'thìa cà phê', r: 'season' },
+    { n: 'Hành khô', q: 2, u: 'củ', note: 'Phi vàng để rắc.', r: 'season' }
+  ],
+  steps: [
+    { t: 'Làm mỡ hành', d: 'Cho hành lá thái nhỏ + muối + đường vào bát chịu nhiệt. Đun dầu thật nóng rồi dội thẳng lên.', m: 5, heat: 'Lửa to', cue: 'Nghe <b>tiếng xèo mạnh và hành chuyển xanh sẫm ngay lập tức</b>. Dội dầu chưa đủ nóng thì hành sống và hăng.' },
+    { t: 'Làm nóng vỉ', d: 'Quạt than đến khi phủ tro trắng, hoặc làm nóng vỉ/chảo gang 5 phút.', m: 8, heat: 'Than hoa / chảo gang', cue: 'Vẩy giọt nước lên vỉ thấy <b>bốc hơi biến mất trong một giây</b>.' },
+    { t: 'Nướng sò trước, tôm sau', d: 'Xếp sò lên vỉ trước, khoảng 2 phút sau mới xếp tôm vào cạnh. Không lật vội.', m: 6, heat: 'Than hoa', cue: 'Sò <b>nước trong vỏ sôi lăn tăn và thịt rụt lại</b>; tôm <b>đỏ cam đều và cong thành chữ C</b>. Con nào đạt thì gắp ngay con đó ra.' },
+    { t: 'Nướng mực', d: 'Mực nướng sau cùng vì nhanh chín nhất.', m: 4, heat: 'Than hoa', cue: 'Thân mực <b>cong lại, các đường khứa nở bung thành vảy và chuyển trắng đục</b>. Quá 1 phút nữa là dai.' },
+    { t: 'Rưới mỡ hành', d: 'Bày ra đĩa, rưới mỡ hành, rắc lạc giã và hành phi.', m: 2, heat: '—', cue: 'Mỡ hành <b>đọng trong các đường khứa và trong vỏ sò</b>, không chảy hết xuống đĩa.' }
+  ],
+  tips: ['Nướng theo thứ tự lâu chín trước: sò → tôm → mực. Bỏ tất cả lên cùng lúc là chắc chắn có món bị dai.', 'Mỡ hành làm dư thì để tủ lạnh được 3 ngày, dùng cho cơm cháy, bánh mì nướng, cá nướng.'],
+  serveWith: 'Muối ớt xanh và bia. Món quanh bếp than, không phải món trong mâm.'
+},
+{
+  id: 'ba-chi-nuong-rieng-me', name: 'Ba chỉ nướng riềng mẻ', cat: 'nuong', role: 'ngoai', diff: 2, serves: 4, prep: 190,
+  tags: ['thịt lợn'],
+  why: 'Vị Bắc rất đặc trưng, nhưng mẻ là con dao hai lưỡi: đúng liều thì thơm và mềm, quá tay thì thịt bở và chua gắt.',
+  ing: [
+    { n: 'Thịt ba chỉ', q: 800, u: 'g', per: { n: 110, l: 'miếng bằng lòng bàn tay' }, note: 'Thái miếng mỏng bằng đốt ngón tay, dài bằng hai ngón.', r: 'main' },
+    { n: 'Riềng', q: 80, u: 'g', per: { n: 80, l: 'củ bằng ngón tay cái' }, note: 'Giã nhỏ hoặc xay, vắt bớt nước.', r: 'veg' },
+    { n: 'Mẻ', q: 2, u: 'thìa canh', note: 'Lọc qua rây, chỉ lấy phần nước sánh. Không có thì thay bằng 1 thìa canh sữa chua không đường.', r: 'season' },
+    { n: 'Mắm tôm', q: 1, u: 'thìa cà phê', note: 'Ít thôi — chỉ để tạo hậu vị.', r: 'season' },
+    { n: 'Nghệ tươi', q: 1, u: 'củ', note: 'Giã nhỏ, tạo màu vàng.', r: 'season' },
+    { n: 'Đường', q: 1, u: 'thìa canh', r: 'season' },
+    { n: 'Nước mắm', q: 1, u: 'thìa canh', r: 'season' },
+    { n: 'Hành khô', q: 3, u: 'củ', r: 'season' },
+    { n: 'Dầu ăn', q: 1, u: 'thìa canh', r: 'season' }
+  ],
+  steps: [
+    { t: 'Trộn hỗn hợp ướp', d: 'Trộn riềng, mẻ đã lọc, nghệ, mắm tôm, đường, mắm, hành khô băm và dầu thành một hỗn hợp sệt.', m: 8, heat: '—', cue: 'Hỗn hợp <b>vàng sẫm, sánh như hồ</b>. Nếm thấy chua nhẹ và mặn dịu — chua gắt thì bớt mẻ ngay bây giờ, muộn hơn là không sửa được.' },
+    { t: 'Ướp lạnh', d: 'Bóp đều hỗn hợp vào thịt, bọc kín, để ngăn mát tối thiểu 3 tiếng.', m: 180, heat: '—', cue: 'Miếng thịt <b>ngả vàng nghệ toàn bộ, phần nạc chuyển màu hồng nhạt hơn ban đầu</b> — đó là dấu hiệu mẻ đã làm mềm thớ thịt.' },
+    { t: 'Nướng mặt mỡ trước', d: 'Than phủ tro trắng thì xếp thịt lên, mặt nhiều mỡ úp xuống.', m: 7, heat: 'Than hoa / lò 220 °C', cue: 'Mỡ <b>chảy xuống và bùng khói thơm</b>, mặt tiếp xúc có vân cháy xém. Nếu lửa bùng lên liếm vào thịt thì nhấc vỉ lên, đừng để đó.' },
+    { t: 'Lật và nướng nốt', d: 'Lật mặt còn lại, nướng đến khi cả hai mặt vàng nâu.', m: 6, heat: 'Than hoa / lò 220 °C', cue: 'Mép miếng thịt <b>quăn lại và có viền nâu giòn</b>, ấn vào thấy đàn hồi chứ không mềm nhũn.' },
+    { t: 'Để nghỉ', d: 'Gắp ra đĩa, để nghỉ 3 phút trước khi ăn.', m: 3, heat: '—', cue: 'Cắt thử: bên trong <b>hồng nhạt và mọng, không còn nước đỏ</b>.' }
+  ],
+  tips: ['Mẻ quá tay là lỗi phổ biến nhất — 2 thìa canh cho 800 g thịt là trần, đừng hơn.', 'Nướng bằng lò thì đặt khay hứng mỡ ở tầng dưới và bật chế độ nướng trên, 10 phút mỗi mặt.'],
+  serveWith: 'Bún, rau sống, và mắm tôm chanh ớt hoặc mắm nêm.'
+},
+{
+  id: 'lau-ga-nam', name: 'Lẩu gà nấm', cat: 'lau', role: 'ngoai', diff: 2, serves: 4, prep: 40,
+  tags: ['thịt gà', 'nấm'],
+  why: 'Nồi lẩu dễ nhất vì nước dùng chính là nước luộc gà — không phải ninh xương riêng, không cần gia vị lạ.',
+  ing: [
+    { n: 'Gà ta', q: 1200, u: 'g', per: { n: 1200, l: 'con gà nhỏ' }, note: 'Chặt miếng vừa gắp. Giữ lại xương cổ, cánh để ninh nước.', r: 'main' },
+    { n: 'Nấm hỗn hợp (kim châm, đùi gà, hương)', q: 400, u: 'g', per: { n: 200, l: 'gói ở siêu thị' }, r: 'veg' },
+    { n: 'Ngải cứu (hoặc rau cải)', q: 300, u: 'g', per: { n: 280, l: 'mớ' }, note: 'Ngải cứu đắng — ai không quen thì thay bằng cải thảo.', r: 'veg' },
+    { n: 'Nước', q: 2500, u: 'ml', per: { n: 250, l: 'bát con' }, r: 'main' },
+    { n: 'Gừng', q: 1, u: 'củ', note: 'Nướng sơ cho thơm.', r: 'season' },
+    { n: 'Hành khô', q: 3, u: 'củ', note: 'Nướng sơ cùng gừng.', r: 'season' },
+    { n: 'Sả', q: 3, u: 'cây', r: 'veg' },
+    { n: 'Muối', q: 1.5, u: 'thìa cà phê', r: 'season' },
+    { n: 'Nước mắm', q: 2, u: 'thìa canh', r: 'season' },
+    { n: 'Bún hoặc mì', q: 600, u: 'g', per: { n: 150, l: 'phần cho một người' }, r: 'main' }
+  ],
+  steps: [
+    { t: 'Nướng gừng hành', d: 'Nướng gừng và hành khô trên bếp cho cháy xém vỏ, cạo sạch phần đen rồi đập dập.', m: 6, heat: 'Lửa to', cue: 'Vỏ <b>cháy xém đen và bốc mùi thơm ngọt</b>. Đây là bước làm nước dùng trong và thơm, bỏ qua thì nước nhạt mùi.' },
+    { t: 'Ninh nước dùng', d: 'Cho xương cổ cánh + gừng hành nướng + sả vào 2,5 lít nước, đun sôi rồi hạ nhỏ, hớt bọt kỹ.', m: 25, heat: 'Lửa to → liu riu', cue: 'Nước <b>trong, ánh vàng nhạt, không còn bọt xám</b>. Sôi sùng sục là nước đục — phải giữ liu riu.' },
+    { t: 'Nêm nước lẩu', d: 'Nêm muối và mắm. Nếm: nước lẩu phải hơi nhạt hơn mức bạn muốn.', m: 3, heat: 'Lửa nhỏ', cue: 'Vị <b>ngọt xương rõ, mặn vừa phải</b>. Nêm vừa miệng ngay bây giờ thì lúc nhúng rau xong sẽ mặn chát.' },
+    { t: 'Bày bàn', d: 'Xếp gà sống, nấm, rau và bún ra đĩa riêng. Chuyển nước lẩu sang nồi trên bếp từ.', m: 6, heat: '—', cue: 'Nước lẩu <b>sôi lăn tăn liên tục ở giữa bàn</b> — chưa sôi thì chưa nhúng gì.' },
+    { t: 'Nhúng theo thứ tự', d: 'Thả gà trước cho ngọt thêm nước, rồi nấm, rau cuối cùng.', m: 8, heat: 'Lửa vừa', cue: 'Gà chín khi <b>thịt tách khỏi xương dễ và nước xiên ra trong</b>. Nấm chín khi mềm và trong. Rau thả xong đếm 30 giây là vớt.' }
+  ],
+  tips: ['Không thả hết rau vào nồi một lúc — nhúng đến đâu ăn đến đó, nếu không nồi nước sẽ chua và đục.', 'Chấm gà bằng muối tiêu chanh hoặc muối ớt xanh, đừng dùng nước mắm mặn vì nước lẩu đã đậm.'],
+  serveWith: 'Bún tươi hoặc mì trứng. Nồi cho 4 người ngồi ăn khoảng một tiếng.'
+},
+{
+  id: 'lau-thai-hai-san', name: 'Lẩu Thái hải sản', cat: 'lau', role: 'ngoai', diff: 2, serves: 4, prep: 45,
+  tags: ['tôm', 'mực', 'ngao/sò'],
+  why: 'Toàn bộ độ khó nằm ở việc cân bốn vị chua – cay – mặn – ngọt trong nồi nước, chứ hải sản chỉ nhúng là chín.',
+  ing: [
+    { n: 'Hải sản hỗn hợp (tôm, mực, ngao)', q: 800, u: 'g', per: { n: 200, l: 'phần cho một người' }, r: 'main' },
+    { n: 'Xương ống (hoặc xương gà)', q: 500, u: 'g', per: { n: 500, l: 'khúc bằng bắp tay' }, r: 'main' },
+    { n: 'Nước', q: 2500, u: 'ml', per: { n: 250, l: 'bát con' }, r: 'main' },
+    { n: 'Sả', q: 5, u: 'cây', note: 'Đập dập, cắt khúc.', r: 'veg' },
+    { n: 'Riềng', q: 50, u: 'g', per: { n: 50, l: 'củ bằng ngón cái' }, note: 'Thái lát.', r: 'veg' },
+    { n: 'Lá chanh', q: 10, u: 'lá', r: 'herb' },
+    { n: 'Cà chua', q: 3, u: 'quả', r: 'veg' },
+    { n: 'Dứa (thơm)', q: 0.5, u: 'quả', r: 'veg' },
+    { n: 'Sa tế', q: 2, u: 'thìa canh', note: 'Cho từ từ, nếm dần.', r: 'season' },
+    { n: 'Nước cốt chanh', q: 3, u: 'thìa canh', note: 'Vắt sau cùng, ngoài bếp.', r: 'season' },
+    { n: 'Nước mắm', q: 3, u: 'thìa canh', r: 'season' },
+    { n: 'Đường', q: 1, u: 'thìa canh', r: 'season' },
+    { n: 'Nấm và rau nhúng', q: 600, u: 'g', per: { n: 150, l: 'phần cho một người' }, r: 'veg' },
+    { n: 'Bún', q: 600, u: 'g', per: { n: 150, l: 'phần cho một người' }, r: 'main' }
+  ],
+  steps: [
+    { t: 'Ninh nước xương', d: 'Chần xương qua nước sôi, rửa lại, rồi ninh với 2,5 lít nước, hớt bọt liên tục.', m: 30, heat: 'Lửa to → liu riu', cue: 'Nước <b>trong và không còn bọt nâu</b>. Bỏ bước chần là nước đục suốt cả nồi.' },
+    { t: 'Thả nhóm tạo mùi', d: 'Cho sả, riềng, lá chanh vò, cà chua bổ múi và dứa vào.', m: 8, heat: 'Lửa vừa', cue: 'Nước <b>ngả màu cam nhạt và bốc mùi sả – lá chanh rõ rệt</b> khi ghé mũi vào.' },
+    { t: 'Nêm ba vị trên bếp', d: 'Cho mắm, đường và sa tế. Nếm sau mỗi lần thêm sa tế.', m: 5, heat: 'Lửa nhỏ', cue: 'Vị <b>mặn – ngọt – cay đã cân, nhưng chưa chua</b>. Đừng vắt chanh lúc này: đun sôi chanh sẽ đắng.' },
+    { t: 'Vắt chanh ngoài bếp', d: 'Bắc nồi ra khỏi bếp, vắt nước cốt chanh vào, khuấy đều rồi nếm lần cuối.', m: 2, heat: 'Tắt bếp', cue: 'Vị <b>chua bật lên đầu lưỡi, cay lắng ở cuống họng</b>. Nhạt thì thêm mắm, gắt thì thêm nửa bát nước nóng.' },
+    { t: 'Nhúng hải sản', d: 'Chuyển nồi ra bàn, nhúng ngao trước, rồi tôm, mực cuối cùng.', m: 8, heat: 'Lửa vừa', cue: 'Ngao <b>há miệng</b>, tôm <b>cong chữ C và đỏ đều</b>, mực <b>vừa cong lại là vớt</b> — mực để trong nồi quá 1 phút là dai.' }
+  ],
+  tips: ['Vắt chanh khi nồi đã nhấc khỏi bếp — đây là khác biệt lớn nhất giữa nồi lẩu Thái ngon và nồi bị đắng.', 'Nêm nhạt hơn bình thường vì hải sản và rau sẽ tiết mặn và nước ra nồi.'],
+  serveWith: 'Bún tươi, rau muống chẻ, cải thảo, nấm kim châm.'
+},
+{
+  id: 'lau-rieu-cua-bap-bo', name: 'Lẩu riêu cua bắp bò', cat: 'lau', role: 'ngoai', diff: 3, serves: 4, prep: 60,
+  tags: ['cua', 'thịt bò', 'cà chua'],
+  why: 'Khó nhất trong các nồi lẩu: phải gạn được gạch cua đóng thành tảng mà không vỡ, giống canh cua nhưng ở quy mô nồi lẩu.',
+  ing: [
+    { n: 'Cua đồng xay', q: 700, u: 'g', per: { n: 350, l: 'bát con cua đã xay' }, note: 'Mua xay sẵn ngoài chợ, nhớ xin cả gạch.', r: 'main' },
+    { n: 'Bắp bò', q: 500, u: 'g', per: { n: 125, l: 'phần cho một người' }, note: 'Thái lát mỏng ngang thớ, để ngăn đá 20 phút cho dễ thái.', r: 'main' },
+    { n: 'Đậu phụ', q: 4, u: 'bìa', note: 'Rán vàng, cắt miếng vuông.', r: 'main' },
+    { n: 'Cà chua', q: 5, u: 'quả', note: 'Bổ múi cau.', r: 'veg' },
+    { n: 'Giấm bỗng (hoặc mẻ)', q: 3, u: 'thìa canh', note: 'Thứ tạo vị chua đặc trưng — không thay bằng chanh được.', r: 'season' },
+    { n: 'Nước', q: 2500, u: 'ml', per: { n: 250, l: 'bát con' }, r: 'main' },
+    { n: 'Hành khô', q: 3, u: 'củ', r: 'season' },
+    { n: 'Nước mắm', q: 2, u: 'thìa canh', r: 'season' },
+    { n: 'Muối', q: 1, u: 'thìa cà phê', r: 'season' },
+    { n: 'Hành lá + tía tô', q: 8, u: 'nhánh', r: 'herb' },
+    { n: 'Bún', q: 800, u: 'g', per: { n: 200, l: 'phần cho một người' }, r: 'main' },
+    { n: 'Rau nhúng (rau muống chẻ, hoa chuối)', q: 500, u: 'g', per: { n: 125, l: 'phần cho một người' }, r: 'veg' }
+  ],
+  steps: [
+    { t: 'Lọc cua', d: 'Hoà cua xay với 1,5 lít nước và ½ thìa cà phê muối, bóp kỹ rồi lọc qua rây, bỏ bã. Lọc lại lần hai cho sạch.', m: 15, heat: '—', cue: 'Nước lọc <b>xám đục đều, không còn lợn cợn vỏ</b> khi nghiêng bát. Bã trên rây gần như khô.' },
+    { t: 'Đun cho gạch nổi — không khuấy', d: 'Đun nước cua lửa vừa. Khi bắt đầu nóng thì <b>tuyệt đối không khuấy</b>, chỉ dùng đũa gạt nhẹ đáy nồi một lần.', m: 12, heat: 'Lửa vừa', cue: 'Gạch cua <b>kết lại thành từng tảng nổi lên và nước bên dưới trong ra</b>. Khuấy một cái là tảng vỡ vụn, không gom lại được nữa.' },
+    { t: 'Vớt gạch để riêng', d: 'Nhẹ tay vớt hết tảng gạch ra bát, giữ nguyên nồi nước dưới.', m: 4, heat: 'Lửa nhỏ', cue: 'Bát gạch <b>còn nguyên tảng, không tan ra nước</b>. Nồi nước bên dưới trong hơn hẳn lúc đầu.' },
+    { t: 'Chưng gạch cua', d: 'Phi hành khô, cho phần gạch mai cua (nếu có) và một nửa chỗ cà chua vào xào cho ra màu, rồi trút vào nồi nước.', m: 8, heat: 'Lửa vừa', cue: 'Chảo <b>ánh màu vàng cam và dầu tách ra</b> — đó là màu của nồi lẩu riêu, không phải màu cà chua thường.' },
+    { t: 'Nêm chua', d: 'Cho nốt cà chua, đậu rán, nêm mắm, muối và giấm bỗng. Nếm dần.', m: 8, heat: 'Lửa nhỏ', cue: 'Vị <b>chua thanh dịu chứ không gắt</b>, ngọt cua rõ. Cho giấm bỗng từng thìa một, chua quá thì không lùi lại được.' },
+    { t: 'Bày và nhúng', d: 'Chuyển ra nồi lẩu, thả tảng gạch lên mặt, rắc hành lá tía tô. Nhúng bắp bò và rau khi ăn.', m: 6, heat: 'Lửa vừa', cue: 'Bắp bò <b>vừa đổi màu nâu hồng là gắp ra ngay</b> — để trong nồi thêm 30 giây là dai. Tảng gạch nổi nguyên trên mặt nồi.' }
+  ],
+  tips: ['Không khuấy khi đun nước cua — đây là điều duy nhất quyết định nồi lẩu này thành hay bại.', 'Giấm bỗng mới cho đúng vị Bắc; thay bằng chanh hay giấm gạo sẽ thành một món khác hẳn.'],
+  serveWith: 'Bún, rau muống chẻ, hoa chuối thái, tía tô. Có thể thêm chả cá hoặc lòng non.'
+},
+{
+  id: 'mien-xao-cua', name: 'Miến xào cua bể', cat: 'xao', role: 'ngoai', diff: 2, serves: 4, prep: 30,
+  tags: ['cua', 'ghẹ'],
+  why: 'Cả món hỏng hay không nằm ở sợi miến: ngâm quá tay là nát bét trong chảo, không cứu được bằng bất cứ cách nào.',
+  ing: [
+    { n: 'Cua bể (hoặc ghẹ)', q: 800, u: 'g', per: { n: 400, l: 'con bằng bàn tay xoè' }, note: 'Hấp chín trước rồi gỡ lấy thịt và gạch.', r: 'main' },
+    { n: 'Miến dong', q: 200, u: 'g', per: { n: 50, l: 'bó bằng ngón tay cái' }, note: 'Ngâm nước lạnh, không ngâm nước nóng.', r: 'main' },
+    { n: 'Hành tây', q: 1, u: 'củ', note: 'Thái múi cau.', r: 'veg' },
+    { n: 'Cà rốt', q: 1, u: 'củ', note: 'Thái sợi bằng que tăm.', r: 'veg' },
+    { n: 'Giá đỗ', q: 150, u: 'g', per: { n: 150, l: 'nắm đầy hai bàn tay' }, r: 'veg' },
+    { n: 'Cần tây (hoặc cần ta)', q: 4, u: 'nhánh', note: 'Cắt khúc bằng đốt ngón tay.', r: 'veg' },
+    { n: 'Hành khô', q: 2, u: 'củ', r: 'season' },
+    { n: 'Nước mắm', q: 1.5, u: 'thìa canh', r: 'season' },
+    { n: 'Dầu hào', q: 1, u: 'thìa canh', r: 'season' },
+    { n: 'Hạt tiêu', q: 1, u: 'thìa cà phê', r: 'season' },
+    { n: 'Dầu ăn', q: 3, u: 'thìa canh', r: 'season' }
+  ],
+  steps: [
+    { t: 'Hấp cua, gỡ thịt', d: 'Hấp cua với sả gừng 15 phút, gỡ lấy thịt càng và thân, giữ riêng phần gạch.', m: 18, heat: 'Lửa to', cue: 'Thịt cua <b>trắng đục, tách khỏi vỏ thành thớ</b>. Gỡ lúc còn ấm thì dễ, để nguội hẳn thì thịt bám vỏ.' },
+    { t: 'Ngâm miến đúng độ', d: 'Ngâm miến trong nước lạnh, vớt ra để ráo và cắt đôi cho dễ đảo.', m: 6, heat: '—', cue: 'Sợi miến <b>mềm dẻo nhưng bẻ vẫn thấy cứng ở lõi</b>. Ngâm đến khi mềm hoàn toàn là vào chảo sẽ nát thành hồ.' },
+    { t: 'Xào rau củ trước', d: 'Phi hành khô, cho cà rốt rồi hành tây vào xào lửa to.', m: 4, heat: 'Lửa to', cue: 'Cà rốt <b>mềm ở mép nhưng còn giòn ở giữa</b>, hành tây trong lại mà chưa ra nước.' },
+    { t: 'Xào gạch cua', d: 'Gạt rau sang một bên, cho gạch cua vào chỗ dầu nóng, đảo cho dậy mùi rồi trộn lại.', m: 2, heat: 'Lửa vừa', cue: 'Gạch <b>chuyển vàng cam đậm và dầu trong chảo ánh màu cam</b> — đó là màu sẽ nhuộm cho cả đĩa miến.' },
+    { t: 'Cho miến, đảo nhanh', d: 'Trút miến vào, nêm mắm và dầu hào rưới quanh thành chảo, đảo bằng đũa dài và hất chứ đừng ngoáy.', m: 4, heat: 'Lửa to', cue: 'Sợi miến <b>ngả màu nâu cam đều và tơi rời, không dính thành cục</b>. Dính cục thì rưới thêm 1 thìa dầu, đừng thêm nước.' },
+    { t: 'Trả thịt cua và giá', d: 'Cho thịt cua, giá đỗ và cần tây vào, đảo 30 giây rồi tắt bếp, rắc tiêu.', m: 2, heat: 'Lửa to', cue: 'Giá <b>vừa mềm mà vẫn trắng và giòn</b>. Thịt cua chỉ cần nóng lại — đảo lâu là tơi vụn hết.' }
+  ],
+  tips: ['Ngâm miến bằng nước lạnh và canh cho lõi còn cứng — đây là điểm quyết định duy nhất của món này.', 'Nêm bằng cách rưới quanh thành chảo nóng chứ không đổ thẳng vào miến, như vậy gia vị dậy mùi và không làm miến ướt một chỗ.'],
+  serveWith: 'Ăn nóng, vắt thêm chanh. Món cỗ hoặc món nhậu, không ăn cùng cơm.'
+}
+);
+
+/* ---------- MÂM GỢI Ý ---------- */
+var COMBOS = [
+  { name: 'Mâm cơm tối gọn nhẹ', note: 'Không món nào cần ninh — nấu song song xong trong khoảng 45 phút. Bắt đầu bằng nồi cơm.', items: [
+      { id: 'thit-kho-tieu', when: 'Bắt đầu ngay — ướp rồi kho, để đó' },
+      { id: 'canh-thit-bam-ca-chua', when: 'Nấu khi thịt đang kho' },
+      { id: 'rau-muong-xao-toi', when: 'Xào cuối cùng, bưng ra ngay' } ] },
+  { name: 'Mâm cơm Bắc cổ điển', note: 'Cặp thịt luộc – mắm tôm – canh cua, ăn nguội.', items: [
+      { id: 'canh-cua-rau-day-muop', when: 'Lọc cua và nấu trước, để nguội' },
+      { id: 'thit-ba-chi-luoc', when: 'Luộc song song, ngâm nước đá' },
+      { id: 'mam-tom-chanh-ot', when: 'Đánh lúc sắp ăn' },
+      { id: 'dua-gop', when: 'Ngâm từ đầu, 15 phút là xong' } ] },
+  { name: 'Mâm cơm chủ nhật', note: 'Có một món cần thời gian — thịt kho tàu — nên khởi động sớm.', items: [
+      { id: 'thit-kho-tau', when: 'Ướp và bắc lên bếp trước 90 phút' },
+      { id: 'canh-suon-khoai-tay-ca-rot', when: 'Ninh sườn khi thịt đang kho' },
+      { id: 'nom-su-hao-ca-rot', when: 'Bóp muối sớm, trộn lúc sắp ăn' } ] },
+  { name: 'Mâm không thịt', note: 'Đủ đạm từ đậu, trứng và nấm.', items: [
+      { id: 'dau-sot-ca-chua', when: 'Rán đậu trước, om sau' },
+      { id: 'cai-chip-xao-nam', when: 'Chần rau khi đang om đậu' },
+      { id: 'canh-bi-dao-tom-kho', when: 'Ngâm tôm khô từ đầu' } ] },
+  { name: 'Mâm hải sản', note: 'Ngao ngâm trước nhất vì phải nhả cát 20 phút — trong lúc đó làm hai món kia.', items: [
+      { id: 'canh-ngao-chua', when: 'Ngâm ngao ngay, nấu canh trước' },
+      { id: 'ca-thu-sot-ca-chua', when: 'Rán cá và om khi canh đã xong' },
+      { id: 'rau-muong-xao-toi', when: 'Xào cuối, bưng ra ngay' } ] },
+  { name: 'Cuối tuần quanh bếp than', note: 'Không ăn với cơm. Ướp thịt từ sáng, chiều chỉ việc quạt than.', items: [
+      { id: 'ba-chi-nuong-rieng-me', when: 'Ướp trước 3 tiếng' },
+      { id: 'ga-nuong-muoi-ot', when: 'Ướp cùng lúc, nướng sau thịt' },
+      { id: 'hai-san-nuong-mo-hanh', when: 'Làm mỡ hành trước, nướng sau cùng' },
+      { id: 'oc-luoc-sa-ot', when: 'Ngâm ốc từ đầu, luộc lúc sắp ăn' } ] }
+];
+/* ============================================================
+   ỨNG DỤNG
+   ============================================================ */
+(function () {
+  /* ---- theme: shared with the rest of the site ---- */
+  var root = document.documentElement;
+  function applyTheme(dark) { root.classList.toggle('dark', dark); }
+  var saved = null;
+  try { saved = localStorage.getItem('hub-theme'); } catch (e) {}
+  applyTheme(saved === 'dark');
+  var toggle = document.getElementById('theme-toggle');
+  if (toggle) toggle.addEventListener('click', function () {
+    var dark = !root.classList.contains('dark');
+    applyTheme(dark);
+    try { localStorage.setItem('hub-theme', dark ? 'dark' : 'light'); } catch (e) {}
+  });
+
+  /* ---- helpers ---- */
+  function norm(s) {
+    return String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd');
+  }
+  function byId(id) { return document.getElementById(id); }
+  function el(tag, cls, html) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (html != null) n.innerHTML = html;
+    return n;
+  }
+  function catOf(k) { for (var i = 0; i < CATS.length; i++) if (CATS[i].k === k) return CATS[i]; return CATS[0]; }
+  function roleOf(k) { for (var i = 0; i < ROLES.length; i++) if (ROLES[i].k === k) return ROLES[i]; return ROLES[0]; }
+  function diffLabel(d) { return d === 1 ? 'Dễ' : d === 2 ? 'Vừa' : 'Khó'; }
+  function totalMin(r) { var t = 0; for (var i = 0; i < r.steps.length; i++) t += (r.steps[i].m || 0); return t; }
+  function timeText(m) {
+    if (m < 60) return m + ' phút';
+    var h = Math.floor(m / 60), r = m % 60;
+    return h + ' giờ' + (r ? ' ' + r + '′' : '');
+  }
+  function dots(d) {
+    var s = '<span class="mc-dots">';
+    for (var i = 1; i <= 3; i++) s += '<i class="' + (i <= d ? 'on' : '') + '"></i>';
+    return s + '</span>';
+  }
+  function fmtNum(n) {
+    var r = Math.round(n * 100) / 100;
+    var i = Math.floor(r + 1e-9), f = Math.round((r - i) * 100);
+    var fr = { 25: '¼', 50: '½', 75: '¾' }[f];
+    if (fr) return (i > 0 ? i : '') + fr;
+    if (Math.abs(r - Math.round(r)) < 0.01) return String(Math.round(r));
+    return String(r).replace('.', ',');
+  }
+  function roundQty(q, u) {
+    if (u === 'g' || u === 'ml') {
+      if (q >= 100) return Math.round(q / 10) * 10;
+      if (q >= 20) return Math.round(q / 5) * 5;
+      return Math.round(q);
+    }
+    return Math.round(q * 4) / 4;
+  }
+  function qtyText(ing, f) {
+    var q = ing.q * f;
+    if (ing.u === 'g' && q >= 1000) return fmtNum(q / 1000) + ' kg';
+    if (ing.u === 'ml' && q >= 1000) return fmtNum(q / 1000) + ' lít';
+    return fmtNum(roundQty(q, ing.u)) + ' ' + ing.u;
+  }
+  function visText(ing, f) {
+    if (!ing.per) return '';
+    var c = (ing.q * f) / ing.per.n;
+    c = c >= 1 ? Math.round(c * 2) / 2 : Math.round(c * 4) / 4;
+    if (c <= 0) c = 0.25;
+    return '≈ ' + fmtNum(c) + ' ' + ing.per.l;
+  }
+
+  /* ---- index for search ----
+     Hai điều làm bộ tìm kiếm tiếng Việt không bị nhiễu:
+     1) khớp theo *từ*, không phải chuỗi con — bỏ dấu xong thì "kho / khô / khó /
+        không" giống hệt nhau, tìm chuỗi con sẽ trả về gần hết trang;
+     2) giữ cả bản CÓ DẤU — gõ có dấu thì lọc chặt theo dấu, gõ không dấu thì
+        bỏ qua dấu như bình thường.
+     Gia vị (hành khô, muối, đường, dầu…) không vào chỉ mục: món nào cũng có,
+     tìm theo chúng vô nghĩa mà lại làm nhiễu. */
+  var DIAC = /[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]/;
+  function toks(s) {
+    var seen = {}, out = [];
+    s.toLowerCase().split(/[^0-9a-zà-ỹđ]+/).forEach(function (t) {
+      if (t && !seen[t]) { seen[t] = 1; out.push(t); }
+    });
+    return out;
+  }
+  RECIPES.forEach(function (r) {
+    r.total = totalMin(r);
+    var parts = [r.name, catOf(r.cat).l, roleOf(r.role).l, diffLabel(r.diff)];
+    parts = parts.concat(r.tags || []);
+    r.ing.forEach(function (i) { if ((i.r || 'main') !== 'season') parts.push(i.n); });
+    r.steps.forEach(function (s) { parts.push(s.t); });
+    var head = parts.slice(0, parts.length - r.steps.length).join(' ');  // tên · loại · nguyên liệu
+    var raw = parts.join(' ');                                           // + tên các bước
+    r.tA = toks(raw);                    // có dấu
+    r.tP = toks(norm(raw));              // không dấu
+    r.sA = {}; r.tA.forEach(function (t) { r.sA[t] = 1; });
+    r.sP = {}; r.tP.forEach(function (t) { r.sP[t] = 1; });
+    r.hA = {}; toks(head).forEach(function (t) { r.hA[t] = 1; });
+    r.hP = {}; toks(norm(head)).forEach(function (t) { r.hP[t] = 1; });
+  });
+  /* khớp ở tên/loại/nguyên liệu đứng trước khớp ở tên bước */
+  function headScore(r, qt, acc) {
+    var set = acc ? r.hA : r.hP, n = 0;
+    for (var i = 0; i < qt.length; i++) if (set[qt[i]]) n++;
+    return n;
+  }
+  function hitExact(r, qt, acc) {
+    var set = acc ? r.sA : r.sP;
+    for (var i = 0; i < qt.length; i++) if (!set[qt[i]]) return false;
+    return true;
+  }
+  function hitPrefix(r, qt, acc) {
+    var list = acc ? r.tA : r.tP;
+    for (var i = 0; i < qt.length; i++) {
+      var found = false;
+      for (var j = 0; j < list.length; j++) if (list[j].indexOf(qt[i]) === 0) { found = true; break; }
+      if (!found) return false;
+    }
+    return true;
+  }
+
+  var ALL_TAGS = (function () {
+    var m = {};
+    RECIPES.forEach(function (r) { (r.tags || []).forEach(function (t) { m[t] = (m[t] || 0) + 1; }); });
+    return Object.keys(m).sort(function (a, b) { return m[b] - m[a] || a.localeCompare(b, 'vi'); });
+  })();
+
+  /* ---- filter state ---- */
+  var state = { q: '', cat: [], role: [], tag: [], diff: [], time: [], sort: 'diff' };
+
+  function chip(label, icon) {
+    var b = el('button', 'wb-cap mc-chip wb-cap--dashed');
+    b.innerHTML = (icon ? '<span class="wb-ico wb-ico--xs">' + icon + '</span> ' : '') + label;
+    b.setAttribute('data-on', 'false');
+    return b;
+  }
+  function paintChip(b) {
+    var on = b.getAttribute('data-on') === 'true';
+    b.classList.toggle('wb-cap--dashed', !on);
+    b.classList.toggle('wb-cap--solid', on);
+  }
+  function buildChips(hostId, list, key, getK, getL, getI) {
+    var host = byId(hostId);
+    list.forEach(function (it) {
+      var b = chip(getL(it), getI ? getI(it) : null);
+      b.addEventListener('click', function () {
+        var on = b.getAttribute('data-on') !== 'true';
+        b.setAttribute('data-on', String(on));
+        paintChip(b);
+        var k = getK(it), arr = state[key], i = arr.indexOf(k);
+        if (on && i < 0) arr.push(k);
+        if (!on && i > -1) arr.splice(i, 1);
+        render();
+      });
+      host.appendChild(b);
+    });
+  }
+  buildChips('fcat', CATS, 'cat', function (c) { return c.k; }, function (c) { return c.l; }, function (c) { return c.i; });
+  buildChips('frole', ROLES, 'role', function (c) { return c.k; }, function (c) { return c.l; });
+  buildChips('ftag', ALL_TAGS, 'tag', function (t) { return t; }, function (t) { return t; });
+  buildChips('fdiff', DIFFS, 'diff', function (d) { return d.k; }, function (d) { return d.l; });
+  buildChips('ftime', TIMES, 'time', function (t) { return t.k; }, function (t) { return t.l; });
+
+  function timeBucket(m) { return m <= 20 ? 'a' : m <= 45 ? 'b' : 'c'; }
+
+  function match(r) {
+    if (state.cat.length && state.cat.indexOf(r.cat) < 0) return false;
+    if (state.role.length && state.role.indexOf(r.role) < 0) return false;
+    if (state.diff.length && state.diff.indexOf(r.diff) < 0) return false;
+    if (state.time.length && state.time.indexOf(timeBucket(r.total)) < 0) return false;
+    if (state.tag.length) {
+      var ok = false;
+      state.tag.forEach(function (t) { if ((r.tags || []).indexOf(t) > -1) ok = true; });
+      if (!ok) return false;
+    }
+    return true;
+  }
+
+  var SORTERS = {
+    diff: function (a, b) { return a.diff - b.diff || a.total - b.total || a.name.localeCompare(b.name, 'vi'); },
+    time: function (a, b) { return a.total - b.total || a.diff - b.diff; },
+    few: function (a, b) { return a.ing.length - b.ing.length || a.diff - b.diff; },
+    az: function (a, b) { return a.name.localeCompare(b.name, 'vi'); }
+  };
+
+  /* ---- card ---- */
+  function card(r) {
+    var c = catOf(r.cat);
+    var b = el('button', 'wb-card wb-card--hover mc-card');
+    b.type = 'button';
+    var tags = (r.tags || []).slice(0, 3).map(function (t) { return '<span class="wb-tag wb-tag--sm">' + t.replace(/\s/g, '-') + '</span>'; }).join('');
+    var more = (r.tags || []).length > 3 ? '<span class="wb-tag wb-tag--sm">+' + ((r.tags || []).length - 3) + '</span>' : '';
+    b.innerHTML =
+      '<div class="mc-card__top">' +
+        '<span class="wb-cap wb-cap--sm"><span class="wb-ico wb-ico--xs">' + c.i + '</span> ' + c.l + '</span>' +
+        '<span class="wb-cap wb-cap--sm">' + dots(r.diff) + ' ' + diffLabel(r.diff) + '</span>' +
+      '</div>' +
+      '<h3 class="mc-card__name">' + r.name + '</h3>' +
+      '<p class="mc-card__why">' + (r.why || '') + '</p>' +
+      '<div class="wb-tags">' + tags + more + '</div>' +
+      '<div class="mc-card__foot">' +
+        '<span><span class="wb-ico">schedule</span> ' + timeText(r.total) + '</span>' +
+        '<span><span class="wb-ico">shopping_basket</span> ' + r.ing.length + ' thứ</span>' +
+        '<span><span class="wb-ico">format_list_numbered</span> ' + r.steps.length + ' bước</span>' +
+      '</div>';
+    b.addEventListener('click', function () { open(r); });
+    return b;
+  }
+
+  var grid = byId('grid'), empty = byId('empty'), count = byId('count');
+  byId('total').textContent = RECIPES.length;
+  function render() {
+    var base = RECIPES.filter(match);
+    var acc = DIAC.test(state.q);
+    var qt = toks(acc ? state.q : norm(state.q));
+    var list;
+    if (!qt.length) {
+      list = base;
+    } else {
+      /* khớp nguyên từ trước; không có mới nới ra khớp theo tiền tố (gõ dở) */
+      list = base.filter(function (r) { return hitExact(r, qt, acc); });
+      if (!list.length) list = base.filter(function (r) { return hitPrefix(r, qt, acc); });
+    }
+    var sorter = SORTERS[state.sort];
+    if (qt.length) {
+      list.forEach(function (r) { r._s = headScore(r, qt, acc); });
+      list = list.sort(function (a, b) { return b._s - a._s || sorter(a, b); });
+    } else {
+      list = list.sort(sorter);
+    }
+    grid.innerHTML = '';
+    list.forEach(function (r) { grid.appendChild(card(r)); });
+    count.textContent = list.length;
+    empty.classList.toggle('is-hidden', list.length > 0);
+    var on = state.cat.length + state.role.length + state.tag.length + state.diff.length + state.time.length;
+    byId('ftoggle-n').textContent = on ? ' · ' + on : '';
+  }
+
+  /* ---- thanh lọc gấp/mở ----
+     Cả rổ capsule chiếm 186px trên desktop và 470px trên điện thoại, mà nó lại dính
+     trên đầu màn hình — nên mặc định gấp lại ở mọi khổ, nhường chỗ cho danh sách món.
+     Nút "Bộ lọc" đếm sẵn số bộ lọc đang bật để không ai quên mình đang lọc gì.
+     Riêng trên điện thoại, sort + xoá lọc cũng chui vào panel cho hàng đầu đỡ chật. */
+  var fwrap = document.querySelector('.mc-filterwrap');
+  var fpanel = byId('fpanel'), fmore = byId('fmore'), ftoggle = byId('ftoggle'), frow1 = fmore.parentNode;
+  var mqNarrow = window.matchMedia('(max-width: 720px)');
+  function placeFmore() {
+    if (mqNarrow.matches) {
+      if (fmore.parentNode !== fpanel) fpanel.insertBefore(fmore, fpanel.firstChild);
+    } else if (fmore.parentNode !== frow1) {
+      frow1.insertBefore(fmore, ftoggle.nextSibling);
+    }
+  }
+  placeFmore();
+  if (mqNarrow.addEventListener) mqNarrow.addEventListener('change', placeFmore);
+  ftoggle.addEventListener('click', function () {
+    var isOpen = !fwrap.classList.contains('is-open');
+    fwrap.classList.toggle('is-open', isOpen);
+    ftoggle.setAttribute('aria-expanded', String(isOpen));
+  });
+
+  byId('q').addEventListener('input', function () { state.q = this.value.trim().toLowerCase(); render(); });
+  byId('sort').addEventListener('change', function () { state.sort = this.value; render(); });
+  byId('reset').addEventListener('click', function () {
+    state.q = ''; state.cat = []; state.role = []; state.tag = []; state.diff = []; state.time = [];
+    byId('q').value = '';
+    [].slice.call(document.querySelectorAll('.mc-chip')).forEach(function (b) { b.setAttribute('data-on', 'false'); paintChip(b); });
+    render();
+  });
+
+  /* ---- detail modal ---- */
+  var overlay = byId('detail'), current = null, factor = 1, stepIdx = 0;
+  var GROUPS = [
+    { k: 'main', l: 'Nguyên liệu chính' },
+    { k: 'veg', l: 'Rau & củ' },
+    { k: 'season', l: 'Gia vị' },
+    { k: 'herb', l: 'Rau thơm & phụ' }
+  ];
+
+  function renderIng() {
+    var host = byId('d-ing');
+    host.innerHTML = '';
+    GROUPS.forEach(function (g) {
+      var items = current.ing.filter(function (i) { return (i.r || 'main') === g.k; });
+      if (!items.length) return;
+      host.appendChild(el('p', 'mc-group', g.l));
+      items.forEach(function (i) {
+        var row = el('label', 'mc-ing wb-check');
+        var vis = visText(i, factor);
+        var extra = [vis ? '<span class="mc-eq">' + vis + '</span>' : '', i.note || ''].filter(Boolean).join(' · ');
+        row.innerHTML =
+          '<input type="checkbox">' +
+          '<span class="mc-ing__n">' + i.n + '</span>' +
+          '<span class="mc-ing__q">' + qtyText(i, factor) + '</span>' +
+          (extra ? '<span class="mc-ing__vis">' + extra + '</span>' : '');
+        row.querySelector('input').addEventListener('change', function () {
+          row.classList.toggle('is-got', this.checked);
+        });
+        host.appendChild(row);
+      });
+    });
+    byId('d-ingn').textContent = current.ing.length + ' thứ';
+  }
+
+  /* Đồng hồ chỉ hiện ở bước đang làm — trừ khi nó đang chạy cho một bước khác,
+     lúc đó bước ấy giữ luôn mặt đồng hồ để không phải đi tìm. */
+  function tdock(r, n, s) {
+    if (!(T.rid === r.id && T.step === n)) {
+      if (n !== stepIdx) return '';
+      return '<div class="mc-tdock">' +
+        '<button class="wb-btn wb-btn--sm" data-t="start"><span class="wb-ico wb-ico--sm">timer</span> Hẹn giờ ' + s.m + ' phút</button>' +
+        '<span class="wb-help" style="margin:0">Hết giờ sẽ kêu &amp; rung</span></div>';
+    }
+    var ms = tLeft(), pct = Math.max(0, Math.min(100, Math.round((1 - ms / (T.total || 1)) * 100)));
+    return '<div class="mc-tdock' + (T.done ? ' is-done' : '') + '">' +
+      '<span class="mc-live" id="t-live">' + (T.done ? 'Hết giờ' : clock(ms)) + '</span>' +
+      '<div class="wb-progress"><div class="wb-progress__bar" id="t-livebar" style="width:' + pct + '%"></div></div>' +
+      (T.done ? '' : '<button class="wb-btn wb-btn--ghost wb-btn--sm" data-t="toggle">' +
+        '<span class="wb-ico wb-ico--sm">' + (T.run ? 'pause' : 'play_arrow') + '</span> ' + (T.run ? 'Dừng' : 'Chạy tiếp') + '</button>') +
+      '<button class="wb-btn wb-btn--ghost wb-btn--sm" data-t="plus">+1 phút</button>' +
+      '<button class="wb-btn wb-btn--ghost wb-btn--sm" data-t="stop">Tắt</button>' +
+      '</div>';
+  }
+
+  function renderSteps() {
+    var host = byId('d-steps');
+    host.innerHTML = '';
+    current.steps.forEach(function (s, n) {
+      var li = el('li', 'wb-steps__item ' + (n < stepIdx ? 'is-done' : n === stepIdx ? 'is-active' : 'is-todo'));
+      var caps = '<span class="wb-cap wb-cap--sm"><span class="wb-ico wb-ico--xs">schedule</span> ' + s.m + ' phút</span>' +
+        (s.heat && s.heat !== '—' ? '<span class="wb-cap wb-cap--sm"><span class="wb-ico wb-ico--xs">local_fire_department</span> ' + s.heat + '</span>' : '');
+      li.innerHTML =
+        '<span class="wb-steps__marker">' + (n < stepIdx ? '<span class="wb-ico">check</span>' : (n + 1)) + '</span>' +
+        '<div class="wb-steps__content">' +
+          '<p class="wb-steps__title">' + s.t + '</p>' +
+          '<div class="mc-step-caps">' + caps + '</div>' +
+          '<p class="mc-step-d">' + s.d + '</p>' +
+          (s.cue ? '<p class="mc-step-cue"><b>Đạt khi:</b> ' + s.cue + '</p>' : '') +
+          tdock(current, n, s) +
+        '</div>';
+      li.addEventListener('click', function (e) {
+        var tb = e.target.closest('[data-t]');
+        if (!tb) { stepIdx = n; renderSteps(); return; }
+        e.stopPropagation();
+        var a = tb.getAttribute('data-t');
+        if (a === 'start') tStart(current, n);
+        else if (a === 'toggle') { if (T.run) { tPause(); } else { tResume(); } }
+        else if (a === 'plus') tPlus();
+        else if (a === 'stop') tStop();
+      });
+      host.appendChild(li);
+    });
+    var n = current.steps.length;
+    byId('d-prog').style.width = Math.round(stepIdx / n * 100) + '%';
+    byId('d-progn').textContent = stepIdx >= n ? 'xong ' + n + '/' + n : 'bước ' + (stepIdx + 1) + '/' + n;
+    byId('d-next').textContent = stepIdx >= n ? 'Nấu lại từ đầu' : 'Xong bước này';
+    byId('d-stepn').textContent = timeText(current.total);
+  }
+
+  function scrollActive() {
+    var a = byId('d-steps').querySelector('.is-active');
+    if (a) a.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }
+
+  byId('d-next').addEventListener('click', function () {
+    stepIdx = stepIdx >= current.steps.length ? 0 : stepIdx + 1;
+    renderSteps();
+    scrollActive();
+  });
+
+  /* ---- điện thoại: nguyên liệu / các bước là hai tab ---- */
+  var dTabs = byId('d-tabs'), dDetail = byId('d-detail');
+  function showPanel(p) {
+    dDetail.classList.toggle('is-ing', p === 'ing');
+    dDetail.classList.toggle('is-steps', p === 'steps');
+    [].slice.call(dTabs.children).forEach(function (b) {
+      b.classList.toggle('is-active', b.getAttribute('data-p') === p);
+    });
+  }
+  [].slice.call(dTabs.children).forEach(function (b) {
+    b.addEventListener('click', function () {
+      showPanel(b.getAttribute('data-p'));
+      byId('detail').querySelector('.mc-modal__body').scrollTop = 0;
+    });
+  });
+
+  function renderServe() {
+    [].slice.call(byId('d-serve').children).forEach(function (b) {
+      var s = Number(b.getAttribute('data-s'));
+      b.classList.toggle('is-active', Math.abs(s - current.serves * factor) < 0.01);
+    });
+  }
+  [].slice.call(byId('d-serve').children).forEach(function (b) {
+    b.addEventListener('click', function () {
+      factor = Number(b.getAttribute('data-s')) / current.serves;
+      renderServe(); renderIng();
+    });
+  });
+
+  function open(r) {
+    current = r; factor = 1; stepIdx = 0;
+    var c = catOf(r.cat);
+    byId('d-name').textContent = r.name;
+    byId('d-caps').innerHTML =
+      '<span class="wb-cap"><span class="wb-ico wb-ico--xs">' + c.i + '</span> ' + c.l + '</span>' +
+      '<span class="wb-cap">' + roleOf(r.role).l + '</span>' +
+      '<span class="wb-cap">' + dots(r.diff) + ' ' + diffLabel(r.diff) + '</span>' +
+      '<span class="wb-cap"><span class="wb-ico wb-ico--xs">schedule</span> ' + timeText(r.total) + '</span>' +
+      (r.tags || []).map(function (t) { return '<span class="wb-tag wb-tag--sm">' + t.replace(/\s/g, '-') + '</span>'; }).join('');
+    var extra = '';
+    if (r.tips && r.tips.length) {
+      extra += '<hr class="wb-divider" style="margin:20px 0 14px">' +
+        '<div class="mc-panel-h"><span class="wb-ico wb-ico--sm">tips_and_updates</span><span class="mc-panel-h__t">Mẹo &amp; lỗi hay gặp</span></div>' +
+        r.tips.map(function (t) { return '<p class="mc-tip">' + t + '</p>'; }).join('');
+    }
+    if (r.serveWith) {
+      extra += '<div class="wb-alert wb-alert--plain" style="margin-top:14px"><div class="wb-alert__body">' +
+        '<p class="wb-alert__title">Ăn cùng gì</p><p class="wb-alert__msg">' + r.serveWith + '</p></div></div>';
+    }
+    byId('d-extra').innerHTML = extra;
+    showPanel('ing');
+    renderServe(); renderIng(); renderSteps();
+    overlay.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+    byId('detail').querySelector('.mc-modal__body').scrollTop = 0;
+  }
+  function close() {
+    overlay.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+  overlay.addEventListener('click', function (e) {
+    if (e.target === overlay || e.target.closest('[data-modal-close]')) close();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && overlay.classList.contains('is-open')) close();
+    if (e.key === '/' && !overlay.classList.contains('is-open') && document.activeElement.tagName !== 'INPUT') {
+      e.preventDefault(); byId('q').focus();
+    }
+    if (overlay.classList.contains('is-open') && (e.key === 'j' || e.key === 'ArrowDown')) {
+      if (document.activeElement.tagName === 'INPUT') return;
+      e.preventDefault();
+      if (stepIdx < current.steps.length) { stepIdx++; renderSteps(); scrollActive(); }
+    }
+    if (overlay.classList.contains('is-open') && (e.key === 'k' || e.key === 'ArrowUp')) {
+      if (document.activeElement.tagName === 'INPUT') return;
+      e.preventDefault();
+      if (stepIdx > 0) { stepIdx--; renderSteps(); scrollActive(); }
+    }
+  });
+
+  /* =========================================================================
+     HẸN GIỜ
+     Một đồng hồ duy nhất cho cả trang. Ba quyết định đáng nói:
+     · Đếm theo mốc kết thúc (endAt) chứ không trừ dần mỗi giây — tắt màn hình,
+       chuyển tab hay bị trình duyệt bóp setInterval thì quay lại vẫn đúng giờ.
+     · Thanh đồng hồ nổi sống lâu hơn modal: đóng công thức, cuộn đi đâu vẫn thấy,
+       bấm vào là quay lại đúng bước đang canh.
+     · Hết giờ thì kêu + rung + đổi tiêu đề tab, và nhắc lại vài lần — người nấu
+       thường đang ở phòng khác chứ không nhìn màn hình.
+     ====================================================================== */
+  var T = { rid: null, dish: '', step: -1, title: '', total: 0, endAt: 0, left: 0, run: false, done: false };
+  var tickId = null, nagId = null, actx = null, wakeLock = null;
+  var pageTitle = document.title, tbar = byId('tbar');
+
+  function two(n) { return (n < 10 ? '0' : '') + n; }
+  function clock(ms) {
+    var s = Math.max(0, Math.round(ms / 1000)), h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60);
+    return (h ? h + ':' : '') + two(m) + ':' + two(s % 60);
+  }
+  /* Kẹp trong [0, total]: đồng hồ máy có thể bị chỉnh lùi (đổi múi giờ, đồng bộ
+     mạng) — không kẹp thì hẹn 2 phút hiện thành 33 phút. */
+  function tLeft() {
+    var ms = T.run ? T.endAt - Date.now() : T.left;
+    return Math.max(0, Math.min(ms, T.total));
+  }
+
+  function unlockAudio() {
+    try {
+      if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+      if (actx.state === 'suspended') actx.resume();
+    } catch (e) { actx = null; }
+  }
+  /* Ba tiếng "bíp" dựng bằng WebAudio — không tải file, chạy được cả khi mở bằng file:// */
+  function beep() {
+    if (!actx) return;
+    try {
+      if (actx.state === 'suspended') actx.resume();
+      var t0 = actx.currentTime;
+      [0, .42, .84].forEach(function (off) {
+        var o = actx.createOscillator(), g = actx.createGain();
+        o.type = 'sine'; o.frequency.setValueAtTime(880, t0 + off);
+        g.gain.setValueAtTime(0.0001, t0 + off);
+        g.gain.exponentialRampToValueAtTime(.3, t0 + off + .03);
+        g.gain.exponentialRampToValueAtTime(.0001, t0 + off + .34);
+        o.connect(g); g.connect(actx.destination);
+        o.start(t0 + off); o.stop(t0 + off + .36);
+      });
+    } catch (e) {}
+  }
+  function buzz() { try { if (navigator.vibrate) navigator.vibrate([320, 140, 320, 140, 520]); } catch (e) {} }
+
+  /* Tay dính dầu mỡ, không ai muốn chạm màn hình chỉ để nó khỏi tắt. */
+  function keepAwake(on) {
+    try {
+      if (on) {
+        if (wakeLock || !navigator.wakeLock) return;
+        navigator.wakeLock.request('screen').then(function (s) {
+          wakeLock = s;
+          s.addEventListener('release', function () { wakeLock = null; });
+        }).catch(function () {});
+      } else if (wakeLock) {
+        wakeLock.release(); wakeLock = null;
+      }
+    } catch (e) { wakeLock = null; }
+  }
+
+  function loop() { stopLoop(); tickId = setInterval(pulse, 250); }
+  function stopLoop() { if (tickId) { clearInterval(tickId); tickId = null; } }
+  function stopNag() { if (nagId) { clearInterval(nagId); nagId = null; } document.title = pageTitle; }
+  function pulse() {
+    if (T.run && Date.now() >= T.endAt) { tFinish(); return; }
+    paintTimer();
+  }
+
+  function tStart(r, n) {
+    var s = r.steps[n];
+    T.rid = r.id; T.dish = r.name; T.step = n; T.title = s.t;
+    T.total = s.m * 60000; T.left = T.total; T.endAt = Date.now() + T.total;
+    T.run = true; T.done = false;
+    tbar.classList.remove('is-done');
+    stopNag(); unlockAudio(); keepAwake(true); loop();
+    paintTimer(); renderSteps();
+  }
+  function tPause() {
+    if (!T.run) return;
+    T.left = tLeft(); T.run = false;
+    stopLoop(); keepAwake(false); paintTimer(); renderSteps();
+  }
+  function tResume() {
+    if (T.run || T.done || !T.rid) return;
+    T.endAt = Date.now() + T.left; T.run = true;
+    keepAwake(true); loop(); paintTimer(); renderSteps();
+  }
+  function tPlus() {
+    if (!T.rid) return;
+    T.total += 60000;
+    if (T.done) {
+      T.done = false; T.run = true; T.left = 60000; T.endAt = Date.now() + 60000;
+      tbar.classList.remove('is-done');
+      stopNag(); keepAwake(true); loop();
+    } else if (T.run) { T.endAt += 60000; } else { T.left += 60000; }
+    paintTimer(); renderSteps();
+  }
+  function tStop() {
+    T.rid = null; T.step = -1; T.run = false; T.done = false;
+    stopLoop(); stopNag(); keepAwake(false);
+    tbar.hidden = true; tbar.classList.remove('is-done');
+    document.body.classList.remove('mc-has-timer');
+    if (current) renderSteps();
+  }
+  function tFinish() {
+    T.run = false; T.left = 0; T.done = true;
+    stopLoop(); keepAwake(false);
+    tbar.classList.add('is-done');
+    document.title = '⏰ Hết giờ — ' + T.title;
+    beep(); buzz();
+    var k = 0;
+    nagId = setInterval(function () {
+      if (++k > 4) { if (nagId) { clearInterval(nagId); nagId = null; } return; }
+      beep(); buzz();
+    }, 15000);
+    paintTimer();
+    if (current && current.id === T.rid) renderSteps();
+  }
+
+  /* Chỉ sửa text, không dựng lại DOM — chạy 4 lần/giây. */
+  function paintTimer() {
+    if (!T.rid) { tbar.hidden = true; document.body.classList.remove('mc-has-timer'); return; }
+    var ms = tLeft(), txt = T.done ? 'Hết giờ' : clock(ms);
+    var pct = Math.max(0, Math.min(100, Math.round((1 - ms / (T.total || 1)) * 100)));
+    tbar.hidden = false;
+    document.body.classList.add('mc-has-timer');
+    byId('tb-time').textContent = txt;
+    byId('tb-dish').textContent = T.dish;
+    byId('tb-step').textContent = 'Bước ' + (T.step + 1) + ' · ' + T.title + (!T.run && !T.done ? ' · đang dừng' : '');
+    byId('tb-bar').style.width = pct + '%';
+    byId('tb-done').hidden = !T.done;
+    var p = byId('tb-pause');
+    p.hidden = T.done;
+    p.querySelector('.wb-ico').textContent = T.run ? 'pause' : 'play_arrow';
+    p.setAttribute('aria-label', T.run ? 'Tạm dừng' : 'Chạy tiếp');
+    var live = byId('t-live'); if (live) live.textContent = txt;
+    var lbar = byId('t-livebar'); if (lbar) lbar.style.width = pct + '%';
+  }
+
+  function gotoTimerStep(advance) {
+    var r = byIdMap[T.rid], n = T.step;
+    if (!r) return;
+    if (current !== r || !overlay.classList.contains('is-open')) open(r);
+    stepIdx = advance ? Math.min(n + 1, r.steps.length) : n;
+    renderSteps(); showPanel('steps'); scrollActive();
+  }
+
+  byId('tb-pause').addEventListener('click', function () { if (T.run) { tPause(); } else { tResume(); } });
+  byId('tb-plus').addEventListener('click', tPlus);
+  byId('tb-stop').addEventListener('click', tStop);
+  byId('tb-go').addEventListener('click', function () { stopNag(); gotoTimerStep(false); });
+  byId('tb-done').addEventListener('click', function () { stopNag(); gotoTimerStep(true); tStop(); });
+
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState !== 'visible') return;
+    if (T.run) { keepAwake(true); pulse(); }
+  });
+
+  /* ---- combos ---- */
+  var byIdMap = {};
+  RECIPES.forEach(function (r) { byIdMap[r.id] = r; });
+  var chost = byId('combos');
+  COMBOS.forEach(function (cb) {
+    var items = cb.items.map(function (x) { return { r: byIdMap[x.id], when: x.when }; }).filter(function (x) { return x.r; });
+    var card = el('div', 'wb-card');
+    var rows = items.map(function (x, n) {
+      return '<div class="mc-combo__row" data-open="' + x.r.id + '">' +
+        '<span class="wb-avatar wb-avatar--solid wb-avatar--sm">' + (n + 1) + '</span>' +
+        '<span><span class="mc-combo__n">' + x.r.name + '</span><br>' +
+        '<span class="wb-help" style="margin:0">' + x.when + '</span></span>' +
+        '<span class="mc-combo__t">' + timeText(x.r.total) + '</span></div>';
+    }).join('');
+    card.innerHTML =
+      '<div class="wb-card__head"><h4 class="wb-card__title">' + cb.name + '</h4></div>' +
+      '<div class="wb-card__body" style="padding-top:2px"><p class="wb-help" style="margin:0 0 4px">' + cb.note + '</p>' +
+      '<div class="mc-combo__list">' + rows + '</div></div>';
+    card.addEventListener('click', function (e) {
+      var row = e.target.closest('[data-open]');
+      if (row) open(byIdMap[row.getAttribute('data-open')]);
+    });
+    chost.appendChild(card);
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

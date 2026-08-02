@@ -5,6 +5,10 @@ name: Deploy site (build Cashy)
 # The web-builder component gallery is a second standalone Vite build, served at
 # /cashy-wb/ (separate from the app).
 #
+# `stuff/` is the attic (dead templates + retired experiments) — kept in git,
+# never published. `cashy/` is excluded from the rsync because it is built
+# separately, which also keeps its dev docs (docs/, features/) off the web.
+#
 # One-time setup: repo Settings → Pages → Build and deployment → Source =
 # "GitHub Actions" (instead of "Deploy from a branch").
 
@@ -59,6 +63,8 @@ jobs:
             --exclude '.claude' \
             --exclude '_site' \
             --exclude 'cashy' \
+            --exclude 'stuff' \
+            --exclude '.DS_Store' \
             ./ _site/
           mkdir -p _site/cashy
           cp -r cashy/dist/. _site/cashy/

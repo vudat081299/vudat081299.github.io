@@ -415,3 +415,4 @@ A handoff is a **temporary work queue**, not project documentation.
 | [docs/cashy-v1-spec.md](docs/cashy-v1-spec.md) | v1 use-case spec (native-iOS-flavoured) |
 | [docs/wallets-plan.md](docs/wallets-plan.md) | wallets **design record** (all five phases shipped; see [features/wallets.md](docs/features/wallets.md)) |
 | [docs/loans-plan.md](docs/loans-plan.md) | loans (owe / owed) **design record** (all phases shipped; see [features/loans.md](docs/features/loans.md)) |
+| [docs/agentic-workflow/](docs/agentic-workflow/) | kv-pipeline artifacts (spec → tech-design → plan) for the **loan-redesign programme**; its [README](docs/agentic-workflow/README.md) is the **open handoff** for slice B (transaction-linked loans, migration v10) + slice C. BDD scenarios live in [features/](features/) |
