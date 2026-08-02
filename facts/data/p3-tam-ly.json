@@ -1,0 +1,1970 @@
+[
+  {
+    "id": "tl-201",
+    "cat": "tam-ly",
+    "sub": "thien-kien",
+    "t": "Bạn đánh giá một việc đáng làm hơn khi đã bỏ công vào nó, kể cả khi công đó vô ích",
+    "s": "Trong thí nghiệm, người phải làm một thủ tục rườm rà để vào một nhóm lại đánh giá nhóm đó cao hơn người vào dễ dàng. Cơ chế là biện minh cho nỗ lực: đầu bạn không thích ý 'tôi vừa mất nhiều công cho một thứ tầm thường', nên nó nâng giá trị thứ đó lên.",
+    "tags": [
+      "bien-minh",
+      "no-luc"
+    ],
+    "src": "Aronson & Mills, Journal of Abnormal and Social Psychology (1959)"
+  },
+  {
+    "id": "tl-202",
+    "cat": "tam-ly",
+    "sub": "thien-kien",
+    "t": "Cùng một xác suất nghe khác nhau hoàn toàn khi đổi từ phần trăm sang số người",
+    "s": "'Nguy cơ 0,1%' và '1 trên 1.000 người' mô tả cùng một điều, nhưng dạng thứ hai làm người ta hình dung ra một con người cụ thể nên phản ứng mạnh hơn. Cách trình bày này được dùng có ý thức trong cả truyền thông y tế và quảng cáo bảo hiểm.",
+    "tags": [
+      "xac-suat",
+      "dong-khung"
+    ],
+    "src": "Slovic, Monahan & MacGregor, Law and Human Behavior (2000)"
+  },
+  {
+    "id": "tl-203",
+    "cat": "tam-ly",
+    "sub": "thien-kien",
+    "t": "Người ta ước lượng số lượng theo con số được nêu ra trước, kể cả khi biết con số đó là bịa",
+    "s": "Trong thí nghiệm neo, người tham gia xem một số quay ra từ vòng xoay rõ ràng ngẫu nhiên rồi vẫn ước lượng lệch về phía số đó. Hiệu ứng vẫn còn khi họ được cảnh báo trước — nghĩa là biết mình đang bị neo không đủ để chống lại nó.",
+    "tags": [
+      "neo",
+      "uoc-luong"
+    ],
+    "src": "Tversky & Kahneman, Science (1974); Wilson và cộng sự, JEP: General (1996)"
+  },
+  {
+    "id": "tl-204",
+    "cat": "tam-ly",
+    "sub": "thien-kien",
+    "t": "Thứ tự trình bày quyết định lựa chọn nhiều hơn nội dung, khi các phương án gần nhau",
+    "s": "Món đứng đầu và món đứng cuối được chọn nhiều hơn món ở giữa; ứng viên đứng đầu phiếu bầu được lợi vài phần trăm. Với các lựa chọn thật sự gần nhau, hiệu ứng vị trí đủ lớn để đảo kết quả — nên cách chống là xáo thứ tự hoặc chấm điểm từng phương án riêng.",
+    "tags": [
+      "vi-tri",
+      "lua-chon"
+    ],
+    "src": "Miller & Krosnick, Public Opinion Quarterly (1998); nghiên cứu về primacy và recency"
+  },
+  {
+    "id": "tl-205",
+    "cat": "tam-ly",
+    "sub": "thien-kien",
+    "t": "Bạn nhớ và tin những gì khớp với niềm tin sẵn có, và bạn tìm kiếm chúng mà không nhận ra",
+    "s": "Thiên kiến xác nhận hoạt động ở ba tầng: chọn nguồn nào để đọc, giải nghĩa dữ liệu mơ hồ theo hướng nào, và nhớ lại phần nào. Vì cả ba tầng đều ngầm, cảm giác 'tôi đã xem xét khách quan' không phải bằng chứng gì cả.",
+    "tags": [
+      "xac-nhan",
+      "thien-kien"
+    ],
+    "src": "Raymond Nickerson, Confirmation Bias, Review of General Psychology (1998)"
+  },
+  {
+    "id": "tl-206",
+    "cat": "tam-ly",
+    "sub": "thien-kien",
+    "t": "Người ta đòi bằng chứng khắt khe hơn nhiều với kết luận mình không thích",
+    "s": "Cùng một nghiên cứu được đánh giá là chặt chẽ hay yếu tuỳ theo kết luận có khớp với quan điểm người đọc hay không. Trong thí nghiệm về án tử hình, cả hai phía đều thấy nghiên cứu ủng hộ mình thuyết phục hơn — và sau khi đọc cả hai, quan điểm hai bên xa nhau hơn trước.",
+    "tags": [
+      "danh-gia",
+      "phan-cuc"
+    ],
+    "src": "Lord, Ross & Lepper, Journal of Personality and Social Psychology (1979)"
+  },
+  {
+    "id": "tl-207",
+    "cat": "tam-ly",
+    "sub": "thien-kien",
+    "t": "Thông tin đầu tiên bạn nghe về một người định hình cách bạn đọc mọi thông tin sau đó",
+    "s": "Solomon Asch đọc cùng một danh sách tính từ theo hai thứ tự ngược nhau và nhận được hai chân dung khác hẳn. Điều này khiến thứ tự giới thiệu trong tuyển dụng, họp và giới thiệu bạn bè có ảnh hưởng thật, và nó cũng là lý do phỏng vấn nên chấm từng tiêu chí riêng.",
+    "tags": [
+      "an-tuong-dau",
+      "thu-tu"
+    ],
+    "src": "Solomon Asch, Journal of Abnormal and Social Psychology (1946)"
+  },
+  {
+    "id": "tl-208",
+    "cat": "tam-ly",
+    "sub": "thien-kien",
+    "t": "Người ta thích một phương án hơn chỉ vì nó được mô tả là 'mặc định'",
+    "s": "Trong đăng ký hiến tạng, các nước theo cơ chế mặc định đồng ý có tỉ lệ tham gia cao hơn hẳn nước phải chủ động chọn — chênh lệch lớn tới mức không thể giải thích bằng khác biệt văn hoá. Ai đặt tuỳ chọn mặc định thì người đó quyết định phần lớn kết quả.",
+    "tags": [
+      "mac-dinh",
+      "lua-chon"
+    ],
+    "src": "Johnson & Goldstein, Science (2003)"
+  },
+  {
+    "id": "tl-209",
+    "cat": "tam-ly",
+    "sub": "thien-kien",
+    "t": "Đưa thêm một phương án đắt vô lý làm phương án giữa trở nên hấp dẫn",
+    "s": "Không ai mua gói đắt nhất, nhưng sự tồn tại của nó thay đổi điểm tham chiếu và đẩy người mua từ gói rẻ lên gói giữa. Đây là lý do bảng giá ba cột phổ biến tới vậy, và biết cơ chế này giúp bạn hỏi 'tôi cần gì' thay vì 'gói nào hợp lý nhất'.",
+    "tags": [
+      "tham-chieu",
+      "gia"
+    ],
+    "src": "Simonson & Tversky, Journal of Marketing Research (1992)"
+  },
+  {
+    "id": "tl-210",
+    "cat": "tam-ly",
+    "sub": "thien-kien",
+    "t": "Con người xử lý 'không mất' và 'được' bằng hai hệ khác nhau, nên câu chữ đổi được quyết định",
+    "s": "Cùng một chương trình mô tả là 'cứu được 200 trên 600 người' hay 'để 400 trên 600 người chết' cho hai lựa chọn đa số trái ngược. Đây là kết quả nền tảng của lý thuyết triển vọng, và nó vẫn xuất hiện ở bác sĩ, luật sư và người có huấn luyện thống kê.",
+    "tags": [
+      "dong-khung",
+      "trien-vong"
+    ],
+    "src": "Tversky & Kahneman, Science (1981) — bài toán bệnh dịch châu Á"
+  },
+  {
+    "id": "tl-211",
+    "cat": "tam-ly",
+    "sub": "thien-kien",
+    "t": "Bạn cảm thấy một thông tin đúng hơn chỉ vì đã gặp nó vài lần",
+    "s": "Hiệu ứng sự thật ảo: lặp lại làm một phát biểu quen hơn, và sự quen bị đọc thành sự đúng. Nó xảy ra cả với người biết rõ câu đó sai từ trước, và đó là lý do việc nhắc lại tin sai để bác bỏ phải rất cẩn thận.",
+    "tags": [
+      "lap-lai",
+      "su-that-ao"
+    ],
+    "src": "Hasher, Goldstein & Toppino, Journal of Verbal Learning and Verbal Behavior (1977); Fazio và cộng sự, JEP: General (2015)"
+  },
+  {
+    "id": "tl-212",
+    "cat": "tam-ly",
+    "sub": "thien-kien",
+    "t": "Người ta đánh giá quá cao mức phổ biến của quan điểm mình đang có",
+    "s": "Hiệu ứng đồng thuận giả: những ai chọn A tin rằng đa số cũng chọn A, và những ai chọn B cũng vậy. Trong công việc, điều này làm người ta bỏ qua nhu cầu giải thích và ngạc nhiên khi bị phản đối — vì họ tưởng quan điểm của mình là mặc nhiên.",
+    "tags": [
+      "dong-thuan-gia",
+      "nhom"
+    ],
+    "src": "Ross, Greene & House, Journal of Experimental Social Psychology (1977)"
+  },
+  {
+    "id": "tl-213",
+    "cat": "tam-ly",
+    "sub": "thien-kien",
+    "t": "Cái gì dễ hình dung được coi là dễ xảy ra hơn, và truyền thông quyết định cái gì dễ hình dung",
+    "s": "Người ta ước lượng nguy cơ tai nạn máy bay và giết người cao hơn thực tế, còn bệnh tim và tiểu đường thì thấp hơn — trật tự này khớp gần đúng với tần suất xuất hiện trên tin tức. Muốn hiệu chỉnh, phải đi tìm con số, vì trực giác đang đọc từ nguồn khác.",
+    "tags": [
+      "kha-dung",
+      "rui-ro"
+    ],
+    "src": "Lichtenstein, Slovic, Fischhoff, Layman & Combs, JEP: Human Learning and Memory (1978)"
+  },
+  {
+    "id": "tl-214",
+    "cat": "tam-ly",
+    "sub": "thien-kien",
+    "t": "Càng biết ít về một chủ đề, người ta càng thấy nó đơn giản",
+    "s": "Đây là phần vững chắc nhất của các nghiên cứu về ảo tưởng hiểu biết: khi được yêu cầu giải thích cơ chế chi tiết, mức tự tin của người trả lời tụt xuống rõ rệt. Vì vậy 'hãy giải thích cách nó hoạt động' là một câu hỏi hiệu chỉnh mạnh hơn 'anh chắc chứ'.",
+    "tags": [
+      "ao-tuong-hieu-biet",
+      "tu-tin"
+    ],
+    "src": "Rozenblit & Keil, Cognitive Science (2002)"
+  },
+  {
+    "id": "tl-215",
+    "cat": "tam-ly",
+    "sub": "thien-kien",
+    "t": "Bạn coi hành động của mình là do hoàn cảnh và hành động của người khác là do bản chất — trừ khi kết quả xấu",
+    "s": "Khi mình thành công thì do nỗ lực, khi mình thất bại thì do hoàn cảnh; với người khác thì đảo lại. Hai thiên kiến này ghép vào nhau tạo ra phần lớn xung đột trong công việc, vì hai bên đang dùng hai hệ quy chiếu khác nhau cho cùng một sự việc.",
+    "tags": [
+      "quy-gan",
+      "xung-dot"
+    ],
+    "src": "Jones & Nisbett (1971); Miller & Ross, Psychological Bulletin (1975)"
+  },
+  {
+    "id": "tl-216",
+    "cat": "tam-ly",
+    "sub": "thien-kien",
+    "t": "Người ta tin rằng người khác dễ bị quảng cáo tác động hơn mình",
+    "s": "Hiệu ứng người thứ ba: ai cũng cho rằng thông điệp truyền thông ảnh hưởng tới 'đám đông' nhiều hơn tới bản thân. Điều đáng chú ý là chính niềm tin này làm người ta bỏ phòng bị, nên nhóm tự tin nhất về khả năng miễn nhiễm lại là nhóm bị tác động rõ nhất.",
+    "tags": [
+      "quang-cao",
+      "tu-danh-gia"
+    ],
+    "src": "W. Phillips Davison, Public Opinion Quarterly (1983)"
+  },
+  {
+    "id": "tl-217",
+    "cat": "tam-ly",
+    "sub": "thien-kien",
+    "t": "Một chi tiết cụ thể thêm vào làm câu chuyện nghe đáng tin hơn dù xác suất phải giảm đi",
+    "s": "Người ta xếp 'là kế toán và chơi nhạc jazz' là khả năng cao hơn 'là kế toán' — điều không thể đúng về mặt logic vì tập sau chứa tập trước. Cơ chế là tính đại diện: chi tiết làm bức tranh khớp hình mẫu hơn, và đầu ta chấm theo mức khớp chứ không theo xác suất.",
+    "tags": [
+      "hoi-tu",
+      "dai-dien"
+    ],
+    "src": "Tversky & Kahneman, Psychological Review (1983) — bài toán Linda"
+  },
+  {
+    "id": "tl-218",
+    "cat": "tam-ly",
+    "sub": "thien-kien",
+    "t": "Người ta bỏ qua tỉ lệ nền khi có một mô tả sinh động về cá nhân",
+    "s": "Cho biết trong phòng có 70 kỹ sư và 30 luật sư, rồi mô tả một người 'thích giải đố, ít nói' — người ta đoán luật sư nếu mô tả nghe giống hình mẫu luật sư, dù xác suất nền nói ngược lại. Cách chữa duy nhất là bắt đầu từ con số nền rồi mới điều chỉnh.",
+    "tags": [
+      "ti-le-nen",
+      "dai-dien"
+    ],
+    "src": "Kahneman & Tversky, Psychological Review (1973)"
+  },
+  {
+    "id": "tl-219",
+    "cat": "tam-ly",
+    "sub": "thien-kien",
+    "t": "Bạn thấy các kết quả có ý nghĩa vì bạn chỉ nhìn thấy kết quả đã xảy ra",
+    "s": "Trong hàng triệu người mua vé số, ai đó phải trúng — và khi phỏng vấn người đó, mọi chi tiết trong đời họ trông như dấu hiệu. Việc tách 'điều này có ý nghĩa' khỏi 'điều gì đó phải xảy ra' là một trong những kỹ năng khó nhất của tư duy xác suất.",
+    "tags": [
+      "ngau-nhien",
+      "y-nghia"
+    ],
+    "src": "Định luật những con số thật sự lớn (Diaconis & Mosteller, JASA 1989)"
+  },
+  {
+    "id": "tl-220",
+    "cat": "tam-ly",
+    "sub": "thien-kien",
+    "t": "Người ta trả nhiều hơn cho cùng một thứ khi nó được trả bằng thẻ so với bằng tiền mặt",
+    "s": "Thanh toán không tiếp xúc làm giảm cảm giác đau khi trả — trong thí nghiệm đấu giá, mức trả cao hơn đáng kể khi được dùng thẻ. Đó là lý do một cách kiểm soát chi tiêu đơn giản là chuyển các khoản dễ vung tay sang tiền mặt.",
+    "tags": [
+      "chi-tieu",
+      "thanh-toan"
+    ],
+    "src": "Prelec & Simester, Marketing Letters (2001)"
+  },
+  {
+    "id": "tl-221",
+    "cat": "tam-ly",
+    "sub": "thien-kien",
+    "t": "Giá cao làm người ta cảm nhận chất lượng cao hơn, và cảm nhận đó đo được trong não",
+    "s": "Cùng một loại rượu vang được nếm ngon hơn khi người thử tin nó đắt, và vùng não liên quan tới cảm giác dễ chịu hoạt động mạnh hơn thật. Nghĩa là đây không phải chuyện nói cho oai — trải nghiệm thật đã bị thay đổi bởi thông tin về giá.",
+    "tags": [
+      "gia",
+      "chat-luong"
+    ],
+    "src": "Plassmann, O'Doherty, Shiv & Rangel, PNAS (2008)"
+  },
+  {
+    "id": "tl-222",
+    "cat": "tam-ly",
+    "sub": "thien-kien",
+    "t": "Người ta phản ứng với mức thay đổi hơn là với mức tuyệt đối, kể cả với những thứ quan trọng",
+    "s": "Cùng một mức lương được cảm nhận là tốt hay tệ tuỳ theo mức trước đó và mức của người quanh mình. Đây là lý do một lần tăng lương tạo cảm giác tốt ngắn hạn rồi thành mốc mới, và là lý do các so sánh nội bộ gây bất mãn mạnh hơn con số tuyệt đối.",
+    "tags": [
+      "tham-chieu",
+      "thu-nhap"
+    ],
+    "src": "Lý thuyết triển vọng (Kahneman & Tversky, 1979); Card, Mas, Moretti & Saez, American Economic Review (2012)"
+  },
+  {
+    "id": "tl-223",
+    "cat": "tam-ly",
+    "sub": "thien-kien",
+    "t": "Nỗi đau khi mất một thứ mình chưa từng có bằng nỗi đau mất thứ đang có",
+    "s": "Chỉ cần được cho quyền chọn rồi bị rút lại là người ta phản ứng như bị lấy đi tài sản. Trong đàm phán, điều này có nghĩa là mọi thứ bạn đã đưa lên bàn đều lập tức trở thành mốc, nên rút một đề nghị đã nêu đắt hơn nhiều so với chưa nêu.",
+    "tags": [
+      "mat-mat",
+      "dam-phan"
+    ],
+    "src": "Kahneman, Knetsch & Thaler, Journal of Economic Perspectives (1991)"
+  },
+  {
+    "id": "tl-224",
+    "cat": "tam-ly",
+    "sub": "thien-kien",
+    "t": "Người ta không thích một phương án hơn hay kém — họ thích nó hơn hay kém so với cái gì",
+    "s": "Đánh giá gần như luôn là tương đối, nên việc chọn vật so sánh quyết định kết luận. Đây là cơ chế đằng sau giá gạch chéo, mức lương 'thị trường' và cả cảm giác hài lòng với thu nhập của chính mình — vốn phụ thuộc vào thu nhập người quanh bạn hơn là số tuyệt đối.",
+    "tags": [
+      "so-sanh",
+      "tham-chieu"
+    ],
+    "src": "Lý thuyết mức thích ứng (Helson); Clark & Oswald về thu nhập tương đối, Journal of Public Economics (1996)"
+  },
+  {
+    "id": "tl-225",
+    "cat": "tam-ly",
+    "sub": "thien-kien",
+    "t": "Nỗ lực bạn thấy được làm bạn đánh giá dịch vụ cao hơn, kể cả khi nỗ lực đó không cần thiết",
+    "s": "Người dùng hài lòng hơn với trang web tìm chuyến bay có hiển thị 'đang tìm trong 200 hãng' kèm thanh chờ, so với trang trả kết quả tức thì. Điều này giải thích vì sao một số hệ thống cố tình làm chậm — và vì sao 'nhanh hơn' không luôn là 'tốt hơn' trong cảm nhận.",
+    "tags": [
+      "no-luc",
+      "dich-vu"
+    ],
+    "src": "Buell & Norton, Management Science (2011) — hiệu ứng labor illusion"
+  },
+  {
+    "id": "tl-226",
+    "cat": "tam-ly",
+    "sub": "thien-kien",
+    "t": "Người ta đánh giá xác suất một chuỗi sự kiện cao hơn thực tế vì bỏ qua phép nhân",
+    "s": "Mỗi bước có 90% thành công nghe rất chắc, nhưng mười bước liên tiếp chỉ còn 35%. Đây là lý do các kế hoạch nhiều khâu phụ thuộc nhau hầu như luôn trễ, dù từng khâu đều 'gần như chắc chắn'.",
+    "tags": [
+      "xac-suat",
+      "ke-hoach"
+    ],
+    "src": "Bar-Hillel, Organizational Behavior and Human Performance (1973) về đánh giá xác suất hợp"
+  },
+  {
+    "id": "tl-227",
+    "cat": "tam-ly",
+    "sub": "thien-kien",
+    "t": "Người ta đòi bồi thường cho một mất mát cao hơn nhiều mức họ chịu trả để tránh chính mất mát đó",
+    "s": "Khoảng cách giữa 'sẵn sàng chấp nhận' và 'sẵn sàng chi trả' thường gấp hai đến bốn lần cho cùng một thứ. Điều này làm các cuộc thương lượng đền bù rất khó đi tới đâu: hai bên xuất phát từ hai câu hỏi khác nhau về cùng một đối tượng.",
+    "tags": [
+      "boi-thuong",
+      "dam-phan"
+    ],
+    "src": "Horowitz & McConnell, Journal of Environmental Economics and Management (2002) — tổng hợp 45 nghiên cứu"
+  },
+  {
+    "id": "tl-228",
+    "cat": "tam-ly",
+    "sub": "thien-kien",
+    "t": "Cùng một khoản chi được xử lý khác nhau tuỳ bạn xếp nó vào 'ngăn' nào trong đầu",
+    "s": "Người ta lái xe qua thành phố để tiết kiệm 50 nghìn khi mua áo 200 nghìn, nhưng không làm thế để tiết kiệm 50 nghìn khi mua tủ 20 triệu — dù 50 nghìn là 50 nghìn. Kế toán trong đầu là lý do các khoản 'tiền thưởng' bị tiêu dễ hơn khoản 'tiền lương' có cùng giá trị.",
+    "tags": [
+      "ke-toan-trong-dau",
+      "chi-tieu"
+    ],
+    "src": "Richard Thaler, Mental Accounting Matters, Journal of Behavioral Decision Making (1999)"
+  },
+  {
+    "id": "tl-229",
+    "cat": "tam-ly",
+    "sub": "thien-kien",
+    "t": "Người ta ưu tiên duy trì hiện trạng ngay cả khi phương án khác rõ ràng tốt hơn",
+    "s": "Thiên kiến hiện trạng xuất phát từ hai nguồn: ác cảm mất mát và nỗi sợ hối tiếc về hành động. Trong thực tế nó biểu hiện thành việc giữ gói dịch vụ cũ, giữ khoản đầu tư kém và giữ quy trình lỗi thời — mọi thứ đều có chi phí nhưng không ai phải ký duyệt.",
+    "tags": [
+      "hien-trang",
+      "quan-tinh"
+    ],
+    "src": "Samuelson & Zeckhauser, Journal of Risk and Uncertainty (1988)"
+  },
+  {
+    "id": "tl-230",
+    "cat": "tam-ly",
+    "sub": "thien-kien",
+    "t": "Sự tự tin của người nói ảnh hưởng tới mức bạn tin nhiều hơn nội dung họ nói",
+    "s": "Trong thí nghiệm về lời khai và về tư vấn, mức tự tin dự báo mức được tin cậy tốt hơn mức chính xác thực tế. Vì tự tin và đúng chỉ tương quan yếu, đây là một trong những lỗ hổng dễ bị khai thác nhất trong giao tiếp nghề nghiệp.",
+    "tags": [
+      "tu-tin",
+      "long-tin"
+    ],
+    "src": "Price & Stone, Journal of Behavioral Decision Making (2004); Wells & Olson về nhân chứng (2003)"
+  },
+  {
+    "id": "tl-231",
+    "cat": "tam-ly",
+    "sub": "dong-luc",
+    "t": "Thói quen hình thành nhờ tín hiệu và bối cảnh, không nhờ quyết tâm",
+    "s": "Hành vi lặp lại trong cùng bối cảnh dần chuyển sang chế độ tự động, nên cách đổi thói quen hiệu quả nhất là đổi bối cảnh chứ không phải tăng ý chí. Đây là lý do người chuyển nhà hoặc đổi việc dễ thay đổi lối sống hơn người ở nguyên chỗ cũ.",
+    "tags": [
+      "thoi-quen",
+      "boi-canh"
+    ],
+    "src": "Wendy Wood & David Neal, Psychological Review (2007); Wood, Tam & Witt (2005)"
+  },
+  {
+    "id": "tl-232",
+    "cat": "tam-ly",
+    "sub": "dong-luc",
+    "t": "Con số '21 ngày để tạo một thói quen' không có nguồn nghiên cứu nào",
+    "s": "Nó xuất phát từ quan sát của một bác sĩ phẫu thuật thẩm mỹ về thời gian bệnh nhân quen với ngoại hình mới, rồi được lặp lại thành quy tắc. Nghiên cứu thực tế cho thời gian trung vị khoảng 66 ngày với biên độ rất rộng, từ khoảng 18 tới hơn 250 ngày tuỳ hành vi và tuỳ người.",
+    "tags": [
+      "thoi-quen",
+      "huyen-thoai"
+    ],
+    "src": "Maxwell Maltz, Psycho-Cybernetics (1960); Lally và cộng sự, European Journal of Social Psychology (2010)"
+  },
+  {
+    "id": "tl-233",
+    "cat": "tam-ly",
+    "sub": "dong-luc",
+    "t": "Bỏ một ngày không phá thói quen, nhưng tin rằng nó phá thì có",
+    "s": "Trong nghiên cứu theo dõi hình thành thói quen, một lần bỏ lỡ không ảnh hưởng đáng kể tới xu hướng tự động hoá. Vấn đề nằm ở phản ứng sau đó: người coi việc bỏ lỡ là thất bại thường bỏ luôn, còn người coi đó là chuyện thường thì tiếp tục.",
+    "tags": [
+      "thoi-quen",
+      "kien-tri"
+    ],
+    "src": "Lally, van Jaarsveld, Potts & Wardle, European Journal of Social Psychology (2010)"
+  },
+  {
+    "id": "tl-234",
+    "cat": "tam-ly",
+    "sub": "dong-luc",
+    "t": "Mục tiêu quá lớn làm giảm hành động, mục tiêu nhỏ tới mức buồn cười lại làm tăng",
+    "s": "Vì rào cản khởi động, chứ không phải mức khó, là chỗ phần lớn ý định chết. Đặt ngưỡng thấp tới mức không thể từ chối — hai phút, một trang, một lần — làm tăng tỉ lệ bắt đầu, và bắt đầu là biến số dự báo mạnh nhất cho việc hoàn thành.",
+    "tags": [
+      "muc-tieu",
+      "bat-dau"
+    ],
+    "src": "BJ Fogg, Tiny Habits (2019); nghiên cứu về implementation intentions của Gollwitzer (1999)"
+  },
+  {
+    "id": "tl-235",
+    "cat": "tam-ly",
+    "sub": "dong-luc",
+    "t": "Phần thưởng bất định tạo ra hành vi bền hơn phần thưởng chắc chắn",
+    "s": "Lịch trình thưởng theo tỉ lệ biến đổi — đôi khi có, đôi khi không — tạo ra mức lặp lại cao nhất và khó dập nhất trong mọi lịch trình củng cố. Đây là cơ chế của máy đánh bạc, của việc kéo xuống làm mới bảng tin, và của việc kiểm tra tin nhắn liên tục.",
+    "tags": [
+      "cung-co",
+      "nghien"
+    ],
+    "src": "B. F. Skinner, Schedules of Reinforcement (Ferster & Skinner, 1957)"
+  },
+  {
+    "id": "tl-236",
+    "cat": "tam-ly",
+    "sub": "dong-luc",
+    "t": "Tiến độ thấy được là động lực mạnh hơn phần thưởng cuối",
+    "s": "Trong nghiên cứu về nhật ký công việc, ngày mà người ta cảm thấy có tiến triển trong việc có ý nghĩa là ngày họ có động lực và cảm xúc tích cực cao nhất — mạnh hơn cả ghi nhận hay tiền. Hệ quả quản lý: làm cho tiến độ nhìn thấy được thường rẻ hơn và hiệu quả hơn thưởng.",
+    "tags": [
+      "tien-do",
+      "dong-luc"
+    ],
+    "src": "Teresa Amabile & Steven Kramer, The Progress Principle (2011)"
+  },
+  {
+    "id": "tl-237",
+    "cat": "tam-ly",
+    "sub": "dong-luc",
+    "t": "Thẻ tích điểm đã có sẵn hai dấu làm người ta hoàn thành nhiều hơn thẻ trắng cùng số dấu cần",
+    "s": "Hiệu ứng tiến độ giả: cảm giác đã đi được một đoạn làm tăng cam kết. Trong thí nghiệm rửa xe, thẻ 10 ô có 2 ô đóng sẵn cho tỉ lệ hoàn thành cao gần gấp đôi thẻ 8 ô trắng — dù số lần phải mua thêm là như nhau.",
+    "tags": [
+      "tien-do",
+      "cam-ket"
+    ],
+    "src": "Nunes & Drèze, Journal of Consumer Research (2006)"
+  },
+  {
+    "id": "tl-238",
+    "cat": "tam-ly",
+    "sub": "dong-luc",
+    "t": "Người ta làm nhiều hơn khi biết có người sẽ hỏi lại kết quả",
+    "s": "Sự chịu trách nhiệm trước một người cụ thể là một trong những can thiệp rẻ và mạnh nhất về hành vi. Trong các thử nghiệm về tập luyện và học tập, việc phải báo cáo định kỳ cho một người thật làm tăng mức tuân thủ hơn cả tiền thưởng nhỏ.",
+    "tags": [
+      "trach-nhiem",
+      "cam-ket"
+    ],
+    "src": "Nghiên cứu về commitment devices; Rogers, Milkman & Volpp, JAMA (2014)"
+  },
+  {
+    "id": "tl-239",
+    "cat": "tam-ly",
+    "sub": "dong-luc",
+    "t": "Mất tiền đã đặt cọc thúc đẩy mạnh hơn khả năng nhận thưởng cùng giá trị",
+    "s": "Các nền tảng cam kết dùng cơ chế này: bạn nộp trước một khoản và mất nếu không đạt mục tiêu. Trong các thử nghiệm về cai thuốc và giảm cân, cấu trúc mất-nếu-thất-bại cho tỉ lệ thành công cao hơn hẳn cấu trúc thưởng-nếu-thành-công.",
+    "tags": [
+      "cam-ket",
+      "mat-mat"
+    ],
+    "src": "Halpern và cộng sự, New England Journal of Medicine (2015) về cai thuốc bằng tiền đặt cọc"
+  },
+  {
+    "id": "tl-240",
+    "cat": "tam-ly",
+    "sub": "dong-luc",
+    "t": "Ý chí không phải cơ bắp cạn dần, nhưng sự chú ý thì có giới hạn thật",
+    "s": "Giả thuyết cạn kiệt ý chí đã yếu đi nhiều sau các nỗ lực nhân bản thất bại. Điều còn đứng vững là khác: sự chú ý là tài nguyên hữu hạn, nên môi trường ít yếu tố cần cưỡng lại cho kết quả tốt hơn môi trường đòi bạn liên tục nói không.",
+    "tags": [
+      "y-chi",
+      "chu-y"
+    ],
+    "src": "Hagger và cộng sự, Perspectives on Psychological Science (2016) — nhân bản đa trung tâm thất bại"
+  },
+  {
+    "id": "tl-241",
+    "cat": "tam-ly",
+    "sub": "dong-luc",
+    "t": "Người ta bỏ mục tiêu vì thấy nó không còn khớp với mình, không phải vì thiếu kỷ luật",
+    "s": "Mục tiêu do người khác đặt hoặc do một phiên bản cũ của mình đặt thường mất động lực khi bối cảnh đổi. Vì vậy trước khi tự trách là thiếu kỷ luật, câu hỏi cần hỏi là mục tiêu này còn đúng không — và bỏ một mục tiêu đã hết đúng là quyết định tốt, không phải thất bại.",
+    "tags": [
+      "muc-tieu",
+      "tu-chu"
+    ],
+    "src": "Deci & Ryan, lý thuyết tự quyết (Self-Determination Theory, 2000)"
+  },
+  {
+    "id": "tl-242",
+    "cat": "tam-ly",
+    "sub": "dong-luc",
+    "t": "Trì hoãn giảm mạnh khi bạn xác định trước bước đầu tiên cụ thể tới mức không cần nghĩ",
+    "s": "'Học bài' là một ý định, 'mở sách trang 40 lúc 8 giờ tại bàn' là một kế hoạch thực hiện. Tổng hợp hơn 90 nghiên cứu cho thấy dạng kế hoạch thứ hai có hiệu ứng trung bình đáng kể lên hành vi thật, và nó gần như không tốn gì để làm.",
+    "tags": [
+      "tri-hoan",
+      "ke-hoach"
+    ],
+    "src": "Gollwitzer & Sheeran, Advances in Experimental Social Psychology (2006)"
+  },
+  {
+    "id": "tl-243",
+    "cat": "tam-ly",
+    "sub": "dong-luc",
+    "t": "Người ta chọn công việc thoải mái hơn công việc có ý nghĩa khi phải chọn nhanh, và ngược lại khi có thời gian",
+    "s": "Áp lực thời gian đẩy quyết định về phía hệ tự động, vốn ưu tiên tránh khó chịu ngay lập tức. Đây là một lý do để đặt các quyết định quan trọng vào lúc bạn không bị dồn — không phải vì lúc đó bạn thông minh hơn mà vì lúc đó bạn dùng hệ khác.",
+    "tags": [
+      "quyet-dinh",
+      "ap-luc"
+    ],
+    "src": "Kahneman về hai hệ thống; nghiên cứu về ảnh hưởng của áp lực thời gian tới lựa chọn liên thời gian"
+  },
+  {
+    "id": "tl-244",
+    "cat": "tam-ly",
+    "sub": "dong-luc",
+    "t": "Con người đánh giá thấp mức mình sẽ mệt và cao mức mình sẽ hào hứng ở tương lai",
+    "s": "Trong trạng thái bình tĩnh, ta không mô phỏng được trạng thái đói, mệt hay bị dồn — hiện tượng gọi là khe trống đồng cảm nội tại. Đó là lý do các cam kết cho 'tôi vào tuần sau' thường quá tham, và lý do lịch làm việc nên được thiết kế cho phiên bản mệt của bạn.",
+    "tags": [
+      "du-doan-cam-xuc",
+      "ke-hoach"
+    ],
+    "src": "George Loewenstein, Out of Control: Visceral Influences on Behavior (1996)"
+  },
+  {
+    "id": "tl-245",
+    "cat": "tam-ly",
+    "sub": "dong-luc",
+    "t": "Ghi lại hành vi đã đủ để thay đổi hành vi, trước cả khi có bất kỳ can thiệp nào",
+    "s": "Chỉ việc đếm số bước, ghi lại đồ ăn hay ghi giờ làm việc đã làm hành vi dịch theo hướng mong muốn — hiệu ứng tự giám sát. Đây là can thiệp rẻ nhất trong mọi chương trình thay đổi, nên nó thường được dùng làm bước đầu tiên.",
+    "tags": [
+      "tu-giam-sat",
+      "hanh-vi"
+    ],
+    "src": "Kanfer, Self-monitoring (1970); Burke, Wang & Sevick, Journal of the American Dietetic Association (2011)"
+  },
+  {
+    "id": "tl-246",
+    "cat": "tam-ly",
+    "sub": "dong-luc",
+    "t": "Một chuỗi liên tục tạo động lực mạnh, và chính vì thế nó tạo ra rủi ro bỏ hẳn khi bị đứt",
+    "s": "Cơ chế là ác cảm mất mát áp lên chuỗi đã xây được. Cách tận dụng mà không mang rủi ro là đặt trước quy tắc phục hồi — ví dụ 'được nghỉ hai ngày mỗi tháng mà chuỗi vẫn tính' — để một lần đứt không xoá toàn bộ động lực đã tích.",
+    "tags": [
+      "chuoi",
+      "dong-luc"
+    ],
+    "src": "Cơ chế loss aversion áp dụng vào streak; nghiên cứu về gamification và duy trì hành vi"
+  },
+  {
+    "id": "tl-247",
+    "cat": "tam-ly",
+    "sub": "dong-luc",
+    "t": "Phần thưởng cho quá trình bền hơn phần thưởng cho kết quả",
+    "s": "Thưởng theo kết quả gắn động lực vào thứ có yếu tố may rủi, nên nó tạo ra thất vọng có hệ thống. Thưởng theo hành động kiểm soát được — số lần luyện, số lần thử — tạo phản hồi ổn định hơn, và đó cũng là điều duy nhất người ta thật sự điều khiển được.",
+    "tags": [
+      "phan-thuong",
+      "qua-trinh"
+    ],
+    "src": "Carol Dweck về tư duy phát triển; Mueller & Dweck, JPSP (1998)"
+  },
+  {
+    "id": "tl-248",
+    "cat": "tam-ly",
+    "sub": "dong-luc",
+    "t": "Nói ra mục tiêu với người sẽ kiểm tra thì có ích; nói ra để được khen thì không",
+    "s": "Khác biệt nằm ở việc lời nói tạo ra trách nhiệm hay tạo ra sự thoả mãn thay thế. Khi được công nhận vì ý định, người ta cảm thấy đã đạt được một phần bản sắc mong muốn và giảm hành động thật — đây là kết quả từ các thí nghiệm của Peter Gollwitzer.",
+    "tags": [
+      "muc-tieu",
+      "cong-nhan"
+    ],
+    "src": "Gollwitzer, Sheeran, Michalski & Seifert, Psychological Science (2009)"
+  },
+  {
+    "id": "tl-249",
+    "cat": "tam-ly",
+    "sub": "dong-luc",
+    "t": "Người ta bắt đầu hành vi mới nhiều hơn vào các mốc thời gian, và mốc đó có thể tự tạo",
+    "s": "Đăng ký phòng tập tăng vọt đầu năm, đầu tháng, đầu tuần và sau sinh nhật — hiệu ứng khởi đầu mới. Vì cơ chế là cảm giác vạch một đường phân cách với con người cũ, bạn có thể tạo mốc nhân tạo: một ngày có ý nghĩa riêng cũng có tác dụng.",
+    "tags": [
+      "moc-thoi-gian",
+      "bat-dau"
+    ],
+    "src": "Dai, Milkman & Riis, Management Science (2014)"
+  },
+  {
+    "id": "tl-250",
+    "cat": "tam-ly",
+    "sub": "dong-luc",
+    "t": "Ghép việc phải làm với việc muốn làm hiệu quả hơn cố tăng ý chí cho việc phải làm",
+    "s": "Trong một thử nghiệm, người chỉ được nghe audiobook giải trí khi đang ở phòng tập đã tăng tần suất tập rõ rệt so với nhóm đối chứng. Cơ chế là chuyển phần thưởng tức thì vào đúng thời điểm hành vi, thay vì để nó ở cuối một chuỗi dài.",
+    "tags": [
+      "ghep-viec",
+      "phan-thuong"
+    ],
+    "src": "Milkman, Minson & Volpp, Management Science (2014) — temptation bundling"
+  },
+  {
+    "id": "tl-251",
+    "cat": "tam-ly",
+    "sub": "dong-luc",
+    "t": "Người kiệt sức không thiếu động lực — họ mất cảm giác việc mình làm có tác dụng",
+    "s": "Ba thành tố của kiệt sức nghề nghiệp là cạn năng lượng, xa cách với công việc và cảm giác kém hiệu quả. Thành tố thứ ba là chỗ hay bị bỏ qua, nên can thiệp bằng nghỉ phép có thể không giải quyết gì nếu người đó quay lại đúng môi trường không thấy được kết quả.",
+    "tags": [
+      "kiet-suc",
+      "y-nghia"
+    ],
+    "src": "Christina Maslach & Michael Leiter, The Truth About Burnout (1997); WHO ICD-11 (2019)"
+  },
+  {
+    "id": "tl-252",
+    "cat": "tam-ly",
+    "sub": "dong-luc",
+    "t": "Được chọn cách làm quan trọng hơn được chọn làm gì, với động lực hằng ngày",
+    "s": "Quyền tự chủ ở mức thao tác — thứ tự, thời điểm, cách tiếp cận — có tác động lớn tới động lực nội tại, kể cả khi mục tiêu do người khác đặt. Đây là đòn bẩy quản lý rẻ nhất, vì nó không đòi thay đổi mục tiêu hay ngân sách.",
+    "tags": [
+      "tu-chu",
+      "dong-luc"
+    ],
+    "src": "Deci & Ryan, Self-Determination Theory (2000); Hackman & Oldham về thiết kế công việc (1976)"
+  },
+  {
+    "id": "tl-253",
+    "cat": "tam-ly",
+    "sub": "cam-xuc",
+    "t": "Đặt tên cho cảm xúc bằng từ chính xác làm nó dễ điều tiết hơn từ chung chung",
+    "s": "Người có vốn từ cảm xúc phong phú — phân biệt được bực, tủi, thất vọng, bị coi nhẹ — điều tiết cảm xúc tốt hơn và ít dùng các cách xử lý gây hại hơn. Cơ chế là phân giải: cảm xúc mô tả càng chính xác thì hành động ứng phó càng nhắm đúng.",
+    "tags": [
+      "cam-xuc",
+      "tu-vung"
+    ],
+    "src": "Lisa Feldman Barrett về emotional granularity; Kashdan, Barrett & McKnight (2015)"
+  },
+  {
+    "id": "tl-254",
+    "cat": "tam-ly",
+    "sub": "cam-xuc",
+    "t": "Cách bạn hiểu về stress thay đổi cả tác động sinh lý của nó",
+    "s": "Trong các thử nghiệm, người được hướng dẫn coi tim đập nhanh và tay đổ mồ hôi là dấu hiệu cơ thể đang chuẩn bị cho thử thách có phản ứng mạch máu tốt hơn và hiệu suất cao hơn nhóm được dạy cách bình tĩnh lại. Bản thân sự kích hoạt không phải vấn đề; cách gán nghĩa mới là.",
+    "tags": [
+      "stress",
+      "gan-nghia"
+    ],
+    "src": "Jamieson, Nock & Mendes, Journal of Experimental Psychology: General (2012)"
+  },
+  {
+    "id": "tl-255",
+    "cat": "tam-ly",
+    "sub": "cam-xuc",
+    "t": "Đặt lại cách nghĩ về tình huống hiệu quả hơn cố nén biểu hiện cảm xúc",
+    "s": "Hai chiến lược điều tiết cho hai kết quả khác nhau: đánh giá lại làm giảm cả trải nghiệm lẫn biểu hiện và không tốn thêm nguồn lực nhận thức, còn nén lại chỉ giảm biểu hiện, giữ nguyên trải nghiệm, làm tăng phản ứng sinh lý và làm giảm trí nhớ về cuộc trò chuyện.",
+    "tags": [
+      "dieu-tiet",
+      "nen"
+    ],
+    "src": "James Gross & Robert Levenson, Journal of Abnormal Psychology (1997); Gross, JPSP (1998)"
+  },
+  {
+    "id": "tl-256",
+    "cat": "tam-ly",
+    "sub": "cam-xuc",
+    "t": "Người ta cảm thấy tốt hơn khi làm việc gì đó cho người khác — nhưng chỉ khi tự nguyện",
+    "s": "Hành vi giúp đỡ có liên hệ ổn định với cảm xúc tích cực trong nhiều nền văn hoá. Điều kiện then chốt là tính tự nguyện: khi việc giúp đỡ bị áp đặt hoặc bị theo dõi, hiệu ứng giảm mạnh và có thể đảo chiều.",
+    "tags": [
+      "giup-do",
+      "hanh-phuc"
+    ],
+    "src": "Aknin và cộng sự, Journal of Personality and Social Psychology (2013); Weinstein & Ryan, JPSP (2010)"
+  },
+  {
+    "id": "tl-257",
+    "cat": "tam-ly",
+    "sub": "cam-xuc",
+    "t": "Ngủ thiếu làm phản ứng cảm xúc mạnh lên rõ rệt trước cả khi bạn thấy buồn ngủ",
+    "s": "Sau một đêm mất ngủ, hoạt động ở hạch hạnh nhân với hình ảnh gây khó chịu tăng mạnh và kết nối với vùng điều tiết ở vỏ não trước trán giảm. Nghĩa là nhiều cơn nóng nảy được cho là do tính cách thực ra là do giấc ngủ đêm trước.",
+    "tags": [
+      "giac-ngu",
+      "cam-xuc"
+    ],
+    "src": "Yoo, Gujar, Hu, Jolesz & Walker, Current Biology (2007)"
+  },
+  {
+    "id": "tl-258",
+    "cat": "tam-ly",
+    "sub": "cam-xuc",
+    "t": "Thời gian ngoài trời và trong thiên nhiên có tác động đo được lên tâm trạng và chú ý",
+    "s": "Các thử nghiệm cho thấy đi bộ trong công viên cải thiện tâm trạng và khả năng tập trung hơn đi bộ cùng thời lượng trong phố. Hiệu ứng không lớn nhưng nhất quán và gần như không có chi phí, nên nó là một trong những can thiệp có tỉ lệ lợi ích trên nỗ lực cao nhất.",
+    "tags": [
+      "thien-nhien",
+      "chu-y"
+    ],
+    "src": "Berman, Jonides & Kaplan, Psychological Science (2008); Bratman và cộng sự, PNAS (2015)"
+  },
+  {
+    "id": "tl-259",
+    "cat": "tam-ly",
+    "sub": "cam-xuc",
+    "t": "Người ta đánh giá cả một ngày dựa vào phần cuối của nó nhiều hơn phần giữa",
+    "s": "Vì đánh giá hồi tưởng phụ thuộc vào đỉnh và đoạn kết, cùng một ngày có thể được nhớ rất khác nhau tuỳ vào ba mươi phút cuối. Ứng dụng thực dụng: đặt việc dễ chịu vào cuối buổi làm việc và cuối chuyến đi, không phải rải đều.",
+    "tags": [
+      "dinh-va-ket",
+      "tri-nho"
+    ],
+    "src": "Kahneman, Fredrickson, Schreiber & Redelmeier, Psychological Science (1993)"
+  },
+  {
+    "id": "tl-260",
+    "cat": "tam-ly",
+    "sub": "cam-xuc",
+    "t": "Cảm giác cô đơn và số người quanh bạn là hai biến khác nhau",
+    "s": "Cô đơn là khoảng cách giữa quan hệ bạn muốn và quan hệ bạn có, nên người ở giữa đám đông vẫn cô đơn và người sống một mình có thể không. Đây là lý do các can thiệp kiểu 'cho họ tham gia hoạt động nhóm' thường ít hiệu quả hơn can thiệp vào chất lượng một vài quan hệ.",
+    "tags": [
+      "co-don",
+      "quan-he"
+    ],
+    "src": "Cacioppo & Patrick, Loneliness (2008); Masi và cộng sự, Personality and Social Psychology Review (2011)"
+  },
+  {
+    "id": "tl-261",
+    "cat": "tam-ly",
+    "sub": "cam-xuc",
+    "t": "Chờ đợi một tin xấu có thể khó chịu hơn chính tin xấu đó",
+    "s": "Trong nghiên cứu theo dõi người chờ kết quả thi luật, mức lo lắng cao nhất là ngay trước khi biết kết quả, và người biết kết quả xấu hồi phục nhanh hơn dự đoán của chính họ. Điều này gợi ý rằng trì hoãn việc biết sự thật thường đắt hơn là nghe nó.",
+    "tags": [
+      "cho-doi",
+      "lo-lang"
+    ],
+    "src": "Kate Sweeny & James Shepperd, Emotion (2010); nghiên cứu về waiting period"
+  },
+  {
+    "id": "tl-262",
+    "cat": "tam-ly",
+    "sub": "cam-xuc",
+    "t": "Viết ra cảm xúc về một chuyện khó bằng ngôi thứ ba làm khoảng cách với nó tăng lên",
+    "s": "Tự nói chuyện với mình bằng tên riêng hoặc bằng 'bạn' thay vì 'tôi' làm giảm phản ứng cảm xúc và cải thiện chất lượng lập luận về tình huống. Hiệu ứng nhỏ nhưng có thể làm trong vài giây, và nó không đòi ai giúp.",
+    "tags": [
+      "khoang-cach",
+      "tu-noi"
+    ],
+    "src": "Kross và cộng sự, Journal of Personality and Social Psychology (2014)"
+  },
+  {
+    "id": "tl-263",
+    "cat": "tam-ly",
+    "sub": "cam-xuc",
+    "t": "Biết ơn có tác dụng đo được, nhưng chỉ khi cụ thể và không làm quá thường xuyên",
+    "s": "Ghi lại ba điều biết ơn mỗi tuần cho hiệu ứng lớn hơn ghi mỗi ngày — làm hàng ngày khiến việc này thành thủ tục và mất tác dụng. Chi tiết cụ thể cũng quan trọng hơn số lượng: một điều được mô tả rõ hơn ba điều chung chung.",
+    "tags": [
+      "biet-on",
+      "hanh-phuc"
+    ],
+    "src": "Emmons & McCullough, JPSP (2003); Lyubomirsky, Sheldon & Schkade, Review of General Psychology (2005)"
+  },
+  {
+    "id": "tl-264",
+    "cat": "tam-ly",
+    "sub": "cam-xuc",
+    "t": "Cảm xúc tiêu cực có chức năng, và cố xoá hết chúng làm khả năng phán đoán kém đi",
+    "s": "Tâm trạng buồn làm người ta xử lý thông tin kỹ hơn, ít bị thuyết phục bởi lập luận yếu và nhớ chi tiết chính xác hơn. Lo lắng ở mức vừa phải làm tăng chuẩn bị. Vì vậy mục tiêu hợp lý không phải luôn vui mà là cảm xúc khớp với tình huống.",
+    "tags": [
+      "cam-xuc-am",
+      "chuc-nang"
+    ],
+    "src": "Joseph Forgas về ảnh hưởng của tâm trạng lên xử lý thông tin (2013); Schwarz & Clore (1983)"
+  },
+  {
+    "id": "tl-265",
+    "cat": "tam-ly",
+    "sub": "cam-xuc",
+    "t": "Người ta hồi phục sau nghịch cảnh tốt hơn nhiều so với mức chính họ dự đoán",
+    "s": "Dữ liệu theo dõi dài hạn cho thấy đa số người trở lại gần mức hạnh phúc cơ sở sau các sự kiện lớn — nhưng không phải mọi sự kiện: thất nghiệp kéo dài, ly hôn và mất người thân để lại dịch chuyển lâu hơn nhiều so với các sự kiện khác.",
+    "tags": [
+      "hoi-phuc",
+      "thich-ung"
+    ],
+    "src": "Lucas, Clark, Georgellis & Diener, Journal of Personality and Social Psychology (2003, 2004)"
+  },
+  {
+    "id": "tl-266",
+    "cat": "tam-ly",
+    "sub": "cam-xuc",
+    "t": "Đau đớn được nhớ theo mức đau lúc kết thúc, nên một đoạn cuối dịu đi làm ký ức nhẹ hơn",
+    "s": "Trong thí nghiệm nội soi, kéo dài thủ thuật thêm một đoạn ít đau ở cuối làm bệnh nhân nhớ toàn bộ trải nghiệm là ít đau hơn — dù tổng lượng đau lớn hơn. Đây là bằng chứng rõ rằng ký ức về trải nghiệm và bản thân trải nghiệm là hai thứ khác nhau.",
+    "tags": [
+      "dau",
+      "tri-nho"
+    ],
+    "src": "Redelmeier & Kahneman, Pain (1996)"
+  },
+  {
+    "id": "tl-267",
+    "cat": "tam-ly",
+    "sub": "cam-xuc",
+    "t": "Nghe nhạc buồn khi đang buồn giúp nhiều hơn nghe nhạc vui",
+    "s": "Người ta chọn nhạc khớp với tâm trạng hiện tại và báo cáo cảm thấy được đồng cảm, và mức dễ chịu tăng lên. Cơ chế tương tự trong giao tiếp: gọi tên đúng cảm xúc người khác đang có hiệu quả hơn cố kéo họ sang cảm xúc khác ngay.",
+    "tags": [
+      "nhac",
+      "dong-cam"
+    ],
+    "src": "Van den Tol & Edwards, Psychology of Music (2013); Taruffi & Koelsch, PLoS ONE (2014)"
+  },
+  {
+    "id": "tl-268",
+    "cat": "tam-ly",
+    "sub": "cam-xuc",
+    "t": "Sự trông đợi chiếm phần lớn niềm vui của một chuyến đi",
+    "s": "Trong nghiên cứu theo dõi người đi du lịch, mức hạnh phúc cao nhất xuất hiện trong giai đoạn trước chuyến đi, và sau chuyến đi mức hạnh phúc trở về gần bằng nhóm không đi. Hệ quả thực dụng: nhiều chuyến nhỏ có nhiều giai đoạn chờ đợi hơn một chuyến lớn.",
+    "tags": [
+      "trong-doi",
+      "trai-nghiem"
+    ],
+    "src": "Nawijn, Marchand, Veenhoven & Vingerhoets, Applied Research in Quality of Life (2010)"
+  },
+  {
+    "id": "tl-269",
+    "cat": "tam-ly",
+    "sub": "cam-xuc",
+    "t": "Cảm giác thời gian trôi nhanh gắn với việc ít trải nghiệm mới, không với tuổi",
+    "s": "Ký ức dày đặc sự kiện mới làm một quãng thời gian được nhớ là dài; những tháng giống nhau nén lại thành ngắn. Đây là lý do một tuần đi nơi lạ được nhớ dài hơn ba tháng lặp lại, và là cách can thiệp được vào cảm giác đời trôi quá nhanh.",
+    "tags": [
+      "thoi-gian",
+      "tri-nho"
+    ],
+    "src": "William James, Principles of Psychology (1890); Wittmann & Lehnhoff, European Psychologist (2005)"
+  },
+  {
+    "id": "tl-270",
+    "cat": "tam-ly",
+    "sub": "cam-xuc",
+    "t": "Cảm giác kinh ngạc trước thứ lớn hơn mình làm giảm cảm giác tự quan trọng và tăng hành vi giúp đỡ",
+    "s": "Trong các thử nghiệm, người vừa trải qua cảm giác choáng ngợp — trước rừng cây cao, trước hình ảnh vũ trụ — mô tả bản thân nhỏ hơn và sẵn sàng giúp người lạ nhiều hơn. Đây là một lý do thực dụng để tìm những thứ làm bạn thấy mình nhỏ.",
+    "tags": [
+      "kinh-ngac",
+      "vi-tha"
+    ],
+    "src": "Piff, Dietze, Feinberg, Stancato & Keltner, Journal of Personality and Social Psychology (2015)"
+  },
+  {
+    "id": "tl-271",
+    "cat": "tam-ly",
+    "sub": "cam-xuc",
+    "t": "Người ta chịu được đau tốt hơn khi có người thân bên cạnh, và tốt nhất khi được nắm tay",
+    "s": "Trong thí nghiệm chụp não, việc nắm tay bạn đời làm giảm hoạt động ở các vùng liên quan tới đe doạ khi người tham gia chờ một cú sốc điện, và mức giảm tỉ lệ với chất lượng quan hệ. Hiệu ứng nhỏ hơn khi nắm tay người lạ nhưng vẫn có.",
+    "tags": [
+      "dau",
+      "ho-tro-xa-hoi"
+    ],
+    "src": "Coan, Schaefer & Davidson, Psychological Science (2006)"
+  },
+  {
+    "id": "tl-272",
+    "cat": "tam-ly",
+    "sub": "cam-xuc",
+    "t": "Lo lắng về tương lai và trầm cảm về quá khứ đáp ứng với hai loại can thiệp khác nhau",
+    "s": "Lo âu gắn với dự báo quá mức về nguy cơ, nên can thiệp hiệu quả là kiểm chứng dự báo bằng phơi nhiễm dần. Trầm cảm gắn nhiều hơn với giảm hoạt động và nghiền ngẫm, nên can thiệp hiệu quả là kích hoạt hành vi. Trộn hai cách thường làm cả hai kém hiệu lực.",
+    "tags": [
+      "lo-au",
+      "tram-cam"
+    ],
+    "src": "Barlow về điều trị lo âu; Jacobson và cộng sự về behavioral activation, JCCP (1996)"
+  },
+  {
+    "id": "tl-273",
+    "cat": "tam-ly",
+    "sub": "cam-xuc",
+    "t": "Nghiền ngẫm khác suy nghĩ: nó lặp lại câu hỏi 'tại sao' mà không đi tới hành động nào",
+    "s": "Nolen-Hoeksema cho thấy kiểu suy nghĩ lặp tập trung vào nguyên nhân và cảm giác dự báo trầm cảm kéo dài, còn kiểu suy nghĩ tập trung vào 'làm gì tiếp' thì không. Dấu hiệu phân biệt rất đơn giản: sau mười phút, bạn có một việc để làm hay không.",
+    "tags": [
+      "nghien-ngam",
+      "tram-cam"
+    ],
+    "src": "Susan Nolen-Hoeksema, Journal of Abnormal Psychology (1991, 2000)"
+  },
+  {
+    "id": "tl-274",
+    "cat": "tam-ly",
+    "sub": "cam-xuc",
+    "t": "Người ta đánh giá quá cao mức người khác để ý tới lỗi của mình, và mức đó giảm rất nhanh",
+    "s": "Sau một lần nói sai trong họp, bạn nhớ nó nhiều tuần còn người khác quên trong vài phút — vì họ đang bận với chuyện của họ. Nhận ra bất đối xứng này là một trong những cách rẻ nhất để giảm nỗi sợ nói trước nhóm.",
+    "tags": [
+      "anh-den-sang",
+      "tu-y-thuc"
+    ],
+    "src": "Gilovich, Medvec & Savitsky, Journal of Personality and Social Psychology (2000)"
+  },
+  {
+    "id": "tl-275",
+    "cat": "tam-ly",
+    "sub": "tri-nho",
+    "t": "Mỗi lần nhớ lại là một lần ghi lại, nên ký ức bị sửa bởi chính việc nhớ",
+    "s": "Trí nhớ dài hạn không được đọc như đọc file mà được dựng lại rồi lưu lại, và trạng thái hiện tại lẫn vào bản lưu mới. Điều này giải thích vì sao câu chuyện kể nhiều lần trở nên gọn gàng và nhất quán hơn — nó đang được biên tập, không được bảo quản.",
+    "tags": [
+      "tai-cung-co",
+      "tri-nho"
+    ],
+    "src": "Nader, Schafe & LeDoux, Nature (2000); Loftus về khả biến của ký ức"
+  },
+  {
+    "id": "tl-276",
+    "cat": "tam-ly",
+    "sub": "tri-nho",
+    "t": "Bạn nhớ được rất ít chi tiết về những thứ nhìn hàng ngày",
+    "s": "Rất ít người vẽ đúng mặt đồng hồ, bàn phím điện thoại hay đồng tiền mình dùng mỗi ngày. Trí nhớ lưu cái đủ để nhận ra và dùng được, không lưu bản sao — nên 'tôi nhìn thấy rõ ràng' không đảm bảo 'tôi mô tả lại được'.",
+    "tags": [
+      "chi-tiet",
+      "nhan-biet"
+    ],
+    "src": "Nickerson & Adams, Cognitive Psychology (1979) — thí nghiệm vẽ lại đồng xu"
+  },
+  {
+    "id": "tl-277",
+    "cat": "tam-ly",
+    "sub": "tri-nho",
+    "t": "Người ta có thể nhớ rất chi tiết về một sự kiện chưa từng xảy ra",
+    "s": "Bằng cách nhắc lại một sự kiện giả cùng vài chi tiết thật, các nhà nghiên cứu tạo được ký ức 'bị lạc trong trung tâm thương mại' ở một phần đáng kể người tham gia — và những ký ức đó được kể với cảm giác chắc chắn. Vì vậy mức chi tiết không phải bằng chứng cho tính thật.",
+    "tags": [
+      "ky-uc-gia",
+      "chi-tiet"
+    ],
+    "src": "Loftus & Pickrell, Psychiatric Annals (1995)"
+  },
+  {
+    "id": "tl-278",
+    "cat": "tam-ly",
+    "sub": "tri-nho",
+    "t": "Ngủ củng cố ký ức có chọn lọc, và nó ưu tiên thứ bạn được cho biết là sẽ cần dùng",
+    "s": "Khi người tham gia được thông báo trước rằng sẽ bị kiểm tra, phần ký ức đó được củng cố tốt hơn qua giấc ngủ so với phần được bảo là không cần. Nghĩa là ý định trước khi ngủ ảnh hưởng tới việc não giữ lại gì.",
+    "tags": [
+      "giac-ngu",
+      "cung-co"
+    ],
+    "src": "Wilhelm và cộng sự, Journal of Neuroscience (2011)"
+  },
+  {
+    "id": "tl-279",
+    "cat": "tam-ly",
+    "sub": "tri-nho",
+    "t": "Bạn nhớ nơi tìm được thông tin thay vì nhớ chính thông tin đó khi biết mình có thể tra lại",
+    "s": "Khi tin rằng dữ liệu sẽ được lưu trên máy, người ta ghi nhớ nội dung kém hơn nhưng nhớ vị trí lưu tốt hơn. Đây không phải suy giảm trí nhớ mà là phân công lại — nhưng nó có nghĩa là kiến thức dùng ngay trong đầu phải được luyện riêng.",
+    "tags": [
+      "tri-nho-ngoai",
+      "cong-nghe"
+    ],
+    "src": "Sparrow, Liu & Wegner, Science (2011)"
+  },
+  {
+    "id": "tl-280",
+    "cat": "tam-ly",
+    "sub": "tri-nho",
+    "t": "Bạn nhớ tốt hơn ở đúng trạng thái và bối cảnh lúc học",
+    "s": "Thợ lặn học danh sách từ dưới nước nhớ tốt hơn khi được kiểm tra dưới nước. Hiệu ứng phụ thuộc bối cảnh có thật nhưng không lớn, và cách dùng đúng không phải thi ở nơi đã học mà là học ở nhiều bối cảnh để ký ức không dính vào một chỗ.",
+    "tags": [
+      "boi-canh",
+      "hoc"
+    ],
+    "src": "Godden & Baddeley, British Journal of Psychology (1975)"
+  },
+  {
+    "id": "tl-281",
+    "cat": "tam-ly",
+    "sub": "tri-nho",
+    "t": "Trí nhớ ngắn hạn giữ được nhiều hơn khi thông tin được gộp thành khối có nghĩa",
+    "s": "Bảy chữ số rời rạc rất khó giữ, nhưng cùng số chữ số đó thành một ngày tháng quen thì dễ. Đây là lý do người có nền chuyên môn nhớ được nhiều chi tiết hơn trong lĩnh vực của họ — không phải trí nhớ tốt hơn mà là khối lớn hơn.",
+    "tags": [
+      "gop-khoi",
+      "tri-nho-ngan"
+    ],
+    "src": "George Miller, Psychological Review (1956); Chase & Simon về ghi nhớ ở kỳ thủ (1973)"
+  },
+  {
+    "id": "tl-282",
+    "cat": "tam-ly",
+    "sub": "tri-nho",
+    "t": "Kỳ thủ giỏi nhớ bàn cờ rất tốt, nhưng chỉ khi thế cờ hợp lý",
+    "s": "Với thế cờ có ý nghĩa, kiện tướng nhớ vị trí quân vượt xa người mới. Với các quân được đặt ngẫu nhiên, khoảng cách gần như biến mất. Điều này chứng minh trí nhớ chuyên môn là trí nhớ về khuôn mẫu, không phải năng lực chung.",
+    "tags": [
+      "chuyen-mon",
+      "khuon-mau"
+    ],
+    "src": "Chase & Simon, Cognitive Psychology (1973); Gobet & Simon (1996)"
+  },
+  {
+    "id": "tl-283",
+    "cat": "tam-ly",
+    "sub": "tri-nho",
+    "t": "Nhân chứng tự tin hơn sau khi được khen là nhận dạng đúng, dù không có thông tin mới nào",
+    "s": "Chỉ một câu 'tốt, anh xác định đúng người rồi' làm mức tự tin của nhân chứng tăng mạnh, và sự tự tin ấy sau đó thuyết phục bồi thẩm đoàn. Đây là lý do các quy trình nhận dạng hiện đại yêu cầu ghi lại mức tự tin ngay lập tức và người điều hành không biết ai là nghi phạm.",
+    "tags": [
+      "nhan-chung",
+      "tu-tin"
+    ],
+    "src": "Wells & Bradfield, Journal of Applied Psychology (1998)"
+  },
+  {
+    "id": "tl-284",
+    "cat": "tam-ly",
+    "sub": "tri-nho",
+    "t": "Ký ức sống động nhất về các sự kiện lớn thường sai ở chi tiết mà vẫn được kể với niềm tin cao",
+    "s": "Khi so lời kể ngay sau sự kiện với lời kể vài năm sau, mức trùng khớp thấp trong khi mức tự tin vẫn rất cao. Điều này áp dụng cho mọi ký ức 'tôi nhớ như in mình đang ở đâu lúc đó', và nó là một trong các lý do lời khai muộn có giá trị thấp.",
+    "tags": [
+      "ky-uc-den-flash",
+      "do-tin"
+    ],
+    "src": "Talarico & Rubin, Psychological Science (2003); Hirst và cộng sự về ký ức 11/9 (2009)"
+  },
+  {
+    "id": "tl-285",
+    "cat": "tam-ly",
+    "sub": "tri-nho",
+    "t": "Bạn nhớ điều đầu và điều cuối của một danh sách tốt hơn phần giữa",
+    "s": "Hiệu ứng vị trí chuỗi có hai nửa: phần đầu được nhớ nhờ đã kịp chuyển vào trí nhớ dài hạn, phần cuối nhờ còn trong trí nhớ ngắn hạn. Ứng dụng ngay: đặt hai điều quan trọng nhất ở đầu và cuối bài trình bày, không ở giữa.",
+    "tags": [
+      "vi-tri-chuoi",
+      "trinh-bay"
+    ],
+    "src": "Hermann Ebbinghaus (1885); Murdock, Journal of Experimental Psychology (1962)"
+  },
+  {
+    "id": "tl-286",
+    "cat": "tam-ly",
+    "sub": "tri-nho",
+    "t": "Gắn thông tin vào một tuyến đường trong đầu là kỹ thuật ghi nhớ mạnh nhất từng được kiểm chứng",
+    "s": "Phương pháp cung điện ký ức dùng khả năng nhớ không gian — vốn rất mạnh ở người — để chở các thông tin không có cấu trúc. Các nhà vô địch ghi nhớ hầu hết dùng biến thể của kỹ thuật này, và ảnh chụp não cho thấy họ không khác người thường về cấu trúc mà khác về chiến lược.",
+    "tags": [
+      "cung-dien-ky-uc",
+      "ky-thuat"
+    ],
+    "src": "Maguire, Valentine, Wilding & Kapur, Nature Neuroscience (2003)"
+  },
+  {
+    "id": "tl-287",
+    "cat": "tam-ly",
+    "sub": "tri-nho",
+    "t": "Quên là một chức năng, không phải một lỗi",
+    "s": "Người có trí nhớ tự truyện gần như hoàn hảo mô tả việc không quên được là một gánh nặng, và trong lý thuyết học máy cũng vậy: hệ thống nhớ mọi chi tiết sẽ khái quát hoá kém. Quên chi tiết là cách trí nhớ tách lấy khuôn mẫu dùng lại được.",
+    "tags": [
+      "quen",
+      "khai-quat"
+    ],
+    "src": "Nghiên cứu về hyperthymesia (Parker, Cahill & McGaugh, 2006); Richards & Frankland, Neuron (2017)"
+  },
+  {
+    "id": "tl-288",
+    "cat": "tam-ly",
+    "sub": "tri-nho",
+    "t": "Bạn có thể nhớ được thứ mình chưa từng học nếu nó khớp với khuôn mẫu đã có",
+    "s": "Sau khi nghe danh sách 'giường, nghỉ, đêm, mỏi', nhiều người khẳng định chắc chắn đã nghe từ 'ngủ' — vốn không có trong danh sách. Đây là bằng chứng rằng nhớ lại là dựng lại từ liên kết, và các liên kết mạnh có thể tạo ra ký ức không có nguồn.",
+    "tags": [
+      "ky-uc-gia",
+      "lien-ket"
+    ],
+    "src": "Roediger & McDermott, Journal of Experimental Psychology: LMC (1995)"
+  },
+  {
+    "id": "tl-289",
+    "cat": "tam-ly",
+    "sub": "tri-nho",
+    "t": "Người ta nhớ lời hứa của mình chọn lọc theo hướng có lợi",
+    "s": "Trong các nghiên cứu về đàm phán và chia việc nhà, cả hai bên nhớ phần đóng góp của mình cao hơn và phần cam kết của mình nhẹ hơn — tổng các phần thường vượt 100%. Đây là lý do các cam kết quan trọng cần được ghi ra, không phải vì ai đó không trung thực.",
+    "tags": [
+      "cam-ket",
+      "tu-phuc-vu"
+    ],
+    "src": "Ross & Sicoly, Journal of Personality and Social Psychology (1979) về egocentric bias trong quy công"
+  },
+  {
+    "id": "tl-290",
+    "cat": "tam-ly",
+    "sub": "tri-nho",
+    "t": "Bạn không nhớ nguồn của thông tin lâu bằng nhớ nội dung, nên tin sai có thể sống lại",
+    "s": "Sau một thời gian, người ta còn nhớ 'nghe đâu đó rằng X' mà không còn nhớ 'X đã bị bác bỏ' — hiện tượng lẫn nguồn. Đó là lý do một lời bác bỏ mạnh hôm nay không đảm bảo tin sai không quay lại sau vài tháng.",
+    "tags": [
+      "nguon",
+      "thong-tin-sai"
+    ],
+    "src": "Johnson, Hashtroudi & Lindsay, Psychological Bulletin (1993) về source monitoring"
+  },
+  {
+    "id": "tl-291",
+    "cat": "tam-ly",
+    "sub": "tri-nho",
+    "t": "Đường quên có hình dốc mạnh rồi phẳng dần, nên ôn sớm hiệu quả hơn ôn nhiều",
+    "s": "Ebbinghaus đo được phần lớn thất thoát xảy ra trong những giờ và ngày đầu, rồi phần còn lại giảm rất chậm. Hệ quả thực dụng là một lần ôn trong vòng 24 giờ có giá trị hơn ba lần ôn sau một tháng.",
+    "tags": [
+      "duong-quen",
+      "on-tap"
+    ],
+    "src": "Hermann Ebbinghaus, Über das Gedächtnis (1885); Murre & Dros nhân bản, PLoS ONE (2015)"
+  },
+  {
+    "id": "tl-292",
+    "cat": "tam-ly",
+    "sub": "tri-nho",
+    "t": "Thông tin gây cảm xúc mạnh được nhớ tốt hơn ở phần trung tâm và tệ hơn ở phần ngoại vi",
+    "s": "Nhân chứng của một vụ có vũ khí nhớ rõ vũ khí và nhớ kém mặt người — hiện tượng 'tập trung vào vũ khí'. Nghĩa là cảm xúc mạnh không làm trí nhớ tốt lên hay xấu đi một cách đồng đều, nó thu hẹp phạm vi.",
+    "tags": [
+      "cam-xuc",
+      "nhan-chung"
+    ],
+    "src": "Loftus, Loftus & Messo, Law and Human Behavior (1987); Christianson, Psychological Bulletin (1992)"
+  },
+  {
+    "id": "tl-293",
+    "cat": "tam-ly",
+    "sub": "tri-nho",
+    "t": "Kể lại một sự kiện cho người khác định hình lại ký ức của bạn về nó",
+    "s": "Phiên bản được kể — với các chi tiết bị lược, phần hấp dẫn được nhấn — dần thay thế bản gốc trong trí nhớ. Đây là lý do các quy trình điều tra tránh để nhân chứng trao đổi với nhau trước khi lấy lời khai.",
+    "tags": [
+      "ke-lai",
+      "bien-doi"
+    ],
+    "src": "Marsh, Current Directions in Psychological Science (2007); Hirst & Echterhoff về ký ức tập thể (2012)"
+  },
+  {
+    "id": "tl-294",
+    "cat": "tam-ly",
+    "sub": "tri-nho",
+    "t": "Nhóm nhớ tệ hơn tổng các thành viên nhớ riêng lẻ",
+    "s": "Khi cùng nhớ lại, các thành viên ngắt dòng hồi tưởng của nhau nên tổng số chi tiết nhóm thu được ít hơn khi mỗi người nhớ riêng rồi mới gộp. Ứng dụng cho họp phân tích sự cố: thu ghi chép cá nhân trước, thảo luận sau.",
+    "tags": [
+      "nhom",
+      "hoi-tuong"
+    ],
+    "src": "Basden, Basden, Bryner & Thomas, Journal of Experimental Psychology: LMC (1997) — collaborative inhibition"
+  },
+  {
+    "id": "tl-295",
+    "cat": "tam-ly",
+    "sub": "ban-than",
+    "t": "Người ta tự đánh giá cao hơn mức trung bình ở các phẩm chất mơ hồ và thấp hơn ở các kỹ năng cụ thể",
+    "s": "Ai cũng tin mình trung thực và biết lắng nghe hơn trung bình, nhưng ít ai tin mình chơi cờ hay lập trình giỏi hơn trung bình. Khác biệt nằm ở khả năng kiểm chứng: phẩm chất càng khó đo, sai lệch tự đánh giá càng lớn.",
+    "tags": [
+      "tu-danh-gia",
+      "hon-trung-binh"
+    ],
+    "src": "Dunning, Meyerowitz & Holzberg, JPSP (1989); Kruger, JPSP (1999)"
+  },
+  {
+    "id": "tl-296",
+    "cat": "tam-ly",
+    "sub": "ban-than",
+    "t": "Tự thương mình hiệu quả hơn tự phê phán trong việc thay đổi hành vi",
+    "s": "Trái với trực giác 'phải nghiêm khắc mới tiến bộ', các nghiên cứu cho thấy người đối xử với thất bại của mình như với thất bại của một người bạn thì kiên trì hơn, chịu nhận lỗi hơn và ít trốn tránh hơn. Tự phê phán tạo ra động lực tránh, vốn dễ dẫn tới bỏ.",
+    "tags": [
+      "tu-thuong",
+      "kien-tri"
+    ],
+    "src": "Kristin Neff & Christopher Germer (2013); Breines & Chen, Personality and Social Psychology Bulletin (2012)"
+  },
+  {
+    "id": "tl-297",
+    "cat": "tam-ly",
+    "sub": "ban-than",
+    "t": "Bạn giải thích hành vi của mình bằng cách suy ra từ hành vi, không bằng cách đọc động cơ bên trong",
+    "s": "Con người không có quyền truy cập trực tiếp vào lý do thật của mình, nên ta quan sát mình đã làm gì rồi dựng ra một lời giải thích hợp lý. Nisbett và Wilson chỉ ra rằng những lời giải thích đó thường sai một cách kiểm chứng được.",
+    "tags": [
+      "tu-nhan-thuc",
+      "giai-thich"
+    ],
+    "src": "Nisbett & Wilson, Psychological Review (1977); Bem, lý thuyết tự nhận thức (1972)"
+  },
+  {
+    "id": "tl-298",
+    "cat": "tam-ly",
+    "sub": "ban-than",
+    "t": "Người ta thay đổi niềm tin để khớp với hành vi đã làm, kể cả với việc rất nhỏ",
+    "s": "Sau khi ký một bản kiến nghị nhỏ, người ta trở nên ủng hộ vấn đề đó hơn; sau khi nói dối vì một khoản tiền không đáng, người ta bắt đầu tin điều mình nói. Nghĩa là con đường ngắn nhất tới việc đổi quan điểm của một người thường là làm họ thực hiện một hành động nhỏ.",
+    "tags": [
+      "bat-hoa",
+      "hanh-vi"
+    ],
+    "src": "Festinger & Carlsmith, Journal of Abnormal and Social Psychology (1959)"
+  },
+  {
+    "id": "tl-299",
+    "cat": "tam-ly",
+    "sub": "ban-than",
+    "t": "Bản sắc dự báo hành vi tốt hơn mục tiêu",
+    "s": "'Tôi không hút thuốc' vững hơn 'tôi đang cố cai thuốc', vì nó không đòi ra quyết định lại mỗi lần bị mời. Trong thí nghiệm, cách diễn đạt bằng danh từ chỉ con người ('hãy là một người đi bầu') làm tăng hành vi thật so với cách diễn đạt bằng động từ.",
+    "tags": [
+      "ban-sac",
+      "hanh-vi"
+    ],
+    "src": "Bryan, Walton, Rogers & Dweck, PNAS (2011)"
+  },
+  {
+    "id": "tl-300",
+    "cat": "tam-ly",
+    "sub": "ban-than",
+    "t": "Người ta tự phá hoại trước một thử thách để có sẵn lời giải thích cho thất bại",
+    "s": "Thức khuya trước ngày phỏng vấn, không chuẩn bị cho bài trình bày quan trọng — hành vi này bảo vệ hình ảnh bản thân bằng cách tạo ra một nguyên nhân bên ngoài. Nhận ra khuôn mẫu này quan trọng vì nó thường bị hiểu thành thiếu kỷ luật.",
+    "tags": [
+      "tu-pha-hoai",
+      "hinh-anh"
+    ],
+    "src": "Berglas & Jones, Journal of Personality and Social Psychology (1978) — self-handicapping"
+  },
+  {
+    "id": "tl-301",
+    "cat": "tam-ly",
+    "sub": "ban-than",
+    "t": "Người ta nhớ mình đã dự đoán đúng và quên các dự đoán sai của chính mình",
+    "s": "Trí nhớ về quan điểm cũ bị cập nhật theo quan điểm hiện tại, nên cảm giác 'tôi luôn nghĩ vậy' rất khó tin. Cách chống duy nhất là ghi lại — và điều đó cũng làm cho việc học từ kinh nghiệm trở nên khả thi.",
+    "tags": [
+      "nhan-thuc-muon",
+      "tu-danh-gia"
+    ],
+    "src": "Fischhoff & Beyth, Organizational Behavior and Human Performance (1975)"
+  },
+  {
+    "id": "tl-302",
+    "cat": "tam-ly",
+    "sub": "ban-than",
+    "t": "Nghĩ mình có thể thay đổi làm bạn thay đổi được nhiều hơn, nhưng hiệu ứng nhỏ hơn quảng bá",
+    "s": "Tư duy phát triển có liên hệ với kết quả học tập, nhưng các phân tích tổng hợp lớn cho hiệu ứng nhỏ và tập trung ở nhóm học sinh yếu hoặc gặp khó khăn. Nghĩa là nó có giá trị nhưng không phải chìa khoá vạn năng như nhiều bài phổ biến trình bày.",
+    "tags": [
+      "tu-duy-phat-trien",
+      "hieu-ung"
+    ],
+    "src": "Sisk và cộng sự, Psychological Science (2018); Yeager và cộng sự, Nature (2019)"
+  },
+  {
+    "id": "tl-303",
+    "cat": "tam-ly",
+    "sub": "ban-than",
+    "t": "Cảm giác mình là người thế nào thay đổi theo vai đang đóng, nhanh hơn ta tưởng",
+    "s": "Người được phân vai lãnh đạo trong một nhiệm vụ ngắn bắt đầu tự đánh giá là quyết đoán hơn, và điều đó ảnh hưởng tới hành vi ở nhiệm vụ tiếp theo. Đây là lý do việc thay đổi vai trò trong công việc thường thay đổi con người, không chỉ thay đổi kết quả.",
+    "tags": [
+      "vai-tro",
+      "ban-sac"
+    ],
+    "src": "Nghiên cứu về role identity và self-perception (Bem, 1972); Ridgeway về vị thế trong nhóm nhỏ"
+  },
+  {
+    "id": "tl-304",
+    "cat": "tam-ly",
+    "sub": "ban-than",
+    "t": "Người ta duy trì hình ảnh trung thực bằng cách gian lận vừa đủ để không phải đổi hình ảnh đó",
+    "s": "Trong các thí nghiệm, hầu hết người tham gia gian lận một chút chứ không tối đa, và mức gian lận tăng khi hành vi được che bởi các bước trung gian — đổi qua thẻ, qua điểm, qua người khác. Nghĩa là thiết kế quy trình ảnh hưởng tới trung thực nhiều hơn phẩm chất cá nhân.",
+    "tags": [
+      "trung-thuc",
+      "hinh-anh"
+    ],
+    "src": "Mazar, Amir & Ariely, Journal of Marketing Research (2008)"
+  },
+  {
+    "id": "tl-305",
+    "cat": "tam-ly",
+    "sub": "ban-than",
+    "t": "Tự tin và năng lực tương quan yếu, và người quanh bạn dùng tự tin làm thước đo năng lực",
+    "s": "Đây là hai kết quả riêng, ghép lại thì có hệ quả bất tiện: hệ thống xã hội thưởng cho biểu hiện tự tin nhiều hơn cho độ chính xác. Với người làm việc nghiêm túc, hệ quả thực dụng là phải học cách trình bày mức chắc chắn rõ ràng, không phải học cách tỏ ra chắc chắn.",
+    "tags": [
+      "tu-tin",
+      "nang-luc"
+    ],
+    "src": "Anderson, Brion, Moore & Kennedy, Journal of Personality and Social Psychology (2012)"
+  },
+  {
+    "id": "tl-306",
+    "cat": "tam-ly",
+    "sub": "ban-than",
+    "t": "Người ta đánh giá bản thân trong quá khứ thấp đi để thấy mình đang tiến bộ",
+    "s": "Trong các nghiên cứu về so sánh theo thời gian, người ta nhớ phiên bản cũ của mình kém hơn thực tế — cách này tạo cảm giác cải thiện mà không cần cải thiện thật. Đây là lý do các đánh giá tự báo cáo về tiến bộ cần được kiểm bằng số liệu ghi lại từ trước.",
+    "tags": [
+      "tien-bo",
+      "tri-nho"
+    ],
+    "src": "Wilson & Ross, Journal of Personality and Social Psychology (2001)"
+  },
+  {
+    "id": "tl-307",
+    "cat": "tam-ly",
+    "sub": "ban-than",
+    "t": "Nhắc lại giá trị quan trọng nhất của mình trước một tình huống bị đe doạ làm hiệu suất giữ được",
+    "s": "Bài tập tự khẳng định giá trị — viết vài phút về một điều mình coi trọng — làm giảm phản ứng phòng thủ trước thông tin bất lợi và giảm khoảng cách kết quả trong một số thử nghiệm giáo dục. Hiệu ứng phụ thuộc nhiều vào bối cảnh và không phải lúc nào cũng nhân bản được.",
+    "tags": [
+      "tu-khang-dinh",
+      "phong-thu"
+    ],
+    "src": "Cohen, Garcia, Apfel & Master, Science (2006); Sherman & Cohen (2006); một số nhân bản cho hiệu ứng nhỏ hơn"
+  },
+  {
+    "id": "tl-308",
+    "cat": "tam-ly",
+    "sub": "ban-than",
+    "t": "Người ta chịu đựng bất công với mình dễ hơn khi tin hệ thống là công bằng",
+    "s": "Niềm tin vào một thế giới công bằng giúp giảm lo lắng nhưng có giá: nó làm người ta trách nạn nhân và giảm động lực thay đổi điều kiện. Nhận ra cơ chế này giúp phân biệt giữa chấp nhận để sống được và chấp nhận vì đã ngừng nhìn thấy vấn đề.",
+    "tags": [
+      "the-gioi-cong-bang",
+      "bien-minh"
+    ],
+    "src": "Melvin Lerner, The Belief in a Just World (1980)"
+  },
+  {
+    "id": "tl-309",
+    "cat": "tam-ly",
+    "sub": "nhin-nguoi-khac",
+    "t": "Bạn đánh giá người khác qua khuôn mẫu nhóm khi có ít thông tin, và điều đó xảy ra tự động",
+    "s": "Việc kích hoạt khuôn mẫu diễn ra nhanh và ngoài ý thức; điều nằm trong tầm kiểm soát là bước sau — có dùng nó để kết luận hay không. Vì vậy can thiệp hiệu quả không phải cố 'không có định kiến' mà là thiết kế quy trình buộc phải thu thêm thông tin cá nhân.",
+    "tags": [
+      "khuon-mau",
+      "danh-gia"
+    ],
+    "src": "Devine, Journal of Personality and Social Psychology (1989)"
+  },
+  {
+    "id": "tl-310",
+    "cat": "tam-ly",
+    "sub": "nhin-nguoi-khac",
+    "t": "Ẩn danh hoá hồ sơ làm thay đổi kết quả tuyển chọn một cách đo được",
+    "s": "Khi các dàn nhạc Mỹ chuyển sang thi tuyển sau màn che, tỉ lệ nhạc công nữ vượt qua các vòng tăng lên đáng kể. Nghiên cứu này thường bị trích quá mạnh so với cỡ mẫu, nhưng nguyên tắc rộng hơn thì vững: giấu thông tin không liên quan làm đánh giá chính xác hơn.",
+    "tags": [
+      "tuyen-chon",
+      "an-danh"
+    ],
+    "src": "Goldin & Rouse, American Economic Review (2000); các phân tích lại chỉ ra hạn chế về cỡ mẫu"
+  },
+  {
+    "id": "tl-311",
+    "cat": "tam-ly",
+    "sub": "nhin-nguoi-khac",
+    "t": "Người ta thích người giống mình, và điểm giống nhau càng ngẫu nhiên thì tác dụng càng lạ",
+    "s": "Trùng tên, trùng ngày sinh, trùng quê đều làm tăng tỉ lệ đồng ý giúp đỡ trong các thí nghiệm hiện trường. Hiệu ứng này bị dùng nhiều trong bán hàng, và biết nó tồn tại giúp bạn tách phần thiện cảm ra khỏi phần đánh giá về đề nghị.",
+    "tags": [
+      "tuong-dong",
+      "thien-cam"
+    ],
+    "src": "Burger, Messian, Patel, del Prado & Anderson, Personality and Social Psychology Bulletin (2004)"
+  },
+  {
+    "id": "tl-312",
+    "cat": "tam-ly",
+    "sub": "nhin-nguoi-khac",
+    "t": "Người ta hợp tác với người lạ nhiều hơn dự đoán của các mô hình kinh tế",
+    "s": "Trong trò chơi chia tiền một lần với người không bao giờ gặp lại, phần lớn người chia đưa khoảng 40–50% chứ không đưa mức tối thiểu, và người nhận thường từ chối các đề nghị dưới khoảng 20% dù từ chối thì mất trắng. Kết quả này lặp lại ở rất nhiều nền văn hoá với biên độ khác nhau.",
+    "tags": [
+      "hop-tac",
+      "cong-bang"
+    ],
+    "src": "Güth, Schmittberger & Schwarze (1982); Henrich và cộng sự, Behavioral and Brain Sciences (2005)"
+  },
+  {
+    "id": "tl-313",
+    "cat": "tam-ly",
+    "sub": "nhin-nguoi-khac",
+    "t": "Mục tiêu chung phá được xung đột nhóm hiệu quả hơn tiếp xúc đơn thuần",
+    "s": "Trong thí nghiệm ở trại hè Robbers Cave, việc cho hai nhóm đối đầu gặp nhau không giảm căng thẳng; chỉ khi họ buộc phải cùng giải một vấn đề — sửa đường ống nước — thái độ mới đổi. Bài học áp dụng cho cả tổ chức: ghép nhóm vào một mục tiêu chung chứ không chỉ tổ chức giao lưu.",
+    "tags": [
+      "xung-dot-nhom",
+      "muc-tieu-chung"
+    ],
+    "src": "Sherif và cộng sự, Robbers Cave Experiment (1954); Allport về điều kiện tiếp xúc (1954)"
+  },
+  {
+    "id": "tl-314",
+    "cat": "tam-ly",
+    "sub": "nhin-nguoi-khac",
+    "t": "Tiếp xúc giữa các nhóm chỉ giảm định kiến khi thoả một số điều kiện, không phải mọi tiếp xúc",
+    "s": "Phân tích tổng hợp trên hàng trăm nghiên cứu cho thấy tiếp xúc giảm định kiến rõ nhất khi hai bên có vị thế tương đương, có mục tiêu chung, phải hợp tác và được thể chế hỗ trợ. Tiếp xúc không có các điều kiện đó có thể không tác dụng hoặc làm xấu hơn.",
+    "tags": [
+      "dinh-kien",
+      "tiep-xuc"
+    ],
+    "src": "Pettigrew & Tropp, Journal of Personality and Social Psychology (2006)"
+  },
+  {
+    "id": "tl-315",
+    "cat": "tam-ly",
+    "sub": "nhin-nguoi-khac",
+    "t": "Người ta tuân theo nhóm về nhận thức, không chỉ về phát biểu",
+    "s": "Trong thí nghiệm Asch, một số người tham gia thật sự nhìn thấy đoạn thẳng khác đi, không chỉ nói theo cho xong. Phân biệt hai loại tuân thủ này quan trọng: loại thứ hai biến mất khi trả lời riêng, loại thứ nhất thì không.",
+    "tags": [
+      "tuan-thu",
+      "nhan-thuc"
+    ],
+    "src": "Solomon Asch, Scientific American (1955); Berns và cộng sự, Biological Psychiatry (2005) về dữ liệu ảnh não"
+  },
+  {
+    "id": "tl-316",
+    "cat": "tam-ly",
+    "sub": "nhin-nguoi-khac",
+    "t": "Một người phản đối công khai làm sức ép tuân thủ giảm gần hết",
+    "s": "Trong các biến thể của thí nghiệm Asch, chỉ cần một người đồng minh nói khác là tỉ lệ người tham gia dám nói đúng tăng vọt. Đây là lý do trong họp, người đầu tiên dám nêu ý kiến trái chiều tạo ra giá trị lớn hơn nội dung ý kiến đó.",
+    "tags": [
+      "tuan-thu",
+      "phan-doi"
+    ],
+    "src": "Solomon Asch (1955); Nemeth về ảnh hưởng của thiểu số (1986)"
+  },
+  {
+    "id": "tl-317",
+    "cat": "tam-ly",
+    "sub": "nhin-nguoi-khac",
+    "t": "Người ta phục tùng chỉ dẫn của người có vẻ có thẩm quyền xa hơn mức họ tin mình sẽ làm",
+    "s": "Thí nghiệm Milgram thường bị tóm gọn quá đơn giản, và phương pháp của nó bị phê phán nhiều. Điều còn đứng vững là cốt lõi: mức phục tùng phụ thuộc mạnh vào các chi tiết tình huống — khoảng cách với nạn nhân, sự hiện diện của người ra lệnh — hơn là vào tính cách.",
+    "tags": [
+      "phuc-tung",
+      "tinh-huong"
+    ],
+    "src": "Stanley Milgram (1963); Gina Perry, Behind the Shock Machine (2013) — phê phán phương pháp"
+  },
+  {
+    "id": "tl-318",
+    "cat": "tam-ly",
+    "sub": "nhin-nguoi-khac",
+    "t": "Trách nhiệm bị pha loãng khi có nhiều người, nhưng chỉ khi không ai được chỉ định",
+    "s": "Cơ chế của hiệu ứng người ngoài cuộc là phân tán trách nhiệm và không rõ ai nên hành động. Vì vậy cách can thiệp hiệu quả trong thực tế là chỉ định cụ thể: gọi đúng một người bằng đặc điểm nhận dạng rồi giao đúng một việc.",
+    "tags": [
+      "nguoi-ngoai-cuoc",
+      "trach-nhiem"
+    ],
+    "src": "Darley & Latané, Journal of Personality and Social Psychology (1968)"
+  },
+  {
+    "id": "tl-319",
+    "cat": "tam-ly",
+    "sub": "nhin-nguoi-khac",
+    "t": "Trong các vụ có nhiều người chứng kiến, khả năng có ai đó can thiệp thực tế lại cao",
+    "s": "Phân tích video từ camera đường phố ở ba nước cho thấy trong khoảng 9 trên 10 vụ xung đột công khai, có ít nhất một người can thiệp — và số người có mặt càng nhiều thì khả năng có người giúp càng cao. Điều này điều chỉnh lại cách hiểu quá bi quan về hiệu ứng người ngoài cuộc.",
+    "tags": [
+      "nguoi-ngoai-cuoc",
+      "can-thiep"
+    ],
+    "src": "Philpot, Liebst, Levine, Bernasco & Lindegaard, American Psychologist (2020)"
+  },
+  {
+    "id": "tl-320",
+    "cat": "tam-ly",
+    "sub": "nhin-nguoi-khac",
+    "t": "Người ta đánh giá hành vi của người có vị thế cao khoan dung hơn cùng hành vi ở người vị thế thấp",
+    "s": "Cùng một lần đến muộn, cùng một câu nói mạnh được đọc là quyết đoán hay vô lễ tuỳ vị trí người thực hiện. Hiện tượng này làm các bộ quy tắc ứng xử trên giấy không đủ: nếu không đo cách áp dụng, chuẩn mực thực tế sẽ khác chuẩn mực công bố.",
+    "tags": [
+      "vi-the",
+      "danh-gia"
+    ],
+    "src": "Nghiên cứu về status và diễn giải hành vi; Ridgeway, Status Construction Theory (1991)"
+  },
+  {
+    "id": "tl-321",
+    "cat": "tam-ly",
+    "sub": "nhin-nguoi-khac",
+    "t": "Quyền lực làm giảm khả năng nhận biết cảm xúc của người khác",
+    "s": "Trong các thí nghiệm, người được đặt vào vai có quyền đọc biểu cảm kém chính xác hơn và ít điều chỉnh theo góc nhìn người đối diện hơn. Hiệu ứng này giải thích một phần vì sao phản hồi từ dưới lên ít khi tới được nơi cần tới.",
+    "tags": [
+      "quyen-luc",
+      "dong-cam"
+    ],
+    "src": "Galinsky, Magee, Inesi & Gruenfeld, Psychological Science (2006)"
+  },
+  {
+    "id": "tl-322",
+    "cat": "tam-ly",
+    "sub": "nhin-nguoi-khac",
+    "t": "Bạn đọc được cảm xúc người quen chính xác hơn người lạ, nhưng bạn tưởng khoảng cách lớn hơn thực tế",
+    "s": "Người ta tự tin cao về khả năng hiểu bạn đời và bạn thân, trong khi độ chính xác thực tế chỉ hơn mức với người lạ một ít. Ảo tưởng thấu hiểu này là nguyên nhân của nhiều xung đột, vì nó làm người ta bỏ bước hỏi cho rõ.",
+    "tags": [
+      "dong-cam",
+      "quan-he"
+    ],
+    "src": "Savitsky, Keysar, Epley, Carter & Swanson, Journal of Experimental Social Psychology (2011)"
+  },
+  {
+    "id": "tl-323",
+    "cat": "tam-ly",
+    "sub": "nhin-nguoi-khac",
+    "t": "Người ta đánh giá khuôn mặt theo hai chiều rất nhanh, và các phán đoán đó dự báo kết quả bầu cử",
+    "s": "Ảnh chân dung được chấm về mức đáng tin và mức mạnh mẽ trong dưới một giây, và các điểm này tương quan với kết quả bầu cử thực tế ở nhiều nước. Điều đáng lo là chúng gần như không tương quan với năng lực thật.",
+    "tags": [
+      "khuon-mat",
+      "bau-cu"
+    ],
+    "src": "Todorov, Mandisodza, Goren & Hall, Science (2005)"
+  },
+  {
+    "id": "tl-324",
+    "cat": "tam-ly",
+    "sub": "nhin-nguoi-khac",
+    "t": "Người ta cho rằng mình khách quan hơn người khác, và chính điều đó làm họ khó thương lượng",
+    "s": "Ảo tưởng khách quan làm bên nào cũng đọc bất đồng là bằng chứng bên kia thiên vị hoặc thiếu thông tin. Nhận biết cơ chế này thay đổi cách vào đàm phán: giả định bên kia cũng đang nhìn từ một vị trí có lý là điểm khởi đầu hữu ích hơn.",
+    "tags": [
+      "khach-quan",
+      "dam-phan"
+    ],
+    "src": "Pronin, Lin & Ross, Personality and Social Psychology Bulletin (2002)"
+  },
+  {
+    "id": "tl-325",
+    "cat": "tam-ly",
+    "sub": "nhin-nguoi-khac",
+    "t": "Người có cùng quan điểm bị cho là hiểu vấn đề, người khác quan điểm bị cho là bị tác động",
+    "s": "Hiệu ứng thiên vị thù địch: hai bên trong một xung đột đều thấy báo chí trung lập là thiên vị chống mình. Trong thí nghiệm kinh điển, người Israel và người Palestine xem cùng bản tin và cả hai kết luận nó nghiêng về phía đối phương.",
+    "tags": [
+      "truyen-thong",
+      "thien-vi"
+    ],
+    "src": "Vallone, Ross & Lepper, Journal of Personality and Social Psychology (1985)"
+  },
+  {
+    "id": "tl-326",
+    "cat": "tam-ly",
+    "sub": "nhin-nguoi-khac",
+    "t": "Người ta hợp tác nhiều hơn khi thấy hình ảnh có mắt, dù biết đó chỉ là hình",
+    "s": "Trong các thí nghiệm hiện trường, đặt ảnh một cặp mắt gần hộp tiền tự nguyện làm số tiền thu tăng lên. Các nghiên cứu sau cho hiệu ứng nhỏ và không ổn định, nên đây là ví dụ tốt về một kết quả thú vị đang chờ bằng chứng vững hơn.",
+    "tags": [
+      "giam-sat",
+      "hop-tac"
+    ],
+    "src": "Bateson, Nettle & Roberts, Biology Letters (2006); Northover và cộng sự, Evolution and Human Behavior (2017) — nhân bản yếu"
+  },
+  {
+    "id": "tl-327",
+    "cat": "tam-ly",
+    "sub": "nhin-nguoi-khac",
+    "t": "Người ta trừng phạt kẻ vi phạm chuẩn mực dù việc trừng phạt tốn kém cho chính mình",
+    "s": "Trong các trò chơi kinh tế, một tỉ lệ đáng kể người tham gia bỏ tiền của mình để giảm phần của người chơi không đóng góp. Hành vi này xuất hiện ở nhiều nền văn hoá và là một trong những nền tảng giải thích vì sao hợp tác quy mô lớn giữa người xa lạ khả thi.",
+    "tags": [
+      "trung-phat",
+      "hop-tac"
+    ],
+    "src": "Fehr & Gächter, Nature (2002); Henrich và cộng sự, Science (2006) — so sánh liên văn hoá"
+  },
+  {
+    "id": "tl-328",
+    "cat": "tam-ly",
+    "sub": "nhin-nguoi-khac",
+    "t": "Bạn nhớ mặt người cùng nhóm mình chính xác hơn mặt người khác nhóm",
+    "s": "Hiệu ứng nhận diện cùng chủng tộc là một trong các kết quả nhân bản tốt nhất trong tâm lý nhận thức, và nó không phụ thuộc định kiến mà phụ thuộc mức độ tiếp xúc. Hệ quả pháp lý rất lớn: lời khai nhận dạng qua nhóm khác có độ tin cậy thấp hơn đáng kể.",
+    "tags": [
+      "nhan-dien",
+      "nhan-chung"
+    ],
+    "src": "Meissner & Brigham, Psychology, Public Policy and Law (2001)"
+  },
+  {
+    "id": "tl-329",
+    "cat": "tam-ly",
+    "sub": "nhin-nguoi-khac",
+    "t": "Người ta ước lượng sai quan điểm của số đông vì chỉ thấy những người nói to nhất",
+    "s": "Hiện tượng vô tri đa nguyên: nhiều người giữ một quan điểm nhưng tưởng mình thuộc thiểu số, nên không ai nói ra và ai cũng tiếp tục tưởng thế. Đây là cơ chế giữ nguyên nhiều chuẩn mực mà thực tế đa số đã không còn tán thành.",
+    "tags": [
+      "vo-tri-da-nguyen",
+      "chuan-muc"
+    ],
+    "src": "Prentice & Miller, Journal of Personality and Social Psychology (1993)"
+  },
+  {
+    "id": "tl-330",
+    "cat": "tam-ly",
+    "sub": "nhin-nguoi-khac",
+    "t": "Danh tiếng lan truyền được là điều kiện để hợp tác tồn tại giữa những người không gặp lại nhau",
+    "s": "Trong các mô hình và thí nghiệm về có đi có lại gián tiếp, hợp tác chỉ bền khi thông tin về hành vi trước đó truyền được tới đối tác mới. Điều này giải thích vì sao các hệ thống đánh giá — dù thô — làm thay đổi hành vi trên các chợ trực tuyến.",
+    "tags": [
+      "danh-tieng",
+      "hop-tac"
+    ],
+    "src": "Nowak & Sigmund, Nature (2005); Wedekind & Milinski, Science (2000)"
+  },
+  {
+    "id": "tl-331",
+    "cat": "tam-ly",
+    "sub": "nhin-nguoi-khac",
+    "t": "Người ta bắt chước tư thế và nhịp nói của người đối diện mà không nhận ra, và điều đó làm hai bên hợp nhau hơn",
+    "s": "Hiệu ứng tắc kè hoa: người được bắt chước cử chỉ một cách tự nhiên đánh giá cuộc trò chuyện dễ chịu hơn. Điều quan trọng là nó chỉ hiệu quả khi tự nhiên — bắt chước có ý thức quá rõ gây tác dụng ngược.",
+    "tags": [
+      "bat-chuoc",
+      "thien-cam"
+    ],
+    "src": "Chartrand & Bargh, Journal of Personality and Social Psychology (1999)"
+  },
+  {
+    "id": "tl-332",
+    "cat": "tam-ly",
+    "sub": "nhin-nguoi-khac",
+    "t": "Người ta đánh giá một tập thể qua thành viên nổi bật nhất, không qua thành viên trung bình",
+    "s": "Một người gây chú ý — theo hướng tốt hay xấu — định hình ấn tượng về cả nhóm. Điều này giải thích vì sao một hành vi cực đoan trong một cộng đồng lớn có thể đổi hẳn cách nhìn từ bên ngoài, và vì sao các tổ chức phải xử lý sớm các trường hợp ngoại lệ.",
+    "tags": [
+      "noi-bat",
+      "an-tuong"
+    ],
+    "src": "Rothbart, Fulero, Jensen, Howard & Birrell về ảnh hưởng của trường hợp nổi bật (1978)"
+  },
+  {
+    "id": "tl-333",
+    "cat": "tam-ly",
+    "sub": "nhan-cach",
+    "t": "Năm yếu tố tính cách có tính ổn định cao nhưng vẫn dịch chuyển theo tuổi một cách có hệ thống",
+    "s": "Theo tuổi, mức tận tâm và dễ chịu có xu hướng tăng, mức nhạy cảm tiêu cực giảm nhẹ, mức cởi mở giảm sau tuổi trung niên. Nghĩa là 'tính cách không đổi' đúng theo nghĩa xếp hạng tương đối giữa người với người, không đúng theo nghĩa tuyệt đối.",
+    "tags": [
+      "big-five",
+      "phat-trien"
+    ],
+    "src": "Roberts, Walton & Viechtbauer, Psychological Bulletin (2006)"
+  },
+  {
+    "id": "tl-334",
+    "cat": "tam-ly",
+    "sub": "nhan-cach",
+    "t": "Tính cách dự báo hành vi kém trong từng tình huống và tốt khi tính trên nhiều tình huống",
+    "s": "Đây là cách giải bài toán tranh cãi kéo dài giữa 'tính cách' và 'hoàn cảnh': với một lần cụ thể, hoàn cảnh mạnh hơn; với xu hướng dài hạn, tính cách mới hiện lên. Vì vậy đánh giá một người qua một lần gặp gần như vô giá trị.",
+    "tags": [
+      "nhan-cach",
+      "hoan-canh"
+    ],
+    "src": "Epstein, Journal of Personality and Social Psychology (1979); Fleeson, Current Directions (2004)"
+  },
+  {
+    "id": "tl-335",
+    "cat": "tam-ly",
+    "sub": "nhan-cach",
+    "t": "Tận tâm là yếu tố tính cách dự báo hiệu suất công việc tốt nhất trong hầu hết nghề",
+    "s": "Trong các phân tích tổng hợp lớn về tuyển dụng, mức tận tâm có liên hệ ổn định với hiệu suất ở gần như mọi loại công việc, còn các yếu tố khác chỉ dự báo tốt ở một số nghề cụ thể. Tuy vậy hệ số tương quan vẫn ở mức vừa phải, nên nó không thay được đánh giá thực tế.",
+    "tags": [
+      "tan-tam",
+      "hieu-suat"
+    ],
+    "src": "Barrick & Mount, Personnel Psychology (1991); Schmidt & Hunter, Psychological Bulletin (1998)"
+  },
+  {
+    "id": "tl-336",
+    "cat": "tam-ly",
+    "sub": "nhan-cach",
+    "t": "Hướng nội không phải nhút nhát, và trộn hai khái niệm này gây hiểu sai rất phổ biến",
+    "s": "Hướng nội là mức ưa thích cường độ kích thích xã hội thấp hơn; nhút nhát là lo lắng trong tình huống xã hội. Người hướng nội không lo lắng vẫn nói trước công chúng tốt, và người hướng ngoại vẫn có thể nhút nhát — hai chiều này khá độc lập.",
+    "tags": [
+      "huong-noi",
+      "nhut-nhat"
+    ],
+    "src": "Susan Cain, Quiet (2012); Cheek & Buss, Journal of Personality and Social Psychology (1981)"
+  },
+  {
+    "id": "tl-337",
+    "cat": "tam-ly",
+    "sub": "nhan-cach",
+    "t": "Các bài trắc nghiệm tính cách dùng trong tuyển dụng dự báo kém hơn bài kiểm tra thực hành",
+    "s": "Trong xếp hạng độ giá trị dự báo, mẫu công việc thật và kiểm tra năng lực nhận thức đứng đầu, còn trắc nghiệm tính cách tự báo cáo ở mức thấp hơn hẳn. Lý do dễ hiểu: chúng dễ bị trả lời theo hướng mong đợi.",
+    "tags": [
+      "trac-nghiem",
+      "tuyen-dung"
+    ],
+    "src": "Schmidt & Hunter, Psychological Bulletin (1998); Sackett và cộng sự cập nhật, Journal of Applied Psychology (2022)"
+  },
+  {
+    "id": "tl-338",
+    "cat": "tam-ly",
+    "sub": "nhan-cach",
+    "t": "Tính cách chịu ảnh hưởng di truyền đáng kể, và phần môi trường lại chủ yếu không phải gia đình",
+    "s": "Các nghiên cứu sinh đôi cho ước lượng di truyền khoảng 40–50% cho phần lớn đặc điểm tính cách. Phát hiện gây ngạc nhiên hơn là phần môi trường có ảnh hưởng lại chủ yếu là môi trường riêng của từng người, không phải môi trường chung của các anh chị em trong một nhà.",
+    "tags": [
+      "di-truyen",
+      "moi-truong"
+    ],
+    "src": "Plomin & Daniels, Behavioral and Brain Sciences (1987); Turkheimer, Current Directions (2000)"
+  },
+  {
+    "id": "tl-339",
+    "cat": "tam-ly",
+    "sub": "nhan-cach",
+    "t": "Người ta có thể thay đổi tính cách một cách chủ động, nhưng bằng hành vi chứ không bằng ý định",
+    "s": "Trong các thử nghiệm can thiệp, người đặt và thực hiện các bài tập hành vi cụ thể — gọi điện cho người lạ nếu muốn hướng ngoại hơn — có dịch chuyển đo được sau vài tháng, còn người chỉ mong muốn thay đổi thì không. Hiệu ứng nhỏ nhưng thật.",
+    "tags": [
+      "thay-doi",
+      "hanh-vi"
+    ],
+    "src": "Hudson, Briley, Chopik & Derringer, Journal of Personality and Social Psychology (2019)"
+  },
+  {
+    "id": "tl-340",
+    "cat": "tam-ly",
+    "sub": "nhan-cach",
+    "t": "Chỉ số IQ dự báo được nhiều thứ nhưng giải thích được ít hơn mức tranh luận công khai giả định",
+    "s": "Nó tương quan có ý nghĩa với thành tích học tập, thu nhập và một số kết quả sức khoẻ, nhưng phần phương sai giải thích được thường dưới một phần tư. Nghĩa là nó là một biến trong nhiều biến, và dùng nó để dự đoán cá nhân cụ thể là sai cách dùng.",
+    "tags": [
+      "iq",
+      "du-bao"
+    ],
+    "src": "Strenze, Intelligence (2007) — phân tích tổng hợp về IQ và thành tựu kinh tế xã hội"
+  },
+  {
+    "id": "tl-341",
+    "cat": "tam-ly",
+    "sub": "nhan-cach",
+    "t": "Người ta bộc lộ tính cách khác nhau ở các vai khác nhau, và cả hai đều là thật",
+    "s": "Cùng một người có thể nói nhiều ở nhóm bạn và im lặng trong họp mà không ai đang diễn. Mô hình tính cách hiện đại xem đặc điểm là phân bố hành vi theo tình huống, có trung bình và có độ rộng — nên câu hỏi 'người này thật ra thế nào' đặt sai vấn đề.",
+    "tags": [
+      "nhan-cach",
+      "tinh-huong"
+    ],
+    "src": "William Fleeson, Journal of Personality and Social Psychology (2001) — density distribution model"
+  },
+  {
+    "id": "tl-342",
+    "cat": "tam-ly",
+    "sub": "nhan-cach",
+    "t": "Trẻ hướng nội và trẻ nhạy cảm phản ứng mạnh hơn với cả môi trường tốt và môi trường xấu",
+    "s": "Giả thuyết tính khả biến theo khác biệt: cùng một mức nuôi dạy tồi làm nhóm nhạy cảm chịu hậu quả nặng hơn, nhưng cùng một mức nuôi dạy tốt cũng làm nhóm này hưởng lợi nhiều hơn. Nghĩa là 'dễ tổn thương' và 'dễ đáp ứng' là hai mặt của một đặc điểm.",
+    "tags": [
+      "nhay-cam",
+      "moi-truong"
+    ],
+    "src": "Belsky & Pluess, Psychological Bulletin (2009)"
+  },
+  {
+    "id": "tl-343",
+    "cat": "tam-ly",
+    "sub": "nhan-cach",
+    "t": "Ba đặc điểm tối — tự đại, thao túng, thiếu đồng cảm — hay đi cùng nhau và có mặt ở mức thấp trong dân số chung",
+    "s": "Chúng là các chiều liên tục, không phải hộp phân loại, nên đa số người có mức thấp và một số ít có mức cao. Điều đáng lưu ý trong công việc: các đặc điểm này tương quan với gây ấn tượng tốt ban đầu, nên chúng có lợi thế ở các vòng đánh giá ngắn.",
+    "tags": [
+      "tam-giac-toi",
+      "danh-gia"
+    ],
+    "src": "Paulhus & Williams, Journal of Research in Personality (2002)"
+  },
+  {
+    "id": "tl-344",
+    "cat": "tam-ly",
+    "sub": "nhan-cach",
+    "t": "Không có 'kiểu tính cách', chỉ có mức độ trên các chiều liên tục",
+    "s": "Dữ liệu phân bố tính cách gần như luôn liên tục và một đỉnh, không tách thành các cụm rời. Vì vậy mọi hệ thống chia người thành các loại — kể cả các hệ nghe hiện đại — đều tạo ra ranh giới nhân tạo và làm mất thông tin ở gần ngưỡng.",
+    "tags": [
+      "phan-loai",
+      "lien-tuc"
+    ],
+    "src": "McCrae & Costa về cấu trúc chiều của tính cách; phê phán phương pháp phân loại nhị phân"
+  },
+  {
+    "id": "tl-345",
+    "cat": "tam-ly",
+    "sub": "nhan-cach",
+    "t": "Tính cách ảnh hưởng tới tuổi thọ, và yếu tố mạnh nhất không phải mức lạc quan",
+    "s": "Trong nghiên cứu theo dõi dài hạn, mức tận tâm là đặc điểm tính cách dự báo tuổi thọ ổn định nhất — có thể vì nó gắn với hành vi sức khoẻ, tuân thủ điều trị và ít hành vi rủi ro. Lạc quan cũng có liên hệ nhưng yếu hơn và dễ bị nhiễu bởi biến khác.",
+    "tags": [
+      "tuoi-tho",
+      "tan-tam"
+    ],
+    "src": "Friedman & Martin, The Longevity Project (2011); Kern & Friedman, Health Psychology (2008)"
+  },
+  {
+    "id": "tl-346",
+    "cat": "tam-ly",
+    "sub": "nhan-cach",
+    "t": "Người ta đánh giá tính cách của người khác chính xác đáng ngạc nhiên từ rất ít thông tin",
+    "s": "Chỉ nhìn ảnh phòng ở hoặc nghe vài câu nói, người quan sát đoán được mức cởi mở và tận tâm với độ chính xác trên mức ngẫu nhiên rõ rệt. Nhưng độ chính xác này chỉ áp dụng cho vài chiều dễ thấy, không cho các chiều như mức ổn định cảm xúc.",
+    "tags": [
+      "danh-gia",
+      "chinh-xac"
+    ],
+    "src": "Gosling, Ko, Mannarelli & Morris, Journal of Personality and Social Psychology (2002)"
+  },
+  {
+    "id": "tl-347",
+    "cat": "tam-ly",
+    "sub": "nhan-cach",
+    "t": "Một người có thể vừa rất giỏi giao tiếp vừa không thích giao tiếp",
+    "s": "Kỹ năng và sở thích là hai chiều độc lập, nhưng ta thường suy từ cái này sang cái kia. Điều này dẫn tới hai lỗi trong công việc: giao việc tiếp khách cho người làm tốt nhưng cạn năng lượng vì nó, và bỏ qua người muốn học nhưng chưa giỏi.",
+    "tags": [
+      "ky-nang",
+      "so-thich"
+    ],
+    "src": "Phân biệt trait và preference trong lý thuyết tính cách; Cain, Quiet (2012)"
+  },
+  {
+    "id": "tl-348",
+    "cat": "tam-ly",
+    "sub": "huyen-thoai-tam-ly",
+    "t": "Nhóm máu không liên quan tới tính cách, dù niềm tin này rất phổ biến ở Đông Á",
+    "s": "Các nghiên cứu với cỡ mẫu lớn ở Nhật, Hàn và Đài Loan không tìm thấy liên hệ có ý nghĩa giữa nhóm máu và các đặc điểm tính cách. Sự tồn tại dai dẳng của niềm tin này là ví dụ tốt về hiệu ứng Barnum kết hợp với kỳ vọng xã hội.",
+    "tags": [
+      "nhom-mau",
+      "huyen-thoai"
+    ],
+    "src": "Nawata, Japanese Journal of Psychology (2014); Cramer & Imaike, Personality and Individual Differences (2002)"
+  },
+  {
+    "id": "tl-349",
+    "cat": "tam-ly",
+    "sub": "huyen-thoai-tam-ly",
+    "t": "Quảng cáo tiềm thức trong phim là một vụ bịa đặt được thừa nhận",
+    "s": "James Vicary tuyên bố đã chèn chữ 'uống Coca' vào phim và tăng doanh số, nhưng sau đó thừa nhận số liệu là dựng lên và các nỗ lực nhân bản đều thất bại. Các hiệu ứng mồi dưới ngưỡng ý thức có tồn tại trong phòng thí nghiệm nhưng rất yếu và rất ngắn.",
+    "tags": [
+      "tiem-thuc",
+      "quang-cao"
+    ],
+    "src": "Thừa nhận của James Vicary (1962); Karremans, Stroebe & Claus, Journal of Experimental Social Psychology (2006)"
+  },
+  {
+    "id": "tl-350",
+    "cat": "tam-ly",
+    "sub": "huyen-thoai-tam-ly",
+    "t": "Trò chơi điện tử bạo lực không có liên hệ rõ với bạo lực thực tế",
+    "s": "Sau hàng trăm nghiên cứu và nhiều phân tích tổng hợp trái ngược nhau, hiệu ứng lên hành vi hung hăng trong phòng thí nghiệm nhỏ và không chuyển thành bạo lực thật ở mức dân số. Đây là ví dụ về một câu hỏi nghiên cứu bị định hình bởi lo lắng xã hội hơn là bởi dữ liệu.",
+    "tags": [
+      "tro-choi",
+      "bao-luc"
+    ],
+    "src": "Ferguson, Perspectives on Psychological Science (2015); Przybylski & Weinstein, Royal Society Open Science (2019)"
+  },
+  {
+    "id": "tl-351",
+    "cat": "tam-ly",
+    "sub": "huyen-thoai-tam-ly",
+    "t": "Không có bằng chứng cho 'trẻ chỉ số' hay các chương trình luyện trí nhớ làm tăng trí thông minh chung",
+    "s": "Các bài luyện trí nhớ làm việc cải thiện chính bài đó và các bài rất giống nó, nhưng không chuyển sang khả năng nhận thức chung hay kết quả học tập. Đây là một trong những kết luận ổn định nhất trong nghiên cứu can thiệp nhận thức, và nó đi ngược toàn bộ ngành ứng dụng luyện não.",
+    "tags": [
+      "luyen-nao",
+      "chuyen-giao"
+    ],
+    "src": "Melby-Lervåg, Redick & Hulme, Perspectives on Psychological Science (2016); Simons và cộng sự, PSPI (2016)"
+  },
+  {
+    "id": "tl-352",
+    "cat": "tam-ly",
+    "sub": "huyen-thoai-tam-ly",
+    "t": "'Xả cơn giận' làm cơn giận tăng lên, không giảm đi",
+    "s": "Đánh gối, gào lên hoặc viết ra bằng giọng công kích đều làm mức hung hăng sau đó cao hơn nhóm không làm gì. Cơ chế là luyện tập: hành vi biểu đạt cơn giận củng cố chính lối phản ứng đó. Cái có tác dụng là các hoạt động làm giảm mức kích hoạt sinh lý.",
+    "tags": [
+      "tuc-gian",
+      "xa-cam-xuc"
+    ],
+    "src": "Bushman, Personality and Social Psychology Bulletin (2002)"
+  },
+  {
+    "id": "tl-353",
+    "cat": "tam-ly",
+    "sub": "huyen-thoai-tam-ly",
+    "t": "Bài kiểm tra phát hiện nói dối bằng máy đo sinh lý không đủ chính xác để dùng làm bằng chứng",
+    "s": "Máy đo phản ứng sinh lý gắn với căng thẳng, không gắn với sự dối trá, nên người thật thà mà lo lắng bị đánh dấu và người nói dối bình tĩnh thì lọt. Viện Hàn lâm Khoa học Quốc gia Hoa Kỳ kết luận độ chính xác không đủ cho sàng lọc an ninh.",
+    "tags": [
+      "noi-doi",
+      "polygraph"
+    ],
+    "src": "National Research Council, The Polygraph and Lie Detection (2003)"
+  },
+  {
+    "id": "tl-354",
+    "cat": "tam-ly",
+    "sub": "huyen-thoai-tam-ly",
+    "t": "Thôi miên không tạo ra ký ức chính xác hơn, nó tạo ra ký ức tự tin hơn",
+    "s": "Dưới thôi miên, người ta kể nhiều chi tiết hơn nhưng tỉ lệ chi tiết sai cũng tăng, trong khi mức tin vào chúng tăng mạnh. Vì vậy nhiều hệ thống pháp luật hạn chế hoặc loại lời khai thu được bằng thôi miên.",
+    "tags": [
+      "thoi-mien",
+      "tri-nho"
+    ],
+    "src": "Steblay & Bothwell, Law and Human Behavior (1994); các hướng dẫn của toà án Hoa Kỳ về hypnotically refreshed testimony"
+  },
+  {
+    "id": "tl-355",
+    "cat": "tam-ly",
+    "sub": "huyen-thoai-tam-ly",
+    "t": "Vẽ tranh và bài kiểm tra hình mực không có giá trị chẩn đoán như thường được tin",
+    "s": "Các phép thử phóng chiếu có độ tin cậy giữa người chấm thấp và giá trị dự báo yếu cho phần lớn kết luận thường được đưa ra từ chúng. Một số chỉ số của Rorschach có giá trị hạn chế, nhưng cách dùng phổ biến trong đánh giá cá nhân thì không được bằng chứng ủng hộ.",
+    "tags": [
+      "phong-chieu",
+      "chan-doan"
+    ],
+    "src": "Lilienfeld, Wood & Garb, Psychological Science in the Public Interest (2000)"
+  },
+  {
+    "id": "tl-356",
+    "cat": "tam-ly",
+    "sub": "huyen-thoai-tam-ly",
+    "t": "Con người không dùng riêng nửa não nào để làm việc gì cả",
+    "s": "Có sự chuyên biệt hoá chức năng giữa hai bán cầu — ngôn ngữ nghiêng về bên trái ở phần lớn người — nhưng mọi hoạt động phức tạp đều dùng cả hai và trao đổi liên tục qua thể chai. Ảnh chụp não trên hàng nghìn người không tìm thấy 'kiểu người thiên não trái hay não phải'.",
+    "tags": [
+      "nao-trai-phai",
+      "huyen-thoai"
+    ],
+    "src": "Nielsen, Zielinski, Ferguson, Lainhart & Anderson, PLoS ONE (2013)"
+  },
+  {
+    "id": "tl-357",
+    "cat": "tam-ly",
+    "sub": "huyen-thoai-tam-ly",
+    "t": "Học sinh không học tốt hơn khi bài giảng khớp với 'phong cách học' của mình",
+    "s": "Ý tưởng chia người học thành nhìn, nghe, vận động rất phổ biến trong đào tạo, nhưng các thử nghiệm kiểm định trực tiếp giả thuyết khớp phong cách gần như đều cho kết quả âm. Điều thật sự có tác dụng là khớp cách trình bày với nội dung, không với người học.",
+    "tags": [
+      "phong-cach-hoc",
+      "huyen-thoai"
+    ],
+    "src": "Pashler, McDaniel, Rohrer & Bjork, Psychological Science in the Public Interest (2008)"
+  },
+  {
+    "id": "tl-358",
+    "cat": "tam-ly",
+    "sub": "huyen-thoai-tam-ly",
+    "t": "Nhiều kết quả tâm lý học nổi tiếng có cỡ hiệu ứng nhỏ hơn nhiều so với lần công bố đầu",
+    "s": "Trong dự án nhân bản 100 nghiên cứu, khoảng một phần ba tới một nửa cho kết quả cùng hướng, và cỡ hiệu ứng trung bình chỉ khoảng một nửa bản gốc. Điều này không có nghĩa tâm lý học vô giá trị mà có nghĩa: hãy tin các kết quả đã được nhân bản, không tin các kết quả gây sốc.",
+    "tags": [
+      "nhan-ban",
+      "phuong-phap"
+    ],
+    "src": "Open Science Collaboration, Science (2015)"
+  },
+  {
+    "id": "tl-359",
+    "cat": "tam-ly",
+    "sub": "huyen-thoai-tam-ly",
+    "t": "Hiệu ứng mồi bằng từ ngữ — như đọc từ về tuổi già rồi đi chậm hơn — không nhân bản được",
+    "s": "Các thí nghiệm mồi hành vi xã hội từng rất nổi tiếng và được trích dẫn rộng, nhưng nhiều nỗ lực nhân bản độc lập với cỡ mẫu lớn hơn không tìm thấy hiệu ứng. Chính Kahneman sau này viết rằng phần về mồi trong sách của ông đã dựa trên bằng chứng quá yếu.",
+    "tags": [
+      "moi",
+      "nhan-ban"
+    ],
+    "src": "Doyen, Klein, Pichon & Cleeremans, PLoS ONE (2012); thư ngỏ của Kahneman (2017)"
+  },
+  {
+    "id": "tl-360",
+    "cat": "tam-ly",
+    "sub": "huyen-thoai-tam-ly",
+    "t": "Người ta không dùng 10% não, và cũng không có vùng nào 'không dùng'",
+    "s": "Ảnh chụp chuyển hoá cho thấy toàn bộ não có hoạt động, và tổn thương ở gần như bất kỳ vùng nào cũng gây mất chức năng. Con số 10% không truy được về nghiên cứu nào; nó có thể xuất phát từ việc hiểu sai rằng chỉ một phần nơ-ron hoạt động đồng thời tại một thời điểm.",
+    "tags": [
+      "nao",
+      "huyen-thoai"
+    ],
+    "src": "Barry Beyerstein trong Della Sala (ed.), Mind Myths (1999)"
+  },
+  {
+    "id": "tl-361",
+    "cat": "tam-ly",
+    "sub": "huyen-thoai-tam-ly",
+    "t": "Trẻ con không học tốt hơn nhờ video giáo dục dưới hai tuổi, và có thể học kém hơn",
+    "s": "Các thử nghiệm cho thấy trẻ dưới khoảng 2 tuổi học từ vựng từ người thật tốt hơn nhiều so với từ màn hình, hiện tượng gọi là thiếu hụt chuyển giao từ video. Một số nghiên cứu còn tìm thấy liên hệ nghịch giữa thời gian xem và vốn từ ở tuổi này.",
+    "tags": [
+      "tre-nho",
+      "man-hinh"
+    ],
+    "src": "Anderson & Pempek, American Behavioral Scientist (2005); Zimmerman, Christakis & Meltzoff, Journal of Pediatrics (2007)"
+  },
+  {
+    "id": "tl-362",
+    "cat": "tam-ly",
+    "sub": "huyen-thoai-tam-ly",
+    "t": "Không có bằng chứng vững cho việc trí tuệ cảm xúc đo được là một năng lực riêng dự báo mạnh",
+    "s": "Khái niệm này phổ biến trong đào tạo doanh nghiệp, nhưng các thang đo trộn lẫn tính cách, kỹ năng xã hội và năng lực nhận thức. Khi kiểm soát các yếu tố đó, phần dự báo còn lại nhỏ — nghĩa là nó hữu ích như một cách nói, không như một chỉ số.",
+    "tags": [
+      "tri-tue-cam-xuc",
+      "do-luong"
+    ],
+    "src": "Joseph & Newman, Journal of Applied Psychology (2010); Locke, Journal of Organizational Behavior (2005)"
+  },
+  {
+    "id": "tl-363",
+    "cat": "tam-ly",
+    "sub": "huyen-thoai-tam-ly",
+    "t": "Không có bằng chứng cho việc con người dùng 'ngôn ngữ cơ thể' để đọc suy nghĩ của nhau",
+    "s": "Các sách phổ biến gán nghĩa cố định cho từng cử chỉ — khoanh tay là phòng thủ, chạm mũi là nói dối — nhưng nghiên cứu không tìm thấy các dấu hiệu ổn định như vậy. Cử chỉ phụ thuộc bối cảnh, thói quen và nhiệt độ phòng nhiều hơn là phụ thuộc nội tâm.",
+    "tags": [
+      "ngon-ngu-co-the",
+      "huyen-thoai"
+    ],
+    "src": "DePaulo và cộng sự, Psychological Bulletin (2003) — tổng hợp 158 dấu hiệu của sự dối trá"
+  },
+  {
+    "id": "tl-364",
+    "cat": "tam-ly",
+    "sub": "huyen-thoai-tam-ly",
+    "t": "Thí nghiệm búp bê Bobo không chứng minh rằng xem bạo lực gây ra bạo lực",
+    "s": "Nó cho thấy trẻ bắt chước hành vi vừa quan sát trên một món đồ chơi được thiết kế để bị đánh, trong một tình huống rất nhân tạo. Kết luận đúng là con người học bằng quan sát; kết luận bị gán thêm về truyền thông và tội phạm thì vượt xa dữ liệu.",
+    "tags": [
+      "bobo",
+      "hoc-quan-sat"
+    ],
+    "src": "Bandura, Ross & Ross, Journal of Abnormal and Social Psychology (1961); các phê phán về hiệu lực ngoại tại"
+  }
+]

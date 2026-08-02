@@ -1,0 +1,1682 @@
+[
+  {
+    "id": "td-201",
+    "cat": "tu-duy",
+    "sub": "mo-hinh-tu-duy",
+    "t": "Dao cạo Sagan: khẳng định phi thường đòi bằng chứng phi thường",
+    "s": "Mức bằng chứng cần thiết phải tỉ lệ với mức khó tin của điều được khẳng định. Đây là lý do một nghiên cứu đơn lẻ tìm ra 'thuốc chữa ung thư' đáng nghi hơn một nghiên cứu đơn lẻ tìm ra 'ngủ đủ thì tỉnh táo hơn' — cùng chất lượng bằng chứng, nhưng khác mức tiên nghiệm.",
+    "tags": [
+      "bang-chung",
+      "hoai-nghi"
+    ],
+    "src": "Carl Sagan, Cosmos (1980); nguyên tắc Laplace về xác suất tiên nghiệm"
+  },
+  {
+    "id": "td-202",
+    "cat": "tu-duy",
+    "sub": "mo-hinh-tu-duy",
+    "t": "Nguyên lý Anna Karenina: có ít cách để thành công và rất nhiều cách để thất bại",
+    "s": "Mọi gia đình hạnh phúc giống nhau, mỗi gia đình bất hạnh bất hạnh theo cách riêng. Jared Diamond dùng nguyên lý này để giải thích vì sao chỉ 14 loài động vật lớn được thuần hoá: một loài cần thoả mãn đồng thời nhiều điều kiện, thiếu một điều là đủ hỏng. Hệ quả thực dụng: liệt kê các cách hỏng thường hiệu quả hơn hình dung cách thành công.",
+    "tags": [
+      "that-bai",
+      "thuan-hoa"
+    ],
+    "src": "Jared Diamond, Guns, Germs and Steel (1997)"
+  },
+  {
+    "id": "td-203",
+    "cat": "tu-duy",
+    "sub": "mo-hinh-tu-duy",
+    "t": "Định luật Sayre: tranh cãi càng dữ dội khi vấn đề càng ít quan trọng",
+    "s": "Quan sát từ giới học thuật, và nó khớp với 'hiệu ứng nhà xe đạp': hội đồng duyệt thiết kế nhà máy điện hạt nhân dễ đồng ý về lò phản ứng nhưng tranh nhau hàng giờ về mái che xe đạp. Lý do là ai cũng có ý kiến được về việc nhỏ, còn việc lớn thì ít người dám nói.",
+    "tags": [
+      "cuoc-hop",
+      "uu-tien"
+    ],
+    "src": "Wallace Sayre, Đại học Columbia; C. Northcote Parkinson, Parkinson's Law (1957)"
+  },
+  {
+    "id": "td-204",
+    "cat": "tu-duy",
+    "sub": "mo-hinh-tu-duy",
+    "t": "Nghịch lý Jevons: máy hiệu quả hơn thường làm ta tiêu thụ nhiều hơn, không ít hơn",
+    "s": "William Stanley Jevons quan sát rằng động cơ hơi nước tiết kiệm than lại làm tổng lượng than tiêu thụ tăng, vì than rẻ hơn nên được dùng ở nhiều nơi hơn. Đèn LED, ô tô tiết kiệm nhiên liệu và điện toán đám mây đều có phần hiệu ứng này — nên 'tiết kiệm nhờ hiệu quả' không tự động thành tiết kiệm thật.",
+    "tags": [
+      "hieu-qua",
+      "nang-luong"
+    ],
+    "src": "William Stanley Jevons, The Coal Question (1865)"
+  },
+  {
+    "id": "td-205",
+    "cat": "tu-duy",
+    "sub": "mo-hinh-tu-duy",
+    "t": "Định luật Shirky: mọi tổ chức đều có xu hướng bảo vệ chính vấn đề nó được lập ra để giải quyết",
+    "s": "Vì giải quyết xong thì tổ chức hết lý do tồn tại. Đây là công cụ chẩn đoán rất nhanh: khi một bộ phận đề xuất giải pháp, hãy hỏi giải pháp đó nếu thành công thì bộ phận đó còn cần thiết không. Câu trả lời dự báo khá tốt việc họ có làm thật hay không.",
+    "tags": [
+      "to-chuc",
+      "dong-co"
+    ],
+    "src": "Clay Shirky, phát biểu trong các bài viết về thể chế và Internet"
+  },
+  {
+    "id": "td-206",
+    "cat": "tu-duy",
+    "sub": "mo-hinh-tu-duy",
+    "t": "Định luật Tesler: độ phức tạp không mất đi, nó chỉ chuyển từ người dùng sang người làm hoặc ngược lại",
+    "s": "Mỗi hệ thống có một lượng phức tạp tối thiểu không thể xoá. Bạn chỉ chọn được ai gánh nó. Ứng dụng 'đơn giản' thường có nghĩa là đội phát triển gánh phần rối rắm; biểu mẫu 'linh hoạt' thường có nghĩa là người dùng gánh.",
+    "tags": [
+      "thiet-ke",
+      "do-phuc-tap"
+    ],
+    "src": "Larry Tesler, Xerox PARC / Apple"
+  },
+  {
+    "id": "td-207",
+    "cat": "tu-duy",
+    "sub": "mo-hinh-tu-duy",
+    "t": "Dư thừa không phải là lãng phí — hệ thống không có dư thừa thì không hấp thụ được cú sốc",
+    "s": "Một hệ thống chạy ở 100% công suất không có chỗ cho biến động: một xe hỏng là tắc cả tuyến, một người nghỉ là cả nhóm trễ. Lý thuyết hàng đợi cho thấy thời gian chờ tăng vọt phi tuyến khi mức sử dụng vượt khoảng 80%. Vì vậy 'tối ưu hoá hết công suất' và 'chịu được biến động' là hai mục tiêu đối nghịch.",
+    "tags": [
+      "hang-doi",
+      "du-phong"
+    ],
+    "src": "Lý thuyết hàng đợi (Erlang, Kingman); Tom DeMarco, Slack (2001)"
+  },
+  {
+    "id": "td-208",
+    "cat": "tu-duy",
+    "sub": "mo-hinh-tu-duy",
+    "t": "Điểm đòn bẩy mạnh nhất trong một hệ thống không phải là các con số, mà là mục tiêu và mô thức",
+    "s": "Donella Meadows xếp 12 mức can thiệp vào hệ thống theo sức mạnh: điều chỉnh tham số là mức yếu nhất, thay đổi luồng thông tin mạnh hơn, thay đổi mục tiêu và cuối cùng là thay đổi mô thức tư duy là mạnh nhất. Phần lớn nỗ lực cải cách dồn vào mức yếu nhất vì nó dễ đo.",
+    "tags": [
+      "he-thong",
+      "can-thiep"
+    ],
+    "src": "Donella Meadows, Leverage Points (1999); Thinking in Systems (2008)"
+  },
+  {
+    "id": "td-209",
+    "cat": "tu-duy",
+    "sub": "mo-hinh-tu-duy",
+    "t": "Phản hồi bị trễ làm hệ thống dao động, kể cả khi mọi người đều làm đúng",
+    "s": "Nếu tín hiệu về kết quả đến chậm hơn nhịp ra quyết định, người điều khiển sẽ liên tục điều chỉnh quá tay: đó là cơ chế của vòi nước nóng lạnh, của chu kỳ tồn kho và của 'hiệu ứng roi da' trong chuỗi cung ứng. Cách chữa không phải cố gắng hơn mà là làm ngắn độ trễ phản hồi.",
+    "tags": [
+      "he-thong",
+      "chuoi-cung-ung"
+    ],
+    "src": "Jay Forrester, Industrial Dynamics (1961); thí nghiệm Beer Game của MIT"
+  },
+  {
+    "id": "td-210",
+    "cat": "tu-duy",
+    "sub": "mo-hinh-tu-duy",
+    "t": "Tư duy kiểu nghi lễ: làm đúng hình thức của cái từng thành công mà không có cơ chế bên dưới",
+    "s": "Richard Feynman gọi đây là 'khoa học kiểu thờ hàng hoá' — bắt chước đầy đủ vẻ ngoài của phương pháp mà bỏ mất phần khiến nó hoạt động. Dấu hiệu nhận biết trong công việc: quy trình được giữ nguyên nhưng không ai trả lời được nó dùng để bắt lỗi gì.",
+    "tags": [
+      "quy-trinh",
+      "hinh-thuc"
+    ],
+    "src": "Richard Feynman, Cargo Cult Science, diễn văn Caltech (1974)"
+  },
+  {
+    "id": "td-211",
+    "cat": "tu-duy",
+    "sub": "mo-hinh-tu-duy",
+    "t": "Đòi hỏi 'nguyên nhân duy nhất' là một trong những cách hỏng phổ biến nhất của lập luận",
+    "s": "Phần lớn sự cố lớn là kết hợp của nhiều điều kiện, mỗi điều kiện một mình không đủ gây hại. Trong an toàn hệ thống, mô hình 'phô mai Thuỵ Sĩ' của James Reason mô tả điều này: tai nạn xảy ra khi các lỗ hổng ở nhiều lớp phòng thủ tình cờ thẳng hàng. Đi tìm một thủ phạm là cách chắc chắn để bỏ sót các lớp còn lại.",
+    "tags": [
+      "an-toan",
+      "nhan-qua"
+    ],
+    "src": "James Reason, Human Error (1990); Richard Cook, How Complex Systems Fail (1998)"
+  },
+  {
+    "id": "td-212",
+    "cat": "tu-duy",
+    "sub": "mo-hinh-tu-duy",
+    "t": "Bậc thang trừu tượng: phần lớn tranh luận bế tắc vì hai người đang đứng ở hai bậc khác nhau",
+    "s": "Cùng một chủ đề có thể nói ở mức rất cụ thể ('con số tháng này') hoặc rất trừu tượng ('chiến lược của chúng ta'). Khi một người nói ở bậc cụ thể và người kia trả lời ở bậc trừu tượng, cả hai đều thấy đối phương lảng tránh. Hỏi thẳng 'ta đang nói ở mức nào' thường tháo được nút.",
+    "tags": [
+      "tranh-luan",
+      "truu-tuong"
+    ],
+    "src": "S. I. Hayakawa, Language in Thought and Action (1939)"
+  },
+  {
+    "id": "td-213",
+    "cat": "tu-duy",
+    "sub": "mo-hinh-tu-duy",
+    "t": "Định luật Hutber: mọi cải tiến đều bị một số người trải nghiệm như suy tàn",
+    "s": "Vì cải tiến gần như luôn kèm đánh đổi, và người mất mát cảm nhận rõ hơn người được lợi. Điều này giải thích vì sao mọi lần đổi giao diện, đổi quy trình hay đổi chính sách đều có làn sóng phản đối, kể cả khi thay đổi đó đúng — và vì sao im lặng không có nghĩa là đồng ý.",
+    "tags": [
+      "thay-doi",
+      "phan-ung"
+    ],
+    "src": "Patrick Hutber, The Sunday Telegraph; nguyên lý ác cảm mất mát của Kahneman & Tversky"
+  },
+  {
+    "id": "td-214",
+    "cat": "tu-duy",
+    "sub": "mo-hinh-tu-duy",
+    "t": "Da trong cuộc: người không chịu hậu quả của lời khuyên sẽ cho lời khuyên khác hẳn",
+    "s": "Nassim Taleb lập luận rằng bất đối xứng giữa người nhận lợi và người gánh rủi ro là nguồn gốc của phần lớn dự báo tồi và tư vấn tồi. Câu hỏi rẻ nhất để hiệu chỉnh một lời khuyên: 'nếu điều này sai thì người nói mất gì?'",
+    "tags": [
+      "dong-co",
+      "rui-ro"
+    ],
+    "src": "Nassim Nicholas Taleb, Skin in the Game (2018)"
+  },
+  {
+    "id": "td-215",
+    "cat": "tu-duy",
+    "sub": "mo-hinh-tu-duy",
+    "t": "Bất đối xứng của việc dỡ bỏ: thêm vào thì dễ đảo, bỏ đi thì khó đảo",
+    "s": "Đó là lý do các quy định chồng lên nhau theo thời gian mà gần như không bao giờ bị bớt: người đề xuất thêm được ghi công nếu đúng, người đề xuất bỏ bị quy trách nhiệm nếu sai. Kết quả là mọi hệ thống lâu năm có xu hướng nặng dần lên mà không ai chủ động muốn thế.",
+    "tags": [
+      "quy-trinh",
+      "the-che"
+    ],
+    "src": "Cơ chế bất đối xứng động cơ trong lý thuyết lựa chọn công; quan sát về 'regulatory accumulation'"
+  },
+  {
+    "id": "td-216",
+    "cat": "tu-duy",
+    "sub": "mo-hinh-tu-duy",
+    "t": "Định luật Segal: một đồng hồ cho bạn biết giờ, hai đồng hồ làm bạn hết chắc",
+    "s": "Thêm nguồn thông tin không tự động làm hiểu biết tốt hơn — nó chỉ tốt hơn khi bạn có cách phân xử khi các nguồn lệch nhau. Trong tổ chức, hai bảng số liệu không kèm quy tắc chọn nguồn chuẩn thường tạo ra nhiều họp hơn là nhiều hiểu biết.",
+    "tags": [
+      "do-luong",
+      "du-lieu"
+    ],
+    "src": "Ngạn ngữ kỹ thuật thường gọi là Segal's law"
+  },
+  {
+    "id": "td-217",
+    "cat": "tu-duy",
+    "sub": "mo-hinh-tu-duy",
+    "t": "Bạn không thể tối ưu nhiều mục tiêu cùng lúc — bạn chỉ chọn được điểm trên đường biên",
+    "s": "Trong bài toán nhiều mục tiêu, không tồn tại một phương án tốt nhất theo mọi tiêu chí; chỉ có tập các phương án 'không bị vượt trội', và chọn giữa chúng là chọn tỉ lệ đánh đổi. Vì vậy câu hỏi đúng không phải 'phương án nào tốt nhất' mà 'chúng ta bằng lòng đổi bao nhiêu A cho một đơn vị B'.",
+    "tags": [
+      "danh-doi",
+      "toi-uu"
+    ],
+    "src": "Khái niệm biên Pareto trong lý thuyết tối ưu đa mục tiêu"
+  },
+  {
+    "id": "td-218",
+    "cat": "tu-duy",
+    "sub": "mo-hinh-tu-duy",
+    "t": "Định luật Kranzberg: công nghệ không tốt cũng không xấu, nhưng nó không trung tính",
+    "s": "Cùng một công nghệ cho kết quả khác nhau tuỳ thể chế và bối cảnh nó rơi vào — nhưng nó luôn làm một số hành vi rẻ đi và một số đắt lên, và chính sự dịch chuyển chi phí đó là tác động thật. Nên câu hỏi hữu ích không phải 'công nghệ này tốt hay xấu' mà 'nó làm việc gì rẻ hơn'.",
+    "tags": [
+      "cong-nghe",
+      "the-che"
+    ],
+    "src": "Melvin Kranzberg, Technology and History: Kranzberg's Laws, Technology and Culture (1986)"
+  },
+  {
+    "id": "td-219",
+    "cat": "tu-duy",
+    "sub": "mo-hinh-tu-duy",
+    "t": "Quy tắc hai danh sách: cái gì phải đúng để tôi sai, và cái gì phải đúng để tôi đúng",
+    "s": "Viết cả hai danh sách cạnh nhau buộc bạn phát biểu giả định của cả hai phía, thay vì chỉ tìm bằng chứng cho phía mình. Bài tập này rẻ và phát hiện được điều quan trọng nhất: rất nhiều khi hai danh sách dùng chung một giả định, và đó mới là chỗ cần kiểm.",
+    "tags": [
+      "gia-dinh",
+      "tu-kiem"
+    ],
+    "src": "Thực hành assumption mapping; Karl Popper về kiểm định giả thuyết bằng phản chứng"
+  },
+  {
+    "id": "td-220",
+    "cat": "tu-duy",
+    "sub": "mo-hinh-tu-duy",
+    "t": "Bản đồ tốt là bản đồ bỏ đúng thứ cần bỏ, không phải bản đồ chi tiết nhất",
+    "s": "Borges tưởng tượng một bản đồ tỉ lệ 1:1 và nó vô dụng vì trùng với chính lãnh thổ. Mọi mô hình hữu ích đều phải sai một cách có kiểm soát; câu hỏi đánh giá mô hình không phải 'nó có đúng không' mà 'nó bỏ qua gì, và việc bỏ qua đó có gây hại trong trường hợp tôi đang dùng không'.",
+    "tags": [
+      "mo-hinh",
+      "truu-tuong"
+    ],
+    "src": "Jorge Luis Borges, On Exactitude in Science (1946); George Box về mô hình sai nhưng hữu ích"
+  },
+  {
+    "id": "td-221",
+    "cat": "tu-duy",
+    "sub": "mo-hinh-tu-duy",
+    "t": "Trong hệ thống có phản hồi, cùng một hành động cho kết quả trái ngược tuỳ thời điểm",
+    "s": "Tăng lãi suất khi kinh tế nóng và khi kinh tế đang co lại cho hai kết quả khác nhau; tưới nhiều nước cho cây khô và cây đang úng cũng vậy. Đó là lý do các quy tắc dạng 'luôn luôn làm X' rất kém trong hệ thống động, và tại sao mô tả trạng thái hiện tại quan trọng hơn chọn hành động.",
+    "tags": [
+      "he-thong",
+      "boi-canh"
+    ],
+    "src": "Lý thuyết điều khiển và động lực hệ thống; Donella Meadows, Thinking in Systems (2008)"
+  },
+  {
+    "id": "td-222",
+    "cat": "tu-duy",
+    "sub": "mo-hinh-tu-duy",
+    "t": "Tối ưu từng bộ phận thường làm tổng thể xấu đi",
+    "s": "Nếu mỗi bộ phận tối đa hoá chỉ số riêng, kết quả chung có thể tệ hơn khi không ai tối ưu gì: kho giảm tồn để đẹp chỉ số thì sản xuất thiếu vật liệu; sản xuất chạy hết công suất thì kho ngập hàng. Lý thuyết ràng buộc kết luận rằng chỉ có nút thắt mới đáng tối ưu, phần còn lại nên có dư thừa.",
+    "tags": [
+      "he-thong",
+      "nut-that"
+    ],
+    "src": "Eliyahu Goldratt, The Goal (1984); nguyên lý tối ưu cục bộ trong nghiên cứu vận hành"
+  },
+  {
+    "id": "td-223",
+    "cat": "tu-duy",
+    "sub": "mo-hinh-tu-duy",
+    "t": "Định luật Postel về con người: hãy khoan dung với cái bạn nhận và khắt khe với cái bạn gửi",
+    "s": "Nguyên gốc là quy tắc thiết kế giao thức Internet, nhưng nó là một chuẩn giao tiếp tốt: diễn giải phát biểu của người khác theo nghĩa hợp lý nhất, còn phát biểu của mình thì viết chính xác nhất có thể. Bất đối xứng đó làm giảm số vòng trao đổi để đi tới hiểu nhau.",
+    "tags": [
+      "giao-tiep",
+      "nguyen-tac"
+    ],
+    "src": "Jon Postel, RFC 761 (1980) — nguyên tắc bền vững của giao thức TCP"
+  },
+  {
+    "id": "td-224",
+    "cat": "tu-duy",
+    "sub": "mo-hinh-tu-duy",
+    "t": "Hai loại vấn đề cần hai loại cách xử: rối rắm và phức hợp",
+    "s": "Vấn đề rối rắm có nhiều chi tiết nhưng nhân quả rõ, nên chuyên gia và quy trình giải được — phóng tên lửa là ví dụ. Vấn đề phức hợp có nhân quả chỉ thấy được sau khi đã xảy ra, nên phải thăm dò từng bước — nuôi một đứa trẻ là ví dụ. Dùng công cụ của loại này cho loại kia là nguồn thất bại rất phổ biến.",
+    "tags": [
+      "he-thong",
+      "phan-loai"
+    ],
+    "src": "Dave Snowden & Mary Boone, A Leader's Framework for Decision Making, HBR (2007)"
+  },
+  {
+    "id": "td-225",
+    "cat": "tu-duy",
+    "sub": "mo-hinh-tu-duy",
+    "t": "Định luật Pournelle: trong mọi tổ chức lâu năm, người phục vụ bộ máy thắng người phục vụ mục tiêu",
+    "s": "Không phải vì họ xấu, mà vì bộ máy đo lường và thưởng được cái nó nhìn thấy — và nó nhìn thấy sự tuân thủ rõ hơn kết quả. Đây là biến thể tổ chức của định luật Goodhart, và nó là lý do các tổ chức lớn cần cơ chế nhìn thẳng vào kết quả bên ngoài.",
+    "tags": [
+      "to-chuc",
+      "do-luong"
+    ],
+    "src": "Jerry Pournelle, phát biểu về 'iron law of bureaucracy'"
+  },
+  {
+    "id": "td-226",
+    "cat": "tu-duy",
+    "sub": "mo-hinh-tu-duy",
+    "t": "Khi không thể đo cái quan trọng, người ta làm cho cái đo được trở nên quan trọng",
+    "s": "Đây là nửa sau ít được nhắc của định luật Goodhart: vấn đề không chỉ là chỉ số bị chơi, mà là mục tiêu thật bị âm thầm thay bằng mục tiêu đo được. Charles Handy gọi đây là nguỵ biện McNamara, đặt theo tên bộ trưởng đã dùng số thương vong làm thước đo tiến triển ở Việt Nam.",
+    "tags": [
+      "do-luong",
+      "muc-tieu"
+    ],
+    "src": "Charles Handy, The Empty Raincoat (1994); nguỵ biện McNamara"
+  },
+  {
+    "id": "td-227",
+    "cat": "tu-duy",
+    "sub": "mo-hinh-tu-duy",
+    "t": "Có ba loại câu hỏi, và trộn chúng làm cuộc họp không kết thúc được",
+    "s": "Câu hỏi sự thật ('con số là bao nhiêu'), câu hỏi giá trị ('ta muốn gì') và câu hỏi phương án ('làm cách nào'). Câu hỏi sự thật giải bằng dữ liệu, câu hỏi giá trị giải bằng quyết định của người có quyền, câu hỏi phương án giải bằng thiết kế. Rất nhiều tranh luận dài là vì hai bên tưởng đang bàn cùng loại.",
+    "tags": [
+      "cuoc-hop",
+      "tranh-luan"
+    ],
+    "src": "Phân biệt kinh điển giữa phán đoán thực chứng và phán đoán quy chuẩn trong triết học khoa học"
+  },
+  {
+    "id": "td-228",
+    "cat": "tu-duy",
+    "sub": "mo-hinh-tu-duy",
+    "t": "Nghịch lý Braess: bỏ một lựa chọn có thể làm mọi người tốt lên",
+    "s": "Trong mạng giao thông, thêm một con đường có thể làm thời gian đi của tất cả tăng lên, và đóng nó lại làm giảm — vì mỗi người chọn theo lợi ích riêng chứ không theo tối ưu chung. Điều này đã quan sát được ở Seoul và New York, và nó cũng đúng với các hệ thống chia sẻ tài nguyên khác.",
+    "tags": [
+      "mang-luoi",
+      "giao-thong"
+    ],
+    "src": "Dietrich Braess (1968); quan sát tại Seoul khi dỡ đường cao tốc Cheonggyecheon (2005)"
+  },
+  {
+    "id": "td-229",
+    "cat": "tu-duy",
+    "sub": "mo-hinh-tu-duy",
+    "t": "Tính lồi và lõm quyết định bạn nên thử nhiều lần hay thử ít lần",
+    "s": "Nếu mặt xấu bị chặn và mặt tốt không bị chặn, hãy thử thật nhiều lần với mức đặt cược nhỏ. Nếu mặt tốt bị chặn và mặt xấu không bị chặn, hãy giảm số lần phơi mình. Nhiều quyết định đời thường thuộc hai loại này: học một kỹ năng mới thuộc loại đầu, lái xe khi buồn ngủ thuộc loại sau.",
+    "tags": [
+      "rui-ro",
+      "danh-doi"
+    ],
+    "src": "Nassim Nicholas Taleb, Antifragile (2012)"
+  },
+  {
+    "id": "td-230",
+    "cat": "tu-duy",
+    "sub": "mo-hinh-tu-duy",
+    "t": "Định luật Wiio: giao tiếp thường thất bại, và khi nó có vẻ thành công thì thường là do nhầm",
+    "s": "Osmo Wiio phát biểu nó như phiên bản giao tiếp của định luật Murphy. Giá trị thực dụng không phải sự bi quan mà là hệ quả: nếu thất bại là mặc định thì phải xây cơ chế kiểm tra hiểu — hỏi lại, nhắc lại, viết ra — chứ không dựa vào cảm giác 'chắc họ hiểu rồi'.",
+    "tags": [
+      "giao-tiep",
+      "kiem-tra"
+    ],
+    "src": "Osmo A. Wiio, Wiion lait ja vähän muidenkin (1978)"
+  },
+  {
+    "id": "td-231",
+    "cat": "tu-duy",
+    "sub": "nhan-qua",
+    "t": "Tương quan mạnh có thể xuất hiện chỉ vì cả hai biến cùng tăng theo thời gian",
+    "s": "Tiêu thụ pho mát và số người chết vì rối vào ga trải giường, số vụ chết đuối và phim của một diễn viên — các cặp này tương quan rất cao chỉ vì cả hai đều là chuỗi thời gian có xu hướng. Đây là lý do phân tích chuỗi thời gian phải loại xu hướng trước khi nói bất cứ điều gì về quan hệ.",
+    "tags": [
+      "tuong-quan",
+      "chuoi-thoi-gian"
+    ],
+    "src": "Tyler Vigen, Spurious Correlations (2015); vấn đề hồi quy giả trong Granger & Newbold (1974)"
+  },
+  {
+    "id": "td-232",
+    "cat": "tu-duy",
+    "sub": "nhan-qua",
+    "t": "Muốn biết nguyên nhân, hỏi 'nếu không có nó thì sao' — không phải 'chúng có đi cùng nhau không'",
+    "s": "Cách suy luận nhân quả hiện đại dựa trên phản thực: so kết quả thực tế với kết quả trong thế giới không có tác nhân đó. Vì thế giới phản thực không quan sát được, ta phải dựng nó bằng nhóm đối chứng, ngẫu nhiên hoá hoặc các thiết kế tự nhiên. Không có bước đó thì mọi con số chỉ mô tả, không giải thích.",
+    "tags": [
+      "nhan-qua",
+      "phan-thuc"
+    ],
+    "src": "Judea Pearl, The Book of Why (2018); Donald Rubin, mô hình kết quả tiềm năng"
+  },
+  {
+    "id": "td-233",
+    "cat": "tu-duy",
+    "sub": "nhan-qua",
+    "t": "Kiểm soát thêm một biến có thể làm kết luận sai đi, không phải đúng thêm",
+    "s": "Nếu biến bạn thêm vào nằm trên đường nhân quả giữa nguyên nhân và kết quả, hoặc là hệ quả chung của cả hai, thì việc 'kiểm soát' nó tạo ra tương quan giả. Đây là lý do câu 'nghiên cứu đã kiểm soát nhiều yếu tố' không phải bằng chứng về chất lượng — quan trọng là kiểm soát cái nào.",
+    "tags": [
+      "nhan-qua",
+      "sai-lech"
+    ],
+    "src": "Judea Pearl về collider bias; Elwert & Winship, Annual Review of Sociology (2014)"
+  },
+  {
+    "id": "td-234",
+    "cat": "tu-duy",
+    "sub": "nhan-qua",
+    "t": "Thử nghiệm tự nhiên: đôi khi thực tế đã ngẫu nhiên hoá giúp bạn",
+    "s": "Khi không thể làm thí nghiệm, có thể dùng những chỗ thực tế phân bổ gần như ngẫu nhiên: bốc thăm nhập ngũ, ngưỡng điểm xét tuyển, thay đổi luật ở một tỉnh mà không ở tỉnh bên. Ba nhà kinh tế đã nhận Nobel 2021 cho việc phát triển các phương pháp này.",
+    "tags": [
+      "nhan-qua",
+      "phuong-phap"
+    ],
+    "src": "Giải Nobel Kinh tế 2021: David Card, Joshua Angrist, Guido Imbens"
+  },
+  {
+    "id": "td-235",
+    "cat": "tu-duy",
+    "sub": "nhan-qua",
+    "t": "Nguyên nhân gần và nguyên nhân gốc là hai câu trả lời khác nhau, và cả hai đều cần",
+    "s": "Xe không nổ máy vì hết bình, hết bình vì dây phát điện lỏng, dây lỏng vì lần bảo dưỡng trước làm không kỹ. Sửa nguyên nhân gần thì đi được hôm nay; sửa nguyên nhân gốc thì lần sau không lặp lại. Nhiều tổ chức chỉ làm loại đầu rồi ngạc nhiên vì sự cố quay lại.",
+    "tags": [
+      "nhan-qua",
+      "su-co"
+    ],
+    "src": "Thực hành phân tích nguyên nhân gốc (RCA) trong công nghiệp và y tế"
+  },
+  {
+    "id": "td-236",
+    "cat": "tu-duy",
+    "sub": "nhan-qua",
+    "t": "Không có sự cố nào không có nghĩa là hệ thống an toàn — có thể chỉ là chưa tới lượt",
+    "s": "Trong hệ thống có rủi ro đuôi dày, khoảng thời gian yên tĩnh không phải bằng chứng về độ an toàn mà chỉ là hệ quả của tần suất thấp. Cách đọc đúng là xem có bao nhiêu lớp phòng thủ còn nguyên, chứ không phải đếm số lần chưa xảy ra chuyện.",
+    "tags": [
+      "an-toan",
+      "rui-ro"
+    ],
+    "src": "Nancy Leveson, Engineering a Safer World (2011); Richard Cook về hệ thống phức tạp"
+  },
+  {
+    "id": "td-237",
+    "cat": "tu-duy",
+    "sub": "nhan-qua",
+    "t": "Can thiệp thành công thường bị đánh giá thấp vì nó xoá luôn bằng chứng về vấn đề",
+    "s": "Khi việc phòng ngừa có hiệu lực, thứ mà mọi người thấy là 'chẳng có gì xảy ra' — nên tiền chi cho nó trông như tiền lãng phí. Đây là nghịch lý phòng ngừa: chương trình càng hiệu quả càng dễ bị cắt, và Y2K là ví dụ được tranh luận nhiều nhất.",
+    "tags": [
+      "phong-ngua",
+      "danh-gia"
+    ],
+    "src": "Geoffrey Rose, The Strategy of Preventive Medicine (1992)"
+  },
+  {
+    "id": "td-238",
+    "cat": "tu-duy",
+    "sub": "nhan-qua",
+    "t": "Ba điều kiện để nói A gây ra B, và điều kiện thứ ba là điều bị bỏ nhiều nhất",
+    "s": "A phải xảy ra trước B, A và B phải liên hệ với nhau, và phải loại được các cách giải thích khác. Hai điều đầu dễ kiểm và thường được nêu; điều thứ ba tốn công nhất nên hay bị nói lướt bằng cụm 'có thể liên quan tới'.",
+    "tags": [
+      "nhan-qua",
+      "bang-chung"
+    ],
+    "src": "Tiêu chuẩn nhân quả của John Stuart Mill; tiêu chí Bradford Hill (1965)"
+  },
+  {
+    "id": "td-239",
+    "cat": "tu-duy",
+    "sub": "nhan-qua",
+    "t": "Nếu cả hai chiều nhân quả đều nghe hợp lý, thường là vì cả hai đều đúng một phần",
+    "s": "Người tự tin bán hàng giỏi hơn, và bán hàng giỏi làm người ta tự tin hơn. Trong các vòng phản hồi hai chiều, hỏi 'cái nào là nguyên nhân' đặt sai câu hỏi; câu hỏi dùng được là 'can thiệp vào chiều nào thì rẻ hơn'.",
+    "tags": [
+      "nhan-qua",
+      "vong-phan-hoi"
+    ],
+    "src": "Vấn đề nội sinh trong kinh tế lượng; khái niệm nhân quả hai chiều"
+  },
+  {
+    "id": "td-240",
+    "cat": "tu-duy",
+    "sub": "nhan-qua",
+    "t": "Tác dụng của một can thiệp trung bình có thể dương trong khi nó có hại với nhiều người",
+    "s": "Một loại thuốc làm giảm 5% nguy cơ trung bình có thể giúp mạnh một nhóm nhỏ và không giúp gì phần còn lại, hoặc giúp nhóm này và làm hại nhóm khác. Trung bình che mất tính không đồng nhất, nên câu hỏi thực dụng luôn là 'có hiệu quả với ai'.",
+    "tags": [
+      "can-thiep",
+      "phan-nhom"
+    ],
+    "src": "Khái niệm heterogeneous treatment effects; Kent & Hayward, JAMA (2007)"
+  },
+  {
+    "id": "td-241",
+    "cat": "tu-duy",
+    "sub": "nhan-qua",
+    "t": "Thay đổi hành vi hiệu quả nhất thường là thay đổi ma sát, không phải thay đổi động lực",
+    "s": "Bỏ một bước, đổi vị trí, đặt lại tuỳ chọn mặc định — các can thiệp vào ma sát thường mạnh hơn nhiều so với thuyết phục hay thưởng phạt, vì chúng không cần người ta phải muốn gì khác. Kurt Lewin gọi việc bỏ lực cản là đòn bẩy lớn hơn việc thêm lực đẩy.",
+    "tags": [
+      "hanh-vi",
+      "ma-sat"
+    ],
+    "src": "Kurt Lewin, phân tích trường lực (1951); Thaler & Sunstein, Nudge (2008)"
+  },
+  {
+    "id": "td-242",
+    "cat": "tu-duy",
+    "sub": "nhan-qua",
+    "t": "Hiệu ứng lan toả có thể làm can thiệp trông hiệu quả hơn hoặc kém hơn thực tế",
+    "s": "Nếu người trong nhóm đối chứng cũng được lợi gián tiếp — nhờ nói chuyện với nhóm can thiệp, hoặc nhờ dịch bệnh giảm chung — thì so sánh hai nhóm sẽ đánh giá thấp tác dụng thật. Nghiên cứu tẩy giun ở Kenya cho thấy phần lợi ích lan sang trường bên cạnh lớn tới mức đổi hẳn kết luận về chi phí hiệu quả.",
+    "tags": [
+      "can-thiep",
+      "lan-toa"
+    ],
+    "src": "Miguel & Kremer, Econometrica (2004)"
+  },
+  {
+    "id": "td-243",
+    "cat": "tu-duy",
+    "sub": "nhan-qua",
+    "t": "Quy luật hậu quả không lường được có ba dạng, và dạng thứ ba là dạng đắt nhất",
+    "s": "Lợi ích không lường được, hậu quả xấu không lường được, và tác dụng ngược — tức là can thiệp làm chính vấn đề nó nhắm tới xấu đi. Robert Merton phân loại như vậy năm 1936; dạng thứ ba khó thấy nhất vì nó thường xuất hiện sau một khoảng trễ, khi không ai còn theo dõi nữa.",
+    "tags": [
+      "hau-qua",
+      "chinh-sach"
+    ],
+    "src": "Robert K. Merton, The Unanticipated Consequences of Purposive Social Action (1936)"
+  },
+  {
+    "id": "td-244",
+    "cat": "tu-duy",
+    "sub": "nhan-qua",
+    "t": "Trong hệ thống có người, mọi thước đo đều bị phản ứng lại",
+    "s": "Khác với vật lý, đối tượng bị đo ở đây biết mình đang bị đo và điều chỉnh. Đó là lý do các chỉ số hoạt động tốt lúc mới đưa vào rồi kém dần — không phải vì chỉ số sai từ đầu mà vì hành vi đã thích nghi quanh nó. Kế hoạch đo lường nên tính trước ngày hết hiệu lực của chỉ số.",
+    "tags": [
+      "do-luong",
+      "hanh-vi"
+    ],
+    "src": "Donald Campbell, Assessing the Impact of Planned Social Change (1976); định luật Goodhart"
+  },
+  {
+    "id": "td-245",
+    "cat": "tu-duy",
+    "sub": "nhan-qua",
+    "t": "Đừng suy nhân quả từ dữ liệu chỉ có ở những người đã vượt qua một cửa lọc",
+    "s": "Trong số các công ty được nhận vốn, mối liên hệ giữa ý tưởng và đội ngũ có thể âm — không vì hai thứ đó đối nghịch mà vì quỹ chỉ nhận hồ sơ mạnh ở ít nhất một trong hai. Cửa lọc tạo ra tương quan không có trong quần thể gốc, và điều này làm rất nhiều 'bài học' nội bộ sai hướng.",
+    "tags": [
+      "sai-lech-chon-mau",
+      "cua-loc"
+    ],
+    "src": "Nghịch lý Berkson (1946); Elwert & Winship về collider bias (2014)"
+  },
+  {
+    "id": "td-246",
+    "cat": "tu-duy",
+    "sub": "ra-quyet-dinh",
+    "t": "Quyết định nên phân loại theo mức đảo ngược được và mức thông tin, chứ không theo mức quan trọng",
+    "s": "Quyết định dễ đảo và ít thông tin thì làm nhanh và học từ kết quả. Quyết định khó đảo thì trì hoãn tới sát hạn để thu thêm thông tin. Ghép sai hai loại này gây hai lỗi đối xứng: họp ba tuần cho việc thử được trong một ngày, và ký nhanh cho việc không rút lại được.",
+    "tags": [
+      "quyet-dinh",
+      "phan-loai"
+    ],
+    "src": "Thực hành phân loại quyết định trong quản trị; Amazon shareholder letter (1997) về cửa một chiều"
+  },
+  {
+    "id": "td-247",
+    "cat": "tu-duy",
+    "sub": "ra-quyet-dinh",
+    "t": "Đặt mức 'bỏ' từ trước làm bạn thoát khỏi chi phí chìm mà không cần ý chí",
+    "s": "Nếu bạn định trước 'nếu sau 3 tháng chỉ số dưới X thì dừng', bạn không phải đấu với chính mình vào lúc đã đầu tư nhiều nhất và khó rời nhất. Đây là cùng một cơ chế với lệnh cắt lỗ trong đầu tư: chuyển quyết định về thời điểm còn khách quan.",
+    "tags": [
+      "chi-phi-chim",
+      "cam-ket"
+    ],
+    "src": "Nghiên cứu về precommitment; Annie Duke, Quit (2022)"
+  },
+  {
+    "id": "td-248",
+    "cat": "tu-duy",
+    "sub": "ra-quyet-dinh",
+    "t": "Khi mọi phương án đều tệ, việc cần làm là mở rộng tập phương án chứ không phải chọn kỹ hơn",
+    "s": "Rất nhiều quyết định khó là quyết định 'A hay B' trong khi vấn đề thật là chưa ai tìm C. Chip và Dan Heath gọi bẫy này là 'khung hẹp', và một mẹo đơn giản để phá nó là hỏi 'nếu cả A và B đều không được phép thì tôi làm gì'.",
+    "tags": [
+      "phuong-an",
+      "khung-hep"
+    ],
+    "src": "Chip Heath & Dan Heath, Decisive (2013)"
+  },
+  {
+    "id": "td-249",
+    "cat": "tu-duy",
+    "sub": "ra-quyet-dinh",
+    "t": "Người ta hối tiếc việc không làm nhiều hơn việc làm sai, nhưng phải sau nhiều năm",
+    "s": "Trong ngắn hạn, hối tiếc về hành động mạnh hơn; càng về dài hạn, hối tiếc về việc bỏ lỡ càng vượt lên. Điều này gợi ý một cách hiệu chỉnh: với quyết định có hậu quả dài hạn, hãy tưởng tượng cảm giác sau mười năm chứ không phải cảm giác tuần sau.",
+    "tags": [
+      "hoi-tiec",
+      "thoi-gian"
+    ],
+    "src": "Gilovich & Medvec, Psychological Review (1995)"
+  },
+  {
+    "id": "td-250",
+    "cat": "tu-duy",
+    "sub": "ra-quyet-dinh",
+    "t": "Quy tắc dừng tìm kiếm: đừng chọn phương án tốt nhất, hãy chọn khi chi phí tìm thêm vượt lợi ích kỳ vọng",
+    "s": "Với hầu hết quyết định đời thường, thời gian và sức chú ý bỏ ra để so sánh thêm đắt hơn phần cải thiện thu được. Herbert Simon nhận Nobel phần lớn cho ý này: con người không tối ưu mà 'đủ tốt thì dừng', và trong môi trường thật thì đó là chiến lược hợp lý.",
+    "tags": [
+      "quyet-dinh",
+      "chi-phi-tim"
+    ],
+    "src": "Herbert Simon, khái niệm satisficing và duy lý có giới hạn; Nobel Kinh tế 1978"
+  },
+  {
+    "id": "td-251",
+    "cat": "tu-duy",
+    "sub": "ra-quyet-dinh",
+    "t": "Danh sách tiêu chí phải viết trước khi xem phương án, nếu không nó sẽ được viết để hợp với phương án bạn đã thích",
+    "s": "Khi đã có một ứng viên hoặc một sản phẩm trong đầu, ta chọn tiêu chí sao cho nó thắng — hiện tượng này gọi là lý luận có định hướng. Cách chặn rất rẻ: chốt và ghi tiêu chí cùng trọng số ra giấy trước khi mở hồ sơ đầu tiên.",
+    "tags": [
+      "tieu-chi",
+      "thien-kien"
+    ],
+    "src": "Ziva Kunda, The Case for Motivated Reasoning, Psychological Bulletin (1990)"
+  },
+  {
+    "id": "td-252",
+    "cat": "tu-duy",
+    "sub": "ra-quyet-dinh",
+    "t": "Với quyết định lặp lại, quy tắc đơn giản thắng phán đoán từng lần",
+    "s": "Trong nhiều lĩnh vực, một công thức cộng vài yếu tố với trọng số bằng nhau dự báo tốt hơn chuyên gia phán đoán từng trường hợp — vì con người không nhất quán với chính mình giữa các lần. Kết luận không phải 'người kém hơn máy' mà 'người kém hơn chính mình khi không có quy tắc'.",
+    "tags": [
+      "quy-tac",
+      "nhat-quan"
+    ],
+    "src": "Robyn Dawes, The Robust Beauty of Improper Linear Models, American Psychologist (1979); Kahneman, Sibony & Sunstein, Noise (2021)"
+  },
+  {
+    "id": "td-253",
+    "cat": "tu-duy",
+    "sub": "ra-quyet-dinh",
+    "t": "Nhiễu — sự không nhất quán giữa các lần phán đoán — gây thiệt hại ngang hoặc hơn thiên kiến",
+    "s": "Hai thẩm định viên cùng công ty cho hai con số lệch nhau rất xa cho cùng một hồ sơ; cùng một bác sĩ cho hai chẩn đoán khác nhau vào hai buổi. Thiên kiến là lệch có hướng nên còn đoán được; nhiễu thì lệch tứ phía, khó thấy hơn và ít ai đo.",
+    "tags": [
+      "nhieu",
+      "nhat-quan"
+    ],
+    "src": "Kahneman, Sibony & Sunstein, Noise: A Flaw in Human Judgment (2021)"
+  },
+  {
+    "id": "td-254",
+    "cat": "tu-duy",
+    "sub": "ra-quyet-dinh",
+    "t": "Chia quyết định thành các đánh giá độc lập rồi mới tổng hợp cho kết quả tốt hơn đánh giá tổng thể",
+    "s": "Khi chấm một ứng viên hay một phương án, hãy chấm từng chiều riêng và không xem điểm các chiều khác trong lúc chấm — sau đó mới cộng lại. Cách này chặn hiệu ứng hào quang lan từ chiều này sang chiều khác, và nó là lý do phỏng vấn có cấu trúc dự báo tốt hơn.",
+    "tags": [
+      "danh-gia",
+      "hao-quang"
+    ],
+    "src": "Kahneman, Thinking, Fast and Slow (2011); nguyên tắc đánh giá độc lập trong Noise (2021)"
+  },
+  {
+    "id": "td-255",
+    "cat": "tu-duy",
+    "sub": "ra-quyet-dinh",
+    "t": "Trước khi quyết định, hỏi 'tôi sẽ nói gì nếu phải giải thích việc này cho người ngoài sau một năm'",
+    "s": "Bài kiểm tra người quan sát bên ngoài lọc được phần lớn quyết định dựa trên cảm xúc tức thời hoặc động cơ không dám nói ra. Nó rẻ hơn bất kỳ quy trình nào và có thể làm trong ba mươi giây.",
+    "tags": [
+      "quyet-dinh",
+      "tu-kiem"
+    ],
+    "src": "Thực hành 'outside view' của Kahneman & Lovallo, Management Science (1993)"
+  },
+  {
+    "id": "td-256",
+    "cat": "tu-duy",
+    "sub": "ra-quyet-dinh",
+    "t": "Quyết định nhóm tốt hơn khi mỗi người viết ý kiến ra trước khi nghe người khác",
+    "s": "Nếu người có quyền nói trước, phần còn lại hội tụ về đó và nhóm mất luôn phần thông tin độc lập — vốn là lý do duy nhất để họp nhiều người. Thu ý kiến bằng văn bản trước cuộc họp giữ được tính độc lập, và nó cũng làm cuộc họp ngắn hơn.",
+    "tags": [
+      "nhom",
+      "doc-lap"
+    ],
+    "src": "Nghiên cứu về information cascade trong nhóm; thực hành 'silent start' được mô tả trong Noise (2021)"
+  },
+  {
+    "id": "td-257",
+    "cat": "tu-duy",
+    "sub": "ra-quyet-dinh",
+    "t": "Đặt câu hỏi 'chi phí của việc chờ thêm là bao nhiêu' biến sự do dự thành một con số",
+    "s": "Trì hoãn quyết định luôn có giá — mất cơ hội, mất thời gian của người khác, mất lựa chọn. Khi giá đó được viết ra thành con số, phần lớn trường hợp 'để suy nghĩ thêm' hiện ra là đắt hơn việc quyết định ngay với thông tin đang có.",
+    "tags": [
+      "quyet-dinh",
+      "chi-phi"
+    ],
+    "src": "Khái niệm chi phí trì hoãn (cost of delay) trong quản trị dòng giá trị"
+  },
+  {
+    "id": "td-258",
+    "cat": "tu-duy",
+    "sub": "ra-quyet-dinh",
+    "t": "Người ta chọn khác nhau giữa 'được mô tả' và 'được trải nghiệm' cùng một xác suất",
+    "s": "Khi nghe mô tả xác suất, người ta phản ứng quá mức với sự kiện hiếm; khi tự trải nghiệm qua nhiều lượt, người ta lại phản ứng dưới mức. Đây là lý do cảnh báo bằng chữ về rủi ro hiếm ít hiệu lực với người đã làm việc đó nhiều lần mà chưa gặp chuyện.",
+    "tags": [
+      "xac-suat",
+      "kinh-nghiem"
+    ],
+    "src": "Hertwig, Barron, Weber & Erev, Psychological Science (2004)"
+  },
+  {
+    "id": "td-259",
+    "cat": "tu-duy",
+    "sub": "ra-quyet-dinh",
+    "t": "Với nhiều lựa chọn phức tạp, hãy loại trước theo tiêu chí chặn rồi mới so sánh phần còn lại",
+    "s": "So sánh mười phương án trên bảy tiêu chí vượt khả năng làm việc của trí nhớ ngắn hạn, nên kết quả sẽ do thứ tự trình bày quyết định. Đặt vài điều kiện loại trừ trước — ngân sách, thời gian, ràng buộc cứng — thu tập về ba bốn phương án, rồi mới cân nhắc kỹ.",
+    "tags": [
+      "quyet-dinh",
+      "loc"
+    ],
+    "src": "Amos Tversky, Elimination by Aspects, Psychological Review (1972)"
+  },
+  {
+    "id": "td-260",
+    "cat": "tu-duy",
+    "sub": "ra-quyet-dinh",
+    "t": "Quy tắc 'ngủ một đêm' hiệu quả với quyết định có cảm xúc, không hiệu quả với quyết định thiếu thông tin",
+    "s": "Chờ giúp cảm xúc lắng xuống và cho phép xử lý ngầm, nhưng nó không tạo thêm dữ liệu. Nếu bạn đang bế tắc vì thiếu một con số thì việc phải làm là đi lấy con số đó, còn nếu bạn đang tức thì chờ là đủ.",
+    "tags": [
+      "cam-xuc",
+      "quyet-dinh"
+    ],
+    "src": "Nghiên cứu về unconscious thought và affect trong ra quyết định; Baumeister về tự chủ và cảm xúc"
+  },
+  {
+    "id": "td-261",
+    "cat": "tu-duy",
+    "sub": "ra-quyet-dinh",
+    "t": "Chọn theo phương án tệ nhất có thể chấp nhận thay vì phương án tốt nhất có thể mong",
+    "s": "Khi mặt xấu không bị chặn, tối đa hoá kỳ vọng là chiến lược sai. Cách xử lý là đặt sàn: chọn phương án mà trường hợp xấu nhất bạn vẫn sống được, rồi trong số đó mới tìm cái có kỳ vọng cao. Đây là lý do các quyết định về nợ và bảo hiểm không nên tính bằng trung bình.",
+    "tags": [
+      "rui-ro",
+      "san"
+    ],
+    "src": "Nguyên tắc minimax trong lý thuyết quyết định; Taleb về rủi ro sống còn"
+  },
+  {
+    "id": "td-262",
+    "cat": "tu-duy",
+    "sub": "ra-quyet-dinh",
+    "t": "Sự tự tin của bạn về một quyết định không nói gì về chất lượng thông tin của nó",
+    "s": "Cảm giác chắc chắn đến từ tính mạch lạc của câu chuyện trong đầu, không đến từ lượng bằng chứng — nên một câu chuyện gọn gàng dựa trên hai dữ kiện cho cảm giác chắc hơn một bức tranh rối rắm dựa trên hai mươi dữ kiện. Kahneman gọi đây là WYSIATI: cái bạn thấy là toàn bộ cái có.",
+    "tags": [
+      "tu-tin",
+      "bang-chung"
+    ],
+    "src": "Daniel Kahneman, Thinking, Fast and Slow (2011)"
+  },
+  {
+    "id": "td-263",
+    "cat": "tu-duy",
+    "sub": "ra-quyet-dinh",
+    "t": "Hai câu hỏi tách hẳn chất lượng quyết định khỏi may mắn: tôi biết gì, và tôi đã cân nhắc gì",
+    "s": "Sau một kết quả, ghi lại thông tin có tại thời điểm quyết định và các phương án đã cân nhắc — không ghi kết quả. Nhật ký kiểu này là công cụ rẻ nhất chống thiên kiến nhận thức muộn, vì nó cố định lại trạng thái hiểu biết trước khi ký ức bị viết lại.",
+    "tags": [
+      "nhat-ky",
+      "hoc-hoi"
+    ],
+    "src": "Thực hành decision journal; Fischhoff về hindsight bias (1975)"
+  },
+  {
+    "id": "td-264",
+    "cat": "tu-duy",
+    "sub": "ra-quyet-dinh",
+    "t": "Khi hai phương án ngang nhau sau khi đã phân tích kỹ, hãy chọn cái mở ra nhiều lựa chọn hơn về sau",
+    "s": "Nếu giá trị kỳ vọng gần bằng nhau thì thông tin bạn có không đủ để phân biệt, và tiêu chí phụ hợp lý nhất là quyền chọn: phương án nào để lại nhiều đường đi tiếp hơn. Đây là lý do người ta ưu tiên kỹ năng chuyển được sang nhiều nghề hơn kỹ năng chỉ dùng ở một chỗ.",
+    "tags": [
+      "quyen-chon",
+      "quyet-dinh"
+    ],
+    "src": "Lý thuyết quyền chọn thực (real options) trong tài chính doanh nghiệp"
+  },
+  {
+    "id": "td-265",
+    "cat": "tu-duy",
+    "sub": "ra-quyet-dinh",
+    "t": "Người ta chấp nhận rủi ro cao hơn khi thua và thận trọng hơn khi thắng — ngược với điều nên làm",
+    "s": "Lý thuyết triển vọng cho thấy trong miền lỗ, con người tìm rủi ro để mong hoàn lại; trong miền lãi thì ngại rủi ro. Hệ quả thực tế là nhà đầu tư ở dưới vốn thì đánh lớn hơn, và người quản lý dự án đang trễ thì đặt cược mạo hiểm hơn.",
+    "tags": [
+      "rui-ro",
+      "trien-vong"
+    ],
+    "src": "Kahneman & Tversky, Prospect Theory, Econometrica (1979)"
+  },
+  {
+    "id": "td-266",
+    "cat": "tu-duy",
+    "sub": "du-doan",
+    "t": "Dự báo tốt phải có ba phần: điều gì, bao giờ, và xác suất bao nhiêu",
+    "s": "Thiếu mốc thời gian hoặc thiếu con số xác suất thì dự báo không thể chấm điểm được, và không chấm được thì không cải thiện được. Đây là lý do các dự báo thời sự nghe hay mà không ai giỏi lên theo thời gian.",
+    "tags": [
+      "du-bao",
+      "hieu-chinh"
+    ],
+    "src": "Philip Tetlock, Expert Political Judgment (2005); Superforecasting (2015)"
+  },
+  {
+    "id": "td-267",
+    "cat": "tu-duy",
+    "sub": "du-doan",
+    "t": "Cách nhanh nhất để dự báo tốt hơn là chia nhỏ câu hỏi thành các phần đoán được",
+    "s": "Thay vì đoán trực tiếp 'dự án này bao lâu', hãy đoán số hạng mục, thời gian mỗi hạng mục và tỉ lệ phát sinh. Phân rã như vậy làm sai số các phần triệt tiêu nhau một phần, thay vì cộng dồn — đây là cơ chế đứng sau ước lượng Fermi.",
+    "tags": [
+      "du-bao",
+      "phan-ra"
+    ],
+    "src": "Douglas Hubbard, How to Measure Anything (2007); Tetlock về kỹ thuật phân rã"
+  },
+  {
+    "id": "td-268",
+    "cat": "tu-duy",
+    "sub": "du-doan",
+    "t": "Dự báo bằng khoảng luôn tốt hơn dự báo bằng một con số, và người ta đặt khoảng quá hẹp",
+    "s": "Khi được yêu cầu cho khoảng chắc 90%, người ta đưa khoảng chỉ chứa kết quả thật khoảng 30–60% số lần. Bài kiểm tra hiệu chỉnh rất đơn giản: sau mười dự báo dạng khoảng, đếm xem bao nhiêu lần thực tế rơi vào trong.",
+    "tags": [
+      "hieu-chinh",
+      "khoang"
+    ],
+    "src": "Alpert & Raiffa (1982); Douglas Hubbard về huấn luyện hiệu chỉnh"
+  },
+  {
+    "id": "td-269",
+    "cat": "tu-duy",
+    "sub": "du-doan",
+    "t": "Người dự báo giỏi đổi ý thường xuyên nhưng mỗi lần chỉ đổi một chút",
+    "s": "Tetlock thấy các siêu dự báo viên cập nhật xác suất nhiều lần khi có tin mới, mỗi lần dịch vài phần trăm — thay vì giữ nguyên rồi lật hẳn. Nhảy từ 20% sang 80% trong một bước thường là dấu hiệu bạn đã bỏ qua thông tin có sẵn từ trước.",
+    "tags": [
+      "cap-nhat",
+      "du-bao"
+    ],
+    "src": "Philip Tetlock & Dan Gardner, Superforecasting (2015)"
+  },
+  {
+    "id": "td-270",
+    "cat": "tu-duy",
+    "sub": "du-doan",
+    "t": "Xu hướng dài hạn dễ dự báo hơn thời điểm, nhưng người ta bán thời điểm vì nó nghe hấp dẫn",
+    "s": "Rằng dân số già đi, rằng chi phí năng lượng mặt trời giảm — các xu hướng có động lực cơ bản thì đoán được. Còn 'khi nào thị trường sụp' hay 'năm nào công nghệ này phổ biến' phụ thuộc quá nhiều biến ngẫu nhiên. Đọc dự báo nên tách hai loại này ra.",
+    "tags": [
+      "du-bao",
+      "xu-huong"
+    ],
+    "src": "Tetlock về sự khác biệt giữa dự báo xu hướng và dự báo thời điểm"
+  },
+  {
+    "id": "td-271",
+    "cat": "tu-duy",
+    "sub": "du-doan",
+    "t": "Ước lượng thời gian tốt lên rõ rệt khi bạn hỏi 'việc tương tự trước đây mất bao lâu'",
+    "s": "Cách này gọi là dự báo theo lớp tham chiếu, và nó bỏ qua toàn bộ kế hoạch chi tiết để dùng dữ liệu quá khứ. Nó chính xác hơn vì kế hoạch chi tiết chỉ mô tả con đường lý tưởng, còn dữ liệu quá khứ đã bao gồm mọi phát sinh mà bạn không hình dung nổi.",
+    "tags": [
+      "uoc-luong",
+      "lop-tham-chieu"
+    ],
+    "src": "Kahneman & Tversky về reference class forecasting; Flyvbjerg áp dụng cho dự án hạ tầng"
+  },
+  {
+    "id": "td-272",
+    "cat": "tu-duy",
+    "sub": "du-doan",
+    "t": "Nếu bạn không ghi dự báo lại, ký ức sẽ chỉnh nó cho khớp với thực tế đã xảy ra",
+    "s": "Fischhoff cho người dự báo trước một sự kiện rồi hỏi lại sau khi kết quả đã rõ: họ nhớ mình đã đoán gần đúng hơn thực tế. Vì vậy 'tôi biết ngay từ đầu' hầu như luôn là hiện tượng trí nhớ, không phải năng lực.",
+    "tags": [
+      "nhan-thuc-muon",
+      "tri-nho"
+    ],
+    "src": "Baruch Fischhoff, Hindsight ≠ Foresight, Journal of Experimental Psychology (1975)"
+  },
+  {
+    "id": "td-273",
+    "cat": "tu-duy",
+    "sub": "du-doan",
+    "t": "Tổng hợp nhiều dự báo độc lập gần như luôn tốt hơn dự báo tốt nhất trong số đó",
+    "s": "Với điều kiện các sai số không cùng hướng, việc lấy trung vị của nhiều dự báo triệt tiêu phần nhiễu. Đây là lý do các nhóm dự báo giỏi làm việc bằng cách thu ý kiến riêng trước rồi mới tranh luận, chứ không tranh luận để đi tới một con số duy nhất.",
+    "tags": [
+      "tong-hop",
+      "du-bao"
+    ],
+    "src": "Nghiên cứu về wisdom of crowds; Good Judgment Project của IARPA"
+  },
+  {
+    "id": "td-274",
+    "cat": "tu-duy",
+    "sub": "du-doan",
+    "t": "Dự báo bị hỏng nhiều nhất ở chỗ người dự báo có lợi ích trong kết quả",
+    "s": "Không cần ai nói dối: chỉ cần một chút thiên lệch trong việc chọn giả định là đủ để ra con số mong muốn. Vì vậy khi đọc dự báo về một dự án, hãy hỏi ai lập nó và họ được gì nếu con số đẹp — thường điều đó giải thích nhiều hơn phương pháp.",
+    "tags": [
+      "dong-co",
+      "du-bao"
+    ],
+    "src": "Flyvbjerg về strategic misrepresentation trong dự báo dự án (2009)"
+  },
+  {
+    "id": "td-275",
+    "cat": "tu-duy",
+    "sub": "du-doan",
+    "t": "Điều gì đã tồn tại lâu thì kỳ vọng còn tồn tại lâu — nhưng chỉ với thứ không có tuổi thọ tự nhiên",
+    "s": "Với công nghệ, sách, thể chế, ý tưởng thì càng cũ càng có kỳ vọng sống thêm dài. Với con người, thiết bị và sinh vật thì ngược lại, vì chúng có cơ chế lão hoá. Áp dụng lẫn hai loại này là chỗ suy luận kiểu Lindy hay bị dùng sai.",
+    "tags": [
+      "lindy",
+      "tuoi-tho"
+    ],
+    "src": "Nassim Taleb, Antifragile (2012); phân biệt phân bố có và không có tỉ lệ hỏng tăng theo tuổi"
+  },
+  {
+    "id": "td-276",
+    "cat": "tu-duy",
+    "sub": "du-doan",
+    "t": "Kế hoạch nên có mốc kiểm tra chứ không chỉ có mốc hoàn thành",
+    "s": "Mốc hoàn thành chỉ cho biết thông tin khi đã quá muộn để đổi. Mốc kiểm tra là điểm định trước để hỏi 'giả định nào đã sai' và có quyền dừng. Nếu kế hoạch không có điểm nào cho phép dừng thì nó không phải kế hoạch mà là một cam kết.",
+    "tags": [
+      "ke-hoach",
+      "kiem-tra"
+    ],
+    "src": "Thực hành stage-gate trong quản trị dự án; Rita McGrath về discovery-driven planning (1995)"
+  },
+  {
+    "id": "td-277",
+    "cat": "tu-duy",
+    "sub": "du-doan",
+    "t": "Câu hỏi 'điều gì phải đúng để việc này thành công' hữu ích hơn 'việc này có thành công không'",
+    "s": "Cách đặt câu hỏi thứ hai đẩy người ta về tranh luận có–không. Cách thứ nhất tạo ra một danh sách giả định kiểm được, và mỗi giả định lại có thể xếp theo mức chắc chắn và mức quan trọng. Đây là cốt lõi của lập kế hoạch dựa trên khám phá.",
+    "tags": [
+      "gia-dinh",
+      "ke-hoach"
+    ],
+    "src": "Rita Gunther McGrath & Ian MacMillan, Discovery-Driven Planning, HBR (1995)"
+  },
+  {
+    "id": "td-278",
+    "cat": "tu-duy",
+    "sub": "du-doan",
+    "t": "Tương lai gần thường bị hình dung quá giống hiện tại, và tương lai xa quá giống truyện",
+    "s": "Với khoảng 1–2 năm, người ta đánh giá thấp thay đổi vì lấy hiện tại làm mốc. Với khoảng 20–30 năm, người ta lại tưởng tượng theo mô-típ có sẵn trong văn hoá. Cả hai lỗi đều giảm khi bạn nhìn lại cùng khoảng thời gian đó trong quá khứ và hỏi 'khi ấy cái gì đã đổi'.",
+    "tags": [
+      "du-bao",
+      "thoi-gian"
+    ],
+    "src": "Amara's law về đánh giá tác động ngắn và dài hạn; nghiên cứu về construal level theory (Trope & Liberman, 2010)"
+  },
+  {
+    "id": "td-279",
+    "cat": "tu-duy",
+    "sub": "du-doan",
+    "t": "Kịch bản nên viết ba bản, và bản hữu ích nhất là bản bạn không muốn đọc",
+    "s": "Kịch bản tốt, xấu và xấu hơn mức bạn thấy hợp lý. Bản thứ ba là bản có giá trị nhất vì nó buộc phải nêu các phương án dự phòng, và vì phần lớn thất bại lớn nằm trong vùng mà ta đã bỏ qua vì thấy 'khó xảy ra'.",
+    "tags": [
+      "kich-ban",
+      "du-phong"
+    ],
+    "src": "Thực hành lập kịch bản của Royal Dutch Shell từ thập niên 1970; Pierre Wack, HBR (1985)"
+  },
+  {
+    "id": "td-280",
+    "cat": "tu-duy",
+    "sub": "du-doan",
+    "t": "Số lần bạn đúng không đo được năng lực dự báo — phải chấm bằng điểm có xét độ tự tin",
+    "s": "Người luôn nói '50%' không bao giờ sai hẳn mà cũng không cho thông tin gì. Điểm Brier chấm cả độ chính xác lẫn độ mạnh dạn: dự báo 90% mà đúng được điểm cao, 90% mà sai bị trừ rất nặng. Không có cách chấm như vậy thì không ai có động cơ nói thẳng.",
+    "tags": [
+      "cham-diem",
+      "du-bao"
+    ],
+    "src": "Glenn Brier, Verification of Forecasts Expressed in Terms of Probability (1950)"
+  },
+  {
+    "id": "td-281",
+    "cat": "tu-duy",
+    "sub": "lap-luan-sai",
+    "t": "Nguỵ biện đe doạ trượt dốc chỉ là nguỵ biện khi không nêu được cơ chế trượt",
+    "s": "Nếu chỉ nói 'cho phép A rồi sẽ tới Z' mà không nêu cơ chế nào đưa A tới B, đó là nguỵ biện. Nhưng khi cơ chế có thật — tiền lệ pháp lý, động cơ kinh tế, hiệu ứng chuẩn mực — thì lập luận trượt dốc là lập luận hợp lệ và bỏ qua nó cũng là một lỗi.",
+    "tags": [
+      "nguy-bien",
+      "lap-luan"
+    ],
+    "src": "Douglas Walton, Slippery Slope Arguments (1992)"
+  },
+  {
+    "id": "td-282",
+    "cat": "tu-duy",
+    "sub": "lap-luan-sai",
+    "t": "Cãi 'không ai chứng minh được điều ngược lại' là chuyển gánh nặng chứng minh sang bên kia",
+    "s": "Trong lập luận, người khẳng định có nghĩa vụ đưa bằng chứng, không phải người nghi ngờ. Bertrand Russell minh hoạ bằng chiếc ấm trà quay quanh Mặt Trời: không ai bác bỏ được, và điều đó không làm nó đáng tin thêm một chút nào.",
+    "tags": [
+      "nguy-bien",
+      "bang-chung"
+    ],
+    "src": "Bertrand Russell, Is There a God? (1952)"
+  },
+  {
+    "id": "td-283",
+    "cat": "tu-duy",
+    "sub": "lap-luan-sai",
+    "t": "Nguỵ biện Scotsman thật: sửa định nghĩa sau khi bị đưa phản ví dụ",
+    "s": "'Người X không bao giờ làm chuyện đó' — 'nhưng ông ấy là người X và ông ấy đã làm' — 'thì ông ấy không phải người X thật'. Mẹo nhận biết: nếu định nghĩa được điều chỉnh ngay sau khi có dữ liệu bất lợi thì khẳng định ban đầu không kiểm được, nên nó không nói gì cả.",
+    "tags": [
+      "nguy-bien",
+      "dinh-nghia"
+    ],
+    "src": "Antony Flew, Thinking about Thinking (1975)"
+  },
+  {
+    "id": "td-284",
+    "cat": "tu-duy",
+    "sub": "lap-luan-sai",
+    "t": "Nguỵ biện Nirvana: bác một giải pháp vì nó không hoàn hảo, thay vì so với phương án thật",
+    "s": "Vaccine không hiệu quả 100% nên bị bác; mũ bảo hiểm không cứu mọi trường hợp nên bị coi là vô dụng. So sánh đúng luôn là 'với và không với', không phải 'với và hoàn hảo'. Harold Demsetz gọi lối so sánh sai này là cách tiếp cận thiên đường vô vọng.",
+    "tags": [
+      "nguy-bien",
+      "so-sanh"
+    ],
+    "src": "Harold Demsetz, Information and Efficiency: Another Viewpoint (1969)"
+  },
+  {
+    "id": "td-285",
+    "cat": "tu-duy",
+    "sub": "lap-luan-sai",
+    "t": "Nguỵ biện nghịch lý Nga: từ chối một cải thiện vì nó chưa giải quyết được vấn đề lớn hơn",
+    "s": "'Sửa cái này thì được gì khi cả hệ thống còn hỏng?' — dạng lập luận này chặn mọi bước nhỏ khả thi để chờ một bước lớn không tới. Nó thường xuất hiện khi người phản đối không thật sự muốn thay đổi, nên đáng đặt câu hỏi kế tiếp: vậy bước nhỏ nào thì anh đồng ý.",
+    "tags": [
+      "nguy-bien",
+      "cai-cach"
+    ],
+    "src": "Dạng biến thể của nguỵ biện Nirvana và whataboutism trong tranh luận chính sách"
+  },
+  {
+    "id": "td-286",
+    "cat": "tu-duy",
+    "sub": "lap-luan-sai",
+    "t": "Tính đúng của kết luận không suy ra từ tính đúng của người nói, kể cả khi người nói là chuyên gia",
+    "s": "Chuyên gia là bằng chứng gián tiếp có giá trị, nhưng chỉ trong đúng lĩnh vực họ có phản hồi hiệu chỉnh và chỉ khi họ không có lợi ích trong kết luận. Ngoài hai điều kiện đó, ý kiến chuyên gia dự báo kém hơn nhiều so với mức người ta tưởng.",
+    "tags": [
+      "chuyen-gia",
+      "bang-chung"
+    ],
+    "src": "Philip Tetlock, Expert Political Judgment (2005)"
+  },
+  {
+    "id": "td-287",
+    "cat": "tu-duy",
+    "sub": "lap-luan-sai",
+    "t": "Nguỵ biện tương tự sai: hai thứ giống nhau ở vài điểm không có nghĩa giống nhau ở điểm đang bàn",
+    "s": "Ví von rất hữu ích để giải thích và rất dễ sai khi dùng để chứng minh. Cách kiểm nhanh: nêu rõ tính chất nào của A được cho là chuyển sang B, rồi hỏi cơ chế nào bảo đảm việc chuyển đó. Không nêu được cơ chế thì ví von chỉ là minh hoạ.",
+    "tags": [
+      "nguy-bien",
+      "vi-von"
+    ],
+    "src": "Lý thuyết lập luận tương tự trong logic phi hình thức (Walton, Reed & Macagno, 2008)"
+  },
+  {
+    "id": "td-288",
+    "cat": "tu-duy",
+    "sub": "lap-luan-sai",
+    "t": "Nguỵ biện lượng hoá lệch: dùng con số tuyệt đối khi muốn nghe nhỏ và tương đối khi muốn nghe lớn",
+    "s": "'Chỉ 0,3% người dùng bị ảnh hưởng' và 'tăng gấp ba lần nguy cơ' có thể mô tả cùng một dữ liệu. Không có bên nào nói sai, nhưng lựa chọn cách trình bày đã quyết định phản ứng. Cách chống duy nhất là luôn đòi cả hai con số.",
+    "tags": [
+      "so-lieu",
+      "dong-khung"
+    ],
+    "src": "Gigerenzer về mine-run của rủi ro tương đối và tuyệt đối; Calculated Risks (2002)"
+  },
+  {
+    "id": "td-289",
+    "cat": "tu-duy",
+    "sub": "lap-luan-sai",
+    "t": "Tranh luận về từ ngữ thường là tranh luận đã hỏng, nhưng có một trường hợp nó chính đáng",
+    "s": "Nếu hai bên định nghĩa khác nhau thì tiếp tục tranh luận là vô nghĩa cho tới khi chốt định nghĩa — đó là lúc bàn về từ ngữ là việc đúng. Ngoài trường hợp đó, cãi nhau về nên gọi hiện tượng là gì thường chỉ là cách tránh câu hỏi thực chất.",
+    "tags": [
+      "dinh-nghia",
+      "tranh-luan"
+    ],
+    "src": "Vấn đề tranh chấp ngôn từ (verbal dispute) trong triết học phân tích; Chalmers, Verbal Disputes (2011)"
+  },
+  {
+    "id": "td-290",
+    "cat": "tu-duy",
+    "sub": "lap-luan-sai",
+    "t": "Bằng chứng cá nhân sống động lấn át dữ liệu tổng hợp, kể cả với người biết rõ điều đó",
+    "s": "Một câu chuyện về người quen mua xe hỏng thắng được bảng thống kê độ tin cậy của cả dòng xe. Cơ chế là tính khả dụng: thông tin sống động dễ nhớ hơn nên được cân nặng hơn. Cách chống thực dụng là viết con số ra và ép mình đối chiếu, chứ không phải tự nhủ 'tôi khách quan'.",
+    "tags": [
+      "kha-dung",
+      "du-lieu"
+    ],
+    "src": "Nisbett & Ross, Human Inference (1980); Tversky & Kahneman về availability (1973)"
+  },
+  {
+    "id": "td-291",
+    "cat": "tu-duy",
+    "sub": "lap-luan-sai",
+    "t": "Nguỵ biện 'đơn giản hoá thành hai lựa chọn' là cách hiệu quả nhất để thắng một cuộc tranh luận sai",
+    "s": "Khi vấn đề bị đóng khung thành A hay B, người nghe mất khả năng nghĩ tới C và mất luôn khả năng đặt câu hỏi về chính cái khung. Đây là lý do câu hỏi đầu tiên nên là 'ai đã chọn hai lựa chọn này, và còn phương án nào bị bỏ ra ngoài'.",
+    "tags": [
+      "nguy-bien",
+      "dong-khung"
+    ],
+    "src": "Nguỵ biện lưỡng phân sai (false dilemma) trong logic phi hình thức"
+  },
+  {
+    "id": "td-292",
+    "cat": "tu-duy",
+    "sub": "lap-luan-sai",
+    "t": "Người ta đánh giá lập luận theo mức đồng ý với kết luận, không theo tính hợp lệ của suy luận",
+    "s": "Trong thí nghiệm, cùng một tam đoạn luận được cho là hợp lệ nhiều hơn khi kết luận nghe đúng — hiện tượng này gọi là thiên kiến niềm tin. Nó xuất hiện cả ở người được huấn luyện logic, nên cách chặn không phải tự tin vào lý trí mà là kiểm cấu trúc suy luận riêng khỏi nội dung.",
+    "tags": [
+      "logic",
+      "thien-kien"
+    ],
+    "src": "Evans, Barston & Pollard, Memory & Cognition (1983)"
+  },
+  {
+    "id": "td-293",
+    "cat": "tu-duy",
+    "sub": "lap-luan-sai",
+    "t": "Bác bỏ tin sai hiệu quả nhất khi thay nó bằng một câu chuyện khác, không chỉ nói 'điều đó sai'",
+    "s": "Xoá một niềm tin để lại chỗ trống, và trí nhớ có xu hướng lấp lại bằng thông tin cũ. Các thử nghiệm cho thấy hiệu chỉnh có kèm giải thích thay thế bền hơn nhiều so với hiệu chỉnh chỉ phủ định.",
+    "tags": [
+      "thong-tin-sai",
+      "hieu-chinh"
+    ],
+    "src": "Lewandowsky, Ecker, Seifert, Schwarz & Cook, Psychological Science in the Public Interest (2012)"
+  },
+  {
+    "id": "td-294",
+    "cat": "tu-duy",
+    "sub": "lap-luan-sai",
+    "t": "Số lượng lý lẽ nhiều làm lập luận yếu đi, không mạnh lên",
+    "s": "Khi thêm các lý lẽ yếu vào bên cạnh lý lẽ mạnh, người nghe đánh giá cả tập thấp hơn — hiệu ứng pha loãng. Nên trong thuyết trình và trong tranh luận, việc bỏ đi ba luận điểm yếu nhất thường có tác dụng hơn thêm ba luận điểm nữa.",
+    "tags": [
+      "thuyet-phuc",
+      "pha-loang"
+    ],
+    "src": "Nisbett, Zukier & Lemley, Cognitive Psychology (1981)"
+  },
+  {
+    "id": "td-295",
+    "cat": "tu-duy",
+    "sub": "lap-luan-sai",
+    "t": "Bạn hiểu một quan điểm chỉ khi trình bày lại được nó đủ tốt để người bên kia nhận là của mình",
+    "s": "Bài kiểm tra này khắt khe hơn nhiều so với việc mô tả quan điểm đối phương theo cách mình nhớ, và nó lọc gần hết các phiên bản rơm. Trong tranh luận có ghi chép, việc phải đạt được cái gật đầu đó thường làm hai bên phát hiện họ bất đồng ở chỗ khác chỗ tưởng.",
+    "tags": [
+      "tranh-luan",
+      "hieu-nhau"
+    ],
+    "src": "Quy tắc Rapoport, do Daniel Dennett trình bày trong Intuition Pumps (2013)"
+  },
+  {
+    "id": "td-296",
+    "cat": "tu-duy",
+    "sub": "lap-luan-sai",
+    "t": "Không đồng ý về sự thật và không đồng ý về giá trị cần hai cách xử lý hoàn toàn khác nhau",
+    "s": "Bất đồng về sự thật có thể giải bằng dữ liệu và có thể chốt bằng một phép cược. Bất đồng về giá trị không giải được bằng dữ liệu và cố làm vậy chỉ tạo thêm tức giận. Bước hữu ích nhất trong tranh luận dài là xác định mình đang ở loại nào.",
+    "tags": [
+      "tranh-luan",
+      "gia-tri"
+    ],
+    "src": "Phân biệt thực chứng – quy chuẩn trong triết học đạo đức và kinh tế học"
+  },
+  {
+    "id": "td-297",
+    "cat": "tu-duy",
+    "sub": "lap-luan-sai",
+    "t": "Đề nghị đánh cược là cách nhanh nhất để biết ai đang thật sự tin điều mình nói",
+    "s": "Cược buộc người phát biểu chuyển từ khẳng định định tính sang xác suất và mức tiền, và phần lớn khẳng định mạnh mềm đi ngay tại bước đó. Alex Tabarrok gọi cược là một loại thuế đánh vào những lời nói suông.",
+    "tags": [
+      "cuoc",
+      "tu-tin"
+    ],
+    "src": "Alex Tabarrok, 'A bet is a tax on bullshit' (2012); thực hành calibration betting"
+  },
+  {
+    "id": "td-298",
+    "cat": "tu-duy",
+    "sub": "lap-luan-sai",
+    "t": "Nguỵ biện 'tự nhiên nên tốt' và bản sao của nó 'mới nên tốt' đều bỏ qua câu hỏi thật",
+    "s": "Thạch tín tự nhiên, insulin thì không; câu hỏi đáng hỏi là tác dụng và tác hại cụ thể, không phải nguồn gốc. Cùng cấu trúc đó, 'công nghệ mới nên tốt hơn' cũng là lời khẳng định cần bằng chứng chứ không phải điểm khởi đầu.",
+    "tags": [
+      "nguy-bien",
+      "tu-nhien"
+    ],
+    "src": "Nguỵ biện viện dẫn tự nhiên (appeal to nature); G. E. Moore về naturalistic fallacy (1903)"
+  },
+  {
+    "id": "td-299",
+    "cat": "tu-duy",
+    "sub": "hoc-va-nho",
+    "t": "Bạn đánh giá mình đã hiểu dựa trên cảm giác trôi chảy, và cảm giác đó gạt bạn",
+    "s": "Sự trôi chảy khi đọc — chữ dễ đọc, câu quen, giọng tự tin — bị não đọc thành dấu hiệu đã nắm được. Trong thí nghiệm, người học đánh giá mình hiểu bài cao hơn khi tài liệu trình bày mượt, dù kết quả kiểm tra sau đó không khác. Vì vậy cách duy nhất biết mình đã hiểu là thử làm, không phải tự hỏi.",
+    "tags": [
+      "sieu-nhan-thuc",
+      "troi-chay"
+    ],
+    "src": "Bjork, Dunlosky & Kornell, Annual Review of Psychology (2013) về ảo tưởng hiểu biết"
+  },
+  {
+    "id": "td-300",
+    "cat": "tu-duy",
+    "sub": "hoc-va-nho",
+    "t": "Học trong điều kiện hơi khó làm nhớ lâu hơn, dù lúc học có cảm giác kém hiệu quả",
+    "s": "Robert Bjork gọi đây là 'khó khăn mong muốn': xáo trộn thứ tự bài, giãn cách các buổi, tự nhớ lại trước khi xem đáp án — tất cả làm việc học chậm và khó chịu hơn nhưng giữ được lâu hơn. Hệ quả là cảm giác trong lúc học là chỉ báo rất tệ về kết quả.",
+    "tags": [
+      "hoc",
+      "kho-khan"
+    ],
+    "src": "Robert Bjork, khái niệm desirable difficulties (1994)"
+  },
+  {
+    "id": "td-301",
+    "cat": "tu-duy",
+    "sub": "hoc-va-nho",
+    "t": "Ghi chú bằng cách tóm lại bằng lời của mình hiệu quả hơn ghi lại nguyên văn",
+    "s": "Ghi nguyên văn có thể làm mà không cần hiểu, nên nó không tạo dấu vết nhớ. Trong một nghiên cứu so sánh, sinh viên gõ máy ghi được nhiều chữ hơn nhưng trả lời kém hơn ở câu hỏi khái niệm — dù kết quả này về sau được nhân bản với hiệu ứng nhỏ hơn ban đầu.",
+    "tags": [
+      "ghi-chu",
+      "hoc"
+    ],
+    "src": "Mueller & Oppenheimer, Psychological Science (2014); Morehead và cộng sự (2019) nhân bản với hiệu ứng nhỏ hơn"
+  },
+  {
+    "id": "td-302",
+    "cat": "tu-duy",
+    "sub": "hoc-va-nho",
+    "t": "Bạn học nhanh hơn khi bị sai và được sửa ngay, chậm hơn khi luôn làm đúng",
+    "s": "Lỗi tạo ra tín hiệu điều chỉnh; luyện tập không có lỗi thì không có tín hiệu. Vì vậy bài tập tốt nên ở mức khiến bạn sai khoảng 15–30% số lần, và phản hồi phải đến đủ nhanh để bạn còn nhớ mình đã nghĩ gì.",
+    "tags": [
+      "phan-hoi",
+      "luyen-tap"
+    ],
+    "src": "Anders Ericsson về luyện tập có chủ đích; Wilson và cộng sự về 'tỉ lệ lỗi tối ưu', Nature Communications (2019)"
+  },
+  {
+    "id": "td-303",
+    "cat": "tu-duy",
+    "sub": "hoc-va-nho",
+    "t": "Kiến thức mới chỉ dính khi có chỗ để móc vào, nên thứ tự học quan trọng hơn nỗ lực",
+    "s": "Trí nhớ dài hạn hoạt động bằng liên kết, nên một khái niệm không nối được vào cái gì đã biết sẽ rơi. Đó là lý do bỏ qua nền tảng để học phần hấp dẫn thường vừa mất thời gian vừa tạo cảm giác mình học kém.",
+    "tags": [
+      "hoc",
+      "nen-tang"
+    ],
+    "src": "Lý thuyết sơ đồ nhận thức (Bartlett, Piaget); Sweller về tải nhận thức (1988)"
+  },
+  {
+    "id": "td-304",
+    "cat": "tu-duy",
+    "sub": "hoc-va-nho",
+    "t": "Ví dụ cụ thể trước, quy tắc trừu tượng sau — thứ tự ngược lại làm người học không dùng được",
+    "s": "Người học chỉ nhận ra cấu trúc chung sau khi đã gặp vài trường hợp cụ thể khác nhau; nghe định nghĩa trước thường tạo ra thứ nhớ được mà không nhận ra được ngoài thực tế. Hai ví dụ khác bối cảnh hiệu quả hơn một ví dụ chi tiết.",
+    "tags": [
+      "hoc",
+      "vi-du"
+    ],
+    "src": "Gick & Holyoak về chuyển giao tương tự, Cognitive Psychology (1983)"
+  },
+  {
+    "id": "td-305",
+    "cat": "tu-duy",
+    "sub": "hoc-va-nho",
+    "t": "Trí nhớ làm việc bị chiếm bởi thứ không liên quan sẽ làm bạn học kém, và giao diện rối là một nguồn",
+    "s": "Tải nhận thức có ba phần: phần do bản chất nội dung, phần do cách trình bày, và phần dành cho việc hiểu thật. Chỉ phần thứ hai là cắt được, nên bố cục gọn, bớt trang trí và bỏ thông tin dư là can thiệp học tập rẻ nhất.",
+    "tags": [
+      "tai-nhan-thuc",
+      "trinh-bay"
+    ],
+    "src": "John Sweller, Cognitive Load Theory (1988, 2011)"
+  },
+  {
+    "id": "td-306",
+    "cat": "tu-duy",
+    "sub": "hoc-va-nho",
+    "t": "Học một kỹ năng ở nhiều bối cảnh khác nhau làm nó chuyển được sang tình huống mới",
+    "s": "Luyện trong một bối cảnh duy nhất tạo ra kỹ năng bám chặt vào bối cảnh đó — người giải được bài tập trong sách vẫn tắc khi gặp cùng bài dưới dạng khác. Đa dạng hoá điều kiện luyện tập làm kết quả trước mắt kém hơn nhưng chuyển giao tốt hơn nhiều.",
+    "tags": [
+      "chuyen-giao",
+      "luyen-tap"
+    ],
+    "src": "Schmidt & Bjork, Psychological Science (1992)"
+  },
+  {
+    "id": "td-307",
+    "cat": "tu-duy",
+    "sub": "hoc-va-nho",
+    "t": "Giải thích cho người khác buộc bạn phát hiện chỗ mình chỉ đang nhớ chứ không hiểu",
+    "s": "Khi phải nói thành lời có thứ tự, các lỗ hổng lộ ra ở đúng điểm bạn phải nối hai ý lại với nhau. Hiệu ứng này có cả khi người nghe không tồn tại — tự giải thích thành tiếng cũng cải thiện hiểu, dù ít hơn.",
+    "tags": [
+      "giai-thich",
+      "hoc"
+    ],
+    "src": "Chi và cộng sự về self-explanation, Cognitive Science (1994)"
+  },
+  {
+    "id": "td-308",
+    "cat": "tu-duy",
+    "sub": "hoc-va-nho",
+    "t": "Người mới cần bài mẫu làm sẵn, người đã có nền lại học tệ hơn từ bài mẫu",
+    "s": "Cùng một tài liệu có hiệu quả trái ngược tuỳ mức nền của người học — hiện tượng này gọi là đảo chiều theo trình độ. Vì vậy 'phương pháp học tốt nhất' là câu hỏi thiếu dữ kiện: phải hỏi tốt nhất cho ai, đang ở đâu.",
+    "tags": [
+      "hoc",
+      "trinh-do"
+    ],
+    "src": "Kalyuga và cộng sự, expertise reversal effect, Educational Psychologist (2003)"
+  },
+  {
+    "id": "td-309",
+    "cat": "tu-duy",
+    "sub": "hoc-va-nho",
+    "t": "Bạn nhớ tốt hơn khi ôn ngay trước lúc gần quên, không phải khi còn nhớ rõ",
+    "s": "Khoảng cách ôn tập tối ưu tăng dần theo số lần ôn: vài giờ, vài ngày, vài tuần, vài tháng. Ôn khi còn nhớ rõ tốn công mà tăng rất ít độ bền, đó là lý do các hệ thống thẻ ghi nhớ tính lịch ôn theo mức khó của lần trước.",
+    "tags": [
+      "gian-cach",
+      "on-tap"
+    ],
+    "src": "Cepeda và cộng sự, Psychological Bulletin (2006); mô hình SuperMemo của Piotr Woźniak"
+  },
+  {
+    "id": "td-310",
+    "cat": "tu-duy",
+    "sub": "hoc-va-nho",
+    "t": "Bạn nhớ phần chưa hoàn thành lâu hơn phần đã hoàn thành, và có thể dùng điều đó khi học",
+    "s": "Dừng giữa một việc còn dở làm nó tiếp tục chiếm chỗ trong đầu, nên nhiều người viết dừng lại giữa câu để hôm sau vào việc nhanh hơn. Cùng cơ chế đó khiến việc để lại một bài tập chưa xong cuối buổi học giúp buổi sau khởi động dễ hơn.",
+    "tags": [
+      "zeigarnik",
+      "hoc"
+    ],
+    "src": "Bluma Zeigarnik (1927); thực hành viết của Ernest Hemingway"
+  },
+  {
+    "id": "td-311",
+    "cat": "tu-duy",
+    "sub": "hoc-va-nho",
+    "t": "Đánh dấu và bôi vàng gần như không có tác dụng, nhưng nó là kỹ thuật học phổ biến nhất",
+    "s": "Trong tổng quan các phương pháp học, bôi đánh dấu và đọc lại đều được xếp mức 'hiệu quả thấp', trong khi tự kiểm tra và giãn cách xếp mức 'hiệu quả cao'. Điều đáng chú ý là hai phương pháp yếu lại là hai phương pháp sinh viên dùng nhiều nhất.",
+    "tags": [
+      "hoc",
+      "phuong-phap"
+    ],
+    "src": "Dunlosky và cộng sự, Psychological Science in the Public Interest (2013)"
+  },
+  {
+    "id": "td-312",
+    "cat": "tu-duy",
+    "sub": "hoc-va-nho",
+    "t": "Kỹ năng bị mất theo tốc độ khác nhau: hiểu thì bền, quy trình thì phai nhanh",
+    "s": "Bạn còn nhớ nguyên lý của phép chia đa thức nhiều năm sau, nhưng các bước cụ thể thì mất. Hệ quả thực dụng: với việc làm không thường xuyên, hãy đầu tư vào danh sách kiểm tra viết ra thay vì tin vào trí nhớ quy trình.",
+    "tags": [
+      "ky-nang",
+      "quen"
+    ],
+    "src": "Nghiên cứu về skill decay; Arthur và cộng sự, Human Performance (1998)"
+  },
+  {
+    "id": "td-313",
+    "cat": "tu-duy",
+    "sub": "hoc-va-nho",
+    "t": "Luyện tập có chủ đích khác luyện tập nhiều ở ba điểm, và điểm thứ ba là điểm hay thiếu",
+    "s": "Nó nhắm vào phần bạn đang làm kém, nó ở mức khó vượt hiện tại, và nó có phản hồi ngay lập tức về đúng cái điểm đó. Nhiều nghìn giờ làm việc không có phần thứ ba tạo ra kinh nghiệm chứ không tạo ra tiến bộ — đó là lý do nhiều người làm một nghề hai mươi năm vẫn ở mức của năm thứ ba.",
+    "tags": [
+      "luyen-tap",
+      "phan-hoi"
+    ],
+    "src": "Anders Ericsson, Peak (2016); Ericsson, Krampe & Tesch-Römer, Psychological Review (1993)"
+  },
+  {
+    "id": "td-314",
+    "cat": "tu-duy",
+    "sub": "hoc-va-nho",
+    "t": "Kiểm tra không chỉ đo việc học, bản thân nó là một hoạt động học",
+    "s": "Việc phải lấy thông tin ra khỏi trí nhớ làm dấu vết đó mạnh lên, nên một bài kiểm tra không chấm điểm vẫn có tác dụng học. Đây là lý do các khoá học hiệu quả rải câu hỏi giữa bài thay vì để dồn vào cuối kỳ.",
+    "tags": [
+      "kiem-tra",
+      "hoc"
+    ],
+    "src": "Roediger & Butler, Trends in Cognitive Sciences (2011)"
+  },
+  {
+    "id": "td-315",
+    "cat": "tu-duy",
+    "sub": "hoc-va-nho",
+    "t": "Đoán trước đáp án rồi mới xem giúp bạn nhớ tốt hơn, kể cả khi đoán sai",
+    "s": "Việc phải tạo ra một câu trả lời trước làm bạn xử lý đáp án sâu hơn khi gặp nó — hiệu ứng này vẫn có khi phán đoán ban đầu sai hoàn toàn, miễn là được sửa ngay sau đó. Vì vậy đọc câu hỏi trước khi đọc chương sách là một thay đổi rẻ và có hiệu quả đo được.",
+    "tags": [
+      "du-doan",
+      "hoc"
+    ],
+    "src": "Kornell, Hays & Bjork, Journal of Experimental Psychology: LMC (2009)"
+  },
+  {
+    "id": "td-316",
+    "cat": "tu-duy",
+    "sub": "sang-tao",
+    "t": "Ràng buộc làm tăng sáng tạo tới một mức, rồi mới bắt đầu giảm",
+    "s": "Nguồn lực dư dả quá thường cho ra giải pháp lười, còn ràng buộc quá chặt thì chặn hết đường. Tổng quan các nghiên cứu tìm thấy quan hệ hình chữ U ngược: mức ràng buộc trung bình cho kết quả sáng tạo nhất, nên 'cho thêm thời gian và tiền' không phải cách tăng ý tưởng.",
+    "tags": [
+      "rang-buoc",
+      "sang-tao"
+    ],
+    "src": "Acar, Tarakci & van Knippenberg, Journal of Management (2019)"
+  },
+  {
+    "id": "td-317",
+    "cat": "tu-duy",
+    "sub": "sang-tao",
+    "t": "Ý tưởng tốt thường không hiện ra sau ý tưởng đầu — nó nằm ở nửa sau của danh sách",
+    "s": "Chất lượng ý tưởng trung bình có xu hướng tăng dần trong một buổi nghĩ, vì các phương án hiển nhiên bị dùng hết trước. Hệ quả rất thực dụng: đặt hạn mức số lượng, và đừng dừng ở ý tưởng đầu tiên nghe được.",
+    "tags": [
+      "y-tuong",
+      "so-luong"
+    ],
+    "src": "Nghiên cứu về serial order effect trong sinh ý tưởng; Beaty & Silvia, Psychology of Aesthetics (2012)"
+  },
+  {
+    "id": "td-318",
+    "cat": "tu-duy",
+    "sub": "sang-tao",
+    "t": "Bí tắc thường không phải thiếu ý tưởng mà là chưa định nghĩa đúng vấn đề",
+    "s": "Trong nghiên cứu về sinh viên nghệ thuật, những người dành nhiều thời gian ở giai đoạn tìm và đặt lại vấn đề tạo ra tác phẩm được đánh giá cao hơn hẳn, và khác biệt đó còn dự báo được thành công nhiều năm sau. Đổi câu hỏi thường hiệu quả hơn cố tìm thêm đáp án.",
+    "tags": [
+      "dat-van-de",
+      "sang-tao"
+    ],
+    "src": "Getzels & Csikszentmihalyi, The Creative Vision (1976)"
+  },
+  {
+    "id": "td-319",
+    "cat": "tu-duy",
+    "sub": "sang-tao",
+    "t": "Ghép hai lĩnh vực xa nhau tạo ra nhiều ý tưởng mới hơn đào sâu một lĩnh vực",
+    "s": "Phân tích hàng triệu bài báo cho thấy công trình có ảnh hưởng cao thường kết hợp một nền tảng rất quy ước với một vài liên kết rất khác thường. Nghĩa là công thức không phải 'càng lạ càng tốt' mà là phần lớn quy ước cộng một chỗ lệch mạnh.",
+    "tags": [
+      "ket-hop",
+      "sang-tao"
+    ],
+    "src": "Uzzi, Mukherjee, Stringer & Jones, Science (2013)"
+  },
+  {
+    "id": "td-320",
+    "cat": "tu-duy",
+    "sub": "sang-tao",
+    "t": "Người đánh giá ý tưởng thường chọn sai, và họ có thiên kiến chống lại cái mới",
+    "s": "Trong thí nghiệm, người ta nói mình muốn sáng tạo nhưng lại đánh giá thấp các phương án thật sự mới, vì cái mới đi kèm bất định và bất định gây khó chịu. Vì vậy một quy trình đổi mới cần bảo vệ ý tưởng lạ khỏi vòng sàng lọc quá sớm.",
+    "tags": [
+      "danh-gia",
+      "cai-moi"
+    ],
+    "src": "Mueller, Melwani & Goncalo, Psychological Science (2012)"
+  },
+  {
+    "id": "td-321",
+    "cat": "tu-duy",
+    "sub": "sang-tao",
+    "t": "Tâm trí lơ đãng có ích cho sáng tạo, nhưng chỉ khi bạn đã nạp vấn đề vào trước",
+    "s": "Nghỉ trong lúc đang mắc một bài toán cụ thể làm tăng khả năng tìm ra phương án, còn nghỉ mà không có vấn đề nào chờ giải thì không. Điều này khớp với ghi chép về các khoảnh khắc 'chợt nghĩ ra': chúng luôn đến sau một giai đoạn tập trung dài.",
+    "tags": [
+      "nghi-ngoi",
+      "sang-tao"
+    ],
+    "src": "Baird và cộng sự, Psychological Science (2012)"
+  },
+  {
+    "id": "td-322",
+    "cat": "tu-duy",
+    "sub": "sang-tao",
+    "t": "Người sáng tạo nhiều không phải người có tỉ lệ thành công cao hơn — họ chỉ làm nhiều hơn",
+    "s": "Trong nhiều lĩnh vực, xác suất một tác phẩm cụ thể thành công không tăng theo kinh nghiệm; điều tăng là tổng số tác phẩm. Dean Keith Simonton gọi đây là 'nguyên lý bình đẳng xác suất' — hệ quả là muốn tăng số lần trúng, phải tăng số lần thử.",
+    "tags": [
+      "so-luong",
+      "thanh-cong"
+    ],
+    "src": "Dean Keith Simonton, Psychological Review (1997)"
+  },
+  {
+    "id": "td-323",
+    "cat": "tu-duy",
+    "sub": "sang-tao",
+    "t": "Bản nháp tệ có giá trị vì nó biến việc suy nghĩ thành việc sửa",
+    "s": "Sửa một bản có sẵn dùng cơ chế nhận biết, dễ hơn nhiều so với tạo ra từ trang trắng, vốn dùng cơ chế hồi tưởng. Đây là lý do lời khuyên 'viết bản nháp dở nhất có thể' hoạt động: nó chuyển bài toán sang loại mà đầu bạn xử lý tốt hơn.",
+    "tags": [
+      "ban-nhap",
+      "viet"
+    ],
+    "src": "Anne Lamott, Bird by Bird (1994); phân biệt recall và recognition trong tâm lý trí nhớ"
+  },
+  {
+    "id": "td-324",
+    "cat": "tu-duy",
+    "sub": "rui-ro",
+    "t": "Rủi ro sống còn phải được xử lý khác mọi loại rủi ro khác, vì nó xoá luôn cơ hội thử lại",
+    "s": "Với các rủi ro lặp lại được, tối đa hoá kỳ vọng dài hạn là hợp lý. Với rủi ro có thể làm bạn ra khỏi cuộc chơi — vỡ nợ, mất giấy phép, mất sức khoẻ — không có 'dài hạn' nào để tính trung bình. Nguyên tắc là chặn trước, không phải đánh đổi.",
+    "tags": [
+      "rui-ro",
+      "song-con"
+    ],
+    "src": "Nassim Taleb & Ole Peters về ergodicity và ruin; Taleb, Skin in the Game (2018)"
+  },
+  {
+    "id": "td-325",
+    "cat": "tu-duy",
+    "sub": "rui-ro",
+    "t": "Chiến lược đòn tạ: rất an toàn ở phần lớn tài sản và rất mạo hiểm ở một phần nhỏ",
+    "s": "Thay vì mức rủi ro trung bình đều khắp, dồn phần lớn vào chỗ gần như không mất được và một phần nhỏ vào chỗ có thể mất hết nhưng mặt được không bị chặn. Cấu trúc này giữ được mặt tốt của bất định mà chặn mặt xấu, và nó áp dụng cho nghề nghiệp cũng như cho tiền.",
+    "tags": [
+      "don-ta",
+      "rui-ro"
+    ],
+    "src": "Nassim Nicholas Taleb, Antifragile (2012)"
+  },
+  {
+    "id": "td-326",
+    "cat": "tu-duy",
+    "sub": "rui-ro",
+    "t": "Bền vững và kháng nghịch là hai thứ khác nhau: một cái chịu được cú sốc, một cái mạnh lên nhờ nó",
+    "s": "Cốc thuỷ tinh thì dễ vỡ, hòn đá thì bền, còn cơ bắp và hệ miễn dịch thì mạnh lên khi bị tác động vừa phải. Phân biệt này quan trọng khi thiết kế hệ thống: mục tiêu không phải luôn là chống mọi biến động, mà đôi khi là để hệ thống gặp biến động nhỏ thường xuyên.",
+    "tags": [
+      "khang-nghich",
+      "he-thong"
+    ],
+    "src": "Nassim Nicholas Taleb, Antifragile (2012)"
+  },
+  {
+    "id": "td-327",
+    "cat": "tu-duy",
+    "sub": "rui-ro",
+    "t": "Kiểm soát rủi ro làm người ta hành động mạo hiểm hơn, nên phần lợi ích bị bù trừ một phần",
+    "s": "Gọi là bù trừ rủi ro: phanh ABS làm người lái đi gần hơn, mũ bảo hộ làm cầu thủ va chạm mạnh hơn. Điều này không có nghĩa các biện pháp an toàn vô ích — tổng thể chúng vẫn có lợi — nhưng lợi ích thực tế thường nhỏ hơn con số tính trên giấy.",
+    "tags": [
+      "an-toan",
+      "bu-tru"
+    ],
+    "src": "Gerald Wilde, Target Risk (1994); nghiên cứu về risk compensation trong an toàn giao thông"
+  },
+  {
+    "id": "td-328",
+    "cat": "tu-duy",
+    "sub": "rui-ro",
+    "t": "Trong hệ thống ghép chặt, biện pháp an toàn thêm vào có thể tạo ra chế độ hỏng mới",
+    "s": "Charles Perrow phân tích rằng khi các bộ phận liên kết chặt và tương tác phức tạp, tai nạn trở thành 'bình thường' theo nghĩa không thể loại hết — và mỗi lớp bảo vệ thêm vào cũng là một thứ có thể hỏng. Cách giảm rủi ro thật thường là nới lỏng liên kết, không phải thêm lớp.",
+    "tags": [
+      "he-thong",
+      "an-toan"
+    ],
+    "src": "Charles Perrow, Normal Accidents (1984)"
+  },
+  {
+    "id": "td-329",
+    "cat": "tu-duy",
+    "sub": "rui-ro",
+    "t": "Rủi ro tương quan mới là rủi ro đáng lo, không phải rủi ro lớn",
+    "s": "Mười khoản đầu tư nhỏ độc lập an toàn hơn một khoản lớn; nhưng mười khoản nhỏ cùng phụ thuộc một điều kiện thì tương đương một khoản lớn được ngụy trang. Đây là bài học trung tâm của khủng hoảng 2008: các khoản vay được cho là độc lập lại cùng phụ thuộc giá nhà.",
+    "tags": [
+      "tuong-quan",
+      "rui-ro"
+    ],
+    "src": "Phân tích khủng hoảng tài chính 2007–2009; Báo cáo Ủy ban điều tra khủng hoảng tài chính Hoa Kỳ (2011)"
+  },
+  {
+    "id": "td-330",
+    "cat": "tu-duy",
+    "sub": "rui-ro",
+    "t": "Rủi ro bạn tự chọn được cảm nhận nhẹ hơn rủi ro bị áp đặt, dù con số như nhau",
+    "s": "Người ta chấp nhận nguy cơ cao hơn nhiều khi tự lái xe so với khi bay, và phản ứng mạnh với ô nhiễm công nghiệp hơn với ô nhiễm trong nhà mình. Paul Slovic cho thấy nhận thức rủi ro phụ thuộc mức tự nguyện, mức quen thuộc và mức thảm khốc — không chỉ phụ thuộc xác suất.",
+    "tags": [
+      "nhan-thuc-rui-ro",
+      "tu-nguyen"
+    ],
+    "src": "Paul Slovic, Perception of Risk, Science (1987)"
+  },
+  {
+    "id": "td-331",
+    "cat": "tu-duy",
+    "sub": "rui-ro",
+    "t": "Ngưỡng bạn chịu được quan trọng hơn kỳ vọng bạn tính được",
+    "s": "Hai kế hoạch cùng kỳ vọng có thể khác nhau hoàn toàn về mức sụt sâu nhất trên đường đi. Nếu mức sụt đó vượt ngưỡng bạn chịu được về tiền hoặc về tinh thần, bạn sẽ bỏ giữa đường và không bao giờ nhận được phần kỳ vọng đã tính.",
+    "tags": [
+      "nguong",
+      "rui-ro"
+    ],
+    "src": "Khái niệm drawdown và risk of ruin trong quản trị rủi ro tài chính"
+  },
+  {
+    "id": "td-332",
+    "cat": "tu-duy",
+    "sub": "rui-ro",
+    "t": "Thứ bạn chưa nghĩ tới không phòng bằng công cụ nhắm đích, chỉ phòng bằng dư thừa chung",
+    "s": "Với rủi ro đã biết, mua bảo hiểm hoặc phòng vệ theo con số. Với rủi ro chưa nghĩ tới, không có công cụ nào nhắm đúng nó — chỉ có dư thừa chung: tiền mặt, thời gian rảnh, quan hệ, phương án thứ hai. Đó là lý do dự phòng chung không bao giờ tối ưu trên giấy nhưng luôn cần trên thực tế.",
+    "tags": [
+      "bat-dinh",
+      "du-phong"
+    ],
+    "src": "Frank Knight, Risk, Uncertainty and Profit (1921); Taleb về rủi ro ngoài mô hình"
+  },
+  {
+    "id": "td-333",
+    "cat": "tu-duy",
+    "sub": "rui-ro",
+    "t": "Đo rủi ro bằng mức thiệt hại nhân xác suất bỏ mất chiều thứ ba: tốc độ hồi phục",
+    "s": "Hai sự cố cùng thiệt hại kỳ vọng nhưng một cái phục hồi trong ngày và một cái mất năm thì không cùng loại rủi ro. Trong thực hành liên tục kinh doanh, hai chỉ số được dùng là thời gian phục hồi mục tiêu và lượng dữ liệu chấp nhận mất — cả hai đều nói về hồi phục, không về xác suất.",
+    "tags": [
+      "hoi-phuc",
+      "rui-ro"
+    ],
+    "src": "Thực hành business continuity: RTO và RPO trong ISO 22301"
+  },
+  {
+    "id": "td-334",
+    "cat": "tu-duy",
+    "sub": "rui-ro",
+    "t": "Sự kiện chưa từng thấy trong dữ liệu không phải sự kiện không thể xảy ra",
+    "s": "Nếu bạn có 30 năm số liệu, mọi thứ chu kỳ 100 năm đều vắng mặt — và mô hình học từ dữ liệu đó sẽ gán cho chúng xác suất gần không. Đây là cơ chế đứng sau nhiều thất bại quản trị rủi ro: mô hình đúng với quá khứ được tin là đúng với tương lai.",
+    "tags": [
+      "du-lieu",
+      "duoi-day"
+    ],
+    "src": "Taleb, The Black Swan (2007); vấn đề ước lượng phân vị ngoài mẫu trong thống kê cực trị"
+  },
+  {
+    "id": "td-335",
+    "cat": "tu-duy",
+    "sub": "rui-ro",
+    "t": "Đa dạng hoá chỉ có tác dụng khi các phần thật sự không cùng hỏng vì một nguyên nhân",
+    "s": "Ba nhà cung cấp khác nhau nhưng cùng nhập từ một nhà máy là một nhà cung cấp. Ba khoản thu nhập khác nhau nhưng cùng phụ thuộc một ngành là một khoản. Kiểm tra thực dụng: liệt kê các nguyên nhân hỏng chung và đếm xem có bao nhiêu điểm dùng chung.",
+    "tags": [
+      "da-dang-hoa",
+      "phu-thuoc"
+    ],
+    "src": "Phân tích common-cause failure trong kỹ thuật độ tin cậy"
+  },
+  {
+    "id": "td-336",
+    "cat": "tu-duy",
+    "sub": "rui-ro",
+    "t": "Quyết định lớn nên hỏi 'nếu sai thì tôi phát hiện ra nhanh không', trước khi hỏi 'nó có đúng không'",
+    "s": "Trong bất định, khả năng phát hiện sai sớm có giá trị hơn độ chính xác ban đầu — vì phương án nào cũng có xác suất sai đáng kể. Vì vậy hãy ưu tiên các bước có tín hiệu phản hồi rõ và sớm, kể cả khi chúng trông kém hiệu quả hơn.",
+    "tags": [
+      "phan-hoi",
+      "quyet-dinh"
+    ],
+    "src": "Nguyên tắc thiết kế thử nghiệm nhanh; Herbert Simon về thích nghi trong môi trường bất định"
+  },
+  {
+    "id": "td-337",
+    "cat": "tu-duy",
+    "sub": "rui-ro",
+    "t": "Chi phí của một quyết định sai không đối xứng, và bạn nên nghiêng về phía sai rẻ hơn",
+    "s": "Khi hai loại sai có giá khác nhau — báo động giả và bỏ sót, thuê sai người và bỏ mất người giỏi — thì điểm quyết định tối ưu không nằm ở xác suất 50%. Trong thống kê đây là việc chọn ngưỡng theo tổn thất, và trong đời thường nó có nghĩa là hãy hỏi 'sai kiểu nào thì tôi sống được'.",
+    "tags": [
+      "danh-doi",
+      "nguong"
+    ],
+    "src": "Lý thuyết quyết định thống kê: hàm tổn thất và chọn ngưỡng (Wald, 1950)"
+  },
+  {
+    "id": "td-338",
+    "cat": "tu-duy",
+    "sub": "rui-ro",
+    "t": "Nhiều lớp bảo vệ độc lập tốt hơn một lớp rất tốt, và điểm mấu chốt là chữ độc lập",
+    "s": "Nếu mỗi lớp chặn được 90% và các lớp độc lập với nhau, ba lớp để lọt một phần nghìn. Nhưng nếu cả ba lớp cùng dựa trên một giả định, cùng một người vận hành hoặc cùng một nguồn điện, thì ba lớp chỉ mạnh gần bằng một. Đây là lý do đánh giá an toàn phải truy nguyên nhân dùng chung.",
+    "tags": [
+      "phong-thu",
+      "doc-lap"
+    ],
+    "src": "Nguyên lý defence in depth trong an toàn hạt nhân và an ninh thông tin"
+  },
+  {
+    "id": "td-339",
+    "cat": "tu-duy",
+    "sub": "rui-ro",
+    "t": "Chuyển rủi ro cho bên khác tạo ra một rủi ro mới: bên đó không trả được",
+    "s": "Mua bảo hiểm, thuê ngoài, ký hợp đồng chuyển trách nhiệm — các cách này đổi rủi ro gốc thành rủi ro đối tác không thực hiện được cam kết. Trong khủng hoảng, hai loại rủi ro đó lại thường xuất hiện cùng lúc, đúng lúc bạn cần bên kia trả tiền nhất.",
+    "tags": [
+      "bao-hiem",
+      "doi-tac"
+    ],
+    "src": "Khái niệm counterparty risk; kinh nghiệm từ sự sụp đổ của AIG (2008)"
+  },
+  {
+    "id": "td-340",
+    "cat": "tu-duy",
+    "sub": "rui-ro",
+    "t": "Ước lượng xác suất cho sự kiện chưa từng xảy ra bằng cách đếm cơ hội, không bằng cách đếm lần xảy ra",
+    "s": "Nếu chưa có sự cố nào trong 200 lần thao tác, xác suất không phải bằng không — quy tắc ba cho giới hạn trên khoảng 3/200, tức 1,5%. Cách nghĩ này biến 'chưa bao giờ xảy ra' từ một lời an tâm thành một con số có thể so sánh với mức chấp nhận được.",
+    "tags": [
+      "xac-suat",
+      "quy-tac-ba"
+    ],
+    "src": "Hanley & Lippman-Hand, JAMA (1983) — quy tắc ba cho sự kiện không quan sát được"
+  }
+]
