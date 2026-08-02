@@ -1,6 +1,6 @@
 # Cashy — Loan Redesign Programme · Review & Handoff
 
-> Written 2026-07-23. This is the durable record for the **loan-redesign programme** (3 vertical slices) and the review checklist for **Slice A (Contact)**, which is done. Read this to pick the work back up. Full agreed design lives in the assistant memory `cashy-loan-redesign`; per-slice artifacts live under `docs/agentic-workflow/{specs,tech-designs,plans}/` + `features/cashy/…`.
+> Written 2026-07-23. This is the durable record for the **loan-redesign programme** (3 vertical slices) and the review checklist for **Slice A (Contact)**, which is done. Read this to pick the work back up. Full agreed design lives in the assistant memory `cashy-loan-redesign`; per-slice artifacts live under `cashy/docs/agentic-workflow/{specs,tech-designs,plans}/` + `cashy/features/…`.
 
 ## Programme status
 
@@ -10,13 +10,13 @@
 | B | **Loan redesign** (transaction-linked) | ⏳ not started — **next** | v10 |
 | C | **Stats aggregation toggle** (Dashboard) | ⏳ not started | — |
 
-Build convention this programme used: **build-on-`main` directly** (no feature worktree), per the user's choice. kv pipeline artifacts are at **repo-root** `docs/agentic-workflow/…` + `features/…` (the tracing hooks are `$repo`-anchored); app code is under `cashy/src/`.
+Build convention this programme used: **build-on-`main` directly** (no feature worktree), per the user's choice. kv pipeline artifacts were originally written to **repo-root** `docs/agentic-workflow/…` + `features/…` because the tracing hooks are `$repo`-anchored; they were **moved under `cashy/` on 2026-08-02** (they are Cashy-only, and the root of this repo is a published GitHub Pages site). If you re-run the pipeline it will recreate the root folders — move them back under `cashy/` when it does, or re-point the hooks. App code is under `cashy/src/`.
 
 ---
 
 ## SLICE A — Contact · Review checklist (for you to check later)
 
-Artifacts: [spec](specs/2026-07-23-contact.md) (Ready) · [tech-design](tech-designs/2026-07-23-contact.md) (Ready) · [plan](plans/2026-07-23-contact.md) (Ready) · BDD [`features/cashy/contacts/danh-ba-doi-tac.feature`](../../features/cashy/contacts/danh-ba-doi-tac.feature) (28 scenarios).
+Artifacts: [spec](specs/2026-07-23-contact.md) (Ready) · [tech-design](tech-designs/2026-07-23-contact.md) (Ready) · [plan](plans/2026-07-23-contact.md) (Ready) · BDD [`cashy/features/contacts/danh-ba-doi-tac.feature`](../../features/contacts/danh-ba-doi-tac.feature) (28 scenarios).
 
 ### What to spot-check in the app (`#/contacts`)
 - [ ] Add a contact (name + optional username) → appears in the grid with a person icon + `@username` subtitle

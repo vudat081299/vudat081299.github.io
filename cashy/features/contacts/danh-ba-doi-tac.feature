@@ -1,6 +1,6 @@
 @integration
 Feature: Danh bạ đối tác vay/mượn
-  # spec: docs/agentic-workflow/specs/2026-07-23-contact.md
+  # spec: cashy/docs/agentic-workflow/specs/2026-07-23-contact.md
   Là người cho vay và đi vay với những người cụ thể
   Tôi muốn quản lý họ như một danh bạ có định danh ổn định
   Để cùng một người dùng lại được cho nhiều khoản vay, và đổi tên một nơi là cập nhật mọi nơi
