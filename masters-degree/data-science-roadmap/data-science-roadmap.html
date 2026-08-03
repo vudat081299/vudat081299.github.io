@@ -819,6 +819,24 @@
   <p><b>Chi phí:</b> ma trận $n \times n$ nghĩa là bộ nhớ tăng theo bình phương độ dài chuỗi. Chuỗi 1.000 token → 1 triệu ô. Đây là lý do context window đắt, và là chủ đề của hàng trăm paper (FlashAttention, Linformer, Performer…) — cũng là một mỏ đề tài luận văn.</p>
 </template>
 
+<template data-mathdef="posenc" data-title="Positional encoding — công thức sin/cos trong Transformer gốc">
+  <p>Attention không biết thứ tự token: đảo hai từ trong câu, điểm số y hệt. Cách của paper <i>Attention Is All You Need</i>: với mỗi vị trí $pos$, tạo một vector cùng số chiều $d$ với embedding rồi <b>cộng thẳng vào</b> embedding của token ở vị trí đó.</p>
+  <p>$$PE(pos, 2i) = \sin\!\left(\frac{pos}{10000^{2i/d}}\right), \qquad PE(pos, 2i+1) = \cos\!\left(\frac{pos}{10000^{2i/d}}\right)$$</p>
+  <table>
+    <tr><th>Ký hiệu</th><th>Nghĩa</th></tr>
+    <tr><td>$pos$</td><td>vị trí của token trong chuỗi (0, 1, 2, …)</td></tr>
+    <tr><td>$i$</td><td>chỉ số cặp chiều; mỗi cặp $(2i,\, 2i{+}1)$ là một cặp sin–cos</td></tr>
+    <tr><td>$d$</td><td>số chiều embedding — cũng là độ dài của vector $PE$</td></tr>
+  </table>
+  <h4>Vì sao lại là $10000^{2i/d}$</h4>
+  <p>Nó đặt <b>tần số</b> riêng cho từng cặp chiều. Cặp đầu ($i=0$) quay nhanh — phân biệt các vị trí liền kề; các cặp sau quay chậm dần — nắm được khoảng cách xa. Nhiều chu kỳ chồng lên nhau chính là điểm khác với mã hoá giờ 24h ở bài <b>Biến chu kỳ</b>: ở đó chỉ có <i>một</i> chu kỳ, ở đây có cả một dải từ ngắn tới dài.</p>
+  <p>Vì $\sin$ và $\cos$ tuần hoàn, hai vị trí có thể trùng nhau ở <i>một</i> cặp chiều — nhưng gần như không bao giờ trùng ở <b>tất cả</b> các tần số cùng lúc, nên cả vector vẫn định danh được vị trí.</p>
+  <div class="wb-alert wb-alert--warning wb-alert--plain"><div class="wb-alert__body">
+    <p class="wb-alert__title">Đây là bản gốc 2017, không phải bản mọi mô hình dùng hôm nay</p>
+    <p class="wb-alert__msg">Phần lớn LLM hiện đại (LLaMA, GPT-NeoX) chuyển sang <b>RoPE</b>: cũng là "vị trí = góc trên vòng tròn", nhưng áp phép quay vào $Q$ và $K$ lúc tính attention thay vì cộng vào embedding. Ý tưởng vòng tròn giữ nguyên, chi tiết thì tinh vi hơn.</p>
+  </div></div>
+</template>
+
 <template data-mathdef="pvalue" data-title="p-value — điều nó nói và điều nó KHÔNG nói">
   <p>Bạn đổi mô hình, AUC tăng từ 0,910 lên 0,921. Câu hỏi sống còn của luận văn: <b>thật sự tốt hơn, hay chỉ là may?</b></p>
   <h4>Hiểu nhầm phải gỡ trước</h4>
@@ -1249,6 +1267,18 @@ print(mcnemar(tb, exact=<b>False</b>, correction=<b>True</b>))</div>
 
   <h2>Đọc lại paper gốc</h2>
   <p>Paper <i>Attention Is All You Need</i> (Vaswani và cộng sự, 2017) chỉ dài 11 trang. Sau bài này bạn đọc được hình 1 và mục 3 của nó. <b>Đọc một paper gốc từ đầu tới cuối là một trải nghiệm nên có trước khi viết luận văn</b> — nó cho bạn thấy một đóng góp thật trông như thế nào.</p>
+</template>
+
+<template data-aside="x-tab-dl-zoo" data-title="Các kiến trúc deep learning cho dữ liệu bảng"
+          data-sub="Nhánh phụ — biết tên để trả lời khi bị hỏi, không cái nào là mặc định">
+  <p>Có cả một dòng mô hình deep learning thiết kế riêng cho dữ liệu bảng. Với bài của bạn, biết tên là đủ: chưa cái nào đánh bật được boosting một cách nhất quán, nên chúng chỉ đáng là <b>câu trả lời cho hội đồng</b> ("tôi có biết chúng, và đây là lý do không chọn"), không phải mô hình để dùng.</p>
+  <table>
+    <tr><th>Mô hình</th><th>Ý tưởng</th><th>Thực tế</th></tr>
+    <tr><td><b>TabNet</b></td><td>Attention chọn feature theo từng bước</td><td>Nổi nhất, kết quả không nhất quán khi tái lập</td></tr>
+    <tr><td><b>FT-Transformer</b></td><td>Coi mỗi feature như một token, dùng Transformer</td><td>Cạnh tranh được, nhưng cần tune nhiều</td></tr>
+    <tr><td><b>NODE</b></td><td>Cây quyết định "mềm" khả vi</td><td>Ít dùng</td></tr>
+    <tr><td><b>SAINT</b></td><td>Attention trên cả hàng lẫn cột</td><td>Nghiên cứu</td></tr>
+  </table>
 </template>
 
 <template data-aside="x-attn-kinds" data-title="Ba loại attention bạn sẽ gặp tên"
@@ -4840,8 +4870,7 @@ LayerNorm
   <h2>Positional encoding — vì attention mù về thứ tự</h2>
   <p>Đây là chi tiết đẹp và <b>liên quan trực tiếp tới câu hỏi sin/cos của bạn</b>.</p>
   <p>Attention tính điểm giữa mọi cặp token, nhưng phép đó <b>không quan tâm thứ tự</b>: đảo hai từ trong câu, kết quả y hệt. Với ngôn ngữ, đó là thảm hoạ — "chó cắn người" và "người cắn chó" phải khác nhau.</p>
-  <p>Giải pháp trong paper gốc: <b>cộng thêm một tín hiệu sin/cos vào embedding</b> để mã hoá vị trí.</p>
-  <p>$$PE(pos, 2i) = \sin\!\left(\frac{pos}{10000^{2i/d}}\right), \qquad PE(pos, 2i+1) = \cos\!\left(\frac{pos}{10000^{2i/d}}\right)$$</p>
+  <p>Giải pháp trong paper gốc: <b>cộng thêm một tín hiệu sin/cos vào embedding</b> để mã hoá vị trí. <button class="ds-math" data-math="posenc">Công thức positional encoding, bóc từng ký hiệu</button></p>
   <div class="wb-alert wb-alert--info">
     <span class="wb-alert__icon">i</span>
     <div class="wb-alert__body"><p class="wb-alert__title">Vòng tròn đó lại xuất hiện</p>
@@ -4906,14 +4935,7 @@ LayerNorm
   </ul>
   <p>Đây không phải ý kiến cá nhân — nó được kiểm chứng lại nhiều lần trong các so sánh quy mô lớn (Grinsztajn và cộng sự 2022 là tài liệu hay trích dẫn nhất). <b>Trích dẫn được một nguồn cho nhận định này làm phần "lựa chọn mô hình" trong luận văn của bạn vững hẳn.</b></p>
 
-  <h2>Các kiến trúc deep learning cho dữ liệu bảng — biết tên</h2>
-  <table>
-    <tr><th>Mô hình</th><th>Ý tưởng</th><th>Thực tế</th></tr>
-    <tr><td><b>TabNet</b></td><td>Attention chọn feature theo từng bước</td><td>Nổi nhất, kết quả không nhất quán khi tái lập</td></tr>
-    <tr><td><b>FT-Transformer</b></td><td>Coi mỗi feature như một token, dùng Transformer</td><td>Cạnh tranh được, nhưng cần tune nhiều</td></tr>
-    <tr><td><b>NODE</b></td><td>Cây quyết định "mềm" khả vi</td><td>Ít dùng</td></tr>
-    <tr><td><b>SAINT</b></td><td>Attention trên cả hàng lẫn cột</td><td>Nghiên cứu</td></tr>
-  </table>
+  <p class="ds-more"><button class="ds-aside" data-aside="x-tab-dl-zoo">Điểm tên các kiến trúc deep learning cho dữ liệu bảng (TabNet, FT-Transformer…)</button></p>
 
   <h2>Khi nào deep learning THỰC SỰ có lợi cho bài của bạn</h2>
   <ol>
