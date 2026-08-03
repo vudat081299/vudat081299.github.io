@@ -339,6 +339,7 @@
           <div class="ds-rail__progress"><span id="railPct">0% · 0/0 bài</span><button class="wb-btn wb-btn--ghost wb-btn--sm" id="resetBtn">Xoá tiến độ</button></div>
           <div class="wb-progress"><div class="wb-progress__bar" id="railBar" style="width:0%"></div></div>
           <div class="ds-undo" id="undoBar" hidden></div>
+          <div class="ds-undo" id="storeWarn" role="status" hidden></div>
         </div>
         <div class="wb-input-group wb-input-group--seamless">
           <span class="wb-input-group__addon"><span class="wb-ico wb-ico--sm">search</span></span>
@@ -361,7 +362,7 @@
             <span class="wb-alert__icon">!</span>
             <div class="wb-alert__body">
               <p class="wb-alert__title">Trang này cần JavaScript</p>
-              <p class="wb-alert__msg">Nội dung bài học, cây lộ trình, ô tìm kiếm và các khối tương tác đều được dựng bằng JavaScript ngay trong trình duyệt của bạn — không có nó thì trang trống. <b>Không có dữ liệu nào được gửi đi đâu cả:</b> không máy chủ, không phân tích, không đăng nhập; tiến độ học nằm trong bộ nhớ cục bộ của chính trình duyệt này. Hãy bật JavaScript cho trang, hoặc mở bằng một trình duyệt khác.</p>
+              <p class="wb-alert__msg">Nội dung bài học, cây lộ trình, ô tìm kiếm và các khối tương tác đều được dựng bằng JavaScript ngay trong trình duyệt của bạn — không có nó thì trang trống. <b>Trang không gửi tiến độ học của bạn đi đâu cả:</b> không phân tích (analytics), không đăng nhập, không có máy chủ riêng — tiến độ chỉ nằm trong bộ nhớ cục bộ của chính trình duyệt này. Kết nối mạng duy nhất là tải thư viện hiển thị công thức toán (KaTeX) từ một CDN công cộng: request này không mang theo tiến độ học hay nội dung cá nhân nào, nhưng như mọi request tải tài nguyên, trình duyệt vẫn để lộ thông tin kỹ thuật thông thường (địa chỉ IP, user-agent) cho CDN. Hãy bật JavaScript cho trang, hoặc mở bằng một trình duyệt khác.</p>
               <p class="wb-alert__msg">Nếu bạn không bật được JavaScript: toàn bộ nội dung nằm trong mã nguồn của chính file HTML này dưới dạng các khối <code>&lt;template&gt;</code>, nên <b>xem nguồn trang</b> (hoặc mở file bằng một trình soạn thảo) vẫn đọc được hết chữ — chỉ mất phần điều hướng và các khối tương tác.</p>
             </div>
           </div>
@@ -5302,8 +5303,12 @@ viết thêm một hàm ở đây, không sửa dòng nào ở features/train/se
 
 <i># IEEE-CIS chỉ cho TransactionDT = số giây kể từ một mốc gốc không công bố.</i>
 <i># 2017-12-01 là quy ước phổ biến trong cộng đồng Kaggle, KHÔNG phải con số Kaggle</i>
-<i># xác nhận. Nó chỉ dịch chuyển toàn bộ trục thời gian nên không đổi kết quả —</i>
-<i># nhưng phải nêu là giả định khi viết luận văn.</i>
+<i># xác nhận. Dịch mốc gốc KHÔNG đổi thứ tự thời gian, khoảng cách giữa các giao</i>
+<i># dịch hay cách chia theo thời gian — nên mọi feature THỜI GIAN TƯƠNG ĐỐI</i>
+<i># (secs_since_last, n_tx_1h/24h, time split) không đổi. NHƯNG hour/dayofweek/</i>
+<i># month tính từ mốc TUYỆT ĐỐI nên phụ thuộc mốc gốc: đoán sai mốc thì các</i>
+<i># feature lịch bị lệch một cách hệ thống. Nêu là giả định, và coi feature lịch</i>
+<i># là gần đúng khi viết luận văn.</i>
 IEEE_ORIGIN = pd.Timestamp("2017-12-01")
 
 
@@ -6168,7 +6173,7 @@ train 277,753 | valid 57,722 | test 60,000 (test KHÔNG được chạm ở file
   "recall_effective": 0.156,
   "cost_per_tx": 5848.7,
   "cost_saved_vs_do_nothing_pct": 8.51,
-  "breakeven_closed_form": { "review": 0.0148, "block": 0.0476 }
+  "breakeven_closed_form": { "review": 0.0148, "block": 0.2444 }
 }
 
 → models/fraud-20260803-065740.joblib</div>
@@ -6267,18 +6272,33 @@ ALLOW, REVIEW, BLOCK = "ALLOW", "REVIEW", "BLOCK"
 <b>def</b> breakeven() -&gt; dict:
     <i>"""Ngưỡng hoà vốn tính THẲNG TỪ MA TRẬN CHI PHÍ, không cần dữ liệu.
 
-    Chặn có lợi khi   (1−p)·COST_FP_BLOCK &lt; p·COST_FN
-                  →   p &gt; COST_FP_BLOCK / (COST_FN + COST_FP_BLOCK)
-    Xác minh có lợi khi COST_REVIEW &lt; p·REVIEW_CATCH·COST_FN
-                  →   p &gt; COST_REVIEW / (REVIEW_CATCH · COST_FN)
+    Hệ có BA hành động, nên hai biên là hai điểm HOÀ chi phí giữa các hành động
+    CẠNH NHAU — KHÔNG phải BLOCK so với ALLOW:
+
+      ALLOW → REVIEW hoà khi  p·COST_FN = COST_REVIEW + p·(1−REVIEW_CATCH)·COST_FN
+                          →   p = COST_REVIEW / (REVIEW_CATCH · COST_FN)
+      REVIEW → BLOCK hoà khi  COST_REVIEW + p·(1−REVIEW_CATCH)·COST_FN = (1−p)·COST_FP_BLOCK
+                          →   p = (COST_FP_BLOCK − COST_REVIEW)
+                                  / (COST_FP_BLOCK + (1−REVIEW_CATCH)·COST_FN)
+
+    Bẫy hay gặp: lấy thẳng COST_FP_BLOCK/(COST_FN+COST_FP_BLOCK) làm biên BLOCK.
+    Đó là biên của bài toán HAI hành động — nó bỏ qua REVIEW, cho con số thấp hơn
+    hẳn (ở đây ≈0,048 thay vì ≈0,244). Với REVIEW trong bảng, chặn tại 0,048 là
+    bỏ tiền: ở p=0,10 một lần xác minh (~70k) rẻ hơn chặn nhầm (~135k).
 
     So hai con số này với ngưỡng mà pick_thresholds tìm ra trên validation là
     một bài kiểm tra tỉnh táo rất rẻ. Nếu mô hình có hiệu chỉnh tốt, hai bên
     phải cùng cỡ. Lệch nhiều thì hoặc xác suất chưa hiệu chỉnh (hay gặp khi
     dùng class_weight="balanced"), hoặc ràng buộc sức chứa đang cắn.
     """</i>
-    <b>return</b> {"review": COST_REVIEW / (REVIEW_CATCH * COST_FN),
-            "block": COST_FP_BLOCK / (COST_FN + COST_FP_BLOCK)}
+    review = COST_REVIEW / (REVIEW_CATCH * COST_FN)
+    block = ((COST_FP_BLOCK - COST_REVIEW)
+             / (COST_FP_BLOCK + (1 - REVIEW_CATCH) * COST_FN))
+    <b>if</b> block &lt;= review:
+        <i># REVIEW bị trội hoàn toàn (một lần xác minh đắt hơn cả chặn nhầm) → hệ</i>
+        <i># suy về hai hành động, biên BLOCK quay lại điểm hoà ALLOW/BLOCK.</i>
+        block = COST_FP_BLOCK / (COST_FN + COST_FP_BLOCK)
+    <b>return</b> {"review": review, "block": block}
 
 
 <b>def</b> total_cost(y_true, prob, t_review, t_block):
@@ -6373,17 +6393,18 @@ ALLOW, REVIEW, BLOCK = "ALLOW", "REVIEW", "BLOCK"
   </div></div>
 
   <h2>2 · Ngưỡng chọn được có khớp với lý thuyết không</h2>
-  <p>Đây là bài kiểm tra tỉnh táo rẻ nhất trong cả dự án. Ngưỡng hoà vốn tính <b>thẳng từ ma trận chi phí</b>, không cần dữ liệu:</p>
-  <div class="ds-code">chặn có lợi khi   (1−p)·150.000 &lt; p·3.000.000   →  p &gt; 150.000/3.150.000 = <b>0,0476</b>
-xác minh có lợi khi   40.000 &lt; p·0,9·3.000.000   →  p &gt; 40.000/2.700.000 = <b>0,0148</b></div>
+  <p>Đây là bài kiểm tra tỉnh táo rẻ nhất trong cả dự án. Hệ có <b>ba</b> hành động nên có <b>hai</b> biên hoà vốn, mỗi biên là điểm hoà chi phí giữa hai hành động <i>cạnh nhau</i> — tính <b>thẳng từ ma trận chi phí</b>, không cần dữ liệu:</p>
+  <div class="ds-code">ALLOW → REVIEW hoà khi   40.000 = p·0,9·3.000.000                 →  p &gt; 40.000/2.700.000 = <b>0,0148</b>
+REVIEW → BLOCK hoà khi   40.000 + p·0,1·3.000.000 = (1−p)·150.000   →  p &gt; 110.000/450.000 = <b>0,2444</b></div>
+  <p>Bẫy hay gặp: lấy thẳng <code>150.000/(3.000.000+150.000) = 0,0476</code> làm biên BLOCK. Đó là biên của bài toán <b>hai</b> hành động — chỉ so ALLOW với BLOCK — nên nó bỏ qua REVIEW và cho con số thấp hơn hẳn biên REVIEW→BLOCK thật (0,2444). Con số 0,0476 <i>vẫn</i> có vai trò, nhưng ở chỗ khác: xem hàng BLOCK bên dưới.</p>
   <div class="wb-table-scroll"><table>
-    <thead><tr><th>Ngưỡng</th><th>Công thức hoà vốn</th><th>Tìm được trên validation</th><th>Đọc thế nào</th></tr></thead>
+    <thead><tr><th>Ngưỡng</th><th>Hoà vốn (sức chứa vô hạn)</th><th>Tìm được trên validation</th><th>Đọc thế nào</th></tr></thead>
     <tbody>
-      <tr><td>BLOCK</td><td>0,0476</td><td><b>0,0806</b></td><td>Cùng cỡ → xác suất mô hình <b>hiệu chỉnh tốt</b>. Cao hơn một chút vì lưới rời rạc và vì mẫu hữu hạn</td></tr>
-      <tr><td>REVIEW</td><td>0,0148</td><td><b>0,0411</b></td><td>Cao hơn rõ rệt — vì <b>ràng buộc sức chứa đang cắn</b>: hoà vốn nói nên xác minh nhiều hơn, nhưng đội chỉ nuốt nổi 0,5%</td></tr>
+      <tr><td>REVIEW</td><td>0,0148</td><td><b>0,0411</b></td><td>Cao hơn rõ rệt — vì <b>ràng buộc sức chứa đang cắn</b>: hoà vốn (sức chứa vô hạn) đòi xác minh cả dải 0,0148–0,2444, tức ~8% lưu lượng, nhưng đội chỉ nuốt nổi 0,5%. Nên phải nâng sàn xác minh lên, chỉ giữ lại phần rủi ro nhất</td></tr>
+      <tr><td>BLOCK</td><td>0,2444</td><td><b>0,0806</b></td><td><b>Thấp hơn</b> biên lý thuyết 0,2444 — cũng vì sức chứa. Khi ngân sách xác minh đã cạn, một giao dịch không lọt được vào REVIEW chỉ còn hai lựa chọn ALLOW hay BLOCK, mà biên của <i>cặp đó</i> chính là 0,0476. Validation 0,0806 nằm <b>cùng cỡ với 0,0476</b> chứ không phải với 0,2444 — đúng như dự đoán khi sức chứa cắn</td></tr>
     </tbody>
   </table></div>
-  <p>Nếu hai cột lệch nhau <i>hàng chục lần</i> thì gần như chắc chắn xác suất của bạn chưa được hiệu chỉnh — hay gặp nhất là do <code>class_weight="balanced"</code>. Đó là lý do bài trước bỏ nó đi.</p>
+  <p>So với biên <b>phù hợp</b> — 0,2444 khi đội xác minh còn dư sức, 0,0476 khi đã cạn — mà validation vẫn lệch <i>hàng chục lần</i> thì gần như chắc chắn xác suất của bạn chưa được hiệu chỉnh, hay gặp nhất là do <code>class_weight="balanced"</code>. Đó là lý do bài trước bỏ nó đi.</p>
 
   <div data-viz="costmatrix"></div>
 
@@ -6657,7 +6678,7 @@ $ python -m src.final_eval --confirm-freeze
   </ul>
 
   <h2>6 · Bộ test — <code>tests/</code></h2>
-  <p>25 test chạy trong 2 giây, không cần tải dữ liệu. Chúng bắt đúng những lỗi <b>không</b> làm chương trình dừng.</p>
+  <p>26 test chạy trong hơn 2 giây, không cần tải dữ liệu. Chúng bắt đúng những lỗi <b>không</b> làm chương trình dừng.</p>
   <div class="ds-code"><i>"""Fixture dùng chung. Mọi test chạy trên bộ mô phỏng nhỏ nên `pytest` xong
 trong khoảng một phút và không cần tải dữ liệu."""</i>
 <b>import</b> pytest
@@ -6823,10 +6844,28 @@ luận văn mà không ai thấy.
 <b>import</b> numpy <b>as</b> np
 <b>import</b> pytest
 
-<b>from</b> src.config <b>import</b> REVIEW_CAPACITY
+<b>from</b> src.config <b>import</b> (COST_FN, COST_FP_BLOCK, COST_REVIEW, REVIEW_CAPACITY,
+                        REVIEW_CATCH)
 <b>from</b> src.split <b>import</b> assert_split_ok, split_group, split_time, split_time_group
-<b>from</b> src.thresholds <b>import</b> (ALLOW, BLOCK, REVIEW, decide, decision_report,
-                            pick_thresholds, total_cost)
+<b>from</b> src.thresholds <b>import</b> (ALLOW, BLOCK, REVIEW, breakeven, decide,
+                            decision_report, pick_thresholds, total_cost)
+
+
+<b>def</b> test_breakeven_block_is_the_review_block_boundary():
+    <i>"""Biên BLOCK phải là điểm REVIEW/BLOCK hoà chi phí, KHÔNG phải biên hai
+    hành động COST_FP_BLOCK/(COST_FN+COST_FP_BLOCK) — cái sau bỏ qua REVIEW và
+    cho ngưỡng thấp hơn hẳn, chặn tại đó là bỏ tiền."""</i>
+    be = breakeven()
+    two_action = COST_FP_BLOCK / (COST_FN + COST_FP_BLOCK)
+    three_action = ((COST_FP_BLOCK - COST_REVIEW)
+                    / (COST_FP_BLOCK + (1 - REVIEW_CATCH) * COST_FN))
+    <b>assert</b> be["block"] == pytest.approx(three_action)
+    <b>assert</b> be["block"] &gt; two_action           <i># 0,244 vs 0,048 với số mặc định</i>
+    <b>assert</b> be["review"] &lt; be["block"]         <i># decide() đòi review ≤ block</i>
+    <i># Tại một điểm GIỮA hai biên, REVIEW phải rẻ hơn cả ALLOW lẫn BLOCK.</i>
+    p = 0.5 * (be["review"] + be["block"])
+    <b>assert</b> COST_REVIEW + p * (1 - REVIEW_CATCH) * COST_FN &lt; p * COST_FN
+    <b>assert</b> COST_REVIEW + p * (1 - REVIEW_CATCH) * COST_FN &lt; (1 - p) * COST_FP_BLOCK
 
 
 <b>def</b> test_time_split_has_no_future_leak(hist):
@@ -6909,8 +6948,8 @@ luận văn mà không ai thấy.
     <b>assert</b> r["allow_fraud"] + r["review_fraud"] + r["block_fraud"] == r["n_fraud"]</div>
   <p class="ds-codecap">tests/test_split_thresholds.py · (test cho API nằm ở bài sau)</p>
   <div class="ds-code">$ pytest -q
-.........................                                        [100%]
-25 passed in 1.98s</div>
+..........................                                       [100%]
+26 passed in 2.35s</div>
   <div class="wb-alert wb-alert--info wb-alert--plain"><div class="wb-alert__body">
     <p class="wb-alert__title">Test đáng giá nhất trong cả bộ</p>
     <p class="wb-alert__msg"><code>test_history_uses_only_the_past</code>: đổi số tiền của giao dịch <i>cuối cùng</i> lên 1000 lần, rồi khẳng định feature của <b>mọi</b> giao dịch trước nó không đổi một chút nào. Đó là định nghĩa <i>thao tác được</i> của “không nhìn tương lai” — nó không tin vào lời hứa của <code>shift(1)</code>, nó kiểm chứng. Test này bắt được mọi kiểu rò rỉ thời gian, kể cả kiểu bạn chưa nghĩ ra.</p>
@@ -7292,7 +7331,7 @@ pip install -r requirements.txt
 
 python -m src.prepare_data --source sim     <i># 2,0 s  → data/processed/transactions.parquet</i>
 python -m src.train --split time            <i># 4,7 s  → models/fraud-*.joblib  (chỉ số validation)</i>
-pytest -q                                   <i># 2,0 s  → 25 passed</i>
+pytest -q                                   <i># ~2,4 s → 26 passed</i>
 python -m src.final_eval --confirm-freeze   <i># 10,1 s → reports/final_eval_*.json  (MỘT lần)</i>
 uvicorn src.serve:app --port 8000           <i># → http://localhost:8000/docs</i></div>
   <p>Tổng cộng khoảng <b>19 giây tính toán</b> trên một laptop bình thường, không GPU, không tải dữ liệu. Đó là chủ ý: một vòng lặp nhanh là thứ quyết định bạn thử được bao nhiêu ý tưởng trong hai tuần. Khi đổi sang IEEE-CIS thật, đổi đúng một cờ <code>--source ieee</code>.</p>
@@ -8619,10 +8658,28 @@ const _loaded = loadDone();
 const done = _loaded.set;
 const storageBlocked = !!_loaded.blocked;
 
+let saveFailedNotified = false;
 function saveDone() {
   if (storageBlocked) return;
   try { localStorage.setItem(LS_KEY, JSON.stringify([...done])); }
-  catch { /* hết dung lượng hoặc bị chặn giữa chừng — mất tiến độ, không mất trang */ }
+  catch {
+    // Đọc được lúc đầu nhưng GHI hỏng giữa chừng (hết quota, hoặc trình duyệt đổi
+    // chính sách). Bản trước nuốt lỗi ở đây → người học đánh dấu cả buổi rồi mất
+    // sạch khi tải lại mà không hề được cảnh báo. Báo MỘT lần, không spam.
+    if (!saveFailedNotified) {
+      saveFailedNotified = true;
+      // Dùng #storeWarn RIÊNG, không dùng #undoBar: luồng "Xoá tiến độ" gọi saveDone()
+      // rồi showUndo() ngay sau đó, nên nếu viết vào #undoBar thì cảnh báo bị đè mất
+      // trong tích tắc và saveFailedNotified=true khiến nó không hiện lại lần nào nữa.
+      const bar = document.getElementById('storeWarn');
+      if (bar) {
+        bar.hidden = false;
+        bar.textContent = 'Không lưu được tiến độ (bộ nhớ cục bộ đầy hoặc bị chặn) — '
+                        + 'các đánh dấu mới có thể mất khi tải lại trang.';
+      }
+      try { announce('Cảnh báo: không lưu được tiến độ vào bộ nhớ cục bộ.'); } catch {}
+    }
+  }
 }
 if (_loaded.corrupt || _loaded.dropped) saveDone();   // ghi lại bản đã dọn
 const $  = (s, r = document) => r.querySelector(s);
@@ -10424,7 +10481,7 @@ VIZ.costmatrix = el => {
         <div><p class="ds-viz__sub">Ngưỡng chặn tối ưu</p><p class="ds-viz__readout" data-o="tb">—</p>
           <p class="ds-viz__sub">công thức hoà vốn</p></div>
         <div><p class="ds-viz__sub">Ngưỡng xác minh tối ưu</p><p class="ds-viz__readout" data-o="tr">—</p>
-          <p class="ds-viz__sub">nếu đội đủ sức chứa</p></div>
+          <p class="ds-viz__sub" data-o="trsub">nếu đội đủ sức chứa</p></div>
         <div><p class="ds-viz__sub">Tổng thiệt hại / 60.000 giao dịch</p><p class="ds-viz__readout" data-o="cost">—</p>
           <p class="ds-viz__sub" data-o="save">—</p></div>
       </div>
@@ -10443,10 +10500,11 @@ VIZ.costmatrix = el => {
   // Phân phối điểm rủi ro mô phỏng — và mô phỏng theo một tính chất CÓ THẬT của
   // mô hình đã hiệu chỉnh: điểm đọc được như xác suất, tức P(gian lận | điểm=t)=t.
   // 60.000 giao dịch, tỉ lệ gian lận 0,23%. Hệ quả cốt lõi: khi điểm đã hiệu
-  // chỉnh, đáy đường tổng chi phí rơi ĐÚNG vào ngưỡng hoà vốn cFP/(cFN+cFP), với
-  // MỌI bảng chi phí (chứng minh: cực tiểu khi mật_độ_hợp_lệ·cFP = mật_độ_gian_lận·cFN,
-  // mà hiệu chỉnh cho t/(1−t)=cFP/cFN ngay tại đó). Đó là lý do vạch tối ưu và số
-  // "ngưỡng hoà vốn" bên dưới luôn trùng nhau — không phải trùng hợp.
+  // chỉnh, đáy đường tổng chi phí rơi ĐÚNG vào biên hoà vốn REVIEW→BLOCK, tức
+  // (cFP−cRV)/(cFP+(1−CATCH)·cFN), với MỌI bảng chi phí — cùng lập luận hiệu chỉnh
+  // như bản hai hành động, chỉ thay so sánh BLOCK-với-ALLOW bằng BLOCK-với-REVIEW
+  // (hệ có ba hành động, nên dùng cFP/(cFN+cFP) làm ngưỡng chặn là bỏ mất REVIEW).
+  // Đó là lý do vạch tối ưu và số "ngưỡng hoà vốn" bên dưới luôn trùng nhau.
   // Hai cụm điểm, chọn để CDF có DẠNG ĐÓNG: cụm (1−t)^spike (gần như toàn bộ giao
   // dịch hợp lệ, điểm ~0) trộn với cụm t^bump (gian lận, điểm cao). spike=510 canh
   // để bắt được ~15% gian lận — khớp recall thật của mô hình ở bản ghi chạy phía trên.
@@ -10465,18 +10523,24 @@ VIZ.costmatrix = el => {
     o('c_lr').textContent = vnd(cRV);
     o('c_lb').textContent = vnd(cFP);
 
-    // ngưỡng hoà vốn (dạng đóng, không cần dữ liệu)
-    const tbBE = cFP / (cFN + cFP);
-    const trBE = cRV / (CATCH * cFN);
+    // Ngưỡng hoà vốn dạng đóng — HAI biên của hệ BA hành động, mỗi biên là điểm
+    // hoà chi phí giữa hai hành động cạnh nhau (KHÔNG phải BLOCK so với ALLOW):
+    const trBE = cRV / (CATCH * cFN);                        // ALLOW → REVIEW
+    const tbFull = (cFP - cRV) / (cFP + (1 - CATCH) * cFN);  // REVIEW → BLOCK
+    // REVIEW chỉ đáng dùng khi có dải p mà nó rẻ nhất, tức trBE < tbFull. Nếu một
+    // lần xác minh còn đắt hơn cả chặn nhầm thì REVIEW bị trội, hệ suy về hai hành động.
+    const reviewActive = trBE < tbFull;
+    const rMark = reviewActive ? trBE : 0;
+    const tbBE = reviewActive ? tbFull : cFP / (cFN + cFP);
 
-    // đường tổng chi phí theo ngưỡng chặn (bỏ hàng REVIEW cho hình gọn)
-    const cost = t => {
-      const fnCount = POS * cdfPos(t);                       // gian lận có điểm < t → lọt (FN)
-      const fpCount = (N - POS) * (1 - cdfNeg(t));            // hợp lệ có điểm ≥ t → chặn nhầm (FP)
-      return fnCount * cFN + fpCount * cFP;
-    };
-    // Đánh dấu tối ưu NGAY tại ngưỡng hoà vốn: với điểm đã hiệu chỉnh đó chính là
-    // cực tiểu giải tích, khỏi phải dò lưới — và vạch rơi đúng lên con số đọc được.
+    // Tổng chi phí theo NGƯỠNG CHẶN t (ngưỡng xác minh cố định ở rMark). Vì điểm đã
+    // hiệu chỉnh, cực tiểu rơi ĐÚNG vào biên REVIEW→BLOCK, khỏi phải dò lưới.
+    const cost = t => reviewActive
+      ? POS * cdfPos(rMark) * cFN                                        // gian lận cho qua (p < rMark)
+        + POS * (cdfPos(t) - cdfPos(rMark)) * (cRV + (1 - CATCH) * cFN)  // gian lận đưa xác minh
+        + (N - POS) * (cdfNeg(t) - cdfNeg(rMark)) * cRV                  // hợp lệ đưa xác minh
+        + (N - POS) * (1 - cdfNeg(t)) * cFP                             // hợp lệ bị chặn nhầm
+      : POS * cdfPos(t) * cFN + (N - POS) * (1 - cdfNeg(t)) * cFP;       // suy biến hai hành động
     const nothing = POS * cFN;
     const best = tbBE, bestC = cost(best);
     // Thang đứng lấy mốc "không làm gì" làm chuẩn, cắt bớt bức tường bên trái (chặn
@@ -10493,14 +10557,24 @@ VIZ.costmatrix = el => {
     o('dot').setAttribute('cx', X(best)); o('dot').setAttribute('cy', Y(bestC));
 
     o('tb').textContent = tbBE.toFixed(3).replace('.', ',');
-    o('tr').textContent = Math.min(trBE, tbBE).toFixed(3).replace('.', ',');
+    o('tr').textContent = reviewActive ? trBE.toFixed(3).replace('.', ',') : 'không áp dụng';
+    o('trsub').textContent = reviewActive ? 'nếu đội đủ sức chứa' : 'REVIEW bị loại khỏi bài toán';
     o('cost').textContent = Math.round(bestC / 1e6).toLocaleString('vi-VN') + ' triệu ₫';
     o('save').textContent = `rẻ hơn ${Math.round((1 - bestC / nothing) * 100)}% so với không làm gì`;
+    // Biên BLOCK đổi bản chất theo chế độ: có REVIEW thì là biên REVIEW→BLOCK;
+    // khi REVIEW bị trội (xác minh đắt hơn cả chặn nhầm) hệ suy về hai hành động
+    // và biên BLOCK quay về đúng cFP/(cFN+cFP) — không được gọi nhầm là REVIEW→BLOCK.
+    const boundary = reviewActive
+      ? 'biên REVIEW→BLOCK, không phải biên hai hành động cFP/(cFN+cFP)'
+      : 'biên ALLOW→BLOCK cFP/(cFN+cFP) — REVIEW bị loại vì một lần xác minh đắt hơn cả chặn nhầm';
     el.querySelector('[data-o="alt"]').textContent =
-      `Với bỏ lọt ${vnd(cFN)}, chặn nhầm ${vnd(cFP)}, xác minh ${vnd(cRV)}: ngưỡng chặn hoà vốn ` +
-      `${tbBE.toFixed(3)}, ngưỡng xác minh hoà vốn ${trBE.toFixed(3)}. Đường tổng chi phí có đáy tại ngưỡng ` +
-      `${best.toFixed(3)}, tổng ${Math.round(bestC / 1e6)} triệu đồng trên 60.000 giao dịch, ` +
-      `rẻ hơn ${Math.round((1 - bestC / nothing) * 100)}% so với cho qua tất.`;
+      `Với bỏ lọt ${vnd(cFN)}, chặn nhầm ${vnd(cFP)}, xác minh ${vnd(cRV)}: ` +
+      (reviewActive
+        ? `ngưỡng xác minh hoà vốn ${trBE.toFixed(3)}, `
+        : `REVIEW không tối ưu ở bảng chi phí này nên không dùng; `) +
+      `ngưỡng chặn hoà vốn ${tbBE.toFixed(3)} (${boundary}). Đường tổng chi phí có đáy tại ngưỡng ` +
+      `${best.toFixed(3)}, tổng ${Math.round(bestC / 1e6)} triệu đồng trên 60.000 giao dịch, rẻ hơn ` +
+      `${Math.round((1 - bestC / nothing) * 100)}% so với cho qua tất.`;
   };
   el.addEventListener('input', upd); upd();
 };
@@ -10675,7 +10749,7 @@ function flashRail(msg) {
 /* Nếu localStorage không dùng được thì nói ra, đừng để người học đánh dấu cả
    buổi rồi mất sạch khi tải lại. */
 if (storageBlocked) {
-  const bar = $('#undoBar');
+  const bar = $('#storeWarn');
   bar.hidden = false;
   bar.textContent = 'Trình duyệt đang chặn bộ nhớ cục bộ — tiến độ sẽ không được lưu khi tải lại trang.';
 }
