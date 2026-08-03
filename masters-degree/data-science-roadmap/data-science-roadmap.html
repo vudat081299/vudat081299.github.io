@@ -1028,42 +1028,29 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
      ============================================================ -->
 
 <template data-node="home">
-  <section class="wb-section"><h2>Vì sao roadmap.sh không giúp được bạn</h2>
-    <p class="wb-section__desc">Không phải vì nó sai. Vì nó là <b>mục lục</b>, mà bạn đang cần <b>giáo trình</b>.</p>
-    <div class="wb-grid wb-grid--2">
-      <div class="wb-card wb-card--pad">
-        <p class="wb-card__title">roadmap.sh cho bạn</p>
-        <ul style="margin:8px 0 0;padding-left:18px;font-size:14px;line-height:1.7;color:var(--wb-fg-muted)">
-          <li><b>Tám ô</b> trừu tượng — và ba trong số đó chỉ trỏ sang một lộ trình <b>150 ô</b> khác</li>
-          <li>Tên chủ đề, không có ngữ cảnh dùng khi nào và bằng công cụ gì</li>
-          <li>Sắp theo chủ đề, không theo thứ tự phụ thuộc</li>
-          <li>Không có ước lượng thời gian, không có “bỏ được cái nào”</li>
-          <li><b>Không có ô nào</b> cho rò rỉ dữ liệu, chia tập theo thời gian, hay lệch nhãn — đúng những chỗ làm hỏng luận văn</li>
-        </ul>
-      </div>
-      <div class="wb-card wb-card--pad">
-        <p class="wb-card__title">Trang này cho bạn</p>
-        <ul style="margin:8px 0 0;padding-left:18px;font-size:14px;line-height:1.7;color:var(--wb-fg-muted)">
-          <li>Mỗi bài trả lời: <b>vấn đề gì → gõ gì → ở bước nào</b></li>
-          <li>Nhãn <b>Bắt buộc / Nên biết / Biết tên là đủ</b> trên từng bài</li>
-          <li>Thứ tự theo phụ thuộc: bài sau cần bài trước</li>
-          <li>Số phút cho từng bài, và lịch 14 ngày ráp sẵn</li>
-        </ul>
-      </div>
-    </div>
-    <p style="margin-top:14px">Nếu bạn vẫn muốn đối chiếu với roadmap.sh, có một bài dịch từng nhóm ô của họ sang “giữ / bỏ / để sau”:</p>
-    <button class="wb-btn wb-btn--ghost wb-btn--sm" data-goto="r-roadmapsh">
-      <span class="wb-ico wb-ico--sm">arrow_forward</span> Chặng 9 · roadmap.sh dịch ra</button>
-  </section>
-
   <section class="wb-section"><h2>Ba thứ bạn nói bạn chưa biết — nằm ở đâu</h2>
     <p class="wb-section__desc">Đi thẳng vào ba câu hỏi bạn đưa ra, không cần học tuần tự nếu đang gấp.</p>
     <div class="wb-card wb-card--flat"><div class="wb-card__body" style="padding:6px">
       <button class="ds-leaf" data-goto="f-cyclic"><span class="ds-leaf__t"><b>“23h và 0h cách xa nhau trong máy — dùng sin/cos ở đâu?”</b><br><span style="color:var(--wb-fg-muted);font-size:13px">→ Bước 5 của quy trình (Feature engineering), gõ trong file <code>features.py</code>, khoảng 6 dòng pandas</span></span><span class="ds-leaf__m">75′</span></button>
       <button class="ds-leaf" data-goto="dl-attn"><span class="ds-leaf__t"><b>“Transformer là gì?”</b><br><span style="color:var(--wb-fg-muted);font-size:13px">→ Giải từ số 0 bằng ẩn dụ thư viện, có khối bấm được để xem từ nào nhìn từ nào</span></span><span class="ds-leaf__m">120′</span></button>
-      <button class="ds-leaf" data-goto="pr-code"><span class="ds-leaf__t"><b>“Làm sao ra được một product AI thật (phát hiện gian lận)?”</b><br><span style="color:var(--wb-fg-muted);font-size:13px">→ Code chạy được từ đầu tới cuối, kèm cấu trúc thư mục và cách đóng gói</span></span><span class="ds-leaf__m">180′</span></button>
+      <button class="ds-leaf" data-goto="pr-code"><span class="ds-leaf__t"><b>“Làm sao ra được một product AI thật (phát hiện gian lận)?”</b><br><span style="color:var(--wb-fg-muted);font-size:13px">→ Code chạy được từ đầu tới cuối, kèm cấu trúc thư mục và cách đóng gói</span></span><span class="ds-leaf__m">105′</span></button>
       <button class="ds-leaf" data-goto="t-online"><span class="ds-leaf__t"><b>“Máy tôi yếu, tôi thích thứ chạy online 100%”</b><br><span style="color:var(--wb-fg-muted);font-size:13px">→ Có đường đi trọn vẹn trong trình duyệt, kể cả bước đóng gói Docker. Và mỗi bảng so sánh công cụ trên trang đều có cột “chạy online được không”</span></span><span class="ds-leaf__m">45′</span></button>
     </div></div>
+  </section>
+
+  <section class="wb-section"><h2>Một ví dụ duy nhất, chạy suốt cả lộ trình</h2>
+    <p class="wb-section__desc">Mọi khái niệm ở đây được dạy trên <b>một</b> bài toán: chấm điểm gian lận cho từng giao dịch.</p>
+    <p>Đây là lựa chọn có chủ ý, không phải tiện tay. Một giáo trình mỗi bài một ví dụ rời thì bạn hiểu từng mảnh mà không ráp được cái nào; còn bài toán gian lận có tính chất hiếm: nó <b>bắt buộc</b> bạn đi qua đúng những chỗ quyết định một luận văn đúng hay sai — nhãn lệch 0,17%, chia tập theo thời gian, PR-AUC thay vì accuracy, chọn ngưỡng theo tiền, giờ giao dịch là biến chu kỳ, và mô hình cũ đi theo thời gian. Các ví dụ phổ biến hơn (Titanic, giá nhà, MNIST) <b>không</b> ép bạn gặp một cái nào trong số đó.</p>
+    <p>Nó cũng khớp với thứ bạn đã có: đồ án môn học của bạn đúng là bài toán này.</p>
+    <p><a class="wb-btn wb-btn--ghost wb-btn--sm" href="../business-analytics/fraud-detection-project.html">
+      <span class="wb-ico wb-ico--sm">open_in_new</span> Đồ án môn học · Fraud Detection (PaySim)</a></p>
+    <p class="wb-help">Nếu đề tài luận văn của bạn cuối cùng không phải gian lận: <b>toàn bộ khái niệm vẫn giữ nguyên</b>. Chỉ chặng 7 và các con số ví dụ cần viết lại — bản thân lộ trình không phụ thuộc vào miền bài toán.</p>
+  </section>
+
+  <section class="wb-section"><h2>Còn roadmap.sh thì sao</h2>
+    <p>Không phải nó sai — nó là <b>mục lục của một nghề</b>, còn bạn đang cần <b>giáo trình của một dự án</b>. Ba lộ trình liên quan cộng lại có 369 ô, bạn cần khoảng 46, và những chỗ làm hỏng luận văn thì không có ô nào. Toàn bộ phần đối chiếu — ô nào giữ, ô nào để sau, ô nào bỏ — nằm gọn trong một bài tra cứu:</p>
+    <button class="wb-btn wb-btn--ghost wb-btn--sm" data-goto="r-roadmapsh">
+      <span class="wb-ico wb-ico--sm">arrow_forward</span> Chặng 9 · roadmap.sh dịch ra</button>
   </section>
 </template>
 
@@ -1264,7 +1251,7 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
   <div class="ds-day"><p class="ds-day__h">Ngày 11 · ~4h</p><p class="ds-day__t">★ Attention &amp; Transformer</p>
     <p>Hai bài này đọc chậm, có khối tương tác để bấm. Sau đó bạn sẽ đọc được abstract của gần như mọi paper AI hiện nay.</p></div>
   <div class="ds-day"><p class="ds-day__h">Ngày 12 · ~6h</p><p class="ds-day__t">Biến thành sản phẩm</p>
-    <p><b>Kiến trúc hệ thống</b> → <b>★ Code end-to-end</b>. Đây là ngày dài nhất và cũng là ngày cho ra thứ bạn demo được.</p></div>
+    <p><b>Kiến trúc hệ thống</b> → <b>★ Code end-to-end</b> → <b>★ Đánh giá &amp; chọn ngưỡng</b>. Đây là ngày dài nhất và cũng là ngày cho ra thứ bạn demo được. Mốc giữa ngày: <code>python -m src.train</code> chạy xong, có <code>fraud_v1.joblib</code> — commit lại rồi mới đi tiếp.</p></div>
   <div class="ds-day"><p class="ds-day__h">Ngày 13 · ~5h</p><p class="ds-day__t">Đóng gói &amp; giám sát</p>
     <p><b>FastAPI + Docker</b> → <b>Drift &amp; retrain</b>. Kết thúc ngày: <code>docker run</code> lên một API nhận JSON giao dịch, trả về điểm rủi ro.</p></div>
   <div class="ds-day"><p class="ds-day__h">Ngày 14 · ~6h</p><p class="ds-day__t">Luận văn</p>
@@ -4180,6 +4167,22 @@ Quyết định theo ngưỡng
       <p class="wb-alert__msg"><b>Dùng IEEE-CIS làm bộ chính.</b> Đây là bộ duy nhất trong ba bộ cho phép bạn thật sự làm feature engineering theo thời gian — tức là cho phép bạn viết được chương 4 của luận văn. Dùng <code>creditcard.csv</code> ở ngày 1–5 để học pipeline vì nó nhỏ và chạy trong vài giây.</p></div>
   </div>
 
+  <h2>Còn PaySim — bộ mà đồ án môn học của bạn đã dùng?</h2>
+  <p>Câu hỏi này đáng trả lời riêng, vì bạn <b>đã có sẵn</b> một đồ án chạy trên PaySim và mang nó sang luận văn là phản xạ tự nhiên nhất.</p>
+  <p><a class="wb-btn wb-btn--ghost wb-btn--sm" href="../business-analytics/fraud-detection-project.html">
+    <span class="wb-ico wb-ico--sm">open_in_new</span> Đồ án môn học · Fraud Detection (PaySim)</a></p>
+  <p>Câu trả lời ngắn: <b>tái dùng được phần khung, không tái dùng được phần dữ liệu.</b> Hai lý do, lý do thứ hai mới là lý do thật:</p>
+  <ol>
+    <li><b>PaySim là dữ liệu mô phỏng.</b> Quy luật gian lận trong đó được viết ra theo kịch bản, đều đặn hơn thực tế nhiều — nên điểm số cao mà không nói được gì về thế giới thật.</li>
+    <li><b>Chín đặc trưng tổng hợp trong đồ án được sinh <i>có điều kiện theo nhãn</i></b> <code>isFraud</code> — tuổi tài khoản, thiết bị lạ, lệch địa chỉ… đều rút từ hai phân phối khác nhau tuỳ giao dịch đó là gian lận hay không. Đó chính là <b>rò rỉ nhãn theo đúng định nghĩa</b>: đáp án được nhét ngược vào feature. PR-AUC 0,997 của nhóm bạn là hệ quả trực tiếp, không phải thành tích.</li>
+  </ol>
+  <div class="wb-alert wb-alert--warning">
+    <span class="wb-alert__icon">!</span>
+    <div class="wb-alert__body"><p class="wb-alert__title">Chỗ này là cơ hội, không phải vết nhơ</p>
+      <p class="wb-alert__msg">Đồ án của nhóm bạn đã <b>tự gọi tên</b> hạn chế đó thay vì giấu đi — và đó đúng là cách xử lý chuẩn. Với luận văn, bạn còn đi được xa hơn một bước: lấy chính hiện tượng đó làm <b>ví dụ đối chứng</b> ở chương phương pháp — “đây là một mô hình PR-AUC 0,997 hoàn toàn vô dụng, và đây là vì sao” — rồi cho thấy quy trình mới của bạn (IEEE-CIS, chia theo thời gian, kiểm rò rỉ) không mắc lại. Hội đồng đánh giá cao người chỉ ra được sai lầm của chính mình hơn nhiều so với người chưa từng mắc.</p></div>
+  </div>
+  <p>Nếu bạn <i>vẫn</i> muốn giữ PaySim vì đã quen dữ liệu: được, nhưng phải <b>bỏ toàn bộ chín cột sinh bằng Faker</b> và chỉ dùng các cột gốc của PaySim (<code>step</code>, <code>type</code>, <code>amount</code>, số dư trước/sau). Lúc đó điểm sẽ tụt mạnh — và đó mới là điểm thật.</p>
+
   <h2>Tải và kiểm tra</h2>
   <div class="ds-code">pip install kaggle
 <i># đặt kaggle.json vào ~/.kaggle/ (lấy từ trang Account trên Kaggle)</i>
@@ -4225,7 +4228,7 @@ print(df.groupby("hour").Class.mean())   <i># thấy rõ đỉnh lúc rạng sá
 </template>
 
 <template data-node="pr-code">
-  <p>Đây là toàn bộ dự án, từ file rỗng tới API chạy được. Gõ theo thứ tự này trong một ngày làm việc và bạn có một sản phẩm demo được.</p>
+  <p>Đây là nửa đầu của dự án: từ thư mục rỗng tới một mô hình đã huấn luyện, đã lưu ra file. Nửa sau — đánh giá, chọn ngưỡng, test — nằm ở bài kế; đóng gói thành API nằm ở bài sau nữa.</p>
 
   <h2>Cấu trúc thư mục cuối cùng</h2>
   <div class="ds-code">fraud-detection/
@@ -4392,8 +4395,16 @@ DEFAULTS = <b>dict</b>(n_estimators=1500, learning_rate=0.05, num_leaves=31,
 <b>if</b> __name__ == "__main__":
     main()</div>
   <p class="ds-codecap">chạy: <code>python -m src.train</code></p>
+  <div class="wb-alert wb-alert--info wb-alert--plain"><div class="wb-alert__body">
+    <p class="wb-alert__title">Dừng ở đây được rồi — bạn vừa có một mốc thật</p>
+    <p class="wb-alert__msg">Lệnh trên chạy xong là trong <code>models/</code> có <code>fraud_v1.joblib</code> và <code>metrics.json</code>. Đó là ranh giới tự nhiên của một buổi làm việc: <b>commit lại, ghi con số PR-AUC vào commit message</b>, rồi nghỉ. Bài sau trả lời câu tiếp theo — con số đó tốt tới đâu, và bạn chặn từ ngưỡng nào.</p>
+  </div></div>
+</template>
 
-  <h2>6 · <code>src/evaluate.py</code> — ngưỡng theo chi phí + hình cho luận văn</h2>
+<template data-node="pr-eval">
+  <p>Bài trước dừng ở chỗ có một file <code>.joblib</code> và một con số PR-AUC. Bài này biến con số đó thành ba thứ luận văn cần: <b>một ngưỡng có lý do</b>, <b>một khoảng tin cậy</b>, và <b>một bộ test chặn lỗi im lặng</b>.</p>
+
+  <h2>1 · <code>src/evaluate.py</code> — ngưỡng theo chi phí + hình cho luận văn</h2>
   <div class="ds-code"><b>import</b> numpy <b>as</b> np, matplotlib.pyplot <b>as</b> plt
 <b>from</b> sklearn.metrics <b>import</b> precision_recall_curve, average_precision_score
 <b>from</b> .config <b>import</b> COST_FN, COST_FP
@@ -4424,7 +4435,7 @@ DEFAULTS = <b>dict</b>(n_estimators=1500, learning_rate=0.05, num_leaves=31,
     plt.xlabel("Recall"); plt.ylabel("Precision"); plt.legend(); plt.tight_layout()
     plt.savefig(path, dpi=200)</div>
 
-  <h2>7 · Kiểm thử — bốn test cứu bạn khỏi lỗi im lặng</h2>
+  <h2>2 · Kiểm thử — bốn test cứu bạn khỏi lỗi im lặng</h2>
   <p class="ds-codecap">tests/test_pipeline.py — chạy bằng <code>pytest</code></p>
   <div class="ds-code"><b>def</b> test_one_row_works(sample_df):
     """Pipeline phải chạy với đúng MỘT dòng — như lúc serve."""
@@ -4449,11 +4460,12 @@ DEFAULTS = <b>dict</b>(n_estimators=1500, learning_rate=0.05, num_leaves=31,
     <b>assert</b> 0 &lt;= pipe.predict_proba(row)[0, 1] &lt;= 1</div>
   <p>Bốn test này chiếm 20 phút để viết và bắt được đúng bốn loại lỗi đắt nhất. <b>Có thư mục <code>tests/</code> trong repo cũng là điểm cộng khi hội đồng xem code.</b></p>
 
-  <h2>Thứ tự chạy trong ngày làm việc</h2>
-  <div class="ds-code">1. python -m src.train              → in ra PR-AUC, lưu model
+  <h2>Thứ tự chạy — gộp cả hai bài</h2>
+  <div class="ds-code">1. python -m src.train              → in ra PR-AUC, lưu model   (bài trước)
 2. pytest                           → 4 test phải xanh
 3. mở notebook, chạy evaluate       → chọn ngưỡng, xuất hình
 4. uvicorn src.serve:app --reload   → thử API (bài tiếp theo)</div>
+  <p>Từ bước 3 trở đi bạn đã có đủ vật liệu cho <b>chương 4 luận văn</b>: một bảng chỉ số kèm khoảng tin cậy, một hình PR, và một ngưỡng bạn giải thích được bằng tiền chứ không bằng “thường người ta lấy 0,5”.</p>
 </template>
 
 <template data-node="pr-serve">
@@ -5568,7 +5580,8 @@ const TREE = [
   { id:'p7', t:'7 · Làm ra product thật (fraud detection)', kids:[
     { id:'pr-arch',    t:'Kiến trúc hệ thống chống gian lận',          m:60,  p:'core' },
     { id:'pr-data',    t:'Dữ liệu: lấy ở đâu, dùng bộ nào',            m:45,  p:'core' },
-    { id:'pr-code',    t:'★ Code end-to-end, chạy được',               m:180, p:'core' },
+    { id:'pr-code',    t:'★ Code end-to-end: repo tới model đã lưu',   m:105, p:'core' },
+    { id:'pr-eval',    t:'★ Đánh giá, chọn ngưỡng, và bốn test',       m:75,  p:'core' },
     { id:'pr-serve',   t:'Đóng gói: FastAPI + Docker',                 m:90,  p:'core' },
     { id:'pr-monitor', t:'Giám sát: drift, feedback, retrain',         m:75,  p:'core' },
     { id:'pr-mlops',   t:'MLOps tối thiểu: MLflow, DVC, CI',           m:75,  p:'good' },
@@ -5657,7 +5670,8 @@ const PAYOFF = {
   'dl-tab':     ['Câu trả lời có bằng chứng cho "deep learning trên dữ liệu bảng", và cách dùng khôn nhất trong 2 tuần.', 'Chặng sau biến mô hình thành sản phẩm, bắt đầu từ bản vẽ.'],
   'pr-arch':    ['Bản vẽ đường đi của một giao dịch, và năm quyết định thiết kế phải nêu trong luận văn.', 'Bài sau là dữ liệu thật để chạy bản vẽ đó.'],
   'pr-data':    ['Bộ dữ liệu đã tải và đã kiểm tra, cùng bộ mô phỏng để chạy thử pipeline.', 'Bài sau là toàn bộ mã nguồn dự án, từ file rỗng tới mô hình đã lưu.'],
-  'pr-code':    ['Repo hoàn chỉnh: config, features, history, pipeline, train, evaluate, và bốn test.', 'Bài sau biến file .joblib đó thành một dịch vụ mà hệ thống khác gọi được.'],
+  'pr-code':    ['Repo chạy được: config, features, history, pipeline, train — và một file .joblib có thật trong models/.', 'Có model rồi, bài sau mới trả lời được câu "nó tốt tới đâu, và chặn từ ngưỡng nào".'],
+  'pr-eval':    ['Ngưỡng chọn theo chi phí, khoảng tin cậy bootstrap, hình PR cho luận văn, và bốn test chặn lỗi im lặng.', 'Bài sau biến file .joblib đó thành một dịch vụ mà hệ thống khác gọi được.'],
   'pr-serve':   ['API FastAPI, Dockerfile, và bản demo Streamlit dùng cho buổi bảo vệ.', 'Bài sau là chương rất ít luận văn viết được cho ra hồn.'],
   'pr-monitor': ['Đo drift bằng PSI, bảng theo dõi tối thiểu, và chiến lược huấn luyện lại.', 'Bài sau là phần MLOps nhỏ nhất mà vẫn đủ để repo nộp được.'],
   'pr-mlops':   ['MLflow, chốt phiên bản thư viện, CI tối thiểu, và bảng kiểm repo trước khi nộp.', 'Bài sau quy mọi thứ ra tiền — bài có tỉ lệ giá trị trên công sức cao nhất trang.'],
