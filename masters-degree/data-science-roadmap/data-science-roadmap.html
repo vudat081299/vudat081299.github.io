@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="vi">
+<html lang="vi" class="wb-scrollbars">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -136,11 +136,65 @@
   .ds-mathmodal .ds-prose { max-width: none; }
   .katex-display { margin: 14px 0; overflow-x: auto; overflow-y: hidden; padding: 2px 0; }
 
+  /* ---- chip mở ngăn phụ (thông tin bổ sung, không nằm trên mạch chính) ----
+     Khác chip toán ở dấu đầu dòng: ∑ = công thức, › = một ngăn trượt ra bên phải.
+     Cùng hình dạng để người đọc học một lần là biết cả hai đều "bấm được, không bắt buộc". */
+  .ds-aside {
+    font: inherit; font-size: .95em; font-weight: 600; cursor: pointer; text-align: left;
+    background: var(--wb-surface-2); color: var(--wb-fg);
+    border: var(--wb-bw) dashed var(--wb-border-strong); border-radius: var(--wb-radius-pill);
+    padding: 2px 12px 3px; line-height: 1.45; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .ds-aside::before {
+    content: "add"; font-family: var(--wb-icon-font); font-size: 15px; line-height: 1;
+    color: var(--wb-fg-subtle); font-weight: 400;
+  }
+  .ds-aside:hover { background: var(--wb-surface-hover); border-style: solid; }
+  .ds-aside:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
+  /* Hàng chip cuối một mục — tách khỏi mạch chính bằng khoảng trắng, không bằng đường kẻ,
+     để mắt lướt qua được khi đang bám mạch chính. */
+  .ds-more { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 20px; }
+
+  /* ---- ngăn phụ (drawer) ---- */
+  .ds-drawer { width: min(660px, 94vw); }
+  .ds-drawer .ds-prose { max-width: none; }
+  .ds-drawer .wb-drawer__body { padding-bottom: 40px; }
+
+  /* ---- hộp "bạn vừa có được gì" cuối mỗi bài ---- */
+  .ds-gain { display: grid; gap: 10px; }
+  .ds-gain__row { display: grid; grid-template-columns: 26px minmax(0,1fr); gap: 10px; align-items: start; }
+  .ds-gain__ico { color: var(--wb-fg-subtle); margin-top: 1px; }
+  .ds-gain__k {
+    font-size: var(--wb-text-caption); text-transform: uppercase; letter-spacing: .06em;
+    color: var(--wb-fg-subtle); font-weight: 700; margin: 0 0 2px;
+  }
+  .ds-gain__v { margin: 0; line-height: 1.55; }
+
   /* ---- linh tinh ---- */
   .ds-brand { font-weight: 700; letter-spacing: -.01em; }
-  .ds-brand span { color: var(--wb-fg-subtle); font-weight: 500; }
-  @media (max-width: 560px) { .ds-brand span { display: none; } }
   .ds-nodefoot { margin-top: 36px; padding-top: 18px; border-top: var(--wb-bw) solid var(--wb-border); }
+  .ds-keyhint { font-size: var(--wb-text-caption); color: var(--wb-fg-subtle); margin: 12px 0 0; }
+  .ds-keyhint kbd, .ds-prose kbd {
+    font-family: var(--wb-font-mono); font-size: 11px; padding: 1px 6px;
+    border: var(--wb-bw) solid var(--wb-border); border-bottom-width: 2px;
+    border-radius: var(--wb-radius-sm); background: var(--wb-surface-2);
+  }
+  /* Thanh cuộn theo chủ đề cho những vùng cuộn của riêng trang này — cùng bộ quy tắc
+     §27 của kit, chỉ là kit không biết trước tên các lớp ds-*. */
+  .ds-code, .wb-shell__side, .ds-mathmodal .wb-modal__body, .wb-drawer__body {
+    scrollbar-width: thin; scrollbar-color: var(--wb-border-strong) transparent;
+  }
+  .ds-code::-webkit-scrollbar, .wb-shell__side::-webkit-scrollbar,
+  .ds-mathmodal .wb-modal__body::-webkit-scrollbar, .wb-drawer__body::-webkit-scrollbar { width: 10px; height: 10px; }
+  .ds-code::-webkit-scrollbar-track, .wb-shell__side::-webkit-scrollbar-track,
+  .ds-mathmodal .wb-modal__body::-webkit-scrollbar-track, .wb-drawer__body::-webkit-scrollbar-track { background: transparent; }
+  .ds-code::-webkit-scrollbar-thumb, .wb-shell__side::-webkit-scrollbar-thumb,
+  .ds-mathmodal .wb-modal__body::-webkit-scrollbar-thumb, .wb-drawer__body::-webkit-scrollbar-thumb {
+    background: var(--wb-border-strong); border-radius: var(--wb-radius-pill);
+    border: 3px solid transparent; background-clip: content-box;
+  }
+  .ds-code::-webkit-scrollbar-thumb:hover, .wb-shell__side::-webkit-scrollbar-thumb:hover,
+  .ds-mathmodal .wb-modal__body::-webkit-scrollbar-thumb:hover, .wb-drawer__body::-webkit-scrollbar-thumb:hover { background: var(--wb-fg-subtle); }
 </style>
 </head>
 
@@ -151,7 +205,7 @@
     <button class="wb-btn wb-btn--ghost wb-btn--icon wb-shell__side-toggle" data-side-toggle aria-label="Mở/đóng lộ trình">
       <span class="wb-ico">menu</span>
     </button>
-    <a class="wb-navbar__brand ds-brand" href="#/home">Data Science <span>· zero → thạc sĩ</span></a>
+    <a class="wb-navbar__brand ds-brand" href="#/home">Data Science</a>
     <div class="wb-navbar__spacer"></div>
     <div class="wb-navbar__actions">
       <span class="wb-cap wb-cap--sm" id="topProgress" title="Tiến độ học">0%</span>
@@ -205,6 +259,22 @@
       <button class="wb-btn wb-btn--ghost" data-modal-close>Đóng</button>
     </div>
   </div>
+</div>
+
+<!-- Ngăn phụ: mọi thứ KHÔNG nằm trên mạch chính (so sánh công cụ, lựa chọn thay thế,
+     phần đào sâu). Trượt ra từ bên phải, trang vẫn nhìn thấy phía sau — chủ ý, để
+     người đọc cảm được "cái này là rẽ nhánh, đóng lại là về chỗ cũ". -->
+<div class="wb-overlay" id="asideOverlay">
+  <aside class="wb-drawer ds-drawer" role="dialog" aria-modal="true" aria-labelledby="asideTitle">
+    <div class="wb-drawer__head">
+      <div>
+        <h4 class="wb-drawer__title" id="asideTitle">Thông tin thêm</h4>
+        <p class="wb-drawer__sub" id="asideSub">Không bắt buộc — đóng lại là về đúng chỗ đang đọc</p>
+      </div>
+      <button class="wb-close" data-modal-close aria-label="Đóng"></button>
+    </div>
+    <div class="wb-drawer__body"><div class="ds-prose" id="asideBody"></div></div>
+  </aside>
 </div>
 
 <!-- ============================================================
@@ -576,6 +646,384 @@ print(mcnemar(tb, exact=<b>False</b>, correction=<b>True</b>))</div>
 </template>
 
 <!-- ============================================================
+     NGĂN PHỤ — SO SÁNH CÔNG CỤ
+     Mỗi bước của quy trình thường có 3–5 công cụ làm cùng một việc. Việc chọn
+     giữa chúng KHÔNG nằm trên mạch chính (mạch chính là: dùng cái được khuyên,
+     đi tiếp), nên toàn bộ nằm ở đây. Mỗi bảng có cột “Chạy online?” và kết bằng
+     một dòng chọn thay cho người có máy yếu.
+     ============================================================ -->
+
+<template data-aside="cmp-run" data-title="Chỗ viết và chạy code — và chỗ mượn GPU"
+          data-sub="Bước 0 · năm lựa chọn, ba trong số đó không cần cài gì lên máy">
+  <p><b>Chọn nhanh cho máy yếu:</b> <b>Google Colab</b> làm chỗ chạy chính, <b>Kaggle Notebooks</b> làm chỗ dự phòng khi Colab hết lượt GPU, <b>github.dev</b> để sửa file nhanh. Cả ba đều chạy trong tab trình duyệt, máy bạn chỉ cần mở được Chrome.</p>
+  <table>
+    <thead><tr><th>Công cụ</th><th>Online?</th><th>Điểm mạnh</th><th>Điểm yếu</th><th>Chọn khi</th></tr></thead>
+    <tbody>
+      <tr><td><b>Google Colab</b></td><td>100%</td><td>GPU T4 miễn phí, gắn Google Drive, chia sẻ như Google Doc, cài sẵn gần hết thư viện</td><td>Phiên ngắt khi để yên lâu; thư viện bị Google nâng cấp không báo trước</td><td>Mặc định. Mọi việc chạy nặng</td></tr>
+      <tr><td><b>Kaggle Notebooks</b></td><td>100%</td><td>Hạn mức GPU tính theo tuần nên ổn định hơn; dữ liệu tải lên thành Kaggle Dataset, mọi notebook dùng lại được</td><td>Giao diện chậm hơn; khó gắn kho dữ liệu ngoài</td><td>Colab hết lượt GPU; hoặc dữ liệu đã sẵn trên Kaggle</td></tr>
+      <tr><td><b>GitHub Codespaces</b></td><td>100%</td><td>Là VS Code thật trong trình duyệt, có terminal, chạy được Docker — gần nhất với một máy Linux thật</td><td>Có hạn mức giờ miễn phí mỗi tháng; hết là phải trả tiền</td><td>Cần terminal thật hoặc cần dựng Docker mà máy không kham nổi</td></tr>
+      <tr><td><b>github.dev</b></td><td>100%</td><td>Bấm phím <code>.</code> trên trang repo là mở ngay trình soạn thảo, không tốn hạn mức nào</td><td><b>Không chạy được code</b> — chỉ sửa và commit</td><td>Sửa một dòng, sửa README, sửa config</td></tr>
+      <tr><td><b>Jupyter trên máy</b></td><td>Không</td><td>Không phụ thuộc mạng, không giới hạn thời gian, dữ liệu không đi đâu cả</td><td>Máy yếu là hỏng chuyện; và bạn tự lo mọi thứ cài đặt</td><td>Dữ liệu công ty không được phép rời máy</td></tr>
+    </tbody>
+  </table>
+  <h4>Về GPU: đừng mua, và phần lớn thời gian đừng bật</h4>
+  <p>Mô hình chính của bạn là LightGBM — nó chạy trên CPU, 300 nghìn dòng mất vài giây. GPU chỉ đáng bật cho <b>hai việc</b>: sinh embedding cho cột chữ, và huấn luyện mạng nơ-ron ở chặng 6. Cộng lại chưa tới 3 giờ GPU cho cả 14 ngày, tức là <b>hạn mức miễn phí của Colab hoặc Kaggle là thừa</b>.</p>
+  <p>Các dịch vụ GPU trả tiền (Lightning, Paperspace, Vast.ai, RunPod) rẻ hơn mua máy nhưng vẫn là tiền, và bạn không cần. Nếu có lúc nào thật sự cần lâu hơn: Kaggle cấp hạn mức theo tuần và không cắt giữa chừng như Colab, nên nó là chỗ chạy job dài tốt hơn.</p>
+  <p class="wb-help">Hạn mức miễn phí của cả bốn dịch vụ online đều thay đổi theo từng thời điểm. Con số cụ thể phải xem tại trang của họ lúc bạn dùng — đừng chép con số vào luận văn.</p>
+</template>
+
+<template data-aside="cmp-storage" data-title="Để vài trăm MB dữ liệu ở đâu"
+          data-sub="Bước 2 · vấn đề riêng của người làm online: notebook chết là mất file">
+  <p><b>Chọn nhanh cho máy yếu:</b> <b>Google Drive</b> (Colab gắn vào một lệnh) cho dữ liệu đang làm, <b>Kaggle Dataset</b> cho bản đã chốt. Tuyệt đối không để file dữ liệu trong repo git.</p>
+  <table>
+    <thead><tr><th>Chỗ để</th><th>Online?</th><th>Điểm mạnh</th><th>Điểm yếu</th><th>Chọn khi</th></tr></thead>
+    <tbody>
+      <tr><td><b>Google Drive</b></td><td>100%</td><td><code>drive.mount()</code> một dòng là có; sửa file lần nào cũng thấy ngay</td><td>Đọc file nhỏ lẻ rất chậm — nên copy sang <code>/content</code> trước khi chạy vòng lặp</td><td>Mặc định trong suốt 14 ngày</td></tr>
+      <tr><td><b>Kaggle Dataset</b></td><td>100%</td><td>Có phiên bản; gắn vào notebook là đọc tốc độ cao; chia sẻ được link cho người hướng dẫn</td><td>Tải lên chậm; sửa là phải tạo phiên bản mới</td><td>Bản dữ liệu đã chốt, dùng cho kết quả cuối</td></tr>
+      <tr><td><b>Hugging Face Datasets</b></td><td>100%</td><td>Là một repo git, có lịch sử thay đổi thật; hợp nếu bạn cũng deploy trên HF</td><td>Phải học thêm một công cụ; công khai theo mặc định</td><td>Muốn mọi thứ nằm trên một nền tảng</td></tr>
+      <tr><td><b>Git LFS</b></td><td>Không</td><td>Dữ liệu đi cùng code, đúng một lệnh <code>clone</code></td><td>Hạn mức miễn phí của GitHub nhỏ, vượt là mất tiền; dễ nhân đôi dung lượng repo</td><td>Chỉ cho file dưới ~50 MB</td></tr>
+      <tr><td><b>Để thẳng trong repo</b></td><td>—</td><td>—</td><td>Repo phình, <code>clone</code> lâu, và không lùi lại được</td><td><b>Không bao giờ.</b> Thêm <code>data/</code> vào <code>.gitignore</code> ngay hôm nay</td></tr>
+    </tbody>
+  </table>
+  <p>Thứ <b>phải</b> nằm trong git là <code>data/README.md</code>: nguồn dữ liệu, ngày tải, số dòng, và mã băm (checksum) của file. Đó là thứ làm công trình của bạn tái lập được, không phải bản thân file.</p>
+</template>
+
+<template data-aside="cmp-query" data-title="Lấy dữ liệu ra: pandas, DuckDB, SQLite hay máy chủ thật"
+          data-sub="Bước 2 · bốn cách, và cách rẻ nhất lại là cách dạy bạn SQL">
+  <p><b>Chọn nhanh cho máy yếu:</b> <b>DuckDB</b>. Nó cho bạn viết SQL thật ngay trên file CSV, không cài máy chủ, không tốn RAM như pandas, và chạy được trong Colab bằng một lệnh <code>pip install</code>.</p>
+  <table>
+    <thead><tr><th>Công cụ</th><th>Online?</th><th>Điểm mạnh</th><th>Điểm yếu</th><th>Chọn khi</th></tr></thead>
+    <tbody>
+      <tr><td><b>pandas <code>read_csv</code></b></td><td>Chạy ở đâu cũng được</td><td>Một dòng là xong; ai cũng biết</td><td>Nạp cả file vào RAM — file 1 GB có thể ngốn 3–5 GB</td><td>File nhỏ, dưới vài trăm MB</td></tr>
+      <tr><td><b>DuckDB</b></td><td>Chạy ở đâu cũng được</td><td>Đọc thẳng CSV/Parquet bằng SQL, chỉ nạp cột nào cần; nhanh hơn pandas ở phép nhóm và nối bảng</td><td>Một thư viện nữa phải học (nhưng cú pháp là SQL chuẩn)</td><td>Mặc định. Cả khi chỉ để luyện SQL</td></tr>
+      <tr><td><b>SQLite</b></td><td>Chạy ở đâu cũng được</td><td>Có sẵn trong Python, một file là một cơ sở dữ liệu</td><td>Chậm với phép tổng hợp lớn; thiếu nhiều hàm cửa sổ nâng cao</td><td>Cần lưu trạng thái giữa các lần chạy</td></tr>
+      <tr><td><b>PostgreSQL / MySQL thật</b></td><td>Tuỳ nơi đặt</td><td>Là thứ bạn sẽ gặp khi đi làm; xử lý được dữ liệu lớn hơn máy</td><td>Phải có máy chủ, có quyền, có mật khẩu</td><td>Dữ liệu thật của công ty</td></tr>
+    </tbody>
+  </table>
+  <p>Điểm mấu chốt: <b>cú pháp SQL bạn viết cho DuckDB gần như y hệt cú pháp cho PostgreSQL</b>, kể cả window function. Nên tập trên CSV bây giờ không phải là tập cái khác — đó là tập đúng thứ bạn sẽ gõ vào cơ sở dữ liệu của công ty.</p>
+</template>
+
+<template data-aside="cmp-eda" data-title="Nhìn dữ liệu: tự viết hay để công cụ sinh báo cáo"
+          data-sub="Bước 3 · công cụ sinh báo cáo tự động tiện, nhưng có một cái bẫy">
+  <p><b>Chọn nhanh:</b> chạy <b>ydata-profiling</b> một lần để có bản đồ tổng, rồi <b>tự viết pandas + matplotlib</b> cho bốn biểu đồ thật sự vào luận văn. Đừng dừng ở báo cáo tự động.</p>
+  <table>
+    <thead><tr><th>Công cụ</th><th>Online?</th><th>Điểm mạnh</th><th>Điểm yếu</th><th>Chọn khi</th></tr></thead>
+    <tbody>
+      <tr><td><b>pandas + matplotlib tự viết</b></td><td>Chạy ở đâu cũng được</td><td>Bạn kiểm soát từng con số, và hình xuất ra dùng thẳng cho luận văn</td><td>Tốn thời gian gõ</td><td>Bốn biểu đồ cuối cùng đưa vào bài</td></tr>
+      <tr><td><b>ydata-profiling</b></td><td>Chạy ở đâu cũng được</td><td>Một dòng ra một báo cáo HTML: phân phối, thiếu, tương quan, trùng lặp</td><td>Rất chậm với dữ liệu lớn; và <b>ru ngủ</b> — đọc xong tưởng đã hiểu dữ liệu</td><td>Lần đầu mở một bộ dữ liệu lạ</td></tr>
+      <tr><td><b>Colab <code>data_table</code></b></td><td>100%</td><td>Bật một dòng là mọi DataFrame thành bảng lọc/sắp xếp được bằng chuột</td><td>Chỉ để nhìn, không xuất được hình</td><td>Đang trong Colab và muốn soi vài dòng cụ thể</td></tr>
+      <tr><td><b>Excel / Google Sheets</b></td><td>Sheets thì có</td><td>Nhanh với vài nghìn dòng; ai cũng đọc được</td><td>Chết với vài trăm nghìn dòng; và mọi thao tác tay đều <b>không tái lập được</b></td><td>Chỉ để liếc mắt. Không bao giờ để xử lý</td></tr>
+    </tbody>
+  </table>
+  <p>Cái bẫy của báo cáo tự động: nó trả lời “dữ liệu <i>trông</i> thế nào”, không trả lời “dữ liệu <i>có vấn đề gì với bài toán của tôi</i>”. Rò rỉ thời gian, nhãn đến trễ, một cột bị điền sẵn sau khi sự việc xảy ra — không công cụ nào tự thấy được.</p>
+</template>
+
+<template data-aside="cmp-dataframe" data-title="Xử lý bảng: pandas, polars hay đẩy sang SQL"
+          data-sub="Bước 4–5 · khi dữ liệu bắt đầu không vừa RAM">
+  <p><b>Chọn nhanh cho máy yếu:</b> để <b>DuckDB/SQL</b> làm phần nặng (nhóm, nối, cửa sổ) rồi mới đưa kết quả đã nhỏ lại sang <b>pandas</b>. Đừng đổi sang polars giữa dự án chỉ vì nó nhanh hơn.</p>
+  <table>
+    <thead><tr><th>Công cụ</th><th>Online?</th><th>Điểm mạnh</th><th>Điểm yếu</th><th>Chọn khi</th></tr></thead>
+    <tbody>
+      <tr><td><b>pandas</b></td><td>Chạy ở đâu cũng được</td><td>Hệ sinh thái lớn nhất; mọi ví dụ trên mạng đều bằng pandas; nối thẳng vào sklearn</td><td>Ngốn RAM; chậm ở phép nhóm lớn</td><td>Mặc định cho cả dự án này</td></tr>
+      <tr><td><b>polars</b></td><td>Chạy ở đâu cũng được</td><td>Nhanh hơn nhiều lần, dùng ít RAM hơn, có chế độ lười (lazy) tự tối ưu</td><td>API khác hẳn; ít ví dụ; phải đổi sang pandas trước khi vào sklearn</td><td>Dự án sau. Không phải trong 14 ngày này</td></tr>
+      <tr><td><b>DuckDB (SQL)</b></td><td>Chạy ở đâu cũng được</td><td>Làm phép nặng ngoài RAM; và bạn đang cần luyện SQL cho lúc đi làm</td><td>Không tiện cho thao tác lắt nhắt từng cột</td><td>Nhóm, nối bảng, window function</td></tr>
+      <tr><td><b>Dask / Spark</b></td><td>Cần cụm máy</td><td>Dữ liệu hàng chục GB trở lên</td><td>Phức tạp gấp bội, và bạn không có dữ liệu cỡ đó</td><td><b>Không dùng.</b> Biết tên là đủ</td></tr>
+    </tbody>
+  </table>
+  <p>Ngưỡng thực tế: dưới ~2 triệu dòng thì pandas trong Colab chạy thoải mái. Trên mức đó, thứ cần đổi <b>không phải thư viện</b> mà là chỗ làm việc — đẩy phép nhóm xuống SQL.</p>
+</template>
+
+<template data-aside="cmp-gbdt" data-title="Boosting: LightGBM, XGBoost, CatBoost hay sklearn"
+          data-sub="Bước 7 · bốn thư viện làm gần như cùng một việc">
+  <p><b>Chọn nhanh:</b> <b>LightGBM</b> làm mô hình chính. Thêm <b>một</b> đối thủ vào bảng so sánh của luận văn — chọn CatBoost nếu dữ liệu bạn nhiều cột hạng mục, chọn XGBoost nếu không.</p>
+  <table>
+    <thead><tr><th>Thư viện</th><th>Cần cài?</th><th>Điểm mạnh</th><th>Điểm yếu</th><th>Chọn khi</th></tr></thead>
+    <tbody>
+      <tr><td><b>LightGBM</b></td><td>Có sẵn trên Colab</td><td>Nhanh nhất trên CPU; nhận cột hạng mục trực tiếp; ít tốn RAM</td><td>Mọc cây theo lá nên dễ overfit trên dữ liệu nhỏ — phải chặn bằng <code>min_child_samples</code></td><td>Mặc định cho bài của bạn</td></tr>
+      <tr><td><b>XGBoost</b></td><td>Có sẵn trên Colab</td><td>Được trích dẫn nhiều nhất, hội đồng quen tên; rất ổn định</td><td>Chậm hơn LightGBM ở cùng cấu hình; xử lý cột hạng mục kém tự nhiên hơn</td><td>Cần một baseline “ai cũng công nhận”</td></tr>
+      <tr><td><b>CatBoost</b></td><td>Phải <code>pip install</code></td><td>Mạnh nhất khi có cột hạng mục nhiều giá trị; mặc định đã tốt, ít phải tinh chỉnh</td><td>Huấn luyện chậm hơn; file mô hình nặng hơn</td><td>Dữ liệu có mã cửa hàng, mã thiết bị, mã tỉnh…</td></tr>
+      <tr><td><b>sklearn <code>HistGradientBoosting</code></b></td><td>Không cần cài gì</td><td>Không thêm phụ thuộc; đủ nhanh; nhận cột hạng mục từ bản 1.0</td><td>Ít nút vặn hơn; cộng đồng nhỏ hơn</td><td>Môi trường bị cấm cài thêm thư viện</td></tr>
+    </tbody>
+  </table>
+  <p>Chênh lệch giữa bốn cái này thường <b>nhỏ hơn</b> chênh lệch do một nhóm feature tốt mang lại. Nếu còn ít thời gian, dồn vào feature, đừng dồn vào việc thử đủ bốn thư viện.</p>
+</template>
+
+<template data-aside="cmp-tune" data-title="Tinh chỉnh siêu tham số: grid, random hay Optuna"
+          data-sub="Bước 7 · ba cách, chênh nhau chủ yếu ở số giờ máy">
+  <p><b>Chọn nhanh:</b> <b>RandomizedSearchCV</b> nếu bạn chỉ còn vài giờ, <b>Optuna</b> nếu còn một buổi. Bỏ hẳn GridSearchCV.</p>
+  <table>
+    <thead><tr><th>Cách</th><th>Cần cài?</th><th>Điểm mạnh</th><th>Điểm yếu</th><th>Chọn khi</th></tr></thead>
+    <tbody>
+      <tr><td><b>GridSearchCV</b></td><td>Có sẵn</td><td>Dễ giải thích; chạy hết mọi tổ hợp nên không bỏ sót</td><td>Số tổ hợp nhân lên theo cấp số nhân; phần lớn thời gian chạy ở vùng vô vọng</td><td>Chỉ khi có đúng 2 tham số, mỗi cái 3 giá trị</td></tr>
+      <tr><td><b>RandomizedSearchCV</b></td><td>Có sẵn</td><td>Bạn ấn định số lần chạy, nên biết trước tốn bao lâu; thường bằng grid với ít lần hơn nhiều</td><td>Không học từ những lần đã thử</td><td>Ngân sách chặt. Lựa chọn an toàn</td></tr>
+      <tr><td><b>Optuna</b></td><td><code>pip install</code></td><td>Học từ các lần trước; cắt sớm nhánh vô vọng (pruning); vẽ được hình tầm quan trọng của từng tham số đưa vào luận văn</td><td>Thêm một thư viện; dễ để nó chạy quá lâu</td><td>Có một buổi để chạy và muốn một hình đẹp cho chương 4</td></tr>
+    </tbody>
+  </table>
+  <p>Dù chọn cách nào: <b>chấm điểm trên tập valid, không phải test</b>, và cố định số lần chạy từ đầu. Tuning là chỗ dễ tự lừa mình nhất trong cả dự án — thử đủ lâu thì kiểu gì cũng ra một con số đẹp trên tập test.</p>
+</template>
+
+<template data-aside="cmp-track" data-title="Ghi lại thí nghiệm: file CSV, MLflow hay W&amp;B"
+          data-sub="Bước 7 · sau 40 lần chạy bạn sẽ không nhớ lần nào ra 0,412">
+  <p><b>Chọn nhanh cho máy yếu:</b> <b>Weights &amp; Biases</b> — bảng điều khiển nằm trên web nên máy bạn không phải chạy gì, và bạn gửi được một đường dẫn cho người hướng dẫn xem trực tiếp.</p>
+  <table>
+    <thead><tr><th>Cách</th><th>Online?</th><th>Điểm mạnh</th><th>Điểm yếu</th><th>Chọn khi</th></tr></thead>
+    <tbody>
+      <tr><td><b>Thêm dòng vào CSV</b></td><td>—</td><td>Không phụ thuộc gì; 5 dòng code; mở bằng pandas là ra bảng cho luận văn</td><td>Phải tự nhớ ghi; không lưu được hình và mô hình kèm theo</td><td>Bạn kỷ luật, và muốn ít thứ phải lo</td></tr>
+      <tr><td><b>MLflow</b></td><td>Không (chạy trên máy)</td><td>Chuẩn công nghiệp, hội đồng biết tên; lưu cả tham số, chỉ số, hình và file mô hình</td><td><code>mlflow ui</code> chạy trên máy bạn — máy yếu thì nặng; trong Colab phải đục lỗ mạng ra ngoài mới xem được</td><td>Làm trên máy thật, và muốn một tên quen thuộc để viết vào bài</td></tr>
+      <tr><td><b>Weights &amp; Biases</b></td><td>100%</td><td>Không chạy gì trên máy; biểu đồ so sánh các lần chạy rất tốt; chia sẻ bằng đường dẫn</td><td>Dữ liệu chỉ số đi lên máy chủ của họ; cần tài khoản</td><td>Làm trong Colab, máy yếu, cần khoe tiến độ cho người hướng dẫn</td></tr>
+    </tbody>
+  </table>
+  <p>Điều thật sự quan trọng không phải công cụ nào, mà là <b>mỗi lần chạy phải ghi lại được mã commit của git</b>. Không có nó thì một con số đẹp cũng không tái tạo lại được, và đó chính là câu hội đồng sẽ hỏi.</p>
+</template>
+
+<template data-aside="cmp-explain" data-title="Giải thích mô hình: SHAP, permutation, LIME"
+          data-sub="Bước 8 · ba cách trả lời “vì sao mô hình quyết định như vậy”">
+  <p><b>Chọn nhanh:</b> <b>permutation importance</b> cho bức tranh tổng thể (rẻ, dễ giải thích), <b>SHAP</b> cho một ca cụ thể trong buổi bảo vệ. Bỏ qua LIME.</p>
+  <table>
+    <thead><tr><th>Cách</th><th>Chi phí máy</th><th>Trả lời được gì</th><th>Điểm yếu</th><th>Chọn khi</th></tr></thead>
+    <tbody>
+      <tr><td><b><code>feature_importances_</code></b></td><td>Miễn phí</td><td>Cột nào được cây dùng nhiều</td><td><b>Thiên vị</b> cột nhiều giá trị khác nhau; đo trên tập train nên dễ đánh lừa</td><td>Liếc nhanh trong lúc làm. Không đưa vào luận văn một mình</td></tr>
+      <tr><td><b>Permutation importance</b></td><td>Vừa</td><td>Bỏ cột này đi thì điểm tụt bao nhiêu — đo trên tập test</td><td>Cho kết quả lệch khi hai cột tương quan mạnh với nhau</td><td>Bảng tầm quan trọng chính của luận văn</td></tr>
+      <tr><td><b>SHAP</b></td><td>Nặng nhất</td><td>Từng dòng: cột nào đẩy điểm lên, cột nào kéo xuống, bao nhiêu</td><td>Chậm; và hình dễ bị đọc thành quan hệ nhân quả — phải nói rõ nó không phải</td><td>Giải thích một giao dịch cụ thể trước hội đồng</td></tr>
+      <tr><td><b>LIME</b></td><td>Vừa</td><td>Gần giống SHAP nhưng xấp xỉ cục bộ</td><td>Kết quả không ổn định giữa các lần chạy; gần như đã bị SHAP thay thế</td><td>Chỉ khi người hướng dẫn yêu cầu đích danh</td></tr>
+      <tr><td><b>Partial dependence plot</b></td><td>Vừa</td><td><i>Hình dạng</i> quan hệ giữa một cột và dự đoán — tăng dần hay có ngưỡng gãy</td><td>Sai lệch khi các cột tương quan với nhau</td><td>Muốn một hình dễ đọc cho chương kết quả</td></tr>
+      <tr><td><b>Counterfactual</b></td><td>Vừa</td><td>“Cần đổi gì để giao dịch này được duyệt?”</td><td>Ít thư viện chín; dễ sinh ra kịch bản phi thực tế</td><td>Cần giải thích cho chính khách hàng bị chặn</td></tr>
+    </tbody>
+  </table>
+  <p>Một điểm cộng dễ ăn: chạy <b>cả hai</b> permutation và SHAP rồi nói chúng có đồng ý với nhau không. Chúng không đồng ý cũng là một phát hiện đáng viết, không phải một lỗi.</p>
+</template>
+
+<template data-aside="cmp-serve" data-title="Đóng gói và chạy thật: khung nào, đặt ở đâu"
+          data-sub="Bước 9 · phần này quyết định bạn có cần Docker trên máy hay không">
+  <p><b>Chọn nhanh cho máy yếu:</b> viết <b>FastAPI</b>, đẩy lên <b>Hugging Face Spaces</b> ở chế độ Docker. Họ dựng ảnh Docker trên máy chủ của họ từ <code>Dockerfile</code> trong repo — <b>máy bạn không cần cài Docker</b>. Đây là mắt xích hay bị kẹt nhất với máy yếu, và đây là cách gỡ.</p>
+  <h4>Khung phục vụ</h4>
+  <table>
+    <thead><tr><th>Khung</th><th>Cho ai gọi</th><th>Điểm mạnh</th><th>Điểm yếu</th><th>Chọn khi</th></tr></thead>
+    <tbody>
+      <tr><td><b>FastAPI</b></td><td>Hệ thống khác</td><td>Tự sinh trang tài liệu thử được ngay tại <code>/docs</code>; kiểm tra kiểu dữ liệu đầu vào giúp bạn</td><td>Không có giao diện cho người xem</td><td>Sản phẩm chính của luận văn</td></tr>
+      <tr><td><b>Flask</b></td><td>Hệ thống khác</td><td>Đơn giản hơn, nhiều ví dụ cũ</td><td>Không kiểm tra kiểu; không có <code>/docs</code></td><td>Không có lý do gì để chọn thay FastAPI</td></tr>
+      <tr><td><b>Streamlit</b></td><td>Con người</td><td>Vài chục dòng ra một trang bấm được; hội đồng thích nhìn</td><td>Không phải API thật; mỗi thao tác chạy lại cả file</td><td>Bản demo <i>bên cạnh</i> API, không thay API</td></tr>
+      <tr><td><b>Gradio</b></td><td>Con người</td><td>Ít dòng nhất; chạy thẳng trên HF Spaces không cần cấu hình</td><td>Ít tuỳ biến bố cục</td><td>Cần một demo online sau 20 phút</td></tr>
+    </tbody>
+  </table>
+  <h4>Chỗ đặt</h4>
+  <table>
+    <thead><tr><th>Nơi đặt</th><th>Cần Docker trên máy?</th><th>Điểm mạnh</th><th>Điểm yếu</th></tr></thead>
+    <tbody>
+      <tr><td><b>Hugging Face Spaces</b></td><td>Không</td><td>Bậc miễn phí chạy CPU đủ cho mô hình của bạn; nhận cả Dockerfile lẫn Streamlit/Gradio; có đường dẫn công khai để dán vào luận văn</td><td>Ngủ khi không ai dùng, lần gọi đầu chậm; mã nguồn công khai trừ khi đặt riêng tư</td></tr>
+      <tr><td><b>Render / Railway / Fly.io</b></td><td>Không</td><td>Giống một máy chủ thật hơn; có tên miền riêng</td><td>Chính sách miễn phí của cả ba <b>thay đổi liên tục</b> — kiểm lại trước khi phụ thuộc vào</td></tr>
+      <tr><td><b>Docker trên máy bạn</b></td><td>Có</td><td>Không phụ thuộc ai; chạy được cả khi mất mạng</td><td>Máy yếu là khổ; và không gửi được đường dẫn cho hội đồng bấm thử</td></tr>
+    </tbody>
+  </table>
+  <p>Vẫn <b>phải viết <code>Dockerfile</code></b> dù không chạy Docker trên máy: nó là bằng chứng tái lập được, và hội đồng sẽ tìm nó trong repo. Bạn chỉ là để máy chủ của người ta dựng nó thay mình.</p>
+</template>
+
+<template data-aside="cmp-figure" data-title="Hình cho luận văn: biểu đồ và sơ đồ kiến trúc"
+          data-sub="Phần viết · hai loại hình, hai bộ công cụ khác nhau">
+  <p><b>Chọn nhanh:</b> <b>matplotlib</b> xuất PDF cho biểu đồ, <b>draw.io</b> cho sơ đồ kiến trúc. Cả hai đều chạy được trong trình duyệt.</p>
+  <h4>Biểu đồ từ dữ liệu</h4>
+  <table>
+    <thead><tr><th>Công cụ</th><th>Điểm mạnh</th><th>Điểm yếu</th><th>Chọn khi</th></tr></thead>
+    <tbody>
+      <tr><td><b>matplotlib</b></td><td>Kiểm soát từng chi tiết; xuất PDF/SVG nên chữ trong hình không bị vỡ khi in</td><td>Mặc định xấu, phải chỉnh</td><td>Mọi hình đi vào bản nộp</td></tr>
+      <tr><td><b>seaborn</b></td><td>Một dòng ra một hình thống kê đã đẹp sẵn; vẫn là matplotlib bên dưới nên chỉnh tiếp được</td><td>Khó bẻ khi cần bố cục lạ</td><td>Hình phân phối, hình tương quan</td></tr>
+      <tr><td><b>plotly</b></td><td>Rê chuột xem được giá trị — rất hợp cho Streamlit</td><td><b>Bẫy:</b> luận văn là PDF, tính tương tác mất sạch, và xuất ảnh tĩnh cần cài thêm</td><td>Bản demo, không phải bản nộp</td></tr>
+    </tbody>
+  </table>
+  <h4>Sơ đồ kiến trúc</h4>
+  <table>
+    <thead><tr><th>Công cụ</th><th>Online?</th><th>Điểm mạnh</th><th>Điểm yếu</th></tr></thead>
+    <tbody>
+      <tr><td><b>draw.io</b></td><td>100%</td><td>Miễn phí, lưu thẳng vào Google Drive, xuất PDF nét</td><td>Kéo thả bằng tay, hơi lâu</td></tr>
+      <tr><td><b>Excalidraw</b></td><td>100%</td><td>Nhanh nhất; nét vẽ tay nhìn thân thiện</td><td>Trông không đủ trang trọng cho một số hội đồng</td></tr>
+      <tr><td><b>Mermaid</b></td><td>100%</td><td>Sơ đồ viết bằng chữ nên nằm trong git, sửa được bằng khác biệt dòng</td><td>Không tự đặt được vị trí từng khối</td></tr>
+      <tr><td><b>PowerPoint</b></td><td>Bản web thì có</td><td>Bạn đã biết dùng</td><td>Xuất ra hay bị mờ; phải nhớ xuất PDF chứ không phải PNG</td></tr>
+    </tbody>
+  </table>
+  <p>Một quy tắc tiết kiệm nhiều giờ: <b>đặt cỡ chữ trong hình bằng cỡ chữ trong bài</b> (khoảng 9–11pt sau khi thu nhỏ). Hình có chữ li ti là lỗi bị nhắc nhiều nhất khi phản biện đọc bản in.</p>
+</template>
+
+<template data-aside="cmp-write" data-title="Viết luận văn: soạn thảo và quản lý trích dẫn"
+          data-sub="Phần viết · chọn sai chỗ này thì mất vài giờ vào định dạng thay vì nội dung">
+  <p><b>Chọn nhanh cho máy yếu:</b> <b>Overleaf</b> (biên dịch trên máy chủ của họ, máy bạn chỉ mở tab) + <b>Zotero</b> cho trích dẫn. Trừ khi trường bắt nộp bản <code>.docx</code> — khi đó dùng Word và đừng cãi.</p>
+  <table>
+    <thead><tr><th>Công cụ</th><th>Online?</th><th>Điểm mạnh</th><th>Điểm yếu</th><th>Chọn khi</th></tr></thead>
+    <tbody>
+      <tr><td><b>Overleaf (LaTeX)</b></td><td>100%</td><td>Công thức và tham chiếu hình/bảng tự đánh số; nhiều trường có sẵn mẫu; không cài gì lên máy</td><td>Bậc miễn phí giới hạn thời gian biên dịch — bài dài có thể chạm trần</td><td>Mặc định, nếu trường nhận PDF</td></tr>
+      <tr><td><b>Word</b></td><td>Bản web thì có</td><td>Người hướng dẫn dùng “theo dõi thay đổi” để sửa cho bạn; trường thường có mẫu <code>.docx</code></td><td>Công thức khổ sở; đánh số hình bảng hay loạn khi chèn thêm</td><td>Trường bắt buộc, hoặc thầy cô sửa trực tiếp</td></tr>
+      <tr><td><b>Google Docs</b></td><td>100%</td><td>Cùng viết cùng lúc; không bao giờ mất bản</td><td>Yếu nhất ở công thức, trích dẫn và đánh số</td><td>Nháp đề cương. Không phải bản chính</td></tr>
+      <tr><td><b>Typst</b></td><td>100%</td><td>Nhanh và dễ đọc hơn LaTeX nhiều</td><td>Rất ít mẫu luận văn của các trường Việt Nam</td><td>Chỉ khi bạn không bị ràng buộc mẫu</td></tr>
+    </tbody>
+  </table>
+  <h4>Trích dẫn</h4>
+  <table>
+    <thead><tr><th>Công cụ</th><th>Điểm mạnh</th><th>Điểm yếu</th></tr></thead>
+    <tbody>
+      <tr><td><b>Zotero</b></td><td>Miễn phí; nút trên trình duyệt lưu paper một cú bấm; xuất BibTeX cho Overleaf và có plugin cho Word</td><td>Dung lượng đồng bộ miễn phí có hạn (lưu file PDF ở Drive thì hết lo)</td></tr>
+      <tr><td><b>Mendeley</b></td><td>Tương tự Zotero, đọc PDF tiện hơn</td><td>Thuộc một nhà xuất bản; ít mở hơn</td></tr>
+      <tr><td><b>Gõ tay</b></td><td>—</td><td>Đến bài thứ 20 là sai định dạng, và sửa lại thủ công mất cả buổi</td></tr>
+    </tbody>
+  </table>
+  <p>Làm ngay hôm nay, mất 10 phút: cài nút Zotero trên trình duyệt. Từ giờ mỗi lần mở một paper thì bấm lưu <b>ngay lúc đọc</b>. Đi tìm lại nguồn vào ngày cuối là một trong những cách mất thời gian oan uổng nhất.</p>
+</template>
+
+<!-- Nhánh phụ tách ra khỏi các bài: mỗi cái từng nằm giữa mạch chính và làm
+     người đọc phải nhảy qua. Nội dung giữ nguyên, chỉ đổi chỗ ở. -->
+
+<template data-aside="x-notneeded" data-title="Những thứ bạn KHÔNG cần trong 2 tuần này"
+          data-sub="Danh sách bỏ qua — đọc để yên tâm rằng bạn không đang thiếu gì">
+  <p>Nói rõ để bạn khỏi lo lắng — mỗi cái đều xuất hiện trong roadmap.sh và đều <b>không</b> cần cho mục tiêu của bạn:</p>
+  <table>
+    <tr><th>Công cụ</th><th>Nó dành cho ai</th><th>Khi nào bạn mới cần</th></tr>
+    <tr><td>Spark / Hadoop</td><td>Data engineer, dữ liệu &gt; vài trăm GB</td><td>Khi pandas hết RAM. Dữ liệu luận văn của bạn sẽ vừa RAM.</td></tr>
+    <tr><td>Kafka</td><td>Hệ thống streaming thật</td><td>Chỉ cần <i>nói được</i> nó nằm ở đâu trong kiến trúc</td></tr>
+    <tr><td>Kubernetes</td><td>Vận hành nhiều dịch vụ ở quy mô lớn</td><td>Docker là đủ để bảo vệ luận văn</td></tr>
+    <tr><td>Airflow</td><td>Lên lịch pipeline dữ liệu</td><td>Một dòng cron cũng đủ minh hoạ</td></tr>
+    <tr><td>Feature store (Feast…)</td><td>Đội nhiều người dùng chung feature</td><td>Xem bài riêng — 95% dự án không cần</td></tr>
+    <tr><td>Tableau / Power BI</td><td>Báo cáo cho lãnh đạo</td><td>matplotlib đủ cho luận văn</td></tr>
+    <tr><td>TensorFlow / Keras</td><td>Nhánh khác của deep learning</td><td>Chọn PyTorch, đừng học cả hai</td></tr>
+  </table>
+  <p>Nếu hội đồng hỏi “sao không dùng Spark”, câu trả lời đúng và mạnh là: <i>“Dữ liệu 284.807 dòng vừa trong bộ nhớ, dùng Spark chỉ thêm chi phí vận hành mà không cải thiện gì. Khi vượt ngưỡng đó, hướng mở rộng là…”</i> — thể hiện bạn hiểu <b>đánh đổi</b>, chứ không phải bạn thiếu công cụ.</p>
+</template>
+
+<template data-aside="x-la-skip" data-title="Đại số tuyến tính: phần bỏ qua được"
+          data-sub="Nhánh phụ — ba ý ở mạch chính là đủ để đi tiếp">
+  <p>Để bạn khỏi lo: định thức, ma trận nghịch đảo tính bằng tay, không gian con, hạng, chéo hoá, phân rã Jordan. Chúng có trong giáo trình đại số tuyến tính nhưng bạn sẽ không gõ chúng lần nào trong 14 ngày này.</p>
+  <p>Một ngoại lệ đáng biết tên: <b>trị riêng / vector riêng</b> — vì PCA (giảm chiều) chạy trên nó. Nhưng bạn dùng <code>PCA(n_components=10)</code> chứ không tự tính. Biết nó nghĩa là “tìm các hướng mà dữ liệu trải rộng nhất” là đủ.</p>
+</template>
+
+<template data-aside="x-tree-gradient" data-title="Cây quyết định và XGBoost có dùng gradient không?"
+          data-sub="Nhánh phụ — trả lời một thắc mắc hay gặp, không cản đường">
+  <p>Có, nhưng khác. Một cây đơn lẻ <b>không</b> dùng gradient descent — nó chọn ngưỡng chia bằng cách thử hết và lấy cái giảm độ hỗn loạn nhiều nhất <button class="ds-math" data-math="entropy">(entropy/Gini)</button>. Nhưng <b>Gradient Boosting</b> thì đúng như tên: mỗi cây mới được huấn luyện để dự đoán <i>phần gradient còn lại</i> của các cây trước. Nên hiểu gradient vẫn cần, kể cả khi bạn chỉ dùng LightGBM.</p>
+
+  <div class="wb-alert wb-alert--info">
+    <span class="wb-alert__icon">i</span>
+    <div class="wb-alert__body"><p class="wb-alert__title">Bạn sẽ không phải tính đạo hàm bằng tay, một lần nào</p>
+      <p class="wb-alert__msg">PyTorch/TensorFlow có <b>autograd</b>: bạn viết phép tính xuôi, thư viện tự dựng đồ thị và tính ngược. Bạn cần hiểu <i>ý nghĩa</i> để đọc được vì sao loss không giảm — không cần kỹ năng đạo hàm.</p></div>
+  </div>
+</template>
+
+<template data-aside="x-memorize" data-title="Mô hình có phải “học thuộc” không?"
+          data-sub="Nhánh phụ — làm rõ một cách nói dễ gây hiểu nhầm">
+  <p>Một hiểu nhầm phổ biến cần gỡ: nhiều người nghĩ mô hình <i>ghi nhớ</i> dữ liệu huấn luyện rồi tra cứu lại. Nghe hợp lý vì "học" trong tiếng Việt gợi ý học thuộc, và vì mô hình đúng là hoạt động tốt hơn trên dữ liệu đã thấy.</p>
+  <p>Nhưng cái mô hình giữ lại chỉ là <b>một bộ tham số</b> — với logistic regression là 30 con số, dữ liệu gốc bị vứt đi hoàn toàn. Nó nén hàng trăm nghìn dòng thành vài chục tham số, nên nó <b>bắt buộc</b> phải bỏ qua chi tiết và giữ lại quy luật. Khi mô hình <i>overfit</i>, đó chính là lúc nó tiến gần tới học thuộc — và đó là lỗi, không phải mục tiêu.</p>
+</template>
+
+<template data-aside="x-tree-learn" data-title="Cây và boosting thì “học” thế nào"
+          data-sub="Nhánh phụ — nối lại với gia đình mô hình bạn sẽ dùng">
+  <p>Cây đơn lẻ không dùng gradient — nó thử mọi ngưỡng chia và giữ cái làm giảm độ hỗn loạn nhiều nhất <button class="ds-math" data-math="entropy">(Gini/entropy)</button>.</p>
+  <p>Nhưng <b>Gradient Boosting</b> đúng như tên gọi: mỗi cây mới được huấn luyện để dự đoán <b>phần gradient còn lại</b> của tổ hợp các cây trước. Nói cách khác, cây thứ $k$ học cách sửa lỗi của $k-1$ cây trước đó. Đó là ý nghĩa của chữ "boosting", và là lý do bạn vẫn cần hiểu gradient dù chỉ dùng LightGBM.</p>
+</template>
+
+<template data-aside="x-tf-variants" data-title="Ba biến thể Transformer, và paper gốc"
+          data-sub="Nhánh phụ — cần khi đọc paper, không cần để làm bài">
+  <table>
+    <tr><th>Loại</th><th>Cấu trúc</th><th>Giỏi gì</th><th>Ví dụ</th></tr>
+    <tr><td><b>Encoder-only</b></td><td>Nhìn cả hai chiều</td><td>Hiểu, phân loại, embedding</td><td>BERT, PhoBERT (tiếng Việt)</td></tr>
+    <tr><td><b>Decoder-only</b></td><td>Masked, chỉ nhìn quá khứ</td><td>Sinh văn bản</td><td>GPT, LLaMA, Claude</td></tr>
+    <tr><td><b>Encoder-decoder</b></td><td>Cả hai + cross-attention</td><td>Dịch, tóm tắt</td><td>T5, mô hình gốc 2017</td></tr>
+  </table>
+
+  <h2>Đọc lại paper gốc</h2>
+  <p>Paper <i>Attention Is All You Need</i> (Vaswani và cộng sự, 2017) chỉ dài 11 trang. Sau bài này bạn đọc được hình 1 và mục 3 của nó. <b>Đọc một paper gốc từ đầu tới cuối là một trải nghiệm nên có trước khi viết luận văn</b> — nó cho bạn thấy một đóng góp thật trông như thế nào.</p>
+</template>
+
+<template data-aside="x-attn-kinds" data-title="Ba loại attention bạn sẽ gặp tên"
+          data-sub="Nhánh phụ — từ vựng để đọc paper không bị khựng">
+  <table>
+    <tr><th>Loại</th><th>Ai nhìn ai</th><th>Dùng ở</th></tr>
+    <tr><td><b>Self-attention</b></td><td>Token trong một chuỗi nhìn nhau</td><td>Mọi khối Transformer</td></tr>
+    <tr><td><b>Masked self-attention</b></td><td>Chỉ nhìn về <b>quá khứ</b>, che tương lai</td><td>GPT và mọi mô hình sinh văn bản — nếu không nó sẽ "nhìn trộm" từ cần đoán</td></tr>
+    <tr><td><b>Cross-attention</b></td><td>Chuỗi A nhìn chuỗi B</td><td>Dịch máy: câu đích nhìn câu nguồn</td></tr>
+  </table>
+</template>
+
+<template data-aside="x-llm-vocab" data-title="Từ vựng LLM để không bị hớ"
+          data-sub="Nhánh phụ — tra khi nghe người khác dùng những từ này">
+  <table>
+    <tr><th>Từ</th><th>Nghĩa gọn</th></tr>
+    <tr><td>Token</td><td>Mảnh từ. ~1 token ≈ 4 ký tự tiếng Anh; tiếng Việt tốn token hơn</td></tr>
+    <tr><td>Context window</td><td>Số token tối đa mô hình nhìn được một lần</td></tr>
+    <tr><td>Temperature</td><td>Độ ngẫu nhiên khi sinh. 0 = ổn định nhất <button class="ds-math" data-math="softmax">(cơ chế)</button></td></tr>
+    <tr><td>LoRA / QLoRA</td><td>Fine-tune chỉ một phần nhỏ tham số — rẻ hơn nhiều lần</td></tr>
+    <tr><td>Quantization</td><td>Giảm độ chính xác số (16-bit → 4-bit) để chạy trên máy nhỏ</td></tr>
+    <tr><td>Hallucination</td><td>Bịa ra thông tin nghe hợp lý nhưng sai</td></tr>
+  </table>
+</template>
+
+<template data-aside="x-mlops-skip" data-title="MLOps: những thứ KHÔNG cần làm"
+          data-sub="Danh sách bỏ qua — để bạn không đi lạc vào nửa ngành công nghiệp">
+  <table>
+    <tr><th>Công cụ</th><th>Khi nào mới cần</th></tr>
+    <tr><td>Kubernetes</td><td>Nhiều dịch vụ, nhiều bản sao, tự mở rộng theo tải</td></tr>
+    <tr><td>Kubeflow / Airflow</td><td>Nhiều pipeline chạy theo lịch, phụ thuộc lẫn nhau</td></tr>
+    <tr><td>Feature store</td><td>Nhiều mô hình dùng chung feature</td></tr>
+    <tr><td>Model registry riêng</td><td>MLflow đã có sẵn ở mức đủ dùng</td></tr>
+    <tr><td>Seldon / KServe</td><td>Triển khai mô hình ở quy mô lớn</td></tr>
+  </table>
+  <p>Nhắc lại nguyên tắc dùng được cho mọi câu hỏi kiểu này: <b>nêu được vấn đề mà công cụ giải quyết, nói mình giải quyết nó bằng cách nào ở quy mô hiện tại, và chỉ ra khi nào thì cần công cụ đó.</b> Câu trả lời như vậy mạnh hơn nhiều so với việc cài thêm công cụ để trưng.</p>
+</template>
+
+<template data-aside="x-cyclic-more" data-title="Còn cột nào có tính chu kỳ nữa"
+          data-sub="Nhánh phụ — mở rộng sang các cột khác sau khi đã làm được cột giờ">
+  <table>
+    <tr><th>Cột</th><th>Chu kỳ $T$</th><th>Ghi chú</th></tr>
+    <tr><td>Giờ trong ngày</td><td>24</td><td>Dùng nhiều nhất</td></tr>
+    <tr><td>Phút trong giờ</td><td>60</td><td>Ít hữu ích trừ khi có mẫu hình theo phút</td></tr>
+    <tr><td>Thứ trong tuần</td><td>7</td><td>Chủ nhật và thứ Hai liền nhau</td></tr>
+    <tr><td>Ngày trong tháng</td><td>30/31</td><td>Cẩn thận: tháng dài ngắn khác nhau</td></tr>
+    <tr><td>Tháng trong năm</td><td>12</td><td>Tháng 12 và tháng 1 liền nhau</td></tr>
+    <tr><td>Hướng gió, góc, kinh độ</td><td>360</td><td>359° và 1° chỉ cách nhau 2°</td></tr>
+  </table>
+</template>
+
+<template data-aside="x-pipeline-bugs" data-title="Hai lỗi Pipeline hay gặp và cách sửa"
+          data-sub="Gỡ lỗi — mở khi gặp, không cần đọc trước">
+  <h3>“Tôi không lấy được tên feature sau khi biến đổi”</h3>
+  <div class="ds-code">names = pipe.named_steps["prep"].get_feature_names_out()
+imp = pipe.named_steps["model"].feature_importances_
+pd.Series(imp, index=names).sort_values(ascending=<b>False</b>).head(20)</div>
+  <p>Cần <code>verbose_feature_names_out=False</code> trong ColumnTransformer để tên gọn (<code>city_HaNoi</code> thay vì <code>cat__city_HaNoi</code>).</p>
+
+  <h3>“FunctionTransformer của tôi lỗi khi dự đoán một dòng”</h3>
+  <p>Hàm của bạn phải chạy được với DataFrame <b>một dòng</b>. Kiểm tra ngay khi viết:</p>
+  <div class="ds-code"><b>assert</b> add_derived(df_train.head(1)).shape[0] == 1</div>
+  <p>Đặt <code>assert</code> này trong test. Nó sẽ bắt lỗi vào ngày bạn vô tình dùng một phép tính cần nhiều dòng (như <code>.rolling()</code>) bên trong hàm — mà phép đó thuộc loại C, phải tính bên ngoài Pipeline.</p>
+
+  <div class="wb-alert wb-alert--info">
+    <span class="wb-alert__icon">i</span>
+    <div class="wb-alert__body"><p class="wb-alert__title">Ranh giới cần nhớ</p>
+      <p class="wb-alert__msg">Trong Pipeline chỉ đặt được các phép biến đổi <b>theo từng dòng</b> (sin/cos, log, tỉ lệ) và các phép <b>học tham số từ train</b> (scale, one-hot). Các feature cần <b>lịch sử nhiều dòng</b> (<code>n_tx_1h</code>, <code>hist_mean</code>) phải được tính <i>trước</i> khi vào Pipeline — lúc train bằng pandas, lúc serve bằng truy vấn CSDL hoặc Redis. Vẽ đúng ranh giới này trong sơ đồ kiến trúc của luận văn.</p></div>
+  </div>
+</template>
+
+<template data-aside="x-sklearn-imports" data-title="Bản đồ import: cần gì thì lấy từ đâu"
+          data-sub="Bảng tra — quay lại đây mỗi lần quên tên module">
+  <table>
+    <tr><th>Việc</th><th>Module</th></tr>
+    <tr><td>Chia tập, cross-validation, tune</td><td><code>sklearn.model_selection</code></td></tr>
+    <tr><td>Scale, one-hot, imputer</td><td><code>sklearn.preprocessing</code>, <code>sklearn.impute</code></td></tr>
+    <tr><td>Ghép cột / ghép bước</td><td><code>sklearn.compose</code>, <code>sklearn.pipeline</code></td></tr>
+    <tr><td>Mô hình tuyến tính</td><td><code>sklearn.linear_model</code></td></tr>
+    <tr><td>Cây, rừng, boosting</td><td><code>sklearn.tree</code>, <code>sklearn.ensemble</code></td></tr>
+    <tr><td>Chỉ số đánh giá</td><td><code>sklearn.metrics</code></td></tr>
+  </table>
+</template>
+
+<template data-aside="x-split-other" data-title="Hai cách chia khác: phân tầng và theo nhóm"
+          data-sub="Nhánh phụ — bài của bạn chia theo thời gian; hai cách này cho bài toán khác">
+  <div class="ds-code"><b>from</b> sklearn.model_selection <b>import</b> train_test_split
+X_tr, X_te, y_tr, y_te = train_test_split(
+    X, y, test_size=0.2, stratify=y, random_state=42)   <i># ← stratify là bắt buộc khi lệch</i></div>
+  <p>Không có <code>stratify=y</code>, với 0,17% dương, một tập test 1.000 dòng có thể tình cờ chứa 0 ca gian lận — và mọi chỉ số thành vô nghĩa.</p>
+
+  <h3>Theo nhóm</h3>
+  <div class="ds-code"><b>from</b> sklearn.model_selection <b>import</b> GroupShuffleSplit
+gss = GroupShuffleSplit(test_size=0.2, random_state=42)
+tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
+</template>
+
+<!-- ============================================================
      CHẶNG 0 — BẮT ĐẦU TỪ ĐÂY
      ============================================================ -->
 
@@ -614,6 +1062,7 @@ print(mcnemar(tb, exact=<b>False</b>, correction=<b>True</b>))</div>
       <button class="ds-leaf" data-goto="f-cyclic"><span class="ds-leaf__t"><b>“23h và 0h cách xa nhau trong máy — dùng sin/cos ở đâu?”</b><br><span style="color:var(--wb-fg-muted);font-size:13px">→ Bước 5 của quy trình (Feature engineering), gõ trong file <code>features.py</code>, khoảng 6 dòng pandas</span></span><span class="ds-leaf__m">75′</span></button>
       <button class="ds-leaf" data-goto="dl-attn"><span class="ds-leaf__t"><b>“Transformer là gì?”</b><br><span style="color:var(--wb-fg-muted);font-size:13px">→ Giải từ số 0 bằng ẩn dụ thư viện, có khối bấm được để xem từ nào nhìn từ nào</span></span><span class="ds-leaf__m">120′</span></button>
       <button class="ds-leaf" data-goto="pr-code"><span class="ds-leaf__t"><b>“Làm sao ra được một product AI thật (phát hiện gian lận)?”</b><br><span style="color:var(--wb-fg-muted);font-size:13px">→ Code chạy được từ đầu tới cuối, kèm cấu trúc thư mục và cách đóng gói</span></span><span class="ds-leaf__m">180′</span></button>
+      <button class="ds-leaf" data-goto="t-online"><span class="ds-leaf__t"><b>“Máy tôi yếu, tôi thích thứ chạy online 100%”</b><br><span style="color:var(--wb-fg-muted);font-size:13px">→ Có đường đi trọn vẹn trong trình duyệt, kể cả bước đóng gói Docker. Và mỗi bảng so sánh công cụ trên trang đều có cột “chạy online được không”</span></span><span class="ds-leaf__m">45′</span></button>
     </div></div>
   </section>
 </template>
@@ -629,10 +1078,19 @@ print(mcnemar(tb, exact=<b>False</b>, correction=<b>True</b>))</div>
     <tr><td><span class="wb-cap wb-cap--dashed wb-cap--sm">Biết tên là đủ</span></td><td>Chỉ cần biết nó tồn tại và giải quyết vấn đề gì, để không hoảng khi gặp</td><td>Đọc 5 phút, bỏ qua</td></tr>
   </table>
 
-  <h2>Toán nằm trong popup, không nằm trên đường đi</h2>
-  <p>Mỗi khi nội dung chạm tới toán, bạn sẽ thấy một chip như thế này —
-    <button class="ds-math" data-math="expvar">kỳ vọng &amp; phương sai</button> — bấm vào là mở ra ở giữa màn hình, giải thích từ đầu, có ví dụ bằng số, và luôn có một dòng nói <i>“trong code nó là hàm nào”</i>.</p>
-  <p>Bạn <b>không cần</b> mở tất cả. Chip nào chắn đường hiểu thì mở. Bấm thử cái ở trên ngay bây giờ để biết nó trông thế nào.</p>
+  <h2>Mạch chính chỉ chứa mạch chính</h2>
+  <p>Nguyên tắc bố cục của cả trang: <b>chữ bạn đang đọc là đường đi ngắn nhất tới sản phẩm.</b> Mọi thứ có ích nhưng không nằm trên đường đó đều bị đẩy ra sau một cái chip bấm được. Bạn không mất gì, và mạch đọc không bị cắt.</p>
+  <p>Có hai loại chip, phân biệt bằng dấu ở đầu:</p>
+  <table>
+    <tr><th>Chip</th><th>Mở ra cái gì</th><th>Khi nào nên bấm</th></tr>
+    <tr><td><button class="ds-math" data-math="expvar">kỳ vọng &amp; phương sai</button></td><td>Một <b>công thức</b>, hiện giữa màn hình: giải thích từ đầu, ví dụ bằng số, và luôn có dòng <i>“trong code nó là hàm nào”</i></td><td>Khi đoạn toán đó chắn đường hiểu của bạn</td></tr>
+    <tr><td><button class="ds-aside" data-aside="cmp-run">So sánh chỗ chạy code</button></td><td>Một <b>nhánh phụ</b>, trượt ra từ bên phải: so sánh công cụ, phương án thay thế, phần đào sâu</td><td>Khi bạn đang phân vân chọn cái gì, hoặc tò mò</td></tr>
+  </table>
+  <p>Bấm thử cả hai ngay bây giờ. Bạn <b>không cần</b> mở hết — đọc thẳng một mạch mà bỏ qua toàn bộ chip thì vẫn ra được sản phẩm.</p>
+  <p>Đặc biệt, gần như <b>mỗi bước đều có 3–5 công cụ làm cùng một việc</b>. Việc so sánh chúng nằm hết trong ngăn bên phải, và bảng nào cũng có cột “chạy online được không” cùng một dòng chọn thay cho người có máy yếu.</p>
+
+  <h2>Bàn phím</h2>
+  <p>Đọc bằng phím nhanh hơn rê chuột xuống cuối trang: <kbd>]</kbd> sang bài sau, <kbd>[</kbd> về bài trước, <kbd>Esc</kbd> đóng popup hoặc ngăn phụ đang mở. Ba phím này chạy ở mọi bài, trừ lúc con trỏ đang nằm trong ô tìm kiếm.</p>
 
   <h2>Ba đường đi tuỳ tình huống</h2>
   <div class="wb-grid wb-grid--auto" style="--wb-grid-min:220px">
@@ -767,6 +1225,8 @@ print(mcnemar(tb, exact=<b>False</b>, correction=<b>True</b>))</div>
     <tr><td>Demo cho hội đồng xem</td><td><b>Streamlit</b></td><td>Một file Python ra một web app</td></tr>
     <tr><td>Viết luận văn</td><td><b>Overleaf</b> (LaTeX) + Zotero</td><td>Word cũng được, nhưng LaTeX trị công thức và tài liệu tham khảo tốt hơn hẳn</td></tr>
   </table>
+  <p>Cột giữa là <b>một</b> lựa chọn mặc định, không phải lựa chọn duy nhất — mỗi ô đều có 2–4 công cụ đối thủ. Bảng so sánh đầy đủ (kèm cột “chạy online được không”, cho máy yếu) nằm trong các ngăn dưới đây:</p>
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-run">Chỗ chạy code &amp; GPU</button><button class="ds-aside" data-aside="cmp-storage">Chỗ để dữ liệu</button><button class="ds-aside" data-aside="cmp-query">Lấy dữ liệu ra</button><button class="ds-aside" data-aside="cmp-eda">Nhìn dữ liệu</button><button class="ds-aside" data-aside="cmp-dataframe">Xử lý bảng</button><button class="ds-aside" data-aside="cmp-gbdt">Thư viện boosting</button><button class="ds-aside" data-aside="cmp-tune">Tinh chỉnh</button><button class="ds-aside" data-aside="cmp-track">Ghi thí nghiệm</button><button class="ds-aside" data-aside="cmp-explain">Giải thích mô hình</button><button class="ds-aside" data-aside="cmp-serve">Đóng gói &amp; nơi đặt</button><button class="ds-aside" data-aside="cmp-figure">Hình &amp; sơ đồ</button><button class="ds-aside" data-aside="cmp-write">Viết &amp; trích dẫn</button></p>
 </template>
 
 <template data-node="s-plan14">
@@ -779,7 +1239,7 @@ print(mcnemar(tb, exact=<b>False</b>, correction=<b>True</b>))</div>
 
   <h2>Tuần 1 — đi hết một vòng</h2>
   <div class="ds-day"><p class="ds-day__h">Ngày 1 · ~6h</p><p class="ds-day__t">Khung tư duy + công cụ</p>
-    <p>Chặng 0 trọn vẹn (1h25) → <b>★ Mỗi bước dùng tool gì</b> (1h — đọc sớm để biết cả 14 ngày tới bạn sẽ mở những công cụ nào và lúc nào) → <b>Môi trường</b> (1h) → bắt đầu <b>pandas</b> (2h30). Kết thúc ngày: bạn đọc được một file CSV, xem được <code>.info()</code>, <code>.describe()</code>, lọc và nhóm được dữ liệu.</p></div>
+    <p>Chặng 0 trọn vẹn (1h25) → <b>★ Mỗi bước dùng tool gì</b> (1h — đọc sớm để biết cả 14 ngày tới bạn sẽ mở những công cụ nào và lúc nào) → <b>Môi trường</b> (1h) → <b>★ Làm cả dự án trên trình duyệt</b> (45p — làm luôn 15 phút dựng năm tài khoản ở cuối bài, để ngày 9 không phải học công cụ mới lúc đang gấp) → bắt đầu <b>pandas</b> (2h). Kết thúc ngày: bạn đọc được một file CSV, xem được <code>.info()</code>, <code>.describe()</code>, lọc và nhóm được dữ liệu.</p></div>
   <div class="ds-day"><p class="ds-day__h">Ngày 2 · ~6h30</p><p class="ds-day__t">pandas cho xong + SQL + numpy + sklearn</p>
     <p>Hết <b>pandas</b> → <b>SQL</b> (1h, học ngay sau pandas vì hai thứ này là cùng một tư duy) → <b>numpy</b> (1h) → <b>scikit-learn: 4 khái niệm</b> (2h). Kết thúc ngày: bạn chạy được <code>fit</code>/<code>predict</code> trên dữ liệu đồ chơi và hiểu <code>Pipeline</code> là gì.</p></div>
   <div class="ds-day"><p class="ds-day__h">Ngày 3 · ~5h30</p><p class="ds-day__t">Toán tối thiểu</p>
@@ -889,6 +1349,111 @@ git diff                 <i># xem mình vừa đổi gì</i></div>
     <div class="wb-alert__body"><p class="wb-alert__title">Kiểm tra bạn đã xong bài này</p>
       <p class="wb-alert__msg">Mở terminal, <code>source .venv/bin/activate</code>, gõ <code>python -c "import pandas, sklearn, lightgbm; print('ok')"</code> và thấy chữ <code>ok</code>. Thư mục dự án đã dựng. <code>git log</code> có ít nhất một commit.</p></div>
   </div>
+
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-run">So sánh chỗ viết &amp; chạy code</button></p>
+</template>
+
+<template data-node="t-online">
+  <p>Máy yếu <b>không</b> là rào cản cho bài toán này. Không phải vì bạn sẽ chịu khổ, mà vì <b>mọi mắt xích của dự án đều có bản chạy trong tab trình duyệt</b> — kể cả mắt xích ai cũng tưởng bắt buộc phải có máy khoẻ, là đóng gói Docker.</p>
+  <p>Bài này dựng nguyên một đường đi không đụng tới máy bạn quá việc mở Chrome. Đọc trước bài Colab, vì Colab chỉ là <i>một</i> mắt xích trong đường đi này.</p>
+
+  <h2>Mười bước, làm ở đâu trên trình duyệt</h2>
+  <table>
+    <thead><tr><th>Bước</th><th>Mở tab nào</th><th>Máy bạn phải làm gì</th></tr></thead>
+    <tbody>
+      <tr><td>1 · Đóng khung bài toán</td><td>Google Docs</td><td>Gõ chữ</td></tr>
+      <tr><td>2 · Lấy dữ liệu</td><td>Colab + Google Drive (hoặc Kaggle)</td><td>Không gì cả</td></tr>
+      <tr><td>3 · EDA</td><td>Colab</td><td>Không gì cả</td></tr>
+      <tr><td>4 · Làm sạch</td><td>Colab, sửa file trong <code>src/</code></td><td>Không gì cả</td></tr>
+      <tr><td>5 · Feature engineering</td><td>Colab + github.dev để sửa <code>src/features.py</code></td><td>Không gì cả</td></tr>
+      <tr><td>6 · Chia tập</td><td>Colab</td><td>Không gì cả</td></tr>
+      <tr><td>7 · Huấn luyện &amp; tinh chỉnh</td><td>Colab (bật GPU nếu cần), W&amp;B để ghi kết quả</td><td>Không gì cả</td></tr>
+      <tr><td>8 · Đánh giá &amp; chọn ngưỡng</td><td>Colab</td><td>Không gì cả</td></tr>
+      <tr><td>9 · Đưa lên chạy thật</td><td>GitHub → Hugging Face Spaces dựng Docker hộ bạn</td><td>Không gì cả</td></tr>
+      <tr><td>10 · Giám sát</td><td>Colab chạy định kỳ, hoặc GitHub Actions</td><td>Không gì cả</td></tr>
+      <tr><td>Viết luận văn</td><td>Overleaf + Zotero</td><td>Gõ chữ</td></tr>
+    </tbody>
+  </table>
+  <p>Không có dòng nào trong bảng cần CPU của bạn. Thứ duy nhất máy bạn thật sự phải kham là <b>hiển thị một trang web</b>.</p>
+
+  <h2>Năm tài khoản, và mỗi cái đóng vai gì</h2>
+  <p>Đừng nghĩ theo kiểu “năm công cụ phải học”. Nghĩ theo kiểu <b>năm chỗ, mỗi chỗ giữ một thứ</b> — và mỗi thứ chỉ có đúng một chỗ ở. Nhầm chỗ ở là nguồn gốc của gần hết sự lộn xộn về sau.</p>
+  <table>
+    <thead><tr><th>Chỗ</th><th>Giữ cái gì</th><th>Nguyên tắc</th></tr></thead>
+    <tbody>
+      <tr><td><b>GitHub</b></td><td>Toàn bộ mã nguồn</td><td>Đây là <b>bản thật duy nhất</b> của code. Mọi chỗ khác chỉ mượn về chạy</td></tr>
+      <tr><td><b>Google Drive</b></td><td>File dữ liệu</td><td>Không bao giờ để dữ liệu trong GitHub</td></tr>
+      <tr><td><b>Colab / Kaggle</b></td><td>Không giữ gì cả</td><td>Chỗ chạy, không phải chỗ ở. Đóng tab là mất, và <b>được phép mất</b></td></tr>
+      <tr><td><b>Hugging Face Spaces</b></td><td>Sản phẩm đang chạy</td><td>Tự dựng lại mỗi khi bạn đẩy code lên</td></tr>
+      <tr><td><b>Overleaf</b></td><td>Bản luận văn</td><td>Kết quả số thì chép từ file <code>results.csv</code> trong repo sang, không gõ tay</td></tr>
+    </tbody>
+  </table>
+
+  <div class="wb-alert wb-alert--warning">
+    <span class="wb-alert__icon">!</span>
+    <div class="wb-alert__body"><p class="wb-alert__title">Quy tắc sống còn của cách làm online: code không sống trong notebook</p>
+      <p class="wb-alert__msg">Cám dỗ lớn nhất khi làm trên Colab là gõ thẳng mọi thứ vào ô code. Ba ngày sau bạn có sáu notebook, không cái nào là bản thật, và không tái lập được kết quả nào. <b>Notebook chỉ được chứa: lệnh clone repo, lệnh gọi hàm, và hình vẽ.</b> Mọi logic nằm trong <code>src/*.py</code> trên GitHub. Đây là điều duy nhất trong bài này mà nếu bỏ qua thì cả đường đi sụp.</p></div>
+  </div>
+
+  <div class="ds-codecap">Ô đầu tiên của mọi notebook — chép nguyên</div>
+  <div class="ds-code">!git clone https://github.com/&lt;bạn&gt;/fraud-detection.git
+%cd fraud-detection
+!pip install -q -r requirements.txt
+%load_ext autoreload
+%autoreload 2                     <i># sửa src/ ở tab khác là thấy ngay, không cần khởi động lại</i>
+
+<b>from</b> google.colab <b>import</b> drive
+drive.mount(<b>'/content/drive'</b>)
+DATA = <b>'/content/drive/MyDrive/fraud/data'</b></div>
+  <p>Sửa code thì mở <code>github.dev</code> ở tab bên cạnh (vào repo trên GitHub, bấm phím <code>.</code>), sửa, commit. Quay lại Colab chạy <code>!git pull</code>. Vòng lặp này mất khoảng 20 giây và nó là nhịp làm việc của bạn suốt 14 ngày.</p>
+
+  <h2>Mắt xích ai cũng tưởng cần máy khoẻ: Docker</h2>
+  <p>Bước 9 yêu cầu đóng gói dịch vụ vào một ảnh Docker. Cài Docker Desktop lên một máy yếu là một buổi tối khổ sở, và nhiều người dừng dự án ở đúng đây.</p>
+  <p><b>Bạn không cần cài Docker.</b> Hugging Face Spaces nhận một repo có <code>Dockerfile</code> và <b>tự dựng ảnh trên máy chủ của họ</b>. Bạn đẩy code lên, họ dựng, vài phút sau bạn có một đường dẫn công khai chạy thật — dán thẳng vào luận văn và bấm được ngay trong buổi bảo vệ.</p>
+  <div class="ds-codecap">Đủ để một Space chạy — ba file, không có file nào cần chạy trên máy bạn</div>
+  <div class="ds-code"><i># Dockerfile</i>
+FROM python:3.11-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+<i># HF Spaces gọi vào cổng 7860</i>
+CMD ["uvicorn", "src.serve:app", "--host", "0.0.0.0", "--port", "7860"]</div>
+  <p>Vẫn phải <b>viết</b> <code>Dockerfile</code> — nó là bằng chứng tái lập được và hội đồng sẽ tìm nó trong repo. Bạn chỉ là không phải chạy nó trên máy mình.</p>
+  <p class="wb-help">Cổng, tên biến môi trường và cách khai báo của HF Spaces có thể đổi. Xem tài liệu của họ lúc bạn dựng, đừng chép mù con số ở đây.</p>
+
+  <h2>Ba giới hạn của đường đi online, và cách chống</h2>
+  <table>
+    <thead><tr><th>Giới hạn</th><th>Hậu quả thật</th><th>Cách chống</th></tr></thead>
+    <tbody>
+      <tr><td>Phiên Colab bị ngắt khi để yên lâu</td><td>Đang huấn luyện 40 phút thì mất trắng</td><td>Ghi checkpoint xuống Drive sau mỗi lần chạy; và <b>đừng bao giờ</b> để kết quả chỉ nằm trong RAM của notebook</td></tr>
+      <tr><td>Thư viện bị nâng cấp không báo</td><td>Số của bạn hôm nay khác số người phản biện chạy tháng sau</td><td>Ô đầu luôn <code>pip install -r requirements.txt</code> với phiên bản đã ghim, và in phiên bản ra ngay trong notebook</td></tr>
+      <tr><td>Mạng chập chờn</td><td>Mất phiên giữa chừng</td><td>Việc nặng chạy thành script một lệnh (<code>!python -m src.train</code>) chứ không chạy rải rác từng ô</td></tr>
+    </tbody>
+  </table>
+
+  <div class="wb-alert wb-alert--danger">
+    <span class="wb-alert__icon">!</span>
+    <div class="wb-alert__body"><p class="wb-alert__title">Một ranh giới không được bước qua</p>
+      <p class="wb-alert__msg">Nếu bạn dùng <b>dữ liệu giao dịch thật của công ty</b>, tải nó lên Google Drive, Kaggle hay Hugging Face là đưa dữ liệu khách hàng ra khỏi phạm vi cho phép — kể cả khi thư mục để ở chế độ riêng tư. Trường hợp đó thì hoặc xin dữ liệu đã ẩn danh bằng văn bản, hoặc làm trên máy công ty. Toàn bộ bài này chỉ áp dụng cho <b>dữ liệu công khai hoặc dữ liệu mô phỏng</b>.</p></div>
+  </div>
+
+  <h2>Việc cần làm hôm nay — 15 phút</h2>
+  <ol>
+    <li>Tạo repo <code>fraud-detection</code> trên GitHub, thêm <code>data/</code> vào <code>.gitignore</code>.</li>
+    <li>Vào repo, bấm phím <code>.</code> — xác nhận github.dev mở ra được.</li>
+    <li>Mở Colab, chạy ô đầu ở trên, xác nhận <code>git clone</code> và <code>drive.mount</code> đều chạy.</li>
+    <li>Tạo tài khoản Hugging Face. Chưa cần deploy gì.</li>
+    <li>Tạo tài khoản Overleaf, mở một dự án rỗng.</li>
+  </ol>
+  <p>Làm hết hôm nay thì ngày 9 — lúc cần đưa sản phẩm lên chạy thật và đang gấp — bạn không phải học công cụ mới.</p>
+
+  <p class="ds-more">
+    <button class="ds-aside" data-aside="cmp-run">So sánh chỗ chạy code &amp; chỗ mượn GPU</button>
+    <button class="ds-aside" data-aside="cmp-storage">So sánh chỗ để dữ liệu</button>
+    <button class="ds-aside" data-aside="cmp-serve">So sánh cách đóng gói &amp; nơi đặt sản phẩm</button>
+    <button class="ds-aside" data-aside="cmp-write">So sánh công cụ viết luận văn</button>
+  </p>
 </template>
 
 <template data-node="t-colab">
@@ -1018,6 +1583,8 @@ files.upload()</div>
     <li>Tải <code>creditcard.csv</code> lên Drive vào thư mục <code>fraud/data/</code>. Từ giờ mọi phiên Colab chỉ mất 5 giây để có dữ liệu.</li>
   </ol>
   <p>Làm bốn bước này hôm nay, để tới ngày 10 khi cần GPU thì bạn <b>không phải học công cụ mới trong lúc đang gấp</b>.</p>
+
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-run">So sánh Colab với các chỗ chạy khác</button><button class="ds-aside" data-aside="cmp-storage">So sánh chỗ để dữ liệu</button></p>
 </template>
 
 <template data-node="t-pandas">
@@ -1113,6 +1680,8 @@ df.drop_duplicates(subset=["tx_id"])</div>
     <p class="wb-alert__title">Một chi tiết trung thực về cột <code>hour</code> này</p>
     <p class="wb-alert__msg">Trong bộ <code>creditcard.csv</code>, <code>Time</code> là <b>số giây kể từ giao dịch đầu tiên của bộ dữ liệu</b>, và không ai công bố giao dịch đó xảy ra lúc mấy giờ. Nên cột bạn vừa tạo là "giờ tính từ lúc bắt đầu ghi", <b>lệch một hằng số so với giờ đồng hồ thật</b>. Với việc tìm quy luật tuần hoàn thì không sao — chu kỳ vẫn là 24 và hai đầu vẫn phải nối liền. Nhưng <b>đừng viết vào luận văn câu "gian lận tập trung lúc 2 giờ sáng"</b> nếu dùng bộ này; hãy viết "tập trung ở một khung giờ nhất định trong ngày". Đây đúng là loại chi tiết mà phản biện cẩn thận sẽ bắt.</p>
   </div></div>
+
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-dataframe">pandas · polars · SQL — khi nào đổi</button></p>
 </template>
 
 <template data-node="t-sql">
@@ -1237,6 +1806,8 @@ df  = pd.read_sql("SELECT ... FROM transactions WHERE ts &gt;= %(t0)s",
     <li>Viết một window function tính <code>hist_mean</code>, rồi kiểm tra: giao dịch <b>đầu tiên</b> của mỗi thẻ phải ra <code>NULL</code>. Nếu không phải <code>NULL</code>, bạn đang rò rỉ.</li>
   </ol>
   <p>Bước 3 là bước quan trọng nhất — nó là bản SQL của đúng phép kiểm tra ở bài <b>Biến theo thời gian</b>, và cùng một logic sẽ cứu bạn ở cả hai nơi.</p>
+
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-query">So sánh DuckDB · SQLite · máy chủ thật</button></p>
 </template>
 
 <template data-node="t-numpy">
@@ -1339,16 +1910,7 @@ pipe = Pipeline([("prep", prep), ("model", LGBMClassifier())])</div>
   <p><code>handle_unknown="ignore"</code> là thứ cứu bạn khi chạy thật: hôm nay xuất hiện một thành phố chưa từng có trong tập train, không có tham số này thì API sẽ nổ.</p>
   <p>Bài <b>★ Pipeline + ColumnTransformer</b> ở chặng 4 sẽ ráp đầy đủ, bao gồm cả cách nhét biến đổi sin/cos của bạn vào đây.</p>
 
-  <h2>Bản đồ nhanh: cần gì thì import từ đâu</h2>
-  <table>
-    <tr><th>Việc</th><th>Module</th></tr>
-    <tr><td>Chia tập, cross-validation, tune</td><td><code>sklearn.model_selection</code></td></tr>
-    <tr><td>Scale, one-hot, imputer</td><td><code>sklearn.preprocessing</code>, <code>sklearn.impute</code></td></tr>
-    <tr><td>Ghép cột / ghép bước</td><td><code>sklearn.compose</code>, <code>sklearn.pipeline</code></td></tr>
-    <tr><td>Mô hình tuyến tính</td><td><code>sklearn.linear_model</code></td></tr>
-    <tr><td>Cây, rừng, boosting</td><td><code>sklearn.tree</code>, <code>sklearn.ensemble</code></td></tr>
-    <tr><td>Chỉ số đánh giá</td><td><code>sklearn.metrics</code></td></tr>
-  </table>
+  <p class="ds-more"><button class="ds-aside" data-aside="x-sklearn-imports">Bản đồ import: cần gì lấy từ đâu</button><button class="ds-aside" data-aside="cmp-gbdt">So sánh thư viện boosting</button></p>
 </template>
 
 <template data-node="t-stack">
@@ -1364,6 +1926,8 @@ pipe = Pipeline([("prep", prep), ("model", LGBMClassifier())])</div>
     <tr><td><b>terminal + venv</b></td><td>Chạy script, cài thư viện</td><td>Luôn mở một cửa sổ</td></tr>
     <tr><td><b>git</b></td><td>Lưu mốc, và <b>ghi con số vào commit message</b></td><td>Sau mỗi kết quả có ý nghĩa</td></tr>
   </table>
+
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-run">Chỗ chạy code &amp; GPU</button></p>
 
   <h2>Bước 1 · Đóng khung bài toán</h2>
   <table>
@@ -1386,6 +1950,8 @@ kaggle datasets download -d mlg-ulb/creditcardfraud -p data/raw --unzip
 <i># hoặc từ CSDL công ty — lưu câu truy vấn vào sql/extract.sql</i>
 psql "$DB_URL" -f sql/extract.sql -o data/raw/tx.csv</div>
 
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-query">Cách lấy dữ liệu ra</button><button class="ds-aside" data-aside="cmp-storage">Chỗ để dữ liệu</button></p>
+
   <h2>Bước 3 · EDA</h2>
   <table>
     <tr><td style="width:110px"><b>Công cụ</b></td><td><b>Jupyter</b> + <b>pandas</b> + <b>matplotlib/seaborn</b></td></tr>
@@ -1393,6 +1959,8 @@ psql "$DB_URL" -f sql/extract.sql -o data/raw/tx.csv</div>
     <tr><td><b>Xong thì có</b></td><td>Notebook đã chạy + 3–4 hình trong <code>reports/figures/</code>, trong đó có <b>tỉ lệ gian lận theo giờ</b></td></tr>
     <tr><td><b>Bẫy</b></td><td>EDA trên toàn bộ dữ liệu <i>trước khi</i> chia tập — não bạn trở thành đường rò rỉ, và không công cụ nào phát hiện được.</td></tr>
   </table>
+
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-eda">Công cụ nhìn dữ liệu</button></p>
 
   <h2>Bước 4 · Làm sạch</h2>
   <table>
@@ -1416,6 +1984,8 @@ df["hour_cos"] = np.cos(2*np.pi*df["hour"]/24)
 <i># src/history.py — cần nhiều dòng, chạy TRƯỚC khi vào Pipeline</i>
 g.rolling("1h", closed="left").count()</div>
 
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-dataframe">pandas · polars · SQL</button></p>
+
   <h2>Bước 6 · Chia tập</h2>
   <table>
     <tr><td style="width:110px"><b>Công cụ</b></td><td><b><code>sklearn.model_selection</code></b> — nhưng với dữ liệu có thời gian thì chỉ cần <code>iloc</code></td></tr>
@@ -1434,6 +2004,8 @@ g.rolling("1h", closed="left").count()</div>
   <div class="ds-code">python -m src.train          <i># in PR-AUC, lưu model</i>
 mlflow ui                    <i># mở localhost:5000 xem lại mọi lần chạy</i></div>
 
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-gbdt">Thư viện boosting</button><button class="ds-aside" data-aside="cmp-tune">Cách tinh chỉnh</button><button class="ds-aside" data-aside="cmp-track">Cách ghi thí nghiệm</button></p>
+
   <h2>Bước 8 · Đánh giá &amp; chọn ngưỡng</h2>
   <table>
     <tr><td style="width:110px"><b>Công cụ</b></td><td><b><code>sklearn.metrics</code></b> · <b>SHAP</b> (giải thích) · <b>numpy</b> (bootstrap) · <b>statsmodels</b> (McNemar)</td></tr>
@@ -1441,6 +2013,8 @@ mlflow ui                    <i># mở localhost:5000 xem lại mọi lần ch�
     <tr><td><b>Xong thì có</b></td><td>Bảng kết quả có <b>khoảng tin cậy</b> và <b>cột quy ra tiền</b>, một ngưỡng đã chốt, và 3 hình cho luận văn</td></tr>
     <tr><td><b>Bẫy</b></td><td>Báo cáo accuracy; để ngưỡng 0,5; chọn ngưỡng trên tập test.</td></tr>
   </table>
+
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-explain">Công cụ giải thích mô hình</button></p>
 
   <h2>Bước 9 · Đưa lên chạy thật</h2>
   <table>
@@ -1452,6 +2026,8 @@ mlflow ui                    <i># mở localhost:5000 xem lại mọi lần ch�
   <div class="ds-code">uvicorn src.serve:app --reload --port 8000    <i># rồi mở localhost:8000/docs</i>
 docker build -t fraud-api . &amp;&amp; docker run -p 8000:8000 fraud-api
 streamlit run app.py                          <i># bản demo kéo thanh trượt</i></div>
+
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-serve">Đóng gói &amp; nơi đặt</button></p>
 
   <h2>Bước 10 · Giám sát &amp; huấn luyện lại</h2>
   <table>
@@ -1469,6 +2045,8 @@ streamlit run app.py                          <i># bản demo kéo thanh trượ
     <tr><td><b>MLflow</b></td><td>Trí nhớ</td><td>Bảng kết quả chương 5 xuất thẳng ra, không dựng lại</td></tr>
   </table>
 
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-write">Công cụ viết</button><button class="ds-aside" data-aside="cmp-figure">Công cụ vẽ hình</button></p>
+
   <h2>Một ngày làm việc, theo đúng thứ tự mở công cụ</h2>
   <div class="ds-code">1. terminal   → source .venv/bin/activate
 2. jupyter    → mở 02-experiments.ipynb, chạy Restart &amp; Run All
@@ -1480,20 +2058,8 @@ streamlit run app.py                          <i># bản demo kéo thanh trượ
 8. ghi một dòng vào bảng thí nghiệm</div>
   <p>Tám bước này lặp lại 5–10 lần mỗi ngày trong tuần 2. <b>Bước 7 là bước hay bị bỏ nhất</b> và cũng là bước cứu bạn khi tới ngày 13 cần biết cấu hình nào cho con số nào.</p>
 
-  <h2>Những thứ bạn KHÔNG cần trong 2 tuần này</h2>
-  <p>Nói rõ để bạn khỏi lo lắng — mỗi cái đều xuất hiện trong roadmap.sh và đều <b>không</b> cần cho mục tiêu của bạn:</p>
-  <table>
-    <tr><th>Công cụ</th><th>Nó dành cho ai</th><th>Khi nào bạn mới cần</th></tr>
-    <tr><td>Spark / Hadoop</td><td>Data engineer, dữ liệu &gt; vài trăm GB</td><td>Khi pandas hết RAM. Dữ liệu luận văn của bạn sẽ vừa RAM.</td></tr>
-    <tr><td>Kafka</td><td>Hệ thống streaming thật</td><td>Chỉ cần <i>nói được</i> nó nằm ở đâu trong kiến trúc</td></tr>
-    <tr><td>Kubernetes</td><td>Vận hành nhiều dịch vụ ở quy mô lớn</td><td>Docker là đủ để bảo vệ luận văn</td></tr>
-    <tr><td>Airflow</td><td>Lên lịch pipeline dữ liệu</td><td>Một dòng cron cũng đủ minh hoạ</td></tr>
-    <tr><td>Feature store (Feast…)</td><td>Đội nhiều người dùng chung feature</td><td>Xem bài riêng — 95% dự án không cần</td></tr>
-    <tr><td>Tableau / Power BI</td><td>Báo cáo cho lãnh đạo</td><td>matplotlib đủ cho luận văn</td></tr>
-    <tr><td>TensorFlow / Keras</td><td>Nhánh khác của deep learning</td><td>Chọn PyTorch, đừng học cả hai</td></tr>
-  </table>
-  <p>Nếu hội đồng hỏi “sao không dùng Spark”, câu trả lời đúng và mạnh là: <i>“Dữ liệu 284.807 dòng vừa trong bộ nhớ, dùng Spark chỉ thêm chi phí vận hành mà không cải thiện gì. Khi vượt ngưỡng đó, hướng mở rộng là…”</i> — thể hiện bạn hiểu <b>đánh đổi</b>, chứ không phải bạn thiếu công cụ.</p>
-</template>
+  <p class="ds-more"><button class="ds-aside" data-aside="x-notneeded">Những thứ bạn KHÔNG cần trong 2 tuần này</button></p>
+  </template>
 
 <!-- ============================================================
      CHẶNG 2 — TOÁN TỐI THIỂU
@@ -1519,10 +2085,8 @@ streamlit run app.py                          <i># bản demo kéo thanh trượ
   <p><button class="ds-math" data-math="matmul">Nhân ma trận và luật khớp shape</button></p>
   <p>Thói quen nên tạo ngay tuần này: sau mỗi bước biến đổi dữ liệu, in <code>X.shape</code>. 80% lỗi trong tuần đầu là lỗi shape, và <code>.shape</code> chỉ thẳng vào chỗ sai.</p>
 
-  <h2>Những thứ bạn có thể bỏ qua hoàn toàn</h2>
-  <p>Để bạn khỏi lo: định thức, ma trận nghịch đảo tính bằng tay, không gian con, hạng, chéo hoá, phân rã Jordan. Chúng có trong giáo trình đại số tuyến tính nhưng bạn sẽ không gõ chúng lần nào trong 14 ngày này.</p>
-  <p>Một ngoại lệ đáng biết tên: <b>trị riêng / vector riêng</b> — vì PCA (giảm chiều) chạy trên nó. Nhưng bạn dùng <code>PCA(n_components=10)</code> chứ không tự tính. Biết nó nghĩa là “tìm các hướng mà dữ liệu trải rộng nhất” là đủ.</p>
-</template>
+  <p class="ds-more"><button class="ds-aside" data-aside="x-la-skip">Phần đại số tuyến tính bỏ qua được</button></p>
+  </template>
 
 <template data-node="m-deriv">
   <p>Đây là bài toán quan trọng nhất trong cả chặng 2, vì nó trả lời câu hỏi mà mọi người đều gật đầu mà ít ai nói lại được: <b>“máy học” cụ thể là làm gì?</b></p>
@@ -1554,15 +2118,8 @@ streamlit run app.py                          <i># bản demo kéo thanh trượ
     <tr><td>Loss nhảy lên nhảy xuống</td><td><code>lr</code> hơi lớn, hoặc batch quá nhỏ nên gradient nhiễu</td><td>Giảm <code>lr</code>, tăng batch size</td></tr>
   </table>
 
-  <h2>Vậy cây quyết định và XGBoost có dùng gradient không?</h2>
-  <p>Có, nhưng khác. Một cây đơn lẻ <b>không</b> dùng gradient descent — nó chọn ngưỡng chia bằng cách thử hết và lấy cái giảm độ hỗn loạn nhiều nhất <button class="ds-math" data-math="entropy">(entropy/Gini)</button>. Nhưng <b>Gradient Boosting</b> thì đúng như tên: mỗi cây mới được huấn luyện để dự đoán <i>phần gradient còn lại</i> của các cây trước. Nên hiểu gradient vẫn cần, kể cả khi bạn chỉ dùng LightGBM.</p>
-
-  <div class="wb-alert wb-alert--info">
-    <span class="wb-alert__icon">i</span>
-    <div class="wb-alert__body"><p class="wb-alert__title">Bạn sẽ không phải tính đạo hàm bằng tay, một lần nào</p>
-      <p class="wb-alert__msg">PyTorch/TensorFlow có <b>autograd</b>: bạn viết phép tính xuôi, thư viện tự dựng đồ thị và tính ngược. Bạn cần hiểu <i>ý nghĩa</i> để đọc được vì sao loss không giảm — không cần kỹ năng đạo hàm.</p></div>
-  </div>
-</template>
+  <p class="ds-more"><button class="ds-aside" data-aside="x-tree-gradient">Cây và XGBoost có dùng gradient không?</button></p>
+  </template>
 
 <template data-node="m-prob">
   <p>Xác suất trong data science phục vụ hai việc rất cụ thể: <b>mô tả một cột dữ liệu</b> (nó thường bao nhiêu, dao động cỡ nào) và <b>hiểu đầu ra của mô hình</b> (0,73 nghĩa là gì).</p>
@@ -1792,6 +2349,8 @@ sns.heatmap(df[cols].corr(), cmap="coolwarm", center=0)</div>
     <div class="wb-alert__body"><p class="wb-alert__title">Bẫy EDA: đừng nhìn tập test</p>
       <p class="wb-alert__msg">Nếu bạn EDA trên toàn bộ dữ liệu rồi mới chia, chính <b>bộ não bạn</b> trở thành đường rò rỉ: bạn chọn feature dựa trên những gì bạn thấy ở cả tập test. Đây là loại leakage không công cụ nào phát hiện được. Cách làm đúng: chia tập <b>trước</b>, EDA chỉ trên train, và chỉ mở tập test đúng một lần ở cuối.</p></div>
   </div>
+
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-eda">So sánh công cụ nhìn dữ liệu</button></p>
 </template>
 
 <template data-node="d-clean">
@@ -1854,6 +2413,8 @@ df["city"]    = df["city"].str.strip().str.lower()   <i># " Hà Nội " và "hà
     <tr><td>Làm một lần, ghi ra <code>data/processed/</code></td><td>Nằm trong <code>Pipeline</code>, chạy lại mỗi lần dự đoán</td></tr>
   </table>
   <p>Quy tắc thực dụng: nếu phép biến đổi <b>học tham số từ dữ liệu</b> (trung vị để điền, μ/σ để scale, danh sách hạng mục để one-hot) thì nó <b>phải</b> nằm trong Pipeline, dù bạn gọi nó là làm sạch. Chỉ những phép sửa tuyệt đối (đổi kiểu, bỏ trùng) mới được làm ngoài.</p>
+
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-dataframe">pandas · polars · SQL — khi nào đổi</button></p>
 </template>
 
 <template data-node="d-leak">
@@ -1966,17 +2527,7 @@ tscv = TimeSeriesSplit(n_splits=5)
           <i># fold 2: train [0:200]   valid [200:300]  ← train lớn dần</i></div>
   <p>Tập train lớn dần theo từng fold, và validation <b>luôn nằm sau</b> train về thời gian. Đây là mô phỏng trung thực cách hệ thống thật hoạt động: bạn train trên mọi thứ đã biết và dự đoán ngày mai.</p>
 
-  <h3>Phân tầng (khi không có thời gian)</h3>
-  <div class="ds-code"><b>from</b> sklearn.model_selection <b>import</b> train_test_split
-X_tr, X_te, y_tr, y_te = train_test_split(
-    X, y, test_size=0.2, stratify=y, random_state=42)   <i># ← stratify là bắt buộc khi lệch</i></div>
-  <p>Không có <code>stratify=y</code>, với 0,17% dương, một tập test 1.000 dòng có thể tình cờ chứa 0 ca gian lận — và mọi chỉ số thành vô nghĩa.</p>
-
-  <h3>Theo nhóm</h3>
-  <div class="ds-code"><b>from</b> sklearn.model_selection <b>import</b> GroupShuffleSplit
-gss = GroupShuffleSplit(test_size=0.2, random_state=42)
-tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
-
+  <p class="ds-more"><button class="ds-aside" data-aside="x-split-other">Hai cách chia khác: phân tầng &amp; theo nhóm</button></p>
   <h2>Kiểm tra sau khi chia — bốn dòng, làm mỗi lần</h2>
   <div class="ds-code"><b>assert</b> train.ts.max() &lt; test.ts.min(), "rò rỉ thời gian!"
 <b>assert</b> <b>not</b> set(train.card_id) &amp; set(test.card_id), "rò rỉ nhóm!"   <i># nếu chia theo nhóm</i>
@@ -2265,17 +2816,7 @@ SplineTransformer(n_knots=12, degree=3, extrapolation="periodic")</div>
       <p class="wb-alert__msg">LightGBM/XGBoost chia theo ngưỡng, không đo khoảng cách. Chúng biểu diễn được "giờ ≥ 22 HOẶC giờ ≤ 3" bằng hai lần chia — hoàn toàn ổn với cột <code>hour</code> thô. Nhiều người vẫn thêm sin/cos vì rẻ và đôi khi giúp thêm chút, nhưng nếu mô hình chính của bạn là LightGBM thì <b>đừng kỳ vọng cải thiện lớn</b>, và hãy đo trước khi khẳng định. Đây cũng chính là loại nhận định làm luận văn của bạn trông chín chắn hơn.</p></div>
   </div>
 
-  <h2>Còn những cột nào có tính chu kỳ</h2>
-  <table>
-    <tr><th>Cột</th><th>Chu kỳ $T$</th><th>Ghi chú</th></tr>
-    <tr><td>Giờ trong ngày</td><td>24</td><td>Dùng nhiều nhất</td></tr>
-    <tr><td>Phút trong giờ</td><td>60</td><td>Ít hữu ích trừ khi có mẫu hình theo phút</td></tr>
-    <tr><td>Thứ trong tuần</td><td>7</td><td>Chủ nhật và thứ Hai liền nhau</td></tr>
-    <tr><td>Ngày trong tháng</td><td>30/31</td><td>Cẩn thận: tháng dài ngắn khác nhau</td></tr>
-    <tr><td>Tháng trong năm</td><td>12</td><td>Tháng 12 và tháng 1 liền nhau</td></tr>
-    <tr><td>Hướng gió, góc, kinh độ</td><td>360</td><td>359° và 1° chỉ cách nhau 2°</td></tr>
-  </table>
-
+  <p class="ds-more"><button class="ds-aside" data-aside="x-cyclic-more">Còn cột nào có tính chu kỳ nữa</button></p>
   <h2>Cách viết vào luận văn</h2>
   <div class="ds-code">"Các đặc trưng thời gian mang bản chất tuần hoàn: 23:00 và 00:00 chỉ
 cách nhau một giờ nhưng biểu diễn số nguyên đặt chúng ở hai cực của
@@ -2504,24 +3045,8 @@ score = pipe.predict_proba(pd.DataFrame([tx_dict]))[0, 1]</div>
     <tr><td><b>Tái lập được</b></td><td>Người phản biện tải repo về, <code>joblib.load</code>, chạy ra đúng số của bạn.</td></tr>
   </table>
 
-  <h2>Hai lỗi hay gặp và cách sửa</h2>
-  <h3>“Tôi không lấy được tên feature sau khi biến đổi”</h3>
-  <div class="ds-code">names = pipe.named_steps["prep"].get_feature_names_out()
-imp = pipe.named_steps["model"].feature_importances_
-pd.Series(imp, index=names).sort_values(ascending=<b>False</b>).head(20)</div>
-  <p>Cần <code>verbose_feature_names_out=False</code> trong ColumnTransformer để tên gọn (<code>city_HaNoi</code> thay vì <code>cat__city_HaNoi</code>).</p>
-
-  <h3>“FunctionTransformer của tôi lỗi khi dự đoán một dòng”</h3>
-  <p>Hàm của bạn phải chạy được với DataFrame <b>một dòng</b>. Kiểm tra ngay khi viết:</p>
-  <div class="ds-code"><b>assert</b> add_derived(df_train.head(1)).shape[0] == 1</div>
-  <p>Đặt <code>assert</code> này trong test. Nó sẽ bắt lỗi vào ngày bạn vô tình dùng một phép tính cần nhiều dòng (như <code>.rolling()</code>) bên trong hàm — mà phép đó thuộc loại C, phải tính bên ngoài Pipeline.</p>
-
-  <div class="wb-alert wb-alert--info">
-    <span class="wb-alert__icon">i</span>
-    <div class="wb-alert__body"><p class="wb-alert__title">Ranh giới cần nhớ</p>
-      <p class="wb-alert__msg">Trong Pipeline chỉ đặt được các phép biến đổi <b>theo từng dòng</b> (sin/cos, log, tỉ lệ) và các phép <b>học tham số từ train</b> (scale, one-hot). Các feature cần <b>lịch sử nhiều dòng</b> (<code>n_tx_1h</code>, <code>hist_mean</code>) phải được tính <i>trước</i> khi vào Pipeline — lúc train bằng pandas, lúc serve bằng truy vấn CSDL hoặc Redis. Vẽ đúng ranh giới này trong sơ đồ kiến trúc của luận văn.</p></div>
-  </div>
-</template>
+  <p class="ds-more"><button class="ds-aside" data-aside="x-pipeline-bugs">Hai lỗi Pipeline hay gặp &amp; cách sửa</button></p>
+  </template>
 
 <template data-node="f-select">
   <p>Sau vài vòng feature engineering bạn có 200 cột. Câu hỏi: giữ hết hay bỏ bớt?</p>
@@ -2632,10 +3157,8 @@ RFECV(estimator=LGBMClassifier(), step=5, cv=5, scoring="average_precision")</di
   </ol>
   <p>Rất nhiều người làm ngược: bắt đầu từ bước 5 hoặc 6, và bỏ qua bước 4 nơi phần lớn giá trị nằm.</p>
 
-  <h2>Mô hình có phải "học thuộc" không?</h2>
-  <p>Một hiểu nhầm phổ biến cần gỡ: nhiều người nghĩ mô hình <i>ghi nhớ</i> dữ liệu huấn luyện rồi tra cứu lại. Nghe hợp lý vì "học" trong tiếng Việt gợi ý học thuộc, và vì mô hình đúng là hoạt động tốt hơn trên dữ liệu đã thấy.</p>
-  <p>Nhưng cái mô hình giữ lại chỉ là <b>một bộ tham số</b> — với logistic regression là 30 con số, dữ liệu gốc bị vứt đi hoàn toàn. Nó nén hàng trăm nghìn dòng thành vài chục tham số, nên nó <b>bắt buộc</b> phải bỏ qua chi tiết và giữ lại quy luật. Khi mô hình <i>overfit</i>, đó chính là lúc nó tiến gần tới học thuộc — và đó là lỗi, không phải mục tiêu.</p>
-</template>
+  <p class="ds-more"><button class="ds-aside" data-aside="x-memorize">Mô hình có phải “học thuộc” không?</button></p>
+  </template>
 
 <template data-node="ml-linear">
   <p>Hồi quy tuyến tính là mô hình đơn giản nhất, và <b>chính vì đơn giản nên nó là baseline không thể thiếu</b>. Nếu mô hình phức tạp của bạn không thắng được nó một cách rõ ràng, bạn chưa có gì để viết.</p>
@@ -2737,10 +3260,8 @@ pd.DataFrame({"feature": names, "coef": coefs, "odds_ratio": odds}) \
   <h2>Thấy tận mắt</h2>
   <div data-viz="gd"></div>
 
-  <h2>Còn cây và boosting thì "học" thế nào</h2>
-  <p>Cây đơn lẻ không dùng gradient — nó thử mọi ngưỡng chia và giữ cái làm giảm độ hỗn loạn nhiều nhất <button class="ds-math" data-math="entropy">(Gini/entropy)</button>.</p>
-  <p>Nhưng <b>Gradient Boosting</b> đúng như tên gọi: mỗi cây mới được huấn luyện để dự đoán <b>phần gradient còn lại</b> của tổ hợp các cây trước. Nói cách khác, cây thứ $k$ học cách sửa lỗi của $k-1$ cây trước đó. Đó là ý nghĩa của chữ "boosting", và là lý do bạn vẫn cần hiểu gradient dù chỉ dùng LightGBM.</p>
-</template>
+  <p class="ds-more"><button class="ds-aside" data-aside="x-tree-learn">Cây và boosting thì “học” thế nào</button></p>
+  </template>
 
 <template data-node="ml-trees">
   <p>Đây là gia đình mô hình bạn sẽ dùng làm mô hình chính. Ba tầng, mỗi tầng sửa nhược điểm của tầng trước.</p>
@@ -2813,7 +3334,8 @@ print("số cây thực dùng:", model.best_iteration_)</div>
   <p>Đặt <code>n_estimators</code> cao (2000) và để <code>early_stopping</code> dừng khi điểm validation ngừng cải thiện trong 100 vòng. Bạn không phải đoán số cây; thuật toán tự tìm. <b>Điều kiện:</b> tập <code>eval_set</code> phải là validation, tuyệt đối không phải test.</p>
 
   <h2>XGBoost hay LightGBM?</h2>
-  <p>Khác biệt thực tế nhỏ. LightGBM nhanh hơn đáng kể trên dữ liệu lớn và xử lý cột hạng mục nguyên bản. XGBoost tài liệu nhiều hơn và ổn định hơn trên dữ liệu rất nhỏ. <b>Chọn một, đừng tốn thời gian so sánh</b> — trừ khi việc so sánh chính là đóng góp của luận văn (nó không nên là).</p>
+  <p>Khác biệt thực tế nhỏ hơn nhiều so với khác biệt do một nhóm feature tốt mang lại. <b>Chọn một, đừng tốn thời gian so sánh</b> — trừ khi việc so sánh chính là đóng góp của luận văn (nó không nên là).</p>
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-gbdt">So sánh LightGBM · XGBoost · CatBoost · sklearn</button></p>
 </template>
 
 <template data-node="ml-overfit">
@@ -3096,6 +3618,8 @@ print(study.best_params, study.best_value)</div>
     <tr><td>Ensemble 5 mô hình</td><td>+0,003 → +0,01</td><td>vài giờ, khó triển khai</td></tr>
   </table>
   <p>Bảng này giải thích thứ tự làm việc: <b>đừng tune trước khi feature xong</b>. Với 2 tuần, một lần Optuna 60 trial vào ngày 9 là đủ.</p>
+
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-tune">So sánh grid · random · Optuna</button></p>
 </template>
 
 <template data-node="ml-shap">
@@ -3138,14 +3662,7 @@ shap.plots.waterfall(exp[0])                            <i># MỘT ca cụ thể
     <li><b>Chậm</b> trên dữ liệu lớn. Lấy mẫu 1.000–5.000 dòng là đủ cho hình trong luận văn.</li>
   </ul>
 
-  <h2>Các cách giải thích khác, biết tên là đủ</h2>
-  <table>
-    <tr><th>Cách</th><th>Khác gì SHAP</th></tr>
-    <tr><td><b>Permutation importance</b></td><td>Chỉ toàn cục, nhưng nhanh và trực tiếp đo tác động lên chỉ số</td></tr>
-    <tr><td><b>Partial dependence plot</b></td><td>Cho thấy <i>hình dạng</i> quan hệ giữa một feature và dự đoán</td></tr>
-    <tr><td><b>LIME</b></td><td>Tiền thân của SHAP, kém ổn định hơn — không cần dùng nữa</td></tr>
-    <tr><td><b>Counterfactual</b></td><td>"Cần đổi gì để giao dịch này được duyệt?" — hữu ích khi cần giải thích cho khách hàng</td></tr>
-  </table>
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-explain">So sánh SHAP · permutation · PDP · LIME</button></p>
 </template>
 
 <template data-node="ml-unsup">
@@ -3440,14 +3957,7 @@ vec = emb(torch.tensor([1234]))   <i># → vector 32 chiều của cửa hàng #
   <p>Một bộ Q,K,V chỉ học được một kiểu quan hệ. Transformer chạy 8–16 "đầu" song song với các ma trận chiếu khác nhau. Khi phân tích các mô hình đã train, người ta thấy các đầu tự phân công: đầu này chuyên quan hệ ngữ pháp, đầu kia chuyên đại từ chỉ về đâu, đầu khác chuyên token liền kề.</p>
   <p><b>Không ai gán nhiệm vụ đó.</b> Sự phân công nổi lên từ quá trình tối ưu — và đây là một trong những điều đẹp nhất của kiến trúc này.</p>
 
-  <h2>Ba loại attention bạn sẽ gặp tên</h2>
-  <table>
-    <tr><th>Loại</th><th>Ai nhìn ai</th><th>Dùng ở</th></tr>
-    <tr><td><b>Self-attention</b></td><td>Token trong một chuỗi nhìn nhau</td><td>Mọi khối Transformer</td></tr>
-    <tr><td><b>Masked self-attention</b></td><td>Chỉ nhìn về <b>quá khứ</b>, che tương lai</td><td>GPT và mọi mô hình sinh văn bản — nếu không nó sẽ "nhìn trộm" từ cần đoán</td></tr>
-    <tr><td><b>Cross-attention</b></td><td>Chuỗi A nhìn chuỗi B</td><td>Dịch máy: câu đích nhìn câu nguồn</td></tr>
-  </table>
-
+  <p class="ds-more"><button class="ds-aside" data-aside="x-attn-kinds">Ba loại attention bạn sẽ gặp tên</button></p>
   <h2>Cái giá: bình phương độ dài</h2>
   <p>Mỗi token nhìn mọi token → ma trận $n \times n$. Chuỗi 1.000 token = 1 triệu ô. Gấp đôi độ dài = gấp bốn chi phí.</p>
   <p>Đây là lý do context window đắt đỏ, và là chủ đề của hàng trăm paper (FlashAttention, Linformer, Performer, sliding window...). <b>Cũng là một mỏ đề tài luận văn</b> nếu bạn muốn hướng lý thuyết hơn.</p>
@@ -3503,17 +4013,7 @@ LayerNorm
       <p class="wb-alert__msg">Đây <b>chính xác</b> là ý tưởng bạn dùng cho giờ 23h–0h, chỉ khác: thay vì một chu kỳ 24 giờ, họ dùng nhiều chu kỳ chồng lên nhau (từ rất ngắn tới rất dài). Nhờ vậy mô hình vừa phân biệt được vị trí liền kề, vừa nắm được khoảng cách xa. Nếu bạn hiểu bài <b>Biến chu kỳ</b> thì bạn đã hiểu positional encoding — nó là cùng một mẹo, áp cho vị trí thay vì cho giờ. Các mô hình hiện đại (LLaMA, GPT-NeoX) dùng <b>RoPE</b>, vẫn dựa trên phép quay trên vòng tròn, chỉ tinh vi hơn.</p></div>
   </div>
 
-  <h2>Ba biến thể — biết để đọc paper</h2>
-  <table>
-    <tr><th>Loại</th><th>Cấu trúc</th><th>Giỏi gì</th><th>Ví dụ</th></tr>
-    <tr><td><b>Encoder-only</b></td><td>Nhìn cả hai chiều</td><td>Hiểu, phân loại, embedding</td><td>BERT, PhoBERT (tiếng Việt)</td></tr>
-    <tr><td><b>Decoder-only</b></td><td>Masked, chỉ nhìn quá khứ</td><td>Sinh văn bản</td><td>GPT, LLaMA, Claude</td></tr>
-    <tr><td><b>Encoder-decoder</b></td><td>Cả hai + cross-attention</td><td>Dịch, tóm tắt</td><td>T5, mô hình gốc 2017</td></tr>
-  </table>
-
-  <h2>Đọc lại paper gốc</h2>
-  <p>Paper <i>Attention Is All You Need</i> (Vaswani và cộng sự, 2017) chỉ dài 11 trang. Sau bài này bạn đọc được hình 1 và mục 3 của nó. <b>Đọc một paper gốc từ đầu tới cuối là một trải nghiệm nên có trước khi viết luận văn</b> — nó cho bạn thấy một đóng góp thật trông như thế nào.</p>
-
+  <p class="ds-more"><button class="ds-aside" data-aside="x-tf-variants">Ba biến thể Transformer &amp; paper gốc</button></p>
   <h2>Cần biết bao nhiêu cho luận văn về dữ liệu bảng?</h2>
   <p>Nếu đề tài của bạn là fraud detection trên dữ liệu bảng, bạn cần <b>giải thích được</b> Transformer nếu bị hỏi (rất có thể bị hỏi), nhưng không cần dùng. Trả lời tốt: <i>"Transformer vượt trội với dữ liệu chuỗi và văn bản nhờ self-attention nắm được phụ thuộc xa. Với dữ liệu bảng có số chiều vừa phải, các so sánh gần đây cho thấy gradient boosting vẫn tốt hơn, nên tôi chọn LightGBM; hướng mở rộng là mô hình hoá chuỗi giao dịch bằng Transformer."</i></p>
 </template>
@@ -3556,17 +4056,8 @@ LayerNorm
     <tr><td>Viết code, viết nháp luận văn</td><td><b>Có</b>, nhưng bạn phải kiểm chứng từng dòng và tự hiểu — hội đồng sẽ hỏi</td></tr>
   </table>
 
-  <h2>Từ vựng để không bị hớ</h2>
-  <table>
-    <tr><th>Từ</th><th>Nghĩa gọn</th></tr>
-    <tr><td>Token</td><td>Mảnh từ. ~1 token ≈ 4 ký tự tiếng Anh; tiếng Việt tốn token hơn</td></tr>
-    <tr><td>Context window</td><td>Số token tối đa mô hình nhìn được một lần</td></tr>
-    <tr><td>Temperature</td><td>Độ ngẫu nhiên khi sinh. 0 = ổn định nhất <button class="ds-math" data-math="softmax">(cơ chế)</button></td></tr>
-    <tr><td>LoRA / QLoRA</td><td>Fine-tune chỉ một phần nhỏ tham số — rẻ hơn nhiều lần</td></tr>
-    <tr><td>Quantization</td><td>Giảm độ chính xác số (16-bit → 4-bit) để chạy trên máy nhỏ</td></tr>
-    <tr><td>Hallucination</td><td>Bịa ra thông tin nghe hợp lý nhưng sai</td></tr>
-  </table>
-</template>
+  <p class="ds-more"><button class="ds-aside" data-aside="x-llm-vocab">Từ vựng LLM để không bị hớ</button></p>
+  </template>
 
 <template data-node="dl-tab">
   <p>Câu hỏi thẳng: dữ liệu của bạn là bảng, vậy có nên dùng deep learning không? <b>Câu trả lời ngắn: không, nhưng phải biết vì sao để trả lời hội đồng.</b></p>
@@ -3729,6 +4220,8 @@ print(df.Class.mean())          <i># ~0,002 = 0,2%</i>
 print(df.groupby("hour").Class.mean())   <i># thấy rõ đỉnh lúc rạng sáng</i></div>
   <p>Bộ này rất hữu ích vì <b>bạn biết trước sự thật</b>: nếu mô hình của bạn không tìm ra được quy luật theo giờ, thì lỗi nằm ở code chứ không phải ở dữ liệu.</p>
   <p>Con số <code>-8.8</code> là cái điều chỉnh để tỉ lệ dương ra đúng cỡ thực tế. Nếu bạn đổi <code>1.8</code> hay hệ số của <code>amount</code>, tỉ lệ dương sẽ trôi theo — cứ in <code>df.Class.mean()</code> rồi chỉnh hằng số đầu tiên lên/xuống cho tới khi vừa ý. Đây cũng là một bài tập tốt: nó cho bạn cảm giác trực tiếp về <b>log-odds</b>, cộng thêm 1 vào hằng số đó là nhân odds lên $e \approx 2{,}7$ lần.</p>
+
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-storage">So sánh chỗ để vài trăm MB dữ liệu</button></p>
 </template>
 
 <template data-node="pr-code">
@@ -4075,6 +4568,8 @@ n1h    = st.slider("Số giao dịch trong 1 giờ qua", 0, 20, 6)
     st.progress(<b>float</b>(p))
     st.write("CHẶN" <b>if</b> p &gt;= 0.9 <b>else</b> "XÁC MINH" <b>if</b> p &gt;= 0.4 <b>else</b> "CHO QUA")</div>
   <p>Một file, 20 dòng, và hội đồng <b>kéo thanh giờ từ 14h sang 23h rồi thấy điểm rủi ro nhảy lên</b>. Không có slide nào thuyết phục bằng cảnh đó.</p>
+
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-serve">So sánh khung phục vụ &amp; nơi đặt</button></p>
 </template>
 
 <template data-node="pr-monitor">
@@ -4134,6 +4629,8 @@ n1h    = st.slider("Số giao dịch trong 1 giờ qua", 0, 20, 6)
     <div class="wb-alert__body"><p class="wb-alert__title">Vòng phản hồi tự đầu độc</p>
       <p class="wb-alert__msg">Mô hình chặn giao dịch → giao dịch đó không có nhãn thật → dữ liệu train tương lai chỉ chứa những gì mô hình <b>cho qua</b> → mô hình ngày càng tự tin về vùng nó vốn đã đúng và mù về vùng nó đang chặn. Đây là <i>selective labels problem</i>, và cách giảm thiểu chuẩn là <b>cho qua ngẫu nhiên một tỉ lệ nhỏ</b> (0,5–1%) các giao dịch đáng lẽ bị chặn, để thu nhãn thật. Nêu được vấn đề này và giải pháp trong luận văn là một điểm cộng lớn.</p></div>
   </div>
+
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-track">So sánh cách ghi lại kết quả theo dõi</button></p>
 </template>
 
 <template data-node="pr-mlops">
@@ -4175,17 +4672,7 @@ jobs:
       - run: pytest -q</div>
   <p>Mười lăm dòng, và mỗi lần push bạn biết ngay code còn chạy không. Dấu tick xanh trên repo cũng là một tín hiệu chất lượng khi hội đồng xem.</p>
 
-  <h2>Những thứ KHÔNG cần</h2>
-  <table>
-    <tr><th>Công cụ</th><th>Khi nào mới cần</th></tr>
-    <tr><td>Kubernetes</td><td>Nhiều dịch vụ, nhiều bản sao, tự mở rộng theo tải</td></tr>
-    <tr><td>Kubeflow / Airflow</td><td>Nhiều pipeline chạy theo lịch, phụ thuộc lẫn nhau</td></tr>
-    <tr><td>Feature store</td><td>Nhiều mô hình dùng chung feature</td></tr>
-    <tr><td>Model registry riêng</td><td>MLflow đã có sẵn ở mức đủ dùng</td></tr>
-    <tr><td>Seldon / KServe</td><td>Triển khai mô hình ở quy mô lớn</td></tr>
-  </table>
-  <p>Nhắc lại nguyên tắc dùng được cho mọi câu hỏi kiểu này: <b>nêu được vấn đề mà công cụ giải quyết, nói mình giải quyết nó bằng cách nào ở quy mô hiện tại, và chỉ ra khi nào thì cần công cụ đó.</b> Câu trả lời như vậy mạnh hơn nhiều so với việc cài thêm công cụ để trưng.</p>
-
+  <p class="ds-more"><button class="ds-aside" data-aside="x-mlops-skip">Những thứ MLOps KHÔNG cần làm</button></p>
   <h2>Danh sách kiểm tra repo trước khi nộp</h2>
   <ul>
     <li><code>README.md</code> — mô tả bài toán, cách cài, cách chạy, kết quả chính</li>
@@ -4196,6 +4683,8 @@ jobs:
     <li>Không có dữ liệu nhạy cảm, không có khoá API trong repo</li>
     <li><code>models/metrics.json</code> khớp với con số trong luận văn</li>
   </ul>
+
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-track">So sánh CSV · MLflow · W&amp;B</button></p>
 </template>
 
 <template data-node="pr-cost">
@@ -4573,6 +5062,8 @@ giống ngẫu nhiên với độ lệch chuẩn 0,006, cho thấy tính ổn đ
     <p class="wb-alert__title">Dùng AI để viết luận văn — ranh giới</p>
     <p class="wb-alert__msg">Dùng để sửa văn phong, dịch, gợi ý bố cục, tìm lỗi logic thì bình thường và ngày càng phổ biến. Nhưng <b>bạn phải hiểu và bảo vệ được từng câu</b> — hội đồng sẽ hỏi vào chi tiết, và một đoạn văn bạn không tự viết ra thường là đoạn bạn không trả lời được. Ngoài ra hãy kiểm tra quy định của trường bạn về công bố việc sử dụng AI; nhiều nơi đã yêu cầu ghi rõ.</p>
   </div></div>
+
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-figure">So sánh công cụ vẽ hình cho luận văn</button></p>
 </template>
 
 <template data-node="th-tools">
@@ -4620,6 +5111,8 @@ plt.savefig("reports/figures/pr_curve.pdf")   <i># PDF = vector, không vỡ khi
     <li>Link tới repo code, và repo đó chạy được</li>
     <li>Đã đọc to phần tóm tắt — nếu tự thấy khó hiểu thì người đọc cũng vậy</li>
   </ul>
+
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-write">So sánh Overleaf · Word · Typst</button><button class="ds-aside" data-aside="cmp-figure">So sánh công cụ vẽ hình &amp; sơ đồ</button></p>
 </template>
 
 <template data-node="th-defense">
@@ -5015,7 +5508,8 @@ const TREE = [
   ]},
   { id:'p1', t:'1 · Công cụ — biết gõ trước khi biết nghĩ', kids:[
     { id:'t-env',      t:'Môi trường: Python, venv, notebook',         m:60,  p:'core' },
-    { id:'t-colab',    t:'Google Colab — làm được gì, khi nào dùng',   m:45,  p:'good' },
+    { id:'t-online',   t:'★ Làm cả dự án trên trình duyệt (máy yếu)',  m:45,  p:'core' },
+    { id:'t-colab',    t:'Google Colab — làm được gì, khi nào dùng',   m:45,  p:'core' },
     { id:'t-pandas',   t:'pandas — 15 thao tác chiếm 90% việc',        m:150, p:'core' },
     { id:'t-sql',      t:'SQL — lấy dữ liệu ra khỏi cơ sở dữ liệu',    m:60,  p:'core' },
     { id:'t-numpy',    t:'numpy — vector hoá & mảng',                  m:60,  p:'core' },
@@ -5104,6 +5598,84 @@ const PRIO = {
   skim: { label:'Biết tên là đủ',  cls:'wb-cap wb-cap--dashed wb-cap--sm' },
 };
 
+/* Kết mỗi bài bằng hai câu: bạn vừa cầm được cái gì, và bài kế dùng nó làm gì.
+   Câu thứ hai là chỗ tạo ra lực kéo — nó mở một vòng chưa khép, nên người đọc
+   sang bài sau vì tò mò chứ không vì kỷ luật. Viết rời khỏi template để mọi bài
+   chắc chắn có, và để đọc một lượt là kiểm được cả mạch có liền không.
+   [đã có, bài sau dùng để] */
+const PAYOFF = {
+  's-how':      ['Cách đọc trang này: ba nhãn ưu tiên, toán nằm trong popup, thông tin phụ nằm trong ngăn bên phải.', 'Bài sau dựng cái khung 10 bước để bạn treo mọi thứ còn lại lên.'],
+  's-pipeline': ['Khung 10 bước — từ nay mọi kỹ thuật bạn học đều có một địa chỉ để treo vào.', 'Bài sau là bảng tra ngược dùng đúng 10 địa chỉ đó.'],
+  's-lookup':   ['Bảng tra ngược: có triệu chứng cụ thể → ra ngay bước nào, bài nào, công cụ nào.', 'Bài sau xếp 10 bước đó vào 14 ngày có giờ cụ thể.'],
+  's-plan14':   ['Lịch 14 ngày, cắt được nếu bạn có ít giờ hơn dự kiến.', 'Hết phần dẫn nhập. Bài sau bắt tay làm thật: một giờ để có môi trường chạy được.'],
+  't-env':      ['Môi trường chạy được, cấu trúc thư mục dự án, repo git đã khởi tạo.', 'Máy bạn yếu, nên bài sau dựng đường đi thứ hai: làm toàn bộ trên trình duyệt.'],
+  't-online':   ['Một đường đi 100% trình duyệt: viết code, chạy, huấn luyện, triển khai, viết luận văn — không cần máy khoẻ.', 'Bài sau đi sâu vào mắt xích trung tâm của đường đi đó.'],
+  't-colab':    ['Colab dùng đúng cách: repo là gốc, Colab chỉ là chỗ chạy; và biết GPU đáng bật lúc nào.', 'Bài sau là thứ bạn sẽ gõ trong đó suốt 14 ngày.'],
+  't-pandas':   ['Năm nhóm thao tác pandas đủ cho toàn bộ dự án, và bài tập đã làm xong.', 'pandas cần có dữ liệu để chạm vào — bài sau là cách lấy nó ra khỏi cơ sở dữ liệu.'],
+  't-sql':      ['Sáu mệnh đề SQL, và window function tính feature đúng mốc thời gian mà không rò rỉ.', 'Bài sau là lớp nền bên dưới pandas — nơi phần lớn thông báo lỗi sinh ra.'],
+  't-numpy':    ['Shape, broadcasting, seed — ba thứ quyết định bạn đọc được lỗi hay ngồi đoán.', 'Bài sau ráp chúng vào bộ khung mà mọi mô hình bạn dùng đều tuân theo.'],
+  't-sklearn':  ['Bốn khái niệm sklearn: estimator, transformer, Pipeline, ColumnTransformer.', 'Bài sau nói ở mỗi bước trong 10 bước thì mở công cụ nào và gõ gì.'],
+  't-stack':    ['Sổ tay theo bước: mở gì, gõ gì, xong có gì trong tay, bẫy nằm ở đâu.', 'Chặng sau là phần toán tối thiểu để bạn đọc hiểu những con số công cụ in ra.'],
+  'm-vector':   ['Ba ý hình học: một dòng là một điểm, khoảng cách phụ thuộc đơn vị, ma trận là cả bảng.', 'Bài sau dùng đúng hình học đó để trả lời "máy học bằng cách nào".'],
+  'm-deriv':    ['Câu trả lời cho câu hỏi ít ai nói thẳng: độ dốc, gradient, và bước đi ngược dốc.', 'Bài sau chuyển sang ngôn ngữ mà đầu ra của mô hình được viết bằng.'],
+  'm-prob':     ['Đọc được một cột dữ liệu, và đọc đúng con số 0–1 mà mô hình trả ra.', 'Bài sau giải thích vì sao 99% chính xác vẫn có thể hoàn toàn vô dụng.'],
+  'm-bayes':    ['Lý do một mô hình rất chính xác vẫn báo động sai gần hết — bằng số, không bằng cảm giác.', 'Bài sau là phần toán hội đồng soi kỹ nhất: chứng minh chênh lệch là thật.'],
+  'm-infer':    ['Bootstrap, McNemar, và cách nói về p-value mà không bị bắt lỗi.', 'Hết phần toán. Chặng sau chạm vào dữ liệu thật, bắt đầu từ việc đóng khung bài toán.'],
+  'd-framing':  ['Một trang đề bài: dự đoán gì, tại thời điểm nào, sai thì tốn bao nhiêu tiền.', 'Có tờ đề bài rồi, bài sau mới biết phải nhìn cái gì khi mở dữ liệu ra.'],
+  'd-eda':      ['Danh sách 10 điểm kiểm tra chạy được cho mọi bộ dữ liệu mới, và bốn biểu đồ đáng vẽ.', 'EDA vừa chỉ ra chỗ bẩn; bài sau là cách làm sạch mà không tự lừa mình.'],
+  'd-clean':    ['Cách xử lý thiếu, ngoại lai, trùng lặp — tất cả nằm trong code, không thao tác tay.', 'Bài sau là lỗi lặng lẽ nhất: làm sạch rất đúng nhưng vẫn rò rỉ đáp án.'],
+  'd-leak':     ['Sáu kiểu rò rỉ, và quy trình kiểm tra chạy trước khi tin bất kỳ con số nào.', 'Bài sau là nơi rò rỉ hay xảy ra nhất: chỗ bạn cắt dữ liệu ra làm ba.'],
+  'd-split':    ['Tập train/valid/test chia theo thời gian, và bốn dòng assert kiểm tra sau khi chia.', 'Có tập sạch rồi, chặng sau mới được phép tạo feature — phần quyết định điểm số.'],
+  'f-what':     ['Định nghĩa feature engineering gắn với thao tác thật, và nhịp một buổi làm việc.', 'Bài sau vào loại cột đơn giản nhất: cột số.'],
+  'f-numeric':  ['Bốn phép biến đổi cột số, và nhóm feature tỉ lệ thường bị bỏ quên.', 'Bài sau là loại cột khó hơn: cột chữ có hữu hạn giá trị.'],
+  'f-cat':      ['Năm cách mã hoá cột phân loại, và bảng chọn nhanh theo số giá trị khác nhau.', 'Bài sau là loại cột mà cả năm cách trên đều làm sai.'],
+  'f-cyclic':   ['Mã hoá sin/cos, gõ được ở cả bốn mức từ notebook tới Pipeline.', 'Bài sau là nhóm feature mạnh nhất cho bài gian lận — và dễ rò rỉ nhất.'],
+  'f-time':     ['Feature theo thời gian: khoảng cách, velocity, so với thói quen — tính không rò rỉ.', 'Bài sau xử lý cột chữ tự do, nếu dữ liệu của bạn có.'],
+  'f-text':     ['Ba mức xử lý cột chữ, chọn theo số giờ bạn còn lại.', 'Bài sau ráp toàn bộ feature đã học vào một đối tượng duy nhất.'],
+  'f-pipeline': ['src/pipeline.py chạy được: một đối tượng làm hết từ dữ liệu thô tới dự đoán.', 'Có Pipeline rồi, bài sau mới cắt bớt feature một cách có bằng chứng.'],
+  'f-select':   ['Ba cách chọn feature xếp theo độ tin cậy, và cách viết phần này vào luận văn.', 'Bài sau giải thích thuật ngữ Feature Store bạn sẽ gặp khắp nơi — và vì sao chưa cần.'],
+  'f-store':    ['Biết Feature Store giải quyết gì, và khái niệm point-in-time correctness để nói đúng.', 'Chặng sau chọn mô hình để đổ đống feature này vào.'],
+  'ml-map':     ['Bản đồ năm mô hình, và quy trình chọn theo đúng thứ tự.', 'Bài sau là baseline không thể thiếu.'],
+  'ml-linear':  ['Baseline hồi quy logistic chạy được, và cách đọc hệ số để viết vào luận văn.', 'Bài sau nói mô hình đó thực sự được huấn luyện bằng cách nào.'],
+  'ml-loss':    ['Hàm mất mát ráp với gradient descent, và biết phân biệt nó với chỉ số đánh giá.', 'Bài sau là gia đình mô hình bạn sẽ dùng làm mô hình chính.'],
+  'ml-trees':   ['LightGBM với cấu hình khởi đầu, ba siêu tham số quan trọng, và early stopping.', 'Bài sau là kẻ thù của mọi mô hình mạnh.'],
+  'ml-overfit': ['Chẩn đoán overfit bằng hình, và bảy cách chống xếp theo hiệu quả.', 'Bài sau là cách đo cho chắc, thay vì tin vào một lần chia may rủi.'],
+  'ml-cv':      ['Cross-validation đúng loại cho dữ liệu thời gian, và cách đọc độ lệch chuẩn.', 'Bài sau là vấn đề trung tâm của bài toán gian lận: 0,17% nhãn dương.'],
+  'ml-imb':     ['Thứ tự ưu tiên xử lý mất cân bằng, và bảng thí nghiệm mẫu đưa thẳng vào luận văn.', 'Bài sau là quyết định dễ làm hỏng cả luận văn nhất.'],
+  'ml-metrics': ['PR-AUC làm chỉ số chính, và một ngưỡng chọn theo chi phí chứ không theo cảm tính.', 'Có chỉ số đúng rồi, bài sau mới tối ưu siêu tham số mà không tự lừa mình.'],
+  'ml-tune':    ['Optuna dùng được ngay, và bốn quy tắc để kết quả tuning không phải ảo.', 'Bài sau trả lời câu hội đồng gần như chắc chắn hỏi.'],
+  'ml-shap':    ['Hai loại hình SHAP cho luận văn, và ba giới hạn bạn phải tự nêu trước khi bị hỏi.', 'Bài sau là phương án khi nhãn quá ít hoặc đến quá trễ.'],
+  'ml-unsup':   ['Phân cụm và phát hiện bất thường, cùng cách kết hợp với mô hình có giám sát.', 'Chặng sau là deep learning, bắt đầu từ mạng nơ-ron.'],
+  'dl-nn':      ['Mạng nơ-ron nhìn ra là hồi quy logistic xếp chồng, và vòng lặp huấn luyện đầy đủ.', 'Bài sau là cách mạng đó tự sửa mình.'],
+  'dl-backprop':['Backpropagation gọn trong quy tắc dây chuyền, và hai bệnh sinh ra trực tiếp từ nó.', 'Bài sau là bộ nút bạn thật sự vặn khi huấn luyện.'],
+  'dl-train':   ['Bảng chẩn đoán đường cong loss, và quy trình gỡ lỗi khi mạng không học.', 'Bài sau là ý tưởng nền cho mọi thứ hiện đại.'],
+  'dl-embed':   ['Embedding: học một vector ngắn cho mỗi thực thể, và chỗ dùng trong bài của bạn.', 'Bài sau điểm danh hai kiến trúc cũ để bạn đọc paper không thấy lạ.'],
+  'dl-cnn-rnn': ['Biết CNN và RNN/LSTM làm gì, và chỗ chúng còn được dùng năm 2026.', 'Bài sau là khái niệm bạn nói mình chưa biết.'],
+  'dl-attn':    ['Attention từ số 0: bốn bước, multi-head, và cái giá bình phương độ dài.', 'Bài sau ráp attention thành một kiến trúc hoàn chỉnh.'],
+  'dl-tf':      ['Một khối Transformer đầy đủ, và positional encoding nối thẳng lại với bài sin/cos.', 'Bài sau là thứ được xây trên kiến trúc đó.'],
+  'dl-llm':     ['Nói chuyện về LLM cho đúng, và bốn cách dùng xếp từ rẻ tới đắt.', 'Bài sau trả lời thẳng: dữ liệu bảng thì có nên dùng deep learning không.'],
+  'dl-tab':     ['Câu trả lời có bằng chứng cho "deep learning trên dữ liệu bảng", và cách dùng khôn nhất trong 2 tuần.', 'Chặng sau biến mô hình thành sản phẩm, bắt đầu từ bản vẽ.'],
+  'pr-arch':    ['Bản vẽ đường đi của một giao dịch, và năm quyết định thiết kế phải nêu trong luận văn.', 'Bài sau là dữ liệu thật để chạy bản vẽ đó.'],
+  'pr-data':    ['Bộ dữ liệu đã tải và đã kiểm tra, cùng bộ mô phỏng để chạy thử pipeline.', 'Bài sau là toàn bộ mã nguồn dự án, từ file rỗng tới mô hình đã lưu.'],
+  'pr-code':    ['Repo hoàn chỉnh: config, features, history, pipeline, train, evaluate, và bốn test.', 'Bài sau biến file .joblib đó thành một dịch vụ mà hệ thống khác gọi được.'],
+  'pr-serve':   ['API FastAPI, Dockerfile, và bản demo Streamlit dùng cho buổi bảo vệ.', 'Bài sau là chương rất ít luận văn viết được cho ra hồn.'],
+  'pr-monitor': ['Đo drift bằng PSI, bảng theo dõi tối thiểu, và chiến lược huấn luyện lại.', 'Bài sau là phần MLOps nhỏ nhất mà vẫn đủ để repo nộp được.'],
+  'pr-mlops':   ['MLflow, chốt phiên bản thư viện, CI tối thiểu, và bảng kiểm repo trước khi nộp.', 'Bài sau quy mọi thứ ra tiền — bài có tỉ lệ giá trị trên công sức cao nhất trang.'],
+  'pr-cost':    ['Ma trận chi phí, và phân tích độ nhạy biến điểm yếu thành điểm mạnh.', 'Sản phẩm xong. Chặng sau là phần viết, bắt đầu từ chọn đề tài.'],
+  'th-topic':   ['Một trang đề cương: khoảng trống, câu hỏi nghiên cứu, và cách bạn sẽ chứng minh.', 'Bài sau là cách đọc 15–30 paper mà vẫn kịp deadline.'],
+  'th-read':    ['Phương pháp đọc ba lượt, và chỗ tìm paper.', 'Bài sau là bước tiết kiệm thời gian nhất: tái lập một paper trước khi tự làm.'],
+  'th-repro':   ['Quy trình tái lập, cách xử lý khi không tái lập được, và cách làm công trình của bạn tái lập được.', 'Bài sau thiết kế phần thực nghiệm — nơi luận văn được chấm điểm thật.'],
+  'th-design':  ['Ba tầng thí nghiệm: baseline, ablation, độ nhạy — cùng bảng theo dõi.', 'Bài sau chứng minh chênh lệch giữa các dòng trong bảng đó là thật.'],
+  'th-stats':   ['Nhiều seed, khoảng tin cậy, kiểm định ghép cặp, và mẫu đoạn viết sẵn.', 'Bài sau là bộ khung để đổ tất cả những thứ này vào.'],
+  'th-write':   ['Bộ khung IMRaD mở rộng, và công thức viết cho từng chương.', 'Bài sau là công cụ tiết kiệm hàng chục giờ ở giai đoạn viết.'],
+  'th-tools':   ['Overleaf, Zotero, MLflow, và bảng kiểm cuối cùng trước khi nộp.', 'Bài sau là 45 phút quyết định tất cả.'],
+  'th-defense': ['12 slide có thời lượng, kịch bản demo 90 giây, và 24 câu hội đồng hay hỏi.', 'Hết đường đi chính. Chặng cuối là phần tra cứu — quay lại khi cần.'],
+  'r-roadmapsh':['roadmap.sh dịch xong: ô nào giữ, ô nào để sau, ô nào bỏ — và tám khái niệm nó không có.', 'Bài sau là 20 lỗi ngốn nhiều thời gian nhất của người mới.'],
+  'r-mistakes': ['20 lỗi phổ biến — đọc một lượt hôm nay, quay lại khi bí.', 'Bài sau là từ điển tra nhanh, xếp theo nhóm khái niệm liên quan.'],
+  'r-glossary': ['Từ điển tra nhanh, xếp theo nhóm chứ không theo bảng chữ cái.', 'Bài cuối là danh sách nguồn ngắn có chủ ý.'],
+  'r-books':    ['Danh sách nguồn tối thiểu: một cuốn sách, vài paper, chỗ tìm dữ liệu.', 'Hết lộ trình. Mở lại lịch 14 ngày và bắt đầu ngày 1.'],
+};
+
 /* ============================================================
    2. Trạng thái + tiện ích
    ============================================================ */
@@ -5189,6 +5761,26 @@ function syncProgress() {
   }
 }
 
+/* Kết bài: cầm được gì, và bài sau dùng nó làm gì. Dùng wb-card--flat để nó đọc
+   như một chỗ nghỉ, không phải một cảnh báo — màu chỉ dành cho trạng thái thật. */
+function gainBox(id) {
+  const g = PAYOFF[id];
+  if (!g) return '';
+  return `
+    <div class="wb-card wb-card--flat" style="margin-top:26px"><div class="wb-card__body">
+      <div class="ds-gain">
+        <div class="ds-gain__row">
+          <span class="wb-ico wb-ico--sm ds-gain__ico">inventory_2</span>
+          <div><p class="ds-gain__k">Bạn vừa có</p><p class="ds-gain__v">${g[0]}</p></div>
+        </div>
+        <div class="ds-gain__row">
+          <span class="wb-ico wb-ico--sm ds-gain__ico">east</span>
+          <div><p class="ds-gain__k">Nó dẫn đi đâu</p><p class="ds-gain__v">${g[1]}</p></div>
+        </div>
+      </div>
+    </div></div>`;
+}
+
 /* ============================================================
    4. Router
    ============================================================ */
@@ -5219,6 +5811,7 @@ function render() {
       <span class="wb-cap wb-cap--sm"><span class="wb-ico wb-ico--xs">schedule</span> ${fmtMin(leaf.m)}</span>
     </div>
     <div class="ds-prose" id="prose">${tpl ? '' : '<p class="wb-help">Nội dung đang được viết.</p>'}</div>
+    ${gainBox(id)}
     <div class="ds-nodefoot">
       <div class="wb-cluster">
         <button class="wb-btn" id="markBtn" data-node="${id}">Đánh dấu đã học xong</button>
@@ -5235,6 +5828,7 @@ function render() {
             <span class="wb-pager__meta">${next.phase.t}</span></span>
             <span class="wb-ico wb-pager__arrow">chevron_right</span></a>` : '<span></span>'}
       </nav>
+      <p class="ds-keyhint"><kbd>[</kbd> bài trước · <kbd>]</kbd> bài sau · <kbd>Esc</kbd> đóng popup</p>
     </div>`;
 
   if (tpl) $('#prose').append(tpl.content.cloneNode(true));
@@ -5320,9 +5914,10 @@ function typeset(el) {
   });
 }
 
-function afterRender(scope) {
-  // Bảng trong bài học có thể rộng hơn cột nội dung trên màn hẹp — cho nó tự cuộn
-  // trong khung của mình thay vì đẩy cả trang sang ngang.
+/* Dùng cho cả ba nơi có nội dung bài: cột chính, popup toán, ngăn phụ. */
+function enhance(scope) {
+  // Bảng có thể rộng hơn cột chứa nó trên màn hẹp — cho nó tự cuộn trong khung
+  // của mình thay vì đẩy cả trang sang ngang.
   $$('.ds-prose > table', scope).forEach(t => {
     const wrap = document.createElement('div');
     wrap.className = 'wb-table-scroll';
@@ -5330,16 +5925,30 @@ function afterRender(scope) {
     wrap.append(t);
   });
   typeset(scope);
+  $$('[data-viz]', scope).forEach(initViz);
+}
+
+function afterRender(scope) {
+  enhance(scope);
   scope.scrollTop = 0;
   window.scrollTo({ top: 0 });
-  $$('[data-viz]', scope).forEach(initViz);
-  $$('[data-collapse-toggle]', scope).forEach(b => b.addEventListener('click', () => {
-    b.closest('.wb-collapse').classList.toggle('is-open');
-  }));
   syncProgress();
 }
 
-/* popup toán -------------------------------------------------- */
+/* popup toán + ngăn phụ ---------------------------------------
+   Hai lớp thông tin ngoài mạch chính, hai vật chứa khác nhau có chủ ý:
+     ∑ chip  → modal ở giữa màn hình: một công thức, đọc xong là xong.
+     + chip  → drawer trượt từ phải: một nhánh rẽ dài hơn (so sánh công cụ,
+               phương án thay thế), trang chính vẫn thấy được phía sau. */
+function closeLayers() {
+  $('#mathOverlay').classList.remove('is-open');
+  $('#asideOverlay').classList.remove('is-open');
+}
+function layerOpen() {
+  return $('#mathOverlay').classList.contains('is-open') ||
+         $('#asideOverlay').classList.contains('is-open');
+}
+
 document.addEventListener('click', e => {
   const chip = e.target.closest('[data-math]');
   if (chip) {
@@ -5350,17 +5959,54 @@ document.addEventListener('click', e => {
     body.innerHTML = '';
     if (tpl) body.append(tpl.content.cloneNode(true));
     else body.innerHTML = '<p class="wb-help">Chưa có ghi chú cho mục này.</p>';
-    typeset(body);
-    $$('[data-viz]', body).forEach(initViz);
+    enhance(body);
     $('#mathOverlay').classList.add('is-open');
     return;
   }
-  if (e.target.closest('[data-modal-close]') || e.target.id === 'mathOverlay') {
-    $('#mathOverlay').classList.remove('is-open');
+
+  const more = e.target.closest('[data-aside]:not(template)');
+  if (more) {
+    const key = more.dataset.aside;
+    const tpl = document.querySelector(`template[data-aside="${key}"]`);
+    $('#asideTitle').textContent = tpl?.dataset.title || 'Thông tin thêm';
+    $('#asideSub').textContent = tpl?.dataset.sub || 'Không bắt buộc — đóng lại là về đúng chỗ đang đọc';
+    const body = $('#asideBody');
+    body.innerHTML = '';
+    if (tpl) body.append(tpl.content.cloneNode(true));
+    else body.innerHTML = '<p class="wb-help">Chưa có ghi chú cho mục này.</p>';
+    body.scrollTop = 0;
+    body.parentElement.scrollTop = 0;
+    enhance(body);
+    $('#asideOverlay').classList.add('is-open');
+    return;
+  }
+
+  if (e.target.closest('[data-modal-close]') || e.target.id === 'mathOverlay' || e.target.id === 'asideOverlay') {
+    closeLayers();
   }
 });
+
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') $('#mathOverlay').classList.remove('is-open');
+  if (e.key === 'Escape') { closeLayers(); return; }
+
+  /* [ và ] = bài trước / bài sau. Cùng phím với "lùi/tiến" của nhiều trình đọc.
+     Bỏ qua khi đang gõ vào ô tìm kiếm, đang mở lớp phủ, hoặc đang giữ phím tổ hợp
+     (⌘] là chuyển tab của trình duyệt — không được cướp). */
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  if (layerOpen()) return;
+  const t = e.target;
+  if (t instanceof HTMLElement && (t.matches('input, textarea, select') || t.isContentEditable)) return;
+  if (e.key !== '[' && e.key !== ']') return;
+
+  const cur = location.hash.replace(/^#\/?/, '') || 'home';
+  const i = LEAVES.findIndex(l => l.id === cur);
+  if (e.key === ']') {
+    if (i === -1) { if (LEAVES[0]) location.hash = '#/' + LEAVES[0].id; }
+    else if (LEAVES[i + 1]) location.hash = '#/' + LEAVES[i + 1].id;
+  } else {
+    if (i > 0) location.hash = '#/' + LEAVES[i - 1].id;
+    else if (i === 0) location.hash = '#/home';
+  }
 });
 
 /* ============================================================
@@ -5619,22 +6265,41 @@ if (localStorage.getItem('ds-theme') === 'dark' ||
 $('#resetBtn').addEventListener('click', () => { done.clear(); saveDone(); syncProgress(); });
 /* Chỉ số tìm kiếm: tiêu đề + toàn bộ nội dung bài, để tra được một khái niệm
    (SMOTE, PR-AUC, sin/cos…) chứ không chỉ tra được tên bài. */
+/* Nội dung nằm trong ngăn phụ và popup toán vẫn phải tìm được — nếu không, việc đẩy
+   nó ra khỏi mạch chính lại thành làm mất nó. Nhưng nó vào một ô riêng, tính điểm
+   nhẹ hơn, và hai bài "mục lục" (Tra ngược, Sổ tay công cụ) thì bỏ hẳn: chúng trỏ
+   tới cả chục ngăn nên nếu tính đủ thì bài nào cũng thua chúng. */
+const HUB_LINKS = 3;
 const SEARCH_INDEX = Object.fromEntries(LEAVES.map(l => {
   const tpl = document.querySelector(`template[data-node="${l.id}"]`);
-  const body = tpl ? tpl.content.textContent : '';
-  return [l.id, (l.t + ' ' + l.phase.t + ' ' + body).toLowerCase()];
+  const own = (l.t + ' ' + l.phase.t + ' ' + (tpl ? tpl.content.textContent : '')).toLowerCase();
+  let extra = '';
+  const links = tpl ? [...tpl.content.querySelectorAll('[data-aside], [data-math]')] : [];
+  if (links.length <= HUB_LINKS) {
+    for (const c of links) {
+      const k = c.dataset.aside || c.dataset.math;
+      const sel = c.dataset.aside ? `template[data-aside="${k}"]` : `template[data-mathdef="${k}"]`;
+      const sub = document.querySelector(sel);
+      if (sub) extra += ' ' + (sub.dataset.title || '') + ' ' + sub.content.textContent;
+    }
+  }
+  return [l.id, { own, extra: extra.toLowerCase() }];
 }));
 
 /* Tìm kiếm: thay cây bằng danh sách phẳng xếp theo mức liên quan, vì một thuật ngữ
    như "sin/cos" xuất hiện ở hàng chục bài — lọc cây thì vẫn còn quá nhiều để chọn. */
+const countIn = (hay, q) => {
+  let i = 0, n = 0;
+  while ((i = hay.indexOf(q, i)) !== -1 && n < 30) { n++; i += q.length; }
+  return n;
+};
+
 function scoreLeaf(l, q) {
   let s = 0;
   if (l.t.toLowerCase().includes(q)) s += 100;
   if (l.phase.t.toLowerCase().includes(q)) s += 20;
-  const body = SEARCH_INDEX[l.id];
-  let i = 0, n = 0;
-  while ((i = body.indexOf(q, i)) !== -1 && n < 30) { n++; i += q.length; }
-  return s + n;
+  const ix = SEARCH_INDEX[l.id];
+  return s + countIn(ix.own, q) + countIn(ix.extra, q) * 0.5;
 }
 
 $('#searchBox').addEventListener('input', e => {
