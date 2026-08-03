@@ -66,6 +66,20 @@
     font-family: var(--wb-font-mono); font-size: var(--wb-text-caption); color: var(--wb-fg-subtle);
     margin: 0 0 6px; letter-spacing: .03em;
   }
+  /* nút Chép — bọc quanh .ds-code, đặt tuyệt đối nên không đội layout, không cuộn ngang theo code */
+  .ds-codewrap { position: relative; }
+  .ds-copy {
+    position: absolute; top: 8px; right: 8px; z-index: 2;
+    font-family: var(--wb-font); font-size: 11px; font-weight: 650; line-height: 1;
+    padding: 5px 9px; cursor: pointer; opacity: .5;
+    color: var(--wb-fg-subtle); background: var(--wb-surface);
+    border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius);
+    transition: opacity .12s ease, color .12s ease, border-color .12s ease;
+  }
+  .ds-codewrap:hover .ds-copy, .ds-copy:hover, .ds-copy:focus-visible, .ds-copy.is-done { opacity: 1; }
+  .ds-copy:hover, .ds-copy.is-done { color: var(--wb-fg); border-color: var(--wb-border-strong); }
+  .ds-copy:focus-visible { outline: 2px solid var(--wb-border-strong); outline-offset: 2px; }
+  @media (hover: none) { .ds-copy { opacity: 1; } }
 
   /* ---- chip mở popup toán ---- */
   .ds-math {
@@ -535,11 +549,11 @@
      ============================================================ -->
 
 <template data-mathdef="dot" data-title="Vector và tích vô hướng — “giống nhau” đo bằng gì">
-  <p>Một dòng dữ liệu <b>là</b> một vector. Giao dịch của bạn: <code>[số tiền 250.000, giờ 23, số lần quẹt trong 1h = 4]</code> → vector 3 chiều <code>[250000, 23, 4]</code>. Toàn bộ machine learning là hình học trên những mũi tên này.</p>
+  <p>Một dòng dữ liệu <b>là</b> một vector. Giao dịch của bạn: <code>[số tiền 250.000, giờ 23, số lần quẹt trong 1h = 4]</code> → vector 3 chiều <code>[250000, 23, 4]</code>. Rất nhiều mô hình có thể nhìn như hình học trên những mũi tên này — đây là một trực giác mạnh, dù không phải mọi mô hình đều quy về hình học (cây quyết định chẳng hạn thì không).</p>
   <h4>Tích vô hướng: “hai mũi tên có cùng hướng không”</h4>
   <p>Lấy từng cặp số nhân với nhau rồi cộng lại. Với $a = [3, 4]$ và $b = [2, 1]$:</p>
   <p>$$a \cdot b = 3\times2 + 4\times1 = 10$$</p>
-  <p>Số này lớn khi hai vector chỉ về cùng hướng, bằng 0 khi chúng vuông góc (không liên quan gì nhau), âm khi ngược hướng. <b>Mọi mô hình tuyến tính, mọi lớp neural network, mọi attention đều chỉ là tích vô hướng lặp lại rất nhiều lần.</b></p>
+  <p>Số này lớn khi hai vector chỉ về cùng hướng, bằng 0 khi chúng vuông góc (không liên quan gì nhau), âm khi ngược hướng. <b>Tích vô hướng là phép tính lõi, lặp lại rất nhiều lần, trong mô hình tuyến tính, trong mỗi lớp neural network và trong attention.</b> Nhưng nó không phải <i>toàn bộ</i> câu chuyện: xen giữa các tích vô hướng đó luôn có hàm phi tuyến (activation), chuẩn hoá, convolution, gating…; và cây quyết định thì không dùng tích vô hướng chút nào — nó chia dữ liệu theo ngưỡng.</p>
   <h4>Độ dài và khoảng cách</h4>
   <p>Độ dài (chuẩn L2): $\|a\| = \sqrt{3^2+4^2} = 5$. Khoảng cách giữa hai điểm là độ dài của hiệu: $\|a-b\|$.</p>
   <p>Cosine similarity = tích vô hướng đã bỏ qua độ dài, chỉ còn góc:</p>
@@ -623,7 +637,7 @@
 </template>
 
 <template data-mathdef="normal" data-title="Phân phối chuẩn và z-score">
-  <p>Đo chiều cao 10.000 người: rất nhiều người quanh mức trung bình, càng ra xa càng ít, và hai bên đối xứng. Hình chuông đó là phân phối chuẩn — nó xuất hiện khắp nơi vì <b>tổng của nhiều yếu tố ngẫu nhiên nhỏ độc lập luôn có xu hướng tiến về hình chuông</b> (định lý giới hạn trung tâm).</p>
+  <p>Đo chiều cao 10.000 người: rất nhiều người quanh mức trung bình, càng ra xa càng ít, và hai bên đối xứng. Hình chuông đó là phân phối chuẩn — nó xuất hiện khắp nơi vì <b>tổng của nhiều yếu tố ngẫu nhiên nhỏ, độc lập, không cái nào áp đảo, có xu hướng tiến về hình chuông</b> (định lý giới hạn trung tâm — một kết quả tiệm cận, cần vài điều kiện chứ không phải luật tuyệt đối).</p>
   <p>$$X \sim \mathcal{N}(\mu, \sigma^2)$$</p>
   <p>Quy tắc 68–95–99,7: khoảng 68% dữ liệu nằm trong $\mu \pm \sigma$, 95% trong $\mu \pm 2\sigma$, 99,7% trong $\mu \pm 3\sigma$.</p>
   <h4>z-score: dịch mọi thứ về cùng một ngôn ngữ</h4>
@@ -958,7 +972,7 @@ print(mcnemar(tb, exact=<b>False</b>, correction=<b>True</b>))</div>
 
 <template data-aside="cmp-query" data-title="Lấy dữ liệu ra: pandas, DuckDB, SQLite hay máy chủ thật"
           data-sub="Bước 2 · bốn cách, và cách rẻ nhất lại là cách dạy bạn SQL">
-  <p><b>Chọn nhanh cho máy yếu:</b> <b>DuckDB</b>. Nó cho bạn viết SQL thật ngay trên file CSV, không cài máy chủ, không tốn RAM như pandas, và chạy được trong Colab bằng một lệnh <code>pip install</code>.</p>
+  <p><b>Chọn nhanh cho máy yếu:</b> <b>DuckDB</b>. Nó cho bạn viết SQL thật ngay trên file CSV, không cài máy chủ, ngốn ít RAM hơn pandas nhiều (chỉ nạp cột cần và đổ bớt ra đĩa khi thiếu bộ nhớ — chứ không phải không dùng RAM), và chạy được trong Colab bằng một lệnh <code>pip install</code>.</p>
   <table>
     <thead><tr><th>Công cụ</th><th>Online?</th><th>Điểm mạnh</th><th>Điểm yếu</th><th>Chọn khi</th></tr></thead>
     <tbody>
@@ -998,7 +1012,7 @@ print(mcnemar(tb, exact=<b>False</b>, correction=<b>True</b>))</div>
       <tr><td><b>Dask / Spark</b></td><td>Cần cụm máy</td><td>Dữ liệu hàng chục GB trở lên</td><td>Phức tạp gấp bội, và bạn không có dữ liệu cỡ đó</td><td><b>Không dùng.</b> Biết tên là đủ</td></tr>
     </tbody>
   </table>
-  <p>Ngưỡng thực tế: dưới ~2 triệu dòng thì pandas trong Colab chạy thoải mái. Trên mức đó, thứ cần đổi <b>không phải thư viện</b> mà là chỗ làm việc — đẩy phép nhóm xuống SQL.</p>
+  <p>Ngưỡng thực tế (kinh nghiệm tương đối, không phải con số cứng): quanh mức ~2 triệu dòng thì pandas trong Colab thường vẫn chạy thoải mái — nhưng ngưỡng này co giãn mạnh theo <b>số cột, kiểu dữ liệu, phép tính bạn chạy và RAM có sẵn</b> (một bảng 500 cột nặng hơn nhiều một bảng 10 cột cùng số dòng). Khi bắt đầu chạm trần, thứ cần đổi <b>không phải thư viện</b> mà là chỗ làm việc — đẩy phép nhóm xuống SQL.</p>
 </template>
 
 <template data-aside="cmp-gbdt" data-title="Boosting: LightGBM, XGBoost, CatBoost hay sklearn"
@@ -1371,8 +1385,8 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
         <div class="wb-media">
           <span class="wb-ico ds-prep__ico">code</span>
           <div class="wb-media__body">
-            <p class="wb-media__title">Biết lập trình cơ bản thì đi nhanh — nhưng không bắt buộc</p>
-            <p class="wb-media__text">Nếu Python là ngôn ngữ đầu tiên của bạn, vẫn theo được; chỉ lâu hơn khoảng <b>1,3–1,5 lần</b>, và phần đội thêm nằm gần hết ở giờ thực hành. Mọi con số thời lượng trên trang đều ghi kèm phiên bản “từ số 0”.</p>
+            <p class="wb-media__title">Đọc được Python cơ bản — đây là điều kiện thật sự</p>
+            <p class="wb-media__text">“Từ số 0” ở trang này nghĩa là <b>zero Data Science</b>, không phải zero lập trình. Bạn không cần biết trước Data Science hay Machine Learning; nhưng bạn <b>cần đọc được Python cơ bản</b> (biến, list/dict, hàm, vòng lặp, if, import). Các thư viện như pandas, sklearn sẽ được giải thích ngay nơi dùng — <b>trang này không dạy lập trình từ đầu.</b> Nếu Python còn hoàn toàn mới, hãy học một khoá nhập môn Python ngắn (khoảng một tuần) trước; con số “từ số 0 ≈ … giờ” trên trang tính thêm cho việc bạn mới với <i>hệ sinh thái Data Science</i> (chưa quen thư viện, công cụ), chứ không phải cho việc học lập trình từ con số không.</p>
           </div>
         </div>
         <div class="wb-media">
@@ -1392,8 +1406,8 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
         <div class="wb-media">
           <span class="wb-ico ds-prep__ico">keyboard</span>
           <div class="wb-media__body">
-            <p class="wb-media__title">Một thói quen: gõ lại, đừng copy</p>
-            <p class="wb-media__text">Đọc xong một bài mà không gõ gì thì 48 giờ sau chỉ còn khoảng 10%. Mở sẵn một notebook bên cạnh, gõ lại code rồi đổi một tham số xem nó hỏng thế nào.</p>
+            <p class="wb-media__title">Một thói quen: gõ lại những đoạn ngắn quan trọng</p>
+            <p class="wb-media__text">Đọc xong một bài mà không gõ gì thì 48 giờ sau chỉ còn khoảng 10%. Mỗi khối code có nút <b>Chép</b> ở góc — cứ dùng nó cho code dài, config và boilerplate. Nhưng với những snippet ngắn cốt lõi, hãy <b>gõ lại bằng tay</b>; và sau khi chép, đổi một tham số rồi chạy xem nó hỏng thế nào — đó mới là lúc kiến thức bám lại.</p>
           </div>
         </div>
       </div>
@@ -1505,7 +1519,7 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
   <h2>Cách học để nhớ được</h2>
   <p>Đọc xong một bài mà không gõ gì thì 48 giờ sau còn lại khoảng 10%. Quy tắc cho cả 14 ngày:</p>
   <ul>
-    <li><b>Mở sẵn một notebook</b> bên cạnh. Mỗi đoạn code trong bài, gõ lại (đừng copy) rồi đổi một tham số xem hỏng thế nào.</li>
+    <li><b>Mở sẵn một notebook</b> bên cạnh. Snippet ngắn thì gõ lại bằng tay cho nhớ; code dài thì dùng nút <b>Chép</b> ở góc khối code, rồi đổi một tham số xem nó hỏng thế nào.</li>
     <li><b>Sau mỗi bài, tự nói lại bằng lời của mình</b> trong 3 câu, viết vào notebook. Nếu không nói được, bạn chưa hiểu — quay lại chỗ mờ.</li>
     <li><b>Đánh dấu mức học</b> bằng chấm tròn bên trái mỗi bài — bấm để đi vòng <i>đã đọc → đã thực hành → đạt deliverable</i>. Trên trang bài có nút tương ứng và <b>tiêu chí đạt</b> cụ thể. Tiến độ tính theo <i>workload</i> (một bài code 150′ nặng hơn nhiều một bài đọc 10′), không phải theo số tick, và lưu trong trình duyệt này — không cần đăng nhập.</li>
   </ul>
@@ -1514,6 +1528,126 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
     <div class="wb-alert__body"><p class="wb-alert__title">Một lời thẳng thắn về thời gian</p>
       <p class="wb-alert__msg"><b>Không ai thành thạo Data Science trong 14 ngày, và trang này không hứa điều đó.</b> Hai tuần đủ để bạn làm một product demo chạy thật trên <i>một</i> bài toán và giải thích các quyết định chính bằng artifact — chưa phải năng lực bảo vệ luận văn. Sáu tới tám tuần thì thêm được thứ mà hai tuần không mua được: <b>thực hành chuyển giao</b> trên hai họ bài toán khác. Còn năng lực định vị độc lập và <b>trực giác</b> với dữ liệu lạ cần nhiều vòng tự làm hỏng rồi sửa. Trang này rút ngắn đường đi, không rút ngắn số vòng luyện tập đó.</p></div>
   </div>
+</template>
+
+<template data-node="s-intro">
+  <p>Bạn nói mình chưa biết Data Science — đúng như giả định của trang này. Bài này bắt đầu từ con số 0: <b>Data Science là gì</b>, nó khác gì các nghề nghe na ná, và <b>bộ từ vựng lõi</b> mà mọi bài sau đều mặc nhiên dùng. Đọc xong bài này, những chữ như <i>feature, nhãn, train, inference, loss, metric, baseline</i> sẽ không còn là tiếng lạ.</p>
+  <p class="wb-help">“Từ số 0” ở đây là <b>zero Data Science</b>, không phải zero lập trình: bài không dạy Python, chỉ cần bạn đọc được Python cơ bản. Không có dòng code nào bắt buộc phải chạy ở bài này — chỉ có một bảng đồ chơi để bám vào.</p>
+
+  <h2>Data Science là gì — trả lời thẳng</h2>
+  <p><b>Data</b> (dữ liệu) là những ghi chép về thế giới đã được biến thành con số hoặc chữ mà máy đọc được: một dòng giao dịch, một lượt xem video, một dòng nhiệt độ đo lúc 3 giờ chiều.</p>
+  <p><b>Data Science</b> là quá trình dùng <b>dữ liệu, thống kê, lập trình và hiểu biết lĩnh vực</b> để <b>mô tả</b> điều đã xảy ra, <b>giải thích</b> điều đang xảy ra, <b>dự đoán</b> điều có thể xảy ra, và <b>hỗ trợ ra quyết định</b>. Đây là một mô tả để định hướng, không phải ranh giới tuyệt đối — các nghề dưới đây giao nhau nhiều.</p>
+
+  <div class="wb-alert wb-alert--warning wb-alert--plain"><div class="wb-alert__body">
+    <p class="wb-alert__title">Hiểu nhầm phổ biến nhất: “Data Science = train model”</p>
+    <p class="wb-alert__msg">Nghe hợp lý, vì model là phần long lanh nhất và cũng là phần các khoá học nói nhiều nhất. Nhưng phần lớn công việc thật nằm ở chỗ khác: <b>đóng khung bài toán, lấy và làm sạch dữ liệu, quyết định đo cái gì</b>. Và rất nhiều câu hỏi <b>không cần Machine Learning</b> — chỉ cần SQL, một biểu đồ, hoặc vài phép thống kê. Một Data Scientist giỏi phân biệt được khi nào cần model và khi nào một câu truy vấn là đủ.</p>
+  </div></div>
+
+  <p>Data Scientist thực sự làm gì? Bắt đầu từ một <b>câu hỏi kinh doanh</b> mơ hồ và biến nó thành một <b>câu hỏi dữ liệu</b> trả lời được. Ví dụ: “giảm gian lận” → <i>“cho một giao dịch tại thời điểm quẹt thẻ, xác suất nó là gian lận là bao nhiêu, và ở ngưỡng nào thì nên chặn?”</i> (bài <a href="#/d-framing">Đóng khung bài toán</a> làm kỹ bước này).</p>
+
+  <p>Một câu hỏi dữ liệu thường rơi vào một trong bốn loại — và loại nào quyết định bạn cần công cụ gì:</p>
+  <div class="wb-table-scroll"><table>
+    <thead><tr><th>Loại câu hỏi</th><th>Hỏi gì</th><th>Thường cần gì</th></tr></thead>
+    <tbody>
+      <tr><td><b>Mô tả</b> (descriptive)</td><td>“Điều gì đã và đang xảy ra?” — doanh thu tháng trước, tỉ lệ gian lận theo giờ</td><td>SQL, thống kê mô tả, biểu đồ. <b>Không cần ML.</b></td></tr>
+      <tr><td><b>Dự đoán</b> (predictive)</td><td>“Điều gì có thể xảy ra?” — giao dịch này có phải gian lận không</td><td>Machine Learning</td></tr>
+      <tr><td><b>Nhân quả</b> (causal)</td><td>“Nếu tôi <i>can thiệp</i> thì sao?” — đổi chính sách này có <b>làm</b> giảm gian lận không</td><td>Thí nghiệm (A/B test) hoặc suy luận nhân quả — xem <a href="#/q-causal">A/B testing</a></td></tr>
+      <tr><td><b>Ra quyết định</b> (decision / data product)</td><td>“Từ dự đoán, hệ thống nên <i>làm gì</i>?” — chặn, cho qua, hay gọi xác minh</td><td>Ngưỡng + chi phí sai lầm, rồi đóng thành sản phẩm</td></tr>
+    </tbody>
+  </table></div>
+  <p><b>Ba điều dễ nhầm, nói trước:</b> (1) không phải dự án nào cũng cần ML; (2) một mô hình <b>dự đoán</b> tốt <b>không</b> tự động trả lời câu hỏi <b>nhân quả</b> (“A đi kèm B” khác “A gây ra B”); (3) một mô hình tốt <b>không</b> tự động tạo ra một quyết định tốt — quyết định còn cần ngưỡng và chi phí.</p>
+
+  <h2>Bản đồ: DS, Analytics, Thống kê, ML, AI, Data Engineering</h2>
+  <p>Người mới hay rối vì các nghề này chồng lấn. Đây là chỗ mỗi cái đứng — đủ để định vị, không phải một bài hướng nghiệp:</p>
+  <div class="wb-table-scroll"><table>
+    <thead><tr><th>Lĩnh vực</th><th>Trả lời câu hỏi cốt lõi</th><th>Công cụ điển hình</th></tr></thead>
+    <tbody>
+      <tr><td><b>Data Analysis / Analytics</b></td><td>Điều gì đã và đang xảy ra?</td><td>SQL, thống kê mô tả, dashboard, biểu đồ</td></tr>
+      <tr><td><b>Thống kê (Statistics)</b></td><td>Từ một <i>mẫu</i>, suy ra gì về <i>tổng thể</i>? Chắc chắn tới đâu?</td><td>Kiểm định giả thuyết, khoảng tin cậy, đo bất định</td></tr>
+      <tr><td><b>Machine Learning</b></td><td>Học quy luật từ dữ liệu để <i>dự đoán</i> hoặc tạo biểu diễn</td><td>scikit-learn, LightGBM, mạng nơ-ron</td></tr>
+      <tr><td><b>Artificial Intelligence (AI)</b></td><td>Khái niệm rộng: hệ thống làm những việc “cần trí tuệ”. ML là một nhánh của AI</td><td>(bao trùm ML và hơn thế)</td></tr>
+      <tr><td><b>Data Science</b></td><td>Kết hợp cả bốn thứ trên + hiểu lĩnh vực để giải một vấn đề <i>từ đầu tới cuối</i></td><td>Toàn bộ những cái trên</td></tr>
+      <tr><td><b>Data Engineering</b></td><td>Làm sao có được dữ liệu — thu thập, lưu trữ, cung cấp</td><td>Pipeline dữ liệu, kho dữ liệu, SQL, Spark</td></tr>
+      <tr><td><b>ML Engineering / MLOps</b></td><td>Đưa mô hình vào <i>vận hành</i>, giám sát, duy trì</td><td>Docker, CI/CD, MLflow, giám sát drift</td></tr>
+    </tbody>
+  </table></div>
+  <p class="wb-help">Trang này là một roadmap <b>Applied Data Science / ML</b>: nó nghiêng về Data Science và Machine Learning ứng dụng, chạm vào Analytics, Thống kê, và một lát mỏng Data/ML Engineering đủ để đưa được một mô hình ra chạy thật.</p>
+
+  <h2>Bộ từ vựng tối thiểu — học trên một bảng đồ chơi</h2>
+  <p>Thay vì học định nghĩa suông, hãy neo mọi thuật ngữ vào <b>một bảng 6 giao dịch</b> này. Mỗi dòng là một lần quẹt thẻ; cột cuối là thứ ta muốn đoán.</p>
+  <div class="wb-table-scroll"><table>
+    <thead><tr><th>id</th><th>số tiền (đ)</th><th>giờ</th><th>quẹt/1h</th><th>thẻ mới?</th><th>khách khiếu nại sau?</th><th>gian lận? (nhãn)</th></tr></thead>
+    <tbody>
+      <tr><td>t001</td><td>250.000</td><td>23</td><td>4</td><td>có</td><td>có</td><td><b>1</b></td></tr>
+      <tr><td>t002</td><td>90.000</td><td>12</td><td>1</td><td>không</td><td>không</td><td>0</td></tr>
+      <tr><td>t003</td><td>1.500.000</td><td>2</td><td>6</td><td>có</td><td>có</td><td><b>1</b></td></tr>
+      <tr><td>t004</td><td>45.000</td><td>9</td><td>1</td><td>không</td><td>không</td><td>0</td></tr>
+      <tr><td>t005</td><td>300.000</td><td>14</td><td>2</td><td>không</td><td>không</td><td>0</td></tr>
+      <tr><td>t006</td><td>800.000</td><td>3</td><td>5</td><td>có</td><td>không</td><td>0</td></tr>
+    </tbody>
+  </table></div>
+  <p>Giờ gắn tên cho từng thứ. Đọc cột “trong bảng trên là gì” để thấy thuật ngữ chạm vào đâu:</p>
+  <div class="wb-table-scroll"><table>
+    <thead><tr><th>Thuật ngữ</th><th>Nghĩa</th><th>Trong bảng trên là gì</th></tr></thead>
+    <tbody>
+      <tr><td><b>Dataset</b> (bộ dữ liệu)</td><td>Cả bảng</td><td>6 giao dịch × 7 cột</td></tr>
+      <tr><td><b>Dòng</b> = observation / mẫu / sample / record</td><td>Một quan sát</td><td>Một lần quẹt thẻ, ví dụ t003</td></tr>
+      <tr><td><b>Cột</b> = biến / variable</td><td>Một thuộc tính đo được</td><td>“số tiền”, “giờ”…</td></tr>
+      <tr><td><b>Feature</b> = đầu vào / input / X</td><td>Cột mà mô hình <i>được phép nhìn</i> để đoán</td><td>số tiền, giờ, quẹt/1h, thẻ mới?</td></tr>
+      <tr><td><b>Target</b> = nhãn / label / y</td><td>Cột ta muốn đoán</td><td>“gian lận?” (0 hoặc 1)</td></tr>
+      <tr><td><b>ID</b></td><td>Định danh một dòng; <b>không</b> phải feature</td><td>cột “id” (t001…)</td></tr>
+      <tr><td><b>Model</b> (mô hình)</td><td>Vật đã học, biến feature → dự đoán</td><td>thứ ta sẽ tạo ra từ bảng này</td></tr>
+      <tr><td><b>Algorithm</b> (thuật toán)</td><td><i>Cách</i> học ra model (công thức/quy trình)</td><td>ví dụ “cây quyết định”, “hồi quy logistic”</td></tr>
+      <tr><td><b>Training</b> / fit</td><td>Cho model xem feature <i>và</i> nhãn để nó học</td><td><code>model.fit(X, y)</code></td></tr>
+      <tr><td><b>Inference</b> / predict</td><td>Dùng model đã học để đoán trên dòng <i>mới</i> (chưa có nhãn)</td><td><code>model.predict(X_mới)</code></td></tr>
+      <tr><td><b>Parameter</b> (tham số)</td><td>Con số model <b>tự học</b> từ dữ liệu</td><td>trọng số mỗi feature</td></tr>
+      <tr><td><b>Hyperparameter</b> (siêu tham số)</td><td>Con số <b>bạn đặt trước</b> khi train, model không tự học</td><td>độ sâu tối đa của cây</td></tr>
+      <tr><td><b>Prediction score</b></td><td>Đầu ra của model, thường là xác suất 0–1</td><td>“0,82 khả năng gian lận”</td></tr>
+      <tr><td><b>Loss</b> (mất mát)</td><td>Đo model <i>sai bao nhiêu</i>, dùng <b>lúc train</b> để chỉnh tham số</td><td>phạt càng nặng khi tự tin mà sai</td></tr>
+      <tr><td><b>Metric</b> (chỉ số)</td><td>Đo model <i>tốt tới đâu</i>, dùng <b>lúc báo cáo</b> cho người</td><td>“bắt được 64% gian lận”</td></tr>
+      <tr><td><b>Threshold</b> (ngưỡng)</td><td>Mốc để biến score thành quyết định</td><td>“score ≥ 0,5 thì chặn”</td></tr>
+      <tr><td><b>Baseline</b></td><td>Cách đơn giản nhất để so — model phải thắng nó mới đáng</td><td>“luôn đoán không gian lận”, hay một luật thủ công</td></tr>
+      <tr><td><b>Train / validation / test</b></td><td>Chia dữ liệu: học / chọn lựa / chấm điểm cuối</td><td>3 phần rời của cùng bảng — xem <a href="#/d-split">Chia tập</a></td></tr>
+      <tr><td><b>Structured / unstructured</b></td><td>Có dạng bảng / không dạng bảng (ảnh, chữ tự do, âm thanh)</td><td>bảng này là structured</td></tr>
+    </tbody>
+  </table></div>
+  <p class="wb-help">Hai cặp hay bị lẫn: <b>loss vs metric</b> — loss là cho <i>máy</i> tối ưu lúc train, metric là cho <i>người</i> đọc lúc báo cáo; chúng có thể khác nhau. <b>Parameter vs hyperparameter</b> — parameter máy tự học, hyperparameter bạn đặt tay. Các từ này còn được nhắc lại tại nơi dùng, và gom ở <a href="#/r-glossary">Từ điển thuật ngữ</a> để tra sau.</p>
+
+  <h2>Từ vựng về cấu trúc dữ liệu</h2>
+  <ul>
+    <li><b>Grain</b> = một dòng đại diện cho <i>cái gì</i> (còn gọi là unit of observation). Ở bảng trên: một <i>giao dịch</i>. Nếu là “một ngày của một khách” thì lại là bảng khác hẳn.</li>
+    <li><b>Schema</b> = danh sách cột và kiểu của chúng. <b>Primary key / ID</b> = cột định danh duy nhất một dòng.</li>
+    <li><b>Kiểu dữ liệu:</b> số (numerical), hạng mục (categorical), có thứ tự (ordinal), đúng/sai (boolean), thời gian (datetime), chữ (text). “Liên tục vs rời rạc” chỉ cần hiểu ở mức trực giác: cân nặng liên tục, số lần quẹt rời rạc.</li>
+    <li><b>Missing (thiếu) không tự động nghĩa là dữ liệu sai</b> — đôi khi “thiếu” chính là một tín hiệu (khách chưa từng khiếu nại).</li>
+    <li><b>Timestamp</b> (mốc thời gian dùng để tính) khác <b>ngày tháng chỉ để hiển thị</b>.</li>
+    <li><b>Nhãn do ai tạo, tạo khi nào?</b> Nhãn “gian lận” thường chỉ chắc chắn sau khi điều tra — có <b>label delay</b> (độ trễ nhãn). Dữ liệu gần đây nhất có thể chưa có nhãn đáng tin.</li>
+    <li><b>Sample (mẫu) khác Population (tổng thể):</b> bạn học trên một mẫu, nhưng muốn kết luận cho cả tổng thể. Mẫu có thể lệch — <b>sampling bias</b> (chọn mẫu lệch) hoặc <b>measurement bias</b> (đo lệch).</li>
+  </ul>
+  <div class="wb-alert wb-alert--danger"><span class="wb-alert__icon">!</span>
+    <div class="wb-alert__body"><p class="wb-alert__title">Câu quan trọng nhất của bài</p>
+      <p class="wb-alert__msg"><b>Nếu bạn không xác định được một dòng đại diện cho cái gì (grain), thì chưa được train model.</b> Mọi thứ về sau — feature, nhãn, chia tập — đều dựa trên việc trả lời được câu này.</p></div>
+  </div>
+
+  <h2>Đi một vòng tư duy hoàn chỉnh trên bảng đồ chơi</h2>
+  <p>Đây là phần đáng làm chậm. Trả lời từng câu, đối chiếu với bảng 6 dòng ở trên:</p>
+  <ol>
+    <li><b>Một dòng là gì?</b> Một giao dịch. <b>Feature</b> nào đang có? số tiền, giờ, quẹt/1h, thẻ mới?. <b>Target</b> là “gian lận?”. <b>ID</b> là “id”.</li>
+    <li><b>Cột nào KHÔNG được làm feature?</b> “khách khiếu nại sau?” — vì <b>tại thời điểm quẹt thẻ, ta chưa biết nó</b>. Dùng nó để đoán chính là <b>rò rỉ dữ liệu</b> (data leakage): điểm số đẹp giả tạo, ra thực tế sập ngay. Đây là lỗi giết luận văn — cả một bài dành cho nó: <a href="#/d-leak">Data leakage</a>.</li>
+    <li><b>Một baseline đơn giản:</b> “chặn nếu giờ trong 0–5 <i>và</i> thẻ mới”. Áp lên bảng: chặn t003 (gian lận thật → đúng), chặn t006 (không gian lận → <b>báo động sai</b>), bỏ sót t001 (gian lận lúc 23h → <b>lọt lưới</b>).</li>
+    <li><b>Hai loại lỗi:</b> chặn nhầm khách thật là <b>dương tính giả</b> (false positive, như t006); để lọt gian lận là <b>âm tính giả</b> (false negative, như t001). Chúng tốn tiền theo hai cách khác nhau.</li>
+    <li><b>Score khác quyết định:</b> một model trả <b>score</b> 0–1 cho mỗi dòng. Quyết định “chặn hay không” chỉ có khi ta đặt một <b>threshold</b>: chặn nếu score ≥ ngưỡng.</li>
+    <li><b>Đổi ngưỡng, hai lỗi đổi ngược chiều nhau:</b> hạ ngưỡng → chặn nhiều hơn → bắt thêm gian lận (ít false negative) nhưng phiền thêm khách thật (nhiều false positive). Nâng ngưỡng thì ngược lại. Không có ngưỡng “đúng” tuyệt đối — chỉ có ngưỡng hợp với chi phí (bài <a href="#/ml-metrics">Đo lường & ngưỡng</a>). Vì sao ở tỉ lệ gian lận rất thấp việc này đặc biệt khó, xem <button class="ds-math" data-math="bayes">Bayes bằng số</button>.</li>
+  </ol>
+
+  <div class="wb-alert wb-alert--info"><span class="wb-alert__icon">i</span>
+    <div class="wb-alert__body"><p class="wb-alert__title">Tự kiểm — làm được là qua bài</p>
+      <p class="wb-alert__msg">1. Viết <b>Data Science là gì</b> bằng 2–3 câu của <i>chính bạn</i>.<br>
+      2. Xếp 5 câu hỏi sau vào mô tả / dự đoán / nhân quả: “tháng trước bao nhiêu giao dịch?”, “giao dịch này có gian lận không?”, “giảm hạn mức đêm có <i>làm</i> giảm gian lận không?”, “nhóm khách nào gian lận nhiều nhất?”, “khách này tháng sau còn dùng thẻ không?”.<br>
+      3. Trong một bảng bất kỳ, chỉ ra <b>dòng, feature, target, ID</b>, và một cột <i>không được</i> làm feature.<br>
+      4. Viết một <b>prediction contract</b>: “Với [đầu vào] tại [thời điểm], dự đoán [đầu ra] để hỗ trợ [quyết định].”</p></div>
+  </div>
+
+  <p>Một lời thẳng về chữ “master”: bài này (và cả trang) cho bạn <b>bản đồ</b> và năng lực <b>tự học tiếp</b> — đủ để làm trọn một dự án end-to-end và tiếp cận một mô hình/lĩnh vực mới. <b>Thành thạo thật</b> vẫn cần nhiều dự án độc lập, phản hồi, thời gian và kinh nghiệm lĩnh vực; không ai đọc một lượt mà thành chuyên gia, và trang này không hứa điều đó.</p>
 </template>
 
 <template data-node="s-pipeline">
@@ -1530,7 +1664,7 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
       <p class="wb-steps__desc">SQL từ kho dữ liệu, file CSV, API, hoặc dataset công khai. Kèm câu hỏi sống còn: <i>tại thời điểm dự đoán, tôi thực sự có sẵn cột nào?</i></p></div></li>
     <li class="wb-steps__item"><span class="wb-steps__marker">3</span><div class="wb-steps__content">
       <p class="wb-steps__title">EDA — nhìn dữ liệu</p>
-      <p class="wb-steps__desc">Bao nhiêu dòng, bao nhiêu thiếu, phân phối hình gì, nhãn lệch cỡ nào, có cột nào rò rỉ tương lai không. Trong Jupyter, bằng pandas + matplotlib.</p></div></li>
+      <p class="wb-steps__desc">EDA có <b>hai thì</b>: (a) <i>trước khi chia tập</i> — kiểm tra cấu trúc: bao nhiêu dòng, kiểu dữ liệu, trùng lặp, phạm vi thời gian, một dòng là gì, nhãn có sẵn chưa; (b) <i>sau khi chia tập, chỉ trên train</i> — xem phân phối, quan hệ feature–nhãn, chọn feature. Việc gì có thể ảnh hưởng tới mô hình thì để dành cho thì (b), vì nhìn tập test sớm là một dạng rò rỉ. Trong Jupyter, bằng pandas + matplotlib.</p></div></li>
     <li class="wb-steps__item"><span class="wb-steps__marker">4</span><div class="wb-steps__content">
       <p class="wb-steps__title">Làm sạch</p>
       <p class="wb-steps__desc">Thiếu thì điền hay bỏ, trùng thì gộp, ngoại lai thì cắt hay giữ, kiểu dữ liệu cho đúng.</p></div></li>
@@ -1571,7 +1705,7 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
 </template>
 
 <template data-node="s-families">
-  <p>Bài trước cho bạn <b>trục dọc</b>: mọi dự án đều đi qua 10 bước giống nhau. Bài này là <b>trục ngang</b>: dự án đó thuộc <b>họ bài toán</b> nào. Hai trục này giao nhau ở đúng chỗ quyết định mọi thứ — vì bước 6 (chia tập) và bước 8 (đo lường) <b>đổi hoàn toàn</b> tuỳ họ bài toán, trong khi bước 1 tới 5 gần như giữ nguyên.</p>
+  <p>Bài trước cho bạn <b>trục dọc</b>: mọi dự án đều đi qua 10 bước giống nhau. Bài này là <b>trục ngang</b>: dự án đó thuộc <b>họ bài toán</b> nào. Thứ thật sự chuyển giao giữa các họ là <b>bộ câu hỏi và quy trình tư duy của 10 bước</b>, chứ không phải nội dung cụ thể của từng bước. Cách <i>đóng khung</i> (bước 1), cách <i>biểu diễn dữ liệu</i> và <i>làm feature</i> (bước 3–5) đổi rất mạnh khi bạn nhảy từ dữ liệu bảng sang chuỗi thời gian, sang chữ (NLP), sang ảnh; và bước 6 (chia tập) cùng bước 8 (đo lường) thì <b>đổi hoàn toàn</b> tuỳ họ. Nói cách khác: khung 10 ô giữ nguyên, còn thứ điền vào mỗi ô thì tuỳ họ bài toán.</p>
   <p>Đây là thứ phân biệt một người “đã làm xong một dự án” với một người <b>làm được data science</b>: nhìn một dự án lạ — dự báo tồn kho, phân loại ticket, gợi ý sản phẩm — và trong mười phút nói được nó là họ nào, baseline gì, chia tập ra sao, đo bằng gì, rò rỉ nằm ở đâu.</p>
 
   <h2>Chín họ, bấm vào để xem hồ sơ đầy đủ</h2>
@@ -2523,7 +2657,7 @@ pipe.fit(X_train, y_train)         <i># fit_transform cho scale, rồi fit cho m
 pipe.predict_proba(X_test)         <i># transform cho scale, rồi predict cho model</i></div>
   <p>Ba lý do khiến đây là khái niệm quan trọng nhất trong sklearn:</p>
   <ul>
-    <li><b>Không thể rò rỉ.</b> Trong cross-validation, pipeline tự động <code>fit</code> lại scaler <i>bên trong từng fold</i>. Làm tay thì gần như chắc chắn bạn sẽ sai chỗ này.</li>
+    <li><b>Chặn phần lớn rò rỉ tiền xử lý.</b> Trong cross-validation, pipeline tự động <code>fit</code> lại scaler <i>bên trong từng fold</i> nên scaler không bao giờ nhìn thấy dữ liệu validation. Làm tay thì gần như chắc chắn bạn sẽ sai chỗ này. (Pipeline không phải bùa hộ mệnh: nó vẫn rò nếu bạn tạo feature từ tương lai, tổng hợp trên toàn bộ dữ liệu, hay tính feature <i>trước khi</i> đưa vào pipeline — xem <button class="ds-aside" data-aside="x-pipeline-bugs">hai lỗi Pipeline hay gặp</button>.)</li>
     <li><b>Lúc chạy thật không lệch.</b> Bạn lưu <i>một</i> file chứa cả cách tạo feature lẫn mô hình. API chỉ cần <code>pipe.predict_proba(df_1_dòng)</code> — không có cơ hội để code production tính feature khác với lúc train.</li>
     <li><b>Tune được cả hai tầng cùng lúc:</b> <code>{"model__C": [0.1, 1, 10], "scale__with_mean": [True, False]}</code> — hai dấu gạch dưới nối tên bước với tên tham số.</li>
   </ul>
@@ -2632,7 +2766,7 @@ g.rolling("1h", closed="left").count()</div>
     <tr><td style="width:110px"><b>Công cụ</b></td><td><b>LightGBM</b> (mô hình chính) · <b>Optuna</b> (dò tham số) · <b>MLflow</b> (ghi lại) · <b>joblib</b> (lưu)</td></tr>
     <tr><td><b>Gõ gì</b></td><td><code>python -m src.train</code></td></tr>
     <tr><td><b>Xong thì có</b></td><td><code>models/fraud_v1.joblib</code> (chứa <b>cả</b> feature engineering) + <code>models/metrics.json</code> + các lần chạy trong MLflow</td></tr>
-    <tr><td><b>Bẫy</b></td><td>Tune trước khi feature xong. Feature cho +0,10; tune cho +0,01.</td></tr>
+    <tr><td><b>Bẫy</b></td><td>Tune trước khi feature xong. Bậc độ lớn thường gặp: feature tốt cải thiện nhiều hơn hẳn tuning (ví dụ +0,10 so với +0,01 — con số minh hoạ, không phải quy luật).</td></tr>
   </table>
   <div class="ds-code">python -m src.train          <i># in PR-AUC, lưu model</i>
 mlflow ui                    <i># mở localhost:5000 xem lại mọi lần chạy</i></div>
@@ -2780,10 +2914,11 @@ df["z_amount"] = (df["amount"] - df["mean"]) / (df["std"] + 1e-6)   <i># +ε tr�
   <ul>
     <li><b>Nếu mô hình được hiệu chỉnh tốt (calibrated):</b> trong tất cả các giao dịch mà mô hình chấm 0,73, khoảng 73% thật sự là gian lận. Đây là cách hiểu đúng.</li>
     <li><b>Thực tế thường không như vậy.</b> Cây/boosting hay bị lệch hiệu chỉnh, đặc biệt sau khi bạn cân bằng lại dữ liệu bằng SMOTE hoặc <code>class_weight</code>.</li>
-    <li>Kiểm tra bằng <b>calibration curve</b>; sửa bằng <code>CalibratedClassifierCV</code>. Nếu luận văn của bạn dùng con số xác suất để quy ra tiền, phần này <b>phải</b> có.</li>
+    <li>Kiểm tra bằng <b>calibration curve</b>; sửa bằng <code>CalibratedClassifierCV</code>. Nếu luận văn của bạn dùng con số xác suất để quy ra tiền, phần này <b>phải</b> có. <b>Lưu ý quan trọng:</b> <code>CalibratedClassifierCV</code> <i>học</i> từ dữ liệu, nên phải fit trên một tập hiệu chỉnh/validation riêng (hoặc bằng cross-validation) — <b>không bao giờ</b> fit trên tập test. Test chỉ mở đúng một lần ở cuối để <i>báo cáo</i> mức hiệu chỉnh sau khi mọi quyết định đã chốt.</li>
   </ul>
   <div class="ds-code"><b>from</b> sklearn.calibration <b>import</b> calibration_curve
-prob_true, prob_pred = calibration_curve(y_test, y_prob, n_bins=10)
+<i># kiểm tra trên tập validation trong lúc phát triển, KHÔNG dùng test</i>
+prob_true, prob_pred = calibration_curve(y_valid, y_prob_valid, n_bins=10)
 <i># vẽ prob_pred (trục x) vs prob_true (trục y); đường lý tưởng là đường chéo 45°</i></div>
 
   <h2>Điều thường bị hiểu ngược</h2>
@@ -2804,13 +2939,13 @@ prob_true, prob_pred = calibration_curve(y_test, y_prob, n_bins=10)
   <h2>Ba cách nói lại cùng một ý, chọn cách hợp với người nghe</h2>
   <table>
     <tr><th>Người nghe</th><th>Cách nói</th></tr>
-    <tr><td>Hội đồng luận văn</td><td>“Với base rate 0,2%, precision bị chặn trên bởi tỉ lệ dương thật; do đó chúng tôi báo cáo PR-AUC thay vì ROC-AUC.”</td></tr>
+    <tr><td>Hội đồng luận văn</td><td>“Ở base rate 0,2%, PR-AUC là chỉ số trung thực (mốc tham chiếu của nó bằng chính base rate), còn ROC-AUC dễ trông cao một cách đánh lừa; nên chúng tôi báo cáo PR-AUC. Precision cao rất khó đạt khi lớp dương hiếm, nhưng nó <b>không</b> bị chặn trên bởi tỉ lệ dương — một mô hình xếp hạng tốt vẫn có thể đạt precision cao.”</td></tr>
     <tr><td>Trưởng phòng vận hành</td><td>“Muốn bắt thêm 10 vụ gian lận, đội anh phải gọi thêm khoảng 300 cuộc xác minh. Anh chọn con số nào?”</td></tr>
     <tr><td>Chính bạn, lúc debug</td><td>“Precision thấp không có nghĩa model hỏng. Kiểm tra base rate trước khi đi sửa model.”</td></tr>
   </table>
 
   <h2>Naive Bayes — mô hình, chứ không phải định lý</h2>
-  <p>Có một mô hình tên là Naive Bayes dùng định lý này trực tiếp. “Naive” (ngây thơ) vì nó giả định <b>các feature độc lập với nhau</b> — giả định gần như luôn sai trong thực tế (số tiền và loại cửa hàng rõ ràng liên quan nhau).</p>
+  <p>Có một mô hình tên là Naive Bayes dùng định lý này trực tiếp. “Naive” (ngây thơ) vì nó giả định <b>các feature độc lập với nhau khi đã biết lớp</b> (độc lập có điều kiện) — tức là trong nhóm “gian lận”, biết số tiền rồi thì loại cửa hàng không nói thêm gì. Giả định này gần như luôn sai trong thực tế (số tiền và loại cửa hàng vẫn liên quan nhau ngay cả trong cùng một lớp).</p>
   <p>Vậy sao vẫn dùng? Vì nó cực nhanh, cần rất ít dữ liệu, và bất ngờ hiệu quả cho phân loại văn bản (lọc spam). Với dữ liệu bảng của bạn, nó chỉ đáng dùng làm <b>baseline rẻ tiền</b> — có một baseline "ngây thơ" trong bảng so sánh của luận văn là điểm cộng.</p>
   <div class="ds-code"><b>from</b> sklearn.naive_bayes <b>import</b> GaussianNB
 nb = GaussianNB().fit(X_train, y_train)</div>
@@ -2860,7 +2995,7 @@ Kết quả được lấy trung bình trên 5 hạt giống ngẫu nhiên (42, 
   <p>Câu quyết định là câu về <b>hiệu ghép cặp</b>: nó mới là bằng chứng cho “tốt hơn”, không phải việc hai khoảng riêng có chồng lấn hay không. Hai khoảng riêng chỉ để người đọc thấy độ lớn; McNemar chỉ nói về nhãn tại ngưỡng đã chốt; và năm hạt giống cho thấy kết quả tái lập được. Đó là toàn bộ những gì phần thực nghiệm cần chứng minh.</p>
 
   <h2>Thứ bạn có thể bỏ qua</h2>
-  <p>ANOVA, kiểm định phi tham số, thống kê Bayes đầy đủ, power analysis — đều hay, đều không cần cho một luận văn thạc sĩ ứng dụng trong 2 tuần. Nếu người hướng dẫn yêu cầu cụ thể thì học riêng cái đó.</p>
+  <p>ANOVA, kiểm định phi tham số, thống kê Bayes đầy đủ — đều hay, đều không cần cho một luận văn thạc sĩ ứng dụng trong 2 tuần. Nếu người hướng dẫn yêu cầu cụ thể thì học riêng cái đó. <b>Một ngoại lệ:</b> nếu đề tài của bạn có A/B test thì <i>power analysis / tính cỡ mẫu</i> lại là phần bắt buộc — nó quyết định thí nghiệm có khả thi không (xem bài <b>Nhân quả</b>).</p>
 </template>
 
 <!-- ============================================================
@@ -2913,36 +3048,47 @@ Kết quả được lấy trung bình trên 5 hạt giống ngẫu nhiên (42, 
 <template data-node="d-eda">
   <p>EDA (Exploratory Data Analysis) = <b>nhìn dữ liệu bằng mắt trước khi giao cho máy</b>. Mục tiêu không phải là vẽ đẹp; mục tiêu là tìm ra những thứ sẽ phá hỏng mô hình nếu bạn không biết.</p>
 
-  <h2>Danh sách kiểm tra 10 điểm — chạy nguyên xi cho mọi bộ dữ liệu mới</h2>
+  <p><b>Điều quan trọng nhất của cả bài — EDA có hai thì, ngăn bởi bước chia tập:</b></p>
+  <ul>
+    <li><b>Thì 1 · Kiểm cấu trúc — làm trên <i>toàn bộ</i> dữ liệu, TRƯỚC khi chia.</b> Những thứ bạn <i>bắt buộc</i> phải biết để thiết kế được cách chia tập cho đúng: dữ liệu to cỡ nào, một dòng đại diện cho cái gì, có thứ tự thời gian không, nhãn đã có chưa, có trùng lặp hay lỗi nạp dữ liệu hiển nhiên không. Những việc này <b>không</b> dùng quan hệ feature–nhãn nên không tạo rò rỉ.</li>
+    <li><b>Thì 2 · Khám phá theo mô hình — chỉ làm trên tập <i>train</i>, SAU khi đã chốt cách chia.</b> Phân phối feature, quan hệ feature–nhãn, chọn feature, phân tích theo nhóm. Mọi quyết định ở đây có thể ảnh hưởng tới mô hình, nên nếu nhìn cả tập test thì chính <b>bộ não bạn</b> đã trở thành đường rò rỉ.</li>
+  </ul>
+  <p>Vì sao phải tách: cần hiểu <i>cấu trúc</i> đủ để chia tập cho đúng, nhưng mọi <i>khám phá có thể định hướng mô hình</i> phải nằm sau bước chia và chỉ trên train. Test để dành đúng một lần cho đánh giá cuối.</p>
+
+  <h2>Thì 1 · Kiểm cấu trúc — chạy trên toàn bộ dữ liệu, trước khi chia</h2>
   <div class="ds-code"><i># 1. Kích thước và bộ nhớ</i>
 df.shape; df.memory_usage(deep=<b>True</b>).sum() / 1e6   <i># MB</i>
 
 <i># 2. Kiểu dữ liệu — cột ngày có đang là chuỗi text không?</i>
 df.info()
 
-<i># 3. Thiếu bao nhiêu, ở đâu</i>
+<i># 3. Thiếu bao nhiêu, ở đâu (mức độ thiếu là thuộc tính cấu trúc)</i>
 (df.isna().mean() * 100).sort_values(ascending=<b>False</b>).head(15)
 
-<i># 4. Cân bằng nhãn — con số quyết định mọi thứ về sau</i>
-df["Class"].value_counts(normalize=<b>True</b>)
-
-<i># 5. Phân phối cột số</i>
-df.describe().T          <i># .T để đọc dọc, dễ nhìn hơn khi nhiều cột</i>
-
-<i># 6. Cột hạng mục: bao nhiêu giá trị khác nhau</i>
-df.select_dtypes("object").nunique().sort_values(ascending=<b>False</b>)
-
-<i># 7. Trùng lặp</i>
+<i># 4. Trùng lặp</i>
 df.duplicated().sum()
 
-<i># 8. Cột hằng số hoặc gần như hằng (vô dụng)</i>
+<i># 5. Cột hạng mục: bao nhiêu giá trị khác nhau (phát hiện cột ID)</i>
+df.select_dtypes("object").nunique().sort_values(ascending=<b>False</b>)
+
+<i># 6. Cột hằng số hoặc gần như hằng (vô dụng)</i>
 [c <b>for</b> c <b>in</b> df.columns <b>if</b> df[c].nunique() &lt;= 1]
 
-<i># 9. Tương quan với nhãn — cột nào NGHI NGỜ CAO BẤT THƯỜNG</i>
-df.corr(numeric_only=<b>True</b>)["Class"].abs().sort_values(ascending=<b>False</b>).head(10)
+<i># 7. Phạm vi thời gian — quyết định có phải chia theo thời gian không</i>
+df["ts"].min(), df["ts"].max()
 
-<i># 10. Phạm vi thời gian</i>
-df["ts"].min(), df["ts"].max()</div>
+<i># 8. Cân bằng nhãn tổng thể — cần để chọn cách chia (stratify) và chỉ số</i>
+df["Class"].value_counts(normalize=<b>True</b>)</div>
+  <p>Tám mục này trả lời được bốn câu hỏi ở cuối bài (một dòng là gì, nhãn tạo ra sao, có thứ tự thời gian không, có nhóm lặp không) — tức là đủ để <b>thiết kế cách chia tập</b>. Xong bước này mới sang bài <b>Chia tập</b>, rồi mới quay lại làm Thì 2.</p>
+
+  <h2>Thì 2 · Khám phá theo mô hình — chỉ trên tập train, sau khi đã chia</h2>
+  <div class="ds-code"><i># từ đây, mọi thứ chạy trên df_train — KHÔNG đụng test</i>
+<i># 9. Phân phối cột số</i>
+df_train.describe().T          <i># .T để đọc dọc, dễ nhìn hơn khi nhiều cột</i>
+
+<i># 10. Tương quan với nhãn — cột nào NGHI NGỜ CAO BẤT THƯỜNG (dò rò rỉ)</i>
+df_train.corr(numeric_only=<b>True</b>)["Class"].abs().sort_values(ascending=<b>False</b>).head(10)</div>
+  <p class="wb-help">Việc dò rò rỉ (mục 10) cũng làm trên train — một cột tương quan &gt; 0,9 với nhãn gần như chắc là rò rỉ, và bạn phát hiện được điều đó mà không cần chạm vào test.</p>
 
   <h2>Đọc kết quả: bốn tín hiệu báo động</h2>
   <table>
@@ -2953,25 +3099,26 @@ df["ts"].min(), df["ts"].max()</div>
     <tr><td>Một cột thiếu đúng 100% ở nửa sau dữ liệu</td><td>Hệ thống đổi cách ghi giữa chừng</td><td>Xác nhận cột đó có tồn tại ở production không</td></tr>
   </table>
 
-  <h2>Bốn biểu đồ đáng vẽ (và không nên vẽ hơn)</h2>
+  <h2>Bốn biểu đồ đáng vẽ (Thì 2 — trên train, và không nên vẽ hơn)</h2>
   <div class="ds-code"><b>import</b> matplotlib.pyplot <b>as</b> plt
 <b>import</b> seaborn <b>as</b> sns
+<i># tất cả trên df_train — đây là khám phá định hướng mô hình, không đụng test</i>
 
 <i># 1. Phân phối một cột số — dùng log để nhìn được đuôi dài</i>
-sns.histplot(np.log1p(df["Amount"]), bins=50)
+sns.histplot(np.log1p(df_train["Amount"]), bins=50)
 
 <i># 2. So phân phối giữa hai lớp — feature này có phân biệt được không?</i>
-sns.kdeplot(data=df, x="hour", hue="Class", common_norm=<b>False</b>)
+sns.kdeplot(data=df_train, x="hour", hue="Class", common_norm=<b>False</b>)
 
 <i># 3. Tỉ lệ gian lận theo nhóm — biểu đồ hữu ích nhất cho bài fraud</i>
-rate = df.groupby("hour")["Class"].mean()
+rate = df_train.groupby("hour")["Class"].mean()
 rate.plot(kind="bar", title="Tỉ lệ gian lận theo giờ trong ngày")
 
 <i># 4. Ma trận tương quan — chỉ khi ít cột</i>
-sns.heatmap(df[cols].corr(), cmap="coolwarm", center=0)</div>
+sns.heatmap(df_train[cols].corr(), cmap="coolwarm", center=0)</div>
   <p><b>Biểu đồ số 3 chính là chỗ bạn sẽ tự tìm ra động lực cho bài sin/cos.</b> Nếu tỉ lệ gian lận cao vào 1–4 giờ sáng và thấp ban ngày, bạn vừa tìm được một tín hiệu thật — và bước tiếp theo là làm sao cho mô hình dùng được nó mà không hiểu nhầm 23h với 0h là hai thế giới khác nhau.</p>
 
-  <h2>Bốn câu hỏi EDA phải trả lời được trước khi qua bước sau</h2>
+  <h2>Bốn câu hỏi Thì 1 phải trả lời được trước khi chia tập</h2>
   <ol>
     <li><b>Một dòng là gì?</b> Một giao dịch? Một ngày của một khách? Nếu bạn không nói chắc được, mọi thứ sau đó sẽ sai.</li>
     <li><b>Nhãn được tạo ra thế nào?</b> Ai gán nhãn "gian lận", dựa trên gì, trễ bao lâu? Nhãn trễ 60 ngày nghĩa là dữ liệu 60 ngày gần nhất có nhãn <b>không đáng tin</b>.</li>
@@ -2981,8 +3128,8 @@ sns.heatmap(df[cols].corr(), cmap="coolwarm", center=0)</div>
 
   <div class="wb-alert wb-alert--warning">
     <span class="wb-alert__icon">!</span>
-    <div class="wb-alert__body"><p class="wb-alert__title">Bẫy EDA: đừng nhìn tập test</p>
-      <p class="wb-alert__msg">Nếu bạn EDA trên toàn bộ dữ liệu rồi mới chia, chính <b>bộ não bạn</b> trở thành đường rò rỉ: bạn chọn feature dựa trên những gì bạn thấy ở cả tập test. Đây là loại leakage không công cụ nào phát hiện được. Cách làm đúng: chia tập <b>trước</b>, EDA chỉ trên train, và chỉ mở tập test đúng một lần ở cuối.</p></div>
+    <div class="wb-alert__body"><p class="wb-alert__title">Bẫy EDA: đừng để Thì 2 chạm vào tập test</p>
+      <p class="wb-alert__msg">Kiểm cấu trúc (Thì 1) làm trên toàn bộ dữ liệu thì không sao — nó không dùng quan hệ feature–nhãn. Nhưng nếu bạn làm <b>khám phá theo mô hình</b> (Thì 2: xem phân phối, quan hệ feature–nhãn, chọn feature) trên cả tập test, chính <b>bộ não bạn</b> trở thành đường rò rỉ: bạn chọn feature dựa trên những gì đã thấy ở test. Đây là loại leakage không công cụ nào phát hiện được. Quy tắc: <b>Thì 2 chỉ trên train</b>, và chỉ mở tập test đúng một lần ở cuối.</p></div>
   </div>
 
   <p class="ds-more"><button class="ds-aside" data-aside="cmp-eda">So sánh công cụ nhìn dữ liệu</button></p>
@@ -3111,7 +3258,7 @@ df["avg_amt"] = (df.groupby("card_id")["amount"]
     <li>Kết quả có <b>quá đẹp</b> không? (AUC &gt; 0,99 trên bài thực tế = nghi ngờ)</li>
     <li>In <b>feature importance</b>. Nếu một cột chiếm &gt; 50% tầm quan trọng, mở nó ra xem cột đó thật sự là gì.</li>
     <li>Với mỗi cột trong top 10, hỏi: <i>"giá trị này có sẵn tại thời điểm dự đoán không?"</i></li>
-    <li>Mọi phép <code>fit</code> đều nằm trong Pipeline chứ?</li>
+    <li>Mọi phép biến đổi <b>học từ dữ liệu</b> (scaler, encoder, imputer…) đều nằm trong Pipeline và chỉ fit trên train chứ?</li>
     <li>Chia tập có tôn trọng <b>thời gian</b> và <b>nhóm</b> không?</li>
     <li>Bạn đã nhìn tập test bao nhiêu lần rồi?</li>
   </ol>
@@ -3124,6 +3271,7 @@ df["avg_amt"] = (df.groupby("card_id")["amount"]
 
 <template data-node="d-split">
   <p>Chia tập là nơi bạn <b>tự tạo ra bài thi cho mô hình</b>. Chia sai thì mọi con số về sau đều vô nghĩa — mô hình đang thi một đề dễ hơn thực tế.</p>
+  <p class="wb-help">Đúng trình tự: bạn tới đây <b>sau</b> khi làm xong Thì 1 của EDA (kiểm cấu trúc trên toàn bộ dữ liệu — đủ để biết nên chia thế nào). Chốt cách chia ở bài này xong, bạn mới quay lại EDA Thì 2 (khám phá theo mô hình) và <b>chỉ trên tập train</b>.</p>
 
   <h2>Ba tập, ba vai trò khác nhau</h2>
   <table>
@@ -3682,7 +3830,7 @@ score = pipe.predict_proba(pd.DataFrame([tx_dict]))[0, 1]</div>
   <h2>Bốn thứ Pipeline cho bạn miễn phí</h2>
   <table>
     <tr><th>Lợi ích</th><th>Cụ thể</th></tr>
-    <tr><td><b>Không rò rỉ trong CV</b></td><td><code>cross_val_score(pipe, X, y)</code> tự động fit lại scaler/encoder <i>bên trong từng fold</i>. Làm tay thì gần như chắc chắn sai.</td></tr>
+    <tr><td><b>Chặn rò rỉ tiền xử lý trong CV</b></td><td><code>cross_val_score(pipe, X, y)</code> tự động fit lại scaler/encoder <i>bên trong từng fold</i>. Làm tay thì gần như chắc chắn sai.</td></tr>
     <tr><td><b>Không lệch train/serve</b></td><td>Một file, một logic.</td></tr>
     <tr><td><b>Tune xuyên tầng</b></td><td><code>{"model__num_leaves": [15,31,63], "prep__num__impute__strategy": ["median","mean"]}</code></td></tr>
     <tr><td><b>Tái lập được</b></td><td>Người phản biện tải repo về, <code>joblib.load</code>, chạy ra đúng số của bạn.</td></tr>
@@ -3778,7 +3926,7 @@ RFECV(estimator=LGBMClassifier(), step=5, cv=5, scoring="average_precision")</di
     <tr><th>Mô hình</th><th>Điểm mạnh</th><th>Điểm yếu</th><th>Dùng khi</th></tr>
     <tr><td><b>Logistic Regression</b></td><td>Giải thích được từng hệ số, nhanh, ổn định</td><td>Chỉ học được ranh giới tuyến tính</td><td><b>Baseline bắt buộc</b> cho mọi luận văn phân loại</td></tr>
     <tr><td><b>Decision Tree</b></td><td>Vẽ ra được, giải thích cho người không kỹ thuật</td><td>Overfit nặng nếu để tự do</td><td>Minh hoạ, không dùng làm mô hình cuối</td></tr>
-    <tr><td><b>Random Forest</b></td><td>Ít cần tinh chỉnh, khó overfit</td><td>Chậm hơn, thường thua boosting</td><td>Baseline thứ hai, nhanh và an toàn</td></tr>
+    <tr><td><b>Random Forest</b></td><td>Ít cần tinh chỉnh, ít overfit hơn một cây đơn</td><td>Chậm hơn, thường thua boosting; vẫn overfit được với noise/rò rỉ/dữ liệu nhỏ</td><td>Baseline thứ hai, nhanh và an toàn</td></tr>
     <tr><td><b>LightGBM / XGBoost</b></td><td>Rất mạnh trên dữ liệu bảng; xử lý được cột hạng mục và giá trị thiếu; nhanh trên CPU</td><td>Nhiều siêu tham số, dễ overfit nếu tune ẩu; <b>không ngoại suy được</b> ra ngoài khoảng giá trị đã thấy</td><td><b>Điểm khởi đầu mặc định</b> cho dữ liệu bảng</td></tr>
     <tr><td><b>Mạng nơ-ron</b></td><td>Học được quan hệ rất phức tạp; xử lý ảnh/chữ/chuỗi; học được biểu diễn dùng lại được (embedding)</td><td>Cần nhiều dữ liệu, khó giải thích, chậm hơn</td><td>Dữ liệu không phải bảng; hoặc bảng nhưng có cột hạng mục cực nhiều giá trị cần embedding</td></tr>
   </table>
@@ -3828,7 +3976,7 @@ RFECV(estimator=LGBMClassifier(), step=5, cv=5, scoring="average_precision")</di
   <div class="ds-code"><b>from</b> sklearn.linear_model <b>import</b> LogisticRegression
 
 pipe = Pipeline([
-    ("prep",  prep),                       <i># scale là BẮT BUỘC cho mô hình tuyến tính</i>
+    ("prep",  prep),                       <i># scale: gần như luôn cần khi có regularization (như C ở đây) và để so sánh hệ số</i>
     ("model", LogisticRegression(
         C=1.0,                             <i># nghịch đảo mức phạt — C nhỏ = phạt mạnh</i>
         class_weight="balanced",           <i># quan trọng khi nhãn lệch</i>
@@ -4127,7 +4275,7 @@ pipe = ImbPipeline([
     <span class="wb-alert__icon">!</span>
     <div class="wb-alert__body"><p class="wb-alert__title">Hai lỗi SMOTE làm hỏng kết quả</p>
       <p class="wb-alert__msg"><b>1. SMOTE trước khi chia tập.</b> Mẫu tổng hợp sinh từ một ca gian lận ở train có thể rơi vào test → mô hình đã "thấy" test. Kết quả tăng vọt và hoàn toàn giả. Đây là lý do phải dùng <code>imblearn.pipeline</code>: nó chỉ chạy SMOTE trên phần train của mỗi fold.<br>
-      <b>2. Cân bằng về 50/50.</b> Bạn vừa dạy mô hình rằng cứ 2 giao dịch có 1 gian lận — sai lệch hoàn toàn so với thực tế 0,17%. Xác suất đầu ra thành vô nghĩa. Đưa lên 5–10% là đủ.</p></div>
+      <b>2. Cân bằng về 50/50.</b> Bạn vừa dạy mô hình rằng cứ 2 giao dịch có 1 gian lận — sai lệch hoàn toàn so với thực tế 0,17%. Xác suất đầu ra thành vô nghĩa. Đưa lên khoảng 5–10% thường là điểm khởi đầu hợp lý — nhưng không có con số vàng, tỉ lệ tốt nhất tuỳ dữ liệu, mô hình và ngưỡng vận hành, nên hãy thử vài mức rồi đo. Và bất kể chọn mức nào: đã resample (hay dùng <code>class_weight</code>) thì xác suất đầu ra không còn chuẩn, cần hiệu chỉnh lại nếu bạn quy nó ra tiền.</p></div>
   </div>
   <div class="wb-alert wb-alert--warning wb-alert--plain"><div class="wb-alert__body">
     <p class="wb-alert__title">SMOTE và cột hạng mục: một chi tiết hay bị bỏ qua</p>
@@ -4563,7 +4711,7 @@ vec = emb(torch.tensor([1234]))   <i># → vector 32 chiều của cửa hàng #
   <p>Hai ý tưởng cốt lõi đáng nhớ, vì chúng xuất hiện lại ở nhiều nơi:</p>
   <ul>
     <li><b>Chia sẻ tham số</b> — một bộ lọc dùng ở mọi vị trí, nên số tham số nhỏ hơn nhiều so với mạng đầy đủ.</li>
-    <li><b>Bất biến tịnh tiến</b> — con mèo ở góc nào cũng là con mèo.</li>
+    <li><b>Bất biến tịnh tiến</b> — con mèo ở góc nào cũng là con mèo. Nói cho chính xác: một mình phép convolution chỉ <i>tương biến</i> (equivariant) với dịch chuyển — mẫu hình dịch đi thì bản đồ đặc trưng cũng dịch theo. Tính <i>bất biến</i> (vị trí không còn quan trọng) chỉ có được một phần, nhờ pooling, tăng cường dữ liệu và toàn bộ kiến trúc gộp lại.</li>
   </ul>
   <p>Dùng cho: ảnh, và <b>chuỗi thời gian 1 chiều</b> (Conv1D) — cái sau có thể liên quan tới bài của bạn nếu bạn xử lý chuỗi giao dịch.</p>
 
@@ -4574,7 +4722,7 @@ vec = emb(torch.tensor([1234]))   <i># → vector 32 chiều của cửa hàng #
     <li><b>Không song song hoá được.</b> Phải xử lý phần tử thứ 5 xong mới tới thứ 6. Với chuỗi dài và GPU hiện đại, đây là nút cổ chai chí mạng.</li>
     <li><b>Quên cái ở xa.</b> Thông tin từ token 1 phải đi qua 500 bước để tới token 500, và bị pha loãng dần — cùng cơ chế với vanishing gradient.</li>
   </ol>
-  <p>Transformer giải cả hai: mọi vị trí nhìn thấy mọi vị trí <b>trực tiếp</b> (không qua trung gian) và <b>cùng lúc</b> (song song hoàn toàn). Đó là toàn bộ lý do nó thắng — hiểu điều này là hiểu vì sao 2017 là bước ngoặt.</p>
+  <p>Transformer giải cả hai: mọi vị trí nhìn thấy mọi vị trí <b>trực tiếp</b> (không qua trung gian) và <b>cùng lúc</b>. Nhờ vậy <b>lúc huấn luyện</b> nó song song hoá tốt hơn hẳn RNN — đó là toàn bộ lý do nó thắng và vì sao 2017 là bước ngoặt. (Một lưu ý để không hớ: khi <i>sinh văn bản</i>, mô hình vẫn phải làm tuần tự từng token một, vì token sau phụ thuộc token trước — phần song song nằm ở huấn luyện, không phải ở lúc sinh.)</p>
 
   <h2>Còn dùng ở đâu năm 2026</h2>
   <table>
@@ -4701,7 +4849,7 @@ LayerNorm
   </table>
   <div class="wb-alert wb-alert--warning wb-alert--plain"><div class="wb-alert__body">
     <p class="wb-alert__title">Hiểu nhầm rất phổ biến về fine-tuning</p>
-    <p class="wb-alert__msg">Fine-tune dạy mô hình <b>cách nói</b>, không dạy nó <b>sự thật mới</b>. Muốn mô hình biết chính sách nội bộ công ty bạn, RAG là đúng công cụ, không phải fine-tune. Rất nhiều dự án tốn hàng chục triệu để fine-tune cho một vấn đề mà RAG giải quyết tốt hơn với chi phí thấp hơn.</p>
+    <p class="wb-alert__msg">Fine-tune chủ yếu dạy mô hình <b>cách nói</b> — giọng điệu, định dạng, thích ứng với một tác vụ. Nó <i>có thể</i> nhét thêm sự thật mới, nhưng đó không phải cách đáng tin để cập nhật kiến thức: tốn kém, dễ quên thứ cũ, và mỗi lần dữ liệu đổi lại phải train lại. Muốn mô hình biết chính sách nội bộ công ty bạn, RAG thường là đúng công cụ. Rất nhiều dự án tốn hàng chục triệu để fine-tune cho một vấn đề mà RAG giải quyết tốt hơn với chi phí thấp hơn.</p>
   </div></div>
 
   <h2>RAG trong ba câu</h2>
@@ -8453,7 +8601,7 @@ plt.savefig("reports/figures/pr_curve.pdf")   <i># PDF = vector, không vỡ khi
     <tr><td>12</td><td>Báo cáo một seed duy nhất</td><td>5 seed, trung bình ± độ lệch chuẩn</td></tr>
     <tr><td>13</td><td>Không có baseline hoặc baseline yếu</td><td>Tune baseline tử tế như tune mô hình chính</td></tr>
     <tr><td>14</td><td>SMOTE trước khi chia tập</td><td><code>imblearn.pipeline</code></td></tr>
-    <tr><td>15</td><td>Cân bằng về đúng 50/50</td><td>5–10% là đủ; 50/50 phá hỏng hiệu chỉnh xác suất</td></tr>
+    <tr><td>15</td><td>Cân bằng về đúng 50/50</td><td>Một tỉ lệ vừa phải (thường 5–10%, tuỳ dữ liệu) thay vì 50/50, vốn phá hỏng hiệu chỉnh xác suất</td></tr>
   </table>
 
   <h2>Kỹ thuật &amp; quy trình</h2>
@@ -8463,20 +8611,41 @@ plt.savefig("reports/figures/pr_curve.pdf")   <i># PDF = vector, không vỡ khi
     <tr><td>17</td><td>Notebook chạy ô lộn xộn, không tái lập</td><td>"Restart &amp; Run All" trước khi tin bất kỳ con số nào</td></tr>
     <tr><td>18</td><td>Không cố định seed</td><td><code>random_state=42</code> ở mọi chỗ</td></tr>
     <tr><td>19</td><td>Không ghi lại thí nghiệm</td><td>MLflow hoặc một CSV kỷ luật, từ ngày đầu</td></tr>
-    <tr><td>20</td><td>Tune trước khi feature xong</td><td>Feature trước (+0,10), tune sau (+0,01)</td></tr>
+    <tr><td>20</td><td>Tune trước khi feature xong</td><td>Feature trước, tune sau (feature thường cải thiện nhiều hơn hẳn — con số cụ thể tuỳ dữ liệu)</td></tr>
   </table>
 
   <div class="wb-alert wb-alert--danger">
     <span class="wb-alert__icon">!</span>
     <div class="wb-alert__body"><p class="wb-alert__title">Nếu chỉ nhớ được ba điều</p>
       <p class="wb-alert__msg"><b>1.</b> Kết quả quá đẹp = đi tìm chỗ rò rỉ, đừng ăn mừng.<br>
-      <b>2.</b> Mọi phép <code>fit</code> phải nằm trong Pipeline.<br>
-      <b>3.</b> Accuracy vô nghĩa khi nhãn lệch — dùng PR-AUC và quy ra tiền.</p></div>
+      <b>2.</b> Mọi phép biến đổi <b>học từ dữ liệu</b> (scaler, encoder…) nên nằm trong Pipeline và chỉ fit trên train — đó là cách chặn phần lớn rò rỉ tiền xử lý.<br>
+      <b>3.</b> Accuracy gây hiểu nhầm khi nhãn lệch — dùng PR-AUC và quy ra tiền.</p></div>
   </div>
 </template>
 
 <template data-node="r-glossary">
-  <p>Tra nhanh. Sắp theo nhóm, không theo bảng chữ cái — để bạn thấy các khái niệm liên quan nằm cạnh nhau.</p>
+  <p>Tra nhanh. Sắp theo nhóm, không theo bảng chữ cái — để bạn thấy các khái niệm liên quan nằm cạnh nhau. Các từ nền tảng được giải thích kỹ ở bài <a href="#/s-intro">Data Science là gì?</a>; đây chỉ là chỗ tra lại.</p>
+
+  <h2>Nền tảng</h2>
+  <table>
+    <tr><td><b>Data Science</b></td><td>Dùng dữ liệu, thống kê, lập trình và hiểu lĩnh vực để mô tả, giải thích, dự đoán và hỗ trợ ra quyết định</td></tr>
+    <tr><td><b>Dataset</b></td><td>Một bộ dữ liệu — thường là một bảng gồm nhiều dòng và cột</td></tr>
+    <tr><td><b>Observation / dòng / mẫu (sample)</b></td><td>Một quan sát = một dòng của dataset</td></tr>
+    <tr><td><b>Grain</b></td><td>Một dòng đại diện cho <i>cái gì</i> (unit of observation). Không xác định được grain thì chưa train được</td></tr>
+    <tr><td><b>Schema</b></td><td>Danh sách cột và kiểu dữ liệu của chúng</td></tr>
+    <tr><td><b>Model</b></td><td>Vật đã học, ánh xạ feature → dự đoán</td></tr>
+    <tr><td><b>Algorithm (thuật toán)</b></td><td><i>Cách</i> học ra model từ dữ liệu (khác với chính model)</td></tr>
+    <tr><td><b>Training / fit</b></td><td>Cho model xem feature <i>và</i> nhãn để nó học tham số</td></tr>
+    <tr><td><b>Parameter</b></td><td>Con số model tự học từ dữ liệu (khác hyperparameter — bạn đặt tay)</td></tr>
+    <tr><td><b>Baseline</b></td><td>Cách đơn giản nhất để so; model phải thắng nó mới đáng</td></tr>
+    <tr><td><b>Metric</b></td><td>Chỉ số đo model tốt tới đâu, để <i>người</i> đọc (khác loss — để <i>máy</i> tối ưu)</td></tr>
+    <tr><td><b>Threshold (ngưỡng)</b></td><td>Mốc biến prediction score thành quyết định (chặn / không)</td></tr>
+    <tr><td><b>Supervised learning</b></td><td>Học từ dữ liệu <b>có nhãn</b> (biết đáp án lúc train)</td></tr>
+    <tr><td><b>Unsupervised learning</b></td><td>Học từ dữ liệu <b>không nhãn</b> (cụm, phát hiện bất thường)</td></tr>
+    <tr><td><b>Population vs Sample</b></td><td>Tổng thể muốn kết luận, vs mẫu thực sự có trong tay</td></tr>
+    <tr><td><b>Correlation vs Causation</b></td><td>“A đi kèm B” (tương quan) <b>khác</b> “A gây ra B” (nhân quả); dự đoán tốt không chứng minh nhân quả</td></tr>
+    <tr><td><b>Structured / unstructured</b></td><td>Dữ liệu dạng bảng / không dạng bảng (ảnh, chữ, âm thanh)</td></tr>
+  </table>
 
   <h2>Dữ liệu &amp; feature</h2>
   <table>
@@ -8510,7 +8679,7 @@ plt.savefig("reports/figures/pr_curve.pdf")   <i># PDF = vector, không vỡ khi
     <tr><td><b>Precision</b></td><td>Trong số bị báo động, bao nhiêu đúng</td></tr>
     <tr><td><b>Recall</b></td><td>Trong số dương thật, bắt được bao nhiêu</td></tr>
     <tr><td><b>PR-AUC</b></td><td>Diện tích dưới đường Precision–Recall. Chỉ số chính khi lệch nhãn</td></tr>
-    <tr><td><b>ROC-AUC</b></td><td>Diện tích dưới đường TPR–FPR. Lạc quan quá mức khi lệch nhãn</td></tr>
+    <tr><td><b>ROC-AUC</b></td><td>Diện tích dưới đường TPR–FPR. Có thể che khuất chất lượng lớp hiếm khi lệch nhãn — đọc kèm PR-AUC</td></tr>
     <tr><td><b>Calibration</b></td><td>Xác suất mô hình nói có khớp tần suất thực tế không</td></tr>
     <tr><td><b>Cross-validation</b></td><td>Chia nhiều lần để ước lượng hiệu năng ổn định hơn</td></tr>
     <tr><td><b>Bootstrap</b></td><td>Lấy mẫu lại có hoàn lại để dựng khoảng tin cậy</td></tr>
@@ -8600,6 +8769,7 @@ plt.savefig("reports/figures/pr_curve.pdf")   <i># PDF = vector, không vỡ khi
 const TREE = [
   { id:'p0', t:'0 · Bắt đầu từ đây', kids:[
     { id:'s-how',             t:'Trang này dùng thế nào', r:10, x:0, d:0, p:'core' },
+    { id:'s-intro',           t:'★ Data Science là gì? — và bộ từ vựng tối thiểu', r:30, x:10, d:0, p:'core' },
     { id:'s-pipeline',        t:'Một product AI thật gồm 10 bước', r:35, x:0, d:0, p:'core' },
     { id:'s-families',        t:'★ Bản đồ các họ bài toán Data Science', r:35, x:10, d:0, p:'core' },
     { id:'s-lookup',          t:'Tra ngược: “vấn đề này thuộc bước nào?”', r:20, x:0, d:0, p:'core' },
@@ -8715,7 +8885,7 @@ const PRIO = {
    xong chương X thì làm được gì" của một lời giới thiệu sách — giữ ở một chỗ để
    không lệch với tên chặng trong TREE. */
 const PHASE_OUTCOME = {
-  p0:  'Hiểu trang này hoạt động thế nào, và có sẵn hai tấm bản đồ để định vị mọi thứ học về sau: 10 bước của một product AI, và các họ bài toán Data Science.',
+  p0:  'Hiểu Data Science là gì (và khác gì Analytics/Thống kê/ML/AI), nắm bộ từ vựng lõi, rồi có sẵn hai tấm bản đồ để định vị mọi thứ học về sau: 10 bước của một product AI, và các họ bài toán Data Science.',
   p1:  'Dựng được chỗ làm việc (chạy được cả trên máy yếu) và gõ thành thạo pandas, SQL, numpy, scikit-learn — đủ để thao tác dữ liệu thật, không chỉ đọc về chúng.',
   p2:  'Đọc được công thức trong các bài sau mà không hoảng: vector & ma trận, đạo hàm/gradient, xác suất, và phần thống kê suy diễn mà một luận văn cần tới.',
   p3:  'Đóng khung được một bài toán, nhìn dữ liệu đúng cách (EDA), làm sạch, chia tập hợp lệ, và nhận ra rò rỉ dữ liệu — lỗi âm thầm giết chết nhiều luận văn.',
@@ -8824,7 +8994,7 @@ const DAYS = [
      mile  — nhãn mốc, nếu tuần này là một mốc kiểm chứng
    Số giờ suy ra từ chính TREE nên không lệch với trang chủ / lịch 14 ngày. */
 const WEEKS = [
-  { n:1, ids:['s-how','s-pipeline','s-families','s-lookup','s-plan8w','s-plan14',
+  { n:1, ids:['s-how','s-intro','s-pipeline','s-families','s-lookup','s-plan8w','s-plan14',
               't-env','t-online','t-colab','t-ai','t-pandas','t-sql','t-numpy','t-sklearn','t-stack'],
     t:'Khung tư duy · Python/pandas/SQL/numpy/sklearn · quy trình cloud · làm việc với AI',
     out:'Repo GitHub (<code>data/</code> trong <code>.gitignore</code>); một notebook Colab clone repo và đọc được một CSV; <code>requirements.txt</code> đã ghim phiên bản. <i>(problem-statement.md để tuần 2, khi học đóng khung.)</i>',
@@ -8888,7 +9058,8 @@ const trackCap = id => FAST.has(id)
    chắc chắn có, và để đọc một lượt là kiểm được cả mạch có liền không.
    [đã có, bài sau dùng để] */
 const PAYOFF = {
-  's-how':      ['Cách đọc trang này: hai lộ trình, ba nhãn ưu tiên, toán nằm trong popup, thông tin phụ nằm trong ngăn bên phải.', 'Bài sau dựng cái khung 10 bước để bạn treo mọi thứ còn lại lên.'],
+  's-how':      ['Cách đọc trang này: hai lộ trình, ba nhãn ưu tiên, toán nằm trong popup, thông tin phụ nằm trong ngăn bên phải.', 'Bài sau bắt đầu từ con số 0: Data Science là gì, và bộ từ vựng mà mọi bài sau đều dùng.'],
+  's-intro':    ['Định nghĩa Data Science bằng lời thường, bản đồ phân biệt DS / Analytics / Thống kê / ML / AI / Data Engineering, và một bộ từ vựng lõi được giải thích trên một bảng dữ liệu đồ chơi.', 'Có ngôn ngữ chung rồi, bài sau dựng cái khung 10 bước để bạn treo mọi thứ còn lại lên.'],
   's-pipeline': ['Khung 10 bước — từ nay mọi kỹ thuật bạn học đều có một địa chỉ để treo vào.', 'Khung đó giống nhau cho mọi dự án; bài sau là trục thứ hai: mỗi dự án thuộc họ bài toán nào.'],
   's-families': ['Bản đồ 9 họ bài toán, và bộ 8 câu hỏi định vị một dự án lạ trong khoảng 10 phút.', 'Bài sau đi từ hướng ngược lại: có một triệu chứng cụ thể thì tra ra bước nào.'],
   's-lookup':   ['Bảng tra ngược: có triệu chứng cụ thể → ra ngay bước nào, bài nào, công cụ nào.', 'Bài sau xếp tất cả vào một lịch 6–8 tuần có deliverable từng tuần.'],
@@ -9767,6 +9938,48 @@ function typeset(el) {
 }
 
 /* Dùng cho cả ba nơi có nội dung bài: cột chính, popup toán, ngăn phụ. */
+/* Nút Chép cho mọi khối code. Lấy textContent TRƯỚC khi chèn nút, nên bản copy là
+   code sạch (đã giải mã &lt;&gt;&amp;, giữ nguyên thụt lề nhờ white-space:pre) và không
+   dính chữ của nút. Nút nằm trong lớp bọc đặt tuyệt đối → không đội layout. */
+function addCopyButtons(scope) {
+  $$('.ds-code', scope).forEach(block => {
+    if (block.dataset.copyReady) return;
+    block.dataset.copyReady = '1';
+    const code = block.textContent;
+    const wrap = document.createElement('div');
+    wrap.className = 'ds-codewrap';
+    block.parentNode.insertBefore(wrap, block);
+    wrap.append(block);
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'ds-copy';
+    btn.textContent = 'Chép';
+    btn.setAttribute('aria-label', 'Sao chép đoạn code');
+    wrap.append(btn);
+
+    btn.addEventListener('click', async () => {
+      let ok = true;
+      try {
+        await navigator.clipboard.writeText(code);
+      } catch {
+        // dự phòng khi không có clipboard API (http, quyền bị chặn)
+        try {
+          const ta = document.createElement('textarea');
+          ta.value = code;
+          ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+          document.body.append(ta); ta.focus(); ta.select();
+          document.execCommand('copy'); ta.remove();
+        } catch { ok = false; }
+      }
+      btn.classList.add('is-done');
+      btn.textContent = ok ? 'Đã chép' : 'Bấm Ctrl/⌘+C';
+      clearTimeout(btn._t);
+      btn._t = setTimeout(() => { btn.classList.remove('is-done'); btn.textContent = 'Chép'; }, 1600);
+    });
+  });
+}
+
 function enhance(scope) {
   // Bảng có thể rộng hơn cột chứa nó trên màn hẹp — cho nó tự cuộn trong khung
   // của mình thay vì đẩy cả trang sang ngang.
@@ -9776,6 +9989,7 @@ function enhance(scope) {
     t.replaceWith(wrap);
     wrap.append(t);
   });
+  addCopyButtons(scope);
   typeset(scope);
   renderPlan14(scope);
   renderPlanWeeks(scope);
