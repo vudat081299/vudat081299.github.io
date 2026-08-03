@@ -1,0 +1,53 @@
+#!/bin/sh
+# Cổng chất lượng cho masters-degree/data-science-roadmap/.
+# Cài: masters-degree/data-science-roadmap/tools/install-hooks.sh
+#
+# Chỉ chạy khi commit có chạm vào thư mục đó — commit ở cashy/, facts/… không bị ảnh hưởng.
+# Bỏ qua một lần (chỉ khi bạn BIẾT mình đang làm gì): git commit --no-verify
+
+set -e
+DIR="masters-degree/data-science-roadmap"
+ROOT=$(git rev-parse --show-toplevel)
+
+git diff --cached --name-only | grep -q "^$DIR/" || exit 0
+
+if ! command -v node >/dev/null 2>&1; then
+  echo "pre-commit: không có node — bỏ qua cổng data-science-roadmap." >&2
+  exit 0
+fi
+
+echo "pre-commit: chạy cổng $DIR…"
+cd "$ROOT/$DIR"
+
+if ! node tools/gate.mjs --ci; then
+  cat >&2 <<'MSG'
+
+──────────────────────────────────────────────────────────────────────
+Commit bị chặn: có cổng CHẶN không qua (xem danh sách phía trên).
+
+  · G-TOC-STRUCT     → mục lục đã đổi: soi lại 4 câu ở CLAUDE.md §6, rồi
+                       node tools/gate.mjs --write && git add TOC.md
+  · G-REF / G-ORPHAN → sửa data-aside / data-math / data-goto / #/id
+  · G-ORDER          → dời khối <template> cho khớp thứ tự TREE
+  · G-FWD            → xem CLAUDE.md §8 "Thứ tự và phụ thuộc"
+
+Xem khuyến nghị (không chặn):  node tools/gate.mjs --advice
+Bỏ qua có ý thức:              git commit --no-verify
+──────────────────────────────────────────────────────────────────────
+MSG
+  exit 1
+fi
+
+# TOC.md là sản phẩm sinh ra. `--ci` ở trên đã bắt trường hợp file trên ĐĨA bị cũ; chỗ
+# này bắt trường hợp khác: file trên đĩa đúng nhưng chưa được `git add`, nên bản commit
+# vẫn mang mục lục cũ.
+if git diff --cached --name-only | grep -q "^$DIR/data-science-roadmap.html$"; then
+  if ! git diff --cached --name-only | grep -q "^$DIR/TOC.md$"; then
+    if ! git diff --quiet -- TOC.md 2>/dev/null; then
+      echo "pre-commit: TOC.md đã đổi nhưng chưa add — chạy \`git add $DIR/TOC.md\`." >&2
+      exit 1
+    fi
+  fi
+fi
+
+exit 0

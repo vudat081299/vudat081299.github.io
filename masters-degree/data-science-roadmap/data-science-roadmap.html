@@ -365,7 +365,7 @@
   #main h1:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); border-radius: var(--wb-radius-sm); }
 
   /* ---- trang chủ: giới thiệu giáo trình ---- */
-  .ds-lede { font-size: var(--wb-text-title); line-height: 1.55; color: var(--wb-fg); max-width: 68ch; }
+  .ds-lede { font-size: var(--wb-text-title); line-height: 1.55; color: var(--wb-fg); max-width: var(--ds-measure); }
   .ds-outcomes { margin-top: 6px; }
   .ds-outcomes .wb-steps__title { font-weight: 650; }
   .ds-prep__ico { color: var(--wb-fg-subtle); font-size: var(--wb-ico-lg); flex: none; }
@@ -373,7 +373,7 @@
 
   /* ---- bản đồ tổng ở trang chủ ---- */
   .ds-map__phase { display: grid; grid-template-columns: 34px minmax(0,1fr); gap: 14px; }
-  .ds-map__out { color: var(--wb-fg-muted); font-size: var(--wb-text-help); line-height: 1.5; margin: 2px 0 8px; max-width: 68ch; }
+  .ds-map__out { color: var(--wb-fg-muted); font-size: var(--wb-text-help); line-height: 1.5; margin: 2px 0 8px; max-width: var(--ds-measure); }
   .ds-map__num {
     width: 34px; height: 34px; border-radius: var(--wb-radius-pill);
     display: grid; place-items: center; font-family: var(--wb-font-mono); font-weight: 700; font-size: 13px;
@@ -393,10 +393,17 @@
   #results > .ds-rail__progress { margin: 2px 2px 8px; }
 
   /* ---- lịch 14 ngày ---- */
+  /* .ds-day vẫn được bài th-defense dùng cho lịch T−3 / T−2 / T−1 (viết tay trong
+     template). Lịch 14 ngày đã chuyển sang wb-steps; đừng xoá ba dòng này theo. */
   .ds-day { border-left: 2px solid var(--wb-neutral-weak); padding: 0 0 0 16px; margin-bottom: 18px; }
   .ds-day__h { font-family: var(--wb-font-mono); font-size: var(--wb-text-caption); letter-spacing: .08em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 4px; }
   .ds-day__t { font-weight: 650; margin: 0 0 6px; }
-  .ds-daysplit { font-family: var(--wb-font-mono); font-size: var(--wb-text-caption); color: var(--wb-fg-subtle); margin: 0 0 8px; }
+  /* Lịch 14 ngày dùng wb-steps (đường nối dọc = chuỗi phụ thuộc giữa các ngày).
+     Nhích khoảng cách lên vì mỗi mốc ở đây mang cả danh sách bài, không phải một dòng. */
+  .ds-plan14 { margin: 0 0 8px; }
+  .ds-plan14 > .wb-steps__item { padding-bottom: 26px; }
+  .ds-daysplit { font-family: var(--wb-font-mono); font-size: var(--wb-text-caption); color: var(--wb-fg-subtle); margin: 4px 0 8px; }
+  .ds-daysplit__beg { color: var(--wb-border-strong); }
   .ds-daylist { list-style: none; margin: 0 0 10px; padding: 0; }
   .ds-daylist li { display: flex; gap: 8px; align-items: baseline; margin-bottom: 3px; font-size: var(--wb-text-help); }
   .ds-daylist a { flex: 1 1 auto; min-width: 0; }
@@ -10156,23 +10163,29 @@ function renderPlan14(scope) {
   if (!box || box.dataset.ready) return;
   box.dataset.ready = '1';
 
-  box.innerHTML = DAYS.map(d => {
+  // 14 ngày là một CHUỖI, không phải một bộ sưu tập: ngày N lấy file của ngày N−1 làm
+  // đầu vào. Dùng wb-steps để đường nối dọc giữa các mốc nói đúng điều đó — trước đây
+  // 14 thẻ phẳng cạnh nhau đọc như 14 lựa chọn song song, và người đọc mất cảm giác
+  // "bỏ ngày 8 thì ngày 12 không có gì để đóng gói".
+  box.innerHTML = `<ol class="wb-steps ds-plan14">` + DAYS.map(d => {
     const items = d.ids.map(i => byId[i]).filter(Boolean);
     const tot = sumMins(items);
     const r = items.reduce((s, l) => s + l.r, 0);
     const x = items.reduce((s, l) => s + l.x, 0);
     const dv = items.reduce((s, l) => s + l.d, 0);
     return `
-    <div class="ds-day">
-      <p class="ds-day__h">Ngày ${d.n} · ${fmtMin(tot)} <span class="wb-help" style="font-weight:400">(từ số 0 ≈ ${fmtMin(Math.round(tot * BEGINNER_MULT))})</span></p>
-      <p class="ds-day__t">${d.t}</p>
-      <p class="ds-daysplit">đọc ${fmtMin(r)} · thực hành ${fmtMin(x)} · deliverable ${fmtMin(dv)}</p>
-      <ul class="ds-daylist">${items.map(l => `
-        <li><a href="#/${l.id}">${l.t}</a> <span class="ds-leaf__m">${mins(l)}′</span></li>`).join('')}</ul>
-      <p>${d.note}</p>
-      <p class="wb-help"><b>Nộp được:</b> ${d.out}</p>
-    </div>`;
-  }).join('');
+    <li class="wb-steps__item">
+      <span class="wb-steps__marker" aria-hidden="true">${d.n}</span>
+      <div class="wb-steps__content">
+        <p class="wb-steps__title"><span class="ds-sr">Ngày ${d.n}: </span>${d.t}</p>
+        <p class="ds-daysplit">${fmtMin(tot)} — đọc ${fmtMin(r)} · thực hành ${fmtMin(x)} · deliverable ${fmtMin(dv)}<span class="ds-daysplit__beg"> · từ số 0 ≈ ${fmtMin(Math.round(tot * BEGINNER_MULT))}</span></p>
+        <ul class="ds-daylist">${items.map(l => `
+          <li><a href="#/${l.id}">${l.t}</a> <span class="ds-leaf__m">${mins(l)}′</span></li>`).join('')}</ul>
+        <p class="wb-steps__desc">${d.note}</p>
+        <p class="wb-steps__note"><span class="wb-ico wb-ico--xs">inventory_2</span> Nộp được: ${d.out}</p>
+      </div>
+    </li>`;
+  }).join('') + `</ol>`;
 
   const rest = $('#planRest', scope);
   if (rest) {
@@ -11787,7 +11800,7 @@ VIZ.plan14 = el => {
     <div class="wb-card"><div class="wb-card__body">
       <p class="ds-viz__label">Mười bốn ngày — bấm một ngày để xem nó lấy bài từ chặng nào và trả ra deliverable gì</p>
       ${seg('Tô màu theo', [{k:'phase',t:'Chặng'},{k:'kind',t:'Loại thời gian'}], 'phase')}
-      <svg viewBox="0 0 320 132" role="img" aria-label="Mười bốn cột, mỗi cột một ngày, chiều cao là số giờ">
+      <svg viewBox="0 0 320 128" role="img" aria-label="Mười bốn cột, mỗi cột một ngày, chiều cao là số giờ">
         <g data-o="bars"></g>
       </svg>
       <div class="ds-key" data-o="legend"></div>
@@ -11806,9 +11819,13 @@ VIZ.plan14 = el => {
   let mode = 'phase', sel = 1;
   const maxD = Math.max(...DAYS.map(dayMins));
   const draw = () => {
-    const w = 19, gap = 2.6;
+    /* Chừa một lề trái (X0) để hai hàng số dưới trục TỰ ĐƯỢC GỌI TÊN ngay đầu hàng.
+       Trước đây nhãn "ngày · số giờ" nằm ở x=8 y=130 — tức là bên DƯỚI hai hàng số và
+       thẳng cột ngày 1 — nên nó đọc như nhãn của riêng cột đầu, và hai hàng số thì
+       không biết hàng nào là ngày, hàng nào là giờ. */
+    const X0 = 26, w = 18, gap = 2.7;
     bars.innerHTML = DAYS.map((d, i) => {
-      const x = 8 + i * (w + gap);
+      const x = X0 + i * (w + gap);
       const items = d.ids.map(q => byId[q]).filter(Boolean);
       const tot = sumMins(items);
       let segs;
@@ -11834,7 +11851,10 @@ VIZ.plan14 = el => {
               fill="none" stroke="${d.n === sel ? 'var(--wb-fg)' : 'transparent'}" stroke-width="1.8"/>
         <text x="${x + w / 2}" y="110" font-size="7" text-anchor="middle" fill="var(--wb-fg-subtle)">${d.n}</text>
         <text x="${x + w / 2}" y="120" font-size="6" text-anchor="middle" fill="var(--wb-fg-subtle)">${(tot / 60).toFixed(1).replace('.', ',')}</text></g>`;
-    }).join('') + `<text x="8" y="130" font-size="6.5" fill="var(--wb-fg-subtle)">ngày · số giờ</text>`;
+    }).join('')
+      // Nhãn đầu HÀNG, canh phải sát lề trái của cột đầu: mỗi hàng số tự nói nó là gì.
+      + `<text x="${X0 - 5}" y="110" font-size="6.5" text-anchor="end" fill="var(--wb-fg-subtle)">ngày</text>`
+      + `<text x="${X0 - 5}" y="120" font-size="6.5" text-anchor="end" fill="var(--wb-fg-subtle)">giờ</text>`;
 
     legend.innerHTML = mode === 'phase'
       ? TREE.map((p, i) => `<span class="ds-key__i"><span class="ds-key__sw" style="background:${shade(i)}"></span>${phaseShort(p)}</span>`).join('')
@@ -11847,17 +11867,43 @@ VIZ.plan14 = el => {
       `Chặng: ${[...new Set(items.map(l => phaseShort(l.phase)))].join(' · ')}<br>` +
       `Bài: ${items.map(l => l.t).join(' · ')}<br>` +
       `<b>Deliverable:</b> ${d.out}`;
-    alt.textContent = 'Số giờ mỗi ngày: ' +
-      DAYS.map(x => `ngày ${x.n} ${(dayMins(x) / 60).toFixed(1)} giờ`).join(', ') +
-      `. Tổng ${(DAYS.reduce((s, x) => s + dayMins(x), 0) / 60).toFixed(1)} giờ.`;
+    /* Mô tả hình phải nói HÌNH DẠNG, không đọc lại từng con số. Bản trước liệt kê cả
+       14 giá trị — đúng dữ liệu nhưng vô dụng: mắt đã thấy chúng trên cột, và lịch
+       dạng stepper ngay dưới in lại lần thứ ba. Một dãy 14 số đọc như tiếng ồn, và
+       nó chôn mất điều duy nhất cái hình này muốn nói: 14 ngày đều nặng gần như nhau,
+       nên KHÔNG có ngày nào "nhẹ" để dồn việc sang. Số liệu thô cho trình đọc màn
+       hình nằm ở <desc> của SVG. */
+    const hrsOf = x => dayMins(x) / 60;
+    const lo = DAYS.reduce((a, b) => hrsOf(b) < hrsOf(a) ? b : a);
+    const hi = DAYS.reduce((a, b) => hrsOf(b) > hrsOf(a) ? b : a);
+    const totalH = DAYS.reduce((s, x) => s + dayMins(x), 0) / 60;
+    const one = n => n.toFixed(1).replace('.', ',');
+    alt.textContent =
+      `${DAYS.length} ngày, tổng ${one(totalH)} giờ, trung bình ${one(totalH / DAYS.length)} giờ/ngày. `
+      + `Nhẹ nhất ngày ${lo.n} (${one(hrsOf(lo))} giờ), nặng nhất ngày ${hi.n} (${one(hrsOf(hi))} giờ) — `
+      + `chênh nhau chưa tới ${one(Math.ceil((hrsOf(hi) - hrsOf(lo)) * 2) / 2)} giờ, nên không có ngày nào `
+      + `rảnh để dồn việc sang: trượt một ngày là trượt cả chuỗi.`;
+    // Số liệu thô: chỉ cho trình đọc màn hình, vì <svg role="img"> gộp nội dung thành
+    // một mô tả duy nhất nên các <text> số bên trong không được đọc riêng.
+    let desc = bars.ownerSVGElement.querySelector('desc');
+    if (!desc) {
+      desc = document.createElementNS('http://www.w3.org/2000/svg', 'desc');
+      bars.ownerSVGElement.prepend(desc);
+    }
+    desc.textContent = 'Số giờ từng ngày: '
+      + DAYS.map(x => `ngày ${x.n} ${one(hrsOf(x))} giờ`).join(', ') + '.';
   };
   bars.addEventListener('click', e => {
     const t = e.target.closest('[data-day]');
     if (t) { sel = +t.dataset.day; draw(); }
   });
   // Bàn phím: một hàng nút thật bên dưới, vì <rect> trong SVG không tab tới được.
+  // Hàng nút này CŨNG mang số 1..14, nên nếu nó dính sát đáy SVG thì trông như hàng số
+  // thứ ba của trục và người đọc không biết hàng nào là ngày, hàng nào là giờ, hàng nào
+  // là nút bấm. Phải có khoảng tách rõ ràng.
   const nav = document.createElement('div');
   nav.className = 'ds-seg';
+  nav.style.marginTop = '14px';
   nav.setAttribute('role', 'group');
   nav.setAttribute('aria-label', 'Chọn ngày để xem chi tiết');
   nav.innerHTML = DAYS.map(d => `<button class="ds-seg__btn" data-day="${d.n}"

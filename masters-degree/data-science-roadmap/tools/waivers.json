@@ -1,0 +1,30 @@
+{
+  "_doc": [
+    "Lỗi CHẶN đã biết, đã có hướng sửa, nhưng cách sửa là một quyết định GIÁO TRÌNH",
+    "chứ không phải một dòng code — nên tạm không chặn các commit khác. Gate in lại",
+    "toàn bộ danh sách này mỗi lần chạy, kèm ngày và cách sửa.",
+    "",
+    "match  chuỗi con của thông báo lỗi (khớp thì hoãn lỗi đó)",
+    "since  ngày ghi nhận — để thấy nợ đã treo bao lâu",
+    "why    vì sao chưa sửa ngay",
+    "fix    việc cụ thể phải làm để xoá được dòng này",
+    "",
+    "Danh sách này phải NGẮN. Waiver treo quá lâu thì hoặc sửa, hoặc thừa nhận cổng",
+    "đó sai và bỏ cổng — đừng để nó thành nơi chôn lỗi."
+  ],
+
+  "waivers": [
+    {
+      "match": "tiêu chí đạt của \"ml-linear\" (thứ 37) đòi \"PR-AUC\"",
+      "since": "2026-08-03",
+      "why": "Lỗi thật: PR-AUC được dạy ở ml-metrics (thứ 43) nhưng ml-linear (thứ 37) đã bắt người học in PR-AUC ở tiêu chí đạt. Sửa đúng là DỜI BÀI, mà dời bài thì phải kéo theo TREE, WEEKS, thứ tự template, và các câu 'bài sau…' trong PAYOFF — một phiên riêng, không nhét vào phiên khác.",
+      "fix": "Dời ml-metrics lên ngay sau ml-linear (trong TREE và trong thứ tự <template>), thêm nó vào WEEKS tuần 3 (ids + needs), rồi rút hai bước đầu của ml-imb thành một câu trỏ về. Xong thì xoá waiver này VÀ rút gọn allowEarly của PR-AUC trong concepts.json."
+    },
+    {
+      "match": "deliverable tuần 3 đòi \"PR-AUC\" nhưng bài dạy nó",
+      "since": "2026-08-03",
+      "why": "Cùng một gốc với waiver trên: lịch 8 tuần hứa 'in PR-AUC validation' ở tuần 3 trong khi ml-metrics nằm ở tuần 4. auditPlan() không bắt được vì ml-metrics không có trong WEEKS[3].needs.",
+      "fix": "Cùng một lần sửa với waiver trên."
+    }
+  ]
+}

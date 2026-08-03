@@ -1,0 +1,112 @@
+{
+  "_doc": [
+    "Dữ liệu vào cho cổng G-FWD trong gate.mjs: khái niệm nào được DẠY ở bài nào.",
+    "",
+    "Vì sao cần: auditPlan() trong trang chỉ kiểm các phụ thuộc đã KHAI (WEEKS.needs).",
+    "Phụ thuộc thật thì nằm trong chữ — một bài có thể đòi người học 'in PR-AUC' ở tiêu",
+    "chí đạt trong khi PR-AUC được dạy sáu bài sau. Mọi con số vẫn khớp, giáo trình vẫn",
+    "sai. Danh sách này biến loại lỗi đó thành lỗi to tiếng.",
+    "",
+    "Cách thêm một khái niệm:",
+    "  definedIn  bài ĐẦU TIÊN thật sự giải thích nó (không phải bài đầu tiên nhắc tên).",
+    "  pattern    regex (không phân biệt hoa thường). Dùng khi khái niệm có nhiều cách",
+    "             viết, hoặc để tránh bắt nhầm (\\\\b để chặn khớp giữa từ).",
+    "  allowEarly các bài được phép nhắc sớm, KÈM lý do trong allowWhy — thường vì bài",
+    "             đó đã tự định nghĩa tại chỗ một câu, hoặc chỉ nêu tên để định vị.",
+    "",
+    "Chỉ đưa vào đây những khái niệm mà DÙNG SỚM LÀ SAI THẬT. Danh sách dài mà toàn",
+    "khái niệm vô hại thì cổng chỉ còn là tiếng ồn và người ta sẽ tắt nó."
+  ],
+  "concepts": {
+    "PR-AUC": {
+      "definedIn": "ml-metrics",
+      "pattern": "PR-AUC|average_precision",
+      "allowEarly": [
+        "s-intro",
+        "s-plan8w",
+        "s-plan14",
+        "m-bayes",
+        "ml-map",
+        "ml-cv",
+        "ml-imb"
+      ],
+      "allowWhy": "s-* chỉ nêu tên khi giới thiệu lộ trình; m-bayes/ml-map/ml-cv/ml-imb dùng như một tên chỉ số và trỏ tới ml-metrics. NẾU ml-metrics được dời lên sớm hơn thì xoá bớt danh sách này."
+    },
+    "rò rỉ dữ liệu": {
+      "definedIn": "d-leak",
+      "pattern": "rò rỉ|leakage",
+      "allowEarly": [
+        "s-pipeline",
+        "s-lookup",
+        "s-plan8w",
+        "s-plan14",
+        "t-sql",
+        "t-sklearn",
+        "t-stack",
+        "d-eda",
+        "d-clean"
+      ],
+      "allowWhy": "t-sql giải thích cái bẫy point-in-time tại chỗ và gọi tên bài d-leak; các bài còn lại chỉ cảnh báo trước để người học không làm sai trong lúc chờ tới d-leak."
+    },
+    "ngưỡng theo chi phí": {
+      "definedIn": "ml-metrics",
+      "pattern": "ngưỡng theo chi phí|ngưỡng quy ra tiền",
+      "allowEarly": [
+        "s-intro",
+        "s-pipeline"
+      ],
+      "allowWhy": "hai bài nhập môn nêu như một lời hứa của lộ trình, không yêu cầu làm."
+    },
+    "calibration": {
+      "definedIn": "m-prob",
+      "pattern": "calibrat|hiệu chỉnh xác suất",
+      "allowEarly": [],
+      "allowWhy": ""
+    },
+    "Pipeline": {
+      "definedIn": "t-sklearn",
+      "pattern": "\\bColumnTransformer\\b",
+      "allowEarly": [],
+      "allowWhy": "chỉ canh ColumnTransformer: chữ 'Pipeline' được dùng theo nghĩa thường (đường ống dữ liệu) ở rất nhiều bài trước, bắt nó sẽ thành tiếng ồn."
+    },
+    "bootstrap": {
+      "definedIn": "m-infer",
+      "pattern": "bootstrap",
+      "allowEarly": [
+        "s-pipeline"
+      ],
+      "allowWhy": "s-pipeline nêu tên ở bước 8 để định vị."
+    },
+    "embedding": {
+      "definedIn": "dl-embed",
+      "pattern": "embedding",
+      "allowEarly": [
+        "s-families",
+        "s-lookup",
+        "t-ai",
+        "f-text",
+        "f-cat",
+        "q-nlp",
+        "ml-map"
+      ],
+      "allowWhy": "f-text dạy TF-IDF → vector và tự định nghĩa embedding ở mức đủ dùng; các bài còn lại nêu tên để định vị."
+    },
+    "attention": {
+      "definedIn": "dl-attn",
+      "pattern": "\\battention\\b",
+      "allowEarly": [
+        "s-families",
+        "dl-cnn-rnn"
+      ],
+      "allowWhy": "dl-cnn-rnn nêu tên khi nói vì sao RNN bị thay thế."
+    },
+    "datacard": {
+      "definedIn": "pr-data",
+      "pattern": "datacard",
+      "allowEarly": [
+        "d-eda"
+      ],
+      "allowWhy": "TẠM THỜI. Tiêu chí đạt của d-eda tham chiếu datacard trong khi pr-data nằm ở chặng 8 — đây là một phụ thuộc ngược thật, đã ghi trong HANDOFF. Xoá dòng allowEarly này khi pr-data được tách/dời lên chặng 3."
+    }
+  }
+}
