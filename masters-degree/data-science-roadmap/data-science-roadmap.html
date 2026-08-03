@@ -216,8 +216,12 @@
   .ds-tree__phase:has([aria-current="page"]) > .wb-tree__row .wb-tree__label { font-weight: 800; color: var(--wb-fg); }
 
   /* ---- Control mức học trong cây (đọc → thực hành → deliverable) ---- */
+  /* Cụm pip nằm ở MÉP PHẢI hàng (sau __meta), không phải trước tên bài — nếu để
+     trước tên, chuỗi pip chạy dọc mép trái đọc như một "outline" trang trí và đẩy
+     tên bài thụt vào. Ở bên phải, nó là cột trạng thái tiến độ, tên bài thẳng lề. */
   .ds-lvl { display: inline-flex; align-items: center; background: none; border: 0;
-            padding: 3px 3px; margin: 0; cursor: pointer; flex: none; border-radius: var(--wb-radius-sm); }
+            padding: 3px 4px; margin: 0; cursor: pointer; flex: none; border-radius: var(--wb-radius-sm); }
+  .ds-lvl:hover { background: var(--wb-ink-hover); }
   .ds-lvl:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
   .ds-lvl__pips { display: inline-flex; gap: 2px; }
   .ds-pip { width: 6px; height: 6px; border-radius: 50%; box-sizing: border-box;
@@ -9510,14 +9514,14 @@ function buildTree() {
           <li class="wb-tree__node" data-leaf="${k.id}">
             <div class="wb-tree__row" data-goto="${k.id}">
               <span class="wb-tree__toggle is-leaf" aria-hidden="true"></span>
+              <a class="wb-tree__label ds-tree__link" href="#/${k.id}"
+                 id="treelink-${k.id}">${k.t}</a>
+              <span class="wb-tree__meta" aria-hidden="true">${mins(k)}′</span>
               <button type="button" class="ds-lvl" data-lvl-btn="${k.id}"
                       title="Bấm để đổi mức: đọc → thực hành → deliverable"
                       aria-label="Mức học bài ${k.t}: chưa bắt đầu. Bấm để đổi mức.">
                 <span class="ds-lvl__pips" aria-hidden="true"></span>
               </button>
-              <a class="wb-tree__label ds-tree__link" href="#/${k.id}"
-                 id="treelink-${k.id}">${k.t}</a>
-              <span class="wb-tree__meta" aria-hidden="true">${mins(k)}′</span>
             </div>
           </li>`).join('')}
       </ul>
