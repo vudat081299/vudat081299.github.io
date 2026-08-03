@@ -401,14 +401,31 @@
   /* Logo = nút ẩn/hiện lộ trình, hiện ở mọi bề rộng (khác nút ☰ mặc định của kit
      vốn chỉ hiện dưới 900px). Bấm → thu/mở cột trái trên desktop, mở/đóng drawer
      trên mobile — cùng handler [data-side-toggle]. */
-  .ds-logobtn { padding: 0; }
+  /* Nút-logo là một wb-btn--ghost: hover đổ nền --wb-ink-hover (chip mờ) đúng quy
+     ước kit, KHÔNG phóng to SVG. Bo góc nút = 12px để ĐỒNG TÂM với ô bo 6,5px của
+     logo (§24): khe hở góc = 1,5 (lề SVG) + 3 (padding) + 1 (viền) = 5,5 → bán
+     kính ngoài = 6,5 + 5,5 = 12. Đây đúng ca "W-brand button" trong design-principles. */
+  .ds-logobtn { padding: 3px; border-radius: 12px; }
   .ds-logo { display: inline-flex; }
-  .ds-logo svg { display: block; width: 24px; height: 24px; transition: transform .12s ease; }
+  .ds-logo svg { display: block; width: 24px; height: 24px; }
   /* var() KHÔNG chạy trong thuộc tính fill/stroke của SVG — phải đặt qua CSS. */
   .ds-logo__sq { fill: var(--wb-fg); }
   .ds-logo__ln { stroke: var(--wb-canvas); }
   .ds-logo__dot { fill: var(--wb-canvas); }
-  .ds-logobtn:hover .ds-logo svg { transform: scale(1.06); }
+  /* Nút đổi giao diện: capsule emoji + nhãn, theo mẫu theme-btn trong docs kit
+     (pill --wb-radius-pill, viền hairline, nền surface, shadow-sm). Hai trạng thái
+     Sáng/Tối, không có "theo hệ thống". */
+  .ds-theme {
+    display: inline-flex; align-items: center; gap: 7px; line-height: 1;
+    font-family: inherit; font-size: var(--wb-text-help); font-weight: 550; cursor: pointer;
+    padding: 6px 12px; border-radius: var(--wb-radius-pill);
+    border: var(--wb-bw) solid var(--wb-border); background: var(--wb-surface);
+    color: var(--wb-fg); box-shadow: var(--wb-shadow-sm);
+  }
+  .ds-theme:hover { border-color: var(--wb-border-strong); }
+  .ds-theme:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
+  .ds-theme__emoji { font-size: 14px; }
+  @media (max-width: 560px) { .ds-theme { padding: 6px; gap: 0; } .ds-theme__label { display: none; } }
   @media (max-width: 560px) { .ds-brand__sub { display: none; } }
   .ds-nodefoot { margin-top: 36px; padding-top: 18px; border-top: var(--wb-bw) solid var(--wb-border); }
   .ds-keyhint { font-size: var(--wb-text-caption); color: var(--wb-fg-subtle); margin: 12px 0 0; }
@@ -458,9 +475,9 @@
     <div class="wb-navbar__spacer"></div>
     <div class="wb-navbar__actions">
       <span class="wb-cap wb-cap--sm" id="topProgress" title="Tiến độ học đã đạt">0%</span>
-      <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" id="themeBtn" aria-label="Đổi giao diện sáng/tối" title="Đổi sáng/tối">
-        <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
-        <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
+      <button class="ds-theme" id="themeBtn" aria-label="Đổi giao diện sáng/tối" aria-pressed="false" title="Đổi sáng/tối">
+        <span class="ds-theme__emoji" aria-hidden="true">☀</span>
+        <span class="ds-theme__label">Sáng</span>
       </button>
     </div>
   </header>
@@ -8908,7 +8925,7 @@ const PHASE_OUTCOME = {
    ============================================================ */
 const DAYS = [
   { n:1,  t:'Khung tư duy + chỗ làm việc',
-    ids:['s-how','s-pipeline','s-families','s-lookup','s-plan8w','s-plan14','t-env','t-online'],
+    ids:['s-how','s-intro','s-pipeline','s-families','s-lookup','s-plan8w','s-plan14','t-env','t-online'],
     proof:['t-env','t-online'],
     out:'Repo GitHub đã tạo, <code>data/</code> nằm trong <code>.gitignore</code>, một notebook Colab clone được repo và đọc được một file CSV.',
     note:'Đọc <b>★ Bản đồ các họ bài toán</b> ngay hôm nay — nó quyết định bạn đọc mọi bài sau theo cách nào. Làm luôn phần dựng tài khoản ở cuối bài <b>Làm cả dự án trên trình duyệt</b>, để tuần sau không phải học công cụ mới lúc đang gấp.' },
@@ -11803,18 +11820,28 @@ syncSideA11y();
    trắng, không phải chỉ mất theme. loadDone() đã phòng chỗ đọc tiến độ; chỗ theme
    là đường thứ hai chạm storage nên cũng phải phòng. */
 const readTheme = () => { try { return localStorage.getItem('ds-theme'); } catch { return null; } };
-/* Biểu tượng sáng/tối do CSS của kit tự đổi theo lớp .dark (hai <span> to-dark /
-   to-light), không cần JS thay innerHTML — theo đúng mẫu wb-theme-toggle trong docs. */
+/* Capsule emoji + nhãn, HAI trạng thái (Sáng/Tối) — KHÔNG có chế độ "theo hệ
+   thống". Hệ thống chỉ quyết định lần mở ĐẦU TIÊN (khi chưa có lựa chọn lưu);
+   sau đó luôn theo đúng lựa chọn người dùng đã bấm, kể cả khi OS đổi giao diện. */
+function syncThemeBtn() {
+  const dark = document.documentElement.classList.contains('dark');
+  const btn = $('#themeBtn');
+  btn.querySelector('.ds-theme__emoji').textContent = dark ? '☾' : '☀';
+  btn.querySelector('.ds-theme__label').textContent = dark ? 'Tối' : 'Sáng';
+  btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
+}
 $('#themeBtn').addEventListener('click', () => {
   const dark = document.documentElement.classList.toggle('dark');
   try { localStorage.setItem('ds-theme', dark ? 'dark' : 'light'); }
   catch { /* storage bị chặn: theme không nhớ được giữa các lần mở, nhưng vẫn đổi được ngay bây giờ */ }
+  syncThemeBtn();
 });
 const _theme = readTheme();
 if (_theme === 'dark' ||
    (!_theme && matchMedia('(prefers-color-scheme: dark)').matches)) {
   document.documentElement.classList.add('dark');
 }
+syncThemeBtn();
 /* Xoá tiến độ là hành động không hoàn tác được và nút nằm ngay cạnh thanh tiến
    độ — quá dễ bấm nhầm. Thay vì hộp confirm() (chặn trang, dễ bấm bừa), giữ lại
    bản sao và cho hoàn tác trong 10 giây. */
