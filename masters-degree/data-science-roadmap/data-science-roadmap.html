@@ -18,14 +18,64 @@
      Mọi màu / bo góc / khoảng cách đều lấy từ token wb-*. */
 
   /* ---- prose: nội dung bài học ----
-     Khung ngoài dùng hết bề rộng cột chính; CHỮ giữ khổ hẹp để đọc dễ, còn
-     bảng / khối code / hình tương tác / thẻ được tràn rộng ra — trước đây mọi thứ
-     bị ép chung 78ch nên bảng nhiều chữ một cột xuống dòng vụn, còn hai bên thừa chỗ. */
-  .ds-prose { max-width: 1040px; }
+     ĐÚNG HAI mép phải, không hơn:
+       --ds-measure  → mọi dòng CHỮ chảy (p, ul, h2, h3, dl…)
+       hết cột       → bảng, khối code, hình tương tác, card, alert — và pager,
+                       hộp kết bài, bộ tự đánh giá ở ngoài .ds-prose
+
+     Trước đây có BỐN mép so le nên mắt đọc ra "layout hỏng": chữ 74ch = 746px, h2
+     cũng 74ch nhưng font 19px nên thành 959px (đơn vị `ch` co giãn theo font-size —
+     tiêu đề vì thế thò ra ~200px so với đoạn văn ngay dưới nó), .ds-prose 1040px, và
+     pager 1080px. Nay khổ chữ đặt bằng px nên tiêu đề và đoạn văn dùng CÙNG một mép,
+     còn .ds-prose bỏ hẳn max-width nên bảng/code/card chạm đúng mép phải của pager.
+
+     ĐỪNG nới --ds-measure to thêm. Đo thật ở 16px/-apple-system: 746px ≈ 109 ký tự
+     một dòng, đã dài hơn khoảng dễ đọc (45–75, tối đa ~90) — nới nữa là đổi khả năng
+     học lấy cảm giác "kín chỗ". Nếu sửa thì sửa theo hướng NHỎ đi. */
+  /* Cột nội dung hẹp hơn mặc định 1120px của kit. Khổ chữ bị chặn ở 720px vì lý do
+     đọc được; nếu để cột rộng 1080px thì bảng/code/hình chạm mép phải cách chữ tới
+     360px, và khoảng trống so le đó đọc như lỗi layout chứ không như lề trang. Ở 940px
+     (trong lòng 900px) hai mép chỉ cách nhau 180px — đủ để hình rộng vẫn thở, đủ gần
+     để cả trang đọc như MỘT cột. */
+  /* --ds-measure khai ở #main (không ở .ds-prose) vì có khối phải dùng đúng khổ chữ
+     đó nhưng nằm NGOÀI .ds-prose — mục tiêu bài, hộp kết bài, ghi chú phạm vi. */
+  #main { --wb-container-max: 940px; --ds-measure: 720px; }
+  /* ---- mục tiêu bài, đặt trước nội dung ----
+     Không dùng card: card đọc như một khối tách khỏi mạch, còn đây phải đọc như câu
+     đầu tiên của bài. Một vạch trái mảnh + nhãn nhỏ là đủ để mắt biết "đây là lời
+     hứa của bài", rồi đi tiếp. */
+  .ds-obj {
+    /* border-box để MÉP PHẢI trùng đúng mép các đoạn văn bên dưới: vạch trái + padding
+       nằm TRONG khổ, nếu không khối này thò ra 16px và lại thành một mép thứ ba. */
+    box-sizing: border-box; max-width: var(--ds-measure, 720px);
+    margin: 0 0 18px; padding: 8px 0 8px 14px;
+    border-left: 2px solid var(--wb-border-strong);
+    display: flex; flex-direction: column; gap: 2px; line-height: 1.55;
+  }
+  .ds-obj__k {
+    font-size: var(--wb-text-caption); text-transform: uppercase; letter-spacing: .07em;
+    font-weight: 700; color: var(--wb-fg-subtle);
+  }
+  .ds-obj__v { font-size: var(--wb-text-title); color: var(--wb-fg); }
+
+  /* Nút có nhãn dài cả câu: .wb-btn của kit là white-space:nowrap (đúng cho nhãn ngắn),
+     nên một nhãn 60 ký tự thành một hàng 467px và đẩy CẢ TRANG cuộn ngang trên điện
+     thoại. Cho phép nó gói dòng thay vì bắt cả trang giãn ra. */
+  .ds-btn--wrap { white-space: normal; text-align: left; height: auto; }
+  /* Khai cả trên .ds-prose: popup toán và ngăn phụ nằm NGOÀI #main nên không thừa
+     hưởng được biến từ đó. */
+  .ds-prose { --ds-measure: 720px; max-width: none; }
+  /* Popup toán và ngăn phụ hẹp hơn cột bài, nên khổ chữ phải co theo hộp chứ không
+     giữ 720px cứng — nếu giữ, chữ bị chặn ở một khổ rộng hơn cả cái popup. */
+  .ds-mathmodal .ds-prose, .ds-drawer .ds-prose { --ds-measure: none; }
   .ds-prose > p, .ds-prose > ul, .ds-prose > ol, .ds-prose > h2, .ds-prose > h3,
   .ds-prose > h4, .ds-prose > blockquote, .ds-prose > hr, .ds-prose > dl,
   .ds-prose > .ds-more, .ds-prose > .ds-srclist, .ds-prose > .ds-keyhint,
-  .ds-prose > .wb-help { max-width: 74ch; }
+  .ds-prose > .wb-help { max-width: var(--ds-measure); }
+  /* Chữ BÊN TRONG một thẻ/alert cũng phải giữ khổ đọc: thẻ chạy hết cột (1080px) mà
+     để đoạn văn bên trong chạy theo thì một dòng thành ~155 ký tự. */
+  .ds-prose .wb-card__body > p, .ds-prose .wb-card__body > ul,
+  .ds-prose .wb-card__body > ol, .ds-prose .wb-alert__msg { max-width: var(--ds-measure); }
   .ds-prose > h2 {
     font-size: var(--wb-text-section); font-weight: 700; letter-spacing: -.01em;
     margin: var(--wb-section-gap) 0 8px;
@@ -151,7 +201,10 @@
   .ds-ctrl__val { font-family: var(--wb-font-mono); font-size: var(--wb-text-help); font-weight: 600; font-variant-numeric: tabular-nums; }
 
   /* ---- rail: cây lộ trình ---- */
-  .wb-shell { --wb-sidenav-w: 300px; }
+  /* 330px, không hơn: tên bài dài nhất trong TREE vẫn gói gọn 2 dòng ở cỡ 13px, mà
+     cột nội dung bên phải chưa phải nhường chỗ. Rộng hơn nữa thì mục lục bắt đầu
+     tranh chú ý với bài đang đọc. */
+  .wb-shell { --wb-sidenav-w: 330px; }
   .ds-rail { display: flex; flex-direction: column; gap: 14px; }
   .ds-tree .wb-tree__row { align-items: flex-start; }
   .ds-tree .wb-tree__label { white-space: normal; line-height: 1.35; }
@@ -160,8 +213,11 @@
   /* Bỏ đường kẻ dọc guide của wb-tree--lines: 9 chặng × đường kẻ + cột toggle rỗng
      làm cột trái thành một mê cung. Thay bằng thụt lề mềm, phân tầng bằng khoảng
      cách và độ đậm chữ chứ không bằng đường viền. */
+  /* Thụt lề 26px: mép trái tên BÀI phải lệch hẳn khỏi mép trái tên CHẶNG, nếu không
+     hai tầng đọc như một danh sách phẳng và người đọc mất cảm giác mình đang ở đâu
+     trong 9 chặng. 26px = đủ để mắt thấy tầng, chưa tới mức cắt cụt tên bài. */
   .ds-tree.wb-tree--lines > .wb-tree__node > .wb-tree__children {
-    margin-left: 0; padding-left: 10px; border-left: 0;
+    margin-left: 0; padding-left: 26px; border-left: 0;
   }
   .ds-tree > .wb-tree__node + .wb-tree__node { margin-top: 2px; }
   /* Chấm tròn rỗng của lá (toggle giả) chỉ tổ chiếm chỗ — bỏ hẳn, để pip mức học
@@ -203,10 +259,16 @@
   .ds-tree .wb-tree__meta { font-size: 11px; }
   .ds-tree__phase > .wb-tree__row .wb-tree__label { font-weight: 650; font-size: 12.5px; }
   .ds-tree .wb-tree__label.is-done { color: var(--wb-fg-subtle); text-decoration: line-through; text-decoration-thickness: 1px; }
-  /* Nhãn trong cây là <a> thật (Tab tới được) nhưng phải trông như chữ thường,
-     không gạch chân — gạch chân 83 dòng liên tiếp thì cột trái thành hàng rào. */
+  /* Nhãn LÁ là <a> thật (Tab tới được) nhưng phải trông như chữ thường, không gạch
+     chân — gạch chân 84 dòng liên tiếp thì cột trái thành hàng rào. */
   .ds-tree__link { color: inherit; text-decoration: none; flex: 1 1 auto; min-width: 0; }
   .ds-tree__link:hover { text-decoration: none; }
+  /* Nhãn CHẶNG là <button> chứ không phải <a>: bấm nó mở/thu gọn chặng, không điều
+     hướng. Phải khai lại font/nền/lề vì <button> không thừa hưởng gì từ hàng. */
+  .ds-tree__phaselabel {
+    font: inherit; font-family: inherit; background: none; border: 0; padding: 0;
+    margin: 0; text-align: left; cursor: pointer; color: inherit;
+  }
   .ds-tree__link:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); border-radius: var(--wb-radius-sm); }
   .ds-tree .wb-tree__row:has(.ds-tree__link:focus-visible) { background: var(--wb-surface-hover); }
   /* Lá đang mở: cả hàng thành một mục nav được chọn bằng NỀN + CHỮ ĐẬM, KHÔNG
@@ -222,8 +284,13 @@
   .ds-tree__phase:has([aria-current="page"]) > .wb-tree__row .wb-tree__label { font-weight: 800; color: var(--wb-fg); }
 
   /* ---- Control mức học trong cây (đọc → thực hành → deliverable) ---- */
+  /* Cụm pip mức học kiêm nút bấm. Bo tròn hẳn (pill) → nền hover thành CAPSULE khi
+     có ≥2 pip, HÌNH TRÒN khi 1 pip. Nền hover dùng border-strong — đậm hơn nền hover
+     của cả hàng (surface-hover), để khi con trỏ chạm pip (đồng thời tính là hover
+     hàng) vẫn phân biệt được viên pip với cả hàng. */
   .ds-lvl { display: inline-flex; align-items: center; background: none; border: 0;
-            padding: 3px 3px; margin: 0; cursor: pointer; flex: none; border-radius: var(--wb-radius-sm); }
+            padding: 4px; margin: 0; cursor: pointer; flex: none; border-radius: var(--wb-radius-pill); }
+  .ds-lvl:hover { background: var(--wb-border-strong); }
   .ds-lvl:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
   .ds-lvl__pips { display: inline-flex; gap: 2px; }
   .ds-pip { width: 6px; height: 6px; border-radius: 50%; box-sizing: border-box;
@@ -1429,7 +1496,7 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
         <p class="wb-card__sub">Tiến độ lưu trong trình duyệt của bạn — không đăng nhập, không máy chủ. Mọi bước đều có đường đi <b>chạy 100% trên trình duyệt</b> cho người không có máy mạnh.</p>
       </div>
     </div>
-    <p style="margin-top:14px"><button class="wb-btn wb-btn--ghost wb-btn--sm" data-goto="s-how"><span class="wb-ico wb-ico--sm">menu_book</span> Hướng dẫn dùng trang chi tiết (nhãn ưu tiên, hai lộ trình, phím tắt)</button></p>
+    <p style="margin-top:14px"><button class="wb-btn wb-btn--ghost wb-btn--sm ds-btn--wrap" data-goto="s-how"><span class="wb-ico wb-ico--sm">menu_book</span> Hướng dẫn dùng trang chi tiết (nhãn ưu tiên, hai lộ trình, phím tắt)</button></p>
   </section>
 
   <section class="wb-section"><h2>Cần chuẩn bị gì trước khi bắt đầu</h2>
@@ -9528,13 +9595,15 @@ function buildTree() {
   const ul = $('#tree');
   ul.innerHTML = TREE.map(p => `
     <li class="wb-tree__node ds-tree__phase" data-phase="${p.id}">
-      <div class="wb-tree__row" data-goto="${p.kids[0].id}">
+      <div class="wb-tree__row">
         <button class="wb-tree__toggle" aria-expanded="true"
+                aria-controls="kids-${p.id}"
                 aria-label="Thu gọn chặng ${p.t}" data-toggle></button>
-        <a class="wb-tree__label ds-tree__link" href="#/${p.kids[0].id}">${p.t}</a>
+        <button type="button" class="wb-tree__label ds-tree__link ds-tree__phaselabel"
+                aria-controls="kids-${p.id}" aria-expanded="true">${p.t}</button>
         <span class="wb-tree__meta">${fmtMin(phaseMin(p))}</span>
       </div>
-      <ul class="wb-tree__children">
+      <ul class="wb-tree__children" id="kids-${p.id}">
         ${p.kids.map(k => `
           <li class="wb-tree__node" data-leaf="${k.id}">
             <div class="wb-tree__row" data-goto="${k.id}">
@@ -9553,23 +9622,35 @@ function buildTree() {
     </li>`).join('');
 
   ul.addEventListener('click', e => {
-    const toggle = e.target.closest('[data-toggle]');
-    if (toggle) {
-      const node = toggle.closest('.wb-tree__node');
-      const collapsed = node.classList.toggle('is-collapsed');
-      toggle.setAttribute('aria-expanded', String(!collapsed));
-      toggle.setAttribute('aria-label',
-        (collapsed ? 'Mở rộng chặng ' : 'Thu gọn chặng ') + node.querySelector('.wb-tree__label').textContent);
-      return;
-    }
     const lvlBtn = e.target.closest('[data-lvl-btn]');
     if (lvlBtn) { cycleLevel(lvlBtn.dataset.lvlBtn); return; }
+    // Hàng CHẶNG: bấm bất cứ đâu trên hàng = mở/thu gọn chặng. Trước đây hàng chặng
+    // mang data-goto tới bài đầu chặng nên bấm tên chặng lại nhảy thẳng vào bài đầu
+    // — không ai mong đợi thế. Một tiêu đề nhóm thì phải mở nhóm ra; muốn vào bài
+    // thì bấm chính bài đó. Bài đầu chặng vẫn cách một cú bấm, chỉ là không còn bị
+    // bấm nhầm khi người đọc chỉ muốn xem chặng có những gì.
+    const phaseRow = e.target.closest('.ds-tree__phase > .wb-tree__row');
+    if (phaseRow) { togglePhase(phaseRow.parentElement); return; }
     if (e.target.closest('a')) return;                 // link tự lo
-    // Bấm vào khoảng trống của hàng vẫn đi tới bài — tiện chuột, và không ảnh
+    // Bấm vào khoảng trống của hàng lá vẫn đi tới bài — tiện chuột, và không ảnh
     // hưởng bàn phím vì <div> này không nhận tiêu điểm.
     const row = e.target.closest('[data-goto]');
     if (row) location.hash = '#/' + row.dataset.goto;
   });
+}
+
+/* Mở/thu gọn một chặng. Trạng thái nằm ở class trên <li>; hai control (chevron và
+   tên chặng) cùng phản chiếu nó qua aria-expanded, nên trình đọc màn hình nghe đúng
+   dù người dùng bấm vào cái nào. */
+function togglePhase(node) {
+  if (!node) return;
+  const collapsed = node.classList.toggle('is-collapsed');
+  const name = node.querySelector('.wb-tree__label').textContent;
+  $$('[aria-expanded]', node.querySelector('.wb-tree__row')).forEach(el => {
+    el.setAttribute('aria-expanded', String(!collapsed));
+  });
+  const chev = node.querySelector('[data-toggle]');
+  if (chev) chev.setAttribute('aria-label', (collapsed ? 'Mở rộng chặng ' : 'Thu gọn chặng ') + name);
 }
 
 /* Số phút đã đạt trên tổng — tiến độ theo WORKLOAD, không theo số checkbox. */
@@ -9606,6 +9687,28 @@ function syncProgress() {
   syncMatrix();
   syncPortfolio();
   syncMilestones();
+}
+
+/* MỞ bài: mục tiêu, nói trước khi đọc. Người đọc phải biết mình sắp đổi lấy 45 phút
+   để lấy CÁI GÌ, ngay trước khi bỏ 45 phút đó ra — không phải đọc hết mới biết.
+
+   Ba thông tin còn lại của phần mở đã có ngay phía trên: bài NÓI VỀ gì (h1 + đoạn
+   đầu), ĐỘ ƯU TIÊN (chip Bắt buộc/Nên biết/Định vị), ĐỘ CẦN THIẾT (chip 14 ngày +
+   thời lượng + nhãn phạm vi). Thiếu duy nhất là KẾT QUẢ — và kết quả đó đã được khai
+   một lần ở PAYOFF[id][0], nên lấy lại từ đấy chứ không viết tay lần hai: một nguồn
+   sự thật, và auditPlan đã canh bài nào thiếu PAYOFF.
+
+   Cùng một câu xuất hiện lại ở cuối bài (gainBox) là CHỦ Ý, không phải trùng lặp:
+   đầu bài nó là lời hứa, cuối bài là biên nhận. Người đọc cần cả hai đầu để biết
+   mình đã đạt hay chưa. */
+function objectiveStrip(id) {
+  const g = PAYOFF[id];
+  if (!g) return '';
+  return `
+    <p class="ds-obj">
+      <span class="ds-obj__k">Xong bài này bạn có</span>
+      <span class="ds-obj__v">${g[0]}</span>
+    </p>`;
 }
 
 /* Kết bài: cầm được gì, và bài sau dùng nó làm gì. Dùng wb-card--flat để nó đọc
@@ -9727,6 +9830,7 @@ function render() {
     <div class="wb-cluster" style="margin:6px 0 12px" aria-label="Nhóm năng lực của bài">
       ${competencyBadges(leaf)}
     </div>
+    ${objectiveStrip(id)}
     <div class="ds-prose" id="prose">${tpl ? '' : '<p class="wb-help">Nội dung đang được viết.</p>'}</div>
     ${gainBox(id)}
     <div class="ds-nodefoot">
@@ -9748,17 +9852,20 @@ function render() {
 
   if (tpl) $('#prose').append(tpl.content.cloneNode(true));
 
-  // is-selected chỉ cho HÀNG LÁ — hàng chặng dùng data-goto=bài-đầu-chặng để bấm,
+  // is-selected chỉ cho HÀNG LÁ — hàng chặng chỉ là tiêu đề nhóm (bấm để mở/thu gọn),
   // nếu để nó nhận is-selected thì mở bài đầu chặng sẽ sáng cả chặng lẫn bài.
   $$('.ds-tree li[data-leaf] > .wb-tree__row').forEach(r => r.classList.toggle('is-selected', r.dataset.goto === id));
-  // aria-current chỉ đặt trên đúng link của LÁ đang mở (không đặt trên link chặng,
-  // dù href của nó trùng bài đầu chặng) — chặng tự sáng qua :has() trong CSS.
+  // aria-current chỉ đặt trên đúng link của LÁ đang mở — chặng tự tô đậm qua :has().
   $$('.ds-tree li[data-leaf] .ds-tree__link').forEach(a => {
     if (a.getAttribute('href') === '#/' + id) a.setAttribute('aria-current', 'page');
     else a.removeAttribute('aria-current');
   });
-  $$('.ds-tree__phase > .wb-tree__row .ds-tree__link').forEach(a => a.removeAttribute('aria-current'));
-  $$('.ds-tree__phase').forEach(n => { if (n.dataset.phase === leaf.phase.id) n.classList.remove('is-collapsed'); });
+  // Chặng của bài đang mở phải bung ra. Đi qua togglePhase để aria-expanded của cả
+  // chevron lẫn tên chặng khớp trạng thái thật — trước đây chỉ xoá class, nên trình
+  // đọc màn hình vẫn nghe "thu gọn" trong khi mắt thấy đã mở.
+  $$('.ds-tree__phase').forEach(n => {
+    if (n.dataset.phase === leaf.phase.id && n.classList.contains('is-collapsed')) togglePhase(n);
+  });
 
   const sa = $('#selfAssess');
   if (sa) sa.addEventListener('click', e => {
