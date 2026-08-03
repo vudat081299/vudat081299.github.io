@@ -173,6 +173,51 @@
   .ds-tree .wb-tree__row:has([aria-current="page"]) { box-shadow: inset 2px 0 0 var(--wb-fg); }
   /* Chấm tròn của lá không còn là <button>, nên bỏ con trỏ chuột gây hiểu nhầm */
   .ds-tree .wb-tree__toggle.is-leaf { cursor: default; pointer-events: none; }
+
+  /* ---- Control mức học trong cây (đọc → thực hành → deliverable) ---- */
+  .ds-lvl { display: inline-flex; align-items: center; background: none; border: 0;
+            padding: 3px 3px; margin: 0; cursor: pointer; flex: none; border-radius: var(--wb-radius-sm); }
+  .ds-lvl:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
+  .ds-lvl__pips { display: inline-flex; gap: 2px; }
+  .ds-pip { width: 6px; height: 6px; border-radius: 50%; box-sizing: border-box;
+            border: 1px solid var(--wb-border-strong); }
+  .ds-pip.is-on { background: var(--wb-fg); border-color: var(--wb-fg); }
+  .ds-lvl:hover .ds-pip { border-color: var(--wb-fg); }
+
+  /* ---- Tự đánh giá + tiêu chí đạt trên trang bài ---- */
+  .ds-selfassess { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+  .ds-selfassess__q { font-weight: 650; color: var(--wb-fg-subtle); }
+  .ds-lvlbtn.is-active { font-weight: 700; box-shadow: inset 0 0 0 2px var(--wb-fg); }
+  .ds-accept { margin-top: 4px; }
+  .ds-accept__h { font-weight: 700; display: flex; align-items: center; gap: 6px; margin: 0 0 2px; }
+  .ds-accept__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  .ds-accept__list li { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap;
+                        font-size: var(--wb-text-body); }
+  .ds-accept__tag { display: inline-flex; align-items: center; gap: 4px; font-size: 11px;
+                    color: var(--wb-fg-subtle); border: 1px solid var(--wb-border-strong);
+                    border-radius: var(--wb-radius-sm); padding: 1px 6px; white-space: nowrap; flex: none; }
+
+  /* ---- Ma trận năng lực ---- */
+  .ds-matrix { width: 100%; }
+  .ds-matrix th, .ds-matrix td { text-align: center; vertical-align: middle; }
+  .ds-matrix thead th:first-child, .ds-matrix .ds-mx__name, .ds-matrix .ds-mx__evid { text-align: left; }
+  .ds-matrix .ds-mx__evid { font-size: var(--wb-text-caption); color: var(--wb-fg-subtle); }
+  .ds-mx__c { font-size: 16px; color: var(--wb-border-strong); }
+  .ds-mx__c.is-on { color: var(--wb-fg); }
+  .ds-mx__c.is-open { color: var(--wb-fg-subtle); }
+  .ds-mx__c.is-off { color: var(--wb-border); }
+  .ds-mx__c.is-cap { box-shadow: inset 0 0 0 2px var(--wb-border-strong); border-radius: 6px; }
+
+  /* ---- Portfolio blueprint ---- */
+  .ds-pf { display: flex; align-items: center; gap: 10px; padding: 7px 2px;
+           border-bottom: 1px solid var(--wb-border); }
+  .ds-pf:last-child { border-bottom: 0; }
+  .ds-pf__box { width: 16px; height: 16px; flex: none; border: 1px solid var(--wb-border-strong);
+                border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; }
+  .ds-pf.is-done .ds-pf__box { background: var(--wb-fg); color: var(--wb-canvas); border-color: var(--wb-fg); }
+  .ds-pf__a { flex: 1 1 auto; min-width: 0; color: inherit; text-decoration: none; }
+  .ds-pf__a:hover { text-decoration: underline; text-underline-offset: 2px; }
+  .ds-pf.is-done .ds-pf__a { color: var(--wb-fg-subtle); }
   /* Vùng "nhảy tới nội dung" cho người dùng bàn phím — chỉ hiện khi có tiêu điểm */
   /* Kit chưa có lớp ẩn-nhưng-vẫn-đọc-được, nên định nghĩa tại chỗ. Không dùng
      display:none hay visibility:hidden — cả hai đều ẩn khỏi trình đọc màn hình. */
@@ -319,7 +364,8 @@
 <div class="wb-shell" id="shell">
 
   <header class="wb-navbar wb-navbar--sticky wb-navbar--glass">
-    <button class="wb-btn wb-btn--ghost wb-btn--icon wb-shell__side-toggle" data-side-toggle aria-label="Mở/đóng lộ trình">
+    <button class="wb-btn wb-btn--ghost wb-btn--icon wb-shell__side-toggle" data-side-toggle
+            aria-label="Mở/đóng lộ trình" aria-controls="sidenav" aria-expanded="false">
       <span class="wb-ico">menu</span>
     </button>
     <a class="wb-navbar__brand ds-brand" href="#/home">Data Science</a>
@@ -333,7 +379,7 @@
   </header>
 
   <div class="wb-shell__body">
-    <aside class="wb-shell__side">
+    <aside class="wb-shell__side" id="sidenav" aria-label="Lộ trình học">
       <div class="ds-rail">
         <div>
           <div class="ds-rail__progress"><span id="railPct">0% · 0/0 bài</span><button class="wb-btn wb-btn--ghost wb-btn--sm" id="resetBtn">Xoá tiến độ</button></div>
@@ -709,7 +755,10 @@ scores = []
 lo, hi = np.percentile(scores, [2.5, 97.5])
 print(f"AUC = {roc_auc_score(y, p):.3f} (95% CI: {lo:.3f}–{hi:.3f})")</div>
   <p class="wb-help">Hai dòng <code>np.asarray</code> ở đầu là chi tiết nhỏ nhưng bắt buộc: nếu <code>y_test</code> là một pandas Series thì <code>y_test[idx]</code> tra theo <b>nhãn hàng</b> chứ không theo vị trí — hoặc nổ, hoặc âm thầm cho kết quả sai. Đây là lỗi rất hay gặp khi làm bootstrap.</p>
-  <p>Nếu khoảng tin cậy của mô hình mới <b>chồng lấn</b> khoảng của baseline, bạn chưa chứng minh được gì cả — và thà nói thẳng điều đó trong luận văn còn hơn để phản biện chỉ ra.</p>
+  <div class="wb-alert wb-alert--danger wb-alert--plain"><div class="wb-alert__body">
+    <p class="wb-alert__title">Đừng so hai khoảng bằng mắt</p>
+    <p class="wb-alert__msg">Khoảng ở trên là cho <b>một</b> mô hình. So sánh hai mô hình bằng cách nhìn xem hai khoảng có chồng lấn hay không <b>không phải một kiểm định đúng</b>: hai khoảng chồng lấn vẫn có thể tương ứng với một khác biệt có ý nghĩa, đặc biệt khi hai mô hình được chấm trên <i>cùng một tập</i> (sai số của chúng đi kèm nhau, nên hiệu của chúng dao động ít hơn nhiều so với từng cái). Cách đúng: bootstrap <b>ghép cặp</b> — mỗi vòng lấy lại <i>cùng</i> chỉ số hàng, tính $\Delta = \text{metric}_{\text{mới}} - \text{metric}_{\text{baseline}}$, rồi lấy khoảng tin cậy của chính $\Delta$. <b>Nếu khoảng của $\Delta$ chứa 0 → chưa có bằng chứng khác biệt.</b> Code paired bootstrap nằm ở bài <b>Kết quả có ý nghĩa thống kê không</b>.</p>
+  </div></div>
 </template>
 
 <template data-mathdef="auc" data-title="ROC-AUC và PR-AUC — hai đường cong, hai câu chuyện">
@@ -1208,25 +1257,25 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
     <div class="wb-grid wb-grid--auto" style="--wb-grid-min:250px">
       <div class="wb-card wb-card--pad">
         <p class="wb-card__title">Lộ trình chuẩn · 6–8 tuần <span class="wb-cap wb-cap--sm">mặc định</span></p>
-        <p class="wb-card__sub"><b>101 giờ · ~12,5 giờ/tuần</b> nếu học hết, hoặc <b>10 giờ/tuần</b> nếu chỉ học phần Bắt buộc. Một dự án end-to-end đi sâu, <b>cộng</b> chín họ bài toán và các mini-project để bạn định vị được một dự án lạ.</p>
+        <p class="wb-card__sub"><b><span data-stat="total-hrs">105</span> giờ</b> nếu học hết (phần Bắt buộc ~<span data-stat="core-week">10,5</span> giờ/tuần trong 8 tuần). Con số này giả định bạn <b>đã biết lập trình</b>; nếu Python là ngôn ngữ đầu tiên thì ≈ <b><span data-stat="total-beg">147</span> giờ</b> — tức <b>“6–8 tuần” là cho người đã lập trình được</b>, người từ số 0 nên tính 10–13 tuần. Một dự án end-to-end đi sâu, <b>cộng</b> chín họ bài toán và các mini-project.</p>
         <p style="margin:10px 0 0"><button class="wb-btn wb-btn--sm" data-goto="s-plan8w">Xem lộ trình chuẩn</button></p>
       </div>
       <div class="wb-card wb-card--pad">
         <p class="wb-card__title">Fast track · 14 ngày</p>
-        <p class="wb-card__sub"><b>74,5 giờ · ~5,3 giờ/ngày</b> liên tục trong 14 ngày — không phải 60 giờ, và không phải “vài giờ buổi tối”. Đi trọn <i>một</i> vòng end-to-end; nó nói rõ phần nào bị hoãn lại và khi nào quay lại.</p>
+        <p class="wb-card__sub"><b><span data-stat="fast-hrs">74,5</span> giờ · ~<span data-stat="fast-day">5,5</span> giờ/ngày</b> liên tục trong 14 ngày (từ số 0 ≈ <span data-stat="fast-day-beg">7,5</span> giờ/ngày — rất nặng). Đi trọn <i>một</i> vòng end-to-end; nó nói rõ phần nào bị hoãn lại và khi nào quay lại.</p>
         <p style="margin:10px 0 0"><button class="wb-btn wb-btn--ghost wb-btn--sm" data-goto="s-plan14">Xem fast track</button></p>
       </div>
     </div>
-    <p class="wb-help" style="margin-top:12px">Không lộ trình nào ở đây hứa “thành thạo Data Science trong 14 ngày”. Cái 14 ngày mua được là <b>một vòng hoàn chỉnh</b>; cái 6–8 tuần mua thêm được là <b>khả năng chuyển giao sang bài toán khác</b>.</p>
+    <p class="wb-help" style="margin-top:12px">Không lộ trình nào ở đây hứa “thành thạo Data Science” hay “xong năng lực thạc sĩ” chỉ sau một lượt. Cụ thể mỗi lộ trình tạo ra ai: <b>Fast track 14 ngày</b> → đưa phần lớn nhóm năng lực tới mức <i>giải thích / thực hành</i> và làm ra <b>một</b> vòng end-to-end; bạn <i>chạm</i> chuyển giao chứ chưa thành thạo. <b>Lộ trình chuẩn 8 tuần</b> → tới mức <i>có deliverable đạt tiêu chí</i> ở các nhóm 1–6 và 9, cộng khả năng chuyển giao sang bài toán khác. Cả hai <b>đều dừng ở mức “có khung/kỹ năng” cho nghiên cứu và bảo vệ</b> — luận văn hoàn chỉnh và năng lực nghiên cứu độc lập cần nhiều tuần/tháng có mentor. Ma trận 9 nhóm năng lực bên dưới nói rõ từng mức.</p>
   </section>
 
-  <section class="wb-section"><h2>Một dự án chính đi sâu, sáu dự án nhỏ để chuyển giao</h2>
+  <section class="wb-section"><h2>Một dự án chính đi sâu, sáu đề nhỏ để chuyển giao (làm thật 2)</h2>
     <p class="wb-section__desc">Phần lớn khái niệm được dạy trên <b>một</b> bài toán: chấm điểm gian lận cho từng giao dịch. Nhưng nó không phải cả bản đồ.</p>
     <p>Chọn nó làm dự án chính là có chủ ý. Một giáo trình mỗi bài một ví dụ rời thì bạn hiểu từng mảnh mà không ráp được cái nào; còn bài toán gian lận có tính chất hiếm: nó <b>bắt buộc</b> bạn đi qua đúng những chỗ quyết định một luận văn đúng hay sai — nhãn lệch dưới 1%, chia tập theo thời gian, PR-AUC thay vì accuracy, chọn ngưỡng theo tiền, giờ giao dịch là biến chu kỳ, rò rỉ dữ liệu, và mô hình cũ đi theo thời gian. Các ví dụ phổ biến hơn (Titanic, giá nhà, MNIST) <b>không</b> ép bạn gặp một cái nào trong số đó.</p>
-    <p><b>Nhưng một bài toán phân loại trên dữ liệu bảng không bao phủ được Data Science.</b> Nó không dạy bạn backtest một mô hình dự báo, không dạy bạn đọc một metric xếp hạng, và không dạy bạn vì sao mô hình dự đoán không trả lời được câu hỏi nhân quả. Nên trang này có cấu trúc <b>một dự án chính + sáu dự án vệ tinh</b>: chặng 7 đi qua chín họ bài toán, mỗi họ trả lời cùng bốn câu — giữ gì, đổi gì, đo bằng gì, hỏng ở đâu.</p>
+    <p><b>Nhưng một bài toán phân loại trên dữ liệu bảng không bao phủ được Data Science.</b> Nó không dạy bạn backtest một mô hình dự báo, không dạy bạn đọc một metric xếp hạng, và không dạy bạn vì sao mô hình dự đoán không trả lời được câu hỏi nhân quả. Nên trang này có cấu trúc <b>một dự án chính + sáu đề vệ tinh (bắt buộc làm thật 2)</b>: chặng 7 đi qua chín họ bài toán, mỗi họ trả lời cùng bốn câu — giữ gì, đổi gì, đo bằng gì, hỏng ở đâu.</p>
     <div class="wb-cluster" style="margin:14px 0">
       <button class="wb-btn wb-btn--sm" data-goto="s-families">★ Bản đồ các họ bài toán</button>
-      <button class="wb-btn wb-btn--ghost wb-btn--sm" data-goto="q-mini">★ Sáu mini-project chuyển giao</button>
+      <button class="wb-btn wb-btn--ghost wb-btn--sm" data-goto="q-mini">★ Mini-project chuyển giao (làm thật 2/6)</button>
     </div>
     <p>Dự án chính cũng khớp với thứ bạn đã có: đồ án môn học của bạn đúng là bài toán này.</p>
     <p><a class="wb-btn wb-btn--ghost wb-btn--sm" href="../business-analytics/fraud-detection-project.html">
@@ -1260,11 +1309,11 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
   <div class="wb-grid wb-grid--auto" style="--wb-grid-min:240px">
     <div class="wb-card wb-card--pad">
       <p class="wb-card__title">Lộ trình chuẩn · 6–8 tuần</p>
-      <p class="wb-card__sub"><b>Mặc định.</b> 101 giờ, ~12,5 giờ/tuần (hoặc 10 giờ/tuần nếu chỉ lấy phần Bắt buộc). Đi hết cả sáu mục tiêu ở trên, gồm chín họ bài toán và các mini-project chuyển giao.</p>
+      <p class="wb-card__sub"><b>Mặc định.</b> <span data-stat="total-hrs">105</span> giờ (phần Bắt buộc ~<span data-stat="core-week">10,5</span> giờ/tuần). <b>“6–8 tuần” giả định bạn đã biết lập trình</b>; từ số 0 ≈ <span data-stat="total-beg">147</span> giờ → 10–13 tuần. Đi hết cả sáu mục tiêu, gồm chín họ bài toán và mini-project chuyển giao.</p>
     </div>
     <div class="wb-card wb-card--pad">
       <p class="wb-card__title">Fast track · 14 ngày</p>
-      <p class="wb-card__sub">Khi có deadline gấp. 74,5 giờ, ~5,3 giờ/ngày <i>mỗi ngày, không nghỉ</i>. Đi trọn <i>một</i> vòng end-to-end trên một bài toán — đạt mục tiêu 1, 2, 6, nhưng <b>chỉ chạm nhẹ mục tiêu 3</b>.</p>
+      <p class="wb-card__sub">Khi có deadline gấp. <span data-stat="fast-hrs">74,5</span> giờ, ~<span data-stat="fast-day">5,5</span> giờ/ngày <i>mỗi ngày, không nghỉ</i> (từ số 0 ≈ <span data-stat="fast-day-beg">7,5</span> giờ/ngày). Đi trọn <i>một</i> vòng end-to-end trên một bài toán — đạt mục tiêu 1, 2, 6, nhưng <b>chỉ chạm nhẹ mục tiêu 3</b>.</p>
     </div>
   </div>
   <p>Mỗi bài mang một nhãn <span class="wb-cap wb-cap--sm">14 ngày</span> hoặc <span class="wb-cap wb-cap--dashed wb-cap--sm">6–8 tuần</span> để bạn biết nó thuộc lộ trình nào. Đây là chiều <i>thời gian</i>, tách khỏi chiều <i>quan trọng</i> bên dưới.</p>
@@ -1336,7 +1385,7 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
   <ul>
     <li><b>Mở sẵn một notebook</b> bên cạnh. Mỗi đoạn code trong bài, gõ lại (đừng copy) rồi đổi một tham số xem hỏng thế nào.</li>
     <li><b>Sau mỗi bài, tự nói lại bằng lời của mình</b> trong 3 câu, viết vào notebook. Nếu không nói được, bạn chưa hiểu — quay lại chỗ mờ.</li>
-    <li><b>Đánh dấu đã học</b> bằng ô vuông bên trái. Tiến độ lưu trong trình duyệt này, không cần đăng nhập.</li>
+    <li><b>Đánh dấu mức học</b> bằng chấm tròn bên trái mỗi bài — bấm để đi vòng <i>đã đọc → đã thực hành → đạt deliverable</i>. Trên trang bài có nút tương ứng và <b>tiêu chí đạt</b> cụ thể. Tiến độ tính theo <i>workload</i> (một bài code 150′ nặng hơn nhiều một bài đọc 10′), không phải theo số tick, và lưu trong trình duyệt này — không cần đăng nhập.</li>
   </ul>
   <div class="wb-alert wb-alert--info">
     <span class="wb-alert__icon">i</span>
@@ -1501,8 +1550,8 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
 </template>
 
 <template data-node="s-plan8w">
-  <p>Đây là <b>lộ trình chính</b> của trang này: <b>101 giờ</b> chia trên 8 tuần, tức khoảng <b>12,5 giờ/tuần</b> nếu đi hết, hoặc <b>10 giờ/tuần</b> nếu chỉ lấy các bài <span class="wb-cap wb-cap--solid wb-cap--sm">Bắt buộc</span>. Nó đi hết cả chiều rộng (chín họ bài toán) lẫn chiều sâu (một dự án end-to-end đủ để bảo vệ). Bản 14 ngày ở bài sau là phiên bản nén của chính lộ trình này, không phải một lộ trình khác.</p>
-  <p class="wb-help"><b>Các tuần không bằng nhau, và bảng bên dưới không giả vờ là bằng nhau.</b> Tuần 1–2 nặng nhất (14–16 giờ) vì công cụ và toán bị dồn lên đầu — đó là cái giá của việc mọi thứ sau đó chạy trơn. Nếu 16 giờ là bất khả thi với bạn, giãn tuần 1 thành hai tuần và chấp nhận lộ trình 9 tuần; đừng nén nó bằng cách bỏ phần thực hành, vì phần đó mới là chỗ kiến thức bám lại.</p>
+  <p>Đây là <b>lộ trình chính</b> của trang này: <b><span data-stat="total-hrs">105</span> giờ</b> chia trên 8 tuần (phần <span class="wb-cap wb-cap--solid wb-cap--sm">Bắt buộc</span> ~<span data-stat="core-week">10,5</span> giờ/tuần). <b>Con số này giả định bạn đã biết lập trình;</b> nếu Python là ngôn ngữ đầu tiên thì ≈ <b><span data-stat="total-beg">147</span> giờ</b>, nên với người từ số 0 đây thực chất là lộ trình 10–13 tuần — <b>“6–8 tuần” không dành cho người bắt đầu từ con số 0 về lập trình.</b> Nó đi hết cả chiều rộng (chín họ bài toán) lẫn chiều sâu (một dự án end-to-end đủ để bảo vệ). Bản 14 ngày ở bài sau là phiên bản nén của chính lộ trình này.</p>
+  <p class="wb-help"><b>Các tuần không bằng nhau, và bảng bên dưới không giả vờ là bằng nhau.</b> Tuần 1, 2 và 6 nặng nhất (~14–16 giờ, người từ số 0 nhân thêm) vì công cụ/toán dồn lên đầu và tuần 6 gồm chín họ bài toán + hai mini-project. Nếu con số đó bất khả thi với bạn, giãn tuần nặng thành hai tuần và chấp nhận lộ trình dài hơn; đừng nén bằng cách bỏ phần thực hành, vì phần đó mới là chỗ kiến thức bám lại.</p>
 
   <div class="wb-alert wb-alert--info">
     <span class="wb-alert__icon">i</span>
@@ -1518,7 +1567,7 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
     </div>
     <div class="wb-card wb-card--pad">
       <p class="wb-card__title">Cuối tuần 6 · chuyển giao được</p>
-      <p class="wb-card__sub">Ít nhất <b>ba mini-project</b> thuộc ba họ khác nhau đã chạy xong, mỗi cái một notebook và một đoạn “giữ gì / đổi gì”.</p>
+      <p class="wb-card__sub"><b>Hai mini-project</b> thuộc hai họ khác nhau đã làm tới cùng, mỗi cái một notebook và một bảng “giữ gì / đổi gì”; bốn đề còn lại phác thảo bảng.</p>
     </div>
     <div class="wb-card wb-card--pad">
       <p class="wb-card__title">Cuối tuần 8 · bảo vệ được</p>
@@ -1528,7 +1577,7 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
 
   <h2>Tám tuần, mỗi tuần một deliverable</h2>
   <p>Cột <b>Nộp được gì</b> là phần quan trọng nhất của bảng này. Một tuần kết thúc bằng “đã đọc xong” là một tuần không kiểm chứng được; một tuần kết thúc bằng một commit thì có.</p>
-  <p class="wb-help">Cột <b>Giờ</b> tính từ chính các chặng của tuần đó, tách làm ba loại — không phải một con số ước lượng gõ tay. Tuần nào cao hơn 12 giờ thì hoặc bạn giãn nó ra hai tuần, hoặc bạn cắt bớt bài “Nên biết” trong chặng đó.</p>
+  <p class="wb-help">Cột <b>Giờ</b> tính từ chính các bài của tuần đó (leaf-level), tách làm ba loại và kèm ước lượng cho người mới lập trình — không phải một con số gõ tay. Tuần nào cao hơn 14 giờ (nhãn <span class="wb-cap wb-cap--dashed wb-cap--sm">nặng</span>) thì hoặc bạn giãn nó ra hai tuần, hoặc cắt bớt bài “Nên biết” trong đó.</p>
   <div id="planWeeks"></div>
 
   <h2>Vì sao thứ tự này, chứ không phải thứ tự trong đề bài</h2>
@@ -1541,7 +1590,7 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
   <p>Ngoài ba ràng buộc đó, bạn đảo được. Nếu phải nộp đề cương sớm, kéo tuần 8 lên trước tuần 5 — bạn cần biết mình sẽ chứng minh cái gì trước khi biết cách làm.</p>
 
   <h2>Nếu bạn chỉ có 6 tuần</h2>
-  <p>Ép tuần 5 và tuần 6 lại còn một tuần rưỡi bằng cách: ở chặng 6 chỉ giữ <b>Mạng nơ-ron</b>, <b>Attention</b>, <b>Transformer</b>; ở chặng 7 chỉ làm <b>ba</b> mini-project thay vì sáu — chọn forecasting, NLP, và A/B testing, vì ba cái này khác dự án gian lận nhiều nhất nên dạy được nhiều nhất về chuyển giao.</p>
+  <p>Ép tuần 5 và tuần 6 lại còn một tuần rưỡi bằng cách: ở chặng 6 chỉ giữ <b>Mạng nơ-ron</b>, <b>Attention</b>, <b>Transformer</b>; ở chặng 7 giữ đúng <b>hai</b> mini-project bắt buộc — chọn forecasting và một trong NLP / A/B testing, vì chúng khác dự án gian lận nhiều nhất nên dạy được nhiều nhất về chuyển giao.</p>
 
   <h2>Nhịp một tuần</h2>
   <p>Lịch theo tuần dễ trôi hơn lịch theo ngày, nên cần một nhịp cố định:</p>
@@ -1590,7 +1639,7 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
     <li><b>★ A/B testing &amp; tư duy nhân quả</b> — thứ phân biệt “mô hình dự đoán tốt” với “quyết định đúng”.</li>
     <li><b>Hồi quy</b> và <b>Multiclass</b> — nhanh, vì bạn đã có toàn bộ khung.</li>
     <li><b>NLP</b>, <b>Computer vision</b>, <b>Gợi ý</b>, <b>Analytics</b> — chọn theo hướng công việc bạn nhắm tới.</li>
-    <li><b>★ Sáu mini-project chuyển giao</b> — làm ít nhất ba cái. Đây mới là lúc kiến thức chuyển thành khả năng chuyển giao.</li>
+    <li><b>★ Mini-project chuyển giao (làm thật 2/6)</b> — làm ít nhất hai cái tới cùng. Đây mới là lúc kiến thức chuyển thành khả năng chuyển giao.</li>
   </ol>
   <p id="planRest" class="wb-help"></p>
 
@@ -2656,14 +2705,13 @@ nb = GaussianNB().fit(X_train, y_train)</div>
   <p>Nếu bạn chạy lại với seed khác và baseline nhảy lên 0,919 còn của bạn xuống 0,915, thì "cải tiến" ban đầu chỉ là nhiễu. Cách duy nhất để biết là đo mức nhiễu đó.</p>
 
   <h2>Ba công cụ, theo thứ tự nên dùng</h2>
-  <h3>1 · Khoảng tin cậy bằng bootstrap — dùng mặc định</h3>
+  <h3>1 · Bootstrap ghép cặp trên <i>hiệu</i> — dùng mặc định để so hai mô hình</h3>
   <p><button class="ds-math" data-math="ci">Bootstrap — 4 bước + code chạy được</button></p>
-  <p>Đây là công cụ mạnh nhất vì nó áp dụng cho <b>mọi</b> chỉ số, kể cả “số tiền tiết kiệm được” — thứ không có công thức phương sai nào sẵn. Báo cáo dạng: <b>AUC = 0,921 (KTC 95%: 0,908–0,933)</b>.</p>
-  <p>Quy tắc đọc: nếu khoảng của bạn <b>chồng lấn</b> khoảng của baseline, bạn chưa chứng minh được gì. Nói thẳng điều đó trong luận văn tốt hơn nhiều so với để phản biện chỉ ra.</p>
+  <p>Vì hai mô hình được chấm trên <b>cùng một tập</b>, đừng dựng hai khoảng riêng rồi so bằng mắt: hai khoảng chồng lấn vẫn có thể tương ứng với một khác biệt thật. Thay vào đó, mỗi vòng bootstrap lấy lại <b>cùng</b> chỉ số hàng cho cả hai mô hình, tính $\Delta = \text{metric}_{\text{mới}} - \text{metric}_{\text{baseline}}$, rồi lấy khoảng tin cậy của chính $\Delta$. <b>Nếu khoảng của $\Delta$ chứa 0 → chưa có bằng chứng khác biệt.</b> Cách này dùng được cho AUC, PR-AUC, F1, kể cả “số tiền tiết kiệm được”. Code đầy đủ nằm ở bài <b>Kết quả có ý nghĩa thống kê không</b>.</p>
 
-  <h3>2 · McNemar — khi so hai mô hình trên cùng tập test</h3>
+  <h3>2 · McNemar — chỉ cho quyết định nhị phân tại một ngưỡng</h3>
   <p><button class="ds-math" data-math="mcnemar">McNemar — bảng 2×2 và code</button></p>
-  <p>Đây là kiểm định <b>đúng</b> cho tình huống của bạn. Nhiều luận văn dùng t-test hai mẫu độc lập ở đây và đó là sai: hai mô hình chạy trên đúng những mẫu đó nên kết quả không độc lập.</p>
+  <p>McNemar so hai mô hình khi đầu ra đã là <b>nhãn 0/1 tại một ngưỡng cụ thể</b> (chặn / không chặn). Nó <b>không</b> áp dụng cho ROC-AUC hay PR-AUC — những chỉ số dựa trên thứ hạng trên toàn dải ngưỡng; với các chỉ số đó hãy dùng bootstrap ghép cặp ở mục 1. Điểm chung của cả hai: chúng tôn trọng việc hai mô hình chạy trên đúng những mẫu đó, nên đừng dùng t-test hai mẫu độc lập.</p>
 
   <h3>3 · p-value — hiểu để không dùng sai</h3>
   <p><button class="ds-math" data-math="pvalue">p-value nói gì, KHÔNG nói gì, và ba cái bẫy</button></p>
@@ -2679,14 +2727,15 @@ nb = GaussianNB().fit(X_train, y_train)</div>
   <h2>Mẫu câu viết vào luận văn</h2>
   <p>Ba câu này dùng được gần như nguyên văn:</p>
   <div class="ds-code">"Mô hình đề xuất đạt PR-AUC 0,412 (KTC 95% bootstrap: 0,388–0,437, n=1000
-lần lấy mẫu lại), so với 0,367 (0,344-0,391) của baseline LightGBM.
+lần lấy mẫu lại), so với 0,367 (0,344-0,391) của baseline LightGBM. Bootstrap
+GHÉP CẶP trên hiệu cho Δ = 0,045 (KTC 95%: 0,021–0,068), không chứa 0.
 
-Kiểm định McNemar trên cùng tập kiểm tra cho khác biệt có ý nghĩa thống kê
-(χ² = 24,3; p &lt; 0,001).
+Tại ngưỡng vận hành đã chọn, kiểm định McNemar trên cùng tập kiểm tra cho
+khác biệt có ý nghĩa thống kê (χ²(1) = 24,3; p &lt; 0,001).
 
 Kết quả được lấy trung bình trên 5 hạt giống ngẫu nhiên (42, 43, 44, 45, 46);
 độ lệch chuẩn giữa các lần chạy là 0,006."</div>
-  <p>Ba câu này thể hiện: bạn biết đo độ bất định, bạn dùng đúng kiểm định, và kết quả của bạn tái lập được. Đó là toàn bộ những gì phần thực nghiệm cần chứng minh.</p>
+  <p>Câu quyết định là câu về <b>hiệu ghép cặp</b>: nó mới là bằng chứng cho “tốt hơn”, không phải việc hai khoảng riêng có chồng lấn hay không. Hai khoảng riêng chỉ để người đọc thấy độ lớn; McNemar chỉ nói về nhãn tại ngưỡng đã chốt; và năm hạt giống cho thấy kết quả tái lập được. Đó là toàn bộ những gì phần thực nghiệm cần chứng minh.</p>
 
   <h2>Thứ bạn có thể bỏ qua</h2>
   <p>ANOVA, kiểm định phi tham số, thống kê Bayes đầy đủ, power analysis — đều hay, đều không cần cho một luận văn thạc sĩ ứng dụng trong 2 tuần. Nếu người hướng dẫn yêu cầu cụ thể thì học riêng cái đó.</p>
@@ -5107,6 +5156,11 @@ stat, pval = proportions_ztest([conv_b, conv_a], [n_b, n_a])</div>
   <p>Đọc tám bài trên cho bạn <b>bản đồ</b>. Bài này biến bản đồ thành khả năng thật, bằng cách buộc bạn tự tay đi qua các họ bài toán khác.</p>
   <p>Nguyên tắc quan trọng nhất: <b>mini-project không cần production hoá.</b> Không API, không Docker, không tuning. Mỗi cái là <i>một</i> notebook, làm đúng năm việc — và việc thứ năm mới là việc chính.</p>
 
+  <div class="wb-alert wb-alert--info wb-alert--plain"><div class="wb-alert__body">
+    <p class="wb-alert__title">Bắt buộc làm thật 2 trong 6 — phần còn lại là phác thảo</p>
+    <p class="wb-alert__msg">Sáu đề bên dưới là một <b>thực đơn</b>, không phải sáu bài tập bắt buộc. Deliverable của bài này (và của Mốc 2 tuần 6) là <b>hai</b> mini-project làm tới cùng: chọn hai họ <i>khác nhất</i> so với fraud (gợi ý: <b>Forecasting</b> + một trong <b>NLP / Gợi ý / Nhân quả</b>). Bốn cái còn lại chỉ cần bảng “giữ gì / đổi gì” ở mức phác thảo — chúng để bạn tra khi gặp họ đó thật, không phải để nộp. Ngân sách thời lượng của bài (5 giờ) đã tính cho <b>hai</b> notebook làm thật; đừng nhân cho sáu.</p>
+  </div></div>
+
   <h2>Năm việc của một mini-project</h2>
   <ol>
     <li>Tải dữ liệu, định vị bằng <b>tám câu hỏi</b> ở bài <b>Bản đồ các họ bài toán</b>.</li>
@@ -5115,9 +5169,9 @@ stat, pval = proportions_ztest([conv_b, conv_a], [n_b, n_a])</div>
     <li>Chạy <b>một</b> mô hình thật. Ghi con số. Dừng lại — đừng tune.</li>
     <li>Viết <b>bảng “giữ gì / đổi gì”</b> so với dự án gian lận. <b>Đây là sản phẩm thật của mini-project.</b></li>
   </ol>
-  <p>Thời gian mục tiêu: <b>3–5 giờ mỗi cái.</b> Nếu một cái ngốn quá một buổi, gần như chắc chắn bạn đang tối ưu thay vì đang học chuyển giao — dừng và viết bảng bước 5.</p>
+  <p>Thời gian mục tiêu cho <b>một</b> mini-project làm thật: <b>khoảng 2–2,5 giờ</b> nếu bạn bám đúng năm bước và <i>không</i> tune — bạn đã đi qua toàn bộ vòng đời ở dự án fraud, nên phần lặp lại nhanh hơn nhiều so với lần đầu. Nếu một cái ngốn quá một buổi, gần như chắc chắn bạn đang tối ưu thay vì đang học chuyển giao — dừng và viết bảng bước 5. Hai cái × ~2,5 giờ là ngân sách 5 giờ của bài.</p>
 
-  <h2>Sáu dự án</h2>
+  <h2>Sáu dự án (thực đơn — chọn 2 làm thật)</h2>
   <div class="wb-table-scroll"><table>
     <thead><tr><th>#</th><th>Họ</th><th>Đề bài</th><th>Nguồn dữ liệu gợi ý</th><th>Điều nó dạy mà fraud không dạy</th></tr></thead>
     <tbody>
@@ -6414,6 +6468,7 @@ REVIEW → BLOCK hoà khi   40.000 + p·0,1·3.000.000 = (1−p)·150.000   → 
 
   <h2>3 · <code>src/evaluate.py</code> — khoảng tin cậy đúng loại</h2>
   <p>Bootstrap theo dòng (lấy lại ngẫu nhiên từng dòng) chỉ đúng khi các dòng <b>độc lập</b>. Dữ liệu giao dịch vi phạm giả định đó theo hai chiều cùng lúc.</p>
+  <p>File này có <b>hai</b> hàm và chúng trả lời hai câu khác nhau: <code>bootstrap_ci</code> cho khoảng tin cậy của <i>một</i> mô hình (để báo cáo độ lớn), còn <code>paired_ci</code> để <b>so hai mô hình</b> — nó bootstrap ghép cặp trên hiệu $\Delta$ và cờ <code>significant</code> chỉ bật khi khoảng của $\Delta$ <b>không chứa 0</b>. So hai khoảng riêng có chồng lấn hay không là phép so sai vì hai mô hình được chấm trên cùng một tập.</p>
   <div class="wb-table-scroll"><table>
     <thead><tr><th>Kiểu bootstrap</th><th>Lấy lại cái gì</th><th>Dùng khi câu hỏi là…</th></tr></thead>
     <tbody>
@@ -6501,6 +6556,50 @@ nhiễu. Đây đúng là loại lỗi hội đồng hỏi tới.
     <b>return</b> {"point": float(_ap(y, p)), "lo": float(lo), "hi": float(hi),
             "kind": kind, "n_units": len(units), "n_boot": len(scores),
             "width": float(hi - lo)}
+
+
+<b>def</b> paired_ci(y, p_new, p_old, groups=<b>None</b>, times=<b>None</b>, kind="cluster",
+              n=400, seed=42, block="1D", alpha=0.05):
+    <i>"""So HAI mô hình trên CÙNG một tập: bootstrap GHÉP CẶP trên HIỆU metric.
+
+    Mỗi vòng lấy lại đúng cùng các đơn vị (thẻ / khối ngày) rồi tính
+    Δ = PR-AUC(mới) − PR-AUC(baseline) trên cùng mẫu đó, và trả về khoảng tin
+    cậy của chính Δ. NẾU KHOẢNG CHỨA 0 → chưa có bằng chứng khác biệt.
+
+    Đây là phép so đúng, thay cho việc dựng hai khoảng riêng rồi xem chúng có
+    chồng lấn hay không: hai khoảng chồng lấn vẫn có thể ứng với một Δ khác 0 rõ
+    rệt, vì sai số của hai mô hình trên cùng dữ liệu đi kèm nhau và triệt tiêu
+    bớt trong hiệu. (Với quyết định 0/1 tại một ngưỡng cố định thì dùng McNemar.)
+    """</i>
+    y = np.asarray(y)
+    a = np.asarray(p_new, dtype=float)
+    b = np.asarray(p_old, dtype=float)
+    rng = np.random.default_rng(seed)
+
+    <b>if</b> kind == "row":
+        units = [np.array([i]) <b>for</b> i <b>in</b> range(len(y))]
+    <b>elif</b> kind == "cluster":
+        <b>if</b> groups <b>is</b> <b>None</b>:
+            <b>raise</b> ValueError("cluster bootstrap cần groups=card_id")
+        units = _unit_indices(np.asarray(groups))
+    <b>elif</b> kind == "block":
+        <b>if</b> times <b>is</b> <b>None</b>:
+            <b>raise</b> ValueError("block bootstrap cần times=timestamp")
+        units = _unit_indices(pd.to_datetime(pd.Series(np.asarray(times)))
+                              .dt.floor(block).to_numpy())
+    <b>else</b>:
+        <b>raise</b> ValueError(f"kind lạ: {kind}")
+
+    diffs = []
+    <b>for</b> _ <b>in</b> range(n):
+        pick = rng.integers(0, len(units), len(units))
+        idx = np.concatenate([units[k] <b>for</b> k <b>in</b> pick])   <i># CÙNG chỉ số cho cả hai</i>
+        va, vb = _ap(y[idx], a[idx]), _ap(y[idx], b[idx])
+        <b>if</b> <b>not</b> (np.isnan(va) <b>or</b> np.isnan(vb)):
+            diffs.append(va - vb)
+    lo, hi = np.percentile(diffs, [100 * alpha / 2, 100 * (1 - alpha / 2)])
+    <b>return</b> {"delta": float(_ap(y, a) - _ap(y, b)), "lo": float(lo), "hi": float(hi),
+            "kind": kind, "significant": bool(lo &gt; 0 <b>or</b> hi &lt; 0), "n_boot": len(diffs)}
 
 
 <b>def</b> plot_pr(y, p, path=<b>None</b>, label="mô hình"):
@@ -7644,6 +7743,10 @@ so sánh với [BASELINE B], đánh giá bằng [CHỈ SỐ M].</div>
 
   <h2>Lượt 3 · 4–5 giờ — chỉ cho 2–3 paper quan trọng nhất</h2>
   <p>Đọc như thể bạn sẽ phải <b>cài đặt lại</b>. Đặt câu hỏi ở mỗi giả định. Ghi lại chỗ nào bạn thấy đáng ngờ — những chỗ đó là hạt giống của đóng góp.</p>
+  <div class="wb-alert wb-alert--info wb-alert--plain"><div class="wb-alert__body">
+    <p class="wb-alert__title">Thời lượng bài ≠ thời lượng đọc</p>
+    <p class="wb-alert__msg">Con số ~1 giờ của <i>bài</i> này là để học <b>phương pháp</b> ba lượt và áp lượt 1–2 cho một paper. Lượt 3 (4–5 giờ cho mỗi paper × 2–3 paper) là <b>công việc luận văn thật</b>, trải nhiều buổi, <b>không</b> nằm trong ngân sách giờ của bài. Deliverable bạn cần nộp ở đây là <b>reading notes</b> đủ ba lượt cho các paper cốt lõi — xem tiêu chí đạt ở cuối trang.</p>
+  </div></div>
 
   <h2>Đọc phần Kết quả một cách hoài nghi</h2>
   <p>Bốn câu hỏi nên hỏi mọi paper, kể cả paper hay:</p>
@@ -7672,6 +7775,22 @@ so sánh với [BASELINE B], đánh giá bằng [CHỈ SỐ M].</div>
 
 <template data-node="th-repro">
   <p>Tái lập một paper trước khi tự làm là bước mà nhiều người bỏ qua, và cũng là bước tiết kiệm nhiều thời gian nhất. Lý do: nó cho bạn <b>một mốc đã biết là đúng</b>. Khi kết quả của bạn lạ, bạn biết ngay là lỗi ở mình hay ở dữ liệu.</p>
+  <div class="wb-alert wb-alert--warning wb-alert--plain"><div class="wb-alert__body">
+    <p class="wb-alert__title">Bài này dựng KHUNG + tập quy trình — tái lập một paper THẬT mất nhiều ngày/tuần</p>
+    <p class="wb-alert__msg">Đừng để thời lượng ~1,5 giờ của bài làm bạn tưởng tái lập xong một paper trong một buổi. Ngân sách đó đủ để (a) chạy lại một ví dụ nhỏ/đồ chơi cho quen quy trình, và (b) <b>điền reproduction report skeleton</b> ở dưới. Tái lập một kết quả paper đầy đủ — dựng môi trường, khớp dữ liệu, chạy tới ra số — là một mảnh việc riêng, thường mất nhiều ngày tới vài tuần và cần phản hồi mentor. Deliverable của bài là <b>bản báo cáo tái lập có cấu trúc</b>, không phải con số đã khớp.</p>
+  </div></div>
+
+  <h2>Reproduction report — khung bắt buộc điền</h2>
+  <p>Đây là deliverable của bài. Điền đủ tám mục, kể cả khi bạn chưa khớp được số — một báo cáo trung thực về chỗ lệch có giá trị học thuật thật:</p>
+  <div class="ds-code">paper:            tiêu đề · tác giả · năm · link
+version/commit:   commit hash của repo tác giả (hoặc "không có repo")
+dataset:          tên · phiên bản · số dòng · tỉ lệ nhãn
+môi trường:       Python · thư viện chính + phiên bản · phần cứng
+kết quả kỳ vọng:  con số trong bảng của họ (ghi rõ bảng/hàng nào)
+kết quả tái lập:  con số bạn ra (hoặc "chưa chạy tới")
+sai lệch:         Δ tuyệt đối và tương đối
+nguyên nhân đã kiểm: dữ liệu? chia tập? tiền xử lý ẩn? phiên bản lib? seed?
+lệnh tái chạy:    đúng lệnh để chạy lại từ đầu</div>
 
   <h2>Quy trình</h2>
   <ol>
@@ -7785,13 +7904,12 @@ so sánh với [BASELINE B], đánh giá bằng [CHỈ SỐ M].</div>
 print(f"{np.mean(results):.3f} ± {np.std(results):.3f}")</div>
   <p>Nếu độ lệch chuẩn là 0,015 mà "cải tiến" của bạn là 0,010, bạn chưa có gì. Con số này phải biết <b>trước</b> khi tuyên bố bất cứ điều gì.</p>
 
-  <h3>2 · Khoảng tin cậy bằng bootstrap</h3>
+  <h3>2 · Khoảng tin cậy bằng bootstrap (cho từng mô hình)</h3>
   <p><button class="ds-math" data-math="ci">Bootstrap — 4 bước, code chạy được</button></p>
-  <p>Báo cáo: <b>0,412 (KTC 95%: 0,388–0,437)</b>. Nếu khoảng này chồng lấn khoảng của baseline, hãy nói thẳng điều đó.</p>
+  <p>Báo cáo: <b>0,412 (KTC 95%: 0,388–0,437)</b>. Khoảng này để người đọc thấy độ lớn và độ bất định của <i>một</i> mô hình. <b>Đừng</b> kết luận “khác nhau / không khác nhau” bằng cách so hai khoảng riêng có chồng lấn hay không — với hai mô hình trên cùng một tập, đó là phép so sai. Việc kết luận thuộc về mục 3.</p>
 
-  <h3>3 · Kiểm định ghép cặp</h3>
-  <p><button class="ds-math" data-math="mcnemar">McNemar — kiểm định đúng khi hai mô hình chạy trên cùng tập test</button></p>
-  <p>Cho AUC/PR-AUC (chỉ số dựa trên thứ hạng, không phải đếm), dùng bootstrap trên <b>hiệu</b> của hai mô hình:</p>
+  <h3>3 · Kiểm định ghép cặp — chỗ thật sự kết luận “tốt hơn”</h3>
+  <p>Cho AUC/PR-AUC và các chỉ số liên tục dựa trên thứ hạng, dùng bootstrap ghép cặp trên <b>hiệu</b> của hai mô hình (lấy lại cùng chỉ số hàng cho cả hai). Cho quyết định nhị phân tại một ngưỡng cụ thể, dùng <button class="ds-math" data-math="mcnemar">McNemar</button> — nó chỉ hợp lệ ở đầu ra 0/1 tại ngưỡng, không dùng cho AUC:</p>
   <div class="ds-code">rng = np.random.default_rng(42)
 y   = np.asarray(y_te)                       <i># ép mảng, xem ghi chú ở popup Bootstrap</i>
 a, b = np.asarray(p_new), np.asarray(p_old)
@@ -7993,6 +8111,19 @@ plt.savefig("reports/figures/pr_curve.pdf")   <i># PDF = vector, không vỡ khi
     <div class="wb-alert__body"><p class="wb-alert__title">Quay sẵn một video 90 giây của chính màn demo đó</p>
       <p class="wb-alert__msg">Máy chiếu không nhận, Wi-Fi phòng họp chập chờn, cổng 8000 bị chiếm, laptop tự cập nhật đêm trước — bốn chuyện này đều đã xảy ra với ai đó. Có video thì sự cố kỹ thuật tốn của bạn 5 giây (“em có bản ghi sẵn đây ạ”) thay vì 5 phút lúng túng. Để video trong cùng thư mục với slide, và <b>chạy thử toàn bộ trên đúng máy + đúng máy chiếu sẽ dùng</b>.</p></div>
   </div>
+
+  <h2>Bảng kiểm bảo vệ — deliverable của bài</h2>
+  <div class="wb-alert wb-alert--warning wb-alert--plain"><div class="wb-alert__body">
+    <p class="wb-alert__title">Đọc xong 24 câu ≠ bảo vệ được</p>
+    <p class="wb-alert__msg">Danh sách 24 câu bên dưới là <b>tài liệu ôn</b>, không phải bằng chứng bạn sẵn sàng. “Bảo vệ được” là một kỹ năng cần <b>diễn tập có bấm giờ</b> và phản hồi — thường nhiều buổi, lý tưởng là có mentor/bạn đóng vai hội đồng. Trang này chỉ đưa bạn tới mức <i>có khung + có checklist</i>; đánh dấu đạt khi bạn đã qua đủ các mục sau:</p>
+  </div></div>
+  <ul>
+    <li><b>Slide:</b> đủ 12 slide, mỗi slide một thông điệp nằm ở tiêu đề, có đánh số trang.</li>
+    <li><b>Demo + dự phòng:</b> demo 90 giây chạy được, <b>và</b> một video ghi sẵn cùng màn demo đó để phòng sự cố.</li>
+    <li><b>Diễn tập có bấm giờ:</b> nói to tối thiểu 3 lần, vừa thời lượng cho phép (lần đầu thường vượt 40%).</li>
+    <li><b>Bộ câu hỏi tự trả lời:</b> tự viết câu trả lời (3 gạch đầu dòng) cho cả 24 câu; chỗ ấp úng đã ôn.</li>
+    <li><b>Rubric tự chấm:</b> chấm bản nháp theo rubric của trường (nếu không có, dùng: rõ đóng góp · đúng phương pháp đánh giá · nêu được hạn chế · trả lời được câu hỏi).</li>
+  </ul>
 
   <h2>Hai mươi tư câu hội đồng hay hỏi</h2>
   <p>Đọc cột giữa trước, tự trả lời, rồi mới đọc cột phải. Chỗ nào bạn ấp úng chính là chỗ cần ôn.</p>
@@ -8422,7 +8553,7 @@ const TREE = [
     { id:'q-rec',             t:'Gợi ý & xếp hạng (recommendation)', r:45, x:25, d:5, p:'good' },
     { id:'q-causal',          t:'★ A/B testing & tư duy nhân quả', r:55, x:25, d:10, p:'core' },
     { id:'q-analytics',       t:'Analytics: SQL, KPI, cohort, funnel', r:45, x:25, d:5, p:'good' },
-    { id:'q-mini',            t:'★ Sáu mini-project chuyển giao', r:40, x:0, d:20, p:'core' },
+    { id:'q-mini',            t:'★ Mini-project chuyển giao — làm thật 2/6', r:45, x:15, d:240, p:'core' },
   ]},
   { id:'p8', t:'8 · Làm ra product thật (fraud detection)', kids:[
     { id:'pr-arch',           t:'Kiến trúc hệ thống chống gian lận', r:30, x:5, d:25, p:'core' },
@@ -8525,26 +8656,57 @@ const DAYS = [
     note:'Đây là chặng 9 (Luận văn), không phải chặng 8 (Sản phẩm) — chặng 8 đã xong ở ngày 12–13. Bài <b>★ Bảo vệ</b> hôm nay chỉ đọc để biết hội đồng hỏi gì; nó có lịch chuẩn bị 3 ngày riêng, dùng vào ba ngày trước hôm bảo vệ.' },
 ];
 
-/* Lịch 8 tuần — cùng kiểu dữ liệu, cùng cách tính giờ. Mỗi tuần khai báo các
-   chặng nó phủ; số giờ suy ra từ chính TREE. auditPlan() kiểm rằng 11 chặng đều
-   được phủ đúng một lần. */
+/* Lịch 8 tuần — LEAF-LEVEL (mỗi tuần liệt kê từng bài, không phải cả chặng).
+   Chuyển từ phase-level sang leaf-level là để sửa đúng lỗi phụ thuộc: một
+   deliverable không được đòi kiến thức/file mà bài dạy ra nó lại nằm ở tuần sau.
+   Ví dụ ml-map + ml-linear được kéo lên tuần 3 để "python -m src.train in một
+   con số validation" thật sự chạy được ở tuần 3 (cần một mô hình), thay vì hứa
+   ở tuần 3 rồi mới dạy cách train ở tuần 4/7.
+
+   Mỗi tuần khai báo:
+     ids   — các bài (leaf) tuần đó phủ; auditPlan kiểm mỗi leaf xuất hiện đúng 1 lần
+     out   — deliverable (mô tả)
+     needs — các bài PHẢI học xong để làm được deliverable; auditPlan kiểm mọi
+             id trong needs nằm ở tuần này hoặc sớm hơn (không có phụ thuộc ngược)
+     mile  — nhãn mốc, nếu tuần này là một mốc kiểm chứng
+   Số giờ suy ra từ chính TREE nên không lệch với trang chủ / lịch 14 ngày. */
 const WEEKS = [
-  { n:1, ids:['p0','p1'], t:'Đóng khung bài toán · Python/pandas/SQL · quy trình cloud · làm việc với AI',
-    out:'Repo GitHub có <code>docs/problem-statement.md</code>; một notebook Colab đọc được dữ liệu; <code>requirements.txt</code> đã ghim phiên bản' },
-  { n:2, ids:['p2','p3'], t:'Toán tối thiểu · EDA · làm sạch · rò rỉ · chia tập',
-    out:'<code>notebooks/01-eda.ipynb</code> + 4 hình trong <code>reports/figures/</code> + <code>src/split.py</code> kèm <code>assert_split_ok</code>' },
-  { n:3, ids:['p4'], t:'Feature engineering đầy đủ · baseline đầu tiên',
-    out:'<b>Mốc 1:</b> <code>python -m src.train</code> chạy được và in ra một con số validation. Bảng thí nghiệm có dòng đầu tiên' },
-  { n:4, ids:['p5'], t:'ML cổ điển · đánh giá · chọn ngưỡng · giải thích mô hình',
-    out:'Bảng so sánh baseline vs mô hình chính kèm khoảng tin cậy cluster bootstrap; một hình SHAP' },
-  { n:5, ids:['p6'], t:'Deep learning · embedding · attention · Transformer',
-    out:'Một notebook train được một mạng nhỏ tới hội tụ; ba câu tự giải thích attention bằng lời của bạn' },
-  { n:6, ids:['p7'], t:'<b>Các họ bài toán khác</b> · mini-project',
-    out:'<b>Mốc 2:</b> 3–6 mini-project, mỗi cái một notebook + bảng “giữ gì / đổi gì”' },
-  { n:7, ids:['p8'], t:'Sản phẩm: API, đóng gói, giám sát, MLOps tối thiểu',
-    out:'API chạy được đọc ngưỡng từ artifact; <code>Dockerfile</code>; hàm PSI; CI chạy <code>pytest</code>' },
-  { n:8, ids:['p9','p10'], t:'Thiết kế nghiên cứu · thống kê · viết · tái lập · bảo vệ',
-    out:'<b>Mốc 3:</b> dàn ý luận văn, bảng ablation, kiểm định ghép cặp, 12 slide' },
+  { n:1, ids:['s-how','s-pipeline','s-families','s-lookup','s-plan8w','s-plan14',
+              't-env','t-online','t-colab','t-ai','t-pandas','t-sql','t-numpy','t-sklearn','t-stack'],
+    t:'Khung tư duy · Python/pandas/SQL/numpy/sklearn · quy trình cloud · làm việc với AI',
+    out:'Repo GitHub (<code>data/</code> trong <code>.gitignore</code>); một notebook Colab clone repo và đọc được một CSV; <code>requirements.txt</code> đã ghim phiên bản. <i>(problem-statement.md để tuần 2, khi học đóng khung.)</i>',
+    needs:['t-env','t-online','t-pandas'] },
+  { n:2, ids:['m-vector','m-deriv','m-prob','m-bayes','m-infer',
+              'd-framing','d-eda','d-clean','d-leak','d-split'],
+    t:'Toán tối thiểu · đóng khung bài toán · EDA · làm sạch · rò rỉ · chia tập',
+    out:'<code>docs/problem-statement.md</code> (dự đoán gì · khi nào · sai tốn bao nhiêu); <code>notebooks/01-eda.ipynb</code> + 4 hình trong <code>reports/figures/</code>; <code>src/split.py</code> kèm <code>assert_split_ok</code>; danh sách cột nghi rò rỉ kèm lý do',
+    needs:['d-framing','d-eda','d-split','d-leak'] },
+  { n:3, ids:['f-what','f-numeric','f-cat','f-cyclic','f-time','f-text','f-pipeline','f-select','f-store',
+              'ml-map','ml-linear'],
+    t:'Feature engineering đầy đủ · Pipeline · baseline logistic đầu tiên',
+    out:'<code>src/features.py</code> + <code>src/history.py</code>; <code>src/pipeline.py</code> (Pipeline + ColumnTransformer) với một test một dòng; <code>python -m src.train</code> chạy xong và in một PR-AUC validation từ baseline logistic; bảng thí nghiệm có dòng 1',
+    needs:['f-pipeline','ml-linear','ml-map','d-split'], mile:'Mốc 1' },
+  { n:4, ids:['ml-loss','ml-trees','ml-overfit','ml-cv','ml-imb','ml-metrics','ml-tune','ml-shap','ml-unsup'],
+    t:'ML cổ điển · overfit/CV · dữ liệu lệch · PR-AUC & ngưỡng · SHAP',
+    out:'Bảng so sánh baseline vs mô hình chính (LightGBM) trên cùng validation: PR-AUC + trung bình±độ lệch chuẩn của 5 seed; một hình SHAP; một ngưỡng chọn theo chi phí. <i>(Khoảng tin cậy cluster bootstrap và kiểm định ghép cặp làm ở tuần 7–8 khi đã học đúng loại bootstrap.)</i>',
+    needs:['ml-trees','ml-metrics','ml-shap','ml-imb','ml-cv'] },
+  { n:5, ids:['dl-nn','dl-backprop','dl-train','dl-embed','dl-cnn-rnn','dl-attn','dl-tf','dl-llm','dl-tab'],
+    t:'Deep learning nền · embedding · attention · Transformer',
+    out:'Một notebook train một mạng nhỏ tới hội tụ, có vẽ đường cong loss; ba câu tự giải thích attention bằng lời của bạn',
+    needs:['dl-train','dl-attn'] },
+  { n:6, ids:['q-regress','q-forecast','q-multi','q-nlp','q-cv','q-rec','q-causal','q-analytics','q-mini'],
+    t:'Các họ bài toán khác · hai mini-project chuyển giao',
+    out:'Hai mini-project làm thật (mỗi cái một notebook + bảng “giữ gì / đổi gì” so với fraud); bốn đề còn lại chỉ cần bảng giữ/đổi ở mức phác thảo',
+    needs:['q-mini','q-forecast'], mile:'Mốc 2' },
+  { n:7, ids:['pr-arch','pr-data','pr-code','pr-eval','pr-serve','pr-monitor','pr-mlops','pr-cost'],
+    t:'Sản phẩm fraud: repo → model đã lưu → đánh giá → API/Docker → giám sát',
+    out:'<code>python -m src.train</code> bản đầy đủ + <code>models/fraud-*.joblib</code> + metadata + ngưỡng; <code>src/evaluate.py</code> (cluster bootstrap CI + <code>paired_ci</code>); API FastAPI + <code>Dockerfile</code>; hàm PSI; CI chạy <code>pytest</code>',
+    needs:['pr-code','pr-eval','pr-serve','pr-monitor','pr-mlops'] },
+  { n:8, ids:['th-topic','th-read','th-repro','th-design','th-stats','th-write','th-tools','th-defense',
+              'r-roadmapsh','r-mistakes','r-glossary','r-books'],
+    t:'Nghiên cứu · thống kê · viết · tái lập · bảo vệ (khung + kỹ năng, không phải luận văn hoàn chỉnh)',
+    out:'<code>research-question.md</code>; reading notes 3 lượt; <b>reproduction report skeleton</b>; bảng ablation + registry thí nghiệm; kiểm định ghép cặp; <b>thesis skeleton</b> (mapping artifact→chương); defense checklist + 12 slide. <i>(Viết luận văn hoàn chỉnh + tái lập một paper thật + bảo vệ nằm NGOÀI 8 tuần — cần nhiều tuần/tháng và phản hồi mentor.)</i>',
+    needs:['th-topic','th-read','th-repro','th-design','th-stats','th-write','th-defense'], mile:'Mốc 3' },
 ];
 
 /* Nhãn thứ hai, độc lập với nhãn ưu tiên: bài này có nằm trong fast track không.
@@ -8626,7 +8788,7 @@ const PAYOFF = {
   'q-rec':      ['Baseline popularity, collaborative filtering, content-based, và metric xếp hạng đọc đúng cách.', 'Bài sau là ranh giới mà mọi mô hình dự đoán đều không vượt qua được.'],
   'q-causal':   ['Phân biệt tương quan với nhân quả, thiết kế một A/B test đọc được, và biết khi nào mô hình dự đoán không trả lời được câu hỏi đang hỏi.', 'Bài sau là phần công việc chiếm nhiều thời gian nhất của một data team thật.'],
   'q-analytics':['SQL phân tích, cohort, funnel, segmentation, và ranh giới ba nghề: analytics, predictive, causal.', 'Bài cuối chặng: sáu dự án nhỏ để kiểm chứng bạn thật sự chuyển giao được.'],
-  'q-mini':     ['Sáu mini-project có dataset công khai, kèm bảng "giữ gì / đổi gì" so với dự án gian lận.', 'Chặng sau quay lại dự án chính và biến nó thành sản phẩm, bắt đầu từ bản vẽ.'],
+  'q-mini':     ['Hai mini-project chuyển giao làm tới cùng (mỗi cái một notebook + bảng "giữ gì / đổi gì"), và bốn đề phác thảo để tra sau.', 'Chặng sau quay lại dự án chính và biến nó thành sản phẩm, bắt đầu từ bản vẽ.'],
   'pr-arch':    ['Bản vẽ đường đi của một giao dịch, và năm quyết định thiết kế phải nêu trong luận văn.', 'Bài sau là dữ liệu thật để chạy bản vẽ đó.'],
   'pr-data':    ['Bộ dữ liệu đã tải và đã kiểm tra, cùng bộ mô phỏng để chạy thử pipeline.', 'Bài sau là toàn bộ mã nguồn dự án, từ file rỗng tới mô hình đã lưu.'],
   'pr-code':    ['Repo chạy được: config, features, history, pipeline, train — và một file .joblib có thật trong models/.', 'Có model rồi, bài sau mới trả lời được câu "nó tốt tới đâu, và chặn từ ngưỡng nào".'],
@@ -8650,49 +8812,218 @@ const PAYOFF = {
 };
 
 /* ============================================================
+   1c. Hệ số cho người mới lập trình, phạm vi năng lực, tiêu chí đạt, ma trận năng lực
+   ============================================================ */
+
+/* Hai ước lượng, một nguồn số. Cột r/x/d giả định bạn ĐÃ lập trình được. Nếu
+   Python là ngôn ngữ đầu tiên, nhân hệ số này — phần đội lên nằm gần hết ở cột
+   thực hành (x) và deliverable (d), rất ít ở cột đọc. Mọi chỗ hiển thị tổng giờ
+   đều đưa ra CẢ HAI con số qua hàm này, nên không có chỗ nào lỡ quảng bá một con
+   số mà quên người từ số 0. */
+const BEGINNER_MULT = 1.4;
+
+/* Phạm vi thật của một bài. Có những bài trang này chỉ kịp cho "nhận biết" hoặc
+   "làm ra khung"; năng lực độc lập cần nhiều tuần + phản hồi mentor. Nói thẳng
+   để không ai tưởng đọc xong 8 tuần là thành chuyên gia mọi nhánh. */
+const SCOPE = {
+  'th-topic':'skeleton','th-read':'skeleton','th-repro':'weeks','th-design':'skeleton',
+  'th-stats':'skeleton','th-write':'weeks','th-tools':'aware','th-defense':'weeks',
+};
+const SCOPE_LABEL = {
+  aware:    ['Trang chỉ tạo nhận biết', 'Trang giới thiệu để bạn biết nó tồn tại và khi nào cần; năng lực thật phải học riêng.'],
+  skeleton: ['Trang giúp làm ra khung/deliverable', 'Trong khung giờ bài bạn dựng được một artifact ở dạng khung; hoàn thiện nó nằm ngoài trang.'],
+  weeks:    ['Năng lực thật cần nhiều tuần + mentor', 'Đây là kỹ năng phải lặp lại nhiều tuần/tháng có phản hồi mentor mới đạt mức độc lập. Bài chỉ cho bạn quy trình và checklist.'],
+};
+
+/* Tiêu chí đạt (acceptance) cho các bài quan trọng. Đây là thứ biến "tôi đã đọc"
+   thành "tôi làm được": tự đánh dấu mức "Đạt deliverable" nghĩa là bạn xác nhận
+   đã qua các dòng dưới. Trang không kiểm hộ — nhưng liệt kê rõ thì bạn (và hội
+   đồng) biết chính xác cần gì.  k: file | cmd | test | result | ask */
+const ACCEPT = {
+  'd-framing':[
+    {k:'file',v:'<code>docs/problem-statement.md</code> tồn tại trong repo'},
+    {k:'ask', v:'Nói được: dự đoán gì · tại đúng thời điểm nào · một FP và một FN tốn bao nhiêu tiền'},
+    {k:'ask', v:'Chỉ ra thời điểm cắt: chỉ dữ liệu biết TRƯỚC mốc đó mới được dùng làm feature'},
+  ],
+  'd-eda':[
+    {k:'file',v:'<code>notebooks/01-eda.ipynb</code> chạy hết từ đầu tới cuối, không lỗi'},
+    {k:'file',v:'≥ 4 hình lưu trong <code>reports/figures/</code>'},
+    {k:'result',v:'In được tỉ lệ nhãn dương và số dòng — khớp với những gì bạn khai trong datacard'},
+  ],
+  'd-leak':[
+    {k:'file',v:'Một danh sách cột <i>nghi rò rỉ</i>, mỗi cột kèm lý do'},
+    {k:'ask', v:'Giải thích được một kênh rò rỉ theo thời gian có thể xảy ra trong dữ liệu của bạn'},
+  ],
+  'd-split':[
+    {k:'file',v:'<code>src/split.py</code> chia train/valid/test theo thời gian'},
+    {k:'test',v:'<code>assert_split_ok</code> pass: không giao nhau về thời gian, không rò rỉ theo nhóm'},
+    {k:'result',v:'In được khoảng thời gian của từng tập'},
+  ],
+  'f-pipeline':[
+    {k:'file',v:'<code>src/pipeline.py</code>: một đối tượng Pipeline + ColumnTransformer đi từ DataFrame thô tới <code>predict_proba</code>'},
+    {k:'test',v:'Một test chứng minh Pipeline chạy với một dòng dữ liệu'},
+    {k:'ask', v:'Vì sao để scaler trong Pipeline lại chặn được rò rỉ khi cross-validation'},
+  ],
+  'ml-metrics':[
+    {k:'result',v:'Báo cáo PR-AUC (chỉ số chính) chứ không chỉ accuracy/ROC-AUC'},
+    {k:'result',v:'Một ngưỡng chọn theo chi phí, có con số tiền kèm theo'},
+    {k:'ask', v:'Giải thích được vì sao accuracy vô dụng ở 0,17% nhãn dương'},
+  ],
+  'pr-code':[
+    {k:'cmd', v:'<code>python -m src.train</code> chạy xong không lỗi'},
+    {k:'file',v:'<code>models/fraud-*.joblib</code> có thật + file metadata (phiên bản, ngày, config hash)'},
+    {k:'result',v:'In một PR-AUC validation tái lập được khi chạy lại cùng seed'},
+  ],
+  'pr-eval':[
+    {k:'file',v:'<code>src/evaluate.py</code> có <code>bootstrap_ci</code> và <code>paired_ci</code>'},
+    {k:'result',v:'Khoảng tin cậy <b>cluster</b> bootstrap (theo thẻ), không phải theo dòng'},
+    {k:'result',v:'So hai mô hình bằng <code>paired_ci</code>: cờ <code>significant</code> chỉ bật khi CI của Δ không chứa 0'},
+    {k:'test',v:'Bốn test chặn lỗi im lặng (rò rỉ, ngưỡng, hằng số, đầu vào lệch) pass'},
+  ],
+  'pr-serve':[
+    {k:'file',v:'API FastAPI nhận JSON giao dịch, trả điểm rủi ro; <code>Dockerfile</code> build được'},
+    {k:'cmd', v:'<code>docker run</code> lên được service và trả lời một request mẫu'},
+    {k:'ask', v:'Nói rõ đây là bản demo bảo vệ, không phải hạ tầng chạy 24/7'},
+  ],
+  'pr-monitor':[
+    {k:'file',v:'Một hàm tính PSI cho drift, và một spec giám sát tối thiểu (đo gì, ngưỡng báo động, chu kỳ retrain)'},
+    {k:'ask', v:'Phân biệt được data drift với concept drift trong bối cảnh của bạn'},
+  ],
+  'q-mini':[
+    {k:'file',v:'<b>Hai</b> notebook mini-project làm tới cùng (5 bước, không tune)'},
+    {k:'file',v:'Mỗi cái một bảng “giữ gì / đổi gì” so với dự án fraud; bốn đề còn lại có bảng phác thảo'},
+    {k:'test',v:'Mỗi mini-project có một <code>assert</code> chứng minh chia tập đúng kiểu của họ đó'},
+  ],
+  'th-topic':[
+    {k:'file',v:'<code>research-question.md</code> / proposal một trang: khoảng trống · câu hỏi · cách chứng minh (delta)'},
+    {k:'ask', v:'Nói được một câu vì sao đóng góp của bạn là mới so với ≥ 3 paper đã đọc'},
+  ],
+  'th-repro':[
+    {k:'file',v:'Reproduction report skeleton: paper/version/commit · dataset · môi trường · kết quả kỳ vọng · kết quả tái lập · sai lệch · nguyên nhân đã kiểm · lệnh tái chạy'},
+    {k:'ask', v:'Hiểu rằng tái lập một paper THẬT có thể mất nhiều ngày/tuần — bài này chỉ dựng khung + tập quy trình'},
+  ],
+  'th-design':[
+    {k:'file',v:'Experiment registry: baseline · ablation · seed · config · artifact cho từng dòng'},
+    {k:'ask', v:'Mỗi thí nghiệm điền được: "nếu ra A thì kết luận…, nếu ra B thì kết luận…"'},
+  ],
+  'th-stats':[
+    {k:'result',v:'So hai mô hình bằng bootstrap ghép cặp trên hiệu Δ; kết luận dựa trên CI của Δ có chứa 0 không'},
+    {k:'ask', v:'Nói được vì sao so hai khoảng riêng bằng mắt là phép so sai'},
+  ],
+  'th-defense':[
+    {k:'file',v:'12 slide + demo/video dự phòng + bộ câu hỏi tự trả lời + rubric tự đánh giá'},
+    {k:'cmd', v:'Ít nhất một lần rehearsal có bấm giờ (đủ trong thời lượng cho phép)'},
+    {k:'ask', v:'Trả lời được (bằng lời của bạn) mọi câu trong 24 câu hội đồng hay hỏi'},
+  ],
+};
+
+/* Ma trận năng lực: 9 nhóm outcome, mỗi nhóm có TRẦN (mức cao nhất trang này đưa
+   bạn tới) và MỨC HIỆN TẠI (suy ra từ trạng thái học của bạn — không tự gán mức
+   cuối nếu bạn chưa làm ra artifact).
+     lessons — các bài liên quan
+     key     — các bài mang deliverable quyết định; mức năng lực lấy MIN trên các bài này
+     cap     — trần: 2 nhận biết-giải thích · 3 có deliverable · 4 có bằng chứng độc lập
+   Bốn mức hiển thị: 1 Được nhắc tới · 2 Được giải thích · 3 Có thực hành/deliverable
+                     · 4 Có bằng chứng tự làm được. */
+const MARK4 = ['—', 'Được nhắc tới', 'Được giải thích', 'Có thực hành/deliverable', 'Có bằng chứng tự làm'];
+const COMPS = [
+  { n:1, t:'Định vị một bài toán mới', lessons:['s-families','s-lookup','d-framing'], key:['d-framing'], cap:4,
+    evid:'docs/problem-statement.md + định vị bằng 8 câu hỏi' },
+  { n:2, t:'Xây dựng dữ liệu đáng tin', lessons:['d-eda','d-clean','d-leak','pr-data'], key:['d-eda','d-leak'], cap:4,
+    evid:'EDA notebook + data/README (datacard) + danh sách rò rỉ' },
+  { n:3, t:'Pipeline tái lập', lessons:['d-split','f-pipeline','pr-code','pr-mlops'], key:['f-pipeline','pr-code'], cap:4,
+    evid:'pipeline.py + python -m src.train + split asserts + seed/pin' },
+  { n:4, t:'Đánh giá mô hình đúng', lessons:['ml-cv','ml-metrics','pr-eval','th-stats'], key:['pr-eval','th-stats'], cap:4,
+    evid:'evaluate.py (cluster + paired bootstrap) + kiểm định ghép cặp' },
+  { n:5, t:'Chuyển xác suất thành quyết định', lessons:['ml-metrics','pr-eval','pr-cost'], key:['ml-metrics','pr-cost'], cap:4,
+    evid:'ngưỡng theo chi phí + ma trận chi phí + phân tích độ nhạy' },
+  { n:6, t:'Đưa mô hình thành product nhỏ', lessons:['pr-arch','pr-serve','pr-monitor'], key:['pr-serve'], cap:4,
+    evid:'FastAPI + Dockerfile + PSI — mức DEMO bảo vệ, không phải vận hành 24/7' },
+  { n:7, t:'Nghiên cứu ứng dụng', lessons:['th-topic','th-read','th-repro','th-design'], key:['th-topic','th-repro'], cap:3,
+    evid:'proposal + reproduction report skeleton + registry — KHUNG, không phải một nghiên cứu hoàn chỉnh' },
+  { n:8, t:'Viết và bảo vệ', lessons:['th-write','th-tools','th-defense'], key:['th-write','th-defense'], cap:3,
+    evid:'IMRaD skeleton + defense checklist + rehearsal — luận văn & bảo vệ THẬT cần nhiều tuần/tháng + mentor' },
+  { n:9, t:'Chuyển giao sang domain khác', lessons:['s-families','q-forecast','q-mini'], key:['q-mini'], cap:4,
+    evid:'2 mini-project chuyển giao + bảng "giữ gì / đổi gì"' },
+];
+
+/* ============================================================
    2. Trạng thái + tiện ích
    ============================================================ */
-const LS_KEY = 'ds-roadmap-done-v1';
+/* v2: trạng thái là MỨC (1..3) cho từng bài, không phải một checkbox nhị phân.
+   Vì đổi cả cấu trúc dữ liệu, dùng key mới và di trú an toàn từ key cũ. */
+const LS_KEY     = 'ds-roadmap-progress-v2';   // { id: mức 1..3 }
+const LS_KEY_OLD = 'ds-roadmap-done-v1';       // mảng id "đã xong" của bản trước
 
 const LEAVES = TREE.flatMap(p => p.kids.map(k => ({ ...k, phase: p })));
 const byId   = Object.fromEntries(LEAVES.map(l => [l.id, l]));
 
-/* Đọc tiến độ. Bốn thứ có thể sai và cả bốn đều xảy ra thật:
-     · localStorage bị chặn (chế độ riêng tư, cookie bị khoá) → truy cập ném lỗi
-     · giá trị không phải JSON (một tiện ích mở rộng ghi đè, đồng bộ lỗi)
-     · JSON hợp lệ nhưng không phải mảng
-     · mảng chứa id của những bài đã đổi tên hoặc đã bỏ ở bản trước
-   Bản cũ để JSON.parse ném thẳng ra ngoài, và vì dòng đó nằm ở đầu script nên
-   TOÀN BỘ trang trắng — người dùng thấy một trang hỏng chứ không mất mỗi tiến độ. */
-function loadDone() {
+/* Ba mức hoàn thành, thay cho một tick nhị phân — vì "đã đọc", "đã gõ lại code"
+   và "đã làm ra deliverable đạt tiêu chí" là ba việc khác nhau, và cho bài 10′
+   trọng số bằng bài code 150′ là gốc của mọi "ảo giác hoàn thành":
+     1 = đã đọc/hiểu     (phần r)
+     2 = đã thực hành    (phần x)  — bỏ qua nếu bài không có phần thực hành
+     3 = đạt deliverable (phần d, theo tiêu chí acceptance) — chỉ bài có d>0
+   Mức cao nhất một bài có được = tuỳ nó có x, d hay không. */
+function maxLevel(l) { return l.d > 0 ? 3 : (l.x > 0 ? 2 : 1); }
+function levelsFor(l) { const o = [1]; if (l.x > 0) o.push(2); if (l.d > 0) o.push(3); return o; }
+/* Số phút "đã đạt" ở một mức = trọng số của bài trong tiến độ tổng. Một bài code
+   150′ đóng góp gấp bội một bài đọc 10′, và chỉ đóng góp phần d khi bạn thật sự
+   làm ra deliverable — nên không thể đạt 100% mà chưa viết dòng code nào. */
+function minsAt(l, lvl) { let m = 0; if (lvl >= 1) m += l.r; if (lvl >= 2) m += l.x; if (lvl >= 3) m += l.d; return m; }
+
+/* Đọc tiến độ. Mọi thứ có thể sai đều xảy ra thật: storage bị chặn (chế độ riêng
+   tư) → ném lỗi; giá trị không phải JSON; JSON nhưng không phải object; mức lạ.
+   Bản cũ để JSON.parse ném thẳng ở đầu script nên TOÀN BỘ trang trắng — ở đây
+   mọi nhánh hỏng đều rơi về "chưa có tiến độ", trang vẫn dựng bình thường. */
+function loadProgress() {
   let raw;
   try { raw = localStorage.getItem(LS_KEY); }
-  catch { return { set: new Set(), dropped: 0, blocked: true }; }
-  if (!raw) return { set: new Set(), dropped: 0 };
-  let arr;
-  try { arr = JSON.parse(raw); } catch { return { set: new Set(), dropped: 0, corrupt: true }; }
-  if (!Array.isArray(arr)) return { set: new Set(), dropped: 0, corrupt: true };
-  const good = arr.filter(v => typeof v === 'string' && byId[v]);
-  return { set: new Set(good), dropped: arr.length - good.length };
+  catch { return { map: new Map(), blocked: true }; }
+
+  if (raw) {                                   // đã có bản v2
+    let obj; try { obj = JSON.parse(raw); } catch { obj = null; }
+    if (obj && typeof obj === 'object' && !Array.isArray(obj)) {
+      const map = new Map(); let dropped = 0;
+      for (const [k, v] of Object.entries(obj)) {
+        const l = byId[k];
+        if (l && Number.isInteger(v) && v >= 1) map.set(k, Math.min(v, maxLevel(l)));
+        else dropped++;                        // bài đã đổi tên/bỏ, hoặc mức rác
+      }
+      return { map, dropped };
+    }
+    return { map: new Map(), corrupt: true };
+  }
+
+  // Chưa có v2 → DI TRÚ từ v1: "đã xong" của bản trước = coi như đạt mức cao nhất
+  // của bài (họ đã đánh dấu hoàn thành). Không mất dữ liệu, không làm trắng trang.
+  try {
+    const old = localStorage.getItem(LS_KEY_OLD);
+    if (old) {
+      const arr = JSON.parse(old);
+      if (Array.isArray(arr)) {
+        const map = new Map();
+        arr.forEach(id => { const l = byId[id]; if (l) map.set(id, maxLevel(l)); });
+        return { map, migrated: true };
+      }
+    }
+  } catch { /* v1 hỏng cũng không sao — chỉ là không có gì để di trú */ }
+  return { map: new Map() };
 }
 
-const _loaded = loadDone();
-const done = _loaded.set;
+const _loaded = loadProgress();
+const prog = _loaded.map;                        // Map<id, mức 1..3>
 const storageBlocked = !!_loaded.blocked;
 
 let saveFailedNotified = false;
-function saveDone() {
+function saveProgress() {
   if (storageBlocked) return;
-  try { localStorage.setItem(LS_KEY, JSON.stringify([...done])); }
+  try { localStorage.setItem(LS_KEY, JSON.stringify(Object.fromEntries(prog))); }
   catch {
-    // Đọc được lúc đầu nhưng GHI hỏng giữa chừng (hết quota, hoặc trình duyệt đổi
-    // chính sách). Bản trước nuốt lỗi ở đây → người học đánh dấu cả buổi rồi mất
-    // sạch khi tải lại mà không hề được cảnh báo. Báo MỘT lần, không spam.
+    // Đọc được lúc đầu nhưng GHI hỏng giữa chừng (hết quota / trình duyệt đổi
+    // chính sách). Báo MỘT lần, không spam, và dùng #storeWarn riêng khỏi #undoBar.
     if (!saveFailedNotified) {
       saveFailedNotified = true;
-      // Dùng #storeWarn RIÊNG, không dùng #undoBar: luồng "Xoá tiến độ" gọi saveDone()
-      // rồi showUndo() ngay sau đó, nên nếu viết vào #undoBar thì cảnh báo bị đè mất
-      // trong tích tắc và saveFailedNotified=true khiến nó không hiện lại lần nào nữa.
       const bar = document.getElementById('storeWarn');
       if (bar) {
         bar.hidden = false;
@@ -8703,7 +9034,30 @@ function saveDone() {
     }
   }
 }
-if (_loaded.corrupt || _loaded.dropped) saveDone();   // ghi lại bản đã dọn
+// Ghi lại ngay bản đã dọn / đã di trú, để lần sau đọc thẳng v2.
+if (_loaded.corrupt || _loaded.dropped || _loaded.migrated) saveProgress();
+
+const getLevel = id => prog.get(id) || 0;
+function setLevel(id, lvl) {
+  const l = byId[id]; if (!l) return;
+  lvl = Math.max(0, Math.min(lvl, maxLevel(l)));
+  if (lvl <= 0) prog.delete(id); else prog.set(id, lvl);
+  saveProgress(); syncProgress();
+}
+/* Bấm control mức trong cây: đi vòng 0 → các mức của bài → 0. */
+function cycleLevel(id) {
+  const l = byId[id]; if (!l) return;
+  const steps = [0, ...levelsFor(l)];
+  setLevel(id, steps[(steps.indexOf(getLevel(id)) + 1) % steps.length]);
+}
+/* Tên bốn mức (dùng cho aria-label và nhãn nút). Index = mức 0..3, nhưng nội
+   dung phụ thuộc bài: bài không có phần deliverable thì mức 2 đã là cao nhất. */
+function levelName(l, lvl) {
+  if (lvl <= 0) return 'chưa bắt đầu';
+  if (lvl >= 3) return 'đạt deliverable';
+  if (lvl === 2) return 'đã thực hành';
+  return maxLevel(l) === 1 ? 'đã đọc xong' : 'đã đọc';
+}
 const $  = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 
@@ -8719,6 +9073,9 @@ const mins     = l => l.r + l.x + l.d;
    tới số nguyên như bản cũ biến 74,2 thành "74" ở chỗ này và "5,3 giờ/ngày" ở
    chỗ kia — hai con số không nhân ra nhau, và người đọc phát hiện ngay. */
 const hrs = m => (Math.round(m / 30) / 2).toString().replace('.', ',');
+/* Ước lượng thứ hai: nếu Python là ngôn ngữ đầu tiên. Nhân cùng một hệ số ở mọi
+   chỗ, nên hai con số luôn khớp và không có view nào lỡ quên người từ số 0. */
+const hrsBeg = m => hrs(m * BEGINNER_MULT);
 /* Tên chặng rút gọn cho chú giải và bảng: giữ số thứ tự, bỏ phần vế sau dấu
    gạch dài hoặc ngoặc. "1 · Công cụ — biết gõ trước khi biết nghĩ" → "1. Công cụ" */
 const phaseShort = p => p.t.replace(/^(\d+) · /, '$1. ').replace(/ [—(].*$/, '');
@@ -8747,8 +9104,11 @@ function buildTree() {
           <li class="wb-tree__node" data-leaf="${k.id}">
             <div class="wb-tree__row" data-goto="${k.id}">
               <span class="wb-tree__toggle is-leaf" aria-hidden="true"></span>
-              <input type="checkbox" class="wb-tree__check" data-check="${k.id}"
-                     aria-label="Đánh dấu đã học xong: ${k.t}">
+              <button type="button" class="ds-lvl" data-lvl-btn="${k.id}"
+                      title="Bấm để đổi mức: đọc → thực hành → deliverable"
+                      aria-label="Mức học bài ${k.t}: chưa bắt đầu. Bấm để đổi mức.">
+                <span class="ds-lvl__pips" aria-hidden="true"></span>
+              </button>
               <a class="wb-tree__label ds-tree__link" href="#/${k.id}"
                  id="treelink-${k.id}">${k.t}</a>
               <span class="wb-tree__meta" aria-hidden="true">${mins(k)}′</span>
@@ -8767,44 +9127,49 @@ function buildTree() {
         (collapsed ? 'Mở rộng chặng ' : 'Thu gọn chặng ') + node.querySelector('.wb-tree__label').textContent);
       return;
     }
-    if (e.target.closest('a, [data-check]')) return;   // link và checkbox tự lo
+    const lvlBtn = e.target.closest('[data-lvl-btn]');
+    if (lvlBtn) { cycleLevel(lvlBtn.dataset.lvlBtn); return; }
+    if (e.target.closest('a')) return;                 // link tự lo
     // Bấm vào khoảng trống của hàng vẫn đi tới bài — tiện chuột, và không ảnh
     // hưởng bàn phím vì <div> này không nhận tiêu điểm.
     const row = e.target.closest('[data-goto]');
     if (row) location.hash = '#/' + row.dataset.goto;
   });
-
-  ul.addEventListener('change', e => {
-    if (!e.target.matches('[data-check]')) return;
-    setDone(e.target.dataset.check, e.target.checked);
-  });
 }
 
-function setDone(id, val) {
-  val ? done.add(id) : done.delete(id);
-  saveDone();
-  syncProgress();
-}
+/* Số phút đã đạt trên tổng — tiến độ theo WORKLOAD, không theo số checkbox. */
+const totalWeight = () => sumMins(LEAVES);
+const achievedWeight = () => LEAVES.reduce((s, l) => s + minsAt(l, getLevel(l.id)), 0);
+/* Đếm bài đã "đạt deliverable" (mức cao nhất của bài) — chỉ số năng lực thật. */
+const nAtCeiling = () => LEAVES.filter(l => getLevel(l.id) >= maxLevel(l)).length;
 
+function pips(l, lvl) {
+  // maxLevel(l) ô, tô đầy tới mức hiện tại. Bài chỉ-đọc có 1 ô; bài code có 3 ô.
+  const mx = maxLevel(l);
+  let s = '';
+  for (let i = 1; i <= mx; i++) s += `<i class="ds-pip${i <= lvl ? ' is-on' : ''}"></i>`;
+  return s;
+}
 function syncProgress() {
-  $$('[data-check]').forEach(c => {
-    const on = done.has(c.dataset.check);
-    c.checked = on;
-    c.closest('.wb-tree__row').querySelector('.wb-tree__label').classList.toggle('is-done', on);
+  $$('[data-lvl-btn]').forEach(btn => {
+    const id = btn.dataset.lvlBtn, l = byId[id]; if (!l) return;
+    const lvl = getLevel(id);
+    btn.querySelector('.ds-lvl__pips').innerHTML = pips(l, lvl);
+    btn.dataset.level = lvl;
+    btn.setAttribute('aria-label', `Mức học bài ${l.t}: ${levelName(l, lvl)}. Bấm để đổi mức.`);
+    const label = btn.closest('.wb-tree__row').querySelector('.wb-tree__label');
+    label.classList.toggle('is-done', lvl >= maxLevel(l));   // gạch ngang chỉ khi đạt mức cao nhất
   });
-  const total = LEAVES.length, n = LEAVES.filter(l => done.has(l.id)).length;
-  const pct = Math.round(n / total * 100);
-  $('#railPct').textContent = `${pct}% · ${n}/${total} bài`;
+  const pct = Math.round(achievedWeight() / totalWeight() * 100);
+  const nCeil = nAtCeiling();
+  $('#railPct').textContent = `${pct}% workload · ${nCeil}/${LEAVES.length} bài đạt`;
   $('#railBar').style.width = pct + '%';
   $('#topProgress').textContent = pct + '%';
-  const btn = $('#markBtn');
-  if (btn) {
-    const on = done.has(btn.dataset.node);
-    btn.classList.toggle('wb-btn--ghost', on);
-    btn.innerHTML = on
-      ? '<span class="wb-ico wb-ico--sm">check</span> Đã học xong'
-      : 'Đánh dấu đã học xong';
-  }
+  const sa = $('#selfAssess');
+  if (sa) syncLessonControl(sa.dataset.node);
+  const hd = $('#homeDone'); if (hd) hd.textContent = pct + '%';
+  syncMatrix();
+  syncPortfolio();
 }
 
 /* Kết bài: cầm được gì, và bài sau dùng nó làm gì. Dùng wb-card--flat để nó đọc
@@ -8825,6 +9190,71 @@ function gainBox(id) {
         </div>
       </div>
     </div></div>`;
+}
+
+/* Nhãn phạm vi: nói thẳng bài nào chỉ tạo nhận biết, bài nào làm ra khung, bài
+   nào cần nhiều tuần + mentor mới đạt năng lực độc lập. */
+function scopeBadge(id) {
+  const s = SCOPE[id]; if (!s) return '';
+  const [label, why] = SCOPE_LABEL[s];
+  const cls = s === 'weeks' ? 'wb-cap wb-cap--dashed wb-cap--sm' : 'wb-cap wb-cap--sm';
+  return `<span class="${cls}" title="${why.replace(/"/g, '&quot;')}"><span class="wb-ico wb-ico--xs">flag</span> ${label}</span>`;
+}
+
+const ACC_META = {
+  file:  ['description',   'File phải có'],
+  cmd:   ['terminal',      'Lệnh phải chạy được'],
+  test:  ['task_alt',      'Test/assert phải pass'],
+  result:['check_circle',  'Kết quả phải khớp'],
+  ask:   ['help',          'Tự giải thích được'],
+};
+function acceptancePanel(id) {
+  const cr = ACCEPT[id]; if (!cr) return '';
+  return `
+    <div class="wb-card wb-card--flat ds-accept"><div class="wb-card__body">
+      <p class="ds-accept__h"><span class="wb-ico wb-ico--sm">checklist</span> Tiêu chí đạt (acceptance)</p>
+      <p class="wb-help" style="margin:2px 0 10px">Đánh dấu <b>Đạt deliverable</b> nghĩa là bạn tự xác nhận đã qua tất cả các dòng dưới. Đây là ranh giới giữa “đã đọc” và “làm được”.</p>
+      <ul class="ds-accept__list">
+        ${cr.map(c => {
+          const [ico, lbl] = ACC_META[c.k] || ACC_META.ask;
+          return `<li><span class="ds-accept__tag"><span class="wb-ico wb-ico--xs">${ico}</span> ${lbl}</span> <span>${c.v}</span></li>`;
+        }).join('')}
+      </ul>
+    </div></div>`;
+}
+/* Bộ tự đánh giá mức trên trang bài: các nút mức + bảng tiêu chí đạt. */
+function lessonControl(id) {
+  const l = byId[id];
+  const btns = levelsFor(l).map(lv => {
+    const lbl = lv === 1 ? (maxLevel(l) === 1 ? 'Đã đọc xong' : 'Đã đọc')
+              : lv === 2 ? 'Đã thực hành' : 'Đạt deliverable';
+    return `<button class="wb-btn wb-btn--sm ds-lvlbtn" data-set-level="${lv}">${lbl}</button>`;
+  }).join('');
+  const scopeNote = SCOPE[l.id] && SCOPE[l.id] !== 'aware'
+    ? `<p class="wb-help" style="margin-top:8px"><span class="wb-ico wb-ico--xs">info</span> ${SCOPE_LABEL[SCOPE[l.id]][1]}</p>` : '';
+  return `
+    <div class="ds-selfassess" id="selfAssess" data-node="${id}">
+      <div class="wb-cluster">
+        <span class="ds-selfassess__q">Tự đánh giá:</span>
+        <div class="wb-cluster" role="group" aria-label="Mức hoàn thành bài" style="gap:6px">
+          ${btns}
+          <button class="wb-btn wb-btn--ghost wb-btn--sm" data-set-level="0" aria-label="Xoá mức đã đánh dấu">Xoá</button>
+        </div>
+      </div>
+      ${scopeNote}
+      ${acceptancePanel(id)}
+    </div>`;
+}
+function syncLessonControl(id) {
+  const sa = $('#selfAssess'); if (!sa || sa.dataset.node !== id) return;
+  const lvl = getLevel(id);
+  $$('[data-set-level]', sa).forEach(b => {
+    const v = +b.dataset.setLevel;
+    const on = v > 0 && lvl >= v;
+    b.classList.toggle('wb-btn--solid', on);
+    b.classList.toggle('is-active', on);
+    b.setAttribute('aria-pressed', String(on));
+  });
 }
 
 /* ============================================================
@@ -8856,13 +9286,12 @@ function render() {
       <span class="${prio.cls}">${prio.label}</span>
       ${trackCap(id)}
       <span class="wb-cap wb-cap--sm"><span class="wb-ico wb-ico--xs">schedule</span> ${fmtMin(mins(leaf))}</span>
+      ${scopeBadge(id)}
     </div>
     <div class="ds-prose" id="prose">${tpl ? '' : '<p class="wb-help">Nội dung đang được viết.</p>'}</div>
     ${gainBox(id)}
     <div class="ds-nodefoot">
-      <div class="wb-cluster">
-        <button class="wb-btn" id="markBtn" data-node="${id}">Đánh dấu đã học xong</button>
-      </div>
+      ${lessonControl(id)}
       <nav class="wb-pager" style="margin-top:18px" aria-label="Chuyển bài">
         ${prev ? `<a class="wb-pager__link wb-pager__link--prev" href="#/${prev.id}">
             <span class="wb-ico wb-pager__arrow">chevron_left</span>
@@ -8887,9 +9316,13 @@ function render() {
   });
   $$('.ds-tree__phase').forEach(n => { if (n.dataset.phase === leaf.phase.id) n.classList.remove('is-collapsed'); });
 
-  $('#markBtn').addEventListener('click', () => {
-    setDone(id, !done.has(id));
-    if (done.has(id) && next) setTimeout(() => { location.hash = '#/' + next.id; }, 250);
+  const sa = $('#selfAssess');
+  if (sa) sa.addEventListener('click', e => {
+    const b = e.target.closest('[data-set-level]'); if (!b) return;
+    const target = +b.dataset.setLevel;
+    // Bấm lại đúng mức đang có → hạ về mức ngay dưới (bỏ tick), như một toggle.
+    setLevel(id, getLevel(id) === target ? target - 1 : target);
+    if (getLevel(id) >= maxLevel(byId[id]) && next) setTimeout(() => { location.hash = '#/' + next.id; }, 250);
   });
 
   afterRender(main);
@@ -8942,16 +9375,16 @@ function renderHome() {
     <div class="wb-stat-grid" style="margin-top:20px">
       <div class="wb-stat"><div class="wb-stat__top"><span class="wb-stat__label">Tổng thời lượng</span></div>
         <div class="wb-stat__value">${hrs(totalMin)} giờ</div>
-        <div class="wb-stat__foot">${LEAVES.length} bài · ${TREE.length} chặng</div></div>
+        <div class="wb-stat__foot">≈ ${hrsBeg(totalMin)} giờ nếu Python là ngôn ngữ đầu tiên · ${LEAVES.length} bài</div></div>
       <div class="wb-stat"><div class="wb-stat__top"><span class="wb-stat__label">Lộ trình chuẩn · phần bắt buộc</span></div>
         <div class="wb-stat__value">${hrs(coreMin)} giờ</div>
-        <div class="wb-stat__foot">≈ ${hrs(coreMin / 8)} giờ/tuần trong 8 tuần</div></div>
+        <div class="wb-stat__foot">Đã biết lập trình: 6–8 tuần (~${hrs(coreMin / 8)} h/tuần).<br>Từ số 0: ~${hrs(coreMin * BEGINNER_MULT)} giờ → khoảng ${Math.ceil(coreMin * BEGINNER_MULT / 60 / 10)}–${Math.ceil(coreMin * BEGINNER_MULT / 60 / 8)} tuần ở nhịp 8–10 h/tuần.</div></div>
       <div class="wb-stat"><div class="wb-stat__top"><span class="wb-stat__label">Fast track 14 ngày</span></div>
         <div class="wb-stat__value">${hrs(fastMin)} giờ</div>
-        <div class="wb-stat__foot">≈ ${hrs(fastMin / 14)} giờ/ngày · hoãn ${LEAVES.filter(l => !FAST.has(l.id)).length} bài</div></div>
-      <div class="wb-stat"><div class="wb-stat__top"><span class="wb-stat__label">Đã học</span></div>
+        <div class="wb-stat__foot">≈ ${hrs(fastMin / 14)} h/ngày (đã biết lập trình) · từ số 0 ≈ ${hrs(fastMin * BEGINNER_MULT / 14)} h/ngày · hoãn ${LEAVES.filter(l => !FAST.has(l.id)).length} bài</div></div>
+      <div class="wb-stat"><div class="wb-stat__top"><span class="wb-stat__label">Bạn đã đạt (theo workload)</span></div>
         <div class="wb-stat__value" id="homeDone">0%</div>
-        <div class="wb-stat__foot">Lưu trong trình duyệt này</div></div>
+        <div class="wb-stat__foot">Tính theo phút đọc/thực hành/deliverable, không theo số tick · lưu trong trình duyệt này</div></div>
     </div>
     <div class="wb-card wb-card--flat" style="margin-top:14px"><div class="wb-card__body">
       <p class="ds-viz__label">${hrs(totalMin)} giờ đó gồm những gì</p>
@@ -8963,9 +9396,11 @@ function renderHome() {
         <div><p class="ds-viz__sub">Làm ra deliverable</p><p class="ds-viz__readout">${hrs(delivMin)} giờ</p>
           <p class="ds-viz__sub">${Math.round(delivMin / totalMin * 100)}% — file .py, notebook, hình, bảng, đoạn văn</p></div>
       </div>
-      <p class="ds-viz__see"><b>Vì sao tách ba cột:</b> phần lớn lộ trình tự học chỉ đếm cột đầu, rồi người học vỡ lịch ở tuần thứ hai mà không hiểu tại sao — vì hai cột sau <i>cộng lại còn lớn hơn</i> cột đọc. Con số ở đây giả định bạn đã lập trình được; nếu Python là ngôn ngữ đầu tiên, nhân 1,3–1,5 lần và phần đội lên nằm gần hết ở cột giữa.</p>
+      <p class="ds-viz__see"><b>Vì sao tách ba cột:</b> phần lớn lộ trình tự học chỉ đếm cột đầu, rồi người học vỡ lịch ở tuần thứ hai mà không hiểu tại sao — vì hai cột sau <i>cộng lại còn lớn hơn</i> cột đọc. Đây cũng là lý do tiến độ ở trang này tính theo <b>phút của cả ba cột</b>: tick một bài đọc 10′ không thể bằng làm xong một bài code 150′. Con số nền giả định bạn đã lập trình được; nếu Python là ngôn ngữ đầu tiên, nhân ${String(BEGINNER_MULT).replace('.', ',')} lần (≈ ${hrsBeg(totalMin)} giờ) — phần đội lên nằm gần hết ở hai cột sau. <b>Vì vậy “6–8 tuần” là cho người đã biết lập trình;</b> người từ số 0 nên tính theo cột giữa.</p>
     </div></div>
     <div id="homeIntro"></div>
+    <section class="wb-section" id="homeMatrix"></section>
+    <section class="wb-section" id="homePortfolio"></section>
     <section class="wb-section"><h2>Bản đồ toàn bộ lộ trình</h2>
       <p class="wb-section__desc">Bấm vào bất kỳ bài nào để vào học. Thứ tự đã sắp theo phụ thuộc: bài sau cần bài trước, không phải theo chủ đề.</p>
       <div class="wb-stack" style="--wb-stack-gap:26px">
@@ -8992,13 +9427,101 @@ function renderHome() {
     </section>`;
 
   if (tpl) $('#homeIntro').append(tpl.content.cloneNode(true));
-  const n = LEAVES.filter(l => done.has(l.id)).length;
-  $('#homeDone').textContent = Math.round(n / LEAVES.length * 100) + '%';
+  renderMatrix();
+  renderPortfolio();
+  $('#homeDone').textContent = Math.round(achievedWeight() / totalWeight() * 100) + '%';
   $$('.ds-tree .wb-tree__row').forEach(r => r.classList.remove('is-selected'));
   $$('.ds-tree__link').forEach(a => a.removeAttribute('aria-current'));
   afterRender($('#main'));
   announce('Trang chủ lộ trình.');
   focusHeading();
+}
+
+/* ---- Ma trận năng lực -------------------------------------------------------
+   Bốn mức: 1 nhắc tới · 2 giải thích · 3 thực hành/deliverable · 4 bằng chứng tự
+   làm. TRẦN (cap) là mức cao nhất trang này hứa; MỨC CỦA BẠN suy từ trạng thái
+   bạn tự đánh giá — level 0→mức1, đọc→mức2, thực hành→mức3, đạt deliverable→mức4,
+   rồi cắt theo trần. Không có chỗ nào tự gán mức 4 nếu bạn chưa đạt deliverable. */
+function compMarks(c) {
+  const keyLevel = Math.min(...c.key.map(id => getLevel(id)));   // yếu nhất trong các bài quyết định
+  return { learner: Math.min(keyLevel + 1, c.cap), cap: c.cap };
+}
+function matrixRow(c) {
+  const { learner, cap } = compMarks(c);
+  let cells = '';
+  for (let m = 1; m <= 4; m++) {
+    const on = learner >= m, reach = cap >= m;
+    const cls = on ? 'is-on' : (reach ? 'is-open' : 'is-off');
+    const glyph = on ? '●' : (reach ? '○' : '·');
+    cells += `<td class="ds-mx__c ${cls}${cap === m ? ' is-cap' : ''}">${glyph}</td>`;
+  }
+  return `<tr><td class="ds-mx__name"><b>${c.n}. ${c.t}</b></td>${cells}<td class="ds-mx__evid">${c.evid}</td></tr>`;
+}
+function renderMatrix() {
+  const host = $('#homeMatrix'); if (!host) return;
+  host.innerHTML = `
+    <h2>Bạn thật sự làm được gì — 9 nhóm năng lực</h2>
+    <p class="wb-section__desc">Mỗi nhóm có <b>trần</b> (mức cao nhất trang này đưa bạn tới — ô tròn rỗng, viền đậm ở cột cuối cùng đạt được) và <b>mức của bạn</b> (ô tròn đặc, suy từ trạng thái bạn tự đánh giá). Trang <b>không</b> tự gán “bằng chứng tự làm”: mức đó chỉ bật khi bạn đánh dấu <i>đạt deliverable</i> theo tiêu chí acceptance của bài. Hai nhóm <b>nghiên cứu</b> và <b>viết &amp; bảo vệ</b> có trần dừng ở “có deliverable/khung” — năng lực độc lập ở đó cần nhiều tuần/tháng + mentor, nằm ngoài phạm vi trang. Không nhóm nào ở đây biến bạn thành chuyên gia toàn nhánh chỉ sau một lượt.</p>
+    <div class="wb-table-scroll"><table class="ds-matrix">
+      <thead><tr><th>Nhóm năng lực</th><th>Nhắc<br>tới</th><th>Giải<br>thích</th><th>Thực hành/<br>deliverable</th><th>Bằng chứng<br>tự làm</th><th>Bằng chứng cần có (artifact)</th></tr></thead>
+      <tbody id="matrixBody"></tbody>
+    </table></div>
+    <p class="wb-help">● mức bạn đã đạt · ○ trang có thể đưa bạn tới (chưa đạt) · · ngoài phạm vi trang. Fast track 14 ngày chỉ đưa phần lớn nhóm tới mức <b>giải thích / thực hành</b>; lộ trình chuẩn 8 tuần mới chạm mức <b>có deliverable</b> ở các nhóm 1–6 và 9.</p>`;
+  syncMatrix();
+}
+function syncMatrix() {
+  const body = $('#matrixBody'); if (!body) return;
+  body.innerHTML = COMPS.map(matrixRow).join('');
+}
+
+/* ---- Portfolio blueprint ---------------------------------------------------
+   Danh sách artifact cụ thể trang hướng bạn tạo, tách ba nhãn rõ ràng. */
+const PORTFOLIO = [
+  { a:'docs/problem-statement.md', id:'d-framing', tag:'accept' },
+  { a:'data/README.md (datacard) — nguồn · giấy phép · phiên bản', id:'pr-data', tag:'guided' },
+  { a:'notebooks/01-eda.ipynb + ≥ 4 hình', id:'d-eda', tag:'accept' },
+  { a:'adapters/schema — đưa dữ liệu thô về một schema chung', id:'pr-data', tag:'suggest' },
+  { a:'split.py + assert chống rò rỉ (split & leakage)', id:'d-split', tag:'accept' },
+  { a:'src/features.py + src/history.py', id:'f-time', tag:'guided' },
+  { a:'src/pipeline.py — Pipeline + ColumnTransformer', id:'f-pipeline', tag:'accept' },
+  { a:'python -m src.train — một lệnh tái tạo mọi con số', id:'pr-code', tag:'accept' },
+  { a:'models/fraud-*.joblib + metadata + ngưỡng', id:'pr-code', tag:'accept' },
+  { a:'evaluate.py — báo cáo đánh giá + độ bất định (cluster + paired bootstrap)', id:'pr-eval', tag:'accept' },
+  { a:'API FastAPI nhận JSON, trả điểm rủi ro', id:'pr-serve', tag:'accept' },
+  { a:'Dockerfile', id:'pr-serve', tag:'accept' },
+  { a:'tests + CI (pytest chạy trong CI)', id:'pr-mlops', tag:'guided' },
+  { a:'Đặc tả giám sát + hàm PSI', id:'pr-monitor', tag:'accept' },
+  { a:'Bảng/registry thí nghiệm (baseline · ablation · seed · config · artifact)', id:'th-design', tag:'accept' },
+  { a:'research-question.md / proposal một trang', id:'th-topic', tag:'accept' },
+  { a:'Reproduction report skeleton', id:'th-repro', tag:'accept' },
+  { a:'Thesis skeleton — mapping artifact → từng chương', id:'th-write', tag:'guided' },
+  { a:'Slide + demo/video dự phòng + rehearsal + rubric tự chấm', id:'th-defense', tag:'accept' },
+  { a:'2 mini-project chuyển giao + bảng “giữ gì / đổi gì”', id:'q-mini', tag:'accept' },
+];
+const PF_TAG = {
+  accept:  ['Có tiêu chí đạt',      'wb-cap wb-cap--solid wb-cap--sm'],
+  guided:  ['Trang hướng dẫn tạo',  'wb-cap wb-cap--sm'],
+  suggest: ['Chỉ là gợi ý',         'wb-cap wb-cap--dashed wb-cap--sm'],
+};
+function renderPortfolio() {
+  const host = $('#homePortfolio'); if (!host) return;
+  host.innerHTML = `
+    <h2>Portfolio bạn cầm về khi xong</h2>
+    <p class="wb-section__desc">Danh sách artifact cụ thể trang này hướng bạn tạo, tách ba nhãn: <b>có tiêu chí đạt</b> (bài có acceptance rõ ràng), <b>trang hướng dẫn tạo</b> (chỉ cách làm nhưng không chấm theo checklist cứng), và <b>chỉ là gợi ý</b> (tuỳ dự án). Ô vuông bên trái tick khi bài tạo ra artifact đó được bạn đánh dấu <i>đạt deliverable</i>.</p>
+    <div class="wb-card wb-card--flat"><div class="wb-card__body" id="pfBody"></div></div>`;
+  syncPortfolio();
+}
+function syncPortfolio() {
+  const body = $('#pfBody'); if (!body) return;
+  body.innerHTML = PORTFOLIO.map(p => {
+    const l = byId[p.id]; const lvl = l ? getLevel(p.id) : 0; const ok = l && lvl >= maxLevel(l);
+    const [lbl, cls] = PF_TAG[p.tag];
+    return `<div class="ds-pf${ok ? ' is-done' : ''}">
+      <span class="ds-pf__box" aria-hidden="true">${ok ? '<span class="wb-ico wb-ico--xs">check</span>' : ''}</span>
+      <a class="ds-pf__a" href="#/${p.id}">${p.a}</a>
+      <span class="${cls}">${lbl}</span>
+    </div>`;
+  }).join('');
 }
 
 /* ============================================================
@@ -9044,7 +9567,7 @@ function renderPlan14(scope) {
     const dv = items.reduce((s, l) => s + l.d, 0);
     return `
     <div class="ds-day">
-      <p class="ds-day__h">Ngày ${d.n} · ${fmtMin(tot)}</p>
+      <p class="ds-day__h">Ngày ${d.n} · ${fmtMin(tot)} <span class="wb-help" style="font-weight:400">(từ số 0 ≈ ${fmtMin(Math.round(tot * BEGINNER_MULT))})</span></p>
       <p class="ds-day__t">${d.t}</p>
       <p class="ds-daysplit">đọc ${fmtMin(r)} · thực hành ${fmtMin(x)} · deliverable ${fmtMin(dv)}</p>
       <ul class="ds-daylist">${items.map(l => `
@@ -9057,51 +9580,77 @@ function renderPlan14(scope) {
   const rest = $('#planRest', scope);
   if (rest) {
     const off = LEAVES.filter(l => !FAST.has(l.id));
-    rest.innerHTML = `Cộng lại đúng <b>${hrs(sumMins(off))} giờ</b> cho ${off.length} bài bị hoãn — ` +
-      `khoảng 4–5 tuần nữa ở nhịp 10 giờ/tuần, và lúc đó bạn đã đi hết lộ trình chuẩn.`;
+    const offMin = sumMins(off);
+    const wks = Math.round(offMin / 60 / 10);
+    rest.innerHTML = `Cộng lại đúng <b>${hrs(offMin)} giờ</b> cho ${off.length} bài bị hoãn ` +
+      `(từ số 0 ≈ ${hrsBeg(offMin)} giờ) — khoảng ${wks}–${wks + 1} tuần nữa ở nhịp 10 giờ/tuần, ` +
+      `và lúc đó bạn đã đi hết lộ trình chuẩn.`;
   }
 }
 
-/* Lịch 8 tuần dựng từ WEEKS + TREE. Cùng nguồn số với lịch 14 ngày và trang chủ. */
+/* Lịch 8 tuần dựng từ WEEKS (leaf-level) + TREE. Cùng nguồn số với lịch 14 ngày
+   và trang chủ — mỗi leaf đúng một tuần, tổng khớp tuyệt đối với home total. */
 function renderPlanWeeks(scope) {
   const box = $('#planWeeks', scope);
   if (!box || box.dataset.ready) return;
   box.dataset.ready = '1';
 
   const cell = w => {
-    const ph = w.ids.map(i => TREE.find(p => p.id === i)).filter(Boolean);
-    const ls = ph.flatMap(p => p.kids);
-    return { ph, ls, tot: sumMins(ls),
+    const ls = w.ids.map(i => byId[i]).filter(Boolean);
+    const phs = [...new Set(ls.map(l => l.phase))];
+    return { ls, phs, tot: sumMins(ls),
              r: ls.reduce((s, l) => s + l.r, 0),
              x: ls.reduce((s, l) => s + l.x, 0),
              d: ls.reduce((s, l) => s + l.d, 0) };
   };
   const rows = WEEKS.map(w => {
     const c = cell(w);
-    const heavy = c.tot / 60 > 12;
+    const heavy = c.tot / 60 > 14;
+    const title = (w.mile ? `<span class="wb-cap wb-cap--solid wb-cap--sm">${w.mile}</span> ` : '') + w.t;
     return `<tr>
       <td><b>${w.n}</b></td>
-      <td>${w.t}</td>
-      <td>${c.ph.map(phaseShort).join('<br>')}</td>
+      <td>${title}</td>
+      <td>${c.phs.map(phaseShort).join('<br>')}</td>
       <td class="ds-numcell">${hrs(c.tot)} h${heavy ? ' <span class="wb-cap wb-cap--dashed wb-cap--sm">nặng</span>' : ''}
-        <span class="ds-wsplit">${hrs(c.r)} đọc · ${hrs(c.x)} thực hành · ${hrs(c.d)} deliverable</span></td>
+        <span class="ds-wsplit">${hrs(c.r)} đọc · ${hrs(c.x)} thực hành · ${hrs(c.d)} deliverable</span>
+        <span class="ds-wsplit">từ số 0 ≈ ${hrsBeg(c.tot)} h</span></td>
       <td>${w.out}</td></tr>`;
   }).join('');
   const total = sumMins(LEAVES);
   box.innerHTML = `<div class="wb-table-scroll"><table>
-    <thead><tr><th>Tuần</th><th>Nội dung</th><th>Chặng</th><th>Giờ</th><th>Nộp được gì (deliverable)</th></tr></thead>
+    <thead><tr><th>Tuần</th><th>Nội dung</th><th>Chặng</th><th>Giờ (đã biết lập trình)</th><th>Nộp được gì (deliverable)</th></tr></thead>
     <tbody>${rows}</tbody>
     <tfoot><tr><th colspan="3">Tổng</th>
-      <th class="ds-numcell">${hrs(total)} h<span class="ds-wsplit">≈ ${hrs(total / 8)} giờ/tuần</span></th>
-      <th>83 bài · 11 chặng</th></tr></tfoot>
+      <th class="ds-numcell">${hrs(total)} h<span class="ds-wsplit">≈ ${hrs(total / 8)} h/tuần · từ số 0 ≈ ${hrsBeg(total)} h</span></th>
+      <th>${LEAVES.length} bài · ${TREE.length} chặng</th></tr></tfoot>
   </table></div>`;
 }
 
 function afterRender(scope) {
   enhance(scope);
+  fillStats(scope);
   scope.scrollTop = 0;
   window.scrollTo({ top: 0 });
   syncProgress();
+}
+
+/* Điền mọi con số giờ trong nội dung TĨNH (template) từ đúng một nguồn — TREE +
+   DAYS + FAST — nên câu chữ trong bài không thể lệch với thẻ số ở trang chủ, cây
+   bên trái, lịch 14 ngày và lịch chuẩn. Mọi chỗ hardcode "101 giờ" trước đây đã
+   thành <span data-stat="…"> để đi qua đây. */
+function fillStats(scope) {
+  const total = sumMins(LEAVES);
+  const core  = sumMins(LEAVES.filter(l => l.p === 'core'));
+  const fast  = sumMins(LEAVES.filter(l => FAST.has(l.id)));
+  const offL  = LEAVES.filter(l => !FAST.has(l.id));
+  const V = {
+    'total-hrs': hrs(total),   'total-beg': hrsBeg(total),
+    'core-hrs':  hrs(core),    'core-week': hrs(core / 8),  'core-beg': hrsBeg(core),
+    'fast-hrs':  hrs(fast),    'fast-day':  hrs(fast / 14), 'fast-day-beg': hrsBeg(fast / 14),
+    'nleaves':   String(LEAVES.length), 'nphases': String(TREE.length),
+    'ndeferred': String(offL.length),   'deferred-hrs': hrs(sumMins(offL)),
+  };
+  $$('[data-stat]', scope).forEach(el => { const k = el.dataset.stat; if (k in V) el.textContent = V[k]; });
 }
 
 /* popup toán + ngăn phụ ---------------------------------------
@@ -9203,7 +9752,16 @@ document.addEventListener('click', e => {
 });
 
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeLayers(); return; }
+  if (e.key === 'Escape') {
+    // Ưu tiên đóng lớp phủ (popup toán / ngăn phụ). Nếu không có lớp phủ nào mở
+    // mà ngăn lộ trình đang mở dạng drawer trên mobile thì đóng nó và trả tiêu
+    // điểm về nút ☰ — nếu không, Esc trên mobile sẽ không có tác dụng gì.
+    if (layerOpen()) { closeLayers(); return; }
+    if (typeof closeSide === 'function' && isMobileNav() &&
+        $('#shell').classList.contains('is-side-open')) { closeSide(true); return; }
+    closeLayers();
+    return;
+  }
 
   /* [ và ] = bài trước / bài sau. Cùng phím với "lùi/tiến" của nhiều trình đọc.
      Bỏ qua khi đang gõ vào ô tìm kiếm, đang mở lớp phủ, hoặc đang giữ phím tổ hợp
@@ -10714,10 +11272,66 @@ $('.ds-skip').addEventListener('click', e => {
   m.scrollIntoView({ block: 'start' });
 });
 
-$('[data-side-toggle]').addEventListener('click', () => {
-  const narrow = window.matchMedia('(max-width: 900px)').matches;
-  $('#shell').classList.toggle(narrow ? 'is-side-open' : 'is-side-collapsed');
+/* Điều hướng lộ trình — khác nhau ở hai chế độ:
+     · Desktop (>900px): ngăn là một cột thật của trang; nút ☰ chỉ gập/mở cột
+       (is-side-collapsed). Không bao giờ inert.
+     · Mobile (≤900px): ngăn là drawer trượt từ trái. Khi ĐÓNG nó nằm ngoài màn
+       hình (translateX(-100%)) nhưng vẫn trong DOM — nên phải đặt `inert` để nó
+       rời hẳn khỏi cây tiêu điểm/trình đọc màn hình. Mở thì đưa tiêu điểm vào
+       trong, đóng thì trả tiêu điểm về nút ☰, Esc và chạm ra ngoài đều đóng. */
+const sideToggle = $('[data-side-toggle]');
+const sidenav = $('#sidenav');
+const isMobileNav = () => window.matchMedia('(max-width: 900px)').matches;
+
+function syncSideA11y() {
+  const main = $('.wb-shell__main');
+  if (isMobileNav()) {
+    const open = $('#shell').classList.contains('is-side-open');
+    sidenav.inert = !open;                       // ĐÓNG trên mobile → ra khỏi focus tree
+    if (main) main.inert = open;                 // MỞ → nội dung nền không nhận tiêu điểm nữa
+    sideToggle.setAttribute('aria-expanded', String(open));
+  } else {
+    sidenav.inert = false;
+    if (main) main.inert = false;
+    const collapsed = $('#shell').classList.contains('is-side-collapsed');
+    sideToggle.setAttribute('aria-expanded', String(!collapsed));
+  }
+}
+function openSide() {
+  $('#shell').classList.add('is-side-open');
+  syncSideA11y();
+  // Đưa tiêu điểm vào ô tìm kiếm trong ngăn: người dùng bàn phím phải đứng bên
+  // trong thứ họ vừa mở, không bị bỏ lại ở nút ☰ sau lưng lớp phủ.
+  const first = $('#searchBox') || sidenav.querySelector(FOCUSABLE);
+  if (first) first.focus();
+}
+function closeSide(restoreFocus) {
+  $('#shell').classList.remove('is-side-open');
+  syncSideA11y();
+  if (restoreFocus) sideToggle.focus();
+}
+sideToggle.addEventListener('click', () => {
+  if (isMobileNav()) {
+    $('#shell').classList.contains('is-side-open') ? closeSide(true) : openSide();
+  } else {
+    $('#shell').classList.toggle('is-side-collapsed');
+    syncSideA11y();
+  }
 });
+// Chạm vào lớp mờ (bất cứ đâu ngoài ngăn) đóng drawer mobile.
+document.addEventListener('click', e => {
+  if (!isMobileNav() || !$('#shell').classList.contains('is-side-open')) return;
+  if (e.target.closest('#sidenav') || e.target.closest('[data-side-toggle]')) return;
+  closeSide(false);
+});
+// Bấm một liên kết bài trong ngăn → điều hướng nội dung; trên mobile đóng luôn
+// drawer để người đọc thấy bài chứ không bị menu che.
+sidenav.addEventListener('click', e => {
+  if (isMobileNav() && e.target.closest('a[href^="#/"]')) closeSide(false);
+});
+// Vượt qua mốc 900px làm ngăn đổi vai (cột ↔ drawer); giữ cho inert/aria đúng.
+window.addEventListener('resize', syncSideA11y);
+syncSideA11y();
 /* Đọc/ghi theme phải bọc try/catch: ở chế độ riêng tư (Safari cũ) hoặc khi
    cookie/storage bị chặn, chạm localStorage NÉM lỗi. Không bọc thì cả khối khởi
    động dừng ngay đây — trước cả buildTree()/render() — và người dùng thấy trang
@@ -10742,9 +11356,9 @@ if (_theme === 'dark' ||
 let undoSnapshot = null, undoTimer = null;
 $('#resetBtn').addEventListener('click', () => {
   if (undoSnapshot) return;                       // đang trong cửa sổ hoàn tác
-  if (!done.size) { flashRail('Chưa có bài nào được đánh dấu.'); return; }
-  undoSnapshot = [...done];
-  done.clear(); saveDone(); syncProgress();
+  if (!prog.size) { flashRail('Chưa có bài nào được đánh dấu.'); return; }
+  undoSnapshot = [...prog.entries()];             // giữ cả MỨC để hoàn tác đúng
+  prog.clear(); saveProgress(); syncProgress();
   showUndo(undoSnapshot.length);
 });
 
@@ -10754,8 +11368,8 @@ function showUndo(n) {
   bar.innerHTML = `<span>Đã xoá ${n} bài đã đánh dấu.</span>
     <button class="wb-btn wb-btn--sm" id="undoBtn">Hoàn tác</button>`;
   $('#undoBtn').addEventListener('click', () => {
-    undoSnapshot.forEach(id => { if (byId[id]) done.add(id); });
-    saveDone(); syncProgress(); clearUndo();
+    undoSnapshot.forEach(([id, lvl]) => { if (byId[id]) prog.set(id, lvl); });
+    saveProgress(); syncProgress(); clearUndo();
   });
   clearTimeout(undoTimer);
   undoTimer = setTimeout(clearUndo, 10000);
@@ -10950,11 +11564,21 @@ document.addEventListener('click', e => {
 /* Tự kiểm tính nhất quán của dữ liệu lịch. Chạy mỗi lần tải trang và chỉ nói khi
    có gì đó sai — rẻ hơn nhiều so với việc phát hiện lệch số sau khi đã in ra PDF.
    Gõ auditPlan() trong Console để xem đầy đủ. */
+/* Ngưỡng tối thiểu deliverable: nếu nội dung một bài mô tả deliverable "mất tối
+   thiểu N phút" thì cột d của bài không được nhỏ hơn — nếu không, workload trên
+   trang sẽ hứa nhiều hơn số giờ thật sự cấp cho việc làm ra artifact đó. */
+const DELIV_MIN = { 'q-mini': 240 };   // 2 mini-project làm thật, ~2 giờ mỗi cái
+/* Bài core được phép chỉ-đọc (định vị / tra cứu) — không phải mọi bài core đều
+   cần deliverable. Danh sách này để audit đừng báo nhầm chúng. */
+const READONLY_OK = new Set(['s-how','s-pipeline','s-lookup','t-stack','ml-map','r-mistakes']);
+
 function auditPlan(verbose) {
   const bad = [];
+
+  // --- DAYS: mỗi id hợp lệ, đúng một lần, ngày không quá dài/ngắn, có deliverable
   const flat = DAYS.flatMap(d => d.ids);
   flat.forEach((id, i) => {
-    if (!byId[id]) bad.push(`DAYS: id lạ "${id}"`);
+    if (!byId[id]) bad.push(`DAYS: id lạ "${id}" (tham chiếu bài không tồn tại)`);
     if (flat.indexOf(id) !== i) bad.push(`DAYS: "${id}" xuất hiện nhiều lần`);
   });
   DAYS.forEach(d => {
@@ -10963,26 +11587,73 @@ function auditPlan(verbose) {
     if (h < 3.5) bad.push(`Ngày ${d.n} chỉ ${h.toFixed(1)} giờ — quá ngắn, gộp lại đi`);
     if (!d.out) bad.push(`Ngày ${d.n} không có deliverable`);
   });
+
+  // --- WEEKS leaf-level: PHỦ ĐÚNG toàn bộ LEAVES, mỗi bài đúng một lần
   const wIds = WEEKS.flatMap(w => w.ids);
-  TREE.forEach(p => {
-    const n = wIds.filter(x => x === p.id).length;
-    if (n !== 1) bad.push(`WEEKS: chặng ${p.id} xuất hiện ${n} lần (phải đúng 1)`);
+  wIds.forEach((id, i) => {
+    if (!byId[id]) bad.push(`WEEKS: id lạ "${id}"`);
+    if (wIds.indexOf(id) !== i) bad.push(`WEEKS: "${id}" xuất hiện nhiều lần`);
   });
+  LEAVES.forEach(l => { if (!wIds.includes(l.id)) bad.push(`WEEKS: bài "${l.id}" không nằm ở tuần nào`); });
+
+  // --- Phụ thuộc deliverable: mọi prerequisite phải học ở tuần này hoặc SỚM HƠN
+  const weekOf = {}; WEEKS.forEach(w => w.ids.forEach(id => { weekOf[id] = w.n; }));
+  WEEKS.forEach(w => {
+    (w.needs || []).forEach(id => {
+      if (!byId[id]) { bad.push(`Tuần ${w.n}: prerequisite "${id}" không tồn tại`); return; }
+      if (weekOf[id] > w.n) bad.push(`Tuần ${w.n}: deliverable cần "${id}" nhưng bài đó dạy ở tuần ${weekOf[id]} (phụ thuộc ngược)`);
+    });
+    if (!w.out) bad.push(`Tuần ${w.n} không có deliverable`);
+  });
+
+  // --- Từng bài: r/x/d hợp lệ, có PAYOFF; bài core không được thiếu cả thực hành
+  //     lẫn deliverable lẫn acceptance (trừ các bài định vị/tra cứu cho phép)
   LEAVES.forEach(l => {
     if (![l.r, l.x, l.d].every(v => Number.isInteger(v) && v >= 0)) bad.push(`${l.id}: r/x/d không hợp lệ`);
     if (mins(l) <= 0) bad.push(`${l.id}: tổng thời lượng bằng 0`);
     if (!PAYOFF[l.id]) bad.push(`${l.id}: thiếu PAYOFF`);
+    if (l.p === 'core' && l.x === 0 && l.d === 0 && !ACCEPT[l.id] && !READONLY_OK.has(l.id))
+      bad.push(`${l.id}: bài core nhưng không có thực hành / deliverable / acceptance`);
   });
+
+  // --- Deliverable không được nhỏ hơn tối thiểu mô tả trong nội dung
+  for (const [id, min] of Object.entries(DELIV_MIN)) {
+    const l = byId[id];
+    if (!l) bad.push(`DELIV_MIN: bài "${id}" không tồn tại`);
+    else if (l.d < min) bad.push(`${id}: cột deliverable ${l.d}′ < tối thiểu ${min}′ mô tả trong bài`);
+  }
+
+  // --- Tham chiếu bài không tồn tại trong mọi bảng phụ trợ
+  const refCheck = (name, ids) => ids.forEach(id => { if (!byId[id]) bad.push(`${name}: tham chiếu bài lạ "${id}"`); });
+  refCheck('ACCEPT', Object.keys(ACCEPT));
+  refCheck('SCOPE', Object.keys(SCOPE));
+  refCheck('PORTFOLIO', PORTFOLIO.map(p => p.id));
+  COMPS.forEach(c => {
+    refCheck(`COMP ${c.n}`, [...c.lessons, ...c.key]);
+    if (![2, 3, 4].includes(c.cap)) bad.push(`COMP ${c.n}: cap lạ ${c.cap}`);
+    if (!c.key.every(k => c.lessons.includes(k))) bad.push(`COMP ${c.n}: có key nằm ngoài lessons`);
+  });
+  // Mỗi mốc (milestone) phải có ánh xạ năng lực: bài của nó xuất hiện trong ≥1 COMP
+  const compLessons = new Set(COMPS.flatMap(c => c.lessons));
+  WEEKS.filter(w => w.mile).forEach(w => {
+    if (!w.ids.some(id => compLessons.has(id)))
+      bad.push(`Mốc tuần ${w.n} (${w.mile}) không ánh xạ tới nhóm năng lực nào`);
+  });
+
+  // --- Tổng giờ giữa các view phải KHỚP tuyệt đối
+  const totalLeaves = sumMins(LEAVES);
+  const totalWeeks  = wIds.reduce((s, id) => s + (byId[id] ? mins(byId[id]) : 0), 0);
+  if (totalLeaves !== totalWeeks) bad.push(`Tổng giờ lệch: LEAVES ${totalLeaves}′ vs WEEKS ${totalWeeks}′`);
   const fastFromDays = sumMins(LEAVES.filter(l => FAST.has(l.id)));
   const fastFromPlan = DAYS.reduce((s, d) => s + dayMins(d), 0);
   if (fastFromDays !== fastFromPlan) bad.push(`Tổng fast track lệch: ${fastFromDays} vs ${fastFromPlan}`);
 
   if (bad.length) console.warn('[lộ trình] ' + bad.length + ' vấn đề:', bad);
-  else if (verbose) console.info('[lộ trình] OK — %d bài, %d ngày, %s giờ fast track',
-    LEAVES.length, DAYS.length, hrs(fastFromPlan));
+  else if (verbose) console.info('[lộ trình] OK — %d bài, %d ngày, %d tuần · tổng %s giờ · fast %s giờ',
+    LEAVES.length, DAYS.length, WEEKS.length, hrs(totalLeaves), hrs(fastFromPlan));
   return bad;
 }
-auditPlan();
+auditPlan(true);
 
 buildTree();
 addEventListener('hashchange', render);
