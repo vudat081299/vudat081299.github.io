@@ -6173,7 +6173,7 @@ train 277,753 | valid 57,722 | test 60,000 (test KHÔNG được chạm ở file
   "recall_effective": 0.156,
   "cost_per_tx": 5848.7,
   "cost_saved_vs_do_nothing_pct": 8.51,
-  "breakeven_closed_form": { "review": 0.0148, "block": 0.2444 }
+  "breakeven_closed_form": { "review": 0.0148, "block": 0.2444, "review_used": true }
 }
 
 → models/fraud-20260803-065740.joblib</div>
@@ -6682,7 +6682,7 @@ $ python -m src.final_eval --confirm-freeze
   </ul>
 
   <h2>6 · Bộ test — <code>tests/</code></h2>
-  <p>26 test chạy trong hơn 2 giây, không cần tải dữ liệu. Chúng bắt đúng những lỗi <b>không</b> làm chương trình dừng.</p>
+  <p>27 test chạy trong hơn 2 giây, không cần tải dữ liệu. Chúng bắt đúng những lỗi <b>không</b> làm chương trình dừng.</p>
   <div class="ds-code"><i>"""Fixture dùng chung. Mọi test chạy trên bộ mô phỏng nhỏ nên `pytest` xong
 trong khoảng một phút và không cần tải dữ liệu."""</i>
 <b>import</b> pytest
@@ -6970,8 +6970,8 @@ luận văn mà không ai thấy.
     <b>assert</b> r["allow_fraud"] + r["review_fraud"] + r["block_fraud"] == r["n_fraud"]</div>
   <p class="ds-codecap">tests/test_split_thresholds.py · (test cho API nằm ở bài sau)</p>
   <div class="ds-code">$ pytest -q
-..........................                                       [100%]
-26 passed in 2.35s</div>
+...........................                                      [100%]
+27 passed in 2.35s</div>
   <div class="wb-alert wb-alert--info wb-alert--plain"><div class="wb-alert__body">
     <p class="wb-alert__title">Test đáng giá nhất trong cả bộ</p>
     <p class="wb-alert__msg"><code>test_history_uses_only_the_past</code>: đổi số tiền của giao dịch <i>cuối cùng</i> lên 1000 lần, rồi khẳng định feature của <b>mọi</b> giao dịch trước nó không đổi một chút nào. Đó là định nghĩa <i>thao tác được</i> của “không nhìn tương lai” — nó không tin vào lời hứa của <code>shift(1)</code>, nó kiểm chứng. Test này bắt được mọi kiểu rò rỉ thời gian, kể cả kiểu bạn chưa nghĩ ra.</p>
@@ -7353,7 +7353,7 @@ pip install -r requirements.txt
 
 python -m src.prepare_data --source sim     <i># 2,0 s  → data/processed/transactions.parquet</i>
 python -m src.train --split time            <i># 4,7 s  → models/fraud-*.joblib  (chỉ số validation)</i>
-pytest -q                                   <i># ~2,4 s → 26 passed</i>
+pytest -q                                   <i># ~2,4 s → 27 passed</i>
 python -m src.final_eval --confirm-freeze   <i># 10,1 s → reports/final_eval_*.json  (MỘT lần)</i>
 uvicorn src.serve:app --port 8000           <i># → http://localhost:8000/docs</i></div>
   <p>Tổng cộng khoảng <b>19 giây tính toán</b> trên một laptop bình thường, không GPU, không tải dữ liệu. Đó là chủ ý: một vòng lặp nhanh là thứ quyết định bạn thử được bao nhiêu ý tưởng trong hai tuần. Khi đổi sang IEEE-CIS thật, đổi đúng một cờ <code>--source ieee</code>.</p>
