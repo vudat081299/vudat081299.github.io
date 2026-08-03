@@ -17,8 +17,15 @@
   /* Page-local: chỉ layout + những thứ kit chưa có (khối code, khối viz, prose).
      Mọi màu / bo góc / khoảng cách đều lấy từ token wb-*. */
 
-  /* ---- prose: nội dung bài học ---- */
-  .ds-prose { max-width: 78ch; }
+  /* ---- prose: nội dung bài học ----
+     Khung ngoài dùng hết bề rộng cột chính; CHỮ giữ khổ hẹp để đọc dễ, còn
+     bảng / khối code / hình tương tác / thẻ được tràn rộng ra — trước đây mọi thứ
+     bị ép chung 78ch nên bảng nhiều chữ một cột xuống dòng vụn, còn hai bên thừa chỗ. */
+  .ds-prose { max-width: 1040px; }
+  .ds-prose > p, .ds-prose > ul, .ds-prose > ol, .ds-prose > h2, .ds-prose > h3,
+  .ds-prose > h4, .ds-prose > blockquote, .ds-prose > hr, .ds-prose > dl,
+  .ds-prose > .ds-more, .ds-prose > .ds-srclist, .ds-prose > .ds-keyhint,
+  .ds-prose > .wb-help { max-width: 74ch; }
   .ds-prose > h2 {
     font-size: var(--wb-text-section); font-weight: 700; letter-spacing: -.01em;
     margin: var(--wb-section-gap) 0 8px;
@@ -125,12 +132,25 @@
   .ds-ctrl__val { font-family: var(--wb-font-mono); font-size: var(--wb-text-help); font-weight: 600; font-variant-numeric: tabular-nums; }
 
   /* ---- rail: cây lộ trình ---- */
-  .wb-shell { --wb-sidenav-w: 302px; }
-  .ds-rail { display: flex; flex-direction: column; gap: 12px; }
+  .wb-shell { --wb-sidenav-w: 300px; }
+  .ds-rail { display: flex; flex-direction: column; gap: 14px; }
   .ds-tree .wb-tree__row { align-items: flex-start; }
   .ds-tree .wb-tree__label { white-space: normal; line-height: 1.35; }
   .ds-tree .wb-tree__toggle, .ds-tree .wb-tree__check { margin-top: 1px; flex: none; }
-  .ds-tree .wb-tree__meta { flex: none; margin-top: 1px; }
+  .ds-tree .wb-tree__meta { flex: none; margin-top: 2px; }
+  /* Bỏ đường kẻ dọc guide của wb-tree--lines: 9 chặng × đường kẻ + cột toggle rỗng
+     làm cột trái thành một mê cung. Thay bằng thụt lề mềm, phân tầng bằng khoảng
+     cách và độ đậm chữ chứ không bằng đường viền. */
+  .ds-tree.wb-tree--lines > .wb-tree__node > .wb-tree__children {
+    margin-left: 0; padding-left: 10px; border-left: 0;
+  }
+  .ds-tree > .wb-tree__node + .wb-tree__node { margin-top: 2px; }
+  /* Chấm tròn rỗng của lá (toggle giả) chỉ tổ chiếm chỗ — bỏ hẳn, để pip mức học
+     làm cột mốc bên trái. */
+  .ds-tree .wb-tree__toggle.is-leaf { display: none; }
+  /* Hàng chặng = tiêu đề nhóm: nền nhẹ, bo góc, tách khỏi các lá bên dưới. */
+  .ds-tree__phase > .wb-tree__row { padding: 7px 8px; border-radius: var(--wb-radius-sm); }
+  .ds-tree__phase > .wb-tree__row:hover { background: var(--wb-surface-hover); }
   /* Ba loại phát biểu, phân biệt bằng CHỮ chứ không chỉ bằng viền — vì đọc một
      bảng so sánh mà không biết câu nào là sự thật ổn định, câu nào là hạn mức
      sẽ đổi, câu nào là ý kiến của người viết, thì bạn không đánh giá được rủi ro. */
@@ -155,24 +175,31 @@
     background: var(--wb-surface-2); border: var(--wb-bw) solid var(--wb-border);
     border-radius: var(--wb-radius-sm); line-height: 1.4;
   }
+  /* [hidden] đặt display:none, nhưng .ds-undo{display:flex} viết sau nên đè mất —
+     hai thanh này khi rỗng vẫn hiện ra như hai hộp xám vô nghĩa. Trả lại đúng. */
+  .ds-undo[hidden] { display: none; }
   .ds-rail__progress { font-size: var(--wb-text-caption); color: var(--wb-fg-muted); display: flex; justify-content: space-between; margin-bottom: 6px; }
   .ds-tree .wb-tree__label { font-size: 13px; }
   .ds-tree .wb-tree__row { cursor: pointer; }
   .ds-tree .wb-tree__meta { font-size: 11px; }
   .ds-tree__phase > .wb-tree__row .wb-tree__label { font-weight: 650; font-size: 12.5px; }
-  .ds-tree .is-selected .wb-tree__label { font-weight: 650; }
   .ds-tree .wb-tree__label.is-done { color: var(--wb-fg-subtle); text-decoration: line-through; text-decoration-thickness: 1px; }
   /* Nhãn trong cây là <a> thật (Tab tới được) nhưng phải trông như chữ thường,
      không gạch chân — gạch chân 83 dòng liên tiếp thì cột trái thành hàng rào. */
   .ds-tree__link { color: inherit; text-decoration: none; flex: 1 1 auto; min-width: 0; }
-  .ds-tree__link:hover { text-decoration: underline; text-underline-offset: 2px; }
+  .ds-tree__link:hover { text-decoration: none; }
   .ds-tree__link:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); border-radius: var(--wb-radius-sm); }
   .ds-tree .wb-tree__row:has(.ds-tree__link:focus-visible) { background: var(--wb-surface-hover); }
-  /* Bài đang mở: đánh dấu bằng cả chữ đậm LẪN một vạch bên trái, không chỉ bằng màu */
+  /* Lá đang mở: cả hàng thành một mục nav được chọn (nền + chữ đậm + vạch trái),
+     không chỉ một vạch mảnh. Chỉ áp cho HÀNG LÁ, để hàng chặng không sáng nhầm
+     khi bài đang mở tình cờ là bài đầu chặng. */
+  .ds-tree li[data-leaf] > .wb-tree__row:has([aria-current="page"]) {
+    background: var(--wb-surface-hover); box-shadow: inset 2px 0 0 var(--wb-fg); border-radius: var(--wb-radius-sm);
+  }
   .ds-tree__link[aria-current="page"] { font-weight: 700; }
-  .ds-tree .wb-tree__row:has([aria-current="page"]) { box-shadow: inset 2px 0 0 var(--wb-fg); }
-  /* Chấm tròn của lá không còn là <button>, nên bỏ con trỏ chuột gây hiểu nhầm */
-  .ds-tree .wb-tree__toggle.is-leaf { cursor: default; pointer-events: none; }
+  /* Chặng chứa bài đang mở: chỉ tô đậm tên chặng — đủ để định vị, không tranh
+     chú ý với chính bài đang đọc. Thuần CSS qua :has(), nên luôn đúng dù bài nào. */
+  .ds-tree__phase:has([aria-current="page"]) > .wb-tree__row .wb-tree__label { font-weight: 800; color: var(--wb-fg); }
 
   /* ---- Control mức học trong cây (đọc → thực hành → deliverable) ---- */
   .ds-lvl { display: inline-flex; align-items: center; background: none; border: 0;
@@ -197,12 +224,26 @@
                     color: var(--wb-fg-subtle); border: 1px solid var(--wb-border-strong);
                     border-radius: var(--wb-radius-sm); padding: 1px 6px; white-space: nowrap; flex: none; }
 
-  /* ---- Ma trận năng lực ---- */
-  .ds-matrix { width: 100%; }
-  .ds-matrix th, .ds-matrix td { text-align: center; vertical-align: middle; }
-  .ds-matrix thead th:first-child, .ds-matrix .ds-mx__name, .ds-matrix .ds-mx__evid { text-align: left; }
-  .ds-matrix .ds-mx__evid { font-size: var(--wb-text-caption); color: var(--wb-fg-subtle); }
-  .ds-mx__c { font-size: 16px; color: var(--wb-border-strong); }
+  /* ---- Ma trận năng lực ----
+     Bảng này render NGOÀI .ds-prose nên không thừa hưởng padding/viền của prose —
+     phải tự khai báo, nếu không các ô dồn sát nhau trông xô lệch. */
+  .ds-matrix { width: 100%; border-collapse: collapse; font-size: var(--wb-text-help); }
+  .ds-matrix th, .ds-matrix td {
+    text-align: center; vertical-align: middle;
+    padding: 9px 8px; border-bottom: var(--wb-bw) solid var(--wb-border);
+  }
+  .ds-matrix thead th {
+    color: var(--wb-fg-muted); font-weight: 650; font-size: var(--wb-text-caption);
+    line-height: 1.25; vertical-align: bottom; border-bottom: 2px solid var(--wb-border-strong);
+  }
+  .ds-matrix tbody tr:last-child td { border-bottom: 0; }
+  /* Bốn cột mức = cùng bề rộng hẹp; hai cột chữ (tên nhóm, artifact) ăn phần còn lại. */
+  .ds-matrix col.ds-mx__lvlcol { width: 62px; }
+  .ds-matrix thead th:first-child, .ds-matrix .ds-mx__name { text-align: left; width: 26%; }
+  .ds-matrix thead th:last-child,  .ds-matrix .ds-mx__evid { text-align: left; }
+  .ds-matrix .ds-mx__name b { font-weight: 650; }
+  .ds-matrix .ds-mx__evid { font-size: var(--wb-text-caption); color: var(--wb-fg-subtle); line-height: 1.45; }
+  .ds-mx__c { font-size: 17px; color: var(--wb-border-strong); }
   .ds-mx__c.is-on { color: var(--wb-fg); }
   .ds-mx__c.is-open { color: var(--wb-fg-subtle); }
   .ds-mx__c.is-off { color: var(--wb-border); }
@@ -236,21 +277,33 @@
   #main:focus, #main h1:focus { outline: none; }
   #main h1:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); border-radius: var(--wb-radius-sm); }
 
+  /* ---- trang chủ: giới thiệu giáo trình ---- */
+  .ds-lede { font-size: var(--wb-text-title); line-height: 1.55; color: var(--wb-fg); max-width: 68ch; }
+  .ds-outcomes { margin-top: 6px; }
+  .ds-outcomes .wb-steps__title { font-weight: 650; }
+  .ds-prep__ico { color: var(--wb-fg-subtle); font-size: var(--wb-ico-lg); flex: none; }
+  .wb-card__title .wb-ico { color: var(--wb-fg-subtle); vertical-align: -3px; margin-right: 4px; }
+
   /* ---- bản đồ tổng ở trang chủ ---- */
   .ds-map__phase { display: grid; grid-template-columns: 34px minmax(0,1fr); gap: 14px; }
+  .ds-map__out { color: var(--wb-fg-muted); font-size: var(--wb-text-help); line-height: 1.5; margin: 2px 0 8px; max-width: 68ch; }
   .ds-map__num {
     width: 34px; height: 34px; border-radius: var(--wb-radius-pill);
     display: grid; place-items: center; font-family: var(--wb-font-mono); font-weight: 700; font-size: 13px;
     background: var(--wb-fg); color: var(--wb-canvas);
   }
   .ds-leaf {
-    display: flex; align-items: baseline; gap: 8px; width: 100%; text-align: left;
+    display: flex; align-items: baseline; gap: 10px; width: 100%; text-align: left;
     padding: 7px 10px; border-radius: var(--wb-radius-sm); border: var(--wb-bw) solid transparent;
-    background: none; color: inherit; font: inherit; cursor: pointer;
+    background: none; color: inherit; font: inherit; cursor: pointer; text-decoration: none;
   }
-  .ds-leaf:hover { background: var(--wb-surface-hover); border-color: var(--wb-border); }
-  .ds-leaf__t { flex: 1 1 auto; min-width: 0; }
-  .ds-leaf__m { font-family: var(--wb-font-mono); font-size: 11.5px; color: var(--wb-fg-subtle); flex: none; }
+  .ds-leaf:hover { background: var(--wb-surface-hover); border-color: var(--wb-border); text-decoration: none; }
+  .ds-leaf__t { flex: 1 1 auto; min-width: 0; line-height: 1.4; }
+  .ds-leaf__m { font-family: var(--wb-font-mono); font-size: 11.5px; color: var(--wb-fg-subtle); flex: none; margin-left: auto; }
+  /* Kết quả tìm kiếm là <a> — không được gạch chân như một liên kết trong bài. */
+  #results .ds-leaf { align-items: flex-start; }
+  #results .ds-leaf .ds-leaf__m { margin-top: 1px; }
+  #results > .ds-rail__progress { margin: 2px 2px 8px; }
 
   /* ---- lịch 14 ngày ---- */
   .ds-day { border-left: 2px solid var(--wb-neutral-weak); padding: 0 0 0 16px; margin-bottom: 18px; }
@@ -329,7 +382,20 @@
   }
 
   /* ---- linh tinh ---- */
-  .ds-brand { font-weight: 700; letter-spacing: -.01em; }
+  .ds-brand { font-weight: 700; letter-spacing: -.01em; display: inline-flex; align-items: baseline; gap: 7px; }
+  .ds-brand__sub { font-weight: 500; font-size: .8em; color: var(--wb-fg-subtle); letter-spacing: 0; }
+  /* Logo = nút ẩn/hiện lộ trình, hiện ở mọi bề rộng (khác nút ☰ mặc định của kit
+     vốn chỉ hiện dưới 900px). Bấm → thu/mở cột trái trên desktop, mở/đóng drawer
+     trên mobile — cùng handler [data-side-toggle]. */
+  .ds-logobtn { padding: 0; }
+  .ds-logo { display: inline-flex; }
+  .ds-logo svg { display: block; width: 24px; height: 24px; transition: transform .12s ease; }
+  /* var() KHÔNG chạy trong thuộc tính fill/stroke của SVG — phải đặt qua CSS. */
+  .ds-logo__sq { fill: var(--wb-fg); }
+  .ds-logo__ln { stroke: var(--wb-canvas); }
+  .ds-logo__dot { fill: var(--wb-canvas); }
+  .ds-logobtn:hover .ds-logo svg { transform: scale(1.06); }
+  @media (max-width: 560px) { .ds-brand__sub { display: none; } }
   .ds-nodefoot { margin-top: 36px; padding-top: 18px; border-top: var(--wb-bw) solid var(--wb-border); }
   .ds-keyhint { font-size: var(--wb-text-caption); color: var(--wb-fg-subtle); margin: 12px 0 0; }
   .ds-keyhint kbd, .ds-prose kbd {
@@ -364,16 +430,23 @@
 <div class="wb-shell" id="shell">
 
   <header class="wb-navbar wb-navbar--sticky wb-navbar--glass">
-    <button class="wb-btn wb-btn--ghost wb-btn--icon wb-shell__side-toggle" data-side-toggle
-            aria-label="Mở/đóng lộ trình" aria-controls="sidenav" aria-expanded="false">
-      <span class="wb-ico">menu</span>
+    <button class="wb-btn wb-btn--ghost wb-btn--icon ds-logobtn" data-side-toggle
+            aria-label="Ẩn/hiện lộ trình" aria-controls="sidenav" aria-expanded="true" title="Ẩn/hiện lộ trình">
+      <span class="ds-logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="24" height="24" role="img" focusable="false">
+          <rect class="ds-logo__sq" x="1.5" y="1.5" width="21" height="21" rx="6.5"/>
+          <path class="ds-logo__ln" d="M6.5 16.5 L10.5 9.5 L17.5 12.5" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <g class="ds-logo__dot"><circle cx="6.5" cy="16.5" r="1.85"/><circle cx="10.5" cy="9.5" r="1.85"/><circle cx="17.5" cy="12.5" r="1.85"/></g>
+        </svg>
+      </span>
     </button>
-    <a class="wb-navbar__brand ds-brand" href="#/home">Data Science</a>
+    <a class="wb-navbar__brand ds-brand" href="#/home">Data Science <span class="ds-brand__sub">roadmap</span></a>
     <div class="wb-navbar__spacer"></div>
     <div class="wb-navbar__actions">
-      <span class="wb-cap wb-cap--sm" id="topProgress" title="Tiến độ học">0%</span>
-      <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" id="themeBtn" aria-label="Đổi sáng/tối">
-        <span class="wb-ico">dark_mode</span>
+      <span class="wb-cap wb-cap--sm" id="topProgress" title="Tiến độ học đã đạt">0%</span>
+      <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" id="themeBtn" aria-label="Đổi giao diện sáng/tối" title="Đổi sáng/tối">
+        <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
+        <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
       </button>
     </div>
   </header>
@@ -1243,50 +1316,99 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
      ============================================================ -->
 
 <template data-node="home">
-  <section class="wb-section"><h2>Ba thứ bạn nói bạn chưa biết — nằm ở đâu</h2>
-    <p class="wb-section__desc">Đi thẳng vào ba câu hỏi bạn đưa ra, không cần học tuần tự nếu đang gấp.</p>
-    <div class="wb-card wb-card--flat"><div class="wb-card__body" style="padding:6px">
-      <button class="ds-leaf" data-goto="f-cyclic"><span class="ds-leaf__t"><b>“23h và 0h cách xa nhau trong máy — dùng sin/cos ở đâu?”</b><br><span style="color:var(--wb-fg-muted);font-size:13px">→ Bước 5 của quy trình (Feature engineering), gõ trong file <code>features.py</code>, khoảng 6 dòng pandas</span></span><span class="ds-leaf__m">75′</span></button>
-      <button class="ds-leaf" data-goto="dl-attn"><span class="ds-leaf__t"><b>“Transformer là gì?”</b><br><span style="color:var(--wb-fg-muted);font-size:13px">→ Giải từ số 0 bằng ẩn dụ thư viện, có khối bấm được để xem từ nào nhìn từ nào</span></span><span class="ds-leaf__m">120′</span></button>
-      <button class="ds-leaf" data-goto="pr-code"><span class="ds-leaf__t"><b>“Làm sao ra được một product AI thật (phát hiện gian lận)?”</b><br><span style="color:var(--wb-fg-muted);font-size:13px">→ Code chạy được từ đầu tới cuối, kèm cấu trúc thư mục và cách đóng gói</span></span><span class="ds-leaf__m">105′</span></button>
-      <button class="ds-leaf" data-goto="t-online"><span class="ds-leaf__t"><b>“Máy tôi yếu, tôi thích thứ chạy online 100%”</b><br><span style="color:var(--wb-fg-muted);font-size:13px">→ Có đường đi trọn vẹn trong trình duyệt, kể cả bước đóng gói Docker. Và mỗi bảng so sánh công cụ trên trang đều có cột “chạy online được không”</span></span><span class="ds-leaf__m">45′</span></button>
+  <section class="wb-section"><h2>Giáo trình này là gì</h2>
+    <p class="ds-lede">Một giáo trình Data Science <b>lấy dự án làm trục</b>: thay vì đi qua từng chủ đề rời rạc, bạn dựng một sản phẩm AI thật từ đầu tới cuối — một hệ thống chấm điểm gian lận cho từng giao dịch — và mỗi khái niệm được dạy đúng lúc dự án cần đến nó. Học hết, bạn có một product demo chạy được và bộ khung để bắt đầu một luận văn hay paper.</p>
+    <p>Không chỗ nào ở đây hứa biến bạn thành chuyên gia sau một lượt đọc. Điều nó hứa cụ thể hơn thế: <b>sáu năng lực</b>, xếp theo thứ tự khó dần.</p>
+    <ol class="wb-steps ds-outcomes">
+      <li class="wb-steps__item"><span class="wb-steps__marker">1</span><div class="wb-steps__content">
+        <p class="wb-steps__title">Hiểu vòng đời hoàn chỉnh của một dự án Data Science</p>
+        <p class="wb-steps__desc">Và biết mỗi kỹ thuật nằm ở bước nào trong 10 bước của một product AI — nên không bao giờ học một thứ mà không biết nó dùng để làm gì.</p></div></li>
+      <li class="wb-steps__item"><span class="wb-steps__marker">2</span><div class="wb-steps__content">
+        <p class="wb-steps__title">Tự làm được một dự án end-to-end</p>
+        <p class="wb-steps__desc">Từ dữ liệu thô tới một dịch vụ chạy được: EDA, feature, mô hình, đánh giá, đóng gói thành API.</p></div></li>
+      <li class="wb-steps__item"><span class="wb-steps__marker">3</span><div class="wb-steps__content">
+        <p class="wb-steps__title">Định vị được một dự án ở lĩnh vực khác</p>
+        <p class="wb-steps__desc">Nhìn một bài toán Data Science lạ — dự báo, xếp hạng, nhân quả — và biết nó giống/khác dự án của bạn ở đâu, thay vì lạc lối chỉ vì đổi đề.</p></div></li>
+      <li class="wb-steps__item"><span class="wb-steps__marker">4</span><div class="wb-steps__content">
+        <p class="wb-steps__title">Đọc được một kỹ thuật bất kỳ</p>
+        <p class="wb-steps__desc">Với mỗi kỹ thuật: biết nó nằm ở đâu, giải quyết loại vấn đề gì, dựa trên <b>giả định gì</b>, và được đánh giá thế nào.</p></div></li>
+      <li class="wb-steps__item"><span class="wb-steps__marker">5</span><div class="wb-steps__content">
+        <p class="wb-steps__title">Phân biệt bốn thứ hay bị gộp</p>
+        <p class="wb-steps__desc">Công nghệ <i>phổ biến</i>, <i>phù hợp</i>, <i>tiện nhất để học</i>, và <i>nên dùng trong production</i> — bốn câu trả lời khác nhau cho một câu hỏi “dùng gì”.</p></div></li>
+      <li class="wb-steps__item"><span class="wb-steps__marker">6</span><div class="wb-steps__content">
+        <p class="wb-steps__title">Dựng được khung cho một luận văn / paper</p>
+        <p class="wb-steps__desc">Đủ nền để viết proposal, thesis skeleton và defense plan. Viết bản đầy đủ và bảo vệ thật vẫn cần nhiều vòng mentor — trang nói rõ chỗ nào nằm ngoài phạm vi.</p></div></li>
+    </ol>
+    <p class="wb-help">Ba con số ở đầu trang — tổng thời lượng, phần bắt buộc, và tiến độ của bạn — tính theo <i>workload</i> thật: đọc + thực hành + làm ra deliverable. Đó là lý do một bài code 150′ không thể tính “bằng” một bài đọc 10′.</p>
+  </section>
+
+  <section class="wb-section"><h2>Giáo trình dạy theo cách nào</h2>
+    <p class="wb-section__desc">Bốn nguyên tắc dưới đây là thứ tách trang này khỏi một cuốn sách hay một playlist video.</p>
+    <div class="wb-grid wb-grid--auto" style="--wb-grid-min:250px">
+      <div class="wb-card wb-card--pad">
+        <p class="wb-card__title"><span class="wb-ico wb-ico--sm">task_alt</span> Học bằng bằng chứng, không bằng cảm giác hiểu</p>
+        <p class="wb-card__sub">Mỗi bài kết bằng một <b>artifact commit được</b> (file <code>.py</code>, notebook chạy hết, hình, bảng, đoạn văn) kèm <b>tiêu chí đạt</b> cụ thể. Bạn biết mình đã hiểu khi thứ đó chạy — không phải khi gật đầu.</p>
+      </div>
+      <div class="wb-card wb-card--pad">
+        <p class="wb-card__title"><span class="wb-ico wb-ico--sm">timeline</span> Một dự án xuyên suốt</p>
+        <p class="wb-card__sub">Phần lớn khái niệm được dạy trên <b>cùng một bài toán</b>, nên các mảnh ráp lại thành một sản phẩm thật — thay vì mỗi bài một ví dụ rời không nối được với nhau.</p>
+      </div>
+      <div class="wb-card wb-card--pad">
+        <p class="wb-card__title"><span class="wb-ico wb-ico--sm">unfold_less</span> Mạch chính giữ thật gọn</p>
+        <p class="wb-card__sub">Chữ trên mạch chính là đường ngắn nhất tới sản phẩm. Toán sâu và so sánh công cụ nằm sau <b>chip bấm được</b> — mở khi tò mò, bỏ qua vẫn ra sản phẩm.</p>
+      </div>
+      <div class="wb-card wb-card--pad">
+        <p class="wb-card__title"><span class="wb-ico wb-ico--sm">cloud_done</span> Riêng tư, chạy được trên máy yếu</p>
+        <p class="wb-card__sub">Tiến độ lưu trong trình duyệt của bạn — không đăng nhập, không máy chủ. Mọi bước đều có đường đi <b>chạy 100% trên trình duyệt</b> cho người không có máy mạnh.</p>
+      </div>
+    </div>
+    <p style="margin-top:14px"><button class="wb-btn wb-btn--ghost wb-btn--sm" data-goto="s-how"><span class="wb-ico wb-ico--sm">menu_book</span> Hướng dẫn dùng trang chi tiết (nhãn ưu tiên, hai lộ trình, phím tắt)</button></p>
+  </section>
+
+  <section class="wb-section"><h2>Cần chuẩn bị gì trước khi bắt đầu</h2>
+    <div class="wb-card wb-card--flat"><div class="wb-card__body">
+      <div class="wb-stack" style="--wb-stack-gap:16px">
+        <div class="wb-media">
+          <span class="wb-ico ds-prep__ico">code</span>
+          <div class="wb-media__body">
+            <p class="wb-media__title">Biết lập trình cơ bản thì đi nhanh — nhưng không bắt buộc</p>
+            <p class="wb-media__text">Nếu Python là ngôn ngữ đầu tiên của bạn, vẫn theo được; chỉ lâu hơn khoảng <b>1,3–1,5 lần</b>, và phần đội thêm nằm gần hết ở giờ thực hành. Mọi con số thời lượng trên trang đều ghi kèm phiên bản “từ số 0”.</p>
+          </div>
+        </div>
+        <div class="wb-media">
+          <span class="wb-ico ds-prep__ico">laptop_chromebook</span>
+          <div class="wb-media__body">
+            <p class="wb-media__title">Một trình duyệt và một tài khoản Google là đủ</p>
+            <p class="wb-media__text">Không cần GPU hay máy mạnh. Chặng 1 chỉ ra đường đi chạy trọn trên trình duyệt (Colab, Kaggle) cho cả bước đóng gói.</p>
+          </div>
+        </div>
+        <div class="wb-media">
+          <span class="wb-ico ds-prep__ico">functions</span>
+          <div class="wb-media__body">
+            <p class="wb-media__title">Không cần biết trước toán</p>
+            <p class="wb-media__text">Chặng 2 dạy lại đúng phần tối thiểu — vector, đạo hàm/gradient, xác suất, thống kê suy diễn — và mọi công thức đứng sau một chip bấm để mở khi cần.</p>
+          </div>
+        </div>
+        <div class="wb-media">
+          <span class="wb-ico ds-prep__ico">keyboard</span>
+          <div class="wb-media__body">
+            <p class="wb-media__title">Một thói quen: gõ lại, đừng copy</p>
+            <p class="wb-media__text">Đọc xong một bài mà không gõ gì thì 48 giờ sau chỉ còn khoảng 10%. Mở sẵn một notebook bên cạnh, gõ lại code rồi đổi một tham số xem nó hỏng thế nào.</p>
+          </div>
+        </div>
+      </div>
     </div></div>
   </section>
 
-  <section class="wb-section"><h2>Hai lộ trình, chọn theo thời gian bạn có</h2>
-    <div class="wb-grid wb-grid--auto" style="--wb-grid-min:250px">
-      <div class="wb-card wb-card--pad">
-        <p class="wb-card__title">Lộ trình chuẩn · 6–8 tuần <span class="wb-cap wb-cap--sm">mặc định</span></p>
-        <p class="wb-card__sub"><b><span data-stat="total-hrs">—</span> giờ</b> nếu học hết (phần Bắt buộc ~<span data-stat="core-week">—</span> giờ/tuần trong 8 tuần). Con số này giả định bạn <b>đã biết lập trình</b>; nếu Python là ngôn ngữ đầu tiên thì ≈ <b><span data-stat="total-beg">—</span> giờ</b> — tức <b>“6–8 tuần” là cho người đã lập trình được</b>, người từ số 0 nên tính <span data-stat="total-beg-weeks">—</span> tuần ở nhịp 8–10 giờ/tuần. Một dự án end-to-end đi sâu, <b>cộng</b> chín họ bài toán và các mini-project.</p>
-        <p style="margin:10px 0 0"><button class="wb-btn wb-btn--sm" data-goto="s-plan8w">Xem lộ trình chuẩn</button></p>
-      </div>
-      <div class="wb-card wb-card--pad">
-        <p class="wb-card__title">Fast track · 14 ngày</p>
-        <p class="wb-card__sub"><b><span data-stat="fast-hrs">—</span> giờ · ~<span data-stat="fast-day">—</span> giờ/ngày</b> liên tục trong 14 ngày (từ số 0 ≈ <span data-stat="fast-day-beg">—</span> giờ/ngày — rất nặng). Đi trọn <i>một</i> vòng end-to-end; nó nói rõ phần nào bị hoãn lại và khi nào quay lại.</p>
-        <p style="margin:10px 0 0"><button class="wb-btn wb-btn--ghost wb-btn--sm" data-goto="s-plan14">Xem fast track</button></p>
-      </div>
-    </div>
-    <p class="wb-help" style="margin-top:12px">Không lộ trình nào ở đây hứa “thành thạo Data Science” hay “xong năng lực thạc sĩ” chỉ sau một lượt. Cụ thể mỗi lộ trình tạo ra ai: <b>Fast track 14 ngày</b> → đưa phần lớn nhóm năng lực tới mức <i>giải thích / thực hành</i> và làm ra <b>một</b> vòng end-to-end; bạn <i>chạm</i> chuyển giao chứ chưa thành thạo. <b>Lộ trình chuẩn 8 tuần</b> → tới mức <i>có deliverable đạt tiêu chí</i> ở các nhóm 1–6 và 9, cộng khả năng chuyển giao sang bài toán khác. Cả hai <b>đều dừng ở mức “có khung/kỹ năng” cho nghiên cứu và bảo vệ</b> — luận văn hoàn chỉnh và năng lực nghiên cứu độc lập cần nhiều tuần/tháng có mentor. Ma trận 9 nhóm năng lực bên dưới nói rõ từng mức.</p>
-  </section>
-
-  <section class="wb-section"><h2>Một dự án chính đi sâu, sáu đề nhỏ để chuyển giao (làm thật 2)</h2>
-    <p class="wb-section__desc">Phần lớn khái niệm được dạy trên <b>một</b> bài toán: chấm điểm gian lận cho từng giao dịch. Nhưng nó không phải cả bản đồ.</p>
-    <p>Chọn nó làm dự án chính là có chủ ý. Một giáo trình mỗi bài một ví dụ rời thì bạn hiểu từng mảnh mà không ráp được cái nào; còn bài toán gian lận có tính chất hiếm: nó <b>bắt buộc</b> bạn đi qua đúng những chỗ quyết định một luận văn đúng hay sai — nhãn lệch dưới 1%, chia tập theo thời gian, PR-AUC thay vì accuracy, chọn ngưỡng theo tiền, giờ giao dịch là biến chu kỳ, rò rỉ dữ liệu, và mô hình cũ đi theo thời gian. Các ví dụ phổ biến hơn (Titanic, giá nhà, MNIST) <b>không</b> ép bạn gặp một cái nào trong số đó.</p>
-    <p><b>Nhưng một bài toán phân loại trên dữ liệu bảng không bao phủ được Data Science.</b> Nó không dạy bạn backtest một mô hình dự báo, không dạy bạn đọc một metric xếp hạng, và không dạy bạn vì sao mô hình dự đoán không trả lời được câu hỏi nhân quả. Nên trang này có cấu trúc <b>một dự án chính + sáu đề vệ tinh (bắt buộc làm thật 2)</b>: chặng 7 đi qua chín họ bài toán, mỗi họ trả lời cùng bốn câu — giữ gì, đổi gì, đo bằng gì, hỏng ở đâu.</p>
+  <section class="wb-section"><h2>Vì sao dựng quanh một bài toán gian lận</h2>
+    <p class="wb-section__desc">Chọn một dự án chính là có chủ ý — và nó không phải toàn bộ bản đồ.</p>
+    <p>Một giáo trình mỗi bài một ví dụ rời thì bạn hiểu từng mảnh mà không ráp được cái nào. Bài toán chấm điểm gian lận có một tính chất hiếm: nó <b>bắt buộc</b> bạn đi qua đúng những chỗ quyết định một dự án đúng hay sai — nhãn lệch dưới 1%, chia tập theo thời gian, PR-AUC thay vì accuracy, chọn ngưỡng theo tiền, giờ giao dịch là biến chu kỳ, rò rỉ dữ liệu, và mô hình cũ đi theo thời gian. Các ví dụ nhập môn quen thuộc (Titanic, giá nhà, MNIST) <b>không</b> ép bạn gặp một cái nào trong số đó.</p>
+    <p><b>Nhưng một bài phân loại trên dữ liệu bảng không bao phủ được Data Science.</b> Nó không dạy backtest một mô hình dự báo, không dạy đọc một metric xếp hạng, và không dạy vì sao mô hình dự đoán không trả lời được câu hỏi nhân quả. Nên giáo trình có cấu trúc <b>một dự án chính + sáu đề vệ tinh</b>: chặng 7 đi qua các họ bài toán khác, mỗi họ trả lời cùng bốn câu — giữ gì, đổi gì, đo bằng gì, hỏng ở đâu — và bạn làm thật ít nhất hai trong số đó để chứng minh khả năng chuyển giao.</p>
     <div class="wb-cluster" style="margin:14px 0">
-      <button class="wb-btn wb-btn--sm" data-goto="s-families">★ Bản đồ các họ bài toán</button>
-      <button class="wb-btn wb-btn--ghost wb-btn--sm" data-goto="q-mini">★ Mini-project chuyển giao (làm thật 2/6)</button>
+      <button class="wb-btn wb-btn--sm" data-goto="s-families"><span class="wb-ico wb-ico--sm">account_tree</span> Bản đồ các họ bài toán</button>
+      <button class="wb-btn wb-btn--ghost wb-btn--sm" data-goto="q-mini"><span class="wb-ico wb-ico--sm">move_up</span> Mini-project chuyển giao</button>
     </div>
-    <p>Dự án chính cũng khớp với thứ bạn đã có: đồ án môn học của bạn đúng là bài toán này.</p>
-    <p><a class="wb-btn wb-btn--ghost wb-btn--sm" href="../business-analytics/fraud-detection-project.html">
-      <span class="wb-ico wb-ico--sm">open_in_new</span> Đồ án môn học · Fraud Detection (PaySim)</a></p>
-    <p class="wb-help">Nếu đề tài luận văn của bạn cuối cùng không phải gian lận: <b>toàn bộ khung vẫn giữ nguyên</b>, và chặng 7 chính là chỗ chỉ ra cần đổi gì cho họ bài toán của bạn.</p>
-  </section>
-
-  <section class="wb-section"><h2>Còn roadmap.sh thì sao</h2>
-    <p>Không phải nó sai — nó là <b>mục lục của một nghề</b>, còn bạn đang cần <b>giáo trình của một dự án</b>. Ba lộ trình liên quan cộng lại có 369 ô, bạn cần khoảng 46, và những chỗ làm hỏng luận văn thì không có ô nào. Toàn bộ phần đối chiếu — ô nào giữ, ô nào để sau, ô nào bỏ — nằm gọn trong một bài tra cứu:</p>
-    <button class="wb-btn wb-btn--ghost wb-btn--sm" data-goto="r-roadmapsh">
-      <span class="wb-ico wb-ico--sm">arrow_forward</span> Chặng 9 · roadmap.sh dịch ra</button>
+    <p class="wb-help">Đề tài cuối cùng của bạn không phải gian lận cũng không sao: <b>toàn bộ khung vẫn giữ nguyên</b>, và chặng 7 chính là chỗ chỉ ra cần đổi gì cho họ bài toán của bạn.</p>
   </section>
 </template>
 
@@ -8589,6 +8711,23 @@ const PRIO = {
   skim: { label:'Định vị là đủ',   cls:'wb-cap wb-cap--dashed wb-cap--sm' },
 };
 
+/* Một câu cho mỗi chặng: HỌC XONG CHẶNG NÀY BẠN LÀM ĐƯỢC GÌ. Đây là phần "đọc
+   xong chương X thì làm được gì" của một lời giới thiệu sách — giữ ở một chỗ để
+   không lệch với tên chặng trong TREE. */
+const PHASE_OUTCOME = {
+  p0:  'Hiểu trang này hoạt động thế nào, và có sẵn hai tấm bản đồ để định vị mọi thứ học về sau: 10 bước của một product AI, và các họ bài toán Data Science.',
+  p1:  'Dựng được chỗ làm việc (chạy được cả trên máy yếu) và gõ thành thạo pandas, SQL, numpy, scikit-learn — đủ để thao tác dữ liệu thật, không chỉ đọc về chúng.',
+  p2:  'Đọc được công thức trong các bài sau mà không hoảng: vector & ma trận, đạo hàm/gradient, xác suất, và phần thống kê suy diễn mà một luận văn cần tới.',
+  p3:  'Đóng khung được một bài toán, nhìn dữ liệu đúng cách (EDA), làm sạch, chia tập hợp lệ, và nhận ra rò rỉ dữ liệu — lỗi âm thầm giết chết nhiều luận văn.',
+  p4:  'Biến dữ liệu thô thành các feature mà mô hình hiểu được, và ráp tất cả vào một Pipeline tái lập được — bước quyết định chất lượng nhiều hơn cả việc chọn mô hình.',
+  p5:  'Chọn và huấn luyện mô hình phù hợp, xử lý dữ liệu lệch, và đo lường bằng đúng metric (PR-AUC, ngưỡng quy ra tiền) thay vì accuracy gây hiểu nhầm.',
+  p6:  'Hiểu mạng nơ-ron và attention/Transformer từ số 0 — đủ để biết chúng làm gì, khi nào nên dùng, và khi nào dữ liệu bảng không cần tới chúng.',
+  p7:  'Chuyển kiến thức sang các họ bài toán khác — dự báo chuỗi thời gian, hồi quy, NLP, nhân quả — và làm thật hai mini-project để chứng minh khả năng chuyển giao.',
+  p8:  'Đóng gói toàn bộ thành một dịch vụ chạy được: từ repo tới model đã lưu, ra API (FastAPI) + Docker, kèm giám sát drift và kế hoạch retrain.',
+  p9:  'Dựng được khung một nghiên cứu: tìm khoảng trống có “delta”, đọc và tái lập một paper, thiết kế thí nghiệm, viết theo IMRaD, và chuẩn bị bảo vệ.',
+  p10: 'Có một sổ tay để tra khi bí: 20 lỗi người mới hay mắc, từ điển thuật ngữ, bản dịch từ roadmap.sh sang giáo trình này, và danh sách sách/khoá/dataset đáng dùng.',
+};
+
 /* ============================================================
    1b. LỊCH 14 NGÀY — nguồn sự thật DUY NHẤT cho fast track
 
@@ -9392,11 +9531,16 @@ function render() {
 
   if (tpl) $('#prose').append(tpl.content.cloneNode(true));
 
-  $$('.ds-tree .wb-tree__row').forEach(r => r.classList.toggle('is-selected', r.dataset.goto === id));
-  $$('.ds-tree__link').forEach(a => {
+  // is-selected chỉ cho HÀNG LÁ — hàng chặng dùng data-goto=bài-đầu-chặng để bấm,
+  // nếu để nó nhận is-selected thì mở bài đầu chặng sẽ sáng cả chặng lẫn bài.
+  $$('.ds-tree li[data-leaf] > .wb-tree__row').forEach(r => r.classList.toggle('is-selected', r.dataset.goto === id));
+  // aria-current chỉ đặt trên đúng link của LÁ đang mở (không đặt trên link chặng,
+  // dù href của nó trùng bài đầu chặng) — chặng tự sáng qua :has() trong CSS.
+  $$('.ds-tree li[data-leaf] .ds-tree__link').forEach(a => {
     if (a.getAttribute('href') === '#/' + id) a.setAttribute('aria-current', 'page');
     else a.removeAttribute('aria-current');
   });
+  $$('.ds-tree__phase > .wb-tree__row .ds-tree__link').forEach(a => a.removeAttribute('aria-current'));
   $$('.ds-tree__phase').forEach(n => { if (n.dataset.phase === leaf.phase.id) n.classList.remove('is-collapsed'); });
 
   const sa = $('#selfAssess');
@@ -9484,17 +9628,18 @@ function renderHome() {
     <div id="homeIntro"></div>
     <section class="wb-section" id="homeMatrix"></section>
     <section class="wb-section" id="homePortfolio"></section>
-    <section class="wb-section"><h2>Bản đồ toàn bộ lộ trình</h2>
-      <p class="wb-section__desc">Bấm vào bất kỳ bài nào để vào học. Thứ tự đã sắp theo phụ thuộc: bài sau cần bài trước, không phải theo chủ đề.</p>
+    <section class="wb-section"><h2>Đi qua giáo trình: mỗi chặng cho bạn gì</h2>
+      <p class="wb-section__desc">Mười chặng, sắp theo phụ thuộc — bài sau cần bài trước, không phải xếp theo chủ đề. Dòng mô tả dưới mỗi tên chặng là thứ bạn <b>làm được sau khi học xong chặng đó</b>. Bấm vào bất kỳ bài nào để vào học.</p>
       <div class="wb-stack" style="--wb-stack-gap:26px">
         ${TREE.map(p => `
           <div class="ds-map__phase">
             <div class="ds-map__num">${p.id.replace('p','')}</div>
             <div>
-              <div class="wb-cluster" style="margin-bottom:6px">
+              <div class="wb-cluster" style="margin-bottom:2px">
                 <b>${p.t.replace(/^\d+ · /,'')}</b>
                 <span class="wb-cap wb-cap--sm">${fmtMin(phaseMin(p))}</span>
               </div>
+              ${PHASE_OUTCOME[p.id] ? `<p class="ds-map__out">${PHASE_OUTCOME[p.id]}</p>` : ''}
               <div class="wb-card wb-card--flat"><div class="wb-card__body" style="padding:6px">
                 ${p.kids.map(k => `
                   <button class="ds-leaf" data-goto="${k.id}">
@@ -9546,7 +9691,8 @@ function renderMatrix() {
     <h2>Bạn thật sự làm được gì — 9 nhóm năng lực</h2>
     <p class="wb-section__desc">Mỗi nhóm có <b>trần</b> (mức cao nhất trang này đưa bạn tới — ô tròn rỗng, viền đậm ở cột cuối cùng đạt được) và <b>mức của bạn</b> (ô tròn đặc, suy từ trạng thái bạn tự đánh giá). Trang <b>không</b> tự gán “bằng chứng tự làm”: mức đó chỉ bật khi bạn đánh dấu <i>đạt deliverable</i> theo tiêu chí acceptance của bài. Hai nhóm <b>nghiên cứu</b> và <b>viết &amp; bảo vệ</b> có trần dừng ở “có deliverable/khung” — năng lực độc lập ở đó cần nhiều tuần/tháng + mentor, nằm ngoài phạm vi trang. Không nhóm nào ở đây biến bạn thành chuyên gia toàn nhánh chỉ sau một lượt.</p>
     <div class="wb-table-scroll"><table class="ds-matrix">
-      <thead><tr><th>Nhóm năng lực</th><th>Nhắc<br>tới</th><th>Giải<br>thích</th><th>Thực hành/<br>deliverable</th><th>Bằng chứng<br>tự làm</th><th>Bằng chứng cần có (artifact)</th></tr></thead>
+      <colgroup><col><col class="ds-mx__lvlcol"><col class="ds-mx__lvlcol"><col class="ds-mx__lvlcol"><col class="ds-mx__lvlcol"><col></colgroup>
+      <thead><tr><th>Nhóm năng lực</th><th>Nhắc<br>tới</th><th>Giải<br>thích</th><th>Thực&nbsp;hành /<br>deliverable</th><th>Bằng chứng<br>tự làm</th><th>Bằng chứng cần có (artifact)</th></tr></thead>
       <tbody id="matrixBody"></tbody>
     </table></div>
     <p class="wb-help">● mức bạn đã đạt · ○ trang có thể đưa bạn tới (chưa đạt) · · ngoài phạm vi trang. Fast track 14 ngày chỉ đưa phần lớn nhóm tới mức <b>giải thích / thực hành</b>; lộ trình chuẩn 8 tuần mới chạm mức <b>có deliverable</b> ở các nhóm 1–6 và 9.</p>`;
@@ -11443,17 +11589,17 @@ syncSideA11y();
    trắng, không phải chỉ mất theme. loadDone() đã phòng chỗ đọc tiến độ; chỗ theme
    là đường thứ hai chạm storage nên cũng phải phòng. */
 const readTheme = () => { try { return localStorage.getItem('ds-theme'); } catch { return null; } };
+/* Biểu tượng sáng/tối do CSS của kit tự đổi theo lớp .dark (hai <span> to-dark /
+   to-light), không cần JS thay innerHTML — theo đúng mẫu wb-theme-toggle trong docs. */
 $('#themeBtn').addEventListener('click', () => {
   const dark = document.documentElement.classList.toggle('dark');
   try { localStorage.setItem('ds-theme', dark ? 'dark' : 'light'); }
   catch { /* storage bị chặn: theme không nhớ được giữa các lần mở, nhưng vẫn đổi được ngay bây giờ */ }
-  $('#themeBtn').innerHTML = `<span class="wb-ico">${dark ? 'light_mode' : 'dark_mode'}</span>`;
 });
 const _theme = readTheme();
 if (_theme === 'dark' ||
    (!_theme && matchMedia('(prefers-color-scheme: dark)').matches)) {
   document.documentElement.classList.add('dark');
-  $('#themeBtn').innerHTML = '<span class="wb-ico">light_mode</span>';
 }
 /* Xoá tiến độ là hành động không hoàn tác được và nút nằm ngay cạnh thanh tiến
    độ — quá dễ bấm nhầm. Thay vì hộp confirm() (chặn trang, dễ bấm bừa), giữ lại
