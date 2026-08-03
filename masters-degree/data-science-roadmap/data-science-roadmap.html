@@ -6295,10 +6295,14 @@ ALLOW, REVIEW, BLOCK = "ALLOW", "REVIEW", "BLOCK"
     block = ((COST_FP_BLOCK - COST_REVIEW)
              / (COST_FP_BLOCK + (1 - REVIEW_CATCH) * COST_FN))
     <b>if</b> block &lt;= review:
-        <i># REVIEW bị trội hoàn toàn (một lần xác minh đắt hơn cả chặn nhầm) → hệ</i>
-        <i># suy về hai hành động, biên BLOCK quay lại điểm hoà ALLOW/BLOCK.</i>
+        <i># REVIEW bị trội hoàn toàn (một lần xác minh đắt hơn cả chặn nhầm): KHÔNG</i>
+        <i># có dải p nào mà REVIEW rẻ nhất. Hệ suy về hai hành động — biên BLOCK quay</i>
+        <i># lại điểm hoà ALLOW/BLOCK, và dải REVIEW để RỖNG (review = block) nhằm giữ</i>
+        <i># đúng bất biến t_review ≤ t_block của decide(). Giữ nguyên review cũ (lớn</i>
+        <i># hơn block) sẽ trả về cặp ngưỡng mà chính decide() từ chối.</i>
         block = COST_FP_BLOCK / (COST_FN + COST_FP_BLOCK)
-    <b>return</b> {"review": review, "block": block}
+        <b>return</b> {"review": block, "block": block, "review_used": <b>False</b>}
+    <b>return</b> {"review": review, "block": block, "review_used": <b>True</b>}
 
 
 <b>def</b> total_cost(y_true, prob, t_review, t_block):
@@ -6859,6 +6863,7 @@ luận văn mà không ai thấy.
     two_action = COST_FP_BLOCK / (COST_FN + COST_FP_BLOCK)
     three_action = ((COST_FP_BLOCK - COST_REVIEW)
                     / (COST_FP_BLOCK + (1 - REVIEW_CATCH) * COST_FN))
+    <b>assert</b> be["review_used"] <b>is</b> <b>True</b>          <i># số mặc định: REVIEW có dải riêng</i>
     <b>assert</b> be["block"] == pytest.approx(three_action)
     <b>assert</b> be["block"] &gt; two_action           <i># 0,244 vs 0,048 với số mặc định</i>
     <b>assert</b> be["review"] &lt; be["block"]         <i># decide() đòi review ≤ block</i>
@@ -6866,6 +6871,23 @@ luận văn mà không ai thấy.
     p = 0.5 * (be["review"] + be["block"])
     <b>assert</b> COST_REVIEW + p * (1 - REVIEW_CATCH) * COST_FN &lt; p * COST_FN
     <b>assert</b> COST_REVIEW + p * (1 - REVIEW_CATCH) * COST_FN &lt; (1 - p) * COST_FP_BLOCK
+
+
+<b>def</b> test_breakeven_degrades_cleanly_when_review_dominated(monkeypatch):
+    <i>"""Khi một lần xác minh đắt hơn cả chặn nhầm, REVIEW không còn dải nào rẻ
+    nhất. breakeven() phải suy về hai hành động VÀ vẫn giữ t_review ≤ t_block —
+    tuyệt đối không trả cặp (review &gt; block) mà decide() sẽ ném lỗi."""</i>
+    <b>import</b> src.thresholds <b>as</b> th
+    monkeypatch.setattr(th, "COST_FN", 500_000)
+    monkeypatch.setattr(th, "COST_FP_BLOCK", 10_000)
+    monkeypatch.setattr(th, "COST_REVIEW", 400_000)
+    be = th.breakeven()
+    <b>assert</b> be["review_used"] <b>is</b> <b>False</b>
+    <b>assert</b> be["review"] &lt;= be["block"]                    <i># bất biến của decide()</i>
+    <b>assert</b> be["block"] == pytest.approx(10_000 / 510_000) <i># biên ALLOW→BLOCK</i>
+    <i># Cặp trả về phải nạp thẳng vào decide() được, không ném ValueError.</i>
+    act = decide([0.0, 0.5, 0.99], be["review"], be["block"])
+    <b>assert</b> REVIEW <b>not</b> <b>in</b> list(act)                        <i># dải REVIEW rỗng → không bao giờ chọn</i>
 
 
 <b>def</b> test_time_split_has_no_future_leak(hist):
@@ -10547,9 +10569,15 @@ VIZ.costmatrix = el => {
     // sạch mọi khách) để nhìn thấy đáy — nếu để nguyên biên độ thì đáy bị dí bẹp.
     const ref = nothing * 1.3;
     const X = t => 16 + t * 296, Y = cc => 100 - Math.min(cc / ref, 1) * 88;
+    // Chỉ vẽ trên miền policy HỢP LỆ: ngưỡng chặn phải ≥ ngưỡng xác minh rMark.
+    // Với t < rMark thì cdf(t)−cdf(rMark) âm ("số giao dịch REVIEW âm") — không phải
+    // một quyết định thật — nên bắt đầu đường ngay tại rMark thay vì kéo từ 0. Ở số
+    // mặc định rMark≈0,015 nên gần như không đổi; nhưng slider có thể đẩy rMark lên
+    // ~0,6, khi đó cả nửa trái của đường cũ là vô nghĩa.
+    const t0 = reviewActive ? rMark : 0;
     let dPath = '';
     for (let i = 0; i <= 200; i++) {
-      const t = i / 200;
+      const t = t0 + (1 - t0) * (i / 200);
       dPath += (dPath ? 'L' : 'M') + X(t).toFixed(1) + ' ' + Y(cost(t)).toFixed(1) + ' ';
     }
     o('curve').setAttribute('d', dPath);
