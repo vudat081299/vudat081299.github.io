@@ -161,11 +161,25 @@ Cổng mới đi vào `tools/gate.mjs`, mục 3. Ba câu phải trả lời trư
    cổng sẽ bị tắt.
 2. **Ở trạng thái ổn định nó có im không?** Nếu cổng mới sinh ra 40 cảnh báo ngay hôm
    nay, nó không dùng được — thu hẹp mẫu, hoặc gộp theo nhóm như `G-FWD` làm.
-3. **Có thoát cửa không?** Mọi heuristic cần một cách nói "chỗ này cố ý" —
-   `<!-- gate:main -->`, `allowEarly`, `waivers.json`.
+3. **Có thoát cửa không?** Mọi heuristic cần một cách nói "chỗ này cố ý".
 
 Thêm rồi phải **thử cả hai chiều**: tự tạo một vi phạm để xem cổng có nổ, rồi hoàn lại
 để xem nó có im. Cổng chưa bao giờ thấy nổ là cổng chưa biết có chạy hay không.
+
+### Bốn thoát cửa hiện có — và cái nào dùng khi nào
+
+| thoát cửa | ở đâu | dùng khi |
+|---|---|---|
+| `<!-- gate:main -->` | ngay trước một `<h2>`/`<h3>` trong template | tiêu đề trông giống nhánh phụ nhưng mục đó **thật sự** là mạch chính |
+| `<!-- gate:long: lý do -->` | trong template, sau thẻ `<template>` | bài dài > 200 dòng, đã soát, và dài là **đúng** (ví dụ bài đi qua sáu file nguồn) |
+| `allowEarly` + `allowWhy` | `tools/concepts.json` | bài nhắc một khái niệm trước bài dạy nó, nhưng chỉ để **định vị** hoặc đã tự định nghĩa một câu tại chỗ |
+| `waivers.json` | `tools/waivers.json` | lỗi CHẶN **thật**, đã biết cách sửa, nhưng cách sửa là một quyết định giáo trình cần phiên riêng |
+
+Ba cái đầu **đóng vĩnh viễn** một phát hiện — nên chúng bắt buộc kèm lý do cụ thể, và lý
+do đó phải nói *vì sao cổng bắt sai ở đây*, không phải "đã xem rồi". Cái thứ tư là **nợ**:
+nó in lại mỗi lần chạy cho tới khi bị xoá. Đừng dùng waiver cho việc mà `gate:main` /
+`gate:long` / `allowEarly` mới là câu trả lời đúng — và ngược lại, đừng dùng ba cái đầu để
+làm im một lỗi thật.
 
 ---
 

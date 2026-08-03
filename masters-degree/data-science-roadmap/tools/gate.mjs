@@ -443,7 +443,17 @@ const OPTIONAL_HEAD = [
 ];
 for (const t of tplBy('node')) {
   const nlines = t.to - t.from;
-  if (nlines > 200) W(`G-LAYER: bài "${t.key}" dài ${nlines} dòng (${t.from}–${t.to}) — bài dài nhất là chỗ catalogue/so sánh/đào sâu hay lọt lên mạch chính. Soát thủ công.`);
+  /* Bài quá dài là TÍN HIỆU, không phải lỗi: có bài dài vì catalogue lọt lên mạch chính
+     (phải sửa), có bài dài vì nó thật sự là sáu file nguồn phải gõ (không sửa được mà
+     không cắt mất nội dung). Cổng không phân biệt được hai ca đó, nên nó hỏi người.
+     Trả lời bằng <!-- gate:long: lý do --> trong template — cùng cơ chế với gate:main.
+     Không có escape hatch thì bốn khuyến nghị này ở lại mãi, và một danh sách khuyến
+     nghị không bao giờ về 0 sẽ bị bỏ qua toàn bộ. */
+  const longOk = /<!--\s*gate:long:/.test(t.body);
+  if (nlines > 200 && !longOk)
+    W(`G-LAYER: bài "${t.key}" dài ${nlines} dòng (${t.from}–${t.to}) — bài dài thường là chỗ catalogue/so sánh/đào sâu lọt lên mạch chính. Soát thủ công.\n`
+    + '    Soát rồi mà dài là đúng (ví dụ: bài đi qua nhiều file nguồn): ghi\n'
+    + '    <!-- gate:long: lý do cụ thể --> trong template để khuyến nghị này im.');
   for (const m of t.body.matchAll(/<h([23])[^>]*>([\s\S]*?)<\/h\1>/g)) {
     const head = m[2].replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
     const before = t.body.slice(Math.max(0, m.index - 120), m.index);
@@ -501,9 +511,14 @@ for (const t of tplBy('node')) {
 
 /* --- G-VIZ (khuyến nghị): bài nào chưa có gì để NHÌN --------------------
    Không ép: có khái niệm không visualize được. Chỉ liệt kê để không bỏ sót bài
-   đáng vẽ mà chưa vẽ. */
+   đáng vẽ mà chưa vẽ.
+
+   Phải tính cả các hộp do JS dựng lúc chạy (planWeeks / planDays / planRest…):
+   trong nguồn chúng chỉ là một <div> rỗng, nhưng trên trang chúng LÀ cái bảng của
+   bài. Không tính chúng thì cổng báo sai — và một khuyến nghị báo sai sẽ bị bỏ qua,
+   kéo theo cả những khuyến nghị đúng nằm cùng danh sách. */
 const noVisual = tplBy('node').filter(t => t.key !== 'home')
-  .filter(t => !/ds-viz|<table|ds-code|data-viz=/.test(t.body))
+  .filter(t => !/ds-viz|<table|ds-code|data-viz=|<div id="plan/.test(t.body))
   .map(t => t.key);
 if (noVisual.length) W(`G-VIZ: ${noVisual.length} bài không có hình / bảng / khối code nào: ${noVisual.join(', ')}`);
 

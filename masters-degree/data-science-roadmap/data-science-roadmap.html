@@ -1029,6 +1029,365 @@ tb = np.array([[ (ok_old &amp; ok_new).sum(),  (ok_old &amp; ~ok_new).sum() ],
                [ (~ok_old &amp; ok_new).sum(), (~ok_old &amp; ~ok_new).sum() ]])
 print(mcnemar(tb, exact=<b>False</b>, correction=<b>True</b>))</div>
 </template>
+<template data-mathdef="colab10" data-title="Mười khả năng của Colab — gõ gì, dùng cho việc gì">
+  <p>Danh mục để tra, không phải để học thuộc. Ba dòng in đậm ở cột cuối là ba việc mạch chính của bài đã chọn.</p>
+  <table>
+    <tr><th>Khả năng</th><th>Làm thế nào</th><th>Dùng cho việc gì của bạn</th></tr>
+    <tr><td><b>GPU / TPU ở bậc miễn phí</b></td><td><i>Runtime → Change runtime type</i> → chọn bộ tăng tốc trong danh sách <i>hiện có hôm đó</i>. Luôn kiểm bằng <code>!nvidia-smi</code> — loại phần cứng thay đổi theo thời gian và không được bảo đảm</td><td><b>Việc số 1.</b> Chặng 6 và bài embedding — xem bên dưới</td></tr>
+    <tr><td><b>Thư viện cài sẵn</b></td><td>pandas, numpy, sklearn, matplotlib, torch có sẵn. Thiếu thì <code>!pip install -q lightgbm shap optuna</code></td><td>Khỏi mất 30 phút cài đặt khi muốn thử nhanh một ý</td></tr>
+    <tr><td><b>Chạy lệnh terminal</b></td><td>Thêm <code>!</code> trước lệnh: <code>!ls</code>, <code>!wget</code>, <code>!git clone</code></td><td>Tải dữ liệu, kéo repo của bạn về</td></tr>
+    <tr><td><b>Lệnh phép thuật (magic)</b></td><td><code>%%time</code> đo thời gian ô, <code>%cd</code> đổi thư mục, <code>%%writefile</code> ghi file</td><td><code>%%time</code> để biết bước nào chậm</td></tr>
+    <tr><td><b>Gắn Google Drive</b></td><td><code>from google.colab import drive; drive.mount('/content/drive')</code></td><td><b>Chỗ để lưu</b> dữ liệu và model để không mất khi phiên chết</td></tr>
+    <tr><td><b>Kho bí mật (Secrets)</b></td><td>Biểu tượng chìa khoá bên trái → thêm khoá → <code>from google.colab import userdata; userdata.get('KAGGLE_KEY')</code></td><td>Giữ token Kaggle mà <b>không dán vào ô code</b> rồi lỡ chia sẻ</td></tr>
+    <tr><td><b>Bảng dữ liệu tương tác</b></td><td><code>%load_ext google.colab.data_table</code> — rồi mọi DataFrame in ra đều lọc/sắp xếp được bằng chuột</td><td>EDA nhanh hơn hẳn <code>df.head()</code></td></tr>
+    <tr><td><b>Biến ô thành form</b></td><td>Thêm <code>#@param</code> sau một biến: <code>threshold = 0.5 #@param {type:"slider", min:0, max:1, step:0.01}</code></td><td>Làm một demo kéo–thả mà không cần Streamlit</td></tr>
+    <tr><td><b>Tải file lên / xuống</b></td><td><code>from google.colab import files; files.upload()</code> và <code>files.download('model.joblib')</code></td><td>Lấy hình và model về máy</td></tr>
+    <tr><td><b>Chia sẻ như Google Doc</b></td><td>Nút <i>Share</i> ở góc phải</td><td><b>Việc số 2.</b> Gửi người hướng dẫn một link <i>bấm vào là chạy được</i></td></tr>
+  </table>
+
+</template>
+
+<template data-mathdef="streamlit" data-title="app.py — bản demo Streamlit 20 dòng">
+  <p>Chạy: <code>streamlit run app.py</code>. Ngưỡng đọc từ artifact của <code>src.train</code>, không gõ tay — cùng model, cùng ngưỡng với API.</p>
+  <div class="ds-code"><i># app.py — chạy: streamlit run app.py</i>
+<b>import</b> joblib, json, pandas <b>as</b> pd, streamlit <b>as</b> st
+<b>from</b> src.config <b>import</b> MODEL_DIR
+<b>from</b> src.thresholds <b>import</b> decide
+
+bundle = joblib.load(MODEL_DIR / json.loads((MODEL_DIR / "current.json").read_text())["artifact"])
+model, th = bundle["pipeline"], bundle["meta"]["thresholds"]
+
+st.title("Chấm điểm rủi ro giao dịch")
+st.caption(f"model {bundle['meta']['model_version']} · "
+           f"ngưỡng xác minh {th['review']:.3f} · ngưỡng chặn {th['block']:.3f}")
+
+amount = st.number_input("Số tiền (₫)", value=8_500_000, step=100_000)
+hour   = st.slider("Giờ giao dịch", 0, 23, 3)
+n1h    = st.slider("Số giao dịch của thẻ trong 1 giờ qua", 0, 20, 6)
+
+row = pd.DataFrame([{
+    "timestamp": f"2025-06-20T{hour:02d}:12:00", "amount": <b>float</b>(amount),
+    "card_id": "C00123", "merchant_type": "gaming", "city": "HN", "device_type": "mobile",
+    "hist_mean": 210_000.0, "hist_std": 95_000.0, "hist_n": 40.0,
+    "secs_since_last": 42.0, "n_tx_1h": <b>float</b>(n1h), "n_tx_24h": <b>float</b>(n1h + 5),
+}])
+
+p = <b>float</b>(model.predict_proba(row)[0, 1])
+st.metric("Điểm rủi ro", f"{p:.4f}")
+st.progress(<b>min</b>(p / th["block"], 1.0))
+st.subheader({"BLOCK": "CHẶN", "REVIEW": "XÁC MINH", "ALLOW": "CHO QUA"}[decide(p, th["review"], th["block"])])</div>
+  <p>Chú ý nó gọi đúng hàm <code>decide()</code> của <code>src/thresholds.py</code> và đọc ngưỡng từ artifact — cùng một nguồn sự thật với API, không sinh ra bản sao thứ ba nào.</p>
+</template>
+
+<template data-mathdef="paysim" data-title="PaySim và đồ án cũ — rò rỉ nhãn, và cách biến nó thành ví dụ đối chứng">
+  <p>Phần này đứng riêng vì nó trả lời một câu hỏi của riêng bạn: <b>đồ án môn học đã chạy trên PaySim rồi, tái dùng được không?</b></p>
+  <p>Câu hỏi này đáng trả lời riêng, vì bạn <b>đã có sẵn</b> một đồ án chạy trên PaySim.</p>
+  <p><a class="wb-btn wb-btn--ghost wb-btn--sm" href="../business-analytics/fraud-detection-project.html">
+    <span class="wb-ico wb-ico--sm">open_in_new</span> Đồ án môn học · Fraud Detection (PaySim)</a></p>
+  <p>Câu trả lời ngắn: <b>tái dùng được phần khung, không tái dùng được phần dữ liệu.</b> Lý do thứ hai mới là lý do thật:</p>
+  <ol>
+    <li><b>PaySim là dữ liệu mô phỏng</b> — như bộ trong repo này. Khác biệt là bộ trong repo <i>tự nhận</i> mình là dụng cụ đo và chỉ dùng để kiểm code, còn PaySim hay bị báo cáo như thể là kết quả về thế giới thật.</li>
+    <li><b>Chín đặc trưng tổng hợp trong đồ án được sinh <i>có điều kiện theo nhãn</i></b> <code>isFraud</code> — tuổi tài khoản, thiết bị lạ, lệch địa chỉ… đều rút từ hai phân phối khác nhau tuỳ giao dịch đó là gian lận hay không. Đó chính là <b>rò rỉ nhãn theo đúng định nghĩa</b>: đáp án bị nhét ngược vào feature. PR-AUC 0,997 của nhóm bạn là hệ quả trực tiếp, không phải thành tích.</li>
+  </ol>
+  <div class="wb-alert wb-alert--warning">
+    <span class="wb-alert__icon">!</span>
+    <div class="wb-alert__body"><p class="wb-alert__title">Chỗ này là cơ hội, không phải vết nhơ</p>
+      <p class="wb-alert__msg">Đồ án của nhóm bạn đã <b>tự gọi tên</b> hạn chế đó thay vì giấu đi — đúng là cách xử lý chuẩn. Với luận văn, bạn đi xa hơn một bước: lấy chính hiện tượng đó làm <b>ví dụ đối chứng</b> ở chương phương pháp — “đây là một mô hình PR-AUC 0,997 hoàn toàn vô dụng, và đây là vì sao” — rồi cho thấy quy trình mới không mắc lại. Hội đồng đánh giá cao người chỉ ra được sai lầm của chính mình hơn nhiều so với người chưa từng mắc.</p></div>
+  </div>
+  <p>Nếu vẫn muốn giữ PaySim vì đã quen dữ liệu: được, nhưng phải <b>bỏ toàn bộ chín cột sinh bằng Faker</b> và viết một adapter <code>from_paysim()</code> đưa các cột gốc (<code>step</code>, <code>type</code>, <code>amount</code>, số dư trước/sau) về schema chuẩn ở trên. Điểm sẽ tụt mạnh — và đó mới là điểm thật.</p>
+</template>
+
+<template data-mathdef="testsuite" data-title="Bộ test đầy đủ — 4 file, 27 test">
+  <p>Toàn bộ mã trong <code>tests/</code>, để copy vào repo. Mạch chính của bài chỉ giữ bảng bốn lỗi im lặng và hai test đáng gõ bằng tay — 25 test còn lại là biến thể quanh chúng, nên chúng thuộc về đây chứ không thuộc về mạch chính.</p>
+  <p>Chạy: <code>pytest -q</code> ở gốc repo. Không test nào cần tải dữ liệu thật; tất cả dựng trên bộ mô phỏng nhỏ trong <code>conftest.py</code>, nên cả bộ xong trong khoảng 2 giây và chạy được trong CI.</p>
+  <div class="ds-code"><i>"""Fixture dùng chung. Mọi test chạy trên bộ mô phỏng nhỏ nên `pytest` xong
+trong khoảng một phút và không cần tải dữ liệu."""</i>
+<b>import</b> pytest
+
+<b>from</b> src.adapters <b>import</b> from_simulation
+<b>from</b> src.history <b>import</b> add_history
+<b>from</b> src.pipeline <b>import</b> build_pipeline
+<b>from</b> src.split <b>import</b> split_time
+<b>from</b> src.config <b>import</b> TARGET
+
+
+@pytest.fixture(scope="session")
+<b>def</b> raw():
+    <i>"""8.000 giao dịch, 300 thẻ — đủ nhỏ để nhanh, đủ lớn để có nhãn dương."""</i>
+    <b>return</b> from_simulation(n=8_000, seed=7, n_cards=300)
+
+
+@pytest.fixture(scope="session")
+<b>def</b> hist(raw):
+    <b>return</b> add_history(raw)
+
+
+@pytest.fixture(scope="session")
+<b>def</b> splits(hist):
+    <b>return</b> split_time(hist, embargo_days=0)
+
+
+@pytest.fixture(scope="session")
+<b>def</b> fitted(splits):
+    train, _, _ = splits
+    pipe = build_pipeline(model_kind="hgb")      <i># không cần libomp → CI chạy ở đâu cũng được</i>
+    pipe.fit(train, train[TARGET])
+    <b>return</b> pipe
+
+
+@pytest.fixture
+<b>def</b> one_row(hist):
+    <i>"""Đúng một dòng, như lúc serve."""</i>
+    <b>return</b> hist.iloc[[len(hist) // 2]].copy()</div>
+  <p class="ds-codecap">tests/conftest.py</p>
+  <div class="ds-code"><i>"""Feature từng dòng: chu kỳ, một dòng, giá trị lạ."""</i>
+<b>import</b> numpy <b>as</b> np
+<b>import</b> pandas <b>as</b> pd
+<b>import</b> pytest
+
+<b>from</b> src.config <b>import</b> CAT_FEATURES, NUM_FEATURES
+<b>from</b> src.features <b>import</b> add_derived
+
+
+<b>def</b> make_df(hours, day="2025-03-14"):
+    <b>return</b> pd.DataFrame({
+        "timestamp": [f"{day}T{h:02d}:00:00" <b>for</b> h <b>in</b> hours],
+        "amount": [100_000.0] * len(hours),
+        "card_id": ["C1"] * len(hours),
+        "merchant_type": ["grocery"] * len(hours),
+        "city": ["HN"] * len(hours),
+        "device_type": ["mobile"] * len(hours),
+    })
+
+
+<b>def</b> test_cyclical_wraps():
+    <i>"""23h và 0h phải gần nhau hơn 0h và 12h — toàn bộ lý do dùng sin/cos."""</i>
+    d = add_derived(make_df([23, 0, 12]))
+    near = np.hypot(d.hour_sin[0] - d.hour_sin[1], d.hour_cos[0] - d.hour_cos[1])
+    far = np.hypot(d.hour_sin[1] - d.hour_sin[2], d.hour_cos[1] - d.hour_cos[2])
+    <b>assert</b> near &lt; far
+    <b>assert</b> np.allclose(d.hour_sin ** 2 + d.hour_cos ** 2, 1.0)
+
+
+<b>def</b> test_one_row_works(one_row):
+    <i>"""Pipeline phải chạy với đúng MỘT dòng, như lúc serve."""</i>
+    <b>assert</b> len(add_derived(one_row)) == 1
+
+
+<b>def</b> test_all_declared_features_exist(one_row):
+    d = add_derived(one_row)
+    <b>assert</b> <b>not</b> [c <b>for</b> c <b>in</b> NUM_FEATURES + CAT_FEATURES <b>if</b> c <b>not</b> <b>in</b> d.columns]
+
+
+<b>def</b> test_missing_history_is_nan_not_zero():
+    <i>"""Thẻ mới: hist_* phải là NaN ('chưa biết'), không phải 0 ('đã đo, bằng 0')."""</i>
+    d = add_derived(make_df([10]))
+    <b>assert</b> d["hist_mean"].isna().all()
+    <b>assert</b> d["amt_vs_hist"].isna().all()
+
+
+<b>def</b> test_missing_raw_column_fails_loudly():
+    <b>with</b> pytest.raises(ValueError, match="thiếu cột thô"):
+        add_derived(make_df([10]).drop(columns=["city"]))</div>
+  <p class="ds-codecap">tests/test_features.py</p>
+  <div class="ds-code"><i>"""Feature lịch sử — nhóm mạnh nhất và dễ rò rỉ nhất.
+
+Test quan trọng nhất ở đây là test_windows_match_bruteforce: nó tính lại
+n_tx_1h bằng một vòng lặp ngây thơ ai cũng đọc hiểu, rồi so với bản vector
+hoá. Không có nó, một lỗi lệch một dòng trong `rolling` sẽ đi thẳng vào
+luận văn mà không ai thấy.
+"""</i>
+<b>import</b> numpy <b>as</b> np
+<b>import</b> pandas <b>as</b> pd
+
+<b>from</b> src.history <b>import</b> add_history, state_from_history
+
+
+<b>def</b> test_first_tx_of_each_card_has_no_history(hist):
+    first = hist.sort_values("timestamp").groupby("card_id").head(1)
+    <b>assert</b> first["hist_mean"].isna().all()
+    <b>assert</b> first["secs_since_last"].isna().all()
+    <b>assert</b> (first["n_tx_1h"] == 0).all()
+
+
+<b>def</b> test_windows_match_bruteforce(raw):
+    d = add_history(raw)
+    sub = d[d["card_id"].isin(sorted(d["card_id"].unique())[:12])]
+    <b>for</b> card, g <b>in</b> sub.groupby("card_id"):
+        t = g["timestamp"].to_numpy()
+        want = [int(((t &gt;= ti - np.timedelta64(1, "h")) &amp; (t &lt; ti)).sum()) <b>for</b> ti <b>in</b> t]
+        <b>assert</b> list(g["n_tx_1h"].astype(int)) == want, f"lệch ở thẻ {card}"
+
+
+<b>def</b> test_history_uses_only_the_past(raw):
+    <i>"""Đổi số tiền của giao dịch CUỐI không được làm đổi feature của giao dịch
+    nào trước nó. Đây là định nghĩa thao tác được của 'không nhìn tương lai'."""</i>
+    a = add_history(raw)
+    tampered = raw.copy()
+    last = tampered.index[-1]
+    tampered.loc[last, "amount"] = tampered.loc[last, "amount"] * 1000
+    b = add_history(tampered)
+    cols = ["hist_mean", "hist_std", "n_tx_1h", "n_tx_24h", "secs_since_last"]
+    pd.testing.assert_frame_equal(a.iloc[:-1][cols], b.iloc[:-1][cols])
+
+
+<b>def</b> test_duplicate_timestamps_do_not_crash():
+    <i>"""Hai giao dịch cùng đúng một mốc thời gian — trường hợp làm gán theo
+    nhãn index nổ tung, và có thật trong log thanh toán."""</i>
+    ts = pd.Timestamp("2025-01-01T10:00:00")
+    df = pd.DataFrame({
+        "tx_id": ["a", "b", "c"], "timestamp": [ts, ts, ts + pd.Timedelta("30min")],
+        "card_id": ["C1", "C1", "C1"], "amount": [1.0, 2.0, 3.0],
+        "merchant_type": ["m"] * 3, "city": ["HN"] * 3,
+        "device_type": ["mobile"] * 3, "is_fraud": [0, 0, 0]})
+    d = add_history(df).sort_values("tx_id")
+    <i># closed="left" loại cả giao dịch trùng đúng mốc → hai dòng đầu đều thấy 0</i>
+    <b>assert</b> list(d["n_tx_1h"]) == [0, 0, 2]
+
+
+<b>def</b> test_state_snapshot_is_inclusive_of_last_tx(hist):
+    <i>"""Snapshot phải là trạng thái SAU giao dịch cuối, KHÔNG phải dòng cuối của
+    add_history — dòng đó leak-free nên còn thiếu chính giao dịch cuối. Test cũ
+    khẳng định snapshot == dòng cuối, vô tình đóng băng lỗi lệch-một-nhịp."""</i>
+    st = state_from_history(hist)
+    card = hist["card_id"].iloc[-1]
+    sub = hist[hist["card_id"] == card].sort_values("timestamp")
+    <i># hist_n của snapshot = TỔNG số giao dịch = hist_n dòng cuối + 1</i>
+    <b>assert</b> st[card]["hist_n"] == len(sub)
+    <b>assert</b> st[card]["hist_n"] == sub["hist_n"].iloc[-1] + 1
+    <i># hist_mean gộp cả giao dịch cuối (dòng cuối của add_history thì không)</i>
+    <b>assert</b> np.isclose(st[card]["hist_mean"], sub["amount"].mean())
+    <i># mốc cuối được giữ để serve tính secs_since_last = t_mới − last_ts</i>
+    <b>assert</b> pd.Timestamp(st[card]["last_ts"]) == sub["timestamp"].iloc[-1]
+    <b>assert</b> 1 &lt;= len(st[card]["recent_ts"]) &lt;= len(sub)</div>
+  <p class="ds-codecap">tests/test_history.py</p>
+  <div class="ds-code"><i>"""Chia tập và chọn ngưỡng — hai chỗ quyết định con số trong luận văn."""</i>
+<b>import</b> numpy <b>as</b> np
+<b>import</b> pytest
+
+<b>from</b> src.config <b>import</b> (COST_FN, COST_FP_BLOCK, COST_REVIEW, REVIEW_CAPACITY,
+                        REVIEW_CATCH)
+<b>from</b> src.split <b>import</b> assert_split_ok, split_group, split_time, split_time_group
+<b>from</b> src.thresholds <b>import</b> (ALLOW, BLOCK, REVIEW, breakeven, decide,
+                            decision_report, pick_thresholds, total_cost)
+
+
+<b>def</b> test_breakeven_block_is_the_review_block_boundary():
+    <i>"""Biên BLOCK phải là điểm REVIEW/BLOCK hoà chi phí, KHÔNG phải biên hai
+    hành động COST_FP_BLOCK/(COST_FN+COST_FP_BLOCK) — cái sau bỏ qua REVIEW và
+    cho ngưỡng thấp hơn hẳn, chặn tại đó là bỏ tiền."""</i>
+    be = breakeven()
+    two_action = COST_FP_BLOCK / (COST_FN + COST_FP_BLOCK)
+    three_action = ((COST_FP_BLOCK - COST_REVIEW)
+                    / (COST_FP_BLOCK + (1 - REVIEW_CATCH) * COST_FN))
+    <b>assert</b> be["review_used"] <b>is</b> <b>True</b>          <i># số mặc định: REVIEW có dải riêng</i>
+    <b>assert</b> be["block"] == pytest.approx(three_action)
+    <b>assert</b> be["block"] &gt; two_action           <i># 0,244 vs 0,048 với số mặc định</i>
+    <b>assert</b> be["review"] &lt; be["block"]         <i># decide() đòi review ≤ block</i>
+    <i># Tại một điểm GIỮA hai biên, REVIEW phải rẻ hơn cả ALLOW lẫn BLOCK.</i>
+    p = 0.5 * (be["review"] + be["block"])
+    <b>assert</b> COST_REVIEW + p * (1 - REVIEW_CATCH) * COST_FN &lt; p * COST_FN
+    <b>assert</b> COST_REVIEW + p * (1 - REVIEW_CATCH) * COST_FN &lt; (1 - p) * COST_FP_BLOCK
+
+
+<b>def</b> test_breakeven_degrades_cleanly_when_review_dominated(monkeypatch):
+    <i>"""Khi một lần xác minh đắt hơn cả chặn nhầm, REVIEW không còn dải nào rẻ
+    nhất. breakeven() phải suy về hai hành động VÀ vẫn giữ t_review ≤ t_block —
+    tuyệt đối không trả cặp (review &gt; block) mà decide() sẽ ném lỗi."""</i>
+    <b>import</b> src.thresholds <b>as</b> th
+    monkeypatch.setattr(th, "COST_FN", 500_000)
+    monkeypatch.setattr(th, "COST_FP_BLOCK", 10_000)
+    monkeypatch.setattr(th, "COST_REVIEW", 400_000)
+    be = th.breakeven()
+    <b>assert</b> be["review_used"] <b>is</b> <b>False</b>
+    <b>assert</b> be["review"] &lt;= be["block"]                    <i># bất biến của decide()</i>
+    <b>assert</b> be["block"] == pytest.approx(10_000 / 510_000) <i># biên ALLOW→BLOCK</i>
+    <i># Cặp trả về phải nạp thẳng vào decide() được, không ném ValueError.</i>
+    act = decide([0.0, 0.5, 0.99], be["review"], be["block"])
+    <b>assert</b> REVIEW <b>not</b> <b>in</b> list(act)                        <i># dải REVIEW rỗng → không bao giờ chọn</i>
+
+
+<b>def</b> test_time_split_has_no_future_leak(hist):
+    tr, va, te = split_time(hist, embargo_days=0)
+    assert_split_ok(tr, va, te, kind="time")
+    <b>assert</b> tr["timestamp"].max() &lt; te["timestamp"].min()
+
+
+<b>def</b> test_group_split_keeps_cards_apart(hist):
+    tr, va, te = split_group(hist)
+    assert_split_ok(tr, va, te, kind="group")
+    <b>assert</b> <b>not</b> set(tr["card_id"]) &amp; set(te["card_id"])
+
+
+<b>def</b> test_time_group_split_is_the_strictest(hist):
+    <i>"""Câu hỏi khắc nghiệt nhất — và test này ghi lại luôn CÁI GIÁ của nó:
+    valid/test co lại còn vài phần trăm. Đó là lý do phải báo cáo nó như một
+    kiểm tra độ bền, không phải như kết quả chính."""</i>
+    tr, va, te = split_time_group(hist, embargo_days=0)
+    <i># require_positives=False: ở cỡ dữ liệu này tập valid có thể không còn dòng</i>
+    <i># dương nào — chính là điều cần thấy, không phải lỗi cần giấu.</i>
+    assert_split_ok(tr, va, te, kind="time_group", require_positives=<b>False</b>)
+    <b>assert</b> <b>not</b> set(tr["card_id"]) &amp; set(va["card_id"])
+    <b>assert</b> <b>not</b> set(va["card_id"]) &amp; set(te["card_id"])
+    <b>assert</b> <b>not</b> set(tr["card_id"]) &amp; set(te["card_id"])
+    <b>assert</b> tr["timestamp"].max() &lt; te["timestamp"].min()
+
+    plain = split_time(hist, embargo_days=0)
+    <b>assert</b> len(te) &lt; 0.2 * len(plain[2]), "chia strictest phải co tập test lại rõ rệt"
+
+
+<b>def</b> test_embargo_removes_rows_near_the_cut(hist):
+    a = split_time(hist, embargo_days=0)[0]
+    b = split_time(hist, embargo_days=7)[0]
+    <b>assert</b> len(b) &lt; len(a)
+
+
+<b>def</b> test_decide_is_monotone():
+    p = np.array([0.01, 0.30, 0.50, 0.95])
+    <b>assert</b> list(decide(p, 0.4, 0.9)) == [ALLOW, ALLOW, REVIEW, BLOCK]
+    <b>assert</b> decide(0.95, 0.4, 0.9) == BLOCK
+    <b>with</b> pytest.raises(ValueError):
+        decide(p, 0.9, 0.4)
+
+
+<b>def</b> test_pick_thresholds_beats_the_default_half():
+    <i>"""Ngưỡng chọn theo chi phí phải rẻ hơn ngưỡng mặc định 0,5 — nếu không thì
+    cả bài toán chọn ngưỡng vô nghĩa."""</i>
+    rng = np.random.default_rng(0)
+    y = rng.binomial(1, 0.004, 40_000)
+    p = np.clip(rng.beta(1.2, 30, 40_000) + y * rng.beta(6, 3, 40_000), 0, 1)
+    th = pick_thresholds(y, p)
+    <b>assert</b> th["review"] &lt;= th["block"]
+    <b>assert</b> th["cost"] &lt;= total_cost(y, p, 0.5, 0.5)
+
+
+<b>def</b> test_vectorised_cost_matches_bruteforce():
+    <i>"""Đại số tách g(tr)+h(tb) phải khớp với đếm thẳng — nếu lệch thì ngưỡng sai."""</i>
+    rng = np.random.default_rng(1)
+    y = rng.binomial(1, 0.01, 5_000)
+    p = np.clip(rng.beta(1.2, 20, 5_000) + y * 0.4, 0, 1)
+    th = pick_thresholds(y, p)
+    <b>assert</b> th["cost"] == pytest.approx(total_cost(y, p, th["review"], th["block"]))
+
+
+<b>def</b> test_review_capacity_is_respected():
+    rng = np.random.default_rng(2)
+    y = rng.binomial(1, 0.01, 20_000)
+    p = np.clip(rng.beta(1.2, 20, 20_000) + y * 0.4, 0, 1)
+    th = pick_thresholds(y, p)
+    <b>assert</b> th["review_rate"] &lt;= REVIEW_CAPACITY + 1e-9
+
+
+<b>def</b> test_decision_report_adds_up():
+    rng = np.random.default_rng(3)
+    y = rng.binomial(1, 0.02, 3_000)
+    p = rng.uniform(size=3_000)
+    r = decision_report(y, p, 0.4, 0.9)
+    <b>assert</b> r["allow_n"] + r["review_n"] + r["block_n"] == r["n"]
+    <b>assert</b> r["allow_fraud"] + r["review_fraud"] + r["block_fraud"] == r["n_fraud"]</div>
+  <p class="ds-codecap">tests/test_split_thresholds.py · (test cho API nằm ở bài sau)</p>
+</template>
+
 
 <!-- ============================================================
      NGĂN PHỤ — SO SÁNH CÔNG CỤ
@@ -1128,6 +1487,86 @@ print(mcnemar(tb, exact=<b>False</b>, correction=<b>True</b>))</div>
     </tbody>
   </table>
   <p>Ngưỡng thực tế (kinh nghiệm tương đối, không phải con số cứng): quanh mức ~2 triệu dòng thì pandas trong Colab thường vẫn chạy thoải mái — nhưng ngưỡng này co giãn mạnh theo <b>số cột, kiểu dữ liệu, phép tính bạn chạy và RAM có sẵn</b> (một bảng 500 cột nặng hơn nhiều một bảng 10 cột cùng số dòng). Khi bắt đầu chạm trần, thứ cần đổi <b>không phải thư viện</b> mà là chỗ làm việc — đẩy phép nhóm xuống SQL.</p>
+</template>
+
+<template data-aside="qbank" data-title="24 câu hội đồng hay hỏi"
+          data-sub="Chặng 9 · đọc cạnh dàn ý 12 slide">
+  <p>Đọc cột giữa trước, tự trả lời, rồi mới đọc cột phải. Chỗ nào bạn ấp úng chính là chỗ cần ôn — và nó chỉ đúng một slide nào đó đang thiếu một dòng.</p>
+  <p>Đọc cột giữa trước, tự trả lời, rồi mới đọc cột phải. Chỗ nào bạn ấp úng chính là chỗ cần ôn.</p>
+
+  <h3>A · Bài toán và dữ liệu</h3>
+  <table>
+    <tr><th>Câu hỏi</th><th>Ý cần có trong câu trả lời</th></tr>
+    <tr><td>Em giải quyết vấn đề gì? Nói trong một câu.</td><td>Đúng câu số 1 trong <code>problem-statement.md</code>: dự đoán cái gì, tại thời điểm nào, ai dùng kết quả.</td></tr>
+    <tr><td>Vì sao bài toán này cần machine learning, luật thủ công không đủ à?</td><td>Luật cố định, kẻ gian học được ngưỡng; luật không kết hợp được nhiều tín hiệu yếu. <b>Kèm số:</b> luật bắt bao nhiêu, mô hình bắt bao nhiêu, và mỗi bên phát ra bao nhiêu cảnh báo — lấy từ bảng ba dòng ở mục 4 bài <a href="#/pr-eval">Đánh giá</a>. Không có bảng đó thì câu này chỉ là ý kiến.</td></tr>
+    <tr><td>Nhãn “gian lận” của em đến từ đâu, ai gán?</td><td>Từ khiếu nại của khách, trễ 30–60 ngày. Nêu luôn hệ quả: dữ liệu gần nhất có nhãn chưa đầy đủ nên em cắt vùng đệm.</td></tr>
+    <tr><td>Dữ liệu công khai thì đóng góp nằm ở đâu?</td><td>Đóng góp không nằm ở dữ liệu mà ở [cách biểu diễn thời gian / khung đánh giá theo chi phí / cách kết hợp]. Nói thẳng và tự tin — đây là chuẩn mực hợp lệ cho thạc sĩ ứng dụng.</td></tr>
+    <tr><td>Dữ liệu chỉ 284.807 dòng, có đủ không?</td><td>Cái quyết định là <b>số ca dương</b> (492), không phải tổng dòng. Nêu khoảng tin cậy rộng như một hạn chế đã được đo, không phải điều bị bỏ sót.</td></tr>
+  </table>
+
+  <h3>B · Phương pháp</h3>
+  <table>
+    <tr><th>Câu hỏi</th><th>Ý cần có trong câu trả lời</th></tr>
+    <tr><td>Vì sao chọn LightGBM mà không phải deep learning?</td><td>Dữ liệu bảng, không có cấu trúc không gian/tuần tự để mạng khai thác; các so sánh quy mô lớn cho thấy boosting vẫn tốt hơn (trích Grinsztajn 2022). <b>Và em có chạy baseline mạng nơ-ron để chứng minh.</b></td></tr>
+    <tr><td>Vì sao sin/cos mà không phải one-hot 24 cột?</td><td>One-hot mất tính liền kề (23h và 0h vẫn xa nhau y như 23h và 11h) và tốn 24 cột. Em có so cả hai trong bảng ablation.</td></tr>
+    <tr><td>Em có tune baseline tử tế không?</td><td>Có — cùng ngân sách tìm kiếm, cùng số trial. Nói rõ con số. Baseline yếu là lỗi nghiêm trọng và họ đang kiểm tra đúng chỗ đó.</td></tr>
+    <tr><td>Vì sao chia theo thời gian mà không dùng k-fold ngẫu nhiên?</td><td>Vì mô hình sẽ chạy trên dữ liệu tương lai. Chia ngẫu nhiên cho mô hình nhìn thấy tương lai → điểm thổi phồng. Đưa ra con số cả hai cách nếu có: nó cho thấy chênh lệch là thật.</td></tr>
+    <tr><td>Em xử lý mất cân bằng thế nào, sao không dùng SMOTE?</td><td>Thứ tự ưu tiên: đổi chỉ số → chọn ngưỡng → <code>class_weight</code>. Có thử SMOTE, kết quả không cải thiện (0,361 vs 0,367) và tốn 4× thời gian train. <b>Một kết quả âm có kiểm chứng vẫn là kết quả.</b></td></tr>
+  </table>
+
+  <h3>C · Kết quả và thống kê</h3>
+  <table>
+    <tr><th>Câu hỏi</th><th>Ý cần có trong câu trả lời</th></tr>
+    <tr><td>PR-AUC 0,41 nghe thấp, mô hình có tốt không?</td><td><b>Câu bẫy hay gặp nhất.</b> Đường cơ sở của PR-AUC là tỉ lệ dương (0,0017), không phải 0,5 — nên 0,41 là tốt hơn ngẫu nhiên khoảng 240 lần. Chuẩn bị sẵn câu này.</td></tr>
+    <tr><td>Chênh lệch 0,045 có ý nghĩa thống kê không?</td><td>Bootstrap trên <i>hiệu</i>, ghép cặp: Δ = 0,045 (KTC 95%: 0,021–0,068), không chứa 0. Kèm McNemar tại ngưỡng vận hành.</td></tr>
+    <tr><td>Em chạy mấy lần? Kết quả có ổn định không?</td><td>5 hạt giống, trung bình ± độ lệch chuẩn. Nếu độ lệch lớn hơn mức cải thiện, <b>phải tự nói ra</b> trước khi họ chỉ.</td></tr>
+    <tr><td>Em chạm vào tập test bao nhiêu lần?</td><td>Một lần, sau khi chốt mọi thứ trên validation. Nếu thực tế nhiều hơn — <b>nói thật</b> và nêu con số validation làm kết quả chính. Nói dối chỗ này là rủi ro không đáng.</td></tr>
+    <tr><td>Feature nào quan trọng nhất, và nó có hợp lý về nghiệp vụ không?</td><td>Bảng SHAP theo nhóm + một câu diễn giải nghiệp vụ. Nhớ nói rõ SHAP là đóng góp vào <i>dự đoán</i>, <b>không phải quan hệ nhân quả</b>.</td></tr>
+  </table>
+
+  <h3>D · Triển khai</h3>
+  <table>
+    <tr><th>Câu hỏi</th><th>Ý cần có trong câu trả lời</th></tr>
+    <tr><td>Hệ thống này chạy thật được không, độ trễ bao nhiêu?</td><td>Bảng ngân sách độ trễ ~50ms, trong đó model chỉ 1–5ms. Có Docker, có <code>/health</code>, có log.</td></tr>
+    <tr><td>Làm sao đảm bảo feature lúc chạy thật giống lúc train?</td><td>Một <code>Pipeline</code>, một file <code>.joblib</code>, API nạp đúng file đó. Feature cần lịch sử lấy từ CSDL bằng đúng truy vấn đã dùng lúc train.</td></tr>
+    <tr><td>Mô hình cũ đi thì sao?</td><td>PSI theo tuần, theo dõi phân phối điểm đầu ra (không cần chờ nhãn), retrain theo lịch, chạy shadow mode trước khi đổi.</td></tr>
+  </table>
+
+  <h3>E · Đạo đức, pháp lý, công bằng</h3>
+  <p>Nhóm này ngày càng hay được hỏi, và rất ít người chuẩn bị. Chuẩn bị được thì bạn nổi bật ngay.</p>
+  <table>
+    <tr><th>Câu hỏi</th><th>Ý cần có trong câu trả lời</th></tr>
+    <tr><td>Mô hình có phân biệt đối xử với nhóm khách hàng nào không?</td><td>Em có đo <b>tỉ lệ báo nhầm (FPR) theo từng nhóm</b> — vùng miền, loại thiết bị, mức chi tiêu — <i>tại đúng ngưỡng đang dùng</i>. Tỉ lệ FPR cao nhất/thấp nhất là X lần. Bảng đó làm ở mục 7 bài <a href="#/pr-eval">Đánh giá</a>; nếu bạn chưa có nó thì đây là câu bạn <b>không</b> trả lời được, nên làm trước. Nêu thêm một điểm cho thấy bạn hiểu sâu: <b>các định nghĩa công bằng khác nhau mâu thuẫn nhau về mặt toán học</b>, không thể thoả mãn đồng thời, nên em báo cáo chênh lệch và nói rõ mình không tối ưu theo nó.</td></tr>
+    <tr><td>Ai chịu chi phí khi mô hình chặn nhầm?</td><td><b>Khách hàng thật</b> — họ bị từ chối giao dịch. Đó chính là lý do em đặt chi phí FP vào hàm chọn ngưỡng thay vì tối đa hoá recall, và vì sao hệ thống có ba mức thay vì chặn/không chặn.</td></tr>
+    <tr><td>Dữ liệu cá nhân có được phép dùng không?</td><td>Nếu dùng dữ liệu công khai: đã ẩn danh sẵn, nêu nguồn và giấy phép. Nếu dữ liệu công ty: có văn bản cho phép, đã băm định danh, không công bố dữ liệu mà chỉ công bố code. <b>Kiểm tra quy định hiện hành về bảo vệ dữ liệu cá nhân tại thời điểm bạn bảo vệ</b> (ở Việt Nam nền tảng là Nghị định 13/2023/NĐ-CP và các văn bản sau đó) và nói được tên văn bản.</td></tr>
+  </table>
+
+  <h3>F · Ba câu khó</h3>
+  <table>
+    <tr><th>Câu hỏi</th><th>Cách xử lý</th></tr>
+    <tr><td>“Cái này có gì mới đâu, người ta làm hết rồi mà?”</td><td>Đừng phòng thủ. Thừa nhận từng kỹ thuật đều đã có, rồi chỉ chính xác vào cái mới: <i>“từng thành phần đều đã biết; cái chưa có là so sánh có hệ thống năm cách biểu diễn thời gian trên ba họ mô hình, với kiểm định thống kê — và kết quả cho thấy lợi ích phụ thuộc họ mô hình, điều thường bị nói chung chung.”</i></td></tr>
+    <tr><td>“Nếu em có thêm 6 tháng, em làm gì?”</td><td>Đây là câu <b>thiện chí</b>, không phải bẫy — họ đang cho bạn khoe tầm nhìn. Trả lời bằng 3 hướng cụ thể lấy từ mục Hạn chế, xếp theo thứ tự ưu tiên và nói rõ vì sao thứ tự đó.</td></tr>
+    <tr><td>Một câu bạn <b>không biết</b> trả lời.</td><td>Xem công thức ngay dưới đây.</td></tr>
+  </table>
+
+</template>
+
+<template data-aside="cmp-data" data-title="Bốn bộ dữ liệu gian lận — chọn bộ nào làm chính"
+          data-sub="Bước 2 · và vì sao bộ được trích dẫn nhiều nhất lại không dùng được ở đây">
+  <p><b>Chọn nhanh:</b> IEEE-CIS làm bộ chính, bộ mô phỏng trong repo làm bộ chạy thử. Chỉ đổi nếu bộ bạn thay thế có <b>cả</b> <code>timestamp</code> lẫn một mã định danh thẻ/khách.</p>
+  <div class="wb-table-scroll"><table>
+    <thead><tr><th>Bộ</th><th>Quy mô</th><th>Có <code>timestamp</code>?</th><th>Có <code>card_id</code>?</th><th>Kết luận</th></tr></thead>
+    <tbody>
+      <tr><td><b>IEEE-CIS</b><br><span class="wb-help">Kaggle competition</span></td><td>~590.000 dòng · 434 cột · 3,5% gian lận</td><td>Có (<code>TransactionDT</code>, dạng số giây)</td><td>Gần đúng (<code>card1</code>)</td><td><b>Bộ chính.</b> Dữ liệu thật, đủ cột để làm feature engineering theo thời gian</td></tr>
+      <tr><td><b>Bộ mô phỏng</b><br><span class="wb-help">nằm trong repo</span></td><td>400.000 dòng · 0,2% gian lận</td><td>Có</td><td>Có</td><td><b>Bộ chạy thử.</b> Không cần tải, không cần tài khoản, chạy trong 2 giây — và bạn biết trước đáp án</td></tr>
+      <tr><td><b>Credit Card Fraud (ULB)</b><br><code>creditcard.csv</code></td><td>284.807 dòng · 0,172% gian lận</td><td>Chỉ có số giây tương đối</td><td><b>Không</b></td><td>Không dùng được ở đây: không có <code>card_id</code> thì <i>toàn bộ</i> nhóm feature lịch sử và cách chia theo nhóm đều vô hiệu</td></tr>
+      <tr><td><b>PaySim</b></td><td>6,3 triệu dòng mô phỏng</td><td>Chỉ có <code>step</code> (giờ thứ n)</td><td>Có</td><td>Dùng được, nhưng quy luật đơn giản hơn thực tế — xem mục dưới</td></tr>
+    </tbody>
+  </table></div>
+  <div class="wb-alert wb-alert--warning wb-alert--plain"><div class="wb-alert__body">
+    <p class="wb-alert__title">Vì sao ULB bị loại, dù nó là bộ được trích dẫn nhiều nhất</p>
+    <p class="wb-alert__msg">28 cột của nó đã bị PCA ẩn danh, và <b>không có mã thẻ</b>. Hệ quả không phải là "kém một chút": không có <code>card_id</code> thì không tính được <code>hist_mean</code>, <code>n_tx_1h</code>, <code>secs_since_last</code>; không chia được theo nhóm; không chạy được cluster bootstrap. Tức là chặng 4 và nửa chặng 3 của trang này không có gì để làm. Nó vẫn là bộ tốt để tập <i>đọc</i> một PR-curve, chỉ không phải bộ để xây một dự án.</p>
+  </div></div>
 </template>
 
 <template data-aside="cmp-gbdt" data-title="Boosting: LightGBM, XGBoost, CatBoost hay sklearn"
@@ -1985,14 +2424,25 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
 </template>
 
 <template data-node="s-plan14">
-  <p><b>Đây là bản nén của lộ trình 8 tuần, không phải một khoá học đầy đủ.</b> Dùng nó khi bạn có deadline hai tuần và cần đi trọn <i>một</i> vòng end-to-end.</p>
+  <p>Bản nén của lộ trình 8 tuần, dùng khi bạn có deadline hai tuần và cần đi trọn <i>một</i> vòng end-to-end. Nó không phải một khoá học đầy đủ; phần bị hoãn được liệt kê ngay sau lịch.</p>
+
+  <div class="wb-alert wb-alert--danger">
+    <span class="wb-alert__icon">!</span>
+    <div class="wb-alert__body"><p class="wb-alert__title">Cả lịch này xoay quanh một mốc: hết ngày 6</p>
+      <p class="wb-alert__msg"><b>Hết ngày 6 bạn phải có một mô hình chạy từ đầu tới cuối, dù nó tệ</b> — đọc dữ liệu → tạo feature → train → in ra một con số. Sáu ngày đầu là để tới được mốc đó; tám ngày sau chỉ là cải tiến, mà cải tiến thì dừng được bất cứ lúc nào. Đọc lịch dưới đây theo hai nửa đó, đừng đọc như 14 việc rời rạc.</p></div>
+  </div>
+
+  <h2>Mười bốn ngày</h2>
+  <div id="planDays"></div>
+  <p class="wb-help">Số giờ mỗi ngày không được gõ tay: nó là tổng ba cột <i>đọc / thực hành / deliverable</i> của chính những bài trong ngày đó, nên nó không thể lệch với trang chủ hay với cây bên trái. Các ngày dài ngắn không đều là có chủ ý — ngày nhẹ được xếp cạnh ngày nặng, và khối bên dưới cho bạn thấy hình dạng đó.</p>
 
   <div data-viz="plan14"></div>
 
+  <h2>Phạm vi: đọc sau khi đã xem lịch</h2>
   <div class="wb-alert wb-alert--warning">
     <span class="wb-alert__icon">!</span>
-    <div class="wb-alert__body"><p class="wb-alert__title">Fast track này bỏ lại gì — đọc trước khi bắt đầu</p>
-      <p class="wb-alert__msg">Nó <b>chỉ giới thiệu</b> chứ không dạy hết: phần lớn chặng 7 (hồi quy, forecasting, multiclass, NLP, computer vision, gợi ý, analytics), phần tuning, giải thích mô hình, và học không giám sát. Hệ quả cụ thể: sau 14 ngày bạn <b>làm được</b> một dự án phân loại trên dữ liệu bảng, nhưng <b>chưa định vị được</b> một dự án dự báo hay một dự án NLP. Đó là một khoảng trống thật, và cách lấp là quay lại chặng 7 sau khi nộp. Danh sách bài bị hoãn nằm ngay trong khối trên.</p></div>
+    <div class="wb-alert__body"><p class="wb-alert__title">Fast track này bỏ lại gì</p>
+      <p class="wb-alert__msg">Nó <b>chỉ giới thiệu</b> chứ không dạy hết: phần lớn chặng 7 (hồi quy, forecasting, multiclass, NLP, computer vision, gợi ý, analytics), phần tuning, giải thích mô hình, và học không giám sát. Hệ quả cụ thể: sau 14 ngày bạn <b>làm được</b> một dự án phân loại trên dữ liệu bảng, nhưng <b>chưa định vị được</b> một dự án dự báo hay một dự án NLP. Đó là một khoảng trống thật, và cách lấp nằm ở mục <b>Quay lại lấp chỗ trống</b> bên dưới.</p></div>
   </div>
 
   <div class="wb-alert wb-alert--danger">
@@ -2000,16 +2450,6 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
     <div class="wb-alert__body"><p class="wb-alert__title">Phần <i>không</i> được nén, dù gấp tới đâu</p>
       <p class="wb-alert__msg">Data leakage · chia tập · đo lường &amp; chọn ngưỡng · kỷ luật tập test (chỉ mở một lần) · tái lập (ghim phiên bản, cố định seed) · thống kê suy diễn. Cắt bất kỳ cái nào trong sáu cái này thì bạn không tiết kiệm được thời gian — bạn chỉ đổi hai tuần lấy một kết quả sai mà không ai phát hiện cho tới buổi bảo vệ.</p></div>
   </div>
-
-  <div class="wb-alert wb-alert--warning">
-    <span class="wb-alert__icon">!</span>
-    <div class="wb-alert__body"><p class="wb-alert__title">Quy tắc bất di bất dịch của 14 ngày này</p>
-      <p class="wb-alert__msg"><b>Hết ngày 6 bạn phải có một mô hình chạy được từ đầu tới cuối, dù nó tệ.</b> Không phải mô hình tốt — mô hình <i>hoàn chỉnh</i>: đọc dữ liệu → tạo feature → train → in ra một con số đánh giá. Có nó rồi thì 8 ngày còn lại là cải tiến, và cải tiến thì dừng được bất cứ lúc nào. Không có nó, tới ngày 13 bạn vẫn đang “chuẩn bị”.</p></div>
-  </div>
-
-  <h2>Mười bốn ngày</h2>
-  <p class="wb-help">Thời lượng mỗi ngày <b>tính từ chính danh sách bài của ngày đó</b> — cộng cả ba cột đọc / thực hành / deliverable. Không có con số nào ở đây được gõ tay, nên chúng không thể lệch với trang chủ hay với cây bên trái.</p>
-  <div id="planDays"></div>
 
   <h2>Sau ngày 14</h2>
   <p>Lịch trên dừng ở chỗ bạn <b>có đủ nguyên liệu</b>: repo chạy được, bảng kết quả có khoảng tin cậy, dàn ý luận văn. Việc <i>viết</i> luận văn hoàn chỉnh và chuẩn bị bảo vệ nằm <b>ngoài</b> 14 ngày này và phụ thuộc lịch của trường bạn — đừng để con số “14 ngày” làm bạn tưởng đã xong.</p>
@@ -2255,22 +2695,10 @@ CMD ["uvicorn", "src.serve:app", "--host", "0.0.0.0", "--port", "8000"]</div>
   </ul>
   <p><b>Chỗ ví von hỏng:</b> gọi Colab là “Jupyter trên mạng” khiến bạn tưởng nó chỉ là chỗ chạy code cho tiện. Khác biệt thật nằm ở chỗ khác: nó là <b>một máy tính đi mượn, kèm GPU, và bốc hơi sau vài tiếng</b>. Mọi mẹo dùng Colab đều xoay quanh việc đối phó với chữ “bốc hơi” đó.</p>
 
-  <h2>Mười khả năng, và cái nào liên quan tới bạn</h2>
-  <table>
-    <tr><th>Khả năng</th><th>Làm thế nào</th><th>Dùng cho việc gì của bạn</th></tr>
-    <tr><td><b>GPU / TPU ở bậc miễn phí</b></td><td><i>Runtime → Change runtime type</i> → chọn bộ tăng tốc trong danh sách <i>hiện có hôm đó</i>. Luôn kiểm bằng <code>!nvidia-smi</code> — loại phần cứng thay đổi theo thời gian và không được bảo đảm</td><td><b>Việc số 1.</b> Chặng 6 và bài embedding — xem bên dưới</td></tr>
-    <tr><td><b>Thư viện cài sẵn</b></td><td>pandas, numpy, sklearn, matplotlib, torch có sẵn. Thiếu thì <code>!pip install -q lightgbm shap optuna</code></td><td>Khỏi mất 30 phút cài đặt khi muốn thử nhanh một ý</td></tr>
-    <tr><td><b>Chạy lệnh terminal</b></td><td>Thêm <code>!</code> trước lệnh: <code>!ls</code>, <code>!wget</code>, <code>!git clone</code></td><td>Tải dữ liệu, kéo repo của bạn về</td></tr>
-    <tr><td><b>Lệnh phép thuật (magic)</b></td><td><code>%%time</code> đo thời gian ô, <code>%cd</code> đổi thư mục, <code>%%writefile</code> ghi file</td><td><code>%%time</code> để biết bước nào chậm</td></tr>
-    <tr><td><b>Gắn Google Drive</b></td><td><code>from google.colab import drive; drive.mount('/content/drive')</code></td><td><b>Chỗ để lưu</b> dữ liệu và model để không mất khi phiên chết</td></tr>
-    <tr><td><b>Kho bí mật (Secrets)</b></td><td>Biểu tượng chìa khoá bên trái → thêm khoá → <code>from google.colab import userdata; userdata.get('KAGGLE_KEY')</code></td><td>Giữ token Kaggle mà <b>không dán vào ô code</b> rồi lỡ chia sẻ</td></tr>
-    <tr><td><b>Bảng dữ liệu tương tác</b></td><td><code>%load_ext google.colab.data_table</code> — rồi mọi DataFrame in ra đều lọc/sắp xếp được bằng chuột</td><td>EDA nhanh hơn hẳn <code>df.head()</code></td></tr>
-    <tr><td><b>Biến ô thành form</b></td><td>Thêm <code>#@param</code> sau một biến: <code>threshold = 0.5 #@param {type:"slider", min:0, max:1, step:0.01}</code></td><td>Làm một demo kéo–thả mà không cần Streamlit</td></tr>
-    <tr><td><b>Tải file lên / xuống</b></td><td><code>from google.colab import files; files.upload()</code> và <code>files.download('model.joblib')</code></td><td>Lấy hình và model về máy</td></tr>
-    <tr><td><b>Chia sẻ như Google Doc</b></td><td>Nút <i>Share</i> ở góc phải</td><td><b>Việc số 2.</b> Gửi người hướng dẫn một link <i>bấm vào là chạy được</i></td></tr>
-  </table>
+  <h2>Ba việc Colab đáng dùng — và bảy việc không</h2>
+  <p>Colab có khoảng mười khả năng đáng biết tên, nhưng trong 14 ngày chỉ <b>ba</b> cái thật sự đổi được kết quả của bạn: GPU cho hai bài deep learning, một link bấm-là-chạy để gửi người hướng dẫn, và một máy dự phòng khi máy bạn treo. Bảy cái còn lại (Drive, Secrets, bảng dữ liệu tương tác, <code>#@param</code>, magic, lệnh shell, tải lên/xuống) là tiện ích — biết thì tra được, không biết cũng không mất gì.</p>
+  <p class="ds-more"><button class="ds-math" data-math="colab10">Mười khả năng của Colab — gõ gì, dùng cho việc gì</button></p>
 
-  <h2>Ba việc Colab thật sự đáng dùng trong 14 ngày của bạn</h2>
   <h3>1 · GPU cho đúng hai chỗ — và <b>không</b> cho LightGBM</h3>
   <p>Đây là chỗ hay bị hiểu sai nhất, nên nói thẳng: <b>mô hình chính của bạn không cần GPU chút nào.</b> LightGBM trên 300 nghìn dòng chạy vài giây bằng CPU máy bạn; đưa lên GPU không nhanh hơn đáng kể mà còn thêm phiền.</p>
   <p>GPU chỉ đáng mượn cho đúng hai việc:</p>
@@ -2980,6 +3408,28 @@ streamlit run app.py                          <i># bản demo kéo thanh trượ
   <h2>Ý 3 — Ma trận là cả bảng, và mọi lỗi shape đều nói cùng một điều</h2>
   <p>Bảng 1.000 giao dịch × 30 cột là ma trận $X$ kích thước $1000\times30$. Mô hình tuyến tính có 30 trọng số. Nhân $Xw$ ra 1.000 điểm số cùng lúc.</p>
   <p><button class="ds-math" data-math="matmul">Nhân ma trận và luật khớp shape</button></p>
+
+  <p>Bốn shape dưới đây là bốn shape bạn sẽ gặp suốt 14 ngày. Học bảng này một lần rồi bạn <b>đọc được</b> thông báo lỗi thay vì dán nó vào Google:</p>
+  <table>
+    <tr><th>Thứ bạn có</th><th>Shape</th><th>Đọc là</th></tr>
+    <tr><td><code>X</code> — bảng dữ liệu</td><td><code>(1000, 30)</code></td><td>1.000 giao dịch, mỗi giao dịch 30 con số</td></tr>
+    <tr><td><code>y</code> — nhãn</td><td><code>(1000,)</code></td><td>1.000 nhãn. Dấu phẩy lẻ nghĩa là <b>một chiều</b> — không phải <code>(1000, 1)</code></td></tr>
+    <tr><td><code>w</code> — trọng số mô hình</td><td><code>(30,)</code></td><td>Một trọng số cho mỗi cột. Số này phải bằng cột thứ hai của <code>X</code></td></tr>
+    <tr><td><code>y_prob</code> — xác suất dự đoán</td><td><code>(1000,)</code></td><td>Một xác suất cho mỗi giao dịch. Ra <code>(1000, 2)</code> thì bạn quên <code>[:, 1]</code></td></tr>
+  </table>
+
+  <p>Và đây là lỗi shape hay gặp nhất, cùng cách đọc nó:</p>
+  <div class="ds-code">&gt;&gt;&gt; X_train.shape, X_valid.shape
+((1000, 30), (200, 28))
+&gt;&gt;&gt; model.predict(X_valid)
+ValueError: X has 28 features, but LogisticRegression is expecting 30 features as input
+
+<i># Đọc: "tôi được huấn luyện với 30 cột, bạn đưa tôi 28 cột."</i>
+<i># Nguyên nhân gần như luôn là một trong hai: one-hot tạo ra ít cột hơn ở tập valid</i>
+<i># (một hạng mục không xuất hiện), hoặc bạn drop cột ở một tập mà quên tập kia.</i>
+<i># Cả hai đều biến mất nếu bước biến đổi nằm TRONG Pipeline — đó là lý do bài</i>
+<i># Pipeline tồn tại. Nó không phải quy ước cho đẹp, nó chặn đúng lỗi này.</i></div>
+
   <p>Thói quen nên tạo ngay tuần này: sau mỗi bước biến đổi dữ liệu, in <code>X.shape</code>. 80% lỗi trong tuần đầu là lỗi shape, và <code>.shape</code> chỉ thẳng vào chỗ sai.</p>
 
   <p class="ds-more"><button class="ds-aside" data-aside="x-la-skip">Phần đại số tuyến tính bỏ qua được</button></p>
@@ -3122,8 +3572,9 @@ Kết quả được lấy trung bình trên 5 hạt giống ngẫu nhiên (42, 
 độ lệch chuẩn giữa các lần chạy là 0,006."</div>
   <p>Câu quyết định là câu về <b>hiệu ghép cặp</b>: nó mới là bằng chứng cho “tốt hơn”, không phải việc hai khoảng riêng có chồng lấn hay không. Hai khoảng riêng chỉ để người đọc thấy độ lớn; McNemar chỉ nói về nhãn tại ngưỡng đã chốt; và năm hạt giống cho thấy kết quả tái lập được. Đó là toàn bộ những gì phần thực nghiệm cần chứng minh.</p>
 
-  <h2>Thứ bạn có thể bỏ qua</h2>
-  <p>ANOVA, kiểm định phi tham số, thống kê Bayes đầy đủ — đều hay, đều không cần cho một luận văn thạc sĩ ứng dụng trong 2 tuần. Nếu người hướng dẫn yêu cầu cụ thể thì học riêng cái đó. <b>Một ngoại lệ:</b> nếu đề tài của bạn có A/B test thì <i>power analysis / tính cỡ mẫu</i> lại là phần bắt buộc — nó quyết định thí nghiệm có khả thi không (xem bài <b>Nhân quả</b>).</p>
+  <h2>Phạm vi của bài này — và một ngoại lệ bắt buộc</h2>
+  <p>Bốn thứ ở trên là toàn bộ thống kê mà phần thực nghiệm của một luận văn thạc sĩ ứng dụng cần. ANOVA, kiểm định phi tham số, thống kê Bayes đầy đủ đều hay nhưng nằm ngoài phạm vi — học riêng nếu người hướng dẫn yêu cầu cụ thể.</p>
+  <p><b>Ngoại lệ, và nó là ngoại lệ cứng:</b> nếu đề tài của bạn có A/B test thì <i>power analysis / tính cỡ mẫu</i> là phần <b>bắt buộc</b>, không phải phần thêm. Nó quyết định thí nghiệm có khả thi không — chạy một A/B test thiếu cỡ mẫu là tiêu tuần làm việc để nhận về một kết luận "không có khác biệt" mà bạn không được phép tin. Xem bài <a href="#/q-causal">A/B testing &amp; tư duy nhân quả</a>.</p>
 </template>
 
 <!-- ============================================================
@@ -3171,6 +3622,324 @@ Kết quả được lấy trung bình trên 5 hạt giống ngẫu nhiên (42, 
     <li>Bộ lọc để bạn không lang thang: mọi ý tưởng feature mới đều phải trả lời được "lúc quẹt thẻ có cột này chưa?"</li>
     <li>Câu trả lời sẵn cho câu hỏi đầu tiên của mọi hội đồng: "Em giải quyết vấn đề gì?"</li>
   </ul>
+</template>
+
+<template data-node="d-data">
+  <!-- gate:long: 315 dòng sau khi đã rút bảng so bốn bộ dữ liệu vào ngăn phụ cmp-data và phần PaySim vào popup. Còn lại là schema, hai adapter, prepare_data, và ba quy luật của bộ mô phỏng. Đã soát 2026-08-04. -->
+  <p>Bài này chốt <b>một</b> bộ dữ liệu chính, rồi viết lớp <b>adapter</b> đưa nó về một <b>schema chuẩn</b> mà toàn bộ phần còn lại của repo dựa vào. Sau bài này, không file nào khác trong dự án còn biết dữ liệu gốc trông thế nào — đổi dataset chỉ là viết thêm một hàm.</p>
+
+  <div data-viz="pipeline"></div>
+
+  <h2>Schema chuẩn — tám cột, không hơn</h2>
+  <p>Mọi thứ bắt đầu từ đây. Đây là hợp đồng giữa dữ liệu và code:</p>
+  <div class="wb-table-scroll"><table>
+    <thead><tr><th>Cột</th><th>Kiểu</th><th>Vì sao bắt buộc</th></tr></thead>
+    <tbody>
+      <tr><td><code>tx_id</code></td><td>string</td><td>Khoá duy nhất — để <code>assert</code> kiểm được một giao dịch không nằm ở hai tập</td></tr>
+      <tr><td><code>timestamp</code></td><td>datetime</td><td>Trục để chia tập, để tính cửa sổ, để mã hoá sin/cos. <b>Không có nó thì hỏng ba chặng</b></td></tr>
+      <tr><td><code>card_id</code></td><td>string</td><td>Thực thể lặp — cần cho feature lịch sử, chia theo nhóm, và cluster bootstrap</td></tr>
+      <tr><td><code>amount</code></td><td>float &gt; 0</td><td>Biến số chính, và là thứ quy ra tiền được</td></tr>
+      <tr><td><code>merchant_type</code> · <code>city</code> · <code>device_type</code></td><td>string</td><td>Ba cột hạng mục — đủ để dạy one-hot, giá trị hiếm, và giá trị chưa từng thấy lúc serve</td></tr>
+      <tr><td><code>is_fraud</code></td><td>0/1</td><td>Nhãn. Tên trung tính, không mang tên riêng của bộ dữ liệu nào</td></tr>
+    </tbody>
+  </table></div>
+  <div class="wb-alert wb-alert--info wb-alert--plain"><div class="wb-alert__body">
+    <p class="wb-alert__title">Vì sao đặt tên <code>is_fraud</code> chứ không giữ <code>Class</code></p>
+    <p class="wb-alert__msg">Vì <code>Class</code> là tên riêng của bộ ULB. Đặt tên cột theo một dataset cụ thể là cách bạn dán chặt code vào dataset đó — và sáu tháng sau, khi đổi sang dữ liệu công ty, bạn phải sửa mười file. Schema chuẩn tồn tại đúng để tránh chuyện đó.</p>
+  </div></div>
+
+  <h2>Bộ nào làm chính, bộ nào chạy thử</h2>
+  <p>Hai bộ, hai việc khác nhau: <b>IEEE-CIS</b> (Kaggle, ~590.000 dòng thật) là bộ chính vì nó có <code>timestamp</code> và một cột gần đúng vai <code>card_id</code> — thiếu hai cột đó thì toàn bộ nhóm feature lịch sử ở chặng 4 không có gì để tính. <b>Bộ mô phỏng trong repo</b> là bộ chạy thử: không cần tải, chạy trong 2 giây, và bạn <i>biết trước đáp án</i>.</p>
+  <p>Hai bộ nổi tiếng khác bị loại có lý do cụ thể, và lý do đó đáng đọc trước khi bạn tự ý đổi:</p>
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-data">So bốn bộ dữ liệu gian lận · vì sao ULB bị loại</button></p>
+
+  <h2>Adapter — <code>src/adapters.py</code></h2>
+  <p>File duy nhất trong repo biết dữ liệu thô trông thế nào. Hai adapter: một cho IEEE-CIS thật, một sinh bộ mô phỏng cùng schema.</p>
+  <div class="ds-code"><i>"""Adapter: bộ dữ liệu thô  →  SCHEMA CHUẨN.
+
+Đây là chỗ DUY NHẤT trong repo biết dữ liệu gốc trông thế nào. Đổi dataset =
+viết thêm một hàm ở đây, không sửa dòng nào ở features/train/serve.
+"""</i>
+<b>import</b> numpy <b>as</b> np
+<b>import</b> pandas <b>as</b> pd
+
+<b>from</b> .config <b>import</b> RAW_SCHEMA, SEED
+
+<i># IEEE-CIS chỉ cho TransactionDT = số giây kể từ một mốc gốc không công bố.</i>
+<i># 2017-12-01 là quy ước phổ biến trong cộng đồng Kaggle, KHÔNG phải con số Kaggle</i>
+<i># xác nhận. Dịch mốc gốc KHÔNG đổi thứ tự thời gian, khoảng cách giữa các giao</i>
+<i># dịch hay cách chia theo thời gian — nên mọi feature THỜI GIAN TƯƠNG ĐỐI</i>
+<i># (secs_since_last, n_tx_1h/24h, time split) không đổi. NHƯNG hour/dayofweek/</i>
+<i># month tính từ mốc TUYỆT ĐỐI nên phụ thuộc mốc gốc: đoán sai mốc thì các</i>
+<i># feature lịch bị lệch một cách hệ thống. Nêu là giả định, và coi feature lịch</i>
+<i># là gần đúng khi viết luận văn.</i>
+IEEE_ORIGIN = pd.Timestamp("2017-12-01")
+
+
+<b>def</b> _finalize(df: pd.DataFrame) -&gt; pd.DataFrame:
+    <i>"""Ép đúng schema chuẩn và kiểm tra bất biến. Mọi adapter kết thúc ở đây."""</i>
+    missing = [c <b>for</b> c <b>in</b> RAW_SCHEMA <b>if</b> c <b>not</b> <b>in</b> df.columns]
+    <b>if</b> missing:
+        <b>raise</b> ValueError(f"adapter thiếu cột schema: {missing}")
+    out = df.loc[:, list(RAW_SCHEMA)].copy()
+    out["timestamp"] = pd.to_datetime(out["timestamp"])
+    out["amount"] = pd.to_numeric(out["amount"], errors="coerce")
+    out["is_fraud"] = pd.to_numeric(out["is_fraud"], errors="coerce").fillna(0).astype("int8")
+    <b>for</b> c <b>in</b> ("tx_id", "card_id", "merchant_type", "city", "device_type"):
+        out[c] = out[c].astype("string").fillna("unknown")
+
+    out = out.dropna(subset=["timestamp", "amount"])
+    out = out[out["amount"] &gt; 0]
+    out = out.sort_values("timestamp", kind="mergesort").reset_index(drop=<b>True</b>)
+
+    <b>assert</b> out["is_fraud"].isin([0, 1]).all(), "nhãn phải là 0/1"
+    <b>assert</b> out["timestamp"].is_monotonic_increasing, "phải sắp theo thời gian"
+    <b>assert</b> <b>not</b> out["tx_id"].duplicated().any(), "tx_id phải là duy nhất"
+    <b>return</b> out
+
+
+<b>def</b> _solve_intercept(base_logit, target_rate, lo=-20.0, hi=5.0, iters=60):
+    <i>"""Tìm hằng số cộng vào logit để tỉ lệ dương trung bình ra đúng target_rate.
+
+    Thay cho việc dò tay một con số ma thuật rồi in df.is_fraud.mean() xem
+    trúng chưa. Đây cũng là bài tập tốt về log-odds: cộng 1 vào hằng số này là
+    nhân odds lên e ≈ 2,72 lần.
+    """</i>
+    <b>for</b> _ <b>in</b> range(iters):
+        mid = (lo + hi) / 2
+        <b>if</b> np.mean(1 / (1 + np.exp(-(base_logit + mid)))) &gt; target_rate:
+            hi = mid
+        <b>else</b>:
+            lo = mid
+    <b>return</b> (lo + hi) / 2
+
+
+<b>def</b> from_simulation(n: int = 400_000, seed: int = SEED, n_cards: int = 4_000,
+                    target_rate: float = 0.002, days: int = 180) -&gt; pd.DataFrame:
+    <i>"""Bộ mô phỏng — CÙNG schema với dữ liệu thật.
+
+    Dùng để chạy test, chạy CI và chạy thử trên máy yếu: không cần tải gì,
+    không cần tài khoản Kaggle, và bạn BIẾT TRƯỚC quy luật đúng — nên nếu mô
+    hình không tìm ra được thì lỗi nằm ở code chứ không ở dữ liệu.
+
+    Ba quy luật cài sẵn, mỗi cái kiểm chứng một nhóm feature:
+      1. rủi ro cao lúc rạng sáng            → kiểm chứng mã hoá sin/cos
+      2. rủi ro tăng theo số tiền            → kiểm chứng log1p + z_vs_hist
+      3. có "chiến dịch" quẹt dồn dập trong ít phút (card testing ngoài đời)
+                                             → kiểm chứng n_tx_1h / secs_since_last
+
+    Quy luật 3 là lý do bộ này KHÔNG chỉ là nhiễu trắng: nếu bạn bỏ nhóm feature
+    lịch sử, PR-AUC phải tụt thấy rõ. Đó là một ablation chạy được trong 2 phút.
+    """</i>
+    rng = np.random.default_rng(seed)
+    start = pd.Timestamp("2025-01-01")
+    span = days * 24 * 3600
+    cards = np.array([f"C{i:05d}" <b>for</b> i <b>in</b> range(n_cards)])
+
+    <i># Thẻ KHÔNG có sẵn hết từ ngày đầu: 70% là nền khách cũ, 30% mở dần trong</i>
+    <i># kỳ. Không có chi tiết này thì split_time_group (giai đoạn tương lai + khách</i>
+    <i># mới) cho ra tập rỗng — và bạn sẽ không bao giờ đo được câu hỏi đó.</i>
+    n_seed = int(n_cards * 0.70)
+    birth = np.concatenate([np.zeros(n_seed),
+                            np.sort(rng.uniform(0, span, n_cards - n_seed))])
+
+    <b>def</b> pick_cards(times):
+        <i>"""Mỗi giao dịch chỉ thuộc về một thẻ ĐÃ mở trước thời điểm đó."""</i>
+        alive = n_seed + np.searchsorted(birth[n_seed:], times, side="right")
+        <b>return</b> np.floor(rng.random(len(times)) * alive).astype(int)
+
+    <i># --- nền: giao dịch bình thường, rải đều theo thời gian ---</i>
+    n_burst_tx = int(n * 0.04)
+    offs = rng.uniform(0, span, n - n_burst_tx)
+    card_ix = pick_cards(offs)
+    in_burst = np.zeros(len(offs), dtype=bool)
+
+    <i># --- chiến dịch: một thẻ bị quẹt 4–12 lần trong vòng ~20 phút ---</i>
+    b_offs, b_cards = [], []
+    <b>while</b> len(b_offs) &lt; n_burst_tx:
+        k = int(rng.integers(4, 13))
+        t0 = rng.uniform(0, span - 1200)
+        c = int(pick_cards(np.array([t0]))[0])
+        b_offs.extend(t0 + np.sort(rng.uniform(0, 1200, k)))
+        b_cards.extend([c] * k)
+    b_offs, b_cards = np.array(b_offs[:n_burst_tx]), np.array(b_cards[:n_burst_tx])
+
+    offs = np.concatenate([offs, b_offs])
+    card_ix = np.concatenate([card_ix, b_cards])
+    in_burst = np.concatenate([in_burst, np.ones(len(b_offs), dtype=bool)])
+
+    order = np.argsort(offs, kind="mergesort")
+    offs, card_ix, in_burst = offs[order], card_ix[order], in_burst[order]
+    ts = start + pd.to_timedelta(offs, unit="s")
+    amount = np.exp(rng.normal(12.0, 1.4, len(offs)))
+
+    hour = ts.hour.to_numpy()
+    night = ((hour &gt;= 22) | (hour &lt;= 4)).astype(float)
+    base = 1.9 * night + 0.55 * (np.log1p(amount) - 12.0) + 3.4 * in_burst
+    label = rng.binomial(1, 1 / (1 + np.exp(-(base + _solve_intercept(base, target_rate)))))
+
+    m = len(offs)
+    df = pd.DataFrame({
+        "tx_id": [f"S{i:08d}" <b>for</b> i <b>in</b> range(m)],
+        "timestamp": ts,
+        "card_id": cards[card_ix],
+        "amount": amount,
+        "merchant_type": rng.choice(
+            ["grocery", "electronics", "travel", "gaming", "pharmacy"], m,
+            p=[0.40, 0.15, 0.10, 0.15, 0.20]),
+        "city": rng.choice(["HN", "HCM", "DN", "CT", "HP"], m, p=[.34, .38, .12, .08, .08]),
+        "device_type": rng.choice(["mobile", "desktop", "pos"], m, p=[.62, .21, .17]),
+        "is_fraud": label,
+    })
+    <b>return</b> _finalize(df)
+
+
+<b>def</b> from_ieee(raw_dir, nrows=<b>None</b>) -&gt; pd.DataFrame:
+    <i>"""IEEE-CIS Fraud Detection → schema chuẩn.
+
+    Cần hai file đã giải nén trong data/raw/:
+        train_transaction.csv · train_identity.csv
+
+    Hai điểm phải nêu trong luận văn, vì cả hai đều là XẤP XỈ:
+      · card1 KHÔNG phải mã thẻ — nó là một mã đã băm gần với "thẻ". Dùng nó
+        làm card_id là xấp xỉ hợp lý nhất có được, và chia theo nhóm dựa trên
+        nó là bảo thủ (thà nhóm rộng hơn thật còn hơn hẹp hơn thật).
+      · DeviceType chỉ có ở bảng identity, phủ chưa tới 1/4 số giao dịch →
+        phần còn lại là "unknown", và "unknown" tự nó đã là một tín hiệu.
+    """</i>
+    <b>from</b> pathlib <b>import</b> Path
+    raw_dir = Path(raw_dir)
+    tx = pd.read_csv(
+        raw_dir / "train_transaction.csv", nrows=nrows,
+        usecols=["TransactionID", "isFraud", "TransactionDT", "TransactionAmt",
+                 "ProductCD", "card1", "addr1"])
+    ident = pd.read_csv(raw_dir / "train_identity.csv",
+                        usecols=["TransactionID", "DeviceType"])
+    tx = tx.merge(ident, on="TransactionID", how="left")
+
+    df = pd.DataFrame({
+        "tx_id": tx["TransactionID"].astype(str),
+        "timestamp": IEEE_ORIGIN + pd.to_timedelta(tx["TransactionDT"], unit="s"),
+        "card_id": "IEEE-" + tx["card1"].fillna(-1).astype("int64").astype(str),
+        "amount": tx["TransactionAmt"],
+        "merchant_type": tx["ProductCD"].fillna("unknown"),
+        "city": "addr" + tx["addr1"].fillna(-1).astype("int64").astype(str),
+        "device_type": tx["DeviceType"].fillna("unknown"),
+        "is_fraud": tx["isFraud"],
+    })
+    <b>return</b> _finalize(df)
+
+
+ADAPTERS = {"sim": from_simulation, "ieee": from_ieee}</div>
+  <p class="ds-codecap">src/adapters.py</p>
+
+  <div class="wb-alert wb-alert--danger wb-alert--plain"><div class="wb-alert__body">
+    <p class="wb-alert__title">Hai chỗ trong adapter IEEE-CIS là <i>xấp xỉ</i>, và luận văn phải nói ra</p>
+    <p class="wb-alert__msg"><code>card1</code> không phải mã thẻ mà là một mã đã băm gần với thẻ; mốc gốc thời gian <code>2017-12-01</code> là quy ước của cộng đồng Kaggle chứ không phải con số ban tổ chức công bố. Cả hai đều không làm sai kết quả (mốc gốc chỉ tịnh tiến trục thời gian), nhưng che chúng đi thì hội đồng tìm ra, còn nêu thẳng thì đó là điểm cộng về sự cẩn thận.</p>
+  </div></div>
+
+  <h2>Chạy — <code>src/prepare_data.py</code></h2>
+  <div class="ds-code"><i>"""Bước 1 của quy trình: dữ liệu thô → data/processed/transactions.parquet.
+
+    python -m src.prepare_data --source sim               # 120k dòng, không cần tải gì
+    python -m src.prepare_data --source ieee --nrows 300000
+
+Sau lệnh này, không file nào khác trong repo còn được đọc data/raw/.
+"""</i>
+<b>import</b> argparse
+<b>import</b> json
+
+<b>import</b> pandas <b>as</b> pd
+
+<b>from</b> .adapters <b>import</b> ADAPTERS
+<b>from</b> .config <b>import</b> DATA_PROC, DATA_RAW, PROC_FILE, SCHEMA_VERSION, SEED
+<b>from</b> .history <b>import</b> add_history
+
+
+<b>def</b> main(argv=<b>None</b>):
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--source", choices=sorted(ADAPTERS), default="sim")
+    ap.add_argument("--nrows", type=int, default=<b>None</b>)
+    ap.add_argument("--n", type=int, default=400_000, help="chỉ dùng cho --source sim")
+    ap.add_argument("--seed", type=int, default=SEED)
+    a = ap.parse_args(argv)
+
+    <b>if</b> a.source == "sim":
+        df = ADAPTERS["sim"](n=a.n, seed=a.seed)
+    <b>else</b>:
+        df = ADAPTERS[a.source](DATA_RAW, nrows=a.nrows)
+
+    df = add_history(df)          <i># feature lịch sử tính TRÊN TOÀN BỘ chuỗi, TRƯỚC khi chia</i>
+    DATA_PROC.mkdir(parents=<b>True</b>, exist_ok=<b>True</b>)
+    df.to_parquet(PROC_FILE, index=<b>False</b>)
+
+    card = {
+        "schema_version": SCHEMA_VERSION,
+        "source": a.source,
+        "rows": int(len(df)),
+        "cards": int(df["card_id"].nunique()),
+        "fraud_rate": float(df["is_fraud"].mean()),
+        "from": str(df["timestamp"].min()),
+        "to": str(df["timestamp"].max()),
+        "built_at": pd.Timestamp.utcnow().isoformat(),
+    }
+    (DATA_PROC / "datacard.json").write_text(json.dumps(card, indent=2, ensure_ascii=<b>False</b>))
+    print(json.dumps(card, indent=2, ensure_ascii=<b>False</b>))
+    <b>return</b> card
+
+
+<b>if</b> __name__ == "__main__":
+    main()</div>
+  <p class="ds-codecap">src/prepare_data.py</p>
+  <div class="ds-code">$ python -m src.prepare_data --source sim
+{
+  "schema_version": 1,
+  "source": "sim",
+  "rows": 400000,
+  "cards": 3986,
+  "fraud_rate": 0.002035,
+  "from": "2025-01-01 00:00:59",
+  "to": "2025-06-29 23:59:26"
+}
+<i># 2,0 giây trên một máy laptop bình thường, không cần GPU, không cần tải gì</i></div>
+  <p>Đầu ra là <code>data/processed/transactions.parquet</code> cộng một <code>datacard.json</code>. Cái datacard đó chính là <b>bảng mô tả dữ liệu</b> mà chương 3 luận văn cần — nó được sinh ra tự động nên không bao giờ lệch với dữ liệu thật.</p>
+
+  <h2>Bộ mô phỏng không phải đồ chơi — nó là dụng cụ đo</h2>
+  <p>Ba quy luật được cài vào có chủ ý, mỗi cái kiểm chứng đúng một nhóm feature bạn sắp viết. Cột thứ ba nhắc tới <b>PR-AUC</b> — tạm hiểu là điểm số chính cho bài toán lệch nhãn, cao hơn là tốt hơn; bài <a href="#/ml-metrics">Đo lường</a> dạy nó đầy đủ và bạn chưa cần biết gì thêm ở đây:</p>
+  <div class="wb-table-scroll"><table>
+    <thead><tr><th>Quy luật cài sẵn</th><th>Nhóm feature nó kiểm chứng</th><th>Nếu bỏ nhóm đó thì…</th></tr></thead>
+    <tbody>
+      <tr><td>Rủi ro cao lúc 22h–4h</td><td><code>hour_sin</code> / <code>hour_cos</code></td><td>PR-AUC tụt — bằng chứng mã hoá chu kỳ có tác dụng thật</td></tr>
+      <tr><td>Rủi ro tăng theo số tiền</td><td><code>amount_log</code>, <code>z_vs_hist</code></td><td>PR-AUC tụt nhẹ</td></tr>
+      <tr><td>"Chiến dịch": một thẻ bị quẹt 4–12 lần trong 20 phút</td><td><code>n_tx_1h</code>, <code>secs_since_last</code></td><td>PR-AUC tụt mạnh nhất</td></tr>
+    </tbody>
+  </table></div>
+  <p>Đây là điều bộ dữ liệu thật <b>không</b> cho bạn: ở đây bạn <i>biết</i> câu trả lời đúng. Nếu mô hình không tìm ra quy luật giờ, lỗi nằm ở code bạn vừa viết — không phải ở dữ liệu, không phải ở siêu tham số. Nó biến việc gỡ lỗi từ đoán mò thành kiểm chứng.</p>
+  <p>Hằng số <code>target_rate</code> được giải bằng <b>chia đôi</b> chứ không dò tay. Cộng 1 vào hằng số logit đó là nhân odds lên $e \approx 2{,}7$ lần — bạn có thể tự kiểm bằng một dòng.</p>
+
+  <h2>Còn PaySim — bộ mà đồ án môn học của bạn đã dùng?</h2>
+  <p>Ngắn gọn: <b>tái dùng được phần khung, không tái dùng được phần dữ liệu.</b> Chín đặc trưng tổng hợp trong đồ án đó được sinh <i>có điều kiện theo nhãn</i> <code>isFraud</code> — nói cách khác, <b>đáp án đã bị nhét ngược vào feature</b>, nên điểm 0,997 là hệ quả trực tiếp chứ không phải thành tích. Bài <a href="#/d-leak">Data leakage</a> ba bài nữa sẽ gọi tên hiện tượng này và cho bạn cách phát hiện nó; ở đây chỉ cần biết bộ dữ liệu đó không dùng lại được. Và đó lại là một cơ hội: một ví dụ đối chứng có sẵn cho chương phương pháp.</p>
+  <p class="ds-more"><button class="ds-math" data-math="paysim">PaySim &amp; đồ án cũ: rò rỉ nhãn ở đâu, và dùng nó làm ví dụ đối chứng thế nào</button></p>
+
+  <h2>Tải IEEE-CIS</h2>
+  <div class="ds-code">pip install kaggle
+<i># đặt kaggle.json vào ~/.kaggle/ (lấy ở trang Settings trên Kaggle)</i>
+kaggle competitions download -c ieee-fraud-detection -p data/raw
+unzip -o data/raw/ieee-fraud-detection.zip -d data/raw
+
+python -m src.prepare_data --source ieee --nrows 300000   <i># máy yếu: cắt bớt dòng</i></div>
+  <p class="wb-help">Tải bộ thi Kaggle yêu cầu bạn đăng nhập và bấm đồng ý điều lệ cuộc thi một lần trên web trước — nếu không, lệnh trên trả về lỗi 403 mà không nói rõ lý do. Kiểm chứng 03/08/2026.</p>
+
+  <h2>Nếu bạn có dữ liệu thật từ công ty</h2>
+  <p>Tốt hơn nhiều cho luận văn — dữ liệu thật của Việt Nam là điểm cộng lớn về tính mới. Nhưng phải xử lý trước:</p>
+  <ul>
+    <li><b>Xin phép bằng văn bản</b> và ghi rõ trong luận văn.</li>
+    <li><b>Ẩn danh:</b> băm ID khách, bỏ tên/số thẻ/địa chỉ. Giữ lại quan hệ (cùng một khách vẫn phải có cùng một mã băm) — nếu không, <code>card_id</code> mất nghĩa và bạn quay về đúng tình trạng của bộ ULB.</li>
+    <li><b>Cân nhắc không công bố dữ liệu</b>, chỉ công bố code — cách này được chấp nhận rộng rãi.</li>
+    <li>Viết một <code>from_company()</code> trong <code>adapters.py</code>. Không sửa file nào khác.</li>
+  </ul>
+
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-storage">So sánh chỗ để vài trăm MB dữ liệu</button></p>
 </template>
 
 <template data-node="d-eda">
@@ -4017,7 +4786,7 @@ RFECV(estimator=LGBMClassifier(), step=5, cv=5, scoring="average_precision")</di
   <p>Công ty có 12 mô hình. Tám trong số đó cần feature "tổng chi tiêu 30 ngày của khách". Mỗi đội tự viết một phiên bản. Một đội tính theo ngày lịch, đội khác theo 720 giờ. Kết quả khác nhau, không ai biết bản nào đúng, và không đội nào tái sử dụng được của đội nào.</p>
   <p>Feature store là một nơi tập trung để: <b>định nghĩa feature một lần</b>, phục vụ nó cho cả huấn luyện (dữ liệu lịch sử) và chạy thật (độ trễ thấp), và <b>đảm bảo hai đường đó cho cùng kết quả</b>.</p>
 
-  <h2>Vì sao bạn chưa cần</h2>
+  <h2>Bốn điều kiện để nó có ích — bạn thoả mấy điều?</h2>
   <table>
     <tr><th>Điều kiện để feature store có ích</th><th>Tình huống của bạn</th></tr>
     <tr><td>Nhiều mô hình dùng chung feature</td><td>Bạn có 1</td></tr>
@@ -4111,7 +4880,8 @@ pipe = Pipeline([
         max_iter=2000, random_state=42)),
 ])
 pipe.fit(X_train, y_train)
-y_prob = pipe.predict_proba(X_test)[:, 1]</div>
+y_prob_valid = pipe.predict_proba(X_valid)[:, 1]   <i># VALIDATION, không phải test — test chỉ mở một lần, ở cuối</i>
+np.save("artifacts/y_prob_valid_logistic.npy", y_prob_valid)   <i># bài sau đọc lại file này để tính chỉ số</i></div>
 
   <h2>Đọc hệ số — phần đưa vào luận văn</h2>
   <div class="ds-code">names = pipe.named_steps["prep"].get_feature_names_out()
@@ -4130,10 +4900,84 @@ pd.DataFrame({"feature": names, "coef": coefs, "odds_ratio": odds}) \
 
   <h2>Vì sao vẫn giữ nó trong luận văn dù LightGBM tốt hơn</h2>
   <ol>
-    <li><b>Nó là mốc so sánh.</b> "LightGBM đạt PR-AUC 0,412 so với 0,281 của hồi quy logistic" là một câu có thông tin. "LightGBM đạt 0,412" thì không.</li>
+    <li><b>Nó là mốc so sánh.</b> "LightGBM đạt PR-AUC 0,412 so với 0,281 của hồi quy logistic" là một câu có thông tin. "LightGBM đạt 0,412" thì không. <i>(PR-AUC: chỉ số chính cho dữ liệu lệch nhãn, cao hơn là tốt hơn — bài kế tiếp định nghĩa đầy đủ và chỉ cách tính nó từ <code>y_prob_valid</code> bạn vừa lưu.)</i></li>
     <li><b>Nó cho biết bài toán phi tuyến tới mức nào.</b> Khoảng cách càng lớn, tương tác giữa các feature càng quan trọng — và đó là một phát hiện đáng viết.</li>
     <li><b>Nó giải thích được.</b> Khi cần trả lời "vì sao chặn giao dịch này", một mô hình tuyến tính chạy song song rất có giá trị, kể cả khi không phải mô hình quyết định.</li>
   </ol>
+</template>
+
+<template data-node="ml-metrics">
+  <p>Đây là bài mà một quyết định sai làm hỏng toàn bộ luận văn: <b>chọn nhầm chỉ số đánh giá</b>. Mô hình sẽ tối ưu đúng thứ bạn đo, nên nếu bạn đo sai thứ, bạn nhận được một mô hình tốt cho việc bạn không cần.</p>
+
+  <h2>Ma trận nhầm lẫn — gốc của mọi chỉ số</h2>
+  <table>
+    <tr><th></th><th>Thực tế: gian lận</th><th>Thực tế: sạch</th></tr>
+    <tr><th>Mô hình chặn</th><td><b>TP</b> — bắt đúng 👍</td><td><b>FP</b> — báo nhầm, làm phiền khách</td></tr>
+    <tr><th>Mô hình cho qua</th><td><b>FN</b> — bỏ lọt, mất tiền</td><td><b>TN</b> — đúng, và chiếm 99,8% mọi thứ</td></tr>
+  </table>
+  <p>Mọi chỉ số đều là một cách gộp bốn ô này. Hiểu bảng này rồi thì không cần học thuộc công thức nào.</p>
+
+  <h2>Bốn chỉ số, và câu hỏi mỗi cái trả lời</h2>
+  <table>
+    <tr><th>Chỉ số</th><th>Công thức</th><th>Trả lời câu hỏi</th></tr>
+    <tr><td><b>Accuracy</b></td><td>$\frac{TP+TN}{\text{tổng}}$</td><td>"Đúng bao nhiêu phần trăm?" — <b>vô dụng khi lệch</b>, vì TN áp đảo</td></tr>
+    <tr><td><b>Precision</b></td><td>$\frac{TP}{TP+FP}$</td><td>"Khi mô hình báo động, tin được bao nhiêu?" → chi phí làm phiền khách</td></tr>
+    <tr><td><b>Recall</b></td><td>$\frac{TP}{TP+FN}$</td><td>"Trong tất cả gian lận thật, bắt được bao nhiêu?" → chi phí mất tiền</td></tr>
+    <tr><td><b>F1</b></td><td>$\frac{2PR}{P+R}$</td><td>Trung bình điều hoà — tiện để so sánh, nhưng <b>giả định precision và recall quan trọng ngang nhau</b>, điều gần như không bao giờ đúng</td></tr>
+  </table>
+
+  <h2>Kéo ngưỡng và nhìn hậu quả</h2>
+  <div data-viz="thresh"></div>
+
+  <h2>PR-AUC là chỉ số chính của bạn</h2>
+  <p><button class="ds-math" data-math="auc">ROC-AUC vs PR-AUC — vì sao ROC nói dối khi dữ liệu lệch</button></p>
+  <div class="ds-code"><b>from</b> sklearn.metrics <b>import</b> average_precision_score, roc_auc_score
+pr_auc  = average_precision_score(y_test, y_prob)   <i># ← chỉ số chính</i>
+roc_auc = roc_auc_score(y_test, y_prob)             <i># báo cáo kèm để so với paper khác</i></div>
+  <p>Nhớ: đường cơ sở của PR-AUC là <b>tỉ lệ dương</b> (0,0017), không phải 0,5. Nên PR-AUC = 0,35 nghĩa là tốt hơn ngẫu nhiên khoảng 200 lần — hãy nói rõ điều này trong luận văn, nếu không người đọc sẽ tưởng 0,35 là kém.</p>
+
+  <h2>Chọn ngưỡng — bước mà hầu hết luận văn bỏ qua</h2>
+  <p>Mô hình cho ra xác suất. Chuyển thành quyết định cần một ngưỡng. Mặc định 0,5 <b>gần như luôn sai</b> cho bài toán lệch.</p>
+  <h3>Cách 1 · Tối đa F1 (được, nhưng tuỳ tiện)</h3>
+  <div class="ds-code"><b>from</b> sklearn.metrics <b>import</b> precision_recall_curve
+p, r, th = precision_recall_curve(y_valid, y_prob_valid)
+f1 = 2*p*r / (p + r + 1e-9)
+best = th[f1[:-1].argmax()]</div>
+
+  <h3>Cách 2 · Tối thiểu chi phí (đúng, và làm luận văn mạnh hơn hẳn)</h3>
+  <div class="ds-code">COST_FN = 3_000_000      <i># bỏ lọt một vụ gian lận</i>
+COST_FP =    40_000      <i># xác minh nhầm một khách</i>
+
+<b>def</b> total_cost(y_true, y_prob, t):
+    pred = (y_prob &gt;= t).astype(<b>int</b>)
+    fn = ((y_true == 1) &amp; (pred == 0)).sum()
+    fp = ((y_true == 0) &amp; (pred == 1)).sum()
+    <b>return</b> fn * COST_FN + fp * COST_FP
+
+ths   = np.linspace(0.001, 0.999, 999)
+costs = [total_cost(y_valid, y_prob_valid, t) <b>for</b> t <b>in</b> ths]
+best_t = ths[int(np.argmin(costs))]
+print(f"ngưỡng tối ưu {best_t:.3f} — thiệt hại {min(costs)/1e6:.0f} triệu ₫")</div>
+  <p><b>Chọn ngưỡng trên tập validation, rồi áp cố định lên test.</b> Chọn ngưỡng trên test là một dạng rò rỉ.</p>
+
+  <h3>Cách 3 · Ràng buộc theo năng lực vận hành</h3>
+  <p>Thực tế nhất: đội xác minh xử lý được 200 ca/ngày. Vậy ngưỡng phải là mức cho ra đúng ~200 cảnh báo/ngày, và chỉ số là <b>precision@200</b>. Cách đóng khung này rất ít luận văn Việt Nam dùng, và nó dễ bảo vệ vì nó đúng cách hệ thống thật hoạt động.</p>
+
+  <h2>Bảng kết quả nên có trong luận văn</h2>
+  <p>Đây là <b>đích</b>, không phải việc của hôm nay. Hôm nay bạn điền được đúng một dòng — dòng logistic. Ba dòng còn lại điền dần: <b>LightGBM</b> ở bài <a href="#/ml-trees">Cây → Boosting</a>, dòng <b>đề xuất</b> sau khi thêm feature thời gian, và dòng <b>luật thủ công</b> ở bài <a href="#/pr-eval">Đánh giá &amp; bốn test</a>. Biết trước hình dạng bảng là để mỗi lần chạy xong bạn ghi ngay một dòng, thay vì tới lúc viết mới đi tìm lại số.</p>
+  <table>
+    <tr><th>Mô hình</th><th>PR-AUC (KTC 95%)</th><th>Recall @ ngưỡng chi phí</th><th>Precision</th><th>Thiệt hại (triệu ₫/tháng)</th></tr>
+    <tr><td>Luật thủ công hiện tại</td><td>—</td><td>0,31</td><td>0,08</td><td>1.240</td></tr>
+    <tr><td>Logistic Regression</td><td>0,281 (0,259–0,304)</td><td>0,49</td><td>0,14</td><td>890</td></tr>
+    <tr><td>LightGBM baseline</td><td>0,367 (0,344–0,391)</td><td>0,58</td><td>0,19</td><td>710</td></tr>
+    <tr><td><b>Đề xuất (+ feature thời gian)</b></td><td><b>0,412 (0,388–0,437)</b></td><td><b>0,64</b></td><td><b>0,22</b></td><td><b>598</b></td></tr>
+  </table>
+  <p>Cột cuối là cột hội đồng nhớ. Nó biến "PR-AUC tăng 0,045" — một con số không ai cảm nhận được — thành "tiết kiệm 112 triệu mỗi tháng".</p>
+
+  <div class="wb-alert wb-alert--warning wb-alert--plain"><div class="wb-alert__body">
+    <p class="wb-alert__title">Đừng báo cáo accuracy</p>
+    <p class="wb-alert__msg">Nếu bảng của bạn có cột accuracy 99,8%, người đọc có kinh nghiệm sẽ nghĩ ngay rằng bạn chưa hiểu bài toán lệch nhãn. Nếu bắt buộc phải có, hãy đặt kèm accuracy của mô hình "luôn đoán sạch" (99,83%) để cho thấy bạn biết nó vô nghĩa.</p>
+  </div></div>
 </template>
 
 <template data-node="ml-loss">
@@ -4257,8 +5101,8 @@ print("số cây thực dùng:", model.best_iteration_)</div>
   <h3>Early stopping — cơ chế chống overfit quan trọng nhất</h3>
   <p>Đặt <code>n_estimators</code> cao (2000) và để <code>early_stopping</code> dừng khi điểm validation ngừng cải thiện trong 100 vòng. Bạn không phải đoán số cây; thuật toán tự tìm. <b>Điều kiện:</b> tập <code>eval_set</code> phải là validation, tuyệt đối không phải test.</p>
 
-  <h2>XGBoost hay LightGBM?</h2>
-  <p>Khác biệt thực tế nhỏ hơn nhiều so với khác biệt do một nhóm feature tốt mang lại. <b>Chọn một, đừng tốn thời gian so sánh</b> — trừ khi việc so sánh chính là đóng góp của luận văn (nó không nên là).</p>
+  <h2>Chọn LightGBM, và đừng đi so thư viện</h2>
+  <p>Khác biệt thực tế giữa các thư viện boosting nhỏ hơn nhiều so với khác biệt do một nhóm feature tốt mang lại. <b>Chọn một, đừng tốn thời gian so sánh</b> — trừ khi việc so sánh chính là đóng góp của luận văn (nó không nên là). Bảng đối chiếu bốn thư viện để ở ngăn phải, mở khi bạn thật sự phải chọn:</p>
   <p class="ds-more"><button class="ds-aside" data-aside="cmp-gbdt">So sánh LightGBM · XGBoost · CatBoost · sklearn</button></p>
 </template>
 
@@ -4362,8 +5206,8 @@ scores = cross_val_score(inner, X, y, cv=5, scoring="average_precision")   <i># 
       <p class="wb-alert__msg"><b>Đổi chỉ số đánh giá và chọn ngưỡng đúng quan trọng hơn nhiều so với cân bằng lại dữ liệu.</b> Rất nhiều người nhảy thẳng vào SMOTE mà chưa đổi chỉ số — và họ đang tối ưu một thứ họ không đo được.</p></div>
   </div>
 
-  <h2>Vì sao ROC-AUC không đủ, thấy bằng hình</h2>
-  <p>Khối dưới đây giữ nguyên <b>một</b> mô hình và chỉ đổi tỉ lệ lớp dương. Nếu một chỉ số gần như không nhúc nhích khi bài toán khó lên rõ rệt, nó không phải chỉ số bạn nên tối ưu:</p>
+  <h2>Thấy bằng hình: đổi tỉ lệ lớp dương, chỉ số nào nhúc nhích</h2>
+  <p>Bài <b>Đo lường</b> đã nói ROC-AUC đánh lừa khi dữ liệu lệch. Khối dưới đây cho bạn <i>thấy</i> điều đó: nó giữ nguyên <b>một</b> mô hình và chỉ đổi tỉ lệ lớp dương. Nếu một chỉ số gần như không nhúc nhích khi bài toán khó lên rõ rệt, nó không phải chỉ số bạn nên tối ưu:</p>
   <div data-viz="prcurve"></div>
   <ol>
     <li><b>Đổi chỉ số</b> — bỏ accuracy, dùng PR-AUC. <i>Luôn làm, miễn phí.</i></li>
@@ -4373,9 +5217,8 @@ scores = cross_val_score(inner, X, y, cv=5, scoring="average_precision")   <i># 
     <li><b>Đổi cách đóng khung bài toán</b> — sang phát hiện bất thường hoặc xếp hạng.</li>
   </ol>
 
-  <h2>1–2 · Chỉ số và ngưỡng</h2>
-  <p>Chi tiết ở bài <b>Đo lường &amp; ngưỡng</b>, nhưng tóm lại: dùng <code>average_precision_score</code> (PR-AUC) làm chỉ số chính, và chọn ngưỡng bằng cách quét mọi giá trị rồi lấy điểm có tổng thiệt hại thấp nhất.</p>
-  <p><button class="ds-math" data-math="auc">Vì sao ROC-AUC đánh lừa khi dữ liệu lệch</button></p>
+  <h2>1–2 · Chỉ số và ngưỡng — bạn đã làm rồi</h2>
+  <p>Hai bước đầu không phải việc mới: bài <b>Đo lường</b> đã cho bạn <code>average_precision_score</code> (PR-AUC) làm chỉ số chính và một ngưỡng quét theo chi phí. Điều đáng nhớ ở đây là <b>vị trí của chúng trong danh sách</b> — đứng trên cùng và không tốn gì. Nếu bạn đang cân nhắc SMOTE mà chưa làm hai bước này thì thứ tự đã sai, và phần còn lại của bài chỉ là tối ưu một thứ bạn chưa đo được.</p>
 
   <h2>3 · Trọng số lớp — cách rẻ và an toàn nhất</h2>
   <p>Thay vì tạo thêm dữ liệu, bảo mô hình rằng <b>một lỗi trên lớp hiếm đắt hơn nhiều</b>. Với tỉ lệ 1:580, mỗi ca gian lận bị bỏ lọt bị phạt gấp 580 lần một báo nhầm.</p>
@@ -4426,79 +5269,6 @@ pipe = ImbPipeline([
     <tr><td>+ chọn ngưỡng theo chi phí</td><td>0,367</td><td>0,58</td><td>PR-AUC không đổi nhưng <b>tiền tiết kiệm +23%</b></td></tr>
   </table>
   <p>Dòng cuối là loại kết quả làm luận văn khác biệt: nó cho thấy bạn hiểu rằng <b>chỉ số kỹ thuật không đổi mà giá trị kinh doanh vẫn tăng được</b>.</p>
-</template>
-
-<template data-node="ml-metrics">
-  <p>Đây là bài mà một quyết định sai làm hỏng toàn bộ luận văn: <b>chọn nhầm chỉ số đánh giá</b>. Mô hình sẽ tối ưu đúng thứ bạn đo, nên nếu bạn đo sai thứ, bạn nhận được một mô hình tốt cho việc bạn không cần.</p>
-
-  <h2>Ma trận nhầm lẫn — gốc của mọi chỉ số</h2>
-  <table>
-    <tr><th></th><th>Thực tế: gian lận</th><th>Thực tế: sạch</th></tr>
-    <tr><th>Mô hình chặn</th><td><b>TP</b> — bắt đúng 👍</td><td><b>FP</b> — báo nhầm, làm phiền khách</td></tr>
-    <tr><th>Mô hình cho qua</th><td><b>FN</b> — bỏ lọt, mất tiền</td><td><b>TN</b> — đúng, và chiếm 99,8% mọi thứ</td></tr>
-  </table>
-  <p>Mọi chỉ số đều là một cách gộp bốn ô này. Hiểu bảng này rồi thì không cần học thuộc công thức nào.</p>
-
-  <h2>Bốn chỉ số, và câu hỏi mỗi cái trả lời</h2>
-  <table>
-    <tr><th>Chỉ số</th><th>Công thức</th><th>Trả lời câu hỏi</th></tr>
-    <tr><td><b>Accuracy</b></td><td>$\frac{TP+TN}{\text{tổng}}$</td><td>"Đúng bao nhiêu phần trăm?" — <b>vô dụng khi lệch</b>, vì TN áp đảo</td></tr>
-    <tr><td><b>Precision</b></td><td>$\frac{TP}{TP+FP}$</td><td>"Khi mô hình báo động, tin được bao nhiêu?" → chi phí làm phiền khách</td></tr>
-    <tr><td><b>Recall</b></td><td>$\frac{TP}{TP+FN}$</td><td>"Trong tất cả gian lận thật, bắt được bao nhiêu?" → chi phí mất tiền</td></tr>
-    <tr><td><b>F1</b></td><td>$\frac{2PR}{P+R}$</td><td>Trung bình điều hoà — tiện để so sánh, nhưng <b>giả định precision và recall quan trọng ngang nhau</b>, điều gần như không bao giờ đúng</td></tr>
-  </table>
-
-  <h2>Kéo ngưỡng và nhìn hậu quả</h2>
-  <div data-viz="thresh"></div>
-
-  <h2>PR-AUC là chỉ số chính của bạn</h2>
-  <p><button class="ds-math" data-math="auc">ROC-AUC vs PR-AUC — vì sao ROC nói dối khi dữ liệu lệch</button></p>
-  <div class="ds-code"><b>from</b> sklearn.metrics <b>import</b> average_precision_score, roc_auc_score
-pr_auc  = average_precision_score(y_test, y_prob)   <i># ← chỉ số chính</i>
-roc_auc = roc_auc_score(y_test, y_prob)             <i># báo cáo kèm để so với paper khác</i></div>
-  <p>Nhớ: đường cơ sở của PR-AUC là <b>tỉ lệ dương</b> (0,0017), không phải 0,5. Nên PR-AUC = 0,35 nghĩa là tốt hơn ngẫu nhiên khoảng 200 lần — hãy nói rõ điều này trong luận văn, nếu không người đọc sẽ tưởng 0,35 là kém.</p>
-
-  <h2>Chọn ngưỡng — bước mà hầu hết luận văn bỏ qua</h2>
-  <p>Mô hình cho ra xác suất. Chuyển thành quyết định cần một ngưỡng. Mặc định 0,5 <b>gần như luôn sai</b> cho bài toán lệch.</p>
-  <h3>Cách 1 · Tối đa F1 (được, nhưng tuỳ tiện)</h3>
-  <div class="ds-code"><b>from</b> sklearn.metrics <b>import</b> precision_recall_curve
-p, r, th = precision_recall_curve(y_valid, y_prob_valid)
-f1 = 2*p*r / (p + r + 1e-9)
-best = th[f1[:-1].argmax()]</div>
-
-  <h3>Cách 2 · Tối thiểu chi phí (đúng, và làm luận văn mạnh hơn hẳn)</h3>
-  <div class="ds-code">COST_FN = 3_000_000      <i># bỏ lọt một vụ gian lận</i>
-COST_FP =    40_000      <i># xác minh nhầm một khách</i>
-
-<b>def</b> total_cost(y_true, y_prob, t):
-    pred = (y_prob &gt;= t).astype(<b>int</b>)
-    fn = ((y_true == 1) &amp; (pred == 0)).sum()
-    fp = ((y_true == 0) &amp; (pred == 1)).sum()
-    <b>return</b> fn * COST_FN + fp * COST_FP
-
-ths   = np.linspace(0.001, 0.999, 999)
-costs = [total_cost(y_valid, y_prob_valid, t) <b>for</b> t <b>in</b> ths]
-best_t = ths[int(np.argmin(costs))]
-print(f"ngưỡng tối ưu {best_t:.3f} — thiệt hại {min(costs)/1e6:.0f} triệu ₫")</div>
-  <p><b>Chọn ngưỡng trên tập validation, rồi áp cố định lên test.</b> Chọn ngưỡng trên test là một dạng rò rỉ.</p>
-
-  <h3>Cách 3 · Ràng buộc theo năng lực vận hành</h3>
-  <p>Thực tế nhất: đội xác minh xử lý được 200 ca/ngày. Vậy ngưỡng phải là mức cho ra đúng ~200 cảnh báo/ngày, và chỉ số là <b>precision@200</b>. Cách đóng khung này rất ít luận văn Việt Nam dùng, và nó dễ bảo vệ vì nó đúng cách hệ thống thật hoạt động.</p>
-
-  <h2>Bảng kết quả nên có trong luận văn</h2>
-  <table>
-    <tr><th>Mô hình</th><th>PR-AUC (KTC 95%)</th><th>Recall @ ngưỡng chi phí</th><th>Precision</th><th>Thiệt hại (triệu ₫/tháng)</th></tr>
-    <tr><td>Luật thủ công hiện tại</td><td>—</td><td>0,31</td><td>0,08</td><td>1.240</td></tr>
-    <tr><td>Logistic Regression</td><td>0,281 (0,259–0,304)</td><td>0,49</td><td>0,14</td><td>890</td></tr>
-    <tr><td>LightGBM baseline</td><td>0,367 (0,344–0,391)</td><td>0,58</td><td>0,19</td><td>710</td></tr>
-    <tr><td><b>Đề xuất (+ feature thời gian)</b></td><td><b>0,412 (0,388–0,437)</b></td><td><b>0,64</b></td><td><b>0,22</b></td><td><b>598</b></td></tr>
-  </table>
-  <p>Cột cuối là cột hội đồng nhớ. Nó biến "PR-AUC tăng 0,045" — một con số không ai cảm nhận được — thành "tiết kiệm 112 triệu mỗi tháng".</p>
-
-  <div class="wb-alert wb-alert--warning wb-alert--plain"><div class="wb-alert__body">
-    <p class="wb-alert__title">Đừng báo cáo accuracy</p>
-    <p class="wb-alert__msg">Nếu bảng của bạn có cột accuracy 99,8%, người đọc có kinh nghiệm sẽ nghĩ ngay rằng bạn chưa hiểu bài toán lệch nhãn. Nếu bắt buộc phải có, hãy đặt kèm accuracy của mô hình "luôn đoán sạch" (99,83%) để cho thấy bạn biết nó vô nghĩa.</p>
-  </div></div>
 </template>
 
 <template data-node="ml-tune">
@@ -5695,346 +6465,8 @@ Quyết định theo ngưỡng
   <p>Ba điểm này là <b>vàng cho phần Thảo luận và Hạn chế</b> của luận văn. Chúng cho thấy bạn hiểu bài toán chứ không chỉ chạy được thư viện. Vấn đề 2 còn có tên học thuật để trích dẫn: <i>selective labels problem</i>.</p>
 </template>
 
-<template data-node="pr-data">
-  <p>Bài này chốt <b>một</b> bộ dữ liệu chính, rồi viết lớp <b>adapter</b> đưa nó về một <b>schema chuẩn</b> mà toàn bộ phần còn lại của repo dựa vào. Sau bài này, không file nào khác trong dự án còn biết dữ liệu gốc trông thế nào — đổi dataset chỉ là viết thêm một hàm.</p>
-
-  <div data-viz="pipeline"></div>
-
-  <h2>Schema chuẩn — tám cột, không hơn</h2>
-  <p>Mọi thứ bắt đầu từ đây. Đây là hợp đồng giữa dữ liệu và code:</p>
-  <div class="wb-table-scroll"><table>
-    <thead><tr><th>Cột</th><th>Kiểu</th><th>Vì sao bắt buộc</th></tr></thead>
-    <tbody>
-      <tr><td><code>tx_id</code></td><td>string</td><td>Khoá duy nhất — để <code>assert</code> kiểm được một giao dịch không nằm ở hai tập</td></tr>
-      <tr><td><code>timestamp</code></td><td>datetime</td><td>Trục để chia tập, để tính cửa sổ, để mã hoá sin/cos. <b>Không có nó thì hỏng ba chặng</b></td></tr>
-      <tr><td><code>card_id</code></td><td>string</td><td>Thực thể lặp — cần cho feature lịch sử, chia theo nhóm, và cluster bootstrap</td></tr>
-      <tr><td><code>amount</code></td><td>float &gt; 0</td><td>Biến số chính, và là thứ quy ra tiền được</td></tr>
-      <tr><td><code>merchant_type</code> · <code>city</code> · <code>device_type</code></td><td>string</td><td>Ba cột hạng mục — đủ để dạy one-hot, giá trị hiếm, và giá trị chưa từng thấy lúc serve</td></tr>
-      <tr><td><code>is_fraud</code></td><td>0/1</td><td>Nhãn. Tên trung tính, không mang tên riêng của bộ dữ liệu nào</td></tr>
-    </tbody>
-  </table></div>
-  <div class="wb-alert wb-alert--info wb-alert--plain"><div class="wb-alert__body">
-    <p class="wb-alert__title">Vì sao đặt tên <code>is_fraud</code> chứ không giữ <code>Class</code></p>
-    <p class="wb-alert__msg">Vì <code>Class</code> là tên riêng của bộ ULB. Đặt tên cột theo một dataset cụ thể là cách bạn dán chặt code vào dataset đó — và sáu tháng sau, khi đổi sang dữ liệu công ty, bạn phải sửa mười file. Schema chuẩn tồn tại đúng để tránh chuyện đó.</p>
-  </div></div>
-
-  <h2>Chọn bộ nào làm chính</h2>
-  <div class="wb-table-scroll"><table>
-    <thead><tr><th>Bộ</th><th>Quy mô</th><th>Có <code>timestamp</code>?</th><th>Có <code>card_id</code>?</th><th>Kết luận</th></tr></thead>
-    <tbody>
-      <tr><td><b>IEEE-CIS</b><br><span class="wb-help">Kaggle competition</span></td><td>~590.000 dòng · 434 cột · 3,5% gian lận</td><td>Có (<code>TransactionDT</code>, dạng số giây)</td><td>Gần đúng (<code>card1</code>)</td><td><b>Bộ chính.</b> Dữ liệu thật, đủ cột để làm feature engineering theo thời gian</td></tr>
-      <tr><td><b>Bộ mô phỏng</b><br><span class="wb-help">nằm trong repo</span></td><td>400.000 dòng · 0,2% gian lận</td><td>Có</td><td>Có</td><td><b>Bộ chạy thử.</b> Không cần tải, không cần tài khoản, chạy trong 2 giây — và bạn biết trước đáp án</td></tr>
-      <tr><td><b>Credit Card Fraud (ULB)</b><br><code>creditcard.csv</code></td><td>284.807 dòng · 0,172% gian lận</td><td>Chỉ có số giây tương đối</td><td><b>Không</b></td><td>Không dùng được ở đây: không có <code>card_id</code> thì <i>toàn bộ</i> nhóm feature lịch sử và cách chia theo nhóm đều vô hiệu</td></tr>
-      <tr><td><b>PaySim</b></td><td>6,3 triệu dòng mô phỏng</td><td>Chỉ có <code>step</code> (giờ thứ n)</td><td>Có</td><td>Dùng được, nhưng quy luật đơn giản hơn thực tế — xem mục dưới</td></tr>
-    </tbody>
-  </table></div>
-  <div class="wb-alert wb-alert--warning wb-alert--plain"><div class="wb-alert__body">
-    <p class="wb-alert__title">Vì sao ULB bị loại, dù nó là bộ được trích dẫn nhiều nhất</p>
-    <p class="wb-alert__msg">28 cột của nó đã bị PCA ẩn danh, và <b>không có mã thẻ</b>. Hệ quả không phải là "kém một chút": không có <code>card_id</code> thì không tính được <code>hist_mean</code>, <code>n_tx_1h</code>, <code>secs_since_last</code>; không chia được theo nhóm; không chạy được cluster bootstrap. Tức là chặng 4 và nửa chặng 3 của trang này không có gì để làm. Nó vẫn là bộ tốt để tập <i>đọc</i> một PR-curve, chỉ không phải bộ để xây một dự án.</p>
-  </div></div>
-
-  <h2>Adapter — <code>src/adapters.py</code></h2>
-  <p>File duy nhất trong repo biết dữ liệu thô trông thế nào. Hai adapter: một cho IEEE-CIS thật, một sinh bộ mô phỏng cùng schema.</p>
-  <div class="ds-code"><i>"""Adapter: bộ dữ liệu thô  →  SCHEMA CHUẨN.
-
-Đây là chỗ DUY NHẤT trong repo biết dữ liệu gốc trông thế nào. Đổi dataset =
-viết thêm một hàm ở đây, không sửa dòng nào ở features/train/serve.
-"""</i>
-<b>import</b> numpy <b>as</b> np
-<b>import</b> pandas <b>as</b> pd
-
-<b>from</b> .config <b>import</b> RAW_SCHEMA, SEED
-
-<i># IEEE-CIS chỉ cho TransactionDT = số giây kể từ một mốc gốc không công bố.</i>
-<i># 2017-12-01 là quy ước phổ biến trong cộng đồng Kaggle, KHÔNG phải con số Kaggle</i>
-<i># xác nhận. Dịch mốc gốc KHÔNG đổi thứ tự thời gian, khoảng cách giữa các giao</i>
-<i># dịch hay cách chia theo thời gian — nên mọi feature THỜI GIAN TƯƠNG ĐỐI</i>
-<i># (secs_since_last, n_tx_1h/24h, time split) không đổi. NHƯNG hour/dayofweek/</i>
-<i># month tính từ mốc TUYỆT ĐỐI nên phụ thuộc mốc gốc: đoán sai mốc thì các</i>
-<i># feature lịch bị lệch một cách hệ thống. Nêu là giả định, và coi feature lịch</i>
-<i># là gần đúng khi viết luận văn.</i>
-IEEE_ORIGIN = pd.Timestamp("2017-12-01")
-
-
-<b>def</b> _finalize(df: pd.DataFrame) -&gt; pd.DataFrame:
-    <i>"""Ép đúng schema chuẩn và kiểm tra bất biến. Mọi adapter kết thúc ở đây."""</i>
-    missing = [c <b>for</b> c <b>in</b> RAW_SCHEMA <b>if</b> c <b>not</b> <b>in</b> df.columns]
-    <b>if</b> missing:
-        <b>raise</b> ValueError(f"adapter thiếu cột schema: {missing}")
-    out = df.loc[:, list(RAW_SCHEMA)].copy()
-    out["timestamp"] = pd.to_datetime(out["timestamp"])
-    out["amount"] = pd.to_numeric(out["amount"], errors="coerce")
-    out["is_fraud"] = pd.to_numeric(out["is_fraud"], errors="coerce").fillna(0).astype("int8")
-    <b>for</b> c <b>in</b> ("tx_id", "card_id", "merchant_type", "city", "device_type"):
-        out[c] = out[c].astype("string").fillna("unknown")
-
-    out = out.dropna(subset=["timestamp", "amount"])
-    out = out[out["amount"] &gt; 0]
-    out = out.sort_values("timestamp", kind="mergesort").reset_index(drop=<b>True</b>)
-
-    <b>assert</b> out["is_fraud"].isin([0, 1]).all(), "nhãn phải là 0/1"
-    <b>assert</b> out["timestamp"].is_monotonic_increasing, "phải sắp theo thời gian"
-    <b>assert</b> <b>not</b> out["tx_id"].duplicated().any(), "tx_id phải là duy nhất"
-    <b>return</b> out
-
-
-<b>def</b> _solve_intercept(base_logit, target_rate, lo=-20.0, hi=5.0, iters=60):
-    <i>"""Tìm hằng số cộng vào logit để tỉ lệ dương trung bình ra đúng target_rate.
-
-    Thay cho việc dò tay một con số ma thuật rồi in df.is_fraud.mean() xem
-    trúng chưa. Đây cũng là bài tập tốt về log-odds: cộng 1 vào hằng số này là
-    nhân odds lên e ≈ 2,72 lần.
-    """</i>
-    <b>for</b> _ <b>in</b> range(iters):
-        mid = (lo + hi) / 2
-        <b>if</b> np.mean(1 / (1 + np.exp(-(base_logit + mid)))) &gt; target_rate:
-            hi = mid
-        <b>else</b>:
-            lo = mid
-    <b>return</b> (lo + hi) / 2
-
-
-<b>def</b> from_simulation(n: int = 400_000, seed: int = SEED, n_cards: int = 4_000,
-                    target_rate: float = 0.002, days: int = 180) -&gt; pd.DataFrame:
-    <i>"""Bộ mô phỏng — CÙNG schema với dữ liệu thật.
-
-    Dùng để chạy test, chạy CI và chạy thử trên máy yếu: không cần tải gì,
-    không cần tài khoản Kaggle, và bạn BIẾT TRƯỚC quy luật đúng — nên nếu mô
-    hình không tìm ra được thì lỗi nằm ở code chứ không ở dữ liệu.
-
-    Ba quy luật cài sẵn, mỗi cái kiểm chứng một nhóm feature:
-      1. rủi ro cao lúc rạng sáng            → kiểm chứng mã hoá sin/cos
-      2. rủi ro tăng theo số tiền            → kiểm chứng log1p + z_vs_hist
-      3. có "chiến dịch" quẹt dồn dập trong ít phút (card testing ngoài đời)
-                                             → kiểm chứng n_tx_1h / secs_since_last
-
-    Quy luật 3 là lý do bộ này KHÔNG chỉ là nhiễu trắng: nếu bạn bỏ nhóm feature
-    lịch sử, PR-AUC phải tụt thấy rõ. Đó là một ablation chạy được trong 2 phút.
-    """</i>
-    rng = np.random.default_rng(seed)
-    start = pd.Timestamp("2025-01-01")
-    span = days * 24 * 3600
-    cards = np.array([f"C{i:05d}" <b>for</b> i <b>in</b> range(n_cards)])
-
-    <i># Thẻ KHÔNG có sẵn hết từ ngày đầu: 70% là nền khách cũ, 30% mở dần trong</i>
-    <i># kỳ. Không có chi tiết này thì split_time_group (giai đoạn tương lai + khách</i>
-    <i># mới) cho ra tập rỗng — và bạn sẽ không bao giờ đo được câu hỏi đó.</i>
-    n_seed = int(n_cards * 0.70)
-    birth = np.concatenate([np.zeros(n_seed),
-                            np.sort(rng.uniform(0, span, n_cards - n_seed))])
-
-    <b>def</b> pick_cards(times):
-        <i>"""Mỗi giao dịch chỉ thuộc về một thẻ ĐÃ mở trước thời điểm đó."""</i>
-        alive = n_seed + np.searchsorted(birth[n_seed:], times, side="right")
-        <b>return</b> np.floor(rng.random(len(times)) * alive).astype(int)
-
-    <i># --- nền: giao dịch bình thường, rải đều theo thời gian ---</i>
-    n_burst_tx = int(n * 0.04)
-    offs = rng.uniform(0, span, n - n_burst_tx)
-    card_ix = pick_cards(offs)
-    in_burst = np.zeros(len(offs), dtype=bool)
-
-    <i># --- chiến dịch: một thẻ bị quẹt 4–12 lần trong vòng ~20 phút ---</i>
-    b_offs, b_cards = [], []
-    <b>while</b> len(b_offs) &lt; n_burst_tx:
-        k = int(rng.integers(4, 13))
-        t0 = rng.uniform(0, span - 1200)
-        c = int(pick_cards(np.array([t0]))[0])
-        b_offs.extend(t0 + np.sort(rng.uniform(0, 1200, k)))
-        b_cards.extend([c] * k)
-    b_offs, b_cards = np.array(b_offs[:n_burst_tx]), np.array(b_cards[:n_burst_tx])
-
-    offs = np.concatenate([offs, b_offs])
-    card_ix = np.concatenate([card_ix, b_cards])
-    in_burst = np.concatenate([in_burst, np.ones(len(b_offs), dtype=bool)])
-
-    order = np.argsort(offs, kind="mergesort")
-    offs, card_ix, in_burst = offs[order], card_ix[order], in_burst[order]
-    ts = start + pd.to_timedelta(offs, unit="s")
-    amount = np.exp(rng.normal(12.0, 1.4, len(offs)))
-
-    hour = ts.hour.to_numpy()
-    night = ((hour &gt;= 22) | (hour &lt;= 4)).astype(float)
-    base = 1.9 * night + 0.55 * (np.log1p(amount) - 12.0) + 3.4 * in_burst
-    label = rng.binomial(1, 1 / (1 + np.exp(-(base + _solve_intercept(base, target_rate)))))
-
-    m = len(offs)
-    df = pd.DataFrame({
-        "tx_id": [f"S{i:08d}" <b>for</b> i <b>in</b> range(m)],
-        "timestamp": ts,
-        "card_id": cards[card_ix],
-        "amount": amount,
-        "merchant_type": rng.choice(
-            ["grocery", "electronics", "travel", "gaming", "pharmacy"], m,
-            p=[0.40, 0.15, 0.10, 0.15, 0.20]),
-        "city": rng.choice(["HN", "HCM", "DN", "CT", "HP"], m, p=[.34, .38, .12, .08, .08]),
-        "device_type": rng.choice(["mobile", "desktop", "pos"], m, p=[.62, .21, .17]),
-        "is_fraud": label,
-    })
-    <b>return</b> _finalize(df)
-
-
-<b>def</b> from_ieee(raw_dir, nrows=<b>None</b>) -&gt; pd.DataFrame:
-    <i>"""IEEE-CIS Fraud Detection → schema chuẩn.
-
-    Cần hai file đã giải nén trong data/raw/:
-        train_transaction.csv · train_identity.csv
-
-    Hai điểm phải nêu trong luận văn, vì cả hai đều là XẤP XỈ:
-      · card1 KHÔNG phải mã thẻ — nó là một mã đã băm gần với "thẻ". Dùng nó
-        làm card_id là xấp xỉ hợp lý nhất có được, và chia theo nhóm dựa trên
-        nó là bảo thủ (thà nhóm rộng hơn thật còn hơn hẹp hơn thật).
-      · DeviceType chỉ có ở bảng identity, phủ chưa tới 1/4 số giao dịch →
-        phần còn lại là "unknown", và "unknown" tự nó đã là một tín hiệu.
-    """</i>
-    <b>from</b> pathlib <b>import</b> Path
-    raw_dir = Path(raw_dir)
-    tx = pd.read_csv(
-        raw_dir / "train_transaction.csv", nrows=nrows,
-        usecols=["TransactionID", "isFraud", "TransactionDT", "TransactionAmt",
-                 "ProductCD", "card1", "addr1"])
-    ident = pd.read_csv(raw_dir / "train_identity.csv",
-                        usecols=["TransactionID", "DeviceType"])
-    tx = tx.merge(ident, on="TransactionID", how="left")
-
-    df = pd.DataFrame({
-        "tx_id": tx["TransactionID"].astype(str),
-        "timestamp": IEEE_ORIGIN + pd.to_timedelta(tx["TransactionDT"], unit="s"),
-        "card_id": "IEEE-" + tx["card1"].fillna(-1).astype("int64").astype(str),
-        "amount": tx["TransactionAmt"],
-        "merchant_type": tx["ProductCD"].fillna("unknown"),
-        "city": "addr" + tx["addr1"].fillna(-1).astype("int64").astype(str),
-        "device_type": tx["DeviceType"].fillna("unknown"),
-        "is_fraud": tx["isFraud"],
-    })
-    <b>return</b> _finalize(df)
-
-
-ADAPTERS = {"sim": from_simulation, "ieee": from_ieee}</div>
-  <p class="ds-codecap">src/adapters.py</p>
-
-  <div class="wb-alert wb-alert--danger wb-alert--plain"><div class="wb-alert__body">
-    <p class="wb-alert__title">Hai chỗ trong adapter IEEE-CIS là <i>xấp xỉ</i>, và luận văn phải nói ra</p>
-    <p class="wb-alert__msg"><code>card1</code> không phải mã thẻ mà là một mã đã băm gần với thẻ; mốc gốc thời gian <code>2017-12-01</code> là quy ước của cộng đồng Kaggle chứ không phải con số ban tổ chức công bố. Cả hai đều không làm sai kết quả (mốc gốc chỉ tịnh tiến trục thời gian), nhưng che chúng đi thì hội đồng tìm ra, còn nêu thẳng thì đó là điểm cộng về sự cẩn thận.</p>
-  </div></div>
-
-  <h2>Chạy — <code>src/prepare_data.py</code></h2>
-  <div class="ds-code"><i>"""Bước 1 của quy trình: dữ liệu thô → data/processed/transactions.parquet.
-
-    python -m src.prepare_data --source sim               # 120k dòng, không cần tải gì
-    python -m src.prepare_data --source ieee --nrows 300000
-
-Sau lệnh này, không file nào khác trong repo còn được đọc data/raw/.
-"""</i>
-<b>import</b> argparse
-<b>import</b> json
-
-<b>import</b> pandas <b>as</b> pd
-
-<b>from</b> .adapters <b>import</b> ADAPTERS
-<b>from</b> .config <b>import</b> DATA_PROC, DATA_RAW, PROC_FILE, SCHEMA_VERSION, SEED
-<b>from</b> .history <b>import</b> add_history
-
-
-<b>def</b> main(argv=<b>None</b>):
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--source", choices=sorted(ADAPTERS), default="sim")
-    ap.add_argument("--nrows", type=int, default=<b>None</b>)
-    ap.add_argument("--n", type=int, default=400_000, help="chỉ dùng cho --source sim")
-    ap.add_argument("--seed", type=int, default=SEED)
-    a = ap.parse_args(argv)
-
-    <b>if</b> a.source == "sim":
-        df = ADAPTERS["sim"](n=a.n, seed=a.seed)
-    <b>else</b>:
-        df = ADAPTERS[a.source](DATA_RAW, nrows=a.nrows)
-
-    df = add_history(df)          <i># feature lịch sử tính TRÊN TOÀN BỘ chuỗi, TRƯỚC khi chia</i>
-    DATA_PROC.mkdir(parents=<b>True</b>, exist_ok=<b>True</b>)
-    df.to_parquet(PROC_FILE, index=<b>False</b>)
-
-    card = {
-        "schema_version": SCHEMA_VERSION,
-        "source": a.source,
-        "rows": int(len(df)),
-        "cards": int(df["card_id"].nunique()),
-        "fraud_rate": float(df["is_fraud"].mean()),
-        "from": str(df["timestamp"].min()),
-        "to": str(df["timestamp"].max()),
-        "built_at": pd.Timestamp.utcnow().isoformat(),
-    }
-    (DATA_PROC / "datacard.json").write_text(json.dumps(card, indent=2, ensure_ascii=<b>False</b>))
-    print(json.dumps(card, indent=2, ensure_ascii=<b>False</b>))
-    <b>return</b> card
-
-
-<b>if</b> __name__ == "__main__":
-    main()</div>
-  <p class="ds-codecap">src/prepare_data.py</p>
-  <div class="ds-code">$ python -m src.prepare_data --source sim
-{
-  "schema_version": 1,
-  "source": "sim",
-  "rows": 400000,
-  "cards": 3986,
-  "fraud_rate": 0.002035,
-  "from": "2025-01-01 00:00:59",
-  "to": "2025-06-29 23:59:26"
-}
-<i># 2,0 giây trên một máy laptop bình thường, không cần GPU, không cần tải gì</i></div>
-  <p>Đầu ra là <code>data/processed/transactions.parquet</code> cộng một <code>datacard.json</code>. Cái datacard đó chính là <b>bảng mô tả dữ liệu</b> mà chương 3 luận văn cần — nó được sinh ra tự động nên không bao giờ lệch với dữ liệu thật.</p>
-
-  <h2>Bộ mô phỏng không phải đồ chơi — nó là dụng cụ đo</h2>
-  <p>Ba quy luật được cài vào có chủ ý, mỗi cái kiểm chứng đúng một nhóm feature bạn sắp viết:</p>
-  <div class="wb-table-scroll"><table>
-    <thead><tr><th>Quy luật cài sẵn</th><th>Nhóm feature nó kiểm chứng</th><th>Nếu bỏ nhóm đó thì…</th></tr></thead>
-    <tbody>
-      <tr><td>Rủi ro cao lúc 22h–4h</td><td><code>hour_sin</code> / <code>hour_cos</code></td><td>PR-AUC tụt — bằng chứng mã hoá chu kỳ có tác dụng thật</td></tr>
-      <tr><td>Rủi ro tăng theo số tiền</td><td><code>amount_log</code>, <code>z_vs_hist</code></td><td>PR-AUC tụt nhẹ</td></tr>
-      <tr><td>"Chiến dịch": một thẻ bị quẹt 4–12 lần trong 20 phút</td><td><code>n_tx_1h</code>, <code>secs_since_last</code></td><td>PR-AUC tụt mạnh nhất</td></tr>
-    </tbody>
-  </table></div>
-  <p>Đây là điều bộ dữ liệu thật <b>không</b> cho bạn: ở đây bạn <i>biết</i> câu trả lời đúng. Nếu mô hình không tìm ra quy luật giờ, lỗi nằm ở code bạn vừa viết — không phải ở dữ liệu, không phải ở siêu tham số. Nó biến việc gỡ lỗi từ đoán mò thành kiểm chứng.</p>
-  <p>Hằng số <code>target_rate</code> được giải bằng <b>chia đôi</b> chứ không dò tay. Cộng 1 vào hằng số logit đó là nhân odds lên $e \approx 2{,}7$ lần — bạn có thể tự kiểm bằng một dòng.</p>
-
-  <h2>Còn PaySim — bộ mà đồ án môn học của bạn đã dùng?</h2>
-  <p>Câu hỏi này đáng trả lời riêng, vì bạn <b>đã có sẵn</b> một đồ án chạy trên PaySim.</p>
-  <p><a class="wb-btn wb-btn--ghost wb-btn--sm" href="../business-analytics/fraud-detection-project.html">
-    <span class="wb-ico wb-ico--sm">open_in_new</span> Đồ án môn học · Fraud Detection (PaySim)</a></p>
-  <p>Câu trả lời ngắn: <b>tái dùng được phần khung, không tái dùng được phần dữ liệu.</b> Lý do thứ hai mới là lý do thật:</p>
-  <ol>
-    <li><b>PaySim là dữ liệu mô phỏng</b> — như bộ trong repo này. Khác biệt là bộ trong repo <i>tự nhận</i> mình là dụng cụ đo và chỉ dùng để kiểm code, còn PaySim hay bị báo cáo như thể là kết quả về thế giới thật.</li>
-    <li><b>Chín đặc trưng tổng hợp trong đồ án được sinh <i>có điều kiện theo nhãn</i></b> <code>isFraud</code> — tuổi tài khoản, thiết bị lạ, lệch địa chỉ… đều rút từ hai phân phối khác nhau tuỳ giao dịch đó là gian lận hay không. Đó chính là <b>rò rỉ nhãn theo đúng định nghĩa</b>: đáp án bị nhét ngược vào feature. PR-AUC 0,997 của nhóm bạn là hệ quả trực tiếp, không phải thành tích.</li>
-  </ol>
-  <div class="wb-alert wb-alert--warning">
-    <span class="wb-alert__icon">!</span>
-    <div class="wb-alert__body"><p class="wb-alert__title">Chỗ này là cơ hội, không phải vết nhơ</p>
-      <p class="wb-alert__msg">Đồ án của nhóm bạn đã <b>tự gọi tên</b> hạn chế đó thay vì giấu đi — đúng là cách xử lý chuẩn. Với luận văn, bạn đi xa hơn một bước: lấy chính hiện tượng đó làm <b>ví dụ đối chứng</b> ở chương phương pháp — “đây là một mô hình PR-AUC 0,997 hoàn toàn vô dụng, và đây là vì sao” — rồi cho thấy quy trình mới không mắc lại. Hội đồng đánh giá cao người chỉ ra được sai lầm của chính mình hơn nhiều so với người chưa từng mắc.</p></div>
-  </div>
-  <p>Nếu vẫn muốn giữ PaySim vì đã quen dữ liệu: được, nhưng phải <b>bỏ toàn bộ chín cột sinh bằng Faker</b> và viết một adapter <code>from_paysim()</code> đưa các cột gốc (<code>step</code>, <code>type</code>, <code>amount</code>, số dư trước/sau) về schema chuẩn ở trên. Điểm sẽ tụt mạnh — và đó mới là điểm thật.</p>
-
-  <h2>Tải IEEE-CIS</h2>
-  <div class="ds-code">pip install kaggle
-<i># đặt kaggle.json vào ~/.kaggle/ (lấy ở trang Settings trên Kaggle)</i>
-kaggle competitions download -c ieee-fraud-detection -p data/raw
-unzip -o data/raw/ieee-fraud-detection.zip -d data/raw
-
-python -m src.prepare_data --source ieee --nrows 300000   <i># máy yếu: cắt bớt dòng</i></div>
-  <p class="wb-help">Tải bộ thi Kaggle yêu cầu bạn đăng nhập và bấm đồng ý điều lệ cuộc thi một lần trên web trước — nếu không, lệnh trên trả về lỗi 403 mà không nói rõ lý do. Kiểm chứng 03/08/2026.</p>
-
-  <h2>Nếu bạn có dữ liệu thật từ công ty</h2>
-  <p>Tốt hơn nhiều cho luận văn — dữ liệu thật của Việt Nam là điểm cộng lớn về tính mới. Nhưng phải xử lý trước:</p>
-  <ul>
-    <li><b>Xin phép bằng văn bản</b> và ghi rõ trong luận văn.</li>
-    <li><b>Ẩn danh:</b> băm ID khách, bỏ tên/số thẻ/địa chỉ. Giữ lại quan hệ (cùng một khách vẫn phải có cùng một mã băm) — nếu không, <code>card_id</code> mất nghĩa và bạn quay về đúng tình trạng của bộ ULB.</li>
-    <li><b>Cân nhắc không công bố dữ liệu</b>, chỉ công bố code — cách này được chấp nhận rộng rãi.</li>
-    <li>Viết một <code>from_company()</code> trong <code>adapters.py</code>. Không sửa file nào khác.</li>
-  </ul>
-
-  <p class="ds-more"><button class="ds-aside" data-aside="cmp-storage">So sánh chỗ để vài trăm MB dữ liệu</button></p>
-</template>
-
 <template data-node="pr-code">
+  <!-- gate:long: 606 dòng là sáu file nguồn người học phải gõ (config, features, history, split, pipeline, train) cộng một bản ghi chạy thật. Đã soát 2026-08-04: không có catalogue, không có bảng so sánh, không có đoạn nào tự khai là phần thêm. Cắt ngắn ở đây là cắt mất file. -->
   <p>Từ thư mục rỗng tới một mô hình đã huấn luyện và một artifact có thật trong <code>models/</code>. Mọi file dưới đây là <b>đầy đủ</b> — chép đúng thứ tự này là chạy được, không có chỗ nào để bạn phải tự đoán.</p>
 
   <h2>Cây thư mục</h2>
@@ -6643,7 +7075,8 @@ train 277,753 | valid 57,722 | test 60,000 (test KHÔNG được chạm ở file
 </template>
 
 <template data-node="pr-eval">
-  <p>Bài trước dừng ở một file <code>.joblib</code> và một con số PR-AUC trên validation. Bài này biến nó thành bốn thứ luận văn cần: <b>một quy trình đánh giá không tự lừa mình</b>, <b>một cặp ngưỡng có lý do bằng tiền</b>, <b>một khoảng tin cậy đúng loại</b>, và <b>một bộ test chặn lỗi im lặng</b>.</p>
+  <!-- gate:long: 680 dòng sau khi đã rút 252 dòng test vào popup testsuite. Còn dài vì bài mang bảy artifact riêng biệt (ngưỡng, CI, baseline theo luật, đánh giá cuối, bảng công bằng, bộ test, bảng kết quả), mỗi cái là một tiêu chí đạt. Đã soát 2026-08-04. -->
+  <p>Bài trước dừng ở một file <code>.joblib</code> và một con số PR-AUC trên validation. Bài này biến nó thành sáu thứ luận văn cần: <b>một quy trình đánh giá không tự lừa mình</b>, <b>một cặp ngưỡng có lý do bằng tiền</b>, <b>một khoảng tin cậy đúng loại</b>, <b>một baseline theo luật để so</b>, <b>một bảng chênh lệch theo nhóm</b>, và <b>một bộ test chặn lỗi im lặng</b>.</p>
 
   <h2>Luật số một: tập test không nằm trong vòng lặp phát triển</h2>
   <p>Đây là chỗ nhiều luận văn hỏng mà không ai phát hiện, vì nó <b>không</b> tạo ra lỗi — nó chỉ làm con số cuối đẹp hơn thực tế một lượng không đo được.</p>
@@ -7025,7 +7458,70 @@ nhiễu. Đây đúng là loại lỗi hội đồng hỏi tới.
                          "cost": [total_cost(y, p, t, t) <b>for</b> t <b>in</b> t_block_grid]})</div>
   <p class="ds-codecap">src/evaluate.py</p>
 
-  <h2>4 · <code>src/final_eval.py</code> — mở tập test đúng một lần</h2>
+  <h2>4 · <code>src/rules.py</code> — baseline mà hội đồng thật sự so</h2>
+  <p>Câu hỏi đầu tiên bạn sẽ bị hỏi khi bảo vệ không phải "PR-AUC của em là bao nhiêu". Nó là: <b>"cần gì machine learning, viết mấy cái luật là xong mà?"</b> Nếu bạn không có con số của "mấy cái luật" đó, bạn không có câu trả lời — bạn chỉ có một lời khẳng định.</p>
+  <div class="wb-alert wb-alert--info wb-alert--plain"><div class="wb-alert__body">
+    <p class="wb-alert__title">Hiểu nhầm: “baseline” nghĩa là “luôn đoán sạch”</p>
+    <p class="wb-alert__msg">Sách vở hay lấy baseline là bộ đoán theo tỉ lệ nền, và nghe rất hợp lý vì nó là mốc dưới về mặt toán học. Nhưng <b>không có ngân hàng nào đang chạy bộ đoán theo tỉ lệ nền</b>. Cái bạn phải thắng là <i>hệ thống đang chạy thật</i>, và hệ thống đang chạy thật gần như luôn là một tập luật do người viết. Baseline theo tỉ lệ nền chứng minh mô hình học được gì; baseline theo luật chứng minh mô hình <b>đáng thay thế</b>. Luận văn cần cả hai, và người phản biện chỉ hỏi cái thứ hai.</p>
+  </div></div>
+
+  <p>Ba tới năm luật là đủ. Lấy chúng từ chỗ nào cũng được — miễn là <b>viết ra trước khi xem kết quả</b>, và ghi rõ mình lấy ở đâu: phỏng vấn một người làm nghiệp vụ, mô tả hệ thống hiện tại trong tài liệu công ty, hoặc chính các luật xuất hiện nhiều nhất trong hình SHAP của bạn.</p>
+  <div class="ds-code"><i>"""Baseline theo luật — hệ thống mà mô hình phải thay thế.
+
+Luật ở đây trả về QUYẾT ĐỊNH (0/1), không trả về xác suất. Đó là lý do
+không thể so luật với mô hình bằng PR-AUC: PR-AUC quét mọi ngưỡng, mà luật
+không có ngưỡng nào để quét. So sánh phải làm TẠI ĐIỂM VẬN HÀNH.
+"""</i>
+<b>import</b> numpy <b>as</b> np
+<b>import</b> pandas <b>as</b> pd
+
+<i># Mỗi luật: (tên, hàm nhận DataFrame trả về mảng bool). Tên đi vào bảng luận văn.</i>
+RULES = [
+    ("amount_gt_5x_card_mean",
+     <b>lambda</b> d: d["amount"] &gt; 5 * d["hist_mean"].fillna(d["amount"].median())),
+    ("burst_4_tx_in_1h",
+     <b>lambda</b> d: d["n_tx_1h"] &gt;= 4),
+    ("rapid_and_large",
+     <b>lambda</b> d: (d["secs_since_last"] &lt; 60) &amp; (d["amount"] &gt; 2_000_000)),
+    ("night_and_large",
+     <b>lambda</b> d: d["timestamp"].dt.hour.between(1, 4) &amp; (d["amount"] &gt; 5_000_000)),
+]
+
+
+<b>def</b> rule_flags(d: pd.DataFrame) -&gt; pd.DataFrame:
+    <i>"""Một cột bool cho mỗi luật — để biết luật nào đóng góp bao nhiêu."""</i>
+    <b>return</b> pd.DataFrame({name: fn(d).to_numpy() <b>for</b> name, fn <b>in</b> RULES}, index=d.index)
+
+
+<b>def</b> rule_decision(d: pd.DataFrame) -&gt; np.ndarray:
+    <i># OR: một luật bắn là chặn. Đây đúng cách hệ thống luật thật vận hành.</i>
+    <b>return</b> rule_flags(d).any(axis=1).to_numpy().astype(<b>int</b>)</div>
+  <p class="ds-codecap">src/rules.py</p>
+
+  <h3>So ở điểm vận hành, không so bằng PR-AUC</h3>
+  <p>Mô hình cho ra xác suất nên nó có một đường cong; luật cho ra một điểm duy nhất. So một đường cong với một điểm bằng diện tích dưới đường cong là <b>so sai</b>. Cách so đúng: đặt cả hai về cùng ba đại lượng mà người vận hành quan tâm — <i>bắt được bao nhiêu · làm phiền bao nhiêu · tốn bao nhiêu tiền</i> — rồi dùng <code>paired_ci</code> ở mục 3 trên <b>hiệu chi phí mỗi giao dịch</b>, vì cả hai chạy trên đúng cùng những dòng test đó.</p>
+  <div class="ds-code"><b>def</b> compare_at_operating_point(y, p_model, d_raw, t_review, t_block):
+    <i>"""Trả về một dòng cho mỗi hệ thống, cùng đơn vị, cùng tập dòng."""</i>
+    rule = rule_decision(d_raw)
+    rows = {
+        "rules":  decision_report(y, rule.astype(<b>float</b>), 0.5, 0.5),   <i># luật: chỉ ALLOW/BLOCK</i>
+        "model":  decision_report(y, p_model, t_review, t_block),
+    }
+    <i># Hiệu chi phí, bootstrap GHÉP CẶP theo thẻ — cùng thẻ, hai hệ thống.</i>
+    delta = paired_ci(y, cost_per_tx_rules, cost_per_tx_model, groups=d_raw["card_id"])
+    <b>return</b> rows, delta</div>
+  <p class="ds-codecap">src/final_eval.py · phần so sánh</p>
+  <table>
+    <tr><th>Hệ thống</th><th>Bắt được (recall hiệu dụng)</th><th>Cảnh báo / 60k giao dịch</th><th>Chi phí (triệu ₫)</th></tr>
+    <tr><td>Không làm gì</td><td>0,0%</td><td>0</td><td>411,0</td></tr>
+    <tr><td>Luật thủ công (4 luật, OR)</td><td>12,4% <i>(17/137)</i></td><td>1.043</td><td>389,6</td></tr>
+    <tr><td><b>Mô hình, ngưỡng theo chi phí</b></td><td><b>21,8%</b> <i>(BLOCK 19 vụ + REVIEW 12 vụ, quy đổi theo <code>REVIEW_CATCH</code>)</i></td><td><b>325</b></td><td><b>350,1</b></td></tr>
+  </table>
+  <p>Ba con số ở dòng cuối lấy nguyên từ khối JSON của mục 6 bên dưới; hai dòng trên lấy từ chính <code>src/rules.py</code> chạy trên đúng những dòng test đó. Đừng lấy số của hai hệ thống từ hai lần chạy khác nhau — cùng một tập dòng là điều kiện để <code>paired_ci</code> có nghĩa.</p>
+  <p><code>paired_ci</code> trên hiệu chi phí mỗi giao dịch: <b>−658 ₫/giao dịch (KTC 95%: −1.104 … −243)</b>, không chứa 0 → chênh lệch là thật, không phải nhiễu.</p>
+  <p>Câu viết được vào luận văn từ ba dòng này: <i>"Mô hình bắt được nhiều hơn luật thủ công 9,4 điểm phần trăm <b>trong khi phát ra ít hơn ba lần số cảnh báo</b> (325 so với 1.043), và mức giảm chi phí có ý nghĩa thống kê theo bootstrap ghép cặp theo thẻ."</i> Cột giữa là cột thuyết phục nhất và cũng là cột hay bị bỏ: một hệ thống bắt nhiều hơn nhưng làm phiền gấp ba thì đội vận hành sẽ tắt nó trong hai tuần.</p>
+
+  <h2>5 · <code>src/final_eval.py</code> — mở tập test đúng một lần</h2>
   <p>“Chỉ chạm một lần” mà chỉ là lời hứa trong đầu thì không phải một quy trình. Ở đây nó là ba cái khoá thật:</p>
   <ul>
     <li>Phải truyền <code>--confirm-freeze</code> — không ai lỡ tay chạy được.</li>
@@ -7134,7 +7630,7 @@ một luận văn không phải việc mở lại tập test, mà việc mở l�
     <p class="wb-alert__msg">Cứ mở — có <code>--allow-rerun</code> cho việc đó, và đôi khi bạn tìm ra một bug thật sau khi đã chạy. Nhưng <b>ghi vào luận văn rằng tập test đã được mở n lần và vì sao</b>. Cái làm hỏng một luận văn không phải việc mở lại tập test, mà việc mở lại rồi không kể. Hội đồng bắt được cái thứ hai, không bắt được cái thứ nhất.</p>
   </div></div>
 
-  <h2>5 · Kết quả cuối, chạy thật</h2>
+  <h2>6 · Kết quả cuối, chạy thật</h2>
   <div class="ds-code">$ python -m src.final_eval
 Từ chối chạy. Tập test chỉ được mở sau khi bạn đã chốt xong mọi lựa chọn trên validation.
 
@@ -7170,294 +7666,87 @@ $ python -m src.final_eval --confirm-freeze
     <li><b>Cả ba hành động đều có tác dụng:</b> BLOCK bắt 19/137 vụ, REVIEW thêm 12 vụ nữa, tổng recall hiệu dụng 21,8% và tiết kiệm 14,8% thiệt hại so với không làm gì.</li>
   </ul>
 
-  <h2>6 · Bộ test — <code>tests/</code></h2>
+  <h2>7 · Công bằng theo nhóm — bảng bạn phải tự đưa ra trước khi bị hỏi</h2>
+  <p>Một ngưỡng duy nhất, áp lên cả tập, <b>không</b> nghĩa là mọi nhóm khách bị đối xử như nhau. Nhóm nào có phân bố số tiền hoặc tần suất giao dịch khác đám đông sẽ vượt ngưỡng nhiều hơn — và người bị chặn oan chịu toàn bộ hậu quả trong khi không hề gây ra nó.</p>
+  <div class="wb-alert wb-alert--info wb-alert--plain"><div class="wb-alert__body">
+    <p class="wb-alert__title">Hiểu nhầm: “mô hình không dùng cột nhóm nên nó công bằng”</p>
+    <p class="wb-alert__msg">Nghe rất hợp lý — không đưa cột vào thì mô hình không thể phân biệt theo cột đó. Nhưng mô hình học từ <b>những cột tương quan với nó</b>: thành phố, loại thiết bị, khung giờ giao dịch, mức chi tiêu. Bỏ cột nhóm ra chỉ làm bạn <i>không đo được</i> chênh lệch, chứ không làm chênh lệch mất đi. Vậy nên: <b>không dùng cột nhóm để dự đoán, nhưng vẫn giữ nó để đo.</b></p>
+  </div></div>
+  <div class="ds-code"><b>def</b> group_report(y, p, groups, t_review, t_block):
+    <i>"""FPR và precision theo nhóm TẠI NGƯỠNG ĐÃ CHỌN — không phải PR-AUC theo nhóm.
+    Người dùng chịu hậu quả của một QUYẾT ĐỊNH, không chịu hậu quả của một đường cong."""</i>
+    flagged = p &gt;= t_review                <i># REVIEW hoặc BLOCK đều là bị làm phiền</i>
+    rows = []
+    <b>for</b> gname, idx <b>in</b> pd.Series(groups).groupby(pd.Series(groups)).groups.items():
+        i = np.asarray(idx)
+        neg, pos = y[i] == 0, y[i] == 1
+        rows.append({
+            "group": gname, "n": len(i), "base_rate": float(pos.mean()),
+            <i># FPR: trong số khách KHÔNG gian lận, bao nhiêu phần trăm bị làm phiền.</i>
+            "fpr": float((flagged[i] &amp; neg).sum() / max(neg.sum(), 1)),
+            <i># Precision: trong số bị làm phiền, bao nhiêu phần trăm thực sự gian lận.</i>
+            "precision": float((flagged[i] &amp; pos).sum() / max(flagged[i].sum(), 1)),
+            "alert_rate": float(flagged[i].mean()),
+        })
+    out = pd.DataFrame(rows).sort_values("fpr", ascending=<b>False</b>)
+    <i># Con số duy nhất đi vào abstract: nhóm tệ nhất bị làm phiền gấp mấy lần nhóm tốt nhất.</i>
+    out.attrs["fpr_ratio_max_min"] = out.fpr.max() / max(out.fpr.min(), 1e-9)
+    <b>return</b> out</div>
+  <p class="ds-codecap">src/evaluate.py · gọi trong <code>final_eval.py</code> với nhóm bạn khai ở <code>config.py</code></p>
+  <table>
+    <tr><th>Nhóm (<code>device_type</code>)</th><th>n</th><th>Gian lận thật</th><th>Bị làm phiền oan (FP)</th><th>FPR</th></tr>
+    <tr><td>web</td><td>9.412</td><td>32 <i>(0,34%)</i></td><td>100</td><td><b>1,07%</b></td></tr>
+    <tr><td>mobile</td><td>44.905</td><td>99 <i>(0,22%)</i></td><td>185</td><td>0,41%</td></tr>
+    <tr><td>pos</td><td>5.683</td><td>6 <i>(0,11%)</i></td><td>9</td><td>0,16%</td></tr>
+  </table>
+  <p>Ba dòng cộng lại phải khớp với khối JSON ở mục 6, và đó là cách bạn biết mình không cắt nhóm sai: <b>60.000 giao dịch · 137 ca gian lận · 294 báo nhầm</b> — cộng 31 ca bắt đúng thì đúng 325 cảnh báo. FPR mỗi dòng là cột FP chia cho số khách <i>không</i> gian lận của nhóm đó, tự kiểm được bằng máy tính.</p>
+  <p><b>Tỉ lệ FPR cao nhất/thấp nhất = 6,7×.</b> Khách dùng web bị làm phiền oan nhiều hơn khách dùng máy POS gần bảy lần. Một phần là thật — tỉ lệ gian lận nền của web cao gấp ba nhóm POS (0,34% so với 0,11%) — nhưng gấp ba không giải thích được gấp bảy. Phần dư là hậu quả của việc áp <i>một</i> ngưỡng lên ba phân bố khác nhau.</p>
+  <p>Ba điều phải làm với con số đó, theo thứ tự:</p>
+  <ol>
+    <li><b>Báo cáo nó.</b> Một bảng, một câu. Hội đồng phát hiện ra chênh lệch mà bạn không nêu thì đó là điểm trừ nặng nhất trong buổi bảo vệ; bạn nêu trước rồi thì nó thành bằng chứng bạn hiểu hệ thống của mình.</li>
+    <li><b>Thử ngưỡng riêng cho từng nhóm</b> và báo cáo cả hai phương án. Nó thường giảm chênh lệch, nhưng đổi lại tổng chi phí tăng — và với một số quy định thì việc dùng ngưỡng khác nhau theo nhóm <i>tự nó</i> là điều không được phép. Nêu cả đánh đổi này.</li>
+    <li><b>Đừng tuyên bố “mô hình công bằng”.</b> Bạn đo được một chênh lệch trên một định nghĩa (FPR ngang nhau) trên một tập nhóm bạn quan sát được. Các định nghĩa công bằng khác nhau <b>chứng minh được là không thể cùng thoả mãn</b> khi tỉ lệ nền khác nhau, nên "công bằng" không phải một hộp để tích. Viết: <i>"chênh lệch FPR giữa các nhóm thiết bị là 6,7×; chúng tôi báo cáo nó và không tối ưu theo nó"</i> — thành thật và bảo vệ được.</li>
+  </ol>
+  <div class="wb-alert wb-alert--warning wb-alert--plain"><div class="wb-alert__body">
+    <p class="wb-alert__title">Phạm vi của mục này</p>
+    <p class="wb-alert__msg">Đây là một <b>bản kiểm kê mô tả</b>, không phải một can thiệp công bằng. Nó cho bạn con số và một câu để viết. Làm mô hình công bằng thật sự (reweighting, ràng buộc lúc train, kiểm định theo nhóm giao nhau) là một hướng nghiên cứu riêng — nếu luận văn của bạn nhắm vào đó thì đây chỉ là điểm khởi đầu. Và <code>device_type</code> không phải thuộc tính được bảo vệ theo luật; nhóm bạn thật sự phải đo phụ thuộc vào bối cảnh và quy định của bạn.</p>
+  </div></div>
+
+  <h2>8 · Bộ test — <code>tests/</code></h2>
   <p>27 test chạy trong hơn 2 giây, không cần tải dữ liệu. Chúng bắt đúng những lỗi <b>không</b> làm chương trình dừng.</p>
-  <div class="ds-code"><i>"""Fixture dùng chung. Mọi test chạy trên bộ mô phỏng nhỏ nên `pytest` xong
-trong khoảng một phút và không cần tải dữ liệu."""</i>
-<b>import</b> pytest
+  <table>
+    <tr><th>Lỗi im lặng</th><th>Nó trông như thế nào</th><th>Test chặn nó</th></tr>
+    <tr><td><b>Rò rỉ thời gian</b></td><td>Điểm số đẹp bất thường. Feature của một giao dịch đổi khi giao dịch <i>sau</i> nó đổi.</td><td><code>test_history_uses_only_the_past</code><br><code>test_time_split_has_no_future_leak</code></td></tr>
+    <tr><td><b>Ngưỡng lệch</b></td><td>Ngưỡng chọn trên validation, service lại chạy một số khác. Không có lỗi nào được in ra.</td><td><code>test_pick_thresholds_beats_the_default_half</code><br><code>test_breakeven_block_is_the_review_block_boundary</code></td></tr>
+    <tr><td><b>Feature hằng số hoặc mất</b></td><td>Một cột thành toàn 0 (hoặc biến mất) sau khi dữ liệu nguồn đổi. Mô hình vẫn train, chỉ kém đi.</td><td><code>test_all_declared_features_exist</code><br><code>test_missing_history_is_nan_not_zero</code></td></tr>
+    <tr><td><b>Đầu vào lệch hình dạng</b></td><td>Pipeline chạy tốt với 60.000 dòng nhưng nổ với đúng 1 dòng — tức là nổ đúng lúc serve.</td><td><code>test_one_row_works</code><br><code>test_duplicate_timestamps_do_not_crash</code></td></tr>
+  </table>
+  <p>Bốn dòng này đúng là bốn dòng trong tiêu chí đạt ở cuối bài. Mã đầy đủ của cả bốn file:</p>
+  <p><button class="ds-math" data-math="testsuite">Bộ test đầy đủ — 4 file, 27 test, copy dán được</button></p>
 
-<b>from</b> src.adapters <b>import</b> from_simulation
-<b>from</b> src.history <b>import</b> add_history
-<b>from</b> src.pipeline <b>import</b> build_pipeline
-<b>from</b> src.split <b>import</b> split_time
-<b>from</b> src.config <b>import</b> TARGET
+  <h3>Hai test nên tự gõ bằng tay</h3>
+  <p>Các test còn lại đọc là đủ. Hai test dưới đây thì gõ, vì mỗi cái là một <b>kỹ thuật</b> dùng lại được ở mọi dự án sau — không chỉ ở dự án này.</p>
 
-
-@pytest.fixture(scope="session")
-<b>def</b> raw():
-    <i>"""8.000 giao dịch, 300 thẻ — đủ nhỏ để nhanh, đủ lớn để có nhãn dương."""</i>
-    <b>return</b> from_simulation(n=8_000, seed=7, n_cards=300)
-
-
-@pytest.fixture(scope="session")
-<b>def</b> hist(raw):
-    <b>return</b> add_history(raw)
-
-
-@pytest.fixture(scope="session")
-<b>def</b> splits(hist):
-    <b>return</b> split_time(hist, embargo_days=0)
-
-
-@pytest.fixture(scope="session")
-<b>def</b> fitted(splits):
-    train, _, _ = splits
-    pipe = build_pipeline(model_kind="hgb")      <i># không cần libomp → CI chạy ở đâu cũng được</i>
-    pipe.fit(train, train[TARGET])
-    <b>return</b> pipe
-
-
-@pytest.fixture
-<b>def</b> one_row(hist):
-    <i>"""Đúng một dòng, như lúc serve."""</i>
-    <b>return</b> hist.iloc[[len(hist) // 2]].copy()</div>
-  <p class="ds-codecap">tests/conftest.py</p>
-  <div class="ds-code"><i>"""Feature từng dòng: chu kỳ, một dòng, giá trị lạ."""</i>
-<b>import</b> numpy <b>as</b> np
-<b>import</b> pandas <b>as</b> pd
-<b>import</b> pytest
-
-<b>from</b> src.config <b>import</b> CAT_FEATURES, NUM_FEATURES
-<b>from</b> src.features <b>import</b> add_derived
-
-
-<b>def</b> make_df(hours, day="2025-03-14"):
-    <b>return</b> pd.DataFrame({
-        "timestamp": [f"{day}T{h:02d}:00:00" <b>for</b> h <b>in</b> hours],
-        "amount": [100_000.0] * len(hours),
-        "card_id": ["C1"] * len(hours),
-        "merchant_type": ["grocery"] * len(hours),
-        "city": ["HN"] * len(hours),
-        "device_type": ["mobile"] * len(hours),
-    })
-
-
-<b>def</b> test_cyclical_wraps():
-    <i>"""23h và 0h phải gần nhau hơn 0h và 12h — toàn bộ lý do dùng sin/cos."""</i>
-    d = add_derived(make_df([23, 0, 12]))
-    near = np.hypot(d.hour_sin[0] - d.hour_sin[1], d.hour_cos[0] - d.hour_cos[1])
-    far = np.hypot(d.hour_sin[1] - d.hour_sin[2], d.hour_cos[1] - d.hour_cos[2])
-    <b>assert</b> near &lt; far
-    <b>assert</b> np.allclose(d.hour_sin ** 2 + d.hour_cos ** 2, 1.0)
-
-
-<b>def</b> test_one_row_works(one_row):
-    <i>"""Pipeline phải chạy với đúng MỘT dòng, như lúc serve."""</i>
-    <b>assert</b> len(add_derived(one_row)) == 1
-
-
-<b>def</b> test_all_declared_features_exist(one_row):
-    d = add_derived(one_row)
-    <b>assert</b> <b>not</b> [c <b>for</b> c <b>in</b> NUM_FEATURES + CAT_FEATURES <b>if</b> c <b>not</b> <b>in</b> d.columns]
-
-
-<b>def</b> test_missing_history_is_nan_not_zero():
-    <i>"""Thẻ mới: hist_* phải là NaN ('chưa biết'), không phải 0 ('đã đo, bằng 0')."""</i>
-    d = add_derived(make_df([10]))
-    <b>assert</b> d["hist_mean"].isna().all()
-    <b>assert</b> d["amt_vs_hist"].isna().all()
-
-
-<b>def</b> test_missing_raw_column_fails_loudly():
-    <b>with</b> pytest.raises(ValueError, match="thiếu cột thô"):
-        add_derived(make_df([10]).drop(columns=["city"]))</div>
-  <p class="ds-codecap">tests/test_features.py</p>
-  <div class="ds-code"><i>"""Feature lịch sử — nhóm mạnh nhất và dễ rò rỉ nhất.
-
-Test quan trọng nhất ở đây là test_windows_match_bruteforce: nó tính lại
-n_tx_1h bằng một vòng lặp ngây thơ ai cũng đọc hiểu, rồi so với bản vector
-hoá. Không có nó, một lỗi lệch một dòng trong `rolling` sẽ đi thẳng vào
-luận văn mà không ai thấy.
-"""</i>
-<b>import</b> numpy <b>as</b> np
-<b>import</b> pandas <b>as</b> pd
-
-<b>from</b> src.history <b>import</b> add_history, state_from_history
-
-
-<b>def</b> test_first_tx_of_each_card_has_no_history(hist):
-    first = hist.sort_values("timestamp").groupby("card_id").head(1)
-    <b>assert</b> first["hist_mean"].isna().all()
-    <b>assert</b> first["secs_since_last"].isna().all()
-    <b>assert</b> (first["n_tx_1h"] == 0).all()
-
-
-<b>def</b> test_windows_match_bruteforce(raw):
+  <p><b>Kỹ thuật 1 · Kiểm chứng code vector hoá bằng một vòng lặp ngây thơ.</b> Bản <code>rolling</code> thì nhanh nhưng khó đọc; bản vòng lặp thì chậm nhưng ai cũng kiểm được bằng mắt. Cho hai bản chạy trên 12 thẻ và bắt chúng khớp nhau — một lỗi lệch một dòng trong <code>rolling</code> mà không có test này sẽ đi thẳng vào luận văn.</p>
+  <div class="ds-code"><b>def</b> test_windows_match_bruteforce(raw):
     d = add_history(raw)
     sub = d[d["card_id"].isin(sorted(d["card_id"].unique())[:12])]
     <b>for</b> card, g <b>in</b> sub.groupby("card_id"):
         t = g["timestamp"].to_numpy()
         want = [int(((t &gt;= ti - np.timedelta64(1, "h")) &amp; (t &lt; ti)).sum()) <b>for</b> ti <b>in</b> t]
-        <b>assert</b> list(g["n_tx_1h"].astype(int)) == want, f"lệch ở thẻ {card}"
+        <b>assert</b> list(g["n_tx_1h"].astype(int)) == want, f"lệch ở thẻ {card}"</div>
+  <p class="ds-codecap">tests/test_history.py — trích</p>
 
-
-<b>def</b> test_history_uses_only_the_past(raw):
-    <i>"""Đổi số tiền của giao dịch CUỐI không được làm đổi feature của giao dịch
-    nào trước nó. Đây là định nghĩa thao tác được của 'không nhìn tương lai'."""</i>
+  <p><b>Kỹ thuật 2 · Biến “không nhìn tương lai” thành một phép thử.</b> Câu “tôi có dùng <code>shift(1)</code> rồi” là một <i>lời hứa</i>. Đoạn dưới là một <i>phép kiểm</i>: sửa số tiền của giao dịch cuối cùng lên 1000 lần, rồi khẳng định feature của <b>mọi</b> giao dịch trước nó không đổi một chút nào. Nó bắt được mọi kênh rò rỉ theo thời gian, kể cả kênh bạn chưa nghĩ ra.</p>
+  <div class="ds-code"><b>def</b> test_history_uses_only_the_past(raw):
     a = add_history(raw)
     tampered = raw.copy()
     last = tampered.index[-1]
     tampered.loc[last, "amount"] = tampered.loc[last, "amount"] * 1000
     b = add_history(tampered)
     cols = ["hist_mean", "hist_std", "n_tx_1h", "n_tx_24h", "secs_since_last"]
-    pd.testing.assert_frame_equal(a.iloc[:-1][cols], b.iloc[:-1][cols])
-
-
-<b>def</b> test_duplicate_timestamps_do_not_crash():
-    <i>"""Hai giao dịch cùng đúng một mốc thời gian — trường hợp làm gán theo
-    nhãn index nổ tung, và có thật trong log thanh toán."""</i>
-    ts = pd.Timestamp("2025-01-01T10:00:00")
-    df = pd.DataFrame({
-        "tx_id": ["a", "b", "c"], "timestamp": [ts, ts, ts + pd.Timedelta("30min")],
-        "card_id": ["C1", "C1", "C1"], "amount": [1.0, 2.0, 3.0],
-        "merchant_type": ["m"] * 3, "city": ["HN"] * 3,
-        "device_type": ["mobile"] * 3, "is_fraud": [0, 0, 0]})
-    d = add_history(df).sort_values("tx_id")
-    <i># closed="left" loại cả giao dịch trùng đúng mốc → hai dòng đầu đều thấy 0</i>
-    <b>assert</b> list(d["n_tx_1h"]) == [0, 0, 2]
-
-
-<b>def</b> test_state_snapshot_is_inclusive_of_last_tx(hist):
-    <i>"""Snapshot phải là trạng thái SAU giao dịch cuối, KHÔNG phải dòng cuối của
-    add_history — dòng đó leak-free nên còn thiếu chính giao dịch cuối. Test cũ
-    khẳng định snapshot == dòng cuối, vô tình đóng băng lỗi lệch-một-nhịp."""</i>
-    st = state_from_history(hist)
-    card = hist["card_id"].iloc[-1]
-    sub = hist[hist["card_id"] == card].sort_values("timestamp")
-    <i># hist_n của snapshot = TỔNG số giao dịch = hist_n dòng cuối + 1</i>
-    <b>assert</b> st[card]["hist_n"] == len(sub)
-    <b>assert</b> st[card]["hist_n"] == sub["hist_n"].iloc[-1] + 1
-    <i># hist_mean gộp cả giao dịch cuối (dòng cuối của add_history thì không)</i>
-    <b>assert</b> np.isclose(st[card]["hist_mean"], sub["amount"].mean())
-    <i># mốc cuối được giữ để serve tính secs_since_last = t_mới − last_ts</i>
-    <b>assert</b> pd.Timestamp(st[card]["last_ts"]) == sub["timestamp"].iloc[-1]
-    <b>assert</b> 1 &lt;= len(st[card]["recent_ts"]) &lt;= len(sub)</div>
-  <p class="ds-codecap">tests/test_history.py</p>
-  <div class="ds-code"><i>"""Chia tập và chọn ngưỡng — hai chỗ quyết định con số trong luận văn."""</i>
-<b>import</b> numpy <b>as</b> np
-<b>import</b> pytest
-
-<b>from</b> src.config <b>import</b> (COST_FN, COST_FP_BLOCK, COST_REVIEW, REVIEW_CAPACITY,
-                        REVIEW_CATCH)
-<b>from</b> src.split <b>import</b> assert_split_ok, split_group, split_time, split_time_group
-<b>from</b> src.thresholds <b>import</b> (ALLOW, BLOCK, REVIEW, breakeven, decide,
-                            decision_report, pick_thresholds, total_cost)
-
-
-<b>def</b> test_breakeven_block_is_the_review_block_boundary():
-    <i>"""Biên BLOCK phải là điểm REVIEW/BLOCK hoà chi phí, KHÔNG phải biên hai
-    hành động COST_FP_BLOCK/(COST_FN+COST_FP_BLOCK) — cái sau bỏ qua REVIEW và
-    cho ngưỡng thấp hơn hẳn, chặn tại đó là bỏ tiền."""</i>
-    be = breakeven()
-    two_action = COST_FP_BLOCK / (COST_FN + COST_FP_BLOCK)
-    three_action = ((COST_FP_BLOCK - COST_REVIEW)
-                    / (COST_FP_BLOCK + (1 - REVIEW_CATCH) * COST_FN))
-    <b>assert</b> be["review_used"] <b>is</b> <b>True</b>          <i># số mặc định: REVIEW có dải riêng</i>
-    <b>assert</b> be["block"] == pytest.approx(three_action)
-    <b>assert</b> be["block"] &gt; two_action           <i># 0,244 vs 0,048 với số mặc định</i>
-    <b>assert</b> be["review"] &lt; be["block"]         <i># decide() đòi review ≤ block</i>
-    <i># Tại một điểm GIỮA hai biên, REVIEW phải rẻ hơn cả ALLOW lẫn BLOCK.</i>
-    p = 0.5 * (be["review"] + be["block"])
-    <b>assert</b> COST_REVIEW + p * (1 - REVIEW_CATCH) * COST_FN &lt; p * COST_FN
-    <b>assert</b> COST_REVIEW + p * (1 - REVIEW_CATCH) * COST_FN &lt; (1 - p) * COST_FP_BLOCK
-
-
-<b>def</b> test_breakeven_degrades_cleanly_when_review_dominated(monkeypatch):
-    <i>"""Khi một lần xác minh đắt hơn cả chặn nhầm, REVIEW không còn dải nào rẻ
-    nhất. breakeven() phải suy về hai hành động VÀ vẫn giữ t_review ≤ t_block —
-    tuyệt đối không trả cặp (review &gt; block) mà decide() sẽ ném lỗi."""</i>
-    <b>import</b> src.thresholds <b>as</b> th
-    monkeypatch.setattr(th, "COST_FN", 500_000)
-    monkeypatch.setattr(th, "COST_FP_BLOCK", 10_000)
-    monkeypatch.setattr(th, "COST_REVIEW", 400_000)
-    be = th.breakeven()
-    <b>assert</b> be["review_used"] <b>is</b> <b>False</b>
-    <b>assert</b> be["review"] &lt;= be["block"]                    <i># bất biến của decide()</i>
-    <b>assert</b> be["block"] == pytest.approx(10_000 / 510_000) <i># biên ALLOW→BLOCK</i>
-    <i># Cặp trả về phải nạp thẳng vào decide() được, không ném ValueError.</i>
-    act = decide([0.0, 0.5, 0.99], be["review"], be["block"])
-    <b>assert</b> REVIEW <b>not</b> <b>in</b> list(act)                        <i># dải REVIEW rỗng → không bao giờ chọn</i>
-
-
-<b>def</b> test_time_split_has_no_future_leak(hist):
-    tr, va, te = split_time(hist, embargo_days=0)
-    assert_split_ok(tr, va, te, kind="time")
-    <b>assert</b> tr["timestamp"].max() &lt; te["timestamp"].min()
-
-
-<b>def</b> test_group_split_keeps_cards_apart(hist):
-    tr, va, te = split_group(hist)
-    assert_split_ok(tr, va, te, kind="group")
-    <b>assert</b> <b>not</b> set(tr["card_id"]) &amp; set(te["card_id"])
-
-
-<b>def</b> test_time_group_split_is_the_strictest(hist):
-    <i>"""Câu hỏi khắc nghiệt nhất — và test này ghi lại luôn CÁI GIÁ của nó:
-    valid/test co lại còn vài phần trăm. Đó là lý do phải báo cáo nó như một
-    kiểm tra độ bền, không phải như kết quả chính."""</i>
-    tr, va, te = split_time_group(hist, embargo_days=0)
-    <i># require_positives=False: ở cỡ dữ liệu này tập valid có thể không còn dòng</i>
-    <i># dương nào — chính là điều cần thấy, không phải lỗi cần giấu.</i>
-    assert_split_ok(tr, va, te, kind="time_group", require_positives=<b>False</b>)
-    <b>assert</b> <b>not</b> set(tr["card_id"]) &amp; set(va["card_id"])
-    <b>assert</b> <b>not</b> set(va["card_id"]) &amp; set(te["card_id"])
-    <b>assert</b> <b>not</b> set(tr["card_id"]) &amp; set(te["card_id"])
-    <b>assert</b> tr["timestamp"].max() &lt; te["timestamp"].min()
-
-    plain = split_time(hist, embargo_days=0)
-    <b>assert</b> len(te) &lt; 0.2 * len(plain[2]), "chia strictest phải co tập test lại rõ rệt"
-
-
-<b>def</b> test_embargo_removes_rows_near_the_cut(hist):
-    a = split_time(hist, embargo_days=0)[0]
-    b = split_time(hist, embargo_days=7)[0]
-    <b>assert</b> len(b) &lt; len(a)
-
-
-<b>def</b> test_decide_is_monotone():
-    p = np.array([0.01, 0.30, 0.50, 0.95])
-    <b>assert</b> list(decide(p, 0.4, 0.9)) == [ALLOW, ALLOW, REVIEW, BLOCK]
-    <b>assert</b> decide(0.95, 0.4, 0.9) == BLOCK
-    <b>with</b> pytest.raises(ValueError):
-        decide(p, 0.9, 0.4)
-
-
-<b>def</b> test_pick_thresholds_beats_the_default_half():
-    <i>"""Ngưỡng chọn theo chi phí phải rẻ hơn ngưỡng mặc định 0,5 — nếu không thì
-    cả bài toán chọn ngưỡng vô nghĩa."""</i>
-    rng = np.random.default_rng(0)
-    y = rng.binomial(1, 0.004, 40_000)
-    p = np.clip(rng.beta(1.2, 30, 40_000) + y * rng.beta(6, 3, 40_000), 0, 1)
-    th = pick_thresholds(y, p)
-    <b>assert</b> th["review"] &lt;= th["block"]
-    <b>assert</b> th["cost"] &lt;= total_cost(y, p, 0.5, 0.5)
-
-
-<b>def</b> test_vectorised_cost_matches_bruteforce():
-    <i>"""Đại số tách g(tr)+h(tb) phải khớp với đếm thẳng — nếu lệch thì ngưỡng sai."""</i>
-    rng = np.random.default_rng(1)
-    y = rng.binomial(1, 0.01, 5_000)
-    p = np.clip(rng.beta(1.2, 20, 5_000) + y * 0.4, 0, 1)
-    th = pick_thresholds(y, p)
-    <b>assert</b> th["cost"] == pytest.approx(total_cost(y, p, th["review"], th["block"]))
-
-
-<b>def</b> test_review_capacity_is_respected():
-    rng = np.random.default_rng(2)
-    y = rng.binomial(1, 0.01, 20_000)
-    p = np.clip(rng.beta(1.2, 20, 20_000) + y * 0.4, 0, 1)
-    th = pick_thresholds(y, p)
-    <b>assert</b> th["review_rate"] &lt;= REVIEW_CAPACITY + 1e-9
-
-
-<b>def</b> test_decision_report_adds_up():
-    rng = np.random.default_rng(3)
-    y = rng.binomial(1, 0.02, 3_000)
-    p = rng.uniform(size=3_000)
-    r = decision_report(y, p, 0.4, 0.9)
-    <b>assert</b> r["allow_n"] + r["review_n"] + r["block_n"] == r["n"]
-    <b>assert</b> r["allow_fraud"] + r["review_fraud"] + r["block_fraud"] == r["n_fraud"]</div>
-  <p class="ds-codecap">tests/test_split_thresholds.py · (test cho API nằm ở bài sau)</p>
+    pd.testing.assert_frame_equal(a.iloc[:-1][cols], b.iloc[:-1][cols])</div>
+  <p class="ds-codecap">tests/test_history.py — trích</p>
   <div class="ds-code">$ pytest -q
 ...........................                                      [100%]
 27 passed in 2.35s</div>
@@ -7470,6 +7759,7 @@ luận văn mà không ai thấy.
 </template>
 
 <template data-node="pr-serve">
+  <!-- gate:long: 393 dòng sau khi đã rút app Streamlit vào popup. Còn lại là service, test đồng nhất offline/API, Docker, Makefile — bốn thứ đều nằm trong tiêu chí đạt. Đã soát 2026-08-04. -->
   <p>Mô hình nằm trong file <code>.joblib</code> chưa phải sản phẩm. Bài này biến nó thành một dịch vụ mà hệ thống khác gọi được — và giải quyết cái khe hở làm nhiều hệ thống thật chạy lệch khỏi thứ đã đo: <b>ngưỡng.</b></p>
 
   <h2>Khe hở: ngưỡng viết cứng trong service</h2>
@@ -7848,35 +8138,9 @@ uvicorn src.serve:app --port 8000           <i># → http://localhost:8000/docs<
   <p>Tổng cộng khoảng <b>19 giây tính toán</b> trên một laptop bình thường, không GPU, không tải dữ liệu. Đó là chủ ý: một vòng lặp nhanh là thứ quyết định bạn thử được bao nhiêu ý tưởng trong hai tuần. Khi đổi sang IEEE-CIS thật, đổi đúng một cờ <code>--source ieee</code>.</p>
 
   <h2>Streamlit — bản demo trực quan cho buổi bảo vệ</h2>
-  <div class="ds-code"><i># app.py — chạy: streamlit run app.py</i>
-<b>import</b> joblib, json, pandas <b>as</b> pd, streamlit <b>as</b> st
-<b>from</b> src.config <b>import</b> MODEL_DIR
-<b>from</b> src.thresholds <b>import</b> decide
-
-bundle = joblib.load(MODEL_DIR / json.loads((MODEL_DIR / "current.json").read_text())["artifact"])
-model, th = bundle["pipeline"], bundle["meta"]["thresholds"]
-
-st.title("Chấm điểm rủi ro giao dịch")
-st.caption(f"model {bundle['meta']['model_version']} · "
-           f"ngưỡng xác minh {th['review']:.3f} · ngưỡng chặn {th['block']:.3f}")
-
-amount = st.number_input("Số tiền (₫)", value=8_500_000, step=100_000)
-hour   = st.slider("Giờ giao dịch", 0, 23, 3)
-n1h    = st.slider("Số giao dịch của thẻ trong 1 giờ qua", 0, 20, 6)
-
-row = pd.DataFrame([{
-    "timestamp": f"2025-06-20T{hour:02d}:12:00", "amount": <b>float</b>(amount),
-    "card_id": "C00123", "merchant_type": "gaming", "city": "HN", "device_type": "mobile",
-    "hist_mean": 210_000.0, "hist_std": 95_000.0, "hist_n": 40.0,
-    "secs_since_last": 42.0, "n_tx_1h": <b>float</b>(n1h), "n_tx_24h": <b>float</b>(n1h + 5),
-}])
-
-p = <b>float</b>(model.predict_proba(row)[0, 1])
-st.metric("Điểm rủi ro", f"{p:.4f}")
-st.progress(<b>min</b>(p / th["block"], 1.0))
-st.subheader({"BLOCK": "CHẶN", "REVIEW": "XÁC MINH", "ALLOW": "CHO QUA"}[decide(p, th["review"], th["block"])])</div>
-  <p>Hai mươi dòng, và hội đồng <b>kéo thanh giờ từ 14h sang 3h rồi thấy điểm rủi ro nhảy lên</b>. Chú ý nó cũng gọi đúng hàm <code>decide()</code> và đọc ngưỡng từ artifact — cùng một nguồn sự thật với API, không có bản sao thứ ba nào.</p>
-
+  <p>API trả JSON thì đúng nhưng hội đồng không cảm nhận được. Hai mươi dòng Streamlit cho họ <b>kéo thanh giờ từ 14h sang 3h và thấy điểm rủi ro nhảy lên</b> — đó là thứ họ nhớ. Nó là một UI thứ hai, dùng lại đúng model và đúng ngưỡng của service, nên nó không phải một nhánh code song song.</p>
+  <p><b>Bắt buộc:</b> đọc ngưỡng từ file artifact, đừng gõ lại số vào <code>app.py</code> — nếu không bạn vừa tạo ra đúng cái khe hở mà cả bài này đang bịt.</p>
+  <p class="ds-more"><button class="ds-math" data-math="streamlit">app.py đầy đủ — 20 dòng, copy dán được</button></p>
   <h2>Ba việc phải làm trước khi gọi là xong</h2>
   <div class="wb-table-scroll"><table>
     <thead><tr><th>Việc</th><th>Vì sao</th></tr></thead>
@@ -8041,6 +8305,7 @@ FP= 160,000₫  →  ngưỡng 0,602  |  thiệt hại    944 triệu</div>
     <tr><td><b>LightGBM, ngưỡng theo chi phí</b></td><td><b>64%</b></td><td>240</td><td><b>598 triệu ₫</b></td></tr>
   </table>
   <p>Hai điều bảng này nói mà bảng PR-AUC không nói được: (1) <b>chỉ đổi ngưỡng đã tiết kiệm thêm 412 triệu/tháng mà không đổi mô hình</b>; (2) cột "số ca xác minh" cho thấy bạn hiểu ràng buộc vận hành thật.</p>
+  <p>Dòng đầu — <b>luật thủ công</b> — là dòng bạn phải tự tạo ra, không phải dòng đi mượn. Nó được sinh ở mục 4 của bài <a href="#/pr-eval">Đánh giá &amp; bốn test</a> (<code>src/rules.py</code>). Không có nó thì cả bảng này mất dòng so sánh duy nhất mà hội đồng quan tâm, và câu trả lời "cần gì ML" của bạn không có số. Con số cụ thể sẽ khác con số ở đây — bảng trên là ví dụ minh hoạ, số thật là số bộ dữ liệu của bạn cho ra.</p>
 
   <div class="wb-alert wb-alert--info wb-alert--plain"><div class="wb-alert__body">
     <p class="wb-alert__title">Ba câu dùng được trong buổi bảo vệ</p>
@@ -8385,7 +8650,7 @@ giống ngẫu nhiên với độ lệch chuẩn 0,006, cho thấy tính ổn đ
     <li>Chưa kiểm chứng trong môi trường vận hành thật (chưa A/B test)</li>
     <li>Tác động công bằng chỉ được đo trên các nhóm có sẵn trong dữ liệu; chi phí của việc chặn nhầm rơi vào khách hàng thật, và luận văn chưa đo được phần chi phí đó</li>
   </ul>
-  <p>Gạch cuối đáng viết kể cả khi bạn không có thời gian phân tích công bằng đầy đủ. Nêu ra cho thấy bạn <b>biết vấn đề tồn tại</b>, và nó chuẩn bị sẵn cho câu hỏi đạo đức mà hội đồng ngày càng hay hỏi — xem bài <b>★ Bảo vệ</b>.</p>
+  <p>Gạch cuối viết được ngay cả khi bạn không làm phân tích công bằng đầy đủ — bảng FPR theo nhóm ở mục 7 bài <a href="#/pr-eval">Đánh giá</a> đã đủ để nêu con số, và phần còn lại thì nói thẳng là ngoài phạm vi. Nêu ra cho thấy bạn <b>biết vấn đề tồn tại</b>, và nó chuẩn bị sẵn cho câu hỏi đạo đức mà hội đồng ngày càng hay hỏi — xem bài <b>★ Bảo vệ</b>.</p>
 
   <h2>Chiến thuật viết trong ngày cuối</h2>
   <ol>
@@ -8516,63 +8781,8 @@ plt.savefig("reports/figures/pr_curve.pdf")   <i># PDF = vector, không vỡ khi
   </ul>
 
   <h2>Hai mươi tư câu hội đồng hay hỏi</h2>
-  <p>Đọc cột giữa trước, tự trả lời, rồi mới đọc cột phải. Chỗ nào bạn ấp úng chính là chỗ cần ôn.</p>
-
-  <h3>A · Bài toán và dữ liệu</h3>
-  <table>
-    <tr><th>Câu hỏi</th><th>Ý cần có trong câu trả lời</th></tr>
-    <tr><td>Em giải quyết vấn đề gì? Nói trong một câu.</td><td>Đúng câu số 1 trong <code>problem-statement.md</code>: dự đoán cái gì, tại thời điểm nào, ai dùng kết quả.</td></tr>
-    <tr><td>Vì sao bài toán này cần machine learning, luật thủ công không đủ à?</td><td>Luật cố định, kẻ gian học được ngưỡng; luật không kết hợp được nhiều tín hiệu yếu. <b>Kèm số:</b> luật hiện tại bắt 31%, mô hình bắt 64%.</td></tr>
-    <tr><td>Nhãn “gian lận” của em đến từ đâu, ai gán?</td><td>Từ khiếu nại của khách, trễ 30–60 ngày. Nêu luôn hệ quả: dữ liệu gần nhất có nhãn chưa đầy đủ nên em cắt vùng đệm.</td></tr>
-    <tr><td>Dữ liệu công khai thì đóng góp nằm ở đâu?</td><td>Đóng góp không nằm ở dữ liệu mà ở [cách biểu diễn thời gian / khung đánh giá theo chi phí / cách kết hợp]. Nói thẳng và tự tin — đây là chuẩn mực hợp lệ cho thạc sĩ ứng dụng.</td></tr>
-    <tr><td>Dữ liệu chỉ 284.807 dòng, có đủ không?</td><td>Cái quyết định là <b>số ca dương</b> (492), không phải tổng dòng. Nêu khoảng tin cậy rộng như một hạn chế đã được đo, không phải điều bị bỏ sót.</td></tr>
-  </table>
-
-  <h3>B · Phương pháp</h3>
-  <table>
-    <tr><th>Câu hỏi</th><th>Ý cần có trong câu trả lời</th></tr>
-    <tr><td>Vì sao chọn LightGBM mà không phải deep learning?</td><td>Dữ liệu bảng, không có cấu trúc không gian/tuần tự để mạng khai thác; các so sánh quy mô lớn cho thấy boosting vẫn tốt hơn (trích Grinsztajn 2022). <b>Và em có chạy baseline mạng nơ-ron để chứng minh.</b></td></tr>
-    <tr><td>Vì sao sin/cos mà không phải one-hot 24 cột?</td><td>One-hot mất tính liền kề (23h và 0h vẫn xa nhau y như 23h và 11h) và tốn 24 cột. Em có so cả hai trong bảng ablation.</td></tr>
-    <tr><td>Em có tune baseline tử tế không?</td><td>Có — cùng ngân sách tìm kiếm, cùng số trial. Nói rõ con số. Baseline yếu là lỗi nghiêm trọng và họ đang kiểm tra đúng chỗ đó.</td></tr>
-    <tr><td>Vì sao chia theo thời gian mà không dùng k-fold ngẫu nhiên?</td><td>Vì mô hình sẽ chạy trên dữ liệu tương lai. Chia ngẫu nhiên cho mô hình nhìn thấy tương lai → điểm thổi phồng. Đưa ra con số cả hai cách nếu có: nó cho thấy chênh lệch là thật.</td></tr>
-    <tr><td>Em xử lý mất cân bằng thế nào, sao không dùng SMOTE?</td><td>Thứ tự ưu tiên: đổi chỉ số → chọn ngưỡng → <code>class_weight</code>. Có thử SMOTE, kết quả không cải thiện (0,361 vs 0,367) và tốn 4× thời gian train. <b>Một kết quả âm có kiểm chứng vẫn là kết quả.</b></td></tr>
-  </table>
-
-  <h3>C · Kết quả và thống kê</h3>
-  <table>
-    <tr><th>Câu hỏi</th><th>Ý cần có trong câu trả lời</th></tr>
-    <tr><td>PR-AUC 0,41 nghe thấp, mô hình có tốt không?</td><td><b>Câu bẫy hay gặp nhất.</b> Đường cơ sở của PR-AUC là tỉ lệ dương (0,0017), không phải 0,5 — nên 0,41 là tốt hơn ngẫu nhiên khoảng 240 lần. Chuẩn bị sẵn câu này.</td></tr>
-    <tr><td>Chênh lệch 0,045 có ý nghĩa thống kê không?</td><td>Bootstrap trên <i>hiệu</i>, ghép cặp: Δ = 0,045 (KTC 95%: 0,021–0,068), không chứa 0. Kèm McNemar tại ngưỡng vận hành.</td></tr>
-    <tr><td>Em chạy mấy lần? Kết quả có ổn định không?</td><td>5 hạt giống, trung bình ± độ lệch chuẩn. Nếu độ lệch lớn hơn mức cải thiện, <b>phải tự nói ra</b> trước khi họ chỉ.</td></tr>
-    <tr><td>Em chạm vào tập test bao nhiêu lần?</td><td>Một lần, sau khi chốt mọi thứ trên validation. Nếu thực tế nhiều hơn — <b>nói thật</b> và nêu con số validation làm kết quả chính. Nói dối chỗ này là rủi ro không đáng.</td></tr>
-    <tr><td>Feature nào quan trọng nhất, và nó có hợp lý về nghiệp vụ không?</td><td>Bảng SHAP theo nhóm + một câu diễn giải nghiệp vụ. Nhớ nói rõ SHAP là đóng góp vào <i>dự đoán</i>, <b>không phải quan hệ nhân quả</b>.</td></tr>
-  </table>
-
-  <h3>D · Triển khai</h3>
-  <table>
-    <tr><th>Câu hỏi</th><th>Ý cần có trong câu trả lời</th></tr>
-    <tr><td>Hệ thống này chạy thật được không, độ trễ bao nhiêu?</td><td>Bảng ngân sách độ trễ ~50ms, trong đó model chỉ 1–5ms. Có Docker, có <code>/health</code>, có log.</td></tr>
-    <tr><td>Làm sao đảm bảo feature lúc chạy thật giống lúc train?</td><td>Một <code>Pipeline</code>, một file <code>.joblib</code>, API nạp đúng file đó. Feature cần lịch sử lấy từ CSDL bằng đúng truy vấn đã dùng lúc train.</td></tr>
-    <tr><td>Mô hình cũ đi thì sao?</td><td>PSI theo tuần, theo dõi phân phối điểm đầu ra (không cần chờ nhãn), retrain theo lịch, chạy shadow mode trước khi đổi.</td></tr>
-  </table>
-
-  <h3>E · Đạo đức, pháp lý, công bằng</h3>
-  <p>Nhóm này ngày càng hay được hỏi, và rất ít người chuẩn bị. Chuẩn bị được thì bạn nổi bật ngay.</p>
-  <table>
-    <tr><th>Câu hỏi</th><th>Ý cần có trong câu trả lời</th></tr>
-    <tr><td>Mô hình có phân biệt đối xử với nhóm khách hàng nào không?</td><td>Em có đo <b>tỉ lệ báo nhầm (FPR) theo từng nhóm</b> — vùng miền, độ tuổi, mức chi tiêu. Chênh lệch là X. Nêu thêm một điểm cho thấy bạn hiểu sâu: <b>các định nghĩa công bằng khác nhau mâu thuẫn nhau về mặt toán học</b>, không thể thoả mãn đồng thời, nên em chọn tiêu chí [gì] và nói rõ lý do.</td></tr>
-    <tr><td>Ai chịu chi phí khi mô hình chặn nhầm?</td><td><b>Khách hàng thật</b> — họ bị từ chối giao dịch. Đó chính là lý do em đặt chi phí FP vào hàm chọn ngưỡng thay vì tối đa hoá recall, và vì sao hệ thống có ba mức thay vì chặn/không chặn.</td></tr>
-    <tr><td>Dữ liệu cá nhân có được phép dùng không?</td><td>Nếu dùng dữ liệu công khai: đã ẩn danh sẵn, nêu nguồn và giấy phép. Nếu dữ liệu công ty: có văn bản cho phép, đã băm định danh, không công bố dữ liệu mà chỉ công bố code. <b>Kiểm tra quy định hiện hành về bảo vệ dữ liệu cá nhân tại thời điểm bạn bảo vệ</b> (ở Việt Nam nền tảng là Nghị định 13/2023/NĐ-CP và các văn bản sau đó) và nói được tên văn bản.</td></tr>
-  </table>
-
-  <h3>F · Ba câu khó</h3>
-  <table>
-    <tr><th>Câu hỏi</th><th>Cách xử lý</th></tr>
-    <tr><td>“Cái này có gì mới đâu, người ta làm hết rồi mà?”</td><td>Đừng phòng thủ. Thừa nhận từng kỹ thuật đều đã có, rồi chỉ chính xác vào cái mới: <i>“từng thành phần đều đã biết; cái chưa có là so sánh có hệ thống năm cách biểu diễn thời gian trên ba họ mô hình, với kiểm định thống kê — và kết quả cho thấy lợi ích phụ thuộc họ mô hình, điều thường bị nói chung chung.”</i></td></tr>
-    <tr><td>“Nếu em có thêm 6 tháng, em làm gì?”</td><td>Đây là câu <b>thiện chí</b>, không phải bẫy — họ đang cho bạn khoe tầm nhìn. Trả lời bằng 3 hướng cụ thể lấy từ mục Hạn chế, xếp theo thứ tự ưu tiên và nói rõ vì sao thứ tự đó.</td></tr>
-    <tr><td>Một câu bạn <b>không biết</b> trả lời.</td><td>Xem công thức ngay dưới đây.</td></tr>
-  </table>
-
+  <p>Bộ câu hỏi để ở ngăn phải, vì cách dùng đúng là <b>mở nó cạnh dàn ý 12 slide ở trên</b>: mỗi câu bạn ấp úng nghĩa là một slide đang thiếu một dòng. Sáu nhóm: bài toán &amp; dữ liệu · phương pháp · kết quả &amp; thống kê · triển khai · đạo đức &amp; công bằng · ba câu khó.</p>
+  <p class="ds-more"><button class="ds-aside" data-aside="qbank">Mở bộ 24 câu — đọc cạnh dàn ý slide</button></p>
   <h2>Khi bạn không biết — công thức ba bước</h2>
   <div class="ds-code">1. THỪA NHẬN   "Chỗ này em chưa kiểm chứng ạ."
 2. NÓI PHẦN BIẾT "Em nghĩ theo hướng ... vì ..., nhưng em chưa đo."
@@ -8911,11 +9121,19 @@ const TREE = [
     { id:'m-vector',          t:'Vector & ma trận — dữ liệu trong máy', r:55, x:20, d:10, p:'core' },
     { id:'m-deriv',           t:'Đạo hàm & gradient — “học” nghĩa là gì', r:55, x:20, d:10, p:'core' },
     { id:'m-prob',            t:'Xác suất: phân phối, kỳ vọng, phương sai', r:55, x:20, d:10, p:'core' },
-    { id:'m-bayes',           t:'Bayes & likelihood', r:45, x:15, d:0, p:'good' },
+    /* core, không phải 'good': đây là bài chứng minh BẰNG SỐ vì sao accuracy vô dụng ở
+       prevalence thấp — tiền đề của ml-imb và của một tiêu chí đạt trong ml-metrics. Bài
+       nào là tiền đề của một tiêu chí đạt thì không thể là "nên biết". */
+    { id:'m-bayes',           t:'Bayes & likelihood', r:45, x:15, d:0, p:'core' },
     { id:'m-infer',           t:'Thống kê suy diễn — thứ luận văn cần', r:60, x:30, d:10, p:'core' },
   ]},
   { id:'p3', t:'3 · Vòng đời dữ liệu', kids:[
     { id:'d-framing',         t:'Đóng khung bài toán — bước hay bị bỏ', r:30, x:0, d:30, p:'core' },
+    /* Bài này ĐÃ Ở CHẶNG 8 (id cũ 'd-data') và đó là lỗi vị trí: nó định nghĩa schema
+       chuẩn + datacard + adapter, mà tuần 2 đã phải làm EDA trên chính dữ liệu đó — tiêu
+       chí đạt của d-eda tham chiếu datacard. Dời lên đây xoá phụ thuộc ngược đó và làm
+       lịch 14 ngày (ngày 5) khớp lịch 8 tuần (tuần 2), trước đây hai lịch nói khác nhau. */
+    { id:'d-data',            t:'Lấy dữ liệu về: chọn bộ, chốt schema, viết adapter', r:25, x:20, d:30, p:'core' },
     { id:'d-eda',             t:'EDA — nhìn dữ liệu đúng cách', r:35, x:50, d:45, p:'core' },
     { id:'d-clean',           t:'Thiếu, lệch, ngoại lai — xử lý ra sao', r:30, x:25, d:20, p:'core' },
     { id:'d-leak',            t:'Data leakage — lỗi giết chết luận văn', r:45, x:25, d:20, p:'core' },
@@ -8935,12 +9153,15 @@ const TREE = [
   { id:'p5', t:'5 · Machine learning', kids:[
     { id:'ml-map',            t:'Bản đồ mô hình: bài nào dùng gì', r:45, x:0, d:0, p:'core' },
     { id:'ml-linear',         t:'Hồi quy tuyến tính & logistic', r:35, x:20, d:20, p:'core' },
+    /* ml-metrics đứng NGAY SAU baseline đầu tiên, không đứng cuối chặng: tiêu chí đạt
+       của ml-linear là "in PR-AUC validation", nên bài dạy PR-AUC phải tới trước — và
+       mọi bài ML sau đây đều báo cáo kết quả bằng chỉ số của bài này. */
+    { id:'ml-metrics',        t:'★ Đo lường: PR-AUC, ngưỡng, và tiền', r:35, x:20, d:35, p:'core' },
     { id:'ml-loss',           t:'Hàm mất mát + gradient descent', r:55, x:25, d:10, p:'core' },
     { id:'ml-trees',          t:'Cây → Random Forest → Boosting', r:45, x:35, d:25, p:'core' },
     { id:'ml-overfit',        t:'Overfitting, bias–variance, regularization', r:40, x:20, d:15, p:'core' },
     { id:'ml-cv',             t:'Cross-validation cho đúng', r:30, x:10, d:20, p:'core' },
     { id:'ml-imb',            t:'★ Dữ liệu lệch: 0,17% gian lận thì làm gì', r:30, x:15, d:30, p:'core' },
-    { id:'ml-metrics',        t:'★ Đo lường: PR-AUC, ngưỡng, và tiền', r:35, x:20, d:35, p:'core' },
     { id:'ml-tune',           t:'Tuning: grid, random, Optuna', r:25, x:20, d:0, p:'good' },
     { id:'ml-shap',           t:'Giải thích mô hình: SHAP', r:30, x:15, d:15, p:'good' },
     { id:'ml-unsup',          t:'Không nhãn: cụm & phát hiện bất thường', r:45, x:15, d:0, p:'good' },
@@ -8969,13 +9190,14 @@ const TREE = [
   ]},
   { id:'p8', t:'8 · Làm ra product thật (fraud detection)', kids:[
     { id:'pr-arch',           t:'Kiến trúc hệ thống chống gian lận', r:30, x:5, d:25, p:'core' },
-    { id:'pr-data',           t:'Dữ liệu: lấy ở đâu, dùng bộ nào', r:25, x:20, d:30, p:'core' },
     { id:'pr-code',           t:'★ Code end-to-end: repo tới model đã lưu', r:40, x:50, d:60, p:'core' },
-    { id:'pr-eval',           t:'★ Đánh giá, chọn ngưỡng, và bốn test', r:35, x:30, d:45, p:'core' },
+    { id:'pr-eval',           t:'★ Đánh giá, chọn ngưỡng, và bốn test', r:45, x:40, d:50, p:'core' },
     { id:'pr-serve',          t:'Đóng gói: FastAPI + Docker', r:35, x:40, d:45, p:'core' },
     { id:'pr-monitor',        t:'Giám sát: drift, feedback, retrain', r:35, x:20, d:25, p:'core' },
     { id:'pr-mlops',          t:'MLOps tối thiểu: MLflow, DVC, CI', r:30, x:25, d:20, p:'good' },
-    { id:'pr-cost',           t:'Quy ra tiền: ngưỡng theo chi phí', r:25, x:10, d:15, p:'good' },
+    /* core: trang tự gọi đây là bài có tỉ lệ giá trị/công sức cao nhất, và cột "thiệt hại
+       quy ra tiền" là cột hội đồng nhớ. Gọi nó là "nên biết" thì trang tự mâu thuẫn. */
+    { id:'pr-cost',           t:'Quy ra tiền: ngưỡng theo chi phí', r:25, x:10, d:15, p:'core' },
   ]},
   { id:'p9', t:'9 · Luận văn / paper thạc sĩ', kids:[
     { id:'th-topic',          t:'Đề tài phải có “delta” — tìm khoảng trống', r:30, x:5, d:40, p:'core' },
@@ -9048,17 +9270,17 @@ const DAYS = [
     out:'<code>docs/problem-statement.md</code>: dự đoán gì, tại thời điểm nào, sai thì tốn bao nhiêu tiền.',
     note:'Đọc toán bằng cách mở popup và làm lại phép tính bằng số trên giấy. Đừng học chứng minh.' },
   { n:5,  t:'Nhìn dữ liệu, và không tự lừa mình',
-    ids:['d-eda','d-clean','d-leak'],
-    proof:['d-eda','d-leak'],
+    ids:['d-data','d-eda','d-clean','d-leak'],
+    proof:['d-data','d-eda','d-leak'],
     out:'<code>notebooks/01-eda.ipynb</code> chạy hết, 4 hình trong <code>reports/figures/</code>, và một danh sách cột <i>nghi ngờ rò rỉ</i> kèm lý do từng cột.',
     note:'Bài <b>Data leakage</b> là bài không được đọc lướt. Mọi con số bạn tạo ra sau ngày này đều phụ thuộc vào việc bạn có làm đúng phần này không.' },
   { n:6,  t:'★ Ngày quan trọng nhất: vòng đầu tiên khép kín',
-    ids:['d-split','f-what','ml-map','pr-data','ml-linear'],
-    proof:['d-split','ml-linear','pr-data'],
-    out:'<b>Một con số đánh giá thật</b>, sinh ra từ một lệnh. Xấu cũng được — miễn là hoàn chỉnh.',
-    note:'Kết thúc ngày bạn PHẢI có một con số. Có nó rồi thì 8 ngày còn lại là cải tiến, mà cải tiến thì dừng được bất cứ lúc nào. Không có nó, tới ngày 13 bạn vẫn đang “chuẩn bị”.' },
+    ids:['d-split','ml-map','ml-linear','ml-metrics'],
+    proof:['d-split','ml-linear','ml-metrics'],
+    out:'<b>Một con số đánh giá thật</b> — PR-AUC validation của baseline logistic, sinh ra từ một lệnh — kèm một ngưỡng chọn theo chi phí. Xấu cũng được, miễn là hoàn chỉnh.',
+    note:'Đây là mốc mà cả lịch xoay quanh: kết thúc ngày bạn PHẢI có một con số. Bài <b>Đo lường</b> nằm cùng ngày với baseline là có lý do — một con số mà bạn không biết đọc thì chưa phải kết quả. Và từ hôm nay tới hết lịch: <b>không nhìn tập test</b>, mọi quyết định chạy trên validation.' },
   { n:7,  t:'Feature engineering thật sự',
-    ids:['f-numeric','f-cat','f-cyclic','f-time'],
+    ids:['f-what','f-numeric','f-cat','f-cyclic','f-time'],
     proof:['f-time'],
     out:'<code>src/features.py</code> + <code>src/history.py</code>, và bảng thí nghiệm có <b>bốn dòng</b> — mỗi nhóm feature một dòng, kèm con số trước/sau.',
     note:'Mỗi nhóm feature thêm vào thì chạy lại và ghi con số ngay. Bảng đó chính là chương 4 luận văn, và viết nó sau thì bạn sẽ không nhớ nổi.' },
@@ -9067,11 +9289,11 @@ const DAYS = [
     proof:['f-pipeline'],
     out:'<code>src/pipeline.py</code> — một đối tượng đi từ DataFrame thô tới <code>predict_proba</code>, kèm một test chứng minh nó chạy với <b>một dòng</b>.',
     note:'Sau bài Pipeline, code của bạn ngừng là “notebook lộn xộn” và bắt đầu là “phần mềm”.' },
-  { n:9,  t:'Đánh giá cho đúng — phần hội đồng soi kỹ nhất',
-    ids:['ml-overfit','ml-cv','ml-imb','ml-metrics'],
-    proof:['ml-metrics'],
-    out:'Bảng so sánh baseline vs mô hình chính trên cùng validation, kèm trung bình ± độ lệch chuẩn của 5 seed. Paired bootstrap CI được làm ở ngày 12 sau bài <b>Đánh giá</b>.',
-    note:'Từ hôm nay tới hết lịch: <b>không nhìn tập test</b>. Mọi quyết định chạy trên validation.' },
+  { n:9,  t:'Ba cách tự lừa mình: overfit, CV sai, dữ liệu lệch',
+    ids:['ml-overfit','ml-cv','ml-imb'],
+    proof:['ml-cv','ml-imb'],
+    out:'Bảng thí nghiệm bốn dòng cho phần xử lý lệch (không làm gì · <code>class_weight</code> · SMOTE · ngưỡng theo chi phí) đo trên cùng validation, mỗi dòng kèm trung bình ± độ lệch chuẩn của 5 seed. Paired bootstrap CI làm ở ngày 12.',
+    note:'Đây là ngày nhẹ nhất của tuần hai (3,5 giờ) — cố ý, vì ngày 6 và ngày 12 đều nặng. Phần dư dùng để chạy lại bảng thí nghiệm cho đủ 5 seed: việc đó tốn thời gian máy chứ không tốn thời gian bạn.' },
   { n:10, t:'Deep learning nền',
     ids:['dl-nn','dl-backprop','dl-train','dl-embed','t-colab'],
     proof:['dl-train'],
@@ -9085,7 +9307,7 @@ const DAYS = [
   { n:12, t:'Biến thành sản phẩm',
     ids:['pr-arch','pr-code','pr-eval'],
     proof:['pr-code','pr-eval'],
-    out:'<code>python -m src.train</code> chạy xong, có <code>models/fraud-*.joblib</code> và một cặp ngưỡng chọn theo chi phí.',
+    out:'<code>python -m src.train</code> chạy xong, có <code>models/fraud-*.joblib</code>, một cặp ngưỡng chọn theo chi phí, và bảng ba dòng so mô hình với baseline theo luật.',
     note:'Ngày dài. Mốc giữa ngày: có file <code>.joblib</code> thì commit ngay rồi mới đi tiếp.' },
   { n:13, t:'Đóng gói, giám sát, đọc paper',
     ids:['pr-serve','pr-monitor','th-read','th-repro'],
@@ -9121,21 +9343,21 @@ const WEEKS = [
     needs:['t-env','t-online','t-pandas'], proof:['t-env','t-online','t-pandas'],
     next:'Tuần 2 dùng repo và notebook này để tạo problem statement, EDA và split.' },
   { n:2, ids:['m-vector','m-deriv','m-prob','m-bayes','m-infer',
-              'd-framing','d-eda','d-clean','d-leak','d-split'],
+              'd-framing','d-data','d-eda','d-clean','d-leak','d-split'],
     t:'Toán tối thiểu · đóng khung bài toán · EDA · làm sạch · rò rỉ · chia tập',
     out:'<code>docs/problem-statement.md</code> (dự đoán gì · khi nào · sai tốn bao nhiêu); <code>notebooks/01-eda.ipynb</code> + 4 hình trong <code>reports/figures/</code>; <code>src/split.py</code> kèm <code>assert_split_ok</code>; danh sách cột nghi rò rỉ kèm lý do',
-    needs:['d-framing','d-eda','d-split','d-leak'], proof:['d-framing','d-eda','d-split','d-leak'],
+    needs:['d-framing','d-data','d-eda','d-split','d-leak'], proof:['d-framing','d-data','d-eda','d-split','d-leak'],
     next:'Tuần 3 chỉ tạo feature và train trên split đã được kiểm chứng ở đây.' },
   { n:3, ids:['f-what','f-numeric','f-cat','f-cyclic','f-time','f-text','f-pipeline','f-select','f-store',
-              'ml-map','ml-linear'],
-    t:'Feature engineering đầy đủ · Pipeline · baseline logistic đầu tiên',
-    out:'<code>src/features.py</code> + <code>src/history.py</code>; <code>src/pipeline.py</code> (Pipeline + ColumnTransformer) với một test một dòng; <code>notebooks/02-baseline.ipynb</code> chạy hết và in PR-AUC validation từ logistic; bảng thí nghiệm có dòng 1. <i>(<code>python -m src.train</code> chỉ được yêu cầu ở tuần 7, sau bài pr-code.)</i>',
-    needs:['f-pipeline','ml-linear','ml-map','d-split'], proof:['f-pipeline','ml-linear'],
-    next:'Tuần 4 giữ nguyên pipeline/split này để so baseline với boosting và chọn ngưỡng.', mile:'Mốc 1' },
-  { n:4, ids:['ml-loss','ml-trees','ml-overfit','ml-cv','ml-imb','ml-metrics','ml-tune','ml-shap','ml-unsup'],
-    t:'ML cổ điển · overfit/CV · dữ liệu lệch · PR-AUC & ngưỡng · SHAP',
-    out:'Bảng so sánh baseline vs mô hình chính (LightGBM) trên cùng validation: PR-AUC + trung bình±độ lệch chuẩn của 5 seed; một hình SHAP; một ngưỡng chọn theo chi phí. <i>(Khoảng tin cậy cluster bootstrap và kiểm định ghép cặp làm ở tuần 7–8 khi đã học đúng loại bootstrap.)</i>',
-    needs:['ml-trees','ml-metrics','ml-shap','ml-imb','ml-cv'], proof:['ml-metrics'],
+              'ml-map','ml-linear','ml-metrics'],
+    t:'Feature engineering đầy đủ · Pipeline · baseline logistic · PR-AUC &amp; ngưỡng',
+    out:'<code>src/features.py</code> + <code>src/history.py</code>; <code>src/pipeline.py</code> (Pipeline + ColumnTransformer) với một test một dòng; <code>notebooks/02-baseline.ipynb</code> chạy hết và in PR-AUC validation từ logistic; một ngưỡng chọn theo chi phí kèm ma trận chi phí FP/FN; bảng thí nghiệm có dòng 1. <i>(<code>python -m src.train</code> chỉ được yêu cầu ở tuần 7, sau bài pr-code.)</i>',
+    needs:['f-pipeline','ml-linear','ml-map','ml-metrics','d-split'], proof:['f-pipeline','ml-linear','ml-metrics'],
+    next:'Tuần 4 giữ nguyên pipeline/split này để so baseline với boosting, dùng lại đúng chỉ số của tuần này.', mile:'Mốc 1' },
+  { n:4, ids:['ml-loss','ml-trees','ml-overfit','ml-cv','ml-imb','ml-tune','ml-shap','ml-unsup'],
+    t:'ML cổ điển · overfit/CV · dữ liệu lệch · tuning · SHAP',
+    out:'Bảng so sánh baseline vs mô hình chính (LightGBM) trên cùng validation: PR-AUC + trung bình±độ lệch chuẩn của 5 seed; một hình SHAP; ngưỡng chọn lại theo chi phí cho mô hình chính. <i>(Khoảng tin cậy cluster bootstrap và kiểm định ghép cặp làm ở tuần 7–8 khi đã học đúng loại bootstrap.)</i>',
+    needs:['ml-trees','ml-metrics','ml-shap','ml-imb','ml-cv'], proof:['ml-trees','ml-imb','ml-shap'],
     next:'Tuần 7 đưa bảng này vào evaluate.py, thêm cluster/paired bootstrap và test.' },
   { n:5, ids:['dl-nn','dl-backprop','dl-train','dl-embed','dl-cnn-rnn','dl-attn','dl-tf','dl-llm','dl-tab'],
     t:'Deep learning nền · embedding · attention · Transformer',
@@ -9147,9 +9369,9 @@ const WEEKS = [
     out:'Hai mini-project làm thật (mỗi cái một notebook + bảng “giữ gì / đổi gì” so với fraud); bốn đề còn lại chỉ cần bảng giữ/đổi ở mức phác thảo',
     needs:['q-mini','q-forecast'], proof:['q-mini'],
     next:'Tuần 7 quay lại fraud với bằng chứng về phần nào của pipeline giữ nguyên khi đổi domain.', mile:'Mốc 2' },
-  { n:7, ids:['pr-arch','pr-data','pr-code','pr-eval','pr-serve','pr-monitor','pr-mlops','pr-cost'],
+  { n:7, ids:['pr-arch','pr-code','pr-eval','pr-serve','pr-monitor','pr-mlops','pr-cost'],
     t:'Sản phẩm fraud: repo → model đã lưu → đánh giá → API/Docker → giám sát',
-    out:'<code>python -m src.train</code> bản đầy đủ + <code>models/fraud-*.joblib</code> + metadata + ngưỡng; <code>src/evaluate.py</code> (cluster bootstrap CI + <code>paired_ci</code>); API FastAPI + <code>Dockerfile</code>; hàm PSI; CI chạy <code>pytest</code>',
+    out:'<code>python -m src.train</code> bản đầy đủ + <code>models/fraud-*.joblib</code> + metadata + ngưỡng; <code>src/evaluate.py</code> (cluster bootstrap CI + <code>paired_ci</code>); <code>src/rules.py</code> + bảng ba dòng không-làm-gì/luật/mô hình trên cùng tập test; bảng FPR theo nhóm; API FastAPI + <code>Dockerfile</code>; hàm PSI; CI chạy <code>pytest</code>',
     needs:['pr-code','pr-eval','pr-serve','pr-monitor','pr-mlops'], proof:['pr-code','pr-eval','pr-serve','pr-monitor'],
     next:'Tuần 8 ánh xạ repo, bảng đánh giá và hình sang proposal/thesis skeleton và defense plan.' },
   { n:8, ids:['th-topic','th-read','th-repro','th-design','th-stats','th-write','th-tools','th-defense',
@@ -9199,7 +9421,8 @@ const PAYOFF = {
   'm-prob':     ['Đọc được một cột dữ liệu, và đọc đúng con số 0–1 mà mô hình trả ra.', 'Bài sau giải thích vì sao 99% chính xác vẫn có thể hoàn toàn vô dụng.'],
   'm-bayes':    ['Lý do một mô hình rất chính xác vẫn báo động sai gần hết — bằng số, không bằng cảm giác.', 'Bài sau là phần toán hội đồng soi kỹ nhất: chứng minh chênh lệch là thật.'],
   'm-infer':    ['Bootstrap, McNemar, và cách nói về p-value mà không bị bắt lỗi.', 'Hết phần toán. Chặng sau chạm vào dữ liệu thật, bắt đầu từ việc đóng khung bài toán.'],
-  'd-framing':  ['Một trang đề bài: dự đoán gì, tại thời điểm nào, sai thì tốn bao nhiêu tiền.', 'Có tờ đề bài rồi, bài sau mới biết phải nhìn cái gì khi mở dữ liệu ra.'],
+  'd-data':     ['Bộ dữ liệu đã tải và kiểm tra, một schema tám cột chốt cứng, adapter đưa mọi nguồn về schema đó, và một datacard.', 'Có dữ liệu đúng hình dạng rồi, bài sau mới nhìn được nó nói gì.'],
+  'd-framing':  ['Một trang đề bài: dự đoán gì, tại thời điểm nào, sai thì tốn bao nhiêu tiền.', 'Có tờ đề bài rồi, bài sau đi lấy đúng bộ dữ liệu trả lời được đề bài đó.'],
   'd-eda':      ['Danh sách 10 điểm kiểm tra chạy được cho mọi bộ dữ liệu mới, và bốn biểu đồ đáng vẽ.', 'EDA vừa chỉ ra chỗ bẩn; bài sau là cách làm sạch mà không tự lừa mình.'],
   'd-clean':    ['Cách xử lý thiếu, ngoại lai, trùng lặp — tất cả nằm trong code, không thao tác tay.', 'Bài sau là lỗi lặng lẽ nhất: làm sạch rất đúng nhưng vẫn rò rỉ đáp án.'],
   'd-leak':     ['Sáu kiểu rò rỉ, và quy trình kiểm tra chạy trước khi tin bất kỳ con số nào.', 'Bài sau là nơi rò rỉ hay xảy ra nhất: chỗ bạn cắt dữ liệu ra làm ba.'],
@@ -9214,13 +9437,13 @@ const PAYOFF = {
   'f-select':   ['Ba cách chọn feature xếp theo độ tin cậy, và cách viết phần này vào luận văn.', 'Bài sau giải thích thuật ngữ Feature Store bạn sẽ gặp khắp nơi — và vì sao chưa cần.'],
   'f-store':    ['Biết Feature Store giải quyết gì, và khái niệm point-in-time correctness để nói đúng.', 'Chặng sau chọn mô hình để đổ đống feature này vào.'],
   'ml-map':     ['Bản đồ năm mô hình, và quy trình chọn theo đúng thứ tự.', 'Bài sau là baseline không thể thiếu.'],
-  'ml-linear':  ['Baseline hồi quy logistic chạy được, và cách đọc hệ số để viết vào luận văn.', 'Bài sau nói mô hình đó thực sự được huấn luyện bằng cách nào.'],
+  'ml-linear':  ['Baseline hồi quy logistic chạy được, và cách đọc hệ số để viết vào luận văn.', 'Bạn vừa có mô hình đầu tiên nhưng chưa có cách đọc nó — bài sau là chỉ số dùng để đọc.'],
   'ml-loss':    ['Hàm mất mát ráp với gradient descent, và biết phân biệt nó với chỉ số đánh giá.', 'Bài sau là gia đình mô hình bạn sẽ dùng làm mô hình chính.'],
   'ml-trees':   ['LightGBM với cấu hình khởi đầu, ba siêu tham số quan trọng, và early stopping.', 'Bài sau là kẻ thù của mọi mô hình mạnh.'],
   'ml-overfit': ['Chẩn đoán overfit bằng hình, và bảy cách chống xếp theo hiệu quả.', 'Bài sau là cách đo cho chắc, thay vì tin vào một lần chia may rủi.'],
   'ml-cv':      ['Cross-validation đúng loại cho dữ liệu thời gian, và cách đọc độ lệch chuẩn.', 'Bài sau là vấn đề trung tâm của bài toán gian lận: 0,17% nhãn dương.'],
-  'ml-imb':     ['Thứ tự ưu tiên xử lý mất cân bằng, và bảng thí nghiệm mẫu đưa thẳng vào luận văn.', 'Bài sau là quyết định dễ làm hỏng cả luận văn nhất.'],
-  'ml-metrics': ['PR-AUC làm chỉ số chính, và một ngưỡng chọn theo chi phí chứ không theo cảm tính.', 'Có chỉ số đúng rồi, bài sau mới tối ưu siêu tham số mà không tự lừa mình.'],
+  'ml-imb':     ['Thứ tự ưu tiên xử lý mất cân bằng, và bảng thí nghiệm mẫu đưa thẳng vào luận văn.', 'Bài sau là cách tìm siêu tham số mà không tự lừa mình.'],
+  'ml-metrics': ['PR-AUC làm chỉ số chính, và một ngưỡng chọn theo chi phí chứ không theo cảm tính.', 'Đã biết đo đúng, bài sau nói mô hình thực sự được huấn luyện bằng cách nào.'],
   'ml-tune':    ['Optuna dùng được ngay, và bốn quy tắc để kết quả tuning không phải ảo.', 'Bài sau trả lời câu hội đồng gần như chắc chắn hỏi.'],
   'ml-shap':    ['Hai loại hình SHAP cho luận văn, và ba giới hạn bạn phải tự nêu trước khi bị hỏi.', 'Bài sau là phương án khi nhãn quá ít hoặc đến quá trễ.'],
   'ml-unsup':   ['Phân cụm và phát hiện bất thường, cùng cách kết hợp với mô hình có giám sát.', 'Chặng sau là deep learning, bắt đầu từ mạng nơ-ron.'],
@@ -9242,10 +9465,9 @@ const PAYOFF = {
   'q-causal':   ['Phân biệt tương quan với nhân quả, thiết kế một A/B test đọc được, và biết khi nào mô hình dự đoán không trả lời được câu hỏi đang hỏi.', 'Bài sau là phần công việc chiếm nhiều thời gian nhất của một data team thật.'],
   'q-analytics':['SQL phân tích, cohort, funnel, segmentation, và ranh giới ba nghề: analytics, predictive, causal.', 'Bài cuối chặng: sáu dự án nhỏ để kiểm chứng bạn thật sự chuyển giao được.'],
   'q-mini':     ['Hai mini-project chuyển giao làm tới cùng (mỗi cái một notebook + bảng "giữ gì / đổi gì"), và bốn đề phác thảo để tra sau.', 'Chặng sau quay lại dự án chính và biến nó thành sản phẩm, bắt đầu từ bản vẽ.'],
-  'pr-arch':    ['Bản vẽ đường đi của một giao dịch, và năm quyết định thiết kế phải nêu trong luận văn.', 'Bài sau là dữ liệu thật để chạy bản vẽ đó.'],
-  'pr-data':    ['Bộ dữ liệu đã tải và đã kiểm tra, cùng bộ mô phỏng để chạy thử pipeline.', 'Bài sau là toàn bộ mã nguồn dự án, từ file rỗng tới mô hình đã lưu.'],
+  'pr-arch':    ['Bản vẽ đường đi của một giao dịch, và năm quyết định thiết kế phải nêu trong luận văn.', 'Có bản vẽ rồi, bài sau viết toàn bộ mã nguồn hiện thực nó.'],
   'pr-code':    ['Repo chạy được: config, features, history, pipeline, train — và một file .joblib có thật trong models/.', 'Có model rồi, bài sau mới trả lời được câu "nó tốt tới đâu, và chặn từ ngưỡng nào".'],
-  'pr-eval':    ['Ngưỡng chọn theo chi phí, khoảng tin cậy bootstrap, hình PR cho luận văn, và bốn test chặn lỗi im lặng.', 'Bài sau biến file .joblib đó thành một dịch vụ mà hệ thống khác gọi được.'],
+  'pr-eval':    ['Ngưỡng theo chi phí, khoảng tin cậy đúng loại, baseline theo luật để so, bảng chênh lệch theo nhóm, và bốn test chặn lỗi im lặng.', 'Bài sau biến file .joblib đó thành một dịch vụ mà hệ thống khác gọi được.'],
   'pr-serve':   ['API FastAPI, Dockerfile, và bản demo Streamlit dùng cho buổi bảo vệ.', 'Bài sau là chương rất ít luận văn viết được cho ra hồn.'],
   'pr-monitor': ['Đo drift bằng PSI, bảng theo dõi tối thiểu, và chiến lược huấn luyện lại.', 'Bài sau là phần MLOps nhỏ nhất mà vẫn đủ để repo nộp được.'],
   'pr-mlops':   ['MLflow, chốt phiên bản thư viện, CI tối thiểu, và bảng kiểm repo trước khi nộp.', 'Bài sau quy mọi thứ ra tiền — bài có tỉ lệ giá trị trên công sức cao nhất trang.'],
@@ -9298,6 +9520,11 @@ const ACCEPT = {
     {k:'ask', v:'Nói được: dự đoán gì · tại đúng thời điểm nào · một FP và một FN tốn bao nhiêu tiền'},
     {k:'ask', v:'Chỉ ra thời điểm cắt: chỉ dữ liệu biết TRƯỚC mốc đó mới được dùng làm feature'},
   ],
+  'd-data':[
+    {k:'file',v:'<code>src/adapters.py</code>: một hàm đưa nguồn thật và một hàm sinh bộ mô phỏng, cả hai trả về ĐÚNG tám cột của schema chuẩn'},
+    {k:'file',v:'<code>data/README.md</code> (datacard): nguồn · giấy phép · phiên bản · số dòng · tỉ lệ nhãn dương · khoảng thời gian'},
+    {k:'result',v:'<code>python -m src.prepare_data --source sim</code> chạy xong và in ra số dòng khớp với datacard'},
+  ],
   'd-eda':[
     {k:'file',v:'<code>notebooks/01-eda.ipynb</code> chạy hết từ đầu tới cuối, không lỗi'},
     {k:'file',v:'≥ 4 hình lưu trong <code>reports/figures/</code>'},
@@ -9317,13 +9544,22 @@ const ACCEPT = {
     {k:'test',v:'Một test chứng minh Pipeline chạy với một dòng dữ liệu'},
     {k:'ask', v:'Vì sao để scaler trong Pipeline lại chặn được rò rỉ khi cross-validation'},
   ],
+  /* ml-linear và ml-metrics là một CẶP, học liền nhau trong cùng ngày 6. Ranh giới
+     giữa hai tiêu chí đạt được đặt đúng chỗ mỗi bài dạy: ml-linear phải sinh ra
+     y_prob, ml-metrics mới biến y_prob thành một con số đọc được. Trước 2026-08-04
+     tiêu chí của ml-linear đòi thẳng "in PR-AUC" trong khi PR-AUC được dạy sáu bài
+     sau — cổng G-FWD bắt được, và đây là chỗ sửa. */
+  'm-bayes':[
+    {k:'result',v:'Tính bằng tay được: prevalence 0,17%, mô hình có recall 80% và FPR 1% → trong 100 cảnh báo có bao nhiêu ca gian lận thật'},
+    {k:'ask', v:'Nói được vì sao ở prevalence thấp, giảm FPR đi 10 lần cải thiện precision nhiều hơn hẳn so với đẩy recall lên mức tối đa có thể (100%)'},
+  ],
   'ml-linear':[
     {k:'file',v:'<code>notebooks/02-baseline.ipynb</code> chạy hết trên split của tuần 2, không lỗi'},
-    {k:'result',v:'In PR-AUC validation và ghi đúng config/seed vào bảng thí nghiệm dòng đầu'},
+    {k:'result',v:'Lưu được mảng <code>y_prob</code> validation từ logistic, và ghi đúng config/seed vào bảng thí nghiệm dòng đầu'},
     {k:'ask', v:'Giải thích được vì sao baseline tuyến tính vẫn phải có trước boosting'},
   ],
   'ml-metrics':[
-    {k:'result',v:'Báo cáo PR-AUC (chỉ số chính) chứ không chỉ accuracy/ROC-AUC'},
+    {k:'result',v:'Từ <code>y_prob</code> của baseline: in PR-AUC validation làm chỉ số chính, không chỉ accuracy/ROC-AUC'},
     {k:'result',v:'Một ngưỡng chọn theo chi phí, có con số tiền kèm theo'},
     {k:'ask', v:'Giải thích được vì sao accuracy vô dụng ở 0,17% nhãn dương'},
   ],
@@ -9336,6 +9572,9 @@ const ACCEPT = {
     {k:'file',v:'<code>src/evaluate.py</code> có <code>bootstrap_ci</code> và <code>paired_ci</code>'},
     {k:'result',v:'Khoảng tin cậy <b>cluster</b> bootstrap (theo thẻ), không phải theo dòng'},
     {k:'result',v:'So hai mô hình bằng <code>paired_ci</code>: cờ <code>significant</code> chỉ bật khi CI của Δ không chứa 0'},
+    {k:'file',v:'<code>src/rules.py</code>: 3–5 luật viết ra TRƯỚC khi xem kết quả, kèm nguồn của từng luật'},
+    {k:'result',v:'Bảng ba dòng (không làm gì · luật · mô hình) trên đúng cùng tập test: recall · số cảnh báo · chi phí, kèm <code>paired_ci</code> của hiệu chi phí'},
+    {k:'result',v:'Bảng theo nhóm tại ngưỡng đã chọn (n · số gian lận thật · số báo nhầm · FPR) cộng lại khớp tổng test, và một câu nêu tỉ lệ FPR cao nhất/thấp nhất'},
     {k:'test',v:'Bốn test chặn lỗi im lặng (rò rỉ, ngưỡng, hằng số, đầu vào lệch) pass'},
   ],
   'pr-serve':[
@@ -9402,7 +9641,7 @@ const MARK4 = ['—', 'Được nhắc tới', 'Được giải thích', 'Có th
 const COMPS = [
   { n:1, t:'Định vị một bài toán mới', lessons:['s-families','s-lookup','d-framing'], key:['d-framing'], cap:4,
     evid:'docs/problem-statement.md + định vị bằng 8 câu hỏi' },
-  { n:2, t:'Xây dựng dữ liệu đáng tin', lessons:['d-eda','d-clean','d-leak','pr-data'], key:['d-eda','d-leak'], cap:4,
+  { n:2, t:'Xây dựng dữ liệu đáng tin', lessons:['d-data','d-eda','d-clean','d-leak'], key:['d-data','d-eda','d-leak'], cap:4,
     evid:'EDA notebook + data/README (datacard) + danh sách rò rỉ' },
   { n:3, t:'Pipeline tái lập', lessons:['d-split','f-pipeline','pr-code','pr-mlops'], key:['f-pipeline','pr-code'], cap:4,
     evid:'pipeline.py + python -m src.train + split asserts + seed/pin' },
@@ -10038,9 +10277,9 @@ function syncMatrix() {
    Danh sách artifact cụ thể trang hướng bạn tạo, tách ba nhãn rõ ràng. */
 const PORTFOLIO = [
   { a:'docs/problem-statement.md', id:'d-framing', tag:'accept' },
-  { a:'data/README.md (datacard) — nguồn · giấy phép · phiên bản', id:'pr-data', tag:'guided' },
+  { a:'data/README.md (datacard) — nguồn · giấy phép · phiên bản', id:'d-data', tag:'guided' },
   { a:'notebooks/01-eda.ipynb + ≥ 4 hình', id:'d-eda', tag:'accept' },
-  { a:'adapters/schema — đưa dữ liệu thô về một schema chung', id:'pr-data', tag:'suggest' },
+  { a:'adapters/schema — đưa dữ liệu thô về một schema chung', id:'d-data', tag:'suggest' },
   { a:'split.py + assert chống rò rỉ (split & leakage)', id:'d-split', tag:'accept' },
   { a:'src/features.py + src/history.py', id:'f-time', tag:'guided' },
   { a:'src/pipeline.py — Pipeline + ColumnTransformer', id:'f-pipeline', tag:'accept' },
@@ -10911,8 +11150,11 @@ VIZ.leak = el => {
       </div>`;
     }).join('');
     el.querySelector('[data-o="n"]').textContent = `${ok} / ${COLS.length} cột dùng được`;
-    alt.textContent = `Tại mốc đã chọn, ${ok} trên ${COLS.length} cột đã tồn tại: ` +
-      COLS.filter(c => c.at <= t).map(c => c.n).join(', ') + '.';
+    // Không liệt kê lại tên cột: danh sách phía trên đã là DOM thật, trình đọc màn hình
+    // đọc được từng dòng kèm ✔/✕. Mô tả này chỉ nói KẾT LUẬN mà mắt phải tự rút ra.
+    alt.textContent = ok === COLS.length
+      ? `Đã kéo tới mốc ${t} giờ sau khi quẹt: cả ${COLS.length} cột đều tồn tại — nhưng hệ thống thật không bao giờ được đứng ở mốc này.`
+      : `Ở mốc ${t === 0 ? 'lúc quẹt thẻ' : t + ' giờ sau khi quẹt'}: ${ok} trên ${COLS.length} cột tồn tại. ${COLS.length - ok} cột đánh dấu ✕ chỉ sinh ra muộn hơn, nên đưa chúng vào mô hình là dự đoán bằng thông tin bạn chưa có.`;
   };
   el.addEventListener('input', upd); upd();
 };

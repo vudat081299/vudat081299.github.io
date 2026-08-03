@@ -144,6 +144,13 @@ cần DOM thật (id trùng, tổng giờ giữa các view). Phải trả về `
 **Khuyến nghị (người quyết định):** `G-LAYER` (mục tự khai là nhánh phụ, bài quá dài),
 `G-VIZ` (bài chưa có gì để nhìn), `G-MEASURE` (khổ chữ trôi), `G-FWD` ở mức thân bài.
 
+**Thoát cửa** khi cổng bắt sai một chỗ cố ý: `<!-- gate:main -->` (tiêu đề trông giống
+nhánh phụ nhưng là mạch chính) · `<!-- gate:long: lý do -->` (bài dài đã soát và dài là
+đúng) · `allowEarly` trong `concepts.json` (nhắc tên để định vị). Cả ba **bắt buộc kèm lý
+do nói vì sao cổng bắt sai**, không phải "đã xem rồi". Lỗi CHẶN thật mà chưa sửa thì vào
+`waivers.json` — nó in lại mỗi lần chạy, và đó là điểm khác biệt. Bảng đầy đủ:
+[docs/authoring.md](docs/authoring.md#việc-5--thêm-một-cổng-mới-vào-gatemjs).
+
 Khuyến nghị phải **gần bằng 0 ở trạng thái ổn định**. Danh sách dài ra là dấu hiệu hoặc
 nội dung đang trôi, hoặc cổng bắt sai — sửa một trong hai, đừng để nó thành tiếng ồn.
 

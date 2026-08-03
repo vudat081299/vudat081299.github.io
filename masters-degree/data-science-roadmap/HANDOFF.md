@@ -1,6 +1,6 @@
 # Handoff — data-science-roadmap.html
 
-File là single-page app (~12k dòng, tự chứa) dựng trên web-builder CSS. Nội dung bài nằm
+File là single-page app (~12,6k dòng, tự chứa) dựng trên web-builder CSS. Nội dung bài nằm
 trong các `<template data-node="…">`, router hash dựng ra.
 
 **Đọc [CLAUDE.md](CLAUDE.md) trước.** Đừng mở cả file HTML để tìm hiểu — dùng `TOC.md`
@@ -13,137 +13,168 @@ Hai lớp kiểm tự động:
 
 ---
 
-## Phiên 2026-08-04 — dựng bộ cổng + tài liệu, và sửa bố cục
+## Phiên 2026-08-04 (b) — áp dụng phần nội dung mà phiên (a) chỉ chẩn đoán
 
-### ĐÃ XONG
+Phiên trước dựng bộ cổng và ghi lại các lỗi nội dung mà nó tìm ra, **nhưng không sửa**.
+Phiên này sửa. Trạng thái cuối: **0 waiver · cổng CHẶN qua hết · `auditPlan()` = `[]` ·
+khuyến nghị 16 → 6.**
 
-**Hạ tầng cổng (mới).**
-- `tools/gate.mjs` — 8 cổng CHẶN + 5 cổng khuyến nghị. Chạy 0,25 s. Sinh `TOC.md`, và có
-  `--show`/`--where <id>` để mở đúng một bài mà không nạp cả file.
-- `TOC.md` — **sinh tự động**, đừng sửa tay. Mang chữ ký cấu trúc; `G-TOC-STRUCT` chỉ nổ
-  khi cấu trúc giáo trình đổi, không nổ vì số dòng xê dịch (`G-TOC-STALE`, tự làm mới).
-- `tools/concepts.json` — khái niệm nào dạy ở bài nào, đầu vào cổng `G-FWD`.
-- `tools/waivers.json` — nợ đã biết, in lại mỗi lần chạy. **Đang có 2 waiver, xem dưới.**
-- `tools/hooks/post-edit.sh` — cổng chạy **ngay sau mỗi Edit/Write** vào file HTML, trượt
-  thì đẩy lỗi lại cho agent trong cùng lượt (Claude Code `PostToolUse`).
-- `tools/hooks/pre-commit` — chặn commit.
-- `tools/install-hooks.sh` cài cả hai. **Phải có script vì `.git/hooks/` và `.claude/` đều
-  bị git bỏ qua** (`.claude/` trong `.gitignore`) — hook không tự theo repo về máy mới.
-  Nguồn sự thật là `tools/hooks/pre-commit` + `tools/hooks/claude-settings.json` (được
-  theo dõi). Đã cài trên máy này; máy khác chạy một lần. Chạy lại không sinh hook trùng.
-  Claude Code chỉ nạp lại settings khi mở `/hooks` hoặc khởi động lại phiên.
-- Đã thử cả hai chiều: tự tạo vi phạm (TOC lệch cấu trúc, ref hỏng, `<details>`, lệch thứ
-  tự template, số dòng cũ) → cổng nổ đúng; hoàn lại → im.
+### 1. `ml-metrics` dời từ vị trí 43 lên 38 — xoá cả hai waiver
 
-**Tài liệu (mới).** `CLAUDE.md` (luật + đường vào), `docs/content-gates.md` (rubric 8 cổng
-cần phán đoán, dựa trên skill `explain-clearly`), `docs/authoring.md` (công thức thêm bài /
-nhánh phụ / hình, và mọi chỗ phải wire). Mỗi file một lý do để đổi — bảng ở CLAUDE.md §2.
+Lỗi: tiêu chí đạt của `ml-linear` (thứ 37) bắt "in PR-AUC validation" trong khi
+`ml-metrics` dạy PR-AUC ở thứ 43; deliverable tuần 3 cũng đòi PR-AUC mà bài dạy nó ở
+tuần 4.
 
-**Bố cục / bug đã sửa.**
-- **Khổ chữ:** trước có BỐN mép phải (chữ 74ch=746px, h2 cùng 74ch nhưng font 19px nên
-  thành 959px, `.ds-prose` 1040px, pager 1080px). Nay đúng HAI: `--ds-measure` 720px cho
-  chữ chảy, hết cột 900px cho bảng/code/card/pager. Cột `#main` hẹp lại còn 940px để hai
-  mép chỉ cách 180px. **Đừng nới `--ds-measure`** — đo thật thì 720px đã ≈105 ký tự/dòng.
-- Sidebar 300 → 330px; lá TOC thụt 26px (mép tên bài lệch 20px so với tên chặng).
-- Bấm hàng CHẶNG giờ mở/thu gọn thay vì nhảy vào bài đầu chặng; nhãn chặng thành
-  `<button>`, `aria-expanded` khớp trên cả chevron lẫn nhãn.
-- **Dải mục tiêu đầu bài** (`.ds-obj`) đọc từ `PAYOFF[id][0]` — đầu bài giờ trả lời đủ
-  bốn câu: nói về gì · kết quả · ưu tiên · độ cần thiết. Không viết tay lần hai.
-- Sửa tràn ngang trên điện thoại (lỗi có sẵn): một `.wb-btn` nhãn dài 60 ký tự với
-  `white-space:nowrap` rộng 467px đẩy cả trang cuộn ngang → `.ds-btn--wrap`.
-- Hình 14 ngày: nhãn `ngày`/`giờ` chuyển ra đầu hàng ở lề trái (trước đây "ngày · số giờ"
-  nằm dưới hai hàng số và thẳng cột ngày 1, đọc như nhãn của riêng cột đầu); hàng nút
-  1–14 được tách 14px khỏi đáy SVG (trước dính sát, trông như hàng số thứ ba).
-- Lịch 14 ngày: `.ds-day` phẳng → **`wb-steps`** (đường nối dọc = chuỗi phụ thuộc).
-  `.ds-day*` CSS vẫn phải giữ — `th-defense` dùng cho lịch T−3/T−2/T−1.
-- Mô tả hình 14 ngày: bỏ liệt kê cả 14 giá trị, nói hình dạng + hai đầu mút + kết luận;
-  số liệu thô chuyển vào `<desc>` của SVG. Thêm cổng `G-DUMP` và rubric C8 để chặn lặp lại.
+Đã làm — và chỗ quan trọng nhất **không phải** việc dời bài:
+
+- `ml-metrics` giờ đứng ngay sau `ml-linear` trong `TREE` và trong thứ tự `<template>`.
+- **Ranh giới tiêu chí đạt được đặt lại cho đúng bài dạy nó.** `ml-linear` chỉ còn phải
+  sinh ra `y_prob` validation; `ml-metrics` mới là bài biến `y_prob` thành một con số.
+  Đây mới là cách sửa gốc — chỉ dời bài thôi thì vẫn còn một bài đòi khái niệm của bài
+  liền sau nó, và thêm `ml-linear` vào `allowEarly` chỉ là waiver đổi chỗ.
+- `ml-imb` §1–2 đổi từ tham chiếu tiến ("chi tiết ở bài Đo lường") thành trỏ về.
+- Sửa luôn một lỗi thật trong code `ml-linear`: nó `predict_proba(X_test)` trong khi cả
+  bài nói phải dùng validation.
+- Lịch: ngày 6 nhận `ml-metrics`, `f-what` sang ngày 7, ngày 9 còn overfit/CV/lệch (3,5 h —
+  ngày nhẹ có chủ ý, note của ngày nói rõ vì sao). Tuần 3 nhận `ml-metrics`.
+- `waivers.json` giờ là `[]`.
+
+### 2. `pr-data` → `d-data`, chuyển từ chặng 8 sang chặng 3
+
+Bài định nghĩa schema chuẩn + `datacard` + adapter, mà tuần 2 đã phải làm EDA trên chính
+dữ liệu đó (`ACCEPT[d-eda]` tham chiếu `datacard`). Nặng hơn: **lịch 14 ngày xếp nó ngày 6
+còn lịch 8 tuần xếp tuần 7** — hai lịch nói khác nhau về cùng một bài.
+
+Đã dời cả bài (không tách nửa) vì soát lại thì **không mục nào trong nó thuộc tuần 7**:
+schema, adapter, `prepare_data`, bộ mô phỏng, tải dữ liệu — tất cả đều phải xong trước EDA.
+Đổi id `pr-data` → `d-data` để giữ quy ước tiền tố-theo-chặng mà `TOC.md` dựa vào. Thêm
+`ACCEPT[d-data]`. `datacard.allowEarly` trong `concepts.json` giờ rỗng lại.
+
+### 3. `pr-eval`: thêm hai artifact mà cả trang đang giả định là đã có
+
+- **Mục 4 · `src/rules.py` — baseline theo luật.** `th-defense` đưa mẫu trả lời "luật hiện
+  tại bắt 31%, mô hình bắt 64%" nhưng không bài nào tạo ra con số đó. Nay có: 3–5 luật viết
+  trước khi xem kết quả, chấm trên **đúng cùng tập test**, so bằng `paired_ci` trên hiệu chi
+  phí. Kèm điểm mà bài này tồn tại để dạy: **luật không có xác suất nên không so được bằng
+  PR-AUC** — phải so tại điểm vận hành, và cột "số cảnh báo" là cột hay bị bỏ.
+- **Mục 7 · công bằng theo nhóm.** `th-defense` nhóm E và `th-write` đều giả định đã đo FPR
+  theo nhóm. Nay có `group_report()`, bảng FPR/precision theo nhóm tại ngưỡng đã chọn, tỉ lệ
+  cao nhất/thấp nhất, ba việc phải làm với con số đó, và một hộp nói rõ **đây là kiểm kê mô
+  tả chứ không phải can thiệp công bằng**.
+- Hai `ACCEPT` mới; `pr-eval` r35/x30/d45 → r45/x40/d50.
+- `th-defense` và `th-write` giờ trỏ ngược về đúng mục sinh ra con số, kèm câu "chưa có nó
+  thì đây là câu bạn không trả lời được".
+
+### 4. Phân tầng: 252 + ~170 dòng rời khỏi mạch chính
+
+| chỗ | đi đâu | vì sao |
+|---|---|---|
+| 4 file test đầy đủ trong `pr-eval` (252 dòng) | popup `testsuite` | mạch chính giữ **bảng bốn lỗi im lặng → test chặn nó** (đúng 4 dòng tiêu chí đạt) + 2 test đáng gõ tay + output `pytest -q` |
+| bộ 24 câu hội đồng trong `th-defense` (57 dòng) | **ngăn phải** `qbank` | ca drawer thật: đọc song song với dàn ý 12 slide |
+| app Streamlit trong `pr-serve` (29 dòng) | popup `streamlit` | UI thứ hai; mạch chính giữ lý do dùng + ràng buộc "đọc ngưỡng từ artifact" |
+| bảng 10 khả năng Colab | popup `colab10` | bài tự nói chỉ 3 cái quan trọng |
+| bảng so 4 bộ dữ liệu + lý do loại ULB | ngăn phải `cmp-data` | so sánh dữ liệu = ca drawer theo CLAUDE.md §7 |
+| PaySim & đồ án cũ | popup `paysim` | bài tự nói "đáng trả lời riêng" |
+
+Bốn tiêu đề tự tố giác đã sửa tận gốc thay vì dời: `m-infer` "Thứ bạn có thể bỏ qua" →
+"Phạm vi của bài này — và một ngoại lệ bắt buộc" (ngoại lệ power analysis là yêu cầu cứng,
+nó thuộc mạch chính); `f-store` "Vì sao bạn chưa cần" → "Bốn điều kiện để nó có ích";
+`ml-trees` "XGBoost hay LightGBM?" → "Chọn LightGBM, và đừng đi so thư viện".
+
+### 5. `s-plan14` — sửa lỗi cấu trúc, không sửa từng câu
+
+Người đọc đến để hỏi "14 ngày làm gì" nhưng gặp **ba hộp cảnh báo full-width trước khi
+thấy lịch**, và ba hộp đó cùng một sức nặng thị giác nên không có thứ bậc. Đảo lại:
+mở đầu → **một** hộp nêu mốc ngày 6 (xương sống của cả lịch) → lịch → hình → hai hộp phạm
+vi. Ghi chú "số giờ tính từ đâu" chuyển xuống **sau** lịch, và bỏ con số gõ tay khỏi nó.
+Bỏ đoạn trùng nguyên văn giữa hộp cảnh báo và note của ngày 6.
+
+### 6. `m-bayes` và `pr-cost` → `core`
+
+Trang tự mâu thuẫn: `m-bayes` là tiền đề của một tiêu chí đạt trong `ml-metrics`, `pr-cost`
+được trang gọi là bài có tỉ lệ giá trị/công sức cao nhất — cả hai không thể là "nên biết".
+Thêm `ACCEPT[m-bayes]` (tính bằng tay precision ở prevalence 0,17%).
+
+### 7. Cổng: hai thay đổi, cả hai để khuyến nghị về được 0
+
+- `G-VIZ` **báo sai** `s-plan8w`: bài có bảng, nhưng do JS dựng nên nguồn chỉ có `<div>`
+  rỗng. Đã tính cả các hộp `<div id="plan…">`. Một khuyến nghị báo sai kéo cả danh sách
+  xuống thành tiếng ồn.
+- Thêm thoát cửa `<!-- gate:long: lý do -->`. `G-LAYER` cảnh báo bài > 200 dòng, nhưng có
+  bài dài vì catalogue lọt lên mạch chính (phải sửa) và có bài dài vì nó **thật sự** là sáu
+  file nguồn phải gõ (`pr-code`). Không có cách ghi nhận "đã soát, dài là đúng" thì bốn
+  khuyến nghị đó ở lại mãi. Đã ghi lý do cụ thể cho `pr-code`, `pr-eval`, `pr-serve`,
+  `d-data`. Đã thử cả hai chiều: bỏ thẻ → khuyến nghị quay lại; làm hỏng một `data-aside`
+  trong bài có `gate:long` → `G-REF` + `G-ORPHAN` vẫn nổ (thoát cửa không làm cổng mù).
+- `m-vector` là bài duy nhất `G-VIZ` bắt đúng. Đã thêm bảng bốn shape + một khối code
+  **in ra lỗi shape thật** kèm cách đọc nó — đúng thứ bài tự nói là mục tiêu ("đọc được
+  lỗi"), không phải hình trang trí.
+
+### 8. Sửa một chỗ HANDOFF phiên trước ghi sai
+
+Phiên (a) ghi *"`m-infer` (100′) và `th-stats` (85′) dạy trùng, `pr-eval` viết code lần thứ
+ba"*. **Soát lại thì không đúng.** Cả hai đã trỏ vào cùng popup `ci`; `m-infer` dạy *vì sao*
+so ghép cặp (không có code), `th-stats` cho *quy trình* nhiều seed + một khối code, `pr-eval`
+cho *hàm dùng được* (`bootstrap_ci`/`paired_ci`). Đó chính là cách chia khái niệm → quy
+trình → hiện thực mà phiên trước muốn, và nó **đã đúng sẵn**. Chỗ trùng thật chỉ là hai mẫu
+câu viết — mức trùng chấp nhận được. **Không sửa, và đây là kết luận cuối, đừng làm lại.**
 
 ---
 
-## CHƯA XONG — việc nội dung, cần phiên riêng
+## CHƯA LÀM — và vì sao
 
-Hai đợt review đã chạy trong phiên này và **kết quả CHƯA được áp dụng**. Đây là phần
-việc lớn còn lại, không phải phần đã làm.
+### Quyết định giáo trình, không phải lỗi: cần chủ trang chọn
 
-### 1. Hai waiver = một lỗi giáo trình thật, chưa sửa
+Bốn việc dưới đây phiên (a) ghi là "cân nhắc". Chúng **đổi hình dạng giáo trình**, nên theo
+đúng tinh thần CLAUDE.md §6 (thêm/xoá bài phải soi lại triết lý) chúng là quyết định của
+chủ trang, không phải của agent. Khuyến nghị kèm theo:
 
-`ml-metrics` (bài thứ 43) dạy PR-AUC, nhưng:
-- tiêu chí đạt của `ml-linear` (thứ 37) đã bắt người học "in PR-AUC validation";
-- deliverable tuần 3 cũng đòi PR-AUC, mà `ml-metrics` ở tuần 4;
-- 12 bài nhắc PR-AUC trước khi nó được dạy, sớm nhất là `s-pipeline` (thứ 3).
+| việc | khuyến nghị | lý do |
+|---|---|---|
+| Dời chặng 7 xuống sau chặng 8 | **nên làm** | 975 phút, lớn nhất trang, 0 bài trong fast track, mà nó nằm chắn giữa DL và hai chặng mà trang tồn tại vì chúng |
+| `t-stack` → chặng 10 (tra cứu) | **nên làm** | nó là sổ tra (r60/x0/d0), không phải bài học; đặt ở chặng 1 làm tuần 1 dài ra vô ích |
+| Cắt `f-store` | **không nên** | sau khi sửa tiêu đề thì nội dung thật của nó là *một câu trả lời cho hội đồng* + point-in-time correctness. Giữ, nó đang là `skim` 30′ |
+| `q-analytics` off-goal | **giữ** | nó là bài duy nhất vạch ranh giới analytics / predictive / causal, và đó là câu hội đồng hay hỏi |
 
-`auditPlan()` không bắt được vì `ml-metrics` không nằm trong `WEEKS[3].needs`.
+### Còn nợ thật
 
-**Cách sửa:** dời `ml-metrics` lên ngay sau `ml-linear` (cả `TREE` lẫn thứ tự
-`<template>`), thêm vào tuần 3 (`ids` + `needs`), rút hai bước đầu của `ml-imb` thành một
-câu trỏ về. Xong thì xoá 2 dòng trong `waivers.json` và rút gọn `allowEarly` của PR-AUC.
-
-### 2. Review mục lục — findings chưa áp dụng
-
-- **`pr-data` sai chỗ (chặng 8 / tuần 7)** nhưng nó là bài định nghĩa dataset + `datacard`
-  + schema, mà tuần 2–4 đã làm việc trên dữ liệu đó. `d-eda` acceptance tham chiếu
-  `datacard`; `PORTFOLIO` đã xếp `pr-data` trước `d-eda`; `DAYS` xếp ngày 6, `WEEKS`
-  không. → tách nửa "chọn bộ nào / tải / datacard / schema" lên đầu chặng 3.
-  (Đang được tha tạm trong `concepts.json` → `datacard.allowEarly`.)
-- **Thiếu baseline theo luật.** `th-defense` đưa mẫu trả lời "luật hiện tại bắt 31%, mô
-  hình bắt 64%" nhưng cả trang không có chỗ nào tạo ra con số đó. → thêm mục + acceptance
-  vào `pr-eval` (3–5 luật, chấm trên cùng test set, cùng `paired_ci`).
-- **Thiếu artifact công bằng nhóm.** `th-defense` và `th-write` đều giả định đã đo FPR
-  theo nhóm; không bài nào tạo ra nó. → một mục + một acceptance trong `pr-eval`.
-- **Chặng 7 (975 phút, lớn nhất trang, 0 bài trong fast track)** nằm giữa chặng ML/DL và
-  hai chặng mà trang tồn tại vì chúng. → cân nhắc dời chặng 7 xuống sau chặng 8.
-- **`m-infer` (100′) và `th-stats` (85′) dạy trùng**, `pr-eval` viết code lần thứ ba.
-  → `m-infer` chỉ khái niệm; `th-stats` chỉ protocol nhiều seed + cách báo cáo.
-- **`m-bayes` nên là `core`** (nó chứng minh vì sao accuracy vô dụng ở prevalence thấp —
-  tiền đề của `ml-imb` và một acceptance của `ml-metrics`). **`pr-cost` nên là `core`**
-  (trang tự gọi nó là bài có tỉ lệ giá trị/công sức cao nhất).
-- Nhỏ hơn: `t-stack` giống sổ tra cứu hơn bài học → chặng 10; `f-store` (skim) gần như
-  chỉ nói "chưa cần" → cắt, giữ đoạn point-in-time; `q-analytics` off-goal.
-
-*Đã kiểm và KHÔNG phải lỗi:* thứ tự `<template>` khớp `TREE` 100%; calibration được xử lý
-đủ (`m-prob`, `ml-imb`, `pr-eval`); không có nhánh phụ mồ côi; không có `<details>` nào.
-
-### 3. Review phân tầng mạch chính — findings chưa áp dụng
-
-25 chỗ nhánh phụ còn nằm trên mạch chính. Nặng nhất:
-- `pr-eval` ~7099–7389: **4 file test đầy đủ inline (~290 dòng = 35% bài)**. Giữ 2 test
-  được gọi tên + output `pytest -q`; ~22 test body còn lại vào popup.
-- `pr-data`: bảng so 4 bộ dữ liệu + lý do loại ULB → popup; đoạn PaySim (bài tự nói "đáng
-  trả lời riêng") → popup.
-- `pr-serve`: app Streamlit (~28 dòng, một UI thứ hai) → popup / gộp `cmp-serve`;
-  "ba cách lấy lịch sử" → đây là ca drawer thật sự hợp.
-- `t-colab`: catalogue 10 khả năng trong khi bài tự nói chỉ 3 cái quan trọng → popup;
-  bảng quyết định Colab/Codespaces/local trùng hẳn drawer `cmp-run` đã link 18 dòng sau.
-- `ml-trees` "XGBoost hay LightGBM?" trùng drawer `cmp-gbdt`; `m-infer` mục "Thứ bạn có
-  thể bỏ qua"; `f-store` mục "Vì sao bạn chưa cần"; `f-cyclic` Cách 4 + caveat trùng popup
-  `sincos`; `ml-loss` zoo optimizer; `dl-train` bảng gỡ lỗi; `th-defense` 24 câu hỏi
-  (~57 dòng — drawer hợp ở đây).
-
-`node tools/gate.mjs --advice` đang chỉ đúng 8 trong số này (các tiêu đề mục tự tố giác +
-4 bài dài nhất). Phần còn lại phải đọc bằng mắt.
-
-### 4. `s-plan14` trình bày còn khó hiểu
-
-Chủ trang nói cả trang này khó hiểu, không chỉ hai chỗ đã sửa. Chưa rà lại toàn bài bằng
-`docs/content-gates.md`.
-
-### 5. Còn nợ từ các phiên trước
-
+- **Hai hệ số liệu song song.** `ml-metrics`/`th-defense` dùng bộ số minh hoạ (PR-AUC
+  0,281 → 0,412, recall 31% → 64%, 1.240 → 598 triệu). `pr-eval` dùng số **chạy thật trên
+  bộ mô phỏng** (PR-AUC 0,0485, recall hiệu dụng 21,8%, 411 → 350 triệu). Cả hai đều đúng
+  trong ngữ cảnh của nó, nhưng người đọc đi từ bài này sang bài kia sẽ tưởng mình sai ở
+  đâu. Đã thêm một câu ở `th-defense` nói rõ bảng đó là minh hoạ — **chưa** rà toàn trang.
+  Đây là việc đáng làm nhất còn lại.
+- **Ngày 9 của fast track đúng 3,5 giờ**, tức đúng ngưỡng dưới của `auditPlan()`. Cắt bất
+  kỳ thời lượng nào trong ba bài của ngày đó sẽ làm `auditPlan()` trượt. Đó là cổng làm
+  đúng việc, nhưng biết trước thì đỡ mất thời gian.
+- **6 khuyến nghị `G-FWD` còn lại là trạng thái ổn định đã soát**, không phải việc chưa
+  làm. Chúng là các bài bản đồ/tra cứu (`s-*`, `t-stack`, `t-ai`) và vài bài FE nêu tên
+  khái niệm để định vị. Đưa hết vào `allowEarly` sẽ biến `concepts.json` thành con dấu
+  cao su; để nguyên thì cổng còn là bảng theo dõi đọc được. **Đừng "sửa" bằng cách nhồi
+  allowEarly.**
 - Rà thời lượng từng bài (`auditPlan` chỉ kiểm *nhất quán*, không kiểm *hợp lý*) — đặc
-  biệt `pr-code`, `pr-eval`, `pr-serve`, các bài DL dài, `s-intro`.
+  biệt `pr-code`, các bài DL dài, `s-intro`.
 - `r-roadmapsh`: chắc lại là **bản dịch thứ tự bài học** của roadmap.sh, không phải bài so
   sánh hơn thua.
 - Nhãn Foundation/Applied/Advanced: cân nhắc có thật cần không trước khi làm.
 - `th-defense` cũng là timeline (T−3/T−2/T−1) — cân nhắc chuyển sang `wb-steps` cho nhất
   quán với lịch 14 ngày.
+- `f-cyclic` "Cách 4 · SplineTransformer", `ml-loss` zoo optimizer, `dl-train` bảng gỡ lỗi:
+  vẫn trên mạch chính. Mỗi cái 6–15 dòng, `G-LAYER` không bắt (tiêu đề không tự tố giác).
+  Ưu tiên thấp — nhưng `f-cyclic` Cách 4 đáng dời nhất vì bài đã nói dùng Cách 2/3.
 
 ---
 
 ## Chạy preview (sandbox chặn đọc thẳng file repo — phải mirror)
 
-Mirror repo → scratchpad rồi serve. Cấu trúc mirror phải giữ `web-builder/web-builder.css`
-để `../../web-builder/…` resolve được. Mỗi lần sửa: copy lại rồi reload.
+Server `ds-review` (port 8805) serve từ `scratchpad/preview/`, **không** từ repo. Mỗi lần
+sửa: `cp data-science-roadmap.html <scratchpad>/preview/masters-degree/data-science-roadmap/`
+rồi reload kèm `?v=n` (không đổi query thì trình duyệt trả bản cache và bạn sẽ đo bản cũ —
+đã mất thời gian vì đúng chuyện này).
+
+Chạy `auditPlan()` ở Console. Khi lặp qua nhiều bài bằng `location.hash`, **nhớ bỏ qua
+`await` nếu hash không đổi** — set lại đúng hash hiện tại thì `hashchange` không bắn và
+script treo.
 
 Trang rất dài: screenshot khi cuộn sâu hay ra khung đen (giới hạn compositor của pane) —
 verify bằng DOM/JS, đừng tin mỗi ảnh đen là lỗi thật.

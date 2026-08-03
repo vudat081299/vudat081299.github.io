@@ -27,10 +27,10 @@
         "s-plan14",
         "m-bayes",
         "ml-map",
-        "ml-cv",
-        "ml-imb"
+        "ml-linear",
+        "d-data"
       ],
-      "allowWhy": "s-* chỉ nêu tên khi giới thiệu lộ trình; m-bayes/ml-map/ml-cv/ml-imb dùng như một tên chỉ số và trỏ tới ml-metrics. NẾU ml-metrics được dời lên sớm hơn thì xoá bớt danh sách này."
+      "allowWhy": "s-* chỉ nêu tên khi giới thiệu lộ trình; m-bayes/ml-map nêu như tên một chỉ số và trỏ tới ml-metrics. ml-linear đứng NGAY TRƯỚC ml-metrics và tự định nghĩa PR-AUC một câu tại chỗ ('chỉ số chính cho dữ liệu lệch nhãn, cao hơn là tốt hơn') rồi trỏ sang bài kế — đúng ngoại lệ mà CLAUDE.md §8 cho phép ở mức thân bài. Tiêu chí đạt của nó KHÔNG còn đòi PR-AUC (chỉ đòi lưu y_prob). 2026-08-04: ml-cv/ml-imb rời danh sách vì ml-metrics đã được dời lên trước chúng. d-data vào danh sách cùng ngày vì nó được dời lên chặng 3: nó dùng PR-AUC như tên một điểm số trong bảng ablation và tự chú thích một câu tại chỗ."
     },
     "rò rỉ dữ liệu": {
       "definedIn": "d-leak",
@@ -43,10 +43,11 @@
         "t-sql",
         "t-sklearn",
         "t-stack",
+        "d-data",
         "d-eda",
         "d-clean"
       ],
-      "allowWhy": "t-sql giải thích cái bẫy point-in-time tại chỗ và gọi tên bài d-leak; các bài còn lại chỉ cảnh báo trước để người học không làm sai trong lúc chờ tới d-leak."
+      "allowWhy": "d-data diễn giải hiện tượng bằng lời thường ('đáp án bị nhét ngược vào feature') và trỏ tới d-leak thay vì dùng thuật ngữ như đã biết; t-sql giải thích cái bẫy point-in-time tại chỗ và gọi tên bài d-leak; các bài còn lại chỉ cảnh báo trước để người học không làm sai trong lúc chờ tới d-leak."
     },
     "ngưỡng theo chi phí": {
       "definedIn": "ml-metrics",
@@ -101,12 +102,10 @@
       "allowWhy": "dl-cnn-rnn nêu tên khi nói vì sao RNN bị thay thế."
     },
     "datacard": {
-      "definedIn": "pr-data",
+      "definedIn": "d-data",
       "pattern": "datacard",
-      "allowEarly": [
-        "d-eda"
-      ],
-      "allowWhy": "TẠM THỜI. Tiêu chí đạt của d-eda tham chiếu datacard trong khi pr-data nằm ở chặng 8 — đây là một phụ thuộc ngược thật, đã ghi trong HANDOFF. Xoá dòng allowEarly này khi pr-data được tách/dời lên chặng 3."
+      "allowEarly": [],
+      "allowWhy": "2026-08-04: danh sách này rỗng lại được vì bài dạy datacard (cũ là pr-data ở chặng 8, nay là d-data ở chặng 3) đã đứng TRƯỚC d-eda. Trước đó đây là một phụ thuộc ngược thật đang được tha tạm."
     }
   }
 }
