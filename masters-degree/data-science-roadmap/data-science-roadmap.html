@@ -53,6 +53,11 @@
   .ds-prose .wb-table-scroll { margin: 0 0 16px; }
   .ds-prose .wb-table-scroll > table { margin: 0; }
 
+  /* Bôi đen văn bản: nền = mực, chữ = nền — đơn sắc, tự đảo theo light/dark
+     (light: nền đen, chữ trắng; dark: nền trắng, chữ đen). */
+  ::selection { background: var(--wb-fg); color: var(--wb-canvas); }
+  ::-moz-selection { background: var(--wb-fg); color: var(--wb-canvas); }
+
   /* ---- khối code (kit không có) ---- */
   .ds-code {
     background: var(--wb-surface-2); border: var(--wb-bw) solid var(--wb-border);
@@ -192,7 +197,7 @@
   /* [hidden] đặt display:none, nhưng .ds-undo{display:flex} viết sau nên đè mất —
      hai thanh này khi rỗng vẫn hiện ra như hai hộp xám vô nghĩa. Trả lại đúng. */
   .ds-undo[hidden] { display: none; }
-  .ds-rail__progress { font-size: var(--wb-text-caption); color: var(--wb-fg-muted); display: flex; justify-content: space-between; margin-bottom: 6px; }
+  .ds-rail__progress { font-size: var(--wb-text-caption); color: var(--wb-fg-muted); display: flex; align-items: center; gap: 8px; justify-content: space-between; margin-bottom: 6px; }
   .ds-tree .wb-tree__label { font-size: 13px; }
   .ds-tree .wb-tree__row { cursor: pointer; }
   .ds-tree .wb-tree__meta { font-size: 11px; }
