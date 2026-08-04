@@ -1,6 +1,6 @@
 # Handoff — data-science-roadmap.html
 
-File là single-page app (~12,6k dòng, tự chứa) dựng trên web-builder CSS. Nội dung bài nằm
+File là single-page app (~13,9k dòng, tự chứa) dựng trên web-builder CSS. Nội dung bài nằm
 trong các `<template data-node="…">`, router hash dựng ra.
 
 **Đọc [CLAUDE.md](CLAUDE.md) trước.** Đừng mở cả file HTML để tìm hiểu — dùng `TOC.md`
@@ -14,6 +14,123 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 - `node tools/gate.mjs` đã bao gồm `auditPlan()` (cổng `G-PLAN`) — **không cần mở trình
   duyệt để kiểm lịch học nữa**.
 - `node tools/gate.test.mjs` — test cho chính bộ cổng. Chạy khi sửa `tools/`.
+
+---
+
+## Phiên 2026-08-04 (j) — thanh trên nói tiếng Anh + cùng chiều cao, nút sao chép & panel Notes làm lại, docs bỏ hết nhật ký
+
+Chủ trang báo bốn việc: (1) thanh trên canh giữa dọc toàn bộ, và **mọi chữ trên thanh trên
+phải là tiếng Anh**; (2) nút sao chép code xấu; (3) nút xoá ghi chú xấu — bấm xoá xong nền
+đỏ, hover vào thì icon thành **đen trên nền đỏ** — và "bố cục note này rất xấu, design đẹp
+hơn được không"; (4) docs đang ghi kiểu nhật ký (*"Chủ trang chốt 2026-08-04, sau khi xem
+trang ở cấu hình 660/18px, theo thứ tự ưu tiên:"*) — **docs chỉ để ghi tài liệu**, cái gì
+đổi theo thời gian thì vào changelog; rà toàn bộ `.md` xem còn lỗi tương tự.
+
+### 1. Thanh trên — canh giữa KHÔNG phải là vấn đề, ba chiều cao khác nhau mới là
+
+Đo trước khi sửa: cả bốn ô đã có `mid = 27,5px`, tức **đã canh giữa dọc đúng**. Thứ làm hàng
+đọc so le là **chiều cao**: nút-logo 32 · chip % 19,4 · Notes 32 · sáng/tối 28. Mắt đọc mép
+trên và mép dưới của mỗi ô, không đọc tâm nó — nên "canh giữa" thêm nữa sẽ không sửa được gì.
+
+Sửa: token `--ds-navctl: 30px` khai ở `.wb-navbar`, cả bốn ô dùng nó, **kèm
+`box-sizing: border-box`** (kit không đặt border-box toàn cục, thiếu nó là viền cộng thêm 2px
+và ô đó lại lệch). Phụ đề thương hiệu chuyển từ `align-items: baseline` sang `center` và có
+vạch ngăn — canh giữa hai cỡ chữ khác nhau chỉ đọc đúng khi chúng là hai thứ tách biệt, và
+vạch ngăn dùng lại đúng hình của `Notes │ 3` ở đầu bên kia thanh.
+
+**Luật ngôn ngữ đảo chiều cho thanh trên** (`lộ trình học` → `Roadmap`, cùng mọi `title=` /
+`aria-label` / chữ do `syncNotesCount()` sinh). Cái được thêm: luật cũ có **hai ngoại lệ rời**
+(`Notes`, `Light`/`Dark`) — cả hai nằm trên thanh trên, nên giờ chúng tan vào một luật thay vì
+là hai ca đặc biệt phải nhớ. Lớp vỏ còn lại (thanh bên, chân trang, panel, `<title>`) vẫn
+tiếng Việt; ngoại lệ duy nhất còn lại là **tiêu đề dock** `Notes` vì nó là tên của panel.
+
+Chạm vào: `CSS lớp vỏ · markup navbar · syncNotesCount`
+
+### 2. Nút sao chép — `opacity: .5` là nguyên nhân của cả ba chỗ xấu
+
+`.5` áp cho **cả hộp** nên nền và viền cũng mờ theo: viền hoá một vạch đục nằm giữa nền code
+và nền nút, không ra viền mà cũng không ra bóng. Cộng thêm `--wb-radius` (10px) **đúng bằng**
+bán kính góc khối code mà chỉ cách nó 8px → hai góc bo cùng bán kính lồng nhau. Sửa bằng cách
+bỏ chính quyết định "luôn hiện ở .5": khi nghỉ là **icon trần** (không nền, không viền, không
+góc — không có gì để đục), trỏ vào khối code mới thành chip đủ nét, bán kính `--wb-radius-sm`
+để hai góc đọc thành hai cấp.
+
+Nền chip là `--wb-canvas`, **không** `--wb-surface`: khối code là `--wb-surface-2`, và ở chế
+độ tối hai token đó cách nhau đúng 7 đơn vị xám (`#131316` / `#1a1a1e`) — chip đặt lên gần như
+tàng hình. Luật này đã ghi vào `design.md` §6: **chọn token theo khoảng cách, không theo tên.**
+
+Bắt kèm một lỗi thật: nhánh sao chép **thất bại** cũng bật `is-done` (xanh). Tách `is-fail`
+(đỏ) — một lần chép thất bại không được hiện ra màu thành công.
+
+Chạm vào: `CSS .ds-copy · addCopyButtons`
+
+### 3. Panel Notes — lỗi nút xoá là cascade của kit, không phải màu chọn sai
+
+Nguyên nhân đúng như chủ trang thấy, và nó nằm ở kit: nút xoá là
+`wb-btn wb-btn--ghost`, lúc lên nòng thì code bật thêm `wb-btn--danger`. Nhưng
+`.wb-btn--ghost:hover` đặt `color: var(--wb-fg)` với độ ưu tiên **0-2-0**, còn
+`.wb-btn--danger` đặt màu chữ với **0-1-0** — nên hover thắng: **icon đen trên nền đỏ**. Đây
+không phải lỗi đặt màu, là lỗi **chồng hai variant của kit cùng đặt một thuộc tính**.
+
+Sửa: hai nút sửa/xoá dùng `.ds-nact` của riêng trang, không dùng nút kit nữa. Và trạng thái
+lên nòng **đổi hình chứ không chỉ đổi màu**: icon thùng rác → chữ `Xoá?` trên nền
+`--wb-danger-soft`. Ô đỏ đặc chỉ nói được "nguy hiểm"; dấu hỏi nói ra đúng việc đang xảy ra —
+trang đang **chờ** cú bấm thứ hai. Thêm `:has(.is-armed)` để nút đang chờ không tàng hình khi
+chuột rời hàng.
+
+Ba lỗi bố cục còn lại, cùng một gốc — **panel hẹp mà mọi thứ đều tranh bề rộng**:
+
+| lỗi | nguyên nhân | sửa |
+|---|---|---|
+| nút `Lưu` nằm một dòng riêng, canh trái | nhãn "Đây là" + 3 nút loại + `Lưu` không đủ chỗ trên một hàng | ba nút loại **chia đều bề rộng** (tự nói ra "chọn một trong ba", nên bỏ được nhãn), `Lưu` rộng hết hàng |
+| dấu `·` treo ở đầu/cuối dòng trong hàng meta | một hàng `flex-wrap: wrap` + các phần ngăn bằng `·` rời → gói ở **mọi** bề rộng | bỏ hẳn dấu `·`, chia **ba hàng** theo thứ đo được: loại+giờ+nút · chữ ghi chú · tên bài (cắt "…") |
+| ~7 dòng chữ xám cho 1 ô nhập | 3 câu phụ đề + placeholder dài + 2 đoạn gợi ý + 1 nhãn HOA trùng vai với dòng "Ghi cho" | mỗi khối **một** câu; bỏ nhãn HOA của khối ghi; bỏ số "1." "2." (hai nút xếp thứ tự đã nói ra rằng chúng là hai bước) |
+
+Chạm vào: `CSS .ds-notes* + .ds-nact · markup panel · renderNotes · noteAction`
+
+### 4. Docs bỏ hết nhật ký — và một luật mới để nó không quay lại
+
+Luật thêm vào `CLAUDE.md` §0a: **bốn file `.md` docs ghi trạng thái hiện tại, HANDOFF.md ghi
+lịch sử.** Thấy mình định viết "chủ trang chốt \<ngày\>" hay "bản trước để X" vào docs thì đó
+là dòng thuộc HANDOFF; docs chỉ ghi **luật, và con số đang dùng**.
+
+Đã bỏ khỏi docs: mọi "chủ trang chốt 2026-08-04", "bản (a)/(b)", "phiên (e)/(f)/(g)", bảng
+before/after của thang chữ, đoạn kể `--ds-measure` đổi ba lần trong một ngày, hai con số đo
+sai từng ghi ở `design.md`. Không mất gì: mục `## Phiên … (i)` ngay dưới đây **đã** giữ đủ
+những chuyện đó. Cái *giữ lại* là phần vẫn là luật — "muốn đổi cột/chữ thì HỎI", "đừng bật
+lại zoom", kèm lý do đủ ngắn để đọc.
+
+Đồng thời sửa ba lỗi thật trong docs, không phải lỗi văn phong:
+
+- `CLAUDE.md` §0a lấy **"trung vị ≤ 85 ký tự/dòng"** làm tiêu chí xong việc, trong khi §10
+  của chính nó nói 152 là **có chủ ý**. Hai dòng trong một file bảo hai điều trái nhau.
+- `editing.md` có **hai hàng trùng nhau** cho "Thêm một lớp phủ mới", và hai hàng gần trùng
+  cho "Đổi khổ chữ" / "Nới cột nội dung" — trong đó một hàng nói sửa `--ds-measure` **và**
+  `--ds-fs`, hàng kia nói *"sửa `--ds-measure`, chỉ nó"*.
+- `design.md` đánh số `§0.2b` giữa `§0.2` và `§0.3`. Đổi thành `§0.1–0.5` phẳng, và sửa hết
+  tham chiếu chéo trong `CLAUDE.md` + `editing.md` theo.
+
+Chạm vào: `CLAUDE.md §0a/§10/§11 · docs/design.md (viết lại §0) · docs/editing.md · docs/writing.md`
+
+### Cố ý KHÔNG làm trong phiên này
+
+- **Không chạm `--ds-measure` / `--ds-fs`.** Đó là quyết định của chủ trang (§0.3), và phiên
+  này không có yêu cầu nào về khổ trang.
+- **Không dịch nội dung panel Notes sang tiếng Anh.** Yêu cầu nói rõ "text xuất hiện trên
+  navbar", và panel không phải navbar. Dịch thêm là tự nới phạm vi.
+- **Giữ hai nhãn HOA `ĐÃ GHI` / `ĐƯA VÀO REPO`** dù đã bỏ cái thứ ba. Chúng là thứ duy nhất
+  chia panel thành các khối; bỏ hết thì ba phần chạy liền vào nhau.
+- **Không bỏ `★` khỏi tên bài** hiện trong dòng "bài nào" của mỗi ghi chú. Dấu đó nằm trong
+  `TREE.t` nên bỏ là chạm `TOC.md` + cổng, mà nó vẫn khớp với cây bên trái.
+- **Không sửa vòng focus quanh `h1`** sau khi đổi bài (router đưa tiêu điểm vào `#main`) —
+  hành vi có từ trước, không thuộc phạm vi phiên này.
+- **6 khuyến nghị `G-FWD`** giữ nguyên: chúng là quyết định về giáo trình, không phải lỗi UI.
+
+### Còn nợ của riêng phiên này
+
+- `docs/design.md` dài **~540 dòng**, hơn bản trước một ít dù đã bỏ hết nhật ký — vì phiên này
+  thêm luật mới (chiều cao thanh trên, bố cục panel, chọn token theo khoảng cách). Nếu chủ
+  trang thấy vẫn rườm rà thì chỗ cắt tiếp là §0.5, mục dài nhất.
 
 ---
 

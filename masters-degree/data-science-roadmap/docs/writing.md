@@ -7,7 +7,8 @@ Nó **không** kiểm được điều duy nhất thật sự quan trọng: *đ�
 hiểu không.*
 
 File này là danh sách tám câu bạn phải tự soi, vì máy không soi hộ được. Nền lý thuyết:
-skill `explain-clearly`.
+skill `explain-clearly`. Đây là tiêu chuẩn, không phải nhật ký — bài nào đã soát, phiên nào
+sửa gì thuộc [HANDOFF.md](../HANDOFF.md).
 
 **Khi nào soi:** khi viết một bài mới, khi viết lại một bài, hoặc khi chủ trang yêu cầu
 review. **Đừng** soi cả 84 bài mỗi lần sửa một dấu phẩy — làm vậy là cách chắc chắn để
@@ -33,9 +34,9 @@ thay đổi, câu nào chỉ là ý kiến của người viết.
 | ý kiến của người viết | "với 2 tuần thì LightGBM là lựa chọn đúng" | nói rõ đây là phán đoán |
 
 **Trượt:** câu tuyệt đối. `luôn`, `không bao giờ`, `mọi`, `chắc chắn`, `không thể` — gần
-như mỗi lần xuất hiện là một lần nói quá. Hai ví dụ đã phải sửa trong trang này: *"Pipeline
-thì không thể rò rỉ"* (sai — Pipeline chặn *phần lớn* rò rỉ tiền xử lý, không phải tất cả)
-và *"CLT luôn đúng"* (sai — nó có điều kiện, và là kết quả tiệm cận).
+như mỗi lần xuất hiện là một lần nói quá. Hai mẫu điển hình: *"Pipeline thì không thể rò
+rỉ"* (sai — Pipeline chặn *phần lớn* rò rỉ tiền xử lý, không phải tất cả) và *"CLT luôn
+đúng"* (sai — nó có điều kiện, và là kết quả tiệm cận).
 
 **Đạt:** con số nào cũng có nguồn, hoặc được gọi thẳng là ví dụ minh hoạ. Một con số chỉ
 để minh hoạ thì phải **ghi rõ nó là minh hoạ** — nếu không, người học sẽ tưởng đó là kết
@@ -190,8 +191,8 @@ bắt được một đoạn văn lan man giữa bài — đó là việc của 
 
 **Hỏi:** đoạn này đang **nói một ý**, hay đang **đọc lại một bảng số**?
 
-Đây là lỗi khó tự thấy nhất khi viết, vì nó *cảm giác* như đang đầy đủ và cẩn thận. Ví dụ
-thật đã phải sửa trong trang này — mô tả của hình lịch 14 ngày:
+Đây là lỗi khó tự thấy nhất khi viết, vì nó *cảm giác* như đang đầy đủ và cẩn thận. Mẫu —
+mô tả của hình lịch 14 ngày:
 
 > ✗ "Số giờ mỗi ngày: ngày 1 5.8 giờ, ngày 2 5.3 giờ, ngày 3 5.9 giờ, … ngày 14 5.8 giờ.
 > Tổng 75.8 giờ."

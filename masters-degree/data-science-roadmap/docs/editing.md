@@ -12,7 +12,8 @@ như vậy.
 
 Luật *vì sao* nằm ở [CLAUDE.md](../CLAUDE.md). Cách viết cho người đọc hiểu nằm ở
 [writing.md](writing.md). Nó trông thế nào và nằm ở đâu trên màn hình nằm ở
-[design.md](design.md). File này chỉ nói gõ ở đâu.
+[design.md](design.md). File này chỉ nói gõ ở đâu — và nó ghi **trạng thái hiện tại**, không
+ghi phiên nào đã làm gì; việc đó thuộc [HANDOFF.md](../HANDOFF.md).
 
 Mở đúng đoạn cần sửa, đừng mở cả file:
 
@@ -37,20 +38,20 @@ cổng nào canh, bạn phải tự nhớ.
 | **Đổi tên / thời lượng / ưu tiên một bài** | chỉ `TREE`, rồi sinh lại `TOC.md` | `G-TOC-STRUCT` chặn để bạn xác nhận có ý thức |
 | **Dời một chặng** | xem [việc 3](#việc-3--dời-thêm-hoặc-xoá-một-chặng) — nhiều hơn bạn nghĩ | một phần |
 | **Thêm một nhánh phụ** (popup / ngăn phải) | khối `<template>` của nó, cộng một chip mở nó | `G-ORPHAN` chặn nếu tạo mà không ai mở |
-| **Đổi khổ chữ** | `--ds-measure` **và** `--ds-fs` — xem hàng "Nới cột nội dung" dưới | `G-MEASURE` |
-| **Thêm một lớp phủ mới** (popup / drawer / panel) | thêm id vào `LAYER_IDS` — nếu không thì `Esc` và bấm-ra-ngoài không đóng được nó, và nó không chặn phím `[` `]` | **mắt** |
+| **Thêm một lớp phủ mới** (popup / drawer / panel) | thêm id vào `LAYER_IDS` — thiếu thì `Esc` và bấm-ra-ngoài không đóng được nó, và nó không chặn phím `[` `]`. Dock `Notes` **cố ý không có** trong danh sách đó ([design.md](design.md) §0.5) | **mắt**: mở lớp mới rồi bấm Esc |
 | **Thêm một nút bật/tắt** | `wb-btn wb-btn--sm ds-lvlbtn`, bật thì thêm **`is-active`** — một class trạng thái, không hai. Xem [design.md](design.md) §4 | **mắt** |
+| **Cần một nút có trạng thái kit không có sẵn** | viết một class của riêng trang, **đừng chồng hai variant `wb-btn--*`** đặt cùng thuộc tính — `--ghost` + `--danger` cho ra icon đen trên nền đỏ ([design.md](design.md) §3) | **mắt**, và phải kiểm ở trạng thái hover |
 | **Thêm một cổng vào `gate.mjs`** | hàng trong mảng `GATES` · bảng §4 của `CLAUDE.md` · một ca NỔ + để nó vào chiều IM ở `gate.test.mjs` | `G-DOC` nhắc nếu `CLAUDE.md` thiếu tên; `gate.test.mjs` in ra cổng nào chưa có ca NỔ |
 | **Thêm một lệnh vào `tools/`** | bảng lệnh ở `CLAUDE.md` §3 · bảng định tuyến §0a · một ca "chạy được" trong `gate.test.mjs` | **mắt** |
 | **Đổi khuôn dòng của `LEARNING-LOG.md`** | `RE_ENTRY`/`RE_GROUP` trong `tools/learn.mjs` **và** `N_RE_ENTRY`/`N_RE_GROUP` trong HTML — hai bản của cùng một ngữ pháp, vì trang không có build nên không import được `.mjs` | **mắt**, và đây là chỗ dễ lệch nhất |
-| **Cần "cao/rộng bằng cửa sổ"** | dùng `--ds-vh` / `--ds-vw`, **không** `vh`/`vw`/`dvh` trần: `zoom` không điều chỉnh đơn vị viewport nên số trần bị co thêm 10% (thanh bên + ngăn phụ + dock từng cụt đúng 10% đáy). Media query cũng vậy — con số phải đã chia zoom | `node tools/gate.test.mjs` có ca canh |
-| **Đặt cỡ chữ cho khối trong `#main`** | trỏ vào **một bậc của thang** `--ds-t-*` (§0.2 của [design.md](design.md)). Cần một loại nội dung chưa có bậc → thêm bậc ở `:root` ⑧, đừng viết `font-size` rời. `em` chỉ cho thứ phụ thuộc ngữ cảnh (code inline). **Px cứng chỉ đúng ở lớp vỏ** | **mắt** + đếm lại số cỡ chữ (§0.2) |
+| **Cần "cao/rộng bằng cửa sổ"** | dùng `--ds-vh` / `--ds-vw`, **không** `vh`/`vw`/`dvh` trần ([design.md](design.md) §0.4). Media query cũng vậy — con số phải đã chia zoom | `node tools/gate.test.mjs` có ca canh |
+| **Đặt cỡ chữ cho khối trong `#main`** | trỏ vào **một bậc của thang** `--ds-t-*` ([design.md](design.md) §0.2). Cần một loại nội dung chưa có bậc → thêm bậc ở `:root` ⑧, đừng viết `font-size` rời. `em` chỉ cho thứ phụ thuộc ngữ cảnh (code inline). **Px cứng chỉ đúng ở lớp vỏ** | **mắt** + đếm lại số cỡ chữ (§0.2) |
+| **Thêm một component `wb-*` của kit vào bài** | nếu kit ghi `font-size` px cứng cho nó (đúng với hầu hết: alert, help, card, steps, cap, btn, pager…) thì thêm một dòng vào khối `#main .wb-*` để kéo về thang — không thêm thì nó đọc như một trang khác dán vào | đếm lại số cỡ chữ (§0.2): phải ≤ ~10 |
+| **Nới cột nội dung / đổi khổ chữ** | `--ds-measure` **và** `--ds-fs` cùng lúc — nhưng đọc [design.md](design.md) §0.3 trước, hai con số đó là quyết định của chủ trang. Rồi sửa số đo ở hai chỗ: khối chú thích đầu `<style>` và `design.md` §0.3 | `G-MEASURE`, và đo lại ký tự/dòng — **đừng** copy số cũ sang |
 | **Đổi bề rộng dock `Notes`** | `--ds-dock-w` trong `:root` là mặc định fluid; JS chỉ ghi đè khi người dùng KÉO, và reset = **xoá** `localStorage['ds.dockW']` chứ không ghi lại 25% | mở dock, kéo, F5, kiểm bề rộng còn nhớ |
 | **Đổi tên file ghi chú tải về** | `a.download` trong HTML **và** `PAT_EXPORT` trong `tools/learn.mjs` — đây là hợp đồng để `--sync` tự tìm được file; lệch một bên là `--sync` báo "không thấy bản xuất nào" | chạy `node tools/learn.mjs --sync` sau khi bấm tải về |
-| **Nới cột nội dung** | `--ds-measure` **và** `--ds-fs` cùng lúc (§0.2 của [design.md](design.md)), rồi ba chỗ ghi số đo: khối chú thích đầu `<style>`, `CLAUDE.md` §10, `design.md` §0.2 | đo lại ký tự/dòng — **đừng** copy số cũ sang |
-| **Thêm một component `wb-*` của kit vào bài** | nếu kit ghi `font-size` px cứng cho nó (đúng với hầu hết: alert, help, card, steps, cap, btn, pager…) thì thêm một dòng vào khối `#main .wb-*` để kéo về thang — không thêm thì nó nằm ngoài thang chữ và đọc như một trang khác dán vào | đếm lại số cỡ chữ (§0.2): phải ≤ ~10 |
-| **Thêm một lớp phủ mới** | `LAYER_IDS` trong HTML (thiếu thì lớp đó không đóng được bằng Esc/bấm-ra-ngoài). Dock `Notes` **cố ý không có** trong danh sách đó — xem design.md §0.4 | mở lớp mới rồi bấm Esc |
-| **Đổi một từ ở lớp vỏ trang** | cùng từ đó **trong bài** — hai tên cho một khái niệm là lỗi `CLAUDE.md` §11 | `grep -n '<từ cũ>' data-science-roadmap.html` phải ra 0 (hoặc chỉ còn chỗ nêu tên tiếng Anh một lần) |
+| **Đổi một từ ở lớp vỏ trang** | cùng từ đó **trong bài** — hai tên cho một khái niệm là lỗi `CLAUDE.md` §11. Thanh trên nói tiếng Anh, lớp vỏ còn lại tiếng Việt ([design.md](design.md) §0.1) | `grep -n '<từ cũ>' data-science-roadmap.html` phải ra 0 (hoặc chỉ còn chỗ nêu tên tiếng Anh một lần) |
+| **Thêm một ô vào thanh trên** | `height: var(--ds-navctl)` **và** `box-sizing: border-box`, nhãn/`title`/`aria-label` bằng tiếng Anh ([design.md](design.md) §0.1) | **mắt**: bốn ô phải cùng mép trên và mép dưới |
 
 **Ba chỗ không cổng nào bắt được** — chúng là văn xuôi, máy không đọc được nội dung:
 
@@ -150,8 +151,8 @@ nhất:
 
 - **Hai chỗ phải khớp nhau:** vị trí trong `TREE` và vị trí vật lý của khối `<template>`.
 - **`PAYOFF` của cả bài trước và bài sau**, không chỉ bài bạn vừa dời.
-- **Dời sang chặng khác thì phải đổi id** theo tiền tố chặng. Phiên trước đã phải đổi
-  `pr-data` → `d-data` đúng vì lý do này.
+- **Dời sang chặng khác thì phải đổi id** theo tiền tố chặng: một bài `pr-*` chuyển sang
+  chặng 3 phải thành `d-*`, rồi sửa mọi chỗ nhắc id cũ.
 
 Xoá bài thì ghi vào [HANDOFF.md](../HANDOFF.md) **mất gì** — nội dung đó biến mất khỏi
 trang, và phiên sau cần biết nó từng có.
@@ -159,9 +160,6 @@ trang, và phiên sau cần biết nó từng có.
 ---
 
 ## Việc 3 · Dời, thêm hoặc xoá một chặng
-
-Việc này trước đây không có trong tài liệu, nhưng nó đang là việc treo: HANDOFF ghi hai đề
-xuất *"dời chặng 7 xuống sau chặng 8"* và *"`t-stack` sang chặng 10"*.
 
 Dời một chặng đắt hơn dời một bài, vì **số hiệu chặng nằm trong chính tiêu đề**:
 
@@ -305,6 +303,6 @@ trang này.
 | nguồn | `<ul class="ds-srclist">`, `<p class="ds-srcline">` |
 
 **Đừng đặt `max-width` mới ở đâu cả.** Mép phải của trang do `--ds-measure` quyết định, và
-`G-MEASURE` bắt mọi giá trị cứng viết thêm. Muốn nới trang thì sửa `--ds-measure`, chỉ nó.
-Ba cái bẫy khi sửa phần bảng tràn ra hai bên nằm ở CLAUDE.md §10 — đọc trước khi động vào,
-phiên trước đã dính đủ cả ba.
+`G-MEASURE` bắt mọi giá trị cứng viết thêm. Muốn nới trang thì sửa `--ds-measure` **và**
+`--ds-fs` — xem hàng "Nới cột nội dung" ở bảng đầu file. Ba cái bẫy khi sửa phần bảng tràn ra
+hai bên nằm ở `CLAUDE.md` §10; đọc trước khi động vào.
