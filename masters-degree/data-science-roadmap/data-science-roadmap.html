@@ -39,7 +39,17 @@
      để cả trang đọc như MỘT cột. */
   /* --ds-measure khai ở #main (không ở .ds-prose) vì có khối phải dùng đúng khổ chữ
      đó nhưng nằm NGOÀI .ds-prose — mục tiêu bài, hộp kết bài, ghi chú phạm vi. */
-  #main { --wb-container-max: 940px; --ds-measure: 720px; }
+  /* --wb-measure là khổ chữ MẶC ĐỊNH của kit cho .wb-page-head / .wb-section, mặc định
+     68ch. Đơn vị `ch` co theo font-size nên đoạn intro trang chủ bị chặn ~586px (body) /
+     ~600px (lede) — so le với 720px của phần còn lại, đúng thứ raggedness `ch` mà cả
+     trang đã bỏ ở chỗ khác. Alias nó về --ds-measure để MỌI dòng chữ, kể cả text do
+     shell kit quản, dùng chung một mép phải. Kit có HAI token khổ chữ — --wb-measure
+     (68ch, cho .wb-section) và --wb-measure-tight (62ch, cho phần mô tả .wb-page-head,
+     đúng đoạn intro trang chủ) — alias CẢ HAI, nếu không đoạn hero vẫn kẹt ở ~586px. */
+  #main {
+    --wb-container-max: 940px; --ds-measure: 720px;
+    --wb-measure: var(--ds-measure); --wb-measure-tight: var(--ds-measure);
+  }
   /* ---- mục tiêu bài, đặt trước nội dung ----
      Không dùng card: card đọc như một khối tách khỏi mạch, còn đây phải đọc như câu
      đầu tiên của bài. Một vạch trái mảnh + nhãn nhỏ là đủ để mắt biết "đây là lời
