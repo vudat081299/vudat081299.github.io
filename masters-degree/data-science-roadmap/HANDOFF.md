@@ -121,6 +121,23 @@ câu viết — mức trùng chấp nhận được. **Không sửa, và đây l
 
 ---
 
+## Phiên 2026-08-04 (c) — khổ chữ đoạn intro (phiên UI song song)
+
+Chỉ một sửa, đã commit `effabda` + push. Không đụng nội dung của (b).
+
+**Đoạn mô tả `.wb-page-head` + lede trang chủ bị kẹt ~586–600px** trong khi phần còn lại
+đã ở 720px — đúng lỗi "có text full, có text không" chủ trang báo. Gốc: hai token khổ chữ
+CỦA KIT — `--wb-measure` (68ch) và `--wb-measure-tight` (62ch, cho phần mô tả hero) — vẫn
+là đơn vị `ch` co theo font, đúng thứ raggedness mà (a) đã bỏ cho các class `ds-*` nhưng
+nó lọt lại qua shell. Alias CẢ HAI về `--ds-measure` trên `#main` → mọi dòng chữ (kể cả
+text do kit quản) dùng chung mép 720px. Không thêm `max-width` cứng nên `G-MEASURE` vẫn
+sạch. Verify DOM: intro 586→720px, 0 đoạn nào còn bị chặn dưới 720 ở cả trang chủ lẫn bài.
+
+**Chủ trang đã chốt 720px** (không nới tới 940px): 940px ≈ 137 ký tự/dòng hại việc đọc —
+khớp comment "ĐỪNG nới --ds-measure" sẵn có. Đây là kết luận cuối cho khổ chữ, đừng làm lại.
+
+---
+
 ## CHƯA LÀM — và vì sao
 
 ### Quyết định giáo trình, không phải lỗi: cần chủ trang chọn
