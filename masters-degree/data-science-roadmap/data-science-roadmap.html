@@ -353,22 +353,54 @@
      CHỈ icon, không nhãn chữ: nó lặp lại ở 175 khối code, và một chữ "Chép" cạnh mỗi khối
      là 175 lần nhắc một việc mà cái icon đã nói xong. Ý nghĩa vẫn giữ được qua
      aria-label + title (xem docs/design.md — luật icon thay nhãn). */
+  /* Ba thứ làm bản trước xấu, cả ba đều là hệ quả của một quyết định: NÚT LUÔN HIỆN Ở
+     `opacity: .5`.
+       · .5 opacity áp cho CẢ hộp, nên nền và viền cũng mờ theo → viền hoá ra một vạch
+         đục nằm giữa nền code và nền nút, không ra viền mà cũng không ra bóng;
+       · `--wb-radius` (10px) đúng bằng bán kính góc của khối code, mà nút đặt cách góc
+         đó 8px → hai góc bo cùng bán kính lồng vào nhau, mắt đọc thành một lỗi in;
+       · hộp 28px cho icon 18px thì chật, không đủ đất cho hình tròn của icon.
+     Sửa bằng cách bỏ chính quyết định đó: khi nghỉ, nút là ICON TRẦN mờ — không nền,
+     không viền, không góc, nên không có gì để đục. Trỏ vào khối code thì nó mới thành
+     một chip đủ nét. Bán kính nhỏ hơn hẳn khối code (6px so với 10px) để hai góc đọc
+     thành hai cấp, không thành hai đường song song. */
   .ds-codewrap { position: relative; }
   .ds-copy {
-    position: absolute; top: 8px; right: 8px; z-index: 2;
+    position: absolute; top: 7px; right: 7px; z-index: 2;
     display: inline-flex; align-items: center; justify-content: center;
-    width: 28px; height: 28px; padding: 0; cursor: pointer; opacity: .5;
-    color: var(--wb-fg-subtle); background: var(--wb-surface);
-    border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius);
-    transition: opacity .12s ease, color .12s ease, border-color .12s ease;
+    box-sizing: border-box; width: 30px; height: 30px; padding: 0; cursor: pointer;
+    color: var(--wb-fg-subtle); background: none;
+    border: var(--wb-bw) solid transparent; border-radius: var(--wb-radius-sm);
+    opacity: .45;
+    transition: opacity .12s ease, color .12s ease, background-color .12s ease, border-color .12s ease;
   }
-  .ds-codewrap:hover .ds-copy, .ds-copy:hover, .ds-copy:focus-visible, .ds-copy.is-done { opacity: 1; }
-  .ds-copy:hover { color: var(--wb-fg); border-color: var(--wb-border-strong); }
+  /* Nét đầy đủ chỉ khi con trỏ đã ở trong khối code — lúc đó nút mới cần đọc như một
+     nút, và cái nền phía sau icon mới có lý do tồn tại.
+     Nền là `--wb-canvas`, KHÔNG phải `--wb-surface`: khối code đã là `--wb-surface-2`,
+     và ở chế độ tối hai token đó cách nhau đúng 7 đơn vị xám (#131316 so với #1a1a1e)
+     — chip đặt lên gần như tàng hình. `--wb-canvas` là nền trang, cách xa nhất khỏi
+     nền khối code ở CẢ hai chế độ. */
+  .ds-codewrap:hover .ds-copy, .ds-copy:focus-visible,
+  .ds-copy.is-done, .ds-copy.is-fail {
+    opacity: 1; background: var(--wb-canvas); border-color: var(--wb-border);
+    box-shadow: var(--wb-shadow-sm);
+  }
+  .ds-copy:hover { color: var(--wb-fg); background: var(--wb-canvas); border-color: var(--wb-border-strong); }
   /* Đã chép: đổi icon sang dấu ✓ nên phải đổi cả màu, không thì cái ✓ trông như một
      trạng thái hover. Rule này đứng SAU :hover để chuột còn đang đè lên nút vẫn thấy. */
-  .ds-copy.is-done { color: var(--wb-success); border-color: var(--wb-success); }
-  .ds-copy:focus-visible { outline: 2px solid var(--wb-border-strong); outline-offset: 2px; }
-  @media (hover: none) { .ds-copy { opacity: 1; } }
+  .ds-copy.is-done {
+    color: var(--wb-success-text); background: var(--wb-success-soft);
+    border-color: transparent;
+  }
+  .ds-copy.is-fail {
+    color: var(--wb-danger-text); background: var(--wb-danger-soft);
+    border-color: transparent;
+  }
+  .ds-copy:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
+  /* Không có hover thì không có gì để hiện ra: trên màn cảm ứng nút phải đủ nét ngay. */
+  @media (hover: none) {
+    .ds-copy { opacity: 1; background: var(--wb-canvas); border-color: var(--wb-border); }
+  }
 
   /* ---- chip mở popup toán ---- */
   .ds-math {
@@ -729,17 +761,38 @@
     .ds-wfrow__bar { display: none; }
   }
 
-  /* ---- linh tinh ---- */
-  .ds-brand { font-weight: 700; letter-spacing: -.01em; display: inline-flex; align-items: baseline; gap: 7px; }
-  .ds-brand__sub { font-weight: 500; font-size: .8em; color: var(--wb-fg-subtle); letter-spacing: 0; }
+  /* ---- thanh trên: MỌI Ô CÙNG MỘT CHIỀU CAO -------------------------------
+     `align-items: center` của kit đã canh giữa dọc, nhưng canh giữa KHÔNG đủ: bốn ô
+     trên thanh từng cao 32 / 19 / 32 / 28px, nên tâm trùng nhau mà hàng vẫn đọc so le
+     — mắt đọc mép trên và mép dưới của mỗi ô, không đọc tâm nó. Một token, mọi ô cùng
+     cao, thì hàng đọc như MỘT hàng.
+     Token đặt ở `.wb-navbar` chứ không ở `:root`: nó là số của lớp vỏ, không phải một
+     đại lượng của khổ trang (khối `:root` ⑤–⑧ chỉ giữ những số đó). */
+  .wb-navbar { --ds-navctl: 30px; }
+  /* Chữ trên thanh trên là TIẾNG ANH — cả nhãn, cả `title=`, cả `aria-label`. Lớp vỏ
+     còn lại (thanh bên, panel, chân trang) vẫn tiếng Việt; xem docs/design.md §0.1. */
+  .ds-brand { font-weight: 700; letter-spacing: -.01em; display: inline-flex; align-items: center; gap: 0; }
+  /* Phụ đề canh GIỮA, không canh chân chữ — cùng luật với ba ô kia. Canh giữa hai cỡ
+     chữ khác nhau chỉ đọc đúng khi chúng là hai thứ tách biệt, nên có vạch ngăn: đọc
+     thành `Data Science │ Roadmap`, cùng ngôn ngữ hình với `Notes │ 3` ở bên phải. */
+  .ds-brand__sub {
+    font-weight: 500; font-size: .8em; color: var(--wb-fg-subtle); letter-spacing: 0;
+    margin-left: 9px; padding-left: 9px; border-left: var(--wb-bw) solid var(--wb-border);
+  }
   /* Logo = nút ẩn/hiện lộ trình, hiện ở mọi bề rộng (khác nút ☰ mặc định của kit
      vốn chỉ hiện dưới 900px). Bấm → thu/mở cột trái trên desktop, mở/đóng drawer
      trên mobile — cùng handler [data-side-toggle]. */
   /* Nút-logo là một wb-btn--ghost: hover đổ nền --wb-ink-hover (chip mờ) đúng quy
-     ước kit, KHÔNG phóng to SVG. Bo góc nút = 12px để ĐỒNG TÂM với ô bo 6,5px của
-     logo (§24): khe hở góc = 1,5 (lề SVG) + 3 (padding) + 1 (viền) = 5,5 → bán
-     kính ngoài = 6,5 + 5,5 = 12. Đây đúng ca "W-brand button" trong design-principles. */
-  .ds-logobtn { padding: 3px; border-radius: 12px; }
+     ước kit, KHÔNG phóng to SVG. Bo góc nút ĐỒNG TÂM với ô bo 6,5px của logo (§24):
+     khe hở góc = 1,5 (lề SVG) + 2 (padding) + 1 (viền) = 4,5 → bán kính ngoài =
+     6,5 + 4,5 = 11. Đây đúng ca "W-brand button" trong design-principles.
+     `box-sizing: border-box` để --ds-navctl là chiều cao NGOÀI: kit không đặt
+     border-box toàn cục, nên không có nó thì viền cộng thêm 2px và ô này lại lệch
+     đúng cái lỗi mà token vừa sửa. */
+  .ds-logobtn {
+    box-sizing: border-box; padding: 2px; border-radius: 11px;
+    width: var(--ds-navctl); height: var(--ds-navctl);
+  }
   .ds-logo { display: inline-flex; }
   .ds-logo svg { display: block; width: 24px; height: 24px; }
   /* var() KHÔNG chạy trong thuộc tính fill/stroke của SVG — phải đặt qua CSS. */
@@ -750,25 +803,27 @@
      (pill --wb-radius-pill, viền hairline, nền surface, shadow-sm). Hai trạng thái
      Sáng/Tối, không có "theo hệ thống". */
   .ds-theme {
+    box-sizing: border-box; height: var(--ds-navctl);
     display: inline-flex; align-items: center; gap: 7px; line-height: 1;
     font-family: inherit; font-size: var(--wb-text-help); font-weight: 550; cursor: pointer;
-    padding: 6px 12px; border-radius: var(--wb-radius-pill);
+    padding: 0 12px; border-radius: var(--wb-radius-pill);
     border: var(--wb-bw) solid var(--wb-border); background: var(--wb-surface);
     color: var(--wb-fg); box-shadow: var(--wb-shadow-sm);
   }
   .ds-theme:hover { border-color: var(--wb-border-strong); }
   .ds-theme:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
   .ds-theme__emoji { font-size: 14px; }
-  @media (max-width: 560px) { .ds-theme { padding: 6px; gap: 0; } .ds-theme__label { display: none; } }
+  @media (max-width: 560px) { .ds-theme { width: var(--ds-navctl); padding: 0; gap: 0; } .ds-theme__label { display: none; } }
 
   /* ---- Sổ học: nút mở ở thanh trên + ngăn ghi chú -------------------------
      Dùng chung dáng capsule với .ds-theme để thanh trên chỉ có MỘT ngôn ngữ hình.
      Số ghi chú là con số duy nhất trên nút, nên nó dùng số bảng (tabular) — không
      thì 1 → 11 làm nút nhảy bề rộng. */
   .ds-notesbtn {
+    box-sizing: border-box; height: var(--ds-navctl);
     display: inline-flex; align-items: center; gap: 7px; line-height: 1;
     font-family: inherit; font-size: var(--wb-text-help); font-weight: 550; cursor: pointer;
-    padding: 6px 12px; border-radius: var(--wb-radius-pill);
+    padding: 0 12px; border-radius: var(--wb-radius-pill);
     border: var(--wb-bw) solid var(--wb-border); background: var(--wb-surface);
     color: var(--wb-fg); box-shadow: var(--wb-shadow-sm);
   }
@@ -790,7 +845,10 @@
      2/5 dòng là chỗ tắc thì màu đang nói sai về chính con số nó đứng cạnh. Số chỗ tắc
      được nói ở đúng chỗ nó thuộc về: tiêu đề mục "Đã ghi" trong panel, và tooltip nút. */
   .ds-notesbtn__n[hidden] { display: none; }
-  @media (max-width: 560px) { .ds-notesbtn { padding: 6px; gap: 4px; } .ds-notesbtn__label { display: none; } }
+  @media (max-width: 560px) { .ds-notesbtn { padding: 0 8px; gap: 4px; } .ds-notesbtn__label { display: none; } }
+  /* Chip phần trăm là ô thứ hai trên hàng, và `wb-cap--sm` chỉ cao 19px — nó là ô đã
+     phá hàng nặng nhất. Cùng chiều cao, nhưng KHÔNG thêm viền: nó không phải nút. */
+  .wb-navbar .wb-cap { box-sizing: border-box; height: var(--ds-navctl); }
 
   /* ---- Sổ học là DOCK, không phải lớp phủ --------------------------------
      Ba tầng ở CLAUDE.md §7 (mạch chính · popup · ngăn phụ) đều là lớp PHỦ: mở ra thì
@@ -867,13 +925,18 @@
   /* Con số trong tiêu đề mục KHÔNG viết hoa theo tiêu đề: "5 GHI CHÚ · 2 CHỖ TẮC" đọc
      như đang hét, mà nó chỉ là một dòng đếm. */
   .ds-notes__sech .ds-notes__when { text-transform: none; letter-spacing: 0; font-weight: 550; }
-  /* Tên bài đang mở: một DÒNG CHỮ, không phải một hộp. Bản trước là hộp viền + nền
-     surface-2, nên nó đọc như một ô input bị vô hiệu hoá — mà nó không nhận chữ, nó chỉ
-     nói "ghi chú sắp tới sẽ dán vào bài này". Tiêu đề mục ngay trên đã nói vai của nó,
-     nên cái hộp chỉ thêm một khối hình. */
-  .ds-notes__ctx { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin: -2px 0 2px; }
-  .ds-notes__ctxk { font-size: var(--wb-text-caption); color: var(--wb-fg-muted); }
-  .ds-notes__ctxv { font-weight: 650; }
+  /* Tên bài đang mở: một DÒNG CHỮ, không phải một hộp — hộp viền + nền đọc như một ô
+     input bị vô hiệu hoá, mà nó không nhận chữ, nó chỉ nói "ghi chú sắp tới dán vào
+     bài này". Dòng này CŨNG là tiêu đề của khối ghi: nó đã nói khối để làm gì, nên
+     không cần thêm một nhãn HOA phía trên nữa.
+     `nowrap` + cắt bằng "…": tên bài dài tới 60 ký tự, và cho nó gói dòng thì cái nhãn
+     "Ghi cho" bị bỏ lại một mình trên dòng trước. */
+  .ds-notes__ctx { display: flex; align-items: baseline; gap: 7px; min-width: 0; margin: 0; }
+  .ds-notes__ctxk { flex: none; font-size: var(--wb-text-caption); color: var(--wb-fg-muted); }
+  .ds-notes__ctxv {
+    font-weight: 650; min-width: 0;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
   /* `resize: none` + tự cao dần theo chữ (JS `autoGrow`). Bản trước để
      `resize: vertical`, và cái tay kéo mặc định của trình duyệt ở góc dưới-phải là ba
      vạch chéo mảnh — nó là chi tiết duy nhất trong cả panel mà trang không kiểm soát
@@ -889,6 +952,18 @@
   .ds-notes__row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .ds-notes__row--end { justify-content: flex-end; }
   .ds-notes__spacer { flex: 1 1 auto; }
+  /* ---- ba loại ghi chú, và nút Lưu ---------------------------------------
+     Dùng lại ĐÚNG mẫu nút bật/tắt của trang (`.ds-lvlbtn` + `.is-active`, docs/design.md
+     §4) và chỉ thêm một việc: ba nút chia đều bề rộng. Chia đều là thứ tự nói ra rằng
+     nhóm này là "chọn MỘT trong ba" — bản trước phải mượn một nhãn chữ "Đây là" để nói
+     việc đó, rồi nhãn + ba nút + nút Lưu không đủ chỗ trên một hàng của dock hẹp nên
+     Lưu bị đẩy xuống dòng riêng và canh trái: đọc như một nút bị bỏ rơi.
+     Lưu rộng hết hàng vì nó là hành động chính của panel và không có ô nào khác trên
+     hàng đó để phải canh với. */
+  .ds-notes__kinds { display: flex; gap: 6px; }
+  .ds-notes__kinds > .wb-btn { flex: 1 1 0; min-width: 0; padding-inline: 4px; }
+  .ds-notes__save { width: 100%; justify-content: center; }
+  .ds-notes__hint { margin: 0; }
 
   /* ---- danh sách ghi chú: HÀNG, không phải THẺ ----------------------------
      Bản trước mỗi ghi chú là một thẻ có nền riêng, viền quanh, mép trái 3px màu theo
@@ -899,18 +974,29 @@
      không phân biệt được màu — nhưng chỉ với `tắc` và `gỡ`; `ghi` là mặc định nên nó
      không cần nhãn nào cả. */
   .ds-notes__list { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
-  .ds-notes__item { padding: 11px 0 12px; border-top: var(--wb-bw) solid var(--wb-border); }
+  .ds-notes__item { padding: 10px 0 12px; border-top: var(--wb-bw) solid var(--wb-border); }
   .ds-notes__item:first-child { border-top: 0; padding-top: 2px; }
-  .ds-notes__text {
-    white-space: pre-wrap; overflow-wrap: anywhere;
-    font-size: var(--wb-text-help); line-height: 1.6; margin: 0; color: var(--wb-fg);
-  }
-  .ds-notes__meta {
-    display: flex; align-items: center; gap: 7px; flex-wrap: wrap; margin-top: 7px;
+  /* ---- ba hàng, và mỗi hàng chỉ giữ thứ nó đo được -----------------------
+     Bản trước gộp loại + tên bài + thời điểm + hai nút vào MỘT hàng `flex-wrap: wrap`.
+     Trong dock hẹp thì hàng đó luôn gói, và vì các phần ngăn nhau bằng dấu `·` rời nên
+     mỗi lần gói lại để lại một dấu `·` treo ở cuối dòng trên hoặc đầu dòng dưới. Đó là
+     thứ xấu nhất trong panel, và nó xấu ở mọi bề rộng vì bề rộng nào cũng gói.
+     Cách sửa không phải là canh lại dấu `·` — mà là bỏ hẳn nó: chia ba hàng theo thứ
+     ĐO ĐƯỢC.
+       · hàng đầu  — loại + thời điểm + hai nút: cả ba đều ngắn và gần như cố định
+       · giữa      — chữ ghi chú, thứ đậm nhất
+       · hàng cuối — tên bài, thứ DUY NHẤT không đoán được bề rộng, nên nó được cả một
+                     dòng riêng và cắt bằng "…" */
+  .ds-notes__head {
+    display: flex; align-items: center; gap: 8px; min-height: 22px;
     font-size: var(--wb-text-caption); color: var(--wb-fg-subtle);
   }
-  /* Loại: điểm màu + chữ, cùng một cụm. Không viên, không viền — hàng meta phải đọc
-     như một dòng chữ nhỏ, không như một dãy nhãn. */
+  .ds-notes__text {
+    white-space: pre-wrap; overflow-wrap: anywhere;
+    font-size: var(--wb-text-help); line-height: 1.6; margin: 1px 0 0; color: var(--wb-fg);
+  }
+  /* Loại: điểm màu + chữ, cùng một cụm. Không viên, không viền — hàng đầu phải đọc như
+     một dòng chữ nhỏ, không như một dãy nhãn. */
   .ds-notes__kind { display: inline-flex; align-items: center; gap: 5px; font-weight: 650; }
   .ds-notes__kind::before {
     content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor;
@@ -918,21 +1004,46 @@
   .ds-notes__kind[data-kind="tắc"] { color: var(--wb-warning); }
   .ds-notes__kind[data-kind="gỡ"]  { color: var(--wb-success); }
   /* Tên bài LUÔN có mặt (mỗi ghi chú tự nói nó thuộc bài nào), nên nó phải nhẹ: chữ
-     thường, gạch chân chỉ khi hover. Nó là thứ dài nhất trong hàng meta nên nó được
-     phép co lại và cắt bằng "…" thay vì đẩy giờ xuống dòng dưới. */
+     thường, gạch chân chỉ khi hover. */
   .ds-notes__at {
-    color: var(--wb-fg-muted); text-decoration: none; min-width: 0;
-    max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    display: block; margin-top: 5px; font-size: var(--wb-text-caption);
+    color: var(--wb-fg-muted); text-decoration: none;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
   .ds-notes__at:hover { color: var(--wb-fg); text-decoration: underline; text-underline-offset: 2px; }
   .ds-notes__when { font-variant-numeric: tabular-nums; }
-  .ds-notes__dot { color: var(--wb-border-strong); }
   /* Sửa/xoá chỉ hiện khi trỏ vào hàng hoặc khi có tiêu điểm trong hàng — hai cái nút
      nhân 20 ghi chú là 40 nút cạnh chữ. `:focus-within` là phần giữ cho bàn phím vẫn
      tới được; màn cảm ứng không có hover nên ở đó chúng hiện sẵn. */
   .ds-notes__acts { margin-left: auto; display: flex; gap: 2px; opacity: 0; transition: opacity .12s ease; }
   .ds-notes__item:hover .ds-notes__acts, .ds-notes__item:focus-within .ds-notes__acts { opacity: 1; }
+  /* Nút xoá đã "lên nòng" phải TIẾP TỤC thấy được dù chuột đã rời hàng — nó đang chờ
+     một cú bấm nữa trong 2,5 giây, và một thứ đang chờ mà tàng hình thì là cái bẫy. */
+  .ds-notes__item:has(.is-armed) .ds-notes__acts { opacity: 1; }
   @media (hover: none) { .ds-notes__acts { opacity: 1; } }
+  /* ---- Sửa / Xoá: KHÔNG dùng nút của kit --------------------------------
+     `wb-btn--ghost` + `wb-btn--danger` là một cặp KHÔNG chạy được cùng nhau, và đó là
+     lỗi thật đã có trên trang: `.wb-btn--ghost:hover` đặt `color: var(--wb-fg)` với độ
+     ưu tiên 0-2-0, còn `.wb-btn--danger` đặt màu chữ với 0-1-0 — nên khi trỏ vào nút đã
+     lên nòng, icon quay về màu chữ thường: ICON ĐEN TRÊN NỀN ĐỎ. Hai class của riêng
+     trang thì không có cái cascade đó để mà thua.
+     Và trạng thái lên nòng không còn là một ô đỏ ĐẶC: nó là chữ `Xoá?` trên nền đỏ
+     nhạt. Ô đỏ đặc chỉ nói được "nguy hiểm", còn dấu hỏi nói ra đúng việc đang xảy ra —
+     trang đang CHỜ một cú bấm nữa. */
+  .ds-nact {
+    box-sizing: border-box; height: 26px; min-width: 26px; padding: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: inherit; font-size: var(--wb-text-label); font-weight: 650; line-height: 1;
+    color: var(--wb-fg-subtle); background: none; border: 0; cursor: pointer;
+    border-radius: var(--wb-radius-sm);
+    transition: color .12s ease, background-color .12s ease;
+  }
+  .ds-nact:hover { color: var(--wb-fg); background: var(--wb-ink-hover); }
+  .ds-nact--del:hover { color: var(--wb-danger-text); background: var(--wb-danger-soft); }
+  .ds-nact:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
+  .ds-nact.is-armed, .ds-nact.is-armed:hover {
+    padding: 0 8px; color: var(--wb-danger-text); background: var(--wb-danger-soft);
+  }
   .ds-notes__empty { font-size: var(--wb-text-help); color: var(--wb-fg-muted); line-height: 1.6; }
   .ds-notes__io { font-size: var(--wb-text-help); }
   .ds-notes__io[hidden] { display: none; }
@@ -955,7 +1066,7 @@
   @media (max-width: 560px) { .ds-brand__sub { display: none; } }
   .ds-nodefoot { margin-top: 36px; padding-top: 18px; border-top: var(--wb-bw) solid var(--wb-border); }
   .ds-keyhint { font-size: var(--wb-text-caption); color: var(--wb-fg-subtle); margin: 12px 0 0; }
-  .ds-keyhint kbd, .ds-prose kbd {
+  .ds-keyhint kbd, .ds-prose kbd, .ds-notes kbd {
     font-family: var(--wb-font-mono); font-size: var(--ds-t-label); padding: 1px 6px;
     border: var(--wb-bw) solid var(--wb-border); border-bottom-width: 2px;
     border-radius: var(--wb-radius-sm); background: var(--wb-surface-2);
@@ -988,7 +1099,7 @@
 
   <header class="wb-navbar wb-navbar--sticky wb-navbar--glass">
     <button class="wb-btn wb-btn--ghost wb-btn--icon ds-logobtn" data-side-toggle
-            aria-label="Ẩn/hiện lộ trình" aria-controls="sidenav" aria-expanded="true" title="Ẩn/hiện lộ trình">
+            aria-label="Show/hide roadmap" aria-controls="sidenav" aria-expanded="true" title="Show/hide roadmap">
       <span class="ds-logo" aria-hidden="true">
         <svg viewBox="0 0 24 24" width="24" height="24" role="img" focusable="false">
           <rect class="ds-logo__sq" x="1.5" y="1.5" width="21" height="21" rx="6.5"/>
@@ -997,25 +1108,25 @@
         </svg>
       </span>
     </button>
-    <!-- Lớp vỏ trang nói tiếng Việt, kể cả khi thuật ngữ trong bài giữ tên gốc.
-         Xem docs/design.md — luật ngôn ngữ của lớp vỏ. -->
-    <a class="wb-navbar__brand ds-brand" href="#/home">Data Science <span class="ds-brand__sub">lộ trình học</span></a>
+    <!-- THANH TRÊN nói tiếng Anh — nhãn, `title=`, `aria-label`, cả chữ do JS sinh.
+         Phần còn lại của lớp vỏ (thanh bên, panel, chân trang) vẫn tiếng Việt; ranh
+         giới ở docs/design.md §0.1. -->
+    <a class="wb-navbar__brand ds-brand" href="#/home">Data Science <span class="ds-brand__sub">Roadmap</span></a>
     <div class="wb-navbar__spacer"></div>
     <div class="wb-navbar__actions">
-      <span class="wb-cap wb-cap--sm" id="topProgress" title="Tiến độ học đã đạt">0%</span>
+      <span class="wb-cap wb-cap--sm" id="topProgress" title="Progress achieved">0%</span>
       <!-- GIỮ nhãn chữ (khác nút sao chép ở khối code, chỉ có icon): đây là một tính
            năng cần được phát hiện, không phải một hành động lặp lại mà ngữ cảnh đã nói
            hộ. Xem docs/design.md — luật icon thay nhãn.
-           Nhãn là "Notes", không phải "Sổ học": người dùng chỉ đang ghi chú: cái tên
-           LEARNING-LOG là cơ chế bên dưới và không nên lộ ra ở lớp vỏ. Đây là ngoại lệ
-           DUY NHẤT của luật lớp-vỏ-tiếng-Việt, và nó được ghi ở docs/design.md §0.1. -->
-      <button class="ds-notesbtn" id="notesBtn" aria-label="Mở Notes" title="Notes — ghi chú theo bài (n)"
+           Nhãn là "Notes", không phải "Sổ học": người dùng chỉ đang ghi chú, còn
+           LEARNING-LOG là cơ chế bên dưới và không nên lộ ra ở lớp vỏ. -->
+      <button class="ds-notesbtn" id="notesBtn" aria-label="Open Notes" title="Notes — per-lesson notes (n)"
               aria-expanded="false" aria-controls="notesOverlay">
         <span class="wb-ico wb-ico--sm" aria-hidden="true">edit_note</span>
         <span class="ds-notesbtn__label">Notes</span>
         <span class="ds-notesbtn__n" id="notesCount" hidden>0</span>
       </button>
-      <button class="ds-theme" id="themeBtn" aria-label="Đổi giao diện sáng/tối" aria-pressed="false" title="Đổi sáng/tối">
+      <button class="ds-theme" id="themeBtn" aria-label="Toggle light/dark theme" aria-pressed="false" title="Toggle light/dark">
         <span class="ds-theme__emoji" aria-hidden="true">☀</span>
         <span class="ds-theme__label">Light</span>
       </button>
@@ -1115,9 +1226,10 @@
     <div class="wb-drawer__head">
       <div>
         <h4 class="wb-drawer__title" id="notesTitle">Notes</h4>
-        <!-- Câu thứ hai là chỗ DUY NHẤT nói ra rằng mép trái kéo được: tay kéo chỉ hiện
-             khi trỏ chuột vào, nên không nói thì không ai tìm ra. -->
-        <p class="wb-drawer__sub">Ghi chú nằm trong trình duyệt này. Trang phía sau vẫn đọc và bấm được. Kéo mép trái để đổi bề rộng.</p>
+        <!-- MỘT câu. Bản trước ba câu, và câu thứ ba ("kéo mép trái để đổi bề rộng")
+             không còn việc gì: tay kéo là một viên LUÔN THẤY ở mép trái và có `title`
+             của riêng nó, nên nó tự nói được. -->
+        <p class="wb-drawer__sub">Lưu trong trình duyệt này — trang phía sau vẫn đọc và bấm được.</p>
       </div>
       <button class="wb-close" data-notes-close aria-label="Đóng Notes"></button>
     </div>
@@ -1125,29 +1237,28 @@
       <div class="ds-notes">
 
         <div class="ds-notes__sec">
-          <h5 class="ds-notes__sech">Ghi cho bài đang mở</h5>
-          <div class="ds-notes__ctx">
+          <!-- Dòng "Ghi cho <tên bài>" LÀ tiêu đề của khối này — nó nói cả việc khối để
+               làm gì và ghi chú sắp tới sẽ dán vào đâu. Bản trước có thêm một nhãn HOA
+               "GHI CHO BÀI ĐANG MỞ" ngay trên nó: hai tiêu đề cho một khối. -->
+          <p class="ds-notes__ctx">
+            <span class="ds-notes__ctxk">Ghi cho</span>
             <span class="ds-notes__ctxv" id="notesWhere">—</span>
-          </div>
+          </p>
           <textarea class="ds-notes__ta" id="notesInput" rows="3"
-            placeholder="Chỗ nào đọc mà không hiểu? Enter để lưu, Shift+Enter xuống dòng."></textarea>
+            placeholder="Chỗ nào đọc mà không hiểu?"></textarea>
           <!-- Ba loại, không phải một. "Chỗ tắc" là loại đáng giá nhất trong cả cơ chế
                này: nó là thứ duy nhất biến sổ học thành hàng đợi việc sửa nội dung, và
                là dữ liệu cho cổng G-LEARN (hai bài cùng tắc ở một khái niệm = khái niệm
                đó dạy quá muộn). Không cho chọn loại thì tín hiệu đó không tồn tại.
-               Nhãn "Đây là" ở đầu nhóm: không có nó thì ba cái nút không tự nói được
-               chúng là ba lựa chọn của MỘT câu hỏi. -->
-          <div class="ds-notes__row">
-            <span class="ds-notes__ctxk">Đây là</span>
-            <div class="wb-cluster" role="group" aria-label="Loại ghi chú" style="gap:6px">
-              <button class="wb-btn wb-btn--sm ds-lvlbtn is-active" data-nkind="ghi" aria-pressed="true">Ghi chú</button>
-              <button class="wb-btn wb-btn--sm ds-lvlbtn" data-nkind="tắc" aria-pressed="false">Chỗ tắc</button>
-              <button class="wb-btn wb-btn--sm ds-lvlbtn" data-nkind="gỡ" aria-pressed="false">Đã gỡ</button>
-            </div>
-            <span class="ds-notes__spacer"></span>
-            <button class="wb-btn wb-btn--sm" id="notesAdd" disabled>Lưu</button>
+               Ba nút chia đều bề rộng, đúng một nút đặc màu: hình đó tự nói "chọn MỘT
+               trong ba", nên không cần một nhãn chữ đứng trước để nói hộ. -->
+          <div class="ds-notes__kinds" role="group" aria-label="Loại ghi chú">
+            <button class="wb-btn wb-btn--sm ds-lvlbtn is-active" data-nkind="ghi" aria-pressed="true">Ghi chú</button>
+            <button class="wb-btn wb-btn--sm ds-lvlbtn" data-nkind="tắc" aria-pressed="false">Chỗ tắc</button>
+            <button class="wb-btn wb-btn--sm ds-lvlbtn" data-nkind="gỡ" aria-pressed="false">Đã gỡ</button>
           </div>
-          <p class="wb-help" style="margin:0">Chọn <b>Chỗ tắc</b> khi đọc mà không hiểu — đó là dòng làm trang này tốt lên, không phải lời phàn nàn.</p>
+          <button class="wb-btn wb-btn--sm ds-notes__save" id="notesAdd" disabled>Lưu ghi chú</button>
+          <p class="wb-help ds-notes__hint">Chọn <b>Chỗ tắc</b> cho chỗ đọc mà không hiểu — dòng đó làm trang tốt lên.<br><kbd>Enter</kbd> lưu · <kbd>Shift</kbd>+<kbd>Enter</kbd> xuống dòng.</p>
         </div>
 
         <!-- MỘT danh sách, mọi ghi chú, mới nhất trước — không lọc theo bài đang mở.
@@ -1169,12 +1280,15 @@
              tải file về (một cú bấm) rồi chạy một lệnh tự tìm file đó. -->
         <div class="ds-notes__sec">
           <h5 class="ds-notes__sech">Đưa vào repo</h5>
-          <p class="wb-help" style="margin:0">Trang không tự ghi được vào <code>LEARNING-LOG.md</code> — nó là file tĩnh trong trình duyệt. Hai bước:</p>
-          <button class="wb-btn wb-btn--sm" id="notesDl">
-            <span class="wb-ico wb-ico--xs" aria-hidden="true">download</span> 1. Tải ghi chú về máy
+          <!-- Hai bước, và hai NÚT/KHỐI xếp theo thứ tự đã nói ra rằng chúng là hai bước
+               — nên không cần đánh số "1." "2." vào nhãn nữa. Chữ giải thích rút về đúng
+               phần không đoán được: vì sao phải qua hai bước, và lệnh làm gì. -->
+          <p class="wb-help ds-notes__hint">Trang tĩnh không ghi được vào <code>LEARNING-LOG.md</code>, nên phải qua hai bước:</p>
+          <button class="wb-btn wb-btn--sm ds-notes__save" id="notesDl">
+            <span class="wb-ico wb-ico--xs" aria-hidden="true">download</span> Tải ghi chú về máy
           </button>
-          <p class="wb-help" style="margin:0">2. Chạy lệnh này — nó tự tìm file vừa tải, trộn vào <code>LEARNING-LOG.md</code>, bỏ qua dòng đã có:</p>
           <code class="ds-notes__cmd">node tools/learn.mjs --sync</code>
+          <p class="wb-help ds-notes__hint">Lệnh tự tìm file vừa tải và bỏ qua dòng đã có.</p>
           <div class="wb-alert wb-alert--info ds-notes__io" id="notesIoMsg" role="status" hidden></div>
           <button class="ds-notes__link" id="notesImp" aria-expanded="false" aria-controls="notesImpBox">Khôi phục ghi chú từ một file đã tải về</button>
           <div id="notesImpBox" hidden>
@@ -10972,14 +11086,16 @@ function addCopyButtons(scope) {
       // Đổi ICON, không chỉ đổi màu — người không phân biệt được màu vẫn thấy phản hồi.
       // Nhánh thất bại nói việc phải làm ("bấm Ctrl/⌘+C") qua title, vì lúc đó nội dung
       // vẫn chưa nằm trong clipboard và một cái ✓ ở đây sẽ là nói dối.
-      btn.classList.add('is-done');
+      // `is-done` xanh cho nhánh THÀNH CÔNG, `is-fail` đỏ cho nhánh thất bại — bản
+      // trước dùng chung `is-done`, nên một lần chép thất bại vẫn hiện ra màu xanh.
+      btn.classList.add(ok ? 'is-done' : 'is-fail');
       ico.textContent = ok ? 'check' : 'priority_high';
       btn.title = ok ? 'Đã sao chép' : 'Không sao chép được — chọn đoạn code rồi bấm Ctrl/⌘+C';
       btn.setAttribute('aria-label', btn.title);
       announce(ok ? 'Đã sao chép đoạn code.' : 'Không sao chép được. Chọn đoạn code rồi bấm Ctrl hoặc Command + C.');
       clearTimeout(btn._t);
       btn._t = setTimeout(() => {
-        btn.classList.remove('is-done');
+        btn.classList.remove('is-done', 'is-fail');
         ico.textContent = 'content_copy';
         btn.title = 'Sao chép đoạn code';
         btn.setAttribute('aria-label', btn.title);
@@ -12993,9 +13109,10 @@ function syncNotesCount() {
   const nStuck = notes.filter(n => n.kind === 'tắc').length;
   el.textContent = String(notes.length);
   el.hidden = notes.length === 0;
+  // Tiếng Anh: đây là chữ của THANH TRÊN (docs/design.md §0.1), không phải chữ trong panel.
   $('#notesBtn').title = notes.length
-    ? `Notes — ${notes.length} ghi chú${nStuck ? `, ${nStuck} chỗ tắc` : ''} (n)`
-    : 'Notes — ghi chú theo bài (n)';
+    ? `Notes — ${notes.length} note${notes.length > 1 ? 's' : ''}${nStuck ? `, ${nStuck} stuck` : ''} (n)`
+    : 'Notes — per-lesson notes (n)';
 }
 
 /* "x phút trước" chỉ trong 24 giờ đầu, sau đó là ngày. Một dòng "3 ngày trước" bắt
@@ -13023,67 +13140,63 @@ function renderNotes() {
   if (!shown.length) {
     const li = document.createElement('li');
     li.className = 'ds-notes__empty';
-    li.textContent = 'Chưa có ghi chú nào. Ghi một dòng ở chỗ nào bạn đọc mà không hiểu — đó là dòng đáng giá nhất.';
+    // Một câu. Vì sao "chỗ tắc" là dòng đáng giá nhất thì phần gợi ý dưới ô ghi đã nói,
+    // và nói lại ở đây là nói hai lần trong cùng một khung nhìn.
+    li.textContent = 'Chưa có ghi chú nào.';
     list.append(li);
     return;
   }
 
+  // Ba hàng mỗi ghi chú — vì sao ba chứ không phải một hàng gói dòng: xem khối
+  // `.ds-notes__head` trong <style>.
   for (const n of shown) {
     const li = document.createElement('li');
     li.className = 'ds-notes__item';
     li.dataset.note = n.id;
     li.dataset.kind = n.kind || 'ghi';
 
-    const p = document.createElement('p');
-    p.className = 'ds-notes__text';
-    p.textContent = n.text;                       // textContent, KHÔNG innerHTML: ghi chú
-    li.append(p);                                 // là chữ của người dùng và sẽ có dấu <
-
-    const meta = document.createElement('div');
-    meta.className = 'ds-notes__meta';
+    const head = document.createElement('div');
+    head.className = 'ds-notes__head';
     // `ghi` là mặc định nên KHÔNG có nhãn — nhãn cho thứ mặc định là nhiễu.
     if (n.kind && n.kind !== 'ghi') {
       const kind = document.createElement('span');
       kind.className = 'ds-notes__kind';
       kind.dataset.kind = n.kind;
       kind.textContent = n.kind === 'tắc' ? 'Chỗ tắc' : 'Đã gỡ';
-      meta.append(kind);
-      meta.append(dotSep());
+      head.append(kind);
     }
-    const a = document.createElement('a');
-    a.className = 'ds-notes__at';
-    a.href = '#/' + n.node;
-    a.textContent = nodeTitle(n.node);
-    a.title = 'Mở bài này';
-    meta.append(a, dotSep());
-
     const when = document.createElement('span');
     when.className = 'ds-notes__when';
     when.textContent = whenText(n);
-    meta.append(when);
+    head.append(when);
 
     const acts = document.createElement('div');
     acts.className = 'ds-notes__acts';
     for (const [act, ico, lbl] of [['edit', 'edit', 'Sửa ghi chú'], ['del', 'delete', 'Xoá ghi chú']]) {
       const b = document.createElement('button');
-      b.className = 'wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm';
+      b.type = 'button';
+      b.className = 'ds-nact' + (act === 'del' ? ' ds-nact--del' : '');
       b.dataset.nact = act;
       b.title = lbl;
       b.setAttribute('aria-label', lbl);
       b.innerHTML = `<span class="wb-ico wb-ico--xs" aria-hidden="true">${ico}</span>`;
       acts.append(b);
     }
-    meta.append(acts);
-    li.append(meta);
+    head.append(acts);
+
+    const p = document.createElement('p');
+    p.className = 'ds-notes__text';
+    p.textContent = n.text;                       // textContent, KHÔNG innerHTML: ghi chú
+                                                  // là chữ của người dùng và sẽ có dấu <
+    const a = document.createElement('a');
+    a.className = 'ds-notes__at';
+    a.href = '#/' + n.node;
+    a.textContent = nodeTitle(n.node);
+    a.title = 'Mở bài này';
+
+    li.append(head, p, a);
     list.append(li);
   }
-}
-function dotSep() {
-  const s = document.createElement('span');
-  s.className = 'ds-notes__dot';
-  s.setAttribute('aria-hidden', 'true');
-  s.textContent = '·';
-  return s;
 }
 /* Ô ghi tự cao dần: `resize: none` bỏ cái tay kéo chéo của trình duyệt (xem CSS), nên
    chiều cao phải do JS lo. Đặt về `auto` trước khi đọc scrollHeight, không thì ô chỉ
@@ -13367,14 +13480,20 @@ function noteAction(btn) {
       announce('Đã xoá ghi chú.');
       return;
     }
+    // Bước lên nòng đổi HÌNH của nút, không chỉ đổi màu nó: icon thùng rác → chữ `Xoá?`.
+    // Bản trước bật `wb-btn--danger` lên một nút đang là `wb-btn--ghost`, và hai class
+    // đó của kit đánh nhau trong cascade — kết quả là icon đen trên nền đỏ khi hover
+    // (xem khối `.ds-nact` trong <style>).
     btn.dataset.armed = '1';
-    btn.classList.add('wb-btn--danger');
+    btn.classList.add('is-armed');
+    btn.textContent = 'Xoá?';
     btn.title = 'Bấm lần nữa để xoá thật';
     btn.setAttribute('aria-label', btn.title);
     setTimeout(() => {
       if (!btn.isConnected) return;
       delete btn.dataset.armed;
-      btn.classList.remove('wb-btn--danger');
+      btn.classList.remove('is-armed');
+      btn.innerHTML = '<span class="wb-ico wb-ico--xs" aria-hidden="true">delete</span>';
       btn.title = 'Xoá ghi chú';
       btn.setAttribute('aria-label', btn.title);
     }, 2500);
