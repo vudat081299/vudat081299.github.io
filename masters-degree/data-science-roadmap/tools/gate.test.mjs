@@ -21,7 +21,7 @@
    ========================================================================== */
 
 import { readFileSync, writeFileSync, mkdirSync, rmSync, cpSync, mkdtempSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { dirname, join } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
@@ -224,9 +224,34 @@ if (untested.length) console.log(`\n· chưa có ca NỔ: ${untested.join(', ')}
    session.mjs và learn.mjs không kiểm gì cả nên không có chiều NỔ/IM. Nhưng chúng
    là hai lệnh mà quy trình bắt buộc gọi (CLAUDE.md §0a và §12), nên một lỗi cú pháp
    trong đó làm hỏng cả quy trình mà không cổng nào biết. Đây là cái chặn rẻ nhất. */
+/* Hợp đồng giữa HAI file, không phải một cổng: tên file sổ học mà trang tải về phải
+   khớp mẫu mà `learn.mjs --sync` đi tìm. Lệch một bên thì không cổng nào nổ, không lỗi
+   nào hiện ra — chỉ là `--sync` mãi mãi báo "không thấy bản xuất nào". Đúng loại lỗi mà
+   test tồn tại để bắt. */
+console.log('\nhợp đồng tên file sổ học (HTML ↔ learn.mjs):\n');
+reset();
+{
+  const html = readFileSync(join(DS, 'data-science-roadmap.html'), 'utf8');
+  const m = /a\.download\s*=\s*`([^`]+)`/.exec(html);
+  if (!m) {
+    no('bản xuất', 'không tìm thấy `a.download` trong HTML — trang không còn tải file về?');
+  } else {
+    const { PAT_EXPORT } = await import(pathToFileURL(join(DS, 'tools', 'learn.mjs')).href);
+    // Dựng đúng tên file thật: thay ${isoToday()} bằng một ngày cụ thể.
+    const name = m[1].replace(/\$\{[^}]+\}/g, '2026-08-04');
+    const dup = name.replace(/\.md$/, ' (1).md');       // Chrome khi trùng tên
+    PAT_EXPORT.test(name)
+      ? ok('bản xuất', `PAT_EXPORT khớp tên trang đặt (${name})`)
+      : no('bản xuất', `PAT_EXPORT KHÔNG khớp "${name}" — --sync sẽ không bao giờ thấy file`);
+    PAT_EXPORT.test(dup)
+      ? ok('bản xuất', 'khớp cả bản trùng tên của Chrome')
+      : no('bản xuất', `PAT_EXPORT không khớp "${dup}" — tải lần thứ hai là mất`);
+  }
+}
+
 console.log('\ncông cụ phiên — chỉ kiểm chạy được:\n');
 reset();
-for (const [tool, args] of [['session.mjs', []], ['session.mjs', ['--close']], ['learn.mjs', []], ['learn.mjs', ['--check']]]) {
+for (const [tool, args] of [['session.mjs', []], ['session.mjs', ['--close']], ['learn.mjs', []], ['learn.mjs', ['--check']], ['learn.mjs', ['--sync']]]) {
   try {
     execFileSync(process.execPath, [join(DS, 'tools', tool), ...args],
       { cwd: DS, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });

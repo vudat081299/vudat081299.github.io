@@ -83,7 +83,7 @@ function handoffSection(name) {
 /* --------------------------------------------------------------------------
    MỞ PHIÊN
    ------------------------------------------------------------------------ */
-function start() {
+async function start() {
   const P = readPage(HTML);
   console.log('');
   console.log(B(`Mở phiên · ${REL}`) + DIM(`  ${P.LEAVES.length} bài · ${P.TREE.length} chặng · ${P.lines.length} dòng HTML`));
@@ -166,6 +166,19 @@ function start() {
     const open = (l.out.match(/^- /gm) || []).length;
     console.log(DIM('  sổ học: ') + first + (open ? YEL(` · ${open} chỗ tắc còn mở`) : ''));
   }
+  /* Bản xuất từ trang chưa nạp — thứ KHÔNG đọc được bằng cách xem file trong repo, vì
+     nó nằm ở ~/Downloads. Không có dòng này thì ghi chú của một buổi học nằm im trong
+     thư mục tải về cho tới khi ai đó tình cờ nhớ ra. */
+  try {
+    const { findExports, pendingFromExport } = await import('./learn.mjs');
+    for (const e of findExports().slice(0, 3)) {
+      const n = pendingFromExport(e.path);
+      if (!n) continue;
+      console.log(YEL(`  · bản xuất sổ học chưa nạp: ${n} dòng mới trong ${e.path}`));
+      console.log(DIM('    nạp bằng: ') + B('node tools/learn.mjs --sync'));
+      break;
+    }
+  } catch { /* chưa có LEARNING-LOG.md, hoặc không đọc được thư mục nhà: không phải lỗi */ }
   console.log('');
 
   console.log(DIM('Bảng "định làm X → đọc gì, chạy gì" ở đầu CLAUDE.md. Đóng phiên: ')
@@ -296,4 +309,4 @@ function close() {
   console.log('');
 }
 
-if (CLOSE) close(); else start();
+if (CLOSE) close(); else await start();

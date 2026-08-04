@@ -22,19 +22,30 @@
    Trạng thái hiện tại của một bài = dòng `mức N` MỚI NHẤT của bài đó. Nghĩa là
    lịch sử không bao giờ bị viết lại: hạ mức cũng là thêm một dòng.
 
+   Vì sao có `--sync` chứ không chỉ `--import <file>`: trang là một file HTML tĩnh,
+   nó KHÔNG ghi được vào file trong repo — không có server, và File System Access API
+   thì cần cấp quyền lại mỗi phiên, chưa kể trang thường được mở từ GitHub Pages nên
+   còn khác cả origin. Nên đường đi bắt buộc là "trang → file tải về → repo". Việc duy
+   nhất còn có thể bỏ là bắt người dùng TỰ TÌM cái file đó và gõ đường dẫn vào: `--sync`
+   tự quét ~/Downloads (và vài chỗ hay gặp khác), lấy bản mới nhất, trộn vào. Trộn là
+   idempotent nhờ khoá lọc trùng, nên chạy lại nhiều lần không sinh dòng thừa — không
+   cần đánh dấu "file này đã nạp rồi".
+
    Dùng:
      node tools/learn.mjs                          in tóm tắt
+     node tools/learn.mjs --sync                    TỰ tìm bản xuất mới nhất rồi trộn
      node tools/learn.mjs --write                   sinh lại khối summary
      node tools/learn.mjs --add <id> <loại> <chữ>   thêm một dòng vào sổ
-     node tools/learn.mjs --import <file>           trộn bản xuất từ trang vào sổ
+     node tools/learn.mjs --import <file>           trộn đúng một file đã chỉ tên
      node tools/learn.mjs --check                   in phần nhắc (cổng G-LEARN dùng)
 
    <loại>: m1 m2 m3 (mức) · tac (tắc ở đâu) · go (đã gỡ được) · ghi (ghi chú thường)
    ========================================================================== */
 
-import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { homedir } from 'node:os';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..');
@@ -191,7 +202,7 @@ export function buildSummary(P, entries) {
 
   if (!known.length) {
     L.push('Sổ chưa có dòng nào. Thêm bằng `node tools/learn.mjs --add <id> <loại> <nội dung>`,');
-    L.push('hoặc gõ trên trang (nút **Sổ học** ở thanh trên) rồi `--import` bản xuất về đây.');
+    L.push('hoặc gõ trên trang (nút **Sổ học** ở thanh trên) → "Tải sổ về máy" → `node tools/learn.mjs --sync`.');
     return L.join('\n');
   }
 
@@ -341,6 +352,44 @@ export function appendEntries(P, list) {
   return { added, skipped };
 }
 
+/* ---------------------------------------------------------------------------
+   Tìm bản xuất từ trang  (nguồn của --sync và của lời nhắc trong session.mjs)
+   ------------------------------------------------------------------------- */
+/* Phải KHỚP tên file mà trang đặt (`a.download` trong data-science-roadmap.html).
+   Đuôi `.*` là cho bản trùng tên: Chrome lưu thành "learning-log-2026-08-04 (1).md".
+   Vẫn nhận `so-hoc-` (tên cũ, trước khi đổi tên file sang tiếng Anh) — một bản xuất còn
+   nằm trong ~/Downloads từ trước không được im lặng biến thành vô hình. */
+export const PAT_EXPORT = /^(learning-log|so-hoc)-\d{4}-\d{2}-\d{2}.*\.md$/i;
+
+/* Bốn chỗ, theo đúng thứ tự khả năng: thư mục tải về là chỗ 99% file rơi vào; Desktop
+   cho người đổi mặc định của trình duyệt; hai chỗ cuối cho người chủ động lưu vào repo.
+   Không quét sâu — quét cả cây thư mục nhà là chậm và là chuyện không ai nhờ. */
+export function findExports() {
+  const dirs = [join(homedir(), 'Downloads'), join(homedir(), 'Desktop'), ROOT, join(ROOT, '..', '..')];
+  const out = [];
+  for (const d of dirs) {
+    let names;
+    try { names = readdirSync(d); } catch { continue; }   // không có / không đọc được: bỏ qua
+    for (const n of names) {
+      if (!PAT_EXPORT.test(n)) continue;
+      const p = join(d, n);
+      try { out.push({ path: p, mtime: statSync(p).mtimeMs }); } catch { /* file vừa bị xoá */ }
+    }
+  }
+  return out.sort((a, b) => b.mtime - a.mtime);
+}
+
+/* Bao nhiêu dòng trong bản xuất mà sổ CHƯA có. Dùng cùng khoá lọc trùng với
+   appendEntries, nên con số này đúng bằng số dòng `--sync` sẽ thêm. */
+export function pendingFromExport(file) {
+  let inc;
+  try { inc = parseLog(readFileSync(file, 'utf8')); } catch { return null; }
+  const log = readLog();
+  const have = new Set((log.exists ? parseLog(log.raw).entries : [])
+    .map(e => `${e.id}\0${e.date}\0${e.kind}\0${e.text.trim()}`));
+  return inc.entries.filter(e => !have.has(`${e.id}\0${e.date}\0${e.kind}\0${e.text.trim()}`)).length;
+}
+
 export function writeSummary(P) {
   const log = readLog();
   if (!log.exists) throw new Error('chưa có LEARNING-LOG.md');
@@ -378,9 +427,33 @@ if (isMain) {
     process.exit(0);
   }
 
-  if (has('--import')) {
-    const f = argv[argv.indexOf('--import') + 1];
-    if (!f || !existsSync(f)) { console.error('dùng: node tools/learn.mjs --import <file .md xuất từ trang>'); process.exit(2); }
+  /* --sync và --import là MỘT việc, khác nhau ở chỗ ai tìm file. Gộp thành một nhánh
+     để không có hai đoạn code trộn-vào-sổ chạy lệch nhau. */
+  if (has('--sync') || has('--import')) {
+    const flag = has('--sync') ? '--sync' : '--import';
+    let f = argv[argv.indexOf(flag) + 1];
+    if (f && f.startsWith('--')) f = undefined;
+
+    if (!f) {
+      if (flag === '--import') {
+        console.error('dùng: node tools/learn.mjs --import <file>   (hoặc --sync để tự tìm)');
+        process.exit(2);
+      }
+      const found = findExports();
+      if (!found.length) {
+        console.log('· không thấy bản xuất nào (tên dạng `learning-log-YYYY-MM-DD.md`).');
+        console.log('  Trên trang: bấm **Sổ học** ở thanh trên → "1. Tải sổ về máy", rồi chạy lại lệnh này.');
+        console.log('  Đã quét: ~/Downloads · ~/Desktop · thư mục trang · gốc repo');
+        process.exit(0);
+      }
+      f = found[0].path;
+      if (found.length > 1) {
+        console.log(`· thấy ${found.length} bản xuất, lấy bản MỚI NHẤT: ${f}`);
+        console.log('  (bản cũ hơn: ' + found.slice(1, 4).map(x => x.path).join(', ') + ')');
+      }
+    }
+    if (!existsSync(f)) { console.error(`· không có file "${f}"`); process.exit(2); }
+
     const inc = parseLog(readFileSync(f, 'utf8'));
     if (!inc.entries.length && !inc.bad.length) {
       console.error(`· "${f}" không có dòng nào đúng khuôn. Bản xuất từ trang phải giữ nguyên cả dòng "${SO_HEAD}".`);
@@ -388,8 +461,9 @@ if (isMain) {
     }
     const r = appendEntries(P, inc.entries);
     writeSummary(P);
-    console.log(`✓ trộn xong: thêm ${r.added} · bỏ qua ${r.skipped} trùng`
+    console.log(`✓ nạp ${f}\n  thêm ${r.added} dòng${r.skipped ? ` · bỏ qua ${r.skipped} dòng đã có` : ''}`
       + (inc.bad.length ? ` · ${inc.bad.length} dòng không đọc được (dòng ${inc.bad.map(b => b.line).join(', ')})` : ''));
+    if (!r.added) console.log('  (sổ đã có đủ những dòng này — chạy lại không sinh trùng, cứ yên tâm)');
     process.exit(0);
   }
 
