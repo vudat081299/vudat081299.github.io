@@ -149,6 +149,12 @@ const CASES = [
   ['G-TOC-STRUCT', 'đổi tên một bài trong TREE', h =>
     once(h, "t:'Bayes & likelihood'", "t:'Bayes & likelihood (đổi tên)'")],
   ['G-NEXT', 'đổi chỗ hai bài trong TREE', swapTwoInTree],
+  /* Ca này dựng lại ĐÚNG lỗi đã xảy ra 2026-08-04, không phải một lỗi cú pháp bất kỳ:
+     một dấu backtick lọt vào comment HTML nằm TRONG template literal của renderHome().
+     Dựng lại đúng hình dạng đó là cách duy nhất để biết cổng bắt được thứ nó sinh ra để
+     bắt — một ca `let x = ;` cũng làm cổng nổ, nhưng không chứng minh được gì cả. */
+  ['G-SYNTAX', 'backtick trong comment HTML bên trong template literal', h =>
+    once(h, '<ol class="wb-steps ds-map">', '<!-- `wb-steps` -->\n      <ol class="wb-steps ds-map">')],
 ];
 
 /* Các ca không sửa HTML mà sửa file khác. Mỗi ca tự dọn ở `after` nếu nó chạm vào

@@ -209,6 +209,7 @@ const GATES = [
   ['G-REF',        'chặn', 'mọi data-aside / data-math / data-goto / #/id giải được'],
   ['G-ORPHAN',     'chặn', 'không có nhánh phụ nào mà không bài nào mở'],
   ['G-PAYOFF',     'chặn', 'mọi bài khai PAYOFF (thiếu = đầu bài không có mục tiêu)'],
+  ['G-SYNTAX',     'chặn', 'script chính của trang phân tích được (không thì trang trắng)'],
   ['G-NO-DETAILS', 'chặn', 'không dùng <details> để ẩn kiến thức'],
   ['G-FWD',        'chặn', 'tiêu chí đạt / deliverable tuần không đòi thứ chưa dạy'],
   ['G-PLAN',       'chặn', 'lịch 14 ngày & 8 tuần nhất quán (bản node của auditPlan)'],
@@ -321,6 +322,39 @@ for (const l of LEAVES) {
   if (!g) { F(`G-PAYOFF: bài "${l.id}" thiếu PAYOFF → đầu bài không có dòng mục tiêu`); continue; }
   if (!Array.isArray(g) || g.length !== 2 || !g[0] || !g[1]) F(`G-PAYOFF: "${l.id}" PAYOFF phải là [kết quả, dẫn tới đâu]`);
   else if (g[0].length < 25) W(`G-PAYOFF: "${l.id}" mục tiêu quá ngắn để nói được kết quả: "${g[0]}"`);
+}
+
+/* --- G-SYNTAX: script của trang phải phân tích được ---------------------
+   Vì sao cổng này tồn tại: 2026-08-04 một phiên thêm một comment HTML vào TRONG một
+   template literal của `renderHome()`, và comment đó chứa dấu backtick. Một dấu backtick
+   là đứt template, đứt template là `SyntaxError`, và `SyntaxError` trong <script> nghĩa là
+   KHÔNG hàm nào được định nghĩa: router chết, trang chỉ còn cái vỏ. Cả 9 cổng CHẶN lúc đó
+   vẫn xanh — vì tất cả chúng đọc HTML như VĂN BẢN, không cổng nào hỏi "đoạn script này có
+   chạy được không".
+
+   Đó là loại lỗi tệ nhất mà bộ cổng này có thể bỏ sót: hậu quả tối đa (trang trắng), dấu
+   hiệu tối thiểu (diff nhìn vô hại — chỉ là một comment), và người sửa CSS thì không có lý
+   do nào để mở trình duyệt kiểm lại JS. Máy phải bắt.
+
+   Cách kiểm: bóc script dài nhất (script chính của trang) rồi nhờ `new Function` phân tích.
+   Chỉ PHÂN TÍCH, không chạy — nên không cần DOM, không có tác dụng phụ, và mất ~10ms. */
+{
+  const scripts = [...src.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].map(m => m[1]);
+  if (!scripts.length) F('G-SYNTAX: không tìm thấy khối <script> nào trong trang — router không thể chạy');
+  else {
+    const main = scripts.reduce((a, b) => (b.length > a.length ? b : a));
+    try {
+      new Function(main);
+    } catch (e) {
+      // Đếm dòng để chỉ đúng chỗ trong FILE, không phải trong đoạn đã bóc ra.
+      const at = src.indexOf(main);
+      const base = at < 0 ? 0 : src.slice(0, at).split('\n').length;
+      F(`G-SYNTAX: script chính của trang không phân tích được — ${e.message}\n` +
+        `    Cả trang sẽ trắng: SyntaxError nghĩa là không hàm nào được định nghĩa.\n` +
+        `    Khối script bắt đầu ở dòng ~${base}. Nghi phạm số 1: dấu backtick trong một\n` +
+        `    comment HTML nằm bên trong template literal (đã dính một lần) — xem CLAUDE.md §4.`);
+    }
+  }
 }
 
 /* --- G-NO-DETAILS: kiến thức không được ẩn bằng gập tại chỗ -------------
