@@ -1692,6 +1692,14 @@
   </div></div>
 </template>
 
+<template data-mathdef="cyclicspline" data-title="Periodic spline — mã hoá chu kỳ tổng quát hơn sin/cos">
+  <p>Từ sklearn 1.0 có sẵn một lớp mã hoá chu kỳ tổng quát hơn cặp sin/cos đơn: <code>SplineTransformer</code> ở chế độ ngoại suy tuần hoàn. Đây là <i>cách thứ tư</i> để đặt feature chu kỳ, nâng cao hơn ba cách trong thân bài.</p>
+  <div class="ds-code"><b>from</b> sklearn.preprocessing <b>import</b> SplineTransformer
+<i># periodic spline — tổng quát hơn sin/cos, bắt được hình dạng phức tạp hơn</i>
+SplineTransformer(n_knots=12, degree=3, extrapolation="periodic")</div>
+  <p>Spline tuần hoàn linh hoạt hơn cặp sin/cos đơn (vốn chỉ mô tả được một hình sin trơn). Nếu tỉ lệ gian lận theo giờ có hai đỉnh nhọn, spline bắt tốt hơn. <b>Đây là một ứng viên đóng góp nhỏ nhưng có thật cho luận văn:</b> so sánh sin/cos đơn, đa hài (thêm cặp cho chu kỳ 12h), và spline tuần hoàn.</p>
+</template>
+
 <template data-mathdef="softmax" data-title="Softmax — biến điểm số thành phân phối xác suất">
   <p>Sigmoid dùng cho 2 lớp. Với nhiều lớp (10 loại gian lận chẳng hạn), bạn có 10 điểm số thô và cần biến chúng thành 10 xác suất cộng lại bằng 1.</p>
   <p>$$\text{softmax}(z)_i = \frac{e^{z_i}}{\sum_j e^{z_j}}$$</p>
@@ -2816,12 +2824,12 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
   <section class="wb-section"><h2>Vì sao dựng quanh một bài toán gian lận</h2>
     <p class="wb-section__desc">Chọn một dự án chính là có chủ ý — và nó không phải toàn bộ bản đồ.</p>
     <p>Một giáo trình mỗi bài một ví dụ rời thì bạn hiểu từng mảnh mà không ráp được cái nào. Bài toán chấm điểm gian lận có một tính chất hiếm: nó <b>bắt buộc</b> bạn đi qua đúng những chỗ quyết định một dự án đúng hay sai — nhãn lệch dưới 1%, chia tập theo thời gian, PR-AUC thay vì accuracy, chọn ngưỡng theo tiền, giờ giao dịch là biến chu kỳ, rò rỉ dữ liệu, và mô hình cũ đi theo thời gian. Các ví dụ nhập môn quen thuộc (Titanic, giá nhà, MNIST) <b>không</b> ép bạn gặp một cái nào trong số đó.</p>
-    <p><b>Nhưng một bài phân loại trên dữ liệu bảng không bao phủ được Data Science.</b> Nó không dạy backtest một mô hình dự báo, không dạy đọc một metric xếp hạng, và không dạy vì sao mô hình dự đoán không trả lời được câu hỏi nhân quả. Nên giáo trình có cấu trúc <b>một dự án chính + sáu đề vệ tinh</b>: chặng 7 đi qua các họ bài toán khác, mỗi họ trả lời cùng bốn câu — giữ gì, đổi gì, đo bằng gì, hỏng ở đâu — và bạn làm thật ít nhất hai trong số đó để chứng minh khả năng chuyển giao.</p>
+    <p><b>Nhưng một bài phân loại trên dữ liệu bảng không bao phủ được Data Science.</b> Nó không dạy backtest một mô hình dự báo, không dạy đọc một metric xếp hạng, và không dạy vì sao mô hình dự đoán không trả lời được câu hỏi nhân quả. Nên giáo trình có cấu trúc <b>một dự án chính + sáu đề vệ tinh</b>: chặng 8 đi qua các họ bài toán khác, mỗi họ trả lời cùng bốn câu — giữ gì, đổi gì, đo bằng gì, hỏng ở đâu — và bạn làm thật ít nhất hai trong số đó để chứng minh khả năng chuyển giao.</p>
     <div class="wb-cluster" style="margin:14px 0">
       <button class="wb-btn wb-btn--sm" data-goto="s-families"><span class="wb-ico wb-ico--sm">account_tree</span> Bản đồ các họ bài toán</button>
       <button class="wb-btn wb-btn--ghost wb-btn--sm" data-goto="q-mini"><span class="wb-ico wb-ico--sm">move_up</span> Mini-project chuyển giao</button>
     </div>
-    <p class="wb-help">Đề tài cuối cùng của bạn không phải gian lận cũng không sao: <b>toàn bộ khung vẫn giữ nguyên</b>, và chặng 7 chính là chỗ chỉ ra cần đổi gì cho họ bài toán của bạn.</p>
+    <p class="wb-help">Đề tài cuối cùng của bạn không phải gian lận cũng không sao: <b>toàn bộ khung vẫn giữ nguyên</b>, và chặng 8 chính là chỗ chỉ ra cần đổi gì cho họ bài toán của bạn.</p>
   </section>
 </template>
 
@@ -2907,7 +2915,7 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
     </div>
     <div class="wb-card wb-card--pad">
       <p class="wb-card__title">C · Cần nộp đề cương tuần này</p>
-      <p class="wb-card__sub">Chặng 0 → chặng 9 (Luận văn) → quay về chặng 8 (Product). Bạn cần biết mình sẽ chứng minh cái gì trước khi biết cách build.</p>
+      <p class="wb-card__sub">Chặng 0 → chặng 9 (Luận văn) → quay về chặng 7 (Product). Bạn cần biết mình sẽ chứng minh cái gì trước khi biết cách build.</p>
     </div>
     <div class="wb-card wb-card--pad">
       <p class="wb-card__title">D · Đang bí đúng một chỗ</p>
@@ -3146,7 +3154,7 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
       <p class="wb-alert__msg">“Dự báo nhu cầu để tự động đặt hàng” = forecasting (dự báo) + tối ưu hoá (quyết định đặt bao nhiêu) + đôi khi nhân quả (đặt hàng nhiều có làm tăng doanh số không, hay chỉ tương quan). Khi thấy một dự án khó phân loại, gần như luôn là vì nó có nhiều lớp — <b>tách ra rồi định vị từng lớp</b>, đừng cố ép nó vào một ô.</p></div>
   </div>
 
-  <p>Chặng 7 của trang này đi vào từng họ, mỗi họ một bài, rồi yêu cầu làm thật <b>hai trong sáu</b> mini-project để tạo bằng chứng chuyển giao; bốn đề còn lại chỉ là phác thảo để tra sau.</p>
+  <p>Chặng 8 của trang này đi vào từng họ, mỗi họ một bài, rồi yêu cầu làm thật <b>hai trong sáu</b> mini-project để tạo bằng chứng chuyển giao; bốn đề còn lại chỉ là phác thảo để tra sau.</p>
 </template>
 
 <template data-node="s-lookup">
@@ -3192,7 +3200,7 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
     <tr><td>Biến đổi feature + gắn thành chuỗi</td><td><b>scikit-learn</b> (<code>Pipeline</code>, <code>ColumnTransformer</code>)</td><td>Nơi sin/cos được gắn vào để không bao giờ lệch giữa train và serve</td></tr>
     <tr><td>Mô hình cho dữ liệu bảng</td><td><b>LightGBM</b> / XGBoost</td><td>Kết quả mạnh và ổn định trên nhiều bài toán bảng — nhưng vẫn phải so với baseline tuyến tính</td></tr>
     <tr><td>Mạng nơ-ron, Transformer</td><td><b>PyTorch</b> (+ Hugging Face)</td><td>Thường là lựa chọn thực tế khi dữ liệu là chữ / ảnh / chuỗi dài</td></tr>
-    <tr><td>Dự báo chuỗi thời gian</td><td><b>statsmodels</b> (ETS/ARIMA) + <b>LightGBM</b> có lag</td><td>Luôn kèm baseline naive &amp; seasonal-naive — xem chặng 7</td></tr>
+    <tr><td>Dự báo chuỗi thời gian</td><td><b>statsmodels</b> (ETS/ARIMA) + <b>LightGBM</b> có lag</td><td>Luôn kèm baseline naive &amp; seasonal-naive — xem chặng 8</td></tr>
     <tr><td>Biểu đồ</td><td><b>matplotlib</b>, seaborn</td><td>Đủ cho cả luận văn</td></tr>
     <tr><td>Giải thích mô hình</td><td><b>SHAP</b></td><td>Hội đồng gần như chắc chắn sẽ hỏi “vì sao model quyết định vậy”</td></tr>
     <tr><td>Ghi lại thí nghiệm</td><td><b>MLflow</b> (hoặc một file CSV kỷ luật)</td><td>Không có nó, tới tuần 2 bạn sẽ không nhớ cấu hình nào cho kết quả nào</td></tr>
@@ -3206,12 +3214,12 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
 
 <template data-node="s-plan8w">
   <p>Đây là <b>lộ trình chính</b> của trang này: <b><span data-stat="total-hrs">—</span> giờ</b> chia trên 8 tuần (phần <span class="wb-cap wb-cap--solid wb-cap--sm">Bắt buộc</span> ~<span data-stat="core-week">—</span> giờ/tuần). <b>Con số này giả định bạn đã biết lập trình;</b> nếu Python là ngôn ngữ đầu tiên thì ≈ <b><span data-stat="total-beg">—</span> giờ</b>, nên với người từ số 0 đây thực chất là lộ trình <span data-stat="total-beg-weeks">—</span> tuần ở nhịp 8–10 giờ/tuần — <b>“6–8 tuần” không dành cho người bắt đầu từ con số 0 về lập trình.</b> Nó đi hết chiều rộng của chín họ bài toán và chiều sâu của một product demo end-to-end có bằng chứng; luận văn hoàn chỉnh và bảo vệ thật vẫn nằm ngoài ngân sách này. Bản 14 ngày ở bài sau là phiên bản nén của chính lộ trình.</p>
-  <p class="wb-help"><b>Các tuần không bằng nhau, và bảng bên dưới không giả vờ là bằng nhau.</b> Tuần 1, 2 và 6 nặng nhất (~14–16 giờ, người từ số 0 nhân thêm) vì công cụ/toán dồn lên đầu và tuần 6 gồm chín họ bài toán + hai mini-project. Nếu con số đó bất khả thi với bạn, giãn tuần nặng thành hai tuần và chấp nhận lộ trình dài hơn; đừng nén bằng cách bỏ phần thực hành, vì phần đó mới là chỗ kiến thức bám lại.</p>
+  <p class="wb-help"><b>Các tuần không bằng nhau, và bảng bên dưới không giả vờ là bằng nhau.</b> Tuần 1, 2 và 7 nặng nhất (~14–16 giờ, người từ số 0 nhân thêm) vì công cụ/toán dồn lên đầu và tuần 7 gồm chín họ bài toán + hai mini-project. Nếu con số đó bất khả thi với bạn, giãn tuần nặng thành hai tuần và chấp nhận lộ trình dài hơn; đừng nén bằng cách bỏ phần thực hành, vì phần đó mới là chỗ kiến thức bám lại.</p>
 
   <div class="wb-alert wb-alert--info">
     <span class="wb-alert__icon">i</span>
     <div class="wb-alert__body"><p class="wb-alert__title">Vì sao 6–8 tuần chứ không phải 2 tuần</p>
-      <p class="wb-alert__msg">Hai tuần đủ để <b>đi hết một vòng</b> trên một bài toán. Nó không đủ để bạn nhìn một dự án thuộc lĩnh vực khác và định vị được nó — vì việc đó cần bạn đã tự tay chạm vào ít nhất bốn, năm họ bài toán khác nhau và thấy chỗ nào giữ nguyên, chỗ nào đổi. Đó là toàn bộ khác biệt giữa hai lộ trình, và nó nằm ở tuần 6.</p></div>
+      <p class="wb-alert__msg">Hai tuần đủ để <b>đi hết một vòng</b> trên một bài toán. Nó không đủ để bạn nhìn một dự án thuộc lĩnh vực khác và định vị được nó — vì việc đó cần bạn đã tự tay chạm vào ít nhất bốn, năm họ bài toán khác nhau và thấy chỗ nào giữ nguyên, chỗ nào đổi. Đó là toàn bộ khác biệt giữa hai lộ trình, và nó nằm ở tuần 7.</p></div>
   </div>
 
   <h2>Ba mốc không thể bỏ</h2>
@@ -3221,7 +3229,7 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
       <p class="wb-card__sub">Một con số đánh giá thật từ <code>notebooks/02-baseline.ipynb</code> chạy hết. Xấu cũng được — miễn là vòng dữ liệu → split → baseline → metric đã <b>khép kín</b>.</p>
     </div>
     <div class="wb-card wb-card--pad">
-      <p class="wb-card__title">Cuối tuần 6 · chuyển giao được</p>
+      <p class="wb-card__title">Cuối tuần 7 · chuyển giao được</p>
       <p class="wb-card__sub"><b>Hai mini-project</b> thuộc hai họ khác nhau đã làm tới cùng, mỗi cái một notebook và một bảng “giữ gì / đổi gì”; bốn đề còn lại phác thảo bảng.</p>
     </div>
     <div class="wb-card wb-card--pad">
@@ -3236,7 +3244,7 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
   <div id="planWeeks"></div>
 
   <h2>Vì sao thứ tự này, chứ không phải thứ tự trong đề bài</h2>
-  <p>Có một chỗ lệch đáng nói: nhiều người xếp “các họ bài toán” trước deep learning. Ở đây thì ngược lại — <b>tuần 5 là deep learning, tuần 6 mới là các họ bài toán</b>. Lý do là phụ thuộc kiến thức: bài NLP cần bạn đã hiểu embedding và attention, bài computer vision cần bạn đã hiểu mạng nơ-ron, và bài forecasting có một nhánh LSTM. Học họ bài toán trước sẽ biến chúng thành danh sách tên gọi thay vì hiểu biết.</p>
+  <p>Có một chỗ lệch đáng nói: nhiều người xếp “các họ bài toán” trước deep learning. Ở đây thì ngược lại — <b>deep learning ở tuần 5, còn các họ bài toán để tới tuần 7</b> (sau khi tuần 6 đã đóng gói xong sản phẩm chính). Lý do là phụ thuộc kiến thức: bài NLP cần bạn đã hiểu embedding và attention, bài computer vision cần bạn đã hiểu mạng nơ-ron, và bài forecasting có một nhánh LSTM. Học họ bài toán trước sẽ biến chúng thành danh sách tên gọi thay vì hiểu biết.</p>
   <p>Hai chỗ khác cũng cố định, và đây là những chỗ <b>không được đảo</b>:</p>
   <ul>
     <li><b>Chia tập (tuần 2) phải xong trước feature engineering (tuần 3).</b> Làm ngược là công thức chuẩn để rò rỉ dữ liệu.</li>
@@ -3245,7 +3253,7 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
   <p>Ngoài ba ràng buộc đó, bạn đảo được. Nếu phải nộp đề cương sớm, kéo tuần 8 lên trước tuần 5 — bạn cần biết mình sẽ chứng minh cái gì trước khi biết cách làm.</p>
 
   <h2>Nếu bạn chỉ có 6 tuần</h2>
-  <p>Ép tuần 5 và tuần 6 lại còn một tuần rưỡi bằng cách: ở chặng 6 chỉ giữ <b>Mạng nơ-ron</b>, <b>Attention</b>, <b>Transformer</b>; ở chặng 7 giữ đúng <b>hai</b> mini-project bắt buộc — chọn forecasting và một trong NLP / A/B testing, vì chúng khác dự án gian lận nhiều nhất nên dạy được nhiều nhất về chuyển giao.</p>
+  <p>Ép phần deep learning (tuần 5) và các họ bài toán (tuần 7) lại còn một tuần rưỡi bằng cách: ở chặng 6 chỉ giữ <b>Mạng nơ-ron</b>, <b>Attention</b>, <b>Transformer</b>; ở chặng 8 giữ đúng <b>hai</b> mini-project bắt buộc — chọn forecasting và một trong NLP / A/B testing, vì chúng khác dự án gian lận nhiều nhất nên dạy được nhiều nhất về chuyển giao.</p>
 
   <h2>Nhịp một tuần</h2>
   <p>Lịch theo tuần dễ trôi hơn lịch theo ngày, nên cần một nhịp cố định:</p>
@@ -3275,7 +3283,7 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
   <div class="wb-alert wb-alert--warning">
     <span class="wb-alert__icon">!</span>
     <div class="wb-alert__body"><p class="wb-alert__title">Fast track này bỏ lại gì</p>
-      <p class="wb-alert__msg">Nó <b>chỉ giới thiệu</b> chứ không dạy hết: phần lớn chặng 7 (hồi quy, forecasting, multiclass, NLP, computer vision, gợi ý, analytics), phần tuning, giải thích mô hình, và học không giám sát. Hệ quả cụ thể: sau 14 ngày bạn <b>làm được</b> một dự án phân loại trên dữ liệu bảng, nhưng <b>chưa định vị được</b> một dự án dự báo hay một dự án NLP. Đó là một khoảng trống thật, và cách lấp nằm ở mục <b>Quay lại lấp chỗ trống</b> bên dưới.</p></div>
+      <p class="wb-alert__msg">Nó <b>chỉ giới thiệu</b> chứ không dạy hết: phần lớn chặng 8 (hồi quy, forecasting, multiclass, NLP, computer vision, gợi ý, analytics), phần tuning, giải thích mô hình, và học không giám sát. Hệ quả cụ thể: sau 14 ngày bạn <b>làm được</b> một dự án phân loại trên dữ liệu bảng, nhưng <b>chưa định vị được</b> một dự án dự báo hay một dự án NLP. Đó là một khoảng trống thật, và cách lấp nằm ở mục <b>Quay lại lấp chỗ trống</b> bên dưới.</p></div>
   </div>
 
   <div class="wb-alert wb-alert--danger">
@@ -4068,157 +4076,6 @@ pipe = Pipeline([("prep", prep), ("model", LGBMClassifier())])</div>
   <p class="ds-more"><button class="ds-aside" data-aside="x-sklearn-imports">Bản đồ import: cần gì lấy từ đâu</button><button class="ds-aside" data-aside="cmp-gbdt">So sánh thư viện boosting</button></p>
 </template>
 
-<template data-node="t-stack">
-  <p>Bài này trả lời đúng một câu: <b>ở mỗi bước của quy trình 10 bước, tôi mở công cụ nào ra, gõ cái gì, và kết thúc bước đó tôi có file gì trong tay?</b></p>
-  <p>Đọc nó như một sổ tay tra cứu. Mỗi bước có bốn thứ: <b>công cụ</b>, <b>lệnh đầu tiên</b> để bạn khỏi ngồi nhìn màn hình trắng, <b>hiện vật</b> phải có khi xong, và <b>cái bẫy</b> của bước đó.</p>
-
-  <h2>Công cụ dùng xuyên suốt cả 10 bước</h2>
-  <p>Cột “mở ở đâu” viết theo đường đi <b>cloud-first</b>. Nếu bạn làm trên máy, đọc mọi dòng thành “trình soạn thảo và terminal trên máy bạn” — quy trình không đổi.</p>
-  <div class="wb-table-scroll"><table>
-    <tr><th>Công cụ</th><th>Vai trò</th><th>Mở ở đâu</th><th>Mở khi nào</th></tr>
-    <tr><td><b>Google Colab</b></td><td>Nơi bạn <i>suy nghĩ</i>, nhìn dữ liệu, và mượn GPU</td><td>Tab trình duyệt</td><td>Bước 3–8, mỗi ngày</td></tr>
-    <tr><td><b>Trình soạn thảo</b></td><td>Viết file <code>.py</code> trong <code>src/</code></td><td>github.dev (sửa nhanh) · Codespaces (sửa kèm chạy) · VS Code trên máy</td><td>Khi một đoạn code đã ổn định</td></tr>
-    <tr><td><b>terminal</b></td><td>Chạy script, chạy <code>pytest</code>, dựng Docker</td><td>Codespaces · hoặc terminal + <code>venv</code> trên máy</td><td>Luôn mở một cửa sổ</td></tr>
-    <tr><td><b>git</b></td><td>Lưu mốc, và <b>ghi con số vào commit message</b></td><td>Ở bất cứ đâu trong ba chỗ trên</td><td>Sau mỗi kết quả có ý nghĩa</td></tr>
-    <tr><td><b>AI coding assistant</b></td><td>Sinh code nháp, giải thích lỗi, viết test</td><td>Tab trình duyệt hoặc trong trình soạn thảo</td><td>Liên tục — với kỷ luật ở bài <b>Làm việc với AI</b></td></tr>
-  </table></div>
-
-  <p class="ds-more"><button class="ds-aside" data-aside="cmp-run">Chỗ chạy code &amp; GPU</button></p>
-
-  <h2>Bước 1 · Đóng khung bài toán</h2>
-  <table>
-    <tr><td style="width:110px"><b>Công cụ</b></td><td>Một file văn bản. Không phải notebook.</td></tr>
-    <tr><td><b>Gõ gì</b></td><td><code>touch docs/problem-statement.md</code> rồi trả lời sáu câu ở bài <b>Đóng khung bài toán</b></td></tr>
-    <tr><td><b>Xong thì có</b></td><td><code>docs/problem-statement.md</code> — sẽ thành chương 1 luận văn gần như nguyên văn</td></tr>
-    <tr><td><b>Bẫy</b></td><td>Mở notebook trước khi viết file này. Bạn sẽ code ba ngày rồi mới phát hiện mình đang trả lời sai câu hỏi.</td></tr>
-  </table>
-
-  <h2>Bước 2 · Lấy dữ liệu</h2>
-  <table>
-    <tr><td style="width:110px"><b>Công cụ</b></td><td><b>SQL</b> (dữ liệu công ty) hoặc <b>Kaggle CLI</b> (dữ liệu công khai). Tập SQL bằng <b>DuckDB</b>.</td></tr>
-    <tr><td><b>Gõ gì</b></td><td>Xem bên dưới</td></tr>
-    <tr><td><b>Xong thì có</b></td><td><code>data/raw/*.csv</code> (từ đây <b>chỉ đọc</b>) và <code>sql/extract.sql</code> nếu lấy từ CSDL</td></tr>
-    <tr><td><b>Bẫy</b></td><td>Sửa tay một ô trong <code>data/raw/</code>. Ngày bạn làm thế là ngày kết quả của bạn hết tái lập được.</td></tr>
-  </table>
-  <div class="ds-code">pip install kaggle duckdb
-kaggle datasets download -d mlg-ulb/creditcardfraud -p data/raw --unzip
-
-<i># hoặc từ CSDL công ty — lưu câu truy vấn vào sql/extract.sql</i>
-psql "$DB_URL" -f sql/extract.sql -o data/raw/tx.csv</div>
-
-  <p class="ds-more"><button class="ds-aside" data-aside="cmp-query">Cách lấy dữ liệu ra</button><button class="ds-aside" data-aside="cmp-storage">Chỗ để dữ liệu</button></p>
-
-  <h2>Bước 3 · EDA</h2>
-  <table>
-    <tr><td style="width:110px"><b>Công cụ</b></td><td><b>Jupyter</b> + <b>pandas</b> + <b>matplotlib/seaborn</b></td></tr>
-    <tr><td><b>Gõ gì</b></td><td><code>jupyter lab</code>, tạo <code>notebooks/01-eda.ipynb</code>, chạy danh sách 10 điểm ở bài <b>EDA</b></td></tr>
-    <tr><td><b>Xong thì có</b></td><td>Notebook đã chạy + 3–4 hình trong <code>reports/figures/</code>, trong đó có <b>tỉ lệ gian lận theo giờ</b></td></tr>
-    <tr><td><b>Bẫy</b></td><td>EDA trên toàn bộ dữ liệu <i>trước khi</i> chia tập — não bạn trở thành đường rò rỉ, và không công cụ nào phát hiện được.</td></tr>
-  </table>
-
-  <p class="ds-more"><button class="ds-aside" data-aside="cmp-eda">Công cụ nhìn dữ liệu</button></p>
-
-  <h2>Bước 4 · Làm sạch</h2>
-  <table>
-    <tr><td style="width:110px"><b>Công cụ</b></td><td><b>pandas</b> cho phép sửa tuyệt đối · <b><code>sklearn.impute</code></b> cho phép học tham số</td></tr>
-    <tr><td><b>Gõ gì</b></td><td><code>pd.to_datetime(..., errors="coerce")</code>, <code>drop_duplicates</code>, <code>.str.strip().str.lower()</code></td></tr>
-    <tr><td><b>Xong thì có</b></td><td><code>data/processed/</code> — sinh ra <b>hoàn toàn bằng code</b> từ <code>raw/</code></td></tr>
-    <tr><td><b>Bẫy</b></td><td>Điền giá trị thiếu bằng <code>SimpleImputer</code> <i>ngoài</i> Pipeline. Nó học trung vị từ cả tập test → rò rỉ.</td></tr>
-  </table>
-
-  <h2>Bước 5 · Feature engineering ← chỗ sin/cos nằm</h2>
-  <table>
-    <tr><td style="width:110px"><b>Công cụ</b></td><td><b>pandas + numpy</b> viết trong <code>src/features.py</code>, gắn vào Pipeline bằng <b><code>FunctionTransformer</code></b>. Feature cần lịch sử: <b>pandas <code>rolling</code></b> hoặc <b>window function SQL</b>.</td></tr>
-    <tr><td><b>Gõ gì</b></td><td>Xem bên dưới</td></tr>
-    <tr><td><b>Xong thì có</b></td><td><code>src/features.py</code> + <code>src/history.py</code>, và một bảng ghi mỗi nhóm feature làm điểm tăng bao nhiêu</td></tr>
-    <tr><td><b>Bẫy</b></td><td>Viết logic feature lần thứ hai trong <code>serve.py</code>. Hai bản sẽ lệch nhau, và <b>không có gì báo lỗi</b>.</td></tr>
-  </table>
-  <div class="ds-code"><i># src/features.py — không học tham số, chạy được với MỘT dòng</i>
-df["hour_sin"] = np.sin(2*np.pi*df["hour"]/24)
-df["hour_cos"] = np.cos(2*np.pi*df["hour"]/24)
-
-<i># src/history.py — cần nhiều dòng, chạy TRƯỚC khi vào Pipeline</i>
-g.rolling("1h", closed="left").count()</div>
-
-  <p class="ds-more"><button class="ds-aside" data-aside="cmp-dataframe">pandas · polars · SQL</button></p>
-
-  <h2>Bước 6 · Chia tập</h2>
-  <table>
-    <tr><td style="width:110px"><b>Công cụ</b></td><td><b><code>sklearn.model_selection</code></b> — nhưng với dữ liệu có thời gian thì chỉ cần <code>iloc</code></td></tr>
-    <tr><td><b>Gõ gì</b></td><td><code>df.sort_values("ts")</code> rồi cắt 70/15/15, sau đó <b>hai dòng <code>assert</code></b></td></tr>
-    <tr><td><b>Xong thì có</b></td><td>Hàm <code>time_split()</code> trong <code>src/train.py</code> + dòng in khoảng thời gian từng tập (đưa vào luận văn)</td></tr>
-    <tr><td><b>Bẫy</b></td><td><code>train_test_split</code> mặc định là ngẫu nhiên. Với dữ liệu giao dịch, nó cho mô hình nhìn thấy tương lai.</td></tr>
-  </table>
-
-  <h2>Bước 7 · Huấn luyện &amp; tinh chỉnh</h2>
-  <table>
-    <tr><td style="width:110px"><b>Công cụ</b></td><td><b>LightGBM</b> (mô hình chính) · <b>Optuna</b> (dò tham số) · <b>MLflow</b> (ghi lại) · <b>joblib</b> (lưu)</td></tr>
-    <tr><td><b>Gõ gì</b></td><td><code>python -m src.train</code></td></tr>
-    <tr><td><b>Xong thì có</b></td><td><code>models/fraud_v1.joblib</code> (chứa <b>cả</b> feature engineering) + <code>models/metrics.json</code> + các lần chạy trong MLflow</td></tr>
-    <tr><td><b>Bẫy</b></td><td>Tune trước khi feature xong. Bậc độ lớn thường gặp: feature tốt cải thiện nhiều hơn hẳn tuning (ví dụ +0,10 so với +0,01 — con số minh hoạ, không phải quy luật).</td></tr>
-  </table>
-  <div class="ds-code">python -m src.train          <i># in PR-AUC, lưu model</i>
-mlflow ui                    <i># mở localhost:5000 xem lại mọi lần chạy</i></div>
-
-  <p class="ds-more"><button class="ds-aside" data-aside="cmp-gbdt">Thư viện boosting</button><button class="ds-aside" data-aside="cmp-tune">Cách tinh chỉnh</button><button class="ds-aside" data-aside="cmp-track">Cách ghi thí nghiệm</button></p>
-
-  <h2>Bước 8 · Đánh giá &amp; chọn ngưỡng</h2>
-  <table>
-    <tr><td style="width:110px"><b>Công cụ</b></td><td><b><code>sklearn.metrics</code></b> · <b>SHAP</b> (giải thích) · <b>numpy</b> (bootstrap) · <b>statsmodels</b> (McNemar)</td></tr>
-    <tr><td><b>Gõ gì</b></td><td><code>average_precision_score</code>, quét ngưỡng bằng <code>np.linspace</code>, <code>shap.plots.beeswarm</code></td></tr>
-    <tr><td><b>Xong thì có</b></td><td>Bảng kết quả có <b>khoảng tin cậy</b> và <b>cột quy ra tiền</b>, một ngưỡng đã chốt, và 3 hình cho luận văn</td></tr>
-    <tr><td><b>Bẫy</b></td><td>Báo cáo accuracy; để ngưỡng 0,5; chọn ngưỡng trên tập test.</td></tr>
-  </table>
-
-  <p class="ds-more"><button class="ds-aside" data-aside="cmp-explain">Công cụ giải thích mô hình</button></p>
-
-  <h2>Bước 9 · Đưa lên chạy thật</h2>
-  <table>
-    <tr><td style="width:110px"><b>Công cụ</b></td><td><b>FastAPI</b> + <b>uvicorn</b> (API) · <b>Docker</b> đóng gói, dựng trong <b>Codespaces</b> nếu máy yếu · <b>Streamlit</b> + Streamlit Community Cloud (demo cho hội đồng)</td></tr>
-    <tr><td><b>Gõ gì</b></td><td>Xem bên dưới</td></tr>
-    <tr><td><b>Xong thì có</b></td><td><code>docker build</code> chạy thành công (giữ log) + trang <code>/docs</code> bấm thử được + một app Streamlit có đường dẫn công khai</td></tr>
-    <tr><td><b>Bẫy</b></td><td>Gọi <code>joblib.load</code> trong mỗi request — mất 200ms, phá ngân sách 50ms. Nạp một lần lúc khởi động.</td></tr>
-  </table>
-  <div class="ds-code"><i># chạy ở đâu cũng được: máy bạn, hoặc terminal trong Codespaces</i>
-uvicorn src.serve:app --reload --port 8000    <i># rồi mở /docs</i>
-docker build -t fraud-api . &amp;&amp; docker run -p 8000:8000 fraud-api
-streamlit run app.py                          <i># bản demo kéo thanh trượt</i></div>
-  <p class="wb-help">Máy yếu thì chạy đúng ba lệnh trên trong một GitHub Codespace — nó có Docker sẵn và tự chuyển tiếp cổng ra một URL bấm được. Nhớ tắt Codespace khi xong.</p>
-
-  <p class="ds-more"><button class="ds-aside" data-aside="cmp-serve">Đóng gói &amp; nơi đặt</button></p>
-
-  <h2>Bước 10 · Giám sát &amp; huấn luyện lại</h2>
-  <table>
-    <tr><td style="width:110px"><b>Công cụ</b></td><td><b>numpy</b> (hàm PSI ~6 dòng) · <b>logging</b> · <b>cron</b> — không cần Airflow</td></tr>
-    <tr><td><b>Gõ gì</b></td><td>Hàm <code>psi()</code> ở bài <b>Giám sát</b>, chạy hằng tuần trên log</td></tr>
-    <tr><td><b>Xong thì có</b></td><td>Bảng theo dõi 5 nhóm chỉ số + một mục trong luận văn mà rất ít luận văn có</td></tr>
-    <tr><td><b>Bẫy</b></td><td>Chỉ log điểm số mà không log <b>feature đã tính</b>. Sáu tháng sau không ai debug được vì sao model quyết định vậy.</td></tr>
-  </table>
-
-  <h2>Ba công cụ cho phần viết</h2>
-  <table>
-    <tr><th>Công cụ</th><th>Thay cho</th><th>Vì sao đáng đổi</th></tr>
-    <tr><td><b>Overleaf</b> (LaTeX)</td><td>Word</td><td>Công thức đẹp, đánh số hình/bảng tự cập nhật, file 100 trang không vỡ</td></tr>
-    <tr><td><b>Zotero</b></td><td>Gõ tay tài liệu tham khảo</td><td>40 tài liệu: 3 giờ và có lỗi → 10 phút và không lỗi</td></tr>
-    <tr><td><b>MLflow</b></td><td>Trí nhớ</td><td>Bảng kết quả chương 5 xuất thẳng ra, không dựng lại</td></tr>
-  </table>
-
-  <p class="ds-more"><button class="ds-aside" data-aside="cmp-write">Công cụ viết</button><button class="ds-aside" data-aside="cmp-figure">Công cụ vẽ hình</button></p>
-
-  <h2>Một ngày làm việc, theo đúng thứ tự mở công cụ</h2>
-  <div class="ds-code">1. terminal   → source .venv/bin/activate
-2. jupyter    → mở 02-experiments.ipynb, chạy Restart &amp; Run All
-3. nghĩ MỘT giả thuyết, viết ra bằng tiếng Việt
-4. jupyter    → thử 5 dòng pandas, xem điểm đổi không
-5. giữ được?  → chuyển sang src/features.py bằng trình soạn thảo
-6. terminal   → python -m src.train  &amp;&amp;  pytest
-7. git commit -m "them z_vs_history, pr-auc 0.394 -> 0.412"
-8. ghi một dòng vào bảng thí nghiệm</div>
-  <p>Tám bước này lặp lại 5–10 lần mỗi ngày trong tuần 2. <b>Bước 7 là bước hay bị bỏ nhất</b> và cũng là bước cứu bạn khi tới ngày 13 cần biết cấu hình nào cho con số nào.</p>
-
-  <p class="ds-more"><button class="ds-aside" data-aside="x-notneeded">Những thứ chưa cần cho dự án này</button></p>
-  </template>
-
 <!-- ============================================================
      CHẶNG 2 — TOÁN TỐI THIỂU
      ============================================================ -->
@@ -4965,7 +4822,7 @@ pipe.fit(X_train, y_train)</div>
   <p>Áp dụng cho <b>mọi</b> thứ học tham số: scaler, imputer, one-hot, PCA, target encoding, chọn feature.</p>
 
   <h3>4 · Rò rỉ nhóm — cùng một thực thể ở hai bên</h3>
-  <p>Một khách hàng có 200 giao dịch. Chia ngẫu nhiên → 160 ở train, 40 ở test. Mô hình học thuộc thói quen của chính khách đó rồi được chấm điểm trên chính khách đó. Điểm cao giả tạo, và sẽ sụp khi gặp khách mới.</p>
+  <p>Một khách hàng có 200 giao dịch. Chia ngẫu nhiên → 160 ở train, 40 ở test. Mô hình học thuộc thói quen của chính khách đó rồi được chấm điểm trên chính khách đó. Điểm cao giả tạo, và sẽ sụp khi gặp khách mới. <b>Một lưu ý để trả lời cho chuẩn:</b> điều này là rò rỉ khi hệ thống thật của bạn phải chấm <b>khách mới chưa từng thấy</b>. Nếu thực tế bạn luôn gặp lại chính những thẻ cũ (thường đúng với gian lận thẻ), cùng thực thể ở hai bên không đương nhiên là rò rỉ — nó tuỳ kịch bản triển khai. Chia theo nhóm vẫn là mặc định an toàn, nên nói rõ bạn đang đánh giá cho kịch bản nào.</p>
   <p><b>Cách chữa:</b> <code>GroupKFold</code> hoặc <code>GroupShuffleSplit</code> với <code>groups=df["card_id"]</code>.</p>
 
   <h3>5 · Rò rỉ qua feature tổng hợp</h3>
@@ -5263,7 +5120,7 @@ Máy nhìn thấy: [0 1 2 3] 4 5 ... 20 21 [22 23]              ← hai cụm �
   <p>Một cột <code>hour</code> trở thành <b>hai cột</b> <code>hour_sin</code> và <code>hour_cos</code>. Phải là hai, vì một số duy nhất không đủ xác định vị trí trên vòng tròn (chỉ dùng sin thì 3h và 9h trùng giá trị).</p>
   <p><button class="ds-math" data-math="sincos">Công thức, bảng số kiểm chứng, và trường hợp KHÔNG cần dùng</button></p>
 
-  <h2>Gõ ở đâu — bốn cách, theo độ nghiêm túc tăng dần</h2>
+  <h2>Gõ ở đâu — ba cách, theo độ nghiêm túc tăng dần</h2>
 
   <h3>Cách 1 · Nhanh nhất, để thử trong notebook</h3>
   <div class="ds-code"><b>import</b> numpy <b>as</b> np
@@ -5318,17 +5175,12 @@ joblib.dump(pipe, "models/fraud_v1.joblib")   <i># một file chứa TẤT CẢ<
   <div class="ds-code">pipe = joblib.load("models/fraud_v1.joblib")
 score = pipe.predict_proba(pd.DataFrame([tx]))[0, 1]   <i># sin/cos tự chạy bên trong</i></div>
 
-  <h3>Cách 4 · Dùng lớp có sẵn của sklearn (từ bản 1.0)</h3>
-  <div class="ds-code"><b>from</b> sklearn.preprocessing <b>import</b> SplineTransformer
-<i># periodic spline — tổng quát hơn sin/cos, bắt được hình dạng phức tạp hơn</i>
-SplineTransformer(n_knots=12, degree=3, extrapolation="periodic")</div>
-  <p>Spline tuần hoàn linh hoạt hơn cặp sin/cos đơn (vốn chỉ mô tả được một hình sin trơn). Nếu tỉ lệ gian lận theo giờ có hai đỉnh nhọn, spline bắt tốt hơn. <b>Đây là một ứng viên đóng góp nhỏ nhưng có thật cho luận văn:</b> so sánh sin/cos đơn, đa hài (thêm cặp cho chu kỳ 12h), và spline tuần hoàn.</p>
-
   <h2>Đa hài — khi một cặp sin/cos không đủ</h2>
   <p>Một cặp sin/cos chỉ dựng được một sóng lên-xuống mượt trong 24 giờ. Nếu thực tế có <b>hai</b> đỉnh (trưa và tối), thêm cặp thứ hai với chu kỳ một nửa:</p>
   <div class="ds-code"><b>for</b> k <b>in</b> (1, 2, 3):                      <i># k = số hài</i>
     df[f"hour_sin{k}"] = np.sin(2*np.pi*k*df["hour"]/24)
     df[f"hour_cos{k}"] = np.cos(2*np.pi*k*df["hour"]/24)</div>
+  <p><button class="ds-math" data-math="cyclicspline">Cách thứ tư, nâng cao: periodic spline của sklearn — và một đóng góp nhỏ cho luận văn</button></p>
 
   <h2>Khi nào KHÔNG cần làm việc này</h2>
   <div class="wb-alert wb-alert--info">
@@ -5669,7 +5521,7 @@ RFECV(estimator=LGBMClassifier(), step=5, cv=5, scoring="average_precision")</di
 
   <div class="wb-alert wb-alert--warning wb-alert--plain"><div class="wb-alert__body">
     <p class="wb-alert__title">Bảng này chỉ nói về <i>phân loại trên dữ liệu bảng</i></p>
-    <p class="wb-alert__msg">Năm mô hình trên là bản đồ cho họ bài toán bạn đang làm, không phải bản đồ của cả ngành. Dự báo chuỗi thời gian có gia đình mô hình riêng (naive, ETS, ARIMA, boosting có lag); gợi ý có gia đình riêng; nhân quả thì không dùng mô hình dự đoán chút nào. <b>Chặng 7</b> vẽ bản đồ cho từng họ đó.</p>
+    <p class="wb-alert__msg">Năm mô hình trên là bản đồ cho họ bài toán bạn đang làm, không phải bản đồ của cả ngành. Dự báo chuỗi thời gian có gia đình mô hình riêng (naive, ETS, ARIMA, boosting có lag); gợi ý có gia đình riêng; nhân quả thì không dùng mô hình dự đoán chút nào. <b>Chặng 8</b> vẽ bản đồ cho từng họ đó.</p>
   </div></div>
 
   <h2>Quy trình chọn mô hình — theo đúng thứ tự này</h2>
@@ -5767,6 +5619,7 @@ pd.DataFrame({"feature": names, "coef": coefs, "odds_ratio": odds}) \
   <div class="ds-code"><b>from</b> sklearn.metrics <b>import</b> average_precision_score, roc_auc_score
 pr_auc  = average_precision_score(y_test, y_prob)   <i># ← chỉ số chính</i>
 roc_auc = roc_auc_score(y_test, y_prob)             <i># báo cáo kèm để so với paper khác</i></div>
+  <p><code>average_precision_score</code> tính <b>Average Precision (AP)</b> — tổng các mức tăng recall nhân với precision tại đó — và đó là ước lượng diện tích dưới đường PR mà sklearn khuyên dùng. Nhiều người quen gọi nó là <b>PR-AUC</b> (trang này cũng vậy); chỉ đừng tính diện tích đó bằng <code>auc(recall, precision)</code>, vì nội suy tuyến tính ở đó cho con số lạc quan giả.</p>
   <p>Nhớ: đường cơ sở của PR-AUC là <b>tỉ lệ dương</b> (0,0017), không phải 0,5. Nên PR-AUC = 0,35 nghĩa là tốt hơn ngẫu nhiên khoảng 200 lần — hãy nói rõ điều này trong luận văn, nếu không người đọc sẽ tưởng 0,35 là kém.</p>
 
   <h2>Chọn ngưỡng — bước mà hầu hết luận văn bỏ qua</h2>
@@ -5801,9 +5654,9 @@ print(f"ngưỡng tối ưu {best_t:.3f} — thiệt hại {min(costs)/1e6:.0f} 
 
   <div class="wb-alert wb-alert--info wb-alert--plain"><div class="wb-alert__body">
     <p class="wb-alert__title">Bạn lấy <i>hình dạng</i> của bảng, không lấy con số — và số của bạn sẽ nhỏ hơn nhiều</p>
-    <p class="wb-alert__msg">Hiểu nhầm sắp xảy ra: bạn nhớ 0,412, rồi tới chặng 8 chạy thật ra <b>0,0485</b>, và kết luận mình làm hỏng ở đâu đó. <b>Không hỏng.</b> Trang này có <b>hai hệ số liệu</b> và luôn nói rõ đang dùng hệ nào:<br>
+    <p class="wb-alert__msg">Hiểu nhầm sắp xảy ra: bạn nhớ 0,412, rồi tới chặng 7 chạy thật ra <b>0,0485</b>, và kết luận mình làm hỏng ở đâu đó. <b>Không hỏng.</b> Trang này có <b>hai hệ số liệu</b> và luôn nói rõ đang dùng hệ nào:<br>
     · <b>Số minh hoạ</b> — bảng trên và mọi con số 0,281 / 0,367 / 0,412 ở các bài lý thuyết. Chúng ở tầm một bộ dữ liệu thẻ <i>thật</i> (IEEE-CIS), dùng để bạn thấy hình dạng bảng và tập đọc chênh lệch.<br>
-    · <b>Số chạy thật</b> — bộ mô phỏng trong repo, ở chặng 7–8. PR-AUC quanh <b>0,03–0,05</b>.<br>
+    · <b>Số chạy thật</b> — bộ mô phỏng trong repo, ở chặng 7. PR-AUC quanh <b>0,03–0,05</b>.<br>
     Lý do nằm ngay đoạn trên: <b>PR-AUC không có thang tuyệt đối.</b> Nó chỉ đọc được khi kèm <b>mốc dưới</b> (tỉ lệ dương) và <b>mốc trên</b> (trần của bài toán). Bộ mô phỏng có trần lý thuyết chỉ khoảng 0,05–0,07 — đo ở bài <a href="#/pr-code">Code end-to-end</a> — nên 0,0485 là <i>sát trần</i>, còn 0,412 trên bộ đó là bất khả. Hai con số không mâu thuẫn; chúng ở hai bài toán khác nhau.<br>
     Câu rút ra, dùng được cả trong luận văn: <b>một con số PR-AUC trần trụi không nói lên điều gì</b> — luôn báo cáo kèm tỉ lệ nền, và nếu biết thì kèm cả trần.</p>
   </div></div>
@@ -6175,7 +6028,7 @@ print(study.best_params, study.best_value)</div>
 
   <h2>Ý tưởng SHAP, không cần công thức</h2>
   <p>Tưởng tượng một nhóm làm chung dự án và được thưởng 100 triệu. Chia thế nào cho công bằng? Lý thuyết trò chơi có một đáp án: với mỗi người, xét mọi thứ tự gia nhập nhóm có thể, đo phần giá trị tăng thêm khi người đó vào, rồi lấy trung bình. Đó là <b>giá trị Shapley</b>.</p>
-  <p>SHAP áp đúng ý tưởng đó cho feature: <b>mỗi feature đóng góp bao nhiêu vào việc đẩy dự đoán lệch khỏi mức trung bình</b>. Tổng mọi đóng góp + giá trị cơ sở = dự đoán cuối. Đây là tính chất quan trọng: nó <b>cộng lại đúng bằng</b> kết quả, nên giải thích không phải là ước lượng mơ hồ.</p>
+  <p>SHAP áp đúng ý tưởng đó cho feature: <b>mỗi feature đóng góp bao nhiêu vào việc đẩy dự đoán lệch khỏi mức trung bình</b>. Tổng mọi đóng góp + giá trị cơ sở = dự đoán cuối. Đây là tính chất quan trọng: nó <b>cộng lại đúng bằng</b> kết quả, nên giải thích không phải là ước lượng mơ hồ. Một chỗ dễ bị hỏi khi bảo vệ: với mô hình phân loại cây, "dự đoán cuối" ở đây là <b>log-odds</b> (biên thô trước khi bóp về xác suất), nên phép cộng đúng bằng ở thang đó — không phải ở thang xác suất. Trình bày hình thì nói rõ trục là log-odds.</p>
 
   <div data-viz="shap"></div>
 
@@ -6203,7 +6056,7 @@ shap.plots.waterfall(exp[0])                            <i># MỘT ca cụ thể
     <tr><td><b>Summary plot</b> (beeswarm)</td><td>"Mô hình học được gì <b>nói chung</b> về gian lận?"</td><td>Kết quả &amp; thảo luận</td></tr>
     <tr><td><b>Force / waterfall plot</b></td><td>"Vì sao <b>giao dịch này</b> bị chặn?"</td><td>Nghiên cứu tình huống — rất thuyết phục khi bảo vệ</td></tr>
   </table>
-  <p>Cách đọc beeswarm: mỗi chấm là một giao dịch. Trục ngang = mức đẩy dự đoán (phải = tăng rủi ro). Màu = giá trị feature cao hay thấp. Nếu <code>secs_since_last</code> có các chấm màu "thấp" nằm bên phải, nghĩa là <b>khoảng cách thời gian ngắn đẩy rủi ro lên</b> — và câu đó viết thẳng vào luận văn được.</p>
+  <p>Cách đọc beeswarm: mỗi chấm là một giao dịch. Trục ngang = mức đẩy dự đoán theo log-odds (phải = tăng rủi ro). Màu = giá trị feature cao hay thấp. Nếu <code>secs_since_last</code> có các chấm màu "thấp" nằm bên phải, nghĩa là <b>khoảng cách thời gian ngắn đẩy rủi ro lên</b> — và câu đó viết thẳng vào luận văn được.</p>
 
   <h2>Ba giới hạn phải nêu (nêu ra làm bạn mạnh hơn, không yếu đi)</h2>
   <ul>
@@ -6444,7 +6297,7 @@ vec = emb(torch.tensor([1234]))   <i># → vector 32 chiều của cửa hàng #
   <div class="wb-alert wb-alert--info">
     <span class="wb-alert__icon">i</span>
     <div class="wb-alert__body"><p class="wb-alert__title">Bài này cần tới đâu, tuỳ lộ trình bạn đang đi</p>
-      <p class="wb-alert__msg">Nếu bạn đang chạy <b>fast track 14 ngày</b> trên một bài toán phân loại dữ liệu bảng: biết chúng giải quyết gì và vì sao bị thay là đủ, không cần cài đặt. Nếu bạn đi <b>lộ trình chuẩn</b>: bài này là nền cho hai bài ở chặng 7 — <b>Computer vision</b> dùng CNN, và <b>Forecasting</b> có nhánh LSTM/GRU làm baseline chuỗi. Lúc đó bạn sẽ thật sự chạy chúng, nên đọc kỹ hơn phần “vì sao” bên dưới.</p></div>
+      <p class="wb-alert__msg">Nếu bạn đang chạy <b>fast track 14 ngày</b> trên một bài toán phân loại dữ liệu bảng: biết chúng giải quyết gì và vì sao bị thay là đủ, không cần cài đặt. Nếu bạn đi <b>lộ trình chuẩn</b>: bài này là nền cho hai bài ở chặng 8 — <b>Computer vision</b> dùng CNN, và <b>Forecasting</b> có nhánh LSTM/GRU làm baseline chuỗi. Lúc đó bạn sẽ thật sự chạy chúng, nên đọc kỹ hơn phần “vì sao” bên dưới.</p></div>
   </div>
 
   <h2>CNN — cho dữ liệu có cấu trúc không gian</h2>
@@ -6577,6 +6430,7 @@ LayerNorm
 
   <h2>LLM là gì, bỏ hết hào quang</h2>
   <p>Một Transformer decoder-only rất lớn, huấn luyện trên khối lượng văn bản khổng lồ với đúng <b>một</b> nhiệm vụ: <b>đoán token tiếp theo</b>. Mọi khả năng khác — trả lời, viết code, dịch — đều nổi lên từ nhiệm vụ đó, không được lập trình riêng.</p>
+  <p><b>Cần nói thêm cho chuẩn:</b> đó mới là bước <b>tiền huấn luyện</b>. Việc mô hình biết bám theo chỉ dẫn và từ chối yêu cầu hại chỉ có sau một bước <b>hậu huấn luyện</b> chồng lên — tinh chỉnh trên ví dụ mẫu (SFT) rồi học từ phản hồi của người (RLHF). Và "decoder-only" là kiến trúc phổ biến nhất chứ không phải duy nhất; vẫn có LLM encoder-decoder.</p>
   <p><b>Hiểu nhầm cần gỡ:</b> LLM không tra cứu một cơ sở dữ liệu. Nó không "biết" theo nghĩa có một chỗ lưu sự thật. Nó sinh ra token có xác suất cao dựa trên mẫu hình đã học. Đó là lý do nó <b>bịa ra thông tin nghe rất hợp lý</b> (hallucination) — không phải lỗi vặt sẽ được vá, mà là hệ quả trực tiếp của cách nó hoạt động.</p>
 
   <h2>Bốn cách dùng, từ rẻ tới đắt</h2>
@@ -6631,7 +6485,7 @@ LayerNorm
   <ol>
     <li><b>Cột hạng mục lực lượng rất lớn</b> — embedding cho 50.000 cửa hàng thường tốt hơn one-hot hay target encoding.</li>
     <li><b>Có dữ liệu chuỗi</b> — chuỗi giao dịch của một thẻ theo thời gian. Đây là chỗ Transformer/LSTM có đất diễn thật.</li>
-    <li><b>Có nhiều loại dữ liệu (multi-modal)</b> — bảng + văn bản + ảnh hoá đơn. Chỉ mạng nơ-ron kết hợp được trong một mô hình.</li>
+    <li><b>Có nhiều loại dữ liệu (multi-modal)</b> — bảng + văn bản + ảnh hoá đơn. Kết hợp chúng <i>end-to-end trong một mô hình</i> thường phải là mạng nơ-ron — dù bạn vẫn có thể trích embedding từ mỗi loại rồi đưa vào LightGBM, đúng cách làm ở mục cuối bài.</li>
     <li><b>Học biểu diễn chung</b> — huấn luyện trên dữ liệu không nhãn khổng lồ rồi tinh chỉnh cho tác vụ có nhãn ít.</li>
   </ol>
 
@@ -6645,605 +6499,7 @@ LayerNorm
 </template>
 
 <!-- ============================================================
-     CHẶNG 7 — CÁC HỌ BÀI TOÁN KHÁC
-     Mục đích của cả chặng: chuyển giao. Mỗi bài trả lời cùng bốn câu —
-     giữ gì từ dự án gian lận, đổi gì, đo bằng gì, hỏng ở đâu — nên đọc
-     xong chặng này bạn định vị được một dự án lạ, không chỉ làm được
-     một dự án quen.
-     ============================================================ -->
-
-<template data-node="q-regress">
-  <p>Đổi một chữ trong đề bài — “giao dịch này có gian lận không” thành “đơn hàng này giao mất bao nhiêu phút” — và bạn rời khỏi phân loại, sang <b>hồi quy</b>. Đầu ra không còn là xác suất trong khoảng 0–1 mà là một số thực có đơn vị: phút, đồng, kWh, kg.</p>
-
-  <h2>Giữ nguyên gần hết — đổi đúng ba chỗ</h2>
-  <div class="wb-table-scroll"><table>
-    <thead><tr><th>Bước</th><th>So với bài phân loại</th></tr></thead>
-    <tbody>
-      <tr><td>1–5 · Đóng khung, lấy dữ liệu, EDA, làm sạch, feature</td><td><b>Giữ nguyên hoàn toàn.</b> sin/cos, lag, rolling, one-hot — y hệt</td></tr>
-      <tr><td>6 · Chia tập</td><td><b>Đổi:</b> không có <code>stratify</code> theo nhãn nữa. Nếu biến mục tiêu lệch mạnh, chia theo <i>nhóm phân vị</i> của nó để mọi tập đều có phần đuôi</td></tr>
-      <tr><td>7 · Mô hình</td><td><b>Gần như giữ nguyên:</b> đổi <code>LGBMClassifier</code> → <code>LGBMRegressor</code>, <code>LogisticRegression</code> → <code>Ridge</code></td></tr>
-      <tr><td>8 · Đo lường</td><td><b>Đổi hoàn toàn.</b> Không còn PR-AUC, ngưỡng, ma trận nhầm lẫn — xem phần dưới</td></tr>
-    </tbody>
-  </table></div>
-  <p>Đây là mẫu hình lặp lại ở cả chặng này: <b>phần lớn công việc chuyển giao được, chỗ vỡ luôn nằm ở chia tập và đo lường.</b></p>
-
-  <h2>Bốn chỉ số, và câu hỏi để chọn giữa chúng</h2>
-  <div class="wb-table-scroll"><table>
-    <thead><tr><th>Chỉ số</th><th>Đọc là</th><th>Chọn khi</th><th>Bẫy</th></tr></thead>
-    <tbody>
-      <tr><td><b>MAE</b></td><td>“Sai trung bình 8,3 phút”</td><td>Mặc định. Đơn vị giống biến mục tiêu nên nói được với người không kỹ thuật</td><td>Coi sai 1 phút và sai 60 phút là cùng bản chất, chỉ khác độ lớn</td></tr>
-      <tr><td><b>RMSE</b></td><td>Cũng đơn vị đó, nhưng phạt nặng sai số lớn</td><td>Khi một cú sai lớn tốn hơn nhiều lần so với nhiều cú sai nhỏ (dự báo tải điện, tồn kho)</td><td>Rất nhạy với ngoại lai — một dòng bẩn kéo lệch cả con số</td></tr>
-      <tr><td><b>MAPE</b></td><td>“Sai trung bình 12%”</td><td>Khi cần so sánh giữa các mặt hàng có quy mô rất khác nhau</td><td><b>Vỡ khi giá trị thật gần 0</b> (chia cho 0), và phạt dự báo cao hơn nhẹ hơn dự báo thấp hơn — nên nó âm thầm khuyến khích mô hình đoán thấp</td></tr>
-      <tr><td><b>R²</b></td><td>“Giải thích được 0,72 phương sai”</td><td>Báo cáo học thuật, so với baseline “luôn đoán trung bình”</td><td>Không có đơn vị nên <b>không nói được gì về việc sai đó có chấp nhận được không</b>. R² = 0,9 vẫn có thể sai 3 tiếng mỗi đơn</td></tr>
-    </tbody>
-  </table></div>
-  <p>Cách chọn nhanh: hỏi <b>“sai một đơn vị thì tốn bao nhiêu, và chi phí đó tăng tuyến tính hay tăng nhanh hơn?”</b> Tuyến tính → MAE. Nhanh hơn → RMSE. Đây là cùng một câu hỏi “quy ra tiền” của bài phân loại, chỉ khoác áo khác.</p>
-  <div class="ds-code"><b>from</b> sklearn.metrics <b>import</b> mean_absolute_error, root_mean_squared_error, r2_score
-<b>from</b> lightgbm <b>import</b> LGBMRegressor
-
-model = LGBMRegressor(random_state=42).fit(X_tr, y_tr)
-pred  = model.predict(X_va)
-
-<i># baseline BẮT BUỘC: luôn đoán trung vị của tập train</i>
-base  = np.full_like(y_va, np.median(y_tr), dtype=<b>float</b>)
-
-<b>for</b> name, p <b>in</b> [("baseline", base), ("lgbm", pred)]:
-    print(name, <b>round</b>(mean_absolute_error(y_va, p), 2),
-                <b>round</b>(root_mean_squared_error(y_va, p), 2),
-                <b>round</b>(r2_score(y_va, p), 3))</div>
-  <p>Chú ý baseline là <b>trung vị</b>, không phải trung bình: trung vị là giá trị tối ưu cho MAE, trung bình tối ưu cho RMSE. Chọn sai baseline là tự cho mình một đối thủ yếu.</p>
-
-  <h2>Một con số không đủ: khoảng dự đoán</h2>
-  <p>“Đơn này giao trong 34 phút” là một lời hứa. “Đơn này giao trong 28–47 phút, 80% khả năng” là một <b>thông tin dùng được</b> — nó nói cho hệ thống biết khi nào nên hứa và khi nào nên báo trước là có thể trễ.</p>
-  <p>Cách rẻ nhất để có khoảng đó với LightGBM là <b>hồi quy phân vị</b>: train ba mô hình cho ba phân vị.</p>
-  <div class="ds-code"><i># ba mô hình: cận dưới, trung vị, cận trên → khoảng 80%</i>
-models = {}
-<b>for</b> q <b>in</b> [0.1, 0.5, 0.9]:
-    models[q] = LGBMRegressor(objective="quantile", alpha=q,
-                              random_state=42).fit(X_tr, y_tr)
-
-lo, mid, hi = (models[q].predict(X_va) <b>for</b> q <b>in</b> [0.1, 0.5, 0.9])
-
-<i># KIỂM CHỨNG: khoảng 80% thì phải bao được ~80% giá trị thật</i>
-coverage = ((y_va &gt;= lo) &amp; (y_va &lt;= hi)).mean()
-print(f"độ phủ thực tế: {coverage:.1%}  (mong đợi ~80%)")</div>
-  <p>Dòng cuối là dòng quan trọng nhất và cũng là dòng hay bị bỏ. Một khoảng dự đoán chỉ có giá trị nếu <b>độ phủ thực tế khớp với mức đã công bố</b>. Phủ 55% trong khi tuyên bố 80% thì tệ hơn không đưa khoảng nào, vì nó tạo ra một sự tự tin sai chỗ. Báo cáo cả hai con số — độ rộng khoảng và độ phủ — là một điểm cộng dễ ăn trong luận văn.</p>
-  <p class="wb-help">Nếu cần bảo đảm chặt chẽ hơn về mặt lý thuyết, từ khoá cần tra là <b>conformal prediction</b> — nó cho khoảng có bảo đảm độ phủ với giả định rất nhẹ. Đủ để nêu tên trong phần hướng phát triển.</p>
-
-  <h2>Ba sai lầm đặc trưng của hồi quy</h2>
-  <ol>
-    <li><b>Không nhìn phân phối phần dư.</b> Vẽ <code>y_true − y_pred</code> theo <code>y_pred</code>: nếu nó loe ra hình phễu, sai số tỉ lệ với độ lớn — cân nhắc dự đoán <code>log(y)</code> rồi mũ ngược lại <button class="ds-math" data-math="logtransform">(vì sao lấy log)</button>. Nếu phần dư có cấu trúc (cong, phân cụm), bạn còn thiếu feature.</li>
-    <li><b>Dự đoán ra giá trị vô lý mà không chặn.</b> Thời gian giao hàng âm, giá nhà âm. Kẹp đầu ra về miền hợp lệ, và <b>đếm xem phải kẹp bao nhiêu lần</b> — con số đó là một chẩn đoán, không phải một chi tiết vặt.</li>
-    <li><b>Dùng R² làm chỉ số chính rồi không ai biết mô hình có dùng được không.</b> Luôn kèm MAE cùng đơn vị gốc, và một câu so với ngưỡng nghiệp vụ: “sai trung bình 8 phút, trong khi khách chấp nhận sai lệch tới 15 phút”.</li>
-  </ol>
-</template>
-
-<template data-node="q-forecast">
-  <p>Đây là họ bài toán dễ làm sai nhất trong cả chặng, vì nó <b>trông giống</b> hồi quy — cũng dự đoán một con số — nhưng gần như mọi thói quen bạn xây được ở phần trước đều phải viết lại. Nó cũng là họ phổ biến thứ hai trong công việc thật, sau phân loại.</p>
-  <p>Khác biệt cốt lõi nằm ở một câu: trong hồi quy, các dòng dữ liệu <b>độc lập</b> với nhau; trong forecasting, dòng hôm nay là hệ quả của dòng hôm qua. Mọi thứ dưới đây chảy ra từ chỗ đó.</p>
-
-  <h2>Bốn thứ phải nhìn thấy trước khi mô hình hoá</h2>
-  <div data-viz="decomp"></div>
-  <div class="wb-table-scroll"><table>
-    <thead><tr><th>Khái niệm</th><th>Là gì</th><th>Vì sao bạn phải quan tâm</th></tr></thead>
-    <tbody>
-      <tr><td><b>Xu hướng</b> (trend)</td><td>Mức nền đi lên hay đi xuống dài hạn</td><td>Mô hình cây <b>không ngoại suy</b> được xu hướng — đây là hạn chế lớn nhất khi dùng LightGBM cho forecasting</td></tr>
-      <tr><td><b>Mùa vụ</b> (seasonality)</td><td>Mẫu hình lặp theo chu kỳ cố định: theo giờ, theo thứ, theo tháng</td><td>Đây là chỗ <b>mã hoá sin/cos gặp lại bạn</b>, và cũng là chỗ baseline seasonal-naive lấy sức mạnh</td></tr>
-      <tr><td><b>Tính dừng</b> (stationarity)</td><td>Trung bình và phương sai không đổi theo thời gian</td><td>ARIMA <i>giả định</i> chuỗi dừng — nên phải lấy sai phân trước. Mô hình cây thì không cần, nhưng chuỗi không dừng vẫn làm hỏng cách bạn chia tập</td></tr>
-      <tr><td><b>Tự tương quan</b> (autocorrelation)</td><td>Giá trị hôm nay tương quan với chính nó cách đây $k$ bước</td><td>Biểu đồ ACF/PACF cho bạn biết <b>nên tạo lag nào</b> — nó thay việc đoán mò bằng bằng chứng</td></tr>
-    </tbody>
-  </table></div>
-  <div class="ds-code"><b>import</b> statsmodels.api <b>as</b> sm
-<b>from</b> statsmodels.tsa.seasonal <b>import</b> STL
-
-<i># tách chuỗi thành xu hướng + mùa vụ + phần dư — luôn làm trước tiên</i>
-res = STL(y, period=7).fit()      <i># period=7 cho dữ liệu ngày có mùa vụ theo tuần</i>
-res.plot()
-
-<i># lag nào đáng tạo? nhìn đỉnh của PACF</i>
-sm.graphics.tsa.plot_pacf(y, lags=40)</div>
-
-  <h2>Chia tập: chỗ 90% lỗi nằm</h2>
-  <p>Một câu duy nhất cần nhớ: <b>không bao giờ chia ngẫu nhiên chuỗi thời gian.</b> Chia ngẫu nhiên nghĩa là mô hình được học từ tháng 6 và tháng 8 rồi đi dự đoán tháng 7 — trong thực tế bạn không bao giờ có tháng 8 khi cần dự báo tháng 7. Điểm số sẽ đẹp, và hoàn toàn vô nghĩa.</p>
-  <p>Cách đúng là <b>backtesting walk-forward</b>: mô phỏng lại đúng cái bạn sẽ làm trong đời thật — đứng ở một mốc thời gian, chỉ nhìn về quá khứ, dự đoán tương lai, rồi trượt mốc đó tới.</p>
-  <div data-viz="walkforward"></div>
-  <div class="ds-code"><b>from</b> sklearn.model_selection <b>import</b> TimeSeriesSplit
-
-tscv = TimeSeriesSplit(n_splits=5, test_size=28, gap=0)
-<b>for</b> tr_idx, te_idx <b>in</b> tscv.split(X):
-    <i># tr_idx LUÔN nằm trước te_idx — không cần tự kiểm nữa</i>
-    model.fit(X.iloc[tr_idx], y.iloc[tr_idx])
-    score = mae(y.iloc[te_idx], model.predict(X.iloc[te_idx]))</div>
-  <p><b>Tham số <code>gap</code> là chi tiết ít người dùng và nó rất quan trọng.</b> Nếu trong thực tế bạn phải dự báo trước 7 ngày (vì cần thời gian đặt hàng), thì mốc dự đoán cách dữ liệu mới nhất 7 ngày — đặt <code>gap=7</code>. Không đặt là bạn đang tự cho mình dữ liệu mà lúc chạy thật sẽ chưa có.</p>
-
-  <h2>Rò rỉ theo thời gian: ba dạng riêng của forecasting</h2>
-  <ul>
-    <li><b>Dùng thống kê của cả chuỗi để chuẩn hoá.</b> <code>StandardScaler().fit(y_toàn_bộ)</code> đưa thông tin tương lai vào tập train. Chỉ được <code>fit</code> trên phần quá khứ của từng fold.</li>
-    <li><b>Rolling/lag tính sau khi đã sắp sai thứ tự,</b> hoặc quên <code>shift(1)</code> nên cửa sổ chứa chính điểm cần dự đoán. Cùng cái bẫy ở bài <b>Biến theo thời gian</b>, chỉ nghiêm trọng hơn.</li>
-    <li><b>Feature ngoại sinh chưa tồn tại tại thời điểm dự báo.</b> Dùng nhiệt độ thật của ngày mai để dự báo doanh số ngày mai — nhưng ngày mai bạn chỉ có <i>dự báo</i> nhiệt độ, không có nhiệt độ thật. Đây là dạng tinh vi nhất và rất hay lọt lưới.</li>
-  </ul>
-
-  <h2>Baseline: hai dòng code, và rất khó đánh bại</h2>
-  <p>Đây là phần bị bỏ qua nhiều nhất, và cũng là phần khiến nhiều luận văn forecasting không bảo vệ được. <b>Hai baseline dưới đây là bắt buộc</b>, và với nhiều chuỗi thực tế thì chúng thắng cả Prophet lẫn LSTM.</p>
-  <div class="ds-code"><i># 1. NAIVE — dự báo = giá trị gần nhất</i>
-pred_naive = y.shift(1)
-
-<i># 2. SEASONAL NAIVE — dự báo = giá trị cùng kỳ chu kỳ trước</i>
-<i>#    (thứ Ba tuần này ≈ thứ Ba tuần trước) — mạnh bất ngờ</i>
-pred_snaive = y.shift(7)</div>
-  <p>Và đây là lý do có <b>MASE</b> (Mean Absolute Scaled Error): nó là MAE của bạn <i>chia cho</i> MAE của naive.</p>
-  <div class="ds-code">mase = mean_absolute_error(y_true, y_pred) / mean_absolute_error(y_true, pred_naive)
-<i># mase &lt; 1 → tốt hơn naive · mase ≥ 1 → mô hình của bạn vô dụng</i></div>
-  <p>MASE là chỉ số đáng dùng làm chỉ số chính cho forecasting: nó không vỡ khi giá trị bằng 0 (khác MAPE), không phụ thuộc đơn vị nên so sánh được giữa các chuỗi, và quan trọng nhất — <b>nó luôn nhắc bạn con số của mình đang so với cái gì</b>. Một bảng kết quả forecasting không có cột naive là một bảng chưa đọc được.</p>
-
-  <h2>Bản đồ mô hình — đặt đúng vai, không xếp hạng</h2>
-  <p>Đây là chỗ có nhiều thông tin sai nhất trên internet. Nói thẳng: <b>không có mô hình nào trong bảng này luôn tốt hơn mô hình khác.</b> Các cuộc thi dự báo quy mô lớn nhiều năm liền cho thấy phương pháp thống kê cổ điển và tổ hợp đơn giản thường ngang ngửa hoặc thắng các mô hình phức tạp trên chuỗi ngắn, và deep learning chỉ chiếm ưu thế khi có <i>rất nhiều</i> chuỗi liên quan để học chung.</p>
-  <div class="wb-table-scroll"><table>
-    <thead><tr><th>Mô hình</th><th>Mạnh khi</th><th>Yếu khi</th><th>Vai trò hợp lý</th></tr></thead>
-    <tbody>
-      <tr><td><b>Naive / seasonal-naive</b></td><td>Luôn luôn</td><td>—</td><td><b>Baseline bắt buộc.</b> Không có nó thì mọi con số khác không đọc được</td></tr>
-      <tr><td><b>Làm mượt mũ / ETS</b></td><td>Chuỗi ngắn, có xu hướng và mùa vụ rõ, ít feature ngoài</td><td>Không nhận được biến ngoại sinh (khuyến mãi, thời tiết)</td><td>Baseline thống kê thứ hai. Rẻ, mạnh, dễ giải thích</td></tr>
-      <tr><td><b>ARIMA / SARIMA</b></td><td>Chuỗi dừng (hoặc làm dừng được), cần khoảng tin cậy có nền lý thuyết</td><td>Phải chọn $(p,d,q)$; chậm khi có hàng nghìn chuỗi</td><td>Baseline học thuật — hội đồng quen tên và sẽ hỏi vì sao không dùng</td></tr>
-      <tr><td><b>Prophet</b></td><td>Mùa vụ nhiều tầng (ngày+tuần+năm), có ngày lễ, chuỗi dài, dữ liệu thiếu rải rác</td><td>Chuỗi ngắn, mùa vụ yếu, hoặc cần độ chính xác cao — thường thua boosting có lag tốt</td><td>Một dòng trong bảng so sánh; mạnh nhất ở khả năng <b>tách thành phần</b> để giải thích</td></tr>
-      <tr><td><b>Boosting + lag features</b></td><td>Có nhiều biến ngoại sinh; nhiều chuỗi train chung; mối quan hệ phi tuyến</td><td><b>Không ngoại suy được xu hướng</b> — dự báo bị kẹt trong khoảng giá trị đã thấy</td><td>Lựa chọn mặc định tốt <i>nếu</i> bạn khử xu hướng trước (dự báo sai phân, hoặc tỉ lệ so với cùng kỳ)</td></tr>
-      <tr><td><b>LSTM / GRU</b></td><td>Chuỗi dài, nhiều chuỗi cùng lúc, quan hệ phụ thuộc phức tạp</td><td>Dữ liệu ít; cần tinh chỉnh nhiều; khó giải thích</td><td>Một baseline sequence hợp lệ trong luận văn — <b>không</b> phải mặc định</td></tr>
-      <tr><td><b>Temporal CNN, Transformer chuỗi</b></td><td>Rất nhiều dữ liệu, tầm dự báo dài, cần song song hoá</td><td>Chi phí và độ phức tạp cao so với lợi ích trên bài toán cỡ luận văn</td><td>Định vị được là đủ; nêu như hướng mở rộng</td></tr>
-    </tbody>
-  </table></div>
-  <div class="wb-alert wb-alert--warning">
-    <span class="wb-alert__icon">!</span>
-    <div class="wb-alert__body"><p class="wb-alert__title">Prophet: hai điều cần biết trước khi chọn</p>
-      <p class="wb-alert__msg">Thứ nhất, <b>Prophet ở chế độ bảo trì</b> — README chính thức ghi rõ dự án chỉ nhận sửa lỗi và cập nhật phụ thuộc, không thêm tính năng mới (kiểm ngày 3/8/2026). Nó vẫn dùng tốt và vẫn cài được, nhưng đừng viết vào luận văn rằng đây là công nghệ đang phát triển. Thứ hai, điểm mạnh thật của Prophet <b>không phải độ chính xác</b> mà là khả năng tách chuỗi thành xu hướng / mùa vụ / ngày lễ thành những hình dễ giải thích cho người không kỹ thuật. Nếu bạn cần độ chính xác, hãy so nó với boosting có lag tốt trước khi chốt.</p></div>
-  </div>
-
-  <h2>Feature cho forecasting: lag, cửa sổ trượt, lịch</h2>
-  <div data-viz="lag"></div>
-  <div class="ds-code"><i># LAG — giá trị của chính chuỗi ở quá khứ. Chọn lag theo PACF, đừng đoán</i>
-<b>for</b> k <b>in</b> [1, 7, 14, 28]:
-    df[f"lag_{k}"] = df["y"].shift(k)
-
-<i># CỬA SỔ TRƯỢT — luôn shift(1) TRƯỚC rồi mới rolling, nếu không là rò rỉ</i>
-<b>for</b> w <b>in</b> [7, 28]:
-    df[f"roll_mean_{w}"] = df["y"].shift(1).rolling(w).mean()
-    df[f"roll_std_{w}"]  = df["y"].shift(1).rolling(w).std()
-
-<i># LỊCH — thứ, ngày trong tháng, tháng, ngày lễ; mã hoá chu kỳ bằng sin/cos</i>
-df["dow"]     = df["ds"].dt.dayofweek
-df["dow_sin"] = np.sin(2*np.pi*df["dow"]/7)
-df["dow_cos"] = np.cos(2*np.pi*df["dow"]/7)
-df["is_holiday"] = df["ds"].isin(HOLIDAYS).astype(<b>int</b>)</div>
-  <p>Thứ tự <code>.shift(1).rolling(w)</code> chứ không phải <code>.rolling(w).shift(1)</code> — cả hai đều chạy, chỉ một cái đúng. Viết một test cho nó, theo đúng loại test số 4 ở bài <b>Làm việc với AI</b>.</p>
-
-  <h2>Quy trình một dự án forecasting, theo thứ tự</h2>
-  <ol>
-    <li>Vẽ chuỗi ra. Nhìn bằng mắt trước khi mô hình hoá. Tách STL.</li>
-    <li>Chốt <b>tầm dự báo</b> (dự báo trước bao nhiêu bước) và <b>độ trễ dữ liệu</b> (khi dự báo thì dữ liệu mới nhất cũ bao nhiêu). Hai con số này quyết định <code>gap</code>.</li>
-    <li>Chạy naive và seasonal-naive. Ghi lại MAE. <b>Đây là mốc.</b></li>
-    <li>ETS hoặc ARIMA. Ghi lại.</li>
-    <li>Boosting + lag/rolling/lịch. Ghi lại.</li>
-    <li>Chỉ khi bước 5 chưa đủ, và bạn có nhiều chuỗi: thử LSTM hoặc Prophet.</li>
-    <li>Backtest walk-forward tất cả trên <b>cùng một bộ fold</b>. Báo cáo MASE + độ lệch chuẩn giữa các fold.</li>
-  </ol>
-  <p>Bước 7 quan trọng hơn vẻ ngoài của nó: một mô hình thắng ở 1 fold nhưng thua ở 4 fold còn lại thì chưa thắng gì. Độ lệch chuẩn giữa các fold là con số hội đồng sẽ hỏi.</p>
-
-  <p class="wb-help">Dataset gợi ý để tập, đều tải trực tiếp được trong Colab/Kaggle: tiêu thụ điện theo giờ, lượt truy cập Wikipedia theo ngày, doanh số bán lẻ theo tuần. Chi tiết ở bài <b>Sáu mini-project</b>.</p>
-</template>
-
-<template data-node="q-multi">
-  <p>Từ hai lớp lên nhiều lớp nghe như một thay đổi nhỏ, và về mặt code thì đúng là nhỏ — <code>LGBMClassifier</code> tự xử lý. Chỗ đổi thật nằm ở <b>cách bạn đọc kết quả</b>: với hai lớp có một precision và một recall; với 12 lớp có 12 cặp, và cách gộp chúng lại thành một con số quyết định bạn đang báo cáo điều gì.</p>
-
-  <h2>Phân biệt hai bài toán hay bị lẫn</h2>
-  <div class="wb-table-scroll"><table>
-    <thead><tr><th></th><th>Multiclass</th><th>Multilabel</th></tr></thead>
-    <tbody>
-      <tr><td>Câu hỏi</td><td>Ticket này thuộc <b>một</b> trong 12 phòng ban nào?</td><td>Bài viết này thuộc <b>những</b> chủ đề nào? (có thể 0, 1 hoặc nhiều)</td></tr>
-      <tr><td>Nhãn</td><td>Một số nguyên</td><td>Một vector 0/1 độ dài N</td></tr>
-      <tr><td>Tầng cuối</td><td><b>softmax</b> — các xác suất cộng lại bằng 1 <button class="ds-math" data-math="softmax">(công thức)</button></td><td><b>sigmoid cho từng nhãn</b> — độc lập, không cộng lại bằng 1</td></tr>
-      <tr><td>Loss</td><td>Cross-entropy</td><td>Binary cross-entropy cộng trên các nhãn</td></tr>
-      <tr><td>sklearn</td><td><code>LGBMClassifier</code> tự nhận</td><td><code>MultiOutputClassifier</code>, hoặc một mô hình cho mỗi nhãn</td></tr>
-      <tr><td>Ngưỡng</td><td>Lấy <code>argmax</code>, thường không cần ngưỡng</td><td><b>Một ngưỡng cho mỗi nhãn</b>, và chúng nên khác nhau</td></tr>
-    </tbody>
-  </table></div>
-  <p>Dùng softmax cho bài multilabel là lỗi thiết kế hay gặp: nó ép mô hình phải chọn <i>một</i> nhãn, trong khi đề bài cho phép nhiều. Triệu chứng là recall thấp một cách khó hiểu ở mọi nhãn.</p>
-
-  <h2>Ba kiểu trung bình hoá — chọn sai là báo cáo sai</h2>
-  <p>Đây là phần đáng đọc kỹ nhất của bài. Giả sử 3 lớp: A có 900 mẫu và F1 = 0,95; B có 80 mẫu và F1 = 0,60; C có 20 mẫu và F1 = 0,10.</p>
-  <div class="wb-table-scroll"><table>
-    <thead><tr><th>Kiểu</th><th>Tính thế nào</th><th>Ra bao nhiêu</th><th>Trả lời câu hỏi</th></tr></thead>
-    <tbody>
-      <tr><td><b>macro</b></td><td>Trung bình cộng F1 của các lớp, <b>không</b> nhân trọng số</td><td>(0,95+0,60+0,10)/3 = <b>0,55</b></td><td>“Mô hình làm tốt trên <i>mọi lớp</i> chứ?” — lớp hiếm có tiếng nói ngang lớp phổ biến</td></tr>
-      <tr><td><b>weighted</b></td><td>Trung bình có trọng số theo số mẫu mỗi lớp</td><td>≈ <b>0,90</b></td><td>“Trên một mẫu ngẫu nhiên thì sao?” — bị lớp phổ biến chi phối</td></tr>
-      <tr><td><b>micro</b></td><td>Gộp hết TP/FP/FN rồi mới tính một lần</td><td>≈ accuracy trong multiclass</td><td>“Tổng thể đúng bao nhiêu ca?”</td></tr>
-    </tbody>
-  </table></div>
-  <p>Chênh lệch 0,55 và 0,90 <b>trên cùng một mô hình</b>. Cả hai đều đúng về mặt tính toán, và chọn con số nào để in đậm trong tóm tắt là một quyết định trung thực hay không trung thực. Quy tắc: <b>nếu lớp hiếm mới là lớp quan trọng — mà thường là vậy — báo cáo macro và nói rõ.</b> Và luôn kèm bảng F1 <i>từng lớp</i>; con số gộp giấu đi đúng thứ đáng nhìn.</p>
-  <div class="ds-code"><b>from</b> sklearn.metrics <b>import</b> classification_report, confusion_matrix
-
-print(classification_report(y_va, pred, digits=3))   <i># có cả từng lớp lẫn ba kiểu gộp</i>
-
-<i># ma trận nhầm lẫn CHUẨN HOÁ theo hàng — đọc được cặp lớp nào hay bị lẫn</i>
-cm = confusion_matrix(y_va, pred, normalize="true")</div>
-  <p>Ma trận nhầm lẫn chuẩn hoá là hình đáng đưa vào luận văn nhất của bài multiclass. Nó không chỉ nói mô hình sai bao nhiêu mà nói <b>sai theo hướng nào</b> — và “lớp 3 hay bị nhận nhầm thành lớp 7” thường dẫn thẳng tới một phát hiện về dữ liệu (hai lớp đó thực chất chồng lấn, hoặc người gán nhãn cũng lẫn).</p>
-
-  <h2>Ba việc cần làm thêm khi lên nhiều lớp</h2>
-  <ul>
-    <li><b>Chia tập stratify theo lớp hiếm nhất.</b> Với 12 lớp mà lớp hiếm nhất chỉ có 30 mẫu, một lần chia không may là tập test có 2 mẫu — mọi chỉ số của lớp đó thành nhiễu.</li>
-    <li><b>Gộp các lớp quá hiếm thành “KHÁC”</b> nếu chúng dưới ~50 mẫu và nghiệp vụ cho phép. Thà có một lớp “KHÁC” xử lý được còn hơn ba lớp không bao giờ đoán đúng.</li>
-    <li><b>Cân nhắc cấu trúc phân cấp.</b> Nếu 12 lớp thực ra là 3 nhóm lớn × 4 lớp con, một mô hình hai tầng thường tốt hơn và giải thích dễ hơn.</li>
-  </ul>
-</template>
-
-<template data-node="q-nlp">
-  <p>Bài <b>Chữ &amp; embedding</b> ở chặng 4 xử lý cột chữ như một nguồn feature phụ. Bài này coi văn bản là <b>đầu vào chính</b> — phân loại ticket hỗ trợ, phân tích cảm xúc bình luận, trích xuất thông tin từ văn bản tự do.</p>
-  <p>Một câu định khung: trong NLP hiện nay, cám dỗ lớn nhất là bắt đầu từ mô hình mạnh nhất. <b>Đừng.</b> Bắt đầu từ TF-IDF không phải vì tiết kiệm, mà vì nó là thứ duy nhất cho bạn biết bài toán của bạn <i>khó tới đâu</i>.</p>
-
-  <h2>Ba mức, và tiêu chí lên mức tiếp theo</h2>
-  <div class="wb-table-scroll"><table>
-    <thead><tr><th>Mức</th><th>Làm gì</th><th>Chi phí</th><th>Lên mức sau khi</th></tr></thead>
-    <tbody>
-      <tr><td><b>1 · TF-IDF + tuyến tính</b></td><td><code>TfidfVectorizer</code> + <code>LogisticRegression</code>. Thêm n-gram 1–2 từ</td><td>Vài giây CPU</td><td><b>Luôn chạy đầu tiên.</b> Nó là mốc so sánh bắt buộc</td></tr>
-      <tr><td><b>2 · Embedding câu</b></td><td><code>sentence-transformers</code> sinh vector, rồi đưa vào LightGBM hoặc logistic</td><td>Vài phút GPU (Colab)</td><td>Mức 1 chạm trần và lỗi chủ yếu do <i>từ đồng nghĩa / diễn đạt khác</i></td></tr>
-      <tr><td><b>3 · Fine-tune Transformer</b></td><td>Huấn luyện tiếp một mô hình pretrained trên nhãn của bạn</td><td>Hàng chục phút tới vài giờ GPU</td><td>Mức 2 chạm trần, bạn có &gt;~2.000 mẫu có nhãn, và độ chính xác thật sự đáng số giờ đó</td></tr>
-    </tbody>
-  </table></div>
-  <div class="ds-code"><i># MỨC 1 — chạy trước mọi thứ khác. 6 dòng.</i>
-<b>from</b> sklearn.feature_extraction.text <b>import</b> TfidfVectorizer
-<b>from</b> sklearn.linear_model <b>import</b> LogisticRegression
-<b>from</b> sklearn.pipeline <b>import</b> make_pipeline
-
-pipe = make_pipeline(
-    TfidfVectorizer(ngram_range=(1, 2), min_df=3, max_features=50_000),
-    LogisticRegression(max_iter=1000, class_weight="balanced"),
-).fit(text_tr, y_tr)</div>
-  <p>Với tiếng Việt, TF-IDF hoạt động khá tốt ngay cả khi không tách từ, nhưng tách từ (ví dụ bằng <code>underthesea</code> hoặc <code>pyvi</code>) thường cải thiện rõ vì tiếng Việt có nhiều từ ghép hai âm tiết. Thử cả hai và ghi lại — đó là một dòng thí nghiệm hợp lệ.</p>
-
-  <h2>Fine-tune và RAG: hai thứ khác nhau, hay bị dùng lẫn</h2>
-  <div class="wb-table-scroll"><table>
-    <thead><tr><th></th><th>Fine-tuning</th><th>RAG</th></tr></thead>
-    <tbody>
-      <tr><td>Giải quyết</td><td>Mô hình chưa biết <b>làm</b> tác vụ này (định dạng, giọng văn, quy tắc phân loại của bạn)</td><td>Mô hình chưa <b>biết</b> nội dung này (tài liệu nội bộ, dữ liệu mới)</td></tr>
-      <tr><td>Cập nhật kiến thức</td><td>Phải train lại</td><td>Chỉ cần thêm tài liệu vào kho</td></tr>
-      <tr><td>Trích nguồn</td><td>Không có</td><td><b>Có</b> — trả về được đoạn văn bản gốc</td></tr>
-      <tr><td>Chọn khi</td><td>Tác vụ hẹp, có nhãn, định dạng đầu ra cố định</td><td>Hỏi–đáp trên tài liệu, cần dẫn nguồn</td></tr>
-    </tbody>
-  </table></div>
-  <p><b>Nếu bài toán của bạn là phân loại văn bản, cả hai đều không phải câu trả lời đầu tiên.</b> Một TF-IDF hoặc một embedding + LightGBM thường vừa rẻ hơn, vừa nhanh hơn, vừa giải thích được — và giải thích được là điều hội đồng hỏi. Chỉ nhắc tới RAG khi đề bài thật sự là hỏi–đáp trên một kho tài liệu.</p>
-
-  <h2>Đánh giá NLP: đo cái gì, thay vì khoe tên mô hình</h2>
-  <p>Đây là chỗ nhiều luận văn NLP yếu nhất — chọn được mô hình lớn nhưng phần đánh giá chỉ có một con số accuracy.</p>
-  <div class="wb-table-scroll"><table>
-    <thead><tr><th>Tác vụ</th><th>Metric</th><th>Lưu ý</th></tr></thead>
-    <tbody>
-      <tr><td>Phân loại văn bản, phân tích cảm xúc</td><td>macro-F1 + bảng từng lớp</td><td>Lớp “trung tính” thường là lớp khó nhất và hay bị giấu trong con số gộp</td></tr>
-      <tr><td>Nhận dạng thực thể (NER)</td><td>F1 mức <b>span</b>, không phải mức token</td><td>Đoán đúng 3/4 token của một tên riêng là <b>sai</b>, không phải đúng 75%</td></tr>
-      <tr><td>Tóm tắt, sinh văn bản</td><td>ROUGE/BLEU <b>cộng với</b> đánh giá của con người</td><td>Các chỉ số tự động chỉ đo trùng lặp từ ngữ — chúng không đo được đúng/sai sự thật</td></tr>
-      <tr><td>Truy xuất, RAG</td><td>Recall@K, MRR cho phần truy xuất; tỉ lệ trả lời có dẫn nguồn đúng cho phần sinh</td><td>Tách hai phần ra mà đo — lỗi thường nằm ở truy xuất chứ không ở sinh</td></tr>
-    </tbody>
-  </table></div>
-  <p>Và một việc rẻ mà giá trị cao: <b>đọc tay 50 ca sai</b>, phân loại chúng thành 4–5 nhóm nguyên nhân, đưa bảng đó vào luận văn. Nó cho thấy bạn hiểu bài toán chứ không chỉ chạy được thư viện, và gần như luôn chỉ ra một cải tiến rẻ mà không chỉ số nào gợi ý được.</p>
-
-  <h2>Rò rỉ đặc trưng của NLP</h2>
-  <ul>
-    <li><b>Văn bản trùng lặp gần đúng giữa train và test.</b> Ticket được gửi lại, bình luận copy-paste, bài đăng lại. Khử trùng lặp bằng băm hoặc độ tương đồng <b>trước khi</b> chia tập.</li>
-    <li><b>Chia ngẫu nhiên khi dữ liệu có thời gian hoặc có tác giả.</b> Cùng một người viết 200 bình luận nằm cả ở train lẫn test → mô hình học nhận ra người đó, không phải nhận ra cảm xúc.</li>
-    <li><b><code>fit</code> vectorizer trên toàn bộ dữ liệu.</b> Từ vựng và IDF được học từ cả tập test. Đặt <code>TfidfVectorizer</code> <i>trong</i> Pipeline là xong.</li>
-  </ul>
-</template>
-
-<template data-node="q-cv">
-  <p>Bài này <b>không</b> biến trang này thành khoá computer vision. Mục tiêu hẹp và rõ: để khi gặp một dự án ảnh, bạn định vị được nó thuộc loại nào, biết baseline hợp lý, biết chỗ hay hỏng — và đã một lần tự tay chạy transfer learning để không thấy nó huyền bí.</p>
-
-  <h2>Ba loại bài toán ảnh — phân biệt bằng đầu ra</h2>
-  <div class="wb-table-scroll"><table>
-    <thead><tr><th>Loại</th><th>Đầu ra</th><th>Chi phí gán nhãn</th><th>Metric</th></tr></thead>
-    <tbody>
-      <tr><td><b>Classification</b></td><td>Một nhãn cho cả ảnh: “có lỗi / không lỗi”</td><td>Thấp — vài giây/ảnh</td><td>Accuracy, macro-F1</td></tr>
-      <tr><td><b>Detection</b></td><td>Danh sách hộp bao + nhãn: “3 người ở toạ độ…”</td><td>Trung bình — vài chục giây/ảnh</td><td><b>mAP</b> ở các ngưỡng IoU</td></tr>
-      <tr><td><b>Segmentation</b></td><td>Nhãn cho <b>từng pixel</b></td><td>Cao — nhiều phút/ảnh</td><td><b>IoU</b> / hệ số Dice</td></tr>
-    </tbody>
-  </table></div>
-  <p>Cột “chi phí gán nhãn” là cột quyết định phạm vi dự án nhiều hơn cả độ khó kỹ thuật. Rất nhiều dự án CV thất bại không phải vì mô hình mà vì <b>không đủ ảnh có nhãn</b>. Câu hỏi đầu tiên khi nhận một dự án CV là “ai gán nhãn, mất bao lâu, và có nhất quán không?”</p>
-  <p>Mẹo thu hẹp phạm vi: nếu detection quá đắt, hỏi xem <b>classification trên ảnh đã cắt</b> có giải quyết được vấn đề nghiệp vụ không. Rất thường là có.</p>
-
-  <h2>CNN và vision transformer — định vị</h2>
-  <p>Bài <b>CNN &amp; RNN</b> ở chặng 6 đã giải thích ý tưởng CNN. Phần cần thêm ở đây gọn:</p>
-  <ul>
-    <li><b>CNN</b> có sẵn giả định “thông tin cục bộ, bất biến tịnh tiến” cài trong kiến trúc, nên nó học tốt với <b>ít dữ liệu hơn</b>. Vẫn là lựa chọn hợp lý cho phần lớn dự án cỡ luận văn.</li>
-    <li><b>Vision Transformer (ViT)</b> cắt ảnh thành các mảnh rồi coi chúng như token — chính xác là cơ chế bạn học ở bài Attention. Nó không có giả định cục bộ cài sẵn, nên <b>cần nhiều dữ liệu hơn hoặc phải pretrain rồi fine-tune</b>. Với dữ liệu vừa và nhỏ, một CNN pretrained thường ngang hoặc hơn.</li>
-    <li>Trong thực tế bạn hầu như luôn <b>fine-tune một mô hình pretrained</b>, không train từ đầu. Train từ đầu cần lượng dữ liệu mà bạn không có.</li>
-  </ul>
-
-  <h2>Mini-lab: transfer learning, chạy được trong Colab</h2>
-  <p>Mục tiêu của lab này là <b>trải nghiệm</b>, không phải điểm số. Chọn một bộ dữ liệu nhỏ (ví dụ hoa, hoặc ảnh sản phẩm đạt/lỗi), và làm đúng ba bước.</p>
-  <div class="ds-code"><b>import</b> torch, torch.nn <b>as</b> nn
-<b>from</b> torchvision <b>import</b> models, transforms
-
-<i># 1. lấy mô hình đã học sẵn trên ImageNet</i>
-net = models.resnet18(weights="IMAGENET1K_V1")
-
-<i># 2. ĐÓNG BĂNG phần thân, chỉ thay và học lại lớp cuối</i>
-<b>for</b> p <b>in</b> net.parameters():
-    p.requires_grad = <b>False</b>
-net.fc = nn.Linear(net.fc.in_features, N_CLASSES)   <i># chỉ lớp này được học</i>
-
-<i># 3. chuẩn hoá ĐÚNG như lúc pretrain — sai chỗ này là điểm tụt không hiểu vì sao</i>
-tf = transforms.Compose([
-    transforms.Resize(256), transforms.CenterCrop(224),
-    transforms.ToTensor(),
-    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
-])</div>
-  <p>Ba bước này thường cho kết quả rất tốt sau vài phút GPU. Chỉ khi nó chạm trần mới nghĩ tới việc mở băng vài lớp cuối của phần thân và train tiếp với learning rate nhỏ hơn nhiều (khoảng 1/10).</p>
-  <p><b>Baseline bắt buộc trước khi fine-tune bất cứ thứ gì:</b> đóng băng toàn bộ mạng, lấy vector đặc trưng ở lớp áp chót, đưa vào một logistic regression. Đó là <i>linear probe</i>, chạy mất một phút, và nó cho bạn biết đặc trưng pretrained đã đủ tốt chưa.</p>
-
-  <h2>Ba chỗ hỏng riêng của CV</h2>
-  <ol>
-    <li><b>Rò rỉ theo nhóm.</b> Nhiều ảnh của cùng một vật thể / cùng một bệnh nhân / cùng một ca sản xuất nằm cả ở train lẫn test. Điểm cao giả tạo. Chia theo <b>nhóm</b>, không theo ảnh — cùng nguyên tắc với <code>GroupKFold</code> ở bài <b>Chia tập</b>.</li>
-    <li><b>Tăng cường dữ liệu (augmentation) sai ngữ nghĩa.</b> Lật ngang một ảnh chữ số biến 6 thành thứ không phải 6; lật một ảnh X-quang đổi trái thành phải. Augmentation phải giữ nguyên nhãn — kiểm bằng cách nhìn 20 ảnh sau khi tăng cường.</li>
-    <li><b>Tương quan giả với nền hoặc thiết bị.</b> Mô hình học “ảnh chụp bằng máy A thì là lớp dương” vì tình cờ mọi ca dương đều chụp bằng máy A. Cách bắt: kiểm tra mô hình trên ảnh đã che vật thể chính — nếu vẫn đoán đúng, nó đang nhìn nền.</li>
-  </ol>
-  <p class="wb-help">Lỗi số 3 là lỗi kinh điển của các bài báo CV y tế và cũng là loại phát hiện rất đáng viết. Nếu bạn tìm ra một tương quan giả trong dữ liệu của mình, đó là một đóng góp thật, không phải một thất bại.</p>
-</template>
-
-<template data-node="q-rec">
-  <p>Gợi ý là họ bài toán mà <b>độ chính xác gần như không có ý nghĩa</b>. Người dùng không xem một dự đoán — họ xem một <i>danh sách</i>, thường chỉ 5–10 mục đầu. Nên toàn bộ cách nghĩ phải chuyển từ “đoán đúng hay sai” sang “<b>thứ đúng có nằm trong top-K không, và ở vị trí nào</b>”.</p>
-
-  <h2>Ba cách tiếp cận, và điểm yếu của từng cách</h2>
-  <div class="wb-table-scroll"><table>
-    <thead><tr><th>Cách</th><th>Ý tưởng</th><th>Mạnh</th><th>Yếu</th></tr></thead>
-    <tbody>
-      <tr><td><b>Popularity</b></td><td>Gợi ý những mục phổ biến nhất, cho mọi người như nhau</td><td>Không cần mô hình; <b>rất khó đánh bại</b> trên nhiều tập dữ liệu</td><td>Không cá nhân hoá; khuếch đại thứ vốn đã phổ biến</td></tr>
-      <tr><td><b>Collaborative filtering</b></td><td>“Người giống bạn đã thích thứ này”. Học từ ma trận người dùng × mục</td><td>Tìm được sở thích bất ngờ mà nội dung không gợi ý</td><td><b>Khởi đầu lạnh</b> — người mới, mục mới thì không có gì để dựa vào</td></tr>
-      <tr><td><b>Content-based</b></td><td>“Thứ này giống thứ bạn đã thích”. Dựa trên thuộc tính/embedding của mục</td><td>Xử lý được mục mới; giải thích được cho người dùng</td><td>Dễ tạo bong bóng — chỉ gợi ý mãi một loại</td></tr>
-    </tbody>
-  </table></div>
-  <p>Hệ thống thật gần như luôn là <b>tổ hợp</b>: content-based cho người mới, collaborative khi đã đủ lịch sử, và popularity làm lưới an toàn. Nói được điều đó là đã hiểu bài toán hơn phần lớn người mới.</p>
-  <p><b>Popularity là baseline bắt buộc,</b> và bạn nên chuẩn bị tinh thần rằng nó khó thắng. Rất nhiều bài báo gợi ý bị phản biện chỉ vì không so với popularity.</p>
-
-  <h2>Metric xếp hạng: ba cái cần biết</h2>
-  <div class="wb-table-scroll"><table>
-    <thead><tr><th>Metric</th><th>Đo gì</th><th>Có quan tâm thứ tự không</th></tr></thead>
-    <tbody>
-      <tr><td><b>Recall@K</b></td><td>Trong những thứ người dùng thật sự thích, bao nhiêu phần trăm lọt vào top-K</td><td>Không — nằm ở vị trí 1 hay 10 đều tính như nhau</td></tr>
-      <tr><td><b>MAP@K</b></td><td>Precision trung bình dọc theo danh sách</td><td>Có</td></tr>
-      <tr><td><b>NDCG@K</b></td><td>Như MAP nhưng chiết khấu theo vị trí bằng hàm log, và nhận được mức độ liên quan nhiều bậc</td><td>Có — <b>mạnh nhất</b>, và là chuẩn báo cáo trong các bài báo xếp hạng</td></tr>
-    </tbody>
-  </table></div>
-  <p>Chọn <b>K</b> theo giao diện thật, không theo thói quen: nếu màn hình hiện 6 mục thì đo @6, đừng đo @20 vì thấy số đẹp hơn.</p>
-
-  <h2>Chia tập: leave-last-out theo thời gian</h2>
-  <p>Chia ngẫu nhiên các tương tác là sai theo đúng cách của forecasting: mô hình được thấy thứ người dùng mua tháng sau để đoán thứ họ mua tháng này.</p>
-  <div class="ds-code"><i># đúng: với mỗi người dùng, tương tác CUỐI CÙNG dùng để test</i>
-df = df.sort_values(["user_id", "ts"])
-test  = df.groupby("user_id").tail(1)
-train = df.drop(test.index)
-
-<i># chặt chẽ hơn: cắt theo một MỐC THỜI GIAN chung cho mọi người dùng</i>
-cutoff = df["ts"].quantile(0.8)
-train, test = df[df.ts &lt;= cutoff], df[df.ts &gt; cutoff]</div>
-  <p>Cách thứ hai chặt hơn và gần với thực tế hơn (bạn triển khai mô hình tại một thời điểm, không phải tại “tương tác cuối của mỗi người”). Nêu rõ bạn chọn cách nào và vì sao — đó là một quyết định thiết kế hội đồng sẽ hỏi.</p>
-
-  <h2>Vì sao offline tốt mà online vẫn tệ</h2>
-  <p>Đây là đặc điểm quan trọng nhất của họ bài toán này, và là chỗ nó chạm vào bài <b>A/B testing</b> ngay sau đây.</p>
-  <ul>
-    <li><b>Vòng phản hồi.</b> Dữ liệu lịch sử chỉ ghi lại những thứ <i>đã được hệ thống cũ gợi ý</i>. Bạn không bao giờ biết người dùng có thích thứ chưa từng được hiện ra hay không. Mô hình mới học từ dữ liệu đó sẽ bắt chước hệ thống cũ.</li>
-    <li><b>Vị trí gây thiên lệch.</b> Mục ở vị trí 1 được bấm nhiều hơn mục ở vị trí 10 <i>chỉ vì</i> nó ở vị trí 1. Không hiệu chỉnh thì bạn đang học lại thói quen của giao diện, không phải sở thích.</li>
-    <li><b>Chỉ số offline không phải chỉ số kinh doanh.</b> NDCG tăng 5% không đảm bảo doanh thu tăng, và có khi còn giảm nếu mô hình đẩy mạnh những thứ rẻ tiền dễ bấm.</li>
-  </ul>
-  <p>Kết luận thực dụng cho luận văn: <b>báo cáo offline, nhưng nói rõ giới hạn của nó và mô tả thí nghiệm online bạn <i>sẽ</i> chạy</b> (chia lưu lượng, chỉ số chính, cỡ mẫu cần). Mô tả được một thiết kế A/B đúng đắn có giá trị bằng việc chạy nó, và nó là phần rất ít luận văn viết được.</p>
-</template>
-
-<template data-node="q-causal">
-  <p>Toàn bộ trang này tới đây dạy bạn <b>dự đoán</b>. Bài này về câu hỏi khác hẳn, và là câu hỏi mà tổ chức thật sự trả tiền để trả lời: <b>“nếu tôi <i>làm</i> việc này, chuyện gì sẽ xảy ra?”</b></p>
-  <p>Khác biệt không phải là kỹ thuật, mà là logic. Mô hình dự đoán trả lời “trong thế giới như hiện tại, cái gì thường đi cùng cái gì”. Câu hỏi nhân quả hỏi về một thế giới <i>bị can thiệp</i> — và dữ liệu quan sát được không chứa thế giới đó.</p>
-
-  <h2>Ví dụ để thấy chỗ vỡ</h2>
-  <p>Một mô hình rất tốt học được: <b>khách hàng dùng tính năng X có tỉ lệ rời bỏ thấp hơn 40%.</b> Kết luận tự nhiên: đẩy mọi người dùng X để giảm rời bỏ. Kết luận đó có thể sai hoàn toàn, vì ba lý do khác nhau:</p>
-  <ul>
-    <li><b>Đảo chiều nhân quả:</b> không phải X giữ chân khách, mà khách <i>vốn đã</i> gắn bó thì mới đi tìm X.</li>
-    <li><b>Biến gây nhiễu (confounding):</b> khách hàng doanh nghiệp lớn vừa hay dùng X, vừa ít rời bỏ — vì họ là doanh nghiệp lớn. X không làm gì cả.</li>
-    <li><b>Thiên lệch chọn mẫu:</b> chỉ những khách đã vượt qua giai đoạn onboarding mới thấy X, mà nhóm đó vốn đã ít rời bỏ.</li>
-  </ul>
-  <p><b>Không có mô hình dự đoán nào — không LightGBM, không deep learning, không SHAP — phân biệt được ba khả năng này.</b> Chúng đều học tương quan, và tương quan giống hệt nhau trong cả ba trường hợp. Đây là giới hạn về loại câu hỏi, không phải giới hạn về sức mạnh mô hình. Hiểu điều này là hiểu vì sao SHAP <i>không</i> phải công cụ nhân quả, dù hình của nó rất dễ đọc theo hướng nhân quả.</p>
-
-  <h2>A/B test: vì sao ngẫu nhiên hoá giải được cả ba</h2>
-  <p>Gán ngẫu nhiên người dùng vào nhóm A hoặc B làm một việc rất mạnh: nó khiến hai nhóm <b>giống nhau về mọi thứ</b> — cả những thứ bạn đo được lẫn những thứ bạn không nghĩ tới. Còn lại đúng một khác biệt: nhóm nào được can thiệp. Nên chênh lệch kết quả <i>là</i> tác động của can thiệp.</p>
-  <h3>Bốn thứ phải chốt <b>trước</b> khi bật thí nghiệm</h3>
-  <ol>
-    <li><b>Một chỉ số chính duy nhất</b> (OEC). Không phải năm chỉ số rồi chọn cái nào đẹp — đó là p-hacking <button class="ds-math" data-math="pvalue">(p-value nói gì và không nói gì)</button>.</li>
-    <li><b>Cỡ mẫu và thời gian chạy</b>, tính từ mức chênh lệch nhỏ nhất đáng quan tâm. Tính trước, không tính sau.</li>
-    <li><b>Đơn vị ngẫu nhiên hoá:</b> theo người dùng, theo phiên, hay theo cửa hàng. Chọn sai gây rò rỉ giữa hai nhóm.</li>
-    <li><b>Chỉ số bảo vệ</b> (guardrail): những thứ không được phép xấu đi, kể cả khi chỉ số chính tốt lên.</li>
-  </ol>
-  <div class="ds-code"><b>from</b> statsmodels.stats.power <b>import</b> zt_ind_solve_power
-<b>from</b> statsmodels.stats.proportion <b>import</b> proportions_ztest
-<b>import</b> numpy <b>as</b> np
-
-<i># TRƯỚC khi chạy: cần bao nhiêu người mỗi nhóm?</i>
-p0, mde = 0.10, 0.01                      <i># tỉ lệ hiện tại 10%, muốn phát hiện +1 điểm %</i>
-h = 2*np.arcsin(np.sqrt(p0+mde)) - 2*np.arcsin(np.sqrt(p0))    <i># cỡ tác động Cohen's h</i>
-n = zt_ind_solve_power(effect_size=h, alpha=0.05, power=0.8)
-print(f"cần ~{n:,.0f} người MỖI nhóm")
-
-<i># SAU khi chạy: chênh lệch + khoảng tin cậy, đừng chỉ báo p-value</i>
-stat, pval = proportions_ztest([conv_b, conv_a], [n_b, n_a])</div>
-  <p>Con số cỡ mẫu thường gây sốc — và đó là thông tin hữu ích: nó cho bạn biết <b>có nên chạy thí nghiệm này không</b>. Nếu cần 200.000 người mà bạn chỉ có 5.000/tháng, thí nghiệm đó không khả thi và bạn cần một cách khác.</p>
-  <p>Luôn báo cáo <b>chênh lệch kèm khoảng tin cậy</b> <button class="ds-math" data-math="ci">(bootstrap &amp; khoảng tin cậy)</button>, không chỉ p-value. “+0,8 điểm phần trăm, KTC 95% [0,1; 1,5]” nói được nhiều hơn “p = 0,03”, và không thể bị đọc nhầm thành “chắc chắn tốt hơn”.</p>
-
-  <h2>Bốn lỗi làm hỏng một A/B test</h2>
-  <div class="wb-table-scroll"><table>
-    <thead><tr><th>Lỗi</th><th>Hậu quả</th><th>Cách chống</th></tr></thead>
-    <tbody>
-      <tr><td><b>Dừng sớm khi thấy đẹp</b> (peeking)</td><td>Tỉ lệ dương tính giả tăng vọt — nhìn đủ nhiều lần thì kiểu gì cũng có lúc p &lt; 0,05</td><td>Chốt thời điểm dừng từ đầu; hoặc dùng phương pháp tuần tự có hiệu chỉnh</td></tr>
-      <tr><td><b>Thử nhiều chỉ số / nhiều phân khúc</b></td><td>Cùng vấn đề: 20 phép kiểm ở mức 5% thì trung bình có 1 cái "ý nghĩa" do ngẫu nhiên</td><td>Một chỉ số chính; phân tích theo phân khúc chỉ để <i>sinh giả thuyết</i>, không để kết luận</td></tr>
-      <tr><td><b>Rò rỉ giữa hai nhóm</b> (interference)</td><td>Người nhóm A bị ảnh hưởng bởi nhóm B (mạng xã hội, thị trường hai chiều) → tác động bị pha loãng</td><td>Ngẫu nhiên hoá theo cụm: theo thành phố, theo nhóm bạn bè</td></tr>
-      <tr><td><b>Hiệu ứng mới lạ</b></td><td>Chỉ số tăng vọt tuần đầu chỉ vì giao diện lạ, rồi tụt về cũ</td><td>Chạy đủ dài để qua giai đoạn đó; nhìn kết quả theo tuần chứ không chỉ tổng</td></tr>
-    </tbody>
-  </table></div>
-
-  <h2>Khi không thể chạy thí nghiệm</h2>
-  <p>Rất nhiều câu hỏi quan trọng không cho phép ngẫu nhiên hoá — vì lý do đạo đức, chi phí, hoặc vì sự việc đã xảy ra rồi. Lúc đó có một nhóm phương pháp <b>quasi-experimental</b>, và với luận văn thì <i>định vị được chúng</i> là đủ:</p>
-  <div class="wb-table-scroll"><table>
-    <thead><tr><th>Phương pháp</th><th>Dùng khi</th><th>Giả định cốt lõi</th></tr></thead>
-    <tbody>
-      <tr><td><b>Difference-in-differences</b></td><td>Một nhóm bị tác động tại một thời điểm, nhóm khác thì không</td><td>Nếu không có can thiệp, hai nhóm đã đi <b>song song</b> — kiểm bằng cách vẽ giai đoạn trước</td></tr>
-      <tr><td><b>Regression discontinuity</b></td><td>Can thiệp được quyết định bởi một ngưỡng (điểm số, tuổi, thu nhập)</td><td>Ngay sát hai bên ngưỡng, các đơn vị gần như giống nhau</td></tr>
-      <tr><td><b>Propensity score matching</b></td><td>Có nhiều biến quan sát được và muốn ghép cặp nhóm tương tự</td><td><b>Không còn biến gây nhiễu nào chưa đo được</b> — giả định mạnh và không kiểm chứng được</td></tr>
-      <tr><td><b>Biến công cụ</b> (IV)</td><td>Có một biến ảnh hưởng tới can thiệp nhưng không ảnh hưởng trực tiếp tới kết quả</td><td>Tìm được một biến công cụ hợp lệ là phần khó nhất</td></tr>
-    </tbody>
-  </table></div>
-  <p>Điểm chung: mỗi phương pháp mua được kết luận nhân quả bằng cách <b>đổi lấy một giả định không kiểm chứng trực tiếp được</b>. Nêu rõ giả định đó và cách bạn kiểm tra nó gián tiếp — chính là phần làm nên chất lượng của một chương phương pháp.</p>
-
-  <div class="wb-alert wb-alert--info">
-    <span class="wb-alert__icon">i</span>
-    <div class="wb-alert__body"><p class="wb-alert__title">Câu này rất hay được hỏi trong buổi bảo vệ</p>
-      <p class="wb-alert__msg">“Mô hình của em nói feature này quan trọng nhất. Vậy tác động vào nó thì kết quả có cải thiện không?” — Câu trả lời đúng là <b>không suy ra được</b>: mô hình học tương quan trong dữ liệu quan sát, còn câu hỏi đang hỏi về can thiệp. Rồi nói tiếp cách kiểm chứng: một A/B test với thiết kế cụ thể, hoặc một phương pháp quasi-experimental với giả định nêu rõ. Trả lời như vậy mạnh hơn nhiều so với gật đầu.</p></div>
-  </div>
-</template>
-
-<template data-node="q-analytics">
-  <p>Không phải câu hỏi nào cũng cần mô hình. Phần lớn giá trị mà một data team tạo ra hằng ngày đến từ việc <b>trả lời câu hỏi bằng dữ liệu đã có</b> — không train gì cả. Bài này về phần đó, và về ranh giới giữa ba nghề hay bị gộp làm một.</p>
-
-  <h2>Ba nghề, ba loại câu hỏi</h2>
-  <div class="wb-table-scroll"><table>
-    <thead><tr><th></th><th>Analytics</th><th>Predictive modeling</th><th>Causal inference</th></tr></thead>
-    <tbody>
-      <tr><td>Câu hỏi</td><td>“Chuyện gì <b>đã</b> xảy ra, và ở đâu?”</td><td>“Chuyện gì <b>sẽ</b> xảy ra?”</td><td>“Nếu tôi <b>làm</b> X thì sao?”</td></tr>
-      <tr><td>Công cụ chính</td><td>SQL, dashboard, biểu đồ</td><td>scikit-learn, LightGBM</td><td>A/B test, quasi-experiment</td></tr>
-      <tr><td>Đầu ra</td><td>Một con số, một xu hướng, một phân khúc</td><td>Một điểm số cho từng dòng</td><td>Một ước lượng tác động + khoảng tin cậy</td></tr>
-      <tr><td>Sai lầm hay gặp</td><td>Đọc tương quan thành nguyên nhân</td><td>Dùng cho câu hỏi nhân quả</td><td>Bỏ qua chi phí thí nghiệm</td></tr>
-    </tbody>
-  </table></div>
-  <p>Sai lầm tốn kém nhất của người mới là <b>mang mô hình dự đoán tới một câu hỏi analytics</b>. “Vì sao doanh số tháng này giảm?” không cần mô hình — nó cần một truy vấn tách doanh số theo kênh, theo vùng, theo nhóm khách, cho tới khi tìm ra chỗ giảm.</p>
-
-  <h2>Ba phân tích chiếm phần lớn công việc thật</h2>
-  <h3>1 · Cohort — nhóm theo thời điểm bắt đầu</h3>
-  <p>Câu hỏi: “khách hàng đăng ký tháng 1 có ở lại lâu hơn khách đăng ký tháng 6 không?” Không nhóm theo cohort thì mọi thay đổi về tỉ lệ giữ chân đều lẫn với thay đổi về cơ cấu khách mới.</p>
-  <div class="ds-code"><b>WITH</b> first_order <b>AS</b> (
-  <b>SELECT</b> user_id, DATE_TRUNC('month', <b>MIN</b>(order_ts)) <b>AS</b> cohort
-  <b>FROM</b> orders <b>GROUP BY</b> user_id
-)
-<b>SELECT</b> f.cohort,
-       DATE_DIFF('month', f.cohort, DATE_TRUNC('month', o.order_ts)) <b>AS</b> month_n,
-       <b>COUNT</b>(<b>DISTINCT</b> o.user_id) <b>AS</b> active_users
-<b>FROM</b> orders o <b>JOIN</b> first_order f <b>USING</b> (user_id)
-<b>GROUP BY</b> 1, 2 <b>ORDER BY</b> 1, 2;</div>
-  <p>Kết quả xoay thành bảng cohort — hàng là tháng đăng ký, cột là số tháng kể từ đó. Đọc theo hàng thấy vòng đời một nhóm; đọc theo cột so sánh các nhóm ở cùng độ tuổi. Đây là một trong những bảng có mật độ thông tin cao nhất trong analytics.</p>
-
-  <h3>2 · Funnel — rơi rụng qua từng bước</h3>
-  <p>Câu hỏi: “trong 100 người vào trang, bao nhiêu người thanh toán, và rụng nhiều nhất ở bước nào?” Hai chi tiết hay làm sai:</p>
-  <ul>
-    <li><b>Phải theo đúng thứ tự và trong một cửa sổ thời gian.</b> Người xem sản phẩm hôm nay và mua tháng sau không nên tính là cùng một phễu.</li>
-    <li><b>Đếm theo người, không theo sự kiện.</b> Một người xem 8 lần không phải 8 người.</li>
-  </ul>
-
-  <h3>3 · Segmentation — cắt theo nhóm</h3>
-  <p>Câu hỏi: “con số tổng đang giấu chuyện gì?” Một tỉ lệ chuyển đổi đứng yên có thể là nhóm di động tăng bù cho nhóm máy tính giảm. <b>Nghịch lý Simpson</b> — xu hướng đúng trong mọi nhóm con nhưng đảo chiều khi gộp lại — là lý do bước này không bỏ được. Cách làm rẻ nhất là RFM (gần đây / tần suất / giá trị) trước khi nghĩ tới phân cụm.</p>
-
-  <h2>KPI: hai câu hỏi trước khi thêm một chỉ số vào dashboard</h2>
-  <ul>
-    <li><b>Ai sẽ làm gì khác đi khi con số này thay đổi?</b> Không trả lời được thì đó không phải KPI, đó là trang trí.</li>
-    <li><b>Nó bị lách được bằng cách nào?</b> Mọi chỉ số bị đặt làm mục tiêu đều sớm bị tối ưu theo cách bạn không muốn — đo “số ticket đã đóng” thì ticket sẽ được đóng nhanh mà không giải quyết. Cặp đôi bảo vệ (số ticket đóng <i>và</i> tỉ lệ mở lại) là cách chống thông dụng nhất.</li>
-  </ul>
-  <p>Và một chỉ số không có <b>ngữ cảnh</b> thì không đọc được. Mọi con số trên dashboard nên đi kèm ít nhất một trong ba: so với kỳ trước, so với mục tiêu, hoặc so với dải dao động bình thường.</p>
-
-  <h2>Dashboard: ba quy tắc và một cảnh báo</h2>
-  <ul>
-    <li><b>Một dashboard trả lời một câu hỏi.</b> Dashboard “tổng quan mọi thứ” là dashboard không ai mở tới lần thứ ba.</li>
-    <li><b>Định nghĩa chỉ số nằm trong git, không nằm trong công cụ BI.</b> Khi “khách hàng hoạt động” được định nghĩa lại trong Tableau mà không ai biết, mọi con số lịch sử ngầm đổi nghĩa.</li>
-    <li><b>Số tuyệt đối đi kèm số tương đối.</b> “Tăng 300%” trên nền 2 ca là 6 ca.</li>
-  </ul>
-  <p class="wb-help">Với luận văn: phần analytics thường thuộc chương mô tả dữ liệu, không phải chương đóng góp. Làm nó bằng SQL/pandas + matplotlib rồi xuất hình là đủ — không cần dựng Tableau/Power BI, và dựng lên cũng không cộng điểm.</p>
-</template>
-
-<template data-node="q-mini">
-  <p>Đọc tám bài trên cho bạn <b>bản đồ</b>. Bài này biến bản đồ thành khả năng thật, bằng cách buộc bạn tự tay đi qua các họ bài toán khác.</p>
-  <p>Nguyên tắc quan trọng nhất: <b>mini-project không cần production hoá.</b> Không API, không Docker, không tuning. Mỗi cái là <i>một</i> notebook, làm đúng năm việc — và việc thứ năm mới là việc chính.</p>
-
-  <div class="wb-alert wb-alert--info wb-alert--plain"><div class="wb-alert__body">
-    <p class="wb-alert__title">Bắt buộc làm thật 2 trong 6 — phần còn lại là phác thảo</p>
-    <p class="wb-alert__msg">Sáu đề bên dưới là một <b>thực đơn</b>, không phải sáu bài tập bắt buộc. Deliverable của bài này (và của Mốc 2 tuần 6) là <b>hai</b> mini-project làm tới cùng: chọn hai họ <i>khác nhất</i> so với fraud (gợi ý: <b>Forecasting</b> + một trong <b>NLP / Gợi ý / Nhân quả</b>). Bốn cái còn lại chỉ cần bảng “giữ gì / đổi gì” ở mức phác thảo — chúng để bạn tra khi gặp họ đó thật, không phải để nộp. Ngân sách thời lượng của bài (5 giờ) đã tính cho <b>hai</b> notebook làm thật; đừng nhân cho sáu.</p>
-  </div></div>
-
-  <h2>Năm việc của một mini-project</h2>
-  <ol>
-    <li>Tải dữ liệu, định vị bằng <b>tám câu hỏi</b> ở bài <b>Bản đồ các họ bài toán</b>.</li>
-    <li>Chia tập <b>đúng kiểu của họ đó</b>, và viết một <code>assert</code> chứng minh nó đúng.</li>
-    <li>Chạy <b>baseline bắt buộc</b> của họ đó. Ghi con số.</li>
-    <li>Chạy <b>một</b> mô hình thật. Ghi con số. Dừng lại — đừng tune.</li>
-    <li>Viết <b>bảng “giữ gì / đổi gì”</b> so với dự án gian lận. <b>Đây là sản phẩm thật của mini-project.</b></li>
-  </ol>
-  <p>Thời gian mục tiêu cho <b>một</b> mini-project làm thật: <b>khoảng 2–2,5 giờ</b> nếu bạn bám đúng năm bước và <i>không</i> tune — bạn đã đi qua toàn bộ vòng đời ở dự án fraud, nên phần lặp lại nhanh hơn nhiều so với lần đầu. Nếu một cái ngốn quá một buổi, gần như chắc chắn bạn đang tối ưu thay vì đang học chuyển giao — dừng và viết bảng bước 5. Hai cái × ~2,5 giờ là ngân sách 5 giờ của bài.</p>
-
-  <h2>Sáu dự án (thực đơn — chọn 2 làm thật)</h2>
-  <div class="wb-table-scroll"><table>
-    <thead><tr><th>#</th><th>Họ</th><th>Đề bài</th><th>Nguồn dữ liệu gợi ý</th><th>Điều nó dạy mà fraud không dạy</th></tr></thead>
-    <tbody>
-      <tr><td>1</td><td><b>Forecasting</b></td><td>Dự báo tiêu thụ điện / lượt truy cập theo ngày, tầm 28 ngày</td><td>Chuỗi tiêu thụ điện theo giờ, hoặc lượt xem Wikipedia — cả hai có bản công khai tải trực tiếp bằng URL</td><td>Backtest walk-forward, baseline seasonal-naive, MASE, và việc cây <b>không ngoại suy được xu hướng</b></td></tr>
-      <tr><td>2</td><td><b>Hồi quy</b></td><td>Dự đoán giá nhà hoặc thời gian giao hàng</td><td><code>fetch_california_housing()</code> có sẵn trong scikit-learn — không cần tải gì</td><td>MAE vs RMSE vs MAPE, phân tích phần dư, và <b>khoảng dự đoán</b> kèm kiểm tra độ phủ</td></tr>
-      <tr><td>3</td><td><b>Multiclass / CV</b></td><td>Phân loại ảnh nhiều lớp bằng transfer learning</td><td>Một bộ ảnh nhỏ nhiều lớp (hoa, thức ăn, chữ số) tải qua <code>torchvision.datasets</code></td><td>macro vs weighted F1, ma trận nhầm lẫn chuẩn hoá, linear probe làm baseline</td></tr>
-      <tr><td>4</td><td><b>NLP</b></td><td>Phân loại cảm xúc hoặc phân loại ticket hỗ trợ</td><td>Một bộ đánh giá sản phẩm hoặc tin tức có nhãn trên Kaggle/Hugging Face</td><td>TF-IDF làm mốc bắt buộc, khử trùng lặp trước khi chia, đọc tay 50 ca sai</td></tr>
-      <tr><td>5</td><td><b>Gợi ý</b></td><td>Gợi ý top-10 mục cho mỗi người dùng</td><td>Một bộ đánh giá phim hoặc lịch sử mua hàng công khai</td><td>Popularity rất khó thắng, Recall@K/NDCG@K, chia leave-last-out theo thời gian</td></tr>
-      <tr><td>6</td><td><b>Nhân quả</b></td><td>Phân tích một A/B test: có tác động thật không, lớn cỡ nào</td><td><b>Tự sinh</b> bằng <code>numpy</code> — xem code bên dưới. Tốt hơn dữ liệu thật vì bạn biết đáp án</td><td>Cỡ mẫu, khoảng tin cậy, và bốn cách làm hỏng một thí nghiệm</td></tr>
-    </tbody>
-  </table></div>
-  <p class="wb-help">Cố ý không dán đường dẫn cụ thể: liên kết dataset đổi và chết thường xuyên. Cách tìm ổn định là gõ tên bộ dữ liệu vào ô tìm kiếm của Kaggle Datasets hoặc Hugging Face Datasets, rồi <b>kiểm ba thứ trước khi tải</b>: giấy phép sử dụng, kích thước, và ngày cập nhật gần nhất.</p>
-
-  <h2>Tiêu chí chọn dataset — dùng được cho mọi dự án sau này</h2>
-  <ul>
-    <li><b>Công khai và không cần xin quyền.</b> Chờ duyệt truy cập là cách phổ biến nhất để một dự án cuối tuần chết yểu.</li>
-    <li><b>Nhỏ hoặc vừa</b> — dưới vài trăm MB để vừa RAM Colab/Kaggle mà không phải xử lý theo lô.</li>
-    <li><b>Tải được bằng một dòng</b> trong notebook (URL trực tiếp, <code>kagglehub</code>, hoặc có sẵn trong thư viện).</li>
-    <li><b>Có giấy phép rõ ràng</b> — bắt buộc nếu định đưa vào luận văn. Ghi giấy phép vào <code>data/README.md</code>.</li>
-    <li><b>Không cần GPU mạnh.</b> Với ảnh, chọn bộ có ảnh nhỏ hoặc ít lớp.</li>
-    <li><b>Phù hợp bài học, không phải nổi tiếng.</b> Titanic nổi tiếng nhưng không dạy được gì về rò rỉ theo thời gian; MNIST nổi tiếng nhưng đã bão hoà tới mức mọi mô hình đều &gt;99%, nên nó không phân biệt được gì.</li>
-  </ul>
-
-  <h2>Dữ liệu A/B test tự sinh — cho mini-project 6</h2>
-  <p>Với bài nhân quả, dữ liệu tự sinh <b>tốt hơn</b> dữ liệu thật, vì bạn biết trước sự thật và kiểm chứng được phương pháp của mình.</p>
-  <div class="ds-code"><b>import</b> numpy <b>as</b> np, pandas <b>as</b> pd
-rng = np.random.default_rng(7)
-n = 20_000
-
-<i># biến gây nhiễu: khách hàng "nặng ký" vừa hay được thấy tính năng mới, vừa hay mua</i>
-heavy = rng.binomial(1, 0.3, n)
-
-<i># (a) DỮ LIỆU QUAN SÁT — nhóm điều trị KHÔNG ngẫu nhiên</i>
-treat_obs = rng.binomial(1, 0.2 + 0.5*heavy)
-<i># (b) THÍ NGHIỆM — gán ngẫu nhiên, độc lập với mọi thứ</i>
-treat_rct = rng.binomial(1, 0.5, n)
-
-TRUE_EFFECT = 0.02        <i># sự thật: tính năng làm tăng 2 điểm phần trăm</i>
-conv = <b>lambda</b> t: rng.binomial(1, 0.10 + 0.12*heavy + TRUE_EFFECT*t)
-
-df = pd.DataFrame({"heavy": heavy,
-                   "t_obs": treat_obs, "y_obs": conv(treat_obs),
-                   "t_rct": treat_rct, "y_rct": conv(treat_rct)})
-
-<i># so hai cách ước lượng với sự thật 0,02</i>
-naive = df.groupby("t_obs").y_obs.mean().diff().iloc[-1]
-rct   = df.groupby("t_rct").y_rct.mean().diff().iloc[-1]
-print(f"quan sát thô: {naive:.4f}   thí nghiệm: {rct:.4f}   sự thật: {TRUE_EFFECT}")</div>
-  <p>Chạy đoạn này và nhìn: ước lượng từ dữ liệu quan sát lệch <b>gấp nhiều lần</b> tác động thật, còn ước lượng từ thí nghiệm ngẫu nhiên thì bám sát. Cùng dữ liệu, cùng công thức, khác nhau đúng một chỗ — cách nhóm điều trị được gán. Sau đó thử tự sửa ước lượng quan sát bằng cách phân tầng theo <code>heavy</code> và xem nó về gần sự thật tới đâu.</p>
-  <p>Đây là bài tập có tỉ lệ hiểu-biết trên thời gian cao nhất trong cả chặng: mười lăm phút, và bạn thấy tận mắt vì sao “mô hình rất chính xác” không đồng nghĩa với “kết luận đúng”.</p>
-
-  <h2>Bảng “giữ gì / đổi gì” — mẫu để chép</h2>
-  <p>Mỗi mini-project kết thúc bằng một bảng như thế này trong <code>README</code> của notebook. <b>Hai bảng hoàn chỉnh</b> từ hai notebook đã chạy, cộng bốn bảng phác thảo, là bằng chứng đúng với khối lượng giờ mà trang đã cấp — và là thứ đáng nói nhất trong một buổi phỏng vấn.</p>
-  <div class="wb-table-scroll"><table>
-    <thead><tr><th>Chiều</th><th>Dự án gian lận</th><th>Mini-project này</th><th>Vì sao đổi</th></tr></thead>
-    <tbody>
-      <tr><td>Họ bài toán</td><td>Phân loại nhị phân lệch nhãn</td><td>…</td><td>…</td></tr>
-      <tr><td>Chia tập</td><td>Theo thời gian, 70/15/15</td><td>…</td><td>…</td></tr>
-      <tr><td>Baseline</td><td>Đoán theo tỉ lệ nền + luật thủ công</td><td>…</td><td>…</td></tr>
-      <tr><td>Metric chính</td><td>PR-AUC + chi phí quy ra tiền</td><td>…</td><td>…</td></tr>
-      <tr><td>Rủi ro rò rỉ chính</td><td>Feature cửa sổ chứa dòng hiện tại</td><td>…</td><td>…</td></tr>
-      <tr><td>Có cần deep learning</td><td>Không</td><td>…</td><td>…</td></tr>
-      <tr><td>Sai lầm đặc trưng</td><td>Báo cáo accuracy; để ngưỡng 0,5</td><td>…</td><td>…</td></tr>
-    </tbody>
-  </table></div>
-</template>
-
-<!-- ============================================================
-     CHẶNG 8 — LÀM RA PRODUCT THẬT
+     CHẶNG 7 — LÀM RA PRODUCT THẬT
      ============================================================ -->
 
 <template data-node="pr-arch">
@@ -9161,6 +8417,607 @@ FP= 160,000₫  →  ngưỡng 0,602  |  thiệt hại    944 triệu</div>
 </template>
 
 <!-- ============================================================
+     CHẶNG 8 — CÁC HỌ BÀI TOÁN KHÁC
+     Mục đích của cả chặng: chuyển giao. Mỗi bài trả lời cùng bốn câu —
+     giữ gì từ dự án gian lận, đổi gì, đo bằng gì, hỏng ở đâu — nên đọc
+     xong chặng này bạn định vị được một dự án lạ, không chỉ làm được
+     một dự án quen.
+     ============================================================ -->
+
+<template data-node="q-regress">
+  <p>Đổi một chữ trong đề bài — “giao dịch này có gian lận không” thành “đơn hàng này giao mất bao nhiêu phút” — và bạn rời khỏi phân loại, sang <b>hồi quy</b>. Đầu ra không còn là xác suất trong khoảng 0–1 mà là một số thực có đơn vị: phút, đồng, kWh, kg.</p>
+
+  <h2>Giữ nguyên gần hết — đổi đúng ba chỗ</h2>
+  <div class="wb-table-scroll"><table>
+    <thead><tr><th>Bước</th><th>So với bài phân loại</th></tr></thead>
+    <tbody>
+      <tr><td>1–5 · Đóng khung, lấy dữ liệu, EDA, làm sạch, feature</td><td><b>Giữ nguyên hoàn toàn.</b> sin/cos, lag, rolling, one-hot — y hệt</td></tr>
+      <tr><td>6 · Chia tập</td><td><b>Đổi:</b> không có <code>stratify</code> theo nhãn nữa. Nếu biến mục tiêu lệch mạnh, chia theo <i>nhóm phân vị</i> của nó để mọi tập đều có phần đuôi</td></tr>
+      <tr><td>7 · Mô hình</td><td><b>Gần như giữ nguyên:</b> đổi <code>LGBMClassifier</code> → <code>LGBMRegressor</code>, <code>LogisticRegression</code> → <code>Ridge</code></td></tr>
+      <tr><td>8 · Đo lường</td><td><b>Đổi hoàn toàn.</b> Không còn PR-AUC, ngưỡng, ma trận nhầm lẫn — xem phần dưới</td></tr>
+    </tbody>
+  </table></div>
+  <p>Đây là mẫu hình lặp lại ở cả chặng này: <b>phần lớn công việc chuyển giao được, chỗ vỡ luôn nằm ở chia tập và đo lường.</b></p>
+
+  <h2>Bốn chỉ số, và câu hỏi để chọn giữa chúng</h2>
+  <div class="wb-table-scroll"><table>
+    <thead><tr><th>Chỉ số</th><th>Đọc là</th><th>Chọn khi</th><th>Bẫy</th></tr></thead>
+    <tbody>
+      <tr><td><b>MAE</b></td><td>“Sai trung bình 8,3 phút”</td><td>Mặc định. Đơn vị giống biến mục tiêu nên nói được với người không kỹ thuật</td><td>Coi sai 1 phút và sai 60 phút là cùng bản chất, chỉ khác độ lớn</td></tr>
+      <tr><td><b>RMSE</b></td><td>Cũng đơn vị đó, nhưng phạt nặng sai số lớn</td><td>Khi một cú sai lớn tốn hơn nhiều lần so với nhiều cú sai nhỏ (dự báo tải điện, tồn kho)</td><td>Rất nhạy với ngoại lai — một dòng bẩn kéo lệch cả con số</td></tr>
+      <tr><td><b>MAPE</b></td><td>“Sai trung bình 12%”</td><td>Khi cần so sánh giữa các mặt hàng có quy mô rất khác nhau</td><td><b>Vỡ khi giá trị thật gần 0</b> (chia cho 0), và phạt dự báo cao hơn nhẹ hơn dự báo thấp hơn — nên nó âm thầm khuyến khích mô hình đoán thấp</td></tr>
+      <tr><td><b>R²</b></td><td>“Giải thích được 0,72 phương sai”</td><td>Báo cáo học thuật, so với baseline “luôn đoán trung bình”</td><td>Không có đơn vị nên <b>không nói được gì về việc sai đó có chấp nhận được không</b>. R² = 0,9 vẫn có thể sai 3 tiếng mỗi đơn</td></tr>
+    </tbody>
+  </table></div>
+  <p>Cách chọn nhanh: hỏi <b>“sai một đơn vị thì tốn bao nhiêu, và chi phí đó tăng tuyến tính hay tăng nhanh hơn?”</b> Tuyến tính → MAE. Nhanh hơn → RMSE. Đây là cùng một câu hỏi “quy ra tiền” của bài phân loại, chỉ khoác áo khác.</p>
+  <div class="ds-code"><b>from</b> sklearn.metrics <b>import</b> mean_absolute_error, root_mean_squared_error, r2_score
+<b>from</b> lightgbm <b>import</b> LGBMRegressor
+
+model = LGBMRegressor(random_state=42).fit(X_tr, y_tr)
+pred  = model.predict(X_va)
+
+<i># baseline BẮT BUỘC: luôn đoán trung vị của tập train</i>
+base  = np.full_like(y_va, np.median(y_tr), dtype=<b>float</b>)
+
+<b>for</b> name, p <b>in</b> [("baseline", base), ("lgbm", pred)]:
+    print(name, <b>round</b>(mean_absolute_error(y_va, p), 2),
+                <b>round</b>(root_mean_squared_error(y_va, p), 2),
+                <b>round</b>(r2_score(y_va, p), 3))</div>
+  <p>Chú ý baseline là <b>trung vị</b>, không phải trung bình: trung vị là giá trị tối ưu cho MAE, trung bình tối ưu cho RMSE. Chọn sai baseline là tự cho mình một đối thủ yếu.</p>
+
+  <h2>Một con số không đủ: khoảng dự đoán</h2>
+  <p>“Đơn này giao trong 34 phút” là một lời hứa. “Đơn này giao trong 28–47 phút, 80% khả năng” là một <b>thông tin dùng được</b> — nó nói cho hệ thống biết khi nào nên hứa và khi nào nên báo trước là có thể trễ.</p>
+  <p>Cách rẻ nhất để có khoảng đó với LightGBM là <b>hồi quy phân vị</b>: train ba mô hình cho ba phân vị.</p>
+  <div class="ds-code"><i># ba mô hình: cận dưới, trung vị, cận trên → khoảng 80%</i>
+models = {}
+<b>for</b> q <b>in</b> [0.1, 0.5, 0.9]:
+    models[q] = LGBMRegressor(objective="quantile", alpha=q,
+                              random_state=42).fit(X_tr, y_tr)
+
+lo, mid, hi = (models[q].predict(X_va) <b>for</b> q <b>in</b> [0.1, 0.5, 0.9])
+
+<i># KIỂM CHỨNG: khoảng 80% thì phải bao được ~80% giá trị thật</i>
+coverage = ((y_va &gt;= lo) &amp; (y_va &lt;= hi)).mean()
+print(f"độ phủ thực tế: {coverage:.1%}  (mong đợi ~80%)")</div>
+  <p>Dòng cuối là dòng quan trọng nhất và cũng là dòng hay bị bỏ. Một khoảng dự đoán chỉ có giá trị nếu <b>độ phủ thực tế khớp với mức đã công bố</b>. Phủ 55% trong khi tuyên bố 80% thì tệ hơn không đưa khoảng nào, vì nó tạo ra một sự tự tin sai chỗ. Báo cáo cả hai con số — độ rộng khoảng và độ phủ — là một điểm cộng dễ ăn trong luận văn.</p>
+  <p class="wb-help">Nếu cần bảo đảm chặt chẽ hơn về mặt lý thuyết, từ khoá cần tra là <b>conformal prediction</b> — nó cho khoảng có bảo đảm độ phủ với giả định rất nhẹ. Đủ để nêu tên trong phần hướng phát triển.</p>
+
+  <h2>Ba sai lầm đặc trưng của hồi quy</h2>
+  <ol>
+    <li><b>Không nhìn phân phối phần dư.</b> Vẽ <code>y_true − y_pred</code> theo <code>y_pred</code>: nếu nó loe ra hình phễu, sai số tỉ lệ với độ lớn — cân nhắc dự đoán <code>log(y)</code> rồi mũ ngược lại <button class="ds-math" data-math="logtransform">(vì sao lấy log)</button>. Nếu phần dư có cấu trúc (cong, phân cụm), bạn còn thiếu feature.</li>
+    <li><b>Dự đoán ra giá trị vô lý mà không chặn.</b> Thời gian giao hàng âm, giá nhà âm. Kẹp đầu ra về miền hợp lệ, và <b>đếm xem phải kẹp bao nhiêu lần</b> — con số đó là một chẩn đoán, không phải một chi tiết vặt.</li>
+    <li><b>Dùng R² làm chỉ số chính rồi không ai biết mô hình có dùng được không.</b> Luôn kèm MAE cùng đơn vị gốc, và một câu so với ngưỡng nghiệp vụ: “sai trung bình 8 phút, trong khi khách chấp nhận sai lệch tới 15 phút”.</li>
+  </ol>
+</template>
+
+<template data-node="q-forecast">
+  <p>Đây là họ bài toán dễ làm sai nhất trong cả chặng, vì nó <b>trông giống</b> hồi quy — cũng dự đoán một con số — nhưng gần như mọi thói quen bạn xây được ở phần trước đều phải viết lại. Nó cũng là họ phổ biến thứ hai trong công việc thật, sau phân loại.</p>
+  <p>Khác biệt cốt lõi nằm ở một câu: trong hồi quy, các dòng dữ liệu <b>độc lập</b> với nhau; trong forecasting, dòng hôm nay là hệ quả của dòng hôm qua. Mọi thứ dưới đây chảy ra từ chỗ đó.</p>
+
+  <h2>Bốn thứ phải nhìn thấy trước khi mô hình hoá</h2>
+  <div data-viz="decomp"></div>
+  <div class="wb-table-scroll"><table>
+    <thead><tr><th>Khái niệm</th><th>Là gì</th><th>Vì sao bạn phải quan tâm</th></tr></thead>
+    <tbody>
+      <tr><td><b>Xu hướng</b> (trend)</td><td>Mức nền đi lên hay đi xuống dài hạn</td><td>Mô hình cây <b>không ngoại suy</b> được xu hướng — đây là hạn chế lớn nhất khi dùng LightGBM cho forecasting</td></tr>
+      <tr><td><b>Mùa vụ</b> (seasonality)</td><td>Mẫu hình lặp theo chu kỳ cố định: theo giờ, theo thứ, theo tháng</td><td>Đây là chỗ <b>mã hoá sin/cos gặp lại bạn</b>, và cũng là chỗ baseline seasonal-naive lấy sức mạnh</td></tr>
+      <tr><td><b>Tính dừng</b> (stationarity)</td><td>Trung bình và phương sai không đổi theo thời gian</td><td>ARIMA <i>giả định</i> chuỗi dừng — nên phải lấy sai phân trước. Mô hình cây thì không cần, nhưng chuỗi không dừng vẫn làm hỏng cách bạn chia tập</td></tr>
+      <tr><td><b>Tự tương quan</b> (autocorrelation)</td><td>Giá trị hôm nay tương quan với chính nó cách đây $k$ bước</td><td>Biểu đồ ACF/PACF cho bạn biết <b>nên tạo lag nào</b> — nó thay việc đoán mò bằng bằng chứng</td></tr>
+    </tbody>
+  </table></div>
+  <div class="ds-code"><b>import</b> statsmodels.api <b>as</b> sm
+<b>from</b> statsmodels.tsa.seasonal <b>import</b> STL
+
+<i># tách chuỗi thành xu hướng + mùa vụ + phần dư — luôn làm trước tiên</i>
+res = STL(y, period=7).fit()      <i># period=7 cho dữ liệu ngày có mùa vụ theo tuần</i>
+res.plot()
+
+<i># lag nào đáng tạo? nhìn đỉnh của PACF</i>
+sm.graphics.tsa.plot_pacf(y, lags=40)</div>
+
+  <h2>Chia tập: chỗ 90% lỗi nằm</h2>
+  <p>Một câu duy nhất cần nhớ: <b>không bao giờ chia ngẫu nhiên chuỗi thời gian.</b> Chia ngẫu nhiên nghĩa là mô hình được học từ tháng 6 và tháng 8 rồi đi dự đoán tháng 7 — trong thực tế bạn không bao giờ có tháng 8 khi cần dự báo tháng 7. Điểm số sẽ đẹp, và hoàn toàn vô nghĩa.</p>
+  <p>Cách đúng là <b>backtesting walk-forward</b>: mô phỏng lại đúng cái bạn sẽ làm trong đời thật — đứng ở một mốc thời gian, chỉ nhìn về quá khứ, dự đoán tương lai, rồi trượt mốc đó tới.</p>
+  <div data-viz="walkforward"></div>
+  <div class="ds-code"><b>from</b> sklearn.model_selection <b>import</b> TimeSeriesSplit
+
+tscv = TimeSeriesSplit(n_splits=5, test_size=28, gap=0)
+<b>for</b> tr_idx, te_idx <b>in</b> tscv.split(X):
+    <i># tr_idx LUÔN nằm trước te_idx — không cần tự kiểm nữa</i>
+    model.fit(X.iloc[tr_idx], y.iloc[tr_idx])
+    score = mae(y.iloc[te_idx], model.predict(X.iloc[te_idx]))</div>
+  <p><b>Tham số <code>gap</code> là chi tiết ít người dùng và nó rất quan trọng.</b> Nó xử đúng một thứ hẹp: <b>độ trễ dữ liệu</b> — lúc chấm điểm, dữ liệu mới nhất đã cũ mấy bước. Nếu khi chạy thật dữ liệu về trễ 7 ngày, đặt <code>gap=7</code> để mỗi fold train dừng đúng chỗ thực tế dừng. Không đặt là bạn đang tự cho mình dữ liệu mà lúc chạy thật sẽ chưa có. Đừng nhầm <code>gap</code> với <b>tầm dự báo</b> (dự báo trước bao nhiêu bước): tầm dự báo nằm ở <b>cách bạn dựng target</b> — nhãn là giá trị ở bước tương lai nào — chứ không phải ở <code>gap</code>.</p>
+
+  <h2>Rò rỉ theo thời gian: ba dạng riêng của forecasting</h2>
+  <ul>
+    <li><b>Dùng thống kê của cả chuỗi để chuẩn hoá.</b> <code>StandardScaler().fit(y_toàn_bộ)</code> đưa thông tin tương lai vào tập train. Chỉ được <code>fit</code> trên phần quá khứ của từng fold.</li>
+    <li><b>Rolling/lag tính sau khi đã sắp sai thứ tự,</b> hoặc quên <code>shift(1)</code> nên cửa sổ chứa chính điểm cần dự đoán. Cùng cái bẫy ở bài <b>Biến theo thời gian</b>, chỉ nghiêm trọng hơn.</li>
+    <li><b>Feature ngoại sinh chưa tồn tại tại thời điểm dự báo.</b> Dùng nhiệt độ thật của ngày mai để dự báo doanh số ngày mai — nhưng ngày mai bạn chỉ có <i>dự báo</i> nhiệt độ, không có nhiệt độ thật. Đây là dạng tinh vi nhất và rất hay lọt lưới.</li>
+  </ul>
+
+  <h2>Baseline: hai dòng code, và rất khó đánh bại</h2>
+  <p>Đây là phần bị bỏ qua nhiều nhất, và cũng là phần khiến nhiều luận văn forecasting không bảo vệ được. <b>Hai baseline dưới đây là bắt buộc</b>, và với nhiều chuỗi thực tế thì chúng thắng cả Prophet lẫn LSTM.</p>
+  <div class="ds-code"><i># 1. NAIVE — dự báo = giá trị gần nhất</i>
+pred_naive = y.shift(1)
+
+<i># 2. SEASONAL NAIVE — dự báo = giá trị cùng kỳ chu kỳ trước</i>
+<i>#    (thứ Ba tuần này ≈ thứ Ba tuần trước) — mạnh bất ngờ</i>
+pred_snaive = y.shift(7)</div>
+  <p>Và đây là lý do có <b>MASE</b> (Mean Absolute Scaled Error): MAE của bạn <i>chia cho</i> một MAE tham chiếu của naive. Định nghĩa chuẩn (Hyndman) lấy mẫu số là MAE của naive <b>một bước, đo trên tập train</b> — một hằng số của chuỗi, cố định khi bạn đổi mô hình.</p>
+  <div class="ds-code"><i># mẫu số MASE chuẩn: MAE của naive-một-bước trên LỊCH SỬ (train), tính một lần</i>
+d = mean_absolute_error(y_train.iloc[1:], y_train.shift(1).iloc[1:])
+mase = mean_absolute_error(y_true, y_pred) / d
+<i># mase &lt; 1 → tốt hơn naive · mase ≥ 1 → mô hình của bạn vô dụng</i></div>
+  <p>Nếu chia cho MAE của naive tính <i>trên chính tập test</i> — cách nhiều đoạn code viết vội — bạn vẫn có một tỉ số so-với-naive dùng được, nhưng đó là <b>relative MAE</b> chứ không phải MASE: mẫu số đổi theo từng fold test. Với luận văn, gọi đúng tên là điều hội đồng để ý.</p>
+  <p>MASE là chỉ số đáng dùng làm chỉ số chính cho forecasting: nó không vỡ khi giá trị bằng 0 (khác MAPE), không phụ thuộc đơn vị nên so sánh được giữa các chuỗi, và quan trọng nhất — <b>nó luôn nhắc bạn con số của mình đang so với cái gì</b>. Một bảng kết quả forecasting không có cột naive là một bảng chưa đọc được.</p>
+
+  <h2>Bản đồ mô hình — đặt đúng vai, không xếp hạng</h2>
+  <p>Đây là chỗ có nhiều thông tin sai nhất trên internet. Nói thẳng: <b>không có mô hình nào trong bảng này luôn tốt hơn mô hình khác.</b> Các cuộc thi dự báo quy mô lớn nhiều năm liền cho thấy phương pháp thống kê cổ điển và tổ hợp đơn giản thường ngang ngửa hoặc thắng các mô hình phức tạp trên chuỗi ngắn, và deep learning chỉ chiếm ưu thế khi có <i>rất nhiều</i> chuỗi liên quan để học chung.</p>
+  <div class="wb-table-scroll"><table>
+    <thead><tr><th>Mô hình</th><th>Mạnh khi</th><th>Yếu khi</th><th>Vai trò hợp lý</th></tr></thead>
+    <tbody>
+      <tr><td><b>Naive / seasonal-naive</b></td><td>Luôn luôn</td><td>—</td><td><b>Baseline bắt buộc.</b> Không có nó thì mọi con số khác không đọc được</td></tr>
+      <tr><td><b>Làm mượt mũ / ETS</b></td><td>Chuỗi ngắn, có xu hướng và mùa vụ rõ, ít feature ngoài</td><td>Không nhận được biến ngoại sinh (khuyến mãi, thời tiết)</td><td>Baseline thống kê thứ hai. Rẻ, mạnh, dễ giải thích</td></tr>
+      <tr><td><b>ARIMA / SARIMA</b></td><td>Chuỗi dừng (hoặc làm dừng được), cần khoảng tin cậy có nền lý thuyết</td><td>Phải chọn $(p,d,q)$; chậm khi có hàng nghìn chuỗi</td><td>Baseline học thuật — hội đồng quen tên và sẽ hỏi vì sao không dùng</td></tr>
+      <tr><td><b>Prophet</b></td><td>Mùa vụ nhiều tầng (ngày+tuần+năm), có ngày lễ, chuỗi dài, dữ liệu thiếu rải rác</td><td>Chuỗi ngắn, mùa vụ yếu, hoặc cần độ chính xác cao — thường thua boosting có lag tốt</td><td>Một dòng trong bảng so sánh; mạnh nhất ở khả năng <b>tách thành phần</b> để giải thích</td></tr>
+      <tr><td><b>Boosting + lag features</b></td><td>Có nhiều biến ngoại sinh; nhiều chuỗi train chung; mối quan hệ phi tuyến</td><td><b>Không ngoại suy được xu hướng</b> — dự báo bị kẹt trong khoảng giá trị đã thấy</td><td>Lựa chọn mặc định tốt <i>nếu</i> bạn khử xu hướng trước (dự báo sai phân, hoặc tỉ lệ so với cùng kỳ)</td></tr>
+      <tr><td><b>LSTM / GRU</b></td><td>Chuỗi dài, nhiều chuỗi cùng lúc, quan hệ phụ thuộc phức tạp</td><td>Dữ liệu ít; cần tinh chỉnh nhiều; khó giải thích</td><td>Một baseline sequence hợp lệ trong luận văn — <b>không</b> phải mặc định</td></tr>
+      <tr><td><b>Temporal CNN, Transformer chuỗi</b></td><td>Rất nhiều dữ liệu, tầm dự báo dài, cần song song hoá</td><td>Chi phí và độ phức tạp cao so với lợi ích trên bài toán cỡ luận văn</td><td>Định vị được là đủ; nêu như hướng mở rộng</td></tr>
+    </tbody>
+  </table></div>
+  <div class="wb-alert wb-alert--warning">
+    <span class="wb-alert__icon">!</span>
+    <div class="wb-alert__body"><p class="wb-alert__title">Prophet: hai điều cần biết trước khi chọn</p>
+      <p class="wb-alert__msg">Thứ nhất, <b>Prophet ở chế độ bảo trì</b> — README chính thức ghi rõ dự án chỉ nhận sửa lỗi và cập nhật phụ thuộc, không thêm tính năng mới (kiểm ngày 3/8/2026). Nó vẫn dùng tốt và vẫn cài được, nhưng đừng viết vào luận văn rằng đây là công nghệ đang phát triển. Thứ hai, điểm mạnh thật của Prophet <b>không phải độ chính xác</b> mà là khả năng tách chuỗi thành xu hướng / mùa vụ / ngày lễ thành những hình dễ giải thích cho người không kỹ thuật. Nếu bạn cần độ chính xác, hãy so nó với boosting có lag tốt trước khi chốt.</p></div>
+  </div>
+
+  <h2>Feature cho forecasting: lag, cửa sổ trượt, lịch</h2>
+  <div data-viz="lag"></div>
+  <div class="ds-code"><i># LAG — giá trị của chính chuỗi ở quá khứ. Chọn lag theo PACF, đừng đoán</i>
+<b>for</b> k <b>in</b> [1, 7, 14, 28]:
+    df[f"lag_{k}"] = df["y"].shift(k)
+
+<i># CỬA SỔ TRƯỢT — luôn shift(1) TRƯỚC rồi mới rolling, nếu không là rò rỉ</i>
+<b>for</b> w <b>in</b> [7, 28]:
+    df[f"roll_mean_{w}"] = df["y"].shift(1).rolling(w).mean()
+    df[f"roll_std_{w}"]  = df["y"].shift(1).rolling(w).std()
+
+<i># LỊCH — thứ, ngày trong tháng, tháng, ngày lễ; mã hoá chu kỳ bằng sin/cos</i>
+df["dow"]     = df["ds"].dt.dayofweek
+df["dow_sin"] = np.sin(2*np.pi*df["dow"]/7)
+df["dow_cos"] = np.cos(2*np.pi*df["dow"]/7)
+df["is_holiday"] = df["ds"].isin(HOLIDAYS).astype(<b>int</b>)</div>
+  <p>Thứ tự <code>.shift(1).rolling(w)</code> chứ không phải <code>.rolling(w).shift(1)</code> — cả hai đều chạy, chỉ một cái đúng. Viết một test cho nó, theo đúng loại test số 4 ở bài <b>Làm việc với AI</b>.</p>
+
+  <h2>Quy trình một dự án forecasting, theo thứ tự</h2>
+  <ol>
+    <li>Vẽ chuỗi ra. Nhìn bằng mắt trước khi mô hình hoá. Tách STL.</li>
+    <li>Chốt <b>tầm dự báo</b> (dự báo trước bao nhiêu bước) và <b>độ trễ dữ liệu</b> (khi dự báo thì dữ liệu mới nhất cũ bao nhiêu). Hai con số này quyết định <code>gap</code>.</li>
+    <li>Chạy naive và seasonal-naive. Ghi lại MAE. <b>Đây là mốc.</b></li>
+    <li>ETS hoặc ARIMA. Ghi lại.</li>
+    <li>Boosting + lag/rolling/lịch. Ghi lại.</li>
+    <li>Chỉ khi bước 5 chưa đủ, và bạn có nhiều chuỗi: thử LSTM hoặc Prophet.</li>
+    <li>Backtest walk-forward tất cả trên <b>cùng một bộ fold</b>. Báo cáo MASE + độ lệch chuẩn giữa các fold.</li>
+  </ol>
+  <p>Bước 7 quan trọng hơn vẻ ngoài của nó: một mô hình thắng ở 1 fold nhưng thua ở 4 fold còn lại thì chưa thắng gì. Độ lệch chuẩn giữa các fold là con số hội đồng sẽ hỏi.</p>
+
+  <p class="wb-help">Dataset gợi ý để tập, đều tải trực tiếp được trong Colab/Kaggle: tiêu thụ điện theo giờ, lượt truy cập Wikipedia theo ngày, doanh số bán lẻ theo tuần. Chi tiết ở bài <b>Sáu mini-project</b>.</p>
+</template>
+
+<template data-node="q-multi">
+  <p>Từ hai lớp lên nhiều lớp nghe như một thay đổi nhỏ, và về mặt code thì đúng là nhỏ — <code>LGBMClassifier</code> tự xử lý. Chỗ đổi thật nằm ở <b>cách bạn đọc kết quả</b>: với hai lớp có một precision và một recall; với 12 lớp có 12 cặp, và cách gộp chúng lại thành một con số quyết định bạn đang báo cáo điều gì.</p>
+
+  <h2>Phân biệt hai bài toán hay bị lẫn</h2>
+  <div class="wb-table-scroll"><table>
+    <thead><tr><th></th><th>Multiclass</th><th>Multilabel</th></tr></thead>
+    <tbody>
+      <tr><td>Câu hỏi</td><td>Ticket này thuộc <b>một</b> trong 12 phòng ban nào?</td><td>Bài viết này thuộc <b>những</b> chủ đề nào? (có thể 0, 1 hoặc nhiều)</td></tr>
+      <tr><td>Nhãn</td><td>Một số nguyên</td><td>Một vector 0/1 độ dài N</td></tr>
+      <tr><td>Tầng cuối</td><td><b>softmax</b> — các xác suất cộng lại bằng 1 <button class="ds-math" data-math="softmax">(công thức)</button></td><td><b>sigmoid cho từng nhãn</b> — độc lập, không cộng lại bằng 1</td></tr>
+      <tr><td>Loss</td><td>Cross-entropy</td><td>Binary cross-entropy cộng trên các nhãn</td></tr>
+      <tr><td>sklearn</td><td><code>LGBMClassifier</code> tự nhận</td><td><code>MultiOutputClassifier</code>, hoặc một mô hình cho mỗi nhãn</td></tr>
+      <tr><td>Ngưỡng</td><td>Lấy <code>argmax</code>, thường không cần ngưỡng</td><td><b>Một ngưỡng cho mỗi nhãn</b>, và chúng nên khác nhau</td></tr>
+    </tbody>
+  </table></div>
+  <p>Dùng softmax cho bài multilabel là lỗi thiết kế hay gặp: nó ép mô hình phải chọn <i>một</i> nhãn, trong khi đề bài cho phép nhiều. Triệu chứng là recall thấp một cách khó hiểu ở mọi nhãn.</p>
+
+  <h2>Ba kiểu trung bình hoá — chọn sai là báo cáo sai</h2>
+  <p>Đây là phần đáng đọc kỹ nhất của bài. Giả sử 3 lớp: A có 900 mẫu và F1 = 0,95; B có 80 mẫu và F1 = 0,60; C có 20 mẫu và F1 = 0,10.</p>
+  <div class="wb-table-scroll"><table>
+    <thead><tr><th>Kiểu</th><th>Tính thế nào</th><th>Ra bao nhiêu</th><th>Trả lời câu hỏi</th></tr></thead>
+    <tbody>
+      <tr><td><b>macro</b></td><td>Trung bình cộng F1 của các lớp, <b>không</b> nhân trọng số</td><td>(0,95+0,60+0,10)/3 = <b>0,55</b></td><td>“Mô hình làm tốt trên <i>mọi lớp</i> chứ?” — lớp hiếm có tiếng nói ngang lớp phổ biến</td></tr>
+      <tr><td><b>weighted</b></td><td>Trung bình có trọng số theo số mẫu mỗi lớp</td><td>≈ <b>0,90</b></td><td>“Trên một mẫu ngẫu nhiên thì sao?” — bị lớp phổ biến chi phối</td></tr>
+      <tr><td><b>micro</b></td><td>Gộp hết TP/FP/FN rồi mới tính một lần</td><td>≈ accuracy trong multiclass</td><td>“Tổng thể đúng bao nhiêu ca?”</td></tr>
+    </tbody>
+  </table></div>
+  <p>Chênh lệch 0,55 và 0,90 <b>trên cùng một mô hình</b>. Cả hai đều đúng về mặt tính toán, và chọn con số nào để in đậm trong tóm tắt là một quyết định trung thực hay không trung thực. Quy tắc: <b>nếu lớp hiếm mới là lớp quan trọng — mà thường là vậy — báo cáo macro và nói rõ.</b> Và luôn kèm bảng F1 <i>từng lớp</i>; con số gộp giấu đi đúng thứ đáng nhìn.</p>
+  <div class="ds-code"><b>from</b> sklearn.metrics <b>import</b> classification_report, confusion_matrix
+
+print(classification_report(y_va, pred, digits=3))   <i># có cả từng lớp lẫn ba kiểu gộp</i>
+
+<i># ma trận nhầm lẫn CHUẨN HOÁ theo hàng — đọc được cặp lớp nào hay bị lẫn</i>
+cm = confusion_matrix(y_va, pred, normalize="true")</div>
+  <p>Ma trận nhầm lẫn chuẩn hoá là hình đáng đưa vào luận văn nhất của bài multiclass. Nó không chỉ nói mô hình sai bao nhiêu mà nói <b>sai theo hướng nào</b> — và “lớp 3 hay bị nhận nhầm thành lớp 7” thường dẫn thẳng tới một phát hiện về dữ liệu (hai lớp đó thực chất chồng lấn, hoặc người gán nhãn cũng lẫn).</p>
+
+  <h2>Ba việc cần làm thêm khi lên nhiều lớp</h2>
+  <ul>
+    <li><b>Chia tập stratify theo lớp hiếm nhất.</b> Với 12 lớp mà lớp hiếm nhất chỉ có 30 mẫu, một lần chia không may là tập test có 2 mẫu — mọi chỉ số của lớp đó thành nhiễu.</li>
+    <li><b>Gộp các lớp quá hiếm thành “KHÁC”</b> nếu chúng dưới ~50 mẫu và nghiệp vụ cho phép. Thà có một lớp “KHÁC” xử lý được còn hơn ba lớp không bao giờ đoán đúng.</li>
+    <li><b>Cân nhắc cấu trúc phân cấp.</b> Nếu 12 lớp thực ra là 3 nhóm lớn × 4 lớp con, một mô hình hai tầng thường tốt hơn và giải thích dễ hơn.</li>
+  </ul>
+</template>
+
+<template data-node="q-nlp">
+  <p>Bài <b>Chữ &amp; embedding</b> ở chặng 4 xử lý cột chữ như một nguồn feature phụ. Bài này coi văn bản là <b>đầu vào chính</b> — phân loại ticket hỗ trợ, phân tích cảm xúc bình luận, trích xuất thông tin từ văn bản tự do.</p>
+  <p>Một câu định khung: trong NLP hiện nay, cám dỗ lớn nhất là bắt đầu từ mô hình mạnh nhất. <b>Đừng.</b> Bắt đầu từ TF-IDF không phải vì tiết kiệm, mà vì nó là thứ duy nhất cho bạn biết bài toán của bạn <i>khó tới đâu</i>.</p>
+
+  <h2>Ba mức, và tiêu chí lên mức tiếp theo</h2>
+  <div class="wb-table-scroll"><table>
+    <thead><tr><th>Mức</th><th>Làm gì</th><th>Chi phí</th><th>Lên mức sau khi</th></tr></thead>
+    <tbody>
+      <tr><td><b>1 · TF-IDF + tuyến tính</b></td><td><code>TfidfVectorizer</code> + <code>LogisticRegression</code>. Thêm n-gram 1–2 từ</td><td>Vài giây CPU</td><td><b>Luôn chạy đầu tiên.</b> Nó là mốc so sánh bắt buộc</td></tr>
+      <tr><td><b>2 · Embedding câu</b></td><td><code>sentence-transformers</code> sinh vector, rồi đưa vào LightGBM hoặc logistic</td><td>Vài phút GPU (Colab)</td><td>Mức 1 chạm trần và lỗi chủ yếu do <i>từ đồng nghĩa / diễn đạt khác</i></td></tr>
+      <tr><td><b>3 · Fine-tune Transformer</b></td><td>Huấn luyện tiếp một mô hình pretrained trên nhãn của bạn</td><td>Hàng chục phút tới vài giờ GPU</td><td>Mức 2 chạm trần, bạn có &gt;~2.000 mẫu có nhãn, và độ chính xác thật sự đáng số giờ đó</td></tr>
+    </tbody>
+  </table></div>
+  <div class="ds-code"><i># MỨC 1 — chạy trước mọi thứ khác. 6 dòng.</i>
+<b>from</b> sklearn.feature_extraction.text <b>import</b> TfidfVectorizer
+<b>from</b> sklearn.linear_model <b>import</b> LogisticRegression
+<b>from</b> sklearn.pipeline <b>import</b> make_pipeline
+
+pipe = make_pipeline(
+    TfidfVectorizer(ngram_range=(1, 2), min_df=3, max_features=50_000),
+    LogisticRegression(max_iter=1000, class_weight="balanced"),
+).fit(text_tr, y_tr)</div>
+  <p>Với tiếng Việt, TF-IDF hoạt động khá tốt ngay cả khi không tách từ, nhưng tách từ (ví dụ bằng <code>underthesea</code> hoặc <code>pyvi</code>) thường cải thiện rõ vì tiếng Việt có nhiều từ ghép hai âm tiết. Thử cả hai và ghi lại — đó là một dòng thí nghiệm hợp lệ.</p>
+
+  <h2>Fine-tune và RAG: hai thứ khác nhau, hay bị dùng lẫn</h2>
+  <div class="wb-table-scroll"><table>
+    <thead><tr><th></th><th>Fine-tuning</th><th>RAG</th></tr></thead>
+    <tbody>
+      <tr><td>Giải quyết</td><td>Mô hình chưa biết <b>làm</b> tác vụ này (định dạng, giọng văn, quy tắc phân loại của bạn)</td><td>Mô hình chưa <b>biết</b> nội dung này (tài liệu nội bộ, dữ liệu mới)</td></tr>
+      <tr><td>Cập nhật kiến thức</td><td>Phải train lại</td><td>Chỉ cần thêm tài liệu vào kho</td></tr>
+      <tr><td>Trích nguồn</td><td>Không có</td><td><b>Có</b> — trả về được đoạn văn bản gốc</td></tr>
+      <tr><td>Chọn khi</td><td>Tác vụ hẹp, có nhãn, định dạng đầu ra cố định</td><td>Hỏi–đáp trên tài liệu, cần dẫn nguồn</td></tr>
+    </tbody>
+  </table></div>
+  <p><b>Nếu bài toán của bạn là phân loại văn bản, cả hai đều không phải câu trả lời đầu tiên.</b> Một TF-IDF hoặc một embedding + LightGBM thường vừa rẻ hơn, vừa nhanh hơn, vừa giải thích được — và giải thích được là điều hội đồng hỏi. Chỉ nhắc tới RAG khi đề bài thật sự là hỏi–đáp trên một kho tài liệu.</p>
+
+  <h2>Đánh giá NLP: đo cái gì, thay vì khoe tên mô hình</h2>
+  <p>Đây là chỗ nhiều luận văn NLP yếu nhất — chọn được mô hình lớn nhưng phần đánh giá chỉ có một con số accuracy.</p>
+  <div class="wb-table-scroll"><table>
+    <thead><tr><th>Tác vụ</th><th>Metric</th><th>Lưu ý</th></tr></thead>
+    <tbody>
+      <tr><td>Phân loại văn bản, phân tích cảm xúc</td><td>macro-F1 + bảng từng lớp</td><td>Lớp “trung tính” thường là lớp khó nhất và hay bị giấu trong con số gộp</td></tr>
+      <tr><td>Nhận dạng thực thể (NER)</td><td>F1 mức <b>span</b>, không phải mức token</td><td>Đoán đúng 3/4 token của một tên riêng là <b>sai</b>, không phải đúng 75%</td></tr>
+      <tr><td>Tóm tắt, sinh văn bản</td><td>ROUGE/BLEU <b>cộng với</b> đánh giá của con người</td><td>Các chỉ số tự động chỉ đo trùng lặp từ ngữ — chúng không đo được đúng/sai sự thật</td></tr>
+      <tr><td>Truy xuất, RAG</td><td>Recall@K, MRR cho phần truy xuất; tỉ lệ trả lời có dẫn nguồn đúng cho phần sinh</td><td>Tách hai phần ra mà đo — lỗi thường nằm ở truy xuất chứ không ở sinh</td></tr>
+    </tbody>
+  </table></div>
+  <p>Và một việc rẻ mà giá trị cao: <b>đọc tay 50 ca sai</b>, phân loại chúng thành 4–5 nhóm nguyên nhân, đưa bảng đó vào luận văn. Nó cho thấy bạn hiểu bài toán chứ không chỉ chạy được thư viện, và gần như luôn chỉ ra một cải tiến rẻ mà không chỉ số nào gợi ý được.</p>
+
+  <h2>Rò rỉ đặc trưng của NLP</h2>
+  <ul>
+    <li><b>Văn bản trùng lặp gần đúng giữa train và test.</b> Ticket được gửi lại, bình luận copy-paste, bài đăng lại. Khử trùng lặp bằng băm hoặc độ tương đồng <b>trước khi</b> chia tập.</li>
+    <li><b>Chia ngẫu nhiên khi dữ liệu có thời gian hoặc có tác giả.</b> Cùng một người viết 200 bình luận nằm cả ở train lẫn test → mô hình học nhận ra người đó, không phải nhận ra cảm xúc.</li>
+    <li><b><code>fit</code> vectorizer trên toàn bộ dữ liệu.</b> Từ vựng và IDF được học từ cả tập test. Đặt <code>TfidfVectorizer</code> <i>trong</i> Pipeline là xong.</li>
+  </ul>
+</template>
+
+<template data-node="q-cv">
+  <p>Bài này <b>không</b> biến trang này thành khoá computer vision. Mục tiêu hẹp và rõ: để khi gặp một dự án ảnh, bạn định vị được nó thuộc loại nào, biết baseline hợp lý, biết chỗ hay hỏng — và đã một lần tự tay chạy transfer learning để không thấy nó huyền bí.</p>
+
+  <h2>Ba loại bài toán ảnh — phân biệt bằng đầu ra</h2>
+  <div class="wb-table-scroll"><table>
+    <thead><tr><th>Loại</th><th>Đầu ra</th><th>Chi phí gán nhãn</th><th>Metric</th></tr></thead>
+    <tbody>
+      <tr><td><b>Classification</b></td><td>Một nhãn cho cả ảnh: “có lỗi / không lỗi”</td><td>Thấp — vài giây/ảnh</td><td>Accuracy, macro-F1</td></tr>
+      <tr><td><b>Detection</b></td><td>Danh sách hộp bao + nhãn: “3 người ở toạ độ…”</td><td>Trung bình — vài chục giây/ảnh</td><td><b>mAP</b> ở các ngưỡng IoU</td></tr>
+      <tr><td><b>Segmentation</b></td><td>Nhãn cho <b>từng pixel</b></td><td>Cao — nhiều phút/ảnh</td><td><b>IoU</b> / hệ số Dice</td></tr>
+    </tbody>
+  </table></div>
+  <p>Cột “chi phí gán nhãn” là cột quyết định phạm vi dự án nhiều hơn cả độ khó kỹ thuật. Rất nhiều dự án CV thất bại không phải vì mô hình mà vì <b>không đủ ảnh có nhãn</b>. Câu hỏi đầu tiên khi nhận một dự án CV là “ai gán nhãn, mất bao lâu, và có nhất quán không?”</p>
+  <p>Mẹo thu hẹp phạm vi: nếu detection quá đắt, hỏi xem <b>classification trên ảnh đã cắt</b> có giải quyết được vấn đề nghiệp vụ không. Rất thường là có.</p>
+
+  <h2>CNN và vision transformer — định vị</h2>
+  <p>Bài <b>CNN &amp; RNN</b> ở chặng 6 đã giải thích ý tưởng CNN. Phần cần thêm ở đây gọn:</p>
+  <ul>
+    <li><b>CNN</b> có sẵn giả định “thông tin cục bộ, bất biến tịnh tiến” cài trong kiến trúc, nên nó học tốt với <b>ít dữ liệu hơn</b>. Vẫn là lựa chọn hợp lý cho phần lớn dự án cỡ luận văn.</li>
+    <li><b>Vision Transformer (ViT)</b> cắt ảnh thành các mảnh rồi coi chúng như token — chính xác là cơ chế bạn học ở bài Attention. Nó không có giả định cục bộ cài sẵn, nên <b>cần nhiều dữ liệu hơn hoặc phải pretrain rồi fine-tune</b>. Với dữ liệu vừa và nhỏ, một CNN pretrained thường ngang hoặc hơn.</li>
+    <li>Trong thực tế bạn hầu như luôn <b>fine-tune một mô hình pretrained</b>, không train từ đầu. Train từ đầu cần lượng dữ liệu mà bạn không có.</li>
+  </ul>
+
+  <h2>Mini-lab: transfer learning, chạy được trong Colab</h2>
+  <p>Mục tiêu của lab này là <b>trải nghiệm</b>, không phải điểm số. Chọn một bộ dữ liệu nhỏ (ví dụ hoa, hoặc ảnh sản phẩm đạt/lỗi), và làm đúng ba bước.</p>
+  <div class="ds-code"><b>import</b> torch, torch.nn <b>as</b> nn
+<b>from</b> torchvision <b>import</b> models, transforms
+
+<i># 1. lấy mô hình đã học sẵn trên ImageNet</i>
+net = models.resnet18(weights="IMAGENET1K_V1")
+
+<i># 2. ĐÓNG BĂNG phần thân, chỉ thay và học lại lớp cuối</i>
+<b>for</b> p <b>in</b> net.parameters():
+    p.requires_grad = <b>False</b>
+net.fc = nn.Linear(net.fc.in_features, N_CLASSES)   <i># chỉ lớp này được học</i>
+
+<i># 3. chuẩn hoá ĐÚNG như lúc pretrain — sai chỗ này là điểm tụt không hiểu vì sao</i>
+tf = transforms.Compose([
+    transforms.Resize(256), transforms.CenterCrop(224),
+    transforms.ToTensor(),
+    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
+])</div>
+  <p>Ba bước này thường cho kết quả rất tốt sau vài phút GPU. Chỉ khi nó chạm trần mới nghĩ tới việc mở băng vài lớp cuối của phần thân và train tiếp với learning rate nhỏ hơn nhiều (khoảng 1/10).</p>
+  <p><b>Baseline bắt buộc trước khi fine-tune bất cứ thứ gì:</b> đóng băng toàn bộ mạng, lấy vector đặc trưng ở lớp áp chót, đưa vào một logistic regression. Đó là <i>linear probe</i>, chạy mất một phút, và nó cho bạn biết đặc trưng pretrained đã đủ tốt chưa.</p>
+
+  <h2>Ba chỗ hỏng riêng của CV</h2>
+  <ol>
+    <li><b>Rò rỉ theo nhóm.</b> Nhiều ảnh của cùng một vật thể / cùng một bệnh nhân / cùng một ca sản xuất nằm cả ở train lẫn test. Điểm cao giả tạo. Chia theo <b>nhóm</b>, không theo ảnh — cùng nguyên tắc với <code>GroupKFold</code> ở bài <b>Chia tập</b>.</li>
+    <li><b>Tăng cường dữ liệu (augmentation) sai ngữ nghĩa.</b> Lật ngang một ảnh chữ số biến 6 thành thứ không phải 6; lật một ảnh X-quang đổi trái thành phải. Augmentation phải giữ nguyên nhãn — kiểm bằng cách nhìn 20 ảnh sau khi tăng cường.</li>
+    <li><b>Tương quan giả với nền hoặc thiết bị.</b> Mô hình học “ảnh chụp bằng máy A thì là lớp dương” vì tình cờ mọi ca dương đều chụp bằng máy A. Cách bắt: kiểm tra mô hình trên ảnh đã che vật thể chính — nếu vẫn đoán đúng, nó đang nhìn nền.</li>
+  </ol>
+  <p class="wb-help">Lỗi số 3 là lỗi kinh điển của các bài báo CV y tế và cũng là loại phát hiện rất đáng viết. Nếu bạn tìm ra một tương quan giả trong dữ liệu của mình, đó là một đóng góp thật, không phải một thất bại.</p>
+</template>
+
+<template data-node="q-rec">
+  <p>Gợi ý là họ bài toán mà <b>độ chính xác gần như không có ý nghĩa</b>. Người dùng không xem một dự đoán — họ xem một <i>danh sách</i>, thường chỉ 5–10 mục đầu. Nên toàn bộ cách nghĩ phải chuyển từ “đoán đúng hay sai” sang “<b>thứ đúng có nằm trong top-K không, và ở vị trí nào</b>”.</p>
+
+  <h2>Ba cách tiếp cận, và điểm yếu của từng cách</h2>
+  <div class="wb-table-scroll"><table>
+    <thead><tr><th>Cách</th><th>Ý tưởng</th><th>Mạnh</th><th>Yếu</th></tr></thead>
+    <tbody>
+      <tr><td><b>Popularity</b></td><td>Gợi ý những mục phổ biến nhất, cho mọi người như nhau</td><td>Không cần mô hình; <b>rất khó đánh bại</b> trên nhiều tập dữ liệu</td><td>Không cá nhân hoá; khuếch đại thứ vốn đã phổ biến</td></tr>
+      <tr><td><b>Collaborative filtering</b></td><td>“Người giống bạn đã thích thứ này”. Học từ ma trận người dùng × mục</td><td>Tìm được sở thích bất ngờ mà nội dung không gợi ý</td><td><b>Khởi đầu lạnh</b> — người mới, mục mới thì không có gì để dựa vào</td></tr>
+      <tr><td><b>Content-based</b></td><td>“Thứ này giống thứ bạn đã thích”. Dựa trên thuộc tính/embedding của mục</td><td>Xử lý được mục mới; giải thích được cho người dùng</td><td>Dễ tạo bong bóng — chỉ gợi ý mãi một loại</td></tr>
+    </tbody>
+  </table></div>
+  <p>Hệ thống thật gần như luôn là <b>tổ hợp</b>: content-based cho người mới, collaborative khi đã đủ lịch sử, và popularity làm lưới an toàn. Nói được điều đó là đã hiểu bài toán hơn phần lớn người mới.</p>
+  <p><b>Popularity là baseline bắt buộc,</b> và bạn nên chuẩn bị tinh thần rằng nó khó thắng. Rất nhiều bài báo gợi ý bị phản biện chỉ vì không so với popularity.</p>
+
+  <h2>Metric xếp hạng: ba cái cần biết</h2>
+  <div class="wb-table-scroll"><table>
+    <thead><tr><th>Metric</th><th>Đo gì</th><th>Có quan tâm thứ tự không</th></tr></thead>
+    <tbody>
+      <tr><td><b>Recall@K</b></td><td>Trong những thứ người dùng thật sự thích, bao nhiêu phần trăm lọt vào top-K</td><td>Không — nằm ở vị trí 1 hay 10 đều tính như nhau</td></tr>
+      <tr><td><b>MAP@K</b></td><td>Precision trung bình dọc theo danh sách</td><td>Có</td></tr>
+      <tr><td><b>NDCG@K</b></td><td>Như MAP nhưng chiết khấu theo vị trí bằng hàm log, và nhận được mức độ liên quan nhiều bậc</td><td>Có — <b>mạnh nhất</b>, và là chuẩn báo cáo trong các bài báo xếp hạng</td></tr>
+    </tbody>
+  </table></div>
+  <p>Chọn <b>K</b> theo giao diện thật, không theo thói quen: nếu màn hình hiện 6 mục thì đo @6, đừng đo @20 vì thấy số đẹp hơn.</p>
+
+  <h2>Chia tập: leave-last-out theo thời gian</h2>
+  <p>Chia ngẫu nhiên các tương tác là sai theo đúng cách của forecasting: mô hình được thấy thứ người dùng mua tháng sau để đoán thứ họ mua tháng này.</p>
+  <div class="ds-code"><i># đúng: với mỗi người dùng, tương tác CUỐI CÙNG dùng để test</i>
+df = df.sort_values(["user_id", "ts"])
+test  = df.groupby("user_id").tail(1)
+train = df.drop(test.index)
+
+<i># chặt chẽ hơn: cắt theo một MỐC THỜI GIAN chung cho mọi người dùng</i>
+cutoff = df["ts"].quantile(0.8)
+train, test = df[df.ts &lt;= cutoff], df[df.ts &gt; cutoff]</div>
+  <p>Cách thứ hai chặt hơn và gần với thực tế hơn (bạn triển khai mô hình tại một thời điểm, không phải tại “tương tác cuối của mỗi người”). Nêu rõ bạn chọn cách nào và vì sao — đó là một quyết định thiết kế hội đồng sẽ hỏi.</p>
+
+  <h2>Vì sao offline tốt mà online vẫn tệ</h2>
+  <p>Đây là đặc điểm quan trọng nhất của họ bài toán này, và là chỗ nó chạm vào bài <b>A/B testing</b> ngay sau đây.</p>
+  <ul>
+    <li><b>Vòng phản hồi.</b> Dữ liệu lịch sử chỉ ghi lại những thứ <i>đã được hệ thống cũ gợi ý</i>. Bạn không bao giờ biết người dùng có thích thứ chưa từng được hiện ra hay không. Mô hình mới học từ dữ liệu đó sẽ bắt chước hệ thống cũ.</li>
+    <li><b>Vị trí gây thiên lệch.</b> Mục ở vị trí 1 được bấm nhiều hơn mục ở vị trí 10 <i>chỉ vì</i> nó ở vị trí 1. Không hiệu chỉnh thì bạn đang học lại thói quen của giao diện, không phải sở thích.</li>
+    <li><b>Chỉ số offline không phải chỉ số kinh doanh.</b> NDCG tăng 5% không đảm bảo doanh thu tăng, và có khi còn giảm nếu mô hình đẩy mạnh những thứ rẻ tiền dễ bấm.</li>
+  </ul>
+  <p>Kết luận thực dụng cho luận văn: <b>báo cáo offline, nhưng nói rõ giới hạn của nó và mô tả thí nghiệm online bạn <i>sẽ</i> chạy</b> (chia lưu lượng, chỉ số chính, cỡ mẫu cần). Mô tả được một thiết kế A/B đúng đắn có giá trị bằng việc chạy nó, và nó là phần rất ít luận văn viết được.</p>
+</template>
+
+<template data-node="q-causal">
+  <p>Toàn bộ trang này tới đây dạy bạn <b>dự đoán</b>. Bài này về câu hỏi khác hẳn, và là câu hỏi mà tổ chức thật sự trả tiền để trả lời: <b>“nếu tôi <i>làm</i> việc này, chuyện gì sẽ xảy ra?”</b></p>
+  <p>Khác biệt không phải là kỹ thuật, mà là logic. Mô hình dự đoán trả lời “trong thế giới như hiện tại, cái gì thường đi cùng cái gì”. Câu hỏi nhân quả hỏi về một thế giới <i>bị can thiệp</i> — và dữ liệu quan sát được không chứa thế giới đó.</p>
+
+  <h2>Ví dụ để thấy chỗ vỡ</h2>
+  <p>Một mô hình rất tốt học được: <b>khách hàng dùng tính năng X có tỉ lệ rời bỏ thấp hơn 40%.</b> Kết luận tự nhiên: đẩy mọi người dùng X để giảm rời bỏ. Kết luận đó có thể sai hoàn toàn, vì ba lý do khác nhau:</p>
+  <ul>
+    <li><b>Đảo chiều nhân quả:</b> không phải X giữ chân khách, mà khách <i>vốn đã</i> gắn bó thì mới đi tìm X.</li>
+    <li><b>Biến gây nhiễu (confounding):</b> khách hàng doanh nghiệp lớn vừa hay dùng X, vừa ít rời bỏ — vì họ là doanh nghiệp lớn. X không làm gì cả.</li>
+    <li><b>Thiên lệch chọn mẫu:</b> chỉ những khách đã vượt qua giai đoạn onboarding mới thấy X, mà nhóm đó vốn đã ít rời bỏ.</li>
+  </ul>
+  <p><b>Không có mô hình dự đoán nào — không LightGBM, không deep learning, không SHAP — phân biệt được ba khả năng này.</b> Chúng đều học tương quan, và tương quan giống hệt nhau trong cả ba trường hợp. Đây là giới hạn về loại câu hỏi, không phải giới hạn về sức mạnh mô hình. Hiểu điều này là hiểu vì sao SHAP <i>không</i> phải công cụ nhân quả, dù hình của nó rất dễ đọc theo hướng nhân quả.</p>
+
+  <h2>A/B test: vì sao ngẫu nhiên hoá giải được cả ba</h2>
+  <p>Gán ngẫu nhiên người dùng vào nhóm A hoặc B làm một việc rất mạnh: nó khiến hai nhóm <b>giống nhau về mọi thứ</b> — cả những thứ bạn đo được lẫn những thứ bạn không nghĩ tới. Còn lại đúng một khác biệt: nhóm nào được can thiệp. Nên chênh lệch kết quả <i>là</i> tác động của can thiệp.</p>
+  <h3>Bốn thứ phải chốt <b>trước</b> khi bật thí nghiệm</h3>
+  <ol>
+    <li><b>Một chỉ số chính duy nhất</b> (OEC). Không phải năm chỉ số rồi chọn cái nào đẹp — đó là p-hacking <button class="ds-math" data-math="pvalue">(p-value nói gì và không nói gì)</button>.</li>
+    <li><b>Cỡ mẫu và thời gian chạy</b>, tính từ mức chênh lệch nhỏ nhất đáng quan tâm. Tính trước, không tính sau.</li>
+    <li><b>Đơn vị ngẫu nhiên hoá:</b> theo người dùng, theo phiên, hay theo cửa hàng. Chọn sai gây rò rỉ giữa hai nhóm.</li>
+    <li><b>Chỉ số bảo vệ</b> (guardrail): những thứ không được phép xấu đi, kể cả khi chỉ số chính tốt lên.</li>
+  </ol>
+  <div class="ds-code"><b>from</b> statsmodels.stats.power <b>import</b> zt_ind_solve_power
+<b>from</b> statsmodels.stats.proportion <b>import</b> proportions_ztest
+<b>import</b> numpy <b>as</b> np
+
+<i># TRƯỚC khi chạy: cần bao nhiêu người mỗi nhóm?</i>
+p0, mde = 0.10, 0.01                      <i># tỉ lệ hiện tại 10%, muốn phát hiện +1 điểm %</i>
+h = 2*np.arcsin(np.sqrt(p0+mde)) - 2*np.arcsin(np.sqrt(p0))    <i># cỡ tác động Cohen's h</i>
+n = zt_ind_solve_power(effect_size=h, alpha=0.05, power=0.8)
+print(f"cần ~{n:,.0f} người MỖI nhóm")
+
+<i># SAU khi chạy: chênh lệch + khoảng tin cậy, đừng chỉ báo p-value</i>
+stat, pval = proportions_ztest([conv_b, conv_a], [n_b, n_a])</div>
+  <p>Con số cỡ mẫu thường gây sốc — và đó là thông tin hữu ích: nó cho bạn biết <b>có nên chạy thí nghiệm này không</b>. Nếu cần 200.000 người mà bạn chỉ có 5.000/tháng, thí nghiệm đó không khả thi và bạn cần một cách khác.</p>
+  <p>Luôn báo cáo <b>chênh lệch kèm khoảng tin cậy</b> <button class="ds-math" data-math="ci">(bootstrap &amp; khoảng tin cậy)</button>, không chỉ p-value. “+0,8 điểm phần trăm, KTC 95% [0,1; 1,5]” nói được nhiều hơn “p = 0,03”, và không thể bị đọc nhầm thành “chắc chắn tốt hơn”.</p>
+
+  <h2>Bốn lỗi làm hỏng một A/B test</h2>
+  <div class="wb-table-scroll"><table>
+    <thead><tr><th>Lỗi</th><th>Hậu quả</th><th>Cách chống</th></tr></thead>
+    <tbody>
+      <tr><td><b>Dừng sớm khi thấy đẹp</b> (peeking)</td><td>Tỉ lệ dương tính giả tăng vọt — nhìn đủ nhiều lần thì kiểu gì cũng có lúc p &lt; 0,05</td><td>Chốt thời điểm dừng từ đầu; hoặc dùng phương pháp tuần tự có hiệu chỉnh</td></tr>
+      <tr><td><b>Thử nhiều chỉ số / nhiều phân khúc</b></td><td>Cùng vấn đề: 20 phép kiểm ở mức 5% thì trung bình có 1 cái "ý nghĩa" do ngẫu nhiên</td><td>Một chỉ số chính; phân tích theo phân khúc chỉ để <i>sinh giả thuyết</i>, không để kết luận</td></tr>
+      <tr><td><b>Rò rỉ giữa hai nhóm</b> (interference)</td><td>Người nhóm A bị ảnh hưởng bởi nhóm B (mạng xã hội, thị trường hai chiều) → tác động bị pha loãng</td><td>Ngẫu nhiên hoá theo cụm: theo thành phố, theo nhóm bạn bè</td></tr>
+      <tr><td><b>Hiệu ứng mới lạ</b></td><td>Chỉ số tăng vọt tuần đầu chỉ vì giao diện lạ, rồi tụt về cũ</td><td>Chạy đủ dài để qua giai đoạn đó; nhìn kết quả theo tuần chứ không chỉ tổng</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Khi không thể chạy thí nghiệm</h2>
+  <p>Rất nhiều câu hỏi quan trọng không cho phép ngẫu nhiên hoá — vì lý do đạo đức, chi phí, hoặc vì sự việc đã xảy ra rồi. Lúc đó có một nhóm phương pháp <b>quasi-experimental</b>, và với luận văn thì <i>định vị được chúng</i> là đủ:</p>
+  <div class="wb-table-scroll"><table>
+    <thead><tr><th>Phương pháp</th><th>Dùng khi</th><th>Giả định cốt lõi</th></tr></thead>
+    <tbody>
+      <tr><td><b>Difference-in-differences</b></td><td>Một nhóm bị tác động tại một thời điểm, nhóm khác thì không</td><td>Nếu không có can thiệp, hai nhóm đã đi <b>song song</b> — kiểm bằng cách vẽ giai đoạn trước</td></tr>
+      <tr><td><b>Regression discontinuity</b></td><td>Can thiệp được quyết định bởi một ngưỡng (điểm số, tuổi, thu nhập)</td><td>Ngay sát hai bên ngưỡng, các đơn vị gần như giống nhau</td></tr>
+      <tr><td><b>Propensity score matching</b></td><td>Có nhiều biến quan sát được và muốn ghép cặp nhóm tương tự</td><td><b>Không còn biến gây nhiễu nào chưa đo được</b> — giả định mạnh và không kiểm chứng được</td></tr>
+      <tr><td><b>Biến công cụ</b> (IV)</td><td>Có một biến ảnh hưởng tới can thiệp nhưng không ảnh hưởng trực tiếp tới kết quả</td><td>Tìm được một biến công cụ hợp lệ là phần khó nhất</td></tr>
+    </tbody>
+  </table></div>
+  <p>Điểm chung: mỗi phương pháp mua được kết luận nhân quả bằng cách <b>đổi lấy một giả định không kiểm chứng trực tiếp được</b>. Nêu rõ giả định đó và cách bạn kiểm tra nó gián tiếp — chính là phần làm nên chất lượng của một chương phương pháp.</p>
+
+  <div class="wb-alert wb-alert--info">
+    <span class="wb-alert__icon">i</span>
+    <div class="wb-alert__body"><p class="wb-alert__title">Câu này rất hay được hỏi trong buổi bảo vệ</p>
+      <p class="wb-alert__msg">“Mô hình của em nói feature này quan trọng nhất. Vậy tác động vào nó thì kết quả có cải thiện không?” — Câu trả lời đúng là <b>không suy ra được</b>: mô hình học tương quan trong dữ liệu quan sát, còn câu hỏi đang hỏi về can thiệp. Rồi nói tiếp cách kiểm chứng: một A/B test với thiết kế cụ thể, hoặc một phương pháp quasi-experimental với giả định nêu rõ. Trả lời như vậy mạnh hơn nhiều so với gật đầu.</p></div>
+  </div>
+</template>
+
+<template data-node="q-analytics">
+  <p>Không phải câu hỏi nào cũng cần mô hình. Phần lớn giá trị mà một data team tạo ra hằng ngày đến từ việc <b>trả lời câu hỏi bằng dữ liệu đã có</b> — không train gì cả. Bài này về phần đó, và về ranh giới giữa ba nghề hay bị gộp làm một.</p>
+
+  <h2>Ba nghề, ba loại câu hỏi</h2>
+  <div class="wb-table-scroll"><table>
+    <thead><tr><th></th><th>Analytics</th><th>Predictive modeling</th><th>Causal inference</th></tr></thead>
+    <tbody>
+      <tr><td>Câu hỏi</td><td>“Chuyện gì <b>đã</b> xảy ra, và ở đâu?”</td><td>“Chuyện gì <b>sẽ</b> xảy ra?”</td><td>“Nếu tôi <b>làm</b> X thì sao?”</td></tr>
+      <tr><td>Công cụ chính</td><td>SQL, dashboard, biểu đồ</td><td>scikit-learn, LightGBM</td><td>A/B test, quasi-experiment</td></tr>
+      <tr><td>Đầu ra</td><td>Một con số, một xu hướng, một phân khúc</td><td>Một điểm số cho từng dòng</td><td>Một ước lượng tác động + khoảng tin cậy</td></tr>
+      <tr><td>Sai lầm hay gặp</td><td>Đọc tương quan thành nguyên nhân</td><td>Dùng cho câu hỏi nhân quả</td><td>Bỏ qua chi phí thí nghiệm</td></tr>
+    </tbody>
+  </table></div>
+  <p>Sai lầm tốn kém nhất của người mới là <b>mang mô hình dự đoán tới một câu hỏi analytics</b>. “Vì sao doanh số tháng này giảm?” không cần mô hình — nó cần một truy vấn tách doanh số theo kênh, theo vùng, theo nhóm khách, cho tới khi tìm ra chỗ giảm.</p>
+
+  <h2>Ba phân tích chiếm phần lớn công việc thật</h2>
+  <h3>1 · Cohort — nhóm theo thời điểm bắt đầu</h3>
+  <p>Câu hỏi: “khách hàng đăng ký tháng 1 có ở lại lâu hơn khách đăng ký tháng 6 không?” Không nhóm theo cohort thì mọi thay đổi về tỉ lệ giữ chân đều lẫn với thay đổi về cơ cấu khách mới.</p>
+  <div class="ds-code"><b>WITH</b> first_order <b>AS</b> (
+  <b>SELECT</b> user_id, DATE_TRUNC('month', <b>MIN</b>(order_ts)) <b>AS</b> cohort
+  <b>FROM</b> orders <b>GROUP BY</b> user_id
+)
+<b>SELECT</b> f.cohort,
+       DATE_DIFF('month', f.cohort, DATE_TRUNC('month', o.order_ts)) <b>AS</b> month_n,
+       <b>COUNT</b>(<b>DISTINCT</b> o.user_id) <b>AS</b> active_users
+<b>FROM</b> orders o <b>JOIN</b> first_order f <b>USING</b> (user_id)
+<b>GROUP BY</b> 1, 2 <b>ORDER BY</b> 1, 2;</div>
+  <p>Kết quả xoay thành bảng cohort — hàng là tháng đăng ký, cột là số tháng kể từ đó. Đọc theo hàng thấy vòng đời một nhóm; đọc theo cột so sánh các nhóm ở cùng độ tuổi. Đây là một trong những bảng có mật độ thông tin cao nhất trong analytics.</p>
+
+  <h3>2 · Funnel — rơi rụng qua từng bước</h3>
+  <p>Câu hỏi: “trong 100 người vào trang, bao nhiêu người thanh toán, và rụng nhiều nhất ở bước nào?” Hai chi tiết hay làm sai:</p>
+  <ul>
+    <li><b>Phải theo đúng thứ tự và trong một cửa sổ thời gian.</b> Người xem sản phẩm hôm nay và mua tháng sau không nên tính là cùng một phễu.</li>
+    <li><b>Đếm theo người, không theo sự kiện.</b> Một người xem 8 lần không phải 8 người.</li>
+  </ul>
+
+  <h3>3 · Segmentation — cắt theo nhóm</h3>
+  <p>Câu hỏi: “con số tổng đang giấu chuyện gì?” Một tỉ lệ chuyển đổi đứng yên có thể là nhóm di động tăng bù cho nhóm máy tính giảm. <b>Nghịch lý Simpson</b> — xu hướng đúng trong mọi nhóm con nhưng đảo chiều khi gộp lại — là lý do bước này không bỏ được. Cách làm rẻ nhất là RFM (gần đây / tần suất / giá trị) trước khi nghĩ tới phân cụm.</p>
+
+  <h2>KPI: hai câu hỏi trước khi thêm một chỉ số vào dashboard</h2>
+  <ul>
+    <li><b>Ai sẽ làm gì khác đi khi con số này thay đổi?</b> Không trả lời được thì đó không phải KPI, đó là trang trí.</li>
+    <li><b>Nó bị lách được bằng cách nào?</b> Mọi chỉ số bị đặt làm mục tiêu đều sớm bị tối ưu theo cách bạn không muốn — đo “số ticket đã đóng” thì ticket sẽ được đóng nhanh mà không giải quyết. Cặp đôi bảo vệ (số ticket đóng <i>và</i> tỉ lệ mở lại) là cách chống thông dụng nhất.</li>
+  </ul>
+  <p>Và một chỉ số không có <b>ngữ cảnh</b> thì không đọc được. Mọi con số trên dashboard nên đi kèm ít nhất một trong ba: so với kỳ trước, so với mục tiêu, hoặc so với dải dao động bình thường.</p>
+
+  <h2>Dashboard: ba quy tắc và một cảnh báo</h2>
+  <ul>
+    <li><b>Một dashboard trả lời một câu hỏi.</b> Dashboard “tổng quan mọi thứ” là dashboard không ai mở tới lần thứ ba.</li>
+    <li><b>Định nghĩa chỉ số nằm trong git, không nằm trong công cụ BI.</b> Khi “khách hàng hoạt động” được định nghĩa lại trong Tableau mà không ai biết, mọi con số lịch sử ngầm đổi nghĩa.</li>
+    <li><b>Số tuyệt đối đi kèm số tương đối.</b> “Tăng 300%” trên nền 2 ca là 6 ca.</li>
+  </ul>
+  <p class="wb-help">Với luận văn: phần analytics thường thuộc chương mô tả dữ liệu, không phải chương đóng góp. Làm nó bằng SQL/pandas + matplotlib rồi xuất hình là đủ — không cần dựng Tableau/Power BI, và dựng lên cũng không cộng điểm.</p>
+</template>
+
+<template data-node="q-mini">
+  <p>Đọc tám bài trên cho bạn <b>bản đồ</b>. Bài này biến bản đồ thành khả năng thật, bằng cách buộc bạn tự tay đi qua các họ bài toán khác.</p>
+  <p>Nguyên tắc quan trọng nhất: <b>mini-project không cần production hoá.</b> Không API, không Docker, không tuning. Mỗi cái là <i>một</i> notebook, làm đúng năm việc — và việc thứ năm mới là việc chính.</p>
+
+  <div class="wb-alert wb-alert--info wb-alert--plain"><div class="wb-alert__body">
+    <p class="wb-alert__title">Bắt buộc làm thật 2 trong 6 — phần còn lại là phác thảo</p>
+    <p class="wb-alert__msg">Sáu đề bên dưới là một <b>thực đơn</b>, không phải sáu bài tập bắt buộc. Deliverable của bài này (và của Mốc 2 tuần 7) là <b>hai</b> mini-project làm tới cùng: chọn hai họ <i>khác nhất</i> so với fraud (gợi ý: <b>Forecasting</b> + một trong <b>NLP / Gợi ý / Nhân quả</b>). Bốn cái còn lại chỉ cần bảng “giữ gì / đổi gì” ở mức phác thảo — chúng để bạn tra khi gặp họ đó thật, không phải để nộp. Ngân sách thời lượng của bài (5 giờ) đã tính cho <b>hai</b> notebook làm thật; đừng nhân cho sáu.</p>
+  </div></div>
+
+  <h2>Năm việc của một mini-project</h2>
+  <ol>
+    <li>Tải dữ liệu, định vị bằng <b>tám câu hỏi</b> ở bài <b>Bản đồ các họ bài toán</b>.</li>
+    <li>Chia tập <b>đúng kiểu của họ đó</b>, và viết một <code>assert</code> chứng minh nó đúng.</li>
+    <li>Chạy <b>baseline bắt buộc</b> của họ đó. Ghi con số.</li>
+    <li>Chạy <b>một</b> mô hình thật. Ghi con số. Dừng lại — đừng tune.</li>
+    <li>Viết <b>bảng “giữ gì / đổi gì”</b> so với dự án gian lận. <b>Đây là sản phẩm thật của mini-project.</b></li>
+  </ol>
+  <p>Thời gian mục tiêu cho <b>một</b> mini-project làm thật: <b>khoảng 2–2,5 giờ</b> nếu bạn bám đúng năm bước và <i>không</i> tune — bạn đã đi qua toàn bộ vòng đời ở dự án fraud, nên phần lặp lại nhanh hơn nhiều so với lần đầu. Nếu một cái ngốn quá một buổi, gần như chắc chắn bạn đang tối ưu thay vì đang học chuyển giao — dừng và viết bảng bước 5. Hai cái × ~2,5 giờ là ngân sách 5 giờ của bài.</p>
+
+  <h2>Sáu dự án (thực đơn — chọn 2 làm thật)</h2>
+  <div class="wb-table-scroll"><table>
+    <thead><tr><th>#</th><th>Họ</th><th>Đề bài</th><th>Nguồn dữ liệu gợi ý</th><th>Điều nó dạy mà fraud không dạy</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td><b>Forecasting</b></td><td>Dự báo tiêu thụ điện / lượt truy cập theo ngày, tầm 28 ngày</td><td>Chuỗi tiêu thụ điện theo giờ, hoặc lượt xem Wikipedia — cả hai có bản công khai tải trực tiếp bằng URL</td><td>Backtest walk-forward, baseline seasonal-naive, MASE, và việc cây <b>không ngoại suy được xu hướng</b></td></tr>
+      <tr><td>2</td><td><b>Hồi quy</b></td><td>Dự đoán giá nhà hoặc thời gian giao hàng</td><td><code>fetch_california_housing()</code> có sẵn trong scikit-learn — không cần tải gì</td><td>MAE vs RMSE vs MAPE, phân tích phần dư, và <b>khoảng dự đoán</b> kèm kiểm tra độ phủ</td></tr>
+      <tr><td>3</td><td><b>Multiclass / CV</b></td><td>Phân loại ảnh nhiều lớp bằng transfer learning</td><td>Một bộ ảnh nhỏ nhiều lớp (hoa, thức ăn, chữ số) tải qua <code>torchvision.datasets</code></td><td>macro vs weighted F1, ma trận nhầm lẫn chuẩn hoá, linear probe làm baseline</td></tr>
+      <tr><td>4</td><td><b>NLP</b></td><td>Phân loại cảm xúc hoặc phân loại ticket hỗ trợ</td><td>Một bộ đánh giá sản phẩm hoặc tin tức có nhãn trên Kaggle/Hugging Face</td><td>TF-IDF làm mốc bắt buộc, khử trùng lặp trước khi chia, đọc tay 50 ca sai</td></tr>
+      <tr><td>5</td><td><b>Gợi ý</b></td><td>Gợi ý top-10 mục cho mỗi người dùng</td><td>Một bộ đánh giá phim hoặc lịch sử mua hàng công khai</td><td>Popularity rất khó thắng, Recall@K/NDCG@K, chia leave-last-out theo thời gian</td></tr>
+      <tr><td>6</td><td><b>Nhân quả</b></td><td>Phân tích một A/B test: có tác động thật không, lớn cỡ nào</td><td><b>Tự sinh</b> bằng <code>numpy</code> — xem code bên dưới. Tốt hơn dữ liệu thật vì bạn biết đáp án</td><td>Cỡ mẫu, khoảng tin cậy, và bốn cách làm hỏng một thí nghiệm</td></tr>
+    </tbody>
+  </table></div>
+  <p class="wb-help">Cố ý không dán đường dẫn cụ thể: liên kết dataset đổi và chết thường xuyên. Cách tìm ổn định là gõ tên bộ dữ liệu vào ô tìm kiếm của Kaggle Datasets hoặc Hugging Face Datasets, rồi <b>kiểm ba thứ trước khi tải</b>: giấy phép sử dụng, kích thước, và ngày cập nhật gần nhất.</p>
+
+  <h2>Tiêu chí chọn dataset — dùng được cho mọi dự án sau này</h2>
+  <ul>
+    <li><b>Công khai và không cần xin quyền.</b> Chờ duyệt truy cập là cách phổ biến nhất để một dự án cuối tuần chết yểu.</li>
+    <li><b>Nhỏ hoặc vừa</b> — dưới vài trăm MB để vừa RAM Colab/Kaggle mà không phải xử lý theo lô.</li>
+    <li><b>Tải được bằng một dòng</b> trong notebook (URL trực tiếp, <code>kagglehub</code>, hoặc có sẵn trong thư viện).</li>
+    <li><b>Có giấy phép rõ ràng</b> — bắt buộc nếu định đưa vào luận văn. Ghi giấy phép vào <code>data/README.md</code>.</li>
+    <li><b>Không cần GPU mạnh.</b> Với ảnh, chọn bộ có ảnh nhỏ hoặc ít lớp.</li>
+    <li><b>Phù hợp bài học, không phải nổi tiếng.</b> Titanic nổi tiếng nhưng không dạy được gì về rò rỉ theo thời gian; MNIST nổi tiếng nhưng đã bão hoà tới mức mọi mô hình đều &gt;99%, nên nó không phân biệt được gì.</li>
+  </ul>
+
+  <h2>Dữ liệu A/B test tự sinh — cho mini-project 6</h2>
+  <p>Với bài nhân quả, dữ liệu tự sinh <b>tốt hơn</b> dữ liệu thật, vì bạn biết trước sự thật và kiểm chứng được phương pháp của mình.</p>
+  <div class="ds-code"><b>import</b> numpy <b>as</b> np, pandas <b>as</b> pd
+rng = np.random.default_rng(7)
+n = 20_000
+
+<i># biến gây nhiễu: khách hàng "nặng ký" vừa hay được thấy tính năng mới, vừa hay mua</i>
+heavy = rng.binomial(1, 0.3, n)
+
+<i># (a) DỮ LIỆU QUAN SÁT — nhóm điều trị KHÔNG ngẫu nhiên</i>
+treat_obs = rng.binomial(1, 0.2 + 0.5*heavy)
+<i># (b) THÍ NGHIỆM — gán ngẫu nhiên, độc lập với mọi thứ</i>
+treat_rct = rng.binomial(1, 0.5, n)
+
+TRUE_EFFECT = 0.02        <i># sự thật: tính năng làm tăng 2 điểm phần trăm</i>
+conv = <b>lambda</b> t: rng.binomial(1, 0.10 + 0.12*heavy + TRUE_EFFECT*t)
+
+df = pd.DataFrame({"heavy": heavy,
+                   "t_obs": treat_obs, "y_obs": conv(treat_obs),
+                   "t_rct": treat_rct, "y_rct": conv(treat_rct)})
+
+<i># so hai cách ước lượng với sự thật 0,02</i>
+naive = df.groupby("t_obs").y_obs.mean().diff().iloc[-1]
+rct   = df.groupby("t_rct").y_rct.mean().diff().iloc[-1]
+print(f"quan sát thô: {naive:.4f}   thí nghiệm: {rct:.4f}   sự thật: {TRUE_EFFECT}")</div>
+  <p>Chạy đoạn này và nhìn: ước lượng từ dữ liệu quan sát lệch <b>gấp nhiều lần</b> tác động thật, còn ước lượng từ thí nghiệm ngẫu nhiên thì bám sát. Cùng dữ liệu, cùng công thức, khác nhau đúng một chỗ — cách nhóm điều trị được gán. Sau đó thử tự sửa ước lượng quan sát bằng cách phân tầng theo <code>heavy</code> và xem nó về gần sự thật tới đâu.</p>
+  <p>Đây là bài tập có tỉ lệ hiểu-biết trên thời gian cao nhất trong cả chặng: mười lăm phút, và bạn thấy tận mắt vì sao “mô hình rất chính xác” không đồng nghĩa với “kết luận đúng”.</p>
+
+  <h2>Bảng “giữ gì / đổi gì” — mẫu để chép</h2>
+  <p>Mỗi mini-project kết thúc bằng một bảng như thế này trong <code>README</code> của notebook. <b>Hai bảng hoàn chỉnh</b> từ hai notebook đã chạy, cộng bốn bảng phác thảo, là bằng chứng đúng với khối lượng giờ mà trang đã cấp — và là thứ đáng nói nhất trong một buổi phỏng vấn.</p>
+  <div class="wb-table-scroll"><table>
+    <thead><tr><th>Chiều</th><th>Dự án gian lận</th><th>Mini-project này</th><th>Vì sao đổi</th></tr></thead>
+    <tbody>
+      <tr><td>Họ bài toán</td><td>Phân loại nhị phân lệch nhãn</td><td>…</td><td>…</td></tr>
+      <tr><td>Chia tập</td><td>Theo thời gian, 70/15/15</td><td>…</td><td>…</td></tr>
+      <tr><td>Baseline</td><td>Đoán theo tỉ lệ nền + luật thủ công</td><td>…</td><td>…</td></tr>
+      <tr><td>Metric chính</td><td>PR-AUC + chi phí quy ra tiền</td><td>…</td><td>…</td></tr>
+      <tr><td>Rủi ro rò rỉ chính</td><td>Feature cửa sổ chứa dòng hiện tại</td><td>…</td><td>…</td></tr>
+      <tr><td>Có cần deep learning</td><td>Không</td><td>…</td><td>…</td></tr>
+      <tr><td>Sai lầm đặc trưng</td><td>Báo cáo accuracy; để ngưỡng 0,5</td><td>…</td><td>…</td></tr>
+    </tbody>
+  </table></div>
+</template>
+
+<!-- ============================================================
      CHẶNG 9 — LUẬN VĂN / PAPER
      ============================================================ -->
 
@@ -9664,6 +9521,157 @@ plt.savefig("reports/figures/pr_curve.pdf")   <i># PDF = vector, không vỡ khi
      CHẶNG 10 — TRA CỨU
      ============================================================ -->
 
+<template data-node="r-stack">
+  <p>Bài này trả lời đúng một câu: <b>ở mỗi bước của quy trình 10 bước, tôi mở công cụ nào ra, gõ cái gì, và kết thúc bước đó tôi có file gì trong tay?</b></p>
+  <p>Đọc nó như một sổ tay tra cứu. Mỗi bước có bốn thứ: <b>công cụ</b>, <b>lệnh đầu tiên</b> để bạn khỏi ngồi nhìn màn hình trắng, <b>hiện vật</b> phải có khi xong, và <b>cái bẫy</b> của bước đó.</p>
+
+  <h2>Công cụ dùng xuyên suốt cả 10 bước</h2>
+  <p>Cột “mở ở đâu” viết theo đường đi <b>cloud-first</b>. Nếu bạn làm trên máy, đọc mọi dòng thành “trình soạn thảo và terminal trên máy bạn” — quy trình không đổi.</p>
+  <div class="wb-table-scroll"><table>
+    <tr><th>Công cụ</th><th>Vai trò</th><th>Mở ở đâu</th><th>Mở khi nào</th></tr>
+    <tr><td><b>Google Colab</b></td><td>Nơi bạn <i>suy nghĩ</i>, nhìn dữ liệu, và mượn GPU</td><td>Tab trình duyệt</td><td>Bước 3–8, mỗi ngày</td></tr>
+    <tr><td><b>Trình soạn thảo</b></td><td>Viết file <code>.py</code> trong <code>src/</code></td><td>github.dev (sửa nhanh) · Codespaces (sửa kèm chạy) · VS Code trên máy</td><td>Khi một đoạn code đã ổn định</td></tr>
+    <tr><td><b>terminal</b></td><td>Chạy script, chạy <code>pytest</code>, dựng Docker</td><td>Codespaces · hoặc terminal + <code>venv</code> trên máy</td><td>Luôn mở một cửa sổ</td></tr>
+    <tr><td><b>git</b></td><td>Lưu mốc, và <b>ghi con số vào commit message</b></td><td>Ở bất cứ đâu trong ba chỗ trên</td><td>Sau mỗi kết quả có ý nghĩa</td></tr>
+    <tr><td><b>AI coding assistant</b></td><td>Sinh code nháp, giải thích lỗi, viết test</td><td>Tab trình duyệt hoặc trong trình soạn thảo</td><td>Liên tục — với kỷ luật ở bài <b>Làm việc với AI</b></td></tr>
+  </table></div>
+
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-run">Chỗ chạy code &amp; GPU</button></p>
+
+  <h2>Bước 1 · Đóng khung bài toán</h2>
+  <table>
+    <tr><td style="width:110px"><b>Công cụ</b></td><td>Một file văn bản. Không phải notebook.</td></tr>
+    <tr><td><b>Gõ gì</b></td><td><code>touch docs/problem-statement.md</code> rồi trả lời sáu câu ở bài <b>Đóng khung bài toán</b></td></tr>
+    <tr><td><b>Xong thì có</b></td><td><code>docs/problem-statement.md</code> — sẽ thành chương 1 luận văn gần như nguyên văn</td></tr>
+    <tr><td><b>Bẫy</b></td><td>Mở notebook trước khi viết file này. Bạn sẽ code ba ngày rồi mới phát hiện mình đang trả lời sai câu hỏi.</td></tr>
+  </table>
+
+  <h2>Bước 2 · Lấy dữ liệu</h2>
+  <table>
+    <tr><td style="width:110px"><b>Công cụ</b></td><td><b>SQL</b> (dữ liệu công ty) hoặc <b>Kaggle CLI</b> (dữ liệu công khai). Tập SQL bằng <b>DuckDB</b>.</td></tr>
+    <tr><td><b>Gõ gì</b></td><td>Xem bên dưới</td></tr>
+    <tr><td><b>Xong thì có</b></td><td><code>data/raw/*.csv</code> (từ đây <b>chỉ đọc</b>) và <code>sql/extract.sql</code> nếu lấy từ CSDL</td></tr>
+    <tr><td><b>Bẫy</b></td><td>Sửa tay một ô trong <code>data/raw/</code>. Ngày bạn làm thế là ngày kết quả của bạn hết tái lập được.</td></tr>
+  </table>
+  <div class="ds-code">pip install kaggle duckdb
+kaggle datasets download -d mlg-ulb/creditcardfraud -p data/raw --unzip
+
+<i># hoặc từ CSDL công ty — lưu câu truy vấn vào sql/extract.sql</i>
+psql "$DB_URL" -f sql/extract.sql -o data/raw/tx.csv</div>
+
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-query">Cách lấy dữ liệu ra</button><button class="ds-aside" data-aside="cmp-storage">Chỗ để dữ liệu</button></p>
+
+  <h2>Bước 3 · EDA</h2>
+  <table>
+    <tr><td style="width:110px"><b>Công cụ</b></td><td><b>Jupyter</b> + <b>pandas</b> + <b>matplotlib/seaborn</b></td></tr>
+    <tr><td><b>Gõ gì</b></td><td><code>jupyter lab</code>, tạo <code>notebooks/01-eda.ipynb</code>, chạy danh sách 10 điểm ở bài <b>EDA</b></td></tr>
+    <tr><td><b>Xong thì có</b></td><td>Notebook đã chạy + 3–4 hình trong <code>reports/figures/</code>, trong đó có <b>tỉ lệ gian lận theo giờ</b></td></tr>
+    <tr><td><b>Bẫy</b></td><td>EDA trên toàn bộ dữ liệu <i>trước khi</i> chia tập — não bạn trở thành đường rò rỉ, và không công cụ nào phát hiện được.</td></tr>
+  </table>
+
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-eda">Công cụ nhìn dữ liệu</button></p>
+
+  <h2>Bước 4 · Làm sạch</h2>
+  <table>
+    <tr><td style="width:110px"><b>Công cụ</b></td><td><b>pandas</b> cho phép sửa tuyệt đối · <b><code>sklearn.impute</code></b> cho phép học tham số</td></tr>
+    <tr><td><b>Gõ gì</b></td><td><code>pd.to_datetime(..., errors="coerce")</code>, <code>drop_duplicates</code>, <code>.str.strip().str.lower()</code></td></tr>
+    <tr><td><b>Xong thì có</b></td><td><code>data/processed/</code> — sinh ra <b>hoàn toàn bằng code</b> từ <code>raw/</code></td></tr>
+    <tr><td><b>Bẫy</b></td><td>Điền giá trị thiếu bằng <code>SimpleImputer</code> <i>ngoài</i> Pipeline. Nó học trung vị từ cả tập test → rò rỉ.</td></tr>
+  </table>
+
+  <h2>Bước 5 · Feature engineering ← chỗ sin/cos nằm</h2>
+  <table>
+    <tr><td style="width:110px"><b>Công cụ</b></td><td><b>pandas + numpy</b> viết trong <code>src/features.py</code>, gắn vào Pipeline bằng <b><code>FunctionTransformer</code></b>. Feature cần lịch sử: <b>pandas <code>rolling</code></b> hoặc <b>window function SQL</b>.</td></tr>
+    <tr><td><b>Gõ gì</b></td><td>Xem bên dưới</td></tr>
+    <tr><td><b>Xong thì có</b></td><td><code>src/features.py</code> + <code>src/history.py</code>, và một bảng ghi mỗi nhóm feature làm điểm tăng bao nhiêu</td></tr>
+    <tr><td><b>Bẫy</b></td><td>Viết logic feature lần thứ hai trong <code>serve.py</code>. Hai bản sẽ lệch nhau, và <b>không có gì báo lỗi</b>.</td></tr>
+  </table>
+  <div class="ds-code"><i># src/features.py — không học tham số, chạy được với MỘT dòng</i>
+df["hour_sin"] = np.sin(2*np.pi*df["hour"]/24)
+df["hour_cos"] = np.cos(2*np.pi*df["hour"]/24)
+
+<i># src/history.py — cần nhiều dòng, chạy TRƯỚC khi vào Pipeline</i>
+g.rolling("1h", closed="left").count()</div>
+
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-dataframe">pandas · polars · SQL</button></p>
+
+  <h2>Bước 6 · Chia tập</h2>
+  <table>
+    <tr><td style="width:110px"><b>Công cụ</b></td><td><b><code>sklearn.model_selection</code></b> — nhưng với dữ liệu có thời gian thì chỉ cần <code>iloc</code></td></tr>
+    <tr><td><b>Gõ gì</b></td><td><code>df.sort_values("ts")</code> rồi cắt 70/15/15, sau đó <b>hai dòng <code>assert</code></b></td></tr>
+    <tr><td><b>Xong thì có</b></td><td>Hàm <code>time_split()</code> trong <code>src/train.py</code> + dòng in khoảng thời gian từng tập (đưa vào luận văn)</td></tr>
+    <tr><td><b>Bẫy</b></td><td><code>train_test_split</code> mặc định là ngẫu nhiên. Với dữ liệu giao dịch, nó cho mô hình nhìn thấy tương lai.</td></tr>
+  </table>
+
+  <h2>Bước 7 · Huấn luyện &amp; tinh chỉnh</h2>
+  <table>
+    <tr><td style="width:110px"><b>Công cụ</b></td><td><b>LightGBM</b> (mô hình chính) · <b>Optuna</b> (dò tham số) · <b>MLflow</b> (ghi lại) · <b>joblib</b> (lưu)</td></tr>
+    <tr><td><b>Gõ gì</b></td><td><code>python -m src.train</code></td></tr>
+    <tr><td><b>Xong thì có</b></td><td><code>models/fraud_v1.joblib</code> (chứa <b>cả</b> feature engineering) + <code>models/metrics.json</code> + các lần chạy trong MLflow</td></tr>
+    <tr><td><b>Bẫy</b></td><td>Tune trước khi feature xong. Bậc độ lớn thường gặp: feature tốt cải thiện nhiều hơn hẳn tuning (ví dụ +0,10 so với +0,01 — con số minh hoạ, không phải quy luật).</td></tr>
+  </table>
+  <div class="ds-code">python -m src.train          <i># in PR-AUC, lưu model</i>
+mlflow ui                    <i># mở localhost:5000 xem lại mọi lần chạy</i></div>
+
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-gbdt">Thư viện boosting</button><button class="ds-aside" data-aside="cmp-tune">Cách tinh chỉnh</button><button class="ds-aside" data-aside="cmp-track">Cách ghi thí nghiệm</button></p>
+
+  <h2>Bước 8 · Đánh giá &amp; chọn ngưỡng</h2>
+  <table>
+    <tr><td style="width:110px"><b>Công cụ</b></td><td><b><code>sklearn.metrics</code></b> · <b>SHAP</b> (giải thích) · <b>numpy</b> (bootstrap) · <b>statsmodels</b> (McNemar)</td></tr>
+    <tr><td><b>Gõ gì</b></td><td><code>average_precision_score</code>, quét ngưỡng bằng <code>np.linspace</code>, <code>shap.plots.beeswarm</code></td></tr>
+    <tr><td><b>Xong thì có</b></td><td>Bảng kết quả có <b>khoảng tin cậy</b> và <b>cột quy ra tiền</b>, một ngưỡng đã chốt, và 3 hình cho luận văn</td></tr>
+    <tr><td><b>Bẫy</b></td><td>Báo cáo accuracy; để ngưỡng 0,5; chọn ngưỡng trên tập test.</td></tr>
+  </table>
+
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-explain">Công cụ giải thích mô hình</button></p>
+
+  <h2>Bước 9 · Đưa lên chạy thật</h2>
+  <table>
+    <tr><td style="width:110px"><b>Công cụ</b></td><td><b>FastAPI</b> + <b>uvicorn</b> (API) · <b>Docker</b> đóng gói, dựng trong <b>Codespaces</b> nếu máy yếu · <b>Streamlit</b> + Streamlit Community Cloud (demo cho hội đồng)</td></tr>
+    <tr><td><b>Gõ gì</b></td><td>Xem bên dưới</td></tr>
+    <tr><td><b>Xong thì có</b></td><td><code>docker build</code> chạy thành công (giữ log) + trang <code>/docs</code> bấm thử được + một app Streamlit có đường dẫn công khai</td></tr>
+    <tr><td><b>Bẫy</b></td><td>Gọi <code>joblib.load</code> trong mỗi request — mất 200ms, phá ngân sách 50ms. Nạp một lần lúc khởi động.</td></tr>
+  </table>
+  <div class="ds-code"><i># chạy ở đâu cũng được: máy bạn, hoặc terminal trong Codespaces</i>
+uvicorn src.serve:app --reload --port 8000    <i># rồi mở /docs</i>
+docker build -t fraud-api . &amp;&amp; docker run -p 8000:8000 fraud-api
+streamlit run app.py                          <i># bản demo kéo thanh trượt</i></div>
+  <p class="wb-help">Máy yếu thì chạy đúng ba lệnh trên trong một GitHub Codespace — nó có Docker sẵn và tự chuyển tiếp cổng ra một URL bấm được. Nhớ tắt Codespace khi xong.</p>
+
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-serve">Đóng gói &amp; nơi đặt</button></p>
+
+  <h2>Bước 10 · Giám sát &amp; huấn luyện lại</h2>
+  <table>
+    <tr><td style="width:110px"><b>Công cụ</b></td><td><b>numpy</b> (hàm PSI ~6 dòng) · <b>logging</b> · <b>cron</b> — không cần Airflow</td></tr>
+    <tr><td><b>Gõ gì</b></td><td>Hàm <code>psi()</code> ở bài <b>Giám sát</b>, chạy hằng tuần trên log</td></tr>
+    <tr><td><b>Xong thì có</b></td><td>Bảng theo dõi 5 nhóm chỉ số + một mục trong luận văn mà rất ít luận văn có</td></tr>
+    <tr><td><b>Bẫy</b></td><td>Chỉ log điểm số mà không log <b>feature đã tính</b>. Sáu tháng sau không ai debug được vì sao model quyết định vậy.</td></tr>
+  </table>
+
+  <h2>Ba công cụ cho phần viết</h2>
+  <table>
+    <tr><th>Công cụ</th><th>Thay cho</th><th>Vì sao đáng đổi</th></tr>
+    <tr><td><b>Overleaf</b> (LaTeX)</td><td>Word</td><td>Công thức đẹp, đánh số hình/bảng tự cập nhật, file 100 trang không vỡ</td></tr>
+    <tr><td><b>Zotero</b></td><td>Gõ tay tài liệu tham khảo</td><td>40 tài liệu: 3 giờ và có lỗi → 10 phút và không lỗi</td></tr>
+    <tr><td><b>MLflow</b></td><td>Trí nhớ</td><td>Bảng kết quả chương 5 xuất thẳng ra, không dựng lại</td></tr>
+  </table>
+
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-write">Công cụ viết</button><button class="ds-aside" data-aside="cmp-figure">Công cụ vẽ hình</button></p>
+
+  <h2>Một ngày làm việc, theo đúng thứ tự mở công cụ</h2>
+  <div class="ds-code">1. terminal   → source .venv/bin/activate
+2. jupyter    → mở 02-experiments.ipynb, chạy Restart &amp; Run All
+3. nghĩ MỘT giả thuyết, viết ra bằng tiếng Việt
+4. jupyter    → thử 5 dòng pandas, xem điểm đổi không
+5. giữ được?  → chuyển sang src/features.py bằng trình soạn thảo
+6. terminal   → python -m src.train  &amp;&amp;  pytest
+7. git commit -m "them z_vs_history, pr-auc 0.394 -> 0.412"
+8. ghi một dòng vào bảng thí nghiệm</div>
+  <p>Tám bước này lặp lại 5–10 lần mỗi ngày trong tuần 2. <b>Bước 7 là bước hay bị bỏ nhất</b> và cũng là bước cứu bạn khi tới ngày 13 cần biết cấu hình nào cho con số nào.</p>
+
+  <p class="ds-more"><button class="ds-aside" data-aside="x-notneeded">Những thứ chưa cần cho dự án này</button></p>
+  </template>
+
 <template data-node="r-roadmapsh">
   <p>Bạn nói đọc roadmap.sh mà không biết cái gì cần cái gì không. Bài này mở nó ra và dịch từng ô sang ba mức: <b>giữ · để sau · bỏ</b>, cho đúng mục tiêu của bạn.</p>
   <p class="wb-help">Đối chiếu với nội dung thật của roadmap.sh ngày <b>3/8/2026</b> (lấy từ kho mã nguồn của họ). Roadmap.sh có sửa nội dung theo thời gian, nên nếu bạn đọc bài này lâu sau đó thì con số có thể lệch — nhưng phần “thiếu gì” ở cuối bài thì gần như chắc chắn vẫn đúng.</p>
@@ -9960,7 +9968,6 @@ const TREE = [
     { id:'t-sql',             t:'SQL — lấy dữ liệu ra khỏi cơ sở dữ liệu', r:25, x:35, d:15, p:'core' },
     { id:'t-numpy',           t:'numpy — vector hoá & mảng', r:25, x:35, d:10, p:'core' },
     { id:'t-sklearn',         t:'scikit-learn — 4 khái niệm là đủ', r:45, x:75, d:20, p:'core' },
-    { id:'t-stack',           t:'★ Mỗi bước dùng tool gì, và gõ gì', r:60, x:0, d:0, p:'core' },
   ]},
   { id:'p2', t:'2 · Toán tối thiểu (không hơn)', kids:[
     { id:'m-vector',          t:'Vector & ma trận — dữ liệu trong máy', r:55, x:20, d:10, p:'core' },
@@ -10022,18 +10029,7 @@ const TREE = [
     { id:'dl-llm',            t:'LLM, fine-tune, RAG — dùng sao cho đúng', r:65, x:10, d:0, p:'good' },
     { id:'dl-tab',            t:'Deep learning cho dữ liệu bảng: nên không?', r:40, x:5, d:0, p:'good' },
   ]},
-  { id:'p7', t:'7 · Các họ bài toán khác — chuyển giao kiến thức', kids:[
-    { id:'q-regress',         t:'Hồi quy: dự đoán một con số', r:45, x:20, d:10, p:'core' },
-    { id:'q-forecast',        t:'★ Chuỗi thời gian & forecasting', r:70, x:50, d:30, p:'core' },
-    { id:'q-multi',           t:'Multiclass & multilabel', r:40, x:15, d:5, p:'good' },
-    { id:'q-nlp',             t:'NLP: TF-IDF → embedding → Transformer', r:50, x:30, d:10, p:'good' },
-    { id:'q-cv',              t:'Computer vision — định vị & mini-lab', r:35, x:25, d:0, p:'good' },
-    { id:'q-rec',             t:'Gợi ý & xếp hạng (recommendation)', r:45, x:25, d:5, p:'good' },
-    { id:'q-causal',          t:'★ A/B testing & tư duy nhân quả', r:55, x:25, d:10, p:'core' },
-    { id:'q-analytics',       t:'Analytics: SQL, KPI, cohort, funnel', r:45, x:25, d:5, p:'good' },
-    { id:'q-mini',            t:'★ Mini-project chuyển giao — làm thật 2/6', r:45, x:15, d:240, p:'core' },
-  ]},
-  { id:'p8', t:'8 · Làm ra product thật (fraud detection)', kids:[
+  { id:'p8', t:'7 · Làm ra product thật (fraud detection)', kids:[
     { id:'pr-arch',           t:'Kiến trúc hệ thống chống gian lận', r:30, x:5, d:25, p:'core' },
     { id:'pr-code',           t:'★ Code end-to-end: repo tới model đã lưu', r:40, x:50, d:60, p:'core' },
     { id:'pr-eval',           t:'★ Đánh giá, chọn ngưỡng, và bốn test', r:45, x:40, d:50, p:'core' },
@@ -10043,6 +10039,17 @@ const TREE = [
     /* core: trang tự gọi đây là bài có tỉ lệ giá trị/công sức cao nhất, và cột "thiệt hại
        quy ra tiền" là cột hội đồng nhớ. Gọi nó là "nên biết" thì trang tự mâu thuẫn. */
     { id:'pr-cost',           t:'Quy ra tiền: ngưỡng theo chi phí', r:25, x:10, d:15, p:'core' },
+  ]},
+  { id:'p7', t:'8 · Các họ bài toán khác — chuyển giao kiến thức', kids:[
+    { id:'q-regress',         t:'Hồi quy: dự đoán một con số', r:45, x:20, d:10, p:'core' },
+    { id:'q-forecast',        t:'★ Chuỗi thời gian & forecasting', r:70, x:50, d:30, p:'core' },
+    { id:'q-multi',           t:'Multiclass & multilabel', r:40, x:15, d:5, p:'good' },
+    { id:'q-nlp',             t:'NLP: TF-IDF → embedding → Transformer', r:50, x:30, d:10, p:'good' },
+    { id:'q-cv',              t:'Computer vision — định vị & mini-lab', r:35, x:25, d:0, p:'good' },
+    { id:'q-rec',             t:'Gợi ý & xếp hạng (recommendation)', r:45, x:25, d:5, p:'good' },
+    { id:'q-causal',          t:'★ A/B testing & tư duy nhân quả', r:55, x:25, d:10, p:'core' },
+    { id:'q-analytics',       t:'Analytics: SQL, KPI, cohort, funnel', r:45, x:25, d:5, p:'good' },
+    { id:'q-mini',            t:'★ Mini-project chuyển giao — làm thật 2/6', r:45, x:15, d:240, p:'core' },
   ]},
   { id:'p9', t:'9 · Luận văn / paper thạc sĩ', kids:[
     { id:'th-topic',          t:'Đề tài phải có “delta” — tìm khoảng trống', r:30, x:5, d:40, p:'core' },
@@ -10055,6 +10062,7 @@ const TREE = [
     { id:'th-defense',        t:'★ Bảo vệ: slide, demo, 24 câu hội đồng hỏi', r:30, x:5, d:45, p:'core' },
   ]},
   { id:'p10', t:'10 · Tra cứu', kids:[
+    { id:'r-stack',           t:'★ Mỗi bước dùng tool gì, và gõ gì', r:60, x:0, d:0, p:'core' },
     { id:'r-roadmapsh',       t:'roadmap.sh dịch ra: giữ gì, bỏ gì', r:45, x:0, d:0, p:'good' },
     { id:'r-mistakes',        t:'20 lỗi người mới hay mắc', r:30, x:0, d:0, p:'core' },
     { id:'r-glossary',        t:'Từ điển thuật ngữ', r:45, x:0, d:0, p:'good' },
@@ -10105,10 +10113,10 @@ const DAYS = [
     out:'Năm nhóm thao tác pandas đã gõ lại bằng tay; một truy vấn window function tính feature theo mốc thời gian.',
     note:'Đọc bài <b>Làm việc với AI</b> TRƯỚC khi viết nhiều code — nó đổi cách bạn giao việc suốt 12 ngày còn lại.' },
   { n:3,  t:'numpy, scikit-learn, và vector',
-    ids:['t-numpy','t-sklearn','t-stack','m-vector'],
+    ids:['t-numpy','t-sklearn','m-vector'],
     proof:['t-sklearn','m-vector'],
     out:'Một <code>Pipeline</code> hai bước chạy được trên dữ liệu đồ chơi; <code>tests/test_features.py</code> dù chỉ có một <code>assert</code>.',
-    note:'Đây là ngày dài nhất của tuần đầu. Bốn khái niệm sklearn ở đây là bộ khung mọi bài sau đều dựa vào.' },
+    note:'Bốn khái niệm sklearn ở đây là bộ khung mọi bài sau đều dựa vào.' },
   { n:4,  t:'Toán tối thiểu + đóng khung bài toán',
     ids:['m-deriv','m-prob','m-infer','d-framing'],
     proof:['d-framing'],
@@ -10163,7 +10171,7 @@ const DAYS = [
     ids:['th-design','th-stats','th-write','th-defense'],
     proof:['th-design','th-stats','th-write','th-defense'],
     out:'Thesis skeleton theo IMRaD, bảng ablation/registry, kiểm định ghép cặp, danh sách baseline và defense-plan skeleton. Slide hoàn chỉnh + rehearsal nằm trong lịch chuẩn bị bảo vệ riêng.',
-    note:'Đây là chặng 9 (Luận văn), không phải chặng 8 (Sản phẩm) — chặng 8 đã xong ở ngày 12–13. Bài <b>★ Bảo vệ</b> hôm nay chỉ đọc để biết hội đồng hỏi gì; nó có lịch chuẩn bị 3 ngày riêng, dùng vào ba ngày trước hôm bảo vệ.' },
+    note:'Đây là chặng 9 (Luận văn), không phải chặng 7 (Sản phẩm) — chặng 7 đã xong ở ngày 12–13. Bài <b>★ Bảo vệ</b> hôm nay chỉ đọc để biết hội đồng hỏi gì; nó có lịch chuẩn bị 3 ngày riêng, dùng vào ba ngày trước hôm bảo vệ.' },
 ];
 
 /* Lịch 8 tuần — LEAF-LEVEL (mỗi tuần liệt kê từng bài, không phải cả chặng).
@@ -10171,7 +10179,7 @@ const DAYS = [
    deliverable không được đòi kiến thức/file mà bài dạy ra nó lại nằm ở tuần sau.
    Ví dụ ml-map + ml-linear được kéo lên tuần 3 để notebook baseline thật sự in
    được một con số validation. Training command dạng module thuộc kiến trúc repo
-   end-to-end vẫn để tuần 7, sau khi bài pr-code đã dạy cấu trúc đó.
+   end-to-end vẫn để tuần 6, sau khi bài pr-code đã dạy cấu trúc đó.
 
    Mỗi tuần khai báo:
      ids   — các bài (leaf) tuần đó phủ; auditPlan kiểm mỗi leaf xuất hiện đúng 1 lần
@@ -10182,7 +10190,7 @@ const DAYS = [
    Số giờ suy ra từ chính TREE nên không lệch với trang chủ / lịch 14 ngày. */
 const WEEKS = [
   { n:1, ids:['s-how','s-intro','s-pipeline','s-families','s-lookup','s-plan8w','s-plan14',
-              't-env','t-online','t-colab','t-ai','t-pandas','t-sql','t-numpy','t-sklearn','t-stack'],
+              't-env','t-online','t-colab','t-ai','t-pandas','t-sql','t-numpy','t-sklearn'],
     t:'Khung tư duy · Python/pandas/SQL/numpy/sklearn · quy trình cloud · làm việc với AI',
     out:'Repo GitHub (<code>data/</code> trong <code>.gitignore</code>); một notebook Colab clone repo và đọc được một CSV; <code>requirements.txt</code> đã ghim phiên bản. <i>(problem-statement.md để tuần 2, khi học đóng khung.)</i>',
     needs:['t-env','t-online','t-pandas'], proof:['t-env','t-online','t-pandas'],
@@ -10196,31 +10204,31 @@ const WEEKS = [
   { n:3, ids:['f-what','f-numeric','f-cat','f-cyclic','f-time','f-text','f-pipeline','f-select','f-store',
               'ml-map','ml-linear','ml-metrics'],
     t:'Feature engineering đầy đủ · Pipeline · baseline logistic · PR-AUC &amp; ngưỡng',
-    out:'<code>src/features.py</code> + <code>src/history.py</code>; <code>src/pipeline.py</code> (Pipeline + ColumnTransformer) với một test một dòng; <code>notebooks/02-baseline.ipynb</code> chạy hết và in PR-AUC validation từ logistic; một ngưỡng chọn theo chi phí kèm ma trận chi phí FP/FN; bảng thí nghiệm có dòng 1. <i>(<code>python -m src.train</code> chỉ được yêu cầu ở tuần 7, sau bài pr-code.)</i>',
+    out:'<code>src/features.py</code> + <code>src/history.py</code>; <code>src/pipeline.py</code> (Pipeline + ColumnTransformer) với một test một dòng; <code>notebooks/02-baseline.ipynb</code> chạy hết và in PR-AUC validation từ logistic; một ngưỡng chọn theo chi phí kèm ma trận chi phí FP/FN; bảng thí nghiệm có dòng 1. <i>(<code>python -m src.train</code> chỉ được yêu cầu ở tuần 6, sau bài pr-code.)</i>',
     needs:['f-pipeline','ml-linear','ml-map','ml-metrics','d-split'], proof:['f-pipeline','ml-linear','ml-metrics'],
     next:'Tuần 4 giữ nguyên pipeline/split này để so baseline với boosting, dùng lại đúng chỉ số của tuần này.', mile:'Mốc 1' },
   { n:4, ids:['ml-loss','ml-trees','ml-overfit','ml-cv','ml-imb','ml-tune','ml-shap','ml-unsup'],
     t:'ML cổ điển · overfit/CV · dữ liệu lệch · tuning · SHAP',
-    out:'Bảng so sánh baseline vs mô hình chính (LightGBM) trên cùng validation: PR-AUC + trung bình±độ lệch chuẩn của 5 seed; một hình SHAP; ngưỡng chọn lại theo chi phí cho mô hình chính. <i>(Khoảng tin cậy cluster bootstrap và kiểm định ghép cặp làm ở tuần 7–8 khi đã học đúng loại bootstrap.)</i>',
+    out:'Bảng so sánh baseline vs mô hình chính (LightGBM) trên cùng validation: PR-AUC + trung bình±độ lệch chuẩn của 5 seed; một hình SHAP; ngưỡng chọn lại theo chi phí cho mô hình chính. <i>(Khoảng tin cậy cluster bootstrap và kiểm định ghép cặp làm ở tuần 6 và 8 khi đã học đúng loại bootstrap.)</i>',
     needs:['ml-trees','ml-metrics','ml-shap','ml-imb','ml-cv'], proof:['ml-trees','ml-imb','ml-shap'],
-    next:'Tuần 7 đưa bảng này vào evaluate.py, thêm cluster/paired bootstrap và test.' },
+    next:'Tuần 6 đưa bảng này vào evaluate.py, thêm cluster/paired bootstrap và test.' },
   { n:5, ids:['dl-nn','dl-backprop','dl-train','dl-embed','dl-cnn-rnn','dl-attn','dl-tf','dl-llm','dl-tab'],
     t:'Deep learning nền · embedding · attention · Transformer',
     out:'Một notebook train một mạng nhỏ tới hội tụ, có vẽ đường cong loss; ba câu tự giải thích attention bằng lời của bạn',
     needs:['dl-train','dl-attn'], proof:['dl-train','dl-attn'],
-    next:'Tuần 6 dùng nền này để định vị NLP/CV/forecasting; không coi notebook đồ chơi là model production.' },
-  { n:6, ids:['q-regress','q-forecast','q-multi','q-nlp','q-cv','q-rec','q-causal','q-analytics','q-mini'],
-    t:'Các họ bài toán khác · hai mini-project chuyển giao',
-    out:'Hai mini-project làm thật (mỗi cái một notebook + bảng “giữ gì / đổi gì” so với fraud); bốn đề còn lại chỉ cần bảng giữ/đổi ở mức phác thảo',
-    needs:['q-mini','q-forecast'], proof:['q-mini'],
-    next:'Tuần 7 quay lại fraud với bằng chứng về phần nào của pipeline giữ nguyên khi đổi domain.', mile:'Mốc 2' },
-  { n:7, ids:['pr-arch','pr-code','pr-eval','pr-serve','pr-monitor','pr-mlops','pr-cost'],
+    next:'Tuần 6 quay về dự án gian lận, đóng gói toàn bộ thành một sản phẩm chạy được: repo → model đã lưu → API/Docker.' },
+  { n:6, ids:['pr-arch','pr-code','pr-eval','pr-serve','pr-monitor','pr-mlops','pr-cost'],
     t:'Sản phẩm fraud: repo → model đã lưu → đánh giá → API/Docker → giám sát',
     out:'<code>python -m src.train</code> bản đầy đủ + <code>models/fraud-*.joblib</code> + metadata + ngưỡng; <code>src/evaluate.py</code> (cluster bootstrap CI + <code>paired_ci</code>); <code>src/rules.py</code> + bảng ba dòng không-làm-gì/luật/mô hình trên cùng tập test; bảng FPR theo nhóm; API FastAPI + <code>Dockerfile</code>; hàm PSI; CI chạy <code>pytest</code>',
     needs:['pr-code','pr-eval','pr-serve','pr-monitor','pr-mlops'], proof:['pr-code','pr-eval','pr-serve','pr-monitor'],
-    next:'Tuần 8 ánh xạ repo, bảng đánh giá và hình sang proposal/thesis skeleton và defense plan.' },
+    next:'Tuần 7 chuyển kiến thức sang các họ bài toán khác và làm hai mini-project chứng minh khả năng chuyển giao.' },
+  { n:7, ids:['q-regress','q-forecast','q-multi','q-nlp','q-cv','q-rec','q-causal','q-analytics','q-mini'],
+    t:'Các họ bài toán khác · hai mini-project chuyển giao',
+    out:'Hai mini-project làm thật (mỗi cái một notebook + bảng “giữ gì / đổi gì” so với fraud); bốn đề còn lại chỉ cần bảng giữ/đổi ở mức phác thảo',
+    needs:['q-mini','q-forecast'], proof:['q-mini'],
+    next:'Tuần 8 ánh xạ sản phẩm và bằng chứng chuyển giao sang proposal/thesis skeleton và defense plan.', mile:'Mốc 2' },
   { n:8, ids:['th-topic','th-read','th-repro','th-design','th-stats','th-write','th-tools','th-defense',
-              'r-roadmapsh','r-mistakes','r-glossary','r-books'],
+              'r-stack','r-roadmapsh','r-mistakes','r-glossary','r-books'],
     t:'Nghiên cứu · thống kê · viết · tái lập · bảo vệ (khung + kỹ năng, không phải luận văn hoàn chỉnh)',
     out:'<code>research-question.md</code>; reading-note skeleton + lượt 1–2 cho một paper; <b>reproduction report skeleton</b>; bảng ablation + registry thí nghiệm; kiểm định ghép cặp; <b>thesis skeleton</b> (mapping artifact→chương); defense-plan skeleton. <i>(Lượt đọc 3, viết luận văn hoàn chỉnh, tái lập một paper thật, làm slide/rehearsal và bảo vệ nằm NGOÀI 8 tuần — cần nhiều tuần/tháng và phản hồi mentor.)</i>',
     needs:['th-topic','th-read','th-repro','th-design','th-stats','th-write','th-defense'],
@@ -10259,8 +10267,7 @@ const PAYOFF = {
   't-pandas':   ['Năm nhóm thao tác pandas đủ cho toàn bộ dự án, và bài tập đã làm xong.', 'pandas cần có dữ liệu để chạm vào — bài sau là cách lấy nó ra khỏi cơ sở dữ liệu.'],
   't-sql':      ['Sáu mệnh đề SQL, và window function tính feature đúng mốc thời gian mà không rò rỉ.', 'Bài sau là lớp nền bên dưới pandas — nơi phần lớn thông báo lỗi sinh ra.'],
   't-numpy':    ['Shape, broadcasting, seed — ba thứ quyết định bạn đọc được lỗi hay ngồi đoán.', 'Bài sau ráp chúng vào bộ khung mà mọi mô hình bạn dùng đều tuân theo.'],
-  't-sklearn':  ['Bốn khái niệm sklearn: estimator, transformer, Pipeline, ColumnTransformer.', 'Bài sau nói ở mỗi bước trong 10 bước thì mở công cụ nào và gõ gì.'],
-  't-stack':    ['Sổ tay theo bước: mở gì, gõ gì, xong có gì trong tay, bẫy nằm ở đâu.', 'Chặng sau là phần toán tối thiểu để bạn đọc hiểu những con số công cụ in ra.'],
+  't-sklearn':  ['Bốn khái niệm sklearn: estimator, transformer, Pipeline, ColumnTransformer.', 'Chặng sau là phần toán tối thiểu để bạn đọc hiểu những con số công cụ in ra.'],
   'm-vector':   ['Ba ý hình học: một dòng là một điểm, khoảng cách phụ thuộc đơn vị, ma trận là cả bảng.', 'Bài sau dùng đúng hình học đó để trả lời "máy học bằng cách nào".'],
   'm-deriv':    ['Câu trả lời cho câu hỏi ít ai nói thẳng: độ dốc, gradient, và bước đi ngược dốc.', 'Bài sau chuyển sang ngôn ngữ mà đầu ra của mô hình được viết bằng.'],
   'm-prob':     ['Đọc được một cột dữ liệu, và đọc đúng con số 0–1 mà mô hình trả ra.', 'Bài sau giải thích vì sao 99% chính xác vẫn có thể hoàn toàn vô dụng.'],
@@ -10300,7 +10307,7 @@ const PAYOFF = {
   'dl-attn':    ['Attention từ số 0: bốn bước, multi-head, và cái giá bình phương độ dài.', 'Bài sau ráp attention thành một kiến trúc hoàn chỉnh.'],
   'dl-tf':      ['Một khối Transformer đầy đủ, và positional encoding nối thẳng lại với bài sin/cos.', 'Bài sau là thứ được xây trên kiến trúc đó.'],
   'dl-llm':     ['Nói chuyện về LLM cho đúng, và bốn cách dùng xếp từ rẻ tới đắt.', 'Bài sau trả lời thẳng: dữ liệu bảng thì có nên dùng deep learning không.'],
-  'dl-tab':     ['Câu trả lời có bằng chứng cho "deep learning trên dữ liệu bảng", và cách dùng khôn nhất khi thời gian có hạn.', 'Hết phần kỹ thuật chung. Chặng sau rời khỏi bài toán gian lận để xem tám họ bài toán khác đổi những gì.'],
+  'dl-tab':     ['Câu trả lời có bằng chứng cho "deep learning trên dữ liệu bảng", và cách dùng khôn nhất khi thời gian có hạn.', 'Hết phần kỹ thuật chung. Chặng sau quay về dự án gian lận và đóng gói toàn bộ thành một sản phẩm chạy được: repo, model, API, giám sát.'],
   'q-regress':  ['Bộ chỉ số cho biến liên tục (MAE/RMSE/MAPE/R²) chọn theo bài toán, và cách báo cáo khoảng dự đoán thay vì một con số trần trụi.', 'Bài sau là họ bài toán mà mọi thứ bạn biết về chia tập đều phải viết lại.'],
   'q-forecast': ['Một module forecasting đủ dùng: baseline naive, backtesting walk-forward, lag/rolling, ETS/ARIMA/Prophet/boosting/LSTM đặt đúng vai, và metric MASE.', 'Bài sau quay lại phân loại nhưng với nhiều hơn hai lớp.'],
   'q-multi':    ['Cách mở rộng từ 2 lớp lên N lớp và multilabel, và ba kiểu trung bình hoá chỉ số mà chọn sai là báo cáo sai.', 'Bài sau là loại dữ liệu đầu vào không phải bảng: chữ.'],
@@ -10309,14 +10316,14 @@ const PAYOFF = {
   'q-rec':      ['Baseline popularity, collaborative filtering, content-based, và metric xếp hạng đọc đúng cách.', 'Bài sau là ranh giới mà mọi mô hình dự đoán đều không vượt qua được.'],
   'q-causal':   ['Phân biệt tương quan với nhân quả, thiết kế một A/B test đọc được, và biết khi nào mô hình dự đoán không trả lời được câu hỏi đang hỏi.', 'Bài sau là phần công việc chiếm nhiều thời gian nhất của một data team thật.'],
   'q-analytics':['SQL phân tích, cohort, funnel, segmentation, và ranh giới ba nghề: analytics, predictive, causal.', 'Bài cuối chặng: sáu dự án nhỏ để kiểm chứng bạn thật sự chuyển giao được.'],
-  'q-mini':     ['Hai mini-project chuyển giao làm tới cùng (mỗi cái một notebook + bảng "giữ gì / đổi gì"), và bốn đề phác thảo để tra sau.', 'Chặng sau quay lại dự án chính và biến nó thành sản phẩm, bắt đầu từ bản vẽ.'],
+  'q-mini':     ['Hai mini-project chuyển giao làm tới cùng (mỗi cái một notebook + bảng "giữ gì / đổi gì"), và bốn đề phác thảo để tra sau.', 'Chặng sau là phần viết: biến toàn bộ những gì đã làm thành một luận văn, bắt đầu từ chọn đề tài.'],
   'pr-arch':    ['Bản vẽ đường đi của một giao dịch, và năm quyết định thiết kế phải nêu trong luận văn.', 'Có bản vẽ rồi, bài sau viết toàn bộ mã nguồn hiện thực nó.'],
   'pr-code':    ['Repo chạy được: config, features, history, pipeline, train — và một file .joblib có thật trong models/.', 'Có model rồi, bài sau mới trả lời được câu "nó tốt tới đâu, và chặn từ ngưỡng nào".'],
   'pr-eval':    ['Ngưỡng theo chi phí, khoảng tin cậy đúng loại, baseline theo luật để so, bảng chênh lệch theo nhóm, và bốn test chặn lỗi im lặng.', 'Bài sau biến file .joblib đó thành một dịch vụ mà hệ thống khác gọi được.'],
   'pr-serve':   ['API FastAPI, Dockerfile, và bản demo Streamlit dùng cho buổi bảo vệ.', 'Bài sau là chương rất ít luận văn viết được cho ra hồn.'],
   'pr-monitor': ['Đo drift bằng PSI, bảng theo dõi tối thiểu, và chiến lược huấn luyện lại.', 'Bài sau là phần MLOps nhỏ nhất mà vẫn đủ để repo nộp được.'],
   'pr-mlops':   ['MLflow, chốt phiên bản thư viện, CI tối thiểu, và bảng kiểm repo trước khi nộp.', 'Bài sau quy mọi thứ ra tiền — bài có tỉ lệ giá trị trên công sức cao nhất trang.'],
-  'pr-cost':    ['Ma trận chi phí, và phân tích độ nhạy biến điểm yếu thành điểm mạnh.', 'Sản phẩm xong. Chặng sau là phần viết, bắt đầu từ chọn đề tài.'],
+  'pr-cost':    ['Ma trận chi phí, và phân tích độ nhạy biến điểm yếu thành điểm mạnh.', 'Sản phẩm xong. Chặng sau rời khỏi bài toán gian lận để xem tám họ bài toán khác đổi những gì.'],
   'th-topic':   ['Một trang đề cương: khoảng trống, câu hỏi nghiên cứu, và cách bạn sẽ chứng minh.', 'Bài sau là cách đọc 15–30 paper mà vẫn kịp deadline.'],
   'th-read':    ['Reading-note skeleton + lượt 1–2 cho một paper; lượt 3 được lập lịch riêng vì cần 4–5 giờ/paper.', 'Bài sau dùng notes đó để chọn đúng kết quả cần tái lập và ghi reproduction report.'],
   'th-repro':   ['Quy trình tái lập, cách xử lý khi không tái lập được, và cách làm công trình của bạn tái lập được.', 'Bài sau thiết kế phần thực nghiệm — nơi luận văn được chấm điểm thật.'],
@@ -10325,6 +10332,7 @@ const PAYOFF = {
   'th-write':   ['Bộ khung IMRaD mở rộng, và công thức viết cho từng chương.', 'Bài sau là công cụ tiết kiệm hàng chục giờ ở giai đoạn viết.'],
   'th-tools':   ['Overleaf, Zotero, MLflow, và bảng kiểm cuối cùng trước khi nộp.', 'Bài sau là 45 phút quyết định tất cả.'],
   'th-defense': ['Defense-plan skeleton: outline slide, demo/video dự phòng, lịch rehearsal, bộ câu hỏi và rubric.', 'Hết đường đi trong page; slide thật, rehearsal và mentor review tiếp tục theo lịch T−3/T−1 trước ngày bảo vệ.'],
+  'r-stack':    ['Sổ tay theo bước: mở gì, gõ gì, xong có gì trong tay, bẫy nằm ở đâu.', 'Bài sau dịch roadmap.sh sang giáo trình này: ô nào giữ, ô nào để sau, ô nào bỏ.'],
   'r-roadmapsh':['roadmap.sh dịch xong: ô nào giữ, ô nào để sau, ô nào bỏ — và tám khái niệm nó không có.', 'Bài sau là 20 lỗi ngốn nhiều thời gian nhất của người mới.'],
   'r-mistakes': ['20 lỗi phổ biến — đọc một lượt hôm nay, quay lại khi bí.', 'Bài sau là từ điển tra nhanh, xếp theo nhóm khái niệm liên quan.'],
   'r-glossary': ['Từ điển tra nhanh, xếp theo nhóm chứ không theo bảng chữ cái.', 'Bài cuối là danh sách nguồn ngắn có chủ ý.'],
@@ -11942,7 +11950,7 @@ VIZ.families = el => {
       <div data-o="panel"></div>
       <p class="ds-viz__alt" data-o="alt"></p>
       ${seeBlock({
-        see:'bấm lần lượt <b>Phân loại nhị phân</b> rồi <b>Forecasting</b>. Bốn dòng đầu (đầu vào/đầu ra, baseline) đổi ít; hai dòng <b>Chia tập</b> và <b>Metric</b> đổi hoàn toàn. Đó là quy luật của cả chặng 7: phần lớn quy trình chuyển giao được, chỗ vỡ luôn nằm ở chia tập và đo lường.',
+        see:'bấm lần lượt <b>Phân loại nhị phân</b> rồi <b>Forecasting</b>. Bốn dòng đầu (đầu vào/đầu ra, baseline) đổi ít; hai dòng <b>Chia tập</b> và <b>Metric</b> đổi hoàn toàn. Đó là quy luật của cả chặng 8: phần lớn quy trình chuyển giao được, chỗ vỡ luôn nằm ở chia tập và đo lường.',
         wrong:'“đổi họ bài toán thì phải học lại từ đầu”. Không — bước 1 tới 5 gần như giữ nguyên. Cái phải học lại là <i>cách kiểm chứng</i>, không phải cách xây.',
         code:'trả lời tám câu hỏi định vị trong <code>docs/problem-statement.md</code> trước khi mở notebook.',
       })}
@@ -13938,7 +13946,7 @@ const DELIV_MIN = {
 };
 /* Bài core được phép chỉ-đọc (định vị / tra cứu) — không phải mọi bài core đều
    cần deliverable. Danh sách này để audit đừng báo nhầm chúng. */
-const READONLY_OK = new Set(['s-how','s-pipeline','s-lookup','t-stack','ml-map','r-mistakes']);
+const READONLY_OK = new Set(['s-how','s-pipeline','s-lookup','r-stack','ml-map','r-mistakes']);
 
 function auditPlan(verbose) {
   const bad = [];
