@@ -30,7 +30,10 @@
      alert, pager, hộp kết bài — tất cả dừng ở CÙNG một mép. Chỉ **bảng** được
      tràn ra ngoài mép đó (xem `--ds-bleed`), vì đo thật thì bảng là khối duy nhất
      thực sự cần: bề rộng tự nhiên trung vị 844px, 106/155 bảng vượt 720px — trong
-     khi code trung vị chỉ 587px và chỉ 12/175 khối vượt 720px.
+     khi code trung vị chỉ 587px và chỉ 12/175 khối vượt 720px. (Hai con số đó đo ở
+     thời cột 720px. Bảng của kit là `width:100%` nên chúng không bao giờ sinh thanh
+     cuộn riêng — đo lại 2026-08-04: 26/26 bảng `scrollWidth == clientWidth`. Cái mà
+     tràn mua được là ô bảng bị gói ít dòng hơn, không phải hết cuộn ngang.)
 
      Trước đây cột rộng 900px còn chữ 720px, nên mọi đoạn văn chừa một khoảng trống
      180px bên phải trong khi bảng/code chạm mép — mắt đọc khoảng so le đó ra "layout
@@ -40,14 +43,28 @@
      Số ký tự trên một dòng = bề rộng cột ÷ bề rộng một chữ. Nới cột mà giữ nguyên
      cỡ chữ là đẩy thẳng con số đó lên, nên hai token ① và ⑤ luôn đi cùng nhau.
 
-     Đo thật trên trang này (tiếng Việt, chỉ tính DÒNG ĐẦY, bỏ dòng cuối dở):
-       720px / 16px → trung vị 75, cao nhất 84   ✓ (bản cũ)
-       860px / 18px → trung vị 81, cao nhất 86   ✓ ĐANG DÙNG — cột +19%, chữ +12,5%
-       860px / 17px → trung vị 83, cao nhất 90   ~ sát trần
-       900px / 17px → trung vị 89, cao nhất 93   ✗ đã vượt
-       900px / 16px → trung vị 93                ✗ vượt xa
-     Khoảng dễ đọc là 45–90 ký tự/dòng. Nới nữa thì phải nới --ds-fs theo, và ĐO
-     LẠI bằng cách đếm dòng đầy — đừng nới theo cảm giác "cho kín chỗ trống".
+     Đo lại 2026-08-04 (cách đo ở docs/design.md §0.2 — tách dòng bằng rect TỪNG KÝ TỰ
+     rồi bỏ dòng cuối mỗi đoạn; số dưới đây ở cửa sổ 1440px, cột 954px hiện ra):
+       cấu hình      trung vị   p90   cao nhất   dòng ngoài khoảng 45–90
+       860px / 18px     102     108     118        gần như tất cả   ✗ bản trước
+       1060px / 26px     91      95     104        26/48            ✗ còn sát trần
+       1060px / 27px     88      91     104        11/48            ~
+       1060px / 28px     84      88      93         4/53            ✓ ĐANG DÙNG
+     Khoảng dễ đọc là 45–90 ký tự/dòng, và tiếng Việt nên nằm ở nửa dưới của khoảng
+     đó chứ không phải nửa trên: từ tiếng Việt ngắn hơn từ tiếng Anh, nên CÙNG một số
+     ký tự là NHIỀU TỪ hơn để mắt phải quét.
+
+     ⑤ là clamp() nên hai con số trên chỉ là ĐẦU RỘNG của thang. Đo ở ba bề rộng:
+       cửa sổ 375px  → cột 339px, chữ 17px → trung vị 47 ký tự/dòng  ✓
+       cửa sổ 1000px → cột 656px, chữ ~24px                          ✓
+       cửa sổ 1440px → cột 954px, chữ 28px → trung vị 84             ✓
+     Nghĩa là cột và chữ co giãn CÙNG NHAU, nên khổ đọc gần như không đổi theo cửa sổ.
+
+     Hai con số 75 và 81 từng ghi ở đây (cho 720/16 và 860/18) là ĐO SAI — bản đo đó
+     nhóm ký tự theo `top` với ngưỡng quá rộng nên gộp hai dòng thành một. Bản đo mới
+     kiểm chứng được bằng cách in thẳng chuỗi của từng dòng ra và đếm tay: một dòng
+     774px ở 18px chứa 100–103 ký tự, không phải 81. Nghĩa là bản 860/18 đã ở NGOÀI
+     khoảng dễ đọc, và lần nới này vừa rộng hơn vừa dễ đọc hơn bản cũ.
 
      ---- Cỡ chữ prose là MỘT token, và cả bậc tiêu đề suy ra từ nó ----
      h2/h3/h4 trong bài đặt bằng `em`, không phải px, nên đổi ⑤ là cả bậc tự giãn
@@ -62,21 +79,40 @@
      khi phần còn lại 720px. Alias CẢ HAI về --ds-measure — thiếu cái thứ hai thì
      đoạn hero vẫn lệch. */
   :root {
-    --ds-measure: 860px;   /* ① khổ chữ VÀ bề rộng cột nội dung — sửa số này là đủ */
-    --ds-wide:   1060px;   /* ② bảng được tràn rộng tới đây (chỉ bảng, khi đủ chỗ) */
-    --ds-side:    330px;   /* ③ .wb-shell__side — chỉ dùng để tính chỗ trống hai bên */
-    --ds-gutter:   20px;   /* ④ lề trong ngang của .wb-container--pad */
-    --ds-fs:       18px;   /* ⑤ cỡ chữ thân bài — đi CÙNG ① (xem khối chú thích trên) */
-    --ds-zoom:       .9;   /* ⑥ tỉ lệ hiển thị mặc định — xem khối chú thích ngay dưới */
-    --ds-dock-w:  380px;   /* ⑦ bề rộng dock sổ học; thân trang nhường đúng chỗ này */
-    --ds-bleed:     0px;   /* mặc định KHÔNG tràn; #main tính lại bên dưới */
+    --ds-measure: 1060px;  /* ① khổ chữ VÀ bề rộng cột nội dung — sửa số này là đủ */
+    --ds-wide:    1260px;  /* ② bảng được tràn rộng tới đây (chỉ bảng, khi đủ chỗ) */
+    --ds-side:     330px;  /* ③ .wb-shell__side — chỉ dùng để tính chỗ trống hai bên */
+    --ds-gutter:    20px;  /* ④ lề trong ngang của .wb-container--pad */
+    /* ⑤ cỡ chữ thân bài — đi CÙNG ① (xem khối chú thích trên). Là clamp() vì cột ① cũng
+       co theo cửa sổ: cột 339px mà chữ giữ 28px thì điện thoại còn 30 ký tự/dòng, dưới
+       sàn 45. Nội suy THẲNG giữa hai điểm đã ĐO: 17px ở cửa sổ 375px (47 ký tự/dòng) và
+       28px ở cửa sổ ≥1306px (84 ký tự/dòng). Hai hệ số 1,064/12,56 là đường thẳng qua
+       đúng hai điểm đó, tính trên px cục bộ (đã chia zoom, xem --ds-vw). */
+    --ds-fs: clamp(17px, calc(var(--ds-vw) * 1.064 + 12.56px), 28px);
+    --ds-zoom:        .9;  /* ⑥ tỉ lệ hiển thị mặc định — xem khối chú thích ngay dưới */
+    /* ⑦ bề rộng dock ghi chú: MẶC ĐỊNH 1/4 cửa sổ thật, kéo được (JS ghi đè bằng px
+       và nhớ lại). clamp() để cửa sổ 900px không ra dock 225px vô dụng, và màn 4K
+       không ra dock 960px. Xem khối chú thích ở `.ds-notesdock`. */
+    --ds-dock-w: clamp(300px, calc(25 * var(--ds-vw)), 640px);
+    --ds-bleed:      0px;  /* mặc định KHÔNG tràn; #main tính lại bên dưới */
+    /* 1% cửa sổ THẬT. `zoom` không điều chỉnh đơn vị viewport (xem khối ⑥), nên mọi
+       chỗ cần "cao/rộng bằng cửa sổ" phải dùng hai token này, KHÔNG dùng vh/vw trần. */
+    --ds-vh: calc(1vh / var(--ds-zoom));
+    --ds-vw: calc(1vw / var(--ds-zoom));
+    /* Kit tự khai `--wb-shell-h: 100dvh` kèm chú thích "override if the page is zoomed".
+       Đây là chỗ override đó: thiếu nó thì thanh bên và ngăn trượt cụt đúng 10% chiều cao. */
+    --wb-shell-h: calc(100 * var(--ds-vh));
   }
   /* ---- ⑥ vì sao trang tự mở ở 90% ----
-     Trang này để đọc liên tục 45 phút, nên "một màn hình thấy được bao nhiêu" quan trọng
-     bằng "chữ to bao nhiêu". 90% cho thêm ~11% nội dung mỗi màn hình mà KHÔNG đổi số ký
-     tự trên một dòng — zoom co cả bề rộng lẫn cỡ chữ theo cùng một tỉ lệ, nên khổ đọc
-     giữ nguyên 81 ký tự/dòng. Chữ thật sự hiện ra là 18 × 0,9 ≈ 16,2px, đúng bằng cỡ
-     chữ cũ; nghĩa là cột rộng thêm mà không có gì nhỏ đi so với trước.
+     Việc của zoom KHÔNG phải là làm chữ nhỏ đi — ① và ⑤ lo cỡ chữ. Việc của nó là làm
+     LỚP VỎ nhỏ đi: thanh trên, thanh bên, nút, chip, chân trang đều đặt bằng px trong
+     bộ kit và không có token nào để nới. Zoom là cách duy nhất co cả bộ đó cùng một
+     nhịp mà không phải sửa từng con số của kit. Kết quả: chữ thân bài hiện ra
+     28 × 0,9 ≈ 25,2px trong một cột 1060 × 0,9 ≈ 954px, còn lớp vỏ thì nhỏ hơn 10% so
+     với chữ — đúng thứ tự ưu tiên muốn có.
+
+     Zoom KHÔNG đổi số ký tự trên một dòng (nó co cả bề rộng lẫn cỡ chữ theo cùng tỉ
+     lệ), nên mọi số đo ở khối trên đọc được cho cả hai hệ toạ độ.
 
      Zoom của trình duyệt NHÂN THÊM lên trên số này (người đọc bấm 110% thì thành 99%),
      nên đây là điểm bắt đầu, không phải cái khoá tay ai.
@@ -96,11 +132,31 @@
      Vì là clamp() nên KHÔNG cần media query: desktop rộng thì tràn đủ 90px, laptop
      hẹp thì tràn một phần, tablet/mobile thì bằng 0. Mobile thanh bên đã ẩn nên
      công thức tính dư ra --ds-side — sai theo hướng an toàn (không bao giờ tràn lố). */
+  /* ---- BỐN TOKEN CHỮ CỦA KIT, ĐỊNH NGHĨA LẠI CHO CỘT BÀI ----
+     Khoảng 35 lớp `ds-*` trong bài đọc --wb-text-help / --wb-text-caption /
+     --wb-text-body / --wb-text-title của kit, và bốn token đó là px CỨNG (12–15px).
+     Khi thân bài 18px thì 13px còn đọc như "chữ phụ"; khi thân bài 26px thì 13px đọc
+     như một trang khác dán vào, và một đoạn 13px trải hết cột 954px thì dài hơn 170
+     ký tự/dòng. Sửa ở TOKEN chứ không sửa 35 chỗ dùng, và giữ đúng tỉ lệ mà thiết kế
+     cũ đã chọn (15/18, 14/18, 13/18, 12/18) — nên không có gì đổi TƯƠNG ĐỐI, chỉ là
+     cả bậc giãn theo ⑤.
+     Đặt ở `#main` chứ không ở `.ds-prose`: dải mục tiêu đầu bài, breadcrumb, chip,
+     hộp kết bài, pager đều nằm NGOÀI .ds-prose nhưng vẫn thuộc cột bài. Lớp vỏ
+     (thanh bên, cây, navbar, chân trang, dock) nằm ngoài #main nên vẫn dùng px của
+     kit — đúng, vì lớp vỏ không được giãn theo cỡ chữ bài. Popup/ngăn phụ cũng ngoài
+     #main và tự có --ds-fs riêng, nên chúng giữ bậc chữ cũ của kit.
+     Dùng `calc(--ds-fs × k)`, KHÔNG dùng `em`: `em` trong custom property được giải ở
+     CHỖ DÙNG, nên hai lớp lồng nhau cùng đọc token sẽ nhân dồn — `.ds-fam dt` trong
+     `.ds-fam` ra .67 × .72 × 26 ≈ 12,5px thay vì 17,4px. */
   #main {
+    --wb-text-title:   calc(var(--ds-fs) * .84);
+    --wb-text-body:    calc(var(--ds-fs) * .78);
+    --wb-text-help:    calc(var(--ds-fs) * .72);
+    --wb-text-caption: calc(var(--ds-fs) * .67);
     --wb-container-max: calc(var(--ds-measure) + 2 * var(--ds-gutter));
     --wb-measure: var(--ds-measure); --wb-measure-tight: var(--ds-measure);
     --ds-bleed: clamp(0px,
-      (100vw / var(--ds-zoom) - var(--ds-side) - var(--ds-measure) - 2 * var(--ds-gutter) - 24px) / 2,
+      (100 * var(--ds-vw) - var(--ds-side) - var(--ds-measure) - 2 * var(--ds-gutter) - 24px) / 2,
       (var(--ds-wide) - var(--ds-measure)) / 2);
     padding-inline: var(--ds-gutter);   /* khoá lề ngang khớp --wb-container-max */
   }
@@ -168,6 +224,7 @@
   /* `.wb-help` là chữ phụ hay dùng nhất trong bài (chú thích dưới bảng, ghi chú nguồn),
      nên nó cũng phải giãn theo --ds-fs như bảng. */
   .ds-prose .wb-help { font-size: .83em; }
+  /* Bốn token chữ của kit được định nghĩa lại cho CẢ CỘT BÀI — xem khối `#main`. */
   /* Bảng và chữ phụ trong bài cũng đặt bằng `em` — cùng lý do như bậc tiêu đề: chúng
      phải giãn theo --ds-fs, không thì thân bài 18px mà bảng 13px đọc như hai trang
      khác nhau dán cạnh nhau. Bảng vẫn nhỏ hơn thân bài (đúng, để nhìn được cả hàng). */
@@ -203,7 +260,7 @@
   .ds-code {
     background: var(--wb-surface-2); border: var(--wb-bw) solid var(--wb-border);
     border-radius: var(--wb-radius); padding: 14px 16px; overflow-x: auto;
-    font-family: var(--wb-font-mono); font-size: 12.5px; line-height: 1.65;
+    font-family: var(--wb-font-mono); font-size: calc(var(--ds-fs) * .69); line-height: 1.65;
     margin: 0 0 16px; white-space: pre; tab-size: 2;
   }
   .ds-code b { font-weight: 700; color: var(--wb-fg); }
@@ -415,7 +472,7 @@
   .ds-accept__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
   .ds-accept__list li { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap;
                         font-size: var(--wb-text-body); }
-  .ds-accept__tag { display: inline-flex; align-items: center; gap: 4px; font-size: 11px;
+  .ds-accept__tag { display: inline-flex; align-items: center; gap: 4px; font-size: calc(var(--ds-fs) * .61);
                     color: var(--wb-fg-subtle); border: 1px solid var(--wb-border-strong);
                     border-radius: var(--wb-radius-sm); padding: 1px 6px; white-space: nowrap; flex: none; }
 
@@ -438,7 +495,7 @@
   .ds-matrix thead th:last-child,  .ds-matrix .ds-mx__evid { text-align: left; }
   .ds-matrix .ds-mx__name b { font-weight: 650; }
   .ds-matrix .ds-mx__evid { font-size: var(--wb-text-caption); color: var(--wb-fg-subtle); line-height: 1.45; }
-  .ds-mx__c { font-size: 17px; color: var(--wb-border-strong); }
+  .ds-mx__c { font-size: calc(var(--ds-fs) * .94); color: var(--wb-border-strong); }
   .ds-mx__c.is-on { color: var(--wb-fg); }
   .ds-mx__c.is-open { color: var(--wb-fg-subtle); }
   .ds-mx__c.is-off { color: var(--wb-border); }
@@ -484,7 +541,7 @@
   .ds-map__out { color: var(--wb-fg-muted); font-size: var(--wb-text-help); line-height: 1.5; margin: 2px 0 8px; max-width: var(--ds-measure); }
   .ds-map__num {
     width: 34px; height: 34px; border-radius: var(--wb-radius-pill);
-    display: grid; place-items: center; font-family: var(--wb-font-mono); font-weight: 700; font-size: 13px;
+    display: grid; place-items: center; font-family: var(--wb-font-mono); font-weight: 700; font-size: calc(var(--ds-fs) * .72);
     background: var(--wb-fg); color: var(--wb-canvas);
   }
   .ds-leaf {
@@ -494,7 +551,7 @@
   }
   .ds-leaf:hover { background: var(--wb-surface-hover); border-color: var(--wb-border); text-decoration: none; }
   .ds-leaf__t { flex: 1 1 auto; min-width: 0; line-height: 1.4; }
-  .ds-leaf__m { font-family: var(--wb-font-mono); font-size: 11.5px; color: var(--wb-fg-subtle); flex: none; margin-left: auto; }
+  .ds-leaf__m { font-family: var(--wb-font-mono); font-size: calc(var(--ds-fs) * .64); color: var(--wb-fg-subtle); flex: none; margin-left: auto; }
   /* Kết quả tìm kiếm là <a> — không được gạch chân như một liên kết trong bài. */
   #results .ds-leaf { align-items: flex-start; }
   #results .ds-leaf .ds-leaf__m { margin-top: 1px; }
@@ -516,9 +573,11 @@
   .ds-daylist li { display: flex; gap: 8px; align-items: baseline; margin-bottom: 3px; font-size: var(--wb-text-help); }
   .ds-daylist a { flex: 1 1 auto; min-width: 0; }
 
-  /* ---- popup toán ---- */
-  .ds-mathmodal { max-width: 760px; width: min(760px, 94vw); }
-  .ds-mathmodal .wb-modal__body { max-height: min(72vh, 720px); overflow-y: auto; }
+  /* ---- popup toán ----
+     `94vw` / `72vh` trần sẽ ra 94% và 72% của MỘT CỬA SỔ ĐÃ CO 0,9 — tức 85% và 65%
+     cửa sổ thật. Dùng --ds-vw/--ds-vh (khối `:root`) để con số nói đúng điều nó nói. */
+  .ds-mathmodal { max-width: 760px; width: min(760px, calc(94 * var(--ds-vw))); }
+  .ds-mathmodal .wb-modal__body { max-height: min(calc(72 * var(--ds-vh)), 720px); overflow-y: auto; }
   .ds-mathmodal .ds-prose { max-width: none; }
   .katex-display { margin: 14px 0; overflow-x: auto; overflow-y: hidden; padding: 2px 0; }
 
@@ -541,8 +600,13 @@
      để mắt lướt qua được khi đang bám mạch chính. */
   .ds-more { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 20px; }
 
-  /* ---- ngăn phụ (drawer) ---- */
-  .ds-drawer { width: min(660px, 94vw); }
+  /* ---- ngăn phụ (drawer) ----
+     Kit đặt `.wb-drawer { height: 100vh; max-width: 92vw }`. Dưới zoom, cả hai con số
+     đó co thêm 0,9 lần, nên ngăn trượt cụt 10% đáy — đúng lỗi chủ trang thấy. Sửa ở
+     LỚP `.wb-drawer` chứ không sửa riêng từng ngăn: dock ghi chú và ngăn phụ dùng
+     cùng lớp đó, nên sửa một chỗ là cả hai đúng. */
+  .wb-drawer { height: calc(100 * var(--ds-vh)); max-width: calc(92 * var(--ds-vw)); }
+  .ds-drawer { width: min(660px, calc(94 * var(--ds-vw))); }
   .ds-drawer .ds-prose { max-width: none; }
   .ds-drawer .wb-drawer__body { padding-bottom: 40px; }
 
@@ -628,11 +692,21 @@
   }
   .ds-notesbtn:hover { border-color: var(--wb-border-strong); }
   .ds-notesbtn:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
+  /* Số ghi chú: KHÔNG phải badge. Badge (viên đặc, màu nghịch đảo) là ngôn ngữ của
+     "có việc chưa xử lý" — tin nhắn chưa đọc, lỗi chưa xem. Ghi chú của chính mình
+     không phải việc tồn, nên viên đặc đó vừa xấu vừa nói sai. Đây chỉ là một con số
+     đứng sau nhãn, ngăn bằng một vạch mảnh: đọc như "Notes · 3". Số bảng (tabular)
+     để 1 → 11 không làm nút nhảy bề rộng. */
   .ds-notesbtn__n {
-    min-width: 17px; padding: 0 5px; border-radius: var(--wb-radius-pill);
-    font-size: 10px; font-weight: 700; font-variant-numeric: tabular-nums;
-    background: var(--wb-fg); color: var(--wb-canvas);
+    padding-left: 8px; margin-left: -1px;
+    border-left: var(--wb-bw) solid var(--wb-border);
+    font-size: var(--wb-text-caption); font-weight: 600;
+    font-variant-numeric: tabular-nums; color: var(--wb-fg-muted);
   }
+  .ds-notesbtn:hover .ds-notesbtn__n { border-left-color: var(--wb-border-strong); }
+  /* KHÔNG tô màu con số theo "có chỗ tắc": con số là TỔNG ghi chú, nên tô nó vàng vì
+     2/5 dòng là chỗ tắc thì màu đang nói sai về chính con số nó đứng cạnh. Số chỗ tắc
+     được nói ở đúng chỗ nó thuộc về: tiêu đề mục "Đã ghi" trong panel, và tooltip nút. */
   .ds-notesbtn__n[hidden] { display: none; }
   @media (max-width: 560px) { .ds-notesbtn { padding: 6px; gap: 4px; } .ds-notesbtn__label { display: none; } }
 
@@ -650,16 +724,53 @@
          nằm đè lên chữ. Nhường chỗ thì cột co lại và chữ gói lại dòng — đó là cái
          giá phải trả, và nó rẻ hơn việc che mất đoạn văn đang được ghi chú.
      Dưới 1200px thì hết chỗ để nhường: dock nằm đè, và đó là lựa chọn đúng vì màn
-     hình hẹp thì không thể có cả hai. */
+     hình hẹp thì không thể có cả hai.
+
+     Bề rộng: MẶC ĐỊNH 1/4 cửa sổ (token ⑦), KÉO ĐƯỢC ở mép trái. Vì sao 1/4 chứ không
+     phải một số px cố định: dock lấy chỗ của cột nội dung, nên "bao nhiêu là đủ" phụ
+     thuộc cửa sổ — 380px trên màn 1280 là 30% cột, trên màn 2560 là 15%. Kéo được vì
+     việc đang làm quyết định: đọc lại ghi chú cũ thì muốn rộng, gõ một dòng thì muốn hẹp. */
   .ds-notesdock {
-    width: var(--ds-dock-w); max-width: 94vw; z-index: 90;   /* dưới popup (100/101) */
-    top: var(--ds-navh, 56px); height: calc(100vh - var(--ds-navh, 56px));
+    width: var(--ds-dock-w); z-index: 90;   /* dưới popup (100/101) */
+    top: var(--ds-navh, 56px); height: calc(100 * var(--ds-vh) - var(--ds-navh, 56px));
     box-shadow: var(--wb-shadow-lg);
   }
   #notesOverlay { z-index: 90; }
-  @media (min-width: 1200px) {
+  /* 1333px = 1200px CỬA SỔ THẬT ÷ 0,9. Media query được so với `viewport / zoom`, nên
+     một `min-width: 1200px` trần ở đây thật ra là ngưỡng 1080px thật — và ở 1080px thì
+     cột còn ~38 ký tự/dòng sau khi nhường chỗ, tức dưới sàn 45. Đây là chỗ DUY NHẤT
+     trong trang dùng media query, và nó phải mang con số đã chia zoom. */
+  @media (min-width: 1333px) {
     body.ds-dock-on .wb-shell__main { padding-right: var(--ds-dock-w); }
   }
+  /* Tay kéo. Bản đầu là một vạch 1px chỉ hiện khi hover — nhìn ra "mỏng mỏng", và
+     không nói được rằng nó kéo được. Giờ là một TAY NẮM: viên 4×34px LUÔN thấy, giữa
+     mép trái. Hình viên thuốc là hình mà ai cũng đã học nghĩa "kéo tôi" từ chỗ khác,
+     nên nó không cần chú thích. Hover/tiêu điểm/đang kéo thì nó đậm màu và dài ra —
+     đổi MÀU và CHIỀU CAO, không đổi bề rộng hay `left`, vì đổi hai cái đó thì tay nắm
+     nhảy ngang đúng lúc con trỏ vừa tới.
+     Vùng bấm rộng 13px (tay nắm chỉ 4px) — mục tiêu chuột phải to hơn thứ nhìn thấy.
+     Đặt NGOÀI luồng cuộn của thân dock để cuộn danh sách không làm mất tay kéo. Là
+     <div role="separator" tabindex="0"> nên bàn phím đổi được: ←/→ 16px, Home/End hai
+     đầu — kéo chuột không phải cách duy nhất. */
+  .ds-dockgrip {
+    position: absolute; left: -6px; top: 0; bottom: 0; width: 13px; z-index: 2;
+    cursor: col-resize; background: none; border: 0; padding: 0; touch-action: none;
+  }
+  .ds-dockgrip::after {
+    content: ""; position: absolute; left: 4px; top: 50%; width: 5px; height: 44px;
+    transform: translateY(-50%); border-radius: var(--wb-radius-pill);
+    background: var(--wb-fg-subtle);
+    transition: background-color .12s ease, height .12s ease;
+  }
+  .ds-dockgrip:hover::after, .ds-dockgrip:focus-visible::after, body.ds-dragging .ds-dockgrip::after {
+    background: var(--wb-fg); height: 76px;
+  }
+  .ds-dockgrip:focus-visible { outline: none; }
+  .ds-dockgrip:focus-visible::after { box-shadow: 0 0 0 3px var(--wb-ring); }
+  /* Trong lúc kéo: tắt chọn chữ (kéo ngang qua đoạn văn sẽ bôi đen cả trang) và tắt
+     transition bề rộng của thân trang, nếu không dock đi trước còn nội dung đi sau. */
+  body.ds-dragging { user-select: none; cursor: col-resize; }
   .ds-notes { display: flex; flex-direction: column; gap: 14px; }
   /* Mỗi khối trong sổ có một TIÊU ĐỀ nói nó để làm gì. Bản trước không có, nên ba
      nhóm nút xếp thẳng vào nhau và người đọc phải tự đoán nhóm nào thuộc việc gì. */
@@ -670,15 +781,23 @@
     display: flex; align-items: center; gap: 8px;
   }
   .ds-notes__sec + .ds-notes__sec { border-top: var(--wb-bw) solid var(--wb-border); padding-top: 14px; }
-  .ds-notes__ctx {
-    display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
-    padding: 8px 10px; border-radius: var(--wb-radius);
-    background: var(--wb-surface-2); border: var(--wb-bw) solid var(--wb-border);
-  }
+  /* Con số trong tiêu đề mục KHÔNG viết hoa theo tiêu đề: "5 GHI CHÚ · 2 CHỖ TẮC" đọc
+     như đang hét, mà nó chỉ là một dòng đếm. */
+  .ds-notes__sech .ds-notes__when { text-transform: none; letter-spacing: 0; font-weight: 550; }
+  /* Tên bài đang mở: một DÒNG CHỮ, không phải một hộp. Bản trước là hộp viền + nền
+     surface-2, nên nó đọc như một ô input bị vô hiệu hoá — mà nó không nhận chữ, nó chỉ
+     nói "ghi chú sắp tới sẽ dán vào bài này". Tiêu đề mục ngay trên đã nói vai của nó,
+     nên cái hộp chỉ thêm một khối hình. */
+  .ds-notes__ctx { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin: -2px 0 2px; }
   .ds-notes__ctxk { font-size: var(--wb-text-caption); color: var(--wb-fg-muted); }
   .ds-notes__ctxv { font-weight: 650; }
+  /* `resize: none` + tự cao dần theo chữ (JS `autoGrow`). Bản trước để
+     `resize: vertical`, và cái tay kéo mặc định của trình duyệt ở góc dưới-phải là ba
+     vạch chéo mảnh — nó là chi tiết duy nhất trong cả panel mà trang không kiểm soát
+     được màu lẫn hình, nên nó luôn trông lạc. Tự cao dần thì không cần tay kéo đó. */
   .ds-notes__ta {
-    width: 100%; box-sizing: border-box; resize: vertical; min-height: 74px;
+    width: 100%; box-sizing: border-box; resize: none; overflow: hidden;
+    min-height: 68px; max-height: 320px;
     font: inherit; font-size: var(--wb-text-help); line-height: 1.55;
     padding: 9px 11px; border-radius: var(--wb-radius);
     border: var(--wb-bw) solid var(--wb-border); background: var(--wb-surface); color: var(--wb-fg);
@@ -687,27 +806,51 @@
   .ds-notes__row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .ds-notes__row--end { justify-content: flex-end; }
   .ds-notes__spacer { flex: 1 1 auto; }
-  .ds-notes__list { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
-  /* Mép trái mang LOẠI ghi chú, không phải trang trí: ở chế độ sáng thì --wb-surface
-     trùng màu nền trang, nên nếu chỉ dựa vào nền thì thẻ không tách ra khỏi trang.
-     Loại được nói HAI lần (mép trái + capsule chữ) có chủ ý — màu một mình không đủ
-     cho người không phân biệt được màu, chữ một mình thì không quét nhanh được. */
-  .ds-notes__item {
-    border: var(--wb-bw) solid var(--wb-border); border-left: 3px solid var(--wb-border-strong);
-    border-radius: 0 var(--wb-radius) var(--wb-radius) 0;
-    background: var(--wb-surface-2); padding: 9px 11px;
+
+  /* ---- danh sách ghi chú: HÀNG, không phải THẺ ----------------------------
+     Bản trước mỗi ghi chú là một thẻ có nền riêng, viền quanh, mép trái 3px màu theo
+     loại, và bo góc một bên. Bốn thứ trang trí cho một dòng chữ — trong một dock hẹp
+     thì chúng cộng lại thành nhiễu, và cái mép trái bo một bên là chi tiết xấu nhất.
+     Giờ là hàng phẳng, ngăn nhau bằng một vạch: chữ ghi chú là thứ đậm nhất, mọi thứ
+     khác lùi xuống hàng meta. Loại vẫn được nói HAI lần (điểm màu + chữ) cho người
+     không phân biệt được màu — nhưng chỉ với `tắc` và `gỡ`; `ghi` là mặc định nên nó
+     không cần nhãn nào cả. */
+  .ds-notes__list { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
+  .ds-notes__item { padding: 11px 0 12px; border-top: var(--wb-bw) solid var(--wb-border); }
+  .ds-notes__item:first-child { border-top: 0; padding-top: 2px; }
+  .ds-notes__text {
+    white-space: pre-wrap; overflow-wrap: anywhere;
+    font-size: var(--wb-text-help); line-height: 1.6; margin: 0; color: var(--wb-fg);
   }
-  .ds-notes__item[data-kind="tắc"] { border-left-color: var(--wb-warning); }
-  .ds-notes__item[data-kind="gỡ"]  { border-left-color: var(--wb-success); }
-  .ds-notes__text { white-space: pre-wrap; overflow-wrap: anywhere; font-size: var(--wb-text-help); line-height: 1.55; margin: 0; }
-  .ds-notes__meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
-  .ds-notes__when { font-size: var(--wb-text-caption); color: var(--wb-fg-subtle); font-variant-numeric: tabular-nums; }
-  .ds-notes__acts { margin-left: auto; display: flex; gap: 4px; }
-  .ds-notes__empty { font-size: var(--wb-text-help); color: var(--wb-fg-muted); }
-  /* Tên bài trong danh sách "Tất cả" là một capsule bấm được, không phải một link
-     trong câu văn — gạch chân làm nó đọc như chữ bị nhấn mạnh giữa dòng meta. */
-  .ds-notes__meta a { text-decoration: none; }
-  .ds-notes__meta a:hover { border-color: var(--wb-fg); color: var(--wb-fg); }
+  .ds-notes__meta {
+    display: flex; align-items: center; gap: 7px; flex-wrap: wrap; margin-top: 7px;
+    font-size: var(--wb-text-caption); color: var(--wb-fg-subtle);
+  }
+  /* Loại: điểm màu + chữ, cùng một cụm. Không viên, không viền — hàng meta phải đọc
+     như một dòng chữ nhỏ, không như một dãy nhãn. */
+  .ds-notes__kind { display: inline-flex; align-items: center; gap: 5px; font-weight: 650; }
+  .ds-notes__kind::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor;
+  }
+  .ds-notes__kind[data-kind="tắc"] { color: var(--wb-warning); }
+  .ds-notes__kind[data-kind="gỡ"]  { color: var(--wb-success); }
+  /* Tên bài LUÔN có mặt (mỗi ghi chú tự nói nó thuộc bài nào), nên nó phải nhẹ: chữ
+     thường, gạch chân chỉ khi hover. Nó là thứ dài nhất trong hàng meta nên nó được
+     phép co lại và cắt bằng "…" thay vì đẩy giờ xuống dòng dưới. */
+  .ds-notes__at {
+    color: var(--wb-fg-muted); text-decoration: none; min-width: 0;
+    max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .ds-notes__at:hover { color: var(--wb-fg); text-decoration: underline; text-underline-offset: 2px; }
+  .ds-notes__when { font-variant-numeric: tabular-nums; }
+  .ds-notes__dot { color: var(--wb-border-strong); }
+  /* Sửa/xoá chỉ hiện khi trỏ vào hàng hoặc khi có tiêu điểm trong hàng — hai cái nút
+     nhân 20 ghi chú là 40 nút cạnh chữ. `:focus-within` là phần giữ cho bàn phím vẫn
+     tới được; màn cảm ứng không có hover nên ở đó chúng hiện sẵn. */
+  .ds-notes__acts { margin-left: auto; display: flex; gap: 2px; opacity: 0; transition: opacity .12s ease; }
+  .ds-notes__item:hover .ds-notes__acts, .ds-notes__item:focus-within .ds-notes__acts { opacity: 1; }
+  @media (hover: none) { .ds-notes__acts { opacity: 1; } }
+  .ds-notes__empty { font-size: var(--wb-text-help); color: var(--wb-fg-muted); line-height: 1.6; }
   .ds-notes__io { font-size: var(--wb-text-help); }
   .ds-notes__io[hidden] { display: none; }
   /* Lệnh cần chạy sau khi tải sổ về: hiện thẳng ra, không giấu trong tooltip. Người
@@ -730,7 +873,7 @@
   .ds-nodefoot { margin-top: 36px; padding-top: 18px; border-top: var(--wb-bw) solid var(--wb-border); }
   .ds-keyhint { font-size: var(--wb-text-caption); color: var(--wb-fg-subtle); margin: 12px 0 0; }
   .ds-keyhint kbd, .ds-prose kbd {
-    font-family: var(--wb-font-mono); font-size: 11px; padding: 1px 6px;
+    font-family: var(--wb-font-mono); font-size: calc(var(--ds-fs) * .61); padding: 1px 6px;
     border: var(--wb-bw) solid var(--wb-border); border-bottom-width: 2px;
     border-radius: var(--wb-radius-sm); background: var(--wb-surface-2);
   }
@@ -777,13 +920,16 @@
     <div class="wb-navbar__spacer"></div>
     <div class="wb-navbar__actions">
       <span class="wb-cap wb-cap--sm" id="topProgress" title="Tiến độ học đã đạt">0%</span>
-      <!-- Sổ học GIỮ nhãn chữ (khác nút sao chép ở khối code, chỉ có icon): đây là một
-           tính năng cần được phát hiện, không phải một hành động lặp lại mà ngữ cảnh
-           đã nói hộ. Xem docs/design.md — luật icon thay nhãn. -->
-      <button class="ds-notesbtn" id="notesBtn" aria-label="Mở sổ học" title="Sổ học — ghi chú theo bài (n)"
+      <!-- GIỮ nhãn chữ (khác nút sao chép ở khối code, chỉ có icon): đây là một tính
+           năng cần được phát hiện, không phải một hành động lặp lại mà ngữ cảnh đã nói
+           hộ. Xem docs/design.md — luật icon thay nhãn.
+           Nhãn là "Notes", không phải "Sổ học": người dùng chỉ đang ghi chú: cái tên
+           LEARNING-LOG là cơ chế bên dưới và không nên lộ ra ở lớp vỏ. Đây là ngoại lệ
+           DUY NHẤT của luật lớp-vỏ-tiếng-Việt, và nó được ghi ở docs/design.md §0.1. -->
+      <button class="ds-notesbtn" id="notesBtn" aria-label="Mở Notes" title="Notes — ghi chú theo bài (n)"
               aria-expanded="false" aria-controls="notesOverlay">
         <span class="wb-ico wb-ico--sm" aria-hidden="true">edit_note</span>
-        <span class="ds-notesbtn__label">Sổ học</span>
+        <span class="ds-notesbtn__label">Notes</span>
         <span class="ds-notesbtn__n" id="notesCount" hidden>0</span>
       </button>
       <button class="ds-theme" id="themeBtn" aria-label="Đổi giao diện sáng/tối" aria-pressed="false" title="Đổi sáng/tối">
@@ -872,19 +1018,25 @@
   </aside>
 </div>
 
-<!-- Sổ học: ghi chú của người học, gắn vào đúng bài đang mở.
+<!-- Notes: ghi chú của người học, gắn vào đúng bài đang mở.
      DOCK, không phải lớp phủ — trang phía sau vẫn cuộn được, bấm được, chọn chữ được
-     trong lúc sổ đang mở. Vì sao đó là tầng thứ tư ngoài ba tầng của CLAUDE.md §7:
+     trong lúc Notes đang mở. Vì sao đó là tầng thứ tư ngoài ba tầng của CLAUDE.md §7:
      xem khối `.ds-notesdock` trong <style>. Ba khối bên dưới, mỗi khối một tiêu đề
      nói nó để làm gì: GHI · ĐÃ GHI · ĐƯA VÀO REPO. -->
 <div class="wb-overlay wb-overlay--pass" id="notesOverlay">
   <aside class="wb-drawer ds-notesdock" role="complementary" aria-labelledby="notesTitle">
+    <!-- Tay kéo đứng TRƯỚC phần đầu và ngoài .wb-drawer__body: nó phải nằm ngoài vùng
+         cuộn, nếu không cuộn danh sách ghi chú xuống là mất tay kéo. -->
+    <div class="ds-dockgrip" id="dockGrip" role="separator" aria-orientation="vertical"
+         tabindex="0" aria-label="Kéo để đổi bề rộng Notes" title="Kéo để đổi bề rộng · ←/→ · nhấn đúp để về 1/4 cửa sổ"></div>
     <div class="wb-drawer__head">
       <div>
-        <h4 class="wb-drawer__title" id="notesTitle">Sổ học</h4>
-        <p class="wb-drawer__sub">Ghi chú nằm trong trình duyệt này. Trang phía sau vẫn đọc và bấm được.</p>
+        <h4 class="wb-drawer__title" id="notesTitle">Notes</h4>
+        <!-- Câu thứ hai là chỗ DUY NHẤT nói ra rằng mép trái kéo được: tay kéo chỉ hiện
+             khi trỏ chuột vào, nên không nói thì không ai tìm ra. -->
+        <p class="wb-drawer__sub">Ghi chú nằm trong trình duyệt này. Trang phía sau vẫn đọc và bấm được. Kéo mép trái để đổi bề rộng.</p>
       </div>
-      <button class="wb-close" data-notes-close aria-label="Đóng sổ học"></button>
+      <button class="wb-close" data-notes-close aria-label="Đóng Notes"></button>
     </div>
     <div class="wb-drawer__body">
       <div class="ds-notes">
@@ -915,17 +1067,15 @@
           <p class="wb-help" style="margin:0">Chọn <b>Chỗ tắc</b> khi đọc mà không hiểu — đó là dòng làm trang này tốt lên, không phải lời phàn nàn.</p>
         </div>
 
+        <!-- MỘT danh sách, mọi ghi chú, mới nhất trước — không lọc theo bài đang mở.
+             Bản trước mặc định lọc "Bài này", nên đổi bài là danh sách trông như vừa bị
+             xoá sạch. Ghi chú là của cả quá trình học, không phải của một trang; mỗi
+             dòng tự nói nó thuộc bài nào là đủ, và cái nhãn đó bấm được để mở bài. -->
         <div class="ds-notes__sec">
           <h5 class="ds-notes__sech">
             Đã ghi
             <span class="ds-notes__spacer"></span>
-            <!-- Cùng khuôn với bộ nút mức ở cuối bài (.ds-lvlbtn): wb-btn--sm, mục đang
-                 chọn thì thêm is-active. Bộ kit không có segmented control, và tự dựng
-                 một cái là thêm một ngôn ngữ hình thứ hai cho cùng một việc. -->
-            <span class="wb-cluster" role="group" aria-label="Lọc ghi chú" style="gap:6px">
-              <button class="wb-btn wb-btn--sm ds-lvlbtn is-active" data-nfilter="here" aria-pressed="true">Bài này</button>
-              <button class="wb-btn wb-btn--sm ds-lvlbtn" data-nfilter="all" aria-pressed="false">Tất cả</button>
-            </span>
+            <span class="ds-notes__when" id="notesTotal"></span>
           </h5>
           <ul class="ds-notes__list" id="notesList" aria-live="polite"></ul>
         </div>
@@ -938,12 +1088,12 @@
           <h5 class="ds-notes__sech">Đưa vào repo</h5>
           <p class="wb-help" style="margin:0">Trang không tự ghi được vào <code>LEARNING-LOG.md</code> — nó là file tĩnh trong trình duyệt. Hai bước:</p>
           <button class="wb-btn wb-btn--sm" id="notesDl">
-            <span class="wb-ico wb-ico--xs" aria-hidden="true">download</span> 1. Tải sổ về máy
+            <span class="wb-ico wb-ico--xs" aria-hidden="true">download</span> 1. Tải ghi chú về máy
           </button>
-          <p class="wb-help" style="margin:0">2. Chạy lệnh này — nó tự tìm file vừa tải, trộn vào sổ, bỏ qua dòng đã có:</p>
+          <p class="wb-help" style="margin:0">2. Chạy lệnh này — nó tự tìm file vừa tải, trộn vào <code>LEARNING-LOG.md</code>, bỏ qua dòng đã có:</p>
           <code class="ds-notes__cmd">node tools/learn.mjs --sync</code>
           <div class="wb-alert wb-alert--info ds-notes__io" id="notesIoMsg" role="status" hidden></div>
-          <button class="ds-notes__link" id="notesImp" aria-expanded="false" aria-controls="notesImpBox">Khôi phục sổ từ một file đã tải về</button>
+          <button class="ds-notes__link" id="notesImp" aria-expanded="false" aria-controls="notesImpBox">Khôi phục ghi chú từ một file đã tải về</button>
           <div id="notesImpBox" hidden>
             <label class="wb-label" for="notesImpTa">Dán nội dung mục <code>## Sổ</code> vào đây</label>
             <textarea class="ds-notes__ta" id="notesImpTa" rows="5"
@@ -10450,7 +10600,7 @@ function render() {
             <span class="wb-pager__meta">${next.phase.t}</span></span>
             <span class="wb-ico wb-pager__arrow">chevron_right</span></a>` : '<span></span>'}
       </nav>
-      <p class="ds-keyhint"><kbd>[</kbd> bài trước · <kbd>]</kbd> bài sau · <kbd>n</kbd> sổ học · <kbd>Esc</kbd> đóng popup</p>
+      <p class="ds-keyhint"><kbd>[</kbd> bài trước · <kbd>]</kbd> bài sau · <kbd>n</kbd> ghi chú · <kbd>Esc</kbd> đóng popup</p>
     </div>`;
 
   if (tpl) $('#prose').append(tpl.content.cloneNode(true));
@@ -12728,14 +12878,14 @@ let notes = (() => {
     return Array.isArray(a) ? a.filter(n => n && typeof n.text === 'string') : [];
   } catch { return []; }
 })();
-let noteFilter = 'here', noteKind = 'ghi', notesSaveWarned = false;
+let noteKind = 'ghi', notesSaveWarned = false;
 
 function saveNotes() {
   try { localStorage.setItem(LS_KEY_NOTES, JSON.stringify(notes)); }
   catch {
     if (notesSaveWarned) return;
     notesSaveWarned = true;
-    notesMsg('Không lưu được vào bộ nhớ trình duyệt. Bấm "Tải sổ về máy" ngay để không mất ghi chú.', 'warning');
+    notesMsg('Không lưu được vào bộ nhớ trình duyệt. Bấm "Tải ghi chú về máy" ngay để không mất ghi chú.', 'warning');
   }
 }
 /* Id đủ để phân biệt trong một sổ tay của một người — không cần crypto.randomUUID
@@ -12757,12 +12907,12 @@ function notesMsg(text, kind) {
 
 function syncNotesCount() {
   const el = $('#notesCount');
+  const nStuck = notes.filter(n => n.kind === 'tắc').length;
   el.textContent = String(notes.length);
   el.hidden = notes.length === 0;
-  const nStuck = notes.filter(n => n.kind === 'tắc').length;
   $('#notesBtn').title = notes.length
-    ? `Sổ học — ${notes.length} ghi chú${nStuck ? `, ${nStuck} chỗ tắc` : ''} (n)`
-    : 'Sổ học — ghi chú theo bài (n)';
+    ? `Notes — ${notes.length} ghi chú${nStuck ? `, ${nStuck} chỗ tắc` : ''} (n)`
+    : 'Notes — ghi chú theo bài (n)';
 }
 
 /* "x phút trước" chỉ trong 24 giờ đầu, sau đó là ngày. Một dòng "3 ngày trước" bắt
@@ -12775,20 +12925,22 @@ function whenText(n) {
   return n.day || '';
 }
 
+/* MỘT danh sách: mọi ghi chú, mới nhất trước, mỗi dòng tự khai nó thuộc bài nào.
+   Không lọc theo bài đang mở — xem chú thích ở khối markup. */
 function renderNotes() {
   const list = $('#notesList');
-  const here = curNode();
-  $('#notesWhere').textContent = nodeTitle(here);
-  const shown = (noteFilter === 'here' ? notes.filter(n => n.node === here) : notes.slice())
-    .sort((a, b) => (b.ts || 0) - (a.ts || 0));
+  $('#notesWhere').textContent = nodeTitle(curNode());
+  const shown = notes.slice().sort((a, b) => (b.ts || 0) - (a.ts || 0));
+  const nStuck = shown.filter(n => n.kind === 'tắc').length;
+  $('#notesTotal').textContent = shown.length
+    ? `${shown.length} ghi chú${nStuck ? ` · ${nStuck} chỗ tắc` : ''}`
+    : '';
 
   list.textContent = '';
   if (!shown.length) {
     const li = document.createElement('li');
     li.className = 'ds-notes__empty';
-    li.textContent = noteFilter === 'here'
-      ? 'Chưa có ghi chú nào cho bài này.'
-      : 'Sổ còn trống. Ghi một dòng ở chỗ nào bạn đọc mà không hiểu — đó là dòng đáng giá nhất.';
+    li.textContent = 'Chưa có ghi chú nào. Ghi một dòng ở chỗ nào bạn đọc mà không hiểu — đó là dòng đáng giá nhất.';
     list.append(li);
     return;
   }
@@ -12806,20 +12958,22 @@ function renderNotes() {
 
     const meta = document.createElement('div');
     meta.className = 'ds-notes__meta';
+    // `ghi` là mặc định nên KHÔNG có nhãn — nhãn cho thứ mặc định là nhiễu.
     if (n.kind && n.kind !== 'ghi') {
-      const tag = document.createElement('span');
-      tag.className = 'wb-cap wb-cap--sm' + (n.kind === 'tắc' ? ' wb-cap--warning' : ' wb-cap--success');
-      tag.textContent = n.kind === 'tắc' ? 'chỗ tắc' : 'đã gỡ';
-      meta.append(tag);
+      const kind = document.createElement('span');
+      kind.className = 'ds-notes__kind';
+      kind.dataset.kind = n.kind;
+      kind.textContent = n.kind === 'tắc' ? 'Chỗ tắc' : 'Đã gỡ';
+      meta.append(kind);
+      meta.append(dotSep());
     }
-    if (noteFilter === 'all') {
-      const a = document.createElement('a');
-      a.className = 'wb-cap wb-cap--sm wb-cap--dashed';
-      a.href = '#/' + n.node;
-      a.textContent = nodeTitle(n.node);
-      a.title = 'Mở bài này';
-      meta.append(a);
-    }
+    const a = document.createElement('a');
+    a.className = 'ds-notes__at';
+    a.href = '#/' + n.node;
+    a.textContent = nodeTitle(n.node);
+    a.title = 'Mở bài này';
+    meta.append(a, dotSep());
+
     const when = document.createElement('span');
     when.className = 'ds-notes__when';
     when.textContent = whenText(n);
@@ -12829,7 +12983,7 @@ function renderNotes() {
     acts.className = 'ds-notes__acts';
     for (const [act, ico, lbl] of [['edit', 'edit', 'Sửa ghi chú'], ['del', 'delete', 'Xoá ghi chú']]) {
       const b = document.createElement('button');
-      b.className = 'wb-btn wb-btn--ghost wb-btn--sm';
+      b.className = 'wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm';
       b.dataset.nact = act;
       b.title = lbl;
       b.setAttribute('aria-label', lbl);
@@ -12840,6 +12994,20 @@ function renderNotes() {
     li.append(meta);
     list.append(li);
   }
+}
+function dotSep() {
+  const s = document.createElement('span');
+  s.className = 'ds-notes__dot';
+  s.setAttribute('aria-hidden', 'true');
+  s.textContent = '·';
+  return s;
+}
+/* Ô ghi tự cao dần: `resize: none` bỏ cái tay kéo chéo của trình duyệt (xem CSS), nên
+   chiều cao phải do JS lo. Đặt về `auto` trước khi đọc scrollHeight, không thì ô chỉ
+   cao lên được chứ không thấp lại khi xoá chữ. Trần 320px do CSS giữ. */
+function autoGrow(ta) {
+  ta.style.height = 'auto';
+  ta.style.height = ta.scrollHeight + 'px';
 }
 
 /* ---- xuất: đúng ngữ pháp mục `## Sổ` của LEARNING-LOG.md ----------------
@@ -12952,8 +13120,9 @@ function openNotes(trigger) {
   $('#notesBtn').setAttribute('aria-expanded', 'true');
   notesLastTrigger = trigger && trigger !== document.body ? trigger : null;
   // preventScroll: trên màn hình hẹp, cuộn-tới-tiêu-điểm đẩy luôn tiêu đề mục và tên bài
-  // ra khỏi tầm nhìn — mở sổ ra mà không thấy mình đang ghi cho bài nào.
-  setTimeout(() => $('#notesInput').focus({ preventScroll: true }), 60);
+  // ra khỏi tầm nhìn — mở panel ra mà không thấy mình đang ghi cho bài nào.
+  // autoGrow phải chạy SAU khi panel hiện: lúc còn `display:none` thì scrollHeight là 0.
+  setTimeout(() => { autoGrow($('#notesInput')); $('#notesInput').focus({ preventScroll: true }); }, 60);
 }
 
 function closeNotes() {
@@ -12971,10 +13140,100 @@ $('#notesBtn').addEventListener('click', e => {
   else openNotes(e.currentTarget);
 });
 
+/* ---- bề rộng dock: mặc định 1/4 cửa sổ, kéo được ------------------------
+   Con số lưu là px CỤC BỘ (trước zoom), không phải px trên màn hình. Lý do: CSS trong
+   trang này sống trong hệ toạ độ đã bị `zoom` co lại, còn `clientX` và getBoundingClientRect
+   trả về px SAU zoom. Trộn hai hệ đó là cách để dock nhảy 10% mỗi lần kéo. Quy tắc:
+   chỗ nào đi từ chuột vào CSS thì CHIA zoom, chỗ nào đi từ CSS ra chuột thì NHÂN.
+
+   Không có bề rộng nào được lưu → không ghi gì cả, để `clamp()` trong :root tự tính
+   theo cửa sổ. Nghĩa là người chưa từng kéo thì đổi cửa sổ vẫn được đúng 1/4, còn
+   người đã kéo thì con số của họ được tôn trọng — đó là lý do reset = XOÁ, không phải
+   ghi lại 25%. */
+const DOCK_KEY = 'ds.dockW';
+const dockZoom = () => parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--ds-zoom')) || 1;
+const dockMin = () => 280;
+const dockMax = () => Math.round(innerWidth / dockZoom() * .72);
+const dockGrip = $('#dockGrip');
+const dockEl = $('.ds-notesdock');
+
+/* Đọc bằng getComputedStyle, KHÔNG bằng getBoundingClientRect. Hai lý do, cả hai đã
+   thử: (a) rect trả về 0 khi dock đang đóng (`.wb-overlay` là display:none), nên mọi
+   phép cộng/trừ từ đó ra 0; (b) rect là px SAU zoom còn computed width là px cục bộ,
+   nên đọc computed width là hết luôn việc chia zoom ở phía này. */
+function dockWNow() { return parseFloat(getComputedStyle(dockEl).width) || dockMin(); }
+
+function syncGripAria() {
+  const local = dockWNow();
+  dockGrip.setAttribute('aria-valuemin', String(dockMin()));
+  dockGrip.setAttribute('aria-valuemax', String(dockMax()));
+  dockGrip.setAttribute('aria-valuenow', String(Math.round(local)));
+  dockGrip.setAttribute('aria-valuetext', `${Math.round(local * dockZoom() / innerWidth * 100)}% bề rộng cửa sổ`);
+}
+
+function setDockW(local, remember) {
+  const w = Math.max(dockMin(), Math.min(dockMax(), Math.round(local)));
+  document.documentElement.style.setProperty('--ds-dock-w', w + 'px');
+  if (remember) { try { localStorage.setItem(DOCK_KEY, String(w)); } catch { } }
+  syncGripAria();
+}
+
+function resetDockW() {
+  document.documentElement.style.removeProperty('--ds-dock-w');
+  try { localStorage.removeItem(DOCK_KEY); } catch { }
+  syncGripAria();
+  announce('Bề rộng ghi chú về mặc định, 1/4 cửa sổ.');
+}
+
+(function initDockW() {
+  let saved = null;
+  try { saved = localStorage.getItem(DOCK_KEY); } catch { }
+  if (saved) setDockW(parseFloat(saved), false); else syncGripAria();
+  // Cửa sổ nhỏ lại thì bề rộng đã lưu có thể vượt trần mới → kẹp lại, nhưng KHÔNG ghi
+  // đè con số đã lưu: kéo cửa sổ rộng lại thì người dùng phải được nhận lại bề rộng cũ.
+  addEventListener('resize', () => { if (saved) setDockW(parseFloat(saved), false); else syncGripAria(); });
+})();
+
+/* Cờ + listener trên window, KHÔNG dùng setPointerCapture: capture chỉ nhận pointerId
+   của một con trỏ thật, nên nó ném khi bị gọi bằng sự kiện dựng tay — và một cái tay
+   kéo không kiểm được bằng script là một cái tay kéo không được kiểm. Listener trên
+   window cũng là thứ giữ cho việc kéo không đứt khi chuột chạy ra ngoài dock. */
+let dragging = false;
+dockGrip.addEventListener('pointerdown', e => {
+  if (e.button) return;
+  dragging = true;
+  document.body.classList.add('ds-dragging');
+  e.preventDefault();                       // không để kéo thành bôi đen chữ
+});
+addEventListener('pointermove', e => {
+  if (!dragging) return;
+  setDockW((innerWidth - e.clientX) / dockZoom(), false);
+});
+function endDrag() {
+  if (!dragging) return;
+  dragging = false;
+  document.body.classList.remove('ds-dragging');
+  setDockW(dockWNow(), true);                // chốt lại một lần, ở cuối — không ghi mỗi frame
+}
+addEventListener('pointerup', endDrag);
+addEventListener('pointercancel', endDrag);
+dockGrip.addEventListener('dblclick', resetDockW);
+/* Bàn phím: một tay kéo mà chỉ chuột dùng được thì nó không phải là điều khiển, nó là
+   một cái bẫy. ←/→ 16px (Shift 64px), Home/End về hai đầu, Enter/Space về mặc định. */
+dockGrip.addEventListener('keydown', e => {
+  const step = e.shiftKey ? 64 : 16;
+  const go = d => { setDockW(dockWNow() + d, true); e.preventDefault(); };
+  if (e.key === 'ArrowLeft') go(step);
+  else if (e.key === 'ArrowRight') go(-step);
+  else if (e.key === 'Home') { setDockW(dockMax(), true); e.preventDefault(); }
+  else if (e.key === 'End') { setDockW(dockMin(), true); e.preventDefault(); }
+  else if (e.key === 'Enter' || e.key === ' ') { resetDockW(); e.preventDefault(); }
+});
+
 const notesTa = $('#notesInput');
 const notesAddBtn = $('#notesAdd');
 const syncAddBtn = () => { notesAddBtn.disabled = !notesTa.value.trim(); };
-notesTa.addEventListener('input', syncAddBtn);
+notesTa.addEventListener('input', () => { syncAddBtn(); autoGrow(notesTa); });
 notesTa.addEventListener('keydown', e => {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); addNote(); }
 });
@@ -12985,7 +13244,7 @@ function addNote() {
   if (!text) return;
   notes.push({ id: newNoteId(), node: curNode(), kind: noteKind, day: isoToday(), text, ts: Date.now() });
   saveNotes(); syncNotesCount();
-  notesTa.value = ''; syncAddBtn();
+  notesTa.value = ''; syncAddBtn(); autoGrow(notesTa);
   // Vừa ghi cho bài này thì phải THẤY nó ngay, kể cả khi đang lọc "Tất cả".
   renderNotes();
   announce('Đã lưu ghi chú.');
@@ -13004,22 +13263,11 @@ $('#notesOverlay').addEventListener('click', e => {
     notesTa.focus();
     return;
   }
-  const fb = e.target.closest('[data-nfilter]');
-  if (fb) {
-    noteFilter = fb.dataset.nfilter;
-    $$('[data-nfilter]').forEach(b => {
-      const on = b.dataset.nfilter === noteFilter;
-      b.classList.toggle('is-active', on);
-      b.setAttribute('aria-pressed', String(on));
-    });
-    renderNotes();
-    return;
-  }
   const act = e.target.closest('[data-nact]');
   if (act) { noteAction(act); return; }
-  // Bấm tên bài trong danh sách "Tất cả" → mở bài đó và GIỮ sổ mở. Bản trước đóng sổ
-  // lại, vì lúc đó sổ là lớp phủ nên không thể vừa mở bài vừa giữ sổ. Giờ thì được,
-  // và giữ mở mới đúng việc: bạn bấm sang bài đó chính vì muốn xem lại chỗ đã ghi.
+  // Bấm tên bài trong một dòng ghi chú → mở bài đó và GIỮ panel mở. Bản trước đóng nó
+  // lại, vì lúc đó panel là lớp phủ nên không thể vừa mở bài vừa giữ panel. Giờ thì
+  // được, và giữ mở mới đúng việc: bạn bấm sang bài đó chính vì muốn xem lại chỗ đã ghi.
 });
 
 function noteAction(btn) {
@@ -13055,8 +13303,9 @@ function noteAction(btn) {
   const ta = document.createElement('textarea');
   ta.className = 'ds-notes__ta';
   ta.value = n.text;
-  ta.rows = Math.min(8, n.text.split('\n').length + 1);
   p.replaceWith(ta);
+  autoGrow(ta);
+  ta.addEventListener('input', () => autoGrow(ta));
   ta.focus();
   const commit = () => {
     const v = ta.value.trim();
