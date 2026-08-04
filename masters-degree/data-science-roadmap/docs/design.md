@@ -119,6 +119,13 @@ Ba luật kèm theo:
   lệch nhau 200px. Px cứng chỉ được dùng **ngoài `#main`** (lớp vỏ).
 - **Thêm một loại nội dung mới** → thêm một bậc ở ⑧ rồi trỏ vào; **thêm một component kit
   vào bài** → thêm một dòng ở tầng 3. Đừng viết `font-size` rời tại chỗ dùng.
+- **MỘT bậc, MỘT tên.** Tầng 2 làm `--ds-t-cap` và `--wb-text-caption` bằng nhau *bên trong*
+  `#main`, nên trước 2026-08-04 trang có 22 chỗ gõ tên này và 50 chỗ gõ tên kia cho cùng
+  những bậc đó — đọc code không biết được một rule thuộc cột bài hay lớp vỏ. Luật:
+  rule **chỉ trong cột bài** → `--ds-t-*`; rule **chỉ ở lớp vỏ** → `--wb-text-*` (px của
+  kit, vì lớp vỏ không được giãn theo cỡ chữ bài); rule **trải cả hai lớp** → `--wb-text-*`
+  và để tầng 2 tự đổi theo ngữ cảnh. Đúng một rule thuộc loại thứ ba:
+  `.ds-keyhint kbd, .ds-prose kbd, .ds-notes kbd`.
 
 Hai chỗ dùng `em` còn lại là **đúng** và đừng đổi: `code:not(pre code)` (.88em) và
 `.ds-brand__sub` (.8em, ở lớp vỏ). Cả hai phải co theo *phần tử chứa* chứ không theo thân
@@ -346,6 +353,73 @@ vạch mảnh, đọc như `Notes · 3`. Và **đừng tô màu con số theo "c
 ghi chú, tô vàng vì 2/5 dòng là chỗ tắc thì màu đang nói sai về chính con số nó đứng cạnh;
 số chỗ tắc được nói ở tiêu đề mục "Đã ghi" và ở tooltip của nút.
 
+### 0.6 MỘT thang khoảng cách, khai theo QUAN HỆ
+
+Cùng ý tưởng như thang chữ, chỉ đổi câu hỏi: chỗ dùng hỏi **"hai khối này liên quan tới nhau
+thế nào"**, không hỏi "mấy px". Bảy bậc ở `:root` ⑨:
+
+| token | px | dùng cho quan hệ |
+|---|---|---|
+| `--ds-sp-hair` | 4 | nhãn ↔ giá trị của nó, trong cùng một khối |
+| `--ds-sp-tight` | 6 | giữa hai `<li>`; tiêu đề mục con ↔ thân nó |
+| `--ds-sp-near` | 8 | tiêu đề ↔ thân nó |
+| `--ds-sp-text` | 14 | giữa hai đoạn văn — **nhịp nền** của bài |
+| `--ds-sp-block` | 20 | văn ↔ một **khối**: code, bảng, viz, alert, hàng chip |
+| `--ds-sp-sub` | 28 | giữa hai mục con (kit gọi `--wb-block-gap`) |
+| `--ds-sp-sec` | 44 | trước một tiêu đề mục (kit gọi `--wb-section-gap`) |
+
+**Vì sao cần.** Đo 85 bài × 1686 cặp khối liền nhau (script dưới) ra **9 nhịp** cho vài quan
+hệ: 13px giữa hai đoạn văn, 14px giữa hai danh sách, 16px quanh bảng/code, 18px quanh viz,
+20px quanh hàng chip. Mắt không đọc năm nhịp đó thành năm ý — nó đọc ra "trang xộc xệch".
+Và nhịp thứ sáu tệ hơn: **0px**, vì `.wb-alert` của kit không khai margin nào cả, nên **23
+chỗ** có alert dán sát khối ngay dưới. Sau khi token hoá: **6 nhịp, không còn 0px.**
+
+**Chỗ khai nhịp là trang, không phải kit.** Kit đúng khi không áp nhịp cho trang dùng nó
+(`.wb-alert` chỉ có `padding`). Nên nhịp "khối ↔ khối kế tiếp" khai **một danh sách gộp**
+trong `<style>` (`.ds-prose > .wb-alert, … { margin-bottom: var(--ds-sp-block) }`) — thêm
+một loại khối vào bài thì **thêm tên nó vào danh sách đó**, đừng viết `margin` riêng ở chỗ
+định nghĩa khối.
+
+**Cái KHÔNG thuộc thang, có chủ ý** — hai loại:
+
+- **`padding` của một component**, cả hai trục: `3px 12px` của một chip, `8px 10px` của ô
+  bảng, `14px 16px` của khối code, `7px 10px` của một hàng bấm được. Đó là *hình dạng* của
+  chính component — nó quyết định component trông dày hay mỏng, không quyết định nhịp của
+  trang. Ép `.ds-leaf` từ `7px` lên `8px` cho "đúng thang" thì được sự nhất quán trên giấy mà
+  đổi hình một thứ chẳng liên quan.
+- **Nhích quang học ≤5px bên trong** một component: gap 2px giữa nhãn và giá trị, `margin-top:
+  1px` bù đường viền của một icon, `row-gap: 0` để huỷ một `gap` của kit.
+
+**Ranh giới, một câu: `margin` giữa hai khối anh em thì LÊN thang; `padding` trong lòng một
+component thì KHÔNG.** Tự kiểm bằng cách grep `margin` dọc còn viết px trần trong `<style>` —
+ra chỗ nào ngoài lớp vỏ là chỗ đó chưa lên thang.
+
+Đếm lại sau mỗi lần sửa nhịp — một con số nói ngay là thang còn khít hay đã trôi:
+
+```js
+// mọi cặp khối anh em liền nhau trong cột bài, gom theo khoảng cách thật
+const ids = [...document.querySelectorAll('template[data-node]')].map(t => t.dataset.node);
+const hist = {};
+for (const id of ids) {
+  location.hash = '#/' + id; render();
+  const k = [...document.querySelectorAll('#main .ds-prose > *')];
+  for (let i = 0; i < k.length - 1; i++) {
+    const a = k[i].getBoundingClientRect(), b = k[i + 1].getBoundingClientRect();
+    if (!a.height || !b.height) continue;
+    const g = Math.round(b.top - a.bottom); hist[g] = (hist[g] || 0) + 1;
+  }
+}
+console.log(Object.keys(hist).length, 'nhịp', hist);   // mục tiêu: ≤7, và KHÔNG có khoá "0"
+```
+
+### 0.7 Cỡ nút vuông/tròn: `--ds-ctl` ba bậc
+
+Ô có chiều cao == chiều rộng thì **một** token lo cả hai: `--ds-ctl` 30px (mốc stepper, nút
+sao chép), `--ds-ctl-sm` 26px (nút nhỏ trên thanh trên và trong dock), `--ds-ctl-xs` 24px
+(logo). Trước đây bốn con số rời, trong đó **30 và 34 là cùng một vai** — một số thứ tự
+trong một vòng tròn — chỉ khác nhau vì được gõ hai lần ở hai chỗ. `--ds-ctl` cũng là chỗ
+`--wb-steps-size` của kit nối vào, nên mốc stepper và nút trong bài không thể lệch nhau nữa.
+
 ---
 
 ## 1. Nội dung chính và nội dung phụ — cách phân biệt
@@ -392,6 +466,45 @@ nhất là hai bài tra cứu (`s-lookup`, `t-stack`) — chúng *là* index, c�
 theo được không? Nếu một đoạn trên mạch chính chỉ hiểu được sau khi mở popup thì phần thiếu
 đó thuộc mạch chính — kéo nó lên.
 
+### 1.1 Hình dạng của cái chip mở nhánh phụ
+
+Hai loại chip, **cùng hình** (viên nét đứt) để người đọc học một lần là biết cả hai đều
+"bấm được, không bắt buộc", khác nhau ở **dấu đầu dòng**:
+
+| chip | dấu | nói gì |
+|---|---|---|
+| `.ds-math` → popup | `∑` | "trong này là công thức" — nói về **loại nội dung** |
+| `.ds-aside` → drawer | `chevron_right` | "đi tới một ngăn trượt ra **bên phải**" — nói về **việc sắp xảy ra**, và chỉ đúng hướng ngăn |
+
+**Không dùng `+`.** Dấu cộng đọc ra là *"thêm một cái nữa"* — tạo mới, cộng vào, mở rộng một
+danh sách — mà chip này không thêm gì cả: nó đưa người đọc **tới** một ngăn đã có sẵn nội
+dung. (Trang đã để `add` một thời gian trong khi chú thích ngay cạnh nó vẫn ghi `›`; đó là
+code trôi khỏi chú thích, không phải một quyết định khác.)
+
+**Nét đứt phải SỐNG QUA hover.** Nét đứt là *nghĩa* của chip — "khối này không nằm trên mạch
+chính, bỏ qua được" — không phải trạng thái nghỉ của nó. Đổi sang nét liền lúc hover thì đúng
+lúc người đọc chú ý nhất, chip lại tự nói ngược điều nó vừa nói, và nhìn ra như một chip khác
+hẳn nhảy vào chỗ cũ. Hover chỉ được đổi **nền** và **màu viền**; `border-style` thì không.
+Cách tự kiểm: rule `:hover` của chip **không được chứa** `border-style`.
+
+### 1.2 Bề rộng của drawer: 1/3 cửa sổ, kéo được, và khoá cuộn trang
+
+- **Bề rộng mặc định là tỉ lệ cửa sổ, không phải px cứng** (`--ds-aside-w` = 1/3, token ⑪).
+  660px cứng vừa không nói được vì sao là 660, vừa cho hai cảm giác khác nhau trên hai màn:
+  52% cửa sổ ở laptop 1280px, 26% ở màn 2560px.
+- **Kéo được ở mép trái**, bằng **đúng** tay kéo `.ds-grip` và **đúng** hàm
+  `makeEdgeResizer()` mà dock `Notes` dùng. Có hai ngăn kéo được nhưng chỉ một cơ chế: mọi cái
+  bẫy của việc kéo (hệ toạ độ zoom, `rect` trả 0 khi ngăn đang đóng, reset = *xoá* token chứ
+  không ghi lại tỉ lệ mặc định, không dùng `setPointerCapture`) chỉ được nhớ đúng ở một chỗ.
+- **Lớp phủ thì phải KHOÁ CUỘN trang.** `inert` chặn tiêu điểm và chuột nhưng **không** chặn
+  bánh xe chuột, nên trước 2026-08-04 thanh cuộn trang vẫn còn và vẫn lái được trong lúc
+  drawer mở — hai vùng cuộn cạnh nhau, không dấu hiệu nào nói cái nào đang nhận. Khoá bằng
+  `html.ds-scrolllock { overflow: hidden }`, và **`scrollbar-gutter: stable` phải đặt vô điều
+  kiện** ở `html` chứ không đặt kèm lúc khoá: đặt kèm thì chỗ chừa và chỗ mất xảy ra cùng một
+  frame và nội dung nhảy ngang 11px. Đo sau khi làm: dịch ngang **0,00px**.
+  Dock `Notes` **không** khoá — trang phía sau phải cuộn được, đó là điều làm nó khác ba tầng
+  kia (§0.5).
+
 ---
 
 ## 2. Khổ chữ: một mép phải
@@ -427,6 +540,28 @@ cùng một việc.
 | icon | `wb-ico` — chữ bên trong là **tên ligature** Material Symbols (`content_copy`, `edit_note`, `download`) |
 | xếp ngang có khoảng cách | `wb-cluster` |
 | popup / drawer | `wb-modal` / `wb-drawer` trong một `wb-overlay` |
+| **một chuỗi bước có thứ tự** | `wb-steps` — **luôn luôn**, xem ngay dưới |
+
+**`wb-steps` là component duy nhất cho "một chuỗi bước".** Trang có ba chỗ như vậy: sáu kết
+quả ở trang chủ, mười một chặng giáo trình, và lịch 14 ngày. Trước 2026-08-04 chặng giáo
+trình tự vẽ bằng một grid riêng (`.ds-map__phase` + `.ds-map__num` 34px) — cùng một hình (số
+trong vòng tròn) nhưng gõ lại lần thứ hai, và lần thứ hai **thiếu đường nối dọc**. Người đọc
+không thấy "thiếu một đường kẻ", họ thấy *"cái này không phải một chuỗi"*. Sửa bằng cách
+dùng đúng component kia, **không** bằng cách vẽ thêm một đường nối thứ hai.
+
+Hai luật hình thức của stepper, áp cho **mọi** stepper trừ khi cố ý trình bày khác:
+
+- **Mốc canh giữa dọc với TIÊU ĐỀ của bước**, và chữ phụ nằm **ngay dưới** tiêu đề. Kit bù
+  bằng `padding-top: 4px` trên khối nội dung — con số đó chỉ đúng cho tiêu đề đúng một dòng
+  ở đúng một cỡ chữ: đo thật thì tâm lệch 3px ở tiêu đề một dòng và 12px ở tiêu đề hai dòng.
+  Cách đúng là `display: grid` + `display: contents` trên `.wb-steps__content`, để tiêu đề và
+  chữ phụ thành **hai hàng thật**, rồi `align-self: center` mốc với hàng đầu. Đo lại sau khi
+  làm: lệch **0,00px** ở cả 4 stepper, ở 1440px và 375px.
+- **Hai cái bẫy khi đổi item từ flex sang grid.** (a) Kit khai `gap: 14px` — shorthand đặt
+  **cả hai trục** — nên phải `row-gap: 0`, không thì chữ phụ cách tiêu đề 18px, xa hơn cả
+  khoảng cách giữa hai bước. (b) Khoảng cách tiêu đề↔chữ phụ đặt ở **margin-trên của chữ
+  phụ**, không phải margin-dưới của tiêu đề: `align-self: center` canh *hộp lề*, nên 2px lề
+  dưới của tiêu đề làm tâm lệch đúng 1px.
 
 **Ba token thường bị gõ sai** (không có trong kit, dùng là im lặng không có tác dụng):
 

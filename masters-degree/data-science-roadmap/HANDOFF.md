@@ -17,6 +17,102 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 
 ---
 
+## Phiên 2026-08-04 (k) — token hoá spacing/cỡ nút, một tên cho một bậc chữ, stepper về một loại, drawer 1/3 kéo được
+
+Chủ trang yêu cầu: ba nhóm **chuẩn hoá dùng chung** (chữ / kích thước / margin-padding) và
+bốn **góp ý cụ thể**. Nguyên tắc xuyên suốt phiên: chỉ dồn chỗ khai báo về một nơi, **không**
+đổi giá trị hiện ra mắt — trừ chỗ chính chủ trang chỉ ra là sai.
+
+### Thang khoảng cách `--ds-sp-*` (7 bậc, khai theo QUAN HỆ)
+
+Đo trước khi sửa: 85 bài × **1686 cặp khối liền nhau** ra **9 nhịp** khác nhau, trong đó
+13/14/16px là ba giá trị gần trùng cho cùng một quan hệ (823 cặp), và **0px × 24** — đúng lỗi
+chủ trang thấy: `.wb-alert` của kit **không khai margin nào cả**, nên 23 chỗ có alert dán sát
+khối ngay dưới. Sau khi token hoá: **6 nhịp, hết hẳn 0px.** Cách đo ở design.md §0.6.
+
+Quyết định đáng ghi: nhịp "khối ↔ khối kế tiếp" khai **một danh sách gộp** trong `<style>`
+chứ không rải mỗi component một rule — nó là một *quyết định*, nên phải đọc được ở một chỗ.
+Và **nhích quang học ≤5px bên trong component + padding ngang của component KHÔNG lên thang**,
+có chủ ý: chúng là hình dạng của component, không phải nhịp của trang.
+
+### Một bậc chữ, một tên
+
+Thang `--ds-t-*` đã có từ phiên trước; việc còn lại là 22 chỗ gõ `--ds-t-*` và **50 chỗ gõ
+`--wb-text-*`** cho cùng những bậc đó (tầng 2 làm chúng bằng nhau *bên trong* `#main`), nên
+đọc code không biết một rule thuộc cột bài hay lớp vỏ. Đổi 43 rule phía cột bài sang
+`--ds-t-*`, giữ `--wb-text-*` cho lớp vỏ và cho **một** rule trải cả hai lớp
+(`.ds-keyhint kbd, .ds-prose kbd, .ds-notes kbd` — alias đang làm đúng việc nó sinh ra để làm).
+
+**Chứng minh no-op:** đo `font-size` của **263 khoá phần tử** trên 85 bài, so bản mới với bản
+`HEAD` nạp trong iframe cùng cửa sổ → **đúng 1 chỗ đổi**, là chỗ cố ý:
+`.ds-viz__readout` 28px → 25,8px (`--ds-t-hero`) vì nó đang là `clamp(20px, 3vw, 28px)` —
+vừa `vw` trần (phạm luật §0.4) vừa ngoài thang.
+
+### Bốn góp ý
+
+1. **Chip nét đứt mất nét khi hover** — `.ds-math:hover` và `.ds-aside:hover` đều đặt
+   `border-style: solid`. Bỏ, đổi `border-color` thay vì `border-style`: nét đứt là *nghĩa*
+   của chip ("bỏ qua được"), không phải trạng thái nghỉ.
+2. **Dấu `+` sai nghĩa** → `chevron_right`. `+` đọc ra "thêm một cái nữa"; chip này đưa người
+   đọc *tới* một ngăn đã có sẵn. Chú thích trong code vốn đã ghi `›` từ đầu — `add` là chỗ
+   code trôi khỏi chú thích.
+3. **Drawer**: `--ds-aside-w` = 1/3 cửa sổ (thay 660px cứng), **kéo được** bằng đúng
+   `.ds-grip` + đúng `makeEdgeResizer()` của dock `Notes` — tách hàm chung thay vì chép 80
+   dòng lần thứ hai. Khoá cuộn trang khi lớp phủ mở (`inert` không chặn bánh xe chuột);
+   `scrollbar-gutter: stable` đặt **vô điều kiện** nên nội dung dịch ngang **0,00px**.
+4. **Stepper**: trang chủ có **stepper thứ hai tự vẽ** (`.ds-map__phase` + `.ds-map__num`
+   34px) — cùng hình, gõ lần thứ hai, và thiếu đường nối. Đổi sang `wb-steps`, xoá hai class
+   đó. Mốc canh giữa dọc với tiêu đề áp cho **mọi** stepper bằng grid + `display: contents`;
+   đo lại lệch tâm **0,00px** ở cả 4 stepper, ở 1440px và 375px (bản cũ lệch 3px một dòng,
+   12px hai dòng).
+
+### Cổng mới `G-SYNTAX` — vì tôi tự dính đúng cái bẫy nó canh
+
+Giữa phiên tôi thêm một comment HTML vào trong template literal của `renderHome()`, và comment
+đó chứa dấu **backtick**. Một backtick là đứt template → `SyntaxError` → **không hàm nào được
+định nghĩa** → trang chỉ còn cái vỏ. Và **cả 9 cổng CHẶN vẫn xanh**, vì tất cả đọc HTML như
+văn bản; không cổng nào hỏi "script này có chạy được không".
+
+Đó là loại lỗi tệ nhất bộ cổng có thể bỏ sót: hậu quả tối đa, diff nhìn vô hại nhất (một
+comment), và người đang sửa CSS không có lý do nào để mở trình duyệt kiểm lại JS. `G-SYNTAX`
+bóc script dài nhất rồi `new Function` — chỉ phân tích, không chạy, ~10ms. Ca test dựng lại
+**đúng** hình dạng lỗi đã xảy ra, không phải một lỗi cú pháp bất kỳ.
+
+Chạm vào: `(khung: CSS / script / dữ liệu)` · `tools/gate.mjs` · `tools/gate.test.mjs`
+
+### Cố ý KHÔNG làm trong phiên này
+
+- **KHÔNG đổi `--ds-measure` (1060px) và `--ds-fs` (15px).** Chúng là quyết định của chủ
+  trang (CLAUDE.md §10). Việc token hoá giữ nguyên mọi giá trị hiện ra mắt.
+- **KHÔNG đảo nhịp lệch cho `.ds-codecap`.** Nhãn tên file phải dính khối nó gọi tên và cách
+  xa khối kia — nhưng 33 nhãn trong bài đang dùng **cả hai chiều**: 5156 và 3554 gọi tên khối
+  DƯỚI, còn 1862 (`tests/conftest.py`) gọi tên khối TRÊN (khối trên nó là các pytest fixture).
+  Chừng nào hai chiều còn lẫn nhau thì mọi nhịp lệch đều sai một nửa số chỗ, nên nhịp giữ đối
+  xứng. Đây là lỗi **nội dung**, sửa cần đọc từng khối code — không phải việc của một phiên CSS.
+- **KHÔNG bắt 10px và 12px lên thang bằng cách thêm bậc.** Chúng được map theo *vai* (10 → nhãn
+  ↔ thân = `near`; 12 → hai khối khác nhau = `text`). Thêm một bậc 11px thì thang thành 8 bậc và
+  mất luôn lý do tồn tại của nó.
+- **KHÔNG khoá cuộn của thanh bên** khi lớp phủ mở — chủ trang nói "thanh cuộn của main web",
+  và thanh bên là vùng cuộn riêng có thể đang ở vị trí người đọc muốn giữ.
+- **KHÔNG sửa 6 khuyến nghị `G-FWD`** (PR-AUC, rò rỉ dữ liệu, Pipeline, bootstrap, embedding,
+  attention dùng trước bài dạy). Có từ trước phiên này, và cách sửa là quyết định giáo trình.
+
+### Đường nối stepper: `--wb-border-strong`, chủ trang chốt
+
+Đường nối lúc đầu dùng `--wb-border` của kit, và ở chế độ sáng nó ra 228,228,231 trên nền
+247,247,248 — tương phản **1,19:1**, sát ngưỡng thấy được. Chủ trang duyệt đổi lên bậc kế tiếp
+có sẵn của kit: **sáng 1,19 → 1,38:1 · tối 1,30 → 1,59:1**, và token tự đảo đúng chiều ở tối.
+
+Lý do đáng ghi để phiên sau không kéo về `--wb-border` cho "nhất quán hairline": đường này
+**không cùng loại** với hairline chia ô bảng. Nó là thứ duy nhất nói *"các mốc này là MỘT
+chuỗi"* — nó mang nghĩa, còn hairline bảng chỉ ngăn cách. Mờ đi là mất đúng cái nghĩa đó.
+
+### Còn nợ của riêng phiên này
+
+- Thang `--ds-sp-*` chưa có cổng canh. `G-MEASURE` canh `max-width` cứng, nhưng chưa có cổng
+  nào bắt "vừa viết `margin-bottom: 17px` tại chỗ". Script đếm nhịp ở design.md §0.6 chạy
+  trong trình duyệt; muốn thành cổng thì phải đọc CSS bằng node và so với danh sách token.
+
 ## Phiên 2026-08-04 (j) — thanh trên nói tiếng Anh + cùng chiều cao, nút sao chép & panel Notes làm lại, docs bỏ hết nhật ký
 
 Chủ trang báo bốn việc: (1) thanh trên canh giữa dọc toàn bộ, và **mọi chữ trên thanh trên

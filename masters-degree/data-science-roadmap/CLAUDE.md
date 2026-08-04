@@ -40,6 +40,8 @@ Rồi tìm việc mình định làm trong bảng này:
 | **đổi chữ ở thanh bên / chân trang / panel** | [docs/design.md](docs/design.md) **§0.1** | mở trang | không còn chữ tiếng Anh nào ngoài tên icon và `Notes` |
 | **đổi cỡ chữ / thêm một bậc chữ** | [docs/design.md](docs/design.md) **§0.2** · §10 | đếm lại số cỡ chữ (script ở §0.2) | ≤ ~10 cỡ chữ, trải ≤ 2× (nay 8 / 1,92×) |
 | **nới cột nội dung** | [docs/design.md](docs/design.md) **§0.3** — cột/chữ là quyết định của chủ trang, **hỏi trước** | đo lại ký tự/dòng (script ở §0.3) | 1440/1200/375px không cuộn ngang |
+| **đặt margin / padding cho một khối** | [docs/design.md](docs/design.md) **§0.6** | trỏ vào một bậc `--ds-sp-*`; đếm lại số nhịp (script ở §0.6) | ≤ 7 nhịp · **không có nhịp 0px** (nay 6) |
+| **thêm một chuỗi bước (stepper)** | [docs/design.md](docs/design.md) **§3** | dùng `wb-steps`, đừng tự vẽ | có đường nối · tâm mốc khớp tâm tiêu đề (đo phải ra 0) |
 | **dùng chiều cao / bề rộng cửa sổ** | [docs/design.md](docs/design.md) **§0.4** (đơn vị viewport) | `node tools/gate.test.mjs` | không có `vh`/`vw`/`dvh` trần — dùng `--ds-vh` / `--ds-vw` |
 | **chuyển một khối ra ngoài mạch chính** | §7 · [docs/design.md](docs/design.md) §1 | `gate.mjs --advice` | popup là mặc định; chọn drawer thì phải viết ra lý do |
 | **sửa lịch 8 tuần / 14 ngày** | §8 · [docs/editing.md](docs/editing.md) việc 4 | `node tools/audit.mjs` | `G-PLAN` qua |
@@ -209,10 +211,11 @@ thức ở [docs/design.md](docs/design.md), kèm ba cái bẫy của pane previ
 Bảng này phải khớp mảng `GATES` trong `gate.mjs` — cổng `G-DOC` tự đối chiếu và nhắc nếu
 lệch. In danh sách thật bất cứ lúc nào: `node tools/gate.mjs --gates`.
 
-**Chặn commit — 9 cổng:**
+**Chặn commit — 10 cổng:**
 
 | cổng | canh điều gì |
 |---|---|
+| `G-SYNTAX` | script chính **phân tích được** — `SyntaxError` là trang trắng, xem ngay dưới bảng |
 | `G-TOC-STRUCT` | **cấu trúc** mục lục khớp HTML (bài, tên, chặng, ưu tiên, thời lượng, tuần) |
 | `G-ORDER` | thứ tự khối `<template>` trong file == thứ tự `TREE` |
 | `G-NODE` | mỗi bài đúng một template, không thừa không trùng |
@@ -222,6 +225,23 @@ lệch. In danh sách thật bất cứ lúc nào: `node tools/gate.mjs --gates`
 | `G-NO-DETAILS` | không dùng `<details>` cho kiến thức |
 | `G-FWD` | tiêu chí đạt / deliverable tuần không đòi thứ chưa được dạy |
 | `G-PLAN` | lịch 14 ngày & 8 tuần nhất quán — **bản node của `auditPlan()`**, xem §3 |
+
+**`G-SYNTAX` — cái bẫy backtick, và vì sao nó xứng đáng có một cổng riêng.** Trang là một
+file HTML tự chứa, nên phần lớn nội dung động nằm trong **template literal** của JS
+(`renderHome`, `renderPlan14`, `renderNotes`…). Trong một template literal, **một dấu
+backtick là hết** — kể cả khi nó nằm trong một comment HTML, vì JS không biết gì về comment
+HTML. Hậu quả không phải "một khối hiện sai" mà là `SyntaxError` cho cả `<script>`, tức
+**không hàm nào được định nghĩa** và trang chỉ còn cái vỏ.
+
+Đã dính 2026-08-04: thêm một comment giải thích, trong comment có `` `wb-steps` ``. Và cả 9
+cổng CHẶN lúc đó vẫn xanh, vì tất cả chúng đọc HTML như **văn bản** — không cổng nào hỏi
+"đoạn script này có chạy được không". Đó là loại lỗi tệ nhất bộ cổng có thể bỏ sót: hậu quả
+tối đa, diff nhìn vô hại nhất (chỉ là một comment), và người đang sửa CSS thì không có lý do
+nào để mở trình duyệt kiểm lại JS.
+
+**Luật:** viết chú thích BÊN TRONG một template literal thì **không dùng backtick** — gọi
+tên class/token bằng chữ trần (`wb-steps`, không phải `` `wb-steps` ``). Muốn dùng backtick
+thì đưa chú thích ra ngoài template, thành comment JS phía trên hàm.
 
 **Chỉ nhắc, người quyết định — 10 cổng:**
 
@@ -417,6 +437,9 @@ nhau, xem ngay dưới bảng.
 | `--ds-gutter` | 20px | lề ngang `.wb-container--pad` |
 | `--ds-fs` | `clamp(14px, …, 15px)` | cỡ chữ thân bài = **gốc của cả thang `--ds-t-*`** |
 | `--ds-t-*` | 9 bậc × `--ds-fs` | **thang chữ**: `hero h1 h2 h3 body sub code cap label` |
+| `--ds-sp-*` | 7 bậc, 4→44px | **thang khoảng cách**, khai theo QUAN HỆ: `hair tight near text block sub sec` — [docs/design.md](docs/design.md) §0.6 |
+| `--ds-ctl*` | 30 / 26 / 24px | cỡ nút vuông-tròn; `--ds-ctl` là chỗ `--wb-steps-size` nối vào — §0.7 |
+| `--ds-aside-w` | 1/3 cửa sổ | bề rộng ngăn phụ, kéo được — cùng cơ chế `--ds-dock-w` |
 | `--ds-zoom` | **1** | không zoom nữa — giữ token để luật `vh/vw` còn chỗ bám |
 | `--ds-dock-w` | 1/4 cửa sổ | bề rộng dock `Notes`, kéo được; thân trang nhường đúng chỗ |
 | `--ds-vh` / `--ds-vw` | `1vh\|1vw / zoom` | 1% cửa sổ **thật** |
