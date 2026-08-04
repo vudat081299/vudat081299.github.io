@@ -367,16 +367,13 @@
   .ds-prose > .wb-stack, .ds-prose > .wb-steps, .ds-prose > .wb-media,
   .ds-prose > .ds-codewrap, .ds-prose > .ds-viz, .ds-prose > .ds-more,
   .ds-prose > .ds-srclist, .ds-prose > .ds-keyhint { margin-bottom: var(--ds-sp-block); }
-  /* `.ds-codecap` là NHÃN TÊN FILE của khối code, nên nó phải dính sát khối nó gọi tên và
-     cách xa khối kia — nhịp lệch là thứ nói cho mắt biết nhãn thuộc về ai.
-     Ở đây nhãn dính khối BÊN DƯỚI (nhịp `tight`), theo đúng hành vi đang có.
-     CHƯA sửa được cho đúng hoàn toàn, và lý do là lỗi NỘI DUNG chứ không phải lỗi CSS:
-     33 nhãn trong bài dùng cả HAI chiều — 5156 ("notebooks/02-experiments.ipynb") và
-     3554 gọi tên khối ngay DƯỚI, còn 1862 ("tests/conftest.py") gọi tên khối ngay TRÊN
-     (khối trên nó là các pytest fixture, khối dưới là test_features.py). Chừng nào hai
-     chiều còn lẫn nhau thì mọi nhịp lệch đều sai một nửa số chỗ, nên nhịp này giữ đối
-     xứng có chủ ý. Chọn một chiều rồi dời nhãn là việc riêng — xem HANDOFF.md. */
-  .ds-prose > .ds-codecap { margin-bottom: var(--ds-sp-tight); }
+  /* `.ds-codecap` — nhãn tên file, đặt NGAY DƯỚI khối code nó gọi tên (caption; một chiều
+     duy nhất từ 2026-08-04, lý do ở HANDOFF.md). Nhịp LỆCH: sát khối trên (nhịp tight),
+     cách khối dưới nhịp block. margin-top âm = tight − block, collapse với margin-bottom
+     block của khối code (hoặc .ds-codewrap) ngay trên → hở còn đúng tight. Phải để ở
+     `.ds-prose > .ds-codecap` (0-2-0) để THẮNG `.ds-prose p` (0-1-1); popup/drawer cũng là
+     .ds-prose (xem §.ds-mathmodal .ds-prose ở trên) nên rule này phủ luôn cả hai. */
+  .ds-prose > .ds-codecap { margin: calc(var(--ds-sp-tight) - var(--ds-sp-block)) 0 var(--ds-sp-block); }
   /* Bảng nhỏ hơn thân bài một bậc (đúng — để nhìn được cả hàng), và `<th>` nhỏ hơn ô
      một bậc nữa vì nó viết HOA. Cả hai trỏ vào thang ⑧, không viết px và không viết
      `em`: thân bài 18px mà bảng 13px thì đọc như hai trang dán cạnh nhau. */
@@ -419,7 +416,11 @@
   .ds-code i { font-style: normal; color: var(--wb-fg-subtle); }
   .ds-codecap {
     font-family: var(--wb-font-mono); font-size: var(--ds-t-cap); color: var(--wb-fg-subtle);
-    margin: 0 0 var(--ds-sp-tight); letter-spacing: .03em;
+    /* Caption DƯỚI khối code: dính SÁT khối trên (nhịp tight), cách khối dưới nhịp block.
+       margin-top âm = tight − block, collapse với margin-bottom block của khối code (hoặc
+       .ds-codewrap) ngay trên → hở còn đúng tight. Khối trên nhãn LUÔN là code, nên phép
+       trừ này ổn định mọi chỗ, kể cả popup. */
+    margin: calc(var(--ds-sp-tight) - var(--ds-sp-block)) 0 var(--ds-sp-block); letter-spacing: .03em;
   }
   /* nút sao chép — bọc quanh .ds-code, đặt tuyệt đối nên không đội layout, không cuộn ngang theo code.
      CHỈ icon, không nhãn chữ: nó lặp lại ở 175 khối code, và một chữ "Chép" cạnh mỗi khối
@@ -3347,10 +3348,10 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
 
   <h2>Ghim phiên bản — việc quan trọng nhất của bài này</h2>
   <p>Dù chạy ở đâu, thứ bạn <b>phải</b> có là một <code>requirements.txt</code> đã chốt phiên bản. Đây không phải chi tiết vặt: nó là ranh giới giữa “kết quả tái lập được” và “con số của tôi khác con số của người phản biện mà không ai hiểu vì sao”.</p>
-  <p class="ds-codecap">Colab / Codespaces / terminal — chạy một lần rồi commit</p>
   <div class="ds-code">pip install pandas numpy scikit-learn matplotlib seaborn lightgbm shap
 pip freeze &gt; requirements.txt        <i># khoá lại phiên bản — bắt buộc cho luận văn</i>
 git add requirements.txt &amp;&amp; git commit -m "chot phien ban thu vien"</div>
+  <p class="ds-codecap">Colab / Codespaces / terminal — chạy một lần rồi commit</p>
   <p>Từ đó về sau, <b>ô đầu tiên của mọi notebook</b> là <code>!pip install -q -r requirements.txt</code>. Colab nâng cấp thư viện của họ bất cứ lúc nào mà không báo — dòng đó là thứ chặn việc kết quả của bạn trôi theo.</p>
 
   <h3>Nếu bạn làm trên máy: thêm <code>venv</code></h3>
@@ -3445,7 +3446,6 @@ git diff                 <i># xem mình vừa đổi gì</i></div>
       <p class="wb-alert__msg">Cám dỗ lớn nhất khi làm trên Colab là gõ thẳng mọi thứ vào ô code. Ba ngày sau bạn có sáu notebook, không cái nào là bản thật, và không tái lập được kết quả nào. <b>Notebook chỉ được chứa: lệnh clone repo, lệnh gọi hàm, và hình vẽ.</b> Mọi logic nằm trong <code>src/*.py</code> trên GitHub. Đây là điều duy nhất trong bài này mà nếu bỏ qua thì cả đường đi sụp.</p></div>
   </div>
 
-  <div class="ds-codecap">Ô đầu tiên của mọi notebook — chép nguyên</div>
   <div class="ds-code">!git clone https://github.com/&lt;bạn&gt;/fraud-detection.git
 %cd fraud-detection
 !pip install -q -r requirements.txt
@@ -3455,16 +3455,16 @@ git diff                 <i># xem mình vừa đổi gì</i></div>
 <b>from</b> google.colab <b>import</b> drive
 drive.mount(<b>'/content/drive'</b>)
 DATA = <b>'/content/drive/MyDrive/fraud/data'</b></div>
+  <div class="ds-codecap">Ô đầu tiên của mọi notebook — chép nguyên</div>
   <p>Sửa code thì mở <code>github.dev</code> ở tab bên cạnh (vào repo trên GitHub, bấm phím <code>.</code>), sửa, commit. Quay lại Colab chạy <code>!git pull</code>. Vòng lặp này mất khoảng 20 giây và nó là nhịp làm việc của bạn suốt 14 ngày.</p>
 
   <h2>Mắt xích ai cũng tưởng cần máy khoẻ: Docker</h2>
   <p>Bước 9 yêu cầu đóng gói dịch vụ vào một ảnh Docker. Cài Docker Desktop lên một máy yếu là một buổi tối khổ sở, và nhiều người dừng dự án ở đúng đây.</p>
   <p><b>Bạn không cần cài Docker lên máy mình.</b> <b>GitHub Codespaces</b> cho bạn một máy Linux đầy đủ trong tab trình duyệt, <b>đã có sẵn Docker</b>. Bạn mở repo, bấm <i>Code → Codespaces → Create codespace</i>, rồi gõ đúng những lệnh bạn sẽ gõ trên một máy thật:</p>
-  <div class="ds-codecap">terminal trong Codespaces — chạy trên máy của GitHub, không phải máy bạn</div>
   <div class="ds-code">docker build -t fraud-api .
 docker run -p 8000:8000 fraud-api
 <i># Codespaces tự chuyển tiếp cổng 8000 ra một URL tạm — bấm vào là mở /docs</i></div>
-  <div class="ds-codecap">Dockerfile — commit vào repo, đây là bằng chứng tái lập được</div>
+  <div class="ds-codecap">terminal trong Codespaces — chạy trên máy của GitHub, không phải máy bạn</div>
   <div class="ds-code"><i># Dockerfile</i>
 FROM python:3.11-slim
 WORKDIR /app
@@ -3473,6 +3473,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 EXPOSE 8000
 CMD ["uvicorn", "src.serve:app", "--host", "0.0.0.0", "--port", "8000"]</div>
+  <div class="ds-codecap">Dockerfile — commit vào repo, đây là bằng chứng tái lập được</div>
   <p>Hai thứ cần lưu ý về hạn mức, kiểm ngày 3/8/2026 trên tài liệu GitHub: bậc GitHub Free có <b>120 core-hour</b> và <b>15 GB-tháng</b> mỗi tháng, <b>không cần thẻ thanh toán</b> (hết hạn mức thì bị chặn, không tự tính tiền). Một Codespace 2 nhân tiêu 2 core-hour mỗi giờ chạy — nên <b>tắt nó khi xong</b> thay vì để chạy nền. Hạn mức có thể đổi; kiểm lại trên trang tài liệu của GitHub.</p>
   <div class="wb-alert wb-alert--warning">
     <span class="wb-alert__icon">!</span>
@@ -3554,7 +3555,6 @@ print(torch.cuda.is_available(), torch.cuda.get_device_name(0) <b>if</b> torch.c
 
   <h2>Quy trình dùng Colab đúng cách: repo là gốc, Colab là chỗ chạy</h2>
   <p>Sai lầm phổ biến là viết code thẳng trong ô Colab. Sau ba ngày bạn có 6 notebook, không cái nào là bản thật, và không cái nào đưa vào luận văn được. Cách đúng: <b>code sống trong repo, Colab chỉ kéo về và chạy.</b></p>
-  <p class="ds-codecap">ô đầu tiên của mọi notebook Colab</p>
   <div class="ds-code"><i># 1. kéo code của bạn về máy ảo</i>
 !git clone https://github.com/&lt;bạn&gt;/fraud-detection.git
 %cd fraud-detection
@@ -3573,6 +3573,7 @@ DATA = '/content/drive/MyDrive/fraud/data'
 <i># 4. giờ dùng đúng code trong repo, không viết lại</i>
 <b>from</b> src.pipeline <b>import</b> build_pipeline
 <b>from</b> src.features <b>import</b> add_derived</div>
+  <p class="ds-codecap">ô đầu tiên của mọi notebook Colab</p>
   <p>Hai dòng <code>autoreload</code> là thứ khiến quy trình này chịu được: bạn sửa <code>src/features.py</code> bằng trình soạn thảo, chạy lại ô trong Colab, và nó dùng bản mới ngay. Không có nó, bạn phải khởi động lại kernel sau mỗi lần sửa và sẽ bỏ cuộc sau 20 phút.</p>
 
   <h3>Lấy dữ liệu vào Colab — bốn cách, chọn theo tình huống</h3>
@@ -3663,7 +3664,6 @@ files.upload()</div>
 
   <h2>Test tối thiểu trước khi tin một con số</h2>
   <p>Đây là ranh giới thực sự: <b>không tin bất kỳ con số nào sinh ra từ code bạn chưa test.</b> Không cần một bộ test đầy đủ — cần đúng bốn loại assert dưới đây, và AI viết chúng cho bạn trong một phút nếu bạn yêu cầu.</p>
-  <p class="ds-codecap">tests/test_features.py — bốn loại test đáng có ngay từ ngày 2</p>
   <div class="ds-code"><b>import</b> pandas <b>as</b> pd, numpy <b>as</b> np
 <b>from</b> src.features <b>import</b> add_derived
 <b>from</b> src.history  <b>import</b> add_velocity
@@ -3689,6 +3689,7 @@ files.upload()</div>
     out   = add_velocity(sample_df)
     first = out.sort_values("ts").groupby("card_id").head(1)
     <b>assert</b> first["n_tx_1h"].fillna(0).eq(0).all()</div>
+  <p class="ds-codecap">tests/test_features.py — bốn loại test đáng có ngay từ ngày 2</p>
   <p>Test số 3 và số 4 là hai cái đáng giá nhất. Test 3 vì nó kiểm <i>đúng đắn toán học</i> chứ không chỉ kiểm “chạy không lỗi”. Test 4 vì rò rỉ là lỗi duy nhất trong danh sách này <b>làm điểm số của bạn đẹp lên</b> — nên nó không bao giờ tự lộ ra.</p>
   <p class="wb-help">Cách dùng AI hiệu quả nhất ở đây là đảo chiều: yêu cầu nó <b>viết test trước</b>, bạn đọc test và xác nhận đó đúng là hành vi bạn muốn, rồi mới yêu cầu viết code. Bạn kiểm 10 dòng test dễ hơn nhiều so với kiểm 80 dòng code.</p>
 
@@ -3881,7 +3882,6 @@ LIMIT    100;</div>
 
   <h2>Window function — phần đáng giá nhất của bài này</h2>
   <p>Đây là lý do bài này là <b>bắt buộc</b> chứ không phải “nên biết”. Ở bài <b>Biến theo thời gian</b>, bạn tính <code>hist_mean</code> và <code>n_tx_1h</code> bằng <code>.shift(1).expanding()</code> và <code>.rolling(closed="left")</code>. SQL làm đúng việc đó, và <b>làm ngay trên máy chủ dữ liệu</b> thay vì kéo 50 triệu dòng về máy bạn.</p>
-  <p class="ds-codecap">point-in-time features, viết thẳng bằng SQL</p>
   <div class="ds-code">SELECT
     tx_id, card_id, ts, amount,
 
@@ -3905,6 +3905,7 @@ LIMIT    100;</div>
         PARTITION BY card_id ORDER BY ts)) AS secs_since_last
 
 FROM transactions;</div>
+  <p class="ds-codecap">point-in-time features, viết thẳng bằng SQL</p>
   <p>Bóc ba mảnh của <code>OVER (...)</code> — hiểu ba mảnh này là hiểu toàn bộ window function:</p>
   <table>
     <tr><th>Mảnh</th><th>Nghĩa</th><th>Tương đương pandas</th></tr>
@@ -5265,7 +5266,6 @@ Máy nhìn thấy: [0 1 2 3] 4 5 ... 20 21 [22 23]              ← hai cụm �
   <h2>Gõ ở đâu — bốn cách, theo độ nghiêm túc tăng dần</h2>
 
   <h3>Cách 1 · Nhanh nhất, để thử trong notebook</h3>
-  <p class="ds-codecap">notebooks/02-experiments.ipynb</p>
   <div class="ds-code"><b>import</b> numpy <b>as</b> np
 
 df["hour"] = pd.to_datetime(df["timestamp"]).dt.hour
@@ -5280,10 +5280,10 @@ df["dow_cos"]  = np.cos(2 * np.pi * df["dow"] / 7)
 
 df["month_sin"] = np.sin(2 * np.pi * df["ts"].dt.month / 12)
 df["month_cos"] = np.cos(2 * np.pi * df["ts"].dt.month / 12)</div>
+  <p class="ds-codecap">notebooks/02-experiments.ipynb</p>
   <p>Sáu dòng. Đây là toàn bộ "thao tác thật" mà bạn đang tìm. Không có công cụ đặc biệt nào — chỉ pandas và numpy.</p>
 
   <h3>Cách 2 · Hàm dùng lại được, đặt trong <code>src/features.py</code></h3>
-  <p class="ds-codecap">src/features.py</p>
   <div class="ds-code"><b>import</b> numpy <b>as</b> np
 <b>import</b> pandas <b>as</b> pd
 
@@ -5298,6 +5298,7 @@ CYCLES = {"hour": 24, "dayofweek": 7, "month": 12, "minute": 60}
         out[f"{part}_sin"] = np.sin(2 * np.pi * vals / period)
         out[f"{part}_cos"] = np.cos(2 * np.pi * vals / period)
     <b>return</b> out</div>
+  <p class="ds-codecap">src/features.py</p>
   <p>Giờ notebook chỉ cần <code>from src.features import add_cyclical</code>. Cùng một hàm, và sau này API cũng gọi đúng hàm đó — đây là bước đầu tiên chống training/serving skew.</p>
 
   <h3>Cách 3 · Gắn vào Pipeline bằng <code>FunctionTransformer</code></h3>
@@ -5481,7 +5482,6 @@ X = (X - mu) / sigma                  x = (x - 250000) / 180000   <i># hardcode!
   <p>Ba cơ hội để hai bên lệch nhau, và <b>không có cái nào báo lỗi khi lệch</b>. Mô hình vẫn trả về một con số — chỉ là số sai. Đây là lỗi phổ biến nhất khi đưa mô hình lên chạy thật.</p>
 
   <h2>Bản đầy đủ — copy được, chỉ cần đổi tên cột</h2>
-  <p class="ds-codecap">src/pipeline.py</p>
   <div class="ds-code"><b>import</b> numpy <b>as</b> np, pandas <b>as</b> pd, joblib
 <b>from</b> sklearn.pipeline <b>import</b> Pipeline
 <b>from</b> sklearn.compose <b>import</b> ColumnTransformer
@@ -5544,6 +5544,7 @@ DEFAULTS = <b>dict</b>(n_estimators=600, learning_rate=0.05, num_leaves=31,
         <i># {**A, **B}: B đè lên A — nên gọi build_pipeline(random_state=43) không lỗi</i>
         ("model",  LGBMClassifier(**{**DEFAULTS, **lgbm_kwargs})),
     ])</div>
+  <p class="ds-codecap">src/pipeline.py</p>
 
   <h2>Dùng nó</h2>
   <div class="ds-code"><i># train.py</i>
