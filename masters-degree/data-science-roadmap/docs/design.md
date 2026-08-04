@@ -7,8 +7,8 @@ Ba file khác trả lời ba câu khác, đừng trộn:
 
 | câu hỏi | file |
 |---|---|
-| tôi đổi cái này thì phải đổi cái gì nữa? | [sua-trang.md](sua-trang.md) |
-| giải thích thế nào để người ta hiểu? | [viet-de-hieu.md](viet-de-hieu.md) |
+| tôi đổi cái này thì phải đổi cái gì nữa? | [editing.md](editing.md) |
+| giải thích thế nào để người ta hiểu? | [writing.md](writing.md) |
 | luật bắt buộc và vì sao có luật đó? | [../CLAUDE.md](../CLAUDE.md) |
 | **nó trông thế nào, nằm ở đâu?** | **file này** |
 
@@ -17,6 +17,95 @@ chúng — nó chỉ cho biết cách áp dụng:
 
 - **§7 — ba tầng trình bày.** Cái gì lên mạch chính, cái gì vào popup, cái gì vào drawer.
 - **§10 — khổ chữ.** Cả trang chỉ có **một mép phải**.
+
+---
+
+## 0. Luật của lớp vỏ — bốn thứ áp cho CẢ trang
+
+Mục §1–§8 nói về **một khối nội dung**. Mục này nói về **lớp vỏ**: thanh trên, thanh bên,
+chân trang, tiêu đề tab, và cách cả trang được đo. Chúng không phải "tính năng" nên dễ
+bị bỏ qua khi soát — nhưng sai thì người đọc thấy ngay từ giây đầu, trước cả khi đọc
+được chữ nào.
+
+### 0.1 Lớp vỏ nói tiếng Việt
+
+Thuật ngữ **trong bài** giữ tên gốc theo `CLAUDE.md` §11 (định nghĩa ngay lần đầu, dùng
+nhất quán). **Lớp vỏ thì không**: nó là chỗ điều hướng, không phải chỗ dạy, nên không có
+lý do gì để một người mới phải đọc tiếng Anh ở đó.
+
+Cụ thể là những chỗ này: `<title>` · `<meta description>` · tên trang trên thanh trên ·
+mọi nhãn nút · dòng tiến độ ở thanh bên · chân trang · nhãn ô tìm kiếm · tiêu đề popup /
+ngăn phụ / sổ học · `aria-label` và `title=` (trình đọc màn hình đọc chúng thành tiếng).
+
+Đã sửa theo luật này: `roadmap` → **lộ trình học** · `workload` → **khối lượng** ·
+`artifact và acceptance criteria` (chân trang) → **sản phẩm làm ra và tiêu chí đạt**.
+
+Và khi một từ đã đổi ở lớp vỏ thì **phải đổi luôn trong bài** — hai tên cho một khái niệm
+là đúng thứ `CLAUDE.md` §11 cấm. `khối lượng` được nêu kèm tên tiếng Anh **đúng một lần**
+ở trang chủ, để người học tra được khi gặp ở nơi khác.
+
+Tự kiểm: mở trang, chạy trong console
+`document.querySelector('.wb-navbar').innerText + document.querySelector('.ds-rail').innerText`
+— chữ tiếng Anh duy nhất được phép còn lại là tên ligature của icon (`search`, `edit_note`),
+vì đó là *nội dung* của font icon chứ không phải chữ hiển thị.
+
+### 0.2 Nới cột thì phải nới chữ — hai token đi cùng nhau
+
+Số ký tự trên một dòng = bề rộng cột ÷ bề rộng một chữ. Nên `--ds-measure` (bề rộng) và
+`--ds-fs` (cỡ chữ) **luôn đổi cùng nhau**; đổi một cái là tự đẩy độ dài dòng ra ngoài
+khoảng dễ đọc 45–90 ký tự.
+
+Đo thật trên trang (tiếng Việt, chỉ tính **dòng đầy**, bỏ dòng cuối dở):
+
+| cột / chữ | trung vị | cao nhất | |
+|---|---|---|---|
+| 720 / 16px | 75 | 84 | bản cũ |
+| **860 / 18px** | **81** | **86** | **đang dùng** |
+| 860 / 17px | 83 | 90 | sát trần |
+| 900 / 17px | 89 | 93 | đã vượt |
+
+Cách đo lại (đừng đo bằng cảm giác): với mỗi đoạn `<p>` trong `.ds-prose`, dùng `Range`
+lấy `getBoundingClientRect().top` của **từng ký tự**, gom theo `top` để biết mỗi dòng có
+bao nhiêu ký tự, rồi **bỏ dòng cuối** của mỗi đoạn. Bỏ dòng cuối là bắt buộc: nó luôn dở
+nên nó kéo trung vị xuống ~8 ký tự và làm một khổ đã quá rộng trông như vẫn ổn.
+
+Kèm theo: bậc tiêu đề trong bài (`h2/h3/h4`), cỡ chữ bảng và `.wb-help` đều đặt bằng `em`
+để giãn theo `--ds-fs`. **Đừng dùng token px của kit cho chúng** — `--wb-text-body` là
+14px, nhỏ hơn thân bài, nên `h4` từng nhỏ hơn chính đoạn văn nó đứng đầu.
+
+### 0.3 Trang tự mở ở 90%
+
+`html { zoom: var(--ds-zoom) }`, `--ds-zoom: .9`. Lý do: trang để đọc liên tục 45 phút,
+nên "một màn hình thấy được bao nhiêu" quan trọng ngang "chữ to bao nhiêu". 90% cho thêm
+~11% nội dung mỗi màn hình mà **không** đổi số ký tự/dòng (zoom co cả bề rộng lẫn cỡ chữ
+cùng tỉ lệ). Chữ hiện ra thật là 18 × 0,9 ≈ 16,2px — đúng bằng cỡ chữ cũ.
+
+Zoom của trình duyệt **nhân thêm** lên trên số này, nên người đọc vẫn tự điều chỉnh được.
+
+**Cái bẫy:** `zoom` không điều chỉnh đơn vị viewport. Đo thật: trong `zoom:.9`, một khối
+`width:100vw` ra **1152px** trên cửa sổ 1280px — `100vw` vẫn là 1280 *đơn vị cục bộ* rồi
+bị co 0,9. Nên mọi công thức dùng `100vw` phải chia `var(--ds-zoom)`; hiện có một chỗ là
+`--ds-bleed`. `position: fixed` thì Chrome xử lý đúng — đã kiểm: popup và ngăn phụ vẫn
+phủ kín màn hình.
+
+### 0.4 Sổ học là tầng thứ tư: dock, không phải lớp phủ
+
+Ba tầng ở `CLAUDE.md` §7 đều là chỗ **đọc**, nên chúng là lớp phủ: mở ra thì trang phía
+sau bị chặn, đóng lại là về chỗ cũ. Sổ học là chỗ **viết về cái đang đọc**, nên luật
+ngược lại: mở ra thì trang vẫn phải **cuộn được, bấm được, chọn chữ được**.
+
+Ba việc để nó thật là dock — thiếu một cái là nó lại thành lớp phủ:
+
+1. `wb-overlay--pass` (không làm tối nền, không nhận chuột — con của nó nhận lại).
+2. **Không** `inert` cái nền, **không** nhốt tiêu điểm, **không** `aria-modal`. Ba thứ đó
+   *là* định nghĩa của modal; khai nhầm thì trình đọc màn hình nói sai với người dùng.
+3. Thân trang **nhường chỗ** đúng `--ds-dock-w` (`body.ds-dock-on`), nên dock không đè
+   lên chữ. Cột co lại và chữ gói lại dòng — đó là giá phải trả, và nó rẻ hơn việc che
+   mất đoạn văn đang được ghi chú. Dưới 1200px thì hết chỗ nhường: dock nằm đè.
+
+Hệ quả cần biết: sổ học **không** nằm trong `LAYER_IDS`, nên Esc chỉ đóng nó khi không
+còn popup nào mở, bấm ra ngoài không đóng nó (bấm để chọn một câu mà mất cái sổ đang viết
+là đúng cái bẫy dock tồn tại để tránh), và mở popup toán không làm mất cái sổ.
 
 ---
 
@@ -38,7 +127,8 @@ Chọn vật chứa cho nội dung phụ:
 | | dùng khi | vì sao |
 |---|---|---|
 | **Popup** `data-math` <br>(mặc định) | đọc xong là xong, không cần nhìn lại mạch chính | Ở **giữa màn hình** → mắt không phải đi tìm. Đóng lại là về đúng chỗ đang đọc. |
-| **Drawer** `data-aside` <br>(ngoại lệ, phải có lý do) | phải đọc **song song** với mạch chính | Ví dụ đúng: bảng so sánh công cụ mà người đọc đang phải chọn ngay lúc đó (`cmp-*`); bộ câu hội đồng đọc cạnh dàn ý slide (`qbank`); **sổ học** — viết một câu về đoạn vừa đọc thì phải còn thấy đoạn đó. |
+| **Drawer** `data-aside` <br>(ngoại lệ, phải có lý do) | phải đọc **song song** với mạch chính | Ví dụ đúng: bảng so sánh công cụ mà người đọc đang phải chọn ngay lúc đó (`cmp-*`); bộ câu hội đồng đọc cạnh dàn ý slide (`qbank`). |
+| **Dock** (tầng thứ tư) | không phải chỗ đọc mà là chỗ **viết về** cái đang đọc | Hiện chỉ có **sổ học**. Khác cả ba tầng trên ở chỗ nó KHÔNG chặn trang — xem §0.4. |
 | **`<details>` / gập tại chỗ** | **không bao giờ** | Nó đẩy nội dung phía dưới nhảy xuống, người đọc mất chỗ. Cổng `G-NO-DETAILS` chặn cứng. |
 
 **Popup trước, drawer sau.** Trang này dài; drawer cao thì người đọc phải ngước cổ lên
@@ -67,14 +157,15 @@ thiếu đó thuộc mạch chính — kéo nó lên.
 
 ## 2. Khổ chữ: một mép phải
 
-Chi tiết và bốn con số ở `CLAUDE.md` §10. Ba điều cần nhớ khi thêm một khối:
+Chi tiết và bảy con số ở `CLAUDE.md` §10; cách nới cột cho đúng ở **§0.2** trên. Ba điều
+cần nhớ khi thêm một khối:
 
 1. **Đừng đặt `max-width` cứng.** Cột nội dung *đã* đúng bằng khổ chữ. Cổng `G-MEASURE` bắt.
 2. **Bảng là khối duy nhất được tràn ra hai bên** (`--ds-bleed`). Code, card, alert, hộp
    kết bài đều dừng ở cùng mép với chữ.
-3. **Muốn nới trang thì sửa `--ds-measure`, và chỉ sửa nó.** Mọi thứ khác suy ra bằng
-   `calc()`. Đơn vị `ch` bị cấm ở đây — nó co theo `font-size` nên `h2` và `<p>` cùng
-   `74ch` ra hai mép lệch nhau 200px.
+3. **Muốn nới trang thì sửa `--ds-measure` + `--ds-fs`, và chỉ sửa hai cái đó** (§0.2 nói
+   vì sao phải cả hai). Mọi thứ khác suy ra bằng `calc()`. Đơn vị `ch` bị cấm ở đây — nó
+   co theo `font-size` nên `h2` và `<p>` cùng `74ch` ra hai mép lệch nhau 200px.
 
 ---
 

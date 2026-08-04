@@ -69,7 +69,7 @@ bình thường, chỉ mất phần `G-LEARN`.
 **0/84 bài đã chạm · 0 bài đạt mức cao nhất · 0 h/106.5 h khối lượng (0%)**
 
 Sổ chưa có dòng nào. Thêm bằng `node tools/learn.mjs --add <id> <loại> <nội dung>`,
-hoặc gõ trên trang (nút **Sổ học** ở thanh trên) rồi `--import` bản xuất về đây.
+hoặc gõ trên trang (nút **Sổ học** ở thanh trên) → "Tải sổ về máy" → `node tools/learn.mjs --sync`.
 
 <!-- /learn:summary -->
 

@@ -31,22 +31,24 @@ Rồi tìm việc mình định làm trong bảng này:
 
 | định làm | đọc | chạy | xong là khi nào |
 |---|---|---|---|
-| **sửa chữ trong một bài** | `node tools/gate.mjs --show <id>` · [docs/viet-de-hieu.md](docs/viet-de-hieu.md) | `gate.mjs --advice` | cổng CHẶN qua · không sinh khuyến nghị mới |
-| **thêm / xoá / dời một bài** | §6 (bốn câu phải trả lời) → [docs/sua-trang.md](docs/sua-trang.md) việc 1–2 | `gate.mjs --write` rồi `git add TOC.md` | `G-TOC-STRUCT` qua · đọc lại `G-NEXT` |
-| **thêm / xoá / dời một chặng** | [docs/sua-trang.md](docs/sua-trang.md) **việc 3** | `gate.mjs --write` | như trên. Giữ nguyên `id` chặng, đừng đổi số |
-| **thêm hình / bảng / code** | §10 (một mép phải) · [docs/thiet-ke-trang.md](docs/thiet-ke-trang.md) | `gate.mjs --advice` + **mở trang bằng mắt** | không cuộn ngang ở 1440 / 1100 / 375px |
-| **đổi giao diện, thêm nút, thêm component** | **[docs/thiet-ke-trang.md](docs/thiet-ke-trang.md)** · §7 · §10 | mở trang, kiểm **cả sáng lẫn tối** | `G-MEASURE` im · hai chế độ đều đọc được |
-| **chuyển một khối ra ngoài mạch chính** | §7 · [docs/thiet-ke-trang.md](docs/thiet-ke-trang.md) §1 | `gate.mjs --advice` | popup là mặc định; chọn drawer thì phải viết ra lý do |
-| **sửa lịch 8 tuần / 14 ngày** | §8 · [docs/sua-trang.md](docs/sua-trang.md) việc 4 | `node tools/audit.mjs` | `G-PLAN` qua |
-| **thêm / sửa một cổng** | §4 · [docs/sua-trang.md](docs/sua-trang.md) việc 6 | `node tools/gate.test.mjs` | test xanh · thêm tên cổng vào §4 (`G-DOC` bắt) |
+| **sửa chữ trong một bài** | `node tools/gate.mjs --show <id>` · [docs/writing.md](docs/writing.md) | `gate.mjs --advice` | cổng CHẶN qua · không sinh khuyến nghị mới |
+| **thêm / xoá / dời một bài** | §6 (bốn câu phải trả lời) → [docs/editing.md](docs/editing.md) việc 1–2 | `gate.mjs --write` rồi `git add TOC.md` | `G-TOC-STRUCT` qua · đọc lại `G-NEXT` |
+| **thêm / xoá / dời một chặng** | [docs/editing.md](docs/editing.md) **việc 3** | `gate.mjs --write` | như trên. Giữ nguyên `id` chặng, đừng đổi số |
+| **thêm hình / bảng / code** | §10 (một mép phải) · [docs/design.md](docs/design.md) | `gate.mjs --advice` + **mở trang bằng mắt** | không cuộn ngang ở 1440 / 1100 / 375px |
+| **đổi giao diện, thêm nút, thêm component** | **[docs/design.md](docs/design.md)** · §7 · §10 | mở trang, kiểm **cả sáng lẫn tối** | `G-MEASURE` im · hai chế độ đều đọc được |
+| **đổi chữ ở thanh trên / thanh bên / chân trang** | [docs/design.md](docs/design.md) **§0.1** (lớp vỏ nói tiếng Việt) | mở trang | không còn chữ tiếng Anh nào ngoài tên icon |
+| **nới cột / đổi cỡ chữ / đổi zoom** | [docs/design.md](docs/design.md) **§0.2–0.3** · §10 | đo lại ký tự/dòng (cách đo ở §0.2) | trung vị ≤ 85 · 1440/1200/375px không cuộn ngang |
+| **chuyển một khối ra ngoài mạch chính** | §7 · [docs/design.md](docs/design.md) §1 | `gate.mjs --advice` | popup là mặc định; chọn drawer thì phải viết ra lý do |
+| **sửa lịch 8 tuần / 14 ngày** | §8 · [docs/editing.md](docs/editing.md) việc 4 | `node tools/audit.mjs` | `G-PLAN` qua |
+| **thêm / sửa một cổng** | §4 · [docs/editing.md](docs/editing.md) việc 6 | `node tools/gate.test.mjs` | test xanh · thêm tên cổng vào §4 (`G-DOC` bắt) |
 | **ghi việc học của mình** | [LEARNING-LOG.md](LEARNING-LOG.md) | `learn.mjs --add` hoặc nút **Sổ học** trên trang | `learn.mjs --check` im |
 | **đóng phiên / commit / push** | §12 | `node tools/session.mjs --close` | HANDOFF đã ghi · `G-HANDOFF` im |
 
 Ba file docs, ba câu khác nhau — đừng đọc sai file:
 
-- [docs/sua-trang.md](docs/sua-trang.md) — *"đổi cái này thì phải đổi cái gì nữa"*
-- [docs/viet-de-hieu.md](docs/viet-de-hieu.md) — *"giải thích thế nào để người ta hiểu"*
-- [docs/thiet-ke-trang.md](docs/thiet-ke-trang.md) — *"nó trông thế nào, nằm ở đâu"*
+- [docs/editing.md](docs/editing.md) — *"đổi cái này thì phải đổi cái gì nữa"*
+- [docs/writing.md](docs/writing.md) — *"giải thích thế nào để người ta hiểu"*
+- [docs/design.md](docs/design.md) — *"nó trông thế nào, nằm ở đâu"*
 
 ---
 
@@ -106,9 +108,9 @@ tools/concepts.json   khái niệm nào dạy ở bài nào  (đầu vào cổng
 tools/waivers.json    lỗi thật đang hoãn có chủ ý
 
 CLAUDE.md               → quy tắc bắt buộc + đường vào; không code nào đọc nó
-docs/sua-trang.md       → đổi cái này thì phải đổi cái kia; thêm bài/chặng/hình gõ ở đâu
-docs/viet-de-hieu.md    → tám thứ máy không kiểm được ("giải thích này có hiểu được")
-docs/thiet-ke-trang.md  → nó trông thế nào, nằm ở đâu; component nào, icon hay chữ
+docs/editing.md         → đổi cái này thì phải đổi cái kia; thêm bài/chặng/hình gõ ở đâu
+docs/writing.md         → tám thứ máy không kiểm được ("giải thích này có hiểu được")
+docs/design.md          → nó trông thế nào, nằm ở đâu; component nào, icon hay chữ
 HANDOFF.md              → sổ nhật ký phiên làm việc
 LEARNING-LOG.md         → việc học của chủ trang (agent ghi); nguồn của cổng G-LEARN
 ```
@@ -118,9 +120,9 @@ Mỗi file **một lý do để đổi** — đó là cách giữ cho bộ tài 
 | file | đổi khi nào |
 |---|---|
 | `CLAUDE.md` | quy trình / luật đổi |
-| `docs/viet-de-hieu.md` | tiêu chuẩn *chất lượng nội dung* đổi |
-| `docs/sua-trang.md` | *cấu trúc kỹ thuật* của trang đổi (thêm khối dữ liệu, thêm class) |
-| `docs/thiet-ke-trang.md` | *hình thức* đổi (component mới, luật trình bày mới) |
+| `docs/writing.md` | tiêu chuẩn *chất lượng nội dung* đổi |
+| `docs/editing.md` | *cấu trúc kỹ thuật* của trang đổi (thêm khối dữ liệu, thêm class) |
+| `docs/design.md` | *hình thức* đổi (component mới, luật trình bày mới) |
 | `TOC.md` | tự động, mỗi lần nội dung đổi |
 | `tools/*` | thêm/sửa cổng, hoặc thêm/sửa lệnh phiên |
 | `HANDOFF.md` | mỗi phiên |
@@ -152,7 +154,7 @@ node tools/gate.mjs --advice    # kèm phần chỉ nhắc (không chặn)
 node tools/gate.mjs --write     # sinh lại TOC.md
 node tools/gate.mjs --gates     # in danh sách cổng đang chạy
 node tools/audit.mjs            # chỉ phần lịch học — bản node của auditPlan()
-node tools/learn.mjs            # tóm tắt sổ học; --add / --import / --write / --check
+node tools/learn.mjs            # tóm tắt sổ học; --add / --sync / --write / --check
 node tools/gate.test.mjs        # test cho chính bộ cổng
 tools/install-hooks.sh          # cài CẢ BA hook (một lần mỗi máy / mỗi bản clone)
 ```
@@ -190,7 +192,7 @@ sang thư mục khác, bật server, mở trang, thêm `?v=n` chống cache, gõ
 cổng bắt buộc mà đắt như vậy thì trên thực tế sẽ bị bỏ.
 
 Vẫn nên mở trang bằng mắt khi sửa **giao diện** — cổng không thấy được layout. Luật hình
-thức ở [docs/thiet-ke-trang.md](docs/thiet-ke-trang.md), kèm ba cái bẫy của pane preview.
+thức ở [docs/design.md](docs/design.md), kèm ba cái bẫy của pane preview.
 
 ---
 
@@ -234,7 +236,7 @@ nhánh phụ nhưng là mạch chính) · `<!-- gate:long: lý do -->` (bài dà
 đúng) · `allowEarly` trong `concepts.json` (nhắc tên để định vị). Cả ba **bắt buộc kèm lý
 do nói vì sao cổng bắt sai**, không phải "đã xem rồi". Lỗi CHẶN thật mà chưa sửa thì vào
 `waivers.json` — nó in lại mỗi lần chạy, và đó là điểm khác biệt. Bảng đầy đủ:
-[docs/sua-trang.md](docs/sua-trang.md#việc-6--thêm-một-cổng-mới-vào-gatemjs).
+[docs/editing.md](docs/editing.md#việc-6--thêm-một-cổng-mới-vào-gatemjs).
 
 Khuyến nghị phải **gần bằng 0 ở trạng thái ổn định**. Danh sách dài ra là dấu hiệu hoặc
 nội dung đang trôi, hoặc cổng bắt sai — sửa một trong hai, đừng để nó thành tiếng ồn.
@@ -244,7 +246,7 @@ nội dung đang trôi, hoặc cổng bắt sai — sửa một trong hai, đừ
 ## 5. Cổng cần phán đoán — bạn phải tự soi
 
 Máy không kiểm được "giải thích này có làm người ta hiểu không". Rubric đầy đủ, kèm cách
-soi từng mục: **[docs/viet-de-hieu.md](docs/viet-de-hieu.md)**. Tám mục, tóm lại:
+soi từng mục: **[docs/writing.md](docs/writing.md)**. Tám mục, tóm lại:
 
 1. **Đúng** — mọi tuyên bố kiểm chứng được; không câu tuyệt đối; hạn mức của nhà cung cấp
    phải ghi ngày kiểm.
@@ -296,13 +298,19 @@ Trang có đúng **ba tầng trình bày**, và việc phân loại là bắt bu
 
 Cách thử: xoá khối này khỏi mạch chính, người học vẫn làm được `ACCEPT` của bài không?
 Vẫn được → phụ. Chi tiết cách chọn vật chứa + sáu dấu hiệu:
-[docs/thiet-ke-trang.md](docs/thiet-ke-trang.md) §1.
+[docs/design.md](docs/design.md) §1.
 
 | tầng | ở đâu | dùng cho |
 |---|---|---|
 | **mạch chính** | thân bài | con đường ngắn nhất từ chưa biết tới làm được: giải thích lõi, code phải gõ, một ví dụ chạy hết, tự kiểm |
 | **popup** `data-mathdef` | modal giữa màn hình | **mặc định cho mọi nhánh phụ**: công thức, đào sâu, catalogue, danh mục lỗi, ba cách khác, paper |
 | **ngăn phải** `data-aside` | drawer bên phải | **chỉ khi cần đọc SONG SONG với mạch chính** |
+
+Ba tầng trên đều là chỗ **đọc**, nên cả ba đều là lớp phủ: mở ra thì trang phía sau bị
+chặn. **Sổ học là tầng thứ tư** và luật ngược lại — nó là chỗ *viết về* cái đang đọc, nên
+mở ra thì trang vẫn phải cuộn được, bấm được, chọn chữ được (dock, không phải lớp phủ).
+Đó là tầng duy nhất kiểu này, và thêm tầng thứ năm thì phải viết ra lý do:
+[docs/design.md](docs/design.md) §0.4.
 
 **Popup là mặc định, drawer là ngoại lệ.** Lý do rất cụ thể: trang dài, drawer cao thì
 người đọc phải ngước cổ lên xuống, và mắt phải rời chỗ đang đọc. Drawer chỉ thắng khi
@@ -389,27 +397,37 @@ dừng ở cùng một mép. **Bảng là ngoại lệ duy nhất** — nó đư
 chữ) trong khi code chỉ 587px (12/175 vượt): cho code tràn theo thì mất mép chung mà
 được rất ít.
 
-Bốn con số nằm ở **một khối `:root` duy nhất** đầu `<style>`, mọi thứ khác suy ra bằng
-`calc()`. **Muốn nới trang thì sửa `--ds-measure`, và chỉ sửa nó.**
+Bảy con số nằm ở **một khối `:root` duy nhất** đầu `<style>`, mọi thứ khác suy ra bằng
+`calc()`. **Muốn nới trang thì sửa `--ds-measure` VÀ `--ds-fs`** — hai cái này đi cùng
+nhau, xem ngay dưới bảng.
 
 | token | mặc định | là gì |
 |---|---|---|
-| `--ds-measure` | 720px | khổ chữ **và** bề rộng cột |
-| `--ds-wide` | 900px | bảng được tràn rộng tới đây |
+| `--ds-measure` | 860px | khổ chữ **và** bề rộng cột |
+| `--ds-wide` | 1060px | bảng được tràn rộng tới đây |
 | `--ds-side` | 330px | `.wb-shell__side`, chỉ để tính chỗ trống |
 | `--ds-gutter` | 20px | lề ngang `.wb-container--pad` |
+| `--ds-fs` | 18px | cỡ chữ thân bài — **đi cùng `--ds-measure`** |
+| `--ds-zoom` | .9 | trang tự mở ở 90%; zoom trình duyệt nhân thêm lên |
+| `--ds-dock-w` | 380px | bề rộng dock sổ học; thân trang nhường đúng chỗ này |
 
 Suy ra: `--wb-container-max`, alias hai token khổ chữ của kit (`--wb-measure` và
-`--wb-measure-tight` — thiếu cái thứ hai thì đoạn intro trang chủ kẹt ~586px), và
-`--ds-bleed` = mức tràn mỗi bên của bảng, tính bằng `clamp()` trên `100vw`. **Không
-media query** — đó là chủ ý: 1440px tràn đủ 90px/bên, 1100px tràn 0, mobile 375px tràn
-0, và không bề rộng nào gây cuộn ngang.
+`--wb-measure-tight` — thiếu cái thứ hai thì đoạn intro trang chủ kẹt ~586px), bậc tiêu
+đề + cỡ chữ bảng + `.wb-help` trong bài (đặt bằng `em` nên giãn theo `--ds-fs`), và
+`--ds-bleed` = mức tràn mỗi bên của bảng, tính bằng `clamp()` trên `100vw / --ds-zoom`.
+**Không media query** — đó là chủ ý: 1440px tràn đủ 100px/bên, 1200px tràn một phần,
+mobile 375px tràn 0, và không bề rộng nào gây cuộn ngang.
 
-Đừng đặt `max-width` cứng ở đâu nữa; `G-MEASURE` bắt. Và **đừng nới `--ds-measure` lên
-bằng `--ds-wide`**: đo thật trên trang này (16px, tiếng Việt, 6 đoạn dài) thì 720px ra
-62–90 ký tự/dòng (trung vị 77, trong khoảng dễ đọc 45–90) còn 900px ra 80–119, đã vượt.
-Nới thì nới từng bước và **đo lại**. Đơn vị `ch` bị cấm ở đây — nó co theo `font-size`,
-nên `h2` và `<p>` cùng `74ch` lại ra hai mép lệch nhau 200px.
+**Nới cột thì phải nới chữ.** Số ký tự/dòng = bề rộng cột ÷ bề rộng một chữ, nên đổi một
+token mà giữ token kia là tự đẩy độ dài dòng ra ngoài khoảng dễ đọc 45–90. Đo thật (chỉ
+tính **dòng đầy**): 720/16px → trung vị 75 · **860/18px → 81** · 860/17px → 83 ·
+900/17px → 89 (vượt) · 900/16px → 93. Cách đo lại và ba luật lớp vỏ khác (ngôn ngữ, zoom,
+dock) ở **[docs/design.md](docs/design.md) §0** — đọc đó trước khi nới.
+
+Đừng đặt `max-width` cứng ở đâu nữa; `G-MEASURE` bắt. Đơn vị `ch` bị cấm ở đây — nó co
+theo `font-size`, nên `h2` và `<p>` cùng `74ch` lại ra hai mép lệch nhau 200px. Và đừng
+dùng token px của kit cho cỡ chữ trong bài: `--wb-text-body` là 14px, nhỏ hơn thân bài,
+nên `h4` từng nhỏ hơn chính đoạn văn nó đứng đầu.
 
 Ba cái bẫy khi sửa phần tràn của bảng, đã dính đủ cả ba: kit đặt
 `.wb-table-scroll { width: 100% }` nên phải ép `width: auto` (width cố định thì margin
@@ -428,6 +446,13 @@ chỗ trống hai bên để tràn vào.
 - Thuật ngữ **không bắt buộc**: bỏ. Nhưng nếu người học sẽ gặp lại nó ở nơi khác, nêu tên
   chính thức **một lần** để họ tra được — đừng bắt họ học tên trước khi hiểu ý.
 - **Không đổi cách gọi giữa chừng.** Cùng khái niệm, cùng một từ, từ đầu tới cuối.
+- **Lớp vỏ trang nói tiếng Việt** — thanh trên, thanh bên, chân trang, nhãn nút, `<title>`,
+  `aria-label`. Đó là chỗ điều hướng, không phải chỗ dạy, nên không có lý do để người mới
+  phải đọc tiếng Anh ở đó. Thuật ngữ *trong bài* thì theo hai gạch đầu dòng trên. Đổi một
+  từ ở lớp vỏ thì **đổi luôn trong bài** — hai tên cho một khái niệm là đúng thứ gạch đầu
+  dòng ngay trên cấm (đã làm với `workload` → `khối lượng`, nêu tên tiếng Anh một lần ở
+  trang chủ). Danh sách chỗ nào là "lớp vỏ" + cách tự kiểm:
+  [docs/design.md](docs/design.md) §0.1.
 - Viết tắt và khái niệm khó: giải thích tại chỗ, hoặc `title=` để hover, hoặc chip popup
   `data-math`. Đừng để người đọc phải rời bài đi tra.
 - `r-glossary` là bảng tra, **không** phải chỗ thay cho việc định nghĩa tại chỗ.
@@ -508,7 +533,7 @@ tuần. Ba đường vào:
 
 ```bash
 node tools/learn.mjs --add <id> <loại> <nội dung>   # chủ trang nhắc tới một bài khi trò chuyện
-node tools/learn.mjs --import <file .md>            # trộn bản xuất từ nút "Sổ học" trên trang
+node tools/learn.mjs --sync                         # TỰ tìm bản xuất mới nhất từ trang rồi trộn
 node tools/learn.mjs                                # xem đang ở đâu
 ```
 
@@ -526,5 +551,16 @@ Hai luật của file:
 2. Khối `learn:summary` là **sản phẩm** — `learn.mjs --write` sinh lại toàn bộ, đừng sửa tay.
 
 Trên trang, nút **Sổ học** (phím `n`) ghi trực tiếp vào bộ nhớ trình duyệt và xuất ra đúng
-định dạng mục `## Sổ`, nên **xuất → `--import` → nạp lại** là một vòng khép kín, kể cả tiến
-độ đã tick. Bộ nhớ trình duyệt là bản làm việc; `LEARNING-LOG.md` là bản bền có lịch sử git.
+định dạng mục `## Sổ`, nên **tải về → `--sync` → khôi phục** là một vòng khép kín, kể cả
+tiến độ đã tick. Bộ nhớ trình duyệt là bản làm việc; `LEARNING-LOG.md` là bản bền có lịch
+sử git.
+
+**Trang KHÔNG tự ghi được vào `LEARNING-LOG.md`** — nó là một file HTML tĩnh, không có
+server, và thường được mở từ GitHub Pages nên còn khác cả origin. Nên đường đi bắt buộc là
+*trang → file tải về → repo*, đúng hai bước, và cả hai đều hiện trên panel sổ học. Việc duy
+nhất bỏ được là bắt người dùng tự tìm file: `--sync` quét `~/Downloads` (rồi Desktop, thư
+mục trang, gốc repo), lấy bản **mới nhất**, trộn vào. Trộn là idempotent nhờ khoá lọc trùng
+nên chạy lại bao nhiêu lần cũng không sinh dòng thừa — không cần đánh dấu "file đã nạp".
+`node tools/session.mjs` khi mở phiên **tự phát hiện** bản xuất còn dòng chưa nạp và in
+đúng một lệnh cần chạy. Tên file (`learning-log-YYYY-MM-DD.md`) là hợp đồng giữa `a.download`
+trong HTML và `PAT_EXPORT` trong `learn.mjs` — đổi một bên là đứt, xem `docs/editing.md`.

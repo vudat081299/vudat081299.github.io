@@ -11,8 +11,8 @@ Vì sao cần: một câu như *"bài sau nói về X"* nằm ở bài thứ 40;
 như vậy.
 
 Luật *vì sao* nằm ở [CLAUDE.md](../CLAUDE.md). Cách viết cho người đọc hiểu nằm ở
-[viet-de-hieu.md](viet-de-hieu.md). Nó trông thế nào và nằm ở đâu trên màn hình nằm ở
-[thiet-ke-trang.md](thiet-ke-trang.md). File này chỉ nói gõ ở đâu.
+[writing.md](writing.md). Nó trông thế nào và nằm ở đâu trên màn hình nằm ở
+[design.md](design.md). File này chỉ nói gõ ở đâu.
 
 Mở đúng đoạn cần sửa, đừng mở cả file:
 
@@ -39,10 +39,14 @@ cổng nào canh, bạn phải tự nhớ.
 | **Thêm một nhánh phụ** (popup / ngăn phải) | khối `<template>` của nó, cộng một chip mở nó | `G-ORPHAN` chặn nếu tạo mà không ai mở |
 | **Đổi khổ chữ** | chỉ `--ds-measure`, không sửa gì khác | `G-MEASURE` |
 | **Thêm một lớp phủ mới** (popup / drawer / panel) | thêm id vào `LAYER_IDS` — nếu không thì `Esc` và bấm-ra-ngoài không đóng được nó, và nó không chặn phím `[` `]` | **mắt** |
-| **Thêm một nút bật/tắt** | `wb-btn wb-btn--sm ds-lvlbtn`, bật thì thêm **`is-active`** — một class trạng thái, không hai. Xem [thiet-ke-trang.md](thiet-ke-trang.md) §4 | **mắt** |
+| **Thêm một nút bật/tắt** | `wb-btn wb-btn--sm ds-lvlbtn`, bật thì thêm **`is-active`** — một class trạng thái, không hai. Xem [design.md](design.md) §4 | **mắt** |
 | **Thêm một cổng vào `gate.mjs`** | hàng trong mảng `GATES` · bảng §4 của `CLAUDE.md` · một ca NỔ + để nó vào chiều IM ở `gate.test.mjs` | `G-DOC` nhắc nếu `CLAUDE.md` thiếu tên; `gate.test.mjs` in ra cổng nào chưa có ca NỔ |
 | **Thêm một lệnh vào `tools/`** | bảng lệnh ở `CLAUDE.md` §3 · bảng định tuyến §0a · một ca "chạy được" trong `gate.test.mjs` | **mắt** |
 | **Đổi khuôn dòng của `LEARNING-LOG.md`** | `RE_ENTRY`/`RE_GROUP` trong `tools/learn.mjs` **và** `N_RE_ENTRY`/`N_RE_GROUP` trong HTML — hai bản của cùng một ngữ pháp, vì trang không có build nên không import được `.mjs` | **mắt**, và đây là chỗ dễ lệch nhất |
+| **Đổi tên file sổ học tải về** | `a.download` trong HTML **và** `PAT_EXPORT` trong `tools/learn.mjs` — đây là hợp đồng để `--sync` tự tìm được file; lệch một bên là `--sync` báo "không thấy bản xuất nào" | chạy `node tools/learn.mjs --sync` sau khi bấm tải về |
+| **Nới cột nội dung** | `--ds-measure` **và** `--ds-fs` cùng lúc (§0.2 của [design.md](design.md)), rồi ba chỗ ghi số đo: khối chú thích đầu `<style>`, `CLAUDE.md` §10, `design.md` §0.2 | đo lại ký tự/dòng — **đừng** copy số cũ sang |
+| **Thêm một lớp phủ mới** | `LAYER_IDS` trong HTML (thiếu thì lớp đó không đóng được bằng Esc/bấm-ra-ngoài). Dock sổ học **cố ý không có** trong danh sách đó — xem design.md §0.4 | mở lớp mới rồi bấm Esc |
+| **Đổi một từ ở lớp vỏ trang** | cùng từ đó **trong bài** — hai tên cho một khái niệm là lỗi `CLAUDE.md` §11 | `grep -n '<từ cũ>' data-science-roadmap.html` phải ra 0 (hoặc chỉ còn chỗ nêu tên tiếng Anh một lần) |
 
 **Ba chỗ không cổng nào bắt được** — chúng là văn xuôi, máy không đọc được nội dung:
 

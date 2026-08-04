@@ -17,6 +17,154 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 
 ---
 
+## Phiên 2026-08-04 (g) — khổ trang rộng ra, lớp vỏ nói tiếng Việt, sổ học thành dock
+
+Sáu việc, tất cả do chủ trang nêu trong một lượt. Trạng thái cuối: **cổng CHẶN qua · 7
+khuyến nghị (6 `G-FWD` là trạng thái ổn định đã soát ở phiên (b), + `G-HANDOFF` mà mục này
+đóng lại) · `gate.test.mjs` 44 đạt / 0 trượt.**
+
+### 1. Cột 720 → 860px, chữ 16 → 18px, và **hai token này đi cùng nhau**
+
+Chủ trang: *"content bé quá nên còn nhiều vacuum, cho content rộng ra — main rộng ra và
+thẻ `<p>` cũng phải rộng theo"*. Nới cột mà giữ nguyên cỡ chữ là đẩy thẳng số ký tự/dòng
+lên, nên phải nới cả hai. Đo thật (chỉ tính **dòng đầy**, bỏ dòng cuối dở):
+
+| cột / chữ | trung vị | cao nhất | |
+|---|---|---|---|
+| 720 / 16px | 75 | 84 | bản cũ |
+| **860 / 18px** | **81** | **86** | chọn cái này |
+| 860 / 17px | 83 | 90 | sát trần 90 |
+| 900 / 17px | 89 | 93 | vượt |
+
+`--ds-fs` là token thứ năm trong khối `:root`. Kèm theo, **bậc tiêu đề trong bài chuyển
+sang `em`**: trước đây `h4` dùng `--wb-text-body` = 14px trong khi thân bài 16px, tức
+**tiêu đề nhỏ hơn đoạn văn nó đứng đầu** — lỗi có sẵn, `em` là cách để nó không quay lại.
+Bảng và `.wb-help` cũng vậy. `--ds-wide` 900 → 1060 để bảng vẫn tràn được tương ứng.
+
+**Số đo nằm ở ba chỗ** (khối chú thích đầu `<style>`, CLAUDE.md §10, design.md
+§0.2) — đã thêm dòng vào `docs/editing.md` để phiên sau không sửa một chỗ rồi bỏ hai.
+
+### 2. Trang tự mở ở 90%
+
+`html { zoom: var(--ds-zoom) }`. Không đổi số ký tự/dòng (zoom co cả bề rộng lẫn cỡ chữ),
+chỉ cho thêm ~11% nội dung mỗi màn hình; chữ hiện ra thật 18 × 0,9 ≈ 16,2px = đúng cỡ chữ
+cũ. Zoom trình duyệt nhân thêm lên, nên không khoá tay ai.
+
+**Cái bẫy đã đo:** `zoom` KHÔNG điều chỉnh đơn vị viewport — trong `zoom:.9`, một khối
+`width:100vw` ra 1152px trên cửa sổ 1280px. Nên `--ds-bleed` phải chia `var(--ds-zoom)`;
+không chia thì bảng mất 10% mức tràn. `position: fixed` thì Chrome xử lý đúng (đã kiểm:
+popup phủ kín 1269×720 dưới zoom). Media query cũng tính theo `viewport / zoom` — nên
+`min-width: 1200px` của dock ứng với ~1080px thật.
+
+### 3. Lớp vỏ nói tiếng Việt
+
+`roadmap` → **lộ trình học** · `workload` → **khối lượng** (cả 6 chỗ trong bài, kèm nêu
+tên tiếng Anh **một lần** ở trang chủ để tra được) · chân trang `artifact và acceptance
+criteria` → **sản phẩm làm ra và tiêu chí đạt** · `<title>` + `<meta description>`.
+
+Luật + danh sách "chỗ nào là lớp vỏ" + cách tự kiểm: **design.md §0.1**, và một
+gạch đầu dòng trong `CLAUDE.md` §11 (vì luật "không đổi cách gọi giữa chừng" nằm ở đó).
+
+### 4. Sổ học là **tầng thứ tư**: dock, không phải lớp phủ
+
+Chủ trang: *"khi đang note thì vẫn phải cho thao tác + đọc được content chính"*. Ba tầng ở
+§7 đều là chỗ **đọc** nên đều chặn trang; sổ học là chỗ **viết về** cái đang đọc nên luật
+ngược lại. Ba việc để nó thật là dock — `wb-overlay--pass`, **không** `inert`/focus-trap/
+`aria-modal`, và thân trang **nhường** đúng `--ds-dock-w`. Đã kiểm bằng
+`elementFromPoint(400,300)` → trả về phần tử của trang, không phải lớp phủ.
+
+Hệ quả có chủ ý: sổ học **ra khỏi `LAYER_IDS`**, nên Esc chỉ đóng nó khi không còn popup
+nào, bấm ra ngoài không đóng nó, mở popup toán không làm mất sổ đang viết, và **bấm tên
+bài trong danh sách "Tất cả" giữ sổ mở** (bản cũ đóng lại, vì lúc đó nó là lớp phủ).
+Ngược lại: `openLayer` phải `inert` cả dock, không thì popup "modal" mà vẫn gõ được vào sổ.
+
+### 5. Thiết kế lại panel sổ học cho dễ hiểu
+
+Chủ trang: *"design lại note cho dễ hiểu hơn, sao có thêm 1 tính năng trộn sổ là gì thế"*.
+
+- **Ba khối, mỗi khối một tiêu đề** nói nó để làm gì: GHI CHO BÀI ĐANG MỞ · ĐÃ GHI · ĐƯA
+  VÀO REPO. Bản cũ xếp ba nhóm nút thẳng vào nhau, người đọc phải tự đoán nhóm nào việc gì.
+- Nhãn **"Đây là"** trước ba nút loại — không có nó thì ba nút không tự nói được rằng
+  chúng là ba lựa chọn của **một** câu hỏi.
+- **Bỏ nút sao chép** (trùng việc với Tải về) và **bỏ "Trộn vào sổ"**: việc đó giờ là
+  *"Khôi phục sổ từ một file đã tải về"* — một dòng chữ bấm được ở cuối, kèm một câu nói
+  khi nào cần (xoá bộ nhớ trình duyệt, hoặc sang máy khác). Nó là việc **hiếm**, nên nó
+  không được đứng ngang hàng với việc làm mỗi buổi.
+- `focus({preventScroll:true})` khi mở: trên 375px, cuộn-tới-tiêu-điểm đẩy luôn tên bài ra
+  khỏi tầm nhìn — mở sổ mà không thấy đang ghi cho bài nào.
+
+### 6. `learn.mjs --sync` — hết phải dán tay
+
+Chủ trang: *"khi lưu note không tự động thêm vào LEARNING log mà phải paste tay à"*.
+
+Câu trả lời thẳng: **trang không ghi được vào file trong repo** — file HTML tĩnh, không
+server, thường mở từ GitHub Pages nên còn khác origin; File System Access API thì phải cấp
+quyền lại mỗi phiên. Nên đường đi *trang → file tải về → repo* là bắt buộc. Việc duy nhất
+bỏ được là bắt người dùng tự tìm file và gõ đường dẫn:
+
+- `--sync` quét `~/Downloads` → Desktop → thư mục trang → gốc repo, lấy bản **mới nhất**.
+  Idempotent nhờ khoá lọc trùng (đã thử: lần 1 thêm 3, lần 2 thêm 0) nên **không cần** đánh
+  dấu "file đã nạp".
+- `session.mjs` khi mở phiên tự phát hiện bản xuất **còn dòng chưa nạp** và in đúng một
+  lệnh. Đây là thứ không đọc được bằng cách xem repo — file nằm ở `~/Downloads`.
+- Panel in thẳng cả hai bước + đúng câu lệnh, `user-select: all` để chép được.
+- **Hợp đồng tên file** `learning-log-YYYY-MM-DD.md` giữa `a.download` (HTML) và `PAT_EXPORT`
+  (learn.mjs) → có **test riêng**, vì lệch một bên thì không cổng nào nổ, không lỗi nào
+  hiện ra, chỉ là `--sync` mãi mãi báo "không thấy bản xuất nào". Test khớp cả bản trùng
+  tên của Chrome (`learning-log-… (1).md`).
+
+### 7. Tên file sang tiếng Anh
+
+Chủ trang: *"tên các file phải là tiếng anh hết chứ"*. Ba file docs, và tên file mà trang
+tải về:
+
+| cũ | mới | câu nó trả lời |
+|---|---|---|
+| `docs/sua-trang.md` | **`docs/editing.md`** | đổi cái này thì phải đổi cái gì nữa |
+| `docs/viet-de-hieu.md` | **`docs/writing.md`** | giải thích thế nào để người ta hiểu |
+| `docs/thiet-ke-trang.md` | **`docs/design.md`** | nó trông thế nào, nằm ở đâu |
+| `so-hoc-YYYY-MM-DD.md` | **`learning-log-YYYY-MM-DD.md`** | bản xuất sổ học |
+
+`git mv` (giữ lịch sử) + 79 chỗ trỏ tới ba file docs trong 5 file khác. **`PAT_EXPORT` vẫn
+nhận cả tiền tố `so-hoc-`**: một bản xuất còn nằm trong `~/Downloads` từ trước không được
+im lặng trở thành vô hình với `--sync`.
+
+Chú ý cho phiên sau: **nội dung file vẫn tiếng Việt** — chỉ tên file là tiếng Anh, cùng lý
+do với §0.1 (tên file là chỗ điều hướng, không phải chỗ dạy).
+
+### Đã kiểm bằng mắt và bằng số
+
+| bề rộng thật | cuộn ngang | cột `<p>` | bảng | dock mở |
+|---|---|---|---|---|
+| 1440 | không | 774 | 954 (đủ trần) | nhường 380, cột 754 |
+| 1200 | không | 774 | 845 | nhường 380, cột 514 |
+| 1000 | không | 656 | 656 | **đè** (hết chỗ nhường) |
+| 375 | không | 339 | 339 | đè, rộng 317 (94vw) |
+
+Cả sáng lẫn tối. Bẫy của pane preview lại dính: **ảnh chụp trả về frame cũ** sau khi đổi
+theme — `getComputedStyle(body).backgroundColor` đã là màu sáng mà ảnh vẫn tối, phải cuộn
+một cái mới ra frame mới. Đọc giá trị tính toán, đừng tin ảnh.
+
+### Cố ý KHÔNG làm
+
+- **Không nới cột thêm nữa.** 900/17px đã cho trung vị 89 ký tự/dòng, sát trần 90. Chỗ
+  trống hai bên còn lại **không phải chỗ để nhồi thêm chữ** — nó là chỗ bảng tràn vào. Muốn
+  hẹp khoảng trống đó thì hai cách: thu `--ds-side` (330px), hoặc cho thêm loại khối được
+  tràn (viz chẳng hạn). Cả hai đều là quyết định hình thức, không phải lỗi — chưa làm vì
+  chưa được nhờ, và cách thứ hai làm yếu luật "một mép phải".
+- **Không tự thu thanh bên khi mở dock.** Làm vậy thì cột giữ đúng 860px (không gói lại
+  dòng), nhưng chữ **nhảy ngang ~365px** — đổi một cái khó chịu thành một cái khó chịu
+  khác, mà cái sau còn bất ngờ hơn vì người dùng không bấm gì vào thanh bên.
+- **Không nhớ trạng thái dock trong localStorage.** Chưa có bằng chứng người dùng muốn sổ
+  tự mở lại; thêm một khoá storage nữa thì thêm một thứ phải dọn khi "Xoá tiến độ".
+- **Không đổi `Fast track 14 ngày`** dù nó là tiếng Anh: đó là **tên một bài** trong `TREE`,
+  đổi là kéo theo `DAYS`/`WEEKS`/`TOC.md`/cổng. Nó là thuật ngữ trong nội dung (§11), không
+  phải lớp vỏ. Muốn đổi thì làm như một việc riêng, theo `docs/editing.md` việc 2.
+- **Không để `session.mjs` tự chạy `--sync`.** Nó được định nghĩa là "chỉ đọc và in"; một
+  lệnh mở phiên mà ghi vào file nguồn là phá đúng tính chất làm nó an toàn để chạy mọi lúc.
+
+---
+
 ## Phiên 2026-08-04 (f) — quy trình phiên, cổng lúc push, và sổ học
 
 Phiên này xây **7 việc mà phiên (e) đã chốt phạm vi nhưng chưa code**, cộng ba việc chủ
@@ -112,9 +260,9 @@ Hai chỗ phải cẩn thận, đã sửa sau khi test bắt được:
 `N_RE_ENTRY`/`N_RE_GROUP` trong HTML là **bản thứ hai** của ngữ pháp trong `learn.mjs`.
 Trang không có build nên không import được `.mjs`; bù lại ngữ pháp được giữ **bé đến mức
 hai bản không thể lệch** — một regex nhóm, một regex dòng, hết. Đã ghi vào bảng lan truyền
-của `sua-trang.md`.
+của `editing.md`.
 
-### 5. `docs/thiet-ke-trang.md` — file thứ tư, chủ trang yêu cầu giữa phiên
+### 5. `docs/design.md` — file thứ tư, chủ trang yêu cầu giữa phiên
 
 Ba file docs cũ trả lời ba câu; **"nó trông thế nào, nằm ở đâu"** thì không file nào trả
 lời — luật hình thức đang nằm rải trong `CLAUDE.md` §7 (phân tầng) và §10 (khổ chữ), còn
@@ -133,7 +281,7 @@ mới *bổ sung cách áp dụng*, và cả hai bên trỏ nhau.
   = đặc) và bỏ class ma. Sửa một chỗ, đúng cho cả bộ nút mức lẫn hai bộ nút mới trong sổ.
 - **`--wb-bg` không tồn tại** (đúng tên là `--wb-canvas` / `--wb-surface`). Tôi tự gõ sai
   khi viết CSS mới; CSS **im lặng bỏ qua** dòng đó nên nút "đang chọn" ra chữ cùng màu nền.
-  Đã ghi cả hai vào bảng "ba token thường bị gõ sai" của `thiet-ke-trang.md`, kèm cách tự
+  Đã ghi cả hai vào bảng "ba token thường bị gõ sai" của `design.md`, kèm cách tự
   kiểm trong 5 giây (`grep -c -- "--wb-canvas" ...`).
 
 ### 7. Nút "Chép" → icon
@@ -145,7 +293,7 @@ không chỉ đổi màu, để người không phân biệt được màu vẫn
 `priority_high` + hướng dẫn, **không** ra dấu ✓ (lúc đó nội dung chưa nằm trong clipboard,
 một cái ✓ ở đây là nói dối). Hai câu trong bài gọi tên "nút **Chép**" đã sửa theo.
 
-Luật rút ra, ghi vào `thiet-ke-trang.md` §5: **hành động lặp lại mà ngữ cảnh đã nói rõ →
+Luật rút ra, ghi vào `design.md` §5: **hành động lặp lại mà ngữ cảnh đã nói rõ →
 chỉ icon; một tính năng cần được phát hiện → icon kèm nhãn.** Nên nút **Sổ học** giữ nhãn.
 
 ### 8. `LEARNING-LOG.md` không lên web
@@ -461,11 +609,11 @@ nấu ăn"* thì không hiểu là cái gì luôn.
 
 | cũ | mới | vì sao |
 |---|---|---|
-| `docs/authoring.md` | `docs/sua-trang.md` | "authoring" là từ nghề; dịch ra "soạn thảo" cũng không rõ hơn |
-| `docs/content-gates.md` | `docs/viet-de-hieu.md` | "cổng nội dung" nghe như một cơ chế máy, mà nó là danh sách tự soi cho người |
+| `docs/authoring.md` | `docs/editing.md` | "authoring" là từ nghề; dịch ra "soạn thảo" cũng không rõ hơn |
+| `docs/content-gates.md` | `docs/writing.md` | "cổng nội dung" nghe như một cơ chế máy, mà nó là danh sách tự soi cho người |
 
 Cả hai viết lại: bỏ ví von phải giải mã ("công thức nấu ăn", "wire vào đâu", "rubric",
-"thoát cửa", "Diátaxis", "concreteness fading"), câu ngắn hơn, và **`sua-trang.md` được xếp
+"thoát cửa", "Diátaxis", "concreteness fading"), câu ngắn hơn, và **`editing.md` được xếp
 lại quanh câu hỏi thật của người dùng: "tôi vừa đổi cái này, còn phải đổi gì nữa"** — bảng đó
 giờ nằm ngay đầu file thay vì rải trong sáu mục.
 
@@ -480,15 +628,15 @@ một dòng theo đúng khuôn của `cashy`.
 ### Cố ý KHÔNG làm trong phiên này
 
 - **Không dời ba cái bẫy CSS ra khỏi CLAUDE.md §10.** Lúc review có đề xuất dời chúng sang
-  `sua-trang.md` cho đúng bảng phân vai ở §2 (§10 đang là mục dài nhất, 48 dòng). **Bỏ ý
+  `editing.md` cho đúng bảng phân vai ở §2 (§10 đang là mục dài nhất, 48 dòng). **Bỏ ý
   đó:** phiên (d) đặt chúng vào CLAUDE.md *có chủ ý* sau khi dính cả ba, và CLAUDE.md là file
   chắc chắn được đọc. Đổi lấy sự gọn gàng mà mất một cái phanh thật thì không đáng.
-  `sua-trang.md` chỉ trỏ sang §10.
+  `editing.md` chỉ trỏ sang §10.
 - **Không đổi tên `CLAUDE.md` / `HANDOFF.md` / `TOC.md`** — chúng là quy ước công cụ đọc.
 - **Không đụng nội dung bài nào**, kể cả 6 khuyến nghị `G-FWD` (trạng thái ổn định đã soát ở
   phiên (b) — đừng nhồi `allowEarly`).
 - **Hai quyết định giáo trình vẫn treo** cho chủ trang: dời chặng 7, `t-stack` → chặng 10.
-  Giờ đã có checklist ở `sua-trang.md` việc 3 để làm, nhưng *có nên làm hay không* vẫn không
+  Giờ đã có checklist ở `editing.md` việc 3 để làm, nhưng *có nên làm hay không* vẫn không
   phải việc của agent.
 - **Không thêm dependency nào.** `plan.mjs` viết để không cần jsdom: mọi thứ `auditPlan` kiểm
   đều nằm trong dữ liệu, nên không cần dựng DOM. Node ở máy này là v16.20.2 (có v26 ở
