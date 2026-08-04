@@ -17,6 +17,94 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 
 ---
 
+## Phiên 2026-08-04 (i) — MỘT thang chữ token hoá, cột 1060px / chữ 15px, bỏ zoom
+
+Chủ trang báo ba việc: cỡ chữ **không đồng đều**, một số chữ *chỉ là nội dung* mà **to như
+tiêu đề**, và nghi `zoom: .9` là nguồn loạt lỗi UI. Đo trước khi sửa → **nghi đúng một phần
+ba**. Trong phiên chủ trang bổ sung hai yêu cầu nữa: **giảm khoảng trống** và **chữ nhỏ đi
+nhiều** ("13, 14 hoặc 15 cho content là dễ đọc lắm rồi").
+
+| | nguyên nhân | do zoom? |
+|---|---|---|
+| chữ nội dung to quá | `--ds-fs` bị đẩy lên **28px** ở phiên (a) để chữa 102 ký tự/dòng | **không** |
+| cỡ chữ không đồng đều | kit ghi px cứng ở 60+ chỗ, chỉ 4/8 token chữ được nối vào `--ds-fs` | **không** |
+| nhãn 9,9px · bảng mất mức tràn · thanh bên cụt đáy | `zoom` không điều chỉnh đơn vị viewport, và nhân mọi px kit × 0,9 | **có** |
+
+Số đo trước khi sửa (bài `d-eda`, 1440px): thân bài **25,2px** — **to hơn tên bài `h1`
+(24,3px)**; 99 khối `.wb-alert` giữ 12,2px = **2,07×** so với đoạn văn cạnh nó; **18 cỡ chữ**
+trên một trang, trải **3,31×**.
+
+### 1. Thang chữ ba tầng, khai theo LOẠI NỘI DUNG (`--ds-t-*`) — phần giá trị nhất của phiên
+
+Gốc của "không đồng đều" không phải một con số sai mà là **hai hệ chữ chồng nhau trong cùng
+một cột**: `--ds-fs` chỉ chi phối `.ds-prose`, còn `wb-*` thì kit đặt px cứng. Phiên (a)
+"định nghĩa lại 4 token" nên chỉ với tới ~35 lớp `ds-*`. Nay:
+
+```
+:root ⑧        9 bậc, tên theo loại nội dung: hero h1 h2 h3 body sub code cap label
+#main          CẢ TÁM token chữ của kit nối vào 9 bậc đó (trước: 4)
+#main .wb-*    component nào kit ghi px cứng thì kéo về thang — một dòng mỗi loại
+```
+
+Kết quả: **8 cỡ chữ, trải 1,92×** (không tính icon). Và điểm quan trọng hơn con số đó:
+**thứ bậc giờ đúng ở MỌI giá trị `--ds-fs`** — `h1` luôn = 1,5 × thân bài. Nhờ vậy khi chủ
+trang đổi ý về cỡ chữ (18 → 15px) thì chỉ đổi **một** token, không phải soát lại cả trang.
+
+### 2. Cột 1060px + chữ 15px — CHỦ TRANG CHỐT, và đây là chỗ phiên này làm sai một lần
+
+`ký tự/dòng ≈ cột ÷ (0,46 × cỡ chữ)`. Ba đại lượng khoá nhau; chọn hai là cái thứ ba bị
+quyết định. Phiên này **tự chọn** "đúng trần 90 ký tự/dòng" làm ưu tiên số một, nên hạ
+`--ds-measure` 1060 → **660px** — trong khi `HANDOFF` phiên (h) đã ghi rõ *"1060px là đúng
+con số chủ trang chỉ vào, không nới cột thêm nữa"*. Chủ trang bắt đảo lại ngay, và nói đúng:
+ở 660px thì `#main` chỉ 700px (trống **210px** bên phải) và bảng phải tràn margin âm nên
+**lệch 193px sang trái so với chữ**.
+
+Cấu hình cuối, do chủ trang chốt: `--ds-measure` **1060px** · `--ds-fs`
+**clamp(14px, …, 15px)** · `--ds-wide` 1260px · `line-height` p/li 1,68 → **1,8**.
+Đo thật: 375px → cột 335/chữ 14px → **48** ✓ · 1200px → 819/15 → **115** · 1440px → 1059/15
+→ **152**. Trống bên phải `#main`: 210px → **11px**. Bảng: cùng x, cùng bề rộng với chữ.
+
+⚠️ **152 ký tự/dòng vượt trần khuyến nghị 90, và đó là quyết định có chủ ý.** Bảng dial
+(1060/900/740/620px) ở `design.md` §0.2b. **Phiên sau đừng tự hẹp cột lại** — `--ds-measure`
+đã đổi ba lần trong một ngày (720 → 1060 → 660 → 1060) vì mỗi phiên tự chọn một cặp khác.
+
+### 3. `--ds-zoom: .9` → `1`, nhưng GIỮ token
+
+Ba cái giá cho một lợi ích (vỏ nhỏ hơn 10%): nhân mọi px cứng của kit × 0,9 (nhãn 11px →
+9,9px, dưới ngưỡng đọc được và không khai ở đâu cả) · đơn vị viewport không theo zoom (**đã
+cắn hai lần**: mức tràn bảng, rồi thanh bên/ngăn phụ/dock cụt 10% đáy) · hai hệ toạ độ px
+trong cùng một file (`getBoundingClientRect` vs `getComputedStyle`).
+
+**Token `--ds-zoom` / `--ds-vh` / `--ds-vw` được giữ dù bằng 1** — luật "không viết
+`vh`/`vw`/`dvh` trần" bám vào đó và `gate.test.mjs` có ca canh. Media query `1333px` →
+**`1200px`** (số thật). `gate.test` in 5 ngưỡng: `560 560 560 1200 560`.
+
+### CỐ Ý KHÔNG SỬA
+
+- **Không hẹp cột lại để cứu con số 152 ký tự/dòng** — xem §2. Đây là mục quan trọng nhất
+  của cả phiên: nó là *quyết định của chủ trang*, không phải nợ kỹ thuật.
+- **Không kéo icon (`--wb-ico-*`) vào thang chữ.** Icon là trục riêng và nhiều nút của kit
+  lấy kích thước từ padding + icon. Script đếm cỡ chữ **bỏ qua `.wb-ico`** vì lý do đó.
+- **Không sửa cỡ chữ popup/ngăn phụ** (`--ds-fs: 16px` riêng, ngoài `#main`) — chúng hẹp
+  ~420–660px nên khổ chữ khác là đúng.
+- **Không tách "khổ chữ" khỏi "bề rộng cột"** (đề xuất hai bề rộng: chữ 700px, bảng/code
+  1060px). Đã trình bày và chủ trang **không chọn** — muốn một mép, chữ rộng hết cột. Đừng
+  đề xuất lại mà không có lý do mới.
+- **Không sửa `dockZoom()`** dù zoom = 1 làm hai hệ toạ độ trùng nhau — giữ đúng chiều
+  nhân/chia để không thành bom hẹn giờ nếu ai bật lại zoom.
+- **6 khuyến nghị `G-FWD`** (PR-AUC, rò rỉ dữ liệu, Pipeline, bootstrap, embedding,
+  attention) là nợ giáo trình có từ trước.
+
+### Đã quyết trong phiên
+
+- **Nhãn nút giao diện `Sáng`/`Tối` → `Light`/`Dark`** theo yêu cầu trực tiếp của chủ trang,
+  ngược `CLAUDE.md` §11. Ghi thành **ngoại lệ thứ hai** ở `design.md` §0.1 (cùng chỗ với
+  ngoại lệ `Notes`) để phiên sau không đổi ngược. `aria-label`/`title` vẫn tiếng Việt.
+- **Bảng không cần tràn nữa.** Cột 1060px = đúng bề rộng bảng cần, nên `--ds-bleed` tự về 0
+  ở 1440px và bảng nằm đúng mép chữ. Cơ chế tràn vẫn còn cho cửa sổ rộng hơn.
+
+---
+
 ## Phiên 2026-08-04 (h) — cột bằng bề rộng bảng, chữ fluid, hết cụt 10% vì zoom, `Notes` mới
 
 Phiên (g) để lại ba lỗi mà chủ trang thấy ngay: thanh bên và dock cụt đáy, cột vẫn hẹp,

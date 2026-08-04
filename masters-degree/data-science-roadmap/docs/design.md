@@ -53,6 +53,12 @@ mô tả *việc người dùng đang làm* — người dùng chỉ đang ghi m
 Đừng "sửa lại cho đúng luật" thành `Ghi chú`: đây là quyết định của chủ trang, ghi ở đây
 đúng để phiên sau không đổi ngược.
 
+**Ngoại lệ thứ hai: nhãn nút đổi giao diện là `Light` / `Dark`** (2026-08-04, chủ trang yêu
+cầu trực tiếp). Cùng lý do như `Notes`: hai từ đó là *tên của hai chế độ*, ngắn và đã quen
+mắt. Ranh giới giữ nguyên như trên — **nhãn** là tiếng Anh, còn `aria-label` và `title=`
+của chính cái nút vẫn tiếng Việt ("Đổi giao diện sáng/tối"), và mọi câu **nói về** nó trong
+tài liệu vẫn là **sáng / tối**. Đừng đổi ngược.
+
 Và khi một từ đã đổi ở lớp vỏ thì **phải đổi luôn trong bài** — hai tên cho một khái niệm
 là đúng thứ `CLAUDE.md` §11 cấm. `khối lượng` được nêu kèm tên tiếng Anh **đúng một lần**
 ở trang chủ, để người học tra được khi gặp ở nơi khác.
@@ -62,37 +68,116 @@ Tự kiểm: mở trang, chạy trong console
 — chữ tiếng Anh duy nhất được phép còn lại là tên ligature của icon (`search`, `edit_note`),
 vì đó là *nội dung* của font icon chứ không phải chữ hiển thị, cộng với `Notes` ở trên.
 
-### 0.2 Nới cột thì phải nới chữ — hai token đi cùng nhau
+### 0.2 MỘT thang chữ, khai theo loại nội dung
 
-Số ký tự trên một dòng = bề rộng cột ÷ bề rộng một chữ. Nên `--ds-measure` (bề rộng) và
-`--ds-fs` (cỡ chữ) **luôn đổi cùng nhau**; đổi một cái là tự đẩy độ dài dòng ra ngoài
-khoảng dễ đọc 45–90 ký tự. Với tiếng Việt hãy nhắm **nửa dưới** của khoảng đó: từ tiếng
-Việt ngắn hơn từ tiếng Anh, nên cùng một số ký tự là nhiều từ hơn để mắt phải quét.
+**Cột `--ds-measure` = 1060px và chữ `--ds-fs` = 15px là do chủ trang chốt (2026-08-04).
+Đừng tự đổi hai con số đó — đọc §0.2b trước.** Mục này nói về thứ độc lập với chúng: thang
+chữ, tức việc mọi cỡ chữ trong cột bài phải trỏ vào một bậc có tên.
 
-Đo lại 2026-08-04, cửa sổ 1440px (chỉ tính **dòng đầy**, bỏ dòng cuối dở):
+Vì sao phải có thang — đo 2026-08-04, bài `d-eda`, cửa sổ 1440px, ở cấu hình 1060/28px:
 
-| cột / chữ | trung vị | p90 | cao nhất | |
-|---|---|---|---|---|
-| 860 / 18px | 102 | 108 | 118 | bản trước — **đã ở ngoài khoảng** |
-| 1060 / 26px | 91 | 95 | 104 | còn sát trần |
-| 1060 / 27px | 88 | 91 | 104 | ~ |
-| **1060 / 28px** | **84** | **88** | **93** | **đang dùng** |
+| | trước khi có thang | sau | |
+|---|---|---|---|
+| thân bài `<p>` | 25,2px | 15px | |
+| **tên bài `h1`** | **24,3px** | **22,5px** | trước: thân bài TO HƠN tiêu đề bài |
+| `.wb-alert__msg` × 99 khối | 12,2px | 13,8px | trước: 2,07× so với thân bài ngay cạnh |
+| số cỡ chữ khác nhau / trang | **18** | **8** | không tính icon (thang riêng của kit) |
+| cỡ cao nhất ÷ thấp nhất | **3,31×** | **1,92×** | |
 
-`--ds-fs` là **`clamp()`**, nên `28px` chỉ là đầu rộng của thang: 17px ở cửa sổ 375px,
-nội suy thẳng, 28px từ cửa sổ ~1306px trở lên. Lý do phải fluid: cột cũng co theo cửa sổ,
-nên chữ cố định 28px trên điện thoại còn **30 ký tự/dòng** — dưới sàn 45. Đo ba đầu:
-375px → cột 339px, trung vị 47 · 1000px → cột 656px · 1440px → cột 954px, trung vị 84.
+Điểm quan trọng nhất của thang: **thứ bậc đúng ở MỌI giá trị `--ds-fs`.** `h1` luôn = 1,5 ×
+thân bài vì cả hai đọc cùng một gốc, nên đổi cỡ chữ giờ là đổi **một** token — không phải
+soát lại cả trang, và không thể tái hiện lỗi "thân bài to hơn tiêu đề" được nữa.
 
-⚠️ **Hai con số 75 và 81 từng ghi ở bảng này (cho 720/16 và 860/18) là đo sai** — bản đo
-cũ gom ký tự theo `top` với ngưỡng quá rộng nên gộp hai dòng thành một. Kiểm lại bằng cách
-in **thẳng chuỗi của từng dòng** ra rồi đếm tay: một dòng 774px ở 18px chứa 100–103 ký tự.
-Nghĩa là bản 860/18 đã ở ngoài khoảng dễ đọc, và lần nới này *vừa rộng hơn vừa dễ đọc hơn*.
+Vì sao 18 cỡ: `--ds-fs` chỉ chi phối `.ds-prose`, còn kit `web-builder` đặt **px cứng ở
+60+ chỗ** và chỉ **8 token chữ** của nó là đọc được — mà đa số component của kit *không
+dùng token nào*. Nên "định nghĩa lại 4 token" của bản (a) chỉ với tới ~35 lớp `ds-*`;
+toàn bộ `wb-*` trong bài (99 alert, 58 help, card, steps, cap, btn, pager, breadcrumb)
+vẫn nằm ngoài thang. Hai hệ chữ chồng nhau trong **cùng một cột**.
+
+**Cách làm đúng — ba tầng, và mọi cỡ chữ trong cột bài phải nằm ở tầng 1:**
+
+```
+tầng 1  :root ⑧   9 bậc, tên theo LOẠI NỘI DUNG, tất cả = calc(--ds-fs × k)
+                  hero 1,72 · h1 1,5 · h2 1,28 · h3 1,12 · body 1
+                  sub ,92 · code ,88 · cap ,84 · label ,78
+tầng 2  #main     8 token chữ của kit nối vào tầng 1 (cả 8, không phải 4)
+tầng 3  #main .wb-*  component nào ghi px cứng thì kéo về tầng 1, một dòng mỗi loại
+```
+
+Khoảng giữa hai bậc liền kề là **1,07–1,17×** có chủ ý: chỉ *tiêu đề* mới được to, còn
+mọi thứ là *nội dung* thì phải đọc như cùng một trang. Bậc thấp nhất phân biệt bằng **độ
+đậm và màu**, không bằng cỡ — `h4` = đúng cỡ thân bài + in đậm.
+
+Ba luật kèm theo:
+
+- **Cùng loại nội dung thì cùng bậc.** `.ds-obj__v` (dải mục tiêu đầu bài) và `.ds-gain__v`
+  (hộp kết bài) là **cùng một câu** (`CLAUDE.md` §9), nên cùng `--ds-t-h3`. Bản (a) để
+  16,8px và 15px — hai cỡ cho một câu.
+- **Không px cứng, không `em`, không `ch` trong cột bài.** `em` đúng về kết quả nhưng không
+  nói ra được rằng đây *cùng bậc* với chỗ khác; token nói ra được, và đó là toàn bộ điểm
+  khác. `ch` thì sai hẳn — nó co theo `font-size` nên `h2` và `<p>` cùng `74ch` ra hai mép
+  lệch nhau 200px. Px cứng chỉ được dùng **ngoài `#main`** (lớp vỏ).
+- **Thêm một loại nội dung mới** → thêm một bậc ở ⑧ rồi trỏ vào; **thêm một component kit
+  vào bài** → thêm một dòng ở tầng 3. Đừng viết `font-size` rời tại chỗ dùng.
+
+### 0.2b Cột 1060px / chữ 15px là QUYẾT ĐỊNH CỦA CHỦ TRANG — muốn đổi thì hỏi
+
+Ba đại lượng khoá nhau bằng **một phép chia**, không phải bằng luật thiết kế:
+
+```
+ký tự/dòng  ≈  --ds-measure  ÷  (0,46 × --ds-fs)
+```
+
+0,46em là bề rộng một chữ tiếng Việt trong font này — đo thật, ổn định qua mọi cỡ (660/18px
+→ 8,35px/ký tự = 0,464em; 1060/28px → 12,62px = 0,451em). Biết hai đại lượng là cái thứ ba
+**bị quyết định**. Khoảng khuyến nghị của typography là 45–90 ký tự/dòng.
+
+Chủ trang chốt 2026-08-04, sau khi xem trang ở cấu hình 660/18px, theo thứ tự ưu tiên:
+
+1. **Hết khoảng trống** — cột phải rộng hết chỗ. Ở 660px thì `#main` chỉ 700px, trống 210px
+   bên phải, và bảng phải tràn bằng margin âm nên **lệch 193px sang trái so với chữ**.
+2. **Chữ nhỏ** — nguyên văn: *"13, 14 hoặc 15 cho content là dễ đọc lắm rồi"*.
+
+Hai ưu tiên đó đẩy con số thứ ba lên: đo thật **152 ký tự/dòng** ở cửa sổ 1440px, vượt trần
+90. **Đó là quyết định có chủ ý, không phải lỗi chưa ai thấy.**
+
+⚠️ **Đừng "sửa" bằng cách hẹp cột lại.** Việc đó đã xảy ra rồi: một phiên hạ `--ds-measure`
+về 660px cho đúng trần 90, và chủ trang bắt đảo lại ngay. `--ds-measure` đã đổi **ba lần
+trong một ngày** (720 → 1060 → 660 → 1060) vì mỗi phiên tự chọn một cặp khác trong ba đại
+lượng, và cái giá của churn đó đắt hơn cái giá của dòng dài. **Muốn đổi thì HỎI.**
+
+Thứ duy nhất được nới để bù dòng dài: `line-height` của `p`/`li` = **1,8** (không phải 1,68).
+Lỗi duy nhất của dòng dài là mắt quay về đầu dòng sau bị nhảy lộn dòng, và giãn dòng chống
+đúng lỗi đó. Đó là mitigation đúng cho khổ rộng, không phải một con số tuỳ tiện.
+
+Đo thật 2026-08-04, cách đo ở dưới:
+
+| cửa sổ | cột | chữ | trung vị | p90 | |
+|---|---|---|---|---|---|
+| 375px | 335px | 14,0px | **48** | 52 | ✓ trong khoảng — điện thoại tự về, không cần luật riêng |
+| 1200px | 819px | 15,0px | **115** | 121 | |
+| 1440px | 1059px | 15,0px | **152** | 159 | cấu hình đang dùng |
+
+Bảng để chủ trang chỉ vào nếu muốn dial lại — đổi **đúng một** token `--ds-measure`:
+
+| `--ds-measure` | ký tự/dòng | trống bên phải chữ |
+|---|---|---|
+| **1060px** | **152** | 0 ← đang dùng |
+| 900px | 130 | 160px |
+| 740px | 107 | 320px |
+| 620px | 90 (đúng trần) | 440px |
+
+⚠️ **Hai con số 75 và 81 từng ghi ở đây (cho 720/16 và 860/18) là đo sai** — bản đo cũ gom
+ký tự theo `top` với ngưỡng quá rộng nên gộp hai dòng thành một. Kiểm lại bằng cách in
+**thẳng chuỗi của từng dòng** ra rồi đếm tay: một dòng 774px ở 18px chứa 100–103 ký tự.
 
 Cách đo lại — và **luôn in một dòng ra để kiểm chính cái thước**:
 
 ```js
 // tách dòng bằng rect TỪNG KÝ TỰ; ngưỡng 4–6px, không lớn hơn
-const el = document.querySelector('#main .ds-prose > p');          // đoạn thân bài
+// MẪU ĐO: đoạn văn + gạch đầu dòng ở mạch chính. Đổi mẫu là đổi con số (chỉ `> p` ra
+// 80/44 thay vì 79/43), nên khi ghi số vào docs thì ghi luôn mẫu đã dùng.
+const el = document.querySelector('#main .ds-prose > p, #main .ds-prose > ul > li');
 const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
 let node, lastTop = null, lines = [''];
 while ((node = w.nextNode())) for (let i = 0; i < node.nodeValue.length; i++) {
@@ -109,34 +194,57 @@ console.log(lines.map(s => s.length), lines);   // ĐỌC chuỗi, đừng chỉ
 **Bỏ dòng cuối** của mỗi đoạn là bắt buộc: nó luôn dở nên kéo trung vị xuống và làm một
 khổ đã quá rộng trông như vẫn ổn.
 
-Kèm theo — mọi cỡ chữ **trong cột bài** phải suy ra từ `--ds-fs`, không được là px cứng:
+Và **đếm lại số cỡ chữ** sau mỗi lần sửa thang — một con số, nói được ngay là thang còn
+khít hay đã trôi (mục tiêu: ≤ ~10 cỡ, trải ≤ 2×; hiện là **8 cỡ / 1,92×**):
 
-- bậc tiêu đề (`h2/h3/h4`), bảng, `.wb-help` đặt bằng `em`;
-- **bốn token chữ của kit được định nghĩa lại trong `#main`** (`--wb-text-title/-body/`
-  `-help/-caption` = `calc(var(--ds-fs) * .84/.78/.72/.67)`), vì ~35 lớp `ds-*` đọc chúng.
-  Đặt ở `#main` chứ không `.ds-prose`: dải mục tiêu, breadcrumb, chip, hộp kết bài, pager
-  nằm ngoài `.ds-prose` nhưng vẫn thuộc cột bài. Dùng `calc()` **không dùng `em`** — `em`
-  trong custom property giải ở chỗ dùng nên hai lớp lồng nhau sẽ nhân dồn.
+```js
+// mọi phần tử trong cột bài CÓ text trực tiếp, gom theo cỡ chữ
+const seen = new Map();
+document.querySelectorAll('#main *').forEach(el => {
+  if (!el.offsetHeight) return;
+  let direct = ''; el.childNodes.forEach(n => { if (n.nodeType === 3) direct += n.nodeValue.trim(); });
+  if (direct.length < 3) return;
+  if (el.closest('.wb-ico')) return;        // icon là thang riêng của kit, không phải chữ
+  const fs = parseFloat(getComputedStyle(el).fontSize);
+  const cls = (el.className || el.tagName).toString().split(' ')[0];
+  if (!seen.has(cls + fs)) seen.set(cls + fs, cls + ':' + fs);
+});
+const sizes = [...new Set([...seen.values()].map(v => +v.split(':')[1]))].sort((a, b) => b - a);
+console.log(sizes.length, 'cỡ · trải', (sizes[0] / sizes.at(-1)).toFixed(2) + '×', sizes, [...seen.values()]);
+```
 
-Vì sao quan trọng: một đoạn 13px trải hết cột 954px là **hơn 170 ký tự/dòng**. Và
-`--wb-text-body` của kit là 14px, nhỏ hơn thân bài — nên `h4` từng nhỏ hơn đoạn văn nó
-đứng đầu.
+Hai chỗ dùng `em` còn lại là **đúng** và đừng đổi: `code:not(pre code)` (.88em) và
+`.ds-brand__sub` (.8em, ở lớp vỏ). Cả hai phải co theo *phần tử chứa* chứ không theo thân
+bài — một đoạn code inline nằm trong `<th>` thì phải nhỏ như `<th>`, không phải như `<p>`.
+Đó là ranh giới: `em` cho thứ **phụ thuộc ngữ cảnh**, token cho thứ **có bậc riêng**.
+Còn `em` trong **custom property** thì
+luôn sai: nó được giải ở *chỗ dùng*, nên hai lớp lồng nhau cùng đọc token sẽ nhân dồn —
+`.ds-fam dt` trong `.ds-fam` từng ra `.67 × .72 × 26 ≈ 12,5px` thay vì 17,4px.
 
-### 0.3 Trang tự mở ở 90%
+### 0.3 KHÔNG zoom nữa (`--ds-zoom: 1`) — và vì sao vẫn giữ token
 
-`html { zoom: var(--ds-zoom) }`, `--ds-zoom: .9`. Việc của nó **không phải** làm chữ nhỏ
-đi — `--ds-measure` và `--ds-fs` lo cỡ chữ. Việc của nó là làm **lớp vỏ** nhỏ đi: thanh
-trên, thanh bên, nút, chip, chân trang đều là px trong bộ kit và không có token nào để
-nới, nên zoom là cách duy nhất co cả bộ đó cùng một nhịp mà không sửa từng con số của kit.
-Kết quả: chữ bài hiện ra 28 × 0,9 ≈ 25,2px trong cột 1060 × 0,9 ≈ 954px, lớp vỏ nhỏ hơn
-10% — đúng thứ tự ưu tiên muốn có. Zoom của trình duyệt **nhân thêm** lên số này, nên
-người đọc vẫn tự điều chỉnh được.
+Từ 2026-08-04 (a) tới (b), trang mở ở `zoom: .9`. Việc của nó là co **lớp vỏ** 10% — thanh
+trên, thanh bên, nút, chip, chân trang đều là px cứng trong kit và không có token nào để
+nới. Nó làm được đúng việc đó. Nó cũng làm **ba việc không ai đặt hàng**:
 
-**Cái bẫy, và nó đã cắn hai lần:** `zoom` không điều chỉnh đơn vị viewport. Đo thật: trong
-`zoom:.9`, một khối `width:100vw` ra **1152px** trên cửa sổ 1280px — `100vw` vẫn là 1280
-*đơn vị cục bộ* rồi bị co 0,9. Hệ quả lần thứ hai (phiên (g) → (h)): kit đặt
-`--wb-shell-h: 100dvh` và `.wb-drawer { height: 100vh }`, nên **thanh bên, ngăn phụ và
-dock ghi chú đều cụt đúng 10% đáy**.
+1. **Nhân mọi px cứng của kit xuống 0,9.** Nhãn 11px của kit ra 9,9px hiện ra — dưới ngưỡng
+   đọc được, mà không có chỗ nào trong trang khai con số 9,9 đó, nên không ai soát được nó.
+2. **`zoom` không điều chỉnh đơn vị viewport** — cắn **hai lần**: bảng mất 10% mức tràn
+   (phiên (f)), rồi thanh bên + ngăn phụ + dock **cụt đúng 10% đáy** vì kit đặt
+   `--wb-shell-h: 100dvh` và `.wb-drawer { height: 100vh }` (phiên (g) → (h)). Đo thật:
+   trong `zoom:.9`, `width:100vw` ra **1152px** trên cửa sổ 1280px.
+3. **Đẻ ra hai hệ toạ độ px trong cùng một file.** `getBoundingClientRect()` và `clientX`
+   là px SAU zoom; `getComputedStyle().width` là px cục bộ. Tay kéo dock phải nhân/chia
+   đúng chiều, sai một chỗ là nó nhảy 10% mỗi lần kéo.
+
+Ba cái giá đó trả cho **một** lợi ích, mà lợi ích đó giờ mua được bằng thang §0.2: cột bài
+không còn đọc px của kit nữa, nên "vỏ nhỏ hơn chữ" là quan hệ giữa hai thang, không cần
+zoom. Nên `--ds-zoom: 1`.
+
+**GIỮ token `--ds-zoom` / `--ds-vh` / `--ds-vw` chứ không xoá.** Chúng là chỗ luật dưới đây
+bám vào, và `gate.test.mjs` có một ca canh. Xoá đi thì lần sau ai đặt lại `zoom` sẽ dựng
+lại cả ba cái bẫy trên từ đầu. Với `--ds-zoom: 1` thì `--ds-vh` = `1vh`, phép chia thành
+phép nhân 1 — không tốn gì.
 
 Luật, không có ngoại lệ: **trong trang này không viết `vh`/`vw`/`dvh` trần.** Dùng hai
 token ở `:root`:
@@ -154,14 +262,17 @@ ca canh việc này.
 
 Hai thứ khác cùng gốc:
 
-- **Media query** cũng so với `viewport / zoom`. Một `min-width: 1200px` ở đây thật ra là
-  ngưỡng **1080px thật**. Trang có 5 ngưỡng: bốn cái `560px` (lớp vỏ trên điện thoại — tức
-  504px thật) và một cái `1333px` = 1200 thật (dock nhường chỗ). `gate.test.mjs` in cả 5 ra
-  mỗi lần chạy, đúng để lần thêm cái thứ sáu không ai quên chia.
+- **Media query** cũng so với `viewport / zoom`, nên khi zoom ≠ 1 thì số trong media query
+  phải là số **đã chia**. Trang có 5 ngưỡng: bốn cái `560px` (lớp vỏ trên điện thoại) và
+  một cái `1200px` (dock nhường chỗ). Với zoom = 1 chúng là ngưỡng thật; hồi `.9` thì hai
+  con số đó là 504 thật và `1333` viết trong CSS. `gate.test.mjs` in cả 5 ra mỗi lần chạy,
+  đúng để lần thêm cái thứ sáu không ai quên chia.
 - **`position: fixed` thì Chrome xử lý đúng** — đã kiểm, popup và ngăn phụ vẫn phủ kín.
 - **`getBoundingClientRect()` và `clientX` là px SAU zoom; `getComputedStyle().width` là px
   cục bộ.** Trộn hai hệ là cách để một tay kéo nhảy 10% mỗi lần kéo. Quy tắc: từ chuột vào
-  CSS thì **chia** zoom, từ CSS ra chuột thì **nhân**.
+  CSS thì **chia** zoom, từ CSS ra chuột thì **nhân**. Với zoom = 1 hai hệ trùng nhau, nên
+  **code sai kiểu này hiện không lộ ra** — giữ đúng chiều nhân/chia trong `dockZoom()` để
+  nó không thành bom hẹn giờ nếu ai bật lại zoom.
 
 ### 0.4 `Notes` là tầng thứ tư: dock, không phải lớp phủ
 
@@ -176,8 +287,8 @@ Ba việc để nó thật là dock — thiếu một cái là nó lại thành 
    *là* định nghĩa của modal; khai nhầm thì trình đọc màn hình nói sai với người dùng.
 3. Thân trang **nhường chỗ** đúng `--ds-dock-w` (`body.ds-dock-on`), nên dock không đè
    lên chữ. Cột co lại và chữ gói lại dòng — đó là giá phải trả, và nó rẻ hơn việc che
-   mất đoạn văn đang được ghi chú. Dưới 1200px **thật** thì hết chỗ nhường: dock nằm đè
-   (media query `1333px`, xem §0.3 — con số phải đã chia zoom).
+   mất đoạn văn đang được ghi chú. Dưới 1200px thì hết chỗ nhường: dock nằm đè (media
+   query `1200px` — số thật, vì zoom = 1; xem §0.3 nếu ai bật lại zoom).
 
 Hệ quả cần biết: `Notes` **không** nằm trong `LAYER_IDS`, nên Esc chỉ đóng nó khi không
 còn popup nào mở, bấm ra ngoài không đóng nó (bấm để chọn một câu mà mất cái đang viết
@@ -282,7 +393,7 @@ thiếu đó thuộc mạch chính — kéo nó lên.
 
 ## 2. Khổ chữ: một mép phải
 
-Chi tiết và chín con số ở `CLAUDE.md` §10; cách nới cột cho đúng ở **§0.2** trên. Bốn điều
+Chi tiết và các token ở `CLAUDE.md` §10; thang chữ + cách nới cột ở **§0.2** trên. Bốn điều
 cần nhớ khi thêm một khối:
 
 1. **Đừng đặt `max-width` cứng.** Cột nội dung *đã* đúng bằng khổ chữ. Cổng `G-MEASURE` bắt.
@@ -291,9 +402,9 @@ cần nhớ khi thêm một khối:
 3. **Muốn nới trang thì sửa `--ds-measure` + `--ds-fs`, và chỉ sửa hai cái đó** (§0.2 nói
    vì sao phải cả hai). Mọi thứ khác suy ra bằng `calc()`. Đơn vị `ch` bị cấm ở đây — nó
    co theo `font-size` nên `h2` và `<p>` cùng `74ch` ra hai mép lệch nhau 200px.
-4. **Không px cứng cho cỡ chữ trong `#main`.** Cột rộng 954px thì một đoạn 13px là hơn 170
-   ký tự/dòng. Dùng `em`, hoặc `calc(var(--ds-fs) * k)`, hoặc token của kit (bốn token đó
-   đã được định nghĩa lại trong `#main` — §0.2). Px cứng chỉ đúng ở **lớp vỏ**, ngoài `#main`.
+4. **Không px cứng cho cỡ chữ trong `#main` — trỏ vào một bậc của thang ⑧** (`--ds-t-*`,
+   §0.2). Cột 1060px mà một đoạn để px cứng thì nó rơi ra ngoài thang ngay. `em` chỉ dùng
+   cho thứ phụ thuộc ngữ cảnh (code inline). Px cứng chỉ đúng ở **lớp vỏ**, ngoài `#main`.
 
 ---
 

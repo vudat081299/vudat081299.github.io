@@ -37,7 +37,7 @@ Rồi tìm việc mình định làm trong bảng này:
 | **thêm hình / bảng / code** | §10 (một mép phải) · [docs/design.md](docs/design.md) | `gate.mjs --advice` + **mở trang bằng mắt** | không cuộn ngang ở 1440 / 1100 / 375px |
 | **đổi giao diện, thêm nút, thêm component** | **[docs/design.md](docs/design.md)** · §7 · §10 | mở trang, kiểm **cả sáng lẫn tối** | `G-MEASURE` im · hai chế độ đều đọc được |
 | **đổi chữ ở thanh trên / thanh bên / chân trang** | [docs/design.md](docs/design.md) **§0.1** (lớp vỏ nói tiếng Việt) | mở trang | không còn chữ tiếng Anh nào ngoài tên icon |
-| **nới cột / đổi cỡ chữ / đổi zoom** | [docs/design.md](docs/design.md) **§0.2–0.3** · §10 | đo lại ký tự/dòng (cách đo ở §0.2) | trung vị ≤ 85 · 1440/1200/375px không cuộn ngang |
+| **nới cột / đổi cỡ chữ / thêm một bậc chữ** | [docs/design.md](docs/design.md) **§0.2–0.3** · §10 | đo lại ký tự/dòng **và đếm lại số cỡ chữ** (cả hai cách đo ở §0.2) | trung vị ≤ 85 · ≤ ~10 cỡ chữ, trải ≤ 2× (nay 8 / 1,92×) · 1440/1200/375px không cuộn ngang |
 | **dùng chiều cao / bề rộng cửa sổ** | [docs/design.md](docs/design.md) **§0.3** (bẫy zoom + đơn vị viewport) | `node tools/gate.test.mjs` | không có `vh`/`vw`/`dvh` trần — dùng `--ds-vh` / `--ds-vw` |
 | **chuyển một khối ra ngoài mạch chính** | §7 · [docs/design.md](docs/design.md) §1 | `gate.mjs --advice` | popup là mặc định; chọn drawer thì phải viết ra lý do |
 | **sửa lịch 8 tuần / 14 ngày** | §8 · [docs/editing.md](docs/editing.md) việc 4 | `node tools/audit.mjs` | `G-PLAN` qua |
@@ -398,50 +398,71 @@ dừng ở cùng một mép. **Bảng là ngoại lệ duy nhất** — nó đư
 chữ) trong khi code chỉ 587px (12/175 vượt): cho code tràn theo thì mất mép chung mà
 được rất ít.
 
-Chín con số nằm ở **một khối `:root` duy nhất** đầu `<style>`, mọi thứ khác suy ra bằng
+Mọi con số nằm ở **một khối `:root` duy nhất** đầu `<style>`, mọi thứ khác suy ra bằng
 `calc()`. **Muốn nới trang thì sửa `--ds-measure` VÀ `--ds-fs`** — hai cái này đi cùng
 nhau, xem ngay dưới bảng.
 
 | token | mặc định | là gì |
 |---|---|---|
-| `--ds-measure` | 1060px | khổ chữ **và** bề rộng cột |
+| `--ds-measure` | **1060px** | khổ chữ **và** bề rộng cột — **chủ trang chốt, đừng tự đổi** |
 | `--ds-wide` | 1260px | bảng được tràn rộng tới đây |
 | `--ds-side` | 330px | `.wb-shell__side`, chỉ để tính chỗ trống |
 | `--ds-gutter` | 20px | lề ngang `.wb-container--pad` |
-| `--ds-fs` | `clamp(17px, …, 28px)` | cỡ chữ thân bài — **đi cùng `--ds-measure`** |
-| `--ds-zoom` | .9 | co **lớp vỏ** 10%; zoom trình duyệt nhân thêm lên |
+| `--ds-fs` | `clamp(14px, …, **15px**)` | cỡ chữ thân bài = **gốc của cả thang `--ds-t-*`** — chủ trang chốt 15px |
+| `--ds-t-*` | 9 bậc × `--ds-fs` | **thang chữ**: `hero h1 h2 h3 body sub code cap label` |
+| `--ds-zoom` | **1** | không zoom nữa — giữ token để luật `vh/vw` còn chỗ bám |
 | `--ds-dock-w` | 1/4 cửa sổ | bề rộng dock `Notes`, kéo được; thân trang nhường đúng chỗ |
 | `--ds-vh` / `--ds-vw` | `1vh|1vw / zoom` | 1% cửa sổ **thật** — xem ngay dưới |
 
-**`zoom` không điều chỉnh đơn vị viewport, và đó là cái bẫy đã cắn hai lần.** Lần đầu:
-công thức tràn bảng mất 10% mức tràn. Lần hai: kit đặt `--wb-shell-h: 100dvh` và
-`.wb-drawer { height: 100vh }`, nên thanh bên + ngăn phụ + dock **cụt đúng 10% đáy**. Luật
-bây giờ: **không viết `vh`/`vw`/`dvh` trần trong trang này**, dùng `--ds-vh` / `--ds-vw`.
-Media query cũng so với `viewport / zoom` — trang có 5 ngưỡng (bốn cái `560px` cho lớp vỏ
-trên điện thoại, một cái `1333px` = **1200px thật** cho việc nhường chỗ dock), và số ở đó
-phải là số ĐÃ CHIA. `gate.test.mjs` in cả 5 ngưỡng ra mỗi lần chạy để không ai thêm một
-cái thứ sáu mà quên chia.
+**Cỡ chữ trong cột bài phải trỏ vào MỘT bậc của `--ds-t-*`, không viết px/`em`/`ch` rời.**
+Thang có ba tầng: `:root` khai 9 bậc → `#main` nối **cả 8** token chữ của kit vào chúng →
+`#main .wb-*` kéo những component mà kit ghi px cứng (99 `.wb-alert`, 58 `.wb-help`, card,
+steps, cap, btn, pager…) về thang. Thiếu tầng thứ ba là có **hai hệ chữ trong cùng một
+cột** — đó là lỗi đã sống suốt bản trước: thân bài 25,2px cạnh alert 12,2px, tên bài `h1`
+24,3px **nhỏ hơn** thân bài, **18 cỡ chữ** khác nhau trên một trang (trải 3,31×). Nay
+**8 cỡ, trải 1,92×** — không tính icon, vốn là thang riêng của kit. Và vì cả 8 token của
+kit đã nối vào thang, thứ bậc đúng ở **mọi** giá trị `--ds-fs`: đổi nó thành 13 hay 20 thì
+`h1` vẫn = 1,5 × thân bài. Nên đổi cỡ chữ giờ là đổi **một** token, không phải soát lại cả trang.
+Cùng một loại nội dung thì **cùng một bậc** — cách đếm lại ở
+[docs/design.md](docs/design.md) §0.2.
+
+**`zoom` không điều chỉnh đơn vị viewport, và đó là cái bẫy đã cắn hai lần** — cùng với
+việc nó nhân mọi px cứng của kit xuống 0,9 (nhãn 11px → 9,9px) là lý do `--ds-zoom` giờ
+bằng **1**. Lần đầu: công thức tràn bảng mất 10% mức tràn. Lần hai: kit đặt
+`--wb-shell-h: 100dvh` và `.wb-drawer { height: 100vh }`, nên thanh bên + ngăn phụ + dock
+**cụt đúng 10% đáy**. Token được **giữ** dù bằng 1, vì luật sau bám vào nó: **không viết
+`vh`/`vw`/`dvh` trần trong trang này**, dùng `--ds-vh` / `--ds-vw`. Media query cũng so với
+`viewport / zoom` — trang có 5 ngưỡng (bốn cái `560px` cho lớp vỏ trên điện thoại, một cái
+`1200px` cho việc nhường chỗ dock); với zoom = 1 chúng là ngưỡng thật, ai bật lại zoom thì
+phải CHIA. `gate.test.mjs` in cả 5 ngưỡng ra mỗi lần chạy để không ai thêm cái thứ sáu mà
+quên chia.
 
 Suy ra: `--wb-container-max`, alias hai token khổ chữ của kit (`--wb-measure` và
-`--wb-measure-tight` — thiếu cái thứ hai thì đoạn intro trang chủ kẹt ~586px), **bốn token
-chữ của kit được định nghĩa lại trong `#main`** (`--wb-text-title/-body/-help/-caption` =
-`calc(var(--ds-fs) * .84/.78/.72/.67)`, vì ~35 lớp `ds-*` đọc chúng và px cứng 13px trong
-cột 954px là hơn 170 ký tự/dòng), bậc tiêu đề + cỡ chữ bảng + `.wb-help` (đặt bằng `em`),
-và `--ds-bleed` = mức tràn mỗi bên của bảng, tính bằng `clamp()` trên `100 * --ds-vw`.
+`--wb-measure-tight` — thiếu cái thứ hai thì đoạn intro trang chủ kẹt ~586px), cả tám token
+chữ của kit + các component kit ghi px cứng (xem thang `--ds-t-*` trên), bậc tiêu đề, cỡ
+chữ bảng, và `--ds-bleed` = mức tràn mỗi bên của bảng, tính bằng `clamp()` trên
+`100 * --ds-vw`.
 
-**Nới cột thì phải nới chữ.** Số ký tự/dòng = bề rộng cột ÷ bề rộng một chữ, nên đổi một
-token mà giữ token kia là tự đẩy độ dài dòng ra ngoài khoảng dễ đọc 45–90 (tiếng Việt nên
-nhắm **nửa dưới**: từ ngắn hơn nên cùng số ký tự là nhiều từ hơn). Đo thật ở cửa sổ 1440px,
-chỉ tính **dòng đầy**: 860/18px → trung vị **102** (bản trước, đã vượt trần) · 1060/26px →
-91 · 1060/27px → 88 · **1060/28px → 84** ✓. `--ds-fs` là `clamp()` nên 28px chỉ là đầu
-rộng: 375px → chữ 17px, trung vị 47. Cách đo lại (và vì sao hai con số 75/81 ghi ở đây
-trước kia là **đo sai**) cùng ba luật lớp vỏ khác ở **[docs/design.md](docs/design.md) §0**
-— đọc đó trước khi nới.
+**Ba đại lượng khoá nhau bằng một phép chia, và CHỦ TRANG đã chọn hai trong ba.**
+`ký tự/dòng ≈ --ds-measure ÷ (0,46 × --ds-fs)` (0,46em là bề rộng một chữ tiếng Việt trong
+font này, đo thật, ổn định qua mọi cỡ). Biết hai là cái thứ ba bị quyết định. Chủ trang chốt
+2026-08-04: **cột rộng hết chỗ** (hết khoảng trống) + **chữ 15px** ("13, 14 hoặc 15 cho
+content là dễ đọc lắm rồi") → ký tự/dòng ra **152**, vượt trần khuyến nghị 90.
+
+**Đó là quyết định, không phải lỗi chưa ai thấy — đừng "sửa" bằng cách hẹp cột lại.** Việc
+đó đã xảy ra: một phiên hạ cột về 660px cho đúng trần 90, và chủ trang bắt đảo lại ngay
+(container tụt còn 700px, trống 210px bên phải, bảng lệch 193px sang trái vì phải tràn
+margin âm mới đủ chỗ). `--ds-measure` đã đổi **ba lần trong một ngày** vì mỗi phiên tự chọn
+một cặp khác — cái giá đó đắt hơn dòng dài. **Muốn đổi thì HỎI.** Thứ duy nhất được nới để
+bù: `line-height` của `p`/`li` = **1,8**. Đo thật: 375px → cột 335/chữ 14px → 48 ✓ ·
+1200px → 819/15 → 115 · 1440px → 1059/15 → **152**. Cách đo lại (và vì sao hai con số 75/81
+ghi ở đây trước kia là **đo sai**) ở **[docs/design.md](docs/design.md) §0.2**.
 
 Đừng đặt `max-width` cứng ở đâu nữa; `G-MEASURE` bắt. Đơn vị `ch` bị cấm ở đây — nó co
 theo `font-size`, nên `h2` và `<p>` cùng `74ch` lại ra hai mép lệch nhau 200px. Và **đừng
-đặt px cứng cho cỡ chữ trong `#main`**: dùng `em` hoặc `calc(var(--ds-fs) * k)`. Px cứng
-chỉ đúng ở lớp vỏ, ngoài `#main`.
+đặt px cứng cho cỡ chữ trong `#main`**: trỏ vào một bậc `--ds-t-*`. `em` chỉ dành cho thứ
+phụ thuộc ngữ cảnh (code inline trong `<th>` phải nhỏ như `<th>`). Px cứng chỉ đúng ở lớp
+vỏ, ngoài `#main`.
 
 Ba cái bẫy khi sửa phần tràn của bảng, đã dính đủ cả ba: kit đặt
 `.wb-table-scroll { width: 100% }` nên phải ép `width: auto` (width cố định thì margin
