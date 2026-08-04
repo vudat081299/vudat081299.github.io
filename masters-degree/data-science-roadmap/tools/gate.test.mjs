@@ -249,6 +249,49 @@ reset();
   }
 }
 
+/* ---- đơn vị viewport dưới `zoom` ------------------------------------------
+   `html { zoom: .9 }` KHÔNG điều chỉnh vh/vw/dvh: một `height: 100vh` ra 90% chiều cao
+   cửa sổ thật. Lỗi này đã xảy ra HAI lần (mức tràn bảng, rồi thanh bên + ngăn phụ +
+   dock cụt 10% đáy) và cả hai lần đều không có cổng nào bắt được — nó không phải lỗi
+   cấu trúc, nó là một con số đúng cú pháp mà sai nghĩa. Nên nó là test, không phải cổng.
+
+   Luật: trong khối <style> của trang, mọi `<số>vh|vw|dvh|dvw` chỉ được xuất hiện ở
+     · dòng định nghĩa hai token `--ds-vh` / `--ds-vw`, hoặc
+     · một khai báo `font-size` (chữ CO theo zoom là đúng, không phải lỗi).
+   Media query cũng bị kiểm: con số ở đó phải là con số ĐÃ CHIA zoom, nên nó phải mang
+   một chú thích nói ra điều đó — không có chú thích thì gần như chắc là quên chia. */
+console.log('\nđơn vị viewport dưới zoom (không dùng vh/vw trần):\n');
+reset();
+{
+  const html = readFileSync(join(DS, 'data-science-roadmap.html'), 'utf8');
+  const style = html.slice(html.indexOf('<style>'), html.indexOf('</style>'));
+  /* Xoá RUỘT chú thích nhưng giữ số dòng: các khối chú thích ở đây NÓI về cái bẫy nên
+     chúng đầy chữ `100vw`, và một test báo động vào chính tài liệu giải thích lỗi thì
+     nó là tiếng ồn. Thay mọi ký tự trong chú thích bằng dấu cách, chừa \n. */
+  const code = style.replace(/\/\*[\s\S]*?\*\//g, m => m.replace(/[^\n]/g, ' '));
+  const bad = [];
+  code.split('\n').forEach((line, i) => {
+    if (!/\d\s*(dvh|dvw|vh|vw)\b/.test(line)) return;
+    if (/--ds-vh\s*:|--ds-vw\s*:/.test(line)) return;             // chính hai token
+    if (/font-size/.test(line)) return;                           // cỡ chữ co theo zoom là đúng
+    bad.push(`${i + 1}: ${line.trim().slice(0, 90)}`);
+  });
+  bad.length === 0
+    ? ok('đơn vị vp', 'không có vh/vw/dvh trần nào ngoài hai token --ds-vh/--ds-vw')
+    : no('đơn vị vp', `${bad.length} chỗ dùng đơn vị viewport trần:\n      ` + bad.join('\n      '));
+
+  /* Media query cũng bị nhân zoom, nhưng nó KHÔNG phải lỗi — chỉ là con số phải được
+     chọn có ý thức. Test chỉ in ra danh sách để lần soát nào cũng đi qua nó một lần. */
+  const mqs = [...code.matchAll(/@media[^{]*\((?:min|max)-width:\s*(\d+)px\)/g)].map(m => m[1]);
+  ok('media query', mqs.length
+    ? `${mqs.length} ngưỡng: ${mqs.join(', ')}px — ngưỡng THẬT = số × zoom, kiểm lại nếu vừa thêm`
+    : 'không có media query nào');
+  const tokens = ['--ds-vh', '--ds-vw'];
+  tokens.every(t => style.includes(t + ': calc('))
+    ? ok('đơn vị vp', 'hai token --ds-vh/--ds-vw còn được định nghĩa bằng calc()')
+    : no('đơn vị vp', 'thiếu định nghĩa --ds-vh hoặc --ds-vw — mọi chỗ dùng chúng sẽ im lặng thành 0');
+}
+
 console.log('\ncông cụ phiên — chỉ kiểm chạy được:\n');
 reset();
 for (const [tool, args] of [['session.mjs', []], ['session.mjs', ['--close']], ['learn.mjs', []], ['learn.mjs', ['--check']], ['learn.mjs', ['--sync']]]) {
