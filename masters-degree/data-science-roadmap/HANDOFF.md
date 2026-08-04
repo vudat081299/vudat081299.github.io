@@ -17,6 +17,129 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 
 ---
 
+## Phiên 2026-08-04 (m2) — hai move chặng giáo trình (chủ trang duyệt cả hai)
+
+Chủ trang duyệt **cả hai** move trong backlog "Quyết định giáo trình" (phiên m Vòng 2); đã làm
+**xong cả hai + verify bằng preview sống**:
+
+- **`t-stack` → chặng 10**: ✅ **XONG + verify** (đổi id `t-stack`→`r-stack`, đưa lên đầu chặng 10;
+  bỏ khỏi tuần 1 + ngày 3 fast track; thêm vào tuần 8; sửa `PAYOFF` t-sklearn→toán, r-stack→
+  r-roadmapsh; `READONLY_OK`. Cổng xanh, preview xác nhận r-stack render ở chặng 10, hết `#/t-stack`.)
+- **Dời chặng 7 (q-\*, họ bài toán) xuống sau chặng 8 (pr-\*, product)**: ✅ **XONG + verify** —
+  làm theo docs/editing.md việc 3, các bước:
+  1. Dời khối template `q-*` (`q-regress`…`q-mini`) ra **sau** khối `pr-*` (trước `th-topic`).
+  2. `TREE`: đưa block `p7` xuống sau `p8`; **đổi số ở `t`**: p8 → "7 · …", p7 → "8 · …" (giữ `id`).
+  3. `WEEKS`: hoán nội dung tuần 6↔7 (product = tuần 6, họ-bài-toán = tuần 7); `mile:'Mốc 2'` đi
+     theo q-mini sang tuần 7; sửa các câu `next`. **Kiểm**: q-* cần DL (tuần 5) vẫn đứng trước; product
+     không cần q-* → không sinh phụ thuộc ngược.
+  4. `DAYS`: **không đổi** — q-* không nằm trong fast track, và DAYS vốn đã interleave (th-topic ngày 11
+     trước pr-* ngày 12), nên auditPlan không ép DAYS theo thứ tự TREE.
+  5. `PAYOFF` 3 nhịp nối: `dl-tab`[1]→product · `pr-cost`[1]→họ-bài-toán · `q-mini`[1]→luận văn.
+  6. **~9 câu văn "chặng 7/8"** phải lật (chỉ 7↔8; chặng 6/9 giữ) — không cổng nào bắt, phải grep tay:
+     dòng ~2827/2832/3203/3256/3286/6451 (họ-bài-toán, 7→8) · ~2918 card + ~10174 DAYS note (product, 8→7)
+     · ~5810 "chặng 7–8" (kiểm nghĩa trước khi sửa).
+  7. **"Sơ đồ phụ thuộc" trong `s-plan8w`**: hoá ra KHÔNG phải SVG riêng — nó là bảng tuần
+     `#planWeeks` render từ `WEEKS` (needs/next), tự cập nhật. Không phải sửa tay.
+  `PHASE_OUTCOME`/`COMP_PHASE` đánh theo `id` → không đổi. (Đã đổi id chặng: **không**; chỉ đổi
+  số hiển thị trong `t` — p8→"7·", p7→"8·".)
+
+  **Verify (preview 8806):** trang chủ thứ tự **6 DL → 7 Product → 8 Họ bài toán → 9 Luận văn →
+  10 Tra cứu**; lịch 8 tuần: **tuần 6 = Sản phẩm, tuần 7 = Mốc 2 Các họ bài toán, tuần 8 = Mốc 3**;
+  `pr-arch`/`q-regress`/`q-mini`/`pr-cost` render đúng chương. Cổng CHẶN xanh, **không sinh G-FWD
+  mới** (còn đúng 5 khuyến nghị cũ; "bootstrap" tự hết vì r-stack xuống cuối). Prose đã kiểm: pr-*
+  không nhắc chuyển-giao/mini-project, q-* nhắc "sản phẩm/API" đều là nghĩa chung → không vỡ theo
+  thứ tự. 12 câu "chặng 7/8" + ~10 câu "tuần 6/7" đã lật đúng chiều (grep xác nhận).
+
+**Preview đã sửa** (không còn mù): `serve-live.py` trong scratchpad phiên này serve mirror **sống**,
+launch.json thêm entry `ds-live` (cổng 8806). Sau mỗi Edit chạy `sh <scratch>/sync-preview.sh` rồi reload.
+Server cũ `ds-review` (8805) serve bản mirror của phiên khác — **bỏ, đừng dùng**.
+
+## Phiên 2026-08-04 (m) — thực thi các sửa nội dung mà phiên (l) §2 thẩm định là "đáng sửa"
+
+Yêu cầu: *"làm tất cả handoff mới thêm từ commit e189805"* — tức thực thi các sửa nội dung mà
+phiên (l) đã thẩm định trong §2 nhưng **cố ý hoãn** (xem "Cố ý KHÔNG làm" của phiên l). Đã làm
+đúng hai nhóm phiên (l) gắn nhãn **"đáng sửa (P0 factual)"** + **"tinh chỉnh precision"**, cộng
+một clarification phiên (l) khuyến nghị. **Không** đụng nhóm "đừng sửa theo review" và các quyết
+định của chủ trang.
+
+### Đã sửa — 7 chỗ, 6 bài
+
+1. **`q-forecast` MASE** (P0): mẫu số đổi sang MAE naive-**một bước trên train** (Hyndman) —
+   `d = mean_absolute_error(y_train.iloc[1:], y_train.shift(1).iloc[1:])`. Thêm một đoạn tách
+   rõ: chia cho naive **trên test** (code cũ) là **relative MAE**, không phải MASE. Giữ tên
+   "MASE" làm chỉ số chính (mục tiêu bài hứa MASE), nhưng gọi đúng cả hai.
+2. **`q-forecast` gap** (precision): tách `gap` = **độ trễ dữ liệu**; **tầm dự báo** (horizon)
+   nằm ở cách dựng target, không ở `gap`. Bỏ hàm ý "gap=7 ⇒ dự báo trước 7 ngày".
+3. **`dl-tab` multimodal** (P0): "Chỉ mạng nơ-ron kết hợp được" → "kết hợp **end-to-end** trong
+   một mô hình thường phải là NN", trỏ thẳng tới mục embedding→LightGBM cuối bài — chỗ trước đây
+   **tự mâu thuẫn**.
+4. **`dl-llm` post-training** (P0): thêm đoạn hedge — "mọi khả năng nổi lên từ đoán token" mới
+   là **tiền huấn luyện**; hành vi bám chỉ dẫn/từ chối đến từ **hậu huấn luyện** (SFT→RLHF);
+   decoder-only không phải kiến trúc duy nhất (có encoder-decoder). SFT/RLHF gloss tại chỗ (§11).
+5. **`ml-metrics` AP** (precision): thêm một câu — `average_precision_score` = **AP**, là ước
+   lượng PR-AUC sklearn khuyên; **đừng** đổi sang `auc(recall, precision)` (nội suy tuyến tính
+   cho số lạc quan giả — đúng cái review đề xuất mà sklearn khuyên tránh). Giữ tên "PR-AUC" xuyên
+   suốt (§11).
+6. **`ml-shap` log-odds** (clarification): thêm câu ở chỗ "cộng lại đúng bằng" — với mô hình cây
+   "dự đoán cuối" là **log-odds**, phép cộng đúng bằng ở thang đó chứ không phải xác suất; sửa
+   câu đọc beeswarm thành "mức đẩy dự đoán **theo log-odds**". (Review nói trang sai "= xác suất"
+   — trang không hề nói thế; đây là làm rõ, không phải sửa lỗi.)
+7. **`d-leak` rò rỉ nhóm** (precision): thêm câu — "sụp khi gặp khách mới" chỉ đúng khi hệ thống
+   chấm **entity mới**; nếu luôn gặp lại thẻ cũ thì cùng entity hai bên không đương nhiên là rò
+   rỉ, tuỳ kịch bản. Giữ group-split làm mặc định an toàn.
+
+Chạm vào: 6 template bài (`q-forecast` ×2, `dl-tab`, `dl-llm`, `ml-metrics`, `ml-shap`, `d-leak`)
+· `TOC.md` (số dòng). **Không** đổi CSS/JS/layout. Cổng CHẶN đều qua, **G-SYNTAX xanh**.
+
+**Chưa xem được bằng mắt trên trình duyệt:** preview_start ở sandbox này serve một **bản mirror
+cũ** của repo (đo được: server trả 942 KB, file thật trên đĩa 1,20 MB; restart server không cập
+nhật). Đã xác minh bằng `grep` trên đĩa (cả 7 chỗ có mặt) + cổng `G-SYNTAX` (script phân tích
+được). Vì đây là sửa **chữ trong template tĩnh**, markup y hệt các khối anh em cùng bài, và không
+có math `$…$` mới, rủi ro render ≈ 0. Nếu muốn render thật thì mirror sang scratchpad rồi serve
+(xem memory `preview-sandbox-mirror`).
+
+### Vòng 2 — làm nốt backlog "CHƯA LÀM" (chủ trang: "làm nốt cho tôi")
+
+- **`f-cyclic` Cách 4 → popup** ✓ (backlog "Còn nợ thật", mục được gọi là "đáng dời nhất"):
+  "Cách 4 · SplineTransformer" rời mạch chính vào popup `data-mathdef="cyclicspline"`; đổi tiêu
+  đề "bốn cách"→"ba cách"; nút mở đặt cuối mục "Đa hài". Popup đếm 27→28, `G-REF` xanh. Mạch
+  chính giờ = sin/cos ở ba mức + đa hài; spline là đào sâu tuỳ chọn. (Nút mở popup nên xem bằng
+  mắt khi preview render được — cơ chế y hệt 27 popup cũ nên rủi ro thấp.)
+- **`r-roadmapsh` verify** ✓ (backlog): đọc lại — bài **đã** là bản dịch giữ/để-sau/bỏ + mục
+  "roadmap.sh thiếu gì", KHÔNG phải bài hơn-thua ("roadmap.sh làm tốt đúng việc nó định làm").
+  Không cần sửa; gạch khỏi backlog.
+- **Rà thời lượng** (spot-check): pr-code 150′, dl-attn 120′, s-intro 40′ — không số nào bất
+  thường lộ ra. Rà kỹ từng bài vẫn để mở (open-ended, không phải lỗi).
+
+### Backlog "Quyết định giáo trình" — chủ trang duyệt, đã làm
+
+- **Dời chặng 7 (họ bài toán, q-*) xuống sau chặng 8 (product)** và **`t-stack` → chặng 10**:
+  chủ trang duyệt cả hai → **đã làm + verify**. Chi tiết + kết quả verify ở mục **Phiên (m2)**
+  đầu file.
+- **`th-defense` timeline → `wb-steps`**: HOÃN — cần xem căn chỉnh bằng mắt ("tâm mốc khớp tâm
+  tiêu đề, đo ra 0") mà preview đang serve bản cũ. Làm khi preview render được.
+- **Giữ nguyên theo khuyến nghị**: `f-store` (giữ, skim 30′), `q-analytics` (giữ), nhãn
+  Foundation/Applied/Advanced (không thêm — chỉ tăng nhiễu). `ml-loss` zoo optimizer & `dl-train`
+  bảng gỡ lỗi: ưu tiên thấp, để nguyên trên mạch chính.
+
+### Cố ý KHÔNG làm trong phiên này
+
+- **Nhóm "Review SAI / trang đã tự phòng"** (phiên l §2): `ml-linear`/`m-prob` phân phối chuẩn,
+  `dl-tab` "không cấu trúc" (đã trích Grinsztajn), production/thesis heuristic (PSI/latency/
+  defense đã hedge sẵn), MLflow-log-test. Không đụng — trang đã đúng.
+- **`ml-loss`/`ml-linear`** ("loss không luôn GD" / "logistic↔LightGBM đo interaction"): phiên l
+  đánh giá là simplification nhẹ, đã có aside `x-tree-learn`. Bỏ qua.
+- **6 khuyến nghị `G-FWD`** (PR-AUC / rò rỉ / Pipeline / bootstrap / embedding / attention dùng
+  trước bài dạy): **nợ giáo trình có sẵn**, quyết định của chủ trang — không nhồi allowEarly
+  (§4 + "Còn nợ thật"). Các sửa phiên này **không thêm G-FWD mới** (mọi bài chạm đều ở/sau bài
+  dạy khái niệm liên quan).
+- **Cột 1060px / chữ 14–15px / thứ tự bài**: quyết định của chủ trang (§10). Review khuyên đổi
+  nhưng **phải hỏi** — không tự đổi.
+- **Không đổi tag `.ds-codecap`** (`<div>` vs `<p>` còn lẫn): là việc dọn dẹp riêng của phiên (l),
+  không thuộc phạm vi "sửa nội dung theo review".
+- **Không commit/push**: chủ trang chưa yêu cầu. Và `pre-push` chưa cài (G-HOOK) — chạy
+  `tools/install-hooks.sh` trước khi push (push `main` = deploy).
+
 ## Phiên 2026-08-04 (l) — chốt một chiều cho `.ds-codecap`, và thẩm định một bản review nội dung
 
 Hai việc: (1) chốt chiều cho nhãn tên file `.ds-codecap` (việc mà phiên (k) cố ý hoãn, xem
@@ -1250,24 +1373,18 @@ một dòng theo đúng khuôn của `cashy`.
 
 ## CHƯA LÀM — và vì sao
 
-### Quyết định giáo trình, không phải lỗi: cần chủ trang chọn
+### Quyết định giáo trình — đã xử
 
-Bốn việc dưới đây phiên (a) ghi là "cân nhắc". Chúng **đổi hình dạng giáo trình**, nên theo
-đúng tinh thần CLAUDE.md §6 (thêm/xoá bài phải soi lại triết lý) chúng là quyết định của
-chủ trang, không phải của agent. Khuyến nghị kèm theo:
+Hai việc "nên làm" **đã làm ở Phiên (m2)** (dời chặng 7 xuống sau chặng 8; `t-stack`→`r-stack`
+sang chặng 10). Hai việc còn lại là quyết định **giữ nguyên** — đừng revisit:
 
-| việc | khuyến nghị | lý do |
+| việc | quyết định | vì sao |
 |---|---|---|
-| Dời chặng 7 xuống sau chặng 8 | **nên làm** | 975 phút, lớn nhất trang, 0 bài trong fast track, mà nó nằm chắn giữa DL và hai chặng mà trang tồn tại vì chúng |
-| `t-stack` → chặng 10 (tra cứu) | **nên làm** | nó là sổ tra (r60/x0/d0), không phải bài học; đặt ở chặng 1 làm tuần 1 dài ra vô ích |
-| Cắt `f-store` | **không nên** | sau khi sửa tiêu đề thì nội dung thật của nó là *một câu trả lời cho hội đồng* + point-in-time correctness. Giữ, nó đang là `skim` 30′ |
-| `q-analytics` off-goal | **giữ** | nó là bài duy nhất vạch ranh giới analytics / predictive / causal, và đó là câu hội đồng hay hỏi |
+| Cắt `f-store` | **giữ, không cắt** | nội dung thật của nó là *một câu trả lời cho hội đồng* + point-in-time correctness; đang `skim` 30′ |
+| `q-analytics` off-goal | **giữ** | bài duy nhất vạch ranh giới analytics / predictive / causal — câu hội đồng hay hỏi |
 
 ### Còn nợ thật
 
-- ~~**Hai hệ số liệu song song.**~~ **Xong ở phiên (d)** — đã rà toàn trang, nối bằng
-  nhãn thống nhất + hộp gỡ hiểu nhầm ở `ml-metrics`, không đổi con số nào. Xem mục 2
-  phiên (d) để biết vì sao **không** đồng bộ hoá hai hệ. Đừng làm lại.
 - **Ngày 9 của fast track đúng 3,5 giờ**, tức đúng ngưỡng dưới của `auditPlan()`. Cắt bất
   kỳ thời lượng nào trong ba bài của ngày đó sẽ làm `auditPlan()` trượt. Đó là cổng làm
   đúng việc, nhưng biết trước thì đỡ mất thời gian.
@@ -1278,14 +1395,13 @@ chủ trang, không phải của agent. Khuyến nghị kèm theo:
   allowEarly.**
 - Rà thời lượng từng bài (`auditPlan` chỉ kiểm *nhất quán*, không kiểm *hợp lý*) — đặc
   biệt `pr-code`, các bài DL dài, `s-intro`.
-- `r-roadmapsh`: chắc lại là **bản dịch thứ tự bài học** của roadmap.sh, không phải bài so
-  sánh hơn thua.
 - Nhãn Foundation/Applied/Advanced: cân nhắc có thật cần không trước khi làm.
 - `th-defense` cũng là timeline (T−3/T−2/T−1) — cân nhắc chuyển sang `wb-steps` cho nhất
-  quán với lịch 14 ngày.
-- `f-cyclic` "Cách 4 · SplineTransformer", `ml-loss` zoo optimizer, `dl-train` bảng gỡ lỗi:
-  vẫn trên mạch chính. Mỗi cái 6–15 dòng, `G-LAYER` không bắt (tiêu đề không tự tố giác).
-  Ưu tiên thấp — nhưng `f-cyclic` Cách 4 đáng dời nhất vì bài đã nói dùng Cách 2/3.
+  quán với lịch 14 ngày. **Hoãn ở phiên (m)**: cần xem căn chỉnh bằng mắt, mà preview đang
+  serve bản cũ (xem memory `preview-sandbox-mirror`).
+- `ml-loss` zoo optimizer, `dl-train` bảng gỡ lỗi: vẫn trên mạch chính. Mỗi cái 6–15 dòng,
+  `G-LAYER` không bắt (tiêu đề không tự tố giác). Ưu tiên thấp. (`f-cyclic` "Cách 4 ·
+  SplineTransformer" đã dời vào popup `cyclicspline` ở phiên (m).)
 
 ---
 
