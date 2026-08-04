@@ -17,7 +17,7 @@ Live: <https://vudat081299.github.io>
 | `facts/` | Thư viện fact có kiểm chứng (HTML + `data/` JSON) |
 | `json-analysis/` | Công cụ xem/sửa/so sánh JSON |
 | `loto/`, `read-excel-file-to-table/` | Công cụ nhỏ, một trang |
-| `masters-degree/` | Tài liệu môn cao học, chia theo môn |
+| `masters-degree/` | Tài liệu môn cao học, chia theo môn. **`data-science-roadmap/` là trang dạy Data Science 84 bài — một file HTML 0,9 MB, và nó có `CLAUDE.md` + `TOC.md` + bộ cổng kiểm `tools/gate.mjs` riêng. ĐỌC `CLAUDE.md` TRƯỚC; đừng mở file HTML để tìm hiểu (tốn ~250k token), dùng `TOC.md` và `node tools/gate.mjs --show <id>`** |
 | `poem/` | 7 bài thơ Việt. Tự chứa hoàn toàn: `main.js` (engine Truyện Kiều) + `style.css` + `assets/` nằm ngay trong thư mục |
 | `portfolio/` | Portfolio + vài component thí nghiệm (GlassCard, ClockComponent, Universe…) |
 | `stuff/` | **Gác xép.** Template Bootstrap gốc chưa sửa và thí nghiệm cũ (`app/`, `swift-docs-factory/`, `archive/`, `SRE.html`). Giữ trong git nhưng **không publish** — không link tới từ đâu cả |

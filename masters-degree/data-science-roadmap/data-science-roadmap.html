@@ -17,38 +17,59 @@
   /* Page-local: chỉ layout + những thứ kit chưa có (khối code, khối viz, prose).
      Mọi màu / bo góc / khoảng cách đều lấy từ token wb-*. */
 
-  /* ---- prose: nội dung bài học ----
-     ĐÚNG HAI mép phải, không hơn:
-       --ds-measure  → mọi dòng CHỮ chảy (p, ul, h2, h3, dl…)
-       hết cột       → bảng, khối code, hình tương tác, card, alert — và pager,
-                       hộp kết bài, bộ tự đánh giá ở ngoài .ds-prose
+  /* ╔══════════════════════════════════════════════════════════════════════════╗
+     ║  KHỔ TRANG — BỐN CON SỐ, VÀ CHÚNG NẰM ĐÚNG Ở ĐÂY                        ║
+     ╚══════════════════════════════════════════════════════════════════════════╝
+     Muốn trang rộng ra / hẹp lại: sửa `--ds-measure` ở khối `:root` ngay dưới,
+     KHÔNG sửa chỗ nào khác. Bề rộng cột, khổ chữ, mức tràn của bảng và ngưỡng tự
+     tắt tràn khi hết chỗ đều suy ra từ nó bằng calc(). Không có con số khổ chữ
+     nào viết rời trong phần CSS còn lại — cổng `G-MEASURE` canh đúng việc đó.
 
-     Trước đây có BỐN mép so le nên mắt đọc ra "layout hỏng": chữ 74ch = 746px, h2
-     cũng 74ch nhưng font 19px nên thành 959px (đơn vị `ch` co giãn theo font-size —
-     tiêu đề vì thế thò ra ~200px so với đoạn văn ngay dưới nó), .ds-prose 1040px, và
-     pager 1080px. Nay khổ chữ đặt bằng px nên tiêu đề và đoạn văn dùng CÙNG một mép,
-     còn .ds-prose bỏ hẳn max-width nên bảng/code/card chạm đúng mép phải của pager.
+     ---- MỘT mép phải, không phải hai ----
+     Cột nội dung ĐÚNG BẰNG khổ chữ. Nghĩa là đoạn văn, tiêu đề, khối code, card,
+     alert, pager, hộp kết bài — tất cả dừng ở CÙNG một mép. Chỉ **bảng** được
+     tràn ra ngoài mép đó (xem `--ds-bleed`), vì đo thật thì bảng là khối duy nhất
+     thực sự cần: bề rộng tự nhiên trung vị 844px, 106/155 bảng vượt 720px — trong
+     khi code trung vị chỉ 587px và chỉ 12/175 khối vượt 720px.
 
-     ĐỪNG nới --ds-measure to thêm. Đo thật ở 16px/-apple-system: 746px ≈ 109 ký tự
-     một dòng, đã dài hơn khoảng dễ đọc (45–75, tối đa ~90) — nới nữa là đổi khả năng
-     học lấy cảm giác "kín chỗ". Nếu sửa thì sửa theo hướng NHỎ đi. */
-  /* Cột nội dung hẹp hơn mặc định 1120px của kit. Khổ chữ bị chặn ở 720px vì lý do
-     đọc được; nếu để cột rộng 1080px thì bảng/code/hình chạm mép phải cách chữ tới
-     360px, và khoảng trống so le đó đọc như lỗi layout chứ không như lề trang. Ở 940px
-     (trong lòng 900px) hai mép chỉ cách nhau 180px — đủ để hình rộng vẫn thở, đủ gần
-     để cả trang đọc như MỘT cột. */
-  /* --ds-measure khai ở #main (không ở .ds-prose) vì có khối phải dùng đúng khổ chữ
-     đó nhưng nằm NGOÀI .ds-prose — mục tiêu bài, hộp kết bài, ghi chú phạm vi. */
-  /* --wb-measure là khổ chữ MẶC ĐỊNH của kit cho .wb-page-head / .wb-section, mặc định
-     68ch. Đơn vị `ch` co theo font-size nên đoạn intro trang chủ bị chặn ~586px (body) /
-     ~600px (lede) — so le với 720px của phần còn lại, đúng thứ raggedness `ch` mà cả
-     trang đã bỏ ở chỗ khác. Alias nó về --ds-measure để MỌI dòng chữ, kể cả text do
-     shell kit quản, dùng chung một mép phải. Kit có HAI token khổ chữ — --wb-measure
-     (68ch, cho .wb-section) và --wb-measure-tight (62ch, cho phần mô tả .wb-page-head,
-     đúng đoạn intro trang chủ) — alias CẢ HAI, nếu không đoạn hero vẫn kẹt ở ~586px. */
+     Trước đây cột rộng 900px còn chữ 720px, nên mọi đoạn văn chừa một khoảng trống
+     180px bên phải trong khi bảng/code chạm mép — mắt đọc khoảng so le đó ra "layout
+     hỏng". Nay chữ chạm mép cột, còn bảng tràn ra thì đọc như một chủ ý.
+
+     ---- ĐỪNG nới --ds-measure quá tay ----
+     Đo thật trên trang này (16px / -apple-system, tiếng Việt, 6 đoạn dài):
+       720px → 62–90 ký tự/dòng (trung vị 77)   ✓ trong khoảng dễ đọc 45–90
+       900px → 80–119 ký tự/dòng                ✗ đã vượt
+     Nới thì nới từng bước và ĐO LẠI, đừng nới theo cảm giác "kín chỗ".
+
+     ---- Vì sao phải alias hai token của kit ----
+     Kit web-builder có khổ chữ riêng cho shell: `--wb-measure` (68ch, cho
+     .wb-section) và `--wb-measure-tight` (62ch, cho phần mô tả .wb-page-head).
+     Đơn vị `ch` co theo font-size nên đoạn intro trang chủ từng kẹt ~586px trong
+     khi phần còn lại 720px. Alias CẢ HAI về --ds-measure — thiếu cái thứ hai thì
+     đoạn hero vẫn lệch. */
+  :root {
+    --ds-measure: 720px;   /* ① khổ chữ VÀ bề rộng cột nội dung — sửa số này là đủ */
+    --ds-wide:    900px;   /* ② bảng được tràn rộng tới đây (chỉ bảng, khi đủ chỗ) */
+    --ds-side:    330px;   /* ③ .wb-shell__side — chỉ dùng để tính chỗ trống hai bên */
+    --ds-gutter:   20px;   /* ④ lề trong ngang của .wb-container--pad */
+    --ds-bleed:     0px;   /* mặc định KHÔNG tràn; #main tính lại bên dưới */
+  }
+  /* Suy ra, đừng sửa tay. --ds-bleed là mức tràn MỖI BÊN của bảng:
+       · trần    = (--ds-wide − --ds-measure) / 2 → 90px, đủ để bảng đạt 900px
+       · thực tế = một nửa chỗ trống còn lại hai bên cột, nên khi cửa sổ hẹp dần
+                   bảng tự thu về đúng mép cột thay vì tràn ra ngoài màn hình
+       · 24px trừ hao cho thanh cuộn chiếm chỗ (Windows) — 100vw không trừ nó
+     Vì là clamp() nên KHÔNG cần media query: desktop rộng thì tràn đủ 90px, laptop
+     hẹp thì tràn một phần, tablet/mobile thì bằng 0. Mobile thanh bên đã ẩn nên
+     công thức tính dư ra --ds-side — sai theo hướng an toàn (không bao giờ tràn lố). */
   #main {
-    --wb-container-max: 940px; --ds-measure: 720px;
+    --wb-container-max: calc(var(--ds-measure) + 2 * var(--ds-gutter));
     --wb-measure: var(--ds-measure); --wb-measure-tight: var(--ds-measure);
+    --ds-bleed: clamp(0px,
+      (100vw - var(--ds-side) - var(--ds-measure) - 2 * var(--ds-gutter) - 24px) / 2,
+      (var(--ds-wide) - var(--ds-measure)) / 2);
+    padding-inline: var(--ds-gutter);   /* khoá lề ngang khớp --wb-container-max */
   }
   /* ---- mục tiêu bài, đặt trước nội dung ----
      Không dùng card: card đọc như một khối tách khỏi mạch, còn đây phải đọc như câu
@@ -57,7 +78,7 @@
   .ds-obj {
     /* border-box để MÉP PHẢI trùng đúng mép các đoạn văn bên dưới: vạch trái + padding
        nằm TRONG khổ, nếu không khối này thò ra 16px và lại thành một mép thứ ba. */
-    box-sizing: border-box; max-width: var(--ds-measure, 720px);
+    box-sizing: border-box; max-width: var(--ds-measure);
     margin: 0 0 18px; padding: 8px 0 8px 14px;
     border-left: 2px solid var(--wb-border-strong);
     display: flex; flex-direction: column; gap: 2px; line-height: 1.55;
@@ -72,12 +93,13 @@
      nên một nhãn 60 ký tự thành một hàng 467px và đẩy CẢ TRANG cuộn ngang trên điện
      thoại. Cho phép nó gói dòng thay vì bắt cả trang giãn ra. */
   .ds-btn--wrap { white-space: normal; text-align: left; height: auto; }
-  /* Khai cả trên .ds-prose: popup toán và ngăn phụ nằm NGOÀI #main nên không thừa
-     hưởng được biến từ đó. */
-  .ds-prose { --ds-measure: 720px; max-width: none; }
+  /* .ds-prose không cần max-width riêng nữa: cột (#main) ĐÃ bằng khổ chữ. */
+  .ds-prose { max-width: none; }
   /* Popup toán và ngăn phụ hẹp hơn cột bài, nên khổ chữ phải co theo hộp chứ không
-     giữ 720px cứng — nếu giữ, chữ bị chặn ở một khổ rộng hơn cả cái popup. */
-  .ds-mathmodal .ds-prose, .ds-drawer .ds-prose { --ds-measure: none; }
+     giữ 720px cứng — nếu giữ, chữ bị chặn ở một khổ rộng hơn cả cái popup. Chúng nằm
+     NGOÀI #main nên --ds-measure thừa hưởng từ :root; tắt luôn tràn bảng ở đây vì
+     không có chỗ trống hai bên để tràn vào. */
+  .ds-mathmodal .ds-prose, .ds-drawer .ds-prose { --ds-measure: none; --ds-bleed: 0px; }
   .ds-prose > p, .ds-prose > ul, .ds-prose > ol, .ds-prose > h2, .ds-prose > h3,
   .ds-prose > h4, .ds-prose > blockquote, .ds-prose > hr, .ds-prose > dl,
   .ds-prose > .ds-more, .ds-prose > .ds-srclist, .ds-prose > .ds-keyhint,
@@ -112,6 +134,21 @@
   .ds-prose th { font-weight: 650; color: var(--wb-fg-muted); font-size: var(--wb-text-caption); text-transform: uppercase; letter-spacing: .05em; }
   .ds-prose .wb-table-scroll { margin: 0 0 16px; }
   .ds-prose .wb-table-scroll > table { margin: 0; }
+  /* Bảng — khối DUY NHẤT được tràn ra ngoài mép cột. Lý do chọn riêng bảng: đo bề
+     rộng tự nhiên của toàn bộ nội dung trang thì bảng trung vị 844px (106/155 bảng
+     vượt 720px) còn code trung vị 587px (chỉ 12/175 khối vượt). Cho code tràn theo
+     thì được thêm rất ít mà mất mép chung.
+     Ba chi tiết, thiếu cái nào cũng hỏng:
+       · dùng margin âm chứ không đặt width cố định → bảng luôn rộng đúng
+         "cột + 2×--ds-bleed" dù sau này --ds-measure có đổi;
+       · `width: auto` là BẮT BUỘC vì kit đặt `.wb-table-scroll { width: 100% }`,
+         mà width cố định thì margin âm chỉ đẩy khối lệch đi chứ không nới nó ra;
+       · phải là con TRỰC TIẾP (`>`) và phải đứng SAU rule `margin: 0 0 16px` ngay
+         trên — bảng nằm trong card/alert thì không được tràn, và shorthand `margin`
+         đặt sau sẽ xoá sạch `margin-inline` đặt trước. */
+  .ds-prose > .wb-table-scroll {
+    width: auto; margin-inline: calc(-1 * var(--ds-bleed));
+  }
 
   /* Bôi đen văn bản: nền = mực, chữ = nền — đơn sắc, tự đảo theo light/dark
      (light: nền đen, chữ trắng; dark: nền trắng, chữ đen). */
@@ -131,18 +168,24 @@
     font-family: var(--wb-font-mono); font-size: var(--wb-text-caption); color: var(--wb-fg-subtle);
     margin: 0 0 6px; letter-spacing: .03em;
   }
-  /* nút Chép — bọc quanh .ds-code, đặt tuyệt đối nên không đội layout, không cuộn ngang theo code */
+  /* nút sao chép — bọc quanh .ds-code, đặt tuyệt đối nên không đội layout, không cuộn ngang theo code.
+     CHỈ icon, không nhãn chữ: nó lặp lại ở 175 khối code, và một chữ "Chép" cạnh mỗi khối
+     là 175 lần nhắc một việc mà cái icon đã nói xong. Ý nghĩa vẫn giữ được qua
+     aria-label + title (xem docs/thiet-ke-trang.md — luật icon thay nhãn). */
   .ds-codewrap { position: relative; }
   .ds-copy {
     position: absolute; top: 8px; right: 8px; z-index: 2;
-    font-family: var(--wb-font); font-size: 11px; font-weight: 650; line-height: 1;
-    padding: 5px 9px; cursor: pointer; opacity: .5;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; padding: 0; cursor: pointer; opacity: .5;
     color: var(--wb-fg-subtle); background: var(--wb-surface);
     border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius);
     transition: opacity .12s ease, color .12s ease, border-color .12s ease;
   }
   .ds-codewrap:hover .ds-copy, .ds-copy:hover, .ds-copy:focus-visible, .ds-copy.is-done { opacity: 1; }
-  .ds-copy:hover, .ds-copy.is-done { color: var(--wb-fg); border-color: var(--wb-border-strong); }
+  .ds-copy:hover { color: var(--wb-fg); border-color: var(--wb-border-strong); }
+  /* Đã chép: đổi icon sang dấu ✓ nên phải đổi cả màu, không thì cái ✓ trông như một
+     trạng thái hover. Rule này đứng SAU :hover để chuột còn đang đè lên nút vẫn thấy. */
+  .ds-copy.is-done { color: var(--wb-success); border-color: var(--wb-success); }
   .ds-copy:focus-visible { outline: 2px solid var(--wb-border-strong); outline-offset: 2px; }
   @media (hover: none) { .ds-copy { opacity: 1; } }
 
@@ -311,7 +354,18 @@
   /* ---- Tự đánh giá + tiêu chí đạt trên trang bài ---- */
   .ds-selfassess { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
   .ds-selfassess__q { font-weight: 650; color: var(--wb-fg-subtle); }
-  .ds-lvlbtn.is-active { font-weight: 700; box-shadow: inset 0 0 0 2px var(--wb-fg); }
+  /* Nút BẬT/TẮT trong một nhóm (mức học ở cuối bài, loại ghi chú và bộ lọc trong sổ).
+     Bộ kit không có segmented control, và `.wb-btn` mặc định ĐÃ là nút đặc màu tối —
+     nên nếu chỉ dựa vào mặc định thì cả nhóm trông như đang được chọn hết. Bản trước
+     bật/tắt bằng class `wb-btn--solid`, mà class đó KHÔNG TỒN TẠI trong kit: trạng thái
+     "đang chọn" chỉ còn một vòng inset gần như vô hình trên nền tối.
+     Nay hai trạng thái được định nghĩa hẳn ở đây: chưa chọn = viền, đang chọn = đặc. */
+  .ds-lvlbtn { background: transparent; color: var(--wb-fg); border-color: var(--wb-border-strong); font-weight: 600; }
+  .ds-lvlbtn:hover { background: var(--wb-ink-hover); }
+  .ds-lvlbtn.is-active {
+    font-weight: 700; background: var(--wb-fg); color: var(--wb-canvas); border-color: var(--wb-fg);
+  }
+  .ds-lvlbtn.is-active:hover { background: var(--wb-fg); }
   .ds-accept { margin-top: 4px; }
   .ds-accept__h { font-weight: 700; display: flex; align-items: center; gap: 6px; margin: 0 0 2px; }
   .ds-accept__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
@@ -516,6 +570,72 @@
   .ds-theme:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
   .ds-theme__emoji { font-size: 14px; }
   @media (max-width: 560px) { .ds-theme { padding: 6px; gap: 0; } .ds-theme__label { display: none; } }
+
+  /* ---- Sổ học: nút mở ở thanh trên + ngăn ghi chú -------------------------
+     Dùng chung dáng capsule với .ds-theme để thanh trên chỉ có MỘT ngôn ngữ hình.
+     Số ghi chú là con số duy nhất trên nút, nên nó dùng số bảng (tabular) — không
+     thì 1 → 11 làm nút nhảy bề rộng. */
+  .ds-notesbtn {
+    display: inline-flex; align-items: center; gap: 7px; line-height: 1;
+    font-family: inherit; font-size: var(--wb-text-help); font-weight: 550; cursor: pointer;
+    padding: 6px 12px; border-radius: var(--wb-radius-pill);
+    border: var(--wb-bw) solid var(--wb-border); background: var(--wb-surface);
+    color: var(--wb-fg); box-shadow: var(--wb-shadow-sm);
+  }
+  .ds-notesbtn:hover { border-color: var(--wb-border-strong); }
+  .ds-notesbtn:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
+  .ds-notesbtn__n {
+    min-width: 17px; padding: 0 5px; border-radius: var(--wb-radius-pill);
+    font-size: 10px; font-weight: 700; font-variant-numeric: tabular-nums;
+    background: var(--wb-fg); color: var(--wb-canvas);
+  }
+  .ds-notesbtn__n[hidden] { display: none; }
+  @media (max-width: 560px) { .ds-notesbtn { padding: 6px; gap: 4px; } .ds-notesbtn__label { display: none; } }
+
+  /* Ngăn ghi chú là DRAWER, không phải popup — đúng ngoại lệ mà CLAUDE.md §7 cho
+     phép: viết một câu về đoạn đang đọc thì phải còn thấy đoạn đó phía sau. Popup
+     giữa màn hình sẽ che mất chính thứ đang được ghi chú. */
+  .ds-notes { display: flex; flex-direction: column; gap: 10px; }
+  .ds-notes__ctx {
+    display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
+    padding: 8px 10px; border-radius: var(--wb-radius);
+    background: var(--wb-surface-2); border: var(--wb-bw) solid var(--wb-border);
+  }
+  .ds-notes__ctxk { font-size: var(--wb-text-caption); color: var(--wb-fg-muted); }
+  .ds-notes__ctxv { font-weight: 650; }
+  .ds-notes__ta {
+    width: 100%; box-sizing: border-box; resize: vertical; min-height: 74px;
+    font: inherit; font-size: var(--wb-text-help); line-height: 1.55;
+    padding: 9px 11px; border-radius: var(--wb-radius);
+    border: var(--wb-bw) solid var(--wb-border); background: var(--wb-surface); color: var(--wb-fg);
+  }
+  .ds-notes__ta:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); border-color: var(--wb-border-strong); }
+  .ds-notes__row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .ds-notes__row--end { justify-content: flex-end; }
+  .ds-notes__spacer { flex: 1 1 auto; }
+  .ds-notes__list { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
+  /* Mép trái mang LOẠI ghi chú, không phải trang trí: ở chế độ sáng thì --wb-surface
+     trùng màu nền trang, nên nếu chỉ dựa vào nền thì thẻ không tách ra khỏi trang.
+     Loại được nói HAI lần (mép trái + capsule chữ) có chủ ý — màu một mình không đủ
+     cho người không phân biệt được màu, chữ một mình thì không quét nhanh được. */
+  .ds-notes__item {
+    border: var(--wb-bw) solid var(--wb-border); border-left: 3px solid var(--wb-border-strong);
+    border-radius: 0 var(--wb-radius) var(--wb-radius) 0;
+    background: var(--wb-surface-2); padding: 9px 11px;
+  }
+  .ds-notes__item[data-kind="tắc"] { border-left-color: var(--wb-warning); }
+  .ds-notes__item[data-kind="gỡ"]  { border-left-color: var(--wb-success); }
+  .ds-notes__text { white-space: pre-wrap; overflow-wrap: anywhere; font-size: var(--wb-text-help); line-height: 1.55; margin: 0; }
+  .ds-notes__meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .ds-notes__when { font-size: var(--wb-text-caption); color: var(--wb-fg-subtle); font-variant-numeric: tabular-nums; }
+  .ds-notes__acts { margin-left: auto; display: flex; gap: 4px; }
+  .ds-notes__empty { font-size: var(--wb-text-help); color: var(--wb-fg-muted); }
+  /* Tên bài trong danh sách "Tất cả" là một capsule bấm được, không phải một link
+     trong câu văn — gạch chân làm nó đọc như chữ bị nhấn mạnh giữa dòng meta. */
+  .ds-notes__meta a { text-decoration: none; }
+  .ds-notes__meta a:hover { border-color: var(--wb-fg); color: var(--wb-fg); }
+  .ds-notes__io { font-size: var(--wb-text-help); }
+  .ds-notes__io[hidden] { display: none; }
   @media (max-width: 560px) { .ds-brand__sub { display: none; } }
   .ds-nodefoot { margin-top: 36px; padding-top: 18px; border-top: var(--wb-bw) solid var(--wb-border); }
   .ds-keyhint { font-size: var(--wb-text-caption); color: var(--wb-fg-subtle); margin: 12px 0 0; }
@@ -565,6 +685,15 @@
     <div class="wb-navbar__spacer"></div>
     <div class="wb-navbar__actions">
       <span class="wb-cap wb-cap--sm" id="topProgress" title="Tiến độ học đã đạt">0%</span>
+      <!-- Sổ học GIỮ nhãn chữ (khác nút sao chép ở khối code, chỉ có icon): đây là một
+           tính năng cần được phát hiện, không phải một hành động lặp lại mà ngữ cảnh
+           đã nói hộ. Xem docs/thiet-ke-trang.md — luật icon thay nhãn. -->
+      <button class="ds-notesbtn" id="notesBtn" aria-label="Mở sổ học" title="Sổ học — ghi chú theo bài (n)"
+              aria-expanded="false" aria-controls="notesOverlay">
+        <span class="wb-ico wb-ico--sm" aria-hidden="true">edit_note</span>
+        <span class="ds-notesbtn__label">Sổ học</span>
+        <span class="ds-notesbtn__n" id="notesCount" hidden>0</span>
+      </button>
       <button class="ds-theme" id="themeBtn" aria-label="Đổi giao diện sáng/tối" aria-pressed="false" title="Đổi sáng/tối">
         <span class="ds-theme__emoji" aria-hidden="true">☀</span>
         <span class="ds-theme__label">Sáng</span>
@@ -648,6 +777,87 @@
       <button class="wb-close" data-modal-close aria-label="Đóng"></button>
     </div>
     <div class="wb-drawer__body"><div class="ds-prose" id="asideBody"></div></div>
+  </aside>
+</div>
+
+<!-- Sổ học: ghi chú của người học, gắn vào đúng bài đang mở.
+     DRAWER chứ không popup, và đây là ngoại lệ hợp lệ theo CLAUDE.md §7: viết một câu
+     về đoạn vừa đọc thì phải còn thấy đoạn đó phía sau. Popup giữa màn hình sẽ che
+     mất chính thứ đang được ghi chú — nghĩa là bắt người ta giữ ý trong đầu, đúng
+     việc mà cái sổ tồn tại để khỏi phải làm. -->
+<div class="wb-overlay" id="notesOverlay">
+  <aside class="wb-drawer ds-drawer" role="dialog" aria-modal="true" aria-labelledby="notesTitle">
+    <div class="wb-drawer__head">
+      <div>
+        <h4 class="wb-drawer__title" id="notesTitle">Sổ học</h4>
+        <p class="wb-drawer__sub">Chỉ nằm trong trình duyệt này. Tải về để đưa vào <code>LEARNING-LOG.md</code> của repo.</p>
+      </div>
+      <button class="wb-close" data-modal-close aria-label="Đóng"></button>
+    </div>
+    <div class="wb-drawer__body">
+      <div class="ds-notes">
+        <div class="ds-notes__ctx">
+          <span class="ds-notes__ctxk">Ghi cho bài</span>
+          <span class="ds-notes__ctxv" id="notesWhere">—</span>
+        </div>
+
+        <div>
+          <label class="wb-label" for="notesInput">Ghi chú mới</label>
+          <textarea class="ds-notes__ta" id="notesInput" rows="3"
+            placeholder="Chỗ nào đọc mà không hiểu? Enter để lưu, Shift+Enter xuống dòng."></textarea>
+          <!-- Ba loại, không phải một. "Chỗ tắc" là loại đáng giá nhất trong cả cơ chế
+               này: nó là thứ duy nhất biến sổ học thành hàng đợi việc sửa nội dung, và
+               là dữ liệu cho cổng G-LEARN (hai bài cùng tắc ở một khái niệm = khái niệm
+               đó dạy quá muộn). Không cho chọn loại thì tín hiệu đó không tồn tại. -->
+          <div class="ds-notes__row" style="margin-top:8px">
+            <div class="wb-cluster" role="group" aria-label="Loại ghi chú" style="gap:6px">
+              <button class="wb-btn wb-btn--sm ds-lvlbtn is-active" data-nkind="ghi" aria-pressed="true">Ghi chú</button>
+              <button class="wb-btn wb-btn--sm ds-lvlbtn" data-nkind="tắc" aria-pressed="false">Chỗ tắc</button>
+              <button class="wb-btn wb-btn--sm ds-lvlbtn" data-nkind="gỡ" aria-pressed="false">Đã gỡ</button>
+            </div>
+            <span class="ds-notes__spacer"></span>
+            <button class="wb-btn wb-btn--sm" id="notesAdd" disabled>Lưu</button>
+          </div>
+        </div>
+
+        <div class="ds-notes__row">
+          <!-- Cùng khuôn với bộ nút mức ở cuối bài (.ds-lvlbtn): wb-btn--sm, mức đang
+               chọn thì thêm is-active. Bộ kit không có segmented control, và tự
+               dựng một cái là thêm một ngôn ngữ hình thứ hai cho cùng một việc. -->
+          <div class="wb-cluster" role="group" aria-label="Lọc ghi chú" style="gap:6px">
+            <button class="wb-btn wb-btn--sm ds-lvlbtn is-active" data-nfilter="here" aria-pressed="true">Bài này</button>
+            <button class="wb-btn wb-btn--sm ds-lvlbtn" data-nfilter="all" aria-pressed="false">Tất cả</button>
+          </div>
+          <span class="ds-notes__spacer"></span>
+          <button class="wb-btn wb-btn--ghost wb-btn--sm" id="notesDl">
+            <span class="wb-ico wb-ico--xs" aria-hidden="true">download</span> Tải .md
+          </button>
+          <button class="wb-btn wb-btn--ghost wb-btn--sm" id="notesCopy"
+                  aria-label="Sao chép toàn bộ sổ" title="Sao chép toàn bộ sổ">
+            <span class="wb-ico wb-ico--xs" aria-hidden="true">content_copy</span>
+          </button>
+          <button class="wb-btn wb-btn--ghost wb-btn--sm" id="notesImp"
+                  aria-label="Nạp sổ từ nội dung dán vào" title="Nạp lại sổ từ nội dung dán vào">
+            <span class="wb-ico wb-ico--xs" aria-hidden="true">upload</span>
+          </button>
+        </div>
+
+        <div class="wb-alert wb-alert--info ds-notes__io" id="notesIoMsg" role="status" hidden></div>
+
+        <div id="notesImpBox" hidden>
+          <label class="wb-label" for="notesImpTa">Dán nội dung mục <code>## Sổ</code> vào đây</label>
+          <textarea class="ds-notes__ta" id="notesImpTa" rows="5"
+            placeholder="### `d-eda` · …&#10;- 2026-08-04 · tắc · …"></textarea>
+          <p class="wb-help" style="margin:6px 0 0">Trộn thêm vào, không ghi đè: dòng trùng bị bỏ qua.</p>
+          <div class="ds-notes__row ds-notes__row--end" style="margin-top:8px">
+            <button class="wb-btn wb-btn--ghost wb-btn--sm" id="notesImpCancel">Bỏ</button>
+            <button class="wb-btn wb-btn--sm" id="notesImpDo">Trộn vào sổ</button>
+          </div>
+        </div>
+
+        <ul class="ds-notes__list" id="notesList" aria-live="polite"></ul>
+      </div>
+    </div>
   </aside>
 </div>
 
@@ -1983,7 +2193,7 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
           <span class="wb-ico ds-prep__ico">keyboard</span>
           <div class="wb-media__body">
             <p class="wb-media__title">Một thói quen: gõ lại những đoạn ngắn quan trọng</p>
-            <p class="wb-media__text">Đọc xong một bài mà không gõ gì thì 48 giờ sau chỉ còn khoảng 10%. Mỗi khối code có nút <b>Chép</b> ở góc — cứ dùng nó cho code dài, config và boilerplate. Nhưng với những snippet ngắn cốt lõi, hãy <b>gõ lại bằng tay</b>; và sau khi chép, đổi một tham số rồi chạy xem nó hỏng thế nào — đó mới là lúc kiến thức bám lại.</p>
+            <p class="wb-media__text">Đọc xong một bài mà không gõ gì thì 48 giờ sau chỉ còn khoảng 10%. Mỗi khối code có nút sao chép (<span class="wb-ico wb-ico--xs" aria-hidden="true">content_copy</span>) ở góc trên phải — cứ dùng nó cho code dài, config và boilerplate. Nhưng với những snippet ngắn cốt lõi, hãy <b>gõ lại bằng tay</b>; và sau khi chép, đổi một tham số rồi chạy xem nó hỏng thế nào — đó mới là lúc kiến thức bám lại.</p>
           </div>
         </div>
       </div>
@@ -2095,7 +2305,7 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
   <h2>Cách học để nhớ được</h2>
   <p>Đọc xong một bài mà không gõ gì thì 48 giờ sau còn lại khoảng 10%. Quy tắc cho cả 14 ngày:</p>
   <ul>
-    <li><b>Mở sẵn một notebook</b> bên cạnh. Snippet ngắn thì gõ lại bằng tay cho nhớ; code dài thì dùng nút <b>Chép</b> ở góc khối code, rồi đổi một tham số xem nó hỏng thế nào.</li>
+    <li><b>Mở sẵn một notebook</b> bên cạnh. Snippet ngắn thì gõ lại bằng tay cho nhớ; code dài thì dùng nút sao chép (<span class="wb-ico wb-ico--xs" aria-hidden="true">content_copy</span>) ở góc trên phải khối code, rồi đổi một tham số xem nó hỏng thế nào.</li>
     <li><b>Sau mỗi bài, tự nói lại bằng lời của mình</b> trong 3 câu, viết vào notebook. Nếu không nói được, bạn chưa hiểu — quay lại chỗ mờ.</li>
     <li><b>Đánh dấu mức học</b> bằng chấm tròn bên trái mỗi bài — bấm để đi vòng <i>đã đọc → đã thực hành → đạt deliverable</i>. Trên trang bài có nút tương ứng và <b>tiêu chí đạt</b> cụ thể. Tiến độ tính theo <i>workload</i> (một bài code 150′ nặng hơn nhiều một bài đọc 10′), không phải theo số tick, và lưu trong trình duyệt này — không cần đăng nhập.</li>
   </ul>
@@ -4975,6 +5185,15 @@ print(f"ngưỡng tối ưu {best_t:.3f} — thiệt hại {min(costs)/1e6:.0f} 
 
   <h2>Bảng kết quả nên có trong luận văn</h2>
   <p>Đây là <b>đích</b>, không phải việc của hôm nay. Hôm nay bạn điền được đúng một dòng — dòng logistic. Ba dòng còn lại điền dần: <b>LightGBM</b> ở bài <a href="#/ml-trees">Cây → Boosting</a>, dòng <b>đề xuất</b> sau khi thêm feature thời gian, và dòng <b>luật thủ công</b> ở bài <a href="#/pr-eval">Đánh giá &amp; bốn test</a>. Biết trước hình dạng bảng là để mỗi lần chạy xong bạn ghi ngay một dòng, thay vì tới lúc viết mới đi tìm lại số.</p>
+
+  <div class="wb-alert wb-alert--info wb-alert--plain"><div class="wb-alert__body">
+    <p class="wb-alert__title">Bạn lấy <i>hình dạng</i> của bảng, không lấy con số — và số của bạn sẽ nhỏ hơn nhiều</p>
+    <p class="wb-alert__msg">Hiểu nhầm sắp xảy ra: bạn nhớ 0,412, rồi tới chặng 8 chạy thật ra <b>0,0485</b>, và kết luận mình làm hỏng ở đâu đó. <b>Không hỏng.</b> Trang này có <b>hai hệ số liệu</b> và luôn nói rõ đang dùng hệ nào:<br>
+    · <b>Số minh hoạ</b> — bảng trên và mọi con số 0,281 / 0,367 / 0,412 ở các bài lý thuyết. Chúng ở tầm một bộ dữ liệu thẻ <i>thật</i> (IEEE-CIS), dùng để bạn thấy hình dạng bảng và tập đọc chênh lệch.<br>
+    · <b>Số chạy thật</b> — bộ mô phỏng trong repo, ở chặng 7–8. PR-AUC quanh <b>0,03–0,05</b>.<br>
+    Lý do nằm ngay đoạn trên: <b>PR-AUC không có thang tuyệt đối.</b> Nó chỉ đọc được khi kèm <b>mốc dưới</b> (tỉ lệ dương) và <b>mốc trên</b> (trần của bài toán). Bộ mô phỏng có trần lý thuyết chỉ khoảng 0,05–0,07 — đo ở bài <a href="#/pr-code">Code end-to-end</a> — nên 0,0485 là <i>sát trần</i>, còn 0,412 trên bộ đó là bất khả. Hai con số không mâu thuẫn; chúng ở hai bài toán khác nhau.<br>
+    Câu rút ra, dùng được cả trong luận văn: <b>một con số PR-AUC trần trụi không nói lên điều gì</b> — luôn báo cáo kèm tỉ lệ nền, và nếu biết thì kèm cả trần.</p>
+  </div></div>
   <table>
     <tr><th>Mô hình</th><th>PR-AUC (KTC 95%)</th><th>Recall @ ngưỡng chi phí</th><th>Precision</th><th>Thiệt hại (triệu ₫/tháng)</th></tr>
     <tr><td>Luật thủ công hiện tại</td><td>—</td><td>0,31</td><td>0,08</td><td>1.240</td></tr>
@@ -5271,6 +5490,7 @@ pipe = ImbPipeline([
   </ul>
 
   <h2>Bảng thí nghiệm mẫu cho luận văn</h2>
+  <p><i>Số minh hoạ, cùng hệ với bài <a href="#/ml-metrics">Đo lường</a> — điều đáng nhớ là <b>thứ tự</b> và <b>khoảng cách</b> giữa các dòng, không phải giá trị tuyệt đối.</i></p>
   <table>
     <tr><th>Cấu hình</th><th>PR-AUC</th><th>Recall@1% FPR</th><th>Ghi chú</th></tr>
     <tr><td>Baseline (không xử lý lệch)</td><td>0,312</td><td>0,41</td><td>ngưỡng 0,5 gần như không bắt được gì</td></tr>
@@ -7670,6 +7890,7 @@ $ python -m src.final_eval --confirm-freeze
 
   <h2>Đọc bảng đó</h2>
   <ul>
+    <li><b>0,0485 không mâu thuẫn với 0,412 ở bài <a href="#/ml-metrics">Đo lường</a>.</b> Bảng ở bài đó là <b>số minh hoạ</b>, tầm một bộ dữ liệu thẻ thật; đây là <b>số chạy thật trên bộ mô phỏng</b>. Đọc cho đúng thì phải kẹp giữa hai mốc: tỉ lệ nền của tập test là 137/60.000 = <b>0,00228</b>, nên 0,0485 là <b>gấp ~21 lần đoán bừa</b>; và trần lý thuyết của bộ mô phỏng chỉ 0,05–0,07 (đo ở bài <a href="#/pr-code">Code end-to-end</a>), nên bạn đang ở <b>sát trần</b>. Cùng lý do đó, recall 21,8% ở đây không phải "kém hơn 64%" — 64% là con số của bài toán khác. Câu viết vào luận văn là câu có hai mốc, không phải con số trần trụi.</li>
     <li><b>Cluster rộng hơn row</b> (0,0507 so với 0,0491). Đúng hướng dự đoán: coi mỗi dòng là độc lập làm bạn tưởng mình có 60.000 quan sát, trong khi thật ra chỉ có <b>3.986 thẻ</b>. Khoảng hẹp giả tạo chính là cách người ta tuyên bố “cải thiện có ý nghĩa” cho một chênh lệch chỉ là nhiễu.</li>
     <li><b>Khoảng block chỉ dựa trên 27 khối ngày.</b> Nó hẹp hơn, nhưng <i>hẹp vì quá ít đơn vị</i> chứ không phải vì chắc chắn hơn. Dưới khoảng 20 khối thì bản thân khoảng tin cậy cũng là nhiễu — hãy nói rõ điều đó thay vì chọn con số đẹp nhất.</li>
     <li><b>PR-AUC test 0,0485 &gt; valid 0,0294.</b> Đây chỉ là mô tả trên hai giai đoạn dữ liệu khác nhau, <b>không</b> phải bằng chứng mô hình mạnh lên theo thời gian. Không được suy kết luận từ việc hai CI riêng chồng lấn hay không; nếu câu hỏi là so hai mô hình trên cùng mẫu, phải bootstrap ghép cặp trên hiệu metric. Với valid và test thuộc hai giai đoạn khác nhau, hãy báo cáo riêng độ bất định, mô tả distribution shift, và chỉ kiểm định một giả thuyết thời gian đã định trước bằng thiết kế theo khối phù hợp.</li>
@@ -8307,6 +8528,7 @@ FP= 160,000₫  →  ngưỡng 0,602  |  thiệt hại    944 triệu</div>
   <p>Kết luận viết được: <i>"Ngưỡng tối ưu nhạy với giả định chi phí, nhưng mô hình đề xuất vượt baseline trong toàn bộ khoảng khảo sát 20.000–160.000₫."</i> Câu này mạnh hơn nhiều so với việc chọn đại một con số.</p>
 
   <h2>So sánh cuối cùng nên có</h2>
+  <p>Bảng dưới đây dùng <b>số minh hoạ</b> (cùng hệ với bài <a href="#/ml-metrics">Đo lường</a>) — nó cho bạn thấy <i>hình dạng</i> và <i>các cột phải có</i>. Bảng tương ứng <b>chạy thật trên bộ mô phỏng</b> nằm ở mục 4 bài <a href="#/pr-eval">Đánh giá &amp; bốn test</a>, và nó đọc ra 12,4% / 21,8% chứ không phải 31% / 64%. Hai bảng cùng hình dạng, khác bộ dữ liệu — đừng chờ số của bạn khớp bảng này.</p>
   <table>
     <tr><th>Phương án</th><th>Bắt được (% giá trị gian lận)</th><th>Số ca xác minh/ngày</th><th>Thiệt hại ròng/tháng</th></tr>
     <tr><td>Không làm gì</td><td>0%</td><td>0</td><td>1.850 triệu ₫</td></tr>
@@ -8315,7 +8537,7 @@ FP= 160,000₫  →  ngưỡng 0,602  |  thiệt hại    944 triệu</div>
     <tr><td><b>LightGBM, ngưỡng theo chi phí</b></td><td><b>64%</b></td><td>240</td><td><b>598 triệu ₫</b></td></tr>
   </table>
   <p>Hai điều bảng này nói mà bảng PR-AUC không nói được: (1) <b>chỉ đổi ngưỡng đã tiết kiệm thêm 412 triệu/tháng mà không đổi mô hình</b>; (2) cột "số ca xác minh" cho thấy bạn hiểu ràng buộc vận hành thật.</p>
-  <p>Dòng đầu — <b>luật thủ công</b> — là dòng bạn phải tự tạo ra, không phải dòng đi mượn. Nó được sinh ở mục 4 của bài <a href="#/pr-eval">Đánh giá &amp; bốn test</a> (<code>src/rules.py</code>). Không có nó thì cả bảng này mất dòng so sánh duy nhất mà hội đồng quan tâm, và câu trả lời "cần gì ML" của bạn không có số. Con số cụ thể sẽ khác con số ở đây — bảng trên là ví dụ minh hoạ, số thật là số bộ dữ liệu của bạn cho ra.</p>
+  <p>Dòng đầu — <b>luật thủ công</b> — là dòng bạn phải tự tạo ra, không phải dòng đi mượn. Nó được sinh ở mục 4 của bài <a href="#/pr-eval">Đánh giá &amp; bốn test</a> (<code>src/rules.py</code>). Không có nó thì cả bảng này mất dòng so sánh duy nhất mà hội đồng quan tâm, và câu trả lời "cần gì ML" của bạn không có số.</p>
 
   <div class="wb-alert wb-alert--info wb-alert--plain"><div class="wb-alert__body">
     <p class="wb-alert__title">Ba câu dùng được trong buổi bảo vệ</p>
@@ -8514,7 +8736,7 @@ lệnh tái chạy:    đúng lệnh để chạy lại từ đầu</div>
   <p>Baseline phải được <b>tune tử tế</b>. Cố tình để baseline yếu là một dạng gian lận học thuật, và hội đồng có kinh nghiệm nhận ra ngay.</p>
 
   <h3>Tầng 2 · Ablation — tháo từng mảnh để biết mảnh nào quan trọng</h3>
-  <p>Đây là bảng thuyết phục nhất trong luận văn. Nó chứng minh <b>đóng góp của bạn thực sự là nguyên nhân</b> của cải thiện, chứ không phải may.</p>
+  <p>Đây là bảng thuyết phục nhất trong luận văn. Nó chứng minh <b>đóng góp của bạn thực sự là nguyên nhân</b> của cải thiện, chứ không phải may. <i>(Số trong bảng mẫu dưới đây — và trong bảng theo dõi thí nghiệm ở cuối bài — là <b>số minh hoạ</b>, cùng hệ với bài <a href="#/ml-metrics">Đo lường</a>. Số chạy thật trên bộ mô phỏng nhỏ hơn một bậc; lý do ở hộp cảnh báo tại bài đó.)</i></p>
   <table>
     <tr><th>Cấu hình</th><th>PR-AUC</th><th>Δ</th></tr>
     <tr><td>Đầy đủ (mô hình đề xuất)</td><td>0,412</td><td>—</td></tr>
@@ -8557,7 +8779,7 @@ lệnh tái chạy:    đúng lệnh để chạy lại từ đầu</div>
 </template>
 
 <template data-node="th-stats">
-  <p>Bạn có hai con số: 0,412 và 0,367. Bài này về cách chứng minh chênh lệch đó là thật — và cách nói trung thực khi nó không phải.</p>
+  <p>Bạn có hai con số: 0,412 và 0,367 — lấy từ bảng ablation ở bài trước, hệ <b>số minh hoạ</b>. Bài này về cách chứng minh chênh lệch đó là thật — và cách nói trung thực khi nó không phải. Quy trình dưới đây không phụ thuộc vào độ lớn của con số, nên áp nguyên vào số chạy thật của bạn.</p>
 
   <h2>Ba việc, làm cả ba</h2>
   <h3>1 · Chạy nhiều seed</h3>
@@ -9795,11 +10017,34 @@ function saveProgress() {
 // Ghi lại ngay bản đã dọn / đã di trú, để lần sau đọc thẳng v3.
 if (_loaded.corrupt || _loaded.dropped || _loaded.migrated) saveProgress();
 
+/* NGÀY đạt mức, lưu riêng khỏi mức.
+   Vì sao cần: bản xuất sổ học phải nói "ngày 4/8 đạt mức 2", không phải "hôm nay đạt
+   mức 2" — nếu không thì mỗi lần xuất lại là một dòng mới cho cùng một việc, và
+   learn.mjs --import không lọc trùng được. Key RIÊNG (không nhồi vào v3) để bản v3
+   không phải đổi schema: mất key này thì chỉ mất ngày, tiến độ vẫn nguyên. */
+const LS_KEY_TS = 'ds-roadmap-progress-ts-v1';        // { id: "YYYY-MM-DD" }
+const levelTs = (() => {
+  try {
+    const o = JSON.parse(localStorage.getItem(LS_KEY_TS) || '{}');
+    return (o && typeof o === 'object' && !Array.isArray(o)) ? new Map(Object.entries(o)) : new Map();
+  } catch { return new Map(); }
+})();
+const isoToday = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+};
+function saveLevelTs() {
+  try { localStorage.setItem(LS_KEY_TS, JSON.stringify(Object.fromEntries(levelTs))); } catch { /* saveProgress đã báo hộ */ }
+}
+
 const getLevel = id => prog.get(id) || 0;
 function setLevel(id, lvl) {
   const l = byId[id]; if (!l) return;
   lvl = Math.max(0, Math.min(lvl, maxLevel(l)));
+  const before = prog.get(id) || 0;
   if (lvl <= 0) prog.delete(id); else prog.set(id, lvl);
+  // Chỉ ghi ngày khi mức THAY ĐỔI — bấm lại đúng mức đang có không được làm mới ngày.
+  if (lvl !== before) { if (lvl <= 0) levelTs.delete(id); else levelTs.set(id, isoToday()); saveLevelTs(); }
   saveProgress(); syncProgress();
 }
 /* Bấm control mức trong cây: đi vòng 0 → các mức của bài → 0. */
@@ -10046,7 +10291,9 @@ function syncLessonControl(id) {
   $$('[data-set-level]', sa).forEach(b => {
     const v = +b.dataset.setLevel;
     const on = v > 0 && lvl >= v;
-    b.classList.toggle('wb-btn--solid', on);
+    // MỘT class trạng thái, không hai. Bản trước bật cả `wb-btn--solid` — một class
+    // không có trong kit, nên nó không làm gì cả và trạng thái "đang chọn" gần như
+    // không thấy được. Hai trạng thái của .ds-lvlbtn giờ định nghĩa ở <style>.
     b.classList.toggle('is-active', on);
     b.setAttribute('aria-pressed', String(on));
   });
@@ -10103,7 +10350,7 @@ function render() {
             <span class="wb-pager__meta">${next.phase.t}</span></span>
             <span class="wb-ico wb-pager__arrow">chevron_right</span></a>` : '<span></span>'}
       </nav>
-      <p class="ds-keyhint"><kbd>[</kbd> bài trước · <kbd>]</kbd> bài sau · <kbd>Esc</kbd> đóng popup</p>
+      <p class="ds-keyhint"><kbd>[</kbd> bài trước · <kbd>]</kbd> bài sau · <kbd>n</kbd> sổ học · <kbd>Esc</kbd> đóng popup</p>
     </div>`;
 
   if (tpl) $('#prose').append(tpl.content.cloneNode(true));
@@ -10347,9 +10594,15 @@ function typeset(el) {
 }
 
 /* Dùng cho cả ba nơi có nội dung bài: cột chính, popup toán, ngăn phụ. */
-/* Nút Chép cho mọi khối code. Lấy textContent TRƯỚC khi chèn nút, nên bản copy là
+/* Nút sao chép cho mọi khối code. Lấy textContent TRƯỚC khi chèn nút, nên bản copy là
    code sạch (đã giải mã &lt;&gt;&amp;, giữ nguyên thụt lề nhờ white-space:pre) và không
-   dính chữ của nút. Nút nằm trong lớp bọc đặt tuyệt đối → không đội layout. */
+   dính chữ của nút. Nút nằm trong lớp bọc đặt tuyệt đối → không đội layout.
+
+   CHỈ icon, không nhãn chữ. Nút này xuất hiện ở 175 khối code, tức nhãn "Chép" được
+   in ra 175 lần để nói một việc mà biểu tượng hai-tờ-giấy đã nói xong — nó thành nhiễu
+   thị giác cạnh đúng thứ người đọc cần đọc. Ý nghĩa không mất: aria-label cho trình
+   đọc màn hình, title cho chuột, và trạng thái sau khi bấm đổi hẳn icon (✓) chứ không
+   chỉ đổi màu, nên phản hồi vẫn thấy được cả khi không phân biệt được màu. */
 function addCopyButtons(scope) {
   $$('.ds-code', scope).forEach(block => {
     if (block.dataset.copyReady) return;
@@ -10363,10 +10616,12 @@ function addCopyButtons(scope) {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'ds-copy';
-    btn.textContent = 'Chép';
+    btn.innerHTML = '<span class="wb-ico wb-ico--sm" aria-hidden="true">content_copy</span>';
+    btn.title = 'Sao chép đoạn code';
     btn.setAttribute('aria-label', 'Sao chép đoạn code');
     wrap.append(btn);
 
+    const ico = btn.firstElementChild;
     btn.addEventListener('click', async () => {
       let ok = true;
       try {
@@ -10381,10 +10636,21 @@ function addCopyButtons(scope) {
           document.execCommand('copy'); ta.remove();
         } catch { ok = false; }
       }
+      // Đổi ICON, không chỉ đổi màu — người không phân biệt được màu vẫn thấy phản hồi.
+      // Nhánh thất bại nói việc phải làm ("bấm Ctrl/⌘+C") qua title, vì lúc đó nội dung
+      // vẫn chưa nằm trong clipboard và một cái ✓ ở đây sẽ là nói dối.
       btn.classList.add('is-done');
-      btn.textContent = ok ? 'Đã chép' : 'Bấm Ctrl/⌘+C';
+      ico.textContent = ok ? 'check' : 'priority_high';
+      btn.title = ok ? 'Đã sao chép' : 'Không sao chép được — chọn đoạn code rồi bấm Ctrl/⌘+C';
+      btn.setAttribute('aria-label', btn.title);
+      announce(ok ? 'Đã sao chép đoạn code.' : 'Không sao chép được. Chọn đoạn code rồi bấm Ctrl hoặc Command + C.');
       clearTimeout(btn._t);
-      btn._t = setTimeout(() => { btn.classList.remove('is-done'); btn.textContent = 'Chép'; }, 1600);
+      btn._t = setTimeout(() => {
+        btn.classList.remove('is-done');
+        ico.textContent = 'content_copy';
+        btn.title = 'Sao chép đoạn code';
+        btn.setAttribute('aria-label', btn.title);
+      }, 1600);
     });
   });
 }
@@ -10575,10 +10841,12 @@ function openLayer(overlayId, trigger) {
   document.addEventListener('keydown', trapFocus, true);
 }
 
+const LAYER_IDS = ['mathOverlay', 'asideOverlay', 'notesOverlay'];
+
 function closeLayers() {
   const wasOpen = layerOpen();
-  $('#mathOverlay').classList.remove('is-open');
-  $('#asideOverlay').classList.remove('is-open');
+  LAYER_IDS.forEach(id => $('#' + id).classList.remove('is-open'));
+  $('#notesBtn').setAttribute('aria-expanded', 'false');
   $('#shell').inert = false;
   document.removeEventListener('keydown', trapFocus, true);
   if (wasOpen && lastTrigger && document.contains(lastTrigger)) lastTrigger.focus();
@@ -10586,8 +10854,7 @@ function closeLayers() {
 }
 
 function layerOpen() {
-  return $('#mathOverlay').classList.contains('is-open') ||
-         $('#asideOverlay').classList.contains('is-open');
+  return LAYER_IDS.some(id => $('#' + id).classList.contains('is-open'));
 }
 
 document.addEventListener('click', e => {
@@ -10623,7 +10890,9 @@ document.addEventListener('click', e => {
     return;
   }
 
-  if (e.target.closest('[data-modal-close]') || e.target.id === 'mathOverlay' || e.target.id === 'asideOverlay') {
+  // Bấm ra ngoài (chính cái overlay, không phải hộp bên trong) = đóng. Phải liệt kê
+  // đủ cả ba lớp, không thì một lớp đóng được bằng cách bấm nền còn lớp kia thì không.
+  if (e.target.closest('[data-modal-close]') || LAYER_IDS.includes(e.target.id)) {
     closeLayers();
   }
 });
@@ -10647,6 +10916,11 @@ document.addEventListener('keydown', e => {
   if (layerOpen()) return;
   const t = e.target;
   if (t instanceof HTMLElement && (t.matches('input, textarea, select') || t.isContentEditable)) return;
+
+  /* `n` = mở sổ học. Một phím, vì giá trị của cái sổ nằm ở chỗ ghi được NGAY lúc tắc —
+     mỗi bước thêm giữa "nghĩ ra" và "gõ được" là một lần cái ý đó có cơ hội bay mất. */
+  if (e.key === 'n' || e.key === 'N') { e.preventDefault(); openNotes(document.activeElement); return; }
+
   if (e.key !== '[' && e.key !== ']') return;
 
   const cur = location.hash.replace(/^#\/?/, '') || 'home';
@@ -12283,8 +12557,10 @@ let undoSnapshot = null, undoTimer = null;
 $('#resetBtn').addEventListener('click', () => {
   if (undoSnapshot) return;                       // đang trong cửa sổ hoàn tác
   if (!prog.size) { flashRail('Chưa có bài nào được đánh dấu.'); return; }
-  undoSnapshot = [...prog.entries()];             // giữ cả MỨC để hoàn tác đúng
-  prog.clear(); saveProgress(); syncProgress();
+  // Giữ cả MỨC và NGÀY để hoàn tác đúng — mất ngày thì bản xuất sổ học sau đó ghi
+  // sai ngày đạt mức, và learn.mjs --import sẽ thêm dòng trùng thay vì bỏ qua.
+  undoSnapshot = [...prog.entries()].map(([id, lvl]) => [id, lvl, levelTs.get(id)]);
+  prog.clear(); levelTs.clear(); saveProgress(); saveLevelTs(); syncProgress();
   showUndo(undoSnapshot.length);
 });
 
@@ -12294,8 +12570,8 @@ function showUndo(n) {
   bar.innerHTML = `<span>Đã xoá ${n} bài đã đánh dấu.</span>
     <button class="wb-btn wb-btn--sm" id="undoBtn">Hoàn tác</button>`;
   $('#undoBtn').addEventListener('click', () => {
-    undoSnapshot.forEach(([id, lvl]) => { if (byId[id]) prog.set(id, lvl); });
-    saveProgress(); syncProgress(); clearUndo();
+    undoSnapshot.forEach(([id, lvl, day]) => { if (byId[id]) { prog.set(id, lvl); if (day) levelTs.set(id, day); } });
+    saveProgress(); saveLevelTs(); syncProgress(); clearUndo();
   });
   clearTimeout(undoTimer);
   undoTimer = setTimeout(clearUndo, 10000);
@@ -12313,6 +12589,382 @@ function flashRail(msg) {
   bar.textContent = msg;
   setTimeout(() => { bar.hidden = true; bar.textContent = ''; }, 2500);
 }
+
+/* ============================================================
+   Sổ học — ghi chú của người học, gắn vào đúng bài
+
+   Vì sao nó nằm trong trang chứ không phải một app riêng: chỗ tắc phải được ghi
+   NGAY lúc tắc. Bắt người ta mở editor khác, tìm file, tìm đúng mục — là bắt họ giữ
+   ý trong đầu trong lúc làm ba việc, và ý sẽ mất. Ở đây là một phím: `n`.
+
+   Vì sao vẫn cần LEARNING-LOG.md trong repo: bộ nhớ trình duyệt là chỗ TỆ để giữ thứ
+   người ta quan tâm — xoá cache là mất, đổi máy là mất, và git không thấy nó. Nên:
+     bộ nhớ trình duyệt = bản làm việc   ·   LEARNING-LOG.md = bản bền, có lịch sử git
+   Nối hai bên bằng đúng MỘT định dạng văn bản (mục `## Sổ` của file đó), nên xuất ra
+   dán vào là xong, và nạp lại từ chính file đó cũng được — kể cả tiến độ đã tick.
+   ============================================================ */
+const LS_KEY_NOTES = 'ds-roadmap-notes-v1';
+const N_KINDS = ['ghi', 'tắc', 'gỡ'];
+const SO_HEAD = '## Sổ — nguồn sự thật, chỉ thêm vào cuối';
+
+let notes = (() => {
+  try {
+    const a = JSON.parse(localStorage.getItem(LS_KEY_NOTES) || '[]');
+    return Array.isArray(a) ? a.filter(n => n && typeof n.text === 'string') : [];
+  } catch { return []; }
+})();
+let noteFilter = 'here', noteKind = 'ghi', notesSaveWarned = false;
+
+function saveNotes() {
+  try { localStorage.setItem(LS_KEY_NOTES, JSON.stringify(notes)); }
+  catch {
+    if (notesSaveWarned) return;
+    notesSaveWarned = true;
+    notesMsg('Không lưu được vào bộ nhớ trình duyệt. Bấm Tải .md ngay để không mất ghi chú.', 'warning');
+  }
+}
+/* Id đủ để phân biệt trong một sổ tay của một người — không cần crypto.randomUUID
+   (không có trên vài trình duyệt cũ, và nếu ném thì cả khối này chết theo). */
+let noteSeq = 0;
+const newNoteId = () => `n${Date.now().toString(36)}${(noteSeq++).toString(36)}`;
+
+const curNode = () => (location.hash.replace(/^#\/?/, '') || 'home');
+const nodeTitle = id => (byId[id] ? byId[id].t : (id === 'home' ? 'Trang chủ lộ trình' : id));
+
+function notesMsg(text, kind) {
+  const box = $('#notesIoMsg');
+  box.className = 'wb-alert wb-alert--' + (kind || 'info') + ' ds-notes__io';
+  box.textContent = text;
+  box.hidden = false;
+  clearTimeout(box._t);
+  box._t = setTimeout(() => { box.hidden = true; box.textContent = ''; }, 6000);
+}
+
+function syncNotesCount() {
+  const el = $('#notesCount');
+  el.textContent = String(notes.length);
+  el.hidden = notes.length === 0;
+  const nStuck = notes.filter(n => n.kind === 'tắc').length;
+  $('#notesBtn').title = notes.length
+    ? `Sổ học — ${notes.length} ghi chú${nStuck ? `, ${nStuck} chỗ tắc` : ''} (n)`
+    : 'Sổ học — ghi chú theo bài (n)';
+}
+
+/* "x phút trước" chỉ trong 24 giờ đầu, sau đó là ngày. Một dòng "3 ngày trước" bắt
+   người đọc tự trừ ngày, mà ngày mới là thứ khớp được với dòng trong LEARNING-LOG.md. */
+function whenText(n) {
+  const d = Date.now() - (n.ts || 0);
+  if (d < 60e3) return 'vừa xong';
+  if (d < 3600e3) return `${Math.floor(d / 60e3)} phút trước`;
+  if (d < 864e5) return `${Math.floor(d / 3600e3)} giờ trước`;
+  return n.day || '';
+}
+
+function renderNotes() {
+  const list = $('#notesList');
+  const here = curNode();
+  $('#notesWhere').textContent = nodeTitle(here);
+  const shown = (noteFilter === 'here' ? notes.filter(n => n.node === here) : notes.slice())
+    .sort((a, b) => (b.ts || 0) - (a.ts || 0));
+
+  list.textContent = '';
+  if (!shown.length) {
+    const li = document.createElement('li');
+    li.className = 'ds-notes__empty';
+    li.textContent = noteFilter === 'here'
+      ? 'Chưa có ghi chú nào cho bài này.'
+      : 'Sổ còn trống. Ghi một dòng ở chỗ nào bạn đọc mà không hiểu — đó là dòng đáng giá nhất.';
+    list.append(li);
+    return;
+  }
+
+  for (const n of shown) {
+    const li = document.createElement('li');
+    li.className = 'ds-notes__item';
+    li.dataset.note = n.id;
+    li.dataset.kind = n.kind || 'ghi';
+
+    const p = document.createElement('p');
+    p.className = 'ds-notes__text';
+    p.textContent = n.text;                       // textContent, KHÔNG innerHTML: ghi chú
+    li.append(p);                                 // là chữ của người dùng và sẽ có dấu <
+
+    const meta = document.createElement('div');
+    meta.className = 'ds-notes__meta';
+    if (n.kind && n.kind !== 'ghi') {
+      const tag = document.createElement('span');
+      tag.className = 'wb-cap wb-cap--sm' + (n.kind === 'tắc' ? ' wb-cap--warning' : ' wb-cap--success');
+      tag.textContent = n.kind === 'tắc' ? 'chỗ tắc' : 'đã gỡ';
+      meta.append(tag);
+    }
+    if (noteFilter === 'all') {
+      const a = document.createElement('a');
+      a.className = 'wb-cap wb-cap--sm wb-cap--dashed';
+      a.href = '#/' + n.node;
+      a.textContent = nodeTitle(n.node);
+      a.title = 'Mở bài này';
+      meta.append(a);
+    }
+    const when = document.createElement('span');
+    when.className = 'ds-notes__when';
+    when.textContent = whenText(n);
+    meta.append(when);
+
+    const acts = document.createElement('div');
+    acts.className = 'ds-notes__acts';
+    for (const [act, ico, lbl] of [['edit', 'edit', 'Sửa ghi chú'], ['del', 'delete', 'Xoá ghi chú']]) {
+      const b = document.createElement('button');
+      b.className = 'wb-btn wb-btn--ghost wb-btn--sm';
+      b.dataset.nact = act;
+      b.title = lbl;
+      b.setAttribute('aria-label', lbl);
+      b.innerHTML = `<span class="wb-ico wb-ico--xs" aria-hidden="true">${ico}</span>`;
+      acts.append(b);
+    }
+    meta.append(acts);
+    li.append(meta);
+    list.append(li);
+  }
+}
+
+/* ---- xuất: đúng ngữ pháp mục `## Sổ` của LEARNING-LOG.md ----------------
+   Gộp cả TIẾN ĐỘ (mức đã tick) và GHI CHÚ vào một bản, vì cả hai đều là "việc học
+   của bài này" và tách ra thì phải mở hai chỗ để trả lời một câu. Nhóm xếp theo thứ
+   tự học, khớp thứ tự learn.mjs chèn — nên diff của LEARNING-LOG.md đọc được. */
+function notesExport() {
+  const out = [SO_HEAD, ''];
+  const seen = new Set();
+  const emit = id => {
+    const rows = [];
+    const lv = getLevel(id);
+    if (lv > 0) rows.push(`- ${levelTs.get(id) || isoToday()} · mức ${lv}`);
+    for (const n of notes.filter(x => x.node === id).sort((a, b) => (a.ts || 0) - (b.ts || 0))) {
+      const body = n.text.split('\n');
+      rows.push(`- ${n.day || isoToday()} · ${n.kind || 'ghi'} · ${body[0]}`);
+      for (const extra of body.slice(1)) rows.push('  ' + extra);
+    }
+    if (!rows.length) return;
+    out.push(`### \`${id}\` · ${nodeTitle(id)}`, ...rows, '');
+    seen.add(id);
+  };
+  LEAVES.forEach(l => emit(l.id));
+  // Ghi chú gắn vào trang chủ, hoặc vào một bài đã bị xoá/đổi tên: vẫn phải xuất ra.
+  [...new Set(notes.map(n => n.node))].filter(id => !seen.has(id)).forEach(emit);
+  return out.join('\n').replace(/\n+$/, '') + '\n';
+}
+
+/* ---- nạp: bản sao của parseLog trong tools/learn.mjs --------------------
+   Hai bản cùng một ngữ pháp là thứ CLAUDE.md §2 cấm ("một luật, một bản") — nhưng
+   luật đó nói về HTML không được phụ thuộc tools/, và ở đây không thể chia sẻ code:
+   trang không có build, không import được file .mjs. Nên ngữ pháp được giữ BÉ ĐẾN
+   MỨC hai bản không thể lệch: một regex nhóm, một regex dòng, không có gì khác. */
+const N_RE_GROUP = /^###\s+`?([a-z0-9-]+)`?/;
+const N_RE_ENTRY = /^-\s+`?(\d{4}-\d{2}-\d{2})`?\s+·\s+([^·]+?)\s*(?:·\s*(.*))?$/;
+
+function notesParse(text) {
+  const rows = [];
+  let id = null, cur = null;
+  for (const line of String(text).split('\n')) {
+    const g = N_RE_GROUP.exec(line);
+    if (g) { id = g[1]; cur = null; continue; }
+    if (cur && /^ {2,}\S/.test(line)) { cur.text += '\n' + line.trim(); continue; }
+    const m = N_RE_ENTRY.exec(line);
+    if (m && id) {
+      const kind = m[2].trim().toLowerCase().replace(/\s+/g, ' ');
+      cur = { node: id, day: m[1], kind, text: (m[3] || '').trim() };
+      rows.push(cur);
+      continue;
+    }
+    cur = null;
+  }
+  return rows;
+}
+
+function notesImport(text) {
+  const rows = notesParse(text);
+  if (!rows.length) return notesMsg('Không thấy dòng nào đúng khuôn `- YYYY-MM-DD · <loại> · <nội dung>`.', 'danger');
+  const have = new Set(notes.map(n => `${n.node}\0${n.day}\0${n.kind}\0${n.text.trim()}`));
+  let added = 0, dup = 0, ticks = 0;
+  for (const r of rows) {
+    const mLv = /^mức ([123])$/.exec(r.kind);
+    if (mLv) {                                     // nạp lại cả TIẾN ĐỘ, không chỉ ghi chú
+      const l = byId[r.node];
+      if (!l) continue;
+      const want = Math.min(+mLv[1], maxLevel(l));
+      if (getLevel(r.node) < want) {               // chỉ NÂNG, không hạ: bản trong file có
+        prog.set(r.node, want);                    // thể cũ hơn thao tác vừa làm trên trang
+        levelTs.set(r.node, r.day);
+        ticks++;
+      }
+      continue;
+    }
+    if (!N_KINDS.includes(r.kind)) continue;
+    const key = `${r.node}\0${r.day}\0${r.kind}\0${r.text.trim()}`;
+    if (have.has(key) || !r.text.trim()) { dup++; continue; }
+    have.add(key);
+    notes.push({ id: newNoteId(), node: r.node, kind: r.kind, day: r.day, text: r.text.trim(), ts: Date.parse(r.day + 'T12:00:00') || Date.now() });
+    added++;
+  }
+  if (ticks) { saveProgress(); saveLevelTs(); syncProgress(); }
+  saveNotes(); syncNotesCount(); renderNotes();
+  notesMsg(`Trộn xong: thêm ${added} ghi chú${dup ? ` · bỏ qua ${dup} trùng` : ''}${ticks ? ` · nạp lại mức của ${ticks} bài` : ''}.`,
+    added || ticks ? 'success' : 'info');
+}
+
+/* ---- gắn sự kiện ------------------------------------------------------- */
+function openNotes(trigger) {
+  renderNotes();
+  $('#notesBtn').setAttribute('aria-expanded', 'true');
+  openLayer('notesOverlay', trigger);
+  setTimeout(() => $('#notesInput').focus(), 60);
+}
+$('#notesBtn').addEventListener('click', e => {
+  if ($('#notesOverlay').classList.contains('is-open')) closeLayers();
+  else openNotes(e.currentTarget);
+});
+
+const notesTa = $('#notesInput');
+const notesAddBtn = $('#notesAdd');
+const syncAddBtn = () => { notesAddBtn.disabled = !notesTa.value.trim(); };
+notesTa.addEventListener('input', syncAddBtn);
+notesTa.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); addNote(); }
+});
+notesAddBtn.addEventListener('click', addNote);
+
+function addNote() {
+  const text = notesTa.value.trim();
+  if (!text) return;
+  notes.push({ id: newNoteId(), node: curNode(), kind: noteKind, day: isoToday(), text, ts: Date.now() });
+  saveNotes(); syncNotesCount();
+  notesTa.value = ''; syncAddBtn();
+  // Vừa ghi cho bài này thì phải THẤY nó ngay, kể cả khi đang lọc "Tất cả".
+  renderNotes();
+  announce('Đã lưu ghi chú.');
+  notesTa.focus();
+}
+
+$('#notesOverlay').addEventListener('click', e => {
+  const kb = e.target.closest('[data-nkind]');
+  if (kb) {
+    noteKind = kb.dataset.nkind;
+    $$('[data-nkind]').forEach(b => {
+      const on = b.dataset.nkind === noteKind;
+      b.classList.toggle('is-active', on);
+      b.setAttribute('aria-pressed', String(on));
+    });
+    notesTa.focus();
+    return;
+  }
+  const fb = e.target.closest('[data-nfilter]');
+  if (fb) {
+    noteFilter = fb.dataset.nfilter;
+    $$('[data-nfilter]').forEach(b => {
+      const on = b.dataset.nfilter === noteFilter;
+      b.classList.toggle('is-active', on);
+      b.setAttribute('aria-pressed', String(on));
+    });
+    renderNotes();
+    return;
+  }
+  const act = e.target.closest('[data-nact]');
+  if (act) { noteAction(act); return; }
+  // Bấm tên bài trong danh sách "Tất cả" → mở bài đó và đóng ngăn, để thấy chỗ mình ghi.
+  if (e.target.closest('a[href^="#/"]')) closeLayers();
+});
+
+function noteAction(btn) {
+  const li = btn.closest('[data-note]');
+  const n = notes.find(x => x.id === li.dataset.note);
+  if (!n) return;
+
+  if (btn.dataset.nact === 'del') {
+    // Xoá hai-bước, không dùng confirm(): một hộp thoại chặn trang cho một dòng ghi
+    // chú là thuế, còn xoá thẳng thì mất vĩnh viễn vì một cú bấm nhầm.
+    if (btn.dataset.armed) {
+      notes = notes.filter(x => x.id !== n.id);
+      saveNotes(); syncNotesCount(); renderNotes();
+      announce('Đã xoá ghi chú.');
+      return;
+    }
+    btn.dataset.armed = '1';
+    btn.classList.add('wb-btn--danger');
+    btn.title = 'Bấm lần nữa để xoá thật';
+    btn.setAttribute('aria-label', btn.title);
+    setTimeout(() => {
+      if (!btn.isConnected) return;
+      delete btn.dataset.armed;
+      btn.classList.remove('wb-btn--danger');
+      btn.title = 'Xoá ghi chú';
+      btn.setAttribute('aria-label', btn.title);
+    }, 2500);
+    return;
+  }
+
+  if (li.querySelector('textarea')) return;                 // đang sửa rồi
+  const p = li.querySelector('.ds-notes__text');
+  const ta = document.createElement('textarea');
+  ta.className = 'ds-notes__ta';
+  ta.value = n.text;
+  ta.rows = Math.min(8, n.text.split('\n').length + 1);
+  p.replaceWith(ta);
+  ta.focus();
+  const commit = () => {
+    const v = ta.value.trim();
+    if (v && v !== n.text) { n.text = v; n.ts = Date.now(); saveNotes(); }
+    renderNotes();
+  };
+  ta.addEventListener('keydown', ev => {
+    if (ev.key === 'Enter' && !ev.shiftKey) { ev.preventDefault(); commit(); }
+    if (ev.key === 'Escape') { ev.stopPropagation(); renderNotes(); }
+  });
+  ta.addEventListener('blur', commit);
+}
+
+$('#notesDl').addEventListener('click', () => {
+  const blob = new Blob([notesExport()], { type: 'text/markdown;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `so-hoc-${isoToday()}.md`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  notesMsg('Đã tải về. Trộn vào repo: node tools/learn.mjs --import <file>', 'success');
+});
+
+$('#notesCopy').addEventListener('click', async e => {
+  const btn = e.currentTarget, ico = btn.querySelector('.wb-ico');
+  let ok = true;
+  try { await navigator.clipboard.writeText(notesExport()); }
+  catch {
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = notesExport();
+      ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+      document.body.append(ta); ta.focus(); ta.select();
+      document.execCommand('copy'); ta.remove();
+    } catch { ok = false; }
+  }
+  ico.textContent = ok ? 'check' : 'priority_high';
+  setTimeout(() => { ico.textContent = 'content_copy'; }, 1600);
+  notesMsg(ok ? 'Đã sao chép cả sổ — dán vào mục `## Sổ` của LEARNING-LOG.md.'
+              : 'Không sao chép được. Dùng Tải .md.', ok ? 'success' : 'danger');
+});
+
+$('#notesImp').addEventListener('click', () => {
+  const box = $('#notesImpBox');
+  box.hidden = !box.hidden;
+  if (!box.hidden) $('#notesImpTa').focus();
+});
+$('#notesImpCancel').addEventListener('click', () => { $('#notesImpBox').hidden = true; $('#notesImpTa').value = ''; });
+$('#notesImpDo').addEventListener('click', () => {
+  notesImport($('#notesImpTa').value);
+  $('#notesImpTa').value = '';
+  $('#notesImpBox').hidden = true;
+});
+
+// Ngăn đang mở mà đổi bài (bấm link trong ghi chú, hoặc [ ]) → đổi luôn ngữ cảnh ghi.
+window.addEventListener('hashchange', () => { if ($('#notesOverlay').classList.contains('is-open')) renderNotes(); });
+syncNotesCount();
 
 /* Nếu localStorage không dùng được thì nói ra, đừng để người học đánh dấu cả
    buổi rồi mất sạch khi tải lại. */

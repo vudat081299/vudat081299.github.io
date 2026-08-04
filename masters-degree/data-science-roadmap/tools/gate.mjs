@@ -21,12 +21,25 @@
      node tools/gate.mjs --show <id>  in đúng một bài ra stdout (kèm số dòng)
      node tools/gate.mjs --where <id> in dải dòng của một bài, để sed/Read đúng chỗ
      node tools/gate.mjs --advice     in cả phần khuyến nghị (không chặn commit)
+     node tools/gate.mjs --gates      in danh sách cổng đang chạy
+     node tools/gate.mjs --ci         dùng trong pre-commit: nghiêm hơn một bậc
+
+   Các file đi kèm:
+     read-html.mjs   luật đọc dữ liệu ra khỏi HTML (dùng chung)
+     plan.mjs        luật kiểm lịch học — cổng G-PLAN, cũng là bản node của
+                     auditPlan(). Chạy riêng được: node tools/audit.mjs
+     learn.mjs       luật đọc LEARNING-LOG.md — cổng G-LEARN. Chạy riêng được:
+                     node tools/learn.mjs
+     session.mjs     mở/đóng phiên. KHÔNG phải cổng — chỉ đọc và in.
    ========================================================================== */
 
-import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, realpathSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
-import vm from 'node:vm';
+import { readPage } from './read-html.mjs';
+import { checkPlan } from './plan.mjs';
+import { checkLearn } from './learn.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..');
@@ -38,87 +51,20 @@ const argv = process.argv.slice(2);
 const has = f => argv.includes(f);
 const arg = f => { const i = argv.indexOf(f); return i >= 0 ? argv[i + 1] : null; };
 
-const src = readFileSync(HTML, 'utf8');
-const lines = src.split('\n');
-
 /* ---------------------------------------------------------------------------
    1. Đọc dữ liệu ra khỏi HTML
 
-   Không parse HTML, không dựng DOM: chỉ cần cắt đúng các literal trong <script>
-   rồi eval chúng trong sandbox. Nhanh (một file 1MB, ~50ms) và không cần thư viện.
+   Luật đọc file nằm ở tools/read-html.mjs, dùng chung với plan.mjs. Trước đây
+   mỗi công cụ tự đọc, tức có hai bản luật đọc cùng một file — và hai bản thì sẽ
+   lệch nhau. Giờ chỉ còn một bản.
    ------------------------------------------------------------------------- */
-
-/* Nhảy qua chuỗi và chú thích khi đếm ngoặc — nếu không, một dấu ] trong câu tiếng
-   Việt hoặc một // trong URL sẽ cắt literal sai chỗ. */
-function matchBracket(text, start) {
-  const open = text[start];
-  const close = { '[': ']', '{': '}', '(': ')' }[open];
-  let depth = 0, i = start;
-  while (i < text.length) {
-    const c = text[i];
-    if (c === '\\') { i += 2; continue; }
-    if (c === '"' || c === "'" || c === '`') {           // chuỗi
-      const q = c; i++;
-      while (i < text.length && text[i] !== q) { if (text[i] === '\\') i++; i++; }
-      i++; continue;
-    }
-    if (c === '/' && text[i + 1] === '/') { while (i < text.length && text[i] !== '\n') i++; continue; }
-    if (c === '/' && text[i + 1] === '*') { i = text.indexOf('*/', i) + 2; continue; }
-    if (c === open) depth++;
-    else if (c === close) { depth--; if (depth === 0) return i; }
-    i++;
-  }
-  throw new Error('không tìm được ngoặc đóng từ vị trí ' + start);
-}
-
-function literal(name) {
-  const m = new RegExp('\\nconst ' + name + '\\s*=\\s*').exec(src);
-  if (!m) throw new Error(`không thấy "const ${name} =" trong HTML`);
-  const start = m.index + m[0].length;
-  const end = matchBracket(src, start);
-  return vm.runInNewContext('(' + src.slice(start, end + 1) + ')');
-}
-
-const TREE     = literal('TREE');
-const WEEKS    = literal('WEEKS');
-const DAYS     = literal('DAYS');
-const PAYOFF   = literal('PAYOFF');
-const COMPS    = literal('COMPS');
-const ACCEPT   = literal('ACCEPT');
-const SCOPE    = literal('SCOPE');
-const PORTFOLIO = literal('PORTFOLIO');
-const PHASE_OUTCOME = literal('PHASE_OUTCOME');
-
-const LEAVES = TREE.flatMap(p => p.kids.map(k => ({ ...k, phase: p })));
-const byId = Object.fromEntries(LEAVES.map(l => [l.id, l]));
-const orderOf = Object.fromEntries(LEAVES.map((l, i) => [l.id, i]));
-const mins = l => l.r + l.x + l.d;
-
-/* Các khối <template>: id → { kind, title, from, to, body }. Template không lồng
-   nhau nên quét tuyến tính là đủ. */
-function scanTemplates() {
-  const out = [];
-  const re = /<template\s+data-(node|aside|mathdef)="([^"]+)"([^>]*)>/g;
-  let m;
-  while ((m = re.exec(src))) {
-    const closeAt = src.indexOf('</template>', m.index);
-    const titleM = /data-title="([^"]*)"/.exec(m[3]);
-    out.push({
-      kind: m[1], key: m[2],
-      title: titleM ? titleM[1] : null,
-      from: src.slice(0, m.index).split('\n').length,
-      to: src.slice(0, closeAt).split('\n').length + 1,
-      body: src.slice(m.index, closeAt),
-    });
-  }
-  return out;
-}
-const TPL = scanTemplates();
-const tplBy = kind => TPL.filter(t => t.kind === kind);
-const nodeTpl = Object.fromEntries(tplBy('node').map(t => [t.key, t]));
-
-const refsIn = (body, attr) =>
-  [...body.matchAll(new RegExp(`data-${attr}="([^"${'$'}{}]+)"`, 'g'))].map(m => m[1]);
+const P = readPage(HTML);
+const {
+  src, lines,
+  TREE, WEEKS, DAYS, PAYOFF, COMPS, ACCEPT, SCOPE, PORTFOLIO, PHASE_OUTCOME,
+  TPL, tplBy, nodeTpl, refsIn,
+  LEAVES, byId, orderOf, FAST, weekOf, nextOf, mins,
+} = P;
 
 /* ---------------------------------------------------------------------------
    2. Sinh TOC.md — bản đồ để ĐỌC THAY CHO việc mở file 12k dòng
@@ -127,8 +73,6 @@ const refsIn = (body, attr) =>
    không, mở thì sed từ dòng nào" mà không phải nạp cả file vào ngữ cảnh.
    ------------------------------------------------------------------------- */
 const PRIO_LABEL = { core: 'bắt buộc', good: 'nên biết', skim: 'định vị' };
-const FAST = new Set(DAYS.flatMap(d => d.ids));
-const weekOf = {}; WEEKS.forEach(w => w.ids.forEach(id => { weekOf[id] = w.n; }));
 
 /* Chữ ký CẤU TRÚC của mục lục: chỉ những thứ mà đổi là đổi GIÁO TRÌNH — danh sách
    bài, tên, chặng, ưu tiên, thời lượng, tuần, có tiêu chí đạt hay không.
@@ -252,6 +196,32 @@ const warn = [];   // báo để người quyết định
 const held = [];   // lỗi thật đang được HOÃN có chủ ý (waiver) — vẫn in mỗi lần chạy
 const F = m => fail.push(m);
 const W = m => warn.push(m);
+
+/* Danh sách cổng — NGUỒN SỰ THẬT về "trang này có những cổng nào".
+   Cổng G-DOC ở dưới đối chiếu danh sách này với CLAUDE.md, nên thêm một cổng mà
+   quên ghi vào tài liệu thì máy nhắc. Trước khi có nó, G-DUMP đã tồn tại trong
+   code hơn một phiên mà bảng cổng trong CLAUDE.md không có tên nó. */
+const GATES = [
+  ['G-TOC-STRUCT', 'chặn', 'cấu trúc mục lục trong TOC.md còn khớp HTML'],
+  ['G-TOC-STALE',  'nhắc', 'số dòng trong TOC.md đã cũ (chặn khi commit)'],
+  ['G-ORDER',      'chặn', 'thứ tự khối <template> trong file == thứ tự học'],
+  ['G-NODE',       'chặn', 'mỗi bài đúng một template, không thừa không trùng'],
+  ['G-REF',        'chặn', 'mọi data-aside / data-math / data-goto / #/id giải được'],
+  ['G-ORPHAN',     'chặn', 'không có nhánh phụ nào mà không bài nào mở'],
+  ['G-PAYOFF',     'chặn', 'mọi bài khai PAYOFF (thiếu = đầu bài không có mục tiêu)'],
+  ['G-NO-DETAILS', 'chặn', 'không dùng <details> để ẩn kiến thức'],
+  ['G-FWD',        'chặn', 'tiêu chí đạt / deliverable tuần không đòi thứ chưa dạy'],
+  ['G-PLAN',       'chặn', 'lịch 14 ngày & 8 tuần nhất quán (bản node của auditPlan)'],
+  ['G-LAYER',      'nhắc', 'mục tự khai là nhánh phụ, hoặc bài quá dài'],
+  ['G-DUMP',       'nhắc', 'đổ dữ liệu thành câu thay vì nói ý'],
+  ['G-VIZ',        'nhắc', 'bài chưa có hình / bảng / code nào để nhìn'],
+  ['G-MEASURE',    'nhắc', 'có max-width cứng làm trôi khổ chữ'],
+  ['G-NEXT',       'nhắc', 'bài sau đã đổi → đọc lại câu "bài sau…" trong PAYOFF'],
+  ['G-HOOK',       'nhắc', 'ba lớp hook tự động đã được cài chưa'],
+  ['G-DOC',        'nhắc', 'mọi cổng trong code đều có tên trong CLAUDE.md'],
+  ['G-HANDOFF',    'nhắc', 'đổi trang / bộ cổng mà HANDOFF.md không đổi'],
+  ['G-LEARN',      'nhắc', 'sổ học đọc được, và chỗ tắc trùng nhau = dạy quá muộn'],
+];
 
 /* Waiver: một lỗi CHẶN đã biết, đã có hướng sửa, nhưng cách sửa là một quyết định
    giáo trình chứ không phải một dòng code — nên không được chặn mọi commit khác trong
@@ -523,17 +493,151 @@ const noVisual = tplBy('node').filter(t => t.key !== 'home')
 if (noVisual.length) W(`G-VIZ: ${noVisual.length} bài không có hình / bảng / khối code nào: ${noVisual.join(', ')}`);
 
 /* --- G-MEASURE (khuyến nghị): canh trôi khổ chữ -------------------------
-   Cả trang chỉ được có HAI mép phải. Mỗi max-width bằng px/ch viết rời trong CSS
-   bài học là một mép thứ ba đang hình thành. */
+   Cả trang chỉ được có MỘT mép phải: cột nội dung đúng bằng khổ chữ, và chỉ bảng
+   được tràn ra hai bên. Mỗi max-width bằng px/ch viết rời trong CSS là một mép
+   thứ hai đang hình thành. (Mô hình "hai mép" cũ đã bỏ từ phiên 2026-08-04 (d).) */
 const cssBlock = src.slice(src.indexOf('<style>'), src.indexOf('</style>'));
 for (const m of cssBlock.matchAll(/^\s*(\.[a-z0-9_-]+[^{\n]*)\{[^}\n]*max-width:\s*(\d+(?:px|ch))/gim)) {
   if (/--ds-measure|ds-mathmodal|ds-drawer|ds-viz svg/.test(m[1])) continue;
   W(`G-MEASURE: "${m[1].trim()}" đặt max-width cứng ${m[2]} — dùng var(--ds-measure) hoặc để nó chạm mép cột`);
 }
 
+/* --- G-PLAN: lịch học nhất quán -----------------------------------------
+   Đây là các kiểm tra mà `auditPlan()` trong trang chạy — tổng giờ giữa các cách
+   xem phải khớp, mọi bài phải nằm ở đúng một tuần, ngày fast track phải 3,5–6,5
+   giờ, deliverable không được dựa vào bài dạy sau nó.
+
+   Trước đây muốn chạy chúng phải mở trình duyệt và gõ tay vào Console, nên trên
+   thực tế chúng bị bỏ. Giờ chạy cùng các cổng khác. Luật nằm ở tools/plan.mjs. */
+for (const m of checkPlan(P)) F(`G-PLAN: ${m}`);
+
+/* --- G-NEXT (khuyến nghị): "bài sau" đã đổi, câu văn thì chưa ------------
+   PAYOFF[id][1] là câu "bài sau dùng nó để…", và nó hiện ra ở cuối mỗi bài. Dời
+   một bài thì câu đó lập tức trỏ sai — nhưng không cổng nào bắt được, vì đây là
+   văn xuôi chứ không phải tham chiếu. Tài liệu đã ghi ba lần rằng "phải tự nhớ".
+
+   Máy không đọc được nội dung câu, nhưng đọc được ĐIỀU KIỆN làm câu đó thành
+   sai: bài đứng sau đã đổi. TOC.md trên đĩa còn giữ thứ tự cũ, nên chỉ cần so
+   hai thứ tự là biết chính xác những câu nào cần đọc lại. */
+function tocOrder(md) {
+  const out = [];
+  for (const line of md.split('\n')) {
+    if (/^## Nhánh phụ/.test(line)) break;          // hết bảng bài, sang bảng nhánh phụ
+    const m = /^\|\s*`([a-z0-9-]+)`\s*\|/.exec(line);
+    if (m) out.push(m[1]);
+  }
+  return out;
+}
+if (tocOnDisk) {
+  const old = tocOrder(tocOnDisk);
+  const wasThere = new Set(old);
+  const oldNext = {};
+  old.forEach((id, i) => { if (i + 1 < old.length) oldNext[id] = old[i + 1]; });
+  const changed = old.filter(id => byId[id] && oldNext[id] !== nextOf[id]);
+  if (changed.length) {
+    W(`G-NEXT: ${changed.length} bài có BÀI SAU đã đổi — đọc lại câu "bài sau…" trong PAYOFF của chúng:\n`
+    + changed.slice(0, 12).map(id =>
+        `      ${id}: bài sau ${oldNext[id] || '(không có)'} → ${nextOf[id] || '(không có)'}`).join('\n')
+    + (changed.length > 12 ? `\n      … và ${changed.length - 12} bài nữa` : '')
+    + '\n    Câu đó hiện ra ở cuối bài, nên sai là người đọc thấy. Máy chỉ biết bài sau đã đổi,\n'
+    + '    không đọc được câu — nên đây là việc của mắt. Sửa xong: node tools/gate.mjs --write');
+  }
+  for (const l of LEAVES) if (!wasThere.has(l.id)) W(`G-NEXT: bài mới "${l.id}" — nhớ sửa PAYOFF của bài ĐỨNG TRƯỚC nó, câu "bài sau…" của bài đó giờ trỏ sai`);
+}
+
+/* --- G-HOOK (khuyến nghị): ba lớp tự động đã cài chưa -------------------
+   Cả .git/hooks/ lẫn .claude/ đều không được git theo dõi, nên hook không tự
+   theo repo về máy mới. Hệ quả: mọi thứ trong CLAUDE.md §3 mô tả có thể đang tắt
+   mà không ai biết — và đã từng đúng như vậy.
+
+   Bỏ qua khi chạy với --ci: lúc đó chính hook đang gọi ta, nên nó rõ ràng đã cài. */
+const GITROOT = join(ROOT, '..', '..');
+if (!has('--ci')) {
+  const same = (a, b) => { try { return realpathSync(a) === realpathSync(b); } catch { return false; } };
+  // Cài bằng symlink (mặc định) HOẶC bằng một dòng gọi sang trong hook có sẵn.
+  const hookOk = name => {
+    const p = join(GITROOT, '.git', 'hooks', name);
+    return existsSync(p)
+      && (same(p, join(HERE, 'hooks', name)) || readFileSync(p, 'utf8').includes(`data-science-roadmap/tools/hooks/${name}`));
+  };
+  const cs = join(GITROOT, '.claude', 'settings.json');
+  const layers = [
+    ['Claude Code PostToolUse (sau mỗi Edit)', existsSync(cs) && readFileSync(cs, 'utf8').includes('data-science-roadmap')],
+    ['git pre-commit (lúc commit)', hookOk('pre-commit')],
+    ['git pre-push (lúc push = deploy)', hookOk('pre-push')],
+  ];
+  const off = layers.filter(l => !l[1]);
+  if (off.length) {
+    W(`G-HOOK: ${off.length}/3 lớp tự động chưa cài — ` + layers.map(l => `${l[0]}: ${l[1] ? 'có' : 'CHƯA'}`).join(' · ') + '\n'
+    + '    Chạy: tools/install-hooks.sh (một lần cho mỗi máy / mỗi bản clone)\n'
+    + '    Chưa cài thì cổng chỉ chạy khi bạn tự gõ tay — mọi thứ CLAUDE.md §3 mô tả đang tắt.');
+  }
+}
+
+/* --- G-HANDOFF (khuyến nghị): đổi trang mà không ghi lại -----------------
+   CLAUDE.md §12 bắt buộc ghi HANDOFF "đã sửa gì, cố ý KHÔNG sửa gì và vì sao".
+   Mục thứ hai là thứ giữ cho phiên sau không làm lại việc đã cân nhắc và bỏ qua —
+   và nó không thể suy ra được từ diff, nên nếu không ai gõ thì nó mất hẳn.
+
+   Máy không đọc được HANDOFF có ĐÚNG hay không, nhưng đọc được điều kiện cần: có
+   đổi trang/bộ cổng mà HANDOFF không nằm trong cùng lần đổi đó. */
+function gitLines(...args) {
+  try {
+    return execFileSync('git', ['-C', ROOT, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] })
+      .split('\n').filter(Boolean);
+  } catch { return null; }
+}
+{
+  // Lúc commit thì xét đúng những gì đang được commit; lúc chạy tay thì xét worktree.
+  // `-uall`: mặc định git GỘP một thư mục chưa theo dõi thành một dòng (`?? thumuc/`),
+  // nên tên file bên trong không xuất hiện và cổng tưởng không có gì đổi.
+  const files = has('--ci')
+    ? gitLines('diff', '--cached', '--name-only', '--', '.')
+    : (gitLines('status', '--porcelain', '-uall', '--', '.') || []).map(l => l.slice(3).trim());
+  if (files) {
+    const hit = s => files.some(f => f.includes(s));
+    const substantive = hit('data-science-roadmap.html') || hit('/tools/');
+    if (substantive && !hit('HANDOFF.md')) {
+      W('G-HANDOFF: có đổi trang hoặc bộ cổng, mà HANDOFF.md không đổi.\n'
+      + '    Khung điền trước: node tools/session.mjs --close\n'
+      + '    Phần đáng ghi nhất không phải "đã sửa gì" (diff nói được) mà "cố ý KHÔNG sửa gì\n'
+      + '    và vì sao" — không ghi thì phiên sau cân nhắc lại đúng thứ bạn đã bỏ.');
+    }
+  }
+}
+
+/* --- G-LEARN (khuyến nghị): sổ học ---------------------------------------
+   Luật nằm ở learn.mjs, cùng khuôn với G-PLAN ↔ plan.mjs: gate.mjs chỉ gọi.
+   Không có LEARNING-LOG.md thì cổng im — nó là dữ liệu của người học, không phải
+   thứ trang cần để sống. */
+for (const m of checkLearn(P)) W(m);
+
+/* --- G-DOC (khuyến nghị): cổng nào có trong code thì phải có trong tài liệu */
+const CLAUDEMD = join(ROOT, 'CLAUDE.md');
+if (existsSync(CLAUDEMD)) {
+  const doc = readFileSync(CLAUDEMD, 'utf8');
+  const missing = GATES.map(g => g[0]).filter(n => !doc.includes(n));
+  if (missing.length) {
+    W(`G-DOC: ${missing.length} cổng có trong code nhưng CLAUDE.md không nhắc tên: ${missing.join(', ')}\n`
+    + '    Bảng cổng trong tài liệu là thứ người ta đọc để biết máy đang canh gì. Bảng thiếu\n'
+    + '    thì người ta canh lại bằng tay những thứ máy đã canh, hoặc tưởng máy canh thứ nó không canh.\n'
+    + '    Xem danh sách đầy đủ: node tools/gate.mjs --gates');
+  }
+}
+
 /* ---------------------------------------------------------------------------
    4. Chế độ tra cứu — để không phải mở cả file
    ------------------------------------------------------------------------- */
+if (has('--gates')) {
+  console.log('Cổng đang chạy — "chặn" là chặn commit, "nhắc" là khuyến nghị:\n');
+  const w = Math.max(...GATES.map(g => g[0].length));
+  for (const [name, kind, what] of GATES) {
+    console.log(`  ${name.padEnd(w)}  ${kind}  ${what}`);
+  }
+  console.log(`\n  ${GATES.filter(g => g[1] === 'chặn').length} cổng chặn · ${GATES.filter(g => g[1] === 'nhắc').length} cổng nhắc`);
+  process.exit(0);
+}
+
 if (arg('--show') || arg('--where')) {
   const id = arg('--show') || arg('--where');
   const t = nodeTpl[id] || TPL.find(x => x.key === id);

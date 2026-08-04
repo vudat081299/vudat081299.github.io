@@ -1,0 +1,85 @@
+#!/bin/sh
+# Lớp tự động THỨ BA: cổng lúc push. CHẶN.
+# Cài: masters-degree/data-science-roadmap/tools/install-hooks.sh
+#
+# Vì sao cần thêm một lớp nữa khi đã có pre-commit:
+#   push nhánh main = DEPLOY GitHub Pages. Đây là lúc lỗi thôi ra công khai, và là
+#   lúc cuối cùng còn sửa được rẻ. pre-commit có thể bị bỏ qua bằng --no-verify (đúng
+#   và nên có), commit cũ có thể được rebase/cherry-pick vào mà chưa từng qua cổng,
+#   và một commit merge không chạy pre-commit chút nào. pre-push kiểm TRẠNG THÁI
+#   CUỐI của đúng những gì đang được đẩy lên.
+#
+# Bỏ qua một lần (chỉ khi bạn BIẾT mình đang làm gì): git push --no-verify
+
+set -e
+DIR="masters-degree/data-science-roadmap"
+ROOT=$(git rev-parse --show-toplevel)
+Z="0000000000000000000000000000000000000000"
+
+command -v node >/dev/null 2>&1 || {
+  echo "pre-push: không có node — bỏ qua cổng $DIR." >&2
+  exit 0
+}
+
+# stdin: "<ref cục bộ> <sha cục bộ> <ref trên remote> <sha trên remote>" mỗi dòng.
+# Cần biết hai điều: có commit nào chạm thư mục này không, và có chạm tools/ không
+# (test cổng mất ~20 giây nên chỉ chạy khi chính bộ cổng đổi).
+TOUCH=0
+TOUCH_TOOLS=0
+SAW_REF=0
+while read -r _local_ref local_sha _remote_ref remote_sha; do
+  [ -z "$local_sha" ] && continue
+  SAW_REF=1
+  [ "$local_sha" = "$Z" ] && continue                 # đang xoá nhánh: không có gì để kiểm
+  if [ "$remote_sha" = "$Z" ]; then
+    BASE=$(git merge-base "$local_sha" HEAD 2>/dev/null || echo "")   # nhánh mới trên remote
+  else
+    BASE="$remote_sha"
+  fi
+  if [ -n "$BASE" ]; then
+    FILES=$(git diff --name-only "$BASE" "$local_sha" 2>/dev/null || echo "")
+  else
+    FILES="$DIR/"                                     # không xác định được gốc → coi như có chạm
+  fi
+  case "$FILES" in *"$DIR/"*) TOUCH=1 ;; esac
+  case "$FILES" in *"$DIR/tools/"*) TOUCH_TOOLS=1 ;; esac
+done
+
+# Không đọc được ref nào từ stdin (client gọi hook khác kiểu) → chạy cổng cho chắc.
+# Thà mất vài giây còn hơn để một lần deploy đi mà không ai kiểm.
+if [ "$SAW_REF" = "0" ]; then TOUCH=1; TOUCH_TOOLS=0; fi
+if [ "$TOUCH" = "0" ]; then exit 0; fi
+
+cd "$ROOT/$DIR"
+echo "pre-push: cổng $DIR (push main = deploy, nên kiểm lại lần cuối)…"
+
+FAILED=""
+
+node tools/gate.mjs --ci   || FAILED="$FAILED gate"
+node tools/audit.mjs       >/dev/null || FAILED="$FAILED audit"
+if [ "$TOUCH_TOOLS" = "1" ]; then
+  echo "pre-push: bộ cổng có đổi → chạy test của chính nó (~20 giây)…"
+  node tools/gate.test.mjs >/dev/null || FAILED="$FAILED gate.test"
+fi
+
+if [ -n "$FAILED" ]; then
+  cat >&2 <<MSG
+
+──────────────────────────────────────────────────────────────────────
+Push bị CHẶN — trượt:$FAILED
+
+Push nhánh main là deploy GitHub Pages: sau bước này lỗi nằm trên web.
+
+  node tools/gate.mjs --advice     xem cả phần nhắc
+  node tools/audit.mjs             chỉ phần lịch học
+  node tools/gate.test.mjs         test của chính bộ cổng
+  node tools/session.mjs --close   khung HANDOFF + câu commit
+
+Bỏ qua có ý thức:  git push --no-verify
+──────────────────────────────────────────────────────────────────────
+MSG
+  exit 1
+fi
+
+echo "pre-push: cổng qua."
+exit 0

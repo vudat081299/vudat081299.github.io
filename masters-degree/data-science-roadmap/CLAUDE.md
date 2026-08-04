@@ -15,6 +15,41 @@ của nhãn phạm vi `SCOPE`). Hứa quá là lỗi nội dung nghiêm trọng,
 
 ---
 
+## 0a. Bắt đầu ở đây — định làm X thì đọc gì, chạy gì
+
+**Mọi phiên mở bằng một lệnh**, kể cả phiên chỉ sửa một câu:
+
+```bash
+node tools/session.mjs
+```
+
+Nó trả lời bốn câu bạn không thể biết bằng cách đọc file: **có phiên khác đang làm dở
+không** (thư mục này thường có nhiều phiên song song — phiên (e) dính bẫy đó hai lần),
+hook đã cài chưa, việc gì đang dở, cổng đang xanh hay đỏ.
+
+Rồi tìm việc mình định làm trong bảng này:
+
+| định làm | đọc | chạy | xong là khi nào |
+|---|---|---|---|
+| **sửa chữ trong một bài** | `node tools/gate.mjs --show <id>` · [docs/viet-de-hieu.md](docs/viet-de-hieu.md) | `gate.mjs --advice` | cổng CHẶN qua · không sinh khuyến nghị mới |
+| **thêm / xoá / dời một bài** | §6 (bốn câu phải trả lời) → [docs/sua-trang.md](docs/sua-trang.md) việc 1–2 | `gate.mjs --write` rồi `git add TOC.md` | `G-TOC-STRUCT` qua · đọc lại `G-NEXT` |
+| **thêm / xoá / dời một chặng** | [docs/sua-trang.md](docs/sua-trang.md) **việc 3** | `gate.mjs --write` | như trên. Giữ nguyên `id` chặng, đừng đổi số |
+| **thêm hình / bảng / code** | §10 (một mép phải) · [docs/thiet-ke-trang.md](docs/thiet-ke-trang.md) | `gate.mjs --advice` + **mở trang bằng mắt** | không cuộn ngang ở 1440 / 1100 / 375px |
+| **đổi giao diện, thêm nút, thêm component** | **[docs/thiet-ke-trang.md](docs/thiet-ke-trang.md)** · §7 · §10 | mở trang, kiểm **cả sáng lẫn tối** | `G-MEASURE` im · hai chế độ đều đọc được |
+| **chuyển một khối ra ngoài mạch chính** | §7 · [docs/thiet-ke-trang.md](docs/thiet-ke-trang.md) §1 | `gate.mjs --advice` | popup là mặc định; chọn drawer thì phải viết ra lý do |
+| **sửa lịch 8 tuần / 14 ngày** | §8 · [docs/sua-trang.md](docs/sua-trang.md) việc 4 | `node tools/audit.mjs` | `G-PLAN` qua |
+| **thêm / sửa một cổng** | §4 · [docs/sua-trang.md](docs/sua-trang.md) việc 6 | `node tools/gate.test.mjs` | test xanh · thêm tên cổng vào §4 (`G-DOC` bắt) |
+| **ghi việc học của mình** | [LEARNING-LOG.md](LEARNING-LOG.md) | `learn.mjs --add` hoặc nút **Sổ học** trên trang | `learn.mjs --check` im |
+| **đóng phiên / commit / push** | §12 | `node tools/session.mjs --close` | HANDOFF đã ghi · `G-HANDOFF` im |
+
+Ba file docs, ba câu khác nhau — đừng đọc sai file:
+
+- [docs/sua-trang.md](docs/sua-trang.md) — *"đổi cái này thì phải đổi cái gì nữa"*
+- [docs/viet-de-hieu.md](docs/viet-de-hieu.md) — *"giải thích thế nào để người ta hiểu"*
+- [docs/thiet-ke-trang.md](docs/thiet-ke-trang.md) — *"nó trông thế nào, nằm ở đâu"*
+
+---
+
 ## 0. Đừng mở file HTML để tìm hiểu
 
 `data-science-roadmap.html` là **12k dòng, 0,87 MB**. Đọc cả file tốn ~250k token và gần
@@ -60,15 +95,22 @@ data-science-roadmap.html      ← NGUỒN SỰ THẬT DUY NHẤT
   │  phụ thuộc: ../../web-builder/web-builder.css (token + component wb-*)
   │  KHÔNG phụ thuộc bất cứ thứ gì khác trong thư mục này
   ↓ đọc
-tools/gate.mjs  ──sinh──→  TOC.md        (SẢN PHẨM — không sửa tay, không phải nguồn)
-  ↑ đọc
+tools/read-html.mjs   luật đọc dữ liệu ra khỏi HTML — dùng chung, chỉ có MỘT bản
+  ├─ tools/gate.mjs   ──sinh──→  TOC.md   (SẢN PHẨM — không sửa tay, không phải nguồn)
+  ├─ tools/plan.mjs     luật kiểm lịch học      (cổng G-PLAN)
+  ├─ tools/learn.mjs  ↔ LEARNING-LOG.md         (cổng G-LEARN)
+  ├─ tools/audit.mjs    chạy riêng plan.mjs cho người đọc
+  └─ tools/session.mjs  mở / đóng phiên — KHÔNG phải cổng, chỉ đọc và in
+tools/gate.test.mjs   test cho chính bộ cổng — mỗi cổng một ca nổ + một ca im
 tools/concepts.json   khái niệm nào dạy ở bài nào  (đầu vào cổng G-FWD)
 tools/waivers.json    lỗi thật đang hoãn có chủ ý
 
-CLAUDE.md             → quy tắc bắt buộc + đường vào; không code nào đọc nó
-docs/content-gates.md → rubric cho các cổng cần phán đoán ("giải thích này có hiểu được")
-docs/authoring.md     → công thức: thêm bài / nhánh phụ / hình, wire vào đâu
-HANDOFF.md            → sổ nhật ký phiên làm việc
+CLAUDE.md               → quy tắc bắt buộc + đường vào; không code nào đọc nó
+docs/sua-trang.md       → đổi cái này thì phải đổi cái kia; thêm bài/chặng/hình gõ ở đâu
+docs/viet-de-hieu.md    → tám thứ máy không kiểm được ("giải thích này có hiểu được")
+docs/thiet-ke-trang.md  → nó trông thế nào, nằm ở đâu; component nào, icon hay chữ
+HANDOFF.md              → sổ nhật ký phiên làm việc
+LEARNING-LOG.md         → việc học của chủ trang (agent ghi); nguồn của cổng G-LEARN
 ```
 
 Mỗi file **một lý do để đổi** — đó là cách giữ cho bộ tài liệu không phình ra:
@@ -76,59 +118,88 @@ Mỗi file **một lý do để đổi** — đó là cách giữ cho bộ tài 
 | file | đổi khi nào |
 |---|---|
 | `CLAUDE.md` | quy trình / luật đổi |
-| `docs/content-gates.md` | tiêu chuẩn *chất lượng nội dung* đổi |
-| `docs/authoring.md` | *cấu trúc kỹ thuật* của trang đổi (thêm khối dữ liệu, thêm class) |
+| `docs/viet-de-hieu.md` | tiêu chuẩn *chất lượng nội dung* đổi |
+| `docs/sua-trang.md` | *cấu trúc kỹ thuật* của trang đổi (thêm khối dữ liệu, thêm class) |
+| `docs/thiet-ke-trang.md` | *hình thức* đổi (component mới, luật trình bày mới) |
 | `TOC.md` | tự động, mỗi lần nội dung đổi |
-| `tools/*` | thêm/sửa cổng |
+| `tools/*` | thêm/sửa cổng, hoặc thêm/sửa lệnh phiên |
 | `HANDOFF.md` | mỗi phiên |
+| `LEARNING-LOG.md` | mỗi lần chủ trang học xong một bài, hoặc tắc ở đâu |
 
-Thấy mình định thêm mục vào `CLAUDE.md` thì hỏi trước: nó có thuộc một trong ba file
-kia không? `CLAUDE.md` phải đủ ngắn để thật sự được đọc.
+Thấy mình định thêm mục vào `CLAUDE.md` thì hỏi trước: nó có thuộc một trong bốn file
+docs kia không? `CLAUDE.md` phải đủ ngắn để thật sự được đọc.
 
-Ba luật không được vi phạm:
+Bốn luật không được vi phạm:
 
 1. **HTML không bao giờ phụ thuộc vào `tools/` hay `docs/`.** Xoá cả hai thư mục đó thì
    trang vẫn chạy y nguyên. Cổng là thứ *soi* trang, không phải thứ trang cần để sống.
 2. **`TOC.md` không bao giờ là nguồn.** Thấy TOC.md khác HTML thì HTML đúng, TOC.md sai.
 3. **Không thêm file thứ hai chứa nội dung bài học.** Nội dung ở một chỗ. Muốn tra cứu
    nhanh thì sinh ra bản index (như TOC.md), đừng sinh ra bản sao nội dung.
+4. **`LEARNING-LOG.md` là dữ liệu, không phải nội dung trang.** Xoá nó thì cổng vẫn chạy,
+   chỉ mất `G-LEARN`. Mục `## Sổ` trong nó **chỉ được thêm vào cuối** — xem §13.
 
 ---
 
 ## 3. Chạy cổng
 
 ```bash
-node tools/gate.mjs             # cổng chặn; thoát 1 nếu có lỗi
-node tools/gate.mjs --advice    # kèm khuyến nghị (không chặn)
+node tools/session.mjs          # MỞ PHIÊN — chạy cái này trước mọi thứ khác
+node tools/session.mjs --close  # ĐÓNG PHIÊN — khung HANDOFF + câu commit
+
+node tools/gate.mjs             # tất cả cổng; thoát 1 nếu có lỗi chặn
+node tools/gate.mjs --advice    # kèm phần chỉ nhắc (không chặn)
 node tools/gate.mjs --write     # sinh lại TOC.md
-tools/install-hooks.sh          # cài CẢ HAI hook (một lần mỗi máy / mỗi bản clone)
+node tools/gate.mjs --gates     # in danh sách cổng đang chạy
+node tools/audit.mjs            # chỉ phần lịch học — bản node của auditPlan()
+node tools/learn.mjs            # tóm tắt sổ học; --add / --import / --write / --check
+node tools/gate.test.mjs        # test cho chính bộ cổng
+tools/install-hooks.sh          # cài CẢ BA hook (một lần mỗi máy / mỗi bản clone)
 ```
 
 `install-hooks.sh` phải tồn tại vì **cả `.git/hooks/` lẫn `.claude/` đều không được git
 theo dõi** (`.claude/` nằm trong `.gitignore`), nên hook không tự theo repo về máy mới.
-Nguồn sự thật là `tools/hooks/pre-commit` và `tools/hooks/claude-settings.json` — hai file
-được theo dõi; script chỉ nối chúng vào chỗ git và Claude Code thật sự đọc. Chạy lại nhiều
-lần không sinh hook trùng.
+Nguồn sự thật là `tools/hooks/pre-commit`, `tools/hooks/pre-push` và
+`tools/hooks/claude-settings.json` — các file được theo dõi; script chỉ nối chúng vào chỗ
+git và Claude Code thật sự đọc. Chạy lại nhiều lần không sinh hook trùng.
 
-**Hai lớp tự động, cố ý khác nhau:**
+**Ba lớp tự động, ba thời điểm khác nhau có chủ ý:**
 
 | khi nào | ai chạy | làm gì |
 |---|---|---|
 | **ngay sau mỗi lần Edit/Write** vào file HTML | Claude Code hook `PostToolUse` (`.claude/settings.json` → `tools/hooks/post-edit.sh`) | chạy cổng; trượt thì **đưa lỗi lại cho agent ngay trong lượt đó**; qua thì tự làm mới số dòng trong `TOC.md` |
 | **khi commit** | git `pre-commit` (`tools/hooks/pre-commit`) | chạy cổng; chặn commit; chặn cả việc sửa HTML mà quên `git add TOC.md` |
+| **khi push** | git `pre-push` (`tools/hooks/pre-push`) — **CHẶN** | `gate --ci` + `audit`, và `gate.test` nếu `tools/` có đổi (~20 giây) |
+
+Vì sao cần lớp thứ ba khi đã có `pre-commit`: **push nhánh `main` là deploy GitHub Pages.**
+Sau bước đó lỗi nằm trên web. `pre-commit` bỏ qua được bằng `--no-verify` (đúng và nên có),
+một commit cũ có thể được rebase/cherry-pick vào mà chưa từng qua cổng, và commit merge
+không chạy `pre-commit` chút nào. `pre-push` kiểm **trạng thái cuối** của đúng những gì
+đang được đẩy lên. Bỏ qua có ý thức: `git push --no-verify`.
 
 Lớp thứ nhất mới là lớp quan trọng: một agent sửa 20 lần rồi mới commit một lần, nên bắt
 lỗi ở commit nghĩa là nó phải lần lại 20 bước để tìm chỗ hỏng. Bắt ngay lúc sửa thì nó
 tự sửa trong cùng một lượt, khi còn nhớ mình vừa làm gì.
 
-Ngoài ra: mở trang trong trình duyệt và gõ `auditPlan()` ở Console — nó kiểm những thứ
-cần DOM thật (id trùng, tổng giờ giữa các view). Phải trả về `[]`.
+**`auditPlan()` giờ chạy được bằng node, không cần mở trình duyệt.** Hàm đó vẫn nằm trong
+trang và vẫn tự chạy khi tải trang, nhưng luật của nó đã được viết lại trong
+`tools/plan.mjs` và chạy như cổng `G-PLAN`. Nên `node tools/gate.mjs` bao gồm cả nó.
+
+Vì sao đáng đổi: cổng này là **bắt buộc**, nhưng cách chạy cũ tốn sáu bước tay (chép file
+sang thư mục khác, bật server, mở trang, thêm `?v=n` chống cache, gõ hàm, đọc kết quả). Một
+cổng bắt buộc mà đắt như vậy thì trên thực tế sẽ bị bỏ.
+
+Vẫn nên mở trang bằng mắt khi sửa **giao diện** — cổng không thấy được layout. Luật hình
+thức ở [docs/thiet-ke-trang.md](docs/thiet-ke-trang.md), kèm ba cái bẫy của pane preview.
 
 ---
 
 ## 4. Cổng tự động — máy đã canh, đừng canh lại bằng tay
 
-**Chặn commit:**
+Bảng này phải khớp mảng `GATES` trong `gate.mjs` — cổng `G-DOC` tự đối chiếu và nhắc nếu
+lệch. In danh sách thật bất cứ lúc nào: `node tools/gate.mjs --gates`.
+
+**Chặn commit — 9 cổng:**
 
 | cổng | canh điều gì |
 |---|---|
@@ -140,16 +211,30 @@ cần DOM thật (id trùng, tổng giờ giữa các view). Phải trả về `
 | `G-PAYOFF` | mọi bài có `PAYOFF` (thiếu = đầu bài không có dòng mục tiêu) |
 | `G-NO-DETAILS` | không dùng `<details>` cho kiến thức |
 | `G-FWD` | tiêu chí đạt / deliverable tuần không đòi thứ chưa được dạy |
+| `G-PLAN` | lịch 14 ngày & 8 tuần nhất quán — **bản node của `auditPlan()`**, xem §3 |
 
-**Khuyến nghị (người quyết định):** `G-LAYER` (mục tự khai là nhánh phụ, bài quá dài),
-`G-VIZ` (bài chưa có gì để nhìn), `G-MEASURE` (khổ chữ trôi), `G-FWD` ở mức thân bài.
+**Chỉ nhắc, người quyết định — 10 cổng:**
+
+| cổng | nhắc điều gì |
+|---|---|
+| `G-TOC-STALE` | `TOC.md` còn số dòng cũ (khi commit thì thành lỗi chặn) |
+| `G-LAYER` | mục tự khai là nhánh phụ, hoặc bài dài quá 200 dòng |
+| `G-DUMP` | đoạn văn đọc lại một bảng số thay vì nói ý |
+| `G-VIZ` | bài chưa có hình / bảng / code nào để nhìn |
+| `G-MEASURE` | có `max-width` cứng làm trôi khổ chữ |
+| `G-FWD` | (mức thân bài) dùng khái niệm trước bài dạy nó |
+| `G-NEXT` | bài sau đã đổi → đọc lại câu "bài sau…" trong `PAYOFF` của những bài nó nêu tên |
+| `G-HOOK` | ba lớp tự động ở §3 đã được cài chưa |
+| `G-DOC` | có cổng trong code mà `CLAUDE.md` không nhắc tên |
+| `G-HANDOFF` | đổi trang hoặc bộ cổng mà `HANDOFF.md` không đổi — xem §12 |
+| `G-LEARN` | sổ học đọc được, và **≥2 bài cùng tắc ở một khái niệm** = khái niệm đó dạy quá muộn (§13) |
 
 **Thoát cửa** khi cổng bắt sai một chỗ cố ý: `<!-- gate:main -->` (tiêu đề trông giống
 nhánh phụ nhưng là mạch chính) · `<!-- gate:long: lý do -->` (bài dài đã soát và dài là
 đúng) · `allowEarly` trong `concepts.json` (nhắc tên để định vị). Cả ba **bắt buộc kèm lý
 do nói vì sao cổng bắt sai**, không phải "đã xem rồi". Lỗi CHẶN thật mà chưa sửa thì vào
 `waivers.json` — nó in lại mỗi lần chạy, và đó là điểm khác biệt. Bảng đầy đủ:
-[docs/authoring.md](docs/authoring.md#việc-5--thêm-một-cổng-mới-vào-gatemjs).
+[docs/sua-trang.md](docs/sua-trang.md#việc-6--thêm-một-cổng-mới-vào-gatemjs).
 
 Khuyến nghị phải **gần bằng 0 ở trạng thái ổn định**. Danh sách dài ra là dấu hiệu hoặc
 nội dung đang trôi, hoặc cổng bắt sai — sửa một trong hai, đừng để nó thành tiếng ồn.
@@ -159,7 +244,7 @@ nội dung đang trôi, hoặc cổng bắt sai — sửa một trong hai, đừ
 ## 5. Cổng cần phán đoán — bạn phải tự soi
 
 Máy không kiểm được "giải thích này có làm người ta hiểu không". Rubric đầy đủ, kèm cách
-soi từng cổng: **[docs/content-gates.md](docs/content-gates.md)**. Tám cổng, tóm lại:
+soi từng mục: **[docs/viet-de-hieu.md](docs/viet-de-hieu.md)**. Tám mục, tóm lại:
 
 1. **Đúng** — mọi tuyên bố kiểm chứng được; không câu tuyệt đối; hạn mức của nhà cung cấp
    phải ghi ngày kiểm.
@@ -204,7 +289,14 @@ bắt được một câu "bài sau nói về X" giờ trỏ sai bài.
 ## 7. Mạch chính và mạch phụ
 
 Trang có đúng **ba tầng trình bày**, và việc phân loại là bắt buộc — không có "để tạm ở
-đây rồi tính sau".
+đây rồi tính sau". Một câu để phân biệt:
+
+> **Chính** = không biết thì không đi tiếp được → **hiện đầy đủ trên trang.**
+> **Phụ** = biết thì tốt, bỏ qua vẫn học được bài này → **popup, hoặc drawer nếu có lý do.**
+
+Cách thử: xoá khối này khỏi mạch chính, người học vẫn làm được `ACCEPT` của bài không?
+Vẫn được → phụ. Chi tiết cách chọn vật chứa + sáu dấu hiệu:
+[docs/thiet-ke-trang.md](docs/thiet-ke-trang.md) §1.
 
 | tầng | ở đâu | dùng cho |
 |---|---|---|
@@ -289,15 +381,42 @@ làm việc với ý chính). `G-VIZ` chỉ **liệt kê** bài chưa có gì đ
 Hình phải: (a) chỉ rõ cái gì ánh xạ sang cái gì, (b) có `.ds-viz__alt` mô tả bằng chữ —
 mọi thông tin trong SVG phải đọc được ở đó, (c) kéo được thì tốt hơn tĩnh.
 
-**Khổ chữ: cả trang chỉ được có HAI mép phải.**
+**Khổ chữ: cả trang chỉ được có MỘT mép phải.**
 
-- `--ds-measure` (720px) — mọi dòng chữ chảy
-- hết cột (900px) — bảng, code, hình, card, pager
+Cột nội dung **đúng bằng** khổ chữ, nên chữ, code, card, alert, pager, hộp kết bài đều
+dừng ở cùng một mép. **Bảng là ngoại lệ duy nhất** — nó được tràn ra hai bên tới
+`--ds-wide`, vì đo thật thì bảng rộng tự nhiên trung vị 844px (106/155 bảng vượt khổ
+chữ) trong khi code chỉ 587px (12/175 vượt): cho code tràn theo thì mất mép chung mà
+được rất ít.
 
-Đừng đặt `max-width` cứng ở đâu nữa; `G-MEASURE` bắt. Và **đừng nới `--ds-measure` to
-thêm**: đo thật thì 720px đã là ~105 ký tự một dòng, dài hơn khoảng dễ đọc (45–75). Nếu
-sửa thì sửa theo hướng nhỏ đi. Đơn vị `ch` bị cấm ở đây — nó co theo `font-size`, nên
-`h2` và `<p>` cùng `74ch` lại ra hai mép lệch nhau 200px.
+Bốn con số nằm ở **một khối `:root` duy nhất** đầu `<style>`, mọi thứ khác suy ra bằng
+`calc()`. **Muốn nới trang thì sửa `--ds-measure`, và chỉ sửa nó.**
+
+| token | mặc định | là gì |
+|---|---|---|
+| `--ds-measure` | 720px | khổ chữ **và** bề rộng cột |
+| `--ds-wide` | 900px | bảng được tràn rộng tới đây |
+| `--ds-side` | 330px | `.wb-shell__side`, chỉ để tính chỗ trống |
+| `--ds-gutter` | 20px | lề ngang `.wb-container--pad` |
+
+Suy ra: `--wb-container-max`, alias hai token khổ chữ của kit (`--wb-measure` và
+`--wb-measure-tight` — thiếu cái thứ hai thì đoạn intro trang chủ kẹt ~586px), và
+`--ds-bleed` = mức tràn mỗi bên của bảng, tính bằng `clamp()` trên `100vw`. **Không
+media query** — đó là chủ ý: 1440px tràn đủ 90px/bên, 1100px tràn 0, mobile 375px tràn
+0, và không bề rộng nào gây cuộn ngang.
+
+Đừng đặt `max-width` cứng ở đâu nữa; `G-MEASURE` bắt. Và **đừng nới `--ds-measure` lên
+bằng `--ds-wide`**: đo thật trên trang này (16px, tiếng Việt, 6 đoạn dài) thì 720px ra
+62–90 ký tự/dòng (trung vị 77, trong khoảng dễ đọc 45–90) còn 900px ra 80–119, đã vượt.
+Nới thì nới từng bước và **đo lại**. Đơn vị `ch` bị cấm ở đây — nó co theo `font-size`,
+nên `h2` và `<p>` cùng `74ch` lại ra hai mép lệch nhau 200px.
+
+Ba cái bẫy khi sửa phần tràn của bảng, đã dính đủ cả ba: kit đặt
+`.wb-table-scroll { width: 100% }` nên phải ép `width: auto` (width cố định thì margin
+âm chỉ đẩy khối lệch chứ không nới nó); rule tràn phải là con trực tiếp `>` **và** phải
+đứng sau `.ds-prose .wb-table-scroll { margin: 0 0 16px }` (shorthand `margin` đặt sau
+xoá sạch `margin-inline` đặt trước); drawer và popup phải `--ds-bleed: 0px` vì không có
+chỗ trống hai bên để tràn vào.
 
 ---
 
@@ -315,18 +434,97 @@ sửa thì sửa theo hướng nhỏ đi. Đơn vị `ch` bị cấm ở đây �
 
 ---
 
-## 12. Xong việc thì làm đủ ba bước
+## 12. Đóng phiên
 
 ```bash
-node tools/gate.mjs --advice     # 1. cổng chặn qua; đọc khuyến nghị mới sinh ra
-                                 # 2. mở trang, gõ auditPlan() → phải là []
+node tools/session.mjs --close
+```
+
+Lệnh đó in ra đúng bốn thứ, và bạn không phải tự nhớ cái nào: **những lệnh cần chạy**
+(nó tự biết bạn đã sửa `tools/` hay HTML), **dòng nào đổi thuộc bài nào** (`git diff --stat`
+chỉ nói "HTML +88/−39", một con số vô nghĩa cho file 12k dòng), **khung `HANDOFF.md` điền
+trước**, và **câu commit** theo quy ước dưới.
+
+Ba bước bắt buộc, đều là lệnh, không còn bước nào phải mở trình duyệt (`auditPlan()` đã
+nằm trong cổng `G-PLAN`, xem §3):
+
+```bash
+node tools/gate.mjs --advice     # 1. cổng CHẶN phải qua; đọc phần nhắc mới sinh ra
+node tools/gate.test.mjs         # 2. nếu bạn sửa tools/: test cổng phải xanh
 node tools/gate.mjs --write      # 3. nếu mục lục đổi: sinh lại + git add TOC.md
 ```
 
-Và ghi vào `HANDOFF.md`: đã sửa gì, **cố ý không sửa gì và vì sao**. Mục thứ hai quan
-trọng hơn mục thứ nhất — nó là thứ giữ cho phiên sau không làm lại việc đã cân nhắc và
-bỏ qua.
+### Ghi `HANDOFF.md` — hai mục, và mục thứ hai quan trọng hơn
 
-**Cẩn thận:** file HTML này thỉnh thoảng có nhiều phiên làm việc song song. Trước khi
-sửa, `git log --oneline -3` và `git status`; nếu file đã đổi so với lúc bạn đọc, đọc lại
-vùng sắp sửa trước khi Edit.
+Đã sửa gì, và **cố ý KHÔNG sửa gì, vì sao**. Mục thứ nhất `git log` nói được; mục thứ hai
+thì không ai nói được ngoài bạn — nó là thứ giữ cho phiên sau không cân nhắc lại đúng thứ
+bạn đã cân nhắc và bỏ. Cổng `G-HANDOFF` nhắc khi có đổi trang/bộ cổng mà `HANDOFF.md`
+không đổi.
+
+**Việc còn dở thì để trong mục `## ĐANG LÀM` ở ĐẦU `HANDOFF.md`**, không phải cuối:
+
+- Đúng **một** mục `## ĐANG LÀM` trong file, và nó nằm trên mọi mục `## Phiên …`.
+- `node tools/session.mjs` in nguyên văn mục đó khi mở phiên — đó là lý do nó phải ở đầu.
+- **Xong việc thì đổi tiêu đề nó thành `## Phiên <ngày> (<chữ>)`**, đừng thêm một mục mới:
+  hai mục cùng mô tả một việc là cách nhanh nhất làm `HANDOFF.md` hết đáng tin.
+- Trong mục đó ghi cả **phạm vi đã được chủ trang duyệt** và **câu chưa quyết** — phiên sau
+  cần biết cái gì đã chốt để không hỏi lại.
+
+### Câu commit
+
+Repo đã dùng quy ước này rất nhất quán từ đầu; ghi ra đây để không phải đoán:
+
+```
+<loại>(ds-roadmap): <việc, tiếng Việt, không dấu chấm cuối>
+```
+
+| loại | dùng khi |
+|---|---|
+| `feat` | thêm năng lực cho trang hoặc cho bộ công cụ |
+| `fix` | sửa một lỗi thật (nội dung sai, layout hỏng, cổng bắt sai) |
+| `docs` | chỉ đổi `.md` — kể cả `HANDOFF.md`, `CLAUDE.md`, `TOC.md` |
+| `chore` | công cụ / hook, không đổi gì người đọc thấy |
+
+Scope luôn là `ds-roadmap` (repo có nhiều project; `cashy` dùng scope riêng). Nếu một
+commit chạm cả nội dung lẫn công cụ thì **tách hai commit** — đừng chọn một loại rồi thôi.
+
+**Push là DEPLOY.** Nhánh `main` đẩy lên là GitHub Pages build lại. Hook `pre-push` chạy
+cổng + audit (+ test nếu `tools/` đổi) rồi mới cho đi — mất ~20 giây và nó **chặn thật**.
+
+**Cẩn thận:** file HTML này thỉnh thoảng có nhiều phiên làm việc song song.
+`node tools/session.mjs` phát hiện việc đó ngay ở dòng đầu; nếu file đã đổi so với lúc bạn
+đọc, đọc lại vùng sắp sửa trước khi Edit, và **đừng commit hộ phiên khác**.
+
+---
+
+## 13. Sổ học — phản hồi của người học về chính trang này
+
+Chủ trang **vừa viết trang này vừa học nó**. Phản hồi người-học → người-viết là bằng chứng
+chất lượng nội dung đắt nhất trang có thể có, và nó bay hơi sau mỗi buổi học nếu không có
+chỗ ghi. Chỗ ghi đó là [LEARNING-LOG.md](LEARNING-LOG.md).
+
+**Agent ghi, chủ trang nói.** Không phải file gõ tay — nhật ký học gõ tay chết trong một
+tuần. Ba đường vào:
+
+```bash
+node tools/learn.mjs --add <id> <loại> <nội dung>   # chủ trang nhắc tới một bài khi trò chuyện
+node tools/learn.mjs --import <file .md>            # trộn bản xuất từ nút "Sổ học" trên trang
+node tools/learn.mjs                                # xem đang ở đâu
+```
+
+Sáu loại: `m1` `m2` `m3` (mức) · **`tac`** (chỗ đọc mà không hiểu) · `go` (đã gỡ) · `ghi`.
+
+**Loại `tac` là loại đáng giá nhất trong cả cơ chế này.** Một dòng *"mục 3 của `d-eda`:
+không hiểu datacard để làm gì"* thắng mọi heuristic của `G-VIZ`/`G-LAYER`/`G-DUMP`, vì nó
+có một người đọc thật ở một vị trí cụ thể. Và **≥2 bài cùng tắc ở một khái niệm** là tín
+hiệu mà `concepts.json` không thể tự có: khái niệm đó đang được dạy **muộn hơn chỗ cần
+dùng**. Cổng `G-LEARN` báo đúng việc đó.
+
+Hai luật của file:
+
+1. Mục `## Sổ` là **nguồn** và **chỉ được thêm vào cuối**. Hạ mức cũng là *thêm* một dòng.
+2. Khối `learn:summary` là **sản phẩm** — `learn.mjs --write` sinh lại toàn bộ, đừng sửa tay.
+
+Trên trang, nút **Sổ học** (phím `n`) ghi trực tiếp vào bộ nhớ trình duyệt và xuất ra đúng
+định dạng mục `## Sổ`, nên **xuất → `--import` → nạp lại** là một vòng khép kín, kể cả tiến
+độ đã tick. Bộ nhớ trình duyệt là bản làm việc; `LEARNING-LOG.md` là bản bền có lịch sử git.

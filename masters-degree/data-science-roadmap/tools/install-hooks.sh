@@ -1,29 +1,36 @@
 #!/bin/sh
-# Cài cả HAI lớp tự động cho repo này. Chạy một lần cho mỗi máy / mỗi bản clone:
+# Cài cả BA lớp tự động cho repo này. Chạy một lần cho mỗi máy / mỗi bản clone:
 #
 #   masters-degree/data-science-roadmap/tools/install-hooks.sh
 #
+# Ba lớp, ba thời điểm khác nhau có chủ ý (xem CLAUDE.md §3):
+#   sau mỗi Edit/Write  → Claude Code PostToolUse  → agent tự sửa trong cùng một lượt
+#   lúc commit          → git pre-commit           → không để lỗi vào lịch sử
+#   lúc push            → git pre-push             → push main là DEPLOY, chặn lần cuối
+#
 # Vì sao phải có script: cả .git/hooks/ và .claude/ đều KHÔNG được git theo dõi
 # (.claude/ nằm trong .gitignore), nên hook không thể tự theo repo về máy mới. Nguồn sự
-# thật là hai file được theo dõi trong tools/hooks/; script này chỉ nối chúng vào chỗ
+# thật là các file được theo dõi trong tools/hooks/; script này chỉ nối chúng vào chỗ
 # git và Claude Code thật sự đọc.
 set -e
 HERE=$(cd "$(dirname "$0")" && pwd)
 ROOT=$(git -C "$HERE" rev-parse --show-toplevel)
 
-# ---- 1. git pre-commit ------------------------------------------------------
-SRC="$HERE/hooks/pre-commit"
-DST="$ROOT/.git/hooks/pre-commit"
-chmod +x "$SRC" "$HERE/hooks/post-edit.sh" 2>/dev/null || true
+chmod +x "$HERE/hooks/pre-commit" "$HERE/hooks/pre-push" "$HERE/hooks/post-edit.sh" 2>/dev/null || true
 
-if [ -e "$DST" ] && ! [ -L "$DST" ]; then
-  echo "· đã có $DST (không phải symlink) — KHÔNG ghi đè."
-  echo "  tự thêm dòng này vào hook hiện có:"
-  echo "    sh masters-degree/data-science-roadmap/tools/hooks/pre-commit || exit 1"
-else
-  ln -sf "$SRC" "$DST"
-  echo "✓ git pre-commit → tools/hooks/pre-commit"
-fi
+# ---- 1. git pre-commit + pre-push ------------------------------------------
+for H in pre-commit pre-push; do
+  SRC="$HERE/hooks/$H"
+  DST="$ROOT/.git/hooks/$H"
+  if [ -e "$DST" ] && ! [ -L "$DST" ]; then
+    echo "· đã có $DST (không phải symlink) — KHÔNG ghi đè."
+    echo "  tự thêm dòng này vào hook hiện có:"
+    echo "    sh masters-degree/data-science-roadmap/tools/hooks/$H || exit 1"
+  else
+    ln -sf "$SRC" "$DST"
+    echo "✓ git $H → tools/hooks/$H"
+  fi
+done
 
 # ---- 2. Claude Code PostToolUse --------------------------------------------
 # .claude/ bị gitignore nên phải trộn từ file được theo dõi sang. Dùng jq để KHÔNG đè
