@@ -17,6 +17,116 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 
 ---
 
+## Phiên 2026-08-04 (l) — chốt một chiều cho `.ds-codecap`, và thẩm định một bản review nội dung
+
+Hai việc: (1) chốt chiều cho nhãn tên file `.ds-codecap` (việc mà phiên (k) cố ý hoãn, xem
+mục "Cố ý KHÔNG làm" của nó); (2) thẩm định một báo cáo review kỹ thuật của trang — chủ
+trang hỏi "review này đúng hay sai".
+
+### 1. `.ds-codecap` — chốt **NHÃN DƯỚI** (caption), KHÔNG phải "nhãn trên" như spec khuyến nghị
+
+Đọc cả 33 nhãn: **23/33 vốn đã là nhãn-dưới**, và cả trục dự án (`t-ai`, `pr-code`,
+`pr-eval`, `pr-serve`) đặt tên file **sau** khối code. Chỉ 10 nhãn ở các bài giải-thích
+(`t-env`, `t-online`, `t-colab`, `f-time`, và "bốn cách" của `f-cyclic`) đang là nhãn-trên.
+
+**Chốt nhãn-dưới, tức NGƯỢC khuyến nghị "nhãn trên" trong spec chủ trang gửi.** Bốn bằng
+chứng cho thấy nhãn-dưới mới là ý đồ tác giả, spec đếm "24 sau / 16 trước" nhưng không cân
+ba thứ dưới:
+
+1. **23/33 đã là nhãn-dưới** — nhãn-trên phải dời 23, nhãn-dưới chỉ dời 10.
+2. **Đuôi chú thích tố cáo vai caption**: `— trích`, `· phần so sánh`, `· chạy: uvicorn…`,
+   `(test cho API nằm ở bài sau)`. Đọc là chú thích cho cái *vừa xem*, không phải tiêu đề.
+3. **Bài dự án đã có `<h2>N · src/X.py</h2>` đặt tên file TRƯỚC code** — để nhãn lên trên
+   nữa là lặp tên file ngay cạnh heading.
+4. **Cơ chế CSS**: nhãn-dưới xử được sạch bằng `margin-top` âm (xem dưới); còn "nhãn trên"
+   thì spec nói CSS `margin-bottom: tight` đã sẵn — đúng, nhưng chỉ đúng cho 10 nhãn kia.
+
+Đã dời 10 nhãn giải-thích xuống dưới khối code của chúng. Sau đó **cả 33 nhãn đều đứng ngay
+sau một `</div>` khối code** (kiểm bằng awk: 0 nhãn không có `</div>` liền trên).
+
+**Nhịp lệch (CSS)** — `.ds-prose > .ds-codecap { margin: calc(var(--ds-sp-tight) −
+var(--ds-sp-block)) 0 var(--ds-sp-block) }`. `margin-top` âm = `tight − block`, collapse với
+`margin-bottom: block` của khối code (`.ds-codewrap`) ngay trên → hở còn đúng `tight` (6px);
+hở xuống khối sau = `block` (20px). **Phải đặt ở `.ds-prose > .ds-codecap` (0-2-0)** vì
+`.ds-prose p` (0-1-1) đè base `.ds-codecap` (0-1-0) — lần đầu tôi bỏ rule prose đi và nhịp
+ra ngược (đo được 20/14 thay vì 6/20), thêm lại thì đúng. Popup/drawer cũng là `.ds-prose`
+(rule §324) nên một rule này phủ cả ba nơi.
+
+**Đã đo trên trình duyệt** (`t-env`, nhãn "Colab / Codespaces…"): `gapAbove=6px`,
+`gapBelow=20px`, `margin-top:-14px`, `margin-bottom:20px`. Nhãn popup dùng đúng rule đó.
+
+Chạm vào: `(khung: CSS)` + 10 chỗ dời nhãn trong thân bài · `TOC.md` (số dòng).
+
+**Nếu chủ trang muốn "nhãn trên" như spec:** lật lại là dời 23 nhãn còn lại lên trên khối
+của chúng và đổi CSS về `margin: var(--ds-sp-block) 0 var(--ds-sp-tight)` (bỏ margin âm).
+
+### 2. Thẩm định bản review — phần lớn ĐÚNG, vài chỗ SAI hoặc trang đã tự phòng
+
+Không sửa nội dung theo review trong phiên này (các mục là **quyết định giáo trình**, và §1
+đã là một thay đổi đủ lớn cho một lần push). Kết luận từng ý, để phiên sau / chủ trang xử:
+
+**Đúng, đáng sửa (P0 factual):**
+- `q-forecast` **MASE**: code chia cho `mean_absolute_error(y_true, pred_naive)` = MAE naive
+  **trên tập test**; định nghĩa chuẩn (Hyndman) dùng MAE naive **một bước trên train**. Đang
+  là "relative MAE", gọi tên MASE là sai định nghĩa. → nên đổi mẫu số, hoặc đổi tên chỉ số.
+- `dl-tab` dòng "**Chỉ mạng nơ-ron kết hợp được** [multimodal] trong một mô hình" — sai và
+  **tự mâu thuẫn** với đúng đoạn dưới nó (dạy dùng embedding của NN làm feature cho
+  LightGBM = kết hợp modal trong mô hình không-NN). → nới thành "kết hợp *end-to-end* trong
+  một mô hình thường là NN".
+- `dl-llm` "Transformer decoder-only… đúng **một** nhiệm vụ đoán token; **mọi khả năng nổi
+  lên từ đó**" — bỏ qua post-training (SFT/RLHF) và LLM encoder-decoder. Đơn giản hoá được
+  cho intro, nhưng với nguồn trích luận văn nên hedge một câu.
+
+**Đúng nhưng nhẹ / là tinh chỉnh precision:**
+- `ml-metrics` **AP vs PR-AUC**: `average_precision_score` là **AP**, không phải diện tích
+  hình thang dưới PR. Gọi "PR-AUC" là quy ước phổ biến nhưng thiếu chính xác. **Lưu ý**: đề
+  xuất của review ("tính bằng `auc(recall, precision)`") lại là cách sklearn **khuyên tránh**
+  — nếu sửa thì nên ghi "PR-AUC (Average Precision)", đừng đổi sang `auc`.
+- `f-time`/`d-leak` leakage: review đúng rằng (a) cửa sổ chứa giao dịch hiện tại không tự
+  động là leakage nếu giá trị có sẵn lúc chấm điểm; (b) cùng entity ở train/test chỉ sai nếu
+  triển khai để dự đoán entity **mới**. Trang dạy mặc định bảo thủ (đúng, an toàn) nhưng lý
+  do nêu ra ("sụp khi gặp khách mới") là **tuỳ kịch bản triển khai** — đáng thêm một câu.
+- `q-forecast`/`ml-cv` `gap`: đúng rằng `gap` xử **độ trễ dữ liệu**, không tự biến bài thành
+  "dự báo trước k bước" (horizon nằm ở cách dựng target). Trang có nói rời ở bước 2 quy trình
+  nhưng câu "đặt gap=7 ⇒ dự báo trước 7 ngày" là đơn giản hoá dễ gây nhầm.
+- `ml-loss`/`ml-linear`: "loss không luôn tối ưu bằng GD" — đúng, nhưng trang đã có aside
+  `x-tree-learn`; "khoảng cách logistic↔LightGBM đo interaction" — đúng là đo cả phi tuyến,
+  simplification nhẹ.
+
+**Review SAI hoặc trang đã tự phòng (đừng sửa theo):**
+- `ml-shap`: review nói câu "base + SHAP = **xác suất**" là sai. Nhưng trang viết "= **dự
+  đoán cuối**" (không nói xác suất) — với `TreeExplainer(model_output="raw")` tính cộng đúng
+  ở không gian log-odds, nên trang KHÔNG sai. (Đáng thêm một câu "trục là log-odds, không
+  phải xác suất" cho rõ, nhưng claim của review là đọc nhầm.)
+- `ml-linear`/`m-prob` "hồi quy tuyến tính không đòi predictor phân phối chuẩn": trang KHÔNG
+  hề đòi thế — `m-prob` nói giả định chuẩn "cho khoảng tin cậy của hồi quy", đúng. Review
+  dựng một claim trang không nêu.
+- `dl-tab` "tabular không có cấu trúc": trang nói rõ "cấu trúc **không gian/tuần tự**" và
+  trích **đúng Grinsztajn 2022** — chính nguồn review tự dẫn. Trang đã đúng và có nguồn.
+- **Production/thesis (PSI, latency, retrain, defense)**: review bảo "phải ghi là heuristic".
+  Trang **đã ghi rồi**: PSI "là quy ước ngành… không phải định lý — hãy trích dẫn nguồn"
+  (`pr-monitor`); latency "ngân sách công nghiệp **thường** là 100ms"; defense "con số cụ thể
+  **tuỳ trường**". Và `th-defense` mở đầu "không tuyên bố đọc xong là sẵn sàng bảo vệ".
+- **"Log test metric trong MLflow mâu thuẫn mở-test-một-lần"**: trang không bảo log test mỗi
+  run — MLflow ghi param/val, `final_eval.py` mở test một lần riêng. Đây là lo ngại giả định
+  của review, không phải lỗi trang.
+
+**Mục 2/3 của review (thứ tự bài; cột 1059px; chữ mobile 14px):**
+- 6 khuyến nghị `G-FWD` (leakage/PR-AUC/… dùng trước bài dạy) trùng đúng phần "thứ tự" của
+  review — **nợ giáo trình có sẵn**, là quyết định của chủ trang.
+- Cột **1059px / 152 ký tự/dòng** và **chữ 14–15px** là **quyết định của chủ trang** (§10
+  CLAUDE.md), không phải lỗi. Review khuyên hạ về 70–80ch/chữ to hơn — **đừng tự đổi, phải
+  hỏi**. Ghi ở đây để phiên sau không "sửa theo review".
+
+### Cố ý KHÔNG làm trong phiên này
+
+- **Không sửa nội dung theo review** — xem §2, phần lớn là quyết định giáo trình / đã tự
+  phòng, và trộn vào cùng lần push với §1 là quá tải một commit.
+- **Không đổi `--ds-measure` / `--ds-fs`** dù review nêu — quyết định của chủ trang.
+- **Không đổi tag nhãn** (`<div>` vs `<p class="ds-codecap">` còn lẫn): không thuộc phạm vi
+  "chiều nhãn", và cả hai đều khớp `.ds-prose > .ds-codecap`. Nếu muốn sạch thì đổi 3 chỗ
+  `<div class="ds-codecap">` (`t-online`) sang `<p>`.
+
 ## Phiên 2026-08-04 (k) — token hoá spacing/cỡ nút, một tên cho một bậc chữ, stepper về một loại, drawer 1/3 kéo được
 
 Chủ trang yêu cầu: ba nhóm **chuẩn hoá dùng chung** (chữ / kích thước / margin-padding) và
