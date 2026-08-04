@@ -37,15 +37,18 @@ cổng nào canh, bạn phải tự nhớ.
 | **Đổi tên / thời lượng / ưu tiên một bài** | chỉ `TREE`, rồi sinh lại `TOC.md` | `G-TOC-STRUCT` chặn để bạn xác nhận có ý thức |
 | **Dời một chặng** | xem [việc 3](#việc-3--dời-thêm-hoặc-xoá-một-chặng) — nhiều hơn bạn nghĩ | một phần |
 | **Thêm một nhánh phụ** (popup / ngăn phải) | khối `<template>` của nó, cộng một chip mở nó | `G-ORPHAN` chặn nếu tạo mà không ai mở |
-| **Đổi khổ chữ** | chỉ `--ds-measure`, không sửa gì khác | `G-MEASURE` |
+| **Đổi khổ chữ** | `--ds-measure` **và** `--ds-fs` — xem hàng "Nới cột nội dung" dưới | `G-MEASURE` |
 | **Thêm một lớp phủ mới** (popup / drawer / panel) | thêm id vào `LAYER_IDS` — nếu không thì `Esc` và bấm-ra-ngoài không đóng được nó, và nó không chặn phím `[` `]` | **mắt** |
 | **Thêm một nút bật/tắt** | `wb-btn wb-btn--sm ds-lvlbtn`, bật thì thêm **`is-active`** — một class trạng thái, không hai. Xem [design.md](design.md) §4 | **mắt** |
 | **Thêm một cổng vào `gate.mjs`** | hàng trong mảng `GATES` · bảng §4 của `CLAUDE.md` · một ca NỔ + để nó vào chiều IM ở `gate.test.mjs` | `G-DOC` nhắc nếu `CLAUDE.md` thiếu tên; `gate.test.mjs` in ra cổng nào chưa có ca NỔ |
 | **Thêm một lệnh vào `tools/`** | bảng lệnh ở `CLAUDE.md` §3 · bảng định tuyến §0a · một ca "chạy được" trong `gate.test.mjs` | **mắt** |
 | **Đổi khuôn dòng của `LEARNING-LOG.md`** | `RE_ENTRY`/`RE_GROUP` trong `tools/learn.mjs` **và** `N_RE_ENTRY`/`N_RE_GROUP` trong HTML — hai bản của cùng một ngữ pháp, vì trang không có build nên không import được `.mjs` | **mắt**, và đây là chỗ dễ lệch nhất |
-| **Đổi tên file sổ học tải về** | `a.download` trong HTML **và** `PAT_EXPORT` trong `tools/learn.mjs` — đây là hợp đồng để `--sync` tự tìm được file; lệch một bên là `--sync` báo "không thấy bản xuất nào" | chạy `node tools/learn.mjs --sync` sau khi bấm tải về |
+| **Cần "cao/rộng bằng cửa sổ"** | dùng `--ds-vh` / `--ds-vw`, **không** `vh`/`vw`/`dvh` trần: `zoom` không điều chỉnh đơn vị viewport nên số trần bị co thêm 10% (thanh bên + ngăn phụ + dock từng cụt đúng 10% đáy). Media query cũng vậy — con số phải đã chia zoom | `node tools/gate.test.mjs` có ca canh |
+| **Đặt cỡ chữ cho khối trong `#main`** | `em`, hoặc `calc(var(--ds-fs) * k)`, hoặc token của kit (bốn token đã định nghĩa lại trong `#main`). **Px cứng chỉ đúng ở lớp vỏ** — 13px trong cột 954px là hơn 170 ký tự/dòng | **mắt** + đo lại ký tự/dòng |
+| **Đổi bề rộng dock `Notes`** | `--ds-dock-w` trong `:root` là mặc định fluid; JS chỉ ghi đè khi người dùng KÉO, và reset = **xoá** `localStorage['ds.dockW']` chứ không ghi lại 25% | mở dock, kéo, F5, kiểm bề rộng còn nhớ |
+| **Đổi tên file ghi chú tải về** | `a.download` trong HTML **và** `PAT_EXPORT` trong `tools/learn.mjs` — đây là hợp đồng để `--sync` tự tìm được file; lệch một bên là `--sync` báo "không thấy bản xuất nào" | chạy `node tools/learn.mjs --sync` sau khi bấm tải về |
 | **Nới cột nội dung** | `--ds-measure` **và** `--ds-fs` cùng lúc (§0.2 của [design.md](design.md)), rồi ba chỗ ghi số đo: khối chú thích đầu `<style>`, `CLAUDE.md` §10, `design.md` §0.2 | đo lại ký tự/dòng — **đừng** copy số cũ sang |
-| **Thêm một lớp phủ mới** | `LAYER_IDS` trong HTML (thiếu thì lớp đó không đóng được bằng Esc/bấm-ra-ngoài). Dock sổ học **cố ý không có** trong danh sách đó — xem design.md §0.4 | mở lớp mới rồi bấm Esc |
+| **Thêm một lớp phủ mới** | `LAYER_IDS` trong HTML (thiếu thì lớp đó không đóng được bằng Esc/bấm-ra-ngoài). Dock `Notes` **cố ý không có** trong danh sách đó — xem design.md §0.4 | mở lớp mới rồi bấm Esc |
 | **Đổi một từ ở lớp vỏ trang** | cùng từ đó **trong bài** — hai tên cho một khái niệm là lỗi `CLAUDE.md` §11 | `grep -n '<từ cũ>' data-science-roadmap.html` phải ra 0 (hoặc chỉ còn chỗ nêu tên tiếng Anh một lần) |
 
 **Ba chỗ không cổng nào bắt được** — chúng là văn xuôi, máy không đọc được nội dung:

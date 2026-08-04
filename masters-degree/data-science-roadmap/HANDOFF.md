@@ -17,6 +17,190 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 
 ---
 
+## Phiên 2026-08-04 (h) — cột bằng bề rộng bảng, chữ fluid, hết cụt 10% vì zoom, `Notes` mới
+
+Phiên (g) để lại ba lỗi mà chủ trang thấy ngay: thanh bên và dock cụt đáy, cột vẫn hẹp,
+và cái panel ghi chú tên là "Sổ học". Phiên này sửa cả ba, và **hai con số đo được ghi ở
+(g) là đo sai** — chỗ đó quan trọng hơn cả ba việc trên, xem §2.
+
+### 1. `zoom` không điều chỉnh đơn vị viewport — lần thứ hai
+
+Phiên (g) đã biết cái bẫy này (công thức `--ds-bleed` chia `--ds-zoom`) nhưng chỉ sửa
+**một** chỗ. Còn lại: kit đặt `--wb-shell-h: 100dvh` và `.wb-drawer { height: 100vh }`, nên
+dưới `zoom:.9` **thanh bên + ngăn phụ + dock đều cao đúng 90% cửa sổ**. Đo: thanh bên
+597,6px trong khi chỗ trống là 669,6px.
+
+Sửa theo *lớp*, không theo từng chỗ: hai token `--ds-vh` / `--ds-vw` = `calc(1vh|1vw / zoom)`,
+rồi override `--wb-shell-h` (kit tự ghi chú "override if the page is zoomed") và **`.wb-drawer`**
+— sửa ở lớp nên cả ngăn phụ lẫn dock đúng theo cùng lúc. Cộng `.ds-mathmodal` (94vw/72vh),
+`.ds-drawer` (94vw), `--ds-bleed`.
+
+Hai thứ cùng gốc, cũng đã sửa:
+- **Media query** so với `viewport / zoom`, nên `min-width: 1200px` thật ra là ngưỡng
+  **1080px thật** → đổi thành `1333px`. Ở 1080px, cột sau khi nhường chỗ dock còn ~38 ký
+  tự/dòng, dưới sàn 45.
+- `getBoundingClientRect()`/`clientX` là px **sau** zoom, `getComputedStyle().width` là px
+  **cục bộ**. Luật cho code kéo dock: từ chuột vào CSS thì **chia**, từ CSS ra chuột thì **nhân**.
+
+Không có cổng nào bắt được loại lỗi này (nó là con số đúng cú pháp mà sai nghĩa), nên nó
+thành **một ca test** trong `gate.test.mjs`: không `vh|vw|dvh` trần nào trong `<style>`
+ngoài hai token, cộng in ra cả 5 ngưỡng media query mỗi lần chạy.
+
+Chạm vào: `(khung: CSS)` · `tools/gate.test.mjs`
+
+### 2. Hai con số ký tự/dòng ở (g) là ĐO SAI — và bản 860/18 đã ở ngoài khoảng dễ đọc
+
+Phiên (g) ghi "860px/18px → trung vị 81 ký tự/dòng". Đo lại: **100–103**. Bản đo cũ gom ký
+tự theo `top` với ngưỡng quá rộng nên gộp hai dòng thành một. Cách kiểm chắc chắn — và giờ
+là cách bắt buộc, ghi ở `design.md` §0.2: **in thẳng chuỗi của từng dòng ra rồi đếm tay.**
+Một dòng ở 774px/18px chứa đúng 100–103 ký tự, đọc được bằng mắt trong console.
+
+Nghĩa là bản (g) **đã ở ngoài khoảng 45–90**, nên lần nới này không phải "đánh đổi rộng lấy
+dễ đọc" mà tốt hơn ở cả hai: `--ds-measure` 860 → **1060px** (đúng bề rộng `.wb-table-scroll`
+mà chủ trang lấy làm mốc: 1060 × 0,9 = 954px hiện ra) và `--ds-fs` 18 → **28px**, trung vị
+tụt 102 → **84**.
+
+`--ds-fs` giờ là **`clamp(17px, …, 28px)`** — cột co theo cửa sổ nên chữ phải co theo, nếu
+không thì điện thoại 375px còn 30 ký tự/dòng (dưới sàn 45). Đo ba đầu: 375px → 47 · 1000px
+→ 66 · 1440px → 84. `--ds-wide` 1060 → 1260px để bảng vẫn còn chỗ tràn.
+
+Việc đi kèm, và nó lớn hơn hai token: **cỡ chữ trong cột bài không được là px cứng.** Cột
+954px mà một đoạn 13px thì hơn 170 ký tự/dòng. ~35 lớp `ds-*` đọc bốn token chữ của kit
+(12–15px cứng), nên sửa **ở token**, trong `#main`:
+`--wb-text-title/-body/-help/-caption = calc(var(--ds-fs) * .84/.78/.72/.67)` — giữ đúng tỉ
+lệ mà thiết kế cũ đã chọn (15/18, 14/18, 13/18, 12/18), nên không có gì đổi *tương đối*.
+Đặt ở `#main` chứ không `.ds-prose` vì dải mục tiêu, breadcrumb, chip, hộp kết bài, pager
+nằm ngoài `.ds-prose` nhưng vẫn thuộc cột bài. Cộng 6 chỗ px cứng còn lại (`.ds-code`,
+`.ds-accept__tag`, `.ds-mx__c`, `.ds-map__badge`, `.ds-leaf__m`, `kbd`) → `calc()`.
+
+**Dùng `calc()`, không dùng `em`** cho token: `em` trong custom property được giải ở *chỗ
+dùng*, nên hai lớp lồng nhau cùng đọc token sẽ nhân dồn (`.ds-fam dt` ra 12,5px thay vì 17,4px).
+
+Chạm vào: `(khung: CSS)`
+
+### 3. Dock `Notes`: mặc định 1/4 cửa sổ, kéo được
+
+`--ds-dock-w` từ `380px` cố định → `clamp(300px, calc(25 * var(--ds-vw)), 640px)`. Vì sao %:
+dock lấy chỗ của cột bài, nên "bao nhiêu là đủ" phụ thuộc cửa sổ — 380px là 30% cột trên màn
+1280 và 15% trên màn 2560. Mặc định do **CSS** tính, không phải JS, nên người chưa từng kéo
+thì đổi cửa sổ vẫn luôn được đúng 1/4.
+
+Tay kéo `.ds-dockgrip` ở mép trái: `role="separator"` + `tabindex` + `aria-valuemin/max/now/`
+`valuetext`, ←/→ 16px (Shift ×4), Home/End hai đầu, nhấn đúp về mặc định. Bàn phím là bắt
+buộc — một tay kéo chỉ chuột dùng được thì nó không phải điều khiển, nó là cái bẫy.
+
+Ba chi tiết đã phải sửa sau khi thử:
+- **Không `setPointerCapture`** — nó ném khi pointerId không phải con trỏ thật, nên bản đầu
+  im lặng không kéo được và *không kiểm được bằng script*. Đổi sang cờ + listener trên
+  `window` (cũng là thứ giữ cho việc kéo không đứt khi chuột ra ngoài dock).
+- **Đọc bề rộng bằng `getComputedStyle`**, không bằng rect: rect ra **0** khi dock đang
+  đóng (`.wb-overlay` là `display:none`).
+- **Reset = XOÁ `localStorage['ds.dockW']`**, không phải ghi lại 25% — để mặc định fluid
+  quay về đúng nghĩa mặc định.
+
+Tay kéo chỉ hiện vạch khi hover, nên **phụ đề dock phải nói ra rằng mép trái kéo được**.
+
+Chạm vào: `(khung: CSS / script)`
+
+### 4. `Sổ học` → `Notes`
+
+Người dùng chỉ đang ghi một note; `LEARNING-LOG.md` / `## Sổ` / `G-LEARN` là cơ chế bên
+dưới và không nên lộ ra ở lớp vỏ. Ranh giới đã ghi ở `design.md` §0.1 và `CLAUDE.md` §11:
+**tên panel** = `Notes`; **mọi câu nói về nó** = tiếng Việt, dùng từ "ghi chú"; **tên cơ
+chế** giữ nguyên (đường dẫn và cú pháp file, không phải nhãn giao diện).
+
+Đây là **ngoại lệ duy nhất** của luật lớp-vỏ-tiếng-Việt, và nó được ghi ở cả hai chỗ đúng
+để phiên sau không "sửa cho đúng luật" thành `Ghi chú`.
+
+### 5. Thiết kế lại panel `Notes` — sáu chỗ, mỗi chỗ một lý do
+
+Chủ trang chỉ ra bốn thứ; sửa thành sáu vì hai trong số đó có cùng gốc.
+
+**a. Một danh sách, không lọc theo bài đang mở.** Bản trước mặc định lọc "Bài này", nên đổi
+bài là danh sách trông như vừa bị xoá sạch. Ghi chú là của cả quá trình học, không phải của
+một trang. Bỏ hẳn cặp nút lọc và biến `noteFilter`; mỗi dòng **luôn** mang tên bài, và tên
+đó là link mở bài — bấm nó **giữ panel mở**, vì bạn bấm sang bài đó chính vì muốn xem lại
+chỗ đã ghi.
+
+**b. Hàng, không phải thẻ.** Mỗi ghi chú từng là thẻ có nền riêng + viền quanh + mép trái 3px
+màu theo loại + bo góc một bên: bốn thứ trang trí cho một dòng chữ, và trong một dock hẹp
+chúng cộng lại thành nhiễu. Giờ là hàng phẳng ngăn nhau bằng một vạch. Loại vẫn được nói hai
+lần (điểm màu + chữ) cho người không phân biệt được màu, **nhưng chỉ với `tắc` và `gỡ`** —
+`ghi` là mặc định nên nó không có nhãn nào.
+
+**c. Số trên nút không còn là badge.** Viên đặc màu nghịch đảo là ngôn ngữ của "có việc chưa
+xử lý"; ghi chú của chính mình không phải việc tồn, nên viên đó vừa xấu vừa nói sai. Giờ là
+một con số sau nhãn, ngăn bằng vạch mảnh: `Notes · 3`. Tôi đã thử tô nó vàng khi có chỗ tắc
+rồi **bỏ** — con số là *tổng*, tô nó theo 2/5 dòng là để màu nói sai về chính con số nó đứng
+cạnh. Số chỗ tắc nói ở tiêu đề mục "Đã ghi" và ở tooltip nút.
+
+**d. Hai cái "line mỏng mỏng" — cùng một loại lỗi.** Tay kéo dock là vạch 1px chỉ hiện khi
+hover; góc dưới-phải ô ghi là tay kéo chéo mặc định của trình duyệt. Cả hai là *affordance*
+mà trang không kiểm soát được hình. Sửa: tay kéo thành **viên 5×44px luôn thấy** (hover thì
+đổi màu + dài ra, **không** đổi bề rộng — đổi bề rộng thì nó nhảy ngang đúng lúc con trỏ vừa
+tới); ô ghi thành `resize: none` + **tự cao dần** theo chữ, nên cái tay kéo chéo biến mất.
+
+**e. Ô "bài đang mở" bỏ hộp.** Nó là hộp viền + nền `surface-2` nên đọc như một input bị vô
+hiệu hoá, mà nó không nhận chữ. Tiêu đề mục ngay trên đã nói vai của nó.
+
+**f. Sửa/xoá chỉ hiện khi hover hoặc `:focus-within`.** Hai nút × 20 ghi chú = 40 nút cạnh
+chữ. `@media (hover: none)` cho chúng hiện sẵn trên màn cảm ứng.
+
+Đã kiểm bằng 5 ghi chú mẫu ở 5 bài khác nhau: bấm tên bài → đổi bài, panel vẫn mở, danh sách
+**không đổi** (5/5), ô ghi chuyển sang bài mới · nút hành động opacity 0 → 1 khi có tiêu điểm
+bàn phím · ô ghi 70 → 125px rồi thu lại 70px · cả sáng lẫn tối.
+
+Chạm vào: `(khung: CSS / script)`
+
+### Đã kiểm
+
+| bề rộng | chữ | cuộn ngang | thanh bên | cột | bảng | dock |
+|---|---|---|---|---|---|---|
+| 1440 | 28px | 0 | 849,6 = đủ | 954 | 1085 (tràn) | 360 = 1/4 · thân trang nhường chỗ (pad 400) |
+| 1200 | 26,7px | 0 | 769,6 = đủ | 856 | 856 | 300 · nằm đè (ngưỡng `1333` rơi ngay trên 1200) |
+| 1000 | 24,4px | 0 | 709,6 = đủ | 656 | 656 | 270 · nằm đè (đúng) |
+| 375 | 17px | 0 | 812 = cả màn | 339 | 339 | 270 · nằm đè |
+
+Cả sáng và tối. Kéo dock: 1:1 với chuột, kẹp đúng ở min, nhớ qua F5, nhấn đúp về 1/4.
+Console không lỗi. Cổng CHẶN qua · 7 khuyến nghị (6 `G-FWD` ổn định + `G-TOC-STALE`) ·
+`gate.test.mjs` **47 đạt / 0 trượt** · `audit` nhất quán.
+
+### Cố ý KHÔNG làm trong phiên này
+
+- **Không nới cột thêm nữa.** 1060px là *đúng* con số chủ trang chỉ vào (bề rộng
+  `.wb-table-scroll` ở `#/s-how` trên cửa sổ ~1440 = 954px hiện ra). Nới nữa thì phải nới
+  `--ds-fs` lên >28px, và mỗi bước nới là bớt số dòng thấy được trên một màn hình.
+- **Không thu `--ds-side` (330px) để cột rộng thêm.** Cây lộ trình 84 bài là thứ điều hướng
+  chính; 330px đã là mức mà tên bài dài phải gói 2 dòng.
+- **Không cho code/card tràn ra hai bên như bảng.** Đo lại 2026-08-04: 26/26 bảng có
+  `scrollWidth == clientWidth` (bảng của kit là `width:100%`, ô gói dòng chứ không cuộn),
+  nên tràn chỉ mua được "ô bớt gói dòng". Cho code tràn theo là mất mép chung mà được rất ít.
+- **Không đổi cỡ chữ trong popup / ngăn phụ** (vẫn `--ds-fs: 16px`). Chúng hẹp (549–620px
+  hiện ra) nên 16px cho ~80 ký tự/dòng — đúng khoảng. Chữ ở đó nhỏ hơn thân bài nhiều là
+  *chủ ý*: nó nói "đây là nhánh phụ".
+- **Không đưa luật `vh/vw` thành một CỔNG.** Nó không phải lỗi cấu trúc mà là một con số
+  đúng cú pháp sai nghĩa; đặt thành cổng thì phải thêm tên vào `CLAUDE.md` §4 và một ca
+  NỔ/IM cho `G-DOC`, mà giá trị y hệt một ca test. Để ở `gate.test.mjs`.
+- **Không nhớ trạng thái mở/đóng của dock** (chỉ nhớ *bề rộng*). Mở trang ra mà đã có một
+  cái panel chiếm 1/4 màn hình là quyết định hộ người đọc.
+- **Không nhóm danh sách ghi chú theo bài** (kiểu tiêu đề bài rồi các ghi chú dưới nó). Đã
+  cân nhắc: nó làm mất thứ tự thời gian, mà "hôm nay tôi tắc ở đâu" là câu hay hỏi hơn "bài
+  này tôi từng tắc ở đâu". Tên bài trên từng dòng đã đủ để lọc bằng mắt.
+- **Không thêm ô tìm trong ghi chú.** Với vài chục dòng thì cuộn nhanh hơn gõ. Thêm khi số
+  ghi chú vượt ~50, không thêm trước.
+- **Không sửa `.ds-viz__alt`** cho ngắn dòng lại. Nó là mô tả bằng chữ của hình, đọc một
+  lần, không đọc theo dòng — 114 ký tự/dòng ở đó là chấp nhận được, và cách duy nhất để
+  ngắn hơn là cho nó một mép phải riêng, tức phá luật một-mép.
+
+### Còn nợ của riêng phiên này
+
+- Bảng trong bài giờ **cao hơn** (chữ +55% mà `width:100%` nên ô gói nhiều dòng hơn): một
+  bảng ở `s-families` cao 839px. Chưa soát bài nào có bảng dài quá một màn hình.
+- `--ds-fs` là `clamp()` nhưng `--ds-measure` vẫn là một số cứng — cột chỉ hẹp lại khi HẾT
+  chỗ (dưới ~1287px thật). Hai đường cong không khớp hoàn hảo, nên ký tự/dòng không phẳng
+  theo cửa sổ mà đi 47 → 63 → 80 → 84 từ 375px tới 1440px. Vẫn trong khoảng 45–90 ở mọi
+  bề rộng đã đo, nên chưa đáng làm `--ds-measure` fluid theo.
+
 ## Phiên 2026-08-04 (g) — khổ trang rộng ra, lớp vỏ nói tiếng Việt, sổ học thành dock
 
 Sáu việc, tất cả do chủ trang nêu trong một lượt. Trạng thái cuối: **cổng CHẶN qua · 7

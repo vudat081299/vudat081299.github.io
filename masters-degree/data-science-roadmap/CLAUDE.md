@@ -38,10 +38,11 @@ Rồi tìm việc mình định làm trong bảng này:
 | **đổi giao diện, thêm nút, thêm component** | **[docs/design.md](docs/design.md)** · §7 · §10 | mở trang, kiểm **cả sáng lẫn tối** | `G-MEASURE` im · hai chế độ đều đọc được |
 | **đổi chữ ở thanh trên / thanh bên / chân trang** | [docs/design.md](docs/design.md) **§0.1** (lớp vỏ nói tiếng Việt) | mở trang | không còn chữ tiếng Anh nào ngoài tên icon |
 | **nới cột / đổi cỡ chữ / đổi zoom** | [docs/design.md](docs/design.md) **§0.2–0.3** · §10 | đo lại ký tự/dòng (cách đo ở §0.2) | trung vị ≤ 85 · 1440/1200/375px không cuộn ngang |
+| **dùng chiều cao / bề rộng cửa sổ** | [docs/design.md](docs/design.md) **§0.3** (bẫy zoom + đơn vị viewport) | `node tools/gate.test.mjs` | không có `vh`/`vw`/`dvh` trần — dùng `--ds-vh` / `--ds-vw` |
 | **chuyển một khối ra ngoài mạch chính** | §7 · [docs/design.md](docs/design.md) §1 | `gate.mjs --advice` | popup là mặc định; chọn drawer thì phải viết ra lý do |
 | **sửa lịch 8 tuần / 14 ngày** | §8 · [docs/editing.md](docs/editing.md) việc 4 | `node tools/audit.mjs` | `G-PLAN` qua |
 | **thêm / sửa một cổng** | §4 · [docs/editing.md](docs/editing.md) việc 6 | `node tools/gate.test.mjs` | test xanh · thêm tên cổng vào §4 (`G-DOC` bắt) |
-| **ghi việc học của mình** | [LEARNING-LOG.md](LEARNING-LOG.md) | `learn.mjs --add` hoặc nút **Sổ học** trên trang | `learn.mjs --check` im |
+| **ghi việc học của mình** | [LEARNING-LOG.md](LEARNING-LOG.md) | `learn.mjs --add` hoặc nút **Notes** trên trang | `learn.mjs --check` im |
 | **đóng phiên / commit / push** | §12 | `node tools/session.mjs --close` | HANDOFF đã ghi · `G-HANDOFF` im |
 
 Ba file docs, ba câu khác nhau — đừng đọc sai file:
@@ -54,7 +55,7 @@ Ba file docs, ba câu khác nhau — đừng đọc sai file:
 
 ## 0. Đừng mở file HTML để tìm hiểu
 
-`data-science-roadmap.html` là **12k dòng, 0,87 MB**. Đọc cả file tốn ~250k token và gần
+`data-science-roadmap.html` là **13,7k dòng, 0,95 MB**. Đọc cả file tốn ~250k token và gần
 như luôn là việc vô ích.
 
 Thứ tự đọc đúng:
@@ -307,7 +308,7 @@ Vẫn được → phụ. Chi tiết cách chọn vật chứa + sáu dấu hi�
 | **ngăn phải** `data-aside` | drawer bên phải | **chỉ khi cần đọc SONG SONG với mạch chính** |
 
 Ba tầng trên đều là chỗ **đọc**, nên cả ba đều là lớp phủ: mở ra thì trang phía sau bị
-chặn. **Sổ học là tầng thứ tư** và luật ngược lại — nó là chỗ *viết về* cái đang đọc, nên
+chặn. **`Notes` là tầng thứ tư** và luật ngược lại — nó là chỗ *viết về* cái đang đọc, nên
 mở ra thì trang vẫn phải cuộn được, bấm được, chọn chữ được (dock, không phải lớp phủ).
 Đó là tầng duy nhất kiểu này, và thêm tầng thứ năm thì phải viết ra lý do:
 [docs/design.md](docs/design.md) §0.4.
@@ -397,37 +398,50 @@ dừng ở cùng một mép. **Bảng là ngoại lệ duy nhất** — nó đư
 chữ) trong khi code chỉ 587px (12/175 vượt): cho code tràn theo thì mất mép chung mà
 được rất ít.
 
-Bảy con số nằm ở **một khối `:root` duy nhất** đầu `<style>`, mọi thứ khác suy ra bằng
+Chín con số nằm ở **một khối `:root` duy nhất** đầu `<style>`, mọi thứ khác suy ra bằng
 `calc()`. **Muốn nới trang thì sửa `--ds-measure` VÀ `--ds-fs`** — hai cái này đi cùng
 nhau, xem ngay dưới bảng.
 
 | token | mặc định | là gì |
 |---|---|---|
-| `--ds-measure` | 860px | khổ chữ **và** bề rộng cột |
-| `--ds-wide` | 1060px | bảng được tràn rộng tới đây |
+| `--ds-measure` | 1060px | khổ chữ **và** bề rộng cột |
+| `--ds-wide` | 1260px | bảng được tràn rộng tới đây |
 | `--ds-side` | 330px | `.wb-shell__side`, chỉ để tính chỗ trống |
 | `--ds-gutter` | 20px | lề ngang `.wb-container--pad` |
-| `--ds-fs` | 18px | cỡ chữ thân bài — **đi cùng `--ds-measure`** |
-| `--ds-zoom` | .9 | trang tự mở ở 90%; zoom trình duyệt nhân thêm lên |
-| `--ds-dock-w` | 380px | bề rộng dock sổ học; thân trang nhường đúng chỗ này |
+| `--ds-fs` | `clamp(17px, …, 28px)` | cỡ chữ thân bài — **đi cùng `--ds-measure`** |
+| `--ds-zoom` | .9 | co **lớp vỏ** 10%; zoom trình duyệt nhân thêm lên |
+| `--ds-dock-w` | 1/4 cửa sổ | bề rộng dock `Notes`, kéo được; thân trang nhường đúng chỗ |
+| `--ds-vh` / `--ds-vw` | `1vh|1vw / zoom` | 1% cửa sổ **thật** — xem ngay dưới |
+
+**`zoom` không điều chỉnh đơn vị viewport, và đó là cái bẫy đã cắn hai lần.** Lần đầu:
+công thức tràn bảng mất 10% mức tràn. Lần hai: kit đặt `--wb-shell-h: 100dvh` và
+`.wb-drawer { height: 100vh }`, nên thanh bên + ngăn phụ + dock **cụt đúng 10% đáy**. Luật
+bây giờ: **không viết `vh`/`vw`/`dvh` trần trong trang này**, dùng `--ds-vh` / `--ds-vw`.
+Media query cũng so với `viewport / zoom` — trang có 5 ngưỡng (bốn cái `560px` cho lớp vỏ
+trên điện thoại, một cái `1333px` = **1200px thật** cho việc nhường chỗ dock), và số ở đó
+phải là số ĐÃ CHIA. `gate.test.mjs` in cả 5 ngưỡng ra mỗi lần chạy để không ai thêm một
+cái thứ sáu mà quên chia.
 
 Suy ra: `--wb-container-max`, alias hai token khổ chữ của kit (`--wb-measure` và
-`--wb-measure-tight` — thiếu cái thứ hai thì đoạn intro trang chủ kẹt ~586px), bậc tiêu
-đề + cỡ chữ bảng + `.wb-help` trong bài (đặt bằng `em` nên giãn theo `--ds-fs`), và
-`--ds-bleed` = mức tràn mỗi bên của bảng, tính bằng `clamp()` trên `100vw / --ds-zoom`.
-**Không media query** — đó là chủ ý: 1440px tràn đủ 100px/bên, 1200px tràn một phần,
-mobile 375px tràn 0, và không bề rộng nào gây cuộn ngang.
+`--wb-measure-tight` — thiếu cái thứ hai thì đoạn intro trang chủ kẹt ~586px), **bốn token
+chữ của kit được định nghĩa lại trong `#main`** (`--wb-text-title/-body/-help/-caption` =
+`calc(var(--ds-fs) * .84/.78/.72/.67)`, vì ~35 lớp `ds-*` đọc chúng và px cứng 13px trong
+cột 954px là hơn 170 ký tự/dòng), bậc tiêu đề + cỡ chữ bảng + `.wb-help` (đặt bằng `em`),
+và `--ds-bleed` = mức tràn mỗi bên của bảng, tính bằng `clamp()` trên `100 * --ds-vw`.
 
 **Nới cột thì phải nới chữ.** Số ký tự/dòng = bề rộng cột ÷ bề rộng một chữ, nên đổi một
-token mà giữ token kia là tự đẩy độ dài dòng ra ngoài khoảng dễ đọc 45–90. Đo thật (chỉ
-tính **dòng đầy**): 720/16px → trung vị 75 · **860/18px → 81** · 860/17px → 83 ·
-900/17px → 89 (vượt) · 900/16px → 93. Cách đo lại và ba luật lớp vỏ khác (ngôn ngữ, zoom,
-dock) ở **[docs/design.md](docs/design.md) §0** — đọc đó trước khi nới.
+token mà giữ token kia là tự đẩy độ dài dòng ra ngoài khoảng dễ đọc 45–90 (tiếng Việt nên
+nhắm **nửa dưới**: từ ngắn hơn nên cùng số ký tự là nhiều từ hơn). Đo thật ở cửa sổ 1440px,
+chỉ tính **dòng đầy**: 860/18px → trung vị **102** (bản trước, đã vượt trần) · 1060/26px →
+91 · 1060/27px → 88 · **1060/28px → 84** ✓. `--ds-fs` là `clamp()` nên 28px chỉ là đầu
+rộng: 375px → chữ 17px, trung vị 47. Cách đo lại (và vì sao hai con số 75/81 ghi ở đây
+trước kia là **đo sai**) cùng ba luật lớp vỏ khác ở **[docs/design.md](docs/design.md) §0**
+— đọc đó trước khi nới.
 
 Đừng đặt `max-width` cứng ở đâu nữa; `G-MEASURE` bắt. Đơn vị `ch` bị cấm ở đây — nó co
-theo `font-size`, nên `h2` và `<p>` cùng `74ch` lại ra hai mép lệch nhau 200px. Và đừng
-dùng token px của kit cho cỡ chữ trong bài: `--wb-text-body` là 14px, nhỏ hơn thân bài,
-nên `h4` từng nhỏ hơn chính đoạn văn nó đứng đầu.
+theo `font-size`, nên `h2` và `<p>` cùng `74ch` lại ra hai mép lệch nhau 200px. Và **đừng
+đặt px cứng cho cỡ chữ trong `#main`**: dùng `em` hoặc `calc(var(--ds-fs) * k)`. Px cứng
+chỉ đúng ở lớp vỏ, ngoài `#main`.
 
 Ba cái bẫy khi sửa phần tràn của bảng, đã dính đủ cả ba: kit đặt
 `.wb-table-scroll { width: 100% }` nên phải ép `width: auto` (width cố định thì margin
@@ -453,6 +467,12 @@ chỗ trống hai bên để tràn vào.
   dòng ngay trên cấm (đã làm với `workload` → `khối lượng`, nêu tên tiếng Anh một lần ở
   trang chủ). Danh sách chỗ nào là "lớp vỏ" + cách tự kiểm:
   [docs/design.md](docs/design.md) §0.1.
+- **Ngoại lệ duy nhất của luật trên: panel ghi chú tên là `Notes`.** Tên "Sổ học" mô tả
+  *cơ chế* (`LEARNING-LOG.md`, `## Sổ`, `G-LEARN`) chứ không mô tả việc người dùng đang
+  làm — họ chỉ đang ghi một note. Ranh giới: **tên panel** = `Notes`; **mọi câu nói về nó**
+  = tiếng Việt và dùng từ **ghi chú**; **tên cơ chế** giữ nguyên (đường dẫn và cú pháp file,
+  không phải nhãn giao diện). Đừng "sửa lại cho đúng luật" — đây là quyết định của chủ
+  trang, ghi ở [docs/design.md](docs/design.md) §0.1.
 - Viết tắt và khái niệm khó: giải thích tại chỗ, hoặc `title=` để hover, hoặc chip popup
   `data-math`. Đừng để người đọc phải rời bài đi tra.
 - `r-glossary` là bảng tra, **không** phải chỗ thay cho việc định nghĩa tại chỗ.
@@ -522,7 +542,7 @@ cổng + audit (+ test nếu `tools/` đổi) rồi mới cho đi — mất ~20 
 
 ---
 
-## 13. Sổ học — phản hồi của người học về chính trang này
+## 13. Sổ học (`Notes` trên trang) — phản hồi của người học về chính trang này
 
 Chủ trang **vừa viết trang này vừa học nó**. Phản hồi người-học → người-viết là bằng chứng
 chất lượng nội dung đắt nhất trang có thể có, và nó bay hơi sau mỗi buổi học nếu không có
@@ -550,14 +570,14 @@ Hai luật của file:
 1. Mục `## Sổ` là **nguồn** và **chỉ được thêm vào cuối**. Hạ mức cũng là *thêm* một dòng.
 2. Khối `learn:summary` là **sản phẩm** — `learn.mjs --write` sinh lại toàn bộ, đừng sửa tay.
 
-Trên trang, nút **Sổ học** (phím `n`) ghi trực tiếp vào bộ nhớ trình duyệt và xuất ra đúng
+Trên trang, nút **Notes** (phím `n`) ghi trực tiếp vào bộ nhớ trình duyệt và xuất ra đúng
 định dạng mục `## Sổ`, nên **tải về → `--sync` → khôi phục** là một vòng khép kín, kể cả
 tiến độ đã tick. Bộ nhớ trình duyệt là bản làm việc; `LEARNING-LOG.md` là bản bền có lịch
 sử git.
 
 **Trang KHÔNG tự ghi được vào `LEARNING-LOG.md`** — nó là một file HTML tĩnh, không có
 server, và thường được mở từ GitHub Pages nên còn khác cả origin. Nên đường đi bắt buộc là
-*trang → file tải về → repo*, đúng hai bước, và cả hai đều hiện trên panel sổ học. Việc duy
+*trang → file tải về → repo*, đúng hai bước, và cả hai đều hiện trên panel `Notes`. Việc duy
 nhất bỏ được là bắt người dùng tự tìm file: `--sync` quét `~/Downloads` (rồi Desktop, thư
 mục trang, gốc repo), lấy bản **mới nhất**, trộn vào. Trộn là idempotent nhờ khoá lọc trùng
 nên chạy lại bao nhiêu lần cũng không sinh dòng thừa — không cần đánh dấu "file đã nạp".
