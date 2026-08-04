@@ -548,6 +548,19 @@
      cột nội dung bên phải chưa phải nhường chỗ. Rộng hơn nữa thì mục lục bắt đầu
      tranh chú ý với bài đang đọc. */
   .wb-shell { --wb-sidenav-w: 330px; }
+  /* macOS phủ thanh cuộn NỔI lên mép phải: với padding phải 12px của kit, cột phút
+     (r/x/d) ở đuôi mỗi hàng trong cây bị thanh cuộn che. Nới mép phải để nội dung
+     tránh hẳn ra khỏi vùng thanh cuộn. Chủ trang báo 2026-08-04. */
+  #sidenav { padding-right: 22px; }
+  /* Lớp vỏ điều hướng — thanh trên, thanh bên (mục lục), chân trang — KHÔNG cho bôi
+     đen chữ: đó là chỗ để BẤM, không phải chỗ để chép. Ô tìm kiếm là ngoại lệ, vì người
+     dùng gõ và sửa chữ trong đó. Chủ trang chốt 2026-08-04. */
+  .wb-navbar, .wb-shell__side, .wb-footer { -webkit-user-select: none; user-select: none; }
+  #searchBox { -webkit-user-select: text; user-select: text; }
+  /* Nút xoá ô tìm kiếm chỉ hiện khi ô có chữ. `[hidden]` một mình KHÔNG ẩn được vì
+     `.wb-input-group__btn` của kit đặt display:inline-flex (0-1-0) đè lên UA `[hidden]`.
+     Ép ẩn bằng chọn lọc mạnh hơn — cùng cái bẫy đã ghi ở `.ds-undo[hidden]`. */
+  .ds-searchclear[hidden] { display: none; }
   .ds-rail { display: flex; flex-direction: column; gap: 14px; }
   .ds-tree .wb-tree__row { align-items: flex-start; }
   .ds-tree .wb-tree__label { white-space: normal; line-height: 1.35; }
@@ -714,9 +727,12 @@
     transition: top .12s ease;
   }
   .ds-skip:focus { top: 8px; }
-  /* Tiêu điểm sau khi đổi bài: rơi vào <h1>, nhưng không vẽ viền như một nút bấm */
-  #main:focus, #main h1:focus { outline: none; }
-  #main h1:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); border-radius: var(--wb-radius-sm); }
+  /* Tiêu điểm sau khi đổi bài rơi vào <h1> để trình đọc màn hình đọc tên bài — nhưng
+     KHÔNG vẽ viền. h1 mang tabindex=-1 nên phím Tab không bao giờ tới nó; cái vòng
+     focus-visible vì thế CHỈ hiện ra từ đúng cú dời tiêu điểm lúc tải/đổi bài, và người
+     dùng thấy tiêu đề tự sáng viền mà không hiểu vì sao. Bỏ hẳn vòng đó: tiêu điểm vẫn
+     dời (đọc màn hình vẫn nghe), chỉ không còn viền. Chủ trang báo 2026-08-04. */
+  #main:focus, #main h1:focus, #main h1:focus-visible { outline: none; box-shadow: none; }
 
   /* ---- trang chủ: giới thiệu giáo trình ---- */
   .ds-lede { font-size: var(--ds-t-h3); line-height: 1.55; color: var(--wb-fg); max-width: var(--ds-measure); }
@@ -1137,17 +1153,13 @@
   .ds-notes__list { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
   .ds-notes__item { padding: 10px 0 12px; border-top: var(--wb-bw) solid var(--wb-border); }
   .ds-notes__item:first-child { border-top: 0; padding-top: 2px; }
-  /* ---- ba hàng, và mỗi hàng chỉ giữ thứ nó đo được -----------------------
-     Bản trước gộp loại + tên bài + thời điểm + hai nút vào MỘT hàng `flex-wrap: wrap`.
-     Trong dock hẹp thì hàng đó luôn gói, và vì các phần ngăn nhau bằng dấu `·` rời nên
-     mỗi lần gói lại để lại một dấu `·` treo ở cuối dòng trên hoặc đầu dòng dưới. Đó là
-     thứ xấu nhất trong panel, và nó xấu ở mọi bề rộng vì bề rộng nào cũng gói.
-     Cách sửa không phải là canh lại dấu `·` — mà là bỏ hẳn nó: chia ba hàng theo thứ
-     ĐO ĐƯỢC.
-       · hàng đầu  — loại + thời điểm + hai nút: cả ba đều ngắn và gần như cố định
-       · giữa      — chữ ghi chú, thứ đậm nhất
-       · hàng cuối — tên bài, thứ DUY NHẤT không đoán được bề rộng, nên nó được cả một
-                     dòng riêng và cắt bằng "…" */
+  /* ---- hai hàng mỗi ghi chú; tên BÀI đã lên tiêu đề nhóm -----------------
+     Từ 2026-08-04 ghi chú gom theo bài, nên tên bài KHÔNG còn ở từng dòng nữa (tiêu đề
+     nhóm phía trên đã nói). Mỗi ghi chú còn HAI hàng, chia theo thứ ĐO ĐƯỢC:
+       · hàng đầu — loại + thời điểm + hai nút: cả ba đều ngắn, bề rộng gần như cố định
+       · dưới     — chữ ghi chú, thứ đậm nhất
+     Vẫn KHÔNG gộp mọi thứ vào một hàng `flex-wrap: wrap`: các phần ngăn nhau bằng dấu `·`
+     rời thì mỗi lần gói lại để treo một dấu `·` ở cuối/đầu dòng — bề rộng nào cũng gói. */
   .ds-notes__head {
     display: flex; align-items: center; gap: 8px; min-height: 22px;
     font-size: var(--wb-text-caption); color: var(--wb-fg-subtle);
@@ -1164,14 +1176,23 @@
   }
   .ds-notes__kind[data-kind="tắc"] { color: var(--wb-warning); }
   .ds-notes__kind[data-kind="gỡ"]  { color: var(--wb-success); }
-  /* Tên bài LUÔN có mặt (mỗi ghi chú tự nói nó thuộc bài nào), nên nó phải nhẹ: chữ
-     thường, gạch chân chỉ khi hover. */
-  .ds-notes__at {
-    display: block; margin-top: 5px; font-size: var(--wb-text-caption);
-    color: var(--wb-fg-muted); text-decoration: none;
-    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  /* ---- nhóm theo bài: tiêu đề nhóm = tên bài (link mở bài) ----------------
+     Chủ trang yêu cầu 2026-08-04. Tiêu đề nhóm đứng một mình, đậm; con số bên phải là số
+     ghi chú của bài (kèm số chỗ tắc nếu có). Ranh giới giữa hai NHÓM là vạch ĐẬM hơn vạch
+     giữa hai ghi chú trong cùng nhóm, để mắt tách được "sang bài khác" với "ghi chú kế
+     tiếp cùng bài". */
+  .ds-notes__group { display: flex; flex-direction: column; }
+  .ds-notes__group + .ds-notes__group { border-top: 2px solid var(--wb-border-strong); margin-top: 4px; }
+  .ds-notes__grouphead {
+    display: flex; align-items: baseline; gap: 8px; justify-content: space-between;
+    padding: 10px 0 3px; color: var(--wb-fg); text-decoration: none;
+    font-weight: 700; font-size: var(--wb-text-caption); line-height: 1.35;
   }
-  .ds-notes__at:hover { color: var(--wb-fg); text-decoration: underline; text-underline-offset: 2px; }
+  .ds-notes__grouphead:hover .ds-notes__groupname { text-decoration: underline; text-underline-offset: 2px; }
+  .ds-notes__grouphead:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); border-radius: var(--wb-radius-sm); }
+  .ds-notes__groupname { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ds-notes__groupn { flex: none; color: var(--wb-fg-subtle); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .ds-notes__glist { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
   .ds-notes__when { font-variant-numeric: tabular-nums; }
   /* Sửa/xoá chỉ hiện khi trỏ vào hàng hoặc khi có tiêu điểm trong hàng — hai cái nút
      nhân 20 ghi chú là 40 nút cạnh chữ. `:focus-within` là phần giữ cho bàn phím vẫn
@@ -1306,6 +1327,7 @@
         <div class="wb-input-group wb-input-group--seamless">
           <span class="wb-input-group__addon"><span class="wb-ico wb-ico--sm">search</span></span>
           <input class="wb-input" id="searchBox" placeholder="Tìm bài / khái niệm…" aria-label="Tìm trong lộ trình">
+          <button class="wb-input-group__btn ds-searchclear" id="searchClear" type="button" hidden aria-label="Xoá ô tìm kiếm" title="Xoá ô tìm kiếm"><span class="wb-ico wb-ico--sm" aria-hidden="true">close</span></button>
         </div>
         <nav aria-label="Lộ trình">
           <ul class="wb-tree wb-tree--lines ds-tree" id="tree"></ul>
@@ -1334,8 +1356,8 @@
       <footer class="wb-footer wb-footer--slim">
         <div class="wb-footer__inner">
           <div class="wb-footer__bottom">
-            <span class="wb-footer__copy">Data Science · học bằng sản phẩm làm ra và tiêu chí đạt · tiến độ lưu trong trình duyệt này</span>
-            <div class="wb-footer__social"><a class="wb-footer__link" href="../../index.html">← Về trang chủ</a></div>
+            <span class="wb-footer__copy">Data Science · learn by shipping real artifacts and meeting acceptance criteria · progress saved in this browser</span>
+            <div class="wb-footer__social"><a class="wb-footer__link" href="../../index.html">← Back to home</a></div>
           </div>
         </div>
       </footer>
@@ -1427,10 +1449,10 @@
           <p class="wb-help ds-notes__hint">Chọn <b>Chỗ tắc</b> cho chỗ đọc mà không hiểu — dòng đó làm trang tốt lên.<br><kbd>Enter</kbd> lưu · <kbd>Shift</kbd>+<kbd>Enter</kbd> xuống dòng.</p>
         </div>
 
-        <!-- MỘT danh sách, mọi ghi chú, mới nhất trước — không lọc theo bài đang mở.
-             Bản trước mặc định lọc "Bài này", nên đổi bài là danh sách trông như vừa bị
-             xoá sạch. Ghi chú là của cả quá trình học, không phải của một trang; mỗi
-             dòng tự nói nó thuộc bài nào là đủ, và cái nhãn đó bấm được để mở bài. -->
+        <!-- GOM NHÓM theo bài (chủ trang yêu cầu 2026-08-04), KHÔNG lọc theo bài đang mở:
+             tiêu đề mỗi nhóm là tên bài (bấm để mở bài, panel vẫn mở), rồi các ghi chú
+             của bài đó. Nhóm xếp theo ghi chú mới nhất của nhóm. Ghi chú là của cả quá
+             trình học nên vẫn hiện HẾT — gom nhóm chỉ đổi cách xếp, không lọc bớt. -->
         <div class="ds-notes__sec">
           <h5 class="ds-notes__sech">
             Đã ghi
@@ -10667,6 +10689,66 @@ function setLevel(id, lvl) {
   // Chỉ ghi ngày khi mức THAY ĐỔI — bấm lại đúng mức đang có không được làm mới ngày.
   if (lvl !== before) { if (lvl <= 0) levelTs.delete(id); else levelTs.set(id, isoToday()); saveLevelTs(); }
   saveProgress(); syncProgress();
+  // Vừa ĐẠT mức cao nhất của bài (từ dưới lên) → pháo giấy. Đặt Ở ĐÂY chứ không ở chỗ
+  // bấm: cả pip trong cây lẫn nút cuối bài đều gọi setLevel, và "hoàn thành một bài" là
+  // sự kiện của TIẾN ĐỘ, không của một cái nút. loadProgress()/undo/import ghi thẳng vào
+  // `prog` nên không đi qua đây → không bắn pháo lúc tải trang. Chủ trang yêu cầu 2026-08-04.
+  if (lvl >= maxLevel(l) && before < maxLevel(l)) celebrate();
+}
+
+/* ---- Pháo giấy: chúc mừng khi đạt một bài -------------------------------------------
+   Một <canvas> phủ toàn màn hình ở z-index cao hơn MỌI lớp (popup 100/101, dock 90),
+   pointer-events:none nên không chặn thao tác. Giấy rơi từ trên xuống bằng trọng lực +
+   trôi ngang + xoay, ~2,3s rồi tự gỡ. Tôn trọng prefers-reduced-motion: người tắt chuyển
+   động thì bỏ hẳn hiệu ứng. Vanilla, không thư viện — trang là một file HTML tự chứa. */
+let confettiRAF = 0;
+function celebrate() {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const old = document.getElementById('dsConfetti');
+  if (old) { cancelAnimationFrame(confettiRAF); old.remove(); }   // không chồng hai vòng rAF
+
+  const cv = document.createElement('canvas');
+  cv.id = 'dsConfetti';
+  cv.setAttribute('aria-hidden', 'true');
+  cv.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:2147483647;pointer-events:none';
+  document.body.appendChild(cv);
+
+  const ctx = cv.getContext('2d');
+  const dpr = Math.min(devicePixelRatio || 1, 2);
+  cv.width = innerWidth * dpr; cv.height = innerHeight * dpr;
+
+  const colors = ['#f94144', '#f3722c', '#f9c74f', '#90be6d', '#43aa8b', '#577590', '#c77dff'];
+  const g = 0.16 * dpr, DUR = 2300;
+  const bits = Array.from({ length: 140 }, (_, i) => ({
+    x: Math.random() * cv.width,
+    y: (-0.2 - Math.random() * 0.6) * cv.height,
+    vx: (Math.random() - 0.5) * 1.6 * dpr,
+    vy: (1 + Math.random() * 2.2) * dpr,
+    w: (6 + Math.random() * 6) * dpr,
+    h: (8 + Math.random() * 8) * dpr,
+    rot: Math.random() * Math.PI, vr: (Math.random() - 0.5) * 0.3,
+    color: colors[i % colors.length],
+  }));
+
+  const start = performance.now();
+  (function frame(now) {
+    const t = now - start;
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    let alive = 0;
+    const fade = t > DUR - 600 ? Math.max(0, (DUR - t) / 600) : 1;
+    for (const b of bits) {
+      b.vy += g; b.x += b.vx; b.y += b.vy; b.rot += b.vr;
+      if (b.y < cv.height + 40 * dpr) alive++;
+      ctx.save();
+      ctx.globalAlpha = fade;
+      ctx.translate(b.x, b.y); ctx.rotate(b.rot);
+      ctx.fillStyle = b.color;
+      ctx.fillRect(-b.w / 2, -b.h / 2, b.w, b.h);
+      ctx.restore();
+    }
+    if (t < DUR && alive) confettiRAF = requestAnimationFrame(frame);
+    else { cv.remove(); confettiRAF = 0; }
+  })(start);
 }
 /* Bấm control mức trong cây: đi vòng 0 → các mức của bài → 0. */
 function cycleLevel(id) {
@@ -10996,8 +11078,9 @@ function render() {
     const b = e.target.closest('[data-set-level]'); if (!b) return;
     const target = +b.dataset.setLevel;
     // Bấm lại đúng mức đang có → hạ về mức ngay dưới (bỏ tick), như một toggle.
+    // KHÔNG tự nhảy sang bài sau khi đạt mức cao nhất (chủ trang chốt 2026-08-04): đánh
+    // dấu xong thì ở lại bài để đọc lại / ghi chú. Pháo giấy chúc mừng bắn từ setLevel().
     setLevel(id, getLevel(id) === target ? target - 1 : target);
-    if (getLevel(id) >= maxLevel(byId[id]) && next) setTimeout(() => { location.hash = '#/' + next.id; }, 250);
   });
 
   afterRender(main);
@@ -13313,8 +13396,54 @@ function whenText(n) {
   return n.day || '';
 }
 
-/* MỘT danh sách: mọi ghi chú, mới nhất trước, mỗi dòng tự khai nó thuộc bài nào.
-   Không lọc theo bài đang mở — xem chú thích ở khối markup. */
+/* Một ghi chú = một <li> hai phần: hàng meta (loại · thời điểm · nút sửa/xoá) rồi chữ
+   ghi chú. Tên bài KHÔNG còn ở đây — tiêu đề NHÓM phía trên đã nói (xem renderNotes). */
+function noteItem(n) {
+  const li = document.createElement('li');
+  li.className = 'ds-notes__item';
+  li.dataset.note = n.id;
+  li.dataset.kind = n.kind || 'ghi';
+
+  const head = document.createElement('div');
+  head.className = 'ds-notes__head';
+  // `ghi` là mặc định nên KHÔNG có nhãn — nhãn cho thứ mặc định là nhiễu.
+  if (n.kind && n.kind !== 'ghi') {
+    const kind = document.createElement('span');
+    kind.className = 'ds-notes__kind';
+    kind.dataset.kind = n.kind;
+    kind.textContent = n.kind === 'tắc' ? 'Chỗ tắc' : 'Đã gỡ';
+    head.append(kind);
+  }
+  const when = document.createElement('span');
+  when.className = 'ds-notes__when';
+  when.textContent = whenText(n);
+  head.append(when);
+
+  const acts = document.createElement('div');
+  acts.className = 'ds-notes__acts';
+  for (const [act, ico, lbl] of [['edit', 'edit', 'Sửa ghi chú'], ['del', 'delete', 'Xoá ghi chú']]) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'ds-nact' + (act === 'del' ? ' ds-nact--del' : '');
+    b.dataset.nact = act;
+    b.title = lbl;
+    b.setAttribute('aria-label', lbl);
+    b.innerHTML = `<span class="wb-ico wb-ico--xs" aria-hidden="true">${ico}</span>`;
+    acts.append(b);
+  }
+  head.append(acts);
+
+  const p = document.createElement('p');
+  p.className = 'ds-notes__text';
+  p.textContent = n.text;                         // textContent, KHÔNG innerHTML: ghi chú
+                                                  // là chữ của người dùng và sẽ có dấu <
+  li.append(head, p);
+  return li;
+}
+
+/* GOM NHÓM theo bài (chủ trang yêu cầu 2026-08-04). Vẫn hiện HẾT ghi chú, không lọc theo
+   bài đang mở — gom nhóm chỉ đổi CÁCH XẾP, không bỏ bớt. Nhóm xếp theo ghi chú mới nhất
+   của nhóm (nhóm vừa được thêm nổi lên đầu); trong nhóm giữ mới-nhất-trước. */
 function renderNotes() {
   const list = $('#notesList');
   $('#notesWhere').textContent = nodeTitle(curNode());
@@ -13335,55 +13464,37 @@ function renderNotes() {
     return;
   }
 
-  // Ba hàng mỗi ghi chú — vì sao ba chứ không phải một hàng gói dòng: xem khối
-  // `.ds-notes__head` trong <style>.
+  // Map giữ THỨ TỰ chèn = thứ tự gặp trong `shown` (mới nhất trước), nên bài của ghi chú
+  // mới nhất thành nhóm đầu tiên.
+  const groups = new Map();
   for (const n of shown) {
-    const li = document.createElement('li');
-    li.className = 'ds-notes__item';
-    li.dataset.note = n.id;
-    li.dataset.kind = n.kind || 'ghi';
+    if (!groups.has(n.node)) groups.set(n.node, []);
+    groups.get(n.node).push(n);
+  }
 
-    const head = document.createElement('div');
-    head.className = 'ds-notes__head';
-    // `ghi` là mặc định nên KHÔNG có nhãn — nhãn cho thứ mặc định là nhiễu.
-    if (n.kind && n.kind !== 'ghi') {
-      const kind = document.createElement('span');
-      kind.className = 'ds-notes__kind';
-      kind.dataset.kind = n.kind;
-      kind.textContent = n.kind === 'tắc' ? 'Chỗ tắc' : 'Đã gỡ';
-      head.append(kind);
-    }
-    const when = document.createElement('span');
-    when.className = 'ds-notes__when';
-    when.textContent = whenText(n);
-    head.append(when);
+  for (const [node, items] of groups) {
+    const g = document.createElement('li');
+    g.className = 'ds-notes__group';
 
-    const acts = document.createElement('div');
-    acts.className = 'ds-notes__acts';
-    for (const [act, ico, lbl] of [['edit', 'edit', 'Sửa ghi chú'], ['del', 'delete', 'Xoá ghi chú']]) {
-      const b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'ds-nact' + (act === 'del' ? ' ds-nact--del' : '');
-      b.dataset.nact = act;
-      b.title = lbl;
-      b.setAttribute('aria-label', lbl);
-      b.innerHTML = `<span class="wb-ico wb-ico--xs" aria-hidden="true">${ico}</span>`;
-      acts.append(b);
-    }
-    head.append(acts);
+    const head = document.createElement('a');       // tiêu đề nhóm LÀ link mở bài; bấm
+    head.className = 'ds-notes__grouphead';          // không đóng panel (hashchange chỉ
+    head.href = '#/' + node;                         // render lại — xem listener hashchange)
+    head.title = 'Mở bài này';
+    const name = document.createElement('span');
+    name.className = 'ds-notes__groupname';
+    name.textContent = nodeTitle(node);
+    const nStuckG = items.filter(x => x.kind === 'tắc').length;
+    const cnt = document.createElement('span');
+    cnt.className = 'ds-notes__groupn';
+    cnt.textContent = nStuckG ? `${items.length} · ${nStuckG} tắc` : String(items.length);
+    head.append(name, cnt);
+    g.append(head);
 
-    const p = document.createElement('p');
-    p.className = 'ds-notes__text';
-    p.textContent = n.text;                       // textContent, KHÔNG innerHTML: ghi chú
-                                                  // là chữ của người dùng và sẽ có dấu <
-    const a = document.createElement('a');
-    a.className = 'ds-notes__at';
-    a.href = '#/' + n.node;
-    a.textContent = nodeTitle(n.node);
-    a.title = 'Mở bài này';
-
-    li.append(head, p, a);
-    list.append(li);
+    const inner = document.createElement('ul');
+    inner.className = 'ds-notes__glist';
+    for (const n of items) inner.append(noteItem(n));
+    g.append(inner);
+    list.append(g);
   }
 }
 /* Ô ghi tự cao dần: `resize: none` bỏ cái tay kéo chéo của trình duyệt (xem CSS), nên
@@ -13543,8 +13654,11 @@ $('#notesBtn').addEventListener('click', e => {
    phải ghi lại tỉ lệ mặc định. */
 const dsZoom = () => parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--ds-zoom')) || 1;
 
-function makeEdgeResizer({ el, grip, cssVar, storeKey, min, maxRatio, resetSay }) {
-  const lo = () => min;
+function makeEdgeResizer({ el, grip, cssVar, storeKey, min, minRatio, maxRatio, resetSay }) {
+  // Sàn = MAX(sàn px cứng, tỉ lệ cửa sổ). Chủ trang chốt 2026-08-04: mọi ngăn kéo được
+  // trong trang có sàn 1/4 và trần 1/2 cửa sổ. Sàn px cứng giờ chỉ là lưới an toàn cho
+  // cửa sổ hẹp (1/4 của 1024px = 256px, hẹp hơn mức đọc được bảng so sánh trong ngăn phụ).
+  const lo = () => Math.max(min, Math.round(innerWidth / dsZoom() * (minRatio || 0)));
   const hi = () => Math.round(innerWidth / dsZoom() * maxRatio);
 
   /* Đọc bằng getComputedStyle, KHÔNG bằng getBoundingClientRect. Hai lý do, cả hai đã
@@ -13622,7 +13736,7 @@ function makeEdgeResizer({ el, grip, cssVar, storeKey, min, maxRatio, resetSay }
 makeEdgeResizer({
   el: $('.ds-notesdock'), grip: $('#dockGrip'),
   cssVar: '--ds-dock-w', storeKey: 'ds.dockW',
-  min: 280, maxRatio: .72,
+  min: 280, minRatio: .25, maxRatio: .5,
   resetSay: 'Bề rộng ghi chú về mặc định, 1/4 cửa sổ.',
 });
 /* Sàn 340 khớp sàn của `clamp()` trong token ⑪ — hai con số nói cùng một điều ("hẹp hơn
@@ -13631,7 +13745,7 @@ makeEdgeResizer({
 makeEdgeResizer({
   el: $('.ds-drawer'), grip: $('#asideGrip'),
   cssVar: '--ds-aside-w', storeKey: 'ds.asideW',
-  min: 340, maxRatio: .72,
+  min: 340, minRatio: .25, maxRatio: .5,
   resetSay: 'Bề rộng ngăn phụ về mặc định, 1/3 cửa sổ.',
 });
 
@@ -13916,13 +14030,26 @@ function runSearch(raw) {
 /* Gõ nhanh thì không chạy lại sau mỗi ký tự — 83 bài × chỉ số đầy đủ là đủ nặng
    để thấy khựng trên máy yếu, mà máy yếu đúng là đối tượng của trang này. */
 let searchTimer = null;
+const searchClearBtn = $('#searchClear');
+const syncSearchClear = v => { searchClearBtn.hidden = !v; };
 $('#searchBox').addEventListener('input', e => {
   const v = e.target.value;
+  syncSearchClear(v);
   clearTimeout(searchTimer);
   searchTimer = setTimeout(() => runSearch(v), 120);
 });
 $('#searchBox').addEventListener('keydown', e => {
-  if (e.key === 'Escape') { e.target.value = ''; runSearch(''); }
+  if (e.key === 'Escape') { e.target.value = ''; syncSearchClear(''); runSearch(''); }
+});
+/* Nút xoá ô tìm kiếm — chỉ hiện khi ô có chữ (chủ trang yêu cầu 2026-08-04). Bấm: xoá
+   chữ, chạy lại tìm (về cây), rồi trả tiêu điểm về ô để gõ tiếp ngay. */
+searchClearBtn.addEventListener('click', () => {
+  const box = $('#searchBox');
+  box.value = '';
+  syncSearchClear('');
+  clearTimeout(searchTimer);
+  runSearch('');
+  box.focus();
 });
 
 /* Một listener uỷ quyền duy nhất cho MỌI nút [data-goto], gắn một lần lúc khởi

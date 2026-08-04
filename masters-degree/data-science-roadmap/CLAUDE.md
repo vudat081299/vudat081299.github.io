@@ -496,11 +496,12 @@ chỗ trống hai bên để tràn vào.
 - Thuật ngữ **không bắt buộc**: bỏ. Nhưng nếu người học sẽ gặp lại nó ở nơi khác, nêu tên
   chính thức **một lần** để họ tra được — đừng bắt họ học tên trước khi hiểu ý.
 - **Không đổi cách gọi giữa chừng.** Cùng khái niệm, cùng một từ, từ đầu tới cuối.
-- **Lớp vỏ chia hai vùng: thanh trên nói tiếng ANH, phần còn lại nói tiếng VIỆT.** Thanh
+- **Lớp vỏ: thanh trên VÀ chân trang nói tiếng ANH, phần còn lại nói tiếng VIỆT.** Thanh
   trên là vùng nhỏ nhất và quen mắt nhất của trang (`Notes` · `Light`/`Dark` · `0%`), nên
-  tiếng Anh ở đó không bắt người mới dịch gì để dùng được trang. Thanh bên, chân trang,
-  panel, `<title>`, nhãn ô tìm kiếm thì tiếng Việt — đó là chỗ điều hướng, không phải chỗ
-  dạy. Ngoại lệ duy nhất ngoài thanh trên: **tên panel ghi chú là `Notes`**, còn mọi câu
+  tiếng Anh ở đó không bắt người mới dịch gì để dùng được trang; chân trang là dòng ký tên
+  + link "← Back to home" ở cuối, cũng không phải chỗ dạy (chủ trang chốt 2026-08-05). Thanh
+  bên, panel, `<title>`, nhãn ô tìm kiếm thì tiếng Việt — đó là chỗ điều hướng, không phải
+  chỗ dạy. Ngoại lệ duy nhất ngoài thanh trên: **tên panel ghi chú là `Notes`**, còn mọi câu
   *nói về* nó dùng từ **ghi chú**. Ranh giới đầy đủ + cách tự kiểm:
   [docs/design.md](docs/design.md) §0.1.
 - Đổi một từ ở lớp vỏ thì **đổi luôn trong bài** — hai tên cho một khái niệm là đúng thứ

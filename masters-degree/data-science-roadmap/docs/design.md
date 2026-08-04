@@ -37,7 +37,8 @@ hai vùng:
 | vùng | tiếng | gồm |
 |---|---|---|
 | **thanh trên** | **Anh** | nhãn nút, phụ đề thương hiệu, `title=`, `aria-label`, và cả chữ do JS sinh (`syncNotesCount`) |
-| lớp vỏ còn lại | Việt | thanh bên, chân trang, `<title>`, `<meta description>`, nhãn ô tìm kiếm, tiêu đề popup / ngăn phụ, mọi `aria-label` ngoài thanh trên |
+| **chân trang** | **Anh** | dòng credit + link "← Back to home" — chủ trang chốt 2026-08-05: chân trang là dòng ký tên / điều hướng cuối, không phải chỗ dạy, để tiếng Anh cho gọn |
+| lớp vỏ còn lại | Việt | thanh bên, `<title>`, `<meta description>`, nhãn ô tìm kiếm, tiêu đề popup / ngăn phụ, mọi `aria-label` ngoài thanh trên |
 
 Thanh trên là vùng nhỏ nhất và quen mắt nhất của trang (`Notes`, `Light`/`Dark`, `0%`),
 nên nó là chỗ duy nhất mà tiếng Anh không bắt người mới phải dịch gì để dùng được trang.
@@ -282,9 +283,11 @@ Hệ quả cần biết: `Notes` **không** nằm trong `LAYER_IDS`, nên Esc ch
 popup nào mở, bấm ra ngoài không đóng nó (bấm để chọn một câu mà mất cái đang viết là đúng
 cái bẫy dock tồn tại để tránh), và mở popup toán không làm mất nó.
 
-**Bề rộng: mặc định 1/4 cửa sổ, kéo được.** Không phải một số px cố định, vì dock lấy chỗ
-của cột bài nên "bao nhiêu là đủ" phụ thuộc cửa sổ — 380px là 30% cột trên màn 1280 và 15%
-trên màn 2560. Bốn luật:
+**Bề rộng: mặc định 1/4 cửa sổ, kéo được — sàn 1/4, trần 1/2 cửa sổ.** Không phải một số px
+cố định, vì dock lấy chỗ của cột bài nên "bao nhiêu là đủ" phụ thuộc cửa sổ — 380px là 30%
+cột trên màn 1280 và 15% trên màn 2560. **Chủ trang chốt 2026-08-05: MỌI ngăn kéo được (dock
+`Notes` và drawer ngăn phụ) có sàn 1/4 và trần 1/2 cửa sổ** — `makeEdgeResizer({minRatio,
+maxRatio})`, kèm một sàn px cứng (280/340) làm lưới an toàn cho cửa sổ hẹp. Bốn luật:
 
 1. Mặc định là `clamp(300px, calc(25 * var(--ds-vw)), 640px)` — **CSS tính, không phải JS**,
    nên người chưa từng kéo thì đổi cửa sổ vẫn luôn được đúng 1/4.
@@ -309,25 +312,26 @@ riêng, phụ đề dock **không** cần nói lại rằng mép trái kéo đư
 
 Panel hẹp (300–640px) nên mọi thứ ở đây là một cuộc thi giành bề rộng. Sáu luật:
 
-1. **MỘT danh sách, không lọc theo bài đang mở.** Ghi chú là của cả quá trình học, không
-   phải của một trang; lọc theo bài thì đổi bài là danh sách trông như vừa bị xoá sạch. Mỗi
-   dòng **tự khai nó thuộc bài nào**, và cái nhãn đó là link mở bài — bấm nó **giữ panel
-   mở** (bạn bấm sang bài đó chính vì muốn xem lại chỗ đã ghi). Mới nhất trước.
+1. **GOM NHÓM theo bài, KHÔNG lọc theo bài đang mở** (chủ trang chốt 2026-08-05). Ghi chú
+   là của cả quá trình học, không phải của một trang; lọc theo bài thì đổi bài là danh sách
+   trông như vừa bị xoá sạch — nên vẫn hiện HẾT, gom nhóm chỉ đổi cách xếp. Mỗi nhóm có một
+   **tiêu đề là tên bài** (link mở bài — bấm **giữ panel mở** vì bạn sang bài đó để xem lại
+   chỗ đã ghi), kèm số ghi chú + số chỗ tắc của bài. Nhóm xếp theo ghi chú **mới nhất** của
+   nhóm (nhóm vừa thêm nổi lên đầu); trong nhóm, mới nhất trước.
 2. **Hàng, không phải thẻ.** Thẻ = nền riêng + viền quanh + mép trái 3px màu + bo góc một
    bên: bốn thứ trang trí cho một dòng chữ, và trong một dock hẹp chúng cộng lại thành
    nhiễu. Hàng phẳng ngăn nhau bằng một vạch, chữ ghi chú là thứ đậm nhất.
-3. **Mỗi ghi chú là BA HÀNG, không phải một hàng gói dòng.** Gộp loại + tên bài + thời điểm
-   + hai nút vào một hàng `flex-wrap: wrap` thì hàng đó luôn gói ở mọi bề rộng, và vì các
-   phần ngăn nhau bằng dấu `·` rời nên mỗi lần gói lại để lại một dấu `·` treo ở cuối dòng
-   trên hoặc đầu dòng dưới. Cách sửa không phải là canh lại dấu `·` mà là bỏ hẳn nó — chia
-   hàng theo thứ **đo được**:
+3. **Mỗi ghi chú là HAI HÀNG, không phải một hàng gói dòng.** Từ 2026-08-05 tên bài lên
+   tiêu đề nhóm (điểm 1), nên mỗi ghi chú chỉ còn hàng meta + chữ. Vẫn KHÔNG gộp mọi thứ vào
+   một hàng `flex-wrap: wrap`: các phần ngăn nhau bằng dấu `·` rời nên mỗi lần gói lại để một
+   dấu `·` treo ở cuối/đầu dòng. Chia hàng theo thứ **đo được**:
 
    ```
    hàng đầu   loại · thời điểm · [sửa] [xoá]     ← đều ngắn, bề rộng gần như cố định
-   giữa       chữ ghi chú                        ← thứ đậm nhất
-   hàng cuối  tên bài                            ← thứ DUY NHẤT không đoán được bề rộng,
-                                                   nên nó được cả một dòng và cắt bằng "…"
+   dưới       chữ ghi chú                        ← thứ đậm nhất
    ```
+   Tên bài giờ là **tiêu đề nhóm** ở trên, cắt bằng "…" khi dài — vẫn là thứ duy nhất không
+   đoán được bề rộng.
 
 4. **Không nhãn cho loại mặc định.** `tắc` và `gỡ` được nói hai lần (điểm màu + chữ, cho
    người không phân biệt được màu); `ghi` là mặc định nên nó không có nhãn nào — nhãn cho
@@ -491,7 +495,9 @@ Cách tự kiểm: rule `:hover` của chip **không được chứa** `border-s
 
 - **Bề rộng mặc định là tỉ lệ cửa sổ, không phải px cứng** (`--ds-aside-w` = 1/3, token ⑪).
   660px cứng vừa không nói được vì sao là 660, vừa cho hai cảm giác khác nhau trên hai màn:
-  52% cửa sổ ở laptop 1280px, 26% ở màn 2560px.
+  52% cửa sổ ở laptop 1280px, 26% ở màn 2560px. **Kéo được trong khoảng sàn 1/4 → trần 1/2
+  cửa sổ** (`minRatio: .25, maxRatio: .5`) — cùng luật với dock `Notes`, chủ trang chốt
+  2026-08-05; xem §0.5 khối "Bề rộng".
 - **Kéo được ở mép trái**, bằng **đúng** tay kéo `.ds-grip` và **đúng** hàm
   `makeEdgeResizer()` mà dock `Notes` dùng. Có hai ngăn kéo được nhưng chỉ một cơ chế: mọi cái
   bẫy của việc kéo (hệ toạ độ zoom, `rect` trả 0 khi ngăn đang đóng, reset = *xoá* token chứ
@@ -660,9 +666,13 @@ Không có nó thì `1` → `11` làm cả nút nhảy bề rộng, và một c�
 Cổng **không thấy được layout**. Sửa giao diện thì phải mở trang. Cách mở ở
 [../HANDOFF.md](../HANDOFF.md) mục "Chạy preview". Ba cái bẫy:
 
-1. **Screenshot khi cuộn sâu hay ra khung đen** — giới hạn compositor của pane, không phải
-   lỗi của trang. Muốn thấy một khối ở cuối bài thì xoá các khối đứng trước nó trong DOM
-   rồi cuộn lên đầu, hoặc nới cửa sổ cho vừa hết khối cần xem.
+1. **Screenshot khi cuộn sâu, khi có LỚP PHỦ mở, hay khi có canvas z-index cực cao → khung
+   đen** — giới hạn compositor của pane, không phải lỗi của trang. Ba thứ đã trúng bẫy này:
+   khối ở cuối bài, dock `Notes` / popup đang mở, và **pháo giấy** (`#dsConfetti`,
+   z-index 2147483647). Muốn kiểm chúng thì **đừng tin screenshot** — đọc DOM/CSS bằng
+   `javascript_tool`: cấu trúc nhóm ghi chú bằng `querySelectorAll`, độ trong suốt của canvas
+   pháo giấy bằng `getImageData(0,0,1,1)` (góc phải ra alpha 0 → người dùng thật thấy xuyên
+   qua). Muốn thấy một khối ở cuối bài thì xoá các khối đứng trước nó trong DOM rồi cuộn lên.
 2. **`getComputedStyle` đọc ngay trong cùng một lượt với lúc vừa đổi class/theme có thể ra
    giá trị CŨ.** Đổi ở một lệnh, đọc ở lệnh sau — nếu không sẽ đi sửa một lỗi không tồn tại.
    Cùng lý do: đổi `.dark` bằng JS xong screenshot ngay có thể ra ảnh của theme cũ.
@@ -670,3 +680,25 @@ Cổng **không thấy được layout**. Sửa giao diện thì phải mở tra
    lại đúng hash hiện tại thì `hashchange` không bắn và script treo. Và `location.hash = …`
    **không** tải lại trang, nên thứ chỉ đọc `localStorage` lúc khởi động sẽ không thấy dữ
    liệu vừa ghi: phải `location.reload()`.
+
+---
+
+## 9. Pháo giấy — chúc mừng khi ĐẠT một bài (`celebrate()`)
+
+Chủ trang yêu cầu 2026-08-05. Khi một bài lần đầu chạm **mức cao nhất của nó** (đọc-xong
+với bài không có deliverable, hoặc đạt-deliverable với bài có), trang bắn pháo giấy.
+
+- **Kích hoạt ở TIẾN ĐỘ, không ở nút.** `celebrate()` gọi từ `setLevel()` khi
+  `lvl >= maxLevel(l) && before < maxLevel(l)` — nên cả pip trong cây lẫn nút cuối bài đều
+  bắn, còn `loadProgress()`/undo/import ghi thẳng vào `prog` (không qua `setLevel`) nên
+  **không** bắn lúc tải trang. "Hoàn thành một bài" là sự kiện của tiến độ, không của một cái nút.
+- **Không tự nhảy bài.** Trước đây đạt mức cao nhất thì `setTimeout` nhảy sang bài sau; chủ
+  trang bỏ (2026-08-05) — đánh dấu xong thì ở lại để đọc lại / ghi chú.
+- **Layer cao nhất, không chặn gì.** Một `<canvas id="dsConfetti">` `position:fixed`,
+  `z-index: 2147483647` (trên popup 100/101 và dock 90), `pointer-events:none`. Giấy trong
+  suốt ở chỗ không có mảnh (clearRect), nên trang phía sau vẫn thấy và vẫn bấm được.
+- **Tôn trọng `prefers-reduced-motion`**: người tắt chuyển động thì bỏ hẳn hiệu ứng.
+- **Tự dọn**: rAF chạy ~2,3s rồi `canvas.remove()`. Gọi lại khi đang chạy thì huỷ vòng cũ
+  trước (một canvas một lúc). Vanilla, không thư viện — trang là một file HTML tự chứa.
+- **Kiểm**: screenshot ra khung đen (§8) — đọc `getImageData` để xác nhận canvas trong suốt,
+  và `localStorage` để xác nhận `hash` không đổi (không nhảy bài).

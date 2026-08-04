@@ -17,6 +17,65 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 
 ---
 
+## ĐANG LÀM — trang Roadmap thứ hai (batch 2, chủ trang review sáng 2026-08-05)
+
+Chủ trang giao thêm (review sau): **một trang HTML riêng** mở khi bấm "Roadmap" ở navbar trang
+DS. Yêu cầu:
+- Navbar: đúng **1 icon giống logo trang DS** + **1 nút đổi theme**. Nội dung tiếng… (chưa chốt;
+  theo §0.1 thì navbar English).
+- Nội dung: roadmap kiểu **tree/step vui hơn TOC** (phong cách brilliant.org) — **84 step nhỏ,
+  11 level to** (khớp TREE/TOC của trang chính).
+- Bấm một leaf/node → **drawer bên phải, 1/2 cửa sổ**, nội dung **tóm tắt tinh gọn** từ trang
+  chính (đủ ý chính + visualization, bỏ phần thừa) — "học theo style khác, UX khác".
+- **Link ẩn**: từ navbar trang DS bấm "Roadmap" → sang trang này. (Hiện brand là
+  `Data Science <span.ds-brand__sub>Roadmap</span>` trỏ `#/home`; cần thêm đường sang trang mới.)
+- **Chưa quyết**: tên/đường dẫn file trang mới; tree hay step; drawer dùng lại `.ds-drawer`/
+  `makeEdgeResizer` (cùng luật 1/4–1/2) hay tự vẽ; nguồn nội dung tóm tắt (sinh từ template
+  trang chính hay viết tay). Định dùng **Workflow** tóm tắt 84 bài (fan-out theo 11 chặng).
+- **Ràng buộc**: CLAUDE.md §2 luật 3 — "không thêm file thứ hai chứa nội dung bài học". Trang
+  roadmap mới là **bản tóm tắt/điều hướng**, phải nói rõ nguồn sự thật vẫn là trang chính; cân
+  nhắc để nó KHÔNG copy cứng nội dung mà trỏ ngược về `#/id` trang chính.
+
+## Phiên 2026-08-05 (n) — 10 sửa UI theo yêu cầu chủ trang (đã verify preview + cổng xanh)
+
+Mười việc chủ trang liệt kê, làm hết + verify bằng preview mirror (xem "Chạy preview" cuối file):
+
+1. **Pháo giấy khi đạt bài** — `celebrate()` (canvas `#dsConfetti`, z-index 2147483647,
+   `pointer-events:none`, ~2,3s tự dọn, tôn trọng `prefers-reduced-motion`). Gọi từ `setLevel()`
+   khi lần đầu chạm `maxLevel` → cả pip cây lẫn nút cuối bài đều bắn; load/undo/import KHÔNG bắn.
+   Verify: `getImageData(0,0)` alpha 0 (trong suốt), hash không đổi. Doc: design.md §9.
+2. **Bỏ tự nhảy bài** khi đạt mức cao nhất (xoá `setTimeout location.hash = next`). Verify: hash
+   giữ `#/s-how` sau khi bấm "Đã đọc xong".
+3. **Gom ghi chú theo bài** — `renderNotes()` gom nhóm, tách `noteItem()`; tiêu đề nhóm = tên bài
+   (link mở bài), số ghi chú + số tắc; nhóm xếp theo ghi chú mới nhất; trong nhóm mới-nhất-trước.
+   Bỏ `.ds-notes__at` (tên bài từng ở mỗi dòng). Doc: design.md §0.5 điểm 1 & 3.
+4. **h1 không còn viền tiêu điểm khi tải bài** — bỏ `#main h1:focus-visible` box-shadow. Tiêu điểm
+   vẫn dời (đọc màn hình vẫn nghe); h1 `tabindex=-1` nên Tab không tới, viền chỉ từng hiện từ cú
+   dời tiêu điểm khi đổi bài.
+5. **Chân trang → tiếng Anh.** Doc: CLAUDE.md §11 + design.md §0.1 (chân trang chuyển sang vùng English).
+6. **Drawer: sàn 1/4, trần 1/2 cửa sổ** cho CẢ dock `Notes` lẫn ngăn phụ — `makeEdgeResizer` thêm
+   `minRatio`; hai lời gọi `minRatio:.25, maxRatio:.5` (trước là `maxRatio:.72`, không có sàn tỉ lệ).
+   Sàn px cứng (280/340) giữ làm lưới an toàn. Verify aria 1280px: dock 320–640, aside 340–640. Doc:
+   design.md §0.5 + §1.2.
+7. **Thanh bên: nới `#sidenav` padding phải 12→22px** để thanh cuộn nổi macOS không che cột phút (r/x/d).
+8. **Không cho bôi đen chữ** ở navbar / thanh bên / chân trang (`user-select:none` + `-webkit-`),
+   **trừ `#searchBox`** (`user-select:text`). Verify computed style.
+9. **Nút xoá ô tìm kiếm** — `#searchClear` (kit `wb-input-group__btn`), chỉ hiện khi ô có chữ; bấm
+   xoá + chạy lại tìm + trả tiêu điểm. Cần `.ds-searchclear[hidden]{display:none}` vì
+   `.wb-input-group__btn{display:inline-flex}` của kit đè UA `[hidden]` (cùng bẫy `.ds-undo[hidden]`).
+10. **(gộp trong 3)** — không có việc thứ 10 riêng; danh sách chủ trang có 9 mục + xác nhận nguyên tắc
+    "cái gì reuse/tokenize/componentize đều phải document" → đã cập nhật CLAUDE.md §11, design.md §0.1/
+    §0.5/§1.2/§8/§9.
+
+**Cố ý KHÔNG đổi:** (a) DEFAULT bề rộng drawer (dock 1/4, aside 1/3) — chủ trang chỉ đổi giới hạn
+kéo, không đổi mặc định. (b) Pháo giấy bắn cho MỌI bài chạm maxLevel kể cả bài đọc-xong mức 1 — hợp
+với `is-done` sẵn có. (c) Màu pháo giấy là palette lễ hội cố định, KHÔNG token theme — nó là hiệu ứng
+thoáng qua, không phải chrome bền. (d) Các G-FWD cũ (PR-AUC, rò rỉ dữ liệu…) — ngoài phạm vi, không đụng.
+
+**Preview mirror (vì sandbox chặn getcwd trên repo — xem memory):** serve từ scratchpad
+(`serve-site.py` root `scratchpad/site`, cổng 8808); mirror gồm `web-builder/web-builder.css` +
+bản copy HTML. Sau mỗi Edit chạy `scratchpad/sync.sh` rồi navigate lại. `.claude/launch.json` = `ds-mirror`.
+
 ## Phiên 2026-08-04 (m2) — hai move chặng giáo trình (chủ trang duyệt cả hai)
 
 Chủ trang duyệt **cả hai** move trong backlog "Quyết định giáo trình" (phiên m Vòng 2); đã làm
