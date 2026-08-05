@@ -359,8 +359,16 @@
      template literal (wb-steps__note của lịch 14 ngày, lịch 8 tuần) nằm NGOÀI .ds-prose,
      nên chúng không nhận rule trên — và một tên đường dẫn 16 ký tự trong đó đã đẩy trang
      tràn 52px ở 375px. Chỉ khai overflow-wrap chứ không khai nền/viền: phần hình thức
-     vẫn là quyết định riêng của .ds-prose, không lan ra cả trang. */
+     vẫn là quyết định riêng của .ds-prose, không lan ra cả trang.
+
+     `.wb-steps__note` phải có rule RIÊNG, không nấp được sau `#main code`: dòng "Nộp
+     được:" là DỮ LIỆU (trường `out` của DAYS/WEEKS) và nó gọi tên file bằng chữ trần,
+     không bọc <code>. Ngày 4 có `assert_split_ok` — 15 ký tự liền, không chỗ ngắt — và
+     nó tràn đúng 52px ở 375px y như lần trước, chỉ khác đường vào. Neo vào cái chip
+     thay vì vào <code> là vì chip này KHÔNG BAO GIỜ được rộng hơn cột, bất kể bên trong
+     là thẻ gì. */
   #main code { overflow-wrap: anywhere; }
+  #main .wb-steps__note { overflow-wrap: anywhere; }
   .ds-prose hr { border: 0; border-top: var(--wb-bw) solid var(--wb-border); margin: var(--ds-sp-sub) 0; }
   /* ---- KHỐI trong mạch chính: MỘT nhịp dưới, không component nào tự chọn nhịp riêng ----
      `.wb-alert` của kit không khai margin nào cả (đọc web-builder.css: chỉ padding), nên
@@ -834,11 +842,10 @@
   #main .wb-steps__desc { margin: 2px 0 0; }
 
   /* ---- lịch 14 ngày ---- */
-  /* .ds-day vẫn được bài th-defense dùng cho lịch T−3 / T−2 / T−1 (viết tay trong
-     template). Lịch 14 ngày đã chuyển sang wb-steps; đừng xoá ba dòng này theo. */
-  .ds-day { border-left: 2px solid var(--wb-neutral-weak); padding: 0 0 0 16px; margin-bottom: var(--ds-sp-block); }
-  .ds-day__h { font-family: var(--wb-font-mono); font-size: var(--ds-t-cap); letter-spacing: .08em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 4px; }
-  .ds-day__t { font-weight: 650; margin: 0 0 6px; }
+  /* `.ds-day` / `.ds-day__h` / `.ds-day__t` đã XOÁ 2026-08-05: lịch T−3/T−2/T−1 của
+     `th-defense` là chỗ cuối cùng còn dùng, và nó đã chuyển sang `wb-steps`. Trang giờ
+     không còn chuỗi bước nào tự vẽ — docs/design.md §3. (`.ds-daysplit` / `.ds-daylist`
+     dưới đây tên gần giống nhưng là của lịch 14 ngày, KHÔNG liên quan.) */
   /* Lịch 14 ngày dùng wb-steps (đường nối dọc = chuỗi phụ thuộc giữa các ngày).
      Nhích khoảng cách lên vì mỗi mốc ở đây mang cả danh sách bài, không phải một dòng. */
   .ds-plan14 { margin: 0 0 8px; }
@@ -1603,6 +1610,18 @@
   <p>$J(w) = w^2$, bắt đầu ở $w = 4$, $\alpha = 0{,}1$. Gradient $= 2w = 8$. Bước mới: $w = 4 - 0{,}1\times 8 = 3{,}2$. Lặp lại: $3{,}2 \to 2{,}56 \to 2{,}05 \dots \to 0$. Mỗi bước rút ngắn khoảng cách 20%.</p>
   <p>Giờ thử $\alpha = 1{,}1$: $w = 4 - 1{,}1 \times 8 = -4{,}8$. Xa hơn lúc đầu. Bước sau còn xa hơn nữa. Đó là lúc bạn thấy <code>loss: nan</code>.</p>
   <div data-viz="gd"></div>
+</template>
+
+<template data-mathdef="optzoo" data-title="Momentum · Adam · AdamW — ba cái tên, một cái bạn dùng">
+  <p>Cả ba đều sửa cùng một điểm yếu của công thức trần <code>w ← w − α∇J(w)</code>: nó đi <b>cùng một độ dài bước cho mọi tham số, ở mọi thời điểm</b>. Ba cách sửa, xếp theo thứ tự ra đời — mỗi cái giữ lại ý của cái trước.</p>
+  <table>
+    <tr><th>Tên</th><th>Sửa cái gì</th><th>Bạn gặp nó ở đâu</th></tr>
+    <tr><td><b>Momentum</b></td><td>Cộng dồn một phần bước trước, như quả bóng có quán tính — vượt vùng phẳng nhanh hơn và bớt dội qua dội lại trong khe hẹp</td><td>Tài liệu cũ; <code>SGD(momentum=0.9)</code> vẫn là mặc định tốt cho <b>mạng thị giác</b> train từ đầu</td></tr>
+    <tr><td><b>Adam</b></td><td>Thêm: <b>độ dài bước riêng cho từng tham số</b>, tự suy từ lịch sử gradient của chính tham số đó. Tham số ít được cập nhật thì bước dài hơn</td><td>Mặc định của phần lớn ví dụ trên mạng</td></tr>
+    <tr><td><b>AdamW</b></td><td>Adam, nhưng <b>weight decay</b> trừ thẳng vào trọng số thay vì cộng vào gradient. Ở Adam, phép cộng đó bị chính cơ chế chia-theo-lịch-sử làm méo, nên lượng phạt thực tế khác lượng bạn khai</td><td><b>Thứ bạn dùng.</b> Chuẩn cho Transformer và cho mọi thứ bài <b>Huấn luyện</b> đụng tới</td></tr>
+  </table>
+  <p>Vì sao đây là nhánh phụ chứ không phải mạch chính: bạn <b>không phải chọn</b>. Gõ <code>AdamW</code>, để <code>lr</code> và <code>weight_decay</code> ở mức khuyến nghị, rồi đi tiếp. Bảng này để khi đọc một paper hay một repo thấy <code>SGD+momentum</code> thì bạn biết đó không phải lỗi thời — chỉ là một lựa chọn khác cho một loại mạng khác.</p>
+  <p class="wb-help">Cái <i>không</i> đúng: “Adam luôn tốt hơn SGD”. Với mạng tích chập train từ đầu trên tập ảnh lớn, SGD + momentum + lịch giảm lr vẫn thường về đích ở độ chính xác cao hơn, chỉ là tốn công dò lr hơn. Adam thắng ở chỗ <b>chạy được ngay mà không phải dò</b> — với luận văn thì đó là thứ đáng giá hơn.</p>
 </template>
 
 <template data-mathdef="expvar" data-title="Kỳ vọng, phương sai, độ lệch chuẩn">
@@ -5750,12 +5769,7 @@ print(f"ngưỡng tối ưu {best_t:.3f} — thiệt hại {min(costs)/1e6:.0f} 
     <tr><td>SGD</td><td>Một mẫu</td><td>Nhanh, nhiễu, dao động mạnh</td></tr>
     <tr><td><b>Mini-batch</b></td><td>32–512 mẫu</td><td><b>Mặc định của mọi thứ</b></td></tr>
   </table>
-  <p>Và ba bộ tối ưu thông minh hơn công thức cơ bản:</p>
-  <ul>
-    <li><b>Momentum</b> — cộng dồn một phần bước trước, như quả bóng có quán tính. Vượt qua vùng phẳng nhanh hơn.</li>
-    <li><b>Adam</b> — tự điều chỉnh độ dài bước riêng cho từng tham số. <b>Mặc định cho deep learning.</b></li>
-    <li><b>AdamW</b> — Adam với cách xử lý weight decay đúng hơn. Chuẩn hiện tại cho Transformer.</li>
-  </ul>
+  <p>Công thức cập nhật ở trên là bản trần. Thứ bạn thật sự gõ là một <b>bộ tối ưu</b> đã cải tiến nó, và câu trả lời ngắn cho “dùng cái nào” là: <b><code>AdamW</code></b> — mặc định cho deep learning, và là thứ bài <b>Huấn luyện</b> sẽ vặn tham số. Hai bộ còn lại bạn sẽ gặp tên trong tài liệu chứ không phải chọn: <button class="ds-math" data-math="optzoo">Momentum · Adam · AdamW khác nhau chỗ nào</button></p>
 
   <h2>Thấy tận mắt</h2>
   <div data-viz="gd"></div>
@@ -9611,12 +9625,21 @@ plt.savefig("reports/figures/pr_curve.pdf")   <i># PDF = vector, không vỡ khi
   </table>
 
   <h2>Lịch chuẩn bị 3 ngày cuối</h2>
-  <div class="ds-day"><p class="ds-day__h">T−3</p><p class="ds-day__t">Dựng slide</p>
-    <p>Làm <b>bảng và hình trước</b>, chữ sau. Mỗi slide viết ra thông điệp duy nhất của nó vào phần ghi chú.</p></div>
-  <div class="ds-day"><p class="ds-day__h">T−2</p><p class="ds-day__t">Tập nói + quay video demo</p>
-    <p>Nói to 3 lần, bấm giờ, cắt cho vừa. Quay video demo 90 giây. Chạy thử slide trên đúng máy sẽ dùng.</p></div>
-  <div class="ds-day"><p class="ds-day__h">T−1</p><p class="ds-day__t">Luyện hỏi đáp</p>
-    <p>Nhờ một người hỏi bạn 24 câu ở trên theo thứ tự ngẫu nhiên. Câu nào ấp úng thì viết ra giấy 3 gạch đầu dòng và học thuộc 3 gạch đó. Ngủ sớm — mệt làm hỏng phần hỏi đáp nhiều hơn là thiếu chuẩn bị.</p></div>
+  <!-- wb-steps, không phải ba khối rời: ba ngày này là một CHUỖI (không có slide thì
+       không tập nói được, không tập nói thì buổi hỏi đáp T−1 không có gì để sửa), và
+       đường nối dọc của component nói đúng điều đó. Số trong mốc là SỐ NGÀY CÒN LẠI
+       nên nó đếm ngược 3 → 2 → 1; tiêu đề mang nhãn T−3/T−2/T−1 để không phải suy ra. -->
+  <ol class="wb-steps">
+    <li class="wb-steps__item"><span class="wb-steps__marker" aria-hidden="true">3</span><div class="wb-steps__content">
+      <p class="wb-steps__title"><span class="ds-sr">Còn 3 ngày — </span>T−3 · Dựng slide</p>
+      <p class="wb-steps__desc">Làm <b>bảng và hình trước</b>, chữ sau. Mỗi slide viết ra thông điệp duy nhất của nó vào phần ghi chú.</p></div></li>
+    <li class="wb-steps__item"><span class="wb-steps__marker" aria-hidden="true">2</span><div class="wb-steps__content">
+      <p class="wb-steps__title"><span class="ds-sr">Còn 2 ngày — </span>T−2 · Tập nói + quay video demo</p>
+      <p class="wb-steps__desc">Nói to 3 lần, bấm giờ, cắt cho vừa. Quay video demo 90 giây. Chạy thử slide trên đúng máy sẽ dùng.</p></div></li>
+    <li class="wb-steps__item"><span class="wb-steps__marker" aria-hidden="true">1</span><div class="wb-steps__content">
+      <p class="wb-steps__title"><span class="ds-sr">Còn 1 ngày — </span>T−1 · Luyện hỏi đáp</p>
+      <p class="wb-steps__desc">Nhờ một người hỏi bạn 24 câu ở trên theo thứ tự ngẫu nhiên. Câu nào ấp úng thì viết ra giấy 3 gạch đầu dòng và học thuộc 3 gạch đó. Ngủ sớm — mệt làm hỏng phần hỏi đáp nhiều hơn là thiếu chuẩn bị.</p></div></li>
+  </ol>
 
   <div class="wb-alert wb-alert--info">
     <span class="wb-alert__icon">i</span>
@@ -10059,7 +10082,11 @@ streamlit run app.py                          <i># bản demo kéo thanh trượ
    ============================================================ */
 const TREE = [
   { id:'p0', t:'0 · Bắt đầu từ đây', kids:[
-    { id:'s-how',             t:'Trang này dùng thế nào', r:10, x:0, d:0, p:'core' },
+    /* r:15 chứ không phải 10 — đo lại 2026-08-05: thân bài là 1.531 từ trong 28 đoạn văn
+       (không phải bảng để liếc), tức 10 phút ngụ ý 153 từ/phút, gấp 8 lần trung vị 18 của
+       trang và gấp đôi bài đứng thứ hai. Đây là bài THỨ HAI người mới đọc, nên hụt 1/3
+       thời lượng ở đúng đây là đặt sai kỳ vọng ngay từ đầu. */
+    { id:'s-how',             t:'Trang này dùng thế nào', r:15, x:0, d:0, p:'core' },
     { id:'s-intro',           t:'★ Data Science là gì? — và bộ từ vựng tối thiểu', r:30, x:10, d:0, p:'core' },
     { id:'s-pipeline',        t:'Một product AI thật gồm 10 bước', r:35, x:0, d:0, p:'core' },
     { id:'s-families',        t:'★ Bản đồ các họ bài toán Data Science', r:35, x:10, d:0, p:'core' },
@@ -15011,15 +15038,34 @@ function makeEdgeResizer({ el, grip, cssVar, storeKey, min, minRatio, maxRatio, 
      của một con trỏ thật, nên nó ném khi bị gọi bằng sự kiện dựng tay — và một cái tay
      kéo không kiểm được bằng script là một cái tay kéo không được kiểm. Listener trên
      window cũng là thứ giữ cho việc kéo không đứt khi chuột chạy ra ngoài ngăn. */
-  let dragging = false;
+  /* Sau một lần kéo, trình duyệt còn bắn thêm một `click` vào TỔ TIÊN CHUNG của chỗ
+     bấm xuống và chỗ nhả ra. Kéo tay kéo rồi nhả khi con trỏ đã ra ngoài ngăn thì tổ
+     tiên chung đó chính là `.wb-overlay` — và overlay đóng lớp khi bị bấm. Kết quả:
+     kéo xong thì ngăn biến mất, dù người dùng chỉ đang chỉnh bề rộng.
+     Nên nuốt đúng một click ngay sau khi kéo. Ba chi tiết đều có lý do:
+       · pha CAPTURE, để chặn trước khi nó tới listener của overlay;
+       · chỉ khi con trỏ THẬT SỰ có di chuyển (`moved`) — bấm nhẹ lên tay kéo mà không
+         kéo thì không có gì để nuốt, và nuốt oan sẽ ăn mất cú bấm kế tiếp;
+       · có hẹn giờ gỡ, vì không phải lần nhả nào cũng sinh ra click (nhả ngoài cửa sổ,
+         pointercancel). Thiếu nó thì cái bẫy nằm chờ và cú bấm THẬT sau đó bị mất.
+     `dblclick` không bị ảnh hưởng: nó là loại sự kiện riêng, chặn `click` không chặn nó. */
+  function swallowNextClick() {
+    const clear = () => { removeEventListener('click', eat, true); clearTimeout(t); };
+    function eat(e) { e.stopPropagation(); e.preventDefault(); clear(); }
+    const t = setTimeout(clear, 300);
+    addEventListener('click', eat, true);
+  }
+
+  let dragging = false, moved = false;
   grip.addEventListener('pointerdown', e => {
     if (e.button) return;
-    dragging = true;
+    dragging = true; moved = false;
     document.body.classList.add('ds-dragging');
     e.preventDefault();                       // không để kéo thành bôi đen chữ
   });
   addEventListener('pointermove', e => {
     if (!dragging) return;
+    moved = true;
     set((innerWidth - e.clientX) / dsZoom(), false);
   });
   function endDrag() {
@@ -15027,6 +15073,7 @@ function makeEdgeResizer({ el, grip, cssVar, storeKey, min, minRatio, maxRatio, 
     dragging = false;
     document.body.classList.remove('ds-dragging');
     set(wNow(), true);                        // chốt lại một lần, ở cuối — không ghi mỗi frame
+    if (moved) swallowNextClick();
   }
   addEventListener('pointerup', endDrag);
   addEventListener('pointercancel', endDrag);
