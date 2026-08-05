@@ -396,6 +396,16 @@
     text-align: left; padding: 8px 10px; border-bottom: var(--wb-bw) solid var(--wb-border); vertical-align: top;
   }
   .ds-prose th { font-weight: 650; color: var(--wb-fg-muted); font-size: var(--ds-t-label); text-transform: uppercase; letter-spacing: .05em; }
+  /* KHÔNG có hàng tiêu đề dính (`position: sticky` trên `thead th`) — đã thử 2026-08-05
+     và nó KHÔNG chạy được ở trang này, ghi lại để đừng ai thử lần nữa:
+     mọi bảng nằm trong `.wb-table-scroll`, mà lớp đó có `overflow: auto`. Phần tử sticky
+     bám vào khối cuộn gần nhất, tức bám vào chính cái wrapper — wrapper không cuộn dọc
+     nên tiêu đề không bao giờ dính vào cửa sổ. Và không gỡ được bằng `overflow-y: visible`:
+     theo spec, một trục khác `visible` thì trục kia tự thành `auto`, nên `x:auto + y:visible`
+     là bất khả. Muốn có thì phải bỏ wrapper cho từng bảng — mà wrapper là thứ mang phần
+     tràn `--ds-bleed`, nên đổi nó là đổi layout của cả 41 bảng để được lợi ở 3 bảng.
+     Số đo kèm theo: 160 bảng / 84 bài, chỉ 3 bảng cao hơn một màn hình (s-plan8w 3350px,
+     r-roadmapsh 897px, s-intro 893px) — hai trong ba là bảng tra, cao là đúng bản chất. */
   .ds-prose .wb-table-scroll { margin: 0 0 var(--ds-sp-block); }
   .ds-prose .wb-table-scroll > table { margin: 0; }
   /* Bảng — khối DUY NHẤT được tràn ra ngoài mép cột. Lý do chọn riêng bảng: đo bề
@@ -526,7 +536,7 @@
      Không ẩn khỏi trình đọc màn hình, chỉ nhỏ và nhạt hơn. */
   .ds-viz__alt {
     font-size: var(--ds-t-cap); color: var(--wb-fg-subtle);
-    margin: 8px 0 0; line-height: 1.5;
+    margin: var(--ds-sp-near) 0 0; line-height: 1.5;
   }
   /* Hàng nút chọn chế độ — dùng thay radio khi các lựa chọn loại trừ nhau.
      aria-pressed mang trạng thái, nên không phụ thuộc riêng vào màu. */
@@ -609,21 +619,21 @@
   .ds-claim--quota { border-style: dashed; }
   .ds-claim--judgment { border-style: dotted; font-style: italic; }
   .ds-srclist { font-size: var(--ds-t-sub); }
-  .ds-srcline { font-size: var(--ds-t-cap); color: var(--wb-fg-subtle); margin: 6px 0 0; }
+  .ds-srcline { font-size: var(--ds-t-cap); color: var(--wb-fg-subtle); margin: var(--ds-sp-tight) 0 0; }
   .ds-srcline a { color: inherit; }
   .ds-numcell { white-space: nowrap; font-variant-numeric: tabular-nums; }
   .ds-wsplit { display: block; font-size: var(--ds-t-cap); color: var(--wb-fg-subtle); font-weight: 400; margin-top: 2px; }
   .ds-prose tfoot th { border-top: 2px solid var(--wb-border-strong); font-weight: 700; color: var(--wb-fg); text-transform: none; letter-spacing: 0; font-size: var(--ds-t-sub); }
   .ds-undo {
     display: flex; align-items: center; justify-content: space-between; gap: 10px;
-    margin-top: 8px; padding: 8px 10px; font-size: var(--wb-text-caption);
+    margin-top: var(--ds-sp-near); padding: 8px 10px; font-size: var(--wb-text-caption);
     background: var(--wb-surface-2); border: var(--wb-bw) solid var(--wb-border);
     border-radius: var(--wb-radius-sm); line-height: 1.4;
   }
   /* [hidden] đặt display:none, nhưng .ds-undo{display:flex} viết sau nên đè mất —
      hai thanh này khi rỗng vẫn hiện ra như hai hộp xám vô nghĩa. Trả lại đúng. */
   .ds-undo[hidden] { display: none; }
-  .ds-rail__progress { font-size: var(--wb-text-caption); color: var(--wb-fg-muted); display: flex; align-items: center; gap: 8px; justify-content: space-between; margin-bottom: 6px; }
+  .ds-rail__progress { font-size: var(--wb-text-caption); color: var(--wb-fg-muted); display: flex; align-items: center; gap: 8px; justify-content: space-between; margin-bottom: var(--ds-sp-tight); }
   .ds-tree .wb-tree__label { font-size: 13px; }
   .ds-tree .wb-tree__row { cursor: pointer; }
   .ds-tree .wb-tree__meta { font-size: 11px; }
@@ -750,7 +760,7 @@
 
   /* ---- trang chủ: giới thiệu giáo trình ---- */
   .ds-lede { font-size: var(--ds-t-h3); line-height: 1.55; color: var(--wb-fg); max-width: var(--ds-measure); }
-  .ds-outcomes { margin-top: 6px; }
+  .ds-outcomes { margin-top: var(--ds-sp-tight); }
   .ds-outcomes .wb-steps__title { font-weight: 650; }
   .ds-prep__ico { color: var(--wb-fg-subtle); font-size: var(--wb-ico-lg); flex: none; }
   .wb-card__title .wb-ico { color: var(--wb-fg-subtle); vertical-align: -3px; margin-right: 4px; }
@@ -778,7 +788,7 @@
   /* Kết quả tìm kiếm là <a> — không được gạch chân như một liên kết trong bài. */
   #results .ds-leaf { align-items: flex-start; }
   #results .ds-leaf .ds-leaf__m { margin-top: 1px; }
-  #results > .ds-rail__progress { margin: 2px 2px 8px; }
+  #results > .ds-rail__progress { margin: 2px 2px var(--ds-sp-near); }
 
   /* ---- STEPPER: một hình dạng cho MỌI chuỗi bước trên trang -------------------------
      Trang có ba chỗ là "một chuỗi bước có thứ tự": sáu kết quả ở trang chủ (`.ds-outcomes`),
@@ -848,9 +858,9 @@
      dưới đây tên gần giống nhưng là của lịch 14 ngày, KHÔNG liên quan.) */
   /* Lịch 14 ngày dùng wb-steps (đường nối dọc = chuỗi phụ thuộc giữa các ngày).
      Nhích khoảng cách lên vì mỗi mốc ở đây mang cả danh sách bài, không phải một dòng. */
-  .ds-plan14 { margin: 0 0 8px; }
+  .ds-plan14 { margin: 0 0 var(--ds-sp-near); }
   .ds-plan14 > .wb-steps__item { padding-bottom: var(--ds-sp-sub); }
-  .ds-daysplit { font-family: var(--wb-font-mono); font-size: var(--ds-t-cap); color: var(--wb-fg-subtle); margin: 4px 0 8px; }
+  .ds-daysplit { font-family: var(--wb-font-mono); font-size: var(--ds-t-cap); color: var(--wb-fg-subtle); margin: var(--ds-sp-hair) 0 var(--ds-sp-near); }
   .ds-daysplit__beg { color: var(--wb-border-strong); }
   .ds-daylist { list-style: none; margin: 0 0 var(--ds-sp-near); padding: 0; }
   .ds-daylist li { display: flex; gap: 8px; align-items: baseline; margin-bottom: 3px; font-size: var(--ds-t-sub); }
@@ -862,7 +872,7 @@
   .ds-mathmodal { max-width: 760px; width: min(760px, calc(94 * var(--ds-vw))); }
   .ds-mathmodal .wb-modal__body { max-height: min(calc(72 * var(--ds-vh)), 720px); overflow-y: auto; }
   .ds-mathmodal .ds-prose { max-width: none; }
-  .katex-display { margin: 14px 0; overflow-x: auto; overflow-y: hidden; padding: 2px 0; }
+  .katex-display { margin: var(--ds-sp-text) 0; overflow-x: auto; overflow-y: hidden; padding: 2px 0; }
 
   /* ---- chip mở ngăn phụ (thông tin bổ sung, không nằm trên mạch chính) ----
      Khác chip toán ở dấu đầu dòng: ∑ = công thức, › = một ngăn trượt ra bên phải.
