@@ -1,3 +1,6 @@
+<!doctype html>
+<html lang="vi">
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Roadmap · Data Science</title>
@@ -7,27 +10,40 @@
 <style>
 
   :root{
-    --rm-nav-h:56px; --rm-core:var(--wb-fg); --rm-good:var(--wb-gray-400); --rm-skim:var(--wb-gray-300);
-    --rm-drawer-w:min(50vw,760px);
+    --rm-core:var(--wb-fg); --rm-good:var(--wb-gray-400); --rm-skim:var(--wb-gray-300);
+    --rm-drawer-w:min(50vw,760px); --ds-navctl:30px; --ds-ctl-xs:24px;
   }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--wb-canvas);color:var(--wb-fg);font-family:var(--wb-font-sans);}
+  /* line-height:1.55 khớp baseline .wb-app/.wb-shell của kit (web-builder.css §"document
+     baseline", dùng ở data-science-roadmap.html qua class wb-shell) — thiếu dòng này là
+     lý do chữ "Data Science" trên thanh trên hai trang lệch dọc ~2px khi so cạnh nhau:
+     cùng 56px navbar, cùng align-items:center, nhưng line-height "normal" (mặc định trình
+     duyệt) ra chiều cao dòng khác 1.55 × cỡ chữ. */
+  body{margin:0;background:var(--wb-canvas);color:var(--wb-fg);font-family:var(--wb-font);
+    line-height:1.55;-webkit-font-smoothing:antialiased;}
   a{color:inherit}
-  /* ---- navbar ---- */
-  .rm-nav{position:sticky;top:0;z-index:20;height:var(--rm-nav-h);display:flex;align-items:center;
-    justify-content:space-between;padding:0 18px;background:color-mix(in srgb,var(--wb-canvas) 85%,transparent);
-    backdrop-filter:blur(8px);border-bottom:var(--wb-bw) solid var(--wb-border);user-select:none;}
-  .rm-logo{display:inline-flex;width:34px;height:34px;align-items:center;justify-content:center;border-radius:9px;
-    border:var(--wb-bw) solid var(--wb-border);background:var(--wb-surface);}
-  .rm-logo:hover{border-color:var(--wb-border-strong)}
-  .rm-logo__sq{fill:none;stroke:var(--wb-fg);stroke-width:1.6}
-  .rm-logo__ln{stroke:var(--wb-fg)} .rm-logo__dot circle{fill:var(--wb-fg)}
-  .rm-theme{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:16px;
-    border:var(--wb-bw) solid var(--wb-border-strong);background:var(--wb-surface);color:var(--wb-fg);
-    font:inherit;font-size:13px;font-weight:600;cursor:pointer;}
-  .rm-theme:hover{border-color:var(--wb-fg)}
-  .rm-theme:focus-visible{outline:none;box-shadow:0 0 0 3px var(--wb-ring)}
-  .rm-theme__emoji{font-size:14px}
+  /* ---- navbar: CHÉP nguyên từ data-science-roadmap.html (.ds-brand/.ds-logo*/.ds-theme*),
+     đặt trên khung .wb-navbar của kit — không tự vẽ .rm-nav riêng nữa, để logo + nút
+     theme luôn cùng một hình với trang chính. */
+  .wb-navbar{--ds-navctl:30px;}
+  .ds-brand{font-weight:700;letter-spacing:-.01em;display:inline-flex;align-items:center;gap:0;}
+  .ds-brand__sub{font-weight:500;font-size:.8em;color:var(--wb-fg-subtle);letter-spacing:0;
+    margin-left:6px;padding-left:6px;border-left:var(--wb-bw) solid var(--wb-border);}
+  .ds-logobtn{box-sizing:border-box;padding:2px;border-radius:11px;
+    width:var(--ds-navctl);height:var(--ds-navctl);}
+  .ds-logo{display:inline-flex;}
+  .ds-logo svg{display:block;width:var(--ds-ctl-xs);height:var(--ds-ctl-xs);}
+  .ds-logo__sq{fill:var(--wb-fg);}
+  .ds-logo__ln{stroke:var(--wb-canvas);}
+  .ds-logo__dot{fill:var(--wb-canvas);}
+  .ds-theme{box-sizing:border-box;height:var(--ds-navctl);display:inline-flex;align-items:center;
+    gap:7px;line-height:1;font-family:inherit;font-size:13px;font-weight:550;cursor:pointer;
+    padding:0 12px;border-radius:var(--wb-radius-pill);border:var(--wb-bw) solid var(--wb-border);
+    background:var(--wb-surface);color:var(--wb-fg);box-shadow:var(--wb-shadow-sm);}
+  .ds-theme:hover{border-color:var(--wb-border-strong)}
+  .ds-theme:focus-visible{outline:none;box-shadow:0 0 0 3px var(--wb-ring)}
+  .ds-theme__emoji{font-size:14px}
+  @media (max-width:560px){.ds-theme{width:var(--ds-navctl);padding:0;gap:0}.ds-theme__label{display:none}}
   /* ---- hero ---- */
   .rm-main{max-width:920px;margin:0 auto;padding:0 20px 80px}
   .rm-hero{text-align:center;padding:44px 0 20px}
@@ -51,9 +67,11 @@
     display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
   .rm-levelhead__n{flex:none;font-size:11px;color:var(--wb-fg-subtle);font-variant-numeric:tabular-nums;white-space:nowrap}
   .rm-nodes{position:relative}
-  /* mỗi node chiếm nửa bề rộng, dựa vào xương sống ở giữa */
-  .rm-node{position:relative;width:50%;min-height:52px;display:flex;align-items:center;gap:12px;
-    padding:8px 0;background:none;border:0;cursor:pointer;font:inherit;color:inherit}
+  /* mỗi node chiếm nửa bề rộng, dựa vào xương sống ở giữa. min-height/padding nới hơn bản
+     gốc (52px/8px) khá nhiều — chủ trang yêu cầu nới thêm lần hai — để các bước cách xa
+     nhau rõ rệt, dễ tách mắt hơn khi cả 84 bước nằm trên một xương sống dài. */
+  .rm-node{position:relative;width:50%;min-height:80px;display:flex;align-items:center;gap:12px;
+    padding:22px 0;background:none;border:0;cursor:pointer;font:inherit;color:inherit}
   .rm-node--l{margin-right:50%;flex-direction:row-reverse;text-align:right;padding-right:34px}
   .rm-node--r{margin-left:50%;padding-left:34px}
   .rm-node__dot{position:absolute;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;
@@ -62,7 +80,10 @@
     transition:transform .12s ease,border-color .12s ease,background .12s ease;z-index:2}
   .rm-node--l .rm-node__dot{right:-17px} .rm-node--r .rm-node__dot{left:-17px}
   .rm-node__i{font-size:12px;font-variant-numeric:tabular-nums}
-  .rm-node__star{color:var(--wb-warning);font-size:15px;line-height:1}
+  /* Icon font (Material Symbols, đã @import trong web-builder.css) thay cho ký tự ★ thô —
+     ★ Unicode canh giữa lệch tâm khác nhau tuỳ font hệ điều hành, trong một vòng tròn nhỏ
+     lệch đó lộ rõ. --wb-ico-fill:1 để đặc (khớp cảm giác "sao vàng" quen thuộc). */
+  .rm-node__star{--wb-ico-fill:1;color:var(--wb-warning);font-size:17px}
   .rm-node__label{display:flex;flex-direction:column;gap:1px;min-width:0}
   .rm-node__t{font-size:13.5px;font-weight:600;line-height:1.3}
   .rm-node__m{font-size:11px;color:var(--wb-fg-subtle);font-family:var(--wb-font-mono)}
@@ -74,9 +95,10 @@
   .rm-pri-core .rm-node__dot{background:var(--wb-fg);border-color:var(--wb-fg);color:var(--wb-canvas)}
   .rm-pri-good .rm-node__dot{background:var(--wb-surface);border-color:var(--wb-border-strong)}
   .rm-pri-skim .rm-node__dot{background:var(--wb-surface);border-style:dashed;border-color:var(--wb-border-strong)}
-  /* đã đạt (đọc từ localStorage tiến độ trang chính) */
-  .rm-node.is-done .rm-node__dot{background:var(--wb-success,#16a34a);border-color:var(--wb-success,#16a34a);color:#fff}
-  .rm-node.is-done .rm-node__dot::after{content:"✓";position:absolute;font-size:15px;color:#fff}
+  /* đã đạt (đọc từ localStorage tiến độ trang chính) — outline xanh dương + nền trắng,
+     không phải chip đặc xanh lá: chủ trang chọn xanh dương làm màu ưu tiên (2026-08-05). */
+  .rm-node.is-done .rm-node__dot{background:#fff;border-color:var(--wb-info);color:var(--wb-info-text)}
+  .rm-node.is-done .rm-node__dot::after{content:"✓";position:absolute;font-size:15px;color:var(--wb-info-text)}
   .rm-node.is-done .rm-node__dot .rm-node__i,.rm-node.is-done .rm-node__dot .rm-node__star{visibility:hidden}
   .rm-node.is-done .rm-node__t{color:var(--wb-fg-subtle)}
   .rm-foot{text-align:center;margin-top:50px;font-size:12px;color:var(--wb-fg-subtle);line-height:1.6}
@@ -124,33 +146,44 @@
   /* ---- mobile: dồn node về một bên, drawer full ---- */
   @media (max-width:680px){
     .rm-path::before{left:18px}
-    .rm-node,.rm-node--l,.rm-node--r{width:100%;margin:0;flex-direction:row;text-align:left;padding:8px 0 8px 46px}
+    .rm-node,.rm-node--l,.rm-node--r{width:100%;margin:0;flex-direction:row;text-align:left;padding:18px 0 18px 46px}
     .rm-node--l .rm-node__dot,.rm-node--r .rm-node__dot{left:1px;right:auto}
     .rm-levelhead{margin-left:0;margin-right:0}
     :root{--rm-drawer-w:100vw}
   }
 
 </style>
+</head>
+<body>
 
-<header class="rm-nav">
-  <a class="rm-logo" href="data-science-roadmap.html" aria-label="Về trang lộ trình đầy đủ" title="Về trang lộ trình đầy đủ">
-    <svg viewBox="0 0 24 24" width="26" height="26" role="img" focusable="false" aria-hidden="true">
-      <rect class="rm-logo__sq" x="1.5" y="1.5" width="21" height="21" rx="6.5"/>
-      <path class="rm-logo__ln" d="M6.5 16.5 L10.5 9.5 L17.5 12.5" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-      <g class="rm-logo__dot"><circle cx="6.5" cy="16.5" r="1.85"/><circle cx="10.5" cy="9.5" r="1.85"/><circle cx="17.5" cy="12.5" r="1.85"/></g>
-    </svg>
+<!-- Navbar CHÉP NGUYÊN từ data-science-roadmap.html (cùng class wb-navbar/ds-logo/ds-theme/
+     ds-brand) — không tự vẽ lại, để hai trang luôn cùng một hình khi trang kia đổi. -->
+<header class="wb-navbar wb-navbar--sticky wb-navbar--glass">
+  <a class="wb-btn wb-btn--ghost wb-btn--icon ds-logobtn" href="data-science-roadmap.html" aria-label="Về trang lộ trình đầy đủ" title="Về trang lộ trình đầy đủ">
+    <span class="ds-logo" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="24" height="24" role="img" focusable="false">
+        <rect class="ds-logo__sq" x="1.5" y="1.5" width="21" height="21" rx="6.5"/>
+        <path class="ds-logo__ln" d="M6.5 16.5 L10.5 9.5 L17.5 12.5" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <g class="ds-logo__dot"><circle cx="6.5" cy="16.5" r="1.85"/><circle cx="10.5" cy="9.5" r="1.85"/><circle cx="17.5" cy="12.5" r="1.85"/></g>
+      </svg>
+    </span>
   </a>
-  <button class="rm-theme" id="themeBtn" type="button" aria-label="Toggle light/dark theme" aria-pressed="false" title="Toggle light/dark">
-    <span class="rm-theme__emoji" aria-hidden="true">☀</span><span class="rm-theme__label">Light</span>
-  </button>
+  <a class="wb-navbar__brand ds-brand" href="data-science-roadmap.html#/home">Data Science</a>
+  <span class="ds-brand__sub">Roadmap</span>
+  <div class="wb-navbar__spacer"></div>
+  <div class="wb-navbar__actions">
+    <button class="ds-theme" id="themeBtn" type="button" aria-label="Toggle light/dark theme" aria-pressed="false" title="Toggle light/dark">
+      <span class="ds-theme__emoji" aria-hidden="true">☀</span><span class="ds-theme__label">Light</span>
+    </button>
+  </div>
 </header>
 
 <main class="rm-main">
   <section class="rm-hero">
-    <h1 class="rm-hero__h">Bản đồ học nhanh</h1>
-    <p class="rm-hero__sub">Cùng lộ trình, một lối học khác: bấm mỗi bước để nắm <b>kiến thức lõi</b> trong vài giây — muốn đào sâu thì mở bài đầy đủ ở trang chính.</p>
+    <h1 class="rm-hero__h">Quick Roadmap</h1>
+    <p class="rm-hero__sub">The same roadmap, a different way to learn: tap any step to grasp the <b>core idea</b> in seconds — open the full lesson on the main page when you want to go deeper.</p>
     <div class="rm-hero__stats">
-      <span><b>84</b> bước</span><span><b>11</b> chặng</span><span><b>106,5</b> giờ</span>
+      <span><b>84</b> steps</span><span><b>11</b> phases</span><span><b>106.5</b> hours</span>
     </div>
   </section>
   <div class="rm-path">
@@ -171,7 +204,7 @@
     </button>
 <button class="rm-node rm-node--r rm-pri-core" data-id="s-intro" type="button"
         aria-label="Mở tóm tắt: Data Science là gì? — và bộ từ vựng tối thiểu">
-      <span class="rm-node__dot"><span class="rm-node__star" aria-hidden="true">★</span></span>
+      <span class="rm-node__dot"><span class="wb-ico rm-node__star" aria-hidden="true">star</span></span>
       <span class="rm-node__label"><span class="rm-node__t">Data Science là gì? — và bộ từ vựng tối thiểu</span>
         <span class="rm-node__m">40′ · 14d</span></span>
     </button>
@@ -183,7 +216,7 @@
     </button>
 <button class="rm-node rm-node--r rm-pri-core" data-id="s-families" type="button"
         aria-label="Mở tóm tắt: Bản đồ các họ bài toán Data Science">
-      <span class="rm-node__dot"><span class="rm-node__star" aria-hidden="true">★</span></span>
+      <span class="rm-node__dot"><span class="wb-ico rm-node__star" aria-hidden="true">star</span></span>
       <span class="rm-node__label"><span class="rm-node__t">Bản đồ các họ bài toán Data Science</span>
         <span class="rm-node__m">45′ · 14d</span></span>
     </button>
@@ -195,7 +228,7 @@
     </button>
 <button class="rm-node rm-node--r rm-pri-core" data-id="s-plan8w" type="button"
         aria-label="Mở tóm tắt: Lộ trình chuẩn 6–8 tuần">
-      <span class="rm-node__dot"><span class="rm-node__star" aria-hidden="true">★</span></span>
+      <span class="rm-node__dot"><span class="wb-ico rm-node__star" aria-hidden="true">star</span></span>
       <span class="rm-node__label"><span class="rm-node__t">Lộ trình chuẩn 6–8 tuần</span>
         <span class="rm-node__m">25′ · 14d</span></span>
     </button>
@@ -217,13 +250,13 @@
     </header>
     <div class="rm-nodes"><button class="rm-node rm-node--l rm-pri-core" data-id="t-env" type="button"
         aria-label="Mở tóm tắt: Chỗ làm việc: cloud-first, local là dự phòng">
-      <span class="rm-node__dot"><span class="rm-node__star" aria-hidden="true">★</span></span>
+      <span class="rm-node__dot"><span class="wb-ico rm-node__star" aria-hidden="true">star</span></span>
       <span class="rm-node__label"><span class="rm-node__t">Chỗ làm việc: cloud-first, local là dự phòng</span>
         <span class="rm-node__m">1h30 · 14d</span></span>
     </button>
 <button class="rm-node rm-node--r rm-pri-core" data-id="t-online" type="button"
         aria-label="Mở tóm tắt: Làm cả dự án trên trình duyệt (máy yếu)">
-      <span class="rm-node__dot"><span class="rm-node__star" aria-hidden="true">★</span></span>
+      <span class="rm-node__dot"><span class="wb-ico rm-node__star" aria-hidden="true">star</span></span>
       <span class="rm-node__label"><span class="rm-node__t">Làm cả dự án trên trình duyệt (máy yếu)</span>
         <span class="rm-node__m">1h05 · 14d</span></span>
     </button>
@@ -235,7 +268,7 @@
     </button>
 <button class="rm-node rm-node--r rm-pri-core" data-id="t-ai" type="button"
         aria-label="Mở tóm tắt: Làm việc với AI coding assistant">
-      <span class="rm-node__dot"><span class="rm-node__star" aria-hidden="true">★</span></span>
+      <span class="rm-node__dot"><span class="wb-ico rm-node__star" aria-hidden="true">star</span></span>
       <span class="rm-node__label"><span class="rm-node__t">Làm việc với AI coding assistant</span>
         <span class="rm-node__m">1h15 · 14d</span></span>
     </button>
@@ -379,7 +412,7 @@
     </button>
 <button class="rm-node rm-node--r rm-pri-core" data-id="f-cyclic" type="button"
         aria-label="Mở tóm tắt: Biến chu kỳ: 23h và 0h liền nhau">
-      <span class="rm-node__dot"><span class="rm-node__star" aria-hidden="true">★</span></span>
+      <span class="rm-node__dot"><span class="wb-ico rm-node__star" aria-hidden="true">star</span></span>
       <span class="rm-node__label"><span class="rm-node__t">Biến chu kỳ: 23h và 0h liền nhau</span>
         <span class="rm-node__m">1h15 · 14d</span></span>
     </button>
@@ -397,7 +430,7 @@
     </button>
 <button class="rm-node rm-node--l rm-pri-core" data-id="f-pipeline" type="button"
         aria-label="Mở tóm tắt: Ráp tất cả: Pipeline + ColumnTransformer">
-      <span class="rm-node__dot"><span class="rm-node__star" aria-hidden="true">★</span></span>
+      <span class="rm-node__dot"><span class="wb-ico rm-node__star" aria-hidden="true">star</span></span>
       <span class="rm-node__label"><span class="rm-node__t">Ráp tất cả: Pipeline + ColumnTransformer</span>
         <span class="rm-node__m">1h30 · 14d</span></span>
     </button>
@@ -437,7 +470,7 @@
     </button>
 <button class="rm-node rm-node--l rm-pri-core" data-id="ml-metrics" type="button"
         aria-label="Mở tóm tắt: Đo lường: PR-AUC, ngưỡng, và tiền">
-      <span class="rm-node__dot"><span class="rm-node__star" aria-hidden="true">★</span></span>
+      <span class="rm-node__dot"><span class="wb-ico rm-node__star" aria-hidden="true">star</span></span>
       <span class="rm-node__label"><span class="rm-node__t">Đo lường: PR-AUC, ngưỡng, và tiền</span>
         <span class="rm-node__m">1h30 · 14d</span></span>
     </button>
@@ -467,7 +500,7 @@
     </button>
 <button class="rm-node rm-node--r rm-pri-core" data-id="ml-imb" type="button"
         aria-label="Mở tóm tắt: Dữ liệu lệch: 0,17% gian lận thì làm gì">
-      <span class="rm-node__dot"><span class="rm-node__star" aria-hidden="true">★</span></span>
+      <span class="rm-node__dot"><span class="wb-ico rm-node__star" aria-hidden="true">star</span></span>
       <span class="rm-node__label"><span class="rm-node__t">Dữ liệu lệch: 0,17% gian lận thì làm gì</span>
         <span class="rm-node__m">1h15 · 14d</span></span>
     </button>
@@ -531,13 +564,13 @@
     </button>
 <button class="rm-node rm-node--r rm-pri-core" data-id="dl-attn" type="button"
         aria-label="Mở tóm tắt: Attention — giải từ số 0">
-      <span class="rm-node__dot"><span class="rm-node__star" aria-hidden="true">★</span></span>
+      <span class="rm-node__dot"><span class="wb-ico rm-node__star" aria-hidden="true">star</span></span>
       <span class="rm-node__label"><span class="rm-node__t">Attention — giải từ số 0</span>
         <span class="rm-node__m">2h · 14d</span></span>
     </button>
 <button class="rm-node rm-node--l rm-pri-core" data-id="dl-tf" type="button"
         aria-label="Mở tóm tắt: Transformer — ráp thành kiến trúc">
-      <span class="rm-node__dot"><span class="rm-node__star" aria-hidden="true">★</span></span>
+      <span class="rm-node__dot"><span class="wb-ico rm-node__star" aria-hidden="true">star</span></span>
       <span class="rm-node__label"><span class="rm-node__t">Transformer — ráp thành kiến trúc</span>
         <span class="rm-node__m">1h30 · 14d</span></span>
     </button>
@@ -571,13 +604,13 @@
     </button>
 <button class="rm-node rm-node--r rm-pri-core" data-id="pr-code" type="button"
         aria-label="Mở tóm tắt: Code end-to-end: repo tới model đã lưu">
-      <span class="rm-node__dot"><span class="rm-node__star" aria-hidden="true">★</span></span>
+      <span class="rm-node__dot"><span class="wb-ico rm-node__star" aria-hidden="true">star</span></span>
       <span class="rm-node__label"><span class="rm-node__t">Code end-to-end: repo tới model đã lưu</span>
         <span class="rm-node__m">2h30 · 14d</span></span>
     </button>
 <button class="rm-node rm-node--l rm-pri-core" data-id="pr-eval" type="button"
         aria-label="Mở tóm tắt: Đánh giá, chọn ngưỡng, và bốn test">
-      <span class="rm-node__dot"><span class="rm-node__star" aria-hidden="true">★</span></span>
+      <span class="rm-node__dot"><span class="wb-ico rm-node__star" aria-hidden="true">star</span></span>
       <span class="rm-node__label"><span class="rm-node__t">Đánh giá, chọn ngưỡng, và bốn test</span>
         <span class="rm-node__m">2h15 · 14d</span></span>
     </button>
@@ -623,7 +656,7 @@
     </button>
 <button class="rm-node rm-node--r rm-pri-core" data-id="q-forecast" type="button"
         aria-label="Mở tóm tắt: Chuỗi thời gian &amp; forecasting">
-      <span class="rm-node__dot"><span class="rm-node__star" aria-hidden="true">★</span></span>
+      <span class="rm-node__dot"><span class="wb-ico rm-node__star" aria-hidden="true">star</span></span>
       <span class="rm-node__label"><span class="rm-node__t">Chuỗi thời gian &amp; forecasting</span>
         <span class="rm-node__m">2h30</span></span>
     </button>
@@ -653,7 +686,7 @@
     </button>
 <button class="rm-node rm-node--l rm-pri-core" data-id="q-causal" type="button"
         aria-label="Mở tóm tắt: A/B testing &amp; tư duy nhân quả">
-      <span class="rm-node__dot"><span class="rm-node__star" aria-hidden="true">★</span></span>
+      <span class="rm-node__dot"><span class="wb-ico rm-node__star" aria-hidden="true">star</span></span>
       <span class="rm-node__label"><span class="rm-node__t">A/B testing &amp; tư duy nhân quả</span>
         <span class="rm-node__m">1h30</span></span>
     </button>
@@ -665,7 +698,7 @@
     </button>
 <button class="rm-node rm-node--l rm-pri-core" data-id="q-mini" type="button"
         aria-label="Mở tóm tắt: Mini-project chuyển giao — làm thật 2/6">
-      <span class="rm-node__dot"><span class="rm-node__star" aria-hidden="true">★</span></span>
+      <span class="rm-node__dot"><span class="wb-ico rm-node__star" aria-hidden="true">star</span></span>
       <span class="rm-node__label"><span class="rm-node__t">Mini-project chuyển giao — làm thật 2/6</span>
         <span class="rm-node__m">5h</span></span>
     </button></div>
@@ -723,7 +756,7 @@
     </button>
 <button class="rm-node rm-node--r rm-pri-core" data-id="th-defense" type="button"
         aria-label="Mở tóm tắt: Bảo vệ: slide, demo, 24 câu hội đồng hỏi">
-      <span class="rm-node__dot"><span class="rm-node__star" aria-hidden="true">★</span></span>
+      <span class="rm-node__dot"><span class="wb-ico rm-node__star" aria-hidden="true">star</span></span>
       <span class="rm-node__label"><span class="rm-node__t">Bảo vệ: slide, demo, 24 câu hội đồng hỏi</span>
         <span class="rm-node__m">1h20 · 14d</span></span>
     </button></div>
@@ -739,7 +772,7 @@
     </header>
     <div class="rm-nodes"><button class="rm-node rm-node--l rm-pri-core" data-id="r-stack" type="button"
         aria-label="Mở tóm tắt: Mỗi bước dùng tool gì, và gõ gì">
-      <span class="rm-node__dot"><span class="rm-node__star" aria-hidden="true">★</span></span>
+      <span class="rm-node__dot"><span class="wb-ico rm-node__star" aria-hidden="true">star</span></span>
       <span class="rm-node__label"><span class="rm-node__t">Mỗi bước dùng tool gì, và gõ gì</span>
         <span class="rm-node__m">1h</span></span>
     </button>
@@ -790,8 +823,8 @@ const byId={}; DATA.forEach(ph=>ph.lessons.forEach(l=>byId[l.id]={...l,ph}));
 
 /* theme — CHUNG khoá 'ds-theme' với trang chính, nên đổi ở đây nhớ luôn ở kia */
 function syncTheme(){const d=document.documentElement.classList.contains('dark');
-  $('#themeBtn .rm-theme__emoji').textContent=d?'☾':'☀';
-  $('#themeBtn .rm-theme__label').textContent=d?'Dark':'Light';
+  $('#themeBtn .ds-theme__emoji').textContent=d?'☾':'☀';
+  $('#themeBtn .ds-theme__label').textContent=d?'Dark':'Light';
   $('#themeBtn').setAttribute('aria-pressed',d?'true':'false');}
 $('#themeBtn').addEventListener('click',()=>{const d=document.documentElement.classList.toggle('dark');
   try{localStorage.setItem('ds-theme',d?'dark':'light')}catch(e){} syncTheme();});
@@ -842,3 +875,5 @@ overlay.addEventListener('click',close);
 addEventListener('keydown',e=>{if(e.key==='Escape'&&!drawer.hidden)close();});
 
 </script>
+</body>
+</html>
