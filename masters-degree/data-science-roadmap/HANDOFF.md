@@ -17,7 +17,7 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 
 ---
 
-## ĐANG LÀM — thẩm định bản review thứ hai (n3): đã sửa phần factual, ba việc lớn CHỜ CHỦ TRANG
+## Phiên 2026-08-05 (n3) — thẩm định bản review thứ hai — XONG + đã push
 
 Chủ trang đưa một **bản review thứ hai** (khác bản đã thẩm định ở phiên (l)) về cả hai trang, hỏi
 "mệnh đề nào đúng, đúng thì sửa". Đã kiểm từng mệnh đề bằng grep/đếm trên file thật, **sửa xong
@@ -100,7 +100,8 @@ chip hiện `10′ · bài đầy đủ`. *Chụp màn hình trang DS không dù
 
 ### Visualization — 17 khối mới, và roadmap giờ chạy khối THẬT
 
-**Độ phủ: 19/84 bài → 35/84 bài · 24 khối → 41 khối.** Mười bảy khối mới, mỗi khối
+**Độ phủ: 19/84 bài · 23 khối → 36/84 bài · 41 khối** (đếm bằng số mount `data-viz`
+trong các `<template>`; con số nền 19/23 khớp đúng bản review). Mười bảy khối mới, mỗi khối
 nằm ở đúng bài mà review §4 chỉ ra là "thiếu":
 
 | khối | bài | nó làm được điều mà chữ không làm được |
@@ -180,6 +181,60 @@ trả frame vẽ dở/cũ nhiều lần trong phiên này (trang nặng ~1 MB). 
    25–35 node*: mệnh đề của review **đúng** (hiện vẫn 84 node / 11 chặng / 106,5 giờ, navbar +
    brand trỏ về DS, mỗi drawer có "Mở bài đầy đủ →"), nhưng chủ trang **chốt giữ view dẫn xuất**.
    Đừng revisit — kiến trúc "nội dung đầy đủ chỉ ở trang chính" mà phiên (n2) tự khai vẫn đứng.
+
+### Vòng 2 (cùng phiên) — quét nốt những dòng review mà vòng 1 chưa chạm
+
+Vòng 1 sửa những mệnh đề review **gọi tên trực tiếp**. Vòng 2 đối chiếu lại từng dòng của bản
+review với file thật và tìm ra bốn chỗ còn hở — ba chỗ là lỗi thật, một chỗ là mệnh đề sai.
+
+**1. Khối thứ 41: `rollwin` cho `f-time`** (§4, ô "rolling window loại dòng hiện tại"). Đây là ô
+duy nhất trong bảng §4 mà vòng 1 bỏ sót — `f-time` là bài **duy nhất** của chặng 4 còn trắng viz.
+Ba chế độ chính là **ba dòng kiểm tra rò rỉ ở cuối bài**, và mọi số trong bảng đều tính tại chỗ:
+
+| chế độ | dòng đầu | z của giao dịch gian lận đầu |
+|---|---|---|
+| `sort` + `closed="left"` | `hist_mean` = NaN — đúng như phải thế | **109,9** |
+| quên `closed="left"` | `hist_mean` = 120,0, sai lộ ra ngay dòng 1 | **2,0** |
+| quên `sort_values` | NaN rơi vào giao dịch 10:05, không phải dòng đầu | 106,8 nhưng 09:12 lấy lịch sử từ giao dịch xảy ra SAU nó |
+
+Điểm dạy được mà chữ không làm được: bỏ `closed="left"` **không** báo lỗi, và hậu quả không phải
+"lệch một dòng" mà là **feature tự pha loãng bằng chính số tiền nó phải tố giác** — z tụt 55 lần.
+Khối cũng nói thẳng một điều đúng ngay ở chế độ đúng: hai giao dịch gian lận *sau* có z nhỏ, vì
+lịch sử của thẻ đã bị ca đầu kéo lên → `z_vs_history` phải đứng **cạnh** `secs_since_last`/`n_tx_1h`
+chứ không thay được chúng.
+
+**2. Cái bẫy im lặng trong `build-roadmap.mjs` — đáng nhớ hơn cả khối mới.** Mount đầu tiên tôi viết
+là `<div class="ds-viz" data-viz="rollwin">`, còn 40 mount cũ đều là `<div data-viz="…">`. Bộ trích
+`vizOfLesson()` khớp `/div data-viz="…"/` nên **bỏ khối mới mà không báo gì**: cổng xanh, build
+in ra "84/84 bản tóm tắt", roadmap chỉ đơn giản là thiếu một khối. Đã sửa **hai đầu**: regex thành
+`/<div\b[^>]*\bdata-viz="…"/` (nhận mọi thứ tự thuộc tính), **và** thêm một đối chiếu ở build —
+khối nào được định nghĩa mà không bài nào mount thì in cảnh báo. Hiện: 40 khối định nghĩa,
+41 mount, **0 khối mồ côi**.
+
+**3. Ba con số trình bày như quy luật mà vòng 1 chưa gắn nhãn** (§1, danh sách "nên gắn nhãn
+heuristic"):
+
+- `f-what` — "feature ăn đứt mô hình": giữ nguyên luận điểm, thêm `wb-help` nói `+0,03`/`+0,12` là
+  **độ lớn minh hoạ cho bài fraud này**, và nêu **ranh giới**: cán cân đảo lại khi bộ feature đã
+  bão hoà, hoặc khi dữ liệu là ảnh/chữ nơi mô hình tự học biểu diễn.
+- `t-numpy` — "0,3 giây so với 0,003 giây": thêm "trên một máy tính xách tay thông thường" và
+  "để thấy độ lớn, không phải để trích dẫn"; bảo tự đo bằng `%timeit`.
+- **7 chỗ trong `roadmap-summaries.json` còn giữ bản chưa gắn nhãn** trong khi bài đầy đủ đã sửa
+  ở vòng 1 — đúng loại lỗi review §3 gọi tên ("số liệu có ngữ cảnh ở DS, sang Roadmap thành fact"):
+  `t-pandas` (100 lần + mất phạm vi "90% *số dòng bạn viết*"), `t-numpy` (100 lần), `ml-tune` +
+  `ml-map` ("**chỉ** +1–3%"), `s-lookup` (1.000 mẫu, mất câu "không phải ngưỡng lý thuyết"),
+  `s-pipeline` + `f-what` (FE > model). **Bài học lặp lại lần thứ hai trong cùng phiên: sửa bài
+  đầy đủ xong PHẢI grep lại `roadmap-summaries.json` bằng chính cụm từ vừa sửa.**
+
+**4. Mệnh đề SAI thêm một cái** — review §3: *"Roadmap không có micro-exercise hoặc câu tự kiểm"*.
+Drawer **có** mục **Tiêu chí đạt** dựng từ `ACCEPT[id]` (`build-roadmap.mjs` dòng ~474), và từ
+phiên này mỗi khối port sang còn mang theo ô "Hiểu nhầm hay gặp" của `seeBlock`. Đừng thêm bài
+tập riêng cho roadmap — nội dung thứ hai là đúng thứ CLAUDE.md §2 luật 3 cấm.
+
+**Verify vòng 2:** `gate` CHẶN xanh · `gate.test` **49/49** · `audit` nhất quán · vẫn đúng 5 khuyến
+nghị `G-FWD` cũ. Đo DOM ở **1280px và 375px**, cả trang DS lẫn drawer roadmap: `overflowX = 0` ở
+cả trang lẫn drawer, bảng cuộn **trong hộp của chính nó** (đúng §10). Ba chế độ đổi đúng số trên
+cả hai trang. *Ảnh chụp trang DS vẫn trả frame đen — cảnh báo ở trên còn nguyên giá trị.*
 
 ## Phiên 2026-08-05 (n2) — trang Roadmap học nhanh (roadmap.html) — XONG + đã push
 
