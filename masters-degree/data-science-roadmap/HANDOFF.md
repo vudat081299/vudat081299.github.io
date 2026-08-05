@@ -17,6 +17,94 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 
 ---
 
+## Phiên 2026-08-05 (n4) — ĐỔI THỨ TỰ MẠCH CHÍNH — XONG
+
+Chủ trang gỡ hoãn cho backlog "đổi thứ tự mạch chính" (review §2) với chỉ thị: *"option nào
+khiến nội dung trở nên tốt nhất thì làm, không cần quan tâm đến effort"*. Kiến trúc
+`roadmap.html` vẫn **giữ view dẫn xuất** — chủ trang xác nhận lại lần hai.
+
+### Đã bác một phần bản review, có bằng chứng — đừng làm lại theo nguyên văn §2
+
+Thứ tự 10 bước review đề xuất **tự mâu thuẫn**: nó đặt *"công cụ vừa đủ"* ở bước 5, **sau**
+EDA (bước 4) và data/split (bước 3). Đo trên file: `d-data`/`d-leak`/`d-split`/`d-eda`/`d-clean`
+dùng pandas ở **19/6/4/7/3** chỗ. Không thể làm EDA trước khi có pandas. Nên phần đã làm là
+**"C trừ bước 5"** — mọi ý còn lại của review đều nhận, riêng ý đó bác.
+
+Ngược lại, `d-framing` đo được **0 dòng pandas, 0 công thức** — nó là bài duy nhất cả trang học
+được trước khi có công cụ, nên nó lên chặng 0.
+
+### Bốn move, và số đo biện minh cho từng cái
+
+| move | bằng chứng đo được | kết quả |
+|---|---|---|
+| `d-framing` → cuối chặng 0 | trang tự nói framing phải xong "trước khi mở notebook" mà lại đặt nó sau 22,3 giờ | framing ở **3,3h** thay vì 22,3h; chặng 0 có deliverable đầu tiên thay vì 3,3h chỉ đọc |
+| chặng dữ liệu lên trước chặng toán, và sắp lại thành data → **leak → split** → eda → clean | `d-eda` dạy "sau khi chia tập chỉ nhìn train" nhưng bài chia tập đứng **sau** nó hai bài | mọi cái nhìn vào dữ liệu đều sau khi đã chia |
+| chặng toán xuống trước FE; `m-infer` tách hẳn sang chặng 5 cạnh `ml-cv` | khoảng cách "dạy → dùng thật" (đo bằng popup toán): `m-infer` **38 bài**, `m-deriv` 22 bài | m-infer còn cách `pr-eval` 4 bài, và nối thẳng vào câu `ml-cv` vừa để ngỏ |
+| product (p8) lên trước deep learning (p6) | cả chặng product chạy bằng LightGBM, **0 dòng mạng nơ-ron** | người học chạm product ở **53,6h** thay vì 64,8h |
+
+Thứ tự chặng hiển thị mới: 0 Bắt đầu · 1 Công cụ · **2 Vòng đời dữ liệu** · **3 Toán** · 4 FE ·
+5 ML · **6 Product** · **7 Deep learning** · 8 Họ bài toán · 9 Luận văn · 10 Tra cứu.
+**`id` chặng giữ nguyên** (`p2` vẫn là toán dù hiển thị "3", `p8` vẫn là product) — link cũ và
+tiến độ đã lưu bám vào id.
+
+### Hai chỗ CỔNG bắt được, và tôi đã sai trước khi cổng nói
+
+1. **`d-split` trước `d-leak` là sai** — tôi xếp thế theo đúng chữ của review, `G-FWD` nổ ngay:
+   tiêu chí đạt của `d-split` đòi người học nhận ra cột rò rỉ. Đảo lại thành leak → split.
+2. **"bootstrap" thành phụ thuộc ngược mới** khi `m-infer` xuống chặng 5 — `ml-trees` (bagging)
+   và `d-data` dùng nó trước. **Không dời `m-infer` lên trước `ml-trees` được**: chính m-infer
+   lấy baseline LightGBM của `ml-trees` làm ví dụ chạy suốt bài. Xử lý theo đúng ca §8 cho
+   phép: `ml-trees` đã tự định nghĩa tại chỗ, thêm con trỏ sang `m-infer`, rồi khai `allowEarly`
+   kèm lý do. Khuyến nghị về lại **đúng 5 cái G-FWD cũ**, không thêm cái nào.
+
+### Hai lỗi CÓ SẴN mà việc sắp lại làm lộ ra
+
+1. **Trang chủ đánh số chặng theo `p.id` chứ không theo số hiển thị.** Đã sai từ phiên (m2)
+   lúc p7/p8 hoán chỗ — trang chủ in "Chặng 8: Làm ra product" ở vị trí thứ bảy suốt từ đó.
+   Sửa thành `p.t.split(' · ')[0]`. Đây là lý do phải **mở trang bằng mắt**: cả 10 cổng CHẶN
+   đều xanh trong khi trang chủ in sai số chặng.
+2. **`code` ngoài `.ds-prose` không được phép ngắt dòng.** Luật `overflow-wrap` chỉ khai trong
+   `.ds-prose`, còn các stepper lịch dựng bằng template literal thì nằm ngoài — một tên đường
+   dẫn 16 ký tự đẩy `s-plan14` tràn **52px ở 375px**. Đã kiểm ngược bản HEAD để chắc đây là lỗi
+   MỚI do chữ tôi viết chạm ngòi, rồi sửa ở gốc bằng một rule `#main code` (chỉ overflow-wrap,
+   không lan phần nền/viền của `.ds-prose` ra cả trang).
+
+### Lịch: cả hai bản đều đã sắp lại, không chỉ chặng
+
+- **8 tuần**: T1 thêm `d-framing` (deliverable `problem-statement.md` chuyển từ T2 lên T1) ·
+  T2 = vòng đời dữ liệu + toán · T4 thêm `m-infer` · **T5 ↔ T6 hoán** (product lên T5) ·
+  `t-colab` chuyển sang T6 vì đó mới là chỗ cần GPU, và như thế nó khớp với fast track.
+- **14 ngày**: framing lên ngày 1 · ngày 4 = vòng đời dữ liệu · ngày 5 = làm sạch + toán ·
+  `m-infer` sang ngày 9 · **product ngày 10–11, deep learning ngày 12–13** (trước là ngược lại).
+  Ngày 6 cố ý nhẹ nhất (3,5h) vì đó là ngày deliverable — giờ đổ vào việc CHẠY, không phải đọc.
+- Tổng **không đổi**: 106,5h / fast 75,3h. Giãn giờ: tuần 11,2–16,5h, ngày 3,5–6,4h.
+- **11 tham chiếu chéo dạng "chặng 6" / "tuần 5"** trong thân bài đã sửa theo số mới, cộng
+  ba chỗ nữa (mục cắt lịch 3 giờ/ngày, bộ dữ liệu thiếu `card_id`, `m-deriv`). Cổng KHÔNG bắt
+  được loại này — grep `"chặng [0-9]"` và `"tuần [0-9]"` là cách duy nhất.
+
+### Verify
+
+`gate` CHẶN xanh · `gate.test` **49/49** · `audit` nhất quán · `auditPlan()` trên trình duyệt
+trả `[]`, console sạch · khuyến nghị đúng **5 G-FWD cũ**. Đo DOM: **cả 84 bài + trang chủ,
+overflowX = 0 ở 375px**; 1280px cũng 0; roadmap 84 node đúng thứ tự mới, drawer `m-infer` hiện
+"Tuần 4", không tràn ở cả hai khổ. Trang chủ in đúng Chặng 0→10 theo thứ tự.
+
+*Ảnh chụp trang DS vẫn trả frame đen — lỗi này giờ đã lặp ở ba phiên liên tiếp, đừng tốn thời
+gian thử lại, đo DOM luôn.*
+
+### Cố ý KHÔNG làm
+
+- **Không rải chặng toán thành 4 mảnh** như review gợi ý ("vector khi học linear model, gradient
+  khi học loss…"). Chỉ tách đúng `m-infer` — cái có khoảng cách 38 bài. Bốn bài còn lại giữ thành
+  một khối vì với người sợ toán, "đây là toàn bộ phần toán, 5,2 giờ, hết" là một lời hứa có giá
+  trị; rải ra thì mất lời hứa đó mà chỉ được thêm vài bài gần hơn.
+- **Không đổi mốc (`mile`)**: Mốc 1/2/3 vẫn ở tuần 3/7/8. Product xong ở tuần 5 giờ đáng là một
+  mốc, nhưng đổi hệ thống mốc là quyết định riêng của chủ trang.
+- **Không đổi `id` chặng** để khớp số hiển thị. Hai con số đó cố ý rời nhau — xem comment mới ở
+  `renderHome`.
+
+---
+
 ## Phiên 2026-08-05 (n3) — thẩm định bản review thứ hai — XONG + đã push
 
 Chủ trang đưa một **bản review thứ hai** (khác bản đã thẩm định ở phiên (l)) về cả hai trang, hỏi
