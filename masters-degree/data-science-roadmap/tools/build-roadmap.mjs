@@ -87,12 +87,25 @@ function vizOfLesson() {
   for (const part of RAW.split('<template data-node="').slice(1)) {
     const id = part.slice(0, part.indexOf('"'));
     const body = part.slice(0, part.indexOf('</template>'));
-    const names = [...body.matchAll(/div data-viz="([a-z0-9]+)"/g)].map(m => m[1]).filter(n => !VIZ_SKIP.has(n));
+    /* Khớp data-viz ở BẤT KỲ vị trí nào trong thẻ mở, không đòi nó đứng ngay sau
+       "div": mount viết kèm class vẫn phải được nhận. Bản trước đòi "div data-viz="
+       nên một mount viết khác đi bị bỏ IM LẶNG — roadmap mất khối mà không báo gì. */
+    const names = [...body.matchAll(/<div\b[^>]*\bdata-viz="([a-z0-9]+)"/g)].map(m => m[1]).filter(n => !VIZ_SKIP.has(n));
     if (names.length) map[id] = names;
   }
   return map;
 }
 const VIZOF = vizOfLesson();
+
+/* Khối được định nghĩa nhưng KHÔNG bài nào mount thì roadmap mất nó mà không ai
+   biết — đúng cái đã xảy ra với `rollwin` (mount viết kèm class nên bộ trích cũ
+   không khớp). Đối chiếu hai danh sách và nói to ra, thay vì hỏng im lặng. */
+{
+  const defined = [...vizJs().matchAll(/^VIZ\.([a-z0-9]+) = /gm)].map(m => m[1]);
+  const mounted = new Set(Object.values(VIZOF).flat());
+  const orphan = defined.filter(n => !mounted.has(n));
+  if (orphan.length) console.warn(`build-roadmap: ⚠ ${orphan.length} khối không bài nào mount — ${orphan.join(', ')}`);
+}
 
 const esc = s => String(s == null ? '' : s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
