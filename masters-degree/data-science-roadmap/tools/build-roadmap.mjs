@@ -54,9 +54,11 @@ function vizJs() {
   return src;
 }
 
-/* CSS: mọi rule chạm tới class của khối tương tác. Bỏ các rule neo vào
-   `.ds-prose >` — đó là nhịp của cột bài trang chính, roadmap tự đặt nhịp. */
-function vizCss() {
+/* CSS: mọi rule chạm tới một nhóm class của trang chính. Bỏ các rule neo vào
+   `.ds-prose >` — đó là nhịp của cột bài trang chính, roadmap tự đặt nhịp.
+   Tham số hoá `need` vì có HAI nhóm phải mang sang: khối tương tác, và tay kéo
+   bề rộng ngăn (`.ds-grip`). Hai lần gọi, một bộ luật trích. */
+function pickCss(need, what) {
   const s = RAW.indexOf('<style>'), e = RAW.indexOf('</style>');
   const css = RAW.slice(s + 7, e).replace(/\/\*[\s\S]*?\*\//g, '');
   const blocks = src => {
@@ -69,16 +71,28 @@ function vizCss() {
     }
     return out;
   };
-  const NEED = /\.ds-(viz|ctrl|seg|key|costm|fam|maptable|wf)/;
   const picked = [];
   for (const [sel, body] of blocks(css)) {
     if (sel.startsWith('@media')) {
-      const inner = blocks(body).filter(([s2]) => NEED.test(s2));
+      const inner = blocks(body).filter(([s2]) => need.test(s2));
       if (inner.length) picked.push(`${sel}{${inner.map(([s2, b2]) => `${s2}{${b2}}`).join('')}}`);
-    } else if (NEED.test(sel) && !/\.ds-prose\s*>/.test(sel)) picked.push(`${sel}{${body}}`);
+    } else if (need.test(sel) && !/\.ds-prose\s*>/.test(sel)) picked.push(`${sel}{${body}}`);
   }
-  if (!picked.length) throw new Error('build-roadmap: không trích được CSS khối tương tác');
+  if (!picked.length) throw new Error(`build-roadmap: không trích được CSS ${what}`);
   return picked.join('\n');
+}
+const vizCss  = () => pickCss(/\.ds-(viz|ctrl|seg|key|costm|fam|maptable|wf)/, 'khối tương tác');
+const gripCss = () => pickCss(/\.ds-(grip|dragging)\b/, 'tay kéo bề rộng ngăn');
+
+/* JS của tay kéo: `dsZoom()` + `makeEdgeResizer()` nguyên văn từ trang chính.
+   Cùng lý do như vizJs() — CLAUDE.md §2 luật 3, và chú thích ngay trên hàm đó
+   ("chép thì rẻ hôm nay và đắt mãi về sau"). Hàm gọi `announce()`; roadmap khai
+   một bản tối giản trong SCRIPT(). */
+function resizerJs() {
+  const i = RAW.indexOf('const dsZoom = () =>');
+  const j = RAW.indexOf('\nmakeEdgeResizer({', i);
+  if (i < 0 || j < 0) throw new Error('build-roadmap: không tìm thấy makeEdgeResizer() trong HTML nguồn');
+  return RAW.slice(i, j).trimEnd();
 }
 
 /* Bài nào có khối nào — đọc thẳng từ các <template data-node>. */
@@ -173,7 +187,11 @@ const levelsHtml = DATA.map((ph, pi) => {
 }).join('\n');
 
 const html = `<!doctype html>
-<html lang="vi">
+<!-- class="wb-scrollbars": thanh cuộn theo chủ đề cho CẢ TRANG (kit §27) — cùng
+     component, cùng chỗ đặt với data-science-roadmap.html. Thiếu nó thì trang này
+     là trang duy nhất trong bộ còn dùng thanh cuộn mặc định của hệ điều hành, và ở
+     nền tối nó sáng chói lên đúng cạnh phải. -->
+<html lang="vi" class="wb-scrollbars">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -224,14 +242,26 @@ ${levelsHtml}
   <footer class="rm-foot">84 steps · 11 phases, condensed. Open any step for its full lesson.</footer>
 </main>
 
+<!-- Vùng thông báo cho trình đọc màn hình. Có mặt vì makeEdgeResizer() (trích từ
+     trang chính) gọi announce() khi bề rộng về mặc định — một thao tác không đổi gì
+     trong luồng chữ, nên nếu không nói ra thì người dùng bàn phím không biết nó đã
+     chạy. Không dùng dấu backtick trong chú thích này: nó nằm TRONG một template
+     literal của build-roadmap.mjs, đúng cái bẫy mà cổng G-SYNTAX canh. -->
+<p id="routeStatus" class="rm-sr" role="status" aria-live="polite" aria-atomic="true"></p>
+
 <div class="rm-overlay" id="overlay" hidden></div>
 <aside class="rm-drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drTitle" hidden>
+  <!-- Tay kéo: CÙNG lớp .ds-grip và CÙNG hàm makeEdgeResizer() với ngăn phụ + dock
+       ghi chú của trang chính (cả CSS lẫn JS đều trích lúc build). Đứng ngoài thân
+       cuộn để cuộn nội dung không làm mất tay kéo. -->
+  <div class="ds-grip" id="drGrip" role="separator" aria-orientation="vertical"
+       tabindex="0" aria-label="Kéo để đổi bề rộng ngăn tóm tắt" title="Kéo để đổi bề rộng · ←/→ · nhấn đúp để về 1/3 cửa sổ"></div>
   <div class="rm-drawer__bar">
     <span class="rm-drawer__phase" id="drPhase"></span>
     <button class="rm-drawer__close" id="drClose" type="button" aria-label="Đóng" title="Đóng (Esc)">
       <span aria-hidden="true">✕</span></button>
   </div>
-  <div class="rm-drawer__body" id="drBody"></div>
+  <div class="rm-drawer__body wb-scroll-y" id="drBody"></div>
 </aside>
 
 <script>
@@ -241,6 +271,18 @@ ${SCRIPT()}
 /* ==== khối tương tác — TRÍCH nguyên văn từ data-science-roadmap.html lúc build.
    Đừng sửa ở đây: sửa ở trang chính rồi chạy lại node tools/build-roadmap.mjs. ==== */
 ${vizJs()}
+
+/* ==== tay kéo bề rộng ngăn — cũng TRÍCH nguyên văn. Cùng lý do. ==== */
+${resizerJs()}
+/* Sàn 340 khớp sàn của clamp() ở --rm-drawer-w, hai con số nói cùng một điều. Khoá
+   lưu riêng (rm.drawerW, không dùng chung ds.asideW của trang chính): hai ngăn mở ra
+   bằng nhau, nhưng nội dung khác nhau nên bề rộng người dùng chọn cũng có quyền khác. */
+makeEdgeResizer({
+  el: $('#drawer'), grip: $('#drGrip'),
+  cssVar: '--rm-drawer-w', storeKey: 'rm.drawerW',
+  min: 340, minRatio: .25, maxRatio: .5,
+  resetSay: 'Bề rộng ngăn tóm tắt về mặc định, 1/3 cửa sổ.',
+});
 </script>
 </body>
 </html>`;
@@ -253,7 +295,18 @@ if (nSum < 84) console.log(`  ⚠ còn ${84 - nSum} bài chưa có tóm tắt (d
 function STYLE() { return String.raw`
   :root{
     --rm-core:var(--wb-fg); --rm-good:var(--wb-gray-400); --rm-skim:var(--wb-gray-300);
-    --rm-drawer-w:min(50vw,760px); --ds-navctl:30px; --ds-ctl-xs:24px;
+    --ds-navctl:30px; --ds-ctl-xs:24px;
+    /* Trang này không zoom, nhưng GIỮ hai token: makeEdgeResizer() được trích
+       nguyên văn từ trang chính và nó chia cho --ds-zoom ở mọi chỗ đi từ chuột vào
+       CSS. Khai = 1 ở đây là cách để dùng lại hàm đó mà không phải sửa một dòng nào
+       — sửa dòng nào là bắt đầu có hai bản. */
+    --ds-zoom:1;
+    --ds-vw:calc(1vw / var(--ds-zoom));
+    /* Bề rộng ngăn tóm tắt: MẶC ĐỊNH 1/3 cửa sổ, kéo được ở mép trái. Cùng con số,
+       cùng sàn/trần với ngăn phụ của trang chính (token ⑪) — hai ngăn trượt-từ-phải
+       trong cùng một bộ trang thì phải mở ra bằng nhau. Trước đây là min(50vw,760px)
+       cố định: rộng hơn ngăn phụ trang chính và không kéo được. */
+    --rm-drawer-w:clamp(340px, calc(33.333 * var(--ds-vw)), 720px);
     /* Vàng, không phải cam: kit không có token "yellow" riêng (chỉ có --wb-warning là cam
        #d97706/#f59e0b) nên khai literal cho đúng cảm giác "ngôi sao vàng". */
     --rm-star:#f5c518;
@@ -358,7 +411,10 @@ function STYLE() { return String.raw`
   .rm-node.is-done .rm-node__dot .rm-node__i,.rm-node.is-done .rm-node__dot .rm-node__star{visibility:hidden}
   .rm-node.is-done .rm-node__t{color:var(--wb-fg-subtle)}
   .rm-foot{text-align:center;margin-top:50px;font-size:12px;color:var(--wb-fg-subtle);line-height:1.6}
-  /* ---- drawer 1/2 cửa sổ ---- */
+  /* ---- drawer 1/3 cửa sổ, kéo được ---- */
+  /* Chỉ dành cho trình đọc màn hình — vùng thông báo của announce(). */
+  .rm-sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;
+    clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
   .rm-overlay{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.42);opacity:0;transition:opacity .18s ease}
   .rm-overlay.is-open{opacity:1}
   .rm-drawer{position:fixed;top:0;right:0;bottom:0;z-index:41;width:var(--rm-drawer-w);max-width:100vw;
@@ -372,7 +428,10 @@ function STYLE() { return String.raw`
     background:var(--wb-surface);color:var(--wb-fg);cursor:pointer;font-size:15px;line-height:1}
   .rm-drawer__close:hover{border-color:var(--wb-border-strong);background:var(--wb-surface-hover)}
   .rm-drawer__close:focus-visible{outline:none;box-shadow:0 0 0 3px var(--wb-ring)}
+  /* Lớp wb-scroll-y (kit §27) mới là thứ cấp thanh cuộn theo chủ đề + chỗ thở ở đáy;
+     overflow-y ở đây chỉ là dự phòng nếu lớp đó bị bỏ. */
   .rm-drawer__body{flex:1 1 auto;overflow-y:auto;padding:22px 24px 40px}
+${gripCss().split('\n').map(l => '  ' + l).join('\n')}
   .rm-dh{font-size:22px;font-weight:800;line-height:1.25;margin:0 0 12px;letter-spacing:-.01em}
   .rm-dh .rm-dh__star{color:var(--rm-star);margin-right:6px}
   .rm-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
@@ -405,7 +464,12 @@ function STYLE() { return String.raw`
     .rm-node,.rm-node--l,.rm-node--r{width:100%;margin:0;flex-direction:row;text-align:left;padding:18px 0 18px 46px}
     .rm-node--l .rm-node__dot,.rm-node--r .rm-node__dot{left:1px;right:auto}
     .rm-levelhead{margin-left:0;margin-right:0}
-    :root{--rm-drawer-w:100vw}
+    /* Ngăn chiếm cả màn — không còn bề rộng nào để chọn, nên tay kéo bị giấu (một
+       điều khiển không làm được gì là một cái bẫy). Ghi đè cả biến để JS đã lưu bề
+       rộng cũng không thắng: !important vì makeEdgeResizer() đặt biến này ở
+       style của <html>, tức inline. */
+    :root{--rm-drawer-w:100vw !important}
+    .ds-grip{display:none}
   }
 
   /* ==== khối tương tác ====================================================
@@ -494,4 +558,11 @@ document.querySelectorAll('.rm-node').forEach(n=>n.addEventListener('click',()=>
 $('#drClose').addEventListener('click',close);
 overlay.addEventListener('click',close);
 addEventListener('keydown',e=>{if(e.key==='Escape'&&!drawer.hidden)close();});
+
+/* announce() — bản tối giản của hàm cùng tên ở trang chính, đủ cho thứ duy nhất gọi
+   nó ở đây (makeEdgeResizer khi đưa bề rộng về mặc định). Vẫn giữ mẹo xoá-rồi-đặt-lại
+   sau 60ms: gán cùng một chuỗi hai lần liên tiếp thì phần lớn trình đọc màn hình
+   không phát lại, và rAF thì bị tạm dừng khi tab chạy nền. */
+function announce(msg){const el=$('#routeStatus');if(!el)return;
+  el.textContent='';clearTimeout(el._t);el._t=setTimeout(()=>{el.textContent=msg;},60);}
 `; }
