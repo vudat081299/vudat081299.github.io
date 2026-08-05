@@ -394,12 +394,12 @@
    "viz": "Bảng đối chiếu hai cột notebook vs api.py chỉ ra ba dòng dễ lệch: hour_sin bằng np.sin vs math.sin, get_dummies vs one_hot tự viết, (x−mu)/sigma vs (x−250000)/180000 hardcode."
   },
   "f-select": {
-   "tldr": "Sau vài vòng FE có 200 cột, nhưng với LightGBM thường cứ giữ hết vì nó tự bỏ cột vô dụng. Chọn lọc feature chỉ đáng làm khi cần giải thích, giảm chi phí lúc serve, hoặc khi số cột vượt xa số mẫu.",
+   "tldr": "Sau vài vòng FE có 200 cột, nhưng với LightGBM thường cứ giữ hết ở vòng đầu vì nó ít bị cột vô dụng làm hỏng (ít bị, không phải miễn nhiễm: cột nhiễu vẫn tốn thời gian train và tăng phương sai). Chọn lọc feature đáng làm khi cần giải thích, giảm chi phí lúc serve, hoặc khi số cột vượt xa số mẫu.",
    "points": [
-    "Với LightGBM và vài trăm cột thường giữ hết; chọn lọc khi cần giải thích / giảm chi phí tính lúc chạy thật / số cột >> số mẫu",
+    "Với LightGBM và vài trăm cột thường giữ hết ở vòng đầu (heuristic để không sa đà, không phải 'thêm cột thì không mất gì'); chọn lọc khi cần giải thích / giảm chi phí tính lúc chạy thật / số cột >> số mẫu",
     "Lọc thô rẻ làm trước: bỏ cột hằng số (nunique≤1), bỏ một trong hai cột tương quan >0,95 (chúng nói cùng một điều)",
     "Permutation importance (xáo trộn một cột rồi đo điểm tụt, trên tập VALIDATION, scoring='average_precision') đáng tin hơn feature_importances_ của cây, vì chỉ số mặc định của cây thiên vị cột nhiều giá trị khác nhau (cột ID ngẫu nhiên xếp hạng cao)",
-    "RFECV loại dần theo đệ quy chính xác nhất nhưng chậm nhất, chỉ dùng khi mọi thứ khác đã chạy ổn",
+    "RFECV loại dần theo đệ quy là cách sát nhất với chỉ số bạn tối ưu vì nó thử thật, và cũng chậm nhất; kết quả chỉ đúng với ĐÚNG estimator + chỉ số + cách chia CV đưa vào, không phải 'tập cột đúng' tuyệt đối — chỉ dùng khi mọi thứ khác đã chạy ổn",
     "Chọn feature cũng rò rỉ được: chọn top-k theo tương quan với nhãn trên TOÀN BỘ dữ liệu rồi mới cross-validate = điểm CV đẹp giả tạo; cách đúng là đặt bước chọn feature BÊN TRONG Pipeline để chạy lại trong từng fold",
     "Cho luận văn: trình bày độ quan trọng theo NHÓM kèm diễn giải (tốc độ 34%, lệch thói quen 28%, sin/cos 11%...) thay vì liệt kê top-20 — trả lời 'mô hình học được điều gì về gian lận' chứ không phải 'đạt bao nhiêu điểm'"
    ],
@@ -456,19 +456,19 @@
    "viz": "Viz kéo ngưỡng data-viz='thresh' xem hậu quả, và bảng kết quả luận văn 4 dòng (luật thủ công / logistic 0,281 / LightGBM 0,367 / đề xuất 0,412) kèm cột thiệt hại triệu ₫"
   },
   "ml-loss": {
-   "tldr": "'Học' chỉ gồm ba mảnh — mô hình, hàm mất mát (chấm điểm sai), bộ tối ưu (sửa) — và đổi bất kỳ mảnh nào ra thuật toán khác; điểm mấu chốt là hàm mất mát (phải khả vi để train) khác chỉ số đánh giá (chỉ cần có nghĩa), nên train bằng log loss rồi mới chọn ngưỡng để tối ưu chỉ số thật sự quan tâm.",
+   "tldr": "'Học' chỉ gồm ba mảnh — mô hình, hàm mất mát (chấm điểm sai), bộ tối ưu (sửa) — và đổi bất kỳ mảnh nào ra thuật toán khác; điểm mấu chốt là hàm mất mát (cái máy tối ưu; nếu tối ưu bằng gradient thì phải khả vi) khác chỉ số đánh giá (chỉ cần có nghĩa), nên train bằng log loss rồi mới chọn ngưỡng để tối ưu chỉ số quyết định.",
    "points": [
     "Ba mảnh của việc học: mô hình (hàm có tham số w), hàm mất mát (một con số đo mức sai của toàn bộ dự đoán), bộ tối ưu (quy tắc sửa w để con số đó giảm)",
     "Chọn hàm mất mát theo bài toán: dự đoán số → MSE/MAE; phân loại 2 lớp → binary cross-entropy (log loss); nhiều lớp → categorical cross-entropy kèm softmax; xếp hạng → LambdaRank (LightGBM có objective='lambdarank')",
-    "Hàm mất mát phải khả vi để tối ưu được, chỉ số đánh giá thì không cần; không thể tối ưu trực tiếp F1 bằng gradient descent vì nó phụ thuộc việc đếm nên nhảy bậc",
-    "Quy trình thực tế: train bằng log loss → sau đó chọn ngưỡng để tối ưu chỉ số thật sự quan tâm (PR-AUC, F1, tiền tiết kiệm)",
+    "Khả vi là điều kiện của CÁCH tối ưu bằng gradient, không phải luật của mọi ML: không thể tối ưu trực tiếp F1 bằng gradient descent vì nó phụ thuộc việc đếm nên nhảy bậc — nhưng MAE gãy tại 0 vẫn tối ưu được bằng subgradient, còn cây/LightGBM chọn điểm chia bằng tìm kiếm tham lam chứ không hạ gradient",
+    "Quy trình thực tế: train bằng log loss → sau đó chọn ngưỡng để tối ưu chỉ số quyết-định-tại-một-điểm (F1, precision/recall, tiền tiết kiệm). Lưu ý ngưỡng KHÔNG tối ưu được PR-AUC: PR-AUC/AP tổng hợp trên toàn dải ngưỡng nên nó không đổi khi bạn đổi ngưỡng",
     "Ba biến thể gradient descent theo lượng dữ liệu mỗi bước: Batch GD (toàn bộ, chính xác nhưng chậm, không dùng thực tế), SGD (một mẫu, nhanh nhưng nhiễu), Mini-batch (32–512 mẫu, mặc định của mọi thứ)",
     "Ba bộ tối ưu thông minh hơn: Momentum (cộng dồn phần bước trước như quán tính), Adam (tự điều chỉnh độ dài bước riêng từng tham số, mặc định cho deep learning), AdamW (Adam xử lý weight decay đúng hơn, chuẩn cho Transformer)"
    ],
    "viz": "Bảng đối chiếu hàm mất mát vs chỉ số đánh giá (dùng lúc nào, yêu cầu khả vi hay không, ví dụ), và viz gradient descent data-viz='gd'"
   },
   "ml-trees": {
-   "tldr": "Cây → Random Forest → Boosting là ba tầng, mỗi tầng sửa nhược điểm tầng trước: một cây overfit vì học thuộc, Random Forest lấy trung bình 500 cây độc lập để triệt tiêu sai số ngẫu nhiên, còn Gradient Boosting cho mỗi cây nông sửa lỗi cây trước để đạt hiệu năng đỉnh — LightGBM là mô hình chính, dừng ở đó đừng đi so thư viện.",
+   "tldr": "Cây → Random Forest → Boosting là ba tầng, mỗi tầng sửa nhược điểm tầng trước: một cây overfit vì học thuộc, Random Forest lấy trung bình 500 cây được ngẫu nhiên hoá cho ÍT TƯƠNG QUAN với nhau (không phải độc lập — chúng học từ cùng một nguồn dữ liệu) để triệt tiêu bớt sai số ngẫu nhiên, còn Gradient Boosting cho mỗi cây nông sửa lỗi cây trước để đạt hiệu năng đỉnh — LightGBM là mô hình chính, dừng ở đó đừng đi so thư viện.",
    "points": [
     "Cây quyết định chọn câu hỏi bằng cách thử mọi cột và mọi ngưỡng, giữ cái làm hai nhánh con thuần khiết nhất (đo bằng Gini/entropy); ưu điểm vẽ được và giải thích trong 30 giây, nhược điểm chí mạng là học thuộc tập train nếu để tự do — dùng max_depth=4, min_samples_leaf=50 để chặn",
     "Random Forest cần cả hai nguồn đa dạng: bagging (mỗi cây train trên mẫu bootstrap bốc có hoàn lại) và random subspace (mỗi lần chia chỉ xét tập con cột, ngăn một cột mạnh chi phối cả 500 cây)",
@@ -530,10 +530,10 @@
    "viz": "Bảng kỳ vọng thực tế đối chiếu mức cải thiện PR-AUC vs thời gian cho từng việc (feature +0,03–0,15 vs tune 60 trial chỉ +0,005–0,03)"
   },
   "ml-shap": {
-   "tldr": "SHAP mượn giá trị Shapley từ lý thuyết trò chơi để chia 'công trạng' dự đoán cho từng feature, và tổng đóng góp + giá trị cơ sở cộng lại đúng bằng kết quả (ở thang log-odds với mô hình cây) nên giải thích không mơ hồ — công cụ trả lời câu hội đồng chắc chắn hỏi 'vì sao mô hình quyết định như vậy'.",
+   "tldr": "SHAP mượn giá trị Shapley từ lý thuyết trò chơi để chia 'công trạng' dự đoán cho từng feature, và tổng đóng góp + giá trị cơ sở cộng lại đúng bằng kết quả (thang nào là tuỳ đầu ra bạn yêu cầu giải thích — với cây nhị phân ở mặc định model_output='raw' thì là log-odds) nên giải thích không mơ hồ — công cụ trả lời câu hội đồng chắc chắn hỏi 'vì sao mô hình quyết định như vậy'.",
    "points": [
     "Giá trị Shapley: với mỗi feature, xét mọi thứ tự gia nhập có thể, đo phần giá trị tăng thêm khi feature đó vào, rồi lấy trung bình — SHAP đo mỗi feature đóng góp bao nhiêu vào việc đẩy dự đoán lệch khỏi mức trung bình",
-    "Tính chất cộng đúng bằng: tổng mọi đóng góp + giá trị cơ sở = dự đoán cuối; với mô hình cây phân loại, 'dự đoán cuối' là log-odds (biên thô trước khi bóp về xác suất), nên phép cộng đúng ở thang đó — trình bày hình phải nói rõ trục là log-odds",
+    "Tính chất cộng đúng bằng: tổng mọi đóng góp + giá trị cơ sở = dự đoán cuối, nhưng 'dự đoán cuối' là cái gì thì tuỳ đầu ra bạn yêu cầu giải thích — với cây nhị phân ở mặc định của TreeExplainer (LightGBM/XGBoost, model_output='raw') đó là log-odds (biên thô trước khi bóp về xác suất), đổi sang model_output='probability' thì cộng đúng ở thang xác suất; trình bày hình phải nói rõ trục đang là thang nào",
     "Code dùng shap.TreeExplainer(model) rồi exp = explainer(X_t) trên dữ liệu đã transform; ba hình: beeswarm (toàn cục, hình chính), bar (xếp hạng độ quan trọng), waterfall(exp[0]) (một ca cụ thể)",
     "Dùng explainer(X) chứ đừng dùng explainer.shap_values(X): với bài hai lớp, tuỳ phiên bản shap mà shap_values trả về mảng (n_mẫu,n_cột) hoặc danh sách hai mảng, nên shap_values[0] khi thì là mẫu số 0 khi thì là toàn bộ lớp 0 — hình vẫn vẽ ra nhưng sai; API mới trả về Explanation có nhãn rõ ràng",
     "Hai loại hình hai mục đích: summary/beeswarm trả lời 'mô hình học được gì nói chung' (chương Kết quả & thảo luận), force/waterfall trả lời 'vì sao giao dịch NÀY bị chặn' (Nghiên cứu tình huống, rất thuyết phục khi bảo vệ)",
@@ -629,13 +629,13 @@
    "viz": "Widget attention kéo được (data-viz=attn): bấm vào một từ như 'Đà Nẵng' để thấy nó nhìn những từ nào để hiểu chính nó"
   },
   "dl-tf": {
-   "tldr": "Transformer là kiến trúc hoàn chỉnh xây quanh attention: một khối gồm bốn thành phần mà đầu ra cùng kích thước đầu vào nên xếp chồng được vô hạn lần, và positional encoding chính là mẹo sin/cos vòng tròn áp cho vị trí.",
+   "tldr": "Transformer là kiến trúc hoàn chỉnh xây quanh attention: một khối gồm bốn thành phần mà đầu ra cùng kích thước đầu vào nên ghép nối tiếp được tuỳ ý về hình dạng (độ sâu thật bị chặn bởi compute, bộ nhớ và độ ổn định khi train — không phải vô hạn), và positional encoding chính là mẹo sin/cos vòng tròn áp cho vị trí.",
    "points": [
     "Một khối gồm bốn thành phần: multi-head attention (trộn thông tin giữa các token) + nối tắt residual + LayerNorm, rồi feed-forward (xử lý từng token riêng) + residual + LayerNorm",
-    "Vì đầu ra cùng kích thước đầu vào nên xếp chồng khối bao nhiêu lần cũng được — GPT-3 có 96 khối, đó là toàn bộ 'kiến trúc'",
+    "Vì đầu ra cùng kích thước đầu vào nên hình dạng không chặn việc xếp chồng — GPT-3 có 96 khối, đó là toàn bộ 'kiến trúc'; cái chặn độ sâu thật là compute, bộ nhớ và độ ổn định khi tối ưu (chính là lý do khối có sẵn residual + LayerNorm)",
     "Phân công vai trò: attention lo giao tiếp giữa các vị trí, feed-forward lo tính toán tại từng vị trí (chiếm ~2/3 số tham số); xen kẽ hai việc này là ý tưởng kiến trúc cốt lõi",
     "Bỏ residual thì mạng sâu không train nổi (vanishing gradient); bỏ LayerNorm thì train bất ổn dễ nan",
-    "Positional encoding vì attention mù về thứ tự: đảo hai từ trong câu ra kết quả y hệt ('chó cắn người' = 'người cắn chó'), nên phải cộng thêm tín hiệu sin/cos vào embedding để mã hoá vị trí",
+    "Positional encoding vì attention mù về thứ tự: self-attention hoán vị-đồng biến (đảo hai token thì hai vector đầu ra chỉ đổi chỗ, giá trị không đổi) nên lớp đó nhìn câu như một TÚI token — 'chó cắn người' và 'người cắn chó' cho cùng một bộ vector; phải cộng thêm tín hiệu sin/cos vào embedding để mã hoá vị trí",
     "Đây chính là mẹo sin/cos của giờ 23h–0h nhưng dùng nhiều chu kỳ chồng lên nhau (từ rất ngắn tới rất dài) để vừa phân biệt vị trí liền kề vừa nắm khoảng cách xa; các mô hình hiện đại (LLaMA, GPT-NeoX) dùng RoPE dựa trên phép quay vòng tròn"
    ],
    "viz": "Sơ đồ ASCII một khối Transformer: đầu vào x rẽ nhánh residual qua Multi-Head Attention → cộng → LayerNorm → Feed-Forward → cộng → LayerNorm, đầu ra cùng kích thước đầu vào"
@@ -653,12 +653,12 @@
    "viz": "Bảng bốn cách dùng LLM (Prompting/Few-shot/RAG/Fine-tune) với cột cơ chế, chi phí và khi nào dùng"
   },
   "dl-tab": {
-   "tldr": "Trên dữ liệu bảng, gradient boosting (LightGBM) vẫn thắng deep learning, và phải biết vì sao để trả lời hội đồng; cách dùng deep learning thông minh nhất là tạo feature (embedding) cho LightGBM chứ không thay nó.",
+   "tldr": "Trên dữ liệu bảng cỡ vừa, gradient boosting (LightGBM) là baseline rất mạnh và thường thắng deep learning — 'thường', không phải luật phổ quát: kết quả phụ thuộc bộ dữ liệu, và ưu thế mờ đi khi có pretraining hay multimodal. Phải biết vì sao để trả lời hội đồng; cách dùng deep learning thông minh nhất là tạo feature (embedding) cho LightGBM chứ không thay nó.",
    "points": [
     "Bảng không có cấu trúc hình học để khai thác: cột 3 và cột 4 không có quan hệ hình học, hoán vị cột không đổi gì — khác ảnh (CNN) hay token (Transformer)",
     "Đặc trưng không đồng nhất (một cột tiền, một cột mã danh mục, một cột tỉ lệ): cây xử lý tự nhiên, mạng nơ-ron cần chuẩn hoá cẩn thận từng loại",
     "Cây bất biến với phép biến đổi đơn điệu (log hay không log cho kết quả y hệt) còn mạng rất nhạy; ranh giới quyết định dạng bậc thang/ngưỡng ('trên 50 tuổi') cây làm bằng một lần chia, mạng phải xấp xỉ bằng nhiều nơ-ron",
-    "Đây không phải ý kiến cá nhân mà được kiểm chứng lại nhiều lần trong so sánh quy mô lớn — Grinsztajn và cộng sự 2022 là nguồn hay trích, làm phần 'lựa chọn mô hình' của luận văn vững hẳn",
+    "Đây không phải ý kiến cá nhân mà được kiểm chứng lại nhiều lần trong so sánh quy mô lớn — Grinsztajn và cộng sự 2022 là nguồn hay trích, làm phần 'lựa chọn mô hình' của luận văn vững hẳn; nhưng phát biểu cho đúng phạm vi (bộ cỡ ~10 nghìn mẫu, không pretraining/multimodal) vì benchmark khác như TabZilla cho thấy kết quả phụ thuộc bộ dữ liệu",
     "Deep learning thực sự lợi khi: cột hạng mục lực lượng rất lớn (embedding cho 50.000 cửa hàng), có dữ liệu chuỗi, có nhiều loại dữ liệu (multi-modal), hoặc học biểu diễn chung từ dữ liệu không nhãn",
     "Cách dùng thông minh nhất trong 2 tuần: đừng thay LightGBM, hãy train mạng nhỏ có nn.Embedding cho merchant_id, lấy ma trận embedding 50.000×16, nối vào bảng feature rồi train LightGBM — điểm thường tốt hơn cả hai cách riêng, chi phí một buổi"
    ],
@@ -823,7 +823,7 @@
    "viz": "Code chia tập: df.groupby('user_id').tail(1) làm test vs cắt theo cutoff = df['ts'].quantile(0.8) chung cho mọi user."
   },
   "q-causal": {
-   "tldr": "Cả trang tới đây dạy dự đoán ('cái gì đi cùng cái gì'); bài này về câu hỏi tổ chức thật sự trả tiền — 'nếu tôi LÀM X thì sao' — mà không mô hình dự đoán nào (kể cả SHAP) trả lời được, và ngẫu nhiên hoá là thứ duy nhất giải được.",
+   "tldr": "Cả trang tới đây dạy dự đoán ('cái gì đi cùng cái gì'); bài này về câu hỏi tổ chức thật sự trả tiền — 'nếu tôi LÀM X thì sao' — mà không mô hình dự đoán nào (kể cả SHAP) trả lời được. Ngẫu nhiên hoá là cách mạnh nhất và sạch nhất khi làm được; khi không làm được thì vẫn còn nhóm phương pháp quasi-experimental, đổi kết luận nhân quả lấy một giả định nêu rõ.",
    "points": [
     "Một tương quan 'khách dùng X rời bỏ thấp hơn 40%' có thể sai vì ba lý do mà mọi mô hình dự đoán đều không phân biệt được: đảo chiều nhân quả, biến gây nhiễu (confounding), thiên lệch chọn mẫu — vì cả ba cho tương quan giống hệt nhau; đây là lý do SHAP không phải công cụ nhân quả",
     "Gán ngẫu nhiên làm hai nhóm giống nhau về MỌI thứ (cả cái không đo được), chỉ còn khác một điều là can thiệp, nên chênh lệch kết quả LÀ tác động",
