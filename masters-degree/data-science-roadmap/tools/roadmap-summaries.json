@@ -1,0 +1,1019 @@
+{
+ "generatedBy": "workflow ds-roadmap-summaries",
+ "count": 84,
+ "summaries": {
+  "s-how": {
+   "tldr": "Trang là giáo trình có thứ tự; bạn chọn lộ trình theo thời gian mình có, và chiều \"thời gian\" (14 ngày / 6–8 tuần) tách hoàn toàn khỏi chiều \"quan trọng\" (Bắt buộc / Nên biết / Định vị là đủ) — một bài có thể vừa quan trọng vừa không nhét vừa 14 ngày.",
+   "points": [
+    "Hai lộ trình theo thời gian: chuẩn 6–8 tuần (mặc định, đi hết 9 họ bài toán + mini-project) vs Fast track 14 ngày (một vòng end-to-end trên đúng một bài toán).",
+    "Ba nhãn ưu tiên độc lập với lộ trình: Bắt buộc (không biết thì bài sau hỏng) / Nên biết (hội đồng sẽ hỏi) / Định vị là đủ (biết nó ở đâu là xong); ví dụ 'Chuỗi thời gian' vừa Bắt buộc vừa 6–8 tuần.",
+    "Mạch chính = đường ngắn nhất tới sản phẩm; nhánh phụ đẩy ra sau chip — ds-math mở công thức (popup giữa màn hình), ds-aside mở nhánh phụ/so sánh công cụ (drawer bên phải).",
+    "Ba loại phát biểu về công cụ: 'ổn định' (sự thật kỹ thuật, tin được) / 'hạn mức' (số nhà cung cấp đặt, phải kiểm lại đúng ngày dùng) / 'nhận định' (ý kiến, được phép không đồng ý); nguồn kiểm ngày 3/8/2026.",
+    "Phím tắt đọc nhanh: ] sang bài sau, [ về bài trước, Esc đóng popup/ngăn.",
+    "Tiến độ tính theo khối lượng (một bài code 150′ nặng hơn nhiều bài đọc 10′), không theo số tick; đọc xong không gõ gì thì 48 giờ sau còn ~10%."
+   ],
+   "viz": "Hai thẻ đối chiếu lộ trình chuẩn (tổng giờ, 6–8 tuần, phần Bắt buộc ~giờ/tuần) vs Fast track (14 ngày, ~giờ/ngày mỗi ngày không nghỉ)."
+  },
+  "s-intro": {
+   "tldr": "Data Science KHÔNG phải 'train model' — phần lớn việc thật là đóng khung bài toán, lấy và làm sạch dữ liệu, quyết định đo cái gì; và rất nhiều câu hỏi chỉ cần SQL/biểu đồ chứ không cần Machine Learning.",
+   "points": [
+    "Bốn loại câu hỏi dữ liệu quyết định công cụ: Mô tả (SQL, không ML) · Dự đoán (ML) · Nhân quả (A/B test, khi CAN THIỆP) · Ra quyết định (ngưỡng + chi phí sai lầm).",
+    "Ba điều dễ nhầm: không phải dự án nào cũng cần ML; model dự đoán tốt KHÔNG tự trả lời câu nhân quả ('A đi kèm B' khác 'A gây ra B'); model tốt KHÔNG tự tạo quyết định tốt (còn cần ngưỡng + chi phí).",
+    "Cặp thuật ngữ hay lẫn: feature/X (cột model được nhìn) vs target/nhãn/y (cột muốn đoán); loss (cho MÁY tối ưu lúc train) vs metric (cho NGƯỜI đọc lúc báo cáo, có thể khác loss); parameter (máy tự học) vs hyperparameter (bạn đặt tay).",
+    "Training là model.fit(X, y) — cho xem feature VÀ nhãn; inference là model.predict(X_mới) trên dòng chưa có nhãn; score (xác suất 0–1) khác quyết định (chỉ có khi đặt threshold).",
+    "Grain = một dòng đại diện cho cái gì (unit of observation); câu quan trọng nhất bài: chưa xác định được grain thì CHƯA được train model.",
+    "Cột 'khách khiếu nại sau?' không được làm feature vì tại thời điểm quẹt thẻ chưa biết nó — dùng nó là data leakage; hai loại lỗi false positive (chặn nhầm khách thật) vs false negative (lọt gian lận) đổi ngược chiều khi xê dịch ngưỡng."
+   ],
+   "viz": "Bảng đồ chơi 6 giao dịch × 7 cột (id, số tiền, giờ, quẹt/1h, thẻ mới?, khách khiếu nại sau?, gian lận?) — mọi thuật ngữ được neo vào đúng ô của bảng này."
+  },
+  "s-pipeline": {
+   "tldr": "Mọi product AI thật đều đi qua cùng 10 bước; khi không biết một khái niệm 'thuộc về đâu' thì nó luôn rơi vào một trong 10 ô — sin/cos ở bước 5, SHAP ở bước 7, drift ở bước 10.",
+   "points": [
+    "Mười bước: 1 đóng khung bài toán · 2 lấy dữ liệu · 3 EDA · 4 làm sạch · 5 feature engineering · 6 chia tập & cách kiểm chứng · 7 train & tune · 8 đánh giá & chọn ngưỡng · 9 deploy (FastAPI + Docker) · 10 giám sát & retrain.",
+    "Feature engineering (bước 5) quyết định chất lượng nhiều hơn cả việc chọn mô hình; ngược lại model.fit(X,y) (bước 7) là dòng lệnh ngắn nhất và ít quan trọng nhất trong cả quy trình.",
+    "EDA có HAI thì: (a) trước khi chia tập — kiểm cấu trúc (số dòng, kiểu dữ liệu, trùng lặp, grain, nhãn có chưa); (b) sau khi chia tập, CHỈ trên train — xem phân phối, quan hệ feature–nhãn, chọn feature; nhìn tập test sớm là một dạng rò rỉ.",
+    "Bước 9 deploy: feature lúc chạy thật phải tính GIỐNG HỆT lúc train (tránh training/serving skew), dùng Pipeline chung.",
+    "Quy trình là VÒNG LẶP không phải đường thẳng: đánh giá bước 8 tệ → quay về bước 5 nghĩ feature → thiếu dữ liệu → quay bước 2; một dự án bình thường đi vòng 5–15 lần."
+   ],
+   "viz": "Bảng phân bổ thời gian thực tế vs khoá học dạy: đóng khung ~10% (khoá dạy ~0%), lấy-xem-sạch-feature (2–5) ~60% (dạy ~15%), train-tune-đánh giá (6–8) ~15% (dạy ~80%), deploy-giám sát (9–10) ~15% (dạy ~5%)."
+  },
+  "s-families": {
+   "tldr": "10 bước là trục DỌC (mọi dự án giống nhau); họ bài toán là trục NGANG — thứ thật sự chuyển giao giữa các họ là bộ câu hỏi/quy trình 10 bước, còn cách đóng khung, biểu diễn, làm feature (bước 3–5) và nhất là chia tập (6) + đo lường (8) thì đổi theo họ.",
+   "points": [
+    "Bảng, hồi quy: nhị phân → baseline tỉ lệ nền + luật thủ công, metric PR-AUC nếu lệch / ROC-AUC nếu cân bằng; multiclass → baseline lớp phổ biến nhất, macro-F1; hồi quy → baseline trung vị, MAE (có ngoại lai) / RMSE (sai số lớn đắt).",
+    "Chuỗi & không giám sát: forecasting → baseline naive & seasonal-naive, chia CHỈ theo thời gian + backtest walk-forward, metric MASE/sMAPE; không giám sát → không có metric 'thật', đánh giá gián tiếp.",
+    "Chữ, ảnh, xếp hạng: NLP → baseline TF-IDF + logistic regression; computer vision → baseline pretrained đóng băng + linear probe, chia theo nhóm ảnh (cùng bệnh nhân/camera), mAP/IoU/Dice; gợi ý → baseline popularity, chia leave-last-out theo thời gian, Recall@K/NDCG@K/MAP@K.",
+    "Nhân quả/thí nghiệm KHÁC hẳn: không phải train/test mà là nhóm treatment/control, baseline so trước–sau (và biết vì sao nó sai), đo bằng chênh lệch trung bình + khoảng tin cậy.",
+    "Tám câu định vị một dự án lạ: (1) họ nào? (2) input/output chính xác? (3) baseline ngu ngốc bắt buộc? (4) chia tập (thời gian/nhóm lặp/lớp hiếm)? (5) metric có khớp thứ tổ chức quan tâm? (6) rò rỉ ở đâu (cột nào chỉ có SAU sự việc)? (7) có thật cần deep learning? (8) chạy bằng cloud stack nào? — chép vào docs/problem-statement.md.",
+    "Dự án thật thường là TỔ HỢP nhiều họ (vd 'dự báo nhu cầu để tự đặt hàng' = forecasting + tối ưu + đôi khi nhân quả) — tách ra rồi định vị từng lớp, đừng ép vào một ô."
+   ],
+   "viz": "Bảng tổng hợp 9 họ × 5 cột (Họ · Đầu ra · Baseline bắt buộc · Chia tập · Metric chính) kèm khối viz 'families' bấm vào xem hồ sơ từng họ."
+  },
+  "s-lookup": {
+   "tldr": "Bảng tra ngược thực dụng: đi từ một triệu chứng cụ thể → bước nào trong 10 bước, công cụ nào, bài nào — dùng khi đang bí đúng một chỗ chứ không đọc tuần tự.",
+   "points": [
+    "Triệu chứng dữ liệu (bước 5): '23h và 0h bị coi xa nhau' → mã hoá sin/cos; 'cột lệch, vài giá trị khổng lồ' → np.log1p hoặc RobustScaler; 'thành phố 800 giá trị' → target encoding / gộp đuôi hiếm thành KHÁC, KHÔNG one-hot 800 cột.",
+    "Triệu chứng mô hình: 'Accuracy 99,8% mà bắt 0 vụ gian lận' → nhãn lệch, accuracy sai, dùng PR-AUC; 'AUC 0,999 đẹp không tưởng' → gần như chắc chắn data leakage; 'đúng máy sai production' → training/serving skew, dùng Pipeline chung; 'chạy lại ra khác' → chưa cố định random_state.",
+    "Chọn mô hình: dữ liệu bảng khởi điểm LightGBM/XGBoost; ảnh/chữ/âm thanh/chuỗi dài → deep learning; luôn chạy baseline đơn giản trước và để kết quả quyết định.",
+    "Chọn cách chia: có thời gian → chia theo thời gian; nhóm lặp (cùng khách) → GroupKFold; chuỗi thời gian → backtest walk-forward; gợi ý → leave-last-out theo thời gian; còn lại → stratified random.",
+    "Chọn metric: lớp dương hiếm → PR-AUC; cân bằng → ROC-AUC; nhiều lớp → macro-F1; số thực → MAE/RMSE; dự báo → MASE; xếp hạng → NDCG@K; LUÔN kèm một chỉ số quy ra tiền. Dữ liệu bảng: ~1.000 mẫu của lớp hiếm là bắt đầu ổn, số ca dương quan trọng hơn số dòng tổng.",
+    "Bảng công cụ mặc định: pandas (~60% dòng code) · numpy · scikit-learn Pipeline/ColumnTransformer (nơi gắn sin/cos để không lệch train/serve) · LightGBM · PyTorch + Hugging Face · statsmodels ETS/ARIMA · SHAP · MLflow · FastAPI + Docker · Streamlit · Overleaf — mỗi ô chỉ là MỘT mặc định, có 2–4 đối thủ."
+   ],
+   "viz": "Ba bảng triệu chứng → bước → cách sửa; ví dụ then chốt 'Accuracy 99,8% mà bắt được 0 vụ gian lận → bước 8 → nhãn lệch, dùng PR-AUC thay accuracy'."
+  },
+  "s-plan8w": {
+   "tldr": "Lộ trình chính của trang; 'giờ' giả định bạn ĐÃ biết lập trình (từ số 0 phải nhân thêm, thành nhiều tuần hơn). Cốt lõi: thứ tự bài bị khoá bởi phụ thuộc kiến thức, và mỗi tuần phải kết bằng một deliverable commit được chứ không phải 'đã đọc xong'.",
+   "points": [
+    "'6–8 tuần' KHÔNG dành cho người bắt đầu từ con số 0 về lập trình; nếu Python là ngôn ngữ đầu tiên thì tổng giờ và số tuần lớn hơn nhiều (nhịp 8–10 giờ/tuần).",
+    "Ba mốc không bỏ: cuối tuần 3 vòng đầu khép kín (dữ liệu → split → baseline → metric ra một con số thật, xấu cũng được); cuối tuần 7 hai mini-project thuộc hai họ khác nhau làm tới cùng; cuối tuần 8 repo tái lập + bảng thí nghiệm có bất định + thesis skeleton + defense plan.",
+    "Thứ tự cố định trái với trực giác: deep learning ở TUẦN 5, còn các họ bài toán để tới TUẦN 7 — vì NLP cần embedding/attention, CV cần mạng nơ-ron, forecasting có nhánh LSTM; học họ bài toán trước sẽ biến chúng thành danh sách tên gọi.",
+    "Hai ràng buộc KHÔNG được đảo: chia tập (tuần 2) phải xong trước feature engineering (tuần 3) — làm ngược là công thức chuẩn để rò rỉ; đo lường (tuần 4) phải xong trước tuning — tune theo chỉ số sai thì càng tune càng tệ mà bảng vẫn đẹp lên.",
+    "Nhịp một tuần: ba buổi × 3 giờ (không phải mỗi ngày 1,5 giờ) vì data science cần khối thời gian liền để nạp lại ngữ cảnh; buổi cuối tuần LUÔN dành cho deliverable; mỗi buổi ghi một dòng vào bảng thí nghiệm — bảng đó chính là chương 4 luận văn.",
+    "Cột 'Nộp được gì' là phần quan trọng nhất; tuần nào > 14 giờ (nhãn 'nặng') thì giãn thành hai tuần hoặc cắt bài 'Nên biết', KHÔNG bỏ phần thực hành vì đó là chỗ kiến thức bám lại."
+   ],
+   "viz": "Bảng 8 tuần mỗi tuần một deliverable (khối planWeeks), giờ tách ba loại đọc/thực hành/deliverable; tuần 1, 2 và 7 nặng nhất ~14–16 giờ."
+  },
+  "s-plan14": {
+   "tldr": "Bản nén của lộ trình 8 tuần để đi trọn MỘT vòng end-to-end; cả lịch xoay quanh một mốc duy nhất — hết ngày 6 phải có mô hình chạy từ đầu tới cuối dù tệ, tám ngày sau chỉ là cải tiến (dừng được bất cứ lúc nào).",
+   "points": [
+    "Mốc ngày 6: đọc dữ liệu → tạo feature → train → in ra một con số; đọc lịch theo HAI nửa (tới ngày 6 để tới mốc / sau ngày 6 để cải tiến), đừng đọc như 14 việc rời rạc.",
+    "Số giờ mỗi ngày = tổng ba cột đọc/thực hành/deliverable của chính các bài trong ngày, không gõ tay nên không lệch với trang chủ hay cây bên trái.",
+    "Fast track chỉ GIỚI THIỆU chứ không dạy hết: bỏ phần lớn chặng 8 (hồi quy, forecasting, multiclass, NLP, CV, gợi ý, analytics), tuning, giải thích mô hình, học không giám sát → sau 14 ngày làm được một dự án phân loại trên dữ liệu bảng nhưng CHƯA định vị được dự báo hay NLP.",
+    "Sáu thứ KHÔNG được nén dù gấp tới đâu: data leakage · chia tập · đo lường & chọn ngưỡng · kỷ luật tập test (chỉ mở một lần) · tái lập (ghim phiên bản, cố định seed) · thống kê suy diễn — cắt là đổi hai tuần lấy một kết quả sai không ai phát hiện tới buổi bảo vệ.",
+    "Lấp chỗ trống sau ngày 14 theo thứ tự (không tuỳ chọn, chỉ hoãn): forecasting → A/B testing & tư duy nhân quả → hồi quy/multiclass → NLP/CV/gợi ý/analytics → mini-project chuyển giao làm thật 2/6.",
+    "Nếu chỉ 3 giờ/ngày: 14 ngày mua ~42 giờ nên phải cắt thật (không cắt kiểu 'đọc nhanh hơn'); không bao giờ cắt cột deliverable; 'Bản đồ các họ bài toán' nằm trong danh sách không được cắt vì là thứ duy nhất trong 14 ngày dạy CHUYỂN GIAO."
+   ],
+   "viz": "Khối lịch 14 ngày (planDays) + viz plan14 vẽ hình dạng giờ mỗi ngày, cho thấy ngày nhẹ được xếp cạnh ngày nặng."
+  },
+  "t-env": {
+   "tldr": "Chỗ làm việc chia đúng ba vai — nơi code sống (GitHub, bản thật duy nhất), nơi code chạy (Colab, đóng tab là mất), nơi có terminal thật (Codespaces cho pytest/Docker) — và việc quan trọng nhất là ghim phiên bản thư viện để kết quả tái lập được.",
+   "points": [
+    "Ba vai tách bạch: GitHub giữ code (bản thật duy nhất), Colab/Kaggle là chỗ chạy vứt-được, Codespaces là terminal đi mượn cho pytest + dựng Docker",
+    "GitHub Free cho Codespaces 120 core-hour + 15 GB-tháng/tháng, không cần thẻ; máy 2 nhân tiêu 2 core-hour mỗi giờ (kiểm 3/8/2026)",
+    "pip freeze > requirements.txt để khoá phiên bản; ô đầu mọi notebook là !pip install -q -r requirements.txt vì Colab tự nâng cấp thư viện không báo",
+    "Trên máy thì thêm venv (.venv/ vào .gitignore); Colab/Codespaces không cần venv vì mỗi phiên đã là máy ảo/container riêng",
+    "Cấu trúc thư mục dựng từ ngày 1: data/raw là CHỈ-ĐỌC, mọi biến đổi phải là code trong src/ chạy từ raw ra processed",
+    "Notebook để nghĩ, .py để chạy: trước khi tin số nào phải Restart Kernel and Run All; commit kèm con số vào message (vd 'baseline auc 0.87')"
+   ],
+   "viz": "Bảng ba vai (nơi code sống / chạy / có terminal) và cây thư mục dự án fraud-detection với data/raw đánh dấu KHÔNG BAO GIỜ sửa."
+  },
+  "t-online": {
+   "tldr": "Máy yếu không phải rào cản: cả 10 bước của dự án — kể cả đóng gói Docker — đều có bản chạy trong tab trình duyệt, miễn giữ đúng luật code sống trong src/ trên GitHub chứ không trong ô notebook.",
+   "points": [
+    "10 bước dự án đều chạy trên tab trình duyệt; máy bạn chỉ cần hiển thị một trang web, không dùng CPU",
+    "Sáu chỗ, mỗi chỗ một vai: GitHub (code), Google Drive (dữ liệu + checkpoint), Colab/Kaggle (chạy), Codespaces (terminal Docker), Streamlit Community Cloud (demo), Overleaf (luận văn)",
+    "Luật sống còn: notebook chỉ chứa lệnh clone repo, lệnh gọi hàm, và hình vẽ; mọi logic nằm trong src/*.py — bỏ luật này thì cả đường đi sụp",
+    "Docker không cần cài lên máy: Codespaces cho máy Linux có sẵn Docker, gõ docker build/run thật; nhưng dựng được ảnh ≠ có host miễn phí 24/7",
+    "Nhịp làm việc: sửa src/ ở tab github.dev (bấm phím . trên repo) rồi commit, quay lại Colab !git pull — %autoreload 2 để thấy thay đổi ngay",
+    "Ranh giới cấm: dữ liệu giao dịch thật của công ty KHÔNG được tải lên Drive/Kaggle/HF kể cả để riêng tư; chỉ dùng dữ liệu công khai hoặc mô phỏng"
+   ],
+   "viz": "Bảng 10 bước × 'mở tab nào' × 'máy bạn phải làm gì' — cột cuối gần như toàn 'Không gì cả'."
+  },
+  "t-colab": {
+   "tldr": "Colab là một máy tính đi mượn kèm GPU nhưng bốc hơi sau vài tiếng; trong 14 ngày nó chỉ thắng máy bạn ở đúng ba việc, và mô hình chính (LightGBM) không cần GPU chút nào.",
+   "points": [
+    "Colab = Jupyter chạy trên máy ảo Google; file trong /content mất khi phiên kết thúc, chỉ notebook nằm trong Drive là còn",
+    "Chỉ ba việc Colab đáng dùng: GPU cho sinh embedding + train mạng nơ-ron, link bấm-là-chạy gửi người hướng dẫn, máy dự phòng khi máy bạn hỏng",
+    "LightGBM trên 300k dòng chạy vài giây bằng CPU — đưa lên GPU không nhanh hơn; kiểm GPU bằng !nvidia-smi và torch.cuda.is_available() TRƯỚC khi train",
+    "Quy trình đúng: git clone repo về, %load_ext autoreload + %autoreload 2, drive.mount để lưu; code sống trong repo, Colab chỉ kéo về chạy",
+    "Lấy dữ liệu 4 cách; cách (b) đọc từ Drive là đáng đầu tư nhất (tải lên một lần, mỗi phiên sau mất 5 giây), tránh cách (d) files.upload phải làm lại mỗi phiên",
+    "Bốn giới hạn: phiên ngắt (tối đa ~12h), máy ảo bị xoá sạch, GPU không bảo đảm, không phải chỗ chạy sản phẩm — chống bằng checkpoint ra Drive + pip install ghim phiên bản"
+   ],
+   "viz": "Bảng quyết định 'làm gì ở đâu' cột Colab/Codespaces/Máy bạn, với dòng LightGBM ✔ mặc định Colab và dòng dữ liệu nhạy cảm ✔ bắt buộc máy bạn."
+  },
+  "t-ai": {
+   "tldr": "Dùng AI coding assistant biến bạn từ người gõ code thành người ra đề và người kiểm tra; nguy hiểm đặc trưng của DS là sai lầm tự tin không làm chương trình đổ mà chỉ làm con số sai — trông y hệt con số đúng.",
+   "points": [
+    "Giao việc theo module nhỏ (một hàm, một file) với ràng buộc kiểm được, không giao cả dự án; prompt tốt nêu rõ tên cột, kiểu trả về, và cửa sổ KHÔNG gồm dòng hiện tại",
+    "Bốn câu hỏi bắt buộc sau mỗi lần AI đưa code: giả định gì về dữ liệu, chỗ nào gây rò rỉ, chạy được với DataFrame một dòng không, sai im lặng thì triệu chứng là gì",
+    "Không tin con số từ code chưa test; bốn loại assert: hình dạng (số dòng không đổi), một dòng (phá API), giá trị biết trước (kiểm bằng toán), không rò rỉ (dòng đầu mỗi thẻ phải là 0/NaN)",
+    "Đảo chiều để hiệu quả: yêu cầu AI viết test TRƯỚC, bạn đọc 10 dòng test dễ hơn kiểm 80 dòng code, rồi mới viết code",
+    "Ba chỗ đọc code AI trước: ranh giới train/test (fit_transform trên X đầy đủ là cờ đỏ), thứ tự thời gian (sort_values trước rolling/shift), xử lý thiếu và chia cho 0",
+    "Tuyệt đối không đưa vào prompt: khoá API, dữ liệu khách thật (kể cả vài dòng mẫu) — dán schema hoặc dữ liệu giả bằng numpy.random; con số/trích dẫn AI bịa không bao giờ đưa vào luận văn"
+   ],
+   "viz": "Khối code tests/test_features.py bốn hàm assert, trong đó test_cyclic_encoding kiểm hour [0,6,12,18] → hour_sin [0,1,0,-1]."
+  },
+  "t-pandas": {
+   "tldr": "pandas là Excel viết bằng code, và bạn chỉ cần 15 thao tác chiếm 90% việc; sức mạnh thật nằm ở vector hoá (phép tính trên cả cột, nhanh ~100 lần vòng lặp) và groupby+merge để tạo feature so-với-mức-thường của chính khách hàng.",
+   "points": [
+    "Nghi thức mở dữ liệu mới: df.shape, df.head(), df.info() (phát hiện cột ngày đang là object/text), df.describe(), df.isna().sum(), value_counts(normalize=True)",
+    "Lọc phải dùng & (không phải and) và mỗi vế có ngoặc riêng vì & ưu tiên cao hơn >; loc theo NHÃN, iloc theo VỊ TRÍ",
+    "Tạo cột = feature engineering, vector hoá không vòng lặp: np.log1p, .astype(int), .dt.hour/.dt.dayofweek (0=thứ Hai), np.select cho phân loại nhiều nhánh",
+    "groupby().agg() nhiều chỉ số rồi merge how='left' gắn ngược vào bảng gốc; feature mạnh nhất cho fraud: amt_vs_avg = Amount / avg_amt (gấp mấy lần mức thường của chính khách)",
+    "Sau mỗi merge kiểm df.shape ngay: nếu số dòng TĂNG thì bảng phải có khoá trùng và bạn vừa nhân bản dữ liệu — lỗi im lặng nguy hiểm nhất",
+    "Cảnh báo trung thực: trong creditcard.csv cột Time là số giây kể từ giao dịch đầu, nên hour lệch một hằng số so với giờ thật — đừng viết 'gian lận lúc 2h sáng', viết 'một khung giờ nhất định'"
+   ],
+   "viz": "Bài tập tạo cột hour = (df.Time // 3600) % 24 rồi groupby ra tỉ lệ gian lận theo từng giờ, dẫn thẳng tới bài Biến chu kỳ."
+  },
+  "t-sql": {
+   "tldr": "SQL là bốn thao tác pandas đã biết (lọc, nhóm, tổng hợp, nối) viết ở chỗ khác; giá trị lớn nhất là window function tính point-in-time feature ngay trên máy chủ, nhưng nó cũng làm rò rỉ dữ liệu dễ hơn pandas vì lỗi nấp trong một dòng trông vô hại.",
+   "points": [
+    "Sáu mệnh đề đủ dùng: SELECT/FROM/WHERE/GROUP BY/HAVING/ORDER BY/LIMIT; thứ tự VIẾT khác thứ tự CHẠY (chạy: FROM→WHERE→GROUP BY→HAVING→SELECT→ORDER BY)",
+    "Hệ quả của thứ tự chạy: không dùng được bí danh SELECT trong WHERE (nhưng được trong ORDER BY); WHERE lọc trước khi gom, HAVING lọc sau khi gom",
+    "LEFT JOIN đúng ~95% trường hợp (không đánh rơi giao dịch thiếu thông tin); sau mỗi JOIN đếm lại số dòng, tăng là có khoá trùng",
+    "Window function OVER có ba mảnh: PARTITION BY (=groupby), ORDER BY ts (=sort_values), ROWS/RANGE BETWEEN (=expanding/rolling); ROWS đếm theo dòng, RANGE đếm theo giá trị nên cửa sổ '1 giờ' phải dùng RANGE",
+    "Rò rỉ SQL: AVG(amount) OVER (PARTITION BY card_id) thiếu ORDER BY + khung cửa sổ sẽ tính trung bình cả tương lai; luật là mọi window feature phải có ORDER BY ts VÀ khung loại trừ dòng hiện tại (1 PRECEDING / EXCLUDE CURRENT ROW)",
+    "Chạy SQL từ Python: DuckDB tập ngay trên file CSV không cần cài máy chủ (cách nhanh nhất khi có 2 tuần); kết nối thật thì lấy chuỗi kết nối từ biến môi trường và truyền tham số qua params= chống SQL injection"
+   ],
+   "viz": "Khối SQL point-in-time với AVG(...) OVER (PARTITION BY card_id ORDER BY ts ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING) chú thích = s.shift(1).expanding().mean()."
+  },
+  "t-numpy": {
+   "tldr": "numpy là lớp nền dưới pandas và mọi mô hình nhận đầu vào là mảng numpy; điểm cốt lõi là phép toán theo phần tử trên cả mảng cùng lúc (chạy bằng C, ~100 lần nhanh hơn vòng lặp), và hai thứ gây lỗi nhiều nhất là shape và broadcasting.",
+   "points": [
+    "Mảng numpy khác list Python: a*2 nhân từng phần tử (list*2 thì nối danh sách), a@a là tích vô hướng; 1 triệu số vòng lặp ~0,3s vs numpy ~0,003s",
+    "Hàm thật sự dùng: np.log1p/expm1 (cột tiền lệch), np.where (IF trên cả mảng), np.clip (cắt ngoại lai), np.sin/cos/pi (mã hoá chu kỳ), np.random.default_rng(42)",
+    "Shape: (1000,) là dãy phẳng, (1000,1) là một cột — không giống nhau; sklearn đòi 2D, sửa bằng .reshape(-1,1) với -1 nghĩa 'tự tính chiều này'",
+    "Broadcasting: X - mu (mu shape (5,)) tự nhân bản mu cho 1000 dòng; nhưng lặng lẽ — shape sai kiểu 'hợp lệ' tạo mảng khổng lồ thay vì báo lỗi, nên in .shape ở từng bước",
+    "axis là chiều bị bóp mất: axis=0 gộp dọc theo hàng ra một giá trị mỗi cột, axis=1 ngược lại",
+    "Seed là điều kiện bắt buộc của luận văn: default_rng(42) và random_state=42 ở mọi chỗ có ngẫu nhiên (chia tập, khởi tạo mô hình, subsample), không thì không phân biệt được 'tốt hơn' với 'may'"
+   ],
+   "viz": "So sánh xs*2 → [1,2,3,1,2,3] (list nối) với np.array([1,2,3])*2 → array([2,4,6]) (nhân từng phần tử)."
+  },
+  "t-sklearn": {
+   "tldr": "Cả scikit-learn quy về bốn khái niệm: Estimator (có fit), Transformer (fit ở train, transform khắp nơi), Pipeline (nối thành một đối tượng), ColumnTransformer (mỗi loại cột một cách xử lý) — nắm bốn cái này thì dùng được cả thư viện kể cả lớp chưa từng thấy.",
+   "points": [
+    "Estimator: fit học từ dữ liệu, predict ra nhãn, predict_proba ra xác suất (thường cần cái này); thuộc tính học được kết thúc bằng gạch dưới (coef_, mean_)",
+    "Với lệch nhãn đừng dùng predict: nó cắt ở 0,5, mà 0,17% gian lận thì gần như không dòng nào vượt 0,5 → trả về toàn 0; lấy predict_proba rồi tự chọn ngưỡng",
+    "Transformer: fit CHỈ trên train (học μ, σ) rồi transform cùng μ,σ đó ở test — KHÔNG fit lại; fit trên toàn bộ dữ liệu là lỗi rò rỉ phổ biến nhất ngành",
+    "Pipeline là khái niệm quan trọng nhất — ba lý do: chặn rò rỉ tiền xử lý (fit lại scaler trong từng fold CV), lúc chạy thật không lệch (một file chứa cả feature lẫn mô hình), tune cả hai tầng bằng cú pháp hai gạch dưới model__C",
+    "Pipeline không phải bùa hộ mệnh: vẫn rò nếu tạo feature từ tương lai, tổng hợp trên toàn bộ dữ liệu, hay tính feature TRƯỚC khi vào pipeline",
+    "ColumnTransformer điều phối mỗi loại cột: num→StandardScaler, cat→OneHotEncoder(handle_unknown='ignore' để không nổ khi gặp thành phố mới lúc chạy thật), cột giờ→sin/cos"
+   ],
+   "viz": "Khối code Pipeline([('scale', StandardScaler()), ('model', LogisticRegression())]) minh hoạ một pipe.fit gọi fit_transform rồi fit, một pipe.predict_proba gọi transform rồi predict."
+  },
+  "m-vector": {
+   "tldr": "Một dòng dữ liệu n cột là một điểm trong không gian n chiều, và toàn bộ ML là hình học trên đám điểm đó. Vì khoảng cách Euclid bị đơn vị đo chi phối nên phải chuẩn hoá trước mọi mô hình đo khoảng cách; ma trận là cả bảng và mọi lỗi shape đều nói cùng một điều.",
+   "points": [
+    "Một giao dịch 30 cột = một điểm trong không gian 30 chiều; ML là hình học trên đám điểm: mô hình tuyến tính vẽ mặt phẳng chia đôi, KNN tìm điểm gần nhất, k-means gom cụm, mạng nơ-ron bẻ cong không gian.",
+    "Khoảng cách Euclid bị chi phối bởi cột đơn vị lớn: A=(1.000.000đ,10h) và B=(1.000.100đ,22h) ra √(100²+12²)≈100,7 — 100đ chênh lệch át hẳn 12 tiếng chênh lệch.",
+    "StandardScaler = mỗi cột trừ trung bình chia độ lệch chuẩn, đưa mọi cột về cùng ngôn ngữ 'cách trung bình bao nhiêu độ lệch chuẩn'; phải nằm TRƯỚC mọi mô hình đo khoảng cách.",
+    "Bốn shape chuẩn: X=(1000,30), y=(1000,), w=(30,), y_prob=(1000,); dấu phẩy lẻ nghĩa là một chiều (không phải (1000,1)); y_prob ra (1000,2) là quên [:,1]. Xw ra 1.000 điểm số cùng lúc.",
+    "Lỗi 'X has 28 features, but expecting 30' gần như luôn do one-hot thiếu hạng mục ở tập valid, hoặc drop cột lệch giữa hai tập; đặt bước biến đổi TRONG Pipeline chặn đúng lỗi này.",
+    "Thói quen: in X.shape sau mỗi bước biến đổi — 80% lỗi tuần đầu là lỗi shape và .shape chỉ thẳng vào chỗ sai."
+   ],
+   "viz": "Bảng bốn shape (X, y, w, y_prob) kèm ví dụ số khoảng cách Euclid ≈100,7 giữa hai giao dịch chênh 100đ và 12 giờ."
+  },
+  "m-deriv": {
+   "tldr": "'Máy học' cụ thể là: có một bộ tham số, một hàm mất mát chấm điểm mức sai, và lặp đi lặp lại việc nhích bộ số theo hướng làm điểm sai giảm. Gradient chỉ hướng dốc lên nhanh nhất nên mỗi bước là trừ đi gradient nhân độ dài bước.",
+   "points": [
+    "Học = vòng lặp: nhích tham số theo hướng làm hàm mất mát giảm xuống — không có gì huyền bí hơn.",
+    "Đạo hàm = độ dốc tại một điểm khi chỉ có một tham số.",
+    "Gradient = danh sách 'vặn nút này thì sai số đổi bao nhiêu' cho từng tham số (30 hay 175 tỉ), gộp lại là mũi tên chỉ hướng dốc lên nhanh nhất.",
+    "Quy tắc cập nhật: w ← w − α∇J(w), với α là độ dài bước (learning rate).",
+    "loss: nan sau vài bước = lr quá lớn, mỗi bước văng qua đáy → giảm lr 10 lần.",
+    "Loss đứng yên = lr quá nhỏ hoặc kẹt vùng phẳng → tăng lr, dùng Adam thay SGD; loss nhảy lên xuống = lr hơi lớn hoặc batch quá nhỏ nên gradient nhiễu → giảm lr, tăng batch size."
+   ],
+   "viz": "Widget kéo hai thanh (data-viz='gd') mô phỏng toàn bộ quá trình huấn luyện thu nhỏ về một tham số duy nhất."
+  },
+  "m-prob": {
+   "tldr": "Xác suất phục vụ hai việc: mô tả một cột dữ liệu (thường bao nhiêu, dao động cỡ nào) và đọc đúng đầu ra mô hình (0,73 nghĩa gì). Với dữ liệu tiền trung bình gần như luôn gây hiểu nhầm, và con số xác suất chỉ đáng tin khi mô hình được hiệu chỉnh.",
+   "points": [
+    "Ba con số mô tả một cột: kỳ vọng, phương sai, độ lệch chuẩn; nhưng với dữ liệu tiền trung bình gần như luôn gây hiểu nhầm (một giao dịch 3 tỉ kéo trung bình lên trời) — luôn nhìn median và các phân vị qua df.describe().",
+    "z-score cá nhân hoá: groupby('card_id') lấy mean/std rồi (amount−mean)/(std+1e-6) với +ε tránh chia 0; hỏi 'to bất thường so với chính khách hàng đó không' thay vì 'to không'. Bản này còn rò rỉ vì mean/std tính trên cả tương lai.",
+    "Dữ liệu tiền (số tiền, thu nhập, lượt xem) lệch phải: đa số nhỏ, vài giá trị khổng lồ — là bản chất, không phải lỗi; cân nhắc lấy log.",
+    "0,73 chỉ nghĩa '73% thật sự là gian lận' nếu mô hình được hiệu chỉnh (calibrated); cây/boosting hay lệch hiệu chỉnh, đặc biệt sau SMOTE hoặc class_weight.",
+    "Kiểm bằng calibration_curve (n_bins=10, đường lý tưởng là đường chéo 45°), sửa bằng CalibratedClassifierCV — nó học từ dữ liệu nên phải fit trên tập validation/CV riêng, KHÔNG BAO GIỜ trên test; test mở đúng một lần cuối để báo cáo.",
+    "Cây, rừng, boosting không giả định phân phối nào cả; giả định phân phối chuẩn chỉ cần cho một số kiểm định thống kê và khoảng tin cậy của hồi quy tuyến tính — tức phần luận văn, không phải phần mô hình."
+   ],
+   "viz": "Đoạn code z-score cá nhân hoá theo card_id, cùng calibration_curve vẽ prob_pred vs prob_true so với đường chéo 45°."
+  },
+  "m-bayes": {
+   "tldr": "Bayes là công cụ tư duy giải thích vì sao một mô hình 'chính xác 99%' vẫn có thể vô dụng: khi lớp dương quá hiếm, precision tụt xuống chỉ 16,6% — hệ quả toán học không kỹ thuật nào xoá được, chỉ có thể đánh đổi.",
+   "points": [
+    "Hệ thống bắt đúng 99% gian lận, chỉ báo nhầm 1% giao dịch sạch, chạy trên dữ liệu 0,2% gian lận → precision chỉ 16,6%: cứ 6 lần báo động thì 5 lần làm phiền khách thật.",
+    "Precision thấp là hệ quả toán học của lớp dương quá hiếm, không phải model hỏng — kiểm base rate TRƯỚC khi đi sửa model.",
+    "Ở base rate 0,2% báo cáo PR-AUC (mốc tham chiếu bằng chính base rate) thay vì ROC-AUC (dễ trông cao một cách đánh lừa); precision KHÔNG bị chặn trên bởi tỉ lệ dương — một mô hình xếp hạng tốt vẫn đạt precision cao.",
+    "Naive Bayes là một mô hình (không phải chỉ định lý): giả định feature độc lập có điều kiện khi đã biết lớp — gần như luôn sai, nhưng cực nhanh, cần ít dữ liệu, tốt cho phân loại văn bản; với dữ liệu bảng chỉ đáng làm baseline rẻ (GaussianNB().fit).",
+    "Tư duy Bayes cốt lõi: bằng chứng mới cập nhật niềm tin cũ chứ không thay thế nó; tín hiệu yếu không đủ lật niềm tin 'gian lận rất hiếm', nên hệ thống thật xếp hàng theo điểm rủi ro rồi xác minh ca cao nhất thay vì chặn ngay."
+   ],
+   "viz": "Ví dụ chạy hết bằng số trên 100.000 giao dịch, cho ra precision 16,6% ở base rate 0,2%."
+  },
+  "m-infer": {
+   "tldr": "Đây là phần thống kê hội đồng thực sự soi: để nói 'mô hình tốt hơn' phải chứng minh chênh lệch (vd AUC 0,910→0,921, chênh 0,011) không phải may rủi. Công cụ mặc định là bootstrap ghép cặp trên hiệu — nếu khoảng tin cậy của Δ chứa 0 thì chưa có bằng chứng khác biệt.",
+   "points": [
+    "Chênh 0,011 AUC có thể là nhiễu: chạy seed khác baseline có thể vượt lên; cách duy nhất để biết thật hay may là đo mức nhiễu đó.",
+    "Bootstrap ghép cặp trên hiệu (mặc định so hai mô hình): mỗi vòng lấy lại CÙNG chỉ số hàng cho cả hai, tính Δ = metric_mới − metric_baseline, rồi lấy KTC của chính Δ; KTC chứa 0 → chưa có bằng chứng. Đừng dựng hai khoảng riêng rồi so bằng mắt vì hai khoảng chồng lấn vẫn có thể là khác biệt thật.",
+    "McNemar chỉ dùng cho quyết định nhị phân 0/1 tại một ngưỡng cụ thể; KHÔNG áp dụng cho ROC-AUC/PR-AUC (dựa thứ hạng trên toàn dải ngưỡng — dùng bootstrap ghép cặp); đừng dùng t-test hai mẫu độc lập vì hai mô hình chạy trên đúng cùng mẫu.",
+    "Ba lỗi làm hỏng phần thực nghiệm: chỉ một seed (nên chạy 5–10 seed, báo trung bình ± độ lệch chuẩn); dùng test để chọn mô hình (chọn trên validation, chạm test đúng một lần ở cuối); thử 20 cấu hình rồi báo cái đẹp nhất (20 phép thử → ~64% có ít nhất một cái 'có ý nghĩa' do may rủi → báo hết hoặc hiệu chỉnh Bonferroni).",
+    "Bốn công cụ (bootstrap ghép cặp, McNemar, p-value, nhiều seed) là toàn bộ thống kê phần thực nghiệm luận văn thạc sĩ ứng dụng cần; ANOVA, phi tham số, Bayes đầy đủ nằm ngoài phạm vi.",
+    "Ngoại lệ cứng: đề tài có A/B test thì power analysis / tính cỡ mẫu là BẮT BUỘC — chạy A/B test thiếu cỡ mẫu là tiêu cả tuần để nhận về kết luận 'không có khác biệt' mà không được phép tin."
+   ],
+   "viz": "Mẫu câu luận văn: PR-AUC 0,412 (KTC 95% bootstrap 0,388–0,437) vs baseline LightGBM 0,367, bootstrap ghép cặp Δ=0,045 (KTC 0,021–0,068) không chứa 0, McNemar χ²(1)=24,3 p<0,001, trung bình trên 5 seed."
+  },
+  "d-framing": {
+   "tldr": "Phần lớn dự án AI thất bại không phải vì mô hình kém mà vì mô hình trả lời sai câu hỏi; đóng khung là trả lời sáu câu bằng chữ TRƯỚC khi mở notebook, biến mong muốn kinh doanh mơ hồ thành bài toán ML giải được.",
+   "points": [
+    "Sáu câu phải trả lời: dự đoán cái gì (biến mục tiêu chính xác), khi nào (thời điểm chấm điểm), lúc đó có thông tin gì, ai dùng và làm gì với kết quả, sai thì tốn gì (quy ra tiền hai chiều bỏ lọt/báo nhầm), bao nhiêu thì gọi là thành công.",
+    "Câu 3 ('tại thời điểm dự đoán tôi thực sự có gì') là quan trọng nhất — bỏ qua nó sinh data leakage; bài kiểm tra một câu cho mỗi cột: 'cột này được ghi vào lúc nào?', nếu trả lời 'sau sự kiện' thì bỏ.",
+    "Chọn loại bài toán theo đầu ra: có/không → phân loại nhị phân; một trong N → đa lớp; một con số → hồi quy; danh sách xếp hạng → ranking; không có nhãn → phát hiện bất thường.",
+    "Đóng khung gian lận thành ranking (chỉ số precision@k, recall@k) thực tế và dễ có đóng góp mới hơn phân loại, vì đội xác minh chỉ xử lý được N ca/ngày nên câu hỏi thật là 'N ca nào?'.",
+    "Viết docs/problem-statement.md với sáu câu trả lời — nó thành phần Giới thiệu + Phát biểu bài toán của luận văn gần như nguyên văn, và là bộ lọc cho mọi ý tưởng feature mới."
+   ],
+   "viz": "Bảng sáu câu đóng khung với ví dụ gian lận (dự đoán xác suất giao dịch bị khiếu nại gian lận trong 60 ngày, chấm điểm ngay lúc quẹt thẻ) — và ví dụ cột trang_thai_xu_ly cho AUC 0,998 nhưng chỉ điền sau khi có kết luận nên vô dụng."
+  },
+  "d-data": {
+   "tldr": "Chốt MỘT bộ dữ liệu chính rồi viết lớp adapter đưa nó về một schema chuẩn 8 cột, để đổi dataset chỉ là viết thêm một hàm chứ không sửa dòng nào ở features/train/serve.",
+   "points": [
+    "Schema chuẩn 8 cột (tx_id, timestamp, card_id, amount>0, merchant_type, city, device_type, is_fraud 0/1); thiếu timestamp thì hỏng ba chặng (chia tập, tính cửa sổ, mã hoá sin/cos); đặt tên trung tính is_fraud thay vì Class (tên riêng bộ ULB).",
+    "IEEE-CIS (~590.000 dòng thật) là bộ CHÍNH vì có timestamp và card1 gần vai card_id; bộ mô phỏng trong repo là bộ CHẠY THỬ — 2 giây, không cần tải, và biết trước đáp án nên mô hình sai thì lỗi ở code chứ không ở dữ liệu.",
+    "Hàm _finalize ép đúng schema và assert bất biến: nhãn ∈ {0,1}, timestamp đơn điệu tăng (is_monotonic_increasing), tx_id duy nhất — mọi adapter đều kết thúc ở đây.",
+    "Bộ mô phỏng cài ba quy luật, mỗi cái kiểm chứng một nhóm feature: rủi ro cao 22h–4h → sin/cos; rủi ro tăng theo tiền → log1p + z_vs_hist; 'chiến dịch' quẹt 4–12 lần trong ~20 phút → n_tx_1h + secs_since_last (bỏ nhóm này PR-AUC tụt mạnh nhất, là một ablation chạy 2 phút).",
+    "target_rate giải bằng chia đôi (_solve_intercept) chứ không dò tay; cộng 1 vào hằng số logit là nhân odds lên e≈2,72 lần. Hai xấp xỉ IEEE phải nêu trong luận văn: card1 là mã đã băm gần với thẻ, mốc gốc 2017-12-01 chỉ là quy ước cộng đồng Kaggle.",
+    "prepare_data sinh transactions.parquet + datacard.json — datacard chính là bảng mô tả dữ liệu chương 3 luận văn cần, sinh tự động nên không bao giờ lệch với dữ liệu thật."
+   ],
+   "viz": "Output datacard.json của bộ sim: rows 400000, cards 3986, fraud_rate 0.002035, from 2025-01-01 tới 2025-06-29, chạy trong 2,0 giây trên laptop bình thường không cần GPU."
+  },
+  "d-eda": {
+   "tldr": "EDA là nhìn dữ liệu bằng mắt trước khi giao cho máy để bắt những thứ sẽ phá mô hình; then chốt là EDA có HAI THÌ ngăn bởi bước chia tập, trộn chúng là tự biến bộ não thành đường rò rỉ.",
+   "points": [
+    "Thì 1 (kiểm cấu trúc) làm trên TOÀN BỘ dữ liệu TRƯỚC khi chia — không dùng quan hệ feature–nhãn nên không rò rỉ: shape/bộ nhớ, df.info() dtype, tỉ lệ thiếu, trùng lặp, nunique (bắt cột ID), cột hằng số, phạm vi thời gian, cân bằng nhãn.",
+    "Thì 2 (khám phá theo mô hình) chỉ trên tập TRAIN SAU khi chia: phân phối feature, tương quan feature–nhãn, chọn feature — nếu nhìn cả test thì chính bộ não bạn thành đường rò rỉ, loại leakage không công cụ nào phát hiện được.",
+    "Dò rò rỉ: một cột tương quan > 0,9 với nhãn gần như chắc chắn là leakage — làm được trên train mà không cần chạm test.",
+    "Bốn tín hiệu báo động: tương quan >0,9 = leakage; hạng mục 50.000 giá trị khác nhau = cột ID one-hot sẽ nổ; nhãn dương <1% = lệch nặng (accuracy vô dụng); thiếu 100% ở nửa sau dữ liệu = hệ thống đổi cách ghi giữa chừng.",
+    "Biểu đồ tỉ lệ gian lận theo nhóm (df_train.groupby('hour')['Class'].mean()) là biểu đồ hữu ích nhất cho bài fraud và là chỗ tự tìm ra động lực cho sin/cos.",
+    "Bốn câu Thì 1 phải trả lời được trước khi chia tập: một dòng là gì, nhãn được tạo ra thế nào (trễ bao lâu), có thứ tự thời gian không, có nhóm lặp không."
+   ],
+   "viz": "Biểu đồ cột tỉ lệ gian lận theo giờ trong ngày trên df_train — nếu cao vào 1–4 giờ sáng và thấp ban ngày thì đó là tín hiệu thật dẫn thẳng tới nhu cầu mã hoá sin/cos."
+  },
+  "d-clean": {
+   "tldr": "Ba vấn đề — thiếu, ngoại lai, trùng/kiểu — đều xử lý bằng code trong Pipeline chứ không trong Excel, học tham số từ TRAIN rồi áp cho test, không bao giờ ngược lại.",
+   "points": [
+    "Giá trị thiếu chia ba kiểu, xử lý khác nhau: thiếu ngẫu nhiên → điền trung vị/mode; thiếu MANG THÔNG TIN → điền và thêm cột cờ _is_missing (SimpleImputer add_indicator=True); thiếu do cấu trúc ('không áp dụng') → mã hoá riêng.",
+    "Dùng TRUNG VỊ (median) chứ không trung bình cho dữ liệu tiền vì trung bình bị ngoại lai kéo lệch; cột thiếu >60% và vô nghĩa thì bỏ cột, dòng thiếu NHÃN thì bỏ dòng (không bao giờ đoán nhãn).",
+    "Ngoại lai: hỏi 'lỗi nhập liệu hay sự thật hiếm gặp?' trước — trong bài gian lận ngoại lai CHÍNH LÀ thứ đang đi tìm, xoá là xoá mất tín hiệu; làm dịu bằng winsorize (clip quantile 0.001/0.999), log1p, hoặc RobustScaler.",
+    "Ngưỡng lo/hi của winsorize phải tính từ tập TRAIN rồi áp cho test — tính trên toàn bộ dữ liệu là rò rỉ.",
+    "Trùng lặp: drop_duplicates(subset=['tx_id']); ép kiểu sớm với errors='coerce' (biến giá trị hỏng thành NaN, đếm được bằng .isna().sum()); chuẩn hoá chuỗi strip+lower thường giảm ~30% số giá trị khác nhau nên one-hot nhẹ đi 30%.",
+    "Ranh giới làm sạch vs feature engineering: nếu phép biến đổi HỌC tham số từ dữ liệu (trung vị để điền, μ/σ để scale, danh sách hạng mục để one-hot) thì phải nằm trong Pipeline; chỉ phép sửa tuyệt đối (đổi kiểu, bỏ trùng) mới được làm ngoài."
+   ],
+   "viz": "Bảng ba kiểu thiếu (ngẫu nhiên / mang thông tin / do cấu trúc) với ví dụ và cách xử lý tương ứng; code winsorize df['amount'].clip(lo, hi) với ngưỡng quantile([0.001, 0.999])."
+  },
+  "d-leak": {
+   "tldr": "Data leakage là khi mô hình được nhìn thông tin mà lúc dự đoán thật nó sẽ không có, cho điểm đẹp trên giấy nhưng vô dụng khi chạy; đây là lỗi nghiêm trọng nhất — một mô hình bị rò rỉ là một luận văn SAI mà phản biện phát hiện trong 5 phút.",
+   "points": [
+    "Dấu hiệu duy nhất cần nhớ: kết quả đẹp hơn mức hợp lý (AUC 0,999, accuracy 100%, mô hình đơn giản bỗng thắng mọi thứ) → phản xạ đúng không phải vui mừng mà là 'tôi vừa rò rỉ ở đâu?'.",
+    "Kiểu 1 rò rỉ mục tiêu: cột là HỆ QUẢ của nhãn (trang_thai='đã hoàn tiền', so_lan_khieu_nai) tương quan gần hoàn hảo — bắt bằng df.corr()['label'].abs(), mọi cột >0,8 phải thẩm vấn 'ghi vào lúc nào?'. Kiểu 2 rò rỉ thời gian: chia ngẫu nhiên dữ liệu có thời gian → chữa bằng chia theo thời gian.",
+    "Kiểu 3 rò rỉ tiền xử lý: fit scaler/imputer/one-hot/PCA/target encoding trên toàn bộ trước khi chia → chữa bằng chia trước rồi để Pipeline fit chỉ trên train (áp cho MỌI thứ học tham số).",
+    "Kiểu 4 rò rỉ nhóm: cùng thực thể (card_id) ở cả hai bên → GroupKFold/GroupShuffleSplit với groups=df['card_id']; nhưng chỉ là rò rỉ khi hệ thống thật phải chấm khách MỚI chưa từng thấy — tuỳ kịch bản triển khai.",
+    "Kiểu 5 rò rỉ qua feature tổng hợp: groupby('card_id')['amount'].transform('mean') gồm cả giao dịch TƯƠNG LAI → chữa bằng sort_values('ts') rồi shift(1).expanding().mean(), shift(1) đẩy chuỗi xuống để giao dịch hiện tại không tự tính vào trung bình của chính nó.",
+    "Kiểu 6 rò rỉ qua chính bạn: thử 30 cấu hình nhìn điểm test mỗi lần biến test thành validation → chữa bằng ba tập (train học, validation chọn, test báo cáo), chạm test đúng một lần. Quy trình kiểm 6 bước gồm in feature importance và soi cột nào chiếm >50%."
+   ],
+   "viz": "Hình data-viz='leak' minh hoạ câu hỏi gốc 'tại thời điểm dự đoán tôi biết những gì'; và cặp code đối chiếu transform('mean') SAI vs sort_values('ts').shift(1).expanding().mean() ĐÚNG."
+  },
+  "d-split": {
+   "tldr": "Chia tập là nơi bạn tự tạo ra BÀI THI cho mô hình; chia sai thì mọi con số về sau đều vô nghĩa vì mô hình đang thi một đề dễ hơn thực tế.",
+   "points": [
+    "Ba tập ba vai: train (~60–70%, học tham số, nhìn vô số lần), validation (~15–20%, chọn mô hình/siêu tham số/feature/ngưỡng, nhiều lần), test (~15–20%, báo cáo con số cuối, ĐÚNG MỘT LẦN); chỉ có train/test và tune trên test làm con số bị thổi phồng mà không biết phồng bao nhiêu.",
+    "Cây quyết định 3 câu: có thời gian và chạy trên tương lai → chia theo THỜI GIAN (TimeSeriesSplit); nếu không, có thực thể lặp → theo NHÓM (GroupKFold); nếu không, nhãn lệch nặng → PHÂN TẦNG (StratifiedKFold); còn lại → ngẫu nhiên thường.",
+    "Bài toán gian lận trả lời 'CÓ' ở câu đầu → chia theo thời gian, vì kẻ gian đổi chiêu theo thời gian nên mô hình phải chứng minh dự đoán được tương lai chứ không nội suy quá khứ.",
+    "Chia theo thời gian: sort_values('ts') rồi cắt iloc train 70% / valid 70–85% / test 85%; in khoảng thời gian từng tập và đưa dòng in đó vào luận văn để chứng minh không trộn tương lai vào quá khứ.",
+    "Walk-forward CV (TimeSeriesSplit n_splits=5): tập train lớn dần theo từng fold và validation LUÔN nằm sau train về thời gian — mô phỏng trung thực cách hệ thống thật train trên mọi thứ đã biết rồi đoán ngày mai.",
+    "Kiểm sau khi chia bằng assert (không nhìn bằng mắt): train.ts.max() < test.ts.min() (rò rỉ thời gian), không giao card_id giữa train/test (rò rỉ nhóm), so tỉ lệ dương hai tập; và nhãn đến trễ 60 ngày thì cắt bỏ vùng đệm 60 ngày cuối vì nhãn ở đó chưa đầy đủ."
+   ],
+   "viz": "Hình data-viz='split' cho thấy ba cách chia (thời gian / nhóm / phân tầng) trên cùng một tập dữ liệu; kèm code cắt train/valid/test theo mốc iloc 0.70 và 0.85 với dòng print khoảng thời gian từng tập."
+  },
+  "f-what": {
+   "tldr": "Feature engineering là viết code biến cột thô thành cột số mô hình học được, và đảm bảo đúng đoạn code đó chạy lại y hệt lúc dự đoán thật. Nó chạy hai lần trong đời (train và serve) nên phải cho kết quả giống hệt — và nó quyết định kết quả nhiều hơn việc chọn mô hình.",
+   "points": [
+    "Chạy hai lần: lúc train trên hàng trăm nghìn dòng, lúc serve trên MỘT dòng trong API — hai lần lệch nhau (μ train 250k, serve tính lại 310k) là lỗi training/serving skew, âm thầm không báo lỗi",
+    "Cách duy nhất chắc tránh skew: gói toàn bộ FE vào một Pipeline sklearn, lưu chung mô hình vào một file, API nạp đúng file đó",
+    "Ba loại thao tác: A không học tham số (sin/cos, log — FunctionTransformer); B học tham số từ train (StandardScaler, OneHotEncoder — bắt buộc trong Pipeline); C cần lịch sử (rolling — cần kho trạng thái Redis/bảng aggregate)",
+    "Trong dữ liệu bảng, khoảng cách giữa các bộ feature lớn hơn nhiều khoảng cách giữa các mô hình: đổi LogisticRegression→LightGBM cho +0,03 AUC, thêm nhóm feature tần suất cho +0,12",
+    "Nhịp làm việc: baseline → MỘT giả thuyết nói bằng lời → 5 dòng pandas → đo lại → giữ nếu tăng, bỏ nếu không → lặp; đừng thêm 20 feature cùng lúc",
+    "Bảng đo mỗi vòng chính là bảng ablation của luận văn — ghi từ ngày đầu, đừng dựng lại từ trí nhớ ngày cuối"
+   ],
+   "viz": "Bảng một cột timestamp thô nở thành bốn cột có ý nghĩa (hour_sin/cos, is_weekend, secs_since_last_tx, n_tx_last_1h); và nhịp baseline PR-AUC 0,367 → thêm hour_sin/cos → 0,384."
+  },
+  "f-numeric": {
+   "tldr": "Cột số trông đã sẵn sàng nhưng thường không: scale, log, clip, binning xử lý bốn vấn đề khác nhau, và biết dùng cái nào quan trọng hơn biết cả bốn. Nhóm mạnh nhất lại ít được dạy nhất — feature tỉ lệ, vì nó đưa ngữ cảnh vào một con số.",
+   "points": [
+    "Scaling BẮT BUỘC cho mô hình đo khoảng cách (hồi quy tuyến tính/logistic, SVM, KNN, k-means, NN); cây/RF/XGBoost/LightGBM KHÔNG cần vì chia theo thứ hạng, không đo khoảng cách",
+    "log1p = log(1+x), an toàn với số 0, cho dữ liệu lệch phải (90% dưới 500k, vài giao dịch 500 triệu)",
+    "Clip/winsorize theo quantile [0.001, 0.999] lấy từ TRAIN rồi áp lại cho test; trong bài gian lận giá trị cực đoan có thể chính là tín hiệu → giữ cả bản đã cắt lẫn cột cờ is_extreme",
+    "Feature tỉ lệ (amount/user_avg, tx_per_day, night_ratio) biến 'giao dịch 5 triệu' thành 'gấp 42 lần mức bình thường của chính khách này' — luôn +1 ở mẫu để tránh chia 0",
+    "Binning bằng pd.cut cho quan hệ phi tuyến hình chữ U, nhưng với cây/boosting binning gần như luôn làm tệ đi (ép ngưỡng của bạn lên cây đã tự tìm ngưỡng tối ưu, mất thông tin)",
+    "Thứ tự đúng: sửa lỗi (ngoài Pipeline) → tạo feature tỉ lệ/log/sin-cos → điền thiếu (SimpleImputer) → scale; điền thiếu TRƯỚC scale vì scale không xử lý NaN, tạo tỉ lệ TRƯỚC scale vì muốn tỉ lệ của giá trị gốc"
+   ],
+   "viz": "Ví dụ số: 'giao dịch này gấp 42 lần mức bình thường của chính khách hàng này' là một tín hiệu, trong khi 'giao dịch 5 triệu' chỉ là một con số vô ngữ cảnh."
+  },
+  "f-cat": {
+   "tldr": "Mô hình chỉ ăn số nên cột hạng mục phải thành số, và cách biến đổi quyết định rất nhiều: chọn sai thì hoặc mô hình học sai thứ tự giả, hoặc bảng phình ra hàng nghìn cột. Câu hỏi đầu tiên luôn là đếm số giá trị khác nhau (nunique).",
+   "points": [
+    "Chọn theo cardinality: 2 giá trị → ánh xạ 0/1; 3–15 → one-hot; 100–10.000 → target encoding hoặc LightGBM categorical; >10.000 (thường là ID) → không encode, dùng làm khoá groupby",
+    "One-hot đặt min_frequency=0.01 (gom giá trị <1% vào một cột 'hiếm') và handle_unknown BẮT BUỘC cho production — 'infrequent_if_exist' xếp giá trị lạ vào cột hiếm thay vì để API nổ",
+    "Không dùng LabelEncoder cho feature đầu vào (Hà Nội=0, Huế=1 áp thứ tự giả); nó chỉ dành cho biến mục tiêu y. Dùng OrdinalEncoder khi thứ tự CÓ THẬT (thấp<trung bình<cao)",
+    "Target encoding thay hạng mục bằng tỉ lệ nhãn dương trung bình (1 cột thay vì 800) nhưng rất dễ rò rỉ vì dùng chính nhãn → bắt buộc smoothing + tính cross-fitting trong từng fold: TargetEncoder(smooth='auto', cv=5)",
+    "LightGBM xử lý cột category nguyên bản qua categorical_feature=[...], tự nhóm giá trị tối ưu, thường tốt hơn one-hot và không phình cột — nhưng gắn chặt với LightGBM nên baseline logistic vẫn cần nhánh one-hot riêng trong ColumnTransformer",
+    "Hashing băm vào 2^16 ô cố định: bộ nhớ không đổi nhưng có va chạm và mất khả năng giải thích, hiếm khi cần cho luận văn"
+   ],
+   "viz": "Bảng quyết định số-giá-trị-khác-nhau → cách xử lý: 2 / 3–15 / 15–100 / 100–10.000 / >10.000, mỗi mức một encoder khác nhau."
+  },
+  "f-cyclic": {
+   "tldr": "23h và 0h chỉ cách nhau một giờ thật nhưng biểu diễn số nguyên 0–23 đặt chúng ở hai cực xa nhất của thang đo. Sin/cos hoá uốn đường thẳng thành vòng tròn để bảo toàn khoảng cách — một cột hour thành hai cột hour_sin và hour_cos.",
+   "points": [
+    "Phải là HAI cột (sin và cos) vì một số duy nhất không đủ xác định vị trí trên vòng tròn — chỉ dùng sin thì 3h và 9h trùng giá trị; công thức sin(2πv/T), cos(2πv/T)",
+    "Hậu quả nếu để nguyên: logistic chỉ học được một hệ số, không biểu diễn được 'cao ở hai đầu thấp ở giữa'; KNN/SVM tính 23h47 và 0h13 cách nhau 23 đơn vị (xa nhất) thay vì 13 phút; NN phải phí nơ-ron dựng lại tính tuần hoàn",
+    "Áp cho mọi chu kỳ với đúng T: hour/24, dayofweek/7, month/12, minute/60",
+    "Ba mức triển khai theo độ nghiêm túc: 6 dòng numpy trong notebook → hàm add_cyclical trong src/features.py (cùng hàm cho cả API) → FunctionTransformer gắn vào Pipeline rồi joblib.dump một file chứa TẤT CẢ",
+    "Đa hài: một cặp sin/cos chỉ dựng được một sóng lên-xuống; thực tế có hai đỉnh (trưa và tối) thì thêm cặp chu kỳ một nửa (lặp k=1,2,3)",
+    "Cây/boosting KHÔNG cần sin/cos — chúng biểu diễn 'giờ≥22 HOẶC giờ≤3' bằng hai lần chia ngưỡng; nếu mô hình chính là LightGBM thì đừng kỳ vọng cải thiện lớn, phải đo trước khi khẳng định"
+   ],
+   "viz": "Viz đồng hồ kéo được (data-viz='clock') cho A=23,B=0; và bảng luận văn: sin/cos đẩy PR-AUC logistic 0,281→0,343 nhưng gần như không đổi LightGBM 0,367→0,371."
+  },
+  "f-time": {
+   "tldr": "Nhóm feature mạnh nhất cho bài toán gian lận và cũng dễ rò rỉ nhất: một giao dịch đơn lẻ nói rất ít, nhưng giao dịch đó trong bối cảnh những gì vừa xảy ra nói rất nhiều. Điều kiện sống còn là mỗi dòng chỉ được biết thông tin có TRƯỚC nó.",
+   "points": [
+    "Ba nhóm theo sức mạnh: khoảng cách tới sự kiện trước (secs_since_last qua groupby.diff), đếm theo cửa sổ/velocity (rolling '1h','24h'), so với thói quen chính thực thể (z_vs_history) — nhóm cuối phân biệt cao nhất",
+    "closed='left' trong rolling loại chính giao dịch hiện tại ra khỏi cửa sổ; thiếu nó thì feature 'số giao dịch 1h' đã chứa dòng đang đoán → rò rỉ",
+    "Feature so với lịch sử dùng .shift(1).expanding() để mỗi dòng chỉ biết những gì xảy ra trước; z_vs_history = (amount − hist_mean)/(hist_std + 1e-6)",
+    "Trung bình một đại lượng tuần hoàn phải qua vector: lấy trung bình sin/cos rồi np.arctan2(mean_sin, mean_cos) — trung bình cộng thường sai (trung bình 23h và 1h ra 12h); arctan2 (không phải arctan) mới phân biệt bốn góc phần tư",
+    "Gán kết quả rolling bằng .to_numpy() theo vị trí (đã sort card_id,ts) thay vì khớp theo index, vì timestamp trùng tới từng giây làm reindex hỏng trên dữ liệu thật",
+    "Ba dòng kiểm rò rỉ: (1) đã sort_values('ts')? (2) có .shift(1)/closed='left'? (3) dòng đầu mỗi khách có phải NaN không — nếu không phải là đang rò rỉ, vì khách mới không có lịch sử",
+    "Lúc serve khó tính (một giao dịch, 50ms): truy vấn CSDL đủ cho luận văn / Redis counter <1ms là chuẩn công nghiệp / feature store; nói Redis là hướng mở rộng ở phần Hạn chế"
+   ],
+   "viz": "Bảng danh sách feature chống gian lận theo nhóm (Tốc độ / Số tiền / Vị trí / Thói quen) kèm giả thuyết đằng sau mỗi feature, ví dụ km_from_last_tx/hours_elapsed = tốc độ di chuyển bất khả thi."
+  },
+  "f-text": {
+   "tldr": "Biến cột chữ tự do thành số theo ba mức từ rẻ tới đắt. Với dữ liệu bảng ít text, mức rẻ nhất thường lấy được phần lớn tín hiệu, và TF-IDF thắng embedding vì giữ được khả năng giải thích mà hội đồng thích.",
+   "points": [
+    "Mức 1 đặc trưng thủ công (desc_len, desc_n_digits, upper_ratio, has_keyword bằng regex 'refund|urgent|verify') — rẻ, bất ngờ hiệu quả, làm trước và đo trước khi lên mức 2",
+    "Mức 2 TF-IDF: một từ quan trọng nếu xuất hiện nhiều trong văn bản NHƯNG hiếm trong toàn tập; công thức tfidf(t,d) = tf(t,d) × log(N/df(t))",
+    "TfidfVectorizer(max_features=300, ngram_range=(1,2), min_df=5): ngram (1,2) lấy cả cặp từ ('chuyển khoản' khác 'chuyển'+'khoản' rời), max_features chặn phình lên hàng chục nghìn cột; cắm vào ColumnTransformer như một nhánh riêng",
+    "Ưu điểm lớn của TF-IDF là giải thích được — chỉ ra được từ nào đẩy điểm rủi ro lên",
+    "Mức 3 embedding (SentenceTransformer paraphrase-multilingual-MiniLM-L12-v2, ra 384 cột) biết 'hoàn tiền' và 'refund' gần nghĩa, nhưng mất khả năng giải thích, chậm và đặc; chỉ lên mức 3 khi text là nguồn thông tin chính"
+   ],
+   "viz": "Công thức TF-IDF viết thành hai thừa số: tf(t,d) (tần suất trong văn bản) nhân log(N/df(t)) (độ hiếm trong tập)."
+  },
+  "f-pipeline": {
+   "tldr": "Pipeline + ColumnTransformer ráp toàn bộ FE và mô hình thành MỘT file duy nhất — code ngừng là notebook lộn xộn và thành hiện vật triển khai được. Vì train và serve dùng đúng cùng một logic, nó chặn tận gốc lỗi lệch train/serve.",
+   "points": [
+    "Không có Pipeline, notebook và api.py viết lại logic riêng (mu=250000 hardcode) → ba cơ hội lệch nhau, không cái nào báo lỗi khi lệch; mô hình vẫn trả số, chỉ là số sai — lỗi phổ biến nhất khi lên production",
+    "Cấu trúc ba tầng: FunctionTransformer add_derived (không học tham số: sin/cos, log1p, is_weekend, tỉ lệ) → ColumnTransformer (num_pipe: impute median + scale; cat_pipe: impute constant + one-hot) → LGBMClassifier",
+    "ColumnTransformer chia nhóm cột NUM/CAT mỗi nhóm một cách xử lý; remainder='drop' an toàn hơn 'passthrough' (cột không khai báo thì bỏ)",
+    "pipe.fit nhận DataFrame THÔ chứ không phải ma trận đã xử lý; serve chỉ joblib.load + pipe.predict_proba(pd.DataFrame([tx_dict]))[0,1], không viết lại logic nào",
+    "Bốn lợi ích miễn phí: chặn rò rỉ tiền xử lý trong CV (cross_val_score fit lại scaler/encoder BÊN TRONG từng fold), không lệch train/serve, tune xuyên tầng (model__num_leaves, prep__num__impute__strategy), tái lập được cho người phản biện",
+    "Trong num_pipe, SimpleImputer đặt trước StandardScaler; add_indicator=True giữ thêm cột cờ đánh dấu chỗ từng thiếu"
+   ],
+   "viz": "Bảng đối chiếu hai cột notebook vs api.py chỉ ra ba dòng dễ lệch: hour_sin bằng np.sin vs math.sin, get_dummies vs one_hot tự viết, (x−mu)/sigma vs (x−250000)/180000 hardcode."
+  },
+  "f-select": {
+   "tldr": "Sau vài vòng FE có 200 cột, nhưng với LightGBM thường cứ giữ hết vì nó tự bỏ cột vô dụng. Chọn lọc feature chỉ đáng làm khi cần giải thích, giảm chi phí lúc serve, hoặc khi số cột vượt xa số mẫu.",
+   "points": [
+    "Với LightGBM và vài trăm cột thường giữ hết; chọn lọc khi cần giải thích / giảm chi phí tính lúc chạy thật / số cột >> số mẫu",
+    "Lọc thô rẻ làm trước: bỏ cột hằng số (nunique≤1), bỏ một trong hai cột tương quan >0,95 (chúng nói cùng một điều)",
+    "Permutation importance (xáo trộn một cột rồi đo điểm tụt, trên tập VALIDATION, scoring='average_precision') đáng tin hơn feature_importances_ của cây, vì chỉ số mặc định của cây thiên vị cột nhiều giá trị khác nhau (cột ID ngẫu nhiên xếp hạng cao)",
+    "RFECV loại dần theo đệ quy chính xác nhất nhưng chậm nhất, chỉ dùng khi mọi thứ khác đã chạy ổn",
+    "Chọn feature cũng rò rỉ được: chọn top-k theo tương quan với nhãn trên TOÀN BỘ dữ liệu rồi mới cross-validate = điểm CV đẹp giả tạo; cách đúng là đặt bước chọn feature BÊN TRONG Pipeline để chạy lại trong từng fold",
+    "Cho luận văn: trình bày độ quan trọng theo NHÓM kèm diễn giải (tốc độ 34%, lệch thói quen 28%, sin/cos 11%...) thay vì liệt kê top-20 — trả lời 'mô hình học được điều gì về gian lận' chứ không phải 'đạt bao nhiêu điểm'"
+   ],
+   "viz": "Bảng luận văn: tổng độ quan trọng theo nhóm feature (Tốc độ giao dịch 34%, Lệch so với thói quen 28%, Thời gian sin/cos 11%, Loại cửa hàng 9%) kèm diễn giải mỗi nhóm."
+  },
+  "f-store": {
+   "tldr": "Feature store xuất hiện trong mọi roadmap MLOps nhưng một luận văn gần như chắc chắn không cần. Thứ thật sự đáng nhớ là point-in-time correctness — một tính chất độc lập với công cụ mà bạn tự bảo đảm được bằng pandas.",
+   "points": [
+    "Vấn đề feature store giải: công ty có 12 mô hình, tám cần feature 'tổng chi tiêu 30 ngày', mỗi đội tự tính một phiên bản (đội theo ngày lịch, đội theo 720 giờ) → nó định nghĩa feature MỘT LẦN, phục vụ cả train lẫn serve và đảm bảo hai đường cho cùng kết quả",
+    "Bốn điều kiện để có ích: nhiều mô hình dùng chung feature, nhiều đội khám phá feature của nhau, cần point-in-time ở quy mô lớn, có hạ tầng vận hành thêm dịch vụ — luận văn 1 mô hình / 1 người / còn 2 tuần đều không thoả điều nào",
+    "Point-in-time correctness mới là thứ đáng nhớ, độc lập công cụ: mỗi dòng dữ liệu huấn luyện chỉ được chứa thông tin có sẵn tại đúng thời điểm của dòng đó",
+    "Tự làm bằng tay bằng .shift(1), closed='left' và chia tập theo thời gian; Pipeline sklearn + một bảng aggregate trong CSDL đã đảm bảo train và serve cùng logic mà không thêm dịch vụ để vận hành",
+    "Trả lời hội đồng khi hỏi 'sao không dùng feature store': nêu point-in-time là tính chất cần bảo đảm, mình bảo đảm bằng cách cụ thể; feature store cần khi số mô hình và số đội tăng — đó là hướng mở rộng",
+    "Tên để biết không cần dùng: Feast (mã nguồn mở), Tecton, Vertex AI Feature Store, Databricks Feature Store"
+   ],
+   "viz": "Bảng bốn điều kiện để feature store có ích đối chiếu tình huống của bạn: 'Nhiều mô hình dùng chung' → bạn có 1; 'Nhiều đội' → bạn có 1 người; 'Có hạ tầng' → bạn còn 2 tuần."
+  },
+  "ml-map": {
+   "tldr": "Cả ngành có hàng trăm thuật toán nhưng cho phân loại trên dữ liệu bảng chỉ cần nắm 5 mô hình và biết chọn giữa chúng; LightGBM là điểm khởi đầu mặc định, còn quy trình chọn phải đi baseline-trước-tune-sau chứ không ngược lại.",
+   "points": [
+    "Chia loại học theo thứ bạn có: có nhãn (giám sát), không nhãn (không giám sát), ít nhãn + nhiều không nhãn (bán giám sát — thực tế của hầu hết hệ gian lận), phần thưởng theo hành động (tăng cường, không dùng ở đây)",
+    "Năm mô hình cần biết: Logistic Regression (baseline bắt buộc, giải thích được hệ số), Decision Tree (vẽ được nhưng overfit nặng, không dùng làm mô hình cuối), Random Forest (baseline thứ hai, an toàn), LightGBM/XGBoost (mặc định cho dữ liệu bảng), Mạng nơ-ron (cho ảnh/chữ/chuỗi hoặc cột hạng mục cực nhiều giá trị cần embedding)",
+    "LightGBM không ngoại suy được ra ngoài khoảng giá trị đã thấy — điểm yếu phải nhớ khi dùng",
+    "Câu đúng trong luận văn là 'tôi chọn LightGBM vì trên dữ liệu này nó tương đương hoặc hơn với chi phí thấp hơn, và đây là bảng so sánh chứng minh', không phải 'boosting tốt hơn deep learning'",
+    "Quy trình chọn mô hình đúng thứ tự: baseline ngu nhất → logistic + feature cơ bản → LightGBM mặc định (không tune) → cải tiến feature (nơi nhiều điểm nhất) → tune siêu tham số (chỉ +1–3%) → ensemble/stacking (thường không đáng công)",
+    "Bảng 5 mô hình chỉ áp cho phân loại trên dữ liệu bảng; chuỗi thời gian, gợi ý, nhân quả có gia đình mô hình riêng (chặng 8)"
+   ],
+   "viz": "Hai bảng đối chiếu: loại học theo 'bạn có gì', và 5 mô hình theo điểm mạnh/điểm yếu/dùng khi"
+  },
+  "ml-linear": {
+   "tldr": "Hồi quy tuyến tính dự đoán một con số bằng tổng có trọng số của đầu vào; hồi quy logistic đẩy tổng đó qua sigmoid để ra xác suất và thực chất là mô hình phân loại — giá trị lớn nhất của chúng là làm baseline giải thích được và làm mốc so sánh cho mô hình phức tạp.",
+   "points": [
+    "Hồi quy tuyến tính: ŷ = w₀ + w₁x₁ + … + wₙxₙ; với 1 cột là đường thẳng tối thiểu tổng bình phương khoảng cách, với 30 cột là siêu phẳng, toán y hệt",
+    "Ý nghĩa hệ số wⱼ: khi xⱼ tăng 1 đơn vị thì ŷ đổi wⱼ, VỚI ĐIỀU KIỆN mọi cột khác giữ nguyên — vế cuối hay bị bỏ khi diễn giải",
+    "Logistic: z = w₀ + Σwⱼxⱼ rồi p̂ = σ(z) = 1/(1+e^{−z}) để ép về khoảng [0,1]; dù tên là 'hồi quy' nó là mô hình phân loại",
+    "Hệ số logistic tác động lên log-odds chứ không phải xác suất; đọc đúng là dùng odds ratio = np.exp(coef), ví dụ coef 1,42 → odds ratio 4,14 nghĩa là odds gian lận tăng gấp 4,1 lần; viết 'xác suất tăng 1,42' là SAI",
+    "Hai điều kiện để hệ số có nghĩa: feature phải được scale (để so sánh được), và không có đa cộng tuyến nặng (hai cột tương quan 0,98 khiến hệ số vô nghĩa — kiểm bằng VIF hoặc bỏ một cột)",
+    "Code dùng Pipeline với LogisticRegression(C=1.0 nghịch đảo mức phạt, class_weight='balanced', max_iter=2000); lưu y_prob_valid từ predict_proba trên VALIDATION (không phải test) để bài sau tính chỉ số",
+    "Giữ logistic trong luận văn vì: là mốc so sánh (0,412 so với 0,281 mới có thông tin), cho biết bài toán phi tuyến tới mức nào, và giải thích được khi cần trả lời 'vì sao chặn giao dịch này'"
+   ],
+   "viz": "Ví dụ số: coef is_rapid = 1,42 → odds ratio 4,14 → odds gian lận gấp 4,1 lần khi giao dịch dưới 60 giây sau giao dịch trước"
+  },
+  "ml-metrics": {
+   "tldr": "Chọn nhầm chỉ số đánh giá làm hỏng cả luận văn vì mô hình tối ưu đúng thứ bạn đo; với dữ liệu lệch nhãn PR-AUC là chỉ số chính, accuracy vô dụng, và bước chọn ngưỡng theo chi phí (không dùng mặc định 0,5) là bước hầu hết luận văn bỏ qua.",
+   "points": [
+    "Ma trận nhầm lẫn là gốc của mọi chỉ số: TP (bắt đúng), FP (báo nhầm, phiền khách), FN (bỏ lọt, mất tiền), TN (đúng, chiếm 99,8%); mọi chỉ số chỉ là cách gộp bốn ô này",
+    "Bốn chỉ số: Accuracy vô dụng khi lệch (TN áp đảo); Precision = TP/(TP+FP) đo chi phí phiền khách; Recall = TP/(TP+FN) đo chi phí mất tiền; F1 giả định precision và recall quan trọng ngang nhau — gần như không bao giờ đúng",
+    "PR-AUC là chỉ số chính, tính bằng average_precision_score (Average Precision = tổng mức tăng recall nhân precision tại đó); ĐỪNG tính bằng auc(recall, precision) vì nội suy tuyến tính cho con số lạc quan giả",
+    "Đường cơ sở của PR-AUC là tỉ lệ dương (0,0017) chứ không phải 0,5, nên PR-AUC = 0,35 là tốt hơn ngẫu nhiên ~200 lần — phải nói rõ kẻo người đọc tưởng 0,35 là kém",
+    "Ba cách chọn ngưỡng: (1) tối đa F1 qua precision_recall_curve — được nhưng tuỳ tiện; (2) tối thiểu chi phí — quét ngưỡng với COST_FN=3tr, COST_FP=40k, chọn argmin tổng thiệt hại, làm luận văn mạnh hơn hẳn; (3) precision@200 theo năng lực đội xác minh 200 ca/ngày — sát thực tế nhất",
+    "Chọn ngưỡng trên validation rồi áp cố định lên test; chọn ngưỡng trên test là một dạng rò rỉ",
+    "Cột 'thiệt hại triệu ₫/tháng' là cột hội đồng nhớ: biến 'PR-AUC tăng 0,045' thành 'tiết kiệm 112 triệu/tháng'; đừng báo cáo accuracy 99,8% vì lộ ra chưa hiểu bài toán lệch"
+   ],
+   "viz": "Viz kéo ngưỡng data-viz='thresh' xem hậu quả, và bảng kết quả luận văn 4 dòng (luật thủ công / logistic 0,281 / LightGBM 0,367 / đề xuất 0,412) kèm cột thiệt hại triệu ₫"
+  },
+  "ml-loss": {
+   "tldr": "'Học' chỉ gồm ba mảnh — mô hình, hàm mất mát (chấm điểm sai), bộ tối ưu (sửa) — và đổi bất kỳ mảnh nào ra thuật toán khác; điểm mấu chốt là hàm mất mát (phải khả vi để train) khác chỉ số đánh giá (chỉ cần có nghĩa), nên train bằng log loss rồi mới chọn ngưỡng để tối ưu chỉ số thật sự quan tâm.",
+   "points": [
+    "Ba mảnh của việc học: mô hình (hàm có tham số w), hàm mất mát (một con số đo mức sai của toàn bộ dự đoán), bộ tối ưu (quy tắc sửa w để con số đó giảm)",
+    "Chọn hàm mất mát theo bài toán: dự đoán số → MSE/MAE; phân loại 2 lớp → binary cross-entropy (log loss); nhiều lớp → categorical cross-entropy kèm softmax; xếp hạng → LambdaRank (LightGBM có objective='lambdarank')",
+    "Hàm mất mát phải khả vi để tối ưu được, chỉ số đánh giá thì không cần; không thể tối ưu trực tiếp F1 bằng gradient descent vì nó phụ thuộc việc đếm nên nhảy bậc",
+    "Quy trình thực tế: train bằng log loss → sau đó chọn ngưỡng để tối ưu chỉ số thật sự quan tâm (PR-AUC, F1, tiền tiết kiệm)",
+    "Ba biến thể gradient descent theo lượng dữ liệu mỗi bước: Batch GD (toàn bộ, chính xác nhưng chậm, không dùng thực tế), SGD (một mẫu, nhanh nhưng nhiễu), Mini-batch (32–512 mẫu, mặc định của mọi thứ)",
+    "Ba bộ tối ưu thông minh hơn: Momentum (cộng dồn phần bước trước như quán tính), Adam (tự điều chỉnh độ dài bước riêng từng tham số, mặc định cho deep learning), AdamW (Adam xử lý weight decay đúng hơn, chuẩn cho Transformer)"
+   ],
+   "viz": "Bảng đối chiếu hàm mất mát vs chỉ số đánh giá (dùng lúc nào, yêu cầu khả vi hay không, ví dụ), và viz gradient descent data-viz='gd'"
+  },
+  "ml-trees": {
+   "tldr": "Cây → Random Forest → Boosting là ba tầng, mỗi tầng sửa nhược điểm tầng trước: một cây overfit vì học thuộc, Random Forest lấy trung bình 500 cây độc lập để triệt tiêu sai số ngẫu nhiên, còn Gradient Boosting cho mỗi cây nông sửa lỗi cây trước để đạt hiệu năng đỉnh — LightGBM là mô hình chính, dừng ở đó đừng đi so thư viện.",
+   "points": [
+    "Cây quyết định chọn câu hỏi bằng cách thử mọi cột và mọi ngưỡng, giữ cái làm hai nhánh con thuần khiết nhất (đo bằng Gini/entropy); ưu điểm vẽ được và giải thích trong 30 giây, nhược điểm chí mạng là học thuộc tập train nếu để tự do — dùng max_depth=4, min_samples_leaf=50 để chặn",
+    "Random Forest cần cả hai nguồn đa dạng: bagging (mỗi cây train trên mẫu bootstrap bốc có hoàn lại) và random subspace (mỗi lần chia chỉ xét tập con cột, ngăn một cột mạnh chi phối cả 500 cây)",
+    "Chỗ ví von 'trí tuệ đám đông' hỏng: đám đông chỉ khôn hơn khi các thành viên sai độc lập; nếu mọi cây học cùng một thiên lệch từ dữ liệu thì 500 cây sai giống hệt nhau, trung bình không cứu được",
+    "Boosting khác Random Forest: cây trồng tuần tự (cây sau học từ lỗi cây trước) thay vì song song, cây nông 3–8 tầng và yếu thay vì sâu mạnh, cộng dồn nhân learning rate thay vì bỏ phiếu; rủi ro overfit CAO nếu quá nhiều cây nhưng hiệu năng đỉnh tốt hơn",
+    "Cấu hình LightGBM khởi đầu: n_estimators=2000 (cao để early stopping tự dừng), learning_rate=0.05, num_leaves=31 (siêu tham số quan trọng nhất), min_child_samples=50 (tăng khi lệch nhãn), class_weight='balanced', eval_metric='average_precision'",
+    "Ba siêu tham số quan trọng theo thứ tự: num_leaves (overfit→giảm 15/7, underfit→tăng 63/127), learning_rate (giảm 0,01–0,03 khi cần chất lượng tối đa, tăng n_estimators kèm), min_child_samples (tăng mạnh khi lệch — mặc định 20 quá nhỏ với 0,17% dương)",
+    "Early stopping là cơ chế chống overfit quan trọng nhất: để early_stopping(100) dừng khi validation ngừng cải thiện; eval_set BẮT BUỘC là validation, tuyệt đối không phải test"
+   ],
+   "viz": "Cây quyết định ASCII (Số tiền > 2tr? → Giờ 0–4? → 87% gian lận) và bảng đối chiếu Random Forest vs Gradient Boosting trên 5 tiêu chí"
+  },
+  "ml-overfit": {
+   "tldr": "Overfitting là mô hình học thuộc dữ liệu train thay vì học quy luật — kẻ thù trung tâm mà mọi kỹ thuật về sau đều để chống nó; chẩn đoán bằng cặp sai số train/test, và loại nguy hiểm hơn là overfit ẩn lên tập validation khi thử nhiều cấu hình.",
+   "points": [
+    "Chẩn đoán bằng cặp sai số: train cao + test cao = underfit (tăng độ phức tạp/thêm feature); train thấp + test cao = overfit (giảm phức tạp, thêm regularization, thêm dữ liệu); cả hai thấp = tốt; train cao + test thấp = bất thường, kiểm lại cách chia tập",
+    "Bias–variance là hai nguồn sai số: bias cao = mô hình quá đơn giản, sai có hệ thống (đường thẳng qua dữ liệu cong); variance cao = mô hình quá nhạy với dữ liệu cụ thể, sai không ổn định (đổi tập train mô hình đổi hẳn)",
+    "Chỗ ví von bắn bia hỏng: nó gợi ý phải đánh đổi bias lấy variance, nhưng với mô hình hiện đại (boosting, mạng lớn có regularization) thường giảm được CẢ HAI bằng thêm dữ liệu hoặc feature tốt; đánh đổi chỉ chặt khi lượng dữ liệu cố định",
+    "Bảng chẩn đoán nói bạn ĐANG ở đâu, còn đường cong học nói bạn NÊN LÀM GÌ TIẾP (thêm dữ liệu có ích không) — hai câu khác nhau",
+    "Bảy cách chống overfit theo hiệu quả: thêm dữ liệu (mạnh nhất, khó nhất), giảm độ phức tạp (num_leaves↓ max_depth↓), early stopping (mạnh, gần như miễn phí), regularization L1/L2 (mạnh cho tuyến tính và mạng), lấy mẫu ngẫu nhiên (subsample/colsample 0.8), bỏ bớt feature, ensemble",
+    "Overfit ẩn nguy hiểm hơn: thử 50 cấu hình rồi chọn cái điểm validation cao nhất có thể chỉ là may mắn hợp với tập validation đó — bạn đã dùng validation như tập train thứ hai; cách phòng là giữ test tách biệt và chỉ chạm MỘT lần, nếu test tụt hẳn so validation thì con số đúng để báo cáo là test"
+   ],
+   "viz": "Viz kéo thanh 'độ phức tạp' data-viz='overfit' (hai con số sai số đi ngược hướng), viz đường cong học data-viz='learncurve', và ẩn dụ bắn bia cho bias–variance"
+  },
+  "ml-cv": {
+   "tldr": "Một lần chia train/test cho một con số mà không biết nó dao động bao nhiêu; k-fold cho nhiều con số nên biết cả trung bình lẫn độ ổn định (báo cáo mean ± std), và phải chọn loại fold khớp cấu trúc dữ liệu — dùng TimeSeriesSplit khi có thời gian để tránh rò rỉ tương lai.",
+   "points": [
+    "k-fold: chia dữ liệu thành 5 phần, mỗi lần train trên 4 phần và kiểm trên 1 phần, lặp 5 lần để mỗi dòng được kiểm đúng một lần → ra 5 điểm; báo cáo trung bình ± độ lệch chuẩn, độ lệch chuẩn chính là thông tin một lần chia không cho",
+    "Luôn truyền Pipeline (pipe) vào cross_val_score chứ không phải mô hình trần, để sklearn fit lại toàn bộ tiền xử lý bên trong từng fold (scaler chỉ học μ,σ từ phần train của fold đó); scale trước rồi mới CV thì mọi fold đều rò rỉ",
+    "Chọn loại CV theo dữ liệu: StratifiedKFold (lệch nhãn, giữ tỉ lệ dương mọi fold), TimeSeriesSplit (có thời gian, validation luôn nằm SAU train), GroupKFold (có nhóm lặp, một khách không nằm cả hai bên), StratifiedGroupKFold (cả nhóm lẫn lệch)",
+    "Bài toán gian lận dùng TimeSeriesSplit; nếu cùng thẻ xuất hiện nhiều lần và muốn đánh giá trên thẻ mới thì cân nhắc StratifiedGroupKFold và nói rõ trong luận văn",
+    "Đọc kết quả CV: std nhỏ (vd ±0,008) là ổn định tin được; std lớn (vd ±0,14) là BẤT ỔN đừng tin trung bình — nghĩa là dữ liệu không đồng nhất, quá ít mẫu dương, hoặc mô hình quá nhạy; điều tra fold tệ nhất vì nó thường chỉ ra hiện tượng thật đáng viết vào luận văn",
+    "Nested CV cần khi dùng CV để chọn siêu tham số rồi lại báo cáo chính điểm CV đó (bị thổi phồng): vòng trong chọn tham số, vòng ngoài đánh giá — nhưng tốn 15× chi phí; với 2 tuần, dùng ba tập tách biệt (train/valid/test), tune trên valid báo cáo trên test là rẻ hơn và hoàn toàn hợp lệ"
+   ],
+   "viz": "Viz bốn kiểu fold data-viz='cvfolds', và ví dụ số hai bộ fold scores: [0.412,0.398,0.421,0.405,0.417] mean 0,411 std 0,008 ổn định vs [0.51,0.22,0.48,0.19,0.44] mean 0,368 std 0,14 bất ổn"
+  },
+  "ml-imb": {
+   "tldr": "Với 0,17% gian lận (1,7 ca/1000 giao dịch), mô hình luôn đoán 'sạch' đạt accuracy 99,83% mà vô dụng; điều quan trọng nhất là đổi chỉ số và chọn ngưỡng đúng — hai bước miễn phí đứng trên cùng — quan trọng hơn nhiều so với cân bằng lại dữ liệu bằng SMOTE mà nhiều người nhảy thẳng vào.",
+   "points": [
+    "Thứ tự ưu tiên làm từ trên xuống, dừng khi đủ: (1) đổi chỉ số bỏ accuracy dùng PR-AUC — luôn làm miễn phí; (2) chọn ngưỡng theo chi phí thay 0,5 — luôn làm miễn phí; (3) trọng số lớp class_weight='balanced' — một dòng thường hiệu quả; (4) lấy mẫu lại SMOTE/undersample — chỉ khi 1–3 chưa đủ; (5) đổi cách đóng khung sang phát hiện bất thường hoặc xếp hạng",
+    "Trọng số lớp là cách rẻ và an toàn nhất: với tỉ lệ 1:580 mỗi ca bỏ lọt bị phạt gấp 580 lần một báo nhầm; dùng class_weight='balanced' hoặc scale_pos_weight=580; tác dụng phụ là xác suất đầu ra không còn được hiệu chỉnh (cao hơn thực tế), cần CalibratedClassifierCV nếu quy ra tiền",
+    "Ba kỹ thuật lấy mẫu lại: random undersample (bỏ lớp đa số, mất thông tin), random oversample (nhân bản lớp hiếm, overfit vào đúng mẫu đó), SMOTE (sinh mẫu mới bằng nội suy giữa các mẫu hiếm gần nhau, có thể sinh mẫu phi thực tế và kém ở nhiều chiều)",
+    "Hai lỗi SMOTE làm hỏng kết quả: (1) SMOTE trước khi chia tập → mẫu tổng hợp từ train rơi vào test, kết quả tăng vọt và giả — phải dùng imblearn.pipeline để SMOTE chỉ chạy trên phần train mỗi fold; (2) cân bằng về 50/50 dạy mô hình cứ 2 giao dịch có 1 gian lận, xác suất thành vô nghĩa — đưa lên 5–10% (sampling_strategy=0.1) hợp lý hơn",
+    "SMOTE trên cột hạng mục sau one-hot sẽ nội suy ra giá trị như city_HaNoi=0,37 ('37% ở Hà Nội', thứ không tồn tại); cây vẫn chạy nên không thấy lỗi — muốn resample trên cột hạng mục thì dùng SMOTENC(categorical_features=[...]) đặt TRƯỚC one-hot",
+    "Thành thật về SMOTE: nhiều nghiên cứu cho thấy nó KHÔNG tốt hơn class_weight một cách nhất quán, đôi khi tệ hơn; nổi tiếng hơn mức hiệu quả — nhưng so sánh SMOTE vs class_weight vs không làm gì với kiểm định thống kê là một đóng góp có ích kể cả khi kết luận 'SMOTE không giúp'",
+    "Đổi cách đóng khung: phát hiện bất thường (học 'thế nào là bình thường', tốt khi kiểu gian lận mới liên tục xuất hiện) hoặc xếp hạng theo rủi ro đưa top-N cho đội xác minh (precision@k) — thường là cách đóng khung sát thực tế nhất"
+   ],
+   "viz": "Viz đổi tỉ lệ lớp dương xem chỉ số nào nhúc nhích data-viz='prcurve', và bảng thí nghiệm mẫu: baseline PR-AUC 0,312 → +class_weight 0,367 → +SMOTE 0,361 (không cải thiện, tốn 4× thời gian) → +chọn ngưỡng chi phí 0,367 (PR-AUC không đổi nhưng tiền tiết kiệm +23%)"
+  },
+  "ml-tune": {
+   "tldr": "Tuning siêu tham số chỉ cho thêm 1–3% và ngốn nhiều giờ máy nhất nên làm sau cùng khi feature đã ổn; random search thường thắng grid với cùng ngân sách, Optuna học từ các lần thử trước, và có bốn quy tắc để không tự lừa mình.",
+   "points": [
+    "Ba cách: grid search (thử mọi tổ hợp, dùng khi ≤3 tham số mỗi cái ≤4 giá trị), random search (bốc ngẫu nhiên N tổ hợp, thường tốt hơn grid với cùng ngân sách), Optuna/Bayesian (học từ lần thử trước, dùng khi mỗi lần train tốn phút trở lên)",
+    "Vì sao random thắng grid: trong 10 tham số thường chỉ 2–3 cái thật sự quan trọng, grid lãng phí phần lớn ngân sách thử các tổ hợp của tham số vô nghĩa",
+    "Optuna dùng TPESampler(seed=42), objective trả về cross_val_score scoring='average_precision', study.optimize(n_trials=60); suggest_int/suggest_float với log=True cho tham số mà 'gấp đôi' có nghĩa hơn 'cộng 1' (learning_rate, reg_lambda) — không có log thì bộ dò lãng phí thời gian ở vùng giá trị lớn",
+    "Bốn quy tắc để không tự lừa: (1) tune trên validation/CV không bao giờ trên test; (2) cố định seed để biết chênh lệch do tham số hay do ngẫu nhiên; (3) kiểm tham số tốt nhất có nằm ở biên không (num_leaves tối ưu = 127 mà đó cũng là max thì mở rộng khoảng); (4) ghi lại mọi lần thử qua study.trials_dataframe() xuất CSV vào phụ lục",
+    "Kỳ vọng thực tế theo mức cải thiện: thêm nhóm feature tốt +0,03→+0,15 PR-AUC (2–4 giờ nghĩ), đổi LogReg→LightGBM +0,05→+0,10 (15 phút), tune 60 trial chỉ +0,005→+0,03 (1–6 giờ máy), ensemble 5 mô hình +0,003→+0,01",
+    "Kết luận thứ tự làm việc: đừng tune trước khi feature xong; với 2 tuần, một lần Optuna 60 trial vào ngày 9 là đủ"
+   ],
+   "viz": "Bảng kỳ vọng thực tế đối chiếu mức cải thiện PR-AUC vs thời gian cho từng việc (feature +0,03–0,15 vs tune 60 trial chỉ +0,005–0,03)"
+  },
+  "ml-shap": {
+   "tldr": "SHAP mượn giá trị Shapley từ lý thuyết trò chơi để chia 'công trạng' dự đoán cho từng feature, và tổng đóng góp + giá trị cơ sở cộng lại đúng bằng kết quả (ở thang log-odds với mô hình cây) nên giải thích không mơ hồ — công cụ trả lời câu hội đồng chắc chắn hỏi 'vì sao mô hình quyết định như vậy'.",
+   "points": [
+    "Giá trị Shapley: với mỗi feature, xét mọi thứ tự gia nhập có thể, đo phần giá trị tăng thêm khi feature đó vào, rồi lấy trung bình — SHAP đo mỗi feature đóng góp bao nhiêu vào việc đẩy dự đoán lệch khỏi mức trung bình",
+    "Tính chất cộng đúng bằng: tổng mọi đóng góp + giá trị cơ sở = dự đoán cuối; với mô hình cây phân loại, 'dự đoán cuối' là log-odds (biên thô trước khi bóp về xác suất), nên phép cộng đúng ở thang đó — trình bày hình phải nói rõ trục là log-odds",
+    "Code dùng shap.TreeExplainer(model) rồi exp = explainer(X_t) trên dữ liệu đã transform; ba hình: beeswarm (toàn cục, hình chính), bar (xếp hạng độ quan trọng), waterfall(exp[0]) (một ca cụ thể)",
+    "Dùng explainer(X) chứ đừng dùng explainer.shap_values(X): với bài hai lớp, tuỳ phiên bản shap mà shap_values trả về mảng (n_mẫu,n_cột) hoặc danh sách hai mảng, nên shap_values[0] khi thì là mẫu số 0 khi thì là toàn bộ lớp 0 — hình vẫn vẽ ra nhưng sai; API mới trả về Explanation có nhãn rõ ràng",
+    "Hai loại hình hai mục đích: summary/beeswarm trả lời 'mô hình học được gì nói chung' (chương Kết quả & thảo luận), force/waterfall trả lời 'vì sao giao dịch NÀY bị chặn' (Nghiên cứu tình huống, rất thuyết phục khi bảo vệ)",
+    "Đọc beeswarm: mỗi chấm một giao dịch, trục ngang = mức đẩy theo log-odds (phải = tăng rủi ro), màu = giá trị feature cao/thấp; nếu secs_since_last có chấm màu 'thấp' nằm bên phải nghĩa là khoảng cách thời gian ngắn đẩy rủi ro lên",
+    "Ba giới hạn phải nêu (nêu ra làm mạnh hơn): SHAP KHÔNG phải nhân quả (nói đóng góp vào dự đoán của mô hình, không nói feature gây ra gian lận); feature tương quan mạnh chia nhau công trạng khó đoán; chậm trên dữ liệu lớn nên lấy mẫu 1.000–5.000 dòng là đủ"
+   ],
+   "viz": "Ẩn dụ chia thưởng 100 triệu cho nhóm làm chung, viz data-viz='shap', và ví dụ đọc beeswarm secs_since_last màu thấp nằm phải = khoảng cách thời gian ngắn đẩy rủi ro lên"
+  },
+  "ml-unsup": {
+   "tldr": "Khi không có nhãn (hoặc quá ít, quá trễ) vẫn làm được việc, và với gian lận nhóm này đặc biệt đáng giá vì kiểu gian lận mới không có trong dữ liệu lịch sử; cách mạnh nhất cho luận văn không phải chọn một trong hai mà dùng điểm bất thường làm feature cho mô hình có giám sát.",
+   "points": [
+    "Phân cụm k-means đo khoảng cách Euclid nên BẮT BUỘC scale trước và nên mã hoá sin/cos cho biến chu kỳ — đây là một trong những nơi sin/cos thật sự quan trọng; dùng KMeans(n_clusters=5, n_init=10)",
+    "Dùng phân cụm trong luận văn: phân khúc khách hàng rồi cho thấy tỉ lệ gian lận khác nhau giữa các cụm, hoặc dùng nhãn cluster làm một feature cho mô hình có giám sát",
+    "Chọn số cụm bằng elbow hoặc silhouette score, nhưng thành thật thì số cụm thường chọn theo ý nghĩa nghiệp vụ chứ không theo chỉ số — nói thẳng điều đó trung thực hơn giả vờ khách quan",
+    "Bốn thuật toán phát hiện bất thường: Isolation Forest (điểm lạ bị cô lập bằng ít lần chia ngẫu nhiên hơn, mặc định tốt và nhanh), Local Outlier Factor (so mật độ quanh điểm với mật độ hàng xóm, khi bất thường cục bộ), Autoencoder (nén rồi khôi phục, điểm khó khôi phục là điểm lạ, cho nhiều chiều), One-Class SVM (vẽ ranh giới bao vùng bình thường, cho dữ liệu nhỏ)",
+    "Code IsolationForest(contamination=0.002) fit trên X_train_normal, rồi anomaly_score = -iso.score_samples(X) (cao = lạ hơn)",
+    "Cách kết hợp mạnh nhất: đừng chọn một trong hai mà thêm iso_score làm feature cho LightGBM — mô hình có giám sát giỏi kiểu gian lận ĐÃ BIẾT, điểm bất thường bắt cái CHƯA TỪNG THẤY, hai tín hiệu bổ sung nhau",
+    "Đánh giá mô hình không giám sát rất khó vì không nhãn thì không có đúng/sai; đánh giá gián tiếp: (a) dùng nhãn có sẵn chỉ để đánh giá không để train, (b) cho chuyên gia xem 50 ca bất thường nhất đếm tỉ lệ đáng ngờ thật, (c) đo mức cải thiện khi thêm điểm bất thường vào mô hình có giám sát — cách (c) dễ bảo vệ nhất"
+   ],
+   "viz": "Bảng bốn thuật toán phát hiện bất thường (ý tưởng + dùng khi), và ví dụ code kết hợp iso_score làm feature cho LightGBM"
+  },
+  "dl-nn": {
+   "tldr": "Mạng nơ-ron thực chất là hồi quy logistic xếp chồng nhiều tầng: mỗi nơ-ron làm tổng có trọng số rồi qua một hàm phi tuyến, và chính hàm phi tuyến mới khiến độ sâu có nghĩa.",
+   "points": [
+    "Một nơ-ron = z = w·x + b (y hệt hồi quy tuyến tính) rồi a = f(z); nếu f = sigmoid thì một nơ-ron chính là một hồi quy logistic. Xếp nhiều nơ-ron = một lớp, nối lớp = một mạng",
+    "Bỏ hàm phi tuyến thì mọi tầng gộp lại vẫn chỉ là một phép tuyến tính: W3(W2(W1x)) = Wx, nên mạng 100 tầng không mạnh hơn một tầng",
+    "ReLU = max(0,z) là mặc định cho lớp ẩn (rẻ, không vanishing ở phần dương); GELU chuẩn trong Transformer; Sigmoid/Softmax chỉ ở lớp đầu ra",
+    "BCEWithLogitsLoss nhận thẳng logit và tự sigmoid bên trong (ổn định số học hơn), pos_weight cho nhãn lệch; optimizer AdamW lr=1e-3; Dropout(0.3) chống overfit",
+    "Vòng lặp huấn luyện đúng 5 bước: zero_grad → forward → loss → backward → step; là toàn bộ việc train mọi mạng từ 3 tầng tới GPT, chỉ khác kiến trúc và quy mô",
+    "Dữ liệu bảng: 2–3 lớp ẩn, 32–256 nơ-ron mỗi lớp; cần tới 10 tầng cho bảng thì gần như chắc LightGBM tốt hơn với 1% công sức"
+   ],
+   "viz": "Bảng bốn hàm kích hoạt (ReLU/GELU/Sigmoid/Softmax) kèm công thức, và khối code nn.Sequential 30→64→32→1 cho dữ liệu bảng"
+  },
+  "dl-backprop": {
+   "tldr": "Backpropagation chỉ là quy tắc dây chuyền của giải tích áp dụng có tổ chức: nó tính hết đạo hàm của mọi trọng số trong một lần chạy ngược, tốn xấp xỉ một lần chạy xuôi — đó là lý do deep learning khả thi về tính toán.",
+   "points": [
+    "Cách ngây thơ phải nhích từng trọng số rồi chạy lại toàn mạng: 50.000 trọng số = 50.000 lần chạy cho một bước train, không khả thi; backprop làm hết trong một lần chạy ngược",
+    "Cơ chế: mạng là hàm lồng nhau loss(f3(f2(f1(x)))); backprop đi từ cuối về đầu, mỗi bước nhân thêm một đạo hàm cục bộ và tái sử dụng tích đã tính ở lớp sau",
+    "Vanishing gradient: nhân nhiều số <1 với nhau → tiến về 0, lớp đầu đứng yên; thuốc: ReLU thay sigmoid, residual connection, batch/layer norm",
+    "Exploding gradient: nhân nhiều số >1 → bùng nổ, triệu chứng loss: nan; thuốc: clip_grad_norm_(params, 1.0), giảm lr",
+    "Residual connection (nối tắt x + f(x)) tạo đường cho gradient chảy thẳng về đầu không bị nhân nhỏ dần — lý do Transformer có nối tắt ở mỗi khối",
+    "Thực tế chỉ cần ba dòng: zero_grad() (PyTorch cộng dồn gradient, quên là lỗi kinh điển), loss.backward(), optimizer.step()"
+   ],
+   "viz": "Ví dụ số kiểm chứng được: đạo hàm sigmoid tối đa 0,25; nhân 20 lớp cho 0,25^20 ≈ 10^-12, gradient tới lớp đầu gần như bằng 0"
+  },
+  "dl-train": {
+   "tldr": "Đây là bộ điều khiển huấn luyện: learning rate là nút quan trọng nhất, và có một quy trình gỡ lỗi cụ thể khi mạng không học — đứng đầu là thử overfit 100 mẫu.",
+   "points": [
+    "Từ vựng: epoch (một lượt hết data), batch (số mẫu trước mỗi lần cập nhật, 32–512), step (một lần cập nhật = một batch); 100.000 mẫu với batch 256 = 391 step/epoch",
+    "Learning rate là nút quan trọng nhất; lịch chuẩn OneCycleLR warmup rồi giảm dần theo cosine; lr ~1e-3 cho Adam, 1e-5 cho fine-tune",
+    "Chống overfit: early stopping (patience 5–10 epoch), Dropout (0,1–0,5), weight decay L2 (0,01 với AdamW), batch/layer norm",
+    "Đọc đường cong loss: valid quay đầu đi lên = overfit tại đó; loss nan = gradient nổ hoặc chia 0/log(0); valid tốt hơn train là bình thường khi có dropout (dropout tắt lúc đánh giá)",
+    "Gỡ lỗi khi mạng không học: (1) thử overfit 100 mẫu tới loss ≈ 0 — không được là mã có lỗi (nhãn lệch hàng, quên zero_grad); (2) kiểm NaN/scale; (3) quét lr 1e-2/1e-3/1e-4; (4) loss khớp bài toán; (5) kiểm shape pred vs y",
+    "Cho luận văn: dùng MLflow hoặc Weights & Biases ghi tự động tham số + đường cong loss; đường cong train/validation là một hình chuẩn mực của chương thực nghiệm"
+   ],
+   "viz": "Bảng chẩn đoán đường cong loss: mỗi dòng ánh xạ hiện tượng quan sát (train↓ valid↑, cả hai đứng yên, loss nhảy loạn, nan) sang nguyên nhân và cách xử lý"
+  },
+  "dl-embed": {
+   "tldr": "Embedding là học một vector ngắn cho mỗi thực thể thay cho one-hot: các số không do người chọn mà mô hình tự học sao cho giảm loss, khiến những thực thể hành vi giống nhau có vector gần nhau — nền tảng của mọi thứ từ hệ gợi ý tới ChatGPT.",
+   "points": [
+    "One-hot 50.000 mã cửa hàng có ba vấn đề: tốn bộ nhớ, mọi thực thể cách đều nhau (kim hoàn xa quán phở như xa vàng bạc), và thực thể ít giao dịch gần như không học được gì",
+    "nn.Embedding(num_embeddings=50_000, embedding_dim=32) thực chất là một bảng tra 50.000×32, mọi ô đều là tham số học được; emb(id) trả vector 32 chiều",
+    "Quy tắc chọn số chiều: min(50, n^0.25) hay đơn giản n^0.25; với 50.000 giá trị → khoảng 15–32 chiều",
+    "Vector gần nhau nổi lên vì nó làm giảm loss khi các thực thể xuất hiện trong bối cảnh tương tự — không ai gán, ý nghĩa nổi lên từ ngữ cảnh (cùng cơ chế word embedding: vua ≈ hoàng đế)",
+    "Ví von hỏng: embedding không hiểu nghĩa, chỉ mã hoá thống kê đồng xuất hiện — nên nó học luôn cả định kiến trong dữ liệu, là vấn đề đạo đức thật",
+    "Mẹo thực dụng: train embedding bằng mạng nơ-ron rồi lấy 16 cột đó làm feature cho LightGBM; kết hợp thường tốt hơn cả hai cách riêng lẻ"
+   ],
+   "viz": "Code lớp FraudNet ghép merchant_emb với x_num; sau train, merchant_emb.weight (50.000×16) chiếu bằng UMAP/t-SNE thành hình cho luận văn — các cửa hàng rủi ro cao gom vào một vùng"
+  },
+  "dl-cnn-rnn": {
+   "tldr": "CNN và RNN/LSTM thống trị 2012–2017 rồi phần lớn bị Transformer thay, nhưng vẫn là baseline hợp lệ khi dữ liệu ít, tài nguyên hạn chế hoặc chuỗi ngắn — điều quyết định là hiểu vì sao chúng bị thay.",
+   "points": [
+    "CNN: một bộ lọc nhỏ (vd 3×3) trượt khắp ảnh tìm mẫu cục bộ; hai ý tưởng cốt lõi là chia sẻ tham số (một bộ lọc dùng mọi vị trí) và bất biến tịnh tiến",
+    "Nói chính xác: convolution một mình chỉ tương biến (equivariant) với dịch chuyển; tính bất biến (invariance) chỉ có được một phần nhờ pooling, tăng cường dữ liệu và cả kiến trúc gộp lại. CNN dùng cho ảnh và Conv1D cho chuỗi thời gian 1 chiều",
+    "RNN/LSTM/GRU đọc chuỗi từng phần tử mang theo trạng thái ẩn (trí nhớ ngắn hạn); LSTM/GRU có cổng để nhớ lâu hơn",
+    "Hai lý do RNN bị thay: không song song hoá được (phải xử lý xong phần tử 5 mới tới 6) và quên cái ở xa (thông tin token 1 phải đi 500 bước, pha loãng dần — cùng cơ chế vanishing gradient)",
+    "Transformer giải cả hai: mọi vị trí nhìn mọi vị trí trực tiếp và cùng lúc, nên song song hoá tốt khi huấn luyện — nhưng khi sinh văn bản vẫn phải tuần tự từng token",
+    "So sánh LSTM vs Transformer trên chuỗi giao dịch của một thẻ là thiết kế thí nghiệm luận văn hợp lý, nhiều tài liệu tham khảo"
+   ],
+   "viz": "Bảng 'còn dùng ở đâu năm 2026': CNN cho ảnh nhúng/Conv1D chuỗi ngắn, LSTM/GRU chuỗi ngắn dữ liệu ít, Transformer gần như mọi thứ khác"
+  },
+  "dl-attn": {
+   "tldr": "Attention để mỗi từ hỏi thẳng mọi từ khác cùng một lúc và lấy về ngữ cảnh, thay vì mang thông tin qua từng bước như RNN; lõi là ba vai Query–Key–Value mà mô hình tự sinh từ chính token qua ba ma trận học được.",
+   "points": [
+    "Vấn đề: trong câu 'con mèo không băng qua đường vì nó quá mệt', để biểu diễn 'nó' cho đúng mô hình phải nhìn lại các từ khác — attention cho mỗi từ hỏi thẳng mọi từ khác cùng lúc",
+    "Q/K/V ánh xạ như thư viện: Query = câu hỏi mỗi token tự sinh, Key = nhãn quảng cáo 'tôi có thông tin loại này', Value = nội dung thật được lấy đi; điểm khớp Q·K biến thành trọng số, kết quả là trung bình có trọng số các Value",
+    "Ví von hỏng: sách có nhãn do thủ thư dán, còn Q, K, V đều sinh ra từ chính token qua ba ma trận trọng số học được (Q=xW^Q, K=xW^K, V=xW^V) — không ai dán nhãn",
+    "Bốn bước: (1) sinh Q,K,V; (2) chấm điểm Q·K của token i với mọi token j; (3) chia √d_k rồi qua softmax cho các trọng số dương cộng lại bằng 1; (4) trộn = tổng có trọng số các Value",
+    "Multi-head: chạy 8–16 đầu song song với ma trận chiếu khác nhau; phân tích mô hình đã train thấy các đầu tự phân công (ngữ pháp, đại từ chỉ về đâu, token liền kề), không ai gán",
+    "Cái giá là bình phương độ dài: mỗi token nhìn mọi token cho ma trận n×n, gấp đôi độ dài = gấp bốn chi phí (chuỗi 1.000 token = 1 triệu ô) — lý do context window đắt và là đề tài FlashAttention/Linformer/Performer",
+    "Cảnh báo trung thực: trên dữ liệu bảng vừa và nhỏ, self-attention trên chuỗi giao dịch thường vẫn thua LightGBM với feature thủ công tốt"
+   ],
+   "viz": "Widget attention kéo được (data-viz=attn): bấm vào một từ như 'Đà Nẵng' để thấy nó nhìn những từ nào để hiểu chính nó"
+  },
+  "dl-tf": {
+   "tldr": "Transformer là kiến trúc hoàn chỉnh xây quanh attention: một khối gồm bốn thành phần mà đầu ra cùng kích thước đầu vào nên xếp chồng được vô hạn lần, và positional encoding chính là mẹo sin/cos vòng tròn áp cho vị trí.",
+   "points": [
+    "Một khối gồm bốn thành phần: multi-head attention (trộn thông tin giữa các token) + nối tắt residual + LayerNorm, rồi feed-forward (xử lý từng token riêng) + residual + LayerNorm",
+    "Vì đầu ra cùng kích thước đầu vào nên xếp chồng khối bao nhiêu lần cũng được — GPT-3 có 96 khối, đó là toàn bộ 'kiến trúc'",
+    "Phân công vai trò: attention lo giao tiếp giữa các vị trí, feed-forward lo tính toán tại từng vị trí (chiếm ~2/3 số tham số); xen kẽ hai việc này là ý tưởng kiến trúc cốt lõi",
+    "Bỏ residual thì mạng sâu không train nổi (vanishing gradient); bỏ LayerNorm thì train bất ổn dễ nan",
+    "Positional encoding vì attention mù về thứ tự: đảo hai từ trong câu ra kết quả y hệt ('chó cắn người' = 'người cắn chó'), nên phải cộng thêm tín hiệu sin/cos vào embedding để mã hoá vị trí",
+    "Đây chính là mẹo sin/cos của giờ 23h–0h nhưng dùng nhiều chu kỳ chồng lên nhau (từ rất ngắn tới rất dài) để vừa phân biệt vị trí liền kề vừa nắm khoảng cách xa; các mô hình hiện đại (LLaMA, GPT-NeoX) dùng RoPE dựa trên phép quay vòng tròn"
+   ],
+   "viz": "Sơ đồ ASCII một khối Transformer: đầu vào x rẽ nhánh residual qua Multi-Head Attention → cộng → LayerNorm → Feed-Forward → cộng → LayerNorm, đầu ra cùng kích thước đầu vào"
+  },
+  "dl-llm": {
+   "tldr": "LLM là một Transformer decoder-only rất lớn huấn luyện đúng một nhiệm vụ là đoán token tiếp theo; mọi khả năng khác nổi lên từ đó, và hallucination là hệ quả trực tiếp của cách nó sinh token chứ không phải lỗi vặt sẽ được vá.",
+   "points": [
+    "Đoán token tiếp theo mới là tiền huấn luyện; khả năng bám chỉ dẫn và từ chối yêu cầu hại chỉ có sau hậu huấn luyện: tinh chỉnh trên ví dụ mẫu (SFT) rồi học từ phản hồi người (RLHF). Decoder-only là phổ biến nhất, không phải duy nhất",
+    "LLM không tra cứu cơ sở dữ liệu, không có chỗ lưu sự thật — nó sinh token xác suất cao theo mẫu đã học, nên bịa thông tin nghe hợp lý (hallucination) là hệ quả trực tiếp",
+    "Bốn cách dùng từ rẻ tới đắt: prompting (~0, luôn thử trước), few-shot (3–10 ví dụ trong prompt), RAG (tìm tài liệu nhét vào prompt), fine-tune (cao)",
+    "Hiểu nhầm về fine-tune: nó chủ yếu dạy mô hình cách nói (giọng, định dạng), không phải cách đáng tin để cập nhật kiến thức; muốn mô hình biết chính sách nội bộ thì RAG thường đúng công cụ hơn và rẻ hơn",
+    "RAG ba bước: cắt tài liệu thành đoạn → embedding → vector database; câu hỏi thành vector, tìm đoạn gần nhất bằng cosine similarity; nhét đoạn vào prompt. Bản chất chỉ là tìm kiếm ngữ nghĩa + prompt, chất lượng quyết định bởi bước tìm kiếm",
+    "Cho dự án gian lận: KHÔNG dùng LLM chấm điểm rủi ro (chậm, đắt, kém chính xác hơn LightGBM, không giải thích được cho kiểm toán); NÊN dùng để chuẩn hoá tên cửa hàng lộn xộn, và chuyển đầu ra SHAP thành đoạn tiếng Việt cho nhân viên xác minh"
+   ],
+   "viz": "Bảng bốn cách dùng LLM (Prompting/Few-shot/RAG/Fine-tune) với cột cơ chế, chi phí và khi nào dùng"
+  },
+  "dl-tab": {
+   "tldr": "Trên dữ liệu bảng, gradient boosting (LightGBM) vẫn thắng deep learning, và phải biết vì sao để trả lời hội đồng; cách dùng deep learning thông minh nhất là tạo feature (embedding) cho LightGBM chứ không thay nó.",
+   "points": [
+    "Bảng không có cấu trúc hình học để khai thác: cột 3 và cột 4 không có quan hệ hình học, hoán vị cột không đổi gì — khác ảnh (CNN) hay token (Transformer)",
+    "Đặc trưng không đồng nhất (một cột tiền, một cột mã danh mục, một cột tỉ lệ): cây xử lý tự nhiên, mạng nơ-ron cần chuẩn hoá cẩn thận từng loại",
+    "Cây bất biến với phép biến đổi đơn điệu (log hay không log cho kết quả y hệt) còn mạng rất nhạy; ranh giới quyết định dạng bậc thang/ngưỡng ('trên 50 tuổi') cây làm bằng một lần chia, mạng phải xấp xỉ bằng nhiều nơ-ron",
+    "Đây không phải ý kiến cá nhân mà được kiểm chứng lại nhiều lần trong so sánh quy mô lớn — Grinsztajn và cộng sự 2022 là nguồn hay trích, làm phần 'lựa chọn mô hình' của luận văn vững hẳn",
+    "Deep learning thực sự lợi khi: cột hạng mục lực lượng rất lớn (embedding cho 50.000 cửa hàng), có dữ liệu chuỗi, có nhiều loại dữ liệu (multi-modal), hoặc học biểu diễn chung từ dữ liệu không nhãn",
+    "Cách dùng thông minh nhất trong 2 tuần: đừng thay LightGBM, hãy train mạng nhỏ có nn.Embedding cho merchant_id, lấy ma trận embedding 50.000×16, nối vào bảng feature rồi train LightGBM — điểm thường tốt hơn cả hai cách riêng, chi phí một buổi"
+   ],
+   "viz": "Code bốn bước embedding→LightGBM, kèm hình chiếu ma trận embedding xuống 2 chiều tô màu theo tỉ lệ gian lận"
+  },
+  "pr-arch": {
+   "tldr": "Trước khi viết code phải cố định kiến trúc: mô hình chấm điểm realtime nằm sau cổng thanh toán với ngân sách độ trễ ~50ms nên không thể dùng LLM; và ba đặc thù của bài gian lận (nhãn đến trễ, nhãn bị kiểm duyệt, đối thủ thích nghi) mới là thứ làm nó khó hơn một bài phân loại thường.",
+   "points": [
+    "Quyết định theo ba mức ngưỡng chứ không phải chặn/cho-qua: điểm ≥0,90 CHẶN + gửi OTP, ≥0,40 cho qua nhưng đẩy vào hàng đợi xác minh, <0,40 cho qua thẳng",
+    "Ngân sách độ trễ tổng ~50ms (mạng 10 + tra feature lịch sử 15 + pipeline+model 20 + log 5); mức công nghiệp thường là 100ms",
+    "Không dùng LLM để chấm điểm giao dịch: một lần gọi mất 500–3000ms, gấp 10–60 lần toàn bộ ngân sách độ trễ",
+    "Nhãn đến trễ 30–60 ngày (phải chờ khiếu nại/chargeback) nên dữ liệu gần nhất luôn có nhãn không đầy đủ",
+    "Selective labels problem: giao dịch đã bị chặn thì không bao giờ biết có thật gian lận không → mô hình chỉ học từ cái nó cho qua, một thiên lệch tự tạo",
+    "Phải ghi log đầy đủ cả feature đã tính, nếu không thì không debug, không đo drift, không retrain được"
+   ],
+   "viz": "Sơ đồ đường đi một giao dịch: quẹt thẻ → API chấm điểm (tra Redis/CSDL + predict_proba) → quyết định theo ngưỡng → ghi log → kho dữ liệu/giám sát drift/retrain, kèm bảng ngân sách độ trễ cộng ra ~50ms."
+  },
+  "pr-code": {
+   "tldr": "Toàn bộ đường code từ thư mục rỗng tới một artifact .joblib đã huấn luyện, chia thành sáu file trách nhiệm tách bạch; điểm lõi là mọi biến đổi dữ liệu phải nằm TRONG Pipeline để hàm sinh feature chạy y hệt nhau ở train (278 nghìn dòng), eval và serve (một dòng).",
+   "points": [
+    "config.py giữ mọi hằng số ở đúng một chỗ (schema 8 cột, danh sách feature, ma trận chi phí) — khi hội đồng hỏi 'chi phí lấy đâu ra' thì chỉ vào một dòng",
+    "features.py sinh feature CHỈ từ nội dung một dòng; mã hoá chu kỳ bằng sin/cos cho hour(chu kỳ 24), dayofweek(7), month(12) để 23h và 0h liền nhau",
+    "Thẻ chưa có lịch sử để NaN chứ không phải 0 (0 = 'đã đo, bằng 0'; NaN = 'chưa biết'); SimpleImputer(add_indicator=True) vừa điền vừa thêm cột cờ báo ô vốn trống",
+    "history.py là nhóm feature mạnh nhất và dễ rò rỉ nhất — ba bẫy im lặng: min_periods=0 (cửa sổ rỗng phải là 0 không phải NaN), closed='left' (loại chính giao dịch đang xét), gán bằng .to_numpy() vì timestamp lặp lại được; check_no_leak assert mỗi lần chạy",
+    "split.py có ba cách chia = ba câu hỏi tổng quát hoá khác nhau (theo thời gian / theo nhóm card_id / cả hai) + embargo bỏ trống vài ngày vì nhãn đến trễ; báo cáo cách (1) làm chính, (3) làm kiểm tra độ bền",
+    "pipeline.py KHÔNG đặt class_weight='balanced' làm mặc định: trên bộ này nó làm PR-AUC tệ đi (0,029→0,026) và phá hỏng hiệu chỉnh xác suất (Brier 0,0021→0,019)"
+   ],
+   "viz": "Bản ghi chạy thật in PR-AUC 0,0294 với base_rate 0,00213 (gấp 13,8 lần đoán bừa), đọc kèm trần lý thuyết 0,05–0,07 của bộ mô phỏng nên mô hình đạt ~60% mức tối đa."
+  },
+  "pr-eval": {
+   "tldr": "Biến một file .joblib và một PR-AUC validation thành bộ bằng chứng luận văn: quy trình đánh giá không tự lừa (test mở đúng một lần), ngưỡng có lý do bằng tiền, khoảng tin cậy đúng loại, baseline theo luật và bảng công bằng — điểm xuyên suốt là mọi con số phải so được và có ràng buộc vận hành thật.",
+   "points": [
+    "Tập test không nằm trong vòng lặp phát triển: chọn feature/siêu tham số/ngưỡng/mô hình đều trên validation (bao nhiêu lần cũng được), test chạm đúng MỘT lần khi báo cáo — mỗi lần nhìn test rồi sửa là tinh chỉnh lên test bằng tay",
+    "Ma trận chi phí có BA hành động (ALLOW/REVIEW/BLOCK) × 2 sự thật = 6 ô chi phí, không phải 4; thêm ràng buộc REVIEW_CAPACITY 0,5% lưu lượng để nghiệm 'tối ưu' không đẩy 8% giao dịch sang xác minh",
+    "Hai biên hoà vốn tính thẳng từ ma trận chi phí (không cần dữ liệu): ALLOW→REVIEW tại p=0,0148, REVIEW→BLOCK tại p=0,2444; bẫy hay gặp là dùng 0,0476 (biên bài toán hai-hành-động) làm biên BLOCK",
+    "Bootstrap phải theo đơn vị độc lập: kind='cluster' lấy lại theo THẺ (mặc định), 'block' theo khối ngày; bootstrap theo dòng cho khoảng tin cậy hẹp giả tạo → tuyên bố 'cải thiện có ý nghĩa' cho một nhiễu",
+    "paired_ci so hai mô hình bằng bootstrap GHÉP CẶP trên hiệu Δ trên cùng mẫu; 'có ý nghĩa' chỉ khi khoảng của Δ không chứa 0 — không được so hai khoảng riêng xem có chồng lấn",
+    "Baseline phải là luật thủ công (src/rules.py — hệ thống thật mô hình phải thay thế), so TẠI ĐIỂM VẬN HÀNH chứ không bằng PR-AUC vì luật cho một điểm còn mô hình cho một đường cong; final_eval khoá bằng --confirm-freeze + freeze_hash + từ chối ghi đè"
+   ],
+   "viz": "Khối JSON kết quả cuối thật: PR-AUC 0,0485 (base 0,00228 → ~21 lần đoán bừa, sát trần 0,05–0,07), recall hiệu dụng 21,8%, tiết kiệm 14,8% chi phí; và bảng công bằng cho FPR nhóm web/pos lệch 6,7×."
+  },
+  "pr-serve": {
+   "tldr": "Đóng gói mô hình thành dịch vụ FastAPI + Docker, và bịt cái khe hở làm nhiều hệ thống thật chạy lệch khỏi số đã đo: ngưỡng phải đi cùng model trong cùng một artifact và service đọc từ đó, thay vì ai đó viết cứng 0,4/0,9 vào serve.py.",
+   "points": [
+    "serve.py đọc ngưỡng TỪ artifact (không viết trong file); test_api_matches_offline_decisions so từng dòng điểm+quyết định+ngưỡng của API với bản offline trên 60 giao dịch, và test_no_hardcoded_thresholds đọc chính mã service bắt hằng số ngưỡng",
+    "Nạp model lười — để container thiếu model báo lỗi rõ ở /health (503) thay vì chết lúc import — nhưng chỉ nạp MỘT lần vì joblib.load mất ~200ms, gọi mỗi request là phá sạch ngân sách độ trễ (lifespan nạp sẵn lúc khởi động)",
+    "Ba endpoint: /score, /health, /model-card; /model-card trả cả ma trận chi phí và cửa sổ huấn luyện để trả lời 'ngưỡng ở đâu ra' trong buổi bảo vệ",
+    "Nguồn train–serve skew thứ hai: sáu cột hist_*/n_tx_* lúc serve lấy ở đâu — ba cách (caller cung cấp / kho trạng thái Redis với state_from_history / tính lại tại chỗ); tính khác lúc train thì model vẫn chạy, vẫn trả xác suất, chỉ là sai",
+    "Dockerfile phải apt-get install libgomp1 vì LightGBM cần OpenMP; thiếu nó thì container build xong bình thường rồi mới chết lúc import với 'Library not loaded: libomp' (macOS: brew install libomp, hoặc MODEL_KIND='hgb' chỉ cần scikit-learn)",
+    "Ghim đúng phiên bản trong requirements.txt: 'không tái lập được' là lỗi nặng nhất một luận văn có thể mắc vì nó vô hiệu hoá mọi con số; toàn bộ quy trình từ thư mục rỗng ~19 giây tính toán"
+   ],
+   "viz": "Hai lời gọi /score trên cùng thẻ C00123 khác nhau 1.355 lần: 03h/8,5tr/vừa quẹt 6 lần trong 1h ra risk 0,374 (BLOCK); 14h/150k/không dồn dập ra 0,00028 (ALLOW)."
+  },
+  "pr-monitor": {
+   "tldr": "Mô hình không hỏng ngay mà mục dần, nên cần một lớp giám sát phân biệt ba loại drift và một chiến lược retrain; đặc thù bài gian lận là vòng phản hồi tự đầu độc — mô hình chỉ thu được nhãn của những giao dịch nó cho qua.",
+   "points": [
+    "Ba loại drift: data drift đổi P(X), concept drift đổi P(y|X) — nguy hiểm nhất vì đầu vào trông vẫn bình thường, label drift đổi P(y)",
+    "Đo drift bằng PSI = Σ(aᵢ−eᵢ)·ln(aᵢ/eᵢ) so phân phối hiện tại với lúc train; <0,10 ổn định (không làm gì), 0,10–0,25 theo dõi sát, >0,25 retrain — các ngưỡng là quy ước ngành credit scoring, phải trích dẫn",
+    "Trong code psi() bắt buộc np.unique(edges) để bỏ cạnh phân vị trùng, nếu không cột có >10% giá trị 0 (như n_tx_1h) làm np.histogram báo 'bins must increase monotonically'",
+    "Nhóm chỉ số 'Đầu ra' (phân phối điểm rủi ro, tỉ lệ CHẶN/XÁC MINH) quý nhất vì không cần nhãn → phát hiện bất thường ngay lập tức thay vì chờ nhãn trễ 60 ngày",
+    "Retrain theo lịch (mỗi tháng trên 12 tháng gần nhất) là lựa chọn cho luận văn; sau khi train lại chạy shadow mode một tuần so quyết định bản mới với bản cũ, nếu được thì A/B test trên 5% lưu lượng",
+    "Vòng phản hồi tự đầu độc (selective labels): mô hình chặn → không có nhãn thật → dữ liệu train tương lai chỉ chứa cái cho qua; giảm thiểu bằng cho qua ngẫu nhiên 0,5–1% giao dịch đáng lẽ bị chặn để thu nhãn thật"
+   ],
+   "viz": "Bảng ngưỡng PSI ba mức hành động; ví dụ tỉ lệ chặn nhảy từ 0,4% lên 3% trong một đêm là tín hiệu hỏng phát hiện được ngay không cần nhãn."
+  },
+  "pr-mlops": {
+   "tldr": "Chỉ cần một phần rất nhỏ của MLOps để dự án tái lập được và biến trực tiếp thành bảng kết quả luận văn: ghi lại thí nghiệm, phiên bản hoá dữ liệu, chốt phiên bản thư viện, và một CI tối thiểu.",
+   "points": [
+    "MLflow log_params/log_metrics/log_model rồi 'mlflow ui' so mọi lần chạy → xuất CSV thành bảng kết quả luận văn thay vì dựng lại từ trí nhớ; nếu thấy nặng thì một file CSV ghi kỷ luật cũng đạt 80% giá trị",
+    "DVC lưu con trỏ dữ liệu trong git và file thật ở nơi khác (git checkout commit cũ lấy đúng phiên bản dữ liệu); cách rẻ hơn cho luận văn: đặt tên file có ngày + ghi MD5 vào README + không bao giờ sửa file trong data/raw/",
+    "pip freeze > requirements.txt: thiếu nó thì người phản biện chạy với scikit-learn mới hơn ra số khác — lỗi tái lập phổ biến nhất và dễ tránh nhất",
+    "CI GitHub Actions ~15 dòng chạy pytest -q mỗi lần push; tick xanh trên repo cũng là một tín hiệu chất lượng khi hội đồng xem",
+    "Checklist repo trước khi nộp: README (bài toán/cài/chạy/kết quả), requirements chốt phiên bản, chạy được bằng đúng một lệnh, seed cố định mọi chỗ ngẫu nhiên, tests xanh, không có khoá API, metrics.json khớp số trong luận văn"
+   ],
+   "viz": ""
+  },
+  "pr-cost": {
+   "tldr": "Một bảng quy mọi quyết định ra tiền là thứ làm luận văn khác hẳn phần lớn cùng khoá; và vì chi phí FP là một giả định không chắc, phân tích độ nhạy biến chính điểm yếu đó thành điểm mạnh.",
+   "points": [
+    "Ma trận chi phí quy ra tiền: FN mất 3.000.000₫ (giá trị trung bình một vụ gian lận, tính từ df[df.Class==1].amount.mean() cộng chi phí khiếu nại), FP tốn 40.000₫ + rủi ro mất khách",
+    "Phân tích độ nhạy: quét chi phí FP qua [20k, 40k, 80k, 160k], ngưỡng tối ưu đổi (0,214→0,602) nhưng kết luận 'mô hình vượt baseline' ổn định trong toàn khoảng gấp 8 lần",
+    "Bảng so sánh cuối phải có cột 'số ca xác minh/ngày' — cột thuyết phục nhất và hay bị bỏ: một hệ thống bắt nhiều hơn nhưng làm phiền gấp ba thì đội vận hành sẽ tắt nó trong hai tuần",
+    "Chỉ đổi ngưỡng từ mặc định 0,5 sang ngưỡng theo chi phí đã tiết kiệm thêm ~412 triệu/tháng mà không đổi mô hình",
+    "Dòng baseline luật thủ công phải tự tạo (từ src/rules.py chạy trên đúng tập test), không đi mượn — đó là dòng so sánh duy nhất hội đồng thật sự quan tâm; bảng trong bài dùng số minh hoạ (31%/64%) khác số chạy thật ở pr-eval (12,4%/21,8%)",
+    "Ba câu dùng trong bảo vệ: chỉ số quyết định là tổng thiệt hại quy đổi (không phải PR-AUC); ngưỡng chọn bằng tối thiểu hoá hàm chi phí trên validation, không theo mặc định 0,5; khảo sát độ nhạy gấp 8 lần và kết luận không đổi"
+   ],
+   "viz": "Bảng quét độ nhạy chi phí FP: 20k→ngưỡng 0,214 / thiệt hại 612 triệu; 40k→0,318/698tr; 80k→0,447/801tr; 160k→0,602/944tr — ngưỡng dịch nhưng luôn thắng baseline."
+  },
+  "q-regress": {
+   "tldr": "Chuyển từ phân loại sang hồi quy giữ nguyên gần hết pipeline (đóng khung, EDA, feature); chỗ vỡ chỉ nằm ở chia tập và đo lường, và một con số dự đoán đơn lẻ kém hữu ích hơn một khoảng dự đoán có kiểm chứng độ phủ.",
+   "points": [
+    "Chỉ đổi ba chỗ so với phân loại: bỏ stratify theo nhãn (chia theo nhóm phân vị nếu biến mục tiêu lệch), đổi LGBMClassifier→LGBMRegressor và LogisticRegression→Ridge, và đổi hoàn toàn phần metric",
+    "Bốn chỉ số: MAE (mặc định, cùng đơn vị), RMSE (phạt nặng sai lớn, nhạy ngoại lai), MAPE (so mặt hàng khác quy mô nhưng vỡ khi giá trị thật gần 0 và khuyến khích đoán thấp), R² (không đơn vị nên không nói được sai có chấp nhận được không)",
+    "Cách chọn metric: hỏi 'sai một đơn vị tốn bao nhiêu, chi phí tăng tuyến tính hay nhanh hơn?' — tuyến tính→MAE, nhanh hơn→RMSE",
+    "Baseline bắt buộc là luôn đoán trung vị của tập train (trung vị tối ưu cho MAE, trung bình tối ưu cho RMSE) — chọn sai baseline là tự cho đối thủ yếu",
+    "Khoảng dự đoán rẻ nhất với LightGBM là hồi quy phân vị: train 3 mô hình objective='quantile' cho alpha 0.1/0.5/0.9; dòng quan trọng nhất là kiểm coverage thực tế phải khớp ~80% đã công bố",
+    "Ba sai lầm: không nhìn phân phối phần dư (phễu→dự đoán log(y); có cấu trúc→thiếu feature), không chặn giá trị vô lý (thời gian giao âm) và không đếm số lần phải kẹp, dùng R² làm chỉ số chính"
+   ],
+   "viz": "Ví dụ số: MAE 'sai trung bình 8,3 phút' vs R²=0,9 vẫn có thể sai 3 tiếng mỗi đơn; và code coverage = ((y_va>=lo)&(y_va<=hi)).mean() phải ra ~80%."
+  },
+  "q-forecast": {
+   "tldr": "Forecasting trông giống hồi quy nhưng phải viết lại gần hết vì dòng hôm nay là hệ quả của dòng hôm qua; chia tập walk-forward và baseline naive/seasonal-naive là bắt buộc, và mọi con số phải đọc qua MASE (so với naive).",
+   "points": [
+    "Bốn thứ phải nhìn trước khi mô hình hoá: xu hướng (mô hình cây KHÔNG ngoại suy được — hạn chế lớn nhất của LightGBM), mùa vụ (chỗ sin/cos gặp lại), tính dừng (ARIMA giả định chuỗi dừng), tự tương quan (ACF/PACF cho biết nên tạo lag nào); tách chuỗi bằng STL trước tiên",
+    "Không bao giờ chia ngẫu nhiên chuỗi thời gian — dùng backtesting walk-forward qua TimeSeriesSplit (tr_idx luôn trước te_idx)",
+    "Tham số gap xử lý ĐỘ TRỄ DỮ LIỆU (dữ liệu mới nhất đã cũ mấy bước khi chấm điểm), khác với TẦM DỰ BÁO (nằm ở cách dựng target); dữ liệu về trễ 7 ngày thì đặt gap=7",
+    "Ba dạng rò rỉ thời gian: chuẩn hoá bằng thống kê cả chuỗi (chỉ fit trên quá khứ từng fold), rolling/lag quên shift(1) nên cửa sổ chứa chính điểm cần dự đoán, feature ngoại sinh chưa tồn tại lúc dự báo (nhiệt độ thật ngày mai)",
+    "Hai baseline bắt buộc chỉ hai dòng: naive = y.shift(1), seasonal-naive = y.shift(7) — với nhiều chuỗi thực tế chúng thắng cả Prophet lẫn LSTM",
+    "MASE = MAE của bạn chia cho MAE của naive-một-bước đo TRÊN TRAIN (Hyndman, một hằng số cố định); mase<1 tốt hơn naive, ≥1 vô dụng; chia cho naive trên tập test là relative MAE chứ không phải MASE",
+    "Bản đồ mô hình đặt vai không xếp hạng: naive/ETS/ARIMA/Prophet là baseline, boosting+lag là mặc định tốt NẾU khử xu hướng trước, LSTM/Transformer không phải mặc định; thứ tự .shift(1).rolling(w) chứ không phải ngược lại",
+    "Prophet đang ở chế độ bảo trì (README chỉ nhận sửa lỗi, kiểm 3/8/2026); điểm mạnh là tách thành phần để giải thích chứ không phải độ chính xác"
+   ],
+   "viz": "Ba hình động: decomp (tách STL xu hướng+mùa vụ+phần dư), walkforward (trượt mốc train/test), lag; period=7 cho dữ liệu ngày có mùa vụ tuần."
+  },
+  "q-multi": {
+   "tldr": "Lên nhiều lớp thì code gần như không đổi (LGBMClassifier tự xử lý), nhưng cách gộp per-class metric thành một con số quyết định bạn báo cáo trung thực hay không — macro và weighted trên cùng một mô hình có thể chênh nhau rất xa.",
+   "points": [
+    "Phân biệt multiclass (một trong N lớp, softmax, argmax) với multilabel (vector 0/1, sigmoid độc lập cho từng nhãn, một ngưỡng riêng mỗi nhãn, MultiOutputClassifier); dùng softmax cho multilabel làm recall thấp khó hiểu ở mọi nhãn",
+    "Ba kiểu trung bình hoá: macro (trung bình cộng không trọng số — lớp hiếm có tiếng nói ngang lớp phổ biến), weighted (theo số mẫu — bị lớp phổ biến chi phối), micro (gộp TP/FP/FN, ≈ accuracy trong multiclass)",
+    "Quy tắc: nếu lớp hiếm là lớp quan trọng thì báo cáo macro và nói rõ; luôn kèm bảng F1 từng lớp vì con số gộp giấu đúng thứ đáng nhìn",
+    "classification_report(digits=3) cho cả từng lớp lẫn ba kiểu gộp; ma trận nhầm lẫn chuẩn hoá theo hàng (normalize='true') là hình đáng đưa vào luận văn nhất vì nói sai theo HƯỚNG nào",
+    "Ba việc thêm khi lên nhiều lớp: stratify theo lớp hiếm nhất, gộp lớp dưới ~50 mẫu thành 'KHÁC', cân nhắc cấu trúc phân cấp (3 nhóm × 4 lớp con thành mô hình hai tầng)"
+   ],
+   "viz": "Ví dụ số then chốt: 3 lớp A(900 mẫu,F1=0,95) B(80,0,60) C(20,0,10) → macro=(0,95+0,60+0,10)/3=0,55 nhưng weighted≈0,90 trên cùng một mô hình."
+  },
+  "q-nlp": {
+   "tldr": "Trong NLP, cám dỗ lớn nhất là bắt đầu từ mô hình mạnh nhất — nhưng TF-IDF phải chạy trước vì nó là thứ duy nhất cho biết bài toán khó tới đâu; với phân loại văn bản, cả fine-tune lẫn RAG đều không phải câu trả lời đầu tiên.",
+   "points": [
+    "Ba mức leo thang có tiêu chí: (1) TF-IDF+LogisticRegression n-gram 1-2, vài giây CPU, luôn chạy đầu; (2) sentence-transformers embedding + LightGBM khi mức 1 chạm trần do từ đồng nghĩa; (3) fine-tune Transformer khi có >~2000 mẫu có nhãn và độ chính xác đáng số giờ GPU",
+    "Code mức 1 sáu dòng: make_pipeline(TfidfVectorizer(ngram_range=(1,2), min_df=3, max_features=50_000), LogisticRegression(class_weight='balanced'))",
+    "Tiếng Việt: TF-IDF chạy khá tốt cả khi không tách từ, nhưng tách từ bằng underthesea/pyvi thường cải thiện rõ vì nhiều từ ghép hai âm tiết",
+    "Fine-tuning giải quyết mô hình chưa biết LÀM tác vụ (định dạng, quy tắc phân loại), phải train lại, không trích nguồn; RAG giải quyết mô hình chưa BIẾT nội dung, chỉ thêm tài liệu, CÓ trích nguồn — với phân loại văn bản thì embedding+LightGBM thường rẻ hơn cả hai",
+    "Metric theo tác vụ: phân loại/cảm xúc dùng macro-F1+bảng từng lớp, NER dùng F1 mức SPAN không phải token (đúng 3/4 token của tên riêng là sai), tóm tắt dùng ROUGE/BLEU CỘNG đánh giá người, RAG tách đo Recall@K/MRR cho truy xuất riêng phần sinh",
+    "Việc rẻ giá trị cao: đọc tay 50 ca sai, phân thành 4-5 nhóm nguyên nhân, đưa bảng vào luận văn — gần như luôn chỉ ra cải tiến rẻ không chỉ số nào gợi ý được",
+    "Rò rỉ đặc trưng NLP: văn bản trùng lặp gần đúng giữa train/test (khử trước khi chia), chia ngẫu nhiên khi dữ liệu có tác giả (mô hình học nhận ra người), fit vectorizer trên toàn bộ dữ liệu (đặt trong Pipeline là xong)"
+   ],
+   "viz": ""
+  },
+  "q-cv": {
+   "tldr": "Mục tiêu hẹp là định vị được một dự án ảnh thuộc loại nào và tự tay chạy transfer learning một lần; chi phí gán nhãn quyết định phạm vi dự án nhiều hơn độ khó kỹ thuật, và luôn có linear probe làm baseline trước khi fine-tune.",
+   "points": [
+    "Ba loại phân biệt bằng đầu ra: classification (một nhãn/ảnh, gán nhãn vài giây, Accuracy/macro-F1), detection (hộp bao+nhãn, vài chục giây, mAP theo ngưỡng IoU), segmentation (nhãn từng pixel, nhiều phút, IoU/Dice)",
+    "Chi phí gán nhãn là cột quyết định phạm vi; nhiều dự án CV thất bại vì không đủ ảnh có nhãn — mẹo thu hẹp: hỏi xem classification trên ảnh đã cắt có giải quyết được không",
+    "CNN có giả định 'cục bộ, bất biến tịnh tiến' cài sẵn nên học tốt với ít dữ liệu hơn; ViT cắt ảnh thành token không có giả định cục bộ nên cần nhiều dữ liệu hơn — với dữ liệu vừa/nhỏ một CNN pretrained thường ngang hoặc hơn",
+    "Transfer learning ba bước: models.resnet18(weights='IMAGENET1K_V1'), đóng băng thân (requires_grad=False) chỉ thay net.fc, và chuẩn hoá ĐÚNG như lúc pretrain (Normalize mean [0.485,0.456,0.406] std [0.229,0.224,0.225]) — sai chỗ này là điểm tụt không hiểu vì sao",
+    "Baseline bắt buộc trước khi fine-tune: linear probe — đóng băng toàn mạng, lấy vector áp chót đưa vào logistic regression, chạy một phút, cho biết đặc trưng pretrained đã đủ tốt chưa",
+    "Ba chỗ hỏng: rò rỉ theo nhóm (nhiều ảnh cùng vật thể/bệnh nhân ở cả train/test → chia theo nhóm như GroupKFold), augmentation sai ngữ nghĩa (lật 6 thành không phải 6, lật X-quang đổi trái phải), tương quan giả với nền/thiết bị (kiểm bằng che vật thể chính)"
+   ],
+   "viz": "Mini-lab code: resnet18 pretrained ImageNet, đóng băng thân chỉ học net.fc = nn.Linear(in_features, N_CLASSES), vài phút GPU cho kết quả tốt."
+  },
+  "q-rec": {
+   "tldr": "Gợi ý là họ bài toán mà độ chính xác gần như vô nghĩa vì người dùng xem một danh sách top-K chứ không xem một dự đoán; toàn bộ tư duy chuyển sang 'thứ đúng có nằm trong top-K và ở vị trí nào', và offline tốt không đảm bảo online tốt.",
+   "points": [
+    "Ba cách tiếp cận: popularity (không cần mô hình, rất khó đánh bại, không cá nhân hoá), collaborative filtering (người giống bạn đã thích, tìm sở thích bất ngờ nhưng khởi đầu lạnh với người/mục mới), content-based (dựa thuộc tính/embedding, xử lý mục mới và giải thích được nhưng tạo bong bóng); hệ thực tế luôn là tổ hợp",
+    "Popularity là baseline bắt buộc và khó thắng — nhiều bài báo gợi ý bị phản biện chỉ vì không so với popularity",
+    "Ba metric xếp hạng: Recall@K (không quan tâm thứ tự), MAP@K (có quan tâm thứ tự), NDCG@K (chiết khấu theo vị trí bằng log, nhận mức liên quan nhiều bậc, mạnh nhất và là chuẩn báo cáo)",
+    "Chọn K theo giao diện thật: màn hình hiện 6 mục thì đo @6, đừng đo @20 vì số đẹp hơn",
+    "Chia tập leave-last-out theo thời gian: tương tác cuối mỗi user để test, hoặc chặt hơn là cắt theo một mốc thời gian chung (cutoff = quantile(0.8)) vì gần thực tế triển khai hơn",
+    "Vì sao offline tốt mà online tệ: vòng phản hồi (dữ liệu chỉ ghi thứ hệ thống cũ đã gợi ý), vị trí gây thiên lệch (mục vị trí 1 được bấm nhiều chỉ vì ở vị trí 1), chỉ số offline không phải chỉ số kinh doanh (NDCG tăng 5% không đảm bảo doanh thu)",
+    "Kết luận cho luận văn: báo cáo offline nhưng nói rõ giới hạn và mô tả thí nghiệm online SẼ chạy (chia lưu lượng, chỉ số chính, cỡ mẫu) — mô tả được thiết kế A/B đúng có giá trị bằng chạy nó"
+   ],
+   "viz": "Code chia tập: df.groupby('user_id').tail(1) làm test vs cắt theo cutoff = df['ts'].quantile(0.8) chung cho mọi user."
+  },
+  "q-causal": {
+   "tldr": "Cả trang tới đây dạy dự đoán ('cái gì đi cùng cái gì'); bài này về câu hỏi tổ chức thật sự trả tiền — 'nếu tôi LÀM X thì sao' — mà không mô hình dự đoán nào (kể cả SHAP) trả lời được, và ngẫu nhiên hoá là thứ duy nhất giải được.",
+   "points": [
+    "Một tương quan 'khách dùng X rời bỏ thấp hơn 40%' có thể sai vì ba lý do mà mọi mô hình dự đoán đều không phân biệt được: đảo chiều nhân quả, biến gây nhiễu (confounding), thiên lệch chọn mẫu — vì cả ba cho tương quan giống hệt nhau; đây là lý do SHAP không phải công cụ nhân quả",
+    "Gán ngẫu nhiên làm hai nhóm giống nhau về MỌI thứ (cả cái không đo được), chỉ còn khác một điều là can thiệp, nên chênh lệch kết quả LÀ tác động",
+    "Bốn thứ chốt TRƯỚC khi bật thí nghiệm: một chỉ số chính duy nhất (OEC, không phải chọn cái đẹp = p-hacking), cỡ mẫu và thời gian tính từ MDE (tính trước không tính sau), đơn vị ngẫu nhiên hoá (user/phiên/cửa hàng), chỉ số bảo vệ (guardrail)",
+    "Tính cỡ mẫu bằng zt_ind_solve_power với Cohen's h; con số thường gây sốc và đó là thông tin hữu ích — nếu cần 200.000 mà chỉ có 5.000/tháng thì thí nghiệm không khả thi",
+    "Luôn báo cáo chênh lệch KÈM khoảng tin cậy ('+0,8 điểm %, KTC 95% [0,1;1,5]') chứ không chỉ p-value",
+    "Bốn lỗi làm hỏng A/B test: dừng sớm khi thấy đẹp (peeking → dương tính giả tăng vọt), thử nhiều chỉ số/phân khúc (20 phép kiểm ở 5% có ~1 cái 'ý nghĩa' do ngẫu nhiên), rò rỉ giữa hai nhóm (interference → ngẫu nhiên hoá theo cụm), hiệu ứng mới lạ (chạy đủ dài, nhìn theo tuần)",
+    "Khi không thể chạy thí nghiệm, bốn phương pháp quasi-experimental (định vị được là đủ): difference-in-differences (giả định xu hướng song song), regression discontinuity (ngưỡng), propensity score matching (giả định không còn biến nhiễu chưa đo — mạnh và không kiểm được), biến công cụ IV; mỗi cái đổi kết luận nhân quả lấy một giả định không kiểm chứng trực tiếp được"
+   ],
+   "viz": "Code cỡ mẫu: p0=0.10, mde=0.01 → Cohen's h qua arcsin → zt_ind_solve_power(alpha=0.05, power=0.8) ra số người MỖI nhóm."
+  },
+  "q-analytics": {
+   "tldr": "Phần lớn giá trị hằng ngày của data team đến từ trả lời câu hỏi bằng dữ liệu đã có, không train gì; sai lầm tốn kém nhất của người mới là mang mô hình dự đoán tới một câu hỏi analytics ('vì sao doanh số giảm' cần truy vấn tách nhỏ, không cần mô hình).",
+   "points": [
+    "Ba nghề ba loại câu hỏi: analytics ('chuyện gì ĐÃ xảy ra' — SQL/dashboard, sai lầm đọc tương quan thành nguyên nhân), predictive ('chuyện gì SẼ xảy ra' — LightGBM), causal ('nếu tôi LÀM X' — A/B test)",
+    "Cohort: nhóm theo thời điểm bắt đầu; không nhóm theo cohort thì thay đổi tỉ lệ giữ chân lẫn với thay đổi cơ cấu khách mới. SQL dùng DATE_TRUNC('month', MIN(order_ts)) làm cohort rồi DATE_DIFF ra month_n; bảng hàng=tháng đăng ký, cột=số tháng kể từ đó",
+    "Funnel: hai chi tiết hay sai — phải theo đúng thứ tự và trong một cửa sổ thời gian (xem hôm nay mua tháng sau không cùng phễu), và đếm theo NGƯỜI không theo sự kiện (xem 8 lần không phải 8 người)",
+    "Segmentation: cắt theo nhóm để thấy con số tổng đang giấu gì; nghịch lý Simpson (xu hướng đúng trong mọi nhóm con nhưng đảo chiều khi gộp) là lý do bước này không bỏ được; rẻ nhất là RFM trước khi nghĩ tới phân cụm",
+    "KPI hai câu hỏi trước khi thêm vào dashboard: 'ai làm gì khác đi khi con số đổi?' (không trả lời được thì là trang trí), 'nó bị lách bằng cách nào?' (đo 'ticket đã đóng' thì ticket bị đóng nhanh mà không giải quyết — dùng cặp đôi bảo vệ: số đóng VÀ tỉ lệ mở lại)",
+    "Chỉ số cần ngữ cảnh: mọi con số dashboard nên kèm ít nhất một trong ba — so kỳ trước, so mục tiêu, so dải dao động bình thường",
+    "Dashboard: một dashboard trả lời một câu hỏi, định nghĩa chỉ số nằm trong git không nằm trong công cụ BI, số tuyệt đối đi kèm tương đối ('tăng 300%' trên nền 2 ca là 6 ca)"
+   ],
+   "viz": "Truy vấn cohort SQL với WITH first_order (DATE_TRUNC month của MIN order_ts) JOIN để ra bảng cohort hàng=tháng đăng ký × cột=month_n."
+  },
+  "q-mini": {
+   "tldr": "Bản đồ tám bài chỉ thành khả năng thật khi tự tay đi qua các họ bài toán khác; deliverable là làm tới cùng HAI mini-project khác nhất so với fraud, và việc chính không phải điểm số mà là bảng 'giữ gì / đổi gì'.",
+   "points": [
+    "Mini-project KHÔNG cần production hoá: không API, không Docker, không tuning — mỗi cái một notebook làm đúng năm việc, và việc thứ năm mới là việc chính",
+    "Năm việc: (1) tải dữ liệu định vị bằng tám câu hỏi, (2) chia tập đúng kiểu của họ đó + viết assert chứng minh đúng, (3) chạy baseline bắt buộc ghi con số, (4) chạy MỘT mô hình thật ghi con số rồi DỪNG đừng tune, (5) viết bảng 'giữ gì/đổi gì' so với dự án gian lận — đây là sản phẩm thật",
+    "Bắt buộc làm thật 2/6, chọn hai họ khác nhất so với fraud (gợi ý Forecasting + một trong NLP/Gợi ý/Nhân quả); bốn cái còn lại chỉ cần bảng phác thảo; ngân sách 5 giờ = hai notebook × ~2,5 giờ, nếu một cái quá một buổi là đang tối ưu thay vì học chuyển giao",
+    "Sáu đề kèm điều dạy mà fraud không dạy: Forecasting (walk-forward, seasonal-naive, MASE, cây không ngoại suy xu hướng), Hồi quy (fetch_california_housing, MAE/RMSE/MAPE, khoảng dự đoán), Multiclass/CV (macro vs weighted F1, ma trận chuẩn hoá, linear probe), NLP (TF-IDF mốc, khử trùng lặp, đọc tay 50 ca sai), Gợi ý (popularity khó thắng, Recall@K/NDCG@K, leave-last-out), Nhân quả (cỡ mẫu, KTC, bốn cách làm hỏng)",
+    "Tiêu chí chọn dataset: công khai không cần xin quyền, nhỏ/vừa dưới vài trăm MB vừa RAM Colab, tải bằng một dòng, có giấy phép rõ (ghi vào data/README.md), không cần GPU mạnh, phù hợp bài học không phải nổi tiếng (Titanic không dạy rò rỉ thời gian, MNIST bão hoà >99%)",
+    "Bảng 'giữ gì/đổi gì' bảy chiều so với dự án fraud: họ bài toán, chia tập, baseline, metric chính (fraud = PR-AUC + chi phí quy tiền), rủi ro rò rỉ chính, có cần deep learning, sai lầm đặc trưng"
+   ],
+   "viz": "Code A/B tự sinh (mini-project 6): confounder heavy, TRUE_EFFECT=0.02; ước lượng quan sát thô lệch gấp nhiều lần sự thật còn ước lượng RCT bám sát 0,02 — mười lăm phút thấy vì sao 'mô hình chính xác' không bằng 'kết luận đúng'."
+  },
+  "th-topic": {
+   "tldr": "Luận văn thạc sĩ không cần phát minh mới, chỉ cần một khoảng trống nhỏ, xác định được, và lấp bằng bằng chứng. \"Delta\" (phần đóng góp) chỉ cần nằm ở MỘT ô trong công thức đề tài, và ô rẻ nhất mà vẫn hợp lệ là bối cảnh mới.",
+   "points": [
+    "Công thức đề tài: [KỸ THUẬT X] cho [BÀI TOÁN Y] trên [BỐI CẢNH Z], so sánh [BASELINE B], đánh giá bằng [CHỈ SỐ M] — delta nằm ở ít nhất một ô",
+    "5 chỗ đặt delta theo độ khó: bối cảnh Z mới (dễ nhất, hợp lệ cho thạc sĩ ứng dụng) < kết hợp mới ≈ chỉ số M mới ≈ so sánh có hệ thống < kỹ thuật X mới (thường vượt phạm vi 2 tuần)",
+    "Tìm khoảng trống trong 2 giờ: Google Scholar tìm survey 2024..2026, nhảy thẳng tới mục \"Future work\"/\"Open challenges\" — đó là danh sách khoảng trống do chính chuyên gia viết",
+    "4 bẫy: quá rộng (không câu hỏi cụ thể), không baseline, phụ thuộc dữ liệu chưa có trong tay (rủi ro số một — xác nhận có dữ liệu TRƯỚC khi chốt đề tài), chỉ \"thử 5 mô hình xem cái nào tốt\"",
+    "Đề cương 1 trang gồm 6 mục: bối cảnh, khoảng trống (dẫn nguồn), câu hỏi nghiên cứu, phương pháp, đóng góp dự kiến, rủi ro — mục câu hỏi phải viết được thành dạng có/không hoặc so sánh được, không thì đề tài chưa đủ sắc"
+   ],
+   "viz": "Bảng 5 dòng \"delta nằm ở đâu\" kèm ví dụ và độ khó — ví dụ bối cảnh Z: áp kỹ thuật đã có cho dữ liệu giao dịch ngân hàng Việt Nam nơi mẫu chi tiêu theo Tết khác dữ liệu phương Tây"
+  },
+  "th-read": {
+   "tldr": "Đọc 15-30 paper tuần tự từng chữ là cách chắc chắn không kịp; phương pháp ba lượt (chuẩn mực nghiên cứu) sàng nhanh rồi mới đọc sâu, và mọi phần Kết quả phải được đọc hoài nghi.",
+   "points": [
+    "Lượt 1 (5 phút): đọc tiêu đề→tóm tắt→mở đầu→tiêu đề mục→kết luận→lướt tham khảo, trả lời 4 câu (giải bài gì, cách tiếp cận, đóng góp chính, có liên quan không) — sau lượt này 80% paper bị loại",
+    "Lượt 2 (1 giờ): đọc kỹ nhưng bỏ qua chứng minh toán, nhìn kỹ hình+bảng (thường chứa 70% nội dung), ghi sổ 7 dòng gồm cả \"hạn chế họ tự thừa nhận\" — chỗ tìm đề tài cho mình",
+    "Lượt 3 (4-5 giờ, chỉ 2-3 paper quan trọng nhất): đọc như thể phải cài đặt lại, đặt câu hỏi ở mỗi giả định — đây là công việc luận văn thật, không nằm trong ngân sách giờ của bài",
+    "4 câu hỏi hoài nghi khi đọc Kết quả: baseline có được tune tử tế không, có khoảng tin cậy/độ lệch chuẩn không, chia tập thế nào (dữ liệu thời gian chia ngẫu nhiên = thổi phồng), báo cáo bao nhiêu cấu hình",
+    "Nguồn tìm paper: Google Scholar (\"Cited by\"), Connected Papers (dựng sơ đồ bài liên quan), arXiv/Papers with Code (bài mới kèm mã), Semantic Scholar — không bao giờ trích dẫn bài chưa đọc tới ít nhất lượt 1"
+   ],
+   "viz": "Ví dụ số cảnh báo: \"AUC 0,921 vs 0,918\" không chứng minh gì nếu độ lệch chuẩn giữa các seed là 0,01"
+  },
+  "th-repro": {
+   "tldr": "Tái lập một paper trước khi tự làm cho bạn một mốc đã biết là đúng, nên khi kết quả của bạn lạ, bạn biết ngay lỗi ở mình hay ở dữ liệu — và ngay cả khi không khớp được số, một báo cáo trung thực về chỗ lệch vẫn có giá trị học thuật thật.",
+   "points": [
+    "Deliverable là reproduction report 9 mục điền đủ (kể cả chưa khớp số): paper, version/commit hash, dataset (số dòng+tỉ lệ nhãn), môi trường (Python+lib+phần cứng), kết quả kỳ vọng (ghi rõ bảng/hàng), kết quả tái lập, sai lệch (Δ tuyệt đối+tương đối), nguyên nhân đã kiểm, lệnh tái chạy",
+    "Quy trình: chọn paper CÓ mã nguồn, chạy đúng như mô tả (đừng cải tiến gì), so sánh, ghi lại khác biệt, RỒI mới thay đổi một thứ = chính là đóng góp của bạn",
+    "Ngưỡng chẩn đoán: chênh 1-2% là bình thường (seed, phiên bản thư viện); chênh 10% nghĩa là hiểu sai một bước",
+    "Khi không tái lập được, thứ tự kiểm: khác phiên bản dữ liệu (đối chiếu số dòng+tỉ lệ nhãn), khác cách chia tập (nhiều paper không nói rõ — đó là phát hiện đáng nêu), tiền xử lý ẩn trong code, \"AUC\" là ROC hay PR, khác phiên bản lib (thử đúng requirements.txt của họ)",
+    "Làm công trình của mình tái lập được: cố định seed (numpy, sklearn random_state, torch, PYTHONHASHSEED), pip freeze > requirements.txt, một lệnh chạy hết (python -m src.train), in rõ khoảng thời gian từng tập, công bố code GitHub, báo cáo trung bình ± độ lệch chuẩn của 5 lần chạy"
+   ],
+   "viz": "Bảng chẩn đoán khi không khớp số (5 nghi ngờ × cách kiểm) và ngưỡng chênh 1-2% bình thường / 10% = hiểu sai một bước"
+  },
+  "th-design": {
+   "tldr": "Phần thực nghiệm là nơi luận văn được chấm thật: mỗi thí nghiệm phải trả lời đúng một câu hỏi định trước, và bảng ablation là thứ chứng minh đóng góp của bạn thực sự LÀ nguyên nhân của cải thiện chứ không phải may.",
+   "points": [
+    "Quy tắc vàng: trước khi chạy, viết ra \"nếu kết quả A thì kết luận ___, nếu B thì kết luận ___\" — không điền được vế sau thì thí nghiệm vô giá trị bất kể kết quả",
+    "Tầng 1 Baseline (bắt buộc, làm trước): đoán theo tỉ lệ (mốc dưới), luật thủ công đang dùng (mốc quan trọng nhất phải thắng), logistic regression (mức phi tuyến), LightGBM mặc định (mốc mạnh) — baseline phải tune tử tế, để baseline yếu là gian lận học thuật",
+    "Tầng 2 Ablation: tháo từng mảnh đo Δ PR-AUC — bảng thuyết phục nhất; nó cho câu kết luận có nội dung như \"feature tốc độ đóng góp lớn nhất, mã hoá chu kỳ nhỏ nhưng ổn định trên các seed\"",
+    "Tầng 3 Phân tích độ nhạy: theo seed (5 lần), lượng dữ liệu train (đường cong học 25/50/75/100%), giả định chi phí, giai đoạn thời gian",
+    "Bảng theo dõi thí nghiệm ghi từ ngày đầu (#, ngày, mô tả, features, model, seed, PR-AUC valid, ghi chú) — MLflow tự sinh hoặc CSV; bảng này CHÍNH LÀ chương kết quả",
+    "5 sai lầm: đổi nhiều thứ cùng lúc (sửa: một biến mỗi lần), chỉ một seed (5 seed ± std), tune trên test (tune valid, test chạm một lần), baseline yếu, không có ablation"
+   ],
+   "viz": "Bảng ablation minh hoạ: đầy đủ PR-AUC 0,412; −sin/cos −0,014; −feature tốc độ −0,071 (lớn nhất); −lệch thói quen −0,045; −chọn ngưỡng theo chi phí Δ=0 nhưng thiệt hại +23%"
+  },
+  "th-stats": {
+   "tldr": "Có hai con số 0,412 và 0,367 chưa đủ để nói \"tốt hơn\"; phải chứng minh chênh lệch là thật bằng ba việc, và quyết định \"tốt hơn\" chỉ được kết luận bằng kiểm định GHÉP CẶP trên cùng dữ liệu, không bằng việc so hai khoảng tin cậy riêng có chồng lấn hay không.",
+   "points": [
+    "Việc 1 — chạy nhiều seed [42-46] rồi báo mean ± std: nếu độ lệch chuẩn 0,015 mà \"cải tiến\" chỉ 0,010 thì chưa có gì; phải biết std TRƯỚC khi tuyên bố bất cứ điều gì",
+    "Việc 2 — khoảng tin cậy bootstrap cho TỪNG mô hình, báo cáo dạng 0,412 (KTC 95%: 0,388-0,437); nhưng ĐỪNG kết luận khác/không khác bằng cách so hai khoảng riêng chồng lấn — đó là phép so sai",
+    "Việc 3 — kiểm định ghép cặp là chỗ thật sự kết luận: cho AUC/PR-AUC dùng bootstrap ghép cặp trên HIỆU hai mô hình, lấy lại CÙNG chỉ số hàng i cho cả hai (rng.integers), nếu khoảng KHÔNG chứa 0 → khác biệt có ý nghĩa",
+    "Cho quyết định nhị phân tại một ngưỡng cụ thể dùng McNemar — chỉ hợp lệ ở đầu ra 0/1 tại ngưỡng, KHÔNG dùng cho AUC",
+    "\"Có ý nghĩa thống kê\" ≠ \"quan trọng\": luôn báo độ lớn hiệu ứng cùng p, tốt hơn là quy ra tiền; và kết quả KHÔNG có ý nghĩa (vd Δ=0,004; KTC 95%: −0,008…0,015, phù hợp lý thuyết cây không dùng khoảng cách Euclid) vẫn là luận văn tốt vì có giả thuyết + kiểm chứng + giải thích"
+   ],
+   "viz": "Đoạn code bootstrap ghép cặp 1000 vòng lấy cùng chỉ số hàng cho p_new và p_old, in Δ với KTC 95% và quy tắc \"khoảng không chứa 0 = khác biệt có ý nghĩa\""
+  },
+  "th-write": {
+   "tldr": "Viết luận văn nhanh khi biết mỗi chương trả lời một câu hỏi cố định; và trong chương Kết quả phải tách rạch ròi ba tầng — số liệu, diễn giải, hàm ý — vì trộn lẫn chúng là chỗ nhiều luận văn trượt.",
+   "points": [
+    "Khung IMRaD mở rộng 6 chương với câu hỏi cố định + số trang: Mở đầu (8-12tr), Tổng quan (15-25tr), Phương pháp (15-25tr), Thực nghiệm (10-15tr), Kết quả & thảo luận (15-25tr), Kết luận (4-6tr)",
+    "Chương 1 gồm 4 đoạn: bối cảnh (có số liệu), vấn đề (các hạn chế), ĐÓNG GÓP (đánh số 1-2-3, đoạn quan trọng nhất cả luận văn, giữ đúng cách đánh số đó ở chương 6), bố cục",
+    "Chương 3 viết theo trình tự người đọc cần nạp: phát biểu bài toán bằng ký hiệu (X, y, p̂, ngưỡng t) → tổng quan hệ thống → tiền xử lý+feature (chỗ mô tả sin/cos kèm công thức+lý do) → mô hình+siêu tham số → chia tập & phòng rò rỉ (mục riêng, rất được đánh giá cao) → chỉ số+chọn ngưỡng",
+    "Mục Hạn chế viết nghiêm túc vì hội đồng SẼ tìm ra: dữ liệu một tổ chức/giai đoạn, nhãn trễ 30-60 ngày + selective labels, chi phí FP là giả định, chưa A/B test, tác động công bằng — nêu trước thì kiểm soát được câu chuyện",
+    "Chiến thuật ngày cuối: viết chương 4-5 trước (gần dữ liệu nhất), làm bảng/hình trước rồi mỗi đoạn văn chỉ mô tả một bảng, chương 2 viết sau chương 5, chương 1 và 6 viết cuối và phải khớp nhau từng đóng góp"
+   ],
+   "viz": "Bảng 3 tầng chương Kết quả: Kết quả=\"đạt PR-AUC 0,412 so với 0,367 baseline\" (chỉ số), Diễn giải=\"cải thiện đến từ feature tốc độ\" (cơ chế), Hàm ý=\"ngân hàng nên ưu tiên hạ tầng feature thời gian thực\" (nói rõ là suy luận của bạn)"
+  },
+  "th-tools": {
+   "tldr": "Công cụ đúng tiết kiệm hàng chục giờ ở giai đoạn viết: Overleaf/LaTeX trị công thức và đánh số tự động, Zotero trị tài liệu tham khảo, MLflow/W&B trị bảng kết quả — cài trong một buổi tối.",
+   "points": [
+    "Overleaf (LaTeX): công thức gõ $\\sigma(z)=\\frac{1}{1+e^{-z}}$ đẹp tự động, \\ref{fig:arch} tự cập nhật số khi chèn thêm, BibTeX tự sinh tham khảo đúng chuẩn, ổn định với file 100 trang; chạy trên trình duyệt không cần cài — buộc dùng Word thì kèm MathType + Zotero",
+    "Zotero: cài + tiện ích trình duyệt, đang xem paper bấm một nút là lưu cả metadata lẫn PDF, xuất .bib đưa vào Overleaf rồi \\cite{key}; nhập tay 40 tham khảo mất 3 giờ và chắc chắn lỗi, Zotero làm trong 10 phút",
+    "Hình cho luận văn bằng matplotlib rcParams: figsize (5.5, 3.5) vừa một cột A4, font.size 10, savefig.dpi 300, bbox tight; lưu PDF (vector) chứ không PNG để không vỡ khi phóng to, và đặt cỡ chữ trong hình bằng cỡ chữ văn bản",
+    "MLflow/W&B ảnh hưởng trực tiếp chương 5: không ghi thí nghiệm từ đầu thì không dựng lại được bảng kết quả",
+    "Bảng kiểm cuối: mọi hình/bảng có chú thích + được nhắc trong văn bản, trích dẫn khớp hai chiều, ký hiệu toán nhất quán (đừng lúc p lúc ŷ), số thập phân cùng một kiểu (dấu phẩy cho tiếng Việt) + cùng số chữ số, link repo chạy được, đọc to phần tóm tắt"
+   ],
+   "viz": "Đoạn code matplotlib rcParams (figsize 5.5×3.5, font 10, dpi 300, bbox tight) rồi savefig ra .pdf; kèm danh sách hình nên có: sơ đồ kiến trúc, phân phối nhãn, tỉ lệ gian lận theo giờ, đường cong PR, SHAP summary, đường cong học, ngưỡng vs chi phí"
+  },
+  "th-defense": {
+   "tldr": "Buổi bảo vệ không chấm bạn chủ yếu ở phần trình bày mà ở phần hỏi đáp — nơi lộ ra bạn HIỂU hay chỉ CHẠY ĐƯỢC; nên dành 1/3 thời gian chuẩn bị cho slide và 2/3 cho câu hỏi, và hội đồng tìm bằng chứng bạn biết giới hạn công trình chứ không tìm luận văn hoàn hảo.",
+   "points": [
+    "Cấu trúc buổi bảo vệ theo trọng số thực tế: bạn trình bày 15-20 phút (~30%), phản biện + trả lời 10-15 phút (~40%, nặng nhất), hội đồng hỏi tự do 10-15 phút (~30%)",
+    "12 slide, mỗi slide một thông điệp; slide quan trọng nhất là Đóng góp (3 gạch đánh số); slide Phòng chống rò rỉ (4 biện pháp) \"mua được rất nhiều tín nhiệm\"; slide Kết quả có khoảng tin cậy + cột quy ra tiền",
+    "3 quy tắc slide: một slide một thông điệp và thông điệp đó LÀ tiêu đề (đặt \"giảm 40% thiệt hại so với luật hiện tại\" chứ không phải \"Kết quả\"), số phải nằm trên slide không nằm trong lời nói, đánh số trang",
+    "Demo 90 giây theo kịch bản đổi từng biến (giao dịch bình thường→điểm thấp; đổi giờ 14h→2h sáng→điểm nhảy = feature chu kỳ; số giao dịch/giờ 1→8→vùng CHẶN = feature tốc độ) và LUÔN quay sẵn video dự phòng vì máy chiếu/Wi-Fi/cổng 8000 đều đã hỏng với ai đó",
+    "Khi không biết — công thức 3 bước: THỪA NHẬN \"chỗ này em chưa kiểm chứng\" → NÓI PHẦN BIẾT \"em nghĩ theo hướng… nhưng chưa đo\" → CHUYỂN THÀNH VIỆC \"đây là thí nghiệm em sẽ chạy\"; tuyệt đối không bịa số, nói vòng vo, hay trả lời câu khác",
+    "5 lỗi trình bày: dồn 10 phút lý thuyết nền còn 5 phút kết quả (đảo tỉ lệ), đọc slide, xin lỗi về hạn chế (trình bày như lựa chọn có căn cứ), cãi phản biện, không tập nói thành tiếng (lần đầu thường vượt giờ 40% — nói to bấm giờ tối thiểu 3 lần)"
+   ],
+   "viz": "Bảng 12 slide × phút × thông điệp duy nhất, và lịch 3 ngày cuối T−3 dựng slide (bảng/hình trước) / T−2 tập nói + quay video demo / T−1 luyện 24 câu hỏi đáp"
+  },
+  "r-stack": {
+   "tldr": "Ở mỗi bước của quy trình 10 bước có một bộ công cụ cố định, một lệnh mở màn, và một hiện vật (file/artifact) phải có khi xong — bám theo bộ này thì mỗi bước để lại đúng thứ dùng lại được cho luận văn và cho bước sau.",
+   "points": [
+    "Bước 1 viết docs/problem-statement.md bằng file văn bản (không notebook) — nó thành chương 1 luận văn; bẫy là mở notebook trước rồi code sai câu hỏi 3 ngày.",
+    "Bước 2 lấy dữ liệu bằng SQL/Kaggle CLI vào data/raw/ và từ đó CHỈ ĐỌC; sửa tay một ô raw là mất tái lập.",
+    "Bước 4–6: SimpleImputer/scaler/encoder phải nằm TRONG Pipeline (fit ngoài → học trung vị từ test → rò rỉ); dữ liệu thời gian chia bằng sort_values + iloc 70/15/15 chứ không train_test_split ngẫu nhiên.",
+    "Bước 5 feature: sin/cos hoá giờ trong src/features.py gắn qua FunctionTransformer; feature cần lịch sử (rolling '1h', closed='left') tính TRƯỚC khi vào Pipeline; viết logic feature lần hai trong serve.py sẽ lệch âm thầm.",
+    "Bước 7 dùng LightGBM + Optuna + MLflow + joblib, artifact fraud_v1.joblib phải chứa cả feature engineering; feature xong mới tune (feature thường cải thiện nhiều hơn tuning).",
+    "Bước 8 dùng average_precision_score (PR-AUC), quét ngưỡng bằng np.linspace trên validation, SHAP beeswarm; bẫy là báo accuracy, để ngưỡng 0,5, chọn ngưỡng trên test.",
+    "Bước 9 phục vụ bằng FastAPI/uvicorn + Docker (dựng trong Codespaces nếu máy yếu) + Streamlit demo; nạp joblib MỘT lần lúc khởi động chứ không mỗi request (200ms phá ngân sách 50ms).",
+    "Bước 10 giám sát bằng hàm psi() ~6 dòng numpy + logging + cron (không cần Airflow); phải log cả feature đã tính, không chỉ điểm số."
+   ],
+   "viz": "Bảng 10 bước, mỗi bước bốn ô Công cụ / Gõ gì / Xong thì có / Bẫy; kèm vòng lặp một ngày 8 bước từ terminal→jupyter→src→train→git commit ghi con số (pr-auc 0.394→0.412)."
+  },
+  "r-roadmapsh": {
+   "tldr": "roadmap.sh AI/Data Scientist chỉ có 8 ô trừu tượng, 3 trong đó chỉ là cửa dẫn sang các lộ trình hàng trăm ô; với mục tiêu một luận văn dữ liệu bảng trong 2 tuần thì hơn nửa bản đồ không liên quan, và những chỗ quyết định đúng/sai lại KHÔNG có ô nào.",
+   "points": [
+    "Lộ trình gốc 8 ô: giữ Statistics (hội đồng soi), giữ Python bỏ R, bỏ Econometrics; Machine Learning/Deep Learning/MLOps chỉ là cửa sang lộ trình khác.",
+    "Ba cửa dẫn tới 150 ô ML (cần ~35), 62 ô MLOps (cần ~8), 157 ô AI Engineer (cần ~3) — tổng 369 ô.",
+    "Trong ML giữ python/numpy/pandas/sklearn, feature-engineering (ưu tiên cao nhất), hồi quy + cây + gradient boosting, metrics; BỎ eigenvalues/SVD/gradient-jacobian-hessian, reinforcement learning, GAN, TensorFlow/Keras (chọn PyTorch).",
+    "Trong MLOps giữ git (4 lệnh), docker, mlflow, monitoring, SHAP (bỏ LIME vì kém ổn định); bỏ Kubernetes/Terraform/Spark/Kafka/Airflow — việc của kỹ sư hạ tầng/data engineer.",
+    "AI Engineer gần như toàn về LLM (rag, vector-database, fine-tuning, agents) — một nghề khác; chỉ giữ embeddings và bias-and-fairness/ethics.",
+    "Phần đắt nhất: KHÔNG ô nào cho data leakage, chia tập theo thời gian, mất cân bằng nhãn/SMOTE, PR-AUC (chỉ có roc-auc), chọn ngưỡng, hiệu chỉnh xác suất, point-in-time correctness, mã hoá biến chu kỳ — đúng những chỗ sai thì hỏng cả luận văn.",
+    "roadmap.sh rối vì nó là mục lục của một nghề chứ không phải giáo trình một dự án, nó phẳng (eigenvalues trông ngang hàng feature-engineering), và nó liệt kê chủ đề chứ không liệt kê cái bẫy."
+   ],
+   "viz": "Alert đỏ liệt kê 8 khái niệm quyết định luận văn mà cả 369 ô roadmap.sh không có ô nào; kèm bảng dịch từng nhóm ô sang mức Giữ/Để sau/Bỏ."
+  },
+  "r-mistakes": {
+   "tldr": "20 lỗi chiếm phần lớn thời gian mất mát của người mới, gần hết là các dạng rò rỉ dữ liệu và đánh giá sai chỉ số; ba lỗi gốc: kết quả quá đẹp là đi tìm rò rỉ, mọi phép biến đổi học-từ-dữ-liệu phải nằm trong Pipeline chỉ fit trên train, và accuracy gây hiểu nhầm khi nhãn lệch.",
+   "points": [
+    "Rò rỉ theo thời gian: chia ngẫu nhiên dữ liệu có thời gian → chia theo thời gian; feature tổng hợp tính trên tương lai → .shift(1), closed='left'.",
+    "Rò rỉ tiền xử lý: fit scaler/encoder trên toàn bộ dữ liệu → để trong Pipeline; cùng một khách ở cả train và test → GroupKFold.",
+    "Cột chỉ tồn tại sau sự kiện phải loại — hỏi 'cột này được ghi lúc nào?' cho từng cột.",
+    "Đánh giá: dùng accuracy cho dữ liệu lệch → PR-AUC; dùng predict thay predict_proba → lấy xác suất rồi tự chọn ngưỡng; ngưỡng 0,5 mặc định → chọn theo chi phí trên validation; tune trên test → tune trên valid, test chạm một lần.",
+    "Mất cân bằng nhãn: SMOTE trước khi chia tập → imblearn.pipeline; cân về 50/50 phá hiệu chỉnh xác suất → giữ tỉ lệ vừa phải (thường 5–10%).",
+    "Tái lập: báo một seed → 5 seed trung bình ± độ lệch chuẩn, random_state=42; notebook chạy lộn xộn → Restart & Run All trước khi tin con số; ghi thí nghiệm bằng MLflow/CSV từ ngày đầu.",
+    "Feature engineering viết hai lần cho train và serve → một Pipeline, một file .joblib; feature xong mới tune."
+   ],
+   "viz": "Ba bảng #/Lỗi/Sửa (Dữ liệu, Mô hình, Kỹ thuật) 20 dòng; điển hình dòng 15: cân về 50/50 phá hiệu chỉnh xác suất, nên giữ 5–10%."
+  },
+  "r-glossary": {
+   "tldr": "Bảng tra thuật ngữ sắp theo nhóm (nền tảng → feature → huấn luyện → đánh giá → triển khai) để khái niệm liên quan nằm cạnh nhau; là chỗ tra lại một dòng, không thay cho định nghĩa tại chỗ ở s-intro.",
+   "points": [
+    "Phân biệt cặp hay lẫn: parameter (model tự học) vs hyperparameter (đặt tay); metric (người đọc) vs loss (máy tối ưu); algorithm (cách học) vs model (vật đã học); correlation vs causation.",
+    "Grain = một dòng đại diện cho cái gì; không xác định được grain thì chưa train được.",
+    "Feature nhóm: cyclical encoding = cặp sin/cos để 23h gần 0h; target encoding = thay hạng mục bằng tỉ lệ nhãn dương trung bình; data leakage = model thấy thông tin lúc chạy thật sẽ không có; point-in-time correctness = mỗi dòng chỉ chứa thông tin có tại thời điểm đó.",
+    "Đánh giá: Precision = trong số bị báo động bao nhiêu đúng; Recall = trong số dương thật bắt được bao nhiêu; PR-AUC là chỉ số chính khi lệch nhãn; ROC-AUC có thể che chất lượng lớp hiếm nên đọc kèm PR-AUC; base rate = tỉ lệ lớp dương.",
+    "Huấn luyện: gradient descent nhích tham số ngược hướng gradient, learning rate là độ dài mỗi bước, backpropagation tính gradient bằng quy tắc dây chuyền; overfit chống bằng regularization + early stopping.",
+    "Triển khai: Pipeline = chuỗi biến đổi + mô hình đóng thành một đối tượng; training/serving skew = feature tính khác nhau lúc train và chạy thật; shadow mode = chạy song song chưa dùng quyết định."
+   ],
+   "viz": ""
+  },
+  "r-books": {
+   "tldr": "Danh sách nguồn ngắn có chủ ý để TRA CỨU chứ không đọc tuần tự; trong 14 ngày tỉ lệ nên là 1 giờ đọc : 3 giờ làm vì học data science bằng cách làm hỏng rồi sửa.",
+   "points": [
+    "Sách chọn tối đa một: Hands-On ML (Géron) tra chương 2 dự án đầu-cuối + ensemble; ISL (miễn phí PDF) tra chương 4 phân loại và 5 resampling để trích dẫn; ESL chỉ để trích dẫn; Designing ML Systems (Chip Huyen) cho chương kiến trúc và drift.",
+    "Paper trích dẫn: Attention Is All You Need (2017, 11 trang), SMOTE (Chawla 2002) cho dữ liệu lệch, XGBoost/LightGBM gốc, SHAP (Lundberg & Lee 2017), một survey fraud detection 2 năm gần nhất để tìm khoảng trống, Grinsztajn 2022 (deep learning vs boosting trên dữ liệu bảng) để biện minh chọn mô hình.",
+    "Dataset: IEEE-CIS Fraud (Kaggle) làm bộ chính vì có cột thời gian nên FE làm được; Credit Card Fraud ULB nhỏ-sạch để học pipeline; PaySim mô phỏng đơn giản; UCI cho bài tập nhỏ.",
+    "Khi bí: User Guide của scikit-learn, Kaggle notebooks cuộc thi IEEE-CIS (xem người khác làm FE trên đúng bộ của bạn), Cross Validated cho câu hỏi thống kê.",
+    "Nguyên tắc thời gian: mỗi giờ đọc thêm là một giờ không gõ code, giữ tỉ lệ 1 đọc : 3 làm."
+   ],
+   "viz": "Bảng dataset gợi ý IEEE-CIS làm bộ chính (có cột thời gian → FE được) đối lập Credit Card Fraud ULB nhỏ-sạch để học pipeline."
+  }
+ }
+}

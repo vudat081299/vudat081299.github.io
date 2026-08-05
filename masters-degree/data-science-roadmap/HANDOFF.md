@@ -17,24 +17,39 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 
 ---
 
-## ĐANG LÀM — trang Roadmap thứ hai (batch 2, chủ trang review sáng 2026-08-05)
+## Phiên 2026-08-05 (n2) — trang Roadmap học nhanh (roadmap.html) — XONG + đã push
 
-Chủ trang giao thêm (review sau): **một trang HTML riêng** mở khi bấm "Roadmap" ở navbar trang
-DS. Yêu cầu:
-- Navbar: đúng **1 icon giống logo trang DS** + **1 nút đổi theme**. Nội dung tiếng… (chưa chốt;
-  theo §0.1 thì navbar English).
-- Nội dung: roadmap kiểu **tree/step vui hơn TOC** (phong cách brilliant.org) — **84 step nhỏ,
-  11 level to** (khớp TREE/TOC của trang chính).
-- Bấm một leaf/node → **drawer bên phải, 1/2 cửa sổ**, nội dung **tóm tắt tinh gọn** từ trang
-  chính (đủ ý chính + visualization, bỏ phần thừa) — "học theo style khác, UX khác".
-- **Link ẩn**: từ navbar trang DS bấm "Roadmap" → sang trang này. (Hiện brand là
-  `Data Science <span.ds-brand__sub>Roadmap</span>` trỏ `#/home`; cần thêm đường sang trang mới.)
-- **Chưa quyết**: tên/đường dẫn file trang mới; tree hay step; drawer dùng lại `.ds-drawer`/
-  `makeEdgeResizer` (cùng luật 1/4–1/2) hay tự vẽ; nguồn nội dung tóm tắt (sinh từ template
-  trang chính hay viết tay). Định dùng **Workflow** tóm tắt 84 bài (fan-out theo 11 chặng).
-- **Ràng buộc**: CLAUDE.md §2 luật 3 — "không thêm file thứ hai chứa nội dung bài học". Trang
-  roadmap mới là **bản tóm tắt/điều hướng**, phải nói rõ nguồn sự thật vẫn là trang chính; cân
-  nhắc để nó KHÔNG copy cứng nội dung mà trỏ ngược về `#/id` trang chính.
+Trang HTML thứ hai, **học theo style khác** (chủ trang giao; đã bảo "commit + push luôn, không
+cần đợi review"). Đã làm + verify preview mirror + push.
+
+**Kiến trúc — được SINH, không viết tay** (để không phạm CLAUDE.md §2 luật 3):
+- `tools/build-roadmap.mjs` — đọc `data-science-roadmap.html` bằng `readPage()` (TREE/PAYOFF/
+  ACCEPT/PHASE_OUTCOME/FAST/weekOf) + `tools/roadmap-summaries.json` → sinh `roadmap.html`.
+  Chạy lại: `node tools/build-roadmap.mjs`.
+- `tools/roadmap-summaries.json` — **dữ liệu** tóm tắt 84 bài (tldr + 3–6 points + viz), sinh
+  bằng **Workflow `ds-roadmap-summaries`** (11 agent, mỗi agent một chặng, đọc slice HTML rồi
+  rút gọn; 11/11 done, 0 lỗi). Đây là NGUỒN của phần tóm tắt — sinh lại khi nội dung chính đổi.
+- `roadmap.html` — **sản phẩm sinh ra** (không sửa tay). Nội dung ĐẦY ĐỦ vẫn chỉ ở trang chính;
+  mỗi node có link "Mở bài đầy đủ →" trỏ `data-science-roadmap.html#/id`.
+
+**UI:** navbar = 1 logo (trỏ về trang chính) + 1 nút đổi theme (chung khoá `ds-theme` với trang
+chính, nên theme đồng bộ hai trang). Đường đi kiểu timeline (xương sống dọc nét đứt, node so le
+hai bên, header mỗi chặng có badge số + outcome), 84 node / 11 chặng. Node tô theo ưu tiên
+(core đặc / good viền / skim nét đứt), ★ cho bài sao, **✓ xanh cho bài đã đạt** (đọc localStorage
+`ds-roadmap-progress-v3` của trang chính — cùng origin). Bấm node → **drawer phải 1/2 cửa sổ**
+(đo đúng 640/1280) với: chip ưu tiên/thời lượng/fast/tuần · tldr · Kiến thức chính (points) ·
+Hình/ví dụ (viz) · Xong bước này (payoff) · Tiêu chí đạt (accept) · link mở bài đầy đủ. Esc/✕/
+click nền để đóng. Verify: light+dark, drawer 3 bài (f-cyclic/ml-metrics/d-leak) nội dung đúng.
+
+**Link vào:** navbar trang DS — tách "Roadmap" khỏi brand (`<a>` không lồng `<a>`) thành
+`.ds-brand__road` trỏ `roadmap.html`, giữ hình `Data Science │ Roadmap`.
+
+**Cần chủ trang quyết (đã ghi để review):**
+- **Tóm tắt drift**: summaries.json KHÔNG tự kiểm khớp nội dung chính như TOC.md. Nội dung chính
+  đổi → chạy lại workflow + `build-roadmap.mjs`. Chưa có cổng canh việc này (có thể thêm nếu muốn).
+- Có muốn đưa `roadmap.html` vào cổng/`session.mjs` không, hay để ngoài luồng gate.
+- Drawer hiện KHÔNG kéo được (cố định 1/2 theo yêu cầu). Nếu muốn kéo 1/4–1/2 như trang chính thì
+  dùng lại `makeEdgeResizer`.
 
 ## Phiên 2026-08-05 (n) — 10 sửa UI theo yêu cầu chủ trang (đã verify preview + cổng xanh)
 

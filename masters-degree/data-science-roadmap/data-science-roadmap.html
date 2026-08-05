@@ -938,6 +938,10 @@
     font-weight: 500; font-size: .8em; color: var(--wb-fg-subtle); letter-spacing: 0;
     margin-left: 9px; padding-left: 9px; border-left: var(--wb-bw) solid var(--wb-border);
   }
+  /* "Roadmap" là link sang trang học nhanh — cùng dáng phụ đề, thêm phản hồi hover. */
+  .ds-brand__road { text-decoration: none; cursor: pointer; }
+  .ds-brand__road:hover { color: var(--wb-fg); text-decoration: none; }
+  .ds-brand__road:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); border-radius: var(--wb-radius-sm); }
   /* Logo = nút ẩn/hiện lộ trình, hiện ở mọi bề rộng (khác nút ☰ mặc định của kit
      vốn chỉ hiện dưới 900px). Bấm → thu/mở cột trái trên desktop, mở/đóng drawer
      trên mobile — cùng handler [data-side-toggle]. */
@@ -1293,7 +1297,11 @@
     <!-- THANH TRÊN nói tiếng Anh — nhãn, `title=`, `aria-label`, cả chữ do JS sinh.
          Phần còn lại của lớp vỏ (thanh bên, panel, chân trang) vẫn tiếng Việt; ranh
          giới ở docs/design.md §0.1. -->
-    <a class="wb-navbar__brand ds-brand" href="#/home">Data Science <span class="ds-brand__sub">Roadmap</span></a>
+    <a class="wb-navbar__brand ds-brand" href="#/home">Data Science</a>
+    <!-- "Roadmap" là LINK sang trang học nhanh roadmap.html (chủ trang gọi là "tính năng
+         ẩn"). Tách khỏi brand vì <a> không lồng trong <a>; giữ nguyên hình `Data Science │
+         Roadmap`. Sinh trang đó bằng tools/build-roadmap.mjs. -->
+    <a class="ds-brand__sub ds-brand__road" href="roadmap.html" title="Open the quick-study roadmap" aria-label="Open the quick-study roadmap">Roadmap</a>
     <div class="wb-navbar__spacer"></div>
     <div class="wb-navbar__actions">
       <span class="wb-cap wb-cap--sm" id="topProgress" title="Progress achieved">0%</span>
