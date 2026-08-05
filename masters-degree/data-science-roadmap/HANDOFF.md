@@ -17,6 +17,124 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 
 ---
 
+## Phiên 2026-08-05 (n5) — roadmap dùng chung component cuộn + ngăn kéo được; làm nốt backlog
+
+Ba yêu cầu của chủ trang: (1) `roadmap.html` dùng **cùng component thanh cuộn** với trang
+chính, (2) ngăn trong roadmap **mặc định 1/3 cửa sổ và kéo chỉnh được**, (3) *"còn gì cần
+làm đang handoff nữa không? triển khai làm nốt đi"*. Giữa phiên chủ trang báo thêm một lỗi
+thật khi kéo — mục "Nhả chuột trên overlay" dưới đây.
+
+### 1–2. Roadmap: thanh cuộn + ngăn kéo được — TRÍCH, không chép
+
+Cả hai đều **trích từ trang chính lúc build**, không viết bản thứ hai:
+
+| thứ | cách mang sang | vì sao không chép |
+|---|---|---|
+| thanh cuộn | `class="wb-scrollbars"` trên `<html>` (kit §27) + `wb-scroll-y` cho thân ngăn | là component của kit — chỉ cần gọi đúng tên |
+| CSS tay kéo | `pickCss(/\.ds-(grip\|dragging)\b/)` — cùng bộ trích đã dùng cho khối tương tác | 6 rule, sửa một chỗ là hai trang cùng đổi |
+| JS tay kéo | `resizerJs()` cắt `dsZoom()` + `makeEdgeResizer()` nguyên văn | chú thích ngay trên hàm đó đã nói: *"chép thì rẻ hôm nay và đắt mãi về sau"* |
+
+`vizCss()` được tách thành `pickCss(need, what)` để dùng được hai lần. `--rm-drawer-w` đổi
+từ `min(50vw,760px)` cứng → `clamp(340px, 33.333 * --ds-vw, 720px)`, **đúng con số/sàn/trần
+với token ⑪** của trang chính. Roadmap khai `--ds-zoom: 1` + `--ds-vw` chỉ để hàm trích về
+chạy nguyên văn — **đừng sửa hàm cho "gọn hơn"**, sửa là bắt đầu có hai bản.
+
+Khoá lưu **riêng** (`rm.drawerW` ≠ `ds.asideW`): hai ngăn mở ra bằng nhau, nhưng nội dung
+khác nhau nên bề rộng người dùng chọn cũng có quyền khác.
+
+Ở ≤680px ngăn chiếm cả màn nên **tay kéo bị giấu** và `--rm-drawer-w:100vw !important` —
+cần `!important` vì `makeEdgeResizer()` ghi biến đó vào style inline của `<html>`.
+
+### Nhả chuột trên overlay khi đang kéo — lỗi THẬT, đã sửa ở hàm dùng chung
+
+Chủ trang báo: kéo chỉnh bề rộng rồi nhả chuột lúc con trỏ đang ở trên lớp phủ thì ngăn bị
+đóng. **Tái hiện được trên trang chính** (kéo thật bằng chuột: `overlayDisplay` từ `flex`
+→ `none`).
+
+Cơ chế: sau một lần kéo, trình duyệt bắn thêm một `click` vào **tổ tiên chung** của chỗ bấm
+xuống và chỗ nhả ra. Ở trang chính `.ds-grip` nằm **bên trong** `#asideOverlay`, nên tổ tiên
+chung chính là cái overlay — và overlay đóng lớp khi bị bấm.
+
+Sửa trong `makeEdgeResizer()` (nên roadmap được hưởng theo): `swallowNextClick()` nuốt đúng
+một click ở **pha capture**, và chỉ khi con trỏ **thật sự có di chuyển** (`moved`), kèm hẹn
+giờ 300ms để gỡ. Ba điều kiện đó đều có ca kiểm riêng — bỏ bất kỳ cái nào là hỏng một hướng:
+không có `moved` thì một cú bấm nhẹ lên tay kéo sẽ ăn mất cú bấm kế tiếp; không có hẹn giờ
+thì lần nhả nào không sinh click (nhả ngoài cửa sổ, `pointercancel`) sẽ để lại cái bẫy nằm chờ.
+
+**Roadmap vốn KHÔNG dính lỗi này** vì ở đó overlay và ngăn là hai node anh em, tổ tiên chung
+là `<body>`. Nhưng đó là may, không phải thiết kế — nên guard vẫn nằm ở hàm chung.
+
+### 3. Backlog: làm 3, BÁC 1, để lại 2 — kèm lý do từng cái
+
+| mục backlog | kết quả |
+|---|---|
+| `th-defense` lịch T−3/T−2/T−1 → `wb-steps` | **LÀM.** Xoá luôn 3 rule `.ds-day*` — trang giờ không còn chuỗi bước nào tự vẽ |
+| `ml-loss` zoo optimizer → popup | **LÀM.** Mạch chính giữ đúng cái dùng thật (`AdamW`), ba cái tên vào popup `optzoo` |
+| `dl-train` bảng gỡ lỗi → popup | **BÁC — đừng làm lại.** `PAYOFF[dl-train][0]` là *"Bảng chẩn đoán đường cong loss, và quy trình gỡ lỗi"*: cái bảng đó **là** sản phẩm của bài. §7 nói "danh mục lỗi → popup", nhưng ngoại lệ là khi danh mục chính là deliverable |
+| rà thời lượng | **LÀM một chỗ** (`s-how`), đo cả 84 bài — xem dưới |
+| nhãn Foundation/Applied/Advanced | **để lại** — trang đã có 3 chip ưu tiên + chip 14 ngày + nhãn `SCOPE`; thêm trục thứ tư là thêm nhiễu. Cần thì chủ trang gọi |
+| 6 khuyến nghị `G-FWD` | **để nguyên** (backlog cũ đã ghi rõ: đừng nhồi `allowEarly`) |
+
+`th-defense`: mốc đếm **ngược 3 → 2 → 1** (số ngày còn lại), tiêu đề mang nhãn `T−3` để không
+phải suy ra. Đo lại: tâm mốc khớp tâm tiêu đề **lệch 0px**, có đường nối.
+
+### Rà thời lượng: đo cả 84 bài, chỉ MỘT bài đáng sửa
+
+Đo hai lần vì lần đầu **không công bằng**: đếm chữ trong thân bài thì các bài toán/DL bị
+oan (nội dung của chúng nằm trong popup). Đếm cả popup thì lại oan chiều ngược lại — một
+ngăn `cmp-*` được 6 bài mở chung nên bị cộng vào cả 6.
+
+Kết luận sau khi trừ hai nhiễu đó: **chỉ `s-how` là sai thật.** 1.531 từ trong **28 đoạn văn**
+(không phải bảng để liếc) mà khai 10 phút → 153 từ/phút, gấp 8 lần trung vị 18 của trang và
+gấp đôi bài đứng thứ hai. Nó lại là bài **thứ hai** người mới đọc. → `r: 10 → 15`.
+
+Các bài xếp cao kế tiếp đã soát và **để nguyên, đừng đo lại**: `s-lookup` / `r-stack` là bài
+tra cứu (CLAUDE.md §7 công nhận) — bảng tra thì liếc chứ không đọc; `pr-eval` (73 từ/ph),
+`s-intro` (71), `t-colab` (73) nằm trong khoảng chấp nhận được, không phải sai gấp đôi.
+
+Hệ quả: tổng **106,5 → 106,6 giờ**, ngày 1 fast track 5,75 → 5,83h (trần 6,5). `learn.mjs
+--write` phải chạy theo vì khối summary nhúng tổng giờ — `gate.test.mjs` bắt đúng chỗ này.
+
+### Lại một lỗ tràn 52px ở 375px — cùng con số, khác đường vào
+
+`s-plan14` tràn đúng 52px như phiên trước. **Không phải lỗi cũ tái phát**: rule
+`#main code { overflow-wrap: anywhere }` vẫn còn và vẫn đúng. Lần này thủ phạm là
+`assert_split_ok` trong trường `out` của `DAYS` — **chữ trần, không bọc `<code>`**, nên
+rule kia không với tới. Thêm `#main .wb-steps__note { overflow-wrap: anywhere }`: neo vào
+cái chip chứ không vào `<code>`, vì chip đó không bao giờ được rộng hơn cột **bất kể bên
+trong là thẻ gì**.
+
+Đáng chú ý: `documentElement.scrollWidth` báo 427 nhưng `scrollLeft` tối đa = **0** — trang
+không cuộn ngang thật. Nên **đừng chỉ tin `scrollWidth`**; kiểm thêm có cuộn được không, và
+truy ngược bằng `Range.getClientRects()` (thủ phạm là một *inline box*, không phải element,
+nên vòng lặp `getBoundingClientRect()` trên element bỏ sót nó).
+
+### Verify
+
+Cổng CHẶN xanh · `gate.test` **49/49** · `audit` nhất quán (106,6h / 75,3h) · khuyến nghị về
+đúng **5 `G-FWD` cũ**. Quét DOM **85/85 trang (home + 84 bài) tràn ngang = 0 ở 375px**;
+roadmap 0 ở cả 375 và desktop. Ngăn roadmap: mặc định đúng 1/3 (427/1280), kẹp sàn 340 /
+trần 1/2, bàn phím ←/→/Home/End, nhấn đúp reset + xoá khoá lưu, nhớ qua reload, thanh cuộn
+đổi màu theo sáng/tối. Guard nhả-chuột: **3 lần chạy liên tiếp** đều đúng, và cú bấm thường
+vẫn đóng ngăn.
+
+### Hai cái bẫy của pane preview — ghi lại để phiên sau đỡ mất giờ
+
+1. **`resize_window` KHÔNG bắn sự kiện `resize`** (đo được: 0 lần sau khi đổi 900 → 1100px).
+   Nên logic nghe `resize` — như đoạn kẹp lại bề rộng đã lưu — **trông như hỏng mà thật ra
+   không**. Muốn kiểm thì `dispatchEvent(new Event('resize'))` bằng tay.
+2. **Pane bị ẩn thì `requestAnimationFrame` dừng.** Ngăn roadmap thêm class `is-open` trong
+   rAF, nên khi pane ẩn nó "không mở" và mọi phép đo sau đó sai theo. Dấu hiệu: `innerWidth`
+   trả 0. Chụp một ảnh màn hình là pane tỉnh lại.
+
+### Cố ý KHÔNG làm
+
+- Không đụng hệ thống mốc (`mile`), không đổi `id` chặng — như phiên (n4) đã ghi.
+- Không rải chặng toán.
+- Không sửa thời lượng `pr-eval` / `s-intro` / `t-colab`: đã đo, nằm trong khoảng.
+
+---
+
 ## Phiên 2026-08-05 (n4) — ĐỔI THỨ TỰ MẠCH CHÍNH — XONG
 
 Chủ trang gỡ hoãn cho backlog "đổi thứ tự mạch chính" (review §2) với chỉ thị: *"option nào
