@@ -28,7 +28,7 @@
    "tldr": "Mọi product AI thật đều đi qua cùng 10 bước; khi không biết một khái niệm 'thuộc về đâu' thì nó luôn rơi vào một trong 10 ô — sin/cos ở bước 5, SHAP ở bước 7, drift ở bước 10.",
    "points": [
     "Mười bước: 1 đóng khung bài toán · 2 lấy dữ liệu · 3 EDA · 4 làm sạch · 5 feature engineering · 6 chia tập & cách kiểm chứng · 7 train & tune · 8 đánh giá & chọn ngưỡng · 9 deploy (FastAPI + Docker) · 10 giám sát & retrain.",
-    "Feature engineering (bước 5) quyết định chất lượng nhiều hơn cả việc chọn mô hình; ngược lại model.fit(X,y) (bước 7) là dòng lệnh ngắn nhất và ít quan trọng nhất trong cả quy trình.",
+    "Feature engineering (bước 5) thường quyết định chất lượng nhiều hơn cả việc chọn mô hình — đúng chừng nào dữ liệu thô còn thông tin chưa được rút ra thành cột; ngược lại model.fit(X,y) (bước 7) là dòng lệnh ngắn nhất và ít quan trọng nhất trong cả quy trình.",
     "EDA có HAI thì: (a) trước khi chia tập — kiểm cấu trúc (số dòng, kiểu dữ liệu, trùng lặp, grain, nhãn có chưa); (b) sau khi chia tập, CHỈ trên train — xem phân phối, quan hệ feature–nhãn, chọn feature; nhìn tập test sớm là một dạng rò rỉ.",
     "Bước 9 deploy: feature lúc chạy thật phải tính GIỐNG HỆT lúc train (tránh training/serving skew), dùng Pipeline chung.",
     "Quy trình là VÒNG LẶP không phải đường thẳng: đánh giá bước 8 tệ → quay về bước 5 nghĩ feature → thiếu dữ liệu → quay bước 2; một dự án bình thường đi vòng 5–15 lần."
@@ -54,7 +54,7 @@
     "Triệu chứng mô hình: 'Accuracy 99,8% mà bắt 0 vụ gian lận' → nhãn lệch, accuracy sai, dùng PR-AUC; 'AUC 0,999 đẹp không tưởng' → gần như chắc chắn data leakage; 'đúng máy sai production' → training/serving skew, dùng Pipeline chung; 'chạy lại ra khác' → chưa cố định random_state.",
     "Chọn mô hình: dữ liệu bảng khởi điểm LightGBM/XGBoost; ảnh/chữ/âm thanh/chuỗi dài → deep learning; luôn chạy baseline đơn giản trước và để kết quả quyết định.",
     "Chọn cách chia: có thời gian → chia theo thời gian; nhóm lặp (cùng khách) → GroupKFold; chuỗi thời gian → backtest walk-forward; gợi ý → leave-last-out theo thời gian; còn lại → stratified random.",
-    "Chọn metric: lớp dương hiếm → PR-AUC; cân bằng → ROC-AUC; nhiều lớp → macro-F1; số thực → MAE/RMSE; dự báo → MASE; xếp hạng → NDCG@K; LUÔN kèm một chỉ số quy ra tiền. Dữ liệu bảng: ~1.000 mẫu của lớp hiếm là bắt đầu ổn, số ca dương quan trọng hơn số dòng tổng.",
+    "Chọn metric: lớp dương hiếm → PR-AUC; cân bằng → ROC-AUC; nhiều lớp → macro-F1; số thực → MAE/RMSE; dự báo → MASE; xếp hạng → NDCG@K; LUÔN kèm một chỉ số quy ra tiền. Dữ liệu bảng: ~1.000 mẫu của lớp hiếm là bắt đầu ổn (kinh nghiệm thực dụng, không phải ngưỡng lý thuyết — đường cong học tập của chính bạn mới là câu trả lời), số ca dương quan trọng hơn số dòng tổng.",
     "Bảng công cụ mặc định: pandas (~60% dòng code) · numpy · scikit-learn Pipeline/ColumnTransformer (nơi gắn sin/cos để không lệch train/serve) · LightGBM · PyTorch + Hugging Face · statsmodels ETS/ARIMA · SHAP · MLflow · FastAPI + Docker · Streamlit · Overleaf — mỗi ô chỉ là MỘT mặc định, có 2–4 đối thủ."
    ],
    "viz": "Ba bảng triệu chứng → bước → cách sửa; ví dụ then chốt 'Accuracy 99,8% mà bắt được 0 vụ gian lận → bước 8 → nhãn lệch, dùng PR-AUC thay accuracy'."
@@ -132,7 +132,7 @@
    "viz": "Khối code tests/test_features.py bốn hàm assert, trong đó test_cyclic_encoding kiểm hour [0,6,12,18] → hour_sin [0,1,0,-1]."
   },
   "t-pandas": {
-   "tldr": "pandas là Excel viết bằng code, và bạn chỉ cần 15 thao tác chiếm 90% việc; sức mạnh thật nằm ở vector hoá (phép tính trên cả cột, nhanh ~100 lần vòng lặp) và groupby+merge để tạo feature so-với-mức-thường của chính khách hàng.",
+   "tldr": "pandas là Excel viết bằng code, và bạn chỉ cần 15 thao tác — chúng chiếm khoảng 90% số dòng bạn sẽ viết trong cả dự án; sức mạnh thật nằm ở vector hoá (phép tính trên cả cột, thường nhanh hơn vòng lặp Python một tới hai bậc độ lớn, tuỳ phép tính và máy) và groupby+merge để tạo feature so-với-mức-thường của chính khách hàng.",
    "points": [
     "Nghi thức mở dữ liệu mới: df.shape, df.head(), df.info() (phát hiện cột ngày đang là object/text), df.describe(), df.isna().sum(), value_counts(normalize=True)",
     "Lọc phải dùng & (không phải and) và mỗi vế có ngoặc riêng vì & ưu tiên cao hơn >; loc theo NHÃN, iloc theo VỊ TRÍ",
@@ -156,7 +156,7 @@
    "viz": "Khối SQL point-in-time với AVG(...) OVER (PARTITION BY card_id ORDER BY ts ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING) chú thích = s.shift(1).expanding().mean()."
   },
   "t-numpy": {
-   "tldr": "numpy là lớp nền dưới pandas và mọi mô hình nhận đầu vào là mảng numpy; điểm cốt lõi là phép toán theo phần tử trên cả mảng cùng lúc (chạy bằng C, ~100 lần nhanh hơn vòng lặp), và hai thứ gây lỗi nhiều nhất là shape và broadcasting.",
+   "tldr": "numpy là lớp nền dưới pandas và mọi mô hình nhận đầu vào là mảng numpy; điểm cốt lõi là phép toán theo phần tử trên cả mảng cùng lúc (chạy bằng C, thường nhanh hơn vòng lặp Python một tới hai bậc độ lớn — tự đo bằng %timeit chứ đừng trích con số), và hai thứ gây lỗi nhiều nhất là shape và broadcasting.",
    "points": [
     "Mảng numpy khác list Python: a*2 nhân từng phần tử (list*2 thì nối danh sách), a@a là tích vô hướng; 1 triệu số vòng lặp ~0,3s vs numpy ~0,003s",
     "Hàm thật sự dùng: np.log1p/expm1 (cột tiền lệch), np.where (IF trên cả mảng), np.clip (cắt ngoại lai), np.sin/cos/pi (mã hoá chu kỳ), np.random.default_rng(42)",
@@ -310,7 +310,7 @@
    "viz": "Hình data-viz='split' cho thấy ba cách chia (thời gian / nhóm / phân tầng) trên cùng một tập dữ liệu; kèm code cắt train/valid/test theo mốc iloc 0.70 và 0.85 với dòng print khoảng thời gian từng tập."
   },
   "f-what": {
-   "tldr": "Feature engineering là viết code biến cột thô thành cột số mô hình học được, và đảm bảo đúng đoạn code đó chạy lại y hệt lúc dự đoán thật. Nó chạy hai lần trong đời (train và serve) nên phải cho kết quả giống hệt — và nó quyết định kết quả nhiều hơn việc chọn mô hình.",
+   "tldr": "Feature engineering là viết code biến cột thô thành cột số mô hình học được, và đảm bảo đúng đoạn code đó chạy lại y hệt lúc dự đoán thật. Nó chạy hai lần trong đời (train và serve) nên phải cho kết quả giống hệt — và trên dữ liệu bảng nó thường quyết định kết quả nhiều hơn việc chọn mô hình (cán cân đảo lại khi bộ feature đã bão hoà, hoặc khi dữ liệu là ảnh/chữ nơi mô hình tự học biểu diễn).",
    "points": [
     "Chạy hai lần: lúc train trên hàng trăm nghìn dòng, lúc serve trên MỘT dòng trong API — hai lần lệch nhau (μ train 250k, serve tính lại 310k) là lỗi training/serving skew, âm thầm không báo lỗi",
     "Cách duy nhất chắc tránh skew: gói toàn bộ FE vào một Pipeline sklearn, lưu chung mô hình vào một file, API nạp đúng file đó",
@@ -424,7 +424,7 @@
     "Năm mô hình cần biết: Logistic Regression (baseline bắt buộc, giải thích được hệ số), Decision Tree (vẽ được nhưng overfit nặng, không dùng làm mô hình cuối), Random Forest (baseline thứ hai, an toàn), LightGBM/XGBoost (mặc định cho dữ liệu bảng), Mạng nơ-ron (cho ảnh/chữ/chuỗi hoặc cột hạng mục cực nhiều giá trị cần embedding)",
     "LightGBM không ngoại suy được ra ngoài khoảng giá trị đã thấy — điểm yếu phải nhớ khi dùng",
     "Câu đúng trong luận văn là 'tôi chọn LightGBM vì trên dữ liệu này nó tương đương hoặc hơn với chi phí thấp hơn, và đây là bảng so sánh chứng minh', không phải 'boosting tốt hơn deep learning'",
-    "Quy trình chọn mô hình đúng thứ tự: baseline ngu nhất → logistic + feature cơ bản → LightGBM mặc định (không tune) → cải tiến feature (nơi nhiều điểm nhất) → tune siêu tham số (chỉ +1–3%) → ensemble/stacking (thường không đáng công)",
+    "Quy trình chọn mô hình đúng thứ tự: baseline ngu nhất → logistic + feature cơ bản → LightGBM mặc định (không tune) → cải tiến feature (nơi nhiều điểm nhất) → tune siêu tham số (thường chỉ thêm cỡ 1–3%) → ensemble/stacking (thường không đáng công)",
     "Bảng 5 mô hình chỉ áp cho phân loại trên dữ liệu bảng; chuỗi thời gian, gợi ý, nhân quả có gia đình mô hình riêng (chặng 8)"
    ],
    "viz": "Hai bảng đối chiếu: loại học theo 'bạn có gì', và 5 mô hình theo điểm mạnh/điểm yếu/dùng khi"
@@ -518,7 +518,7 @@
    "viz": "Viz đổi tỉ lệ lớp dương xem chỉ số nào nhúc nhích data-viz='prcurve', và bảng thí nghiệm mẫu: baseline PR-AUC 0,312 → +class_weight 0,367 → +SMOTE 0,361 (không cải thiện, tốn 4× thời gian) → +chọn ngưỡng chi phí 0,367 (PR-AUC không đổi nhưng tiền tiết kiệm +23%)"
   },
   "ml-tune": {
-   "tldr": "Tuning siêu tham số chỉ cho thêm 1–3% và ngốn nhiều giờ máy nhất nên làm sau cùng khi feature đã ổn; random search thường thắng grid với cùng ngân sách, Optuna học từ các lần thử trước, và có bốn quy tắc để không tự lừa mình.",
+   "tldr": "Tuning siêu tham số thường là bước cho thêm ít nhất (kinh nghiệm phổ biến trên dữ liệu bảng: cỡ 1–3%, không phải hằng số) mà ngốn nhiều giờ máy nhất nên làm sau cùng khi feature đã ổn; random search thường thắng grid với cùng ngân sách, Optuna học từ các lần thử trước, và có bốn quy tắc để không tự lừa mình.",
    "points": [
     "Ba cách: grid search (thử mọi tổ hợp, dùng khi ≤3 tham số mỗi cái ≤4 giá trị), random search (bốc ngẫu nhiên N tổ hợp, thường tốt hơn grid với cùng ngân sách), Optuna/Bayesian (học từ lần thử trước, dùng khi mỗi lần train tốn phút trở lên)",
     "Vì sao random thắng grid: trong 10 tham số thường chỉ 2–3 cái thật sự quan trọng, grid lãng phí phần lớn ngân sách thử các tổ hợp của tham số vô nghĩa",

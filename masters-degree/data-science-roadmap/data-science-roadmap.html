@@ -4043,7 +4043,7 @@ a = np.array([1, 2, 3])
 a * 2             <i># → array([2, 4, 6])      ← nhân từng phần tử</i>
 a + a             <i># → array([2, 4, 6])</i>
 a @ a             <i># → 14  (tích vô hướng)</i></div>
-  <p>Đây là toàn bộ ý tưởng: numpy làm <b>phép toán theo phần tử trên cả mảng cùng lúc</b>, chạy bằng mã C bên dưới. Một vòng lặp Python xử lý 1 triệu số mất khoảng 0,3 giây; numpy mất khoảng 0,003 giây.</p>
+  <p>Đây là toàn bộ ý tưởng: numpy làm <b>phép toán theo phần tử trên cả mảng cùng lúc</b>, chạy bằng mã C bên dưới. Trên một máy tính xách tay thông thường, một vòng lặp Python xử lý 1 triệu số mất cỡ 0,3 giây còn numpy mất cỡ 0,003 giây — <b>hai con số này là để bạn thấy độ lớn của chênh lệch, không phải để trích dẫn</b>: tỉ lệ thật đổi theo phép tính, kiểu dữ liệu và máy. Đo trên máy bạn bằng <code>%timeit</code>.</p>
   <p><button class="ds-math" data-math="dot">Vector, tích vô hướng và khoảng cách</button> — nếu bạn chưa chắc “tích vô hướng” là gì thì mở cái này trước.</p>
 
   <h2>Những thứ bạn thật sự dùng</h2>
@@ -5036,7 +5036,8 @@ print(len(train), len(valid), len(test))</div>
   <p>Bảng ở bước 5 chính là <b>bảng ablation</b> của luận văn. Ghi nó từ ngày đầu, đừng dựng lại từ trí nhớ vào ngày cuối.</p>
 
   <h2>Vì sao bước này quan trọng hơn chọn mô hình</h2>
-  <p>Đổi từ LogisticRegression sang LightGBM có thể cho bạn +0,03 AUC. Thêm một nhóm feature về tần suất giao dịch có thể cho +0,12. Trong dữ liệu bảng, <b>khoảng cách giữa các mô hình nhỏ hơn nhiều so với khoảng cách giữa các bộ feature</b>.</p>
+  <p>Đổi từ LogisticRegression sang LightGBM có thể cho bạn +0,03 AUC. Thêm một nhóm feature về tần suất giao dịch có thể cho +0,12. Trong dữ liệu bảng, <b>khoảng cách giữa các mô hình thường nhỏ hơn khoảng cách giữa các bộ feature</b>.</p>
+  <p class="wb-help">Hai con số trên là <b>độ lớn minh hoạ cho bài fraud này</b>, không phải hằng số — bảng ablation của chính bạn mới là con số được trích. Và câu "feature ăn đứt mô hình" có ranh giới của nó: nó đúng khi bạn còn <i>chỗ để thêm feature</i>, tức là dữ liệu thô còn mang thông tin mà bảng hiện tại chưa nói ra. Khi bộ feature đã bão hoà, hoặc khi dữ liệu là ảnh / chữ / âm thanh — nơi mô hình <b>tự học lấy biểu diễn</b> thay cho việc bạn gõ tay từng cột — thì cán cân đảo lại, và chọn kiến trúc mới là chỗ quyết định.</p>
   <p>Đó cũng là lý do trong luận văn, phần đóng góp mới của bạn <b>nên</b> nằm ở feature engineering hoặc cách đánh giá — chứ không phải ở "tôi thử thêm một mô hình nữa".</p>
 </template>
 
@@ -5306,6 +5307,8 @@ df["z_vs_history"] = (df["amount"] - df["hist_mean"]) / (df["hist_std"] + 1e-6)
 df["ratio_vs_hist"] = df["amount"] / (df["hist_mean"] + 1)</div>
   <p><code>.shift(1)</code> đẩy chuỗi xuống một dòng, <code>.expanding()</code> tính tích luỹ từ đầu tới dòng trước. Kết quả: mỗi dòng chỉ biết những gì đã xảy ra <b>trước</b> nó.</p>
   <p>Cột <code>z_vs_history</code> là một trong những feature có sức phân biệt cao nhất bạn có thể tạo: nó trả lời "giao dịch này bất thường tới mức nào <i>đối với chính người này</i>".</p>
+
+  <div data-viz="rollwin"></div>
 
   <h2>Danh sách feature cho hệ thống chống gian lận</h2>
   <table>
@@ -14362,6 +14365,94 @@ VIZ.ablation = el => {
     'Biểu đồ khoảng tin cậy cho năm cấu hình. ' + A.map(([t, m, s]) =>
       `${t}: PR-AUC ${m.toFixed(3)}, khoảng ${(m - s).toFixed(3)} đến ${(m + s).toFixed(3)}`).join('; ') +
     '. Khoảng của cấu hình bỏ feature chu kỳ và của cấu hình bỏ lệch thói quen đều chồng lấn khoảng của cấu hình đầy đủ.';
+};
+
+/* -- 6.40 Cửa sổ trượt: bỏ một mảnh cú pháp thì hỏng những gì --
+   Ba dòng kiểm tra rò rỉ ở cuối f-time là thứ người học gật đầu rồi vẫn
+   làm sai, vì hậu quả không hiện ra dưới dạng lỗi. Khối này bật/tắt đúng
+   hai mảnh cú pháp đó rồi TÍNH LẠI thật, để hậu quả thành con số.
+   Mọi số trong bảng đều tính tại chỗ — không có số nào gõ tay. */
+VIZ.rollwin = el => {
+  /* Một thẻ, tám giao dịch. Ba cái cuối là chuỗi rút tiền bất thường. */
+  const TX = [
+    { t: 552, a: 120 }, { t: 580, a: 95 }, { t: 605, a: 150 }, { t: 620, a: 110 },
+    { t: 644, a: 130 }, { t: 652, a: 2400, f: 1 }, { t: 655, a: 2600, f: 1 }, { t: 658, a: 2300, f: 1 },
+  ];
+  const ARRIVED = [2, 0, 5, 1, 7, 3, 6, 4];   /* thứ tự dòng nằm sẵn trong file CSV */
+  const hhmm = m => String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0');
+  const f1 = v => v == null || !isFinite(v) ? '—' : v.toFixed(1).replace('.', ',');
+
+  el.innerHTML = `
+    <div class="wb-card"><div class="wb-card__body">
+      <p class="ds-viz__label">Cùng tám giao dịch của một thẻ. Bỏ đi một mảnh cú pháp và xem cột <code>z_vs_history</code> làm gì</p>
+      ${seg('Cách tính feature', [
+        { k: 'ok', t: 'sort + closed="left"' },
+        { k: 'noleft', t: 'quên closed="left"' },
+        { k: 'nosort', t: 'quên sort_values' },
+      ], 'ok')}
+      <div data-o="tbl"></div>
+      <p class="ds-viz__readout" data-o="r">—</p>
+      <p class="ds-viz__alt" data-o="alt"></p>
+      ${seeBlock({
+        see: 'ở cách <b>đúng</b>, dòng đầu của thẻ là <code>NaN</code> (khách mới thì không có lịch sử — đó là dấu hiệu bạn làm đúng, không phải lỗi cần vá) và giao dịch gian lận đầu tiên có <code>z</code> lên tới ba chữ số. Bấm <b>quên closed="left"</b>: không dòng nào báo lỗi, không dòng nào <code>NaN</code>, nhưng <code>z</code> của chính giao dịch gian lận <b>sụt xuống còn một chữ số</b> — vì số tiền bất thường đó đã được cộng vào cái "mức thường ngày" mà nó đang bị đem ra so. Feature càng cần bắt ca lớn thì càng tự bịt mắt mình ở đúng ca lớn. Và để ý một điều đúng ngay ở cách đúng: hai giao dịch gian lận <i>sau</i> lại có z nhỏ, vì lịch sử của chính thẻ đó đã bị giao dịch gian lận đầu tiên kéo lên. Đó là lý do <code>z_vs_history</code> phải đứng <b>cạnh</b> <code>secs_since_last</code> và <code>n_tx_1h</code> chứ không thay được chúng — một chuỗi rút nhanh liên tiếp là thứ mà nhóm feature tốc độ bắt, không phải nhóm so-với-thói-quen.',
+        wrong: '“gồm hay không gồm dòng hiện tại thì lệch có một dòng, đáng gì”. Lệch một dòng, nhưng lệch <b>đúng cái dòng cực trị</b>, và lệch theo hướng làm mô hình trông giỏi hơn lúc train: <code>n_tx_1h</code> lúc train luôn nhiều hơn một so với con số mà API tính được lúc chạy thật, nên đây còn là một ca <b>lệch train/serve</b> kinh điển. Chế độ <b>quên sort_values</b> cho thấy cái tệ hơn nữa: “lịch sử” trở thành thứ tự dòng trong file, nên có dòng lấy giao dịch <i>tương lai</i> làm quá khứ mà vẫn ra số đẹp.',
+        code: 'ba dòng kiểm tra ở cuối bài chính là ba chế độ trên. Chạy <code>assert df.groupby("card_id").head(1)["hist_mean"].isna().all()</code> sau mỗi feature theo thời gian — nó bắt được cả hai lỗi này.',
+      })}
+    </div></div>`;
+
+  const tbl = el.querySelector('[data-o="tbl"]');
+  const mean = xs => xs.reduce((s, x) => s + x, 0) / xs.length;
+  const sd = xs => {
+    if (xs.length < 2) return null;
+    const m = mean(xs);
+    return Math.sqrt(xs.reduce((s, x) => s + (x - m) ** 2, 0) / (xs.length - 1));
+  };
+  /* Trả về, cho MỖI giao dịch theo thứ tự thời gian: số giao dịch trong cửa sổ
+     1 giờ, trung bình lịch sử, và z so với lịch sử đó. */
+  const compute = mode => {
+    const order = mode === 'nosort' ? ARRIVED : TX.map((_, i) => i);
+    const seen = [];                    /* số tiền các dòng đứng trước, theo thứ tự đang duyệt */
+    const out = new Array(TX.length);
+    for (const i of order) {
+      const cur = TX[i];
+      const hist = mode === 'noleft' ? seen.concat(cur.a) : seen.slice();
+      const m = hist.length ? mean(hist) : null, s = sd(hist);
+      /* cửa sổ 1h đếm trên chính tập "lịch sử" mà chế độ đó nhìn thấy */
+      const win = (mode === 'nosort' ? order.slice(0, order.indexOf(i) + (1)) : TX.map((_, k) => k).slice(0, i + 1))
+        .filter(k => (mode === 'noleft' || k !== i) && TX[k].t > cur.t - 60 && TX[k].t <= cur.t).length;
+      out[i] = { n: win, m, z: m == null || !s ? null : (cur.a - m) / s };
+      seen.push(cur.a);
+    }
+    return out;
+  };
+
+  const draw = mode => {
+    const R = compute(mode);
+    const bad = v => v == null ? 'var(--wb-fg-subtle)' : Math.abs(v) > 20 ? 'var(--wb-fg)' : 'var(--wb-warning)';
+    tbl.innerHTML = '<div class="wb-table-scroll"><table><thead><tr>' +
+      ['ts', 'amount', 'n_tx_1h', 'hist_mean', 'z_vs_history'].map(h => `<th>${h}</th>`).join('') +
+      '</tr></thead><tbody>' +
+      TX.map((x, i) => `<tr>` +
+        `<td>${hhmm(x.t)}${x.f ? ' <b style="color:var(--wb-danger)">⚑</b>' : ''}</td>` +
+        `<td>${x.a.toLocaleString('vi-VN')}</td><td>${R[i].n}</td>` +
+        `<td>${R[i].m == null ? '<i>NaN</i>' : f1(R[i].m)}</td>` +
+        `<td style="color:${x.f ? bad(R[i].z) : 'inherit'}">${R[i].z == null ? '<i>NaN</i>' : f1(R[i].z)}</td></tr>`).join('') +
+      '</tbody></table></div>';
+    const zf = R[5].z;
+    const nanAt = TX.findIndex((_, i) => R[i].m == null);
+    el.querySelector('[data-o="r"]').textContent = mode === 'ok'
+      ? `hist_mean của dòng đầu = NaN, đúng như phải thế · giao dịch gian lận đầu tiên: z = ${f1(zf)}`
+      : mode === 'noleft'
+        ? `hist_mean của dòng đầu = ${f1(R[0].m)} chứ không phải NaN — sai lộ ra ngay từ dòng 1 · z của cùng giao dịch gian lận tụt từ ${f1(compute('ok')[5].z)} xuống ${f1(zf)}`
+        : `dòng NaN rơi vào giao dịch ${hhmm(TX[nanAt].t)} chứ không phải dòng đầu · giao dịch ${hhmm(TX[0].t)} lấy hist_mean = ${f1(R[0].m)} từ một giao dịch xảy ra SAU nó`;
+    el.querySelector('[data-o="alt"]').textContent =
+      `Bảng tám giao dịch của một thẻ, ba giao dịch cuối là gian lận. Cách tính: ${
+        mode === 'ok' ? 'sắp theo thời gian và loại dòng hiện tại khỏi cửa sổ'
+          : mode === 'noleft' ? 'sắp theo thời gian nhưng cửa sổ gồm cả dòng hiện tại'
+            : 'chưa sắp theo thời gian, cửa sổ chạy trên thứ tự dòng trong file'}. ` +
+      TX.map((x, i) => `${hhmm(x.t)} số tiền ${x.a}: n_tx_1h ${R[i].n}, hist_mean ${f1(R[i].m)}, z ${R[i].z == null ? 'NaN' : f1(R[i].z)}`).join('; ') + '.';
+  };
+  wireSeg(el, draw); draw('ok');
 };
 
 /* ============================================================
