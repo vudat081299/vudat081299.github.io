@@ -7,10 +7,8 @@
    "points": [
     "Hai lộ trình theo thời gian: chuẩn 6–8 tuần (mặc định, đi hết 9 họ bài toán + mini-project) vs Fast track 14 ngày (một vòng end-to-end trên đúng một bài toán).",
     "Ba nhãn ưu tiên độc lập với lộ trình: Bắt buộc (không biết thì bài sau hỏng) / Nên biết (hội đồng sẽ hỏi) / Định vị là đủ (biết nó ở đâu là xong); ví dụ 'Chuỗi thời gian' vừa Bắt buộc vừa 6–8 tuần.",
-    "Mạch chính = đường ngắn nhất tới sản phẩm; nhánh phụ đẩy ra sau chip — ds-math mở công thức (popup giữa màn hình), ds-aside mở nhánh phụ/so sánh công cụ (drawer bên phải).",
     "Ba loại phát biểu về công cụ: 'ổn định' (sự thật kỹ thuật, tin được) / 'hạn mức' (số nhà cung cấp đặt, phải kiểm lại đúng ngày dùng) / 'nhận định' (ý kiến, được phép không đồng ý); nguồn kiểm ngày 3/8/2026.",
-    "Phím tắt đọc nhanh: ] sang bài sau, [ về bài trước, Esc đóng popup/ngăn.",
-    "Tiến độ tính theo khối lượng (một bài code 150′ nặng hơn nhiều bài đọc 10′), không theo số tick; đọc xong không gõ gì thì 48 giờ sau còn ~10%."
+    "Tiến độ nên tính theo khối lượng thật (một bài code 150′ nặng hơn nhiều bài đọc 10′), không phải theo số bài đã xem qua; đọc xong không thực hành gì thì kiến thức rơi rụng rất nhanh — khoảng 48 giờ sau chỉ còn nhớ ~10%."
    ],
    "viz": "Hai thẻ đối chiếu lộ trình chuẩn (tổng giờ, 6–8 tuần, phần Bắt buộc ~giờ/tuần) vs Fast track (14 ngày, ~giờ/ngày mỗi ngày không nghỉ)."
   },
@@ -77,7 +75,7 @@
    "tldr": "Bản nén của lộ trình 8 tuần để đi trọn MỘT vòng end-to-end; cả lịch xoay quanh một mốc duy nhất — hết ngày 6 phải có mô hình chạy từ đầu tới cuối dù tệ, tám ngày sau chỉ là cải tiến (dừng được bất cứ lúc nào).",
    "points": [
     "Mốc ngày 6: đọc dữ liệu → tạo feature → train → in ra một con số; đọc lịch theo HAI nửa (tới ngày 6 để tới mốc / sau ngày 6 để cải tiến), đừng đọc như 14 việc rời rạc.",
-    "Số giờ mỗi ngày = tổng ba cột đọc/thực hành/deliverable của chính các bài trong ngày, không gõ tay nên không lệch với trang chủ hay cây bên trái.",
+    "Số giờ mỗi ngày = tổng ba cột đọc/thực hành/deliverable của chính các bài trong ngày, tính tự động nên luôn khớp với thời lượng ghi ở từng bài, không phải một con số áng chừng.",
     "Fast track chỉ GIỚI THIỆU chứ không dạy hết: bỏ phần lớn chặng 8 (hồi quy, forecasting, multiclass, NLP, CV, gợi ý, analytics), tuning, giải thích mô hình, học không giám sát → sau 14 ngày làm được một dự án phân loại trên dữ liệu bảng nhưng CHƯA định vị được dự báo hay NLP.",
     "Sáu thứ KHÔNG được nén dù gấp tới đâu: data leakage · chia tập · đo lường & chọn ngưỡng · kỷ luật tập test (chỉ mở một lần) · tái lập (ghim phiên bản, cố định seed) · thống kê suy diễn — cắt là đổi hai tuần lấy một kết quả sai không ai phát hiện tới buổi bảo vệ.",
     "Lấp chỗ trống sau ngày 14 theo thứ tự (không tuỳ chọn, chỉ hoãn): forecasting → A/B testing & tư duy nhân quả → hồi quy/multiclass → NLP/CV/gợi ý/analytics → mini-project chuyển giao làm thật 2/6.",

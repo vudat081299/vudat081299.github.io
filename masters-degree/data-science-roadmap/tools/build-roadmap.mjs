@@ -129,7 +129,7 @@ ${STYLE()}
 <main class="rm-main">
   <section class="rm-hero">
     <h1 class="rm-hero__h">Quick Roadmap</h1>
-    <p class="rm-hero__sub">The same roadmap, a different way to learn: tap any step to grasp the <b>core idea</b> in seconds — open the full lesson on the main page when you want to go deeper.</p>
+    <p class="rm-hero__sub">A condensed map of Data Science, from zero to a real portfolio project: tap any step to grasp its <b>core idea</b> in seconds.</p>
     <div class="rm-hero__stats">
       <span><b>84</b> steps</span><span><b>11</b> phases</span><span><b>${(Math.round(totalMin/30)/2).toString()}</b> hours</span>
     </div>
@@ -137,7 +137,7 @@ ${STYLE()}
   <div class="rm-path">
 ${levelsHtml}
   </div>
-  <footer class="rm-foot">Generated view · single source of truth is <a href="data-science-roadmap.html">the full roadmap</a>. Summaries are condensed; open a lesson for the complete version.</footer>
+  <footer class="rm-foot">84 steps · 11 phases, condensed. Open any step for its full lesson.</footer>
 </main>
 
 <div class="rm-overlay" id="overlay" hidden></div>
@@ -166,6 +166,9 @@ function STYLE() { return String.raw`
   :root{
     --rm-core:var(--wb-fg); --rm-good:var(--wb-gray-400); --rm-skim:var(--wb-gray-300);
     --rm-drawer-w:min(50vw,760px); --ds-navctl:30px; --ds-ctl-xs:24px;
+    /* Vàng, không phải cam: kit không có token "yellow" riêng (chỉ có --wb-warning là cam
+       #d97706/#f59e0b) nên khai literal cho đúng cảm giác "ngôi sao vàng". */
+    --rm-star:#f5c518;
   }
   *{box-sizing:border-box}
   /* line-height:1.55 khớp baseline .wb-app/.wb-shell của kit (web-builder.css §"document
@@ -181,8 +184,11 @@ function STYLE() { return String.raw`
      theme luôn cùng một hình với trang chính. */
   .wb-navbar{--ds-navctl:30px;}
   .ds-brand{font-weight:700;letter-spacing:-.01em;display:inline-flex;align-items:center;gap:0;}
+  /* margin-left ÂM: "Data Science" và "Roadmap" là hai node RIÊNG, con trực tiếp của
+     .wb-navbar (gap:16px của kit) — số -10px trừ ngược gap đó để vạch "│" nằm đúng giữa
+     hai chữ (6px mỗi bên), khớp trang chính. Đổi gap của .wb-navbar thì tính lại số này. */
   .ds-brand__sub{font-weight:500;font-size:.8em;color:var(--wb-fg-subtle);letter-spacing:0;
-    margin-left:6px;padding-left:6px;border-left:var(--wb-bw) solid var(--wb-border);}
+    margin-left:-10px;padding-left:6px;border-left:var(--wb-bw) solid var(--wb-border);}
   .ds-logobtn{box-sizing:border-box;padding:2px;border-radius:11px;
     width:var(--ds-navctl);height:var(--ds-navctl);}
   .ds-logo{display:inline-flex;}
@@ -191,8 +197,9 @@ function STYLE() { return String.raw`
   .ds-logo__ln{stroke:var(--wb-canvas);}
   .ds-logo__dot{fill:var(--wb-canvas);}
   .ds-theme{box-sizing:border-box;height:var(--ds-navctl);display:inline-flex;align-items:center;
-    gap:7px;line-height:1;font-family:inherit;font-size:13px;font-weight:550;cursor:pointer;
-    padding:0 12px;border-radius:var(--wb-radius-pill);border:var(--wb-bw) solid var(--wb-border);
+    justify-content:center;gap:7px;line-height:1;font-family:inherit;font-size:13px;font-weight:550;
+    cursor:pointer;padding:0 12px;border-radius:var(--wb-radius-pill);
+    border:var(--wb-bw) solid var(--wb-border);
     background:var(--wb-surface);color:var(--wb-fg);box-shadow:var(--wb-shadow-sm);}
   .ds-theme:hover{border-color:var(--wb-border-strong)}
   .ds-theme:focus-visible{outline:none;box-shadow:0 0 0 3px var(--wb-ring)}
@@ -227,7 +234,10 @@ function STYLE() { return String.raw`
   .rm-node{position:relative;width:50%;min-height:80px;display:flex;align-items:center;gap:12px;
     padding:22px 0;background:none;border:0;cursor:pointer;font:inherit;color:inherit}
   .rm-node--l{margin-right:50%;flex-direction:row-reverse;text-align:right;padding-right:34px}
-  .rm-node--r{margin-left:50%;padding-left:34px}
+  /* text-align:left TƯỜNG MINH: <button> có text-align:center mặc định của trình duyệt,
+     không đặt lại thì tiêu đề VÀ text thời gian bên phải bị canh giữa thay vì áp vào
+     xương sống bên trái. */
+  .rm-node--r{margin-left:50%;padding-left:34px;text-align:left}
   .rm-node__dot{position:absolute;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;
     display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;
     background:var(--wb-surface);border:2px solid var(--wb-border-strong);color:var(--wb-fg-muted);
@@ -237,7 +247,7 @@ function STYLE() { return String.raw`
   /* Icon font (Material Symbols, đã @import trong web-builder.css) thay cho ký tự ★ thô —
      ★ Unicode canh giữa lệch tâm khác nhau tuỳ font hệ điều hành, trong một vòng tròn nhỏ
      lệch đó lộ rõ. --wb-ico-fill:1 để đặc (khớp cảm giác "sao vàng" quen thuộc). */
-  .rm-node__star{--wb-ico-fill:1;color:var(--wb-warning);font-size:17px}
+  .rm-node__star{--wb-ico-fill:1;color:var(--rm-star);font-size:17px}
   .rm-node__label{display:flex;flex-direction:column;gap:1px;min-width:0}
   .rm-node__t{font-size:13.5px;font-weight:600;line-height:1.3}
   .rm-node__m{font-size:11px;color:var(--wb-fg-subtle);font-family:var(--wb-font-mono)}
@@ -272,7 +282,7 @@ function STYLE() { return String.raw`
   .rm-drawer__close:focus-visible{outline:none;box-shadow:0 0 0 3px var(--wb-ring)}
   .rm-drawer__body{flex:1 1 auto;overflow-y:auto;padding:22px 24px 40px}
   .rm-dh{font-size:22px;font-weight:800;line-height:1.25;margin:0 0 12px;letter-spacing:-.01em}
-  .rm-dh .rm-dh__star{color:var(--wb-warning);margin-right:6px}
+  .rm-dh .rm-dh__star{color:var(--rm-star);margin-right:6px}
   .rm-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
   .rm-chip{font-size:11px;font-weight:650;padding:3px 9px;border-radius:999px;border:var(--wb-bw) solid var(--wb-border-strong);color:var(--wb-fg-muted);white-space:nowrap}
   .rm-chip--core{background:var(--wb-fg);color:var(--wb-canvas);border-color:var(--wb-fg)}
