@@ -17,6 +17,170 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 
 ---
 
+## ĐANG LÀM — thẩm định bản review thứ hai (n3): đã sửa phần factual, ba việc lớn CHỜ CHỦ TRANG
+
+Chủ trang đưa một **bản review thứ hai** (khác bản đã thẩm định ở phiên (l)) về cả hai trang, hỏi
+"mệnh đề nào đúng, đúng thì sửa". Đã kiểm từng mệnh đề bằng grep/đếm trên file thật, **sửa xong
+toàn bộ phần factual**, và **dừng trước ba việc là quyết định giáo trình/kiến trúc**.
+
+### Đã sửa — 12 chỗ trong HTML, 10 chỗ trong `roadmap-summaries.json`
+
+Nguyên tắc chung của cả loạt: **giữ nguyên trực giác, chỉ đóng lại phạm vi** — không câu nào bị
+làm phức tạp thêm, chỗ nào cũng nói rõ "luật này đúng trong điều kiện nào".
+
+| chỗ | trước | sau |
+|---|---|---|
+| `ml-loss` bảng + đoạn dưới | "Hàm mất mát **phải khả vi** để tối ưu được" | khả vi là điều kiện của **cách tối ưu bằng gradient**; thêm `wb-help` nêu MAE/subgradient + cây không hạ gradient, trỏ aside `x-tree-learn` |
+| popup `dot` | tích vô hướng = 0 → "(không liên quan gì nhau)" | trực giao **trong biểu diễn & thang đo đang dùng**; nói rõ KHÔNG suy ra độc lập thống kê / không tương quan / nhân quả |
+| popup `ci` | bootstrap "dùng được cho **mọi** chỉ số", code bốc theo dòng, không caveat | giữ "mọi chỉ số" (đúng — nói về *chỉ số*), thêm `wb-alert--warning`: bốc theo **dòng** chỉ đúng khi dòng độc lập, dữ liệu giao dịch vi phạm hai chiều → cluster/block, trỏ `pr-eval` |
+| popup `mse` | "$R^2=0$ ngang với **đoán bừa** bằng trung bình" | ngang với **baseline luôn dự đoán trung bình** (đoán ngẫu nhiên còn tệ hơn) |
+| popup `logloss` | "nó **buộc** mô hình phải hiệu chỉnh" | log loss là **proper scoring rule** → **thưởng** cho hiệu chỉnh; thêm dòng "thưởng ≠ bảo đảm" (model hữu hạn/regularized/misspecified vẫn lệch) |
+| popup `posenc` | "đảo hai từ trong câu, điểm số **y hệt**" | self-attention **hoán vị-đồng biến**: đảo token thì output đổi chỗ theo, giá trị không đổi → lớp đó nhìn câu như **túi token** |
+| `f-select` | "LightGBM **tự bỏ** cột vô dụng nên cứ giữ hết" | "**ít bị** cột vô dụng làm hỏng"; thêm `wb-help`: cột nhiễu vẫn tốn thời gian + tăng phương sai, đây là **heuristic vòng đầu** |
+| `f-select` RFE | "**Chính xác nhất**, chậm nhất" | "sát nhất với chỉ số bạn tối ưu vì nó thử thật"; kết quả chỉ đúng với **đúng estimator + chỉ số + cách chia CV** đó |
+| `dl-tf` | "xếp chồng **bao nhiêu lần cũng được**" | "hình dạng không chặn việc xếp chồng"; thêm `wb-help`: cái chặn thật là compute/bộ nhớ/độ ổn định khi tối ưu |
+| `dl-tab` | "Vì sao boosting **vẫn thắng**" (không giới hạn) | giữ nguyên phần thân + thêm `wb-alert--info` "phát biểu cho đúng mức": baseline rất mạnh trên bảng **cỡ vừa**; Grinsztajn đo ~10k mẫu, không pretraining/multimodal; TabZilla cho thấy phụ thuộc bộ dữ liệu |
+| `ml-shap` | "với mô hình cây phân loại, dự đoán cuối **là** log-odds" | thang nào là **tuỳ `model_output`**: mặc định `raw` của TreeExplainer (LightGBM/XGBoost nhị phân) → log-odds; `"probability"` → thang xác suất |
+| `t-env` Kaggle | "~30 giờ GPU/tuần **được bảo đảm**", reset cố định | "hạn mức **theo tuần**, thường ~30 giờ, phụ thuộc tài nguyên sẵn có"; mốc reset ghi là "hay gặp", bảo người học **tự xem đồng hồ quota** |
+| `t-pandas` | vector hoá "nhanh cỡ **100 lần**" | "một tới hai bậc độ lớn (10–100), tuỳ phép tính" + bảo tự đo bằng `%timeit`, đừng trích con số |
+| `ml-tune` | "tuning **là** bước cho thêm 1–3%" | "**thường** cho thêm ít nhất (kinh nghiệm phổ biến trên dữ liệu bảng: cỡ 1–3%, không phải hằng số)" |
+
+`roadmap-summaries.json` sửa **đúng những chỗ bản tóm tắt tự sinh ra lỗi mà bài đầy đủ không có** —
+đây là loại lỗi nguy hiểm nhất của trang tóm tắt, vì bài gốc đúng nên không cổng nào bắt:
+
+- **`ml-loss`**: "chọn ngưỡng để tối ưu … (**PR-AUC**, F1, tiền)" → ngưỡng **không** tối ưu được
+  PR-AUC (AP tổng hợp trên toàn dải ngưỡng, đổi ngưỡng không đổi nó). Bài đầy đủ **không** mắc lỗi
+  này — nó chỉ liệt PR-AUC ở cột "ví dụ chỉ số đánh giá". Tóm tắt gộp hai cột thành một.
+- **`q-causal`**: "ngẫu nhiên hoá là thứ **duy nhất** giải được" → sai, và **tự mâu thuẫn với chính
+  point cuối của nó** (DiD / RDD / PSM / IV). Bài đầy đủ có hẳn mục "Khi không thể chạy thí nghiệm".
+- **`ml-trees`**: "500 cây **độc lập**" → "được ngẫu nhiên hoá cho **ít tương quan**" (bài đầy đủ đã
+  nói đúng ở đoạn "chỗ ví von hỏng").
+- `f-select` (×2), `dl-tf` (×2), `dl-tab` (×2), `ml-shap` (×2): đồng bộ với 12 sửa ở trên.
+
+### Đã sửa ở `roadmap.html` (qua `build-roadmap.mjs` — KHÔNG sửa tay file sinh)
+
+1. **Hero về tiếng Việt.** "Quick Roadmap / A condensed map…" → "Lộ trình rút gọn / Bản đồ cô đọng…",
+   `84 steps · 11 phases · 106.5 hours` → `84 bước · 11 chặng · 106,5 giờ` (thêm `.replace('.', ',')`).
+   Theo CLAUDE.md §11: **chỉ thanh trên và chân trang nói tiếng Anh**, hero là nội dung → tiếng Việt.
+   Chân trang giữ nguyên tiếng Anh, đúng luật. *Lưu ý: phiên (n2)/commit 3e699a5 vừa viết lại đúng
+   câu hero tiếng Anh này — nếu chủ trang cố ý muốn hero tiếng Anh thì đây là chỗ lật lại.*
+2. **Hết mập mờ thời lượng.** Review đúng: `fmt(l.mins)` là thời lượng **bài đầy đủ** lấy từ `TREE`,
+   nhưng trang hứa "nắm ý lõi trong vài giây" → người đọc không biết `45′` là của cái nào. Thêm
+   `.rm-hero__note` dưới hero + đổi chip thành `45′ · bài đầy đủ` kèm `title=`.
+3. `.rm-hero__note` dùng **`--wb-fg-muted` chứ không phải `--wb-fg-subtle`** — đo được ở sáng:
+   subtle `#a1a1aa` trên nền `#f7f7f8` chỉ ~2,6:1 (dưới AA), muted `#71717a` ~4,8:1. Đã ghi lý do
+   ngay trong CSS để phiên sau không "dọn" ngược lại.
+
+**Verify:** `gate` CHẶN xanh · `gate.test` 49/49 · `audit` nhất quán · khuyến nghị vẫn đúng **6 cái
+cũ**, không sinh cái mới. Đo trên trình duyệt (server tĩnh 8813, không mirror): không cuộn ngang ở
+375px và 1440px; mọi khối mới nằm trong cột (max-right 1249 = mép bảng, không phải khối mới);
+popup `ci` mở ra, alert mới rộng 707px trong popup; roadmap **hai chế độ sáng/tối** đều đọc được,
+chip hiện `10′ · bài đầy đủ`. *Chụp màn hình trang DS không dùng được — pane preview trả frame cũ
+(vẽ dở); đã kiểm bằng đo DOM thay thế.*
+
+### Mệnh đề của review mà kiểm ra là SAI hoặc trang đã tự phòng — ĐỪNG "sửa" theo
+
+| review nói | thực tế |
+|---|---|
+| "~1.000 mẫu lớp hiếm" trình bày như quy luật | **đã gắn nhãn sẵn**: "Đây là kinh nghiệm thực dụng, không phải ngưỡng lý thuyết — đường cong học tập của chính bạn mới là câu trả lời" (`s-lookup`) |
+| "LightGBM 300k dòng **luôn** chạy vài giây" | trang không có chữ "luôn"; câu là "chạy vài giây bằng CPU máy bạn" |
+| "Embedding + LightGBM **thường** tốt hơn cả hai" | đã có chữ "thường" ở cả hai chỗ (`dl-embed`, `dl-tab`) |
+| "AUC 0,999 gần như chắc chắn leakage" | đang là **dấu hiệu điều tra**, đúng vai: bảng triệu chứng ở `s-lookup` + "phản xạ đúng không phải vui mừng mà là *tôi vừa rò rỉ ở đâu?*" ở `d-leak` |
+| "15 thao tác pandas chiếm 90%" | đã khoanh phạm vi "số dòng bạn sẽ viết **trong cả dự án**", không phải phát biểu về pandas nói chung |
+| "Pipeline được ráp quá muộn — người học làm cleaning + feature trước khi có mô hình tinh thần về fit/transform" | **SAI**: `t-sklearn` (bài 15, chặng 1, **ngày 3** fast track) dạy đúng bốn khái niệm estimator/transformer/**Pipeline**/**ColumnTransformer**, có luôn `pipe.fit(X_train)` vs `pipe.predict_proba(X_test)` và ba lý do. `f-pipeline` ở chặng 4 là bài **ráp đầy đủ**, không phải lần giới thiệu đầu |
+| "EDA mâu thuẫn với split" | **không mâu thuẫn**: `d-eda` tách rõ **hai thì** — thì 1 trước khi chia (kiểm cấu trúc), thì 2 sau khi chia và chỉ trên train. Thứ tự `d-eda` → `d-split` vẫn là điều đáng bàn (xem dưới), nhưng "trang tự mâu thuẫn" là đọc nhầm |
+
+### Chủ trang đã chốt ba việc lớn (trong phiên) — và việc thứ ba ĐÃ LÀM XONG
+
+| việc | chốt | trạng thái |
+|---|---|---|
+| Kiến trúc `roadmap.html` | **giữ view dẫn xuất** (84 node, vẫn link "Mở bài đầy đủ →") | không đổi thêm gì ngoài mục trên |
+| Đổi thứ tự mạch chính DS | **chưa đổi, ghi backlog** | số liệu ở mục dưới, đừng tự làm |
+| Visualization | **vẽ mới cho DS RỒI port sang roadmap** | ✅ XONG, chi tiết ngay dưới |
+
+### Visualization — 17 khối mới, và roadmap giờ chạy khối THẬT
+
+**Độ phủ: 19/84 bài → 35/84 bài · 24 khối → 41 khối.** Mười bảy khối mới, mỗi khối
+nằm ở đúng bài mà review §4 chỉ ra là "thiếu":
+
+| khối | bài | nó làm được điều mà chữ không làm được |
+|---|---|---|
+| `loop10` | `s-pipeline` | 6 cạnh quay lui bấm được, mỗi cạnh nêu NGUYÊN NHÂN; bật chế độ "thẳng một mạch" để thấy bản đồ sai mà người mới mang trong đầu |
+| `scale2d` | `m-vector` | láng giềng gần ★ **đổi người** khi bật chuẩn hoá (162k/1 lần → 140k/9 lần) |
+| `baserate` | `m-bayes` | icon-array 1.000 ô; giữ recall 90%/FPR 5% rồi kéo tỉ lệ nền → precision 82% → 3,8% |
+| `bootci` | `m-infer` | kéo ρ: hai khoảng riêng ĐỨNG YÊN, khoảng Δ co gần 4×; ở mọi ρ hai khoảng vẫn chồng lấn mà Δ vẫn loại 0 |
+| `logskew` | `f-numeric` | cột cao nhất 99% → 9% (log) → 18% (cắt), và cắt thì 3 giao dịch 180/320/500 triệu về cùng một giá trị |
+| `onehot` | `f-cat` | ma trận thật của LabelEncoder / one-hot / target encoding trên cùng 6 dòng |
+| `fitdag` | `f-pipeline` | mũi tên **đổi chiều** giữa `fit` (train) và `transform` (valid/test/serve) |
+| `logit` | `ml-linear` | kéo w thì đường cong đổi (mô hình), kéo ngưỡng thì đường cong đứng yên (quyết định) |
+| `treesplit` | `ml-trees` | **cây thật**, tự tìm điểm chia theo Gini; sai-trên-train giảm 29→5 khi tăng độ sâu; 3 chế độ một cây / RF 30 cây / boosting |
+| `calib` | `ml-imb` | đường reliability lệch hẳn khỏi đường chéo **trong khi ROC-AUC không đổi** |
+| `nngraph` | `dl-backprop` | kiểm được đúng con số ở mục tự kiểm của bài: 0,25^19 = 3,6e-12; đổi ReLU hoặc bật residual thì sống |
+| `tfblock` | `dl-tf` | shape (512,768) đứng yên còn tham số/bộ nhớ tăng tuyến tính — chống lại đúng chữ "vô hạn" đã sửa ở trên |
+| `prodloop` | `pr-arch` | trục thời gian **đổi đơn vị**: 5 chặng đầu trong 26 ms, nhãn thật về sau 45 ngày |
+| `rankk` | `q-rec` | cùng 4 sản phẩm đúng: Recall@10 giữ 100% ở cả hai thứ tự, NDCG@10 thì không |
+| `causaldag` | `q-causal` | ngẫu nhiên hoá **xoá đúng một mũi tên**; chế độ hiệu chỉnh cho thấy phần nhiễu chưa đo vẫn còn |
+| `funnel` | `q-analytics` | phễu + bảng nhiệt cohort (dòng T3 rơi 100%→38%, thứ trung bình toàn công ty chôn mất) |
+| `ablation` | `th-stats` | bảng ablation của `th-design` vẽ lại **kèm KTC**: 2/4 dòng chồng lấn nên chưa kết luận được |
+
+**Hai lỗi tự bắt được khi test, đã sửa** — ghi ra vì cả hai đều là loại "khối chạy đúng
+nhưng dạy sai", cổng không bắt được:
+
+1. `scale2d` bản đầu có bộ điểm mà láng giềng gần nhất **giống nhau ở cả hai thang** — tức
+   là khối minh hoạ cho một hiện tượng nó không tạo ra. Đã dựng lại bộ điểm quanh hai ứng
+   viên cố ý (một giống về tiền, một giống về hành vi).
+2. `bootci` bản đầu có câu "kéo ρ xuống thì Δ trùm qua mốc 0" — **sai**: với σ của bài,
+   Δ không bao giờ chứa 0 ở bất kỳ ρ nào. Đã đổi luận điểm sang thứ đúng và mạnh hơn:
+   hai khoảng riêng chồng lấn ở *mọi* ρ trong khi Δ loại 0 ở *mọi* ρ.
+
+**Ba chi tiết kỹ thuật đáng nhớ:**
+
+- `treesplit` train thật nên đắt (gb 40 vòng ≈ 190 ms). Đã thêm **memo hoá theo `mode+d`**
+  và gộp sự kiện. Dùng `setTimeout` **chứ không phải `requestAnimationFrame`**: rAF bị treo
+  khi tab ẩn, đo được là bản vẽ cuối bị nuốt mất hoàn toàn.
+- `.rm-hero__note` (và mọi chữ giải thích thật) dùng `--wb-fg-muted`, **không** dùng
+  `--wb-fg-subtle`: ở sáng subtle `#a1a1aa` trên `#f7f7f8` chỉ ~2,6:1, dưới ngưỡng AA.
+- Chữ nhỏ *trong SVG* thì vẫn dùng `--wb-fg-subtle` như 24 khối cũ — đúng quy ước sẵn có,
+  và hợp lệ vì §10 bắt mọi thông tin trong SVG phải đọc được ở `.ds-viz__alt`.
+
+**Port sang `roadmap.html` — không sinh bản sao code.** `build-roadmap.mjs` thêm ba hàm
+`vizJs()` / `vizCss()` / `vizOfLesson()` **trích** mục 6 và các rule CSS `.ds-viz|ctrl|seg|key|
+costm|fam|maptable|wf` thẳng từ `data-science-roadmap.html` lúc build, rồi drawer gọi
+`initViz`. Nên CLAUDE.md §2 luật 3 vẫn đúng: code khối chỉ có MỘT bản, ở trang chính — sửa
+ở đó rồi chạy lại `node tools/build-roadmap.mjs`.
+
+- **`plan14` bị loại có chủ ý** (`VIZ_SKIP`): nó đọc `TREE`/`DAYS`/`byId`/`sumMins` của trang
+  chính. Thêm khối mới mà nó đọc dữ liệu trang chính thì phải thêm tên vào `VIZ_SKIP`.
+- Tám token `--ds-*` mà CSS trích cần được khai lại trong `:root` của roadmap, cùng giá trị;
+  `--ds-fs` cố định **15px** vì drawer không có cột bài để giãn theo.
+- Trường `viz` dạng chữ trong `roadmap-summaries.json` **không bỏ đi**: bài nào có khối thật
+  thì nó tụt xuống làm chú thích (`.rm-vizcap`), bài nào chưa có thì vẫn hiện như cũ.
+- roadmap.html: 222 KB → **409 KB** (mang theo mục 6 + CSS khối).
+
+**Verify:** 17/17 khối mới mount + có `.ds-viz__alt` + có `seeBlock`; không cuộn ngang ở
+**375px và 1440px** cho cả 17 bài; màu chữ SVG lật đúng theo token ở cả sáng lẫn tối;
+roadmap drawer chạy khối thật (kiểm 10 bài, gồm bài nhiều khối như `q-forecast` 3 khối và
+`pr-eval` 2 khối), không cuộn ngang ở 375px. `gate` CHẶN xanh · `gate.test` **49/49** ·
+`audit` nhất quán · khuyến nghị vẫn đúng **5 cái G-FWD cũ**, không sinh cái mới.
+
+*Cảnh báo cho phiên sau:* **chụp màn hình trang DS qua pane preview không tin được** — nó
+trả frame vẽ dở/cũ nhiều lần trong phiên này (trang nặng ~1 MB). Kiểm bằng **đo DOM**
+(`scrollWidth` vs `clientWidth`, `getComputedStyle`, đọc `textContent` của readout/alt) thì
+ổn định. Trang roadmap nhẹ hơn nên chụp được bình thường.
+
+### Hai việc chủ trang chốt HOÃN — đừng tự làm lại
+
+1. **Đổi thứ tự mạch chính** (review §2). Số liệu kiểm ra đúng: framing (`d-framing`) đứng sau
+   **22,4 giờ** (3,3h dẫn nhập + 12,2h công cụ + 6,9h toán); DL chặn đường tới product **11,25 giờ**;
+   `d-split` đứng sau `d-eda`/`d-clean`. Nhưng chủ trang **vừa duyệt và làm hai move chặng ở phiên
+   (m2)** (product lên trước họ-bài-toán), nên đây không phải chỗ tự ý xáo tiếp. Cũng lưu ý: 5 khuyến
+   nghị `G-FWD` còn lại **chính là** phần "phụ thuộc ngược" mà review nêu — chúng là bảng theo dõi
+   đang mở, không phải lỗi mới.
+2. **Đổi định nghĩa `roadmap.html`** (review §5) từ *view dẫn xuất* thành *giáo trình độc lập
+   25–35 node*: mệnh đề của review **đúng** (hiện vẫn 84 node / 11 chặng / 106,5 giờ, navbar +
+   brand trỏ về DS, mỗi drawer có "Mở bài đầy đủ →"), nhưng chủ trang **chốt giữ view dẫn xuất**.
+   Đừng revisit — kiến trúc "nội dung đầy đủ chỉ ở trang chính" mà phiên (n2) tự khai vẫn đứng.
+
 ## Phiên 2026-08-05 (n2) — trang Roadmap học nhanh (roadmap.html) — XONG + đã push
 
 Trang HTML thứ hai, **học theo style khác** (chủ trang giao; đã bảo "commit + push luôn, không
