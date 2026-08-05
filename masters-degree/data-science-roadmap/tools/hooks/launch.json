@@ -1,0 +1,43 @@
+{
+  "_doc": [
+    "NGUỒN của cấu hình preview cho trang này. File THẬT mà Claude Code đọc là",
+    ".claude/launch.json ở gốc repo — mà .claude/ nằm trong .gitignore, nên nó KHÔNG theo",
+    "repo về máy mới. Đây là bản được git theo dõi; tools/install-hooks.sh trộn nó sang.",
+    "Cùng khuôn với claude-settings.json bên cạnh, và cùng lý do.",
+    "",
+    "Hai chỗ KHÔNG được viết cứng, vì chúng khác nhau ở từng máy:",
+    "  __REPO_ROOT__  install-hooks.sh thay bằng đường dẫn thật lúc cài.",
+    "  python3        lấy từ PATH, không trỏ /opt/homebrew/bin/python3.11 như bản cũ —",
+    "                 đường dẫn Homebrew đó chỉ đúng trên máy chủ trang.",
+    "",
+    "KHÔNG dùng `python3 -m http.server`. Lý do đo được (2026-08-05): tiến trình preview",
+    "chạy trong sandbox mà `os.getcwd()` bị TỪ CHỐI hẳn — không phải vì đứng sai thư mục,",
+    "nên `cd` hay `os.chdir()` đều không cứu. Ba chỗ lần lượt nổ, sửa hết cả ba:",
+    "  1. `-m http.server` → argparse tính `default=os.getcwd()` NGAY lúc dựng parser,",
+     "     nên truyền --directory cũng vô ích. → dựng server bằng tay, không qua argparse.",
+    "  2. `python -c` để sys.path[0] = cwd, nên bước IMPORT đã stat thư mục cấm và ném.",
+     "     → cờ -I (isolated) bỏ cwd khỏi sys.path; ở đây chỉ dùng thư viện chuẩn.",
+    "  3. SimpleHTTPRequestHandler.__init__ gọi os.getcwd() MỖI REQUEST (Python 3.9), nên",
+     "     server khởi động được rồi vẫn 500 mọi request. → functools.partial(..., directory=)",
+     "     truyền thẳng thư mục gốc, handler không bao giờ phải hỏi cwd.",
+    "",
+    "autoPort: thư mục này hay có nhiều phiên chạy song song, cổng cố định 8805 làm",
+    "phiên thứ hai không mở được preview. ${PORT} để tool tự cấp cổng trống.",
+    "",
+    "Serve THẲNG từ gốc repo (không mirror sang scratchpad): trang nằm ở",
+    "/masters-degree/data-science-roadmap/data-science-roadmap.html"
+  ],
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "ds-review",
+      "autoPort": true,
+      "runtimeExecutable": "/bin/sh",
+      "runtimeArgs": [
+        "-c",
+        "exec \"$(command -v python3 || command -v python || echo /usr/bin/python3)\" -I -c 'import sys,functools,http.server,socketserver\nH=functools.partial(http.server.SimpleHTTPRequestHandler,directory=sys.argv[1])\nsocketserver.TCPServer.allow_reuse_address=True\nsocketserver.TCPServer((\"127.0.0.1\",int(sys.argv[2])),H).serve_forever()' __REPO_ROOT__ \"${PORT:-8805}\""
+      ],
+      "port": 8805
+    }
+  ]
+}

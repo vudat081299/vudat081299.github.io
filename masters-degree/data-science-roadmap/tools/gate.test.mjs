@@ -145,6 +145,14 @@ const CASES = [
     once(h, '<template data-node="m-bayes">', '<template data-node="m-bayes">' + DUMPY)],
   ['G-MEASURE', 'thêm max-width cứng', h =>
     once(h, '</style>', '.ds-test-mep-thu-ba { max-width: 500px; }\n</style>')],
+  /* Ba dòng, không phải một: dòng đầu là thứ PHẢI nổ, hai dòng sau là hai ngoại lệ mà
+     §0.6 cho phép — nhích quang học ≤5px, và padding (hình dạng component, không phải
+     nhịp trang). Nếu cổng bắt luôn hai dòng kia thì ca "im" ở dưới sẽ không đủ để lộ ra,
+     vì ở đó không có margin px trần nào cả. */
+  ['G-SPACING', 'margin dọc viết px trần trong <style>', h =>
+    once(h, '</style>', '.ds-test-nhip { margin-bottom: 17px; }\n'
+      + '.ds-test-nhich { margin-top: 3px; }\n'
+      + '.ds-test-pad { padding: 12px 16px; margin: 0 12px; }\n</style>')],
   ['G-VIZ', 'bài không còn gì để nhìn', h => stripVisuals(h, 'm-bayes')],
   ['G-TOC-STRUCT', 'đổi tên một bài trong TREE', h =>
     once(h, "t:'Bayes & likelihood'", "t:'Bayes & likelihood (đổi tên)'")],

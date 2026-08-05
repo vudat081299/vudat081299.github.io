@@ -243,7 +243,7 @@ nào để mở trình duyệt kiểm lại JS.
 tên class/token bằng chữ trần (`wb-steps`, không phải `` `wb-steps` ``). Muốn dùng backtick
 thì đưa chú thích ra ngoài template, thành comment JS phía trên hàm.
 
-**Chỉ nhắc, người quyết định — 10 cổng:**
+**Chỉ nhắc, người quyết định — 11 cổng:**
 
 | cổng | nhắc điều gì |
 |---|---|
@@ -252,6 +252,7 @@ thì đưa chú thích ra ngoài template, thành comment JS phía trên hàm.
 | `G-DUMP` | đoạn văn đọc lại một bảng số thay vì nói ý |
 | `G-VIZ` | bài chưa có hình / bảng / code nào để nhìn |
 | `G-MEASURE` | có `max-width` cứng làm trôi khổ chữ |
+| `G-SPACING` | `margin` dọc còn viết px trần thay vì trỏ vào một bậc `--ds-sp-*` ([docs/design.md](docs/design.md) §0.6) |
 | `G-FWD` | (mức thân bài) dùng khái niệm trước bài dạy nó |
 | `G-NEXT` | bài sau đã đổi → đọc lại câu "bài sau…" trong `PAYOFF` của những bài nó nêu tên |
 | `G-HOOK` | ba lớp tự động ở §3 đã được cài chưa |
@@ -261,7 +262,8 @@ thì đưa chú thích ra ngoài template, thành comment JS phía trên hàm.
 
 **Thoát cửa** khi cổng bắt sai một chỗ cố ý: `<!-- gate:main -->` (tiêu đề trông giống
 nhánh phụ nhưng là mạch chính) · `<!-- gate:long: lý do -->` (bài dài đã soát và dài là
-đúng) · `allowEarly` trong `concepts.json` (nhắc tên để định vị). Cả ba **bắt buộc kèm lý
+đúng) · `/* gate:sp: lý do */` trong `<style>` (margin dọc buộc phải là px trần) ·
+`allowEarly` trong `concepts.json` (nhắc tên để định vị). Cả bốn **bắt buộc kèm lý
 do nói vì sao cổng bắt sai**, không phải "đã xem rồi". Lỗi CHẶN thật mà chưa sửa thì vào
 `waivers.json` — nó in lại mỗi lần chạy, và đó là điểm khác biệt. Bảng đầy đủ:
 [docs/editing.md](docs/editing.md#việc-6--thêm-một-cổng-mới-vào-gatemjs).

@@ -217,6 +217,7 @@ const GATES = [
   ['G-DUMP',       'nhắc', 'đổ dữ liệu thành câu thay vì nói ý'],
   ['G-VIZ',        'nhắc', 'bài chưa có hình / bảng / code nào để nhìn'],
   ['G-MEASURE',    'nhắc', 'có max-width cứng làm trôi khổ chữ'],
+  ['G-SPACING',    'nhắc', 'margin dọc còn viết px trần, chưa trỏ vào thang --ds-sp-*'],
   ['G-NEXT',       'nhắc', 'bài sau đã đổi → đọc lại câu "bài sau…" trong PAYOFF'],
   ['G-HOOK',       'nhắc', 'ba lớp hook tự động đã được cài chưa'],
   ['G-DOC',        'nhắc', 'mọi cổng trong code đều có tên trong CLAUDE.md'],
@@ -534,6 +535,46 @@ const cssBlock = src.slice(src.indexOf('<style>'), src.indexOf('</style>'));
 for (const m of cssBlock.matchAll(/^\s*(\.[a-z0-9_-]+[^{\n]*)\{[^}\n]*max-width:\s*(\d+(?:px|ch))/gim)) {
   if (/--ds-measure|ds-mathmodal|ds-drawer|ds-viz svg/.test(m[1])) continue;
   W(`G-MEASURE: "${m[1].trim()}" đặt max-width cứng ${m[2]} — dùng var(--ds-measure) hoặc để nó chạm mép cột`);
+}
+
+/* --- G-SPACING (khuyến nghị): margin dọc còn viết px trần ----------------
+   docs/design.md §0.6 chốt ranh giới bằng đúng một câu: "`margin` giữa hai khối anh
+   em thì LÊN thang; `padding` trong lòng một component thì KHÔNG" — và nói luôn cách
+   tự kiểm: grep margin dọc còn px trần. Đây là cái grep đó, thành cổng.
+
+   Vì sao đáng có: `G-MEASURE` canh `max-width` cứng, nhưng KHÔNG cổng nào bắt được
+   "vừa viết `margin-bottom: 17px` tại chỗ" — mà đó chính là cách thang khoảng cách
+   trôi trở lại 9 nhịp như trước khi token hoá. Nợ này đã nằm trong HANDOFF từ phiên
+   (k); chạy thử lần đầu ra 9 chỗ, và cả 9 đều rơi ĐÚNG vào một bậc có sẵn (4/6/8/14)
+   — tức là drift thật, không phải cổng bắt sai.
+
+   Hai thứ KHÔNG bắt, vì §0.6 cho phép có chủ ý:
+     · |giá trị| ≤ 5px — nhích quang học bên trong một component (bù đường viền icon…).
+     · `padding`, và margin NGANG — đó là hình dạng của component, không phải nhịp trang.
+   Thoát cửa khi thật sự cần px trần: viết `/* gate:sp: lý do *␘/` ngay trên dòng đó. */
+{
+  const styleStart = src.indexOf('<style>') + 7;
+  const before = src.slice(0, styleStart).split('\n').length;
+  const lines = src.slice(styleStart, src.indexOf('</style>')).split('\n');
+  let sel = '';
+  lines.forEach((ln, i) => {
+    const s = ln.match(/^\s*([^{}]+)\{/);
+    if (s) sel = s[1].trim();
+    if (/gate:sp\b/.test(ln) || /gate:sp\b/.test(lines[i - 1] || '')) return;
+    for (const m of ln.matchAll(/(?:^|[;{\s])margin(-top|-bottom)?\s*:\s*([^;}]+)/g)) {
+      const val = m[2].trim();
+      if (!/\dpx/.test(val)) continue;
+      // shorthand `margin`: trục dọc là ô 1 và 3 (1 nếu chỉ có 1–2 ô)
+      const parts = val.split(/\s+/);
+      const vert = m[1] ? [val]
+        : (parts.length >= 3 ? [parts[0], parts[2]] : [parts[0]]);
+      const bad = vert.filter(v => /px$/.test(v || '') && Math.abs(parseFloat(v)) > 5);
+      if (bad.length) {
+        W(`G-SPACING: "${sel.slice(0, 48)}" (dòng ${before + i}) đặt margin dọc ${bad.join(' / ')} trần`
+        + ' — trỏ vào một bậc --ds-sp-* (docs/design.md §0.6)');
+      }
+    }
+  });
 }
 
 /* --- G-PLAN: lịch học nhất quán -----------------------------------------
