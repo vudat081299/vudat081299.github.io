@@ -794,6 +794,8 @@
   #main .wb-steps__item {
     display: grid; grid-template-columns: var(--wb-steps-size) minmax(0, 1fr);
     column-gap: var(--ds-sp-text); row-gap: 0; padding-bottom: var(--ds-sp-block);
+    margin-bottom: 0; /* huỷ margin-bottom chung của <li> trong .ds-prose (§ ngay dưới) —
+      khoảng cách giữa hai bước chỉ do padding-bottom quyết định, không cộng dồn thêm. */
   }
   #main .wb-steps__item:last-child { padding-bottom: 0; }
   /* Đường nối dùng `--wb-border-strong`, không dùng `--wb-border` của kit. Lý do: đường này
@@ -801,8 +803,17 @@
      chuỗi", tức nó mang nghĩa, còn hairline bảng chỉ ngăn cách. Ở chế độ sáng, mức của kit
      ra 228,228,231 trên nền 247,247,248 — sát ngưỡng thấy được, nên cái nghĩa đó biến mất
      đúng ở chế độ mà chủ trang nhận xét là "hơi kì". `--wb-border-strong` là bậc kế tiếp
-     có sẵn trong kit (không phải một màu tự pha), và nó tự đảo đúng chiều ở chế độ tối. */
-  #main .wb-steps__item::before { background: var(--wb-border-strong); }
+     có sẵn trong kit (không phải một màu tự pha), và nó tự đảo đúng chiều ở chế độ tối.
+     `top`/`bottom` thu hẹp vào trong `var(--ds-sp-tight)` mỗi đầu: mặc định kit vẽ đường
+     chạm thẳng vào mốc kế tiếp (top: --wb-steps-size; bottom: 0) — sát ở trang chủ (.ds-map/
+     .ds-outcomes/.ds-plan14, không nằm trong .ds-prose nên không có margin-bottom của <li>
+     để hở). Bên trong một bài, đường TRÔNG như có hở là vì margin-bottom đó, không phải vì
+     component tự có hở — hai chỗ vẽ khác hình cho cùng một component. Giờ hở là một phần của
+     chính đường nối, giống nhau ở mọi nơi dùng wb-steps. */
+  #main .wb-steps__item::before {
+    background: var(--wb-border-strong);
+    top: calc(var(--wb-steps-size) + var(--ds-sp-tight)); bottom: var(--ds-sp-tight);
+  }
   #main .wb-steps__marker { grid-column: 1; grid-row: 1; align-self: center; }
   #main .wb-steps__content { display: contents; }
   #main .wb-steps__content > * { grid-column: 2; min-width: 0; }
@@ -936,7 +947,7 @@
      thành `Data Science │ Roadmap`, cùng ngôn ngữ hình với `Notes │ 3` ở bên phải. */
   .ds-brand__sub {
     font-weight: 500; font-size: .8em; color: var(--wb-fg-subtle); letter-spacing: 0;
-    margin-left: 9px; padding-left: 9px; border-left: var(--wb-bw) solid var(--wb-border);
+    margin-left: 6px; padding-left: 6px; border-left: var(--wb-bw) solid var(--wb-border);
   }
   /* "Roadmap" là link sang trang học nhanh — cùng dáng phụ đề, thêm phản hồi hover. */
   .ds-brand__road { text-decoration: none; cursor: pointer; }
@@ -10707,8 +10718,14 @@ function setLevel(id, lvl) {
 /* ---- Pháo giấy: chúc mừng khi đạt một bài -------------------------------------------
    Một <canvas> phủ toàn màn hình ở z-index cao hơn MỌI lớp (popup 100/101, dock 90),
    pointer-events:none nên không chặn thao tác. Giấy rơi từ trên xuống bằng trọng lực +
-   trôi ngang + xoay, ~2,3s rồi tự gỡ. Tôn trọng prefers-reduced-motion: người tắt chuyển
-   động thì bỏ hẳn hiệu ứng. Vanilla, không thư viện — trang là một file HTML tự chứa. */
+   trôi ngang + xoay. Hai hình: vuông (`sq`) và sợi/streamer dài (`rib`), xen kẽ — giống
+   hộp pháo giấy thật chứ không chỉ một loại mảnh. Tôn trọng prefers-reduced-motion:
+   người tắt chuyển động thì bỏ hẳn hiệu ứng. Vanilla, không thư viện — trang là một file
+   HTML tự chứa.
+   Mỗi mảnh có `spawn` riêng (không sinh ra hết một lượt ở t=0): lấy trung bình HAI số
+   ngẫu nhiên (xấp xỉ phân phối tam giác) dồn thời điểm sinh vào GIỮA cửa sổ SPAWN_WINDOW,
+   thưa dần về hai đầu — số mảnh đang rơi trên màn hình vì vậy tăng dần, đạt đỉnh, rồi
+   giảm dần trước khi tắt hẳn, thay vì bật hết 140 mảnh cùng lúc rồi cùng mờ. */
 let confettiRAF = 0;
 function celebrate() {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -10725,28 +10742,41 @@ function celebrate() {
   const dpr = Math.min(devicePixelRatio || 1, 2);
   cv.width = innerWidth * dpr; cv.height = innerHeight * dpr;
 
-  const colors = ['#f94144', '#f3722c', '#f9c74f', '#90be6d', '#43aa8b', '#577590', '#c77dff'];
-  const g = 0.16 * dpr, DUR = 2300;
-  const bits = Array.from({ length: 140 }, (_, i) => ({
-    x: Math.random() * cv.width,
-    y: (-0.2 - Math.random() * 0.6) * cv.height,
-    vx: (Math.random() - 0.5) * 1.6 * dpr,
-    vy: (1 + Math.random() * 2.2) * dpr,
-    w: (6 + Math.random() * 6) * dpr,
-    h: (8 + Math.random() * 8) * dpr,
-    rot: Math.random() * Math.PI, vr: (Math.random() - 0.5) * 0.3,
-    color: colors[i % colors.length],
-  }));
+  // Bảng màu lễ hội tươi hơn bản cũ: bỏ xanh xám mờ (#577590), thêm hồng — cả bảy màu đều
+  // là màu tươi/sáng, giống dải màu pháo giấy 🎉🎊 thật.
+  const colors = ['#ff4d6d', '#ff9f1c', '#ffd60a', '#8ac926', '#06d6a0', '#4cc9f0', '#c77dff', '#ff70a6'];
+  // Tốc độ rơi chậm hơn bản gốc 75% (hai lần giảm 50% liên tiếp theo yêu cầu): vy và g
+  // đều còn 1/4 giá trị gốc. LIFE (vòng đời mỗi mảnh, tính từ lúc SINH ra) tăng theo để
+  // mảnh vẫn rơi hết quãng đường rồi mới mờ, không "biến mất giữa chừng".
+  const g = 0.04 * dpr;
+  const LIFE = 4800, FADE = 800, SPAWN_WINDOW = 1400;
+  const bits = Array.from({ length: 140 }, (_, i) => {
+    const ribbon = i % 2 === 0;
+    return {
+      spawn: ((Math.random() + Math.random()) / 2) * SPAWN_WINDOW,
+      x: Math.random() * cv.width,
+      y: (-0.2 - Math.random() * 0.6) * cv.height,
+      vx: (Math.random() - 0.5) * 1.6 * dpr,
+      vy: (0.25 + Math.random() * 0.55) * dpr,
+      w: (ribbon ? 3 + Math.random() * 2 : 6 + Math.random() * 6) * dpr,
+      h: (ribbon ? 16 + Math.random() * 10 : 8 + Math.random() * 8) * dpr,
+      rot: Math.random() * Math.PI, vr: (Math.random() - 0.5) * 0.3,
+      color: colors[i % colors.length],
+    };
+  });
 
   const start = performance.now();
   (function frame(now) {
     const t = now - start;
     ctx.clearRect(0, 0, cv.width, cv.height);
     let alive = 0;
-    const fade = t > DUR - 600 ? Math.max(0, (DUR - t) / 600) : 1;
     for (const b of bits) {
+      const age = t - b.spawn;
+      if (age < 0) { alive++; continue; }     // chưa tới lượt sinh — chờ, chưa vẽ
+      if (age >= LIFE) continue;              // đã hết vòng đời — không vẽ, không tính alive
+      alive++;
       b.vy += g; b.x += b.vx; b.y += b.vy; b.rot += b.vr;
-      if (b.y < cv.height + 40 * dpr) alive++;
+      const fade = age > LIFE - FADE ? Math.max(0, (LIFE - age) / FADE) : 1;
       ctx.save();
       ctx.globalAlpha = fade;
       ctx.translate(b.x, b.y); ctx.rotate(b.rot);
@@ -10754,7 +10784,7 @@ function celebrate() {
       ctx.fillRect(-b.w / 2, -b.h / 2, b.w, b.h);
       ctx.restore();
     }
-    if (t < DUR && alive) confettiRAF = requestAnimationFrame(frame);
+    if (alive) confettiRAF = requestAnimationFrame(frame);
     else { cv.remove(); confettiRAF = 0; }
   })(start);
 }
