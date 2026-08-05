@@ -944,10 +944,16 @@
   .ds-brand { font-weight: 700; letter-spacing: -.01em; display: inline-flex; align-items: center; gap: 0; }
   /* Phụ đề canh GIỮA, không canh chân chữ — cùng luật với ba ô kia. Canh giữa hai cỡ
      chữ khác nhau chỉ đọc đúng khi chúng là hai thứ tách biệt, nên có vạch ngăn: đọc
-     thành `Data Science │ Roadmap`, cùng ngôn ngữ hình với `Notes │ 3` ở bên phải. */
+     thành `Data Science │ Roadmap`, cùng ngôn ngữ hình với `Notes │ 3` ở bên phải.
+     "Data Science" và "Roadmap" là hai <a> RIÊNG, cả hai là con trực tiếp của
+     `.wb-navbar` — nên khoảng cách bên TRÁI vạch "│" không chỉ là margin-left ở đây,
+     nó còn cộng thêm `gap: 16px` của chính `.wb-navbar` (kit, §navbar). Muốn vạch nằm
+     ĐÚNG GIỮA hai chữ (padding-left bên phải = 6px) thì margin-left phải là số ÂM để
+     trừ ngược cái gap đó: 6 (khoảng muốn có) − 16 (gap có sẵn) = −10px. Đổi gap của
+     `.wb-navbar` thì phải tính lại số −10 này theo cùng công thức. */
   .ds-brand__sub {
     font-weight: 500; font-size: .8em; color: var(--wb-fg-subtle); letter-spacing: 0;
-    margin-left: 6px; padding-left: 6px; border-left: var(--wb-bw) solid var(--wb-border);
+    margin-left: -10px; padding-left: 6px; border-left: var(--wb-bw) solid var(--wb-border);
   }
   /* "Roadmap" là link sang trang học nhanh — cùng dáng phụ đề, thêm phản hồi hover. */
   .ds-brand__road { text-decoration: none; cursor: pointer; }
@@ -978,12 +984,15 @@
      Sáng/Tối, không có "theo hệ thống". */
   .ds-theme {
     box-sizing: border-box; height: var(--ds-navctl);
-    display: inline-flex; align-items: center; gap: 7px; line-height: 1;
+    display: inline-flex; align-items: center; justify-content: center; gap: 7px; line-height: 1;
     font-family: inherit; font-size: var(--wb-text-help); font-weight: 550; cursor: pointer;
     padding: 0 12px; border-radius: var(--wb-radius-pill);
     border: var(--wb-bw) solid var(--wb-border); background: var(--wb-surface);
     color: var(--wb-fg); box-shadow: var(--wb-shadow-sm);
   }
+  /* justify-content:center bắt buộc vì mobile (dưới) ép width về đúng --ds-navctl (30px)
+     hình vuông và ẩn nhãn — chỉ còn một icon-con (emoji) trong hộp flex, mặc định
+     flex-start dồn nó về mép trái, lệch tâm nút. */
   .ds-theme:hover { border-color: var(--wb-border-strong); }
   .ds-theme:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
   .ds-theme__emoji { font-size: 14px; }
@@ -10722,10 +10731,17 @@ function setLevel(id, lvl) {
    hộp pháo giấy thật chứ không chỉ một loại mảnh. Tôn trọng prefers-reduced-motion:
    người tắt chuyển động thì bỏ hẳn hiệu ứng. Vanilla, không thư viện — trang là một file
    HTML tự chứa.
-   Mỗi mảnh có `spawn` riêng (không sinh ra hết một lượt ở t=0): lấy trung bình HAI số
-   ngẫu nhiên (xấp xỉ phân phối tam giác) dồn thời điểm sinh vào GIỮA cửa sổ SPAWN_WINDOW,
-   thưa dần về hai đầu — số mảnh đang rơi trên màn hình vì vậy tăng dần, đạt đỉnh, rồi
-   giảm dần trước khi tắt hẳn, thay vì bật hết 140 mảnh cùng lúc rồi cùng mờ. */
+   Mỗi mảnh có `spawn` riêng (không sinh ra hết một lượt ở t=0). Đây là đường ease-in-out
+   của MẬT ĐỘ sinh mảnh theo thời gian — thưa ở t=0, dày nhất ở SPAWN_PEAK (0,3s), rồi
+   thưa dần tới hết SPAWN_WINDOW — KHÔNG phải easing áp lên chuyển động rơi: mỗi mảnh vẫn
+   rơi bằng vật lý bình thường (trọng lực cộng dồn mỗi khung hình, một đường thẳng trong
+   không gian vận tốc). Công thức `triangularSpawn` là nghịch đảo CDF của phân phối tam
+   giác LỆCH (min 0, mode SPAWN_PEAK, max SPAWN_WINDOW) — mode lệch sớm về 0,3s nên pha
+   tăng nhanh rồi pha giảm dài hơn, đúng dáng pháo giấy thật (bùng nhanh, rơi rớt kéo dài). */
+function triangularSpawn(total, peak) {
+  const u = Math.random(), fc = peak / total;
+  return u < fc ? Math.sqrt(u * total * peak) : total - Math.sqrt((1 - u) * total * (total - peak));
+}
 let confettiRAF = 0;
 function celebrate() {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -10749,11 +10765,11 @@ function celebrate() {
   // đều còn 1/4 giá trị gốc. LIFE (vòng đời mỗi mảnh, tính từ lúc SINH ra) tăng theo để
   // mảnh vẫn rơi hết quãng đường rồi mới mờ, không "biến mất giữa chừng".
   const g = 0.04 * dpr;
-  const LIFE = 4800, FADE = 800, SPAWN_WINDOW = 1400;
+  const LIFE = 4800, FADE = 800, SPAWN_WINDOW = 1400, SPAWN_PEAK = 300;
   const bits = Array.from({ length: 140 }, (_, i) => {
     const ribbon = i % 2 === 0;
     return {
-      spawn: ((Math.random() + Math.random()) / 2) * SPAWN_WINDOW,
+      spawn: triangularSpawn(SPAWN_WINDOW, SPAWN_PEAK),
       x: Math.random() * cv.width,
       y: (-0.2 - Math.random() * 0.6) * cv.height,
       vx: (Math.random() - 0.5) * 1.6 * dpr,
