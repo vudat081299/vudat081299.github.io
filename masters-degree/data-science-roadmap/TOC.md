@@ -1,6 +1,6 @@
 # TOC — data-science-roadmap.html
 
-<!-- toc-signature: c15e0f61-84b11c -->
+<!-- toc-signature: 8ac45863-84b11c -->
 
 > **SINH TỰ ĐỘNG — đừng sửa tay.** Nguồn sự thật là `data-science-roadmap.html`.
 > Sinh lại: `node tools/gate.mjs --write`. Gate chặn commit nếu file này lệch HTML.
@@ -16,17 +16,18 @@ Cột: **ưu tiên** bắt buộc/nên biết/định vị · **r/x/d** phút đ
 
 ## 0 · Bắt đầu từ đây
 
-**Xong chặng làm được gì.** Hiểu Data Science là gì (và khác gì Analytics/Thống kê/ML/AI), nắm bộ từ vựng lõi, rồi có sẵn hai tấm bản đồ để định vị mọi thứ học về sau: 10 bước của một product AI, và các họ bài toán Data Science.
+**Xong chặng làm được gì.** Hiểu Data Science là gì (và khác gì Analytics/Thống kê/ML/AI), nắm bộ từ vựng lõi, có hai tấm bản đồ để định vị mọi thứ học về sau — và ra khỏi chặng với một trang đề bài của chính bạn: dự đoán gì, tại thời điểm nào, sai thì tốn bao nhiêu tiền.
 
 | id | bài | ưu tiên | r/x/d | F | T | A | dòng |
 |---|---|---|---|---|---|---|---|
-| `s-how` | Trang này dùng thế nào | bắt buộc | 10/0/0 | ✓ | 1 |  | 2891–2994 |
-| `s-intro` | ★ Data Science là gì? — và bộ từ vựng tối thiểu | bắt buộc | 30/10/0 | ✓ | 1 |  | 2995–3114 |
-| `s-pipeline` | Một product AI thật gồm 10 bước | bắt buộc | 35/0/0 | ✓ | 1 |  | 3115–3170 |
-| `s-families` | ★ Bản đồ các họ bài toán Data Science | bắt buộc | 35/10/0 | ✓ | 1 |  | 3171–3216 |
-| `s-lookup` | Tra ngược: “vấn đề này thuộc bước nào?” | bắt buộc | 20/0/0 | ✓ | 1 |  | 3217–3271 |
-| `s-plan8w` | ★ Lộ trình chuẩn 6–8 tuần | bắt buộc | 20/0/5 | ✓ | 1 |  | 3272–3323 |
-| `s-plan14` | Fast track 14 ngày (bản rút gọn) | bắt buộc | 15/0/5 | ✓ | 1 |  | 3324–3378 |
+| `s-how` | Trang này dùng thế nào | bắt buộc | 10/0/0 | ✓ | 1 |  | 2897–3000 |
+| `s-intro` | ★ Data Science là gì? — và bộ từ vựng tối thiểu | bắt buộc | 30/10/0 | ✓ | 1 |  | 3001–3120 |
+| `s-pipeline` | Một product AI thật gồm 10 bước | bắt buộc | 35/0/0 | ✓ | 1 |  | 3121–3176 |
+| `s-families` | ★ Bản đồ các họ bài toán Data Science | bắt buộc | 35/10/0 | ✓ | 1 |  | 3177–3222 |
+| `s-lookup` | Tra ngược: “vấn đề này thuộc bước nào?” | bắt buộc | 20/0/0 | ✓ | 1 |  | 3223–3277 |
+| `s-plan8w` | ★ Lộ trình chuẩn 6–8 tuần | bắt buộc | 20/0/5 | ✓ | 1 |  | 3278–3329 |
+| `s-plan14` | Fast track 14 ngày (bản rút gọn) | bắt buộc | 15/0/5 | ✓ | 1 |  | 3330–3384 |
+| `d-framing` | Đóng khung bài toán — bước hay bị bỏ | bắt buộc | 30/0/30 | ✓ | 1 | 3 | 3385–3427 |
 
 - **`s-how`** — Cách đọc trang này: hai lộ trình, ba nhãn ưu tiên, toán nằm trong popup, thông tin phụ nằm trong ngăn bên phải.
   - dẫn tới: Bài sau bắt đầu từ con số 0: Data Science là gì, và bộ từ vựng mà mọi bài sau đều dùng.
@@ -44,7 +45,9 @@ Cột: **ưu tiên** bắt buộc/nên biết/định vị · **r/x/d** phút đ
 - **`s-plan8w`** — Lộ trình chuẩn 8 tuần, mỗi tuần một sản phẩm kiểm chứng được, kèm sơ đồ phụ thuộc giữa các chặng.
   - dẫn tới: Bài sau là bản rút gọn của chính lộ trình đó, cho người chỉ có hai tuần.
 - **`s-plan14`** — Fast track 14 ngày, và danh sách rõ ràng những phần nó chỉ giới thiệu chứ chưa dạy hết.
-  - dẫn tới: Hết phần dẫn nhập. Bài sau bắt tay làm thật: dựng chỗ làm việc trên cloud.
+  - dẫn tới: Hết phần dẫn nhập lộ trình. Bài cuối chặng là việc đầu tiên bạn làm bằng đầu chứ không bằng máy: viết ra đề bài của chính mình.
+- **`d-framing`** — Một trang đề bài: dự đoán gì, tại thời điểm nào, sai thì tốn bao nhiêu tiền.
+  - dẫn tới: Có tờ đề bài rồi, chặng sau mới dựng chỗ làm việc và học gõ — công cụ để phục vụ đề bài đó, không phải ngược lại.
 
 ## 1 · Công cụ — biết gõ trước khi biết nghĩ
 
@@ -52,14 +55,14 @@ Cột: **ưu tiên** bắt buộc/nên biết/định vị · **r/x/d** phút đ
 
 | id | bài | ưu tiên | r/x/d | F | T | A | dòng |
 |---|---|---|---|---|---|---|---|
-| `t-env` | ★ Chỗ làm việc: cloud-first, local là dự phòng | bắt buộc | 25/35/30 | ✓ | 1 |  | 3383–3469 |
-| `t-online` | ★ Làm cả dự án trên trình duyệt (máy yếu) | bắt buộc | 25/20/20 | ✓ | 1 |  | 3470–3583 |
-| `t-colab` | Google Colab — làm được gì, khi nào dùng | bắt buộc | 20/25/0 | ✓ | 1 |  | 3584–3705 |
-| `t-ai` | ★ Làm việc với AI coding assistant | bắt buộc | 30/30/15 | ✓ | 1 |  | 3706–3809 |
-| `t-pandas` | pandas — 15 thao tác chiếm 90% việc | bắt buộc | 50/100/20 | ✓ | 1 |  | 3810–3906 |
-| `t-sql` | SQL — lấy dữ liệu ra khỏi cơ sở dữ liệu | bắt buộc | 25/35/15 | ✓ | 1 |  | 3907–4032 |
-| `t-numpy` | numpy — vector hoá & mảng | bắt buộc | 25/35/10 | ✓ | 1 |  | 4033–4077 |
-| `t-sklearn` | scikit-learn — 4 khái niệm là đủ | bắt buộc | 45/75/20 | ✓ | 1 |  | 4078–4135 |
+| `t-env` | ★ Chỗ làm việc: cloud-first, local là dự phòng | bắt buộc | 25/35/30 | ✓ | 1 |  | 3432–3518 |
+| `t-online` | ★ Làm cả dự án trên trình duyệt (máy yếu) | bắt buộc | 25/20/20 | ✓ | 1 |  | 3519–3632 |
+| `t-colab` | Google Colab — làm được gì, khi nào dùng | bắt buộc | 20/25/0 | ✓ | 6 |  | 3633–3754 |
+| `t-ai` | ★ Làm việc với AI coding assistant | bắt buộc | 30/30/15 | ✓ | 1 |  | 3755–3858 |
+| `t-pandas` | pandas — 15 thao tác chiếm 90% việc | bắt buộc | 50/100/20 | ✓ | 1 |  | 3859–3955 |
+| `t-sql` | SQL — lấy dữ liệu ra khỏi cơ sở dữ liệu | bắt buộc | 25/35/15 | ✓ | 1 |  | 3956–4081 |
+| `t-numpy` | numpy — vector hoá & mảng | bắt buộc | 25/35/10 | ✓ | 1 |  | 4082–4126 |
+| `t-sklearn` | scikit-learn — 4 khái niệm là đủ | bắt buộc | 45/75/20 | ✓ | 1 |  | 4127–4184 |
 
 - **`t-env`** — Chỗ làm việc cloud-first: GitHub là bản thật, Colab/Codespaces là chỗ chạy, cấu trúc thư mục dự án đã dựng.
   - dẫn tới: Bài sau ráp các mảnh đó thành một đường đi liền mạch cho cả 10 bước.
@@ -83,20 +86,46 @@ Cột: **ưu tiên** bắt buộc/nên biết/định vị · **r/x/d** phút đ
   - dẫn tới: Bài sau ráp chúng vào bộ khung mà mọi mô hình bạn dùng đều tuân theo.
   - mở nhánh phụ: `dot`, `matmul`
 - **`t-sklearn`** — Bốn khái niệm sklearn: estimator, transformer, Pipeline, ColumnTransformer.
-  - dẫn tới: Chặng sau là phần toán tối thiểu để bạn đọc hiểu những con số công cụ in ra.
+  - dẫn tới: Đủ công cụ để chạm dữ liệu thật. Chặng sau đi hết vòng đời của nó: lấy về, chốt schema, chia tập, và không tự lừa mình.
   - mở nhánh phụ: `standardize`, `x-pipeline-bugs`, `x-sklearn-imports`, `cmp-gbdt`
 
-## 2 · Toán tối thiểu (không hơn)
+## 2 · Vòng đời dữ liệu
 
-**Xong chặng làm được gì.** Đọc được công thức trong các bài sau mà không hoảng: vector & ma trận, đạo hàm/gradient, xác suất, và phần thống kê suy diễn mà một luận văn cần tới.
+**Xong chặng làm được gì.** Đi hết vòng đời của dữ liệu trước khi mô hình hoá: lấy về và chốt schema, nhận ra rò rỉ, chia tập hợp lệ, rồi mới nhìn dữ liệu (EDA) và làm sạch. Thứ tự đó là cố ý — mọi cái nhìn vào dữ liệu chỉ hợp lệ sau khi đã chia tập.
 
 | id | bài | ưu tiên | r/x/d | F | T | A | dòng |
 |---|---|---|---|---|---|---|---|
-| `m-vector` | Vector & ma trận — dữ liệu trong máy | bắt buộc | 55/20/10 | ✓ | 2 |  | 4140–4187 |
-| `m-deriv` | Đạo hàm & gradient — “học” nghĩa là gì | bắt buộc | 55/20/10 | ✓ | 2 |  | 4188–4220 |
-| `m-prob` | Xác suất: phân phối, kỳ vọng, phương sai | bắt buộc | 55/20/10 | ✓ | 2 |  | 4221–4258 |
-| `m-bayes` | Bayes & likelihood | bắt buộc | 45/15/0 |  | 2 | 2 | 4259–4286 |
-| `m-infer` | Thống kê suy diễn — thứ luận văn cần | bắt buộc | 60/30/10 | ✓ | 2 |  | 4287–4333 |
+| `d-data` | Lấy dữ liệu về: chọn bộ, chốt schema, viết adapter | bắt buộc | 25/20/30 | ✓ | 2 | 3 | 4189–4506 |
+| `d-leak` | Data leakage — lỗi giết chết luận văn | bắt buộc | 45/25/20 | ✓ | 2 | 2 | 4507–4576 |
+| `d-split` | Chia tập: random, theo thời gian, theo nhóm | bắt buộc | 35/25/30 | ✓ | 2 | 3 | 4577–4639 |
+| `d-eda` | EDA — nhìn dữ liệu đúng cách | bắt buộc | 35/50/45 | ✓ | 2 | 3 | 4640–4729 |
+| `d-clean` | Thiếu, lệch, ngoại lai — xử lý ra sao | bắt buộc | 30/25/20 | ✓ | 2 |  | 4730–4793 |
+
+- **`d-data`** — Bộ dữ liệu đã tải và kiểm tra, một schema tám cột chốt cứng, adapter đưa mọi nguồn về schema đó, và một datacard.
+  - dẫn tới: Có dữ liệu đúng hình dạng rồi. Bài sau là lỗi lặng lẽ nhất — và phải học TRƯỚC khi chia tập, vì nó quyết định chia thế nào mới hợp lệ.
+  - mở nhánh phụ: `paysim`, `cmp-data`, `cmp-storage`
+- **`d-leak`** — Sáu kiểu rò rỉ, và quy trình kiểm tra chạy trước khi tin bất kỳ con số nào.
+  - dẫn tới: Biết cái gì làm hỏng rồi, bài sau chia tập sao cho không dính vào chúng.
+- **`d-split`** — Tập train/valid/test chia theo thời gian, và bốn dòng assert kiểm tra sau khi chia.
+  - dẫn tới: Có tập hợp lệ rồi, từ đây mọi cái nhìn vào dữ liệu đều chỉ nhìn train — và bài sau là cách nhìn cho đúng.
+  - mở nhánh phụ: `x-split-other`
+- **`d-eda`** — Danh sách 10 điểm kiểm tra chạy được cho mọi bộ dữ liệu mới, và bốn biểu đồ đáng vẽ.
+  - dẫn tới: EDA vừa chỉ ra chỗ bẩn; bài sau là cách làm sạch mà không tự lừa mình.
+  - mở nhánh phụ: `cmp-eda`
+- **`d-clean`** — Cách xử lý thiếu, ngoại lai, trùng lặp — tất cả nằm trong code, không thao tác tay.
+  - dẫn tới: Dữ liệu đã sạch và đã chia. Chặng sau là phần toán tối thiểu để bạn đọc hiểu những con số sắp hiện ra — học ở đây vì từ chặng kế tiếp trở đi bài nào cũng cần.
+  - mở nhánh phụ: `expvar`, `cmp-dataframe`
+
+## 3 · Toán tối thiểu (không hơn)
+
+**Xong chặng làm được gì.** Đọc được công thức trong các bài sau mà không hoảng: vector & ma trận, đạo hàm/gradient, xác suất và Bayes. Học ở đây, ngay trước bài đầu tiên thật sự cần tới chúng — phần thống kê suy diễn tách riêng và nằm ở chặng 5, cạnh chỗ bạn phải chứng minh một chênh lệch là thật.
+
+| id | bài | ưu tiên | r/x/d | F | T | A | dòng |
+|---|---|---|---|---|---|---|---|
+| `m-vector` | Vector & ma trận — dữ liệu trong máy | bắt buộc | 55/20/10 | ✓ | 2 |  | 4798–4845 |
+| `m-deriv` | Đạo hàm & gradient — “học” nghĩa là gì | bắt buộc | 55/20/10 | ✓ | 2 |  | 4846–4878 |
+| `m-prob` | Xác suất: phân phối, kỳ vọng, phương sai | bắt buộc | 55/20/10 | ✓ | 2 |  | 4879–4916 |
+| `m-bayes` | Bayes & likelihood | bắt buộc | 45/15/0 |  | 2 | 2 | 4917–4944 |
 
 - **`m-vector`** — Ba ý hình học: một dòng là một điểm, khoảng cách phụ thuộc đơn vị, ma trận là cả bảng.
   - dẫn tới: Bài sau dùng đúng hình học đó để trả lời "máy học bằng cách nào".
@@ -108,41 +137,8 @@ Cột: **ưu tiên** bắt buộc/nên biết/định vị · **r/x/d** phút đ
   - dẫn tới: Bài sau giải thích vì sao 99% chính xác vẫn có thể hoàn toàn vô dụng.
   - mở nhánh phụ: `expvar`, `normal`, `logtransform`
 - **`m-bayes`** — Lý do một mô hình rất chính xác vẫn báo động sai gần hết — bằng số, không bằng cảm giác.
-  - dẫn tới: Bài sau là phần toán hội đồng soi kỹ nhất: chứng minh chênh lệch là thật.
+  - dẫn tới: Hết phần toán. Chặng sau là bước quyết định điểm số nhiều hơn cả việc chọn mô hình: biến dữ liệu thô thành feature.
   - mở nhánh phụ: `bayes`
-- **`m-infer`** — Bootstrap, McNemar, và cách nói về p-value mà không bị bắt lỗi.
-  - dẫn tới: Hết phần toán. Chặng sau chạm vào dữ liệu thật, bắt đầu từ việc đóng khung bài toán.
-  - mở nhánh phụ: `ci`, `mcnemar`, `pvalue`
-
-## 3 · Vòng đời dữ liệu
-
-**Xong chặng làm được gì.** Đóng khung được một bài toán, nhìn dữ liệu đúng cách (EDA), làm sạch, chia tập hợp lệ, và nhận ra rò rỉ dữ liệu — lỗi âm thầm giết chết nhiều luận văn.
-
-| id | bài | ưu tiên | r/x/d | F | T | A | dòng |
-|---|---|---|---|---|---|---|---|
-| `d-framing` | Đóng khung bài toán — bước hay bị bỏ | bắt buộc | 30/0/30 | ✓ | 2 | 3 | 4338–4380 |
-| `d-data` | Lấy dữ liệu về: chọn bộ, chốt schema, viết adapter | bắt buộc | 25/20/30 | ✓ | 2 | 3 | 4381–4698 |
-| `d-eda` | EDA — nhìn dữ liệu đúng cách | bắt buộc | 35/50/45 | ✓ | 2 | 3 | 4699–4788 |
-| `d-clean` | Thiếu, lệch, ngoại lai — xử lý ra sao | bắt buộc | 30/25/20 | ✓ | 2 |  | 4789–4852 |
-| `d-leak` | Data leakage — lỗi giết chết luận văn | bắt buộc | 45/25/20 | ✓ | 2 | 2 | 4853–4922 |
-| `d-split` | Chia tập: random, theo thời gian, theo nhóm | bắt buộc | 35/25/30 | ✓ | 2 | 3 | 4923–4985 |
-
-- **`d-framing`** — Một trang đề bài: dự đoán gì, tại thời điểm nào, sai thì tốn bao nhiêu tiền.
-  - dẫn tới: Có tờ đề bài rồi, bài sau đi lấy đúng bộ dữ liệu trả lời được đề bài đó.
-- **`d-data`** — Bộ dữ liệu đã tải và kiểm tra, một schema tám cột chốt cứng, adapter đưa mọi nguồn về schema đó, và một datacard.
-  - dẫn tới: Có dữ liệu đúng hình dạng rồi, bài sau mới nhìn được nó nói gì.
-  - mở nhánh phụ: `paysim`, `cmp-data`, `cmp-storage`
-- **`d-eda`** — Danh sách 10 điểm kiểm tra chạy được cho mọi bộ dữ liệu mới, và bốn biểu đồ đáng vẽ.
-  - dẫn tới: EDA vừa chỉ ra chỗ bẩn; bài sau là cách làm sạch mà không tự lừa mình.
-  - mở nhánh phụ: `cmp-eda`
-- **`d-clean`** — Cách xử lý thiếu, ngoại lai, trùng lặp — tất cả nằm trong code, không thao tác tay.
-  - dẫn tới: Bài sau là lỗi lặng lẽ nhất: làm sạch rất đúng nhưng vẫn rò rỉ đáp án.
-  - mở nhánh phụ: `expvar`, `cmp-dataframe`
-- **`d-leak`** — Sáu kiểu rò rỉ, và quy trình kiểm tra chạy trước khi tin bất kỳ con số nào.
-  - dẫn tới: Bài sau là nơi rò rỉ hay xảy ra nhất: chỗ bạn cắt dữ liệu ra làm ba.
-- **`d-split`** — Tập train/valid/test chia theo thời gian, và bốn dòng assert kiểm tra sau khi chia.
-  - dẫn tới: Có tập sạch rồi, chặng sau mới được phép tạo feature — phần quyết định điểm số.
-  - mở nhánh phụ: `x-split-other`
 
 ## 4 · Feature engineering
 
@@ -150,15 +146,15 @@ Cột: **ưu tiên** bắt buộc/nên biết/định vị · **r/x/d** phút đ
 
 | id | bài | ưu tiên | r/x/d | F | T | A | dòng |
 |---|---|---|---|---|---|---|---|
-| `f-what` | FE khi làm thật là gõ cái gì, ở đâu | bắt buộc | 30/5/10 | ✓ | 3 |  | 4990–5043 |
-| `f-numeric` | Biến số: scale, log, clip, binning | bắt buộc | 25/15/20 | ✓ | 3 |  | 5044–5097 |
-| `f-cat` | Biến hạng mục: one-hot, target, hashing | bắt buộc | 35/20/20 | ✓ | 3 |  | 5098–5169 |
-| `f-cyclic` | ★ Biến chu kỳ: 23h và 0h liền nhau | bắt buộc | 30/15/30 | ✓ | 3 |  | 5170–5274 |
-| `f-time` | Biến theo thời gian: lag, rolling, velocity | bắt buộc | 35/15/40 | ✓ | 3 |  | 5275–5361 |
-| `f-text` | Chữ & embedding: TF-IDF → vector | nên biết | 40/20/0 |  | 3 |  | 5362–5396 |
-| `f-pipeline` | ★ Ráp tất cả: Pipeline + ColumnTransformer | bắt buộc | 30/20/40 | ✓ | 3 | 3 | 5397–5497 |
-| `f-select` | Chọn feature & đo tầm quan trọng | nên biết | 30/15/0 |  | 3 |  | 5498–5541 |
-| `f-store` | Feature store — khi nào thực sự cần | định vị | 30/0/0 |  | 3 |  | 5542–5564 |
+| `f-what` | FE khi làm thật là gõ cái gì, ở đâu | bắt buộc | 30/5/10 | ✓ | 3 |  | 4949–5002 |
+| `f-numeric` | Biến số: scale, log, clip, binning | bắt buộc | 25/15/20 | ✓ | 3 |  | 5003–5056 |
+| `f-cat` | Biến hạng mục: one-hot, target, hashing | bắt buộc | 35/20/20 | ✓ | 3 |  | 5057–5128 |
+| `f-cyclic` | ★ Biến chu kỳ: 23h và 0h liền nhau | bắt buộc | 30/15/30 | ✓ | 3 |  | 5129–5233 |
+| `f-time` | Biến theo thời gian: lag, rolling, velocity | bắt buộc | 35/15/40 | ✓ | 3 |  | 5234–5320 |
+| `f-text` | Chữ & embedding: TF-IDF → vector | nên biết | 40/20/0 |  | 3 |  | 5321–5355 |
+| `f-pipeline` | ★ Ráp tất cả: Pipeline + ColumnTransformer | bắt buộc | 30/20/40 | ✓ | 3 | 3 | 5356–5456 |
+| `f-select` | Chọn feature & đo tầm quan trọng | nên biết | 30/15/0 |  | 3 |  | 5457–5500 |
+| `f-store` | Feature store — khi nào thực sự cần | định vị | 30/0/0 |  | 3 |  | 5501–5523 |
 
 - **`f-what`** — Định nghĩa feature engineering gắn với thao tác thật, và nhịp một buổi làm việc.
   - dẫn tới: Bài sau vào loại cột đơn giản nhất: cột số.
@@ -184,21 +180,22 @@ Cột: **ưu tiên** bắt buộc/nên biết/định vị · **r/x/d** phút đ
 
 ## 5 · Machine learning
 
-**Xong chặng làm được gì.** Chọn và huấn luyện mô hình phù hợp, xử lý dữ liệu lệch, và đo lường bằng đúng metric (PR-AUC, ngưỡng quy ra tiền) thay vì accuracy gây hiểu nhầm.
+**Xong chặng làm được gì.** Chọn và huấn luyện mô hình phù hợp, xử lý dữ liệu lệch, đo bằng đúng metric (PR-AUC, ngưỡng quy ra tiền) thay vì accuracy gây hiểu nhầm — và chứng minh được chênh lệch giữa hai mô hình là thật chứ không phải may rủi của một lần chia tập.
 
 | id | bài | ưu tiên | r/x/d | F | T | A | dòng |
 |---|---|---|---|---|---|---|---|
-| `ml-map` | Bản đồ mô hình: bài nào dùng gì | bắt buộc | 45/0/0 | ✓ | 3 |  | 5569–5615 |
-| `ml-linear` | Hồi quy tuyến tính & logistic | bắt buộc | 35/20/20 | ✓ | 3 | 3 | 5616–5670 |
-| `ml-metrics` | ★ Đo lường: PR-AUC, ngưỡng, và tiền | bắt buộc | 35/20/35 | ✓ | 3 | 3 | 5671–5754 |
-| `ml-loss` | Hàm mất mát + gradient descent | bắt buộc | 55/25/10 | ✓ | 4 |  | 5755–5806 |
-| `ml-trees` | Cây → Random Forest → Boosting | bắt buộc | 45/35/25 | ✓ | 4 |  | 5807–5883 |
-| `ml-overfit` | Overfitting, bias–variance, regularization | bắt buộc | 40/20/15 | ✓ | 4 |  | 5884–5929 |
-| `ml-cv` | Cross-validation cho đúng | bắt buộc | 30/10/20 | ✓ | 4 |  | 5930–5973 |
-| `ml-imb` | ★ Dữ liệu lệch: 0,17% gian lận thì làm gì | bắt buộc | 30/15/30 | ✓ | 4 |  | 5974–6051 |
-| `ml-tune` | Tuning: grid, random, Optuna | nên biết | 25/20/0 |  | 4 |  | 6052–6107 |
-| `ml-shap` | Giải thích mô hình: SHAP | nên biết | 30/15/15 |  | 4 |  | 6108–6152 |
-| `ml-unsup` | Không nhãn: cụm & phát hiện bất thường | nên biết | 45/15/0 |  | 4 |  | 6153–6187 |
+| `ml-map` | Bản đồ mô hình: bài nào dùng gì | bắt buộc | 45/0/0 | ✓ | 3 |  | 5528–5574 |
+| `ml-linear` | Hồi quy tuyến tính & logistic | bắt buộc | 35/20/20 | ✓ | 3 | 3 | 5575–5629 |
+| `ml-metrics` | ★ Đo lường: PR-AUC, ngưỡng, và tiền | bắt buộc | 35/20/35 | ✓ | 3 | 3 | 5630–5713 |
+| `ml-loss` | Hàm mất mát + gradient descent | bắt buộc | 55/25/10 | ✓ | 4 |  | 5714–5765 |
+| `ml-trees` | Cây → Random Forest → Boosting | bắt buộc | 45/35/25 | ✓ | 4 |  | 5766–5842 |
+| `ml-overfit` | Overfitting, bias–variance, regularization | bắt buộc | 40/20/15 | ✓ | 4 |  | 5843–5888 |
+| `ml-cv` | Cross-validation cho đúng | bắt buộc | 30/10/20 | ✓ | 4 |  | 5889–5932 |
+| `m-infer` | Thống kê suy diễn — thứ luận văn cần | bắt buộc | 60/30/10 | ✓ | 4 |  | 5933–5979 |
+| `ml-imb` | ★ Dữ liệu lệch: 0,17% gian lận thì làm gì | bắt buộc | 30/15/30 | ✓ | 4 |  | 5980–6057 |
+| `ml-tune` | Tuning: grid, random, Optuna | nên biết | 25/20/0 |  | 4 |  | 6058–6113 |
+| `ml-shap` | Giải thích mô hình: SHAP | nên biết | 30/15/15 |  | 4 |  | 6114–6158 |
+| `ml-unsup` | Không nhãn: cụm & phát hiện bất thường | nên biết | 45/15/0 |  | 4 |  | 6159–6193 |
 
 - **`ml-map`** — Bản đồ năm mô hình, và quy trình chọn theo đúng thứ tự.
   - dẫn tới: Bài sau là baseline không thể thiếu.
@@ -219,7 +216,10 @@ Cột: **ưu tiên** bắt buộc/nên biết/định vị · **r/x/d** phút đ
   - dẫn tới: Bài sau là cách đo cho chắc, thay vì tin vào một lần chia may rủi.
   - mở nhánh phụ: `reg`
 - **`ml-cv`** — Cross-validation đúng loại cho dữ liệu thời gian, và cách đọc độ lệch chuẩn.
-  - dẫn tới: Bài sau là vấn đề trung tâm của bài toán gian lận: 0,17% nhãn dương.
+  - dẫn tới: Bài sau trả lời đúng câu mà độ lệch chuẩn giữa các fold vừa đặt ra: chênh lệch thế nào mới gọi là thật.
+- **`m-infer`** — Bootstrap, McNemar, và cách nói về p-value mà không bị bắt lỗi.
+  - dẫn tới: Biết cách chứng minh một chênh lệch rồi, bài sau là vấn đề trung tâm của bài toán gian lận: 0,17% nhãn dương.
+  - mở nhánh phụ: `ci`, `mcnemar`, `pvalue`
 - **`ml-imb`** — Thứ tự ưu tiên xử lý mất cân bằng, và bảng thí nghiệm mẫu đưa thẳng vào luận văn.
   - dẫn tới: Bài sau là cách tìm siêu tham số mà không tự lừa mình.
 - **`ml-tune`** — Optuna dùng được ngay, và bốn quy tắc để kết quả tuning không phải ảo.
@@ -229,23 +229,57 @@ Cột: **ưu tiên** bắt buộc/nên biết/định vị · **r/x/d** phút đ
   - dẫn tới: Bài sau là phương án khi nhãn quá ít hoặc đến quá trễ.
   - mở nhánh phụ: `cmp-explain`
 - **`ml-unsup`** — Phân cụm và phát hiện bất thường, cùng cách kết hợp với mô hình có giám sát.
-  - dẫn tới: Chặng sau là deep learning, bắt đầu từ mạng nơ-ron.
+  - dẫn tới: Hết phần ML cổ điển — và đủ để làm ra sản phẩm. Chặng sau quay về dự án gian lận, đóng gói toàn bộ thành một thứ chạy được: repo, model, API, giám sát.
 
-## 6 · Deep learning & Transformer
+## 6 · Làm ra product thật (fraud detection)
 
-**Xong chặng làm được gì.** Hiểu mạng nơ-ron và attention/Transformer từ số 0 — đủ để biết chúng làm gì, khi nào nên dùng, và khi nào dữ liệu bảng không cần tới chúng.
+**Xong chặng làm được gì.** Đóng gói toàn bộ thành một dịch vụ chạy được: từ repo tới model đã lưu, ra API (FastAPI) + Docker, kèm giám sát drift và kế hoạch retrain.
 
 | id | bài | ưu tiên | r/x/d | F | T | A | dòng |
 |---|---|---|---|---|---|---|---|
-| `dl-nn` | Từ logistic regression → mạng nơ-ron | bắt buộc | 50/15/10 | ✓ | 5 |  | 6192–6242 |
-| `dl-backprop` | Backpropagation — thực chất là gì | bắt buộc | 60/15/0 | ✓ | 5 |  | 6243–6279 |
-| `dl-train` | Huấn luyện: epoch, batch, lr, early stop | bắt buộc | 50/15/10 | ✓ | 5 |  | 6280–6335 |
-| `dl-embed` | Embedding — biến ID thành vector | bắt buộc | 40/10/10 | ✓ | 5 |  | 6336–6378 |
-| `dl-cnn-rnn` | CNN & RNN/LSTM — định vị và khi nào còn dùng | nên biết | 55/5/0 |  | 5 |  | 6379–6414 |
-| `dl-attn` | ★ Attention — giải từ số 0 | bắt buộc | 90/20/10 | ✓ | 5 |  | 6415–6461 |
-| `dl-tf` | ★ Transformer — ráp thành kiến trúc | bắt buộc | 70/10/10 | ✓ | 5 |  | 6462–6514 |
-| `dl-llm` | LLM, fine-tune, RAG — dùng sao cho đúng | nên biết | 65/10/0 |  | 5 |  | 6515–6556 |
-| `dl-tab` | Deep learning cho dữ liệu bảng: nên không? | nên biết | 40/5/0 |  | 5 |  | 6557–6592 |
+| `pr-arch` | Kiến trúc hệ thống chống gian lận | bắt buộc | 30/5/25 | ✓ | 5 |  | 6198–6261 |
+| `pr-code` | ★ Code end-to-end: repo tới model đã lưu | bắt buộc | 40/50/60 | ✓ | 5 | 3 | 6262–6870 |
+| `pr-eval` | ★ Đánh giá, chọn ngưỡng, và bốn test | bắt buộc | 45/40/50 | ✓ | 5 | 7 | 6871–7555 |
+| `pr-serve` | Đóng gói: FastAPI + Docker | bắt buộc | 35/40/45 | ✓ | 5 | 3 | 7556–7951 |
+| `pr-monitor` | Giám sát: drift, feedback, retrain | bắt buộc | 35/20/25 | ✓ | 5 | 2 | 7952–8013 |
+| `pr-mlops` | MLOps tối thiểu: MLflow, DVC, CI | nên biết | 30/25/20 |  | 5 |  | 8014–8067 |
+| `pr-cost` | Quy ra tiền: ngưỡng theo chi phí | bắt buộc | 25/10/15 |  | 5 | 3 | 8068–8113 |
+
+- **`pr-arch`** — Bản vẽ đường đi của một giao dịch, và năm quyết định thiết kế phải nêu trong luận văn.
+  - dẫn tới: Có bản vẽ rồi, bài sau viết toàn bộ mã nguồn hiện thực nó.
+- **`pr-code`** — Repo chạy được: config, features, history, pipeline, train — và một file .joblib có thật trong models/.
+  - dẫn tới: Có model rồi, bài sau mới trả lời được câu "nó tốt tới đâu, và chặn từ ngưỡng nào".
+  - mở nhánh phụ: `cmp-gbdt`, `x-pipeline-bugs`
+- **`pr-eval`** — Ngưỡng theo chi phí, khoảng tin cậy đúng loại, baseline theo luật để so, bảng chênh lệch theo nhóm, và bốn test chặn lỗi im lặng.
+  - dẫn tới: Bài sau biến file .joblib đó thành một dịch vụ mà hệ thống khác gọi được.
+  - mở nhánh phụ: `testsuite`, `ci`, `auc`, `cmp-tune`
+- **`pr-serve`** — API FastAPI, Dockerfile, và bản demo Streamlit dùng cho buổi bảo vệ.
+  - dẫn tới: Bài sau là chương rất ít luận văn viết được cho ra hồn.
+  - mở nhánh phụ: `streamlit`, `cmp-serve`
+- **`pr-monitor`** — Đo drift bằng PSI, bảng theo dõi tối thiểu, và chiến lược huấn luyện lại.
+  - dẫn tới: Bài sau là phần MLOps nhỏ nhất mà vẫn đủ để repo nộp được.
+  - mở nhánh phụ: `cmp-track`
+- **`pr-mlops`** — MLflow, chốt phiên bản thư viện, CI tối thiểu, và bảng kiểm repo trước khi nộp.
+  - dẫn tới: Bài sau quy mọi thứ ra tiền — bài có tỉ lệ giá trị trên công sức cao nhất trang.
+  - mở nhánh phụ: `x-mlops-skip`, `cmp-track`
+- **`pr-cost`** — Ma trận chi phí, và phân tích độ nhạy biến điểm yếu thành điểm mạnh.
+  - dẫn tới: Sản phẩm xong, và nó chạy bằng LightGBM chứ không cần mạng nơ-ron nào. Chặng sau mới là deep learning — học vì nó mở ra chữ, ảnh và attention, không phải vì sản phẩm vừa rồi thiếu nó.
+
+## 7 · Deep learning & Transformer
+
+**Xong chặng làm được gì.** Hiểu mạng nơ-ron và attention/Transformer từ số 0 — đủ để biết chúng làm gì, khi nào nên dùng, và khi nào dữ liệu bảng không cần tới chúng. Chặng này đứng SAU sản phẩm là có chủ ý: sản phẩm bạn vừa làm không cần một dòng mạng nơ-ron nào.
+
+| id | bài | ưu tiên | r/x/d | F | T | A | dòng |
+|---|---|---|---|---|---|---|---|
+| `dl-nn` | Từ logistic regression → mạng nơ-ron | bắt buộc | 50/15/10 | ✓ | 6 |  | 8118–8168 |
+| `dl-backprop` | Backpropagation — thực chất là gì | bắt buộc | 60/15/0 | ✓ | 6 |  | 8169–8205 |
+| `dl-train` | Huấn luyện: epoch, batch, lr, early stop | bắt buộc | 50/15/10 | ✓ | 6 |  | 8206–8261 |
+| `dl-embed` | Embedding — biến ID thành vector | bắt buộc | 40/10/10 | ✓ | 6 |  | 8262–8304 |
+| `dl-cnn-rnn` | CNN & RNN/LSTM — định vị và khi nào còn dùng | nên biết | 55/5/0 |  | 6 |  | 8305–8340 |
+| `dl-attn` | ★ Attention — giải từ số 0 | bắt buộc | 90/20/10 | ✓ | 6 |  | 8341–8387 |
+| `dl-tf` | ★ Transformer — ráp thành kiến trúc | bắt buộc | 70/10/10 | ✓ | 6 |  | 8388–8440 |
+| `dl-llm` | LLM, fine-tune, RAG — dùng sao cho đúng | nên biết | 65/10/0 |  | 6 |  | 8441–8482 |
+| `dl-tab` | Deep learning cho dữ liệu bảng: nên không? | nên biết | 40/5/0 |  | 6 |  | 8483–8518 |
 
 - **`dl-nn`** — Mạng nơ-ron nhìn ra là hồi quy logistic xếp chồng, và vòng lặp huấn luyện đầy đủ.
   - dẫn tới: Bài sau là cách mạng đó tự sửa mình.
@@ -270,42 +304,8 @@ Cột: **ưu tiên** bắt buộc/nên biết/định vị · **r/x/d** phút đ
   - dẫn tới: Bài sau trả lời thẳng: dữ liệu bảng thì có nên dùng deep learning không.
   - mở nhánh phụ: `dot`, `x-llm-vocab`
 - **`dl-tab`** — Câu trả lời có bằng chứng cho "deep learning trên dữ liệu bảng", và cách dùng khôn nhất khi thời gian có hạn.
-  - dẫn tới: Hết phần kỹ thuật chung. Chặng sau quay về dự án gian lận và đóng gói toàn bộ thành một sản phẩm chạy được: repo, model, API, giám sát.
+  - dẫn tới: Hết phần kỹ thuật chung. Chặng sau rời khỏi bài toán gian lận để xem tám họ bài toán khác đổi những gì.
   - mở nhánh phụ: `x-tab-dl-zoo`
-
-## 7 · Làm ra product thật (fraud detection)
-
-**Xong chặng làm được gì.** Đóng gói toàn bộ thành một dịch vụ chạy được: từ repo tới model đã lưu, ra API (FastAPI) + Docker, kèm giám sát drift và kế hoạch retrain.
-
-| id | bài | ưu tiên | r/x/d | F | T | A | dòng |
-|---|---|---|---|---|---|---|---|
-| `pr-arch` | Kiến trúc hệ thống chống gian lận | bắt buộc | 30/5/25 | ✓ | 6 |  | 6597–6660 |
-| `pr-code` | ★ Code end-to-end: repo tới model đã lưu | bắt buộc | 40/50/60 | ✓ | 6 | 3 | 6661–7269 |
-| `pr-eval` | ★ Đánh giá, chọn ngưỡng, và bốn test | bắt buộc | 45/40/50 | ✓ | 6 | 7 | 7270–7954 |
-| `pr-serve` | Đóng gói: FastAPI + Docker | bắt buộc | 35/40/45 | ✓ | 6 | 3 | 7955–8350 |
-| `pr-monitor` | Giám sát: drift, feedback, retrain | bắt buộc | 35/20/25 | ✓ | 6 | 2 | 8351–8412 |
-| `pr-mlops` | MLOps tối thiểu: MLflow, DVC, CI | nên biết | 30/25/20 |  | 6 |  | 8413–8466 |
-| `pr-cost` | Quy ra tiền: ngưỡng theo chi phí | bắt buộc | 25/10/15 |  | 6 | 3 | 8467–8512 |
-
-- **`pr-arch`** — Bản vẽ đường đi của một giao dịch, và năm quyết định thiết kế phải nêu trong luận văn.
-  - dẫn tới: Có bản vẽ rồi, bài sau viết toàn bộ mã nguồn hiện thực nó.
-- **`pr-code`** — Repo chạy được: config, features, history, pipeline, train — và một file .joblib có thật trong models/.
-  - dẫn tới: Có model rồi, bài sau mới trả lời được câu "nó tốt tới đâu, và chặn từ ngưỡng nào".
-  - mở nhánh phụ: `cmp-gbdt`, `x-pipeline-bugs`
-- **`pr-eval`** — Ngưỡng theo chi phí, khoảng tin cậy đúng loại, baseline theo luật để so, bảng chênh lệch theo nhóm, và bốn test chặn lỗi im lặng.
-  - dẫn tới: Bài sau biến file .joblib đó thành một dịch vụ mà hệ thống khác gọi được.
-  - mở nhánh phụ: `testsuite`, `ci`, `auc`, `cmp-tune`
-- **`pr-serve`** — API FastAPI, Dockerfile, và bản demo Streamlit dùng cho buổi bảo vệ.
-  - dẫn tới: Bài sau là chương rất ít luận văn viết được cho ra hồn.
-  - mở nhánh phụ: `streamlit`, `cmp-serve`
-- **`pr-monitor`** — Đo drift bằng PSI, bảng theo dõi tối thiểu, và chiến lược huấn luyện lại.
-  - dẫn tới: Bài sau là phần MLOps nhỏ nhất mà vẫn đủ để repo nộp được.
-  - mở nhánh phụ: `cmp-track`
-- **`pr-mlops`** — MLflow, chốt phiên bản thư viện, CI tối thiểu, và bảng kiểm repo trước khi nộp.
-  - dẫn tới: Bài sau quy mọi thứ ra tiền — bài có tỉ lệ giá trị trên công sức cao nhất trang.
-  - mở nhánh phụ: `x-mlops-skip`, `cmp-track`
-- **`pr-cost`** — Ma trận chi phí, và phân tích độ nhạy biến điểm yếu thành điểm mạnh.
-  - dẫn tới: Sản phẩm xong. Chặng sau rời khỏi bài toán gian lận để xem tám họ bài toán khác đổi những gì.
 
 ## 8 · Các họ bài toán khác — chuyển giao kiến thức
 
@@ -313,15 +313,15 @@ Cột: **ưu tiên** bắt buộc/nên biết/định vị · **r/x/d** phút đ
 
 | id | bài | ưu tiên | r/x/d | F | T | A | dòng |
 |---|---|---|---|---|---|---|---|
-| `q-regress` | Hồi quy: dự đoán một con số | bắt buộc | 45/20/10 |  | 7 |  | 8521–8586 |
-| `q-forecast` | ★ Chuỗi thời gian & forecasting | bắt buộc | 70/50/30 |  | 7 |  | 8587–8700 |
-| `q-multi` | Multiclass & multilabel | nên biết | 40/15/5 |  | 7 |  | 8701–8744 |
-| `q-nlp` | NLP: TF-IDF → embedding → Transformer | nên biết | 50/30/10 |  | 7 |  | 8745–8801 |
-| `q-cv` | Computer vision — định vị & mini-lab | nên biết | 35/25/0 |  | 7 |  | 8802–8855 |
-| `q-rec` | Gợi ý & xếp hạng (recommendation) | nên biết | 45/25/5 |  | 7 |  | 8856–8905 |
-| `q-causal` | ★ A/B testing & tư duy nhân quả | bắt buộc | 55/25/10 |  | 7 |  | 8906–8975 |
-| `q-analytics` | Analytics: SQL, KPI, cohort, funnel | nên biết | 45/25/5 |  | 7 |  | 8976–9032 |
-| `q-mini` | ★ Mini-project chuyển giao — làm thật 2/6 | bắt buộc | 45/15/240 |  | 7 | 3 | 9033–9119 |
+| `q-regress` | Hồi quy: dự đoán một con số | bắt buộc | 45/20/10 |  | 7 |  | 8527–8592 |
+| `q-forecast` | ★ Chuỗi thời gian & forecasting | bắt buộc | 70/50/30 |  | 7 |  | 8593–8706 |
+| `q-multi` | Multiclass & multilabel | nên biết | 40/15/5 |  | 7 |  | 8707–8750 |
+| `q-nlp` | NLP: TF-IDF → embedding → Transformer | nên biết | 50/30/10 |  | 7 |  | 8751–8807 |
+| `q-cv` | Computer vision — định vị & mini-lab | nên biết | 35/25/0 |  | 7 |  | 8808–8861 |
+| `q-rec` | Gợi ý & xếp hạng (recommendation) | nên biết | 45/25/5 |  | 7 |  | 8862–8911 |
+| `q-causal` | ★ A/B testing & tư duy nhân quả | bắt buộc | 55/25/10 |  | 7 |  | 8912–8981 |
+| `q-analytics` | Analytics: SQL, KPI, cohort, funnel | nên biết | 45/25/5 |  | 7 |  | 8982–9038 |
+| `q-mini` | ★ Mini-project chuyển giao — làm thật 2/6 | bắt buộc | 45/15/240 |  | 7 | 3 | 9039–9125 |
 
 - **`q-regress`** — Bộ chỉ số cho biến liên tục (MAE/RMSE/MAPE/R²) chọn theo bài toán, và cách báo cáo khoảng dự đoán thay vì một con số trần trụi.
   - dẫn tới: Bài sau là họ bài toán mà mọi thứ bạn biết về chia tập đều phải viết lại.
@@ -351,14 +351,14 @@ Cột: **ưu tiên** bắt buộc/nên biết/định vị · **r/x/d** phút đ
 
 | id | bài | ưu tiên | r/x/d | F | T | A | dòng |
 |---|---|---|---|---|---|---|---|
-| `th-topic` | Đề tài phải có “delta” — tìm khoảng trống | bắt buộc | 30/5/40 | ✓ | 8 | 2 | 9124–9182 |
-| `th-read` | Đọc paper 3 lượt | bắt buộc | 25/35/30 | ✓ | 8 | 3 | 9183–9232 |
-| `th-repro` | Tái lập một paper — bước bắt buộc | bắt buộc | 25/30/30 | ✓ | 8 | 2 | 9233–9289 |
-| `th-design` | Thiết kế thí nghiệm: baseline, ablation | bắt buộc | 35/20/35 | ✓ | 8 | 2 | 9290–9350 |
-| `th-stats` | Kết quả có ý nghĩa thống kê không | bắt buộc | 30/25/30 | ✓ | 8 | 2 | 9351–9406 |
-| `th-write` | Viết: IMRaD và câu nào nằm ở đâu | bắt buộc | 40/5/45 | ✓ | 8 | 3 | 9407–9475 |
-| `th-tools` | Công cụ: Overleaf, Zotero, W&B | nên biết | 25/20/10 |  | 8 |  | 9476–9524 |
-| `th-defense` | ★ Bảo vệ: slide, demo, 24 câu hội đồng hỏi | bắt buộc | 30/5/45 | ✓ | 8 | 3 | 9525–9621 |
+| `th-topic` | Đề tài phải có “delta” — tìm khoảng trống | bắt buộc | 30/5/40 | ✓ | 8 | 2 | 9130–9188 |
+| `th-read` | Đọc paper 3 lượt | bắt buộc | 25/35/30 | ✓ | 8 | 3 | 9189–9238 |
+| `th-repro` | Tái lập một paper — bước bắt buộc | bắt buộc | 25/30/30 | ✓ | 8 | 2 | 9239–9295 |
+| `th-design` | Thiết kế thí nghiệm: baseline, ablation | bắt buộc | 35/20/35 | ✓ | 8 | 2 | 9296–9356 |
+| `th-stats` | Kết quả có ý nghĩa thống kê không | bắt buộc | 30/25/30 | ✓ | 8 | 2 | 9357–9412 |
+| `th-write` | Viết: IMRaD và câu nào nằm ở đâu | bắt buộc | 40/5/45 | ✓ | 8 | 3 | 9413–9481 |
+| `th-tools` | Công cụ: Overleaf, Zotero, W&B | nên biết | 25/20/10 |  | 8 |  | 9482–9530 |
+| `th-defense` | ★ Bảo vệ: slide, demo, 24 câu hội đồng hỏi | bắt buộc | 30/5/45 | ✓ | 8 | 3 | 9531–9627 |
 
 - **`th-topic`** — Một trang đề cương: khoảng trống, câu hỏi nghiên cứu, và cách bạn sẽ chứng minh.
   - dẫn tới: Bài sau là cách đọc 15–30 paper mà vẫn kịp deadline.
@@ -387,11 +387,11 @@ Cột: **ưu tiên** bắt buộc/nên biết/định vị · **r/x/d** phút đ
 
 | id | bài | ưu tiên | r/x/d | F | T | A | dòng |
 |---|---|---|---|---|---|---|---|
-| `r-stack` | ★ Mỗi bước dùng tool gì, và gõ gì | bắt buộc | 60/0/0 |  | 8 |  | 9626–9776 |
-| `r-roadmapsh` | roadmap.sh dịch ra: giữ gì, bỏ gì | nên biết | 45/0/0 |  | 8 |  | 9777–9863 |
-| `r-mistakes` | 20 lỗi người mới hay mắc | bắt buộc | 30/0/0 | ✓ | 8 |  | 9864–9910 |
-| `r-glossary` | Từ điển thuật ngữ | nên biết | 45/0/0 |  | 8 |  | 9911–9987 |
-| `r-books` | Sách / khoá / dataset đáng dùng | nên biết | 30/0/0 |  | 8 |  | 9988–10031 |
+| `r-stack` | ★ Mỗi bước dùng tool gì, và gõ gì | bắt buộc | 60/0/0 |  | 8 |  | 9632–9782 |
+| `r-roadmapsh` | roadmap.sh dịch ra: giữ gì, bỏ gì | nên biết | 45/0/0 |  | 8 |  | 9783–9869 |
+| `r-mistakes` | 20 lỗi người mới hay mắc | bắt buộc | 30/0/0 | ✓ | 8 |  | 9870–9916 |
+| `r-glossary` | Từ điển thuật ngữ | nên biết | 45/0/0 |  | 8 |  | 9917–9993 |
+| `r-books` | Sách / khoá / dataset đáng dùng | nên biết | 30/0/0 |  | 8 |  | 9994–10037 |
 
 - **`r-stack`** — Sổ tay theo bước: mở gì, gõ gì, xong có gì trong tay, bẫy nằm ở đâu.
   - dẫn tới: Bài sau dịch roadmap.sh sang giáo trình này: ô nào giữ, ô nào để sau, ô nào bỏ.
@@ -411,78 +411,78 @@ Cột: **ưu tiên** bắt buộc/nên biết/định vị · **r/x/d** phút đ
 
 | khoá | tiêu đề | dòng | bài nào mở |
 |---|---|---|---|
-| `dot` | Vector và tích vô hướng — “giống nhau” đo bằng gì | 1531–1548 | `t-numpy`, `m-vector`, `dl-attn`, `dl-llm` |
-| `matmul` | Ma trận — vì sao mọi lỗi đều là lỗi shape | 1549–1560 | `t-numpy`, `m-vector` |
-| `deriv` | Đạo hàm & gradient — “học” thực chất là gì | 1561–1574 | `m-deriv` |
-| `chain` | Quy tắc dây chuyền — cỗ máy đằng sau backpropagation | 1575–1585 | `dl-nn`, `dl-backprop` |
-| `gdupdate` | Công thức cập nhật — dòng lệnh mà máy chạy hàng triệu lần | 1586–1601 | `s-lookup`, `m-deriv`, `ml-loss`, `dl-nn`, `dl-train` |
-| `expvar` | Kỳ vọng, phương sai, độ lệch chuẩn | 1602–1618 | `s-how`, `m-prob`, `d-clean` |
-| `normal` | Phân phối chuẩn và z-score | 1619–1631 | `m-prob` |
-| `bayes` | Định lý Bayes — vì sao 99% chính xác vẫn có thể vô dụng | 1632–1647 | `s-intro`, `m-bayes` |
-| `sigmoid` | Sigmoid & log-odds — biến điểm số thành xác suất | 1648–1661 | `ml-linear` |
-| `logloss` | Cross-entropy (log loss) — sai số cho bài toán phân loại | 1662–1677 | `ml-loss` |
-| `mse` | MSE, RMSE, MAE — sai số cho bài toán dự đoán số | 1678–1691 | `ml-linear`, `ml-loss` |
-| `entropy` | Entropy & Gini — cây quyết định chọn câu hỏi thế nào | 1692–1705 | `ml-trees` |
-| `reg` | Regularization L1/L2 — buộc mô hình khiêm tốn lại | 1706–1720 | `ml-overfit`, `dl-train` |
-| `sincos` | Mã hoá chu kỳ bằng sin/cos — toán đằng sau nó | 1721–1745 | `s-lookup`, `f-cyclic` |
-| `cyclicspline` | Periodic spline — mã hoá chu kỳ tổng quát hơn sin/cos | 1746–1753 | `f-cyclic` |
-| `softmax` | Softmax — biến điểm số thành phân phối xác suất | 1754–1766 | `ml-loss`, `dl-nn`, `dl-attn`, `q-multi` |
-| `attention` | Scaled dot-product attention — công thức đầy đủ | 1767–1789 | `dl-attn` |
-| `posenc` | Positional encoding — công thức sin/cos trong Transformer gốc | 1790–1807 | `dl-tf` |
-| `pvalue` | p-value — điều nó nói và điều nó KHÔNG nói | 1808–1829 | `m-infer`, `q-causal`, `th-stats` |
-| `ci` | Khoảng tin cậy & bootstrap — cách báo cáo kết quả cho tử tế | 1830–1861 | `m-infer`, `pr-eval`, `q-causal`, `th-stats` |
-| `auc` | ROC-AUC và PR-AUC — hai đường cong, hai câu chuyện | 1862–1878 | `ml-metrics`, `pr-eval` |
-| `standardize` | Standardize hay Min-Max — chọn cái nào | 1879–1893 | `t-sklearn`, `m-vector`, `f-numeric` |
-| `logtransform` | Vì sao lấy log của số tiền | 1894–1909 | `s-lookup`, `m-prob`, `f-numeric`, `q-regress` |
-| `mcnemar` | McNemar — so hai mô hình trên cùng tập test | 1910–1928 | `m-infer`, `th-stats` |
-| `colab10` | Mười khả năng của Colab — gõ gì, dùng cho việc gì | 1928–1945 | `t-colab` |
-| `streamlit` | app.py — bản demo Streamlit 20 dòng | 1946–1977 | `pr-serve` |
-| `paysim` | PaySim và đồ án cũ — rò rỉ nhãn, và cách biến nó thành ví dụ đối chứng | 1978–1995 | `d-data` |
-| `testsuite` | Bộ test đầy đủ — 4 file, 27 test | 1996–2286 | `pr-eval` |
+| `dot` | Vector và tích vô hướng — “giống nhau” đo bằng gì | 1537–1554 | `t-numpy`, `m-vector`, `dl-attn`, `dl-llm` |
+| `matmul` | Ma trận — vì sao mọi lỗi đều là lỗi shape | 1555–1566 | `t-numpy`, `m-vector` |
+| `deriv` | Đạo hàm & gradient — “học” thực chất là gì | 1567–1580 | `m-deriv` |
+| `chain` | Quy tắc dây chuyền — cỗ máy đằng sau backpropagation | 1581–1591 | `dl-nn`, `dl-backprop` |
+| `gdupdate` | Công thức cập nhật — dòng lệnh mà máy chạy hàng triệu lần | 1592–1607 | `s-lookup`, `m-deriv`, `ml-loss`, `dl-nn`, `dl-train` |
+| `expvar` | Kỳ vọng, phương sai, độ lệch chuẩn | 1608–1624 | `s-how`, `d-clean`, `m-prob` |
+| `normal` | Phân phối chuẩn và z-score | 1625–1637 | `m-prob` |
+| `bayes` | Định lý Bayes — vì sao 99% chính xác vẫn có thể vô dụng | 1638–1653 | `s-intro`, `m-bayes` |
+| `sigmoid` | Sigmoid & log-odds — biến điểm số thành xác suất | 1654–1667 | `ml-linear` |
+| `logloss` | Cross-entropy (log loss) — sai số cho bài toán phân loại | 1668–1683 | `ml-loss` |
+| `mse` | MSE, RMSE, MAE — sai số cho bài toán dự đoán số | 1684–1697 | `ml-linear`, `ml-loss` |
+| `entropy` | Entropy & Gini — cây quyết định chọn câu hỏi thế nào | 1698–1711 | `ml-trees` |
+| `reg` | Regularization L1/L2 — buộc mô hình khiêm tốn lại | 1712–1726 | `ml-overfit`, `dl-train` |
+| `sincos` | Mã hoá chu kỳ bằng sin/cos — toán đằng sau nó | 1727–1751 | `s-lookup`, `f-cyclic` |
+| `cyclicspline` | Periodic spline — mã hoá chu kỳ tổng quát hơn sin/cos | 1752–1759 | `f-cyclic` |
+| `softmax` | Softmax — biến điểm số thành phân phối xác suất | 1760–1772 | `ml-loss`, `dl-nn`, `dl-attn`, `q-multi` |
+| `attention` | Scaled dot-product attention — công thức đầy đủ | 1773–1795 | `dl-attn` |
+| `posenc` | Positional encoding — công thức sin/cos trong Transformer gốc | 1796–1813 | `dl-tf` |
+| `pvalue` | p-value — điều nó nói và điều nó KHÔNG nói | 1814–1835 | `m-infer`, `q-causal`, `th-stats` |
+| `ci` | Khoảng tin cậy & bootstrap — cách báo cáo kết quả cho tử tế | 1836–1867 | `m-infer`, `pr-eval`, `q-causal`, `th-stats` |
+| `auc` | ROC-AUC và PR-AUC — hai đường cong, hai câu chuyện | 1868–1884 | `ml-metrics`, `pr-eval` |
+| `standardize` | Standardize hay Min-Max — chọn cái nào | 1885–1899 | `t-sklearn`, `m-vector`, `f-numeric` |
+| `logtransform` | Vì sao lấy log của số tiền | 1900–1915 | `s-lookup`, `m-prob`, `f-numeric`, `q-regress` |
+| `mcnemar` | McNemar — so hai mô hình trên cùng tập test | 1916–1934 | `m-infer`, `th-stats` |
+| `colab10` | Mười khả năng của Colab — gõ gì, dùng cho việc gì | 1934–1951 | `t-colab` |
+| `streamlit` | app.py — bản demo Streamlit 20 dòng | 1952–1983 | `pr-serve` |
+| `paysim` | PaySim và đồ án cũ — rò rỉ nhãn, và cách biến nó thành ví dụ đối chứng | 1984–2001 | `d-data` |
+| `testsuite` | Bộ test đầy đủ — 4 file, 27 test | 2002–2292 | `pr-eval` |
 
 ## Nhánh phụ — ngăn bên phải (`data-aside`)
 
 | khoá | tiêu đề | dòng | bài nào mở |
 |---|---|---|---|
-| `cmp-run` | Chỗ viết và chạy code — và chỗ mượn GPU | 2296–2326 | `s-how`, `s-lookup`, `t-env`, `t-online`, `t-colab`, `r-stack` |
-| `cmp-storage` | Để vài trăm MB dữ liệu ở đâu | 2327–2342 | `s-lookup`, `t-env`, `t-online`, `t-colab`, `d-data`, `r-stack` |
-| `cmp-query` | Lấy dữ liệu ra: pandas, DuckDB, SQLite hay máy chủ thật | 2343–2357 | `s-lookup`, `t-sql`, `r-stack` |
-| `cmp-eda` | Nhìn dữ liệu: tự viết hay để công cụ sinh báo cáo | 2358–2372 | `s-lookup`, `d-eda`, `r-stack` |
-| `cmp-dataframe` | Xử lý bảng: pandas, polars hay đẩy sang SQL | 2373–2387 | `s-lookup`, `t-pandas`, `d-clean`, `r-stack` |
-| `qbank` | 24 câu hội đồng hay hỏi | 2388–2449 | `th-defense` |
-| `cmp-data` | Bốn bộ dữ liệu gian lận — chọn bộ nào làm chính | 2450–2467 | `d-data` |
-| `cmp-gbdt` | Boosting: LightGBM, XGBoost, CatBoost hay sklearn | 2468–2482 | `s-lookup`, `t-sklearn`, `ml-trees`, `pr-code`, `r-stack` |
-| `cmp-tune` | Tinh chỉnh siêu tham số: grid, random hay Optuna | 2483–2496 | `s-lookup`, `ml-tune`, `pr-eval`, `r-stack` |
-| `cmp-track` | Ghi lại thí nghiệm: file CSV, MLflow hay W&amp;B | 2497–2512 | `s-lookup`, `pr-monitor`, `pr-mlops`, `r-stack` |
-| `cmp-explain` | Giải thích mô hình: SHAP, permutation, LIME | 2513–2529 | `s-lookup`, `ml-shap`, `r-stack` |
-| `cmp-serve` | Đóng gói và chạy thật: khung nào, đặt ở đâu | 2530–2572 | `s-lookup`, `t-online`, `pr-serve`, `r-stack` |
-| `cmp-figure` | Hình cho luận văn: biểu đồ và sơ đồ kiến trúc | 2573–2597 | `s-lookup`, `th-write`, `th-tools`, `r-stack` |
-| `cmp-write` | Viết luận văn: soạn thảo và quản lý trích dẫn | 2598–2621 | `s-lookup`, `t-online`, `t-ai`, `th-tools`, `r-stack` |
-| `x-notneeded` | Những thứ chưa cần cho dự án này — và mốc để quay lại | 2625–2640 | `r-stack` |
-| `x-la-skip` | Đại số tuyến tính: phần bỏ qua được | 2641–2646 | `m-vector` |
-| `x-tree-gradient` | Cây quyết định và XGBoost có dùng gradient không? | 2647–2657 | `m-deriv` |
-| `x-memorize` | Mô hình có phải “học thuộc” không? | 2658–2663 | `ml-map` |
-| `x-tree-learn` | Cây và boosting thì “học” thế nào | 2664–2669 | `ml-loss` |
-| `x-tf-variants` | Ba biến thể Transformer, và paper gốc | 2670–2682 | `dl-tf` |
-| `x-tab-dl-zoo` | Các kiến trúc deep learning cho dữ liệu bảng | 2683–2694 | `dl-tab` |
-| `x-attn-kinds` | Ba loại attention bạn sẽ gặp tên | 2695–2704 | `dl-attn` |
-| `x-llm-vocab` | Từ vựng LLM để không bị hớ | 2705–2717 | `dl-llm` |
-| `x-mlops-skip` | MLOps: những thứ chưa cần ở quy mô này | 2718–2730 | `pr-mlops` |
-| `x-cyclic-more` | Còn cột nào có tính chu kỳ nữa | 2731–2743 | `f-cyclic` |
-| `x-pipeline-bugs` | Hai lỗi Pipeline hay gặp và cách sửa | 2744–2763 | `t-sklearn`, `f-pipeline`, `pr-code` |
-| `x-sklearn-imports` | Bản đồ import: cần gì thì lấy từ đâu | 2764–2776 | `t-sklearn` |
-| `x-split-other` | Hai cách chia khác: phân tầng và theo nhóm | 2777–2789 | `d-split` |
+| `cmp-run` | Chỗ viết và chạy code — và chỗ mượn GPU | 2302–2332 | `s-how`, `s-lookup`, `t-env`, `t-online`, `t-colab`, `r-stack` |
+| `cmp-storage` | Để vài trăm MB dữ liệu ở đâu | 2333–2348 | `s-lookup`, `t-env`, `t-online`, `t-colab`, `d-data`, `r-stack` |
+| `cmp-query` | Lấy dữ liệu ra: pandas, DuckDB, SQLite hay máy chủ thật | 2349–2363 | `s-lookup`, `t-sql`, `r-stack` |
+| `cmp-eda` | Nhìn dữ liệu: tự viết hay để công cụ sinh báo cáo | 2364–2378 | `s-lookup`, `d-eda`, `r-stack` |
+| `cmp-dataframe` | Xử lý bảng: pandas, polars hay đẩy sang SQL | 2379–2393 | `s-lookup`, `t-pandas`, `d-clean`, `r-stack` |
+| `qbank` | 24 câu hội đồng hay hỏi | 2394–2455 | `th-defense` |
+| `cmp-data` | Bốn bộ dữ liệu gian lận — chọn bộ nào làm chính | 2456–2473 | `d-data` |
+| `cmp-gbdt` | Boosting: LightGBM, XGBoost, CatBoost hay sklearn | 2474–2488 | `s-lookup`, `t-sklearn`, `ml-trees`, `pr-code`, `r-stack` |
+| `cmp-tune` | Tinh chỉnh siêu tham số: grid, random hay Optuna | 2489–2502 | `s-lookup`, `ml-tune`, `pr-eval`, `r-stack` |
+| `cmp-track` | Ghi lại thí nghiệm: file CSV, MLflow hay W&amp;B | 2503–2518 | `s-lookup`, `pr-monitor`, `pr-mlops`, `r-stack` |
+| `cmp-explain` | Giải thích mô hình: SHAP, permutation, LIME | 2519–2535 | `s-lookup`, `ml-shap`, `r-stack` |
+| `cmp-serve` | Đóng gói và chạy thật: khung nào, đặt ở đâu | 2536–2578 | `s-lookup`, `t-online`, `pr-serve`, `r-stack` |
+| `cmp-figure` | Hình cho luận văn: biểu đồ và sơ đồ kiến trúc | 2579–2603 | `s-lookup`, `th-write`, `th-tools`, `r-stack` |
+| `cmp-write` | Viết luận văn: soạn thảo và quản lý trích dẫn | 2604–2627 | `s-lookup`, `t-online`, `t-ai`, `th-tools`, `r-stack` |
+| `x-notneeded` | Những thứ chưa cần cho dự án này — và mốc để quay lại | 2631–2646 | `r-stack` |
+| `x-la-skip` | Đại số tuyến tính: phần bỏ qua được | 2647–2652 | `m-vector` |
+| `x-tree-gradient` | Cây quyết định và XGBoost có dùng gradient không? | 2653–2663 | `m-deriv` |
+| `x-memorize` | Mô hình có phải “học thuộc” không? | 2664–2669 | `ml-map` |
+| `x-tree-learn` | Cây và boosting thì “học” thế nào | 2670–2675 | `ml-loss` |
+| `x-tf-variants` | Ba biến thể Transformer, và paper gốc | 2676–2688 | `dl-tf` |
+| `x-tab-dl-zoo` | Các kiến trúc deep learning cho dữ liệu bảng | 2689–2700 | `dl-tab` |
+| `x-attn-kinds` | Ba loại attention bạn sẽ gặp tên | 2701–2710 | `dl-attn` |
+| `x-llm-vocab` | Từ vựng LLM để không bị hớ | 2711–2723 | `dl-llm` |
+| `x-mlops-skip` | MLOps: những thứ chưa cần ở quy mô này | 2724–2736 | `pr-mlops` |
+| `x-cyclic-more` | Còn cột nào có tính chu kỳ nữa | 2737–2749 | `f-cyclic` |
+| `x-pipeline-bugs` | Hai lỗi Pipeline hay gặp và cách sửa | 2750–2769 | `t-sklearn`, `f-pipeline`, `pr-code` |
+| `x-sklearn-imports` | Bản đồ import: cần gì thì lấy từ đâu | 2770–2782 | `t-sklearn` |
+| `x-split-other` | Hai cách chia khác: phân tầng và theo nhóm | 2783–2795 | `d-split` |
 
 ## Lịch 8 tuần
 
 | tuần | deliverable | mốc | bài |
 |---|---|---|---|
-| 1 | Repo GitHub (<code>data/</code> trong <code>.gitignore</code>); một notebook Colab clone repo và đọc được một CSV; <code>requirements.txt</code> đã ghim phiên bản. <i>(problem-statement.md để tuần 2, khi học đóng khung.)</i> |  | `s-how` `s-intro` `s-pipeline` `s-families` `s-lookup` `s-plan8w` `s-plan14` `t-env` `t-online` `t-colab` `t-ai` `t-pandas` `t-sql` `t-numpy` `t-sklearn` |
-| 2 | <code>docs/problem-statement.md</code> (dự đoán gì · khi nào · sai tốn bao nhiêu); <code>notebooks/01-eda.ipynb</code> + 4 hình trong <code>reports/figures/</code>; <code>src/split.py</code> kèm <code>assert_split_ok</code>; danh sách cột nghi rò rỉ kèm lý do |  | `m-vector` `m-deriv` `m-prob` `m-bayes` `m-infer` `d-framing` `d-data` `d-eda` `d-clean` `d-leak` `d-split` |
-| 3 | <code>src/features.py</code> + <code>src/history.py</code>; <code>src/pipeline.py</code> (Pipeline + ColumnTransformer) với một test một dòng; <code>notebooks/02-baseline.ipynb</code> chạy hết và in PR-AUC validation từ logistic; một ngưỡng chọn theo chi phí kèm ma trận chi phí FP/FN; bảng thí nghiệm có dòng 1. <i>(<code>python -m src.train</code> chỉ được yêu cầu ở tuần 6, sau bài pr-code.)</i> | Mốc 1 | `f-what` `f-numeric` `f-cat` `f-cyclic` `f-time` `f-text` `f-pipeline` `f-select` `f-store` `ml-map` `ml-linear` `ml-metrics` |
-| 4 | Bảng so sánh baseline vs mô hình chính (LightGBM) trên cùng validation: PR-AUC + trung bình±độ lệch chuẩn của 5 seed; một hình SHAP; ngưỡng chọn lại theo chi phí cho mô hình chính. <i>(Khoảng tin cậy cluster bootstrap và kiểm định ghép cặp làm ở tuần 6 và 8 khi đã học đúng loại bootstrap.)</i> |  | `ml-loss` `ml-trees` `ml-overfit` `ml-cv` `ml-imb` `ml-tune` `ml-shap` `ml-unsup` |
-| 5 | Một notebook train một mạng nhỏ tới hội tụ, có vẽ đường cong loss; ba câu tự giải thích attention bằng lời của bạn |  | `dl-nn` `dl-backprop` `dl-train` `dl-embed` `dl-cnn-rnn` `dl-attn` `dl-tf` `dl-llm` `dl-tab` |
-| 6 | <code>python -m src.train</code> bản đầy đủ + <code>models/fraud-*.joblib</code> + metadata + ngưỡng; <code>src/evaluate.py</code> (cluster bootstrap CI + <code>paired_ci</code>); <code>src/rules.py</code> + bảng ba dòng không-làm-gì/luật/mô hình trên cùng tập test; bảng FPR theo nhóm; API FastAPI + <code>Dockerfile</code>; hàm PSI; CI chạy <code>pytest</code> |  | `pr-arch` `pr-code` `pr-eval` `pr-serve` `pr-monitor` `pr-mlops` `pr-cost` |
+| 1 | <code>docs/problem-statement.md</code> (dự đoán gì · tại thời điểm nào · sai tốn bao nhiêu) — <b>viết trước khi mở notebook</b>; repo GitHub (<code>data/</code> trong <code>.gitignore</code>); một notebook Colab clone repo và đọc được một CSV; <code>requirements.txt</code> đã ghim phiên bản. |  | `s-how` `s-intro` `s-pipeline` `s-families` `s-lookup` `s-plan8w` `s-plan14` `d-framing` `t-env` `t-online` `t-ai` `t-pandas` `t-sql` `t-numpy` `t-sklearn` |
+| 2 | Datacard + <code>src/adapter.py</code> đưa nguồn thô về schema tám cột; danh sách cột nghi rò rỉ kèm lý do; <code>src/split.py</code> kèm <code>assert_split_ok</code>; <code>notebooks/01-eda.ipynb</code> + 4 hình trong <code>reports/figures/</code> (chạy trên train, sau khi đã chia) |  | `d-data` `d-leak` `d-split` `d-eda` `d-clean` `m-vector` `m-deriv` `m-prob` `m-bayes` |
+| 3 | <code>src/features.py</code> + <code>src/history.py</code>; <code>src/pipeline.py</code> (Pipeline + ColumnTransformer) với một test một dòng; <code>notebooks/02-baseline.ipynb</code> chạy hết và in PR-AUC validation từ logistic; một ngưỡng chọn theo chi phí kèm ma trận chi phí FP/FN; bảng thí nghiệm có dòng 1. <i>(<code>python -m src.train</code> chỉ được yêu cầu ở tuần 5, sau bài pr-code.)</i> | Mốc 1 | `f-what` `f-numeric` `f-cat` `f-cyclic` `f-time` `f-text` `f-pipeline` `f-select` `f-store` `ml-map` `ml-linear` `ml-metrics` |
+| 4 | Bảng so sánh baseline vs mô hình chính (LightGBM) trên cùng validation: PR-AUC + trung bình±độ lệch chuẩn của 5 seed; một khoảng tin cậy ghép cặp cho chênh lệch giữa hai mô hình; một hình SHAP; ngưỡng chọn lại theo chi phí cho mô hình chính. <i>(Cluster bootstrap trên dữ liệu giao dịch thật làm ở tuần 5, khi đã có tập test của sản phẩm.)</i> |  | `ml-loss` `ml-trees` `ml-overfit` `ml-cv` `m-infer` `ml-imb` `ml-tune` `ml-shap` `ml-unsup` |
+| 5 | <code>python -m src.train</code> bản đầy đủ + <code>models/fraud-*.joblib</code> + metadata + ngưỡng; <code>src/evaluate.py</code> (cluster bootstrap CI + <code>paired_ci</code>); <code>src/rules.py</code> + bảng ba dòng không-làm-gì/luật/mô hình trên cùng tập test; bảng FPR theo nhóm; API FastAPI + <code>Dockerfile</code>; hàm PSI; CI chạy <code>pytest</code> |  | `pr-arch` `pr-code` `pr-eval` `pr-serve` `pr-monitor` `pr-mlops` `pr-cost` |
+| 6 | Một notebook train một mạng nhỏ tới hội tụ, có vẽ đường cong loss; ba câu tự giải thích attention bằng lời của bạn |  | `t-colab` `dl-nn` `dl-backprop` `dl-train` `dl-embed` `dl-cnn-rnn` `dl-attn` `dl-tf` `dl-llm` `dl-tab` |
 | 7 | Hai mini-project làm thật (mỗi cái một notebook + bảng “giữ gì / đổi gì” so với fraud); bốn đề còn lại chỉ cần bảng giữ/đổi ở mức phác thảo | Mốc 2 | `q-regress` `q-forecast` `q-multi` `q-nlp` `q-cv` `q-rec` `q-causal` `q-analytics` `q-mini` |
 | 8 | <code>research-question.md</code>; reading-note skeleton + lượt 1–2 cho một paper; <b>reproduction report skeleton</b>; bảng ablation + registry thí nghiệm; kiểm định ghép cặp; <b>thesis skeleton</b> (mapping artifact→chương); defense-plan skeleton. <i>(Lượt đọc 3, viết luận văn hoàn chỉnh, tái lập một paper thật, làm slide/rehearsal và bảo vệ nằm NGOÀI 8 tuần — cần nhiều tuần/tháng và phản hồi mentor.)</i> | Mốc 3 | `th-topic` `th-read` `th-repro` `th-design` `th-stats` `th-write` `th-tools` `th-defense` `r-stack` `r-roadmapsh` `r-mistakes` `r-glossary` `r-books` |
 

@@ -74,9 +74,11 @@
       "definedIn": "m-infer",
       "pattern": "bootstrap",
       "allowEarly": [
-        "s-pipeline"
+        "s-pipeline",
+        "d-data",
+        "ml-trees"
       ],
-      "allowWhy": "s-pipeline nêu tên ở bước 8 để định vị."
+      "allowWhy": "s-pipeline nêu tên ở bước 8 để định vị. d-data chỉ nêu 'cluster bootstrap' trong một ô bảng schema, để giải thích vì sao card_id đáng giữ — người học không phải làm gì với nó ở đó. ml-trees là ca §8 cho phép: nó TỰ ĐỊNH NGHĨA tại chỗ ('mẫu bootstrap — bốc có hoàn lại') rồi trỏ sang m-infer; và không dời m-infer lên trước ml-trees được, vì chính m-infer lấy baseline LightGBM của ml-trees làm ví dụ chạy suốt bài."
     },
     "embedding": {
       "definedIn": "dl-embed",
