@@ -17,6 +17,98 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 
 ---
 
+## Phiên 2026-08-05 (n6) — dọn nốt backlog cũ: cổng cho thang khoảng cách, launch.json theo repo, soát bảng dài
+
+Chủ trang: *"còn gì cần làm nữa không, làm nốt đi, handoff còn gì không"*. Rà toàn bộ mục
+`Còn nợ của riêng phiên này` + `Còn nợ thật` của các phiên trước → **3 việc còn thật**, làm
+cả 3. Phần còn lại là ghi chú hoặc đã tự khai "đừng làm" — liệt kê ở cuối.
+
+### 1. `G-SPACING` — cổng còn thiếu cho thang `--ds-sp-*` (nợ từ phiên (k))
+
+Phiên (k) ghi: *"`G-MEASURE` canh `max-width` cứng, nhưng chưa có cổng nào bắt 'vừa viết
+`margin-bottom: 17px` tại chỗ'"*. Giờ có. Luật lấy nguyên câu chốt của
+[docs/design.md](docs/design.md) §0.6: **`margin` giữa hai khối anh em thì lên thang;
+`padding` trong lòng component thì không.**
+
+Chạy lần đầu ra **9 chỗ, và cả 9 rơi ĐÚNG vào một bậc có sẵn** (4 / 6 / 8 / 14px) — tức là
+drift thật chứ không phải cổng bắt sai. Đã trỏ hết vào token; cổng im.
+
+Ba ngoại lệ được kiểm bằng ca thật, không chỉ bằng suy luận: `margin-top: 3px` (nhích quang
+học ≤5px) · `padding: 12px 16px` · `margin: 0 24px` (trục ngang) — **đều im**; `margin:
+21px 0 9px` **nổ và báo cả hai giá trị**. Thoát cửa `/* gate:sp: lý do */` cũng đã thử.
+`gate.test.mjs` 49 → **51 ca**.
+
+### 2. `.claude/launch.json` theo repo được (nợ từ phiên (e), nhắc lại ở (h))
+
+Nguồn giờ là `tools/hooks/launch.json` (được git theo dõi), `install-hooks.sh` thay
+`__REPO_ROOT__` rồi trộn bằng `jq` — giữ nguyên configuration khác, chạy nhiều lần không
+sinh trùng (kiểm: 8 config của cashy còn nguyên).
+
+**Đích là `.claude/` của THƯ MỤC NÀY, không phải gốc repo** — preview đọc `launch.json` theo
+thư mục làm việc. (Lần đầu tôi cài nhầm vào gốc repo rồi phải gỡ ra.)
+
+Nhân tiện sửa luôn ba chỗ làm config cũ chỉ chạy được trên đúng một máy / một trạng thái
+sandbox. Cả ba đều là **`os.getcwd()` bị sandbox từ chối HẲN** — không phải đứng sai thư mục,
+nên `cd` hay `os.chdir()` đều không cứu:
+
+1. `-m http.server` → argparse tính `default=os.getcwd()` ngay lúc dựng parser, nên truyền
+   `--directory` cũng vô ích → dựng server bằng tay, không qua argparse.
+2. `python -c` để `sys.path[0]` = cwd → chính bước **import** đã ném → cờ `-I`.
+3. `SimpleHTTPRequestHandler.__init__` gọi `os.getcwd()` **mỗi request** (Python 3.9) → server
+   chạy được mà vẫn 500 mọi request → `functools.partial(..., directory=)`.
+
+Cộng thêm: bỏ `/opt/homebrew/bin/python3.11` viết cứng, lấy `python3` từ PATH.
+
+### 3. Soát bảng cao quá một màn hình (nợ từ phiên (h))
+
+Phiên (h) lo *"chưa soát bài nào có bảng dài quá một màn hình"*. Đo xong: **160 bảng / 84 bài,
+chỉ 3 cái vượt một màn hình** — `s-plan8w` 3350px · `r-roadmapsh` 897px · `s-intro` 893px. Hai
+trong ba là **bảng tra**, cao là đúng bản chất. (Bảng 839px ở `s-families` mà phiên (h) nêu
+tên giờ không còn trong danh sách.) Kết luận: **không phải vấn đề**, đừng soát lại.
+
+**Đã thử hàng tiêu đề dính và BỎ — đừng thử lần nữa.** `position: sticky` trên `thead th`
+không chạy ở trang này: mọi bảng nằm trong `.wb-table-scroll` (`overflow: auto`), nên phần tử
+sticky bám vào wrapper chứ không bám cửa sổ. Không gỡ được bằng `overflow-y: visible` — theo
+spec, một trục khác `visible` thì trục kia tự thành `auto`. Muốn có thì phải bỏ wrapper, mà
+wrapper là thứ mang phần tràn `--ds-bleed`: đổi layout của 41 bảng để lợi cho 3. Lý do đầy đủ
+nằm trong comment ngay chỗ `.ds-prose th` trong `<style>`.
+
+### Đã rà và KHÔNG làm — kèm lý do, để phiên sau khỏi mở lại
+
+| mục backlog (phiên) | vì sao không |
+|---|---|
+| `--ds-measure` fluid theo cửa sổ (i) | chính mục đó đã tự kết luận "chưa đáng làm"; ký tự/dòng vẫn trong khoảng 45–90 ở mọi bề rộng |
+| `G-HANDOFF` phân biệt "đã ghi" vs "chỉ chạm" (l) | mục đó đã tự chốt "để nguyên" — đòi đúng khuôn `## Phiên <ngày>` là bắt agent theo khuôn cứng hơn mức cần |
+| `gate.test.mjs` chạy ~20–25 giây (l, h) | ghi chú về chi phí, không phải việc. Giờ 51 ca vẫn ~20s vì `pre-push` chỉ chạy khi `tools/` đổi |
+| Sổ học xuất riêng MỘT bài (l) | sổ đang 0 dòng; tối ưu cho vấn đề chưa tồn tại |
+| `docs/design.md` dài ~540 dòng (j) | mục đó ghi rõ "nếu chủ trang thấy vẫn rườm rà" → quyết định của chủ trang, không tự cắt |
+| 5 khuyến nghị `G-FWD` | backlog cũ đã ghi: **đừng nhồi `allowEarly`** |
+
+### Một chỗ lệch số, cố ý để nguyên
+
+`audit.mjs` in **106.6 giờ**, còn trang chủ và roadmap in **106,5 giờ**. Không phải file cũ:
+trang làm tròn về nửa giờ (6396 phút → 106,5) còn `audit` in một chữ số thập phân. Hai đối
+tượng đọc khác nhau. Trước phiên (n5) hai con số trùng nhau **do may** (6390 phút chia hết).
+Đừng "sửa" một bên cho khớp mà không hỏi.
+
+### Verify
+
+Cổng CHẶN xanh · `gate.test` **51/51** · `audit` nhất quán · khuyến nghị về đúng **5 `G-FWD`
+cũ**. `install-hooks.sh` chạy hai lần liên tiếp: đúng 1 configuration `ds-review`, 8 config
+của project khác còn nguyên.
+
+### Cái bẫy pane thứ ba (đã mất khá nhiều thời gian vì nó)
+
+Server preview mới khởi động bị bọc trong `Claude.app/Contents/Helpers/disclaimer` — sandbox
+đó **chặn cả `getcwd()` lẫn việc đọc file trong repo**, nên server chạy nhưng trả 404 cho mọi
+đường dẫn. Bằng chứng phân biệt được: một server CŨ còn sống (không bị bọc) phục vụ đúng thư
+mục đó trả **200**. Đây là trạng thái môi trường, **không phải lỗi `launch.json`** — và bản
+config mới còn khá hơn bản cũ dưới cùng sandbox đó (bản cũ nổ ngay lúc khởi động, bản mới
+chạy và phục vụ). Nếu preview 404 toàn tập: kiểm `ps` xem tiến trình có bị bọc `disclaimer`
+không trước khi đi sửa config.
+
+---
+
 ## Phiên 2026-08-05 (n5) — roadmap dùng chung component cuộn + ngăn kéo được; làm nốt backlog
 
 Ba yêu cầu của chủ trang: (1) `roadmap.html` dùng **cùng component thanh cuộn** với trang
