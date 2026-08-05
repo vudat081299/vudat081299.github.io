@@ -24,6 +24,75 @@ const OUT  = join(ROOT, 'roadmap.html');
 
 const P = readPage(HTML);
 const sums = existsSync(SUMS) ? JSON.parse(readFileSync(SUMS, 'utf8')).summaries || JSON.parse(readFileSync(SUMS, 'utf8')) : {};
+const RAW = readFileSync(HTML, 'utf8');
+
+/* ══ PORT khối tương tác từ trang chính ══════════════════════════════════════
+ * Trước đây trường `viz` của summaries được escape rồi đặt vào một <div> — tức
+ * là roadmap chỉ hiện MỘT CÂU MÔ TẢ về hình ("Widget kéo hai thanh…") chứ không
+ * có hình nào. Giờ trang này chạy ĐÚNG các khối `data-viz` của trang chính.
+ *
+ * Vẫn không vi phạm CLAUDE.md §2 luật 3: code khối tương tác chỉ tồn tại MỘT bản,
+ * trong data-science-roadmap.html. Ba hàm dưới đây chỉ TRÍCH nó ra lúc build —
+ * sửa một khối ở trang chính rồi chạy lại lệnh này là roadmap có bản mới.
+ */
+
+/* JS: cả mục 6 (helper seeBlock/seg/wireSeg/key + mọi VIZ.*), trừ hai thứ:
+   `plan14` phụ thuộc TREE/DAYS/byId/sumMins của trang chính nên không mang sang
+   được, và `$$` phải khai lại vì nó nằm ở mục khác. */
+const VIZ_SKIP = new Set(['plan14']);
+function vizJs() {
+  const i = RAW.indexOf('const VIZ = {};');
+  const j = RAW.indexOf('   7. Khởi động');
+  if (i < 0 || j < 0) throw new Error('build-roadmap: không tìm thấy mục 6 (khối tương tác) trong HTML nguồn');
+  let src = RAW.slice(i, RAW.lastIndexOf('/* ===', j));
+  for (const name of VIZ_SKIP) {
+    const p = src.indexOf(`VIZ.${name} = el => {`);
+    if (p < 0) continue;
+    const end = src.indexOf('\n};', p);
+    src = src.slice(0, p) + src.slice(end + 3);
+  }
+  return src;
+}
+
+/* CSS: mọi rule chạm tới class của khối tương tác. Bỏ các rule neo vào
+   `.ds-prose >` — đó là nhịp của cột bài trang chính, roadmap tự đặt nhịp. */
+function vizCss() {
+  const s = RAW.indexOf('<style>'), e = RAW.indexOf('</style>');
+  const css = RAW.slice(s + 7, e).replace(/\/\*[\s\S]*?\*\//g, '');
+  const blocks = src => {
+    const out = []; let i = 0, depth = 0, start = 0, sel = '';
+    while (i < src.length) {
+      const c = src[i];
+      if (c === '{') { if (depth === 0) { sel = src.slice(start, i).trim(); start = i + 1; } depth++; i++; continue; }
+      if (c === '}') { depth--; if (depth === 0) { out.push([sel, src.slice(start, i)]); start = i + 1; } i++; continue; }
+      i++;
+    }
+    return out;
+  };
+  const NEED = /\.ds-(viz|ctrl|seg|key|costm|fam|maptable|wf)/;
+  const picked = [];
+  for (const [sel, body] of blocks(css)) {
+    if (sel.startsWith('@media')) {
+      const inner = blocks(body).filter(([s2]) => NEED.test(s2));
+      if (inner.length) picked.push(`${sel}{${inner.map(([s2, b2]) => `${s2}{${b2}}`).join('')}}`);
+    } else if (NEED.test(sel) && !/\.ds-prose\s*>/.test(sel)) picked.push(`${sel}{${body}}`);
+  }
+  if (!picked.length) throw new Error('build-roadmap: không trích được CSS khối tương tác');
+  return picked.join('\n');
+}
+
+/* Bài nào có khối nào — đọc thẳng từ các <template data-node>. */
+function vizOfLesson() {
+  const map = {};
+  for (const part of RAW.split('<template data-node="').slice(1)) {
+    const id = part.slice(0, part.indexOf('"'));
+    const body = part.slice(0, part.indexOf('</template>'));
+    const names = [...body.matchAll(/div data-viz="([a-z0-9]+)"/g)].map(m => m[1]).filter(n => !VIZ_SKIP.has(n));
+    if (names.length) map[id] = names;
+  }
+  return map;
+}
+const VIZOF = vizOfLesson();
 
 const esc = s => String(s == null ? '' : s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -53,6 +122,7 @@ const DATA = P.TREE.map(ph => ({
       tldr: s?.tldr || (P.PAYOFF[k.id] ? strip(P.PAYOFF[k.id][0]) : ''),
       points: s?.points || [],
       viz: s?.viz || '',
+      vizIds: VIZOF[k.id] || [],
     };
   }),
 }));
@@ -128,11 +198,12 @@ ${STYLE()}
 
 <main class="rm-main">
   <section class="rm-hero">
-    <h1 class="rm-hero__h">Quick Roadmap</h1>
-    <p class="rm-hero__sub">A condensed map of Data Science, from zero to a real portfolio project: tap any step to grasp its <b>core idea</b> in seconds.</p>
+    <h1 class="rm-hero__h">Lộ trình rút gọn</h1>
+    <p class="rm-hero__sub">Bản đồ cô đọng của Data Science, từ số 0 tới một product làm thật: bấm vào bất kỳ bước nào để nắm <b>ý lõi</b> trong vài giây.</p>
     <div class="rm-hero__stats">
-      <span><b>84</b> steps</span><span><b>11</b> phases</span><span><b>${(Math.round(totalMin/30)/2).toString()}</b> hours</span>
+      <span><b>84</b> bước</span><span><b>11</b> chặng</span><span><b>${(Math.round(totalMin/30)/2).toString().replace('.', ',')}</b> giờ</span>
     </div>
+    <p class="rm-hero__note">Số giờ ở đây là <b>thời lượng học bài đầy đủ</b> (đọc + thực hành + deliverable), không phải thời gian đọc bản rút gọn này — mọi con số phút trên từng bước cũng vậy.</p>
   </section>
   <div class="rm-path">
 ${levelsHtml}
@@ -153,6 +224,10 @@ ${levelsHtml}
 <script>
 const DATA = ${JSON.stringify(DATA)};
 ${SCRIPT()}
+
+/* ==== khối tương tác — TRÍCH nguyên văn từ data-science-roadmap.html lúc build.
+   Đừng sửa ở đây: sửa ở trang chính rồi chạy lại node tools/build-roadmap.mjs. ==== */
+${vizJs()}
 </script>
 </body>
 </html>`;
@@ -210,6 +285,10 @@ function STYLE() { return String.raw`
   .rm-hero{text-align:center;padding:44px 0 20px}
   .rm-hero__h{font-size:clamp(28px,5vw,40px);font-weight:800;margin:0 0 10px;letter-spacing:-.02em}
   .rm-hero__sub{font-size:16px;line-height:1.65;color:var(--wb-fg-muted);max-width:620px;margin:0 auto}
+  /* fg-MUTED chứ không phải fg-subtle: đây là một câu giải thích thật, phải đọc được.
+     Ở sáng, --wb-fg-subtle (#a1a1aa) trên nền #f7f7f8 chỉ ~2,6:1 — dưới ngưỡng AA;
+     --wb-fg-muted (#71717a) đạt ~4,8:1. */
+  .rm-hero__note{font-size:13px;line-height:1.6;color:var(--wb-fg-muted);max-width:620px;margin:14px auto 0}
   .rm-hero__stats{display:flex;gap:26px;justify-content:center;margin-top:20px;font-size:14px;color:var(--wb-fg-muted)}
   .rm-hero__stats b{font-size:22px;color:var(--wb-fg);font-weight:800;margin-right:5px}
   /* ---- path: xương sống dọc, node so le hai bên ---- */
@@ -315,11 +394,30 @@ function STYLE() { return String.raw`
     .rm-levelhead{margin-left:0;margin-right:0}
     :root{--rm-drawer-w:100vw}
   }
+
+  /* ==== khối tương tác ====================================================
+     CSS dưới đây được TRÍCH từ data-science-roadmap.html lúc build (xem
+     vizCss() trong build-roadmap.mjs) — đừng sửa trong roadmap.html.
+     Tám token --ds-* mà nó cần thì khai lại ở đây, cùng giá trị với trang
+     chính; --ds-fs cố định 15px vì drawer không có cột bài để giãn theo. */
+  :root{
+    --ds-fs:15px;
+    --ds-t-hero:calc(var(--ds-fs) * 1.72); --ds-t-sub:calc(var(--ds-fs) * .92);
+    --ds-t-cap:calc(var(--ds-fs) * .84);
+    --ds-sp-hair:4px; --ds-sp-tight:6px; --ds-sp-near:8px; --ds-sp-text:14px; --ds-sp-block:20px;
+  }
+  /* Nhịp của khối trong drawer — trang chính đặt nhịp này ở .ds-prose > .ds-viz,
+     rule đó bị loại khi trích vì .ds-prose không tồn tại ở đây. */
+  .rm-sec .ds-viz{margin:10px 0 0}
+  .rm-sec .ds-viz + .ds-viz{margin-top:14px}
+  .rm-vizcap{font-size:12px;line-height:1.55;color:var(--wb-fg-subtle);margin:8px 0 0}
+${vizCss().split('\n').map(l => '  ' + l).join('\n')}
 `; }
 
 /* =============================== SCRIPT =============================== */
 function SCRIPT() { return String.raw`
 const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>[...r.querySelectorAll(s)];
 const byId={}; DATA.forEach(ph=>ph.lessons.forEach(l=>byId[l.id]={...l,ph}));
 
 /* theme — CHUNG khoá 'ds-theme' với trang chính, nên đổi ở đây nhớ luôn ở kia */
@@ -344,6 +442,7 @@ const PRINAME={core:'Bắt buộc',good:'Nên biết',skim:'Định vị là đ�
 function open(id){const l=byId[id];if(!l)return;lastFocus=document.activeElement;
   $('#drPhase').textContent='Chặng '+l.ph.no+' · '+l.ph.name;
   $('#drBody').innerHTML=body(l);
+  $$('[data-viz]',$('#drBody')).forEach(initViz);
   overlay.hidden=false;drawer.hidden=false;requestAnimationFrame(()=>{overlay.classList.add('is-open');drawer.classList.add('is-open');});
   document.documentElement.style.overflow='hidden';$('#drClose').focus();}
 function close(){overlay.classList.remove('is-open');drawer.classList.remove('is-open');
@@ -353,14 +452,22 @@ function close(){overlay.classList.remove('is-open');drawer.classList.remove('is
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function body(l){
   const chips=[]; chips.push('<span class="rm-chip rm-chip--'+l.pri+'">'+PRINAME[l.pri]+'</span>');
-  chips.push('<span class="rm-chip">'+fmt(l.mins)+'</span>');
+  chips.push('<span class="rm-chip" title="Thời lượng học BÀI ĐẦY ĐỦ (đọc + thực hành + deliverable), không phải thời gian đọc bản rút gọn này">'+fmt(l.mins)+' · bài đầy đủ</span>');
   if(l.fast)chips.push('<span class="rm-chip rm-chip--fast">Fast track 14 ngày</span>');
   if(l.week)chips.push('<span class="rm-chip">Tuần '+l.week+'</span>');
   let h='<h2 class="rm-dh">'+(l.star?'<span class="rm-dh__star">★</span>':'')+esc(l.t)+'</h2>';
   h+='<div class="rm-chips">'+chips.join('')+'</div>';
   if(l.tldr)h+='<p class="rm-tldr">'+esc(l.tldr)+'</p>';
   if(l.points&&l.points.length)h+='<div class="rm-sec"><p class="rm-sec__h">Kiến thức chính</p><ul class="rm-points">'+l.points.map(p=>'<li>'+esc(p)+'</li>').join('')+'</ul></div>';
-  if(l.viz)h+='<div class="rm-sec"><p class="rm-sec__h">Hình / ví dụ then chốt</p><div class="rm-viz">'+esc(l.viz)+'</div></div>';
+  /* Có khối tương tác thật thì CHẠY nó; trường viz dạng chữ chỉ còn là chú thích
+     dưới hình. Bài chưa có khối nào thì vẫn hiện phần mô tả như cũ. */
+  if(l.vizIds&&l.vizIds.length){
+    h+='<div class="rm-sec"><p class="rm-sec__h">Hình / ví dụ then chốt</p>'
+      +l.vizIds.map(v=>'<div data-viz="'+v+'"></div>').join('')
+      +(l.viz?'<p class="rm-vizcap">'+esc(l.viz)+'</p>':'')+'</div>';
+  } else if(l.viz){
+    h+='<div class="rm-sec"><p class="rm-sec__h">Hình / ví dụ then chốt</p><div class="rm-viz">'+esc(l.viz)+'</div></div>';
+  }
   if(l.payoff)h+='<div class="rm-sec"><p class="rm-sec__h">Xong bước này</p><div class="rm-po">'
     +'<div class="rm-po__row"><span class="rm-po__k">Bạn có</span><span>'+l.payoff[0]+'</span></div>'
     +'<div class="rm-po__row"><span class="rm-po__k">Dẫn tới</span><span>'+l.payoff[1]+'</span></div></div></div>';
