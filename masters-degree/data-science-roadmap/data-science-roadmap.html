@@ -10853,12 +10853,19 @@ function setLevel(id, lvl) {
    người tắt chuyển động thì bỏ hẳn hiệu ứng. Vanilla, không thư viện — trang là một file
    HTML tự chứa.
    Mỗi mảnh có `spawn` riêng (không sinh ra hết một lượt ở t=0). Đây là đường ease-in-out
-   của MẬT ĐỘ sinh mảnh theo thời gian — thưa ở t=0, dày nhất ở SPAWN_PEAK (0,3s), rồi
-   thưa dần tới hết SPAWN_WINDOW — KHÔNG phải easing áp lên chuyển động rơi: mỗi mảnh vẫn
-   rơi bằng vật lý bình thường (trọng lực cộng dồn mỗi khung hình, một đường thẳng trong
-   không gian vận tốc). Công thức `triangularSpawn` là nghịch đảo CDF của phân phối tam
-   giác LỆCH (min 0, mode SPAWN_PEAK, max SPAWN_WINDOW) — mode lệch sớm về 0,3s nên pha
-   tăng nhanh rồi pha giảm dài hơn, đúng dáng pháo giấy thật (bùng nhanh, rơi rớt kéo dài). */
+   của MẬT ĐỘ sinh mảnh theo thời gian — thưa ở t=0, dày nhất ở SPAWN_PEAK, rồi thưa dần
+   tới hết SPAWN_WINDOW — KHÔNG phải easing áp lên chuyển động rơi: mỗi mảnh vẫn rơi bằng
+   vật lý bình thường (trọng lực cộng dồn mỗi khung hình, một đường thẳng trong không gian
+   vận tốc). Công thức `triangularSpawn` là nghịch đảo CDF của phân phối tam giác LỆCH
+   (min 0, mode SPAWN_PEAK, max SPAWN_WINDOW) — mode lệch sớm nên pha tăng nhanh rồi pha
+   giảm dài hơn, đúng dáng pháo giấy thật (bùng nhanh, rơi rớt kéo dài).
+
+   ĐỘ TRỄ ĐẦU là do CHỖ SINH, không do easing. Bản trước sinh mảnh ở 0,2–0,8 chiều cao cửa
+   sổ PHÍA TRÊN mép trên; với vận tốc đã giảm 75% thì mảnh nhanh nhất mất ~1,3s mới vào
+   khung (cửa sổ 900px), cộng cửa sổ sinh 1,4s nữa → nhìn như trang bị lag. Nay dải sinh
+   dán vào mép trên (0 → −0,12 chiều cao): mảnh có `spawn` gần 0 hiện NGAY khung hình đầu,
+   phần còn lại vào dần tạo dòng rơi. Muốn "ngay" hơn nữa thì phải tăng vy — nhưng vy chậm
+   là yêu cầu của chủ trang, nên chỗ sinh là dial đúng để xoay. Chủ trang yêu cầu 2026-08-05. */
 function triangularSpawn(total, peak) {
   const u = Math.random(), fc = peak / total;
   return u < fc ? Math.sqrt(u * total * peak) : total - Math.sqrt((1 - u) * total * (total - peak));
@@ -10886,13 +10893,13 @@ function celebrate() {
   // đều còn 1/4 giá trị gốc. LIFE (vòng đời mỗi mảnh, tính từ lúc SINH ra) tăng theo để
   // mảnh vẫn rơi hết quãng đường rồi mới mờ, không "biến mất giữa chừng".
   const g = 0.04 * dpr;
-  const LIFE = 4800, FADE = 800, SPAWN_WINDOW = 1400, SPAWN_PEAK = 300;
+  const LIFE = 4800, FADE = 800, SPAWN_WINDOW = 500, SPAWN_PEAK = 80;
   const bits = Array.from({ length: 140 }, (_, i) => {
     const ribbon = i % 2 === 0;
     return {
       spawn: triangularSpawn(SPAWN_WINDOW, SPAWN_PEAK),
       x: Math.random() * cv.width,
-      y: (-0.2 - Math.random() * 0.6) * cv.height,
+      y: -Math.random() * 0.12 * cv.height,
       vx: (Math.random() - 0.5) * 1.6 * dpr,
       vy: (0.25 + Math.random() * 0.55) * dpr,
       w: (ribbon ? 3 + Math.random() * 2 : 6 + Math.random() * 6) * dpr,
@@ -10911,6 +10918,10 @@ function celebrate() {
       const age = t - b.spawn;
       if (age < 0) { alive++; continue; }     // chưa tới lượt sinh — chờ, chưa vẽ
       if (age >= LIFE) continue;              // đã hết vòng đời — không vẽ, không tính alive
+      // Rơi khỏi mép dưới thì coi như xong, không đợi hết LIFE: dải sinh nay dán mép trên
+      // nên mảnh ra khỏi khung sớm hơn LIFE, thiếu dòng này thì vòng rAF chạy không cho
+      // một canvas rỗng. LIFE giờ chỉ còn là hạn mờ dần cho mảnh chưa kịp ra.
+      if (b.y - b.h > cv.height) continue;
       alive++;
       b.vy += g; b.x += b.vx; b.y += b.vy; b.rot += b.vr;
       const fade = age > LIFE - FADE ? Math.max(0, (LIFE - age) / FADE) : 1;

@@ -698,7 +698,22 @@ với bài không có deliverable, hoặc đạt-deliverable với bài có), tr
   `z-index: 2147483647` (trên popup 100/101 và dock 90), `pointer-events:none`. Giấy trong
   suốt ở chỗ không có mảnh (clearRect), nên trang phía sau vẫn thấy và vẫn bấm được.
 - **Tôn trọng `prefers-reduced-motion`**: người tắt chuyển động thì bỏ hẳn hiệu ứng.
-- **Tự dọn**: rAF chạy ~2,3s rồi `canvas.remove()`. Gọi lại khi đang chạy thì huỷ vòng cũ
-  trước (một canvas một lúc). Vanilla, không thư viện — trang là một file HTML tự chứa.
+- **Nổ NGAY, và dial để điều chỉnh là CHỖ SINH — không phải easing.** Mảnh sinh trong dải
+  `y = 0 … −0,12` chiều cao cửa sổ, tức dán vào mép trên, nên mảnh đầu hiện ở khung hình
+  thứ 2 (đo ở 1280×720: **33 ms**, nửa mật độ 0,78 s). Vận tốc rơi cố ý chậm (đã giảm 75%
+  theo yêu cầu chủ trang), nên **đừng tăng vy để bù độ trễ** — xoay dải sinh. `SPAWN_WINDOW`
+  500 ms / `SPAWN_PEAK` 80 ms chỉ rải mảnh cho thành dòng, không phải chỗ tạo trễ.
+- **Tự dọn**: mảnh rơi khỏi mép dưới là hết, không đợi `LIFE`; canvas biến mất ~3,6 s sau
+  khi bắn. `LIFE` (4800) giờ chỉ là hạn mờ dần cho mảnh chưa kịp ra khỏi khung. Gọi lại khi
+  đang chạy thì huỷ vòng cũ trước (một canvas một lúc). Vanilla, không thư viện — trang là
+  một file HTML tự chứa.
 - **Kiểm**: screenshot ra khung đen (§8) — đọc `getImageData` để xác nhận canvas trong suốt,
   và `localStorage` để xác nhận `hash` không đổi (không nhảy bài).
+- **Đo được THỜI GIAN dù pane đóng băng rAF.** Tab preview thường ở `visibilityState:
+  hidden` giữa hai lệnh tool, nên rAF không chạy và mọi phép đo theo đồng hồ thật ra 1 khung.
+  Cách đo: chặn `requestAnimationFrame` (giữ callback lại) **và** `performance.now` (đồng hồ
+  giả cộng 1000/60 mỗi vòng), rồi tự bơm khung hình — chạy đúng code thật nhưng theo thời
+  gian xác định. Đếm mật độ bằng `drawImage` canvas thật xuống một canvas 160×90 rồi đọc
+  alpha, đừng `getImageData` cả canvas mỗi khung. Nhớ trả lại hai hàm gốc khi xong. Muốn
+  so trước/sau thì `git show HEAD:<file> > scratchpad/old.html` rồi đo hai bản cùng một
+  cỡ cửa sổ.
