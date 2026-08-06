@@ -254,8 +254,12 @@ ${levelsHtml}
      literal của build-roadmap.mjs, đúng cái bẫy mà cổng G-SYNTAX canh. -->
 <p id="routeStatus" class="rm-sr" role="status" aria-live="polite" aria-atomic="true"></p>
 
-<div class="rm-overlay" id="overlay" hidden></div>
-<aside class="rm-drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drTitle" hidden>
+<!-- KHÔNG có lớp phủ (chủ trang chốt 2026-08-06). Nên ngăn này KHÔNG phải modal:
+     aria-modal="false", trang phía sau vẫn cuộn được và bấm được, và thân trang
+     nhường đúng bề rộng ngăn để danh sách bước tự căn giữa lại trong phần còn
+     thấy (xem .rm-main + html.rm-open trong STYLE). Cùng luật với dock Notes của
+     trang chính — tầng KHÔNG phủ thì phải để trang sau sống. Đóng bằng ✕ hoặc Esc. -->
+<aside class="rm-drawer" id="drawer" role="dialog" aria-modal="false" aria-labelledby="drTitle" hidden>
   <!-- Tay kéo: CÙNG lớp .ds-grip và CÙNG hàm makeEdgeResizer() với ngăn phụ + dock
        ghi chú của trang chính (cả CSS lẫn JS đều trích lúc build). Đứng ngoài thân
        cuộn để cuộn nội dung không làm mất tay kéo. -->
@@ -420,8 +424,14 @@ function STYLE() { return String.raw`
   /* Chỉ dành cho trình đọc màn hình — vùng thông báo của announce(). */
   .rm-sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;
     clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
-  .rm-overlay{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.42);opacity:0;transition:opacity .18s ease}
-  .rm-overlay.is-open{opacity:1}
+  /* Ngăn mở ra thì thân trang NHƯỜNG CHỖ đúng bề rộng ngăn, không bị ngăn đè lên:
+     .rm-main vốn đã căn giữa bằng margin auto, nên thu hẹp hộp chứa là nó tự căn
+     giữa lại trong phần còn thấy — không cần tính toạ độ, không cần biến thứ hai.
+     Đặt trên <body> chứ không trên .rm-main vì navbar sticky cũng phải ngắn lại,
+     nếu không thì nút theme nằm dưới ngăn. Cùng cơ chế --ds-dock-w của dock Notes
+     ở trang chính. Nhịp .2s khớp transform của ngăn để hai thứ đi cùng nhau. */
+  body{transition:padding-right .2s ease}
+  html.rm-open body{padding-right:var(--rm-drawer-w)}
   .rm-drawer{position:fixed;top:0;right:0;bottom:0;z-index:41;width:var(--rm-drawer-w);max-width:100vw;
     background:var(--wb-canvas);border-left:var(--wb-bw) solid var(--wb-border);box-shadow:var(--wb-shadow-lg);
     display:flex;flex-direction:column;transform:translateX(100%);transition:transform .2s ease}
@@ -475,6 +485,9 @@ ${gripCss().split('\n').map(l => '  ' + l).join('\n')}
        style của <html>, tức inline. */
     :root{--rm-drawer-w:100vw !important}
     .ds-grip{display:none}
+    /* Ngăn chiếm cả màn thì KHÔNG nhường chỗ được — nhường 100vw là đẩy danh sách
+       ra khỏi màn hình. Ở khổ này ngăn che hết nên không có gì phải căn giữa. */
+    html.rm-open body{padding-right:0}
   }
 
   /* ==== khối tương tác ====================================================
@@ -519,17 +532,22 @@ try{const prog=JSON.parse(localStorage.getItem('ds-roadmap-progress-v3')||'{}');
 }catch(e){}
 
 /* drawer */
-const drawer=$('#drawer'),overlay=$('#overlay');let lastFocus=null;
+/* Không lớp phủ, nên KHÔNG khoá cuộn trang (chủ trang chốt 2026-08-06): một ngăn
+   không phủ mà vẫn khoá cuộn là nửa vời — nhường chỗ để đọc danh sách rồi lại
+   không cho cuộn danh sách. Lớp rm-open trên <html> là thứ CSS bám vào để thân
+   trang nhường chỗ; đặt ngay chứ không trong rAF vì rAF bị treo khi tab ẩn. */
+const drawer=$('#drawer');let lastFocus=null;
 const PRINAME={core:'Bắt buộc',good:'Nên biết',skim:'Định vị là đủ'};
 function open(id){const l=byId[id];if(!l)return;lastFocus=document.activeElement;
   $('#drPhase').textContent='Chặng '+l.ph.no+' · '+l.ph.name;
   $('#drBody').innerHTML=body(l);
   $$('[data-viz]',$('#drBody')).forEach(initViz);
-  overlay.hidden=false;drawer.hidden=false;requestAnimationFrame(()=>{overlay.classList.add('is-open');drawer.classList.add('is-open');});
-  document.documentElement.style.overflow='hidden';$('#drClose').focus();}
-function close(){overlay.classList.remove('is-open');drawer.classList.remove('is-open');
-  document.documentElement.style.overflow='';
-  setTimeout(()=>{overlay.hidden=true;drawer.hidden=true;},200);
+  drawer.hidden=false;document.documentElement.classList.add('rm-open');
+  requestAnimationFrame(()=>{drawer.classList.add('is-open');});
+  $('#drClose').focus();}
+function close(){drawer.classList.remove('is-open');
+  document.documentElement.classList.remove('rm-open');
+  setTimeout(()=>{drawer.hidden=true;},200);
   if(lastFocus&&document.contains(lastFocus))lastFocus.focus();}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function body(l){
@@ -561,7 +579,6 @@ function body(l){
 function fmt(m){return m<60?m+'′':(m%60?Math.floor(m/60)+'h'+String(m%60).padStart(2,'0'):Math.floor(m/60)+'h');}
 document.querySelectorAll('.rm-node').forEach(n=>n.addEventListener('click',()=>open(n.dataset.id)));
 $('#drClose').addEventListener('click',close);
-overlay.addEventListener('click',close);
 addEventListener('keydown',e=>{if(e.key==='Escape'&&!drawer.hidden)close();});
 
 /* announce() — bản tối giản của hàm cùng tên ở trang chính, đủ cho thứ duy nhất gọi
