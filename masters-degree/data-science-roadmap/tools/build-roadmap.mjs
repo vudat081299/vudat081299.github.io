@@ -83,6 +83,11 @@ function pickCss(need, what) {
 }
 const vizCss  = () => pickCss(/\.ds-(viz|ctrl|seg|key|costm|fam|maptable|wf)/, 'khối tương tác');
 const gripCss = () => pickCss(/\.ds-(grip|dragging)\b/, 'tay kéo bề rộng ngăn');
+/* Luật "đầu ngăn không có dòng phụ thì cao bằng navbar" ở trang chính, TRÍCH sang đây
+   thay vì chép: nó chỉ dùng class của kit + token --wb-navbar-h nên mang sang được
+   nguyên văn. pickCss ném lỗi nếu không trích được gì, nên nếu ai xoá rule ở trang
+   chính thì build đổ ngay chứ không âm thầm mất luật. */
+const headCss = () => pickCss(/\.wb-drawer__head\b/, 'đầu ngăn không có dòng phụ');
 
 /* JS của tay kéo: `dsZoom()` + `makeEdgeResizer()` nguyên văn từ trang chính.
    Cùng lý do như vizJs() — CLAUDE.md §2 luật 3, và chú thích ngay trên hàm đó
@@ -458,6 +463,9 @@ function STYLE() { return String.raw`
   .rm-drawer{width:var(--rm-drawer-w);max-width:100vw;background:var(--wb-canvas)}
   .rm-drawer[hidden]{display:none}
   .rm-drawer .wb-drawer__body{padding:22px 24px 40px}
+  /* ==== TRÍCH nguyên văn từ data-science-roadmap.html: đầu ngăn nào không có dòng
+     phụ thì cao đúng bằng navbar. Sửa ở trang chính rồi chạy lại build. ==== */
+${headCss().split('\n').map(l => '  ' + l).join('\n')}
 ${gripCss().split('\n').map(l => '  ' + l).join('\n')}
   /* Ngôi sao "bài trọng tâm" đứng cạnh tên bài, nay ở .wb-drawer__title của kit chứ
      không còn ở một h2 tự vẽ trong thân — nên selector neo vào chính nó, không neo

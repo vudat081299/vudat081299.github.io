@@ -159,6 +159,14 @@
   .rm-drawer{width:var(--rm-drawer-w);max-width:100vw;background:var(--wb-canvas)}
   .rm-drawer[hidden]{display:none}
   .rm-drawer .wb-drawer__body{padding:22px 24px 40px}
+  /* ==== TRÍCH nguyên văn từ data-science-roadmap.html: đầu ngăn nào không có dòng
+     phụ thì cao đúng bằng navbar. Sửa ở trang chính rồi chạy lại build. ==== */
+  .wb-drawer__head:not(:has(.wb-drawer__sub)),
+    .wb-drawer__head:has(.wb-drawer__sub:empty){
+      min-height: var(--wb-navbar-h); padding-top: 0; padding-bottom: 0; align-items: center;
+    }
+  .wb-drawer__head:not(:has(.wb-drawer__sub)) .wb-close,
+    .wb-drawer__head:has(.wb-drawer__sub:empty) .wb-close{ align-self: center; }
   .ds-grip{
       position: absolute; left: -6px; top: 0; bottom: 0; width: 13px; z-index: 2;
       cursor: col-resize; background: none; border: 0; padding: 0; touch-action: none;
