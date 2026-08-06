@@ -912,6 +912,12 @@
      một con số không nói được vì sao là 660, và trên màn 2560px thì nó chỉ còn 26% cửa sổ
      trong khi trên laptop 1280px nó chiếm 52%. Cùng một ngăn, hai cảm giác khác nhau. */
   .ds-drawer { width: var(--ds-aside-w); }
+  /* Nền ngăn = NỀN TRANG, không phải --wb-surface của kit (chủ trang chốt 2026-08-06:
+     ở sáng, surface là trắng tinh nên ngăn trông như một tờ giấy dán lên trang xám).
+     Ngăn là chỗ ĐỌC tiếp mạch chính, không phải một cái card nổi lên — nên nó dùng
+     cùng nền với chỗ nó vừa rời ra. Ngăn của roadmap.html khai đúng dòng này
+     (.rm-drawer trong build-roadmap.mjs): đổi ở đây thì đổi cả bên đó. */
+  .ds-drawer { background: var(--wb-canvas); }
   .ds-drawer .ds-prose { max-width: none; }
   .ds-drawer .wb-drawer__body { padding-bottom: var(--ds-sp-sec); }
 
