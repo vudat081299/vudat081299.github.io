@@ -259,18 +259,28 @@ ${levelsHtml}
      nhường đúng bề rộng ngăn để danh sách bước tự căn giữa lại trong phần còn
      thấy (xem .rm-main + html.rm-open trong STYLE). Cùng luật với dock Notes của
      trang chính — tầng KHÔNG phủ thì phải để trang sau sống. Đóng bằng ✕ hoặc Esc. -->
-<aside class="rm-drawer" id="drawer" role="dialog" aria-modal="false" aria-labelledby="drTitle" hidden>
+<aside class="wb-drawer rm-drawer" id="drawer" role="dialog" aria-modal="false" aria-labelledby="drTitle" hidden>
   <!-- Tay kéo: CÙNG lớp .ds-grip và CÙNG hàm makeEdgeResizer() với ngăn phụ + dock
        ghi chú của trang chính (cả CSS lẫn JS đều trích lúc build). Đứng ngoài thân
        cuộn để cuộn nội dung không làm mất tay kéo. -->
   <div class="ds-grip" id="drGrip" role="separator" aria-orientation="vertical"
        tabindex="0" aria-label="Kéo để đổi bề rộng ngăn tóm tắt" title="Kéo để đổi bề rộng · ←/→ · nhấn đúp để về 1/3 cửa sổ"></div>
-  <div class="rm-drawer__bar">
-    <span class="rm-drawer__phase" id="drPhase"></span>
-    <button class="rm-drawer__close" id="drClose" type="button" aria-label="Đóng" title="Đóng (Esc)">
-      <span aria-hidden="true">✕</span></button>
+  <!-- Đầu ngăn dùng ĐÚNG component của kit (§33) như ngăn phụ của trang chính:
+       wb-drawer__head + __title + __sub + wb-close. Trước đây đây là ba class tự vẽ
+       (.rm-drawer__bar/__phase/__close với một ký tự ✕ thô trong hộp 32px) nên hai
+       trang lệch nhau — chủ trang báo 2026-08-06. wb-close lấy dấu ✕ từ icon font
+       của kit, không phải ký tự văn bản.
+       Tên bài nằm ở __title chứ không còn ở .rm-dh trong thân: aria-labelledby của
+       chính thẻ aside này vốn đã trỏ vào drTitle (một id CHƯA từng tồn tại — lỗi có
+       sẵn, nay đóng lại), và đặt ở đầu ngăn thì tên bài không cuộn đi mất. -->
+  <div class="wb-drawer__head">
+    <div>
+      <h4 class="wb-drawer__title" id="drTitle"></h4>
+      <p class="wb-drawer__sub" id="drPhase"></p>
+    </div>
+    <button class="wb-close" id="drClose" type="button" aria-label="Đóng" title="Đóng (Esc)"></button>
   </div>
-  <div class="rm-drawer__body wb-scroll-y" id="drBody"></div>
+  <div class="wb-drawer__body wb-scroll-y" id="drBody"></div>
 </aside>
 
 <script>
@@ -430,25 +440,29 @@ function STYLE() { return String.raw`
      Đặt trên <body> chứ không trên .rm-main vì navbar sticky cũng phải ngắn lại,
      nếu không thì nút theme nằm dưới ngăn. Cùng cơ chế --ds-dock-w của dock Notes
      ở trang chính. Nhịp .2s khớp transform của ngăn để hai thứ đi cùng nhau. */
-  body{transition:padding-right .2s ease}
+  body{transition:padding-right .24s cubic-bezier(.4,0,.2,1)}
   html.rm-open body{padding-right:var(--rm-drawer-w)}
-  .rm-drawer{position:fixed;top:0;right:0;bottom:0;z-index:41;width:var(--rm-drawer-w);max-width:100vw;
-    background:var(--wb-canvas);border-left:var(--wb-bw) solid var(--wb-border);box-shadow:var(--wb-shadow-lg);
-    display:flex;flex-direction:column;transform:translateX(100%);transition:transform .2s ease}
-  .rm-drawer.is-open{transform:translateX(0)}
-  .rm-drawer__bar{flex:none;display:flex;align-items:center;justify-content:space-between;gap:12px;
-    padding:14px 18px;border-bottom:var(--wb-bw) solid var(--wb-border);background:var(--wb-surface)}
-  .rm-drawer__phase{font-size:12px;font-weight:700;color:var(--wb-fg-muted);text-transform:uppercase;letter-spacing:.04em}
-  .rm-drawer__close{width:32px;height:32px;border-radius:8px;border:var(--wb-bw) solid var(--wb-border);
-    background:var(--wb-surface);color:var(--wb-fg);cursor:pointer;font-size:15px;line-height:1}
-  .rm-drawer__close:hover{border-color:var(--wb-border-strong);background:var(--wb-surface-hover)}
-  .rm-drawer__close:focus-visible{outline:none;box-shadow:0 0 0 3px var(--wb-ring)}
-  /* Lớp wb-scroll-y (kit §27) mới là thứ cấp thanh cuộn theo chủ đề + chỗ thở ở đáy;
-     overflow-y ở đây chỉ là dự phòng nếu lớp đó bị bỏ. */
-  .rm-drawer__body{flex:1 1 auto;overflow-y:auto;padding:22px 24px 40px}
+  /* Ngăn = .wb-drawer của kit (§33) + .rm-drawer chỉ để GHI ĐÈ, đúng khuôn
+     "wb-drawer ds-drawer" của trang chính. Vị trí, nền, viền, bóng, transform và
+     .is-open đều là của kit — đừng khai lại ở đây, khai lại là hai trang bắt đầu
+     trôi khỏi nhau. Chỉ ba thứ roadmap cần khác:
+       · bề rộng theo token kéo được (kit cứng 380px / max 92vw)
+       · [hidden] phải THẬT ẩn: .wb-drawer khai display:flex, mà rule của author
+         thắng [hidden]{display:none} của UA ở cùng độ đặc hiệu — thiếu dòng này
+         thì ngăn đóng vẫn nằm trong luồng Tab và vẫn trả rect thật. Trang chính
+         không lộ lỗi này vì ngăn của nó nằm trong .wb-overlay (display:none).
+       · nền = nền trang (--wb-canvas) chứ không phải --wb-surface của kit: ở sáng
+         surface là trắng tinh nên ngăn trông như tờ giấy dán lên trang xám. Cùng
+         một dòng ở .ds-drawer của trang chính — đổi bên này thì đổi cả bên đó.
+       · chỗ thở ở đáy thân cuộn. */
+  .rm-drawer{width:var(--rm-drawer-w);max-width:100vw;background:var(--wb-canvas)}
+  .rm-drawer[hidden]{display:none}
+  .rm-drawer .wb-drawer__body{padding:22px 24px 40px}
 ${gripCss().split('\n').map(l => '  ' + l).join('\n')}
-  .rm-dh{font-size:22px;font-weight:800;line-height:1.25;margin:0 0 12px;letter-spacing:-.01em}
-  .rm-dh .rm-dh__star{color:var(--rm-star);margin-right:6px}
+  /* Ngôi sao "bài trọng tâm" đứng cạnh tên bài, nay ở .wb-drawer__title của kit chứ
+     không còn ở một h2 tự vẽ trong thân — nên selector neo vào chính nó, không neo
+     vào phần tử cha. */
+  .rm-dh__star{color:var(--rm-star);margin-right:6px}
   .rm-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
   .rm-chip{font-size:11px;font-weight:650;padding:3px 9px;border-radius:999px;border:var(--wb-bw) solid var(--wb-border-strong);color:var(--wb-fg-muted);white-space:nowrap}
   .rm-chip--core{background:var(--wb-fg);color:var(--wb-canvas);border-color:var(--wb-fg)}
@@ -539,6 +553,9 @@ try{const prog=JSON.parse(localStorage.getItem('ds-roadmap-progress-v3')||'{}');
 const drawer=$('#drawer');let lastFocus=null;
 const PRINAME={core:'Bắt buộc',good:'Nên biết',skim:'Định vị là đủ'};
 function open(id){const l=byId[id];if(!l)return;lastFocus=document.activeElement;
+  /* Tên bài ở đầu ngăn (wb-drawer__title), chặng ở dòng phụ — cùng khuôn đầu ngăn
+     với trang chính. innerHTML chỉ để chèn ngôi sao; tên bài vẫn qua esc(). */
+  $('#drTitle').innerHTML=(l.star?'<span class="rm-dh__star" aria-hidden="true">★</span>':'')+esc(l.t);
   $('#drPhase').textContent='Chặng '+l.ph.no+' · '+l.ph.name;
   $('#drBody').innerHTML=body(l);
   $$('[data-viz]',$('#drBody')).forEach(initViz);
@@ -555,8 +572,8 @@ function body(l){
   chips.push('<span class="rm-chip" title="Thời lượng học BÀI ĐẦY ĐỦ (đọc + thực hành + deliverable), không phải thời gian đọc bản rút gọn này">'+fmt(l.mins)+' · bài đầy đủ</span>');
   if(l.fast)chips.push('<span class="rm-chip rm-chip--fast">Fast track 14 ngày</span>');
   if(l.week)chips.push('<span class="rm-chip">Tuần '+l.week+'</span>');
-  let h='<h2 class="rm-dh">'+(l.star?'<span class="rm-dh__star">★</span>':'')+esc(l.t)+'</h2>';
-  h+='<div class="rm-chips">'+chips.join('')+'</div>';
+  /* KHÔNG lặp lại tên bài ở đây — nó đã là wb-drawer__title ở đầu ngăn. */
+  let h='<div class="rm-chips">'+chips.join('')+'</div>';
   if(l.tldr)h+='<p class="rm-tldr">'+esc(l.tldr)+'</p>';
   if(l.points&&l.points.length)h+='<div class="rm-sec"><p class="rm-sec__h">Kiến thức chính</p><ul class="rm-points">'+l.points.map(p=>'<li>'+esc(p)+'</li>').join('')+'</ul></div>';
   /* Có khối tương tác thật thì CHẠY nó; trường viz dạng chữ chỉ còn là chú thích
