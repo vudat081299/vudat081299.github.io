@@ -10860,12 +10860,31 @@ function setLevel(id, lvl) {
    (min 0, mode SPAWN_PEAK, max SPAWN_WINDOW) — mode lệch sớm nên pha tăng nhanh rồi pha
    giảm dài hơn, đúng dáng pháo giấy thật (bùng nhanh, rơi rớt kéo dài).
 
-   ĐỘ TRỄ ĐẦU là do CHỖ SINH, không do easing. Bản trước sinh mảnh ở 0,2–0,8 chiều cao cửa
+   ĐỘ TRỄ ĐẦU là do CHỖ SINH, không do easing. Bản đầu sinh mảnh ở 0,2–0,8 chiều cao cửa
    sổ PHÍA TRÊN mép trên; với vận tốc đã giảm 75% thì mảnh nhanh nhất mất ~1,3s mới vào
-   khung (cửa sổ 900px), cộng cửa sổ sinh 1,4s nữa → nhìn như trang bị lag. Nay dải sinh
-   dán vào mép trên (0 → −0,12 chiều cao): mảnh có `spawn` gần 0 hiện NGAY khung hình đầu,
-   phần còn lại vào dần tạo dòng rơi. Muốn "ngay" hơn nữa thì phải tăng vy — nhưng vy chậm
-   là yêu cầu của chủ trang, nên chỗ sinh là dial đúng để xoay. Chủ trang yêu cầu 2026-08-05. */
+   khung (cửa sổ 900px), cộng cửa sổ sinh 1,4s nữa → nhìn như trang bị lag. Chỗ sinh là dial
+   đúng để xoay, KHÔNG phải vy — vy chậm là yêu cầu của chủ trang. Yêu cầu 2026-08-05.
+
+   BA DIAL, ĐỪNG LẪN — mỗi cái trả lời một câu khác nhau (chủ trang yêu cầu 2026-08-06:
+   "hiệu ứng quá ngắn, kéo dài height ra, mật độ thưa hơn 50%"):
+     · mảnh đầu hiện KHI NÀO  → INSTANT: ba mảnh có spawn = 0 và y sát mép trên. Trước đây
+       33ms là ĂN MAY: nó đến từ chuyện có 140 mảnh nên bốc trúng một mảnh vừa spawn sớm
+       vừa nằm sát mép. Giảm còn 70 mảnh thì độ trễ tự bật lên 250ms (đo được). Nay là bảo
+       đảm, không phụ thuộc số mảnh.
+     · hiệu ứng DÀI bao lâu   → SPAWN_WINDOW (mảnh vào khung rải trong bao lâu) + BAND (dải
+       sinh cao bao nhiêu phía trên mép). BAND dùng luỹ thừa 3: đại đa số mảnh vẫn nằm sát
+       mép trên, một ít lên tới 2 lần chiều cao màn để tạo đuôi. Dải PHẲNG (không luỹ thừa)
+       thì mất hết mảnh gần y=0 → mảnh đầu tụt về 517ms, đúng lỗi vừa sửa ở trên.
+     · trên màn DÀY bao nhiêu → COUNT.
+   Đo bằng mô phỏng node (đồng hồ giả 1000/60 mỗi khung, cửa sổ 1280×720) trước → sau:
+     mảnh đầu 33ms → 0ms · trải dọc lúc dày nhất 179/720px → 720/720px · đỉnh trên màn
+     140 → 46 mảnh · canvas tắt 3,73s → 7,17s.
+
+   VMAX là hệ quả của BAND, không phải một lựa chọn thẩm mỹ. Mảnh sinh ở −2 lần chiều cao
+   màn rơi tự do 2 màn trước khi vào khung, nên nếu không chặn thì nó lao qua khung nhanh
+   gấp ba mảnh sinh sát mép — cùng một hiệu ứng mà hai tốc độ. VMAX = 7,6px/khung đúng bằng
+   vận tốc một mảnh sinh sát mép đạt được lúc tới đáy ở bản trước, nên tốc độ rơi NHÌN THẤY
+   không đổi: g và vy vẫn nguyên giá trị đã giảm 75%. */
 function triangularSpawn(total, peak) {
   const u = Math.random(), fc = peak / total;
   return u < fc ? Math.sqrt(u * total * peak) : total - Math.sqrt((1 - u) * total * (total - peak));
@@ -10892,14 +10911,15 @@ function celebrate() {
   // Tốc độ rơi chậm hơn bản gốc 75% (hai lần giảm 50% liên tiếp theo yêu cầu): vy và g
   // đều còn 1/4 giá trị gốc. LIFE (vòng đời mỗi mảnh, tính từ lúc SINH ra) tăng theo để
   // mảnh vẫn rơi hết quãng đường rồi mới mờ, không "biến mất giữa chừng".
-  const g = 0.04 * dpr;
-  const LIFE = 4800, FADE = 800, SPAWN_WINDOW = 500, SPAWN_PEAK = 80;
-  const bits = Array.from({ length: 140 }, (_, i) => {
+  const g = 0.04 * dpr, VMAX = 7.6 * dpr;
+  const LIFE = 9000, FADE = 800, SPAWN_WINDOW = 3000, SPAWN_PEAK = 200;
+  const COUNT = 70, BAND = 2, INSTANT = 3;
+  const bits = Array.from({ length: COUNT }, (_, i) => {
     const ribbon = i % 2 === 0;
     return {
-      spawn: triangularSpawn(SPAWN_WINDOW, SPAWN_PEAK),
+      spawn: i < INSTANT ? 0 : triangularSpawn(SPAWN_WINDOW, SPAWN_PEAK),
       x: Math.random() * cv.width,
-      y: -Math.random() * 0.12 * cv.height,
+      y: i < INSTANT ? -2 * dpr * Math.random() : -(Math.random() ** 3) * BAND * cv.height,
       vx: (Math.random() - 0.5) * 1.6 * dpr,
       vy: (0.25 + Math.random() * 0.55) * dpr,
       w: (ribbon ? 3 + Math.random() * 2 : 6 + Math.random() * 6) * dpr,
@@ -10918,12 +10938,12 @@ function celebrate() {
       const age = t - b.spawn;
       if (age < 0) { alive++; continue; }     // chưa tới lượt sinh — chờ, chưa vẽ
       if (age >= LIFE) continue;              // đã hết vòng đời — không vẽ, không tính alive
-      // Rơi khỏi mép dưới thì coi như xong, không đợi hết LIFE: dải sinh nay dán mép trên
-      // nên mảnh ra khỏi khung sớm hơn LIFE, thiếu dòng này thì vòng rAF chạy không cho
-      // một canvas rỗng. LIFE giờ chỉ còn là hạn mờ dần cho mảnh chưa kịp ra.
+      // Rơi khỏi mép dưới thì coi như xong, không đợi hết LIFE: mảnh ra khỏi khung sớm hơn
+      // LIFE, thiếu dòng này thì vòng rAF chạy không cho một canvas rỗng. LIFE giờ chỉ còn
+      // là hạn mờ dần cho mảnh chưa kịp ra.
       if (b.y - b.h > cv.height) continue;
       alive++;
-      b.vy += g; b.x += b.vx; b.y += b.vy; b.rot += b.vr;
+      b.vy = Math.min(b.vy + g, VMAX); b.x += b.vx; b.y += b.vy; b.rot += b.vr;
       const fade = age > LIFE - FADE ? Math.max(0, (LIFE - age) / FADE) : 1;
       ctx.save();
       ctx.globalAlpha = fade;
