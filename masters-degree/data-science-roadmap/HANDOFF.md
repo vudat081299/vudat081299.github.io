@@ -17,6 +17,117 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 
 ---
 
+## Phiên 2026-08-06 (n7) — pháo giấy nổ NGAY (1,43s → 33ms) · hero roadmap về tiếng Anh + đóng lỗ luật §11
+
+### Hero `roadmap.html` về tiếng Anh — và nguyên nhân nó bị dịch ngược
+
+Chủ trang: *"tại sao phần text 'Lộ trình rút gọn…' lại bị đổi thành tiếng Việt rồi, trước
+đấy nó là tiếng Anh mà"*. Truy được cả chuỗi, **cùng ngày 2026-08-05**:
+
+| giờ | commit | hero |
+|---|---|---|
+| — | `1a75135` | tiếng Việt "Bản đồ học nhanh" (bản đầu) |
+| 12:05 | `82bd55f` | → **tiếng Anh** "Quick Roadmap / The same roadmap, a different way to learn…" |
+| 14:05 | `3e699a5` | viết lại tiếng Anh "A condensed map of Data Science…" + `84 steps · 11 phases · 106.5 hours` |
+| 17:52 | `52a15f9` | → **về tiếng Việt** + thêm `.replace('.', ',')` cho dấu thập phân |
+
+**Nguyên nhân không phải ai làm sai, mà là luật và ý định thiết kế không khớp — và luật
+thắng vì luật được ghi ra.** Hero tiếng Anh vào ở 12:05 trong một phiên *làm lại giao diện*,
+tức là một lựa chọn thẩm mỹ không có chỗ nào ghi lại. Tới 17:52, phiên (n3) soát trang theo
+`CLAUDE.md` §11 — luật lúc đó kể **đúng hai vùng** tiếng Anh (thanh trên, chân trang) — thấy
+hero không thuộc vùng nào nên xếp nó vào "nội dung → tiếng Việt". Phiên đó **có** ghi lại và
+**có** cảnh báo trước, ở [HANDOFF.md:428](HANDOFF.md#L428): *"nếu chủ trang cố ý muốn hero
+tiếng Anh thì đây là chỗ lật lại"*. `.rm-hero__note` sinh ra cùng lúc 17:52 nên nó chưa từng
+có bản tiếng Anh — lần này mới dịch.
+
+Đã làm: dịch **đúng bốn ô chủ trang gửi** (`__h`, `__sub`, `__stats`, `__note`) ở
+`tools/build-roadmap.mjs` rồi chạy lại nó, bỏ `.replace('.', ',')` (tiếng Anh dùng dấu chấm
+thập phân → `106.5 hours`). **Và đóng lỗ luật** để không lặp lại: `CLAUDE.md` §11 +
+`docs/design.md` §0.1 nay ghi vùng tiếng Anh của `roadmap.html` là **thanh trên + hero +
+chân trang**, kèm câu "ô này đã bị dịch ngược một lần, gặp hero tiếng Anh là ĐÚNG luật".
+Thêm một comment cạnh chính khối hero trong builder cho người sửa tay tại chỗ.
+
+Verify: `Quick Roadmap` / `84 steps · 11 phases · 106.5 hours` hiện đúng ở **cả sáng lẫn
+tối**, 1280px và 375px, `scrollWidth == clientWidth` (không cuộn ngang). Cổng CHẶN xanh,
+vẫn đúng 5 khuyến nghị `G-FWD` cũ.
+
+Chạm vào: `(tools/build-roadmap.mjs + roadmap.html sinh lại + CLAUDE.md §11 + docs/design.md §0.1)`
+
+### Pháo giấy nổ NGAY: 1,43s → 33ms, và dial đúng là chỗ sinh mảnh
+
+Chủ trang: *"phần pháo giấy begin chậm quá, phải mất 1 lúc mới thấy… khả năng đang ease in"*.
+
+#### Chẩn đoán: không phải easing, là CHỖ SINH
+
+Bản trước sinh mảnh ở `y = (−0,2 … −0,8) × chiều cao cửa sổ`, tức cách mép trên từ 0,2 đến
+0,8 màn hình, rồi rơi bằng vận tốc **đã cố ý giảm 75%** (yêu cầu phiên trước). Đường
+`triangularSpawn` đúng là một đường ease-in-out, nhưng nó là ease của **mật độ sinh mảnh**,
+không phải của chuyển động — nó không gây trễ đáng kể. Trễ đến từ quãng bay vào khung.
+
+Đo A/B thật (cùng cửa sổ 1280×720, bản cũ lấy bằng `git show HEAD:… > scratchpad/old.html`):
+
+| | mảnh đầu hiện | nửa mật độ | đỉnh | canvas biến mất |
+|---|---|---|---|---|
+| trước | **1433 ms** | 2583 ms | 3450 ms | 6150 ms |
+| sau | **33 ms** (khung 2) | 783 ms | 2783 ms | 3633 ms |
+
+#### Đã sửa — ba dòng, không chạm vật lý rơi
+
+- dải sinh dán vào mép trên: `y = −Math.random() * 0,12 × cv.height`. Mảnh có `spawn` gần 0
+  nằm ngay mép trên → thấy tức thì; số còn lại vào dần nên vẫn ra dòng rơi, không phải một
+  tấm màn xuất hiện cùng lúc.
+- `SPAWN_WINDOW` 1400 → **500 ms**, `SPAWN_PEAK` 300 → **80 ms**.
+- thêm cull `if (b.y - b.h > cv.height) continue;` — dải sinh ngắn nên mảnh ra khỏi khung
+  sớm hơn `LIFE`; thiếu dòng này thì vòng rAF chạy không cho một canvas rỗng ~1,7s.
+
+**KHÔNG tăng `vy`/`g`.** Vận tốc chậm là yêu cầu của chủ trang ở phiên trước; sửa độ trễ
+bằng cách bỏ yêu cầu đó là đổi hai thứ khi chỉ cần đổi một. Ghi luôn vào
+`docs/design.md` §9 rằng **dial để xoay là chỗ sinh, không phải vy** — để phiên sau không
+đi lại đường đó.
+
+Chạm vào: `(khung: script + docs/design.md §8, §9)`
+
+### Cách đo thời gian khi pane đóng băng rAF — đã ghi vào docs/design.md §8
+
+Tab preview ở `visibilityState: hidden` giữa hai lệnh tool, nên rAF không tick: phép đo theo
+đồng hồ thật chỉ ra **1 khung hình** rồi treo. Cách làm được: chặn `requestAnimationFrame`
+(giữ callback) **và** `performance.now` (đồng hồ giả +1000/60 mỗi vòng) rồi tự bơm khung —
+chạy đúng code thật nhưng thời gian xác định, lặp lại được. Đây là cái bẫy pane thứ tư và
+nó đã được ghi cạnh ba cái kia.
+
+### Cố ý KHÔNG làm trong phiên này
+
+- **Không dịch gì khác trên `roadmap.html` ngoài bốn ô hero.** Chủ trang nói rõ *"chỉ cái
+  phần tôi gửi bạn thôi"*. Nên `<title>`, `<meta description>`, tên chặng, nhãn mục ("Kiến
+  thức chính", "Xong bước này", "Tiêu chí đạt"), chip `N bước` và 84 bản tóm tắt **vẫn tiếng
+  Việt** — trang giờ là khung Anh / thân Việt, đúng như trang chính.
+- **Không đổi hero của trang chính (`data-science-roadmap.html`).** Chủ trang chỉ nói về
+  trang roadmap; hero trang chính là nội dung dạy, §11 vẫn áp nguyên.
+- **Không thêm cổng kiểm ngôn ngữ.** Đã cân nhắc: một cổng kiểu "hero phải khớp danh sách
+  chuỗi tiếng Anh" sẽ chặn được lần dịch ngược thứ hai, nhưng nó khoá luôn cả việc chủ trang
+  đổi câu chữ — và cái sai lần này là *luật thiếu vùng*, đã sửa ở đúng chỗ đó (§11 + §0.1).
+  Cổng chỉ đáng thêm nếu chuyện này lặp lại lần nữa.
+- **Không thêm "burst" bắn từ dưới lên / từ hai bên** (dáng pháo giấy kiểu confetti cannon).
+  Nó sẽ giải quyết độ trễ triệt để hơn, nhưng là đổi *hình dáng* hiệu ứng — chủ trang chỉ
+  yêu cầu nổ sớm, không yêu cầu đổi dáng. Muốn làm thì hỏi trước.
+- **Không sinh mảnh ĐÃ ở trong khung** (`y > 0`). Thấy mảnh bật ra giữa màn hình đọc như lỗi
+  render; dán mép trên đã đủ 33 ms.
+- **Không giảm `LIFE`.** Sau khi có cull thì `LIFE` chỉ còn là hạn mờ dần, không còn ảnh
+  hưởng thời lượng thật (3,6s) — sửa nó là sửa một con số đã hết tác dụng.
+- **Không sửa `.claude/launch.json` để trỏ vào scratchpad.** Sandbox phiên này TỪ CHỐI cho
+  tiến trình preview đọc thư mục repo (log: `getcwd: Operation not permitted`, mọi request
+  404) nên đã phải mirror trang sang scratchpad để xem — nhưng đó là chuyện của sandbox từng
+  phiên, và bản trước đã mục vì trỏ vào scratchpad của một phiên đã chết. Đã thêm một config
+  thứ hai để xem, rồi **chạy lại `tools/install-hooks.sh`** để trả `.claude/launch.json` về
+  bản nguồn. Ai gặp 404 khi serve từ gốc repo thì mirror sang scratchpad **trong phiên của
+  mình**, đừng ghi vào `tools/hooks/launch.json`.
+
+### Còn nợ của riêng phiên này
+
+- Không có. 5 khuyến nghị `G-FWD` còn lại là nợ cũ, không phải của phiên này.
+
+---
+
 ## Phiên 2026-08-05 (n6) — dọn nốt backlog cũ: cổng cho thang khoảng cách, launch.json theo repo, soát bảng dài
 
 Chủ trang: *"còn gì cần làm nữa không, làm nốt đi, handoff còn gì không"*. Rà toàn bộ mục

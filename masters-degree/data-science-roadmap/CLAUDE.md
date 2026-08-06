@@ -506,6 +506,11 @@ chỗ trống hai bên để tràn vào.
   chỗ dạy. Ngoại lệ duy nhất ngoài thanh trên: **tên panel ghi chú là `Notes`**, còn mọi câu
   *nói về* nó dùng từ **ghi chú**. Ranh giới đầy đủ + cách tự kiểm:
   [docs/design.md](docs/design.md) §0.1.
+- **`roadmap.html`: hero cũng là vùng tiếng Anh** (chủ trang chốt 2026-08-06) — vùng tiếng
+  Anh của trang đó là **thanh trên + hero + chân trang**. Ô này **đã bị dịch ngược một lần**
+  vì luật cũ chỉ kể tên hai vùng, nên phiên soát trang xếp hero vào tiếng Việt: gặp hero
+  tiếng Anh thì đó là **đúng luật**, đừng "sửa". Sửa ở `tools/build-roadmap.mjs` rồi chạy
+  lại nó, đừng sửa tay file sinh.
 - Đổi một từ ở lớp vỏ thì **đổi luôn trong bài** — hai tên cho một khái niệm là đúng thứ
   gạch đầu dòng ngay trên cấm. `khối lượng` được nêu kèm tên tiếng Anh đúng một lần ở trang
   chủ, để người học tra được khi gặp ở nơi khác.

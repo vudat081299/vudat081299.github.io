@@ -38,7 +38,15 @@ hai vùng:
 |---|---|---|
 | **thanh trên** | **Anh** | nhãn nút, phụ đề thương hiệu, `title=`, `aria-label`, và cả chữ do JS sinh (`syncNotesCount`) |
 | **chân trang** | **Anh** | dòng credit + link "← Back to home" — chủ trang chốt 2026-08-05: chân trang là dòng ký tên / điều hướng cuối, không phải chỗ dạy, để tiếng Anh cho gọn |
+| **hero `roadmap.html`** | **Anh** | `.rm-hero__h` / `__sub` / `__stats` / `__note` — chủ trang chốt 2026-08-06 |
 | lớp vỏ còn lại | Việt | thanh bên, `<title>`, `<meta description>`, nhãn ô tìm kiếm, tiêu đề popup / ngăn phụ, mọi `aria-label` ngoài thanh trên |
+
+**Hero của `roadmap.html` là vùng tiếng Anh, và ô đó đã bị dịch ngược một lần** — đừng dịch
+lại. Vùng tiếng Anh của trang đó là **thanh trên + hero + chân trang** (`.rm-foot` vốn đã
+tiếng Anh): cả ba là khung của trang, phần dạy là 84 khối tóm tắt ở giữa. Sửa ở
+`tools/build-roadmap.mjs` rồi chạy lại nó — `roadmap.html` là file **sinh**, sửa tay là mất
+ở lần build sau. Ba số trong `__stats` dùng dấu **thập phân kiểu Anh** (`106.5 hours`), nên
+đừng thêm lại `.replace('.', ',')`.
 
 Thanh trên là vùng nhỏ nhất và quen mắt nhất của trang (`Notes`, `Light`/`Dark`, `0%`),
 nên nó là chỗ duy nhất mà tiếng Anh không bắt người mới phải dịch gì để dùng được trang.
