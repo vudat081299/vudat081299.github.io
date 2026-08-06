@@ -544,6 +544,24 @@ Cách tự kiểm: rule `:hover` của chip **không được chứa** `border-s
   2026-08-06): ở sáng `--wb-surface` là trắng tinh nên ngăn trông như một tờ giấy dán lên trang
   xám. Ngăn là chỗ **đọc tiếp** mạch chính, không phải một cái card nổi lên. Khai ở `.ds-drawer`
   và `.rm-drawer` — đổi một bên thì đổi cả bên kia.
+- **Đầu ngăn có dòng phụ thì cao theo nội dung; KHÔNG có dòng phụ thì cao đúng
+  `--wb-navbar-h`** (chủ trang chốt 2026-08-06). Dòng phụ đang có ở đâu thì **giữ nguyên** ở
+  đó — luật này chỉ ràng những đầu ngăn trống. Số đo: đầu ngăn có dòng phụ **81px** (title 25
+  + sub 20 + padding 32), bỏ dòng phụ còn **58px**, ràng `min-height` là đúng **56px** = navbar.
+  Ba chi tiết bắt buộc, thiếu cái nào là hụt:
+  **(a)** neo vào token `--wb-navbar-h` của kit, đừng viết `56px` — navbar đổi thì hai chỗ đi
+  theo; **(b)** kể **cả hai dạng** "không có" — thiếu hẳn thẻ (`:not(:has(…__sub))`) và có thẻ
+  mà chữ rỗng (`:has(…__sub:empty)`, vì `#asideSub` luôn tồn tại trong markup, chỉ nội dung mới
+  rỗng); **(c)** ghi đè `align-self` cho `.wb-close` — kit cố ý cho dấu ✕ dính lề trên, mà ở
+  một thanh cao bằng navbar thì nó phải nằm giữa.
+  Rule khai **một bản** ở `data-science-roadmap.html`, `build-roadmap.mjs` **trích** sang
+  roadmap (`headCss()`); `pickCss` ném lỗi nếu không trích được gì, nên xoá rule ở trang chính
+  là build đổ ngay chứ không âm thầm mất luật.
+  **Hôm nay chưa đầu ngăn nào rơi vào luật này** — cả ba đều có dòng phụ (ngăn phụ trang chính
+  luôn có câu mặc định, dock `Notes` có câu tĩnh, ngăn roadmap có tên chặng). Đây là luật cho
+  ngăn sau, và nó đã được kiểm bằng ca thật (xoá chữ / xoá thẻ → 56px, ✕ về giữa; trả lại → 81px).
+  Popup toán (`.wb-modal__head`) **không** thuộc luật này: chủ trang nói "nav trong drawer", và
+  head của modal đang `43px` — ràng nó lên 56px là làm cao thêm một thứ không ai yêu cầu.
 - **`[hidden]` trên một `.wb-drawer` đứng một mình KHÔNG ẩn nó.** Kit khai
   `.wb-drawer { display: flex }`, và rule của author thắng `[hidden] { display: none }` của UA
   ở cùng độ đặc hiệu — nên ngăn "đóng" vẫn nằm trong luồng `Tab` và vẫn trả `rect` thật (đó là

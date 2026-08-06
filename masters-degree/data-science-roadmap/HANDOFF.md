@@ -159,6 +159,40 @@ còn `.rm-dh` trong thân. Cổng CHẶN xanh.
 
 Chạm vào: `(data-science-roadmap.html + tools/build-roadmap.mjs + roadmap.html sinh lại + docs/design.md §1.2)`
 
+### 5. Đầu ngăn không có dòng phụ thì cao đúng bằng navbar
+
+Chủ trang: *"nếu navbar của drawer ở cả màn roadmap và DS đều không có description dưới header
+thì để chiều cao tương đương chiều cao nav của page main thôi"*, và khi được hỏi rõ thì chốt:
+*"dòng sub hiện tại như thế nào giữ nguyên, những nav trong drawer không có dòng sub => height
+phải bằng nav bar tổng"*.
+
+**Hỏi trước khi làm là đúng ở chỗ này.** Đo ra: đầu ngăn **81px** vs navbar **56px**, và 25px
+chênh **đúng bằng dòng phụ** — nên "cho bằng navbar" chỉ có thể đạt bằng cách bỏ dòng phụ. Mà
+dòng phụ của trang chính là **chữ tác giả viết cho từng ngăn** (28 ngăn, lấy từ `data-sub`), xoá
+là xoá thật. Ba phương án đã đưa cho chủ trang chọn; chốt: **giữ dòng phụ, chỉ ràng chiều cao
+cho đầu ngăn KHÔNG có dòng phụ.**
+
+Ba chi tiết của rule, thiếu cái nào là hụt:
+1. neo vào token **`--wb-navbar-h`** của kit, không viết `56px` — navbar đổi thì hai trang theo;
+2. kể **cả hai dạng** "không có": thiếu hẳn thẻ (`:not(:has(…__sub))`) **và** có thẻ mà chữ rỗng
+   (`:has(…__sub:empty)`) — `#asideSub` luôn tồn tại trong markup, chỉ nội dung mới rỗng;
+3. ghi đè `align-self` cho `.wb-close`: kit cố ý cho ✕ dính lề trên, ở thanh cao bằng navbar thì
+   nó phải nằm giữa. Không có dòng này thì cao đúng mà ✕ lệch lên.
+
+Khai **một bản** ở trang chính, roadmap **trích** bằng `headCss()` — `pickCss` ném lỗi nếu không
+trích được gì, nên xoá rule ở trang chính thì build đổ ngay chứ không âm thầm mất luật.
+
+**Nói thẳng: hôm nay rule này chưa đổi gì trên màn hình.** Cả ba đầu ngăn đều có dòng phụ (ngăn
+phụ trang chính luôn có câu mặc định vì `tpl?.dataset.sub || '…'`, dock `Notes` có câu tĩnh, ngăn
+roadmap có tên chặng). Nên nó là luật cho ngăn sau, và đã được kiểm bằng **ca thật** chứ không
+bằng suy luận — trên **cả hai trang**: xoá chữ trong dòng phụ → **56px** (== navbar) và ✕ về
+giữa · xoá hẳn thẻ → **56px** · trả lại chữ → **81px** và ✕ về lề trên. Token đọc ra `56px`.
+
+Popup toán **không** thuộc luật này: chủ trang nói "nav trong drawer", và `.wb-modal__head` đang
+`43px` (kit cho `padding: 18px 20px 0`) — ràng nó lên 56px là làm cao thêm một thứ không ai yêu cầu.
+
+Chạm vào: `(data-science-roadmap.html + tools/build-roadmap.mjs + roadmap.html sinh lại + docs/design.md §1.2)`
+
 ### Cố ý KHÔNG làm trong phiên này
 
 - **Không giữ mật độ trên màn ở −50%.** Hai yêu cầu ("dài hơn" và "thưa hơn 50%") đè lên
