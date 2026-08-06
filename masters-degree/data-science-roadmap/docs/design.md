@@ -499,7 +499,7 @@ lúc người đọc chú ý nhất, chip lại tự nói ngược điều nó v
 hẳn nhảy vào chỗ cũ. Hover chỉ được đổi **nền** và **màu viền**; `border-style` thì không.
 Cách tự kiểm: rule `:hover` của chip **không được chứa** `border-style`.
 
-### 1.2 Bề rộng của drawer: 1/3 cửa sổ, kéo được, và khoá cuộn trang
+### 1.2 Bề rộng của drawer: 1/3 cửa sổ, kéo được, và khoá cuộn trang (trang chính) / nhường chỗ (roadmap)
 
 - **Bề rộng mặc định là tỉ lệ cửa sổ, không phải px cứng** (`--ds-aside-w` = 1/3, token ⑪).
   660px cứng vừa không nói được vì sao là 660, vừa cho hai cảm giác khác nhau trên hai màn:
@@ -518,6 +518,21 @@ Cách tự kiểm: rule `:hover` của chip **không được chứa** `border-s
   frame và nội dung nhảy ngang 11px. Đo sau khi làm: dịch ngang **0,00px**.
   Dock `Notes` **không** khoá — trang phía sau phải cuộn được, đó là điều làm nó khác ba tầng
   kia (§0.5).
+- **Ngăn của `roadmap.html` là KHÔNG phủ** (chủ trang chốt 2026-08-06) — nó theo luật của dock
+  `Notes`, không theo luật ba tầng phủ: **không lớp phủ mờ, không đóng khi bấm ra ngoài, không
+  khoá cuộn, `aria-modal="false"`**. Chỉ ✕ và Esc đóng. Đổi một trong bốn thứ đó thì phải đổi
+  cả bốn: một ngăn không phủ mà vẫn khoá cuộn là nhường chỗ cho người ta đọc danh sách rồi lại
+  không cho cuộn danh sách.
+  Kèm theo là **thân trang nhường đúng bề rộng ngăn** — `html.rm-open body { padding-right:
+  var(--rm-drawer-w) }`. `.rm-main` vốn `margin: 0 auto` nên thu hẹp hộp chứa là nó **tự căn
+  giữa lại** trong phần còn thấy: không tính toạ độ, không thêm biến thứ hai (đo được `lệch =
+  0px` ở cả 1/3 mặc định 427px và lúc kéo tới trần 640px). Đặt trên `<body>` chứ không trên
+  `.rm-main` vì navbar sticky cũng phải ngắn lại, không thì nút theme nằm dưới ngăn. Ở
+  `≤680px` ngăn rộng `100vw` nên **phải huỷ đúng rule này** (`padding-right: 0`) — nhường
+  100vw là đẩy cả danh sách ra khỏi màn hình.
+  Trang chính thì **giữ nguyên** lớp phủ + khoá cuộn cho ngăn phụ: ở đó nhánh phụ là thứ đọc
+  song song *với một bài đang đọc*, còn ở roadmap thì danh sách 84 bước phía sau chính là thứ
+  người ta đang duyệt.
 
 ---
 
@@ -672,7 +687,7 @@ Không có nó thì `1` → `11` làm cả nút nhảy bề rộng, và một c�
 ## 8. Kiểm bằng mắt — và cái bẫy của pane preview
 
 Cổng **không thấy được layout**. Sửa giao diện thì phải mở trang. Cách mở ở
-[../HANDOFF.md](../HANDOFF.md) mục "Chạy preview". Ba cái bẫy:
+[../HANDOFF.md](../HANDOFF.md) mục "Chạy preview". Bốn cái bẫy:
 
 1. **Screenshot khi cuộn sâu, khi có LỚP PHỦ mở, hay khi có canvas z-index cực cao → khung
    đen** — giới hạn compositor của pane, không phải lỗi của trang. Ba thứ đã trúng bẫy này:
@@ -688,6 +703,16 @@ Cổng **không thấy được layout**. Sửa giao diện thì phải mở tra
    lại đúng hash hiện tại thì `hashchange` không bắn và script treo. Và `location.hash = …`
    **không** tải lại trang, nên thứ chỉ đọc `localStorage` lúc khởi động sẽ không thấy dữ
    liệu vừa ghi: phải `location.reload()`.
+4. **Pane ẩn giữa hai lệnh tool thì trang bị đóng băng — và nó nói dối chứ không báo lỗi.**
+   Ba dấu hiệu của cùng một nguyên nhân: `innerWidth` trả **0** (nên canvas đặt theo
+   `innerWidth` ra bề rộng 0 và `drawImage` ném `InvalidStateError`), `requestAnimationFrame`
+   không tick, và **transition không tiến** — nên `getComputedStyle` trả giá trị **lệch một
+   nhịp**: đo lúc mở ngăn thì `padding` còn 0, đo lúc đóng thì mới thấy giá trị của lúc mở.
+   Đọc theo đó là đi sửa một lỗi không tồn tại. Hai cách xử:
+   **(a) chụp một ảnh màn hình → pane tỉnh lại** (và kiểm `innerWidth` khác 0 trước khi đo);
+   **(b) đo trạng thái CUỐI thì tắt hẳn transition** — chèn
+   `*,*::before,*::after{transition:none !important}` rồi đo, rồi bỏ style đó ra. Muốn đo
+   *thời gian* của một animation thì xem cách bơm khung ở §9.
 
 ---
 
@@ -706,15 +731,29 @@ với bài không có deliverable, hoặc đạt-deliverable với bài có), tr
   `z-index: 2147483647` (trên popup 100/101 và dock 90), `pointer-events:none`. Giấy trong
   suốt ở chỗ không có mảnh (clearRect), nên trang phía sau vẫn thấy và vẫn bấm được.
 - **Tôn trọng `prefers-reduced-motion`**: người tắt chuyển động thì bỏ hẳn hiệu ứng.
-- **Nổ NGAY, và dial để điều chỉnh là CHỖ SINH — không phải easing.** Mảnh sinh trong dải
-  `y = 0 … −0,12` chiều cao cửa sổ, tức dán vào mép trên, nên mảnh đầu hiện ở khung hình
-  thứ 2 (đo ở 1280×720: **33 ms**, nửa mật độ 0,78 s). Vận tốc rơi cố ý chậm (đã giảm 75%
-  theo yêu cầu chủ trang), nên **đừng tăng vy để bù độ trễ** — xoay dải sinh. `SPAWN_WINDOW`
-  500 ms / `SPAWN_PEAK` 80 ms chỉ rải mảnh cho thành dòng, không phải chỗ tạo trễ.
-- **Tự dọn**: mảnh rơi khỏi mép dưới là hết, không đợi `LIFE`; canvas biến mất ~3,6 s sau
-  khi bắn. `LIFE` (4800) giờ chỉ là hạn mờ dần cho mảnh chưa kịp ra khỏi khung. Gọi lại khi
-  đang chạy thì huỷ vòng cũ trước (một canvas một lúc). Vanilla, không thư viện — trang là
-  một file HTML tự chứa.
+- **BA dial rời nhau — đừng xoay sai cái.** Vận tốc rơi cố ý chậm (`vy`/`g` đã giảm 75%
+  theo yêu cầu chủ trang), nên **`vy` không phải dial của bất kỳ câu nào dưới đây**:
+
+  | muốn đổi | xoay | đang là |
+  |---|---|---|
+  | mảnh đầu hiện khi nào | `INSTANT` — số mảnh có `spawn = 0` và `y` sát mép trên | 3 mảnh → **0 ms (khung 1)** |
+  | hiệu ứng dài bao lâu | `SPAWN_WINDOW` (mảnh vào khung rải trong bao lâu) + `BAND` (dải sinh cao mấy lần chiều cao màn) | 3000 ms + 2 → **canvas tắt 7,2 s** |
+  | trên màn dày bao nhiêu | `COUNT` | 70 mảnh → **đỉnh 46 mảnh lúc 3,0 s** |
+
+  `INSTANT` phải là **khai báo tường minh**, đừng để độ trễ đầu phụ thuộc `COUNT`: dải sinh
+  bốc ngẫu nhiên thì mảnh gần `y = 0` chỉ xuất hiện *nhờ đông*, nên giảm `COUNT` là độ trễ
+  tự bật lên (đo được: 140 → 70 mảnh thì 33 ms → 250 ms). `BAND` dùng **luỹ thừa 3** để đại
+  đa số mảnh vẫn nằm sát mép trên, một ít lên tới 2 lần chiều cao màn tạo đuôi — dải PHẲNG
+  thì mất hết mảnh gần mép và mảnh đầu tụt về 517 ms.
+- **`VMAX` là hệ quả của `BAND`, không phải lựa chọn thẩm mỹ.** Mảnh sinh ở −2 lần chiều cao
+  màn rơi tự do hai màn trước khi vào khung; không chặn thì nó lao qua khung nhanh gấp ba
+  mảnh sinh sát mép — cùng một hiệu ứng mà hai tốc độ. `VMAX` = 7,6 px/khung × dpr đúng bằng
+  vận tốc mảnh sinh sát mép đạt được lúc tới đáy, nên tốc độ rơi **nhìn thấy** không đổi.
+- **Tự dọn**: mảnh rơi khỏi mép dưới là hết, không đợi `LIFE`; canvas biến mất ~7,2 s sau
+  khi bắn, trải **86% chiều cao màn** lúc dày nhất. `LIFE` (9000) chỉ là hạn mờ dần cho mảnh
+  chưa kịp ra khỏi khung — nó phải lớn hơn quãng bay dài nhất, nếu không mảnh sinh cao nhất
+  mờ mất giữa khung. Gọi lại khi đang chạy thì huỷ vòng cũ trước (một canvas một lúc).
+  Vanilla, không thư viện — trang là một file HTML tự chứa.
 - **Kiểm**: screenshot ra khung đen (§8) — đọc `getImageData` để xác nhận canvas trong suốt,
   và `localStorage` để xác nhận `hash` không đổi (không nhảy bài).
 - **Đo được THỜI GIAN dù pane đóng băng rAF.** Tab preview thường ở `visibilityState:

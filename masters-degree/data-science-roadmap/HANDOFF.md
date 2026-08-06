@@ -17,6 +17,155 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 
 ---
 
+## Phiên 2026-08-06 (n8) — rà nợ handoff (còn 1 việc, là dọn chính handoff) · pháo giấy dài gấp đôi thưa một nửa · ngăn roadmap thành tầng KHÔNG phủ
+
+Ba việc, chủ trang nêu lần lượt trong phiên: (1) *"rà soát hand-off xem còn gì chưa làm
+không"*; (2) *"hiệu ứng pháo giấy quá ngắn, tôi muốn kéo dài height ra, và cho mật độ pháo
+giấy thưa hơn 50% hiện tại"*; (3) *"ở màn road map tôi muốn khi drawer xuất hiện thì phần
+content danh sách bài học phải được căn giữa, và bỏ dismissable layer đi"*.
+
+### 1. Rà nợ: không còn việc kỹ thuật nào — nhưng mục `## CHƯA LÀM` đã mục từ (n5)
+
+Soát toàn bộ mục `Còn nợ của riêng phiên này` của (e)(f)(h)(j)(k)(n7) + mục `## CHƯA LÀM`,
+đối chiếu với việc thật của (n4)→(n7). Trạng thái nền: cổng CHẶN xanh · **5** khuyến nghị
+`G-FWD` · `waivers.json` **rỗng** · `audit` nhất quán · không có mục `## ĐANG LÀM`.
+
+**Việc duy nhất còn thật là dọn chính handoff.** `session.mjs` in tiêu đề các mục `###` dưới
+`## CHƯA LÀM` mỗi lần mở phiên, nên 6 gạch đầu dòng đã cũ được in ra suốt **bốn phiên**:
+
+| gạch đầu dòng của `Còn nợ thật` | thực tế |
+|---|---|
+| "Ngày **9** fast track đúng 3,5 giờ" | số đã sai từ (n4) — nay là **ngày 6** |
+| "**6** khuyến nghị `G-FWD`" | nay **5**; quyết định "để nguyên" không đổi |
+| Rà thời lượng từng bài (`pr-code`, bài DL, `s-intro`) | **xong**: (m) spot-check `pr-code` 150′/`dl-attn` 120′/`s-intro` 40′; (n5) đo cả 84 bài, chỉ `s-how` sai thật |
+| `th-defense` → `wb-steps` | **xong ở (n5)** |
+| `ml-loss` zoo optimizer → popup | **xong ở (n5)** (popup `optzoo`) |
+| `dl-train` bảng gỡ lỗi → popup | **đã bác ở (n5)** — bảng đó *là* deliverable của bài |
+
+Đã viết lại mục đó thành ba mục có tiêu đề tự nói đúng việc — *đang chờ chủ trang gọi* (còn
+đúng một: nhãn Foundation/Applied/Advanced) · *đã quyết là giữ nguyên* · *hai thứ để biết
+trước, không phải việc* — và thêm luật ngay đầu mục: **xong thì xoá khỏi đây**, đừng để lại
+kèm chữ "đã xử". Đó là lỗi đã sinh ra bốn phiên nhiễu.
+
+### 2. Pháo giấy: 3,7s → 7,2s, và hoá ra nó đang là MỘT CỤC
+
+Đo trước khi sửa (mô phỏng node, đồng hồ giả 1000/60 mỗi khung, 1280×720) thì lộ ra một
+chuyện chủ trang không nói nhưng là gốc của cảm giác "ngắn": lúc dày nhất, cả 140 mảnh chỉ
+trải **179px trong 720px** chiều cao màn. Nó không phải mưa giấy, nó là một tấm giấy rơi
+qua — nên vừa đặc vừa hết nhanh.
+
+| | mảnh đầu | đỉnh trên màn | trải dọc lúc đỉnh | nửa đỉnh tới | canvas tắt |
+|---|---|---|---|---|---|
+| trước | 33 ms | **140 mảnh** (1,37s) | **179 / 720px** | 3,27s | 3,73s |
+| sau | **0 ms** (khung 1) | **46 mảnh** (3,03s) | **720 / 720px** | 5,23s | **7,18s** |
+
+Ba dial, mỗi cái một câu — và đây là phần đáng giữ lại của phiên:
+
+- `COUNT` 140 → **70** (thưa 50% như yêu cầu)
+- `SPAWN_WINDOW` 500 → **3000 ms**, `SPAWN_PEAK` 80 → 200, `BAND` 0,12 → **2** lần chiều
+  cao màn với **luỹ thừa 3** (đa số mảnh vẫn sát mép trên, một ít lên cao tạo đuôi)
+- `INSTANT` = 3 mảnh có `spawn = 0`, `y` sát mép trên
+
+**`INSTANT` là chỗ phiên này bắt được một quả mìn của (n7).** 33 ms của (n7) là **ăn may**:
+nó đến từ chuyện có 140 mảnh nên bốc trúng một mảnh vừa sinh sớm vừa nằm sát mép. Chỉ giảm
+`COUNT` xuống 70 thôi (chưa đụng gì khác) là độ trễ tự bật về **250 ms**, và dùng dải sinh
+phẳng cao 1,2 màn thì lên **517 ms** — tức là làm đúng yêu cầu "thưa hơn" sẽ âm thầm phá
+đúng yêu cầu của phiên trước. Nay bảo đảm mảnh đầu **không phụ thuộc `COUNT`** nữa.
+
+`VMAX` = 7,6 px/khung × dpr là **hệ quả bắt buộc của `BAND`**, không phải một lựa chọn: mảnh
+sinh ở −2 màn rơi tự do hai màn trước khi vào khung, không chặn thì nó lao qua nhanh gấp ba
+mảnh sinh sát mép — một hiệu ứng hai tốc độ. Con số đó đúng bằng vận tốc mảnh sinh sát mép
+đạt được lúc tới đáy ở bản trước, nên **tốc độ rơi nhìn thấy không đổi**: `vy` và `g` vẫn
+nguyên giá trị đã giảm 75% theo yêu cầu chủ trang. Luật đầy đủ: `docs/design.md` §9.
+
+Verify: đo lại **trên trình duyệt thật** (không chỉ mô phỏng) bằng cách bơm khung của §8 —
+mảnh đầu 0 ms, đỉnh 3,03s, canvas tắt 7,18s, trải 86% chiều cao màn, khớp mô phỏng trong
+16 ms. Ở 375px: `scrollWidth == clientWidth == 375`, `scrollLeft` tối đa 0,
+`pointer-events: none`. Cổng CHẶN xanh, vẫn đúng 5 khuyến nghị `G-FWD` cũ.
+
+Chạm vào: `(khung: script + docs/design.md §9 + HANDOFF.md)`
+
+### 3. Ngăn roadmap: bỏ lớp phủ, và thân trang NHƯỜNG CHỖ để danh sách tự căn giữa
+
+Sửa ở `tools/build-roadmap.mjs` rồi chạy lại nó — `roadmap.html` là file sinh.
+
+**Căn giữa không cần tính toạ độ.** `.rm-main` vốn đã `max-width: 920px; margin: 0 auto`, nên
+chỉ cần thu hẹp hộp chứa là nó tự căn giữa lại: `html.rm-open body { padding-right:
+var(--rm-drawer-w) }`. Một rule, không biến mới, và **đúng cả khi người dùng kéo bề rộng
+ngăn** vì nó đọc chính token đó (đo được `lệch = 0px` ở 1/3 mặc định 427px *và* lúc kéo tới
+trần 640px). Đặt trên `<body>` chứ không trên `.rm-main`: navbar `wb-navbar--sticky` cũng phải
+ngắn lại, không thì nút theme nằm dưới ngăn.
+
+**Bỏ lớp phủ kéo theo ba thứ nữa, không phải một.** Xoá `.rm-overlay` (div + CSS + listener
+`click` đóng ngăn) thì ngăn không còn là modal, nên phải bỏ luôn `aria-modal="true"` → `false`
+và bỏ `documentElement.style.overflow = 'hidden'`. Giữ khoá cuộn lại là một trạng thái nửa
+vời: nhường chỗ cho người ta đọc danh sách rồi lại không cho cuộn danh sách. Ngăn giờ theo
+đúng luật của dock `Notes` ở trang chính (tầng KHÔNG phủ, §0.5) — đóng bằng ✕ hoặc Esc.
+
+Ở `≤680px` ngăn rộng `100vw` nên **phải huỷ đúng rule nhường chỗ** (`padding-right: 0`);
+nhường 100vw là đẩy cả danh sách ra khỏi màn hình. Đã kiểm ở 375px: ngăn 375px,
+`padding-right: 0px`, tay kéo vẫn ẩn, `scrollWidth == clientWidth == 375`.
+
+**Trang chính KHÔNG đổi theo.** Ở đó nhánh phụ là thứ đọc song song *với một bài đang đọc*,
+nên lớp phủ + khoá cuộn (§1.2) vẫn đúng; ở roadmap thì danh sách 84 bước phía sau chính là
+thứ người ta đang duyệt. Luật của cả hai nằm cạnh nhau ở `docs/design.md` §1.2.
+
+Verify ở 1280×720/1280×800: lệch **0px** ở hai bề rộng ngăn · mép phải navbar == mép trái
+ngăn (842/842, rồi 629/629) · **bấm ra ngoài ngăn không đóng** · Esc đóng · cuộn được khi ngăn
+mở (`scrollY` lên 500) · không còn node nào khớp `.rm-overlay, #overlay` · 375px như trên.
+Ba chuỗi "overlay" còn lại trong `roadmap.html` là **chú thích của `makeEdgeResizer()` trích
+từ trang chính** (kể về `.wb-overlay` của trang chính), không phải code sống.
+
+Chạm vào: `(tools/build-roadmap.mjs + roadmap.html sinh lại + docs/design.md §1.2, §8)`
+
+### Cố ý KHÔNG làm trong phiên này
+
+- **Không giữ mật độ trên màn ở −50%.** Hai yêu cầu ("dài hơn" và "thưa hơn 50%") đè lên
+  cùng một con số: kéo dài 1,9× thì mật độ tức thời tự loãng ra dù `COUNT` không đổi. Đã
+  chọn cách hiểu **đếm mảnh**: 140 → 70. Hệ quả là đỉnh trên màn xuống −67% (140 → 46 mảnh),
+  sâu hơn 50%. Nếu chủ trang muốn đúng −50% **trên màn** thì `COUNT` ≈ 100 (đo được: đỉnh
+  70 mảnh) — đổi một con số, không đổi gì khác.
+- **Không đụng `vy`/`g`.** Yêu cầu "chậm" của phiên trước còn nguyên; `VMAX` chỉ chặn phần
+  vận tốc mà `BAND` mới sinh ra, không giảm vận tốc nào đã có.
+- **Không thêm cổng canh hiệu ứng.** Không có cách đọc "hiệu ứng dài bao lâu" bằng cách đọc
+  HTML như văn bản; muốn thành cổng thì phải bơm khung trong node. Ba dial giờ là hằng số có
+  tên và có bảng số trong `docs/design.md` §9 — đủ cho việc sửa lần sau.
+- **Không sửa 5 khuyến nghị `G-FWD`.** Nợ cũ đã soát, backlog ghi rõ: đừng nhồi `allowEarly`.
+- **Không làm nhãn Foundation/Applied/Advanced.** Đang chờ chủ trang gọi, xem `## CHƯA LÀM`.
+- **Không bỏ lớp phủ của ngăn phụ ở TRANG CHÍNH.** Chủ trang nói "ở màn road map"; hai trang
+  có lý do khác nhau cho cùng một component (xem mục 3). Muốn đồng bộ thì phải nói rõ.
+- **Không làm ngăn roadmap đẩy nội dung bằng `transform` hay `grid`.** `padding-right` trên
+  `<body>` là một dòng, tự đúng khi kéo bề rộng, và không tạo containing block mới (`transform`
+  trên tổ tiên sẽ phá `position: fixed` của chính cái ngăn đó và của canvas pháo giấy).
+- **Không thêm bẫy tiêu điểm (focus trap) cho ngăn roadmap.** Nó không còn là modal, nên
+  Tab đi ra trang phía sau là ĐÚNG — thêm trap là dựng lại cái vừa được yêu cầu bỏ.
+
+### Hai chuyện về pane preview, ngược với ghi chú cũ
+
+1. **`preview_start` đọc `.claude/launch.json` theo THƯ MỤC LÀM VIỆC của phiên, không theo
+   thư mục trang.** Đứng ở gốc repo thì `ds-review` **không tồn tại** (chỉ thấy 8 config của
+   cashy + `root-static`). Dùng `root-static` rồi `navigate` tới đường dẫn đầy đủ là xong —
+   đừng đi sửa `launch.json`. (n6) ghi mặt còn lại của cùng chuyện này: đích cài là `.claude/`
+   của thư mục trang.
+2. **Ảnh chụp trang DS lần này DÙNG ĐƯỢC**, không ra khung đen — chụp được cả trang lẫn
+   canvas pháo giấy ở 1280×720, dpr 1, serve từ gốc repo. (n4) ghi "đã lặp ở ba phiên liên
+   tiếp, đừng thử lại"; nay biết là **không phải luôn luôn**. Vẫn nên đo DOM trước, nhưng
+   thử một ảnh thì không còn là chắc chắn mất thời gian.
+3. **Pane ẩn thì `getComputedStyle` lệch MỘT NHỊP, không phải trả sai ngẫu nhiên** — mất thời
+   gian ở mục 3 vì nó: đo lúc ngăn mở thì `padding-right` còn `0px`, đo lúc đã Esc thì mới
+   thấy `426px`, đọc theo đó thì tưởng logic bị đảo. Nguyên nhân là transition không tiến khi
+   không có khung hình. Cách đo trạng thái cuối: chèn `transition:none !important` rồi đo.
+   Đã ghi thành cái bẫy thứ tư ở `docs/design.md` §8, cùng chỗ với `innerWidth` trả 0.
+4. **`resize_window` về desktop rồi mà `innerWidth` vẫn là 375** cho tới khi tải lại trang —
+   ảnh chụp ra một khung lai (bố cục desktop, kích thước ảnh 364×812). Đổi khổ xong thì
+   `navigate` lại đúng URL trước khi đo hoặc chụp.
+
+### Còn nợ của riêng phiên này
+
+- Không có.
+
+---
+
 ## Phiên 2026-08-06 (n7) — pháo giấy nổ NGAY (1,43s → 33ms) · hero roadmap về tiếng Anh + đóng lỗ luật §11
 
 ### Hero `roadmap.html` về tiếng Anh — và nguyên nhân nó bị dịch ngược
@@ -2075,35 +2224,37 @@ một dòng theo đúng khuôn của `cashy`.
 
 ## CHƯA LÀM — và vì sao
 
-### Quyết định giáo trình — đã xử
+**Đây là backlog đang sống, không phải nhật ký.** `node tools/session.mjs` in tiêu đề mọi
+mục `###` dưới đây **mỗi lần mở phiên**, nên việc nào xong thì **xoá hẳn khỏi đây** (chuyện
+"ai làm nó, phiên nào" thuộc mục `## Phiên …` của phiên đó). Để lại một mục đã xong kèm chữ
+"đã xử" là cách nhanh nhất làm dòng CHƯA LÀM thành tiếng ồn — chính lỗi đó đã sống từ (n5)
+tới (n8), khiến bốn việc đã làm vẫn được in ra suốt bốn phiên.
 
-Hai việc "nên làm" **đã làm ở Phiên (m2)** (dời chặng 7 xuống sau chặng 8; `t-stack`→`r-stack`
-sang chặng 10). Hai việc còn lại là quyết định **giữ nguyên** — đừng revisit:
+### Đang chờ chủ trang gọi — agent đừng tự làm
+
+- **Nhãn Foundation / Applied / Advanced.** (n5) để lại: trang đã có 3 chip ưu tiên + chip
+  14 ngày + nhãn `SCOPE`, thêm trục thứ tư là thêm nhiễu. Đây là quyết định về *cách trình
+  bày giáo trình*, không phải việc kỹ thuật — cần thì chủ trang gọi.
+
+### Đã quyết là GIỮ NGUYÊN — đừng revisit
 
 | việc | quyết định | vì sao |
 |---|---|---|
 | Cắt `f-store` | **giữ, không cắt** | nội dung thật của nó là *một câu trả lời cho hội đồng* + point-in-time correctness; đang `skim` 30′ |
 | `q-analytics` off-goal | **giữ** | bài duy nhất vạch ranh giới analytics / predictive / causal — câu hội đồng hay hỏi |
+| `dl-train` bảng gỡ lỗi → popup | **giữ trên mạch chính** | (n5) bác: `PAYOFF[dl-train][0]` *là* "bảng chẩn đoán đường cong loss" — danh mục chính là deliverable của bài |
+| Đổi thứ tự mạch chính / định nghĩa `roadmap.html` | **xong / chốt** | thứ tự đã đổi ở (n4); `roadmap.html` giữ **view dẫn xuất** (chủ trang xác nhận hai lần) |
 
-### Còn nợ thật
+### Hai thứ để biết trước, KHÔNG phải việc
 
-- **Ngày 9 của fast track đúng 3,5 giờ**, tức đúng ngưỡng dưới của `auditPlan()`. Cắt bất
-  kỳ thời lượng nào trong ba bài của ngày đó sẽ làm `auditPlan()` trượt. Đó là cổng làm
-  đúng việc, nhưng biết trước thì đỡ mất thời gian.
-- **6 khuyến nghị `G-FWD` còn lại là trạng thái ổn định đã soát**, không phải việc chưa
-  làm. Chúng là các bài bản đồ/tra cứu (`s-*`, `t-stack`, `t-ai`) và vài bài FE nêu tên
-  khái niệm để định vị. Đưa hết vào `allowEarly` sẽ biến `concepts.json` thành con dấu
-  cao su; để nguyên thì cổng còn là bảng theo dõi đọc được. **Đừng "sửa" bằng cách nhồi
-  allowEarly.**
-- Rà thời lượng từng bài (`auditPlan` chỉ kiểm *nhất quán*, không kiểm *hợp lý*) — đặc
-  biệt `pr-code`, các bài DL dài, `s-intro`.
-- Nhãn Foundation/Applied/Advanced: cân nhắc có thật cần không trước khi làm.
-- `th-defense` cũng là timeline (T−3/T−2/T−1) — cân nhắc chuyển sang `wb-steps` cho nhất
-  quán với lịch 14 ngày. **Hoãn ở phiên (m)**: cần xem căn chỉnh bằng mắt, mà preview đang
-  serve bản cũ (xem memory `preview-sandbox-mirror`).
-- `ml-loss` zoo optimizer, `dl-train` bảng gỡ lỗi: vẫn trên mạch chính. Mỗi cái 6–15 dòng,
-  `G-LAYER` không bắt (tiêu đề không tự tố giác). Ưu tiên thấp. (`f-cyclic` "Cách 4 ·
-  SplineTransformer" đã dời vào popup `cyclicspline` ở phiên (m).)
+- **Có một ngày fast track nằm đúng ngưỡng dưới 3,5 giờ của `G-PLAN`.** Từ (n4) đó là
+  **ngày 6** — cố ý nhẹ nhất vì là ngày deliverable, giờ đổ vào việc CHẠY. (Bản trước ghi
+  "ngày 9", đúng với lịch trước (n4).) Cắt thời lượng bài nào trong ngày đó thì `G-PLAN`
+  trượt: cổng làm đúng việc, nhưng biết trước thì đỡ mất thời gian truy.
+- **5 khuyến nghị `G-FWD` là trạng thái ổn định đã soát**, không phải việc chưa làm. Chúng
+  là các bài bản đồ/tra cứu (`s-*`, `t-ai`, `r-stack`) và vài bài FE nêu tên khái niệm để
+  định vị. Đưa hết vào `allowEarly` sẽ biến `concepts.json` thành con dấu cao su; để nguyên
+  thì cổng còn là bảng theo dõi đọc được. **Đừng "sửa" bằng cách nhồi `allowEarly`.**
 
 ---
 
