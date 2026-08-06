@@ -533,6 +533,23 @@ Cách tự kiểm: rule `:hover` của chip **không được chứa** `border-s
   Trang chính thì **giữ nguyên** lớp phủ + khoá cuộn cho ngăn phụ: ở đó nhánh phụ là thứ đọc
   song song *với một bài đang đọc*, còn ở roadmap thì danh sách 84 bước phía sau chính là thứ
   người ta đang duyệt.
+- **Cả hai ngăn dùng ĐÚNG component `wb-drawer` của kit (§33), kể cả phần đầu ngăn**:
+  `wb-drawer__head` + `wb-drawer__title` + `wb-drawer__sub` + `wb-close`, và class riêng của
+  trang (`.ds-drawer` / `.rm-drawer`) **chỉ để ghi đè**. Đừng tự vẽ một thanh đầu ngăn thứ hai:
+  roadmap từng có `.rm-drawer__bar/__phase/__close` với một ký tự `✕` thô trong hộp 32px, và
+  hai trang lệch nhau ngay ở chỗ mắt nhìn vào đầu tiên (chủ trang báo 2026-08-06). `wb-close`
+  lấy dấu ✕ từ **icon font** của kit (`\e5cd`, Material Symbols Rounded — `@import` sẵn trong
+  `web-builder.css`), không phải ký tự văn bản, nên nó cùng một hình ở mọi chỗ.
+- **Nền ngăn = `--wb-canvas` (nền TRANG), không phải `--wb-surface` của kit** (chủ trang chốt
+  2026-08-06): ở sáng `--wb-surface` là trắng tinh nên ngăn trông như một tờ giấy dán lên trang
+  xám. Ngăn là chỗ **đọc tiếp** mạch chính, không phải một cái card nổi lên. Khai ở `.ds-drawer`
+  và `.rm-drawer` — đổi một bên thì đổi cả bên kia.
+- **`[hidden]` trên một `.wb-drawer` đứng một mình KHÔNG ẩn nó.** Kit khai
+  `.wb-drawer { display: flex }`, và rule của author thắng `[hidden] { display: none }` của UA
+  ở cùng độ đặc hiệu — nên ngăn "đóng" vẫn nằm trong luồng `Tab` và vẫn trả `rect` thật (đó là
+  lý do phép đo từng ra `width: 1px` khi ngăn đóng). Ngăn trang chính không lộ lỗi này vì nó
+  nằm trong `.wb-overlay` (`display: none`). Ngăn nào đứng ngoài overlay thì phải tự khai
+  `[hidden] { display: none }`.
 
 ---
 

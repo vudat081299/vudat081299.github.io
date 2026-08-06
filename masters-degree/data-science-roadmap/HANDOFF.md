@@ -118,6 +118,47 @@ từ trang chính** (kể về `.wb-overlay` của trang chính), không phải 
 
 Chạm vào: `(tools/build-roadmap.mjs + roadmap.html sinh lại + docs/design.md §1.2, §8)`
 
+### 4. Hai trang dùng CHUNG đầu ngăn của kit, và nền ngăn = nền trang
+
+Chủ trang, sau khi xem bản vừa push: *"drawer ở roadmap có nav khác drawer ở bên page DS quá
+ví dụ như button x không giống, nói chung là dùng lại drawer nav của trang DS ấy"*, rồi
+*"background của drawer bên trang DS cho màu giống màu nền chính đi, hiện tại đang thấy màu
+trắng tinh"*.
+
+**Đầu ngăn: bỏ ba class tự vẽ, dùng component của kit.** `.rm-drawer__bar/__phase/__close`
+(một ký tự `✕` thô trong hộp 32px có viền) → `wb-drawer__head` + `__title` + `__sub` +
+`wb-close`, và `<aside>` nay là `class="wb-drawer rm-drawer"` — đúng khuôn
+`"wb-drawer ds-drawer"` của trang chính. `.rm-drawer` giờ **chỉ còn ba dòng ghi đè** (bề rộng
+token kéo được · `[hidden]` · chỗ thở ở đáy) thay vì khai lại vị trí/nền/viền/bóng/transform.
+Khai lại là chỗ hai trang trôi khỏi nhau — lần này lệch đúng ở nút mắt nhìn vào đầu tiên.
+
+**Tên bài lên `wb-drawer__title`, chặng xuống `wb-drawer__sub`**, và `.rm-dh` h2 trong thân bị
+bỏ (nó lặp lại chính tên bài). Hai cái được thêm: `aria-labelledby="drTitle"` của thẻ `aside`
+**vốn đã trỏ vào một id chưa từng tồn tại** — lỗi có sẵn, nay đóng lại; và tên bài không cuộn
+đi mất vì đầu ngăn là `flex: none`.
+
+**Nền ngăn = `--wb-canvas`, không phải `--wb-surface`.** Khai ở `.ds-drawer` (trang chính) và
+`.rm-drawer`, mỗi chỗ kèm câu "đổi bên này thì đổi cả bên kia". Không trích dùng chung được:
+`pickCss` sẽ mang theo cả `width: var(--ds-aside-w)` của trang chính, đánh nhau với
+`--rm-drawer-w` ở cùng độ đặc hiệu — nhập một dòng mà kéo theo một lỗi.
+
+**Một lỗi có sẵn bắt được nhờ việc này: `[hidden]` không ẩn được `.wb-drawer` đứng một mình.**
+Kit khai `.wb-drawer { display: flex }`, rule của author thắng `[hidden] { display: none }` của
+UA ở cùng độ đặc hiệu — nên ngăn "đóng" vẫn trong luồng `Tab` và vẫn trả `rect` thật (chính là
+`width: 1px` mà phép đo ở mục 3 trả về khi ngăn đóng, tôi đã cho là chuyện của pane). Trang
+chính không lộ vì ngăn của nó nằm trong `.wb-overlay` (`display: none`). Đã thêm
+`.rm-drawer[hidden] { display: none }`.
+
+Verify (đo ở **sáng**, chế độ chủ trang báo lỗi): nền ngăn `rgb(247,247,248)` == nền trang ở
+**cả hai** trang. Đầu ngăn khớp từng số: `padding 16px 18px` · viền dưới `1px rgb(228,228,231)`
+· title `16px/700` · sub `13px rgb(113,113,122)` · `wb-close` `26×26`, `radius 7px`,
+`rgb(113,113,122)`, glyph **U+E5CD** trong `Material Symbols Rounded` (kiểm bằng
+`getComputedStyle(el,'::before')`, không chỉ bằng mắt — CSSOM in ra chuỗi rỗng vì đó là ký tự
+vùng dùng riêng, đừng vội kết luận là thiếu glyph). `[hidden]` nay trả `display: none`. Không
+còn `.rm-dh` trong thân. Cổng CHẶN xanh.
+
+Chạm vào: `(data-science-roadmap.html + tools/build-roadmap.mjs + roadmap.html sinh lại + docs/design.md §1.2)`
+
 ### Cố ý KHÔNG làm trong phiên này
 
 - **Không giữ mật độ trên màn ở −50%.** Hai yêu cầu ("dài hơn" và "thưa hơn 50%") đè lên
