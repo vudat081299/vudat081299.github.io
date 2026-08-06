@@ -918,6 +918,22 @@
      cùng nền với chỗ nó vừa rời ra. Ngăn của roadmap.html khai đúng dòng này
      (.rm-drawer trong build-roadmap.mjs): đổi ở đây thì đổi cả bên đó. */
   .ds-drawer { background: var(--wb-canvas); }
+  /* Đầu ngăn KHÔNG có dòng phụ thì cao ĐÚNG BẰNG navbar và canh giữa như navbar
+     (chủ trang chốt 2026-08-06: dòng phụ đang có thì giữ nguyên, chỉ ngăn nào không
+     có mới bị ràng chiều cao). Neo vào --wb-navbar-h của kit chứ không viết 56px —
+     navbar đổi một chỗ thì cả hai đi theo. Hai dạng "không có", phải kể cả hai:
+     thiếu hẳn thẻ <p>, hoặc có thẻ mà chữ rỗng (#asideSub luôn tồn tại trong markup,
+     chỉ nội dung mới rỗng nếu một ngăn không khai data-sub). Nút ✕ phải ghi đè
+     align-self: kit cố ý cho nó dính lề trên, mà ở một thanh cao bằng navbar thì nó
+     phải nằm giữa.
+     Rule này được build-roadmap.mjs TRÍCH sang roadmap.html — sửa ở đây, đừng sửa
+     bên đó, và đừng chép thành bản thứ hai. */
+  .wb-drawer__head:not(:has(.wb-drawer__sub)),
+  .wb-drawer__head:has(.wb-drawer__sub:empty) {
+    min-height: var(--wb-navbar-h); padding-top: 0; padding-bottom: 0; align-items: center;
+  }
+  .wb-drawer__head:not(:has(.wb-drawer__sub)) .wb-close,
+  .wb-drawer__head:has(.wb-drawer__sub:empty) .wb-close { align-self: center; }
   .ds-drawer .ds-prose { max-width: none; }
   .ds-drawer .wb-drawer__body { padding-bottom: var(--ds-sp-sec); }
 
