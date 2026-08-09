@@ -1,6 +1,17 @@
 .DS_Store
 */.DS_Store
 
-# local Claude Code scaffolding
+# Claude Code scaffolding.
+#
+# Mặc định bỏ qua .claude/ ở MỌI cấp — đó là thiết lập cục bộ của từng máy.
+# Ngoại lệ duy nhất: .claude/settings.json ở gốc repo. File đó giữ khai báo hook
+# PostToolUse của các project con, nên nó phải đi theo repo; nếu không thì cổng chỉ chạy
+# trên đúng một máy và workflow tự động mất tác dụng (xem CLAUDE.md ở gốc repo).
+#
+# Bốn dòng dưới phải giữ đúng thứ tự này. Git không cho phép "mở lại" một file nằm trong
+# thư mục đã bị loại, nên phải mở lại thư mục gốc trước (dòng 2), loại nội dung của nó
+# (dòng 3), rồi mới mở lại đúng một file (dòng 4).
 .claude/
-.DS_Store
+!/.claude/
+/.claude/*
+!/.claude/settings.json

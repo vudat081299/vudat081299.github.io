@@ -1,0 +1,28 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "statusMessage": "Chạy cổng facts…",
+            "timeout": 60,
+            "command": "IN=$(cat); F=$(printf \"%s\" \"$IN\" | jq -r \".tool_input.file_path // .tool_response.filePath // empty\"); case \"$F\" in */facts/data/*.json) R=${F%%/facts/data/*}/facts; if [ -f \"$R/tools/hooks/post-edit.sh\" ]; then printf \"%s\" \"$IN\" | sh \"$R/tools/hooks/post-edit.sh\"; exit $?; fi;; esac; exit 0"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "statusMessage": "Chạy cổng data-science-roadmap…",
+            "timeout": 60,
+            "command": "IN=$(cat); F=$(printf \"%s\" \"$IN\" | jq -r \".tool_input.file_path // .tool_response.filePath // empty\"); case \"$F\" in */data-science-roadmap/*) R=${F%%/data-science-roadmap/*}/data-science-roadmap; if [ -x \"$R/tools/hooks/post-edit.sh\" ]; then printf \"%s\" \"$IN\" | \"$R/tools/hooks/post-edit.sh\"; exit $?; fi;; esac; exit 0"
+          }
+        ]
+      }
+    ]
+  }
+}

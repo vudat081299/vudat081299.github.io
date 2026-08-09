@@ -300,26 +300,24 @@ python3 facts/tools/factlint.py verify    # cổng định nghĩa §1 — phải
 python3 facts/tools/factlint.py stats     # phân bố theo cụm, cảnh báo cụm to
 ```
 
-Hai cổng này còn chạy **tự động** ở hai lớp:
+Hai cổng này còn chạy **tự động** ở hai lớp, và cả hai đều đi theo repo:
 
-| Lớp | Khi nào | Chặn không |
-|---|---|---|
-| `tools/hooks/post-edit.sh` | mỗi lần Edit/Write vào `facts/data/*.json` | có — trả về lỗi cho model tự sửa |
-| `tools/hooks/pre-commit` | lúc `git commit` có chạm `facts/` | có — chặn commit |
+| Lớp | Khi nào | Khai báo ở | Chặn không |
+|---|---|---|---|
+| `tools/hooks/post-edit.sh` | mỗi lần Edit/Write vào `facts/data/*.json` | `.claude/settings.json` (được git theo dõi) | có — trả lỗi cho model tự sửa |
+| `tools/hooks/pre-commit` | lúc `git commit` có chạm `facts/` | `.git/hooks/pre-commit` | có — chặn commit |
 
-Lớp thứ nhất chỉ bắt được sửa bằng Edit/Write; thay đổi viết bằng script thì lọt qua nó và
-bị lớp thứ hai bắt. Vì vậy **phải có cả hai**.
+Lớp thứ nhất chỉ bắt được sửa bằng Edit/Write; thay đổi viết bằng script (`python3 - <<EOF`,
+`sed`…) lọt qua nó và bị lớp thứ hai bắt. Vì vậy **phải có cả hai**.
 
-Cài lớp thứ hai: `sh facts/tools/install-hooks.sh` (dựng bộ điều phối gọi mọi
-`*/tools/hooks/pre-commit` trong repo, nên hook của project khác vẫn chạy y như cũ).
+Lớp thứ hai nằm trong `.git/`, mà `.git/` không clone theo được — nên đầu mỗi phiên phải chạy
+một lần:
 
-Lớp thứ nhất đăng ký ở `.claude/settings.json` gốc repo — thư mục đó **nằm trong
-`.gitignore`**, nên mỗi máy phải tự thêm lại khối này:
-
-```json
-{ "type": "command", "statusMessage": "Chạy cổng facts…", "timeout": 60,
-  "command": "IN=$(cat); F=$(printf \"%s\" \"$IN\" | jq -r \".tool_input.file_path // .tool_response.filePath // empty\"); case \"$F\" in */facts/data/*.json) R=${F%%/facts/data/*}/facts; if [ -f \"$R/tools/hooks/post-edit.sh\" ]; then printf \"%s\" \"$IN\" | sh \"$R/tools/hooks/post-edit.sh\"; exit $?; fi;; esac; exit 0" }
+```bash
+sh facts/tools/install-hooks.sh
 ```
+
+Chi tiết cơ chế ba lớp cổng của cả repo: [CLAUDE.md ở gốc repo](../CLAUDE.md).
 
 Nếu có sửa UI hoặc thêm minh hoạ, chạy tiếp bốn cổng cơ học của
 [page-review](../web-builder/) : không class `wb-*` tự chế, không nền màu trong `<main>`,
