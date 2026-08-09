@@ -223,6 +223,8 @@ const GATES = [
   ['G-DOC',        'nhắc', 'mọi cổng trong code đều có tên trong CLAUDE.md'],
   ['G-HANDOFF',    'nhắc', 'đổi trang / bộ cổng mà HANDOFF.md không đổi'],
   ['G-LEARN',      'nhắc', 'sổ học đọc được, và chỗ tắc trùng nhau = dạy quá muộn'],
+  ['G-ROADMAP',    'nhắc', 'roadmap.html còn khớp bản sinh lại từ nguồn (chặn khi commit)'],
+  ['G-ROADMAP-SUM','nhắc', 'tóm tắt roadmap thiếu bài, hoặc bài đã đổi sau khi tóm tắt'],
 ];
 
 /* Waiver: một lỗi CHẶN đã biết, đã có hướng sửa, nhưng cách sửa là một quyết định
@@ -271,6 +273,65 @@ if (has('--write')) {
   // phải mang mục lục có số dòng đúng, nếu không thì phiên sau mở sai đoạn. `--ci` (hook
   // pre-commit dùng) nâng nó thành lỗi chặn.
   (has('--ci') ? F : W)('G-TOC-STALE: TOC.md còn số dòng cũ (cấu trúc vẫn đúng) — `node tools/gate.mjs --write` rồi `git add TOC.md`');
+}
+
+/* --- G-ROADMAP / G-ROADMAP-SUM: trang thứ hai cũng là SẢN PHẨM ------------
+   `roadmap.html` được sinh từ đúng nguồn này (build-roadmap.mjs), và bộ sinh còn TRÍCH
+   thẳng CSS/JS của trang chính (khối tương tác, tay kéo, đầu ngăn). Nên nó trôi khỏi nguồn
+   trong im lặng đúng như TOC.md từng trôi — chỉ khác là ở đây một lần sửa trang chính là
+   đủ làm bản đã sinh cũ, mà push main thì là deploy. Hai mức, cùng lý do tách như cặp
+   G-TOC-STRUCT / G-TOC-STALE:
+
+   G-ROADMAP     — file trên đĩa khác bản sinh lại. Máy móc, sửa bằng đúng một lệnh, nên
+                   chỉ NHẮC lúc đang sửa; `--ci` (pre-commit / pre-push) nâng thành CHẶN.
+   G-ROADMAP-SUM — phần KHÔNG sinh được: 84 bản tóm tắt do một workflow viết ra. Máy không
+                   đọc được "tóm tắt này còn đúng không", nhưng đọc được "bài đã đổi kể từ
+                   lúc tóm tắt được viết" nhờ vân tay nội dung đóng dấu trong
+                   roadmap-summaries.json. (Audit 2026-08-06 đã tìm ra drift thật ở
+                   `s-plan8w` bằng mắt — đây là cách để lần sau máy tìm.) Luôn chỉ NHẮC:
+                   viết lại một bản tóm tắt là việc của người, không phải của lệnh.
+
+   Import động + try: bộ sinh CỐ Ý ném lỗi khi không trích được CSS/JS từ trang chính (ai
+   đổi tên một class là build đổ chứ không âm thầm mất luật). Ở đây phải bắt lấy, không thì
+   cả bộ cổng chết theo với một stack trace thay vì một câu nói rõ chuyện gì. */
+let RM = null, rmErr = null;
+try { RM = await import('./build-roadmap.mjs'); } catch (e) { rmErr = e; }
+
+if (rmErr) {
+  (has('--ci') ? F : W)(`G-ROADMAP: không sinh được roadmap.html — ${rmErr.message}\n`
+  + '    Bộ sinh trích CSS/JS thẳng từ trang chính; đổi tên class hoặc dời khối là nó ném.');
+} else {
+  const rmOnDisk = existsSync(RM.OUT) ? readFileSync(RM.OUT, 'utf8') : null;
+  if (has('--write')) {
+    writeFileSync(RM.OUT, RM.html);
+    console.log(rmOnDisk === RM.html ? '· roadmap.html: không đổi' : '· roadmap.html: sinh lại từ nguồn');
+  } else if (!rmOnDisk) {
+    W('G-ROADMAP: chưa có roadmap.html — chạy `node tools/build-roadmap.mjs`');
+  } else if (rmOnDisk !== RM.html) {
+    (has('--ci') ? F : W)('G-ROADMAP: roadmap.html không còn khớp bản sinh lại từ nguồn — '
+    + '`node tools/build-roadmap.mjs` rồi `git add roadmap.html`.\n'
+    + '    (Đừng sửa tay roadmap.html: nó là SẢN PHẨM, lượt sinh sau xoá sạch.)');
+  }
+
+  const ids = new Set(LEAVES.map(l => l.id));
+  const missing   = LEAVES.filter(l => !RM.sums[l.id]).map(l => l.id);
+  const orphan    = Object.keys(RM.sums).filter(id => !ids.has(id));
+  const stale     = LEAVES.filter(l => nodeTpl[l.id] && RM.srcHash[l.id]
+                             && RM.srcHash[l.id] !== RM.nodeHash(nodeTpl[l.id].body)).map(l => l.id);
+  const unstamped = LEAVES.filter(l => RM.sums[l.id] && !RM.srcHash[l.id]).map(l => l.id);
+
+  if (missing.length) W(`G-ROADMAP-SUM: ${missing.length} bài chưa có bản tóm tắt trên trang học nhanh `
+    + `(${missing.slice(0, 6).join(', ')}${missing.length > 6 ? '…' : ''}).\n`
+    + '    Trang vẫn dựng được (dùng PAYOFF làm tldr tạm), nhưng node đó đọc mỏng hơn hẳn.');
+  if (orphan.length) W(`G-ROADMAP-SUM: roadmap-summaries.json còn tóm tắt của bài không còn trong TREE `
+    + `(${orphan.join(', ')}) — xoá đi.`);
+  if (stale.length) W(`G-ROADMAP-SUM: ${stale.length} bài đã ĐỔI NỘI DUNG sau khi bản tóm tắt được viết `
+    + `(${stale.slice(0, 8).join(', ')}${stale.length > 8 ? '…' : ''}).\n`
+    + '    Đọc lại tóm tắt của CHÚNG: sai chỗ nào thì sửa trong roadmap-summaries.json; còn đúng thì\n'
+    + '    đóng dấu lại bằng `node tools/build-roadmap.mjs --stamp`. Đóng dấu mà không đọc thì cổng\n'
+    + '    này thành con dấu cao su.');
+  if (unstamped.length) W(`G-ROADMAP-SUM: ${unstamped.length} bản tóm tắt chưa có vân tay nội dung — `
+    + 'chạy `node tools/build-roadmap.mjs --stamp` một lần để lấy mốc.');
 }
 
 /* --- G-ORDER: thứ tự template trong file == thứ tự học ------------------- */

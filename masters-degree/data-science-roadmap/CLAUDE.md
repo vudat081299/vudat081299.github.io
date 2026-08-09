@@ -45,6 +45,7 @@ Rồi tìm việc mình định làm trong bảng này:
 | **dùng chiều cao / bề rộng cửa sổ** | [docs/design.md](docs/design.md) **§0.4** (đơn vị viewport) | `node tools/gate.test.mjs` | không có `vh`/`vw`/`dvh` trần — dùng `--ds-vh` / `--ds-vw` |
 | **chuyển một khối ra ngoài mạch chính** | §7 · [docs/design.md](docs/design.md) §1 | `gate.mjs --advice` | popup là mặc định; chọn drawer thì phải viết ra lý do |
 | **sửa lịch 8 tuần / 14 ngày** | §8 · [docs/editing.md](docs/editing.md) việc 4 | `node tools/audit.mjs` | `G-PLAN` qua |
+| **sửa trang Roadmap học nhanh** | §4 (hai cổng `G-ROADMAP*`) · `tools/build-roadmap.mjs` | `node tools/build-roadmap.mjs` | `G-ROADMAP` im. **Đừng sửa tay `roadmap.html`** — nó là sản phẩm sinh ra |
 | **thêm / sửa một cổng** | §4 · [docs/editing.md](docs/editing.md) việc 6 | `node tools/gate.test.mjs` | test xanh · thêm tên cổng vào §4 (`G-DOC` bắt) |
 | **ghi việc học của mình** | [LEARNING-LOG.md](LEARNING-LOG.md) | `learn.mjs --add` hoặc nút **Notes** trên trang | `learn.mjs --check` im |
 | **đóng phiên / commit / push** | §12 | `node tools/session.mjs --close` | HANDOFF đã ghi · `G-HANDOFF` im |
@@ -109,6 +110,9 @@ data-science-roadmap.html      ← NGUỒN SỰ THẬT DUY NHẤT
   ↓ đọc
 tools/read-html.mjs   luật đọc dữ liệu ra khỏi HTML — dùng chung, chỉ có MỘT bản
   ├─ tools/gate.mjs   ──sinh──→  TOC.md   (SẢN PHẨM — không sửa tay, không phải nguồn)
+  ├─ tools/build-roadmap.mjs ──sinh──→ roadmap.html  (SẢN PHẨM — trang học nhanh; nó còn
+  │     TRÍCH CSS/JS của trang chính lúc build, nên sửa trang chính là bản đã sinh thành cũ)
+  │     + tools/roadmap-summaries.json   84 bản tóm tắt (DỮ LIỆU, một workflow viết ra)
   ├─ tools/plan.mjs     luật kiểm lịch học      (cổng G-PLAN)
   ├─ tools/learn.mjs  ↔ LEARNING-LOG.md         (cổng G-LEARN)
   ├─ tools/audit.mjs    chạy riêng plan.mjs cho người đọc
@@ -145,9 +149,11 @@ Bốn luật không được vi phạm:
 
 1. **HTML không bao giờ phụ thuộc vào `tools/` hay `docs/`.** Xoá cả hai thư mục đó thì
    trang vẫn chạy y nguyên. Cổng là thứ *soi* trang, không phải thứ trang cần để sống.
-2. **`TOC.md` không bao giờ là nguồn.** Thấy TOC.md khác HTML thì HTML đúng, TOC.md sai.
+2. **`TOC.md` và `roadmap.html` không bao giờ là nguồn.** Cả hai là SẢN PHẨM sinh ra; lệch
+   với HTML thì HTML đúng. **Đừng sửa tay `roadmap.html`** — lượt sinh sau xoá sạch.
 3. **Không thêm file thứ hai chứa nội dung bài học.** Nội dung ở một chỗ. Muốn tra cứu
-   nhanh thì sinh ra bản index (như TOC.md), đừng sinh ra bản sao nội dung.
+   nhanh thì sinh ra bản index (như TOC.md) hoặc một VIEW sinh từ nguồn (như
+   `roadmap.html`), đừng gõ tay một bản sao nội dung.
 4. **`LEARNING-LOG.md` là dữ liệu, không phải nội dung trang.** Xoá nó thì cổng vẫn chạy,
    chỉ mất `G-LEARN`. Mục `## Sổ` trong nó **chỉ được thêm vào cuối** — xem §13.
 
@@ -161,9 +167,10 @@ node tools/session.mjs --close  # ĐÓNG PHIÊN — khung HANDOFF + câu commit
 
 node tools/gate.mjs             # tất cả cổng; thoát 1 nếu có lỗi chặn
 node tools/gate.mjs --advice    # kèm phần chỉ nhắc (không chặn)
-node tools/gate.mjs --write     # sinh lại TOC.md
+node tools/gate.mjs --write     # sinh lại CẢ HAI sản phẩm: TOC.md + roadmap.html
 node tools/gate.mjs --gates     # in danh sách cổng đang chạy
 node tools/audit.mjs            # chỉ phần lịch học — bản node của auditPlan()
+node tools/build-roadmap.mjs    # sinh riêng roadmap.html; --stamp = đóng dấu lại tóm tắt
 node tools/learn.mjs            # tóm tắt sổ học; --add / --sync / --write / --check
 node tools/gate.test.mjs        # test cho chính bộ cổng
 tools/install-hooks.sh          # cài CẢ BA hook (một lần mỗi máy / mỗi bản clone)
@@ -243,11 +250,14 @@ nào để mở trình duyệt kiểm lại JS.
 tên class/token bằng chữ trần (`wb-steps`, không phải `` `wb-steps` ``). Muốn dùng backtick
 thì đưa chú thích ra ngoài template, thành comment JS phía trên hàm.
 
-**Chỉ nhắc, người quyết định — 11 cổng:**
+**Chỉ nhắc, người quyết định — 13 cổng** (`G-FWD` có mặt ở cả hai bảng: chặn ở mức tiêu chí
+đạt, chỉ nhắc ở mức thân bài):
 
 | cổng | nhắc điều gì |
 |---|---|
 | `G-TOC-STALE` | `TOC.md` còn số dòng cũ (khi commit thì thành lỗi chặn) |
+| `G-ROADMAP` | `roadmap.html` không còn khớp bản sinh lại từ nguồn (khi commit thì thành lỗi chặn) |
+| `G-ROADMAP-SUM` | bài đã đổi nội dung **sau khi** bản tóm tắt của nó được viết, hoặc bài chưa có tóm tắt |
 | `G-LAYER` | mục tự khai là nhánh phụ, hoặc bài dài quá 200 dòng |
 | `G-DUMP` | đoạn văn đọc lại một bảng số thay vì nói ý |
 | `G-VIZ` | bài chưa có hình / bảng / code nào để nhìn |
@@ -259,6 +269,16 @@ thì đưa chú thích ra ngoài template, thành comment JS phía trên hàm.
 | `G-DOC` | có cổng trong code mà `CLAUDE.md` không nhắc tên |
 | `G-HANDOFF` | đổi trang hoặc bộ cổng mà `HANDOFF.md` không đổi — xem §12 |
 | `G-LEARN` | sổ học đọc được, và **≥2 bài cùng tắc ở một khái niệm** = khái niệm đó dạy quá muộn (§13) |
+
+**Hai cổng `G-ROADMAP*` canh trang thứ hai** (`roadmap.html`). Trang đó được **sinh** từ
+đúng nguồn này — và bộ sinh còn trích thẳng CSS/JS của trang chính — nên phần cấu trúc tự
+đúng; `G-ROADMAP` chỉ kiểm file trên đĩa còn bằng bản sinh lại không. Phần **không** sinh
+được là 84 bản tóm tắt trong `tools/roadmap-summaries.json`. Máy không đọc được "tóm tắt này
+còn đúng không", nhưng đọc được "bài đã đổi kể từ lúc tóm tắt được viết": mỗi bài có một vân
+tay nội dung, đóng dấu bằng `node tools/build-roadmap.mjs --stamp`. Cổng kêu → **đọc lại bản
+tóm tắt của đúng những bài đó**, sửa nếu lệch, rồi mới đóng dấu lại. Đóng dấu mà không đọc
+thì cổng này thành con dấu cao su. (Đã bắt được một ca thật: tóm tắt `s-plan8w` còn ghi
+"deep learning ở tuần 5" sau khi trang đổi sang tuần 6.)
 
 **Thoát cửa** khi cổng bắt sai một chỗ cố ý: `<!-- gate:main -->` (tiêu đề trông giống
 nhánh phụ nhưng là mạch chính) · `<!-- gate:long: lý do -->` (bài dài đã soát và dài là

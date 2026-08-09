@@ -38,16 +38,17 @@ MSG
   exit 1
 fi
 
-# TOC.md là sản phẩm sinh ra. `--ci` ở trên đã bắt trường hợp file trên ĐĨA bị cũ; chỗ
-# này bắt trường hợp khác: file trên đĩa đúng nhưng chưa được `git add`, nên bản commit
-# vẫn mang mục lục cũ.
+# TOC.md và roadmap.html là sản phẩm sinh ra. `--ci` ở trên đã bắt trường hợp file trên
+# ĐĨA bị cũ; chỗ này bắt trường hợp khác: file trên đĩa đúng nhưng chưa được `git add`,
+# nên bản commit vẫn mang bản cũ.
 if git diff --cached --name-only | grep -q "^$DIR/data-science-roadmap.html$"; then
-  if ! git diff --cached --name-only | grep -q "^$DIR/TOC.md$"; then
-    if ! git diff --quiet -- TOC.md 2>/dev/null; then
-      echo "pre-commit: TOC.md đã đổi nhưng chưa add — chạy \`git add $DIR/TOC.md\`." >&2
+  for PROD in TOC.md roadmap.html; do
+    git diff --cached --name-only | grep -q "^$DIR/$PROD$" && continue
+    if ! git diff --quiet -- "$PROD" 2>/dev/null; then
+      echo "pre-commit: $PROD đã đổi nhưng chưa add — chạy \`git add $DIR/$PROD\`." >&2
       exit 1
     fi
-  fi
+  done
 fi
 
 exit 0

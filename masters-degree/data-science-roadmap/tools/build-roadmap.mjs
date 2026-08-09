@@ -23,7 +23,18 @@ const SUMS = join(DIR, 'roadmap-summaries.json');
 const OUT  = join(ROOT, 'roadmap.html');
 
 const P = readPage(HTML);
-const sums = existsSync(SUMS) ? JSON.parse(readFileSync(SUMS, 'utf8')).summaries || JSON.parse(readFileSync(SUMS, 'utf8')) : {};
+const SUMS_RAW = existsSync(SUMS) ? JSON.parse(readFileSync(SUMS, 'utf8')) : {};
+const sums = SUMS_RAW.summaries || (existsSync(SUMS) ? SUMS_RAW : {});
+/* Vân tay nội dung từng bài, đóng dấu lúc bản tóm tắt được viết ra (`--stamp`). Đây là
+   thứ DUY NHẤT máy kiểm được về phần không sinh ra từ nguồn: nó không biết tóm tắt có
+   đúng không, nhưng biết bài đã đổi kể từ lúc tóm tắt được viết. Cổng G-ROADMAP-SUM. */
+const srcHash = SUMS_RAW.srcHash || {};
+export function nodeHash(body) {
+  const s = String(body || '').replace(/\s+/g, ' ').trim();
+  let h = 5381;
+  for (let i = 0; i < s.length; i++) h = ((h * 33) ^ s.charCodeAt(i)) >>> 0;
+  return h.toString(16).padStart(8, '0');
+}
 const RAW = readFileSync(HTML, 'utf8');
 
 /* ══ PORT khối tương tác từ trang chính ══════════════════════════════════════
@@ -311,9 +322,30 @@ makeEdgeResizer({
 </body>
 </html>`;
 
-writeFileSync(OUT, html);
-console.log(`roadmap.html: ${P.LEAVES.length} bước · 11 chặng · ${nSum}/84 bản tóm tắt · ${(html.length/1024).toFixed(0)} KB`);
-if (nSum < 84) console.log(`  ⚠ còn ${84 - nSum} bài chưa có tóm tắt (dùng payoff làm tldr tạm) — chạy workflow rồi lưu tools/roadmap-summaries.json.`);
+/* Từ đây trở xuống là phần CHỈ chạy khi gọi thẳng từ dòng lệnh. File này cũng được
+   gate.mjs `import` (cổng G-ROADMAP so file trên đĩa với `html` ở trên) — nên import
+   phải KHÔNG ghi gì và KHÔNG in gì. Mọi thứ ở trên chỉ đọc, nên chỉ cần rào chỗ này. */
+export { html, OUT, SUMS, sums, srcHash };
+
+if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
+  writeFileSync(OUT, html);
+  console.log(`roadmap.html: ${P.LEAVES.length} bước · 11 chặng · ${nSum}/84 bản tóm tắt · ${(html.length/1024).toFixed(0)} KB`);
+  if (nSum < 84) console.log(`  ⚠ còn ${84 - nSum} bài chưa có tóm tắt (dùng payoff làm tldr tạm) — chạy workflow rồi lưu tools/roadmap-summaries.json.`);
+
+  /* --stamp: đóng dấu "các bản tóm tắt hiện tại KHỚP nội dung hiện tại". Chạy sau khi
+     sinh lại tóm tắt bằng workflow, và chỉ sau khi ĐỌC lại bản tóm tắt của những bài
+     cổng gọi tên. KHÔNG chạy tự động trong lượt build thường: tự đóng dấu mỗi lần build
+     thì G-ROADMAP-SUM không bao giờ phát hiện được drift nữa. */
+  if (process.argv.includes('--stamp')) {
+    const stamp = {};
+    for (const l of P.LEAVES) if (P.nodeTpl[l.id]) stamp[l.id] = nodeHash(P.nodeTpl[l.id].body);
+    const raw = JSON.parse(readFileSync(SUMS, 'utf8'));
+    const out = raw.summaries ? { ...raw, srcHash: stamp }
+                              : { generatedBy: 'workflow ds-roadmap-summaries', count: nSum, summaries: sums, srcHash: stamp };
+    writeFileSync(SUMS, JSON.stringify(out, null, 1) + '\n');
+    console.log(`  · đã đóng dấu vân tay nội dung cho ${Object.keys(stamp).length} bài trong roadmap-summaries.json`);
+  }
+}
 
 /* =============================== STYLE =============================== */
 function STYLE() { return String.raw`

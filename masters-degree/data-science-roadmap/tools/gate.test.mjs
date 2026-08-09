@@ -47,7 +47,9 @@ GIT_HOOKS.forEach(h => writeFileSync(join(TMP, '.git', 'hooks', h), fakeHook(h))
 writeFileSync(join(TMP, '.claude', 'settings.json'),
   JSON.stringify({ hooks: { PostToolUse: [{ command: 'data-science-roadmap' }] } }));
 
-const COPIES = ['data-science-roadmap.html', 'TOC.md', 'CLAUDE.md', 'HANDOFF.md', 'LEARNING-LOG.md'];
+/* roadmap.html có trong danh sách vì nó cũng là SẢN PHẨM sinh ra (cổng G-ROADMAP so nó
+   với bản sinh lại). Thiếu nó thì chiều IM đỏ vì "chưa có roadmap.html". */
+const COPIES = ['data-science-roadmap.html', 'roadmap.html', 'TOC.md', 'CLAUDE.md', 'HANDOFF.md', 'LEARNING-LOG.md'];
 for (const f of COPIES) cpSync(join(REAL, f), join(DS, f));
 cpSync(join(REAL, 'tools'), join(DS, 'tools'), { recursive: true });
 
@@ -186,7 +188,21 @@ const OTHER_CASES = [
   ['G-HANDOFF', 'sửa trang mà không có HANDOFF.md', () => {
     rmSync(join(DS, 'HANDOFF.md'));
   }],
+  ['G-ROADMAP', 'roadmap.html bị sửa tay, lệch bản sinh lại', () => {
+    writeFileSync(join(DS, 'roadmap.html'), ORIG['roadmap.html'] + '\n<!-- sửa tay -->\n');
+  }],
+  /* Chiều NỔ của G-ROADMAP-SUM: xoá vân tay nội dung của một bài. Đó là ca "chưa đóng dấu";
+     ca "bài đã đổi" thì mọi mutation HTML ở trên đã dựng ra rồi. tools/ nằm ngoài phạm vi
+     reset() nên ca này tự trả file về. */
+  ['G-ROADMAP-SUM', 'một bản tóm tắt chưa có vân tay nội dung', () => {
+    const p = join(DS, 'tools', 'roadmap-summaries.json');
+    SUMS0 = readFileSync(p, 'utf8');
+    const j = JSON.parse(SUMS0);
+    delete j.srcHash['m-bayes'];
+    writeFileSync(p, JSON.stringify(j, null, 1) + '\n');
+  }, () => writeFileSync(join(DS, 'tools', 'roadmap-summaries.json'), SUMS0)],
 ];
+let SUMS0 = null;
 
 /* --- chạy ---------------------------------------------------------------- */
 const ALL_GATES = execFileSync(process.execPath, [join(DS, 'tools', 'gate.mjs'), '--gates'],

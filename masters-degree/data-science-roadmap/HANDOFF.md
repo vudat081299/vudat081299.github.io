@@ -17,6 +17,68 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 
 ---
 
+## Phiên 2026-08-09 (o) — cổng cho trang thứ hai: vân tay nội dung của từng bản tóm tắt
+
+Yêu cầu: *"commit gần nhất đã nêu các vấn đề chưa hoàn thiện — rà soát tính đúng sai rồi
+làm"*. Phiên này mở trên một nền **cũ** (local đứng ở `1a75135`, remote đã đi tới `2ce5148`),
+nên phần đầu là bài học chứ không phải kết quả.
+
+### Bài học quy trình — `session.mjs` không kiểm remote
+
+`node tools/session.mjs` báo "✓ thư mục sạch — bạn bắt đầu từ nền commit", và điều đó ĐÚNG
+với working tree nhưng **không nói gì về `origin`**. Local lúc đó thiếu ~20 commit (n3–n9).
+Hậu quả: hai việc đã làm xong và commit tại chỗ hoá ra **trùng với việc upstream đã làm rồi**,
+và làm tốt hơn:
+
+- `th-defense` T−3/T−2/T−1 → `wb-steps`, xoá `.ds-day`: upstream làm ngày 2026-08-05, cùng
+  cách đếm ngược 3→2→1 (vòng tròn 30px không chứa nổi ba ký tự `T−3`).
+- "zoo optimizer" của `ml-loss` → popup: upstream làm bằng popup `optzoo`, câu dẫn ở mạch
+  chính sắc hơn bản của tôi ("bạn **không phải chọn** — gõ AdamW rồi đi tiếp").
+- drawer `roadmap.html` kéo được 1/4–1/2: upstream làm bằng cách **TRÍCH `makeEdgeResizer()`
+  nguyên văn** từ trang chính, còn tôi chép tay một bản thứ hai. Trích đúng hơn theo §2 luật 3.
+
+Hai commit đó đã bị **bỏ** (còn giữ ở nhánh `wip-o-gates` nếu cần đối chiếu), và phiên này
+chỉ giữ lại phần upstream chưa có. **Việc cần làm cho phiên sau: `git fetch` trước khi sửa,
+hoặc thêm bước đó vào `session.mjs`.**
+
+### Đã làm — hai cổng cho trang thứ hai
+
+`roadmap.html` + `build-roadmap.mjs` + `roadmap-summaries.json` tồn tại từ phiên (n2) mà
+`CLAUDE.md` §2 không nhắc tới cái nào và **không cổng nào canh**. Audit (n9) §4 mục 4 đã gọi
+tên đúng lỗ này: *"Summary không có checksum/source hash nên có drift thật (`s-plan8w`)"*, và
+definition-of-done của audit yêu cầu *"gate kiểm sourceHash/version của mọi summary"*. Đã làm:
+
+- **`G-ROADMAP`** (nhắc, **CHẶN với `--ci`**) — `roadmap.html` phải bằng bản sinh lại từ
+  nguồn. Cùng hai-mức với cặp `G-TOC-STRUCT`/`G-TOC-STALE`. Cổng này đáng giá hơn ở nền hiện
+  tại vì bộ sinh **trích** CSS/JS từ trang chính: sửa trang chính là bản đã sinh thành cũ.
+- **`G-ROADMAP-SUM`** (luôn chỉ nhắc) — mỗi bài một **vân tay nội dung** trong
+  `roadmap-summaries.json`, đóng dấu bằng `node tools/build-roadmap.mjs --stamp`. Cổng gọi tên
+  bài đã đổi *sau khi* bản tóm tắt được viết. Máy không biết tóm tắt đúng hay sai; nó chỉ biết
+  bài đã đổi — nên cổng chỉ nhắc, và việc đọc lại là của người.
+- `gate.mjs --write` giờ sinh **cả hai** sản phẩm (hook sau-mỗi-Edit tự làm mới `roadmap.html`
+  y như đang làm với `TOC.md`); `pre-commit` chặn việc quên `git add roadmap.html`.
+- `build-roadmap.mjs` giữ nguyên dạng script, chỉ **rào phần ghi file** vào nhánh chạy-từ-CLI
+  và `export { html, OUT, sums, srcHash, nodeHash }` — import không ghi gì, không in gì.
+  `gate.mjs` import **động trong `try`**: bộ sinh cố ý ném khi không trích được CSS/JS từ
+  trang chính, và một stack trace làm chết cả bộ cổng thì tệ hơn một câu nói rõ chuyện gì.
+- **Đã sửa drift thật trước khi lấy mốc**: tóm tắt `s-plan8w` còn ghi *"deep learning ở TUẦN
+  5"* trong khi trang đã đổi sang *tuần 6* (từ phiên m2). Sửa xong mới `--stamp`, vì đóng dấu
+  đè lên một bản tóm tắt sai chính là biến cổng thành con dấu cao su.
+- Tài liệu: `CLAUDE.md` §0a (một dòng "sửa trang Roadmap học nhanh"), §2 (sơ đồ + luật 2/3),
+  §3 (lệnh), §4 (hai cổng mới → 10 chặn · 13 nhắc). `gate.test.mjs` +2 ca nổ (55 đạt / 0 trượt).
+
+### Cố ý KHÔNG làm
+
+- **Không đụng phần "Roadmap độc lập"** mà audit (n9) §4 mô tả (bỏ link về trang DS, chỉ giữ
+  core spine, mỗi node bốn vật, capstone). Đó là một quyết định giáo trình lớn, chủ trang phải
+  chốt. Cổng vân tay chỉ là **một** trong bảy gạch đầu dòng của definition-of-done đó.
+- **Không sinh lại 84 bản tóm tắt.** Mốc vân tay lấy ở trạng thái hiện tại; từ nay bài nào đổi
+  thì cổng gọi tên bài đó, nên không cần chạy lại cả workflow để biết chỗ nào lệch.
+- **Không đụng 5 khuyến nghị `G-FWD`** — audit (n9) đã đề xuất micro-definition, và đó là việc
+  nội dung của một phiên khác.
+- **Không tự đóng dấu trong lượt build thường.** `--stamp` phải là một hành động có ý thức;
+  build tự đóng dấu thì cổng không bao giờ phát hiện được drift nữa.
+
 ## Phiên 2026-08-07 (n9) — audit kiến thức, thứ tự, khả năng tự học và visualization của hai trang — CHỈ BÁO CÁO
 
 Yêu cầu của chủ trang trong phiên này là **chỉ thẩm định**, ghi kết quả vào handoff, không sửa
