@@ -215,6 +215,7 @@ const GATES = [
   ['G-PLAN',       'chặn', 'lịch 14 ngày & 8 tuần nhất quán (bản node của auditPlan)'],
   ['G-LAYER',      'nhắc', 'mục tự khai là nhánh phụ, hoặc bài quá dài'],
   ['G-DUMP',       'nhắc', 'đổ dữ liệu thành câu thay vì nói ý'],
+  ['G-ABS',        'nhắc', 'ngưỡng % viết như quy luật, không gắn nhãn điểm khởi đầu'],
   ['G-VIZ',        'nhắc', 'bài chưa có hình / bảng / code nào để nhìn'],
   ['G-MEASURE',    'nhắc', 'có max-width cứng làm trôi khổ chữ'],
   ['G-SPACING',    'nhắc', 'margin dọc còn viết px trần, chưa trỏ vào thang --ds-sp-*'],
@@ -588,6 +589,45 @@ const noVisual = tplBy('node').filter(t => t.key !== 'home')
   .map(t => t.key);
 if (noVisual.length) W(`G-VIZ: ${noVisual.length} bài không có hình / bảng / khối code nào: ${noVisual.join(', ')}`);
 
+/* --- G-ABS (khuyến nghị): ngưỡng số được viết như quy luật ---------------
+   Lỗi hay gặp nhất trong bản audit 2026-08-07 không phải "nói sai" mà "nói chắc quá":
+   một con số đúng trong MỘT bối cảnh được viết thành quy tắc chung. Ví dụ thật đã có
+   trên trang: "cột thiếu > 60% và không mang thông tin → bỏ cột" — con số 60 không có
+   nguồn nào, và người mới đọc nó như một ngưỡng chuẩn của ngành.
+
+   Vì sao cổng này HẸP đến thế (và không phải một cổng "từ tuyệt đối" chung):
+   đã thử bản rộng — quét `luôn`, `duy nhất`, `bảo đảm`, `không bao giờ` — và trên nội
+   dung hiện tại nó cho 22 kết quả mà gần như tất cả là dương tính giả: câu phủ định
+   ("GPU không được bảo đảm"), câu trích tài liệu nhà cung cấp, và cả chính những đoạn
+   đang SỬA một tuyên bố tuyệt đối (đoạn giải thích "trần lý thuyết của AP là 1" bị bắt
+   vì nó chứa cụm đó). Một khuyến nghị sai nhiều hơn đúng thì kéo cả danh sách xuống,
+   nên bản giữ lại chỉ bắt đúng một HÌNH DẠNG CÂU: ngưỡng phần trăm + mệnh lệnh, không
+   có từ nào hạ giọng ở gần.
+
+   Thoát cửa: <!-- gate:abs: lý do --> ngay trước khối, khi con số THẬT SỰ là một ràng
+   buộc cứng (hạn mức nhà cung cấp, quy định) chứ không phải kinh nghiệm. */
+const ABS_RULE  = /(?:[>≥<≤]|trên|dưới|vượt|quá|hơn)\s*\d+(?:[.,]\d+)?\s*%[^.;]{0,60}(?:thì|→)/i;
+const ABS_RULE2 = /(?:nên|hãy|phải|luôn)[^.;]{0,50}(?:[>≥<≤]|trên|dưới|ít nhất|tối thiểu)\s*\d+(?:[.,]\d+)?\s*%/i;
+const ABS_HEDGE = /thường|tuỳ|tùy|minh hoạ|minh họa|khởi đầu|phụ thuộc|khoảng|ước lượng|kinh nghiệm|hay gặp|\bmốc\b|ví dụ|điển hình|không phải quy luật|tham khảo|dao động|không phải|chứ không/i;
+for (const t of tplBy('node')) {
+  if (/<!--\s*gate:abs\b/.test(t.body)) continue;
+  /* Đổi &gt;/&lt; thành ký tự thật TRƯỚC khi bỏ thực thể — trong HTML mọi dấu so sánh
+     đều được viết dưới dạng thực thể, nên xoá chúng cùng lượt là cổng mù đúng thứ nó
+     đi tìm. (Chính ca test G-ABS đã lộ ra lỗi này.) */
+  const text = t.body.replace(/<div class="ds-code">[\s\S]*?<\/div>/g, ' ').replace(/<[^>]+>/g, ' ')
+    .replace(/&gt;/g, '>').replace(/&lt;/g, '<').replace(/&ge;/g, '≥').replace(/&le;/g, '≤');
+  for (const s of text.split(/(?<=[.!?])\s+|\n/)) {
+    const c = s.replace(/&[a-z]+;/g, ' ').replace(/\s+/g, ' ').trim();
+    if (c.length < 25) continue;
+    if (!ABS_RULE.test(c) && !ABS_RULE2.test(c)) continue;
+    if (ABS_HEDGE.test(c)) continue;
+    W(`G-ABS: "${t.key}" — ngưỡng % đang được viết như quy luật:\n`
+    + `    …${c.slice(0, 110)}…\n`
+    + '    Gắn nhãn nó là điểm khởi đầu (thường / tuỳ / mốc minh hoạ / phụ thuộc…), hoặc nói\n'
+    + '    con số đó đo ở đâu ra. Nếu đây là ràng buộc cứng thật: <!-- gate:abs: lý do -->');
+  }
+}
+
 /* --- G-MEASURE (khuyến nghị): canh trôi khổ chữ -------------------------
    Cả trang chỉ được có MỘT mép phải: cột nội dung đúng bằng khổ chữ, và chỉ bảng
    được tràn ra hai bên. Mỗi max-width bằng px/ch viết rời trong CSS là một mép
@@ -690,11 +730,24 @@ if (tocOnDisk) {
 const GITROOT = join(ROOT, '..', '..');
 if (!has('--ci')) {
   const same = (a, b) => { try { return realpathSync(a) === realpathSync(b); } catch { return false; } };
-  // Cài bằng symlink (mặc định) HOẶC bằng một dòng gọi sang trong hook có sẵn.
+  /* Ba cách cài đều hợp lệ, và cách thứ ba là cách repo này đang dùng:
+       1. symlink thẳng tới tools/hooks/<name>  (mặc định của install-hooks.sh)
+       2. một dòng gọi sang, thêm vào hook có sẵn
+       3. BỘ ĐIỀU PHỐI — repo có nhiều project, mỗi project một bộ hook riêng, nên hook
+          ở .git/hooks/ chỉ là một vòng lặp find theo mẫu đường dẫn "sao / tools / hooks /
+          tên-hook" rồi gọi từng cái. (Viết mẫu đó ra bằng ký tự thật ở đây sẽ ĐÓNG SỚM
+          chính khối chú thích này — dấu sao + gạch chéo là dấu đóng comment.)
+          Nó KHÔNG chứa chuỗi "data-science-roadmap" nào, nên cách kiểm cũ báo CHƯA CÀI
+          trong khi hook vẫn chạy thật. Đó là false negative tệ nhất một cổng có thể có:
+          nó đẩy người ta đi cài lại và sinh hook chạy hai lần. */
   const hookOk = name => {
     const p = join(GITROOT, '.git', 'hooks', name);
-    return existsSync(p)
-      && (same(p, join(HERE, 'hooks', name)) || readFileSync(p, 'utf8').includes(`data-science-roadmap/tools/hooks/${name}`));
+    if (!existsSync(p)) return false;
+    if (same(p, join(HERE, 'hooks', name))) return true;
+    const src = readFileSync(p, 'utf8');
+    if (src.includes(`data-science-roadmap/tools/hooks/${name}`)) return true;
+    // Bộ điều phối: quét theo mẫu đường dẫn, và hook của thư mục này có tồn tại.
+    return src.includes(`*/tools/hooks/${name}`) && existsSync(join(HERE, 'hooks', name));
   };
   const cs = join(GITROOT, '.claude', 'settings.json');
   const layers = [

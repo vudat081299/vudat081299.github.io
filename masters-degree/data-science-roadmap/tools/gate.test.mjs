@@ -156,6 +156,13 @@ const CASES = [
       + '.ds-test-nhich { margin-top: 3px; }\n'
       + '.ds-test-pad { padding: 12px 16px; margin: 0 12px; }\n</style>')],
   ['G-VIZ', 'bài không còn gì để nhìn', h => stripVisuals(h, 'm-bayes')],
+  /* Dựng lại đúng hình dạng câu đã có thật trên trang trước 2026-08-09 ("cột thiếu
+     > 60% và không mang thông tin → bỏ cột"): ngưỡng % + mũi tên mệnh lệnh, không có
+     từ nào hạ giọng. Ca "im" ở dưới đồng thời chứng minh cổng KHÔNG bắt những câu có
+     nhãn điểm khởi đầu — đó mới là thứ giữ cho nó không thành tiếng ồn. */
+  ['G-ABS', 'ngưỡng % viết như quy luật, không gắn nhãn', h =>
+    once(h, '<template data-node="m-bayes">',
+      '<template data-node="m-bayes"><p>Cột nào thiếu &gt; 60% dữ liệu thì bỏ khỏi mô hình.</p>')],
   ['G-TOC-STRUCT', 'đổi tên một bài trong TREE', h =>
     once(h, "t:'Bayes & likelihood'", "t:'Bayes & likelihood (đổi tên)'")],
   ['G-NEXT', 'đổi chỗ hai bài trong TREE', swapTwoInTree],
