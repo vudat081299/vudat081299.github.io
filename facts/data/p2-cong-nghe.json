@@ -1,18 +1,5 @@
 [
   {
-    "id": "cn-101",
-    "cat": "cong-nghe",
-    "sub": "bao-mat-mat-khau",
-    "t": "Trình quản lý mật khẩu an toàn hơn trí nhớ của bạn, kể cả khi nó bị lộ",
-    "s": "Rủi ro thật của người dùng thông thường không phải là kho mật khẩu bị phá mã, mà là dùng lại một mật khẩu ở nhiều nơi. Một kho mã hoá bằng khoá chính mạnh là đánh đổi rõ ràng có lợi so với việc nhớ 8 mật khẩu và dùng lại chúng khắp nơi.",
-    "tags": [
-      "mat-khau",
-      "bao-mat",
-      "thuc-hanh"
-    ],
-    "src": "Hướng dẫn NIST SP 800-63B; khuyến nghị của NCSC Anh về quản lý mật khẩu"
-  },
-  {
     "id": "cn-102",
     "cat": "cong-nghe",
     "sub": "bao-mat-mat-khau",
@@ -260,19 +247,6 @@
     "src": "Báo cáo của Linux Foundation về Core Infrastructure; sự cố CVE-2021-44228"
   },
   {
-    "id": "cn-122",
-    "cat": "cong-nghe",
-    "sub": "bao-mat-mat-khau",
-    "t": "Cập nhật phần mềm là biện pháp bảo mật hiệu quả nhất mà người dùng thường trì hoãn nhất",
-    "s": "Phần lớn các vụ tấn công thành công khai thác lỗ hổng đã có bản vá từ lâu. Không phải vì kẻ tấn công giỏi, mà vì bản vá không được cài. Bật cập nhật tự động là một trong số ít hành động có tỉ lệ lợi ích trên công sức cao nhất.",
-    "tags": [
-      "bao-mat",
-      "cap-nhat",
-      "thuc-hanh"
-    ],
-    "src": "Danh mục lỗ hổng bị khai thác đã biết của CISA; báo cáo Verizon DBIR"
-  },
-  {
     "id": "cn-124",
     "cat": "cong-nghe",
     "sub": "bao-mat-mat-khau",
@@ -338,19 +312,6 @@
     "src": "Chuẩn IEEE 754; Goldberg, 'What Every Computer Scientist Should Know About Floating-Point Arithmetic' (1991)"
   },
   {
-    "id": "cn-129",
-    "cat": "cong-nghe",
-    "sub": "may-tinh-chip",
-    "t": "Múi giờ là bài toán khó nhất trong lập trình đời thường",
-    "s": "Có múi giờ lệch 45 phút, có nơi đổi giờ tiết kiệm ánh sáng vào các ngày khác nhau mỗi năm, có ngày không tồn tại và có giờ xuất hiện hai lần. Nguyên tắc sống còn: luôn lưu thời điểm theo UTC và chỉ đổi sang giờ địa phương ở lớp hiển thị.",
-    "tags": [
-      "thoi-gian",
-      "lap-trinh",
-      "thuc-hanh"
-    ],
-    "src": "Cơ sở dữ liệu múi giờ IANA; thực hành xử lý thời gian trong kỹ thuật phần mềm"
-  },
-  {
     "id": "cn-130",
     "cat": "cong-nghe",
     "sub": "may-tinh-chip",
@@ -362,19 +323,6 @@
       "nhung"
     ],
     "src": "Vấn đề Year 2038; tài liệu về time_t trong POSIX"
-  },
-  {
-    "id": "cn-131",
-    "cat": "cong-nghe",
-    "sub": "may-tinh-chip",
-    "t": "Tên người thật phá vỡ phần mềm thường xuyên hơn bạn nghĩ",
-    "s": "Có người không có họ, có người có một chữ cái duy nhất, có tên chứa dấu nháy hoặc ký tự không thuộc bảng Latinh, và có người đổi tên hợp pháp. Mọi giả định 'ai cũng có họ và tên' đều sai với hàng triệu người.",
-    "tags": [
-      "thiet-ke",
-      "du-lieu",
-      "bao-tram"
-    ],
-    "src": "Patrick McKenzie, 'Falsehoods Programmers Believe About Names' (2010)"
   },
   {
     "id": "cn-132",
@@ -416,19 +364,6 @@
     "src": "Chiết suất sợi quang; nguyên lý thiết kế mạng phân phối nội dung"
   },
   {
-    "id": "cn-135",
-    "cat": "cong-nghe",
-    "sub": "may-tinh-chip",
-    "t": "Bộ nhớ đệm và việc đặt tên là hai vấn đề khó nhất trong khoa học máy tính",
-    "s": "Câu nói đùa nổi tiếng của Phil Karlton có lý do nghiêm túc: cả hai đều không có tiêu chí đúng sai rõ ràng và cả hai đều sinh lỗi rất khó tái hiện. Bộ nhớ đệm hết hạn sai gây ra một tỉ lệ lớn các sự cố 'không hiểu sao nó lại thế'.",
-    "tags": [
-      "lap-trinh",
-      "cache",
-      "kinh-nghiem"
-    ],
-    "src": "Phil Karlton, Netscape; văn hoá kỹ thuật phần mềm"
-  },
-  {
     "id": "cn-136",
     "cat": "cong-nghe",
     "sub": "may-tinh-chip",
@@ -440,19 +375,6 @@
       "gioi-han"
     ],
     "src": "Gene Amdahl, AFIPS Conference (1967)"
-  },
-  {
-    "id": "cn-137",
-    "cat": "cong-nghe",
-    "sub": "may-tinh-chip",
-    "t": "Tối ưu sớm là gốc rễ của mọi điều xấu — nhưng câu này thường bị trích cụt",
-    "s": "Knuth viết rằng khoảng 97% thời gian không nên bận tâm về hiệu suất nhỏ, nhưng ông cũng nói rõ không được bỏ qua 3% then chốt. Câu trích cụt đã được dùng để biện minh cho rất nhiều mã chậm một cách không cần thiết.",
-    "tags": [
-      "lap-trinh",
-      "toi-uu",
-      "trich-dan"
-    ],
-    "src": "Donald Knuth, 'Structured Programming with go to Statements', ACM Computing Surveys (1974)"
   },
   {
     "id": "cn-138",
@@ -557,19 +479,6 @@
       "nguyen-tac"
     ],
     "src": "OWASP Top 10 (nhiều phiên bản)"
-  },
-  {
-    "id": "cn-147",
-    "cat": "cong-nghe",
-    "sub": "internet-mang",
-    "t": "Định luật Postel từng là kim chỉ nam của Internet, và giờ bị coi là một sai lầm bảo mật",
-    "s": "'Nghiêm khắc với thứ bạn gửi, khoan dung với thứ bạn nhận' giúp Internet phát triển nhanh giữa các hệ thống không tương thích. Nhưng sự khoan dung đó tích luỹ thành hành vi mơ hồ và trở thành nguồn của nhiều lỗ hổng — nên khuyến nghị hiện đại đã đảo ngược.",
-    "tags": [
-      "internet",
-      "giao-thuc",
-      "lich-su"
-    ],
-    "src": "Jon Postel, RFC 761 (1980); phê bình trong Thomson & Nottingham, IETF draft 'The Harmful Consequences of the Robustness Principle'"
   },
   {
     "id": "cn-148",

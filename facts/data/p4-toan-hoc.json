@@ -1,0 +1,1705 @@
+[
+  {
+    "id": "th-201",
+    "cat": "toan-hoc",
+    "sub": "so-nguyen-to",
+    "t": "Có vô hạn số nguyên tố, và Euclid đã chứng minh điều đó cách đây khoảng 2.300 năm",
+    "s": "Giả sử chỉ có hữu hạn, nhân tất cả lại rồi cộng 1 sẽ được một số không chia hết cho số nào trong danh sách. Chứng minh này ngắn tới mức vừa một đoạn văn và vẫn được dạy nguyên vẹn tới hôm nay.",
+    "tags": [
+      "so-nguyen-to",
+      "euclid",
+      "chung-minh"
+    ],
+    "src": "Euclid, Cơ bản, Quyển IX Mệnh đề 20"
+  },
+  {
+    "id": "th-202",
+    "cat": "toan-hoc",
+    "sub": "so-nguyen-to",
+    "t": "Số nguyên tố càng lớn càng thưa, và mật độ quanh số n xấp xỉ 1 chia cho logarit tự nhiên của n",
+    "s": "Trong khoảng 1 tới 100 có 25 số nguyên tố; trong khoảng 1 triệu tới 1 triệu lẻ 100 chỉ còn khoảng 6. Định lý số nguyên tố mô tả chính xác mức thưa dần này.",
+    "tags": [
+      "mat-do",
+      "dinh-ly-so-nguyen-to",
+      "logarit"
+    ],
+    "src": "Hadamard & de la Vallée Poussin (1896)"
+  },
+  {
+    "id": "th-203",
+    "cat": "toan-hoc",
+    "sub": "so-nguyen-to",
+    "t": "Số nguyên tố lớn nhất đã biết có hơn 41 triệu chữ số, và in ra giấy thường thì hết khoảng 20.000 trang",
+    "s": "Đó là một số Mersenne dạng 2 mũ p trừ 1, tìm được nhờ dự án tính toán phân tán GIMPS. Việc kiểm tra một số cỡ đó là số nguyên tố mất nhiều ngày trên máy tính mạnh.",
+    "tags": [
+      "mersenne",
+      "gimps",
+      "ky-luc"
+    ],
+    "src": "Great Internet Mersenne Prime Search (GIMPS), 2024"
+  },
+  {
+    "id": "th-204",
+    "cat": "toan-hoc",
+    "sub": "so-nguyen-to",
+    "t": "Mọi số nguyên lớn hơn 1 phân tích được thành tích các số nguyên tố theo đúng một cách duy nhất",
+    "s": "Định lý cơ bản của số học là lý do số nguyên tố được gọi là 'nguyên tử' của số học. Chính tính duy nhất này làm nền cho mật mã khoá công khai.",
+    "tags": [
+      "phan-tich-thua-so",
+      "so-hoc",
+      "duy-nhat"
+    ],
+    "src": "Định lý cơ bản của số học; Gauss, Disquisitiones Arithmeticae (1801)"
+  },
+  {
+    "id": "th-205",
+    "cat": "toan-hoc",
+    "sub": "so-nguyen-to",
+    "t": "Nhân hai số nguyên tố 300 chữ số mất một phần nghìn giây, còn tách ngược lại thì mọi máy tính hiện nay đều bó tay",
+    "s": "Sự bất đối xứng này là toàn bộ nền tảng của RSA. Nếu ai đó tìm ra thuật toán phân tích thừa số nhanh thì phần lớn hạ tầng bảo mật hiện tại sụp đổ trong một đêm.",
+    "tags": [
+      "rsa",
+      "mat-ma",
+      "do-phuc-tap"
+    ],
+    "src": "Rivest, Shamir & Adleman (1978)"
+  },
+  {
+    "id": "th-206",
+    "cat": "toan-hoc",
+    "sub": "so-nguyen-to",
+    "t": "Có vô hạn cặp số nguyên tố cách nhau không quá 246 đơn vị, và kết quả này mới có từ năm 2013",
+    "s": "Giả thuyết số nguyên tố sinh đôi — vô hạn cặp cách nhau đúng 2 — vẫn chưa ai chứng minh được. Yitang Zhang chứng minh khoảng cách bị chặn bởi 70 triệu, rồi cộng đồng toán học hạ xuống 246 trong vòng một năm.",
+    "tags": [
+      "so-nguyen-to-sinh-doi",
+      "zhang",
+      "polymath"
+    ],
+    "src": "Zhang, Annals of Mathematics (2014); Dự án Polymath8"
+  },
+  {
+    "id": "th-207",
+    "cat": "toan-hoc",
+    "sub": "vo-han-va-tap-hop",
+    "t": "Có nhiều loại vô hạn khác nhau, và số thực nhiều hơn số tự nhiên dù cả hai đều vô hạn",
+    "s": "Cantor chứng minh bằng phép chéo hoá rằng không thể đánh số hết các số thực. Kết quả này gây tranh cãi dữ dội tới mức nhiều nhà toán học đương thời từ chối chấp nhận nó.",
+    "tags": [
+      "cantor",
+      "vo-han",
+      "cheo-hoa"
+    ],
+    "src": "Cantor (1891)"
+  },
+  {
+    "id": "th-208",
+    "cat": "toan-hoc",
+    "sub": "vo-han-va-tap-hop",
+    "t": "Số các số chẵn bằng đúng số các số tự nhiên, dù số chẵn chỉ là một nửa",
+    "s": "Ghép mỗi số tự nhiên n với số chẵn 2n cho một tương ứng một–một hoàn hảo. Với tập vô hạn, 'một phần' có thể lớn bằng 'toàn thể' — đó là định nghĩa của vô hạn.",
+    "tags": [
+      "vo-han",
+      "song-anh",
+      "nghich-ly"
+    ],
+    "src": "Galileo, Hai ngành khoa học mới (1638); Dedekind (1888)"
+  },
+  {
+    "id": "th-209",
+    "cat": "toan-hoc",
+    "sub": "vo-han-va-tap-hop",
+    "t": "Có nhiều số thực trong đoạn từ 0 đến 1 hơn tổng số các phân số trên toàn bộ trục số",
+    "s": "Tập số hữu tỉ đếm được, tập số thực thì không. Nghĩa là nếu chọn ngẫu nhiên một số trong đoạn 0–1 thì xác suất trúng số hữu tỉ bằng đúng 0.",
+    "tags": [
+      "so-thuc",
+      "huu-ti",
+      "do-do"
+    ],
+    "src": "Cantor (1874); Lý thuyết độ đo Lebesgue"
+  },
+  {
+    "id": "th-210",
+    "cat": "toan-hoc",
+    "sub": "vo-han-va-tap-hop",
+    "t": "Khách sạn Hilbert với vô hạn phòng đã kín vẫn nhận thêm được vô hạn khách mới",
+    "s": "Chuyển khách ở phòng n sang phòng 2n, toàn bộ phòng lẻ trống ra. Đây là cách hình dung trực quan nhất cho việc tập vô hạn đếm được cộng thêm tập vô hạn đếm được vẫn đếm được.",
+    "tags": [
+      "hilbert",
+      "vo-han",
+      "nghich-ly"
+    ],
+    "src": "Hilbert, bài giảng (1924); Gamow, One Two Three... Infinity"
+  },
+  {
+    "id": "th-211",
+    "cat": "toan-hoc",
+    "sub": "vo-han-va-tap-hop",
+    "t": "Có những mệnh đề toán học đúng nhưng không thể chứng minh trong hệ tiên đề đang dùng",
+    "s": "Định lý bất toàn của Gödel năm 1931 chấm dứt hy vọng xây một hệ tiên đề vừa đầy đủ vừa nhất quán cho toàn bộ số học. Nó cũng cho thấy một hệ đủ mạnh không thể tự chứng minh tính nhất quán của chính nó.",
+    "tags": [
+      "godel",
+      "bat-toan",
+      "logic"
+    ],
+    "src": "Gödel (1931)"
+  },
+  {
+    "id": "th-212",
+    "cat": "toan-hoc",
+    "sub": "hinh-hoc",
+    "t": "Tổng ba góc trong tam giác chỉ bằng 180 độ trên mặt phẳng; trên mặt cầu nó luôn lớn hơn",
+    "s": "Một tam giác nối cực Bắc với hai điểm trên xích đạo có thể có ba góc vuông, tổng 270 độ. Hình học phi Euclid được phát triển đầu thế kỷ 19 và sau đó thành ngôn ngữ của thuyết tương đối rộng.",
+    "tags": [
+      "phi-euclid",
+      "tam-giac",
+      "mat-cau"
+    ],
+    "src": "Gauss, Bolyai & Lobachevsky (1820–1830); Einstein (1915)"
+  },
+  {
+    "id": "th-213",
+    "cat": "toan-hoc",
+    "sub": "hinh-hoc",
+    "t": "Số pi là số vô tỉ, nghĩa là khai triển thập phân của nó không bao giờ lặp lại và không bao giờ kết thúc",
+    "s": "Lambert chứng minh điều này năm 1761. Với 39 chữ số thập phân đầu tiên là đủ tính chu vi vũ trụ quan sát được với sai số nhỏ hơn đường kính một nguyên tử hydro.",
+    "tags": [
+      "pi",
+      "vo-ti",
+      "hinh-hoc"
+    ],
+    "src": "Lambert (1761); NASA JPL, How Many Decimals of Pi Do We Really Need"
+  },
+  {
+    "id": "th-214",
+    "cat": "toan-hoc",
+    "sub": "hinh-hoc",
+    "t": "Chỉ có đúng năm khối đa diện đều tồn tại trong không gian ba chiều, và điều đó chứng minh được",
+    "s": "Tứ diện, lập phương, bát diện, thập nhị diện và nhị thập diện — không có khối thứ sáu và sẽ không bao giờ có. Chứng minh chỉ cần một lập luận đơn giản về tổng góc tại mỗi đỉnh.",
+    "tags": [
+      "da-dien-deu",
+      "platon",
+      "hinh-hoc"
+    ],
+    "src": "Euclid, Cơ bản, Quyển XIII"
+  },
+  {
+    "id": "th-215",
+    "cat": "toan-hoc",
+    "sub": "hinh-hoc",
+    "t": "Chỉ có ba hình đa giác đều lát kín được mặt phẳng: tam giác, hình vuông và lục giác",
+    "s": "Ong chọn lục giác vì với cùng chu vi thành, nó cho diện tích lớn nhất — tức tốn ít sáp nhất cho cùng thể tích mật. Giả thuyết tổ ong này mãi tới năm 1999 mới được chứng minh chặt chẽ.",
+    "tags": [
+      "lat-mat-phang",
+      "to-ong",
+      "toi-uu"
+    ],
+    "src": "Hales, Discrete & Computational Geometry (2001)"
+  },
+  {
+    "id": "th-216",
+    "cat": "toan-hoc",
+    "sub": "hinh-hoc",
+    "t": "Không thể trải phẳng một mặt cầu mà không làm méo, và mọi bản đồ thế giới đều phải chọn hy sinh cái gì",
+    "s": "Định lý Egregium của Gauss chứng minh độ cong nội tại không đổi được khi uốn. Phép chiếu Mercator giữ đúng góc nhưng phóng to Greenland lên gấp khoảng 14 lần so với thực tế.",
+    "tags": [
+      "ban-do",
+      "mercator",
+      "gauss"
+    ],
+    "src": "Gauss, Theorema Egregium (1827)"
+  },
+  {
+    "id": "th-217",
+    "cat": "toan-hoc",
+    "sub": "hinh-hoc",
+    "t": "Bốn màu là đủ để tô mọi bản đồ phẳng sao cho hai vùng kề nhau khác màu",
+    "s": "Bài toán được nêu năm 1852 và chỉ được giải năm 1976 bằng máy tính kiểm tra 1.936 cấu hình. Đây là định lý lớn đầu tiên mà chứng minh không thể kiểm bằng tay.",
+    "tags": [
+      "bon-mau",
+      "do-thi",
+      "may-tinh"
+    ],
+    "src": "Appel & Haken (1976)"
+  },
+  {
+    "id": "th-218",
+    "cat": "toan-hoc",
+    "sub": "hinh-hoc",
+    "t": "Một hình có thể có chu vi vô hạn nhưng diện tích hữu hạn",
+    "s": "Bông tuyết Koch là ví dụ kinh điển: mỗi bước lặp làm chu vi nhân 4/3 nhưng diện tích hội tụ về một giá trị hữu hạn. Đường bờ biển thực tế cũng dài ra khi bạn đo bằng thước ngắn hơn.",
+    "tags": [
+      "fractal",
+      "koch",
+      "bo-bien"
+    ],
+    "src": "von Koch (1904); Mandelbrot, Science (1967)"
+  },
+  {
+    "id": "th-219",
+    "cat": "toan-hoc",
+    "sub": "hinh-hoc",
+    "t": "Chiều dài bờ biển không phải một con số cố định — nó phụ thuộc độ dài thước đo",
+    "s": "Đo bờ biển Anh bằng thước 200 km cho khoảng 2.400 km, bằng thước 50 km cho khoảng 3.400 km. Đây là lý do các nguồn khác nhau đưa ra chiều dài bờ biển Việt Nam chênh nhau hàng trăm km.",
+    "tags": [
+      "fractal",
+      "bo-bien",
+      "do-luong"
+    ],
+    "src": "Richardson (1961); Mandelbrot, Science (1967)"
+  },
+  {
+    "id": "th-220",
+    "cat": "toan-hoc",
+    "sub": "hinh-hoc",
+    "t": "Có thể cắt một quả cầu thành 5 mảnh rồi ghép lại thành hai quả cầu y hệt quả ban đầu",
+    "s": "Nghịch lý Banach–Tarski là hệ quả của tiên đề chọn, và các 'mảnh' đó không đo được nên không thể dựng bằng dao kéo thật. Nó cho thấy trực giác về thể tích sụp đổ khi gặp tập hợp phi thường.",
+    "tags": [
+      "banach-tarski",
+      "nghich-ly",
+      "tien-de-chon"
+    ],
+    "src": "Banach & Tarski (1924)"
+  },
+  {
+    "id": "th-221",
+    "cat": "toan-hoc",
+    "sub": "day-so-va-ti-le",
+    "t": "Dãy Fibonacci xuất hiện trong cách lá mọc quanh thân vì đó là cách xếp tối ưu để không che nắng nhau",
+    "s": "Góc xoay giữa hai lá liên tiếp thường xấp xỉ 137,5 độ, tức góc vàng. Tỉ số hai số Fibonacci liên tiếp tiến dần tới tỉ lệ vàng 1,618.",
+    "tags": [
+      "fibonacci",
+      "ti-le-vang",
+      "thuc-vat"
+    ],
+    "src": "Douady & Couder, Physical Review Letters (1992)"
+  },
+  {
+    "id": "th-222",
+    "cat": "toan-hoc",
+    "sub": "day-so-va-ti-le",
+    "t": "Tỉ lệ vàng không phổ biến trong nghệ thuật cổ điển như danh tiếng của nó",
+    "s": "Markowsky (1992) rà lại các ví dụ nổi tiếng — kim tự tháp Giza, đền Parthenon, tranh Leonardo — và thấy phần lớn là kết quả của việc chọn điểm đo cho khớp sau, với sai số 5–10% so với 1,618. Bản thân tỉ lệ này vẫn là một hằng số toán học thật với nhiều tính chất đẹp.",
+    "tags": [
+      "ti-le-vang",
+      "nghe-thuat",
+      "huyen-thoai"
+    ],
+    "src": "Markowsky, College Mathematics Journal (1992)"
+  },
+  {
+    "id": "th-223",
+    "cat": "toan-hoc",
+    "sub": "day-so-va-ti-le",
+    "t": "Tăng trưởng 7%/năm làm gấp đôi sau khoảng 10 năm, và quy tắc 72 cho ra con số đó chỉ bằng một phép chia",
+    "s": "Chia 72 cho lãi suất phần trăm được số năm nhân đôi. Sai số dưới 1% với lãi suất trong khoảng 6–10%, đủ chính xác cho mọi ước lượng nhẩm.",
+    "tags": [
+      "quy-tac-72",
+      "lai-kep",
+      "uoc-luong"
+    ],
+    "src": "Luca Pacioli, Summa de arithmetica (1494)"
+  },
+  {
+    "id": "th-225",
+    "cat": "toan-hoc",
+    "sub": "day-so-va-ti-le",
+    "t": "Tổng của một dãy vô hạn có thể là một số hữu hạn, và Zeno đã bối rối vì điều đó 2.400 năm trước",
+    "s": "Tổng 1/2 + 1/4 + 1/8 + ... hội tụ về đúng 1. Nghịch lý Achilles và con rùa tan biến khi ta chấp nhận rằng vô hạn bước có thể hoàn tất trong thời gian hữu hạn.",
+    "tags": [
+      "zeno",
+      "chuoi-hoi-tu",
+      "gioi-han"
+    ],
+    "src": "Zeno xứ Elea (khoảng 450 TCN); Cauchy (1821)"
+  },
+  {
+    "id": "th-226",
+    "cat": "toan-hoc",
+    "sub": "day-so-va-ti-le",
+    "t": "Chuỗi điều hoà 1 + 1/2 + 1/3 + ... phân kỳ ra vô cực, dù các số hạng nhỏ dần về 0",
+    "s": "Để tổng vượt 100 cần cộng khoảng 10 mũ 43 số hạng. Đây là ví dụ rõ nhất cho thấy 'số hạng tiến về 0' không đủ để chuỗi hội tụ.",
+    "tags": [
+      "chuoi-dieu-hoa",
+      "phan-ky",
+      "truc-giac"
+    ],
+    "src": "Oresme (khoảng 1350)"
+  },
+  {
+    "id": "th-227",
+    "cat": "toan-hoc",
+    "sub": "day-so-va-ti-le",
+    "t": "Xếp chồng các viên gạch giống nhau có thể vươn ra xa vô hạn khỏi mép bàn mà không đổ",
+    "s": "Độ vươn tối đa với n viên tỉ lệ với chuỗi điều hoà nên tăng vô hạn, chỉ là cực kỳ chậm: cần hơn 200 triệu viên để vươn ra 10 lần chiều dài một viên.",
+    "tags": [
+      "gach-xep",
+      "chuoi-dieu-hoa",
+      "can-bang"
+    ],
+    "src": "Hall, American Journal of Physics (2005)"
+  },
+  {
+    "id": "th-228",
+    "cat": "toan-hoc",
+    "sub": "day-so-va-ti-le",
+    "t": "Số e xuất hiện lần đầu trong bài toán lãi kép, không phải trong giải tích",
+    "s": "Nếu gửi 1 đồng với lãi 100% một năm và ghép lãi liên tục, cuối năm được đúng e đồng, tức khoảng 2,71828. Bernoulli phát hiện giới hạn này khi nghiên cứu ghép lãi ngày càng dày.",
+    "tags": [
+      "so-e",
+      "lai-kep",
+      "bernoulli"
+    ],
+    "src": "Jacob Bernoulli (1683)"
+  },
+  {
+    "id": "th-229",
+    "cat": "toan-hoc",
+    "sub": "day-so-va-ti-le",
+    "t": "Đẳng thức Euler nối năm hằng số quan trọng nhất của toán học trong một dòng",
+    "s": "e mũ i-pi cộng 1 bằng 0 gộp e, i, pi, 1 và 0 với ba phép toán cơ bản. Nó không phải trò chơi chữ số mà là hệ quả trực tiếp của việc hàm mũ phức mô tả chuyển động tròn.",
+    "tags": [
+      "euler",
+      "hang-so",
+      "so-phuc"
+    ],
+    "src": "Euler, Introductio in analysin infinitorum (1748)"
+  },
+  {
+    "id": "th-230",
+    "cat": "toan-hoc",
+    "sub": "day-so-va-ti-le",
+    "t": "Số phức không hề 'ảo' — chúng là công cụ bắt buộc để mô tả dòng điện xoay chiều và cơ học lượng tử",
+    "s": "Tên gọi 'ảo' do Descartes đặt với ý miệt thị và nó dính luôn. Không có số phức thì không tính được mạch điện, xử lý tín hiệu hay hàm sóng.",
+    "tags": [
+      "so-phuc",
+      "ung-dung",
+      "ten-goi"
+    ],
+    "src": "Descartes (1637); Needham, Visual Complex Analysis"
+  },
+  {
+    "id": "th-231",
+    "cat": "toan-hoc",
+    "sub": "mat-ma",
+    "t": "Mật mã hiện đại không giấu thuật toán — nó chỉ giấu khoá, và nguyên tắc này có từ năm 1883",
+    "s": "Nguyên lý Kerckhoffs nói hệ thống phải an toàn ngay cả khi mọi chi tiết trừ khoá bị công khai. Đó là lý do các chuẩn AES và RSA đều được công bố toàn văn cho cả thế giới soi.",
+    "tags": [
+      "kerckhoffs",
+      "mat-ma",
+      "nguyen-ly"
+    ],
+    "src": "Kerckhoffs, Journal des sciences militaires (1883)"
+  },
+  {
+    "id": "th-232",
+    "cat": "toan-hoc",
+    "sub": "mat-ma",
+    "t": "Khoá AES 256 bit có số tổ hợp lớn hơn số nguyên tử ước tính trong vũ trụ quan sát được",
+    "s": "2 mũ 256 xấp xỉ 10 mũ 77, còn số nguyên tử trong vũ trụ quan sát được ước khoảng 10 mũ 80. Vét cạn khoá là bất khả thi về mặt năng lượng chứ không chỉ về thời gian.",
+    "tags": [
+      "aes",
+      "khoa",
+      "vet-can"
+    ],
+    "src": "NIST FIPS 197; Schneier, Applied Cryptography"
+  },
+  {
+    "id": "th-233",
+    "cat": "toan-hoc",
+    "sub": "mat-ma",
+    "t": "Hai người chưa từng gặp nhau vẫn thoả thuận được một khoá bí mật qua kênh công khai mà kẻ nghe lén không biết gì",
+    "s": "Trao đổi khoá Diffie–Hellman năm 1976 dựa trên việc luỹ thừa modulo dễ tính còn logarit rời rạc thì khó. Đây là ý tưởng làm nên toàn bộ thương mại điện tử.",
+    "tags": [
+      "diffie-hellman",
+      "trao-doi-khoa",
+      "https"
+    ],
+    "src": "Diffie & Hellman, IEEE Transactions on Information Theory (1976)"
+  },
+  {
+    "id": "th-234",
+    "cat": "toan-hoc",
+    "sub": "mat-ma",
+    "t": "Hàm băm biến dữ liệu bất kỳ thành chuỗi độ dài cố định, và đổi một bit đầu vào làm đổi khoảng một nửa số bit đầu ra",
+    "s": "SHA-256 cho ra 256 bit dù đầu vào là một chữ cái hay cả bộ bách khoa toàn thư. Hiệu ứng tuyết lở này là điều kiện để hàm băm dùng được trong chữ ký số và blockchain.",
+    "tags": [
+      "ham-bam",
+      "sha256",
+      "tuyet-lo"
+    ],
+    "src": "NIST FIPS 180-4"
+  },
+  {
+    "id": "th-235",
+    "cat": "toan-hoc",
+    "sub": "mat-ma",
+    "t": "Chỉ có một hệ mật mã được chứng minh là không thể phá, và nó gần như không dùng được trong thực tế",
+    "s": "Sổ tay một lần đòi khoá ngẫu nhiên dài bằng thông điệp, dùng đúng một lần rồi bỏ. Shannon chứng minh tính an toàn tuyệt đối của nó năm 1949; mọi hệ khác chỉ an toàn về mặt tính toán.",
+    "tags": [
+      "one-time-pad",
+      "shannon",
+      "an-toan"
+    ],
+    "src": "Shannon, Bell System Technical Journal (1949)"
+  },
+  {
+    "id": "th-236",
+    "cat": "toan-hoc",
+    "sub": "do-thi-mang-luoi",
+    "t": "Bài toán bảy cây cầu Königsberg không có lời giải, và việc chứng minh điều đó khai sinh ngành lý thuyết đồ thị",
+    "s": "Euler chỉ ra rằng muốn đi qua mỗi cạnh đúng một lần thì số đỉnh có bậc lẻ phải là 0 hoặc 2. Königsberg có bốn đỉnh bậc lẻ nên vô nghiệm — không cần thử một hành trình nào.",
+    "tags": [
+      "euler",
+      "do-thi",
+      "konigsberg"
+    ],
+    "src": "Euler (1736)"
+  },
+  {
+    "id": "th-237",
+    "cat": "toan-hoc",
+    "sub": "do-thi-mang-luoi",
+    "t": "Trong bất kỳ nhóm 6 người nào cũng luôn có 3 người quen nhau đôi một hoặc 3 người hoàn toàn lạ nhau",
+    "s": "Đây là trường hợp đơn giản nhất của lý thuyết Ramsey. Con số tương ứng cho nhóm 4 là 18 người, còn cho nhóm 5 thì tới nay vẫn chưa ai biết chính xác.",
+    "tags": [
+      "ramsey",
+      "to-hop",
+      "do-thi"
+    ],
+    "src": "Ramsey, Proceedings of the LMS (1930)"
+  },
+  {
+    "id": "th-238",
+    "cat": "toan-hoc",
+    "sub": "do-thi-mang-luoi",
+    "t": "Trong một mạng xã hội, bạn của bạn trung bình có nhiều bạn hơn bạn — và điều đó đúng với hầu hết mọi người",
+    "s": "Người có nhiều bạn xuất hiện trong danh sách bạn bè của nhiều người hơn, nên phép lấy trung bình bị lệch. Hệ quả thực tế: ai cũng có cảm giác mình ít bạn hơn mức trung bình.",
+    "tags": [
+      "nghich-ly-ban-be",
+      "mang-xa-hoi",
+      "thong-ke"
+    ],
+    "src": "Feld, American Journal of Sociology (1991)"
+  },
+  {
+    "id": "th-239",
+    "cat": "toan-hoc",
+    "sub": "do-thi-mang-luoi",
+    "t": "Trong mạng lưới quen biết toàn cầu, hai người bất kỳ thường cách nhau khoảng 6 bước",
+    "s": "Thí nghiệm thư chuyền của Milgram cho trung vị 5–6 khâu, và phân tích 721 triệu người dùng Facebook năm 2011 cho khoảng 4,7 khâu. Con số nhỏ vì mạng có nhiều liên kết bắc cầu giữa các cụm.",
+    "tags": [
+      "the-gioi-nho",
+      "milgram",
+      "mang-luoi"
+    ],
+    "src": "Milgram (1967); Backstrom và cộng sự, Facebook (2012)"
+  },
+  {
+    "id": "th-240",
+    "cat": "toan-hoc",
+    "sub": "do-thi-mang-luoi",
+    "t": "Thuật toán tìm đường đi ngắn nhất của Dijkstra ra đời năm 1956 và nó vẫn chạy trong ứng dụng bản đồ của bạn",
+    "s": "Dijkstra nghĩ ra nó trong khoảng 20 phút khi ngồi quán cà phê ở Amsterdam, và ba năm sau mới công bố. Các bản đồ hiện đại dùng biến thể có gợi ý hướng để nhanh hơn nữa.",
+    "tags": [
+      "dijkstra",
+      "thuat-toan",
+      "ban-do"
+    ],
+    "src": "Dijkstra, Numerische Mathematik (1959)"
+  },
+  {
+    "id": "th-241",
+    "cat": "toan-hoc",
+    "sub": "toi-uu-va-thuat-toan",
+    "t": "Không có thuật toán sắp xếp so sánh nào nhanh hơn n nhân logarit n, và đó là chặn dưới đã chứng minh",
+    "s": "Cây quyết định cho n phần tử có ít nhất n giai thừa lá, nên chiều cao tối thiểu là bậc n log n. Muốn nhanh hơn thì phải bỏ mô hình so sánh, như sắp xếp theo cơ số.",
+    "tags": [
+      "sap-xep",
+      "chan-duoi",
+      "do-phuc-tap"
+    ],
+    "src": "Knuth, The Art of Computer Programming, Tập 3"
+  },
+  {
+    "id": "th-242",
+    "cat": "toan-hoc",
+    "sub": "toi-uu-va-thuat-toan",
+    "t": "Bài toán người bán hàng với 20 thành phố có hơn 60 tỉ tỉ lộ trình khả dĩ",
+    "s": "Số hoán vị tăng theo giai thừa nên vét cạn hết khả năng rất nhanh. Các lời giải thực tế dùng heuristic và quy hoạch nguyên, và bài toán này vẫn là chuẩn mực để so sánh thuật toán tối ưu.",
+    "tags": [
+      "tsp",
+      "to-hop",
+      "toi-uu"
+    ],
+    "src": "Applegate và cộng sự, The Traveling Salesman Problem (2006)"
+  },
+  {
+    "id": "th-243",
+    "cat": "toan-hoc",
+    "sub": "toi-uu-va-thuat-toan",
+    "t": "Câu hỏi P có bằng NP hay không vẫn chưa có lời giải, và ai giải được sẽ nhận một triệu đô",
+    "s": "Đây là một trong bảy Bài toán Thiên niên kỷ của Viện Clay. Nếu P bằng NP thì phần lớn hệ mật mã hiện nay mất giá trị, còn nhiều bài toán tối ưu khó lại giải được nhanh.",
+    "tags": [
+      "p-vs-np",
+      "do-phuc-tap",
+      "clay"
+    ],
+    "src": "Clay Mathematics Institute, Millennium Prize Problems (2000)"
+  },
+  {
+    "id": "th-244",
+    "cat": "toan-hoc",
+    "sub": "toi-uu-va-thuat-toan",
+    "t": "Có những bài toán không máy tính nào giải được, và điều đó đã được chứng minh trước khi máy tính tồn tại",
+    "s": "Bài toán dừng — đoán xem một chương trình có kết thúc hay chạy mãi — là không quyết định được. Turing chứng minh điều này năm 1936, chín năm trước chiếc máy tính điện tử đầu tiên.",
+    "tags": [
+      "turing",
+      "bai-toan-dung",
+      "tinh-toan"
+    ],
+    "src": "Turing, Proceedings of the LMS (1936)"
+  },
+  {
+    "id": "th-245",
+    "cat": "toan-hoc",
+    "sub": "toi-uu-va-thuat-toan",
+    "t": "Ghép cặp ổn định luôn tồn tại, và thuật toán tìm ra nó đang phân bổ bác sĩ nội trú cho bệnh viện ở nhiều nước",
+    "s": "Thuật toán Gale–Shapley năm 1962 chạy trong thời gian bình phương số người và luôn cho kết quả không ai muốn đổi. Nó đoạt giải Nobel Kinh tế 2012 cùng lý thuyết thiết kế thị trường.",
+    "tags": [
+      "gale-shapley",
+      "ghep-cap",
+      "nobel"
+    ],
+    "src": "Gale & Shapley (1962); Giải Nobel Kinh tế 2012"
+  },
+  {
+    "id": "th-246",
+    "cat": "toan-hoc",
+    "sub": "nghich-ly-toan",
+    "t": "Chia 100 người thành hai nhóm, một phương pháp có thể tốt hơn ở cả hai nhóm mà vẫn tệ hơn khi gộp lại",
+    "s": "Nghịch lý Simpson xảy ra khi kích cỡ nhóm khác nhau nhiều. Vụ kiện phân biệt giới tính ở Berkeley năm 1973 là ví dụ nổi tiếng: tỉ lệ trúng tuyển của nữ thấp hơn khi gộp nhưng cao hơn ở phần lớn khoa.",
+    "tags": [
+      "simpson",
+      "gop-nhom",
+      "thong-ke"
+    ],
+    "src": "Bickel, Hammel & O'Connell, Science (1975)"
+  },
+  {
+    "id": "th-248",
+    "cat": "toan-hoc",
+    "sub": "nghich-ly-toan",
+    "t": "Trong bỏ phiếu có từ 3 lựa chọn trở lên, không hệ thống nào thoả mãn cùng lúc mọi tiêu chí công bằng hợp lý",
+    "s": "Định lý bất khả thi của Arrow chứng minh điều này năm 1951. Nó không nói mọi hệ bầu cử đều tệ như nhau, chỉ nói không có hệ nào hoàn hảo theo tập tiêu chí đó.",
+    "tags": [
+      "arrow",
+      "bau-cu",
+      "bat-kha-thi"
+    ],
+    "src": "Arrow, Journal of Political Economy (1950); Giải Nobel Kinh tế 1972"
+  },
+  {
+    "id": "th-249",
+    "cat": "toan-hoc",
+    "sub": "nghich-ly-toan",
+    "t": "Số 0,999... với vô hạn chữ số 9 bằng đúng 1, không phải xấp xỉ 1",
+    "s": "Nếu hai số thực khác nhau thì phải có số nằm giữa, mà không có số nào nằm giữa 0,999... và 1. Đây là một trong những kết quả toán học bị tranh cãi dai dẳng nhất dù chứng minh rất đơn giản.",
+    "tags": [
+      "so-thuc",
+      "gioi-han",
+      "truc-giac"
+    ],
+    "src": "Tall & Schwarzenberger, Mathematics Teaching (1978)"
+  },
+  {
+    "id": "th-251",
+    "cat": "toan-hoc",
+    "sub": "nghich-ly-toan",
+    "t": "Trong một nhóm ngẫu nhiên, người kiểm tra chất lượng luôn gặp lô hàng tệ hơn mức trung bình thật",
+    "s": "Nghịch lý thanh tra: lô lớn có nhiều cơ hội được chọn hơn lô nhỏ, nên mẫu bị lệch về phía lô lớn. Cùng cơ chế làm bạn luôn thấy xe buýt đến muộn hơn giãn cách công bố và lớp học đông hơn con số trung bình của trường.",
+    "tags": [
+      "nghich-ly-thanh-tra",
+      "thien-lech",
+      "thong-ke"
+    ],
+    "src": "Feller, An Introduction to Probability Theory"
+  },
+  {
+    "id": "th-252",
+    "cat": "toan-hoc",
+    "sub": "nghich-ly-toan",
+    "t": "Có thể chọn 3 con xúc xắc sao cho A thắng B, B thắng C, nhưng C lại thắng A",
+    "s": "Xúc xắc Efron cho mỗi cặp tỉ lệ thắng 2/3 theo đúng vòng tròn đó. Quan hệ 'mạnh hơn' không nhất thiết có tính bắc cầu, và điều này xuất hiện cả trong bầu cử lẫn xếp hạng thể thao.",
+    "tags": [
+      "xuc-xac-khong-bac-cau",
+      "xac-suat",
+      "efron"
+    ],
+    "src": "Gardner, Scientific American (1970)"
+  },
+  {
+    "id": "th-254",
+    "cat": "toan-hoc",
+    "sub": "nghich-ly-toan",
+    "t": "Trung bình cộng của các tỉ lệ không bằng tỉ lệ của tổng, và lỗi này làm sai lệch nhiều báo cáo",
+    "s": "Đi 60 km/h chiều đi và 30 km/h chiều về cho tốc độ trung bình 40 km/h, không phải 45. Đại lượng đúng ở đây là trung bình điều hoà chứ không phải trung bình cộng.",
+    "tags": [
+      "trung-binh-dieu-hoa",
+      "ti-le",
+      "sai-lech"
+    ],
+    "src": "Chuẩn mực thống kê cơ bản; Huff, How to Lie with Statistics"
+  },
+  {
+    "id": "th-255",
+    "cat": "toan-hoc",
+    "sub": "nghich-ly-toan",
+    "t": "Kỳ vọng của một biến ngẫu nhiên có thể là vô hạn dù mọi kết quả đều hữu hạn",
+    "s": "Nghịch lý St. Petersburg: một trò tung đồng xu trả 2 mũ n đồng có kỳ vọng vô hạn, nhưng gần như không ai chịu trả quá vài chục đồng để tham gia. Bernoulli giải bằng khái niệm hữu dụng biên giảm dần.",
+    "tags": [
+      "st-petersburg",
+      "ky-vong",
+      "huu-dung"
+    ],
+    "src": "Daniel Bernoulli (1738)"
+  },
+  {
+    "id": "th-256",
+    "cat": "toan-hoc",
+    "sub": "do-thi-mang-luoi",
+    "t": "Mọi bản đồ tàu điện ngầm đều là đồ thị bị bóp méo có chủ đích, và bản đồ London năm 1933 khởi đầu chuyện đó",
+    "s": "Harry Beck bỏ tỉ lệ địa lý, chỉ giữ thứ tự trạm và điểm chuyển tuyến, dùng đường thẳng ở 3 góc: 0, 45 và 90 độ. Cách này lan ra hầu hết hệ thống metro trên thế giới.",
+    "tags": [
+      "ban-do-metro",
+      "topo",
+      "thiet-ke"
+    ],
+    "src": "Garland, Mr Beck's Underground Map (1994)"
+  },
+  {
+    "id": "th-257",
+    "cat": "toan-hoc",
+    "sub": "do-thi-mang-luoi",
+    "t": "Mạng có ít đầu mối rất lớn thì chống chịu hỏng ngẫu nhiên tốt nhưng cực yếu khi bị nhắm đúng đầu mối",
+    "s": "Mạng vô tỉ lệ giữ được liên thông khi xoá ngẫu nhiên tới 80% nút, nhưng sụp khi mất khoảng 5–10% nút có bậc cao nhất. Điều này đúng với Internet, mạng điện và mạng lây bệnh.",
+    "tags": [
+      "mang-vo-ti-le",
+      "suy-yeu",
+      "ha-tang"
+    ],
+    "src": "Albert, Jeong & Barabási, Nature (2000)"
+  },
+  {
+    "id": "th-260",
+    "cat": "toan-hoc",
+    "sub": "toi-uu-va-thuat-toan",
+    "t": "Nén dữ liệu không mất mát có giới hạn cứng, và giới hạn đó là entropy của nguồn",
+    "s": "Shannon chứng minh năm 1948 rằng không thuật toán nào nén được dưới mức entropy trung bình mỗi ký hiệu. Vì vậy không tồn tại phần mềm nén được mọi tệp thêm một lần nữa mà không mất gì.",
+    "tags": [
+      "shannon",
+      "entropy",
+      "nen-du-lieu"
+    ],
+    "src": "Shannon, A Mathematical Theory of Communication (1948)"
+  },
+  {
+    "id": "th-262",
+    "cat": "toan-hoc",
+    "sub": "toi-uu-va-thuat-toan",
+    "t": "Thuật toán chia đôi tìm được một mục trong danh sách 1 triệu phần tử chỉ sau 20 lần so sánh",
+    "s": "Mỗi bước loại một nửa số ứng viên, nên số bước là logarit cơ số 2 của kích thước. Với 1 tỉ phần tử cũng chỉ cần 30 bước.",
+    "tags": [
+      "tim-kiem-nhi-phan",
+      "logarit",
+      "thuat-toan"
+    ],
+    "src": "Knuth, The Art of Computer Programming, Tập 3"
+  },
+  {
+    "id": "th-263",
+    "cat": "toan-hoc",
+    "sub": "toi-uu-va-thuat-toan",
+    "t": "Phép biến đổi Fourier nhanh rút thời gian tính từ bậc n bình phương xuống bậc n log n, và nó làm nên toàn bộ ngành xử lý tín hiệu số",
+    "s": "Với 1 triệu điểm dữ liệu, chênh lệch là giữa 10 mũ 12 và khoảng 2×10 mũ 7 phép tính. Không có nó thì không có MP3, JPEG, chụp cộng hưởng từ hay 4G.",
+    "tags": [
+      "fft",
+      "xu-ly-tin-hieu",
+      "thuat-toan"
+    ],
+    "src": "Cooley & Tukey, Mathematics of Computation (1965)"
+  },
+  {
+    "id": "th-264",
+    "cat": "toan-hoc",
+    "sub": "toi-uu-va-thuat-toan",
+    "t": "Số Pi tính được bằng cách ném kim ngẫu nhiên xuống sàn có các đường kẻ song song",
+    "s": "Bài toán kim Buffon cho xác suất kim cắt một đường bằng 2 chia pi khi chiều dài kim bằng khoảng cách các đường. Đây là phương pháp Monte Carlo sớm nhất, ra đời năm 1777.",
+    "tags": [
+      "buffon",
+      "monte-carlo",
+      "pi"
+    ],
+    "src": "Buffon (1777)"
+  },
+  {
+    "id": "th-265",
+    "cat": "toan-hoc",
+    "sub": "hinh-hoc",
+    "t": "Không thể chia một góc thành ba phần bằng nhau chỉ bằng thước kẻ và compa, và điều đó đã được chứng minh là bất khả thi",
+    "s": "Ba bài toán cổ Hy Lạp — chia ba góc, gấp đôi khối lập phương và cầu phương hình tròn — đều bất khả thi, được chứng minh bằng đại số ở thế kỷ 19. Trước đó chúng gây tốn công vô ích suốt hơn hai nghìn năm.",
+    "tags": [
+      "thuoc-compa",
+      "bat-kha-thi",
+      "hy-lap"
+    ],
+    "src": "Wantzel (1837); Lindemann (1882)"
+  },
+  {
+    "id": "th-266",
+    "cat": "toan-hoc",
+    "sub": "hinh-hoc",
+    "t": "Định lý Pythagoras có hơn 350 cách chứng minh khác nhau, và một trong số đó do một tổng thống Mỹ đưa ra",
+    "s": "James Garfield công bố chứng minh của mình năm 1876, 5 năm trước khi nhậm chức. Nó dùng diện tích một hình thang thay vì hình vuông như cách cổ điển.",
+    "tags": [
+      "pythagoras",
+      "chung-minh",
+      "hinh-hoc"
+    ],
+    "src": "Loomis, The Pythagorean Proposition (1927); Garfield, New England Journal of Education (1876)"
+  },
+  {
+    "id": "th-267",
+    "cat": "toan-hoc",
+    "sub": "hinh-hoc",
+    "t": "Một quả cầu và một hình trụ ngoại tiếp nó có tỉ lệ thể tích đúng bằng 2 trên 3",
+    "s": "Archimedes coi đây là phát hiện mà mình tự hào nhất và yêu cầu khắc hình đó lên bia mộ. Ông tìm ra nó khoảng 1.800 năm trước khi có giải tích tích phân.",
+    "tags": [
+      "archimedes",
+      "the-tich",
+      "cau"
+    ],
+    "src": "Archimedes, Về hình cầu và hình trụ (khoảng 225 TCN)"
+  },
+  {
+    "id": "th-268",
+    "cat": "toan-hoc",
+    "sub": "hinh-hoc",
+    "t": "Xếp cầu chặt nhất trong không gian ba chiều đạt mật độ khoảng 74%, và chứng minh mất gần 400 năm",
+    "s": "Kepler nêu giả thuyết năm 1611 khi nhìn cách xếp quả lựu và đống đạn thần công. Thomas Hales hoàn tất chứng minh nhờ máy tính năm 1998 và bản kiểm bằng máy chứng minh hình thức xong năm 2014.",
+    "tags": [
+      "kepler",
+      "xep-cau",
+      "mat-do"
+    ],
+    "src": "Hales, Annals of Mathematics (2005); Dự án Flyspeck (2014)"
+  },
+  {
+    "id": "th-269",
+    "cat": "toan-hoc",
+    "sub": "hinh-hoc",
+    "t": "Có thể lát kín mặt phẳng bằng một hình duy nhất mà mẫu hình không bao giờ lặp lại",
+    "s": "Viên gạch 'chiếc mũ' được tìm ra năm 2023, giải bài toán mở về đơn phiến phi tuần hoàn. Trước đó lời giải tốt nhất là cặp gạch Penrose từ năm 1974.",
+    "tags": [
+      "penrose",
+      "lat-phi-tuan-hoan",
+      "hinh-hoc"
+    ],
+    "src": "Smith, Myers, Kaplan & Goodman-Strauss (2023); Penrose (1974)"
+  },
+  {
+    "id": "th-270",
+    "cat": "toan-hoc",
+    "sub": "hinh-hoc",
+    "t": "Dải Möbius chỉ có một mặt, và cắt dọc giữa nó không cho hai vòng mà cho một vòng dài gấp đôi",
+    "s": "Băng tải và dây curoa hình Möbius mòn đều cả hai phía nên thọ lâu hơn. Cấu trúc này được Möbius và Listing phát hiện độc lập cùng năm 1858.",
+    "tags": [
+      "mobius",
+      "topo",
+      "mat"
+    ],
+    "src": "Möbius & Listing (1858)"
+  },
+  {
+    "id": "th-271",
+    "cat": "toan-hoc",
+    "sub": "day-so-va-ti-le",
+    "t": "Chữ số đầu tiên trong dữ liệu thật là số 1 trong khoảng 30% trường hợp, không phải 11% như trực giác",
+    "s": "Định luật Benford đúng với dữ liệu trải nhiều bậc độ lớn: dân số thành phố, hoá đơn điện, số liệu kế toán. Cơ quan thuế nhiều nước dùng nó để sàng lọc báo cáo có dấu hiệu bịa số.",
+    "tags": [
+      "benford",
+      "gian-lan",
+      "thong-ke"
+    ],
+    "src": "Benford (1938); Nigrini, Benford's Law (2012)"
+  },
+  {
+    "id": "th-273",
+    "cat": "toan-hoc",
+    "sub": "day-so-va-ti-le",
+    "t": "Một hạt gạo trên ô đầu bàn cờ rồi nhân đôi mỗi ô cho tổng hơn 18 tỉ tỉ hạt ở ô thứ 64",
+    "s": "Khối lượng chỗ gạo đó khoảng 460 tỉ tấn, gấp hàng trăm lần sản lượng gạo toàn cầu một năm. Đây là ví dụ cổ nhất về việc trực giác con người luôn ước lượng thấp tăng trưởng luỹ thừa.",
+    "tags": [
+      "ban-co",
+      "luy-thua",
+      "truc-giac"
+    ],
+    "src": "Ibn Khallikan (thế kỷ 13); FAO Rice Market Monitor"
+  },
+  {
+    "id": "th-274",
+    "cat": "toan-hoc",
+    "sub": "day-so-va-ti-le",
+    "t": "Trộn một bộ 52 lá bài cho ra số thứ tự nhiều hơn số giây kể từ Vụ Nổ Lớn",
+    "s": "52 giai thừa xấp xỉ 8×10 mũ 67, còn tuổi vũ trụ chỉ khoảng 4,4×10 mũ 17 giây. Nghĩa là mỗi lần bạn xào bài đủ kỹ, bạn gần như chắc chắn tạo ra một thứ tự chưa từng tồn tại.",
+    "tags": [
+      "giai-thua",
+      "to-hop",
+      "thang-bac"
+    ],
+    "src": "Phép tính tổ hợp cơ bản; NASA WMAP"
+  },
+  {
+    "id": "th-276",
+    "cat": "toan-hoc",
+    "sub": "so-nguyen-to",
+    "t": "Số 1 không được coi là số nguyên tố, và đó là một quyết định về định nghĩa chứ không phải một phát hiện",
+    "s": "Nếu coi 1 là nguyên tố thì phân tích thừa số không còn duy nhất, vì có thể nhân thêm 1 bao nhiêu lần cũng được. Cho tới đầu thế kỷ 20 vẫn có sách xếp 1 vào nhóm nguyên tố.",
+    "tags": [
+      "dinh-nghia",
+      "so-nguyen-to",
+      "lich-su"
+    ],
+    "src": "Caldwell & Xiong, Journal of Integer Sequences (2012)"
+  },
+  {
+    "id": "th-278",
+    "cat": "toan-hoc",
+    "sub": "vo-han-va-tap-hop",
+    "t": "Hầu như mọi số thực đều không phải nghiệm của bất kỳ phương trình đa thức hệ số nguyên nào",
+    "s": "Tập số đại số đếm được, nên tập số siêu việt chiếm gần như toàn bộ trục số. Nhưng chứng minh một số cụ thể là siêu việt lại rất khó: pi mãi tới năm 1882 mới được chứng minh.",
+    "tags": [
+      "so-sieu-viet",
+      "do-do",
+      "lindemann"
+    ],
+    "src": "Cantor (1874); Lindemann (1882)"
+  },
+  {
+    "id": "th-279",
+    "cat": "toan-hoc",
+    "sub": "vo-han-va-tap-hop",
+    "t": "Không có tập hợp nào lớn nhất, vì tập các tập con của một tập luôn lớn hơn chính nó",
+    "s": "Định lý Cantor cho một tháp vô hạn các vô hạn ngày càng lớn. Với tập n phần tử, số tập con là 2 mũ n — và điều đó vẫn đúng khi n là vô hạn.",
+    "tags": [
+      "cantor",
+      "tap-hop",
+      "luy-thua"
+    ],
+    "src": "Cantor (1891)"
+  },
+  {
+    "id": "th-280",
+    "cat": "toan-hoc",
+    "sub": "mat-ma",
+    "t": "Chữ ký số chứng minh cả người gửi và tính nguyên vẹn của nội dung, và đổi một dấu phẩy làm chữ ký sai ngay",
+    "s": "Người gửi băm tài liệu rồi mã hoá giá trị băm bằng khoá riêng; ai cũng giải được bằng khoá công khai nhưng không ai làm giả được. Đây là cơ sở pháp lý của hoá đơn điện tử ở Việt Nam.",
+    "tags": [
+      "chu-ky-so",
+      "xac-thuc",
+      "phap-ly"
+    ],
+    "src": "Luật Giao dịch điện tử 2023; NIST FIPS 186-5"
+  },
+  {
+    "id": "th-282",
+    "cat": "toan-hoc",
+    "sub": "toi-uu-va-thuat-toan",
+    "t": "Sinh số ngẫu nhiên bằng thuật toán luôn cho dãy tất định, nên nó chỉ là giả ngẫu nhiên",
+    "s": "Cùng một hạt giống thì cho đúng cùng một dãy — tính chất này rất hữu ích để lặp lại thí nghiệm nhưng nguy hiểm chết người trong mật mã. Sinh số ngẫu nhiên thật cần nguồn vật lý như nhiễu nhiệt hoặc phân rã phóng xạ.",
+    "tags": [
+      "ngau-nhien",
+      "gia-ngau-nhien",
+      "mat-ma"
+    ],
+    "src": "NIST SP 800-90A; Knuth, TAOCP Tập 2"
+  },
+  {
+    "id": "th-286",
+    "cat": "toan-hoc",
+    "sub": "hinh-hoc",
+    "t": "Bong bóng xà phòng đôi gặp nhau ở đúng góc 120 độ, và mọi màng xà phòng đều tuân theo quy luật đó",
+    "s": "Định luật Plateau được phát biểu năm 1873 và chỉ được chứng minh toán học năm 1976. Đây là hình dạng có tổng diện tích nhỏ nhất, và tổ ong lục giác cũng cho góc 120 độ vì cùng lý do.",
+    "tags": [
+      "plateau",
+      "bong-bong",
+      "toi-uu"
+    ],
+    "src": "Plateau (1873); Taylor, Annals of Mathematics (1976)"
+  },
+  {
+    "id": "th-287",
+    "cat": "toan-hoc",
+    "sub": "hinh-hoc",
+    "t": "Không thể lấy một hình cầu và trải nó ra thành mặt phẳng, nhưng có thể làm ngược lại với hình trụ và hình nón",
+    "s": "Độ cong Gauss của mặt cầu khác 0 nên nó không khai triển được; hình trụ có độ cong Gauss bằng 0 nên cắt ra là trải phẳng được. Đây là lý do vỏ hộp hình trụ dập từ tấm phẳng còn quả cầu thì phải ghép múi.",
+    "tags": [
+      "do-cong-gauss",
+      "khai-trien",
+      "che-tao"
+    ],
+    "src": "Gauss (1827); do Carmo, Differential Geometry of Curves and Surfaces"
+  },
+  {
+    "id": "th-288",
+    "cat": "toan-hoc",
+    "sub": "day-so-va-ti-le",
+    "t": "Tam giác Pascal chứa dãy Fibonacci, các hệ số nhị thức và cả cấu trúc fractal",
+    "s": "Cộng các số theo đường chéo cho ra Fibonacci; tô các số lẻ cho ra tam giác Sierpinski. Nó xuất hiện độc lập ở Trung Hoa, Ba Tư và Ấn Độ hàng trăm năm trước Pascal.",
+    "tags": [
+      "pascal",
+      "to-hop",
+      "fractal"
+    ],
+    "src": "Edwards, Pascal's Arithmetical Triangle (2002)"
+  },
+  {
+    "id": "th-289",
+    "cat": "toan-hoc",
+    "sub": "do-thi-mang-luoi",
+    "t": "Xếp hạng trang web của Google ban đầu dựa trên một bài toán vectơ riêng của ma trận liên kết",
+    "s": "PageRank coi web là đồ thị và tính xác suất một người lướt ngẫu nhiên dừng ở mỗi trang. Ma trận đó có hàng tỉ chiều, và việc giải được nó ở quy mô đó là bước đột phá kỹ thuật của Google.",
+    "tags": [
+      "pagerank",
+      "vecto-rieng",
+      "google"
+    ],
+    "src": "Brin & Page, Computer Networks (1998)"
+  },
+  {
+    "id": "th-290",
+    "cat": "toan-hoc",
+    "sub": "toi-uu-va-thuat-toan",
+    "t": "Bài toán xếp ba lô là NP-khó, nhưng vẫn giải nhanh được nếu trọng số là số nguyên nhỏ",
+    "s": "Quy hoạch động cho thời gian tỉ lệ với số món nhân dung lượng, tức nhanh trên thực tế nhưng vẫn là hàm mũ theo số bit biểu diễn. Đây là ví dụ chuẩn của độ phức tạp giả đa thức.",
+    "tags": [
+      "xep-ba-lo",
+      "np-kho",
+      "quy-hoach-dong"
+    ],
+    "src": "Martello & Toth, Knapsack Problems (1990)"
+  },
+  {
+    "id": "th-291",
+    "cat": "toan-hoc",
+    "sub": "vo-han-va-tap-hop",
+    "t": "Một con khỉ đánh máy vô hạn thời gian gần như chắc chắn viết ra trọn tác phẩm Shakespeare, nhưng thời gian cần vượt xa tuổi vũ trụ",
+    "s": "Xác suất đánh đúng 18 ký tự đầu của Hamlet đã nhỏ hơn 1 chia 10 mũ 25. Định lý này đúng về mặt toán học và vô nghĩa về mặt thực hành — đó chính là điểm đáng chú ý của nó.",
+    "tags": [
+      "khi-danh-may",
+      "xac-suat",
+      "vo-han"
+    ],
+    "src": "Borel (1913); Kittel & Kroemer, Thermal Physics"
+  },
+  {
+    "id": "th-292",
+    "cat": "toan-hoc",
+    "sub": "so-nguyen-to",
+    "t": "Giả thuyết Riemann vẫn chưa được chứng minh sau hơn 160 năm và nó chi phối cách phân bố số nguyên tố",
+    "s": "Đây là một trong bảy Bài toán Thiên niên kỷ, treo giải một triệu đô. Hơn 10 nghìn tỉ nghiệm đầu tiên đã được kiểm và đều nằm đúng chỗ giả thuyết dự đoán.",
+    "tags": [
+      "riemann",
+      "so-nguyen-to",
+      "bai-toan-mo"
+    ],
+    "src": "Riemann (1859); Clay Mathematics Institute"
+  },
+  {
+    "id": "th-293",
+    "cat": "toan-hoc",
+    "sub": "hinh-hoc",
+    "t": "Diện tích hình tròn bằng pi nhân bình phương bán kính, và Archimedes tìm ra bằng cách kẹp giữa hai đa giác 96 cạnh",
+    "s": "Ông chứng minh pi nằm giữa 3 + 10/71 và 3 + 1/7, tức giữa 3,1408 và 3,1429. Phương pháp vét cạn này là tiền thân của giới hạn trong giải tích.",
+    "tags": [
+      "archimedes",
+      "pi",
+      "da-giac"
+    ],
+    "src": "Archimedes, Đo hình tròn (khoảng 250 TCN)"
+  },
+  {
+    "id": "th-294",
+    "cat": "toan-hoc",
+    "sub": "day-so-va-ti-le",
+    "t": "Lãi 1%/tháng không phải 12%/năm mà là 12,68%/năm khi ghép lãi",
+    "s": "Công thức là 1,01 mũ 12 trừ 1. Chênh lệch nhỏ ở lãi suất thấp nhưng bùng lên ở lãi suất cao: 5%/tháng cho 79,6%/năm chứ không phải 60%.",
+    "tags": [
+      "lai-kep",
+      "ghep-lai",
+      "tai-chinh"
+    ],
+    "src": "Phép tính lãi kép cơ bản; Ngân hàng Nhà nước Việt Nam"
+  },
+  {
+    "id": "th-295",
+    "cat": "toan-hoc",
+    "sub": "toi-uu-va-thuat-toan",
+    "t": "Kiểm tra một lời giải nhanh hơn tìm ra nó rất nhiều bậc, và đó là ý tưởng trung tâm của lớp bài toán NP",
+    "s": "Nhìn một lời giải Sudoku 9×9 thì kiểm trong vài giây, còn giải từ ô trống thì lâu hơn hàng nghìn lần. Toàn bộ mật mã hiện đại sống nhờ đúng khoảng cách giữa hai việc đó.",
+    "tags": [
+      "np",
+      "kiem-chung",
+      "do-phuc-tap"
+    ],
+    "src": "Cook, STOC (1971); Arora & Barak, Computational Complexity"
+  },
+  {
+    "id": "th-298",
+    "cat": "toan-hoc",
+    "sub": "vo-han-va-tap-hop",
+    "t": "Xác suất chọn ngẫu nhiên đúng một điểm cho trước trên đoạn thẳng bằng 0, nhưng chắc chắn bạn chọn được một điểm nào đó",
+    "s": "Sự kiện xác suất 0 không đồng nghĩa với sự kiện không thể. Điều này chỉ xuất hiện khi không gian mẫu vô hạn không đếm được, và nó làm nền cho lý thuyết độ đo trong xác suất.",
+    "tags": [
+      "do-do",
+      "xac-suat-khong",
+      "vo-han"
+    ],
+    "src": "Kolmogorov, Grundbegriffe der Wahrscheinlichkeitsrechnung (1933)"
+  },
+  {
+    "id": "th-301",
+    "cat": "toan-hoc",
+    "sub": "so-nguyen-to",
+    "t": "Mọi số nguyên tố lớn hơn 3 đều có dạng 6k cộng 1 hoặc 6k trừ 1",
+    "s": "Các số còn lại chia hết cho 2 hoặc 3. Đây là mẹo lọc nhanh khi kiểm tra số nguyên tố bằng tay và nó loại được hai phần ba số ứng viên ngay lập tức.",
+    "tags": [
+      "so-nguyen-to",
+      "kiem-tra",
+      "so-hoc"
+    ],
+    "src": "Hardy & Wright, An Introduction to the Theory of Numbers"
+  },
+  {
+    "id": "th-302",
+    "cat": "toan-hoc",
+    "sub": "so-nguyen-to",
+    "t": "Có khoảng cách tuỳ ý lớn giữa hai số nguyên tố liên tiếp, và chứng minh chỉ mất vài dòng",
+    "s": "Dãy n giai thừa cộng 2 tới n giai thừa cộng n gồm n trừ 1 số liên tiếp đều là hợp số. Nghĩa là tồn tại quãng dài một tỉ số liên tiếp không có số nguyên tố nào.",
+    "tags": [
+      "so-nguyen-to",
+      "khoang-cach",
+      "chung-minh"
+    ],
+    "src": "Hardy & Wright, An Introduction to the Theory of Numbers"
+  },
+  {
+    "id": "th-303",
+    "cat": "toan-hoc",
+    "sub": "so-nguyen-to",
+    "t": "Mọi số chẵn lớn hơn 2 có vẻ đều viết được thành tổng hai số nguyên tố, nhưng chưa ai chứng minh được",
+    "s": "Giả thuyết Goldbach được nêu năm 1742 và đã kiểm bằng máy tính tới hơn 4×10 mũ 18. Một giải thưởng một triệu đô từng được treo trong hai năm mà không ai nhận.",
+    "tags": [
+      "goldbach",
+      "bai-toan-mo",
+      "so-hoc"
+    ],
+    "src": "Goldbach (1742); Oliveira e Silva và cộng sự (2014)"
+  },
+  {
+    "id": "th-304",
+    "cat": "toan-hoc",
+    "sub": "so-nguyen-to",
+    "t": "Số hoàn hảo — bằng tổng các ước thật của nó — rất hiếm, và tới nay mới biết 51 số",
+    "s": "6 và 28 là hai số đầu tiên. Chưa ai biết có số hoàn hảo lẻ nào hay không, dù đã kiểm tới 10 mũ 1500.",
+    "tags": [
+      "so-hoan-hao",
+      "so-hoc",
+      "bai-toan-mo"
+    ],
+    "src": "Euclid; GIMPS Project"
+  },
+  {
+    "id": "th-305",
+    "cat": "toan-hoc",
+    "sub": "vo-han-va-tap-hop",
+    "t": "Tập các số hữu tỉ đếm được dù nó dày đặc trên trục số",
+    "s": "Cantor sắp xếp mọi phân số vào một lưới rồi đi zigzag để đánh số hết. Nghĩa là giữa hai số bất kỳ có vô hạn phân số, mà tổng số phân số vẫn 'bằng' tổng số số tự nhiên.",
+    "tags": [
+      "huu-ti",
+      "dem-duoc",
+      "cantor"
+    ],
+    "src": "Cantor (1874)"
+  },
+  {
+    "id": "th-306",
+    "cat": "toan-hoc",
+    "sub": "vo-han-va-tap-hop",
+    "t": "Đường cong có thể lấp kín hoàn toàn một hình vuông, dù nó chỉ là một đường",
+    "s": "Đường Peano và đường Hilbert đi qua mọi điểm của hình vuông đơn vị. Kết quả này gây khủng hoảng về khái niệm 'chiều' trong toán học cuối thế kỷ 19.",
+    "tags": [
+      "duong-cong-lap-day",
+      "chieu",
+      "hilbert"
+    ],
+    "src": "Peano (1890); Hilbert (1891)"
+  },
+  {
+    "id": "th-307",
+    "cat": "toan-hoc",
+    "sub": "hinh-hoc",
+    "t": "Đường tròn là hình có diện tích lớn nhất với cùng chu vi, và chứng minh chặt chẽ mất hơn hai nghìn năm",
+    "s": "Bài toán đẳng chu đã được nêu từ thời Hy Lạp cổ nhưng chỉ được chứng minh đầy đủ vào thế kỷ 19. Bong bóng xà phòng giải nó tức thì bằng cách tối thiểu hoá năng lượng bề mặt.",
+    "tags": [
+      "dang-chu",
+      "hinh-hoc",
+      "toi-uu"
+    ],
+    "src": "Weierstrass (1879); Osserman, Bulletin of the AMS (1978)"
+  },
+  {
+    "id": "th-308",
+    "cat": "toan-hoc",
+    "sub": "hinh-hoc",
+    "t": "Trong hình học phi Euclid, tổng ba góc tam giác cho biết diện tích của nó",
+    "s": "Trên mặt cầu, phần vượt quá 180 độ tỉ lệ thuận với diện tích tam giác. Đây là lý do không thể phóng to hay thu nhỏ một tam giác trên mặt cầu mà giữ nguyên hình dạng.",
+    "tags": [
+      "phi-euclid",
+      "dien-tich",
+      "mat-cau"
+    ],
+    "src": "Gauss–Bonnet; do Carmo, Differential Geometry"
+  },
+  {
+    "id": "th-309",
+    "cat": "toan-hoc",
+    "sub": "hinh-hoc",
+    "t": "Một khối lập phương có thể chui lọt qua một lỗ khoét trên khối lập phương cùng kích thước",
+    "s": "Đây là bài toán khối lập phương của Hoàng tử Rupert, có lời giải từ thế kỷ 17. Lỗ được khoét theo hướng đường chéo dài nhất, và tỉ lệ cạnh tối đa là khoảng 1,06.",
+    "tags": [
+      "rupert",
+      "hinh-hoc",
+      "nghich-ly"
+    ],
+    "src": "Nieuwland (1816); Wallis (1685)"
+  },
+  {
+    "id": "th-310",
+    "cat": "toan-hoc",
+    "sub": "hinh-hoc",
+    "t": "Bất kỳ đa giác nào cũng cắt được thành hữu hạn mảnh rồi ghép thành đa giác khác cùng diện tích",
+    "s": "Định lý Wallace–Bolyai–Gerwien cho phép biến hình vuông thành tam giác đều bằng vài nhát cắt. Trong không gian ba chiều, câu tương tự lại sai — và đó là bài toán thứ ba của Hilbert.",
+    "tags": [
+      "cat-ghep",
+      "hilbert",
+      "hinh-hoc"
+    ],
+    "src": "Dehn (1901); Bolyai (1832)"
+  },
+  {
+    "id": "th-311",
+    "cat": "toan-hoc",
+    "sub": "hinh-hoc",
+    "t": "Có đúng 17 nhóm đối xứng khác nhau cho hoạ tiết lặp lại trên mặt phẳng, không hơn không kém",
+    "s": "Cung điện Alhambra ở Tây Ban Nha được cho là chứa gần như đủ cả 17 nhóm, hàng thế kỷ trước khi toán học chứng minh chỉ có 17. Kết quả này được Fedorov chứng minh năm 1891.",
+    "tags": [
+      "doi-xung",
+      "nhom",
+      "hoa-tiet"
+    ],
+    "src": "Fedorov (1891); Grünbaum & Shephard, Tilings and Patterns"
+  },
+  {
+    "id": "th-312",
+    "cat": "toan-hoc",
+    "sub": "day-so-va-ti-le",
+    "t": "Tổng n số lẻ đầu tiên luôn bằng n bình phương",
+    "s": "1 bằng 1, 1 cộng 3 bằng 4, 1 cộng 3 cộng 5 bằng 9. Điều này thấy ngay bằng hình: mỗi số lẻ thêm vào là một 'chữ L' bọc quanh hình vuông cũ.",
+    "tags": [
+      "so-le",
+      "binh-phuong",
+      "chung-minh-hinh"
+    ],
+    "src": "Nicomachus (khoảng 100); Conway & Guy, The Book of Numbers"
+  },
+  {
+    "id": "th-313",
+    "cat": "toan-hoc",
+    "sub": "day-so-va-ti-le",
+    "t": "Tổng các số từ 1 tới 100 bằng 5.050, và cách tính nhanh là ghép cặp đầu với cuối",
+    "s": "Ghép 1 với 100, 2 với 99, được 50 cặp mỗi cặp bằng 101. Công thức tổng quát n nhân n cộng 1 chia 2 đã có từ thời cổ đại chứ không phải do Gauss nghĩ ra, dù giai thoại về ông rất nổi tiếng.",
+    "tags": [
+      "tong",
+      "day-so",
+      "gauss"
+    ],
+    "src": "Hayes, American Scientist (2006)"
+  },
+  {
+    "id": "th-314",
+    "cat": "toan-hoc",
+    "sub": "day-so-va-ti-le",
+    "t": "Lãi suất 100% một năm ghép lãi càng dày thì tiền càng nhiều, nhưng nó hội tụ chứ không tăng mãi",
+    "s": "Ghép mỗi năm được 2 lần vốn, mỗi tháng được 2,613, mỗi ngày được 2,7146, ghép liên tục được đúng e. Không có cách ghép nào cho quá 2,71828 lần.",
+    "tags": [
+      "lai-kep",
+      "so-e",
+      "gioi-han"
+    ],
+    "src": "Bernoulli (1683)"
+  },
+  {
+    "id": "th-315",
+    "cat": "toan-hoc",
+    "sub": "day-so-va-ti-le",
+    "t": "Dãy Fibonacci xuất hiện trong bài toán sinh sản thỏ mà Fibonacci nêu năm 1202, và bài toán đó rất phi thực tế",
+    "s": "Nó giả định thỏ bất tử và sinh đều đặn. Giá trị thật của dãy nằm ở các tính chất toán học và ở chỗ nó xuất hiện trong cấu trúc xoắn của thực vật.",
+    "tags": [
+      "fibonacci",
+      "lich-su",
+      "thuc-vat"
+    ],
+    "src": "Fibonacci, Liber Abaci (1202)"
+  },
+  {
+    "id": "th-316",
+    "cat": "toan-hoc",
+    "sub": "mat-ma",
+    "t": "Mã Caesar dịch chữ cái đi vài vị trí và phá được trong vài giây bằng phân tích tần suất",
+    "s": "Al-Kindi mô tả kỹ thuật phân tích tần suất vào thế kỷ 9, nhiều thế kỷ trước khi châu Âu biết tới nó. Từ đó, mọi hệ mật mã thay thế đơn giản đều coi như đã bị phá.",
+    "tags": [
+      "caesar",
+      "tan-suat",
+      "al-kindi"
+    ],
+    "src": "Al-Kindi (thế kỷ 9); Singh, The Code Book"
+  },
+  {
+    "id": "th-317",
+    "cat": "toan-hoc",
+    "sub": "mat-ma",
+    "t": "Máy Enigma có hơn 10 mũ 20 cấu hình khoá nhưng vẫn bị phá vì nó không bao giờ mã một chữ thành chính nó",
+    "s": "Ràng buộc đó cho phép loại bỏ hàng loạt vị trí ứng viên. Cùng với các đoạn văn bản đoán trước được, nó rút không gian tìm kiếm xuống mức máy giải mã Bombe xử lý được.",
+    "tags": [
+      "enigma",
+      "turing",
+      "the-chien-2"
+    ],
+    "src": "Bletchley Park; Hodges, Alan Turing: The Enigma"
+  },
+  {
+    "id": "th-318",
+    "cat": "toan-hoc",
+    "sub": "mat-ma",
+    "t": "Mã hoá hiện đại dựa trên các bài toán mà chưa ai chứng minh được là khó",
+    "s": "Nếu ai đó tìm ra thuật toán phân tích thừa số nhanh, RSA sụp đổ. Toàn bộ ngành mật mã khoá công khai đứng trên các giả định chưa được chứng minh chứ không trên định lý.",
+    "tags": [
+      "mat-ma",
+      "gia-dinh",
+      "do-phuc-tap"
+    ],
+    "src": "Katz & Lindell, Introduction to Modern Cryptography"
+  },
+  {
+    "id": "th-319",
+    "cat": "toan-hoc",
+    "sub": "mat-ma",
+    "t": "Có thể chứng minh mình biết một bí mật mà không tiết lộ bất kỳ phần nào của bí mật đó",
+    "s": "Chứng minh không tiết lộ tri thức được đề xuất năm 1985 và hiện là nền của nhiều hệ thống xác thực và blockchain riêng tư. Ý tưởng nghe như nghịch lý nhưng đã được hình thức hoá chặt chẽ.",
+    "tags": [
+      "zero-knowledge",
+      "mat-ma",
+      "xac-thuc"
+    ],
+    "src": "Goldwasser, Micali & Rackoff, SIAM Journal on Computing (1989)"
+  },
+  {
+    "id": "th-320",
+    "cat": "toan-hoc",
+    "sub": "do-thi-mang-luoi",
+    "t": "Trong mọi đồ thị, tổng bậc của tất cả đỉnh luôn là số chẵn",
+    "s": "Mỗi cạnh đóng góp đúng 2 vào tổng bậc. Hệ quả: số đỉnh có bậc lẻ luôn là số chẵn, và đó là công cụ chứng minh đơn giản nhất trong lý thuyết đồ thị.",
+    "tags": [
+      "do-thi",
+      "bo-de-bat-tay",
+      "chung-minh"
+    ],
+    "src": "Euler (1736); Bondy & Murty, Graph Theory"
+  },
+  {
+    "id": "th-321",
+    "cat": "toan-hoc",
+    "sub": "do-thi-mang-luoi",
+    "t": "Trong một nhóm bất kỳ, luôn có ít nhất hai người quen đúng cùng số người trong nhóm đó",
+    "s": "Đây là hệ quả của nguyên lý ngăn kéo áp lên bậc của các đỉnh. Kết quả đúng với mọi nhóm từ 2 người trở lên.",
+    "tags": [
+      "ngan-keo",
+      "do-thi",
+      "to-hop"
+    ],
+    "src": "Nguyên lý Dirichlet; Bondy & Murty, Graph Theory"
+  },
+  {
+    "id": "th-322",
+    "cat": "toan-hoc",
+    "sub": "do-thi-mang-luoi",
+    "t": "Nguyên lý ngăn kéo cho phép khẳng định chắc chắn rằng có ít nhất hai người ở Hà Nội có cùng số sợi tóc",
+    "s": "Người có nhiều tóc nhất khoảng 150.000 sợi, còn dân số Hà Nội hơn 8 triệu. Không cần đếm ai cả, kết luận vẫn đúng tuyệt đối.",
+    "tags": [
+      "ngan-keo",
+      "dirichlet",
+      "suy-luan"
+    ],
+    "src": "Nguyên lý Dirichlet (1834)"
+  },
+  {
+    "id": "th-323",
+    "cat": "toan-hoc",
+    "sub": "toi-uu-va-thuat-toan",
+    "t": "Không có thuật toán nén nào nén được mọi tệp, và điều đó chứng minh được bằng đếm",
+    "s": "Có nhiều tệp n bit hơn tệp ngắn hơn n bit, nên không thể ánh xạ một–một mà tệp nào cũng ngắn lại. Mọi phần mềm quảng cáo nén được mọi thứ đều sai về mặt toán học.",
+    "tags": [
+      "nen-du-lieu",
+      "ngan-keo",
+      "chung-minh"
+    ],
+    "src": "Định lý đếm; Cover & Thomas, Elements of Information Theory"
+  },
+  {
+    "id": "th-324",
+    "cat": "toan-hoc",
+    "sub": "toi-uu-va-thuat-toan",
+    "t": "Bài toán chia lịch thi, xếp lịch bay và tô màu bản đồ thực chất là cùng một bài toán",
+    "s": "Chúng đều quy về tô màu đồ thị sao cho hai đỉnh kề khác màu. Một thuật toán tốt cho bài này giải được cả ba, và đó là lý do các bài toán NP-đầy đủ được nghiên cứu chung.",
+    "tags": [
+      "to-mau-do-thi",
+      "np",
+      "xep-lich"
+    ],
+    "src": "Garey & Johnson, Computers and Intractability (1979)"
+  },
+  {
+    "id": "th-325",
+    "cat": "toan-hoc",
+    "sub": "toi-uu-va-thuat-toan",
+    "t": "Thuật toán tham lam cho lời giải tối ưu ở một số bài toán và sai thảm hại ở bài khác",
+    "s": "Đổi tiền bằng cách luôn lấy mệnh giá lớn nhất là tối ưu với bộ tiền Việt Nam nhưng sai với một số bộ mệnh giá khác. Không có cách nào biết trước ngoài việc chứng minh cho từng bài.",
+    "tags": [
+      "tham-lam",
+      "thuat-toan",
+      "toi-uu"
+    ],
+    "src": "Cormen và cộng sự, Introduction to Algorithms"
+  },
+  {
+    "id": "th-326",
+    "cat": "toan-hoc",
+    "sub": "toi-uu-va-thuat-toan",
+    "t": "Bài toán tìm đường ngắn nhất giải được nhanh, nhưng tìm đường dài nhất lại là bài toán NP-khó",
+    "s": "Hai bài toán nghe đối xứng nhưng độ khó chênh nhau một trời một vực. Đây là ví dụ chuẩn cho thấy trực giác về độ khó tính toán rất hay sai.",
+    "tags": [
+      "duong-di",
+      "do-phuc-tap",
+      "np"
+    ],
+    "src": "Garey & Johnson, Computers and Intractability"
+  },
+  {
+    "id": "th-327",
+    "cat": "toan-hoc",
+    "sub": "toi-uu-va-thuat-toan",
+    "t": "Máy học không 'hiểu' dữ liệu — nó tìm hàm khớp dữ liệu, và một hàm khớp hoàn hảo dữ liệu cũ thường tệ với dữ liệu mới",
+    "s": "Đây là hiện tượng quá khớp, và nó là bài toán trung tâm của cả ngành. Định lý không có bữa trưa miễn phí chứng minh không tồn tại thuật toán học tốt nhất cho mọi bài toán.",
+    "tags": [
+      "qua-khop",
+      "may-hoc",
+      "dinh-ly"
+    ],
+    "src": "Wolpert & Macready, IEEE Transactions on Evolutionary Computation (1997)"
+  },
+  {
+    "id": "th-329",
+    "cat": "toan-hoc",
+    "sub": "nghich-ly-toan",
+    "t": "Nghịch lý hai phong bì: lập luận đổi phong bì luôn có lợi nghe hợp lý nhưng dẫn tới vô lý",
+    "s": "Nếu đổi luôn có lợi thì đổi rồi đổi lại cũng có lợi, điều đó không thể đúng. Lỗi nằm ở chỗ dùng cùng một ký hiệu cho hai đại lượng khác nhau trong kỳ vọng.",
+    "tags": [
+      "hai-phong-bi",
+      "ky-vong",
+      "nguy-bien"
+    ],
+    "src": "Nalebuff, Journal of Economic Perspectives (1989)"
+  },
+  {
+    "id": "th-330",
+    "cat": "toan-hoc",
+    "sub": "nghich-ly-toan",
+    "t": "Nghịch lý Parrondo: 2 trò chơi đều thua có thể ghép lại thành 1 chiến lược thắng",
+    "s": "Điều kiện là kết quả trò này phụ thuộc trạng thái do trò kia tạo ra. Nó có ứng dụng trong sinh học tiến hoá và trong mô hình động cơ phân tử.",
+    "tags": [
+      "parrondo",
+      "xac-suat",
+      "to-hop"
+    ],
+    "src": "Harmer & Abbott, Nature (1999)"
+  },
+  {
+    "id": "th-331",
+    "cat": "toan-hoc",
+    "sub": "nghich-ly-toan",
+    "t": "Nghịch lý bỏ phiếu: đa số thích A hơn B, thích B hơn C, nhưng lại thích C hơn A",
+    "s": "Condorcet mô tả hiện tượng này năm 1785. Nó cho thấy 'ý chí của đa số' có thể không tồn tại như một thứ tự nhất quán, và đây là tiền thân của định lý Arrow.",
+    "tags": [
+      "condorcet",
+      "bau-cu",
+      "vong-tron"
+    ],
+    "src": "Condorcet (1785)"
+  },
+  {
+    "id": "th-332",
+    "cat": "toan-hoc",
+    "sub": "nghich-ly-toan",
+    "t": "Một mệnh đề tự nói về chính nó có thể không đúng cũng không sai",
+    "s": "'Câu này sai' không gán được giá trị chân lý nào. Nghịch lý nói dối là gốc của các kết quả về giới hạn của hệ hình thức, gồm cả định lý Gödel.",
+    "tags": [
+      "nghich-ly-noi-doi",
+      "logic",
+      "godel"
+    ],
+    "src": "Tarski (1936); Gödel (1931)"
+  },
+  {
+    "id": "th-333",
+    "cat": "toan-hoc",
+    "sub": "nghich-ly-toan",
+    "t": "Trực giác về tỉ lệ hỏng nặng khi so hai nhóm có kích thước khác nhau",
+    "s": "Một bệnh viện chữa 100 ca nặng với tỉ lệ sống 60% giỏi hơn bệnh viện chữa 1.000 ca nhẹ với tỉ lệ 90%, nhưng bảng xếp hạng thô lại nói ngược. Đây là lý do y tế phải hiệu chỉnh theo mức độ bệnh.",
+    "tags": [
+      "hieu-chinh-rui-ro",
+      "thong-ke",
+      "y-te"
+    ],
+    "src": "Iezzoni, Risk Adjustment for Measuring Health Care Outcomes"
+  },
+  {
+    "id": "th-334",
+    "cat": "toan-hoc",
+    "sub": "nghich-ly-toan",
+    "t": "Xác suất tung 2 đồng xu ra một sấp một ngửa là 50%, không phải 33%",
+    "s": "Có 4 kết quả bằng nhau, và 2 trong số đó cho một sấp một ngửa. D'Alembert từng mắc đúng lỗi này vào thế kỷ 18 khi cho rằng chỉ có 3 kết quả.",
+    "tags": [
+      "xac-suat",
+      "dong-xu",
+      "truc-giac"
+    ],
+    "src": "d'Alembert (1754); Chuẩn mực lý thuyết xác suất"
+  },
+  {
+    "id": "th-335",
+    "cat": "toan-hoc",
+    "sub": "nghich-ly-toan",
+    "t": "Với xúc xắc, tổng 7 xuất hiện nhiều nhất vì nó có nhiều cách tạo ra nhất",
+    "s": "Có 6 cách cho tổng 7 nhưng chỉ 1 cách cho tổng 2 hoặc 12. Galileo đã giải một bài toán tương tự cho công tước Toscana vào khoảng năm 1620.",
+    "tags": [
+      "xuc-xac",
+      "to-hop",
+      "galileo"
+    ],
+    "src": "Galileo, Sopra le scoperte dei dadi (khoảng 1620)"
+  },
+  {
+    "id": "th-336",
+    "cat": "toan-hoc",
+    "sub": "hinh-hoc",
+    "t": "Một tờ giấy không thể gấp đôi quá khoảng 7–8 lần bằng tay, và giới hạn đó có công thức",
+    "s": "Chiều dài giấy cần thiết tăng theo hàm mũ của số lần gấp. Britney Gallivan lập công thức năm 2002 và gấp được 12 lần với một cuộn giấy dài gần 1,2 km.",
+    "tags": [
+      "gap-giay",
+      "cong-thuc",
+      "ky-luc"
+    ],
+    "src": "Gallivan (2002)"
+  },
+  {
+    "id": "th-337",
+    "cat": "toan-hoc",
+    "sub": "day-so-va-ti-le",
+    "t": "Trung bình nhân luôn nhỏ hơn hoặc bằng trung bình cộng, và đó là lý do lợi nhuận trung bình gây hiểu lầm",
+    "s": "Danh mục lãi 50% rồi lỗ 50% có trung bình cộng bằng 0 nhưng thực tế mất 25% vốn. Con số đúng cho tăng trưởng nhiều kỳ là trung bình nhân.",
+    "tags": [
+      "trung-binh-nhan",
+      "dau-tu",
+      "bat-dang-thuc"
+    ],
+    "src": "Bất đẳng thức AM-GM; CFA Institute Curriculum"
+  },
+  {
+    "id": "th-338",
+    "cat": "toan-hoc",
+    "sub": "day-so-va-ti-le",
+    "t": "Tăng 10% rồi giảm 10% không đưa bạn về chỗ cũ mà làm mất 1%",
+    "s": "Thứ tự không quan trọng: 1,1 nhân 0,9 luôn bằng 0,99. Đây là lý do biến động lớn bào mòn vốn ngay cả khi giá quay lại điểm xuất phát.",
+    "tags": [
+      "phan-tram",
+      "tang-truong",
+      "tai-chinh"
+    ],
+    "src": "Phép tính phần trăm cơ bản"
+  },
+  {
+    "id": "th-339",
+    "cat": "toan-hoc",
+    "sub": "toi-uu-va-thuat-toan",
+    "t": "Bài toán ba vật thể trong cơ học không có công thức nghiệm tổng quát, và điều đó đã được chứng minh",
+    "s": "Poincaré chỉ ra hệ ba vật thể có hành vi hỗn loạn vào năm 1890, mở đường cho lý thuyết hỗn loạn. Quỹ đạo tàu vũ trụ vì vậy phải tính bằng số chứ không giải bằng công thức.",
+    "tags": [
+      "ba-vat-the",
+      "hon-loan",
+      "poincare"
+    ],
+    "src": "Poincaré (1890); Diacu & Holmes, Celestial Encounters"
+  },
+  {
+    "id": "th-340",
+    "cat": "toan-hoc",
+    "sub": "toi-uu-va-thuat-toan",
+    "t": "Sai số ban đầu trong hệ hỗn loạn nhân đôi theo chu kỳ đều đặn, và đó là lý do dự báo thời tiết có trần",
+    "s": "Với khí quyển, thời gian nhân đôi sai số khoảng 2 ngày. Nghĩa là tăng độ chính xác đo đạc lên 1.000 lần chỉ kéo dài dự báo thêm khoảng 20 ngày.",
+    "tags": [
+      "hon-loan",
+      "du-bao",
+      "gioi-han"
+    ],
+    "src": "Lorenz (1963); ECMWF"
+  },
+  {
+    "id": "th-341",
+    "cat": "toan-hoc",
+    "sub": "vo-han-va-tap-hop",
+    "t": "Số chữ số của một số tăng theo logarit, nên số có 100 chữ số không lớn gấp đôi số có 50 chữ số",
+    "s": "Nó lớn hơn khoảng 10 mũ 50 lần. Trực giác tuyến tính về độ dài chuỗi số là nguồn sai lầm phổ biến khi ước lượng độ lớn.",
+    "tags": [
+      "logarit",
+      "chu-so",
+      "truc-giac"
+    ],
+    "src": "Chuẩn mực toán học cơ bản"
+  },
+  {
+    "id": "th-342",
+    "cat": "toan-hoc",
+    "sub": "nghich-ly-toan",
+    "t": "Xác suất trong bài toán Monty Hall đổi hẳn nếu người dẫn mở cửa ngẫu nhiên thay vì cố ý",
+    "s": "Nếu ông ta mở ngẫu nhiên và tình cờ trúng cửa trống, xác suất thắng khi đổi chỉ còn 50%. Điều quyết định là thông tin trong hành vi của người dẫn, không phải số cửa còn lại.",
+    "tags": [
+      "monty-hall",
+      "thong-tin",
+      "xac-suat"
+    ],
+    "src": "Rosenhouse, The Monty Hall Problem (2009)"
+  },
+  {
+    "id": "th-343",
+    "cat": "toan-hoc",
+    "sub": "do-thi-mang-luoi",
+    "t": "Mọi bản đồ metro, mạch điện và sơ đồ tổ chức đều là đồ thị, và cùng một thuật toán chạy được cho cả ba",
+    "s": "Lý thuyết đồ thị không quan tâm cái gì được nối, chỉ quan tâm cấu trúc nối. Đây là ví dụ điển hình của việc trừu tượng hoá làm một công cụ dùng được ở nhiều ngành.",
+    "tags": [
+      "do-thi",
+      "truu-tuong",
+      "ung-dung"
+    ],
+    "src": "Newman, Networks: An Introduction (2018)"
+  },
+  {
+    "id": "th-344",
+    "cat": "toan-hoc",
+    "sub": "mat-ma",
+    "t": "Số ngẫu nhiên dùng trong mật mã phải không đoán được, và một lỗi sinh số đã làm lộ khoá của hàng nghìn máy chủ",
+    "s": "Nghiên cứu năm 2012 quét toàn bộ Internet và tìm ra hàng chục nghìn khoá RSA chia sẻ thừa số chung do sinh số kém entropy. Một khi hai khoá chung thừa số, cả hai bị phá trong tích tắc.",
+    "tags": [
+      "ngau-nhien",
+      "rsa",
+      "entropy"
+    ],
+    "src": "Heninger và cộng sự, USENIX Security (2012)"
+  },
+  {
+    "id": "th-345",
+    "cat": "toan-hoc",
+    "sub": "toi-uu-va-thuat-toan",
+    "t": "Sắp xếp một danh sách gần như đã sắp xếp mất thời gian tuyến tính, còn danh sách ngẫu nhiên mất n log n",
+    "s": "Thuật toán chèn khai thác được các đoạn đã có thứ tự, còn quicksort lại có thể rơi vào trường hợp xấu nhất bậc n bình phương. Đây là lý do thư viện chuẩn dùng thuật toán lai chứ không dùng một thuật toán thuần.",
+    "tags": [
+      "sap-xep",
+      "timsort",
+      "thuc-te"
+    ],
+    "src": "Peters, Timsort (2002); Cormen và cộng sự, Introduction to Algorithms"
+  },
+  {
+    "id": "th-346",
+    "cat": "toan-hoc",
+    "sub": "hinh-hoc",
+    "t": "Bánh xe không cần tròn để chạy êm, miễn mặt đường có hình phù hợp",
+    "s": "Bánh vuông lăn êm trên mặt đường gồm các cung dây xích ngược. Bảo tàng Toán học ở New York có một mô hình cho khách đạp thử.",
+    "tags": [
+      "banh-xe-vuong",
+      "hinh-hoc",
+      "duong-cong"
+    ],
+    "src": "Hall & Wagon, Mathematics Magazine (1992)"
+  },
+  {
+    "id": "th-347",
+    "cat": "toan-hoc",
+    "sub": "day-so-va-ti-le",
+    "t": "Số nghịch đảo của 7 có chu kỳ thập phân 6 chữ số lặp lại, và các hoán vị vòng của nó cho ra bội số của chính nó",
+    "s": "1/7 bằng 0,142857 lặp lại, và 142857 nhân 2 bằng 285714. Các số như vậy gọi là số tuần hoàn và chúng gắn với lý thuyết số nguyên tố.",
+    "tags": [
+      "so-tuan-hoan",
+      "thap-phan",
+      "so-hoc"
+    ],
+    "src": "Conway & Guy, The Book of Numbers"
+  },
+  {
+    "id": "th-348",
+    "cat": "toan-hoc",
+    "sub": "nghich-ly-toan",
+    "t": "Xác suất một sự kiện xảy ra ít nhất một lần trong nhiều lần thử tăng nhanh hơn trực giác rất nhiều",
+    "s": "Với xác suất 1% mỗi lần, sau 100 lần thử xác suất xảy ra ít nhất một lần đã là 63%. Đây là lý do rủi ro nhỏ lặp lại nhiều lần trở thành rủi ro lớn.",
+    "tags": [
+      "xac-suat",
+      "lap-lai",
+      "rui-ro"
+    ],
+    "src": "Chuẩn mực lý thuyết xác suất"
+  },
+  {
+    "id": "th-349",
+    "cat": "toan-hoc",
+    "sub": "vo-han-va-tap-hop",
+    "t": "Trong một dãy vô hạn chữ số ngẫu nhiên, mọi chuỗi hữu hạn đều xuất hiện vô số lần",
+    "s": "Nếu số pi là số chuẩn — điều chưa được chứng minh — thì số điện thoại của bạn nằm đâu đó trong khai triển của nó. Chưa ai chứng minh được pi có tính chất này.",
+    "tags": [
+      "so-chuan",
+      "pi",
+      "bai-toan-mo"
+    ],
+    "src": "Borel (1909); Bailey & Crandall, Experimental Mathematics (2001)"
+  },
+  {
+    "id": "th-350",
+    "cat": "toan-hoc",
+    "sub": "toi-uu-va-thuat-toan",
+    "t": "Kiểm tra một số 200 chữ số có phải số nguyên tố hay không nhanh hơn nhiều so với phân tích nó ra thừa số",
+    "s": "Có thuật toán kiểm tra tính nguyên tố chạy trong thời gian đa thức từ năm 2002, còn phân tích thừa số thì chưa. Sự chênh lệch này là điều làm mật mã khoá công khai khả thi.",
+    "tags": [
+      "kiem-tra-nguyen-to",
+      "aks",
+      "mat-ma"
+    ],
+    "src": "Agrawal, Kayal & Saxena, Annals of Mathematics (2004)"
+  }
+]

@@ -1,0 +1,184 @@
+[
+  {
+    "id": "vt-205",
+    "cat": "vu-tru",
+    "sub": "he-mat-troi",
+    "t": "Bão bụi trên Sao Hoả có thể phủ cả hành tinh nhưng gió ở đó không đủ mạnh để thổi bay người",
+    "s": "Khí quyển Sao Hoả chỉ đặc bằng khoảng 0,6% Trái Đất, nên gió 100 km/h ở đó tạo lực tương đương gió khoảng 10 km/h ở đây. Phim ảnh mô tả bão Sao Hoả quật ngã tàu vũ trụ là sai về vật lý.",
+    "tags": [
+      "sao-hoa",
+      "bao",
+      "khi-quyen"
+    ],
+    "src": "NASA Mars Exploration Program"
+  },
+  {
+    "id": "vt-208",
+    "cat": "vu-tru",
+    "sub": "he-mat-troi",
+    "t": "Sao Thổ có khối lượng riêng nhỏ hơn nước, nên về lý thuyết nó nổi được",
+    "s": "Khối lượng riêng trung bình khoảng 0,687 g mỗi centimet khối. Vành đai của nó rộng khoảng 280.000 km nhưng thường chỉ dày khoảng 10 mét.",
+    "tags": [
+      "sao-tho",
+      "khoi-luong-rieng",
+      "vanh-dai"
+    ],
+    "src": "NASA Cassini Mission; Planetary Fact Sheet"
+  },
+  {
+    "id": "vt-217",
+    "cat": "vu-tru",
+    "sub": "mat-trang-thuy-trieu",
+    "t": "Không có 'mặt tối' của Mặt Trăng — mặt xa nhận đúng bằng lượng ánh sáng mặt gần",
+    "s": "Mặt xa cũng có ngày và đêm, mỗi bên khoảng 14 ngày Trái Đất. Nó chỉ 'tối' theo nghĩa ta không quan sát được từ Trái Đất, không theo nghĩa thiếu ánh sáng.",
+    "tags": [
+      "mat-trang",
+      "huyen-thoai",
+      "chieu-sang"
+    ],
+    "src": "NASA Lunar Reconnaissance Orbiter"
+  },
+  {
+    "id": "vt-218",
+    "cat": "vu-tru",
+    "sub": "mat-trang-thuy-trieu",
+    "t": "Mặt Trăng có thể được sinh ra từ một vụ va chạm giữa Trái Đất non trẻ và một thiên thể cỡ Sao Hoả",
+    "s": "Giả thuyết va chạm khổng lồ giải thích được thành phần đồng vị gần giống hệt nhau của Trái Đất và Mặt Trăng. Vụ va chạm ước tính xảy ra khoảng 4,5 tỉ năm trước, chỉ vài chục triệu năm sau khi hệ Mặt Trời hình thành.",
+    "tags": [
+      "mat-trang",
+      "nguon-goc",
+      "va-cham"
+    ],
+    "src": "Canup & Asphaug, Nature (2001)"
+  },
+  {
+    "id": "vt-219",
+    "cat": "vu-tru",
+    "sub": "mat-trang-thuy-trieu",
+    "t": "Nhật thực toàn phần xảy ra được vì Mặt Trời lớn hơn Mặt Trăng khoảng 400 lần và cũng xa hơn khoảng 400 lần",
+    "s": "Đây là trùng hợp hình học chứ không có nguyên nhân vật lý. Vì Mặt Trăng đang lùi xa, khoảng 600 triệu năm nữa sẽ không còn nhật thực toàn phần nào nữa.",
+    "tags": [
+      "nhat-thuc",
+      "hinh-hoc",
+      "trung-hop"
+    ],
+    "src": "NASA Eclipse Website"
+  },
+  {
+    "id": "vt-220",
+    "cat": "vu-tru",
+    "sub": "mat-trang-thuy-trieu",
+    "t": "Thuỷ triều có hai đỉnh mỗi ngày vì lực hấp dẫn kéo không đều trên hai phía Trái Đất",
+    "s": "Phía hướng Mặt Trăng bị kéo mạnh hơn tâm Trái Đất, phía đối diện bị kéo yếu hơn nên 'tụt lại'. Kết quả là hai bướu nước ở hai phía đối diện nhau.",
+    "tags": [
+      "thuy-trieu",
+      "hap-dan",
+      "co-hoc"
+    ],
+    "src": "NOAA Tides and Currents"
+  },
+  {
+    "id": "vt-229",
+    "cat": "vu-tru",
+    "sub": "ngoi-sao-thien-ha",
+    "t": "Sao không thật sự nhấp nháy — khí quyển Trái Đất mới làm ánh sáng của chúng lung linh",
+    "s": "Các lớp không khí có nhiệt độ và mật độ khác nhau bẻ tia sáng liên tục. Hành tinh ít nhấp nháy hơn vì chúng là đĩa sáng chứ không phải điểm sáng.",
+    "tags": [
+      "nhap-nhay",
+      "khi-quyen",
+      "quan-sat"
+    ],
+    "src": "Kính viễn vọng Không gian Hubble; Học viện Thiên văn Hoàng gia Anh"
+  },
+  {
+    "id": "vt-233",
+    "cat": "vu-tru",
+    "sub": "thang-khong-gian",
+    "t": "Phần lớn thể tích một nguyên tử là khoảng trống, và cùng điều đó đúng với vũ trụ",
+    "s": "Mật độ trung bình của vũ trụ tương đương khoảng 6 nguyên tử hydro trên mỗi mét khối. Vật chất tập trung thành sao và thiên hà chỉ là những đốm rất hiếm trong không gian gần như rỗng.",
+    "tags": [
+      "mat-do",
+      "vu-tru",
+      "khoang-trong"
+    ],
+    "src": "Planck Collaboration, A&A (2020)"
+  },
+  {
+    "id": "vt-234",
+    "cat": "vu-tru",
+    "sub": "thang-khong-gian",
+    "t": "Có những thiên hà đang rời xa ta nhanh hơn ánh sáng, và điều đó không vi phạm thuyết tương đối",
+    "s": "Giới hạn tốc độ ánh sáng áp dụng cho chuyển động trong không gian, không cho sự giãn nở của chính không gian. Các thiên hà đó nằm ngoài chân trời Hubble và ánh sáng của chúng sẽ không bao giờ tới được đây.",
+    "tags": [
+      "gian-no",
+      "tuong-doi",
+      "chan-troi"
+    ],
+    "src": "Davis & Lineweaver, PASA (2004)"
+  },
+  {
+    "id": "vt-242",
+    "cat": "vu-tru",
+    "sub": "thang-thoi-gian",
+    "t": "Trái Đất đã từng có ngày chỉ dài khoảng 18 giờ, cách đây khoảng 1,4 tỉ năm",
+    "s": "Con số được suy ra từ các chu kỳ Milankovitch ghi trong trầm tích cổ. Ngày dài dần vì Mặt Trăng lùi xa và ma sát thuỷ triều hãm vòng quay lại.",
+    "tags": [
+      "ngay",
+      "thang-thoi-gian",
+      "dia-chat"
+    ],
+    "src": "Meyers & Malinverno, PNAS (2018)"
+  },
+  {
+    "id": "vt-245",
+    "cat": "vu-tru",
+    "sub": "kham-pha-khong-gian",
+    "t": "Máy tính điều khiển tàu Apollo 11 hạ cánh Mặt Trăng có bộ nhớ khoảng 72 KB",
+    "s": "Điện thoại thông minh hiện nay mạnh hơn nó hàng triệu lần về tốc độ xử lý. Phần mềm được lập trình bằng cách đan tay từng bit vào lõi từ, gọi là 'bộ nhớ dệt'.",
+    "tags": [
+      "apollo",
+      "may-tinh",
+      "lich-su"
+    ],
+    "src": "MIT Instrumentation Laboratory; NASA History Office"
+  },
+  {
+    "id": "vt-247",
+    "cat": "vu-tru",
+    "sub": "kham-pha-khong-gian",
+    "t": "Rác vũ trụ ở quỹ đạo thấp đang tạo nguy cơ phản ứng dây chuyền có thể khoá quỹ đạo trong nhiều thế hệ",
+    "s": "Có hơn 36.000 mảnh lớn hơn 10 cm đang được theo dõi và hàng trăm triệu mảnh nhỏ hơn. Ở tốc độ khoảng 28.000 km/h, một mảnh 1 cm có động năng tương đương một quả lựu đạn.",
+    "tags": [
+      "rac-vu-tru",
+      "kessler",
+      "quy-dao"
+    ],
+    "src": "ESA Space Debris Office; Kessler & Cour-Palais, JGR (1978)"
+  },
+  {
+    "id": "vt-248",
+    "cat": "vu-tru",
+    "sub": "kham-pha-khong-gian",
+    "t": "Kính viễn vọng James Webb quan sát bằng hồng ngoại và phải giữ lạnh dưới −220 độ",
+    "s": "Tấm chắn nắng năm lớp rộng bằng sân tennis giữ chênh lệch khoảng 300 độ giữa mặt nóng và mặt lạnh. Nó đặt ở điểm Lagrange L2, cách Trái Đất 1,5 triệu km, nên không sửa được nếu hỏng.",
+    "tags": [
+      "jwst",
+      "hong-ngoai",
+      "ky-thuat"
+    ],
+    "src": "NASA/ESA/CSA James Webb Space Telescope"
+  },
+  {
+    "id": "vt-249",
+    "cat": "vu-tru",
+    "sub": "kham-pha-khong-gian",
+    "t": "Tàu vũ trụ dùng lực hấp dẫn của hành tinh để tăng tốc mà không tốn nhiên liệu",
+    "s": "Kỹ thuật hỗ trợ trọng lực lấy một phần rất nhỏ động lượng quỹ đạo của hành tinh. Voyager 2 đi được tới Sao Hải Vương chỉ nhờ chuỗi bốn lần bay sát các hành tinh khí.",
+    "tags": [
+      "ho-tro-trong-luc",
+      "quy-dao",
+      "voyager"
+    ],
+    "src": "NASA JPL Basics of Space Flight"
+  }
+]

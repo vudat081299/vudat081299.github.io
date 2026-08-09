@@ -1,0 +1,1653 @@
+[
+  {
+    "id": "vl-201",
+    "cat": "vat-ly",
+    "sub": "anh-sang-song",
+    "t": "Tốc độ ánh sáng trong chân không là 299.792.458 m/s với mọi người quan sát, dù người đó chạy nhanh cỡ nào",
+    "s": "Đây là điểm khác biệt lớn nhất giữa ánh sáng và mọi thứ khác: nếu bạn chạy theo một chiếc xe, vận tốc tương đối của nó giảm; chạy theo một tia sáng thì không. Con số này không phải kết quả đo — từ năm 1983 nó được định nghĩa là chính xác, và mét được định nghĩa lại theo nó.",
+    "tags": [
+      "anh-sang",
+      "tuong-doi",
+      "hang-so"
+    ],
+    "src": "Hội nghị Cân đo Quốc tế (CGPM) 1983; Einstein (1905)"
+  },
+  {
+    "id": "vl-202",
+    "cat": "vat-ly",
+    "sub": "anh-sang-song",
+    "t": "Ánh sáng đi trong sợi quang chỉ khoảng 200.000 km/s, chậm hơn trong chân không một phần ba",
+    "s": "Chiết suất của thuỷ tinh khoảng 1,47 nên tốc độ truyền giảm tương ứng. Đây là lý do độ trễ Hà Nội – New York không thể xuống dưới khoảng 70 mili giây một chiều dù hạ tầng có tốt tới đâu.",
+    "tags": [
+      "cap-quang",
+      "do-tre",
+      "chiet-suat"
+    ],
+    "src": "ITU-T G.652; Agrawal, Fiber-Optic Communication Systems"
+  },
+  {
+    "id": "vl-203",
+    "cat": "vat-ly",
+    "sub": "anh-sang-song",
+    "t": "Màu xanh của bầu trời là do phân tử khí tán xạ ánh sáng ngắn bước sóng mạnh gấp khoảng 16 lần ánh sáng đỏ",
+    "s": "Tán xạ Rayleigh tỉ lệ nghịch với luỹ thừa bốn của bước sóng. Ánh sáng tím bị tán xạ còn mạnh hơn xanh lam, nhưng Mặt Trời phát ít tím hơn và mắt người kém nhạy với tím, nên ta thấy trời xanh chứ không thấy trời tím.",
+    "tags": [
+      "bau-troi",
+      "tan-xa",
+      "mau-sac"
+    ],
+    "src": "Lord Rayleigh (1871); Bohren & Clothiaux, Fundamentals of Atmospheric Radiation"
+  },
+  {
+    "id": "vl-204",
+    "cat": "vat-ly",
+    "sub": "anh-sang-song",
+    "t": "Cầu vồng luôn là một vòng tròn đầy đủ, mặt đất chỉ che mất phần dưới",
+    "s": "Ánh sáng bị khúc xạ và phản xạ trong giọt nước bật ra ở góc khoảng 42 độ so với hướng ngược Mặt Trời, tạo thành hình nón. Từ máy bay hoặc trên đỉnh núi cao người ta chụp được cầu vồng tròn hoàn chỉnh.",
+    "tags": [
+      "cau-vong",
+      "khuc-xa",
+      "quang-hoc"
+    ],
+    "src": "Descartes (1637); Minnaert, Light and Colour in the Outdoors"
+  },
+  {
+    "id": "vl-205",
+    "cat": "vat-ly",
+    "sub": "anh-sang-song",
+    "t": "Mắt người chỉ nhìn được dải bước sóng khoảng 380–700 nanomet, tức chưa tới một phần nghìn tỉ của phổ điện từ",
+    "s": "Cùng một loại sóng, chỉ khác bước sóng, cho ra sóng radio, vi sóng, hồng ngoại, ánh sáng nhìn thấy, tử ngoại, tia X và tia gamma. Cửa sổ ta nhìn được hẹp đúng bằng chỗ khí quyển trong suốt nhất và Mặt Trời phát mạnh nhất.",
+    "tags": [
+      "pho-dien-tu",
+      "thi-giac",
+      "buoc-song"
+    ],
+    "src": "Maxwell (1865); CIE 1931"
+  },
+  {
+    "id": "vl-206",
+    "cat": "vat-ly",
+    "sub": "anh-sang-song",
+    "t": "Âm thanh đi trong nước nhanh gấp khoảng 4,3 lần trong không khí",
+    "s": "Trong không khí 20 °C âm đi khoảng 343 m/s, trong nước biển khoảng 1.500 m/s, trong thép khoảng 5.000 m/s. Càng cứng và càng đàn hồi thì sóng truyền càng nhanh — đó là lý do cá voi liên lạc được qua hàng trăm km.",
+    "tags": [
+      "am-thanh",
+      "song-co",
+      "toc-do"
+    ],
+    "src": "Sổ tay CRC Handbook of Chemistry and Physics"
+  },
+  {
+    "id": "vl-207",
+    "cat": "vat-ly",
+    "sub": "anh-sang-song",
+    "t": "Hiệu ứng Doppler làm còi xe cứu thương đổi cao độ đúng lúc nó đi ngang qua bạn",
+    "s": "Khi nguồn âm tiến lại, các đỉnh sóng bị dồn nên tần số nghe được cao hơn; khi nó đi xa, sóng bị kéo giãn nên tần số thấp hơn. Một còi 700 Hz trên xe chạy 60 km/h nghe thành khoảng 736 Hz lúc lao tới và 667 Hz lúc đi xa — chênh nhau hơn một cung nhạc.",
+    "tags": [
+      "doppler",
+      "tan-so",
+      "am-thanh"
+    ],
+    "src": "Christian Doppler (1842)"
+  },
+  {
+    "id": "vl-208",
+    "cat": "vat-ly",
+    "sub": "anh-sang-song",
+    "t": "Không thể nghe thấy gì trong chân không vì âm thanh cần vật chất để truyền, còn ánh sáng thì không",
+    "s": "Sóng âm là dao động nén giãn của môi trường; không có môi trường thì không có sóng. Sóng điện từ tự truyền được bằng cách từ trường sinh điện trường và ngược lại, nên ánh sáng đi qua 150 triệu km chân không từ Mặt Trời tới ta.",
+    "tags": [
+      "chan-khong",
+      "am-thanh",
+      "song"
+    ],
+    "src": "Maxwell (1865)"
+  },
+  {
+    "id": "vl-209",
+    "cat": "vat-ly",
+    "sub": "anh-sang-song",
+    "t": "Tiếng nổ siêu thanh không phải tiếng của khoảnh khắc vượt tốc độ âm — nó kéo theo máy bay suốt hành trình",
+    "s": "Máy bay bay nhanh hơn âm thanh tạo ra một mặt sóng hình nón đi cùng nó; bất kỳ ai nằm trên đường quét của nón đó đều nghe một tiếng nổ khi mặt sóng đi qua. Vì vậy một chuyến bay siêu thanh gây tiếng nổ dọc cả một dải mặt đất rộng hàng chục km.",
+    "tags": [
+      "sieu-thanh",
+      "song-xung",
+      "hang-khong"
+    ],
+    "src": "NASA Sonic Boom Research; Anderson, Fundamentals of Aerodynamics"
+  },
+  {
+    "id": "vl-210",
+    "cat": "vat-ly",
+    "sub": "anh-sang-song",
+    "t": "Chống ồn chủ động hoạt động bằng cách phát ra đúng sóng âm ngược pha, không phải bằng cách chặn âm",
+    "s": "Micro ngoài tai nghe đo sóng tới rồi loa phát một sóng lệch pha 180 độ để hai sóng triệt tiêu nhau. Cách này hiệu quả nhất với âm trầm đều như tiếng động cơ, và kém với âm cao thay đổi nhanh như giọng nói.",
+    "tags": [
+      "tai-nghe",
+      "giao-thoa",
+      "am-hoc"
+    ],
+    "src": "Paul Lueg, bằng sáng chế Mỹ 2043416 (1936)"
+  },
+  {
+    "id": "vl-211",
+    "cat": "vat-ly",
+    "sub": "nhiet-va-nang-luong",
+    "t": "Nhiệt độ không tuyệt đối là −273,15 °C, và đó là giới hạn dưới thật chứ không phải quy ước",
+    "s": "Nhiệt độ đo mức chuyển động nhiệt của hạt; ở 0 K chuyển động này xuống mức thấp nhất mà cơ học lượng tử cho phép. Định luật ba nhiệt động lực học nói không thể tới 0 K bằng số bước hữu hạn — kỷ lục phòng thí nghiệm hiện ở mức phần tỉ độ trên 0 K.",
+    "tags": [
+      "nhiet-do",
+      "khong-tuyet-doi",
+      "nhiet-dong"
+    ],
+    "src": "Định luật ba nhiệt động lực học; NIST"
+  },
+  {
+    "id": "vl-212",
+    "cat": "vat-ly",
+    "sub": "nhiet-va-nang-luong",
+    "t": "Nước sôi ở 100 °C chỉ đúng ở áp suất mực nước biển; trên đỉnh Everest nó sôi ở khoảng 68 °C",
+    "s": "Sôi xảy ra khi áp suất hơi bằng áp suất khí quyển, nên áp suất càng thấp thì nhiệt độ sôi càng thấp. Vì vậy luộc trứng trên núi cao lâu hơn nhiều: nước sôi nhưng không đủ nóng.",
+    "tags": [
+      "nuoc",
+      "soi",
+      "ap-suat"
+    ],
+    "src": "Sổ tay CRC; Bảng hơi nước IAPWS"
+  },
+  {
+    "id": "vl-213",
+    "cat": "vat-ly",
+    "sub": "nhiet-va-nang-luong",
+    "t": "Nồi áp suất nấu nhanh vì nó đẩy điểm sôi của nước lên khoảng 120 °C",
+    "s": "Ở áp suất gấp đôi khí quyển, nước sôi ở khoảng 120 °C thay vì 100 °C. Tốc độ nhiều phản ứng hoá học tăng gần gấp đôi cho mỗi 10 °C, nên chênh 20 độ rút thời gian ninh xuống còn khoảng một phần ba.",
+    "tags": [
+      "noi-ap-suat",
+      "nau-an",
+      "nhiet"
+    ],
+    "src": "Quy tắc Van 't Hoff; hướng dẫn kỹ thuật USDA"
+  },
+  {
+    "id": "vl-214",
+    "cat": "vat-ly",
+    "sub": "nhiet-va-nang-luong",
+    "t": "Đá lạnh không làm đồ uống lạnh đi bằng nhiệt độ của nó mà bằng nhiệt nóng chảy",
+    "s": "Làm tan 1 gam nước đá ở 0 °C hút 334 jun, trong khi đun 1 gam nước lên 1 độ chỉ cần 4,18 jun. Nghĩa là chỗ đá tan hút nhiệt tương đương làm nguội cùng khối lượng nước đi 80 độ.",
+    "tags": [
+      "da",
+      "nhiet-nong-chay",
+      "do-uong"
+    ],
+    "src": "Sổ tay CRC Handbook"
+  },
+  {
+    "id": "vl-215",
+    "cat": "vat-ly",
+    "sub": "nhiet-va-nang-luong",
+    "t": "Nước có nhiệt dung riêng cao bất thường: 4,18 J trên mỗi gam mỗi độ, gấp khoảng 5 lần cát khô",
+    "s": "Đây là lý do biển ấm lên và nguội đi chậm hơn đất liền, tạo ra gió biển ban ngày và gió đất ban đêm, và làm khí hậu ven biển ôn hoà hơn khí hậu lục địa ở cùng vĩ độ.",
+    "tags": [
+      "nuoc",
+      "nhiet-dung",
+      "khi-hau"
+    ],
+    "src": "Sổ tay CRC Handbook; IPCC AR6"
+  },
+  {
+    "id": "vl-216",
+    "cat": "vat-ly",
+    "sub": "nhiet-va-nang-luong",
+    "t": "Nước nóng có thể đóng băng nhanh hơn nước lạnh trong một số điều kiện, và cơ chế vẫn chưa được chốt",
+    "s": "Hiện tượng Mpemba đã được mô tả từ Aristotle và đo lại nhiều lần, nhưng các lần thử lặp lại có kiểm soát chặt cho kết quả trái ngược nhau. Các giả thuyết gồm bốc hơi, đối lưu, khí hoà tan và siêu lạnh — chưa cái nào được chấp nhận rộng rãi.",
+    "tags": [
+      "mpemba",
+      "dong-bang",
+      "tranh-cai"
+    ],
+    "src": "Burridge & Linden, Scientific Reports (2016)"
+  },
+  {
+    "id": "vl-217",
+    "cat": "vat-ly",
+    "sub": "nhiet-va-nang-luong",
+    "t": "Không thể chế tạo động cơ vĩnh cửu, và điều đó không phải vì kỹ thuật chưa đủ giỏi",
+    "s": "Định luật một nhiệt động lực học cấm tạo năng lượng từ hư không; định luật hai cấm chuyển hết nhiệt thành công. Văn phòng sáng chế Mỹ từ năm 1911 yêu cầu mô hình chạy được cho mọi đơn xin cấp bằng loại này, và chưa đơn nào qua.",
+    "tags": [
+      "dong-co-vinh-cuu",
+      "nhiet-dong",
+      "entropy"
+    ],
+    "src": "USPTO MPEP 608.03; Định luật nhiệt động lực học"
+  },
+  {
+    "id": "vl-218",
+    "cat": "vat-ly",
+    "sub": "nhiet-va-nang-luong",
+    "t": "Nhà máy nhiệt điện tốt nhất chỉ chuyển được khoảng 45% năng lượng nhiên liệu thành điện, phần còn lại thoát ra dạng nhiệt",
+    "s": "Giới hạn Carnot phụ thuộc chênh lệch nhiệt độ giữa nguồn nóng và nguồn lạnh, và không có thiết kế nào vượt qua được nó. Nhà máy tuabin khí chu trình hỗn hợp hiện đại đạt khoảng 60–64%, còn nhà máy than thường quanh 33–45%.",
+    "tags": [
+      "hieu-suat",
+      "carnot",
+      "dien"
+    ],
+    "src": "Cơ quan Năng lượng Quốc tế (IEA); Chu trình Carnot"
+  },
+  {
+    "id": "vl-219",
+    "cat": "vat-ly",
+    "sub": "nhiet-va-nang-luong",
+    "t": "Đèn sợi đốt biến khoảng 95% điện năng thành nhiệt chứ không thành ánh sáng",
+    "s": "Hiệu suất phát sáng của bóng sợi đốt khoảng 15 lumen mỗi watt, đèn LED hiện đại đạt 100–200 lumen mỗi watt. Đó là lý do gần như mọi nước đã cấm bán bóng sợi đốt phổ thông.",
+    "tags": [
+      "den-led",
+      "hieu-suat",
+      "dien"
+    ],
+    "src": "Bộ Năng lượng Mỹ (DOE), Solid-State Lighting Program"
+  },
+  {
+    "id": "vl-220",
+    "cat": "vat-ly",
+    "sub": "nhiet-va-nang-luong",
+    "t": "Điều hoà không tạo ra lạnh — nó bơm nhiệt từ trong nhà ra ngoài, và tổng nhiệt thải ra lớn hơn nhiệt lấy vào",
+    "s": "Máy nén tiêu thụ điện, và toàn bộ điện đó cũng thành nhiệt đổ ra ngoài trời cùng với nhiệt hút từ trong phòng. Vì vậy một thành phố dùng nhiều điều hoà thì không khí ngoài đường thật sự nóng lên.",
+    "tags": [
+      "dieu-hoa",
+      "bom-nhiet",
+      "do-thi"
+    ],
+    "src": "Định luật hai nhiệt động lực học; de Munck và cộng sự, IJC (2013)"
+  },
+  {
+    "id": "vl-221",
+    "cat": "vat-ly",
+    "sub": "luc-va-chuyen-dong",
+    "t": "Một lông chim và một quả búa rơi nhanh như nhau trong chân không, và điều này đã được quay phim trên Mặt Trăng",
+    "s": "Gia tốc rơi không phụ thuộc khối lượng vì lực hấp dẫn tăng theo khối lượng đúng bằng mức quán tính tăng. Phi hành gia David Scott thả búa và lông chim trong sứ mệnh Apollo 15 năm 1971 và cả hai chạm đất cùng lúc.",
+    "tags": [
+      "hap-dan",
+      "rơi-tu-do",
+      "apollo"
+    ],
+    "src": "NASA, Apollo 15 (1971); Galileo (1638)"
+  },
+  {
+    "id": "vl-222",
+    "cat": "vat-ly",
+    "sub": "luc-va-chuyen-dong",
+    "t": "Người trên Trạm Vũ trụ Quốc tế không hề thoát khỏi trọng lực — lực hấp dẫn ở đó vẫn bằng khoảng 90% ở mặt đất",
+    "s": "Họ ở trạng thái rơi tự do liên tục: trạm rơi về Trái Đất nhưng đồng thời bay ngang đủ nhanh nên luôn trượt qua. Cảm giác không trọng lượng đến từ việc mọi vật cùng rơi, không từ việc không có trọng lực.",
+    "tags": [
+      "quy-dao",
+      "roi-tu-do",
+      "iss"
+    ],
+    "src": "NASA Human Research Program"
+  },
+  {
+    "id": "vl-223",
+    "cat": "vat-ly",
+    "sub": "luc-va-chuyen-dong",
+    "t": "Lực ma sát trượt gần như không phụ thuộc diện tích tiếp xúc, chỉ phụ thuộc lực ép và vật liệu",
+    "s": "Lốp xe đua bản rộng không bám hơn nhờ diện tích mà nhờ hợp chất cao su mềm và nhiệt độ làm việc. Định luật Amontons đúng với phần lớn vật liệu cứng nhưng hỏng với cao su và các vật liệu biến dạng nhiều.",
+    "tags": [
+      "ma-sat",
+      "lop-xe",
+      "co-hoc"
+    ],
+    "src": "Amontons (1699); Bowden & Tabor, Friction and Lubrication of Solids"
+  },
+  {
+    "id": "vl-224",
+    "cat": "vat-ly",
+    "sub": "luc-va-chuyen-dong",
+    "t": "Quãng đường phanh của ô tô tăng theo bình phương tốc độ: từ 100 km/h cần quãng phanh gấp 4 lần từ 50 km/h",
+    "s": "Động năng bằng một nửa khối lượng nhân bình phương vận tốc, và phanh phải tiêu tán toàn bộ động năng đó. Đây là lý do chênh 10 km/h ở tốc độ cao nguy hiểm hơn nhiều chênh 10 km/h ở tốc độ thấp.",
+    "tags": [
+      "phanh",
+      "dong-nang",
+      "an-toan-giao-thong"
+    ],
+    "src": "Cục An toàn Giao thông Đường bộ Mỹ (NHTSA)"
+  },
+  {
+    "id": "vl-225",
+    "cat": "vat-ly",
+    "sub": "luc-va-chuyen-dong",
+    "t": "Con quay giữ được thăng bằng nhờ mô men động lượng, và cùng nguyên lý đó giữ xe đạp không đổ theo cách khác với người ta tưởng",
+    "s": "Thí nghiệm với xe đạp có bánh phản quay cho thấy hiệu ứng con quay không phải yếu tố chính; ổn định đến chủ yếu từ hình học lái và phân bố khối lượng. Xe đạp tự cân bằng được khi đang lăn ngay cả khi triệt tiêu hết hiệu ứng con quay.",
+    "tags": [
+      "xe-dap",
+      "mo-men",
+      "on-dinh"
+    ],
+    "src": "Kooijman và cộng sự, Science (2011)"
+  },
+  {
+    "id": "vl-226",
+    "cat": "vat-ly",
+    "sub": "luc-va-chuyen-dong",
+    "t": "Áp suất khí quyển ép lên mỗi mét vuông cơ thể bạn khoảng 10 tấn, và bạn không thấy gì vì áp suất bên trong cân bằng nó",
+    "s": "Áp suất chuẩn ở mực nước biển là 101.325 pascal, tức khoảng 10,3 tấn lực trên mỗi mét vuông. Cột nước cao 10,3 mét cũng tạo đúng áp suất đó — đó là lý do bơm hút không thể kéo nước lên cao quá mức này.",
+    "tags": [
+      "ap-suat",
+      "khi-quyen",
+      "bom"
+    ],
+    "src": "Torricelli (1643); ISO 2533"
+  },
+  {
+    "id": "vl-227",
+    "cat": "vat-ly",
+    "sub": "luc-va-chuyen-dong",
+    "t": "Máy bay bay được không phải vì đường đi trên cánh dài hơn nên không khí phải chạy nhanh hơn",
+    "s": "Giải thích 'thời gian bằng nhau' đó sai và cho ra lực nâng quá nhỏ; cánh phẳng và cánh lộn ngược vẫn bay được. Lực nâng đến từ việc cánh bẻ dòng khí xuống dưới, và phản lực đẩy cánh lên theo định luật ba Newton.",
+    "tags": [
+      "hang-khong",
+      "luc-nang",
+      "khi-dong-hoc"
+    ],
+    "src": "NASA Glenn Research Center, Incorrect Lift Theories"
+  },
+  {
+    "id": "vl-228",
+    "cat": "vat-ly",
+    "sub": "luc-va-chuyen-dong",
+    "t": "Một vật nổi khi nó chiếm chỗ khối nước nặng bằng chính nó, nên tàu thép 200.000 tấn vẫn nổi",
+    "s": "Nguyên lý Archimedes không quan tâm vật liệu, chỉ quan tâm thể tích chiếm chỗ. Thân tàu rỗng làm khối lượng riêng trung bình của cả con tàu nhỏ hơn nước, dù thép nặng gấp gần 8 lần nước.",
+    "tags": [
+      "archimedes",
+      "noi",
+      "tau-thuy"
+    ],
+    "src": "Archimedes, Về các vật nổi (khoảng 250 TCN)"
+  },
+  {
+    "id": "vl-229",
+    "cat": "vat-ly",
+    "sub": "luc-va-chuyen-dong",
+    "t": "Lực Coriolis không quyết định chiều xoáy nước trong bồn rửa — nó quá yếu so với hình dạng bồn",
+    "s": "Ở quy mô bồn rửa, lực Coriolis nhỏ hơn ảnh hưởng của vết xước, độ nghiêng và dòng chảy ban đầu hàng nghìn lần. Ở quy mô bão nhiệt đới rộng hàng trăm km thì nó lại quyết định chiều xoáy: ngược kim đồng hồ ở bắc bán cầu.",
+    "tags": [
+      "coriolis",
+      "xoay-nuoc",
+      "bao"
+    ],
+    "src": "Shapiro, Nature (1962); Trefethen và cộng sự, Nature (1965)"
+  },
+  {
+    "id": "vl-230",
+    "cat": "vat-ly",
+    "sub": "luc-va-chuyen-dong",
+    "t": "Trọng lượng của bạn thay đổi khoảng 0,5% giữa xích đạo và hai cực",
+    "s": "Trái Đất phình ở xích đạo nên bạn ở xa tâm hơn, và chuyển động quay tạo lực ly tâm. Gia tốc trọng trường ở xích đạo khoảng 9,78 m/s², ở cực khoảng 9,83 m/s².",
+    "tags": [
+      "trong-luong",
+      "trai-dat",
+      "hap-dan"
+    ],
+    "src": "Công thức trọng trường quốc tế IGF 1980"
+  },
+  {
+    "id": "vl-231",
+    "cat": "vat-ly",
+    "sub": "dien-tu",
+    "t": "Điện giật gây chết người bằng dòng điện chứ không bằng điện áp, và khoảng 100 miliampe qua tim là đủ",
+    "s": "Dòng 1–5 mA gây cảm giác tê, 10–20 mA làm cơ co cứng không rời tay ra được, khoảng 100 mA qua ngực gây rung thất. Tĩnh điện mùa đông có thể lên tới 20.000 vôn nhưng dòng cực nhỏ và rất ngắn nên vô hại.",
+    "tags": [
+      "dien-giat",
+      "an-toan",
+      "dong-dien"
+    ],
+    "src": "IEC 60479-1; Dalziel (1956)"
+  },
+  {
+    "id": "vl-232",
+    "cat": "vat-ly",
+    "sub": "dien-tu",
+    "t": "Chim đậu trên dây điện cao thế không sao vì hai chân nó ở cùng một điện thế",
+    "s": "Dòng điện chỉ chảy khi có chênh lệch điện thế; hai chân cách nhau vài centimet trên cùng một dây gần như không chênh gì. Chim chết khi chạm đồng thời hai dây khác pha hoặc chạm dây và cột nối đất.",
+    "tags": [
+      "dien-the",
+      "chim",
+      "an-toan"
+    ],
+    "src": "Cục Cải tạo Đất Mỹ, Suggested Practices for Avian Protection"
+  },
+  {
+    "id": "vl-233",
+    "cat": "vat-ly",
+    "sub": "dien-tu",
+    "t": "Dòng điện trong dây đồng chảy chậm hơn cả người đi bộ, chỉ khoảng vài chục centimet mỗi giờ",
+    "s": "Tín hiệu điện lan gần bằng tốc độ ánh sáng vì trường điện từ lan trong không gian quanh dây, nhưng bản thân các electron trôi rất chậm — vận tốc trôi trong dây gia dụng thường dưới 1 mm/s. Bóng đèn sáng ngay không phải vì electron chạy nhanh.",
+    "tags": [
+      "electron",
+      "van-toc-troi",
+      "dien"
+    ],
+    "src": "Griffiths, Introduction to Electrodynamics"
+  },
+  {
+    "id": "vl-234",
+    "cat": "vat-ly",
+    "sub": "dien-tu",
+    "t": "Lò vi sóng làm nóng thức ăn bằng cách xoay phân tử nước 2,45 tỉ lần mỗi giây, không bằng bức xạ ion hoá",
+    "s": "Sóng 2,45 GHz làm phân tử phân cực quay theo trường điện đổi chiều liên tục, ma sát giữa chúng sinh nhiệt. Năng lượng photon vi sóng nhỏ hơn năng lượng liên kết hoá học hàng triệu lần nên nó không thể phá ADN.",
+    "tags": [
+      "lo-vi-song",
+      "buc-xa",
+      "nuoc"
+    ],
+    "src": "WHO, Electromagnetic fields and public health; FDA CFR 21 §1030.10"
+  },
+  {
+    "id": "vl-235",
+    "cat": "vat-ly",
+    "sub": "dien-tu",
+    "t": "Lồng Faraday chặn được sóng vô tuyến, và cửa lò vi sóng chính là một lồng như thế",
+    "s": "Lưới kim loại trên cửa có lỗ khoảng 1 mm, nhỏ hơn nhiều bước sóng 12,2 cm của vi sóng, nên sóng không lọt ra trong khi ánh sáng bước sóng dưới 1 micromet đi qua thoải mái. Cùng nguyên lý giữ hành khách an toàn khi máy bay bị sét đánh.",
+    "tags": [
+      "faraday",
+      "che-chan",
+      "song"
+    ],
+    "src": "Faraday (1836); FDA, Microwave Oven Radiation"
+  },
+  {
+    "id": "vl-236",
+    "cat": "vat-ly",
+    "sub": "dien-tu",
+    "t": "Nam châm mất từ tính khi bị nung nóng quá nhiệt độ Curie — với sắt là 770 °C",
+    "s": "Trên nhiệt độ đó, dao động nhiệt phá vỡ trật tự sắp xếp của các mô men từ. Đây cũng là lý do lõi Trái Đất tuy là sắt nóng chảy nhưng không phải một nam châm vĩnh cửu: từ trường hành tinh do dòng đối lưu dẫn điện sinh ra.",
+    "tags": [
+      "nam-cham",
+      "curie",
+      "tu-truong"
+    ],
+    "src": "Sổ tay CRC Handbook; Merrill, The Magnetic Field of the Earth"
+  },
+  {
+    "id": "vl-237",
+    "cat": "vat-ly",
+    "sub": "dien-tu",
+    "t": "Sét đánh từ dưới lên nhiều hơn người ta tưởng: tia dẫn đường đi xuống, nhưng tia hồi mới là tia sáng chói",
+    "s": "Tia dẫn đường bậc thang đi từ mây xuống rất mờ; khi nó gần mặt đất, một tia hồi phóng ngược lên với dòng trung bình 30.000 ampe và đó là thứ mắt ta thấy. Toàn bộ quá trình mất chưa tới một phần nghìn giây.",
+    "tags": [
+      "set",
+      "dien",
+      "khi-quyen"
+    ],
+    "src": "NOAA National Severe Storms Laboratory; Rakov & Uman, Lightning"
+  },
+  {
+    "id": "vl-238",
+    "cat": "vat-ly",
+    "sub": "dien-tu",
+    "t": "Ổ cắm điện gia dụng Việt Nam là 220 vôn ở tần số 50 Hz, và đèn của bạn thật ra nhấp nháy 100 lần mỗi giây",
+    "s": "Điện xoay chiều đổi chiều 50 lần mỗi giây nên công suất đạt cực đại 100 lần. Mắt người không theo kịp, nhưng máy quay tốc độ cao thấy rõ — và đó là lý do đèn huỳnh quang cũ gây hiệu ứng nhấp nháy khi quay phim.",
+    "tags": [
+      "dien-xoay-chieu",
+      "tan-so",
+      "den"
+    ],
+    "src": "TCVN 7995:2009; IEC 60038"
+  },
+  {
+    "id": "vl-239",
+    "cat": "vat-ly",
+    "sub": "dien-tu",
+    "t": "Truyền tải điện đi xa dùng điện áp rất cao vì tổn hao tỉ lệ với bình phương dòng điện",
+    "s": "Cùng một công suất, tăng điện áp 10 lần thì dòng giảm 10 lần và tổn hao nhiệt trên dây giảm 100 lần. Đường dây 500 kV Bắc – Nam của Việt Nam tồn tại chính vì lý do này.",
+    "tags": [
+      "truyen-tai-dien",
+      "ton-hao",
+      "luoi-dien"
+    ],
+    "src": "Định luật Joule; EVN, hệ thống truyền tải 500 kV"
+  },
+  {
+    "id": "vl-240",
+    "cat": "vat-ly",
+    "sub": "dien-tu",
+    "t": "Pin không chứa sẵn electron — nó chứa hai chất muốn phản ứng với nhau và bắt electron đi vòng qua mạch",
+    "s": "Điện thế của pin do chênh lệch thế điện hoá giữa hai điện cực quyết định, không do kích thước pin. Pin AA và pin cúc áo cùng cho 1,5 vôn; khác nhau ở dung lượng, tức tổng số phản ứng có thể xảy ra.",
+    "tags": [
+      "pin",
+      "dien-hoa",
+      "dien-the"
+    ],
+    "src": "Volta (1800); Linden, Handbook of Batteries"
+  },
+  {
+    "id": "vl-241",
+    "cat": "vat-ly",
+    "sub": "hat-va-luong-tu",
+    "t": "Nguyên tử gần như toàn bộ là khoảng trống: hạt nhân chỉ chiếm khoảng một phần nghìn tỉ thể tích",
+    "s": "Nếu phóng to hạt nhân bằng quả bóng đá thì electron gần nhất ở cách khoảng 3 km. Vật rắn cảm thấy đặc vì lực đẩy điện từ giữa các lớp electron, không vì vật chất lấp đầy không gian.",
+    "tags": [
+      "nguyen-tu",
+      "hat-nhan",
+      "cau-truc"
+    ],
+    "src": "Rutherford (1911)"
+  },
+  {
+    "id": "vl-242",
+    "cat": "vat-ly",
+    "sub": "hat-va-luong-tu",
+    "t": "Ánh sáng vừa là sóng vừa là hạt, và thí nghiệm hai khe vẫn cho vân giao thoa khi bắn từng photon một",
+    "s": "Từng photon đi qua vẫn tạo dần lên hình ảnh vân sáng tối, nghĩa là mỗi hạt tự giao thoa với chính nó. Nếu đặt máy dò xem photon qua khe nào thì vân biến mất — quan sát làm đổi kết quả.",
+    "tags": [
+      "luong-tu",
+      "hai-khe",
+      "photon"
+    ],
+    "src": "Taylor (1909); Tonomura và cộng sự, AJP (1989)"
+  },
+  {
+    "id": "vl-243",
+    "cat": "vat-ly",
+    "sub": "hat-va-luong-tu",
+    "t": "Không thể biết đồng thời chính xác vị trí và động lượng của một hạt, và đó là tính chất của tự nhiên chứ không phải hạn chế của máy đo",
+    "s": "Nguyên lý bất định Heisenberg đặt tích của hai sai số không nhỏ hơn hằng số Planck rút gọn chia đôi. Nó suy ra từ chính bản chất sóng của vật chất, nên máy đo tốt hơn cũng không phá được giới hạn này.",
+    "tags": [
+      "bat-dinh",
+      "heisenberg",
+      "luong-tu"
+    ],
+    "src": "Heisenberg (1927)"
+  },
+  {
+    "id": "vl-244",
+    "cat": "vat-ly",
+    "sub": "hat-va-luong-tu",
+    "t": "Neutron tự do phân rã với chu kỳ bán rã khoảng 10 phút, nhưng neutron trong hạt nhân bền có thể tồn tại mãi",
+    "s": "Neutron đơn lẻ biến thành proton, electron và phản neutrino sau trung bình khoảng 880 giây. Trong hạt nhân, năng lượng liên kết làm phân rã đó không còn có lợi về năng lượng nên nó dừng lại.",
+    "tags": [
+      "neutron",
+      "phan-ra",
+      "hat-nhan"
+    ],
+    "src": "Particle Data Group (PDG), Review of Particle Physics"
+  },
+  {
+    "id": "vl-245",
+    "cat": "vat-ly",
+    "sub": "hat-va-luong-tu",
+    "t": "Phản vật chất tồn tại thật và bệnh viện dùng nó mỗi ngày trong máy chụp PET",
+    "s": "Chất đánh dấu phát positron — phản hạt của electron — và khi positron gặp electron cả hai huỷ nhau thành hai photon gamma bay ngược chiều, cho phép dựng ảnh. Toàn bộ phản vật chất từng được tạo ra trong phòng thí nghiệm cộng lại chưa tới vài nanogam.",
+    "tags": [
+      "phan-vat-chat",
+      "pet",
+      "y-hoc"
+    ],
+    "src": "CERN Antimatter Factory; Hội Y học Hạt nhân Mỹ (SNMMI)"
+  },
+  {
+    "id": "vl-246",
+    "cat": "vat-ly",
+    "sub": "hat-va-luong-tu",
+    "t": "Có bốn lực cơ bản, và lực hấp dẫn yếu hơn lực điện từ khoảng 10 mũ 36 lần",
+    "s": "Một nam châm nhỏ nhấc được chiếc kim lên, tức nó thắng lực hấp dẫn của cả Trái Đất. Hấp dẫn chỉ thống trị ở quy mô lớn vì nó luôn hút và không bị triệt tiêu, còn điện tích dương và âm thì bù trừ nhau.",
+    "tags": [
+      "luc-co-ban",
+      "hap-dan",
+      "dien-tu"
+    ],
+    "src": "Particle Data Group; Feynman, Lectures on Physics"
+  },
+  {
+    "id": "vl-247",
+    "cat": "vat-ly",
+    "sub": "hat-va-luong-tu",
+    "t": "Chất phóng xạ không 'hết hạn' sau một chu kỳ bán rã — mỗi chu kỳ chỉ làm giảm một nửa lượng còn lại",
+    "s": "Sau 1 chu kỳ còn 50%, sau 2 chu kỳ còn 25%, sau 10 chu kỳ còn khoảng 0,1%. Carbon-14 có chu kỳ 5.730 năm nên phương pháp định tuổi bằng carbon dùng được tới khoảng 50.000 năm rồi hết tín hiệu.",
+    "tags": [
+      "phong-xa",
+      "chu-ky-ban-ra",
+      "carbon-14"
+    ],
+    "src": "Libby (1949); IAEA"
+  },
+  {
+    "id": "vl-248",
+    "cat": "vat-ly",
+    "sub": "hat-va-luong-tu",
+    "t": "Bạn nhận khoảng 2,4 milisievert bức xạ nền mỗi năm, và phần lớn đến từ khí radon trong nhà",
+    "s": "Một lần chụp X-quang ngực khoảng 0,1 milisievert, một chuyến bay xuyên Đại Tây Dương khoảng 0,08. Chuối chứa kali-40 nên cũng có phóng xạ, nhưng ăn một quả chỉ thêm khoảng 0,0001 milisievert.",
+    "tags": [
+      "buc-xa",
+      "radon",
+      "lieu-luong"
+    ],
+    "src": "UNSCEAR 2008 Report; US EPA"
+  },
+  {
+    "id": "vl-249",
+    "cat": "vat-ly",
+    "sub": "hat-va-luong-tu",
+    "t": "Neutrino đi xuyên qua Trái Đất gần như không gặp trở ngại, và khoảng 60 tỉ hạt xuyên qua mỗi centimet vuông da bạn mỗi giây",
+    "s": "Chúng chỉ tương tác qua lực hạt nhân yếu nên tiết diện va chạm cực nhỏ. Để bắt được chúng người ta phải xây bể nước hàng chục nghìn tấn dưới lòng đất, như Super-Kamiokande sâu 1.000 mét ở Nhật.",
+    "tags": [
+      "neutrino",
+      "hat",
+      "vat-ly-hat"
+    ],
+    "src": "Bahcall, Neutrino Astrophysics; Super-Kamiokande Collaboration"
+  },
+  {
+    "id": "vl-250",
+    "cat": "vat-ly",
+    "sub": "hat-va-luong-tu",
+    "t": "Điện tích luôn là bội số nguyên của điện tích electron, và không ai từng đo được một phần lẻ tự do",
+    "s": "Millikan đo được lượng tử điện tích năm 1909 bằng thí nghiệm giọt dầu. Quark mang điện tích một phần ba nhưng chưa bao giờ quan sát được ở trạng thái tự do do hiện tượng giam hãm màu.",
+    "tags": [
+      "dien-tich",
+      "luong-tu-hoa",
+      "quark"
+    ],
+    "src": "Millikan (1913); Particle Data Group"
+  },
+  {
+    "id": "vl-253",
+    "cat": "vat-ly",
+    "sub": "tuong-doi",
+    "t": "Khối lượng và năng lượng là hai mặt của cùng một thứ, và 1 gam vật chất tương đương khoảng 21 kiloton TNT",
+    "s": "Hệ thức E = mc² cho 9×10¹³ jun mỗi kilogam. Trong bom hạt nhân, chỉ khoảng 0,1% khối lượng nhiên liệu thật sự chuyển thành năng lượng; phản ứng tổng hợp trong Mặt Trời chuyển được khoảng 0,7%.",
+    "tags": [
+      "nang-luong",
+      "khoi-luong",
+      "hat-nhan"
+    ],
+    "src": "Einstein (1905); Bảng dữ liệu hạt nhân IAEA"
+  },
+  {
+    "id": "vl-254",
+    "cat": "vat-ly",
+    "sub": "tuong-doi",
+    "t": "Không có 'lúc này' chung cho cả vũ trụ: hai sự kiện đồng thời với người này có thể không đồng thời với người khác",
+    "s": "Tính đồng thời phụ thuộc hệ quy chiếu, và điều đó suy trực tiếp từ việc tốc độ ánh sáng như nhau với mọi người quan sát. Hiệu ứng chỉ đáng kể ở vận tốc gần tốc độ ánh sáng hoặc ở khoảng cách rất lớn.",
+    "tags": [
+      "dong-thoi",
+      "tuong-doi",
+      "khong-thoi-gian"
+    ],
+    "src": "Einstein (1905); Taylor & Wheeler, Spacetime Physics"
+  },
+  {
+    "id": "vl-255",
+    "cat": "vat-ly",
+    "sub": "tuong-doi",
+    "t": "Hạt muon từ tia vũ trụ lẽ ra phải phân rã hết trước khi tới mặt đất, nhưng chúng vẫn tới vì thời gian của chúng trôi chậm",
+    "s": "Muon có tuổi thọ riêng khoảng 2,2 micro giây, đủ đi khoảng 660 mét ở tốc độ ánh sáng, trong khi chúng sinh ra ở độ cao 15 km. Số muon đo được ở mặt đất khớp với dự đoán khi tính giãn nở thời gian.",
+    "tags": [
+      "muon",
+      "gian-no-thoi-gian",
+      "tia-vu-tru"
+    ],
+    "src": "Rossi & Hall, Physical Review (1941)"
+  },
+  {
+    "id": "vl-256",
+    "cat": "vat-ly",
+    "sub": "chat-long-khi",
+    "t": "Giọt nước có dạng cầu vì sức căng bề mặt, không vì trọng lực",
+    "s": "Sức căng bề mặt của nước ở 20 °C là 72 milinewton mỗi mét, cao bất thường so với hầu hết chất lỏng, do liên kết hydro. Đó cũng là lý do nhện nước đi được trên mặt nước và kim khâu nhỏ nổi được dù nặng hơn nước.",
+    "tags": [
+      "suc-cang-be-mat",
+      "nuoc",
+      "chat-long"
+    ],
+    "src": "Sổ tay CRC Handbook; de Gennes, Capillarity and Wetting Phenomena"
+  },
+  {
+    "id": "vl-257",
+    "cat": "vat-ly",
+    "sub": "chat-long-khi",
+    "t": "Nước dâng lên trong ống nhỏ mà không cần bơm, và cây cao 100 mét đưa nước lên ngọn bằng chính cơ chế đó",
+    "s": "Mao dẫn cộng với lực kéo do thoát hơi nước ở lá tạo cột nước liên tục trong mạch gỗ. Áp suất trong cột nước này thực ra là áp suất âm, tới khoảng −2 megapascal ở cây cao.",
+    "tags": [
+      "mao-dan",
+      "cay",
+      "thoat-hoi-nuoc"
+    ],
+    "src": "Thuyết dính bám – căng của Dixon & Joly (1895); Tyree & Zimmermann, Xylem Structure"
+  },
+  {
+    "id": "vl-258",
+    "cat": "vat-ly",
+    "sub": "chat-long-khi",
+    "t": "Dòng chảy rối bắt đầu khi số Reynolds vượt khoảng 2.300 trong ống tròn, và đó là ranh giới khá sắc",
+    "s": "Dưới ngưỡng đó dòng chảy tầng, các lớp trượt lên nhau êm; trên ngưỡng, xoáy xuất hiện và trở lực tăng vọt. Cùng một công thức áp dụng cho ống nước gia đình, mạch máu và đường ống dẫn dầu xuyên quốc gia.",
+    "tags": [
+      "reynolds",
+      "dong-chay",
+      "roi"
+    ],
+    "src": "Osborne Reynolds (1883)"
+  },
+  {
+    "id": "vl-259",
+    "cat": "vat-ly",
+    "sub": "chat-long-khi",
+    "t": "Không khí nặng hơn ta tưởng: một phòng 4×5×3 mét chứa khoảng 72 kg không khí",
+    "s": "Khối lượng riêng không khí ở mực nước biển là 1,2 kg mỗi mét khối. Chính khối lượng này tạo ra lực cản khiến xe chạy 100 km/h tốn phần lớn nhiên liệu để đẩy không khí sang một bên chứ không phải để thắng ma sát lăn.",
+    "tags": [
+      "khong-khi",
+      "khoi-luong-rieng",
+      "luc-can"
+    ],
+    "src": "ISA — Khí quyển Chuẩn Quốc tế (ISO 2533)"
+  },
+  {
+    "id": "vl-260",
+    "cat": "vat-ly",
+    "sub": "chat-long-khi",
+    "t": "Bong bóng xà phòng luôn tìm về hình dạng có diện tích nhỏ nhất, và điều đó giải quyết các bài toán hình học rất khó",
+    "s": "Màng xà phòng căng giữa các khung dây tự tạo ra mặt cực tiểu — lời giải cho bài toán mà giải tích phải rất vất vả mới tìm được. Kiến trúc sư Frei Otto dùng chính mô hình bong bóng để thiết kế mái sân vận động Olympic Munich 1972.",
+    "tags": [
+      "bong-bong",
+      "mat-cuc-tieu",
+      "kien-truc"
+    ],
+    "src": "Plateau (1873); Otto, Tensile Structures"
+  },
+  {
+    "id": "vl-261",
+    "cat": "vat-ly",
+    "sub": "do-luong-don-vi",
+    "t": "Từ năm 2019, cả bảy đơn vị cơ bản của hệ SI đều được định nghĩa bằng hằng số tự nhiên, không bằng vật thể nào",
+    "s": "Kilogam là đơn vị cuối cùng còn dựa vào một khối trụ bạch kim ở Pháp; nó được thay bằng định nghĩa qua hằng số Planck. Nghĩa là bất kỳ phòng thí nghiệm đủ giỏi nào trên thế giới cũng dựng lại được đơn vị chuẩn.",
+    "tags": [
+      "si",
+      "don-vi",
+      "kilogam"
+    ],
+    "src": "CGPM lần thứ 26 (2018), hiệu lực từ 20/5/2019"
+  },
+  {
+    "id": "vl-262",
+    "cat": "vat-ly",
+    "sub": "do-luong-don-vi",
+    "t": "Giây được định nghĩa bằng 9.192.631.770 chu kỳ dao động của nguyên tử caesium-133",
+    "s": "Đồng hồ nguyên tử caesium tốt nhất sai chưa tới 1 giây trong 100 triệu năm; đồng hồ mạng quang học thế hệ mới sai chưa tới 1 giây trong tuổi của vũ trụ. Toàn bộ hệ thống GPS, tài chính và viễn thông chạy trên chuẩn này.",
+    "tags": [
+      "giay",
+      "dong-ho-nguyen-tu",
+      "si"
+    ],
+    "src": "BIPM, Brochure SI lần thứ 9"
+  },
+  {
+    "id": "vl-263",
+    "cat": "vat-ly",
+    "sub": "do-luong-don-vi",
+    "t": "Mét từng được định nghĩa là một phần mười triệu quãng đường từ xích đạo tới cực Bắc, và phép đo đó sai khoảng 0,2 mm",
+    "s": "Đoàn khảo sát Pháp đo cung kinh tuyến từ Dunkerque tới Barcelona trong bảy năm giữa Cách mạng Pháp. Sai số do chưa biết chính xác độ dẹt của Trái Đất — và mét chuẩn giữ nguyên chiều dài sai đó cho tới tận hôm nay.",
+    "tags": [
+      "met",
+      "lich-su-do-luong",
+      "si"
+    ],
+    "src": "Alder, The Measure of All Things (2002)"
+  },
+  {
+    "id": "vl-265",
+    "cat": "vat-ly",
+    "sub": "do-luong-don-vi",
+    "t": "Thang decibel là thang lô-ga-rít, nên 90 dB không phải to gấp rưỡi 60 dB mà gấp 1.000 lần về công suất",
+    "s": "Mỗi 10 dB tương ứng công suất âm gấp 10 lần, và cảm nhận độ to của tai người tăng khoảng gấp đôi. Ngưỡng gây tổn thương thính lực bắt đầu từ khoảng 85 dB nếu tiếp xúc 8 giờ mỗi ngày.",
+    "tags": [
+      "decibel",
+      "am-thanh",
+      "thinh-luc"
+    ],
+    "src": "NIOSH Criteria for a Recommended Standard (1998); ISO 1999"
+  },
+  {
+    "id": "vl-266",
+    "cat": "vat-ly",
+    "sub": "do-luong-don-vi",
+    "t": "Độ Richter cũng là thang lô-ga-rít: động đất 7 độ giải phóng năng lượng gấp khoảng 32 lần động đất 6 độ",
+    "s": "Mỗi bậc tương ứng biên độ sóng gấp 10 lần và năng lượng gấp khoảng 31,6 lần. Nghĩa là một trận 9 độ mạnh gấp khoảng một triệu lần một trận 5 độ chứ không phải gấp gần đôi.",
+    "tags": [
+      "richter",
+      "dong-dat",
+      "thang-do"
+    ],
+    "src": "Cục Khảo sát Địa chất Hoa Kỳ (USGS)"
+  },
+  {
+    "id": "vl-267",
+    "cat": "vat-ly",
+    "sub": "do-luong-don-vi",
+    "t": "Nhiệt độ ngoài trời 35 °C nguy hiểm hơn nhiều khi độ ẩm cao, và ngưỡng sinh lý là nhiệt độ bầu ướt 35 °C",
+    "s": "Trên ngưỡng đó, mồ hôi không bay hơi được nữa nên cơ thể không thể hạ nhiệt dù ngồi trong bóng râm và uống đủ nước. Vài nơi ở vùng Vịnh và Nam Á đã chạm ngưỡng này trong thời gian ngắn.",
+    "tags": [
+      "nhiet-bau-uot",
+      "khi-hau",
+      "suc-khoe"
+    ],
+    "src": "Sherwood & Huber, PNAS (2010); Raymond và cộng sự, Science Advances (2020)"
+  },
+  {
+    "id": "vl-268",
+    "cat": "vat-ly",
+    "sub": "do-luong-don-vi",
+    "t": "Áp suất lốp xe ghi 2,2 bar là áp suất dư so với khí quyển, không phải áp suất tuyệt đối",
+    "s": "Áp suất tuyệt đối trong lốp thực ra khoảng 3,2 bar. Lốp non 20% làm tăng tiêu hao nhiên liệu khoảng 2% và rút ngắn tuổi thọ lốp tới 30%.",
+    "tags": [
+      "ap-suat",
+      "lop-xe",
+      "do-luong"
+    ],
+    "src": "Bộ Năng lượng Mỹ (DOE); ETRTO Standards Manual"
+  },
+  {
+    "id": "vl-269",
+    "cat": "vat-ly",
+    "sub": "do-luong-don-vi",
+    "t": "Một calo dinh dưỡng thật ra là một kilocalo, tức lớn gấp 1.000 lần calo trong vật lý",
+    "s": "Một calo vật lý là nhiệt lượng làm nóng 1 gam nước lên 1 độ; con số 2.000 'calo' trên nhãn thực phẩm nghĩa là 2.000 kilocalo, tức khoảng 8,4 triệu jun. Nhầm lẫn này tồn tại vì hai ngành dùng cùng một chữ.",
+    "tags": [
+      "calo",
+      "dinh-duong",
+      "don-vi"
+    ],
+    "src": "Codex Alimentarius; NIST Special Publication 811"
+  },
+  {
+    "id": "vl-270",
+    "cat": "vat-ly",
+    "sub": "do-luong-don-vi",
+    "t": "Số 0 tuyệt đối của thang Kelvin và thang Celsius chênh nhau đúng 273,15, và Kelvin không dùng chữ 'độ'",
+    "s": "Kelvin là thang tuyệt đối nên chênh lệch 1 K bằng đúng chênh lệch 1 °C. Fahrenheit và Celsius cắt nhau ở −40, con số duy nhất mà hai thang cho cùng một giá trị.",
+    "tags": [
+      "kelvin",
+      "celsius",
+      "thang-nhiet"
+    ],
+    "src": "BIPM, Brochure SI"
+  },
+  {
+    "id": "vl-271",
+    "cat": "vat-ly",
+    "sub": "anh-sang-song",
+    "t": "Gương phẳng không đảo trái phải — nó đảo trước sau, và bộ não bạn tự diễn dịch phần còn lại",
+    "s": "Nếu gương thật sự đảo trái phải thì chữ trên áo bạn cũng phải lộn ngược trên dưới. Thứ bị đảo là trục vuông góc với mặt gương; cảm giác đảo trái phải đến từ việc ta tưởng tượng mình xoay người 180 độ để đối diện ảnh.",
+    "tags": [
+      "guong",
+      "quang-hoc",
+      "tri-giac"
+    ],
+    "src": "Gardner, The Ambidextrous Universe; Feynman, Lectures on Physics"
+  },
+  {
+    "id": "vl-272",
+    "cat": "vat-ly",
+    "sub": "anh-sang-song",
+    "t": "Màu đen không phải một màu ánh sáng — nó là chỗ không có ánh sáng tới mắt",
+    "s": "Vật liệu đen nhất từng chế tạo, Vantablack và các lớp phủ ống nano carbon sau nó, hấp thụ trên 99,9% ánh sáng tới. Nhìn một vật phủ chất này, mắt mất hết manh mối về hình khối vì không còn bóng đổ.",
+    "tags": [
+      "mau-den",
+      "anh-sang",
+      "vat-lieu"
+    ],
+    "src": "Surrey NanoSystems; Cui và cộng sự, ACS Applied Materials (2019)"
+  },
+  {
+    "id": "vl-273",
+    "cat": "vat-ly",
+    "sub": "anh-sang-song",
+    "t": "Ánh sáng trắng của Mặt Trời chứa đủ mọi màu, và lăng kính không nhuộm màu mà chỉ tách chúng ra",
+    "s": "Newton chứng minh điều này bằng cách cho ánh sáng đã tách qua lăng kính thứ hai — nó không tách thêm được nữa — rồi ghép lại thành trắng bằng thấu kính. Trước đó người ta tin lăng kính tự tạo ra màu.",
+    "tags": [
+      "newton",
+      "lang-kinh",
+      "mau-sac"
+    ],
+    "src": "Newton, Opticks (1704)"
+  },
+  {
+    "id": "vl-274",
+    "cat": "vat-ly",
+    "sub": "anh-sang-song",
+    "t": "Kính râm phân cực cắt được chói vì ánh sáng phản xạ từ mặt phẳng bị phân cực gần như hoàn toàn",
+    "s": "Ở góc Brewster, khoảng 53 độ với mặt nước, ánh sáng phản xạ phân cực ngang hoàn toàn nên bộ lọc dọc chặn hết. Đó là lý do kính phân cực giúp nhìn xuyên mặt nước còn kính râm thường thì không.",
+    "tags": [
+      "phan-cuc",
+      "kinh-ram",
+      "brewster"
+    ],
+    "src": "Brewster (1815); Hecht, Optics"
+  },
+  {
+    "id": "vl-275",
+    "cat": "vat-ly",
+    "sub": "anh-sang-song",
+    "t": "Laser không phải tia sáng 'mạnh' mà là tia sáng cùng pha và cùng bước sóng",
+    "s": "Chính tính kết hợp đó cho phép chùm tia đi xa mà không loe rộng nhiều. Thí nghiệm phản xạ laser từ gương do Apollo đặt trên Mặt Trăng đo được khoảng cách Trái Đất – Mặt Trăng với sai số vài centimet.",
+    "tags": [
+      "laser",
+      "quang-hoc",
+      "mat-trang"
+    ],
+    "src": "Maiman (1960); NASA Lunar Laser Ranging"
+  },
+  {
+    "id": "vl-276",
+    "cat": "vat-ly",
+    "sub": "nhiet-va-nang-luong",
+    "t": "Kim loại sờ thấy lạnh hơn gỗ ở cùng nhiệt độ phòng vì nó dẫn nhiệt nhanh gấp hàng trăm lần",
+    "s": "Đồng dẫn nhiệt khoảng 400 W/m·K, gỗ khoảng 0,15 W/m·K. Da bạn không đo nhiệt độ mà đo tốc độ mất nhiệt, nên vật dẫn nhiệt tốt luôn cho cảm giác lạnh hơn.",
+    "tags": [
+      "dan-nhiet",
+      "cam-giac",
+      "vat-lieu"
+    ],
+    "src": "Sổ tay CRC Handbook"
+  },
+  {
+    "id": "vl-277",
+    "cat": "vat-ly",
+    "sub": "nhiet-va-nang-luong",
+    "t": "Bình giữ nhiệt hoạt động bằng cách chặn cả ba đường truyền nhiệt cùng lúc",
+    "s": "Lớp chân không giữa hai vách chặn dẫn nhiệt và đối lưu, lớp tráng bạc phản xạ bức xạ hồng ngoại, nắp kín chặn bốc hơi. Bỏ bất kỳ lớp nào thì hiệu quả giảm mạnh — đó là lý do bình móp mất chân không thì hết tác dụng.",
+    "tags": [
+      "binh-giu-nhiet",
+      "truyen-nhiet",
+      "chan-khong"
+    ],
+    "src": "Dewar (1892)"
+  },
+  {
+    "id": "vl-278",
+    "cat": "vat-ly",
+    "sub": "nhiet-va-nang-luong",
+    "t": "Quạt không làm phòng mát đi — nó chỉ làm bạn mát bằng cách tăng tốc bay hơi mồ hôi",
+    "s": "Động cơ quạt còn thải thêm nhiệt vào phòng. Vì vậy bật quạt trong phòng trống là lãng phí thuần tuý, còn với người trong phòng thì gió 1 m/s cho cảm giác mát tương đương hạ nhiệt độ khoảng 3 °C.",
+    "tags": [
+      "quat",
+      "bay-hoi",
+      "cam-giac-nhiet"
+    ],
+    "src": "ASHRAE Standard 55"
+  },
+  {
+    "id": "vl-279",
+    "cat": "vat-ly",
+    "sub": "nhiet-va-nang-luong",
+    "t": "Nước đá ở −18 °C trong tủ đông vẫn bốc hơi trực tiếp thành hơi, và đó là nguyên nhân thực phẩm bị cháy đông",
+    "s": "Thăng hoa xảy ra ngay dưới điểm nóng chảy nếu áp suất hơi thấp. Hơi nước thoát khỏi bề mặt thực phẩm rồi đọng lại thành tinh thể đá ở chỗ lạnh nhất trong tủ.",
+    "tags": [
+      "thang-hoa",
+      "tu-dong",
+      "bao-quan"
+    ],
+    "src": "USDA Food Safety and Inspection Service"
+  },
+  {
+    "id": "vl-280",
+    "cat": "vat-ly",
+    "sub": "nhiet-va-nang-luong",
+    "t": "Nhiệt độ cơ thể người và nhiệt độ phòng chênh nhau chỉ khoảng 12 độ, nhưng bạn vẫn thấy phòng 25 °C là dễ chịu",
+    "s": "Cơ thể sinh khoảng 100 watt nhiệt khi nghỉ và phải thải hết ra ngoài. Nếu môi trường ở đúng 37 °C thì việc thải nhiệt gần như dừng lại, và đó là lý do 37 °C ngoài trời gây nguy hiểm dù nó bằng đúng thân nhiệt.",
+    "tags": [
+      "than-nhiet",
+      "trao-doi-nhiet",
+      "moi-truong"
+    ],
+    "src": "ASHRAE Handbook of Fundamentals"
+  },
+  {
+    "id": "vl-282",
+    "cat": "vat-ly",
+    "sub": "luc-va-chuyen-dong",
+    "t": "Con kiến rơi từ toà nhà cao tầng không hề hấn gì vì lực cản không khí tỉ lệ với diện tích còn khối lượng tỉ lệ với thể tích",
+    "s": "Thu nhỏ vật đi 10 lần thì khối lượng giảm 1.000 lần trong khi diện tích chỉ giảm 100 lần, nên vận tốc rơi cuối giảm mạnh. Đây là lý do côn trùng nhỏ rơi an toàn còn voi thì không.",
+    "tags": [
+      "ti-le-kich-thuoc",
+      "luc-can",
+      "sinh-hoc"
+    ],
+    "src": "Haldane, On Being the Right Size (1926)"
+  },
+  {
+    "id": "vl-284",
+    "cat": "vat-ly",
+    "sub": "luc-va-chuyen-dong",
+    "t": "Dây an toàn cứu người bằng cách kéo dài thời gian giảm tốc, không bằng cách giữ chặt",
+    "s": "Lực bằng biến thiên động lượng chia cho thời gian, nên kéo dài va chạm từ 10 mili giây lên 100 mili giây làm lực giảm 10 lần. Vùng biến dạng của xe, túi khí và dây co giãn đều phục vụ đúng mục đích này.",
+    "tags": [
+      "day-an-toan",
+      "xung-luc",
+      "an-toan"
+    ],
+    "src": "Euro NCAP; NHTSA"
+  },
+  {
+    "id": "vl-285",
+    "cat": "vat-ly",
+    "sub": "luc-va-chuyen-dong",
+    "t": "Vòng đu quay và tàu lượn giữ người không rơi bằng lực hướng tâm, và ở đỉnh vòng lộn người thật sự bị ép vào ghế",
+    "s": "Ở tốc độ đủ lớn, gia tốc hướng tâm vượt gia tốc trọng trường nên ghế vẫn đẩy lên người. Tàu lượn hiện đại giới hạn gia tốc quanh 4–6 lần trọng trường vì trên mức đó máu dồn khỏi não gây ngất.",
+    "tags": [
+      "tau-luon",
+      "huong-tam",
+      "gia-toc"
+    ],
+    "src": "ASTM F2291 Standard Practice for Amusement Rides"
+  },
+  {
+    "id": "vl-286",
+    "cat": "vat-ly",
+    "sub": "dien-tu",
+    "t": "Sạc không dây truyền điện bằng cảm ứng từ, và hiệu suất mất khoảng 20–40% so với sạc dây",
+    "s": "Cuộn dây trong đế tạo từ trường biến thiên, cuộn trong máy biến nó lại thành dòng điện. Phần năng lượng mất đi thành nhiệt, và đó là lý do điện thoại nóng lên rõ khi sạc không dây.",
+    "tags": [
+      "sac-khong-day",
+      "cam-ung",
+      "hieu-suat"
+    ],
+    "src": "Chuẩn Qi của Wireless Power Consortium; nghiên cứu của OneZero/Đại học Purdue"
+  },
+  {
+    "id": "vl-287",
+    "cat": "vat-ly",
+    "sub": "dien-tu",
+    "t": "Đèn LED phát ánh sáng bằng chuyển mức năng lượng của electron, nên màu do vật liệu quyết định chứ không do lớp phủ",
+    "s": "Đèn LED xanh lam mãi tới đầu thập niên 1990 mới làm được và mở đường cho đèn LED trắng — công trình đoạt giải Nobel Vật lý 2014. Không có LED xanh lam thì không có màn hình và đèn chiếu sáng LED như hiện nay.",
+    "tags": [
+      "led",
+      "ban-dan",
+      "nobel"
+    ],
+    "src": "Giải Nobel Vật lý 2014 (Akasaki, Amano, Nakamura)"
+  },
+  {
+    "id": "vl-288",
+    "cat": "vat-ly",
+    "sub": "dien-tu",
+    "t": "Chuẩn Wi-Fi 2,4 GHz dùng đúng dải tần mà lò vi sóng phát ra, nên lò đang chạy làm nhiễu mạng",
+    "s": "Cả hai nằm trong băng tần ISM dành cho công nghiệp, khoa học và y tế. Lò vi sóng rò rỉ ở mức rất thấp nhưng vẫn đủ áp đảo tín hiệu Wi-Fi vốn chỉ khoảng 0,1 watt.",
+    "tags": [
+      "wifi",
+      "nhieu",
+      "tan-so"
+    ],
+    "src": "IEEE 802.11; quy định băng tần ISM của ITU"
+  },
+  {
+    "id": "vl-289",
+    "cat": "vat-ly",
+    "sub": "hat-va-luong-tu",
+    "t": "Hiệu ứng đường hầm lượng tử cho phép hạt vượt qua rào năng lượng mà theo cơ học cổ điển nó không thể vượt",
+    "s": "Mặt Trời cháy được nhờ hiệu ứng này: nhiệt độ lõi 15 triệu độ vẫn chưa đủ để hai proton thắng lực đẩy điện, nhưng xác suất chui hầm khác không. Bộ nhớ flash cũng ghi và xoá dữ liệu bằng cơ chế đó.",
+    "tags": [
+      "duong-ham",
+      "luong-tu",
+      "mat-troi"
+    ],
+    "src": "Gamow (1928); Bảng dữ liệu SOHO/NASA"
+  },
+  {
+    "id": "vl-290",
+    "cat": "vat-ly",
+    "sub": "hat-va-luong-tu",
+    "t": "Siêu dẫn làm điện trở về đúng 0, và vật liệu tốt nhất hiện nay vẫn cần lạnh dưới −135 °C",
+    "s": "Ở trạng thái siêu dẫn, dòng điện chạy vòng trong cuộn kín có thể duy trì nhiều năm không suy giảm. Nam châm siêu dẫn là thứ làm nên máy chụp cộng hưởng từ và máy gia tốc hạt lớn LHC.",
+    "tags": [
+      "sieu-dan",
+      "dien-tro",
+      "mri"
+    ],
+    "src": "Onnes (1911); Bednorz & Müller (1986)"
+  },
+  {
+    "id": "vl-301",
+    "cat": "vat-ly",
+    "sub": "anh-sang-song",
+    "t": "Ánh sáng đẩy vật thể, và buồm mặt trời dùng đúng lực đó để bay",
+    "s": "Photon không có khối lượng nghỉ nhưng có động lượng. Tàu IKAROS của Nhật năm 2010 là tàu đầu tiên bay liên hành tinh chỉ bằng áp suất bức xạ.",
+    "tags": [
+      "buom-mat-troi",
+      "photon",
+      "dong-luong"
+    ],
+    "src": "JAXA IKAROS Mission (2010); Maxwell (1873)"
+  },
+  {
+    "id": "vl-302",
+    "cat": "vat-ly",
+    "sub": "anh-sang-song",
+    "t": "Kính một chiều không tồn tại — thứ tạo hiệu ứng đó là chênh lệch độ sáng hai bên",
+    "s": "Lớp phủ phản xạ khoảng 70% ánh sáng và cho 30% đi qua theo cả hai hướng. Bật đèn ở phòng tối là hiệu ứng biến mất ngay lập tức.",
+    "tags": [
+      "guong-mot-chieu",
+      "quang-hoc",
+      "hieu-lam"
+    ],
+    "src": "Hecht, Optics; hướng dẫn kỹ thuật của các hãng kính an ninh"
+  },
+  {
+    "id": "vl-303",
+    "cat": "vat-ly",
+    "sub": "anh-sang-song",
+    "t": "Ảo ảnh trên đường nhựa nóng là ảnh phản chiếu của bầu trời do lớp khí nóng sát mặt đường",
+    "s": "Không khí nóng có chiết suất thấp hơn nên tia sáng bị bẻ cong lên. Cùng cơ chế tạo ra ảo ảnh ốc đảo trong sa mạc.",
+    "tags": [
+      "ao-anh",
+      "khuc-xa",
+      "khong-khi"
+    ],
+    "src": "Minnaert, Light and Colour in the Outdoors"
+  },
+  {
+    "id": "vl-304",
+    "cat": "vat-ly",
+    "sub": "anh-sang-song",
+    "t": "Tiếng vang nghe được khi vật phản âm cách bạn hơn khoảng 17 mét",
+    "s": "Dưới khoảng cách đó, âm phản về trong chưa tới 0,1 giây và tai gộp nó với âm gốc. Ngưỡng 0,1 giây gọi là hiệu ứng tiền lệ.",
+    "tags": [
+      "tieng-vang",
+      "am-hoc",
+      "thinh-giac"
+    ],
+    "src": "Haas (1951); Rossing, The Science of Sound"
+  },
+  {
+    "id": "vl-305",
+    "cat": "vat-ly",
+    "sub": "anh-sang-song",
+    "t": "Hai loa phát cùng một nốt có thể tạo ra những điểm hoàn toàn im lặng trong phòng",
+    "s": "Giao thoa triệt tiêu xảy ra ở nơi hai sóng lệch pha nửa bước sóng. Đây là lý do di chuyển vài chục centimet trong phòng làm âm trầm mạnh yếu khác hẳn.",
+    "tags": [
+      "giao-thoa",
+      "am-hoc",
+      "phong"
+    ],
+    "src": "Everest, Master Handbook of Acoustics"
+  },
+  {
+    "id": "vl-306",
+    "cat": "vat-ly",
+    "sub": "nhiet-va-nang-luong",
+    "t": "Cùng một lượng nhiệt, làm nóng 1 kg nước lên 1 độ tốn năng lượng gấp gần 10 lần làm nóng 1 kg sắt",
+    "s": "Nhiệt dung riêng của sắt là 0,45 J/g·K so với 4,18 của nước. Đây là lý do chảo gang nóng rất nhanh còn nồi nước thì lâu.",
+    "tags": [
+      "nhiet-dung",
+      "nau-an",
+      "vat-lieu"
+    ],
+    "src": "Sổ tay CRC Handbook"
+  },
+  {
+    "id": "vl-307",
+    "cat": "vat-ly",
+    "sub": "nhiet-va-nang-luong",
+    "t": "Cơ thể bạn toả ra khoảng 100 watt khi nghỉ, tương đương một bóng đèn sợi đốt cũ",
+    "s": "Một phòng họp 20 người nhận thêm khoảng 2 kW nhiệt chỉ từ người. Hệ thống điều hoà toà nhà phải tính riêng phần tải này.",
+    "tags": [
+      "than-nhiet",
+      "nang-luong",
+      "dieu-hoa"
+    ],
+    "src": "ASHRAE Handbook of Fundamentals"
+  },
+  {
+    "id": "vl-308",
+    "cat": "vat-ly",
+    "sub": "nhiet-va-nang-luong",
+    "t": "Nước nóng đóng băng thành đá trong suốt hơn nước lạnh vì nó ít khí hoà tan hơn",
+    "s": "Đun sôi rồi để nguội trước khi làm đá loại bỏ phần lớn khí. Bọt khí bị kẹt lại chính là thứ làm viên đá trắng đục ở giữa.",
+    "tags": [
+      "da",
+      "khi-hoa-tan",
+      "nau-an"
+    ],
+    "src": "McGee, On Food and Cooking"
+  },
+  {
+    "id": "vl-309",
+    "cat": "vat-ly",
+    "sub": "nhiet-va-nang-luong",
+    "t": "Máy sấy tóc và ấm siêu tốc tiêu thụ nhiều điện hơn tủ lạnh, nhưng tủ lạnh vẫn tốn tiền điện hơn",
+    "s": "Công suất tức thời khác tổng năng lượng tiêu thụ. Ấm 2.000 W dùng 3 phút hết 0,1 kWh, còn tủ lạnh 100 W chạy cả ngày hết khoảng 1 kWh.",
+    "tags": [
+      "cong-suat",
+      "nang-luong",
+      "dien"
+    ],
+    "src": "US Department of Energy, Energy Saver"
+  },
+  {
+    "id": "vl-310",
+    "cat": "vat-ly",
+    "sub": "nhiet-va-nang-luong",
+    "t": "Bơm nhiệt cung cấp nhiều nhiệt hơn lượng điện nó tiêu thụ, và điều đó không vi phạm định luật nào",
+    "s": "Nó không tạo ra nhiệt mà bơm nhiệt từ ngoài vào; hệ số hiệu quả thường 3–5. Nghĩa là 1 kWh điện chuyển được 3–5 kWh nhiệt vào nhà.",
+    "tags": [
+      "bom-nhiet",
+      "hieu-suat",
+      "suoi"
+    ],
+    "src": "IEA, The Future of Heat Pumps (2022)"
+  },
+  {
+    "id": "vl-312",
+    "cat": "vat-ly",
+    "sub": "luc-va-chuyen-dong",
+    "t": "Con lắc Foucault chứng minh Trái Đất quay mà không cần nhìn lên trời",
+    "s": "Mặt phẳng dao động của con lắc giữ nguyên trong không gian trong khi sàn nhà quay bên dưới. Ở Paris năm 1851, con lắc dài 67 mét quay hết một vòng biểu kiến trong khoảng 32 giờ.",
+    "tags": [
+      "foucault",
+      "trai-dat",
+      "con-lac"
+    ],
+    "src": "Foucault (1851); Panthéon Paris"
+  },
+  {
+    "id": "vl-313",
+    "cat": "vat-ly",
+    "sub": "luc-va-chuyen-dong",
+    "t": "Vệ tinh không rơi vì nó đang rơi mãi mà luôn trượt qua Trái Đất",
+    "s": "Ở độ cao 400 km, tốc độ ngang cần thiết là khoảng 7,7 km/s. Newton đã mô tả ý tưởng này bằng thí nghiệm tưởng tượng bắn đại bác từ đỉnh núi rất cao.",
+    "tags": [
+      "quy-dao",
+      "newton",
+      "ve-tinh"
+    ],
+    "src": "Newton, Principia (1687); NASA"
+  },
+  {
+    "id": "vl-314",
+    "cat": "vat-ly",
+    "sub": "luc-va-chuyen-dong",
+    "t": "Vận tốc thoát khỏi Trái Đất là 11,2 km/s, và nó không phụ thuộc khối lượng vật thể",
+    "s": "Một hạt bụi và một tàu vũ trụ đều cần cùng tốc độ đó. Với Mặt Trăng con số chỉ là 2,4 km/s, và đó là lý do phóng từ Mặt Trăng rẻ hơn nhiều.",
+    "tags": [
+      "van-toc-thoat",
+      "hap-dan",
+      "vu-tru"
+    ],
+    "src": "NASA Planetary Fact Sheet"
+  },
+  {
+    "id": "vl-315",
+    "cat": "vat-ly",
+    "sub": "luc-va-chuyen-dong",
+    "t": "Một vật rơi trong không khí đạt vận tốc tối đa rồi không nhanh thêm nữa",
+    "s": "Người nhảy dù ở tư thế nằm ngang đạt khoảng 195 km/h, ở tư thế lao đầu xuống thì hơn 300 km/h. Vận tốc rơi cuối phụ thuộc diện tích cản và khối lượng.",
+    "tags": [
+      "roi-tu-do",
+      "luc-can",
+      "nhay-du"
+    ],
+    "src": "US Parachute Association; Cengel & Cimbala, Fluid Mechanics"
+  },
+  {
+    "id": "vl-316",
+    "cat": "vat-ly",
+    "sub": "dien-tu",
+    "t": "Lồng kim loại của ô tô bảo vệ bạn khi bị sét đánh, không phải lốp cao su",
+    "s": "Lốp dày vài centimet không cản nổi điện áp hàng chục triệu vôn vừa phóng qua vài km không khí. Dòng chạy trên vỏ xe và xuống đất — đó là lồng Faraday.",
+    "tags": [
+      "set",
+      "o-to",
+      "faraday"
+    ],
+    "src": "NOAA National Weather Service"
+  },
+  {
+    "id": "vl-317",
+    "cat": "vat-ly",
+    "sub": "dien-tu",
+    "t": "Cầu chì và aptomat bảo vệ dây điện chứ không bảo vệ thiết bị của bạn",
+    "s": "Chúng ngắt khi dòng vượt ngưỡng an toàn của dây, ngăn dây nóng chảy và gây cháy. Muốn bảo vệ thiết bị khỏi xung điện thì cần thiết bị chống sét lan truyền riêng.",
+    "tags": [
+      "cau-chi",
+      "an-toan",
+      "dien"
+    ],
+    "src": "IEC 60898; NFPA 70 National Electrical Code"
+  },
+  {
+    "id": "vl-318",
+    "cat": "vat-ly",
+    "sub": "dien-tu",
+    "t": "Dây nối đất không mang dòng khi mọi thứ bình thường — nó chỉ có việc khi có sự cố",
+    "s": "Nó tạo đường dẫn trở kháng thấp để dòng rò chạy về nguồn và làm aptomat ngắt. Ổ cắm hai chấu không có đường thoát đó nên vỏ thiết bị có thể mang điện.",
+    "tags": [
+      "noi-dat",
+      "an-toan",
+      "dien"
+    ],
+    "src": "IEC 60364; TCVN 9385:2012"
+  },
+  {
+    "id": "vl-319",
+    "cat": "vat-ly",
+    "sub": "dien-tu",
+    "t": "Sạc điện thoại cắm không tải vẫn tiêu thụ điện, nhưng lượng đó rất nhỏ",
+    "s": "Sạc hiện đại tiêu thụ khoảng 0,02–0,1 watt khi không tải, tức khoảng 0,2–0,9 kWh mỗi năm. Các thiết bị chờ lớn như tivi và bộ giải mã mới là phần đáng kể của điện năng ma.",
+    "tags": [
+      "dien-nang-ma",
+      "cho",
+      "tieu-thu"
+    ],
+    "src": "IEA, More Data, Less Energy; US DOE"
+  },
+  {
+    "id": "vl-320",
+    "cat": "vat-ly",
+    "sub": "dien-tu",
+    "t": "Nam châm không hút được nhôm hay đồng, nhưng nó vẫn tương tác với chúng khi chuyển động",
+    "s": "Thả nam châm rơi qua ống đồng, nó rơi rất chậm vì dòng điện xoáy sinh ra từ trường chống lại chuyển động. Nguyên lý này là cơ sở của phanh điện từ trên tàu cao tốc.",
+    "tags": [
+      "dong-xoay",
+      "phanh",
+      "nam-cham"
+    ],
+    "src": "Định luật Lenz; Griffiths, Introduction to Electrodynamics"
+  },
+  {
+    "id": "vl-321",
+    "cat": "vat-ly",
+    "sub": "hat-va-luong-tu",
+    "t": "Vật chất cũng có tính sóng, và người ta đã cho cả phân tử hàng nghìn nguyên tử giao thoa",
+    "s": "Bước sóng de Broglie tỉ lệ nghịch với động lượng, nên vật lớn có bước sóng nhỏ tới mức không quan sát được. Kỷ lục hiện nay là phân tử nặng hơn 25.000 đơn vị khối lượng nguyên tử.",
+    "tags": [
+      "de-broglie",
+      "giao-thoa",
+      "luong-tu"
+    ],
+    "src": "de Broglie (1924); Fein và cộng sự, Nature Physics (2019)"
+  },
+  {
+    "id": "vl-322",
+    "cat": "vat-ly",
+    "sub": "hat-va-luong-tu",
+    "t": "Hai hạt rối lượng tử cho kết quả đo tương quan với nhau, nhưng điều đó không truyền được thông tin nhanh hơn ánh sáng",
+    "s": "Kết quả mỗi phía vẫn hoàn toàn ngẫu nhiên; chỉ khi so hai bản ghi mới thấy tương quan. Việc so đó phải dùng kênh liên lạc thường.",
+    "tags": [
+      "roi-luong-tu",
+      "thong-tin",
+      "gioi-han"
+    ],
+    "src": "Giải Nobel Vật lý 2022; Nielsen & Chuang, Quantum Computation"
+  },
+  {
+    "id": "vl-323",
+    "cat": "vat-ly",
+    "sub": "hat-va-luong-tu",
+    "t": "Chân không lượng tử không rỗng — các cặp hạt liên tục sinh ra và huỷ đi trong đó",
+    "s": "Hiệu ứng Casimir đo được lực hút giữa hai tấm kim loại đặt rất gần nhau do chênh lệch dao động chân không. Lực này đã được đo trực tiếp với sai số dưới 5%.",
+    "tags": [
+      "chan-khong",
+      "casimir",
+      "luong-tu"
+    ],
+    "src": "Lamoreaux, Physical Review Letters (1997)"
+  },
+  {
+    "id": "vl-324",
+    "cat": "vat-ly",
+    "sub": "hat-va-luong-tu",
+    "t": "Bức xạ ion hoá nguy hiểm không phải vì nhiệt mà vì mỗi photon đủ mạnh để bẻ gãy phân tử ADN",
+    "s": "Liều gây chết khoảng 5 sievert tương đương năng lượng chỉ đủ làm cơ thể ấm lên vài phần nghìn độ. Sức tàn phá nằm ở chỗ nó phá đúng chỗ, không ở tổng năng lượng.",
+    "tags": [
+      "buc-xa",
+      "adn",
+      "ion-hoa"
+    ],
+    "src": "ICRP Publication 103; Hall & Giaccia, Radiobiology for the Radiologist"
+  },
+  {
+    "id": "vl-326",
+    "cat": "vat-ly",
+    "sub": "tuong-doi",
+    "t": "Khối lượng của một hạt nhân nhỏ hơn tổng khối lượng các hạt tạo nên nó",
+    "s": "Phần thiếu chính là năng lượng liên kết, theo hệ thức E = mc². Đây là nguồn năng lượng của cả phản ứng phân hạch lẫn tổng hợp.",
+    "tags": [
+      "hut-khoi-luong",
+      "hat-nhan",
+      "nang-luong"
+    ],
+    "src": "Bảng dữ liệu hạt nhân NNDC; Krane, Introductory Nuclear Physics"
+  },
+  {
+    "id": "vl-327",
+    "cat": "vat-ly",
+    "sub": "tuong-doi",
+    "t": "Lỗ đen không phải một vật thể đặc mà là một vùng không gian, và ranh giới của nó không có gì đặc biệt tại chỗ",
+    "s": "Chân trời sự kiện chỉ là nơi mà tốc độ thoát vượt tốc độ ánh sáng. Người rơi qua nó không cảm thấy điều gì bất thường ngay tại thời điểm đó nếu lỗ đen đủ lớn.",
+    "tags": [
+      "lo-den",
+      "chan-troi",
+      "tuong-doi"
+    ],
+    "src": "Misner, Thorne & Wheeler, Gravitation"
+  },
+  {
+    "id": "vl-328",
+    "cat": "vat-ly",
+    "sub": "tuong-doi",
+    "t": "Trọng lực và gia tốc không phân biệt được từ bên trong một buồng kín",
+    "s": "Nguyên lý tương đương này là điểm khởi đầu của thuyết tương đối rộng. Nó cũng suy ra rằng ánh sáng phải bị bẻ cong trong trường hấp dẫn, điều được xác nhận trong nhật thực năm 1919.",
+    "tags": [
+      "nguyen-ly-tuong-duong",
+      "einstein",
+      "1919"
+    ],
+    "src": "Einstein (1907); Dyson, Eddington & Davidson (1920)"
+  },
+  {
+    "id": "vl-329",
+    "cat": "vat-ly",
+    "sub": "chat-long-khi",
+    "t": "Áp suất trong chất lỏng phụ thuộc chiều sâu chứ không phụ thuộc hình dạng bình",
+    "s": "Một ống mảnh cao 10 mét tạo áp suất đáy bằng đúng một hồ sâu 10 mét. Nghịch lý thuỷ tĩnh này từng gây tranh cãi trước khi Pascal chứng minh bằng thí nghiệm thùng nước.",
+    "tags": [
+      "ap-suat",
+      "pascal",
+      "thuy-tinh"
+    ],
+    "src": "Pascal (1648); Cengel & Cimbala, Fluid Mechanics"
+  },
+  {
+    "id": "vl-330",
+    "cat": "vat-ly",
+    "sub": "chat-long-khi",
+    "t": "Máy bay bay ở độ cao 10 km vì không khí loãng làm lực cản giảm khoảng 3 lần",
+    "s": "Đổi lại, động cơ cần khí nén nhiều hơn và khoang phải tăng áp. Điểm cân bằng giữa hai yếu tố này rơi vào khoảng 10–12 km cho máy bay phản lực thương mại.",
+    "tags": [
+      "hang-khong",
+      "luc-can",
+      "do-cao"
+    ],
+    "src": "Anderson, Introduction to Flight"
+  },
+  {
+    "id": "vl-331",
+    "cat": "vat-ly",
+    "sub": "chat-long-khi",
+    "t": "Bóng bay heli bay lên vì không khí xung quanh nặng hơn, không vì heli 'muốn' bay",
+    "s": "Lực đẩy Archimedes áp dụng cho chất khí y như cho chất lỏng. Trong một thang máy đang tăng tốc lên, bóng bay heli nghiêng về phía trước chứ không ngả ra sau như quả bóng thường.",
+    "tags": [
+      "archimedes",
+      "heli",
+      "khi"
+    ],
+    "src": "Halliday, Resnick & Walker, Fundamentals of Physics"
+  },
+  {
+    "id": "vl-332",
+    "cat": "vat-ly",
+    "sub": "chat-long-khi",
+    "t": "Đá khô không tan chảy mà thăng hoa thẳng từ rắn sang khí ở −78,5 độ",
+    "s": "Ở áp suất khí quyển, CO₂ không có pha lỏng. Muốn có CO₂ lỏng phải nén trên 5,1 atm — đó là lý do bình chữa cháy CO₂ phải chịu áp lực cao.",
+    "tags": [
+      "da-kho",
+      "thang-hoa",
+      "co2"
+    ],
+    "src": "Sổ tay CRC Handbook"
+  },
+  {
+    "id": "vl-333",
+    "cat": "vat-ly",
+    "sub": "do-luong-don-vi",
+    "t": "Mọi phép đo đều có sai số, và một con số không kèm sai số thì chưa phải một kết quả đo",
+    "s": "Chuẩn quốc tế yêu cầu công bố độ không đảm bảo đo cùng với giá trị. Đây là khác biệt căn bản giữa số liệu khoa học và số liệu quảng cáo.",
+    "tags": [
+      "sai-so",
+      "do-luong",
+      "chuan"
+    ],
+    "src": "JCGM 100:2008 (GUM); BIPM"
+  },
+  {
+    "id": "vl-334",
+    "cat": "vat-ly",
+    "sub": "do-luong-don-vi",
+    "t": "Chữ số có nghĩa cho biết bạn thật sự biết gì, và viết thêm chữ số là nói dối về độ chính xác",
+    "s": "Đo bằng thước chia milimet rồi ghi kết quả tới micromet là bịa thông tin. Đây là lỗi phổ biến khi chuyển đổi đơn vị bằng máy tính.",
+    "tags": [
+      "chu-so-co-nghia",
+      "do-luong",
+      "sai-so"
+    ],
+    "src": "NIST Special Publication 811"
+  },
+  {
+    "id": "vl-335",
+    "cat": "vat-ly",
+    "sub": "do-luong-don-vi",
+    "t": "Tàu Mars Climate Orbiter mất năm 1999 vì một nhóm dùng đơn vị Anh còn nhóm kia dùng hệ mét",
+    "s": "Lỗi 4,45 lần trong tính lực đẩy khiến tàu bay quá sát Sao Hoả và bị phá huỷ. Thiệt hại khoảng 125 triệu đô cho một lỗi chuyển đổi đơn vị.",
+    "tags": [
+      "don-vi",
+      "nasa",
+      "su-co"
+    ],
+    "src": "NASA Mars Climate Orbiter Mishap Investigation Board (1999)"
+  },
+  {
+    "id": "vl-337",
+    "cat": "vat-ly",
+    "sub": "do-luong-don-vi",
+    "t": "Chỉ số AQI không phải nồng độ bụi — nó là một thang quy đổi khác nhau giữa các nước",
+    "s": "Cùng một nồng độ PM2.5 cho ra chỉ số AQI khác nhau ở Mỹ, châu Âu và Việt Nam vì công thức và ngưỡng khác nhau. So sánh AQI giữa hai ứng dụng thường là so hai thang khác nhau.",
+    "tags": [
+      "aqi",
+      "o-nhiem",
+      "do-luong"
+    ],
+    "src": "US EPA Technical Assistance Document for AQI; QCVN 05:2023/BTNMT"
+  },
+  {
+    "id": "vl-338",
+    "cat": "vat-ly",
+    "sub": "do-luong-don-vi",
+    "t": "Nhiệt độ cảm nhận và nhiệt độ đo được là hai đại lượng khác nhau, và cả hai đều có công thức riêng",
+    "s": "Chỉ số nhiệt kết hợp nhiệt độ với độ ẩm; chỉ số gió lạnh kết hợp nhiệt độ với tốc độ gió. Cùng 35 độ, độ ẩm 40% và 80% cho cảm nhận chênh nhau hơn 10 độ.",
+    "tags": [
+      "chi-so-nhiet",
+      "do-am",
+      "thoi-tiet"
+    ],
+    "src": "NOAA National Weather Service Heat Index"
+  },
+  {
+    "id": "vl-339",
+    "cat": "vat-ly",
+    "sub": "anh-sang-song",
+    "t": "Màn hình của bạn chỉ có ba màu, và mọi màu khác là ảo giác do não trộn lại",
+    "s": "Điểm ảnh chỉ phát đỏ, lục và lam ở các cường độ khác nhau. Vàng trên màn hình không chứa bước sóng vàng nào — nó là đỏ cộng lục kích thích thụ thể giống như ánh sáng vàng thật.",
+    "tags": [
+      "man-hinh",
+      "rgb",
+      "thi-giac"
+    ],
+    "src": "Fairchild, Color Appearance Models; CIE 1931"
+  },
+  {
+    "id": "vl-340",
+    "cat": "vat-ly",
+    "sub": "anh-sang-song",
+    "t": "Ánh sáng đi qua nước rồi ra không khí bị bẻ cong, và đó là lý do cây gậy nhúng nước trông gãy khúc",
+    "s": "Chiết suất nước là 1,33 nên góc khúc xạ khác góc tới. Cùng hiệu ứng làm bể bơi trông nông hơn thực tế khoảng 25%.",
+    "tags": [
+      "khuc-xa",
+      "nuoc",
+      "quang-hoc"
+    ],
+    "src": "Định luật Snell; Hecht, Optics"
+  },
+  {
+    "id": "vl-341",
+    "cat": "vat-ly",
+    "sub": "luc-va-chuyen-dong",
+    "t": "Một quả bóng xoáy bay cong trong không khí vì nó kéo theo lớp khí quanh mình",
+    "s": "Hiệu ứng Magnus tạo chênh lệch áp suất giữa hai phía quả bóng. Cú sút xoáy trong bóng đá và cú bóng bàn cắt đều dựa vào đúng cơ chế này.",
+    "tags": [
+      "magnus",
+      "the-thao",
+      "khi-dong"
+    ],
+    "src": "Magnus (1852); Mehta, Annual Review of Fluid Mechanics (1985)"
+  },
+  {
+    "id": "vl-342",
+    "cat": "vat-ly",
+    "sub": "nhiet-va-nang-luong",
+    "t": "Kim loại nở ra khi nóng lên, và cầu thép dài 1 km giãn khoảng 30 cm giữa mùa đông và mùa hè",
+    "s": "Hệ số giãn nở của thép khoảng 12 phần triệu mỗi độ. Đây là lý do cầu và đường ray phải có khe co giãn.",
+    "tags": [
+      "gian-no-nhiet",
+      "cau",
+      "ky-thuat"
+    ],
+    "src": "Sổ tay CRC Handbook; AASHTO Bridge Design Specifications"
+  },
+  {
+    "id": "vl-343",
+    "cat": "vat-ly",
+    "sub": "dien-tu",
+    "t": "Ánh sáng đèn LED nhấp nháy rất nhanh, và với một số đèn rẻ tiền tần số đó đủ thấp để gây mỏi mắt",
+    "s": "Đèn dùng mạch điều khiển đơn giản nhấp nháy ở 100–120 Hz với biên độ lớn. Chuẩn khuyến nghị hiện nay đặt ngưỡng an toàn ở trên 1.250 Hz hoặc biên độ nhấp nháy rất thấp.",
+    "tags": [
+      "led",
+      "nhap-nhay",
+      "suc-khoe"
+    ],
+    "src": "IEEE 1789-2015"
+  },
+  {
+    "id": "vl-344",
+    "cat": "vat-ly",
+    "sub": "hat-va-luong-tu",
+    "t": "Nguyên tử không thể bị 'nhìn thấy' bằng ánh sáng thường vì nó nhỏ hơn bước sóng khả kiến",
+    "s": "Kính hiển vi quét chui hầm không nhìn mà 'sờ' bằng dòng điện chui hầm giữa mũi dò và bề mặt. Ảnh nguyên tử bạn thấy là bản đồ mật độ electron, không phải ảnh quang học.",
+    "tags": [
+      "kinh-hien-vi",
+      "nguyen-tu",
+      "chui-ham"
+    ],
+    "src": "Binnig & Rohrer, Giải Nobel Vật lý 1986"
+  },
+  {
+    "id": "vl-345",
+    "cat": "vat-ly",
+    "sub": "tuong-doi",
+    "t": "Ánh sáng bị bẻ cong khi đi gần vật thể nặng, và hiện tượng đó được dùng làm kính thiên văn tự nhiên",
+    "s": "Thấu kính hấp dẫn cho phép quan sát các thiên hà mờ hơn nhiều so với khả năng của kính. Cùng một thiên thể có thể xuất hiện nhiều lần trong một bức ảnh.",
+    "tags": [
+      "thau-kinh-hap-dan",
+      "tuong-doi",
+      "quan-sat"
+    ],
+    "src": "Einstein (1936); NASA Hubble Space Telescope"
+  }
+]

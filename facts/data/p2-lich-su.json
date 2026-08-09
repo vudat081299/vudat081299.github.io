@@ -156,32 +156,6 @@
     "src": "Johnson & Mueller, Bulletin of the History of Medicine (2002)"
   },
   {
-    "id": "ls-116",
-    "cat": "lich-su",
-    "sub": "chien-tranh",
-    "t": "Một sĩ quan Liên Xô có thể đã ngăn chiến tranh hạt nhân năm 1983",
-    "s": "Hệ thống cảnh báo sớm báo có tên lửa Mỹ đang bay tới; Stanislav Petrov đánh giá đó là lỗi hệ thống và không báo cáo lên trên. Ông đúng — nguyên nhân là ánh sáng mặt trời phản chiếu trên mây bị vệ tinh nhận diện nhầm.",
-    "tags": [
-      "hat-nhan",
-      "chien-tranh-lanh",
-      "quyet-dinh"
-    ],
-    "src": "Hồ sơ và phỏng vấn về sự kiện ngày 26 tháng 9 năm 1983"
-  },
-  {
-    "id": "ls-117",
-    "cat": "lich-su",
-    "sub": "chien-tranh",
-    "t": "Khủng hoảng tên lửa Cuba suýt nổ vì một tàu ngầm mất liên lạc",
-    "s": "Tàu ngầm Liên Xô B-59 bị thả bom chìm cảnh cáo, mất liên lạc với Moskva và tưởng chiến tranh đã bắt đầu. Việc phóng ngư lôi hạt nhân cần ba sĩ quan đồng ý; Vasili Arkhipov là người duy nhất phản đối và ngăn được quyết định đó.",
-    "tags": [
-      "hat-nhan",
-      "chien-tranh-lanh",
-      "quyet-dinh"
-    ],
-    "src": "Tài liệu giải mật về khủng hoảng tên lửa Cuba; National Security Archive"
-  },
-  {
     "id": "ls-118",
     "cat": "lich-su",
     "sub": "chien-tranh",
@@ -219,19 +193,6 @@
       "danh-doi"
     ],
     "src": "Evenson & Gollin, Science (2003); Nobel Hoà bình 1970"
-  },
-  {
-    "id": "ls-121",
-    "cat": "lich-su",
-    "sub": "can-hien-dai",
-    "t": "Cuộc cá cược nổi tiếng giữa một nhà sinh thái và một nhà kinh tế đã kết thúc bằng phần thắng cho phía lạc quan",
-    "s": "Paul Ehrlich dự đoán giá năm kim loại sẽ tăng do khan hiếm; Julian Simon cược ngược lại. Sau mười năm, giá cả năm loại đều giảm. Bài học không phải là tài nguyên vô hạn, mà là con người phản ứng với giá bằng thay thế và đổi mới.",
-    "tags": [
-      "tai-nguyen",
-      "du-bao",
-      "kinh-te"
-    ],
-    "src": "Cuộc cược Simon–Ehrlich (1980–1990); Sabin, The Bet (2013)"
   },
   {
     "id": "ls-122",
@@ -544,18 +505,5 @@
       "lich-su"
     ],
     "src": "Thư từ của Lady Mary Wortley Montagu (1717); lịch sử variolation"
-  },
-  {
-    "id": "ls-148",
-    "cat": "lich-su",
-    "sub": "co-dai",
-    "t": "Chúng ta biết về nhiều nền văn minh cổ nhờ những thứ họ không định lưu lại",
-    "s": "Rác thải, hoá đơn, danh sách hàng tồn và bài tập của học trò cung cấp nhiều thông tin hơn bia đá ca ngợi vua. Các văn bản chính thức mô tả điều người cầm quyền muốn hậu thế tin; bảng đất sét ghi nợ mô tả điều thật sự xảy ra.",
-    "tags": [
-      "khao-co",
-      "phuong-phap",
-      "nguon"
-    ],
-    "src": "Phương pháp khảo cổ học và văn bản học cổ đại; nghiên cứu bảng đất sét Lưỡng Hà"
   }
 ]

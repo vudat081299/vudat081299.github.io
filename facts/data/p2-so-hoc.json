@@ -187,7 +187,7 @@
     "id": "sh-122",
     "cat": "so-hoc",
     "sub": "nghich-ly-xac-suat",
-    "t": "Nghịch lý Berkson: chọn mẫu theo một điều kiện tạo ra tương quan giả",
+    "t": "Nghịch lý Berkson: lọc mẫu theo 'đạt ít nhất 1 trong 2 tiêu chí' tạo ra tương quan âm giả giữa đúng 2 tiêu chí đó",
     "s": "Trong bệnh viện, hai bệnh không liên quan lại có vẻ tương quan âm, vì phải mắc ít nhất một trong hai mới nhập viện. Trong đời thường: 'người đẹp thì thường kém tử tế' có thể chỉ là hệ quả của việc bạn chỉ hẹn hò với người đạt ít nhất một trong hai tiêu chí.",
     "tags": [
       "thien-lech",
@@ -236,19 +236,6 @@
     "src": "Laupacis, Sackett & Roberts, New England Journal of Medicine (1988)"
   },
   {
-    "id": "sh-126",
-    "cat": "so-hoc",
-    "sub": "so-lieu-lua",
-    "t": "Rủi ro tuyệt đối là con số duy nhất đáng để bạn ra quyết định",
-    "s": "'Ăn thịt chế biến làm tăng 18% nguy cơ ung thư đại trực tràng' nghe đáng sợ; con số tuyệt đối là từ khoảng 6% lên khoảng 7% trong cả đời. Cả hai đều đúng. Bên nào muốn bạn hành động sẽ chọn cách trình bày tương đối.",
-    "tags": [
-      "rui-ro",
-      "doc-so",
-      "y-te"
-    ],
-    "src": "Đánh giá của IARC/WHO về thịt chế biến (2015); Gigerenzer, Reckoning with Risk (2002)"
-  },
-  {
     "id": "sh-127",
     "cat": "so-hoc",
     "sub": "xac-suat-co-dieu-kien",
@@ -273,19 +260,6 @@
       "sang-loc"
     ],
     "src": "Nghịch lý dương tính giả; Gigerenzer, Calculated Risks (2002)"
-  },
-  {
-    "id": "sh-129",
-    "cat": "so-hoc",
-    "sub": "trung-binh-phan-bo",
-    "t": "Khi bạn lo trường hợp xấu, con số phải xem là phân vị 95 chứ không phải trung bình",
-    "s": "Thu nhập trung bình, thời gian giao hàng trung bình, độ trễ trung bình — cả ba đều vô dụng nếu bạn quan tâm tới trường hợp xấu. Ngành vận hành hệ thống dùng phân vị 95 và 99 thay vì trung bình, vì trải nghiệm tệ nhất mới là thứ khách hàng nhớ.",
-    "tags": [
-      "trung-binh",
-      "phan-vi",
-      "van-hanh"
-    ],
-    "src": "Thực hành đo lường độ trễ theo phân vị; Dean & Barroso, 'The Tail at Scale', CACM (2013)"
   },
   {
     "id": "sh-131",
@@ -356,7 +330,7 @@
     "id": "sh-136",
     "cat": "so-hoc",
     "sub": "ngau-nhien",
-    "t": "Quy tắc Kelly: cược bao nhiêu phần trăm vốn là tối ưu cho tăng trưởng dài hạn",
+    "t": "Quy tắc Kelly: tỉ lệ cược tối ưu bằng lợi thế chia cho tỉ lệ trả thưởng, và người thực hành thường chỉ cược 1/2 mức đó",
     "s": "Ngay cả khi có lợi thế, cược quá lớn dẫn tới phá sản gần như chắc chắn vì tăng trưởng vốn là phép nhân. Công thức Kelly cho tỉ lệ tối đa hoá tốc độ tăng trưởng dài hạn, và trong thực hành người ta thường cược một nửa mức đó vì ước lượng lợi thế luôn có sai số.",
     "tags": [
       "dau-tu",
@@ -460,7 +434,7 @@
     "id": "sh-145",
     "cat": "so-hoc",
     "sub": "tuong-quan",
-    "t": "Định luật Goodhart có phiên bản thống kê: tương quan tan rã khi bị dùng để điều khiển",
+    "t": "Một tương quan bị dùng làm mục tiêu điều khiển thì tan rã — phiên bản thống kê của định luật Goodhart",
     "s": "Mối quan hệ quan sát được trong dữ liệu lịch sử phản ánh một cơ chế nhất định. Khi bạn can thiệp vào cơ chế đó, quan hệ cũ không còn giữ. Đây là lý do mô hình dự báo tốt có thể trở thành công cụ điều khiển tồi.",
     "tags": [
       "nhan-qua",

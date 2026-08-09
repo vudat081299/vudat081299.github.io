@@ -1,5 +1,5 @@
 {
-  "updated": "03/08/2026",
+  "updated": "09/08/2026",
   "note": "Thêm fact hàng tuần: tạo data/weekly/<năm>-w<tuần>.json rồi thêm tên file vào cuối mảng files. File đứng sau = fact mới hơn.",
   "categories": [
     {
@@ -85,6 +85,42 @@
       "icon": "translate",
       "label": "Ngôn ngữ & Chữ viết",
       "desc": "Công cụ chính của tư duy và giao tiếp: nó ra đời để làm gì, nó bóp méo gì, và đọc/viết thế nào cho hiệu quả."
+    },
+    {
+      "id": "vat-ly",
+      "icon": "bolt",
+      "label": "Vật lý & Năng lượng",
+      "desc": "Các quy luật không thương lượng được: ánh sáng, nhiệt, lực, năng lượng. Phần lớn trực giác đời thường về chúng đều sai."
+    },
+    {
+      "id": "hoa-hoc",
+      "icon": "science",
+      "label": "Hoá học & Vật liệu",
+      "desc": "Thứ mọi vật được làm từ đó — và vì sao đổi một nguyên tử là đổi hẳn tính chất của cả khối."
+    },
+    {
+      "id": "toan-hoc",
+      "icon": "calculate",
+      "label": "Toán học & Hình học",
+      "desc": "Những kết quả đúng bất kể ai tin gì: số nguyên tố, vô hạn, hình học, mật mã."
+    },
+    {
+      "id": "dia-ly",
+      "icon": "public",
+      "label": "Địa lý & Khí hậu",
+      "desc": "Hình dạng thật của hành tinh: lục địa, đại dương, gió, băng, và các con số về khí hậu."
+    },
+    {
+      "id": "thuc-pham",
+      "icon": "restaurant",
+      "label": "Thực phẩm & Nấu ăn",
+      "desc": "Cái gì xảy ra trong nồi và trong kho: phản ứng hoá học, bảo quản, lên men, nguồn gốc món ăn."
+    },
+    {
+      "id": "nghe-thuat",
+      "icon": "palette",
+      "label": "Nghệ thuật & Âm nhạc",
+      "desc": "Vật lý của âm thanh, hoá học của màu, và các con số đằng sau nhạc cụ, tranh và phim."
     }
   ],
   "clusters": {
@@ -229,6 +265,66 @@
       "ngon-ngu-va-tu-duy",
       "tieng-viet",
       "ngon-ngu-ky-hieu"
+    ],
+    "vat-ly": [
+      "anh-sang-song",
+      "nhiet-va-nang-luong",
+      "luc-va-chuyen-dong",
+      "dien-tu",
+      "hat-va-luong-tu",
+      "tuong-doi",
+      "chat-long-khi",
+      "do-luong-don-vi"
+    ],
+    "hoa-hoc": [
+      "nguyen-to",
+      "phan-ung",
+      "vat-lieu",
+      "nuoc-va-dung-moi",
+      "khi-quyen-hoa-hoc",
+      "polymer-nhua",
+      "kim-loai",
+      "hoa-hoc-doi-song"
+    ],
+    "toan-hoc": [
+      "so-nguyen-to",
+      "vo-han-va-tap-hop",
+      "hinh-hoc",
+      "day-so-va-ti-le",
+      "mat-ma",
+      "do-thi-mang-luoi",
+      "toi-uu-va-thuat-toan",
+      "nghich-ly-toan"
+    ],
+    "dia-ly": [
+      "luc-dia-kien-tao",
+      "dai-duong",
+      "khi-hau-thoi-tiet",
+      "song-nui-sa-mac",
+      "bang-va-cuc",
+      "ban-do-toa-do",
+      "tai-nguyen-dat",
+      "thien-tai"
+    ],
+    "thuc-pham": [
+      "hoa-hoc-nau-an",
+      "len-men",
+      "bao-quan",
+      "nguon-goc-mon-an",
+      "gia-vi-huong-lieu",
+      "do-uong",
+      "nong-nghiep-thuc-pham",
+      "an-toan-thuc-pham"
+    ],
+    "nghe-thuat": [
+      "am-thanh-va-nhac-cu",
+      "ly-thuyet-nhac",
+      "mau-va-chat-lieu",
+      "hoi-hoa",
+      "nhiep-anh-dien-anh",
+      "kien-truc",
+      "chu-va-thiet-ke",
+      "bao-ton-nghe-thuat"
     ]
   },
   "files": [
@@ -263,6 +359,20 @@
     "p3-tu-duy.json",
     "p3-tam-ly.json",
     "p3-giao-tiep.json",
-    "p3-suc-khoe.json"
+    "p3-suc-khoe.json",
+    "p4-vat-ly.json",
+    "p4-hoa-hoc.json",
+    "p4-toan-hoc.json",
+    "p4-dia-ly.json",
+    "p4-thuc-pham.json",
+    "p4-nghe-thuat.json",
+    "p4-sinh-vat.json",
+    "p4-vu-tru.json",
+    "p4-lich-su.json",
+    "p4-co-the.json",
+    "p4-ngon-ngu.json",
+    "p4-cong-nghe.json",
+    "p4-xa-hoi.json",
+    "p4-so-hoc.json"
   ]
 }

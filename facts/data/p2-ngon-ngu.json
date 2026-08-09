@@ -390,19 +390,6 @@
     "src": "Robert Lowth, A Short Introduction to English Grammar (1762); phê bình trong ngôn ngữ học mô tả hiện đại"
   },
   {
-    "id": "nn-132",
-    "cat": "ngon-ngu",
-    "sub": "ngu-phap-tu-vung",
-    "t": "Ngữ pháp mô tả và ngữ pháp quy phạm là hai việc khác nhau",
-    "s": "Nhà ngôn ngữ học mô tả cách người ta thực sự nói; sách giáo khoa quy định cách nên nói. Nhầm hai thứ này dẫn tới việc coi phương ngữ là 'sai' trong khi chúng có quy tắc nội tại nhất quán không kém chuẩn mực chính thức.",
-    "tags": [
-      "ngu-phap",
-      "phuong-phap",
-      "dinh-kien"
-    ],
-    "src": "Nguyên lý cơ bản của ngôn ngữ học hiện đại; Labov, The Social Stratification of English in New York City (1966)"
-  },
-  {
     "id": "nn-133",
     "cat": "ngon-ngu",
     "sub": "hoc-ngoai-ngu",
@@ -432,8 +419,8 @@
     "id": "nn-135",
     "cat": "ngon-ngu",
     "sub": "doc-va-viet",
-    "t": "Thứ dễ đọc hơn được tin là đúng hơn",
-    "s": "Cùng một tuyên bố được đánh giá đúng nhiều hơn khi in bằng phông chữ rõ, màu tương phản cao, hoặc khi có vần điệu. Đây là hiệu ứng lưu loát xử lý — và nó là lý do khẩu hiệu có vần và câu nói ngắn gọn thắng lập luận dài dòng.",
+    "t": "Hiệu ứng lưu loát: cùng một câu được cho là đúng nhiều hơn khi in phông rõ, tương phản cao hoặc có vần",
+    "s": "Cùng một tuyên bố được đánh giá đúng nhiều hơn khi in bằng phông chữ rõ, màu tương phản cao, hoặc khi có vần điệu. Đây là hiệu ứng lưu loát xử lý — và nó là lý do khẩu hiệu có vần và câu nói ngắn gọn thắng lập luận dài dòng. Reber và Schwarz (1999) đo được mức đánh giá 'đúng' chênh nhau rõ rệt chỉ do đổi độ tương phản của cùng 1 câu.",
     "tags": [
       "luu-loat",
       "thuyet-phuc",
@@ -510,7 +497,7 @@
     "id": "nn-141",
     "cat": "ngon-ngu",
     "sub": "hoc-ngoai-ngu",
-    "t": "Hiệu ứng McGurk: nhìn miệng làm bạn nghe ra âm khác",
+    "t": "Hiệu ứng McGurk: nghe âm 'ba' trong khi nhìn miệng phát âm 'ga' làm khoảng 98% người lớn nghe ra 'da'",
     "s": "Nghe âm 'ba' trong khi xem video người phát âm 'ga' khiến đa số người nghe ra 'da'. Hiệu ứng vẫn xảy ra kể cả khi bạn đã biết cơ chế. Nghe không phải là một kênh độc lập — nó là kết quả tổng hợp của nhiều giác quan.",
     "tags": [
       "am-thanh",
@@ -570,18 +557,5 @@
       "chinh-sach"
     ],
     "src": "Nghiên cứu về phục hồi tiếng Hebrew hiện đại; Zuckermann, Revivalistics (2020)"
-  },
-  {
-    "id": "nn-148",
-    "cat": "ngon-ngu",
-    "sub": "hoc-ngoai-ngu",
-    "t": "Dịch máy giỏi ở cấu trúc nhưng vẫn hỏng ở ngữ cảnh văn hoá",
-    "s": "Các hệ thống hiện đại xử lý ngữ pháp rất tốt nhưng thường bỏ mất tầng lịch sự, ẩn ý và quan hệ xã hội — vốn là phần bắt buộc trong tiếng Việt, tiếng Nhật và tiếng Hàn. Một bản dịch đúng ngữ pháp vẫn có thể sai hoàn toàn về mức độ trang trọng.",
-    "tags": [
-      "dich-may",
-      "van-hoa",
-      "gioi-han"
-    ],
-    "src": "Nghiên cứu đánh giá dịch máy về honorifics và pragmatics; báo cáo WMT thường niên"
   }
 ]

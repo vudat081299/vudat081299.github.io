@@ -1,31 +1,5 @@
 [
   {
-    "id": "kd-101",
-    "cat": "kinh-doanh",
-    "sub": "du-an",
-    "t": "Định luật Hyrum: mọi hành vi quan sát được của hệ thống sẽ bị ai đó phụ thuộc vào",
-    "s": "Khi số người dùng đủ lớn, không quan trọng bạn hứa gì trong tài liệu — mọi chi tiết, kể cả lỗi, sẽ trở thành thứ ai đó xây trên đó. Đây là lý do 'sửa một lỗi nhỏ' có thể làm hỏng khách hàng lớn nhất của bạn.",
-    "tags": [
-      "ky-thuat",
-      "san-pham",
-      "phu-thuoc"
-    ],
-    "src": "Hyrum Wright, Google; xem Software Engineering at Google (2020)"
-  },
-  {
-    "id": "kd-102",
-    "cat": "kinh-doanh",
-    "sub": "du-an",
-    "t": "Định luật Wirth: phần mềm chậm đi nhanh hơn phần cứng nhanh lên",
-    "s": "Máy tính mạnh gấp hàng nghìn lần so với hai thập kỷ trước, nhưng thời gian mở một ứng dụng văn phòng không giảm tương ứng. Mỗi lớp trừu tượng thêm vào đều lấy đi một phần tài nguyên, và tài nguyên rẻ thì người ta thôi tiết kiệm.",
-    "tags": [
-      "ky-thuat",
-      "hieu-suat",
-      "phan-mem"
-    ],
-    "src": "Niklaus Wirth, 'A Plea for Lean Software', IEEE Computer (1995)"
-  },
-  {
     "id": "kd-103",
     "cat": "kinh-doanh",
     "sub": "du-an",
@@ -39,19 +13,6 @@
     "src": "Barry Boehm, Software Engineering Economics (1981); phê bình định lượng trong Leprince-Ringuet (2015)"
   },
   {
-    "id": "kd-104",
-    "cat": "kinh-doanh",
-    "sub": "du-an",
-    "t": "Nợ kỹ thuật là ẩn dụ tài chính, và phần 'lãi' mới là chỗ đau",
-    "s": "Đi tắt để ra hàng nhanh là vay nợ có ý thức và đôi khi rất hợp lý. Vấn đề là lãi suất: mỗi thay đổi về sau đều đắt hơn một chút, và khoản đó không nằm trong báo cáo nào cả cho tới khi tốc độ giao hàng sụp xuống mà không ai giải thích được.",
-    "tags": [
-      "ky-thuat",
-      "quan-ly",
-      "danh-doi"
-    ],
-    "src": "Ward Cunningham (1992); Fowler, 'Technical Debt Quadrant' (2009)"
-  },
-  {
     "id": "kd-105",
     "cat": "kinh-doanh",
     "sub": "du-an",
@@ -63,19 +24,6 @@
       "uoc-luong"
     ],
     "src": "Halkjelsvik & Jørgensen, Psychological Bulletin (2012)"
-  },
-  {
-    "id": "kd-107",
-    "cat": "kinh-doanh",
-    "sub": "du-an",
-    "t": "Chia nhỏ dự án là cách giảm rủi ro hiệu quả hơn quản lý rủi ro giỏi hơn",
-    "s": "Dự án càng lớn thì xác suất thất bại thảm hoạ càng cao theo cấp số. Các dự án được chia thành các mô-đun lặp lại — như trạm điện mặt trời so với nhà máy điện hạt nhân — có phân bố chi phí hẹp hơn nhiều. Cấu trúc của công việc quan trọng hơn kỹ năng quản lý nó.",
-    "tags": [
-      "du-an",
-      "rui-ro",
-      "chien-luoc"
-    ],
-    "src": "Flyvbjerg & Gardner, How Big Things Get Done (2023)"
   },
   {
     "id": "kd-108",
@@ -104,71 +52,6 @@
     "src": "CB Insights, 'Top Reasons Startups Fail' (nhiều đợt khảo sát)"
   },
   {
-    "id": "kd-110",
-    "cat": "kinh-doanh",
-    "sub": "khoi-nghiep",
-    "t": "Hỏi khách hàng họ muốn gì cho câu trả lời tệ; hỏi họ đã làm gì cho câu trả lời tốt",
-    "s": "Người ta dự báo hành vi tương lai của chính mình rất kém và lịch sự với người hỏi. Vì vậy câu hỏi hữu ích là về quá khứ cụ thể: lần gần nhất anh gặp vấn đề này là khi nào, anh đã làm gì, đã trả bao nhiêu tiền cho giải pháp hiện tại.",
-    "tags": [
-      "khach-hang",
-      "nghien-cuu",
-      "san-pham"
-    ],
-    "src": "Rob Fitzpatrick, The Mom Test (2013)"
-  },
-  {
-    "id": "kd-111",
-    "cat": "kinh-doanh",
-    "sub": "ban-hang-marketing",
-    "t": "Khách hàng không mua sản phẩm, họ thuê nó làm một việc",
-    "s": "Một chuỗi cửa hàng phát hiện phần lớn sữa lắc được bán vào buổi sáng cho người lái xe đi làm — công việc cần làm không phải 'ăn sáng ngon' mà 'giết thời gian một tay trong 20 phút mà không bẩn'. Khi định nghĩa lại như vậy, đối thủ không còn là sữa lắc khác mà là chuối và bánh mì.",
-    "tags": [
-      "san-pham",
-      "khach-hang",
-      "chien-luoc"
-    ],
-    "src": "Clayton Christensen, Competing Against Luck (2016)"
-  },
-  {
-    "id": "kd-112",
-    "cat": "kinh-doanh",
-    "sub": "khoi-nghiep",
-    "t": "Đổi mới đột phá thường bắt đầu bằng sản phẩm tệ hơn ở mọi tiêu chí quan trọng",
-    "s": "Doanh nghiệp lớn bỏ qua nó một cách hoàn toàn hợp lý: nó phục vụ khách hàng nhỏ, biên lợi nhuận thấp, chất lượng kém. Rồi nó cải thiện đủ nhanh để nuốt thị trường chính. Điểm cốt lõi bị hiểu nhầm nhiều nhất: đây không phải câu chuyện về lười biếng mà về động cơ đúng đắn dẫn tới kết cục sai.",
-    "tags": [
-      "chien-luoc",
-      "doi-moi",
-      "canh-tranh"
-    ],
-    "src": "Clayton Christensen, The Innovator's Dilemma (1997)"
-  },
-  {
-    "id": "kd-113",
-    "cat": "kinh-doanh",
-    "sub": "to-chuc",
-    "t": "Chiến lược là chọn không làm gì, không phải liệt kê mục tiêu",
-    "s": "Một tài liệu chiến lược không nêu rõ đánh đổi nào đã được chấp nhận thì đó là danh sách nguyện vọng. Câu kiểm tra: nếu điều ngược lại cũng nghe hợp lý với một công ty khác, câu đó không phải chiến lược.",
-    "tags": [
-      "chien-luoc",
-      "lanh-dao",
-      "danh-doi"
-    ],
-    "src": "Michael Porter, 'What Is Strategy?', Harvard Business Review (1996); Richard Rumelt, Good Strategy Bad Strategy (2011)"
-  },
-  {
-    "id": "kd-114",
-    "cat": "kinh-doanh",
-    "sub": "do-luong",
-    "t": "Chỉ số nào cũng bị chơi được, nên hãy chọn cặp chỉ số kéo ngược nhau",
-    "s": "Đo tốc độ thì chất lượng tụt; đo chất lượng thì tốc độ tụt. Cách chống hiệu quả nhất không phải là tìm chỉ số hoàn hảo mà là ghép mỗi chỉ số với một chỉ số đối trọng, để việc chơi bẩn một bên hiện ngay ở bên kia.",
-    "tags": [
-      "chi-so",
-      "quan-ly",
-      "dong-co"
-    ],
-    "src": "Nguyên lý paired metrics; ứng dụng phổ biến trong quản trị sản phẩm và DevOps (DORA metrics)"
-  },
-  {
     "id": "kd-115",
     "cat": "kinh-doanh",
     "sub": "do-luong",
@@ -180,32 +63,6 @@
       "to-chuc"
     ],
     "src": "Forsgren, Humble & Kim, Accelerate (2018); báo cáo State of DevOps hằng năm"
-  },
-  {
-    "id": "kd-116",
-    "cat": "kinh-doanh",
-    "sub": "to-chuc",
-    "t": "Họp đứng, họp không có chương trình, họp không có người quyết — ba dấu hiệu của họp vô ích",
-    "s": "Một cuộc họp cần ba thứ để tạo giá trị: câu hỏi cần trả lời, người có quyền trả lời, và tài liệu đọc trước. Thiếu bất kỳ cái nào thì nó trở thành buổi cập nhật, và cập nhật thì nên viết ra chứ không nên tụ tập.",
-    "tags": [
-      "hop",
-      "nang-suat",
-      "quan-ly"
-    ],
-    "src": "Andy Grove, High Output Management (1983); nguyên tắc họp của Amazon và Bezos"
-  },
-  {
-    "id": "kd-117",
-    "cat": "kinh-doanh",
-    "sub": "su-nghiep",
-    "t": "Người làm việc sáng tạo cần khối thời gian liền, không cần thêm giờ",
-    "s": "Lịch của quản lý chia theo khối 30 phút; lịch của người làm chuyên môn cần nửa ngày liền để vào việc. Một cuộc họp đặt giữa buổi chiều không lấy đi một giờ — nó cắt buổi chiều thành hai mảnh không đủ dùng.",
-    "tags": [
-      "nang-suat",
-      "lich",
-      "quan-ly"
-    ],
-    "src": "Paul Graham, 'Maker's Schedule, Manager's Schedule' (2009); nghiên cứu về gián đoạn của Mark, Gudith & Klocke (2008)"
   },
   {
     "id": "kd-118",
@@ -234,83 +91,6 @@
     "src": "John Pencavel, Stanford/IZA Discussion Paper (2014)"
   },
   {
-    "id": "kd-120",
-    "cat": "kinh-doanh",
-    "sub": "tuyen-dung",
-    "t": "Tuyển sai một người đắt hơn để trống vị trí đó",
-    "s": "Chi phí không chỉ là lương đã trả mà gồm thời gian quản lý, tổn thất tinh thần đội, sai sót phải sửa và chi phí tuyển lại. Ước lượng phổ biến trong ngành nhân sự là nhiều lần lương năm cho vị trí quản lý. Đây là lý do quy trình tuyển chậm hơn nhưng chắc hơn gần như luôn có lợi.",
-    "tags": [
-      "tuyen-dung",
-      "chi-phi",
-      "quan-ly"
-    ],
-    "src": "Ước lượng của SHRM và các phân tích chi phí thay thế nhân sự; nguyên tắc 'hire slow, fire fast'"
-  },
-  {
-    "id": "kd-122",
-    "cat": "kinh-doanh",
-    "sub": "tuyen-dung",
-    "t": "Phỏng vấn có cấu trúc: cùng câu hỏi, cùng thang chấm, chấm ngay sau mỗi câu",
-    "s": "Sự khác biệt giữa phỏng vấn dự báo được và phỏng vấn vô dụng nằm ở cấu trúc chứ không ở kỹ năng người phỏng vấn. Ba điều kiện: bộ câu hỏi cố định, thang chấm mô tả bằng hành vi, và ghi điểm trước khi thảo luận với người khác để tránh lây ấn tượng.",
-    "tags": [
-      "tuyen-dung",
-      "quy-trinh"
-    ],
-    "src": "Levashina và cộng sự, Personnel Psychology (2014); thực hành tuyển dụng của Google mô tả trong Work Rules! (2015)"
-  },
-  {
-    "id": "kd-123",
-    "cat": "kinh-doanh",
-    "sub": "tuyen-dung",
-    "t": "Người giỏi nghỉ việc vì quản lý trực tiếp và vì thiếu cơ hội học, không vì lương",
-    "s": "Trong các khảo sát nghỉ việc quy mô lớn, lương hiếm khi đứng đầu — nó là lý do được nêu ra vì dễ nói. Các yếu tố dự báo mạnh hơn là quan hệ với quản lý trực tiếp, cảm giác công việc có ý nghĩa, và cơ hội phát triển kỹ năng.",
-    "tags": [
-      "nghi-viec",
-      "quan-ly",
-      "gan-ket"
-    ],
-    "src": "Gallup, State of the Global Workplace (nhiều năm); McKinsey, 'Great Attrition' survey (2021)"
-  },
-  {
-    "id": "kd-124",
-    "cat": "kinh-doanh",
-    "sub": "su-nghiep",
-    "t": "Lương là yếu tố vệ sinh: thiếu thì bất mãn, đủ thì không tạo động lực",
-    "s": "Herzberg phân biệt yếu tố gây bất mãn khi thiếu — lương, điều kiện làm việc, chính sách — với yếu tố tạo động lực khi có: thành tựu, được công nhận, trách nhiệm. Tăng lương sửa được bất mãn nhưng không tạo ra hăng hái, và đó là lý do nhiều đợt tăng lương không đổi được gì.",
-    "tags": [
-      "dong-luc",
-      "luong",
-      "quan-ly"
-    ],
-    "src": "Frederick Herzberg, Harvard Business Review (1968)"
-  },
-  {
-    "id": "kd-125",
-    "cat": "kinh-doanh",
-    "sub": "su-nghiep",
-    "t": "Ba nhu cầu tạo động lực nội tại: tự chủ, thành thạo, ý nghĩa",
-    "s": "Lý thuyết tự quyết có nền thực nghiệm rộng: khi người ta có quyền quyết cách làm, thấy mình đang giỏi lên, và hiểu việc mình làm phục vụ ai, động lực tự sinh mà không cần thưởng. Thiếu cả ba thì không có gói phúc lợi nào bù được.",
-    "tags": [
-      "dong-luc",
-      "quan-ly",
-      "tam-ly"
-    ],
-    "src": "Deci & Ryan, Self-Determination Theory (1985, 2000); Daniel Pink, Drive (2009)"
-  },
-  {
-    "id": "kd-126",
-    "cat": "kinh-doanh",
-    "sub": "to-chuc",
-    "t": "Khen công khai, góp ý riêng — và góp ý phải cụ thể tới mức làm được ngay",
-    "s": "Phản hồi hiệu quả nêu tình huống, hành vi quan sát được, và tác động của nó. Phản hồi về tính cách ('em thiếu chủ động') không hành động được và kích hoạt phòng vệ. Một phân tích tổng hợp cổ điển còn cho thấy hơn một phần ba can thiệp phản hồi làm hiệu suất giảm.",
-    "tags": [
-      "phan-hoi",
-      "quan-ly",
-      "hieu-suat"
-    ],
-    "src": "Kluger & DeNisi, Psychological Bulletin (1996); mô hình SBI của Center for Creative Leadership"
-  },
-  {
     "id": "kd-127",
     "cat": "kinh-doanh",
     "sub": "tuyen-dung",
@@ -322,58 +102,6 @@
       "hop-tac"
     ],
     "src": "Nghiên cứu về forced ranking; Cappelli & Tavis, Harvard Business Review (2016)"
-  },
-  {
-    "id": "kd-130",
-    "cat": "kinh-doanh",
-    "sub": "do-luong",
-    "t": "Quản lý theo mục tiêu số dễ biến thành quản lý theo báo cáo số",
-    "s": "Khi phần thưởng gắn với chỉ số do chính người thực hiện báo cáo, cái được tối ưu là con số chứ không phải thực tại. Hai biện pháp có tác dụng: lấy số từ hệ thống thay vì từ người, và định kỳ đi xem tận nơi thay vì đọc bảng.",
-    "tags": [
-      "chi-so",
-      "quan-ly",
-      "trung-thuc"
-    ],
-    "src": "Nguyên lý Goodhart/Campbell áp dụng trong quản trị; thực hành genchi genbutsu của Toyota"
-  },
-  {
-    "id": "kd-131",
-    "cat": "kinh-doanh",
-    "sub": "to-chuc",
-    "t": "Quy trình mọc lên sau mỗi sự cố và gần như không bao giờ bị gỡ đi",
-    "s": "Mỗi lần có chuyện, tổ chức thêm một bước kiểm duyệt. Không ai được thưởng vì gỡ bỏ một bước, và ai gỡ thì gánh rủi ro. Kết quả là quy trình chỉ tích tụ theo một chiều cho tới khi tốc độ chết hẳn — trừ khi có cơ chế rà soát và loại bỏ định kỳ.",
-    "tags": [
-      "quy-trinh",
-      "to-chuc",
-      "quan-lieu"
-    ],
-    "src": "Nguyên lý tích tụ quy trình; xem Bain & Company, 'Organizational Drag' (2015)"
-  },
-  {
-    "id": "kd-132",
-    "cat": "kinh-doanh",
-    "sub": "to-chuc",
-    "t": "An toàn tâm lý không phải là dễ chịu — nó là dám nói ra tin xấu sớm",
-    "s": "Đội có nhiều báo cáo lỗi hơn không phải đội làm nhiều lỗi hơn; họ là đội dám ghi nhận lỗi. Trong nghiên cứu gốc ở bệnh viện, các đơn vị có văn hoá cởi mở nhất báo cáo nhiều sai sót thuốc nhất — và chính họ có kết quả tốt nhất.",
-    "tags": [
-      "nhom",
-      "van-hoa",
-      "an-toan"
-    ],
-    "src": "Amy Edmondson, Administrative Science Quarterly (1999)"
-  },
-  {
-    "id": "kd-133",
-    "cat": "kinh-doanh",
-    "sub": "to-chuc",
-    "t": "Khám nghiệm sự cố không đổ lỗi tìm ra nhiều nguyên nhân hơn",
-    "s": "Khi mục tiêu là hiểu hệ thống chứ không phải tìm người chịu trách nhiệm, thông tin chảy ra đầy đủ hơn và các yếu tố góp phần bị che giấu ít hơn. Đây là chuẩn trong hàng không và trong vận hành hệ thống lớn, và nó là một quyết định quản trị chứ không phải một sự tử tế.",
-    "tags": [
-      "su-co",
-      "van-hoa",
-      "hoc-hoi"
-    ],
-    "src": "Sidney Dekker, The Field Guide to Understanding Human Error (2006); thực hành blameless postmortem của Google SRE"
   },
   {
     "id": "kd-134",
@@ -389,19 +117,6 @@
     "src": "James Reason, Human Error (1990)"
   },
   {
-    "id": "kd-135",
-    "cat": "kinh-doanh",
-    "sub": "ban-hang-marketing",
-    "t": "Doanh nghiệp dịch vụ bán năng lực dư thừa, không bán giờ làm",
-    "s": "Khi mọi người bận 100%, hàng đợi bùng nổ và thời gian giao hàng mất kiểm soát — đây là kết quả toán học của lý thuyết hàng đợi, không phải vấn đề kỷ luật. Mức sử dụng quanh 80% thường cho tổng thông lượng cao hơn 100%.",
-    "tags": [
-      "van-hanh",
-      "hang-doi",
-      "nang-suat"
-    ],
-    "src": "Lý thuyết hàng đợi (Kingman's formula); Donald Reinertsen, The Principles of Product Development Flow (2009)"
-  },
-  {
     "id": "kd-136",
     "cat": "kinh-doanh",
     "sub": "du-an",
@@ -415,32 +130,6 @@
     "src": "Định luật Little (1961); thực hành WIP limit trong Kanban (David Anderson, 2010)"
   },
   {
-    "id": "kd-138",
-    "cat": "kinh-doanh",
-    "sub": "ban-hang-marketing",
-    "t": "Chi phí có được một khách phải nhỏ hơn nhiều lần giá trị vòng đời của khách đó",
-    "s": "Tỉ lệ ba lần trở lên là quy ước thực hành phổ biến, kèm điều kiện thu hồi chi phí trong khoảng một năm. Doanh nghiệp bỏ qua yếu tố thời gian thu hồi có thể vẫn 'lãi trên giấy' mà chết vì cạn tiền mặt trước khi khách kịp trả hết.",
-    "tags": [
-      "khach-hang",
-      "tang-truong",
-      "dong-tien"
-    ],
-    "src": "Quy ước LTV/CAC trong đầu tư mạo hiểm; David Skok, 'SaaS Metrics 2.0' (2013)"
-  },
-  {
-    "id": "kd-140",
-    "cat": "kinh-doanh",
-    "sub": "ban-hang-marketing",
-    "t": "Biên lợi nhuận gộp quyết định bạn được phép mắc bao nhiêu sai lầm",
-    "s": "Doanh nghiệp biên 70% có thể chi mạnh cho tiếp thị, thử nghiệm và sai sót; doanh nghiệp biên 8% thì mỗi lỗi vận hành đều ăn thẳng vào lợi nhuận. Cùng một chiến lược có thể thông minh ở công ty này và tự sát ở công ty kia, chỉ vì con số này khác nhau.",
-    "tags": [
-      "tai-chinh",
-      "chien-luoc",
-      "bien-loi-nhuan"
-    ],
-    "src": "Nguyên lý cấu trúc biên trong phân tích ngành; Porter, Competitive Strategy (1980)"
-  },
-  {
     "id": "kd-141",
     "cat": "kinh-doanh",
     "sub": "to-chuc",
@@ -452,19 +141,6 @@
       "quan-tri"
     ],
     "src": "Staw, 'Knee-deep in the Big Muddy', Organizational Behavior and Human Performance (1976)"
-  },
-  {
-    "id": "kd-142",
-    "cat": "kinh-doanh",
-    "sub": "su-nghiep",
-    "t": "Thương lượng lương: khoảng lương nội bộ có sẵn, việc bạn hỏi không tạo ra nó",
-    "s": "Đa số tổ chức đã có dải lương cho vị trí trước khi phỏng vấn. Việc thương lượng chủ yếu quyết định bạn nằm ở đâu trong dải đó, và người không hỏi gần như luôn nằm ở nửa dưới. Rủi ro bị rút lời mời vì thương lượng lịch sự là rất thấp trong thực tế.",
-    "tags": [
-      "luong",
-      "dam-phan",
-      "su-nghiep"
-    ],
-    "src": "Thực hành đãi ngộ theo dải lương; Babcock & Laschever, Women Don't Ask (2003)"
   },
   {
     "id": "kd-143",
@@ -504,31 +180,5 @@
       "thi-truong"
     ],
     "src": "ADP Pay Insights; Atlanta Fed Wage Growth Tracker (job switchers vs job stayers)"
-  },
-  {
-    "id": "kd-146",
-    "cat": "kinh-doanh",
-    "sub": "su-nghiep",
-    "t": "Danh tiếng là tài sản có lãi kép và mất theo bậc thang",
-    "s": "Nó tích luỹ chậm qua từng lần giữ lời và có thể mất phần lớn trong một lần. Về mặt kinh tế, đó là lý do các cam kết nhỏ được giữ đúng có giá trị vượt xa nội dung của chúng — chúng là khoản đầu tư vào một tài sản không mua được bằng tiền.",
-    "tags": [
-      "danh-tieng",
-      "tin-cay",
-      "dai-han"
-    ],
-    "src": "Lý thuyết trò chơi lặp lại (Axelrod, 1984); mô hình danh tiếng của Kreps & Wilson (1982)"
-  },
-  {
-    "id": "kd-148",
-    "cat": "kinh-doanh",
-    "sub": "su-nghiep",
-    "t": "Người thành công nhất trong một tổ chức thường là người giải quyết vấn đề của người khác",
-    "s": "Phân tích mạng lưới nội bộ cho thấy các nút được tìm đến nhiều nhất không phải người có chức vụ cao nhất mà người có kiến thức liên kết nhiều bộ phận. Vị trí trong mạng lưới thông tin dự báo ảnh hưởng thực tế tốt hơn vị trí trong sơ đồ tổ chức.",
-    "tags": [
-      "mang-luoi",
-      "anh-huong",
-      "to-chuc"
-    ],
-    "src": "Cross & Parker, The Hidden Power of Social Networks (2004); Burt, 'Structural Holes' (1992)"
   }
 ]

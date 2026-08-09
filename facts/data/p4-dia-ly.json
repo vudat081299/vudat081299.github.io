@@ -1,0 +1,1874 @@
+[
+  {
+    "id": "dl-201",
+    "cat": "dia-ly",
+    "sub": "luc-dia-kien-tao",
+    "t": "Các lục địa đang di chuyển khoảng 2–10 cm mỗi năm, đủ nhanh để GPS đo được trực tiếp",
+    "s": "Đại Tây Dương rộng thêm khoảng 2,5 cm mỗi năm. Australia trôi lên bắc nhanh tới mức năm 2017 nước này phải dịch toàn bộ hệ toạ độ quốc gia 1,8 mét cho khớp với GPS.",
+    "tags": [
+      "kien-tao",
+      "gps",
+      "luc-dia"
+    ],
+    "src": "Geoscience Australia (2017); NASA JPL"
+  },
+  {
+    "id": "dl-202",
+    "cat": "dia-ly",
+    "sub": "luc-dia-kien-tao",
+    "t": "Dãy Himalaya vẫn đang cao lên khoảng 5 mm mỗi năm vì Ấn Độ tiếp tục húc vào châu Á",
+    "s": "Va chạm bắt đầu khoảng 50 triệu năm trước và chưa dừng. Xói mòn lấy đi gần hết phần tăng thêm, nên chiều cao Everest chỉ nhích rất chậm.",
+    "tags": [
+      "himalaya",
+      "kien-tao",
+      "everest"
+    ],
+    "src": "Bilham và cộng sự, Nature (1997); Cục Khảo sát Trung Quốc & Nepal (2020)"
+  },
+  {
+    "id": "dl-203",
+    "cat": "dia-ly",
+    "sub": "luc-dia-kien-tao",
+    "t": "Everest cao 8.848,86 mét, và con số này được Trung Quốc với Nepal cùng công bố lại năm 2020",
+    "s": "Trước đó hai nước dùng hai số khác nhau vì tính điểm mốc khác nhau: có tính lớp tuyết trên đỉnh hay không. Việc chốt một con số chung là một thoả thuận ngoại giao chứ không chỉ là phép đo.",
+    "tags": [
+      "everest",
+      "do-cao",
+      "ngoai-giao"
+    ],
+    "src": "Thông cáo chung Nepal – Trung Quốc (8/12/2020)"
+  },
+  {
+    "id": "dl-205",
+    "cat": "dia-ly",
+    "sub": "luc-dia-kien-tao",
+    "t": "Ngọn núi cao nhất tính từ chân là Mauna Kea ở Hawaii, cao hơn 10.000 mét nhưng phần lớn nằm dưới nước",
+    "s": "Chỉ 4.207 mét nhô lên trên mặt biển. Nếu tính từ đáy biển thì nó cao hơn Everest khoảng 1.400 mét.",
+    "tags": [
+      "mauna-kea",
+      "nui",
+      "do-cao"
+    ],
+    "src": "Cục Khảo sát Địa chất Hoa Kỳ (USGS)"
+  },
+  {
+    "id": "dl-206",
+    "cat": "dia-ly",
+    "sub": "luc-dia-kien-tao",
+    "t": "Trái Đất có 5 lớp chính, và phần cứng bạn đang đứng trên chỉ dày trung bình khoảng 35 km dưới lục địa",
+    "s": "Dưới đại dương vỏ chỉ dày khoảng 7 km. Tỉ lệ giữa vỏ và bán kính Trái Đất mỏng hơn tỉ lệ vỏ táo so với quả táo.",
+    "tags": [
+      "vo-trai-dat",
+      "cau-truc",
+      "dia-chat"
+    ],
+    "src": "USGS; Dziewonski & Anderson, PREM (1981)"
+  },
+  {
+    "id": "dl-207",
+    "cat": "dia-ly",
+    "sub": "luc-dia-kien-tao",
+    "t": "Lõi trong của Trái Đất là sắt rắn dù nóng khoảng 5.400 °C, vì áp suất ở đó gấp hơn 3 triệu lần khí quyển",
+    "s": "Áp suất đủ cao thì đẩy điểm nóng chảy lên cao hơn nhiệt độ thực tế. Lõi ngoài vẫn là sắt lỏng, và chuyển động đối lưu của nó sinh ra từ trường Trái Đất.",
+    "tags": [
+      "loi-trai-dat",
+      "sat",
+      "tu-truong"
+    ],
+    "src": "Alfè, Gillan & Price, Nature (1999)"
+  },
+  {
+    "id": "dl-208",
+    "cat": "dia-ly",
+    "sub": "luc-dia-kien-tao",
+    "t": "Khoảng 90% núi lửa hoạt động trên Trái Đất nằm dưới đáy biển và ta gần như không thấy chúng",
+    "s": "Sống núi giữa đại dương là dãy núi dài nhất hành tinh, hơn 65.000 km, và nó phun trào liên tục. Phần lớn magma của hành tinh đi ra qua đó chứ không qua các núi lửa nổi tiếng trên cạn.",
+    "tags": [
+      "nui-lua",
+      "song-nui",
+      "dai-duong"
+    ],
+    "src": "NOAA Ocean Exploration; Smithsonian Global Volcanism Program"
+  },
+  {
+    "id": "dl-209",
+    "cat": "dia-ly",
+    "sub": "luc-dia-kien-tao",
+    "t": "Vành đai lửa Thái Bình Dương chứa khoảng 75% núi lửa hoạt động và gây khoảng 90% động đất của thế giới",
+    "s": "Nguyên nhân là chuỗi các đới hút chìm nơi vỏ đại dương lún xuống dưới vỏ lục địa. Nhật, Indonesia, Philippines và Chile đều nằm trên vành đai này.",
+    "tags": [
+      "vanh-dai-lua",
+      "dong-dat",
+      "hut-chim"
+    ],
+    "src": "Cục Khảo sát Địa chất Hoa Kỳ (USGS)"
+  },
+  {
+    "id": "dl-210",
+    "cat": "dia-ly",
+    "sub": "luc-dia-kien-tao",
+    "t": "Núi lửa Toba phun cách đây khoảng 74.000 năm và nó là vụ phun lớn nhất trong 2 triệu năm qua",
+    "s": "Nó phun ra khoảng 2.800 km³ vật chất, gấp hàng nghìn lần vụ St. Helens 1980. Giả thuyết rằng nó gây ra một cổ chai dân số loài người vẫn đang bị tranh cãi mạnh.",
+    "tags": [
+      "toba",
+      "sieu-nui-lua",
+      "tranh-cai"
+    ],
+    "src": "Rampino & Self, Nature (1992); Yost và cộng sự, Journal of Human Evolution (2018)"
+  },
+  {
+    "id": "dl-211",
+    "cat": "dia-ly",
+    "sub": "dai-duong",
+    "t": "Đại dương chiếm khoảng 71% bề mặt Trái Đất nhưng con người chỉ khảo sát chi tiết dưới 26% đáy biển",
+    "s": "Phần lớn bản đồ đáy biển hiện nay được suy ra từ đo trọng lực bằng vệ tinh, độ phân giải khoảng 5 km. Dự án Seabed 2030 đặt mục tiêu vẽ toàn bộ đáy biển với độ phân giải cao trước năm 2030.",
+    "tags": [
+      "dai-duong",
+      "ban-do",
+      "kham-pha"
+    ],
+    "src": "Seabed 2030 / GEBCO (2023)"
+  },
+  {
+    "id": "dl-213",
+    "cat": "dia-ly",
+    "sub": "dai-duong",
+    "t": "Nước biển hấp thụ khoảng 90% lượng nhiệt dư mà khí nhà kính giữ lại",
+    "s": "Nhờ nhiệt dung khổng lồ của nước, nhiệt độ không khí tăng chậm hơn nhiều so với nếu không có đại dương. Đổi lại, nhiệt tích trong nước sẽ tiếp tục đẩy mực nước biển lên hàng thế kỷ dù phát thải dừng lại.",
+    "tags": [
+      "dai-duong",
+      "nhiet",
+      "khi-hau"
+    ],
+    "src": "IPCC AR6 WG1, Chương 9"
+  },
+  {
+    "id": "dl-214",
+    "cat": "dia-ly",
+    "sub": "dai-duong",
+    "t": "Đại dương đã axit hoá khoảng 30% so với thời tiền công nghiệp tính theo nồng độ ion hydro",
+    "s": "pH mặt biển giảm từ khoảng 8,2 xuống 8,1, và vì thang pH là lô-ga-rít nên mức giảm 0,1 tương đương tăng 26% nồng độ ion hydro. Điều này làm sinh vật có vỏ canxi khó tạo vỏ hơn.",
+    "tags": [
+      "axit-hoa",
+      "ph",
+      "san-ho"
+    ],
+    "src": "IPCC AR6; NOAA PMEL Carbon Program"
+  },
+  {
+    "id": "dl-215",
+    "cat": "dia-ly",
+    "sub": "dai-duong",
+    "t": "Dòng hải lưu vận chuyển nhiệt bằng khoảng 25% tổng lượng nhiệt mà khí quyển vận chuyển từ xích đạo lên cực",
+    "s": "Dòng Gulf Stream chở khoảng 1,3 petawatt, gấp hàng chục nghìn lần công suất phát điện toàn cầu. Nếu nó yếu đi đáng kể, Tây Bắc Âu sẽ lạnh hơn hẳn dù toàn cầu vẫn nóng lên.",
+    "tags": [
+      "hai-luu",
+      "gulf-stream",
+      "khi-hau"
+    ],
+    "src": "Trenberth & Caron, Journal of Climate (2001); IPCC AR6"
+  },
+  {
+    "id": "dl-216",
+    "cat": "dia-ly",
+    "sub": "dai-duong",
+    "t": "Sóng thần trên biển sâu chỉ cao vài chục centimet nhưng đi nhanh khoảng 800 km/h",
+    "s": "Tàu ở giữa đại dương gần như không cảm thấy nó đi qua. Khi vào vùng nước cạn, tốc độ giảm và toàn bộ năng lượng dồn lên chiều cao — đó là lúc nó thành tường nước.",
+    "tags": [
+      "song-than",
+      "nang-luong",
+      "canh-bao"
+    ],
+    "src": "NOAA Pacific Tsunami Warning Center"
+  },
+  {
+    "id": "dl-217",
+    "cat": "dia-ly",
+    "sub": "dai-duong",
+    "t": "Thuỷ triều do Mặt Trăng gây ra chủ yếu, nhưng Mặt Trời cũng góp khoảng 46% lực triều",
+    "s": "Mặt Trời nặng hơn rất nhiều nhưng ở xa hơn, và lực triều giảm theo luỹ thừa ba của khoảng cách. Khi hai lực cộng hưởng ta có triều cường, khi vuông góc ta có triều kém.",
+    "tags": [
+      "thuy-trieu",
+      "mat-trang",
+      "mat-troi"
+    ],
+    "src": "NOAA Tides and Currents; Cartwright, Tides: A Scientific History"
+  },
+  {
+    "id": "dl-218",
+    "cat": "dia-ly",
+    "sub": "dai-duong",
+    "t": "Điểm xa đất liền nhất trên đại dương cách bờ gần nhất khoảng 2.688 km",
+    "s": "Điểm Nemo nằm ở nam Thái Bình Dương, và người ở đó thường gần Trạm Vũ trụ Quốc tế hơn gần bất kỳ con người nào khác. Các cơ quan không gian dùng vùng này làm nơi cho tàu vũ trụ rơi xuống.",
+    "tags": [
+      "diem-nemo",
+      "dai-duong",
+      "vu-tru"
+    ],
+    "src": "Lukatela (1992); NASA/ESA hồ sơ tái nhập khí quyển"
+  },
+  {
+    "id": "dl-219",
+    "cat": "dia-ly",
+    "sub": "dai-duong",
+    "t": "Đảo rác Thái Bình Dương không phải một hòn đảo — nó là vùng nước loãng chứa vi nhựa nhìn bằng mắt gần như không thấy",
+    "s": "Nồng độ ước khoảng 5,1 kg nhựa mỗi km² ở vùng lõi, phần lớn là hạt dưới 5 mm. Cách gọi 'đảo' gây kỳ vọng sai về việc dọn dẹp bằng lưới.",
+    "tags": [
+      "vi-nhua",
+      "dai-duong",
+      "o-nhiem"
+    ],
+    "src": "Lebreton và cộng sự, Scientific Reports (2018)"
+  },
+  {
+    "id": "dl-220",
+    "cat": "dia-ly",
+    "sub": "dai-duong",
+    "t": "Khoảng 50–80% oxy trong khí quyển đến từ sinh vật quang hợp trong đại dương, không từ rừng",
+    "s": "Riêng vi khuẩn lam Prochlorococcus, sinh vật quang hợp nhiều nhất hành tinh, đóng góp một phần đáng kể. Rừng vẫn quan trọng cho carbon nhưng phần lớn oxy chúng tạo ra bị chính hệ sinh thái rừng tiêu thụ lại.",
+    "tags": [
+      "oxy",
+      "thuc-vat-phu-du",
+      "rung"
+    ],
+    "src": "NOAA Ocean Service; Chisholm và cộng sự, Nature (1988)"
+  },
+  {
+    "id": "dl-221",
+    "cat": "dia-ly",
+    "sub": "khi-hau-thoi-tiet",
+    "t": "Nhiệt độ bề mặt toàn cầu đã tăng khoảng 1,1–1,2 °C so với giai đoạn 1850–1900",
+    "s": "Mức tăng không đều: vùng cực Bắc nóng lên nhanh gấp khoảng 3–4 lần trung bình toàn cầu. Mỗi năm trong 10 năm gần nhất đều nằm trong nhóm nóng nhất từng ghi nhận.",
+    "tags": [
+      "nhiet-do",
+      "khi-hau",
+      "xu-huong"
+    ],
+    "src": "IPCC AR6 WG1 (2021); WMO State of the Global Climate"
+  },
+  {
+    "id": "dl-222",
+    "cat": "dia-ly",
+    "sub": "khi-hau-thoi-tiet",
+    "t": "Thời tiết và khí hậu là hai đại lượng khác nhau: một cái là trạng thái, một cái là phân bố thống kê trong 30 năm",
+    "s": "Vì vậy một mùa đông lạnh không phản bác xu hướng nóng lên, giống như một ngày mưa không phản bác việc Sa mạc Sahara khô. Chuẩn 30 năm do WMO đặt ra.",
+    "tags": [
+      "thoi-tiet",
+      "khi-hau",
+      "dinh-nghia"
+    ],
+    "src": "WMO Technical Regulations No. 49"
+  },
+  {
+    "id": "dl-223",
+    "cat": "dia-ly",
+    "sub": "khi-hau-thoi-tiet",
+    "t": "Dự báo thời tiết chính xác tối đa khoảng 10 ngày, và giới hạn này là bản chất vật lý chứ không phải thiếu máy tính",
+    "s": "Khí quyển là hệ hỗn loạn: sai số ban đầu nhân đôi khoảng mỗi 2 ngày. Lorenz phát hiện điều này năm 1963 khi làm tròn số liệu tới chữ số thứ ba và thấy kết quả đổi hoàn toàn.",
+    "tags": [
+      "du-bao",
+      "hon-loan",
+      "lorenz"
+    ],
+    "src": "Lorenz, Journal of the Atmospheric Sciences (1963); ECMWF"
+  },
+  {
+    "id": "dl-224",
+    "cat": "dia-ly",
+    "sub": "khi-hau-thoi-tiet",
+    "t": "Bão nhiệt đới cần nước biển ấm trên khoảng 26,5 °C ở độ sâu vài chục mét mới hình thành được",
+    "s": "Đó là lý do bão không xuất hiện ở nam Đại Tây Dương và rất hiếm ở xích đạo, nơi lực Coriolis quá yếu để tạo xoáy. Việt Nam trung bình chịu khoảng 6–8 cơn bão và áp thấp nhiệt đới mỗi năm.",
+    "tags": [
+      "bao",
+      "nhiet-do-nuoc",
+      "viet-nam"
+    ],
+    "src": "NOAA Hurricane Research Division; Tổng cục Khí tượng Thuỷ văn"
+  },
+  {
+    "id": "dl-225",
+    "cat": "dia-ly",
+    "sub": "khi-hau-thoi-tiet",
+    "t": "Mắt bão là vùng lặng gió nhất, và nó bị vây bởi vành mây có gió mạnh nhất của cả cơn bão",
+    "s": "Áp suất trong mắt bão có thể xuống dưới 900 hectopascal, thấp hơn khí quyển chuẩn hơn 10%. Người ở tâm bão thường tưởng bão đã qua, rồi bị vành mây bên kia đánh tiếp.",
+    "tags": [
+      "mat-bao",
+      "ap-suat",
+      "an-toan"
+    ],
+    "src": "NOAA National Hurricane Center"
+  },
+  {
+    "id": "dl-226",
+    "cat": "dia-ly",
+    "sub": "khi-hau-thoi-tiet",
+    "t": "El Niño và La Niña đổi hình thái mưa trên toàn cầu, và chu kỳ của chúng dài khoảng 2–7 năm",
+    "s": "Chúng bắt nguồn từ dao động nhiệt độ nước mặt vùng Thái Bình Dương xích đạo. Với Việt Nam, El Niño thường gắn với ít bão hơn nhưng khô hạn nặng hơn ở miền Trung và Tây Nguyên.",
+    "tags": [
+      "el-nino",
+      "khi-hau",
+      "viet-nam"
+    ],
+    "src": "NOAA Climate Prediction Center; Tổng cục Khí tượng Thuỷ văn"
+  },
+  {
+    "id": "dl-227",
+    "cat": "dia-ly",
+    "sub": "khi-hau-thoi-tiet",
+    "t": "Gió mùa không phải là mưa — nó là sự đảo chiều gió theo mùa do đất và biển nóng lên khác nhau",
+    "s": "Đất nóng nhanh hơn biển vào mùa hè, tạo vùng áp thấp hút gió ẩm từ biển vào. Mùa đông thì ngược lại, và đó là lý do miền Bắc Việt Nam có mùa khô lạnh.",
+    "tags": [
+      "gio-mua",
+      "khi-hau",
+      "chau-a"
+    ],
+    "src": "Webster và cộng sự, Journal of Geophysical Research (1998)"
+  },
+  {
+    "id": "dl-228",
+    "cat": "dia-ly",
+    "sub": "khi-hau-thoi-tiet",
+    "t": "Sét đánh xuống Trái Đất khoảng 40–50 lần mỗi giây, tức hơn 1 tỉ lần mỗi năm",
+    "s": "Vệ tinh đo được mật độ cao nhất ở hồ Maracaibo, Venezuela, với khoảng 233 tia mỗi km² mỗi năm. Khoảng 3/4 số tia sét không chạm đất mà chỉ đi giữa mây.",
+    "tags": [
+      "set",
+      "thong-ke",
+      "ve-tinh"
+    ],
+    "src": "NASA Lightning Imaging Sensor; Albrecht và cộng sự, BAMS (2016)"
+  },
+  {
+    "id": "dl-229",
+    "cat": "dia-ly",
+    "sub": "khi-hau-thoi-tiet",
+    "t": "Mưa đá lớn nhất từng ghi nhận nặng gần 1 kg và đường kính 20 cm",
+    "s": "Viên đá rơi ở Vivian, South Dakota năm 2010. Để giữ được viên đá cỡ đó lơ lửng, dòng khí đi lên trong cơn dông phải mạnh trên 160 km/h.",
+    "tags": [
+      "mua-da",
+      "dong",
+      "ky-luc"
+    ],
+    "src": "NOAA National Climatic Data Center (2010)"
+  },
+  {
+    "id": "dl-230",
+    "cat": "dia-ly",
+    "sub": "khi-hau-thoi-tiet",
+    "t": "Không có hai bông tuyết giống nhau, và lý do là số cách sắp xếp phân tử nước quá lớn",
+    "s": "Một bông tuyết chứa khoảng 10 mũ 18 phân tử nước, và hình dạng phụ thuộc từng biến đổi nhiệt độ, độ ẩm trên đường rơi. Tuy vậy các tinh thể rất nhỏ và đơn giản thì có thể giống nhau.",
+    "tags": [
+      "bong-tuyet",
+      "tinh-the",
+      "xac-suat"
+    ],
+    "src": "Libbrecht, Snow Crystals (2021)"
+  },
+  {
+    "id": "dl-231",
+    "cat": "dia-ly",
+    "sub": "song-nui-sa-mac",
+    "t": "Sông Nile và sông Amazon tranh nhau danh hiệu dài nhất, và tranh chấp nằm ở việc chọn nguồn nào",
+    "s": "Nile thường được ghi khoảng 6.650 km, Amazon khoảng 6.400 km, nhưng một số phép đo chọn nhánh nguồn khác cho Amazon dài hơn. Amazon thì chắc chắn là sông có lưu lượng lớn nhất, chiếm khoảng 20% nước ngọt chảy ra biển toàn cầu.",
+    "tags": [
+      "song",
+      "nile",
+      "amazon"
+    ],
+    "src": "Cục Khảo sát Địa chất Hoa Kỳ; Viện Nghiên cứu Không gian Brazil (INPE)"
+  },
+  {
+    "id": "dl-232",
+    "cat": "dia-ly",
+    "sub": "song-nui-sa-mac",
+    "t": "Sa mạc lớn nhất thế giới là Nam Cực, không phải Sahara",
+    "s": "Định nghĩa sa mạc dựa trên lượng mưa dưới 250 mm mỗi năm, không dựa vào nhiệt độ hay cát. Nam Cực rộng khoảng 14 triệu km², gấp rưỡi Sahara.",
+    "tags": [
+      "sa-mac",
+      "nam-cuc",
+      "dinh-nghia"
+    ],
+    "src": "Tổ chức Khí tượng Thế giới (WMO); Cục Khảo sát Nam Cực Anh"
+  },
+  {
+    "id": "dl-233",
+    "cat": "dia-ly",
+    "sub": "song-nui-sa-mac",
+    "t": "Bụi từ Sahara bay qua Đại Tây Dương và bón phân cho rừng Amazon mỗi năm",
+    "s": "Ước tính khoảng 27 triệu tấn bụi lắng xuống lưu vực Amazon hằng năm, mang theo phospho mà đất rừng nhiệt đới rất thiếu. Phần lớn bụi này đến từ một lòng hồ cạn ở Chad.",
+    "tags": [
+      "bui",
+      "sahara",
+      "amazon"
+    ],
+    "src": "Yu và cộng sự, Geophysical Research Letters (2015)"
+  },
+  {
+    "id": "dl-234",
+    "cat": "dia-ly",
+    "sub": "song-nui-sa-mac",
+    "t": "Đồng bằng sông Mê Kông đang sụt lún nhanh hơn mực nước biển dâng",
+    "s": "Tốc độ sụt trung bình khoảng 1–4 cm mỗi năm ở nhiều nơi, chủ yếu do khai thác nước ngầm quá mức, so với mực nước biển dâng khoảng 3–4 mm mỗi năm. Nghĩa là nguyên nhân gần nhất nằm ở quản lý nước ngầm.",
+    "tags": [
+      "mekong",
+      "sut-lun",
+      "nuoc-ngam"
+    ],
+    "src": "Minderhoud và cộng sự, Environmental Research Letters (2017)"
+  },
+  {
+    "id": "dl-235",
+    "cat": "dia-ly",
+    "sub": "song-nui-sa-mac",
+    "t": "Đồng bằng sông Cửu Long chỉ cao trung bình khoảng 0,8 mét trên mực nước biển",
+    "s": "Đây là lý do vùng này nhạy cảm bậc nhất thế giới với nước biển dâng và xâm nhập mặn. Một phép đo lại bằng dữ liệu độ cao chính xác hơn cho con số thấp hơn nhiều so với ước tính cũ khoảng 2,6 mét.",
+    "tags": [
+      "cuu-long",
+      "do-cao",
+      "nuoc-bien"
+    ],
+    "src": "Minderhoud và cộng sự, Nature Communications (2019)"
+  },
+  {
+    "id": "dl-236",
+    "cat": "dia-ly",
+    "sub": "song-nui-sa-mac",
+    "t": "Thác nước cao nhất thế giới nằm dưới biển, giữa Greenland và Iceland",
+    "s": "Thác Đan Mạch có nước lạnh đặc chảy xuống độ chênh khoảng 3.500 mét, lưu lượng gấp hàng trăm lần thác Niagara. Nó vô hình vì cả 'nước chảy' và 'không khí' đều là nước biển ở hai mật độ khác nhau.",
+    "tags": [
+      "thac",
+      "dai-duong",
+      "hai-luu"
+    ],
+    "src": "NOAA Ocean Exploration"
+  },
+  {
+    "id": "dl-237",
+    "cat": "dia-ly",
+    "sub": "song-nui-sa-mac",
+    "t": "Hồ Baikal chứa khoảng 20% nước ngọt dạng lỏng không đóng băng của toàn hành tinh",
+    "s": "Nó sâu 1.642 mét, sâu nhất thế giới, và đủ cổ để có hệ sinh thái riêng với hơn 1.000 loài đặc hữu. Nếu tháo hết nước Baikal, mọi con sông trên thế giới phải chảy vào đó gần một năm mới đầy lại.",
+    "tags": [
+      "baikal",
+      "nuoc-ngot",
+      "ho"
+    ],
+    "src": "UNESCO World Heritage; Viện Hàn lâm Khoa học Nga"
+  },
+  {
+    "id": "dl-238",
+    "cat": "dia-ly",
+    "sub": "song-nui-sa-mac",
+    "t": "Biển Aral từng là hồ lớn thứ tư thế giới và đã mất trên 90% diện tích trong khoảng 50 năm",
+    "s": "Nguyên nhân là hai con sông cấp nước bị chuyển dòng để tưới bông từ thập niên 1960. Đây là một trong các thảm hoạ môi trường do con người gây ra có quy mô lớn nhất và đo được rõ nhất.",
+    "tags": [
+      "aral",
+      "thuy-loi",
+      "tham-hoa"
+    ],
+    "src": "UNEP; NASA Earth Observatory"
+  },
+  {
+    "id": "dl-239",
+    "cat": "dia-ly",
+    "sub": "song-nui-sa-mac",
+    "t": "Hang Sơn Đoòng ở Quảng Bình là hang tự nhiên lớn nhất thế giới tính theo thể tích khoang",
+    "s": "Khoang lớn nhất cao trên 200 mét và rộng khoảng 150 mét, đủ chứa một toà nhà 40 tầng. Nó chỉ được khảo sát đầy đủ năm 2009 dù người địa phương đã biết cửa hang từ trước.",
+    "tags": [
+      "son-doong",
+      "hang",
+      "viet-nam"
+    ],
+    "src": "British Cave Research Association (2009); UNESCO Phong Nha-Kẻ Bàng"
+  },
+  {
+    "id": "dl-240",
+    "cat": "dia-ly",
+    "sub": "song-nui-sa-mac",
+    "t": "Sa mạc Atacama có những trạm khí tượng chưa từng ghi nhận một giọt mưa nào",
+    "s": "Một số điểm có lượng mưa trung bình dưới 1 mm mỗi năm, và đất ở đó khô tới mức NASA dùng làm nơi thử thiết bị tìm sự sống trên Sao Hoả. Nguyên nhân là bóng mưa của Andes cộng dòng biển lạnh Humboldt.",
+    "tags": [
+      "atacama",
+      "sa-mac",
+      "nasa"
+    ],
+    "src": "Navarro-González và cộng sự, Science (2003)"
+  },
+  {
+    "id": "dl-241",
+    "cat": "dia-ly",
+    "sub": "bang-va-cuc",
+    "t": "Băng ở Nam Cực dày trung bình khoảng 2.100 mét, và chỗ dày nhất gần 4.900 mét",
+    "s": "Nếu toàn bộ tan hết, mực nước biển toàn cầu dâng khoảng 58 mét. Khối lượng băng lớn tới mức nó ép vỏ lục địa lún xuống hàng trăm mét.",
+    "tags": [
+      "nam-cuc",
+      "bang",
+      "nuoc-bien"
+    ],
+    "src": "IPCC AR6; Fretwell và cộng sự, Bedmap2 (2013)"
+  },
+  {
+    "id": "dl-242",
+    "cat": "dia-ly",
+    "sub": "bang-va-cuc",
+    "t": "Băng biển Bắc Cực tan không làm mực nước biển dâng, còn băng trên đất liền thì có",
+    "s": "Băng nổi đã chiếm chỗ đúng khối nước nặng bằng nó theo nguyên lý Archimedes. Đóng góp chính cho nước biển dâng là băng Greenland, Nam Cực và các sông băng trên núi.",
+    "tags": [
+      "bang-bien",
+      "archimedes",
+      "nuoc-bien"
+    ],
+    "src": "IPCC AR6 WG1, Chương 9; NSIDC"
+  },
+  {
+    "id": "dl-243",
+    "cat": "dia-ly",
+    "sub": "bang-va-cuc",
+    "t": "Greenland mất trung bình khoảng 270 tỉ tấn băng mỗi năm trong hai thập kỷ qua",
+    "s": "Con số được đo trực tiếp bằng vệ tinh trọng lực GRACE. Riêng lượng này đã đóng góp khoảng 0,7 mm mỗi năm vào mực nước biển toàn cầu.",
+    "tags": [
+      "greenland",
+      "bang",
+      "grace"
+    ],
+    "src": "IMBIE Team, Nature (2020); NASA GRACE"
+  },
+  {
+    "id": "dl-245",
+    "cat": "dia-ly",
+    "sub": "bang-va-cuc",
+    "t": "Trái Đất đã trải qua ít nhất 5 kỷ băng hà lớn, và chúng ta đang ở trong một kỷ băng hà",
+    "s": "Định nghĩa kỷ băng hà là thời kỳ có băng thường trực ở hai cực, và điều đó đúng với hiện tại. Cái vừa kết thúc khoảng 11.700 năm trước là một 'thời kỳ băng' trong kỷ băng hà đang diễn ra.",
+    "tags": [
+      "ky-bang-ha",
+      "dinh-nghia",
+      "co-khi-hau"
+    ],
+    "src": "Cục Khảo sát Địa chất Hoa Kỳ; Zachos và cộng sự, Science (2001)"
+  },
+  {
+    "id": "dl-246",
+    "cat": "dia-ly",
+    "sub": "bang-va-cuc",
+    "t": "Nhiệt độ thấp nhất từng ghi nhận trên mặt đất là −89,2 °C tại trạm Vostok, Nam Cực",
+    "s": "Vệ tinh sau đó đo được điểm bề mặt xuống tới khoảng −98 °C ở các hố lõm trên cao nguyên Nam Cực, nhưng đó là nhiệt độ bề mặt băng chứ không phải nhiệt độ không khí theo chuẩn khí tượng.",
+    "tags": [
+      "nhiet-do",
+      "ky-luc",
+      "nam-cuc"
+    ],
+    "src": "WMO; Scambos và cộng sự, GRL (2018)"
+  },
+  {
+    "id": "dl-247",
+    "cat": "dia-ly",
+    "sub": "bang-va-cuc",
+    "t": "Bắc Cực không có đất liền dưới băng, còn Nam Cực là một lục địa thật",
+    "s": "Vì vậy Bắc Cực không thuộc quốc gia nào theo nghĩa lãnh thổ, còn Nam Cực bị 7 nước tuyên bố chủ quyền một phần nhưng bị đóng băng bởi Hiệp ước Nam Cực 1959.",
+    "tags": [
+      "bac-cuc",
+      "nam-cuc",
+      "phap-ly"
+    ],
+    "src": "Hiệp ước Nam Cực (1959); UNCLOS"
+  },
+  {
+    "id": "dl-248",
+    "cat": "dia-ly",
+    "sub": "bang-va-cuc",
+    "t": "Đất đóng băng vĩnh cửu chứa lượng carbon khoảng gấp đôi lượng carbon đang có trong khí quyển",
+    "s": "Ước tính khoảng 1.400–1.600 tỉ tấn carbon bị khoá trong permafrost. Khi tan, một phần chuyển thành CO₂ và metan, tạo vòng phản hồi làm nóng thêm.",
+    "tags": [
+      "permafrost",
+      "carbon",
+      "phan-hoi"
+    ],
+    "src": "Schuur và cộng sự, Nature (2015); IPCC SROCC"
+  },
+  {
+    "id": "dl-249",
+    "cat": "dia-ly",
+    "sub": "bang-va-cuc",
+    "t": "Cực từ Bắc di chuyển và trong hai thập kỷ qua nó đi khoảng 50–60 km mỗi năm về phía Siberia",
+    "s": "Tốc độ này nhanh hơn nhiều so với thế kỷ 20, khiến các mô hình từ trường phải cập nhật ngoài lịch năm 2019. La bàn ở nhiều nơi cần hiệu chỉnh độ lệch từ theo thời gian.",
+    "tags": [
+      "cuc-tu",
+      "la-ban",
+      "tu-truong"
+    ],
+    "src": "British Geological Survey & NOAA, World Magnetic Model (2020)"
+  },
+  {
+    "id": "dl-251",
+    "cat": "dia-ly",
+    "sub": "ban-do-toa-do",
+    "t": "Kinh tuyến gốc đi qua Greenwich là một lựa chọn chính trị, không phải một mốc tự nhiên",
+    "s": "Hội nghị Kinh tuyến Quốc tế 1884 chọn Greenwich vì khi đó khoảng 72% tàu thương mại đã dùng hải đồ Anh. Pháp bỏ phiếu trắng và giữ kinh tuyến Paris tới năm 1911.",
+    "tags": [
+      "kinh-tuyen",
+      "greenwich",
+      "lich-su"
+    ],
+    "src": "Hội nghị Kinh tuyến Quốc tế, Washington (1884)"
+  },
+  {
+    "id": "dl-252",
+    "cat": "dia-ly",
+    "sub": "ban-do-toa-do",
+    "t": "Bản đồ Mercator phóng to Greenland lên gấp khoảng 14 lần so với diện tích thật của nó",
+    "s": "Greenland trông bằng châu Phi nhưng thật ra nhỏ hơn khoảng 14 lần. Mercator được thiết kế để giữ đúng góc cho hàng hải, và cái giá phải trả là diện tích ở vĩ độ cao bị nở ra.",
+    "tags": [
+      "mercator",
+      "ban-do",
+      "sai-lech"
+    ],
+    "src": "Mercator (1569); Snyder, Map Projections: A Working Manual"
+  },
+  {
+    "id": "dl-253",
+    "cat": "dia-ly",
+    "sub": "ban-do-toa-do",
+    "t": "Không có phép chiếu bản đồ nào giữ đúng cùng lúc diện tích, hình dạng và khoảng cách",
+    "s": "Mỗi bản đồ là một chọn lựa hy sinh. Bản đồ Gall–Peters giữ diện tích nhưng bóp méo hình dạng nặng, còn Winkel tripel — do National Geographic dùng — cân bằng cả ba mà không đúng hoàn toàn ở cái nào.",
+    "tags": [
+      "phep-chieu",
+      "ban-do",
+      "danh-doi"
+    ],
+    "src": "Snyder, Flattening the Earth (1993); National Geographic Society"
+  },
+  {
+    "id": "dl-255",
+    "cat": "dia-ly",
+    "sub": "ban-do-toa-do",
+    "t": "Trung Quốc rộng gần 5 múi giờ địa lý nhưng chỉ dùng một giờ chuẩn duy nhất",
+    "s": "Vì vậy ở Kashgar phía tây, Mặt Trời mọc lúc gần 10 giờ sáng theo giờ Bắc Kinh vào mùa đông. Nepal thì lệch 45 phút so với giờ chuẩn quốc tế, một trong vài nước dùng độ lệch không tròn giờ.",
+    "tags": [
+      "mui-gio",
+      "trung-quoc",
+      "quy-uoc"
+    ],
+    "src": "IANA Time Zone Database"
+  },
+  {
+    "id": "dl-256",
+    "cat": "dia-ly",
+    "sub": "ban-do-toa-do",
+    "t": "Đường đổi ngày quốc tế không thẳng, và nó uốn để tránh cắt qua các quốc gia",
+    "s": "Kiribati dịch đường này năm 1995 để cả nước cùng một ngày, khiến quốc gia này trở thành nơi đón năm mới sớm nhất thế giới. Samoa nhảy hẳn một ngày vào năm 2011 để cùng lịch với Australia và New Zealand.",
+    "tags": [
+      "doi-ngay",
+      "mui-gio",
+      "kiribati"
+    ],
+    "src": "IANA Time Zone Database; công báo Samoa (2011)"
+  },
+  {
+    "id": "dl-257",
+    "cat": "dia-ly",
+    "sub": "ban-do-toa-do",
+    "t": "GPS cần tối thiểu 4 vệ tinh để định vị, không phải 3",
+    "s": "Ba vệ tinh xác định được ba toạ độ không gian, còn vệ tinh thứ tư dùng để giải sai lệch đồng hồ trong máy thu — vốn quá rẻ để chính xác cỡ nano giây. Hệ thống hiện có 31 vệ tinh hoạt động.",
+    "tags": [
+      "gps",
+      "dinh-vi",
+      "ve-tinh"
+    ],
+    "src": "US Space Force, GPS.gov"
+  },
+  {
+    "id": "dl-258",
+    "cat": "dia-ly",
+    "sub": "ban-do-toa-do",
+    "t": "Toạ độ vĩ độ 1 độ luôn tương ứng khoảng 111 km, nhưng kinh độ 1 độ thì co lại về 0 ở hai cực",
+    "s": "Ở xích đạo, 1 độ kinh cũng khoảng 111 km; ở vĩ độ 60 chỉ còn khoảng 55 km. Đây là lý do không thể quy đổi độ sang km bằng một hằng số duy nhất.",
+    "tags": [
+      "toa-do",
+      "kinh-do",
+      "do-luong"
+    ],
+    "src": "NOAA National Geodetic Survey"
+  },
+  {
+    "id": "dl-259",
+    "cat": "dia-ly",
+    "sub": "ban-do-toa-do",
+    "t": "Bản đồ dùng lưới hình vuông trên mặt cầu luôn có chỗ nối bị hở hoặc chồng, và Google Maps chọn giải bằng phép chiếu Mercator hình vuông",
+    "s": "Vì vậy ứng dụng bản đồ trực tuyến không hiển thị được vùng gần hai cực: vĩ độ bị chặn ở khoảng 85 độ. Đó là lý do bạn không zoom được tới Cực Bắc trên phần lớn bản đồ web.",
+    "tags": [
+      "web-mercator",
+      "ban-do",
+      "gioi-han"
+    ],
+    "src": "EPSG:3857 Web Mercator; tài liệu Google Maps Platform"
+  },
+  {
+    "id": "dl-260",
+    "cat": "dia-ly",
+    "sub": "ban-do-toa-do",
+    "t": "Việt Nam có khoảng 3.260 km đường bờ biển, nhưng con số này thay đổi theo cách đo",
+    "s": "Các nguồn khác nhau đưa ra từ 3.260 đến 3.444 km tuỳ vào việc có tính đảo và các đoạn cửa sông hay không. Đây là hệ quả trực tiếp của việc chiều dài bờ biển phụ thuộc độ phân giải phép đo.",
+    "tags": [
+      "viet-nam",
+      "bo-bien",
+      "do-luong"
+    ],
+    "src": "Tổng cục Thống kê; Bộ Tài nguyên và Môi trường"
+  },
+  {
+    "id": "dl-261",
+    "cat": "dia-ly",
+    "sub": "tai-nguyen-dat",
+    "t": "Chỉ khoảng 11% diện tích đất trên Trái Đất dùng được cho canh tác cây trồng",
+    "s": "Khoảng 26% nữa là đồng cỏ chăn thả, phần còn lại là sa mạc, núi, băng và rừng. Tổng diện tích đất nông nghiệp chiếm khoảng một nửa diện tích đất ở được của hành tinh.",
+    "tags": [
+      "dat-nong-nghiep",
+      "tai-nguyen",
+      "luong-thuc"
+    ],
+    "src": "FAOSTAT; Ritchie & Roser, Our World in Data"
+  },
+  {
+    "id": "dl-262",
+    "cat": "dia-ly",
+    "sub": "tai-nguyen-dat",
+    "t": "Tạo ra 1 cm đất mặt cần khoảng 100–400 năm, còn xói mòn có thể lấy đi chỗ đó trong một mùa mưa",
+    "s": "Đó là lý do đất được xếp là tài nguyên gần như không tái tạo trên thang thời gian con người. Ước tính khoảng một phần ba đất canh tác toàn cầu đã bị suy thoái ở mức trung bình hoặc nặng.",
+    "tags": [
+      "dat",
+      "xoi-mon",
+      "suy-thoai"
+    ],
+    "src": "FAO, Status of the World's Soil Resources (2015)"
+  },
+  {
+    "id": "dl-263",
+    "cat": "dia-ly",
+    "sub": "tai-nguyen-dat",
+    "t": "Một thìa đất khoẻ chứa nhiều sinh vật hơn số người trên Trái Đất",
+    "s": "Mật độ vi khuẩn trong đất tốt vào khoảng 1 tỉ tế bào mỗi gam, cùng với nấm, tuyến trùng và động vật nguyên sinh. Sự đa dạng đó là thứ tạo ra độ phì, không phải bản thân khoáng chất.",
+    "tags": [
+      "dat",
+      "vi-sinh-vat",
+      "da-dang"
+    ],
+    "src": "FAO; Fierer, Nature Reviews Microbiology (2017)"
+  },
+  {
+    "id": "dl-264",
+    "cat": "dia-ly",
+    "sub": "tai-nguyen-dat",
+    "t": "Nông nghiệp dùng khoảng 70% lượng nước ngọt con người khai thác trên toàn cầu",
+    "s": "Công nghiệp chiếm khoảng 19% và sinh hoạt chỉ khoảng 11%. Vì vậy chính sách nước tác động lớn nhất là ở tưới tiêu chứ không ở vòi nước gia đình.",
+    "tags": [
+      "nuoc",
+      "nong-nghiep",
+      "chinh-sach"
+    ],
+    "src": "FAO AQUASTAT; UN World Water Development Report"
+  },
+  {
+    "id": "dl-265",
+    "cat": "dia-ly",
+    "sub": "tai-nguyen-dat",
+    "t": "Rừng Amazon tự tạo ra một phần lượng mưa của chính nó qua các 'dòng sông bay'",
+    "s": "Cây thoát hơi nước tạo khối ẩm khổng lồ di chuyển trong khí quyển, và ước tính khoảng 25–50% lượng mưa trong lưu vực đến từ chính rừng. Vì vậy mất rừng ở một vùng làm khô đi vùng khác cách hàng trăm km.",
+    "tags": [
+      "amazon",
+      "mua",
+      "tai-che-nuoc"
+    ],
+    "src": "Nobre và cộng sự, PNAS (2016); Spracklen, Nature (2012)"
+  },
+  {
+    "id": "dl-266",
+    "cat": "dia-ly",
+    "sub": "tai-nguyen-dat",
+    "t": "Diện tích rừng toàn cầu giảm khoảng 420 triệu hecta từ năm 1990, tương đương diện tích cả Liên minh châu Âu",
+    "s": "Tốc độ mất rừng đã chậm lại: từ khoảng 16 triệu hecta mỗi năm trong thập niên 1990 xuống khoảng 10 triệu hecta mỗi năm giai đoạn 2015–2020. Việt Nam là một trong ít nước có diện tích che phủ rừng tăng trong cùng giai đoạn.",
+    "tags": [
+      "rung",
+      "mat-rung",
+      "viet-nam"
+    ],
+    "src": "FAO Global Forest Resources Assessment (2020)"
+  },
+  {
+    "id": "dl-267",
+    "cat": "dia-ly",
+    "sub": "tai-nguyen-dat",
+    "t": "Đất than bùn chỉ chiếm khoảng 3% diện tích đất nhưng chứa nhiều carbon hơn toàn bộ rừng trên thế giới cộng lại",
+    "s": "Ước tính khoảng 550 tỉ tấn carbon. Khi than bùn bị tháo nước để canh tác, nó oxy hoá và trở thành nguồn phát thải rất lớn — đám cháy than bùn Indonesia 1997 phát thải tương đương nhiều tháng phát thải toàn cầu.",
+    "tags": [
+      "than-bun",
+      "carbon",
+      "chay-rung"
+    ],
+    "src": "UNEP Global Peatlands Assessment (2022); Page và cộng sự, Nature (2002)"
+  },
+  {
+    "id": "dl-268",
+    "cat": "dia-ly",
+    "sub": "tai-nguyen-dat",
+    "t": "Khoảng một nửa diện tích đất ở được của Trái Đất đang dùng cho nông nghiệp, và phần lớn trong đó để nuôi gia súc",
+    "s": "Chăn nuôi chiếm khoảng 77% đất nông nghiệp nhưng chỉ cung cấp khoảng 18% calo và 37% protein cho con người. Đây là con số trung tâm trong mọi tranh luận về chế độ ăn và sử dụng đất.",
+    "tags": [
+      "chan-nuoi",
+      "dat",
+      "calo"
+    ],
+    "src": "Poore & Nemecek, Science (2018); FAO"
+  },
+  {
+    "id": "dl-269",
+    "cat": "dia-ly",
+    "sub": "tai-nguyen-dat",
+    "t": "Cát là tài nguyên bị khai thác nhiều thứ hai sau nước, và cát sa mạc gần như không dùng được để xây",
+    "s": "Hạt cát sa mạc bị gió mài nhẵn và tròn nên không kết dính trong bê tông; xây dựng cần cát sông hoặc cát biển có góc cạnh. Vì vậy Dubai từng phải nhập cát từ Australia.",
+    "tags": [
+      "cat",
+      "xay-dung",
+      "tai-nguyen"
+    ],
+    "src": "UNEP, Sand and Sustainability (2022)"
+  },
+  {
+    "id": "dl-270",
+    "cat": "dia-ly",
+    "sub": "tai-nguyen-dat",
+    "t": "Đồng bằng sông Cửu Long mất khoảng 300–500 hecta đất mỗi năm do sạt lở bờ sông và bờ biển",
+    "s": "Nguyên nhân chính là thiếu hụt phù sa do đập thượng nguồn giữ lại cộng khai thác cát lòng sông. Lượng phù sa về đồng bằng đã giảm khoảng một nửa so với trước khi có chuỗi đập trên dòng chính.",
+    "tags": [
+      "cuu-long",
+      "sat-lo",
+      "phu-sa"
+    ],
+    "src": "Mekong River Commission; Kondolf và cộng sự, Science of the Total Environment (2018)"
+  },
+  {
+    "id": "dl-271",
+    "cat": "dia-ly",
+    "sub": "thien-tai",
+    "t": "Động đất mạnh nhất từng đo được là 9,5 độ ở Chile năm 1960, và nó làm rung cả hành tinh trong nhiều ngày",
+    "s": "Năng lượng giải phóng tương đương khoảng 178.000 lần quả bom Hiroshima. Nó tạo sóng thần cao 10 mét đánh tới Nhật Bản sau khoảng 22 giờ, cách nơi xảy ra hơn 17.000 km.",
+    "tags": [
+      "dong-dat",
+      "chile",
+      "song-than"
+    ],
+    "src": "Cục Khảo sát Địa chất Hoa Kỳ (USGS)"
+  },
+  {
+    "id": "dl-272",
+    "cat": "dia-ly",
+    "sub": "thien-tai",
+    "t": "Số người chết do thiên tai đã giảm hơn 90% trong một thế kỷ dù dân số tăng gấp bốn",
+    "s": "Nguyên nhân là dự báo sớm, nhà ở bền hơn và hệ thống sơ tán. Thiệt hại kinh tế thì tăng, vì có nhiều tài sản hơn nằm ở vùng nguy hiểm.",
+    "tags": [
+      "thien-tai",
+      "tu-vong",
+      "canh-bao-som"
+    ],
+    "src": "EM-DAT CRED; Our World in Data"
+  },
+  {
+    "id": "dl-273",
+    "cat": "dia-ly",
+    "sub": "thien-tai",
+    "t": "Bão được đặt tên theo danh sách luân phiên, và tên của những cơn bão gây thảm hoạ lớn bị loại vĩnh viễn",
+    "s": "Tổ chức Khí tượng Thế giới quản lý các danh sách 6 năm một vòng. Katrina, Haiyan và Ian đều đã bị rút khỏi danh sách để không dùng lại.",
+    "tags": [
+      "bao",
+      "dat-ten",
+      "wmo"
+    ],
+    "src": "WMO Tropical Cyclone Programme"
+  },
+  {
+    "id": "dl-274",
+    "cat": "dia-ly",
+    "sub": "thien-tai",
+    "t": "Lũ quét giết nhiều người hơn bão ở nhiều nước, và phần lớn nạn nhân chết trong xe",
+    "s": "Chỉ khoảng 60 cm nước chảy đủ để làm nổi và trôi một xe hơi. Đây là lý do các cơ quan cứu hộ nhấn mạnh việc không đi qua đoạn ngập dù trông nông.",
+    "tags": [
+      "lu-quet",
+      "an-toan",
+      "xe"
+    ],
+    "src": "NOAA National Weather Service"
+  },
+  {
+    "id": "dl-275",
+    "cat": "dia-ly",
+    "sub": "thien-tai",
+    "t": "Sóng thần không phải sóng thuỷ triều và cũng không phải sóng do gió — nó là sóng của toàn bộ cột nước",
+    "s": "Chu kỳ sóng thần dài từ vài phút tới hơn một giờ, so với vài giây của sóng gió. Vì cả cột nước từ đáy tới mặt cùng chuyển động, năng lượng của nó lớn hơn sóng gió hàng nghìn lần.",
+    "tags": [
+      "song-than",
+      "dinh-nghia",
+      "nang-luong"
+    ],
+    "src": "NOAA; Cục Khảo sát Địa chất Hoa Kỳ"
+  },
+  {
+    "id": "dl-276",
+    "cat": "dia-ly",
+    "sub": "thien-tai",
+    "t": "Nước rút bất thường ngoài bờ biển là dấu hiệu sóng thần đang tới, và khoảng cách thời gian có thể chỉ vài phút",
+    "s": "Năm 2004, một học sinh 10 tuổi ở Phuket nhận ra dấu hiệu này từ bài học địa lý và giúp sơ tán một bãi biển. Ở nhiều nơi khác, người ta lại đi ra xem cá mắc cạn.",
+    "tags": [
+      "song-than",
+      "canh-bao",
+      "2004"
+    ],
+    "src": "UNESCO IOC Tsunami Programme; báo cáo sau thảm hoạ Ấn Độ Dương 2004"
+  },
+  {
+    "id": "dl-277",
+    "cat": "dia-ly",
+    "sub": "thien-tai",
+    "t": "Núi lửa Tambora phun năm 1815 gây ra 'năm không có mùa hè' ở châu Âu và Bắc Mỹ vào 1816",
+    "s": "Tro và sulfat phun lên tầng bình lưu chặn ánh nắng, làm nhiệt độ toàn cầu giảm khoảng 0,4–0,7 °C. Mất mùa năm đó gây nạn đói lan rộng ở nhiều nước.",
+    "tags": [
+      "tambora",
+      "khi-hau",
+      "lich-su"
+    ],
+    "src": "Stommel & Stommel, Volcano Weather (1983); Oppenheimer, Progress in Physical Geography (2003)"
+  },
+  {
+    "id": "dl-278",
+    "cat": "dia-ly",
+    "sub": "thien-tai",
+    "t": "Cháy rừng ở một số hệ sinh thái là điều kiện để cây tái sinh, và ngăn cháy hoàn toàn làm đám cháy sau lớn hơn",
+    "s": "Nhiều loài thông chỉ mở quả để phát tán hạt khi gặp nhiệt độ cao. Chính sách dập mọi đám cháy ở Mỹ suốt thế kỷ 20 làm tích tụ nhiên liệu và góp phần vào các đám cháy cực lớn hiện nay.",
+    "tags": [
+      "chay-rung",
+      "sinh-thai",
+      "chinh-sach"
+    ],
+    "src": "Cục Lâm nghiệp Hoa Kỳ; Keeley và cộng sự, Fire in Mediterranean Ecosystems"
+  },
+  {
+    "id": "dl-279",
+    "cat": "dia-ly",
+    "sub": "thien-tai",
+    "t": "Sét đánh cùng một chỗ nhiều lần là chuyện thường, và tháp Empire State bị đánh khoảng 25 lần mỗi năm",
+    "s": "Cột thu lôi hoạt động chính vì nó tạo ra điểm phóng điện ưa thích. Câu 'sét không đánh hai lần cùng chỗ' sai hoàn toàn về mặt vật lý.",
+    "tags": [
+      "set",
+      "thu-loi",
+      "huyen-thoai"
+    ],
+    "src": "NOAA National Severe Storms Laboratory; Empire State Realty Trust"
+  },
+  {
+    "id": "dl-280",
+    "cat": "dia-ly",
+    "sub": "thien-tai",
+    "t": "Một cơn bão nhiệt đới lớn giải phóng năng lượng ngưng tụ tương đương hàng trăm lần công suất phát điện toàn cầu",
+    "s": "Năng lượng chủ yếu nằm ở việc hơi nước ngưng tụ thành mưa, không ở gió. Chỉ khoảng 0,5% năng lượng đó chuyển thành động năng của gió.",
+    "tags": [
+      "bao",
+      "nang-luong",
+      "khi-quyen"
+    ],
+    "src": "NOAA Atlantic Oceanographic and Meteorological Laboratory"
+  },
+  {
+    "id": "dl-281",
+    "cat": "dia-ly",
+    "sub": "khi-hau-thoi-tiet",
+    "t": "Đảo nhiệt đô thị làm trung tâm thành phố nóng hơn ngoại thành tới 5–7 °C vào ban đêm",
+    "s": "Nguyên nhân là bê tông và nhựa đường tích nhiệt ban ngày rồi thải ra ban đêm, cộng thiếu cây và nhiệt thải từ điều hoà, xe cộ. Đây là hiệu ứng cục bộ, khác với nóng lên toàn cầu.",
+    "tags": [
+      "dao-nhiet",
+      "do-thi",
+      "nhiet"
+    ],
+    "src": "Oke, Boundary Layer Climates; US EPA Heat Island Program"
+  },
+  {
+    "id": "dl-282",
+    "cat": "dia-ly",
+    "sub": "khi-hau-thoi-tiet",
+    "t": "Mây nặng hơn bạn tưởng: một đám mây tích trung bình chứa khoảng 500 tấn nước",
+    "s": "Nó không rơi vì các giọt nước cực nhỏ, đường kính khoảng 20 micromet, có vận tốc rơi chậm hơn dòng khí đi lên. Mưa chỉ xảy ra khi giọt lớn lên tới khoảng 1 mm.",
+    "tags": [
+      "may",
+      "nuoc",
+      "mua"
+    ],
+    "src": "National Center for Atmospheric Research (NCAR); Rogers & Yau, A Short Course in Cloud Physics"
+  },
+  {
+    "id": "dl-283",
+    "cat": "dia-ly",
+    "sub": "khi-hau-thoi-tiet",
+    "t": "Không khí ở độ cao 10 km có áp suất chỉ khoảng một phần tư mặt đất, và đó là lý do máy bay phải tăng áp khoang",
+    "s": "Khoang máy bay thường được giữ ở áp suất tương đương độ cao 1.800–2.400 mét. Chính chênh lệch này làm tai bạn bị nghẹt và làm gói khoai tây phồng lên khi bay.",
+    "tags": [
+      "ap-suat",
+      "may-bay",
+      "do-cao"
+    ],
+    "src": "FAA Aeromedical Standards; ISO 2533"
+  },
+  {
+    "id": "dl-284",
+    "cat": "dia-ly",
+    "sub": "khi-hau-thoi-tiet",
+    "t": "Nhiệt độ giảm khoảng 6,5 °C cho mỗi 1.000 mét lên cao trong tầng đối lưu",
+    "s": "Đó là lý do có tuyết vĩnh cửu trên núi cao ngay ở vùng nhiệt đới. Ở tầng bình lưu thì ngược lại: nhiệt độ tăng theo độ cao vì ozone hấp thụ tia tử ngoại.",
+    "tags": [
+      "gradient-nhiet",
+      "khi-quyen",
+      "nui"
+    ],
+    "src": "Khí quyển Chuẩn Quốc tế ISA (ISO 2533)"
+  },
+  {
+    "id": "dl-285",
+    "cat": "dia-ly",
+    "sub": "khi-hau-thoi-tiet",
+    "t": "Dòng tia ở độ cao khoảng 10 km chạy nhanh tới 400 km/h, và máy bay bay theo nó để tiết kiệm nhiên liệu",
+    "s": "Đây là lý do chuyến bay từ Mỹ về châu Á thường lâu hơn chuyến đi ngược lại tới hơn một giờ. Dòng tia hình thành do chênh lệch nhiệt độ giữa vùng cực và vùng nhiệt đới.",
+    "tags": [
+      "dong-tia",
+      "hang-khong",
+      "khi-quyen"
+    ],
+    "src": "NOAA; Hiệp hội Vận tải Hàng không Quốc tế (IATA)"
+  },
+  {
+    "id": "dl-286",
+    "cat": "dia-ly",
+    "sub": "dai-duong",
+    "t": "Rạn san hô chiếm dưới 0,1% diện tích đáy biển nhưng là nơi sống của khoảng 25% loài sinh vật biển",
+    "s": "San hô là quan hệ cộng sinh giữa động vật và tảo; khi nước quá ấm, san hô đẩy tảo ra và trắng đi. Đợt tẩy trắng toàn cầu 2014–2017 ảnh hưởng khoảng 75% rạn trên thế giới.",
+    "tags": [
+      "san-ho",
+      "da-dang",
+      "tay-trang"
+    ],
+    "src": "Hughes và cộng sự, Nature (2017); NOAA Coral Reef Watch"
+  },
+  {
+    "id": "dl-287",
+    "cat": "dia-ly",
+    "sub": "dai-duong",
+    "t": "Rừng ngập mặn giữ carbon trên mỗi hecta nhiều gấp 3–5 lần rừng nhiệt đới trên cạn",
+    "s": "Phần lớn carbon nằm trong lớp bùn ngập nước, nơi phân huỷ xảy ra rất chậm. Rừng ngập mặn cũng giảm chiều cao sóng bão tới 66% qua 100 mét chiều rộng rừng.",
+    "tags": [
+      "ngap-man",
+      "carbon",
+      "bao"
+    ],
+    "src": "Donato và cộng sự, Nature Geoscience (2011); McIvor và cộng sự (2012)"
+  },
+  {
+    "id": "dl-288",
+    "cat": "dia-ly",
+    "sub": "dai-duong",
+    "t": "Mực nước biển toàn cầu đã dâng khoảng 21–24 cm từ năm 1880, và tốc độ hiện nay đang tăng",
+    "s": "Khoảng một nửa mức dâng đến từ nước ấm lên và giãn nở, phần còn lại từ băng tan. Tốc độ hiện tại khoảng 3,7 mm mỗi năm, gấp hơn hai lần trung bình thế kỷ 20.",
+    "tags": [
+      "nuoc-bien-dang",
+      "khi-hau",
+      "do-luong"
+    ],
+    "src": "IPCC AR6 WG1; NASA Sea Level Change Portal"
+  },
+  {
+    "id": "dl-289",
+    "cat": "dia-ly",
+    "sub": "dai-duong",
+    "t": "Vùng nước thiếu oxy trên biển đã tăng gấp bốn lần diện tích từ năm 1950",
+    "s": "Nguyên nhân là nước ấm giữ ít oxy hơn và phân bón chảy ra biển gây bùng nổ tảo. Cửa sông Mississippi tạo một vùng chết rộng hàng chục nghìn km² mỗi hè.",
+    "tags": [
+      "thieu-oxy",
+      "vung-chet",
+      "phan-bon"
+    ],
+    "src": "Breitburg và cộng sự, Science (2018)"
+  },
+  {
+    "id": "dl-290",
+    "cat": "dia-ly",
+    "sub": "dai-duong",
+    "t": "Cá voi làm giàu cho đại dương bằng phân của chúng, và việc săn cá voi đã làm giảm năng suất biển",
+    "s": "Phân cá voi mang sắt và nitơ từ tầng sâu lên tầng mặt, bón cho thực vật phù du. Cơ chế 'bơm cá voi' này là ví dụ rõ về việc mất một loài lớn làm đổi cả chu trình dinh dưỡng.",
+    "tags": [
+      "ca-voi",
+      "dinh-duong",
+      "dai-duong"
+    ],
+    "src": "Roman & McCarthy, PLoS ONE (2010)"
+  },
+  {
+    "id": "dl-291",
+    "cat": "dia-ly",
+    "sub": "song-nui-sa-mac",
+    "t": "Dãy Andes dài khoảng 7.000 km, là dãy núi trên cạn dài nhất thế giới",
+    "s": "Nó chạy qua 7 quốc gia và tạo ra bóng mưa làm nên sa mạc Atacama ở một bên và rừng Amazon ở bên kia. Hai hệ sinh thái trái ngược nhất hành tinh nằm cạnh nhau vì một dãy núi.",
+    "tags": [
+      "andes",
+      "nui",
+      "bong-mua"
+    ],
+    "src": "National Geographic Society; USGS"
+  },
+  {
+    "id": "dl-292",
+    "cat": "dia-ly",
+    "sub": "song-nui-sa-mac",
+    "t": "Sông Mê Kông chảy qua 6 quốc gia và cung cấp protein cho khoảng 60 triệu người",
+    "s": "Nghề cá nội địa ở lưu vực này là lớn nhất thế giới, khoảng 2 triệu tấn mỗi năm. Việc chặn dòng cá di cư là tác động sinh thái lớn nhất của các đập trên dòng chính.",
+    "tags": [
+      "mekong",
+      "ca",
+      "dap"
+    ],
+    "src": "Mekong River Commission; FAO"
+  },
+  {
+    "id": "dl-293",
+    "cat": "dia-ly",
+    "sub": "song-nui-sa-mac",
+    "t": "Có những con sông chảy ngược chiều so với hàng triệu năm trước, và Amazon là một trong số đó",
+    "s": "Trước khi Andes nhô lên, hệ sông ở Nam Mỹ chảy về phía tây ra Thái Bình Dương. Việc nâng núi đã chặn dòng, tạo hồ khổng lồ, rồi cuối cùng bẻ dòng sang phía đông.",
+    "tags": [
+      "amazon",
+      "dia-chat",
+      "song"
+    ],
+    "src": "Figueiredo và cộng sự, Geology (2009)"
+  },
+  {
+    "id": "dl-294",
+    "cat": "dia-ly",
+    "sub": "song-nui-sa-mac",
+    "t": "Hồ Titicaca ở độ cao 3.812 mét là hồ có tàu thương mại hoạt động cao nhất thế giới",
+    "s": "Ở độ cao đó, áp suất khí quyển chỉ khoảng 64% mặt biển nên nước sôi ở khoảng 88 °C. Hai tàu hơi nước đầu tiên phải được tháo rời chở bằng lừa lên núi từ thập niên 1860.",
+    "tags": [
+      "titicaca",
+      "ho",
+      "do-cao"
+    ],
+    "src": "Cục Khảo sát Địa chất Hoa Kỳ; hồ sơ lịch sử hàng hải Peru"
+  },
+  {
+    "id": "dl-295",
+    "cat": "dia-ly",
+    "sub": "song-nui-sa-mac",
+    "t": "Có hơn 1.000 hang động ở Việt Nam đã được khảo sát, phần lớn nằm trong đá vôi tuổi 400 triệu năm",
+    "s": "Karst Phong Nha–Kẻ Bàng là một trong các khối đá vôi cổ nhất châu Á. Hang được tạo bằng nước mưa hơi axit hoà tan canxi cacbonat qua hàng triệu năm.",
+    "tags": [
+      "karst",
+      "hang",
+      "viet-nam"
+    ],
+    "src": "UNESCO Phong Nha-Kẻ Bàng; British Cave Research Association"
+  },
+  {
+    "id": "dl-296",
+    "cat": "dia-ly",
+    "sub": "luc-dia-kien-tao",
+    "t": "Vành đai lửa và các mỏ khoáng lớn nhất thế giới nằm trùng nhau vì cùng một nguyên nhân kiến tạo",
+    "s": "Đới hút chìm đưa nước và khoáng chất xuống sâu, tạo dung dịch nóng vận chuyển kim loại lên gần bề mặt. Đó là lý do Chile và Peru chiếm khoảng 40% sản lượng đồng toàn cầu.",
+    "tags": [
+      "hut-chim",
+      "khoang-san",
+      "dong"
+    ],
+    "src": "USGS Mineral Commodity Summaries; Sillitoe, Economic Geology (2010)"
+  },
+  {
+    "id": "dl-297",
+    "cat": "dia-ly",
+    "sub": "luc-dia-kien-tao",
+    "t": "Iceland đang bị xé ra hai nửa với tốc độ khoảng 2 cm mỗi năm vì nó nằm ngay trên sống núi giữa Đại Tây Dương",
+    "s": "Ở công viên Þingvellir, người ta lặn được giữa hai mảng kiến tạo. Đây là một trong rất ít nơi trên cạn quan sát trực tiếp được ranh giới mảng phân tách.",
+    "tags": [
+      "iceland",
+      "kien-tao",
+      "song-nui"
+    ],
+    "src": "Cục Khí tượng Iceland; UNESCO Þingvellir"
+  },
+  {
+    "id": "dl-298",
+    "cat": "dia-ly",
+    "sub": "luc-dia-kien-tao",
+    "t": "Biển Chết thấp hơn mực nước biển khoảng 430 mét và mực nước của nó đang tụt hơn 1 mét mỗi năm",
+    "s": "Nguyên nhân là nước sông Jordan bị lấy gần hết cho tưới tiêu và sinh hoạt. Đây là điểm đất liền thấp nhất trên Trái Đất.",
+    "tags": [
+      "bien-chet",
+      "do-cao",
+      "thuy-loi"
+    ],
+    "src": "Israel Hydrological Service; NASA Earth Observatory"
+  },
+  {
+    "id": "dl-299",
+    "cat": "dia-ly",
+    "sub": "khi-hau-thoi-tiet",
+    "t": "Nơi có lượng mưa cao nhất thế giới là Mawsynram và Cherrapunji ở Ấn Độ, trên 11.000 mm mỗi năm",
+    "s": "Gấp khoảng 6 lần lượng mưa trung bình ở Hà Nội. Nguyên nhân là gió mùa ẩm bị chặn bởi cao nguyên Meghalaya buộc phải bốc lên và ngưng tụ.",
+    "tags": [
+      "mua",
+      "ky-luc",
+      "gio-mua"
+    ],
+    "src": "Cục Khí tượng Ấn Độ (IMD); WMO"
+  },
+  {
+    "id": "dl-301",
+    "cat": "dia-ly",
+    "sub": "luc-dia-kien-tao",
+    "t": "Toàn bộ lục địa từng gộp thành một khối duy nhất, và điều đó đã xảy ra ít nhất ba lần",
+    "s": "Pangaea là siêu lục địa gần nhất, tồn tại khoảng 335–175 triệu năm trước. Trước nó còn có Rodinia và Columbia, và các mô hình dự báo một siêu lục địa mới sau khoảng 250 triệu năm nữa.",
+    "tags": [
+      "pangaea",
+      "sieu-luc-dia",
+      "kien-tao"
+    ],
+    "src": "Nance, Murphy & Santosh, Gondwana Research (2014)"
+  },
+  {
+    "id": "dl-302",
+    "cat": "dia-ly",
+    "sub": "luc-dia-kien-tao",
+    "t": "Bằng chứng đầu tiên cho trôi dạt lục địa bị bác bỏ suốt 50 năm vì không ai giải thích được cơ chế",
+    "s": "Alfred Wegener nêu giả thuyết năm 1912 dựa trên hình dạng bờ biển và hoá thạch trùng khớp. Nó chỉ được chấp nhận sau khi phát hiện các vạch từ tính đối xứng ở đáy biển vào thập niên 1960.",
+    "tags": [
+      "wegener",
+      "kien-tao",
+      "lich-su-khoa-hoc"
+    ],
+    "src": "Wegener (1912); Vine & Matthews, Nature (1963)"
+  },
+  {
+    "id": "dl-303",
+    "cat": "dia-ly",
+    "sub": "luc-dia-kien-tao",
+    "t": "Đá cổ nhất trên Trái Đất khoảng 4 tỉ năm tuổi, còn khoáng vật cổ nhất tới 4,4 tỉ năm",
+    "s": "Tinh thể zircon ở Tây Australia cho thấy vỏ lục địa và nước lỏng đã tồn tại rất sớm sau khi hành tinh hình thành. Đáy đại dương thì không đâu quá 200 triệu năm vì nó liên tục bị hút chìm.",
+    "tags": [
+      "zircon",
+      "tuoi-da",
+      "dia-chat"
+    ],
+    "src": "Valley và cộng sự, Nature Geoscience (2014)"
+  },
+  {
+    "id": "dl-304",
+    "cat": "dia-ly",
+    "sub": "luc-dia-kien-tao",
+    "t": "Núi lửa Yellowstone là một siêu núi lửa, và ba lần phun lớn gần nhất cách nhau khoảng 600.000–800.000 năm",
+    "s": "Lần gần nhất cách đây khoảng 640.000 năm. Việc gọi đó là 'quá hạn' là sai về mặt thống kê: ba điểm dữ liệu không đủ để nói về chu kỳ.",
+    "tags": [
+      "yellowstone",
+      "sieu-nui-lua",
+      "thong-ke"
+    ],
+    "src": "Cục Khảo sát Địa chất Hoa Kỳ (USGS), Yellowstone Volcano Observatory"
+  },
+  {
+    "id": "dl-305",
+    "cat": "dia-ly",
+    "sub": "luc-dia-kien-tao",
+    "t": "Có khoảng 500.000 trận động đất mỗi năm được máy ghi nhận, nhưng chỉ khoảng 100.000 trận cảm nhận được",
+    "s": "Trong đó khoảng 100 trận gây thiệt hại. Số trận mạnh trên 7 độ trung bình khoảng 15 mỗi năm và con số này khá ổn định qua nhiều thập kỷ.",
+    "tags": [
+      "dong-dat",
+      "thong-ke",
+      "usgs"
+    ],
+    "src": "Cục Khảo sát Địa chất Hoa Kỳ (USGS)"
+  },
+  {
+    "id": "dl-306",
+    "cat": "dia-ly",
+    "sub": "dai-duong",
+    "t": "Nước biển không mặn đều: Đại Tây Dương mặn hơn Thái Bình Dương",
+    "s": "Chênh lệch đến từ mức bốc hơi, lượng mưa và dòng chảy sông. Đây là một trong các động lực của dòng hải lưu sâu vì nước mặn hơn thì nặng hơn và chìm xuống.",
+    "tags": [
+      "do-man",
+      "dai-duong",
+      "hai-luu"
+    ],
+    "src": "NOAA Ocean Service; Talley, Descriptive Physical Oceanography"
+  },
+  {
+    "id": "dl-307",
+    "cat": "dia-ly",
+    "sub": "dai-duong",
+    "t": "Băng biển đóng lại thành nước ngọt vì muối bị đẩy ra ngoài trong quá trình kết tinh",
+    "s": "Đây là lý do người vùng cực có thể lấy nước uống từ băng biển cũ. Muối bị đẩy ra làm nước xung quanh mặn hơn và nặng hơn, tạo dòng chìm ở vùng cực.",
+    "tags": [
+      "bang-bien",
+      "muoi",
+      "hai-luu"
+    ],
+    "src": "NSIDC; Talley, Descriptive Physical Oceanography"
+  },
+  {
+    "id": "dl-308",
+    "cat": "dia-ly",
+    "sub": "dai-duong",
+    "t": "Sóng do gió tạo ra chỉ chuyển động năng chứ không chuyển nước đi xa",
+    "s": "Các phân tử nước chạy theo quỹ đạo tròn tại chỗ. Đây là lý do phao nổi lên xuống theo sóng chứ không bị đẩy vào bờ, và cũng là lý do phải phân biệt sóng với dòng chảy.",
+    "tags": [
+      "song-bien",
+      "dong-nang",
+      "vat-ly"
+    ],
+    "src": "Open University, Waves, Tides and Shallow-Water Processes"
+  },
+  {
+    "id": "dl-309",
+    "cat": "dia-ly",
+    "sub": "dai-duong",
+    "t": "Dòng rip là dòng nước chảy ngược ra biển và nó là nguyên nhân của phần lớn ca đuối nước ở bãi tắm",
+    "s": "Nó chảy nhanh tới 2 m/s, nhanh hơn tốc độ bơi của vận động viên Olympic. Nhận ra nó qua vệt nước lặng và sẫm màu cắt qua vùng sóng bạc đầu.",
+    "tags": [
+      "dong-rip",
+      "an-toan",
+      "bai-bien"
+    ],
+    "src": "NOAA; Surf Life Saving Australia"
+  },
+  {
+    "id": "dl-310",
+    "cat": "dia-ly",
+    "sub": "dai-duong",
+    "t": "Sóng quái vật cao hơn 25 mét từng bị coi là chuyện thuỷ thủ bịa, cho tới khi một giàn khoan đo được năm 1995",
+    "s": "Sóng Draupner ở Biển Bắc cao 25,6 mét trong điều kiện sóng nền chỉ khoảng 12 mét. Từ đó vệ tinh đã ghi nhận hàng chục sóng tương tự mỗi năm.",
+    "tags": [
+      "song-quai-vat",
+      "draupner",
+      "dai-duong"
+    ],
+    "src": "Haver, Rogue Waves 2004; ESA MaxWave Project"
+  },
+  {
+    "id": "dl-311",
+    "cat": "dia-ly",
+    "sub": "khi-hau-thoi-tiet",
+    "t": "Không khí lạnh nặng hơn không khí ấm, nhưng không khí ẩm lại nhẹ hơn không khí khô",
+    "s": "Phân tử nước nhẹ hơn phân tử nitơ và oxy mà nó thay thế. Đây là lý do không khí ẩm bốc lên và tạo dông, đi ngược trực giác thông thường.",
+    "tags": [
+      "khong-khi",
+      "do-am",
+      "doi-luu"
+    ],
+    "src": "Wallace & Hobbs, Atmospheric Science"
+  },
+  {
+    "id": "dl-312",
+    "cat": "dia-ly",
+    "sub": "khi-hau-thoi-tiet",
+    "t": "Mây trắng vì giọt nước đủ lớn để tán xạ mọi bước sóng như nhau",
+    "s": "Khác với phân tử khí gây tán xạ Rayleigh làm trời xanh, giọt mây gây tán xạ Mie không phụ thuộc bước sóng. Mây đen là vì nó dày tới mức ánh sáng không xuyên qua nổi.",
+    "tags": [
+      "may",
+      "tan-xa",
+      "mie"
+    ],
+    "src": "Bohren & Clothiaux, Fundamentals of Atmospheric Radiation"
+  },
+  {
+    "id": "dl-313",
+    "cat": "dia-ly",
+    "sub": "khi-hau-thoi-tiet",
+    "t": "Nhiệt độ không khí được đo trong bóng râm ở độ cao 1,25–2 mét, trong lều khí tượng thông gió",
+    "s": "Cùng thời điểm, nhiệt độ dưới nắng trực tiếp có thể cao hơn 10–15 độ. Vì vậy con số dự báo và cảm giác ngoài đường luôn lệch nhau một cách hệ thống.",
+    "tags": [
+      "do-nhiet-do",
+      "tieu-chuan",
+      "khi-tuong"
+    ],
+    "src": "WMO Guide to Meteorological Instruments (No. 8)"
+  },
+  {
+    "id": "dl-314",
+    "cat": "dia-ly",
+    "sub": "khi-hau-thoi-tiet",
+    "t": "Xác suất mưa 30% không có nghĩa trời mưa ở 30% diện tích, và cũng không phải mưa 30% thời gian",
+    "s": "Nó là xác suất có mưa đo được tại một điểm bất kỳ trong vùng dự báo. Cách hiểu sai này phổ biến tới mức các cơ quan khí tượng phải giải thích lại liên tục.",
+    "tags": [
+      "du-bao",
+      "xac-suat",
+      "truyen-thong"
+    ],
+    "src": "NOAA National Weather Service"
+  },
+  {
+    "id": "dl-315",
+    "cat": "dia-ly",
+    "sub": "khi-hau-thoi-tiet",
+    "t": "Dự báo thời tiết 5 ngày hiện nay chính xác bằng dự báo 1 ngày của thập niên 1980",
+    "s": "Tiến bộ đến từ vệ tinh, mô hình số và đồng hoá dữ liệu. Mỗi thập kỷ, tầm dự báo hữu ích tăng thêm khoảng một ngày.",
+    "tags": [
+      "du-bao",
+      "tien-bo",
+      "mo-hinh"
+    ],
+    "src": "Bauer, Thorpe & Brunet, Nature (2015)"
+  },
+  {
+    "id": "dl-316",
+    "cat": "dia-ly",
+    "sub": "khi-hau-thoi-tiet",
+    "t": "Nhiệt độ trung bình toàn cầu tăng 1 độ nghe nhỏ, nhưng chênh lệch giữa hiện nay và kỷ băng hà chỉ khoảng 5–6 độ",
+    "s": "Ở kỳ băng hà cuối, băng dày hàng km phủ tới nơi giờ là New York. Nghĩa là vài độ trung bình toàn cầu tương ứng với một hành tinh khác hẳn.",
+    "tags": [
+      "nhiet-do",
+      "ky-bang-ha",
+      "thang-bac"
+    ],
+    "src": "Tierney và cộng sự, Nature (2020); IPCC AR6"
+  },
+  {
+    "id": "dl-317",
+    "cat": "dia-ly",
+    "sub": "song-nui-sa-mac",
+    "t": "Sa mạc không nhất thiết nóng — tiêu chí duy nhất là lượng mưa dưới khoảng 250 mm mỗi năm",
+    "s": "Sa mạc Gobi có mùa đông xuống dưới −40 độ. Cách phân loại theo mưa chứ không theo nhiệt là lý do Nam Cực đứng đầu danh sách sa mạc lớn nhất.",
+    "tags": [
+      "sa-mac",
+      "dinh-nghia",
+      "mua"
+    ],
+    "src": "WMO; Cục Khảo sát Nam Cực Anh"
+  },
+  {
+    "id": "dl-318",
+    "cat": "dia-ly",
+    "sub": "song-nui-sa-mac",
+    "t": "Sông Hoàng Hà từng đổi dòng hơn 20 lần trong lịch sử ghi chép, có lần dịch cửa sông hơn 500 km",
+    "s": "Lượng phù sa khổng lồ làm lòng sông cao dần trên đồng bằng xung quanh, nên vỡ đê là chuyện định kỳ. Các trận lụt của nó nằm trong nhóm thiên tai chết chóc nhất lịch sử loài người.",
+    "tags": [
+      "hoang-ha",
+      "phu-sa",
+      "lut"
+    ],
+    "src": "Cục Thuỷ lợi Hoàng Hà Trung Quốc; Needham, Science and Civilisation in China"
+  },
+  {
+    "id": "dl-319",
+    "cat": "dia-ly",
+    "sub": "song-nui-sa-mac",
+    "t": "Đồng bằng sông Hồng và sông Cửu Long đều được bồi bởi phù sa, nhưng chỉ một trong hai còn đang lớn ra biển",
+    "s": "Đồng bằng sông Hồng vẫn tiến ra vịnh Bắc Bộ ở một số đoạn, còn mũi Cà Mau đã chuyển từ bồi sang xói ở nhiều đoạn bờ. Nguyên nhân là hụt phù sa do đập thượng nguồn và khai thác cát.",
+    "tags": [
+      "dong-bang",
+      "phu-sa",
+      "viet-nam"
+    ],
+    "src": "Bộ Tài nguyên và Môi trường; Anthony và cộng sự, Scientific Reports (2015)"
+  },
+  {
+    "id": "dl-320",
+    "cat": "dia-ly",
+    "sub": "song-nui-sa-mac",
+    "t": "Hồ nước ngọt lớn nhất thế giới theo diện tích là hồ Superior, còn theo thể tích là hồ Baikal",
+    "s": "Ngũ Đại Hồ chứa khoảng 21% nước ngọt mặt của hành tinh. Baikal một mình chứa khoảng 20% nhờ độ sâu 1.642 mét.",
+    "tags": [
+      "ho",
+      "nuoc-ngot",
+      "dia-ly"
+    ],
+    "src": "Cục Khảo sát Địa chất Hoa Kỳ; UNESCO"
+  },
+  {
+    "id": "dl-321",
+    "cat": "dia-ly",
+    "sub": "bang-va-cuc",
+    "t": "Sông băng chảy như chất lỏng rất nhớt, với tốc độ từ vài centimet tới vài chục mét mỗi ngày",
+    "s": "Băng ở đáy biến dạng dẻo dưới áp lực khối băng phía trên. Sông băng Jakobshavn ở Greenland từng đạt hơn 40 mét mỗi ngày, thuộc nhóm nhanh nhất thế giới.",
+    "tags": [
+      "song-bang",
+      "dong-chay",
+      "greenland"
+    ],
+    "src": "Joughin và cộng sự, The Cryosphere (2014)"
+  },
+  {
+    "id": "dl-322",
+    "cat": "dia-ly",
+    "sub": "bang-va-cuc",
+    "t": "Băng nén ở sông băng có màu xanh lam vì nó hấp thụ ánh sáng đỏ",
+    "s": "Băng dày và không bọt khí hoạt động như một bộ lọc màu. Băng tuyết mới thì trắng vì bọt khí tán xạ mọi bước sóng như nhau.",
+    "tags": [
+      "bang",
+      "mau",
+      "quang-hoc"
+    ],
+    "src": "Warren, Applied Optics (1984); NSIDC"
+  },
+  {
+    "id": "dl-323",
+    "cat": "dia-ly",
+    "sub": "bang-va-cuc",
+    "t": "Ở Nam Cực có những thung lũng khô không có tuyết suốt hàng triệu năm",
+    "s": "Thung lũng Khô McMurdo có gió katabatic khô thổi bay mọi độ ẩm. Đây là một trong các nơi khô nhất Trái Đất và NASA dùng nó làm mô hình cho môi trường Sao Hoả.",
+    "tags": [
+      "nam-cuc",
+      "thung-lung-kho",
+      "nasa"
+    ],
+    "src": "NASA; Chương trình Nam Cực Hoa Kỳ (USAP)"
+  },
+  {
+    "id": "dl-324",
+    "cat": "dia-ly",
+    "sub": "bang-va-cuc",
+    "t": "Dưới lớp băng Nam Cực có hơn 400 hồ nước lỏng, và hồ lớn nhất rộng bằng hồ Ontario",
+    "s": "Hồ Vostok nằm sâu gần 4 km dưới băng và bị cô lập khoảng 15 triệu năm. Nước lỏng được duy trì nhờ nhiệt từ lòng đất và áp suất khối băng phía trên.",
+    "tags": [
+      "vostok",
+      "ho-duoi-bang",
+      "nam-cuc"
+    ],
+    "src": "Siegert và cộng sự, Nature (2001)"
+  },
+  {
+    "id": "dl-325",
+    "cat": "dia-ly",
+    "sub": "ban-do-toa-do",
+    "t": "Bản đồ trực tuyến không hiển thị được vùng gần hai cực vì phép chiếu bị chặn ở vĩ độ khoảng 85 độ",
+    "s": "Web Mercator kéo giãn vĩ độ ra vô hạn khi tiến tới cực. Đây là lý do bạn không zoom được tới Cực Bắc trên phần lớn ứng dụng bản đồ.",
+    "tags": [
+      "web-mercator",
+      "ban-do",
+      "gioi-han"
+    ],
+    "src": "EPSG:3857; tài liệu Google Maps Platform"
+  },
+  {
+    "id": "dl-326",
+    "cat": "dia-ly",
+    "sub": "ban-do-toa-do",
+    "t": "Bốn quốc gia trên thế giới không dùng hệ mét làm hệ chính thức trong đời sống",
+    "s": "Mỹ, Liberia và Myanmar là ba cái tên thường được nêu, và ngay cả Mỹ cũng dùng hệ mét trong khoa học, quân sự và y tế. Anh dùng hệ hỗn hợp với dặm cho đường bộ và mét cho phần còn lại.",
+    "tags": [
+      "he-met",
+      "do-luong",
+      "quoc-gia"
+    ],
+    "src": "CIA World Factbook; NIST"
+  },
+  {
+    "id": "dl-327",
+    "cat": "dia-ly",
+    "sub": "ban-do-toa-do",
+    "t": "Đường biên giới thẳng trên bản đồ châu Phi là dấu vết của việc chia thuộc địa bằng thước kẻ",
+    "s": "Hội nghị Berlin 1884–1885 phân chia lục địa mà gần như không có đại diện châu Phi nào tham dự. Khoảng 44% biên giới châu Phi là đường thẳng theo kinh tuyến hoặc vĩ tuyến.",
+    "tags": [
+      "bien-gioi",
+      "thuoc-dia",
+      "chau-phi"
+    ],
+    "src": "Michalopoulos & Papaioannou, Econometrica (2016)"
+  },
+  {
+    "id": "dl-328",
+    "cat": "dia-ly",
+    "sub": "ban-do-toa-do",
+    "t": "Một số quốc gia không có đường ra biển, và hai trong số đó bị bao bởi nước cũng không có đường ra biển",
+    "s": "Có 44 quốc gia không giáp biển. Liechtenstein và Uzbekistan là hai nước 'không giáp biển kép', tức phải đi qua ít nhất hai biên giới mới tới được đại dương.",
+    "tags": [
+      "dia-ly",
+      "quoc-gia",
+      "bien"
+    ],
+    "src": "UN; CIA World Factbook"
+  },
+  {
+    "id": "dl-329",
+    "cat": "dia-ly",
+    "sub": "tai-nguyen-dat",
+    "t": "Trồng cây không phải lúc nào cũng làm mát khí hậu — ở vùng tuyết phủ nó có thể làm ấm lên",
+    "s": "Rừng sẫm màu hấp thụ nhiều nắng hơn tuyết trắng, và hiệu ứng albedo này có thể vượt lợi ích hấp thụ carbon ở vĩ độ cao. Ở vùng nhiệt đới thì trồng rừng làm mát rõ ràng.",
+    "tags": [
+      "trong-rung",
+      "albedo",
+      "khi-hau"
+    ],
+    "src": "Bonan, Science (2008)"
+  },
+  {
+    "id": "dl-330",
+    "cat": "dia-ly",
+    "sub": "tai-nguyen-dat",
+    "t": "Đất nông nghiệp thế giới đủ nuôi hơn 10 tỉ người, và nạn đói hiện nay chủ yếu là vấn đề phân phối và xung đột",
+    "s": "Sản lượng lương thực toàn cầu vượt nhu cầu calo của dân số hiện tại. Các đợt đói lớn gần đây đều gắn với chiến tranh hoặc sụp đổ kinh tế chứ không với thiếu hụt tuyệt đối.",
+    "tags": [
+      "luong-thuc",
+      "nan-doi",
+      "phan-phoi"
+    ],
+    "src": "FAO, The State of Food Security in the World; Sen, Poverty and Famines (1981)"
+  },
+  {
+    "id": "dl-331",
+    "cat": "dia-ly",
+    "sub": "tai-nguyen-dat",
+    "t": "Nước ngầm ở nhiều vùng đang được rút nhanh hơn tốc độ bổ sung hàng chục lần",
+    "s": "Tầng chứa nước Ogallala ở Mỹ và các tầng ở Bắc Ấn Độ đều đang cạn dần, đo được bằng vệ tinh trọng lực. Một số tầng chứa nước hoá thạch cần hàng nghìn năm mới đầy lại.",
+    "tags": [
+      "nuoc-ngam",
+      "khai-thac",
+      "ve-tinh"
+    ],
+    "src": "Rodell và cộng sự, Nature (2018); NASA GRACE"
+  },
+  {
+    "id": "dl-332",
+    "cat": "dia-ly",
+    "sub": "tai-nguyen-dat",
+    "t": "Đất mặn hoá đã làm mất khả năng canh tác của khoảng 20% diện tích tưới tiêu toàn cầu",
+    "s": "Tưới nước bốc hơi để lại muối tích tụ dần. Đây là cơ chế được cho là đã góp phần làm suy tàn nền nông nghiệp Lưỡng Hà cổ đại.",
+    "tags": [
+      "man-hoa",
+      "tuoi-tieu",
+      "lich-su"
+    ],
+    "src": "FAO; Jacobsen & Adams, Science (1958)"
+  },
+  {
+    "id": "dl-333",
+    "cat": "dia-ly",
+    "sub": "thien-tai",
+    "t": "Bão được xếp hạng theo tốc độ gió, nhưng nước dâng và mưa mới gây phần lớn thiệt hại nhân mạng",
+    "s": "Thang Saffir–Simpson chỉ tính gió. Khoảng một nửa số ca tử vong do bão ở Mỹ đến từ nước dâng do bão chứ không từ gió.",
+    "tags": [
+      "bao",
+      "thang-do",
+      "nuoc-dang"
+    ],
+    "src": "NOAA National Hurricane Center; Rappaport, BAMS (2014)"
+  },
+  {
+    "id": "dl-334",
+    "cat": "dia-ly",
+    "sub": "thien-tai",
+    "t": "Nhà xây đúng chuẩn kháng chấn giảm tử vong động đất tới hàng chục lần so với nhà không chuẩn",
+    "s": "So sánh hai trận động đất cùng cường độ ở Chile và Haiti năm 2010 cho thấy chênh lệch tử vong hàng trăm lần. Trận ở Chile mạnh hơn khoảng 500 lần về năng lượng.",
+    "tags": [
+      "dong-dat",
+      "xay-dung",
+      "chinh-sach"
+    ],
+    "src": "USGS; Ngân hàng Thế giới, Building Regulation for Resilience"
+  },
+  {
+    "id": "dl-335",
+    "cat": "dia-ly",
+    "sub": "thien-tai",
+    "t": "Lốc xoáy mạnh nhất có gió trên 480 km/h, nhanh hơn mọi cơn bão nhiệt đới",
+    "s": "Chúng nhỏ và ngắn nhưng cường độ cục bộ cao hơn nhiều. Thang Fujita cải tiến xếp hạng chúng theo mức thiệt hại gây ra chứ không theo gió đo trực tiếp.",
+    "tags": [
+      "loc-xoay",
+      "fujita",
+      "gio"
+    ],
+    "src": "NOAA National Weather Service"
+  },
+  {
+    "id": "dl-336",
+    "cat": "dia-ly",
+    "sub": "thien-tai",
+    "t": "Núi lửa phun không chỉ nguy hiểm vì dung nham — dòng chảy pyroclastic mới là thứ giết người nhiều nhất",
+    "s": "Nó là hỗn hợp khí và tro nóng tới 700 độ chảy xuống sườn núi ở tốc độ hơn 100 km/h. Đây là thứ đã chôn vùi Pompeii chứ không phải dung nham.",
+    "tags": [
+      "nui-lua",
+      "pyroclastic",
+      "pompeii"
+    ],
+    "src": "Smithsonian Global Volcanism Program; Sigurdsson và cộng sự (1985)"
+  },
+  {
+    "id": "dl-337",
+    "cat": "dia-ly",
+    "sub": "khi-hau-thoi-tiet",
+    "t": "Việt Nam nằm trong nhóm quốc gia chịu ảnh hưởng nặng nhất của biến đổi khí hậu do địa hình ven biển thấp",
+    "s": "Nếu mực nước biển dâng 1 mét, khoảng 39% diện tích đồng bằng sông Cửu Long có nguy cơ ngập. Đây là ước tính theo kịch bản, không phải dự báo chắc chắn.",
+    "tags": [
+      "viet-nam",
+      "nuoc-bien-dang",
+      "kich-ban"
+    ],
+    "src": "Bộ Tài nguyên và Môi trường, Kịch bản biến đổi khí hậu (2020)"
+  },
+  {
+    "id": "dl-338",
+    "cat": "dia-ly",
+    "sub": "khi-hau-thoi-tiet",
+    "t": "Xâm nhập mặn ở đồng bằng sông Cửu Long đã tiến sâu tới hơn 70 km vào mùa khô những năm hạn nặng",
+    "s": "Nguyên nhân gồm dòng chảy thượng nguồn giảm, khai thác nước ngầm và nước biển dâng. Nó ảnh hưởng trực tiếp tới cả nước sinh hoạt lẫn canh tác.",
+    "tags": [
+      "xam-nhap-man",
+      "cuu-long",
+      "han"
+    ],
+    "src": "Uỷ hội sông Mê Kông; Bộ Nông nghiệp và Phát triển nông thôn"
+  },
+  {
+    "id": "dl-339",
+    "cat": "dia-ly",
+    "sub": "dai-duong",
+    "t": "Nhiệt độ nước biển ấm lên làm bão mạnh hơn nhưng không nhất thiết nhiều hơn",
+    "s": "Các mô hình đồng thuận rằng tỉ lệ bão cấp cao tăng trong khi tổng số cơn bão có thể không đổi hoặc giảm nhẹ. Đây là một trong các kết luận ổn định nhất về bão trong báo cáo IPCC.",
+    "tags": [
+      "bao",
+      "khi-hau",
+      "ipcc"
+    ],
+    "src": "IPCC AR6 WG1, Chương 11; Knutson và cộng sự, BAMS (2020)"
+  },
+  {
+    "id": "dl-340",
+    "cat": "dia-ly",
+    "sub": "song-nui-sa-mac",
+    "t": "Rừng Amazon có thể đang tiến gần điểm lật, nơi nó chuyển dần thành thảo nguyên",
+    "s": "Một phần lưu vực đã chuyển từ hấp thụ carbon sang thải carbon. Ngưỡng mất rừng được ước tính quanh 20–25% diện tích, và mức mất hiện nay đã vượt 17%.",
+    "tags": [
+      "amazon",
+      "diem-lat",
+      "carbon"
+    ],
+    "src": "Gatti và cộng sự, Nature (2021); Lovejoy & Nobre, Science Advances (2018)"
+  },
+  {
+    "id": "dl-341",
+    "cat": "dia-ly",
+    "sub": "tai-nguyen-dat",
+    "t": "Cây trồng biến đổi gen kháng sâu đã làm giảm lượng thuốc trừ sâu dùng trên đồng ở nhiều nước",
+    "s": "Tổng hợp 147 nghiên cứu cho thấy mức giảm trung bình khoảng 37% lượng thuốc trừ sâu. Đồng thời, cây kháng thuốc diệt cỏ lại làm tăng dùng một số loại thuốc diệt cỏ.",
+    "tags": [
+      "gmo",
+      "thuoc-tru-sau",
+      "danh-doi"
+    ],
+    "src": "Klümper & Qaim, PLoS ONE (2014)"
+  },
+  {
+    "id": "dl-342",
+    "cat": "dia-ly",
+    "sub": "dai-duong",
+    "t": "Khoảng 35% sản lượng đánh bắt biển toàn cầu đến từ ngư trường đang bị khai thác quá mức",
+    "s": "Tỉ lệ này đã tăng liên tục từ khoảng 10% vào thập niên 1970. Các ngư trường được quản lý bằng hạn ngạch cá thể chuyển nhượng có tỉ lệ phục hồi cao hơn rõ rệt.",
+    "tags": [
+      "danh-bat",
+      "qua-muc",
+      "quan-ly"
+    ],
+    "src": "FAO SOFIA (2022); Costello và cộng sự, Science (2008)"
+  },
+  {
+    "id": "dl-343",
+    "cat": "dia-ly",
+    "sub": "bang-va-cuc",
+    "t": "Băng Bắc Cực mùa hè đã giảm khoảng 13% mỗi thập kỷ kể từ khi có dữ liệu vệ tinh năm 1979",
+    "s": "Thể tích băng giảm còn nhanh hơn diện tích vì băng nhiều năm dày bị thay bằng băng một năm mỏng. Các mô hình dự báo mùa hè gần như không băng trước giữa thế kỷ.",
+    "tags": [
+      "bac-cuc",
+      "bang",
+      "ve-tinh"
+    ],
+    "src": "NSIDC; IPCC AR6"
+  },
+  {
+    "id": "dl-344",
+    "cat": "dia-ly",
+    "sub": "khi-hau-thoi-tiet",
+    "t": "Đêm đang ấm lên nhanh hơn ngày, và điều đó ảnh hưởng tới cây trồng nhiều hơn người ta tưởng",
+    "s": "Nhiệt độ tối thiểu ban đêm tăng nhanh hơn nhiệt độ tối đa ban ngày ở phần lớn vùng đất. Cây lúa hô hấp mạnh hơn vào đêm ấm nên mất năng lượng đã tích luỹ ban ngày.",
+    "tags": [
+      "nhiet-do",
+      "dem",
+      "lua"
+    ],
+    "src": "Peng và cộng sự, PNAS (2004); IPCC AR6"
+  },
+  {
+    "id": "dl-345",
+    "cat": "dia-ly",
+    "sub": "ban-do-toa-do",
+    "t": "Điểm cực bắc, nam, đông và tây của Việt Nam nằm ở bốn tỉnh khác nhau, và điểm cực đông không phải Khánh Hoà theo mọi cách tính",
+    "s": "Cực bắc ở Hà Giang, cực nam ở Cà Mau, cực tây ở Điện Biên. Cực đông trên đất liền ở Khánh Hoà, nhưng nếu tính cả quần đảo thì nó nằm xa hơn nhiều về phía đông.",
+    "tags": [
+      "viet-nam",
+      "dia-ly",
+      "cuc"
+    ],
+    "src": "Tổng cục Thống kê; Cục Đo đạc, Bản đồ và Thông tin địa lý Việt Nam"
+  },
+  {
+    "id": "dl-346",
+    "cat": "dia-ly",
+    "sub": "luc-dia-kien-tao",
+    "t": "Việt Nam nằm ngoài vành đai lửa nên ít động đất mạnh, nhưng vẫn có đứt gãy hoạt động",
+    "s": "Đứt gãy Sông Hồng và Sơn La – Điện Biên đã gây các trận trên 6 độ trong thế kỷ 20. Rủi ro chính không phải động đất tại chỗ mà là sóng thần từ đới hút chìm Manila.",
+    "tags": [
+      "viet-nam",
+      "dut-gay",
+      "song-than"
+    ],
+    "src": "Viện Vật lý địa cầu; Cục Khảo sát Địa chất Hoa Kỳ"
+  },
+  {
+    "id": "dl-347",
+    "cat": "dia-ly",
+    "sub": "dai-duong",
+    "t": "Biển Đông có độ sâu lớn nhất khoảng 5.500 mét và chứa một trong các hệ rạn san hô đa dạng nhất thế giới",
+    "s": "Nó nằm trong Tam giác San hô mở rộng, khu vực có số loài san hô cao nhất hành tinh. Hoạt động nạo vét và bồi đắp đã phá huỷ hàng nghìn hecta rạn trong thập kỷ qua.",
+    "tags": [
+      "bien-dong",
+      "san-ho",
+      "da-dang"
+    ],
+    "src": "Veron và cộng sự, Galaxea (2009); Trung tâm Nghiên cứu Chiến lược và Quốc tế (CSIS)"
+  },
+  {
+    "id": "dl-348",
+    "cat": "dia-ly",
+    "sub": "khi-hau-thoi-tiet",
+    "t": "Bão ở Tây Bắc Thái Bình Dương gọi là bão, ở Đại Tây Dương gọi là hurricane, ở Ấn Độ Dương gọi là cyclone — nhưng chúng là cùng một hiện tượng",
+    "s": "Tên gọi khác nhau theo vùng chứ không theo bản chất. Tây Bắc Thái Bình Dương là vùng có nhiều bão nhiệt đới nhất thế giới, khoảng một phần ba tổng số toàn cầu.",
+    "tags": [
+      "bao",
+      "ten-goi",
+      "vung"
+    ],
+    "src": "WMO Tropical Cyclone Programme"
+  },
+  {
+    "id": "dl-349",
+    "cat": "dia-ly",
+    "sub": "tai-nguyen-dat",
+    "t": "Đất hiếm, lithium và cobalt cho pin đang tạo ra một cuộc cạnh tranh tài nguyên mới",
+    "s": "Khoảng 70% cobalt thế giới đến từ Cộng hoà Dân chủ Congo và phần lớn được tinh chế ở Trung Quốc. Chuỗi cung ứng pin tập trung hơn nhiều so với chuỗi cung ứng dầu mỏ.",
+    "tags": [
+      "lithium",
+      "cobalt",
+      "chuoi-cung-ung"
+    ],
+    "src": "IEA, The Role of Critical Minerals in Clean Energy Transitions (2021)"
+  },
+  {
+    "id": "dl-350",
+    "cat": "dia-ly",
+    "sub": "thien-tai",
+    "t": "Cảnh báo sớm giảm tử vong thiên tai mạnh hơn mọi biện pháp công trình, và chi phí thấp hơn nhiều",
+    "s": "Bangladesh giảm tử vong do bão từ hàng trăm nghìn xuống hàng nghìn trong bốn thập kỷ chủ yếu nhờ hệ thống cảnh báo và nhà tránh bão. Liên Hợp Quốc đặt mục tiêu phủ cảnh báo sớm toàn cầu trước năm 2027.",
+    "tags": [
+      "canh-bao-som",
+      "bangladesh",
+      "chinh-sach"
+    ],
+    "src": "WMO, Early Warnings for All (2022); Ngân hàng Thế giới"
+  }
+]

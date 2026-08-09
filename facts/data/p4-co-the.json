@@ -1,0 +1,106 @@
+[
+  {
+    "id": "ct-201",
+    "cat": "co-the",
+    "sub": "thi-giac",
+    "t": "Mắt người phân biệt được khoảng một triệu sắc màu, nhưng chỉ ở vùng trung tâm rất hẹp của thị trường",
+    "s": "Vùng hố trung tâm có đường kính chỉ khoảng 1,5 mm và chiếm chưa tới 1% diện tích võng mạc. Mọi thứ ngoài đó bạn thấy mờ hơn nhiều so với cảm giác chủ quan.",
+    "tags": [
+      "thi-giac",
+      "vong-mac",
+      "mau"
+    ],
+    "src": "Roorda & Williams, Nature (1999); Wandell, Foundations of Vision"
+  },
+  {
+    "id": "ct-202",
+    "cat": "co-the",
+    "sub": "thi-giac",
+    "t": "Mắt bạn liên tục rung nhẹ, và nếu ảnh đứng yên hoàn toàn trên võng mạc thì nó biến mất trong vài giây",
+    "s": "Chuyển động vi giật giữ cho tế bào cảm quang không bị bão hoà. Thí nghiệm ổn định ảnh bằng kính áp tròng đặc biệt cho thấy hình ảnh mờ dần rồi tan hẳn.",
+    "tags": [
+      "vi-giat",
+      "vong-mac",
+      "tri-giac"
+    ],
+    "src": "Ditchburn & Ginsborg, Nature (1952); Martinez-Conde và cộng sự, Nature Reviews Neuroscience (2004)"
+  },
+  {
+    "id": "ct-203",
+    "cat": "co-the",
+    "sub": "thi-giac",
+    "t": "Khoảng 8% nam giới gốc Âu bị mù màu đỏ–lục, so với khoảng 0,5% ở nữ",
+    "s": "Gen liên quan nằm trên nhiễm sắc thể X nên nam chỉ cần một bản lỗi. Tỉ lệ khác nhau rõ giữa các nhóm dân cư, và ở người gốc Á tỉ lệ thấp hơn.",
+    "tags": [
+      "mu-mau",
+      "di-truyen",
+      "thi-giac"
+    ],
+    "src": "Deeb, Clinical Genetics (2005)"
+  },
+  {
+    "id": "ct-204",
+    "cat": "co-the",
+    "sub": "thi-giac",
+    "t": "Một số phụ nữ có bốn loại tế bào cảm quang màu thay vì ba, và về lý thuyết họ phân biệt được nhiều màu hơn",
+    "s": "Hiện tượng tứ sắc chỉ xuất hiện ở người mang hai biến thể gen thụ thể khác nhau trên hai nhiễm sắc thể X. Số người thật sự dùng được lợi thế này rất ít và khó xác nhận.",
+    "tags": [
+      "tu-sac",
+      "thi-giac",
+      "di-truyen"
+    ],
+    "src": "Jordan và cộng sự, Journal of Vision (2010)"
+  },
+  {
+    "id": "ct-209",
+    "cat": "co-the",
+    "sub": "giac-quan-khac",
+    "t": "Lưỡi cảm nhận cả năm vị ở mọi vùng, và 'bản đồ vị giác' trong sách giáo khoa là hiểu lầm từ một lỗi dịch",
+    "s": "Bản đồ đó đến từ việc dịch sai một luận án tiếng Đức năm 1901 vốn chỉ nói mức nhạy chênh nhau rất nhỏ. Nó tồn tại trong sách giáo khoa gần một thế kỷ.",
+    "tags": [
+      "vi-giac",
+      "ban-do",
+      "huyen-thoai"
+    ],
+    "src": "Hänig (1901); Bartoshuk, Physiology & Behavior (1993)"
+  },
+  {
+    "id": "ct-212",
+    "cat": "co-the",
+    "sub": "giac-quan-khac",
+    "t": "Tai trong vừa lo nghe vừa lo thăng bằng, và đó là lý do viêm tai làm bạn chóng mặt",
+    "s": "Ba ống bán khuyên chứa dịch phát hiện chuyển động quay theo ba trục vuông góc. Say tàu xe xảy ra khi tín hiệu từ hệ này mâu thuẫn với tín hiệu từ mắt.",
+    "tags": [
+      "tai-trong",
+      "thang-bang",
+      "say-tau-xe"
+    ],
+    "src": "Purves và cộng sự, Neuroscience"
+  },
+  {
+    "id": "ct-220",
+    "cat": "co-the",
+    "sub": "nao-than-kinh",
+    "t": "Đau xã hội và đau thể chất kích hoạt một phần chung của mạng lưới não",
+    "s": "Vỏ não đai trước và thuỳ đảo trước hoạt động ở cả hai loại đau. Mức độ chồng lấn và ý nghĩa của nó vẫn đang được tranh luận trong ngành.",
+    "tags": [
+      "dau-xa-hoi",
+      "nao",
+      "chong-lap"
+    ],
+    "src": "Eisenberger, Nature Reviews Neuroscience (2012); Wager và cộng sự, PLoS Biology (2013)"
+  },
+  {
+    "id": "ct-223",
+    "cat": "co-the",
+    "sub": "tim-mach-mau",
+    "t": "Máu không có màu xanh trong tĩnh mạch — nó luôn đỏ, chỉ là đỏ sẫm hơn khi thiếu oxy",
+    "s": "Tĩnh mạch trông xanh vì da tán xạ ánh sáng: bước sóng đỏ xuyên sâu và bị hấp thụ, bước sóng xanh phản xạ lại. Đây là hiệu ứng quang học của da chứ không phải màu của máu.",
+    "tags": [
+      "mau",
+      "tinh-mach",
+      "quang-hoc"
+    ],
+    "src": "Kienle và cộng sự, Applied Optics (1996)"
+  }
+]

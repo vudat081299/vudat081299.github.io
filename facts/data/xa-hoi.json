@@ -30,7 +30,7 @@
     "id": "xh-003",
     "cat": "xa-hoi",
     "sub": "bau-cu-chinh-tri",
-    "t": "Định luật Duverger: bầu một vòng, một ghế thì dẫn tới hệ hai đảng",
+    "t": "Định luật Duverger: bầu 1 vòng và 1 ghế cho mỗi khu vực thì hệ chính trị hội tụ về 2 đảng",
     "s": "Khi mỗi khu vực chỉ chọn một người thắng theo đa số tương đối, cử tri có động cơ bỏ phiếu chiến lược cho một trong hai ứng viên dẫn đầu thay vì cho lựa chọn mình thích nhất. Cấu trúc luật chơi định hình kết quả chính trị mạnh hơn nhiều so với sở thích của cử tri.",
     "tags": [
       "bau-cu",
@@ -171,32 +171,6 @@
     "src": "ILO, Women and Men in the Informal Economy (2018)"
   },
   {
-    "id": "xh-014",
-    "cat": "xa-hoi",
-    "sub": "toi-pham-an-toan",
-    "t": "Thuyết 'cửa sổ vỡ' nổi tiếng hơn nhiều so với mức bằng chứng ủng hộ nó",
-    "s": "Ý tưởng rằng dẹp các vi phạm nhỏ sẽ ngăn tội phạm lớn đã định hình chính sách cảnh sát ở nhiều thành phố. Nhưng các phân tích lại dữ liệu New York thập niên 1990 cho thấy phần lớn mức giảm tội phạm không giải thích được bằng chiến thuật này, và tội phạm cũng giảm ở những nơi không áp dụng nó.",
-    "tags": [
-      "chinh-sach",
-      "toi-pham",
-      "phan-bien"
-    ],
-    "src": "Wilson & Kelling, The Atlantic (1982); Harcourt & Ludwig, University of Chicago Law Review (2006)"
-  },
-  {
-    "id": "xh-015",
-    "cat": "xa-hoi",
-    "sub": "van-hoa-truyen-thong",
-    "t": "Cửa sổ Overton: cái gì được coi là 'nói ra được' thay đổi trước khi luật thay đổi",
-    "s": "Trong mọi xã hội tồn tại một dải quan điểm được xem là chấp nhận được để bàn công khai. Các phong trào chính trị hiếm khi thuyết phục trực tiếp người phản đối; họ dịch chuyển dải này bằng cách đưa ra lập trường xa hơn để lập trường của mình trở nên ôn hoà. Nhận ra chiến thuật đó giúp bạn đọc tin tức tỉnh táo hơn.",
-    "tags": [
-      "chinh-tri",
-      "truyen-thong",
-      "du-luan"
-    ],
-    "src": "Joseph Overton, Mackinac Center for Public Policy (thập niên 1990)"
-  },
-  {
     "id": "xh-016",
     "cat": "xa-hoi",
     "sub": "bau-cu-chinh-tri",
@@ -221,19 +195,6 @@
       "kinh-te"
     ],
     "src": "Corrado Gini (1912); ghi chú phương pháp của World Inequality Lab"
-  },
-  {
-    "id": "xh-018",
-    "cat": "xa-hoi",
-    "sub": "the-che-hop-tac",
-    "t": "Quyền sở hữu được ghi nhận rõ ràng là điều kiện để tài sản trở thành vốn",
-    "s": "Hernando de Soto lập luận rằng người nghèo ở các nước đang phát triển không thiếu tài sản — họ thiếu giấy tờ hợp pháp cho tài sản đó, nên không thể thế chấp, chuyển nhượng hay dùng nó làm nền cho tín dụng. Bằng chứng thực nghiệm về hiệu quả của các chương trình cấp giấy chứng nhận là hỗn hợp, nhưng cơ chế thì đã được kiểm chứng ở nhiều nơi.",
-    "tags": [
-      "so-huu",
-      "phat-trien",
-      "the-che"
-    ],
-    "src": "Hernando de Soto, The Mystery of Capital (2000); Galiani & Schargrodsky, Journal of Public Economics (2010)"
   },
   {
     "id": "xh-019",
@@ -274,18 +235,5 @@
       "phat-trien"
     ],
     "src": "UNESCO Institute for Statistics; Our World in Data, Literacy"
-  },
-  {
-    "id": "xh-022",
-    "cat": "xa-hoi",
-    "sub": "luat-phap",
-    "t": "Hợp đồng tốt không phải hợp đồng chi tiết nhất mà là hợp đồng xử lý được lúc trục trặc",
-    "s": "Lý thuyết hợp đồng không đầy đủ chỉ ra: không thể liệt kê trước mọi tình huống, nên điều quan trọng là quy định ai có quyền quyết định khi tình huống ngoài dự liệu xảy ra. Khi ký bất kỳ thoả thuận nào — thuê nhà, hợp tác, góp vốn — hãy đọc kỹ phần chấm dứt và giải quyết tranh chấp trước phần quyền lợi.",
-    "tags": [
-      "hop-dong",
-      "phap-ly",
-      "kinh-doanh"
-    ],
-    "src": "Oliver Hart & Bengt Holmström, Nobel Kinh tế 2016"
   }
 ]

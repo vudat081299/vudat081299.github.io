@@ -1,32 +1,5 @@
 [
   {
-    "id": "gt-001",
-    "cat": "giao-tiep",
-    "sub": "huyen-thoai-giao-tiep",
-    "t": "Câu '93% giao tiếp là phi ngôn ngữ' là hiểu sai chính nghiên cứu gốc",
-    "s": "Con số 7% – 38% – 55% của Albert Mehrabian chỉ áp dụng cho một tình huống rất hẹp: khi người nghe đoán CẢM XÚC của người nói và lời nói mâu thuẫn với giọng điệu, nét mặt. Chính Mehrabian đã nhiều lần cải chính rằng nó không dùng được cho giao tiếp nói chung.",
-    "d": "Vì sao đáng bận tâm: cả một ngành đào tạo kỹ năng mềm được xây trên con số bị hiểu sai này, dẫn tới lời khuyên kiểu 'nội dung không quan trọng, phong thái mới quan trọng'. Trong thực tế công việc, nội dung sai thì phong thái nào cũng không cứu được — nhưng nội dung đúng mà trình bày rối thì cũng không tới được người nghe.",
-    "tags": [
-      "huyen-thoai",
-      "thuyet-trinh",
-      "phi-ngon-ngu"
-    ],
-    "src": "Albert Mehrabian, Silent Messages (1971) và các đính chính của chính tác giả"
-  },
-  {
-    "id": "gt-002",
-    "cat": "giao-tiep",
-    "sub": "lang-nghe",
-    "t": "Hỏi thêm câu hỏi nối tiếp làm người ta quý bạn hơn — đã đo được",
-    "s": "Phân tích các cuộc trò chuyện thật và hẹn hò tốc độ tại Harvard cho thấy người đặt nhiều câu hỏi hơn, đặc biệt là câu hỏi tiếp nối ('rồi sao nữa?', 'vì sao anh chọn hướng đó?'), được đánh giá dễ mến hơn rõ rệt. Người ta cũng gần như không nhận ra đó là lý do mình thấy quý đối phương.",
-    "tags": [
-      "lang-nghe",
-      "quan-he",
-      "an-tuong"
-    ],
-    "src": "Huang, Yeomans, Brooks, Minson & Gino, JPSP (2017)"
-  },
-  {
     "id": "gt-003",
     "cat": "giao-tiep",
     "sub": "quan-he",
@@ -44,8 +17,8 @@
     "id": "gt-004",
     "cat": "giao-tiep",
     "sub": "thuyet-phuc",
-    "t": "Nhờ người khác một việc nhỏ khiến họ quý bạn hơn",
-    "s": "Hiệu ứng Benjamin Franklin: người vừa giúp bạn một việc sẽ có xu hướng đánh giá bạn tích cực hơn, vì họ tự giải thích hành động của mình ('tôi giúp anh ta, chắc tôi thấy anh ta ổn'). Đây là công cụ xây quan hệ ngược trực giác: đừng chỉ cho, hãy biết cách nhận.",
+    "t": "Hiệu ứng Ben Franklin: người vừa giúp bạn một việc nhỏ đánh giá bạn cao hơn chính họ trước khi giúp",
+    "s": "Hiệu ứng Benjamin Franklin: người vừa giúp bạn một việc sẽ có xu hướng đánh giá bạn tích cực hơn, vì họ tự giải thích hành động của mình ('tôi giúp anh ta, chắc tôi thấy anh ta ổn'). Đây là công cụ xây quan hệ ngược trực giác: đừng chỉ cho, hãy biết cách nhận. Thí nghiệm gốc của Jecker và Landy năm 1969 chia người tham gia làm 3 nhóm, và nhóm được đích thân người thí nghiệm nhờ trả lại tiền thưởng cho điểm ưa thích cao nhất.",
     "tags": [
       "quan-he",
       "thuyet-phuc",
@@ -121,19 +94,6 @@
     "src": "Langer, Blank & Chanowitz, JPSP (1978)"
   },
   {
-    "id": "gt-010",
-    "cat": "giao-tiep",
-    "sub": "xung-dot-xin-loi",
-    "t": "Lời xin lỗi có sáu thành phần, và 'nhận trách nhiệm' là thành phần nặng nhất",
-    "s": "Nghiên cứu của Roy Lewicki tách lời xin lỗi thành: bày tỏ hối tiếc, giải thích chuyện gì đã xảy ra, thừa nhận trách nhiệm, tuyên bố hối hận, đề nghị sửa chữa, và xin được tha thứ. Trong đó thừa nhận trách nhiệm có sức nặng lớn nhất, còn xin được tha thứ có sức nặng nhỏ nhất.",
-    "tags": [
-      "xin-loi",
-      "xung-dot",
-      "long-tin"
-    ],
-    "src": "Lewicki, Polin & Lount, Negotiation and Conflict Management Research (2016)"
-  },
-  {
     "id": "gt-011",
     "cat": "giao-tiep",
     "sub": "lang-nghe",
@@ -148,45 +108,6 @@
     "src": "Stivers et al., PNAS (2009)"
   },
   {
-    "id": "gt-012",
-    "cat": "giao-tiep",
-    "sub": "quan-he",
-    "t": "Trò chuyện sâu ít khó xử hơn ta tưởng",
-    "s": "Qua 12 thí nghiệm, người tham gia dự đoán các câu hỏi sâu ('lần gần nhất anh khóc trước mặt người khác là khi nào?') sẽ gây gượng gạo, nhưng thực tế họ thấy dễ chịu hơn và kết nối hơn so với các câu xã giao. Ta đánh giá quá thấp mức độ người khác quan tâm tới mình.",
-    "tags": [
-      "quan-he",
-      "hoi-thoai",
-      "ket-noi"
-    ],
-    "src": "Kardas, Kumar & Epley, JPSP (2022)"
-  },
-  {
-    "id": "gt-013",
-    "cat": "giao-tiep",
-    "sub": "thuyet-phuc",
-    "t": "Sáu nguyên tắc thuyết phục của Cialdini, cộng thêm cái thứ bảy",
-    "s": "Có đi có lại, cam kết và nhất quán, bằng chứng xã hội, thiện cảm, thẩm quyền, khan hiếm — và trong bản mở rộng năm 2016, Cialdini thêm 'sự đồng nhất' (cảm giác cùng một nhóm: đồng hương, cùng trường, cùng nghề). Biết chúng có hai công dụng: dùng chúng, và nhận ra khi mình đang bị dùng.",
-    "tags": [
-      "thuyet-phuc",
-      "ban-hang",
-      "anh-huong"
-    ],
-    "src": "Robert Cialdini, Influence (1984); Pre-Suasion (2016)"
-  },
-  {
-    "id": "gt-014",
-    "cat": "giao-tiep",
-    "sub": "thuyet-phuc",
-    "t": "Xin nhiều rồi rút xuống hiệu quả hơn xin thẳng cái nhỏ",
-    "s": "Kỹ thuật 'đóng sập cửa vào mặt': đề nghị lớn bị từ chối trước sẽ làm tăng đáng kể tỉ lệ đồng ý cho đề nghị nhỏ tiếp theo. Kỹ thuật ngược lại — 'chân trong cửa' — bắt đầu bằng đề nghị nhỏ để tạo cam kết rồi mới xin cái lớn. Cả hai đều đã được kiểm chứng nhiều lần.",
-    "tags": [
-      "thuyet-phuc",
-      "dam-phan",
-      "ban-hang"
-    ],
-    "src": "Cialdini et al., JPSP (1975); Freedman & Fraser, JPSP (1966)"
-  },
-  {
     "id": "gt-015",
     "cat": "giao-tiep",
     "sub": "quan-he",
@@ -198,32 +119,6 @@
       "thuyet-trinh"
     ],
     "src": "Elliot Aronson, Willerman & Floyd, Psychonomic Science (1966)"
-  },
-  {
-    "id": "gt-016",
-    "cat": "giao-tiep",
-    "sub": "thuyet-phuc",
-    "t": "Trong đàm phán, người ta thường tưởng nhầm rằng chiếc bánh cố định",
-    "s": "Nghiên cứu đàm phán cho thấy phần lớn người đi vào bàn với giả định 'anh được thì tôi mất', nên bỏ lỡ các trao đổi cùng có lợi — nơi hai bên coi trọng những thứ khác nhau (thời gian giao hàng, điều khoản thanh toán, phạm vi bảo hành). Câu hỏi mở đầu tốt nhất không phải 'giá bao nhiêu' mà 'điều gì quan trọng nhất với anh trong thoả thuận này'.",
-    "tags": [
-      "dam-phan",
-      "kinh-doanh",
-      "loi-ich"
-    ],
-    "src": "Fisher & Ury, Getting to Yes (1981); Thompson & Hastie, OBHDP (1990)"
-  },
-  {
-    "id": "gt-017",
-    "cat": "giao-tiep",
-    "sub": "thuyet-phuc",
-    "t": "Nói 'tôi không làm việc đó' mạnh hơn 'tôi không thể làm việc đó'",
-    "s": "Trong loạt thí nghiệm về từ chối cám dỗ, người dùng cách nói 'tôi không ăn cái này' (I don't) giữ được mục tiêu tốt hơn nhóm nói 'tôi không thể' (I can't), vì cách nói thứ nhất phát biểu một danh tính, còn cách thứ hai ngụ ý một sự cấm cản từ bên ngoài. Cùng nguyên tắc dùng được khi từ chối lời mời và yêu cầu ngoài giờ.",
-    "tags": [
-      "tu-choi",
-      "ranh-gioi",
-      "ky-luat"
-    ],
-    "src": "Patrick & Hagtvedt, Journal of Consumer Research (2012)"
   },
   {
     "id": "gt-018",
@@ -240,19 +135,6 @@
     "src": "Dunbar, Marriott & Duncan, Human Nature (1997); Dunbar, Grooming, Gossip and the Evolution of Language (1996)"
   },
   {
-    "id": "gt-019",
-    "cat": "giao-tiep",
-    "sub": "xung-dot-xin-loi",
-    "t": "Phản hồi mà không nói rõ hành vi cụ thể thì thường vô dụng",
-    "s": "Phân tích tổng hợp 607 hiệu ứng của Kluger và DeNisi cho thấy can thiệp phản hồi trung bình có cải thiện hiệu suất, nhưng trong khoảng một phần ba số trường hợp nó LÀM GIẢM hiệu suất — đặc biệt khi phản hồi hướng vào con người ('em thiếu chủ động') thay vì vào nhiệm vụ ('báo cáo này thiếu phần rủi ro').",
-    "tags": [
-      "phan-hoi",
-      "quan-ly",
-      "hieu-suat"
-    ],
-    "src": "Kluger & DeNisi, Psychological Bulletin (1996)"
-  },
-  {
     "id": "gt-020",
     "cat": "giao-tiep",
     "sub": "xung-dot-xin-loi",
@@ -264,19 +146,6 @@
       "dam-phan"
     ],
     "src": "Lieberman et al., Psychological Science (2007)"
-  },
-  {
-    "id": "gt-021",
-    "cat": "giao-tiep",
-    "sub": "thuyet-phuc",
-    "t": "Chuẩn bị BATNA quan trọng hơn chuẩn bị lý lẽ",
-    "s": "BATNA là phương án tốt nhất của bạn nếu không đạt thoả thuận. Sức mạnh đàm phán thực chất đến từ chất lượng BATNA chứ không từ kỹ thuật nói. Muốn tăng lương hiệu quả, việc đáng làm nhất trước cuộc nói chuyện là có một lựa chọn thật ở bên ngoài, chứ không phải học thêm câu chữ.",
-    "tags": [
-      "dam-phan",
-      "luong",
-      "su-nghiep"
-    ],
-    "src": "Fisher & Ury, Getting to Yes (1981)"
   },
   {
     "id": "gt-022",

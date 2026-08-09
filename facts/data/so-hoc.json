@@ -6,7 +6,7 @@
     "viz": "birthday",
     "t": "Chỉ cần 23 người trong phòng là xác suất có hai người trùng ngày sinh vượt 50%",
     "s": "Trực giác sai vì ta nghĩ tới 'ai đó trùng với TÔI' (cần 253 người mới tới 50%), trong khi bài toán hỏi 'có bất kỳ cặp nào trùng nhau'. Với 23 người có 253 cặp. Với 70 người, xác suất vượt 99,9%.",
-    "d": "Bài học tổng quát vượt xa ngày sinh: số cặp tăng theo bình phương số phần tử. Đó là lý do trong một tập dữ liệu đủ lớn, các trùng hợp 'không thể ngẫu nhiên' xuất hiện liên tục — và là lý do vì sao dò tìm mô thức trong dữ liệu lớn mà không có giả thuyết trước sẽ luôn tìm ra thứ gì đó.",
+    "d": "Bài học tổng quát vượt xa ngày sinh: số cặp tăng theo bình phương số phần tử. Đó là lý do trong một tập dữ liệu đủ lớn, các trùng hợp 'không thể ngẫu nhiên' xuất hiện liên tục — và là lý do vì sao dò tìm mô thức trong dữ liệu lớn mà không có giả thuyết trước sẽ luôn tìm ra thứ gì đó.\n\nĐổi câu hỏi một chút là con số đổi hẳn: muốn xác suất có ai đó trùng ĐÚNG ngày sinh của bạn vượt 50% thì cần tới 253 người. Lý do là 23 người cho 253 cặp để so, còn 'trùng với bạn' chỉ cho đúng số phép so bằng số người còn lại.",
     "tags": [
       "xac-suat",
       "truc-giac",

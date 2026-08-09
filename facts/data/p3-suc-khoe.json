@@ -75,8 +75,8 @@
     "id": "sk-208",
     "cat": "suc-khoe",
     "sub": "giac-ngu",
-    "t": "Não dọn dẹp chất thải chuyển hoá hiệu quả hơn trong lúc ngủ",
-    "s": "Hệ glymphatic — dòng dịch dọc theo mạch máu trong não — hoạt động mạnh hơn khi ngủ, giúp loại các sản phẩm chuyển hoá bao gồm amyloid beta. Cơ chế được phát hiện ở chuột và bằng chứng ở người còn đang được xây, nên đây là giả thuyết mạnh chứ chưa phải kết luận.",
+    "t": "Hệ glymphatic — dòng dịch dọc mạch máu não — chảy mạnh lên khi ngủ và cuốn theo cả amyloid beta",
+    "s": "Hệ glymphatic — dòng dịch dọc theo mạch máu trong não — hoạt động mạnh hơn khi ngủ, giúp loại các sản phẩm chuyển hoá bao gồm amyloid beta. Cơ chế được phát hiện ở chuột và bằng chứng ở người còn đang được xây, nên đây là giả thuyết mạnh chứ chưa phải kết luận. Ở chuột, khoảng gian bào giãn thêm khoảng 60% khi ngủ, làm dòng dịch đi qua dễ hơn hẳn.",
     "tags": [
       "nao",
       "glymphatic"
@@ -264,30 +264,6 @@
     "src": "Schoenfeld & Contreras, Strength and Conditioning Journal (2013)"
   },
   {
-    "id": "sk-228",
-    "cat": "suc-khoe",
-    "sub": "van-dong",
-    "t": "Khởi động động hiệu quả hơn giãn cơ tĩnh trước khi vận động",
-    "s": "Giãn tĩnh giữ lâu trước khi tập làm giảm nhẹ sức mạnh và công suất trong buổi đó, còn khởi động động — các động tác tăng dần biên độ và nhịp tim — thì cải thiện hiệu suất. Giãn tĩnh vẫn có chỗ, nhưng là sau buổi tập hoặc như một buổi riêng.",
-    "tags": [
-      "khoi-dong",
-      "gian-co"
-    ],
-    "src": "Behm & Chaouachi, European Journal of Applied Physiology (2011)"
-  },
-  {
-    "id": "sk-229",
-    "cat": "suc-khoe",
-    "sub": "van-dong",
-    "t": "Bạn không thể chọn chỗ giảm mỡ bằng cách tập chỗ đó",
-    "s": "Các thử nghiệm tập một bên chi và đo mỡ dưới da hai bên cho thấy mỡ giảm toàn thân, không giảm cục bộ theo cơ được tập. Nghĩa là gập bụng làm khoẻ cơ bụng nhưng không làm mỏng lớp mỡ phía trên nó.",
-    "tags": [
-      "giam-mo",
-      "huyen-thoai"
-    ],
-    "src": "Ramírez-Campillo và cộng sự, Journal of Strength and Conditioning Research (2013); Katch và cộng sự (1984)"
-  },
-  {
     "id": "sk-230",
     "cat": "suc-khoe",
     "sub": "van-dong",
@@ -435,25 +411,13 @@
     "id": "sk-245",
     "cat": "suc-khoe",
     "sub": "an-uong",
-    "t": "Bỏ bữa sáng không làm chuyển hoá chậm lại",
-    "s": "Trong các thử nghiệm ngẫu nhiên, việc ăn hay bỏ bữa sáng không tạo khác biệt về tổng năng lượng tiêu hao, và nhóm ăn bữa sáng có xu hướng nạp thêm calo trong ngày. Ý tưởng bữa sáng 'khởi động chuyển hoá' không có cơ sở thực nghiệm.",
+    "t": "Bỏ bữa sáng không làm tổng năng lượng tiêu hao giảm",
+    "s": "Trong các thử nghiệm ngẫu nhiên, việc ăn hay bỏ bữa sáng không tạo khác biệt về tổng năng lượng tiêu hao, và nhóm ăn bữa sáng có xu hướng nạp thêm calo trong ngày. Ý tưởng bữa sáng 'khởi động chuyển hoá' không có cơ sở thực nghiệm. Thử nghiệm ngẫu nhiên 6 tuần ở Bath không tìm thấy khác biệt về tiêu hao năng lượng giữa nhóm ăn sáng và nhóm nhịn.",
     "tags": [
       "bua-sang",
       "chuyen-hoa"
     ],
     "src": "Sievert và cộng sự, BMJ (2019); Betts và cộng sự, AJCN (2014)"
-  },
-  {
-    "id": "sk-246",
-    "cat": "suc-khoe",
-    "sub": "an-uong",
-    "t": "Cơ thể không cần 'thải độc' vì gan và thận đã làm việc đó liên tục",
-    "s": "Không có sản phẩm thương mại nào chứng minh được loại bỏ một chất độc cụ thể nào. Điều có tác dụng thật với chức năng gan thận thì nhàm chán: bớt rượu, đủ nước, đủ chất xơ, ngủ đủ và không dùng thực phẩm bổ sung không cần thiết.",
-    "tags": [
-      "thai-doc",
-      "huyen-thoai"
-    ],
-    "src": "Klein & Kiat, Journal of Human Nutrition and Dietetics (2015) — tổng quan về detox diets"
   },
   {
     "id": "sk-247",
@@ -576,18 +540,6 @@
     "src": "Haskell và cộng sự, Biological Psychology (2008); Owen và cộng sự, Nutritional Neuroscience (2008)"
   },
   {
-    "id": "sk-258",
-    "cat": "suc-khoe",
-    "sub": "chat-kich-thich",
-    "t": "Uống caffeine sau khi thức khoảng một tiếng hợp lý hơn uống ngay khi vừa dậy",
-    "s": "Nồng độ cortisol tự nhiên cao nhất trong khoảng nửa giờ đến một giờ đầu sau khi thức, nên caffeine lúc đó thêm ít giá trị. Bằng chứng cho lịch trình cụ thể còn yếu, nhưng nguyên tắc chung — dùng caffeine khi độ tỉnh táo bắt đầu tụt — thì hợp lý.",
-    "tags": [
-      "cortisol",
-      "thoi-diem"
-    ],
-    "src": "Debono và cộng sự, Journal of Clinical Endocrinology and Metabolism (2009) về nhịp cortisol"
-  },
-  {
     "id": "sk-259",
     "cat": "suc-khoe",
     "sub": "chat-kich-thich",
@@ -672,30 +624,6 @@
     "src": "Rumgay và cộng sự, The Lancet Oncology (2021); WHO tuyên bố về mức tiêu thụ an toàn (2023)"
   },
   {
-    "id": "sk-266",
-    "cat": "suc-khoe",
-    "sub": "chat-kich-thich",
-    "t": "Nghiên cứu cho thấy uống ít có lợi cho tim đã bị nghi ngờ mạnh vì lỗi phân nhóm",
-    "s": "Nhóm 'không uống' trong nhiều nghiên cứu bao gồm cả người đã bỏ vì bệnh, làm nhóm này trông kém khoẻ hơn. Khi loại nhóm này, lợi ích của việc uống ít giảm mạnh hoặc mất — và các phân tích dùng biến di truyền không tìm thấy lợi ích.",
-    "tags": [
-      "ruou",
-      "sai-lech"
-    ],
-    "src": "Stockwell và cộng sự, Journal of Studies on Alcohol and Drugs (2016); Millwood và cộng sự, The Lancet (2019)"
-  },
-  {
-    "id": "sk-268",
-    "cat": "suc-khoe",
-    "sub": "benh-va-tam-soat",
-    "t": "Tầm soát tốt phải giảm tử vong, không chỉ phát hiện sớm hơn",
-    "s": "Phát hiện sớm hơn tự động làm 'thời gian sống sau chẩn đoán' dài hơn dù không ai sống thêm ngày nào — hiện tượng thiên lệch thời gian dẫn. Vì vậy tỉ lệ sống 5 năm là chỉ số dễ gây nhầm, và tiêu chí đúng để đánh giá một chương trình tầm soát là tử vong do bệnh đó.",
-    "tags": [
-      "tam-soat",
-      "sai-lech"
-    ],
-    "src": "Welch, Schwartz & Woloshin, Overdiagnosed (2011); Gigerenzer và cộng sự, PSPI (2007)"
-  },
-  {
     "id": "sk-270",
     "cat": "suc-khoe",
     "sub": "benh-va-tam-soat",
@@ -730,18 +658,6 @@
       "cap-cuu"
     ],
     "src": "American Heart Association / American Stroke Association guidelines (2019)"
-  },
-  {
-    "id": "sk-274",
-    "cat": "suc-khoe",
-    "sub": "benh-va-tam-soat",
-    "t": "Đau ngực không phải triệu chứng duy nhất của nhồi máu cơ tim, và ở nhiều người nó không có",
-    "s": "Một tỉ lệ đáng kể ca nhồi máu biểu hiện bằng khó thở, buồn nôn, đau lan lên hàm hoặc vai, hoặc mệt bất thường — và các biểu hiện không điển hình phổ biến hơn ở phụ nữ và người tiểu đường. Điều này làm chậm chẩn đoán ở đúng nhóm cần nhanh nhất.",
-    "tags": [
-      "nhoi-mau",
-      "trieu-chung"
-    ],
-    "src": "Canto và cộng sự, JAMA (2012); Mehta và cộng sự, Circulation (2016)"
   },
   {
     "id": "sk-275",
@@ -840,18 +756,6 @@
     "src": "Hróbjartsson & Gøtzsche, NEJM (2001); Cochrane update (2010)"
   },
   {
-    "id": "sk-289",
-    "cat": "suc-khoe",
-    "sub": "thuoc-va-vaccine",
-    "t": "Giả dược vẫn hoạt động khi bệnh nhân biết đó là giả dược",
-    "s": "Trong các thử nghiệm giả dược công khai với hội chứng ruột kích thích, đau lưng và mệt mỏi, nhóm được nói rõ mình đang dùng viên không có hoạt chất vẫn báo cáo cải thiện hơn nhóm không điều trị. Cơ chế được cho là liên quan tới nghi thức điều trị và kỳ vọng.",
-    "tags": [
-      "gia-duoc-mo",
-      "ky-vong"
-    ],
-    "src": "Kaptchuk và cộng sự, PLoS ONE (2010); Carvalho và cộng sự, Pain (2016)"
-  },
-  {
     "id": "sk-290",
     "cat": "suc-khoe",
     "sub": "thuoc-va-vaccine",
@@ -936,18 +840,6 @@
     "src": "ATBC Study Group, NEJM (1994); Omenn và cộng sự, NEJM (1996) — thử nghiệm CARET"
   },
   {
-    "id": "sk-299",
-    "cat": "suc-khoe",
-    "sub": "thuoc-va-vaccine",
-    "t": "Tác dụng phụ được báo cáo trong nhóm giả dược cũng rất cao",
-    "s": "Trong các thử nghiệm vaccine và thuốc, một tỉ lệ lớn triệu chứng được báo cáo ở nhóm dùng giả dược — hiệu ứng nocebo. Điều này không có nghĩa tác dụng phụ là tưởng tượng, mà có nghĩa muốn biết một triệu chứng do thuốc gây ra thì phải so với nhóm đối chứng.",
-    "tags": [
-      "nocebo",
-      "tac-dung-phu"
-    ],
-    "src": "Haas và cộng sự, JAMA Network Open (2022) — phân tích nhóm giả dược trong thử nghiệm vaccine COVID-19"
-  },
-  {
     "id": "sk-300",
     "cat": "suc-khoe",
     "sub": "thuoc-va-vaccine",
@@ -975,7 +867,7 @@
     "id": "sk-302",
     "cat": "suc-khoe",
     "sub": "suc-khoe-tinh-than",
-    "t": "Trị liệu tâm lý và thuốc có hiệu quả tương đương với trầm cảm mức nhẹ đến vừa",
+    "t": "Trị liệu tâm lý và thuốc chống trầm cảm cho hiệu quả gần nhau ở trầm cảm nhẹ đến vừa, và kết hợp cả 2 tốt hơn từng cái riêng",
     "s": "Các phân tích tổng hợp cho thấy hiệu quả gần nhau, và kết hợp hai phương pháp tốt hơn từng phương pháp riêng. Điều khác nhau là mô hình tái phát: hiệu quả của trị liệu có xu hướng bền hơn sau khi ngừng điều trị.",
     "tags": [
       "tram-cam",
@@ -1080,18 +972,6 @@
     "src": "Rose và cộng sự, Cochrane Reviews (2002); Bonanno, American Psychologist (2004)"
   },
   {
-    "id": "sk-313",
-    "cat": "suc-khoe",
-    "sub": "huyen-thoai-suc-khoe",
-    "t": "Bẻ khớp ngón tay không gây viêm khớp",
-    "s": "Tiếng kêu là bọt khí trong dịch khớp bị xẹp, không phải xương cọ nhau. Các nghiên cứu so sánh người có và không có thói quen này không tìm thấy khác biệt về tỉ lệ viêm khớp — dù một nghiên cứu ghi nhận lực nắm tay yếu hơn ở nhóm bẻ nhiều.",
-    "tags": [
-      "be-khop",
-      "huyen-thoai"
-    ],
-    "src": "deWeber, Olszewski & Ortolano, Journal of the American Board of Family Medicine (2011)"
-  },
-  {
     "id": "sk-315",
     "cat": "suc-khoe",
     "sub": "huyen-thoai-suc-khoe",
@@ -1138,18 +1018,6 @@
       "thai-doc"
     ],
     "src": "Genuis và cộng sự, Archives of Environmental Contamination (2011); Laukkanen và cộng sự, JAMA IM (2015) về xông hơi"
-  },
-  {
-    "id": "sk-319",
-    "cat": "suc-khoe",
-    "sub": "huyen-thoai-suc-khoe",
-    "t": "Không có bằng chứng cho việc 'giải độc' sau khi ăn nhiều bằng cách nhịn hôm sau",
-    "s": "Cơ thể không có bộ đếm bù trừ theo ngày; điều quan trọng là tổng lượng theo tuần và theo tháng. Nhưng chu kỳ ăn quá rồi nhịn bù lại có hại thật về mặt hành vi: nó củng cố mối quan hệ trừng phạt với thức ăn và dự báo ăn quá tiếp.",
-    "tags": [
-      "bu-tru",
-      "hanh-vi"
-    ],
-    "src": "Nghiên cứu về restraint theory và chu kỳ ăn quá (Herman & Polivy, 1980)"
   },
   {
     "id": "sk-320",

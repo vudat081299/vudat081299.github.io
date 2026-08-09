@@ -11,8 +11,28 @@ Kiến trúc, cách chạy tại máy và cấu trúc file: xem [README.md](READ
 
 ## 1. Một fact là gì
 
-Một fact = **một điều khẳng định duy nhất, kiểm chứng được, làm người đọc đổi cách nghĩ hoặc
-cách làm**. Không phải một chủ đề, không phải một đoạn giới thiệu.
+> Định nghĩa này được viết lại ngày 09/08/2026 vì thư viện đã trôi sang kể chuyện và khuyên
+> bảo. Nếu bạn thấy fact cũ nào không khớp định nghĩa dưới đây thì fact đó sai, không phải
+> định nghĩa sai.
+
+**Một fact là một khẳng định về thế giới, đúng độc lập với người đọc, và neo được vào ít nhất
+một thứ cứng: một con số đo được, một cơ chế gọi tên được, hoặc một mốc thời gian.**
+
+Ba fact mẫu — mọi fact trong thư viện phải cùng dạng với ba câu này:
+
+- *Cá heo ngủ mỗi lần một nửa não, nửa còn lại thức để nổi lên thở và canh kẻ săn mồi.*
+- *Tốc độ ánh sáng trong chân không là 299.792.458 m/s với mọi người quan sát, dù người đó
+  đang chuyển động nhanh cỡ nào.*
+- *Việt Nam nằm dưới ách đô hộ của các triều đại Trung Hoa tổng cộng khoảng 1.000 năm, chia
+  làm bốn lần Bắc thuộc.*
+
+Chúng có chung ba thứ, và cả ba là **bắt buộc**:
+
+| Cổng | Câu hỏi | Trượt thì sao |
+|---|---|---|
+| **Thế giới** | Nó nói thế giới *là* thế nào, hay nói người đọc *nên* làm gì? | Xoá chữ "bạn" khỏi câu mà câu sụp đổ → đó là lời khuyên, loại |
+| **Mỏ neo** | Có con số, cơ chế, hay mốc thời gian không? | Không có → đó là cảm nhận hoặc ý kiến, loại |
+| **Một câu** | Kể lại được cho người khác trong một câu, không cần dựng bối cảnh? | Phải kể chuyện mới hiểu → đó là chuyện, loại |
 
 ```json
 {
@@ -28,12 +48,50 @@ cách làm**. Không phải một chủ đề, không phải một đoạn giớ
 }
 ```
 
-Ưu tiên nội dung, theo đúng thứ tự này:
+### 1.1 Sáu loại KHÔNG phải fact — thấy là loại, không tranh luận
 
-1. **Sửa một hiểu lầm thường ngày.** Thứ nhiều người tin và tin sai.
-2. **Đổi một hành vi hằng ngày.** Cách nói, cách tiêu tiền, cách ngủ, cách chọn.
-3. **Hiệu chỉnh trực giác về thang bậc.** Thời gian, khoảng cách, xác suất, tiền.
-4. Thứ chỉ thú vị chứ không dùng được: nhận, nhưng ít.
+Đây là danh sách đóng. `factlint.py verify` bắt máy móc phần lớn chúng; phần còn lại bạn phải
+tự bắt bằng mắt.
+
+1. **Tường thuật.** Nội dung là một vụ việc, một thí nghiệm, một nhân vật được kể lại.
+   Dấu hiệu: tiêu đề bắt đầu bằng *"Vụ…"*, *"Thí nghiệm…"*, *"Câu chuyện…"*, hoặc chứa tên
+   riêng của một sự cố.
+   ❌ *"Vụ Kitty Genovese: bài báo gốc sai gần hết chi tiết quan trọng"* — kể xong rồi sao?
+   Người đọc không cầm được gì về.
+   ✅ Nếu thật sự có gì để nói thì nói cái cơ chế, bỏ vụ việc đi.
+
+2. **Lời khuyên.** Câu có mệnh lệnh, hoặc so sánh hai *cách làm* để người đọc chọn.
+   Dấu hiệu: *nên*, *hãy*, *đừng*, *cách tốt nhất*, *X hiệu quả hơn Y*, *giúp bạn…*
+   ❌ *"Nói 'kể tiếp đi' hiệu quả hơn đặt một câu hỏi mới"*.
+
+3. **Meta về nghiên cứu.** Nội dung là số phận của một bài báo, không phải thế giới.
+   ❌ *"Thí nghiệm nhà tù Stanford không phải bằng chứng như nó được kể"*.
+   ✅ Được phép nêu chỗ tranh cãi **bên trong** `s`/`d` của một fact có claim thật (§4 quy tắc 3).
+
+4. **Xu hướng hành vi không mỏ neo.** *"Người ta thường…"*, *"Ta có xu hướng…"* mà không có
+   con số, không có cơ chế thần kinh/sinh lý gọi tên được.
+   ❌ *"Người ta ghét sự mơ hồ hơn ghét rủi ro"*.
+   ✅ *"Ngáp không phải để lấy oxy — thở khí giàu CO₂ không làm tăng số lần ngáp"*: có cơ chế,
+   có phép thử.
+
+5. **Định luật/mô hình đặt tên.** *"Định luật Sayre"*, *"Dao cạo Sagan"*, *"Nguyên lý Anna
+   Karenina"* — đó là cách nói ẩn dụ, không kiểm chứng được, không có mỏ neo.
+   Ngoại lệ: định luật **vật lý/toán học** có công thức và có số (định luật Ohm, định luật
+   Benford) thì được.
+
+6. **Mẹo và huyền thoại tự chế.** Con số không truy được nguồn gốc (§4).
+
+### 1.2 Ranh giới hay bị nhầm
+
+- Fact tâm lý/sinh học **được giữ** khi nó nêu một cơ chế + một con số kiểm được:
+  *"Đau xã hội và đau thể chất kích hoạt cùng vùng vỏ não đai trước"* — đạt.
+  *"Người được lắng nghe kỹ trở nên ít cực đoan hơn"* — trượt cổng mỏ neo.
+- Fact lịch sử **được giữ** khi giá trị nằm ở đại lượng hoặc mốc:
+  *"Chiến tranh Anh–Zanzibar 1896 kéo dài 38 phút"* — đạt.
+  *"Một sĩ quan Liên Xô có thể đã ngăn chiến tranh hạt nhân"* — trượt: giá trị nằm ở diễn
+  biến câu chuyện, và câu có chữ "có thể".
+- Fact sửa huyền thoại **được giữ** khi nó phát biểu cái **đúng**, không phát biểu cái sai:
+  ✅ *"Lưỡi cảm nhận cả năm vị ở mọi vùng"*  ❌ *"Bản đồ vị giác là hiểu lầm do lỗi dịch"*.
 
 Viết bằng tiếng Việt thường ngày. Không "nghiên cứu cho thấy", không "các nhà khoa học đã
 chứng minh". Nêu thẳng con số và nêu thẳng ai tìm ra nó.
@@ -56,9 +114,11 @@ biện lại một kết quả nổi tiếng.
 Ép nó về **một** câu khẳng định. Nếu phải dùng chữ "và" để nối hai ý không phụ thuộc nhau
 thì bạn đang có hai fact — tách ra, hoặc bỏ ý yếu hơn.
 
-Rồi kiểm ba câu hỏi:
+Rồi cho nó qua **ba cổng ở §1** (thế giới / mỏ neo / một câu) và soi lại **sáu loại loại bỏ ở
+§1.1**. Trượt bất kỳ cổng nào → bỏ, đừng tìm cách viết vòng cho lọt.
 
-- Người đọc đổi được gì sau khi biết? Không đổi được gì → bỏ.
+Thêm hai câu hỏi:
+
 - Con số nào là con số chính? Không có → thường là ý kiến, không phải fact.
 - Chỗ nào trong đó đang bị tranh cãi? Có → phải nói ra (§4, quy tắc 3).
 
@@ -123,11 +183,16 @@ Xem §5. **Fact nào demo được bằng visualization thì làm luôn**, đừ
 ### Bước 7 — Chạy lại bộ kiểm
 
 ```bash
-python3 facts/tools/factlint.py check
+python3 facts/tools/factlint.py check && python3 facts/tools/factlint.py verify
 ```
 
-Phải sạch lỗi. Cặp nào ≥ 0,62 mà bạn cố ý giữ thì phải giải thích được vì sao chúng là hai
-claim khác nhau — nếu không giải thích được thì nó là trùng, đi gộp lại.
+Cả hai phải sạch lỗi.
+
+- `check` — cấu trúc + cặp gần trùng. Cặp nào ≥ 0,62 mà bạn cố ý giữ thì phải giải thích được
+  vì sao chúng là hai claim khác nhau; không giải thích được thì nó là trùng, đi gộp lại.
+- `verify` — cổng định nghĩa §1. Nó phân ba mức: `LOẠI` là vi phạm chắc chắn và **phải xoá
+  hoặc viết lại**; `XEM` là nghi ngờ, phải đọc bằng mắt rồi tự quyết; còn lại là đạt.
+  Đây là cổng chặn commit, không phải gợi ý.
 
 ---
 
@@ -231,7 +296,29 @@ trên điện thoại.
 
 ```bash
 python3 facts/tools/factlint.py check     # cấu trúc + cặp gần trùng
+python3 facts/tools/factlint.py verify    # cổng định nghĩa §1 — phải 0 fact LOẠI
 python3 facts/tools/factlint.py stats     # phân bố theo cụm, cảnh báo cụm to
+```
+
+Hai cổng này còn chạy **tự động** ở hai lớp:
+
+| Lớp | Khi nào | Chặn không |
+|---|---|---|
+| `tools/hooks/post-edit.sh` | mỗi lần Edit/Write vào `facts/data/*.json` | có — trả về lỗi cho model tự sửa |
+| `tools/hooks/pre-commit` | lúc `git commit` có chạm `facts/` | có — chặn commit |
+
+Lớp thứ nhất chỉ bắt được sửa bằng Edit/Write; thay đổi viết bằng script thì lọt qua nó và
+bị lớp thứ hai bắt. Vì vậy **phải có cả hai**.
+
+Cài lớp thứ hai: `sh facts/tools/install-hooks.sh` (dựng bộ điều phối gọi mọi
+`*/tools/hooks/pre-commit` trong repo, nên hook của project khác vẫn chạy y như cũ).
+
+Lớp thứ nhất đăng ký ở `.claude/settings.json` gốc repo — thư mục đó **nằm trong
+`.gitignore`**, nên mỗi máy phải tự thêm lại khối này:
+
+```json
+{ "type": "command", "statusMessage": "Chạy cổng facts…", "timeout": 60,
+  "command": "IN=$(cat); F=$(printf \"%s\" \"$IN\" | jq -r \".tool_input.file_path // .tool_response.filePath // empty\"); case \"$F\" in */facts/data/*.json) R=${F%%/facts/data/*}/facts; if [ -f \"$R/tools/hooks/post-edit.sh\" ]; then printf \"%s\" \"$IN\" | sh \"$R/tools/hooks/post-edit.sh\"; exit $?; fi;; esac; exit 0" }
 ```
 
 Nếu có sửa UI hoặc thêm minh hoạ, chạy tiếp bốn cổng cơ học của

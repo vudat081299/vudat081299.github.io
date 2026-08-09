@@ -3,7 +3,7 @@
 Trang tĩnh, không build, không phụ thuộc. Dựng bằng [web-builder](../web-builder/) v0.6
 (`../web-builder/web-builder.css`) + `facts.css` (chrome riêng, prefix `fx-*`) + `app.js`.
 
-**1.511 fact** trên 14 chủ đề, chia thành 118 cụm nhỏ, trong đó 13 fact có minh hoạ tương tác.
+**2.000 fact** trên 20 chủ đề, chia thành 166 cụm nhỏ, trong đó 13 fact có minh hoạ tương tác.
 
 > Sửa hoặc thêm fact thì đọc [CLAUDE.md](CLAUDE.md) trước — ở đó có pipeline thêm fact và
 > cơ chế chống trùng. File này chỉ nói về kiến trúc.
@@ -15,11 +15,14 @@ facts/
   viz.js            minh hoạ tương tác — một hàm cho mỗi giá trị của trường "viz"
   facts.css         phần web-builder chưa có: card dạng <button>, cắt dòng, khung minh hoạ
   tools/
-    factlint.py     kiểm cấu trúc + tìm fact gần trùng + tra fact sắp thêm
+    factlint.py     kiểm cấu trúc + cổng định nghĩa + tìm fact gần trùng + tra fact sắp thêm
+    hooks/          post-edit.sh (PostToolUse) và pre-commit — chạy cổng tự động
+    install-hooks.sh  cài bộ điều phối hook git cho cả repo
   data/
     manifest.json   chủ đề + cụm (clusters) + danh sách file fact (thứ tự file = thứ tự thêm)
     <chu-de>.json   đợt fact đầu
     p2-<chu-de>.json đợt fact thứ hai
+    p3-/p4-<chu-de>.json  các đợt sau
 ```
 
 ## Chạy tại máy
@@ -60,12 +63,17 @@ File đứng sau trong `files` = fact mới hơn, và chế độ sắp xếp m�
 Chạy lại bộ kiểm tra sau khi thêm:
 
 ```bash
-python3 facts/tools/factlint.py check
+python3 facts/tools/factlint.py check && python3 facts/tools/factlint.py verify
 ```
 
-Nó kiểm id trùng, `cat`/`sub` sai, thiếu `src`, `viz` trỏ vào hàm không tồn tại, và quét cả
-thư viện tìm các cặp fact gần trùng nhau. Xem thêm `stats` (phân bố theo cụm) và
-`near "<văn bản>"` (tra một fact sắp thêm) — chi tiết trong [CLAUDE.md](CLAUDE.md).
+`check` kiểm id trùng, `cat`/`sub` sai, thiếu `src`, `viz` trỏ vào hàm không tồn tại, và quét
+cả thư viện tìm các cặp fact gần trùng nhau. `verify` là **cổng định nghĩa**: nó loại fact
+tường thuật, fact lời khuyên, fact meta về nghiên cứu và xu hướng hành vi không mỏ neo —
+xem [CLAUDE.md](CLAUDE.md) §1. Xem thêm `stats` (phân bố theo cụm) và `near "<văn bản>"`
+(tra một fact sắp thêm).
+
+Cả hai cổng chạy tự động: qua hook `PostToolUse` mỗi lần sửa `data/`, và qua `pre-commit`
+lúc commit. Cài hook git bằng `sh facts/tools/install-hooks.sh`.
 
 ## Quy tắc kiểm chứng (bắt buộc)
 

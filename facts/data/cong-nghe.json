@@ -13,20 +13,6 @@
     "src": "TeleGeography, Submarine Cable Map và báo cáo thường niên"
   },
   {
-    "id": "cn-002",
-    "cat": "cong-nghe",
-    "sub": "bao-mat-mat-khau",
-    "t": "Chuẩn mật khẩu hiện đại: dài quan trọng hơn ký tự đặc biệt, và đừng bắt đổi định kỳ",
-    "s": "Hướng dẫn NIST 800-63B từ 2017 khuyến nghị bỏ quy tắc bắt buộc đổi mật khẩu theo lịch và bỏ yêu cầu trộn ký tự phức tạp, thay bằng mật khẩu dài, kiểm tra với danh sách mật khẩu đã lộ. Lý do: các quy tắc rườm rà khiến người dùng chọn biến thể dễ đoán và ghi ra giấy.",
-    "d": "Ba việc có giá trị nhất theo thứ tự: dùng trình quản lý mật khẩu để mỗi dịch vụ một mật khẩu khác nhau; bật xác thực hai lớp bằng ứng dụng hoặc khoá vật lý thay vì SMS; và kiểm tra email của mình trong các vụ rò rỉ dữ liệu đã biết.",
-    "tags": [
-      "bao-mat",
-      "mat-khau",
-      "khuyen-nghi"
-    ],
-    "src": "NIST Special Publication 800-63B, Digital Identity Guidelines (2017, cập nhật sau đó)"
-  },
-  {
     "id": "cn-003",
     "cat": "cong-nghe",
     "sub": "bao-mat-mat-khau",
@@ -236,19 +222,6 @@
     "src": "Nhật ký nhóm Mark II, Smithsonian National Museum of American History"
   },
   {
-    "id": "cn-019",
-    "cat": "cong-nghe",
-    "sub": "du-lieu-luu-tru",
-    "t": "Quy tắc sao lưu 3-2-1 vẫn là tiêu chuẩn đáng tin nhất",
-    "s": "Ba bản sao dữ liệu, trên hai loại phương tiện khác nhau, trong đó một bản đặt ở nơi khác. Đồng bộ đám mây không phải sao lưu: nếu bạn xoá nhầm hoặc bị mã độc mã hoá, thay đổi đó đồng bộ ngay sang mọi thiết bị. Sao lưu thật là bản chụp tại một thời điểm mà bạn khôi phục lại được. Và một bản sao lưu chưa từng được thử khôi phục thì chưa phải bản sao lưu — rất nhiều tổ chức phát hiện bản sao bị hỏng đúng vào lúc cần nó nhất.",
-    "tags": [
-      "sao-luu",
-      "du-lieu",
-      "rui-ro"
-    ],
-    "src": "US-CERT/CISA, khuyến nghị sao lưu dữ liệu"
-  },
-  {
     "id": "cn-020",
     "cat": "cong-nghe",
     "sub": "may-tinh-chip",
@@ -273,18 +246,5 @@
       "tan-cong"
     ],
     "src": "Verizon Data Breach Investigations Report (các năm gần đây)"
-  },
-  {
-    "id": "cn-022",
-    "cat": "cong-nghe",
-    "sub": "huyen-thoai-cong-nghe",
-    "t": "Định luật Cunningham: cách nhanh nhất để có câu trả lời đúng trên mạng là đăng một câu trả lời sai",
-    "s": "Người ta lười trả lời câu hỏi nhưng rất hăng sửa lỗi người khác. Ngoài giá trị hài hước, nó mô tả một cơ chế thật của tri thức tập thể: hệ thống mở cải thiện bằng cách bị phản bác, chứ không bằng cách chờ ai đó nói đúng ngay từ đầu.",
-    "tags": [
-      "internet",
-      "tri-thuc",
-      "hanh-vi"
-    ],
-    "src": "Đặt theo Ward Cunningham, người tạo ra wiki; được Steven McGeady phổ biến"
   }
 ]

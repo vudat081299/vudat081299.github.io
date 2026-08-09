@@ -79,19 +79,6 @@
     "src": "Barber & Odean, Journal of Finance (2000)"
   },
   {
-    "id": "kt-107",
-    "cat": "kinh-te",
-    "sub": "dau-tu",
-    "t": "Người ta bán cổ phiếu đang lãi và giữ cổ phiếu đang lỗ — ngược hẳn cái nên làm",
-    "s": "Hiệu ứng bố trí xuất hiện ở mọi thị trường được nghiên cứu. Bán khoản lãi cho cảm giác 'đúng', giữ khoản lỗ tránh phải thừa nhận sai. Về mặt thuế và về mặt xu hướng giá, cả hai đều thường là quyết định kém.",
-    "tags": [
-      "dau-tu",
-      "hanh-vi",
-      "thien-kien"
-    ],
-    "src": "Shefrin & Statman, Journal of Finance (1985); Odean, Journal of Finance (1998)"
-  },
-  {
     "id": "kt-108",
     "cat": "kinh-te",
     "sub": "chi-tieu-tiet-kiem",
@@ -251,7 +238,7 @@
     "id": "kt-121",
     "cat": "kinh-te",
     "sub": "thue-chinh-sach",
-    "t": "Lời nguyền tài nguyên: nước giàu khoáng sản thường tăng trưởng chậm hơn",
+    "t": "Lời nguyền tài nguyên: nước phụ thuộc nặng vào xuất khẩu khoáng sản tăng trưởng chậm hơn khoảng 1 điểm phần trăm mỗi năm",
     "s": "Các phân tích so sánh cho thấy quốc gia phụ thuộc nặng vào xuất khẩu tài nguyên có xu hướng tăng trưởng dài hạn kém hơn, do tỉ giá bị đẩy lên làm chết ngành sản xuất, do nguồn thu dễ dãi làm suy yếu thể chế, và do giá hàng hoá biến động mạnh. Không phải định mệnh — Na Uy và Botswana là phản ví dụ.",
     "tags": [
       "phat-trien",
@@ -352,19 +339,6 @@
     "src": "French & Poterba, American Economic Review (1991); cập nhật trong báo cáo Vanguard (2021)"
   },
   {
-    "id": "kt-130",
-    "cat": "kinh-te",
-    "sub": "bao-hiem-rui-ro",
-    "t": "Bảo hiểm nên mua cho thảm hoạ, không mua cho phiền toái",
-    "s": "Bảo hiểm chuyển rủi ro với một khoản phí, nên về kỳ vọng bạn luôn lỗ. Nó đáng tiền khi tổn thất sẽ phá vỡ tài chính của bạn, và không đáng khi bạn tự chịu được — đó là lý do bảo hiểm màn hình điện thoại thường là món hàng tệ còn bảo hiểm y tế và nhân thọ thì không.",
-    "tags": [
-      "bao-hiem",
-      "rui-ro",
-      "nguyen-tac"
-    ],
-    "src": "Nguyên lý hữu dụng kỳ vọng; hướng dẫn tiêu dùng của các cơ quan bảo vệ người tiêu dùng"
-  },
-  {
     "id": "kt-131",
     "cat": "kinh-te",
     "sub": "bao-hiem-rui-ro",
@@ -454,19 +428,6 @@
       "quy-tac"
     ],
     "src": "Chuẩn bảo lãnh phát hành của Fannie Mae/Freddie Mac; phổ biến trong hoạch định tài chính cá nhân"
-  },
-  {
-    "id": "kt-138",
-    "cat": "kinh-te",
-    "sub": "lai-va-no",
-    "t": "Trả nợ lãi cao là khoản 'đầu tư' có lợi suất chắc chắn cao nhất bạn tìm được",
-    "s": "Trả sớm khoản nợ 20%/năm tương đương kiếm được 20%/năm không rủi ro và không thuế. Không thị trường nào chào mức đó. Vì vậy thứ tự hợp lý gần như luôn là: quỹ khẩn cấp tối thiểu, rồi nợ lãi cao, rồi mới tới đầu tư.",
-    "tags": [
-      "no",
-      "uu-tien",
-      "dau-tu"
-    ],
-    "src": "Nguyên lý so sánh lợi suất điều chỉnh rủi ro; hướng dẫn tài chính cá nhân phổ biến"
   },
   {
     "id": "kt-139",

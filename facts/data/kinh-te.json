@@ -119,19 +119,6 @@
     "src": "George Akerlof, The Market for Lemons, QJE (1970); Nobel Kinh tế 2001"
   },
   {
-    "id": "kt-010",
-    "cat": "kinh-te",
-    "sub": "dong-co-kinh-te",
-    "t": "Bi kịch của tài sản chung có lối thoát — và Elinor Ostrom đã tìm ra nó",
-    "s": "Lý thuyết cổ điển nói tài nguyên dùng chung tất yếu bị khai thác cạn. Ostrom khảo sát hàng trăm cộng đồng thật (thuỷ lợi, ngư trường, rừng) và cho thấy nhiều nơi tự quản trị bền vững hàng trăm năm nhờ ranh giới rõ ràng, luật do chính người dùng đặt ra, cơ chế giám sát và chế tài tăng dần.",
-    "tags": [
-      "tai-nguyen",
-      "the-che",
-      "hop-tac"
-    ],
-    "src": "Garrett Hardin, Science (1968); Elinor Ostrom, Governing the Commons (1990), Nobel Kinh tế 2009"
-  },
-  {
     "id": "kt-011",
     "cat": "kinh-te",
     "sub": "dong-co-kinh-te",
@@ -299,18 +286,5 @@
       "hanh-phuc"
     ],
     "src": "Hermann Gossen (1854); Daniel Bernoulli (1738)"
-  },
-  {
-    "id": "kt-024",
-    "cat": "kinh-te",
-    "sub": "chi-tieu-tiet-kiem",
-    "t": "Quỹ dự phòng nên tính bằng tháng chi tiêu, không phải bằng phần trăm thu nhập",
-    "s": "Rủi ro tài chính lớn nhất của một người đi làm không phải đầu tư sai mà là mất thu nhập trong lúc chi phí cố định vẫn chạy. Vì vậy đơn vị đo đúng là 'bao nhiêu tháng sống được nếu mất việc hôm nay' — con số phổ biến trong các khuyến nghị là 3–6 tháng, dài hơn nếu thu nhập bấp bênh hoặc bạn là nguồn thu duy nhất của gia đình.",
-    "tags": [
-      "tiet-kiem",
-      "rui-ro",
-      "ke-hoach"
-    ],
-    "src": "Khuyến nghị phổ biến của các cơ quan bảo vệ người tiêu dùng tài chính (ví dụ CFPB, Hoa Kỳ)"
   }
 ]

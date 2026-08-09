@@ -172,47 +172,6 @@
     "src": "Ola Svenson, Acta Psychologica (1981)"
   },
   {
-    "id": "tl-014",
-    "cat": "tam-ly",
-    "sub": "huyen-thoai-tam-ly",
-    "t": "Hiệu ứng Dunning–Kruger có thật, nhưng nhỏ hơn và khác với cách nó bị kể lại",
-    "s": "Nghiên cứu gốc cho thấy người làm kém nhất đánh giá bản thân sát mức trung bình, tức lệch nhiều nhất. Nhưng phần lớn mọi người, kể cả người giỏi, đều dự đoán mình gần mức trung bình — và một phần hiệu ứng đến từ hiện tượng thống kê chứ không hoàn toàn từ 'ngu mà không biết mình ngu'.",
-    "d": "Đây là ví dụ tốt về cách một phát hiện thật bị biến thành câu chửi trên mạng. Bài học dùng được: mức tự tin của một người là tín hiệu rất yếu về năng lực của họ; hãy hỏi họ mô tả cách làm cụ thể, chứ đừng nghe họ tự đánh giá.",
-    "tags": [
-      "thien-kien",
-      "nang-luc",
-      "danh-gia"
-    ],
-    "src": "Kruger & Dunning, JPSP (1999); phê bình phương pháp: Nuhfer et al., Numeracy (2017)"
-  },
-  {
-    "id": "tl-015",
-    "cat": "tam-ly",
-    "sub": "huyen-thoai-tam-ly",
-    "t": "Nhiều kết quả tâm lý học nổi tiếng đã không lặp lại được",
-    "s": "Dự án Reproducibility Project công bố trên Science (2015) thử lặp lại 100 nghiên cứu tâm lý học và chỉ khoảng 36% cho kết quả có ý nghĩa thống kê như bản gốc. Các hiệu ứng từng rất nổi như 'tư thế quyền lực' hay 'cạn kiệt ý chí' nay đứng trên nền bằng chứng rất yếu.",
-    "d": "Đây không phải lý do để vứt bỏ tâm lý học, mà là lý do để đọc nó như người trưởng thành: ưu tiên hiệu ứng đã được lặp lại nhiều lần, ở nhiều nhóm dân cư, với cỡ mẫu lớn và tiền đăng ký thiết kế. Và nghi ngờ mọi kết luận gọn ghẽ được rút ra từ một nghiên cứu duy nhất trên 40 sinh viên.",
-    "tags": [
-      "khoa-hoc",
-      "phan-bien",
-      "khung-hoang-nhan-ban"
-    ],
-    "src": "Open Science Collaboration, Science 349 (2015)"
-  },
-  {
-    "id": "tl-016",
-    "cat": "tam-ly",
-    "sub": "nhin-nguoi-khac",
-    "t": "Hiệu ứng người ngoài cuộc có thật, nhưng trong nguy hiểm thật người ta thường ra tay",
-    "s": "Sách giáo khoa dạy rằng càng đông người chứng kiến thì càng ít người giúp. Phân tích video giám sát các vụ xung đột thật ở ba quốc gia (2019) cho thấy có người can thiệp trong khoảng 9 trên 10 vụ, và càng đông người thì khả năng có ít nhất một người ra tay càng cao.",
-    "tags": [
-      "xa-hoi",
-      "hanh-vi",
-      "phan-bien"
-    ],
-    "src": "Philpot, Liebst, Levine, Bernasco & Lindegaard, American Psychologist (2020)"
-  },
-  {
     "id": "tl-017",
     "cat": "tam-ly",
     "sub": "ban-than",

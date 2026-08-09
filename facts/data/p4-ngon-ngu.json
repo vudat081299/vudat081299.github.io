@@ -1,0 +1,41 @@
+[
+  {
+    "id": "nn-201",
+    "cat": "ngon-ngu",
+    "sub": "chu-viet",
+    "t": "Chữ viết được phát minh độc lập chỉ khoảng 3–4 lần trong lịch sử loài người",
+    "s": "Sumer khoảng 3200 trước Công nguyên, Trung Hoa khoảng 1200 trước Công nguyên, Trung Mỹ khoảng 900 trước Công nguyên, và có thể cả Ai Cập. Mọi hệ chữ khác đều vay mượn hoặc phái sinh từ bốn nguồn này.",
+    "tags": [
+      "chu-viet",
+      "phat-minh",
+      "lich-su"
+    ],
+    "src": "Daniels & Bright, The World's Writing Systems (1996)"
+  },
+  {
+    "id": "nn-202",
+    "cat": "ngon-ngu",
+    "sub": "chu-viet",
+    "t": "Chữ viết ra đời để ghi sổ nợ và hàng tồn kho, không phải để làm thơ",
+    "s": "Phần lớn bảng đất sét Sumer sớm nhất là biên lai lúa mạch, bia và gia súc. Văn học chỉ xuất hiện sau đó khoảng 600–700 năm.",
+    "tags": [
+      "chu-viet",
+      "ke-toan",
+      "sumer"
+    ],
+    "src": "Schmandt-Besserat, How Writing Came About (1996)"
+  },
+  {
+    "id": "nn-215",
+    "cat": "ngon-ngu",
+    "sub": "ngu-phap-tu-vung",
+    "t": "Định luật Zipf: từ phổ biến thứ 2 xuất hiện bằng khoảng 1/2 từ phổ biến nhất, thứ 3 bằng khoảng 1/3",
+    "s": "Quy luật này đúng với hầu hết văn bản đủ dài ở mọi ngôn ngữ, và cả với dân số thành phố hay lượt truy cập website. Nguyên nhân sâu xa của nó vẫn chưa được giải thích trọn vẹn.",
+    "tags": [
+      "zipf",
+      "phan-bo",
+      "thong-ke"
+    ],
+    "src": "Zipf, Human Behavior and the Principle of Least Effort (1949)"
+  }
+]

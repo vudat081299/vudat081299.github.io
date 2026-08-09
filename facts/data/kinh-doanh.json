@@ -1,44 +1,5 @@
 [
   {
-    "id": "kd-001",
-    "cat": "kinh-doanh",
-    "sub": "du-an",
-    "t": "Định luật Parkinson: công việc nở ra cho vừa với thời gian được cấp",
-    "s": "Cho hai tuần để làm một việc một ngày, nó sẽ tốn hai tuần. Cyril Parkinson rút ra quan sát này từ bộ máy hành chính Anh, nơi số nhân viên tăng đều đặn bất kể khối lượng việc thật. Hệ quả thực dụng: đặt hạn ngắn có chủ đích, và tách riêng 'thời gian cần' với 'thời gian được cấp'.",
-    "tags": [
-      "nang-suat",
-      "quan-ly",
-      "thoi-gian"
-    ],
-    "src": "C. Northcote Parkinson, The Economist (1955)"
-  },
-  {
-    "id": "kd-002",
-    "cat": "kinh-doanh",
-    "sub": "to-chuc",
-    "t": "Định luật Brooks: thêm người vào một dự án đang trễ sẽ làm nó trễ thêm",
-    "s": "Người mới cần được đào tạo, và số kênh giao tiếp tăng theo bình phương số người. Với 5 người có 10 kênh, với 10 người có 45 kênh, với 20 người có 190 kênh. Đó là lý do các tổ chức tốt chia thành nhóm nhỏ có ranh giới rõ ràng thay vì một nhóm lớn. Công thức n×(n−1)/2 cũng là lý do toán học đứng sau quy tắc 'đội hai chiếc pizza'.",
-    "tags": [
-      "du-an",
-      "to-chuc",
-      "phan-mem"
-    ],
-    "src": "Fred Brooks, The Mythical Man-Month (1975)"
-  },
-  {
-    "id": "kd-003",
-    "cat": "kinh-doanh",
-    "sub": "to-chuc",
-    "t": "Định luật Conway: sản phẩm của bạn sẽ có hình dạng của sơ đồ tổ chức",
-    "s": "Hệ thống do một tổ chức thiết kế sẽ sao chép cấu trúc giao tiếp của chính tổ chức đó. Ba nhóm làm một trình biên dịch thì ra ba pha. Vì vậy muốn đổi kiến trúc sản phẩm, nhiều khi việc phải làm trước là đổi cách chia nhóm — chứ không phải vẽ lại sơ đồ kỹ thuật.",
-    "tags": [
-      "to-chuc",
-      "kien-truc",
-      "phan-mem"
-    ],
-    "src": "Melvin Conway, Datamation (1968); kiểm chứng thực nghiệm bởi MacCormack, Rusnak & Baldwin (2012)"
-  },
-  {
     "id": "kd-004",
     "cat": "kinh-doanh",
     "sub": "tuyen-dung",
@@ -69,7 +30,7 @@
     "id": "kd-006",
     "cat": "kinh-doanh",
     "sub": "du-an",
-    "t": "Định luật Little: hàng đợi càng dài thì thời gian chờ càng lâu, tuyến tính",
+    "t": "Định luật Little: giữ gấp 2 số việc làm dở cùng lúc thì mỗi việc mất gấp 2 thời gian, dù năng lực không đổi",
     "s": "Số việc đang làm dở bằng tốc độ hoàn thành nhân thời gian trung bình mỗi việc ở trong hệ thống. Nghĩa là nếu bạn muốn giao hàng nhanh hơn mà không tăng năng lực, cách duy nhất là giảm số việc làm dở cùng lúc. Nhận cùng lúc nhiều việc không làm bạn nhanh hơn, chỉ làm mọi thứ trễ đều.",
     "tags": [
       "quy-trinh",
@@ -77,19 +38,6 @@
       "van-hanh"
     ],
     "src": "John Little, Operations Research (1961)"
-  },
-  {
-    "id": "kd-007",
-    "cat": "kinh-doanh",
-    "sub": "to-chuc",
-    "t": "Nguyên lý Peter: người ta được thăng chức tới đúng mức mà mình bắt đầu bất tài",
-    "s": "Vì thăng chức dựa trên thành tích ở vị trí HIỆN TẠI chứ không phải năng lực cho vị trí MỚI, hệ thống có xu hướng đẩy người giỏi việc chuyên môn vào ghế quản lý mà họ không hợp. Nghiên cứu trên dữ liệu bán hàng thật (2019) tìm thấy đúng mô thức này: nhân viên bán giỏi nhất khi lên quản lý lại có đội yếu hơn.",
-    "tags": [
-      "thang-tien",
-      "quan-ly",
-      "su-nghiep"
-    ],
-    "src": "Laurence Peter & Raymond Hull (1969); Benson, Li & Shue, QJE (2019)"
   },
   {
     "id": "kd-008",
@@ -108,7 +56,7 @@
     "id": "kd-009",
     "cat": "kinh-doanh",
     "sub": "to-chuc",
-    "t": "An toàn tâm lý là yếu tố phân biệt nhóm mạnh rõ nhất trong nghiên cứu của Google",
+    "t": "An toàn tâm lý — dám nói ra cái mình chưa biết mà không bị phạt — là yếu tố phân biệt nhóm mạnh rõ nhất trong 180 nhóm được khảo sát",
     "s": "Dự án Aristotle khảo sát 180 nhóm nội bộ và không tìm thấy công thức về thành phần con người. Yếu tố nổi lên mạnh nhất là an toàn tâm lý: cảm giác có thể nói ra điều mình chưa biết, thừa nhận sai sót hoặc phản đối, mà không bị trừng phạt.",
     "d": "Khái niệm này do Amy Edmondson đưa ra từ 1999 sau một phát hiện ngược đời: các đội y tá tốt nhất lại BÁO CÁO nhiều lỗi hơn — không phải vì họ sai nhiều hơn mà vì họ dám nói ra. Muốn tăng chất lượng, cái phải đo không phải số lỗi được ghi nhận mà là tỉ lệ lỗi được nói ra sớm.",
     "tags": [
@@ -117,19 +65,6 @@
       "quan-ly"
     ],
     "src": "Amy Edmondson, Administrative Science Quarterly (1999); Google re:Work, Project Aristotle (2016)"
-  },
-  {
-    "id": "kd-010",
-    "cat": "kinh-doanh",
-    "sub": "to-chuc",
-    "t": "Chi phí một cuộc họp là số người nhân thời gian nhân đơn giá — và gần như không ai tính nó",
-    "s": "Một cuộc họp 8 người trong 1 giờ với chi phí nhân sự trung bình 300 nghìn/giờ tốn 2,4 triệu, chưa kể chi phí chuyển ngữ cảnh trước và sau. Cách rẻ nhất để cải thiện năng suất ở phần lớn tổ chức không phải công cụ mới mà là cắt danh sách mời và đặt mục tiêu ra quyết định cho từng cuộc họp.",
-    "tags": [
-      "hop",
-      "nang-suat",
-      "chi-phi"
-    ],
-    "src": "Phép tính chi phí trực tiếp; xem Perlow, Hadley & Eun, Harvard Business Review (2017)"
   },
   {
     "id": "kd-011",
@@ -157,110 +92,6 @@
       "phan-bien"
     ],
     "src": "Dunbar, Journal of Human Evolution (1992); Lindenfors et al., Biology Letters (2021)"
-  },
-  {
-    "id": "kd-013",
-    "cat": "kinh-doanh",
-    "sub": "ban-hang-marketing",
-    "t": "Định giá theo chi phí là cách nhanh nhất để bỏ tiền trên bàn",
-    "s": "Giá mà khách sẵn sàng trả phụ thuộc vào giá trị họ nhận và các lựa chọn thay thế, không phụ thuộc vào chi phí của bạn. Chi phí chỉ xác định sàn (dưới đó thì lỗ), còn trần do giá trị quyết định. Doanh nghiệp nhỏ thường định giá thấp không phải vì thị trường ép mà vì họ tính từ chi phí đi lên.",
-    "tags": [
-      "gia",
-      "kinh-doanh",
-      "loi-nhuan"
-    ],
-    "src": "Nagle & Müller, The Strategy and Tactics of Pricing (nhiều lần tái bản)"
-  },
-  {
-    "id": "kd-014",
-    "cat": "kinh-doanh",
-    "sub": "ban-hang-marketing",
-    "t": "Giữ khách rẻ hơn nhiều so với kiếm khách mới, và lợi nhuận nhạy với tỉ lệ giữ chân",
-    "s": "Nghiên cứu kinh điển của Reichheld và Sasser trên nhiều ngành cho thấy giảm 5% tỉ lệ khách rời bỏ có thể làm tăng lợi nhuận từ 25% đến 85%, tuỳ ngành. Lý do: khách ở lại lâu mua nhiều hơn, chi phí phục vụ giảm dần và họ giới thiệu người khác. Lưu ý con số này bị lạm dụng: nó dựa trên các ngành cụ thể thập niên 1990, không phải hằng số cho mọi doanh nghiệp. Điều đúng ở mọi nơi là cơ chế, không phải con số.",
-    "tags": [
-      "khach-hang",
-      "loi-nhuan",
-      "tang-truong"
-    ],
-    "src": "Reichheld & Sasser, Harvard Business Review (1990)"
-  },
-  {
-    "id": "kd-015",
-    "cat": "kinh-doanh",
-    "sub": "to-chuc",
-    "t": "Chỉ số 'yếu tố xe buýt' cho biết tổ chức của bạn mong manh tới đâu",
-    "s": "Bus factor là số người tối thiểu mà nếu họ đột ngột biến mất thì dự án đứng lại. Rất nhiều đội có yếu tố xe buýt bằng 1 mà không biết. Cách kiểm tra rẻ nhất: cho từng người nghỉ phép trọn một tuần và xem cái gì gãy.",
-    "tags": [
-      "rui-ro",
-      "to-chuc",
-      "quy-trinh"
-    ],
-    "src": "Thuật ngữ phổ biến trong kỹ nghệ phần mềm; xem Avelino et al., ICPC (2016)"
-  },
-  {
-    "id": "kd-016",
-    "cat": "kinh-doanh",
-    "sub": "khoi-nghiep",
-    "t": "Phần lớn lời khuyên khởi nghiệp là thiên kiến sống sót đóng gói đẹp",
-    "s": "Sách và podcast phỏng vấn người thành công, không phỏng vấn hàng nghìn người làm y hệt và thất bại. Nếu 'bỏ học và tất tay' xuất hiện ở cả nhóm thắng lẫn nhóm thua, nó không giải thích được gì. Câu hỏi đúng khi nghe một lời khuyên: những người làm đúng như vậy mà thất bại đang ở đâu?",
-    "tags": [
-      "khoi-nghiep",
-      "thien-kien",
-      "phan-bien"
-    ],
-    "src": "Nguyên lý thiên kiến sống sót (Abraham Wald, 1943); phân tích trong Denrell, Organization Science (2003)"
-  },
-  {
-    "id": "kd-017",
-    "cat": "kinh-doanh",
-    "sub": "khoi-nghiep",
-    "t": "Doanh nghiệp chết vì hết tiền mặt, không vì hết lợi nhuận",
-    "s": "Một công ty có lãi trên sổ sách vẫn phá sản nếu tiền về chậm hơn tiền ra: hàng tồn kho, công nợ phải thu và tăng trưởng nhanh đều ngốn tiền mặt. Đây là lý do doanh nghiệp tăng trưởng nóng lại hay chết — mỗi đơn hàng mới đòi thêm vốn lưu động trước khi thu được tiền. Câu tổng kết của giới tài chính: lợi nhuận là ý kiến, tiền mặt là sự thật.",
-    "tags": [
-      "dong-tien",
-      "tai-chinh",
-      "kinh-doanh"
-    ],
-    "src": "Nguyên lý quản trị vốn lưu động; xem Churchill & Mullins, Harvard Business Review (2001)"
-  },
-  {
-    "id": "kd-018",
-    "cat": "kinh-doanh",
-    "sub": "do-luong",
-    "t": "Viết ra quyết định kèm lý do là công cụ học hỏi rẻ nhất trong quản lý",
-    "s": "Nhật ký quyết định — ghi lại lựa chọn, thông tin lúc đó, dự đoán kết quả và mức tin tưởng — vô hiệu hoá thiên kiến nhận thức muộn khi bạn nhìn lại. Không có nó, mọi bài học rút kinh nghiệm đều bị ký ức viết lại theo kết quả đã biết.",
-    "tags": [
-      "quyet-dinh",
-      "hoc-hoi",
-      "quan-ly"
-    ],
-    "src": "Xem Kahneman, Lovallo & Sibony, Harvard Business Review (2011)"
-  },
-  {
-    "id": "kd-020",
-    "cat": "kinh-doanh",
-    "sub": "to-chuc",
-    "t": "Đội nhỏ hơn thường nhanh hơn, nhưng lý do không phải vì ít người lười hơn",
-    "s": "Trong các thí nghiệm kéo dây của Ringelmann, lực trung bình mỗi người giảm dần khi nhóm đông lên — một phần vì mất phối hợp, một phần vì lười biếng xã hội khi đóng góp cá nhân không nhìn thấy được. Cách chống lại đã được kiểm chứng: làm cho đóng góp của từng người có thể nhận diện được.",
-    "tags": [
-      "doi-nhom",
-      "nang-suat",
-      "quan-ly"
-    ],
-    "src": "Max Ringelmann (1913); Latané, Williams & Harkins, JPSP (1979)"
-  },
-  {
-    "id": "kd-021",
-    "cat": "kinh-doanh",
-    "sub": "su-nghiep",
-    "t": "Chuyên môn hoá sâu chỉ đáng giá khi thị trường đủ lớn để trả tiền cho nó",
-    "s": "Adam Smith đã nêu quy tắc này từ 1776: mức độ phân công lao động bị giới hạn bởi quy mô thị trường. Áp dụng cho sự nghiệp cá nhân: một kỹ năng cực hẹp chỉ có giá ở nơi có đủ nhu cầu cho nó; ở thị trường nhỏ, người ghép được hai ba kỹ năng liền kề thường có giá hơn.",
-    "tags": [
-      "su-nghiep",
-      "ky-nang",
-      "thi-truong"
-    ],
-    "src": "Adam Smith, The Wealth of Nations (1776), Quyển I Chương 3"
   },
   {
     "id": "kd-022",

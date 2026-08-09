@@ -1,0 +1,2056 @@
+[
+  {
+    "id": "na-201",
+    "cat": "nghe-thuat",
+    "sub": "am-thanh-va-nhac-cu",
+    "t": "Nốt La chuẩn quốc tế là 440 Hz, và con số đó chỉ được thống nhất năm 1955",
+    "s": "Trước đó cao độ chuẩn dao động từ khoảng 415 tới 460 Hz tuỳ nước và tuỳ thời kỳ. Nhạc Baroque thường được chơi lại ở 415 Hz, thấp hơn chuẩn hiện nay đúng nửa cung.",
+    "tags": [
+      "cao-do",
+      "440hz",
+      "tieu-chuan"
+    ],
+    "src": "ISO 16:1975; Haynes, A History of Performing Pitch"
+  },
+  {
+    "id": "na-202",
+    "cat": "nghe-thuat",
+    "sub": "am-thanh-va-nhac-cu",
+    "t": "Quãng tám là tỉ số tần số đúng 2 trên 1, và tai người nghe hai nốt cách quãng tám như 'cùng một nốt'",
+    "s": "Đây là hiện tượng phổ quát qua các nền văn hoá. Nốt La 440 Hz và La 880 Hz có cùng tên vì lý do vật lý này chứ không vì quy ước.",
+    "tags": [
+      "quang-tam",
+      "tan-so",
+      "am-nhac"
+    ],
+    "src": "Burns, The Psychology of Music (1999)"
+  },
+  {
+    "id": "na-203",
+    "cat": "nghe-thuat",
+    "sub": "am-thanh-va-nhac-cu",
+    "t": "Piano hiện đại được lên dây hơi sai so với toán học, và đó là lựa chọn có chủ đích",
+    "s": "Hệ bình quân chia quãng tám thành 12 phần bằng nhau, làm mọi quãng năm hơi hẹp hơn tỉ số 3/2 lý tưởng khoảng 2 phần trăm cung. Đổi lại, nhạc chuyển giọng được sang bất kỳ điệu thức nào mà vẫn nghe chấp nhận được.",
+    "tags": [
+      "binh-quan",
+      "len-day",
+      "piano"
+    ],
+    "src": "Barbour, Tuning and Temperament (1951)"
+  },
+  {
+    "id": "na-204",
+    "cat": "nghe-thuat",
+    "sub": "am-thanh-va-nhac-cu",
+    "t": "Đàn piano có 88 phím, phủ dải tần từ khoảng 27,5 Hz tới 4.186 Hz",
+    "s": "Con số 88 được chốt vào cuối thế kỷ 19 vì phím thấp hơn nghe thành tiếng ù còn phím cao hơn nghe thành tiếng gõ. Đây là giới hạn cảm nhận cao độ của tai người chứ không phải giới hạn kỹ thuật.",
+    "tags": [
+      "piano",
+      "dai-tan",
+      "thinh-giac"
+    ],
+    "src": "Steinway & Sons; Rossing, The Science of Sound"
+  },
+  {
+    "id": "na-205",
+    "cat": "nghe-thuat",
+    "sub": "am-thanh-va-nhac-cu",
+    "t": "Cùng một nốt trên violin và trên sáo nghe khác nhau vì tỉ lệ các hoạ âm khác nhau",
+    "s": "Cao độ do tần số cơ bản quyết định, còn âm sắc do phổ hoạ âm. Đây là lý do bạn nhận ra giọng người quen chỉ sau một từ.",
+    "tags": [
+      "am-sac",
+      "hoa-am",
+      "nhac-cu"
+    ],
+    "src": "Helmholtz, On the Sensations of Tone (1863)"
+  },
+  {
+    "id": "na-206",
+    "cat": "nghe-thuat",
+    "sub": "am-thanh-va-nhac-cu",
+    "t": "Đàn Stradivari không được chứng minh là hay hơn đàn hiện đại trong các thử nghiệm mù",
+    "s": "Trong thử nghiệm mù đôi năm 2014, nghệ sĩ độc tấu không phân biệt được đàn cổ với đàn mới và phần lớn còn chọn đàn mới. Kết quả gây tranh cãi mạnh trong giới nhạc cổ điển.",
+    "tags": [
+      "stradivari",
+      "thu-nghiem-mu",
+      "tranh-cai"
+    ],
+    "src": "Fritz và cộng sự, PNAS (2014)"
+  },
+  {
+    "id": "na-207",
+    "cat": "nghe-thuat",
+    "sub": "am-thanh-va-nhac-cu",
+    "t": "Hộp đàn guitar không khuếch đại năng lượng — nó chỉ ghép dao động của dây với không khí",
+    "s": "Dây rung một mình đẩy được rất ít không khí vì tiết diện của nó chỉ khoảng 1 mm². Mặt đàn có diện tích lớn hơn hàng nghìn lần nên truyền năng lượng ra không khí tốt hơn nhiều, đổi lại dây tắt nhanh hơn.",
+    "tags": [
+      "guitar",
+      "cong-huong",
+      "am-hoc"
+    ],
+    "src": "Fletcher & Rossing, The Physics of Musical Instruments"
+  },
+  {
+    "id": "na-208",
+    "cat": "nghe-thuat",
+    "sub": "am-thanh-va-nhac-cu",
+    "t": "Trống không có cao độ rõ vì các chế độ dao động của màng trống không phải bội số nguyên của nhau",
+    "s": "Ngược lại, dây đàn dao động ở các tần số là bội số nguyên nên cho cao độ rõ ràng. Timpani là ngoại lệ: hình dạng chảo làm một số chế độ gần bội số nguyên hơn.",
+    "tags": [
+      "trong",
+      "dao-dong",
+      "cao-do"
+    ],
+    "src": "Rossing, Science of Percussion Instruments"
+  },
+  {
+    "id": "na-209",
+    "cat": "nghe-thuat",
+    "sub": "am-thanh-va-nhac-cu",
+    "t": "Cồng chiêng Tây Nguyên được chỉnh bằng cách gõ mỏng thành đồng, và mỗi bộ có thang âm riêng",
+    "s": "Không gian văn hoá cồng chiêng được UNESCO công nhận năm 2005. Việc chỉnh âm dựa trên tương quan giữa các chiêng trong bộ chứ không dựa vào một chuẩn tuyệt đối như 440 Hz.",
+    "tags": [
+      "cong-chieng",
+      "viet-nam",
+      "unesco"
+    ],
+    "src": "UNESCO, Danh sách Di sản văn hoá phi vật thể (2005)"
+  },
+  {
+    "id": "na-210",
+    "cat": "nghe-thuat",
+    "sub": "am-thanh-va-nhac-cu",
+    "t": "Tai người nghe được khoảng 20 Hz tới 20.000 Hz khi trẻ, và giới hạn trên giảm dần theo tuổi",
+    "s": "Ở tuổi 50, nhiều người không còn nghe được trên 12.000 Hz. Đây là cơ sở của các chuông báo tần số cao mà chỉ thanh thiếu niên nghe thấy.",
+    "tags": [
+      "thinh-giac",
+      "tan-so",
+      "tuoi"
+    ],
+    "src": "ISO 7029; Rossing, The Science of Sound"
+  },
+  {
+    "id": "na-211",
+    "cat": "nghe-thuat",
+    "sub": "ly-thuyet-nhac",
+    "t": "Hợp âm trưởng và thứ khác nhau chỉ một nốt, và một nửa cung đó đổi hẳn cảm xúc bài hát",
+    "s": "Nốt bậc ba hạ xuống nửa cung biến trưởng thành thứ. Liên hệ giữa hợp âm thứ và cảm giác buồn mạnh trong nhạc phương Tây nhưng không phổ quát ở mọi nền văn hoá.",
+    "tags": [
+      "hop-am",
+      "truong-thu",
+      "cam-xuc"
+    ],
+    "src": "Parncutt, Music Perception (2014)"
+  },
+  {
+    "id": "na-212",
+    "cat": "nghe-thuat",
+    "sub": "ly-thuyet-nhac",
+    "t": "Nhạc ngũ cung xuất hiện độc lập ở rất nhiều nền văn hoá, và các phím đen trên piano tạo đúng một thang ngũ cung",
+    "s": "Năm phím đen liên tiếp cho thang ngũ cung Fa thăng trưởng. Đây là lý do gõ ngẫu nhiên lên các phím đen nghe vẫn thuận tai.",
+    "tags": [
+      "ngu-cung",
+      "thang-am",
+      "pho-quat"
+    ],
+    "src": "Burns, The Psychology of Music"
+  },
+  {
+    "id": "na-213",
+    "cat": "nghe-thuat",
+    "sub": "ly-thuyet-nhac",
+    "t": "Nhạc Việt truyền thống dùng hệ thống hơi và điệu, trong đó cùng một thang âm cho ra cảm xúc khác nhau",
+    "s": "Hơi Bắc trong sáng, hơi Nam ai oán, và khác biệt nằm ở cách nhấn, rung và luyến chứ không ở tập hợp nốt. Đây là chiều mà ký âm phương Tây gần như không ghi lại được.",
+    "tags": [
+      "nhac-viet",
+      "hoi-dieu",
+      "ky-am"
+    ],
+    "src": "Trần Văn Khê, Âm nhạc truyền thống Việt Nam; UNESCO Ca trù"
+  },
+  {
+    "id": "na-214",
+    "cat": "nghe-thuat",
+    "sub": "ly-thuyet-nhac",
+    "t": "Nhịp 4/4 chiếm áp đảo trong nhạc đại chúng, và phần lớn bài hát nằm trong khoảng 100–130 nhịp mỗi phút",
+    "s": "Khoảng nhịp này gần với nhịp bước đi tự nhiên của người lớn. Nhạc dùng trong tập luyện thường chọn quanh 120–140 vì lý do đồng bộ vận động.",
+    "tags": [
+      "nhip",
+      "bpm",
+      "nhac-dai-chung"
+    ],
+    "src": "Moelants, Proceedings of ICMPC (2002)"
+  },
+  {
+    "id": "na-215",
+    "cat": "nghe-thuat",
+    "sub": "ly-thuyet-nhac",
+    "t": "Bốn hợp âm I–V–vi–IV xuất hiện trong hàng trăm bài hát nổi tiếng thuộc nhiều thể loại khác nhau",
+    "s": "Vòng hợp âm này cho một chuyển động hoà thanh vừa quen vừa không kết thúc dứt khoát, nên dễ lặp lại. Nhóm hài Axis of Awesome đã ghép hàng chục bài hit vào cùng một vòng để minh hoạ.",
+    "tags": [
+      "vong-hop-am",
+      "hoa-thanh",
+      "nhac-pop"
+    ],
+    "src": "Everett, The Foundations of Rock (2009)"
+  },
+  {
+    "id": "na-216",
+    "cat": "nghe-thuat",
+    "sub": "ly-thuyet-nhac",
+    "t": "Tai nghe ra 'nốt bị lạc' khi tần số lệch khoảng 5 xu, tức khoảng 0,3% tần số",
+    "s": "Một xu là một phần trăm nửa cung. Người có tai nhạc tốt phân biệt được chênh lệch 5–10 xu, còn người bình thường thường cần khoảng 20 xu.",
+    "tags": [
+      "cao-do",
+      "do-nhay",
+      "xu"
+    ],
+    "src": "Rossing, The Science of Sound; Burns & Ward (1978)"
+  },
+  {
+    "id": "na-217",
+    "cat": "nghe-thuat",
+    "sub": "ly-thuyet-nhac",
+    "t": "Cảm âm tuyệt đối rất hiếm ở phương Tây nhưng phổ biến hơn nhiều ở người nói ngôn ngữ thanh điệu",
+    "s": "Tỉ lệ ở nhạc sinh nói tiếng Trung cao gấp nhiều lần so với nhạc sinh nói tiếng Anh trong cùng trường nhạc. Giả thuyết là việc phải phân biệt cao độ để hiểu nghĩa từ nhỏ có vai trò.",
+    "tags": [
+      "cam-am-tuyet-doi",
+      "thanh-dieu",
+      "ngon-ngu"
+    ],
+    "src": "Deutsch và cộng sự, JASA (2006)"
+  },
+  {
+    "id": "na-218",
+    "cat": "nghe-thuat",
+    "sub": "ly-thuyet-nhac",
+    "t": "Bài hát bị mắc kẹt trong đầu thường dài khoảng 15–30 giây và có quãng lên xuống bất thường",
+    "s": "Phân tích hơn 3.000 bài cho thấy các bài dễ mắc kẹt có nhịp nhanh hơn trung bình và một mẫu giai điệu hơi lệch so với dự đoán. Hiện tượng này ảnh hưởng phần lớn người trưởng thành ít nhất mỗi tuần một lần.",
+    "tags": [
+      "earworm",
+      "giai-dieu",
+      "tri-nho"
+    ],
+    "src": "Jakubowski và cộng sự, Psychology of Aesthetics (2017)"
+  },
+  {
+    "id": "na-219",
+    "cat": "nghe-thuat",
+    "sub": "ly-thuyet-nhac",
+    "t": "Nhạc gây nổi da gà kích hoạt vùng não giải phóng dopamine, cùng vùng phản ứng với thức ăn và tiền",
+    "s": "Chụp PET cho thấy dopamine tiết ra cả ở giai đoạn chờ đợi cao trào lẫn ở chính khoảnh khắc cao trào. Khoảng 55–86% người báo cáo từng trải nghiệm này.",
+    "tags": [
+      "dopamine",
+      "nhac",
+      "nao"
+    ],
+    "src": "Salimpoor và cộng sự, Nature Neuroscience (2011)"
+  },
+  {
+    "id": "na-220",
+    "cat": "nghe-thuat",
+    "sub": "ly-thuyet-nhac",
+    "t": "Nhạc phim thường tránh giai điệu dễ nhớ để không cạnh tranh với thoại",
+    "s": "Đây là lý do phần lớn nhạc nền chỉ để lại ấn tượng cảm xúc chứ không để lại giai điệu. Ngoại lệ là các chủ đề chính được viết riêng để khán giả nhớ, như trong Star Wars hay Jaws.",
+    "tags": [
+      "nhac-phim",
+      "thiet-ke",
+      "chu-de"
+    ],
+    "src": "Cooke, A History of Film Music (2008)"
+  },
+  {
+    "id": "na-221",
+    "cat": "nghe-thuat",
+    "sub": "mau-va-chat-lieu",
+    "t": "Màu xanh lam tự nhiên cực hiếm trong khoáng vật, và đó là lý do bột lapis từng đắt hơn vàng",
+    "s": "Ultramarine làm từ lapis lazuli nhập từ Afghanistan, nên hợp đồng thời Phục hưng ghi rõ ai trả tiền màu xanh. Ultramarine tổng hợp chỉ ra đời năm 1826 và làm giá rơi hàng nghìn lần.",
+    "tags": [
+      "ultramarine",
+      "mau",
+      "lich-su"
+    ],
+    "src": "Ball, Bright Earth: Art and the Invention of Colour (2001)"
+  },
+  {
+    "id": "na-222",
+    "cat": "nghe-thuat",
+    "sub": "mau-va-chat-lieu",
+    "t": "Màu xanh lam tổng hợp đầu tiên do người Ai Cập tạo ra khoảng 4.500 năm trước",
+    "s": "Xanh Ai Cập là canxi đồng silicat, nung ở khoảng 850–950 độ. Nó phát huỳnh quang mạnh trong hồng ngoại, và các nhà khảo cổ dùng chính tính chất đó để phát hiện dấu vết màu đã mờ hết.",
+    "tags": [
+      "xanh-ai-cap",
+      "sac-to",
+      "khao-co"
+    ],
+    "src": "Verri, Analytical and Bioanalytical Chemistry (2009)"
+  },
+  {
+    "id": "na-224",
+    "cat": "nghe-thuat",
+    "sub": "mau-va-chat-lieu",
+    "t": "Màu tím hoàng gia La Mã được chiết từ ốc biển, và cần khoảng 10.000 con cho 1 gam thuốc nhuộm",
+    "s": "Chính vì thế màu này bị luật hạn chế chỉ cho hoàng đế dùng. Thuốc nhuộm tím tổng hợp đầu tiên, mauveine, được một sinh viên 18 tuổi tìm ra tình cờ năm 1856.",
+    "tags": [
+      "tim-tyrian",
+      "thuoc-nhuom",
+      "lich-su"
+    ],
+    "src": "Ball, Bright Earth; Perkin (1856)"
+  },
+  {
+    "id": "na-225",
+    "cat": "nghe-thuat",
+    "sub": "mau-va-chat-lieu",
+    "t": "Sơn dầu khô bằng phản ứng oxy hoá chứ không bằng bay hơi, và quá trình đó kéo dài hàng chục năm",
+    "s": "Dầu lanh polymer hoá dần dưới tác dụng của oxy. Vì vậy tranh sơn dầu 'khô' sau vài tuần vẫn tiếp tục cứng lại trong nhiều năm, và điều đó ảnh hưởng tới cách phục chế.",
+    "tags": [
+      "son-dau",
+      "oxy-hoa",
+      "bao-ton"
+    ],
+    "src": "Mayer, The Artist's Handbook of Materials and Techniques"
+  },
+  {
+    "id": "na-226",
+    "cat": "nghe-thuat",
+    "sub": "mau-va-chat-lieu",
+    "t": "Màu trắng chì được dùng suốt hơn 2.000 năm dù người ta biết chì độc từ thời La Mã",
+    "s": "Nó được thay bằng trắng kẽm và trắng titan trong thế kỷ 19–20. Nhiều hoạ sĩ vẫn thích trắng chì vì độ phủ và độ dẻo mà các chất thay thế chưa đạt được.",
+    "tags": [
+      "trang-chi",
+      "doc",
+      "sac-to"
+    ],
+    "src": "Ball, Bright Earth; US CDC"
+  },
+  {
+    "id": "na-227",
+    "cat": "nghe-thuat",
+    "sub": "mau-va-chat-lieu",
+    "t": "Nhiều bức tranh nổi tiếng đã đổi màu theo thời gian, và ta đang nhìn thứ khác với thứ hoạ sĩ vẽ",
+    "s": "Hoa hướng dương của Van Gogh dùng vàng crom bị sẫm lại thành nâu ô liu dưới ánh sáng. Phân tích tia X cho phép dựng lại màu gốc trên máy tính.",
+    "tags": [
+      "van-gogh",
+      "sac-to",
+      "bien-mau"
+    ],
+    "src": "Monico và cộng sự, Analytical Chemistry (2011)"
+  },
+  {
+    "id": "na-228",
+    "cat": "nghe-thuat",
+    "sub": "mau-va-chat-lieu",
+    "t": "Mực in đen trong máy in phun không phải carbon thuần mà là hỗn hợp nhiều màu để đạt độ đen sâu",
+    "s": "In 'đen tổng hợp' bằng cách chồng lục lam, đỏ tươi và vàng cho ra nâu bẩn nếu không thêm mực đen riêng. Đây là lý do hệ CMYK có chữ K cho mực đen chủ.",
+    "tags": [
+      "cmyk",
+      "muc-in",
+      "mau"
+    ],
+    "src": "Hunt, The Reproduction of Colour"
+  },
+  {
+    "id": "na-229",
+    "cat": "nghe-thuat",
+    "sub": "mau-va-chat-lieu",
+    "t": "Trộn màu ánh sáng và trộn màu sơn cho kết quả ngược nhau",
+    "s": "Ánh sáng trộn cộng: đỏ, lục và lam cộng lại thành trắng. Sơn trộn trừ: các sắc tố hấp thụ dần nên trộn nhiều màu lại càng tối, cuối cùng ra nâu đen.",
+    "tags": [
+      "tron-mau",
+      "cong-tru",
+      "quang-hoc"
+    ],
+    "src": "Fairchild, Color Appearance Models"
+  },
+  {
+    "id": "na-230",
+    "cat": "nghe-thuat",
+    "sub": "mau-va-chat-lieu",
+    "t": "Không có sắc tố nào tạo màu cầu vồng trên cánh bướm và lông công — đó là màu cấu trúc",
+    "s": "Các lớp mỏng nano gây giao thoa ánh sáng, nên màu đổi theo góc nhìn và không phai theo thời gian. Cùng nguyên lý làm nên màu của váng dầu và bong bóng xà phòng.",
+    "tags": [
+      "mau-cau-truc",
+      "giao-thoa",
+      "sinh-hoc"
+    ],
+    "src": "Kinoshita, Structural Colors in the Realm of Nature (2008)"
+  },
+  {
+    "id": "na-231",
+    "cat": "nghe-thuat",
+    "sub": "hoi-hoa",
+    "t": "Phối cảnh tuyến tính được hệ thống hoá ở Florence đầu thế kỷ 15, và trước đó tranh châu Âu gần như không có chiều sâu hình học",
+    "s": "Brunelleschi trình diễn nguyên lý này khoảng năm 1413 và Alberti viết thành sách năm 1435. Đây là ví dụ hiếm về một kỹ thuật nghệ thuật có thời điểm ra đời xác định được.",
+    "tags": [
+      "phoi-canh",
+      "phuc-hung",
+      "lich-su"
+    ],
+    "src": "Alberti, De pictura (1435); Edgerton, The Renaissance Rediscovery of Linear Perspective"
+  },
+  {
+    "id": "na-232",
+    "cat": "nghe-thuat",
+    "sub": "hoi-hoa",
+    "t": "Tranh hang động cổ nhất được xác định tuổi có ít nhất 45.500 năm, và nó ở Indonesia chứ không ở châu Âu",
+    "s": "Hình con lợn rừng ở hang Leang Tedongnge, Sulawesi được định tuổi bằng uranium. Phát hiện này dời trung tâm của nghệ thuật hình tượng sớm nhất ra khỏi châu Âu.",
+    "tags": [
+      "tranh-hang",
+      "tuoi",
+      "indonesia"
+    ],
+    "src": "Brumm và cộng sự, Science Advances (2021)"
+  },
+  {
+    "id": "na-233",
+    "cat": "nghe-thuat",
+    "sub": "hoi-hoa",
+    "t": "Bức Mona Lisa chỉ trở thành nổi tiếng toàn cầu sau khi nó bị đánh cắp năm 1911",
+    "s": "Trước đó nó là một trong nhiều tác phẩm ở Louvre. Vụ trộm được đưa tin khắp thế giới trong hai năm và khi tranh trở lại, đám đông xếp hàng để xem chỗ nó từng bị mất.",
+    "tags": [
+      "mona-lisa",
+      "danh-tieng",
+      "lich-su"
+    ],
+    "src": "Bảo tàng Louvre; Scotti, Vanished Smile (2009)"
+  },
+  {
+    "id": "na-234",
+    "cat": "nghe-thuat",
+    "sub": "hoi-hoa",
+    "t": "Nhiều bức hoạ nổi tiếng có bức tranh khác nằm dưới lớp sơn, và tia X cho thấy chúng",
+    "s": "Picasso vẽ đè lên tranh của chính mình khi còn nghèo, và ít nhất bốn tác phẩm giai đoạn Xanh có hình bên dưới. Việc tái sử dụng toan vẽ là thông lệ chứ không phải ngoại lệ.",
+    "tags": [
+      "tia-x",
+      "phuc-che",
+      "picasso"
+    ],
+    "src": "Bảo tàng Nghệ thuật Phillips; Bảo tàng Van Gogh"
+  },
+  {
+    "id": "na-235",
+    "cat": "nghe-thuat",
+    "sub": "hoi-hoa",
+    "t": "Trường phái Ấn tượng có thể ra đời một phần nhờ tuýp sơn bằng thiếc phát minh năm 1841",
+    "s": "Trước đó sơn phải pha trong xưởng và không giữ được lâu, nên vẽ ngoài trời rất khó. Renoir từng nói không có tuýp sơn thì sẽ không có Ấn tượng.",
+    "tags": [
+      "an-tuong",
+      "cong-nghe",
+      "son"
+    ],
+    "src": "Callen, The Art of Impressionism (2000)"
+  },
+  {
+    "id": "na-236",
+    "cat": "nghe-thuat",
+    "sub": "hoi-hoa",
+    "t": "Bức 'Đêm đầy sao' được Van Gogh vẽ từ cửa sổ một bệnh viện tâm thần, và bố cục xoáy khớp với mô hình dòng rối",
+    "s": "Phân tích thống kê độ sáng trong tranh cho phân bố gần với mô hình rối Kolmogorov. Kết quả này thú vị nhưng không chứng minh được hoạ sĩ 'nhìn thấy' dòng rối.",
+    "tags": [
+      "van-gogh",
+      "dong-roi",
+      "phan-tich"
+    ],
+    "src": "Aragón và cộng sự, Journal of Mathematical Imaging and Vision (2008)"
+  },
+  {
+    "id": "na-237",
+    "cat": "nghe-thuat",
+    "sub": "hoi-hoa",
+    "t": "Tranh Đông Hồ in bằng ván khắc gỗ và màu lấy hoàn toàn từ nguyên liệu tự nhiên",
+    "s": "Đen từ than lá tre, vàng từ hoa hoè, đỏ từ sỏi son, trắng từ vỏ sò nghiền. Giấy điệp phủ bột vỏ sò cho bề mặt óng ánh mà giấy thường không có.",
+    "tags": [
+      "dong-ho",
+      "tranh-dan-gian",
+      "viet-nam"
+    ],
+    "src": "Bảo tàng Mỹ thuật Việt Nam; hồ sơ di sản Bắc Ninh"
+  },
+  {
+    "id": "na-238",
+    "cat": "nghe-thuat",
+    "sub": "hoi-hoa",
+    "t": "Sơn mài Việt Nam là kỹ thuật mài lớp, và tranh phải được mài đi để lộ các lớp bên dưới",
+    "s": "Kỹ thuật này được các hoạ sĩ Trường Mỹ thuật Đông Dương phát triển từ nghề sơn ta truyền thống trong thập niên 1930. Một bức có thể cần hàng chục lớp và nhiều tháng để hoàn thành.",
+    "tags": [
+      "son-mai",
+      "viet-nam",
+      "ky-thuat"
+    ],
+    "src": "Bảo tàng Mỹ thuật Việt Nam; Nguyễn Quân, Mỹ thuật Việt Nam thế kỷ 20"
+  },
+  {
+    "id": "na-239",
+    "cat": "nghe-thuat",
+    "sub": "hoi-hoa",
+    "t": "Phần lớn tranh giả bị phát hiện nhờ vật liệu chứ không nhờ phong cách",
+    "s": "Trắng titan chỉ có từ khoảng năm 1916, nên bức 'thế kỷ 17' chứa nó là giả ngay lập tức. Đồng vị phóng xạ từ thử bom hạt nhân sau 1945 cũng để lại dấu trong sơn và vải toan.",
+    "tags": [
+      "tranh-gia",
+      "giam-dinh",
+      "vat-lieu"
+    ],
+    "src": "Bảo tàng Getty; Caforio và cộng sự, Nuclear Instruments and Methods (2014)"
+  },
+  {
+    "id": "na-240",
+    "cat": "nghe-thuat",
+    "sub": "hoi-hoa",
+    "t": "Ánh sáng làm phai màu tranh không hồi phục được, nên bảo tàng giới hạn độ rọi ở khoảng 50 lux cho tác phẩm nhạy sáng",
+    "s": "Mức đó tối hơn phòng khách thông thường nhiều lần. Tổn hại tích luỹ theo tổng lượng ánh sáng, nên trưng bày lâu ở mức thấp cũng hại như trưng bày ngắn ở mức cao.",
+    "tags": [
+      "bao-ton",
+      "anh-sang",
+      "bao-tang"
+    ],
+    "src": "CIE 157:2004; Bảo tàng Anh, hướng dẫn bảo quản"
+  },
+  {
+    "id": "na-241",
+    "cat": "nghe-thuat",
+    "sub": "nhiep-anh-dien-anh",
+    "t": "Bức ảnh còn giữ được sớm nhất chụp năm 1826–1827 và cần phơi sáng nhiều giờ",
+    "s": "Nicéphore Niépce dùng bản thiếc phủ nhựa đường Judea. Chính thời gian phơi sáng dài là lý do ảnh chân dung đầu tiên phải đợi thêm hơn một thập kỷ.",
+    "tags": [
+      "nhiep-anh",
+      "niepce",
+      "lich-su"
+    ],
+    "src": "Harry Ransom Center, Đại học Texas"
+  },
+  {
+    "id": "na-242",
+    "cat": "nghe-thuat",
+    "sub": "nhiep-anh-dien-anh",
+    "t": "Phim chiếu 24 hình mỗi giây là một thoả hiệp kinh tế chứ không phải ngưỡng sinh học",
+    "s": "Con số được chọn cuối thập niên 1920 vì nó là tốc độ tối thiểu cho âm thanh quang học đạt chất lượng chấp nhận được, đồng thời tiết kiệm phim. Mắt người phân biệt được nhịp cao hơn nhiều.",
+    "tags": [
+      "24fps",
+      "dien-anh",
+      "tieu-chuan"
+    ],
+    "src": "SMPTE; Bordwell & Thompson, Film Art"
+  },
+  {
+    "id": "na-243",
+    "cat": "nghe-thuat",
+    "sub": "nhiep-anh-dien-anh",
+    "t": "Hiệu ứng bánh xe quay ngược trong phim là do lấy mẫu, không phải do mắt",
+    "s": "Khi tốc độ quay của nan hoa gần bội số của tốc độ khung hình, chuyển động biểu kiến đảo chiều. Hiện tượng này gọi là aliasing, và nó xuất hiện ở mọi hệ thống lấy mẫu rời rạc.",
+    "tags": [
+      "aliasing",
+      "lay-mau",
+      "dien-anh"
+    ],
+    "src": "Định lý lấy mẫu Nyquist–Shannon"
+  },
+  {
+    "id": "na-244",
+    "cat": "nghe-thuat",
+    "sub": "nhiep-anh-dien-anh",
+    "t": "Khẩu độ f/2 cho ánh sáng gấp đôi f/2.8, và dãy số khẩu độ tăng theo căn bậc hai của 2",
+    "s": "Vì diện tích lỗ mở tỉ lệ với bình phương đường kính. Đó là lý do dãy khẩu độ chuẩn là 1,4 – 2 – 2,8 – 4 – 5,6 chứ không phải các số tròn.",
+    "tags": [
+      "khau-do",
+      "nhiep-anh",
+      "quang-hoc"
+    ],
+    "src": "Ray, Applied Photographic Optics"
+  },
+  {
+    "id": "na-245",
+    "cat": "nghe-thuat",
+    "sub": "nhiep-anh-dien-anh",
+    "t": "Cảm biến máy ảnh không nhìn thấy màu — mỗi điểm ảnh chỉ đo cường độ qua một kính lọc",
+    "s": "Ma trận Bayer đặt kính lọc đỏ, lục, lam theo mẫu có gấp đôi số ô lục vì mắt người nhạy nhất với lục. Màu của từng điểm ảnh là kết quả nội suy từ các ô lân cận.",
+    "tags": [
+      "bayer",
+      "cam-bien",
+      "mau"
+    ],
+    "src": "Bayer, bằng sáng chế Mỹ 3971065 (1976)"
+  },
+  {
+    "id": "na-246",
+    "cat": "nghe-thuat",
+    "sub": "nhiep-anh-dien-anh",
+    "t": "Phim đen trắng đầu thế kỷ 20 ghi màu đỏ thành gần như đen, nên diễn viên phải hoá trang rất đậm",
+    "s": "Nhũ tương chính sắc chỉ nhạy với xanh lam và tím. Đó là lý do bầu trời trong ảnh cũ thường trắng bệt và môi son trông đen.",
+    "tags": [
+      "phim-den-trang",
+      "nhu-tuong",
+      "lich-su"
+    ],
+    "src": "Eastman Kodak; Salt, Film Style and Technology"
+  },
+  {
+    "id": "na-247",
+    "cat": "nghe-thuat",
+    "sub": "nhiep-anh-dien-anh",
+    "t": "Kỹ xảo dùng mô hình vật lý thường bền hơn theo thời gian so với kỹ xảo số cùng thời",
+    "s": "Nguyên nhân là mô hình thật tương tác đúng với ánh sáng máy quay, còn kỹ xảo số bị đóng khung ở giới hạn phần cứng lúc đó. Đây là lý do nhiều phim thập niên 1980 trông ít lỗi thời hơn phim thập niên 1990.",
+    "tags": [
+      "ky-xao",
+      "cgi",
+      "dien-anh"
+    ],
+    "src": "Rickitt, Special Effects: The History and Technique (2007)"
+  },
+  {
+    "id": "na-248",
+    "cat": "nghe-thuat",
+    "sub": "nhiep-anh-dien-anh",
+    "t": "Màn hình chiếu rạp tối hơn màn hình tivi rất nhiều, và toàn bộ phối màu phim được làm cho mức sáng đó",
+    "s": "Chuẩn rạp là 48 candela mỗi mét vuông cho màn hình trắng, còn tivi HDR có thể đạt 1.000 hoặc hơn. Vì vậy phim xem ở nhà thường phải được phối màu lại.",
+    "tags": [
+      "do-sang",
+      "rap",
+      "tivi"
+    ],
+    "src": "SMPTE ST 196; DCI Specification"
+  },
+  {
+    "id": "na-249",
+    "cat": "nghe-thuat",
+    "sub": "nhiep-anh-dien-anh",
+    "t": "Tỉ lệ khung hình rộng ra đời để cạnh tranh với tivi trong thập niên 1950",
+    "s": "CinemaScope và các định dạng rộng được tung ra khi lượng khán giả tới rạp ở Mỹ giảm mạnh. Tỉ lệ 2,39:1 dùng phổ biến hiện nay là hậu duệ trực tiếp của cuộc cạnh tranh đó.",
+    "tags": [
+      "khung-hinh",
+      "cinemascope",
+      "lich-su"
+    ],
+    "src": "Belton, Widescreen Cinema (1992)"
+  },
+  {
+    "id": "na-250",
+    "cat": "nghe-thuat",
+    "sub": "nhiep-anh-dien-anh",
+    "t": "Phim câm không hề câm — chúng luôn được chiếu kèm nhạc sống",
+    "s": "Rạp lớn có cả dàn nhạc, rạp nhỏ có một người chơi đàn. 'Phim câm' chỉ có nghĩa là không có âm thanh ghi đồng bộ trên bản phim.",
+    "tags": [
+      "phim-cam",
+      "nhac",
+      "lich-su"
+    ],
+    "src": "Altman, Silent Film Sound (2004)"
+  },
+  {
+    "id": "na-251",
+    "cat": "nghe-thuat",
+    "sub": "kien-truc",
+    "t": "Nhà thờ Gothic đứng được nhờ vòm nhọn và trụ bay, hai phát minh cho phép tường mỏng và cửa sổ lớn",
+    "s": "Vòm nhọn dồn lực xuống thẳng đứng hơn vòm tròn, còn trụ bay đỡ phần lực đẩy ngang ra ngoài. Nhờ đó tường không còn phải chịu lực và có thể thay bằng kính màu.",
+    "tags": [
+      "gothic",
+      "vom",
+      "ket-cau"
+    ],
+    "src": "Mark, Light, Wind, and Structure (1990)"
+  },
+  {
+    "id": "na-252",
+    "cat": "nghe-thuat",
+    "sub": "kien-truc",
+    "t": "Mái vòm Pantheon ở Rome vẫn là mái vòm bê tông không cốt thép lớn nhất thế giới sau gần 1.900 năm",
+    "s": "Đường kính 43,3 mét, và độ dày giảm dần từ 6,4 mét ở chân xuống 1,2 mét ở đỉnh. Người La Mã còn đổi loại cốt liệu theo chiều cao, dùng đá nhẹ ở phần trên.",
+    "tags": [
+      "pantheon",
+      "be-tong",
+      "la-ma"
+    ],
+    "src": "Lancaster, Concrete Vaulted Construction in Imperial Rome (2005)"
+  },
+  {
+    "id": "na-253",
+    "cat": "nghe-thuat",
+    "sub": "kien-truc",
+    "t": "Nhà chọc trời chỉ khả thi sau khi có phanh an toàn thang máy, không phải sau khi có thép",
+    "s": "Elisha Otis trình diễn phanh an toàn năm 1854 bằng cách tự đứng trên bục và cho cắt dây. Trước đó, không ai chịu thuê tầng cao vì phải leo bộ và vì sợ rơi thang.",
+    "tags": [
+      "thang-may",
+      "nha-cao-tang",
+      "lich-su"
+    ],
+    "src": "Bernard, Lifted: A Cultural History of the Elevator (2014)"
+  },
+  {
+    "id": "na-254",
+    "cat": "nghe-thuat",
+    "sub": "kien-truc",
+    "t": "Toà nhà cao tầng đung đưa có chủ đích, và đỉnh Taipei 101 dịch tới khoảng 1 mét trong bão",
+    "s": "Một quả cầu thép 660 tấn treo giữa toà nhà làm bộ giảm chấn khối lượng, dao động lệch pha để triệt tiêu rung. Nếu toà nhà cứng tuyệt đối thì lực trong kết cấu sẽ lớn hơn nhiều.",
+    "tags": [
+      "giam-chan",
+      "nha-cao-tang",
+      "ket-cau"
+    ],
+    "src": "Taipei Financial Center Corp.; Connor, Introduction to Structural Motion Control"
+  },
+  {
+    "id": "na-255",
+    "cat": "nghe-thuat",
+    "sub": "kien-truc",
+    "t": "Nhà sàn ở Đông Nam Á giải quyết cùng lúc lũ, côn trùng, thông gió và chăn nuôi",
+    "s": "Khoảng cách sàn – đất tạo dòng đối lưu làm mát mà không cần năng lượng. Đây là ví dụ chuẩn của kiến trúc thích ứng khí hậu trước khi có điều hoà.",
+    "tags": [
+      "nha-san",
+      "khi-hau",
+      "viet-nam"
+    ],
+    "src": "Nguyễn Khắc Tụng, Nhà ở cổ truyền các dân tộc Việt Nam"
+  },
+  {
+    "id": "na-256",
+    "cat": "nghe-thuat",
+    "sub": "kien-truc",
+    "t": "Kim tự tháp Giza sai lệch so với hướng bắc chính xác chưa tới 0,1 độ",
+    "s": "Người Ai Cập có thể đã dùng sao hoặc bóng Mặt Trời để định hướng. Độ chính xác này đạt được khoảng 4.500 năm trước khi có la bàn.",
+    "tags": [
+      "kim-tu-thap",
+      "dinh-huong",
+      "ai-cap"
+    ],
+    "src": "Spence, Nature (2000)"
+  },
+  {
+    "id": "na-257",
+    "cat": "nghe-thuat",
+    "sub": "kien-truc",
+    "t": "Cầu treo hiện đại chịu tải chủ yếu bằng cáp kéo, và cáp chính của một cây cầu lớn gồm hàng chục nghìn sợi thép nhỏ",
+    "s": "Cầu Cổng Vàng có cáp chính đường kính 92 cm bện từ 27.572 sợi. Bện nhiều sợi nhỏ bền hơn một khối thép đặc cùng tiết diện vì khuyết tật không lan qua toàn bộ.",
+    "tags": [
+      "cau-treo",
+      "cap",
+      "ket-cau"
+    ],
+    "src": "Golden Gate Bridge Highway and Transportation District"
+  },
+  {
+    "id": "na-258",
+    "cat": "nghe-thuat",
+    "sub": "kien-truc",
+    "t": "Cầu Tacoma Narrows sập năm 1940 vì mất ổn định khí động, không vì cộng hưởng như sách giáo khoa hay viết",
+    "s": "Cơ chế đúng là rung lắc tự kích thích do dòng khí, gọi là flutter. Nhiều sách vật lý phổ thông vẫn dùng nó làm ví dụ cộng hưởng, và đó là một sai sót được các kỹ sư kết cấu chỉ ra từ lâu.",
+    "tags": [
+      "tacoma",
+      "khi-dong",
+      "ky-thuat"
+    ],
+    "src": "Billah & Scanlan, American Journal of Physics (1991)"
+  },
+  {
+    "id": "na-259",
+    "cat": "nghe-thuat",
+    "sub": "kien-truc",
+    "t": "Tường dày ở kiến trúc truyền thống vùng nóng hoạt động như bộ trễ nhiệt, không như lớp cách nhiệt",
+    "s": "Khối lượng lớn hấp thụ nhiệt ban ngày và thải ra ban đêm, làm biên độ nhiệt trong nhà giảm mạnh. Cách này chỉ hiệu quả ở nơi chênh lệch ngày đêm lớn, nên nó phổ biến ở sa mạc chứ không ở vùng nhiệt đới ẩm.",
+    "tags": [
+      "tuong-day",
+      "tre-nhiet",
+      "khi-hau"
+    ],
+    "src": "Givoni, Man, Climate and Architecture"
+  },
+  {
+    "id": "na-260",
+    "cat": "nghe-thuat",
+    "sub": "kien-truc",
+    "t": "Bê tông cốt thép hoạt động được vì thép và bê tông giãn nở theo nhiệt gần như bằng nhau",
+    "s": "Hệ số giãn nở của cả hai quanh 10–12 phần triệu mỗi độ, nên chúng không tách nhau khi nhiệt độ đổi. Đây là trùng hợp vật liệu quan trọng bậc nhất của kỹ thuật xây dựng hiện đại.",
+    "tags": [
+      "be-tong-cot-thep",
+      "gian-no",
+      "vat-lieu"
+    ],
+    "src": "Neville, Properties of Concrete"
+  },
+  {
+    "id": "na-261",
+    "cat": "nghe-thuat",
+    "sub": "chu-va-thiet-ke",
+    "t": "Chữ in nghiêng ra đời để tiết kiệm giấy, không để nhấn mạnh",
+    "s": "Aldus Manutius giới thiệu kiểu chữ nghiêng ở Venice năm 1501 để in được nhiều chữ hơn trên mỗi trang sách bỏ túi. Vai trò nhấn mạnh chỉ xuất hiện sau đó vài thế kỷ.",
+    "tags": [
+      "chu-nghieng",
+      "in-an",
+      "lich-su"
+    ],
+    "src": "Bringhurst, The Elements of Typographic Style"
+  },
+  {
+    "id": "na-262",
+    "cat": "nghe-thuat",
+    "sub": "chu-va-thiet-ke",
+    "t": "Chân chữ serif không được chứng minh là giúp đọc nhanh hơn trên giấy",
+    "s": "Các nghiên cứu so sánh cho khác biệt rất nhỏ và không nhất quán. Yếu tố ảnh hưởng lớn hơn nhiều là cỡ chữ, độ dài dòng và khoảng cách dòng.",
+    "tags": [
+      "serif",
+      "kha-doc",
+      "thiet-ke"
+    ],
+    "src": "Lund, luận án Đại học Reading (1999); Poole (2008)"
+  },
+  {
+    "id": "na-263",
+    "cat": "nghe-thuat",
+    "sub": "chu-va-thiet-ke",
+    "t": "Dòng chữ dài 45–75 ký tự được coi là dễ đọc nhất, và đó là lý do báo chia cột",
+    "s": "Dòng quá dài làm mắt khó tìm đầu dòng tiếp theo; dòng quá ngắn làm nhịp đọc bị ngắt liên tục. Con số này ổn định qua nhiều nghiên cứu và nhiều ngôn ngữ dùng chữ Latinh.",
+    "tags": [
+      "do-dai-dong",
+      "kha-doc",
+      "bao-chi"
+    ],
+    "src": "Bringhurst, The Elements of Typographic Style; W3C WCAG"
+  },
+  {
+    "id": "na-264",
+    "cat": "nghe-thuat",
+    "sub": "chu-va-thiet-ke",
+    "t": "Chữ Quốc ngữ có nhiều dấu chồng nên nó cần khoảng cách dòng lớn hơn tiếng Anh ở cùng cỡ chữ",
+    "s": "Dấu thanh nằm trên dấu mũ tạo chiều cao vượt quá phần trên của chữ Latinh chuẩn. Phông không thiết kế riêng cho tiếng Việt thường bị cắt dấu hoặc đặt dấu lệch.",
+    "tags": [
+      "tieng-viet",
+      "phong-chu",
+      "thiet-ke"
+    ],
+    "src": "Unicode Standard; hướng dẫn thiết kế phông Việt của Google Fonts"
+  },
+  {
+    "id": "na-266",
+    "cat": "nghe-thuat",
+    "sub": "chu-va-thiet-ke",
+    "t": "Biển báo giao thông dùng chữ hoa lẫn thường vì chữ toàn hoa đọc chậm hơn ở khoảng cách xa",
+    "s": "Đường viền chữ thường tạo hình dạng từ dễ nhận hơn khối chữ nhật đều của chữ hoa. Anh chuyển sang hệ chữ hỗn hợp từ thập niên 1960 sau các thử nghiệm thực địa.",
+    "tags": [
+      "bien-bao",
+      "kha-doc",
+      "giao-thong"
+    ],
+    "src": "Kinneir & Calvert (1963); UK Department for Transport"
+  },
+  {
+    "id": "na-267",
+    "cat": "nghe-thuat",
+    "sub": "chu-va-thiet-ke",
+    "t": "Tỉ lệ khổ giấy A giữ nguyên khi cắt đôi vì tỉ số cạnh của nó là căn bậc hai của 2",
+    "s": "Cắt đôi A4 được hai tờ A5 cùng tỉ lệ. A0 có diện tích đúng 1 mét vuông, và mọi khổ khác suy ra từ đó bằng phép chia đôi.",
+    "tags": [
+      "kho-giay",
+      "iso",
+      "toan-hoc"
+    ],
+    "src": "ISO 216; Lichtenberg (1786)"
+  },
+  {
+    "id": "na-268",
+    "cat": "nghe-thuat",
+    "sub": "chu-va-thiet-ke",
+    "t": "Logo hai màu vẫn phải nhận ra được khi in đen trắng, và đó là tiêu chí kiểm tra kinh điển của thiết kế nhận diện",
+    "s": "Khoảng 8% nam giới gốc Âu bị mù màu đỏ–lục, nên logo phân biệt chỉ bằng cặp màu đó gây vấn đề thật. Kiểm tra bằng cách chuyển sang thang xám bắt được lỗi này ngay.",
+    "tags": [
+      "logo",
+      "mau",
+      "nhan-dien"
+    ],
+    "src": "W3C WCAG 2.1; Hiệp hội Nhãn khoa Mỹ"
+  },
+  {
+    "id": "na-269",
+    "cat": "nghe-thuat",
+    "sub": "chu-va-thiet-ke",
+    "t": "Tỉ lệ tương phản tối thiểu cho chữ nhỏ theo chuẩn tiếp cận web là 4,5 trên 1",
+    "s": "Chữ lớn được nới xuống 3 trên 1. Đây là ngưỡng định lượng chứ không phải cảm nhận, và nó tính được từ độ chói tương đối của hai màu.",
+    "tags": [
+      "tuong-phan",
+      "tiep-can",
+      "web"
+    ],
+    "src": "W3C WCAG 2.1, tiêu chí 1.4.3"
+  },
+  {
+    "id": "na-270",
+    "cat": "nghe-thuat",
+    "sub": "chu-va-thiet-ke",
+    "t": "Bố cục lưới trong thiết kế in ra đời từ trường phái Thuỵ Sĩ giữa thế kỷ 20 và nó là gốc của mọi hệ lưới web hiện nay",
+    "s": "Josef Müller-Brockmann hệ thống hoá phương pháp này năm 1961. Lưới 12 cột phổ biến trong thiết kế web hiện đại thừa hưởng trực tiếp từ đó.",
+    "tags": [
+      "luoi",
+      "thiet-ke",
+      "thuy-si"
+    ],
+    "src": "Müller-Brockmann, Grid Systems in Graphic Design (1961)"
+  },
+  {
+    "id": "na-271",
+    "cat": "nghe-thuat",
+    "sub": "bao-ton-nghe-thuat",
+    "t": "Phục chế nhà nguyện Sistine trong thập niên 1980 làm lộ màu sáng rực và gây tranh cãi suốt nhiều năm",
+    "s": "Nhiều nhà phê bình cho rằng lớp bồ hóng đã bị coi nhầm là lớp sơn bóng do Michelangelo cố ý phủ. Đây là ví dụ điển hình về việc phục chế luôn là một quyết định diễn giải, không chỉ là kỹ thuật.",
+    "tags": [
+      "phuc-che",
+      "sistine",
+      "tranh-cai"
+    ],
+    "src": "Beck & Daley, Art Restoration: The Culture, the Business and the Scandal (1993)"
+  },
+  {
+    "id": "na-272",
+    "cat": "nghe-thuat",
+    "sub": "bao-ton-nghe-thuat",
+    "t": "Nguyên tắc phục chế hiện đại yêu cầu mọi can thiệp phải đảo ngược được và phân biệt được với bản gốc",
+    "s": "Hiến chương Venice 1964 đặt ra khung này cho di tích, và nó lan sang bảo tồn tác phẩm nghệ thuật. Vì vậy phần vá thường được vẽ bằng kỹ thuật cho phép nhìn gần thì thấy khác.",
+    "tags": [
+      "bao-ton",
+      "nguyen-tac",
+      "venice"
+    ],
+    "src": "Hiến chương Venice (1964); ICOMOS"
+  },
+  {
+    "id": "na-273",
+    "cat": "nghe-thuat",
+    "sub": "bao-ton-nghe-thuat",
+    "t": "Hang Lascaux phải đóng cửa với công chúng năm 1963 vì hơi thở của khách làm mốc phát triển",
+    "s": "Khoảng 1.200 khách mỗi ngày mang theo CO₂ và hơi ẩm. Bản sao Lascaux II mở năm 1983 để du khách xem thay bản gốc.",
+    "tags": [
+      "lascaux",
+      "bao-ton",
+      "du-lich"
+    ],
+    "src": "UNESCO; Bộ Văn hoá Pháp"
+  },
+  {
+    "id": "na-274",
+    "cat": "nghe-thuat",
+    "sub": "bao-ton-nghe-thuat",
+    "t": "Giấy axit tự huỷ, và hàng triệu cuốn sách in từ 1850 tới 1990 đang giòn dần trong thư viện",
+    "s": "Quy trình làm giấy công nghiệp thời đó để lại axit trong sợi giấy. Thư viện Quốc hội Mỹ ước tính hàng triệu bản cần khử axit hoặc số hoá trước khi không lật được nữa.",
+    "tags": [
+      "giay-axit",
+      "thu-vien",
+      "bao-ton"
+    ],
+    "src": "Thư viện Quốc hội Mỹ; ISO 9706"
+  },
+  {
+    "id": "na-275",
+    "cat": "nghe-thuat",
+    "sub": "bao-ton-nghe-thuat",
+    "t": "Phim nitrate tự bốc cháy và cháy được cả dưới nước, và đó là lý do phần lớn phim câm đã mất",
+    "s": "Ước tính khoảng 75% phim câm Mỹ không còn bản nào. Nitrate cellulose vừa là chất nền phim vừa là thành phần của thuốc súng không khói.",
+    "tags": [
+      "phim-nitrate",
+      "mat-mat",
+      "lich-su"
+    ],
+    "src": "Thư viện Quốc hội Mỹ, The Survival of American Silent Feature Films (2013)"
+  },
+  {
+    "id": "na-276",
+    "cat": "nghe-thuat",
+    "sub": "bao-ton-nghe-thuat",
+    "t": "Tác phẩm nghệ thuật số khó bảo tồn hơn tranh sơn dầu vì định dạng và phần cứng biến mất nhanh hơn vật liệu",
+    "s": "Một tệp video nghệ thuật năm 1995 có thể cần trình phát và hệ điều hành không còn tồn tại. Bảo tàng phải mô phỏng lại môi trường máy tính cũ để trưng bày.",
+    "tags": [
+      "nghe-thuat-so",
+      "bao-ton",
+      "dinh-dang"
+    ],
+    "src": "Tate; Rinehart & Ippolito, Re-collection (2014)"
+  },
+  {
+    "id": "na-277",
+    "cat": "nghe-thuat",
+    "sub": "bao-ton-nghe-thuat",
+    "t": "Ánh sáng tử ngoại và hồng ngoại cho thấy các lớp bên dưới tranh mà mắt thường không thấy",
+    "s": "Tử ngoại làm lớp vecni cũ phát huỳnh quang, để lộ phần vá muộn hơn; hồng ngoại xuyên qua lớp sơn để lộ nét phác. Hai kỹ thuật này là công cụ tiêu chuẩn trước mọi lần phục chế.",
+    "tags": [
+      "phan-tich-tranh",
+      "tu-ngoai",
+      "hong-ngoai"
+    ],
+    "src": "National Gallery London, Technical Bulletin"
+  },
+  {
+    "id": "na-278",
+    "cat": "nghe-thuat",
+    "sub": "bao-ton-nghe-thuat",
+    "t": "Độ ẩm dao động gây hại cho hiện vật nhiều hơn độ ẩm cao ổn định",
+    "s": "Gỗ, giấy và vải nở co theo độ ẩm, và chu kỳ nở co lặp lại gây nứt tích luỹ. Vì vậy tiêu chuẩn bảo tàng nhấn mạnh biên độ dao động chứ không chỉ mức tuyệt đối.",
+    "tags": [
+      "do-am",
+      "bao-quan",
+      "bao-tang"
+    ],
+    "src": "ASHRAE Chapter 24: Museums, Galleries, Archives"
+  },
+  {
+    "id": "na-279",
+    "cat": "nghe-thuat",
+    "sub": "bao-ton-nghe-thuat",
+    "t": "Nhiều bức tượng và bích hoạ cổ ở Việt Nam bị hỏng nhanh sau khi được sơn lại bằng sơn công nghiệp",
+    "s": "Sơn hiện đại không cho hơi nước đi qua nên nó giữ ẩm bên trong vật liệu truyền thống. Đây là dạng hư hại do can thiệp thiện chí, và nó không đảo ngược được.",
+    "tags": [
+      "bao-ton",
+      "viet-nam",
+      "son"
+    ],
+    "src": "Cục Di sản văn hoá; ICCROM"
+  },
+  {
+    "id": "na-280",
+    "cat": "nghe-thuat",
+    "sub": "bao-ton-nghe-thuat",
+    "t": "Bản quyền tác phẩm nghệ thuật ở phần lớn nước kéo dài tới 70 năm sau khi tác giả mất",
+    "s": "Vì vậy tác phẩm vào miền công cộng theo từng đợt mỗi ngày 1 tháng 1. Việt Nam áp dụng mốc 50 năm sau khi tác giả qua đời cho phần lớn loại hình.",
+    "tags": [
+      "ban-quyen",
+      "mien-cong-cong",
+      "luat"
+    ],
+    "src": "Công ước Berne; Luật Sở hữu trí tuệ Việt Nam 2005, sửa đổi 2022"
+  },
+  {
+    "id": "na-281",
+    "cat": "nghe-thuat",
+    "sub": "am-thanh-va-nhac-cu",
+    "t": "Phòng hoà nhạc tốt có thời gian vang khoảng 1,8–2,2 giây, và con số này được tính chứ không đoán",
+    "s": "Wallace Sabine lập công thức liên hệ thể tích phòng với diện tích hấp thụ năm 1900, biến âm học kiến trúc thành một ngành kỹ thuật. Phòng nói chuyện cần vang ngắn hơn nhiều, quanh 0,6–1 giây.",
+    "tags": [
+      "am-hoc",
+      "phong-hoa-nhac",
+      "sabine"
+    ],
+    "src": "Sabine, Collected Papers on Acoustics (1922)"
+  },
+  {
+    "id": "na-282",
+    "cat": "nghe-thuat",
+    "sub": "am-thanh-va-nhac-cu",
+    "t": "Đàn organ ống lớn có thể phát nốt 16 Hz, thấp hơn ngưỡng nghe và người ta cảm nhận nó bằng cơ thể",
+    "s": "Ống dài nhất của một số organ nhà thờ tới 19 mét. Ở tần số đó, thính giác chuyển dần thành cảm giác rung.",
+    "tags": [
+      "organ",
+      "ha-am",
+      "cam-giac"
+    ],
+    "src": "Rossing, The Science of Sound; Hiệp hội Organ Hoa Kỳ"
+  },
+  {
+    "id": "na-283",
+    "cat": "nghe-thuat",
+    "sub": "am-thanh-va-nhac-cu",
+    "t": "Đàn bầu Việt Nam chỉ có một dây nhưng chơi được cả thang âm nhờ kỹ thuật bồi âm",
+    "s": "Người chơi chạm nhẹ vào điểm nút để lấy bồi âm rồi uốn cần để đổi sức căng dây. Đây là một trong rất ít nhạc cụ một dây chơi được giai điệu đầy đủ.",
+    "tags": [
+      "dan-bau",
+      "boi-am",
+      "viet-nam"
+    ],
+    "src": "Trần Văn Khê, Âm nhạc truyền thống Việt Nam"
+  },
+  {
+    "id": "na-284",
+    "cat": "nghe-thuat",
+    "sub": "am-thanh-va-nhac-cu",
+    "t": "Sáo và kèn đổi cao độ theo nhiệt độ vì tốc độ âm trong không khí phụ thuộc nhiệt độ",
+    "s": "Tốc độ âm tăng khoảng 0,6 m/s cho mỗi độ C, làm cao độ nhạc cụ hơi lên khi phòng ấm. Đó là lý do dàn nhạc phải chỉnh lại sau khi khán phòng đầy người.",
+    "tags": [
+      "nhac-cu",
+      "nhiet-do",
+      "cao-do"
+    ],
+    "src": "Fletcher & Rossing, The Physics of Musical Instruments"
+  },
+  {
+    "id": "na-285",
+    "cat": "nghe-thuat",
+    "sub": "ly-thuyet-nhac",
+    "t": "Định dạng MP3 xoá bỏ các âm mà tai không nghe thấy do bị âm khác che, và nó nén được khoảng 10 lần",
+    "s": "Che khuất tần số và che khuất thời gian là hai hiện tượng tâm lý âm học được khai thác. Vì thông tin bị bỏ đi vĩnh viễn nên MP3 là nén mất mát, khác với ZIP.",
+    "tags": [
+      "mp3",
+      "nen",
+      "tam-ly-am-hoc"
+    ],
+    "src": "Brandenburg, AES (1999); ISO/IEC 11172-3"
+  },
+  {
+    "id": "na-286",
+    "cat": "nghe-thuat",
+    "sub": "ly-thuyet-nhac",
+    "t": "Nhạc số lấy mẫu 44.100 lần mỗi giây vì tai người nghe tới 20.000 Hz và định lý lấy mẫu đòi hơn gấp đôi",
+    "s": "Định lý Nyquist–Shannon nói tần số lấy mẫu phải lớn hơn hai lần tần số cao nhất cần tái tạo. Con số lẻ 44.100 đến từ việc tận dụng thiết bị ghi video thời đó.",
+    "tags": [
+      "nyquist",
+      "cd",
+      "lay-mau"
+    ],
+    "src": "Shannon (1949); Red Book CD Standard (1980)"
+  },
+  {
+    "id": "na-287",
+    "cat": "nghe-thuat",
+    "sub": "hoi-hoa",
+    "t": "Tranh chép và tranh gốc phân biệt được bằng thống kê nét vẽ, và máy học đạt độ chính xác khá cao trên một số bộ dữ liệu",
+    "s": "Phân tích wavelet trên nét bút cho thấy hoạ sĩ có 'chữ ký' hình học ổn định. Phương pháp này bổ trợ chứ chưa thay thế được giám định vật liệu.",
+    "tags": [
+      "giam-dinh",
+      "may-hoc",
+      "net-ve"
+    ],
+    "src": "Johnson và cộng sự, IEEE Signal Processing Magazine (2008)"
+  },
+  {
+    "id": "na-288",
+    "cat": "nghe-thuat",
+    "sub": "nhiep-anh-dien-anh",
+    "t": "Ảnh chân dung thời Victoria hay có người trông đờ đẫn vì họ phải giữ yên nhiều giây với giá đỡ đầu",
+    "s": "Thời phơi sáng ban đầu tính bằng phút, sau rút xuống vài giây. Chuyện 'ảnh chụp người chết' bị thổi phồng: phần lớn ảnh trông cứng đờ chỉ vì thời gian phơi sáng.",
+    "tags": [
+      "nhiep-anh",
+      "victoria",
+      "huyen-thoai"
+    ],
+    "src": "Bảo tàng Getty; Linkman, Photography and Death (2011)"
+  },
+  {
+    "id": "na-290",
+    "cat": "nghe-thuat",
+    "sub": "kien-truc",
+    "t": "Chùa Một Cột và nhiều công trình gỗ Việt Nam dựng bằng mộng, không dùng đinh",
+    "s": "Liên kết mộng cho phép tháo rời và thay từng cấu kiện hỏng mà không phá cả công trình. Đây cũng là lý do các công trình gỗ được 'trùng tu' nhiều lần vẫn giữ nguyên hình dáng qua nhiều thế kỷ.",
+    "tags": [
+      "kien-truc-go",
+      "mong",
+      "viet-nam"
+    ],
+    "src": "Cục Di sản văn hoá; Nguyễn Bá Đang, Kiến trúc gỗ truyền thống Việt Nam"
+  },
+  {
+    "id": "na-301",
+    "cat": "nghe-thuat",
+    "sub": "am-thanh-va-nhac-cu",
+    "t": "Dây đàn ngắn đi một nửa thì cao độ lên đúng một quãng tám",
+    "s": "Quan hệ này được trường phái Pythagoras phát hiện khoảng 2.500 năm trước bằng dây đàn một dây. Đây là mối liên hệ đầu tiên giữa số học và cảm nhận giác quan được ghi lại.",
+    "tags": [
+      "pythagoras",
+      "day-dan",
+      "quang-tam"
+    ],
+    "src": "Pythagoras (khoảng 500 TCN); Barbour, Tuning and Temperament"
+  },
+  {
+    "id": "na-302",
+    "cat": "nghe-thuat",
+    "sub": "am-thanh-va-nhac-cu",
+    "t": "Đàn violin có gần 70 mảnh gỗ ghép lại và không dùng một chiếc đinh nào",
+    "s": "Toàn bộ được giữ bằng keo da động vật, loại keo tháo được bằng nước ấm. Đây là lựa chọn có chủ đích để sửa chữa được sau hàng trăm năm.",
+    "tags": [
+      "violin",
+      "che-tac",
+      "keo"
+    ],
+    "src": "Bảo tàng Nhạc cụ Metropolitan; Hiệp hội Chế tác Đàn Hoa Kỳ"
+  },
+  {
+    "id": "na-303",
+    "cat": "nghe-thuat",
+    "sub": "am-thanh-va-nhac-cu",
+    "t": "Gỗ làm đàn tốt nhất đến từ cây mọc chậm ở vùng lạnh, và mật độ vòng năm quyết định chất âm",
+    "s": "Gỗ vân sam Alpine dùng cho mặt đàn có vòng năm rất khít và đều. Có giả thuyết rằng Thời kỳ Băng hà Nhỏ đã tạo ra loại gỗ đặc biệt cho các cây đàn thế kỷ 17.",
+    "tags": [
+      "go-dan",
+      "von-nam",
+      "am-thanh"
+    ],
+    "src": "Burckle & Grissino-Mayer, Dendrochronologia (2003)"
+  },
+  {
+    "id": "na-304",
+    "cat": "nghe-thuat",
+    "sub": "am-thanh-va-nhac-cu",
+    "t": "Kèn đồng đổi nốt bằng cách đổi hình dạng môi chứ không chỉ bằng bấm van",
+    "s": "Các nốt bồi âm tự nhiên có được nhờ điều chỉnh môi, còn van chỉ thêm chiều dài ống. Kèn tự nhiên không van vẫn chơi được giai điệu nhờ đúng cơ chế này.",
+    "tags": [
+      "ken-dong",
+      "boi-am",
+      "ky-thuat"
+    ],
+    "src": "Fletcher & Rossing, The Physics of Musical Instruments"
+  },
+  {
+    "id": "na-305",
+    "cat": "nghe-thuat",
+    "sub": "am-thanh-va-nhac-cu",
+    "t": "Tiếng đàn piano tắt dần chứ không giữ đều, và pedal chỉ nhấc dampers chứ không kéo dài âm",
+    "s": "Năng lượng dây truyền vào mặt đàn và tiêu tán ra không khí. Pedal cho các dây khác cộng hưởng theo, làm âm dày hơn chứ không làm nó to lâu hơn.",
+    "tags": [
+      "piano",
+      "pedal",
+      "cong-huong"
+    ],
+    "src": "Rossing, The Science of Sound; Steinway Technical Reference"
+  },
+  {
+    "id": "na-306",
+    "cat": "nghe-thuat",
+    "sub": "am-thanh-va-nhac-cu",
+    "t": "Micro thu âm hoạt động ngược hoàn toàn với loa, và về nguyên lý một chiếc loa dùng làm micro được",
+    "s": "Cả hai đều chuyển đổi giữa dao động cơ và tín hiệu điện qua cuộn dây trong từ trường. Micro động và loa động khác nhau chủ yếu ở kích thước và độ nhạy.",
+    "tags": [
+      "micro",
+      "loa",
+      "dien-tu"
+    ],
+    "src": "Eargle, The Microphone Book"
+  },
+  {
+    "id": "na-307",
+    "cat": "nghe-thuat",
+    "sub": "am-thanh-va-nhac-cu",
+    "t": "Tai người định vị được nguồn âm nhờ chênh lệch thời gian tới hai tai chỉ khoảng 0,6 mili giây",
+    "s": "Với âm trầm, não dùng chênh lệch pha; với âm cao, nó dùng chênh lệch cường độ do đầu che. Đây là cơ sở của mọi kỹ thuật âm thanh nổi.",
+    "tags": [
+      "dinh-vi-am",
+      "thinh-giac",
+      "stereo"
+    ],
+    "src": "Blauert, Spatial Hearing (1997)"
+  },
+  {
+    "id": "na-308",
+    "cat": "nghe-thuat",
+    "sub": "am-thanh-va-nhac-cu",
+    "t": "Đàn đá là một trong các nhạc cụ cổ nhất thế giới, và bộ tìm được ở Việt Nam có tuổi khoảng 3.000 năm",
+    "s": "Bộ đàn đá Ndut Liêng Krak phát hiện ở Đắk Lắk năm 1949 hiện trưng bày tại Paris. Các phiến đá được gia công để cho cao độ xác định chứ không phải đá tự nhiên.",
+    "tags": [
+      "dan-da",
+      "viet-nam",
+      "khao-co"
+    ],
+    "src": "Bảo tàng Con người Paris; Viện Âm nhạc Việt Nam"
+  },
+  {
+    "id": "na-309",
+    "cat": "nghe-thuat",
+    "sub": "am-thanh-va-nhac-cu",
+    "t": "Đàn tranh Việt Nam, koto Nhật, guzheng Trung Hoa và gayageum Hàn Quốc cùng một họ nhạc cụ",
+    "s": "Chúng đều là đàn dây gảy có ngựa đàn di động trên thân gỗ dài. Số dây và hệ thang âm khác nhau, nhưng nguyên lý chỉnh cao độ bằng cách dịch ngựa đàn thì giống nhau.",
+    "tags": [
+      "dan-tranh",
+      "dong-a",
+      "nhac-cu"
+    ],
+    "src": "Trần Văn Khê, Âm nhạc truyền thống Việt Nam"
+  },
+  {
+    "id": "na-310",
+    "cat": "nghe-thuat",
+    "sub": "am-thanh-va-nhac-cu",
+    "t": "Trống định âm phải điều chỉnh trong lúc biểu diễn vì nhiệt độ và độ ẩm làm mặt trống đổi cao độ",
+    "s": "Da tự nhiên nhạy hơn màng tổng hợp nhiều lần. Đây là lý do người chơi timpani có bàn đạp chỉnh nhanh và tai phải rất tốt.",
+    "tags": [
+      "timpani",
+      "do-am",
+      "cao-do"
+    ],
+    "src": "Rossing, Science of Percussion Instruments"
+  },
+  {
+    "id": "na-311",
+    "cat": "nghe-thuat",
+    "sub": "ly-thuyet-nhac",
+    "t": "Nhạc buồn không phải chậm mà chủ yếu là ít biến động, và tốc độ chỉ là một yếu tố",
+    "s": "Phân tích âm học cho thấy nhạc được đánh giá buồn có biên độ ổn định, quãng hẹp và ít nhấn mạnh. Cùng một giai điệu chơi chậm lại không tự động trở nên buồn.",
+    "tags": [
+      "cam-xuc",
+      "nhac",
+      "phan-tich"
+    ],
+    "src": "Juslin & Laukka, Psychological Bulletin (2003)"
+  },
+  {
+    "id": "na-312",
+    "cat": "nghe-thuat",
+    "sub": "ly-thuyet-nhac",
+    "t": "Người ta nhận ra một bài hát quen chỉ sau khoảng 100–300 mili giây âm thanh",
+    "s": "Đủ ngắn để không nghe được một nốt trọn vẹn. Não dùng đặc trưng âm sắc và kết cấu chứ không dùng giai điệu để nhận diện nhanh như vậy.",
+    "tags": [
+      "nhan-dien",
+      "nhac",
+      "nao"
+    ],
+    "src": "Krumhansl, Frontiers in Psychology (2010)"
+  },
+  {
+    "id": "na-313",
+    "cat": "nghe-thuat",
+    "sub": "ly-thuyet-nhac",
+    "t": "Trẻ sơ sinh phân biệt được hợp âm thuận và nghịch, và điều này xuất hiện trước khi có tiếp xúc văn hoá",
+    "s": "Trẻ 2–4 tháng tuổi nhìn lâu hơn về phía nguồn phát hợp âm thuận. Điều đó gợi ý một phần cảm nhận hoà thanh có cơ sở sinh học chứ không hoàn toàn do học.",
+    "tags": [
+      "tre-so-sinh",
+      "hoa-thanh",
+      "sinh-hoc"
+    ],
+    "src": "Trainor & Heinmiller, Infant Behavior and Development (1998)"
+  },
+  {
+    "id": "na-314",
+    "cat": "nghe-thuat",
+    "sub": "ly-thuyet-nhac",
+    "t": "Nhạc trong siêu thị chậm hơn làm khách đi chậm hơn và mua nhiều hơn, và hiệu ứng đo được",
+    "s": "Thí nghiệm thực địa cho thấy doanh thu chênh tới hàng chục phần trăm giữa nhạc nhanh và nhạc chậm. Đây là một trong ít can thiệp âm nhạc thương mại có bằng chứng thực địa rõ.",
+    "tags": [
+      "nhac",
+      "ban-le",
+      "hanh-vi"
+    ],
+    "src": "Milliman, Journal of Marketing (1982)"
+  },
+  {
+    "id": "na-315",
+    "cat": "nghe-thuat",
+    "sub": "ly-thuyet-nhac",
+    "t": "Nhạc quốc ca thường viết ở nhịp hành khúc vì nó khớp với nhịp bước chân khoảng 120 bước mỗi phút",
+    "s": "Nhịp đôi và tốc độ đó cho phép đám đông đồng bộ mà không cần tập. Đây là lý do phần lớn quốc ca nghe giống nhau về cấu trúc nhịp.",
+    "tags": [
+      "quoc-ca",
+      "hanh-khuc",
+      "nhip"
+    ],
+    "src": "Bohlman, The Music of European Nationalism"
+  },
+  {
+    "id": "na-316",
+    "cat": "nghe-thuat",
+    "sub": "ly-thuyet-nhac",
+    "t": "Hát tập thể làm nhịp tim của những người hát đồng bộ với nhau",
+    "s": "Nhịp thở bị điều khiển bởi cấu trúc câu nhạc, và nhịp tim đi theo nhịp thở. Hiệu ứng mạnh nhất khi hát các câu dài đều nhau như trong thánh ca.",
+    "tags": [
+      "hat-tap-the",
+      "nhip-tim",
+      "dong-bo"
+    ],
+    "src": "Vickhoff và cộng sự, Frontiers in Psychology (2013)"
+  },
+  {
+    "id": "na-317",
+    "cat": "nghe-thuat",
+    "sub": "ly-thuyet-nhac",
+    "t": "Nhạc giảm cảm nhận đau một cách đo được ở bệnh nhân sau mổ",
+    "s": "Tổng hợp hơn 70 thử nghiệm ngẫu nhiên cho thấy giảm cả điểm đau lẫn nhu cầu thuốc giảm đau. Hiệu ứng nhỏ nhưng nhất quán và gần như không có tác dụng phụ.",
+    "tags": [
+      "nhac",
+      "dau",
+      "y-hoc"
+    ],
+    "src": "Hole và cộng sự, The Lancet (2015)"
+  },
+  {
+    "id": "na-318",
+    "cat": "nghe-thuat",
+    "sub": "ly-thuyet-nhac",
+    "t": "Ký âm phương Tây không ghi được nhiều thứ quan trọng trong nhạc truyền thống Việt Nam",
+    "s": "Cách nhấn, rung, luyến và vuốt dây tạo nên phần lớn bản sắc nhưng không có ký hiệu tương ứng. Đây là lý do học nhạc dân tộc vẫn phải truyền khẩu chứ không học qua bản nhạc.",
+    "tags": [
+      "ky-am",
+      "nhac-viet",
+      "truyen-khau"
+    ],
+    "src": "Trần Văn Khê; UNESCO, hồ sơ Nhã nhạc cung đình Huế"
+  },
+  {
+    "id": "na-319",
+    "cat": "nghe-thuat",
+    "sub": "ly-thuyet-nhac",
+    "t": "Nhã nhạc cung đình Huế được UNESCO công nhận năm 2003, là di sản phi vật thể đầu tiên của Việt Nam được ghi danh",
+    "s": "Sau đó Việt Nam có thêm hơn mười di sản phi vật thể được ghi danh. Nhã nhạc dùng dàn nhạc lễ với cấu trúc bài bản cố định có từ thời Nguyễn.",
+    "tags": [
+      "nha-nhac",
+      "unesco",
+      "viet-nam"
+    ],
+    "src": "UNESCO, Danh sách Di sản văn hoá phi vật thể (2003)"
+  },
+  {
+    "id": "na-320",
+    "cat": "nghe-thuat",
+    "sub": "ly-thuyet-nhac",
+    "t": "Ca trù dùng một hệ thống phách và khổ đàn rất chặt, và nó được UNESCO xếp vào nhóm cần bảo vệ khẩn cấp",
+    "s": "Việc ghi danh năm 2009 thuộc danh sách khẩn cấp chứ không phải danh sách đại diện. Số nghệ nhân biết đủ các thể cách đã giảm xuống rất thấp.",
+    "tags": [
+      "ca-tru",
+      "unesco",
+      "bao-ton"
+    ],
+    "src": "UNESCO (2009); Viện Âm nhạc Việt Nam"
+  },
+  {
+    "id": "na-321",
+    "cat": "nghe-thuat",
+    "sub": "mau-va-chat-lieu",
+    "t": "Màu tím tổng hợp đầu tiên được tìm ra tình cờ bởi một sinh viên 18 tuổi đang cố tổng hợp thuốc chống sốt rét",
+    "s": "William Perkin phát hiện mauveine năm 1856 từ nhựa than đá. Nó khai sinh cả ngành công nghiệp thuốc nhuộm tổng hợp và gián tiếp cả ngành hoá dược.",
+    "tags": [
+      "mauveine",
+      "perkin",
+      "lich-su"
+    ],
+    "src": "Perkin (1856); Garfield, Mauve (2000)"
+  },
+  {
+    "id": "na-322",
+    "cat": "nghe-thuat",
+    "sub": "mau-va-chat-lieu",
+    "t": "Màu đỏ carmine dùng trong thực phẩm và mỹ phẩm được chiết từ một loài rệp",
+    "s": "Cần khoảng 70.000 con rệp cochineal cho 1 kg thuốc nhuộm. Nó vẫn được dùng rộng rãi và ghi trên nhãn là E120 hoặc carmine.",
+    "tags": [
+      "carmine",
+      "e120",
+      "thuc-pham"
+    ],
+    "src": "EFSA; Codex Alimentarius"
+  },
+  {
+    "id": "na-323",
+    "cat": "nghe-thuat",
+    "sub": "mau-va-chat-lieu",
+    "t": "Một số sắc tố cổ độc tới mức chúng đã đầu độc chính người dùng",
+    "s": "Xanh Scheele chứa asen được dùng cho giấy dán tường thế kỷ 19 và giải phóng khí độc trong phòng ẩm. Vàng cadmi và trắng chì cũng nằm trong nhóm bị loại dần vì độc tính.",
+    "tags": [
+      "sac-to",
+      "doc",
+      "lich-su"
+    ],
+    "src": "Ball, Bright Earth; Meharg, Nature (2003)"
+  },
+  {
+    "id": "na-324",
+    "cat": "nghe-thuat",
+    "sub": "mau-va-chat-lieu",
+    "t": "Màu sắc trên màn hình và màu sắc trên giấy không bao giờ khớp hoàn toàn vì hai hệ dùng dải màu khác nhau",
+    "s": "Màn hình phát ánh sáng còn giấy phản xạ ánh sáng, nên có màu hiển thị được mà in không được và ngược lại. Quy trình quản lý màu chỉ thu hẹp chứ không xoá được khoảng cách đó.",
+    "tags": [
+      "rgb",
+      "cmyk",
+      "quan-ly-mau"
+    ],
+    "src": "ICC Specification; Fairchild, Color Appearance Models"
+  },
+  {
+    "id": "na-325",
+    "cat": "nghe-thuat",
+    "sub": "mau-va-chat-lieu",
+    "t": "Cùng một màu trông khác nhau tuỳ màu xung quanh nó, và hiệu ứng này mạnh tới mức đánh lừa được cả hoạ sĩ",
+    "s": "Tương phản đồng thời được Josef Albers hệ thống hoá thành bài tập cơ bản trong đào tạo mỹ thuật. Đây cũng là cơ chế của nhiều ảo giác thị giác nổi tiếng.",
+    "tags": [
+      "tuong-phan",
+      "albers",
+      "thi-giac"
+    ],
+    "src": "Albers, Interaction of Color (1963)"
+  },
+  {
+    "id": "na-326",
+    "cat": "nghe-thuat",
+    "sub": "mau-va-chat-lieu",
+    "t": "Bức tranh 'Tiếng thét' của Munch đang phai màu vì sắc tố vàng cadmi bị phân huỷ dưới độ ẩm",
+    "s": "Phân tích năm 2020 cho thấy độ ẩm chứ không phải ánh sáng là yếu tố chính. Bảo tàng đã đổi điều kiện trưng bày dựa trên kết quả đó.",
+    "tags": [
+      "munch",
+      "sac-to",
+      "bao-ton"
+    ],
+    "src": "Monico và cộng sự, Science Advances (2020)"
+  },
+  {
+    "id": "na-327",
+    "cat": "nghe-thuat",
+    "sub": "hoi-hoa",
+    "t": "Sơn dầu cho phép sửa và chồng lớp, còn sơn tempera trứng khô quá nhanh để làm vậy",
+    "s": "Đây là lý do kỹ thuật chuyển sang sơn dầu ở châu Âu thế kỷ 15 đã đổi hẳn cách vẽ. Nó cho phép chuyển sắc mềm mại và vẽ nhiều lớp trong suốt.",
+    "tags": [
+      "son-dau",
+      "tempera",
+      "ky-thuat"
+    ],
+    "src": "Bảo tàng Quốc gia London; Mayer, The Artist's Handbook"
+  },
+  {
+    "id": "na-328",
+    "cat": "nghe-thuat",
+    "sub": "hoi-hoa",
+    "t": "Bích hoạ fresco phải vẽ khi vữa còn ướt và không sửa được sau khi vữa khô",
+    "s": "Sắc tố ngấm vào lớp vôi và trở thành một phần của tường qua phản ứng carbonat hoá. Michelangelo phải vẽ trần Sistine theo từng mảng đúng bằng lượng vữa trát mỗi ngày.",
+    "tags": [
+      "fresco",
+      "vua",
+      "ky-thuat"
+    ],
+    "src": "Bảo tàng Vatican; Mora & Philippot, Conservation of Wall Paintings"
+  },
+  {
+    "id": "na-329",
+    "cat": "nghe-thuat",
+    "sub": "hoi-hoa",
+    "t": "Tranh sơn dầu trên toan trở nên phổ biến vì nó nhẹ và cuộn lại được để vận chuyển",
+    "s": "Trước đó tranh vẽ trên tấm gỗ nặng và dễ nứt theo thớ. Venice thế kỷ 15 chuyển sang toan sớm nhất, một phần vì độ ẩm cao làm gỗ cong.",
+    "tags": [
+      "toan",
+      "gỗ",
+      "lich-su"
+    ],
+    "src": "Bảo tàng Quốc gia London, Technical Bulletin"
+  },
+  {
+    "id": "na-330",
+    "cat": "nghe-thuat",
+    "sub": "hoi-hoa",
+    "t": "Nhiều hoạ sĩ Phục hưng dùng dụng cụ quang học để dựng hình, và giả thuyết này vẫn gây tranh cãi",
+    "s": "David Hockney và Charles Falco lập luận rằng gương lõm và thấu kính đã được dùng từ khoảng năm 1430. Giới sử học nghệ thuật phản đối mạnh vì thiếu bằng chứng tư liệu trực tiếp.",
+    "tags": [
+      "hockney-falco",
+      "quang-hoc",
+      "tranh-cai"
+    ],
+    "src": "Hockney, Secret Knowledge (2001); Stork, Optics & Photonics News (2004)"
+  },
+  {
+    "id": "na-331",
+    "cat": "nghe-thuat",
+    "sub": "hoi-hoa",
+    "t": "Tranh thuỷ mặc Đông Á không sửa được vì mực thấm ngay vào giấy xuyến chỉ",
+    "s": "Một nét đi là một nét cuối cùng, và tốc độ bút quyết định độ đậm nhạt. Đây là lý do kỹ thuật này đòi hỏi hàng năm luyện tay trước khi vẽ được tác phẩm.",
+    "tags": [
+      "thuy-mac",
+      "muc",
+      "ky-thuat"
+    ],
+    "src": "Bảo tàng Cố cung Đài Bắc; Cahill, Chinese Painting"
+  },
+  {
+    "id": "na-332",
+    "cat": "nghe-thuat",
+    "sub": "hoi-hoa",
+    "t": "Tranh khắc gỗ Nhật ukiyo-e cần một bản khắc riêng cho mỗi màu, và một bức có thể dùng hơn 20 bản",
+    "s": "Ba người tham gia: hoạ sĩ vẽ mẫu, thợ khắc và thợ in. Tên trên tranh thường chỉ là hoạ sĩ, dù kỹ thuật khắc quyết định phần lớn chất lượng.",
+    "tags": [
+      "ukiyo-e",
+      "khac-go",
+      "nhat-ban"
+    ],
+    "src": "Bảo tàng Anh; Bảo tàng Nghệ thuật Metropolitan"
+  },
+  {
+    "id": "na-333",
+    "cat": "nghe-thuat",
+    "sub": "hoi-hoa",
+    "t": "Nghệ thuật trừu tượng không phải vì hoạ sĩ không vẽ được hình thật",
+    "s": "Kandinsky, Mondrian và Picasso đều để lại các tác phẩm tả thực rất kỹ ở giai đoạn đầu. Chuyển sang trừu tượng là lựa chọn có chủ đích sau khi đã thạo kỹ thuật cổ điển.",
+    "tags": [
+      "truu-tuong",
+      "hoi-hoa",
+      "lich-su"
+    ],
+    "src": "Bảo tàng Nghệ thuật Hiện đại New York (MoMA)"
+  },
+  {
+    "id": "na-334",
+    "cat": "nghe-thuat",
+    "sub": "nhiep-anh-dien-anh",
+    "t": "Ảnh màu đầu tiên được chụp năm 1861 bằng cách chồng ba ảnh đen trắng qua ba kính lọc",
+    "s": "James Clerk Maxwell trình diễn nguyên lý ba màu cơ bản này, cùng người viết phương trình điện từ. Nguyên lý đó vẫn là nền của mọi cảm biến màu hiện nay.",
+    "tags": [
+      "anh-mau",
+      "maxwell",
+      "lich-su"
+    ],
+    "src": "Maxwell (1861); Bảo tàng Khoa học London"
+  },
+  {
+    "id": "na-335",
+    "cat": "nghe-thuat",
+    "sub": "nhiep-anh-dien-anh",
+    "t": "Ảnh chụp thiên văn màu thường không phải màu mắt người thấy được",
+    "s": "Các bức ảnh Hubble và James Webb gán màu cho các dải bước sóng khác nhau, gồm cả hồng ngoại và tử ngoại. Đây là màu có ý nghĩa khoa học chứ không phải màu giả tạo tuỳ tiện.",
+    "tags": [
+      "thien-van",
+      "mau-gan",
+      "hubble"
+    ],
+    "src": "NASA/ESA, Hubble Image Processing"
+  },
+  {
+    "id": "na-336",
+    "cat": "nghe-thuat",
+    "sub": "nhiep-anh-dien-anh",
+    "t": "Tốc độ màn trập, khẩu độ và ISO tạo thành một tam giác đánh đổi cố định",
+    "s": "Đổi một yếu tố hai lần phải bù bằng một yếu tố khác đúng hai lần để giữ nguyên độ sáng. Ba yếu tố này đổi ba thứ khác nhau: chuyển động, chiều sâu trường ảnh và nhiễu.",
+    "tags": [
+      "nhiep-anh",
+      "phoi-sang",
+      "danh-doi"
+    ],
+    "src": "Ray, Applied Photographic Optics"
+  },
+  {
+    "id": "na-337",
+    "cat": "nghe-thuat",
+    "sub": "nhiep-anh-dien-anh",
+    "t": "Chiều sâu trường ảnh phụ thuộc kích thước cảm biến, và đó là lý do ảnh điện thoại khó xoá phông thật",
+    "s": "Cảm biến nhỏ cho chiều sâu trường ảnh sâu hơn ở cùng góc nhìn và khẩu độ. Hiệu ứng xoá phông trên điện thoại phần lớn do phần mềm dựng lại.",
+    "tags": [
+      "cam-bien",
+      "xoa-phong",
+      "dien-thoai"
+    ],
+    "src": "Ray, Applied Photographic Optics"
+  },
+  {
+    "id": "na-338",
+    "cat": "nghe-thuat",
+    "sub": "nhiep-anh-dien-anh",
+    "t": "Phim ảnh dùng khoảng 24 hình mỗi giây, nhưng cảm giác chuyển động không đến từ 'lưu ảnh trên võng mạc'",
+    "s": "Giải thích lưu ảnh võng mạc đã bị bác bỏ; cơ chế đúng gồm chuyển động biểu kiến và hiệu ứng phi. Đây là một trong các sai lầm dai dẳng nhất trong sách về điện ảnh.",
+    "tags": [
+      "chuyen-dong-bieu-kien",
+      "dien-anh",
+      "huyen-thoai"
+    ],
+    "src": "Anderson & Anderson, Journal of Film and Video (1993)"
+  },
+  {
+    "id": "na-339",
+    "cat": "nghe-thuat",
+    "sub": "nhiep-anh-dien-anh",
+    "t": "Máu giả trong phim đen trắng thường làm bằng sirô sô cô la vì nó cho độ tương phản đúng",
+    "s": "Máu đỏ thật lên phim đen trắng trông quá nhạt. Cảnh tắm trong phim Psycho năm 1960 dùng đúng thủ thuật này.",
+    "tags": [
+      "phim-den-trang",
+      "hieu-ung",
+      "lich-su"
+    ],
+    "src": "Rebello, Alfred Hitchcock and the Making of Psycho (1990)"
+  },
+  {
+    "id": "na-340",
+    "cat": "nghe-thuat",
+    "sub": "nhiep-anh-dien-anh",
+    "t": "Phim quay ngoại cảnh ban đêm thường được quay ban ngày rồi xử lý cho tối đi",
+    "s": "Kỹ thuật 'day for night' dùng kính lọc và thiếu sáng có kiểm soát. Nó rẻ hơn nhiều so với chiếu sáng cả một ngoại cảnh về đêm.",
+    "tags": [
+      "day-for-night",
+      "quay-phim",
+      "ky-thuat"
+    ],
+    "src": "Bordwell & Thompson, Film Art"
+  },
+  {
+    "id": "na-341",
+    "cat": "nghe-thuat",
+    "sub": "nhiep-anh-dien-anh",
+    "t": "Âm thanh trong phim gần như luôn được dựng lại trong phòng thu chứ không phải âm thu tại hiện trường",
+    "s": "Tiếng bước chân, tiếng vải và tiếng đồ vật được người làm foley tạo lại bằng đạo cụ. Nghề này mang tên Jack Foley, kỹ thuật viên của hãng Universal thập niên 1920.",
+    "tags": [
+      "foley",
+      "am-thanh",
+      "dien-anh"
+    ],
+    "src": "Ament, The Foley Grail (2014)"
+  },
+  {
+    "id": "na-342",
+    "cat": "nghe-thuat",
+    "sub": "nhiep-anh-dien-anh",
+    "t": "Phim ảnh nén màu mạnh hơn nén độ sáng vì mắt người nhạy với độ sáng hơn nhiều",
+    "s": "Lấy mẫu màu 4:2:0 giữ đủ chi tiết độ sáng nhưng chỉ giữ một phần tư thông tin màu. Đây là lý do chữ màu đỏ trên nền đen hay bị nhoè trên video nén.",
+    "tags": [
+      "nen-video",
+      "lay-mau-mau",
+      "thi-giac"
+    ],
+    "src": "ITU-R BT.601; Poynton, Digital Video and HD"
+  },
+  {
+    "id": "na-343",
+    "cat": "nghe-thuat",
+    "sub": "kien-truc",
+    "t": "Nhà cao tầng đầu tiên chỉ 10 tầng, và nó được coi là chọc trời vì kết cấu khung thép chứ không vì chiều cao",
+    "s": "Home Insurance Building ở Chicago năm 1885 chuyển tải trọng từ tường sang khung thép. Đó là bước đổi nguyên lý, và chiều cao chỉ là hệ quả.",
+    "tags": [
+      "nha-choc-troi",
+      "khung-thep",
+      "chicago"
+    ],
+    "src": "Bảo tàng Kiến trúc Chicago; Condit, The Chicago School of Architecture"
+  },
+  {
+    "id": "na-344",
+    "cat": "nghe-thuat",
+    "sub": "kien-truc",
+    "t": "Kim tự tháp Ai Cập được xây bằng đá lấy ngay tại chỗ cho phần lõi, chỉ lớp ngoài mới là đá quý vận chuyển xa",
+    "s": "Mỏ đá vôi nằm cách Giza vài trăm mét. Điều này làm bài toán vận chuyển nhỏ hơn nhiều so với hình dung phổ biến.",
+    "tags": [
+      "kim-tu-thap",
+      "da",
+      "khai-thac"
+    ],
+    "src": "Lehner & Hawass, Giza and the Pyramids"
+  },
+  {
+    "id": "na-345",
+    "cat": "nghe-thuat",
+    "sub": "kien-truc",
+    "t": "Vòm cuốn cho phép vượt nhịp lớn bằng vật liệu chỉ chịu nén tốt như đá và gạch",
+    "s": "Đá chịu nén rất tốt nhưng chịu kéo rất kém; vòm biến toàn bộ tải trọng thành lực nén. Đây là lý do mọi công trình đá lớn trước thời có thép đều dùng vòm. Cầu vòm La Mã còn chịu tải giao thông sau 2.000 năm nhờ đúng tính chất đó, trong khi cầu bê tông cốt thép hiện đại thường xuống cấp sau 50–100 năm vì thép bên trong bị ăn mòn.",
+    "tags": [
+      "vom",
+      "da",
+      "ket-cau"
+    ],
+    "src": "Heyman, The Stone Skeleton (1995)"
+  },
+  {
+    "id": "na-347",
+    "cat": "nghe-thuat",
+    "sub": "kien-truc",
+    "t": "Cửa sổ nhỏ ở kiến trúc truyền thống vùng nóng không phải vì thiếu kính mà để giảm nhiệt bức xạ",
+    "s": "Kết hợp với tường dày và sân trong, nó tạo hệ thống làm mát thụ động. Kiến trúc hiện đại toàn kính ở vùng nhiệt đới phải bù lại bằng điều hoà công suất lớn.",
+    "tags": [
+      "kien-truc",
+      "khi-hau",
+      "lam-mat"
+    ],
+    "src": "Givoni, Man, Climate and Architecture"
+  },
+  {
+    "id": "na-348",
+    "cat": "nghe-thuat",
+    "sub": "kien-truc",
+    "t": "Nhà ống Việt Nam có hình dạng như vậy vì thuế nhà từng tính theo bề ngang mặt tiền",
+    "s": "Cách đánh thuế này từng tồn tại ở nhiều nơi, gồm cả Hà Nội thời thuộc địa và Amsterdam thế kỷ 17. Kết quả là nhà hẹp và sâu ở cả hai nơi.",
+    "tags": [
+      "nha-ong",
+      "thue",
+      "kien-truc"
+    ],
+    "src": "Logan, Hanoi: Biography of a City (2000)"
+  },
+  {
+    "id": "na-349",
+    "cat": "nghe-thuat",
+    "sub": "kien-truc",
+    "t": "Ánh sáng tự nhiên trong nhà thờ Gothic là một quyết định thần học chứ không chỉ là kỹ thuật",
+    "s": "Abbé Suger ở Saint-Denis viết rõ ý định dùng ánh sáng làm biểu tượng. Kính màu vừa kể chuyện cho người không biết chữ vừa biến ánh sáng thành vật liệu kiến trúc.",
+    "tags": [
+      "gothic",
+      "kinh-mau",
+      "suger"
+    ],
+    "src": "Panofsky, Abbot Suger on the Abbey Church of St.-Denis (1946)"
+  },
+  {
+    "id": "na-350",
+    "cat": "nghe-thuat",
+    "sub": "kien-truc",
+    "t": "Sân vận động và nhà hát phải tính đường nhìn cho hàng ghế sau, và thông số đó gọi là giá trị C",
+    "s": "Nó là khoảng chênh cao giữa tầm mắt hàng sau và đỉnh đầu hàng trước, thường 60–120 mm. Chính thông số này quyết định độ dốc khán đài.",
+    "tags": [
+      "khan-dai",
+      "duong-nhin",
+      "thiet-ke"
+    ],
+    "src": "Neufert, Architects' Data; hướng dẫn thiết kế sân vận động của FIFA"
+  },
+  {
+    "id": "na-351",
+    "cat": "nghe-thuat",
+    "sub": "chu-va-thiet-ke",
+    "t": "Chữ Helvetica ra đời năm 1957 và tên gốc của nó là Neue Haas Grotesk",
+    "s": "Nó được đổi tên để dễ bán ở thị trường quốc tế, lấy từ tên Latinh của Thuỵ Sĩ. Đây là một trong các phông được dùng nhiều nhất thế giới trong biển báo và nhận diện thương hiệu.",
+    "tags": [
+      "helvetica",
+      "phong-chu",
+      "lich-su"
+    ],
+    "src": "Bảo tàng Nghệ thuật Hiện đại New York; Hustwit, Helvetica (2007)"
+  },
+  {
+    "id": "na-352",
+    "cat": "nghe-thuat",
+    "sub": "chu-va-thiet-ke",
+    "t": "Chiều cao chữ thường quan trọng hơn cỡ chữ danh nghĩa khi so hai phông",
+    "s": "Hai phông cùng cỡ 12 điểm có thể trông chênh nhau tới 20% về độ lớn thị giác. Đây là lý do đổi phông thường phải chỉnh lại cả cỡ chữ và khoảng cách dòng.",
+    "tags": [
+      "x-height",
+      "phong-chu",
+      "thiet-ke"
+    ],
+    "src": "Bringhurst, The Elements of Typographic Style"
+  },
+  {
+    "id": "na-353",
+    "cat": "nghe-thuat",
+    "sub": "chu-va-thiet-ke",
+    "t": "Khoảng cách giữa các chữ cái được điều chỉnh theo từng cặp, và một phông chuyên nghiệp có hàng nghìn cặp như vậy",
+    "s": "Bảng kerning xử lý các cặp gây hở như A với V hoặc T với o. Phông miễn phí thường thiếu bảng này và đó là khác biệt dễ nhận nhất về chất lượng.",
+    "tags": [
+      "kerning",
+      "phong-chu",
+      "thiet-ke"
+    ],
+    "src": "Adobe Type Technology; Bringhurst, The Elements of Typographic Style"
+  },
+  {
+    "id": "na-354",
+    "cat": "nghe-thuat",
+    "sub": "chu-va-thiet-ke",
+    "t": "Biển báo giao thông dùng phông riêng được thiết kế để đọc được ở tốc độ cao trong điều kiện xấu",
+    "s": "Phông Highway Gothic của Mỹ và Transport của Anh đều tối ưu cho khoảng cách nhìn xa. Thay phông biển báo là một dự án kỹ thuật kéo dài nhiều năm chứ không phải quyết định thẩm mỹ.",
+    "tags": [
+      "bien-bao",
+      "phong-chu",
+      "giao-thong"
+    ],
+    "src": "US FHWA Standard Highway Signs; Kinneir & Calvert (1963)"
+  },
+  {
+    "id": "na-355",
+    "cat": "nghe-thuat",
+    "sub": "chu-va-thiet-ke",
+    "t": "Logo đơn giản dễ nhớ hơn logo phức tạp, và các thương hiệu lớn đều đã đơn giản hoá logo theo thời gian",
+    "s": "Xu hướng này tăng tốc từ khi màn hình nhỏ trở thành nơi hiển thị chính. Logo phải nhận ra được ở kích thước 16 điểm ảnh của biểu tượng ứng dụng.",
+    "tags": [
+      "logo",
+      "don-gian-hoa",
+      "thuong-hieu"
+    ],
+    "src": "Bảo tàng Thiết kế London; hướng dẫn nhận diện của các hãng lớn"
+  },
+  {
+    "id": "na-356",
+    "cat": "nghe-thuat",
+    "sub": "chu-va-thiet-ke",
+    "t": "Chữ Braille có 6 chấm cho 64 tổ hợp, không đủ cho mọi ký tự nên nó dùng ký hiệu chuyển ngữ cảnh",
+    "s": "Louis Braille phát triển nó năm 1824 khi 15 tuổi, dựa trên một hệ mã quân sự cho phép đọc trong bóng tối. Nó chỉ được chấp nhận rộng rãi sau khi ông qua đời.",
+    "tags": [
+      "braille",
+      "chu-viet",
+      "lich-su"
+    ],
+    "src": "World Braille Usage, UNESCO"
+  },
+  {
+    "id": "na-358",
+    "cat": "nghe-thuat",
+    "sub": "bao-ton-nghe-thuat",
+    "t": "Tác phẩm nghệ thuật đương đại làm từ vật liệu dễ hỏng đặt ra bài toán bảo tồn chưa có lời giải",
+    "s": "Tác phẩm dùng sô cô la, mỡ động vật hoặc bóng đèn neon cụ thể sẽ biến mất hoặc phải thay thế. Bảo tàng phải phỏng vấn nghệ sĩ để biết cái gì được phép thay và cái gì không.",
+    "tags": [
+      "nghe-thuat-duong-dai",
+      "bao-ton",
+      "vat-lieu"
+    ],
+    "src": "Tate, Conservation of Modern and Contemporary Art"
+  },
+  {
+    "id": "na-359",
+    "cat": "nghe-thuat",
+    "sub": "bao-ton-nghe-thuat",
+    "t": "Đèn LED trong bảo tàng an toàn hơn đèn halogen vì nó không phát tia tử ngoại và ít nhiệt",
+    "s": "Chuyển sang LED giúp tăng thời gian trưng bày cho phép của nhiều hiện vật nhạy sáng. Cái giá là phổ ánh sáng LED không liên tục nên phải chọn loại có chỉ số hoàn màu cao.",
+    "tags": [
+      "led",
+      "bao-tang",
+      "chieu-sang"
+    ],
+    "src": "CIE 157:2004; Bảo tàng Anh, hướng dẫn chiếu sáng"
+  },
+  {
+    "id": "na-360",
+    "cat": "nghe-thuat",
+    "sub": "bao-ton-nghe-thuat",
+    "t": "Nhiều hiện vật khai quật hỏng nhanh hơn sau khi được đưa lên khỏi lòng đất so với hàng nghìn năm nằm dưới",
+    "s": "Môi trường chôn vùi ổn định về độ ẩm và thiếu oxy. Đội quân đất nung Tần Thuỷ Hoàng mất màu sơn chỉ trong vài phút sau khi tiếp xúc không khí khô.",
+    "tags": [
+      "khao-co",
+      "bao-ton",
+      "dat-nung"
+    ],
+    "src": "Bảo tàng Tần Thuỷ Hoàng; ICCROM"
+  },
+  {
+    "id": "na-361",
+    "cat": "nghe-thuat",
+    "sub": "bao-ton-nghe-thuat",
+    "t": "Số hoá không phải giải pháp bảo tồn dài hạn vì định dạng và vật mang tin cũng hỏng",
+    "s": "Ổ cứng có tuổi thọ vài năm, định dạng tệp lỗi thời sau vài thập kỷ. Lưu trữ số bền vững đòi hỏi di chuyển dữ liệu định kỳ chứ không phải ghi một lần rồi để đó.",
+    "tags": [
+      "so-hoa",
+      "luu-tru",
+      "dinh-dang"
+    ],
+    "src": "Thư viện Quốc hội Mỹ, Digital Preservation; ISO 14721 OAIS"
+  },
+  {
+    "id": "na-362",
+    "cat": "nghe-thuat",
+    "sub": "mau-va-chat-lieu",
+    "t": "Vàng lá dùng trong tranh tôn giáo mỏng tới mức 1 gam vàng phủ được khoảng 1 mét vuông",
+    "s": "Nó được dát bằng cách búa liên tục giữa các lớp da. Chi phí thật của nền vàng nằm ở công dát và công dán chứ không ở lượng vàng.",
+    "tags": [
+      "vang-la",
+      "tranh",
+      "ky-thuat"
+    ],
+    "src": "Bảo tàng Quốc gia London, Technical Bulletin"
+  },
+  {
+    "id": "na-363",
+    "cat": "nghe-thuat",
+    "sub": "hoi-hoa",
+    "t": "Kích thước tranh trong bảo tàng thường nhỏ hơn nhiều so với hình dung của người xem ảnh chụp",
+    "s": "Mona Lisa chỉ 77 nhân 53 centimet. Ngược lại, nhiều bức trừu tượng thế kỷ 20 lớn tới mức không chụp lại được cảm giác đứng trước chúng.",
+    "tags": [
+      "kich-thuoc",
+      "tranh",
+      "cam-nhan"
+    ],
+    "src": "Bảo tàng Louvre; MoMA"
+  },
+  {
+    "id": "na-364",
+    "cat": "nghe-thuat",
+    "sub": "nhiep-anh-dien-anh",
+    "t": "Ảnh chân dung dùng ống kính tele vì ống kính góc rộng làm biến dạng khuôn mặt ở cự ly gần",
+    "s": "Biến dạng đến từ khoảng cách chụp chứ không từ ống kính, nhưng ống tele buộc người chụp đứng xa hơn. Tiêu cự 85–135 mm cho tỉ lệ khuôn mặt tự nhiên nhất.",
+    "tags": [
+      "chan-dung",
+      "tieu-cu",
+      "bien-dang"
+    ],
+    "src": "Ray, Applied Photographic Optics; Cooper và cộng sự, Journal of Vision (2012)"
+  },
+  {
+    "id": "na-365",
+    "cat": "nghe-thuat",
+    "sub": "am-thanh-va-nhac-cu",
+    "t": "Tiếng ồn trắng, hồng và nâu khác nhau ở cách năng lượng phân bố theo tần số",
+    "s": "Ồn trắng có năng lượng đều ở mọi tần số, ồn hồng giảm 3 dB mỗi quãng tám, ồn nâu giảm 6 dB. Tai người nghe ồn hồng là 'đều' nhất vì thính giác cũng phân bố theo quãng tám.",
+    "tags": [
+      "tieng-on",
+      "pho-tan-so",
+      "thinh-giac"
+    ],
+    "src": "Rossing, The Science of Sound"
+  },
+  {
+    "id": "na-366",
+    "cat": "nghe-thuat",
+    "sub": "ly-thuyet-nhac",
+    "t": "Nhạc cụ chỉnh theo hệ bình quân không có quãng nào hoàn toàn đúng ngoài quãng tám",
+    "s": "Quãng năm bình quân hẹp hơn quãng năm thuần khoảng 2 xu, quãng ba trưởng rộng hơn tới 14 xu. Ca sĩ và nhạc cụ dây tự do thường tự chỉnh về quãng thuần khi hát bè.",
+    "tags": [
+      "binh-quan",
+      "quang-thuan",
+      "hoa-thanh"
+    ],
+    "src": "Barbour, Tuning and Temperament"
+  },
+  {
+    "id": "na-367",
+    "cat": "nghe-thuat",
+    "sub": "kien-truc",
+    "t": "Cầu thang xoắn ở lâu đài châu Âu thường xoắn theo chiều thuận kim đồng hồ khi đi lên",
+    "s": "Giả thuyết phổ biến là để người phòng thủ đi xuống thuận tay phải còn người tấn công đi lên bị cột trụ cản. Bằng chứng cho chủ đích này yếu hơn nhiều so với mức độ phổ biến của câu chuyện.",
+    "tags": [
+      "cau-thang",
+      "lau-dai",
+      "tranh-cai"
+    ],
+    "src": "Bảo tàng Chiến tranh Hoàng gia Anh; Historic Environment Scotland"
+  },
+  {
+    "id": "na-368",
+    "cat": "nghe-thuat",
+    "sub": "chu-va-thiet-ke",
+    "t": "Bàn phím QWERTY không được thiết kế để làm người ta gõ chậm lại",
+    "s": "Bố cục này giải quyết vấn đề kẹt thanh gõ trên máy chữ cơ bằng cách tách các cặp chữ hay đi liền nhau. Nghiên cứu so sánh với bố cục Dvorak cho chênh lệch tốc độ rất nhỏ.",
+    "tags": [
+      "qwerty",
+      "ban-phim",
+      "huyen-thoai"
+    ],
+    "src": "Liebowitz & Margolis, Journal of Law and Economics (1990)"
+  },
+  {
+    "id": "na-369",
+    "cat": "nghe-thuat",
+    "sub": "bao-ton-nghe-thuat",
+    "t": "Nhiều bức tranh nổi tiếng đã bị cắt nhỏ đi so với kích thước gốc",
+    "s": "Bức 'Đội tuần đêm' của Rembrandt bị cắt bốn cạnh năm 1715 để vừa một bức tường. Trí tuệ nhân tạo đã được dùng để dựng lại phần thiếu dựa trên một bản sao cùng thời.",
+    "tags": [
+      "rembrandt",
+      "cat-tranh",
+      "phuc-dung"
+    ],
+    "src": "Rijksmuseum, Operation Night Watch (2021)"
+  },
+  {
+    "id": "na-370",
+    "cat": "nghe-thuat",
+    "sub": "nhiep-anh-dien-anh",
+    "t": "Định dạng ảnh JPEG nén mất mát, nên mỗi lần lưu lại là một lần mất thêm chất lượng",
+    "s": "Ảnh mở ra sửa rồi lưu 10 lần có thể xuất hiện nhiễu khối rõ rệt. PNG và các định dạng không mất mát không có vấn đề này nhưng dung lượng lớn hơn nhiều.",
+    "tags": [
+      "jpeg",
+      "nen",
+      "anh"
+    ],
+    "src": "ISO/IEC 10918; Wallace, Communications of the ACM (1991)"
+  },
+  {
+    "id": "na-371",
+    "cat": "nghe-thuat",
+    "sub": "mau-va-chat-lieu",
+    "t": "Mắt người nhạy với màu lục hơn hai màu còn lại, và cảm biến máy ảnh được thiết kế theo đúng thiên lệch đó",
+    "s": "Ma trận Bayer có số ô lọc lục gấp đôi ô đỏ và ô lam. Cùng lý do, tín hiệu độ sáng trong video được tính với trọng số lục lớn nhất.",
+    "tags": [
+      "thi-giac",
+      "bayer",
+      "do-sang"
+    ],
+    "src": "ITU-R BT.709; Bayer (1976)"
+  },
+  {
+    "id": "na-372",
+    "cat": "nghe-thuat",
+    "sub": "kien-truc",
+    "t": "Mái cong ở đình chùa Việt Nam không chỉ để đẹp — nó hắt nước mưa ra xa chân cột gỗ",
+    "s": "Độ vươn của mái thường bằng khoảng một phần ba chiều cao cột. Cột gỗ mục từ chân lên, nên giữ chân cột khô là điều kiện để công trình sống qua nhiều thế kỷ.",
+    "tags": [
+      "dinh-chua",
+      "mai",
+      "kien-truc-go"
+    ],
+    "src": "Nguyễn Bá Đang, Kiến trúc gỗ truyền thống Việt Nam; Cục Di sản văn hoá"
+  },
+  {
+    "id": "na-373",
+    "cat": "nghe-thuat",
+    "sub": "mau-va-chat-lieu",
+    "t": "Mực tàu truyền thống làm từ bồ hóng và keo da, và nó bền hơn phần lớn mực hiện đại",
+    "s": "Hạt carbon gần như không phản ứng hoá học nên chữ viết bằng mực tàu trên giấy tốt giữ nguyên hàng nghìn năm. Mực nhuộm gốc thuốc nhuộm hữu cơ thì phai dưới ánh sáng.",
+    "tags": [
+      "muc-tau",
+      "carbon",
+      "bao-quan"
+    ],
+    "src": "Bảo tàng Anh; Thư viện Quốc gia Trung Quốc"
+  }
+]

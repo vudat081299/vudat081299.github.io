@@ -104,19 +104,6 @@
     "src": "Gapminder, Misconception Study; Hans Rosling, Factfulness (2018)"
   },
   {
-    "id": "xh-109",
-    "cat": "xa-hoi",
-    "sub": "van-hoa-truyen-thong",
-    "t": "Tin tức chọn lọc theo tính bất thường, nên xem tin nhiều làm bạn ước lượng sai thế giới",
-    "s": "Sự kiện được đưa tin vì nó hiếm; điều thường xảy ra thì không thành tin. Kết hợp với heuristic sẵn có — ta ước lượng tần suất bằng độ dễ nhớ — kết quả là người theo dõi tin tức nhiều thường đánh giá quá cao nguy cơ tội phạm, khủng bố và tai nạn máy bay.",
-    "tags": [
-      "truyen-thong",
-      "rui-ro",
-      "thien-kien"
-    ],
-    "src": "Nguyên lý news values (Galtung & Ruge, 1965); Slovic, 'Perception of Risk', Science (1987)"
-  },
-  {
     "id": "xh-110",
     "cat": "xa-hoi",
     "sub": "van-hoa-truyen-thong",
@@ -169,19 +156,6 @@
     "src": "Chenoweth & Stephan, Why Civil Resistance Works (2011)"
   },
   {
-    "id": "xh-114",
-    "cat": "xa-hoi",
-    "sub": "the-che-hop-tac",
-    "t": "Định luật sắt của chế độ đầu sỏ: mọi tổ chức lớn đều sinh ra một nhóm nhỏ nắm quyền",
-    "s": "Michels quan sát rằng ngay cả các đảng cam kết dân chủ nhất cũng phát triển bộ máy chuyên nghiệp, và bộ máy đó dần có lợi ích riêng. Điều này không nói dân chủ vô nghĩa — nó nói rằng cơ chế kiểm soát phải được thiết kế chống lại một xu hướng có thật, chứ không dựa vào thiện chí.",
-    "tags": [
-      "to-chuc",
-      "quyen-luc",
-      "the-che"
-    ],
-    "src": "Robert Michels, Political Parties (1911)"
-  },
-  {
     "id": "xh-115",
     "cat": "xa-hoi",
     "sub": "the-che-hop-tac",
@@ -206,19 +180,6 @@
       "canh-tranh"
     ],
     "src": "Kleiner & Krueger, Journal of Labor Economics (2013); tổng quan của Council of Economic Advisers (2015)"
-  },
-  {
-    "id": "xh-117",
-    "cat": "xa-hoi",
-    "sub": "do-thi-giao-thong",
-    "t": "Giao thông tắc vì nhu cầu tự cảm ứng, nên xây thêm đường chỉ hoãn được vấn đề",
-    "s": "Nghiên cứu trên các đô thị Mỹ cho thấy tổng quãng đường xe chạy tăng gần đúng bằng tỉ lệ tăng chiều dài đường. Cách duy nhất có bằng chứng để giảm tắc lâu dài là định giá việc sử dụng đường — thu phí theo giờ cao điểm — chứ không phải tăng công suất.",
-    "tags": [
-      "giao-thong",
-      "do-thi",
-      "chinh-sach"
-    ],
-    "src": "Duranton & Turner, American Economic Review (2011); kết quả thu phí ùn tắc tại London, Stockholm, Singapore"
   },
   {
     "id": "xh-118",
@@ -312,19 +273,6 @@
     "src": "Gregory Clark, The Son Also Rises (2014); phê bình phương pháp trong nhiều bài phản biện kinh tế học"
   },
   {
-    "id": "xh-125",
-    "cat": "xa-hoi",
-    "sub": "bat-binh-dang",
-    "t": "Chuyển tiền mặt vô điều kiện cho người nghèo cho kết quả tốt hơn nhiều người dự đoán",
-    "s": "Trong hàng chục thử nghiệm ngẫu nhiên ở nhiều nước, tiền mặt trao thẳng làm tăng tiêu dùng, tài sản và thu nhập, và không làm tăng chi cho rượu hay thuốc lá. Kết quả này bền vững tới mức nó trở thành chuẩn so sánh cho các chương trình viện trợ khác.",
-    "tags": [
-      "ngheo",
-      "vien-tro",
-      "bang-chung"
-    ],
-    "src": "Evans & Popova, World Bank Research Observer (2017); Haushofer & Shapiro, QJE (2016)"
-  },
-  {
     "id": "xh-126",
     "cat": "xa-hoi",
     "sub": "the-che-hop-tac",
@@ -338,36 +286,10 @@
     "src": "Acemoglu & Robinson, Why Nations Fail (2012); Acemoglu, Johnson & Robinson, AER (2001)"
   },
   {
-    "id": "xh-127",
-    "cat": "xa-hoi",
-    "sub": "the-che-hop-tac",
-    "t": "Tham nhũng vặt và tham nhũng lớn cần hai loại thuốc khác nhau",
-    "s": "Tham nhũng vặt giảm mạnh khi bỏ đi các cơ hội tuỳ nghi — số hoá thủ tục, bỏ tiếp xúc trực tiếp, công khai bảng giá. Tham nhũng ở tầng cao thì không, vì nó nằm ở khâu thiết kế luật chứ không ở khâu thực thi. Nhầm hai loại dẫn tới các chiến dịch trông rất bận rộn mà không đổi được gì.",
-    "tags": [
-      "tham-nhung",
-      "the-che",
-      "chinh-sach"
-    ],
-    "src": "Olken & Pande, Annual Review of Economics (2012)"
-  },
-  {
-    "id": "xh-128",
-    "cat": "xa-hoi",
-    "sub": "the-che-hop-tac",
-    "t": "Minh bạch không tự động tạo trách nhiệm giải trình",
-    "s": "Công bố dữ liệu chỉ có tác dụng khi có ai đó vừa có động cơ vừa có quyền lực để hành động dựa trên dữ liệu ấy. Nhiều chương trình minh bạch thất bại vì thiếu mắt xích thứ hai — thông tin được công khai, đọc bởi không ai, và không dẫn tới hậu quả nào.",
-    "tags": [
-      "minh-bach",
-      "the-che",
-      "chinh-sach"
-    ],
-    "src": "Fox, Development in Practice (2007); Kosack & Fung, Annual Review of Political Science (2014)"
-  },
-  {
     "id": "xh-129",
     "cat": "xa-hoi",
     "sub": "bau-cu-chinh-tri",
-    "t": "Định lý cử tri trung vị: hai đảng có xu hướng tiến về giữa",
+    "t": "Định lý cử tri trung vị: trong hệ 2 lựa chọn trên 1 chiều quan điểm, cả hai bên đều dịch về vị trí trung vị",
     "s": "Trong hệ thống hai lựa chọn với một chiều quan điểm, chiến lược tối ưu của mỗi bên là dịch về phía cử tri ở vị trí trung vị. Đây là lý do các cương lĩnh trông giống nhau hơn ta mong đợi — và mô hình này hỏng khi cử tri không xếp trên một chiều duy nhất.",
     "tags": [
       "bau-cu",
@@ -401,19 +323,6 @@
       "so-sanh"
     ],
     "src": "Fowler, Quarterly Journal of Political Science (2013); dữ liệu IDEA về bỏ phiếu bắt buộc"
-  },
-  {
-    "id": "xh-132",
-    "cat": "xa-hoi",
-    "sub": "the-che-hop-tac",
-    "t": "Cải cách thường thất bại vì bỏ qua chi phí chuyển đổi, không vì thiết kế sai",
-    "s": "Một chính sách tốt hơn ở trạng thái cuối vẫn có thể thất bại nếu quãng đường tới đó tạo ra người thua rõ ràng và người thắng mơ hồ. Đây là lý do các cải cách thành công thường kèm cơ chế đền bù cho nhóm chịu thiệt — không phải vì công bằng mà vì khả thi.",
-    "tags": [
-      "cai-cach",
-      "chinh-sach",
-      "chuyen-doi"
-    ],
-    "src": "Fernandez & Rodrik, American Economic Review (1991)"
   },
   {
     "id": "xh-133",
@@ -609,18 +518,5 @@
       "hieu-lam"
     ],
     "src": "Dữ liệu nhân khẩu học lịch sử; Our World in Data, 'Life Expectancy'"
-  },
-  {
-    "id": "xh-148",
-    "cat": "xa-hoi",
-    "sub": "the-che-hop-tac",
-    "t": "Nguyên tắc phòng ngừa cũng có chi phí, và chi phí đó thường không được tính",
-    "s": "Cấm hoặc trì hoãn một công nghệ vì rủi ro chưa rõ nghe có vẻ an toàn, nhưng phương án hiện trạng cũng có tỉ lệ tử vong và thiệt hại của nó. Quyết định đúng đòi hỏi so sánh hai rủi ro, chứ không phải so một rủi ro với con số không.",
-    "tags": [
-      "rui-ro",
-      "chinh-sach",
-      "danh-doi"
-    ],
-    "src": "Cass Sunstein, Laws of Fear (2005)"
   }
 ]

@@ -53,58 +53,6 @@
     "src": "Nielsen và cộng sự, PLOS ONE (2013)"
   },
   {
-    "id": "tl-105",
-    "cat": "tam-ly",
-    "sub": "huyen-thoai-tam-ly",
-    "t": "Hiệu ứng Mozart là hiểu sai một nghiên cứu nhỏ về 36 sinh viên",
-    "s": "Nghiên cứu gốc thấy nghe Mozart cải thiện nhẹ một bài xoay hình trong khoảng 10–15 phút, không nói gì về trí thông minh hay trẻ sơ sinh. Truyền thông biến nó thành 'nghe Mozart cho con thông minh', và cả một ngành hàng ra đời. Hiệu ứng thật ra đến từ tâm trạng và mức tỉnh táo, và nhạc pop cũng làm được. Phân tích tổng hợp sau đó cho thấy tác dụng đến từ tâm trạng và mức tỉnh táo — bất cứ thứ gì bạn thích nghe cũng có hiệu ứng tương tự.",
-    "tags": [
-      "huyen-thoai",
-      "am-nhac",
-      "tri-thong-minh"
-    ],
-    "src": "Rauscher, Shaw & Ky, Nature (1993); Chabris, Nature (1999); Pietschnig và cộng sự (2010)"
-  },
-  {
-    "id": "tl-106",
-    "cat": "tam-ly",
-    "sub": "huyen-thoai-tam-ly",
-    "t": "Thí nghiệm nhà tù Stanford không phải bằng chứng như nó được kể",
-    "s": "Băng ghi âm và tài liệu lưu trữ công bố sau này cho thấy 'cai ngục' được hướng dẫn phải cứng rắn, một 'tù nhân' nổi tiếng thừa nhận đã diễn cơn suy sụp, và nghiên cứu không có nhóm đối chứng. Câu 'hoàn cảnh biến người tốt thành ác' vẫn được trích dẫn khắp nơi, nhưng thí nghiệm này không chứng minh được điều đó.",
-    "tags": [
-      "lap-lai",
-      "huyen-thoai",
-      "quyen-luc"
-    ],
-    "src": "Le Texier, American Psychologist (2019); Blum, Medium/HistoryOfPsych (2018)"
-  },
-  {
-    "id": "tl-107",
-    "cat": "tam-ly",
-    "sub": "huyen-thoai-tam-ly",
-    "t": "Vụ Kitty Genovese: bài báo gốc sai gần hết chi tiết quan trọng",
-    "s": "New York Times năm 1964 viết 38 người chứng kiến mà không ai gọi cảnh sát. Xem lại hồ sơ toà án cho thấy rất ít người thật sự thấy vụ tấn công, ít nhất một người có gọi cảnh sát, và một hàng xóm đã chạy ra ôm nạn nhân. Câu chuyện sai đó lại là thứ khai sinh ra cả một dòng nghiên cứu có thật.",
-    "tags": [
-      "huyen-thoai",
-      "bao-chi",
-      "nguoi-ngoai-cuoc"
-    ],
-    "src": "Manning, Levine & Collins, American Psychologist (2007)"
-  },
-  {
-    "id": "tl-108",
-    "cat": "tam-ly",
-    "sub": "nhin-nguoi-khac",
-    "t": "Trong thí nghiệm Asch, một người đồng minh đủ phá vỡ áp lực đám đông",
-    "s": "Khi cả nhóm đồng thanh nói sai, khoảng một phần ba số lượt trả lời của người thật cũng sai theo. Nhưng chỉ cần một người khác trong nhóm nói đúng, mức tuân theo tụt xuống còn khoảng một phần tư mức cũ. Đây là lý do người đầu tiên dám nói khác trong một cuộc họp có giá trị vượt xa nội dung họ nói.",
-    "tags": [
-      "nhom",
-      "ap-luc",
-      "dung-cam"
-    ],
-    "src": "Solomon Asch, Scientific American (1955)"
-  },
-  {
     "id": "tl-109",
     "cat": "tam-ly",
     "sub": "nhin-nguoi-khac",
@@ -169,19 +117,6 @@
     "src": "Anderson & Simester, Quantitative Marketing and Economics (2003)"
   },
   {
-    "id": "tl-114",
-    "cat": "tam-ly",
-    "sub": "thien-kien",
-    "t": "Người ta ghét sự mơ hồ hơn ghét rủi ro",
-    "s": "Cho chọn giữa một bình có đúng 50 bi đỏ 50 bi đen, và một bình không biết tỉ lệ, đa số chọn bình đã biết — dù đặt cược vào màu nào cũng vậy, tức là lựa chọn của họ mâu thuẫn về mặt toán học. Đây là lý do người ta ở lại công việc chán thay vì đổi sang thứ chưa rõ.",
-    "tags": [
-      "rui-ro",
-      "bat-dinh",
-      "lua-chon"
-    ],
-    "src": "Daniel Ellsberg, Quarterly Journal of Economics (1961)"
-  },
-  {
     "id": "tl-115",
     "cat": "tam-ly",
     "sub": "thien-kien",
@@ -206,19 +141,6 @@
       "ky-vong"
     ],
     "src": "Barsky và cộng sự, JAMA (2002); Howick và cộng sự, tổng quan hệ thống (2018)"
-  },
-  {
-    "id": "tl-117",
-    "cat": "tam-ly",
-    "sub": "huyen-thoai-tam-ly",
-    "t": "Thí nghiệm kẹo dẻo dự báo tương lai yếu hơn nhiều khi tính đến hoàn cảnh gia đình",
-    "s": "Câu chuyện quen thuộc: trẻ nhịn ăn kẹo để lấy hai cái sau đó thì lớn lên thành đạt hơn. Lặp lại với mẫu lớn hơn và đa dạng hơn cho thấy phần lớn liên hệ đó biến mất khi kiểm soát thu nhập và học vấn của cha mẹ. Trẻ nghèo không nhịn không phải vì thiếu ý chí, mà vì kinh nghiệm dạy rằng lời hứa hay bị bể.",
-    "tags": [
-      "lap-lai",
-      "tre-em",
-      "y-chi"
-    ],
-    "src": "Mischel và cộng sự (1972); Watts, Duncan & Quan, Psychological Science (2018)"
   },
   {
     "id": "tl-118",
@@ -431,7 +353,7 @@
     "id": "tl-134",
     "cat": "tam-ly",
     "sub": "thien-kien",
-    "t": "Đồng ý một việc nhỏ làm bạn dễ đồng ý việc lớn sau đó",
+    "t": "Chân trong cửa: nhận dán một sticker nhỏ trước làm tỉ lệ đồng ý dựng tấm biển lớn trong sân tăng từ 17% lên 76%",
     "s": "Kỹ thuật chân trong cửa: người vừa nhận dán một miếng sticker nhỏ ủng hộ an toàn giao thông sau đó chấp nhận dựng một tấm biển to xấu xí trong sân nhà với tỉ lệ cao hơn nhiều. Cơ chế là nhu cầu nhất quán với hình ảnh bản thân vừa được thiết lập.",
     "tags": [
       "thuyet-phuc",
@@ -496,7 +418,7 @@
     "id": "tl-139",
     "cat": "tam-ly",
     "sub": "cam-xuc",
-    "t": "Nhịp tim đập nhanh vì lý do khác có thể bị hiểu nhầm thành rung động",
+    "t": "Cầu treo Capilano: 50% đàn ông vừa qua cầu chông chênh gọi lại cho nữ phỏng vấn viên, so với 12% ở nhóm qua cầu vững",
     "s": "Đàn ông vừa đi qua một cầu treo cao chông chênh có xu hướng gọi lại cho người phỏng vấn nữ nhiều hơn hẳn so với nhóm đi qua cầu thấp vững chãi. Não cảm nhận được trạng thái kích thích nhưng phải đoán nguyên nhân — và nó thường đoán theo thứ nổi bật nhất trước mắt.",
     "tags": [
       "cam-xuc",
@@ -558,33 +480,6 @@
     "src": "Gneezy & Rustichini, Journal of Legal Studies (2000)"
   },
   {
-    "id": "tl-144",
-    "cat": "tam-ly",
-    "sub": "ban-than",
-    "t": "Người ta gian lận một chút, chứ không gian lận tối đa",
-    "s": "Trong hàng loạt thí nghiệm, khi có cơ hội gian lận mà không thể bị phát hiện, đa số vẫn gian lận — nhưng chỉ ở mức nhỏ đủ để tự thấy mình vẫn là người tử tế. Nhắc về một chuẩn mực đạo đức ngay trước khi hành động làm giảm mức gian lận này rõ rệt.",
-    "d": "Lưu ý quan trọng về chính nghiên cứu này: một trong những bài báo nổi tiếng nhất của nhóm — về việc ký tên ở đầu tờ khai làm giảm khai gian — đã bị rút lại năm 2021 vì dữ liệu bị phát hiện là nguỵ tạo.\n\nPhần lõi 'gian lận vừa phải' vẫn được nhiều nhóm độc lập tái lập, nhưng đây là ví dụ sống động cho việc: một kết luận hay không đủ, phải xem dữ liệu nào đứng sau nó.",
-    "tags": [
-      "dao-duc",
-      "hanh-vi",
-      "lap-lai"
-    ],
-    "src": "Mazar, Amir & Ariely, Journal of Marketing Research (2008); vụ rút bài Shu và cộng sự PNAS (2012), rút lại năm 2021"
-  },
-  {
-    "id": "tl-145",
-    "cat": "tam-ly",
-    "sub": "nhin-nguoi-khac",
-    "t": "Kỳ vọng của người khác có ảnh hưởng thật, nhưng nhỏ hơn câu chuyện Pygmalion",
-    "s": "Thí nghiệm gốc nói rằng bảo giáo viên một số học sinh sắp bứt phá sẽ khiến học sinh đó tiến bộ thật. Các phân tích tổng hợp sau đó tìm thấy hiệu ứng có tồn tại nhưng nhỏ, và mạnh nhất trong vài tuần đầu khi giáo viên chưa biết rõ học sinh.",
-    "tags": [
-      "ky-vong",
-      "giao-duc",
-      "lap-lai"
-    ],
-    "src": "Rosenthal & Jacobson (1968); Raudenbush, Journal of Educational Psychology (1984); Jussim & Harber (2005)"
-  },
-  {
     "id": "tl-146",
     "cat": "tam-ly",
     "sub": "thien-kien",
@@ -598,19 +493,6 @@
     "src": "Brosnan & de Waal, Nature (2003); Card và cộng sự, American Economic Review (2012)"
   },
   {
-    "id": "tl-147",
-    "cat": "tam-ly",
-    "sub": "tri-nho",
-    "t": "Bạn đánh giá cả một bộ phim, kỳ nghỉ hay công việc bằng vài khoảnh khắc",
-    "s": "Đã có trong quy tắc đỉnh–kết, nhưng hệ quả thực hành thì ít người dùng: bạn thiết kế được ký ức của người khác. Kết thúc một cuộc họp căng bằng một điểm tích cực cụ thể, hay kết thúc chuyến đi bằng một bữa ăn tử tế, đổi hẳn cách toàn bộ trải nghiệm được nhớ lại.",
-    "tags": [
-      "tri-nho",
-      "trai-nghiem",
-      "thiet-ke"
-    ],
-    "src": "Kahneman và cộng sự, Psychological Science (1993); Redelmeier & Kahneman, Pain (1996)"
-  },
-  {
     "id": "tl-148",
     "cat": "tam-ly",
     "sub": "cam-xuc",
@@ -622,19 +504,6 @@
       "suc-khoe-tinh-than"
     ],
     "src": "Pennebaker & Beall (1986); Frattaroli, Psychological Bulletin (2006)"
-  },
-  {
-    "id": "tl-150",
-    "cat": "tam-ly",
-    "sub": "dong-luc",
-    "t": "Người mệt và người đói ra quyết định giống nhau: chọn cái quen thuộc",
-    "s": "Khi nguồn lực nhận thức bị hạn chế — do thiếu ngủ, do vội, do đang lo chuyện khác — người ta chuyển sang lối tắt: chọn mặc định, chọn thứ đã dùng, chọn thứ được gợi ý sẵn. Đây là lý do các quyết định lớn không nên đặt cuối ngày và không nên đặt trong lúc đang gánh khủng hoảng khác.",
-    "tags": [
-      "quyet-dinh",
-      "met-moi",
-      "loi-tat"
-    ],
-    "src": "Mullainathan & Shafir, Scarcity (2013); Pocheptsova và cộng sự, Journal of Marketing Research (2009)"
   },
   {
     "id": "tl-151",
@@ -713,18 +582,5 @@
       "thoi-quen"
     ],
     "src": "George Loewenstein, Organizational Behavior and Human Decision Processes (1996)"
-  },
-  {
-    "id": "tl-158",
-    "cat": "tam-ly",
-    "sub": "dong-luc",
-    "t": "Nghỉ ngơi chủ động khác hẳn nghỉ bằng cách lướt điện thoại",
-    "s": "Các nghiên cứu về phục hồi sau công việc cho thấy điều giúp nạp lại năng lượng là tách khỏi công việc về mặt tâm trí, thư giãn, làm chủ một thứ gì đó, và có quyền tự quyết. Lướt tin thụ động cho ít cả bốn — đó là lý do một tối 'nghỉ ngơi' vẫn có thể kết thúc trong cảm giác cạn kiệt.",
-    "tags": [
-      "nghi-ngoi",
-      "cong-viec",
-      "phuc-hoi"
-    ],
-    "src": "Sonnentag & Fritz, Journal of Occupational Health Psychology (2007)"
   }
 ]

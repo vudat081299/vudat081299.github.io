@@ -3,9 +3,12 @@
 """
 factlint — bộ kiểm tra cho thư viện fact.
 
-Ba việc:
+Bốn việc:
   check            kiểm tra cấu trúc (id trùng, cat/sub sai, thiếu src, viz không tồn tại)
                    + quét cả thư viện tìm cặp fact gần trùng nhau.
+  verify           cổng ĐỊNH NGHĨA (CLAUDE.md §1): loại fact tường thuật, fact lời khuyên,
+                   fact meta về nghiên cứu, định luật đặt tên, xu hướng hành vi không mỏ neo.
+                   Mức LOẠI là chặn commit; mức XEM là phải đọc bằng mắt.
   near "<văn bản>" tra một fact SẮP thêm: in ra các fact có sẵn giống nó nhất,
                    để quyết định thêm mới / gộp vào cái cũ. Đây là bước 3 của pipeline
                    trong CLAUDE.md.
@@ -321,6 +324,164 @@ def cmd_near(argv):
     return 0
 
 
+# ---------------------------------------------------------------- cổng định nghĩa (§1)
+#
+# Một fact phải qua ba cổng: nói về THẾ GIỚI (không phải về người đọc), có MỎ NEO cứng
+# (số / cơ chế / mốc thời gian), và gọn trong MỘT CÂU. §1.1 của CLAUDE.md liệt kê sáu loại
+# bị loại thẳng. Phần dưới bắt máy móc những loại nhận diện được bằng mặt chữ.
+#
+# Hai mức: 'LOẠI' = vi phạm chắc chắn, phải xoá hoặc viết lại. 'XEM' = nghi ngờ, đọc bằng mắt.
+# Quy tắc chỉ soi TIÊU ĐỀ khi việc nhắc tới nghiên cứu/tranh cãi trong phần tóm tắt là hợp lệ
+# (§4 quy tắc 3 bắt buộc nêu tranh cãi trong "s"/"d").
+
+HAS_DIGIT = re.compile(r'\d')
+
+# "nên" nghĩa "should" chứ không phải liên từ "cho nên". Chỉ tính khi ngay sau nó là một
+# động từ hành động — cách này bỏ sót vài trường hợp nhưng gần như không báo nhầm.
+NEN_VERB = ('mua|bán|chọn|làm|dùng|nói|hỏi|viết|đọc|ăn|uống|ngủ|tập|chạy|đi|đến|gọi|nhắn'
+            '|đầu tư|tiết kiệm|tính|đặt|để|tránh|bắt đầu|dừng|giữ|gửi|trả|xin|đợi|chờ'
+            '|kiểm tra|đo|ghi|học|nghỉ|thử|xem|chia|gộp|tắt|bật')
+RE_NEN = re.compile(r'\b(nên|không nên) (%s)\b' % NEN_VERB)
+
+RULES_REJECT = [
+    ('loi-khuyen', 'lời khuyên / câu mệnh lệnh', 't', [
+        RE_NEN,
+        re.compile(r'\b(hãy|đừng|chớ)\b'),
+        re.compile(r'(cái|việc|điều|những gì) nên làm'),
+        re.compile(r'cách (tốt|nhanh|hiệu quả|dễ|an toàn|chắc) nhất'),
+        re.compile(r'\bmẹo\b'),
+    ]),
+    ('tuong-thuat', 'tường thuật một vụ việc / thí nghiệm', 't', [
+        re.compile(r'^(Vụ|Câu chuyện|Chuyện|Thí nghiệm|Bài báo|Trường hợp|Sự kiện) '),
+        re.compile(r'(thí nghiệm|nghiên cứu) (nhà tù|của [A-ZÀ-ỸĐ])'),
+    ]),
+    ('meta-nghien-cuu', 'nói về số phận một nghiên cứu, không nói về thế giới', 't', [
+        re.compile(r'không nhân bản|không lặp lại được|bị rút lại'),
+        re.compile(r'(bài báo|nghiên cứu|kết quả) gốc'),
+        re.compile(r'hiểu sai một nghiên cứu'),
+        re.compile(r'không phải bằng chứng'),
+        re.compile(r'(yếu|mạnh) hơn (nhiều )?khi tính đến'),
+    ]),
+]
+
+# Ba quy tắc dưới chỉ LOẠI khi fact không có mỏ neo số nào trong t+s.
+RULES_REJECT_IF_NO_DIGIT = [
+    ('dinh-luat-dat-ten', 'định luật/nguyên lý đặt theo tên người, không mỏ neo', 't', [
+        re.compile(r'\b(Định luật|Nguyên lý|Dao cạo|Quy tắc|Nghịch lý|Hiệu ứng) [A-ZÀ-ỸĐ]'),
+    ]),
+    ('so-sanh-cach-lam', 'so sánh hai cách làm mà không có con số', 't', [
+        re.compile(r'(hiệu quả|tác dụng|ăn thua|có ích|hữu hiệu|ổn|đúng|chuẩn) hơn'),
+        re.compile(r'\b(tốt|dở|tệ|nhanh|dễ) hơn (hẳn )?(khi|nếu|nhiều)'),
+    ]),
+    ('xu-huong-mo-ho', 'xu hướng hành vi không mỏ neo', 'ts', [
+        re.compile(r'(người ta|con người|ta|bạn) (thường|hay|có xu hướng|dễ)\b'),
+        re.compile(r'\bcó xu hướng\b'),
+        re.compile(r'(phần lớn|nhiều|đa số) người (ta )?(thấy|tin|cảm|nghĩ)'),
+    ]),
+]
+
+RULES_WARN = [
+    ('huong-dan-doc', 'câu hướng dẫn người đọc thao tác — tách khỏi tiêu đề', 't', [
+        re.compile(r'(thử ngay|thử đọc|thử xem|kéo thanh trượt|bấm nút|tự kiểm tra|nhìn vào đây)'),
+    ]),
+    ('ngoi-thu-hai', 'viết cho người đọc thay vì về thế giới', 't', [
+        re.compile(r'(giúp bạn|để bạn|làm bạn dễ|khiến bạn nên|bạn nên|của bạn sẽ)'),
+    ]),
+    ('do-du', 'câu tự hạ mức chắc chắn ngay ở tiêu đề', 't', [
+        re.compile(r'(có thể đã|có lẽ|dường như|hình như|được cho là)'),
+    ]),
+]
+
+
+def verify_fact(f):
+    """Trả về (severity, rule_id, note) hoặc None nếu đạt. severity: 'LOẠI' | 'XEM'."""
+    t = f.get('t', '')
+    ts = t + ' ' + f.get('s', '')
+    has_digit = bool(HAS_DIGIT.search(ts))
+
+    for rid, note, field, pats in RULES_REJECT:
+        hay = t if field == 't' else ts
+        for p in pats:
+            if p.search(hay):
+                return ('LOẠI', rid, note)
+
+    for rid, note, field, pats in RULES_REJECT_IF_NO_DIGIT:
+        hay = t if field == 't' else ts
+        for p in pats:
+            if p.search(hay):
+                return ('LOẠI' if not has_digit else 'XEM', rid, note)
+
+    for rid, note, field, pats in RULES_WARN:
+        hay = t if field == 't' else ts
+        for p in pats:
+            if p.search(hay):
+                return ('XEM', rid, note)
+
+    if not has_digit and len(ts) < 220:
+        return ('XEM', 'thieu-mo-neo', 'không có con số nào trong t+s — kiểm tra cổng mỏ neo')
+    return None
+
+
+def cmd_verify(argv):
+    man, facts = load()
+    only_cat = only_file = None
+    show_warn = '-v' in argv or '--all' in argv
+    if '--cat' in argv:
+        only_cat = argv[argv.index('--cat') + 1]
+    if '--file' in argv:
+        only_file = os.path.basename(argv[argv.index('--file') + 1])
+
+    def in_scope(f):
+        if only_cat and f.get('cat') != only_cat:
+            return False
+        if only_file and os.path.basename(f.get('_file', '')) != only_file:
+            return False
+        return True
+
+    rej, warn = [], []
+    for f in facts:
+        if not in_scope(f):
+            continue
+        v = verify_fact(f)
+        if not v:
+            continue
+        (rej if v[0] == 'LOẠI' else warn).append((f, v))
+
+    scanned = sum(1 for f in facts if in_scope(f))
+    print('%d fact được soi · %d LOẠI · %d XEM' % (scanned, len(rej), len(warn)))
+
+    if rej:
+        by_rule = defaultdict(list)
+        for f, v in rej:
+            by_rule[v[1]].append((f, v))
+        print('\n— LOẠI (%d) — phải xoá hoặc viết lại —' % len(rej))
+        for rid in sorted(by_rule, key=lambda k: -len(by_rule[k])):
+            items = by_rule[rid]
+            print('\n  [%s] %s — %d fact' % (rid, items[0][1][2], len(items)))
+            for f, _ in items:
+                print('    %-8s %s  %s' % (f['id'], '[%s]' % f.get('cat'), f['t']))
+
+    if warn:
+        if show_warn:
+            by_rule = defaultdict(list)
+            for f, v in warn:
+                by_rule[v[1]].append((f, v))
+            print('\n— XEM (%d) — đọc bằng mắt rồi tự quyết —' % len(warn))
+            for rid in sorted(by_rule, key=lambda k: -len(by_rule[k])):
+                items = by_rule[rid]
+                print('\n  [%s] %s — %d fact' % (rid, items[0][1][2], len(items)))
+                for f, _ in items:
+                    print('    %-8s %s  %s' % (f['id'], '[%s]' % f.get('cat'), f['t']))
+        else:
+            print('\n%d fact mức XEM (thêm -v để xem).' % len(warn))
+
+    if rej:
+        print('\nCổng định nghĩa: TRƯỢT. Xem CLAUDE.md §1.1.')
+        return 1
+    print('\nCổng định nghĩa: OK.')
+    return 0
+
+
 def cmd_stats(argv):
     man, facts = load()
     by_cat = Counter(f.get('cat') for f in facts)
@@ -356,6 +517,8 @@ def main():
         return cmd_check(rest)
     if cmd == 'near':
         return cmd_near(rest)
+    if cmd == 'verify':
+        return cmd_verify(rest)
     if cmd == 'stats':
         return cmd_stats(rest)
     print(__doc__)

@@ -1,73 +1,5 @@
 [
   {
-    "id": "td-101",
-    "cat": "tu-duy",
-    "sub": "mo-hinh-tu-duy",
-    "t": "Dao cạo Occam không nói 'đơn giản hơn thì đúng hơn'",
-    "s": "Nguyên bản là: đừng nhân thêm thực thể khi không cần. Nó nói về số giả định phải thêm vào, không phải về việc câu chuyện nghe có gọn tai hay không. Một lời giải thích ngắn gọn nhưng đòi hỏi một âm mưu toàn cầu thì vi phạm dao cạo Occam nặng hơn là một lời giải thích dài dòng mà chỉ dùng những thứ đã biết.",
-    "tags": [
-      "logic",
-      "mo-hinh-tu-duy",
-      "hieu-lam"
-    ],
-    "src": "William of Ockham (thế kỷ 14); diễn giải hiện đại trong Elliott Sober, Ockham's Razors (2015)"
-  },
-  {
-    "id": "td-102",
-    "cat": "tu-duy",
-    "sub": "ra-quyet-dinh",
-    "t": "Quyết định một chiều và quyết định hai chiều cần hai tốc độ khác nhau",
-    "s": "Cửa một chiều là quyết định gần như không quay lại được — bán công ty, bỏ việc, ký hợp đồng 5 năm. Cửa hai chiều thì đi qua rồi quay lại được với chi phí thấp. Sai lầm tổ chức phổ biến nhất là dùng quy trình cửa một chiều cho quyết định cửa hai chiều, khiến mọi thứ chậm lại vì sợ hãi không cần thiết.",
-    "d": "Cách áp dụng cụ thể: trước khi mở một cuộc họp bàn bạc, hỏi trước một câu — 'nếu sai thì mất bao lâu và bao nhiêu tiền để quay lại?'.\n\nNếu câu trả lời là 'một tuần và vài triệu', hãy giao cho một người quyết luôn. Nếu là 'không quay lại được', hãy làm ngược lại: chậm hẳn xuống, viết ra, tìm người phản biện. Phần lớn tổ chức chậm không phải vì họ cân nhắc nhiều, mà vì họ cân nhắc như nhau cho mọi thứ.",
-    "tags": [
-      "ra-quyet-dinh",
-      "quan-ly",
-      "toc-do"
-    ],
-    "src": "Jeff Bezos, thư gửi cổ đông Amazon 1997 và 2015"
-  },
-  {
-    "id": "td-103",
-    "cat": "tu-duy",
-    "sub": "nhan-qua",
-    "t": "Vụ săn chuột ở Hà Nội năm 1902 là ví dụ có thật về động cơ phản tác dụng",
-    "s": "Chính quyền thuộc địa Pháp treo thưởng cho mỗi cái đuôi chuột nộp lên để diệt chuột trong hệ thống cống Hà Nội. Người dân bắt chuột, cắt đuôi rồi thả chúng ra để chúng đẻ tiếp; một số còn nuôi chuột lấy đuôi. Chiến dịch kết thúc trong thất bại.",
-    "d": "Câu chuyện 'rắn hổ mang ở Delhi' được kể phổ biến hơn nhưng gần như không có tài liệu gốc nào chứng thực. Vụ chuột Hà Nội thì có hồ sơ lưu trữ thuộc địa, được sử gia Michael G. Vann dựng lại.\n\nBài học ứng dụng thẳng vào công việc: bạn thưởng cho cái gì đo được, người ta sẽ tối ưu đúng cái đó chứ không phải mục tiêu bạn muốn. Thưởng theo số dòng code, số cuộc gọi, số ticket đóng — kết quả sẽ là nhiều dòng code, nhiều cuộc gọi, nhiều ticket, không phải sản phẩm tốt hơn.",
-    "tags": [
-      "dong-co",
-      "chinh-sach",
-      "viet-nam"
-    ],
-    "src": "Michael G. Vann, 'Of Rats, Rice, and Race: The Great Hanoi Rat Massacre', French Colonial History (2003)"
-  },
-  {
-    "id": "td-104",
-    "cat": "tu-duy",
-    "sub": "du-doan",
-    "t": "Ước lượng Fermi: bạn đoán được con số mình chưa từng biết, sai không quá một bậc",
-    "s": "Chia câu hỏi lớn thành vài câu hỏi nhỏ mà bạn đoán được, rồi nhân lại. Sai số của các bước thường triệt tiêu nhau, nên kết quả hiếm khi lệch quá 10 lần. Đây là kỹ năng phân biệt người biết nghĩ với người chỉ biết tra cứu.",
-    "d": "Ví dụ: Hà Nội cần bao nhiêu thợ cắt tóc? Khoảng 8 triệu dân, mỗi người cắt ~8 lần/năm → 64 triệu lượt. Một thợ cắt ~10 lượt/ngày, ~300 ngày/năm → 3.000 lượt/năm. Vậy cần khoảng 21.000 thợ.\n\nKhông cần đúng. Cần đúng bậc. Khi ai đó nói với bạn một con số thị trường 'tiềm năng 10 tỷ đô', một phép Fermi 30 giây thường đủ để biết nên tin hay không.",
-    "tags": [
-      "uoc-luong",
-      "so-lieu",
-      "ky-nang"
-    ],
-    "src": "Phương pháp gắn với Enrico Fermi; xem Lawrence Weinstein & John Adam, Guesstimation (2008)"
-  },
-  {
-    "id": "td-105",
-    "cat": "tu-duy",
-    "sub": "ra-quyet-dinh",
-    "t": "Kết quả tốt không chứng minh quyết định tốt, và ngược lại",
-    "s": "Đánh giá một quyết định bằng kết quả của nó là thiên kiến kết quả. Trong mọi việc có yếu tố may rủi — đầu tư, tuyển người, khởi nghiệp — quyết định đúng vẫn thua, quyết định ẩu vẫn có lúc thắng. Muốn học được gì, phải hỏi 'lúc đó tôi biết gì và tôi đã cân nhắc thế nào', không phải 'cuối cùng thì sao'. Annie Duke gọi việc đánh giá quyết định bằng kết quả là 'resulting'.",
-    "tags": [
-      "ra-quyet-dinh",
-      "may-rui",
-      "phan-hoi"
-    ],
-    "src": "Annie Duke, Thinking in Bets (2018); Baron & Hershey, Journal of Personality and Social Psychology (1988)"
-  },
-  {
     "id": "td-106",
     "cat": "tu-duy",
     "sub": "hoc-va-nho",
@@ -82,19 +14,6 @@
     "src": "Rozenblit & Keil, Cognitive Science (2002); Fernbach và cộng sự, Psychological Science (2013)"
   },
   {
-    "id": "td-107",
-    "cat": "tu-duy",
-    "sub": "hoc-va-nho",
-    "t": "Kỹ thuật Feynman: dạy lại cho người không biết gì là bài kiểm tra thật",
-    "s": "Viết ra khái niệm bằng ngôn ngữ của một người mới, không dùng thuật ngữ. Chỗ nào bạn buộc phải quay lại thuật ngữ hoặc nói vòng vo, đó chính là chỗ bạn chưa hiểu. Quay lại nguồn, vá đúng chỗ đó, rồi viết lại.",
-    "tags": [
-      "hoc-tap",
-      "viet",
-      "kiem-tra"
-    ],
-    "src": "Phương pháp phổ biến hoá từ cách làm việc của Richard Feynman; xem James Gleick, Genius (1992)"
-  },
-  {
     "id": "td-108",
     "cat": "tu-duy",
     "sub": "hoc-va-nho",
@@ -106,19 +25,6 @@
       "phuong-phap"
     ],
     "src": "Hermann Ebbinghaus (1885); tổng quan: Cepeda và cộng sự, Psychological Bulletin (2006)"
-  },
-  {
-    "id": "td-109",
-    "cat": "tu-duy",
-    "sub": "hoc-va-nho",
-    "t": "Luyện tập xen kẽ khó chịu hơn nhưng hiệu quả hơn luyện tập theo khối",
-    "s": "Tập một kỹ năng cho tới khi thành thạo rồi mới sang kỹ năng khác cho cảm giác tiến bộ nhanh. Trộn lẫn các loại bài tập cho cảm giác chật vật hơn, điểm luyện tập thấp hơn — nhưng kết quả kiểm tra sau đó cao hơn rõ rệt. Cảm giác trôi chảy trong lúc học là một chỉ báo sai.",
-    "tags": [
-      "hoc-tap",
-      "luyen-tap",
-      "nguoc-truc-giac"
-    ],
-    "src": "Rohrer & Taylor, Applied Cognitive Psychology (2007); Bjork & Bjork, 'Desirable difficulties' (2011)"
   },
   {
     "id": "td-110",
@@ -186,19 +92,6 @@
     "src": "Philip Tetlock, Expert Political Judgment (2005) và Superforecasting (2015)"
   },
   {
-    "id": "td-115",
-    "cat": "tu-duy",
-    "sub": "du-doan",
-    "t": "Nói xác suất bằng số làm bạn khó lươn lẹo với chính mình",
-    "s": "'Có khả năng' được người nghe hiểu từ 25% tới 90% tuỳ người. Một tài liệu tình báo Mỹ nổi tiếng về vụ vịnh Con Lợn dùng chữ 'khả năng thành công hợp lý' — về sau tác giả cho biết ý ông là khoảng 3 trên 100. Ghi số vào, bạn mới kiểm điểm được mình sau đó.",
-    "tags": [
-      "xac-suat",
-      "ngon-ngu",
-      "du-bao"
-    ],
-    "src": "Sherman Kent, 'Words of Estimative Probability', CIA Studies in Intelligence (1964)"
-  },
-  {
     "id": "td-116",
     "cat": "tu-duy",
     "sub": "ra-quyet-dinh",
@@ -212,36 +105,10 @@
     "src": "Haynes và cộng sự, New England Journal of Medicine (2009); Atul Gawande, The Checklist Manifesto (2009)"
   },
   {
-    "id": "td-117",
-    "cat": "tu-duy",
-    "sub": "rui-ro",
-    "t": "Hiệu ứng Lindy: thứ càng sống lâu càng có kỳ vọng sống thêm lâu",
-    "s": "Với những thứ không hư hỏng theo tuổi — ý tưởng, sách, công nghệ, thể chế — tuổi đời là bằng chứng về độ bền. Một cuốn sách đã sống 200 năm có triển vọng sống thêm lâu hơn cuốn ra năm ngoái. Ngược hẳn với con người và đồ vật, nơi càng già thì càng gần cuối.",
-    "tags": [
-      "thoi-gian",
-      "rui-ro",
-      "mo-hinh-tu-duy"
-    ],
-    "src": "Benoit Mandelbrot (1982); phổ biến hoá bởi Nassim Taleb, Antifragile (2012)"
-  },
-  {
-    "id": "td-118",
-    "cat": "tu-duy",
-    "sub": "rui-ro",
-    "t": "Rủi ro là thứ bạn tính được xác suất; bất định là thứ bạn không tính được",
-    "s": "Trò roulette là rủi ro: bạn biết luật chơi và tính được kỳ vọng. Một thị trường mới, một công nghệ mới, một đối thủ mới là bất định: bạn còn không biết đầy đủ danh sách kết cục. Nhầm hai thứ này là lý do người ta gắn con số ba chữ số thập phân cho những thứ vốn không đo được.",
-    "tags": [
-      "rui-ro",
-      "bat-dinh",
-      "kinh-te"
-    ],
-    "src": "Frank Knight, Risk, Uncertainty and Profit (1921)"
-  },
-  {
     "id": "td-119",
     "cat": "tu-duy",
     "sub": "lap-luan-sai",
-    "t": "Ai cũng thấy thiên kiến ở người khác và không thấy ở mình",
+    "t": "Điểm mù thiên kiến: người ta tự chấm mình ít thiên kiến hơn người trung bình ở 7 trong 8 loại thiên kiến được hỏi",
     "s": "Khi được mô tả các thiên kiến nhận thức, đa số người tin rằng mình ít bị ảnh hưởng hơn người trung bình. Lý do: ta phán xét người khác qua hành vi quan sát được, còn phán xét mình qua cảm giác nội tâm — mà cảm giác nội tâm thì không có mùi vị của thiên kiến.",
     "tags": [
       "thien-kien",
@@ -263,83 +130,6 @@
     "src": "Lee Ross & Andrew Ward, 'Naive Realism in Everyday Life' (1996)"
   },
   {
-    "id": "td-121",
-    "cat": "tu-duy",
-    "sub": "lap-luan-sai",
-    "t": "Đưa sự thật cho người tin sai thường có tác dụng, chỉ là ít hơn ta mong",
-    "s": "'Hiệu ứng phản tác dụng' — đưa bằng chứng khiến người ta tin sai chặt hơn — từng rất nổi tiếng, nhưng các nghiên cứu lặp lại quy mô lớn hầu như không tìm thấy nó. Điều chỉnh thông tin thường làm niềm tin sai giảm nhẹ; cái ít thay đổi là hành vi bỏ phiếu hay mua hàng.",
-    "tags": [
-      "thong-tin-sai",
-      "thuyet-phuc",
-      "lap-lai"
-    ],
-    "src": "Wood & Porter, Political Behavior (2019); Nyhan, PNAS (2021)"
-  },
-  {
-    "id": "td-122",
-    "cat": "tu-duy",
-    "sub": "lap-luan-sai",
-    "t": "Nguỵ biện xạ thủ Texas: vẽ bia sau khi đã bắn",
-    "s": "Bắn nát vách kho rồi mới vẽ vòng tròn quanh chỗ dày đạn nhất, và tuyên bố mình thiện xạ. Trong đời thật, đó là chọn khung thời gian sau khi nhìn dữ liệu, chọn chỉ số sau khi biết kết quả, hoặc kể lại một chuỗi trùng hợp và gọi nó là quy luật.",
-    "tags": [
-      "nguy-bien",
-      "du-lieu",
-      "hieu-lam"
-    ],
-    "src": "Thuật ngữ dịch tễ học; xem Gary Smith, Standard Deviations (2014)"
-  },
-  {
-    "id": "td-123",
-    "cat": "tu-duy",
-    "sub": "lap-luan-sai",
-    "t": "Chiến thuật lô cốt: nêu quan điểm gây sốc, khi bị vặn thì rút về phiên bản hiển nhiên",
-    "s": "Người tranh luận giữ hai phiên bản của cùng một luận điểm: một cái mạnh và khó bảo vệ (nơi họ muốn bạn tin), một cái yếu và gần như ai cũng đồng ý (nơi họ chạy vào khi bị tấn công). Nhận ra thế cờ này, cách hoá giải là hỏi thẳng: 'bạn đang bảo vệ phiên bản nào?'",
-    "tags": [
-      "nguy-bien",
-      "tranh-luan"
-    ],
-    "src": "Nicholas Shackel, Metaphilosophy (2005)"
-  },
-  {
-    "id": "td-124",
-    "cat": "tu-duy",
-    "sub": "du-doan",
-    "t": "Định luật Hofstadter: mọi việc luôn lâu hơn bạn tưởng, kể cả khi đã tính đến định luật này",
-    "s": "Câu đùa tự quy chiếu này mô tả đúng một hiện tượng đo được: người ta ước lượng thời gian dựa trên kịch bản mọi thứ suôn sẻ, và không cộng vào những trục trặc mà kinh nghiệm nói là chắc chắn có. Bản thân việc biết mình hay ước lượng thiếu cũng không sửa được bao nhiêu.",
-    "tags": [
-      "ke-hoach",
-      "thoi-gian",
-      "du-an"
-    ],
-    "src": "Douglas Hofstadter, Gödel, Escher, Bach (1979)"
-  },
-  {
-    "id": "td-125",
-    "cat": "tu-duy",
-    "sub": "du-doan",
-    "t": "Cách sửa ước lượng sai: hỏi 'những việc giống thế này thường mất bao lâu?'",
-    "s": "Góc nhìn từ trong ra tưởng tượng dự án cụ thể của bạn. Góc nhìn từ ngoài vào tìm một lớp việc tương tự đã hoàn thành và lấy phân bố thực tế của chúng. Trong khảo sát các dự án hạ tầng lớn, cách thứ hai giảm sai lệch mạnh — và đây là kỹ thuật duy nhất đã được chứng minh có hiệu quả với nguỵ biện lập kế hoạch.",
-    "tags": [
-      "ke-hoach",
-      "du-bao",
-      "du-an"
-    ],
-    "src": "Kahneman & Tversky (1979); Flyvbjerg, 'Reference class forecasting', International Journal of Project Management (2006)"
-  },
-  {
-    "id": "td-126",
-    "cat": "tu-duy",
-    "sub": "ra-quyet-dinh",
-    "t": "Quy tắc 10/10/10: quyết định này để lại cảm giác gì sau 10 phút, 10 tháng, 10 năm?",
-    "s": "Phần lớn quyết định tệ là do cảm xúc ngắn hạn được cân nặng hơn hậu quả dài hạn — nổi nóng gửi email, mua theo cơn, nhận việc vì sĩ diện. Ba mốc thời gian buộc bạn đặt cùng một quyết định lên ba cái cân khác nhau, và thường thì hai cái cân sau nói ngược cái đầu.",
-    "tags": [
-      "ra-quyet-dinh",
-      "cam-xuc",
-      "cong-cu"
-    ],
-    "src": "Suzy Welch, 10-10-10 (2009); dùng lại trong Chip & Dan Heath, Decisive (2013)"
-  },
-  {
     "id": "td-127",
     "cat": "tu-duy",
     "sub": "ra-quyet-dinh",
@@ -351,19 +141,6 @@
       "ra-quyet-dinh"
     ],
     "src": "Herbert Simon (1956); Iyengar, Wells & Schwartz, Psychological Science (2006)"
-  },
-  {
-    "id": "td-128",
-    "cat": "tu-duy",
-    "sub": "ra-quyet-dinh",
-    "t": "Nghiên cứu 'quá nhiều lựa chọn làm bạn tê liệt' không lặp lại được",
-    "s": "Thí nghiệm mứt năm 2000 — quầy 24 loại bán ít hơn quầy 6 loại — trở thành kinh điển. Một phân tích tổng hợp 50 thí nghiệm sau đó cho hiệu ứng trung bình gần bằng không. Quá tải lựa chọn có tồn tại trong vài điều kiện hẹp, nhưng không phải quy luật chung như thường được kể.",
-    "tags": [
-      "lua-chon",
-      "lap-lai",
-      "hieu-lam"
-    ],
-    "src": "Iyengar & Lepper, JPSP (2000); Scheibehenne, Greifeneder & Todd, Journal of Consumer Research (2010)"
   },
   {
     "id": "td-129",
@@ -396,7 +173,7 @@
     "id": "td-131",
     "cat": "tu-duy",
     "sub": "ra-quyet-dinh",
-    "t": "Hiệu ứng IKEA: tự lắp một thứ làm bạn định giá nó cao hơn hẳn",
+    "t": "Hiệu ứng IKEA: người tự gấp lấy một chiếc hộp giấy trả 0,78 đô cho nó, người nhận hộp gấp sẵn chỉ trả 0,48 đô",
     "s": "Người tự gấp hộp giấy hoặc tự lắp đồ nội thất sẵn sàng trả cao hơn cho chính sản phẩm đó so với người nhận bản làm sẵn — và họ đánh giá tác phẩm của mình ngang với tác phẩm của thợ. Đây là lý do ta khó bỏ dự án mình đã đổ công vào, kể cả khi nó rõ ràng không còn đáng.",
     "tags": [
       "thien-kien",
@@ -404,44 +181,6 @@
       "du-an"
     ],
     "src": "Norton, Mochon & Ariely, Journal of Consumer Psychology (2012)"
-  },
-  {
-    "id": "td-132",
-    "cat": "tu-duy",
-    "sub": "mo-hinh-tu-duy",
-    "t": "Định luật cái búa: có búa trong tay thì mọi thứ trông như đinh",
-    "s": "Người thạo một công cụ sẽ định nghĩa lại vấn đề cho vừa với công cụ đó. Luật sư thấy vấn đề hợp đồng, kỹ sư thấy vấn đề kỹ thuật, nhà tiếp thị thấy vấn đề truyền thông — và tất cả đều thành thật. Cách chống rẻ nhất là hỏi một người có bộ công cụ khác hẳn.",
-    "tags": [
-      "mo-hinh-tu-duy",
-      "chuyen-mon"
-    ],
-    "src": "Abraham Maslow, The Psychology of Science (1966)"
-  },
-  {
-    "id": "td-133",
-    "cat": "tu-duy",
-    "sub": "mo-hinh-tu-duy",
-    "t": "Định luật Gall: hệ thống phức tạp chạy được luôn tiến hoá từ hệ thống đơn giản chạy được",
-    "s": "Hệ thống phức tạp thiết kế từ đầu trên giấy gần như luôn hỏng, và không sửa được bằng cách vá — phải bắt đầu lại từ một hệ thống đơn giản chạy được. Điều này áp dụng cho phần mềm, quy trình công ty và cả thói quen cá nhân.",
-    "tags": [
-      "he-thong",
-      "thiet-ke",
-      "du-an"
-    ],
-    "src": "John Gall, Systemantics (1975)"
-  },
-  {
-    "id": "td-134",
-    "cat": "tu-duy",
-    "sub": "mo-hinh-tu-duy",
-    "t": "Định luật Ashby: chỉ đa dạng mới hấp thụ được đa dạng",
-    "s": "Bộ điều khiển phải có ít nhất bằng số trạng thái mà hệ thống nó điều khiển có thể rơi vào. Dịch sang đời thường: một quy trình có 3 nhánh xử lý không thể phục vụ tốt 30 kiểu tình huống khách hàng, và bạn không sửa được bằng cách viết quy trình dài hơn — phải trao quyền phán đoán cho con người.",
-    "tags": [
-      "he-thong",
-      "quan-ly",
-      "dieu-khien"
-    ],
-    "src": "W. Ross Ashby, An Introduction to Cybernetics (1956)"
   },
   {
     "id": "td-135",
@@ -457,19 +196,6 @@
     "src": "George Miller, Psychological Review (1956); Nelson Cowan, Behavioral and Brain Sciences (2001)"
   },
   {
-    "id": "td-136",
-    "cat": "tu-duy",
-    "sub": "ra-quyet-dinh",
-    "t": "Kế hoạch dạng 'khi X thì tôi làm Y' hiệu quả hơn hẳn quyết tâm chung chung",
-    "s": "Thay vì 'tôi sẽ tập thể dục nhiều hơn', viết 'thứ Ba và thứ Năm, 7 giờ sáng, tôi mang giày và chạy quanh hồ'. Tổng hợp 94 nghiên cứu cho thấy dạng nếu-thì này có tác động trung bình lớn tới việc thật sự hoàn thành mục tiêu, vì nó chuyển gánh nặng từ ý chí sang tín hiệu môi trường.",
-    "tags": [
-      "thoi-quen",
-      "muc-tieu",
-      "hanh-vi"
-    ],
-    "src": "Gollwitzer & Sheeran, Advances in Experimental Social Psychology (2006)"
-  },
-  {
     "id": "td-137",
     "cat": "tu-duy",
     "sub": "ra-quyet-dinh",
@@ -481,19 +207,6 @@
       "tri-hoan"
     ],
     "src": "Laibson, Quarterly Journal of Economics (1997); O'Donoghue & Rabin, American Economic Review (1999)"
-  },
-  {
-    "id": "td-138",
-    "cat": "tu-duy",
-    "sub": "ra-quyet-dinh",
-    "t": "Hợp đồng Ulysses: tự trói mình từ trước, vì bạn của tương lai sẽ yếu hơn bạn bây giờ",
-    "s": "Ulysses bảo thuỷ thủ trói mình vào cột buồm trước khi nghe tiếng hát mê hoặc. Phiên bản đời thường: chuyển tiền tự động vào tài khoản tiết kiệm ngay ngày lương về, xoá ứng dụng khỏi điện thoại, để đồ ăn vặt ở nơi khó lấy. Cơ chế chung là ra quyết định khi bạn tỉnh táo, cho lúc bạn không tỉnh táo.",
-    "tags": [
-      "y-chi",
-      "thoi-quen",
-      "tien-bac"
-    ],
-    "src": "Jon Elster, Ulysses and the Sirens (1979); Thaler & Benartzi, Journal of Political Economy (2004)"
   },
   {
     "id": "td-139",
@@ -509,31 +222,6 @@
     "src": "Desvousges và cộng sự (1992); Slovic, Judgment and Decision Making (2007)"
   },
   {
-    "id": "td-140",
-    "cat": "tu-duy",
-    "sub": "mo-hinh-tu-duy",
-    "t": "Tư duy nguyên bản chỉ đáng dùng ở vài chỗ, không phải mọi chỗ",
-    "s": "Bóc một vấn đề về các sự thật nền tảng rồi dựng lại từ đó rất mạnh — nhưng cực đắt về thời gian. Suy luận theo loại suy nhanh hơn nhiều và đúng trong đa số trường hợp thường ngày. Kỹ năng thật sự là biết chỗ nào truyền thống đang sai để bỏ công đào, chứ không phải đào lại mọi thứ.",
-    "tags": [
-      "mo-hinh-tu-duy",
-      "sang-tao"
-    ],
-    "src": "Aristotle, Physics; ứng dụng hiện đại phổ biến qua Elon Musk và giới thiết kế sản phẩm"
-  },
-  {
-    "id": "td-141",
-    "cat": "tu-duy",
-    "sub": "nhan-qua",
-    "t": "Hỏi 'vì sao' năm lần thường dừng ở nguyên nhân đầu tiên nghe hợp lý",
-    "s": "Kỹ thuật 5 Whys của Toyota rất hữu ích nhưng có một lỗ hổng: nó giả định mỗi vấn đề có một chuỗi nhân quả tuyến tính duy nhất, trong khi phần lớn sự cố có nhiều nguyên nhân đồng thời. Hai người làm 5 Whys trên cùng một sự cố thường ra hai kết luận khác nhau.",
-    "tags": [
-      "quy-trinh",
-      "phan-tich",
-      "gioi-han"
-    ],
-    "src": "Taiichi Ohno, Toyota Production System (1978); phê bình trong tài liệu an toàn hệ thống của Nancy Leveson"
-  },
-  {
     "id": "td-142",
     "cat": "tu-duy",
     "sub": "sang-tao",
@@ -545,57 +233,6 @@
       "lam-viec"
     ],
     "src": "Oppezzo & Schwartz, Journal of Experimental Psychology: Learning, Memory, and Cognition (2014)"
-  },
-  {
-    "id": "td-143",
-    "cat": "tu-duy",
-    "sub": "mo-hinh-tu-duy",
-    "t": "Định luật Sturgeon: 90% của bất cứ thứ gì cũng là rác",
-    "s": "Nhà văn Theodore Sturgeon nói câu này để đáp lại lời chê khoa học viễn tưởng toàn đồ dở — ông chỉ ra rằng văn chương chính thống, phim ảnh hay bất cứ lĩnh vực nào cũng vậy. Ứng dụng thực tế: khi so sánh hai lĩnh vực, hãy so phần tốt nhất với phần tốt nhất, đừng so đỉnh của bên này với đáy của bên kia.",
-    "tags": [
-      "danh-gia",
-      "so-sanh"
-    ],
-    "src": "Theodore Sturgeon, Venture Science Fiction (1958)"
-  },
-  {
-    "id": "td-144",
-    "cat": "tu-duy",
-    "sub": "du-doan",
-    "t": "Định luật Amara: ta phóng đại tác động ngắn hạn và xem nhẹ tác động dài hạn của công nghệ",
-    "s": "Mọi công nghệ mới đều đi qua giai đoạn được thổi phồng rồi bị chê là thất bại, trước khi lặng lẽ thay đổi mọi thứ ở quy mô mà không ai dự đoán được. Điều này đúng với Internet, điện thoại di động, thương mại điện tử — và là lý do cả người cuồng nhiệt lẫn người hoài nghi đều sai, chỉ khác thời điểm.",
-    "tags": [
-      "cong-nghe",
-      "du-bao",
-      "thoi-gian"
-    ],
-    "src": "Roy Amara, Institute for the Future (thập niên 1960–70)"
-  },
-  {
-    "id": "td-145",
-    "cat": "tu-duy",
-    "sub": "ra-quyet-dinh",
-    "t": "Sự cạn kiệt ý chí là một trong những kết quả tâm lý học lung lay nhất",
-    "s": "Ý tưởng ý chí như cơ bắp có hạn ngạch hằng ngày từng được dạy khắp nơi. Nghiên cứu lặp lại đa phòng thí nghiệm với hơn 2.000 người tìm thấy hiệu ứng gần bằng không. Nghĩa là: bạn khó tập trung buổi chiều có lý do thật, nhưng lời khuyên 'để dành ý chí cho việc quan trọng' không có nền vững.",
-    "tags": [
-      "y-chi",
-      "lap-lai",
-      "hieu-lam"
-    ],
-    "src": "Baumeister và cộng sự (1998); Hagger và cộng sự, Perspectives on Psychological Science (2016)"
-  },
-  {
-    "id": "td-146",
-    "cat": "tu-duy",
-    "sub": "ra-quyet-dinh",
-    "t": "Nghiên cứu 'thẩm phán đói bụng xử nặng hơn' có cách giải thích khác đơn giản hơn",
-    "s": "Biểu đồ nổi tiếng cho thấy tỉ lệ được ân xá tụt về gần 0 trước giờ nghỉ rồi vọt lên sau khi ăn. Phân tích lại chỉ ra thứ tự các vụ không ngẫu nhiên — vụ đơn giản, dễ chấp thuận thường được xếp đầu phiên, và luật sư có mặt hay không cũng ảnh hưởng. Hiệu ứng có thể phần lớn là do lịch xử.",
-    "tags": [
-      "lap-lai",
-      "du-lieu",
-      "hieu-lam"
-    ],
-    "src": "Danziger và cộng sự, PNAS (2011); Weinshall-Margel & Shapard, PNAS (2011); Glöckner, Judgment and Decision Making (2016)"
   },
   {
     "id": "td-147",
@@ -624,19 +261,6 @@
     "src": "Wagner và cộng sự, Nature (2004)"
   },
   {
-    "id": "td-149",
-    "cat": "tu-duy",
-    "sub": "hoc-va-nho",
-    "t": "Viết ra khiến bạn phát hiện lỗ hổng mà nói miệng che được",
-    "s": "Khi nói, bạn dùng ngữ điệu, cử chỉ và phản ứng của người nghe để lấp chỗ trống. Khi viết, những mảnh ghép thiếu hiện nguyên hình. Amazon bỏ hẳn slide cho các cuộc họp quan trọng và thay bằng bản ghi nhớ sáu trang đọc im lặng đầu buổi, chính vì lý do này.",
-    "tags": [
-      "viet",
-      "hop",
-      "tu-duy-ro-rang"
-    ],
-    "src": "Jeff Bezos, thư cổ đông Amazon (2017); nguyên tắc narrative memo của Amazon"
-  },
-  {
     "id": "td-150",
     "cat": "tu-duy",
     "sub": "hoc-va-nho",
@@ -662,31 +286,6 @@
     "src": "Hiện tượng đa so sánh; minh hoạ phổ biến: Tyler Vigen, Spurious Correlations (2015)"
   },
   {
-    "id": "td-152",
-    "cat": "tu-duy",
-    "sub": "lap-luan-sai",
-    "t": "Bạn không cần thắng để đúng: bỏ ra thứ mình tin để bị đánh giá là bước đắt nhất",
-    "s": "Nguyên tắc cốt lõi của khoa học không phải là chứng minh, mà là công khai đặt niềm tin của mình vào chỗ nó có thể bị bác. Trong công việc cũng vậy: người viết trước dự đoán rồi so với kết quả học nhanh hơn nhiều so với người chỉ giải thích sau khi biết kết quả.",
-    "tags": [
-      "khoa-hoc",
-      "du-bao",
-      "hoc-hoi"
-    ],
-    "src": "Karl Popper, The Logic of Scientific Discovery (1934); thực hành tiền đăng ký nghiên cứu hiện đại"
-  },
-  {
-    "id": "td-153",
-    "cat": "tu-duy",
-    "sub": "ra-quyet-dinh",
-    "t": "Ma trận khẩn cấp – quan trọng có lỗ hổng: việc quan trọng hiếm khi tự thấy khẩn cấp",
-    "s": "Cách chia bốn ô rất nổi tiếng, nhưng thực tế là các ô không tự dán nhãn. Mọi thứ có người khác chờ đều tự động cảm thấy khẩn cấp, còn thứ quan trọng nhất — sức khoẻ, quan hệ, kỹ năng, chiến lược — thì không bao giờ gõ cửa. Vì vậy chúng phải được đặt lịch trước, không phải được ưu tiên sau.",
-    "tags": [
-      "quan-ly-thoi-gian",
-      "uu-tien"
-    ],
-    "src": "Phổ biến qua Stephen Covey, The 7 Habits of Highly Effective People (1989); nguồn gốc gán cho Eisenhower chưa được xác thực"
-  },
-  {
     "id": "td-154",
     "cat": "tu-duy",
     "sub": "lap-luan-sai",
@@ -700,19 +299,6 @@
     "src": "West, Meserve & Stanovich, JPSP (2012); Kahan và cộng sự, Behavioural Public Policy (2017)"
   },
   {
-    "id": "td-155",
-    "cat": "tu-duy",
-    "sub": "lap-luan-sai",
-    "t": "Đặt câu hỏi 'bằng chứng nào sẽ làm tôi đổi ý?' trước khi tranh luận",
-    "s": "Nếu bạn không trả lời được, bạn không đang giữ một quan điểm mà đang giữ một danh tính. Cùng câu hỏi đặt cho phía bên kia cũng có tác dụng tương tự và ít gây thù địch hơn nhiều so với việc chỉ ra họ sai — vì nó chuyển cuộc nói chuyện từ 'ai đúng' sang 'cái gì đúng'.",
-    "tags": [
-      "tranh-luan",
-      "khoa-hoc",
-      "cong-cu"
-    ],
-    "src": "Nguyên tắc phản chứng của Popper, áp dụng thực hành trong Julia Galef, The Scout Mindset (2021)"
-  },
-  {
     "id": "td-156",
     "cat": "tu-duy",
     "sub": "lap-luan-sai",
@@ -724,31 +310,5 @@
       "danh-gia"
     ],
     "src": "Cohen, JPSP (2003)"
-  },
-  {
-    "id": "td-157",
-    "cat": "tu-duy",
-    "sub": "lap-luan-sai",
-    "t": "Nói 'tôi không biết' là một kỹ năng đắt tiền và hiếm",
-    "s": "Trong các nghiên cứu về dự báo, việc thừa nhận không biết tương quan với độ chính xác cao hơn về sau, nhưng nó lại bị người nghe trừ điểm uy tín ngay lập tức. Đây là một trong những chỗ mà phần thưởng xã hội ngắn hạn đi ngược hoàn toàn với chất lượng phán đoán dài hạn.",
-    "tags": [
-      "khiem-ton",
-      "du-bao",
-      "uy-tin"
-    ],
-    "src": "Tetlock, Superforecasting (2015); Fischhoff & Chauvin, Intelligence Analysis (2011)"
-  },
-  {
-    "id": "td-158",
-    "cat": "tu-duy",
-    "sub": "rui-ro",
-    "t": "Trong hệ thống phức tạp, mọi giải pháp đều là đánh đổi, không có 'sửa xong'",
-    "s": "Với vấn đề đơn giản có công thức đúng; với vấn đề phức tạp chỉ có các đánh đổi giữa nhiều mục tiêu không đo chung được. Người nói 'giải pháp này không có nhược điểm nào' hoặc chưa hiểu vấn đề, hoặc đang giấu chi phí ở chỗ bạn không nhìn thấy.",
-    "tags": [
-      "he-thong",
-      "danh-doi",
-      "quyet-dinh"
-    ],
-    "src": "Rittel & Webber, 'Dilemmas in a General Theory of Planning', Policy Sciences (1973); Thomas Sowell, A Conflict of Visions (1987)"
   }
 ]

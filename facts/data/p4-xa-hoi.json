@@ -1,0 +1,54 @@
+[
+  {
+    "id": "xh-204",
+    "cat": "xa-hoi",
+    "sub": "dan-so",
+    "t": "Việt Nam có khoảng 100 triệu dân và đang già hoá vào loại nhanh nhất thế giới",
+    "s": "Thời gian chuyển từ 'đang già hoá' sang 'già' ở Việt Nam ước tính khoảng 20 năm, so với hơn 100 năm ở Pháp. Điều này để lại ít thời gian chuẩn bị hệ thống an sinh.",
+    "tags": [
+      "viet-nam",
+      "gia-hoa",
+      "an-sinh"
+    ],
+    "src": "Tổng cục Thống kê; UNFPA Việt Nam"
+  },
+  {
+    "id": "xh-211",
+    "cat": "xa-hoi",
+    "sub": "do-thi-giao-thong",
+    "t": "Hơn một nửa nhân loại đã sống ở đô thị, và tỉ lệ đó vẫn đang tăng",
+    "s": "Mốc 50% được vượt qua vào khoảng năm 2007. Dự báo tới năm 2050 khoảng 68% dân số thế giới sống ở đô thị.",
+    "tags": [
+      "do-thi-hoa",
+      "dan-so",
+      "xu-huong"
+    ],
+    "src": "UN World Urbanization Prospects (2018)"
+  },
+  {
+    "id": "xh-213",
+    "cat": "xa-hoi",
+    "sub": "do-thi-giao-thong",
+    "t": "Thêm đường có thể làm giao thông tắc hơn vì nhu cầu tự cảm ứng",
+    "s": "Nghiên cứu trên các đô thị Mỹ cho thấy tăng 1% chiều dài đường cao tốc kéo theo tăng khoảng 1% tổng quãng đường xe chạy trong khoảng 10 năm. Nghĩa là làm thêm làn không giảm được tắc trong dài hạn.",
+    "tags": [
+      "nhu-cau-cam-ung",
+      "giao-thong",
+      "do-thi"
+    ],
+    "src": "Duranton & Turner, American Economic Review (2011)"
+  },
+  {
+    "id": "xh-218",
+    "cat": "xa-hoi",
+    "sub": "the-che-hop-tac",
+    "t": "Nhóm lợi ích tập trung thường thắng nhóm bị thiệt phân tán, ngay cả khi tổng thiệt hại lớn hơn tổng lợi ích",
+    "s": "Một khoản trợ cấp mang lại nhiều tiền cho vài nghìn người và lấy vài nghìn đồng của mỗi người dân. Bên được lợi có động cơ vận động mạnh, bên thiệt gần như không có động cơ nào.",
+    "tags": [
+      "hanh-dong-tap-the",
+      "loi-ich",
+      "chinh-sach"
+    ],
+    "src": "Olson, The Logic of Collective Action (1965)"
+  }
+]

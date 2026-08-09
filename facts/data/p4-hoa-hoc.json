@@ -1,0 +1,1900 @@
+[
+  {
+    "id": "hh-201",
+    "cat": "hoa-hoc",
+    "sub": "nguyen-to",
+    "t": "Chỉ có 94 nguyên tố tồn tại tự nhiên trên Trái Đất; số còn lại trong bảng tuần hoàn đều do con người tạo ra",
+    "s": "Bảng tuần hoàn hiện có 118 nguyên tố. Từ số 95 trở lên chỉ xuất hiện trong lò phản ứng hoặc máy gia tốc, và nguyên tố nặng nhất, oganesson, tồn tại chưa tới một phần nghìn giây.",
+    "tags": [
+      "bang-tuan-hoan",
+      "nguyen-to",
+      "tong-hop"
+    ],
+    "src": "IUPAC, Periodic Table of the Elements (2016)"
+  },
+  {
+    "id": "hh-202",
+    "cat": "hoa-hoc",
+    "sub": "nguyen-to",
+    "t": "Hydro và heli chiếm khoảng 98% khối lượng vật chất thường của vũ trụ; toàn bộ phần còn lại chỉ là 2%",
+    "s": "Hai nguyên tố này sinh ra trong vài phút đầu sau Vụ Nổ Lớn. Mọi nguyên tố nặng hơn, gồm carbon và oxy trong cơ thể bạn, đều được nấu trong lòng các ngôi sao sau đó.",
+    "tags": [
+      "vu-tru",
+      "nguyen-to",
+      "hydro"
+    ],
+    "src": "Bảng thành phần vũ trụ theo Planck Collaboration; Burbidge và cộng sự (1957)"
+  },
+  {
+    "id": "hh-203",
+    "cat": "hoa-hoc",
+    "sub": "nguyen-to",
+    "t": "Bốn nguyên tố oxy, carbon, hydro và nitơ chiếm khoảng 96% khối lượng cơ thể người",
+    "s": "Riêng oxy chiếm khoảng 65%, phần lớn nằm trong nước. Canxi và phospho cộng lại thêm khoảng 2,5%, chủ yếu ở xương và răng.",
+    "tags": [
+      "co-the",
+      "nguyen-to",
+      "thanh-phan"
+    ],
+    "src": "Emsley, Nature's Building Blocks; Ủy ban Quốc tế về Bảo vệ Bức xạ (ICRP) 23"
+  },
+  {
+    "id": "hh-204",
+    "cat": "hoa-hoc",
+    "sub": "nguyen-to",
+    "t": "Nguyên tố phổ biến nhất trong vỏ Trái Đất là oxy, chiếm khoảng 46% khối lượng",
+    "s": "Phần lớn nằm trong silicat chứ không ở dạng khí. Silic đứng thứ hai với khoảng 28%, và hai nguyên tố này gộp lại tạo nên gần như toàn bộ cát, đá và đất.",
+    "tags": [
+      "vo-trai-dat",
+      "oxy",
+      "silic"
+    ],
+    "src": "Cục Khảo sát Địa chất Hoa Kỳ (USGS); Rudnick & Gao (2003)"
+  },
+  {
+    "id": "hh-205",
+    "cat": "hoa-hoc",
+    "sub": "nguyen-to",
+    "t": "Vàng trên Trái Đất đều đến từ vũ trụ, và toàn bộ vàng từng khai thác chỉ đủ đổ đầy khoảng 4 bể bơi Olympic",
+    "s": "Ước tính khoảng 210.000 tấn vàng đã được khai thác trong lịch sử; với khối lượng riêng 19,3 tấn mỗi mét khối, chỗ đó là một khối lập phương cạnh khoảng 22 mét.",
+    "tags": [
+      "vang",
+      "kim-loai",
+      "tru-luong"
+    ],
+    "src": "Hội đồng Vàng Thế giới (World Gold Council), 2023"
+  },
+  {
+    "id": "hh-206",
+    "cat": "hoa-hoc",
+    "sub": "nguyen-to",
+    "t": "Nhôm từng đắt hơn vàng, và đỉnh tháp đài tưởng niệm Washington làm bằng nhôm vì lý do đó",
+    "s": "Trước quy trình Hall–Héroult năm 1886, tách nhôm khỏi quặng cực khó dù nó là kim loại phổ biến nhất trong vỏ Trái Đất. Giá nhôm rơi khoảng 200 lần trong vòng vài thập kỷ sau đó.",
+    "tags": [
+      "nhom",
+      "lich-su",
+      "gia-kim-loai"
+    ],
+    "src": "Hall (1886) & Héroult (1886); National Park Service"
+  },
+  {
+    "id": "hh-207",
+    "cat": "hoa-hoc",
+    "sub": "nguyen-to",
+    "t": "Thuỷ ngân là kim loại duy nhất ở thể lỏng tại nhiệt độ phòng, và lý do nằm ở hiệu ứng tương đối tính",
+    "s": "Electron lớp trong của thuỷ ngân chuyển động đủ nhanh để hiệu ứng tương đối làm co quỹ đạo, khiến các nguyên tử liên kết yếu với nhau. Điểm nóng chảy của nó là −38,8 °C.",
+    "tags": [
+      "thuy-ngan",
+      "tuong-doi",
+      "kim-loai"
+    ],
+    "src": "Calvo và cộng sự, Angewandte Chemie (2013)"
+  },
+  {
+    "id": "hh-208",
+    "cat": "hoa-hoc",
+    "sub": "nguyen-to",
+    "t": "Khí trơ nhóm 18 gần như không phản ứng vì lớp electron ngoài cùng đã đầy, nhưng xenon vẫn tạo được hợp chất",
+    "s": "Neil Bartlett tổng hợp hợp chất xenon đầu tiên năm 1962, phá bỏ niềm tin rằng khí hiếm hoàn toàn trơ. Heli và neon tới nay vẫn chưa cho hợp chất bền nào ở điều kiện thường.",
+    "tags": [
+      "khi-hiem",
+      "xenon",
+      "phan-ung"
+    ],
+    "src": "Bartlett, Proceedings of the Chemical Society (1962)"
+  },
+  {
+    "id": "hh-209",
+    "cat": "hoa-hoc",
+    "sub": "nguyen-to",
+    "t": "Đồng vị của cùng một nguyên tố có tính chất hoá học gần như y hệt nhưng khối lượng khác nhau",
+    "s": "Uranium-235 và uranium-238 khác nhau 3 neutron, và chỉ loại thứ nhất phân hạch dây chuyền được. Vì hoá tính giống nhau nên phải làm giàu bằng phương pháp vật lý như ly tâm khí, cực kỳ tốn kém.",
+    "tags": [
+      "dong-vi",
+      "uranium",
+      "lam-giau"
+    ],
+    "src": "IAEA; Bảng dữ liệu hạt nhân NNDC"
+  },
+  {
+    "id": "hh-210",
+    "cat": "hoa-hoc",
+    "sub": "nguyen-to",
+    "t": "Carbon tạo được nhiều hợp chất hơn tất cả các nguyên tố khác cộng lại, và con số đã vượt 200 triệu chất",
+    "s": "Nguyên nhân là carbon tạo được bốn liên kết bền với chính nó thành chuỗi, vòng và mạng lưới ba chiều. Đó là lý do hoá học hữu cơ là một ngành riêng và là lý do sự sống dựa trên carbon.",
+    "tags": [
+      "carbon",
+      "huu-co",
+      "lien-ket"
+    ],
+    "src": "Chemical Abstracts Service (CAS) Registry"
+  },
+  {
+    "id": "hh-211",
+    "cat": "hoa-hoc",
+    "sub": "phan-ung",
+    "t": "Phản ứng hoá học không tạo ra hay mất đi nguyên tử, nó chỉ sắp xếp lại chúng",
+    "s": "Lavoisier chứng minh điều này bằng cách cân kín bình phản ứng vào những năm 1780, chấm dứt thuyết phlogiston. Khối lượng chỉ 'mất' khi có khí thoát ra mà người ta quên cân.",
+    "tags": [
+      "bao-toan-khoi-luong",
+      "lavoisier",
+      "phan-ung"
+    ],
+    "src": "Lavoisier, Traité élémentaire de chimie (1789)"
+  },
+  {
+    "id": "hh-212",
+    "cat": "hoa-hoc",
+    "sub": "phan-ung",
+    "t": "Tốc độ phần lớn phản ứng hoá học tăng khoảng gấp đôi cho mỗi 10 °C tăng thêm",
+    "s": "Đây là lý do thực phẩm trong tủ lạnh 4 °C giữ được lâu gấp nhiều lần ở 25 °C, và là lý do nồi áp suất rút thời gian nấu xuống. Quan hệ chính xác hơn cho bởi phương trình Arrhenius.",
+    "tags": [
+      "toc-do-phan-ung",
+      "arrhenius",
+      "bao-quan"
+    ],
+    "src": "Van 't Hoff (1884); Arrhenius (1889)"
+  },
+  {
+    "id": "hh-213",
+    "cat": "hoa-hoc",
+    "sub": "phan-ung",
+    "t": "Chất xúc tác làm phản ứng nhanh hơn mà không bị tiêu hao, và khoảng 90% hoá chất công nghiệp được sản xuất nhờ chúng",
+    "s": "Xúc tác hạ rào năng lượng hoạt hoá chứ không thay đổi vị trí cân bằng. Bộ chuyển đổi xúc tác trên ô tô dùng bạch kim, palladi và rhodi để biến khí độc thành CO₂, nitơ và nước.",
+    "tags": [
+      "xuc-tac",
+      "cong-nghiep",
+      "o-to"
+    ],
+    "src": "Ertl, Giải Nobel Hoá học 2007; US EPA"
+  },
+  {
+    "id": "hh-214",
+    "cat": "hoa-hoc",
+    "sub": "phan-ung",
+    "t": "Lửa cần ba thứ cùng lúc: nhiên liệu, chất oxy hoá và nhiệt — bỏ bất kỳ cái nào là lửa tắt",
+    "s": "Bình chữa cháy CO₂ cắt nguồn oxy, nước cắt nhiệt, còn ngắt van gas cắt nhiên liệu. Dầu ăn cháy không được dập bằng nước vì nước sôi tức thì và bắn dầu đang cháy ra khắp nơi.",
+    "tags": [
+      "lua",
+      "chay",
+      "chua-chay"
+    ],
+    "src": "NFPA 10; Drysdale, An Introduction to Fire Dynamics"
+  },
+  {
+    "id": "hh-215",
+    "cat": "hoa-hoc",
+    "sub": "phan-ung",
+    "t": "Sắt gỉ là phản ứng với oxy và nước, và lớp gỉ không bảo vệ kim loại bên dưới như lớp oxit nhôm",
+    "s": "Oxit nhôm tạo màng đặc dày vài nanomet bám chặt, ngăn phản ứng tiếp; gỉ sắt xốp và bong ra, để lộ lớp sắt mới. Đây là lý do vỏ máy bay bằng nhôm bền còn cầu thép phải sơn lại liên tục.",
+    "tags": [
+      "gi-set",
+      "an-mon",
+      "nhom"
+    ],
+    "src": "Jones, Principles and Prevention of Corrosion"
+  },
+  {
+    "id": "hh-216",
+    "cat": "hoa-hoc",
+    "sub": "phan-ung",
+    "t": "Thang pH là thang lô-ga-rít: dung dịch pH 3 có nồng độ axit gấp 100 lần dung dịch pH 5",
+    "s": "Nước tinh khiết ở 25 °C có pH 7, dịch vị dạ dày khoảng 1,5–3,5, nước biển khoảng 8,1. Mỗi đơn vị pH tương ứng nồng độ ion hydro gấp 10 lần.",
+    "tags": [
+      "ph",
+      "axit",
+      "thang-do"
+    ],
+    "src": "Sørensen (1909); IUPAC Gold Book"
+  },
+  {
+    "id": "hh-217",
+    "cat": "hoa-hoc",
+    "sub": "phan-ung",
+    "t": "Trộn thuốc tẩy javen với chất tẩy chứa amoniac sinh ra khí cloramin độc",
+    "s": "Phản ứng giữa natri hypoclorit và amoniac tạo cloramin gây bỏng đường hô hấp. Trộn javen với axit như nước lau bồn cầu còn nguy hiểm hơn vì sinh khí clo nguyên chất.",
+    "tags": [
+      "javen",
+      "an-toan",
+      "khi-doc"
+    ],
+    "src": "US CDC, Chemical Emergencies; NIOSH Pocket Guide"
+  },
+  {
+    "id": "hh-218",
+    "cat": "hoa-hoc",
+    "sub": "phan-ung",
+    "t": "Phản ứng toả nhiệt và thu nhiệt khác nhau ở dấu, và túi chườm lạnh tức thì dùng đúng loại thu nhiệt",
+    "s": "Amoni nitrat hoà tan trong nước hấp thụ nhiệt mạnh, hạ nhiệt độ túi xuống khoảng 0–5 °C trong vài phút. Không có điện, không có tủ lạnh — chỉ có entanpi hoà tan âm.",
+    "tags": [
+      "nhiet-phan-ung",
+      "tui-chuom",
+      "entanpi"
+    ],
+    "src": "Sổ tay CRC Handbook of Chemistry and Physics"
+  },
+  {
+    "id": "hh-219",
+    "cat": "hoa-hoc",
+    "sub": "phan-ung",
+    "t": "Cân bằng hoá học không có nghĩa phản ứng dừng lại — nó nghĩa là hai chiều xảy ra với tốc độ bằng nhau",
+    "s": "Nguyên lý Le Chatelier cho biết hệ sẽ dịch chuyển để chống lại tác động từ ngoài. Quy trình Haber-Bosch tổng hợp amoniac chạy ở 200 atm và 450 °C chính là để đẩy cân bằng theo hướng có lợi.",
+    "tags": [
+      "can-bang",
+      "le-chatelier",
+      "haber"
+    ],
+    "src": "Le Chatelier (1884); Haber & Bosch (1913)"
+  },
+  {
+    "id": "hh-220",
+    "cat": "hoa-hoc",
+    "sub": "phan-ung",
+    "t": "Enzyme trong cơ thể tăng tốc phản ứng lên tới hàng tỉ lần so với không có chúng",
+    "s": "Enzyme orotidine 5'-phosphat decarboxylase làm phản ứng nhanh hơn khoảng 10 mũ 17 lần: từ 78 triệu năm xuống còn phần nghìn giây. Không có enzyme thì hoá sinh của sự sống chạy quá chậm để duy trì.",
+    "tags": [
+      "enzyme",
+      "xuc-tac",
+      "sinh-hoc"
+    ],
+    "src": "Radzicka & Wolfenden, Science (1995)"
+  },
+  {
+    "id": "hh-221",
+    "cat": "hoa-hoc",
+    "sub": "nuoc-va-dung-moi",
+    "t": "Nước là một trong số rất ít chất mà dạng rắn nhẹ hơn dạng lỏng, và đó là lý do hồ đóng băng từ trên xuống",
+    "s": "Liên kết hydro trong tinh thể đá xếp thưa hơn trong nước lỏng, làm khối lượng riêng giảm khoảng 9%. Nếu đá chìm thì hồ sẽ đóng băng từ đáy lên và mọi sinh vật thuỷ sinh vùng lạnh đã tuyệt chủng.",
+    "tags": [
+      "nuoc",
+      "da",
+      "lien-ket-hydro"
+    ],
+    "src": "Sổ tay CRC Handbook; Chaplin, Water Structure and Science"
+  },
+  {
+    "id": "hh-222",
+    "cat": "hoa-hoc",
+    "sub": "nuoc-va-dung-moi",
+    "t": "Nước đạt khối lượng riêng lớn nhất ở 4 °C chứ không phải ở 0 °C",
+    "s": "Nhờ vậy nước 4 °C chìm xuống đáy hồ và giữ ở đó suốt mùa đông, tạo tầng nước không đóng băng cho cá sống qua mùa. Chênh lệch tuy nhỏ nhưng đủ để điều khiển toàn bộ cấu trúc nhiệt của hồ.",
+    "tags": [
+      "nuoc",
+      "khoi-luong-rieng",
+      "ho"
+    ],
+    "src": "Sổ tay CRC Handbook; Wetzel, Limnology"
+  },
+  {
+    "id": "hh-223",
+    "cat": "hoa-hoc",
+    "sub": "nuoc-va-dung-moi",
+    "t": "Nước tinh khiết dẫn điện rất kém — chính muối khoáng hoà tan trong nước mới dẫn",
+    "s": "Độ dẫn của nước siêu tinh khiết khoảng 0,055 microsiemens mỗi centimet, thấp hơn nước máy hàng nghìn lần. Điện giật trong bồn tắm nguy hiểm vì nước sinh hoạt chứa ion, không vì bản thân H₂O.",
+    "tags": [
+      "nuoc",
+      "dan-dien",
+      "ion"
+    ],
+    "src": "ASTM D1193 Standard Specification for Reagent Water"
+  },
+  {
+    "id": "hh-224",
+    "cat": "hoa-hoc",
+    "sub": "nuoc-va-dung-moi",
+    "t": "Xà phòng hoạt động vì phân tử của nó có một đầu ưa nước và một đầu ưa dầu",
+    "s": "Đầu kỵ nước cắm vào giọt dầu, đầu ưa nước hướng ra ngoài, tạo thành hạt mixen bị nước cuốn đi. Cùng cơ chế đó phá lớp vỏ lipid của nhiều virus, gồm cả coronavirus.",
+    "tags": [
+      "xa-phong",
+      "mixen",
+      "virus"
+    ],
+    "src": "Rosen, Surfactants and Interfacial Phenomena; WHO"
+  },
+  {
+    "id": "hh-225",
+    "cat": "hoa-hoc",
+    "sub": "nuoc-va-dung-moi",
+    "t": "Nước cứng đóng cặn vì chứa nhiều ion canxi và magie, và cặn đó làm giảm hiệu suất bình nóng lạnh",
+    "s": "Một lớp cặn dày 1 mm làm tăng tiêu thụ năng lượng khoảng 7–10% do dẫn nhiệt kém. Nước mềm thì không đóng cặn nhưng lại làm xà phòng khó xả sạch.",
+    "tags": [
+      "nuoc-cung",
+      "can-voi",
+      "thiet-bi"
+    ],
+    "src": "US Department of Energy; WHO, Hardness in Drinking-water"
+  },
+  {
+    "id": "hh-226",
+    "cat": "hoa-hoc",
+    "sub": "nuoc-va-dung-moi",
+    "t": "Cồn 70% khử khuẩn tốt hơn cồn 96%",
+    "s": "Cồn quá đậm làm đông tụ protein ở lớp ngoài vi khuẩn tạo màng bảo vệ, ngăn cồn thấm vào trong. Nước trong dung dịch 70% giúp cồn xuyên qua thành tế bào và làm biến tính protein bên trong.",
+    "tags": [
+      "con",
+      "khu-khuan",
+      "nong-do"
+    ],
+    "src": "US CDC, Guideline for Disinfection and Sterilization (2008)"
+  },
+  {
+    "id": "hh-227",
+    "cat": "hoa-hoc",
+    "sub": "nuoc-va-dung-moi",
+    "t": "Dầu và nước không trộn được vì phân tử nước thà bám vào nhau còn hơn bám vào dầu",
+    "s": "Đây không phải lực đẩy giữa dầu và nước mà là lực hút mạnh giữa các phân tử nước với nhau qua liên kết hydro. Chất nhũ hoá như lecithin trong lòng đỏ trứng làm cầu nối giữa hai bên — đó là nguyên lý của sốt mayonnaise.",
+    "tags": [
+      "dau-nuoc",
+      "nhu-hoa",
+      "hydro"
+    ],
+    "src": "Israelachvili, Intermolecular and Surface Forces"
+  },
+  {
+    "id": "hh-228",
+    "cat": "hoa-hoc",
+    "sub": "nuoc-va-dung-moi",
+    "t": "Muối làm hạ điểm đóng băng của nước, và đó là lý do người ta rắc muối lên đường mùa đông",
+    "s": "Nước muối bão hoà đóng băng ở khoảng −21 °C. Dưới nhiệt độ đó muối ăn hết tác dụng, nên vùng cực lạnh phải dùng canxi clorua hoặc magie clorua.",
+    "tags": [
+      "muoi",
+      "dong-bang",
+      "duong-bo"
+    ],
+    "src": "Sổ tay CRC Handbook; US Federal Highway Administration"
+  },
+  {
+    "id": "hh-229",
+    "cat": "hoa-hoc",
+    "sub": "nuoc-va-dung-moi",
+    "t": "Một cốc nước chứa khoảng 8×10²⁴ phân tử, nhiều hơn số cốc nước có thể múc từ tất cả đại dương",
+    "s": "Đây là lý do người ta hay nói mỗi cốc nước bạn uống có thể chứa vài phân tử từng đi qua cơ thể một nhân vật lịch sử. Số Avogadro, 6,022×10²³, là thứ làm chuyện đó thành khả dĩ về mặt số học.",
+    "tags": [
+      "avogadro",
+      "phan-tu",
+      "thang-bac"
+    ],
+    "src": "Số Avogadro theo định nghĩa SI 2019"
+  },
+  {
+    "id": "hh-230",
+    "cat": "hoa-hoc",
+    "sub": "nuoc-va-dung-moi",
+    "t": "Nước ngầm chiếm khoảng 30% nước ngọt của hành tinh, còn sông hồ chỉ chiếm khoảng 1,2%",
+    "s": "Khoảng 68,7% nước ngọt bị khoá trong băng và sông băng. Toàn bộ nước ngọt chỉ là 2,5% lượng nước trên Trái Đất; phần còn lại là nước mặn.",
+    "tags": [
+      "nuoc-ngot",
+      "nuoc-ngam",
+      "tai-nguyen"
+    ],
+    "src": "Cục Khảo sát Địa chất Hoa Kỳ (USGS), Water Science School"
+  },
+  {
+    "id": "hh-231",
+    "cat": "hoa-hoc",
+    "sub": "vat-lieu",
+    "t": "Kim cương và than chì đều là carbon nguyên chất, khác nhau chỉ ở cách sắp xếp nguyên tử",
+    "s": "Kim cương có mạng tứ diện ba chiều nên cứng nhất; than chì xếp thành lớp phẳng trượt lên nhau nên mềm tới mức dùng làm chất bôi trơn và ruột bút chì. Ở điều kiện thường, kim cương thực ra là dạng kém bền hơn.",
+    "tags": [
+      "kim-cuong",
+      "than-chi",
+      "carbon"
+    ],
+    "src": "Sổ tay CRC Handbook; Bundy và cộng sự (1955)"
+  },
+  {
+    "id": "hh-232",
+    "cat": "hoa-hoc",
+    "sub": "vat-lieu",
+    "t": "Thuỷ tinh không phải chất lỏng chảy chậm, và cửa sổ nhà thờ dày ở đáy không phải vì lý do đó",
+    "s": "Thuỷ tinh là chất rắn vô định hình; tốc độ chảy ở nhiệt độ phòng nhỏ tới mức cần thời gian dài hơn tuổi vũ trụ mới thấy được. Kính trung cổ dày không đều vì kỹ thuật thổi thời đó, và thợ thường lắp phần dày xuống dưới.",
+    "tags": [
+      "thuy-tinh",
+      "vo-dinh-hinh",
+      "huyen-thoai"
+    ],
+    "src": "Zanotto, American Journal of Physics (1998)"
+  },
+  {
+    "id": "hh-233",
+    "cat": "hoa-hoc",
+    "sub": "vat-lieu",
+    "t": "Thép không gỉ không gỉ nhờ một lớp oxit crom dày khoảng 2 nanomet tự phục hồi khi bị xước",
+    "s": "Cần ít nhất 10,5% crom trong hợp kim để lớp màng này hình thành. Nếu để trong môi trường thiếu oxy hoặc nhiều ion clorua, lớp màng không tái tạo được và thép vẫn ăn mòn.",
+    "tags": [
+      "thep-khong-gi",
+      "crom",
+      "an-mon"
+    ],
+    "src": "ASTM A240; Sedriks, Corrosion of Stainless Steels"
+  },
+  {
+    "id": "hh-234",
+    "cat": "hoa-hoc",
+    "sub": "vat-lieu",
+    "t": "Bê tông La Mã bền hơn nhiều loại bê tông hiện đại, và cơ chế tự lành của nó mới được giải mã năm 2023",
+    "s": "Các cục vôi sống trong bê tông phản ứng với nước rò vào vết nứt, tạo canxi cacbonat lấp kín. Cảng và đê La Mã dưới nước biển vẫn đứng sau 2.000 năm trong khi bê tông cốt thép hiện đại thường xuống cấp sau 50–100 năm.",
+    "tags": [
+      "be-tong",
+      "la-ma",
+      "tu-lanh"
+    ],
+    "src": "Seymour và cộng sự, Science Advances (2023)"
+  },
+  {
+    "id": "hh-235",
+    "cat": "hoa-hoc",
+    "sub": "vat-lieu",
+    "t": "Graphene chỉ dày một lớp nguyên tử nhưng bền gấp khoảng 200 lần thép cùng khối lượng",
+    "s": "Nó được tách lần đầu bằng băng dính từ than chì, một cách làm đơn giản tới mức đáng ngờ và đã đoạt giải Nobel Vật lý 2010. Một tấm graphene rộng bằng tờ giấy nặng chưa tới một phần nghìn gam.",
+    "tags": [
+      "graphene",
+      "vat-lieu",
+      "nobel"
+    ],
+    "src": "Novoselov & Geim, Science (2004); Giải Nobel Vật lý 2010"
+  },
+  {
+    "id": "hh-236",
+    "cat": "hoa-hoc",
+    "sub": "vat-lieu",
+    "t": "Cao su tự nhiên phải qua lưu hoá mới dùng được, nếu không nó chảy nhão khi nóng và giòn khi lạnh",
+    "s": "Charles Goodyear phát hiện việc trộn lưu huỳnh rồi nung tạo cầu nối giữa các chuỗi polymer. Trước đó, sản phẩm cao su bán ra mùa hè thì chảy và mùa đông thì vỡ.",
+    "tags": [
+      "cao-su",
+      "luu-hoa",
+      "polymer"
+    ],
+    "src": "Goodyear, bằng sáng chế Mỹ 3633 (1844)"
+  },
+  {
+    "id": "hh-237",
+    "cat": "hoa-hoc",
+    "sub": "vat-lieu",
+    "t": "Vật liệu cứng nhất không phải vật liệu bền nhất — kim cương rất cứng nhưng đập búa vẫn vỡ",
+    "s": "Độ cứng đo khả năng chống trầy; độ dai đo khả năng chống nứt gãy. Kim cương có mặt cắt tinh thể nên một cú đánh đúng hướng làm nó tách ra, và thợ kim hoàn dùng đúng tính chất đó để cắt đá.",
+    "tags": [
+      "do-cung",
+      "do-dai",
+      "kim-cuong"
+    ],
+    "src": "Ashby, Materials Selection in Mechanical Design"
+  },
+  {
+    "id": "hh-238",
+    "cat": "hoa-hoc",
+    "sub": "vat-lieu",
+    "t": "Sợi carbon bền hơn thép theo khối lượng nhưng chịu nén kém, nên nó thường được dùng chung với nhựa nền",
+    "s": "Composite sợi carbon có độ bền riêng cao gấp 5–10 lần thép nhưng gần như không dẻo: nó gãy đột ngột thay vì biến dạng dần. Đó là lý do khung xe đua bằng composite vỡ vụn khi va chạm để hấp thụ năng lượng.",
+    "tags": [
+      "soi-carbon",
+      "composite",
+      "co-hoc"
+    ],
+    "src": "Chawla, Composite Materials: Science and Engineering"
+  },
+  {
+    "id": "hh-239",
+    "cat": "hoa-hoc",
+    "sub": "vat-lieu",
+    "t": "Gốm chịu được nhiệt độ rất cao nhưng vỡ khi sốc nhiệt vì nó không giãn nở đều",
+    "s": "Tấm chắn nhiệt tàu con thoi làm từ gốm silica xốp có thể nung đỏ ở một đầu trong khi đầu kia vẫn cầm tay được. Thuỷ tinh borosilicat chịu sốc nhiệt tốt nhờ hệ số giãn nở chỉ bằng khoảng một phần ba thuỷ tinh thường.",
+    "tags": [
+      "gom",
+      "soc-nhiet",
+      "borosilicat"
+    ],
+    "src": "NASA, Space Shuttle Thermal Protection System; Corning"
+  },
+  {
+    "id": "hh-240",
+    "cat": "hoa-hoc",
+    "sub": "vat-lieu",
+    "t": "Kim loại nhớ hình quay lại dạng ban đầu khi được nung, và stent tim mạch dùng đúng tính chất này",
+    "s": "Hợp kim nitinol chuyển pha tinh thể ở nhiệt độ cơ thể nên stent được nén nhỏ để luồn qua mạch máu rồi tự bung ra đúng hình dạng thiết kế. Cùng vật liệu đó làm gọng kính bẻ cong không gãy.",
+    "tags": [
+      "nitinol",
+      "nho-hinh",
+      "y-te"
+    ],
+    "src": "Buehler, Naval Ordnance Laboratory (1959); FDA Device Database"
+  },
+  {
+    "id": "hh-241",
+    "cat": "hoa-hoc",
+    "sub": "khi-quyen-hoa-hoc",
+    "t": "Không khí chứa 78% nitơ và chỉ 21% oxy, nhưng chính 0,04% CO₂ mới quyết định khí hậu",
+    "s": "Nitơ và oxy là phân tử hai nguyên tử đối xứng nên hầu như không hấp thụ hồng ngoại. CO₂, hơi nước và metan hấp thụ mạnh, và đó là toàn bộ cơ chế hiệu ứng nhà kính.",
+    "tags": [
+      "khi-quyen",
+      "co2",
+      "nha-kinh"
+    ],
+    "src": "IPCC AR6 WG1; NOAA Global Monitoring Laboratory"
+  },
+  {
+    "id": "hh-242",
+    "cat": "hoa-hoc",
+    "sub": "khi-quyen-hoa-hoc",
+    "t": "Nồng độ CO₂ trong khí quyển đã vượt 420 phần triệu, mức cao nhất trong ít nhất 800.000 năm",
+    "s": "Lõi băng Nam Cực cho phép đọc trực tiếp thành phần khí quyển quá khứ qua bọt khí bị nhốt. Trong toàn bộ khoảng đó, CO₂ dao động giữa khoảng 180 và 300 phần triệu.",
+    "tags": [
+      "co2",
+      "loi-bang",
+      "khi-hau"
+    ],
+    "src": "NOAA Mauna Loa Observatory; Lüthi và cộng sự, Nature (2008)"
+  },
+  {
+    "id": "hh-243",
+    "cat": "hoa-hoc",
+    "sub": "khi-quyen-hoa-hoc",
+    "t": "Tầng ozone bảo vệ sự sống chỉ dày khoảng 3 milimet nếu nén về áp suất mặt đất",
+    "s": "Toàn bộ lượng ozone trong cột khí quyển thường vào khoảng 300 đơn vị Dobson, và mỗi 100 đơn vị tương đương 1 mm. Lớp mỏng đó chặn phần lớn tia tử ngoại B và gần như toàn bộ tử ngoại C.",
+    "tags": [
+      "ozone",
+      "tu-ngoai",
+      "khi-quyen"
+    ],
+    "src": "NASA Ozone Watch; WMO Ozone Assessment"
+  },
+  {
+    "id": "hh-245",
+    "cat": "hoa-hoc",
+    "sub": "khi-quyen-hoa-hoc",
+    "t": "Metan giữ nhiệt mạnh gấp khoảng 80 lần CO₂ trong 20 năm đầu nhưng phân huỷ nhanh hơn nhiều",
+    "s": "Chu kỳ tồn tại của metan trong khí quyển khoảng 12 năm, còn CO₂ thì một phần đáng kể ở lại hàng nghìn năm. Vì vậy cắt phát thải metan cho hiệu quả nhanh nhất về nhiệt độ ngắn hạn.",
+    "tags": [
+      "metan",
+      "khi-nha-kinh",
+      "khi-hau"
+    ],
+    "src": "IPCC AR6 WG1, Chương 7"
+  },
+  {
+    "id": "hh-246",
+    "cat": "hoa-hoc",
+    "sub": "khi-quyen-hoa-hoc",
+    "t": "Mùi sau cơn mưa có tên khoa học là petrichor, và nó chủ yếu do một hợp chất do vi khuẩn đất tạo ra",
+    "s": "Geosmin do xạ khuẩn Streptomyces tiết ra, và mũi người nhạy với nó tới mức phát hiện được ở nồng độ 5 phần nghìn tỉ. Giọt mưa đập xuống đất bắn các hạt khí dung mang chất này lên không.",
+    "tags": [
+      "petrichor",
+      "geosmin",
+      "mui"
+    ],
+    "src": "Bear & Thomas, Nature (1964); Joung & Buie, Nature Communications (2015)"
+  },
+  {
+    "id": "hh-247",
+    "cat": "hoa-hoc",
+    "sub": "khi-quyen-hoa-hoc",
+    "t": "Ozone ở tầng cao bảo vệ ta nhưng ozone ở mặt đất là chất gây ô nhiễm gây hại phổi",
+    "s": "Ozone mặt đất hình thành khi ánh nắng tác dụng lên khí thải xe và dung môi. Ngưỡng khuyến cáo của WHO là 100 microgam mỗi mét khối trung bình 8 giờ.",
+    "tags": [
+      "ozone",
+      "o-nhiem",
+      "suc-khoe"
+    ],
+    "src": "WHO Global Air Quality Guidelines (2021); US EPA"
+  },
+  {
+    "id": "hh-248",
+    "cat": "hoa-hoc",
+    "sub": "khi-quyen-hoa-hoc",
+    "t": "Bụi mịn PM2.5 nhỏ tới mức đi thẳng vào phế nang và vào máu, và nó là loại ô nhiễm gây tử vong nhiều nhất",
+    "s": "Hạt đường kính dưới 2,5 micromet nhỏ hơn khoảng 30 lần sợi tóc người. WHO đặt ngưỡng khuyến cáo trung bình năm ở 5 microgam mỗi mét khối, mức mà phần lớn đô thị lớn đều vượt.",
+    "tags": [
+      "pm25",
+      "o-nhiem-khong-khi",
+      "suc-khoe"
+    ],
+    "src": "WHO Global Air Quality Guidelines (2021)"
+  },
+  {
+    "id": "hh-249",
+    "cat": "hoa-hoc",
+    "sub": "khi-quyen-hoa-hoc",
+    "t": "Mưa axit do khí lưu huỳnh và nitơ tạo ra, và các đạo luật kiểm soát đã làm độ axit của mưa giảm rõ rệt",
+    "s": "Đạo luật Không khí Sạch sửa đổi năm 1990 của Mỹ lập thị trường mua bán hạn ngạch SO₂, và phát thải giảm hơn 80% trong ba thập kỷ. Đây là ví dụ hiếm về công cụ thị trường giải quyết được ô nhiễm.",
+    "tags": [
+      "mua-axit",
+      "so2",
+      "chinh-sach"
+    ],
+    "src": "US EPA Acid Rain Program; Schmalensee & Stavins, JEP (2013)"
+  },
+  {
+    "id": "hh-251",
+    "cat": "hoa-hoc",
+    "sub": "polymer-nhua",
+    "t": "Nhựa PET trong chai nước và sợi polyester trong áo là cùng một loại polymer",
+    "s": "Khác nhau chỉ ở cách gia công: kéo thành sợi hay thổi thành chai. Vì vậy chai nhựa tái chế biến thành áo phông là quy trình vật lý đơn giản chứ không phải phép màu công nghệ.",
+    "tags": [
+      "pet",
+      "polyester",
+      "tai-che"
+    ],
+    "src": "ASTM D7611 mã nhận diện nhựa; Hiệp hội Công nghiệp Nhựa (PLASTICS)"
+  },
+  {
+    "id": "hh-252",
+    "cat": "hoa-hoc",
+    "sub": "polymer-nhua",
+    "t": "Bảy mã tam giác dưới đáy đồ nhựa là mã nhận diện loại nhựa, không phải mức độ tái chế được",
+    "s": "Mã 1 và 2 được tái chế rộng rãi; mã 3, 6 và 7 hầu như không nơi nào nhận. Ký hiệu tam giác gây hiểu nhầm tới mức nhiều bang ở Mỹ đã kiện các công ty vì quảng cáo sai.",
+    "tags": [
+      "nhua",
+      "tai-che",
+      "nhan-mac"
+    ],
+    "src": "ASTM D7611; California SB 343 (2021)"
+  },
+  {
+    "id": "hh-253",
+    "cat": "hoa-hoc",
+    "sub": "polymer-nhua",
+    "t": "Chỉ khoảng 9% tổng lượng nhựa từng được sản xuất đã thực sự được tái chế",
+    "s": "Khoảng 12% bị đốt và gần 79% nằm ở bãi rác hoặc ngoài môi trường. Tổng lượng nhựa loài người đã sản xuất tới nay vượt 9 tỉ tấn.",
+    "tags": [
+      "nhua",
+      "rac-thai",
+      "moi-truong"
+    ],
+    "src": "Geyer, Jambeck & Law, Science Advances (2017)"
+  },
+  {
+    "id": "hh-254",
+    "cat": "hoa-hoc",
+    "sub": "polymer-nhua",
+    "t": "Túi nilon phân huỷ sinh học phần lớn cần điều kiện công nghiệp 58 °C mới phân huỷ, không phân huỷ trong tự nhiên",
+    "s": "Tiêu chuẩn EN 13432 chỉ chứng nhận cho môi trường ủ công nghiệp. Trong đất hoặc nước biển, nhiều loại túi này tồn tại nhiều năm gần như nguyên vẹn.",
+    "tags": [
+      "phan-huy-sinh-hoc",
+      "tui-nilon",
+      "tieu-chuan"
+    ],
+    "src": "EN 13432; Napper & Thompson, Environmental Science & Technology (2019)"
+  },
+  {
+    "id": "hh-255",
+    "cat": "hoa-hoc",
+    "sub": "polymer-nhua",
+    "t": "Vi nhựa đã được tìm thấy trong máu người, nhau thai và phổi, nhưng tác động sức khoẻ vẫn chưa rõ",
+    "s": "Nghiên cứu năm 2022 phát hiện hạt nhựa trong máu của 17 trên 22 người hiến. Việc có mặt không đồng nghĩa với gây hại, và bằng chứng về liều lượng và cơ chế còn đang được xây dựng.",
+    "tags": [
+      "vi-nhua",
+      "suc-khoe",
+      "tranh-cai"
+    ],
+    "src": "Leslie và cộng sự, Environment International (2022); WHO (2022)"
+  },
+  {
+    "id": "hh-256",
+    "cat": "hoa-hoc",
+    "sub": "polymer-nhua",
+    "t": "Nylon là sợi tổng hợp hoàn toàn đầu tiên và nó ra mắt công chúng bằng một đôi tất",
+    "s": "DuPont bán 64 triệu đôi tất nylon trong năm đầu tiên 1940. Khi Thế chiến nổ ra, toàn bộ nylon chuyển sang làm dù và dây thừng quân sự.",
+    "tags": [
+      "nylon",
+      "lich-su",
+      "soi-tong-hop"
+    ],
+    "src": "Carothers, bằng sáng chế Mỹ 2130523 (1938); Hounshell & Smith, Science and Corporate Strategy"
+  },
+  {
+    "id": "hh-257",
+    "cat": "hoa-hoc",
+    "sub": "polymer-nhua",
+    "t": "Teflon trơn vì liên kết carbon–flo là một trong những liên kết đơn bền nhất trong hoá hữu cơ",
+    "s": "Năng lượng liên kết khoảng 485 kJ mỗi mol làm bề mặt gần như không phản ứng và không bám. Chính vì bền như vậy mà các hợp chất PFAS họ hàng của nó tồn tại rất lâu trong môi trường.",
+    "tags": [
+      "teflon",
+      "pfas",
+      "lien-ket"
+    ],
+    "src": "Plunkett, DuPont (1938); US EPA PFAS Program"
+  },
+  {
+    "id": "hh-258",
+    "cat": "hoa-hoc",
+    "sub": "polymer-nhua",
+    "t": "Cao su và ADN đều là polymer, và nhựa nhân tạo chỉ là một nhánh muộn của một họ rất cũ",
+    "s": "Polymer là chuỗi các đơn vị lặp lại; cellulose trong gỗ, protein trong cơ và tinh bột trong gạo đều thuộc loại này. Con người mới học cách tổng hợp polymer từ đầu thế kỷ 20.",
+    "tags": [
+      "polymer",
+      "sinh-hoc",
+      "cau-truc"
+    ],
+    "src": "Staudinger, Giải Nobel Hoá học 1953"
+  },
+  {
+    "id": "hh-259",
+    "cat": "hoa-hoc",
+    "sub": "polymer-nhua",
+    "t": "Nhựa nhiệt dẻo nấu chảy rồi tạo hình lại được, còn nhựa nhiệt rắn thì không bao giờ",
+    "s": "Nhựa nhiệt rắn có liên kết ngang cố định giữa các chuỗi, nên nung chỉ làm nó cháy chứ không chảy. Đó là lý do vỏ ổ điện và lốp xe rất khó tái chế trong khi chai nước thì dễ.",
+    "tags": [
+      "nhiet-deo",
+      "nhiet-ran",
+      "tai-che"
+    ],
+    "src": "Odian, Principles of Polymerization"
+  },
+  {
+    "id": "hh-260",
+    "cat": "hoa-hoc",
+    "sub": "polymer-nhua",
+    "t": "Keo dán siêu dính đóng rắn nhờ hơi ẩm, không nhờ bay hơi dung môi",
+    "s": "Cyanoacrylate polymer hoá gần như tức thì khi gặp ion hydroxide trong nước bám trên bề mặt. Đó là lý do nó dính ngón tay cực nhanh — da người luôn có sẵn độ ẩm.",
+    "tags": [
+      "keo",
+      "cyanoacrylate",
+      "hoa-hoc"
+    ],
+    "src": "Coover, bằng sáng chế Mỹ 2794788 (1957)"
+  },
+  {
+    "id": "hh-261",
+    "cat": "hoa-hoc",
+    "sub": "kim-loai",
+    "t": "Đồng diệt khuẩn khi tiếp xúc, và tay nắm cửa bằng đồng thau giảm mật độ vi khuẩn rõ rệt",
+    "s": "Ion đồng phá màng tế bào và làm hỏng ADN vi khuẩn. Cơ quan Bảo vệ Môi trường Mỹ đã đăng ký hơn 400 hợp kim đồng là bề mặt diệt khuẩn.",
+    "tags": [
+      "dong",
+      "khang-khuan",
+      "benh-vien"
+    ],
+    "src": "US EPA Registration of Copper Alloys (2008); Grass và cộng sự, AEM (2011)"
+  },
+  {
+    "id": "hh-262",
+    "cat": "hoa-hoc",
+    "sub": "kim-loai",
+    "t": "Thép là hợp kim sắt với carbon, và chỉ cần 0,2–2% carbon là đủ đổi hoàn toàn tính chất",
+    "s": "Sắt nguyên chất mềm và dễ uốn; thêm carbon tạo các pha cứng làm tăng độ bền lên nhiều lần. Trên khoảng 2,1% carbon thì nó thành gang, cứng nhưng giòn.",
+    "tags": [
+      "thep",
+      "sat",
+      "carbon"
+    ],
+    "src": "Callister, Materials Science and Engineering; ASTM A1"
+  },
+  {
+    "id": "hh-263",
+    "cat": "hoa-hoc",
+    "sub": "kim-loai",
+    "t": "Titan có độ bền riêng cao nhất trong các kim loại thông dụng, nhưng khó gia công vì nó cháy được",
+    "s": "Bột titan và phoi titan bốc cháy trong không khí và không dập được bằng nước. Nó cũng phản ứng mạnh với oxy khi nóng nên phải hàn trong môi trường khí trơ.",
+    "tags": [
+      "titan",
+      "hop-kim",
+      "gia-cong"
+    ],
+    "src": "ASM Handbook, Volume 2; NFPA 484"
+  },
+  {
+    "id": "hh-264",
+    "cat": "hoa-hoc",
+    "sub": "kim-loai",
+    "t": "Lithium là kim loại nhẹ nhất, nhẹ tới mức nó nổi trên dầu hoả",
+    "s": "Khối lượng riêng 0,534 g mỗi centimet khối, chỉ bằng khoảng một nửa nước. Chính khối lượng nhẹ cộng thế điện hoá cao làm nó thành nền tảng của pin xe điện và điện thoại.",
+    "tags": [
+      "lithium",
+      "pin",
+      "kim-loai"
+    ],
+    "src": "Sổ tay CRC Handbook; USGS Mineral Commodity Summaries"
+  },
+  {
+    "id": "hh-265",
+    "cat": "hoa-hoc",
+    "sub": "kim-loai",
+    "t": "Đất hiếm không hề hiếm trong vỏ Trái Đất — cái khó là tách chúng ra khỏi nhau",
+    "s": "Ceri phổ biến hơn cả đồng. Vì 17 nguyên tố này có hoá tính gần như y hệt, quy trình tách cần hàng trăm bậc chiết lỏng–lỏng, tốn kém và gây ô nhiễm.",
+    "tags": [
+      "dat-hiem",
+      "khai-khoang",
+      "cong-nghe"
+    ],
+    "src": "USGS Mineral Commodity Summaries; Ủy ban châu Âu, Critical Raw Materials"
+  },
+  {
+    "id": "hh-266",
+    "cat": "hoa-hoc",
+    "sub": "kim-loai",
+    "t": "Nhôm tái chế chỉ tốn khoảng 5% năng lượng so với sản xuất nhôm từ quặng",
+    "s": "Điện phân bauxite cần khoảng 14 kWh cho mỗi kilogam nhôm; nấu lại nhôm phế chỉ cần khoảng 0,7 kWh. Khoảng 75% lượng nhôm từng được sản xuất vẫn đang lưu hành.",
+    "tags": [
+      "nhom",
+      "tai-che",
+      "nang-luong"
+    ],
+    "src": "International Aluminium Institute; US DOE"
+  },
+  {
+    "id": "hh-267",
+    "cat": "hoa-hoc",
+    "sub": "kim-loai",
+    "t": "Vàng không xỉn màu vì nó gần như không phản ứng, và đó là lý do mặt nạ Tutankhamun vẫn sáng sau 3.300 năm",
+    "s": "Vàng chỉ tan trong nước cường toan, hỗn hợp axit nitric và axit clohydric. Đồ trang sức vàng bị xỉn thường là do các kim loại pha thêm trong hợp kim.",
+    "tags": [
+      "vang",
+      "an-mon",
+      "lich-su"
+    ],
+    "src": "Sổ tay CRC Handbook; Bảo tàng Ai Cập Cairo"
+  },
+  {
+    "id": "hh-268",
+    "cat": "hoa-hoc",
+    "sub": "kim-loai",
+    "t": "Thuỷ ngân hoà tan được vàng, và người ta từng khai thác vàng bằng cách đó với hậu quả môi trường rất lớn",
+    "s": "Hỗn hống thuỷ ngân – vàng được nung để bay hơi thuỷ ngân, thải hơi độc trực tiếp ra không khí. Khai thác vàng thủ công hiện vẫn là nguồn phát thải thuỷ ngân do người lớn nhất thế giới.",
+    "tags": [
+      "thuy-ngan",
+      "vang",
+      "o-nhiem"
+    ],
+    "src": "UNEP Global Mercury Assessment (2018); Công ước Minamata"
+  },
+  {
+    "id": "hh-269",
+    "cat": "hoa-hoc",
+    "sub": "kim-loai",
+    "t": "Kim loại dẫn điện tốt vì electron hoá trị của chúng gần như tự do di chuyển trong cả khối",
+    "s": "Bạc dẫn điện tốt nhất, rồi tới đồng, vàng và nhôm. Dây điện dùng đồng thay vì bạc vì chênh lệch độ dẫn chỉ khoảng 6% trong khi chênh lệch giá là hàng trăm lần.",
+    "tags": [
+      "dan-dien",
+      "kim-loai",
+      "electron"
+    ],
+    "src": "Sổ tay CRC Handbook; Kittel, Introduction to Solid State Physics"
+  },
+  {
+    "id": "hh-270",
+    "cat": "hoa-hoc",
+    "sub": "kim-loai",
+    "t": "Hàn thiếc không nóng chảy kim loại nền — nó tạo một lớp hợp kim mỏng ở bề mặt tiếp xúc",
+    "s": "Nhiệt độ nóng chảy của thiếc hàn quanh 183–220 °C, thấp hơn nhiều điểm nóng chảy của đồng ở 1.085 °C. Mối hàn tốt nhận ra ở lớp hợp kim liên kim loại dày khoảng 1–3 micromet.",
+    "tags": [
+      "han-thiec",
+      "dien-tu",
+      "hop-kim"
+    ],
+    "src": "IPC J-STD-001; Humpston & Jacobson, Principles of Soldering"
+  },
+  {
+    "id": "hh-271",
+    "cat": "hoa-hoc",
+    "sub": "hoa-hoc-doi-song",
+    "t": "Baking soda và bột nở không phải một thứ: bột nở đã có sẵn axit trong đó",
+    "s": "Baking soda là natri bicacbonat thuần, cần một axit như sữa chua hay giấm mới sinh khí. Bột nở trộn sẵn axit khô nên chỉ cần nước và nhiệt.",
+    "tags": [
+      "banh",
+      "nau-an",
+      "bicacbonat"
+    ],
+    "src": "McGee, On Food and Cooking; US FDA CFR 21 §184.1736"
+  },
+  {
+    "id": "hh-272",
+    "cat": "hoa-hoc",
+    "sub": "hoa-hoc-doi-song",
+    "t": "Giấm và baking soda trộn với nhau gần như vô dụng để tẩy rửa vì chúng trung hoà lẫn nhau",
+    "s": "Phản ứng sinh CO₂ trông rất ấn tượng nhưng sản phẩm cuối là natri axetat và nước, tức là nước muối loãng. Dùng riêng từng thứ mới tận dụng được tính kiềm hoặc tính axit của chúng.",
+    "tags": [
+      "tay-rua",
+      "giam",
+      "bicacbonat"
+    ],
+    "src": "Trung hoà axit–bazơ; American Cleaning Institute"
+  },
+  {
+    "id": "hh-273",
+    "cat": "hoa-hoc",
+    "sub": "hoa-hoc-doi-song",
+    "t": "Chất chống nắng hoạt động theo hai cơ chế khác nhau: hấp thụ hoá học hoặc phản xạ vật lý",
+    "s": "Kẽm oxit và titan dioxit phản xạ và tán xạ tia tử ngoại; các chất hữu cơ như avobenzone hấp thụ rồi thải năng lượng thành nhiệt. SPF 30 chặn khoảng 97% tia UVB, SPF 50 chặn khoảng 98%.",
+    "tags": [
+      "chong-nang",
+      "spf",
+      "da"
+    ],
+    "src": "US FDA Sunscreen Monograph; Hiệp hội Da liễu Mỹ (AAD)"
+  },
+  {
+    "id": "hh-274",
+    "cat": "hoa-hoc",
+    "sub": "hoa-hoc-doi-song",
+    "t": "Pin kiềm rò rỉ chất kiềm chứ không phải axit, và đó là lý do lau bằng giấm hoặc chanh",
+    "s": "Chất điện ly trong pin AA thông thường là kali hydroxit. Pin axit chì trong ô tô thì ngược lại, cần trung hoà bằng baking soda.",
+    "tags": [
+      "pin",
+      "an-toan",
+      "kiem"
+    ],
+    "src": "Linden, Handbook of Batteries; hướng dẫn an toàn của Energizer"
+  },
+  {
+    "id": "hh-275",
+    "cat": "hoa-hoc",
+    "sub": "hoa-hoc-doi-song",
+    "t": "Hầu hết mùi bạn ngửi được là các phân tử hữu cơ nhẹ, và ngưỡng phát hiện chênh nhau tới hàng tỉ lần giữa các chất",
+    "s": "Mũi người nhận ra thiol trong khí gas ở mức vài phần tỉ, trong khi cần nồng độ cao hơn hàng nghìn lần mới ngửi thấy ethanol. Khí gas tự nhiên vốn không mùi; người ta cố tình pha mercaptan vào để rò rỉ được phát hiện.",
+    "tags": [
+      "mui",
+      "thiol",
+      "an-toan"
+    ],
+    "src": "Amoore & Hautala, Journal of Applied Toxicology (1983)"
+  },
+  {
+    "id": "hh-276",
+    "cat": "hoa-hoc",
+    "sub": "hoa-hoc-doi-song",
+    "t": "Nến cháy không phải sáp cháy trực tiếp — bấc hút sáp lỏng lên rồi hơi sáp mới cháy",
+    "s": "Tắt nến rồi đưa lửa vào cột khói trắng cách bấc vài centimet, ngọn lửa chạy ngược xuống châm lại nến. Cột khói đó chính là hơi sáp chưa cháy.",
+    "tags": [
+      "nen",
+      "chay",
+      "hoi"
+    ],
+    "src": "Faraday, The Chemical History of a Candle (1861)"
+  },
+  {
+    "id": "hh-277",
+    "cat": "hoa-hoc",
+    "sub": "hoa-hoc-doi-song",
+    "t": "Chất chống đông trong ô tô rất ngọt và rất độc, và đó là lý do nhiều nước bắt buộc pha chất gây đắng",
+    "s": "Ethylene glycol chuyển hoá trong gan thành axit oxalic gây suy thận; liều gây chết ở người lớn khoảng 100 ml. Vị ngọt làm nó nguy hiểm đặc biệt với trẻ nhỏ và vật nuôi.",
+    "tags": [
+      "chong-dong",
+      "doc-chat",
+      "an-toan"
+    ],
+    "src": "US CDC ATSDR; Đạo luật An toàn Chất chống đông của Mỹ (2012)"
+  },
+  {
+    "id": "hh-278",
+    "cat": "hoa-hoc",
+    "sub": "hoa-hoc-doi-song",
+    "t": "Kem đánh răng chứa flo hoạt động bằng cách tạo lớp men bền hơn với axit, không bằng cách diệt vi khuẩn",
+    "s": "Ion flo thay thế ion hydroxide trong hydroxyapatit tạo fluorapatit, chất tan ở pH thấp hơn. Nồng độ hiệu quả theo WHO là 1.000–1.500 phần triệu.",
+    "tags": [
+      "flo",
+      "rang",
+      "men-rang"
+    ],
+    "src": "WHO, Fluoride in Drinking-water; Cochrane Review về kem đánh răng chứa flo"
+  },
+  {
+    "id": "hh-279",
+    "cat": "hoa-hoc",
+    "sub": "hoa-hoc-doi-song",
+    "t": "Bình chữa cháy CO₂ làm tay bỏng lạnh nếu cầm sai chỗ, vì khí giãn nở đột ngột hút nhiệt mạnh",
+    "s": "Nhiệt độ ở loa phun có thể xuống dưới −70 °C. Cùng hiệu ứng giãn nở đó làm bình gas lạnh đi và đọng sương khi xả nhanh.",
+    "tags": [
+      "chua-chay",
+      "co2",
+      "giai-nhiet"
+    ],
+    "src": "NFPA 10; Hiệu ứng Joule–Thomson"
+  },
+  {
+    "id": "hh-280",
+    "cat": "hoa-hoc",
+    "sub": "hoa-hoc-doi-song",
+    "t": "Hạn sử dụng trên phần lớn thực phẩm khô là mốc chất lượng chứ không phải mốc an toàn",
+    "s": "Nhãn 'best before' chỉ thời điểm sản phẩm còn giữ đúng hương vị và kết cấu. Nhãn 'use by' trên thực phẩm dễ hỏng mới là mốc an toàn thật sự.",
+    "tags": [
+      "han-su-dung",
+      "an-toan",
+      "lang-phi"
+    ],
+    "src": "FAO/WHO Codex Alimentarius; UK Food Standards Agency"
+  },
+  {
+    "id": "hh-281",
+    "cat": "hoa-hoc",
+    "sub": "phan-ung",
+    "t": "Phản ứng Maillard giữa đường và protein tạo ra hàng trăm hợp chất mùi mới, và nó cần khoảng 140 °C",
+    "s": "Đây là thứ tạo màu nâu và mùi thơm cho bánh mì nướng, thịt áp chảo và cà phê rang. Nước sôi chỉ 100 °C nên thức ăn luộc không bao giờ có được mùi này.",
+    "tags": [
+      "maillard",
+      "nau-an",
+      "mui"
+    ],
+    "src": "Maillard (1912); McGee, On Food and Cooking"
+  },
+  {
+    "id": "hh-282",
+    "cat": "hoa-hoc",
+    "sub": "phan-ung",
+    "t": "Caramel hoá là đường tự phân huỷ ở nhiệt độ cao và nó khác hẳn phản ứng Maillard",
+    "s": "Đường mía bắt đầu caramel hoá ở khoảng 160 °C mà không cần protein. Hai phản ứng thường xảy ra song song trong nướng bánh, và điều đó khiến chúng hay bị nhầm là một.",
+    "tags": [
+      "caramel",
+      "duong",
+      "nau-an"
+    ],
+    "src": "McGee, On Food and Cooking; Belitz, Food Chemistry"
+  },
+  {
+    "id": "hh-283",
+    "cat": "hoa-hoc",
+    "sub": "phan-ung",
+    "t": "Pháo hoa có màu vì mỗi kim loại phát ra bước sóng riêng khi bị nung nóng",
+    "s": "Stronti cho đỏ, bari cho lục, đồng cho lam, natri cho vàng cam. Màu lam khó làm nhất vì hợp chất đồng phân huỷ ở nhiệt độ mà pháo hoa cần để cháy đủ sáng.",
+    "tags": [
+      "phao-hoa",
+      "pho-phat-xa",
+      "kim-loai"
+    ],
+    "src": "Conkling & Mocella, Chemistry of Pyrotechnics"
+  },
+  {
+    "id": "hh-284",
+    "cat": "hoa-hoc",
+    "sub": "phan-ung",
+    "t": "Túi khí ô tô bơm căng bằng một phản ứng hoá học hoàn tất trong khoảng 30 mili giây",
+    "s": "Natri azide phân huỷ sinh khí nitơ, nhanh hơn mọi hệ thống bơm cơ khí. Chính vì phản ứng quá nhanh nên túi khí bung ra với tốc độ khoảng 300 km/h và có thể gây thương tích nếu ngồi quá gần.",
+    "tags": [
+      "tui-khi",
+      "phan-ung",
+      "an-toan"
+    ],
+    "src": "NHTSA; SAE J1980"
+  },
+  {
+    "id": "hh-285",
+    "cat": "hoa-hoc",
+    "sub": "phan-ung",
+    "t": "Đom đóm phát sáng bằng phản ứng hoá học có hiệu suất gần 100%, gần như không toả nhiệt",
+    "s": "Luciferin phản ứng với oxy dưới xúc tác luciferase, biến gần như toàn bộ năng lượng thành photon. Đèn LED tốt nhất hiện chỉ đạt khoảng 50–60% hiệu suất chuyển đổi.",
+    "tags": [
+      "phat-quang-sinh-hoc",
+      "dom-dom",
+      "hieu-suat"
+    ],
+    "src": "Seliger & McElroy, Archives of Biochemistry (1960)"
+  },
+  {
+    "id": "hh-286",
+    "cat": "hoa-hoc",
+    "sub": "vat-lieu",
+    "t": "Xi măng chiếm khoảng 8% tổng phát thải CO₂ toàn cầu, và phần lớn không đến từ nhiên liệu",
+    "s": "Khoảng 60% lượng CO₂ sinh ra từ chính phản ứng nung đá vôi thành vôi sống, tức là không thể cắt bằng cách đổi sang năng lượng sạch. Đây là lý do khử carbon ngành xi măng khó hơn ngành điện.",
+    "tags": [
+      "xi-mang",
+      "co2",
+      "cong-nghiep"
+    ],
+    "src": "Chatham House, Making Concrete Change (2018); IEA"
+  },
+  {
+    "id": "hh-287",
+    "cat": "hoa-hoc",
+    "sub": "vat-lieu",
+    "t": "Giấy vàng đi theo thời gian vì lignin trong bột gỗ bị oxy hoá dưới ánh sáng",
+    "s": "Giấy không lignin, làm từ bột hoá học hoặc từ vải, giữ trắng hàng thế kỷ. Đó là lý do sách in giấy báo mục nhanh còn bản thảo trung cổ trên giấy da vẫn đọc được.",
+    "tags": [
+      "giay",
+      "lignin",
+      "bao-quan"
+    ],
+    "src": "ISO 9706 Permanence of Paper; Thư viện Quốc hội Mỹ"
+  },
+  {
+    "id": "hh-288",
+    "cat": "hoa-hoc",
+    "sub": "vat-lieu",
+    "t": "Silica gel trong gói chống ẩm không độc, và nó hút được lượng nước bằng khoảng 40% khối lượng của chính nó",
+    "s": "Chữ 'do not eat' in trên gói là vì nguy cơ hóc và vì một số loại có chất chỉ thị coban. Silica gel là thuỷ tinh xốp với diện tích bề mặt trong tới khoảng 800 mét vuông mỗi gam.",
+    "tags": [
+      "silica-gel",
+      "hut-am",
+      "an-toan"
+    ],
+    "src": "US National Capital Poison Center; Sổ tay CRC"
+  },
+  {
+    "id": "hh-289",
+    "cat": "hoa-hoc",
+    "sub": "nuoc-va-dung-moi",
+    "t": "Nước biển mặn vì sông cuốn muối từ đá ra biển suốt hàng tỉ năm và nước bay hơi để lại muối",
+    "s": "Độ mặn trung bình khoảng 35 gam mỗi lít, tương đương 3,5%. Biển Chết đạt khoảng 34% nên người nổi được mà không cần bơi.",
+    "tags": [
+      "nuoc-bien",
+      "do-man",
+      "dia-hoa"
+    ],
+    "src": "NOAA Ocean Service; Cục Khảo sát Địa chất Hoa Kỳ"
+  },
+  {
+    "id": "hh-290",
+    "cat": "hoa-hoc",
+    "sub": "nuoc-va-dung-moi",
+    "t": "Khử mặn nước biển tốn ít nhất khoảng 1 kWh cho mỗi mét khối theo giới hạn nhiệt động lực học",
+    "s": "Nhà máy thẩm thấu ngược hiện đại tiêu thụ khoảng 3–4 kWh mỗi mét khối, tức đã khá gần giới hạn lý thuyết. Vì vậy giá nước khử mặn khó giảm mạnh thêm bằng cải tiến công nghệ đơn thuần.",
+    "tags": [
+      "khu-man",
+      "nang-luong",
+      "nuoc"
+    ],
+    "src": "Elimelech & Phillip, Science (2011)"
+  },
+  {
+    "id": "hh-291",
+    "cat": "hoa-hoc",
+    "sub": "nguyen-to",
+    "t": "Heli trên Trái Đất là tài nguyên hữu hạn và nó thoát vĩnh viễn vào vũ trụ khi bị thả ra",
+    "s": "Heli sinh ra từ phân rã phóng xạ trong lòng đất qua hàng trăm triệu năm và tích trong mỏ khí. Nó quá nhẹ để khí quyển giữ lại, nên bóng bay heli là tiêu hao không hoàn lại.",
+    "tags": [
+      "heli",
+      "tai-nguyen",
+      "khi"
+    ],
+    "src": "Nuttall, Clarke & Glowacki, Nature (2012); USGS"
+  },
+  {
+    "id": "hh-292",
+    "cat": "hoa-hoc",
+    "sub": "nguyen-to",
+    "t": "Phospho là nguyên tố duy nhất trong nông nghiệp không có chất thay thế và không có nguồn khí quyển",
+    "s": "Nitơ lấy được từ không khí bằng quy trình Haber-Bosch, còn phospho chỉ khai thác được từ quặng photphat tập trung ở vài nước. Đây là một rủi ro dài hạn ít được nói tới của an ninh lương thực.",
+    "tags": [
+      "phospho",
+      "phan-bon",
+      "an-ninh-luong-thuc"
+    ],
+    "src": "Cordell, Drangert & White, Global Environmental Change (2009); USGS"
+  },
+  {
+    "id": "hh-294",
+    "cat": "hoa-hoc",
+    "sub": "phan-ung",
+    "t": "Quy trình Haber-Bosch tiêu thụ khoảng 1–2% năng lượng toàn cầu để biến khí nitơ thành phân bón",
+    "s": "Phản ứng cần 200 atm và 400–500 °C vì liên kết ba trong phân tử N₂ cực bền. Khoảng một nửa lượng nitơ trong cơ thể người hiện nay đi qua quy trình này.",
+    "tags": [
+      "haber",
+      "phan-bon",
+      "nang-luong"
+    ],
+    "src": "Smil, Enriching the Earth (2001); IEA"
+  },
+  {
+    "id": "hh-295",
+    "cat": "hoa-hoc",
+    "sub": "hoa-hoc-doi-song",
+    "t": "Mực in trên hoá đơn nhiệt không phải mực — giấy tự đổi màu khi bị nung nóng",
+    "s": "Lớp phủ chứa thuốc nhuộm leuco và chất hiện màu; nhiệt làm hai chất phản ứng. Đó là lý do hoá đơn để trong xe nóng thì đen sì và để lâu thì mờ hết chữ.",
+    "tags": [
+      "giay-nhiet",
+      "hoa-don",
+      "muc"
+    ],
+    "src": "Sổ tay công nghệ in nhiệt; Nghiên cứu về bisphenol trong giấy nhiệt của ECHA"
+  },
+  {
+    "id": "hh-296",
+    "cat": "hoa-hoc",
+    "sub": "vat-lieu",
+    "t": "Bọt biển và mút xốp cách nhiệt tốt không phải vì vật liệu mà vì lượng khí bị nhốt bên trong",
+    "s": "Không khí tĩnh dẫn nhiệt rất kém, khoảng 0,026 W/m·K. Mọi vật liệu cách nhiệt tốt — len khoáng, xốp EPS, lông vũ — đều làm cùng một việc: giữ khí không cho đối lưu.",
+    "tags": [
+      "cach-nhiet",
+      "xop",
+      "khong-khi"
+    ],
+    "src": "ASHRAE Handbook of Fundamentals"
+  },
+  {
+    "id": "hh-297",
+    "cat": "hoa-hoc",
+    "sub": "khi-quyen-hoa-hoc",
+    "t": "Khói thuốc lá chứa hơn 7.000 hợp chất và ít nhất 70 chất trong đó gây ung thư đã được xác định",
+    "s": "Nicotine gây nghiện nhưng không phải chất gây ung thư chính; nhóm nitrosamine đặc hiệu thuốc lá và các hydrocarbon thơm đa vòng mới là thủ phạm. Đây là lý do sản phẩm nicotine không khói có hồ sơ nguy cơ khác hẳn.",
+    "tags": [
+      "thuoc-la",
+      "ung-thu",
+      "hoa-chat"
+    ],
+    "src": "US Surgeon General Report (2014); IARC Monographs"
+  },
+  {
+    "id": "hh-298",
+    "cat": "hoa-hoc",
+    "sub": "vat-lieu",
+    "t": "Amiăng từng được coi là vật liệu kỳ diệu vì nó chịu lửa, bền và rẻ, và tác hại chỉ lộ ra sau vài thập kỷ",
+    "s": "Sợi amiăng đủ nhỏ để vào sâu phổi và không phân huỷ, gây u trung biểu mô sau 20–50 năm ủ bệnh. Hơn 60 nước đã cấm hoàn toàn, nhưng Việt Nam vẫn nằm trong nhóm tiêu thụ amiăng trắng lớn.",
+    "tags": [
+      "amiang",
+      "ung-thu",
+      "chinh-sach"
+    ],
+    "src": "WHO, Asbestos: elimination of asbestos-related diseases; IARC"
+  },
+  {
+    "id": "hh-299",
+    "cat": "hoa-hoc",
+    "sub": "kim-loai",
+    "t": "Chì độc thần kinh và không có ngưỡng an toàn nào được xác lập cho trẻ em",
+    "s": "Chì cạnh tranh với canxi trong dẫn truyền thần kinh và tích trong xương hàng chục năm. Sau khi xăng pha chì bị cấm, nồng độ chì máu trung bình ở trẻ em Mỹ giảm hơn 90%.",
+    "tags": [
+      "chi",
+      "doc-than-kinh",
+      "tre-em"
+    ],
+    "src": "US CDC; WHO Lead Poisoning Fact Sheet"
+  },
+  {
+    "id": "hh-300",
+    "cat": "hoa-hoc",
+    "sub": "hoa-hoc-doi-song",
+    "t": "Chất tạo ngọt aspartame ngọt gấp khoảng 200 lần đường mía, nên lượng dùng cực nhỏ",
+    "s": "Vì vậy calo nó đóng góp gần như bằng không dù bản thân nó vẫn là một dipeptide có năng lượng. Người mắc phenylketon niệu phải tránh nó vì cơ thể không chuyển hoá được phenylalanine.",
+    "tags": [
+      "aspartame",
+      "chat-tao-ngot",
+      "dinh-duong"
+    ],
+    "src": "JECFA (FAO/WHO); US FDA"
+  },
+  {
+    "id": "hh-301",
+    "cat": "hoa-hoc",
+    "sub": "nguyen-to",
+    "t": "Nguyên tố duy nhất được đặt tên theo một người còn sống khi đặt là seaborgi",
+    "s": "Glenn Seaborg còn sống năm 1997 khi nguyên tố 106 được đặt tên, và quyết định này gây tranh cãi. Ông cũng là người duy nhất từng nhận thư gửi tới một địa chỉ có tên nguyên tố mang tên mình.",
+    "tags": [
+      "seaborgi",
+      "ten-nguyen-to",
+      "iupac"
+    ],
+    "src": "IUPAC (1997); Phòng thí nghiệm Lawrence Berkeley"
+  },
+  {
+    "id": "hh-302",
+    "cat": "hoa-hoc",
+    "sub": "nguyen-to",
+    "t": "Francium hiếm tới mức tổng lượng tồn tại tự nhiên trên toàn Trái Đất chỉ khoảng 30 gam tại bất kỳ thời điểm nào",
+    "s": "Nó phân rã với chu kỳ bán rã 22 phút và liên tục được tạo lại từ chuỗi phân rã của actini. Chưa ai từng thấy một mẫu francium đủ lớn để quan sát bằng mắt.",
+    "tags": [
+      "francium",
+      "phong-xa",
+      "hiem"
+    ],
+    "src": "Sổ tay CRC Handbook; IUPAC"
+  },
+  {
+    "id": "hh-303",
+    "cat": "hoa-hoc",
+    "sub": "nguyen-to",
+    "t": "Technetium là nguyên tố nhẹ nhất không có đồng vị bền nào, và nó được dự đoán tồn tại trước khi được tìm ra",
+    "s": "Mendeleev để trống ô số 43 trong bảng tuần hoàn năm 1869. Nó chỉ được tổng hợp năm 1937 và hiện là chất đánh dấu phổ biến nhất trong chẩn đoán hình ảnh y học.",
+    "tags": [
+      "technetium",
+      "mendeleev",
+      "y-hoc"
+    ],
+    "src": "Perrier & Segrè (1937); IAEA"
+  },
+  {
+    "id": "hh-304",
+    "cat": "hoa-hoc",
+    "sub": "nguyen-to",
+    "t": "Hydro có ba đồng vị và một trong số đó nặng gấp ba lần đồng vị thường",
+    "s": "Nước nặng chứa deuteri có điểm sôi cao hơn nước thường khoảng 1,4 độ và độc với sinh vật nếu thay thế phần lớn nước cơ thể. Tách nước nặng khỏi nước thường là một trong các quy trình công nghiệp tốn kém nhất.",
+    "tags": [
+      "deuteri",
+      "nuoc-nang",
+      "dong-vi"
+    ],
+    "src": "Sổ tay CRC Handbook; IAEA"
+  },
+  {
+    "id": "hh-305",
+    "cat": "hoa-hoc",
+    "sub": "nguyen-to",
+    "t": "Bảng tuần hoàn được sắp theo số proton chứ không theo khối lượng, và Mendeleev đã sắp sai vài chỗ vì chưa biết điều đó",
+    "s": "Ông vẫn đảo thứ tự một số cặp để tính chất hoá học khớp, dù khối lượng nói ngược lại. Henry Moseley chứng minh số hiệu nguyên tử mới là biến sắp xếp đúng vào năm 1913.",
+    "tags": [
+      "bang-tuan-hoan",
+      "moseley",
+      "lich-su"
+    ],
+    "src": "Moseley, Philosophical Magazine (1913)"
+  },
+  {
+    "id": "hh-306",
+    "cat": "hoa-hoc",
+    "sub": "phan-ung",
+    "t": "Kim loại kiềm phản ứng với nước mạnh dần theo chiều xuống nhóm, và caesium nổ ngay khi chạm nước",
+    "s": "Lithium sủi bọt, natri cháy, kali nổ nhỏ, còn caesium phản ứng đủ mạnh để làm vỡ bình thuỷ tinh. Nguyên nhân là electron ngoài cùng càng xa hạt nhân càng dễ mất.",
+    "tags": [
+      "kim-loai-kiem",
+      "phan-ung",
+      "nuoc"
+    ],
+    "src": "Mason và cộng sự, Nature Chemistry (2015)"
+  },
+  {
+    "id": "hh-307",
+    "cat": "hoa-hoc",
+    "sub": "phan-ung",
+    "t": "Phản ứng đồng hồ đổi màu đột ngột sau một khoảng thời gian định trước, và thời điểm đó tính được",
+    "s": "Phản ứng Briggs-Rauscher và phản ứng iod đồng hồ dao động giữa các màu theo chu kỳ đều đặn. Chúng chứng minh phản ứng hoá học không nhất thiết đi một chiều tới cân bằng một cách đơn điệu.",
+    "tags": [
+      "phan-ung-dao-dong",
+      "hoa-hoc",
+      "thi-nghiem"
+    ],
+    "src": "Belousov (1951); Zhabotinsky (1964)"
+  },
+  {
+    "id": "hh-308",
+    "cat": "hoa-hoc",
+    "sub": "phan-ung",
+    "t": "Nhôm phản ứng cực mạnh với oxit sắt, và phản ứng nhiệt nhôm sinh nhiệt tới 2.500 độ",
+    "s": "Nó nóng chảy được thép và được dùng để hàn ray đường sắt tại chỗ. Một khi đã khơi mào, phản ứng không dập được bằng nước vì nước bị tách thành hydro và oxy.",
+    "tags": [
+      "nhiet-nhom",
+      "han",
+      "duong-sat"
+    ],
+    "src": "Goldschmidt (1893); AWS Welding Handbook"
+  },
+  {
+    "id": "hh-309",
+    "cat": "hoa-hoc",
+    "sub": "phan-ung",
+    "t": "Sắt nguyên chất dạng bột tự bốc cháy trong không khí ở nhiệt độ phòng",
+    "s": "Diện tích bề mặt lớn làm tốc độ oxy hoá tăng vọt tới mức nhiệt sinh ra nhanh hơn nhiệt toả đi. Cùng nguyên nhân làm bụi bột mì và bụi gỗ gây nổ trong nhà máy.",
+    "tags": [
+      "tu-chay",
+      "bui-no",
+      "dien-tich-be-mat"
+    ],
+    "src": "OSHA Combustible Dust Hazard; NFPA 652"
+  },
+  {
+    "id": "hh-310",
+    "cat": "hoa-hoc",
+    "sub": "phan-ung",
+    "t": "Pin nhiên liệu hydro chỉ thải ra nước, nhưng phần lớn hydro công nghiệp hiện nay được làm từ khí tự nhiên",
+    "s": "Quy trình cải hoá hơi nước metan phát thải khoảng 9–12 kg CO₂ cho mỗi kg hydro. Vì vậy 'sạch tại điểm dùng' không đồng nghĩa với sạch trên toàn vòng đời.",
+    "tags": [
+      "hydro",
+      "nhien-lieu",
+      "vong-doi"
+    ],
+    "src": "IEA, The Future of Hydrogen (2019)"
+  },
+  {
+    "id": "hh-311",
+    "cat": "hoa-hoc",
+    "sub": "vat-lieu",
+    "t": "Thuỷ tinh cường lực vỡ thành hạt nhỏ vì nó được làm nguội bề mặt nhanh có chủ đích",
+    "s": "Lớp ngoài chịu nén còn lõi chịu kéo, nên khi vỡ toàn bộ ứng suất giải phóng cùng lúc. Đây là lý do kính ô tô vỡ vụn thay vì tạo mảnh sắc.",
+    "tags": [
+      "kinh-cuong-luc",
+      "ung-suat",
+      "an-toan"
+    ],
+    "src": "ASTM C1048; Nghiên cứu vật liệu kính của Corning"
+  },
+  {
+    "id": "hh-312",
+    "cat": "hoa-hoc",
+    "sub": "vat-lieu",
+    "t": "Kính chống đạn không phải kính mà là nhiều lớp kính xen kẽ lớp nhựa dẻo",
+    "s": "Lớp polycarbonate hoặc PVB hấp thụ năng lượng va đập và giữ mảnh vỡ. Kính chắn gió ô tô dùng cùng nguyên lý, và đó là lý do nó nứt mạng nhện thay vì vỡ rời.",
+    "tags": [
+      "kinh-nhieu-lop",
+      "pvb",
+      "an-toan"
+    ],
+    "src": "ANSI/SAE Z26.1; UL 752"
+  },
+  {
+    "id": "hh-313",
+    "cat": "hoa-hoc",
+    "sub": "vat-lieu",
+    "t": "Sợi thuỷ tinh cách nhiệt tốt không phải nhờ thuỷ tinh mà nhờ không khí bị giữ giữa các sợi",
+    "s": "Bản thân thuỷ tinh dẫn nhiệt gấp khoảng 40 lần không khí tĩnh. Mọi vật liệu cách nhiệt tốt đều làm cùng một việc: chia nhỏ không khí thành các túi để chặn đối lưu.",
+    "tags": [
+      "cach-nhiet",
+      "soi-thuy-tinh",
+      "khong-khi"
+    ],
+    "src": "ASHRAE Handbook of Fundamentals"
+  },
+  {
+    "id": "hh-314",
+    "cat": "hoa-hoc",
+    "sub": "vat-lieu",
+    "t": "Aerogel nhẹ tới mức có loại chỉ nặng gấp ba lần không khí, và nó là chất rắn cách nhiệt tốt nhất từng chế tạo",
+    "s": "Nó gồm hơn 99% là không khí giữ trong khung silica nano. NASA dùng nó để bắt bụi sao chổi trong sứ mệnh Stardust mà không làm hạt bụi bốc hơi.",
+    "tags": [
+      "aerogel",
+      "cach-nhiet",
+      "nasa"
+    ],
+    "src": "NASA Stardust Mission; Hüsing & Schubert, Angewandte Chemie (1998)"
+  },
+  {
+    "id": "hh-315",
+    "cat": "hoa-hoc",
+    "sub": "vat-lieu",
+    "t": "Thép Damascus cổ chứa ống nano carbon, và công thức làm ra nó đã thất truyền",
+    "s": "Phân tích kính hiển vi điện tử năm 2006 phát hiện cấu trúc nano trong lưỡi kiếm thế kỷ 17. Người thợ thời đó không biết ống nano tồn tại; cấu trúc hình thành nhờ tạp chất trong quặng và quy trình rèn.",
+    "tags": [
+      "damascus",
+      "ong-nano",
+      "khao-co"
+    ],
+    "src": "Reibold và cộng sự, Nature (2006)"
+  },
+  {
+    "id": "hh-316",
+    "cat": "hoa-hoc",
+    "sub": "nuoc-va-dung-moi",
+    "t": "Nước có ít nhất 18 dạng tinh thể đá khác nhau tuỳ áp suất và nhiệt độ",
+    "s": "Loại ta gặp hằng ngày là băng Ih. Ở áp suất cực cao, có dạng băng tồn tại ở nhiệt độ trên 100 độ, và nó có thể có trong lòng các hành tinh băng.",
+    "tags": [
+      "bang",
+      "pha",
+      "vat-ly"
+    ],
+    "src": "Salzmann, Journal of Chemical Physics (2019)"
+  },
+  {
+    "id": "hh-317",
+    "cat": "hoa-hoc",
+    "sub": "nuoc-va-dung-moi",
+    "t": "Nước siêu lạnh có thể ở thể lỏng tới −40 độ nếu không có hạt nhân kết tinh",
+    "s": "Đây là lý do một chai nước tinh khiết để trong ngăn đá vẫn lỏng cho tới khi bạn gõ vào và nó đóng băng tức thì. Mây tầng cao cũng chứa giọt nước siêu lạnh, và đó là nguyên nhân đóng băng trên cánh máy bay.",
+    "tags": [
+      "sieu-lanh",
+      "dong-bang",
+      "may-bay"
+    ],
+    "src": "Debenedetti, Journal of Physics: Condensed Matter (2003)"
+  },
+  {
+    "id": "hh-318",
+    "cat": "hoa-hoc",
+    "sub": "nuoc-va-dung-moi",
+    "t": "Nước biển và nước ngọt trộn với nhau giải phóng năng lượng đủ để phát điện",
+    "s": "Chênh lệch nồng độ muối tạo áp suất thẩm thấu tương đương cột nước cao khoảng 270 mét. Nhà máy điện thẩm thấu đầu tiên chạy thử ở Na Uy năm 2009 nhưng chưa hiệu quả về kinh tế.",
+    "tags": [
+      "tham-thau",
+      "nang-luong",
+      "cua-song"
+    ],
+    "src": "Statkraft (2009); Logan & Elimelech, Nature (2012)"
+  },
+  {
+    "id": "hh-319",
+    "cat": "hoa-hoc",
+    "sub": "khi-quyen-hoa-hoc",
+    "t": "Khí nhà kính mạnh nhất trong khí quyển tính theo tổng tác động là hơi nước, nhưng con người không điều khiển được nó trực tiếp",
+    "s": "Hơi nước hoạt động như một khuếch đại: khí ấm hơn giữ được nhiều hơi nước hơn, làm ấm thêm. CO₂ mới là biến điều khiển vì nó tồn tại lâu và do con người thải ra.",
+    "tags": [
+      "hoi-nuoc",
+      "phan-hoi",
+      "khi-hau"
+    ],
+    "src": "IPCC AR6 WG1, Chương 7; Lacis và cộng sự, Science (2010)"
+  },
+  {
+    "id": "hh-320",
+    "cat": "hoa-hoc",
+    "sub": "khi-quyen-hoa-hoc",
+    "t": "Khí SF6 dùng trong thiết bị điện có tiềm năng gây ấm gấp khoảng 24.000 lần CO₂ và tồn tại hàng nghìn năm",
+    "s": "Nó được dùng làm chất cách điện trong trạm biến áp cao thế. Lượng phát thải nhỏ nhưng tác động mỗi kilogam cực lớn, nên nó nằm trong danh mục kiểm soát của Nghị định thư Kyoto.",
+    "tags": [
+      "sf6",
+      "khi-nha-kinh",
+      "dien"
+    ],
+    "src": "IPCC AR6; Nghị định thư Kyoto"
+  },
+  {
+    "id": "hh-321",
+    "cat": "hoa-hoc",
+    "sub": "polymer-nhua",
+    "t": "Nhựa PVC cháy sinh khí hydro clorua ăn mòn đường hô hấp, và đó là mối nguy chính trong cháy nhà",
+    "s": "Phần lớn nạn nhân hoả hoạn chết vì khói và khí độc chứ không vì lửa. Dây điện và ống nước PVC là nguồn phổ biến nhất trong nhà ở.",
+    "tags": [
+      "pvc",
+      "chay",
+      "khi-doc"
+    ],
+    "src": "NFPA; Hull & Kandola, Fire Retardancy of Polymers"
+  },
+  {
+    "id": "hh-322",
+    "cat": "hoa-hoc",
+    "sub": "polymer-nhua",
+    "t": "Cao su tự nhiên bị ánh sáng và ozone làm nứt, còn cao su tổng hợp thì bền hơn nhiều với hai thứ đó",
+    "s": "Ozone tấn công liên kết đôi trong chuỗi polymer. Đây là lý do lốp xe có chất chống ozone và tại sao dây thun cũ nứt vụn dù không bị kéo.",
+    "tags": [
+      "cao-su",
+      "ozone",
+      "lao-hoa"
+    ],
+    "src": "Ciesielski, An Introduction to Rubber Technology"
+  },
+  {
+    "id": "hh-323",
+    "cat": "hoa-hoc",
+    "sub": "kim-loai",
+    "t": "Kim loại mỏi và gãy sau nhiều chu kỳ tải dù mỗi lần tải đều dưới ngưỡng bền",
+    "s": "Đây là nguyên nhân của loạt tai nạn máy bay Comet đầu thập niên 1950, nơi vết nứt bắt đầu từ góc cửa sổ vuông. Cửa sổ máy bay bo tròn từ đó trở đi.",
+    "tags": [
+      "moi-kim-loai",
+      "comet",
+      "ky-thuat"
+    ],
+    "src": "Báo cáo điều tra de Havilland Comet (1954); Suresh, Fatigue of Materials"
+  },
+  {
+    "id": "hh-324",
+    "cat": "hoa-hoc",
+    "sub": "kim-loai",
+    "t": "Thiếc chuyển sang dạng bột xám ở nhiệt độ thấp, và hiện tượng này từng phá hỏng thiết bị ở vùng lạnh",
+    "s": "Dưới khoảng 13 độ, thiếc trắng dần chuyển thành thiếc xám giòn. Có giả thuyết cho rằng cúc áo thiếc trong quân đội Napoleon ở Nga đã mục vì lý do này, dù bằng chứng lịch sử yếu.",
+    "tags": [
+      "thiec",
+      "chuyen-pha",
+      "lich-su"
+    ],
+    "src": "Sổ tay CRC Handbook; Le Coustumer và cộng sự, Journal of Materials Science (2000)"
+  },
+  {
+    "id": "hh-325",
+    "cat": "hoa-hoc",
+    "sub": "kim-loai",
+    "t": "Tái chế một lon nhôm tiết kiệm đủ điện để chạy tivi khoảng ba giờ",
+    "s": "Nhôm là vật liệu tái chế có tỉ lệ tiết kiệm năng lượng cao nhất, khoảng 95%. Một lon nhôm có thể quay lại kệ hàng chỉ sau khoảng 60 ngày.",
+    "tags": [
+      "nhom",
+      "tai-che",
+      "nang-luong"
+    ],
+    "src": "Aluminum Association; US EPA"
+  },
+  {
+    "id": "hh-326",
+    "cat": "hoa-hoc",
+    "sub": "hoa-hoc-doi-song",
+    "t": "Chất chống dính và áo mưa từng dùng chung một họ hoá chất, và họ đó gần như không phân huỷ trong tự nhiên",
+    "s": "PFAS được gọi là 'hoá chất vĩnh cửu' vì liên kết carbon–flo quá bền. Chúng đã được phát hiện trong máu của gần như toàn bộ dân số được xét nghiệm ở nhiều nước.",
+    "tags": [
+      "pfas",
+      "moi-truong",
+      "suc-khoe"
+    ],
+    "src": "US EPA PFAS Strategic Roadmap; US CDC NHANES"
+  },
+  {
+    "id": "hh-327",
+    "cat": "hoa-hoc",
+    "sub": "hoa-hoc-doi-song",
+    "t": "Bột giặt hoạt động bằng bốn cơ chế cùng lúc, và enzyme là thành phần làm việc ở nhiệt độ thấp",
+    "s": "Chất hoạt động bề mặt cuốn dầu, enzyme cắt protein và tinh bột, chất tẩy oxy hoá vết màu, chất chống tái bám giữ bẩn lơ lửng. Giặt nước lạnh chỉ hiệu quả nếu bột có enzyme phù hợp.",
+    "tags": [
+      "bot-giat",
+      "enzyme",
+      "giat-giu"
+    ],
+    "src": "Showell, Handbook of Detergents"
+  },
+  {
+    "id": "hh-328",
+    "cat": "hoa-hoc",
+    "sub": "hoa-hoc-doi-song",
+    "t": "Nước hoa có ba tầng hương vì các phân tử bay hơi ở tốc độ khác nhau",
+    "s": "Hương đầu là phân tử nhẹ bay trong 15 phút, hương giữa kéo vài giờ, hương cuối là phân tử nặng bám nhiều giờ. Đây là hoá lý của áp suất hơi chứ không phải quy ước nghệ thuật.",
+    "tags": [
+      "nuoc-hoa",
+      "bay-hoi",
+      "mui"
+    ],
+    "src": "Sell, The Chemistry of Fragrances"
+  },
+  {
+    "id": "hh-329",
+    "cat": "hoa-hoc",
+    "sub": "hoa-hoc-doi-song",
+    "t": "Vết bẩn protein như máu và trứng phải giặt nước lạnh, vì nước nóng làm protein đông và bám chặt",
+    "s": "Trên khoảng 60 độ, albumin biến tính và kết dính vào sợi vải. Ngược lại, vết dầu mỡ cần nước nóng để giảm độ nhớt.",
+    "tags": [
+      "giat-giu",
+      "protein",
+      "nhiet-do"
+    ],
+    "src": "Showell, Handbook of Detergents"
+  },
+  {
+    "id": "hh-330",
+    "cat": "hoa-hoc",
+    "sub": "hoa-hoc-doi-song",
+    "t": "Khí CO không màu không mùi và nó gắn vào hemoglobin mạnh hơn oxy khoảng 200 lần",
+    "s": "Vì vậy nồng độ chỉ 0,1% trong không khí đã đủ gây tử vong sau vài giờ. Máy phát điện và than tổ ong dùng trong phòng kín là nguyên nhân phổ biến nhất.",
+    "tags": [
+      "co",
+      "ngo-doc",
+      "an-toan"
+    ],
+    "src": "US CDC; WHO Guidelines for Indoor Air Quality"
+  },
+  {
+    "id": "hh-331",
+    "cat": "hoa-hoc",
+    "sub": "hoa-hoc-doi-song",
+    "t": "Sơn tường 'không mùi' không đồng nghĩa với không phát thải hợp chất hữu cơ dễ bay hơi",
+    "s": "Một số VOC không mùi ở nồng độ thấp nhưng vẫn ảnh hưởng chất lượng không khí. Nhãn hàm lượng VOC tính bằng gam mỗi lít là thông tin đáng tin hơn cảm nhận mũi.",
+    "tags": [
+      "voc",
+      "son",
+      "khong-khi"
+    ],
+    "src": "US EPA; California CDPH Standard Method v1.2"
+  },
+  {
+    "id": "hh-332",
+    "cat": "hoa-hoc",
+    "sub": "hoa-hoc-doi-song",
+    "t": "Bình gas trong bếp chứa chất lỏng chứ không chứa khí, và áp suất trong bình gần như không đổi cho tới lúc gần hết",
+    "s": "LPG hoá lỏng dưới áp suất khoảng 2–8 bar tuỳ nhiệt độ. Vì vậy không thể biết còn bao nhiêu gas bằng cách xem đồng hồ áp suất — chỉ cân bình mới biết.",
+    "tags": [
+      "gas",
+      "lpg",
+      "ap-suat"
+    ],
+    "src": "NFPA 58; tiêu chuẩn kỹ thuật LPG"
+  },
+  {
+    "id": "hh-333",
+    "cat": "hoa-hoc",
+    "sub": "hoa-hoc-doi-song",
+    "t": "Dầu ăn cũ bốc khói ở nhiệt độ thấp hơn dầu mới vì nó đã bị phân giải một phần",
+    "s": "Mỗi lần chiên, một phần chất béo bị thuỷ phân thành axit béo tự do có điểm bốc khói thấp hơn. Dầu chiên lại nhiều lần cũng tích tụ các hợp chất phân cực bị nhiều nước giới hạn bằng quy định.",
+    "tags": [
+      "dau-chien",
+      "diem-boc-khoi",
+      "an-toan"
+    ],
+    "src": "Choe & Min, Journal of Food Science (2007); quy định TPM của EU"
+  },
+  {
+    "id": "hh-334",
+    "cat": "hoa-hoc",
+    "sub": "hoa-hoc-doi-song",
+    "t": "Thuốc hết hạn phần lớn không thành độc mà chỉ giảm hiệu lực",
+    "s": "Một chương trình của quân đội Mỹ thử hơn 100 loại thuốc dự trữ và thấy khoảng 90% vẫn đạt chuẩn nhiều năm sau hạn ghi trên nhãn. Ngoại lệ quan trọng gồm nitroglycerin, insulin và kháng sinh dạng lỏng.",
+    "tags": [
+      "thuoc",
+      "han-su-dung",
+      "on-dinh"
+    ],
+    "src": "US FDA/DoD Shelf Life Extension Program; Lyon và cộng sự, Journal of Pharmaceutical Sciences (2006)"
+  },
+  {
+    "id": "hh-335",
+    "cat": "hoa-hoc",
+    "sub": "phan-ung",
+    "t": "Nến, gỗ và than đều cháy bằng cùng một phản ứng cơ bản: carbon và hydro gặp oxy",
+    "s": "Sản phẩm là CO₂ và nước cộng năng lượng. Khác biệt về ngọn lửa và khói đến từ tốc độ giải phóng chất bay hơi và mức thiếu oxy tại chỗ.",
+    "tags": [
+      "chay",
+      "oxy-hoa",
+      "nhien-lieu"
+    ],
+    "src": "Drysdale, An Introduction to Fire Dynamics"
+  },
+  {
+    "id": "hh-336",
+    "cat": "hoa-hoc",
+    "sub": "phan-ung",
+    "t": "Khói là nhiên liệu chưa cháy hết, và nó vẫn cháy được nếu gặp đủ oxy và nhiệt",
+    "s": "Hiện tượng bùng cháy khi mở cửa phòng cháy là do khói tích tụ gặp không khí mới. Đây là một trong các nguy hiểm chết người nhất với lính cứu hoả.",
+    "tags": [
+      "khoi",
+      "bung-chay",
+      "cuu-hoa"
+    ],
+    "src": "NFPA; Drysdale, An Introduction to Fire Dynamics"
+  },
+  {
+    "id": "hh-337",
+    "cat": "hoa-hoc",
+    "sub": "phan-ung",
+    "t": "Khí nitơ chiếm 78% không khí nhưng cây không dùng trực tiếp được vì liên kết ba trong phân tử N₂ quá bền",
+    "s": "Chỉ vi khuẩn cố định đạm và tia sét mới phá được liên kết này trong tự nhiên. Đây là lý do phân đạm quan trọng tới vậy với nông nghiệp.",
+    "tags": [
+      "nito",
+      "co-dinh-dam",
+      "nong-nghiep"
+    ],
+    "src": "Smil, Enriching the Earth (2001)"
+  },
+  {
+    "id": "hh-338",
+    "cat": "hoa-hoc",
+    "sub": "khi-quyen-hoa-hoc",
+    "t": "Sương mù quang hoá hình thành từ khí thải xe dưới ánh nắng, nên nó nặng nhất vào buổi chiều nắng",
+    "s": "Oxit nitơ và hợp chất hữu cơ dễ bay hơi phản ứng tạo ozone mặt đất. Đây là lý do Los Angeles và Bắc Kinh có mô hình ô nhiễm theo giờ khác hẳn nhau.",
+    "tags": [
+      "suong-mu-quang-hoa",
+      "ozone",
+      "do-thi"
+    ],
+    "src": "Haagen-Smit (1952); US EPA"
+  },
+  {
+    "id": "hh-339",
+    "cat": "hoa-hoc",
+    "sub": "khi-quyen-hoa-hoc",
+    "t": "Đốt rơm rạ ngoài đồng phát thải bụi mịn cao gấp nhiều lần so với cùng khối lượng đốt trong lò công nghiệp",
+    "s": "Cháy không hoàn toàn ở nhiệt độ thấp tạo nhiều hạt carbon đen. Đây là nguồn ô nhiễm theo mùa lớn ở đồng bằng Bắc Bộ và nhiều nước Nam Á.",
+    "tags": [
+      "dot-rom",
+      "bui-min",
+      "o-nhiem"
+    ],
+    "src": "Bộ Tài nguyên và Môi trường; Andreae & Merlet, Global Biogeochemical Cycles (2001)"
+  },
+  {
+    "id": "hh-340",
+    "cat": "hoa-hoc",
+    "sub": "nuoc-va-dung-moi",
+    "t": "Nước cất thiếu khoáng và nó ăn mòn đường ống kim loại nhanh hơn nước có độ cứng vừa phải",
+    "s": "WHO khuyến nghị nước uống có một mức khoáng tối thiểu, quanh 100 mg/l tổng chất rắn hoà tan. Nước quá tinh khiết hoà tan kim loại từ ống dẫn nhanh hơn, nên hệ thống cấp nước tinh khiết phải dùng ống trơ.",
+    "tags": [
+      "nuoc-cat",
+      "khoang-chat",
+      "suc-khoe"
+    ],
+    "src": "WHO, Nutrients in Drinking Water (2005)"
+  },
+  {
+    "id": "hh-342",
+    "cat": "hoa-hoc",
+    "sub": "kim-loai",
+    "t": "Vàng có thể dát mỏng tới khoảng 0,1 micromet, mỏng tới mức ánh sáng xanh xuyên qua được",
+    "s": "Một gam vàng dát được thành lá rộng khoảng 1 mét vuông. Lá vàng mỏng nhìn xuyên qua có màu lục lam chứ không phải vàng.",
+    "tags": [
+      "vang",
+      "dat-mong",
+      "quang-hoc"
+    ],
+    "src": "Bảo tàng Anh; Sổ tay CRC Handbook"
+  },
+  {
+    "id": "hh-343",
+    "cat": "hoa-hoc",
+    "sub": "nguyen-to",
+    "t": "Silic là nguyên tố phổ biến thứ hai trong vỏ Trái Đất và nó là nền của cả ngành bán dẫn",
+    "s": "Cát thạch anh phải được tinh chế tới độ tinh khiết 99,9999999% mới dùng làm chip. Đây là một trong các vật liệu tinh khiết nhất mà con người sản xuất ở quy mô công nghiệp.",
+    "tags": [
+      "silic",
+      "ban-dan",
+      "tinh-khiet"
+    ],
+    "src": "SEMI Standards; USGS Mineral Commodity Summaries"
+  },
+  {
+    "id": "hh-344",
+    "cat": "hoa-hoc",
+    "sub": "polymer-nhua",
+    "t": "Sợi vải tổng hợp thải ra vi nhựa mỗi lần giặt, và một mẻ giặt có thể thải hàng trăm nghìn sợi",
+    "s": "Ước tính khoảng 700.000 sợi cho một mẻ 6 kg vải tổng hợp. Phần lớn đi qua nhà máy xử lý nước thải và ra sông biển.",
+    "tags": [
+      "vi-nhua",
+      "giat-giu",
+      "moi-truong"
+    ],
+    "src": "Napper & Thompson, Marine Pollution Bulletin (2016)"
+  },
+  {
+    "id": "hh-345",
+    "cat": "hoa-hoc",
+    "sub": "hoa-hoc-doi-song",
+    "t": "Chất chống oxy hoá trong thực phẩm không tương đương với chất chống oxy hoá có ích trong cơ thể",
+    "s": "Chỉ số ORAC từng được dùng để quảng cáo đã bị Bộ Nông nghiệp Mỹ gỡ khỏi cơ sở dữ liệu năm 2012 vì nó không phản ánh tác dụng sinh học. Nhiều thử nghiệm bổ sung liều cao cho kết quả trung tính hoặc có hại.",
+    "tags": [
+      "chong-oxy-hoa",
+      "orac",
+      "dinh-duong"
+    ],
+    "src": "USDA (2012); Bjelakovic và cộng sự, Cochrane Review (2012)"
+  },
+  {
+    "id": "hh-346",
+    "cat": "hoa-hoc",
+    "sub": "phan-ung",
+    "t": "Bột nở làm bánh phồng bằng CO₂, còn lòng trắng đánh bông làm bánh phồng bằng không khí và hơi nước",
+    "s": "Ba cơ chế tạo xốp — hoá học, cơ học và sinh học — có thể dùng riêng hoặc kết hợp. Bánh sừng bò phồng gần như hoàn toàn nhờ hơi nước từ bơ bốc hơi giữa các lớp bột.",
+    "tags": [
+      "banh",
+      "xop",
+      "nau-an"
+    ],
+    "src": "McGee, On Food and Cooking"
+  },
+  {
+    "id": "hh-347",
+    "cat": "hoa-hoc",
+    "sub": "vat-lieu",
+    "t": "Bê tông đạt khoảng 70% cường độ sau 7 ngày nhưng vẫn tiếp tục cứng thêm trong nhiều năm",
+    "s": "Phản ứng thuỷ hoá xi măng diễn ra chậm dần chứ không dừng lại. Mẫu bê tông tiêu chuẩn được thử ở mốc 28 ngày vì đó là điểm cân bằng giữa độ chính xác và thời gian chờ.",
+    "tags": [
+      "be-tong",
+      "thuy-hoa",
+      "xay-dung"
+    ],
+    "src": "ACI 318; Neville, Properties of Concrete"
+  },
+  {
+    "id": "hh-348",
+    "cat": "hoa-hoc",
+    "sub": "kim-loai",
+    "t": "Hai kim loại khác nhau tiếp xúc trong môi trường ẩm tạo thành một cục pin và ăn mòn nhanh hơn",
+    "s": "Ăn mòn điện hoá là lý do ốc thép không được bắt trực tiếp vào tấm nhôm ngoài trời. Kỹ sư dùng bảng thế điện hoá để chọn cặp kim loại có chênh lệch nhỏ.",
+    "tags": [
+      "an-mon-dien-hoa",
+      "kim-loai",
+      "ky-thuat"
+    ],
+    "src": "ASTM G82; Jones, Principles and Prevention of Corrosion"
+  },
+  {
+    "id": "hh-349",
+    "cat": "hoa-hoc",
+    "sub": "nuoc-va-dung-moi",
+    "t": "Xà phòng không diệt khuẩn — nó cuốn trôi vi khuẩn, và điều đó lại hiệu quả hơn với nhiều mầm bệnh",
+    "s": "Cơ chế cơ học này không tạo áp lực chọn lọc nên vi khuẩn không kháng lại được. Xà phòng có chất diệt khuẩn không cho lợi ích rõ với người dùng gia đình, và FDA đã cấm nhiều hoạt chất loại đó từ năm 2016.",
+    "tags": [
+      "xa-phong",
+      "khang-khuan",
+      "fda"
+    ],
+    "src": "US FDA (2016); Aiello và cộng sự, Clinical Infectious Diseases (2007)"
+  },
+  {
+    "id": "hh-350",
+    "cat": "hoa-hoc",
+    "sub": "khi-quyen-hoa-hoc",
+    "t": "Băng phiến và long não thăng hoa trực tiếp từ rắn sang khí, và đó là lý do chúng nhỏ dần mà không để lại vết ướt",
+    "s": "Cả hai đều là chất rắn có áp suất hơi cao ở nhiệt độ phòng. Naphthalene trong băng phiến đã bị hạn chế ở nhiều nước vì độc tính với trẻ nhỏ.",
+    "tags": [
+      "thang-hoa",
+      "bang-phien",
+      "an-toan"
+    ],
+    "src": "US CDC ATSDR; EU Regulation 1907/2006 (REACH)"
+  }
+]

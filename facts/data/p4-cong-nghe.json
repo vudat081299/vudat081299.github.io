@@ -1,0 +1,171 @@
+[
+  {
+    "id": "cn-202",
+    "cat": "cong-nghe",
+    "sub": "internet-mang",
+    "t": "Cáp quang biển bị đứt trung bình khoảng 150–200 lần mỗi năm, phần lớn do neo tàu và lưới cào",
+    "s": "Việt Nam kết nối quốc tế qua vài tuyến chính, nên một sự cố cũng làm chậm cả nước. Sửa một tuyến cần tàu chuyên dụng và thường mất vài tuần.",
+    "tags": [
+      "cap-ngam",
+      "su-co",
+      "viet-nam"
+    ],
+    "src": "International Cable Protection Committee (ICPC)"
+  },
+  {
+    "id": "cn-206",
+    "cat": "cong-nghe",
+    "sub": "internet-mang",
+    "t": "Một tìm kiếm hay một tin nhắn tốn rất ít năng lượng, và vấn đề nằm ở tổng số lượng",
+    "s": "Trung tâm dữ liệu tiêu thụ khoảng 1–1,5% điện năng toàn cầu. Chúng cũng tiêu tốn nhiều nước cho làm mát hơn phần lớn người dùng hình dung.",
+    "tags": [
+      "trung-tam-du-lieu",
+      "nang-luong",
+      "nuoc"
+    ],
+    "src": "IEA, Data Centres and Data Transmission Networks (2023)"
+  },
+  {
+    "id": "cn-207",
+    "cat": "cong-nghe",
+    "sub": "bao-mat-mat-khau",
+    "t": "Độ dài mật khẩu quan trọng hơn ký tự đặc biệt, và chuẩn hiện đại bỏ yêu cầu đổi định kỳ",
+    "s": "NIST từ năm 2017 khuyến nghị không bắt đổi mật khẩu theo lịch vì nó khiến người dùng chọn biến thể dễ đoán. Một cụm bốn từ ngẫu nhiên mạnh hơn một chuỗi 8 ký tự có ký tự đặc biệt.",
+    "tags": [
+      "mat-khau",
+      "nist",
+      "bao-mat"
+    ],
+    "src": "NIST SP 800-63B (2017)"
+  },
+  {
+    "id": "cn-212",
+    "cat": "cong-nghe",
+    "sub": "bao-mat-mat-khau",
+    "t": "Trình quản lý mật khẩu an toàn hơn trí nhớ vì nó cho phép mỗi dịch vụ một mật khẩu khác nhau",
+    "s": "Kho được mã hoá bằng khoá dẫn xuất từ mật khẩu chính, nên nhà cung cấp cũng không đọc được. Rủi ro tập trung là có thật, nhưng nó nhỏ hơn rủi ro dùng lại mật khẩu ở hàng chục nơi.",
+    "tags": [
+      "quan-ly-mat-khau",
+      "bao-mat",
+      "danh-doi"
+    ],
+    "src": "NIST SP 800-63B; NCSC Anh"
+  },
+  {
+    "id": "cn-214",
+    "cat": "cong-nghe",
+    "sub": "du-lieu-luu-tru",
+    "t": "Quy tắc sao lưu 3-2-1 vẫn là tiêu chuẩn: 3 bản, 2 loại phương tiện, 1 bản ở nơi khác",
+    "s": "Bản sao trên cùng máy không bảo vệ được trước hỏng ổ, mã độc tống tiền hay cháy nhà. Một bản sao chưa từng được thử khôi phục thì chưa được coi là bản sao.",
+    "tags": [
+      "sao-luu",
+      "3-2-1",
+      "an-toan-du-lieu"
+    ],
+    "src": "US CISA; NIST SP 800-34"
+  },
+  {
+    "id": "cn-215",
+    "cat": "cong-nghe",
+    "sub": "du-lieu-luu-tru",
+    "t": "Đĩa CD và DVD ghi tại nhà có tuổi thọ ngắn hơn nhiều so với đĩa ép công nghiệp",
+    "s": "Lớp thuốc nhuộm hữu cơ trong đĩa ghi phân huỷ theo nhiệt và ánh sáng, và nhiều đĩa hỏng sau 5–10 năm. Đĩa ép có lớp nhôm dập vật lý nên bền hơn.",
+    "tags": [
+      "dia-quang",
+      "luu-tru",
+      "tuoi-tho"
+    ],
+    "src": "Thư viện Quốc hội Mỹ, Care and Handling of CDs and DVDs"
+  },
+  {
+    "id": "cn-216",
+    "cat": "cong-nghe",
+    "sub": "du-lieu-luu-tru",
+    "t": "Băng từ vẫn là phương tiện lưu trữ dài hạn rẻ nhất và nó vẫn đang được cải tiến",
+    "s": "Một băng LTO hiện nay chứa hàng chục terabyte và có tuổi thọ lưu kho khoảng 30 năm. Các trung tâm dữ liệu lớn vẫn dùng nó cho dữ liệu nguội.",
+    "tags": [
+      "bang-tu",
+      "lto",
+      "luu-tru"
+    ],
+    "src": "LTO Program; IBM Research"
+  },
+  {
+    "id": "cn-219",
+    "cat": "cong-nghe",
+    "sub": "may-tinh-chip",
+    "t": "Con số 3 nanomet trên tên chip hiện nay không còn tương ứng kích thước vật lý nào",
+    "s": "Từ khoảng nút 22 nm trở đi, tên gọi thành nhãn tiếp thị chứ không phải phép đo. Kích thước thật của các cấu trúc nhỏ nhất lớn hơn con số đó vài lần.",
+    "tags": [
+      "chip",
+      "nanomet",
+      "tiep-thi"
+    ],
+    "src": "IEEE Spectrum; IRDS More Moore Chapter"
+  },
+  {
+    "id": "cn-220",
+    "cat": "cong-nghe",
+    "sub": "may-tinh-chip",
+    "t": "Một nhà máy chip hiện đại tốn khoảng 10–20 tỉ đô và mất vài năm để xây",
+    "s": "Máy quang khắc cực tím sâu do một công ty Hà Lan độc quyền sản xuất, giá hơn 150 triệu đô mỗi máy. Đây là lý do chuỗi cung ứng chip tập trung vào rất ít nơi trên thế giới.",
+    "tags": [
+      "chip",
+      "nha-may",
+      "chuoi-cung-ung"
+    ],
+    "src": "SIA/BCG Report (2021); ASML Annual Report"
+  },
+  {
+    "id": "cn-223",
+    "cat": "cong-nghe",
+    "sub": "may-tinh-chip",
+    "t": "Bộ nhớ đệm nhanh hơn RAM khoảng 100 lần và RAM nhanh hơn ổ SSD khoảng 1.000 lần",
+    "s": "Chênh lệch nhiều bậc này là lý do phần lớn tối ưu hiệu năng thực chất là tối ưu vị trí dữ liệu. Một lần truy cập bộ nhớ chính tốn thời gian bằng hàng trăm phép tính.",
+    "tags": [
+      "bo-nho",
+      "phan-cap",
+      "hieu-nang"
+    ],
+    "src": "Hennessy & Patterson, Computer Architecture: A Quantitative Approach"
+  },
+  {
+    "id": "cn-229",
+    "cat": "cong-nghe",
+    "sub": "ai-thuat-toan",
+    "t": "Máy tính đánh cờ vua mạnh hơn mọi kỳ thủ từ năm 1997, nhưng cờ vây phải đợi tới năm 2016",
+    "s": "Không gian nước đi của cờ vây lớn hơn cờ vua nhiều bậc, nên phương pháp vét cạn không dùng được. Bước ngoặt đến từ mạng nơ-ron kết hợp tìm kiếm cây Monte Carlo.",
+    "tags": [
+      "co-vua",
+      "co-vay",
+      "ai"
+    ],
+    "src": "Silver và cộng sự, Nature (2016); IBM Deep Blue (1997)"
+  },
+  {
+    "id": "cn-233",
+    "cat": "cong-nghe",
+    "sub": "dien-thoai-pin",
+    "t": "Độ phân giải cao hơn khả năng phân giải của mắt bạn không cải thiện gì mà chỉ tốn pin",
+    "s": "Ở khoảng cách xem thông thường, mắt người phân biệt được khoảng 60 điểm ảnh mỗi độ góc nhìn. Vượt ngưỡng đó, thêm điểm ảnh chỉ làm tăng công suất xử lý và tiêu thụ điện.",
+    "tags": [
+      "man-hinh",
+      "do-phan-giai",
+      "mat"
+    ],
+    "src": "Deering, SIGGRAPH (1998); Apple Retina specifications"
+  },
+  {
+    "id": "cn-240",
+    "cat": "cong-nghe",
+    "sub": "huyen-thoai-cong-nghe",
+    "t": "Wi-Fi không phải viết tắt của cái gì cả, và Bluetooth được đặt theo tên một vị vua Viking",
+    "s": "Wi-Fi là tên thương hiệu do một công ty tiếp thị nghĩ ra năm 1999. Logo Bluetooth là hai chữ rune ghép lại, viết tắt tên Harald Bluetooth, vị vua đã hợp nhất Đan Mạch và Na Uy.",
+    "tags": [
+      "wifi",
+      "bluetooth",
+      "ten-goi"
+    ],
+    "src": "Wi-Fi Alliance; Bluetooth SIG"
+  }
+]

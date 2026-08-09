@@ -1,0 +1,56 @@
+#!/bin/sh
+# Cổng chất lượng cho facts/ — chạy lúc commit.
+# Cài: facts/tools/install-hooks.sh
+#
+# Chỉ chạy khi commit có chạm vào facts/ — commit ở cashy/, masters-degree/… không bị ảnh hưởng.
+# Đây là lưới cuối: hook PostToolUse chỉ bắt được sửa bằng Edit/Write, còn cổng này bắt được
+# cả những thay đổi viết bằng script.
+# Bỏ qua một lần (chỉ khi bạn BIẾT mình đang làm gì): git commit --no-verify
+
+set -e
+DIR="facts"
+ROOT=$(git rev-parse --show-toplevel)
+
+git diff --cached --name-only | grep -q "^$DIR/" || exit 0
+
+if ! command -v python3 >/dev/null 2>&1; then
+  echo "pre-commit: không có python3 — bỏ qua cổng facts." >&2
+  exit 0
+fi
+
+echo "pre-commit: chạy cổng $DIR…"
+cd "$ROOT/$DIR"
+
+FAIL=0
+CHECK=$(python3 tools/factlint.py check 2>&1) || true
+case "$CHECK" in
+  *'— LỖI ('*)
+    printf '%s\n' "$CHECK" | sed -n '/— LỖI (/,$p' >&2
+    FAIL=1 ;;
+esac
+
+if ! VERIFY=$(python3 tools/factlint.py verify 2>&1); then
+  printf '%s\n' "$VERIFY" >&2
+  FAIL=1
+fi
+
+if [ "$FAIL" -ne 0 ]; then
+  cat >&2 <<'MSG'
+
+──────────────────────────────────────────────────────────────────────
+Commit bị chặn: cổng facts không qua.
+
+  · lỗi cấu trúc  → id trùng / cat / sub / src / viz — xem danh sách trên
+  · mức LOẠI      → fact trượt định nghĩa, xem facts/CLAUDE.md §1.1
+                    (tường thuật, lời khuyên, meta nghiên cứu, định luật
+                     đặt tên, xu hướng hành vi không mỏ neo)
+
+Xem thêm:  python3 facts/tools/factlint.py verify -v
+           python3 facts/tools/factlint.py stats
+Bỏ qua có ý thức:  git commit --no-verify
+──────────────────────────────────────────────────────────────────────
+MSG
+  exit 1
+fi
+
+echo "pre-commit: cổng $DIR qua."

@@ -1,85 +1,5 @@
 [
   {
-    "id": "td-001",
-    "cat": "tu-duy",
-    "sub": "mo-hinh-tu-duy",
-    "t": "Bạn có hai hệ thống nghĩ, và hệ nhanh cầm lái phần lớn thời gian",
-    "s": "Hệ 1 chạy tự động, nhanh, tốn ít năng lượng và luôn có sẵn câu trả lời. Hệ 2 chậm, tốn sức, và mặc định lười — nó chỉ vào cuộc khi bị buộc. Hầu hết sai lầm phán đoán không phải vì bạn ngu, mà vì Hệ 2 tin lời Hệ 1 mà không kiểm.",
-    "d": "Ví dụ kinh điển: một cây gậy và quả bóng giá 1,10 đô; cây gậy đắt hơn quả bóng 1 đô. Quả bóng giá bao nhiêu? Đa số bật ra ngay '10 xu' — sai. Đáp án là 5 xu.\n\nBài học ứng dụng: các quyết định quan trọng (tuyển người, ký hợp đồng, xuống tiền) nên có một bước bắt buộc làm chậm — viết ra, ngủ một đêm, hoặc bắt mình giải thích cho người thứ ba. Không phải để thông minh hơn, mà để ép Hệ 2 vào cuộc.",
-    "tags": [
-      "ra-quyet-dinh",
-      "kahneman",
-      "nhan-thuc"
-    ],
-    "src": "Daniel Kahneman, Thinking, Fast and Slow (2011); Shane Frederick, Cognitive Reflection Test (2005)"
-  },
-  {
-    "id": "td-002",
-    "cat": "tu-duy",
-    "sub": "mo-hinh-tu-duy",
-    "t": "Đảo ngược vấn đề: hỏi 'làm sao để chắc chắn thất bại?'",
-    "s": "Nhà toán học Carl Jacobi có câu 'man muss immer umkehren' — luôn phải đảo ngược. Thay vì hỏi làm sao để dự án thành công, hãy liệt kê mọi cách chắc chắn làm nó chết, rồi tránh từng cái. Danh sách thứ hai thường cụ thể và dễ hành động hơn danh sách thứ nhất.",
-    "tags": [
-      "mo-hinh-tu-duy",
-      "giai-quyet-van-de"
-    ],
-    "src": "Carl Gustav Jacobi; được Charlie Munger phổ biến trong Poor Charlie's Almanack"
-  },
-  {
-    "id": "td-003",
-    "cat": "tu-duy",
-    "sub": "du-doan",
-    "t": "Premortem: giả vờ dự án đã thất bại rồi mới bắt đầu",
-    "s": "Trước khi khởi động, tập hợp nhóm lại và nói: 'Một năm sau, dự án này đã thất bại thảm hại. Hãy viết ra vì sao.' Nghiên cứu cho thấy cách đặt câu hỏi ở thì quá khứ hoàn thành làm tăng đáng kể số nguyên nhân rủi ro mà nhóm nêu ra, so với câu hỏi 'có rủi ro gì'.",
-    "d": "Lý do tâm lý: khi rủi ro được đóng khung là 'đã xảy ra', não chuyển từ chế độ tưởng tượng mơ hồ sang chế độ giải thích — mà giải thích thì cụ thể hơn nhiều. Nó cũng gỡ bỏ rào cản xã hội: người bi quan không còn bị xem là kẻ phá đám, vì cả nhóm đang được yêu cầu bi quan.",
-    "tags": [
-      "ra-quyet-dinh",
-      "quan-ly-rui-ro",
-      "du-an"
-    ],
-    "src": "Gary Klein, Harvard Business Review (2007); Mitchell, Russo & Pennington (1989)"
-  },
-  {
-    "id": "td-004",
-    "cat": "tu-duy",
-    "sub": "mo-hinh-tu-duy",
-    "t": "Hàng rào của Chesterton: đừng dỡ cái bạn chưa hiểu vì sao có",
-    "s": "Gặp một quy định vô lý, một bước thừa trong quy trình, một cái hàng rào giữa đồng không? Nguyên tắc là: chỉ được dỡ sau khi trả lời được vì sao nó ở đó. Rất nhiều quy trình 'ngớ ngẩn' là sẹo của một tai nạn mà người mới chưa từng thấy. Phần đối xứng ít được nhắc: rất nhiều hàng rào còn đứng đó chỉ vì không ai chịu chi phí kiểm xem lý do gốc còn hiệu lực không — nên cách xử thực dụng là đặt hạn kiểm định lại cho quy tắc, thay vì tranh luận giữ hay bỏ.",
-    "tags": [
-      "mo-hinh-tu-duy",
-      "quan-ly",
-      "thay-doi"
-    ],
-    "src": "G. K. Chesterton, The Thing (1929)"
-  },
-  {
-    "id": "td-005",
-    "cat": "tu-duy",
-    "sub": "mo-hinh-tu-duy",
-    "t": "Nghĩ bậc hai: 'rồi sau đó thì sao?'",
-    "s": "Bậc một là hệ quả trực tiếp, ai cũng thấy. Bậc hai là hệ quả của hệ quả, và nó thường ngược dấu. Giảm giá để giành khách (bậc một: doanh số tăng) kéo theo khách quen chờ đợt giảm tiếp và biên lợi nhuận neo thấp (bậc hai). Người ra quyết định giỏi khác người bình thường chủ yếu ở chỗ họ hỏi thêm câu 'rồi sau đó thì sao?' hai đến ba lần.",
-    "tags": [
-      "mo-hinh-tu-duy",
-      "ra-quyet-dinh",
-      "chien-luoc"
-    ],
-    "src": "Howard Marks, The Most Important Thing (2011)"
-  },
-  {
-    "id": "td-006",
-    "cat": "tu-duy",
-    "sub": "mo-hinh-tu-duy",
-    "t": "Định luật Goodhart: chỉ số thành mục tiêu thì hết là chỉ số tốt",
-    "s": "Khi bạn thưởng theo số cuộc gọi, nhân viên sẽ gọi nhiều cuộc vô nghĩa. Khi bệnh viện bị chấm điểm theo tỉ lệ tử vong sau phẫu thuật, ca khó sẽ bị từ chối. Bản thân phép đo không sai; sai là ở chỗ gắn phần thưởng vào nó mà không giám sát hành vi mà nó tạo ra.",
-    "d": "Phiên bản gốc của Charles Goodhart (1975) nói về chính sách tiền tệ; Marilyn Strathern diễn đạt lại thành câu ngắn phổ biến ngày nay. Cách phòng: dùng nhiều chỉ số đối trọng nhau (tốc độ đi kèm chất lượng, doanh số đi kèm tỉ lệ hoàn trả), và đổi chỉ số định kỳ trước khi hệ thống kịp bị tối ưu hoá ngược.",
-    "tags": [
-      "do-luong",
-      "quan-ly",
-      "dong-co"
-    ],
-    "src": "Charles Goodhart (1975); Marilyn Strathern (1997)"
-  },
-  {
     "id": "td-007",
     "cat": "tu-duy",
     "sub": "lap-luan-sai",
@@ -91,125 +11,6 @@
       "khoi-nghiep"
     ],
     "src": "Abraham Wald, Statistical Research Group (1943)"
-  },
-  {
-    "id": "td-008",
-    "cat": "tu-duy",
-    "sub": "nhan-qua",
-    "t": "Hồi quy về trung bình khiến ta tin nhầm rằng mắng có tác dụng hơn khen",
-    "s": "Huấn luyện viên nhận thấy: khen phi công bay tốt thì lần sau họ bay tệ hơn, mắng phi công bay tệ thì lần sau họ khá hơn — nên kết luận mắng hiệu quả hơn. Thực ra kết quả cực đoan tự nó có xu hướng trở về mức trung bình ở lần sau, dù bạn có làm gì hay không.",
-    "d": "Đây là một trong những cái bẫy nguy hiểm nhất trong quản lý và y học: bất kỳ can thiệp nào áp lên nhóm 'đang tệ nhất' đều trông như có hiệu quả. Cách duy nhất để biết thật sự có tác dụng hay không là có nhóm đối chứng, hoặc ít nhất là so với xu hướng dài hạn thay vì so với một điểm cực đoan.",
-    "tags": [
-      "thong-ke",
-      "quan-ly",
-      "thien-kien"
-    ],
-    "src": "Francis Galton (1886); Kahneman & Tversky, Science (1974)"
-  },
-  {
-    "id": "td-009",
-    "cat": "tu-duy",
-    "sub": "mo-hinh-tu-duy",
-    "t": "Dao cạo Hanlon: đừng quy cho ác ý cái mà sự cẩu thả đã giải thích đủ",
-    "s": "Email cộc lốc, tin nhắn không trả lời, quyết định làm bạn thiệt — đa số không phải âm mưu, mà là người ta bận, quên, hiểu nhầm, hoặc chưa nghĩ tới bạn. Giả định ác ý làm bạn phản ứng leo thang; giả định cẩu thả làm bạn hỏi lại một câu và thường là xong chuyện.",
-    "tags": [
-      "mo-hinh-tu-duy",
-      "giao-tiep",
-      "quan-he"
-    ],
-    "src": "Robert J. Hanlon, Murphy's Law Book Two (1980)"
-  },
-  {
-    "id": "td-010",
-    "cat": "tu-duy",
-    "sub": "mo-hinh-tu-duy",
-    "t": "Bản đồ không phải là lãnh thổ",
-    "s": "Mọi mô hình — báo cáo tài chính, KPI, sơ đồ tổ chức, cả bài viết này — đều là bản rút gọn của thực tại, và phần bị bỏ đi mới là chỗ bạn vấp. Sai lầm không nằm ở việc dùng bản đồ, mà ở việc quên rằng mình đang dùng bản đồ.",
-    "tags": [
-      "mo-hinh-tu-duy",
-      "nhan-thuc"
-    ],
-    "src": "Alfred Korzybski, Science and Sanity (1933)"
-  },
-  {
-    "id": "td-011",
-    "cat": "tu-duy",
-    "sub": "ra-quyet-dinh",
-    "t": "Chi phí chìm đã tiêu rồi thì không còn là dữ liệu để quyết định",
-    "s": "Số tiền, thời gian, công sức đã bỏ ra không thể thu hồi, nên nó không nên xuất hiện trong phép tính 'tiếp hay dừng'. Câu hỏi đúng luôn là: nếu hôm nay mới bắt đầu, với những gì đang biết, tôi có bỏ tiền vào việc này không?",
-    "d": "Khó ở chỗ dừng lại nghĩa là công khai thừa nhận sai — nên chi phí chìm thực chất là bài toán thể diện chứ không phải bài toán tài chính. Cách chữa: tách người quyết định tiếp tục khỏi người đã quyết định bắt đầu, và định trước điều kiện dừng ngay từ lúc khởi động ('nếu sau 6 tháng chưa đạt X thì dừng').",
-    "tags": [
-      "ra-quyet-dinh",
-      "kinh-te",
-      "du-an"
-    ],
-    "src": "Arkes & Blumer, Organizational Behavior and Human Decision Processes (1985)"
-  },
-  {
-    "id": "td-012",
-    "cat": "tu-duy",
-    "sub": "lap-luan-sai",
-    "t": "Định luật Brandolini: bác bỏ tốn năng lượng gấp nhiều lần bịa ra",
-    "s": "Lượng công sức cần để phản bác một điều nhảm nhí lớn hơn một bậc so với công sức tạo ra nó. Đó là lý do tin sai lan nhanh hơn tin đúng, và cũng là lý do người trưởng thành nên chọn trận mà đánh thay vì đi cải chính mọi thứ trên mạng.",
-    "tags": [
-      "thong-tin",
-      "tranh-luan",
-      "mang-xa-hoi"
-    ],
-    "src": "Alberto Brandolini (2013)"
-  },
-  {
-    "id": "td-013",
-    "cat": "tu-duy",
-    "sub": "lap-luan-sai",
-    "t": "Nguyên tắc phản chứng: giả thuyết nào cũng phải nói được 'cái gì sẽ chứng minh tôi sai'",
-    "s": "Karl Popper phân biệt khoa học với nguỵ khoa học không bằng việc có bằng chứng ủng hộ hay không, mà bằng việc có thể bị bác bỏ hay không. Áp dụng đời thường: khi ai đó nói về thị trường, đối thủ, hay tính cách một người, hãy hỏi 'điều gì sẽ khiến anh đổi ý?'. Nếu câu trả lời là không có gì, đó là niềm tin chứ không phải phân tích.",
-    "tags": [
-      "khoa-hoc",
-      "tranh-luan",
-      "mo-hinh-tu-duy"
-    ],
-    "src": "Karl Popper, The Logic of Scientific Discovery (1934/1959)"
-  },
-  {
-    "id": "td-014",
-    "cat": "tu-duy",
-    "sub": "lap-luan-sai",
-    "t": "Bạn không kiểm chứng lý lẽ của mình, bạn chỉ kiểm chứng lý lẽ của người khác",
-    "s": "Trong bài toán chọn thẻ Wason, chưa tới 10% người lớn có học vấn chọn đúng khi bài toán trừu tượng — nhưng đa số chọn đúng khi cùng bài toán đó được kể dưới dạng bắt kẻ gian lận. Bộ não người dường như tiến hoá để tìm lỗ hổng trong lập luận của đối phương, không phải của chính mình.",
-    "d": "Hệ quả thực dụng: đừng tin vào việc tự kiểm tra suy nghĩ trong đầu. Muốn phát hiện lỗi trong kế hoạch của mình, cách rẻ nhất là đưa nó cho một người có động cơ tìm lỗ hổng — đồng nghiệp khó tính, đối thủ, hoặc chính bạn của một tháng sau khi đã viết nó ra giấy.",
-    "tags": [
-      "lap-luan",
-      "thien-kien",
-      "phan-bien"
-    ],
-    "src": "Peter Wason (1968); Cosmides & Tooby (1992); Mercier & Sperber, The Enigma of Reason (2017)"
-  },
-  {
-    "id": "td-015",
-    "cat": "tu-duy",
-    "sub": "mo-hinh-tu-duy",
-    "t": "Vòng tròn năng lực: biết rìa của nó quan trọng hơn kích thước của nó",
-    "s": "Warren Buffett nói điều quan trọng không phải vòng tròn hiểu biết của bạn rộng bao nhiêu, mà là bạn có biết chính xác nó kết thúc ở đâu không. Phần lớn thiệt hại tài chính và nghề nghiệp xảy ra khi người ta hành động tự tin ở ngay ngoài rìa vòng tròn mà không nhận ra mình đã bước ra.",
-    "tags": [
-      "ra-quyet-dinh",
-      "dau-tu",
-      "su-nghiep"
-    ],
-    "src": "Warren Buffett, thư gửi cổ đông Berkshire Hathaway (1996)"
-  },
-  {
-    "id": "td-016",
-    "cat": "tu-duy",
-    "sub": "mo-hinh-tu-duy",
-    "t": "Via negativa: bỏ bớt thường hiệu quả hơn thêm vào — và ta gần như luôn quên mất lựa chọn đó",
-    "s": "Một loạt thí nghiệm đăng trên Nature (2021) cho thấy khi được yêu cầu cải thiện một thiết kế, một hành trình hay một quy trình, người ta mặc định nghĩ tới việc thêm chi tiết, dù cách bỏ bớt thường tốt hơn và rẻ hơn. Khi được nhắc rằng 'bỏ bớt cũng là một lựa chọn', tỉ lệ chọn phương án bỏ tăng lên rõ rệt.",
-    "tags": [
-      "thiet-ke",
-      "quy-trinh",
-      "don-gian-hoa"
-    ],
-    "src": "Adams, Converse, Hales & Klotz, Nature 592 (2021)"
   },
   {
     "id": "td-017",
@@ -224,19 +25,6 @@
       "thien-kien"
     ],
     "src": "Kahneman & Tversky (1979); Flyvbjerg, Harvard Business Review (2003)"
-  },
-  {
-    "id": "td-018",
-    "cat": "tu-duy",
-    "sub": "lap-luan-sai",
-    "t": "Quy tắc Rapoport: muốn phản bác ai, trước hết phải diễn đạt lại quan điểm của họ hay hơn họ",
-    "s": "Trình tự do Anatol Rapoport đề xuất: (1) diễn đạt lại lập trường của đối phương rõ đến mức họ nói 'cảm ơn, tôi ước gì mình nói được như thế'; (2) nêu những điểm bạn đồng ý; (3) nêu điều bạn học được từ họ; rồi mới (4) phản bác. Ba bước đầu làm cuộc tranh luận đổi bản chất — từ thi đấu sang cùng tìm ra đáp án.",
-    "tags": [
-      "tranh-luan",
-      "giao-tiep",
-      "phan-bien"
-    ],
-    "src": "Anatol Rapoport; dẫn trong Daniel Dennett, Intuition Pumps (2013)"
   },
   {
     "id": "td-019",
@@ -254,19 +42,6 @@
     "src": "Bickel, Hammel & O'Connell, Science 187 (1975)"
   },
   {
-    "id": "td-020",
-    "cat": "tu-duy",
-    "sub": "nhan-qua",
-    "t": "Tương quan không phải nhân quả, nhưng cũng đừng vứt nó đi",
-    "s": "Tương quan là bằng chứng yếu về nhân quả, không phải bằng chứng bằng không. Cách dùng trưởng thành: coi tương quan là lời mời đi tìm cơ chế và biến gây nhiễu, chứ không phải kết luận, và cũng không phải cái cớ để bác bỏ mọi dữ liệu quan sát.",
-    "tags": [
-      "thong-ke",
-      "nhan-qua",
-      "phan-tich"
-    ],
-    "src": "Judea Pearl, The Book of Why (2018)"
-  },
-  {
     "id": "td-021",
     "cat": "tu-duy",
     "sub": "mo-hinh-tu-duy",
@@ -278,18 +53,5 @@
       "kinh-te"
     ],
     "src": "Vilfredo Pareto, Cours d'économie politique (1896); Joseph Juran phổ biến trong quản lý chất lượng"
-  },
-  {
-    "id": "td-022",
-    "cat": "tu-duy",
-    "sub": "lap-luan-sai",
-    "t": "Bạn không cần thắng cuộc tranh luận để đổi ý người khác — bạn cần giảm chi phí đổi ý của họ",
-    "s": "Đổi ý công khai đồng nghĩa với thừa nhận mình từng sai trước mặt người khác, đó là chi phí xã hội chứ không phải chi phí logic. Vì vậy, cách hiệu quả là cho họ lối ra giữ được thể diện: 'với thông tin lúc đó thì phương án ấy hợp lý, giờ có thêm dữ liệu này…'.",
-    "tags": [
-      "tranh-luan",
-      "giao-tiep",
-      "thuyet-phuc"
-    ],
-    "src": "Kolditz & Arkin (1982), nghiên cứu về hành vi giữ thể diện; Adam Grant, Think Again (2021)"
   }
 ]

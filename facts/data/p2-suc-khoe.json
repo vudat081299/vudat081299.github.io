@@ -55,7 +55,7 @@
     "id": "sk-105",
     "cat": "suc-khoe",
     "sub": "giac-ngu",
-    "t": "Liệu pháp hành vi nhận thức cho mất ngủ hiệu quả hơn thuốc ngủ về dài hạn",
+    "t": "Liệu pháp hành vi nhận thức là điều trị đầu tay cho mất ngủ mạn tính trong hướng dẫn của cả Mỹ và châu Âu, đứng trên thuốc ngủ",
     "s": "Các hướng dẫn lâm sàng ở Mỹ và châu Âu đều đặt CBT-I là điều trị đầu tay cho mất ngủ mạn tính, trên cả thuốc. Thuốc tác dụng nhanh hơn trong vài tuần đầu nhưng hiệu quả mất dần và có nguy cơ lệ thuộc; CBT-I giữ hiệu quả sau khi ngừng điều trị.",
     "tags": [
       "mat-ngu",
@@ -195,23 +195,10 @@
     "src": "Wen và cộng sự, The Lancet (2011); Arem và cộng sự, JAMA Internal Medicine (2015)"
   },
   {
-    "id": "sk-118",
-    "cat": "suc-khoe",
-    "sub": "an-uong",
-    "t": "Chế độ ăn tốt nhất là chế độ bạn duy trì được",
-    "s": "Các thử nghiệm so sánh trực tiếp low-carb, low-fat và các chế độ khác thường cho khác biệt nhỏ về cân nặng sau một năm, trong khi mức tuân thủ giải thích phần lớn khác biệt giữa các cá nhân. Cuộc tranh cãi về tỉ lệ dinh dưỡng đa lượng lớn hơn nhiều so với tác động thực tế của nó. Thử nghiệm DIETFITS so sánh trực tiếp ít carb với ít béo cho khác biệt nhỏ sau 12 tháng, và mức biến động giữa các cá nhân lớn hơn khác biệt giữa hai chế độ.",
-    "tags": [
-      "dinh-duong",
-      "giam-can",
-      "tuan-thu"
-    ],
-    "src": "Gardner và cộng sự, JAMA (2018), nghiên cứu DIETFITS; Johnston và cộng sự, JAMA (2014)"
-  },
-  {
     "id": "sk-119",
     "cat": "suc-khoe",
     "sub": "an-uong",
-    "t": "Nhịn ăn gián đoạn không hiệu quả hơn giảm calo thông thường khi so cùng mức năng lượng",
+    "t": "Nhịn ăn gián đoạn giảm cân bằng đúng cơ chế nạp ít calo hơn, không phải bằng khung giờ",
     "s": "Các thử nghiệm có kiểm soát cho thấy kết quả giảm cân tương đương khi tổng calo bằng nhau. Nó vẫn là công cụ hữu ích với người thấy dễ tuân thủ hơn khi có khung giờ rõ ràng — nhưng lợi ích đến từ việc ăn ít hơn, không từ khung giờ tự nó.",
     "tags": [
       "dinh-duong",
@@ -315,7 +302,7 @@
     "id": "sk-127",
     "cat": "suc-khoe",
     "sub": "thuoc-va-vaccine",
-    "t": "Vắc-xin không gây tự kỷ — nghiên cứu gốc là gian lận và đã bị rút",
+    "t": "Vắc-xin MMR không gây tự kỷ: các nghiên cứu theo dõi trên hàng triệu trẻ ở nhiều nước không tìm thấy liên hệ nào",
     "s": "Bài báo năm 1998 dựa trên 12 trẻ đã bị tạp chí rút lại và tác giả bị tước giấy phép hành nghề vì thao túng dữ liệu. Các nghiên cứu sau đó trên hàng triệu trẻ ở nhiều nước không tìm thấy bất kỳ liên hệ nào.",
     "tags": [
       "vac-xin",
@@ -341,7 +328,7 @@
     "id": "sk-130",
     "cat": "suc-khoe",
     "sub": "benh-va-tam-soat",
-    "t": "Rửa tay bằng xà phòng hiệu quả hơn nước rửa tay khô trong nhiều tình huống",
+    "t": "Xà phòng cuốn trôi được cả norovirus và bào tử C. difficile, hai thứ mà cồn rửa tay khô gần như không diệt",
     "s": "Cồn diệt được nhiều loại vi khuẩn và virus nhưng kém hiệu quả với norovirus, bào tử Clostridioides difficile, và khi tay bẩn nhìn thấy được. Xà phòng hoạt động bằng cách cuốn trôi, nên nó không có điểm mù đó.",
     "tags": [
       "ve-sinh",

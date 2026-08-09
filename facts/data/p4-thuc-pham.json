@@ -1,0 +1,1952 @@
+[
+  {
+    "id": "tp-201",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Thịt áp chảo không hề 'khoá nước lại' — miếng thịt áp chảo mất nước nhiều hơn miếng không áp chảo",
+    "s": "Harold McGee cân thịt trước và sau và cho thấy lớp vỏ nâu không chặn được nước. Lý do áp chảo là mùi và màu từ phản ứng Maillard, không phải giữ nước.",
+    "tags": [
+      "thit",
+      "maillard",
+      "huyen-thoai"
+    ],
+    "src": "McGee, On Food and Cooking (2004)"
+  },
+  {
+    "id": "tp-202",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Nấu ở 60–65 độ giữ thịt mềm vì trên khoảng 70 độ collagen co lại và ép nước ra",
+    "s": "Đây là nguyên lý của nấu chậm ở nhiệt độ thấp: thịt bò giữ ở 55–60 độ trong nhiều giờ vẫn hồng và mềm. Trên 70 độ, sợi cơ co ngót và miếng thịt khô lại.",
+    "tags": [
+      "nhiet-do",
+      "protein",
+      "sous-vide"
+    ],
+    "src": "Baldwin, International Journal of Gastronomy and Food Science (2012)"
+  },
+  {
+    "id": "tp-203",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Nước sôi ở 100 độ là trần nhiệt của mọi cách luộc, nên rán và nướng cho mùi mà luộc không có được",
+    "s": "Phản ứng Maillard cần khoảng 140 độ trở lên, và caramel hoá đường cần khoảng 160 độ. Đó là lý do thức ăn luộc không bao giờ có mùi thơm của thức ăn nướng.",
+    "tags": [
+      "maillard",
+      "nhiet",
+      "nau-an"
+    ],
+    "src": "McGee, On Food and Cooking; Belitz, Food Chemistry"
+  },
+  {
+    "id": "tp-204",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Thêm muối vào nước làm nhiệt độ sôi tăng chưa tới 1 độ ở lượng dùng thực tế",
+    "s": "Muốn tăng 1 độ cần khoảng 58 gam muối cho mỗi lít nước, đậm hơn nước biển. Muối cho vào nước luộc là để nêm chứ không để nấu nhanh hơn.",
+    "tags": [
+      "muoi",
+      "nhiet-do-soi",
+      "huyen-thoai"
+    ],
+    "src": "Sổ tay CRC Handbook; McGee, On Food and Cooking"
+  },
+  {
+    "id": "tp-205",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Trứng chín ở hai nhiệt độ khác nhau: lòng trắng đông ở khoảng 62 độ, lòng đỏ ở khoảng 68 độ",
+    "s": "Chênh lệch 6 độ này là toàn bộ cơ sở của trứng lòng đào và trứng chần. Trứng ngâm ở đúng 64 độ cho lòng trắng vừa đông và lòng đỏ còn sánh.",
+    "tags": [
+      "trung",
+      "protein",
+      "nhiet"
+    ],
+    "src": "This, Molecular Gastronomy (2006)"
+  },
+  {
+    "id": "tp-206",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Trứng cũ dễ bóc vỏ hơn trứng mới vì pH lòng trắng tăng theo thời gian",
+    "s": "CO₂ thoát dần qua vỏ làm pH tăng từ khoảng 7,6 lên trên 9, khiến màng dưới vỏ bám kém hơn vào lòng trắng. Trứng để 7–10 ngày bóc dễ hơn trứng mới đẻ rõ rệt.",
+    "tags": [
+      "trung",
+      "ph",
+      "bao-quan"
+    ],
+    "src": "USDA Egg Grading Manual; McGee, On Food and Cooking"
+  },
+  {
+    "id": "tp-207",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Hành làm chảy nước mắt vì nó phun ra một khí lưu huỳnh chỉ hình thành sau khi tế bào bị phá",
+    "s": "Enzyme alliinase gặp tiền chất tạo syn-propanethial-S-oxide, chất này phản ứng với nước ở mắt tạo axit sulfuric loãng. Làm lạnh hành hoặc dùng dao rất sắc giảm lượng khí sinh ra.",
+    "tags": [
+      "hanh",
+      "luu-huynh",
+      "enzyme"
+    ],
+    "src": "Imai và cộng sự, Nature (2002)"
+  },
+  {
+    "id": "tp-208",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Tỏi chỉ có mùi sau khi bị dập, và cách dập quyết định độ hăng",
+    "s": "Allicin chỉ sinh ra khi enzyme gặp alliin, tức khi thành tế bào bị vỡ. Tỏi băm nhuyễn hăng hơn tỏi cắt lát, và tỏi nguyên củ nướng gần như ngọt vì enzyme bị nhiệt phá trước khi kịp phản ứng.",
+    "tags": [
+      "toi",
+      "allicin",
+      "enzyme"
+    ],
+    "src": "Block, Garlic and Other Alliums (2010)"
+  },
+  {
+    "id": "tp-210",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Thang Scoville ban đầu đo bằng cách nếm pha loãng, và ớt Carolina Reaper đạt trên 1,6 triệu đơn vị",
+    "s": "Ớt chuông là 0, ớt jalapeño khoảng 2.500–8.000, ớt hiểm Việt Nam khoảng 50.000–100.000. Ngày nay người ta đo bằng sắc ký lỏng rồi quy đổi sang thang cũ.",
+    "tags": [
+      "scoville",
+      "ot",
+      "do-luong"
+    ],
+    "src": "Scoville (1912); Guinness World Records"
+  },
+  {
+    "id": "tp-211",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Bột ngọt là muối của một axit amin có sẵn trong cà chua, phô mai và nước mắm",
+    "s": "Glutamat tự do trong nước mắm và trong phô mai Parmesan cao hơn nhiều so với lượng bột ngọt thường dùng khi nấu. Các thử nghiệm mù đôi không lặp lại được 'hội chứng nhà hàng Trung Hoa'.",
+    "tags": [
+      "bot-ngot",
+      "umami",
+      "glutamat"
+    ],
+    "src": "FDA; Freeman, Journal of the American Academy of Nurse Practitioners (2006)"
+  },
+  {
+    "id": "tp-213",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Nước mắm và garum La Mã là cùng một công nghệ: ủ cá với muối cho enzyme tự phân giải protein",
+    "s": "Tỉ lệ muối khoảng 25–30% ngăn vi khuẩn gây bệnh trong khi enzyme nội tại của cá vẫn hoạt động. Quá trình mất 6–18 tháng và tạo ra hàm lượng axit amin tự do rất cao.",
+    "tags": [
+      "nuoc-mam",
+      "garum",
+      "len-men"
+    ],
+    "src": "Curtis, Garum and Salsamenta (1991); TCVN 5107:2018"
+  },
+  {
+    "id": "tp-215",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Nhào bột bánh mì tạo mạng gluten, và chính mạng đó giữ khí để bánh nở",
+    "s": "Gluten hình thành khi hai protein glutenin và gliadin gặp nước rồi được sắp xếp lại bằng lực cơ học. Bột mì làm bánh mì có 12–14% protein, bột làm bánh ngọt chỉ 7–9%.",
+    "tags": [
+      "gluten",
+      "banh-mi",
+      "protein"
+    ],
+    "src": "Belitz, Food Chemistry; AACC International Methods"
+  },
+  {
+    "id": "tp-217",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Khoai tây để tủ lạnh sinh thêm đường và khi chiên sẽ tạo nhiều acrylamide hơn",
+    "s": "Nhiệt độ dưới 8 độ kích hoạt chuyển tinh bột thành đường khử, và đường này phản ứng với asparagine ở nhiệt độ cao. Cơ quan an toàn thực phẩm châu Âu khuyến cáo bảo quản khoai trên 8 độ.",
+    "tags": [
+      "khoai-tay",
+      "acrylamide",
+      "bao-quan"
+    ],
+    "src": "EFSA, Acrylamide in food (2015); UK Food Standards Agency"
+  },
+  {
+    "id": "tp-218",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Sốt mayonnaise là nhũ tương dầu trong nước, và lecithin trong lòng đỏ trứng là chất nối hai bên",
+    "s": "Một lòng đỏ nhũ hoá được tới khoảng 200 ml dầu. Sốt bị tách là do cho dầu quá nhanh khiến giọt dầu lớn hơn mức lecithin bao được.",
+    "tags": [
+      "mayonnaise",
+      "nhu-tuong",
+      "lecithin"
+    ],
+    "src": "McGee, On Food and Cooking; This, Molecular Gastronomy"
+  },
+  {
+    "id": "tp-219",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Dứa và đu đủ chứa enzyme phân giải protein nên chúng làm sữa chua và gelatin không đông",
+    "s": "Bromelain trong dứa và papain trong đu đủ cắt liên kết peptide. Đun nóng làm enzyme mất hoạt tính, nên dứa đóng hộp thì dùng được với gelatin còn dứa tươi thì không.",
+    "tags": [
+      "enzyme",
+      "dua",
+      "gelatin"
+    ],
+    "src": "Belitz, Food Chemistry"
+  },
+  {
+    "id": "tp-220",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Nấu rau xanh quá lâu làm mất màu vì axit trong tế bào thoát ra và phá diệp lục",
+    "s": "Magie ở tâm phân tử diệp lục bị thay bằng hydro, chuyển màu từ lục sang ô liu xỉn. Chần nhanh trong nước sôi nhiều rồi làm lạnh ngay giữ được màu lâu nhất.",
+    "tags": [
+      "diep-luc",
+      "rau",
+      "nau-an"
+    ],
+    "src": "Belitz, Food Chemistry; McGee, On Food and Cooking"
+  },
+  {
+    "id": "tp-221",
+    "cat": "thuc-pham",
+    "sub": "len-men",
+    "t": "Bánh mì, bia, rượu vang, sữa chua, nước tương và cà phê đều là sản phẩm lên men",
+    "s": "Con người dùng vi sinh vật để chế biến thực phẩm ít nhất 13.000 năm trước khi biết vi sinh vật tồn tại. Bằng chứng bia cổ nhất tìm được ở Israel có tuổi khoảng 13.000 năm.",
+    "tags": [
+      "len-men",
+      "lich-su",
+      "vi-sinh"
+    ],
+    "src": "Liu và cộng sự, Journal of Archaeological Science: Reports (2018)"
+  },
+  {
+    "id": "tp-222",
+    "cat": "thuc-pham",
+    "sub": "len-men",
+    "t": "Sữa chua giữ được lâu hơn sữa vì vi khuẩn lactic hạ pH xuống khoảng 4,5 và chặn vi khuẩn gây bệnh",
+    "s": "Hai chủng chuẩn là Lactobacillus bulgaricus và Streptococcus thermophilus, hoạt động cộng sinh. Chúng cũng tiêu thụ một phần lactose, đó là lý do người kém dung nạp lactose thường ăn sữa chua dễ hơn uống sữa.",
+    "tags": [
+      "sua-chua",
+      "lactic",
+      "ph"
+    ],
+    "src": "Codex Standard 243-2003; Savaiano, AJCN (2014)"
+  },
+  {
+    "id": "tp-223",
+    "cat": "thuc-pham",
+    "sub": "len-men",
+    "t": "Phô mai ra đời từ việc chứa sữa trong dạ dày động vật, nơi enzyme rennet làm sữa đông lại",
+    "s": "Chymosin cắt casein khiến protein kết tủa và tách khỏi nước sữa. Hầu hết rennet công nghiệp hiện nay do vi sinh vật biến đổi gen sản xuất chứ không lấy từ dạ dày bê.",
+    "tags": [
+      "pho-mai",
+      "rennet",
+      "casein"
+    ],
+    "src": "Fox và cộng sự, Fundamentals of Cheese Science (2017)"
+  },
+  {
+    "id": "tp-224",
+    "cat": "thuc-pham",
+    "sub": "len-men",
+    "t": "Kim chi và dưa muối không cần men giống — vi khuẩn lactic có sẵn trên bề mặt rau",
+    "s": "Nồng độ muối 2–3% ức chế vi khuẩn gây hỏng nhưng cho lactobacillus phát triển. Đó là lý do muối quá nhạt thì dưa hỏng, quá mặn thì không chua được.",
+    "tags": [
+      "kim-chi",
+      "muoi-chua",
+      "lactic"
+    ],
+    "src": "Jung và cộng sự, Applied and Environmental Microbiology (2011)"
+  },
+  {
+    "id": "tp-225",
+    "cat": "thuc-pham",
+    "sub": "len-men",
+    "t": "Nem chua và tôm chua an toàn nhờ axit lactic, không nhờ nhiệt",
+    "s": "pH xuống dưới 4,6 là ngưỡng chặn Clostridium botulinum. Đây cũng là ngưỡng pháp lý mà cơ quan an toàn thực phẩm dùng để phân loại thực phẩm axit hoá.",
+    "tags": [
+      "nem-chua",
+      "ph",
+      "an-toan"
+    ],
+    "src": "US FDA CFR 21 §114; Codex Alimentarius"
+  },
+  {
+    "id": "tp-226",
+    "cat": "thuc-pham",
+    "sub": "len-men",
+    "t": "Bánh mì bột chua nổi bằng vi sinh vật hoang dã, và mỗi bột cái có hệ vi sinh riêng",
+    "s": "Nghiên cứu 500 mẫu bột cái từ nhiều nước cho thấy thành phần vi sinh khác nhau rõ rệt nhưng không tương quan chặt với vị trí địa lý như người ta tưởng. Bột cái lâu năm nhất còn hoạt động được ghi nhận trên 100 năm tuổi.",
+    "tags": [
+      "bot-chua",
+      "vi-sinh",
+      "banh-mi"
+    ],
+    "src": "Landis và cộng sự, eLife (2021)"
+  },
+  {
+    "id": "tp-227",
+    "cat": "thuc-pham",
+    "sub": "len-men",
+    "t": "Rượu vang đỏ có màu từ vỏ nho, không từ thịt nho",
+    "s": "Gần như mọi giống nho đều có thịt màu nhạt. Rượu vang trắng làm được từ nho đỏ nếu ép và tách vỏ ngay, và nhiều loại champagne dùng đúng cách đó.",
+    "tags": [
+      "ruou-vang",
+      "nho",
+      "mau"
+    ],
+    "src": "Robinson, The Oxford Companion to Wine"
+  },
+  {
+    "id": "tp-228",
+    "cat": "thuc-pham",
+    "sub": "len-men",
+    "t": "Bia và rượu vang đều do nấm men Saccharomyces cerevisiae tạo ra, nhưng nồng độ cồn bị chặn ở khoảng 15%",
+    "s": "Trên mức đó, chính cồn giết nấm men. Rượu mạnh hơn phải qua chưng cất, và công nghệ chưng cất muộn hơn công nghệ lên men hàng nghìn năm.",
+    "tags": [
+      "nam-men",
+      "con",
+      "chung-cat"
+    ],
+    "src": "Boulton & Quain, Brewing Yeast and Fermentation"
+  },
+  {
+    "id": "tp-229",
+    "cat": "thuc-pham",
+    "sub": "len-men",
+    "t": "Cà phê phải lên men trước khi rang, và bước đó ảnh hưởng tới mùi nhiều hơn nhiều người nghĩ",
+    "s": "Lớp thịt quả được phân giải bằng vi sinh vật trong 12–36 giờ. Phương pháp chế biến ướt, khô hay honey tạo hồ sơ hương khác nhau rõ rệt trên cùng một giống cây.",
+    "tags": [
+      "ca-phe",
+      "len-men",
+      "che-bien"
+    ],
+    "src": "Specialty Coffee Association; Lee và cộng sự, Food Chemistry (2015)"
+  },
+  {
+    "id": "tp-230",
+    "cat": "thuc-pham",
+    "sub": "len-men",
+    "t": "Sô cô la cần lên men hạt cacao 5–7 ngày, và không lên men thì không có mùi sô cô la",
+    "s": "Hạt cacao tươi vị đắng chát và không có hương đặc trưng. Chính vi sinh vật trong lớp thịt quả tạo tiền chất mùi, rồi rang mới phát triển chúng thành hàng trăm hợp chất thơm.",
+    "tags": [
+      "cacao",
+      "len-men",
+      "so-co-la"
+    ],
+    "src": "Schwan & Wheals, Critical Reviews in Food Science (2004)"
+  },
+  {
+    "id": "tp-231",
+    "cat": "thuc-pham",
+    "sub": "bao-quan",
+    "t": "Mật ong gần như không hỏng, và người ta đã tìm thấy mật ong ăn được trong lăng mộ Ai Cập",
+    "s": "Nguyên nhân là hàm lượng nước dưới 18%, pH khoảng 3,9 và enzyme glucose oxidase sinh hydro peroxide. Ba cơ chế đó cộng lại làm vi sinh vật không sống được.",
+    "tags": [
+      "mat-ong",
+      "bao-quan",
+      "ph"
+    ],
+    "src": "White, Bee World (1978); USDA"
+  },
+  {
+    "id": "tp-232",
+    "cat": "thuc-pham",
+    "sub": "bao-quan",
+    "t": "Muối và đường bảo quản thực phẩm bằng cách hút nước ra khỏi tế bào vi khuẩn",
+    "s": "Áp suất thẩm thấu cao làm vi sinh vật mất nước và ngừng hoạt động. Đây là công nghệ bảo quản cổ nhất còn dùng, và nó không cần điện.",
+    "tags": [
+      "muoi",
+      "tham-thau",
+      "bao-quan"
+    ],
+    "src": "Jay, Modern Food Microbiology"
+  },
+  {
+    "id": "tp-233",
+    "cat": "thuc-pham",
+    "sub": "bao-quan",
+    "t": "Đóng hộp diệt khuẩn bằng nhiệt và mối lo lớn nhất là bào tử vi khuẩn gây ngộ độc thịt",
+    "s": "Clostridium botulinum sinh bào tử chịu được nước sôi, nên thực phẩm ít axit phải xử lý ở 121 độ trong nồi hấp áp lực. Thực phẩm có pH dưới 4,6 thì đun nước sôi là đủ.",
+    "tags": [
+      "dong-hop",
+      "botulinum",
+      "an-toan"
+    ],
+    "src": "US FDA; National Center for Home Food Preservation"
+  },
+  {
+    "id": "tp-234",
+    "cat": "thuc-pham",
+    "sub": "bao-quan",
+    "t": "Hút chân không không diệt khuẩn, và với một số vi khuẩn nó còn tạo điều kiện tốt hơn",
+    "s": "Clostridium và Listeria phát triển được trong môi trường thiếu oxy. Vì vậy thực phẩm hút chân không vẫn phải giữ lạnh, và nhãn cảnh báo trên bao bì là bắt buộc ở nhiều nước.",
+    "tags": [
+      "chan-khong",
+      "vi-khuan",
+      "an-toan"
+    ],
+    "src": "US FSIS; EFSA Panel on Biological Hazards"
+  },
+  {
+    "id": "tp-235",
+    "cat": "thuc-pham",
+    "sub": "bao-quan",
+    "t": "Chiếu xạ thực phẩm không làm thực phẩm nhiễm phóng xạ",
+    "s": "Tia gamma đi xuyên qua và phá ADN vi sinh vật rồi thoát ra, không để lại chất phóng xạ. Hơn 60 nước cho phép chiếu xạ, và WHO kết luận thực phẩm chiếu xạ ở liều được duyệt là an toàn.",
+    "tags": [
+      "chieu-xa",
+      "an-toan",
+      "buc-xa"
+    ],
+    "src": "WHO, High-dose irradiation (1999); Codex STAN 106-1983"
+  },
+  {
+    "id": "tp-236",
+    "cat": "thuc-pham",
+    "sub": "bao-quan",
+    "t": "Tủ lạnh không dừng vi khuẩn, nó chỉ làm chúng chậm lại, và Listeria vẫn sinh sôi ở 4 độ",
+    "s": "Vùng nhiệt độ nguy hiểm là 5–60 độ, nơi vi khuẩn nhân đôi nhanh nhất. Ở 4 độ, Listeria monocytogenes vẫn phát triển, và đó là lý do thực phẩm ăn liền có hạn dùng ngắn dù để lạnh.",
+    "tags": [
+      "tu-lanh",
+      "listeria",
+      "an-toan"
+    ],
+    "src": "US FDA Food Code; WHO Five Keys to Safer Food"
+  },
+  {
+    "id": "tp-237",
+    "cat": "thuc-pham",
+    "sub": "bao-quan",
+    "t": "Trứng ở châu Âu để ngoài tủ lạnh còn ở Mỹ phải để trong tủ, và lý do là hai chính sách khác nhau",
+    "s": "Mỹ rửa trứng để diệt salmonella bề mặt, việc này làm mất lớp màng bảo vệ nên phải giữ lạnh. Châu Âu không rửa mà tiêm vắc-xin cho gà đẻ, giữ được lớp màng tự nhiên.",
+    "tags": [
+      "trung",
+      "salmonella",
+      "chinh-sach"
+    ],
+    "src": "US FDA Egg Safety Rule; EU Regulation 589/2008"
+  },
+  {
+    "id": "tp-238",
+    "cat": "thuc-pham",
+    "sub": "bao-quan",
+    "t": "Rau quả tiếp tục hô hấp và chín sau khi thu hoạch, và ethylene là hormone điều khiển quá trình đó",
+    "s": "Một quả chuối chín làm chín cả nải vì nó phát ethylene. Táo và bơ cũng vậy, còn dưa chuột và rau lá thì rất nhạy với ethylene nên không nên để cạnh.",
+    "tags": [
+      "ethylene",
+      "chin",
+      "bao-quan"
+    ],
+    "src": "UC Davis Postharvest Technology Center"
+  },
+  {
+    "id": "tp-239",
+    "cat": "thuc-pham",
+    "sub": "bao-quan",
+    "t": "Cấp đông nhanh giữ chất lượng tốt hơn cấp đông chậm vì tinh thể đá nhỏ hơn",
+    "s": "Đông chậm tạo tinh thể lớn phá vỡ thành tế bào, làm thực phẩm chảy nước khi rã. Cấp đông công nghiệp hạ nhiệt qua vùng −1 đến −5 độ trong vài phút thay vì vài giờ.",
+    "tags": [
+      "cap-dong",
+      "tinh-the",
+      "chat-luong"
+    ],
+    "src": "Fellows, Food Processing Technology (2017)"
+  },
+  {
+    "id": "tp-240",
+    "cat": "thuc-pham",
+    "sub": "bao-quan",
+    "t": "Khoảng một phần ba lượng thực phẩm sản xuất trên thế giới bị mất hoặc bỏ đi",
+    "s": "Tương đương khoảng 1,3 tỉ tấn mỗi năm. Ở nước thu nhập cao, phần lớn tổn thất xảy ra ở khâu tiêu dùng; ở nước thu nhập thấp thì ở khâu thu hoạch và bảo quản.",
+    "tags": [
+      "lang-phi-thuc-pham",
+      "fao",
+      "chuoi-cung-ung"
+    ],
+    "src": "FAO, Global Food Losses and Food Waste (2011); UNEP Food Waste Index"
+  },
+  {
+    "id": "tp-243",
+    "cat": "thuc-pham",
+    "sub": "nguon-goc-mon-an",
+    "t": "Cà rốt ban đầu màu tím và trắng; giống cam phổ biến hiện nay xuất hiện muộn ở Hà Lan",
+    "s": "Các tài liệu thực vật thế kỷ 16–17 mô tả cà rốt tím, vàng và trắng. Câu chuyện người Hà Lan lai màu cam để tôn vinh nhà Orange là truyền thuyết phổ biến nhưng không có bằng chứng chắc chắn.",
+    "tags": [
+      "ca-rot",
+      "giong",
+      "lich-su"
+    ],
+    "src": "Simon, HortScience (2000); Iorizzo và cộng sự, Nature Genetics (2016)"
+  },
+  {
+    "id": "tp-246",
+    "cat": "thuc-pham",
+    "sub": "nguon-goc-mon-an",
+    "t": "Hạt tiêu từng đắt tới mức nó là động lực chính của các chuyến đi tìm đường sang Ấn Độ",
+    "s": "Việt Nam hiện là nước xuất khẩu hạt tiêu lớn nhất thế giới, chiếm khoảng 35–40% thương mại toàn cầu. Loại gia vị từng khởi động thời đại thám hiểm nay là mặt hàng nông sản thông thường.",
+    "tags": [
+      "ho-tieu",
+      "thuong-mai",
+      "viet-nam"
+    ],
+    "src": "International Pepper Community; Bộ Nông nghiệp và Phát triển nông thôn"
+  },
+  {
+    "id": "tp-247",
+    "cat": "thuc-pham",
+    "sub": "nguon-goc-mon-an",
+    "t": "Sushi ban đầu là cách bảo quản cá bằng cơm lên men, và cơm được bỏ đi chứ không ăn",
+    "s": "Narezushi ủ cá với cơm hàng tháng để axit lactic bảo quản. Sushi ăn cơm cùng cá chỉ xuất hiện ở Edo thế kỷ 19 khi người ta dùng giấm để tạo vị chua nhanh.",
+    "tags": [
+      "sushi",
+      "len-men",
+      "lich-su"
+    ],
+    "src": "Ishige, The History and Culture of Japanese Food (2001)"
+  },
+  {
+    "id": "tp-248",
+    "cat": "thuc-pham",
+    "sub": "nguon-goc-mon-an",
+    "t": "Bánh mì Việt Nam dùng bột mì pha bột gạo nên vỏ mỏng giòn hơn baguette Pháp",
+    "s": "Tỉ lệ pha và độ ẩm cao trong lò tạo cấu trúc ruột rỗng nhẹ. Đây là ví dụ về một món nhập khẩu bị biến đổi kỹ thuật tới mức trở thành sản phẩm khác.",
+    "tags": [
+      "banh-mi",
+      "viet-nam",
+      "ky-thuat"
+    ],
+    "src": "Nguyễn, Vietnamese Food Any Day; Oxford English Dictionary (bổ sung 'banh mi', 2011)"
+  },
+  {
+    "id": "tp-249",
+    "cat": "thuc-pham",
+    "sub": "nguon-goc-mon-an",
+    "t": "Cà phê robusta chiếm khoảng 40% sản lượng thế giới, và Việt Nam là nước sản xuất robusta lớn nhất",
+    "s": "Robusta có caffeine khoảng 2,2% so với 1,2% của arabica, và chịu bệnh tốt hơn. Đó là lý do nó chiếm phần lớn cà phê hoà tan.",
+    "tags": [
+      "ca-phe",
+      "robusta",
+      "viet-nam"
+    ],
+    "src": "International Coffee Organization (ICO); USDA FAS"
+  },
+  {
+    "id": "tp-250",
+    "cat": "thuc-pham",
+    "sub": "nguon-goc-mon-an",
+    "t": "Cây lúa được thuần hoá độc lập ít nhất hai lần, ở Trung Quốc và ở châu Phi",
+    "s": "Oryza sativa từ lưu vực Dương Tử khoảng 9.000 năm trước, Oryza glaberrima ở đồng bằng sông Niger khoảng 3.000 năm trước. Hai loài khác nhau về di truyền dù cùng gọi là lúa.",
+    "tags": [
+      "lua",
+      "thuan-hoa",
+      "di-truyen"
+    ],
+    "src": "Fuller và cộng sự, Science (2009); Wang và cộng sự, Nature Genetics (2014)"
+  },
+  {
+    "id": "tp-251",
+    "cat": "thuc-pham",
+    "sub": "gia-vi-huong-lieu",
+    "t": "Vani là gia vị đắt thứ hai sau nghệ tây, và lý do là hoa của nó phải được thụ phấn bằng tay",
+    "s": "Ngoài Mexico, nơi có loài ong bản địa thích hợp, hoa vani chỉ nở một ngày và phải thụ phấn thủ công trong vài giờ. Kỹ thuật này do một nô lệ 12 tuổi ở đảo Réunion tìm ra năm 1841.",
+    "tags": [
+      "vani",
+      "thu-phan",
+      "gia"
+    ],
+    "src": "Rain, Vanilla: The Cultural History (2004)"
+  },
+  {
+    "id": "tp-252",
+    "cat": "thuc-pham",
+    "sub": "gia-vi-huong-lieu",
+    "t": "Nghệ tây cần khoảng 150.000 hoa để cho 1 kg gia vị",
+    "s": "Mỗi hoa chỉ có 3 nhị đỏ, và chúng phải được hái bằng tay trong buổi sáng khi hoa vừa nở. Giá bán lẻ thường vượt 3.000 đô một kilogam.",
+    "tags": [
+      "nghe-tay",
+      "gia",
+      "thu-hoach"
+    ],
+    "src": "FAO; Hiệp hội Nghệ tây Iran"
+  },
+  {
+    "id": "tp-253",
+    "cat": "thuc-pham",
+    "sub": "gia-vi-huong-lieu",
+    "t": "Quế 'thật' và quế phổ biến trên thị trường là hai loài khác nhau, và loại phổ biến chứa nhiều coumarin",
+    "s": "Cassia chứa coumarin cao gấp hàng chục lần Ceylon, và coumarin liều cao gây độc gan. Cơ quan an toàn thực phẩm châu Âu đặt ngưỡng dung nạp hằng ngày ở 0,1 mg mỗi kg cân nặng.",
+    "tags": [
+      "que",
+      "coumarin",
+      "an-toan"
+    ],
+    "src": "EFSA, Coumarin in flavourings (2004); BfR Đức"
+  },
+  {
+    "id": "tp-254",
+    "cat": "thuc-pham",
+    "sub": "gia-vi-huong-lieu",
+    "t": "Hạt tiêu đen và hạt tiêu trắng là cùng một quả, khác nhau ở cách chế biến",
+    "s": "Tiêu đen là quả chưa chín phơi cả vỏ; tiêu trắng là quả chín được ngâm nước cho rữa vỏ rồi phơi hạt. Vì vậy tiêu trắng ít mùi vỏ hơn nhưng cay tương đương.",
+    "tags": [
+      "ho-tieu",
+      "che-bien",
+      "gia-vi"
+    ],
+    "src": "Bộ Nông nghiệp và Phát triển nông thôn; Ravindran, Black Pepper (2000)"
+  },
+  {
+    "id": "tp-255",
+    "cat": "thuc-pham",
+    "sub": "gia-vi-huong-lieu",
+    "t": "Mù tạt chỉ hăng sau khi nghiền và trộn với chất lỏng, và nước nóng phá luôn độ hăng",
+    "s": "Enzyme myrosinase phải gặp glucosinolate mới sinh isothiocyanate. Trộn bằng nước lạnh cho vị hăng mạnh, trộn bằng giấm giữ độ hăng lâu, còn nước nóng làm enzyme mất hoạt tính.",
+    "tags": [
+      "mu-tat",
+      "enzyme",
+      "che-bien"
+    ],
+    "src": "Belitz, Food Chemistry; McGee, On Food and Cooking"
+  },
+  {
+    "id": "tp-256",
+    "cat": "thuc-pham",
+    "sub": "gia-vi-huong-lieu",
+    "t": "Wasabi bán ở phần lớn nhà hàng không phải wasabi mà là cải ngựa nhuộm màu",
+    "s": "Wasabi thật rất khó trồng, cần nước suối chảy và 18 tháng sinh trưởng, và mất mùi trong khoảng 15 phút sau khi mài. Vì vậy hầu hết sản phẩm đóng tuýp là horseradish, mù tạt và phẩm màu.",
+    "tags": [
+      "wasabi",
+      "cai-ngua",
+      "thuc-pham"
+    ],
+    "src": "Hội Nông nghiệp Nhật Bản; Depree và cộng sự, Food Research International (1998)"
+  },
+  {
+    "id": "tp-257",
+    "cat": "thuc-pham",
+    "sub": "gia-vi-huong-lieu",
+    "t": "Bạc hà không làm miệng lạnh — menthol chỉ mở thụ thể báo lạnh",
+    "s": "Thụ thể TRPM8 vốn phản ứng với nhiệt độ dưới khoảng 26 độ, và menthol kích hoạt nó trực tiếp. Đây là cặp đối xứng hoàn hảo với capsaicin và thụ thể nhiệt nóng.",
+    "tags": [
+      "bac-ha",
+      "menthol",
+      "trpm8"
+    ],
+    "src": "McKemy, Neuhausser & Julius, Nature (2002)"
+  },
+  {
+    "id": "tp-258",
+    "cat": "thuc-pham",
+    "sub": "gia-vi-huong-lieu",
+    "t": "Hạt mùi và rau mùi có mùi khác nhau hoàn toàn dù cùng một cây",
+    "s": "Lá chứa aldehyde chuỗi dài mà một phần dân số cảm nhận thành mùi xà phòng do biến thể gen OR6A2. Hạt thì giàu linalool, cho mùi cam và gỗ, và gần như không ai thấy giống xà phòng.",
+    "tags": [
+      "rau-mui",
+      "gen",
+      "mui"
+    ],
+    "src": "Eriksson và cộng sự, Flavour (2012)"
+  },
+  {
+    "id": "tp-260",
+    "cat": "thuc-pham",
+    "sub": "gia-vi-huong-lieu",
+    "t": "Vị của thức ăn phần lớn đến từ mũi, không từ lưỡi",
+    "s": "Lưỡi chỉ phân biệt 5 vị cơ bản; hàng nghìn sắc thái còn lại do khứu giác sau miệng cung cấp. Bịt mũi ăn hành tây và táo, phần lớn người không phân biệt được.",
+    "tags": [
+      "vi-giac",
+      "khuu-giac",
+      "cam-quan"
+    ],
+    "src": "Shepherd, Neurogastronomy (2011); Spence, Gastrophysics"
+  },
+  {
+    "id": "tp-261",
+    "cat": "thuc-pham",
+    "sub": "do-uong",
+    "t": "Trà xanh, trà đen và trà oolong đều từ cùng một cây, khác nhau ở mức oxy hoá lá",
+    "s": "Camellia sinensis cho tất cả; trà xanh được diệt enzyme ngay bằng nhiệt, trà đen để oxy hoá hoàn toàn. Trà thảo mộc thì không phải trà theo nghĩa thực vật.",
+    "tags": [
+      "tra",
+      "oxy-hoa",
+      "che-bien"
+    ],
+    "src": "Hiệp hội Trà Quốc tế; Harbowy & Balentine, Critical Reviews in Plant Sciences (1997)"
+  },
+  {
+    "id": "tp-262",
+    "cat": "thuc-pham",
+    "sub": "do-uong",
+    "t": "Nước sôi 100 độ làm trà xanh đắng vì nó chiết quá nhiều catechin và caffeine",
+    "s": "Trà xanh Nhật thường pha ở 60–80 độ, trà đen ở 95–100 độ. Chênh lệch nhiệt độ đổi hoàn toàn tỉ lệ giữa chất đắng, chất chát và chất tạo ngọt umami trong nước trà.",
+    "tags": [
+      "tra",
+      "nhiet-do",
+      "chiet-xuat"
+    ],
+    "src": "Hiệp hội Trà Nhật Bản; Belitz, Food Chemistry"
+  },
+  {
+    "id": "tp-263",
+    "cat": "thuc-pham",
+    "sub": "do-uong",
+    "t": "Caffeine trong một tách cà phê pha máy dao động từ khoảng 60 đến 200 mg tuỳ cách pha và giống hạt",
+    "s": "Espresso đậm hơn theo thể tích nhưng một shot 30 ml chỉ khoảng 60–80 mg, ít hơn một cốc cà phê nhỏ giọt 240 ml. Nghĩa là 'espresso nhiều caffeine hơn' đúng theo nồng độ và sai theo liều thực tế.",
+    "tags": [
+      "caffeine",
+      "ca-phe",
+      "lieu"
+    ],
+    "src": "USDA FoodData Central; Hiệp hội Cà phê Đặc sản"
+  },
+  {
+    "id": "tp-264",
+    "cat": "thuc-pham",
+    "sub": "do-uong",
+    "t": "Rang cà phê đậm làm giảm caffeine theo khối lượng nhưng đo theo hạt thì gần như không đổi",
+    "s": "Rang lâu làm hạt mất nước và nở ra, nên cùng một thìa bột rang đậm chứa ít hạt hơn. Caffeine chịu nhiệt tốt và chỉ mất rất ít trong quá trình rang.",
+    "tags": [
+      "ca-phe",
+      "rang",
+      "caffeine"
+    ],
+    "src": "Specialty Coffee Association; Hečimović và cộng sự, Food Chemistry (2011)"
+  },
+  {
+    "id": "tp-265",
+    "cat": "thuc-pham",
+    "sub": "do-uong",
+    "t": "Cà phê decaf vẫn còn caffeine, thường khoảng 2–5 mg mỗi tách",
+    "s": "Tiêu chuẩn quốc tế yêu cầu loại bỏ ít nhất 97% caffeine, không phải 100%. Người rất nhạy caffeine uống nhiều tách decaf vẫn có thể chịu ảnh hưởng.",
+    "tags": [
+      "decaf",
+      "caffeine",
+      "tieu-chuan"
+    ],
+    "src": "ISO 20481; US FDA"
+  },
+  {
+    "id": "tp-266",
+    "cat": "thuc-pham",
+    "sub": "do-uong",
+    "t": "Bia không cồn vẫn chứa tới 0,5% cồn theo quy định của nhiều nước, và nước cam để lâu cũng vậy",
+    "s": "Quá trình lên men tự nhiên trong nước quả có thể sinh lượng cồn tương tự. Vì vậy ngưỡng 0,5% được chọn làm mốc thực tế chứ không phải mốc tuyệt đối.",
+    "tags": [
+      "bia",
+      "con",
+      "quy-dinh"
+    ],
+    "src": "EU Regulation 1169/2011; US TTB"
+  },
+  {
+    "id": "tp-267",
+    "cat": "thuc-pham",
+    "sub": "do-uong",
+    "t": "Khoảng 90% rượu vang trên thị trường đạt đỉnh hương trong 1–2 năm đầu, không phải càng để lâu càng ngon",
+    "s": "Chỉ những chai có đủ tannin, axit và đường mới hưởng lợi từ việc ủ lâu. Phần lớn rượu vang thương mại được thiết kế để uống ngay và sẽ xỉn vị nếu để quá vài năm.",
+    "tags": [
+      "ruou-vang",
+      "lao-hoa",
+      "thi-truong"
+    ],
+    "src": "Robinson, The Oxford Companion to Wine; Jancis Robinson"
+  },
+  {
+    "id": "tp-268",
+    "cat": "thuc-pham",
+    "sub": "do-uong",
+    "t": "Nước đóng chai không an toàn hơn nước máy ở các thành phố có hệ thống xử lý đạt chuẩn",
+    "s": "Ở Mỹ, nước máy chịu giám sát của EPA nghiêm hơn nước đóng chai do FDA quản. Khoảng 25–45% nước đóng chai trên thị trường thế giới là nước máy đã xử lý thêm.",
+    "tags": [
+      "nuoc-dong-chai",
+      "quy-dinh",
+      "so-sanh"
+    ],
+    "src": "US EPA & FDA; WHO Guidelines for Drinking-water Quality"
+  },
+  {
+    "id": "tp-269",
+    "cat": "thuc-pham",
+    "sub": "do-uong",
+    "t": "Đồ uống có ga tạo cảm giác 'cay tê' vì CO₂ chuyển thành axit carbonic và kích hoạt thụ thể đau",
+    "s": "Cùng thụ thể phản ứng với mù tạt và wasabi. Đây là lý do nước có ga cảm thấy 'sốc' hơn nước thường dù nhiệt độ như nhau.",
+    "tags": [
+      "co2",
+      "nuoc-ga",
+      "thu-the"
+    ],
+    "src": "Chandrashekar và cộng sự, Science (2009)"
+  },
+  {
+    "id": "tp-270",
+    "cat": "thuc-pham",
+    "sub": "do-uong",
+    "t": "Sữa tươi và sữa tiệt trùng UHT khác nhau ở nhiệt độ xử lý, và UHT giữ được nhiều tháng mà không cần lạnh",
+    "s": "Thanh trùng ở 72 độ trong 15 giây diệt vi khuẩn gây bệnh nhưng còn vi khuẩn gây hỏng; UHT ở 135–150 độ trong vài giây diệt gần hết. Cái giá là mùi nấu và mất một phần vitamin nhóm B.",
+    "tags": [
+      "sua",
+      "uht",
+      "thanh-trung"
+    ],
+    "src": "Codex Standard 206-1999; IDF Bulletin"
+  },
+  {
+    "id": "tp-271",
+    "cat": "thuc-pham",
+    "sub": "nong-nghiep-thuc-pham",
+    "t": "Năng suất lúa gạo toàn cầu đã tăng hơn gấp đôi từ năm 1960 trong khi diện tích trồng chỉ tăng khoảng 30%",
+    "s": "Đây là kết quả trực tiếp của giống mới, phân bón và thuỷ lợi. Nếu giữ năng suất năm 1960, thế giới sẽ cần thêm diện tích đất nông nghiệp lớn hơn cả Nam Mỹ.",
+    "tags": [
+      "cach-mang-xanh",
+      "nang-suat",
+      "lua"
+    ],
+    "src": "FAOSTAT; Borlaug, Giải Nobel Hoà bình 1970"
+  },
+  {
+    "id": "tp-272",
+    "cat": "thuc-pham",
+    "sub": "nong-nghiep-thuc-pham",
+    "t": "Việt Nam là một trong ba nước xuất khẩu gạo lớn nhất thế giới, và cũng nằm trong nhóm dùng nhiều nước nhất cho mỗi kg gạo",
+    "s": "Trồng lúa nước ngập liên tục phát thải metan đáng kể; kỹ thuật rút nước giữa vụ giảm phát thải 30–70% mà không giảm năng suất. Đây là một trong ít biện pháp giảm phát thải nông nghiệp đã được kiểm chứng ở quy mô lớn.",
+    "tags": [
+      "lua",
+      "metan",
+      "viet-nam"
+    ],
+    "src": "IRRI; Bộ Nông nghiệp và Phát triển nông thôn; IPCC AR6"
+  },
+  {
+    "id": "tp-273",
+    "cat": "thuc-pham",
+    "sub": "nong-nghiep-thuc-pham",
+    "t": "Khoảng 75% đa dạng giống cây lương thực đã mất trong thế kỷ 20 theo ước tính của FAO",
+    "s": "Nguyên nhân là chuyển sang giống thương mại năng suất cao. Các ngân hàng hạt giống như Svalbard Global Seed Vault lưu hơn 1,2 triệu mẫu để phòng ngừa.",
+    "tags": [
+      "da-dang-giong",
+      "hat-giong",
+      "svalbard"
+    ],
+    "src": "FAO, State of the World's Plant Genetic Resources; Crop Trust"
+  },
+  {
+    "id": "tp-274",
+    "cat": "thuc-pham",
+    "sub": "nong-nghiep-thuc-pham",
+    "t": "Ong và các loài thụ phấn tham gia vào khoảng 75% các loại cây lương thực chính, nhưng chỉ khoảng 35% sản lượng calo",
+    "s": "Ngũ cốc chính — lúa, mì, ngô — tự thụ phấn hoặc nhờ gió, nên phần calo phụ thuộc ong nhỏ hơn phần số loài. Nhưng phần lớn vitamin và vi chất lại đến từ cây cần thụ phấn.",
+    "tags": [
+      "ong",
+      "thu-phan",
+      "luong-thuc"
+    ],
+    "src": "Klein và cộng sự, Proceedings of the Royal Society B (2007); IPBES"
+  },
+  {
+    "id": "tp-275",
+    "cat": "thuc-pham",
+    "sub": "nong-nghiep-thuc-pham",
+    "t": "Cây biến đổi gen đã được trồng thương mại hơn 25 năm và các cơ quan khoa học lớn đều kết luận thực phẩm từ chúng an toàn như thực phẩm thường",
+    "s": "Viện Hàn lâm Khoa học Quốc gia Mỹ rà soát hơn 900 nghiên cứu năm 2016. Tranh luận thực chất còn lại nằm ở quyền sở hữu giống, độc quyền và tác động môi trường, không ở an toàn thực phẩm.",
+    "tags": [
+      "gmo",
+      "an-toan",
+      "tranh-luan"
+    ],
+    "src": "National Academies of Sciences, Genetically Engineered Crops (2016); WHO"
+  },
+  {
+    "id": "tp-276",
+    "cat": "thuc-pham",
+    "sub": "nong-nghiep-thuc-pham",
+    "t": "Nông nghiệp hữu cơ cho năng suất thấp hơn khoảng 20–25% nên nó cần nhiều đất hơn cho cùng sản lượng",
+    "s": "Đổi lại, nó giảm dùng thuốc trừ sâu tổng hợp và thường tốt hơn cho đa dạng sinh học tại chỗ. Đây là một đánh đổi thật chứ không phải một bên đúng một bên sai.",
+    "tags": [
+      "huu-co",
+      "nang-suat",
+      "danh-doi"
+    ],
+    "src": "Seufert, Ramankutty & Foley, Nature (2012); Ponisio và cộng sự (2015)"
+  },
+  {
+    "id": "tp-277",
+    "cat": "thuc-pham",
+    "sub": "nong-nghiep-thuc-pham",
+    "t": "Vận chuyển thường chỉ chiếm dưới 10% dấu vết carbon của thực phẩm, còn phương thức sản xuất chiếm phần lớn",
+    "s": "Vì vậy chọn loại thực phẩm thường quan trọng hơn chọn thực phẩm địa phương. Thịt bò nuôi gần nhà phát thải nhiều hơn đậu nành chở nửa vòng Trái Đất.",
+    "tags": [
+      "carbon",
+      "van-chuyen",
+      "thuc-pham"
+    ],
+    "src": "Poore & Nemecek, Science (2018)"
+  },
+  {
+    "id": "tp-278",
+    "cat": "thuc-pham",
+    "sub": "nong-nghiep-thuc-pham",
+    "t": "Sản xuất 1 kg thịt bò phát thải trung bình khoảng 60 kg CO₂ tương đương, còn 1 kg đậu là khoảng 0,9 kg",
+    "s": "Chênh lệch khoảng 60 lần đến từ metan do bò tiêu hoá và từ đất dùng để trồng thức ăn. Thịt gà khoảng 6 kg, cá nuôi khoảng 5 kg.",
+    "tags": [
+      "phat-thai",
+      "thit",
+      "dinh-duong"
+    ],
+    "src": "Poore & Nemecek, Science (2018)"
+  },
+  {
+    "id": "tp-279",
+    "cat": "thuc-pham",
+    "sub": "nong-nghiep-thuc-pham",
+    "t": "Khoảng 70% kháng sinh bán ra ở nhiều nước được dùng cho vật nuôi, không cho người",
+    "s": "Phần lớn dùng để thúc tăng trưởng và phòng bệnh trong chuồng chật, và đây là một nguồn quan trọng của vi khuẩn kháng thuốc. Liên minh châu Âu đã cấm dùng kháng sinh thúc tăng trưởng từ năm 2006.",
+    "tags": [
+      "khang-sinh",
+      "chan-nuoi",
+      "khang-thuoc"
+    ],
+    "src": "WHO; US FDA Animal Drug Sales Reports; EU Regulation 1831/2003"
+  },
+  {
+    "id": "tp-280",
+    "cat": "thuc-pham",
+    "sub": "nong-nghiep-thuc-pham",
+    "t": "Cá nuôi đã vượt cá đánh bắt tự nhiên về khối lượng dùng cho người từ năm 2014",
+    "s": "Sản lượng đánh bắt tự nhiên gần như không tăng từ thập niên 1990 vì phần lớn ngư trường đã khai thác tới hoặc quá giới hạn. Mọi mức tăng tiêu thụ cá kể từ đó đều đến từ nuôi trồng.",
+    "tags": [
+      "thuy-san",
+      "nuoi-trong",
+      "danh-bat"
+    ],
+    "src": "FAO, The State of World Fisheries and Aquaculture (2022)"
+  },
+  {
+    "id": "tp-281",
+    "cat": "thuc-pham",
+    "sub": "an-toan-thuc-pham",
+    "t": "Vùng nhiệt độ nguy hiểm cho thực phẩm là 5–60 độ, và vi khuẩn có thể nhân đôi mỗi 20 phút trong đó",
+    "s": "Nghĩa là một vi khuẩn thành hơn 2 triệu con sau 7 giờ. Nguyên tắc 2 giờ và 4 giờ trong bếp công nghiệp xuất phát trực tiếp từ tốc độ này.",
+    "tags": [
+      "vi-khuan",
+      "nhiet-do",
+      "bep"
+    ],
+    "src": "US FDA Food Code; WHO Five Keys to Safer Food"
+  },
+  {
+    "id": "tp-282",
+    "cat": "thuc-pham",
+    "sub": "an-toan-thuc-pham",
+    "t": "Rã đông thực phẩm ở nhiệt độ phòng nguy hiểm vì lớp ngoài vào vùng nguy hiểm rất lâu trước khi lõi tan",
+    "s": "Ba cách an toàn là rã trong tủ lạnh, rã trong nước lạnh chảy và rã bằng lò vi sóng rồi nấu ngay. Rã rồi cấp đông lại làm tăng cả rủi ro vi sinh lẫn mất chất lượng.",
+    "tags": [
+      "ra-dong",
+      "an-toan",
+      "bep"
+    ],
+    "src": "US FSIS; Food Standards Agency (UK)"
+  },
+  {
+    "id": "tp-283",
+    "cat": "thuc-pham",
+    "sub": "an-toan-thuc-pham",
+    "t": "Rửa thịt gà trước khi nấu làm tăng nguy cơ ngộ độc vì nước bắn mang vi khuẩn ra khắp bếp",
+    "s": "Nước có thể bắn xa tới 50 cm quanh bồn rửa. Nhiệt độ nấu 74 độ ở phần dày nhất mới là bước diệt khuẩn thật sự.",
+    "tags": [
+      "thit-ga",
+      "campylobacter",
+      "an-toan"
+    ],
+    "src": "US FSIS; UK Food Standards Agency"
+  },
+  {
+    "id": "tp-284",
+    "cat": "thuc-pham",
+    "sub": "an-toan-thuc-pham",
+    "t": "Thớt gỗ không kém an toàn hơn thớt nhựa, và một số nghiên cứu cho kết quả ngược lại",
+    "s": "Vi khuẩn trên gỗ giảm nhanh hơn do gỗ hút nước và có hợp chất kháng khuẩn, trong khi vết dao trên nhựa tạo chỗ trú. Yếu tố quyết định vẫn là rửa sạch và tách thớt cho thực phẩm sống và chín.",
+    "tags": [
+      "thot",
+      "go",
+      "an-toan"
+    ],
+    "src": "Ak, Cliver & Kaspar, Journal of Food Protection (1994)"
+  },
+  {
+    "id": "tp-285",
+    "cat": "thuc-pham",
+    "sub": "an-toan-thuc-pham",
+    "t": "Cơm nguội để ngoài lâu gây ngộ độc vì bào tử Bacillus cereus chịu được nhiệt nấu",
+    "s": "Bào tử sống sót sau khi cơm chín rồi nảy mầm khi cơm nguội dần và tiết độc tố chịu nhiệt. Hấp lại không phá được độc tố đã sinh ra, nên cơm phải làm nguội nhanh và giữ lạnh.",
+    "tags": [
+      "com",
+      "bacillus-cereus",
+      "an-toan"
+    ],
+    "src": "UK NHS; Cục Quản lý Thực phẩm và Dược phẩm Mỹ"
+  },
+  {
+    "id": "tp-286",
+    "cat": "thuc-pham",
+    "sub": "an-toan-thuc-pham",
+    "t": "Mật ong không được cho trẻ dưới 1 tuổi vì nó có thể chứa bào tử gây ngộ độc thịt",
+    "s": "Ruột trẻ sơ sinh chưa có hệ vi sinh cạnh tranh nên bào tử Clostridium botulinum nảy mầm được. Với người lớn, cùng lượng bào tử đó không gây vấn đề gì.",
+    "tags": [
+      "mat-ong",
+      "tre-so-sinh",
+      "botulism"
+    ],
+    "src": "US CDC; WHO"
+  },
+  {
+    "id": "tp-287",
+    "cat": "thuc-pham",
+    "sub": "an-toan-thuc-pham",
+    "t": "Nấm mốc trên thực phẩm không chỉ ở phần nhìn thấy — sợi nấm và độc tố lan sâu hơn nhiều",
+    "s": "Với thực phẩm mềm, cắt bỏ phần mốc không đủ. Aflatoxin trong ngô và đậu phộng mốc là chất gây ung thư gan nhóm 1 và không bị phá bởi nhiệt nấu thường.",
+    "tags": [
+      "nam-moc",
+      "aflatoxin",
+      "an-toan"
+    ],
+    "src": "IARC Monographs; USDA"
+  },
+  {
+    "id": "tp-288",
+    "cat": "thuc-pham",
+    "sub": "an-toan-thuc-pham",
+    "t": "Sán và ký sinh trong cá bị diệt bằng cấp đông, không bằng chanh hay giấm",
+    "s": "Quy định của Mỹ và EU yêu cầu cá dùng ăn sống phải đông ở −20 độ trong 7 ngày hoặc −35 độ trong 15 giờ. Axit trong chanh, giấm và rượu không đạt được điều đó.",
+    "tags": [
+      "ca-song",
+      "ky-sinh",
+      "cap-dong"
+    ],
+    "src": "US FDA Fish and Fishery Products Hazards Guide; EU Regulation 853/2004"
+  },
+  {
+    "id": "tp-289",
+    "cat": "thuc-pham",
+    "sub": "an-toan-thuc-pham",
+    "t": "Măng tươi và sắn chứa cyanogenic glycoside, và luộc mở nắp là bước làm giảm độc",
+    "s": "Sắn đắng chưa xử lý đã gây ngộ độc hàng loạt ở nhiều nước. Ngâm, luộc và đổ nước là quy trình dân gian có cơ sở hoá học thật: chất độc dễ bay hơi và tan trong nước.",
+    "tags": [
+      "mang",
+      "san",
+      "cyanide"
+    ],
+    "src": "FAO/WHO Codex; Nhóm nghiên cứu độc tố thực vật của WHO"
+  },
+  {
+    "id": "tp-290",
+    "cat": "thuc-pham",
+    "sub": "an-toan-thuc-pham",
+    "t": "Khoai tây mọc mầm và vỏ xanh chứa solanine, và chất này không bị phá bởi nấu thường",
+    "s": "Solanine bền tới trên 200 độ. Hàm lượng an toàn theo khuyến cáo là dưới 100 mg mỗi kg, và khoai xanh có thể vượt nhiều lần mức đó.",
+    "tags": [
+      "khoai-tay",
+      "solanine",
+      "an-toan"
+    ],
+    "src": "EFSA, Glycoalkaloids in food (2020)"
+  },
+  {
+    "id": "tp-291",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Dầu ăn có điểm bốc khói khác nhau tới hơn 100 độ, và vượt điểm đó thì dầu sinh chất có hại",
+    "s": "Dầu ô liu nguyên chất khoảng 190–210 độ, dầu bơ tinh luyện khoảng 270 độ, dầu dừa nguyên chất chỉ khoảng 175 độ. Chiên ngập dầu thường ở 175–190 độ nên chọn dầu là chọn theo con số này.",
+    "tags": [
+      "dau-an",
+      "diem-boc-khoi",
+      "chien"
+    ],
+    "src": "Institute of Shortening and Edible Oils; Belitz, Food Chemistry"
+  },
+  {
+    "id": "tp-292",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Chảo chống dính bắt đầu phân huỷ trên khoảng 260 độ, và chảo rỗng nóng lên tới mức đó trong vài phút",
+    "s": "PTFE bền ở nhiệt độ nấu thường nhưng thải khí khi quá nóng. Vì vậy nguyên tắc là không đun chảo chống dính khi rỗng và không dùng nó để áp chảo ở nhiệt cực cao.",
+    "tags": [
+      "chao-chong-dinh",
+      "ptfe",
+      "an-toan"
+    ],
+    "src": "US EPA; Hiệp hội Hoá học Mỹ (ACS)"
+  },
+  {
+    "id": "tp-293",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Nướng thịt ở nhiệt độ rất cao tạo ra amin thơm dị vòng, và ướp trước làm giảm lượng chất này",
+    "s": "Ướp bằng thảo mộc, bia hoặc nước chanh giảm được 40–90% tuỳ điều kiện trong các thử nghiệm. Tránh để thịt cháy đen và lật thường xuyên cũng giảm rõ.",
+    "tags": [
+      "nuong",
+      "hca",
+      "an-toan"
+    ],
+    "src": "US National Cancer Institute; Viegas và cộng sự, Food & Function (2012)"
+  },
+  {
+    "id": "tp-294",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Cà chua nấu chín cho nhiều lycopene hấp thu được hơn cà chua tươi",
+    "s": "Nhiệt phá thành tế bào và làm lycopene chuyển sang dạng cơ thể hấp thu tốt hơn; thêm dầu tăng hấp thu thêm nữa. Đây là ví dụ ngược với niềm tin 'tươi luôn tốt hơn nấu'.",
+    "tags": [
+      "ca-chua",
+      "lycopene",
+      "dinh-duong"
+    ],
+    "src": "Gärtner, Stahl & Sies, AJCN (1997)"
+  },
+  {
+    "id": "tp-295",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Bắp cải, bông cải và các loại cải sinh mùi lưu huỳnh khi nấu quá lâu",
+    "s": "Glucosinolate phân giải thành hợp chất lưu huỳnh sau khoảng 5–7 phút nấu. Đó là lý do luộc nhanh giữ mùi dễ chịu còn luộc lâu thì nồng.",
+    "tags": [
+      "cai",
+      "glucosinolate",
+      "nau-an"
+    ],
+    "src": "McGee, On Food and Cooking; Belitz, Food Chemistry"
+  },
+  {
+    "id": "tp-297",
+    "cat": "thuc-pham",
+    "sub": "nguon-goc-mon-an",
+    "t": "Phở xuất hiện ở miền Bắc vào khoảng đầu thế kỷ 20, muộn hơn nhiều so với hình dung phổ biến",
+    "s": "Các ghi chép báo chí và từ điển đầu tiên nhắc tới phở từ thập niên 1910–1930. Trước đó không có tài liệu nào mô tả món này.",
+    "tags": [
+      "pho",
+      "viet-nam",
+      "lich-su"
+    ],
+    "src": "Nguyễn Ngọc Chính, tư liệu báo chí Đông Dương; Vũ Hồng Liên, Rice and Baguette"
+  },
+  {
+    "id": "tp-298",
+    "cat": "thuc-pham",
+    "sub": "nguon-goc-mon-an",
+    "t": "Nước tương và tương hột ở Đông Á có tuổi ít nhất 2.000 năm và cùng dựa vào nấm Aspergillus oryzae",
+    "s": "Nhật Bản đã chọn giống nấm này tới mức nó gần như mất khả năng sinh độc tố aflatoxin so với họ hàng hoang dã. Đây là một trong các ví dụ thuần hoá vi sinh vật lâu đời nhất.",
+    "tags": [
+      "nuoc-tuong",
+      "koji",
+      "thuan-hoa"
+    ],
+    "src": "Machida và cộng sự, Nature (2005); Shurtleff & Aoyagi, History of Soy Sauce"
+  },
+  {
+    "id": "tp-299",
+    "cat": "thuc-pham",
+    "sub": "nguon-goc-mon-an",
+    "t": "Kem ra đời trước tủ lạnh nhờ kỹ thuật trộn muối với đá để hạ nhiệt xuống dưới 0 độ",
+    "s": "Nước muối bão hoà đạt tới −21 độ, đủ để làm đông hỗn hợp sữa và đường. Kỹ thuật này được ghi nhận ở Ấn Độ, Ba Tư và Ý từ trước thế kỷ 17.",
+    "tags": [
+      "kem",
+      "muoi",
+      "lich-su"
+    ],
+    "src": "Weir & Weir, Ice Creams, Sorbets and Gelati (2010)"
+  },
+  {
+    "id": "tp-300",
+    "cat": "thuc-pham",
+    "sub": "nguon-goc-mon-an",
+    "t": "Sô cô la được uống dưới dạng đắng và có ớt hàng nghìn năm trước khi có sô cô la thanh ngọt",
+    "s": "Dấu vết cacao trong bình gốm ở Trung Mỹ có tuổi khoảng 3.900 năm. Sô cô la thanh chỉ xuất hiện năm 1847 và sô cô la sữa năm 1875.",
+    "tags": [
+      "so-co-la",
+      "cacao",
+      "lich-su"
+    ],
+    "src": "Zarrillo và cộng sự, Nature Ecology & Evolution (2018); Coe & Coe, The True History of Chocolate"
+  },
+  {
+    "id": "tp-301",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Ướp muối thịt trước khi nấu làm thịt giữ nước tốt hơn, và cơ chế là muối phá cấu trúc protein",
+    "s": "Muối làm sợi protein duỗi ra và giữ nước lại thay vì ép ra khi nóng. Ướp khô 40 phút trở lên cho kết quả rõ rệt hơn ướp ngay trước khi nấu.",
+    "tags": [
+      "muoi",
+      "thit",
+      "protein"
+    ],
+    "src": "McGee, On Food and Cooking; Cook's Illustrated"
+  },
+  {
+    "id": "tp-302",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Thịt cần nghỉ sau khi nấu vì áp suất trong sợi cơ phải giảm trước khi cắt",
+    "s": "Cắt ngay làm nước thịt chảy ra nhiều hơn đáng kể. Thời gian nghỉ tỉ lệ với độ dày miếng thịt, thường 5–20 phút.",
+    "tags": [
+      "thit",
+      "nghi",
+      "nau-an"
+    ],
+    "src": "McGee, On Food and Cooking"
+  },
+  {
+    "id": "tp-303",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Nhiệt độ lõi quyết định độ chín của thịt, và màu hồng không phải dấu hiệu đáng tin",
+    "s": "Thịt bò xay có thể chuyển nâu ở 55 độ hoặc còn hồng ở 75 độ tuỳ độ pH và thời gian bảo quản. Ngưỡng an toàn 71 độ cho thịt xay chỉ kiểm được bằng nhiệt kế.",
+    "tags": [
+      "nhiet-ke",
+      "an-toan",
+      "thit"
+    ],
+    "src": "US FSIS; McGee, On Food and Cooking"
+  },
+  {
+    "id": "tp-305",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Bơ gồm ba thành phần và nhiệt độ tách chúng ra theo thứ tự",
+    "s": "Bơ khoảng 80% mỡ, 16% nước và 4% chất rắn sữa. Đun tới khi nước bay hết và chất rắn nâu lại cho bơ nâu với mùi hạt dẻ đặc trưng.",
+    "tags": [
+      "bo",
+      "maillard",
+      "nau-an"
+    ],
+    "src": "McGee, On Food and Cooking"
+  },
+  {
+    "id": "tp-306",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Kem tươi đánh bông được vì bọt khí bị giữ giữa các hạt béo bị vỡ một phần",
+    "s": "Cần ít nhất 30% béo mới ổn định được bọt. Đánh quá tay làm hạt béo dính hẳn vào nhau và kem tách thành bơ với nước.",
+    "tags": [
+      "kem",
+      "bot",
+      "beo"
+    ],
+    "src": "Belitz, Food Chemistry"
+  },
+  {
+    "id": "tp-307",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Đường không chỉ tạo ngọt — trong bánh nó giữ ẩm, làm mềm và hạ nhiệt độ đông",
+    "s": "Giảm đường trong công thức bánh đổi luôn cả kết cấu chứ không chỉ đổi vị. Đây là lý do bánh ít đường thường khô và cứng hơn.",
+    "tags": [
+      "duong",
+      "banh",
+      "ket-cau"
+    ],
+    "src": "McGee, On Food and Cooking"
+  },
+  {
+    "id": "tp-308",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Gelatin đông ở khoảng 15 độ và tan ở khoảng 35 độ, thấp hơn thân nhiệt người",
+    "s": "Đó là lý do thạch gelatin tan trong miệng còn thạch agar từ rong biển thì không, vì agar tan ở khoảng 85 độ. Hai chất tạo đông này không thay nhau được.",
+    "tags": [
+      "gelatin",
+      "agar",
+      "nau-an"
+    ],
+    "src": "Belitz, Food Chemistry"
+  },
+  {
+    "id": "tp-309",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Nước dùng trong hơn nếu ninh lăn tăn thay vì sôi mạnh, vì sôi mạnh nhũ hoá mỡ vào nước",
+    "s": "Bọt protein và mỡ bị đánh tan thành hạt nhỏ lơ lửng. Đây là lý do phở và các món nước trong đều ninh ở khoảng 85–95 độ.",
+    "tags": [
+      "nuoc-dung",
+      "nhu-hoa",
+      "nau-an"
+    ],
+    "src": "McGee, On Food and Cooking"
+  },
+  {
+    "id": "tp-310",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Rượu vang trong món ăn không bay hơi hết, và sau 2,5 giờ ninh vẫn còn khoảng 5% cồn",
+    "s": "Nghiên cứu của Bộ Nông nghiệp Mỹ đo lượng cồn còn lại theo phương pháp và thời gian nấu. Đun sôi nhanh giữ lại tới 85% cồn ban đầu.",
+    "tags": [
+      "con",
+      "nau-an",
+      "bay-hoi"
+    ],
+    "src": "USDA Table of Nutrient Retention Factors"
+  },
+  {
+    "id": "tp-311",
+    "cat": "thuc-pham",
+    "sub": "len-men",
+    "t": "Bột chua nổi nhờ nấm men hoang dã và vi khuẩn lactic hoạt động cùng nhau",
+    "s": "Vi khuẩn tạo axit làm bột chua và ức chế vi sinh vật lạ; nấm men tạo CO₂ làm bánh nở. Tỉ lệ giữa hai nhóm quyết định độ chua và tốc độ nở.",
+    "tags": [
+      "bot-chua",
+      "vi-sinh",
+      "banh-mi"
+    ],
+    "src": "Gänzle, Current Opinion in Food Science (2014)"
+  },
+  {
+    "id": "tp-312",
+    "cat": "thuc-pham",
+    "sub": "len-men",
+    "t": "Bánh mì bột chua có chỉ số đường huyết thấp hơn bánh mì men công nghiệp cùng loại bột",
+    "s": "Axit lactic làm chậm quá trình tiêu hoá tinh bột. Hiệu ứng đã được đo trong nhiều thử nghiệm nhưng độ lớn thay đổi tuỳ công thức và thời gian ủ.",
+    "tags": [
+      "bot-chua",
+      "duong-huyet",
+      "dinh-duong"
+    ],
+    "src": "Liljeberg & Björck, European Journal of Clinical Nutrition (1998)"
+  },
+  {
+    "id": "tp-313",
+    "cat": "thuc-pham",
+    "sub": "len-men",
+    "t": "Rượu vang tự nhiên lên men bằng nấm men có sẵn trên vỏ nho, không cần thêm men giống",
+    "s": "Mỗi vườn nho có hệ vi sinh riêng, và đó là một phần của khái niệm terroir. Nhiều nhà sản xuất công nghiệp thêm men chọn lọc để kết quả ổn định hơn giữa các vụ.",
+    "tags": [
+      "ruou-vang",
+      "men",
+      "terroir"
+    ],
+    "src": "Bokulich và cộng sự, PNAS (2014)"
+  },
+  {
+    "id": "tp-314",
+    "cat": "thuc-pham",
+    "sub": "len-men",
+    "t": "Giấm là kết quả của hai lần lên men liên tiếp: đường thành cồn rồi cồn thành axit axetic",
+    "s": "Vi khuẩn Acetobacter cần oxy nên giấm chỉ hình thành khi rượu tiếp xúc không khí. Đây là lý do rượu vang mở nắp lâu ngày chuyển chua.",
+    "tags": [
+      "giam",
+      "len-men",
+      "acetobacter"
+    ],
+    "src": "Belitz, Food Chemistry"
+  },
+  {
+    "id": "tp-315",
+    "cat": "thuc-pham",
+    "sub": "len-men",
+    "t": "Miso, natto và tempeh đều là đậu nành lên men nhưng bằng ba loại vi sinh vật khác nhau",
+    "s": "Miso dùng nấm Aspergillus oryzae, natto dùng vi khuẩn Bacillus subtilis, tempeh dùng nấm Rhizopus. Ba vi sinh vật cho ba kết cấu và ba hồ sơ dinh dưỡng khác hẳn nhau.",
+    "tags": [
+      "dau-nanh",
+      "len-men",
+      "vi-sinh"
+    ],
+    "src": "Shurtleff & Aoyagi, The Book of Miso; Nout & Kiers, Journal of Applied Microbiology (2005)"
+  },
+  {
+    "id": "tp-316",
+    "cat": "thuc-pham",
+    "sub": "len-men",
+    "t": "Trà kombucha lên men bằng một khối cộng sinh giữa vi khuẩn và nấm men, và nó tạo ra một lượng cồn nhỏ",
+    "s": "Nồng độ thường dưới 0,5%, tức mức mà nhiều nước coi là không cồn. Sản phẩm ủ quá lâu ở nhiệt độ cao có thể vượt ngưỡng đó.",
+    "tags": [
+      "kombucha",
+      "len-men",
+      "con"
+    ],
+    "src": "US TTB; Jayabalan và cộng sự, Comprehensive Reviews in Food Science (2014)"
+  },
+  {
+    "id": "tp-317",
+    "cat": "thuc-pham",
+    "sub": "bao-quan",
+    "t": "Đường và muối bảo quản bằng cùng một cơ chế, nhưng cần nồng độ rất khác nhau",
+    "s": "Mứt cần khoảng 65% đường mới ức chế được vi sinh vật, trong khi muối chỉ cần khoảng 20%. Cả hai đều hạ hoạt độ nước xuống dưới ngưỡng vi khuẩn sống được.",
+    "tags": [
+      "hoat-do-nuoc",
+      "mut",
+      "muoi"
+    ],
+    "src": "Jay, Modern Food Microbiology"
+  },
+  {
+    "id": "tp-318",
+    "cat": "thuc-pham",
+    "sub": "bao-quan",
+    "t": "Hoạt độ nước chứ không phải độ ẩm quyết định thực phẩm có hỏng hay không",
+    "s": "Mật ong có nước nhưng hoạt độ nước dưới 0,6 nên vi sinh vật không dùng được. Đây là chỉ số mà công nghiệp thực phẩm dùng thay cho 'khô' hay 'ướt'.",
+    "tags": [
+      "hoat-do-nuoc",
+      "bao-quan",
+      "vi-sinh"
+    ],
+    "src": "Codex Alimentarius; Jay, Modern Food Microbiology"
+  },
+  {
+    "id": "tp-320",
+    "cat": "thuc-pham",
+    "sub": "bao-quan",
+    "t": "Hun khói bảo quản thực phẩm bằng cả sấy khô lẫn các hợp chất kháng khuẩn trong khói",
+    "s": "Phenol và formaldehyde trong khói ức chế vi sinh vật. Cùng các hợp chất đó lại gồm cả hydrocarbon thơm đa vòng, nên hun khói nhiều liên quan tới tăng nguy cơ ung thư dạ dày.",
+    "tags": [
+      "hun-khoi",
+      "bao-quan",
+      "ung-thu"
+    ],
+    "src": "IARC Monographs; Jay, Modern Food Microbiology"
+  },
+  {
+    "id": "tp-321",
+    "cat": "thuc-pham",
+    "sub": "gia-vi-huong-lieu",
+    "t": "Nghệ có curcumin, nhưng cơ thể hấp thu nó rất kém nếu không có chất hỗ trợ",
+    "s": "Sinh khả dụng đường uống rất thấp; piperine trong hạt tiêu đen làm tăng hấp thu đáng kể trong các thử nghiệm. Đây là cơ sở hoá học của việc nhiều món cà ri kết hợp nghệ với tiêu.",
+    "tags": [
+      "nghe",
+      "curcumin",
+      "hap-thu"
+    ],
+    "src": "Shoba và cộng sự, Planta Medica (1998)"
+  },
+  {
+    "id": "tp-322",
+    "cat": "thuc-pham",
+    "sub": "gia-vi-huong-lieu",
+    "t": "Gừng gây cảm giác cay bằng một phân tử khác với ớt, và nấu chín làm nó cay hơn",
+    "s": "Gingerol trong gừng tươi chuyển thành shogaol khi đun, và shogaol cay hơn khoảng hai lần. Đây là lý do gừng khô và gừng nướng nồng hơn gừng sống.",
+    "tags": [
+      "gung",
+      "gingerol",
+      "nhiet"
+    ],
+    "src": "Belitz, Food Chemistry"
+  },
+  {
+    "id": "tp-323",
+    "cat": "thuc-pham",
+    "sub": "gia-vi-huong-lieu",
+    "t": "Hạt tiêu Tứ Xuyên không cay mà gây tê, và nó kích hoạt thụ thể xúc giác chứ không phải thụ thể đau",
+    "s": "Hydroxy-alpha-sanshool tạo cảm giác rung ở tần số khoảng 50 Hz trên môi. Đây là loại cảm giác thứ ba, không thuộc vị cũng không thuộc đau nóng.",
+    "tags": [
+      "tieu-tu-xuyen",
+      "te",
+      "thu-the"
+    ],
+    "src": "Hagura và cộng sự, Proceedings of the Royal Society B (2013)"
+  },
+  {
+    "id": "tp-324",
+    "cat": "thuc-pham",
+    "sub": "gia-vi-huong-lieu",
+    "t": "Muối biển và muối tinh có thành phần hoá học gần như y hệt nhau",
+    "s": "Cả hai đều trên 97% natri clorua. Khác biệt về vị đến từ kích thước hạt và tốc độ tan chứ không từ khoáng chất, vốn chỉ chiếm phần rất nhỏ.",
+    "tags": [
+      "muoi",
+      "so-sanh",
+      "dinh-duong"
+    ],
+    "src": "USDA FoodData Central; McGee, On Food and Cooking"
+  },
+  {
+    "id": "tp-325",
+    "cat": "thuc-pham",
+    "sub": "gia-vi-huong-lieu",
+    "t": "Lá nguyệt quế có tác dụng thật trong nước dùng, và các thử nghiệm mù cho thấy người ta phân biệt được",
+    "s": "Nó chứa eugenol và cineole tan chậm trong nước nóng. Thời gian ninh dài là điều kiện để các hợp chất này chiết ra đủ.",
+    "tags": [
+      "nguyet-que",
+      "huong-lieu",
+      "chiet-xuat"
+    ],
+    "src": "Serious Eats, thử nghiệm mù (2014); Belitz, Food Chemistry"
+  },
+  {
+    "id": "tp-326",
+    "cat": "thuc-pham",
+    "sub": "do-uong",
+    "t": "Nước pha cà phê chiếm hơn 98% khối lượng tách cà phê, nên chất lượng nước quyết định vị",
+    "s": "Nước quá mềm cho vị nhạt, nước quá cứng cho vị chát và đóng cặn máy. Hiệp hội Cà phê Đặc sản khuyến nghị tổng khoáng hoà tan khoảng 150 mg mỗi lít.",
+    "tags": [
+      "ca-phe",
+      "nuoc",
+      "chiet-xuat"
+    ],
+    "src": "Specialty Coffee Association Water Quality Handbook"
+  },
+  {
+    "id": "tp-327",
+    "cat": "thuc-pham",
+    "sub": "do-uong",
+    "t": "Cà phê chiết quá lâu ra vị đắng còn chiết quá nhanh ra vị chua, và cả hai đều là lỗi kỹ thuật",
+    "s": "Axit chiết ra trước, đường và chất tạo thân sau, chất đắng sau cùng. Tỉ lệ chiết tối ưu nằm quanh 18–22% khối lượng bột.",
+    "tags": [
+      "ca-phe",
+      "chiet-xuat",
+      "ky-thuat"
+    ],
+    "src": "Specialty Coffee Association Brewing Control Chart"
+  },
+  {
+    "id": "tp-329",
+    "cat": "thuc-pham",
+    "sub": "do-uong",
+    "t": "Nước ép trái cây có lượng đường tương đương nước ngọt có ga ở cùng thể tích",
+    "s": "Một ly nước cam 250 ml chứa khoảng 21 gam đường, xấp xỉ một lon cola. Khác biệt nằm ở vitamin và chất chống oxy hoá, không ở lượng đường.",
+    "tags": [
+      "nuoc-ep",
+      "duong",
+      "dinh-duong"
+    ],
+    "src": "USDA FoodData Central; WHO Guideline on Sugars Intake"
+  },
+  {
+    "id": "tp-330",
+    "cat": "thuc-pham",
+    "sub": "do-uong",
+    "t": "Sữa hạt không tương đương sữa bò về dinh dưỡng, và chênh lệch lớn nhất là protein",
+    "s": "Sữa hạnh nhân thường chỉ khoảng 1 gam protein mỗi 240 ml so với 8 gam của sữa bò. Sữa đậu nành là loại gần sữa bò nhất về protein.",
+    "tags": [
+      "sua-hat",
+      "protein",
+      "dinh-duong"
+    ],
+    "src": "USDA FoodData Central"
+  },
+  {
+    "id": "tp-331",
+    "cat": "thuc-pham",
+    "sub": "nguon-goc-mon-an",
+    "t": "Cà phê được phát hiện ở Ethiopia và lan sang Yemen trước khi tới châu Âu qua Đế chế Ottoman",
+    "s": "Quán cà phê đầu tiên ở châu Âu mở ở Venice năm 1645. Cây cà phê chỉ tới Việt Nam năm 1857 do người Pháp mang sang.",
+    "tags": [
+      "ca-phe",
+      "lich-su",
+      "viet-nam"
+    ],
+    "src": "Pendergrast, Uncommon Grounds (1999)"
+  },
+  {
+    "id": "tp-332",
+    "cat": "thuc-pham",
+    "sub": "nguon-goc-mon-an",
+    "t": "Mì Ý không đến từ Trung Quốc qua Marco Polo — mì đã có ở Ý trước khi ông về",
+    "s": "Tài liệu Sicilia thế kỷ 12 mô tả sản xuất mì sợi khô, khoảng 100 năm trước chuyến đi của Marco Polo. Câu chuyện này được một tạp chí ngành mì Mỹ phổ biến vào thập niên 1920.",
+    "tags": [
+      "mi-y",
+      "marco-polo",
+      "huyen-thoai"
+    ],
+    "src": "Serventi & Sabban, Pasta: The Story of a Universal Food (2002)"
+  },
+  {
+    "id": "tp-333",
+    "cat": "thuc-pham",
+    "sub": "nguon-goc-mon-an",
+    "t": "Cà ri Nhật đến từ Anh chứ không từ Ấn Độ",
+    "s": "Hải quân Nhật học món này từ Hải quân Hoàng gia Anh cuối thế kỷ 19. Đó là lý do nó sệt như sốt kiểu Anh chứ không loãng như cà ri Ấn.",
+    "tags": [
+      "ca-ri",
+      "nhat-ban",
+      "lich-su"
+    ],
+    "src": "Solt, The Untold History of Ramen; Cwiertka, Modern Japanese Cuisine"
+  },
+  {
+    "id": "tp-334",
+    "cat": "thuc-pham",
+    "sub": "nguon-goc-mon-an",
+    "t": "Bánh mì kẹp mang tên Bá tước Sandwich, nhưng cách ăn này đã có ở nhiều nền văn hoá từ trước",
+    "s": "Tên gọi xuất hiện khoảng năm 1762. Bánh mì kẹp thịt kiểu Trung Đông và bánh cuốn kiểu Ấn đều cổ hơn nhiều thế kỷ.",
+    "tags": [
+      "sandwich",
+      "ten-goi",
+      "lich-su"
+    ],
+    "src": "Oxford English Dictionary; Wilson, Sandwich: A Global History"
+  },
+  {
+    "id": "tp-335",
+    "cat": "thuc-pham",
+    "sub": "nguon-goc-mon-an",
+    "t": "Sushi cá hồi là phát minh của người Na Uy trong thập niên 1980",
+    "s": "Người Nhật vốn không ăn cá hồi sống vì cá hồi Thái Bình Dương có nguy cơ ký sinh. Na Uy đã vận động thị trường Nhật bằng cá hồi nuôi Đại Tây Dương an toàn hơn.",
+    "tags": [
+      "sushi",
+      "ca-hoi",
+      "thuong-mai"
+    ],
+    "src": "BBC, The Norwegian campaign behind Japan's love of salmon sushi (2015)"
+  },
+  {
+    "id": "tp-336",
+    "cat": "thuc-pham",
+    "sub": "nguon-goc-mon-an",
+    "t": "Kem que được cho là do một cậu bé 11 tuổi phát minh tình cờ năm 1905",
+    "s": "Frank Epperson để quên cốc nước soda có que khuấy ngoài trời qua đêm lạnh. Ông đăng ký bằng sáng chế 18 năm sau đó.",
+    "tags": [
+      "kem-que",
+      "phat-minh",
+      "lich-su"
+    ],
+    "src": "Epperson, bằng sáng chế Mỹ 1505592 (1924)"
+  },
+  {
+    "id": "tp-337",
+    "cat": "thuc-pham",
+    "sub": "nguon-goc-mon-an",
+    "t": "Bánh phở, bún, bánh cuốn và bánh đa đều làm từ bột gạo nhưng khác nhau ở cách xử lý bột",
+    "s": "Độ nghiền, tỉ lệ gạo cũ và cách tráng hay ép quyết định kết cấu cuối cùng. Gạo để lâu cho ít amylopectin hơn nên sợi dai hơn, đó là lý do gạo mới không làm bún ngon.",
+    "tags": [
+      "gao",
+      "bun",
+      "pho"
+    ],
+    "src": "Nguyễn Thị Diệu, Vietnamese Cuisine; nghiên cứu tinh bột gạo của IRRI"
+  },
+  {
+    "id": "tp-338",
+    "cat": "thuc-pham",
+    "sub": "nguon-goc-mon-an",
+    "t": "Chả cá, nem chua và tré đều dựa trên nguyên lý bảo quản bằng axit hoặc muối trước khi có tủ lạnh",
+    "s": "Đây là lý do ẩm thực truyền thống ở vùng nhiệt đới có rất nhiều món lên men và món ướp. Tủ lạnh gia đình chỉ phổ biến ở Việt Nam từ thập niên 1990.",
+    "tags": [
+      "bao-quan",
+      "viet-nam",
+      "len-men"
+    ],
+    "src": "Steinkraus, Handbook of Indigenous Fermented Foods"
+  },
+  {
+    "id": "tp-339",
+    "cat": "thuc-pham",
+    "sub": "nong-nghiep-thuc-pham",
+    "t": "Một quả trứng gà công nghiệp mất khoảng 24–26 giờ để hình thành trong cơ thể gà mái",
+    "s": "Lòng đỏ mất vài giờ, lòng trắng khoảng 3 giờ, vỏ mất tới 20 giờ. Vì vậy gà không thể đẻ quá một quả mỗi ngày dù được chọn giống thế nào.",
+    "tags": [
+      "trung",
+      "ga",
+      "sinh-ly"
+    ],
+    "src": "Đại học Nông nghiệp; Hiệp hội Trứng Hoa Kỳ"
+  },
+  {
+    "id": "tp-340",
+    "cat": "thuc-pham",
+    "sub": "nong-nghiep-thuc-pham",
+    "t": "Bò sữa chỉ cho sữa sau khi sinh bê, nên ngành sữa gắn liền với ngành thịt bê",
+    "s": "Chu kỳ tiết sữa kéo dài khoảng 10 tháng sau mỗi lần sinh. Đây là ràng buộc sinh học mà nhiều người tiêu dùng không biết khi so sánh các lựa chọn ăn uống.",
+    "tags": [
+      "sua",
+      "bo",
+      "chan-nuoi"
+    ],
+    "src": "FAO; Đại học Cornell, Department of Animal Science"
+  },
+  {
+    "id": "tp-341",
+    "cat": "thuc-pham",
+    "sub": "nong-nghiep-thuc-pham",
+    "t": "Cá hồi nuôi có màu hồng nhờ chất bổ sung trong thức ăn, không phải màu tự nhiên của thịt",
+    "s": "Astaxanthin trong tự nhiên đến từ giáp xác mà cá ăn. Nhà sản xuất chọn sắc độ theo bảng màu tiêu chuẩn cho từng thị trường.",
+    "tags": [
+      "ca-hoi",
+      "astaxanthin",
+      "nuoi-trong"
+    ],
+    "src": "FAO; DSM SalmoFan Standard"
+  },
+  {
+    "id": "tp-342",
+    "cat": "thuc-pham",
+    "sub": "nong-nghiep-thuc-pham",
+    "t": "Cây trồng cần khoảng 17 nguyên tố dinh dưỡng thiết yếu, và thiếu một cái thôi là năng suất bị chặn",
+    "s": "Định luật tối thiểu của Liebig nói năng suất bị giới hạn bởi yếu tố khan hiếm nhất, không bởi tổng lượng phân bón. Bón thêm nitơ không cứu được cây thiếu kẽm.",
+    "tags": [
+      "liebig",
+      "phan-bon",
+      "nong-nghiep"
+    ],
+    "src": "von Liebig (1840); FAO Fertilizer and Plant Nutrition Bulletin"
+  },
+  {
+    "id": "tp-343",
+    "cat": "thuc-pham",
+    "sub": "nong-nghiep-thuc-pham",
+    "t": "Luân canh cây họ đậu bổ sung đạm cho đất mà không cần phân bón",
+    "s": "Vi khuẩn cộng sinh trong nốt sần rễ cố định nitơ từ không khí. Kỹ thuật này đã được dùng hàng nghìn năm trước khi ai biết nitơ là gì.",
+    "tags": [
+      "luan-canh",
+      "dau",
+      "co-dinh-dam"
+    ],
+    "src": "FAO; Smil, Enriching the Earth"
+  },
+  {
+    "id": "tp-344",
+    "cat": "thuc-pham",
+    "sub": "nong-nghiep-thuc-pham",
+    "t": "Chuối, cam và nho không hạt đều được nhân giống vô tính vì không có hạt để gieo",
+    "s": "Toàn bộ vườn là bản sao di truyền của một cây gốc. Đây là điểm mạnh về đồng đều sản phẩm và điểm yếu chí mạng trước dịch bệnh.",
+    "tags": [
+      "vo-tinh",
+      "cay-an-qua",
+      "benh-cay"
+    ],
+    "src": "Kew Gardens; FAO"
+  },
+  {
+    "id": "tp-345",
+    "cat": "thuc-pham",
+    "sub": "an-toan-thuc-pham",
+    "t": "Ngộ độc thực phẩm phổ biến nhất không phải từ hàng quán mà từ bếp gia đình",
+    "s": "Ước tính của cơ quan an toàn thực phẩm nhiều nước cho thấy phần lớn ca lẻ tẻ xảy ra tại nhà. Ổ dịch tập thể thì hay xảy ra ở bếp ăn tập trung và được báo cáo nhiều hơn.",
+    "tags": [
+      "ngo-doc",
+      "bep-gia-dinh",
+      "thong-ke"
+    ],
+    "src": "US CDC; UK Food Standards Agency"
+  },
+  {
+    "id": "tp-346",
+    "cat": "thuc-pham",
+    "sub": "an-toan-thuc-pham",
+    "t": "Nhiễm chéo từ thớt và dao gây nhiều ca bệnh hơn thực phẩm nấu chưa chín ở nhiều khảo sát",
+    "s": "Vi khuẩn từ thịt sống chuyển sang rau ăn sống là con đường phổ biến nhất. Vì vậy quy tắc tách dụng cụ cho đồ sống và đồ chín quan trọng ngang với nhiệt độ nấu.",
+    "tags": [
+      "nhiem-cheo",
+      "bep",
+      "an-toan"
+    ],
+    "src": "US FDA Food Code; WHO Five Keys to Safer Food"
+  },
+  {
+    "id": "tp-348",
+    "cat": "thuc-pham",
+    "sub": "an-toan-thuc-pham",
+    "t": "Hàu sống mang nguy cơ vi khuẩn Vibrio, và nguy cơ này cao hơn vào mùa nước ấm",
+    "s": "Vibrio phát triển mạnh khi nhiệt độ nước trên 20 độ. Đây là cơ sở của quy tắc dân gian chỉ ăn hàu vào các tháng có chữ R trong tiếng Anh, tức các tháng lạnh.",
+    "tags": [
+      "hau",
+      "vibrio",
+      "mua"
+    ],
+    "src": "US FDA; CDC Vibrio Surveillance"
+  },
+  {
+    "id": "tp-349",
+    "cat": "thuc-pham",
+    "sub": "an-toan-thuc-pham",
+    "t": "Cá nóc chứa tetrodotoxin, chất độc mạnh hơn xyanua hàng nghìn lần và không có thuốc giải",
+    "s": "Độc tố tập trung ở gan, buồng trứng và da. Ở Nhật, đầu bếp phải có giấy phép riêng và phải qua nhiều năm đào tạo mới được chế biến.",
+    "tags": [
+      "ca-noc",
+      "tetrodotoxin",
+      "an-toan"
+    ],
+    "src": "Bộ Y tế, Lao động và Phúc lợi Nhật Bản; US FDA Bad Bug Book"
+  },
+  {
+    "id": "tp-350",
+    "cat": "thuc-pham",
+    "sub": "an-toan-thuc-pham",
+    "t": "Sữa tươi chưa tiệt trùng mang nguy cơ nhiễm khuẩn cao gấp nhiều lần sữa đã xử lý nhiệt",
+    "s": "Dữ liệu giám sát ở Mỹ cho thấy sữa chưa tiệt trùng chiếm tỉ lệ ổ dịch cao vượt xa tỉ trọng tiêu thụ của nó. Các lợi ích dinh dưỡng được quảng cáo chưa được chứng minh trong thử nghiệm.",
+    "tags": [
+      "sua-tuoi",
+      "tiet-trung",
+      "an-toan"
+    ],
+    "src": "US CDC; Langer và cộng sự, Emerging Infectious Diseases (2012)"
+  },
+  {
+    "id": "tp-351",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Chảo gang giữ nhiệt tốt hơn chảo mỏng nên nó không tụt nhiệt khi cho thịt lạnh vào",
+    "s": "Khối lượng nhiệt lớn là thứ tạo lớp vỏ nâu đều. Chảo nhôm mỏng nóng nhanh hơn nhưng mất nhiệt ngay khi tiếp xúc thực phẩm.",
+    "tags": [
+      "chao-gang",
+      "nhiet",
+      "nau-an"
+    ],
+    "src": "McGee, On Food and Cooking; Cook's Illustrated"
+  },
+  {
+    "id": "tp-352",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Lớp chống dính tự nhiên trên chảo gang là polymer từ dầu bị nung, không phải lớp dầu bám",
+    "s": "Dầu bị oxy hoá và trùng hợp thành màng cứng bám chặt vào bề mặt kim loại. Đây là phản ứng hoá học thật chứ không phải mẹo dân gian.",
+    "tags": [
+      "chao-gang",
+      "polymer",
+      "hoa-hoc"
+    ],
+    "src": "Cook's Illustrated; nghiên cứu về quá trình polymer hoá dầu khô"
+  },
+  {
+    "id": "tp-353",
+    "cat": "thuc-pham",
+    "sub": "bao-quan",
+    "t": "Rau lá héo hồi lại được khi ngâm nước lạnh vì tế bào lấy lại áp suất trương",
+    "s": "Nước đi vào tế bào qua thẩm thấu và làm thành tế bào căng trở lại. Cơ chế này chỉ hoạt động khi tế bào chưa chết hẳn.",
+    "tags": [
+      "rau",
+      "ap-suat-truong",
+      "bao-quan"
+    ],
+    "src": "Taiz & Zeiger, Plant Physiology"
+  },
+  {
+    "id": "tp-355",
+    "cat": "thuc-pham",
+    "sub": "do-uong",
+    "t": "Bia nhạt và bia đen khác nhau chủ yếu ở mức rang mạch nha, không ở nồng độ cồn",
+    "s": "Nhiều loại stout có cồn thấp hơn lager công nghiệp. Màu đậm đến từ mạch nha rang qua phản ứng Maillard.",
+    "tags": [
+      "bia",
+      "mach-nha",
+      "mau"
+    ],
+    "src": "Bamforth, Beer: Tap into the Art and Science of Brewing"
+  },
+  {
+    "id": "tp-356",
+    "cat": "thuc-pham",
+    "sub": "gia-vi-huong-lieu",
+    "t": "Vani tổng hợp và vani thiên nhiên chứa cùng một phân tử chính là vanillin",
+    "s": "Khác biệt nằm ở vài trăm hợp chất phụ có trong chiết xuất tự nhiên. Trong bánh nướng ở nhiệt độ cao, các hợp chất phụ đó phần lớn bay đi, nên khác biệt cảm quan rất nhỏ.",
+    "tags": [
+      "vani",
+      "vanillin",
+      "so-sanh"
+    ],
+    "src": "Cook's Illustrated thử nghiệm mù; Belitz, Food Chemistry"
+  },
+  {
+    "id": "tp-357",
+    "cat": "thuc-pham",
+    "sub": "nong-nghiep-thuc-pham",
+    "t": "Ong mật không phải loài thụ phấn bản địa ở phần lớn nơi chúng được nuôi, và ong hoang dã thụ phấn hiệu quả hơn cho nhiều cây",
+    "s": "Nghiên cứu trên 41 hệ cây trồng cho thấy ong hoang dã tăng tỉ lệ đậu quả ở mọi hệ, còn ong mật chỉ tăng ở một số. Nuôi thêm ong mật không thay thế được mất đa dạng ong hoang.",
+    "tags": [
+      "ong",
+      "thu-phan",
+      "da-dang"
+    ],
+    "src": "Garibaldi và cộng sự, Science (2013)"
+  },
+  {
+    "id": "tp-358",
+    "cat": "thuc-pham",
+    "sub": "an-toan-thuc-pham",
+    "t": "Nấm dại độc và nấm ăn được có thể giống hệt nhau, và mọi cách phân biệt truyền miệng đều đã bị bác bỏ",
+    "s": "Nấm tán bay Amanita phalloides gây khoảng 50% số ca tử vong do nấm trên thế giới và trông rất giống vài loài ăn được. Nấu chín không phá được độc tố amatoxin, và triệu chứng chỉ xuất hiện sau 6–12 giờ.",
+    "tags": [
+      "nam-doc",
+      "amanita",
+      "an-toan"
+    ],
+    "src": "US CDC; Bảo tàng Lịch sử Tự nhiên London"
+  },
+  {
+    "id": "tp-359",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Đông lạnh làm hỏng kết cấu rau củ nhiều nước vì tinh thể đá phá vỡ thành tế bào",
+    "s": "Đây là lý do dưa chuột và xà lách rã đông thành nhũn. Rau ít nước và có thành tế bào dày như đậu Hà Lan thì chịu đông tốt hơn nhiều.",
+    "tags": [
+      "cap-dong",
+      "rau",
+      "ket-cau"
+    ],
+    "src": "Fellows, Food Processing Technology"
+  },
+  {
+    "id": "tp-360",
+    "cat": "thuc-pham",
+    "sub": "do-uong",
+    "t": "Đá viên làm nước ngọt loãng dần, nên quán dùng đá lớn không phải để đẹp mà để giảm diện tích tan",
+    "s": "Một viên đá lớn có tỉ lệ diện tích trên thể tích nhỏ hơn nhiều viên nhỏ cùng khối lượng. Nó làm lạnh chậm hơn nhưng làm loãng ít hơn.",
+    "tags": [
+      "da",
+      "do-uong",
+      "hinh-hoc"
+    ],
+    "src": "Arnold, Liquid Intelligence (2014)"
+  },
+  {
+    "id": "tp-361",
+    "cat": "thuc-pham",
+    "sub": "nguon-goc-mon-an",
+    "t": "Nước tương Nhật và nước tương Trung Hoa khác nhau ở tỉ lệ lúa mì, và điều đó đổi hẳn hương",
+    "s": "Shoyu Nhật thường dùng khoảng 50% lúa mì, còn nước tương Trung Hoa truyền thống dùng ít hoặc không dùng. Lúa mì cho vị ngọt và hương cồn nhẹ khi lên men.",
+    "tags": [
+      "nuoc-tuong",
+      "shoyu",
+      "so-sanh"
+    ],
+    "src": "Shurtleff & Aoyagi, History of Soy Sauce"
+  },
+  {
+    "id": "tp-362",
+    "cat": "thuc-pham",
+    "sub": "len-men",
+    "t": "Phô mai xanh có mốc là do nấm Penicillium được cấy có chủ đích, cùng chi với nấm cho ra penicillin",
+    "s": "Người ta chọc lỗ vào khối phô mai để đưa oxy vào cho nấm phát triển thành vân xanh. Loài dùng làm phô mai không sinh kháng sinh đáng kể.",
+    "tags": [
+      "pho-mai-xanh",
+      "penicillium",
+      "len-men"
+    ],
+    "src": "Fox và cộng sự, Fundamentals of Cheese Science"
+  },
+  {
+    "id": "tp-363",
+    "cat": "thuc-pham",
+    "sub": "bao-quan",
+    "t": "Trứng cũ nổi trong nước còn trứng mới chìm, và lý do là túi khí bên trong lớn dần",
+    "s": "Nước bay hơi qua vỏ xốp và không khí đi vào thay chỗ. Đây là phép thử độ tươi đáng tin, khác với nhiều mẹo bếp dân gian.",
+    "tags": [
+      "trung",
+      "do-tuoi",
+      "bao-quan"
+    ],
+    "src": "USDA; McGee, On Food and Cooking"
+  },
+  {
+    "id": "tp-364",
+    "cat": "thuc-pham",
+    "sub": "hoa-hoc-nau-an",
+    "t": "Ngâm hành tím vào nước lạnh làm giảm vị hăng vì các hợp chất lưu huỳnh tan trong nước",
+    "s": "Ngâm 15 phút rồi vớt ra là đủ để đổi rõ vị. Đây là hoá học chiết xuất chứ không phải mẹo cảm tính.",
+    "tags": [
+      "hanh",
+      "luu-huynh",
+      "chiet-xuat"
+    ],
+    "src": "McGee, On Food and Cooking"
+  },
+  {
+    "id": "tp-365",
+    "cat": "thuc-pham",
+    "sub": "nong-nghiep-thuc-pham",
+    "t": "Một kg thịt bò cần khoảng 15.000 lít nước tính trên toàn chuỗi, phần lớn là nước mưa cho cỏ và ngũ cốc",
+    "s": "Dấu chân nước xanh lá — nước mưa — chiếm khoảng 94% con số đó. Vì vậy so sánh dấu chân nước giữa các thực phẩm phải tách riêng nước tưới và nước mưa mới có ý nghĩa chính sách.",
+    "tags": [
+      "dau-chan-nuoc",
+      "thit",
+      "nong-nghiep"
+    ],
+    "src": "Mekonnen & Hoekstra, Ecosystems (2012)"
+  }
+]

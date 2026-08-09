@@ -1,0 +1,639 @@
+[
+  {
+    "id": "sv-201",
+    "cat": "sinh-vat",
+    "sub": "co-the-dong-vat",
+    "t": "Hươu cao cổ có đúng 7 đốt sống cổ, bằng số đốt sống cổ của người",
+    "s": "Gần như mọi động vật có vú đều có 7 đốt sống cổ, từ chuột tới cá voi. Ngoại lệ hiếm gồm lười và bò biển.",
+    "tags": [
+      "huou-cao-co",
+      "dot-song",
+      "tien-hoa"
+    ],
+    "src": "Galis, Journal of Experimental Zoology (1999)"
+  },
+  {
+    "id": "sv-202",
+    "cat": "sinh-vat",
+    "sub": "co-the-dong-vat",
+    "t": "Dây thần kinh thanh quản quặt ngược của hươu cao cổ đi vòng xuống ngực rồi quay lên, dài hơn 4 mét cho một quãng 20 cm",
+    "s": "Đây là di sản của cấu trúc cá tổ tiên, nơi đường đi đó còn ngắn. Nó là một trong các bằng chứng rõ nhất rằng tiến hoá chắp vá chứ không thiết kế lại từ đầu.",
+    "tags": [
+      "tien-hoa",
+      "than-kinh",
+      "huou-cao-co"
+    ],
+    "src": "Wedel, Acta Palaeontologica Polonica (2012)"
+  },
+  {
+    "id": "sv-203",
+    "cat": "sinh-vat",
+    "sub": "co-the-dong-vat",
+    "t": "Tim tôm hùm nằm ở lưng và máu của nó không màu cho tới khi tiếp xúc oxy thì chuyển xanh nhạt",
+    "s": "Chúng dùng hemocyanin chứa đồng thay vì hemoglobin chứa sắt. Tôm hùm cũng nhai bằng dạ dày chứ không bằng miệng.",
+    "tags": [
+      "tom-hum",
+      "hemocyanin",
+      "giai-phau"
+    ],
+    "src": "Bảo tàng Lịch sử Tự nhiên Hoa Kỳ; Factor, Biology of the Lobster"
+  },
+  {
+    "id": "sv-204",
+    "cat": "sinh-vat",
+    "sub": "co-the-dong-vat",
+    "t": "Voi có khoảng 40.000 cơ trong vòi, nhiều hơn tổng số cơ trong toàn bộ cơ thể người",
+    "s": "Vòi không có xương nên nó là một cấu trúc thuỷ tĩnh cơ, giống lưỡi người và xúc tu bạch tuộc. Nó nâng được 250 kg mà vẫn nhặt được một hạt lạc.",
+    "tags": [
+      "voi",
+      "voi-co",
+      "giai-phau"
+    ],
+    "src": "Vườn thú Smithsonian; Wilson và cộng sự, Journal of Zoology (1991)"
+  },
+  {
+    "id": "sv-205",
+    "cat": "sinh-vat",
+    "sub": "co-the-dong-vat",
+    "t": "Xương chim rỗng nhưng bộ xương chim thường nặng tương đương bộ xương thú cùng khối lượng",
+    "s": "Xương rỗng có thành dày và các thanh chống bên trong nên cứng hơn với cùng khối lượng, chứ không nhẹ hơn tổng thể. Nhiều xương chim còn nối thông với hệ túi khí phổi.",
+    "tags": [
+      "chim",
+      "xuong",
+      "bay"
+    ],
+    "src": "Dumont, Proceedings of the Royal Society B (2010)"
+  },
+  {
+    "id": "sv-206",
+    "cat": "sinh-vat",
+    "sub": "co-the-dong-vat",
+    "t": "Cá mập không có xương — bộ khung của chúng làm bằng sụn, nhẹ hơn xương khoảng một nửa",
+    "s": "Nhờ vậy chúng nổi dễ hơn dù không có bong bóng khí. Sụn cũng là lý do hoá thạch cá mập chủ yếu chỉ còn răng.",
+    "tags": [
+      "ca-map",
+      "sun",
+      "tien-hoa"
+    ],
+    "src": "Bảo tàng Lịch sử Tự nhiên London; Compagno, Sharks of the World"
+  },
+  {
+    "id": "sv-207",
+    "cat": "sinh-vat",
+    "sub": "co-the-dong-vat",
+    "t": "Răng cá mập rụng và mọc lại liên tục, và một con có thể thay hơn 30.000 chiếc trong đời",
+    "s": "Răng xếp thành nhiều hàng như băng chuyền, hàng sau đẩy hàng trước ra. Đây là lý do răng cá mập là hoá thạch phổ biến bậc nhất.",
+    "tags": [
+      "ca-map",
+      "rang",
+      "tai-tao"
+    ],
+    "src": "Bảo tàng Lịch sử Tự nhiên Florida"
+  },
+  {
+    "id": "sv-208",
+    "cat": "sinh-vat",
+    "sub": "co-the-dong-vat",
+    "t": "Ngựa không thể nôn vì cơ vòng thực quản của chúng quá mạnh và góc nối dạ dày rất hẹp",
+    "s": "Vì vậy đau bụng ở ngựa là tình trạng cấp cứu có thể gây tử vong. Chuột và thỏ cũng không nôn được, dù cơ chế hơi khác.",
+    "tags": [
+      "ngua",
+      "tieu-hoa",
+      "thu-y"
+    ],
+    "src": "Merck Veterinary Manual"
+  },
+  {
+    "id": "sv-209",
+    "cat": "sinh-vat",
+    "sub": "co-the-dong-vat",
+    "t": "Đà điểu có mắt to hơn não của chính nó",
+    "s": "Mắt đường kính khoảng 5 cm, lớn nhất trong các loài trên cạn. Điều này hợp lý với lối sống phát hiện kẻ săn mồi từ xa trên đồng cỏ trống.",
+    "tags": [
+      "da-dieu",
+      "mat",
+      "giac-quan"
+    ],
+    "src": "Martin & Katzir, Brain, Behavior and Evolution (1995)"
+  },
+  {
+    "id": "sv-210",
+    "cat": "sinh-vat",
+    "sub": "co-the-dong-vat",
+    "t": "Gấu trúc ăn tre nhưng vẫn có hệ tiêu hoá của loài ăn thịt, nên chúng phải ăn 12–38 kg tre mỗi ngày",
+    "s": "Ruột ngắn và thiếu enzyme phân giải cellulose làm hiệu suất hấp thu chỉ khoảng 17%. Chúng bù bằng cách ăn liên tục tới 14 giờ mỗi ngày.",
+    "tags": [
+      "gau-truc",
+      "tieu-hoa",
+      "tre"
+    ],
+    "src": "Zhu và cộng sự, PNAS (2011)"
+  },
+  {
+    "id": "sv-211",
+    "cat": "sinh-vat",
+    "sub": "giac-quan-dong-vat",
+    "t": "Chó ngửi được ở nồng độ thấp hơn người khoảng 10.000 tới 100.000 lần",
+    "s": "Chúng có khoảng 220 triệu tế bào thụ cảm mùi so với khoảng 5 triệu ở người, và vùng não xử lý mùi lớn hơn nhiều theo tỉ lệ. Chó nghiệp vụ phát hiện được một số bệnh ung thư qua hơi thở với độ nhạy cao trong các thử nghiệm.",
+    "tags": [
+      "cho",
+      "khuu-giac",
+      "y-hoc"
+    ],
+    "src": "Walker và cộng sự, Applied Animal Behaviour Science (2006)"
+  },
+  {
+    "id": "sv-212",
+    "cat": "sinh-vat",
+    "sub": "giac-quan-dong-vat",
+    "t": "Dơi định vị bằng tiếng vang với độ phân giải đủ để bắt côn trùng trong bóng tối hoàn toàn",
+    "s": "Chúng phát siêu âm 20–200 kHz và đo độ trễ tiếng vang. Một số loài bướm đêm tiến hoá khả năng nghe siêu âm và bổ nhào để né, còn dơi lại tiến hoá tần số nằm ngoài dải nghe của bướm.",
+    "tags": [
+      "doi",
+      "dinh-vi",
+      "tien-hoa"
+    ],
+    "src": "Griffin, Listening in the Dark (1958); Corcoran & Conner, Science (2014)"
+  },
+  {
+    "id": "sv-213",
+    "cat": "sinh-vat",
+    "sub": "giac-quan-dong-vat",
+    "t": "Cá heo nhìn bằng âm thanh và dựng được hình ảnh ba chiều của vật thể bên trong cơ thể khác",
+    "s": "Sóng siêu âm xuyên qua mô mềm nên chúng phát hiện được cá đang trốn dưới cát và có thể nhận ra cá thể mang thai. Độ phân giải đủ để phân biệt hai kim loại khác nhau cùng hình dạng.",
+    "tags": [
+      "ca-heo",
+      "sieu-am",
+      "giac-quan"
+    ],
+    "src": "Au, The Sonar of Dolphins (1993)"
+  },
+  {
+    "id": "sv-214",
+    "cat": "sinh-vat",
+    "sub": "giac-quan-dong-vat",
+    "t": "Ong nhìn được tia tử ngoại, và nhiều bông hoa có hoa văn chỉ đường mà mắt người không thấy",
+    "s": "Các 'đường băng dẫn mật' phản xạ tử ngoại chỉ thẳng vào tâm hoa. Ong không nhìn được màu đỏ, nên hoa thụ phấn nhờ ong hiếm khi đỏ thuần.",
+    "tags": [
+      "ong",
+      "tu-ngoai",
+      "hoa"
+    ],
+    "src": "von Frisch (1914); Chittka & Raine, Current Opinion in Plant Biology (2006)"
+  },
+  {
+    "id": "sv-215",
+    "cat": "sinh-vat",
+    "sub": "giac-quan-dong-vat",
+    "t": "Rắn hố má 'nhìn' được nhiệt nhờ cơ quan hồng ngoại phân biệt chênh lệch khoảng 0,003 độ",
+    "s": "Hai hố nằm giữa mắt và mũi tạo ảnh nhiệt thô, và não hợp nhất nó với ảnh thị giác. Chúng săn được chuột trong bóng tối hoàn toàn.",
+    "tags": [
+      "ran",
+      "hong-ngoai",
+      "giac-quan"
+    ],
+    "src": "Gracheva và cộng sự, Nature (2010)"
+  },
+  {
+    "id": "sv-217",
+    "cat": "sinh-vat",
+    "sub": "giac-quan-dong-vat",
+    "t": "Cá mập phát hiện được điện trường yếu tới vài phần tỉ vôn mỗi centimet",
+    "s": "Các bóng Lorenzini trên mõm là thụ thể điện nhạy nhất trong giới động vật. Nhờ đó chúng tìm được cá vùi trong cát chỉ bằng tín hiệu điện từ cơ tim của con mồi.",
+    "tags": [
+      "ca-map",
+      "dien-truong",
+      "giac-quan"
+    ],
+    "src": "Kalmijn, Science (1971)"
+  },
+  {
+    "id": "sv-218",
+    "cat": "sinh-vat",
+    "sub": "giac-quan-dong-vat",
+    "t": "Mèo nhìn trong tối tốt hơn người khoảng 6–8 lần nhờ lớp phản quang phía sau võng mạc",
+    "s": "Tapetum lucidum phản xạ ánh sáng trở lại tế bào cảm quang một lần nữa, và đó cũng là thứ làm mắt mèo sáng lên khi rọi đèn. Cái giá là ảnh hơi nhoè vì ánh sáng bị tán xạ.",
+    "tags": [
+      "meo",
+      "thi-giac",
+      "tapetum"
+    ],
+    "src": "Ollivier và cộng sự, Veterinary Ophthalmology (2004)"
+  },
+  {
+    "id": "sv-219",
+    "cat": "sinh-vat",
+    "sub": "giac-quan-dong-vat",
+    "t": "Voi nghe được hạ âm dưới 20 Hz và liên lạc qua khoảng cách hàng chục km",
+    "s": "Chúng cũng cảm nhận rung động qua chân và vòi. Đàn voi phản ứng với tiếng gọi của cá thể khác trước khi con người nghe thấy bất kỳ âm thanh nào.",
+    "tags": [
+      "voi",
+      "ha-am",
+      "lien-lac"
+    ],
+    "src": "Payne, Langbauer & Thomas, Behavioral Ecology and Sociobiology (1986)"
+  },
+  {
+    "id": "sv-220",
+    "cat": "sinh-vat",
+    "sub": "giac-quan-dong-vat",
+    "t": "Bồ câu tìm đường về bằng ít nhất ba hệ thống song song: mặt trời, từ trường và bản đồ mùi",
+    "s": "Che một hệ thống thì chúng vẫn về được nhờ các hệ còn lại, và đó là lý do cơ chế này khó nghiên cứu. Bản đồ mùi được chứng minh bằng thí nghiệm gây mê khứu giác.",
+    "tags": [
+      "bo-cau",
+      "dinh-huong",
+      "mui"
+    ],
+    "src": "Wallraff, Avian Navigation (2005)"
+  },
+  {
+    "id": "sv-221",
+    "cat": "sinh-vat",
+    "sub": "hanh-vi-dong-vat",
+    "t": "Quạ New Caledonia chế tạo công cụ theo nhiều bước và giữ lại công cụ tốt để dùng lại",
+    "s": "Chúng uốn dây thép thành móc câu trong thí nghiệm mà không được dạy. Khả năng giải bài toán nhiều bước của chúng tương đương trẻ 5–7 tuổi trong một số nhiệm vụ.",
+    "tags": [
+      "qua",
+      "cong-cu",
+      "tri-thong-minh"
+    ],
+    "src": "Weir, Chappell & Kacelnik, Science (2002); Taylor và cộng sự, Proceedings B (2010)"
+  },
+  {
+    "id": "sv-222",
+    "cat": "sinh-vat",
+    "sub": "hanh-vi-dong-vat",
+    "t": "Tinh tinh học kỹ thuật dùng công cụ từ mẹ và các nhóm khác nhau có 'văn hoá' công cụ khác nhau",
+    "s": "Khảo sát ở nhiều địa điểm châu Phi ghi nhận hơn 39 tập tính khác biệt giữa các quần thể mà không giải thích được bằng môi trường hay di truyền. Đây là bằng chứng cho văn hoá ở loài ngoài người.",
+    "tags": [
+      "tinh-tinh",
+      "van-hoa",
+      "cong-cu"
+    ],
+    "src": "Whiten và cộng sự, Nature (1999)"
+  },
+  {
+    "id": "sv-227",
+    "cat": "sinh-vat",
+    "sub": "hanh-vi-dong-vat",
+    "t": "Chó hiểu được cử chỉ chỉ tay của người, còn tinh tinh thì hầu như không",
+    "s": "Đây là kết quả của quá trình thuần hoá chứ không phải trí thông minh cao hơn: sói nuôi từ nhỏ cũng kém hơn chó ở nhiệm vụ này. Chó con chưa qua huấn luyện đã làm được.",
+    "tags": [
+      "cho",
+      "chi-tay",
+      "thuan-hoa"
+    ],
+    "src": "Hare và cộng sự, Science (2002)"
+  },
+  {
+    "id": "sv-229",
+    "cat": "sinh-vat",
+    "sub": "hanh-vi-dong-vat",
+    "t": "Chuột phát tiếng cười siêu âm khi bị cù, và chúng tìm tới bàn tay cù",
+    "s": "Tiếng kêu 50 kHz tương ứng trạng thái tích cực và tăng khi cù vùng gáy và bụng. Phát hiện này mở ra cả một dòng nghiên cứu về cảm xúc dương ở loài gặm nhấm.",
+    "tags": [
+      "chuot",
+      "cam-xuc",
+      "sieu-am"
+    ],
+    "src": "Panksepp & Burgdorf, Physiology & Behavior (2003); Ishiyama & Brecht, Science (2016)"
+  },
+  {
+    "id": "sv-230",
+    "cat": "sinh-vat",
+    "sub": "hanh-vi-dong-vat",
+    "t": "Bạch tuộc giải được câu đố mở nắp lọ từ bên trong và nhớ cách làm ở lần sau",
+    "s": "Chúng cũng dùng vỏ dừa làm nơi trú và mang theo khi di chuyển — một trong ít ví dụ dùng công cụ ở động vật không xương sống. Hai phần ba nơ-ron của bạch tuộc nằm ở các xúc tu chứ không ở não.",
+    "tags": [
+      "bach-tuoc",
+      "tri-thong-minh",
+      "cong-cu"
+    ],
+    "src": "Finn, Tregenza & Norman, Current Biology (2009); Hochner, Current Biology (2012)"
+  },
+  {
+    "id": "sv-232",
+    "cat": "sinh-vat",
+    "sub": "tien-hoa",
+    "t": "Cá voi tiến hoá từ động vật có vú bốn chân sống trên cạn, và chuỗi hoá thạch chuyển tiếp gần như đầy đủ",
+    "s": "Pakicetus, Ambulocetus và Basilosaurus cho thấy từng bước chuyển ra biển trong khoảng 10 triệu năm. Cá voi hiện đại vẫn giữ xương chậu tiêu giảm bên trong cơ thể.",
+    "tags": [
+      "ca-voi",
+      "tien-hoa",
+      "hoa-thach"
+    ],
+    "src": "Thewissen và cộng sự, Nature (2001)"
+  },
+  {
+    "id": "sv-233",
+    "cat": "sinh-vat",
+    "sub": "tien-hoa",
+    "t": "Mắt đã tiến hoá độc lập ít nhất 40 lần ở các nhánh sinh vật khác nhau",
+    "s": "Mắt của bạch tuộc và mắt của người giống nhau về cấu trúc nhưng phát triển từ mô khác nhau, nên mắt bạch tuộc không có điểm mù. Đây là ví dụ kinh điển của tiến hoá hội tụ.",
+    "tags": [
+      "mat",
+      "tien-hoa",
+      "hoi-tu"
+    ],
+    "src": "Land & Nilsson, Animal Eyes (2012)"
+  },
+  {
+    "id": "sv-234",
+    "cat": "sinh-vat",
+    "sub": "tien-hoa",
+    "t": "Khoảng 99% các loài từng sống trên Trái Đất đã tuyệt chủng",
+    "s": "Đã có 5 đợt tuyệt chủng hàng loạt lớn, và đợt lớn nhất cuối kỷ Permi xoá khoảng 90% loài biển. Tốc độ tuyệt chủng hiện nay được nhiều nghiên cứu ước tính cao hơn nền tự nhiên hàng chục tới hàng trăm lần.",
+    "tags": [
+      "tuyet-chung",
+      "da-dang",
+      "lich-su"
+    ],
+    "src": "Raup, Extinction: Bad Genes or Bad Luck (1991); Ceballos và cộng sự, Science Advances (2015)"
+  },
+  {
+    "id": "sv-235",
+    "cat": "sinh-vat",
+    "sub": "tien-hoa",
+    "t": "Sự sống trên Trái Đất dùng chung một bộ mã di truyền gần như giống hệt nhau ở mọi loài",
+    "s": "Cùng 64 bộ ba mã hoá cùng các axit amin từ vi khuẩn tới người, với vài ngoại lệ nhỏ. Đây là bằng chứng mạnh nhất cho một tổ tiên chung duy nhất.",
+    "tags": [
+      "ma-di-truyen",
+      "to-tien-chung",
+      "sinh-hoc"
+    ],
+    "src": "Crick (1968); Koonin & Novozhilov, IUBMB Life (2009)"
+  },
+  {
+    "id": "sv-238",
+    "cat": "sinh-vat",
+    "sub": "tien-hoa",
+    "t": "Người và chuối chia sẻ khoảng 60% số gen, và con số này nghe sốc chỉ vì nó bị hiểu sai",
+    "s": "Nó nói về tỉ lệ gen có họ hàng chứ không phải tỉ lệ ADN giống nhau. Các chức năng cơ bản của tế bào — hô hấp, nhân đôi ADN — giống nhau ở mọi sinh vật nhân thực.",
+    "tags": [
+      "gen",
+      "chuoi",
+      "so-sanh"
+    ],
+    "src": "Viện Nghiên cứu Bộ gen Người Quốc gia Mỹ (NHGRI)"
+  },
+  {
+    "id": "sv-239",
+    "cat": "sinh-vat",
+    "sub": "tien-hoa",
+    "t": "Kháng kháng sinh là tiến hoá diễn ra đủ nhanh để quan sát trong phòng thí nghiệm trong vài ngày",
+    "s": "Thí nghiệm MEGA-plate quay phim vi khuẩn E. coli vượt qua các vùng kháng sinh nồng độ tăng dần 1.000 lần trong khoảng 11 ngày. Đây là bằng chứng trực quan nhất về chọn lọc tự nhiên.",
+    "tags": [
+      "khang-khang-sinh",
+      "tien-hoa",
+      "thi-nghiem"
+    ],
+    "src": "Baym và cộng sự, Science (2016)"
+  },
+  {
+    "id": "sv-240",
+    "cat": "sinh-vat",
+    "sub": "tien-hoa",
+    "t": "Vi khuẩn E. coli nuôi liên tục từ năm 1988 đã qua hơn 75.000 thế hệ và một dòng phát triển được khả năng ăn citrate",
+    "s": "12 quần thể giống hệt nhau được nuôi song song; đặc điểm mới hoàn toàn này xuất hiện ở 1 dòng sau khoảng 31.000 thế hệ, và nó đòi hỏi ít nhất 2 đột biến xảy ra đúng thứ tự. Đây là quan sát trực tiếp về việc chức năng mới sinh ra như thế nào.",
+    "tags": [
+      "lenski",
+      "tien-hoa",
+      "thi-nghiem"
+    ],
+    "src": "Blount, Borland & Lenski, PNAS (2008)"
+  },
+  {
+    "id": "sv-241",
+    "cat": "sinh-vat",
+    "sub": "vi-khuan-virus",
+    "t": "Virus không phải sinh vật sống theo định nghĩa thông thường vì chúng không tự chuyển hoá",
+    "s": "Chúng chỉ nhân lên bên trong tế bào chủ. Tranh luận về việc virus có sống hay không vẫn chưa ngã ngũ và nó chủ yếu là tranh luận về định nghĩa.",
+    "tags": [
+      "virus",
+      "dinh-nghia",
+      "sinh-hoc"
+    ],
+    "src": "Moreira & López-García, Nature Reviews Microbiology (2009)"
+  },
+  {
+    "id": "sv-242",
+    "cat": "sinh-vat",
+    "sub": "vi-khuan-virus",
+    "t": "Thực khuẩn thể là dạng sinh học nhiều nhất trên hành tinh, ước tính khoảng 10 mũ 31 hạt",
+    "s": "Chúng giết khoảng một nửa số vi khuẩn trong đại dương mỗi ngày. Liệu pháp dùng thực khuẩn thể chữa nhiễm khuẩn kháng thuốc đang được thử lại sau nhiều thập kỷ bị bỏ quên.",
+    "tags": [
+      "thuc-khuan-the",
+      "virus",
+      "khang-thuoc"
+    ],
+    "src": "Suttle, Nature Reviews Microbiology (2007)"
+  },
+  {
+    "id": "sv-245",
+    "cat": "sinh-vat",
+    "sub": "vi-khuan-virus",
+    "t": "Vi khuẩn trao đổi gen ngang với nhau, kể cả giữa các loài khác nhau",
+    "s": "Đó là lý do kháng kháng sinh lan nhanh hơn nhiều so với tốc độ đột biến. Một gen kháng thuốc có thể nhảy từ vi khuẩn đường ruột vô hại sang vi khuẩn gây bệnh qua plasmid.",
+    "tags": [
+      "chuyen-gen-ngang",
+      "plasmid",
+      "khang-thuoc"
+    ],
+    "src": "Ochman, Lawrence & Groisman, Nature (2000)"
+  },
+  {
+    "id": "sv-246",
+    "cat": "sinh-vat",
+    "sub": "thuc-vat-nam",
+    "t": "Cây không 'ăn' đất — khối lượng gỗ của nó chủ yếu đến từ khí CO₂ trong không khí",
+    "s": "Jan van Helmont trồng một cây liễu 5 năm trong chậu đất cân sẵn: cây tăng 74 kg còn đất chỉ giảm khoảng 57 gam. Ông kết luận sai là do nước, nhưng thí nghiệm đã chứng minh đất không phải nguồn.",
+    "tags": [
+      "quang-hop",
+      "cay",
+      "co2"
+    ],
+    "src": "van Helmont (1648); Taiz & Zeiger, Plant Physiology"
+  },
+  {
+    "id": "sv-253",
+    "cat": "sinh-vat",
+    "sub": "thuc-vat-nam",
+    "t": "Địa y không phải một sinh vật mà là hai hoặc ba: một nấm, một tảo và thường thêm một nấm men",
+    "s": "Chúng mọc được trên đá trần và là sinh vật tiên phong tạo đất. Một số địa y ở Bắc Cực được ước tính hơn 8.000 năm tuổi.",
+    "tags": [
+      "dia-y",
+      "cong-sinh",
+      "sinh-thai"
+    ],
+    "src": "Spribille và cộng sự, Science (2016)"
+  },
+  {
+    "id": "sv-254",
+    "cat": "sinh-vat",
+    "sub": "thuc-vat-nam",
+    "t": "Hoa hướng dương trưởng thành không quay theo Mặt Trời — chỉ nụ non mới quay",
+    "s": "Cây non xoay theo nhịp ngày đêm nhờ tăng trưởng lệch hai bên thân. Khi hoa nở, thân cứng lại và hầu hết hoa cố định hướng về phía đông, giúp hoa ấm sớm và thu hút ong nhiều hơn.",
+    "tags": [
+      "huong-duong",
+      "huong-sang",
+      "thuc-vat"
+    ],
+    "src": "Atamian và cộng sự, Science (2016)"
+  },
+  {
+    "id": "sv-255",
+    "cat": "sinh-vat",
+    "sub": "thuc-vat-nam",
+    "t": "Cây tre có thể mọc hơn 90 cm trong một ngày, nhanh nhất trong giới thực vật",
+    "s": "Loài Phyllostachys edulis đạt tốc độ đó nhờ các đốt thân đã hình thành sẵn và chỉ việc kéo dài bằng nước. Nhiều loài tre cũng ra hoa đồng loạt theo chu kỳ dài 40–120 năm rồi chết hàng loạt.",
+    "tags": [
+      "tre",
+      "tang-truong",
+      "chu-ky"
+    ],
+    "src": "Guinness World Records; Janzen, Annual Review of Ecology (1976)"
+  },
+  {
+    "id": "sv-260",
+    "cat": "sinh-vat",
+    "sub": "bien-va-nuoc",
+    "t": "San hô là động vật sống cộng sinh với tảo, và tẩy trắng là lúc nó đuổi tảo ra vì nước quá nóng",
+    "s": "Chỉ cần nhiệt độ vượt mức bình thường 1–2 độ trong vài tuần là đủ. Không có tảo, san hô mất tới 90% nguồn dinh dưỡng và chết nếu nhiệt độ không hạ kịp.",
+    "tags": [
+      "san-ho",
+      "tay-trang",
+      "cong-sinh"
+    ],
+    "src": "Hughes và cộng sự, Nature (2017); NOAA Coral Reef Watch"
+  },
+  {
+    "id": "sv-263",
+    "cat": "sinh-vat",
+    "sub": "bien-va-nuoc",
+    "t": "Rùa biển quay lại đúng bãi biển nơi chúng nở ra để đẻ trứng, sau hàng chục năm và hàng nghìn km",
+    "s": "Bằng chứng cho thấy chúng ghi nhớ dấu hiệu từ trường của bãi biển lúc mới nở. Nghiên cứu ở Florida cho thấy số tổ tương quan với thay đổi của trường địa từ tại bãi đó.",
+    "tags": [
+      "rua-bien",
+      "tu-truong",
+      "di-cu"
+    ],
+    "src": "Brothers & Lohmann, Current Biology (2015)"
+  },
+  {
+    "id": "sv-264",
+    "cat": "sinh-vat",
+    "sub": "bien-va-nuoc",
+    "t": "Cá hồi ngửi được mùi của dòng sông nơi chúng sinh ra và dùng nó để tìm đường về",
+    "s": "Chúng in dấu mùi khi còn nhỏ, rồi dùng từ trường để tìm về gần cửa sông trước khi chuyển sang khứu giác cho chặng cuối. Tỉ lệ về đúng sông mẹ ở nhiều quần thể trên 90%.",
+    "tags": [
+      "ca-hoi",
+      "khuu-giac",
+      "di-cu"
+    ],
+    "src": "Hasler & Scholz, Olfactory Imprinting and Homing in Salmon (1983)"
+  },
+  {
+    "id": "sv-265",
+    "cat": "sinh-vat",
+    "sub": "bien-va-nuoc",
+    "t": "Ở độ sâu dưới 1.000 mét không còn ánh sáng mặt trời, nhưng khoảng 76% sinh vật ở đó tự phát sáng",
+    "s": "Phát quang sinh học được dùng để dụ mồi, nguỵ trang ngược sáng và liên lạc. Đây là đặc điểm phổ biến nhất chứ không phải ngoại lệ ở biển sâu.",
+    "tags": [
+      "bien-sau",
+      "phat-quang",
+      "sinh-thai"
+    ],
+    "src": "Martini & Haddock, Scientific Reports (2017)"
+  },
+  {
+    "id": "sv-266",
+    "cat": "sinh-vat",
+    "sub": "chim-va-bay",
+    "t": "Chim nhạn biển Bắc Cực di cư xa nhất trong giới động vật, khoảng 70.000 km mỗi năm",
+    "s": "Chúng bay từ Bắc Cực xuống Nam Cực rồi quay lại, nên chúng thấy nhiều ánh sáng ban ngày hơn bất kỳ sinh vật nào. Trong đời khoảng 30 năm, quãng đường của một con tương đương 3 lần đi tới Mặt Trăng và về.",
+    "tags": [
+      "nhan-bien",
+      "di-cu",
+      "ky-luc"
+    ],
+    "src": "Egevang và cộng sự, PNAS (2010)"
+  },
+  {
+    "id": "sv-268",
+    "cat": "sinh-vat",
+    "sub": "chim-va-bay",
+    "t": "Chim ruồi vỗ cánh tới 80 lần mỗi giây và là loài chim duy nhất bay lùi được",
+    "s": "Nhịp tim của chúng đạt hơn 1.200 nhịp mỗi phút khi bay. Ban đêm chúng vào trạng thái ngủ đông ngắn, hạ thân nhiệt và nhịp tim để không chết đói.",
+    "tags": [
+      "chim-ruoi",
+      "bay",
+      "trao-doi-chat"
+    ],
+    "src": "Altshuler & Dudley, Journal of Experimental Biology (2002)"
+  },
+  {
+    "id": "sv-276",
+    "cat": "sinh-vat",
+    "sub": "con-trung",
+    "t": "Bọ hung định hướng bằng dải Ngân Hà, và đó là loài đầu tiên được chứng minh làm vậy",
+    "s": "Trong thí nghiệm, bọ đội mũ che trời đi vòng vo còn bọ nhìn được bầu trời đêm đi thẳng. Chúng dùng ánh sáng phân cực từ Mặt Trăng và cả dải sáng của Ngân Hà.",
+    "tags": [
+      "bo-hung",
+      "dinh-huong",
+      "ngan-ha"
+    ],
+    "src": "Dacke và cộng sự, Current Biology (2013)"
+  },
+  {
+    "id": "sv-278",
+    "cat": "sinh-vat",
+    "sub": "con-trung",
+    "t": "Gián sống được nhiều tuần sau khi mất đầu vì chúng thở qua lỗ thở trên thân và có hệ thần kinh phân tán",
+    "s": "Chúng chết vì mất nước chứ không vì thiếu điều khiển. Điều này không đúng với động vật có xương sống vì hệ tuần hoàn và hô hấp của chúng phụ thuộc vào đầu.",
+    "tags": [
+      "gian",
+      "giai-phau",
+      "sinh-ly"
+    ],
+    "src": "Choi, Scientific American (2007); Bell, Cockroaches: Ecology, Behavior"
+  },
+  {
+    "id": "sv-280",
+    "cat": "sinh-vat",
+    "sub": "con-trung",
+    "t": "Một loại nấm ký sinh điều khiển hành vi kiến, bắt nó trèo lên cao rồi cắn chặt vào lá trước khi chết",
+    "s": "Nấm Ophiocordyceps mọc ra từ đầu kiến và phát tán bào tử từ độ cao tối ưu. Vị trí cắn nằm ở khoảng 25 cm trên mặt đất, đúng vùng nhiệt độ và độ ẩm tốt nhất cho nấm.",
+    "tags": [
+      "nam",
+      "ky-sinh",
+      "hanh-vi"
+    ],
+    "src": "Hughes và cộng sự, BMC Ecology (2011)"
+  },
+  {
+    "id": "sv-294",
+    "cat": "sinh-vat",
+    "sub": "vi-khuan-virus",
+    "t": "Vi khuẩn trong ruột bạn tổng hợp một phần vitamin K và một số vitamin nhóm B",
+    "s": "Chúng cũng lên men chất xơ thành axit béo chuỗi ngắn nuôi tế bào ruột. Đây là lý do dùng kháng sinh phổ rộng dài ngày có thể ảnh hưởng tới chuyển hoá chứ không chỉ tới nhiễm trùng.",
+    "tags": [
+      "he-vi-sinh",
+      "vitamin",
+      "ruot"
+    ],
+    "src": "Rowland và cộng sự, European Journal of Nutrition (2018)"
+  },
+  {
+    "id": "sv-295",
+    "cat": "sinh-vat",
+    "sub": "tien-hoa",
+    "t": "Nam Cực từng có rừng, và hoá thạch cây được tìm thấy cách cực Nam khoảng 500 km",
+    "s": "Khoảng 90 triệu năm trước, khu vực này có rừng ôn đới ẩm với nhiệt độ trung bình khoảng 12 độ. Lõi trầm tích chứa cả rễ cây và phấn hoa được bảo quản nguyên vẹn.",
+    "tags": [
+      "nam-cuc",
+      "rung",
+      "co-khi-hau"
+    ],
+    "src": "Klages và cộng sự, Nature (2020)"
+  }
+]

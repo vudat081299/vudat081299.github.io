@@ -4,7 +4,7 @@
     "cat": "vu-tru",
     "sub": "thang-khong-gian",
     "viz": "scale-solar",
-    "t": "Hệ Mặt Trời gần như toàn bộ là khoảng trống — kéo thanh trượt để thấy",
+    "t": "Nếu Mặt Trời to bằng quả bóng rổ thì Trái Đất là hạt vừng cách đó 26 mét",
     "s": "Nếu thu Mặt Trời về kích cỡ quả bóng rổ (24 cm), Trái Đất sẽ là hạt vừng đường kính 2,2 mm nằm cách đó gần 26 mét, và Sao Hải Vương cách khoảng 775 mét. Mọi hình vẽ hệ Mặt Trời bạn từng thấy đều nén khoảng cách xuống hàng nghìn lần vì không thể vẽ đúng tỉ lệ lên một trang giấy.",
     "tags": [
       "quy-mo",
@@ -455,32 +455,6 @@
       "di-san"
     ],
     "src": "NASA Voyager Mission; Sagan và cộng sự, Murmurs of Earth (1978)"
-  },
-  {
-    "id": "vt-139",
-    "cat": "vu-tru",
-    "sub": "kham-pha-khong-gian",
-    "t": "Nghịch lý Fermi: nếu vũ trụ đầy sự sống thì tại sao im lặng thế?",
-    "s": "Với hàng trăm tỷ ngôi sao chỉ riêng trong Ngân Hà và tuổi vũ trụ hàng tỷ năm, một nền văn minh du hành lẽ ra đã lan khắp thiên hà từ lâu. Chưa có lời giải nào được chấp nhận rộng rãi — mọi phương án đều có hệ quả đáng lo hoặc đáng ngạc nhiên.",
-    "tags": [
-      "fermi",
-      "su-song",
-      "chua-biet"
-    ],
-    "src": "Enrico Fermi (khoảng 1950); Hart, Quarterly Journal of the Royal Astronomical Society (1975)"
-  },
-  {
-    "id": "vt-140",
-    "cat": "vu-tru",
-    "sub": "kham-pha-khong-gian",
-    "t": "Phương trình Drake không dự đoán gì — nó là cách sắp xếp sự thiếu hiểu biết",
-    "s": "Nó nhân một chuỗi hệ số lại với nhau để ước lượng số nền văn minh liên lạc được. Vấn đề là vài hệ số cuối có sai số hàng chục bậc độ lớn, nên kết quả có thể là bất cứ số nào. Giá trị thật của nó là chia bài toán thành các câu hỏi trả lời được.",
-    "tags": [
-      "drake",
-      "su-song",
-      "phuong-phap"
-    ],
-    "src": "Frank Drake (1961); phân tích bất định trong Sandberg, Drexler & Ord (2018)"
   },
   {
     "id": "vt-141",

@@ -1,0 +1,210 @@
+[
+  {
+    "id": "ls-201",
+    "cat": "lich-su",
+    "sub": "viet-nam",
+    "t": "Việt Nam nằm dưới ách đô hộ của các triều đại Trung Hoa tổng cộng khoảng 1.000 năm, chia làm bốn lần Bắc thuộc",
+    "s": "Lần thứ nhất bắt đầu năm 179 trước Công nguyên, lần thứ tư kết thúc năm 1427. Giai đoạn dài nhất kéo dài hơn 500 năm liên tục từ năm 43 tới 544.",
+    "tags": [
+      "bac-thuoc",
+      "viet-nam",
+      "lich-su"
+    ],
+    "src": "Đại Việt sử ký toàn thư; Taylor, The Birth of Vietnam (1983)"
+  },
+  {
+    "id": "ls-205",
+    "cat": "lich-su",
+    "sub": "viet-nam",
+    "t": "Kỳ thi Nho học cuối cùng ở Việt Nam diễn ra năm 1919, muộn hơn Trung Quốc 14 năm",
+    "s": "Trung Quốc bãi bỏ khoa cử năm 1905. Hệ thống này đã tồn tại ở Việt Nam từ năm 1075, tức gần 850 năm.",
+    "tags": [
+      "khoa-cu",
+      "giao-duc",
+      "viet-nam"
+    ],
+    "src": "Đại Việt sử ký toàn thư; Woodside, Vietnam and the Chinese Model"
+  },
+  {
+    "id": "ls-232",
+    "cat": "lich-su",
+    "sub": "can-hien-dai",
+    "t": "Xăng pha chì tồn tại nửa thế kỷ dù người ta đã biết chì độc từ thời La Mã",
+    "s": "Nó được bán từ năm 1923 và chỉ bị loại bỏ hoàn toàn trên toàn cầu vào năm 2021. Nồng độ chì trong máu trẻ em Mỹ giảm hơn 90% sau khi cấm.",
+    "tags": [
+      "xang-pha-chi",
+      "doc",
+      "chinh-sach"
+    ],
+    "src": "UNEP (2021); US CDC; Needleman, Annual Review of Public Health (2004)"
+  },
+  {
+    "id": "ls-235",
+    "cat": "lich-su",
+    "sub": "can-hien-dai",
+    "t": "Sự cố Y2K không xảy ra vì người ta đã bỏ ra hàng trăm tỉ đô để sửa nó trước",
+    "s": "Ước tính chi phí toàn cầu khoảng 300–600 tỉ đô trong nhiều năm chuẩn bị. Đây là ví dụ điển hình của nghịch lý phòng ngừa: việc thành công trông giống như việc chưa bao giờ cần thiết.",
+    "tags": [
+      "y2k",
+      "phong-ngua",
+      "cong-nghe"
+    ],
+    "src": "US Senate Special Committee on the Year 2000 Technology Problem (2000)"
+  },
+  {
+    "id": "ls-236",
+    "cat": "lich-su",
+    "sub": "phat-minh",
+    "t": "Nhiều phát minh lớn được tạo ra độc lập bởi nhiều người gần như cùng lúc",
+    "s": "Điện thoại, bóng đèn, giải tích và thuyết tiến hoá đều có ít nhất hai người đi tới độc lập trong khoảng thời gian ngắn. Một tổng hợp năm 1922 liệt kê 148 trường hợp phát minh song song.",
+    "tags": [
+      "phat-minh",
+      "song-song",
+      "lich-su"
+    ],
+    "src": "Ogburn & Thomas, Political Science Quarterly (1922)"
+  },
+  {
+    "id": "ls-251",
+    "cat": "lich-su",
+    "sub": "y-te-lich-su",
+    "t": "Ca ghép tim đầu tiên năm 1967 thành công về kỹ thuật nhưng bệnh nhân chỉ sống 18 ngày",
+    "s": "Vấn đề không phải phẫu thuật mà là thải ghép. Tỉ lệ sống chỉ tăng vọt sau khi có cyclosporine vào đầu thập niên 1980.",
+    "tags": [
+      "ghep-tim",
+      "thai-ghep",
+      "y-hoc"
+    ],
+    "src": "Barnard, South African Medical Journal (1967); Borel (1976)"
+  },
+  {
+    "id": "ls-252",
+    "cat": "lich-su",
+    "sub": "y-te-lich-su",
+    "t": "Thuốc gây mê chỉ được dùng rộng rãi từ giữa thế kỷ 19, nên trước đó mọi ca mổ đều diễn ra khi bệnh nhân còn thức",
+    "s": "Ca mổ công khai dùng ether đầu tiên diễn ra ở Boston năm 1846. Tốc độ là tiêu chí quan trọng nhất của bác sĩ phẫu thuật trước thời điểm đó.",
+    "tags": [
+      "gay-me",
+      "phau-thuat",
+      "lich-su"
+    ],
+    "src": "Bảo tàng Ether Dome, Bệnh viện Đa khoa Massachusetts"
+  },
+  {
+    "id": "ls-253",
+    "cat": "lich-su",
+    "sub": "y-te-lich-su",
+    "t": "Nước sạch và hệ thống thoát nước cứu nhiều người hơn mọi loại thuốc cộng lại",
+    "s": "Một cuộc bình chọn của tạp chí BMJ năm 2007 xếp công trình vệ sinh là tiến bộ y học quan trọng nhất từ năm 1840. Tại nhiều thành phố, tuổi thọ tăng mạnh trước khi có kháng sinh.",
+    "tags": [
+      "ve-sinh",
+      "nuoc-sach",
+      "y-te-cong-cong"
+    ],
+    "src": "BMJ (2007); Cutler & Miller, Demography (2005)"
+  },
+  {
+    "id": "ls-254",
+    "cat": "lich-su",
+    "sub": "y-te-lich-su",
+    "t": "Bản đồ ca bệnh của John Snow năm 1854 chấm dứt tranh luận về nguồn dịch tả trước khi ai biết vi khuẩn",
+    "s": "Ông vẽ vị trí từng ca tử vong ở Soho và cho thấy chúng tụ quanh một máy nước duy nhất. Đây là ví dụ sớm nhất của dịch tễ học không gian.",
+    "tags": [
+      "john-snow",
+      "dich-te",
+      "ban-do"
+    ],
+    "src": "Snow, On the Mode of Communication of Cholera (1855)"
+  },
+  {
+    "id": "ls-258",
+    "cat": "lich-su",
+    "sub": "chien-tranh",
+    "t": "Chiến tranh thế giới thứ hai giết nhiều dân thường hơn quân nhân",
+    "s": "Ước tính khoảng 70–85 triệu người chết, trong đó dân thường chiếm khoảng hai phần ba. Con số chính xác không xác định được vì nhiều nước không có thống kê dân số đáng tin thời chiến.",
+    "tags": [
+      "the-chien",
+      "dan-thuong",
+      "thong-ke"
+    ],
+    "src": "Bảo tàng Quốc gia Thế chiến II Hoa Kỳ; Overy, The Oxford Illustrated History of WWII"
+  },
+  {
+    "id": "ls-259",
+    "cat": "lich-su",
+    "sub": "chien-tranh",
+    "t": "Súng máy và dây thép gai làm chiến tranh chiến hào thành thế bế tắc, và xe tăng ra đời để phá bế tắc đó",
+    "s": "Chiếc xe tăng đầu tiên xuất hiện trên chiến trường năm 1916 tại Somme. Tên 'tank' là mật danh, vì các thùng vỏ được ghi là chở thùng nước cho Nga.",
+    "tags": [
+      "xe-tang",
+      "the-chien-1",
+      "cong-nghe"
+    ],
+    "src": "Bảo tàng Chiến tranh Hoàng gia Anh; Fletcher, The British Tanks 1915–19"
+  },
+  {
+    "id": "ls-260",
+    "cat": "lich-su",
+    "sub": "chien-tranh",
+    "t": "Đại bác và tường thành đá đã kết thúc thời đại lâu đài kiểu trung cổ trong khoảng một thế kỷ",
+    "s": "Tường cao và mỏng chống được máy bắn đá nhưng vỡ trước đạn pháo. Kiến trúc quân sự chuyển sang thành thấp, dày, hình sao để chống pháo từ thế kỷ 16.",
+    "tags": [
+      "dai-bac",
+      "lau-dai",
+      "kien-truc"
+    ],
+    "src": "Duffy, Siege Warfare (1979)"
+  },
+  {
+    "id": "ls-261",
+    "cat": "lich-su",
+    "sub": "chien-tranh",
+    "t": "Radar được phát triển trước Thế chiến thứ hai và nó quan trọng hơn nhiều loại vũ khí trong trận không chiến nước Anh",
+    "s": "Chuỗi trạm Chain Home cho không quân Anh thời gian phản ứng đủ để điều máy bay tới đúng nơi. Không có nó, lực lượng ít hơn khó có thể cầm cự.",
+    "tags": [
+      "radar",
+      "the-chien-2",
+      "cong-nghe"
+    ],
+    "src": "Bảo tàng Không quân Hoàng gia Anh; Buderi, The Invention That Changed the World"
+  },
+  {
+    "id": "ls-262",
+    "cat": "lich-su",
+    "sub": "chien-tranh",
+    "t": "Trong Thế chiến thứ nhất, bệnh tật từng giết nhiều lính hơn đạn ở nhiều chiến trường",
+    "s": "Sốt phát ban, kiết lỵ và cúm gây tổn thất khổng lồ. Đây cũng là cuộc chiến lớn đầu tiên mà nhiều quân đội có tỉ lệ chết vì thương tích cao hơn chết vì bệnh, nhờ tiến bộ y tế quân sự.",
+    "tags": [
+      "chien-tranh",
+      "benh-tat",
+      "y-te"
+    ],
+    "src": "Harrison, The Medical War (2010)"
+  },
+  {
+    "id": "ls-268",
+    "cat": "lich-su",
+    "sub": "huyen-thoai-lich-su",
+    "t": "Không có bằng chứng cho việc người trung cổ tin rằng Trái Đất phẳng",
+    "s": "Các học giả trung cổ đọc Ptolemy và Aristotle, cả hai đều mô tả Trái Đất hình cầu. Huyền thoại này được truyền bá bởi các tác giả thế kỷ 19 muốn dựng câu chuyện khoa học chống tôn giáo.",
+    "tags": [
+      "trai-dat-phang",
+      "huyen-thoai",
+      "trung-co"
+    ],
+    "src": "Russell, Inventing the Flat Earth (1991)"
+  },
+  {
+    "id": "ls-271",
+    "cat": "lich-su",
+    "sub": "co-dai",
+    "t": "Eratosthenes đo được chu vi Trái Đất năm 240 trước Công nguyên với sai số dưới 15%",
+    "s": "Ông so chiều dài bóng cột ở Alexandria và Syene vào cùng thời điểm, rồi nhân tỉ lệ góc với khoảng cách hai thành phố. Toàn bộ phép đo chỉ cần một cây cột, một cái giếng và một phép chia.",
+    "tags": [
+      "eratosthenes",
+      "do-dac",
+      "hy-lap"
+    ],
+    "src": "Eratosthenes (khoảng 240 TCN); Nicastro, Circumference (2008)"
+  }
+]

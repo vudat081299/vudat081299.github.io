@@ -92,20 +92,6 @@
     "src": "Rayner, Schotter, Masson, Potter & Treiman, Psychological Science in the Public Interest (2016)"
   },
   {
-    "id": "nn-008",
-    "cat": "ngon-ngu",
-    "sub": "doc-va-viet",
-    "t": "Tự kiểm tra lại nhớ lâu hơn đọc lại nhiều lần",
-    "s": "Trong thí nghiệm kinh điển, nhóm đọc bài rồi làm bài kiểm tra nhớ tốt hơn hẳn nhóm đọc đi đọc lại, khi kiểm tra sau một tuần — dù chính nhóm đọc lại lại tự tin hơn về mức thuộc bài của mình. Cảm giác trôi chảy khi đọc lại là ảo giác về việc đã biết.",
-    "d": "Kết hợp hai kỹ thuật có bằng chứng mạnh nhất: tự kiểm tra (gấp sách lại, viết ra những gì nhớ được) và giãn cách (ôn lại sau vài ngày thay vì dồn một buổi). Cả hai đều khiến việc học có cảm giác khó hơn — và đó chính là lý do chúng hiệu quả hơn.",
-    "tags": [
-      "hoc-tap",
-      "tri-nho",
-      "phuong-phap"
-    ],
-    "src": "Roediger & Karpicke, Psychological Science (2006); Dunlosky et al., PSPI (2013)"
-  },
-  {
     "id": "nn-010",
     "cat": "ngon-ngu",
     "sub": "tieng-viet",
@@ -143,20 +129,6 @@
       "tieng-anh"
     ],
     "src": "Allen Walker Read, American Speech (1963–1964)"
-  },
-  {
-    "id": "nn-013",
-    "cat": "ngon-ngu",
-    "sub": "hoc-ngoai-ngu",
-    "t": "Lợi thế nhận thức của người song ngữ yếu hơn nhiều so với danh tiếng",
-    "s": "Hàng loạt nghiên cứu từng báo cáo người song ngữ có chức năng điều hành tốt hơn. Khi phân tích lại, các nghiên cứu tìm thấy hiệu ứng được công bố nhiều hơn hẳn nghiên cứu không tìm thấy — dấu hiệu điển hình của thiên lệch xuất bản, và các nghiên cứu cỡ mẫu lớn sau này phần lớn không tái lập được.",
-    "d": "Điều này không làm giảm giá trị của việc biết thêm ngôn ngữ: lợi ích về nghề nghiệp, về tiếp cận thông tin và về quan hệ thì rõ ràng và không cần dựa vào tuyên bố 'não khoẻ hơn'. Không nên bảo vệ một điều tốt bằng một lập luận yếu.",
-    "tags": [
-      "song-ngu",
-      "phan-bien",
-      "nhan-thuc"
-    ],
-    "src": "de Bruin, Treccani & Della Sala, Psychological Science (2015); Paap & Greenberg, Cognitive Psychology (2013)"
   },
   {
     "id": "nn-014",
@@ -224,19 +196,6 @@
     "src": "MoMA, bộ sưu tập thiết kế; NTT DoCoMo, tư liệu i-mode"
   },
   {
-    "id": "nn-019",
-    "cat": "ngon-ngu",
-    "sub": "doc-va-viet",
-    "t": "Câu chủ động thường dễ hiểu hơn, nhưng câu bị động không phải lỗi",
-    "s": "Bị động là công cụ đúng khi chủ thể không quan trọng, chưa biết, hoặc khi bạn muốn giữ mạch chủ đề cho câu. Lời khuyên 'không bao giờ dùng bị động' là quy tắc học vẹt; nguyên tắc thật là đặt thông tin cũ ở đầu câu và thông tin mới ở cuối câu.",
-    "tags": [
-      "viet",
-      "van-phong",
-      "ngu-phap"
-    ],
-    "src": "Steven Pinker, The Sense of Style (2014); Geoffrey Pullum, English Today (2014)"
-  },
-  {
     "id": "nn-020",
     "cat": "ngon-ngu",
     "sub": "ngu-phap-tu-vung",
@@ -248,31 +207,5 @@
       "ngon-ngu-hoc"
     ],
     "src": "Nguyên lý ngôn ngữ học mô tả; xem Crystal, The Cambridge Encyclopedia of Language"
-  },
-  {
-    "id": "nn-021",
-    "cat": "ngon-ngu",
-    "sub": "doc-va-viet",
-    "t": "Viết tay ghi nhớ tốt hơn gõ máy khi mục tiêu là hiểu",
-    "s": "Nghiên cứu ban đầu cho rằng sinh viên chép bài bằng tay hiểu khái niệm tốt hơn nhóm gõ laptop, vì viết chậm buộc phải diễn đạt lại thay vì chép nguyên văn. Một nghiên cứu nhân bản quy mô lớn hơn không tìm thấy hiệu ứng đó, nên hãy coi đây là gợi ý hợp lý chứ chưa phải kết luận chắc chắn.",
-    "tags": [
-      "ghi-chep",
-      "hoc-tap",
-      "phan-bien"
-    ],
-    "src": "Mueller & Oppenheimer, Psychological Science (2014); Morehead, Dunlosky & Rawson, Educational Psychology Review (2019)"
-  },
-  {
-    "id": "nn-022",
-    "cat": "ngon-ngu",
-    "sub": "doc-va-viet",
-    "t": "Viết ra là cách rẻ nhất để phát hiện mình chưa hiểu",
-    "s": "Ý tưởng trong đầu luôn có vẻ mạch lạc vì nó chưa bị buộc phải đi theo trình tự tuyến tính. Văn bản không cho phép nhảy cóc: chỗ lập luận đứt gãy sẽ hiện ra thành một câu không viết nổi. Đó là lý do các tổ chức ra quyết định tốt thường yêu cầu một bản viết trước cuộc họp, thay vì slide.",
-    "tags": [
-      "viet",
-      "tu-duy",
-      "quyet-dinh"
-    ],
-    "src": "Nguyên tắc memo sáu trang tại Amazon; xem Paul Graham, Putting Ideas into Words (2022)"
   }
 ]

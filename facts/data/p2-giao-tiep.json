@@ -13,71 +13,6 @@
     "src": "John Gottman & Robert Levenson, Journal of Marriage and the Family (1992)"
   },
   {
-    "id": "gt-102",
-    "cat": "giao-tiep",
-    "sub": "quan-he",
-    "t": "Ba kỵ sĩ còn lại: chỉ trích, phòng thủ và phớt lờ",
-    "s": "Bên cạnh khinh miệt, ba kiểu phản ứng này dự báo đổ vỡ. Chỉ trích khác phàn nàn ở chỗ nó nhắm vào con người ('anh lúc nào cũng vô tâm') thay vì hành vi ('hôm nay anh về muộn mà không báo'). Phớt lờ — im lặng quay đi — thường bị hiểu là bình tĩnh, nhưng nó là dạng leo thang câm.",
-    "tags": [
-      "quan-he",
-      "xung-dot",
-      "gottman"
-    ],
-    "src": "Gottman & Levenson, Journal of Marriage and Family (2000)"
-  },
-  {
-    "id": "gt-103",
-    "cat": "giao-tiep",
-    "sub": "quan-he",
-    "t": "Cách bạn phản ứng với tin vui của người khác quan trọng hơn cách bạn an ủi họ",
-    "s": "Trong nghiên cứu về các cặp đôi, thứ dự báo chất lượng quan hệ mạnh nhất không phải là hỗ trợ lúc khó khăn mà là phản ứng lúc người kia khoe chuyện tốt. Phản ứng chủ động và tích cực — hỏi thêm, cùng hào hứng — tạo hiệu quả rõ rệt; phản ứng kiểu 'ừ tốt đấy' rồi chuyển chủ đề gây hại gần như phản ứng tiêu cực.",
-    "tags": [
-      "quan-he",
-      "lang-nghe",
-      "tin-vui"
-    ],
-    "src": "Gable, Reis, Impett & Asher, JPSP (2004)"
-  },
-  {
-    "id": "gt-104",
-    "cat": "giao-tiep",
-    "sub": "viet-va-noi",
-    "t": "Chữ 'nhưng' xoá sạch vế đứng trước nó",
-    "s": "Người nghe xử lý 'anh làm tốt lắm, nhưng...' bằng cách vứt vế đầu và giữ vế sau. Thay 'nhưng' bằng 'và' hoặc tách thành hai câu riêng giữ được cả hai thông tin. Đây là mẹo rẻ nhất để phản hồi không biến thành đòn đánh.",
-    "tags": [
-      "phan-hoi",
-      "ngon-tu",
-      "quan-ly"
-    ],
-    "src": "Nguyên tắc phổ biến trong huấn luyện phản hồi; xem Douglas Stone & Sheila Heen, Thanks for the Feedback (2014)"
-  },
-  {
-    "id": "gt-105",
-    "cat": "giao-tiep",
-    "sub": "lang-nghe",
-    "t": "Ba giây im lặng sau khi đối phương nói xong thường sinh ra thông tin quý nhất",
-    "s": "Người ta khó chịu với khoảng lặng và có xu hướng lấp nó — thường bằng thứ họ chưa định nói. Trong đàm phán và phỏng vấn, việc chủ động không lấp chỗ trống là kỹ thuật thu thập thông tin rẻ nhất và ít gây phản kháng nhất.",
-    "tags": [
-      "dam-phan",
-      "lang-nghe",
-      "im-lang"
-    ],
-    "src": "Chris Voss, Never Split the Difference (2016); nghiên cứu về khoảng lặng trong hội thoại của Stivers và cộng sự, PNAS (2009)"
-  },
-  {
-    "id": "gt-106",
-    "cat": "giao-tiep",
-    "sub": "lang-nghe",
-    "t": "Câu hỏi bắt đầu bằng 'làm sao' và 'cái gì' mở cửa; 'tại sao' đóng cửa",
-    "s": "'Tại sao anh làm thế' gần như luôn được nghe thành lời buộc tội, kể cả khi bạn thật lòng muốn hiểu. 'Điều gì khiến anh chọn cách đó' hỏi đúng thông tin ấy mà không kích hoạt phòng vệ. Trong đàm phán, 'làm sao tôi làm được việc đó' còn buộc phía kia phải tự giải bài toán của bạn.",
-    "tags": [
-      "cau-hoi",
-      "dam-phan",
-      "xung-dot"
-    ],
-    "src": "Chris Voss, Never Split the Difference (2016); nguyên lý câu hỏi hiệu chỉnh trong đàm phán FBI"
-  },
-  {
     "id": "gt-107",
     "cat": "giao-tiep",
     "sub": "lang-nghe",
@@ -128,19 +63,6 @@
       "dong-cam"
     ],
     "src": "Michael Kraus, American Psychologist (2017)"
-  },
-  {
-    "id": "gt-111",
-    "cat": "giao-tiep",
-    "sub": "quan-he",
-    "t": "Gọi điện làm người ta thấy gắn kết hơn nhắn tin, và không hề gượng gạo như bạn sợ",
-    "s": "Người tham gia dự đoán gọi điện cho một người bạn cũ sẽ ngượng hơn nhắn tin và không gắn kết hơn bao nhiêu. Thực tế: mức gắn kết cao hơn rõ rệt, còn mức ngượng thì đúng bằng nhắn tin. Chúng ta chọn kênh giao tiếp dựa trên một nỗi sợ được dự báo sai.",
-    "tags": [
-      "quan-he",
-      "du-bao",
-      "dien-thoai"
-    ],
-    "src": "Kumar & Epley, Journal of Experimental Psychology: General (2021)"
   },
   {
     "id": "gt-112",
@@ -208,23 +130,10 @@
     "src": "Glikson, Cheshin & van Kleef, Social Psychological and Personality Science (2018)"
   },
   {
-    "id": "gt-117",
-    "cat": "giao-tiep",
-    "sub": "thuyet-phuc",
-    "t": "Đưa khoảng giá thay vì một con số làm bạn được nhiều hơn mà không mất thiện chí",
-    "s": "Trong đàm phán, đề nghị 'khoảng 100 đến 110' — với mục tiêu thật là 100 — cho kết quả tốt hơn đề nghị đúng 100, vì phía kia hiếm khi phản giá dưới đáy khoảng. Điều kiện quan trọng: đáy khoảng phải là mức bạn thật sự chấp nhận được, không phải mức bạn mơ.",
-    "tags": [
-      "dam-phan",
-      "gia-ca",
-      "neo"
-    ],
-    "src": "Ames & Mason, JPSP (2015)"
-  },
-  {
     "id": "gt-118",
     "cat": "giao-tiep",
     "sub": "nhom-va-hop",
-    "t": "Quyền lực làm giảm khả năng nhìn từ góc nhìn người khác — đo được bằng một chữ E",
+    "t": "Quyền lực làm giảm khả năng đổi góc nhìn: người được mồi cảm giác quyền lực vẽ chữ E ngược với người đối diện nhiều gấp gần 3 lần",
     "s": "Người được mồi cảm giác quyền lực rồi yêu cầu vẽ chữ E lên trán mình có xu hướng vẽ theo hướng đọc được với chính họ, chứ không phải với người đối diện, cao gấp gần ba lần. Cùng nhóm này cũng kém hơn trong việc đoán cảm xúc qua ảnh mắt.",
     "tags": [
       "quyen-luc",
@@ -245,19 +154,6 @@
       "lanh-dao"
     ],
     "src": "Tổng quan trong Anderson & Berdahl, JPSP (2002); thực hành 'speak last' trong quản trị nhóm"
-  },
-  {
-    "id": "gt-120",
-    "cat": "giao-tiep",
-    "sub": "xung-dot-xin-loi",
-    "t": "Trong xung đột, hãy tách con người khỏi vấn đề và lập trường khỏi lợi ích",
-    "s": "Hai người tranh nhau một quả cam: lập trường của cả hai là 'tôi muốn quả cam', nhưng lợi ích thì một người cần nước, một người cần vỏ. Đàm phán theo lập trường tạo trò chơi tổng bằng không; hỏi 'để làm gì' thường mở ra chỗ cả hai cùng được.",
-    "tags": [
-      "dam-phan",
-      "xung-dot",
-      "loi-ich"
-    ],
-    "src": "Roger Fisher & William Ury, Getting to Yes (1981)"
   },
   {
     "id": "gt-122",
@@ -299,58 +195,6 @@
     "src": "Broockman & Kalla, Science (2016)"
   },
   {
-    "id": "gt-125",
-    "cat": "giao-tiep",
-    "sub": "lang-nghe",
-    "t": "Người nghe giỏi làm người nói bớt phòng thủ và tự thấy mình bớt cực đoan",
-    "s": "Khi được nghe bởi một người chăm chú, không phán xét, người nói mô tả quan điểm của mình phức tạp hơn và bớt tuyệt đối hơn. Nghe tốt không chỉ giúp bạn hiểu — nó thay đổi chính điều người kia nghĩ ngay trong lúc nói.",
-    "tags": [
-      "lang-nghe",
-      "thuyet-phuc",
-      "xung-dot"
-    ],
-    "src": "Itzchakov, Kluger & Castro, Personality and Social Psychology Bulletin (2017)"
-  },
-  {
-    "id": "gt-126",
-    "cat": "giao-tiep",
-    "sub": "xung-dot-xin-loi",
-    "t": "Phàn nàn nêu vấn đề; yêu cầu nêu hành vi cụ thể và thời điểm",
-    "s": "'Anh chẳng bao giờ phụ việc nhà' không cho người kia biết phải làm gì. 'Tối nay anh rửa bát được không' thì có. Nghiên cứu về giao tiếp bất bạo động và về phản hồi trong tổ chức đều hội tụ ở một điểm: mức cụ thể của yêu cầu dự báo khả năng nó được đáp ứng.",
-    "tags": [
-      "yeu-cau",
-      "quan-he",
-      "phan-hoi"
-    ],
-    "src": "Marshall Rosenberg, Nonviolent Communication (1999); nguyên tắc phản hồi SBI của Center for Creative Leadership"
-  },
-  {
-    "id": "gt-127",
-    "cat": "giao-tiep",
-    "sub": "xung-dot-xin-loi",
-    "t": "Lời xin lỗi có chữ 'nếu' không phải lời xin lỗi",
-    "s": "'Tôi xin lỗi nếu bạn cảm thấy bị xúc phạm' chuyển trách nhiệm sang cảm nhận của người nghe. Trong thí nghiệm, dạng xin lỗi này làm mức tha thứ thấp hơn cả không xin lỗi trong một số tình huống, vì nó bị đọc là chối bỏ có trang trí.",
-    "tags": [
-      "xin-loi",
-      "tin-cay",
-      "quan-he"
-    ],
-    "src": "Lewicki, Polin & Lount, Negotiation and Conflict Management Research (2016)"
-  },
-  {
-    "id": "gt-129",
-    "cat": "giao-tiep",
-    "sub": "quan-he",
-    "t": "Chuyện phiếm không phải nội dung rỗng — nó là nghi thức kiểm tra an toàn",
-    "s": "Trao đổi về thời tiết hay giao thông truyền rất ít thông tin nhưng làm rất nhiều việc: xác lập rằng hai bên có thiện chí, đồng bộ nhịp lượt nói, và dò xem có thể đi sâu hơn không. Bỏ qua bước này để 'vào thẳng vấn đề' thường làm người kia đóng lại.",
-    "tags": [
-      "tro-chuyen",
-      "nghi-thuc",
-      "xa-hoi"
-    ],
-    "src": "Bronisław Malinowski, khái niệm 'phatic communion' (1923); nghiên cứu hội thoại hiện đại của Emanuel Schegloff"
-  },
-  {
     "id": "gt-130",
     "cat": "giao-tiep",
     "sub": "lang-nghe",
@@ -361,31 +205,6 @@
       "chu-y"
     ],
     "src": "Ralph Nichols, 'Listening is a 10-Part Skill', Nation's Business (1957); tổng quan trong tài liệu huấn luyện lắng nghe"
-  },
-  {
-    "id": "gt-131",
-    "cat": "giao-tiep",
-    "sub": "lang-nghe",
-    "t": "Nhắc lại ba từ cuối của người đối diện làm họ nói tiếp",
-    "s": "Kỹ thuật phản chiếu này rất đơn giản và hiệu quả một cách khó chịu: nó báo hiệu bạn đang theo dõi, không đưa ra phán xét nào, và tạo một khoảng lặng mà người kia sẽ tự lấp. Trong huấn luyện đàm phán, nó được dạy như bước đầu tiên trước mọi kỹ thuật khác.",
-    "tags": [
-      "lang-nghe",
-      "dam-phan",
-      "ky-thuat"
-    ],
-    "src": "Chris Voss, Never Split the Difference (2016)"
-  },
-  {
-    "id": "gt-132",
-    "cat": "giao-tiep",
-    "sub": "thuyet-phuc",
-    "t": "'Không' của đối phương thường có nghĩa 'chưa đủ thông tin', không phải kết thúc",
-    "s": "Trong đàm phán, một lời từ chối sớm thường bảo vệ quyền tự chủ chứ không phản ánh đánh giá về đề nghị. Người đàm phán có kinh nghiệm coi 'không' là điểm bắt đầu của cuộc trao đổi thật, và chuyển sang hỏi điều gì khiến đề nghị này không dùng được.",
-    "tags": [
-      "dam-phan",
-      "tu-choi"
-    ],
-    "src": "Chris Voss, Never Split the Difference (2016); Jim Camp, Start with No (2002)"
   },
   {
     "id": "gt-133",
@@ -414,31 +233,6 @@
     "src": "Miller và cộng sự, JPSP (1976); Smith & Shaffer, Personality and Social Psychology Bulletin (1991)"
   },
   {
-    "id": "gt-135",
-    "cat": "giao-tiep",
-    "sub": "thuyet-phuc",
-    "t": "Thừa nhận một điểm yếu thật làm lập luận của bạn mạnh hơn",
-    "s": "Lập luận hai mặt — nêu cả điểm bất lợi rồi phản bác — thuyết phục hơn lập luận một chiều với người có học vấn cao hoặc đang hoài nghi. Nó cũng tạo miễn dịch: người nghe đã gặp phản biện từ bạn sẽ khó bị lay chuyển bởi phản biện từ người khác.",
-    "tags": [
-      "thuyet-phuc",
-      "lap-luan",
-      "uy-tin"
-    ],
-    "src": "Hovland, Lumsdaine & Sheffield (1949); O'Keefe, Communication Yearbook (1999)"
-  },
-  {
-    "id": "gt-136",
-    "cat": "giao-tiep",
-    "sub": "phi-ngon-ngu",
-    "t": "Nhìn vào mắt khoảng ba giây một lượt là mức dễ chịu nhất",
-    "s": "Nghiên cứu đo mức thoải mái khi bị nhìn cho thấy khoảng ba giây là điểm ngọt; ngắn hơn bị đọc là né tránh, dài hơn bắt đầu bị đọc là gây hấn hoặc dò xét. Trong hội thoại tự nhiên, người nghe nhìn nhiều hơn người nói.",
-    "tags": [
-      "phi-ngon-ngu",
-      "anh-mat"
-    ],
-    "src": "Binetti và cộng sự, Royal Society Open Science (2016)"
-  },
-  {
     "id": "gt-137",
     "cat": "giao-tiep",
     "sub": "huyen-thoai-giao-tiep",
@@ -450,19 +244,6 @@
       "phan-doan"
     ],
     "src": "Bond & DePaulo, Personality and Social Psychology Review (2006)"
-  },
-  {
-    "id": "gt-138",
-    "cat": "giao-tiep",
-    "sub": "huyen-thoai-giao-tiep",
-    "t": "Cách phát hiện nói dối hiệu quả hơn là tăng gánh nặng nhận thức, không phải soi ngôn ngữ cơ thể",
-    "s": "Yêu cầu kể lại câu chuyện theo thứ tự ngược, hỏi chi tiết ngoại vi bất ngờ, hoặc yêu cầu vẽ sơ đồ hiện trường làm người nói dối lộ ra nhiều mâu thuẫn hơn hẳn. Người nói thật lấy từ ký ức, người nói dối phải dựng — và dựng ngược thì rất tốn sức.",
-    "tags": [
-      "noi-doi",
-      "phong-van",
-      "ky-thuat"
-    ],
-    "src": "Vrij và cộng sự, Law and Human Behavior (2008)"
   },
   {
     "id": "gt-139",
@@ -478,19 +259,6 @@
     "src": "Fiske, Cuddy & Glick, Trends in Cognitive Sciences (2007)"
   },
   {
-    "id": "gt-140",
-    "cat": "giao-tiep",
-    "sub": "nhom-va-hop",
-    "t": "Trong cuộc họp, ý tưởng được nhớ theo người nói cuối và người nói to nhất",
-    "s": "Thứ tự phát biểu và âm lượng ảnh hưởng tới việc ai được ghi nhận, độc lập với chất lượng ý tưởng. Cách khắc phục có bằng chứng: thu thập ý kiến bằng văn bản trước cuộc họp, và ghi lại tên người đề xuất ngay khi ý tưởng xuất hiện.",
-    "tags": [
-      "hop",
-      "cong-nhan",
-      "nhom"
-    ],
-    "src": "Nghiên cứu về hiệu ứng thứ tự trong nhóm; thực hành 'brainwriting' của Paulus & Yang (2000)"
-  },
-  {
     "id": "gt-141",
     "cat": "giao-tiep",
     "sub": "phi-ngon-ngu",
@@ -502,19 +270,6 @@
       "to-chuc"
     ],
     "src": "Kraus, Côté & Keltner, Psychological Science (2010)"
-  },
-  {
-    "id": "gt-142",
-    "cat": "giao-tiep",
-    "sub": "thuyet-phuc",
-    "t": "Đưa lựa chọn thay vì một đề nghị làm tăng khả năng được đồng ý",
-    "s": "Trình bày hai hoặc ba phương án cụ thể chuyển câu hỏi từ 'có hay không' sang 'cái nào', và giữ cho người kia cảm giác tự quyết. Đây cũng là lý do lịch hẹn dạng 'thứ Ba 10h hay thứ Năm 15h' được trả lời nhanh hơn 'khi nào anh rảnh'.",
-    "tags": [
-      "thuyet-phuc",
-      "lich-hen",
-      "lua-chon"
-    ],
-    "src": "Nguyên lý tự chủ trong lý thuyết tự quyết (Deci & Ryan); ứng dụng trong nghiên cứu tuân thủ của Guéguen & Pascual (2000)"
   },
   {
     "id": "gt-143",
@@ -567,31 +322,5 @@
       "an-tuong"
     ],
     "src": "Sorrentino & Boutillier, Journal of Experimental Social Psychology (1975); MacLaren và cộng sự (2020)"
-  },
-  {
-    "id": "gt-147",
-    "cat": "giao-tiep",
-    "sub": "viet-va-noi",
-    "t": "Người viết email ngắn được trả lời nhanh hơn và nhiều hơn",
-    "s": "Phân tích khối lượng lớn email cho thấy độ dài thư tương quan âm với tỉ lệ được trả lời, và thư dài hơn khoảng năm câu bắt đầu bị trì hoãn rõ rệt. Một yêu cầu quan trọng nằm ở đoạn thứ tư của một email dài thường không được thực hiện — không phải vì bị từ chối, mà vì không được đọc tới.",
-    "tags": [
-      "email",
-      "cong-viec",
-      "ro-rang"
-    ],
-    "src": "Kooti và cộng sự, WWW Conference (2015)"
-  },
-  {
-    "id": "gt-148",
-    "cat": "giao-tiep",
-    "sub": "lang-nghe",
-    "t": "Nhắc lại yêu cầu của người kia bằng lời của bạn trước khi trả lời làm giảm leo thang",
-    "s": "Trong hoà giải và đàm phán con tin, bước bắt buộc trước khi phản hồi là tóm tắt lại tới mức phía kia xác nhận 'đúng rồi'. Chỉ riêng việc đạt tới chữ 'đúng rồi' đã hạ nhiệt, vì phần lớn cơn giận trong xung đột đến từ cảm giác không được nghe chứ không từ nội dung bất đồng.",
-    "tags": [
-      "xung-dot",
-      "lang-nghe",
-      "hoa-giai"
-    ],
-    "src": "Voss & Raz (2016); mô hình thang bậc thay đổi hành vi của FBI (Vecchi và cộng sự, 2005)"
   }
 ]
