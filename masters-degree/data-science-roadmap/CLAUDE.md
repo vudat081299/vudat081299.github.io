@@ -65,7 +65,7 @@ HANDOFF; trong docs chỉ ghi **luật, và con số đang dùng**.
 
 ## 0. Đừng mở file HTML để tìm hiểu
 
-`data-science-roadmap.html` là **~13,9k dòng, ~0,97 MB**. Đọc cả file tốn ~250k token và gần
+`data-science-roadmap.html` là **~16,3k dòng, ~1,36 MB**. Đọc cả file tốn ~350k token và gần
 như luôn là việc vô ích.
 
 Thứ tự đọc đúng:
@@ -250,7 +250,7 @@ nào để mở trình duyệt kiểm lại JS.
 tên class/token bằng chữ trần (`wb-steps`, không phải `` `wb-steps` ``). Muốn dùng backtick
 thì đưa chú thích ra ngoài template, thành comment JS phía trên hàm.
 
-**Chỉ nhắc, người quyết định — 13 cổng** (`G-FWD` có mặt ở cả hai bảng: chặn ở mức tiêu chí
+**Chỉ nhắc, người quyết định — 14 cổng** (`G-FWD` có mặt ở cả hai bảng: chặn ở mức tiêu chí
 đạt, chỉ nhắc ở mức thân bài):
 
 | cổng | nhắc điều gì |
@@ -260,6 +260,7 @@ thì đưa chú thích ra ngoài template, thành comment JS phía trên hàm.
 | `G-ROADMAP-SUM` | bài đã đổi nội dung **sau khi** bản tóm tắt của nó được viết, hoặc bài chưa có tóm tắt |
 | `G-LAYER` | mục tự khai là nhánh phụ, hoặc bài dài quá 200 dòng |
 | `G-DUMP` | đoạn văn đọc lại một bảng số thay vì nói ý |
+| `G-ABS` | một ngưỡng `%` được viết như quy luật, không gắn nhãn "điểm khởi đầu" — xem ngay dưới bảng |
 | `G-VIZ` | bài chưa có hình / bảng / code nào để nhìn |
 | `G-MEASURE` | có `max-width` cứng làm trôi khổ chữ |
 | `G-SPACING` | `margin` dọc còn viết px trần thay vì trỏ vào một bậc `--ds-sp-*` ([docs/design.md](docs/design.md) §0.6) |
@@ -280,10 +281,19 @@ tóm tắt của đúng những bài đó**, sửa nếu lệch, rồi mới đ�
 thì cổng này thành con dấu cao su. (Đã bắt được một ca thật: tóm tắt `s-plan8w` còn ghi
 "deep learning ở tuần 5" sau khi trang đổi sang tuần 6.)
 
+**`G-ABS` canh một hình dạng câu, không canh một danh sách từ.** Lỗi hay gặp nhất trong bản
+audit 2026-08-07 không phải "nói sai" mà **"nói chắc quá"**: một con số đúng trong một bối
+cảnh được viết thành quy tắc chung (`cột thiếu > 60% → bỏ cột`). Đã thử bản rộng — quét
+`luôn`, `duy nhất`, `bảo đảm` — và nó cho 22 kết quả mà gần hết là dương tính giả: câu phủ
+định, câu trích tài liệu nhà cung cấp, và cả những đoạn đang *sửa* một tuyên bố tuyệt đối.
+Nên bản giữ lại chỉ bắt **ngưỡng `%` + mệnh lệnh, không có từ nào hạ giọng ở gần** — ở trạng
+thái ổn định nó im hoàn toàn. Thoát cửa: `<!-- gate:abs: lý do -->`.
+
 **Thoát cửa** khi cổng bắt sai một chỗ cố ý: `<!-- gate:main -->` (tiêu đề trông giống
 nhánh phụ nhưng là mạch chính) · `<!-- gate:long: lý do -->` (bài dài đã soát và dài là
 đúng) · `/* gate:sp: lý do */` trong `<style>` (margin dọc buộc phải là px trần) ·
-`allowEarly` trong `concepts.json` (nhắc tên để định vị). Cả bốn **bắt buộc kèm lý
+`<!-- gate:abs: lý do -->` (con số THẬT SỰ là ràng buộc cứng, không phải kinh nghiệm) ·
+`allowEarly` trong `concepts.json` (nhắc tên để định vị). Cả năm **bắt buộc kèm lý
 do nói vì sao cổng bắt sai**, không phải "đã xem rồi". Lỗi CHẶN thật mà chưa sửa thì vào
 `waivers.json` — nó in lại mỗi lần chạy, và đó là điểm khác biệt. Bảng đầy đủ:
 [docs/editing.md](docs/editing.md#việc-6--thêm-một-cổng-mới-vào-gatemjs).

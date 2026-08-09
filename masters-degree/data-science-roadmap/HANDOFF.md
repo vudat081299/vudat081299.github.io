@@ -1,6 +1,6 @@
 # Handoff — data-science-roadmap.html
 
-File là single-page app (~13,9k dòng, tự chứa) dựng trên web-builder CSS. Nội dung bài nằm
+File là single-page app (~16,3k dòng, tự chứa) dựng trên web-builder CSS. Nội dung bài nằm
 trong các `<template data-node="…">`, router hash dựng ra.
 
 **Đọc [CLAUDE.md](CLAUDE.md) trước.** Đừng mở cả file HTML để tìm hiểu — dùng `TOC.md`
@@ -14,6 +14,123 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 - `node tools/gate.mjs` đã bao gồm `auditPlan()` (cổng `G-PLAN`) — **không cần mở trình
   duyệt để kiểm lịch học nữa**.
 - `node tools/gate.test.mjs` — test cho chính bộ cổng. Chạy khi sửa `tools/`.
+
+---
+
+## Phiên 2026-08-09 (p) — thực thi bản audit (n9): 12 điểm kiến thức, 8 hình thật, cổng `G-ABS`, mạch chính cho roadmap
+
+Yêu cầu: *"làm hết đi"* (toàn bộ khuyến nghị của audit n9), cộng một yêu cầu về chính file
+này: *"mấy cái đã làm thì bỏ trong handoff hoặc mark là đã làm — không phải tư tưởng hay
+quyết định xuyên suốt thì nên xoá, tuỳ bạn quyết định"*. Đã xoá — xem mục cuối.
+
+### 1. Mười hai điểm kiến thức P0/P1 (audit §1) — xong cả 12
+
+| bài | sửa gì |
+|---|---|
+| `s-how` | bỏ "48 giờ sau còn ~10%". Không có tỉ lệ quên phổ quát; giữ lại **chiều** (truy xuất chủ động > đọc lại) và nói rõ mức rơi tuỳ vật liệu/cách đo. Sửa ở cả trang chủ lẫn thân bài |
+| `d-eda` · `d-split` · `d-clean` | **dời `d-eda` lên TRƯỚC `d-split`** — hai bài đã tự viết theo trình tự "EDA Thì 1 → chia tập → EDA Thì 2" trong khi `TREE` xếp ngược lại. Thêm vào `d-clean` bảng **hai loại làm sạch** (A sửa tuyệt đối, chạy trước khi chia · B học tham số, fit trên train) và một cảnh báo: **bỏ trùng sau khi chia là một đường rò rỉ** |
+| `m-prob` | **tách probability khỏi calibration.** `m-prob` giữ khái niệm + thêm hẳn phần **tỉ lệ nền** (thiếu trước đó, mà nó là cái làm PR-AUC đọc được); toàn bộ `calibration_curve` / `CalibratedClassifierCV` chuyển sang `ml-metrics`, ngay cạnh phần quy ngưỡng ra tiền |
+| `m-infer` · `th-stats` | quy tắc **"bốc lại đơn vị độc lập"** đưa lên mạch chính ở lần đầu dạy bootstrap (trước đó chỉ nằm trong popup `ci`), và code mẫu ở `th-stats` đổi sang **cluster bootstrap theo `card_id`** |
+| `f-numeric` | "scaling bắt buộc" → **ba mức**: đổi hẳn kết quả (KNN/k-means/SVM-RBF/PCA) · không đổi dự đoán nhưng hỏng regularization + hội tụ + diễn giải (tuyến tính/logistic/NN) · không cần (cây) |
+| `f-what` · `f-pipeline` | Pipeline chặn **một nửa** lệch train–serve (phần đã học tham số), không chặn feature cần lịch sử. Nêu ba cách cho nửa còn lại: hàm dùng chung → point-in-time join → feature store |
+| `dl-nn` | "sigmoid/softmax chỉ ở lớp đầu ra" → đúng **trong mạng xuôi của bài này**; sigmoid là cổng LSTM/GRU, softmax nằm trong attention. Quy tắc đúng là "hàm này ép đầu ra về dạng gì" |
+| `q-causal` | randomization cân bằng **theo kỳ vọng**, cho **ước lượng** chứ không phải bảo đảm. Thêm ba giả định: may rủi khi chia nhóm, SUTVA/không lây, và phân tích theo ý định điều trị |
+| `pr-monitor` | bỏ "cách giảm thiểu chuẩn là cho lọt 0,5–1%". Đổi thành exploration có governance: **năm câu phải trả lời trước**, tỉ lệ là câu cuối; và nêu phương án rẻ hơn (xác minh thủ công một mẫu) là cách trình bày an toàn cho luận văn |
+| `th-repro` | bỏ "1–2% bình thường / 10% là sai". Mốc đúng là **độ bất định của chính bài gốc**, hoặc dao động seed khi chạy lại mã nguồn của họ; kèm thứ tự truy nguyên khi lệch |
+| `ml-metrics` · `pr-code` · `pr-eval` | "trần lý thuyết 0,05–0,07" → **mốc oracle đo bằng thực nghiệm** (trần của AP luôn là 1). Thêm code tái lập mốc và yêu cầu công bố seed / số lần chạy / khoảng |
+| `pr-arch` · `pr-eval` · `pr-serve` | 0,90 / 0,40 trong sơ đồ kiến trúc được gắn nhãn **số minh hoạ**, kèm câu chốt "một nguồn sự thật duy nhất cho ngưỡng: artifact của mô hình". Nhãn tương tự cho ngưỡng trong viz SHAP |
+
+Hàng thứ 13 (`s-plan8w`) đã xong ở phiên (o).
+
+### 2. Hạ giọng / gắn nhãn heuristic (audit §2)
+
+`m-vector` ("mọi ML là hình học" → "rất nhiều thuật toán nhìn được qua lăng kính hình học") ·
+`m-prob` (cây **không giả định phân phối tham số**, nhưng vẫn giả định i.i.d./nhãn/mẫu đại
+diện) · `ml-linear` (**năm** điều kiện để so độ lớn hệ số, và mô hình logistic song song
+*không* giải thích quyết định của LightGBM) · `ml-cv` (std giữa fold là thống kê mô tả —
+không phải khoảng tin cậy, không phải "độ ổn định") · `ml-imb` ("xác suất vô nghĩa" → "đổi
+tỉ lệ nền, mất hiệu chỉnh") · `dl-cnn-rnn` (RNN bị thay gần hết **trong NLP**, CNN vẫn cạnh
+tranh trong thị giác) · `th-design` (ablation cho **đóng góp biên trong một setup**, không
+phải bằng chứng nhân quả) · `th-write`/`th-tools` (số trang, khổ hình là **mẫu**; DPI không
+làm hình vector nét hơn) · `t-colab` (thời gian chạy là bậc độ lớn, không phải cam kết) ·
+`q-nlp` (**BLEU là của dịch máy**, đừng dùng cho tóm tắt; mốc ~2.000 nhãn là điểm khởi đầu) ·
+`d-eda` (mốc tương quan 0,9) · `d-clean` (mốc thiếu 60%) · `ml-tune`/`ml-map` (1–3%) ·
+`q-multi` (~50 mẫu/lớp).
+
+### 3. Năm nhóm forward reference (audit §3) — đóng hết, `G-FWD` về 0
+
+Theo đúng khuyến nghị "micro-definition tại lần dùng đầu, **không** kéo cả bài lên trước":
+`f-what` và `f-cyclic` được thêm một câu chú tại chỗ cho PR-AUC; `ml-cv` chú một câu cho
+bootstrap; `dl-nn` định nghĩa vai trò của attention ngay chỗ nhắc tên. Các bài còn lại chỉ
+nêu tên trong bảng tra hoặc trong lịch học → vào `allowEarly` **kèm lý do từng bài**.
+`concepts.json` cũng sửa một mục sai sau khi nội dung dời: `calibration.definedIn` đổi từ
+`m-prob` sang `ml-metrics`.
+
+### 4. Tám hình P0 (audit §5) — tất cả là hình thật, tương tác được
+
+`meanmed` (m-prob: kéo đuôi, xem trung bình rời trung vị) · `broadcast` (t-numpy: ba cặp
+shape, ô mờ = ô NumPy tự nhân bản, kèm ca hỏng) · `fittransform` (t-sklearn: fit trên train
+vs fit trên tất cả — cùng một giao dịch 900 ở valid, z tụt hẳn) · `edapanel` (d-eda: bốn ô,
+mỗi ô **một câu hỏi khác**) · `nnforward` (dl-nn: shape từng tầng, kéo batch thì shape đổi mà
+số tham số không) · `losscurve` (dl-train: bốn hình dạng đường loss + chỗ early stopping
+dừng) · `residual` (q-regress: ba tình huống phần dư + độ phủ thực tế của khoảng) · `confmat`
+(q-multi: ma trận 5 lớp, đổi giữa số đếm / chuẩn hoá hàng / chuẩn hoá cột — macro-F1 0,54 vs
+micro-F1 0,97 trên **cùng** một ma trận). Thêm `calib` (đã có sẵn) vào phần hiệu chỉnh mới
+của `ml-metrics`.
+
+Đã kiểm trên trình duyệt: cả 9 mount đúng bài, mọi nút/thanh trượt chạy không lỗi, không
+`getBBox` nào vượt viewBox, không cuộn ngang ở 375px, và cả hai chế độ sáng/tối. **Một lỗi
+thật bắt được lúc kiểm**: `confmat` dùng `fill="var(--wb-bw)"` cho chữ trên ô đậm — `--wb-bw`
+là **bề rộng viền (1px)**, không phải màu, nên chữ rơi về màu mặc định. Đổi sang
+`var(--wb-surface)`.
+
+### 5. `G-ABS` — cổng cho ngưỡng viết như quy luật (audit §7 mục 6)
+
+Audit đề nghị "một content lint riêng cho absolute words". **Bản rộng đã thử và bị bác bằng
+số đo**: quét `luôn` / `duy nhất` / `bảo đảm` / `không bao giờ` cho **22** kết quả, gần hết là
+dương tính giả — câu phủ định ("GPU **không được** bảo đảm"), câu trích tài liệu nhà cung cấp,
+và cả đoạn đang *sửa* một tuyên bố tuyệt đối (đoạn giải thích "trần lý thuyết của AP là 1" bị
+chính nó bắt). Một khuyến nghị sai nhiều hơn đúng thì kéo cả danh sách xuống, nên bản giữ lại
+chỉ bắt **một hình dạng câu**: ngưỡng `%` + mệnh lệnh, không có từ hạ giọng ở gần. Ở trạng
+thái hiện tại nó **im hoàn toàn**, và ca test dựng lại đúng câu đã có thật trên trang
+(`cột thiếu > 60% → bỏ cột`).
+
+Ca test đó còn lộ ra một lỗi trong chính cổng: HTML viết dấu so sánh bằng thực thể (`&gt;`),
+mà bước làm sạch xoá thực thể *trước* khi so khớp — tức cổng mù đúng thứ nó đi tìm. Đã đổi
+`&gt;`/`&lt;` thành ký tự thật trước khi lọc.
+
+### 6. `G-HOOK` báo sai — đã sửa cách kiểm
+
+Cổng báo "2/3 lớp tự động chưa cài" trong khi cả hai hook git **vẫn chạy**. Nguyên nhân: repo
+này dùng **bộ điều phối** ở `.git/hooks/` (do `facts/tools/install-hooks.sh` sinh) — nó quét
+mọi `tools/hooks/<tên>` trong repo rồi gọi từng cái, nên không chứa chuỗi
+`data-science-roadmap` mà cách kiểm cũ đi tìm. Đây là loại false negative tệ nhất: nó đẩy
+người ta đi cài lại và sinh hook chạy hai lần. `hookOk()` giờ nhận cả ba cách cài.
+
+### 7. Roadmap: mạch chính là mặc định (audit §4 gạch 1)
+
+`roadmap.html` mở ra giờ hiện **65 bước core** (88,5 h) thay vì cả 84; nút ở hero mở lại đủ
+84 (106,5 h). Số bước từng chặng, hai con số ở hero và chân trang đều đổi theo — hiện 65 mà
+vẫn khoe 84 là đúng kiểu lệch làm người đọc mất tin. Ẩn bằng CSS (`body.rm-core`) chứ không
+xoá node, nên bật lại là tức thì. Hero cũng bỏ lời hứa "grasp its core idea **in seconds**"
+(audit đo được 25.770 từ — "vài giây" là hứa quá).
+
+### Cố ý KHÔNG làm — và vì sao
+
+- **Không bỏ link "Mở bài đầy đủ →" và link navbar về trang DS** (audit §4 gạch 5). Bỏ link
+  *trước khi* có chiều sâu chỉ làm trang tệ đi: người đọc mất đường thoát sang nội dung thật
+  mà không được bù lại gì. Việc này chỉ đúng khi làm **cùng lượt** với bốn vật mỗi node ở
+  gạch dưới. Đã ghi vào `## CHƯA LÀM` như một đơn vị công việc, không tách.
+- **Không viết bốn vật cho từng node** (mental model → visual → worked example → self-check,
+  audit §4 gạch 2–4). Đó là ~65 ví dụ có số + ~65 câu tự kiểm có đáp án, mỗi cái phải đúng và
+  phải khớp bài gốc. Viết ẩu để "cho đủ gạch" thì tệ hơn không viết: nó biến trang thành một
+  bộ bài tập sai. Đây là việc của một phiên riêng, có phạm vi riêng.
+- **Không làm 8 hình P1** (audit §5). Audit tự nói thứ tự: *"làm 8 visual P0 trước, đo
+  comprehension/usability; chỉ sau đó mới làm P1"*. Làm cả 16 một lượt là bỏ qua bước đo.
+- **Không đổi 11 chặng** — audit §3 nói rõ "chưa có lý do đủ mạnh để đảo toàn bộ curriculum",
+  chỉ sửa ba đường nối, và cả ba đã sửa.
+- **Không thêm `git fetch` vào `session.mjs`** (nợ từ phiên (o)). Vẫn là việc đáng làm, nhưng
+  nó chạm quy trình phiên chứ không chạm nội dung, và phiên này đã đủ rộng.
 
 ---
 
@@ -79,230 +196,49 @@ definition-of-done của audit yêu cầu *"gate kiểm sourceHash/version của
 - **Không tự đóng dấu trong lượt build thường.** `--stamp` phải là một hành động có ý thức;
   build tự đóng dấu thì cổng không bao giờ phát hiện được drift nữa.
 
-## Phiên 2026-08-07 (n9) — audit kiến thức, thứ tự, khả năng tự học và visualization của hai trang — CHỈ BÁO CÁO
+## Phiên 2026-08-07 (n9) — audit kiến thức, thứ tự, khả năng tự học và visualization
 
-Yêu cầu của chủ trang trong phiên này là **chỉ thẩm định**, ghi kết quả vào handoff, không sửa
-HTML/JS/CSS/nội dung bài. Vì vậy phiên này không đổi `data-science-roadmap.html`,
-`roadmap.html`, `roadmap-summaries.json`, `TOC.md` hay tool sinh trang.
+Phiên đó chỉ **thẩm định**, không sửa dòng nào. Toàn bộ khuyến nghị của nó (§1 12 điểm kiến
+thức, §2 danh sách hạ giọng, §3 ba đường nối + 5 nhóm forward reference, §5 tám hình P0, §7
+mục 6 content lint) **đã được thực thi ở phiên (p)** — bảng chi tiết từng chỗ sửa nằm ở mục
+đó, nên không lặp lại ở đây. Phần còn nợ nằm ở `## CHƯA LÀM`.
 
-### Kết luận ngắn
+Giữ lại ba thứ dưới đây vì chúng là **quyết định và nguyên tắc**, không phải danh sách việc.
 
-- **Trang Data Science:** khung giáo trình lớn đi đúng hướng và đủ rộng cho mục tiêu từ nền
-  tảng tới project/thesis. Mạch lớn *problem → data → math → feature → model/evaluation →
-  product → DL → specialization → thesis* hợp lý. Tuy nhiên chưa nên coi toàn bộ câu chữ là
-  đã được fact-check xong: có một nhóm khẳng định tuyệt đối, heuristic bị viết như quy luật,
-  và vài hướng dẫn đánh giá/risk cần sửa trước lần xuất bản nội dung tiếp theo.
-- **Thứ tự:** thứ tự **theo phase đạt**, nhưng thứ tự vi mô chưa hoàn toàn đạt. Ba điểm chính
-  là làm sạch/chia tập đang tự mâu thuẫn, calibration xuất hiện trước khi có classifier, và
-  5 nhóm thuật ngữ xuất hiện trước bài dạy chúng.
-- **Cách dạy:** trang DS nhìn chung dễ theo vì dùng một fraud project xuyên suốt, có deliverable,
-  misconception và fast/full scope. Điểm làm người mới chậm lại là mật độ thuật ngữ, quá nhiều
-  con số ngưỡng không gắn nhãn “minh hoạ”, và một số đoạn ví von mạnh hơn sự thật kỹ thuật.
-- **Trang Roadmap:** hiện **chưa đạt hợp đồng “một course cơ bản độc lập”** mà chủ trang mô tả.
-  Nó đã tách giao diện, nhưng vẫn là lớp tóm tắt/drawer dẫn về bài DS; mang cả 84 bài sang,
-  khá dài, thiếu worked example/code/self-check, và nhiều ô “Hình:” chỉ là mô tả hình bằng chữ.
-  Người đọc có thể dùng nó để ôn/định hướng, chưa đủ để chỉ học trang này rồi tự hoàn thành
-  một project DS cơ bản.
-- **Visualization:** không cần ép mọi chủ đề có hình. Trang DS có interactive visualization ở
-  **36/84 bài (41 mount)**; 48 bài không có `data-viz`. Roadmap có câu mô tả visualization ở
-  81/84 summary nhưng phần lớn mô tả đó **không phải visualization thật**. Có khoảng 12–16
-  chủ đề mà thêm hình thật sẽ giảm đáng kể tải nhận thức; danh sách ưu tiên nằm dưới.
+### Hợp đồng "Roadmap độc lập" — target đã chốt với chủ trang
 
-### Phạm vi và bằng chứng đã kiểm
+Roadmap là một bản giáo trình ngắn hơn chạy song song với trang DS, nhưng **reader-facing
+phải hoàn toàn tự chứa**: không cần mở, không cần biết tới, không được nhắc sang trang DS.
+Việc build nội bộ vẫn được lấy trang DS làm nguồn để chống drift — đó là chi tiết triển khai,
+không phải mối quan hệ lộ ra cho người đọc.
 
-1. Đọc cấu trúc đủ **84 bài / 11 phase**, TOC, metadata thời lượng/fast track, toàn bộ 84
-   summary của Roadmap; đọc source chính xác của các bài có claim cần kiểm.
-2. Chạy cổng hiện tại: toàn bộ cổng CHẶN xanh; còn đúng **5 cảnh báo `G-FWD`**. Cổng xanh chỉ
-   chứng minh cấu trúc/contract máy kiểm được, **không chứng minh độ đúng học thuật**.
-3. Đếm trực tiếp nội dung hiện tại: full track **6.395 phút = 106,6 giờ**; fast track
-   **58/84 bài = 4.520 phút = 75,3 giờ**; Roadmap có khoảng **25.770 từ**, bằng khoảng 32%
-   lesson body của trang DS. Nhãn “nắm ý trong vài giây” vì thế đang hứa quá mức.
-4. Render hai trang thật và spot-check các lesson có/không có `data-viz`, drawer, navbar,
-   link và trạng thái độc lập.
-5. Đối chiếu claim với tài liệu chính thức/nguồn phương pháp ở cuối mục này. Không chạy lại
-   notebook/dataset để tái tạo các con số thực nghiệm của fraud simulator; các claim kiểu
-   “số chạy thật” vẫn cần artifact + seed + môi trường để được coi là independently verified.
+Definition of done (còn 4/7 gạch, xem `## CHƯA LÀM`):
 
-### Bảng quyết định
-
-| Tiêu chí | Data Science | Roadmap | Kết luận |
-|---|---|---|---|
-| Đủ mạch kiến thức nền | Đạt | Phủ đủ tên chủ đề | Roadmap có breadth nhưng chưa có depth tối thiểu để tự học |
-| Đúng kiến thức | Cần sửa các điểm ưu tiên dưới đây | Kế thừa lỗi + có ít nhất 1 summary cũ | Chưa đạt fact-check cuối |
-| Thứ tự phase | Đạt | Cùng thứ tự DS | Giữ khung lớn |
-| Thứ tự vi mô | Cần chỉnh 3 cụm | Kế thừa nguyên trạng | Chưa đạt hoàn toàn |
-| Dễ hiểu với người mới | Khá tốt, nhưng dày | Summary vẫn dài/dày | Cần giảm jargon và thêm worked example |
-| Visualization đúng chỗ | Có nhiều hình tốt, còn khoảng trống quan trọng | Nhiều “hình bằng chữ” | Ưu tiên hình thật theo ma trận dưới |
-| Độc lập với trang kia | Không áp dụng | **Chưa đạt** | Reader vẫn được dẫn sang “bài đầy đủ” của DS |
-
-### 1. Các điểm kiến thức phải sửa trước (P0/P1)
-
-| Bài / cụm | Vấn đề hiện tại | Kết luận và hướng sửa |
-|---|---|---|
-| `s-how` | “48 giờ sau còn khoảng 10%” được viết như định luật chung | Không có một tỉ lệ quên phổ quát; phụ thuộc vật liệu, cách đo và retrieval. Bỏ số tuyệt đối hoặc ghi rõ nguồn/ngữ cảnh thí nghiệm. |
-| `d-split` · `d-eda` · `d-clean` | TOC đi `d-leak → d-split → d-eda → d-clean`, nhưng `d-split` nói người học đã qua EDA; dedup ở `d-clean` lại đến sau split | Tách rõ **structural audit + deterministic dedup trước split** và **EDA/model-fitted cleaning chỉ trên train sau split**. Đây vừa là lỗi thứ tự vừa là lỗi leakage. |
-| `m-prob` | Probability cơ bản trộn với `calibration_curve`, `CalibratedClassifierCV`, SMOTE/class weight trước khi người học có classifier | Giữ distribution, conditional probability và base rate ở đây; chuyển calibration ứng dụng tới `ml-metrics` hoặc ngay sau `ml-linear`. |
-| `m-infer` · `th-stats` | Dạy bootstrap theo row; tới `pr-eval` mới nói cluster theo card hoặc block theo ngày | Fraud data có card/time phụ thuộc nhau; row bootstrap làm CI hẹp giả. Quy tắc “resample independent unit” phải xuất hiện ngay lần đầu dạy bootstrap và được tái dùng ở thesis. |
-| `f-numeric` | “Scaling bắt buộc” cho linear/logistic/SVM/KNN/k-means/NN | Quá rộng. KNN, k-means và nhiều SVM **nhạy với scale**; linear/logistic không bắt buộc về mặt dự đoán, nhưng scaling quan trọng cho regularization, optimization và so hệ số. Đổi taxonomy thay vì một nhãn “bắt buộc”. |
-| `f-what` · `f-pipeline` | Gọi sklearn `Pipeline`/một file feature là cách duy nhất tránh train–serve skew | Pipeline ngăn leakage của transform được fit và giữ preprocessing nhất quán; nó không tự giải quyết point-in-time history, external state hay feature freshness. Shared contracts/code, feature store và point-in-time join cũng là giải pháp. |
-| `dl-nn` | Sigmoid/softmax “chỉ” dùng ở output layer | Sai tuyệt đối: sigmoid còn là gate của LSTM/GRU; softmax nằm trong attention. Chỉ đúng trong phạm vi classifier đơn giản đang minh hoạ. |
-| `q-causal` | Randomization làm hai nhóm giống nhau “mọi thứ”, nên chênh lệch “là” causal effect | Chỉ cân bằng **theo kỳ vọng**, vẫn có sampling uncertainty; còn cần SUTVA/no interference, xử lý compliance/attrition. Viết lại như estimate có giả định, không phải bảo đảm tuyệt đối. |
-| `pr-monitor` | Khuyên cho lọt ngẫu nhiên 0,5–1% giao dịch đáng lẽ block như “standard mitigation” | Đây là can thiệp rủi ro, không có rate phổ quát. Chỉ nêu như phương án exploration có governance, loss cap, review, ethics/challenge path; không viết thành recipe cho người mới. |
-| `th-repro` | Chênh 1–2% là bình thường, 10% là sai | Không có tolerance phổ quát và “%” còn mơ hồ theo metric. So với uncertainty đã báo cáo, seeds, metric definition, data snapshot và môi trường. |
-| `ml-metrics` · `pr-code` | Gọi AP 0,05–0,07 của simulator là “trần lý thuyết” rồi suy ra % trần | Trần lý thuyết của AP là 1. Nếu đó là oracle Monte Carlo trên simulator thì gọi **empirical oracle benchmark**, công bố cách tạo, số lần chạy và CI. |
-| `pr-arch` · `pr-eval` · `pr-serve` | Các threshold 0,90/0,40; 0,0148/0,2444; và score 0,374 → BLOCK xuất hiện ở các ngữ cảnh không được phân biệt đủ rõ | Không nhất thiết cùng một experiment, nhưng với reader hiện là mâu thuẫn. Mỗi threshold phải gắn nhãn illustrative/artifact-derived, cost matrix/version, và có một result artifact làm nguồn sự thật. |
-| `s-plan8w` (chỉ Roadmap) | Summary nói DL ở tuần 5; lesson/TOC hiện nói tuần 6 | Summary đã stale. Builder mới chỉ kiểm đủ 84 key, chưa kiểm source hash/freshness. Thêm sync gate trước khi tiếp tục coi Roadmap là bản song song. |
-
-### 2. Các claim cần hạ giọng hoặc gắn nhãn heuristic (P1/P2)
-
-- `m-vector`: đổi “mọi ML là hình học” thành “nhiều thuật toán có thể được nhìn qua lăng
-  kính hình học”. `m-prob`: tree không cần **giả định phân phối tham số của feature**, nhưng
-  vẫn có giả định sampling/i.i.d./label và giới hạn generalization.
-- `ml-linear`: scaling chỉ cho phép so độ lớn coefficient trong điều kiện phù hợp; diễn giải
-  còn phụ thuộc encoding, interactions, confounding, regularization và model specification.
-  Một logistic model song song không giải thích được chính quyết định cụ thể của LightGBM.
-- `ml-cv`: standard deviation giữa fold là thống kê mô tả, không mặc nhiên là confidence
-  interval hay “độ ổn định”; time folds còn không IID và cần khoảng thời gian phù hợp để metric
-  có thể so sánh.
-- `ml-imb`: đổi “oversample 50/50 làm probability vô nghĩa” thành “đổi class prior và thường
-  làm probability mất calibration nếu không hiệu chỉnh”; 5–10% chỉ là starting heuristic.
-- `d-eda`, `d-clean`, `ml-tune`, `q-nlp`: các mốc correlation 0,9; missing 60%; category 1%;
-  mẫu lớp 50; tuning 1–3%; 5–10 seed; khoảng 2.000 label… phải mang nhãn **điểm khởi đầu
-  minh hoạ**, không phải quy luật.
-- `dl-tf`: sinusoidal position encoding chỉ cùng *họ phép toán* với cyclic time encoding;
-  vị trí đầu/cuối sequence không có semantics vòng như 23h/0h.
-- `dl-llm`: weights có lưu tri thức thống kê; fine-tuning có thể đổi factual behavior nhưng
-  không đáng tin như cơ chế cập nhật fact có kiểm soát. Nếu dùng LLM viết lời giải thích từ
-  SHAP phải có grounded fields/template/human review vì audit và hallucination risk.
-- `dl-cnn-rnn`: RNN phần lớn bị thay thế trong NLP; CNN vẫn phổ biến/cạnh tranh trong vision
-  và edge/resource-constrained settings. Tránh “Transformers làm gần như mọi thứ”.
-- `q-forecast`: ARIMA dùng differencing để xử lý level không stationary; điều cần stationary
-  là phần sau differencing/errors theo specification. “Boosting + lag là mặc định” không phổ
-  quát. Claim Prophet maintenance mode hiện đúng nhưng là claim theo thời điểm.
-- `q-nlp`: BLEU chủ yếu cho machine translation, không nên đứng như metric tổng quát cho
-  summarization; ưu tiên ROUGE + semantic/factual/task-specific và human evaluation.
-- `th-design`: ablation ước lượng marginal contribution trong một setup cố định; không tự
-  “chứng minh” nhân quả khi có interactions/order/seeds.
-- `th-topic`, `th-tools`: page count, thời lượng defense, cỡ figure và DPI là template; rubric
-  của trường/advisor mới là nguồn quyết định. Vector PDF không được “nét hơn” vì tăng DPI;
-  DPI chỉ có ý nghĩa cho raster được nhúng.
-- `t-colab`, `t-online`: tốc độ LightGBM, GPU nhanh/chậm, giới hạn runtime và việc mọi bước
-  chạy trong browser phụ thuộc hardware/provider/browser. Giữ con số như benchmark có ngày,
-  dataset và môi trường, không viết thành bảo đảm.
-- `r-roadmapsh`: số node và phạm vi roadmap.sh thay đổi theo thời gian; ghi ngày/source hoặc
-  bỏ số cố định. Không nên nói tài nguyên ngoài “bỏ hẳn” causal/econometrics như sự thật bền.
-
-### 3. Thứ tự bài học đề xuất
-
-**Giữ nguyên 11 phase.** Chưa có lý do đủ mạnh để đảo toàn bộ curriculum; sửa ba đường nối:
-
-| Điểm nối | Thứ tự/contract đề xuất |
-|---|---|
-| Data | `d-data` → structural audit/schema/type + exact dedup → `d-leak` → `d-split` → train-only EDA → train-fitted clean/impute/encode. Có thể vẫn giữ node hiện tại, nhưng nội dung phải nói rõ hai loại cleaning. |
-| Probability → model | `m-prob` chỉ dạy probability/distribution/base rate; sau model đầu tiên mới dạy calibration, PR-AUC và threshold/cost. |
-| Forward reference | Không nhất thiết kéo cả bài lên trước. Thêm micro-definition + link nội bộ ngay lần đầu dùng cho 5 nhóm `PR-AUC`, `rò rỉ dữ liệu`, `Pipeline`, `embedding`, `attention`; bài đầy đủ vẫn ở vị trí hiện tại. |
-
-Năm nhóm cảnh báo hiện tại cụ thể là: `PR-AUC` xuất hiện trước `ml-metrics` ở 7 bài;
-`rò rỉ dữ liệu` trước `d-leak` ở 5 bài; `Pipeline` trước `t-sklearn` ở `s-lookup`;
-`embedding` trước `dl-embed` ở 3 bài; `attention` trước `dl-attn` ở 3 bài. Với người đã biết
-thì đây là teaser; với beginner, chúng là nợ khái niệm. Micro-definition là sửa ít phá mạch nhất.
-
-### 4. Roadmap độc lập: target hiểu đúng và khoảng cách hiện tại
-
-**Target được chốt theo yêu cầu chủ trang:** Roadmap là một bản giáo trình ngắn hơn chạy song
-song với DS, nhưng reader-facing phải **hoàn toàn tự chứa**. Không được cần mở, biết tới hay
-được nhắc sang trang DS. Việc build nội bộ có thể lấy DS làm source để chống drift; đó là chi
-tiết triển khai, không phải mối quan hệ được lộ ra cho reader.
-
-Hiện trạng chưa đạt vì:
-
-1. Navbar còn link `Data Science`; mỗi drawer còn nút **“Mở bài đầy đủ →”** trỏ về DS; footer
-   còn nói mở full lesson; progress dùng chung. Đây là phụ thuộc nhìn thấy được, không chỉ là
-   reuse kỹ thuật.
-2. Roadmap mang đủ **84/84 bài**, gồm 65 core + 18 good-to-know + 1 skim. Như vậy chưa “lược
-   bỏ thứ không thuộc mạch chính”. 25.770 từ cũng không còn là quick map.
-3. Summary chủ yếu là TL;DR + 5–7 bullet; thiếu một ví dụ số làm trọn, code tối thiểu có thể
-   chạy, practice/self-check và acceptance criterion. Chỉ **22/84** lesson của hệ hiện tại có
-   ACCEPT criterion; summary không tạo ra một đường hoàn thành project độc lập.
-4. Summary không có checksum/source hash nên có drift thật (`s-plan8w`). “Sinh từ cùng source”
-   chưa đủ nếu phần biên tập tóm tắt nằm ở JSON riêng và gate chỉ đếm key.
-
-**Definition of done cho Roadmap độc lập:**
-
-- mặc định chỉ hiện **core spine**; good-to-know/skim gấp vào “học sau” hoặc bỏ khỏi flow chính;
-- mỗi core node có đúng bốn vật: *mental model một câu → một visual/diagram phù hợp → một
-  worked example hoặc snippet → một self-check có đáp án*;
+- mặc định chỉ hiện **core spine** — *xong (p)*;
+- gate kiểm `sourceHash` của mọi summary — *xong (o)*;
+- hero không hứa quá mức so với 25.770 từ thật — *xong (p)*;
+- mỗi core node có đúng bốn vật: *mental model một câu → một visual phù hợp → một worked
+  example hoặc snippet chạy được → một self-check có đáp án*;
 - coding node có code tối thiểu chạy được; conceptual node có ví dụ số nhỏ thay vì thêm chữ;
-- sau core spine, reader tự làm được một capstone nhỏ: frame target, chia tập không leak, tạo
-  baseline, chọn metric, build pipeline, đánh giá có uncertainty/cost, đóng gói và mô tả monitor;
-- không còn link/copy “bài đầy đủ”, không cần progress hay context của DS;
-- gate kiểm `sourceHash`/version của mọi summary và fail khi source đổi mà summary chưa review.
+- sau core spine, reader tự làm được một capstone nhỏ (frame target → chia tập không leak →
+  baseline → chọn metric → pipeline → đánh giá có uncertainty/cost → đóng gói → mô tả monitor);
+- không còn link/copy "bài đầy đủ", không cần progress hay context của trang DS.
 
-Nếu chưa có các phần trên, cách gọi trung thực là **visual syllabus/companion**, không phải
-standalone basic course.
+**Chừng nào bốn gạch cuối chưa xong, cách gọi trung thực là *visual syllabus / companion*,
+không phải standalone basic course.**
 
-### 5. Visualization: cái gì nên thêm, cái gì không cần ép
+### Những điểm đang làm tốt — bảo toàn khi sửa
 
-`G-VIZ` hiện xanh vì bảng/code/figure placeholder đều được tính là “visual evidence”. Nó không
-phân biệt một diagram thật với câu chữ bắt đầu bằng “Hình:”. Vì thế cổng hiện tại không trả lời
-được câu hỏi “reader có hiểu nhanh hơn không”. Roadmap hiện có mô tả `viz` ở **81/84** bài
-(thiếu `pr-mlops`, `q-nlp`, `r-glossary`), nhưng ở 48 bài không có interactive `data-viz` thì
-drawer thường chỉ render mô tả đó thành một khối chữ.
+- Một project fraud xuyên suốt giúp concrete → abstract; phần lớn bài có đầu ra cầm được.
+- Đặt leakage/split trước modeling, product/reproducibility trước DL, transfer trước thesis
+  là lựa chọn curriculum tốt.
+- Phân biệt fast/full, `SCOPE` thật, misconception và giới hạn ví von nhìn chung trung thực.
+- Nội dung về Average Precision (không nội suy hình thang), cross-fitting của TargetEncoder,
+  calibration trên dữ liệu độc lập/CV, và cluster/block bootstrap ở `pr-eval` là đúng hướng.
+- Các visual đang tốt dùng để **ra quyết định hoặc giải thích quan hệ**, không trang trí —
+  đây là tiêu chuẩn cho mọi visual mới.
 
-**Ưu tiên thêm hình thật — có lợi rõ ràng ở cả DS và Roadmap:**
-
-| Ưu tiên | Bài | Visualization phù hợp | Hiện tại | Giá trị dạy học |
-|---|---|---|---|---|
-| P0 | `m-prob` | distribution có kéo mean/median + reliability diagram | DS không có `data-viz`; Roadmap chỉ mô tả | Biến distribution/calibration từ công thức thành trực giác |
-| P0 | `t-numpy` | shape/broadcasting tile animation | Chưa có | Người mới thấy ngay trục nào được lặp, giảm lỗi shape |
-| P0 | `t-sklearn` | flow `fit`/`transform` tách train/valid | Chưa có | Nối trực tiếp preprocessing với leakage |
-| P0 | `d-eda` | small multiples: distribution/outlier/missing/correlation trên cùng dataset | Chưa có | Cho thấy mỗi chart trả lời một câu hỏi khác |
-| P0 | `dl-nn` | neuron/layer forward flow với shape | Chưa có | Đây là chủ đề không nên chỉ học bằng công thức |
-| P0 | `dl-train` | train-vs-validation loss cho fit/overfit/underfit | Chưa có; bảng không thay thế curve | Hình dạng curve là signal chẩn đoán chính |
-| P0 | `q-regress` | residual plot + prediction interval/coverage | Chưa có | Phân biệt point error với uncertainty |
-| P0 | `q-multi` | normalized confusion matrix tương tác | Chưa có | Macro/micro/weighted trở nên nhìn thấy được |
-| P1 | `s-plan8w` | dependency/workload timeline 8 tuần | Chưa có | Roadmap đặc biệt cần hình phụ thuộc thay vì bullet dài |
-| P1 | `ml-tune` | grid vs random vs TPE trên cùng search space | Chưa có | Thấy trực tiếp vì sao random/TPE dùng budget tốt hơn |
-| P1 | `ml-unsup` | cluster/outlier 2D với slider | Chưa có | Distance/density cần trực giác hình học |
-| P1 | `pr-cost` | threshold → FP/FN → cost/action curve | Có bảng, chưa có curve | Bảng số che mất quan hệ liên tục theo threshold |
-| P1 | `pr-mlops` | lineage graph data → run → registry → deploy | Không có cả summary `viz` | MLOps là quan hệ/ownership, diagram tốt hơn prose |
-| P1 | `dl-embed` | lookup table → 2D neighborhood | Chưa có | Phân biệt ID/index, vector và semantic neighborhood |
-| P1 | `q-cv` | classification/detection/segmentation triptych | Chưa có | Ba output/task khác nhau rõ hơn ngay trong một khung |
-| P1 | `f-text`/`q-nlp` | document → token → term matrix/embedding → output | Chưa có | Nối pipeline text cổ điển và neural; `q-nlp` đang thiếu `viz` |
-
-**Đã có visual đúng loại, nên ưu tiên giữ/tinh chỉnh thay vì thêm cho đủ số:** `d-leak`,
-`d-split`, `f-pipeline`, `ml-metrics`, `ml-tree`, `ml-overfit`, `pr-eval`, `dl-attn`,
-`q-causal`. Một bài có một visual giải thích được quan hệ chính tốt hơn ba chart trang trí.
-
-**Không cần ép interactive visualization** cho các bài thiên về cách dùng/reference/checklist như
-`s-how`, `s-lookup`, `d-framing`, `t-env`, `t-online`, `t-colab`, `t-ai`, `t-pandas`, `t-sql`,
-`d-clean`, `f-what`, `f-select`, `f-store`, `q-mini`, `th-topic`, `th-write`, `th-tools`,
-`th-defense`, `r-stack`, `r-roadmapsh`, `r-mistakes`, `r-glossary`, `r-books`. Ở đây flowchart,
-table hoặc code nhỏ là đủ; không tạo chart nếu nó không làm lộ một quan hệ mới.
-
-### 6. Những điểm đang làm tốt — nên bảo toàn khi sửa
-
-- Một project fraud xuyên suốt giúp concrete → abstract; phần lớn lesson có đầu ra hữu hình.
-- Đặt leakage/split trước modeling, product/reproducibility trước DL, transfer trước thesis là
-  lựa chọn curriculum tốt.
-- Phân biệt fast/full, scope thật, misconception và giới hạn analogy nhìn chung trung thực.
-- Các nội dung về Average Precision (không nội suy hình thang), cross-fitting của TargetEncoder,
-  calibration trên dữ liệu độc lập/CV, và cluster/block bootstrap trong `pr-eval` là đúng hướng.
-- Các visual đang tốt dùng để **ra quyết định hoặc giải thích quan hệ**, không chỉ trang trí;
-  đây nên là tiêu chuẩn cho các visual mới.
-
-### 7. Thứ tự thực thi khuyến nghị cho phiên sửa sau
-
-1. Sửa P0 correctness/safety + thống nhất threshold/artifact.
-2. Sửa data-order, tách probability khỏi calibration, trả hết 5 nhóm forward reference.
-3. Chốt contract Roadmap độc lập; bỏ dependency reader-facing; chọn core spine và thêm
-   `sourceHash` gate.
-4. Viết lại mỗi core summary theo 4 vật: model → visual → example/snippet → self-check.
-5. Làm 8 visual P0 trước, đo comprehension/usability; chỉ sau đó mới làm P1.
-6. Thêm một content lint riêng cho absolute words (`only`, `always`, `theoretical ceiling`,
-   ngưỡng `%` không gắn nhãn) — không nhồi việc này vào `G-VIZ`.
-
-### 8. Nguồn đối chiếu chính
+### Nguồn đối chiếu chính
 
 - Memory/forgetting: [OpenStax Psychology 2e — Problems with Memory](https://openstax.org/books/psychology-2e/pages/8-3-problems-with-memory)
 - Average Precision: [scikit-learn `average_precision_score`](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.average_precision_score.html)
@@ -316,12 +252,11 @@ table hoặc code nhỏ là đủ; không tạo chart nếu nó không làm lộ
 - Prophet trạng thái hiện tại: [official `facebook/prophet` repository](https://github.com/facebook/prophet)
 - Roadmap ngoài repo là nguồn biến động: [AI/Data Scientist PDF](https://roadmap.sh/pdfs/roadmaps/ai-data-scientist.pdf), [Machine Learning](https://roadmap.sh/machine-learning), [MLOps](https://roadmap.sh/mlops), [AI Engineer](https://roadmap.sh/ai-engineer)
 
-### Cố ý chưa làm trong phiên này
+### Một điều audit tự nói và vẫn đúng
 
-- Không sửa một dòng code/nội dung nào ngoài báo cáo handoff này, đúng yêu cầu.
-- Không regenerate `roadmap.html`, không đổi TOC/summary/gate, không tạo visualization.
-- Không coi các con số benchmark của fraud simulator là đã verify thực nghiệm cho tới khi có
-  script/artifact/seed/environment tái tạo được; audit này là audit học thuật + cấu trúc + render.
+Các con số benchmark của bộ mô phỏng fraud **chưa được verify thực nghiệm độc lập** — cần
+script/artifact/seed/environment tái tạo được mới gọi là verified. Audit đó là audit học
+thuật + cấu trúc + render, không chạy lại notebook.
 
 ---
 
@@ -2613,11 +2548,46 @@ mục `###` dưới đây **mỗi lần mở phiên**, nên việc nào xong th�
 "đã xử" là cách nhanh nhất làm dòng CHƯA LÀM thành tiếng ồn — chính lỗi đó đã sống từ (n5)
 tới (n8), khiến bốn việc đã làm vẫn được in ra suốt bốn phiên.
 
+### Roadmap độc lập — bốn gạch cuối, làm CÙNG MỘT LƯỢT
+
+Hợp đồng và bảy gạch đầy đủ ở mục `## Phiên (n9)`. Ba gạch đã xong (core spine mặc định,
+`sourceHash` gate, hero không hứa quá). Bốn gạch còn lại **là một đơn vị công việc, đừng
+tách**:
+
+- mỗi core node bốn vật: mental model một câu → visual → worked example / snippet chạy được
+  → self-check có đáp án;
+- coding node có code tối thiểu chạy được, conceptual node có ví dụ số nhỏ;
+- sau core spine, reader tự làm được một capstone nhỏ;
+- **rồi mới** bỏ link "Mở bài đầy đủ →", link navbar về trang DS, và progress dùng chung.
+
+**Vì sao không tách:** bỏ link trước khi có chiều sâu chỉ làm trang tệ đi — người đọc mất
+đường thoát sang nội dung thật mà không được bù lại gì. Chừng nào chưa xong cả bốn, gọi trang
+đó là *visual syllabus / companion* mới trung thực (audit n9 tự kết luận vậy).
+
+Ước lượng: ~65 ví dụ có số + ~65 câu tự kiểm, mỗi cái phải khớp bài gốc. Đây là một phiên
+riêng, không phải phần đuôi của phiên khác.
+
+### Tám hình P1 — chỉ làm SAU khi đo được 8 hình P0
+
+Audit n9 §5 xếp thứ tự rõ: *"làm 8 visual P0 trước, đo comprehension/usability; chỉ sau đó
+mới làm P1"*. Tám hình P0 đã xong ở phiên (p). Danh sách P1: `s-plan8w` (dependency/workload
+timeline 8 tuần) · `ml-tune` (grid vs random vs TPE trên cùng search space) · `ml-unsup`
+(cluster/outlier 2D có slider) · `pr-cost` (threshold → FP/FN → cost curve; hiện có bảng) ·
+`pr-mlops` (lineage graph data → run → registry → deploy) · `dl-embed` (lookup table → 2D
+neighborhood) · `q-cv` (classification/detection/segmentation triptych) · `f-text`/`q-nlp`
+(document → token → term matrix/embedding → output).
+
+Ba bài **chưa có trường `viz` nào** trong `roadmap-summaries.json`: `pr-mlops`, `q-nlp`,
+`r-glossary`.
+
 ### Đang chờ chủ trang gọi — agent đừng tự làm
 
 - **Nhãn Foundation / Applied / Advanced.** (n5) để lại: trang đã có 3 chip ưu tiên + chip
   14 ngày + nhãn `SCOPE`, thêm trục thứ tư là thêm nhiễu. Đây là quyết định về *cách trình
   bày giáo trình*, không phải việc kỹ thuật — cần thì chủ trang gọi.
+- **`git fetch` trong `session.mjs`** (nợ từ phiên (o)). `session.mjs` báo "thư mục sạch"
+  dựa trên working tree, không hỏi `origin`; thư mục này thường có nhiều phiên push thẳng
+  `main`, nên nền local rất dễ cũ mà không có dấu hiệu nào. Việc nhỏ, chạm quy trình phiên.
 
 ### Đã quyết là GIỮ NGUYÊN — đừng revisit
 
@@ -2626,18 +2596,16 @@ tới (n8), khiến bốn việc đã làm vẫn được in ra suốt bốn phi
 | Cắt `f-store` | **giữ, không cắt** | nội dung thật của nó là *một câu trả lời cho hội đồng* + point-in-time correctness; đang `skim` 30′ |
 | `q-analytics` off-goal | **giữ** | bài duy nhất vạch ranh giới analytics / predictive / causal — câu hội đồng hay hỏi |
 | `dl-train` bảng gỡ lỗi → popup | **giữ trên mạch chính** | (n5) bác: `PAYOFF[dl-train][0]` *là* "bảng chẩn đoán đường cong loss" — danh mục chính là deliverable của bài |
-| Đổi thứ tự mạch chính / định nghĩa `roadmap.html` | **xong / chốt** | thứ tự đã đổi ở (n4); `roadmap.html` giữ **view dẫn xuất** (chủ trang xác nhận hai lần) |
+| Đổi thứ tự mạch chính | **xong** | (n4) đổi thứ tự chặng; (p) đổi thêm một đường nối trong chặng 2 (`d-eda` lên trước `d-split`) |
+| 11 chặng | **giữ** | audit n9 §3: "chưa có lý do đủ mạnh để đảo toàn bộ curriculum" — chỉ sửa ba đường nối, cả ba đã sửa ở (p) |
+| Cổng "từ tuyệt đối" bản rộng | **bác, có số đo** | quét `luôn`/`duy nhất`/`bảo đảm` cho 22 kết quả, gần hết là dương tính giả. `G-ABS` chỉ bắt hình dạng "ngưỡng % + mệnh lệnh" — xem (p) mục 5 |
 
-### Hai thứ để biết trước, KHÔNG phải việc
+### Một thứ để biết trước, KHÔNG phải việc
 
 - **Có một ngày fast track nằm đúng ngưỡng dưới 3,5 giờ của `G-PLAN`.** Từ (n4) đó là
-  **ngày 6** — cố ý nhẹ nhất vì là ngày deliverable, giờ đổ vào việc CHẠY. (Bản trước ghi
-  "ngày 9", đúng với lịch trước (n4).) Cắt thời lượng bài nào trong ngày đó thì `G-PLAN`
-  trượt: cổng làm đúng việc, nhưng biết trước thì đỡ mất thời gian truy.
-- **5 khuyến nghị `G-FWD` là trạng thái ổn định đã soát**, không phải việc chưa làm. Chúng
-  là các bài bản đồ/tra cứu (`s-*`, `t-ai`, `r-stack`) và vài bài FE nêu tên khái niệm để
-  định vị. Đưa hết vào `allowEarly` sẽ biến `concepts.json` thành con dấu cao su; để nguyên
-  thì cổng còn là bảng theo dõi đọc được. **Đừng "sửa" bằng cách nhồi `allowEarly`.**
+  **ngày 6** — cố ý nhẹ nhất vì là ngày deliverable, giờ đổ vào việc CHẠY. Cắt thời lượng bài
+  nào trong ngày đó thì `G-PLAN` trượt: cổng làm đúng việc, nhưng biết trước thì đỡ mất
+  thời gian truy.
 
 ---
 
