@@ -23,31 +23,44 @@
       "pattern": "PR-AUC|average_precision",
       "allowEarly": [
         "s-intro",
+        "s-pipeline",
+        "s-families",
+        "s-lookup",
         "s-plan8w",
         "s-plan14",
+        "t-ai",
         "m-bayes",
+        "m-prob",
         "ml-map",
         "ml-linear",
-        "d-data"
+        "d-data",
+        "f-what",
+        "f-cyclic",
+        "f-select"
       ],
-      "allowWhy": "s-* chỉ nêu tên khi giới thiệu lộ trình; m-bayes/ml-map nêu như tên một chỉ số và trỏ tới ml-metrics. ml-linear đứng NGAY TRƯỚC ml-metrics và tự định nghĩa PR-AUC một câu tại chỗ ('chỉ số chính cho dữ liệu lệch nhãn, cao hơn là tốt hơn') rồi trỏ sang bài kế — đúng ngoại lệ mà CLAUDE.md §8 cho phép ở mức thân bài. Tiêu chí đạt của nó KHÔNG còn đòi PR-AUC (chỉ đòi lưu y_prob). 2026-08-04: ml-cv/ml-imb rời danh sách vì ml-metrics đã được dời lên trước chúng. d-data vào danh sách cùng ngày vì nó được dời lên chặng 3: nó dùng PR-AUC như tên một điểm số trong bảng ablation và tự chú thích một câu tại chỗ."
+      "allowWhy": "s-* chỉ nêu tên khi giới thiệu lộ trình; m-bayes/ml-map nêu như tên một chỉ số và trỏ tới ml-metrics. ml-linear đứng NGAY TRƯỚC ml-metrics và tự định nghĩa PR-AUC một câu tại chỗ ('chỉ số chính cho dữ liệu lệch nhãn, cao hơn là tốt hơn') rồi trỏ sang bài kế — đúng ngoại lệ mà CLAUDE.md §8 cho phép ở mức thân bài. Tiêu chí đạt của nó KHÔNG còn đòi PR-AUC (chỉ đòi lưu y_prob). 2026-08-04: ml-cv/ml-imb rời danh sách vì ml-metrics đã được dời lên trước chúng. d-data vào danh sách cùng ngày vì nó được dời lên chặng 3: nó dùng PR-AUC như tên một điểm số trong bảng ablation và tự chú thích một câu tại chỗ. 2026-08-09 (thực thi audit n9 §3): sáu bài còn lại được xử theo đúng khuyến nghị 'micro-definition tại lần dùng đầu, không kéo cả bài lên trước' — s-pipeline/s-families/s-lookup/t-ai chỉ nêu tên trong bảng tra hoặc mô tả bước (không ai phải LÀM gì với nó ở đó); m-prob nhắc tên đúng một lần khi dạy tỉ lệ nền và trỏ thẳng sang ml-metrics; f-what và f-cyclic đã được thêm một câu chú tại chỗ ('chỉ số chính cho dữ liệu lệch nhãn, cao hơn là tốt hơn') kèm link. f-select chỉ xuất hiện dưới dạng chuỗi scoring='average_precision' trong hai dòng code sklearn — nó là tên tham số, không phải khái niệm đang được dùng để lập luận."
     },
     "rò rỉ dữ liệu": {
       "definedIn": "d-leak",
       "pattern": "rò rỉ|leakage",
       "allowEarly": [
+        "s-intro",
         "s-pipeline",
+        "s-families",
         "s-lookup",
         "s-plan8w",
         "s-plan14",
+        "d-framing",
         "t-sql",
+        "t-ai",
+        "t-pandas",
         "t-sklearn",
         "t-stack",
         "d-data",
         "d-eda",
         "d-clean"
       ],
-      "allowWhy": "d-data diễn giải hiện tượng bằng lời thường ('đáp án bị nhét ngược vào feature') và trỏ tới d-leak thay vì dùng thuật ngữ như đã biết; t-sql giải thích cái bẫy point-in-time tại chỗ và gọi tên bài d-leak; các bài còn lại chỉ cảnh báo trước để người học không làm sai trong lúc chờ tới d-leak."
+      "allowWhy": "d-data diễn giải hiện tượng bằng lời thường ('đáp án bị nhét ngược vào feature') và trỏ tới d-leak thay vì dùng thuật ngữ như đã biết; t-sql giải thích cái bẫy point-in-time tại chỗ và gọi tên bài d-leak; các bài còn lại chỉ cảnh báo trước để người học không làm sai trong lúc chờ tới d-leak. 2026-08-09 (audit n9 §3): năm bài còn lại đã có micro-definition tại chỗ hoặc không đòi người học làm gì — s-intro định nghĩa nguyên văn một câu ngay lần đầu ('dùng nó để đoán chính là rò rỉ dữ liệu (data leakage): điểm số đẹp giả tạo, ra thực tế sập ngay'), t-pandas và t-ai nêu kèm ví dụ cụ thể về chỗ hỏng, s-families/d-framing chỉ đặt câu hỏi kiểm tra chứ không dạy."
     },
     "ngưỡng theo chi phí": {
       "definedIn": "ml-metrics",
@@ -59,16 +72,23 @@
       "allowWhy": "hai bài nhập môn nêu như một lời hứa của lộ trình, không yêu cầu làm."
     },
     "calibration": {
-      "definedIn": "m-prob",
+      "definedIn": "ml-metrics",
       "pattern": "calibrat|hiệu chỉnh xác suất",
-      "allowEarly": [],
-      "allowWhy": ""
+      "allowEarly": [
+        "m-prob",
+        "ml-imb",
+        "ml-trees",
+        "pr-code"
+      ],
+      "allowWhy": "2026-08-09 (audit n9 §1/§3 — tách probability khỏi calibration): trước đây m-prob vừa dạy xác suất vừa dạy calibration_curve/CalibratedClassifierCV, tức bắt người học hiệu chỉnh khi chưa có classifier nào. Phần ứng dụng đã chuyển sang ml-metrics (ngay sau mô hình đầu tiên và ngay cạnh phần quy ngưỡng ra tiền, là chỗ calibration thật sự cần). m-prob giữ lại đúng khái niệm 'hiệu chỉnh tốt nghĩa là gì' như một cách ĐỌC con số 0-1, kèm câu 'chưa cần xử lý ở đây' và link sang ml-metrics; ml-imb/ml-trees/pr-code nhắc lại khi cảnh báo resample làm mất hiệu chỉnh."
     },
     "Pipeline": {
       "definedIn": "t-sklearn",
       "pattern": "\\bColumnTransformer\\b",
-      "allowEarly": [],
-      "allowWhy": "chỉ canh ColumnTransformer: chữ 'Pipeline' được dùng theo nghĩa thường (đường ống dữ liệu) ở rất nhiều bài trước, bắt nó sẽ thành tiếng ồn."
+      "allowEarly": [
+        "s-lookup"
+      ],
+      "allowWhy": "chỉ canh ColumnTransformer: chữ 'Pipeline' được dùng theo nghĩa thường (đường ống dữ liệu) ở rất nhiều bài trước, bắt nó sẽ thành tiếng ồn. 2026-08-09 (audit n9 §3): s-lookup là BẢNG TRA — nó liệt kê 'công cụ nào cho việc nào' và ColumnTransformer xuất hiện đúng một lần trong một ô bảng, để người đang bí biết phải đi tìm cái gì. Không ai được yêu cầu dùng nó ở đó."
     },
     "bootstrap": {
       "definedIn": "m-infer",
@@ -76,9 +96,10 @@
       "allowEarly": [
         "s-pipeline",
         "d-data",
-        "ml-trees"
+        "ml-trees",
+        "ml-cv"
       ],
-      "allowWhy": "s-pipeline nêu tên ở bước 8 để định vị. d-data chỉ nêu 'cluster bootstrap' trong một ô bảng schema, để giải thích vì sao card_id đáng giữ — người học không phải làm gì với nó ở đó. ml-trees là ca §8 cho phép: nó TỰ ĐỊNH NGHĨA tại chỗ ('mẫu bootstrap — bốc có hoàn lại') rồi trỏ sang m-infer; và không dời m-infer lên trước ml-trees được, vì chính m-infer lấy baseline LightGBM của ml-trees làm ví dụ chạy suốt bài."
+      "allowWhy": "s-pipeline nêu tên ở bước 8 để định vị. d-data chỉ nêu 'cluster bootstrap' trong một ô bảng schema, để giải thích vì sao card_id đáng giữ — người học không phải làm gì với nó ở đó. ml-trees là ca §8 cho phép: nó TỰ ĐỊNH NGHĨA tại chỗ ('mẫu bootstrap — bốc có hoàn lại') rồi trỏ sang m-infer; và không dời m-infer lên trước ml-trees được, vì chính m-infer lấy baseline LightGBM của ml-trees làm ví dụ chạy suốt bài. 2026-08-09 (audit n9 §1 · quy tắc đơn vị độc lập): ml-cv vào danh sách vì hộp cảnh báo mới về 'độ lệch chuẩn giữa fold KHÔNG phải khoảng tin cậy' phải nêu tên công cụ đúng để thay thế; nó tự chú một câu tại chỗ ('bốc lại dữ liệu có hoàn lại hàng nghìn lần để xem con số dao động bao nhiêu') rồi trỏ sang m-infer, đúng ngoại lệ CLAUDE.md §8 mức thân bài."
     },
     "embedding": {
       "definedIn": "dl-embed",
@@ -86,22 +107,29 @@
       "allowEarly": [
         "s-families",
         "s-lookup",
+        "s-plan8w",
+        "t-env",
+        "t-colab",
         "t-ai",
         "f-text",
         "f-cat",
         "q-nlp",
         "ml-map"
       ],
-      "allowWhy": "f-text dạy TF-IDF → vector và tự định nghĩa embedding ở mức đủ dùng; các bài còn lại nêu tên để định vị."
+      "allowWhy": "f-text dạy TF-IDF → vector và tự định nghĩa embedding ở mức đủ dùng; các bài còn lại nêu tên để định vị. 2026-08-09 (audit n9 §3): s-plan8w nêu 'bài NLP cần bạn đã hiểu embedding' khi giải thích thứ tự chặng — đó là câu VỀ lịch học, không dùng khái niệm; t-env/t-colab liệt kê 'sinh embedding' trong bảng việc-nào-cần-GPU, cũng chỉ là tên một loại việc."
     },
     "attention": {
       "definedIn": "dl-attn",
       "pattern": "\\battention\\b",
       "allowEarly": [
         "s-families",
-        "dl-cnn-rnn"
+        "s-plan8w",
+        "s-plan14",
+        "dl-nn",
+        "dl-cnn-rnn",
+        "dl-embed"
       ],
-      "allowWhy": "dl-cnn-rnn nêu tên khi nói vì sao RNN bị thay thế."
+      "allowWhy": "dl-cnn-rnn nêu tên khi nói vì sao RNN bị thay thế. 2026-08-09 (audit n9 §1/§3): dl-embed đứng ngay trước dl-attn và câu cuối bài chính là cầu nối ('cơ chế trao đổi đó chính là attention, bài tiếp theo'); dl-nn nêu attention trong ghi chú sửa lỗi 'softmax chỉ ở lớp đầu ra', kèm định nghĩa vai trò một câu (biến điểm tương đồng thành trọng số cộng bằng 1) và link sang dl-attn; s-plan8w/s-plan14 chỉ liệt kê tên bài trong lịch học."
     },
     "datacard": {
       "definedIn": "d-data",

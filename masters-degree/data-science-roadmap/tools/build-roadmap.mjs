@@ -149,6 +149,13 @@ const phaseName = t => t.replace(/^\d+\s*·\s*/, '').replace(/ [—(].*$/, '');
 const PRI = { core: ['Bắt buộc', 'core'], good: ['Nên biết', 'good'], skim: ['Định vị', 'skim'] };
 
 const totalMin = P.sumMins(P.LEAVES);
+/* Mạch chính = các bài ưu tiên core. Trang mặc định hiện đúng mạch này (audit n9 §4:
+   "mặc định chỉ hiện core spine; good-to-know/skim gấp vào học sau"), và nút ở hero
+   mở lại đủ 84 bước. Hai con số dưới đây là con số của mạch chính, để hero không
+   hứa 84 bước rồi hiện ra ít hơn. */
+const CORE = P.LEAVES.filter(l => l.p === 'core');
+const CORE_N = CORE.length;
+const coreMin = P.sumMins(CORE);
 
 /* ---- DATA nhúng vào trang (để JS dựng drawer) ---- */
 const DATA = P.TREE.map(ph => ({
@@ -196,7 +203,7 @@ const levelsHtml = DATA.map((ph, pi) => {
         <span class="rm-levelhead__name">${esc(ph.name)}</span>
         <span class="rm-levelhead__out">${esc(ph.outcome)}</span>
       </span>
-      <span class="rm-levelhead__n">${ph.lessons.length} bước</span>
+      <span class="rm-levelhead__n" data-core="${ph.lessons.filter(l => l.pri === 'core').length}" data-all="${ph.lessons.length}">${ph.lessons.filter(l => l.pri === 'core').length} bước</span>
     </header>
     <div class="rm-nodes">${nodes}</div>
   </section>`;
@@ -212,7 +219,7 @@ const html = `<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Roadmap · Data Science</title>
-<meta name="description" content="Bản đồ học nhanh Data Science — 84 bước qua 11 chặng, bấm mỗi bước để xem tóm tắt tinh gọn (kiến thức lõi + ví dụ), mở bài đầy đủ ở trang chính.">
+<meta name="description" content="Bản đồ học nhanh Data Science — mạch chính 11 chặng (mở được đủ 84 bước), bấm mỗi bước để xem tóm tắt tinh gọn: ý lõi, hình then chốt, và tiêu chí đạt.">
 <script>try{var t=localStorage.getItem('ds-theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark');}catch(e){}</script>
 <link rel="stylesheet" href="../../web-builder/web-builder.css">
 <style>
@@ -251,16 +258,20 @@ ${STYLE()}
        hero + chân trang là khung của trang, không phải chỗ dạy. -->
   <section class="rm-hero">
     <h1 class="rm-hero__h">Quick Roadmap</h1>
-    <p class="rm-hero__sub">A condensed map of Data Science, from zero to a real product you actually build: tap any step to grasp its <b>core idea</b> in seconds.</p>
+    <p class="rm-hero__sub">A condensed map of Data Science, from zero to a real product you actually build. Tap any step for its <b>core idea</b>, the key figures, and what done means — a few minutes each, not seconds.</p>
     <div class="rm-hero__stats">
-      <span><b>84</b> steps</span><span><b>11</b> phases</span><span><b>${(Math.round(totalMin/30)/2).toString()}</b> hours</span>
+      <span><b data-o="nsteps">${CORE_N}</b> steps</span><span><b>11</b> phases</span><span><b data-o="nhours" data-core="${(Math.round(coreMin/30)/2).toString()}" data-all="${(Math.round(totalMin/30)/2).toString()}">${(Math.round(coreMin/30)/2).toString()}</b> hours</span>
+    </div>
+    <div class="rm-hero__filter">
+      <button class="rm-filt" id="filtBtn" type="button" aria-pressed="true">Core spine only</button>
+      <span class="rm-filt__note" id="filtNote">Good-to-know and orientation-only steps are hidden. They are extras, not prerequisites.</span>
     </div>
     <p class="rm-hero__note">These hours are the <b>full-lesson workload</b> (reading + practice + deliverable), not the time it takes to read this condensed version — the same holds for every per-step minute figure below.</p>
   </section>
   <div class="rm-path">
 ${levelsHtml}
   </div>
-  <footer class="rm-foot">84 steps · 11 phases, condensed. Open any step for its full lesson.</footer>
+  <footer class="rm-foot"><span data-o="nfoot">${CORE_N}</span> core steps · 11 phases, condensed. Toggle above to see all 84.</footer>
 </main>
 
 <!-- Vùng thông báo cho trình đọc màn hình. Có mặt vì makeEdgeResizer() (trích từ
@@ -412,6 +423,16 @@ function STYLE() { return String.raw`
      --wb-fg-muted (#71717a) đạt ~4,8:1. */
   .rm-hero__note{font-size:13px;line-height:1.6;color:var(--wb-fg-muted);max-width:620px;margin:14px auto 0}
   .rm-hero__stats{display:flex;gap:26px;justify-content:center;margin-top:20px;font-size:14px;color:var(--wb-fg-muted)}
+  /* Bộ lọc mạch chính. Nút nằm ở hero (vùng tiếng Anh của trang này — CLAUDE.md §11),
+     và mặc định BẬT: trang mở ra là mạch chính, đúng khuyến nghị audit n9 §4. */
+  .rm-hero__filter{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:22px}
+  .rm-filt{font:inherit;font-size:13px;font-weight:600;padding:7px 16px;border-radius:var(--wb-radius-pill);
+    border:var(--wb-bw) solid var(--wb-border-strong);background:var(--wb-surface);color:var(--wb-fg);cursor:pointer}
+  .rm-filt:hover{background:var(--wb-surface-hover)}
+  .rm-filt[aria-pressed="true"]{background:var(--wb-fg);color:var(--wb-surface);border-color:var(--wb-fg)}
+  .rm-filt__note{font-size:12px;color:var(--wb-fg-subtle);max-width:520px;text-align:center;line-height:1.6}
+  body.rm-core .rm-node:not(.rm-pri-core){display:none}
+  body.rm-core .rm-level.is-empty{display:none}
   .rm-hero__stats b{font-size:22px;color:var(--wb-fg);font-weight:800;margin-right:5px}
   /* ---- path: xương sống dọc, node so le hai bên ---- */
   .rm-path{position:relative;margin-top:24px}
@@ -635,6 +656,37 @@ function body(l){
 }
 function fmt(m){return m<60?m+'′':(m%60?Math.floor(m/60)+'h'+String(m%60).padStart(2,'0'):Math.floor(m/60)+'h');}
 document.querySelectorAll('.rm-node').forEach(n=>n.addEventListener('click',()=>open(n.dataset.id)));
+
+/* Bộ lọc mạch chính — mặc định BẬT. Ẩn bằng CSS (body.rm-core) chứ không xoá node,
+   để bật lại là tức thì và không phải dựng lại DOM. Ba thứ phải đổi theo: số bước
+   của từng chặng, hai con số ở hero, và chân trang — nếu không thì trang hiện 65
+   bước mà vẫn khoe 84, đúng kiểu lệch làm người đọc mất tin. */
+(function(){
+  const btn=$('#filtBtn'), note=$('#filtNote'); if(!btn)return;
+  const ALL=document.querySelectorAll('.rm-node').length;
+  const CORE=document.querySelectorAll('.rm-node.rm-pri-core').length;
+  function apply(core){
+    document.body.classList.toggle('rm-core',core);
+    btn.setAttribute('aria-pressed',String(core));
+    btn.textContent=core?'Core spine only':'Showing all '+ALL;
+    note.textContent=core
+      ?'Good-to-know and orientation-only steps are hidden. They are extras, not prerequisites.'
+      :'All '+ALL+' steps, including good-to-know and orientation-only ones.';
+    document.querySelectorAll('.rm-levelhead__n').forEach(el=>{
+      el.textContent=(core?el.dataset.core:el.dataset.all)+' bước';
+    });
+    document.querySelectorAll('.rm-level').forEach(sec=>{
+      const vis=sec.querySelectorAll(core?'.rm-node.rm-pri-core':'.rm-node').length;
+      sec.classList.toggle('is-empty',vis===0);
+    });
+    const ns=$('[data-o="nsteps"]'), nf=$('[data-o="nfoot"]'), nh=$('[data-o="nhours"]');
+    if(ns)ns.textContent=core?CORE:ALL;
+    if(nf)nf.textContent=core?CORE:ALL;
+    if(nh)nh.textContent=core?nh.dataset.core:nh.dataset.all;
+  }
+  btn.addEventListener('click',()=>apply(!document.body.classList.contains('rm-core')));
+  apply(true);
+})();
 $('#drClose').addEventListener('click',close);
 addEventListener('keydown',e=>{if(e.key==='Escape'&&!drawer.hidden)close();});
 

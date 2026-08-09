@@ -2926,7 +2926,7 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
           <span class="wb-ico ds-prep__ico">keyboard</span>
           <div class="wb-media__body">
             <p class="wb-media__title">Một thói quen: gõ lại những đoạn ngắn quan trọng</p>
-            <p class="wb-media__text">Đọc xong một bài mà không gõ gì thì 48 giờ sau chỉ còn khoảng 10%. Mỗi khối code có nút sao chép (<span class="wb-ico wb-ico--xs" aria-hidden="true">content_copy</span>) ở góc trên phải — cứ dùng nó cho code dài, config và boilerplate. Nhưng với những snippet ngắn cốt lõi, hãy <b>gõ lại bằng tay</b>; và sau khi chép, đổi một tham số rồi chạy xem nó hỏng thế nào — đó mới là lúc kiến thức bám lại.</p>
+            <p class="wb-media__text">Đọc xong một bài mà không gõ gì thì phần nhớ lại rơi nhanh nhất ngay trong một hai ngày đầu — rơi bao nhiêu thì tuỳ vật liệu và tuỳ cách đo, nên đừng tin một con số phần trăm cố định nào. Mỗi khối code có nút sao chép (<span class="wb-ico wb-ico--xs" aria-hidden="true">content_copy</span>) ở góc trên phải — cứ dùng nó cho code dài, config và boilerplate. Nhưng với những snippet ngắn cốt lõi, hãy <b>gõ lại bằng tay</b>; và sau khi chép, đổi một tham số rồi chạy xem nó hỏng thế nào — đó mới là lúc kiến thức bám lại.</p>
           </div>
         </div>
       </div>
@@ -3036,7 +3036,7 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
   </div>
 
   <h2>Cách học để nhớ được</h2>
-  <p>Đọc xong một bài mà không gõ gì thì 48 giờ sau còn lại khoảng 10%. Quy tắc cho cả 14 ngày:</p>
+  <p>Đọc xong một bài mà không gõ gì thì phần nhớ lại rơi nhanh nhất ngay trong một hai ngày đầu. Đó là kết quả lặp lại được của các thí nghiệm về <i>đường cong quên</i>, nhưng <b>không</b> có một tỉ lệ phần trăm phổ quát: mức rơi phụ thuộc vật liệu học, cách đo (nhận ra hay nhớ lại chủ động) và việc bạn có tự truy xuất lại hay không. Thứ đáng nhớ là chiều: <b>truy xuất chủ động giữ lại nhiều hơn đọc lại</b>. Quy tắc cho cả 14 ngày:</p>
   <ul>
     <li><b>Mở sẵn một notebook</b> bên cạnh. Snippet ngắn thì gõ lại bằng tay cho nhớ; code dài thì dùng nút sao chép (<span class="wb-ico wb-ico--xs" aria-hidden="true">content_copy</span>) ở góc trên phải khối code, rồi đổi một tham số xem nó hỏng thế nào.</li>
     <li><b>Sau mỗi bài, tự nói lại bằng lời của mình</b> trong 3 câu, viết vào notebook. Nếu không nói được, bạn chưa hiểu — quay lại chỗ mờ.</li>
@@ -3698,7 +3698,7 @@ CMD ["uvicorn", "src.serve:app", "--host", "0.0.0.0", "--port", "8000"]</div>
   <p class="ds-more"><button class="ds-math" data-math="colab10">Mười khả năng của Colab — gõ gì, dùng cho việc gì</button></p>
 
   <h3>1 · GPU cho đúng hai chỗ — và <b>không</b> cho LightGBM</h3>
-  <p>Đây là chỗ hay bị hiểu sai nhất, nên nói thẳng: <b>mô hình chính của bạn không cần GPU chút nào.</b> LightGBM trên 300 nghìn dòng chạy vài giây bằng CPU máy bạn; đưa lên GPU không nhanh hơn đáng kể mà còn thêm phiền.</p>
+  <p>Đây là chỗ hay bị hiểu sai nhất, nên nói thẳng: <b>mô hình chính của bạn không cần GPU chút nào.</b> LightGBM trên vài trăm nghìn dòng và vài chục cột thường xong trong khoảng vài giây tới vài chục giây trên CPU thường; đưa lên GPU không nhanh hơn đáng kể mà còn thêm phiền. <span class="wb-help">Con số đó là bậc độ lớn để bạn khỏi lo, không phải một cam kết: nó phụ thuộc số cột, số cây, số nhân CPU và bộ dữ liệu. Cách chắc chắn là bấm giờ chính lần chạy của bạn và ghi lại — dù sao bạn cũng cần con số đó cho chương thực nghiệm.</span></p>
   <p>GPU chỉ đáng mượn cho đúng hai việc:</p>
   <table>
     <tr><th>Việc</th><th>Trên CPU máy bạn</th><th>Trên GPU Colab</th></tr>
@@ -4168,6 +4168,8 @@ X_centered = X - mu            <i># numpy tự "nhân bản" mu cho 1000 dòng</
   <p><code>axis=0</code> nghĩa là “gộp dọc theo hàng” → ra một giá trị cho mỗi cột. <code>axis=1</code> thì ngược lại. Cách nhớ: <b>axis là chiều bị bóp mất</b>.</p>
   <p>Broadcasting rất tiện nhưng cũng lặng lẽ: nếu shape của bạn sai theo một cách "hợp lệ", numpy sẽ tạo ra một mảng khổng lồ thay vì báo lỗi. Khi kết quả ra shape lạ, in <code>.shape</code> ở từng bước.</p>
 
+  <div data-viz="broadcast"></div>
+
   <h2>Seed — điều kiện bắt buộc của luận văn</h2>
   <div class="ds-code">rng = np.random.default_rng(42)   <i># cách hiện đại, khuyên dùng</i>
 rng.integers(0, 100, size=5)
@@ -4199,6 +4201,8 @@ Xte = scaler.transform(X_test)       <i># ÁP DỤNG cùng μ, σ đó — KHÔN
 
 Xtr = scaler.fit_transform(X_train)  <i># viết tắt của hai dòng đầu</i></div>
   <p>Đây là chỗ sinh ra lỗi rò rỉ dữ liệu phổ biến nhất trong ngành. Nếu bạn <code>fit</code> trên toàn bộ dữ liệu, thì $\mu$ và $\sigma$ đã chứa thông tin của tập test → kết quả đẹp giả tạo. <button class="ds-math" data-math="standardize">Chi tiết Standardize vs Min-Max, và cái bẫy này</button></p>
+
+  <div data-viz="fittransform"></div>
 
   <h2>3 · Pipeline — nối các bước thành một đối tượng duy nhất</h2>
   <div class="ds-code"><b>from</b> sklearn.pipeline <b>import</b> Pipeline
@@ -4625,9 +4629,100 @@ df["avg_amt"] = (df.groupby("card_id")["amount"]
   </div></div>
 </template>
 
+<template data-node="d-eda">
+  <p>EDA (Exploratory Data Analysis) = <b>nhìn dữ liệu bằng mắt trước khi giao cho máy</b>. Mục tiêu không phải là vẽ đẹp; mục tiêu là tìm ra những thứ sẽ phá hỏng mô hình nếu bạn không biết.</p>
+
+  <p><b>Điều quan trọng nhất của cả bài — EDA có hai thì, ngăn bởi bước chia tập:</b></p>
+  <ul>
+    <li><b>Thì 1 · Kiểm cấu trúc — làm trên <i>toàn bộ</i> dữ liệu, TRƯỚC khi chia.</b> Những thứ bạn <i>bắt buộc</i> phải biết để thiết kế được cách chia tập cho đúng: dữ liệu to cỡ nào, một dòng đại diện cho cái gì, có thứ tự thời gian không, nhãn đã có chưa, có trùng lặp hay lỗi nạp dữ liệu hiển nhiên không. Những việc này <b>không</b> dùng quan hệ feature–nhãn nên không tạo rò rỉ.</li>
+    <li><b>Thì 2 · Khám phá theo mô hình — chỉ làm trên tập <i>train</i>, SAU khi đã chốt cách chia.</b> Phân phối feature, quan hệ feature–nhãn, chọn feature, phân tích theo nhóm. Mọi quyết định ở đây có thể ảnh hưởng tới mô hình, nên nếu nhìn cả tập test thì chính <b>bộ não bạn</b> đã trở thành đường rò rỉ.</li>
+  </ul>
+  <p>Vì sao phải tách: cần hiểu <i>cấu trúc</i> đủ để chia tập cho đúng, nhưng mọi <i>khám phá có thể định hướng mô hình</i> phải nằm sau bước chia và chỉ trên train. Test để dành đúng một lần cho đánh giá cuối.</p>
+
+  <h2>Thì 1 · Kiểm cấu trúc — chạy trên toàn bộ dữ liệu, trước khi chia</h2>
+  <div class="ds-code"><i># 1. Kích thước và bộ nhớ</i>
+df.shape; df.memory_usage(deep=<b>True</b>).sum() / 1e6   <i># MB</i>
+
+<i># 2. Kiểu dữ liệu — cột ngày có đang là chuỗi text không?</i>
+df.info()
+
+<i># 3. Thiếu bao nhiêu, ở đâu (mức độ thiếu là thuộc tính cấu trúc)</i>
+(df.isna().mean() * 100).sort_values(ascending=<b>False</b>).head(15)
+
+<i># 4. Trùng lặp</i>
+df.duplicated().sum()
+
+<i># 5. Cột hạng mục: bao nhiêu giá trị khác nhau (phát hiện cột ID)</i>
+df.select_dtypes("object").nunique().sort_values(ascending=<b>False</b>)
+
+<i># 6. Cột hằng số hoặc gần như hằng (vô dụng)</i>
+[c <b>for</b> c <b>in</b> df.columns <b>if</b> df[c].nunique() &lt;= 1]
+
+<i># 7. Phạm vi thời gian — quyết định có phải chia theo thời gian không</i>
+df["ts"].min(), df["ts"].max()
+
+<i># 8. Cân bằng nhãn tổng thể — cần để chọn cách chia (stratify) và chỉ số</i>
+df["Class"].value_counts(normalize=<b>True</b>)</div>
+  <p>Tám mục này trả lời được bốn câu hỏi ở cuối bài (một dòng là gì, nhãn tạo ra sao, có thứ tự thời gian không, có nhóm lặp không) — tức là đủ để <b>thiết kế cách chia tập</b>. Xong bước này mới sang bài <b>Chia tập</b>, rồi mới quay lại làm Thì 2.</p>
+
+  <h2>Thì 2 · Khám phá theo mô hình — chỉ trên tập train, sau khi đã chia</h2>
+  <div class="ds-code"><i># từ đây, mọi thứ chạy trên df_train — KHÔNG đụng test</i>
+<i># 9. Phân phối cột số</i>
+df_train.describe().T          <i># .T để đọc dọc, dễ nhìn hơn khi nhiều cột</i>
+
+<i># 10. Tương quan với nhãn — cột nào NGHI NGỜ CAO BẤT THƯỜNG (dò rò rỉ)</i>
+df_train.corr(numeric_only=<b>True</b>)["Class"].abs().sort_values(ascending=<b>False</b>).head(10)</div>
+  <p class="wb-help">Việc dò rò rỉ (mục 10) cũng làm trên train — một cột tương quan cao bất thường với nhãn gần như chắc là rò rỉ, và bạn phát hiện được điều đó mà không cần chạm vào test. <b>0,9 là mốc minh hoạ, không phải ngưỡng chuẩn:</b> thứ đáng chú ý là một cột <i>vượt hẳn</i> các cột còn lại, nên hãy nhìn cả bảng đã sắp xếp chứ đừng chỉ lọc theo một con số. Với nhãn hiếm, tương quan Pearson còn bị nén xuống, nên 0,3 đã có thể là đáng ngờ.</p>
+
+  <div data-viz="edapanel"></div>
+
+  <h2>Đọc kết quả: bốn tín hiệu báo động</h2>
+  <table>
+    <tr><th>Thấy gì</th><th>Nghĩa là</th><th>Làm gì</th></tr>
+    <tr><td>Một cột tương quan cao vượt hẳn phần còn lại <span class="wb-help">(mốc minh hoạ: &gt; 0,9 hay gặp; con số tuỳ dữ liệu)</span></td><td><b>Gần như chắc chắn là leakage</b></td><td>Điều tra ngay: cột này được ghi lúc nào?</td></tr>
+    <tr><td>Cột hạng mục có 50.000 giá trị khác nhau</td><td>Có thể là ID — one-hot sẽ nổ tung</td><td>Bỏ, hoặc dùng làm khoá để tổng hợp</td></tr>
+    <tr><td>Nhãn dương chiếm &lt; 1%</td><td>Bài toán lệch nặng</td><td>Accuracy vô dụng; chuẩn bị đọc bài <b>Dữ liệu lệch</b></td></tr>
+    <tr><td>Một cột thiếu đúng 100% ở nửa sau dữ liệu</td><td>Hệ thống đổi cách ghi giữa chừng</td><td>Xác nhận cột đó có tồn tại ở production không</td></tr>
+  </table>
+
+  <h2>Bốn biểu đồ đáng vẽ (Thì 2 — trên train, và không nên vẽ hơn)</h2>
+  <div class="ds-code"><b>import</b> matplotlib.pyplot <b>as</b> plt
+<b>import</b> seaborn <b>as</b> sns
+<i># tất cả trên df_train — đây là khám phá định hướng mô hình, không đụng test</i>
+
+<i># 1. Phân phối một cột số — dùng log để nhìn được đuôi dài</i>
+sns.histplot(np.log1p(df_train["Amount"]), bins=50)
+
+<i># 2. So phân phối giữa hai lớp — feature này có phân biệt được không?</i>
+sns.kdeplot(data=df_train, x="hour", hue="Class", common_norm=<b>False</b>)
+
+<i># 3. Tỉ lệ gian lận theo nhóm — biểu đồ hữu ích nhất cho bài fraud</i>
+rate = df_train.groupby("hour")["Class"].mean()
+rate.plot(kind="bar", title="Tỉ lệ gian lận theo giờ trong ngày")
+
+<i># 4. Ma trận tương quan — chỉ khi ít cột</i>
+sns.heatmap(df_train[cols].corr(), cmap="coolwarm", center=0)</div>
+  <p><b>Biểu đồ số 3 chính là chỗ bạn sẽ tự tìm ra động lực cho bài sin/cos.</b> Nếu tỉ lệ gian lận cao vào 1–4 giờ sáng và thấp ban ngày, bạn vừa tìm được một tín hiệu thật — và bước tiếp theo là làm sao cho mô hình dùng được nó mà không hiểu nhầm 23h với 0h là hai thế giới khác nhau.</p>
+
+  <h2>Bốn câu hỏi Thì 1 phải trả lời được trước khi chia tập</h2>
+  <ol>
+    <li><b>Một dòng là gì?</b> Một giao dịch? Một ngày của một khách? Nếu bạn không nói chắc được, mọi thứ sau đó sẽ sai.</li>
+    <li><b>Nhãn được tạo ra thế nào?</b> Ai gán nhãn "gian lận", dựa trên gì, trễ bao lâu? Nhãn trễ 60 ngày nghĩa là dữ liệu 60 ngày gần nhất có nhãn <b>không đáng tin</b>.</li>
+    <li><b>Dữ liệu có thứ tự thời gian không?</b> Nếu có, bạn <b>bắt buộc</b> chia tập theo thời gian.</li>
+    <li><b>Có nhóm lặp không?</b> Cùng một khách xuất hiện ở nhiều dòng? Nếu có, chia ngẫu nhiên sẽ để cùng một khách nằm ở cả train và test → rò rỉ.</li>
+  </ol>
+
+  <div class="wb-alert wb-alert--warning">
+    <span class="wb-alert__icon">!</span>
+    <div class="wb-alert__body"><p class="wb-alert__title">Bẫy EDA: đừng để Thì 2 chạm vào tập test</p>
+      <p class="wb-alert__msg">Kiểm cấu trúc (Thì 1) làm trên toàn bộ dữ liệu thì không sao — nó không dùng quan hệ feature–nhãn. Nhưng nếu bạn làm <b>khám phá theo mô hình</b> (Thì 2: xem phân phối, quan hệ feature–nhãn, chọn feature) trên cả tập test, chính <b>bộ não bạn</b> trở thành đường rò rỉ: bạn chọn feature dựa trên những gì đã thấy ở test. Đây là loại leakage không công cụ nào phát hiện được. Quy tắc: <b>Thì 2 chỉ trên train</b>, và chỉ mở tập test đúng một lần ở cuối.</p></div>
+  </div>
+
+  <p class="ds-more"><button class="ds-aside" data-aside="cmp-eda">So sánh công cụ nhìn dữ liệu</button></p>
+</template>
 <template data-node="d-split">
   <p>Chia tập là nơi bạn <b>tự tạo ra bài thi cho mô hình</b>. Chia sai thì mọi con số về sau đều vô nghĩa — mô hình đang thi một đề dễ hơn thực tế.</p>
-  <p class="wb-help">Đúng trình tự: bạn tới đây <b>sau</b> khi làm xong Thì 1 của EDA (kiểm cấu trúc trên toàn bộ dữ liệu — đủ để biết nên chia thế nào). Chốt cách chia ở bài này xong, bạn mới quay lại EDA Thì 2 (khám phá theo mô hình) và <b>chỉ trên tập train</b>.</p>
+  <p class="wb-help">Đúng trình tự: bạn tới đây <b>sau</b> khi làm xong Thì 1 của bài trước (kiểm cấu trúc trên toàn bộ dữ liệu — đủ để biết nên chia thế nào), và sau khi đã bỏ <b>trùng lặp chính xác</b>. Chốt cách chia ở bài này xong, bạn mới quay lại EDA Thì 2 (khám phá theo mô hình) và <b>chỉ trên tập train</b>.</p>
 
   <h2>Ba tập, ba vai trò khác nhau</h2>
   <table>
@@ -4688,100 +4783,21 @@ print(len(train), len(valid), len(test))</div>
   </div></div>
 </template>
 
-<template data-node="d-eda">
-  <p>EDA (Exploratory Data Analysis) = <b>nhìn dữ liệu bằng mắt trước khi giao cho máy</b>. Mục tiêu không phải là vẽ đẹp; mục tiêu là tìm ra những thứ sẽ phá hỏng mô hình nếu bạn không biết.</p>
-
-  <p><b>Điều quan trọng nhất của cả bài — EDA có hai thì, ngăn bởi bước chia tập:</b></p>
-  <ul>
-    <li><b>Thì 1 · Kiểm cấu trúc — làm trên <i>toàn bộ</i> dữ liệu, TRƯỚC khi chia.</b> Những thứ bạn <i>bắt buộc</i> phải biết để thiết kế được cách chia tập cho đúng: dữ liệu to cỡ nào, một dòng đại diện cho cái gì, có thứ tự thời gian không, nhãn đã có chưa, có trùng lặp hay lỗi nạp dữ liệu hiển nhiên không. Những việc này <b>không</b> dùng quan hệ feature–nhãn nên không tạo rò rỉ.</li>
-    <li><b>Thì 2 · Khám phá theo mô hình — chỉ làm trên tập <i>train</i>, SAU khi đã chốt cách chia.</b> Phân phối feature, quan hệ feature–nhãn, chọn feature, phân tích theo nhóm. Mọi quyết định ở đây có thể ảnh hưởng tới mô hình, nên nếu nhìn cả tập test thì chính <b>bộ não bạn</b> đã trở thành đường rò rỉ.</li>
-  </ul>
-  <p>Vì sao phải tách: cần hiểu <i>cấu trúc</i> đủ để chia tập cho đúng, nhưng mọi <i>khám phá có thể định hướng mô hình</i> phải nằm sau bước chia và chỉ trên train. Test để dành đúng một lần cho đánh giá cuối.</p>
-
-  <h2>Thì 1 · Kiểm cấu trúc — chạy trên toàn bộ dữ liệu, trước khi chia</h2>
-  <div class="ds-code"><i># 1. Kích thước và bộ nhớ</i>
-df.shape; df.memory_usage(deep=<b>True</b>).sum() / 1e6   <i># MB</i>
-
-<i># 2. Kiểu dữ liệu — cột ngày có đang là chuỗi text không?</i>
-df.info()
-
-<i># 3. Thiếu bao nhiêu, ở đâu (mức độ thiếu là thuộc tính cấu trúc)</i>
-(df.isna().mean() * 100).sort_values(ascending=<b>False</b>).head(15)
-
-<i># 4. Trùng lặp</i>
-df.duplicated().sum()
-
-<i># 5. Cột hạng mục: bao nhiêu giá trị khác nhau (phát hiện cột ID)</i>
-df.select_dtypes("object").nunique().sort_values(ascending=<b>False</b>)
-
-<i># 6. Cột hằng số hoặc gần như hằng (vô dụng)</i>
-[c <b>for</b> c <b>in</b> df.columns <b>if</b> df[c].nunique() &lt;= 1]
-
-<i># 7. Phạm vi thời gian — quyết định có phải chia theo thời gian không</i>
-df["ts"].min(), df["ts"].max()
-
-<i># 8. Cân bằng nhãn tổng thể — cần để chọn cách chia (stratify) và chỉ số</i>
-df["Class"].value_counts(normalize=<b>True</b>)</div>
-  <p>Tám mục này trả lời được bốn câu hỏi ở cuối bài (một dòng là gì, nhãn tạo ra sao, có thứ tự thời gian không, có nhóm lặp không) — tức là đủ để <b>thiết kế cách chia tập</b>. Xong bước này mới sang bài <b>Chia tập</b>, rồi mới quay lại làm Thì 2.</p>
-
-  <h2>Thì 2 · Khám phá theo mô hình — chỉ trên tập train, sau khi đã chia</h2>
-  <div class="ds-code"><i># từ đây, mọi thứ chạy trên df_train — KHÔNG đụng test</i>
-<i># 9. Phân phối cột số</i>
-df_train.describe().T          <i># .T để đọc dọc, dễ nhìn hơn khi nhiều cột</i>
-
-<i># 10. Tương quan với nhãn — cột nào NGHI NGỜ CAO BẤT THƯỜNG (dò rò rỉ)</i>
-df_train.corr(numeric_only=<b>True</b>)["Class"].abs().sort_values(ascending=<b>False</b>).head(10)</div>
-  <p class="wb-help">Việc dò rò rỉ (mục 10) cũng làm trên train — một cột tương quan &gt; 0,9 với nhãn gần như chắc là rò rỉ, và bạn phát hiện được điều đó mà không cần chạm vào test.</p>
-
-  <h2>Đọc kết quả: bốn tín hiệu báo động</h2>
-  <table>
-    <tr><th>Thấy gì</th><th>Nghĩa là</th><th>Làm gì</th></tr>
-    <tr><td>Một cột tương quan &gt; 0,9 với nhãn</td><td><b>Gần như chắc chắn là leakage</b></td><td>Điều tra ngay: cột này được ghi lúc nào?</td></tr>
-    <tr><td>Cột hạng mục có 50.000 giá trị khác nhau</td><td>Có thể là ID — one-hot sẽ nổ tung</td><td>Bỏ, hoặc dùng làm khoá để tổng hợp</td></tr>
-    <tr><td>Nhãn dương chiếm &lt; 1%</td><td>Bài toán lệch nặng</td><td>Accuracy vô dụng; chuẩn bị đọc bài <b>Dữ liệu lệch</b></td></tr>
-    <tr><td>Một cột thiếu đúng 100% ở nửa sau dữ liệu</td><td>Hệ thống đổi cách ghi giữa chừng</td><td>Xác nhận cột đó có tồn tại ở production không</td></tr>
-  </table>
-
-  <h2>Bốn biểu đồ đáng vẽ (Thì 2 — trên train, và không nên vẽ hơn)</h2>
-  <div class="ds-code"><b>import</b> matplotlib.pyplot <b>as</b> plt
-<b>import</b> seaborn <b>as</b> sns
-<i># tất cả trên df_train — đây là khám phá định hướng mô hình, không đụng test</i>
-
-<i># 1. Phân phối một cột số — dùng log để nhìn được đuôi dài</i>
-sns.histplot(np.log1p(df_train["Amount"]), bins=50)
-
-<i># 2. So phân phối giữa hai lớp — feature này có phân biệt được không?</i>
-sns.kdeplot(data=df_train, x="hour", hue="Class", common_norm=<b>False</b>)
-
-<i># 3. Tỉ lệ gian lận theo nhóm — biểu đồ hữu ích nhất cho bài fraud</i>
-rate = df_train.groupby("hour")["Class"].mean()
-rate.plot(kind="bar", title="Tỉ lệ gian lận theo giờ trong ngày")
-
-<i># 4. Ma trận tương quan — chỉ khi ít cột</i>
-sns.heatmap(df_train[cols].corr(), cmap="coolwarm", center=0)</div>
-  <p><b>Biểu đồ số 3 chính là chỗ bạn sẽ tự tìm ra động lực cho bài sin/cos.</b> Nếu tỉ lệ gian lận cao vào 1–4 giờ sáng và thấp ban ngày, bạn vừa tìm được một tín hiệu thật — và bước tiếp theo là làm sao cho mô hình dùng được nó mà không hiểu nhầm 23h với 0h là hai thế giới khác nhau.</p>
-
-  <h2>Bốn câu hỏi Thì 1 phải trả lời được trước khi chia tập</h2>
-  <ol>
-    <li><b>Một dòng là gì?</b> Một giao dịch? Một ngày của một khách? Nếu bạn không nói chắc được, mọi thứ sau đó sẽ sai.</li>
-    <li><b>Nhãn được tạo ra thế nào?</b> Ai gán nhãn "gian lận", dựa trên gì, trễ bao lâu? Nhãn trễ 60 ngày nghĩa là dữ liệu 60 ngày gần nhất có nhãn <b>không đáng tin</b>.</li>
-    <li><b>Dữ liệu có thứ tự thời gian không?</b> Nếu có, bạn <b>bắt buộc</b> chia tập theo thời gian.</li>
-    <li><b>Có nhóm lặp không?</b> Cùng một khách xuất hiện ở nhiều dòng? Nếu có, chia ngẫu nhiên sẽ để cùng một khách nằm ở cả train và test → rò rỉ.</li>
-  </ol>
-
-  <div class="wb-alert wb-alert--warning">
-    <span class="wb-alert__icon">!</span>
-    <div class="wb-alert__body"><p class="wb-alert__title">Bẫy EDA: đừng để Thì 2 chạm vào tập test</p>
-      <p class="wb-alert__msg">Kiểm cấu trúc (Thì 1) làm trên toàn bộ dữ liệu thì không sao — nó không dùng quan hệ feature–nhãn. Nhưng nếu bạn làm <b>khám phá theo mô hình</b> (Thì 2: xem phân phối, quan hệ feature–nhãn, chọn feature) trên cả tập test, chính <b>bộ não bạn</b> trở thành đường rò rỉ: bạn chọn feature dựa trên những gì đã thấy ở test. Đây là loại leakage không công cụ nào phát hiện được. Quy tắc: <b>Thì 2 chỉ trên train</b>, và chỉ mở tập test đúng một lần ở cuối.</p></div>
-  </div>
-
-  <p class="ds-more"><button class="ds-aside" data-aside="cmp-eda">So sánh công cụ nhìn dữ liệu</button></p>
-</template>
 
 <template data-node="d-clean">
-  <p>Ba vấn đề, ba cách xử lý. Nguyên tắc xuyên suốt: <b>mọi quyết định làm sạch đều phải nằm trong code, không phải trong Excel</b>, và phải học từ train rồi áp cho test — không bao giờ ngược lại.</p>
+  <p>Ba vấn đề, ba cách xử lý. Nguyên tắc xuyên suốt: <b>mọi quyết định làm sạch đều phải nằm trong code, không phải trong Excel</b>.</p>
 
-  <h2>1 · Giá trị thiếu</h2>
+  <p><b>Điều quan trọng nhất của cả bài — "làm sạch" là HAI việc khác nhau, và chúng chạy ở hai thời điểm khác nhau:</b></p>
+  <table>
+    <tr><th></th><th>A · Sửa tuyệt đối</th><th>B · Sửa học từ dữ liệu</th></tr>
+    <tr><td><b>Là gì</b></td><td>Đúng/sai không phụ thuộc tập nào: đổi kiểu, chuẩn hoá chuỗi, bỏ <b>trùng lặp chính xác</b>, bỏ giá trị bất khả thi (tiền âm, tuổi 200)</td><td>Cần một con số tính ra <i>từ</i> dữ liệu: trung vị để điền, phân vị để cắt ngưỡng, μ/σ để scale, danh sách hạng mục để one-hot</td></tr>
+    <tr><td><b>Chạy khi nào</b></td><td><b>TRƯỚC khi chia tập</b>, cùng lúc chốt schema</td><td><b>SAU khi chia</b>, <code>fit</code> chỉ trên train rồi <code>transform</code> cho valid/test</td></tr>
+    <tr><td><b>Ở đâu trong code</b></td><td>Script chuẩn hoá một lần, ghi ra <code>data/processed/</code></td><td>Bên trong <code>Pipeline</code>, chạy lại mỗi lần dự đoán</td></tr>
+    <tr><td><b>Làm sai thì</b></td><td>Dòng trùng rơi vào cả train lẫn test → mô hình đã <i>thấy</i> câu trả lời → điểm ảo</td><td>Thống kê của test lọt vào phép biến đổi → rò rỉ, điểm ảo</td></tr>
+  </table>
+  <p class="wb-help">Mục 3 dưới đây là loại A (nên đọc trước, và nó thuộc về bước trước khi chia); mục 1 và 2 là loại B.</p>
+
+  <h2>1 · Giá trị thiếu <span class="wb-help">— loại B, fit trên train</span></h2>
   <h3>Bước đầu tiên: hỏi vì sao thiếu</h3>
   <table>
     <tr><th>Kiểu thiếu</th><th>Ví dụ</th><th>Xử lý</th></tr>
@@ -4799,9 +4815,10 @@ num_pipe = Pipeline([
 ])</div>
   <p>Dùng <b>trung vị</b> chứ không phải trung bình cho dữ liệu tiền tệ — trung bình bị ngoại lai kéo lệch <button class="ds-math" data-math="expvar">(xem ví dụ số)</button>.</p>
   <p><code>add_indicator=<b>True</b></code> là cách gọn nhất để vừa điền vừa giữ lại thông tin "chỗ này vốn trống". Nếu muốn tách riêng, sklearn còn lớp <code>MissingIndicator</code>. (Bạn có thể gặp <code>AddMissingIndicator</code> trong bài viết trên mạng — đó là của thư viện <code>feature_engine</code>, không phải sklearn, nên đừng ngạc nhiên khi import không được.)</p>
-  <p><b>Khi nào xoá thay vì điền:</b> cột thiếu &gt; 60% và không mang thông tin → bỏ cột. Dòng thiếu <i>nhãn</i> → bỏ dòng (không bao giờ đoán nhãn).</p>
+  <p><b>Khi nào xoá thay vì điền:</b> cột thiếu rất nhiều <i>và</i> không mang thông tin → bỏ cột. Dòng thiếu <i>nhãn</i> → bỏ dòng (không bao giờ đoán nhãn).</p>
+  <p class="wb-help">Con số 60% hay được nhắc như ngưỡng, nhưng nó là <b>điểm khởi đầu minh hoạ</b>, không phải quy luật: một cột thiếu 80% vẫn rất đáng giữ nếu chỗ <i>có</i> giá trị lại là tín hiệu mạnh (cột thiếu mang thông tin ở hàng thứ hai bảng trên), còn một cột thiếu 20% mà chỉ toàn nhiễu thì bỏ cũng chẳng mất gì. Quyết định bằng cách thử cả hai và đo, đừng quyết bằng ngưỡng.</p>
 
-  <h2>2 · Ngoại lai</h2>
+  <h2>2 · Ngoại lai <span class="wb-help">— ngưỡng là loại B, fit trên train</span></h2>
   <p>Câu hỏi đầu tiên không phải "xoá thế nào" mà <b>"đây là lỗi nhập liệu hay là sự thật hiếm gặp?"</b></p>
   <ul>
     <li>Số tiền âm, tuổi 200, ngày 30/02 → lỗi. Sửa hoặc bỏ.</li>
@@ -4819,9 +4836,15 @@ df["amount_log"] = np.log1p(df["amount"])
 <b>from</b> sklearn.preprocessing <b>import</b> RobustScaler</div>
   <p><b>Quan trọng:</b> ngưỡng <code>lo</code>/<code>hi</code> phải tính từ <b>tập train</b>, rồi áp cho test. Tính trên toàn bộ dữ liệu là rò rỉ.</p>
 
-  <h2>3 · Trùng lặp và kiểu dữ liệu</h2>
-  <div class="ds-code"><i># trùng thật sự</i>
+  <h2>3 · Trùng lặp và kiểu dữ liệu <span class="wb-help">— loại A, chạy TRƯỚC khi chia</span></h2>
+  <div class="wb-alert wb-alert--warning">
+    <span class="wb-alert__icon">!</span>
+    <div class="wb-alert__body"><p class="wb-alert__title">Bỏ trùng sau khi chia là một đường rò rỉ</p>
+      <p class="wb-alert__msg">Nếu cùng một giao dịch xuất hiện hai lần và bạn chia tập trước rồi mới bỏ trùng, một bản có thể nằm ở train và bản kia ở test. Mô hình đã <b>học thuộc</b> đúng dòng nó sắp bị hỏi, và điểm test của bạn cao lên mà không có năng lực nào thật. Vì thế: <b>bỏ trùng chính xác cùng lúc với chốt schema, trước bước chia</b> — nó là phép sửa tuyệt đối, không cần biết tập nào, nên chạy sớm không mất gì. Chỉ những phép <i>gộp gần đúng</i> (fuzzy match, gộp theo khoảng thời gian có tham số) mới phải học từ train.</p></div>
+  </div>
+  <div class="ds-code"><i># trùng thật sự — chạy trên toàn bộ dữ liệu, TRƯỚC khi chia</i>
 df = df.drop_duplicates(subset=["tx_id"])
+<b>assert</b> df["tx_id"].is_unique, "còn trùng khoá — chia tập bây giờ là rò rỉ"
 
 <i># kiểu dữ liệu — làm sớm, tiết kiệm hàng giờ debug</i>
 df["ts"]      = pd.to_datetime(df["timestamp"], errors="coerce")
@@ -4851,7 +4874,7 @@ df["city"]    = df["city"].str.strip().str.lower()   <i># " Hà Nội " và "hà
 
   <h2>Ý 1 — Một dòng dữ liệu là một điểm trong không gian</h2>
   <p>Giao dịch của bạn có 3 cột: số tiền, giờ, số lần quẹt trong 1 giờ. Vậy nó là một điểm trong không gian 3 chiều, toạ độ <code>(250000, 23, 4)</code>. Với 30 cột thì là một điểm trong không gian 30 chiều — không hình dung nổi, nhưng <b>toán thì y hệt</b>.</p>
-  <p>Toàn bộ machine learning là hình học trên đám điểm này: mô hình tuyến tính vẽ một mặt phẳng chia đôi chúng, KNN tìm điểm gần nhất, k-means gom cụm, mạng nơ-ron bẻ cong không gian cho tới khi hai lớp tách rời.</p>
+  <p><b>Rất nhiều</b> thuật toán machine learning nhìn được qua lăng kính hình học trên đám điểm này: mô hình tuyến tính vẽ một mặt phẳng chia đôi chúng, KNN tìm điểm gần nhất, k-means gom cụm, mạng nơ-ron bẻ cong không gian cho tới khi hai lớp tách rời. Lăng kính đó cực kỳ hữu ích, và trang này dùng nó nhiều — nhưng nó là <i>một</i> cách nhìn, không phải bản chất duy nhất. Cây quyết định (mô hình chính của bạn) tự nhiên hơn khi nhìn như một chuỗi câu hỏi có/không; mô hình xác suất nhìn như phân phối; và cùng một thuật toán thường có nhiều cách nhìn cùng đúng. Khi một cách nhìn không giúp bạn hiểu, đổi cách nhìn khác chứ đừng ép.</p>
   <p><button class="ds-math" data-math="dot">Vector, tích vô hướng, khoảng cách — giải chi tiết</button></p>
 
   <h2>Ý 2 — “Gần nhau” phụ thuộc vào đơn vị đo, nên phải scale</h2>
@@ -4934,6 +4957,8 @@ ValueError: X has 28 features, but LogisticRegression is expecting 30 features a
   <p><button class="ds-math" data-math="expvar">Kỳ vọng, phương sai, độ lệch chuẩn — có ví dụ số</button></p>
   <p>Điều quan trọng nhất trong popup đó, nhắc lại ở đây vì bạn sẽ gặp mỗi ngày: với dữ liệu tiền tệ, <b>trung bình gần như luôn gây hiểu nhầm</b>. Một giao dịch 3 tỉ kéo trung bình lên trời trong khi 99% giao dịch quanh 200k. Luôn nhìn cả <code>median</code> và các phân vị — <code>df.describe()</code> đã in sẵn cho bạn.</p>
 
+  <div data-viz="meanmed"></div>
+
   <h2>Hình chuông và z-score</h2>
   <p><button class="ds-math" data-math="normal">Phân phối chuẩn, quy tắc 68–95–99,7, z-score</button></p>
   <p>Ứng dụng trực tiếp cho bài toán gian lận: thay vì hỏi “giao dịch này có to không”, hỏi <b>“giao dịch này to bất thường so với chính khách hàng đó không”</b>. Cột đó là z-score cá nhân hoá:</p>
@@ -4946,22 +4971,30 @@ df["z_amount"] = (df["amount"] - df["mean"]) / (df["std"] + 1e-6)   <i># +ε tr�
   <p>Số tiền giao dịch, thu nhập, lượt xem video, dân số thành phố — tất cả đều <b>lệch phải</b>: đa số nhỏ, vài giá trị khổng lồ. Đó không phải lỗi dữ liệu, đó là bản chất.</p>
   <p><button class="ds-math" data-math="logtransform">Vì sao lấy log của số tiền — bảng đối chiếu</button></p>
 
+  <h2>Tỉ lệ nền — con số phải biết trước mọi con số khác</h2>
+  <p><b>Tỉ lệ nền (base rate)</b> là xác suất một dòng bất kỳ mang nhãn dương, khi bạn chưa biết gì về nó. Với bộ thẻ tín dụng: 492 ca gian lận trên 284.807 giao dịch → <b>0,0017</b>, tức 0,17%.</p>
+  <p>Vì sao nó là con số quan trọng nhất trong cả chặng này: mọi xác suất mô hình trả ra đều là <b>xác suất có điều kiện</b> — "biết giao dịch này 3 tỉ, lúc 3 giờ sáng, thẻ mới mở, thì khả năng gian lận là bao nhiêu" — và một xác suất có điều kiện chỉ đọc được khi đặt cạnh tỉ lệ nền. Một ví dụ có số:</p>
+  <table>
+    <tr><th></th><th>Chưa biết gì</th><th>Biết "lúc 3h sáng, số tiền &gt; 10 triệu"</th></tr>
+    <tr><td>Xác suất gian lận</td><td>0,0017</td><td>0,04</td></tr>
+    <tr><td>Đọc là</td><td>tỉ lệ nền</td><td>gấp <b>~24 lần</b> tỉ lệ nền</td></tr>
+  </table>
+  <p>0,04 nghe rất nhỏ — nhưng nó là tín hiệu <i>mạnh</i>, vì mốc so sánh là 0,0017 chứ không phải 0,5. Đây chính là cái bẫy làm người mới vứt nhầm một mô hình tốt, và cũng là lý do bài <b>Đo lường</b> sẽ nói "PR-AUC 0,35 là kết quả tốt".</p>
+  <p class="wb-help">Cùng một cơ chế trả lời câu hỏi kinh điển: một xét nghiệm đúng 99% cho kết quả dương, với căn bệnh chỉ 1/10.000 người mắc, thì khả năng bạn thật sự mắc bệnh vẫn chỉ khoảng 1%. Tỉ lệ nền át độ chính xác của phép đo.</p>
+
   <h2>Đọc đầu ra của mô hình cho đúng</h2>
   <p>Mô hình trả về 0,73. Nghĩa là gì?</p>
   <ul>
-    <li><b>Nếu mô hình được hiệu chỉnh tốt (calibrated):</b> trong tất cả các giao dịch mà mô hình chấm 0,73, khoảng 73% thật sự là gian lận. Đây là cách hiểu đúng.</li>
-    <li><b>Thực tế thường không như vậy.</b> Cây/boosting hay bị lệch hiệu chỉnh, đặc biệt sau khi bạn cân bằng lại dữ liệu bằng SMOTE hoặc <code>class_weight</code>.</li>
-    <li>Kiểm tra bằng <b>calibration curve</b>; sửa bằng <code>CalibratedClassifierCV</code>. Nếu luận văn của bạn dùng con số xác suất để quy ra tiền, phần này <b>phải</b> có. <b>Lưu ý quan trọng:</b> <code>CalibratedClassifierCV</code> <i>học</i> từ dữ liệu, nên phải fit trên một tập hiệu chỉnh/validation riêng (hoặc bằng cross-validation) — <b>không bao giờ</b> fit trên tập test. Test chỉ mở đúng một lần ở cuối để <i>báo cáo</i> mức hiệu chỉnh sau khi mọi quyết định đã chốt.</li>
+    <li><b>Cách hiểu đúng, nếu mô hình được hiệu chỉnh tốt (calibrated):</b> trong tất cả giao dịch mà mô hình chấm 0,73, khoảng 73% thật sự là gian lận. Nghĩa là con số đó <i>là</i> một xác suất, dùng nhân với tiền được.</li>
+    <li><b>Thực tế thường không như vậy:</b> nhiều mô hình cho ra một con số 0–1 <i>xếp hạng</i> đúng (ca rủi ro hơn được điểm cao hơn) nhưng <i>giá trị</i> thì lệch. Với việc chọn ngưỡng thì xếp hạng đúng là đủ; với việc quy ra tiền thì không.</li>
+    <li><b>Chưa cần xử lý ở đây.</b> Muốn kiểm và sửa độ hiệu chỉnh thì phải có một mô hình đã train và một tập validation — bạn sẽ có cả hai ở chặng Machine learning. Cách làm nằm ở bài <a href="#/ml-metrics">Đo lường: PR-AUC, ngưỡng, và tiền</a>.</li>
   </ul>
-  <div class="ds-code"><b>from</b> sklearn.calibration <b>import</b> calibration_curve
-<i># kiểm tra trên tập validation trong lúc phát triển, KHÔNG dùng test</i>
-prob_true, prob_pred = calibration_curve(y_valid, y_prob_valid, n_bins=10)
-<i># vẽ prob_pred (trục x) vs prob_true (trục y); đường lý tưởng là đường chéo 45°</i></div>
 
   <h2>Điều thường bị hiểu ngược</h2>
   <div class="wb-alert wb-alert--warning wb-alert--plain"><div class="wb-alert__body">
     <p class="wb-alert__title">“Dữ liệu của tôi không theo phân phối chuẩn, có train được không?”</p>
-    <p class="wb-alert__msg">Được, hoàn toàn bình thường. Cây, rừng, boosting <b>không giả định phân phối nào cả</b>. Giả định chuẩn chỉ cần cho một số kiểm định thống kê và cho khoảng tin cậy của hồi quy tuyến tính — tức là ở phần <i>luận văn</i>, không phải phần <i>mô hình</i>. Đây là chỗ nhiều người mới tự làm khó mình.</p>
+    <p class="wb-alert__msg">Được, hoàn toàn bình thường. Cây, rừng, boosting <b>không giả định feature theo một họ phân phối tham số nào</b> — không cần chuẩn, không cần đối xứng. Giả định chuẩn chỉ cần cho một số kiểm định thống kê và cho khoảng tin cậy của hồi quy tuyến tính — tức là ở phần <i>luận văn</i>, không phải phần <i>mô hình</i>. Đây là chỗ nhiều người mới tự làm khó mình.<br>
+    <b>Nhưng "không giả định phân phối" không phải là "không giả định gì".</b> Cây vẫn giả định: dữ liệu train và dữ liệu lúc chạy thật đến từ cùng một nguồn (i.i.d. — nếu phân phối trôi thì mô hình sai mà không báo), nhãn đủ đúng để học được, và mẫu đủ đại diện cho vùng bạn sẽ dự đoán. Đó mới là những giả định làm hỏng mô hình trong thực tế, và trang này quay lại chúng ở bài <a href="#/pr-monitor">Giám sát: drift</a>.</p>
   </div></div>
 </template>
 
@@ -5019,7 +5052,13 @@ nb = GaussianNB().fit(X_train, y_train)</div>
     <li><b>Lúc dự đoán thật</b> — trên <b>một</b> dòng, bên trong API, mỗi lần có giao dịch.</li>
   </ol>
   <p>Và đây là điều then chốt: <b>hai lần đó phải cho ra kết quả giống hệt nhau.</b> Nếu lúc train bạn scale bằng $\mu = 250.000$ mà lúc chạy thật API tính lại $\mu$ từ dữ liệu hôm nay ra $310.000$, mô hình nhận đầu vào sai và dự đoán sai — âm thầm, không báo lỗi. Lỗi này có tên: <b>training/serving skew</b>.</p>
-  <p>Cách duy nhất chắc chắn tránh được: gói toàn bộ feature engineering vào một <code>Pipeline</code> của sklearn, lưu nó chung với mô hình vào một file, và API nạp đúng file đó. Bài <b>★ Pipeline + ColumnTransformer</b> làm việc này.</p>
+  <p>Cách chống hiệu quả nhất cho phần bạn kiểm soát được: gói toàn bộ feature engineering vào một <code>Pipeline</code> của sklearn, lưu nó chung với mô hình vào một file, và API nạp đúng file đó. Bài <b>★ Pipeline + ColumnTransformer</b> làm việc này.</p>
+  <div class="wb-alert wb-alert--warning wb-alert--plain"><div class="wb-alert__body">
+    <p class="wb-alert__title">Pipeline chặn được một nửa của lệch train/serve, không phải cả hai</p>
+    <p class="wb-alert__msg"><b>Chặn được:</b> mọi phép biến đổi <i>đã học tham số</i> (μ/σ của scaler, danh sách hạng mục của encoder, trung vị để điền) — vì tham số được lưu cùng mô hình, nên lúc serve không ai tính lại được nữa. Đó là loại A và B trong bảng ngay dưới.<br>
+    <b>KHÔNG chặn được:</b> loại C — feature cần <b>lịch sử</b>. <code>n_tx_1h</code> lúc train tính bằng pandas trên cả file; lúc serve tính bằng Redis trên trạng thái hiện tại. Hai đường code khác nhau, hai định nghĩa "1 giờ qua" có thể khác nhau, và dữ liệu đến trễ thì con số cũng khác. Pipeline không nhìn thấy chỗ đó.<br>
+    Ba thứ mới chặn được loại C, và mỗi thứ đắt dần: <b>một hàm dùng chung</b> cho cả hai đường (rẻ nhất, làm được ngay); <b>point-in-time join</b> khi tạo dữ liệu train — chỉ dùng thông tin đã có <i>tại thời điểm</i> giao dịch, đúng như lúc serve; và <b>feature store</b> — một kho tính feature một lần rồi phục vụ cả train lẫn serve (đây là lý do feature store tồn tại, xem bài <a href="#/f-store">Feature store</a>). Trang này dùng hai cách đầu; cách thứ ba là thứ để biết tên chứ chưa cần dựng cho luận văn.</p>
+  </div></div>
 
   <h2>Ba loại thao tác — và chỗ để chúng</h2>
   <table>
@@ -5031,7 +5070,7 @@ nb = GaussianNB().fit(X_train, y_train)</div>
   <p>Loại C là loại khó nhất về mặt kỹ thuật và cũng là loại cho tín hiệu mạnh nhất trong bài toán gian lận. Bài <b>Biến theo thời gian</b> nói riêng về nó.</p>
 
   <h2>Một buổi làm feature engineering thật diễn ra thế nào</h2>
-  <p>Để bạn hình dung nhịp làm việc, không phải lý thuyết:</p>
+  <p>Để bạn hình dung nhịp làm việc, không phải lý thuyết. <span class="wb-help">(<b>PR-AUC</b> trong đoạn dưới là chỉ số chấm điểm mô hình mà trang này dùng làm chỉ số chính cho dữ liệu lệch nhãn — <b>cao hơn là tốt hơn</b>, và thang của nó không phải 0–1 quen thuộc: xem bài <a href="#/ml-metrics">Đo lường</a>. Ở đây bạn chỉ cần biết nó là con số bạn theo dõi tăng hay giảm.)</span></p>
   <div class="ds-code">1. Mở notebook, load dữ liệu đã sạch, load pipeline hiện tại
 2. Chạy baseline → ghi lại: PR-AUC = 0,367
 3. Nghĩ MỘT giả thuyết bằng lời:
@@ -5059,12 +5098,15 @@ nb = GaussianNB().fit(X_train, y_train)</div>
   <div class="ds-code"><b>from</b> sklearn.preprocessing <b>import</b> StandardScaler, RobustScaler, MinMaxScaler
 <i># trong Pipeline, không bao giờ fit_transform trên toàn bộ dữ liệu</i></div>
   <p><button class="ds-math" data-math="standardize">Chọn Standard / MinMax / Robust — bảng so sánh</button></p>
+  <p>Câu hỏi đúng không phải "mô hình này có bắt buộc scale không" mà <b>"nếu không scale thì hỏng ở đâu"</b> — vì câu trả lời rơi vào <i>ba</i> mức, không phải hai:</p>
   <table>
-    <tr><th>Mô hình</th><th>Cần scale?</th></tr>
-    <tr><td>Hồi quy tuyến tính/logistic, SVM, KNN, k-means, mạng nơ-ron</td><td><b>Bắt buộc</b></td></tr>
-    <tr><td>Cây, Random Forest, XGBoost, LightGBM</td><td><b>Không cần</b> — chúng chia theo thứ hạng, không đo khoảng cách</td></tr>
+    <tr><th>Mức</th><th>Mô hình</th><th>Không scale thì sao</th></tr>
+    <tr><td><b>1 · Đổi hẳn kết quả</b></td><td>KNN, k-means, SVM có kernel RBF, PCA, phát hiện bất thường theo khoảng cách</td><td>Thuật toán <i>là</i> phép đo khoảng cách. Cột đơn vị lớn nuốt hết cột đơn vị nhỏ, nên "hàng xóm gần nhất" gần như chỉ do cột số tiền quyết định. Đây là chỗ duy nhất đáng gọi là <b>bắt buộc</b>.</td></tr>
+    <tr><td><b>2 · Không đổi dự đoán, nhưng đổi thứ khác</b></td><td>Hồi quy tuyến tính / logistic, mạng nơ-ron</td><td>Về mặt <i>toán</i>, không regularization thì scale chỉ đổi hệ số chứ không đổi dự đoán. Nhưng ba thứ vẫn hỏng: <b>(a) regularization</b> — L1/L2 phạt theo độ lớn hệ số, nên không scale là phạt nặng cột có đơn vị nhỏ một cách tuỳ tiện; <b>(b) tối ưu</b> — gradient descent hội tụ chậm hoặc không hội tụ khi các trục lệch thang, và mạng nơ-ron thì gần như luôn cần; <b>(c) diễn giải</b> — không cùng thang thì so độ lớn hệ số là vô nghĩa.</td></tr>
+    <tr><td><b>3 · Không cần</b></td><td>Cây, Random Forest, XGBoost, LightGBM</td><td>Chúng cắt theo <i>thứ hạng</i> ("amount &gt; 500k?"), và mọi phép biến đổi đơn điệu giữ nguyên thứ hạng. Scale ở đây chỉ tốn một bước.</td></tr>
   </table>
-  <p>Vì bạn sẽ dùng LightGBM làm mô hình chính, phần scale chủ yếu phục vụ <b>baseline logistic regression</b> — mà baseline thì luận văn nào cũng cần.</p>
+  <p class="wb-help">Nói cách khác: mức 1 là "sai kết quả", mức 2 là "vẫn chạy nhưng bạn mất regularization đúng, tốc độ hội tụ và khả năng đọc hệ số". Trong sklearn, <code>LogisticRegression</code> mặc định <b>có</b> L2, nên trên thực tế bạn vẫn nên scale — chỉ là vì lý do (a), không phải vì "thuật toán đòi".</p>
+  <p>Vì bạn sẽ dùng LightGBM làm mô hình chính, phần scale chủ yếu phục vụ <b>baseline logistic regression</b> — mà baseline thì luận văn nào cũng cần. Đặt <code>StandardScaler</code> trong nhánh số của <code>ColumnTransformer</code> và quên nó đi là xong.</p>
 
   <h2>2 · Đổi thang đo (log) cho dữ liệu lệch</h2>
   <p><b>Vấn đề:</b> 90% giao dịch dưới 500k, vài giao dịch 500 triệu. Mô hình tuyến tính bị vài điểm cực trị kéo lệch toàn bộ.</p>
@@ -5271,6 +5313,7 @@ score = pipe.predict_proba(pd.DataFrame([tx]))[0, 1]   <i># sin/cos tự chạy 
 
   <p class="ds-more"><button class="ds-aside" data-aside="x-cyclic-more">Còn cột nào có tính chu kỳ nữa</button></p>
   <h2>Cách viết vào luận văn</h2>
+  <p class="wb-help"><b>PR-AUC</b> dưới đây là chỉ số chính của trang này cho dữ liệu lệch nhãn (cao hơn = tốt hơn); bài <a href="#/ml-metrics">Đo lường</a> định nghĩa đầy đủ và chỉ cách tính. Ở đây chỉ cần đọc nó như “điểm số của mô hình”.</p>
   <div class="ds-code">"Các đặc trưng thời gian mang bản chất tuần hoàn: 23:00 và 00:00 chỉ
 cách nhau một giờ nhưng biểu diễn số nguyên đặt chúng ở hai cực của
 miền giá trị. Chúng tôi mã hoá mỗi thành phần chu kỳ v với chu kỳ T
@@ -5497,7 +5540,7 @@ score = pipe.predict_proba(pd.DataFrame([tx_dict]))[0, 1]</div>
   <table>
     <tr><th>Lợi ích</th><th>Cụ thể</th></tr>
     <tr><td><b>Chặn rò rỉ tiền xử lý trong CV</b></td><td><code>cross_val_score(pipe, X, y)</code> tự động fit lại scaler/encoder <i>bên trong từng fold</i>. Làm tay thì gần như chắc chắn sai.</td></tr>
-    <tr><td><b>Không lệch train/serve</b></td><td>Một file, một logic.</td></tr>
+    <tr><td><b>Không lệch train/serve — ở phần tiền xử lý</b></td><td>Một file, một logic, tham số đã học được lưu kèm. <b>Giới hạn:</b> chỉ đúng cho các bước nằm <i>trong</i> Pipeline. Feature cần lịch sử (<code>n_tx_1h</code>, <code>hist_mean</code>) vẫn được tính ở ngoài, bằng hai đường code khác nhau lúc train và lúc serve — đó là nguồn lệch còn lại, và bài <a href="#/pr-serve">Đóng gói</a> xử lý riêng.</td></tr>
     <tr><td><b>Tune xuyên tầng</b></td><td><code>{"model__num_leaves": [15,31,63], "prep__num__impute__strategy": ["median","mean"]}</code></td></tr>
     <tr><td><b>Tái lập được</b></td><td>Người phản biện tải repo về, <code>joblib.load</code>, chạy ra đúng số của bạn.</td></tr>
   </table>
@@ -5615,7 +5658,7 @@ RFECV(estimator=LGBMClassifier(), step=5, cv=5, scoring="average_precision")</di
     <li><b>Logistic regression</b> với feature cơ bản. Nhanh, và cho bạn biết bài toán có tuyến tính không.</li>
     <li><b>LightGBM mặc định.</b> Không tune gì. Con số này thường đã rất gần con số cuối cùng của bạn.</li>
     <li><b>Cải tiến feature</b> — đây là chỗ có nhiều điểm nhất để lấy.</li>
-    <li><b>Tune siêu tham số</b> — thường chỉ cho thêm 1–3%.</li>
+    <li><b>Tune siêu tham số</b> — thường cho thêm ít nhất; trên dữ liệu bảng hay gặp cỡ 1–3%, nhưng đó là <i>kinh nghiệm phổ biến</i> chứ không phải con số bảo đảm.</li>
     <li>Ensemble, stacking — thường không đáng công cho luận văn thạc sĩ.</li>
   </ol>
   <p>Rất nhiều người làm ngược: bắt đầu từ bước 5 hoặc 6, và bỏ qua bước 4 nơi phần lớn giá trị nằm.</p>
@@ -5664,17 +5707,22 @@ pd.DataFrame({"feature": names, "coef": coefs, "odds_ratio": odds}) \
   <p>Cách viết đúng: <i>"Hệ số của <code>is_rapid</code> là 1,42 (tỉ số odds 4,14), nghĩa là khi giao dịch xảy ra dưới 60 giây sau giao dịch trước, <b>odds gian lận tăng gấp 4,1 lần</b>, với các yếu tố khác không đổi."</i></p>
   <p>Cách viết <b>sai</b> mà rất nhiều luận văn mắc: "xác suất tăng 1,42". Hệ số tác động lên log-odds, không phải xác suất — và quan hệ giữa hai thứ đó không tuyến tính.</p>
 
-  <h2>Hai điều kiện để hệ số có nghĩa</h2>
+  <h2>Điều kiện để so <i>độ lớn</i> hệ số — nhiều hơn bạn nghĩ</h2>
+  <p>Sắp xếp hệ số theo trị tuyệt đối rồi gọi cái đầu bảng là "quan trọng nhất" là thao tác gần như luận văn nào cũng làm, và nó chỉ hợp lệ khi <b>cả năm</b> điều dưới đây đúng. Thiếu một cái là bảng xếp hạng đổi.</p>
   <ul>
-    <li><b>Feature phải được scale.</b> Nếu không, hệ số của cột số tiền (đơn vị đồng) và cột số lần quẹt không so sánh được với nhau.</li>
-    <li><b>Không có đa cộng tuyến nặng.</b> Nếu hai cột tương quan 0,98, mô hình có thể gán +50 cho cột này và −49 cho cột kia; tổng thì đúng nhưng từng hệ số vô nghĩa. Kiểm tra bằng VIF hoặc chỉ đơn giản là bỏ một trong hai.</li>
+    <li><b>Feature đã được scale.</b> Nếu không, hệ số của cột số tiền (đơn vị đồng) và cột số lần quẹt không cùng thang nên không so được với nhau.</li>
+    <li><b>Không có đa cộng tuyến nặng.</b> Nếu hai cột tương quan 0,98, mô hình có thể gán +50 cho cột này và −49 cho cột kia; tổng thì đúng nhưng từng hệ số không đọc được. Kiểm tra bằng VIF hoặc chỉ đơn giản là bỏ một trong hai.</li>
+    <li><b>Cách mã hoá đã cố định.</b> Với cột hạng mục, hệ số luôn là "so với hạng mục tham chiếu". Đổi hạng mục tham chiếu là mọi hệ số của cột đó đổi — nên phải nói rõ tham chiếu là gì.</li>
+    <li><b>Không có tương tác bị bỏ sót, và không có biến gây nhiễu bị bỏ ngoài.</b> Hệ số là "tác động khi <i>các cột có trong mô hình</i> không đổi" — thêm hoặc bớt một cột là hệ số các cột còn lại đổi theo. Đây là chỗ câu "với các yếu tố khác không đổi" hay bị đọc rộng hơn nó cho phép.</li>
+    <li><b>Regularization đã được tính đến.</b> L2 kéo mọi hệ số về 0 và kéo mạnh hơn ở cột tương quan cao; L1 còn đẩy hẳn một số cột về 0 và chọn <i>một</i> trong nhóm cột tương quan gần như tuỳ ý. Mức phạt <code>C</code> đổi là bảng xếp hạng đổi.</li>
   </ul>
+  <p class="wb-help">Cách nói an toàn và vẫn đủ mạnh cho luận văn: <i>"trong mô hình logistic đã scale và với tập cột này, <code>is_rapid</code> có hệ số lớn nhất"</i> — gắn kết luận vào <b>mô hình cụ thể</b>, không phát biểu về bài toán nói chung. Muốn nói về tầm quan trọng bền hơn thì so nhiều cách đo (hệ số, permutation importance, SHAP) và báo cáo chỗ chúng bất đồng.</p>
 
   <h2>Vì sao vẫn giữ nó trong luận văn dù LightGBM tốt hơn</h2>
   <ol>
     <li><b>Nó là mốc so sánh.</b> "LightGBM đạt PR-AUC 0,412 so với 0,281 của hồi quy logistic" là một câu có thông tin. "LightGBM đạt 0,412" thì không. <i>(PR-AUC: chỉ số chính cho dữ liệu lệch nhãn, cao hơn là tốt hơn — bài kế tiếp định nghĩa đầy đủ và chỉ cách tính nó từ <code>y_prob_valid</code> bạn vừa lưu.)</i></li>
     <li><b>Nó cho biết bài toán phi tuyến tới mức nào.</b> Khoảng cách càng lớn, tương tác giữa các feature càng quan trọng — và đó là một phát hiện đáng viết.</li>
-    <li><b>Nó giải thích được.</b> Khi cần trả lời "vì sao chặn giao dịch này", một mô hình tuyến tính chạy song song rất có giá trị, kể cả khi không phải mô hình quyết định.</li>
+    <li><b>Nó giải thích được — nhưng giải thích chính nó, không giải thích LightGBM.</b> Một mô hình tuyến tính chạy song song rất có giá trị để mô tả <i>xu hướng chung</i> của dữ liệu bằng ngôn ngữ hội đồng hiểu được. Nhưng nếu LightGBM mới là mô hình ra quyết định, thì câu "vì sao <b>giao dịch này</b> bị chặn" phải được trả lời bằng chính LightGBM — bằng SHAP ở bài <a href="#/pr-eval">Đánh giá &amp; bốn test</a>. Dùng lời giải thích của mô hình A cho quyết định của mô hình B là một lỗi trung thực, và nó đủ nghiêm trọng để bị hỏi lại ở buổi bảo vệ.</li>
   </ol>
 </template>
 
@@ -5736,6 +5784,28 @@ print(f"ngưỡng tối ưu {best_t:.3f} — thiệt hại {min(costs)/1e6:.0f} 
   <h3>Cách 3 · Ràng buộc theo năng lực vận hành</h3>
   <p>Thực tế nhất: đội xác minh xử lý được 200 ca/ngày. Vậy ngưỡng phải là mức cho ra đúng ~200 cảnh báo/ngày, và chỉ số là <b>precision@200</b>. Cách đóng khung này rất ít luận văn Việt Nam dùng, và nó dễ bảo vệ vì nó đúng cách hệ thống thật hoạt động.</p>
 
+  <h2>Hiệu chỉnh xác suất — bắt buộc nếu bạn quy ra tiền</h2>
+  <p>Cách 2 ở trên nhân xác suất với chi phí. Phép nhân đó chỉ hợp lệ nếu con số 0–1 <b>là một xác suất thật</b>: trong tất cả ca được chấm 0,7, khoảng 70% đúng là gian lận. Bài <a href="#/m-prob">Xác suất</a> gọi đó là <i>hiệu chỉnh tốt</i> (calibrated) — giờ bạn đã có mô hình và tập validation nên kiểm được.</p>
+  <p>Hai điều cần phân biệt, vì chúng độc lập nhau:</p>
+  <table>
+    <tr><th></th><th>Xếp hạng (ranking)</th><th>Hiệu chỉnh (calibration)</th></tr>
+    <tr><td>Hỏi gì</td><td>Ca rủi ro hơn có điểm cao hơn không?</td><td>Điểm 0,7 có nghĩa là 70% không?</td></tr>
+    <tr><td>Đo bằng</td><td>PR-AUC, ROC-AUC</td><td>Calibration curve, Brier score</td></tr>
+    <tr><td>Cần cho</td><td>Chọn ngưỡng, xếp hàng đợi xác minh</td><td><b>Quy ra tiền</b>, cộng rủi ro nhiều giao dịch</td></tr>
+  </table>
+  <p>Một mô hình có PR-AUC rất tốt vẫn có thể hiệu chỉnh rất tệ — và ngược lại. Boosting hay bị lệch hiệu chỉnh; việc cân bằng lại dữ liệu (SMOTE, <code>class_weight</code>) làm nó lệch thêm, vì bạn đã cố ý đổi tỉ lệ nền mà mô hình nhìn thấy.</p>
+  <div class="ds-code"><b>from</b> sklearn.calibration <b>import</b> calibration_curve, CalibratedClassifierCV
+<i># 1. KIỂM — trên validation, không bao giờ trên test</i>
+prob_true, prob_pred = calibration_curve(y_valid, y_prob_valid, n_bins=10)
+<i># vẽ prob_pred (trục x) vs prob_true (trục y); lý tưởng là đường chéo 45°</i>
+
+<i># 2. SỬA — CalibratedClassifierCV HỌC từ dữ liệu, nên nó cũng cần tập riêng</i>
+cal = CalibratedClassifierCV(model, method="isotonic", cv=5)   <i># cv=5: cross-fit trên train</i>
+cal.fit(X_train, y_train)</div>
+  <div data-viz="calib"></div>
+  <p><b>Bẫy chết người:</b> <code>CalibratedClassifierCV</code> là một bước <i>học</i>, nên fit nó trên tập test là rò rỉ y hệt như chọn ngưỡng trên test. Fit trên train bằng cross-validation (như trên) hoặc trên một tập hiệu chỉnh riêng. Test chỉ mở đúng một lần ở cuối để <i>báo cáo</i> mức hiệu chỉnh sau khi mọi quyết định đã chốt.</p>
+  <p class="wb-help"><code>method="isotonic"</code> linh hoạt hơn nhưng cần vài nghìn mẫu dương mới ổn định; ít dữ liệu thì <code>"sigmoid"</code> (Platt) an toàn hơn. Với bài lệch nặng, số <i>mẫu dương</i> mới là thứ quyết định, không phải tổng số dòng.</p>
+
   <h2>Bảng kết quả nên có trong luận văn</h2>
   <p>Đây là <b>đích</b>, không phải việc của hôm nay. Hôm nay bạn điền được đúng một dòng — dòng logistic. Ba dòng còn lại điền dần: <b>LightGBM</b> ở bài <a href="#/ml-trees">Cây → Boosting</a>, dòng <b>đề xuất</b> sau khi thêm feature thời gian, và dòng <b>luật thủ công</b> ở bài <a href="#/pr-eval">Đánh giá &amp; bốn test</a>. Biết trước hình dạng bảng là để mỗi lần chạy xong bạn ghi ngay một dòng, thay vì tới lúc viết mới đi tìm lại số.</p>
 
@@ -5744,7 +5814,7 @@ print(f"ngưỡng tối ưu {best_t:.3f} — thiệt hại {min(costs)/1e6:.0f} 
     <p class="wb-alert__msg">Hiểu nhầm sắp xảy ra: bạn nhớ 0,412, rồi tới chặng 6 chạy thật ra <b>0,0485</b>, và kết luận mình làm hỏng ở đâu đó. <b>Không hỏng.</b> Trang này có <b>hai hệ số liệu</b> và luôn nói rõ đang dùng hệ nào:<br>
     · <b>Số minh hoạ</b> — bảng trên và mọi con số 0,281 / 0,367 / 0,412 ở các bài lý thuyết. Chúng ở tầm một bộ dữ liệu thẻ <i>thật</i> (IEEE-CIS), dùng để bạn thấy hình dạng bảng và tập đọc chênh lệch.<br>
     · <b>Số chạy thật</b> — bộ mô phỏng trong repo, ở chặng 6. PR-AUC quanh <b>0,03–0,05</b>.<br>
-    Lý do nằm ngay đoạn trên: <b>PR-AUC không có thang tuyệt đối.</b> Nó chỉ đọc được khi kèm <b>mốc dưới</b> (tỉ lệ dương) và <b>mốc trên</b> (trần của bài toán). Bộ mô phỏng có trần lý thuyết chỉ khoảng 0,05–0,07 — đo ở bài <a href="#/pr-code">Code end-to-end</a> — nên 0,0485 là <i>sát trần</i>, còn 0,412 trên bộ đó là bất khả. Hai con số không mâu thuẫn; chúng ở hai bài toán khác nhau.<br>
+    Lý do nằm ngay đoạn trên: <b>PR-AUC không có thang tuyệt đối.</b> Nó chỉ đọc được khi kèm <b>mốc dưới</b> (tỉ lệ dương) và, nếu đo được, một <b>mốc trên</b>. Trần toán học của AP luôn là 1 và vô dụng; cái dùng được là <b>mốc oracle đo trên chính bộ dữ liệu đó</b> — với bộ mô phỏng của trang này là khoảng 0,05–0,07, cách đo nằm ở bài <a href="#/pr-code">Code end-to-end</a> — nên 0,0485 là <i>sát mốc đó</i>, còn 0,412 trên bộ đó là bất khả. Hai con số không mâu thuẫn; chúng ở hai bài toán khác nhau.<br>
     Câu rút ra, dùng được cả trong luận văn: <b>một con số PR-AUC trần trụi không nói lên điều gì</b> — luôn báo cáo kèm tỉ lệ nền, và nếu biết thì kèm cả trần.</p>
   </div></div>
   <table>
@@ -5933,11 +6003,19 @@ print("số cây thực dùng:", model.best_iteration_)</div>
 </template>
 
 <template data-node="ml-cv">
-  <p>Một lần chia train/test cho bạn <b>một</b> con số, và bạn không biết con số đó dao động bao nhiêu. Cross-validation cho bạn nhiều con số, nên bạn biết cả mức trung bình lẫn độ ổn định.</p>
+  <p>Một lần chia train/test cho bạn <b>một</b> con số, và bạn không biết con số đó dao động bao nhiêu. Cross-validation cho bạn nhiều con số, nên bạn thấy được cả mức trung bình lẫn mức dao động giữa các lần chia.</p>
 
   <h2>k-fold, bằng lời</h2>
   <p>Chia dữ liệu thành 5 phần bằng nhau. Lần 1: train trên phần 2-3-4-5, kiểm tra trên phần 1. Lần 2: train trên 1-3-4-5, kiểm tra trên 2. Lặp 5 lần. Mỗi dòng dữ liệu được dùng để kiểm tra đúng một lần.</p>
   <p>Kết quả: 5 điểm số. Báo cáo <b>trung bình ± độ lệch chuẩn</b>. Độ lệch chuẩn chính là thông tin mà một lần chia không cho bạn.</p>
+  <div class="wb-alert wb-alert--warning wb-alert--plain"><div class="wb-alert__body">
+    <p class="wb-alert__title">Đọc độ lệch chuẩn giữa các fold cho đúng phạm vi</p>
+    <p class="wb-alert__msg">Nó là một <b>thống kê mô tả</b>: năm con số đó tản ra bao nhiêu. Ba thứ nó <i>không</i> phải:<br>
+    · <b>Không phải khoảng tin cậy.</b> Năm fold dùng chung phần lớn dữ liệu train nên chúng không độc lập; viết "trung bình ± 2 độ lệch chuẩn" như một KTC 95% là sai. Muốn có khoảng tin cậy thì dùng <b>bootstrap</b> — bốc lại dữ liệu có hoàn lại hàng nghìn lần để xem con số dao động bao nhiêu — ở bài <a href="#/m-infer">Thống kê suy diễn</a>.<br>
+    · <b>Không phải &quot;độ ổn định của mô hình&quot;.</b> Nó trộn ba nguồn dao động: mô hình nhạy cảm, các fold khó dễ khác nhau, và bản thân chỉ số nhiễu khi lớp dương quá hiếm.<br>
+    · <b>Với fold theo thời gian thì càng phải cẩn thận:</b> mỗi fold có kích thước train khác nhau và rơi vào giai đoạn khác nhau, nên chênh lệch giữa chúng có thể chỉ phản ánh &quot;tháng 12 khó hơn tháng 6&quot;. Đọc như tín hiệu định tính, đừng đưa vào phép tính.<br>
+    Dùng đúng thì nó trả lời một câu rất giá trị: <b>&quot;cải tiến của tôi có lớn hơn mức dao động tự nhiên không?&quot;</b> Nếu không, bạn chưa có gì để báo cáo.</p>
+  </div></div>
 
   <h2>Bốn kiểu fold, và cái hỏng khi chọn sai</h2>
   <div data-viz="cvfolds"></div>
@@ -5990,6 +6068,14 @@ scores = cross_val_score(inner, X, y, cv=5, scoring="average_precision")   <i># 
   <p><button class="ds-math" data-math="ci">Bootstrap — 4 bước + code chạy được</button></p>
   <p>Vì hai mô hình được chấm trên <b>cùng một tập</b>, đừng dựng hai khoảng riêng rồi so bằng mắt: hai khoảng chồng lấn vẫn có thể tương ứng với một khác biệt thật. Thay vào đó, mỗi vòng bootstrap lấy lại <b>cùng</b> chỉ số hàng cho cả hai mô hình, tính $\Delta = \text{metric}_{\text{mới}} - \text{metric}_{\text{baseline}}$, rồi lấy khoảng tin cậy của chính $\Delta$. <b>Nếu khoảng của $\Delta$ chứa 0 → chưa có bằng chứng khác biệt.</b> Cách này dùng được cho AUC, PR-AUC, F1, kể cả “số tiền tiết kiệm được”. Code đầy đủ nằm ở bài <b>Kết quả có ý nghĩa thống kê không</b>.</p>
 
+  <div class="wb-alert wb-alert--warning">
+    <span class="wb-alert__icon">!</span>
+    <div class="wb-alert__body"><p class="wb-alert__title">Quy tắc đi kèm bootstrap từ lần đầu: bốc lại <i>đơn vị độc lập</i>, không phải dòng</p>
+      <p class="wb-alert__msg">Bootstrap giả định mỗi lần bốc là một quan sát <b>độc lập</b>. Dữ liệu giao dịch vi phạm giả định đó theo hai chiều: nhiều dòng cùng <b>một thẻ</b>, và các dòng gần nhau <b>trong thời gian</b> phụ thuộc nhau. Bốc theo dòng lúc đó cho khoảng tin cậy <b>hẹp giả tạo</b> — trông chắc chắn hơn thực tế, và đó đúng là loại lỗi làm hội đồng bác một kết quả.<br>
+      Quy tắc một câu: <b>đơn vị bốc lại phải là đơn vị mà bạn tin là độc lập.</b> Với dữ liệu thẻ, đó là <b>thẻ</b> (cluster bootstrap — bốc lại các <code>card_id</code>, lấy hết giao dịch của thẻ được bốc) hoặc <b>khối thời gian</b> (block bootstrap — bốc lại các khối ngày). Bốc theo dòng chỉ đúng khi mỗi dòng thật sự là một thực thể riêng.<br>
+      Áp dụng ngay từ đây, và giữ nguyên quy tắc này ở bài <a href="#/pr-eval">Đánh giá &amp; bốn test</a> (code cả ba kiểu) và ở chương thực nghiệm của luận văn. Trong luận văn phải <b>nói rõ đã bốc lại theo đơn vị nào</b> — đó là một câu, và thiếu nó thì mọi khoảng tin cậy phía sau đều không kiểm chứng được.</p></div>
+  </div>
+
   <h3>2 · McNemar — chỉ cho quyết định nhị phân tại một ngưỡng</h3>
   <p><button class="ds-math" data-math="mcnemar">McNemar — bảng 2×2 và code</button></p>
   <p>McNemar so hai mô hình khi đầu ra đã là <b>nhãn 0/1 tại một ngưỡng cụ thể</b> (chặn / không chặn). Nó <b>không</b> áp dụng cho ROC-AUC hay PR-AUC — những chỉ số dựa trên thứ hạng trên toàn dải ngưỡng; với các chỉ số đó hãy dùng bootstrap ghép cặp ở mục 1. Điểm chung của cả hai: chúng tôn trọng việc hai mô hình chạy trên đúng những mẫu đó, nên đừng dùng t-test hai mẫu độc lập.</p>
@@ -6008,8 +6094,9 @@ scores = cross_val_score(inner, X, y, cv=5, scoring="average_precision")   <i># 
   <h2>Mẫu câu viết vào luận văn</h2>
   <p>Ba câu này dùng được gần như nguyên văn:</p>
   <div class="ds-code">"Mô hình đề xuất đạt PR-AUC 0,412 (KTC 95% bootstrap: 0,388–0,437, n=1000
-lần lấy mẫu lại), so với 0,367 (0,344-0,391) của baseline LightGBM. Bootstrap
-GHÉP CẶP trên hiệu cho Δ = 0,045 (KTC 95%: 0,021–0,068), không chứa 0.
+lần lấy mẫu lại, bốc lại theo THẺ chứ không theo dòng), so với 0,367
+(0,344-0,391) của baseline LightGBM. Bootstrap GHÉP CẶP trên hiệu cho
+Δ = 0,045 (KTC 95%: 0,021–0,068), không chứa 0.
 
 Tại ngưỡng vận hành đã chọn, kiểm định McNemar trên cùng tập kiểm tra cho
 khác biệt có ý nghĩa thống kê (χ²(1) = 24,3; p &lt; 0,001).
@@ -6075,7 +6162,7 @@ pipe = ImbPipeline([
     <span class="wb-alert__icon">!</span>
     <div class="wb-alert__body"><p class="wb-alert__title">Hai lỗi SMOTE làm hỏng kết quả</p>
       <p class="wb-alert__msg"><b>1. SMOTE trước khi chia tập.</b> Mẫu tổng hợp sinh từ một ca gian lận ở train có thể rơi vào test → mô hình đã "thấy" test. Kết quả tăng vọt và hoàn toàn giả. Đây là lý do phải dùng <code>imblearn.pipeline</code>: nó chỉ chạy SMOTE trên phần train của mỗi fold.<br>
-      <b>2. Cân bằng về 50/50.</b> Bạn vừa dạy mô hình rằng cứ 2 giao dịch có 1 gian lận — sai lệch hoàn toàn so với thực tế 0,17%. Xác suất đầu ra thành vô nghĩa. Đưa lên khoảng 5–10% thường là điểm khởi đầu hợp lý — nhưng không có con số vàng, tỉ lệ tốt nhất tuỳ dữ liệu, mô hình và ngưỡng vận hành, nên hãy thử vài mức rồi đo. Và bất kể chọn mức nào: đã resample (hay dùng <code>class_weight</code>) thì xác suất đầu ra không còn chuẩn, cần hiệu chỉnh lại nếu bạn quy nó ra tiền.</p></div>
+      <b>2. Cân bằng về 50/50.</b> Bạn vừa dạy mô hình rằng cứ 2 giao dịch có 1 gian lận — trong khi thực tế là 0,17%. Nói chính xác thì bạn đã <b>đổi tỉ lệ nền mà mô hình nhìn thấy</b>, nên xác suất đầu ra bị đẩy lên cao một cách hệ thống: <i>xếp hạng</i> thường vẫn dùng được, nhưng <i>giá trị</i> thì không còn đọc như xác suất, và mọi phép nhân với tiền đều sai — trừ khi bạn hiệu chỉnh lại. Đưa lên khoảng 5–10% thường là điểm khởi đầu hợp lý — nhưng không có con số vàng, tỉ lệ tốt nhất tuỳ dữ liệu, mô hình và ngưỡng vận hành, nên hãy thử vài mức rồi đo. Và bất kể chọn mức nào: đã resample (hay dùng <code>class_weight</code>) thì xác suất đầu ra không còn chuẩn, cần hiệu chỉnh lại nếu bạn quy nó ra tiền.</p></div>
   </div>
   <div class="wb-alert wb-alert--warning wb-alert--plain"><div class="wb-alert__body">
     <p class="wb-alert__title">SMOTE và cột hạng mục: một chi tiết hay bị bỏ qua</p>
@@ -6269,6 +6356,12 @@ Quyết định theo ngưỡng
                         ▼
       [Kho dữ liệu] ──► giám sát drift ──► huấn luyện lại
                    └──► nhãn từ khiếu nại (trễ 30–60 ngày)</div>
+
+  <div class="wb-alert wb-alert--info wb-alert--plain"><div class="wb-alert__body">
+    <p class="wb-alert__title">0,90 và 0,40 trong hình là <b>số minh hoạ</b> — đừng chép vào hệ thống của bạn</p>
+    <p class="wb-alert__msg">Hình trên vẽ <i>hình dạng</i> của kiến trúc: ba mức quyết định, và ngưỡng đọc từ đâu. Hai con số tròn 0,90 / 0,40 chỉ để hình dễ đọc; chúng <b>không</b> phải kết quả của bất kỳ phép tính nào trên trang này.<br>
+    Ngưỡng thật của dự án được <b>tính</b> ở bài <a href="#/pr-eval">Đánh giá, chọn ngưỡng, và bốn test</a> từ ma trận chi phí và ràng buộc sức chứa, rồi <b>ghi vào chính artifact của mô hình</b> (<code>meta["thresholds"]</code> trong file <code>.joblib</code>, và <code>models/metrics.json</code> để đọc bằng mắt). API đọc ngưỡng từ đó, không viết cứng — và đó chính là quyết định thiết kế mà bài này đang dạy. <b>Một nguồn sự thật duy nhất cho ngưỡng: file artifact.</b> Bất cứ con số ngưỡng nào bạn thấy ở bài khác đều phải kèm nhãn nó thuộc hệ nào.</p>
+  </div></div>
 
   <div data-viz="prodloop"></div>
 
@@ -6904,7 +6997,17 @@ train 277,753 | valid 57,722 | test 60,000 (test KHÔNG được chạm ở file
       <tr><td><b>cost_saved 8,5%</b></td><td>Giá trị kinh doanh</td><td>So với <i>không làm gì</i> (cho qua tất). Đây là con số duy nhất trong bảng mà người không làm kỹ thuật đọc được.</td></tr>
     </tbody>
   </table></div>
-  <p>Trần lý thuyết của bộ mô phỏng — PR-AUC nếu bạn <i>biết</i> đúng xác suất sinh dữ liệu — là khoảng <b>0,05–0,07</b>. Mô hình đạt khoảng một nửa tới hai phần ba trần đó, và phần thiếu có lý do giải thích được: <code>n_tx_1h</code> chỉ là dấu hiệu <i>gián tiếp</i> của một chiến dịch, và giao dịch <b>đầu tiên</b> của mỗi chiến dịch luôn có <code>n_tx_1h = 0</code> nên mô hình không thể nhìn thấy. Biết trần của bài toán là thứ phân biệt “mô hình của tôi 0,03” với “mô hình của tôi đạt 60% mức tối đa có thể”.</p>
+  <p><b>Mốc oracle của bộ mô phỏng.</b> Trần lý thuyết của Average Precision, với mọi bài toán, là <b>1</b> — nên đừng gọi con số dưới đây là "trần lý thuyết". Cái đo được ở đây là một thứ hẹp hơn và cụ thể hơn: chấm mỗi giao dịch bằng <i>chính xác suất sinh gian lận</i> mà bộ mô phỏng dùng để tạo nhãn, rồi tính AP trên cùng tập test. Đó là mô hình tốt nhất có thể tồn tại <i>trên bộ dữ liệu này, với đúng những cột này</i> — gọi cho đúng là <b>mốc oracle đo bằng thực nghiệm</b> (empirical oracle benchmark), không phải một hằng số toán học.</p>
+  <div class="ds-code"><i># tái lập mốc oracle — chạy trong repo của bạn, đừng chép con số của người khác</i>
+p_true = sim.fraud_probability(df_test)          <i># xác suất sinh, chỉ simulator mới biết</i>
+oracle_ap = average_precision_score(y_test, p_true)
+<i># lặp lại với nhiều seed rồi báo cáo trung vị + khoảng, vì AP dao động theo tập sinh ra</i></div>
+  <p>Trên bộ mô phỏng của trang này, mốc đó rơi vào khoảng <b>0,05–0,07</b>. Mô hình đạt khoảng một nửa tới hai phần ba mốc, và phần thiếu có lý do giải thích được: <code>n_tx_1h</code> chỉ là dấu hiệu <i>gián tiếp</i> của một chiến dịch, và giao dịch <b>đầu tiên</b> của mỗi chiến dịch luôn có <code>n_tx_1h = 0</code> nên mô hình không thể nhìn thấy.</p>
+  <div class="wb-alert wb-alert--warning wb-alert--plain"><div class="wb-alert__body">
+    <p class="wb-alert__title">Đưa vào luận văn thì phải kèm cách tạo ra nó</p>
+    <p class="wb-alert__msg">Một mốc oracle chỉ có giá trị khi người đọc tái lập được: ghi rõ <b>seed</b>, <b>số lần chạy</b>, <b>phiên bản bộ sinh dữ liệu</b> và <b>khoảng</b> (không chỉ một con số). Khoảng 0,05–0,07 ở trên là kết quả của <i>bộ sinh trong repo này</i>; đổi tham số chiến dịch là mốc đổi theo. Chạy lại bằng chính script của bạn và báo cáo số của bạn — đó cũng là một dòng kết quả đáng có trong chương phương pháp.</p>
+  </div></div>
+  <p>Biết mốc của bài toán là thứ phân biệt “mô hình của tôi 0,03” với “mô hình của tôi đạt ~60% mức tối đa đo được trên bộ dữ liệu này”.</p>
 
   <div class="wb-alert wb-alert--info wb-alert--plain"><div class="wb-alert__body">
     <p class="wb-alert__title">Dừng ở đây được rồi — bạn vừa có một mốc thật</p>
@@ -7500,7 +7603,7 @@ $ python -m src.final_eval --confirm-freeze
 
   <h2>Đọc bảng đó</h2>
   <ul>
-    <li><b>0,0485 không mâu thuẫn với 0,412 ở bài <a href="#/ml-metrics">Đo lường</a>.</b> Bảng ở bài đó là <b>số minh hoạ</b>, tầm một bộ dữ liệu thẻ thật; đây là <b>số chạy thật trên bộ mô phỏng</b>. Đọc cho đúng thì phải kẹp giữa hai mốc: tỉ lệ nền của tập test là 137/60.000 = <b>0,00228</b>, nên 0,0485 là <b>gấp ~21 lần đoán bừa</b>; và trần lý thuyết của bộ mô phỏng chỉ 0,05–0,07 (đo ở bài <a href="#/pr-code">Code end-to-end</a>), nên bạn đang ở <b>sát trần</b>. Cùng lý do đó, recall 21,8% ở đây không phải "kém hơn 64%" — 64% là con số của bài toán khác. Câu viết vào luận văn là câu có hai mốc, không phải con số trần trụi.</li>
+    <li><b>0,0485 không mâu thuẫn với 0,412 ở bài <a href="#/ml-metrics">Đo lường</a>.</b> Bảng ở bài đó là <b>số minh hoạ</b>, tầm một bộ dữ liệu thẻ thật; đây là <b>số chạy thật trên bộ mô phỏng</b>. Đọc cho đúng thì phải kẹp giữa hai mốc: tỉ lệ nền của tập test là 137/60.000 = <b>0,00228</b>, nên 0,0485 là <b>gấp ~21 lần đoán bừa</b>; và <b>mốc oracle</b> đo được trên bộ mô phỏng chỉ 0,05–0,07 (cách đo ở bài <a href="#/pr-code">Code end-to-end</a> — đó là mốc thực nghiệm của bộ dữ liệu này, không phải trần lý thuyết của AP, vốn luôn bằng 1), nên bạn đang ở <b>sát mốc đó</b>. Cùng lý do đó, recall 21,8% ở đây không phải "kém hơn 64%" — 64% là con số của bài toán khác. Câu viết vào luận văn là câu có hai mốc, không phải con số trần trụi.</li>
     <li><b>Cluster rộng hơn row</b> (0,0507 so với 0,0491). Đúng hướng dự đoán: coi mỗi dòng là độc lập làm bạn tưởng mình có 60.000 quan sát, trong khi thật ra chỉ có <b>3.986 thẻ</b>. Khoảng hẹp giả tạo chính là cách người ta tuyên bố “cải thiện có ý nghĩa” cho một chênh lệch chỉ là nhiễu.</li>
     <li><b>Khoảng block chỉ dựa trên 27 khối ngày.</b> Nó hẹp hơn, nhưng <i>hẹp vì quá ít đơn vị</i> chứ không phải vì chắc chắn hơn. Dưới khoảng 20 khối thì bản thân khoảng tin cậy cũng là nhiễu — hãy nói rõ điều đó thay vì chọn con số đẹp nhất.</li>
     <li><b>PR-AUC test 0,0485 &gt; valid 0,0294.</b> Đây chỉ là mô tả trên hai giai đoạn dữ liệu khác nhau, <b>không</b> phải bằng chứng mô hình mạnh lên theo thời gian. Không được suy kết luận từ việc hai CI riêng chồng lấn hay không; nếu câu hỏi là so hai mô hình trên cùng mẫu, phải bootstrap ghép cặp trên hiệu metric. Với valid và test thuộc hai giai đoạn khác nhau, hãy báo cáo riêng độ bất định, mô tả distribution shift, và chỉ kiểm định một giả thuyết thời gian đã định trước bằng thiết kế theo khối phù hợp.</li>
@@ -8051,8 +8154,20 @@ uvicorn src.serve:app --port 8000           <i># → http://localhost:8000/docs<
   <div class="wb-alert wb-alert--warning">
     <span class="wb-alert__icon">!</span>
     <div class="wb-alert__body"><p class="wb-alert__title">Vòng phản hồi tự đầu độc</p>
-      <p class="wb-alert__msg">Mô hình chặn giao dịch → giao dịch đó không có nhãn thật → dữ liệu train tương lai chỉ chứa những gì mô hình <b>cho qua</b> → mô hình ngày càng tự tin về vùng nó vốn đã đúng và mù về vùng nó đang chặn. Đây là <i>selective labels problem</i>, và cách giảm thiểu chuẩn là <b>cho qua ngẫu nhiên một tỉ lệ nhỏ</b> (0,5–1%) các giao dịch đáng lẽ bị chặn, để thu nhãn thật. Nêu được vấn đề này và giải pháp trong luận văn là một điểm cộng lớn.</p></div>
+      <p class="wb-alert__msg">Mô hình chặn giao dịch → giao dịch đó không có nhãn thật → dữ liệu train tương lai chỉ chứa những gì mô hình <b>cho qua</b> → mô hình ngày càng tự tin về vùng nó vốn đã đúng và mù về vùng nó đang chặn. Đây là <i>selective labels problem</i>, và <b>nêu được nó trong luận văn đã là một điểm cộng lớn</b> — rất nhiều luận văn không nhận ra dữ liệu của mình bị chính mô hình cũ lọc.</p></div>
   </div>
+
+  <h3>Cách lấy lại nhãn ở vùng bị chặn — và vì sao phải cẩn thận</h3>
+  <p>Cách hay được nhắc tới là <b>cho qua ngẫu nhiên một tỉ lệ nhỏ</b> giao dịch đáng lẽ bị chặn, để xem thật ra chúng có gian lận không. Nó là <i>exploration</i>: bạn cố tình trả một cái giá đã biết để mua thông tin mà quan sát thụ động không cho.</p>
+  <p><b>Đây không phải một công thức để chép, và không có tỉ lệ phổ quát.</b> Bạn đang cố ý để lọt những giao dịch mà hệ thống đánh giá là gian lận, nên cái giá là tiền thật của khách hàng thật. Ai đề xuất nó phải trả lời được cả năm câu sau <i>trước</i>, và tỉ lệ chỉ là câu cuối cùng:</p>
+  <ol>
+    <li><b>Ai được quyền quyết định?</b> Đây là quyết định rủi ro cấp tổ chức (risk / compliance / pháp chế), không phải tham số của người làm mô hình.</li>
+    <li><b>Trần thiệt hại là bao nhiêu?</b> Đặt hạn mức tuyệt đối theo ngày và theo giao dịch, và tự động dừng khi chạm — không phải chỉ một tỉ lệ phần trăm.</li>
+    <li><b>Ai chịu thiệt?</b> Nếu khách hàng chịu thì phải có đường hoàn tiền/khiếu nại rõ ràng. Không được để chi phí của việc học rơi vào người không liên quan.</li>
+    <li><b>Có cách rẻ hơn không?</b> Thường là có: xác minh <i>thủ công</i> một mẫu ngẫu nhiên trong vùng bị chặn (không cho tiền chạy, chỉ tốn giờ người), dùng ngưỡng chặn thấp hơn ở một vùng hẹp, hoặc mô hình hoá cơ chế chọn lọc thay vì can thiệp.</li>
+    <li><b>Rồi mới tới tỉ lệ</b> — và nó là kết quả của bốn câu trên cộng với cỡ mẫu bạn cần để ước lượng có ý nghĩa, không phải một con số mặc định.</li>
+  </ol>
+  <p class="wb-help">Trong một luận văn, cách trình bày an toàn và cũng mạnh hơn là: <b>mô tả cơ chế và điều kiện áp dụng</b>, chỉ ra rằng bạn biết dữ liệu của mình bị lọc, rồi dùng phương án xác minh thủ công trên mẫu — nó cho gần đúng thông tin đó mà không cần một quyết định rủi ro mà bạn không có thẩm quyền đưa ra.</p>
 
   <p class="ds-more"><button class="ds-aside" data-aside="cmp-track">So sánh cách ghi lại kết quả theo dõi</button></p>
 </template>
@@ -8178,9 +8293,12 @@ FP= 160,000₫  →  ngưỡng 0,602  |  thiệt hại    944 triệu</div>
     <tr><th>Hàm</th><th>Công thức</th><th>Dùng ở đâu</th></tr>
     <tr><td><b>ReLU</b></td><td>$\max(0, z)$</td><td><b>Mặc định cho lớp ẩn.</b> Rẻ, không bị vanishing gradient ở phần dương</td></tr>
     <tr><td>GELU</td><td>xấp xỉ ReLU nhưng mượt</td><td>Chuẩn trong Transformer</td></tr>
-    <tr><td>Sigmoid</td><td>$\frac{1}{1+e^{-z}}$</td><td>Chỉ ở lớp <b>đầu ra</b>, bài toán 2 lớp</td></tr>
-    <tr><td>Softmax</td><td><button class="ds-math" data-math="softmax">xem</button></td><td>Chỉ ở lớp <b>đầu ra</b>, nhiều lớp</td></tr>
+    <tr><td>Sigmoid</td><td>$\frac{1}{1+e^{-z}}$</td><td><b>Trong mạng xuôi này:</b> chỉ ở lớp <b>đầu ra</b>, bài toán 2 lớp. Đừng dùng cho lớp ẩn — nó bão hoà và gây vanishing gradient</td></tr>
+    <tr><td>Softmax</td><td><button class="ds-math" data-math="softmax">xem</button></td><td><b>Trong mạng xuôi này:</b> chỉ ở lớp <b>đầu ra</b>, nhiều lớp</td></tr>
   </table>
+  <p class="wb-help"><b>"Chỉ ở lớp đầu ra" đúng trong phạm vi mạng xuôi đơn giản của bài này, không phải một quy luật chung.</b> Ở kiến trúc khác, hai hàm đó nằm ngay <i>giữa</i> mạng và làm việc khác hẳn: sigmoid là <b>cổng</b> của LSTM/GRU (quyết định giữ lại bao nhiêu phần trăm bộ nhớ — cần một số 0–1, nên sigmoid là lựa chọn tự nhiên), và softmax nằm trong <b>attention</b> của Transformer (biến điểm tương đồng thành trọng số cộng bằng 1, xem bài <a href="#/dl-attn">Attention</a>). Quy tắc đáng nhớ không phải "hàm này ở tầng nào" mà <b>"hàm này ép đầu ra về dạng gì"</b>: sigmoid → một số 0–1; softmax → một bộ số cộng bằng 1. Cần dạng đó ở đâu thì dùng ở đó.</p>
+
+  <div data-viz="nnforward"></div>
 
   <h2>Một mạng đầy đủ cho dữ liệu bảng</h2>
   <div class="ds-code"><b>import</b> torch, torch.nn <b>as</b> nn
@@ -8280,6 +8398,8 @@ sched.step()</div>
     <tr><td><b>Batch/Layer norm</b></td><td>Chuẩn hoá đầu ra mỗi lớp → train ổn định hơn</td><td>Gần như luôn dùng</td></tr>
   </table>
 
+  <div data-viz="losscurve"></div>
+
   <h2>Đọc đường cong loss — bảng chẩn đoán</h2>
   <table>
     <tr><th>Bạn thấy</th><th>Nghĩa là</th><th>Làm gì</th></tr>
@@ -8377,9 +8497,9 @@ vec = emb(torch.tensor([1234]))   <i># → vector 32 chiều của cửa hàng #
   <h2>Còn dùng ở đâu năm 2026</h2>
   <table>
     <tr><th>Kiến trúc</th><th>Vẫn dùng khi</th></tr>
-    <tr><td>CNN</td><td>Ảnh khi tài nguyên hạn chế, xử lý ảnh trên thiết bị nhúng; Conv1D cho chuỗi ngắn</td></tr>
-    <tr><td>LSTM/GRU</td><td>Chuỗi ngắn, dữ liệu ít, cần mô hình nhẹ. Vẫn là baseline hợp lệ trong luận văn</td></tr>
-    <tr><td>Transformer</td><td>Gần như mọi thứ khác</td></tr>
+    <tr><td>CNN</td><td><b>Vẫn rất phổ biến và cạnh tranh</b> trong thị giác máy tính — nhất là khi dữ liệu vừa phải, cần chạy nhanh, hoặc chạy trên thiết bị nhúng/điện thoại. Các họ ConvNet hiện đại vẫn ngang ngửa Vision Transformer ở nhiều bài toán. Conv1D cũng tốt cho chuỗi ngắn</td></tr>
+    <tr><td>LSTM/GRU</td><td><b>Đã bị thay thế gần hết trong xử lý ngôn ngữ</b>, nhưng vẫn dùng cho chuỗi ngắn, dữ liệu ít, mô hình nhẹ, và dự báo chuỗi thời gian. Vẫn là baseline hợp lệ trong luận văn</td></tr>
+    <tr><td>Transformer</td><td>Mặc định cho ngôn ngữ và cho hầu hết bài toán quy mô lớn có nhiều dữ liệu; ở thị giác thì là <i>một</i> lựa chọn mạnh chứ chưa phải lựa chọn duy nhất</td></tr>
   </table>
   <p class="wb-help">Nếu luận văn của bạn mô hình hoá <i>chuỗi giao dịch</i> của một thẻ, so sánh LSTM vs Transformer là một thiết kế thí nghiệm hợp lý và có tài liệu tham khảo dồi dào.</p>
 </template>
@@ -8628,6 +8748,8 @@ print(f"độ phủ thực tế: {coverage:.1%}  (mong đợi ~80%)")</div>
   <p>Dòng cuối là dòng quan trọng nhất và cũng là dòng hay bị bỏ. Một khoảng dự đoán chỉ có giá trị nếu <b>độ phủ thực tế khớp với mức đã công bố</b>. Phủ 55% trong khi tuyên bố 80% thì tệ hơn không đưa khoảng nào, vì nó tạo ra một sự tự tin sai chỗ. Báo cáo cả hai con số — độ rộng khoảng và độ phủ — là một điểm cộng dễ ăn trong luận văn.</p>
   <p class="wb-help">Nếu cần bảo đảm chặt chẽ hơn về mặt lý thuyết, từ khoá cần tra là <b>conformal prediction</b> — nó cho khoảng có bảo đảm độ phủ với giả định rất nhẹ. Đủ để nêu tên trong phần hướng phát triển.</p>
 
+  <div data-viz="residual"></div>
+
   <h2>Ba sai lầm đặc trưng của hồi quy</h2>
   <ol>
     <li><b>Không nhìn phân phối phần dư.</b> Vẽ <code>y_true − y_pred</code> theo <code>y_pred</code>: nếu nó loe ra hình phễu, sai số tỉ lệ với độ lớn — cân nhắc dự đoán <code>log(y)</code> rồi mũ ngược lại <button class="ds-math" data-math="logtransform">(vì sao lấy log)</button>. Nếu phần dư có cấu trúc (cong, phân cụm), bạn còn thiếu feature.</li>
@@ -8786,10 +8908,12 @@ print(classification_report(y_va, pred, digits=3))   <i># có cả từng lớp 
 cm = confusion_matrix(y_va, pred, normalize="true")</div>
   <p>Ma trận nhầm lẫn chuẩn hoá là hình đáng đưa vào luận văn nhất của bài multiclass. Nó không chỉ nói mô hình sai bao nhiêu mà nói <b>sai theo hướng nào</b> — và “lớp 3 hay bị nhận nhầm thành lớp 7” thường dẫn thẳng tới một phát hiện về dữ liệu (hai lớp đó thực chất chồng lấn, hoặc người gán nhãn cũng lẫn).</p>
 
+  <div data-viz="confmat"></div>
+
   <h2>Ba việc cần làm thêm khi lên nhiều lớp</h2>
   <ul>
     <li><b>Chia tập stratify theo lớp hiếm nhất.</b> Với 12 lớp mà lớp hiếm nhất chỉ có 30 mẫu, một lần chia không may là tập test có 2 mẫu — mọi chỉ số của lớp đó thành nhiễu.</li>
-    <li><b>Gộp các lớp quá hiếm thành “KHÁC”</b> nếu chúng dưới ~50 mẫu và nghiệp vụ cho phép. Thà có một lớp “KHÁC” xử lý được còn hơn ba lớp không bao giờ đoán đúng.</li>
+    <li><b>Gộp các lớp quá hiếm thành “KHÁC”</b> nếu chúng quá ít mẫu để học được và nghiệp vụ cho phép. (Mốc ~50 mẫu hay được dùng làm điểm khởi đầu; con số thật phụ thuộc số cột, độ khó của lớp và chỉ số bạn đo — hãy nhìn F1 <i>từng lớp</i> để quyết định.) Thà có một lớp “KHÁC” xử lý được còn hơn ba lớp không bao giờ đoán đúng.</li>
     <li><b>Cân nhắc cấu trúc phân cấp.</b> Nếu 12 lớp thực ra là 3 nhóm lớn × 4 lớp con, một mô hình hai tầng thường tốt hơn và giải thích dễ hơn.</li>
   </ul>
 </template>
@@ -8804,7 +8928,7 @@ cm = confusion_matrix(y_va, pred, normalize="true")</div>
     <tbody>
       <tr><td><b>1 · TF-IDF + tuyến tính</b></td><td><code>TfidfVectorizer</code> + <code>LogisticRegression</code>. Thêm n-gram 1–2 từ</td><td>Vài giây CPU</td><td><b>Luôn chạy đầu tiên.</b> Nó là mốc so sánh bắt buộc</td></tr>
       <tr><td><b>2 · Embedding câu</b></td><td><code>sentence-transformers</code> sinh vector, rồi đưa vào LightGBM hoặc logistic</td><td>Vài phút GPU (Colab)</td><td>Mức 1 chạm trần và lỗi chủ yếu do <i>từ đồng nghĩa / diễn đạt khác</i></td></tr>
-      <tr><td><b>3 · Fine-tune Transformer</b></td><td>Huấn luyện tiếp một mô hình pretrained trên nhãn của bạn</td><td>Hàng chục phút tới vài giờ GPU</td><td>Mức 2 chạm trần, bạn có &gt;~2.000 mẫu có nhãn, và độ chính xác thật sự đáng số giờ đó</td></tr>
+      <tr><td><b>3 · Fine-tune Transformer</b></td><td>Huấn luyện tiếp một mô hình pretrained trên nhãn của bạn</td><td>Hàng chục phút tới vài giờ GPU</td><td>Mức 2 chạm trần, bạn có <b>đủ</b> mẫu có nhãn, và độ chính xác thật sự đáng số giờ đó. (Mốc hay được nhắc là vài nghìn — cỡ ~2.000 cho bài phân loại đơn giản — nhưng đây là điểm khởi đầu minh hoạ: số cần thiết phụ thuộc số lớp, độ khó và mức độ gần giữa dữ liệu của bạn với dữ liệu pretrain. Cách chắc chắn là vẽ <i>learning curve</i>: thêm nhãn dần và xem điểm còn tăng không.)</td></tr>
     </tbody>
   </table></div>
   <div class="ds-code"><i># MỨC 1 — chạy trước mọi thứ khác. 6 dòng.</i>
@@ -8837,7 +8961,7 @@ pipe = make_pipeline(
     <tbody>
       <tr><td>Phân loại văn bản, phân tích cảm xúc</td><td>macro-F1 + bảng từng lớp</td><td>Lớp “trung tính” thường là lớp khó nhất và hay bị giấu trong con số gộp</td></tr>
       <tr><td>Nhận dạng thực thể (NER)</td><td>F1 mức <b>span</b>, không phải mức token</td><td>Đoán đúng 3/4 token của một tên riêng là <b>sai</b>, không phải đúng 75%</td></tr>
-      <tr><td>Tóm tắt, sinh văn bản</td><td>ROUGE/BLEU <b>cộng với</b> đánh giá của con người</td><td>Các chỉ số tự động chỉ đo trùng lặp từ ngữ — chúng không đo được đúng/sai sự thật</td></tr>
+      <tr><td>Tóm tắt, sinh văn bản</td><td><b>ROUGE</b> + chỉ số ngữ nghĩa (BERTScore) + kiểm tính đúng sự thật, <b>cộng với</b> đánh giá của con người</td><td>Các chỉ số trùng lặp từ ngữ không đo được đúng/sai sự thật. <b>BLEU thì đừng dùng ở đây</b> — nó được thiết kế cho <i>dịch máy</i>, nơi bản tham chiếu chặt; với tóm tắt thì một bản tóm tắt tốt hoàn toàn có thể không trùng cụm từ nào với bản tham chiếu.</td></tr>
       <tr><td>Truy xuất, RAG</td><td>Recall@K, MRR cho phần truy xuất; tỉ lệ trả lời có dẫn nguồn đúng cho phần sinh</td><td>Tách hai phần ra mà đo — lỗi thường nằm ở truy xuất chứ không ở sinh</td></tr>
     </tbody>
   </table></div>
@@ -8971,7 +9095,14 @@ train, test = df[df.ts &lt;= cutoff], df[df.ts &gt; cutoff]</div>
   <div data-viz="causaldag"></div>
 
   <h2>A/B test: vì sao ngẫu nhiên hoá giải được cả ba</h2>
-  <p>Gán ngẫu nhiên người dùng vào nhóm A hoặc B làm một việc rất mạnh: nó khiến hai nhóm <b>giống nhau về mọi thứ</b> — cả những thứ bạn đo được lẫn những thứ bạn không nghĩ tới. Còn lại đúng một khác biệt: nhóm nào được can thiệp. Nên chênh lệch kết quả <i>là</i> tác động của can thiệp.</p>
+  <p>Gán ngẫu nhiên người dùng vào nhóm A hoặc B làm một việc rất mạnh: nó khiến hai nhóm giống nhau <b>theo kỳ vọng</b> ở mọi đặc điểm — cả những thứ bạn đo được lẫn những thứ bạn không nghĩ tới. Không có cách nào khác mua được vế "những thứ bạn không nghĩ tới", và đó là lý do thí nghiệm ngẫu nhiên là tiêu chuẩn vàng.</p>
+  <p><b>Nhưng "theo kỳ vọng" không phải "chắc chắn", và ba chữ đó là ranh giới của cả phương pháp.</b> Đọc cho đúng thì chênh lệch kết quả là một <b>ước lượng</b> của tác động, kèm sai số, và nó chỉ đứng vững khi ba giả định sau đúng:</p>
+  <ul>
+    <li><b>Vẫn còn may rủi khi chia nhóm.</b> Một lần tung đồng xu cụ thể vẫn có thể cho hai nhóm lệch nhau — đó chính là thứ khoảng tin cậy đo. Cỡ mẫu càng nhỏ, lệch càng dễ. Nên báo cáo khoảng tin cậy của chênh lệch, và kiểm tra cân bằng ở vài biến nền trước khi tin.</li>
+    <li><b>Không lây sang nhau (SUTVA / no interference).</b> Kết quả của một người không được phụ thuộc vào việc <i>người khác</i> ở nhóm nào. Bị vi phạm ngay khi hai nhóm gặp nhau: hai người bán trên cùng một sàn tranh cùng một người mua, hai người dùng cùng một nhóm chat, hoặc bạn ngẫu nhiên hoá theo phiên mà cùng một người quay lại nhiều phiên. Cách chữa là <b>đổi đơn vị ngẫu nhiên hoá</b> lên mức không còn lây (theo người, theo cửa hàng, theo thành phố).</li>
+    <li><b>Không có rơi rụng lệch nhau (compliance &amp; attrition).</b> Người được gán nhóm B nhưng không thật sự dùng tính năng, hoặc bỏ ngang nhiều hơn nhóm A — lúc đó so hai nhóm <i>đã lọc</i> là đã phá vỡ ngẫu nhiên hoá. Cách chuẩn: phân tích theo <b>ý định điều trị</b> (intention-to-treat) — giữ nguyên nhóm được gán ban đầu, kể cả người không dùng.</li>
+  </ul>
+  <p class="wb-help">Câu viết vào luận văn: <i>"ngẫu nhiên hoá <b>ước lượng không chệch</b> tác động trung bình, với giả định không lây giữa các đơn vị và phân tích theo ý định điều trị"</i> — không phải <i>"chênh lệch là tác động nhân quả"</i>. Người phản biện hỏi đúng vào ba giả định trên, và có sẵn câu trả lời là khác biệt giữa một chương thực nghiệm chắc và một chương bị vặn.</p>
   <h3>Bốn thứ phải chốt <b>trước</b> khi bật thí nghiệm</h3>
   <ol>
     <li><b>Một chỉ số chính duy nhất</b> (OEC). Không phải năm chỉ số rồi chọn cái nào đẹp — đó là p-hacking <button class="ds-math" data-math="pvalue">(p-value nói gì và không nói gì)</button>.</li>
@@ -9305,7 +9436,10 @@ lệnh tái chạy:    đúng lệnh để chạy lại từ đầu</div>
   <ol>
     <li><b>Chọn một paper có mã nguồn</b> (Papers with Code, GitHub của tác giả). Ưu tiên bài dùng đúng bộ dữ liệu bạn định dùng.</li>
     <li><b>Chạy đúng như họ mô tả.</b> Đừng cải tiến gì cả. Mục tiêu duy nhất: ra được con số gần với bảng của họ.</li>
-    <li><b>So sánh.</b> Chênh 1–2% là bình thường (seed, phiên bản thư viện). Chênh 10% nghĩa là bạn hiểu sai một bước.</li>
+    <li><b>So sánh — và so với đúng cái mốc.</b> Không có ngưỡng "chênh bao nhiêu phần trăm thì coi là tái lập được"; ai đưa cho bạn một con số như vậy là đang đoán. Ba lý do: "%" của chỉ số nào (chênh 0,01 trên AP 0,05 là 20%, trên AUC 0,9 là 1%), tương đối hay tuyệt đối, và mỗi bài toán có mức nhiễu khác nhau.</li>
+    <li><b>Mốc đúng là độ bất định của chính họ.</b> Nếu paper báo cáo khoảng tin cậy hoặc độ lệch chuẩn qua nhiều seed, thì "tái lập được" nghĩa là <b>số của bạn nằm trong khoảng đó</b>. Nếu paper không báo cáo gì, hãy tự dựng mốc: chạy lại <i>code của họ</i> với 5 seed khác nhau, xem chính nó dao động bao nhiêu — đó mới là ngưỡng để đo mình. Rất thường xuyên, dao động giữa các seed lớn hơn khoảng cách mà bạn đang lo lắng.</li>
+    <li><b>Khi lệch nhiều hơn mức đó, đi theo thứ tự này:</b> định nghĩa chỉ số (AP hay AUC-của-đường-PR? macro hay micro?) → bản dữ liệu và cách chia → tiền xử lý ẩn không nằm trong repo → phiên bản thư viện → seed. Bốn nguyên nhân đầu gây lệch lớn; seed thường là nguyên nhân nhỏ nhất, và cũng là cái người ta hay đổ lỗi nhất.</li>
+    <li><b>Ghi con số bạn đo được, kèm mốc.</b> Câu viết vào luận văn: <i>"tái chạy cho AP 0,381 (5 seed: 0,374–0,389), so với 0,392 báo cáo trong bài; tác giả không công bố độ bất định, nên mốc so sánh là dao động seed của chính mã nguồn của họ."</i> Đó là một câu trung thực, kiểm chứng được, và mạnh hơn hẳn "kết quả gần đúng với bài gốc".</li>
     <li><b>Ghi lại chỗ khác biệt.</b> Đây là dữ liệu quý cho phần thảo luận của bạn.</li>
     <li><b>Rồi mới thay đổi một thứ</b> — chính là đóng góp của bạn.</li>
   </ol>
@@ -9396,8 +9530,9 @@ lệnh tái chạy:    đúng lệnh để chạy lại từ đầu</div>
     <tr><td>Chỉ một seed</td><td>Không phân biệt được cải tiến với nhiễu</td><td>5 seed, báo cáo ± std</td></tr>
     <tr><td>Tune trên test</td><td>Con số cuối bị thổi phồng</td><td>Tune trên valid, test chạm một lần</td></tr>
     <tr><td>Baseline yếu</td><td>Kết luận không đứng vững</td><td>Tune baseline như tune mô hình của mình</td></tr>
-    <tr><td>Không có ablation</td><td>Không chứng minh được nhân quả</td><td>Bảng tầng 2</td></tr>
+    <tr><td>Không có ablation</td><td>Không tách được đóng góp của từng thành phần</td><td>Bảng tầng 2</td></tr>
   </table>
+  <p class="wb-help"><b>Ablation cho biết gì và không cho biết gì.</b> Bỏ một thành phần rồi đo lại cho bạn <i>đóng góp biên</i> của thành phần đó — <b>trong đúng setup này</b>: đúng bộ feature còn lại, đúng siêu tham số, đúng cách chia, đúng seed. Nó không phải bằng chứng nhân quả theo nghĩa mạnh: các thành phần <b>tương tác</b> với nhau (A vô dụng khi có B nhưng quan trọng khi bỏ B), <b>thứ tự bỏ</b> ảnh hưởng kết quả, và mỗi dòng vẫn có nhiễu theo seed. Viết đúng phạm vi: <i>"bỏ nhóm feature thời gian làm PR-AUC giảm 0,031 (5 seed, ±0,006) trong cấu hình cuối"</i> — chứ không phải <i>"feature thời gian gây ra 0,031 điểm PR-AUC"</i>.</p>
 </template>
 
 <template data-node="th-stats">
@@ -9424,16 +9559,22 @@ print(f"{np.mean(results):.3f} ± {np.std(results):.3f}")</div>
   <div class="ds-code">rng = np.random.default_rng(42)
 y   = np.asarray(y_te)                       <i># ép mảng, xem ghi chú ở popup Bootstrap</i>
 a, b = np.asarray(p_new), np.asarray(p_old)
+g    = np.asarray(cards_te)                  <i># card_id của từng dòng test</i>
+
+<i># bốc lại theo THẺ (đơn vị độc lập), không theo dòng — quy tắc từ bài Thống kê suy diễn</i>
+uniq = np.unique(g)
+idx_of = {c: np.flatnonzero(g == c) <b>for</b> c <b>in</b> uniq}
 
 diffs = []
 <b>for</b> _ <b>in</b> range(1000):
-    i = rng.integers(0, len(y), len(y))      <i># CÙNG chỉ số cho cả hai mô hình</i>
+    picked = rng.choice(uniq, size=len(uniq), replace=<b>True</b>)
+    i = np.concatenate([idx_of[c] <b>for</b> c <b>in</b> picked])   <i># CÙNG chỉ số cho cả hai mô hình</i>
     diffs.append(average_precision_score(y[i], a[i])
                - average_precision_score(y[i], b[i]))
 lo, hi = np.percentile(diffs, [2.5, 97.5])
 print(f"Δ = {np.mean(diffs):.4f}  (95% CI: {lo:.4f} … {hi:.4f})")
 <i># nếu khoảng KHÔNG chứa 0 → khác biệt có ý nghĩa</i></div>
-  <p>Cách này lấy mẫu lại <b>cùng chỉ số hàng</b> cho cả hai mô hình, nên nó tôn trọng việc hai mô hình được chấm trên cùng dữ liệu.</p>
+  <p>Hai chi tiết, cả hai đều bắt buộc. <b>Ghép cặp:</b> mỗi vòng dùng <i>cùng</i> chỉ số cho cả hai mô hình, nên phép so tôn trọng việc chúng được chấm trên cùng dữ liệu. <b>Cụm:</b> đơn vị bốc lại là <b>thẻ</b>, không phải dòng — đúng quy tắc "bốc lại đơn vị độc lập" đã đặt ở bài <a href="#/m-infer">Thống kê suy diễn</a>. Nếu dữ liệu của bạn thật sự một-dòng-một-thực-thể thì đổi về <code>rng.integers(0, len(y), len(y))</code>; nếu phụ thuộc chính là theo thời gian thì bốc lại theo <b>khối ngày</b>. Chọn kiểu nào cũng được, miễn <b>viết ra trong luận văn là đã bốc theo đơn vị nào</b> — bốc theo dòng trên dữ liệu có thẻ lặp cho khoảng hẹp giả và người phản biện sẽ hỏi đúng câu này.</p>
 
   <h2>Hiểu p-value cho đúng</h2>
   <p><button class="ds-math" data-math="pvalue">p-value nói gì, KHÔNG nói gì, và ba cái bẫy</button></p>
@@ -9447,8 +9588,8 @@ print(f"Δ = {np.mean(diffs):.4f}  (95% CI: {lo:.4f} … {hi:.4f})")
   </div>
 
   <h2>Mẫu đoạn viết</h2>
-  <div class="ds-code">"Mô hình đề xuất đạt PR-AUC 0,412 (KTC 95% bootstrap: 0,388–0,437;
-1.000 lần lấy mẫu lại) trên tập kiểm tra, so với 0,367 (0,344–0,391)
+  <div class="ds-code">"Mô hình đề xuất đạt PR-AUC 0,412 (KTC 95% bootstrap theo cụm-thẻ:
+0,388–0,437; 1.000 lần lấy mẫu lại) trên tập kiểm tra, so với 0,367 (0,344–0,391)
 của LightGBM baseline. Chênh lệch được ghép cặp Δ = 0,045
 (KTC 95%: 0,021–0,068), không chứa 0, cho thấy cải thiện có ý nghĩa
 thống kê. Kiểm định McNemar tại ngưỡng vận hành đã chọn cho
@@ -9469,6 +9610,7 @@ giống ngẫu nhiên với độ lệch chuẩn 0,006, cho thấy tính ổn đ
     <tr><td><b>5. Kết quả &amp; thảo luận</b></td><td>Ra cái gì, có nghĩa là gì, hạn chế ở đâu</td><td>15–25 trang</td></tr>
     <tr><td><b>6. Kết luận</b></td><td>Tóm lại đóng góp, hướng tiếp theo</td><td>4–6 trang</td></tr>
   </table>
+  <p class="wb-help">Cột <i>Độ dài</i> là <b>mẫu tham khảo</b>, không phải quy định. Nguồn quyết định là <b>quy chế của trường bạn và yêu cầu của giảng viên hướng dẫn</b> — có nơi đòi 60 trang, có nơi 120, có nơi tính theo số chữ, và một số nơi quy định luôn cả thứ tự chương. Lấy mẫu chính thức của khoa trước khi viết dòng đầu tiên; cái đáng giữ ở bảng này là <b>tỉ lệ tương đối</b> giữa các chương, không phải con số tuyệt đối.</p>
 
   <h2>Chương 1 — công thức bốn đoạn</h2>
   <div class="ds-code">Đoạn 1 — BỐI CẢNH:  "Gian lận thẻ gây thiệt hại X tỉ đồng mỗi năm tại
@@ -9558,7 +9700,8 @@ plt.rcParams.update({
     "savefig.bbox": "tight",
 })
 plt.savefig("reports/figures/pr_curve.pdf")   <i># PDF = vector, không vỡ khi phóng to</i></div>
-  <p>Lưu dạng <b>PDF</b> chứ không phải PNG — LaTeX nhúng vector và hình luôn sắc nét. Đặt cỡ chữ trong hình bằng cỡ chữ trong văn bản.</p>
+  <p>Lưu dạng <b>PDF</b> chứ không phải PNG: PDF từ matplotlib là <b>vector</b>, tức hình được mô tả bằng đường và chữ nên phóng to bao nhiêu cũng sắc nét. <b>Chi tiết dễ hiểu nhầm:</b> <code>savefig.dpi</code> ở trên <i>không</i> làm hình vector nét hơn — DPI chỉ có nghĩa với ảnh raster (PNG/JPG, và với ảnh raster được nhúng bên trong PDF). Giữ dòng đó vì bạn vẫn sẽ xuất vài hình PNG (ảnh chụp màn hình, heatmap rất dày điểm), còn hình vector thì thứ quyết định độ nét là <b>cỡ chữ và độ dày nét</b>, không phải DPI. Đặt cỡ chữ trong hình bằng cỡ chữ trong văn bản.</p>
+  <p class="wb-help">Các con số ở trên — khổ 5,5×3,5 inch, chữ 10pt, 300 DPI — là <b>một bộ mặc định dùng được</b>, không phải chuẩn. Quy định thật nằm ở mẫu luận văn của trường và yêu cầu của giảng viên hướng dẫn; nếu hai bên khác nhau thì trường/giảng viên thắng. Kiểm tra trước khi vẽ 15 hình rồi phải làm lại.</p>
   <p>Danh sách hình nên có: sơ đồ kiến trúc · phân phối nhãn · tỉ lệ gian lận theo giờ (động lực cho sin/cos) · đường cong PR · SHAP summary · đường cong học · biểu đồ ngưỡng vs chi phí.</p>
 
   <h2>Bảng kiểm cuối cùng</h2>
@@ -10157,8 +10300,8 @@ const TREE = [
        lịch 14 ngày (ngày 5) khớp lịch 8 tuần (tuần 2), trước đây hai lịch nói khác nhau. */
     { id:'d-data',            t:'Lấy dữ liệu về: chọn bộ, chốt schema, viết adapter', r:25, x:20, d:30, p:'core' },
     { id:'d-leak',            t:'Data leakage — lỗi giết chết luận văn', r:45, x:25, d:20, p:'core' },
-    { id:'d-split',           t:'Chia tập: random, theo thời gian, theo nhóm', r:35, x:25, d:30, p:'core' },
     { id:'d-eda',             t:'EDA — nhìn dữ liệu đúng cách', r:35, x:50, d:45, p:'core' },
+    { id:'d-split',           t:'Chia tập: random, theo thời gian, theo nhóm', r:35, x:25, d:30, p:'core' },
     { id:'d-clean',           t:'Thiếu, lệch, ngoại lai — xử lý ra sao', r:30, x:25, d:20, p:'core' },
   ]},
   /* Toán đứng ở đây — sau khi đã có dữ liệu trong tay, ngay trước bài đầu tiên thật sự
@@ -10276,7 +10419,7 @@ const PHASE_OUTCOME = {
   p0:  'Hiểu Data Science là gì (và khác gì Analytics/Thống kê/ML/AI), nắm bộ từ vựng lõi, có hai tấm bản đồ để định vị mọi thứ học về sau — và ra khỏi chặng với một trang đề bài của chính bạn: dự đoán gì, tại thời điểm nào, sai thì tốn bao nhiêu tiền.',
   p1:  'Dựng được chỗ làm việc (chạy được cả trên máy yếu) và gõ thành thạo pandas, SQL, numpy, scikit-learn — đủ để thao tác dữ liệu thật, không chỉ đọc về chúng.',
   p2:  'Đọc được công thức trong các bài sau mà không hoảng: vector & ma trận, đạo hàm/gradient, xác suất và Bayes. Học ở đây, ngay trước bài đầu tiên thật sự cần tới chúng — phần thống kê suy diễn tách riêng và nằm ở chặng 5, cạnh chỗ bạn phải chứng minh một chênh lệch là thật.',
-  p3:  'Đi hết vòng đời của dữ liệu trước khi mô hình hoá: lấy về và chốt schema, nhận ra rò rỉ, chia tập hợp lệ, rồi mới nhìn dữ liệu (EDA) và làm sạch. Thứ tự đó là cố ý — mọi cái nhìn vào dữ liệu chỉ hợp lệ sau khi đã chia tập.',
+  p3:  'Đi hết vòng đời của dữ liệu trước khi mô hình hoá: lấy về và chốt schema, nhận ra rò rỉ, kiểm cấu trúc, chia tập hợp lệ, rồi mới khám phá và làm sạch. Thứ tự đó là cố ý, và ranh giới nằm ở bước chia: trước khi chia bạn chỉ được nhìn CẤU TRÚC (dòng là gì, có thời gian không, có trùng không) và chỉ được sửa những thứ tuyệt đối; mọi cái nhìn hay phép sửa HỌC TỪ DỮ LIỆU đều phải đợi sau khi chia và chỉ trên train.',
   p4:  'Biến dữ liệu thô thành các feature mà mô hình hiểu được, và ráp tất cả vào một Pipeline tái lập được — bước quyết định chất lượng nhiều hơn cả việc chọn mô hình.',
   p5:  'Chọn và huấn luyện mô hình phù hợp, xử lý dữ liệu lệch, đo bằng đúng metric (PR-AUC, ngưỡng quy ra tiền) thay vì accuracy gây hiểu nhầm — và chứng minh được chênh lệch giữa hai mô hình là thật chứ không phải may rủi của một lần chia tập.',
   p6:  'Hiểu mạng nơ-ron và attention/Transformer từ số 0 — đủ để biết chúng làm gì, khi nào nên dùng, và khi nào dữ liệu bảng không cần tới chúng. Chặng này đứng SAU sản phẩm là có chủ ý: sản phẩm bạn vừa làm không cần một dòng mạng nơ-ron nào.',
@@ -10311,8 +10454,8 @@ const DAYS = [
     out:'Một truy vấn window function tính feature theo mốc thời gian; một <code>Pipeline</code> hai bước chạy được trên dữ liệu đồ chơi; <code>tests/test_features.py</code> dù chỉ có một <code>assert</code>.',
     note:'Bốn khái niệm sklearn ở đây là bộ khung mọi bài sau đều dựa vào.' },
   { n:4,  t:'Vòng đời dữ liệu: schema → rò rỉ → chia tập → EDA',
-    ids:['d-data','d-leak','d-split','d-eda'],
-    proof:['d-data','d-leak','d-split','d-eda'],
+    ids:['d-data','d-leak','d-eda','d-split'],
+    proof:['d-data','d-leak','d-eda','d-split'],
     out:'<code>src/split.py</code> kèm <code>assert_split_ok</code>; danh sách cột <i>nghi ngờ rò rỉ</i> kèm lý do từng cột; <code>notebooks/01-eda.ipynb</code> chạy hết với 4 hình trong <code>reports/figures/</code>.',
     note:'Ngày dài, và thứ tự trong ngày là bắt buộc: học rò rỉ rồi mới chia tập, chia tập rồi mới nhìn dữ liệu. Bài <b>Data leakage</b> không được đọc lướt — mọi con số bạn tạo ra sau ngày này đều phụ thuộc vào việc bạn có làm đúng phần đó không.' },
   { n:5,  t:'Làm sạch, rồi toán tối thiểu',
@@ -10388,11 +10531,11 @@ const WEEKS = [
     out:'<code>docs/problem-statement.md</code> (dự đoán gì · tại thời điểm nào · sai tốn bao nhiêu) — <b>viết trước khi mở notebook</b>; repo GitHub (<code>data/</code> trong <code>.gitignore</code>); một notebook Colab clone repo và đọc được một CSV; <code>requirements.txt</code> đã ghim phiên bản.',
     needs:['d-framing','t-env','t-online','t-pandas'], proof:['d-framing','t-env','t-online','t-pandas'],
     next:'Tuần 2 dùng repo và notebook này để đi hết vòng đời dữ liệu, rồi mới tới phần toán.' },
-  { n:2, ids:['d-data','d-leak','d-split','d-eda','d-clean',
+  { n:2, ids:['d-data','d-leak','d-eda','d-split','d-clean',
               'm-vector','m-deriv','m-prob','m-bayes'],
     t:'Vòng đời dữ liệu: schema · rò rỉ · chia tập · EDA · làm sạch — rồi toán tối thiểu',
     out:'Datacard + <code>src/adapter.py</code> đưa nguồn thô về schema tám cột; danh sách cột nghi rò rỉ kèm lý do; <code>src/split.py</code> kèm <code>assert_split_ok</code>; <code>notebooks/01-eda.ipynb</code> + 4 hình trong <code>reports/figures/</code> (chạy trên train, sau khi đã chia)',
-    needs:['d-data','d-leak','d-split','d-eda'], proof:['d-data','d-leak','d-split','d-eda'],
+    needs:['d-data','d-leak','d-eda','d-split'], proof:['d-data','d-leak','d-eda','d-split'],
     next:'Tuần 3 chỉ tạo feature và train trên split đã được kiểm chứng ở đây.' },
   { n:3, ids:['f-what','f-numeric','f-cat','f-cyclic','f-time','f-text','f-pipeline','f-select','f-store',
               'ml-map','ml-linear','ml-metrics'],
@@ -10468,10 +10611,10 @@ const PAYOFF = {
   'm-infer':    ['Bootstrap, McNemar, và cách nói về p-value mà không bị bắt lỗi.', 'Biết cách chứng minh một chênh lệch rồi, bài sau là vấn đề trung tâm của bài toán gian lận: 0,17% nhãn dương.'],
   'd-data':     ['Bộ dữ liệu đã tải và kiểm tra, một schema tám cột chốt cứng, adapter đưa mọi nguồn về schema đó, và một datacard.', 'Có dữ liệu đúng hình dạng rồi. Bài sau là lỗi lặng lẽ nhất — và phải học TRƯỚC khi chia tập, vì nó quyết định chia thế nào mới hợp lệ.'],
   'd-framing':  ['Một trang đề bài: dự đoán gì, tại thời điểm nào, sai thì tốn bao nhiêu tiền.', 'Có tờ đề bài rồi, chặng sau mới dựng chỗ làm việc và học gõ — công cụ để phục vụ đề bài đó, không phải ngược lại.'],
-  'd-eda':      ['Danh sách 10 điểm kiểm tra chạy được cho mọi bộ dữ liệu mới, và bốn biểu đồ đáng vẽ.', 'EDA vừa chỉ ra chỗ bẩn; bài sau là cách làm sạch mà không tự lừa mình.'],
+  'd-eda':      ['Danh sách 10 điểm kiểm tra chạy được cho mọi bộ dữ liệu mới, và bốn biểu đồ đáng vẽ — tách làm hai thì, ngăn bởi bước chia tập.', 'Thì 1 vừa cho bạn biết dữ liệu có thứ tự thời gian không, có nhóm lặp không — đúng những thứ quyết định cách chia. Bài sau chia tập, rồi bạn quay lại đây làm Thì 2.'],
   'd-clean':    ['Cách xử lý thiếu, ngoại lai, trùng lặp — tất cả nằm trong code, không thao tác tay.', 'Dữ liệu đã sạch và đã chia. Chặng sau là phần toán tối thiểu để bạn đọc hiểu những con số sắp hiện ra — học ở đây vì từ chặng kế tiếp trở đi bài nào cũng cần.'],
-  'd-leak':     ['Sáu kiểu rò rỉ, và quy trình kiểm tra chạy trước khi tin bất kỳ con số nào.', 'Biết cái gì làm hỏng rồi, bài sau chia tập sao cho không dính vào chúng.'],
-  'd-split':    ['Tập train/valid/test chia theo thời gian, và bốn dòng assert kiểm tra sau khi chia.', 'Có tập hợp lệ rồi, từ đây mọi cái nhìn vào dữ liệu đều chỉ nhìn train — và bài sau là cách nhìn cho đúng.'],
+  'd-leak':     ['Sáu kiểu rò rỉ, và quy trình kiểm tra chạy trước khi tin bất kỳ con số nào.', 'Biết cái gì làm hỏng rồi, bài sau mới dám nhìn dữ liệu — và nói rõ nhìn được cái gì trước khi chia, cái gì phải đợi sau.'],
+  'd-split':    ['Tập train/valid/test chia theo thời gian, và bốn dòng assert kiểm tra sau khi chia.', 'Có tập hợp lệ rồi: quay lại EDA Thì 2 trên train, rồi sang bài sau để làm sạch — và bài đó tách rõ phép sửa nào chạy trước khi chia, phép nào phải học từ train.'],
   'f-what':     ['Định nghĩa feature engineering gắn với thao tác thật, và nhịp một buổi làm việc.', 'Bài sau vào loại cột đơn giản nhất: cột số.'],
   'f-numeric':  ['Bốn phép biến đổi cột số, và nhóm feature tỉ lệ thường bị bỏ quên.', 'Bài sau là loại cột khó hơn: cột chữ có hữu hạn giá trị.'],
   'f-cat':      ['Năm cách mã hoá cột phân loại, và bảng chọn nhanh theo số giá trị khác nhau.', 'Bài sau là loại cột mà cả năm cách trên đều làm sai.'],
@@ -13108,7 +13251,7 @@ VIZ.shap = el => {
       ${seg('Giao dịch', Object.keys(CASES).map(k => ({ k, t: CASES[k].t })), 'block')}
       <div data-o="rows"></div>
       <p class="ds-viz__readout" data-o="sum">—</p>
-      <p class="ds-viz__sub">điểm gốc + tổng đóng góp = điểm dự đoán — <i>đẳng thức</i> (không phải xấp xỉ) khi explainer chấm điểm trong <b>không gian xác suất</b></p>
+      <p class="ds-viz__sub">điểm gốc + tổng đóng góp = điểm dự đoán — <i>đẳng thức</i> (không phải xấp xỉ) khi explainer chấm điểm trong <b>không gian xác suất</b>. Hai nhãn “chặn / cho qua” ở đây đọc theo <b>ngưỡng trong artifact</b> (CHẶN ≥ 0,0806, đo trên bộ mô phỏng ở bài Đánh giá), không phải số tròn 0,90 minh hoạ trong sơ đồ kiến trúc</p>
       <p class="ds-viz__alt" data-o="alt"></p>
       <div class="wb-alert wb-alert--warning wb-alert--plain" style="margin-top:12px"><div class="wb-alert__body">
         <p class="wb-alert__title">SHAP không phải tác động nhân quả</p>
@@ -14326,7 +14469,7 @@ VIZ.rankk = el => {
 VIZ.causaldag = el => {
   const MODE = {
     obs: { t: 'Dữ liệu quan sát', cut: [], note: 'Cả ba đường cùng tồn tại. Tương quan bạn đo được giữa X và Kết quả là TỔNG của tác động thật và đường vòng qua biến gây nhiễu — và không có phép thống kê nào tách chúng ra chỉ từ dữ liệu này.' },
-    rct: { t: 'A/B test (ngẫu nhiên hoá)', cut: ['cx'], note: 'Gán ngẫu nhiên CẮT ĐỨT mũi tên từ biến gây nhiễu tới X: giờ ai dùng X là do đồng xu quyết định, không do họ là ai. Đường vòng bị chặn, nên chênh lệch còn lại chính là tác động thật.' },
+    rct: { t: 'A/B test (ngẫu nhiên hoá)', cut: ['cx'], note: 'Gán ngẫu nhiên CẮT ĐỨT mũi tên từ biến gây nhiễu tới X: giờ ai dùng X là do đồng xu quyết định, không do họ là ai. Đường vòng bị chặn, nên chênh lệch còn lại là ƯỚC LƯỢNG không chệch của tác động — vẫn kèm sai số, và vẫn cần giả định hai nhóm không lây sang nhau.' },
     adj: { t: 'Hiệu chỉnh theo biến quan sát được', cut: ['cx*'], note: 'Propensity score / hồi quy có kiểm soát cũng chặn đường vòng — NHƯNG chỉ với những biến gây nhiễu bạn ĐO ĐƯỢC. Biến gây nhiễu chưa đo (nét đứt) vẫn nguyên, và không có cách nào kiểm chứng nó từ chính dữ liệu.' },
   };
   el.innerHTML = `
@@ -14338,7 +14481,7 @@ VIZ.causaldag = el => {
       <p class="ds-viz__sub" data-o="n"></p>
       <p class="ds-viz__alt" data-o="alt"></p>
       ${seeBlock({
-        see: 'ở <b>dữ liệu quan sát</b> có hai đường từ X tới Kết quả: đường thẳng (tác động thật) và đường vòng qua <b>biến gây nhiễu</b>. Bật <b>A/B test</b>: mũi tên “nhiễu → X” <i>biến mất</i> — đó là tất cả những gì ngẫu nhiên hoá làm, và nó đủ. Bật <b>hiệu chỉnh</b>: mũi tên cũng bị chặn, nhưng chỉ với phần nhiễu <b>đo được</b>; phần nét đứt còn lại là cái giá bạn trả để không phải chạy thí nghiệm.',
+        see: 'ở <b>dữ liệu quan sát</b> có hai đường từ X tới Kết quả: đường thẳng (tác động thật) và đường vòng qua <b>biến gây nhiễu</b>. Bật <b>A/B test</b>: mũi tên “nhiễu → X” <i>biến mất</i> — đó là tất cả những gì ngẫu nhiên hoá làm — đủ để cắt biến gây nhiễu, nhưng không xoá được may rủi khi chia nhóm. Bật <b>hiệu chỉnh</b>: mũi tên cũng bị chặn, nhưng chỉ với phần nhiễu <b>đo được</b>; phần nét đứt còn lại là cái giá bạn trả để không phải chạy thí nghiệm.',
         wrong: '“không chạy được thí nghiệm thì chịu, không nói gì về nhân quả được”. Sai — DiD, hồi quy gián đoạn, biến công cụ và propensity score đều cho kết luận nhân quả, chỉ là mỗi cái <b>đổi lấy một giả định không kiểm chứng trực tiếp được</b>. Chất lượng chương phương pháp nằm ở chỗ bạn nêu rõ giả định đó và kiểm nó gián tiếp, chứ không ở chỗ tránh nói.',
         code: 'phần lớn công việc là vẽ được cái DAG này cho bài toán của bạn TRƯỚC khi chạy mô hình — nó quyết định biến nào phải kiểm soát và, quan trọng không kém, biến nào <b>không được</b> kiểm soát (kiểm soát một biến nằm giữa X và kết quả sẽ xoá mất chính tác động bạn đang đo).',
       })}
@@ -14580,6 +14723,496 @@ VIZ.rollwin = el => {
       TX.map((x, i) => `${hhmm(x.t)} số tiền ${x.a}: n_tx_1h ${R[i].n}, hist_mean ${f1(R[i].m)}, z ${R[i].z == null ? 'NaN' : f1(R[i].z)}`).join('; ') + '.';
   };
   wireSeg(el, draw); draw('ok');
+};
+
+/* -- 6.42 Trung bình vs trung vị khi đuôi dài ------------------
+   m-prob nói "với dữ liệu tiền, trung bình gần như luôn gây hiểu nhầm". Câu đó
+   đúng nhưng trừu tượng cho tới khi thấy hai vạch tách nhau ra khi kéo đuôi. */
+VIZ.meanmed = el => {
+  el.innerHTML = `
+    <div class="wb-card"><div class="wb-card__body">
+      <p class="ds-viz__label">Kéo độ dài đuôi, xem trung bình rời khỏi chỗ “đa số nằm”</p>
+      <div class="ds-ctrl"><div class="ds-ctrl__top"><span class="ds-ctrl__name">Vài giao dịch lớn nhất to cỡ nào</span><span class="ds-ctrl__val" data-o="tv">gấp 40 lần</span></div>
+        <input class="wb-range" type="range" min="1" max="120" value="40" data-i="t"></div>
+      <svg viewBox="0 0 320 118" aria-hidden="true"><g data-o="g"></g></svg>
+      <p class="ds-viz__readout" data-o="r">—</p>
+      <p class="ds-viz__alt" data-o="alt"></p>
+      ${seeBlock({
+        see: 'ở mức nhỏ nhất hai vạch gần như chồng lên nhau. Kéo sang phải: <b>trung vị đứng yên</b> vì nó chỉ hỏi “giá trị ở giữa là bao nhiêu”, còn <b>trung bình chạy theo đuôi</b> — chỉ ba giao dịch cũng kéo được nó ra khỏi vùng mà 97% dữ liệu nằm. Đọc dòng số dưới hình: tỉ lệ giao dịch <i>dưới mức trung bình</i> tăng dần tới hơn 80%.',
+        wrong: '“trung bình là con số đại diện”. Nó đại diện cho <i>tổng chia đều</i>, chứ không cho <i>một giao dịch điển hình</i>. Với tiền, thu nhập, lượt xem — mọi thứ có đuôi dài — câu hỏi “một giao dịch thường là bao nhiêu” phải trả lời bằng trung vị. Trung bình vẫn đúng chỗ của nó: khi bạn cần TỔNG (doanh thu, thiệt hại cả tháng), vì tổng = trung bình × số dòng.',
+        code: '<code>df.describe()</code> in sẵn cả hai: hàng <code>mean</code> và hàng <code>50%</code>. Hai hàng đó lệch nhau nhiều là dấu hiệu đuôi dài — và là lúc nên xem thêm <code>np.log1p</code> ở bài Biến số.',
+      })}
+    </div></div>`;
+  const g = el.querySelector('[data-o="g"]'), r = el.querySelector('[data-o="r"]');
+  const alt = el.querySelector('[data-o="alt"]'), tv = el.querySelector('[data-o="tv"]');
+  /* 100 giao dịch quanh 200k, cố định (không random để hình luôn giống nhau),
+     cộng 3 giao dịch lớn mà thanh trượt điều khiển. */
+  const BASE = Array.from({ length: 100 }, (_, i) => 120 + ((i * 37) % 160));
+  const draw = () => {
+    const k = +el.querySelector('[data-i="t"]').value;
+    const big = [k * 200 * 0.6, k * 200 * 0.85, k * 200];
+    const v = BASE.concat(big).sort((a, b) => a - b);
+    const mean = v.reduce((s, x) => s + x, 0) / v.length;
+    const med = v[Math.floor(v.length / 2)];
+    const hi = Math.max(v[v.length - 1], mean * 1.15), NB = 46, bins = new Array(NB).fill(0);
+    v.forEach(x => bins[Math.min(NB - 1, Math.floor(x / hi * NB))]++);
+    const mx = Math.max(...bins), X = x => 14 + (x / hi) * 292;
+    g.innerHTML = bins.map((n, i) => {
+      const bh = (n / mx) * 74;
+      return `<rect x="${14 + i * 6.35}" y="${88 - bh}" width="5.6" height="${bh}" fill="var(--wb-border-strong)"/>`;
+    }).join('')
+      + `<line x1="14" y1="89" x2="306" y2="89" stroke="var(--wb-border)" stroke-width="1"/>`
+      + `<line x1="${X(med)}" y1="10" x2="${X(med)}" y2="89" stroke="var(--wb-fg)" stroke-width="1.6"/>`
+      + `<text x="${X(med)}" y="8" font-size="7" text-anchor="middle" fill="var(--wb-fg)">trung vị</text>`
+      + `<line x1="${X(mean)}" y1="20" x2="${X(mean)}" y2="89" stroke="var(--wb-warning)" stroke-width="1.6" stroke-dasharray="3 2"/>`
+      + `<text x="${X(mean)}" y="18" font-size="7" text-anchor="middle" fill="var(--wb-warning)">trung bình</text>`
+      + `<text x="14" y="101" font-size="7" fill="var(--wb-fg-subtle)">0</text>`
+      + `<text x="306" y="101" font-size="7" text-anchor="end" fill="var(--wb-fg-subtle)">${Math.round(hi).toLocaleString('vi')} nghìn ₫</text>`;
+    const below = v.filter(x => x < mean).length / v.length * 100;
+    tv.textContent = 'gấp ' + k + ' lần';
+    r.innerHTML = `trung vị <b>${Math.round(med).toLocaleString('vi')} nghìn ₫</b> · trung bình <b>${Math.round(mean).toLocaleString('vi')} nghìn ₫</b> — `
+      + `chênh <b>${(mean / med).toFixed(1).replace('.', ',')} lần</b>, và <b>${below.toFixed(0)}%</b> số giao dịch nằm DƯỚI mức trung bình`;
+    alt.textContent = `Histogram 103 giao dịch. Ba giao dịch lớn nhất gấp khoảng ${k} lần mức thường. `
+      + `Trung vị ${Math.round(med)} nghìn đồng, trung bình ${Math.round(mean)} nghìn đồng, `
+      + `tỉ lệ giao dịch nằm dưới mức trung bình là ${below.toFixed(0)} phần trăm.`;
+  };
+  el.addEventListener('input', draw); draw();
+};
+
+/* -- 6.43 Broadcasting: trục nào được lặp ra --------------------
+   Lỗi shape là lỗi tốn giờ nhất của người mới dùng NumPy, và nó tốn giờ vì
+   quy tắc được đọc bằng chữ ("căn từ phải sang") chứ không được NHÌN. */
+VIZ.broadcast = el => {
+  const C = {
+    row: { t: '(3,4) + (4,)', a: [3, 4], b: [4], out: [3, 4], ok: true,
+      why: 'Căn từ PHẢI sang: 4 khớp 4. Chiều còn thiếu của b được coi là 1, rồi lặp lên 3.' },
+    col: { t: '(3,1) + (1,4)', a: [3, 1], b: [1, 4], out: [3, 4], ok: true,
+      why: 'Cả hai cùng nở: a lặp theo cột, b lặp theo hàng. Đây là cách tạo bảng nhân, ma trận khoảng cách, lưới toạ độ.' },
+    bad: { t: '(3,4) + (3,)', a: [3, 4], b: [3], ok: false,
+      why: 'Căn từ phải: 4 gặp 3, không bằng nhau và không có bên nào bằng 1 → NumPy dừng. Muốn cộng theo HÀNG thì phải viết b.reshape(3,1) để nói rõ 3 là chiều hàng.' },
+  };
+  el.innerHTML = `
+    <div class="wb-card"><div class="wb-card__body">
+      <p class="ds-viz__label">Cùng một phép cộng, ba cặp shape — trục nào được lặp ra</p>
+      ${seg('Cặp shape', Object.keys(C).map(k => ({ k, t: C[k].t })), 'row')}
+      <svg viewBox="0 0 320 104" aria-hidden="true"><g data-o="g"></g></svg>
+      <p class="ds-viz__readout" data-o="r">—</p>
+      <p class="ds-viz__alt" data-o="alt"></p>
+      ${seeBlock({
+        see: 'ô <b>mờ</b> là ô NumPy tự nhân bản ra — nó không tồn tại trong bộ nhớ, chỉ được đọc lại nhiều lần. Ở <b>(3,4)+(4,)</b> một hàng bị lặp xuống 3 lần; ở <b>(3,1)+(1,4)</b> cả hai đều nở và kết quả to hơn cả hai đầu vào. Ở ca <b>hỏng</b>, không ô nào lặp được vì 4 và 3 không khớp mà cũng không có số 1 nào để nở.',
+        wrong: '“shape khác nhau thì cộng không được”. Ngược lại — broadcasting tồn tại chính để cộng được. Quy tắc chỉ có hai dòng: <b>căn từ phải sang</b>, và mỗi cặp chiều phải <b>bằng nhau hoặc có một bên bằng 1</b>. Hiểu hai dòng đó thì đọc mọi lỗi shape trong một phút.',
+        code: 'Khi bí, in <code>a.shape, b.shape</code> rồi căn từ phải sang bằng mắt. Cần nói rõ một chiều là hàng hay cột thì dùng <code>b.reshape(-1, 1)</code> (thành cột) hoặc <code>b[None, :]</code> (thành hàng) — đừng để NumPy đoán hộ.',
+      })}
+    </div></div>`;
+  const g = el.querySelector('[data-o="g"]'), r = el.querySelector('[data-o="r"]');
+  const alt = el.querySelector('[data-o="alt"]');
+  const grid = (x0, y0, sh, out, label) => {
+    const rows = sh.length === 1 ? 1 : sh[0], cols = sh[sh.length - 1];
+    const R = out ? out[0] : rows, K = out ? out[1] : cols;
+    let s = `<text x="${x0}" y="${y0 - 4}" font-size="7" fill="var(--wb-fg-subtle)">${label}</text>`;
+    for (let i = 0; i < R; i++) for (let j = 0; j < K; j++) {
+      const real = i < rows && j < cols;
+      s += `<rect x="${x0 + j * 15}" y="${y0 + i * 15}" width="13" height="13" rx="2"`
+        + ` fill="${real ? 'var(--wb-fg)' : 'var(--wb-border)'}"${real ? '' : ' stroke="var(--wb-border-strong)" stroke-dasharray="2 1.5"'}/>`;
+    }
+    return s;
+  };
+  const draw = k => {
+    const c = C[k];
+    if (c.ok) {
+      g.innerHTML = grid(16, 26, c.a, c.out, 'a ' + c.t.split(' + ')[0])
+        + `<text x="${16 + c.out[1] * 15 + 6}" y="${26 + 9}" font-size="11" fill="var(--wb-fg-subtle)">+</text>`
+        + grid(16 + c.out[1] * 15 + 20, 26, c.b, c.out, 'b ' + c.t.split(' + ')[1])
+        + `<text x="${16 + 2 * (c.out[1] * 15 + 20) + 6}" y="${26 + 9}" font-size="11" fill="var(--wb-fg-subtle)">=</text>`
+        + grid(16 + 2 * (c.out[1] * 15 + 20) + 20, 26, c.out, null, 'kết quả (' + c.out.join(',') + ')');
+    } else {
+      g.innerHTML = grid(16, 26, c.a, null, 'a (3,4)')
+        + `<text x="${16 + 4 * 15 + 6}" y="35" font-size="11" fill="var(--wb-fg-subtle)">+</text>`
+        + grid(16 + 4 * 15 + 20, 26, c.b, null, 'b (3,)')
+        + `<text x="${16 + 4 * 15 + 20 + 3 * 15 + 10}" y="35" font-size="11" fill="var(--wb-danger)">✕</text>`
+        + `<text x="${16 + 4 * 15 + 20 + 3 * 15 + 24}" y="35" font-size="8" fill="var(--wb-danger)">ValueError</text>`;
+    }
+    r.innerHTML = c.ok
+      ? `<b>${c.t} → (${c.out.join(',')})</b> · ${c.why}`
+      : `<b>${c.t} → lỗi</b> · ${c.why}`;
+    alt.textContent = c.ok
+      ? `Cặp shape ${c.t} cho kết quả shape ${c.out.join(' nhân ')}. ${c.why}`
+      : `Cặp shape ${c.t} không broadcast được. ${c.why}`;
+  };
+  wireSeg(el, draw); draw('row');
+};
+
+/* -- 6.44 fit ở đâu, transform ở đâu ---------------------------
+   Cả cột "Cần scale" của f-numeric lẫn Pipeline của t-sklearn đều dựa vào một
+   ý duy nhất: fit CHỈ nhìn train. Thấy hai con số mu khác nhau thì hiểu ngay. */
+VIZ.fittransform = el => {
+  const TR = [120, 150, 180, 210, 240, 260, 290, 310];
+  const VA = [200, 230, 900, 260, 280];   /* 900 = một giao dịch lớn nằm ở valid */
+  const el0 = (a) => a.reduce((s, x) => s + x, 0) / a.length;
+  const sd = (a) => { const m = el0(a); return Math.sqrt(a.reduce((s, x) => s + (x - m) * (x - m), 0) / a.length); };
+  el.innerHTML = `
+    <div class="wb-card"><div class="wb-card__body">
+      <p class="ds-viz__label">Cùng dữ liệu, hai chỗ gọi <code>fit</code> — và con số đưa vào mô hình khác nhau</p>
+      ${seg('Cách làm', [{ k: 'ok', t: 'fit trên TRAIN (đúng)' }, { k: 'bad', t: 'fit trên TẤT CẢ (rò rỉ)' }], 'ok')}
+      <svg viewBox="0 0 320 96" aria-hidden="true"><g data-o="g"></g></svg>
+      <p class="ds-viz__readout" data-o="r">—</p>
+      <p class="ds-viz__alt" data-o="alt"></p>
+      ${seeBlock({
+        see: 'ở cách <b>đúng</b>, μ và σ chỉ được tính từ 8 giá trị train — giao dịch 900 ở tập valid vẫn hiện ra là một điểm rất xa (z lớn), đúng như lúc chạy thật khi gặp một giao dịch chưa từng thấy. Đổi sang <b>fit trên tất cả</b>: μ và σ bị chính giao dịch 900 kéo lên, nên nó tự “bình thường hoá” chính mình — z tụt xuống, và mô hình của bạn trông giỏi hơn thực tế.',
+        wrong: '“chỉ là scale thôi, có gì mà rò rỉ”. Rò rỉ không cần nhãn: bất kỳ con số nào <i>học được từ dữ liệu</i> (μ, σ, trung vị để điền, danh sách hạng mục, phân vị để cắt) mà nhìn thấy valid/test đều mang thông tin của tương lai vào mô hình. Đây là lý do mọi bước học tham số phải nằm trong <code>Pipeline</code>.',
+        code: '<code>fit_transform</code> trên train, <code>transform</code> (KHÔNG có fit) trên valid/test. Đặt trong <code>Pipeline</code> thì sklearn tự làm đúng, kể cả bên trong từng fold của <code>cross_val_score</code> — và đó là lý do bài này ép dùng Pipeline ngay từ đầu.',
+      })}
+    </div></div>`;
+  const g = el.querySelector('[data-o="g"]'), r = el.querySelector('[data-o="r"]');
+  const alt = el.querySelector('[data-o="alt"]');
+  const draw = mode => {
+    const src = mode === 'ok' ? TR : TR.concat(VA);
+    const mu = el0(src), s = sd(src);
+    const z = x => (x - mu) / s;
+    const zs = VA.map(z), zmax = Math.max(...VA.concat(TR).map(x => Math.abs(z(x)))) || 1;
+    const X = v => 160 + (v / (zmax * 1.15)) * 140;
+    g.innerHTML =
+      `<text x="14" y="14" font-size="7" fill="var(--wb-fg-subtle)">tập dùng để tính μ, σ</text>`
+      + `<text x="14" y="26" font-size="8" fill="${mode === 'ok' ? 'var(--wb-fg)' : 'var(--wb-danger)'}">${mode === 'ok' ? 'chỉ TRAIN (8 dòng)' : 'TRAIN + VALID (13 dòng)'}</text>`
+      + `<text x="14" y="42" font-size="7" fill="var(--wb-fg-subtle)">μ = ${mu.toFixed(0)} · σ = ${s.toFixed(0)}</text>`
+      + `<line x1="160" y1="72" x2="308" y2="72" stroke="var(--wb-border)" stroke-width="1"/>`
+      + `<line x1="${X(0)}" y1="52" x2="${X(0)}" y2="76" stroke="var(--wb-border-strong)" stroke-width="1"/>`
+      + `<text x="${X(0)}" y="86" font-size="7" text-anchor="middle" fill="var(--wb-fg-subtle)">z = 0</text>`
+      + TR.map(x => `<circle cx="${X(z(x))}" cy="72" r="2.6" fill="var(--wb-border-strong)"/>`).join('')
+      + VA.map((x, i) => `<circle cx="${X(zs[i])}" cy="62" r="3.2" fill="${x === 900 ? 'var(--wb-warning)' : 'var(--wb-fg)'}"/>`).join('')
+      + `<text x="160" y="52" font-size="7" fill="var(--wb-fg-subtle)">▲ valid (tròn trên) · ● train (tròn dưới)</text>`
+      + `<text x="${Math.min(300, X(z(900)))}" y="56" font-size="7" text-anchor="middle" fill="var(--wb-warning)">900</text>`;
+    r.innerHTML = mode === 'ok'
+      ? `Giao dịch 900 ở tập valid nhận <b>z = ${z(900).toFixed(2).replace('.', ',')}</b> — nó nổi bật đúng như nó phải nổi bật.`
+      : `Giao dịch 900 giờ nhận <b>z = ${z(900).toFixed(2).replace('.', ',')}</b>, thấp hơn hẳn: nó đã tự kéo μ và σ về phía mình. `
+        + `Mô hình thấy một thế giới “êm” hơn thế giới thật, và điểm số trên valid sẽ đẹp hơn thực tế.`;
+    alt.textContent = `Trục z-score. Thống kê μ và σ được tính từ ${mode === 'ok' ? 'chỉ tập train' : 'cả train lẫn valid'}: `
+      + `μ bằng ${mu.toFixed(0)}, σ bằng ${s.toFixed(0)}. Giao dịch lớn 900 ở tập valid có z bằng ${z(900).toFixed(2)}.`;
+  };
+  wireSeg(el, draw); draw('ok');
+};
+
+/* -- 6.45 Bốn câu hỏi, bốn biểu đồ khác nhau -------------------
+   d-eda liệt kê "bốn biểu đồ đáng vẽ" bằng code. Điều bảng code không nói được
+   là mỗi biểu đồ TRẢ LỜI MỘT CÂU KHÁC NHAU — và đó mới là thứ đáng nhớ. */
+VIZ.edapanel = el => {
+  /* Một bộ dữ liệu giả lập cố định, dùng chung cho cả bốn ô. */
+  const HOURS = [2.1, 2.6, 2.4, 1.9, 1.2, 0.8, 0.5, 0.4, 0.5, 0.6, 0.6, 0.7,
+                 0.7, 0.6, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.3, 1.6, 1.9, 2.2];
+  const AMT = Array.from({ length: 40 }, (_, i) => Math.exp(1.2 + i * 0.075));
+  const MISS = [['amount', 2], ['city', 11], ['device', 3], ['email', 58], ['refund_at', 91]];
+  const CORR = [['n_tx_1h', 0.31], ['z_amount', 0.24], ['hour_sin', 0.12], ['is_night', 0.10], ['chargeback_flag', 0.94]];
+  const Q = {
+    dist: { t: 'Phân phối', q: 'Cột này có hình dạng gì?' },
+    rate: { t: 'Tỉ lệ theo nhóm', q: 'Nhóm nào rủi ro hơn?' },
+    miss: { t: 'Thiếu', q: 'Cột nào thiếu tới mức không dùng được?' },
+    corr: { t: 'Tương quan với nhãn', q: 'Cột nào đáng ngờ là rò rỉ?' },
+  };
+  el.innerHTML = `
+    <div class="wb-card"><div class="wb-card__body">
+      <p class="ds-viz__label">Cùng một bộ dữ liệu — mỗi biểu đồ trả lời một câu hỏi khác</p>
+      ${seg('Câu hỏi', Object.keys(Q).map(k => ({ k, t: Q[k].t })), 'dist')}
+      <p class="ds-viz__readout" data-o="q">—</p>
+      <svg viewBox="0 0 320 104" aria-hidden="true"><g data-o="g"></g></svg>
+      <p class="ds-viz__readout" data-o="r">—</p>
+      <p class="ds-viz__alt" data-o="alt"></p>
+      ${seeBlock({
+        see: 'bốn ô này KHÔNG phải bốn cách vẽ cùng một thứ. Mỗi ô trả lời đúng một câu, và bỏ ô nào thì mất hẳn câu đó: bỏ <b>Thiếu</b> thì bạn điền trung vị cho một cột trống 91%; bỏ <b>Tương quan</b> thì <code>chargeback_flag</code> đi thẳng vào mô hình và bạn có một PR-AUC 0,98 hoàn toàn giả.',
+        wrong: '“EDA là vẽ càng nhiều hình càng tốt”. Ngược lại: bốn câu hỏi này là <i>đủ</i> để đi tiếp, và hình thứ năm không trả lời câu nào mới thì chỉ tốn giờ. Cách kiểm tra một biểu đồ có đáng vẽ không: viết ra câu hỏi nó trả lời — không viết được thì đừng vẽ.',
+        code: 'Ô 1 <code>sns.histplot</code> · ô 2 <code>df.groupby("hour")["Class"].mean()</code> · ô 3 <code>df.isna().mean()</code> · ô 4 <code>df.corr()["Class"].abs().sort_values()</code>. Ba ô đầu chạy được ở <b>Thì 1</b>; ô 4 là Thì 2 — nó dùng quan hệ với nhãn nên chỉ chạy trên <b>train</b>.',
+      })}
+    </div></div>`;
+  const g = el.querySelector('[data-o="g"]'), r = el.querySelector('[data-o="r"]');
+  const q = el.querySelector('[data-o="q"]'), alt = el.querySelector('[data-o="alt"]');
+  const bars = (vals, labs, color, fmt) => {
+    const mx = Math.max(...vals), w = Math.min(20, 292 / vals.length - 2);
+    return vals.map((v, i) => {
+      const bh = (v / mx) * 66, x = 16 + i * (292 / vals.length);
+      return `<rect x="${x}" y="${82 - bh}" width="${w}" height="${bh}" rx="1.5" fill="${color(v, i)}"/>`
+        + (labs[i] != null ? `<text x="${x + w / 2}" y="${94}" font-size="6" text-anchor="middle" fill="var(--wb-fg-subtle)">${labs[i]}</text>` : '')
+        + (fmt ? `<text x="${x + w / 2}" y="${78 - bh}" font-size="6" text-anchor="middle" fill="var(--wb-fg-subtle)">${fmt(v)}</text>` : '');
+    }).join('') + `<line x1="14" y1="83" x2="308" y2="83" stroke="var(--wb-border)" stroke-width="1"/>`;
+  };
+  const draw = k => {
+    q.textContent = Q[k].q;
+    if (k === 'dist') {
+      const NB = 24, bins = new Array(NB).fill(0), hi = Math.max(...AMT);
+      AMT.forEach(x => bins[Math.min(NB - 1, Math.floor(x / hi * NB))]++);
+      g.innerHTML = bars(bins, bins.map(() => null), () => 'var(--wb-border-strong)')
+        + `<text x="16" y="94" font-size="6" fill="var(--wb-fg-subtle)">nhỏ</text>`
+        + `<text x="306" y="94" font-size="6" text-anchor="end" fill="var(--wb-fg-subtle)">lớn (đuôi dài)</text>`;
+      r.innerHTML = 'Lệch phải, đuôi dài — <b>không</b> phải hình chuông. Đây là lý do bài Biến số dạy <code>log1p</code>, và lý do phải đọc trung vị chứ không chỉ trung bình.';
+      alt.textContent = 'Histogram cột số tiền: lệch phải với đuôi dài về bên phải, đa số giá trị dồn ở nhóm nhỏ.';
+    } else if (k === 'rate') {
+      g.innerHTML = bars(HOURS, HOURS.map((_, i) => i % 3 === 0 ? i : null), v => v > 1.8 ? 'var(--wb-warning)' : 'var(--wb-border-strong)')
+        + `<text x="16" y="14" font-size="7" fill="var(--wb-fg-subtle)">tỉ lệ gian lận (%) theo giờ trong ngày</text>`;
+      r.innerHTML = 'Rạng sáng (0–3h) cao gấp <b>~4 lần</b> ban ngày. Đây chính là chỗ bạn tự tìm ra động lực cho mã hoá sin/cos — và nó không nhìn ra được từ bảng <code>describe()</code>.';
+      alt.textContent = 'Biểu đồ cột tỉ lệ gian lận theo 24 giờ: cao nhất khoảng 2,6 phần trăm lúc 1 giờ sáng, thấp nhất khoảng 0,4 phần trăm lúc 7 giờ sáng.';
+    } else if (k === 'miss') {
+      g.innerHTML = bars(MISS.map(m => m[1]), MISS.map(m => m[0]), v => v > 50 ? 'var(--wb-warning)' : 'var(--wb-border-strong)', v => v + '%');
+      r.innerHTML = '<code>refund_at</code> thiếu 91% — nhưng <b>đừng bỏ vội</b>: nó thiếu vì <i>chưa hoàn tiền</i>, tức là thiếu MANG THÔNG TIN. Câu hỏi luôn là “vì sao thiếu”, không phải “thiếu bao nhiêu”.';
+      alt.textContent = 'Tỉ lệ thiếu theo cột: amount 2 phần trăm, device 3, city 11, email 58, refund_at 91.';
+    } else {
+      g.innerHTML = bars(CORR.map(c => c[1]), CORR.map(c => c[0]), v => v > 0.6 ? 'var(--wb-danger)' : 'var(--wb-border-strong)', v => v.toFixed(2).replace('.', ','))
+        + `<text x="16" y="14" font-size="7" fill="var(--wb-fg-subtle)">|tương quan| với nhãn</text>`;
+      r.innerHTML = '<code>chargeback_flag</code> vượt hẳn phần còn lại. Đó là <b>kết quả</b> của việc phát hiện gian lận, không phải dấu hiệu có trước — dùng nó là rò rỉ. Điều đáng nhìn không phải con số 0,94 mà là <b>khoảng cách</b> giữa nó và cột đứng thứ hai.';
+      alt.textContent = 'Tương quan tuyệt đối với nhãn: chargeback_flag 0,94, n_tx_1h 0,31, z_amount 0,24, hour_sin 0,12, is_night 0,10.';
+    }
+  };
+  wireSeg(el, draw); draw('dist');
+};
+
+/* -- 6.46 Một lượt truyền xuôi, kèm shape ở từng tầng ----------
+   dl-nn nói "mạng nơ-ron là hồi quy logistic xếp chồng". Câu đó chỉ trở thành
+   trực giác khi thấy SỐ CHIỀU đổi ở từng tầng và thấy chỗ phi tuyến nằm ở đâu. */
+VIZ.nnforward = el => {
+  el.innerHTML = `
+    <div class="wb-card"><div class="wb-card__body">
+      <p class="ds-viz__label">Một batch đi qua mạng — mỗi tầng đổi số cột, phi tuyến thì không</p>
+      <div class="ds-ctrl"><div class="ds-ctrl__top"><span class="ds-ctrl__name">Số dòng trong batch</span><span class="ds-ctrl__val" data-o="bv">64</span></div>
+        <input class="wb-range" type="range" min="1" max="256" step="1" value="64" data-i="b"></div>
+      <div class="ds-ctrl"><div class="ds-ctrl__top"><span class="ds-ctrl__name">Nơ-ron ở tầng ẩn</span><span class="ds-ctrl__val" data-o="hv">32</span></div>
+        <input class="wb-range" type="range" min="2" max="128" step="1" value="32" data-i="h"></div>
+      <svg viewBox="0 0 320 108" aria-hidden="true"><g data-o="g"></g></svg>
+      <p class="ds-viz__readout" data-o="r">—</p>
+      <p class="ds-viz__alt" data-o="alt"></p>
+      ${seeBlock({
+        see: 'kéo <b>số dòng</b>: cột đầu tiên của mọi shape đổi theo, còn <i>số tham số không đổi chút nào</i> — batch chỉ là “bao nhiêu dòng đi cùng một lượt”. Kéo <b>số nơ-ron</b>: mọi shape ở giữa đổi VÀ số tham số tăng theo. Và để ý các ô <b>ReLU</b>: chúng không đổi shape và không có tham số nào — chúng chỉ bẻ cong.',
+        wrong: '“nhiều nơ-ron hơn thì mạng thông minh hơn”. Nhiều nơ-ron hơn = nhiều tham số hơn = học thuộc dễ hơn. Với dữ liệu bảng vài trăm nghìn dòng, một mạng nhỏ (32–64) thường thắng một mạng to, và cả hai thường vẫn thua LightGBM — đó là kết luận của bài Dữ liệu bảng.',
+        code: 'Mỗi <code>nn.Linear(a, b)</code> có đúng <code>a×b + b</code> tham số (ma trận trọng số cộng bias). Cách gỡ lỗi shape nhanh nhất: in <code>x.shape</code> sau từng tầng — đúng những con số hình này đang hiện.',
+      })}
+    </div></div>`;
+  const g = el.querySelector('[data-o="g"]'), r = el.querySelector('[data-o="r"]');
+  const alt = el.querySelector('[data-o="alt"]');
+  const bv = el.querySelector('[data-o="bv"]'), hv = el.querySelector('[data-o="hv"]');
+  const draw = () => {
+    const B = +el.querySelector('[data-i="b"]').value, H = +el.querySelector('[data-i="h"]').value;
+    const IN = 12;
+    bv.textContent = B; hv.textContent = H;
+    const steps = [
+      { t: 'đầu vào', s: [B, IN], p: 0, k: 'io' },
+      { t: 'Linear(' + IN + ',' + H + ')', s: [B, H], p: IN * H + H, k: 'lin' },
+      { t: 'ReLU', s: [B, H], p: 0, k: 'act' },
+      { t: 'Linear(' + H + ',' + H / 2 + ')', s: [B, Math.max(1, Math.round(H / 2))], p: H * Math.max(1, Math.round(H / 2)) + Math.max(1, Math.round(H / 2)), k: 'lin' },
+      { t: 'ReLU', s: [B, Math.max(1, Math.round(H / 2))], p: 0, k: 'act' },
+      { t: 'Linear(' + Math.max(1, Math.round(H / 2)) + ',1)', s: [B, 1], p: Math.max(1, Math.round(H / 2)) + 1, k: 'lin' },
+      { t: 'sigmoid', s: [B, 1], p: 0, k: 'act' },
+    ];
+    const W = 292 / steps.length;
+    g.innerHTML = steps.map((st, i) => {
+      const x = 16 + i * W, fill = st.k === 'act' ? 'var(--wb-border)' : st.k === 'io' ? 'var(--wb-border-strong)' : 'var(--wb-fg)';
+      const hh = 8 + Math.min(40, Math.log2(st.s[1] + 1) * 9);
+      return `<rect x="${x}" y="${54 - hh / 2}" width="${W - 6}" height="${hh}" rx="3" fill="${fill}"/>`
+        + `<text x="${x + (W - 6) / 2}" y="${44 - hh / 2}" font-size="6" text-anchor="middle" fill="var(--wb-fg-subtle)">${st.t}</text>`
+        + `<text x="${x + (W - 6) / 2}" y="${72 + hh / 2}" font-size="6.5" text-anchor="middle" fill="var(--wb-fg)">(${st.s.join(',')})</text>`
+        + `<text x="${x + (W - 6) / 2}" y="${82 + hh / 2}" font-size="6" text-anchor="middle" fill="${st.p ? 'var(--wb-fg-subtle)' : 'var(--wb-border-strong)'}">${st.p ? st.p.toLocaleString('vi') + ' tham số' : 'không tham số'}</text>`
+        + (i < steps.length - 1 ? `<text x="${x + W - 4}" y="57" font-size="7" fill="var(--wb-fg-subtle)">›</text>` : '');
+    }).join('');
+    const total = steps.reduce((s, x) => s + x.p, 0);
+    r.innerHTML = `Tổng <b>${total.toLocaleString('vi')} tham số</b> — và con số đó <b>không</b> phụ thuộc batch. `
+      + `Batch chỉ đổi cột đầu của mọi shape: (${B},${IN}) vào, (${B},1) ra — đúng ${B} xác suất, mỗi dòng một cái.`;
+    alt.textContent = `Chuỗi bảy tầng: ${steps.map(s => s.t + ' cho shape ' + s.s.join(' nhân ')).join('; ')}. `
+      + `Tổng số tham số ${total}, không phụ thuộc kích thước batch ${B}.`;
+  };
+  el.addEventListener('input', draw); draw();
+};
+
+/* -- 6.47 Hình dạng đường loss là tín hiệu chẩn đoán -----------
+   Bảng triệu chứng của dl-train đúng, nhưng bảng không thay thế được HÌNH DẠNG:
+   thứ người ta thật sự nhìn khi debug là hai đường cong tách nhau hay không. */
+VIZ.losscurve = el => {
+  const M = {
+    under: { t: 'Thiếu khớp', why: 'Hai đường <b>đi cùng nhau và dừng ở mức cao</b>. Mô hình chưa học nổi cả dữ liệu train — thêm dữ liệu không cứu được.',
+      fix: 'Mạng to hơn / train lâu hơn / bớt regularization / thêm feature. Và kiểm cả lỗi cấu hình: learning rate quá nhỏ cũng cho đúng hình này.' },
+    good:  { t: 'Vừa', why: 'Hai đường cùng xuống, khe hở nhỏ và <b>ổn định</b>. Đây là hình dạng bạn muốn.',
+      fix: 'Dừng ở đáy của đường validation. Ghi lại epoch đó — nó là siêu tham số bạn phải báo cáo.' },
+    over:  { t: 'Quá khớp', why: 'Train tiếp tục xuống, <b>validation quay đầu đi lên</b>. Từ điểm quay đầu trở đi, mô hình đang học thuộc nhiễu.',
+      fix: 'Early stopping tại đáy · dropout / weight decay · thêm dữ liệu. Đáy của đường validation chính là chỗ early stopping dừng.' },
+    noisy: { t: 'Nhiễu / lr quá lớn', why: 'Cả hai đường <b>nhảy lung tung</b>, có epoch tăng vọt. Đây không phải quá khớp — đây là tối ưu đang không hội tụ.',
+      fix: 'Giảm learning rate (thường chia 3–10) · tăng batch · kiểm dữ liệu chưa scale. Đừng train lâu hơn, nó không tự lành.' },
+  };
+  el.innerHTML = `
+    <div class="wb-card"><div class="wb-card__body">
+      <p class="ds-viz__label">Bốn hình dạng đường loss, và mỗi hình dạng nói gì</p>
+      ${seg('Tình huống', Object.keys(M).map(k => ({ k, t: M[k].t })), 'good')}
+      <svg viewBox="0 0 320 112" aria-hidden="true"><g data-o="g"></g></svg>
+      <p class="ds-viz__readout" data-o="r">—</p>
+      <p class="ds-viz__readout" data-o="f">—</p>
+      <p class="ds-viz__alt" data-o="alt"></p>
+      ${seeBlock({
+        see: 'thứ đáng đọc không phải <i>độ cao</i> của hai đường mà <b>khe hở giữa chúng</b> và <b>hướng của đường validation</b>. Quá khớp và thiếu khớp có loss train khác nhau một trời một vực nhưng cùng là “mô hình dùng không được” — phân biệt chúng bằng khe hở, không bằng con số.',
+        wrong: '“validation loss tăng nghĩa là code sai”. Không — với mạng nơ-ron, validation quay đầu là chuyện <b>bình thường và dự đoán được</b>; nó chính là lý do early stopping tồn tại. Cái đáng sợ hơn là đường validation <i>nhảy lung tung</i>: đó mới là dấu hiệu learning rate sai hoặc dữ liệu chưa scale.',
+        code: 'Ghi <code>train_loss</code> và <code>val_loss</code> mỗi epoch vào một list rồi vẽ — 5 dòng code, và nó tiết kiệm hàng giờ đoán mò. Trong luận văn, một hình như thế này biện minh cho con số epoch bạn chọn tốt hơn mọi câu chữ.',
+      })}
+    </div></div>`;
+  const g = el.querySelector('[data-o="g"]'), r = el.querySelector('[data-o="r"]');
+  const f = el.querySelector('[data-o="f"]'), alt = el.querySelector('[data-o="alt"]');
+  const N = 30;
+  const series = k => {
+    const tr = [], va = [];
+    for (let i = 0; i < N; i++) {
+      const x = i / (N - 1);
+      /* dao động cố định theo chỉ số, không dùng random để hình luôn giống nhau */
+      const wob = Math.sin(i * 2.3) * 0.5 + Math.sin(i * 5.1) * 0.3;
+      if (k === 'under') { tr.push(0.62 - 0.10 * x); va.push(0.65 - 0.09 * x); }
+      else if (k === 'good') { tr.push(0.70 * Math.exp(-2.4 * x) + 0.09); va.push(0.70 * Math.exp(-2.1 * x) + 0.14); }
+      else if (k === 'over') { tr.push(0.70 * Math.exp(-3.2 * x) + 0.02); va.push(0.70 * Math.exp(-3.4 * x) + 0.13 + 0.42 * Math.max(0, x - 0.34) * Math.max(0, x - 0.34)); }
+      else { tr.push(0.45 + 0.16 * wob); va.push(0.52 + 0.20 * wob + 0.05 * Math.sin(i * 1.7)); }
+    }
+    return { tr, va };
+  };
+  const draw = k => {
+    const { tr, va } = series(k);
+    const hi = Math.max(...tr, ...va) * 1.1, X = i => 20 + (i / (N - 1)) * 286, Y = v => 92 - (v / hi) * 78;
+    const path = a => a.map((v, i) => (i ? 'L' : 'M') + X(i).toFixed(1) + ' ' + Y(v).toFixed(1)).join(' ');
+    const bestI = va.indexOf(Math.min(...va));
+    g.innerHTML =
+      `<line x1="20" y1="93" x2="308" y2="93" stroke="var(--wb-border)" stroke-width="1"/>`
+      + `<line x1="20" y1="12" x2="20" y2="93" stroke="var(--wb-border)" stroke-width="1"/>`
+      + `<path d="${path(tr)}" fill="none" stroke="var(--wb-border-strong)" stroke-width="1.6"/>`
+      + `<path d="${path(va)}" fill="none" stroke="var(--wb-fg)" stroke-width="1.8"/>`
+      + (k === 'over' ? `<line x1="${X(bestI)}" y1="12" x2="${X(bestI)}" y2="93" stroke="var(--wb-warning)" stroke-width="1.2" stroke-dasharray="3 2"/>`
+        + `<text x="${X(bestI)}" y="10" font-size="6.5" text-anchor="middle" fill="var(--wb-warning)">early stopping dừng ở đây</text>` : '')
+      + `<text x="22" y="10" font-size="6.5" fill="var(--wb-fg-subtle)">loss</text>`
+      + `<text x="306" y="103" font-size="6.5" text-anchor="end" fill="var(--wb-fg-subtle)">epoch →</text>`
+      + `<text x="26" y="${Y(tr[N - 1]) - 4}" font-size="6.5" fill="var(--wb-border-strong)">train</text>`
+      + `<text x="${X(N - 1) - 4}" y="${Y(va[N - 1]) - 4}" font-size="6.5" text-anchor="end" fill="var(--wb-fg)">validation</text>`;
+    const gap = va[N - 1] - tr[N - 1];
+    r.innerHTML = M[k].why + ` <span class="wb-help">(khe hở cuối: ${gap.toFixed(2).replace('.', ',')})</span>`;
+    f.innerHTML = '<b>Làm gì:</b> ' + M[k].fix;
+    alt.textContent = `Hai đường loss theo epoch, tình huống ${M[k].t.toLowerCase()}. `
+      + `Loss train đi từ ${tr[0].toFixed(2)} xuống ${tr[N - 1].toFixed(2)}; loss validation từ ${va[0].toFixed(2)} tới ${va[N - 1].toFixed(2)}. `
+      + `Khe hở cuối giữa hai đường là ${gap.toFixed(2)}.`;
+  };
+  wireSeg(el, draw); draw('good');
+};
+
+/* -- 6.48 Sai số điểm khác với độ bất định --------------------
+   q-regress dạy MAE/RMSE rồi dạy khoảng dự đoán. Người mới hay gộp hai thứ đó
+   làm một; residual plot cộng khoảng phủ tách chúng ra bằng hình. */
+VIZ.residual = el => {
+  /* 60 điểm cố định: y thật, dự đoán, và độ rộng khoảng dự đoán. */
+  const P = Array.from({ length: 60 }, (_, i) => {
+    const x = 5 + i * 1.5;
+    const wob = Math.sin(i * 1.9) * 1.0 + Math.sin(i * 0.7) * 1.4;
+    return { x, y: x * 0.8 + 4 + wob * (1 + x / 40), yhat: x * 0.8 + 4 };
+  });
+  const M = {
+    ok:   { t: 'Mô hình ổn', f: p => p },
+    bias: { t: 'Thiếu một phi tuyến', f: p => ({ ...p, yhat: p.yhat + (p.x - 50) * (p.x - 50) * 0.006 - 2.5 }) },
+    het:  { t: 'Sai số nở theo x', f: p => p },
+  };
+  el.innerHTML = `
+    <div class="wb-card"><div class="wb-card__body">
+      <p class="ds-viz__label">Phần dư nói mô hình sai <i>ở đâu</i> — MAE chỉ nói sai <i>bao nhiêu</i></p>
+      ${seg('Tình huống', Object.keys(M).map(k => ({ k, t: M[k].t })), 'ok')}
+      <div class="ds-ctrl"><div class="ds-ctrl__top"><span class="ds-ctrl__name">Độ rộng khoảng dự đoán</span><span class="ds-ctrl__val" data-o="wv">±1,0 σ</span></div>
+        <input class="wb-range" type="range" min="4" max="30" value="10" data-i="w"></div>
+      <svg viewBox="0 0 320 112" aria-hidden="true"><g data-o="g"></g></svg>
+      <p class="ds-viz__readout" data-o="r">—</p>
+      <p class="ds-viz__alt" data-o="alt"></p>
+      ${seeBlock({
+        see: 'ở <b>Mô hình ổn</b>, phần dư rải đều quanh vạch 0 — không hình dạng nào. Đổi sang <b>Thiếu một phi tuyến</b>: MAE chỉ nhích lên một chút, nhưng phần dư vẽ thành một đường cong rõ ràng — mô hình sai <i>có hệ thống</i> ở hai đầu. Đổi sang <b>Sai số nở</b>: phần dư loe ra hình phễu, nghĩa là một khoảng dự đoán rộng cố định sẽ vừa quá rộng ở đầu này vừa quá hẹp ở đầu kia.',
+        wrong: '“MAE thấp là mô hình tốt”. MAE là một con số duy nhất cho toàn bộ tập — nó không phân biệt được “sai đều ở mọi nơi” với “rất đúng ở giữa, sai hệ thống ở hai đầu”, mà hai thứ đó dẫn tới hai hành động hoàn toàn khác nhau. Vẽ phần dư <b>trước</b> khi tin MAE.',
+        code: '<code>resid = y_true - y_pred</code> rồi <code>plt.scatter(y_pred, resid)</code> và một đường ngang ở 0. Với khoảng dự đoán, con số phải báo cáo là <b>độ phủ thực tế</b> (bao nhiêu phần trăm điểm thật rơi vào khoảng), không phải độ rộng bạn đặt ra.',
+      })}
+    </div></div>`;
+  const g = el.querySelector('[data-o="g"]'), r = el.querySelector('[data-o="r"]');
+  const alt = el.querySelector('[data-o="alt"]'), wv = el.querySelector('[data-o="wv"]');
+  const draw = k => {
+    const w = +el.querySelector('[data-i="w"]').value / 10;
+    wv.textContent = '±' + w.toFixed(1).replace('.', ',') + ' σ';
+    const pts = P.map(M[k].f);
+    const res = pts.map(p => p.y - p.yhat);
+    const sd = Math.sqrt(res.reduce((s, x) => s + x * x, 0) / res.length);
+    const mae = res.reduce((s, x) => s + Math.abs(x), 0) / res.length;
+    const band = k === 'het' ? pts.map(p => w * sd * (0.4 + p.x / 55)) : pts.map(() => w * sd);
+    const cov = res.filter((e, i) => Math.abs(e) <= band[i]).length / res.length * 100;
+    const mx = Math.max(...res.map(Math.abs), ...band) * 1.15;
+    const X = p => 20 + ((p.x - 5) / 88) * 286, Y = v => 56 - (v / mx) * 44;
+    g.innerHTML =
+      `<path d="${pts.map((p, i) => (i ? 'L' : 'M') + X(p).toFixed(1) + ' ' + Y(band[i]).toFixed(1)).join(' ')}`
+      + ` ${pts.map((p, i) => 'L' + X(p).toFixed(1) + ' ' + Y(-band[i]).toFixed(1)).reverse().join(' ')} Z"`
+      + ` fill="var(--wb-border)" opacity="0.45"/>`
+      + `<line x1="20" y1="56" x2="308" y2="56" stroke="var(--wb-border-strong)" stroke-width="1.2"/>`
+      + pts.map((p, i) => `<circle cx="${X(p).toFixed(1)}" cy="${Y(res[i]).toFixed(1)}" r="2.1" fill="${Math.abs(res[i]) <= band[i] ? 'var(--wb-fg)' : 'var(--wb-warning)'}"/>`).join('')
+      + `<text x="22" y="12" font-size="6.5" fill="var(--wb-fg-subtle)">phần dư = thật − dự đoán</text>`
+      + `<text x="22" y="60" font-size="6.5" fill="var(--wb-fg-subtle)">0</text>`
+      + `<text x="306" y="106" font-size="6.5" text-anchor="end" fill="var(--wb-fg-subtle)">giá trị dự đoán →</text>`;
+    r.innerHTML = `MAE <b>${mae.toFixed(2).replace('.', ',')}</b> · độ phủ thực tế của khoảng: <b>${cov.toFixed(0)}%</b>`
+      + (k === 'bias' ? ' — MAE chỉ nhích lên, nhưng phần dư đã cong: mô hình sai <b>có hệ thống</b>, không phải sai ngẫu nhiên.'
+        : k === 'het' ? ' — khoảng rộng đều là sai loại: nó quá rộng ở bên trái và quá hẹp ở bên phải, dù độ phủ trung bình trông ổn.'
+          : ' — phần dư không có hình dạng nào, đúng như mong đợi. Chỉnh thanh trượt tới khi độ phủ đạt mức bạn hứa (thường 90 hoặc 95%).');
+    alt.textContent = `Biểu đồ phần dư, tình huống ${M[k].t.toLowerCase()}, dải khoảng dự đoán rộng ${w.toFixed(1)} lần độ lệch chuẩn. `
+      + `MAE bằng ${mae.toFixed(2)}, độ phủ thực tế ${cov.toFixed(0)} phần trăm.`;
+  };
+  wireSeg(el, draw); el.addEventListener('input', () => draw(el.querySelector('[data-seg][aria-pressed="true"]').dataset.seg)); draw('ok');
+};
+
+/* -- 6.49 Ma trận nhầm lẫn nhiều lớp, chuẩn hoá theo hàng ------
+   q-multi giải thích macro / micro / weighted bằng công thức. Cùng một ma trận,
+   ba con số ra rất khác nhau — và chuẩn hoá theo hàng là cách thấy vì sao. */
+VIZ.confmat = el => {
+  const L = ['thẻ giả', 'chiếm tài khoản', 'thương gia gian', 'hoàn tiền gian', 'hợp lệ'];
+  /* hàng = lớp thật, cột = lớp mô hình đoán. Lớp cuối áp đảo về số lượng. */
+  const CM = [
+    [42, 6, 2, 4, 26],
+    [9, 31, 1, 3, 36],
+    [1, 2, 8, 1, 18],
+    [2, 3, 1, 12, 22],
+    [14, 11, 6, 9, 4960],
+  ];
+  el.innerHTML = `
+    <div class="wb-card"><div class="wb-card__body">
+      <p class="ds-viz__label">Cùng một ma trận — đổi cách chuẩn hoá là đổi hẳn kết luận</p>
+      ${seg('Hiển thị', [{ k: 'raw', t: 'Số đếm' }, { k: 'row', t: 'Chuẩn hoá theo HÀNG (recall)' }, { k: 'col', t: 'Chuẩn hoá theo CỘT (precision)' }], 'raw')}
+      <svg viewBox="0 0 320 132" aria-hidden="true"><g data-o="g"></g></svg>
+      <p class="ds-viz__readout" data-o="r">—</p>
+      <p class="ds-viz__alt" data-o="alt"></p>
+      ${seeBlock({
+        see: 'ở <b>Số đếm</b>, ô “hợp lệ → hợp lệ” với 4.960 làm mọi ô khác thành đen kịt như nhau — bảng trông như một mô hình hoàn hảo. Đổi sang <b>chuẩn hoá theo hàng</b>: bốn lớp gian lận hiện nguyên hình, và bạn thấy phần lớn ca bị đẩy nhầm vào cột “hợp lệ”. Ba con số F1 dưới hình chênh nhau rất xa trên <i>cùng</i> ma trận này.',
+        wrong: '“báo cáo F1 là đủ”. F1 <i>nào</i>? <b>micro</b> gần bằng accuracy nên bị lớp đông áp đảo; <b>weighted</b> cũng vậy; chỉ <b>macro</b> cho mỗi lớp một phiếu bằng nhau. Với bài toán mà lớp hiếm mới là lớp quan trọng, chọn con số nào để in đậm là một quyết định trung thực hay không trung thực.',
+        code: '<code>ConfusionMatrixDisplay.from_predictions(y, p, normalize="true")</code> — <code>normalize="true"</code> là chuẩn hoá theo HÀNG (recall từng lớp). Luôn kèm <code>classification_report</code> để có bảng F1 <b>từng lớp</b>; con số gộp giấu đi đúng thứ đáng nhìn.',
+      })}
+    </div></div>`;
+  const g = el.querySelector('[data-o="g"]'), r = el.querySelector('[data-o="r"]');
+  const alt = el.querySelector('[data-o="alt"]');
+  const draw = mode => {
+    const rowSum = CM.map(row => row.reduce((s, x) => s + x, 0));
+    const colSum = L.map((_, j) => CM.reduce((s, row) => s + row[j], 0));
+    const val = (i, j) => mode === 'raw' ? CM[i][j] : mode === 'row' ? CM[i][j] / rowSum[i] : CM[i][j] / (colSum[j] || 1);
+    const mx = mode === 'raw' ? Math.max(...CM.flat()) : 1;
+    const CW = 45, CH = 19, X0 = 78, Y0 = 26;
+    let s = `<text x="${X0 + CW * 2.5}" y="10" font-size="6.5" text-anchor="middle" fill="var(--wb-fg-subtle)">mô hình đoán →</text>`;
+    L.forEach((t, j) => { s += `<text x="${X0 + j * CW + CW / 2}" y="22" font-size="6.2" text-anchor="middle" fill="var(--wb-fg-subtle)">${t}</text>`; });
+    CM.forEach((row, i) => {
+      s += `<text x="${X0 - 4}" y="${Y0 + i * CH + 11}" font-size="6.2" text-anchor="end" fill="var(--wb-fg-subtle)">${L[i]}</text>`;
+      row.forEach((_, j) => {
+        const v = val(i, j), a = mode === 'raw' ? Math.pow(v / mx, 0.32) : v;
+        s += `<rect x="${X0 + j * CW}" y="${Y0 + i * CH}" width="${CW - 2}" height="${CH - 2}" rx="2" fill="var(--wb-fg)" opacity="${(0.06 + 0.9 * a).toFixed(3)}"/>`
+          + `<text x="${X0 + j * CW + (CW - 2) / 2}" y="${Y0 + i * CH + 12}" font-size="6.6" text-anchor="middle" fill="var(--wb-surface)" opacity="${a > 0.45 ? 1 : 0}">${mode === 'raw' ? v : (v * 100).toFixed(0) + '%'}</text>`
+          + `<text x="${X0 + j * CW + (CW - 2) / 2}" y="${Y0 + i * CH + 12}" font-size="6.6" text-anchor="middle" fill="var(--wb-fg)" opacity="${a > 0.45 ? 0 : 1}">${mode === 'raw' ? v : (v * 100).toFixed(0) + '%'}</text>`;
+      });
+    });
+    s += `<text x="14" y="${Y0 + 2.5 * CH}" font-size="6.5" fill="var(--wb-fg-subtle)">thật</text>`;
+    g.innerHTML = s;
+    /* F1 từng lớp rồi ba cách gộp — tính thẳng từ ma trận, không viết cứng. */
+    const f1 = L.map((_, i) => {
+      const tp = CM[i][i], fp = colSum[i] - tp, fn = rowSum[i] - tp;
+      const p = tp / (tp + fp || 1), rc = tp / (tp + fn || 1);
+      return (p + rc) ? 2 * p * rc / (p + rc) : 0;
+    });
+    const macro = f1.reduce((s2, x) => s2 + x, 0) / f1.length;
+    const weighted = f1.reduce((s2, x, i) => s2 + x * rowSum[i], 0) / rowSum.reduce((a, b) => a + b, 0);
+    const micro = CM.reduce((s2, row, i) => s2 + row[i], 0) / rowSum.reduce((a, b) => a + b, 0);
+    r.innerHTML = `<b>macro-F1 ${macro.toFixed(2).replace('.', ',')}</b> · weighted-F1 ${weighted.toFixed(2).replace('.', ',')} · micro-F1 ${micro.toFixed(2).replace('.', ',')} — `
+      + `cùng một mô hình, chênh nhau <b>${(micro / macro).toFixed(1).replace('.', ',')} lần</b>. `
+      + `F1 của lớp hiếm nhất (${L[2]}) chỉ <b>${f1[2].toFixed(2).replace('.', ',')}</b>.`;
+    alt.textContent = `Ma trận nhầm lẫn 5 lớp, hiển thị ${mode === 'raw' ? 'số đếm' : mode === 'row' ? 'chuẩn hoá theo hàng' : 'chuẩn hoá theo cột'}. `
+      + `F1 từng lớp: ${L.map((t, i) => t + ' ' + f1[i].toFixed(2)).join('; ')}. `
+      + `macro-F1 ${macro.toFixed(2)}, weighted-F1 ${weighted.toFixed(2)}, micro-F1 ${micro.toFixed(2)}.`;
+  };
+  wireSeg(el, draw); draw('raw');
 };
 
 /* ============================================================
