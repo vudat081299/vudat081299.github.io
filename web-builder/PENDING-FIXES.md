@@ -20,7 +20,7 @@ getComputedStyle(document.documentElement).getPropertyValue('--wb-version').repl
 | 3 | Rail stepper ngang xuyên qua marker | kit v0.6: rail vẽ vào **khe giữa** hai marker (`left: calc(50% + size/2)`, `width: calc(100% - size)`) thay vì che bằng nền đục — nên đúng luôn cho `.is-todo`, `--dashed`, `--dot` và dark |
 | 4 | `__actions` không thu hẹp | kit v0.6 ghi rõ **hợp đồng slot**: `__actions` **chỉ chứa nút icon** (nó không bao giờ gập, vì theme toggle / tìm kiếm / avatar phải còn bấm được trên điện thoại); nút **chữ** đặt cuối `__menu`, sau một `__spacer` lồng bên trong — `__menu` giờ `flex: 1 1 auto` nên spacer đó đẩy CTA sang phải khi thanh rộng, và CTA tự chui vào ☰ khi thanh hẹp |
 
-**Bản vá page-local đã gỡ** khỏi `mam-com-viet.html` (kit lo rồi):
+**Bản vá page-local đã gỡ** khỏi `vietnamese-home-cooking.html` (kit lo rồi):
 
 - `.wb-container { box-sizing: border-box }`
 - `.wb-steps--horizontal .wb-steps__item.is-todo .wb-steps__marker { background: var(--wb-surface) }` (+ `.dark`).
@@ -33,8 +33,8 @@ getComputedStyle(document.documentElement).getPropertyValue('--wb-version').repl
 
 | Trang | Bề rộng | CSS cũ | v0.6 |
 |---|---|---|---|
-| `mam-com-viet.html` | 1280 | tràn 40px | **0** |
-| `mam-com-viet.html` | 390 | tràn 40px | **0** |
+| `vietnamese-home-cooking.html` | 1280 | tràn 40px | **0** |
+| `vietnamese-home-cooking.html` | 390 | tràn 40px | **0** |
 | `finance-econ-rulebook.html` | 1280 | tràn 40px | **0** |
 
 ---
@@ -64,7 +64,7 @@ này, và đang tràn 32px ở 390/320.
 Hai lựa chọn: trỏ nó sang `../web-builder/web-builder.css` (một bản kit cho cả site — nên làm), hoặc copy
 bản mới đè lên. Trỏ sang bản chung thì lần sau không phải nhớ có hai chỗ.
 
-### C. `mam-com-viet.html` — `.mc-navhide` giờ đã có cách làm chuẩn
+### C. `vietnamese-home-cooking.html` — `.mc-navhide` giờ đã có cách làm chuẩn
 
 Trang đang ẩn chữ trong `.wb-navbar__actions` dưới 720px để né lỗi #4. Cách này **vẫn chạy đúng**, không gấp.
 Nhưng đúng bài của kit bây giờ là bỏ `.mc-navhide` và **chuyển 3 nút chữ vào cuối `.wb-navbar__menu`** sau một
@@ -81,6 +81,6 @@ document.documentElement.scrollWidth - document.documentElement.clientWidth   //
 ```
 
 Cẩn thận một cái bẫy: **so hai hình chữ nhật theo trục ngang thôi thì báo nhầm.** Ở ≤640px trang
-`mam-com-viet.html` tự dựng stepper thành **dọc**, mọi bước cùng toạ độ x — kiểm 1 chiều sẽ kêu "rail xuyên
+`vietnamese-home-cooking.html` tự dựng stepper thành **dọc**, mọi bước cùng toạ độ x — kiểm 1 chiều sẽ kêu "rail xuyên
 marker" trong khi thực tế chúng cách nhau theo trục y. Kiểm cả hai trục, hoặc chỉ kiểm khi
 `flex-direction` thật sự là `row`.
