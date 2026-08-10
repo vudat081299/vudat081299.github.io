@@ -3499,8 +3499,18 @@ var LABELS = {
     overlay.classList.remove('is-open');
     document.body.style.overflow = '';
   }
+  // Nút × / [data-modal-close]: bấm là đóng.
   overlay.addEventListener('click', function (e) {
-    if (e.target === overlay || e.target.closest('[data-modal-close]')) close();
+    if (e.target.closest('[data-modal-close]')) close();
+  });
+  // Bấm nền để đóng: chỉ đóng khi CẢ chỗ bấm xuống và chỗ nhả chuột đều là chính lớp nền
+  // (overlay), không phải hộp bên trong — tránh bôi đen chữ trong hộp rồi kéo ra nền làm
+  // modal đóng oan (click nhắm vào tổ tiên chung của điểm bấm và điểm nhả = overlay).
+  var downOnOverlay = false;
+  overlay.addEventListener('pointerdown', function (e) { downOnOverlay = (e.target === overlay); });
+  overlay.addEventListener('pointerup', function (e) {
+    if (downOnOverlay && e.target === overlay) close();
+    downOnOverlay = false;
   });
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && overlay.classList.contains('is-open')) close();

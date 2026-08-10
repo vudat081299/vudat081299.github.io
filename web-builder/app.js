@@ -1125,8 +1125,7 @@ document.addEventListener("click", (e) => {
   const open = e.target.closest("[data-modal-open]");
   if (open) { const m = document.querySelector(open.getAttribute("data-modal-open"));
     if (m) m.classList.add("is-open"); return; }
-  if (e.target.closest("[data-modal-close]") ||
-      (e.target.classList && e.target.classList.contains("wb-overlay"))) {
+  if (e.target.closest("[data-modal-close]")) {
     const ov = e.target.closest(".wb-overlay");
     if (ov) ov.classList.remove("is-open");
     return;
@@ -1146,6 +1145,21 @@ document.addEventListener("click", (e) => {
         (p.hidden = p.dataset.panel !== tab.dataset.tab));
     }
   }
+});
+
+/* Bấm nền để đóng modal: chỉ đóng khi CẢ pointerdown và pointerup rơi trúng chính
+   .wb-overlay (lớp nền), không phải hộp .wb-modal bên trong. Nếu bắt bằng "click" như cũ
+   thì một thao tác bôi đen chữ trong modal rồi nhả chuột trên nền sẽ đóng oan, vì sự kiện
+   click nhắm vào tổ tiên chung của điểm bấm và điểm nhả — chính là overlay. */
+let _wbOverlayDown = null;
+document.addEventListener("pointerdown", (e) => {
+  _wbOverlayDown = (e.target.classList && e.target.classList.contains("wb-overlay")) ? e.target : null;
+});
+document.addEventListener("pointerup", (e) => {
+  if (_wbOverlayDown && e.target === _wbOverlayDown && e.target.classList.contains("wb-overlay")) {
+    e.target.classList.remove("is-open");
+  }
+  _wbOverlayDown = null;
 });
 
 function spawnToast(d) {

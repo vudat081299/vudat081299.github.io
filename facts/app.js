@@ -437,9 +437,18 @@
       el.search.select();
     });
 
-    /* đóng drawer: nút ×, bấm nền */
+    /* đóng: nút × / [data-modal-close] — bấm là đóng */
     el.overlay.addEventListener('click', function (e) {
-      if (e.target === el.overlay || e.target.closest('[data-modal-close]')) closeFact();
+      if (e.target.closest('[data-modal-close]')) closeFact();
+    });
+    /* bấm nền để đóng: chỉ đóng khi CẢ chỗ bấm xuống và chỗ nhả chuột đều là chính lớp
+       nền (overlay), không phải hộp bên trong — tránh bôi đen chữ trong modal rồi kéo ra
+       nền làm đóng oan (click nhắm vào tổ tiên chung của điểm bấm và điểm nhả = overlay). */
+    var downOnOverlay = false;
+    el.overlay.addEventListener('pointerdown', function (e) { downOnOverlay = (e.target === el.overlay); });
+    el.overlay.addEventListener('pointerup', function (e) {
+      if (downOnOverlay && e.target === el.overlay) closeFact();
+      downOnOverlay = false;
     });
 
     /* shell: ☰ mở rail, nút đổi theme, chạm nền đóng rail */
