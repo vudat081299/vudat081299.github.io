@@ -17,6 +17,29 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 
 ---
 
+## Phiên 2026-08-10 (q) — bấm nền chỉ đóng lớp phủ khi bấm VÀ nhả đều trúng overlay
+
+Bug toàn repo (chủ trang báo): bấm chuột trong một modal/popup rồi kéo ra **nhả trên nền**
+thì lớp phủ đóng oan. Nguyên nhân: handler đóng bằng sự kiện `click` trên overlay, mà click
+nhắm vào **tổ tiên chung** của điểm bấm và điểm nhả — kéo từ hộp ra nền thì tổ tiên chung
+chính là overlay, nên click rơi trúng overlay và đóng.
+
+Sửa ở trang này: nhánh click chỉ còn lo `[data-modal-close]`; tách phần bấm-nền sang một
+cặp `pointerdown`/`pointerup` trên `document` — chỉ `closeLayers()` khi CẢ hai đều rơi trúng
+đúng một overlay có id trong `LAYER_IDS` (mathOverlay/asideOverlay). Kiểm trong trình duyệt:
+kéo content→nền GIỮ MỞ; bấm+nhả trên nền ĐÓNG; nút × ĐÓNG; bôi đen chữ trong hộp GIỮ MỞ.
+
+**Cố ý KHÔNG sửa `roadmap.html`:** nó là sản phẩm sinh ra và drawer của nó đóng bằng nút
+`#drClose` + Esc, không có bấm-nền-đóng nên không dính bug. `build-roadmap` không trích
+handler modal của trang chính, nên `gate --write` để `roadmap.html` "không đổi" là đúng.
+(Ba chỗ file này có chuỗi ".wb-overlay" là **văn bản bài học** đang giảng đúng hiện tượng
+này, không phải code.)
+
+Cùng lỗi còn ở 5 nơi khác trong repo (web-builder/app.js, facts/app.js, 3 trang bếp) — đã
+sửa và commit riêng, ngoài project này.
+
+---
+
 ## Phiên 2026-08-09 (p) — thực thi bản audit (n9): 12 điểm kiến thức, 8 hình thật, cổng `G-ABS`, mạch chính cho roadmap
 
 Yêu cầu: *"làm hết đi"* (toàn bộ khuyến nghị của audit n9), cộng một yêu cầu về chính file

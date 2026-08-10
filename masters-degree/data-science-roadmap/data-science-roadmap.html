@@ -11994,15 +11994,28 @@ document.addEventListener('click', e => {
     return;
   }
 
-  // Bấm ra ngoài (chính cái overlay, không phải hộp bên trong) = đóng. Phải liệt kê
-  // đủ cả hai lớp, không thì một lớp đóng được bằng cách bấm nền còn lớp kia thì không.
-  if (e.target.closest('[data-modal-close]') || LAYER_IDS.includes(e.target.id)) {
+  // Nút đóng trong lớp phủ: bấm là đóng. Bấm nền để đóng nay tách sang cặp
+  // pointerdown/pointerup phía dưới — chỉ đóng khi bấm và nhả đều trúng chính overlay.
+  if (e.target.closest('[data-modal-close]')) {
     closeLayers();
   }
   // Sổ học có nút đóng riêng: nó không đóng bằng cách bấm ra ngoài, vì "ra ngoài" ở
   // đây là chính trang đang đọc — bấm vào chữ để chọn một câu mà mất cái sổ đang viết
   // thì đúng là cái bẫy mà dock tồn tại để tránh.
   if (e.target.closest('[data-notes-close]')) closeNotes();
+});
+
+// Bấm nền để đóng lớp phủ: chỉ đóng khi CẢ pointerdown và pointerup rơi trúng chính
+// cái overlay (id nằm trong LAYER_IDS), không phải hộp bên trong. Bắt bằng click như cũ
+// thì bôi đen chữ trong hộp rồi nhả chuột trên nền sẽ đóng oan, vì click nhắm vào tổ
+// tiên chung của điểm bấm và điểm nhả — chính là overlay.
+let layerPointerDown = null;
+document.addEventListener('pointerdown', e => {
+  layerPointerDown = LAYER_IDS.includes(e.target.id) ? e.target : null;
+});
+document.addEventListener('pointerup', e => {
+  if (layerPointerDown && e.target === layerPointerDown && LAYER_IDS.includes(e.target.id)) closeLayers();
+  layerPointerDown = null;
 });
 
 document.addEventListener('keydown', e => {
