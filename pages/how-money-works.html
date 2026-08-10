@@ -88,9 +88,49 @@
   /* ---- back to top ---- */
   .hw-top { position: fixed; right: 18px; bottom: 18px; z-index: 20; opacity: 0; pointer-events: none; transition: opacity .16s ease; }
   .hw-top.is-on { opacity: 1; pointer-events: auto; }
+
+  /* ---- visualizations ------------------------------------------------------
+     Every chart is plain SVG/CSS on wb-* chart parts. Colour comes from the
+     mono ramp (.wb-chart-scheme--mono + .wb-chart-ramp--N sets --wb-chart-1..N
+     to shades of ink), so the whole set stays tier-1 grey; the only charts that
+     spend real colour are the ones where the book's meaning IS a status
+     (cash-flow health, hyperinflation collapse).
+     .hw-vw wraps a chart too wide to shrink readably: it scrolls inside its own
+     box instead of pushing the page sideways. min-width lives here, not in a
+     style attribute, so no geometry leaks into the markup. -------------------- */
+  .hw-viz { margin: 14px 0 18px; }
+  /* A chart's natural size is its viewBox. Left uncapped, .wb-chart__svg's
+     width:100% blows a 420-unit chart up to the 918px reading column — 2.2x,
+     which makes the 11px SVG labels tower over 14.5px body text. So each chart
+     declares its own ceiling through --hw-chart-max, the same way this page
+     already tunes --wb-stack-gap / --wb-sticky-gap. Geometry, not a design
+     value: the kit has no token for "how wide is this drawing". */
+  .hw-viz .wb-chart__svg { max-width: var(--hw-chart-max, 100%); }
+  .hw-vw { overflow-x: auto; }
+  .hw-vw .wb-chart__svg { min-width: 620px; }
+  .hw-vw--lg .wb-chart__svg { min-width: 820px; }
+  .hw-src { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .04em; color: var(--wb-fg-subtle); margin: 10px 0 0; line-height: 1.5; }
+
+  /* SVG text roles: title-ish label, a number, a quiet caption. */
+  .hw-vt { fill: var(--wb-fg); font-size: 11.5px; font-weight: 620; font-family: var(--wb-font); }
+  .hw-vn { fill: var(--wb-fg); font-size: 12px; font-weight: 700; font-family: var(--wb-font); font-variant-numeric: tabular-nums; }
+  .hw-vs { fill: var(--wb-fg-muted); font-size: 10.5px; font-family: var(--wb-font); }
+
+  /* Single-colour marks pick from the neutral ladder — never a hand-picked grey. */
+  .hw-vline { fill: none; stroke: var(--wb-neutral-strong); stroke-width: 1.25; }
+  .hw-vdash { fill: none; stroke: var(--wb-neutral); stroke-width: 1; stroke-dasharray: 3 3; }
+  .hw-vbox { fill: var(--wb-surface); stroke: var(--wb-border); stroke-width: 1; }
+
+  /* Node/flow diagrams (barter mesh, recession loop). */
+  .hw-vnode { fill: var(--wb-surface); stroke: var(--wb-neutral-strong); stroke-width: 1.25; }
+  .hw-vedge { fill: none; stroke: var(--wb-neutral); stroke-width: .9; }
 </style>
 </head>
-<body>
+<!-- wb-app is the kit's baseline: border-box on every wb-* element, the font,
+     canvas/ink colours, line-height, links that inherit instead of going
+     browser-blue. A shell-less page must say it or it falls through to the
+     browser defaults. -->
+<body class="wb-app">
 
 <header class="wb-navbar wb-navbar--sticky wb-navbar--collapse-lg">
   <button class="wb-navbar__toggle wb-btn wb-btn--ghost wb-btn--icon" data-navbar-toggle
@@ -289,6 +329,108 @@
           </ol>
         </div></div>
 
+        <h3 class="hw-h3">Mười hiện vật tiền — và điều mà chỉ trục thời gian thật mới cho thấy</h3>
+        <p class="hw-p">Sách dành hai trang cho các hiện vật đã từng làm nhiệm vụ của tiền. Đọc thành danh sách thì chúng chỉ là mười cái tên. Đặt lên <b>trục thời gian đúng tỷ lệ</b> thì lộ ra hình dạng thật: bốn nghìn năm gần như trống, rồi <b>toàn bộ thời đại tiền xu dồn vào một cụm hẹp</b> ở cuối.</p>
+        <div class="hw-viz wb-card wb-chart-scheme--mono"><div class="wb-card__body">
+          <p class="wb-chart__title">Hiện vật tiền, đặt đúng vị trí trên trục thời gian</p>
+          <p class="wb-chart__sub">Điểm tròn là vị trí <b>thật</b> theo năm; nhãn được dàn đều bên dưới và nối bằng đường dẫn, vì nếu để nhãn ở đúng chỗ thì sáu mục cuối chồng lên nhau.</p>
+          <div class="hw-vw hw-vw--lg"><div class="wb-chart">
+            <svg class="wb-chart__svg" viewBox="0 0 880 140" role="img"
+                 aria-label="Trục thời gian mười hiện vật tiền, từ hàng đổi hàng 5.000 TCN tới dirham Ả Rập năm 900. Tám trong mười hiện vật nằm sau mốc 1.000 TCN.">
+              <!-- era ticks + labels (linear scale: 1 year = 0.1295 units) -->
+              <g class="hw-vs" text-anchor="middle">
+                <text x="66" y="32">5.000 TCN</text>
+                <text x="195" y="32">4.000</text>
+                <text x="325" y="32">3.000</text>
+                <text x="454" y="32">2.000</text>
+                <text x="584" y="32">1.000</text>
+                <text x="714" y="32">0</text>
+                <text x="843" y="32">1.000 CN</text>
+              </g>
+              <g class="hw-vdash">
+                <path d="M66,38 V46"/><path d="M195,38 V46"/><path d="M325,38 V46"/><path d="M454,38 V46"/>
+                <path d="M584,38 V46"/><path d="M714,38 V46"/><path d="M843,38 V46"/>
+              </g>
+              <line class="wb-axis-line" x1="40" y1="46" x2="856" y2="46"/>
+
+              <!-- the dense cluster, called out as a band -->
+              <rect x="584" y="40" width="246" height="12" rx="6" fill="var(--wb-chart-4)" opacity=".5"/>
+
+              <!-- leader lines: true position -> evenly spaced label column -->
+              <g class="hw-vedge">
+                <polyline points="66,50 66,64 81,74 81,86"/>
+                <polyline points="195,50 195,64 162,74 162,86"/>
+                <polyline points="584,50 584,64 244,74 244,86"/>
+                <polyline points="636,50 636,64 326,74 326,86"/>
+                <polyline points="636,50 636,64 407,74 407,86"/>
+                <polyline points="688,50 688,64 489,74 489,86"/>
+                <polyline points="710,50 710,64 570,74 570,86"/>
+                <polyline points="804,50 804,64 652,74 652,86"/>
+                <polyline points="830,50 830,64 734,74 734,86"/>
+                <polyline points="830,50 830,64 815,74 815,86"/>
+              </g>
+              <!-- true positions -->
+              <g fill="var(--wb-chart-1)">
+                <circle cx="66" cy="46" r="3.4"/><circle cx="195" cy="46" r="3.4"/><circle cx="584" cy="46" r="3.4"/>
+                <circle cx="636" cy="46" r="3.4"/><circle cx="688" cy="46" r="3.4"/><circle cx="710" cy="46" r="3.4"/>
+                <circle cx="804" cy="46" r="3.4"/><circle cx="830" cy="46" r="3.4"/>
+              </g>
+              <!-- labels, evenly spaced -->
+              <g class="hw-vt" text-anchor="middle">
+                <text x="81"  y="98">Hàng đổi</text><text x="81"  y="109">hàng</text>
+                <text x="162" y="98">Bảng đất</text><text x="162" y="109">Sumer</text>
+                <text x="244" y="98">Vỏ ốc</text><text x="244" y="109">cowrie</text>
+                <text x="326" y="98">Xu vàng</text><text x="326" y="109">Lydia</text>
+                <text x="407" y="98">Drachma</text><text x="407" y="109">Athens</text>
+                <text x="489" y="98">Xu Hán</text><text x="489" y="109">(Trung Hoa)</text>
+                <text x="570" y="98">Xu La Mã</text>
+                <text x="652" y="98">Xu</text><text x="652" y="109">Byzantine</text>
+                <text x="734" y="98">Xu Anglo-</text><text x="734" y="109">Saxon</text>
+                <text x="815" y="98">Dirham</text><text x="815" y="109">Ả Rập</text>
+              </g>
+              <g class="hw-vs" text-anchor="middle">
+                <text x="81"  y="126">5.000 TCN</text>
+                <text x="162" y="126">4.000 TCN</text>
+                <text x="244" y="126">1.000 TCN</text>
+                <text x="326" y="126">600 TCN</text>
+                <text x="407" y="126">600 TCN</text>
+                <text x="489" y="126">200 TCN</text>
+                <text x="570" y="126">27 TCN</text>
+                <text x="652" y="126">700</text>
+                <text x="734" y="126">900</text>
+                <text x="815" y="126">900</text>
+              </g>
+            </svg>
+          </div></div>
+          <p class="hw-src">Nguồn: “Timeline of artifacts”, tr.16–19. Dải tô đậm = 1.000 TCN → 900 CN, quãng chứa 8 trong 10 hiện vật.</p>
+        </div></div>
+        <div class="hw-tw">
+          <table class="wb-table wb-table--compact">
+            <thead><tr><th>Hiện vật</th><th>Sách ghi</th><th>Chi tiết trong sách</th></tr></thead>
+            <tbody>
+              <tr><td>Hàng đổi hàng</td><td>5.000 TCN</td><td>Trao đổi trực tiếp, thường là hàng dễ hỏng — ví dụ một con bò.</td></tr>
+              <tr><td>Bảng đất sét Sumer</td><td>4.000 TCN</td><td>Người ghi chép lưu giao dịch trên đất sét; bảng cũng dùng làm <b>biên nhận</b>.</td></tr>
+              <tr><td>Vỏ ốc cowrie</td><td>1.000 TCN</td><td>Dùng làm tiền khắp Ấn Độ và Nam Thái Bình Dương; nhiều màu, nhiều cỡ.</td></tr>
+              <tr><td>Xu vàng Lydia</td><td>600 TCN</td><td>Hỗn hợp vàng và bạc dập thành đĩa, có khắc chữ — <b>những đồng xu đầu tiên</b>.</td></tr>
+              <tr><td>Drachma Athens</td><td>600 TCN</td><td>Người Athens dùng bạc từ Laurion để đúc đồng tiền lưu hành khắp thế giới Hy Lạp.</td></tr>
+              <tr><td>Xu nhà Hán</td><td>200 TCN</td><td>Thường bằng đồng thanh hoặc đồng đỏ; xu Trung Hoa sơ kỳ <b>đục lỗ ở giữa</b>.</td></tr>
+              <tr><td>Xu La Mã</td><td>27 TCN</td><td>Mang chân dung hoàng đế, lưu thông khắp Đế quốc La Mã.</td></tr>
+              <tr><td>Xu Byzantine</td><td>700</td><td>Xu Byzantine sơ kỳ bằng vàng nguyên chất; về sau pha thêm kim loại như đồng đỏ.</td></tr>
+              <tr><td>Xu Anglo-Saxon</td><td>900</td><td>Đồng penny bạc, khắc dòng chữ ghi Offa là vua (“rex”) của Mercia.</td></tr>
+              <tr><td>Dirham Ả Rập</td><td>900</td><td>Nhiều đồng bạc của thế giới Islam được người Viking mang tới Scandinavia.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="wb-alert wb-alert--warning">
+          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">warning</span></span>
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Hai chỗ trong chính bảng này không khớp — nêu ra để bạn đừng học thuộc số sai</p>
+            <p class="wb-alert__msg"><b>1. Đồng penny Anglo-Saxon tự mâu thuẫn.</b> Sách vừa ghi mốc <b>900</b> và gọi nó là “penny bạc <b>thế kỷ 10</b>”, vừa nói dòng chữ trên đồng xu ghi <b>Offa</b> là vua Mercia. Nhưng <b>Offa trị vì 757–796</b> — tức <b>thế kỷ 8</b>. Một đồng xu mang tên Offa không thể là xu thế kỷ 10; hoặc cái mốc sai, hoặc tên vua sai.</p>
+            <p class="wb-alert__msg"><b>2. Bảng đất sét Sumer đặt ở 4.000 TCN là quá sớm</b>, và lệch với chính sách: bảng “Sự tiến hoá của tiền” ghi <em>“chứng cứ ghi chép giao dịch — 7.000 TCN”</em>, còn ở đây là 4.000 TCN. Chữ hình nêm Sumer thực tế xuất hiện quãng <b>3.400–3.000 TCN</b>. Ba con số cho cùng một việc, không con nào trùng con nào.</p>
+            <p class="wb-alert__msg"><em>Điều cần giữ lại không phải các mốc chính xác, mà là <b>trình tự</b>: ghi chép trước, vật làm dấu giá trị sau, rồi xu do nhà nước dập — và trình tự đó thì cả ba con số đều đồng ý.</em></p>
+          </div>
+        </div>
+
         <h3 class="hw-h3">Bảy đặc tính bắt buộc — thiếu một thứ là hỏng</h3>
         <p class="hw-p">Có giá trị · bền · dễ mang · đồng nhất · chia nhỏ được · nguồn cung hữu hạn · dùng được làm phương tiện trao đổi. Nhưng nền của cả bảy là <b>niềm tin</b> — người ta phải tin rằng nhận tiền hôm nay thì mai vẫn mua được hàng.</p>
 
@@ -340,6 +482,52 @@
         </div>
         <h3 class="hw-h3">Quy luật cung – cầu</h3>
         <p class="hw-p">Giá một mặt hàng (ví dụ dầu) giảm thì người ta dùng nhiều hơn; giá tăng thì dùng ít đi. Ở chiều ngược lại, <b>nguồn cung thấp đẩy giá lên</b> — người ta chịu trả cao cho thứ khó kiếm — và <b>nguồn cung dồi dào kéo giá xuống</b>, vì không ai trả giá cao cho thứ có sẵn khắp nơi.</p>
+        <div class="hw-viz wb-card wb-chart-scheme--mono wb-chart-ramp--3" style="--hw-chart-max:520px"><div class="wb-card__body">
+          <p class="wb-chart__title">Hai câu của sách là hai chuyển động khác nhau trên cùng một đồ thị</p>
+          <p class="wb-chart__sub">Đường <b>cầu</b> dốc xuống nói câu thứ nhất: giá cao thì mua ít. Việc <b>đường cung dịch sang phải</b> nói câu thứ hai: hàng dồi dào hơn thì điểm cắt tụt xuống — <b>giá thấp hơn, lượng nhiều hơn</b>.</p>
+          <div class="wb-chart">
+            <svg class="wb-chart__svg" viewBox="0 0 420 212" role="img"
+                 aria-label="Đồ thị cung cầu: đường cầu dốc xuống cắt hai đường cung. Khi cung dịch sang phải, điểm cân bằng chuyển từ giá cao lượng ít sang giá thấp lượng nhiều.">
+              <defs>
+                <marker id="hw-ah" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+                  <path d="M0,0 L8,4 L0,8 z" fill="var(--wb-neutral-strong)"/>
+                </marker>
+              </defs>
+              <line class="wb-axis-line" x1="46" y1="26" x2="46" y2="186"/>
+              <line class="wb-axis-line" x1="46" y1="186" x2="392" y2="186"/>
+              <text class="hw-vs" x="46" y="18" text-anchor="middle">Giá</text>
+              <text class="hw-vs" x="392" y="204" text-anchor="end">Lượng →</text>
+              <text class="hw-vs" x="40" y="96" text-anchor="end">cao</text>
+              <text class="hw-vs" x="40" y="127" text-anchor="end">thấp</text>
+
+              <g class="hw-vdash">
+                <path d="M46,96 H180 V186"/>
+                <path d="M46,123 H243 V186"/>
+              </g>
+
+              <!-- demand, then supply at two levels. Tone + dash tell the lines
+                   apart; the labels stay ink so they never go too pale to read. -->
+              <line x1="46" y1="40" x2="370" y2="176" stroke="var(--wb-chart-1)" stroke-width="2"/>
+              <text class="hw-vt" x="374" y="180">Cầu</text>
+              <line x1="90" y1="186" x2="250" y2="26" stroke="var(--wb-chart-2)" stroke-width="2"/>
+              <text class="hw-vt" x="250" y="20" text-anchor="middle">Cung thấp</text>
+              <line x1="180" y1="186" x2="340" y2="26" stroke="var(--wb-chart-3)" stroke-width="2.25" stroke-dasharray="5 4"/>
+              <text class="hw-vt" x="340" y="20" text-anchor="middle">Cung dồi dào</text>
+
+              <!-- the shift, drawn in the clear band between the two supply lines -->
+              <path class="hw-vline" d="M102,178 h76" marker-end="url(#hw-ah)"/>
+              <text class="hw-vs" x="140" y="198" text-anchor="middle">cung tăng</text>
+
+              <!-- the two equilibria, numbered; the words live in the caption -->
+              <circle cx="180" cy="96" r="9" fill="var(--wb-chart-1)"/>
+              <text class="hw-vn" x="180" y="100" text-anchor="middle" style="fill:var(--wb-canvas)">1</text>
+              <circle cx="243" cy="123" r="9" fill="var(--wb-canvas)" stroke="var(--wb-chart-1)" stroke-width="2"/>
+              <text class="hw-vn" x="243" y="127" text-anchor="middle">2</text>
+            </svg>
+          </div>
+          <p class="hw-p" style="margin:12px 0 0"><b>①</b> cung thấp gặp cầu ở chỗ <b>giá cao, lượng ít</b>. <b>②</b> cung dồi dào gặp cùng đường cầu đó ở chỗ <b>giá thấp, lượng nhiều</b>. Đường cầu <em>không đổi</em> giữa hai tình huống — chỉ có cung dịch chỗ.</p>
+          <p class="hw-src">Nguồn: hộp “Supply and demand”, tr.13 — sách mô tả bằng lời, không in đồ thị; hình này dựng lại từ mô tả đó. Đường thẳng thay cho đường cong để giữ hình đọc được: điều quan trọng là hướng dốc và chiều dịch, không phải độ cong.</p>
+        </div></div>
       </section>
 
       <!-- ─────────── 1.3 ─────────── -->
@@ -383,7 +571,7 @@
               <p class="wb-steps__desc">12 nước EU bỏ đồng tiền quốc gia; tiền giấy và xu phát hành 3 năm sau.</p></div></li>
             <li class="wb-steps__item is-active"><span class="wb-steps__marker">12</span><div class="wb-steps__content">
               <p class="wb-steps__title">2008 · Bitcoin</p>
-              <p class="wb-steps__desc">Được công bố như một dạng tiền điện tử chỉ tồn tại dưới dạng dữ liệu mã hoá trên máy chủ; giao dịch đầu tiên tháng 1/2009.</p></div></li>
+              <p class="wb-steps__desc">Được công bố như một dạng tiền điện tử chỉ tồn tại dưới dạng dữ liệu mã hoá trên máy chủ; giao dịch đầu tiên tháng 1/2009. <em>(Lưu ý: ở chương tiền số, sách lại ghi mốc “giao dịch Bitcoin đầu tiên — 5/2010”. Hai mốc này nói về hai việc khác nhau: <b>1/2009</b> là giao dịch đầu tiên giữa hai người, <b>5/2010</b> là lần đầu bitcoin được dùng để mua một hàng hoá thật. Sách không nói rõ chỗ khác biệt đó.)</em></p></div></li>
           </ol>
         </div></div>
       </section>
@@ -448,25 +636,95 @@
         </ol>
 
         <h4 class="hw-h4">Số nhân (multiplier) — chi tiết quyết định độ mạnh của Keynes</h4>
-        <div class="wb-grid wb-grid--2">
-          <div class="wb-card wb-card--pad">
-            <p class="wb-media__title">Tiêu hết</p>
-            <p class="wb-media__text">Nhân viên nhận <b>$100</b> → tiêu hết $100 → siêu thị trả nhà cung cấp $100 → nhà cung cấp trả nhân viên $100. <b>$100 ban đầu tạo ra $300 hoạt động.</b></p>
+        <p class="hw-p">Cùng <b>$100</b> đưa vào tay một người, nhưng kết quả cho cả nền kinh tế khác nhau <b>gấp đôi</b> — chỉ vì người đó tiêu hết hay giữ lại một nửa. Đây là lý do một gói kích thích có thể đúng về lý thuyết mà vẫn hụt trên thực tế.</p>
+        <div class="hw-viz wb-card wb-chart-scheme--mono wb-chart-ramp--2" style="--hw-chart-max:580px"><div class="wb-card__body">
+          <p class="wb-chart__title">$100 đi qua ba vòng — tiêu hết so với giữ lại một nửa</p>
+          <p class="wb-chart__sub">Mỗi thanh là số tiền <b>đổi tay</b> ở một vòng. Cột dọc thẳng hàng để so trực tiếp: mỗi vòng của hàng dưới chỉ dài bằng nửa hàng trên, và sai lệch đó <b>cộng dồn</b>.</p>
+          <div class="wb-chart">
+            <svg class="wb-chart__svg" viewBox="0 0 440 246" role="img"
+                 aria-label="So sánh số nhân: tiêu hết tạo ba vòng 100 đô la, tổng 300 đô la hoạt động; giữ lại một nửa tạo ba vòng 50 đô la, tổng 150 đô la.">
+              <g class="hw-vs" text-anchor="middle">
+                <text x="110" y="14">vòng 1</text><text x="110" y="26">nhân viên tiêu</text>
+                <text x="224" y="14">vòng 2</text><text x="224" y="26">siêu thị → nhà cung cấp</text>
+                <text x="338" y="14">vòng 3</text><text x="338" y="26">nhà cung cấp → nhân viên</text>
+              </g>
+
+              <!-- row A: spend it all -->
+              <text class="hw-vt" x="56" y="52">Tiêu hết — số nhân mạnh</text>
+              <g class="hw-vn" text-anchor="middle">
+                <text x="110" y="70">$100</text><text x="224" y="70">$100</text><text x="338" y="70">$100</text>
+              </g>
+              <g fill="var(--wb-chart-1)">
+                <rect x="56" y="76" width="108" height="24" rx="3"/>
+                <rect x="170" y="76" width="108" height="24" rx="3"/>
+                <rect x="284" y="76" width="108" height="24" rx="3"/>
+              </g>
+              <text class="hw-vn" x="392" y="118" text-anchor="end">tổng hoạt động tạo ra = $300</text>
+
+              <!-- row B: save half -->
+              <text class="hw-vt" x="56" y="152">Tiết kiệm một nửa — số nhân yếu</text>
+              <g class="hw-vn" text-anchor="middle">
+                <text x="83" y="170">$50</text><text x="197" y="170">$50</text><text x="311" y="170">$50</text>
+              </g>
+              <g fill="var(--wb-chart-2)">
+                <rect x="56" y="176" width="54" height="24" rx="3"/>
+                <rect x="170" y="176" width="54" height="24" rx="3"/>
+                <rect x="284" y="176" width="54" height="24" rx="3"/>
+              </g>
+              <!-- the money that left the chain -->
+              <g class="hw-vdash">
+                <path d="M110,176 h54 v24 h-54 z"/><path d="M224,176 h54 v24 h-54 z"/><path d="M338,176 h54 v24 h-54 z"/>
+              </g>
+              <text class="hw-vs" x="392" y="214" text-anchor="end">viền nét đứt = phần bị giữ lại, không đổi tay tiếp</text>
+              <text class="hw-vn" x="392" y="232" text-anchor="end">tổng hoạt động tạo ra = $150</text>
+            </svg>
           </div>
-          <div class="wb-card wb-card--pad">
-            <p class="wb-media__title">Tiết kiệm một nửa</p>
-            <p class="wb-media__text">Nhân viên nhận $100 → <b>tiết kiệm $50, tiêu $50</b> → chuỗi chỉ còn $50 → $50 → $50. Tỷ lệ tiết kiệm càng cao, <b>số nhân càng yếu</b> — đây chính là lý do các gói kích thích đôi khi không hiệu quả như dự tính.</p>
-          </div>
-        </div>
+          <p class="hw-src">Nguồn: hộp “Multipliers”, tr.22–23. Sách đếm ba vòng đổi tay sau khoản chi ban đầu; tỷ lệ tiết kiệm càng cao thì chuỗi càng ngắn.</p>
+        </div></div>
 
         <h3 class="hw-h3">Hayek — chu kỳ kinh doanh</h3>
         <p class="hw-p">Friedrich Hayek chỉ ra một chu kỳ: trong suy thoái, <b>lãi suất giảm</b> → tín dụng mở rộng quá mức → phải <b>nâng lãi suất</b> để chặn cầu vượt mức → điều chỉnh → phục hồi. Đồ thị GDP thực đi theo sóng mở rộng ↔ suy thoái. Mức lãi trong sách: cắt xuống <b>0,25%</b> khi suy thoái, nâng lên <b>1%</b> khi cần siết.</p>
+        <div class="hw-viz wb-card wb-chart-scheme--mono" style="--hw-chart-max:560px"><div class="wb-card__body">
+          <p class="wb-chart__title">Chu kỳ Hayek — lãi suất không chỉ phản ứng với chu kỳ, nó tạo ra chu kỳ tiếp theo</p>
+          <p class="wb-chart__sub">Đọc theo vòng: đáy → cắt lãi → tín dụng nở → đỉnh → nâng lãi → điều chỉnh → đáy. <b>Mỗi lần chữa cơn này là gieo cơn sau</b> — đó mới là luận điểm của Hayek, không phải bản thân hình sóng.</p>
+          <div class="wb-chart">
+            <svg class="wb-chart__svg" viewBox="0 0 440 216" role="img"
+                 aria-label="Sóng GDP thực theo thời gian với hai đáy và hai đỉnh; ở đáy lãi suất cắt còn 0,25%, ở đỉnh nâng lên 1%.">
+              <line class="wb-axis-line" x1="44" y1="180" x2="410" y2="180"/>
+              <line class="wb-axis-line" x1="44" y1="30" x2="44" y2="180"/>
+              <text class="hw-vs" x="44" y="22" text-anchor="middle">GDP thực</text>
+              <text class="hw-vs" x="410" y="196" text-anchor="end">Thời gian →</text>
+
+              <!-- the cycle -->
+              <path fill="none" stroke="var(--wb-chart-1)" stroke-width="2.25" stroke-linecap="round"
+                    d="M50,150 C74,150 96,72 120,72 C144,72 166,146 190,146 C214,146 236,62 260,62 C284,62 306,136 330,136 C352,136 372,78 394,72"/>
+
+              <!-- troughs: rate cut -->
+              <g>
+                <circle cx="50" cy="150" r="3.6" fill="var(--wb-chart-1)"/>
+                <circle cx="190" cy="146" r="3.6" fill="var(--wb-chart-1)"/>
+                <circle cx="330" cy="136" r="3.6" fill="var(--wb-chart-1)"/>
+                <text class="hw-vn" x="190" y="164" text-anchor="middle">0,25%</text>
+                <text class="hw-vs" x="190" y="175" text-anchor="middle">cắt lãi suất ở đáy</text>
+              </g>
+              <!-- peaks: rate rise -->
+              <g>
+                <circle cx="120" cy="72" r="3.6" fill="var(--wb-chart-1)"/>
+                <circle cx="260" cy="62" r="3.6" fill="var(--wb-chart-1)"/>
+                <text class="hw-vn" x="260" y="50" text-anchor="middle">1%</text>
+                <text class="hw-vs" x="260" y="39" text-anchor="middle">nâng lãi suất ở đỉnh</text>
+              </g>
+
+              <text class="hw-vs" x="44" y="206">Bốn pha lặp lại: mở rộng → suy thoái → phục hồi → điều chỉnh.</text>
+            </svg>
+          </div>
+          <p class="hw-src">Nguồn: “Hayek’s business cycle”, tr.22–23 (đồ thị REAL GDP / TIME với các pha EXPANSION · RECESSION · RECOVERY · CORRECTION). Hình sóng là minh hoạ khái niệm, không phải dữ liệu thật của một nước.</p>
+        </div></div>
 
         <h3 class="hw-h3">Friedman — chủ nghĩa trọng tiền</h3>
         <p class="hw-p">Milton Friedman cho rằng chính phủ có thể nâng hoặc hạ lãi suất để tác động tới cung tiền: <b>cắt lãi suất kích thích chi tiêu; nâng lãi suất siết chi tiêu</b> và giảm lượng tiền lưu thông.</p>
 
-        <div class="wb-alert wb-alert--info">
-          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span>
+        <div class="wb-alert wb-alert--plain">
           <div class="wb-alert__body">
             <p class="wb-alert__title">Chỗ bất đồng thật sự nằm ở đâu</p>
             <p class="wb-alert__msg">Cả năm trường phái — Fisher, Marx, Keynes, Hayek, Friedman — đều mô tả cùng một nền kinh tế. <b>Bất đồng về dữ kiện</b> là “số nhân tài khoá thực tế bằng bao nhiêu” — một câu hỏi thực nghiệm còn tranh cãi tới hôm nay. <b>Bất đồng về giá trị</b> là “chấp nhận lạm phát cao hơn để đổi lấy việc làm nhiều hơn tới mức nào” — dữ liệu không giải quyết được, vì nó phụ thuộc bạn đứng ở phía người có việc hay người giữ tiết kiệm.</p>
@@ -488,16 +746,59 @@
 
         <h3 class="hw-h3">Lợi nhuận ròng (net income) — “dòng cuối cùng”</h3>
         <p class="hw-p">Công thức: <b>Doanh thu − Chi phí = Lợi nhuận ròng</b>. Các khoản bị trừ ra: thuế, chi phí ngân hàng và lãi vay, khấu hao tài sản, nhân sự, và mọi chi phí vận hành khác.</p>
-        <div class="hw-tw">
-          <table class="wb-table wb-table--compact">
-            <thead><tr><th></th><th>Nhà phát triển bất động sản</th><th>Nhà bán lẻ</th></tr></thead>
-            <tbody>
-              <tr><td>Doanh thu</td><td>$100.000</td><td>$100.000</td></tr>
-              <tr><td>Chi phí</td><td>vật liệu $20.000 · nhân sự $40.000 · thuế $5.000</td><td>thuê mặt bằng $10.000 · nhân sự $30.000 · hàng nhập $22.000 · thuế $20.000</td></tr>
-              <tr><td><b>Lợi nhuận ròng</b></td><td><b>$35.000</b></td><td><b>$18.000</b></td></tr>
-            </tbody>
-          </table>
-        </div>
+        <div class="hw-viz wb-card wb-chart-scheme--mono wb-chart-ramp--5" style="--hw-chart-max:600px"><div class="wb-card__body">
+          <p class="wb-chart__title">Hai công ty, cùng doanh thu $100.000 — “dòng cuối cùng” chênh nhau gần hai lần</p>
+          <p class="wb-chart__sub">Cả hai thanh dài bằng nhau vì doanh thu bằng nhau. Thứ khác nhau là <b>bao nhiêu phần bị chi phí ăn hết trước khi tới đoạn tối nhất ở cuối</b> — đoạn đó là lợi nhuận ròng.</p>
+          <div class="wb-chart">
+            <svg class="wb-chart__svg" viewBox="0 0 460 200" role="img"
+                 aria-label="Hai thanh chồng: nhà phát triển bất động sản giữ lại 35.000 đô la trên 100.000 doanh thu; nhà bán lẻ chỉ giữ 18.000.">
+              <!-- row 1 · property developer -->
+              <text class="hw-vt" x="40" y="16">Nhà phát triển bất động sản</text>
+              <g>
+                <rect x="40"  y="24" width="76"  height="34" fill="var(--wb-chart-3)"/>
+                <rect x="116" y="24" width="152" height="34" fill="var(--wb-chart-2)"/>
+                <rect x="268" y="24" width="19"  height="34" fill="var(--wb-chart-5)"/>
+                <rect x="287" y="24" width="133" height="34" fill="var(--wb-chart-1)"/>
+              </g>
+              <text class="hw-vn" x="353" y="46" text-anchor="middle" style="fill:var(--wb-canvas)">$35.000</text>
+              <text class="hw-vs" x="353" y="72" text-anchor="middle">35% doanh thu về tới cuối</text>
+
+              <!-- row 2 · retailer -->
+              <text class="hw-vt" x="40" y="98">Nhà bán lẻ</text>
+              <g>
+                <rect x="40"  y="106" width="38"  height="34" fill="var(--wb-chart-4)"/>
+                <rect x="78"  y="106" width="114" height="34" fill="var(--wb-chart-2)"/>
+                <rect x="192" y="106" width="84"  height="34" fill="var(--wb-chart-3)"/>
+                <rect x="276" y="106" width="76"  height="34" fill="var(--wb-chart-5)"/>
+                <rect x="352" y="106" width="68"  height="34" fill="var(--wb-chart-1)"/>
+              </g>
+              <text class="hw-vn" x="386" y="128" text-anchor="middle" style="fill:var(--wb-canvas)">$18.000</text>
+              <text class="hw-vs" x="386" y="154" text-anchor="middle">18% doanh thu về tới cuối</text>
+
+              <!-- shared scale -->
+              <line class="wb-axis-line" x1="40" y1="174" x2="420" y2="174"/>
+              <g class="hw-vdash">
+                <path d="M135,170 V178"/><path d="M230,170 V178"/><path d="M325,170 V178"/>
+              </g>
+              <g class="hw-vs">
+                <text x="40" y="192">$0</text>
+                <text x="135" y="192" text-anchor="middle">25k</text>
+                <text x="230" y="192" text-anchor="middle">50k</text>
+                <text x="325" y="192" text-anchor="middle">75k</text>
+                <text x="420" y="192" text-anchor="end">$100k</text>
+              </g>
+            </svg>
+          </div>
+          <div class="wb-legend" style="margin-top:12px">
+            <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-2)"></span>Nhân sự<span class="wb-legend__val">$40.000 · $30.000</span></span>
+            <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-3)"></span>Vật liệu / hàng nhập<span class="wb-legend__val">$20.000 · $22.000</span></span>
+            <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-4)"></span>Thuê mặt bằng<span class="wb-legend__val">— · $10.000</span></span>
+            <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-5)"></span>Thuế<span class="wb-legend__val">$5.000 · $20.000</span></span>
+            <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-1)"></span>Lợi nhuận ròng<span class="wb-legend__val">$35.000 · $18.000</span></span>
+          </div>
+          <p class="hw-src">Nguồn: “Calculating net income”, tr.28–29. Kiểm tra lại: 100.000 − 20.000 − 40.000 − 5.000 = 35.000; và 100.000 − 10.000 − 30.000 − 22.000 − 20.000 = 18.000.</p>
+        </div></div>
+        <p class="hw-p">Chỗ đáng chú ý không phải công ty nào “giỏi hơn” — hai ngành khác nhau thì cấu trúc chi phí khác nhau. Chỗ đáng chú ý là <b>doanh thu không nói gì về việc còn lại bao nhiêu</b>. Nhà bán lẻ trả thuế gấp bốn lần nhà phát triển ($20.000 so với $5.000) trên cùng mức doanh thu.</p>
         <p class="hw-p"><b>Lợi nhuận trên mỗi cổ phiếu (EPS)</b> = lợi nhuận ròng ÷ số cổ phiếu đang lưu hành — chỉ số nhà đầu tư dùng để so sánh khả năng sinh lời giữa các công ty.</p>
 
         <div class="wb-alert wb-alert--warning">
@@ -555,6 +856,54 @@
             <p class="wb-media__text" style="margin-top:6px"><em>Dùng cho mỏ than, mỏ kim cương, dầu khí, rừng.</em></p>
           </div>
         </div>
+        <div class="hw-viz wb-card wb-chart-scheme--mono wb-chart-ramp--3" style="--hw-chart-max:600px"><div class="wb-card__body">
+          <p class="wb-chart__title">Ba cái tên, một phép chia — vẽ ra thì thấy chúng là cùng một đường thẳng, chỉ khác độ dốc</p>
+          <p class="wb-chart__sub">Trục dọc là <b>% giá trị ban đầu còn lại</b>, nên ba tài sản rất khác cỡ ($25.000 · $21.000 · $10 triệu) so được với nhau. Cả ba đều là đường thẳng: mỗi kỳ trừ đi <b>đúng một lượng như nhau</b>.</p>
+          <div class="wb-chart">
+            <svg class="wb-chart__svg" viewBox="0 0 460 230" role="img"
+                 aria-label="Ba đường thẳng giảm dần: xe tải từ 100% xuống 20% trong 5 năm, bằng sáng chế xuống 0% trong 7 năm, rừng xuống 10% trong 10 kỳ.">
+              <line class="wb-axis-line" x1="50" y1="34" x2="50" y2="194"/>
+              <line class="wb-axis-line" x1="50" y1="194" x2="420" y2="194"/>
+              <line class="hw-vdash" x1="50" y1="114" x2="420" y2="114"/>
+              <g class="hw-vs" text-anchor="end">
+                <text x="44" y="38">100%</text>
+                <text x="44" y="118">50%</text>
+                <text x="44" y="198">0%</text>
+              </g>
+              <g class="hw-vs" text-anchor="middle">
+                <text x="50" y="210">0</text>
+                <text x="122.8" y="210">2</text>
+                <text x="195.6" y="210">4</text>
+                <text x="268.4" y="210">6</text>
+                <text x="341.2" y="210">8</text>
+                <text x="414" y="210">10</text>
+                <text x="235" y="224">kỳ (năm, hoặc lượt khai thác)</text>
+              </g>
+
+              <!-- Three lines from one origin. On-chart labels collide badly here
+                   (all three converge at 100%), so naming lives in the legend and
+                   only the residual value is annotated, at the far-apart endpoints. -->
+              <line x1="50" y1="34" x2="414" y2="178" stroke="var(--wb-chart-3)" stroke-width="2.5"/>
+              <circle cx="414" cy="178" r="4" fill="var(--wb-chart-3)"/>
+              <text class="hw-vs" x="414" y="168" text-anchor="end">còn $1tr</text>
+
+              <line x1="50" y1="34" x2="304.8" y2="194" stroke="var(--wb-chart-2)" stroke-width="2.5"/>
+              <circle cx="304.8" cy="194" r="4" fill="var(--wb-chart-2)"/>
+              <text class="hw-vs" x="311" y="186">về $0</text>
+
+              <line x1="50" y1="34" x2="232" y2="162" stroke="var(--wb-chart-1)" stroke-width="2.5"/>
+              <circle cx="232" cy="162" r="4" fill="var(--wb-chart-1)"/>
+              <text class="hw-vs" x="226" y="178" text-anchor="end">còn $5.000</text>
+            </svg>
+          </div>
+          <div class="wb-legend" style="margin-top:12px">
+            <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-1)"></span>Xe tải · 5 năm · $4.000/năm<span class="wb-legend__val">$25.000 → $5.000</span></span>
+            <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-2)"></span>Bằng sáng chế · 7 năm · $3.000/năm<span class="wb-legend__val">$21.000 → $0</span></span>
+            <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-3)"></span>Rừng · 10 lượt · $900.000/lượt<span class="wb-legend__val">$10tr → $1tr</span></span>
+          </div>
+          <p class="hw-src">Nguồn: các hộp tính toán tr.32–33. Ba đường đều <b>không</b> chạm 0 theo cùng một cách: xe tải dừng ở giá thanh lý $5.000, rừng dừng ở giá trị còn lại $1 triệu, chỉ bằng sáng chế mới về $0.</p>
+        </div></div>
+        <p class="hw-p"><b>Điều đồ thị nói mà ba công thức không nói:</b> đường thẳng là một <em>giả định kế toán</em>, không phải thực tế. Chính sách ghi rõ ô tô mất <b>60% giá trị sau 3 năm</b> — tức đường thật cong gấp xuống ở đầu, không thẳng. Kế toán chọn đường thẳng vì nó đơn giản và khó bị bóp méo, không vì nó đúng.</p>
         <div class="wb-alert wb-alert--warning" style="margin-top:14px">
           <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">warning</span></span>
           <div class="wb-alert__body">
@@ -625,17 +974,58 @@
         </div>
 
         <h4 class="hw-h4">Bốn trạng thái dòng tiền</h4>
-        <div class="hw-tw">
-          <table class="wb-table wb-table--compact">
-            <thead><tr><th>Trạng thái</th><th>Nghĩa là gì</th></tr></thead>
-            <tbody>
-              <tr><td><span class="wb-cap wb-cap--success wb-cap--sm">Dương</span></td><td>Tiền vào &gt; tiền ra, quỹ tiền tăng — doanh nghiệp đang phát đạt.</td></tr>
-              <tr><td><span class="wb-cap wb-cap--sm">Ổn định</span></td><td>Vào bằng ra. Vẫn là dấu hiệu khoẻ: công ty có thể tăng đầu tư hoặc trả cổ tức cao hơn mà quỹ tiền không giảm.</td></tr>
-              <tr><td><span class="wb-cap wb-cap--warning wb-cap--sm">Âm</span></td><td>Ra &gt; vào, quỹ tiền teo dần → sẽ gặp khó.</td></tr>
-              <tr><td><span class="wb-cap wb-cap--danger wb-cap--sm">Phá sản</span></td><td>Tiền cạn, không còn gì trả hoá đơn → mất khả năng thanh toán.</td></tr>
-            </tbody>
-          </table>
-        </div>
+        <div class="hw-viz wb-card wb-chart-scheme--mono wb-chart-ramp--2" style="--hw-chart-max:620px"><div class="wb-card__body">
+          <p class="wb-chart__title">Bốn trạng thái, và chỉ <b>một</b> con số quyết định bạn ở trạng thái nào</p>
+          <p class="wb-chart__sub">Con số đó là <b>hiệu giữa hai cột</b>. Hai cột xám luôn cùng thang đo nên so được ngay; chỉ ô kết luận bên dưới mang màu, vì ở đây “khoẻ hay chết” là <b>trạng thái thật</b>, không phải một cách phân loại.</p>
+          <div class="wb-chart">
+            <svg class="wb-chart__svg" viewBox="0 0 460 182" role="img"
+                 aria-label="Bốn trạng thái dòng tiền: dương (vào lớn hơn ra, tiền tăng), ổn định (vào bằng ra), âm (ra lớn hơn vào, tiền teo dần), phá sản (ra vượt xa vào, cạn tiền).">
+              <g class="hw-vt" text-anchor="middle">
+                <text x="62" y="14">Dương</text><text x="176" y="14">Ổn định</text>
+                <text x="290" y="14">Âm</text><text x="404" y="14">Phá sản</text>
+              </g>
+
+              <!-- in / out columns, identical scale across all four panels -->
+              <g fill="var(--wb-chart-1)">
+                <rect x="36"  y="46"  width="22" height="72" rx="2"/>
+                <rect x="150" y="60"  width="22" height="58" rx="2"/>
+                <rect x="264" y="74"  width="22" height="44" rx="2"/>
+                <rect x="378" y="96"  width="22" height="22" rx="2"/>
+              </g>
+              <g fill="var(--wb-chart-2)">
+                <rect x="66"  y="72"  width="22" height="46" rx="2"/>
+                <rect x="180" y="60"  width="22" height="58" rx="2"/>
+                <rect x="294" y="46"  width="22" height="72" rx="2"/>
+                <rect x="408" y="40"  width="22" height="78" rx="2"/>
+              </g>
+              <g class="wb-axis-line">
+                <line x1="30" y1="118" x2="94" y2="118"/><line x1="144" y1="118" x2="208" y2="118"/>
+                <line x1="258" y1="118" x2="322" y2="118"/><line x1="372" y1="118" x2="436" y2="118"/>
+              </g>
+              <g class="hw-vs" text-anchor="middle">
+                <text x="47" y="130">vào</text><text x="77" y="130">ra</text>
+                <text x="161" y="130">vào</text><text x="191" y="130">ra</text>
+                <text x="275" y="130">vào</text><text x="305" y="130">ra</text>
+                <text x="389" y="130">vào</text><text x="419" y="130">ra</text>
+              </g>
+
+              <!-- the outcome: the only place this page spends colour on a chart -->
+              <rect x="16"  y="142" width="92" height="22" rx="6" fill="var(--wb-success-soft)" stroke="var(--wb-success)" stroke-width="1"/>
+              <rect x="130" y="142" width="92" height="22" rx="6" fill="var(--wb-surface-hover)" stroke="var(--wb-border)" stroke-width="1"/>
+              <rect x="244" y="142" width="92" height="22" rx="6" fill="var(--wb-warning-soft)" stroke="var(--wb-warning)" stroke-width="1"/>
+              <rect x="358" y="142" width="92" height="22" rx="6" fill="var(--wb-danger-soft)" stroke="var(--wb-danger)" stroke-width="1"/>
+              <g class="hw-vs" text-anchor="middle" font-weight="620">
+                <text x="62"  y="157" style="fill:var(--wb-success-text)">Tiền tăng</text>
+                <text x="176" y="157" style="fill:var(--wb-fg-muted)">Tiền không đổi</text>
+                <text x="290" y="157" style="fill:var(--wb-warning-text)">Tiền teo dần</text>
+                <text x="404" y="157" style="fill:var(--wb-danger-text)">Cạn tiền</text>
+              </g>
+              <text class="hw-vs" x="230" y="178" text-anchor="middle">Cột cao thấp là minh hoạ tỷ lệ, không phải số liệu của một công ty cụ thể.</text>
+            </svg>
+          </div>
+          <p class="hw-src">Nguồn: “Positive and negative cash flow”, tr.38–39. “Ổn định” cũng là trạng thái khoẻ: quỹ tiền không giảm dù công ty đã tăng đầu tư và trả cổ tức cao hơn.</p>
+        </div></div>
+        <p class="hw-p"><b>Chỗ dễ đọc sai:</b> “âm” chưa phải chết. Một công ty đang mở rộng có thể chủ động chịu dòng tiền âm một thời gian. Nó thành chết khi <b>quỹ tiền chạm 0 trước khi tiền vào kịp về</b> — đó là lý do sách xếp “phá sản” thành một trạng thái riêng, chứ không phải mức âm sâu hơn.</p>
 
         <h4 class="hw-h4">Năm nguyên nhân gây tắc dòng tiền</h4>
         <ul class="hw-ul">
@@ -670,6 +1060,38 @@
         <div class="wb-card wb-card--pad" style="text-align:center;font-family:var(--wb-font-mono);font-size:13.5px">
           Đòn bẩy (%) = Nợ dài hạn ÷ (Vốn cổ phần + Quỹ dự trữ + Nợ dài hạn) × 100
         </div>
+        <div class="hw-viz wb-card wb-chart-scheme--mono" style="--hw-chart-max:600px"><div class="wb-card__body">
+          <p class="wb-chart__title">Cùng một thước, hai công ty, hai kết luận trái ngược — và cả hai đều đúng</p>
+          <p class="wb-chart__sub">Đặt cạnh nhau mới thấy điều quan trọng: <b>ngưỡng 25% không phải luật</b>. Công ty cấp nước ở mức 64%, gấp hơn hai lần rưỡi ngưỡng, mà vẫn được coi là chấp nhận được.</p>
+          <div class="wb-chart">
+            <svg class="wb-chart__svg" viewBox="0 0 460 140" role="img"
+                 aria-label="Thang đòn bẩy 0 tới 100 phần trăm: công ty phần mềm ở 21,2 phần trăm nằm trong vùng đòn bẩy thấp dưới 25 phần trăm; công ty cấp nước ở 64 phần trăm.">
+              <g class="hw-vt">
+                <text x="44" y="24">Phần mềm sắp IPO — 21,2%</text>
+                <text x="250" y="24">Cấp nước độc quyền vùng — 64%</text>
+              </g>
+              <g class="hw-vdash"><path d="M121,30 V52"/><path d="M283,30 V52"/></g>
+
+              <!-- track, then the "low gearing" zone on top of it -->
+              <rect x="40" y="52" width="380" height="24" rx="3" fill="var(--wb-surface-hover)"/>
+              <rect x="40" y="52" width="95"  height="24" rx="3" fill="var(--wb-chart-1)" opacity=".13"/>
+              <line class="hw-vline" x1="135" y1="48" x2="135" y2="80" stroke-dasharray="3 3"/>
+
+              <circle cx="121" cy="64" r="5.5" fill="var(--wb-chart-1)"/>
+              <circle cx="283" cy="64" r="5.5" fill="var(--wb-canvas)" stroke="var(--wb-chart-1)" stroke-width="2.25"/>
+
+              <line class="wb-axis-line" x1="40" y1="76" x2="420" y2="76"/>
+              <g class="hw-vs" text-anchor="middle">
+                <text x="40" y="92">0%</text><text x="135" y="92">25%</text><text x="230" y="92">50%</text>
+                <text x="325" y="92">75%</text><text x="420" y="92">100%</text>
+              </g>
+              <text class="hw-vt" x="135" y="112" text-anchor="middle">≤ 25% = “đòn bẩy thấp” theo thông lệ</text>
+              <text class="hw-vs" x="230" y="130" text-anchor="middle">Vùng tô nhạt = khoảng thông lệ gọi là thấp. Bên phải nó không tự động là xấu.</text>
+            </svg>
+          </div>
+          <p class="hw-src">Nguồn: “Gearing ratio calculation” + hai case study, tr.40–41. Kiểm tra: 1,2 ÷ (2 + 2,455 + 1,2) = 21,2%; 360 ÷ (82 + 120 + 360) = 64,1%.</p>
+        </div></div>
+        <p class="hw-p"><b>Vì sao 64% chấp nhận được với công ty cấp nước:</b> nó là nhà cung cấp nước <em>duy nhất</em> trong vùng, với vài triệu khách. Doanh thu gần như chắc chắn → trả lãi gần như chắc chắn. Sách nói thẳng mức tối ưu phụ thuộc <b>độ rủi ro của ngành, mức đòn bẩy của đối thủ, và độ chín của công ty</b> — và rằng doanh nghiệp Đức, Pháp thường có tỷ lệ cao hơn Mỹ, Anh. <em>Đọc một tỷ lệ đòn bẩy mà không biết ngành nào thì con số đó gần như vô nghĩa.</em></p>
         <div class="wb-grid wb-grid--2" style="margin-top:12px">
           <div class="wb-card wb-card--pad">
             <p class="wb-media__title">Công ty phần mềm sắp IPO — <span class="wb-cap wb-cap--success wb-cap--sm">21,2%</span></p>
@@ -775,6 +1197,45 @@
         </div>
         <p class="hw-p"><b>Ký hiệu:</b> kế toán dùng “Dr”/“Cr”, hoặc “+”/“−”, hoặc — như bảng trên — <b>dấu ngoặc để biểu thị số âm</b>.</p>
         <p class="hw-p"><b>Tự kiểm tra bảng:</b> 2.318,9 − 1.891,5 − 114,9 − 93,1 − 17,2 = <b>202,2</b>, đúng bằng dòng tài sản thuần. Một bảng cân đối luôn phải khép lại được như vậy — nếu bạn cộng không ra, hoặc bạn đang thiếu dòng, hoặc bảng có vấn đề.</p>
+        <h4 class="hw-h4">Xếp lại bảng trên theo một câu hỏi khác: <em>ai đang thật sự sở hữu khối tài sản này?</em></h4>
+        <p class="hw-p">Bảng cân đối liệt kê theo trình tự kế toán, nên không trả lời thẳng câu đó. Cộng tài sản lại — <b>2.167,1 hữu hình + 350,6 ngắn hạn = 2.517,7 triệu $</b> — rồi xếp mọi bên có quyền đòi theo độ lớn, thì bức tranh khác hẳn.</p>
+        <div class="hw-figs">
+          <div class="hw-fig"><span class="n">2.517,7 triệu $</span><span class="l">tổng tài sản công ty đang nắm</span></div>
+          <div class="hw-fig"><span class="n">8,0%</span><span class="l">phần thuộc về cổ đông — phần còn lại là quyền đòi của người khác</span></div>
+          <div class="hw-fig"><span class="n">75,1%</span><span class="l">chỉ riêng nợ dài hạn đã chiếm ba phần tư khối tài sản</span></div>
+        </div>
+        <div class="hw-viz wb-card wb-chart-scheme--mono wb-chart-ramp--6"><div class="wb-card__body">
+          <p class="wb-chart__title">Quyền đòi trên $2.517,7 triệu tài sản · công ty cấp nước, 2013</p>
+          <p class="wb-chart__sub">Thanh dài nhất = khoản lớn nhất. Dòng cuối là phần của cổ đông — <b>người “sở hữu” công ty lại đứng cuối hàng và nắm phần nhỏ nhất trong ba nhóm lớn</b>.</p>
+          <div class="wb-stack">
+            <div>
+              <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:5px"><span class="wb-cell-strong">Chủ nợ — sau 1 năm</span><span class="wb-cell-muted">1.891,5 · 75,1%</span></div>
+              <div class="wb-progress"><div class="wb-progress__bar" style="width:100%;background:var(--wb-chart-2)"></div></div>
+            </div>
+            <div>
+              <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:5px"><span class="wb-cell-strong">Cổ đông — tài sản thuần</span><span class="wb-cell-muted">202,2 · 8,0%</span></div>
+              <div class="wb-progress"><div class="wb-progress__bar" style="width:10.7%;background:var(--wb-chart-1)"></div></div>
+            </div>
+            <div>
+              <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:5px"><span class="wb-cell-strong">Chủ nợ — trong 1 năm</span><span class="wb-cell-muted">198,8 · 7,9%</span></div>
+              <div class="wb-progress"><div class="wb-progress__bar" style="width:10.5%;background:var(--wb-chart-3)"></div></div>
+            </div>
+            <div>
+              <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:5px"><span class="wb-cell-strong">Dự phòng nợ phải trả và chi phí</span><span class="wb-cell-muted">114,9 · 4,6%</span></div>
+              <div class="wb-progress"><div class="wb-progress__bar" style="width:6.1%;background:var(--wb-chart-4)"></div></div>
+            </div>
+            <div>
+              <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:5px"><span class="wb-cell-strong">Nghĩa vụ trợ cấp hưu trí</span><span class="wb-cell-muted">93,1 · 3,7%</span></div>
+              <div class="wb-progress"><div class="wb-progress__bar" style="width:4.9%;background:var(--wb-chart-5)"></div></div>
+            </div>
+            <div>
+              <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:5px"><span class="wb-cell-strong">Doanh thu chưa thực hiện</span><span class="wb-cell-muted">17,2 · 0,7%</span></div>
+              <div class="wb-progress"><div class="wb-progress__bar" style="width:0.9%;background:var(--wb-chart-6)"></div></div>
+            </div>
+          </div>
+          <p class="hw-src">Nguồn: bảng cân đối tr.44–45, cột 2013 (triệu $). Sáu khoản cộng lại = 2.517,7 = tổng tài sản; tỷ lệ tính trên tổng đó.</p>
+        </div></div>
+        <p class="hw-p">Con số 8,0% này giải thích luôn <b>vì sao đòn bẩy của chính công ty đó là 64%</b> ở mục trước: một doanh nghiệp tiện ích được xây gần như toàn bộ bằng tiền người khác. Nó chịu được vì doanh thu gần như chắc chắn — nhưng nó cũng có nghĩa <b>một cú giảm nhỏ trong giá trị tài sản là ăn thẳng vào phần vốn mỏng của cổ đông</b>.</p>
         <div class="wb-alert wb-alert--warning">
           <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">warning</span></span>
           <div class="wb-alert__body">
@@ -849,8 +1310,7 @@
             </tbody>
           </table>
         </div>
-        <div class="wb-alert wb-alert--info">
-          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span>
+        <div class="wb-alert wb-alert--plain">
           <div class="wb-alert__body">
             <p class="wb-alert__title">Quan hệ nghịch cần khắc cốt</p>
             <p class="wb-alert__msg"><b>Giá trái phiếu lên thì lợi suất xuống, và ngược lại.</b> Lý do đơn giản: tiền lãi cố định ở $100; nếu bạn phải bỏ $1.200 để mua dòng $100 đó thì bạn lời ít hơn người chỉ bỏ $800.</p>
@@ -900,23 +1360,54 @@
         <p class="hw-lede">Không có nó: chính phủ không vay được, công ty không mở rộng được, cá nhân không đổi được ngoại tệ, và không ai đầu tư được ra ngoài thị trường nước mình.</p>
 
         <h3 class="hw-h3">Bản đồ các sàn lớn — theo vốn hoá thị trường</h3>
-        <div class="hw-tw">
-          <table class="wb-table wb-table--compact">
-            <thead><tr><th>Sàn</th><th>Nơi</th><th>Vốn hoá</th></tr></thead>
-            <tbody>
-              <tr><td>NYSE</td><td>New York</td><td>$14,14 nghìn tỷ</td></tr>
-              <tr><td>NASDAQ</td><td>New York</td><td>$5,63 nghìn tỷ</td></tr>
-              <tr><td>Japan Exchange Group (JPX)</td><td>Tokyo</td><td>$3,73 nghìn tỷ — <b>lớn nhất châu Á</b></td></tr>
-              <tr><td>Shanghai (SSE)</td><td>Trung Quốc</td><td>$2,9 nghìn tỷ</td></tr>
-              <tr><td>London Stock Exchange</td><td>London</td><td>$2,68 nghìn tỷ — <b>lớn nhất châu Âu</b></td></tr>
-              <tr><td>Euronext</td><td>Amsterdam · Brussels · Lisbon · London · Paris</td><td>$2,56 nghìn tỷ</td></tr>
-              <tr><td>Shenzhen (SZSE)</td><td>Trung Quốc</td><td>$2,36 nghìn tỷ</td></tr>
-              <tr><td>Hong Kong (SEHK)</td><td>Hong Kong</td><td>$2,32 nghìn tỷ</td></tr>
-              <tr><td>Toronto (TSE)</td><td>Canada</td><td>$1,45 nghìn tỷ</td></tr>
-              <tr><td>Deutsche Börse (FWB)</td><td>Frankfurt</td><td>$1,24 nghìn tỷ</td></tr>
-            </tbody>
-          </table>
-        </div>
+        <p class="hw-p">Danh sách xếp hạng che mất điều đáng chú ý nhất. Vẽ theo độ dài thì thấy ngay: <b>NYSE không hơn đối thủ một chút, nó lớn gấp 2,5 lần sàn thứ hai — và sàn thứ hai cũng ở New York.</b></p>
+        <div class="hw-viz wb-card wb-chart-scheme--mono wb-chart-ramp--3"><div class="wb-card__body">
+          <p class="wb-chart__title">Mười sàn giao dịch lớn nhất · vốn hoá, nghìn tỷ $</p>
+          <p class="wb-chart__sub">Thanh đậm = hai sàn New York. Cộng lại chúng bằng <b>50,7%</b> tổng vốn hoá của cả mười sàn trong danh sách này.</p>
+          <div class="wb-stack">
+            <div>
+              <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:5px"><span class="wb-cell-strong">NYSE · New York</span><span class="wb-cell-muted">14,14</span></div>
+              <div class="wb-progress"><div class="wb-progress__bar" style="width:100%;background:var(--wb-chart-1)"></div></div>
+            </div>
+            <div>
+              <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:5px"><span class="wb-cell-strong">NASDAQ · New York</span><span class="wb-cell-muted">5,63</span></div>
+              <div class="wb-progress"><div class="wb-progress__bar" style="width:39.8%;background:var(--wb-chart-1)"></div></div>
+            </div>
+            <div>
+              <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:5px"><span class="wb-cell-strong">Japan Exchange Group · Tokyo <span class="wb-cap wb-cap--sm">lớn nhất châu Á</span></span><span class="wb-cell-muted">3,73</span></div>
+              <div class="wb-progress"><div class="wb-progress__bar" style="width:26.4%;background:var(--wb-chart-2)"></div></div>
+            </div>
+            <div>
+              <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:5px"><span class="wb-cell-strong">Shanghai · Trung Quốc</span><span class="wb-cell-muted">2,90</span></div>
+              <div class="wb-progress"><div class="wb-progress__bar" style="width:20.5%;background:var(--wb-chart-2)"></div></div>
+            </div>
+            <div>
+              <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:5px"><span class="wb-cell-strong">London Stock Exchange <span class="wb-cap wb-cap--sm">lớn nhất châu Âu</span></span><span class="wb-cell-muted">2,68</span></div>
+              <div class="wb-progress"><div class="wb-progress__bar" style="width:19.0%;background:var(--wb-chart-2)"></div></div>
+            </div>
+            <div>
+              <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:5px"><span class="wb-cell-strong">Euronext · Amsterdam · Brussels · Lisbon · London · Paris</span><span class="wb-cell-muted">2,56</span></div>
+              <div class="wb-progress"><div class="wb-progress__bar" style="width:18.1%;background:var(--wb-chart-2)"></div></div>
+            </div>
+            <div>
+              <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:5px"><span class="wb-cell-strong">Shenzhen · Trung Quốc</span><span class="wb-cell-muted">2,36</span></div>
+              <div class="wb-progress"><div class="wb-progress__bar" style="width:16.7%;background:var(--wb-chart-2)"></div></div>
+            </div>
+            <div>
+              <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:5px"><span class="wb-cell-strong">Hong Kong · SEHK</span><span class="wb-cell-muted">2,32</span></div>
+              <div class="wb-progress"><div class="wb-progress__bar" style="width:16.4%;background:var(--wb-chart-2)"></div></div>
+            </div>
+            <div>
+              <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:5px"><span class="wb-cell-strong">Toronto · Canada</span><span class="wb-cell-muted">1,45</span></div>
+              <div class="wb-progress"><div class="wb-progress__bar" style="width:10.3%;background:var(--wb-chart-3)"></div></div>
+            </div>
+            <div>
+              <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:5px"><span class="wb-cell-strong">Deutsche Börse · Frankfurt</span><span class="wb-cell-muted">1,24</span></div>
+              <div class="wb-progress"><div class="wb-progress__bar" style="width:8.8%;background:var(--wb-chart-3)"></div></div>
+            </div>
+          </div>
+          <p class="hw-src">Nguồn: “Financial markets around the world”, tr.54–55. Tổng mười sàn = 39,01 nghìn tỷ $; NYSE + NASDAQ = 19,77 nghìn tỷ = 50,7%. Trung Quốc có ba sàn trong danh sách (Shanghai · Shenzhen · Hong Kong), cộng lại 7,58 nghìn tỷ.</p>
+        </div></div>
         <p class="hw-p">Bên trong sàn: môi giới giao dịch cổ phiếu, trái phiếu, hàng hoá (nguyên liệu thô), và sản phẩm chuyên biệt như futures, options. Mua bán theo thời gian thực, <b>giá đổi từng giây</b>. Người mua phải nêu rõ mua gì, giá nào, khối lượng bao nhiêu. Mỗi cổ phiếu có <b>mã ticker</b>. Khi dễ mua bán, thị trường gọi là <b>thanh khoản (liquid)</b>; ít người mua bán thì <b>kém thanh khoản (illiquid)</b>.</p>
 
         <h3 class="hw-h3">Thị trường tiền tệ (money market)</h3>
@@ -1095,8 +1586,7 @@
             </tbody>
           </table>
         </div>
-        <div class="wb-alert wb-alert--info">
-          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span>
+        <div class="wb-alert wb-alert--plain">
           <div class="wb-alert__body">
             <p class="wb-alert__title">Tính liên thông — điểm dễ bỏ qua nhưng quan trọng nhất</p>
             <p class="wb-alert__msg">Một cú sốc ở thị trường này lan sang thị trường khác. Đàm phán xoá nợ của <b>Hy Lạp</b> làm chứng khoán châu Âu chao đảo, nhất là khi có khả năng Hy Lạp rời euro. Lo ngại <b>kinh tế Trung Quốc</b> chậm lại kéo theo lo ngại tăng trưởng toàn cầu. Kết quả <b>Brexit 2016</b> làm bảng Anh rớt mạnh.</p>
@@ -1249,8 +1739,7 @@
             </div>
           </div>
         </div>
-        <div class="wb-alert wb-alert--info" style="margin-top:14px">
-          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span>
+        <div class="wb-alert wb-alert--plain" style="margin-top:14px">
           <div class="wb-alert__body">
             <p class="wb-alert__title">Điểm dễ nhầm khi so sánh giữa các nước</p>
             <p class="wb-alert__msg">Ranh giới các nhóm M <b>khác nhau tuỳ nước</b>. Chính phủ Mỹ đo cung tiền bằng <b>M2</b> và từ <b>2006 không còn công bố số liệu M3</b>. Cho nên khi so sánh cung tiền giữa hai nước, phải hỏi trước “đang dùng định nghĩa nào”.</p>
@@ -1260,6 +1749,58 @@
         <div class="hw-figs">
           <div class="hw-fig"><span class="n">1,2 nghìn tỷ $</span><span class="l">lượng tiền mặt Mỹ đang lưu thông</span></div>
         </div>
+
+        <div class="hw-viz wb-card wb-chart-scheme--mono wb-chart-ramp--4"><div class="wb-card__body">
+          <p class="wb-chart__title">M0 → M3 không phải bốn loại tiền, mà là bốn <b>vòng bao nhau</b></p>
+          <p class="wb-chart__sub">Đây là chỗ dễ nhầm nhất: M1 <em>chứa</em> M0, M2 <em>chứa</em> M1, cứ thế. Nên “cung tiền tăng” là một câu vô nghĩa nếu chưa nói đang đo bằng vòng nào.</p>
+          <div class="wb-chart">
+            <svg class="wb-chart__svg" viewBox="0 0 460 212" role="img"
+                 aria-label="Một thanh chia bốn đoạn, với bốn dấu ngoặc lồng nhau: M0 là đoạn đầu, M1 gồm hai đoạn đầu, M2 gồm ba, M3 gồm cả bốn. Càng sang phải càng khó tiêu.">
+              <defs>
+                <marker id="hw-ah2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+                  <path d="M0,0 L8,4 L0,8 z" fill="var(--wb-neutral-strong)"/>
+                </marker>
+              </defs>
+              <!-- nested brackets, widest on top -->
+              <g class="hw-vline">
+                <path d="M40,38 V32 H420 V38"/>
+                <path d="M40,52 V46 H325 V52"/>
+                <path d="M40,66 V60 H230 V66"/>
+                <path d="M40,80 V74 H135 V80"/>
+              </g>
+              <g class="hw-vn">
+                <text x="424" y="36">M3</text><text x="329" y="50">M2</text>
+                <text x="234" y="64">M1</text><text x="139" y="78">M0</text>
+              </g>
+
+              <!-- the four slices: darkest = most spendable -->
+              <rect x="40"  y="86" width="95" height="30" fill="var(--wb-chart-1)"/>
+              <rect x="135" y="86" width="95" height="30" fill="var(--wb-chart-2)"/>
+              <rect x="230" y="86" width="95" height="30" fill="var(--wb-chart-3)"/>
+              <rect x="325" y="86" width="95" height="30" fill="var(--wb-chart-4)"/>
+              <g class="hw-vs" text-anchor="middle">
+                <text x="87"  y="132">tiền mặt</text>
+                <text x="182" y="132">tương đương tiền</text>
+                <text x="277" y="132">gửi kỳ hạn ngắn</text>
+                <text x="372" y="132">gửi kỳ hạn dài</text>
+              </g>
+
+              <!-- narrow vs broad -->
+              <g class="hw-vdash"><path d="M40,148 H224"/><path d="M236,148 H420"/></g>
+              <g class="hw-vt" text-anchor="middle">
+                <text x="135" y="164">tiền hẹp (narrow)</text>
+                <text x="325" y="164">tiền rộng (broad)</text>
+              </g>
+
+              <path class="hw-vline" d="M40,184 H414" marker-end="url(#hw-ah2)"/>
+              <g class="hw-vs">
+                <text x="40" y="202">dễ tiêu nhất</text>
+                <text x="420" y="202" text-anchor="end">khó tiêu nhất</text>
+              </g>
+            </svg>
+          </div>
+          <p class="hw-src">Nguồn: “How the money supply is measured”, tr.86–87. Độ rộng các đoạn là minh hoạ khái niệm — sách không cho số tiền của từng nhóm. Sách cũng nêu M4 thuộc tiền rộng nhưng <b>không định nghĩa nó</b>, nên trang này cũng không.</p>
+        </div></div>
 
         <h3 class="hw-h3">Tiền pháp định và tiền bảo chứng bằng hàng hoá</h3>
         <div class="hw-tw">
@@ -1315,7 +1856,46 @@
             </tbody>
           </table>
         </div>
+        <div class="hw-viz wb-card wb-chart-scheme--mono wb-chart-ramp--3"><div class="wb-card__body">
+          <p class="wb-chart__title">Vì sao chuỗi này nhân tiền lên: mỗi vòng chỉ mất đi <b>đúng 5%</b></p>
+          <p class="wb-chart__sub">Đoạn đậm bên trái là phần bị giữ lại làm dự trữ; toàn bộ phần còn lại đi tiếp thành khoản vay mới. Bốn thanh gần như dài bằng nhau — <b>đó chính là lý do tổng phình lên</b>.</p>
+          <div class="wb-chart">
+            <svg class="wb-chart__svg" viewBox="0 0 460 212" role="img"
+                 aria-label="Bốn thanh: ngân hàng A nhận 1.000 đô la giữ 50 cho vay 950; B nhận 950 giữ 47,50 cho vay 902,50; C nhận 902,50 cho vay 857,37; D nhận 857,37 cho vay 814,50.">
+              <text class="hw-vt" x="40" y="28">Ngân hàng A · nhận gửi $1.000,00</text>
+              <rect x="70" y="32" width="17.5"  height="22" fill="var(--wb-chart-1)"/>
+              <rect x="87.5" y="32" width="332.5" height="22" fill="var(--wb-chart-3)"/>
+              <text class="hw-vs" x="254" y="47" text-anchor="middle">cho vay tiếp $950,00</text>
+
+              <text class="hw-vt" x="40" y="74">Ngân hàng B · nhận gửi $950,00</text>
+              <rect x="70" y="78" width="16.6"  height="22" fill="var(--wb-chart-1)"/>
+              <rect x="86.6" y="78" width="315.9" height="22" fill="var(--wb-chart-3)"/>
+              <text class="hw-vs" x="245" y="93" text-anchor="middle">cho vay tiếp $902,50</text>
+
+              <text class="hw-vt" x="40" y="120">Ngân hàng C · nhận gửi $902,50</text>
+              <rect x="70" y="124" width="15.8"  height="22" fill="var(--wb-chart-1)"/>
+              <rect x="85.8" y="124" width="300.1" height="22" fill="var(--wb-chart-3)"/>
+              <text class="hw-vs" x="236" y="139" text-anchor="middle">cho vay tiếp $857,37</text>
+
+              <text class="hw-vt" x="40" y="166">Ngân hàng D · nhận gửi $857,37</text>
+              <rect x="70" y="170" width="15.0"  height="22" fill="var(--wb-chart-1)"/>
+              <rect x="85" y="170" width="285.1" height="22" fill="var(--wb-chart-3)"/>
+              <text class="hw-vs" x="228" y="185" text-anchor="middle">cho vay tiếp $814,50</text>
+
+              <!-- the reserve column, called out once -->
+              <path class="hw-vdash" d="M70,192 V199 H87.5 V192"/>
+              <text class="hw-vs" x="78" y="209" text-anchor="middle">dự trữ 5%</text>
+            </svg>
+          </div>
+          <p class="hw-src">Nguồn: “The multiplier effect of the fractional reserve cycle”, tr.90–91. Kiểm tra: tổng tiền gửi $3.709,87 + tổng cho vay $3.524,37 = <b>$7.234,24</b> quyền đòi tiền, trên $185,50 tiền mặt.</p>
+        </div></div>
+        <div class="hw-figs">
+          <div class="hw-fig"><span class="n">$185,50</span><span class="l">toàn bộ tiền mặt thật trong chuỗi bốn ngân hàng</span></div>
+          <div class="hw-fig"><span class="n">$7.234,24</span><span class="l">tổng quyền đòi tiền được tạo ra từ khoản gửi $1.000 ban đầu</span></div>
+          <div class="hw-fig"><span class="n">39 lần</span><span class="l">quyền đòi tiền chia cho tiền mặt thật — và đó chỉ mới bốn vòng</span></div>
+        </div>
         <p class="hw-p">Khoản gửi ban đầu <b>$1.000</b> cuối cùng tạo ra tổng quyền đòi tiền (tất cả tiền gửi và khoản vay) là <b>$7.234,24</b>, với dự trữ tiền mặt gộp chỉ <b>$185,50</b>. <em>Sách nói rõ đây là bản giải thích đơn giản hoá của hiệu ứng số nhân.</em></p>
+        <p class="hw-p"><b>Chuỗi này chưa dừng ở ngân hàng D.</b> Sách cắt ở bốn vòng cho gọn, nhưng phép tính không dừng: với dự trữ 5%, giới hạn lý thuyết của cả chuỗi vô hạn là <b>1 ÷ 0,05 = 20 lần</b> khoản gửi ban đầu, tức khoảng <b>$20.000</b> tiền gửi được tạo ra từ $1.000. Bốn vòng mới đi được $3.709 — <em>chưa tới một phần năm đường</em>.</p>
         <div class="wb-alert wb-alert--warning">
           <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">warning</span></span>
           <div class="wb-alert__body">
@@ -1360,8 +1940,7 @@
 
         <h3 class="hw-h3">Từ suy thoái tới đại suy thoái</h3>
         <p class="hw-p">Đại suy thoái (depression) là suy thoái sâu kéo dài — <b>GDP giảm liên tiếp nhiều tháng, tới 10%</b>, và thất nghiệp bùng nổ. Điều đáng sợ nhất: <b>các công cụ thông thường ngừng hiệu quả</b> — bơm thêm tiền không còn tác dụng, lãi suất thấp không còn kích thích được tiêu dùng. Thứ cần đến là <b>đầu tư của chính phủ</b> để tạo việc làm và tăng trưởng.</p>
-        <div class="wb-alert wb-alert--info">
-          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span>
+        <div class="wb-alert wb-alert--plain">
           <div class="wb-alert__body">
             <p class="wb-alert__title">Bẫy thanh khoản — cơ chế khiến bơm tiền vô ích</p>
             <p class="wb-alert__msg">Trong thời bất ổn, người ta giữ tiền vì nó là kho giá trị đáng tin, đổi nhanh ra tài sản khác được. Hơn nữa, <b>khi giá đang giảm thì giữ tiền lại có lời</b>, vì cùng số tiền ngày mai mua được nhiều hơn.</p>
@@ -1479,14 +2058,46 @@
           <li>Doanh nghiệp bị ảnh hưởng có thể dẫn tới <b>mất việc làm</b>.</li>
           <li>Ở Mexico, thuế 10% trên nước ngọt đã thu hơn <b>$2 tỷ</b> kể từ 2014, <b>nhưng doanh số đã bắt đầu tăng trở lại</b> sau đợt giảm ban đầu.</li>
         </ul>
-        <div class="wb-alert wb-alert--info">
-          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span>
+        <div class="wb-alert wb-alert--plain">
           <div class="wb-alert__body">
             <p class="wb-alert__title">Đường cong Laffer — và chỗ nó gây tranh cãi</p>
             <p class="wb-alert__msg">Đặt theo tên nhà kinh tế Mỹ <b>Arthur Laffer</b>: có một <b>mức thuế tối ưu để tối đa hoá nguồn thu</b> — vì ở thuế suất rất cao, số người tìm cách né thuế sẽ nhiều hơn số người nộp. Nguồn thu ban đầu tăng theo thuế suất, rồi cuối cùng giảm.</p>
             <p class="wb-alert__msg"><b>Chỗ tranh cãi:</b> (a) <b>rất khó biết điểm tối ưu nằm ở đâu</b>, và (b) nó có vẻ <b>hợp thức hoá</b> việc người siêu giàu không nộp thuế và việc người thường tham gia kinh tế xám. Đây là bất đồng vừa về dữ kiện (điểm tối ưu ở đâu — câu hỏi thực nghiệm) vừa về giá trị (ai nên gánh bao nhiêu — không có đáp án dữ liệu). Neo: ước tính <b>24%</b> hoạt động kinh tế của Hy Lạp năm 2013 không khai báo và không chịu thuế.</p>
           </div>
         </div>
+        <div class="hw-viz wb-card wb-chart-scheme--mono" style="--hw-chart-max:580px"><div class="wb-card__body">
+          <p class="wb-chart__title">Đường cong Laffer — và cái mà mọi hình vẽ đường Laffer thường che đi</p>
+          <p class="wb-chart__sub">Hai đầu thì không ai tranh cãi: thuế <b>0%</b> thu về 0, thuế <b>100%</b> cũng thu về 0 vì không ai còn động lực làm ra thu nhập để bị lấy hết. Mọi tranh cãi nằm ở <b>giữa</b> — và đó đúng là chỗ hình vẽ không biết gì.</p>
+          <div class="wb-chart">
+            <svg class="wb-chart__svg" viewBox="0 0 440 236" role="img"
+                 aria-label="Đường cong Laffer: nguồn thu thuế bằng 0 ở thuế suất 0% và 100%, đạt cực đại ở khoảng giữa; vùng đỉnh được tô mờ để nói rằng vị trí đỉnh không xác định.">
+              <!-- the honest part: a band, not a point -->
+              <rect x="176" y="30" width="108" height="160" fill="var(--wb-chart-1)" opacity=".08"/>
+              <text class="hw-vt" x="230" y="22" text-anchor="middle">đỉnh nằm đâu đó trong dải này</text>
+
+              <line class="wb-axis-line" x1="50" y1="30" x2="50" y2="190"/>
+              <line class="wb-axis-line" x1="50" y1="190" x2="410" y2="190"/>
+
+              <polyline fill="none" stroke="var(--wb-chart-1)" stroke-width="2.5" stroke-linejoin="round"
+                        points="50,190 86,132.4 122,87.6 158,55.6 194,36.4 230,30 266,36.4 302,55.6 338,87.6 374,132.4 410,190"/>
+
+              <circle cx="50" cy="190" r="4" fill="var(--wb-chart-1)"/>
+              <circle cx="410" cy="190" r="4" fill="var(--wb-chart-1)"/>
+
+              <text class="hw-vs" x="56" y="20">Nguồn thu thuế</text>
+              <text class="hw-vs" x="44" y="34" text-anchor="end">cao</text>
+              <text class="hw-vs" x="44" y="194" text-anchor="end">0</text>
+              <g class="hw-vs" text-anchor="middle">
+                <text x="50" y="206">0%</text>
+                <text x="230" y="206">50%</text>
+                <text x="410" y="206">100%</text>
+                <text x="230" y="228">Thuế suất</text>
+              </g>
+            </svg>
+          </div>
+          <p class="hw-src">Nguồn: hộp “The Laffer curve”, tr.126–127. <b>Hình dạng ở đây là minh hoạ, không phải số đo.</b> Parabol vẽ đỉnh ở 50% chỉ vì parabol thì cân — sách không hề nói đỉnh ở 50%, và nói rõ là rất khó biết nó ở đâu.</p>
+        </div></div>
+        <p class="hw-p"><b>Vì sao chi tiết “dải thay vì điểm” lại quan trọng về mặt chính trị:</b> đường Laffer được dùng để lập luận cho cả hai phía. Ai muốn giảm thuế sẽ nói ta đang ở <em>bên phải</em> đỉnh (giảm thuế thì thu được nhiều hơn); ai muốn tăng thuế sẽ nói ta ở <em>bên trái</em> (tăng thuế thì thu được nhiều hơn). <b>Cùng một đường cong, hai kết luận trái ngược — và nó không tự nói ta đang đứng ở đâu trên đó.</b> Đây là lý do sách xếp mục này vào phần “không có đáp án kỹ thuật”.</p>
 
         <h3 class="hw-h3">Vay nợ chính phủ và nợ công</h3>
         <p class="hw-p">Nợ công <b>không xấu tự thân</b> — cái quyết định là nền kinh tế có đủ lớn để gánh nó không. Cách vay: chính phủ <b>phát hành trái phiếu</b> cho cá nhân và định chế tài chính; trả lãi cố định theo thời gian và hoàn gốc khi đáo hạn. Một phần đáng kể ngân sách được dành riêng để trả nợ.</p>
@@ -1606,8 +2217,7 @@
           </div>
         </div>
         <p class="hw-p"><b>Các “bể” trong máy:</b> Thu nhập → Thuế → Thu nhập khả dụng (còn lại sau thuế) → Chi tiêu tiêu dùng (thu nhập hộ gia đình trừ tiết kiệm) → Đầu tư (doanh nghiệp chi) → Chi tiêu nội địa (hộ gia đình + chính phủ + doanh nghiệp) → cộng <b>cán cân đối ngoại</b> (xuất khẩu trừ nhập khẩu) → <b>Thu nhập quốc dân</b>. Các van điều khiển: <b>thuế, lãi suất, nới lỏng định lượng, chi tiêu chính phủ</b>.</p>
-        <div class="wb-alert wb-alert--info">
-          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span>
+        <div class="wb-alert wb-alert--plain">
           <div class="wb-alert__body">
             <p class="wb-alert__title">Nguyên lý nền: thu nhập bằng chi tiêu</p>
             <p class="wb-alert__msg">Mỗi đồng chi ra ở một chỗ trong nền kinh tế <b>phải bằng một đồng ai đó kiếm được ở chỗ khác</b>; tổng thu nhập của nền kinh tế phải khớp tổng chi tiêu. Chính nguyên lý này cho phép dựng các mô hình như MONIAC. Neo: Tổng thu nhập quốc dân (GNI) của Nhật năm 2015 là <b>4,29 nghìn tỷ USD</b>.</p>
@@ -1643,8 +2253,7 @@
           </table>
         </div>
         <p class="hw-p">Cắt thuế, cắt chi tiêu, hạ lãi suất đều cho tác dụng ngược lại.</p>
-        <div class="wb-alert wb-alert--info">
-          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span>
+        <div class="wb-alert wb-alert--plain">
           <div class="wb-alert__body">
             <p class="wb-alert__title">Đánh đổi trung tâm — và một chuyển dịch quan điểm</p>
             <p class="wb-alert__msg">Nhà kinh tế chỉ ra sự đánh đổi giữa lạm phát và thất nghiệp: <b>thất nghiệp thấp thường đi kèm lạm phát cao, và ngược lại</b>. Mục tiêu thường là tổ hợp “lạm phát thấp + thất nghiệp thấp”, nhưng hai thứ này kéo nhau.</p>
@@ -1670,18 +2279,37 @@
           </ol>
         </div></div>
         <h4 class="hw-h4">Thang lãi suất điển hình của ngân hàng thương mại</h4>
-        <div class="hw-tw">
-          <table class="wb-table wb-table--compact">
-            <thead><tr><th>Sản phẩm</th><th>Lãi</th><th>Vì sao</th></tr></thead>
-            <tbody>
-              <tr><td>Thẻ tín dụng</td><td><b>15%</b></td><td rowspan="2">Không có tài sản đảm bảo, không người bảo lãnh → rủi ro hơn cho bên cho vay → lãi cao hơn</td></tr>
-              <tr><td>Vay cá nhân</td><td><b>10%</b></td></tr>
-              <tr><td>Thế chấp cố định 30 năm</td><td><b>4%</b></td><td rowspan="2">Có bảo đảm bằng chính căn nhà → lãi thấp hơn</td></tr>
-              <tr><td>Thế chấp cố định 15 năm</td><td><b>3%</b></td></tr>
-              <tr><td>Tiết kiệm</td><td><b>0,6%</b></td><td>Lãi trả cho tiết kiệm <b>luôn</b> thấp hơn lãi tính cho khoản vay — đó là chỗ ngân hàng kiếm sống</td></tr>
-              <tr><td>Lãi suất liên ngân hàng</td><td>cao hơn base rate một chút</td><td>Ngân hàng cho nhau vay</td></tr>
-            </tbody>
-          </table>
+        <p class="hw-p">Xếp năm con số này lên cùng một thước thì mô hình kinh doanh của ngân hàng hiện ra trong một hình: <b>vay của bạn ở 0,6%, cho vay lại ở 15%</b>.</p>
+        <div class="hw-viz wb-card wb-chart-scheme--mono wb-chart-ramp--3"><div class="wb-card__body">
+          <p class="wb-chart__title">Lãi suất theo sản phẩm · thang chung, dài nhất = 15%</p>
+          <p class="wb-chart__sub">Quy luật duy nhất cần nhớ: <b>có tài sản đảm bảo thì lãi thấp</b>. Thẻ tín dụng và vay cá nhân không có gì bảo đảm; thế chấp có chính căn nhà.</p>
+          <div class="wb-stack">
+            <div>
+              <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:5px"><span class="wb-cell-strong">Thẻ tín dụng <span class="wb-cap wb-cap--sm">không bảo đảm</span></span><span class="wb-cell-muted">15%</span></div>
+              <div class="wb-progress"><div class="wb-progress__bar" style="width:100%;background:var(--wb-chart-1)"></div></div>
+            </div>
+            <div>
+              <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:5px"><span class="wb-cell-strong">Vay cá nhân <span class="wb-cap wb-cap--sm">không bảo đảm</span></span><span class="wb-cell-muted">10%</span></div>
+              <div class="wb-progress"><div class="wb-progress__bar" style="width:66.7%;background:var(--wb-chart-1)"></div></div>
+            </div>
+            <div>
+              <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:5px"><span class="wb-cell-strong">Thế chấp cố định 30 năm <span class="wb-cap wb-cap--sm">có bảo đảm</span></span><span class="wb-cell-muted">4%</span></div>
+              <div class="wb-progress"><div class="wb-progress__bar" style="width:26.7%;background:var(--wb-chart-2)"></div></div>
+            </div>
+            <div>
+              <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:5px"><span class="wb-cell-strong">Thế chấp cố định 15 năm <span class="wb-cap wb-cap--sm">có bảo đảm</span></span><span class="wb-cell-muted">3%</span></div>
+              <div class="wb-progress"><div class="wb-progress__bar" style="width:20%;background:var(--wb-chart-2)"></div></div>
+            </div>
+            <div>
+              <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:5px"><span class="wb-cell-strong">Tiết kiệm — ngân hàng trả <em>cho bạn</em></span><span class="wb-cell-muted">0,6%</span></div>
+              <div class="wb-progress"><div class="wb-progress__bar" style="width:4%;background:var(--wb-chart-3)"></div></div>
+            </div>
+          </div>
+          <p class="hw-src">Nguồn: “Typical interest rates offered by commercial banks”, tr.120–121. Lãi suất liên ngân hàng (ngân hàng cho nhau vay) nằm hơi cao hơn base rate — sách không cho con số cụ thể.</p>
+        </div></div>
+        <div class="hw-figs">
+          <div class="hw-fig"><span class="n">25 lần</span><span class="l">15% ÷ 0,6% — khoảng cách giữa giá ngân hàng bán tiền và giá nó mua tiền của bạn</span></div>
+          <div class="hw-fig"><span class="n">14,4 điểm %</span><span class="l">chênh lệch tuyệt đối giữa thẻ tín dụng và tiết kiệm; đây là nguồn sống của ngân hàng thương mại</span></div>
         </div>
         <dl class="hw-terms">
           <div class="hw-term"><dt>Nominal rate</dt><dd>Lãi suất niêm yết, <b>chưa tính lạm phát, phí, hay lãi kép</b>.</dd></div>
@@ -1753,8 +2381,7 @@
         </div>
         <p class="hw-p"><b>Quy mô chính phủ so với nền kinh tế — khác nhau rất nhiều:</b> Mỹ 20% · Hàn Quốc 30% · Úc 36% · Nga 39% · Nhật 43% · Đức 45% · Anh 45% · Ý 51% · Pháp 57% · Đan Mạch 58% · Hy Lạp 61%. Thông thường quanh <b>40% GDP</b>. Neo: ngân sách liên bang Mỹ 2017 là <b>4,15 nghìn tỷ USD</b>.</p>
         <p class="hw-p"><b>Chi tiêu hỗ trợ kinh tế ra sao:</b> giao thông và viễn thông hỗ trợ trực tiếp; nghiên cứu khoa học thường do nhà nước tài trợ; chi cho giáo dục đào tạo lực lượng lao động; một số chính phủ trợ cấp các ngành then chốt.</p>
-        <div class="wb-alert wb-alert--info">
-          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span>
+        <div class="wb-alert wb-alert--plain">
           <div class="wb-alert__body">
             <p class="wb-alert__title">Tranh luận cắt giảm — nêu thẳng</p>
             <p class="wb-alert__msg">Nhiều chính phủ sau khủng hoảng 2008 đã cố cắt chi tiêu để giảm thâm hụt. <b>Các quyết định này gây tranh cãi, vì tác động dài hạn lên nền kinh tế vẫn chưa rõ.</b> Đây là bất đồng thực nghiệm còn mở, không phải chuyện đã có đáp án.</p>
@@ -1810,8 +2437,7 @@
             </div>
           </div>
         </div>
-        <div class="wb-alert wb-alert--info" style="margin-top:14px">
-          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span>
+        <div class="wb-alert wb-alert--plain" style="margin-top:14px">
           <div class="wb-alert__body">
             <p class="wb-alert__title">Vận tốc lưu thông của tiền — biến số hay bị bỏ quên</p>
             <p class="wb-alert__msg">Không chỉ <em>lượng</em> tiền quyết định, mà cả <b>tốc độ tiền đổi tay</b>. Nếu cùng một đồng $1 được tiêu ba lần trong năm qua ba giao dịch riêng biệt, vận tốc bằng 3. Nếu cả cung tiền lẫn vận tốc đều tăng nhanh, cung hàng hoá có thể không theo kịp → <b>nhiều tiền đuổi ít hàng</b> → lạm phát cầu kéo.</p>
@@ -1929,17 +2555,66 @@
             <li class="wb-steps__item is-active"><span class="wb-steps__marker">7</span><div class="wb-steps__content"><p class="wb-steps__title">Tháng 11/1923 — chấm dứt</p><p class="wb-steps__desc">Chính phủ mới cùng một chủ tịch ngân hàng trung ương mới. Ngân hàng trung ương <b>ngừng trả nợ chính phủ bằng tiền in</b>. Đồng <b>Rentenmark</b> ra đời thay đồng mark giấy gần như vô giá trị, <b>được bảo chứng bằng thế chấp trên đất đai</b>, và chủ tịch mới cam kết <b>cố định tỷ giá với USD</b>. Niềm tin được khôi phục; một phần nợ chiến tranh được xoá và bồi thường được giảm trong 1924–25.</p></div></li>
           </ol>
         </div></div>
-        <div class="wb-alert wb-alert--info">
-          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span>
+        <div class="wb-alert wb-alert--plain">
           <div class="wb-alert__body">
             <p class="wb-alert__title">Hai lập luận về cách chặn siêu lạm phát</p>
             <p class="wb-alert__msg"><b>Độ tin cậy (credibility):</b> vì siêu lạm phát dựa trên kỳ vọng, nó cũng có thể bị chặn nhanh. Nếu chính phủ <b>cam kết một cách đáng tin</b> rằng sẽ chấm dứt lạm phát (ví dụ ra đồng tiền mới kèm quy tắc phát hành chặt), có thể dừng nó với chi phí hạn chế. Cái khó là <b>thực hiện được cam kết đó, nhất là với chính phủ yếu</b>.</p>
             <p class="wb-alert__msg"><b>Lập luận độc tài (gây tranh cãi):</b> vì siêu lạm phát bắt nguồn từ chính phủ yếu, chấm dứt nó đòi hỏi một chính phủ mạnh — <b>thậm chí một chính phủ chấm dứt dân chủ</b>. Nhà kinh tế <b>Thomas Sargent</b> đưa ra lập luận này cho Trung Âu thập niên 1920. <em>Sách gọi thẳng đây là lập luận gây tranh cãi — nó là một quan sát lịch sử, không phải một khuyến nghị chính sách, và nó không chứng minh rằng dân chủ không thể chặn siêu lạm phát.</em></p>
           </div>
         </div>
+        <div class="hw-viz wb-card wb-chart-scheme--mono" style="--hw-chart-max:600px"><div class="wb-card__body">
+          <p class="wb-chart__title">Giá một ổ bánh mì, 1922 → 11/1923 — phải vẽ trên thang log mới vừa trang giấy</p>
+          <p class="wb-chart__sub">Trên thang thường, cột 1922 sẽ mỏng hơn một sợi tóc so với cột 1923 và bạn <em>không thấy gì</em>. Ở đây <b>mỗi bậc trục dọc là nhân 10</b> — và giá vẫn phải leo hơn <b>chín bậc</b>.</p>
+          <div class="wb-chart">
+            <svg class="wb-chart__svg" viewBox="0 0 460 244" role="img"
+                 aria-label="Thang log: giá bánh mì từ 163 mark năm 1922 lên 200 tỷ mark tháng 11 năm 1923, vượt xa hai mức mệnh giá tờ 10.000 và 100.000 mark.">
+              <!-- decade grid -->
+              <g class="wb-grid-line">
+                <line x1="56" y1="182.1" x2="410" y2="182.1"/><line x1="56" y1="164.2" x2="410" y2="164.2"/>
+                <line x1="56" y1="146.3" x2="410" y2="146.3"/><line x1="56" y1="128.4" x2="410" y2="128.4"/>
+                <line x1="56" y1="110.5" x2="410" y2="110.5"/><line x1="56" y1="92.6"  x2="410" y2="92.6"/>
+                <line x1="56" y1="74.7"  x2="410" y2="74.7"/><line x1="56" y1="56.8"  x2="410" y2="56.8"/>
+                <line x1="56" y1="38.9"  x2="410" y2="38.9"/>
+              </g>
+              <line class="wb-axis-line" x1="56" y1="26" x2="56" y2="204"/>
+              <line class="wb-axis-line" x1="56" y1="204" x2="410" y2="204"/>
+              <g class="hw-vs" text-anchor="end">
+                <text x="50" y="204">100</text>
+                <text x="50" y="168">10 nghìn</text>
+                <text x="50" y="132">1 triệu</text>
+                <text x="50" y="96">100 triệu</text>
+                <text x="50" y="60">10 tỷ</text>
+              </g>
+
+              <!-- the two largest banknotes the book pictures: flat, and hopelessly outrun -->
+              <g class="hw-vdash"><path d="M60,164.2 H400"/><path d="M60,146.3 H400"/></g>
+              <g class="hw-vs" text-anchor="end">
+                <text x="400" y="160">mệnh giá tờ 10.000 mark</text>
+                <text x="400" y="142">mệnh giá tờ 100.000 mark</text>
+              </g>
+
+              <!-- price of one loaf -->
+              <line x1="60" y1="196.2" x2="400" y2="33.6" stroke="var(--wb-chart-1)" stroke-width="2.5"/>
+              <circle cx="60" cy="196.2" r="4.5" fill="var(--wb-chart-1)"/>
+              <circle cx="400" cy="33.6" r="4.5" fill="var(--wb-chart-1)"/>
+              <text class="hw-vn" x="72" y="200">163 mark</text>
+              <text class="hw-vn" x="396" y="28" text-anchor="end">200.000.000.000 mark</text>
+
+              <g class="hw-vs" text-anchor="middle">
+                <text x="60" y="220">1922</text>
+                <text x="400" y="220">11/1923</text>
+                <text x="230" y="238">Đường thẳng trên thang log = tăng theo hàm số nhân, không phải tăng dần.</text>
+              </g>
+            </svg>
+          </div>
+          <p class="hw-src">Nguồn: bước 7 của case study, tr.146–147 (163 mark năm 1922 → 200 tỷ mark tháng 11/1923), cùng hai tờ tiền 10.000 và 100.000 mark sách in ở bước 5–6. Đường nối hai điểm là nội suy — sách chỉ cho hai mốc, đường đi thật không mượt như vậy.</p>
+        </div></div>
         <div class="hw-figs">
-          <div class="hw-fig"><span class="n">460 septillion</span><span class="l">số pengő Hungary đổi 1 USD ở đỉnh siêu lạm phát tháng 7/1946</span></div>
+          <div class="hw-fig"><span class="n">×1,2 tỷ</span><span class="l">giá ổ bánh mì tăng bấy nhiêu lần trong khoảng 22 tháng (200 tỷ ÷ 163)</span></div>
+          <div class="hw-fig"><span class="n">2 triệu tờ</span><span class="l">số tờ 100.000 mark cần để mua <b>một</b> ổ bánh mì vào 11/1923 — in tiền to hơn không đuổi kịp</span></div>
+          <div class="hw-fig"><span class="n">460 septillion</span><span class="l">số pengő Hungary đổi 1 USD ở đỉnh siêu lạm phát tháng 7/1946 — trường hợp tệ hơn Đức rất nhiều</span></div>
         </div>
+        <p class="hw-p"><b>Đây là chỗ trực giác hỏng.</b> Phản ứng tự nhiên của một chính phủ trong cảnh này là in tờ mệnh giá lớn hơn cho tiện. Nhưng hình trên cho thấy vì sao việc đó vô nghĩa: hai đường nét đứt là <b>đứng yên</b> trong khi giá cả bay thẳng lên. In tờ to hơn không đuổi theo lạm phát — <b>nó là bằng chứng công khai rằng chính phủ đã bỏ cuộc</b>, và chính bằng chứng đó lại đẩy kỳ vọng lạm phát lên tiếp.</p>
 
         <h3 class="hw-h3">Vỡ nợ — Argentina 1998–2001</h3>
         <p class="hw-p">Vòng xoáy nợ là <b>lời tiên tri tự ứng nghiệm</b> — bên cho vay mất niềm tin nên đòi lãi cao hơn, lãi cao hơn khiến nợ càng khó kiểm soát, và điều đó khiến vỡ nợ càng dễ xảy ra.</p>
@@ -2258,8 +2933,7 @@
         </div>
 
         <h3 class="hw-h3">Bảo hiểm nhân thọ và bảo hiểm sinh mạng</h3>
-        <div class="wb-alert wb-alert--info">
-          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span>
+        <div class="wb-alert wb-alert--plain">
           <div class="wb-alert__body">
             <p class="wb-alert__title">Hai từ hay bị dùng lẫn nhau nhưng khác nhau ở một điểm</p>
             <p class="wb-alert__msg"><b>Assurance</b> bảo vệ trước một sự kiện <b>chắc chắn xảy ra</b> (cái chết); <b>insurance</b> bảo vệ trước <b>khả năng</b> nó xảy ra <em>trong một khoảng thời gian</em>.</p>
@@ -2374,6 +3048,45 @@
           <div class="wb-card wb-card--pad"><p class="wb-media__title">Bất động sản nhà ở</p><p class="wb-media__text">Lợi nhuận dễ dự đoán hơn cả về tiền thuê lẫn bán lại, dù <b>vị trí luôn là yếu tố then chốt</b>. Dễ định giá hơn — điều đó giúp ích khi bán.</p></div>
         </div>
         <h4 class="hw-h4">Chu kỳ bất động sản — bốn pha</h4>
+        <div class="hw-viz wb-card wb-chart-scheme--mono" style="--hw-chart-max:600px"><div class="wb-card__body">
+          <p class="wb-chart__title">Bốn pha, và một con số làm cả hình có ý nghĩa: <b>18 năm</b></p>
+          <p class="wb-chart__sub">Bốn pha thì ai cũng đoán được. Điều đáng chú ý là <b>độ dài</b>: nếu một vòng mất khoảng 18 năm, thì phần lớn người mua nhà chỉ trải qua <b>hai hoặc ba</b> vòng trong cả đời — quá ít để học từ kinh nghiệm của chính mình.</p>
+          <div class="wb-chart">
+            <svg class="wb-chart__svg" viewBox="0 0 440 212" role="img"
+                 aria-label="Một sóng giá bất động sản: sụt ở đáy, phục hồi khi đi lên, bùng nổ ở đỉnh, chậm lại khi đi xuống, rồi sụt trở lại; một vòng khoảng 18 năm.">
+              <defs>
+                <marker id="hw-ah4" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+                  <path d="M0,0 L8,4 L0,8 z" fill="var(--wb-neutral-strong)"/>
+                </marker>
+                <marker id="hw-ah4r" viewBox="0 0 8 8" refX="1" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+                  <path d="M8,0 L0,4 L8,8 z" fill="var(--wb-neutral-strong)"/>
+                </marker>
+              </defs>
+              <line class="wb-axis-line" x1="50" y1="26" x2="50" y2="152"/>
+              <line class="wb-axis-line" x1="50" y1="152" x2="410" y2="152"/>
+              <text class="hw-vs" x="56" y="20">Giá bất động sản</text>
+
+              <path fill="none" stroke="var(--wb-chart-1)" stroke-width="2.5"
+                    d="M50,138 C110,138 170,44 230,44 C290,44 350,138 410,138"/>
+
+              <circle cx="50" cy="138" r="4" fill="var(--wb-chart-1)"/>
+              <circle cx="230" cy="44" r="4.5" fill="var(--wb-chart-1)"/>
+              <circle cx="410" cy="138" r="4" fill="var(--wb-chart-1)"/>
+
+              <text class="hw-vt" x="230" y="34" text-anchor="middle">bùng nổ</text>
+              <text class="hw-vs" x="230" y="22" text-anchor="middle">niềm tin cao · nhiều người mua</text>
+              <text class="hw-vt" x="126" y="96">phục hồi</text>
+              <text class="hw-vt" x="300" y="96" text-anchor="end">chậm lại</text>
+              <text class="hw-vt" x="56" y="132">sụt</text>
+              <text class="hw-vt" x="404" y="132" text-anchor="end">sụt</text>
+
+              <path class="hw-vline" d="M56,176 H404" marker-end="url(#hw-ah4)" marker-start="url(#hw-ah4r)"/>
+              <text class="hw-vn" x="230" y="196" text-anchor="middle">một vòng ≈ 18 năm</text>
+            </svg>
+          </div>
+          <p class="hw-src">Nguồn: “The property cycle” + hộp “The 18-year real-estate cycle”, tr.176–181. Con số 18 năm là của nhà dự báo kinh tế <b>Phillip J. Anderson</b>, dựa trên nghiên cứu thị trường bất động sản Mỹ qua <b>hai thế kỷ</b>: ông chỉ ra rằng giao dịch đất và hoạt động xây dựng đạt đỉnh trung bình khoảng 18 năm một lần. Hình sóng là minh hoạ khái niệm, không phải dữ liệu giá thật.</p>
+        </div></div>
+        <p class="hw-p"><em>Giữ thái độ thận trọng đúng mức với con số này: đây là một quy luật <b>trung bình dựa trên lịch sử một nước</b>, không phải một cái đồng hồ. Nó hữu ích để nhắc rằng thị trường có chu kỳ — không hữu ích để đoán năm nào là đỉnh.</em></p>
         <div class="hw-tw">
           <table class="wb-table wb-table--compact">
             <thead><tr><th>Pha</th><th>Diễn biến</th></tr></thead>
@@ -2435,8 +3148,7 @@
         <div class="hw-figs">
           <div class="hw-fig"><span class="n">1987</span><span class="l">khởi đầu thị trường bò dài nhất lịch sử Mỹ tới nay — kéo dài 13 năm</span></div>
         </div>
-        <div class="wb-alert wb-alert--info">
-          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span>
+        <div class="wb-alert wb-alert--plain">
           <div class="wb-alert__body">
             <p class="wb-alert__title">Năm lý do giá cổ phiếu quan trọng — vượt ra ngoài túi tiền nhà đầu tư</p>
             <p class="wb-alert__msg">Nhà đầu tư nhắm tăng trưởng vốn <b>chỉ có lãi nếu giá tăng</b> · giá giảm ảnh hưởng <b>danh tiếng công ty, ban lãnh đạo, và khả năng đi vay</b> · công ty có giá cổ phiếu giảm <b>trở thành mục tiêu thâu tóm</b> · <b>giá trị quỹ hưu trí gắn với thị trường sẽ giảm theo</b> — tin rất xấu cho người sắp nghỉ hưu · khi thị trường một nước giảm, <b>nhà đầu tư nước ngoài thường rút tiền khỏi nước đó hoàn toàn, làm giảm giá trị đồng tiền</b>.</p>
@@ -2489,20 +3201,52 @@
 
         <h3 class="hw-h3">Phân bổ tài sản (asset allocation)</h3>
         <p class="hw-p">Đa dạng hoá là “đừng bỏ trứng vào một giỏ”; <b>phân bổ tài sản là quyết định <em>bao nhiêu phần trăm</em> trứng vào từng giỏ</b>. Cái sau mới là thứ định hình lợi nhuận kỳ vọng. Tỷ lệ mỗi loại tài sản gọi là <b>portfolio weighting</b>, đặt theo <b>mức chịu rủi ro, mục tiêu, và khung thời gian</b>.</p>
-        <div class="hw-tw">
-          <table class="wb-table wb-table--compact">
-            <thead><tr><th>Loại tài sản</th><th>Tỷ trọng</th><th>Lợi nhuận kỳ vọng</th><th>Đóng góp</th></tr></thead>
-            <tbody>
-              <tr><td>Cổ phiếu</td><td>20%</td><td>10%</td><td>2,0%</td></tr>
-              <tr><td>Bất động sản</td><td>20%</td><td>8%</td><td>1,6%</td></tr>
-              <tr><td>Trái phiếu</td><td>40%</td><td>5%</td><td>2,0%</td></tr>
-              <tr><td>Tiền mặt</td><td>20%</td><td>3%</td><td>0,6%</td></tr>
-              <tr><td><b>Tổng</b></td><td><b>100%</b></td><td><em>trung bình đơn giản 6,5%</em></td><td><b>6,2%</b></td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="wb-alert wb-alert--info">
-          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span>
+        <div class="hw-viz wb-card wb-chart-scheme--mono wb-chart-ramp--4" style="--hw-chart-max:620px"><div class="wb-card__body">
+          <p class="wb-chart__title">Danh mục phòng thủ trong sách — và một cái bẫy số học nhỏ</p>
+          <p class="wb-chart__sub">Lợi nhuận kỳ vọng của cả danh mục <b>không</b> phải trung bình của bốn con số 10 · 8 · 5 · 3. Nó là trung bình <b>có trọng số</b> — và vì miếng lớn nhất lại là miếng sinh lời thấp, kết quả thấp hơn.</p>
+          <div class="wb-chart">
+            <svg class="wb-chart__svg" viewBox="0 0 440 208" role="img"
+                 aria-label="Vòng tròn phân bổ: trái phiếu 40 phần trăm, cổ phiếu 20, bất động sản 20, tiền mặt 20. Lợi nhuận kỳ vọng có trọng số 6,2 phần trăm.">
+              <g transform="rotate(-90 94 110)" fill="none" stroke-width="26">
+                <circle cx="94" cy="110" r="54" stroke="var(--wb-chart-1)" stroke-dasharray="136.3 203.0"/>
+                <circle cx="94" cy="110" r="54" stroke="var(--wb-chart-2)" stroke-dasharray="68.5 270.8" stroke-dashoffset="-135.72"/>
+                <circle cx="94" cy="110" r="54" stroke="var(--wb-chart-3)" stroke-dasharray="68.5 270.8" stroke-dashoffset="-203.58"/>
+                <circle cx="94" cy="110" r="54" stroke="var(--wb-chart-4)" stroke-dasharray="68.5 270.8" stroke-dashoffset="-271.44"/>
+              </g>
+              <text class="wb-donut__center-value" x="94" y="108">6,2%</text>
+              <text class="wb-donut__center-label" x="94" y="124">kỳ vọng</text>
+
+              <g class="hw-vs" text-anchor="middle"><text x="94" y="196">tỷ trọng danh mục</text></g>
+
+              <!-- the arithmetic, laid out so each row is checkable -->
+              <g class="hw-vs"><text x="186" y="34">tỷ trọng × lợi nhuận kỳ vọng = đóng góp</text></g>
+              <rect x="186" y="46" width="11" height="11" rx="2" fill="var(--wb-chart-1)"/>
+              <text class="hw-vt" x="204" y="56">Trái phiếu</text>
+              <text class="hw-vn" x="424" y="56" text-anchor="end">40% × 5% = 2,0%</text>
+
+              <rect x="186" y="72" width="11" height="11" rx="2" fill="var(--wb-chart-2)"/>
+              <text class="hw-vt" x="204" y="82">Cổ phiếu</text>
+              <text class="hw-vn" x="424" y="82" text-anchor="end">20% × 10% = 2,0%</text>
+
+              <rect x="186" y="98" width="11" height="11" rx="2" fill="var(--wb-chart-3)"/>
+              <text class="hw-vt" x="204" y="108">Bất động sản</text>
+              <text class="hw-vn" x="424" y="108" text-anchor="end">20% × 8% = 1,6%</text>
+
+              <rect x="186" y="124" width="11" height="11" rx="2" fill="var(--wb-chart-4)"/>
+              <text class="hw-vt" x="204" y="134">Tiền mặt</text>
+              <text class="hw-vn" x="424" y="134" text-anchor="end">20% × 3% = 0,6%</text>
+
+              <line class="wb-axis-line" x1="186" y1="146" x2="424" y2="146"/>
+              <text class="hw-vt" x="204" y="162">Lợi nhuận kỳ vọng của danh mục</text>
+              <text class="hw-vn" x="424" y="162" text-anchor="end">6,2%</text>
+              <text class="hw-vs" x="204" y="180">Trung bình đơn giản của bốn nhóm</text>
+              <text class="hw-vs" x="424" y="180" text-anchor="end">6,5%</text>
+            </svg>
+          </div>
+          <p class="hw-src">Nguồn: “Strategic asset allocation” + hộp “Expected returns of asset classes”, tr.188–189. Bốn dòng cộng lại: 2,0 + 2,0 + 1,6 + 0,6 = <b>6,2%</b>; trung bình đơn giản (10+8+5+3)÷4 = <b>6,5%</b>.</p>
+        </div></div>
+        <p class="hw-p"><b>Vì sao 6,2% thấp hơn 6,5%:</b> miếng lớn nhất của vòng tròn — <b>40% trái phiếu</b> — lại là nhóm sinh lời thấp thứ hai. Trung bình đơn giản coi bốn nhóm ngang nhau; trung bình có trọng số thì không. <em>Đây là cái giá của phòng thủ, và điểm hay là nó <b>đo được bằng số</b>: bạn biết chính xác mình đang trả 0,3 điểm phần trăm mỗi năm để đổi lấy sự ổn định.</em></p>
+        <div class="wb-alert wb-alert--plain">
           <div class="wb-alert__body">
             <p class="wb-alert__title">Điểm cần chú ý</p>
             <p class="wb-alert__msg">Trung bình đơn giản của bốn mức lợi nhuận là 6,5%, nhưng lợi nhuận kỳ vọng thực của danh mục là <b>6,2%</b> — vì tỷ trọng lớn nhất (40%) nằm ở tài sản lợi nhuận thấp. <b>Tỷ trọng, chứ không phải danh sách tài sản, quyết định kết quả.</b></p>
@@ -2520,18 +3264,47 @@
 
         <h3 class="hw-h3">Bình quân giá (dollar cost averaging)</h3>
         <p class="hw-p">Thay vì đoán đáy thị trường, hãy <b>chia nhỏ tiền và mua đều</b> — khi giá thấp bạn tự động mua được nhiều đơn vị hơn, khi giá cao thì ít hơn.</p>
-        <div class="hw-tw">
-          <table class="wb-table wb-table--compact">
-            <thead><tr><th></th><th>Nhà đầu tư A — một lần</th><th>Nhà đầu tư B — bình quân giá</th></tr></thead>
-            <tbody>
-              <tr><td>Cách làm</td><td>Bỏ hết $1.400 một lần khi giá $20/cổ phiếu</td><td>Bỏ <b>$200/tháng</b> trong 7 tháng</td></tr>
-              <tr><td>Cổ phiếu mua mỗi tháng</td><td>—</td><td>12 · 13 · 6 · 10 · 10 · 12 · 10</td></tr>
-              <tr><td><b>Tổng cổ phiếu</b></td><td><b>70</b></td><td><b>73</b></td></tr>
-              <tr><td>Giá bình quân</td><td>$20,00</td><td><b>$19,18</b></td></tr>
-            </tbody>
-          </table>
+        <div class="hw-viz wb-card wb-chart-scheme--mono wb-chart-ramp--2" style="--hw-chart-max:600px"><div class="wb-card__body">
+          <p class="wb-chart__title">Cùng $200 mỗi tháng, nhưng mỗi tháng mua được số cổ phiếu khác nhau</p>
+          <p class="wb-chart__sub">Đường nét đứt là mức <b>10 cổ phiếu</b> — đúng bằng mức nhà đầu tư A mua được khi bỏ một lần ở giá $20. Cột <b>cao hơn</b> đường đó là tháng giá rẻ; cột <b>thấp hơn</b> là tháng giá đắt.</p>
+          <div class="wb-chart">
+            <svg class="wb-chart__svg" viewBox="0 0 440 228" role="img"
+                 aria-label="Bảy cột số cổ phiếu mua được mỗi tháng với 200 đô la: 12, 13, 6, 10, 10, 12, 10. Bốn tháng ở hoặc trên mức 10, một tháng chỉ 6.">
+              <line class="wb-axis-line" x1="40" y1="160" x2="410" y2="160"/>
+              <g fill="var(--wb-chart-1)">
+                <rect x="46"  y="58.5"  width="40" height="101.5" rx="2"/>
+                <rect x="98"  y="50"    width="40" height="110"   rx="2"/>
+                <rect x="202" y="75.4"  width="40" height="84.6"  rx="2"/>
+                <rect x="254" y="75.4"  width="40" height="84.6"  rx="2"/>
+                <rect x="306" y="58.5"  width="40" height="101.5" rx="2"/>
+                <rect x="358" y="75.4"  width="40" height="84.6"  rx="2"/>
+              </g>
+              <rect x="150" y="109.2" width="40" height="50.8" rx="2" fill="var(--wb-chart-2)"/>
+
+              <line class="hw-vdash" x1="40" y1="75.4" x2="410" y2="75.4"/>
+              <path class="hw-vdash" d="M406,30 V75"/>
+              <text class="hw-vs" x="410" y="24" text-anchor="end">10 cổ phiếu = mức của nhà đầu tư A</text>
+
+              <g class="hw-vn" text-anchor="middle">
+                <text x="66" y="52">12</text><text x="118" y="43">13</text><text x="170" y="102">6</text>
+                <text x="222" y="69">10</text><text x="274" y="69">10</text><text x="326" y="52">12</text><text x="378" y="69">10</text>
+              </g>
+              <g class="hw-vs" text-anchor="middle">
+                <text x="66" y="176">T1</text><text x="118" y="176">T2</text><text x="170" y="176">T3</text>
+                <text x="222" y="176">T4</text><text x="274" y="176">T5</text><text x="326" y="176">T6</text><text x="378" y="176">T7</text>
+                <text x="170" y="190">giá vọt lên</text>
+                <text x="225" y="212">Mỗi cột = số cổ phiếu $200 mua được tháng đó. Tổng 7 tháng = 73 cổ phiếu.</text>
+              </g>
+            </svg>
+          </div>
+          <p class="hw-src">Nguồn: “Dollar cost averaging vs lump-sum investing”, tr.190–191. Số cổ phiếu là số của sách; 12+13+6+10+10+12+10 = <b>73</b>, và $1.400 ÷ 73 = <b>$19,18</b> — khớp giá bình quân sách in.</p>
+        </div></div>
+        <div class="hw-figs">
+          <div class="hw-fig"><span class="n">70 cổ phiếu</span><span class="l">nhà đầu tư A — bỏ hết $1.400 một lần ở giá $20</span></div>
+          <div class="hw-fig"><span class="n">73 cổ phiếu</span><span class="l">nhà đầu tư B — $200/tháng trong 7 tháng, cùng $1.400</span></div>
+          <div class="hw-fig"><span class="n">$19,18</span><span class="l">giá bình quân của B, thấp hơn $20 của A — thêm 3 cổ phiếu miễn phí</span></div>
         </div>
-        <p class="hw-p">B được thêm <b>3 cổ phiếu</b> với cùng số tiền.</p>
+        <p class="hw-p"><b>Nhưng đừng rút ra bài học sai.</b> B thắng ở đây <em>vì giá dao động</em> — nhất là tháng T3 giá vọt lên khiến $200 chỉ mua được 6 cổ phiếu, và những tháng rẻ đã bù lại nhiều hơn. Nếu giá <b>tăng đều</b> suốt 7 tháng thì A thắng, vì A mua toàn bộ ở mức giá thấp nhất. <b>Bình quân giá không phải cách kiếm thêm lợi nhuận — nó là cách bỏ việc phải đoán đáy.</b></p>
         <div class="wb-grid wb-grid--2">
           <div class="wb-card wb-card--pad">
             <p class="wb-media__title">Cảnh báo với DCA</p>
@@ -2585,14 +3358,54 @@
 
         <h3 class="hw-h3">Danh mục tối ưu và đường biên hiệu quả</h3>
         <p class="hw-p">Danh mục tối ưu là danh mục cho <b>lợi nhuận cao nhất ở một mức rủi ro nhất định</b>, hoặc <b>rủi ro thấp nhất cho một mức lợi nhuận nhất định</b>. Rất nhiều danh mục thực tế đang ở dưới mức đó mà chủ nhân không biết.</p>
+        <div class="hw-viz wb-card wb-chart-scheme--mono" style="--hw-chart-max:600px"><div class="wb-card__body">
+          <p class="wb-chart__title">Đường biên hiệu quả — và vì sao B đang chịu lỗ mà không biết</p>
+          <p class="wb-chart__sub">A và C <b>đều tối ưu</b>, dù rủi ro rất khác nhau: mỗi người ngồi ở mức rủi ro mình chịu được, và nhận mức cao nhất mà mức rủi ro đó cho phép. B thì <b>nằm dưới đường</b> — và có <b>hai</b> cách sửa.</p>
+          <div class="wb-chart">
+            <svg class="wb-chart__svg" viewBox="0 0 440 244" role="img"
+                 aria-label="Đồ thị rủi ro và lợi nhuận: đường biên hiệu quả cong lên rồi phẳng dần. A và C nằm trên đường, B nằm dưới đường với hai mũi tên chỉ hai cách cải thiện.">
+              <defs>
+                <marker id="hw-ah3" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+                  <path d="M0,0 L8,4 L0,8 z" fill="var(--wb-neutral-strong)"/>
+                </marker>
+              </defs>
+              <line class="wb-axis-line" x1="50" y1="26" x2="50" y2="190"/>
+              <line class="wb-axis-line" x1="50" y1="190" x2="410" y2="190"/>
+              <text class="hw-vs" x="56" y="20">Lợi nhuận bình quân năm</text>
+              <text class="hw-vs" x="410" y="222" text-anchor="end">Rủi ro (độ lệch chuẩn) →</text>
+
+              <!-- the frontier -->
+              <path fill="none" stroke="var(--wb-chart-1)" stroke-width="2.5"
+                    d="M70,170 C 95,145 120,126 160,110 C 205,92 245,76 290,66 C 325,58 355,52 380,49"/>
+              <text class="hw-vt" x="380" y="40" text-anchor="end">đường biên hiệu quả</text>
+
+              <!-- the two fixes available to B -->
+              <g class="hw-vdash"><path d="M205,124 V96"/><path d="M205,124 H130"/></g>
+              <path class="hw-vline" d="M205,120 V98" marker-end="url(#hw-ah3)"/>
+              <path class="hw-vline" d="M201,124 H128" marker-end="url(#hw-ah3)"/>
+              <text class="hw-vs" x="222" y="102">↑ cùng rủi ro, lợi nhuận cao hơn</text>
+              <text class="hw-vs" x="222" y="150">← cùng lợi nhuận, rủi ro thấp hơn</text>
+
+              <circle cx="120" cy="126" r="10" fill="var(--wb-chart-1)"/>
+              <text class="hw-vn" x="120" y="130" text-anchor="middle" style="fill:var(--wb-canvas)">A</text>
+              <circle cx="205" cy="124" r="10" fill="var(--wb-canvas)" stroke="var(--wb-chart-1)" stroke-width="2"/>
+              <text class="hw-vn" x="205" y="128" text-anchor="middle">B</text>
+              <circle cx="290" cy="66" r="10" fill="var(--wb-chart-1)"/>
+              <text class="hw-vn" x="290" y="70" text-anchor="middle" style="fill:var(--wb-canvas)">C</text>
+
+              <text class="hw-vs" x="410" y="180" text-anchor="end">Đường phẳng dần: rủi ro thêm không còn đổi được lợi nhuận thêm.</text>
+            </svg>
+          </div>
+          <p class="hw-src">Nguồn: “Efficient frontier”, tr.194–195. Khái niệm do <b>Harry Markowitz</b> đưa ra năm <b>1952</b> (Nobel kinh tế). Vị trí A · B · C là minh hoạ theo mô tả của sách, không phải số đo.</p>
+        </div></div>
+        <p class="hw-p"><b>Chi tiết dễ bỏ qua nhưng quan trọng nhất:</b> đường biên <b>phẳng dần khi lên cao</b>. Sách nói rõ lý do — có một giới hạn cho mức lợi nhuận nhà đầu tư có thể kỳ vọng, nên <b>quá một điểm nào đó, nhận thêm rủi ro không còn đem lại lợi ích gì</b>. Đó là lập luận bằng hình cho câu “đánh cược lớn hơn không phải là chiến lược”.</p>
         <p class="hw-p"><b>Đường biên hiệu quả (efficient frontier):</b> đồ thị với trục ngang là <b>rủi ro (đo bằng độ lệch chuẩn của lợi nhuận hằng năm)</b> và trục dọc là <b>lợi nhuận trung bình hằng năm</b>. Các danh mục <b>nằm dưới đường biên là dưới tối ưu</b> — hoặc vì lợi nhuận không đủ cho mức rủi ro đó, hoặc vì rủi ro quá cao so với mức lợi nhuận đó.</p>
         <div class="wb-grid wb-grid--3">
           <div class="wb-card wb-card--pad"><p class="wb-media__title">Nhà đầu tư A</p><p class="wb-media__text">Nằm <b>trên</b> đường biên — nhận lợi nhuận cao nhất có thể với mức rủi ro họ chấp nhận; tối đa hoá lợi nhuận trong khi giới hạn tiếp xúc với biến động.</p></div>
           <div class="wb-card wb-card--pad"><p class="wb-media__title">Nhà đầu tư C</p><p class="wb-media__text">Cũng <b>trên</b> đường biên — danh mục rủi ro cao <b>nhưng được đền bù bằng lợi nhuận cao hơn</b>.</p></div>
           <div class="wb-card wb-card--pad"><p class="wb-media__title">Nhà đầu tư B</p><p class="wb-media__text"><b>Dưới tối ưu.</b> Nếu hài lòng với mức rủi ro hiện tại, B nên <b>tái cân bằng về gần vị trí C</b> để có lợi nhuận cao hơn; hoặc nếu muốn hạ rủi ro mà giữ nguyên lợi nhuận, chỉnh phân bổ <b>về gần A</b>.</p></div>
         </div>
-        <div class="wb-alert wb-alert--info" style="margin-top:14px">
-          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span>
+        <div class="wb-alert wb-alert--plain" style="margin-top:14px">
           <div class="wb-alert__body">
             <p class="wb-alert__title">Chi tiết tinh tế nhưng rất thực</p>
             <p class="wb-alert__msg"><b>Đường biên phẳng dần khi lên cao</b>, vì có giới hạn cho mức lợi nhuận nhà đầu tư có thể kỳ vọng — nên <b>quá một điểm nào đó, chấp nhận thêm rủi ro không còn lợi gì.</b></p>
@@ -2640,25 +3453,50 @@
 
         <h3 class="hw-h3">Vì sao bắt đầu sớm quan trọng đến vậy</h3>
         <p class="hw-lede">Đây là mục có con số thuyết phục nhất trong cả cuốn sách — cùng một mục tiêu hưu trí, <b>chờ 20 năm khiến số tiền phải để dành mỗi tháng gần gấp đôi</b>.</p>
-        <div class="hw-tw">
-          <table class="wb-table wb-table--compact">
-            <thead><tr><th>Tuổi bắt đầu</th><th>Phải tiết kiệm mỗi tháng</th><th>Mỗi năm</th></tr></thead>
-            <tbody>
-              <tr><td><b>25</b></td><td><b>$165</b></td><td>$1.980</td></tr>
-              <tr><td><b>35</b></td><td><b>$215</b></td><td>$2.580</td></tr>
-              <tr><td><b>45</b></td><td><b>$322</b></td><td>$3.864</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="hw-p"><em>Cùng mục tiêu: $15.000/năm lương hưu ở tuổi 68. Tính toán của một hiệp hội người tiêu dùng Anh, dẫn trong sách.</em></p>
+        <div class="hw-viz wb-card wb-chart-scheme--mono wb-chart-ramp--3" style="--hw-chart-max:560px"><div class="wb-card__body">
+          <p class="wb-chart__title">Cùng một mức lương hưu — cái giá của việc chờ</p>
+          <p class="wb-chart__sub">Ba cột này không phải ba mục tiêu khác nhau. Chúng là <b>cùng một mục tiêu</b>: $15.000/năm lương hưu ở tuổi 68. Chỉ khác thời điểm bắt đầu.</p>
+          <div class="wb-chart">
+            <svg class="wb-chart__svg" viewBox="0 0 440 224" role="img"
+                 aria-label="Ba cột: bắt đầu tuổi 25 cần 1.980 đô la mỗi năm, tuổi 35 cần 2.580, sau 50 tuổi cần 3.864 — gần gấp đôi mức của tuổi 25.">
+              <line class="hw-vdash" x1="50" y1="108.5" x2="400" y2="108.5"/>
+              <text class="hw-vs" x="400" y="104" text-anchor="end">mức của người bắt đầu ở tuổi 25</text>
+
+              <g fill="var(--wb-chart-2)">
+                <rect x="80"  y="108.5" width="60" height="61.5" rx="2"/>
+                <rect x="190" y="89.9"  width="60" height="80.1" rx="2"/>
+              </g>
+              <rect x="300" y="50" width="60" height="120" rx="2" fill="var(--wb-chart-1)"/>
+
+              <g class="hw-vn" text-anchor="middle">
+                <text x="110" y="100">$1.980</text>
+                <text x="220" y="82">$2.580</text>
+                <text x="330" y="42">$3.864</text>
+              </g>
+              <line class="wb-axis-line" x1="50" y1="170" x2="400" y2="170"/>
+              <g class="hw-vt" text-anchor="middle">
+                <text x="110" y="188">bắt đầu tuổi 25</text>
+                <text x="220" y="188">bắt đầu tuổi 35</text>
+                <text x="330" y="188">bắt đầu sau 50</text>
+              </g>
+              <g class="hw-vs" text-anchor="middle">
+                <text x="110" y="202">$165/tháng</text>
+                <text x="220" y="202">$215/tháng</text>
+                <text x="330" y="202">≈ $322/tháng</text>
+                <text x="225" y="220">Số tiền phải để dành mỗi năm để đạt cùng $15.000/năm lương hưu ở tuổi 68.</text>
+              </g>
+            </svg>
+          </div>
+          <p class="hw-src">Nguồn: “Pension contributions” + ba panel “Saving at…”, tr.198–201; tính toán của một hiệp hội người tiêu dùng Anh dẫn trong sách. Sách nêu <b>$165/tháng</b> (tuổi 25) và <b>$215/tháng</b> (tuổi 35); với nhóm <b>“trên 50 tuổi”</b> sách chỉ cho con số năm $3.864, nên mức $322/tháng ở đây là <em>suy ra</em> bằng phép chia 12.</p>
+        </div></div>
+        <p class="hw-p">Chờ từ 25 tới sau 50 làm khoản phải để dành mỗi năm tăng <b>95%</b> — gần gấp đôi. Và đó là phần dễ đo; phần khó đo là <b>số năm mà tiền lẽ ra được sinh lãi</b>.</p>
         <ol class="hw-ol">
           <li>Mỗi tháng phải để dành <b>ít hơn</b> để đạt cùng số tiền.</li>
           <li>Một số chủ lao động <b>đóng góp thêm</b> vào quỹ hưu của nhân viên, và một số chính phủ cho <b>ưu đãi thuế</b>.</li>
           <li>Khoản đầu tư có <b>nhiều thời gian hơn để vượt qua các nhịp lên xuống</b> của thị trường vốn.</li>
           <li>Người tiết kiệm hưởng <b>nhiều lãi tích luỹ hơn</b> qua năm tháng.</li>
         </ol>
-        <div class="wb-alert wb-alert--info">
-          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span>
+        <div class="wb-alert wb-alert--plain">
           <div class="wb-alert__body">
             <p class="wb-alert__title">Quy tắc ngón tay cái đáng nhớ</p>
             <p class="wb-alert__msg">Lấy <b>một nửa số tuổi lúc bắt đầu tiết kiệm</b> — đó là phần trăm lương nên để dành cho hưu trí. Bắt đầu ở tuổi 20 → <b>10%</b>; bắt đầu ở tuổi 40 → <b>20%</b>. Người bắt đầu rất muộn phải đóng góp tỷ lệ rất lớn.</p>
@@ -2796,6 +3634,58 @@
           </table>
         </div>
         <p class="hw-p"><em>$1.000 với lãi 10%/năm ghép hằng năm.</em> <b>So sánh quyết định:</b> lãi kép cho tổng lãi <b>$331</b>, trong khi lãi đơn cùng lãi suất cùng thời gian chỉ cho <b>$300</b> — <b>hơn $31</b>. Nghe nhỏ trong 3 năm; chính con số đó nhân lên qua 30 năm mới là điều đáng sợ (hoặc đáng mừng).</p>
+        <div class="hw-viz wb-card wb-chart-scheme--mono wb-chart-ramp--2" style="--hw-chart-max:600px"><div class="wb-card__body">
+          <p class="wb-chart__title">Vì sao $31 sau ba năm lại thành $13.449 sau ba mươi năm</p>
+          <p class="wb-chart__sub">Cùng $1.000, cùng 10%/năm. Đường <b>lãi đơn</b> là đường thẳng — mỗi năm đúng $100. Đường <b>lãi kép</b> cong lên, vì mỗi năm nó tính lãi trên một con số lớn hơn năm trước.</p>
+          <div class="wb-chart">
+            <svg class="wb-chart__svg" viewBox="0 0 440 240" role="img"
+                 aria-label="Hai đường trong 30 năm: lãi đơn tăng thẳng từ 1.000 lên 4.000 đô la; lãi kép cong lên tới 17.449 đô la.">
+              <g class="wb-grid-line">
+                <line x1="54" y1="145.6" x2="410" y2="145.6"/>
+                <line x1="54" y1="101.1" x2="410" y2="101.1"/>
+                <line x1="54" y1="56.7"  x2="410" y2="56.7"/>
+              </g>
+              <line class="wb-axis-line" x1="54" y1="26" x2="54" y2="190"/>
+              <line class="wb-axis-line" x1="54" y1="190" x2="410" y2="190"/>
+              <g class="hw-vs" text-anchor="end">
+                <text x="48" y="194">$0</text>
+                <text x="48" y="149">$5.000</text>
+                <text x="48" y="105">$10.000</text>
+                <text x="48" y="60">$15.000</text>
+              </g>
+              <g class="hw-vs" text-anchor="middle">
+                <text x="54" y="206">0</text>
+                <text x="172.7" y="206">10</text>
+                <text x="291.3" y="206">20</text>
+                <text x="410" y="206">30</text>
+                <text x="232" y="224">năm</text>
+              </g>
+
+              <!-- simple interest: a straight line, $100 a year, for ever -->
+              <line x1="54" y1="181.1" x2="410" y2="154.4" stroke="var(--wb-chart-2)" stroke-width="2.25" stroke-dasharray="6 4"/>
+              <circle cx="410" cy="154.4" r="4" fill="var(--wb-chart-2)"/>
+              <text class="hw-vn" x="406" y="148" text-anchor="end">$4.000</text>
+
+              <!-- compound -->
+              <polyline fill="none" stroke="var(--wb-chart-1)" stroke-width="2.5" stroke-linejoin="round"
+                        points="54,181.1 113.3,175.7 172.7,167.0 232,152.9 291.3,130.2 350.7,93.7 410,34.9"/>
+              <circle cx="410" cy="34.9" r="4.5" fill="var(--wb-chart-1)"/>
+              <text class="hw-vn" x="406" y="28" text-anchor="end">$17.449</text>
+
+              <!-- where the book stops -->
+              <path class="hw-vdash" d="M89.6,178 V132"/>
+              <circle cx="89.6" cy="178.2" r="3.4" fill="var(--wb-chart-1)"/>
+              <text class="hw-vs" x="96" y="128">3 năm — chỗ sách dừng lại:</text>
+              <text class="hw-vs" x="96" y="140">hai đường còn cách nhau $31</text>
+            </svg>
+          </div>
+          <div class="wb-legend" style="margin-top:12px">
+            <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-1)"></span>Lãi kép — lãi được tái đầu tư<span class="wb-legend__val">$17.449</span></span>
+            <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-chart-2)"></span>Lãi đơn — lãi được rút ra mỗi năm<span class="wb-legend__val">$4.000</span></span>
+          </div>
+          <p class="hw-src">Nguồn: ba năm đầu ($1.000 → $1.100 → $1.210 → $1.331) là số của sách, tr.208–209. <b>Phần từ năm 4 tới năm 30 là suy ra</b> bằng đúng công thức sách in — A = P(1+R/N)<sup>NT</sup> với P=1.000, R=0,1, N=1: 1.000 × 1,1<sup>30</sup> = $17.449. Lãi đơn = 1.000 + 30 × 100 = $4.000.</p>
+        </div></div>
+        <p class="hw-p"><b>Đọc hình này cho đúng:</b> hai đường xuất phát cùng một chỗ và <em>trông như nhau</em> trong khoảng mười năm đầu. Đó chính là lý do lãi kép khó tin khi nghe kể: <b>phần thưởng dồn hết về cuối</b>. Ở năm 10 khoảng cách mới là $594; ở năm 20 là $3.727; ở năm 30 là <b>$13.449</b>. Ai bỏ cuộc ở năm thứ tám sẽ kết luận rằng lãi kép bị nói quá — và họ sẽ không sai với dữ liệu họ có.</p>
         <div class="wb-card wb-card--pad" style="text-align:center;font-family:var(--wb-font-mono);font-size:14px">
           A = P (1 + R/N)<sup>NT</sup>
           <div style="font-size:12px;color:var(--wb-fg-muted);margin-top:8px;font-family:var(--wb-font)">A = số tiền cuối · P = gốc ban đầu · R = lãi suất · N = số lần ghép lãi mỗi năm · T = số năm</div>
@@ -2875,7 +3765,38 @@
             </tbody>
           </table>
         </div>
+        <div class="hw-viz wb-card wb-chart-scheme--mono wb-chart-ramp--2" style="--hw-chart-max:600px"><div class="wb-card__body">
+          <p class="wb-chart__title">Cùng căn nhà $200.000, cùng 25 năm — chỉ khác lãi suất</p>
+          <p class="wb-chart__sub">Đoạn đậm bên trái <b>giống nhau tuyệt đối</b> ở hai gói: đó là tiền mua nhà. Toàn bộ phần chênh lệch là <b>lãi</b>. Đường nét đứt là mốc $200.000 — hãy chú ý gói 9% vượt qua nó bao xa.</p>
+          <div class="wb-chart">
+            <svg class="wb-chart__svg" viewBox="0 0 440 210" role="img"
+                 aria-label="Hai thanh: gói 3% tổng trả 284.400 đô la gồm 200.000 gốc và 84.400 lãi; gói 9% tổng trả 503.400 gồm 200.000 gốc và 303.400 lãi.">
+              <text class="hw-vt" x="46" y="26">Lãi 3% · trả $948/tháng</text>
+              <rect x="46" y="32" width="143.1" height="34" fill="var(--wb-chart-1)"/>
+              <rect x="189.1" y="32" width="60.4" height="34" fill="var(--wb-chart-2)"/>
+              <text class="hw-vn" x="117" y="54" text-anchor="middle" style="fill:var(--wb-canvas)">$200.000</text>
+              <text class="hw-vn" x="255" y="54">lãi $84.400</text>
+
+              <text class="hw-vt" x="46" y="106">Lãi 9% · trả $1.678/tháng</text>
+              <rect x="46" y="112" width="143.1" height="34" fill="var(--wb-chart-1)"/>
+              <rect x="189.1" y="112" width="217.0" height="34" fill="var(--wb-chart-2)"/>
+              <text class="hw-vn" x="117" y="134" text-anchor="middle" style="fill:var(--wb-canvas)">$200.000</text>
+              <text class="hw-vn" x="297" y="134" text-anchor="middle">lãi $303.400</text>
+
+              <path class="hw-vdash" d="M189.1,32 V70 M189.1,112 V158"/>
+              <text class="hw-vs" x="189.1" y="170" text-anchor="middle">$200.000 — giá căn nhà</text>
+
+              <line class="wb-axis-line" x1="46" y1="182" x2="406" y2="182"/>
+              <g class="hw-vs">
+                <text x="46" y="198">$0</text>
+                <text x="406" y="198" text-anchor="end">$503.400 tổng trả</text>
+              </g>
+            </svg>
+          </div>
+          <p class="hw-src">Nguồn: hai case study thế chấp, tr.214–217. Kiểm tra: $948 × 300 kỳ = $284.400, trừ gốc $200.000 còn $84.400 lãi; $1.678 × 300 = $503.400, trừ gốc còn $303.400 lãi.</p>
+        </div></div>
         <p class="hw-p">Chênh lệch 6 điểm phần trăm làm <b>tổng lãi tăng gấp gần 3,6 lần</b>. Đây là lý do việc so sánh lãi suất quan trọng hơn gần như mọi quyết định tài chính cá nhân khác.</p>
+        <p class="hw-p"><b>Điều chỉ thấy được khi vẽ ra:</b> ở gói 9%, tiền lãi <b>$303.400 vượt quá giá căn nhà $200.000</b> — bạn trả tiền cho ngân hàng nhiều hơn trả cho người bán nhà, gấp <b>1,5 lần</b>. Cùng căn nhà đó ở gói 3% thì lãi chỉ bằng <b>42%</b> giá nhà. <em>Không có thay đổi nào về căn nhà, về thời hạn, hay về người vay — chỉ một con số trong hợp đồng.</em></p>
         <div class="wb-alert wb-alert--danger">
           <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">error</span></span>
           <div class="wb-alert__body">
@@ -3011,15 +3932,22 @@
             <li class="wb-steps__item is-active"><span class="wb-steps__marker">4</span><div class="wb-steps__content"><p class="wb-steps__title">Bitcoin tới nơi</p><p class="wb-steps__desc">Có thể dùng mua hàng qua nhà bán lẻ, bán qua sàn, hoặc trực tiếp cho người mua trực tuyến. Qua các trang như LocalBitcoins.com và Meetup.com, người dùng có thể <b>giao dịch mặt đối mặt</b>, mang ví số trên thiết bị di động tới để trao đổi.</p></div></li>
           </ol>
         </div></div>
-        <div class="wb-alert wb-alert--info">
-          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span>
+        <div class="wb-alert wb-alert--plain">
           <div class="wb-alert__body">
             <p class="wb-alert__title">Vì sao Bitcoin an toàn — và vì sao giá trị được thiết kế để giữ</p>
             <p class="wb-alert__msg"><b>An toàn:</b> nếu kẻ tấn công cố sửa một giao dịch trong blockchain, <b>hash kết quả sẽ đổi và làm vô hiệu toàn bộ các khối sau đó</b>. Ngoài ra, vì người dùng chỉ được biết qua khoá công khai, giao dịch giữ được tính ẩn danh.</p>
             <p class="wb-alert__msg"><b>Giá trị:</b> số bitcoin có thể tạo ra <b>giới hạn ở 21 triệu</b>, nhằm ngăn mất giá do dư cung. Thêm nữa, <b>khi số bitcoin lưu hành tăng, chương trình làm việc xác thực khó hơn</b> — quá trình đào lâu hơn, ít đồng được tạo ra hơn, và nguồn cung hạn chế giữ giá trị ở mức cao. <b>Phí:</b> giao dịch đôi khi miễn phí nhưng thường người mua trả <b>phí nhỏ khoảng 1%</b>, chia cho các thợ đào.</p>
           </div>
         </div>
-        <p class="hw-p"><em>Ghi chú bối cảnh: sách xuất bản 2017, nên các số liệu về Bitcoin — như “16 tỷ bitcoin lưu hành trị giá 9 tỷ USD năm 2016” ở phần đầu sách — phản ánh thời điểm đó, không phải hiện tại. Cơ chế thì không đổi.</em></p>
+        <div class="wb-alert wb-alert--danger">
+          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">error</span></span>
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Một con số sai trong sách — và bạn có thể tự bắt được nó</p>
+            <p class="wb-alert__msg">Ở phần đầu sách (tr.18–19) có ô số liệu: <em>“<b>$16 tỷ</b> — số bitcoin lưu hành năm 2016, trị giá 9 tỷ USD”</em>. Con số đó <b>không thể đúng</b>, và không phải vì nó cũ: chính cuốn sách này nói tổng số bitcoin <b>giới hạn ở 21 triệu</b>. Không bao giờ có 16 tỷ bitcoin — nhiều hơn giới hạn tối đa <b>hơn 760 lần</b>.</p>
+            <p class="wb-alert__msg"><b>Con số đúng gần như chắc chắn là “16 <em>triệu</em>”</b>, và phần còn lại của ô số liệu tự xác nhận điều đó: 16 triệu bitcoin trị giá 9 tỷ USD nghĩa là khoảng <b>$563/bitcoin</b> — đúng tầm giá bitcoin năm 2016. Nếu là 16 tỷ đồng thì mỗi đồng chỉ đáng $0,56, vô lý với mọi mốc giá trong cùng cuốn sách. Ngoài ra ô này còn để dấu <b>$</b> trước một con số <em>đếm số lượng</em>, không phải số tiền.</p>
+            <p class="wb-alert__msg"><em>Nêu chi tiết này ra không phải để bắt lỗi sách, mà vì nó là bài tập tốt: <b>một con số vô lý thường tự tố giác bằng cách mâu thuẫn với một con số khác trong cùng tài liệu</b>. Ở đây “21 triệu” và “16 tỷ” không thể cùng đúng — và bạn không cần biết gì thêm về bitcoin để thấy thế.</em></p>
+          </div>
+        </div>
 
         <h3 class="hw-h3">Gọi vốn cộng đồng (crowdfunding)</h3>
         <p class="hw-p">Crowdfunding hoạt động trên nguyên tắc <b>xin rất nhiều người một khoản rất nhỏ</b> — và điểm khác biệt với gây quỹ truyền thống là nó <b>cắt bỏ trung gian</b>. Trước thời mạng xã hội, gây quỹ thường qua bên thứ ba như ngân hàng hoặc tổ chức từ thiện, qua chương trình đăng ký định kỳ, hoặc nhờ gia đình và bạn bè.</p>
@@ -3158,8 +4086,7 @@
           </div>
         </div>
         <p class="hw-p" style="margin-top:12px"><b>Thuế lãi vốn:</b> <b>ngắn hạn</b> — tài sản nắm một năm hoặc ít hơn, bị đánh <b>cùng thuế suất như thu nhập</b>; <b>dài hạn</b> — nắm trên một năm, thuế trên lãi vốn ròng <b>phụ thuộc thu nhập</b>, mức tối đa thường <b>20%</b>, nhưng với người thu nhập cao và một số loại lãi vốn ròng có thể lên <b>28%</b>.</p>
-        <div class="wb-alert wb-alert--info">
-          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span>
+        <div class="wb-alert wb-alert--plain">
           <div class="wb-alert__body">
             <p class="wb-alert__title">Thuế bang — điểm thực dụng nhất</p>
             <p class="wb-alert__msg">Tính tới 2016, <b>43 bang thu thuế thu nhập, 7 bang không</b>. 41 bang đánh thuế thu nhập từ lương; 2 bang chỉ đánh thuế cổ tức và lãi. Chênh lệch rất lớn: <b>Florida không có thuế thu nhập, còn California là 13,3%</b>.</p>
@@ -3207,8 +4134,7 @@
           </ol>
         </div></div>
         <p class="hw-p" style="margin-top:12px"><b>Bốn vai trò chính:</b> điều tiết ngân hàng và định chế tài chính · dùng chính sách tiền tệ để ngăn nền kinh tế và thị trường tài chính bất ổn · dùng chính sách để tác động tới môi trường tín dụng, số liệu việc làm, giá cả và tiền tệ · <b>cung cấp cho chính phủ Mỹ một số dịch vụ tài chính</b>.</p>
-        <div class="wb-alert wb-alert--info">
-          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span>
+        <div class="wb-alert wb-alert--plain">
           <div class="wb-alert__body">
             <p class="wb-alert__title">Hai lãi suất — và cơ chế khéo léo giữa chúng</p>
             <p class="wb-alert__msg"><b>Federal funds rate</b> = lãi suất các ngân hàng cho nhau vay qua đêm. <b>Discount rate</b> = lãi suất Fed tính khi cho ngân hàng vay.</p>
@@ -3253,8 +4179,7 @@
             </tbody>
           </table>
         </div>
-        <div class="wb-alert wb-alert--info">
-          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span>
+        <div class="wb-alert wb-alert--plain">
           <div class="wb-alert__body">
             <p class="wb-alert__title">Chi tiết rất hữu ích về “preapproval”</p>
             <p class="wb-alert__msg">Khi bắt đầu tìm thế chấp, cần được <b>phê duyệt trước</b> — bên cho vay sẽ xem báo cáo và điểm tín dụng. Việc này tạo một <b>“hard inquiry”</b>, <b>nhưng tin tốt là điểm FICO nhận diện được các truy vấn phát sinh từ việc so sánh lãi thế chấp và xử lý nhiều truy vấn như một truy vấn duy nhất</b>. <em>Nghĩa là: so sánh nhiều bên cho vay không làm hỏng điểm tín dụng của bạn — đây là điều nhiều người sợ oan.</em></p>
@@ -3284,8 +4209,7 @@
         </div>
         <p class="hw-p">Ngày nay bên phát hành <b>kén hơn</b> khi duyệt thẻ, và <b>nhiều người trẻ trì hoãn việc dùng tín dụng</b>. Ai mang dư nợ thì phải trả lãi trên đó, và <b>lãi kép có thể làm nợ thẻ phình lên rất nhanh</b>.</p>
         <p class="hw-p"><b>Cách tính lãi — hai phương pháp:</b> <b>average daily balance</b> (lãi tính phụ thuộc vào việc công ty thẻ <b>có cộng các giao dịch mua mới vào hay loại chúng ra</b>) và <b>daily balance</b> (tính lãi cho số dư của <b>từng ngày</b> rồi cộng lại thành tổng phí tài chính).</p>
-        <div class="wb-alert wb-alert--info">
-          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span>
+        <div class="wb-alert wb-alert--plain">
           <div class="wb-alert__body">
             <p class="wb-alert__title">Thời gian ân hạn — điều đáng biết nhất</p>
             <p class="wb-alert__msg">Công ty thẻ <b>không bắt đầu tính lãi ngay khi mua hàng, trừ khi thẻ đã đang mang dư nợ</b>. Có <b>thời gian ân hạn miễn lãi từ 21 tới 25 ngày</b> — khoảng giữa ngày mua và ngày đến hạn thanh toán. <b>Nhưng điều này chỉ áp dụng nếu số dư đầu mỗi chu kỳ thanh toán bằng không.</b></p>
@@ -3463,8 +4387,7 @@
             <p class="wb-alert__msg">BOE quản lý dự trữ vàng và ngoại hối cho <b>Bộ Ngân khố (HMT)</b>, đóng vai trò đại lý mua bán ngoại tệ. Dự trữ này dùng một phần để <b>chống lại các biến động lớn của bảng Anh</b>. <b>Trong 12 tháng trước cuộc bỏ phiếu Brexit 2016, BOE đã tăng dự trữ ngoại hối 34%</b> — các nhà kinh tế xem đây là biện pháp phòng ngừa để bảo vệ bảng khỏi mất giá quá mạnh trong bất định sau đó.</p>
           </div>
         </div>
-        <div class="wb-alert wb-alert--info">
-          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span>
+        <div class="wb-alert wb-alert--plain">
           <div class="wb-alert__body">
             <p class="wb-alert__title">Chuyện “legal tender” — chi tiết dễ hiểu sai</p>
             <p class="wb-alert__msg">Ở England, tiền bảng chỉ do BOE in; nhưng ở <b>Scotland và Bắc Ireland, bảy ngân hàng khác có giấy phép in tiền địa phương</b> với sự cho phép của BOE — ba ở Scotland, bốn ở Bắc Ireland. BOE phát hành <b>£50, £20, £10, £5</b> cho England và Wales; Scotland và Bắc Ireland cũng phát hành <b>£100</b>, và <b>chỉ Scotland phát hành tờ £1</b>.</p>
@@ -3500,8 +4423,7 @@
           </table>
         </div>
         <p class="hw-p">Thuế thu nhập và National Insurance là thuế trực thu chính, chiếm <b>khoảng 45%</b>. <b>Cộng cả các thuế gián thu, các khoản đánh trên hàng hoá dịch vụ chiếm 28% nguồn thu.</b></p>
-        <div class="wb-alert wb-alert--info">
-          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span>
+        <div class="wb-alert wb-alert--plain">
           <div class="wb-alert__body">
             <p class="wb-alert__title">Một dịch chuyển chính sách đáng chú ý</p>
             <p class="wb-alert__msg">Trong thập kỷ qua, <b>nguồn thu từ người nộp thuế thu nhập cao đã tăng, còn từ người thu nhập thấp đã giảm</b>, do thay đổi chính sách — <b>mức miễn thuế cá nhân cho người thu nhập thấp tăng lên, trong khi ngưỡng cho người thu nhập cao giảm xuống</b>. Kết quả: <b>số người nộp thuế bậc cao đã tăng thêm hơn một triệu.</b></p>
@@ -3611,8 +4533,7 @@
           </div>
         </div>
 
-        <div class="wb-alert wb-alert--info">
-          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span>
+        <div class="wb-alert wb-alert--plain">
           <div class="wb-alert__body">
             <p class="wb-alert__title">Thuế tiền số ở Anh — khác Mỹ ở một điểm quan trọng</p>
             <p class="wb-alert__msg"><b>Mỹ coi bitcoin là <em>tài sản</em>; Anh coi nó là <em>tiền cá nhân</em></b> — và khác biệt đó thay đổi hẳn nghĩa vụ VAT. Tới tháng 3/2014, VAT 20% được áp lên việc mua bitcoin; <b>nay không phải trả VAT khi đổi bitcoin lấy bảng Anh hoặc tiền tệ khác</b>. Tuy nhiên, <b>nếu hàng hoá hoặc dịch vụ được cung cấp và thanh toán bằng bitcoin, VAT vẫn áp như thường</b> nếu bên cung cấp có đăng ký VAT.</p>
@@ -3652,8 +4573,7 @@
           </table>
         </div>
         <p class="hw-p">Áp cho giao dịch <b>trên £125.000 với nhà ở và đất ở</b>, và <b>£150.000 với đất và bất động sản phi nhà ở</b>. <b>Thuế suất khác áp dụng cho bất động sản thứ hai hoặc buy-to-let.</b> Ở Scotland, <b>LBTT</b> có hiệu lực từ 1/4/2015 — <b>thuế suất phần trăm giống, nhưng ngưỡng các bậc khác</b>.</p>
-        <div class="wb-alert wb-alert--info">
-          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span>
+        <div class="wb-alert wb-alert--plain">
           <div class="wb-alert__body">
             <p class="wb-alert__title">Thẻ tín dụng — và một lớp bảo vệ người tiêu dùng nhiều nước không có</p>
             <p class="wb-alert__msg">Anh có thị trường thẻ phát triển nhất châu Âu: <b>hơn 60 triệu thẻ</b> gắn với <b>51 triệu tài khoản</b>. <b>Khoảng 42% tài khoản có dư nợ chịu lãi 0%</b> vì được trả hết mỗi tháng. Ở Anh, công ty thẻ <b>thường tính lãi ngay khi mua hàng</b> — nhưng <b>miễn là dư nợ được trả đủ mỗi tháng, phần lớn thẻ vẫn cho một khoảng miễn lãi</b>.</p>
