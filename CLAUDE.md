@@ -4,11 +4,21 @@
 `CLAUDE.md` của chính nó. File này chỉ nói về thứ vắt ngang tất cả: **cổng chất lượng và
 cách chúng chạy tự động**.
 
-| Project | Luật riêng | Cổng |
-|---|---|---|
-| `facts/` | [facts/CLAUDE.md](facts/CLAUDE.md) | `facts/tools/factlint.py check` + `verify` |
-| `masters-degree/data-science-roadmap/` | CLAUDE.md trong thư mục đó | `node tools/gate.mjs` |
-| các project khác | xem thư mục | — |
+| Project | Luật riêng | Cổng | Lớp đang nối |
+|---|---|---|---|
+| `facts/` | [facts/CLAUDE.md](facts/CLAUDE.md) | `facts/tools/factlint.py check` + `verify` | 1, 2, 3 |
+| `masters-degree/data-science-roadmap/` | CLAUDE.md trong thư mục đó | `node tools/gate.mjs` | 1, 2, 3 |
+| `cashy/` | [cashy/CLAUDE.md](cashy/CLAUDE.md) | `node scripts/check-layers.mjs` + `oxlint` | 2 |
+| `pages/` | — | `python3 pages/tools/lint-pages.py` | 2 |
+| các project khác | xem thư mục | — | — |
+
+`pages/` không có CLAUDE.md riêng: mỗi trang là một tài liệu HTML tự chứa, không có luật
+nội dung chung để viết ra. Cổng của nó chỉ kiểm thứ đúng/sai khách quan — id trùng, anchor
+gãy, asset thiếu, thẻ lệch.
+
+Cổng `cashy/` cần Node ≥ 20 (oxlint cần ≥ 22). Node mặc định trên máy có thể là bản cũ do
+fnm/nvm ghim, nên hook tự dò Homebrew thay vì tin vào `PATH` — nếu không nó sẽ "im lặng
+pass" mà chẳng kiểm gì.
 
 ---
 

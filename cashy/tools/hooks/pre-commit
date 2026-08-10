@@ -1,0 +1,71 @@
+#!/bin/sh
+# Cổng chất lượng cho cashy/ — chạy lúc commit. CHẶN.
+# Cài: facts/tools/install-hooks.sh  (bộ điều phối tự nhặt file này theo */tools/hooks/pre-commit)
+#
+# Chỉ chạy khi commit có chạm cashy/ — commit ở facts/, masters-degree/… không bị ảnh hưởng.
+# Hai cổng tĩnh, nhanh, không cần build:
+#   · scripts/check-layers.mjs  — ràng buộc kiến trúc ui → usecases → domain, data dưới usecases
+#   · oxlint                    — lint (chỉ error mới chặn; warning không chặn)
+# tsc -b / vitest nặng hơn thuộc pre-push (chưa dựng) — không đặt ở đây để commit còn nhanh.
+#
+# Bỏ qua một lần (chỉ khi bạn BIẾT mình đang làm gì): git commit --no-verify
+
+set -e
+DIR="cashy"
+ROOT=$(git rev-parse --show-toplevel)
+
+git diff --cached --name-only | grep -q "^$DIR/" || exit 0
+
+# cashy cần Node mới (oxlint/pnpm ≥ 22; .nvmrc = 20). node mặc định trên máy có thể là bản cũ
+# (fnm/nvm ghim 16) — dò một node ≥ 20, ưu tiên PATH rồi tới Homebrew.
+NODE=""
+NODE_MAJOR=0
+for cand in node /opt/homebrew/bin/node /opt/homebrew/opt/node/bin/node; do
+  command -v "$cand" >/dev/null 2>&1 || continue
+  V=$("$cand" -v 2>/dev/null | sed 's/^v//' | cut -d. -f1)
+  case "$V" in ''|*[!0-9]*) continue ;; esac
+  if [ "$V" -ge 20 ]; then NODE="$cand"; NODE_MAJOR="$V"; break; fi
+done
+
+if [ -z "$NODE" ]; then
+  echo "pre-commit: không tìm thấy Node ≥ 20 — bỏ qua cổng $DIR." >&2
+  exit 0
+fi
+
+# Cho oxlint (shim gọi 'node' trong PATH) dùng đúng bản node vừa dò.
+NODE_DIR=$(dirname "$(command -v "$NODE")")
+PATH="$NODE_DIR:$PATH"
+export PATH
+
+cd "$ROOT/$DIR"
+echo "pre-commit: chạy cổng $DIR (node $("$NODE" -v))…"
+
+FAIL=0
+"$NODE" scripts/check-layers.mjs || FAIL=1
+
+if [ ! -x node_modules/.bin/oxlint ]; then
+  echo "pre-commit: cashy chưa cài deps (node_modules/.bin/oxlint) — bỏ qua lint." >&2
+elif [ "$NODE_MAJOR" -lt 22 ]; then
+  echo "pre-commit: Node $NODE_MAJOR < 22 → bỏ qua oxlint (chỉ chạy check-layers)." >&2
+else
+  node_modules/.bin/oxlint || FAIL=1
+fi
+
+if [ "$FAIL" -ne 0 ]; then
+  cat >&2 <<'MSG'
+
+──────────────────────────────────────────────────────────────────────
+Commit bị chặn: cổng cashy không qua.
+
+  · layering  → import phá tầng ui → usecases → domain (data dưới usecases)
+  · oxlint    → có error (warning không chặn) — xem dòng báo phía trên
+
+Xem thêm:  cd cashy && node scripts/check-layers.mjs
+           cd cashy && pnpm run lint
+Bỏ qua có ý thức:  git commit --no-verify
+──────────────────────────────────────────────────────────────────────
+MSG
+  exit 1
+fi
+
+echo "pre-commit: cổng $DIR qua."

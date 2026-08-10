@@ -1,0 +1,85 @@
+#!/bin/sh
+# Lớp tự động THỨ BA cho facts/: cổng lúc push. CHẶN.
+# Cài: facts/tools/install-hooks.sh  (bộ điều phối tự nhặt file này theo *//tools/hooks/pre-push)
+#
+# Vì sao cần thêm lớp này khi đã có pre-commit của facts:
+#   push nhánh main = DEPLOY GitHub Pages — toàn bộ fact ra công khai. pre-commit có thể bị
+#   bỏ qua bằng --no-verify (đúng và nên có), commit cũ có thể được rebase/cherry-pick vào mà
+#   chưa từng qua cổng, và commit merge không chạy pre-commit chút nào. pre-push kiểm TRẠNG
+#   THÁI CUỐI của đúng những gì đang được đẩy lên.
+#
+# Bỏ qua một lần (chỉ khi bạn BIẾT mình đang làm gì): git push --no-verify
+
+set -e
+DIR="facts"
+ROOT=$(git rev-parse --show-toplevel)
+Z="0000000000000000000000000000000000000000"
+
+command -v python3 >/dev/null 2>&1 || {
+  echo "pre-push: không có python3 — bỏ qua cổng $DIR." >&2
+  exit 0
+}
+
+# stdin: "<ref cục bộ> <sha cục bộ> <ref trên remote> <sha trên remote>" mỗi dòng.
+# Chỉ cần biết: trong những commit sắp đẩy lên có commit nào chạm facts/ không.
+TOUCH=0
+SAW_REF=0
+while read -r _local_ref local_sha _remote_ref remote_sha; do
+  [ -z "$local_sha" ] && continue
+  SAW_REF=1
+  [ "$local_sha" = "$Z" ] && continue                 # đang xoá nhánh: không có gì để kiểm
+  if [ "$remote_sha" = "$Z" ]; then
+    BASE=$(git merge-base "$local_sha" HEAD 2>/dev/null || echo "")   # nhánh mới trên remote
+  else
+    BASE="$remote_sha"
+  fi
+  if [ -n "$BASE" ]; then
+    FILES=$(git diff --name-only "$BASE" "$local_sha" 2>/dev/null || echo "")
+  else
+    FILES="$DIR/"                                     # không xác định được gốc → coi như có chạm
+  fi
+  case "$FILES" in *"$DIR/"*) TOUCH=1 ;; esac
+done
+
+# Không đọc được ref nào từ stdin (client gọi hook khác kiểu) → chạy cổng cho chắc.
+# Thà mất vài giây còn hơn để một lần deploy đi mà không ai kiểm.
+if [ "$SAW_REF" = "0" ]; then TOUCH=1; fi
+if [ "$TOUCH" = "0" ]; then exit 0; fi
+
+cd "$ROOT/$DIR"
+echo "pre-push: cổng $DIR (push main = deploy, kiểm lại lần cuối)…"
+
+FAIL=0
+CHECK=$(python3 tools/factlint.py check 2>&1) || true
+case "$CHECK" in
+  *'— LỖI ('*)
+    printf '%s\n' "$CHECK" | sed -n '/— LỖI (/,$p' >&2
+    FAIL=1 ;;
+esac
+
+if ! VERIFY=$(python3 tools/factlint.py verify 2>&1); then
+  printf '%s\n' "$VERIFY" >&2
+  FAIL=1
+fi
+
+if [ "$FAIL" -ne 0 ]; then
+  cat >&2 <<'MSG'
+
+──────────────────────────────────────────────────────────────────────
+Push bị CHẶN — cổng facts không qua.
+
+Push nhánh main là deploy GitHub Pages: sau bước này fact nằm trên web.
+
+  · lỗi cấu trúc  → id trùng / cat / sub / src / viz — xem danh sách trên
+  · mức LOẠI      → fact trượt định nghĩa (facts/CLAUDE.md §1.1)
+
+Xem thêm:  python3 facts/tools/factlint.py verify -v
+           python3 facts/tools/factlint.py stats
+Bỏ qua có ý thức:  git push --no-verify
+──────────────────────────────────────────────────────────────────────
+MSG
+  exit 1
+fi
+
+echo "pre-push: cổng $DIR qua."
+exit 0

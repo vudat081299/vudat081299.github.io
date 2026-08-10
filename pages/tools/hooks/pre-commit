@@ -1,0 +1,47 @@
+#!/bin/sh
+# Cổng chất lượng cho pages/ — chạy lúc commit. CHẶN.
+# Cài: facts/tools/install-hooks.sh  (bộ điều phối tự nhặt file này theo */tools/hooks/pre-commit)
+#
+# Chỉ chạy khi commit có chạm pages/ — commit ở facts/, cashy/… không bị ảnh hưởng.
+# Chỉ soi ĐÚNG những trang đang được commit, không soi cả 8 trang: mỗi trang tới 4.700 dòng.
+#
+# Bỏ qua một lần (chỉ khi bạn BIẾT mình đang làm gì): git commit --no-verify
+
+set -e
+DIR="pages"
+ROOT=$(git rev-parse --show-toplevel)
+
+CHANGED=$(git diff --cached --name-only --diff-filter=ACMR | grep "^$DIR/.*\.html$" || true)
+[ -z "$CHANGED" ] && exit 0
+
+if ! command -v python3 >/dev/null 2>&1; then
+  echo "pre-commit: không có python3 — bỏ qua cổng $DIR." >&2
+  exit 0
+fi
+
+cd "$ROOT"
+echo "pre-commit: chạy cổng $DIR…"
+
+# shellcheck disable=SC2086
+if ! python3 "$DIR/tools/lint-pages.py" $CHANGED; then
+  cat >&2 <<'MSG'
+
+──────────────────────────────────────────────────────────────────────
+Commit bị chặn: cổng pages không qua.
+
+Mỗi trang trong pages/ là một tài liệu tự chứa, và push main = deploy
+thẳng lên GitHub Pages — không có build step nào bắt lỗi hộ.
+
+  · id trùng      → id phải duy nhất; trùng thì anchor nhảy sai chỗ
+  · anchor gãy    → href="#x" không có id nào tên x
+  · asset thiếu   → src/href trỏ vào file không tồn tại
+  · thẻ lệch      → div/section/table/ul/ol mở đóng không khớp
+
+Xem thêm:  python3 pages/tools/lint-pages.py -v
+Bỏ qua có ý thức:  git commit --no-verify
+──────────────────────────────────────────────────────────────────────
+MSG
+  exit 1
+fi
+
+echo "pre-commit: cổng $DIR qua."
