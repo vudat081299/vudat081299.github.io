@@ -1,19 +1,44 @@
 <div class="wb-page-head">
   <p class="wb-eyebrow">Layout &amp; utilities</p>
   <h2>Scroll / thanh cuộn</h2>
-  <p>Thanh cuộn <b>theme-aware</b> dùng lại được: một bar mảnh, track trong suốt, thumb màu
+  <p>Thanh cuộn <b>theme-aware</b> là <b>mặc định toàn trang</b>: một bar mảnh, track trong suốt, thumb màu
   <code>--wb-border-strong</code> bo pill (hover → <code>--wb-fg-subtle</code>) — thay cho bar OS chói trên nền
-  tối. <code>.wb-scroll-y</code> / <code>.wb-scroll-x</code> cho vùng overflow; <code>.wb-scrollbars</code> chỉ
-  đổi <i>hình</i> thanh cuộn (không đụng overflow) — kể cả thanh cuộn cả trang. Textarea, thân bảng và menu
-  dropdown cũng tự mang kiểu này.</p>
+  tối. Khai báo <b>một lần</b> ở mục 27 của CSS nên <i>mọi</i> vùng cuộn đều thừa hưởng: thanh cả trang (viewport), textarea,
+  thân bảng, menu dropdown, một <code>div</code> overflow bạn tự viết, cả widget third-party — <b>không cần thêm
+  class</b>. <code>.wb-scroll-y</code> / <code>.wb-scroll-x</code> giờ lo <i>overflow + chừa đuôi</i>, không phải
+  lo hình thanh cuộn.</p>
 </div>
 
 <section class="wb-section">
   <div class="wb-alert wb-alert--info doc-note">
     <span aria-hidden="true">🖥️</span>
-    <div>Thanh cuộn <b>cả trang (viewport)</b>: thêm class vào thẻ gốc —
-    <code>&lt;html class="wb-scrollbars"&gt;</code>. Chính trang docs này đang dùng nó, nên bar bên phải cửa sổ
-    khớp theme sáng/tối thay vì dùng bar mặc định của trình duyệt.</div>
+    <div>Thanh cuộn <b>cả trang (viewport)</b>: <b>không phải làm gì cả</b> — <code>:root</code> đã mang sẵn
+    (<code>scrollbar-color</code> là thuộc tính <b>kế thừa</b>, nên khai một chỗ là xuống cả cây). Bar bên phải cửa
+    sổ của chính trang docs này khớp theme sáng/tối mà không có class nào. Cần trả một nhánh về bar OS (widget tự
+    mang thanh riêng) thì dùng <code>.wb-scrollbars--os</code>.</div>
+  </div>
+
+  <div class="wb-block">
+    <h4>Không cần class — <code>overflow:auto</code> là đủ</h4>
+    <p class="wb-block__desc">Một vùng cuộn "trần", không class <code>wb-*</code> nào: bar vẫn theo theme. Đây là
+    điểm khác so với trước v0.7 (khi đó phải opt-in từng element, ngoài danh sách là hiện bar OS).
+    <code>.wb-scrollbars--os</code> là đường lùi cho nhánh muốn bar gốc.</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="wb-cluster">
+          <div style="max-height:120px;max-width:240px;overflow:auto;border:var(--wb-bw) solid var(--wb-border);border-radius:var(--wb-radius);padding:10px">
+            <p class="wb-cell-muted" style="margin:0">Không class — theo theme</p>
+            <p style="height:240px;margin:0"></p>
+          </div>
+          <div class="wb-scrollbars--os" style="max-height:120px;max-width:240px;overflow:auto;border:var(--wb-bw) solid var(--wb-border);border-radius:var(--wb-radius);padding:10px">
+            <p class="wb-cell-muted" style="margin:0"><code>--os</code> — bar gốc của OS</p>
+            <p style="height:240px;margin:0"></p>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div style="overflow:auto"&gt; … &lt;/div&gt;                    &lt;!-- đã theo theme --&gt;
+&lt;div class="wb-scrollbars--os" style="overflow:auto"&gt; … &lt;/div&gt;  &lt;!-- trả về bar OS --&gt;</code></pre></div>
+    </div>
   </div>
 
   <div class="wb-block">

@@ -61,5 +61,21 @@
         <code>--modifier</code> để làm một <i>advisory</i> (không phải gate).</p>
       </div>
     </details>
+    <details class="wb-accordion__item">
+      <summary>T6 · Mục 27 của CSS style thanh cuộn toàn trang từ <code>:root</code> + <code>*</code> — chỗ duy nhất CSS vươn ra
+      ngoài namespace <code>wb-*</code> — <b>Chọn</b></summary>
+      <div class="wb-accordion__body">
+        <p style="margin:0 0 10px">Ở mọi nơi khác, prefix <code>wb-</code> là một lời hứa: drop file vào, thứ gì bạn
+        không opt-in thì không đổi. Thanh cuộn là ngoại lệ <b>có chủ ý</b>, vì bản opt-in đã <b>thất bại trên thực
+        tế</b>: theming là một danh sách class cố định, nên mọi vùng cuộn ngoài danh sách (một <code>div</code>
+        <code>overflow:auto</code> viết tay, một widget third-party) hiện bar OS chói ngay cạnh surface wb — và cách
+        chữa là <i>phải nhớ</i> gắn <code>.wb-scrollbars</code> vào từng cái.</p>
+        <p style="margin:0 0 10px">Thanh cuộn là <b>chrome, không phải content</b>: sai thì thấy trên mọi màn hình, và
+        "khai một lần" là bản duy nhất còn đúng khi trang lớn dần. Đường lùi: <code>.wb-scrollbars--os</code> trả một
+        element <b>và cả nhánh con</b> về bar gốc của OS.</p>
+        <p style="margin:0"><b>Trade-off:</b> app nào muốn bar OS trên phần lớn trang thì giờ phải opt-<i>out</i> thay
+        vì opt-in. Xét lại nếu có tích hợp thật cần bar native làm mặc định.</p>
+      </div>
+    </details>
   </div>
 </section>

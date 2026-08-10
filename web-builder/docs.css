@@ -54,8 +54,8 @@ html { margin: 0; }
        artifact — an app never needs this.
      · --wb-navbar-h / --wb-sidenav-w  the docs bar and rail run a little larger
        than the library defaults (58/252 vs 56/240).
-   Theme-aware scrollbars come from `.wb-scrollbars` (§27), carried in index.html
-   by the rail, <html> and the Config drawer.
+   Theme-aware scrollbars need nothing here: §27 makes them a page-wide default
+   (declared once on :root + *), so the rail, <html> and the Config drawer inherit them.
 
    Each override is scoped to the element that needs it, NOT to :root — on :root
    they would also retune every standalone navbar / sidenav demo on the pages, so
@@ -350,7 +350,7 @@ html { margin: 0; }
 .doc-config__body {
   flex: 1 1 auto; overflow-y: auto; padding: 16px 16px 28px;
   display: flex; flex-direction: column; gap: 14px;
-}   /* scrollbar theming via .wb-scrollbars (web-builder.css §27) — set in index.html */
+}   /* scrollbar theming is inherited — page-wide default in web-builder.css §27 */
 
 /* Each group is a subtle card, so the controls read as tidy sections. */
 .doc-config__group {

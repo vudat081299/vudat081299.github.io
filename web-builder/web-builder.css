@@ -1877,35 +1877,46 @@
         and to tap/select instead of being pinned against the frame.
    Regions:  .wb-scroll-y (overflow-y) · .wb-scroll-x (overflow-x); add --pad for a
    taller tail on long lists / menus / sidebars.
-   Bar-only:  .wb-scrollbars themes an element's scrollbar WITHOUT touching its overflow.
-   Put it on <html class="wb-scrollbars"> for a theme-aware VIEWPORT (whole-page) bar, or on
-   any element that already scrolls. Textareas and the built-in areas (table body, dropdown
-   menu) carry the theming too. Set BOTH the standard props (scrollbar-width/-color — Firefox
-   + Chrome 121+) and the ::-webkit-* block (older WebKit), kept identical. Scale the tail. */
-.wb-scroll-y, .wb-scroll-x, .wb-table-scroll, .wb-menu, .wb-textarea, .wb-scrollbars {
+
+   DECLARED ONCE, PAGE-WIDE. The themed bar is the DEFAULT for every scroller on the page —
+   the viewport, a component's built-in area, an overflow div you wrote by hand, a third-party
+   widget. No per-element class is needed (it used to be an opt-in name list, and anything
+   outside that list showed a bright OS bar next to wb surfaces). How the one declaration
+   reaches everything — measured in Chrome 148, not assumed:
+     · `scrollbar-color` INHERITS, so declaring it on :root reaches the whole tree + the
+       viewport bar. `.dark` repeats it because what descendants inherit is the RESOLVED
+       colour: a .dark subtree below the root must recompute it against the dark tokens.
+     · `scrollbar-width` does NOT inherit, and pseudo-elements never do — hence `*`.
+   Where a scroller HAS scrollbar-color/-width, Chrome IGNORES its ::-webkit-scrollbar rules
+   (proved side by side: webkit-only → the custom bar; webkit + standard props → the standard
+   bar). So the ::-webkit-* block below is NOT an identical twin of the standard props — it is
+   the fallback that only reaches older WebKit (Safari < 18.2). Keep both; edit both.
+   Escape hatch: .wb-scrollbars--os hands an element + its subtree back to the OS bar.
+   Scale the tail. */
+:root, .dark {
   scrollbar-width: thin;
   scrollbar-color: var(--wb-border-strong) transparent;
 }
-.wb-scroll-y::-webkit-scrollbar, .wb-scroll-x::-webkit-scrollbar,
-.wb-table-scroll::-webkit-scrollbar, .wb-menu::-webkit-scrollbar,
-.wb-textarea::-webkit-scrollbar, .wb-scrollbars::-webkit-scrollbar { width: 10px; height: 10px; }
-.wb-scroll-y::-webkit-scrollbar-track, .wb-scroll-x::-webkit-scrollbar-track,
-.wb-table-scroll::-webkit-scrollbar-track, .wb-menu::-webkit-scrollbar-track,
-.wb-textarea::-webkit-scrollbar-track, .wb-scrollbars::-webkit-scrollbar-track { background: transparent; }
-.wb-scroll-y::-webkit-scrollbar-thumb, .wb-scroll-x::-webkit-scrollbar-thumb,
-.wb-table-scroll::-webkit-scrollbar-thumb, .wb-menu::-webkit-scrollbar-thumb,
-.wb-textarea::-webkit-scrollbar-thumb, .wb-scrollbars::-webkit-scrollbar-thumb {
+* { scrollbar-width: thin; }
+/* Legacy WebKit only (see above): the standard props win wherever they are supported. */
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
   background: var(--wb-border-strong); border-radius: var(--wb-radius-pill);
   border: 3px solid transparent; background-clip: padding-box;
 }
-.wb-scroll-y::-webkit-scrollbar-thumb:hover, .wb-scroll-x::-webkit-scrollbar-thumb:hover,
-.wb-table-scroll::-webkit-scrollbar-thumb:hover, .wb-menu::-webkit-scrollbar-thumb:hover,
-.wb-textarea::-webkit-scrollbar-thumb:hover, .wb-scrollbars::-webkit-scrollbar-thumb:hover { background: var(--wb-fg-subtle); }
+*::-webkit-scrollbar-thumb:hover { background: var(--wb-fg-subtle); }
 /* Where the horizontal + vertical bars meet (e.g. a code textarea) — keep it transparent
    instead of the bright OS default square. */
-.wb-scroll-y::-webkit-scrollbar-corner, .wb-scroll-x::-webkit-scrollbar-corner,
-.wb-table-scroll::-webkit-scrollbar-corner, .wb-menu::-webkit-scrollbar-corner,
-.wb-textarea::-webkit-scrollbar-corner, .wb-scrollbars::-webkit-scrollbar-corner { background: transparent; }
+*::-webkit-scrollbar-corner { background: transparent; }
+/* Opt an element (and its subtree) back to the native OS scrollbar — for a third-party
+   widget that ships its own bar, or a surface that must look un-themed. On legacy WebKit the
+   themed bar stays (the ::-webkit-* block above can't be un-declared, only overridden). */
+.wb-scrollbars--os, .wb-scrollbars--os * { scrollbar-width: auto; scrollbar-color: auto; }
+/* Back-compat: .wb-scrollbars was the opt-in that is now the default, so it is a no-op on a
+   normal page. Kept because it still reads as intent in existing markup, and because it
+   re-asserts the theme on a scroller inside a .wb-scrollbars--os subtree. */
+.wb-scrollbars { scrollbar-width: thin; scrollbar-color: var(--wb-border-strong) transparent; }
 .wb-scroll-y { overflow-y: auto; scroll-padding-block-end: 12px; }
 .wb-scroll-x { overflow-x: auto; }
 .wb-scroll-y--pad { padding-bottom: 44px; }

@@ -267,8 +267,12 @@
         <p>Mọi vùng cuộn theo hai thói quen (đều nướng sẵn trong <code>.wb-scroll-y</code>):</p>
         <ol class="doc-list">
           <li><b>Thanh cuộn theo theme</b> — thanh mảnh, <b>track trong suốt</b>, thumb viền trung tính, để nó theo
-          theme thay vì hiện thanh OS sáng chói chọi trên nền tối hoặc đọc như một divider thứ hai. (Các vùng cuộn
-          dựng sẵn — thân bảng, menu dropdown — đã mang sẵn.)</li>
+          theme thay vì hiện thanh OS sáng chói chọi trên nền tối hoặc đọc như một divider thứ hai. Đây là
+          <b>mặc định toàn trang</b>, khai báo <b>một lần</b> ở mục 27 của stylesheet: thanh viewport, các vùng cuộn dựng
+          sẵn (thân bảng, menu dropdown), một div overflow bạn tự viết, cả widget third-party — tất cả đều thừa
+          hưởng, <b>không cần class, không phải nhớ từng element</b>. Trước v0.7 đây là danh sách opt-in, nên mọi
+          scroller ngoài danh sách lặng lẽ hiện thanh OS cạnh surface wb. Muốn trả một nhánh về thanh OS (widget tự
+          mang thanh riêng) thì dùng <code>.wb-scrollbars--os</code>.</li>
           <li><b>Khoảng thở sau item cuối</b> — <code>scroll-padding</code> + pad đáy để hàng cuối cuộn thoát khỏi
           cạnh, dễ đọc và chạm/chọn, thay vì bị ghim vào khung.</li>
         </ol>
