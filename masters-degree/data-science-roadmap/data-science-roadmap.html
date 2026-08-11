@@ -3383,8 +3383,9 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
 
   <div class="wb-alert wb-alert--danger">
     <span class="wb-alert__icon">!</span>
-    <div class="wb-alert__body"><p class="wb-alert__title">Cả lịch này xoay quanh một mốc: hết ngày 6</p>
-      <p class="wb-alert__msg"><b>Hết ngày 6 bạn phải có một mô hình chạy từ đầu tới cuối, dù nó tệ</b> — đọc dữ liệu → tạo feature → train → in ra một con số. Sáu ngày đầu là để tới được mốc đó; tám ngày sau chỉ là cải tiến, mà cải tiến thì dừng được bất cứ lúc nào. Đọc lịch dưới đây theo hai nửa đó, đừng đọc như 14 việc rời rạc.</p></div>
+    <div class="wb-alert__body"><p class="wb-alert__title">Ba mốc — đọc lịch theo chúng, đừng đọc như 14 việc rời rạc</p>
+      <p class="wb-alert__msg">Lịch dưới đây gắn nhãn <b>Mốc 1 · 2 · 3</b> ở đúng ba ngày, còn mọi ngày khác là đường đi tới mốc kế tiếp. <b>Hết ngày 6 (Mốc 1):</b> một mô hình chạy từ đầu tới cuối, dù nó tệ — đọc dữ liệu → chia tập hợp lệ → train logistic → in ra một con số validation mà bạn đọc được. Feature engineering chưa có ở đây (nó là ngày 7–8), nên mốc này chỉ đòi <i>vòng chạy khép kín</i>, không đòi mô hình tốt. <b>Hết ngày 11 (Mốc 2):</b> con số đó đã thành sản phẩm — một API nhận JSON giao dịch và trả về điểm rủi ro, chạy được trong Docker. <b>Hết ngày 14 (Mốc 3):</b> đủ nguyên liệu để viết luận văn — bảng kết quả có khoảng tin cậy, dàn ý IMRaD, kế hoạch bảo vệ.</p>
+      <p class="wb-alert__msg">Ba mốc không tương đương nhau về chỗ cắt. Hụt giờ thì phần cắt được là những ngày <i>cải tiến mô hình</i> giữa Mốc 1 và Mốc 2 (ngày 7–9): cắt bớt thì mô hình yếu hơn, nhưng bạn vẫn tới được Mốc 2 và Mốc 3. Cắt chính ba ngày mốc thì không phải “học ít hơn” — là không có sản phẩm, hoặc không có luận văn.</p></div>
   </div>
 
   <h2>Mười bốn ngày</h2>
@@ -10436,6 +10437,12 @@ const PHASE_OUTCOME = {
    fast track không" và "bài này học ngày nào" không thể mâu thuẫn. auditPlan()
    ở cuối file kiểm lại: mỗi bài xuất hiện đúng một lần, và không ngày nào
    vượt quá 6 giờ.
+
+   mile — nhãn mốc, đúng cơ chế WEEKS đang dùng (ngày 6 · 11 · 14). Ba mốc này là
+   thứ giữ 14 ngày thành MỘT chuỗi có hình dạng. Trước khi có trường này, "hai nửa
+   quanh ngày 6" chỉ tồn tại trong một đoạn văn ở đầu bài: danh sách 14 ngày và
+   biểu đồ 14 cột không có dấu nào ở ngày 6, nên người đọc không thấy hai con số
+   ngày-6 và 14-ngày liên quan gì tới nhau (chủ trang báo 2026-08-12).
    ============================================================ */
 const DAYS = [
   { n:1,  t:'Khung tư duy + đề bài của bạn + chỗ làm việc',
@@ -10463,7 +10470,7 @@ const DAYS = [
     proof:['d-clean'],
     out:'Bước làm sạch nằm trong code chứ không phải thao tác tay; và ba trang giấy nháp bạn tự làm lại phép tính của ba bài toán bằng số.',
     note:'Toán đặt ở đây, không phải đầu lộ trình: bạn đã có dữ liệu trong tay nên mỗi khái niệm đều có chỗ để chỉ vào. Đọc bằng cách mở popup và làm lại phép tính bằng số trên giấy. Đừng học chứng minh.' },
-  { n:6,  t:'★ Ngày quan trọng nhất: vòng đầu tiên khép kín',
+  { n:6,  mile:'Mốc 1', t:'★ Ngày quan trọng nhất: vòng đầu tiên khép kín',
     ids:['ml-map','ml-linear','ml-metrics'],
     proof:['ml-linear','ml-metrics'],
     out:'<b>Một con số đánh giá thật</b> — PR-AUC validation của baseline logistic, sinh ra từ một lệnh — kèm một ngưỡng chọn theo chi phí. Xấu cũng được, miễn là hoàn chỉnh.',
@@ -10488,11 +10495,11 @@ const DAYS = [
     proof:['pr-code','pr-eval'],
     out:'<code>python -m src.train</code> chạy xong, có <code>models/fraud-*.joblib</code>, một cặp ngưỡng chọn theo chi phí, và bảng ba dòng so mô hình với baseline theo luật.',
     note:'Ngày dài. Mốc giữa ngày: có file <code>.joblib</code> thì commit ngay rồi mới đi tiếp. Chú ý sản phẩm này chạy bằng LightGBM — bạn chưa học một dòng mạng nơ-ron nào, và không cần.' },
-  { n:11, t:'Đóng gói, giám sát, và tìm khoảng trống đề tài',
+  { n:11, mile:'Mốc 2', t:'Đóng gói, giám sát, và tìm khoảng trống đề tài',
     ids:['pr-serve','pr-monitor','th-topic','r-mistakes'],
     proof:['pr-serve','pr-monitor','th-topic'],
     out:'<code>docker run</code> lên một API nhận JSON giao dịch và trả về điểm rủi ro; và một trang đề cương: khoảng trống, câu hỏi nghiên cứu, cách chứng minh.',
-    note:'API chạy được là thứ bạn demo — tới hết hôm nay bạn đã có một sản phẩm hoàn chỉnh, sớm hơn lịch cũ hai ngày. Phần còn lại của 14 ngày là mở rộng, không phải cứu vãn.' },
+    note:'API chạy được là thứ bạn demo — <b>đây là Mốc 2</b>: hết hôm nay bạn đã có một sản phẩm hoàn chỉnh. Ba ngày còn lại không phải cứu vãn sản phẩm: ngày 12–13 mở rộng kiến thức (deep learning, đọc paper), ngày 14 dựng khung luận văn.' },
   { n:12, t:'Deep learning nền',
     ids:['dl-nn','dl-backprop','dl-train','dl-embed','t-colab'],
     proof:['dl-train'],
@@ -10503,7 +10510,7 @@ const DAYS = [
     proof:['dl-attn','th-read','th-repro'],
     out:'Ba câu tự viết giải thích attention không dùng công thức; một paper đã qua lượt 1–2 kèm reading-note skeleton; reproduction-report skeleton đã điền. Lượt 3 và tái lập đầy đủ nằm ngoài 14 ngày.',
     note:'Ngày dài. Hai bài attention đọc chậm, có khối tương tác để bấm — xong hai bài này bạn đọc được abstract của gần như mọi paper AI hiện nay, và đó chính là thứ cần cho hai bài đọc paper cùng ngày.' },
-  { n:14, t:'Thiết kế nghiên cứu + dàn ý luận văn',
+  { n:14, mile:'Mốc 3', t:'Thiết kế nghiên cứu + dàn ý luận văn',
     ids:['th-design','th-stats','th-write','th-defense'],
     proof:['th-design','th-stats','th-write','th-defense'],
     out:'Thesis skeleton theo IMRaD, bảng ablation/registry, kiểm định ghép cặp, danh sách baseline và defense-plan skeleton. Slide hoàn chỉnh + rehearsal nằm trong lịch chuẩn bị bảo vệ riêng.',
@@ -11762,7 +11769,13 @@ function enhance(scope) {
 }
 
 /* Lịch 14 ngày dựng từ DAYS. Mọi con số giờ ở đây là tổng của chính các bài
-   trong ngày đó, nên lịch không thể nói khác trang chủ. */
+   trong ngày đó, nên lịch không thể nói khác trang chủ.
+
+   Chip mốc dùng ĐÚNG cơ chế của lịch 8 tuần (cùng milestoneDone, cùng lớp
+   wb-cap--solid) — chỉ khác thuộc tính đồng bộ: data-mile-day thay cho
+   data-mile-state, vì syncMilestones phải biết tra DAYS hay WEEKS. Chip này là
+   thứ nối "hết ngày 6" ở đầu bài với danh sách bên dưới; thiếu nó thì mốc chỉ
+   nằm trong một đoạn văn và người đọc không thấy nó thuộc về lịch nào. */
 function renderPlan14(scope) {
   const box = $('#planDays', scope);
   if (!box || box.dataset.ready) return;
@@ -11782,7 +11795,7 @@ function renderPlan14(scope) {
     <li class="wb-steps__item">
       <span class="wb-steps__marker" aria-hidden="true">${d.n}</span>
       <div class="wb-steps__content">
-        <p class="wb-steps__title"><span class="ds-sr">Ngày ${d.n}: </span>${d.t}</p>
+        <p class="wb-steps__title"><span class="ds-sr">Ngày ${d.n}: </span>${d.mile ? `<span class="wb-cap wb-cap--solid wb-cap--sm" data-mile-day="${d.n}">${d.mile} · ${milestoneDone(d) ? 'đã đạt' : 'chưa đạt checklist'}</span> ` : ''}${d.t}</p>
         <p class="ds-daysplit">${fmtMin(tot)} — đọc ${fmtMin(r)} · thực hành ${fmtMin(x)} · deliverable ${fmtMin(dv)}<span class="ds-daysplit__beg"> · từ số 0 ≈ ${fmtMin(Math.round(tot * BEGINNER_MULT))}</span></p>
         <ul class="ds-daylist">${items.map(l => `
           <li><a href="#/${l.id}">${l.t}</a> <span class="ds-leaf__m">${mins(l)}′</span></li>`).join('')}</ul>
@@ -11846,16 +11859,20 @@ function renderPlanWeeks(scope) {
 
 /* Mốc chỉ "đã đạt" khi TẤT CẢ bài tạo bằng chứng của mốc đã ở mức cao nhất.
    Đọc hết các bài trong tuần không đủ. Các bài proof quan trọng đều có acceptance
-   criteria; self-audit kiểm điều đó để mốc không thoái hoá về checkbox. */
+   criteria; self-audit kiểm điều đó để mốc không thoái hoá về checkbox.
+
+   Hàm này chỉ đọc hai trường mile + proof, nên nó dùng được cho CẢ một tuần
+   (WEEKS) lẫn một ngày (DAYS) — hai lịch, một luật "đã đạt". */
 function milestoneDone(w) {
   return !!(w.mile && w.proof && w.proof.length &&
     w.proof.every(id => byId[id] && ACCEPT[id] && getLevel(id) >= maxLevel(byId[id])));
 }
 function syncMilestones() {
-  $$('[data-mile-state]').forEach(el => {
-    const w = WEEKS.find(x => x.n === +el.dataset.mileState);
-    if (w) el.textContent = `${w.mile} · ${milestoneDone(w) ? 'đã đạt' : 'chưa đạt checklist'}`;
-  });
+  const set = (el, m) => {
+    if (m) el.textContent = `${m.mile} · ${milestoneDone(m) ? 'đã đạt' : 'chưa đạt checklist'}`;
+  };
+  $$('[data-mile-state]').forEach(el => set(el, WEEKS.find(x => x.n === +el.dataset.mileState)));
+  $$('[data-mile-day]').forEach(el => set(el, DAYS.find(x => x.n === +el.dataset.mileDay)));
 }
 
 function afterRender(scope) {
@@ -13448,7 +13465,7 @@ VIZ.costmatrix = el => {
 VIZ.plan14 = el => {
   el.innerHTML = `
     <div class="wb-card"><div class="wb-card__body">
-      <p class="ds-viz__label">Mười bốn ngày — bấm một ngày để xem nó lấy bài từ chặng nào và trả ra deliverable gì</p>
+      <p class="ds-viz__label">Mười bốn ngày — bấm một ngày để xem nó lấy bài từ chặng nào và trả ra deliverable gì. Ba số ngày <b>in đậm</b> dưới trục là ba mốc: ${DAYS.filter(d => d.mile).map(d => d.n).join(' · ')}</p>
       ${seg('Tô màu theo', [{k:'phase',t:'Chặng'},{k:'kind',t:'Loại thời gian'}], 'phase')}
       <svg viewBox="0 0 320 128" role="img" aria-label="Mười bốn cột, mỗi cột một ngày, chiều cao là số giờ">
         <g data-o="bars"></g>
@@ -13499,7 +13516,8 @@ VIZ.plan14 = el => {
                  style="cursor:pointer" data-day="${d.n}"/>${out}
         <rect x="${x}" y="${(100 - tot / maxD * 84).toFixed(1)}" width="${w}" height="${(tot / maxD * 84).toFixed(1)}"
               fill="none" stroke="${d.n === sel ? 'var(--wb-fg)' : 'transparent'}" stroke-width="1.8"/>
-        <text x="${x + w / 2}" y="110" font-size="7" text-anchor="middle" fill="var(--wb-fg-subtle)">${d.n}</text>
+        <text x="${x + w / 2}" y="110" font-size="7" text-anchor="middle"
+              font-weight="${d.mile ? 700 : 400}" fill="var(--wb-fg${d.mile ? '' : '-subtle'})">${d.n}</text>
         <text x="${x + w / 2}" y="120" font-size="6" text-anchor="middle" fill="var(--wb-fg-subtle)">${(tot / 60).toFixed(1).replace('.', ',')}</text></g>`;
     }).join('')
       // Nhãn đầu HÀNG, canh phải sát lề trái của cột đầu: mỗi hàng số tự nói nó là gì.
@@ -13532,7 +13550,8 @@ VIZ.plan14 = el => {
       `${DAYS.length} ngày, tổng ${one(totalH)} giờ, trung bình ${one(totalH / DAYS.length)} giờ/ngày. `
       + `Nhẹ nhất ngày ${lo.n} (${one(hrsOf(lo))} giờ), nặng nhất ngày ${hi.n} (${one(hrsOf(hi))} giờ) — `
       + `chênh nhau chưa tới ${one(Math.ceil((hrsOf(hi) - hrsOf(lo)) * 2) / 2)} giờ, nên không có ngày nào `
-      + `rảnh để dồn việc sang: trượt một ngày là trượt cả chuỗi.`;
+      + `rảnh để dồn việc sang: trượt một ngày là trượt cả chuỗi. `
+      + `Số ngày in đậm dưới trục là ba mốc: ${DAYS.filter(x => x.mile).map(x => `ngày ${x.n} (${x.mile})`).join(', ')}.`;
     // Số liệu thô: chỉ cho trình đọc màn hình, vì <svg role="img"> gộp nội dung thành
     // một mô tả duy nhất nên các <text> số bên trong không được đọc riêng.
     let desc = bars.ownerSVGElement.querySelector('desc');

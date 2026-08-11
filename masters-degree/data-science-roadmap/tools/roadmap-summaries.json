@@ -72,16 +72,16 @@
    "viz": "Bảng 8 tuần mỗi tuần một deliverable (khối planWeeks), giờ tách ba loại đọc/thực hành/deliverable; tuần 1, 2 và 7 nặng nhất ~14–16 giờ."
   },
   "s-plan14": {
-   "tldr": "Bản nén của lộ trình 8 tuần để đi trọn MỘT vòng end-to-end; cả lịch xoay quanh một mốc duy nhất — hết ngày 6 phải có mô hình chạy từ đầu tới cuối dù tệ, tám ngày sau chỉ là cải tiến (dừng được bất cứ lúc nào).",
+   "tldr": "Bản nén của lộ trình 8 tuần để đi trọn MỘT vòng end-to-end; lịch có BA mốc, gắn nhãn Mốc 1/2/3 ngay trong danh sách ngày — ngày 6 có vòng chạy khép kín, ngày 11 có sản phẩm demo được, ngày 14 có đủ nguyên liệu viết luận văn.",
    "points": [
-    "Mốc ngày 6: đọc dữ liệu → tạo feature → train → in ra một con số; đọc lịch theo HAI nửa (tới ngày 6 để tới mốc / sau ngày 6 để cải tiến), đừng đọc như 14 việc rời rạc.",
+    "Ba mốc, đừng đọc như 14 việc rời rạc: Mốc 1 (hết ngày 6) đọc dữ liệu → chia tập hợp lệ → train logistic → in ra một con số validation đọc được — feature engineering là ngày 7–8 nên mốc này chỉ đòi VÒNG CHẠY khép kín, không đòi mô hình tốt; Mốc 2 (hết ngày 11) API trong Docker; Mốc 3 (hết ngày 14) bảng kết quả có khoảng tin cậy + dàn ý IMRaD. Hụt giờ thì phần cắt được là mấy ngày cải tiến mô hình giữa Mốc 1 và Mốc 2 (ngày 7–9), không phải chính ba ngày mốc.",
     "Số giờ mỗi ngày = tổng ba cột đọc/thực hành/deliverable của chính các bài trong ngày, tính tự động nên luôn khớp với thời lượng ghi ở từng bài, không phải một con số áng chừng.",
     "Fast track chỉ GIỚI THIỆU chứ không dạy hết: bỏ phần lớn chặng 8 (hồi quy, forecasting, multiclass, NLP, CV, gợi ý, analytics), tuning, giải thích mô hình, học không giám sát → sau 14 ngày làm được một dự án phân loại trên dữ liệu bảng nhưng CHƯA định vị được dự báo hay NLP.",
     "Sáu thứ KHÔNG được nén dù gấp tới đâu: data leakage · chia tập · đo lường & chọn ngưỡng · kỷ luật tập test (chỉ mở một lần) · tái lập (ghim phiên bản, cố định seed) · thống kê suy diễn — cắt là đổi hai tuần lấy một kết quả sai không ai phát hiện tới buổi bảo vệ.",
     "Lấp chỗ trống sau ngày 14 theo thứ tự (không tuỳ chọn, chỉ hoãn): forecasting → A/B testing & tư duy nhân quả → hồi quy/multiclass → NLP/CV/gợi ý/analytics → mini-project chuyển giao làm thật 2/6.",
     "Nếu chỉ 3 giờ/ngày: 14 ngày mua ~42 giờ nên phải cắt thật (không cắt kiểu 'đọc nhanh hơn'); không bao giờ cắt cột deliverable; 'Bản đồ các họ bài toán' nằm trong danh sách không được cắt vì là thứ duy nhất trong 14 ngày dạy CHUYỂN GIAO."
    ],
-   "viz": "Khối lịch 14 ngày (planDays) + viz plan14 vẽ hình dạng giờ mỗi ngày, cho thấy ngày nhẹ được xếp cạnh ngày nặng."
+   "viz": "Khối lịch 14 ngày (planDays) + viz plan14 vẽ hình dạng giờ mỗi ngày, cho thấy ngày nhẹ được xếp cạnh ngày nặng; ba số ngày 6 · 11 · 14 in đậm dưới trục là ba mốc."
   },
   "t-env": {
    "tldr": "Chỗ làm việc chia đúng ba vai — nơi code sống (GitHub, bản thật duy nhất), nơi code chạy (Colab, đóng tab là mất), nơi có terminal thật (Codespaces cho pytest/Docker) — và việc quan trọng nhất là ghim phiên bản thư viện để kết quả tái lập được.",
@@ -1023,7 +1023,7 @@
   "s-families": "6038141c",
   "s-lookup": "4d417cde",
   "s-plan8w": "ca0558ba",
-  "s-plan14": "121f4bcc",
+  "s-plan14": "d38f682a",
   "d-framing": "51cee6ec",
   "t-env": "91c15849",
   "t-online": "6b545427",
