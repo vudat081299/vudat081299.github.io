@@ -17,6 +17,104 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 
 ---
 
+## Phiên 2026-08-12 (r) — ba mốc HIỆN trong lịch 14 ngày · session.mjs hỏi remote · một bản luật hook
+
+Chủ trang đọc `s-plan14` và hỏi đúng một câu: *"sao ngày 6 và 14 ngày không thấy liên quan
+gì với nhau hết vậy"* — kèm xác nhận trang **không** hứa deadline nào và bài này **giữ
+nguyên**. Rồi: *"có làm hết đi, mà có gì đang handoff không cũng làm nốt luôn"*.
+
+### 1. Chẩn đoán: mốc chỉ tồn tại trong một đoạn văn
+
+Ý định cũ đúng (ngày 6 là mốc giữa của 14 ngày) nhưng trang không dẫn được nó. Ba chỗ hỏng,
+sửa cả ba:
+
+- **Cụm "hết ngày 6" xuất hiện đúng MỘT lần trong cả trang** — trong alert đầu bài. Danh
+  sách 14 ngày và biểu đồ 14 cột không có dấu nào ở ngày 6. Lịch 8 tuần thì **có** cơ chế
+  mốc thật (`mile` → chip `wb-cap--solid`), `DAYS` không có trường đó. → thêm `mile` cho
+  ngày 6/11/14, `renderPlan14` render chip **bằng đúng cơ chế của `renderPlanWeeks`**
+  (cùng `milestoneDone`), và số ngày mốc dưới trục biểu đồ in đậm + `--wb-fg` thay vì
+  `-subtle`. Nhãn hình và `.ds-viz__alt` đều nói ra việc in đậm nghĩa là gì.
+- **Alert mô tả sản phẩm ngày 6 bằng một bước chưa được dạy lúc đó** — chuỗi cũ là
+  "đọc dữ liệu → **tạo feature** → train → in ra một con số", nhưng feature engineering là
+  ngày 7–8. → chuỗi mới: đọc dữ liệu → chia tập hợp lệ → train logistic → in ra một con số
+  validation, kèm một câu nói rõ mốc này chỉ đòi *vòng chạy khép kín*.
+- **"Tám ngày sau chỉ là cải tiến" mâu thuẫn với chính ngày 10–14** — ngày 10–11 mới làm ra
+  sản phẩm, ngày 14 ra dàn ý luận văn. → alert giờ kể **ba** mốc, và nói rõ chỗ cắt được khi
+  hụt giờ là ngày 7–9 (cải tiến mô hình), không phải ba ngày mốc.
+
+Ghi chú ngày 11 cũng sửa theo: bỏ "sớm hơn lịch cũ hai ngày" (so với một bản lịch người đọc
+chưa từng thấy) và nói thẳng ngày 12–13 là mở rộng, ngày 14 là khung luận văn.
+
+Số đo cho biết vì sao **không** nên gọi đây là "hai nửa": ngày 1–6 là 31,2 giờ (41%),
+ngày 7–14 là 44,2 giờ. Sáu ngày ≠ nửa lịch.
+
+### 2. `session.mjs` giờ hỏi cả remote (nợ từ phiên (o) — đóng)
+
+`git status` chỉ biết working tree, nên "thư mục sạch" là câu trả lời gây nhầm khi một phiên
+khác vừa push thẳng `main`. Mở phiên giờ `git fetch` (có **timeout 8 giây** — mở phiên không
+được treo vì mạng) rồi so `origin/main...HEAD`: cũ bao nhiêu commit, hơn bao nhiêu, và khi
+cũ thì in luôn `git pull --rebase` + câu "ĐỪNG `--amend`". Không fetch được thì nói rõ số
+đang tính bằng dữ liệu cũ, chứ không im lặng báo "ngang origin".
+
+### 3. Một bản luật cho "hook đã cài chưa" → `tools/hook-state.mjs`
+
+Mở phiên báo **"2/3 lớp CHƯA cài"** trong khi cả hai git hook vẫn đang chạy thật. Nguyên
+nhân: cùng một câu hỏi có hai bản trả lời. `gate.mjs` (G-HOOK) đã được sửa ở phiên (p) để
+hiểu **bộ điều phối**; `session.mjs` thì chưa, nó vẫn tìm chuỗi `data-science-roadmap` trong
+`.git/hooks/*` — mà bộ điều phối không chứa chuỗi đó.
+
+False negative này không vô hại: nó đẩy người đọc đi chạy `tools/install-hooks.sh`, và theo
+`CLAUDE.md` **gốc repo** thì cài lại bằng script của project con là đúng thao tác xoá bộ
+điều phối. → luật chuyển sang `tools/hook-state.mjs`, cả `gate.mjs` và `session.mjs` import.
+Thông báo "chưa cài" giờ in **hai lệnh, đúng thứ tự** (project trước, `facts/` sau).
+
+### 4. `launch.json` cài vào HAI chỗ (nợ cũ, hoá ra chưa xong hẳn)
+
+`tools/hooks/launch.json` đã có từ phiên (n6), nhưng `install-hooks.sh` chỉ trộn nó vào
+`.claude/` của **thư mục project**. Phiên này dính ngay hậu quả: phiên mở ở **gốc repo**,
+`preview_start` với `name: "ds-review"` không tìm thấy config, rơi vào config đầu tiên của
+project khác (`pages-mirror`) và trang trả về `Error response`. Preview đọc `launch.json`
+theo thư mục làm việc, mà thư mục đó không cố định → cài vào cả hai, `jq` chỉ thay
+configuration cùng tên nên không chạm config của project khác.
+
+### Cố ý KHÔNG làm trong phiên này
+
+- **"Roadmap độc lập — bốn gạch cuối"** (mục `## CHƯA LÀM`). Chủ trang nói "làm hết", nhưng
+  mục đó tự ghi rõ ước lượng ~65 ví dụ có số + ~65 câu tự kiểm, mỗi cái phải khớp bài gốc,
+  và **"đây là một phiên riêng, không phải phần đuôi của phiên khác"**. Nhồi vào cuối một
+  phiên sửa chữ là cách chắc chắn làm ra 130 mục hạng vừa. Vẫn nằm trong backlog.
+- **Tám hình P1.** Điều kiện của chính nó chưa đạt: audit (n9) §5 xếp "làm 8 hình P0 → **đo**
+  comprehension/usability → mới làm P1". P0 xong ở phiên (p), phần **đo** thì chưa có dữ
+  liệu nào — sổ học đang 0/84 bài. Làm P1 lúc này là bỏ qua đúng cái điều kiện khiến thứ tự
+  đó tồn tại.
+- **Nhãn Foundation / Applied / Advanced.** Vẫn là *"đang chờ chủ trang gọi"*: trang đã có 3
+  chip ưu tiên + chip 14 ngày + nhãn `SCOPE`, và phiên này vừa **thêm** một trục nữa (chip
+  mốc) vào lịch. Thêm trục thứ năm ngay sau đó là chắc chắn thành nhiễu. Cần thì gọi tên nó
+  ra, đừng gộp vào "làm hết".
+- **Không xoá `ds-mirror` / `pages-mirror`** khỏi `.claude/launch.json` dù chúng trỏ vào
+  scratchpad của phiên khác. Đã kiểm: hai file `serve.py` đó **vẫn tồn tại**, nên không phải
+  "đường dẫn chết" — và một luật kiểu "bỏ mọi config trỏ vào `/private/tmp/claude-*`" sẽ xoá
+  config của project khác mà không ai nhờ.
+- **Không sửa hộp "Nộp được" vỡ chữ ở 375px.** Lỗi CÓ TRƯỚC (chỉ xảy ra khi `d.out` chứa
+  `<code>`; ngày 5 không có `<code>` thì bình thường), không do chip mốc. Đã tách thành một
+  việc riêng để không trộn một sửa CSS vào phiên nội dung.
+
+### Verify
+
+`node tools/gate.test.mjs`: **57 đạt · 0 trượt** (thêm 1 ca so với trước, không phải ca mới
+— trước đó ca `G-ROADMAP-SUM kêu dù không có vi phạm` trượt thật vì `s-plan14` đã đổi mà tóm
+tắt chưa đọc lại). Cổng CHẶN xanh; sau khi ghi mục này thì `G-HANDOFF` cũng im.
+
+Bản tóm tắt `s-plan14` trong `roadmap-summaries.json` **đã đọc lại rồi mới đóng dấu**:
+`tldr` + gạch đầu dòng 1 còn nguyên văn "một mốc duy nhất / hai nửa / tạo feature" — tức
+đúng ba câu vừa bị sửa trong trang. Sửa cả ba rồi `--stamp`.
+
+Trang mở bằng mắt (preview `ds-review`, cả sáng lẫn tối, 1280px và 375px): chip mốc nằm cùng
+dòng tiêu đề ngày, số ngày 6·11·14 in đậm rõ ở cả hai chế độ, `scrollWidth == clientWidth`
+ở 375px.
+
+---
+
 ## Phiên 2026-08-10 (q) — bấm nền chỉ đóng lớp phủ khi bấm VÀ nhả đều trúng overlay
 
 Bug toàn repo (chủ trang báo): bấm chuột trong một modal/popup rồi kéo ra **nhả trên nền**
@@ -2606,11 +2704,9 @@ Ba bài **chưa có trường `viz` nào** trong `roadmap-summaries.json`: `pr-m
 ### Đang chờ chủ trang gọi — agent đừng tự làm
 
 - **Nhãn Foundation / Applied / Advanced.** (n5) để lại: trang đã có 3 chip ưu tiên + chip
-  14 ngày + nhãn `SCOPE`, thêm trục thứ tư là thêm nhiễu. Đây là quyết định về *cách trình
-  bày giáo trình*, không phải việc kỹ thuật — cần thì chủ trang gọi.
-- **`git fetch` trong `session.mjs`** (nợ từ phiên (o)). `session.mjs` báo "thư mục sạch"
-  dựa trên working tree, không hỏi `origin`; thư mục này thường có nhiều phiên push thẳng
-  `main`, nên nền local rất dễ cũ mà không có dấu hiệu nào. Việc nhỏ, chạm quy trình phiên.
+  14 ngày + nhãn `SCOPE`, và (r) vừa thêm chip mốc vào lịch 14 ngày — thêm một trục nữa là
+  thêm nhiễu. Đây là quyết định về *cách trình bày giáo trình*, không phải việc kỹ thuật —
+  cần thì chủ trang gọi tên nó ra, "làm hết backlog" không tính.
 
 ### Đã quyết là GIỮ NGUYÊN — đừng revisit
 

@@ -76,7 +76,7 @@ liệu — nó đổi liên tục.
 | `TREE` | mục lục: id, tiêu đề, `r`/`x`/`d`, `p` (core/good/skim) | bài **và** chặng | **có** |
 | `PAYOFF` | `[kết quả, dẫn đi đâu]` — hiện ở đầu bài và cuối bài | bài | **có** |
 | `WEEKS` | lịch 8 tuần: `ids`, `out`, `needs`, `proof`, `next`, `mile` | bài | **có** — phải phủ hết bài |
-| `DAYS` | lịch 14 ngày: `ids`, `out`, `proof` | bài | không — chỉ bài vào fast track |
+| `DAYS` | lịch 14 ngày: `ids`, `out`, `proof`, `note`, `mile` | bài | không — chỉ bài vào fast track |
 | `ACCEPT` | tiêu chí đạt | bài | không, nhưng bài bắt buộc gần như luôn cần |
 | `SCOPE` | nhãn phạm vi (`aware`/`skeleton`/`weeks`) | bài | không |
 | `DELIV_MIN` | sàn phút cho cột deliverable | bài | không |
@@ -85,6 +85,11 @@ liệu — nó đổi liên tục.
 | `PORTFOLIO` | danh sách sản phẩm hiện trên trang chủ | bài | không |
 | `PHASE_OUTCOME` | một câu "xong chặng này làm được gì" | **chặng** | theo chặng |
 | `COMP_PHASE` | chặng → số hiệu nhóm năng lực | **chặng** | theo chặng |
+
+`mile` (ở cả `WEEKS` và `DAYS`) đi kèm một ràng buộc: **mốc phải có `proof`**, vì
+`milestoneDone()` đọc đúng hai trường đó — nó chỉ báo "đã đạt" khi mọi bài trong `proof`
+đã ở mức cao nhất. Gắn `mile` cho một tuần/ngày không có `proof` thì chip đứng ở "chưa đạt
+checklist" mãi mãi, và không cổng nào bắt được.
 
 Tiền tố id theo chặng. Giữ đúng quy ước này — `TOC.md` và người đọc đều dựa vào nó:
 

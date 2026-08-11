@@ -23,9 +23,10 @@ của nhãn phạm vi `SCOPE`). Hứa quá là lỗi nội dung nghiêm trọng,
 node tools/session.mjs
 ```
 
-Nó trả lời bốn câu bạn không thể biết bằng cách đọc file: **có phiên khác đang làm dở
-không** (thư mục này thường có nhiều phiên song song), hook đã cài chưa, việc gì đang dở,
-cổng đang xanh hay đỏ.
+Nó trả lời năm câu bạn không thể biết bằng cách đọc file: **có phiên khác đang làm dở
+không** (thư mục này thường có nhiều phiên song song), **nền local có còn mới không** (nó
+`git fetch` rồi so với upstream — `git status` im lặng khi phiên khác vừa push thẳng
+`main`), hook đã cài chưa, việc gì đang dở, cổng đang xanh hay đỏ.
 
 Rồi tìm việc mình định làm trong bảng này:
 
@@ -117,6 +118,8 @@ tools/read-html.mjs   luật đọc dữ liệu ra khỏi HTML — dùng chung, 
   ├─ tools/learn.mjs  ↔ LEARNING-LOG.md         (cổng G-LEARN)
   ├─ tools/audit.mjs    chạy riêng plan.mjs cho người đọc
   └─ tools/session.mjs  mở / đóng phiên — KHÔNG phải cổng, chỉ đọc và in
+tools/hook-state.mjs  luật "ba lớp hook đã cài chưa" — dùng chung bởi gate.mjs (G-HOOK)
+                      và session.mjs; hai bản đã từng lệch nhau, xem đầu file đó
 tools/gate.test.mjs   test cho chính bộ cổng — mỗi cổng một ca nổ + một ca im
 tools/concepts.json   khái niệm nào dạy ở bài nào  (đầu vào cổng G-FWD)
 tools/waivers.json    lỗi thật đang hoãn có chủ ý
@@ -173,14 +176,27 @@ node tools/audit.mjs            # chỉ phần lịch học — bản node của
 node tools/build-roadmap.mjs    # sinh riêng roadmap.html; --stamp = đóng dấu lại tóm tắt
 node tools/learn.mjs            # tóm tắt sổ học; --add / --sync / --write / --check
 node tools/gate.test.mjs        # test cho chính bộ cổng
-tools/install-hooks.sh          # cài CẢ BA hook (một lần mỗi máy / mỗi bản clone)
+tools/install-hooks.sh          # lớp 1 + cấu hình preview (một lần mỗi máy / mỗi bản clone)
+sh ../../facts/tools/install-hooks.sh   # lớp 2–3 — bộ điều phối git hook cho CẢ repo
 ```
 
 `install-hooks.sh` phải tồn tại vì **cả `.git/hooks/` lẫn `.claude/` đều không được git
 theo dõi** (`.claude/` nằm trong `.gitignore`), nên hook không tự theo repo về máy mới.
-Nguồn sự thật là `tools/hooks/pre-commit`, `tools/hooks/pre-push` và
-`tools/hooks/claude-settings.json` — các file được theo dõi; script chỉ nối chúng vào chỗ
-git và Claude Code thật sự đọc. Chạy lại nhiều lần không sinh hook trùng.
+Nguồn sự thật là `tools/hooks/pre-commit`, `tools/hooks/pre-push`,
+`tools/hooks/claude-settings.json` và `tools/hooks/launch.json` — các file được theo dõi;
+script chỉ nối chúng vào chỗ git, Claude Code và preview thật sự đọc. Chạy lại nhiều lần
+không sinh hook trùng.
+
+**Cần CẢ HAI lệnh, và git hook thuộc lệnh thứ hai.** Repo có nhiều project con nên
+`.git/hooks/*` phải là **bộ điều phối** (gọi mọi `*/tools/hooks/<event>`), không phải
+symlink trỏ vào một project — xem `CLAUDE.md` ở **gốc repo**. Script của thư mục này biết
+nhường: gặp hook đã là file thật thì nó không ghi đè, chỉ in ra dòng cần thêm. Nên nó chỉ
+còn lo lớp 1 (`PostToolUse`) và `launch.json`.
+
+`launch.json` được cài vào **hai chỗ**: `.claude/` của thư mục này *và* `.claude/` ở gốc
+repo. Preview đọc file theo **thư mục làm việc của phiên**, mà phiên hay mở ở gốc repo —
+thiếu bản ở gốc thì `preview_start` với `name: "ds-review"` không tìm thấy config và rơi
+vào config đầu tiên của project khác.
 
 **Ba lớp tự động, ba thời điểm khác nhau có chủ ý:**
 
