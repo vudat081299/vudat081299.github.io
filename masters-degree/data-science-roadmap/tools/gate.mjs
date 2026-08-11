@@ -33,13 +33,14 @@
      session.mjs     mở/đóng phiên. KHÔNG phải cổng — chỉ đọc và in.
    ========================================================================== */
 
-import { readFileSync, writeFileSync, existsSync, realpathSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { readPage } from './read-html.mjs';
 import { checkPlan } from './plan.mjs';
 import { checkLearn } from './learn.mjs';
+import { hookLayers } from './hook-state.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..');
@@ -729,36 +730,13 @@ if (tocOnDisk) {
    Bỏ qua khi chạy với --ci: lúc đó chính hook đang gọi ta, nên nó rõ ràng đã cài. */
 const GITROOT = join(ROOT, '..', '..');
 if (!has('--ci')) {
-  const same = (a, b) => { try { return realpathSync(a) === realpathSync(b); } catch { return false; } };
-  /* Ba cách cài đều hợp lệ, và cách thứ ba là cách repo này đang dùng:
-       1. symlink thẳng tới tools/hooks/<name>  (mặc định của install-hooks.sh)
-       2. một dòng gọi sang, thêm vào hook có sẵn
-       3. BỘ ĐIỀU PHỐI — repo có nhiều project, mỗi project một bộ hook riêng, nên hook
-          ở .git/hooks/ chỉ là một vòng lặp find theo mẫu đường dẫn "sao / tools / hooks /
-          tên-hook" rồi gọi từng cái. (Viết mẫu đó ra bằng ký tự thật ở đây sẽ ĐÓNG SỚM
-          chính khối chú thích này — dấu sao + gạch chéo là dấu đóng comment.)
-          Nó KHÔNG chứa chuỗi "data-science-roadmap" nào, nên cách kiểm cũ báo CHƯA CÀI
-          trong khi hook vẫn chạy thật. Đó là false negative tệ nhất một cổng có thể có:
-          nó đẩy người ta đi cài lại và sinh hook chạy hai lần. */
-  const hookOk = name => {
-    const p = join(GITROOT, '.git', 'hooks', name);
-    if (!existsSync(p)) return false;
-    if (same(p, join(HERE, 'hooks', name))) return true;
-    const src = readFileSync(p, 'utf8');
-    if (src.includes(`data-science-roadmap/tools/hooks/${name}`)) return true;
-    // Bộ điều phối: quét theo mẫu đường dẫn, và hook của thư mục này có tồn tại.
-    return src.includes(`*/tools/hooks/${name}`) && existsSync(join(HERE, 'hooks', name));
-  };
-  const cs = join(GITROOT, '.claude', 'settings.json');
-  const layers = [
-    ['Claude Code PostToolUse (sau mỗi Edit)', existsSync(cs) && readFileSync(cs, 'utf8').includes('data-science-roadmap')],
-    ['git pre-commit (lúc commit)', hookOk('pre-commit')],
-    ['git pre-push (lúc push = deploy)', hookOk('pre-push')],
-  ];
-  const off = layers.filter(l => !l[1]);
+  // Luật "đã cài chưa" nằm ở tools/hook-state.mjs — MỘT bản, vì session.mjs hỏi đúng
+  // câu này và hai bản trả lời đã từng lệch nhau (xem đầu file đó).
+  const layers = hookLayers({ hooksDir: join(HERE, 'hooks'), gitRoot: GITROOT });
+  const off = layers.filter(l => !l.ok);
   if (off.length) {
-    W(`G-HOOK: ${off.length}/3 lớp tự động chưa cài — ` + layers.map(l => `${l[0]}: ${l[1] ? 'có' : 'CHƯA'}`).join(' · ') + '\n'
-    + '    Chạy: tools/install-hooks.sh (một lần cho mỗi máy / mỗi bản clone)\n'
+    W(`G-HOOK: ${off.length}/3 lớp tự động chưa cài — ` + layers.map(l => `${l.what}: ${l.ok ? 'có' : 'CHƯA'}`).join(' · ') + '\n'
+    + '    Chạy: tools/install-hooks.sh, rồi sh ../../facts/tools/install-hooks.sh (một lần cho mỗi máy / mỗi bản clone)\n'
     + '    Chưa cài thì cổng chỉ chạy khi bạn tự gõ tay — mọi thứ CLAUDE.md §3 mô tả đang tắt.');
   }
 }

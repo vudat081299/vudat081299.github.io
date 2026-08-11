@@ -64,31 +64,40 @@ fi
 # về máy mới, và bản cũ còn viết cứng cả đường dẫn repo lẫn /opt/homebrew/bin/python3.11
 # — hai thứ chỉ đúng trên đúng một máy. Nguồn giờ là tools/hooks/launch.json (được git
 # theo dõi), chỗ này thay __REPO_ROOT__ rồi trộn vào, giữ nguyên configuration khác.
-# Đích là .claude/ của CHÍNH THƯ MỤC NÀY, không phải của gốc repo: preview đọc
-# launch.json theo thư mục làm việc, và thư mục làm việc khi sửa trang này là
-# masters-degree/data-science-roadmap. (git hook và settings.json thì ngược lại —
-# chúng là của cả repo nên vẫn đi vào $ROOT.)
+# Cài vào HAI chỗ, và đó là chỗ bản trước làm sai. Preview đọc .claude/launch.json
+# theo THƯ MỤC LÀM VIỆC của phiên, mà thư mục đó không cố định: phiên mở ở
+# masters-degree/data-science-roadmap thì đọc bản của project, phiên mở ở gốc repo
+# (rất thường, vì repo này nhiều project) thì đọc bản ở gốc. Bản trước chỉ ghi vào
+# project, nên một phiên mở ở gốc repo gọi preview_start "ds-review" sẽ không tìm
+# thấy config và rơi vào config đầu tiên của project khác — đã dính đúng ca đó
+# 2026-08-12: nó khởi động "pages-mirror" và trang trả về Error response.
+# (git hook và settings.json thì luôn của cả repo nên chỉ đi vào $ROOT.)
 PROJ=$(dirname "$HERE")
-LJ="$PROJ/.claude/launch.json"
 LSRC="$HERE/hooks/launch.json"
 if ! command -v jq >/dev/null 2>&1; then
-  echo "· không có jq — bỏ qua launch.json. Tự chép tools/hooks/launch.json sang $LJ"
-  echo "  và thay __REPO_ROOT__ bằng $ROOT."
+  echo "· không có jq — bỏ qua launch.json. Tự chép tools/hooks/launch.json sang"
+  echo "  $PROJ/.claude/launch.json và $ROOT/.claude/launch.json,"
+  echo "  thay __REPO_ROOT__ bằng $ROOT."
 else
-  mkdir -p "$PROJ/.claude"
-  [ -f "$LJ" ] || echo '{"version":"0.0.1","configurations":[]}' > "$LJ"
-  TMP=$(mktemp)
-  # Bỏ configuration cùng tên rồi thêm lại bản mới → chạy nhiều lần không sinh trùng.
-  sed "s#__REPO_ROOT__#$ROOT#g" "$LSRC" > "$TMP.src"
-  jq --slurpfile add "$TMP.src" '
-    .version = ($add[0].version // .version // "0.0.1") |
-    .configurations = (
-      [ (.configurations // [])[] | select(.name != $add[0].configurations[0].name) ]
-      + $add[0].configurations
-    )
-  ' "$LJ" > "$TMP" && mv "$TMP" "$LJ"
-  rm -f "$TMP.src"
-  echo "✓ preview ds-review → $LJ  (serve từ $ROOT)"
+  SRC=$(mktemp)
+  sed "s#__REPO_ROOT__#$ROOT#g" "$LSRC" > "$SRC"
+  for D in "$PROJ" "$ROOT"; do
+    LJ="$D/.claude/launch.json"
+    mkdir -p "$D/.claude"
+    [ -f "$LJ" ] || echo '{"version":"0.0.1","configurations":[]}' > "$LJ"
+    TMP=$(mktemp)
+    # Bỏ configuration cùng tên rồi thêm lại bản mới → chạy nhiều lần không sinh
+    # trùng, và KHÔNG chạm config của project khác đang nằm cùng file.
+    jq --slurpfile add "$SRC" '
+      .version = ($add[0].version // .version // "0.0.1") |
+      .configurations = (
+        [ (.configurations // [])[] | select(.name != $add[0].configurations[0].name) ]
+        + $add[0].configurations
+      )
+    ' "$LJ" > "$TMP" && mv "$TMP" "$LJ"
+    echo "✓ preview ds-review → $LJ  (serve từ $ROOT)"
+  done
+  rm -f "$SRC"
 fi
 
 echo

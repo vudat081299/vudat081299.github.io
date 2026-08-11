@@ -9,6 +9,9 @@
        HTML. Phiên trước dính bẫy đó HAI LẦN: đọc HANDOFF.md, phân tích, kết luận
        — rồi phát hiện một phiên khác đã sửa đúng chỗ đó và bản mình đọc là bản cũ.
        `git status` biết điều này ngay từ giây đầu, chỉ là không ai gọi nó.
+       Nhưng `git status` CHỈ biết working tree: nó im lặng khi nền local đã cũ vì
+       một phiên khác vừa push thẳng `main`. Nên mở phiên còn `git fetch` rồi so
+       với upstream — "thư mục sạch" mà nền đã cũ vẫn là nền cũ.
      · ĐÓNG PHIÊN. CLAUDE.md §12 bắt ghi HANDOFF "đã sửa gì, cố ý không sửa gì".
        Một bắt buộc mà phải tự nhớ và tự gõ lại từ đầu thì trên thực tế sẽ bị bỏ.
        Ở đây nó thành một khung điền trước, dựng từ `git diff` thật.
@@ -21,11 +24,12 @@
    in. Cổng nằm ở gate.mjs.
    ========================================================================== */
 
-import { readFileSync, existsSync, realpathSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { readPage } from './read-html.mjs';
+import { hookLayers } from './hook-state.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..');
@@ -47,6 +51,16 @@ function git(...args) {
   try { return execFileSync('git', ['-C', ROOT, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }); }
   catch { return null; }
 }
+/* Lệnh git có ĐI RA MẠNG phải có timeout: mở phiên không được treo vì máy đang
+   offline hay remote đang chậm. Hết giờ thì coi như không fetch được và nói ra,
+   chứ không im lặng báo "ngang origin" bằng dữ liệu cũ. */
+function gitNet(...args) {
+  try {
+    execFileSync('git', ['-C', ROOT, ...args],
+      { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], timeout: 8000 });
+    return true;
+  } catch { return false; }
+}
 function node(...args) {
   try { return { ok: true, out: execFileSync(process.execPath, args, { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }) }; }
   catch (e) { return { ok: false, out: (e.stdout || '') + (e.stderr || '') }; }
@@ -66,6 +80,27 @@ function dirtyHere() {
     if (arrow >= 0) p = p.slice(arrow + 4);
     return { code: l.slice(0, 2), path: p.startsWith(REL + '/') ? p.slice(REL.length + 1) : p, raw: l.slice(3).trim() };
   });
+}
+
+/* Nền local có còn mới không. Đây là câu `git status` KHÔNG trả lời được: thư mục
+   này thường có nhiều phiên push thẳng `main`, nên `HEAD` của bạn có thể bị vượt
+   mặt bất cứ lúc nào — kể cả giữa hai lệnh của cùng một lượt làm việc. Hệ quả thật
+   (09/08/2026): một lượt `--amend` rơi trúng commit của phiên khác.
+
+   Trả về { branch, up, behind, ahead, fetched } hoặc null nếu không gọi được git. */
+function remoteState() {
+  const head = git('rev-parse', '--abbrev-ref', 'HEAD');
+  if (!head) return null;
+  const branch = head.trim();
+  const upRaw = git('rev-parse', '--abbrev-ref', `${branch}@{upstream}`);
+  if (!upRaw) return { branch, up: null };
+  const up = upRaw.trim();
+  const remote = (git('config', '--get', `branch.${branch}.remote`) || 'origin').trim() || 'origin';
+  const fetched = gitNet('fetch', '-q', remote, branch);
+  const counts = git('rev-list', '--left-right', '--count', `${up}...HEAD`);
+  if (!counts) return { branch, up, fetched };
+  const [behind, ahead] = counts.trim().split(/\s+/).map(Number);
+  return { branch, up, behind, ahead, fetched };
 }
 
 /* Lấy một mục `## <tên>` trong HANDOFF.md, tới `## ` kế tiếp. */
@@ -106,27 +141,50 @@ async function start() {
   }
   console.log('');
 
+  // 1b. Nền local còn mới không — câu mà `git status` ở trên KHÔNG trả lời.
+  const rs = remoteState();
+  if (rs && rs.up == null) {
+    console.log(DIM(`· nhánh ${rs.branch} không có upstream — không so được với remote.`));
+  } else if (rs && rs.behind == null) {
+    console.log(YEL(`· không so được với ${rs.up}`) + DIM(' — remote chưa có nhánh này?'));
+  } else if (rs) {
+    if (!rs.fetched) {
+      console.log(YEL(`· không fetch được ${rs.up}`) + DIM(' (offline hay remote chậm?) — số dưới đây tính bằng dữ liệu cũ.'));
+    }
+    if (rs.behind > 0) {
+      console.log(RED(`⚠ nền local ĐÃ CŨ ${rs.behind} commit so với ${rs.up}`)
+        + (rs.ahead > 0 ? RED(` (và bạn đang hơn ${rs.ahead})`) : ''));
+      console.log('  Lấy về trước khi sửa: ' + B(`git pull --rebase ${rs.up.replace('/', ' ')}`));
+      console.log(DIM('  Và ĐỪNG `--amend` / `reset --hard`: HEAD của bạn không còn là commit bạn tưởng.'));
+    } else if (rs.ahead > 0) {
+      console.log(GRN(`✓ nền ngang ${rs.up}`) + DIM(` — bạn đang hơn ${rs.ahead} commit chưa push.`));
+    } else {
+      console.log(GRN(`✓ nền ngang ${rs.up}`) + DIM(' — không có phiên nào push thêm.'));
+    }
+  }
+  console.log('');
+
   // 2. Ba commit cuối — để biết phiên ngay trước làm gì.
   const log = git('log', '--oneline', '-3', '--', '.');
   if (log) { console.log(B('3 commit cuối chạm thư mục này')); log.trimEnd().split('\n').forEach(l => console.log('    ' + l)); console.log(''); }
 
   // 3. Hook: nếu chưa cài thì mọi thứ CLAUDE.md §3 mô tả đang tắt.
+  //    Luật "đã cài chưa" nằm ở tools/hook-state.mjs, dùng chung với cổng G-HOOK.
+  //    Bản cũ ở đây tự kiểm và KHÔNG biết bộ điều phối, nên nó báo "2/3 lớp CHƯA cài"
+  //    trong khi hook vẫn chạy — xem đầu hook-state.mjs.
   const GITROOT = join(ROOT, '..', '..');
-  const same = (a, b) => { try { return realpathSync(a) === realpathSync(b); } catch { return false; } };
-  const hookOk = (name, needle) => {
-    const p = join(GITROOT, '.git', 'hooks', name);
-    return existsSync(p) && (same(p, join(HERE, 'hooks', name)) || readFileSync(p, 'utf8').includes(needle));
-  };
-  const cs = join(GITROOT, '.claude', 'settings.json');
-  const layers = [
-    ['sau mỗi Edit/Write', existsSync(cs) && readFileSync(cs, 'utf8').includes('data-science-roadmap')],
-    ['lúc commit',        hookOk('pre-commit', 'data-science-roadmap/tools/hooks/pre-commit')],
-    ['lúc push',          hookOk('pre-push',   'data-science-roadmap/tools/hooks/pre-push')],
-  ];
-  const off = layers.filter(l => !l[1]);
+  const layers = hookLayers({ hooksDir: join(HERE, 'hooks'), gitRoot: GITROOT });
+  const off = layers.filter(l => !l.ok);
   if (off.length) {
-    console.log(RED(`⚠ ${off.length}/3 lớp tự động CHƯA cài`) + ` — ${off.map(l => l[0]).join(', ')}`);
-    console.log('  Chạy: ' + B('tools/install-hooks.sh') + DIM('  (một lần cho mỗi máy / mỗi bản clone)'));
+    console.log(RED(`⚠ ${off.length}/3 lớp tự động CHƯA cài`) + ` — ${off.map(l => l.when).join(', ')}`);
+    // HAI lệnh, và THỨ TỰ có ý nghĩa: repo này nhiều project con nên .git/hooks phải là
+    // bộ điều phối (gọi mọi */tools/hooks/<event>), không phải symlink trỏ vào một
+    // project. Script của project này biết nhường — nó không ghi đè hook đã là file
+    // thật — nên chạy nó trước rồi mới dựng bộ điều phối là an toàn ở cả hai thứ tự;
+    // nhưng in đúng thứ tự thì không ai phải nghĩ. Xem CLAUDE.md ở GỐC repo.
+    console.log('  Chạy ' + B('cả hai') + DIM(', một lần cho mỗi máy / mỗi bản clone:'));
+    console.log('    ' + B('tools/install-hooks.sh') + DIM('               lớp 1 (sau mỗi Edit) + cấu hình preview'));
+    console.log('    ' + B('sh ../../facts/tools/install-hooks.sh') + DIM('  lớp 2–3 (commit, push) — bộ điều phối cho cả repo'));
   } else {
     console.log(GRN('✓ cả 3 lớp tự động đã cài') + DIM(' — sau mỗi Edit · lúc commit · lúc push'));
   }
