@@ -24,7 +24,10 @@
       "tieu-dung",
       "viet-nam"
     ],
-    "src": "Nguyên lý chi phí vốn; quy định về phí chuyển đổi trả góp của các tổ chức phát hành thẻ"
+    "src": "Nguyên lý chi phí vốn; quy định về phí chuyển đổi trả góp của các tổ chức phát hành thẻ",
+    "khac_voi": [
+      "tl-220"
+    ]
   },
   {
     "id": "kt-103",
@@ -219,7 +222,10 @@
       "khach-hang",
       "canh-tranh"
     ],
-    "src": "Klemperer, Review of Economic Studies (1995)"
+    "src": "Klemperer, Review of Economic Studies (1995)",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "kt-120",
@@ -313,7 +319,10 @@
       "nganh",
       "chi-phi"
     ],
-    "src": "Sutton, Sunk Costs and Market Structure (1991)"
+    "src": "Sutton, Sunk Costs and Market Structure (1991)",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "kt-128",

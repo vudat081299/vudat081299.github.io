@@ -36,7 +36,10 @@
       "hemocyanin",
       "giai-phau"
     ],
-    "src": "Bảo tàng Lịch sử Tự nhiên Hoa Kỳ; Factor, Biology of the Lobster"
+    "src": "Bảo tàng Lịch sử Tự nhiên Hoa Kỳ; Factor, Biology of the Lobster",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "sv-204",
@@ -75,7 +78,10 @@
       "sun",
       "tien-hoa"
     ],
-    "src": "Bảo tàng Lịch sử Tự nhiên London; Compagno, Sharks of the World"
+    "src": "Bảo tàng Lịch sử Tự nhiên London; Compagno, Sharks of the World",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "sv-207",
@@ -101,7 +107,10 @@
       "tieu-hoa",
       "thu-y"
     ],
-    "src": "Merck Veterinary Manual"
+    "src": "Merck Veterinary Manual",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "sv-209",

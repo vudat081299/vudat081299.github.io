@@ -50,18 +50,5 @@
       "monte-carlo"
     ],
     "src": "Tversky & Kahneman, Psychological Bulletin (1971)"
-  },
-  {
-    "id": "sh-224",
-    "cat": "so-hoc",
-    "sub": "dem-va-to-hop",
-    "t": "Xác suất ít nhất một sự cố bằng 1 trừ xác suất không có sự cố nào, và cách tính này đảo ngược nhiều trực giác",
-    "s": "Một hệ thống gồm 100 bộ phận mà mỗi bộ phận đáng tin 99% chỉ chạy trọn vẹn khoảng 37% số lần. Đây là lý do hệ thống phức tạp cần dư thừa chứ không cần từng bộ phận tốt hơn chút ít.",
-    "tags": [
-      "xac-suat",
-      "he-thong",
-      "do-tin-cay"
-    ],
-    "src": "Chuẩn mực lý thuyết độ tin cậy"
   }
 ]

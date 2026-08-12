@@ -153,7 +153,10 @@
       "chi-tieu",
       "thanh-toan"
     ],
-    "src": "Prelec & Simester, Marketing Letters (2001)"
+    "src": "Prelec & Simester, Marketing Letters (2001)",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "tl-221",
@@ -564,14 +567,17 @@
       "nhac",
       "dong-cam"
     ],
-    "src": "Van den Tol & Edwards, Psychology of Music (2013); Taruffi & Koelsch, PLoS ONE (2014)"
+    "src": "Van den Tol & Edwards, Psychology of Music (2013); Taruffi & Koelsch, PLoS ONE (2014)",
+    "khac_voi": [
+      "na-311"
+    ]
   },
   {
     "id": "tl-268",
     "cat": "tam-ly",
     "sub": "cam-xuc",
-    "t": "Sự trông đợi chiếm phần lớn niềm vui của một chuyến đi",
-    "s": "Trong nghiên cứu theo dõi người đi du lịch, mức hạnh phúc cao nhất xuất hiện trong giai đoạn trước chuyến đi, và sau chuyến đi mức hạnh phúc trở về gần bằng nhóm không đi. Hệ quả thực dụng: nhiều chuyến nhỏ có nhiều giai đoạn chờ đợi hơn một chuyến lớn.",
+    "t": "Người đi du lịch hạnh phúc nhất ở giai đoạn trước chuyến đi, và sau chuyến đi họ trở về gần bằng người không đi",
+    "s": "Theo dõi người đi du lịch qua cả ba giai đoạn — trước, trong và sau — cho thấy đỉnh nằm ở giai đoạn chờ đợi, còn hiệu ứng hậu chuyến đi tan gần hết. Nghĩa là phần lớn giá trị tâm lý đo được của một chuyến đi nằm ở lúc chưa đi, không phải lúc đã về.",
     "tags": [
       "trong-doi",
       "trai-nghiem"
@@ -1323,7 +1329,10 @@
       "tan-tam",
       "hieu-suat"
     ],
-    "src": "Barrick & Mount, Personnel Psychology (1991); Schmidt & Hunter, Psychological Bulletin (1998)"
+    "src": "Barrick & Mount, Personnel Psychology (1991); Schmidt & Hunter, Psychological Bulletin (1998)",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "tl-336",
@@ -1437,8 +1446,8 @@
     "id": "tl-346",
     "cat": "tam-ly",
     "sub": "nhan-cach",
-    "t": "Người ta đánh giá tính cách của người khác chính xác đáng ngạc nhiên từ rất ít thông tin",
-    "s": "Chỉ nhìn ảnh phòng ở hoặc nghe vài câu nói, người quan sát đoán được mức cởi mở và tận tâm với độ chính xác trên mức ngẫu nhiên rõ rệt. Nhưng độ chính xác này chỉ áp dụng cho vài chiều dễ thấy, không cho các chiều như mức ổn định cảm xúc.",
+    "t": "Chỉ nhìn ảnh phòng ở của một người, người lạ đoán đúng mức cởi mở và tận tâm của họ trên mức ngẫu nhiên",
+    "s": "Người quan sát chưa từng gặp chủ phòng vẫn khớp được hai chiều đó với bảng tự đánh giá của chính chủ phòng và của người thân họ. Nhưng độ chính xác chỉ có ở các chiều để lại dấu vật lý — sách vở, mức ngăn nắp, đồ trang trí — chứ không có ở các chiều như mức ổn định cảm xúc.",
     "tags": [
       "danh-gia",
       "chinh-xac"

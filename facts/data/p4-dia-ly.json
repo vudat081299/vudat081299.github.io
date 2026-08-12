@@ -452,7 +452,10 @@
       "nuoc-ngot",
       "ho"
     ],
-    "src": "UNESCO World Heritage; Viện Hàn lâm Khoa học Nga"
+    "src": "UNESCO World Heritage; Viện Hàn lâm Khoa học Nga",
+    "khac_voi": [
+      "dl-320"
+    ]
   },
   {
     "id": "dl-238",
@@ -1297,7 +1300,10 @@
       "dai-duong",
       "hai-luu"
     ],
-    "src": "NOAA Ocean Service; Talley, Descriptive Physical Oceanography"
+    "src": "NOAA Ocean Service; Talley, Descriptive Physical Oceanography",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "dl-307",
@@ -1362,7 +1368,10 @@
       "do-am",
       "doi-luu"
     ],
-    "src": "Wallace & Hobbs, Atmospheric Science"
+    "src": "Wallace & Hobbs, Atmospheric Science",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "dl-312",
@@ -1505,7 +1514,10 @@
       "mau",
       "quang-hoc"
     ],
-    "src": "Warren, Applied Optics (1984); NSIDC"
+    "src": "Warren, Applied Optics (1984); NSIDC",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "dl-323",
@@ -1641,8 +1653,8 @@
     "id": "dl-333",
     "cat": "dia-ly",
     "sub": "thien-tai",
-    "t": "Bão được xếp hạng theo tốc độ gió, nhưng nước dâng và mưa mới gây phần lớn thiệt hại nhân mạng",
-    "s": "Thang Saffir–Simpson chỉ tính gió. Khoảng một nửa số ca tử vong do bão ở Mỹ đến từ nước dâng do bão chứ không từ gió.",
+    "t": "Khoảng một nửa số ca tử vong do bão ở Mỹ đến từ nước dâng, nhưng thang xếp hạng bão chỉ tính gió",
+    "s": "Thang Saffir–Simpson xếp bão thành năm cấp thuần theo tốc độ gió duy trì, nên một cơn bão cấp thấp đổ bộ vào vùng vịnh nông có thể chết người hơn một cơn cấp cao đổ bộ vào bờ dốc. Nước dâng phụ thuộc hình dạng thềm lục địa và hướng đổ bộ, hai thứ không có trong thang.",
     "tags": [
       "bao",
       "thang-do",

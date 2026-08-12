@@ -77,7 +77,10 @@
       "phuong-sai",
       "hieu-lam"
     ],
-    "src": "Wainer & Zwerling, Phi Delta Kappan (2006); mô tả trong Kahneman, Thinking, Fast and Slow (2011)"
+    "src": "Wainer & Zwerling, Phi Delta Kappan (2006); mô tả trong Kahneman, Thinking, Fast and Slow (2011)",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "sh-114",
@@ -152,7 +155,7 @@
     "cat": "so-hoc",
     "sub": "nghich-ly-xac-suat",
     "t": "Nghịch lý bạn bè: bạn của bạn trung bình có nhiều bạn hơn bạn",
-    "s": "Đây là sự thật toán học ở gần như mọi mạng lưới, không phải chuyện tự ti. Người có nhiều bạn xuất hiện trong danh sách bạn của nhiều người hơn, nên khi lấy mẫu qua quan hệ bạn bè, bạn lấy mẫu thiên về họ. Cùng cơ chế khiến lớp học có vẻ đông hơn sĩ số trung bình.",
+    "s": "Đây là sự thật toán học ở gần như mọi mạng lưới, không phải chuyện tự ti. Người có nhiều bạn xuất hiện trong danh sách bạn của nhiều người hơn, nên khi lấy mẫu qua quan hệ bạn bè, phép lấy mẫu thiên về họ và trung bình bị lệch lên. Hệ quả: gần như ai cũng có cảm giác mình ít bạn hơn mức trung bình. Cùng cơ chế khiến lớp học có vẻ đông hơn sĩ số trung bình.",
     "tags": [
       "mang-luoi",
       "lay-mau",
@@ -346,7 +349,8 @@
     ],
     "src": "John Kelly, Bell System Technical Journal (1956); Thorp, The Kelly Criterion in Blackjack, Sports Betting, and the Stock Market (2006)",
     "xem_ok": [
-      "dinh-luat-dat-ten"
+      "dinh-luat-dat-ten",
+      "xu-huong-mo-ho"
     ]
   },
   {
@@ -464,7 +468,10 @@
       "trung-hop",
       "truc-giac"
     ],
-    "src": "Diaconis & Mosteller, 'Methods for Studying Coincidences', JASA (1989)"
+    "src": "Diaconis & Mosteller, 'Methods for Studying Coincidences', JASA (1989)",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "sh-147",
@@ -483,8 +490,8 @@
     "id": "sh-148",
     "cat": "so-hoc",
     "sub": "dem-va-to-hop",
-    "t": "Xác suất ít nhất một sự cố bằng 1 trừ xác suất không có sự cố nào",
-    "s": "Mười thành phần độc lập, mỗi cái hỏng 1% mỗi năm, thì xác suất có ít nhất một cái hỏng là 1 − 0,99¹⁰ ≈ 9,6%, không phải 1%. Đây là phép tính đứng sau mọi đánh giá rủi ro hệ thống, và cũng là lý do hệ thống nhiều bộ phận luôn kém tin cậy hơn từng bộ phận.",
+    "t": "Một hệ 100 bộ phận, mỗi bộ phận đáng tin 99%, chỉ chạy trọn vẹn 37% số lần",
+    "s": "Phép tính là 1 trừ xác suất không có sự cố nào. Mười thành phần độc lập mỗi cái hỏng 1% mỗi năm cho xác suất có ít nhất một cái hỏng là 1 − 0,99¹⁰ ≈ 9,6%, không phải 1%; với 100 bộ phận thì 0,99¹⁰⁰ ≈ 37% và xác suất có sự cố lên 63%. Đây là lý do hệ thống phức tạp cần dư thừa chứ không cần từng bộ phận tốt hơn chút ít.",
     "tags": [
       "rui-ro",
       "he-thong",

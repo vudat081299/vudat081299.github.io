@@ -39,6 +39,8 @@ VIZ_JS = os.path.normpath(os.path.join(HERE, '..', 'viz.js'))
 # Ngưỡng báo cáo. Trên NEAR_HARD gần như chắc là trùng; giữa hai mốc thì phải đọc bằng mắt.
 NEAR_SOFT = 0.42
 NEAR_HARD = 0.62
+# Ngưỡng riêng cho cặp KHÁC chủ đề — thấp hơn NEAR_HARD có chủ ý, xem scan_dupes.
+NEAR_CROSS = 0.52
 
 # Cụm quá to thì việc "chỉ so trong cụm" mất tác dụng — tách cụm khi vượt mốc này.
 CLUSTER_MAX = 90
@@ -170,6 +172,16 @@ def check_shape(man, facts, vk):
                     if rid not in known:
                         errs.append('%s: xem_ok "%s" không phải luật nào — %s'
                                     % (where, rid, ', '.join(sorted(known))))
+        if 'khac_voi' in f:
+            if not isinstance(f['khac_voi'], list) or not f['khac_voi']:
+                errs.append('%s: "khac_voi" phải là mảng id fact không rỗng' % where)
+
+    ids = {f.get('id') for f in facts}
+    for f in facts:
+        for other in f.get('khac_voi') or []:
+            if other not in ids:
+                errs.append('%s / %s: khac_voi trỏ tới id không tồn tại "%s"'
+                            % (f['_file'], f.get('id'), other))
     return errs, warns
 
 
@@ -238,25 +250,51 @@ def candidate_pairs(facts, df):
             for b in range(a + 1, len(idxs)):
                 tight.add((min(idxs[a], idxs[b]), max(idxs[a], idxs[b])))
 
-    wide = set()
-    by_cat = defaultdict(list)
-    for i, f in enumerate(facts):
-        by_cat[f.get('cat')].append(i)
-    for idxs in by_cat.values():
-        for a in range(len(idxs)):
-            for b in range(a + 1, len(idxs)):
-                p = (idxs[a], idxs[b])
-                if p not in tight:
-                    wide.add(p)
-    return tight, wide
+    return tight
 
 
 def scan_dupes(facts, limit=None):
+    """
+    Quét MỌI cặp, nhưng ngưỡng báo khác nhau theo hạng — vì cùng một điểm tương đồng mang
+    nghĩa khác nhau tuỳ hai fact ở đâu:
+
+      cùng cụm, hoặc chung token hiếm  → NEAR_SOFT (0,42). Chỗ trùng thật hay nằm.
+      cùng cat, khác cụm              → NEAR_HARD (0,62). Khác cụm trong cùng chủ đề thì
+                                        dùng chung nhiều từ vựng là chuyện thường.
+      khác cat                        → NEAR_CROSS (0,52). Ngược lại, hai chủ đề khác nhau
+                                        gần như không có từ vựng chung, nên 0,52 ở đây
+                                        *đáng ngờ hơn* 0,52 trong cùng chủ đề.
+
+    Ngưỡng khác-cat thấp hơn ngưỡng cùng-cat nghe ngược, nhưng đo mới thấy đúng: ở 0,52
+    lưới khác-cat chỉ thêm 14 cặp mà trong đó có 5 cặp trùng thẳng (so-hoc với toan-hoc
+    nhân bản nhau: trung bình của tỉ lệ, nghịch lý bạn bè, xác suất ít nhất một lần), còn
+    lưới cùng-cat hạ xuống 0,42 thì thêm 99 cặp gần như toàn nhiễu.
+
+    Quét hết 2.000 fact là ~1,8 triệu cặp và tốn ~1,6 giây, nên không cần chỉ mục gì thêm.
+
+    Cặp nào đã có người đọc và kết luận là hai claim khác nhau thì khai bằng field "khac_voi"
+    ở một trong hai fact: "khac_voi": ["sk-205"]. Cùng lý do với "xem_ok" ở verify — không có
+    cách ghi lại thì danh sách cặp không bao giờ hội tụ, và phiên sau không phân biệt được
+    cặp đã soi với cặp chưa soi.
+    """
     vecs, df, _ = build_index(facts)
-    tight, wide = candidate_pairs(facts, df)
+    tight = candidate_pairs(facts, df)
+    cat = [f.get('cat') for f in facts]
+    ok = set()
+    for i, f in enumerate(facts):
+        for other in f.get('khac_voi') or []:
+            ok.add(frozenset((f.get('id'), other)))
     out = []
-    for pairs, floor in ((tight, NEAR_SOFT), (wide, NEAR_HARD)):
-        for i, j in pairs:
+    for i in range(len(facts)):
+        for j in range(i + 1, len(facts)):
+            if frozenset((facts[i].get('id'), facts[j].get('id'))) in ok:
+                continue
+            if (i, j) in tight:
+                floor = NEAR_SOFT
+            elif cat[i] == cat[j]:
+                floor = NEAR_HARD
+            else:
+                floor = NEAR_CROSS
             s = cosine(vecs[i], vecs[j])
             if s >= floor:
                 out.append((s, i, j))

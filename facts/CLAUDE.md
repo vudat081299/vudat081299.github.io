@@ -239,6 +239,17 @@ Hai điều kiện khi dùng:
    phải công tắc làm cổng im lặng. Thêm bừa thì lần sau không ai tin được field này nữa.
 2. **Không miễn được mức `LOẠI`.** Nếu một fact thật sự cần vượt `LOẠI` thì luật sai — đi sửa
    luật, đừng miễn cho một fact.
+
+**Cặp gần trùng cũng vậy — dùng `khac_voi`.** Khi đã đọc hai fact và kết luận chúng là hai
+claim khác nhau, khai ở một trong hai:
+
+```json
+"khac_voi": ["sk-205"]
+```
+
+`check` sẽ không báo cặp đó nữa. Cùng lý do với `xem_ok`: không có nó thì danh sách cặp không
+hội tụ. Nhưng đọc §3 trước khi dùng — ba dạng trùng ở đó (trùng thẳng, fact hệ quả, fact demo)
+đều phải gộp chứ không phải khai `khac_voi`.
   Đây là cổng chặn commit, không phải gợi ý.
 
 ---

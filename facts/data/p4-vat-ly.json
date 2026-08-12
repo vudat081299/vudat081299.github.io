@@ -260,7 +260,10 @@
       "bom-nhiet",
       "do-thi"
     ],
-    "src": "Định luật hai nhiệt động lực học; de Munck và cộng sự, IJC (2013)"
+    "src": "Định luật hai nhiệt động lực học; de Munck và cộng sự, IJC (2013)",
+    "khac_voi": [
+      "vl-310"
+    ]
   },
   {
     "id": "vl-221",
@@ -559,7 +562,10 @@
       "heisenberg",
       "luong-tu"
     ],
-    "src": "Heisenberg (1927)"
+    "src": "Heisenberg (1927)",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "vl-244",
@@ -676,7 +682,10 @@
       "tuong-doi",
       "khong-thoi-gian"
     ],
-    "src": "Einstein (1905); Taylor & Wheeler, Spacetime Physics"
+    "src": "Einstein (1905); Taylor & Wheeler, Spacetime Physics",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "vl-255",
@@ -1066,7 +1075,10 @@
       "ban-dan",
       "nobel"
     ],
-    "src": "Giải Nobel Vật lý 2014 (Akasaki, Amano, Nakamura)"
+    "src": "Giải Nobel Vật lý 2014 (Akasaki, Amano, Nakamura)",
+    "khac_voi": [
+      "na-359"
+    ]
   },
   {
     "id": "vl-288",
@@ -1147,7 +1159,10 @@
       "khuc-xa",
       "khong-khi"
     ],
-    "src": "Minnaert, Light and Colour in the Outdoors"
+    "src": "Minnaert, Light and Colour in the Outdoors",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "vl-304",
@@ -1212,7 +1227,10 @@
       "khi-hoa-tan",
       "nau-an"
     ],
-    "src": "McGee, On Food and Cooking"
+    "src": "McGee, On Food and Cooking",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "vl-309",
@@ -1420,7 +1438,10 @@
       "hat-nhan",
       "nang-luong"
     ],
-    "src": "Bảng dữ liệu hạt nhân NNDC; Krane, Introductory Nuclear Physics"
+    "src": "Bảng dữ liệu hạt nhân NNDC; Krane, Introductory Nuclear Physics",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "vl-327",
@@ -1602,7 +1623,10 @@
       "the-thao",
       "khi-dong"
     ],
-    "src": "Magnus (1852); Mehta, Annual Review of Fluid Mechanics (1985)"
+    "src": "Magnus (1852); Mehta, Annual Review of Fluid Mechanics (1985)",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "vl-342",

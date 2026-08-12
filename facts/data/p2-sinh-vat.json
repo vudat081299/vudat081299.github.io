@@ -23,7 +23,10 @@
       "chon-giong",
       "tien-hoa"
     ],
-    "src": "Nghiên cứu di truyền Brassica oleracea; Purugganan & Fuller, Nature (2009)"
+    "src": "Nghiên cứu di truyền Brassica oleracea; Purugganan & Fuller, Nature (2009)",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "sv-103",
@@ -42,8 +45,8 @@
     "id": "sv-104",
     "cat": "sinh-vat",
     "sub": "thuc-vat-nam",
-    "t": "Hầu hết chuối, cam và nho không hạt đều được nhân giống vô tính",
-    "s": "Không hạt nghĩa là không sinh sản hữu tính, nên mỗi cây là bản sao của cây mẹ qua giâm cành hoặc ghép. Tiện cho nông nghiệp, nhưng nó xoá bỏ đa dạng di truyền — và đa dạng di truyền chính là hệ miễn dịch của một loài cây trồng.",
+    "t": "Chuối, cam và nho không hạt được nhân giống vô tính, nên cả một vườn là bản sao di truyền của một cây gốc",
+    "s": "Không hạt nghĩa là không sinh sản hữu tính, nên mỗi cây phải tạo ra bằng giâm cành hoặc ghép. Điều đó cho sản phẩm đồng đều, nhưng xoá bỏ đa dạng di truyền — mà đa dạng di truyền chính là hệ miễn dịch của một loài cây trồng, nên một dịch bệnh phù hợp có thể quét sạch toàn bộ giống cùng lúc.",
     "tags": [
       "nong-nghiep",
       "sinh-san",
@@ -543,7 +546,10 @@
       "rua",
       "tuoi-tho"
     ],
-    "src": "Reinke và cộng sự, Science (2022); da Silva và cộng sự, Science (2022)"
+    "src": "Reinke và cộng sự, Science (2022); da Silva và cộng sự, Science (2022)",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "sv-145",

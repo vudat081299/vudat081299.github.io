@@ -416,7 +416,10 @@
       "vo-dinh-hinh",
       "huyen-thoai"
     ],
-    "src": "Zanotto, American Journal of Physics (1998)"
+    "src": "Zanotto, American Journal of Physics (1998)",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "hh-233",
@@ -861,7 +864,10 @@
       "vang",
       "o-nhiem"
     ],
-    "src": "UNEP Global Mercury Assessment (2018); Công ước Minamata"
+    "src": "UNEP Global Mercury Assessment (2018); Công ước Minamata",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "hh-269",
@@ -900,7 +906,10 @@
       "nau-an",
       "bicacbonat"
     ],
-    "src": "McGee, On Food and Cooking; US FDA CFR 21 §184.1736"
+    "src": "McGee, On Food and Cooking; US FDA CFR 21 §184.1736",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "hh-272",
@@ -939,7 +948,10 @@
       "an-toan",
       "kiem"
     ],
-    "src": "Linden, Handbook of Batteries; hướng dẫn an toàn của Energizer"
+    "src": "Linden, Handbook of Batteries; hướng dẫn an toàn của Energizer",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "hh-275",
@@ -952,7 +964,10 @@
       "thiol",
       "an-toan"
     ],
-    "src": "Amoore & Hautala, Journal of Applied Toxicology (1983)"
+    "src": "Amoore & Hautala, Journal of Applied Toxicology (1983)",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "hh-276",
@@ -1017,7 +1032,10 @@
       "an-toan",
       "lang-phi"
     ],
-    "src": "FAO/WHO Codex Alimentarius; UK Food Standards Agency"
+    "src": "FAO/WHO Codex Alimentarius; UK Food Standards Agency",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "hh-281",
@@ -1173,7 +1191,10 @@
       "phan-bon",
       "an-ninh-luong-thuc"
     ],
-    "src": "Cordell, Drangert & White, Global Environmental Change (2009); USGS"
+    "src": "Cordell, Drangert & White, Global Environmental Change (2009); USGS",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "hh-294",
@@ -1719,7 +1740,10 @@
       "oxy-hoa",
       "nhien-lieu"
     ],
-    "src": "Drysdale, An Introduction to Fire Dynamics"
+    "src": "Drysdale, An Introduction to Fire Dynamics",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "hh-336",

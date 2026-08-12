@@ -468,19 +468,6 @@
     "src": "Ramsey, Proceedings of the LMS (1930)"
   },
   {
-    "id": "th-238",
-    "cat": "toan-hoc",
-    "sub": "do-thi-mang-luoi",
-    "t": "Trong một mạng xã hội, bạn của bạn trung bình có nhiều bạn hơn bạn — và điều đó đúng với hầu hết mọi người",
-    "s": "Người có nhiều bạn xuất hiện trong danh sách bạn bè của nhiều người hơn, nên phép lấy trung bình bị lệch. Hệ quả thực tế: ai cũng có cảm giác mình ít bạn hơn mức trung bình.",
-    "tags": [
-      "nghich-ly-ban-be",
-      "mang-xa-hoi",
-      "thong-ke"
-    ],
-    "src": "Feld, American Journal of Sociology (1991)"
-  },
-  {
     "id": "th-239",
     "cat": "toan-hoc",
     "sub": "do-thi-mang-luoi",
@@ -643,8 +630,8 @@
     "id": "th-254",
     "cat": "toan-hoc",
     "sub": "nghich-ly-toan",
-    "t": "Trung bình cộng của các tỉ lệ không bằng tỉ lệ của tổng, và lỗi này làm sai lệch nhiều báo cáo",
-    "s": "Đi 60 km/h chiều đi và 30 km/h chiều về cho tốc độ trung bình 40 km/h, không phải 45. Đại lượng đúng ở đây là trung bình điều hoà chứ không phải trung bình cộng.",
+    "t": "Đi 60 km/h chiều đi và 30 km/h chiều về cho tốc độ trung bình 40 km/h, không phải 45",
+    "s": "Vì thời gian ở mỗi chặng khác nhau: chiều chậm chiếm gấp đôi thời gian nên nó có trọng số gấp đôi. Đại lượng đúng cho mọi thứ tính theo 'trên một đơn vị' — km/h, lãi suất, tỉ lệ chuyển đổi — là trung bình điều hoà, bằng 2 chia cho tổng các nghịch đảo.",
     "tags": [
       "trung-binh-dieu-hoa",
       "ti-le",
@@ -1472,7 +1459,10 @@
       "logic",
       "godel"
     ],
-    "src": "Tarski (1936); Gödel (1931)"
+    "src": "Tarski (1936); Gödel (1931)",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "th-333",
@@ -1654,7 +1644,10 @@
       "hinh-hoc",
       "duong-cong"
     ],
-    "src": "Hall & Wagon, Mathematics Magazine (1992)"
+    "src": "Hall & Wagon, Mathematics Magazine (1992)",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "th-347",
@@ -1668,19 +1661,6 @@
       "so-hoc"
     ],
     "src": "Conway & Guy, The Book of Numbers"
-  },
-  {
-    "id": "th-348",
-    "cat": "toan-hoc",
-    "sub": "nghich-ly-toan",
-    "t": "Xác suất một sự kiện xảy ra ít nhất một lần trong nhiều lần thử tăng nhanh hơn trực giác rất nhiều",
-    "s": "Với xác suất 1% mỗi lần, sau 100 lần thử xác suất xảy ra ít nhất một lần đã là 63%. Đây là lý do rủi ro nhỏ lặp lại nhiều lần trở thành rủi ro lớn.",
-    "tags": [
-      "xac-suat",
-      "lap-lai",
-      "rui-ro"
-    ],
-    "src": "Chuẩn mực lý thuyết xác suất"
   },
   {
     "id": "th-349",

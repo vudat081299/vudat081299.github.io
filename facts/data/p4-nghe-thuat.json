@@ -62,7 +62,10 @@
       "hoa-am",
       "nhac-cu"
     ],
-    "src": "Helmholtz, On the Sensations of Tone (1863)"
+    "src": "Helmholtz, On the Sensations of Tone (1863)",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "na-206",
@@ -153,7 +156,10 @@
       "thang-am",
       "pho-quat"
     ],
-    "src": "Burns, The Psychology of Music"
+    "src": "Burns, The Psychology of Music",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "na-213",
@@ -361,7 +367,10 @@
       "cong-tru",
       "quang-hoc"
     ],
-    "src": "Fairchild, Color Appearance Models"
+    "src": "Fairchild, Color Appearance Models",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "na-230",
@@ -634,7 +643,10 @@
       "nhac",
       "lich-su"
     ],
-    "src": "Altman, Silent Film Sound (2004)"
+    "src": "Altman, Silent Film Sound (2004)",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "na-251",
@@ -790,7 +802,11 @@
       "kha-doc",
       "thiet-ke"
     ],
-    "src": "Lund, luận án Đại học Reading (1999); Poole (2008)"
+    "src": "Lund, luận án Đại học Reading (1999); Poole (2008)",
+    "xem_ok": [
+      "do-lon-bang-chu",
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "na-263",
@@ -1050,7 +1066,10 @@
       "boi-am",
       "viet-nam"
     ],
-    "src": "Trần Văn Khê, Âm nhạc truyền thống Việt Nam"
+    "src": "Trần Văn Khê, Âm nhạc truyền thống Việt Nam",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "na-284",
@@ -1258,7 +1277,10 @@
       "do-am",
       "cao-do"
     ],
-    "src": "Rossing, Science of Percussion Instruments"
+    "src": "Rossing, Science of Percussion Instruments",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "na-311",
@@ -1336,7 +1358,10 @@
       "nhip-tim",
       "dong-bo"
     ],
-    "src": "Vickhoff và cộng sự, Frontiers in Psychology (2013)"
+    "src": "Vickhoff và cộng sự, Frontiers in Psychology (2013)",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "na-317",
@@ -1648,7 +1673,10 @@
       "quay-phim",
       "ky-thuat"
     ],
-    "src": "Bordwell & Thompson, Film Art"
+    "src": "Bordwell & Thompson, Film Art",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "na-341",
@@ -1986,7 +2014,10 @@
       "ban-phim",
       "huyen-thoai"
     ],
-    "src": "Liebowitz & Margolis, Journal of Law and Economics (1990)"
+    "src": "Liebowitz & Margolis, Journal of Law and Economics (1990)",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "na-369",
@@ -2051,6 +2082,9 @@
       "carbon",
       "bao-quan"
     ],
-    "src": "Bảo tàng Anh; Thư viện Quốc gia Trung Quốc"
+    "src": "Bảo tàng Anh; Thư viện Quốc gia Trung Quốc",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   }
 ]

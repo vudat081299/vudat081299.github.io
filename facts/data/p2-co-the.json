@@ -90,7 +90,13 @@
       "khuu-giac",
       "doi-thuong"
     ],
-    "src": "Sinh lý học vị giác; Small & Prescott, Experimental Brain Research (2005)"
+    "src": "Sinh lý học vị giác; Small & Prescott, Experimental Brain Research (2005)",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ],
+    "khac_voi": [
+      "tp-258"
+    ]
   },
   {
     "id": "ct-109",
@@ -103,7 +109,10 @@
       "than-kinh",
       "canh-bao"
     ],
-    "src": "Doty, Nature Reviews Neurology (2012)"
+    "src": "Doty, Nature Reviews Neurology (2012)",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "ct-110",
@@ -415,7 +424,10 @@
       "giam-can",
       "nguoc-truc-giac"
     ],
-    "src": "Pontzer và cộng sự, Current Biology (2016); Pontzer, Burn (2021)"
+    "src": "Pontzer và cộng sự, Current Biology (2016); Pontzer, Burn (2021)",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "ct-135",

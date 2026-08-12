@@ -153,7 +153,10 @@
       "banh-mi",
       "protein"
     ],
-    "src": "Belitz, Food Chemistry; AACC International Methods"
+    "src": "Belitz, Food Chemistry; AACC International Methods",
+    "khac_voi": [
+      "tp-312"
+    ]
   },
   {
     "id": "tp-217",
@@ -296,7 +299,10 @@
       "nho",
       "mau"
     ],
-    "src": "Robinson, The Oxford Companion to Wine"
+    "src": "Robinson, The Oxford Companion to Wine",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "tp-228",
@@ -364,7 +370,10 @@
       "tham-thau",
       "bao-quan"
     ],
-    "src": "Jay, Modern Food Microbiology"
+    "src": "Jay, Modern Food Microbiology",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "tp-233",
@@ -715,7 +724,10 @@
       "rang",
       "caffeine"
     ],
-    "src": "Specialty Coffee Association; Hečimović và cộng sự, Food Chemistry (2011)"
+    "src": "Specialty Coffee Association; Hečimović và cộng sự, Food Chemistry (2011)",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "tp-265",
@@ -780,7 +792,10 @@
       "nuoc-ga",
       "thu-the"
     ],
-    "src": "Chandrashekar và cộng sự, Science (2009)"
+    "src": "Chandrashekar và cộng sự, Science (2009)",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "tp-270",
@@ -1040,7 +1055,10 @@
       "san",
       "cyanide"
     ],
-    "src": "FAO/WHO Codex; Nhóm nghiên cứu độc tố thực vật của WHO"
+    "src": "FAO/WHO Codex; Nhóm nghiên cứu độc tố thực vật của WHO",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "tp-290",
@@ -1248,7 +1266,10 @@
       "banh",
       "ket-cau"
     ],
-    "src": "McGee, On Food and Cooking"
+    "src": "McGee, On Food and Cooking",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "tp-308",
@@ -1300,7 +1321,10 @@
       "vi-sinh",
       "banh-mi"
     ],
-    "src": "Gänzle, Current Opinion in Food Science (2014)"
+    "src": "Gänzle, Current Opinion in Food Science (2014)",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "tp-312",
@@ -1417,7 +1441,10 @@
       "curcumin",
       "hap-thu"
     ],
-    "src": "Shoba và cộng sự, Planta Medica (1998)"
+    "src": "Shoba và cộng sự, Planta Medica (1998)",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "tp-322",
@@ -1469,7 +1496,10 @@
       "huong-lieu",
       "chiet-xuat"
     ],
-    "src": "Serious Eats, thử nghiệm mù (2014); Belitz, Food Chemistry"
+    "src": "Serious Eats, thử nghiệm mù (2014); Belitz, Food Chemistry",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "tp-326",
@@ -1651,7 +1681,10 @@
       "astaxanthin",
       "nuoi-trong"
     ],
-    "src": "FAO; DSM SalmoFan Standard"
+    "src": "FAO; DSM SalmoFan Standard",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "tp-342",
@@ -1677,20 +1710,10 @@
       "dau",
       "co-dinh-dam"
     ],
-    "src": "FAO; Smil, Enriching the Earth"
-  },
-  {
-    "id": "tp-344",
-    "cat": "thuc-pham",
-    "sub": "nong-nghiep-thuc-pham",
-    "t": "Chuối, cam và nho không hạt đều được nhân giống vô tính vì không có hạt để gieo",
-    "s": "Toàn bộ vườn là bản sao di truyền của một cây gốc. Đây là điểm mạnh về đồng đều sản phẩm và điểm yếu chí mạng trước dịch bệnh.",
-    "tags": [
-      "vo-tinh",
-      "cay-an-qua",
-      "benh-cay"
-    ],
-    "src": "Kew Gardens; FAO"
+    "src": "FAO; Smil, Enriching the Earth",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "tp-345",
@@ -1768,7 +1791,10 @@
       "nhiet",
       "nau-an"
     ],
-    "src": "McGee, On Food and Cooking; Cook's Illustrated"
+    "src": "McGee, On Food and Cooking; Cook's Illustrated",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "tp-352",
@@ -1794,7 +1820,10 @@
       "ap-suat-truong",
       "bao-quan"
     ],
-    "src": "Taiz & Zeiger, Plant Physiology"
+    "src": "Taiz & Zeiger, Plant Physiology",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "tp-355",
@@ -1807,7 +1836,10 @@
       "mach-nha",
       "mau"
     ],
-    "src": "Bamforth, Beer: Tap into the Art and Science of Brewing"
+    "src": "Bamforth, Beer: Tap into the Art and Science of Brewing",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "tp-356",
@@ -1820,7 +1852,10 @@
       "vanillin",
       "so-sanh"
     ],
-    "src": "Cook's Illustrated thử nghiệm mù; Belitz, Food Chemistry"
+    "src": "Cook's Illustrated thử nghiệm mù; Belitz, Food Chemistry",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "tp-357",
@@ -1862,7 +1897,10 @@
       "rau",
       "ket-cau"
     ],
-    "src": "Fellows, Food Processing Technology"
+    "src": "Fellows, Food Processing Technology",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "tp-360",
@@ -1901,7 +1939,10 @@
       "penicillium",
       "len-men"
     ],
-    "src": "Fox và cộng sự, Fundamentals of Cheese Science"
+    "src": "Fox và cộng sự, Fundamentals of Cheese Science",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "tp-363",
@@ -1914,7 +1955,10 @@
       "do-tuoi",
       "bao-quan"
     ],
-    "src": "USDA; McGee, On Food and Cooking"
+    "src": "USDA; McGee, On Food and Cooking",
+    "xem_ok": [
+      "thieu-mo-neo"
+    ]
   },
   {
     "id": "tp-364",

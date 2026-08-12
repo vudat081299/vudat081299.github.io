@@ -51,7 +51,10 @@
       "nao",
       "tim"
     ],
-    "src": "Spalding et al., Cell (2005); Bergmann et al., Science (2009)"
+    "src": "Spalding et al., Cell (2005); Bergmann et al., Science (2009)",
+    "khac_voi": [
+      "ct-146"
+    ]
   },
   {
     "id": "ct-005",
@@ -116,7 +119,10 @@
       "tai-tao",
       "y-hoc"
     ],
-    "src": "Michalopoulos & DeFrances, Science (1997); dữ liệu ghép gan từ người sống"
+    "src": "Michalopoulos & DeFrances, Science (1997); dữ liệu ghép gan từ người sống",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "ct-010",
@@ -129,7 +135,10 @@
       "dinh-duong",
       "tien-hoa"
     ],
-    "src": "Itan, Powell, Beaumont, Burger & Thomas, PLOS Computational Biology (2009)"
+    "src": "Itan, Powell, Beaumont, Burger & Thomas, PLOS Computational Biology (2009)",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "ct-011",

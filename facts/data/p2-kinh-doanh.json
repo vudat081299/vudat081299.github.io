@@ -10,7 +10,10 @@
       "quy-trinh",
       "chi-phi"
     ],
-    "src": "Barry Boehm, Software Engineering Economics (1981); phê bình định lượng trong Leprince-Ringuet (2015)"
+    "src": "Barry Boehm, Software Engineering Economics (1981); phê bình định lượng trong Leprince-Ringuet (2015)",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "kd-105",
@@ -36,7 +39,10 @@
       "tang-truong",
       "that-bai"
     ],
-    "src": "Startup Genome Report Extra on Premature Scaling (2011); phân tích khám nghiệm startup của CB Insights"
+    "src": "Startup Genome Report Extra on Premature Scaling (2011); phân tích khám nghiệm startup của CB Insights",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "kd-109",
@@ -114,7 +120,10 @@
       "an-toan",
       "he-thong"
     ],
-    "src": "James Reason, Human Error (1990)"
+    "src": "James Reason, Human Error (1990)",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "kd-136",

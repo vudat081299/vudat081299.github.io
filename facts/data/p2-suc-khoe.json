@@ -43,13 +43,16 @@
     "cat": "suc-khoe",
     "sub": "giac-ngu",
     "t": "Nhiệt độ phòng mát giúp ngủ sâu hơn vì cơ thể phải hạ nhiệt để vào giấc",
-    "s": "Thân nhiệt lõi giảm khoảng 1 độ khi bạn chìm vào giấc ngủ, và quá trình đó bị cản khi phòng quá nóng. Khoảng 18–20 độ được khuyến nghị trong hầu hết hướng dẫn giấc ngủ — và tắm nước ấm trước khi ngủ có tác dụng vì nó đẩy máu ra da, giúp hạ nhiệt lõi nhanh hơn.",
+    "s": "Thân nhiệt lõi giảm khoảng 1 độ khi bạn chìm vào giấc ngủ, và quá trình đó bị cản khi phòng quá nóng. Khoảng 18–20 độ được khuyến nghị trong hầu hết hướng dẫn giấc ngủ; trên khoảng đó thì thời gian ngủ sâu giảm và số lần thức giấc tăng.",
     "tags": [
       "giac-ngu",
       "nhiet-do",
       "thuc-hanh"
     ],
-    "src": "Okamoto-Mizuno & Mizuno, Journal of Physiological Anthropology (2012); Haghayegh và cộng sự, Sleep Medicine Reviews (2019)"
+    "src": "Okamoto-Mizuno & Mizuno, Journal of Physiological Anthropology (2012); Haghayegh và cộng sự, Sleep Medicine Reviews (2019)",
+    "khac_voi": [
+      "sk-212"
+    ]
   },
   {
     "id": "sk-105",
@@ -503,8 +506,8 @@
     "id": "sk-143",
     "cat": "suc-khoe",
     "sub": "suc-khoe-tinh-than",
-    "t": "Thiền chánh niệm có hiệu quả vừa phải với lo âu và đau, không phải thuốc chữa bách bệnh",
-    "s": "Tổng quan có hệ thống tìm thấy bằng chứng chất lượng vừa cho cải thiện lo âu, trầm cảm và đau, nhưng bằng chứng yếu hoặc không có cho nhiều tuyên bố khác. Kích thước hiệu ứng tương đương các can thiệp tâm lý khác — tốt, nhưng không kỳ diệu. Ít được nói tới hơn: một tỉ lệ người tham gia báo cáo trải nghiệm khó chịu như tăng lo lắng hoặc cảm giác xa cách, đặc biệt trong các khoá tập trung dài.",
+    "t": "Thiền chánh niệm cải thiện lo âu với độ lớn hiệu ứng 0,38, nhưng không có bằng chứng nó hơn tập thể dục hay CBT",
+    "s": "Tổng quan 47 thử nghiệm trên 3.515 người: so với nhóm đối chứng trung tính, thiền cho lo âu 0,38 sau tám tuần và 0,22 sau ba đến sáu tháng, trầm cảm 0,30 và đau 0,33 — bằng chứng mức vừa. Nhưng khi đối chứng là một can thiệp thật như tập thể dục, thư giãn hay trị liệu hành vi nhận thức, bằng chứng cho thấy thiền vượt trội chỉ ở mức thấp. Ít được nói tới hơn: một tỉ lệ người tham gia báo cáo trải nghiệm khó chịu như tăng lo lắng hoặc cảm giác xa cách, đặc biệt trong các khoá tập trung dài.",
     "tags": [
       "thien",
       "bang-chung",

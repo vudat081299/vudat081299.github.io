@@ -63,7 +63,12 @@
       "ngu-phap",
       "ngon-ngu-hoc"
     ],
-    "src": "William Stokoe, Sign Language Structure (1960); Petitto & Marentette, Science (1991)"
+    "src": "William Stokoe, Sign Language Structure (1960); Petitto & Marentette, Science (1991)",
+    "khac_voi": [
+      "nn-108",
+      "nn-144",
+      "nn-101"
+    ]
   },
   {
     "id": "nn-006",
@@ -206,6 +211,9 @@
       "chuan-muc",
       "ngon-ngu-hoc"
     ],
-    "src": "Nguyên lý ngôn ngữ học mô tả; xem Crystal, The Cambridge Encyclopedia of Language"
+    "src": "Nguyên lý ngôn ngữ học mô tả; xem Crystal, The Cambridge Encyclopedia of Language",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   }
 ]

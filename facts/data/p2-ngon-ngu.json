@@ -10,7 +10,12 @@
       "hieu-lam",
       "da-dang"
     ],
-    "src": "Nguyên lý bình đẳng ngôn ngữ trong ngôn ngữ học hiện đại; Evans & Levinson, Behavioral and Brain Sciences (2009)"
+    "src": "Nguyên lý bình đẳng ngôn ngữ trong ngôn ngữ học hiện đại; Evans & Levinson, Behavioral and Brain Sciences (2009)",
+    "khac_voi": [
+      "nn-144",
+      "nn-108",
+      "nn-130"
+    ]
   },
   {
     "id": "nn-102",
@@ -75,7 +80,10 @@
       "tranh-cai",
       "phuong-phap"
     ],
-    "src": "Chen, American Economic Review (2013); phản biện của Roberts, Winters & Chen, PLOS ONE (2015)"
+    "src": "Chen, American Economic Review (2013); phản biện của Roberts, Winters & Chen, PLOS ONE (2015)",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "nn-107",
@@ -101,7 +109,10 @@
       "nguon-goc",
       "tre-em"
     ],
-    "src": "Senghas & Coppola, Psychological Science (2001); nghiên cứu về Idioma de Señas Nicaragüense"
+    "src": "Senghas & Coppola, Psychological Science (2001); nghiên cứu về Idioma de Señas Nicaragüense",
+    "khac_voi": [
+      "nn-144"
+    ]
   },
   {
     "id": "nn-109",
@@ -153,7 +164,10 @@
       "nhan-thuc",
       "danh-doi"
     ],
-    "src": "Bialystok, Craik & Luk, Trends in Cognitive Sciences (2012)"
+    "src": "Bialystok, Craik & Luk, Trends in Cognitive Sciences (2012)",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "nn-114",
@@ -218,7 +232,10 @@
       "ngu-he",
       "hieu-lam"
     ],
-    "src": "Phân loại ngữ hệ Austroasiatic; Sidwell & Blench, nghiên cứu về nguồn gốc Nam Á"
+    "src": "Phân loại ngữ hệ Austroasiatic; Sidwell & Blench, nghiên cứu về nguồn gốc Nam Á",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "nn-119",

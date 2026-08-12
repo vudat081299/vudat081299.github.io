@@ -9,7 +9,10 @@
       "deu-dan",
       "nhip-sinh-hoc"
     ],
-    "src": "Huang & Redline, Diabetes Care (2019); Lunsford-Avery và cộng sự, Scientific Reports (2018)"
+    "src": "Huang & Redline, Diabetes Care (2019); Lunsford-Avery và cộng sự, Scientific Reports (2018)",
+    "khac_voi": [
+      "sk-205"
+    ]
   },
   {
     "id": "sk-202",
@@ -57,7 +60,11 @@
       "mat-ngu",
       "nhan-thuc"
     ],
-    "src": "Harvey & Tang, Psychological Bulletin (2012)"
+    "src": "Harvey & Tang, Psychological Bulletin (2012)",
+    "khac_voi": [
+      "sk-221",
+      "sk-212"
+    ]
   },
   {
     "id": "sk-207",
@@ -195,7 +202,7 @@
     "id": "sk-221",
     "cat": "suc-khoe",
     "sub": "giac-ngu",
-    "t": "Đo giấc ngủ bằng đồng hồ thông minh sai đáng kể ở các giai đoạn ngủ",
+    "t": "Đồng hồ thông minh đo tổng thời gian ngủ khá đúng nhưng phân biệt giai đoạn ngủ kém hẳn so với điện não",
     "s": "Các thiết bị đeo tay ước lượng tổng thời gian ngủ khá tốt nhưng phân biệt giai đoạn ngủ sâu và REM kém so với đo điện não. Với người lo về giấc ngủ, việc theo dõi số liệu sai lại có thể làm lo lắng tăng — hiện tượng đã được đặt tên là orthosomnia.",
     "tags": [
       "thiet-bi",
@@ -429,8 +436,8 @@
     "id": "sk-247",
     "cat": "suc-khoe",
     "sub": "an-uong",
-    "t": "Nước nạp vào không chỉ từ nước uống — thức ăn cung cấp một phần đáng kể",
-    "s": "Rau quả, canh, cơm và cả cà phê đều tính vào lượng dịch nạp. Cơ chế điều hoà là cảm giác khát và độ đặc của nước tiểu, nên với người khoẻ mạnh thì uống theo khát là đủ; các con số cố định không có cơ sở sinh lý.",
+    "t": "Cơ thể điều hoà nước bằng cảm giác khát và độ đặc nước tiểu, nên mọi con số cố định kiểu '2 lít mỗi ngày' không có cơ sở sinh lý",
+    "s": "Thận điều chỉnh lượng nước thải theo nồng độ máu, và khát là tín hiệu xuất hiện trước khi mất nước đủ để gây hại ở người khoẻ mạnh. Rau quả, canh, cơm và cả cà phê đều tính vào lượng dịch nạp, nên phần nước đến từ thức ăn không hề nhỏ và không có trong con số 'số cốc mỗi ngày'.",
     "tags": [
       "nuoc",
       "khat"

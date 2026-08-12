@@ -23,7 +23,10 @@
       "an-toan",
       "thuc-hanh"
     ],
-    "src": "Báo cáo lừa đảo của FTC và các cơ quan an ninh mạng; tài liệu cảnh báo của ngân hàng nhà nước nhiều quốc gia"
+    "src": "Báo cáo lừa đảo của FTC và các cơ quan an ninh mạng; tài liệu cảnh báo của ngân hàng nhà nước nhiều quốc gia",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "cn-105",
@@ -127,7 +130,10 @@
       "mang-xa-hoi",
       "phan-cuc"
     ],
-    "src": "Rathje, Van Bavel & van der Linden, PNAS (2021)"
+    "src": "Rathje, Van Bavel & van der Linden, PNAS (2021)",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "cn-113",
@@ -179,7 +185,10 @@
       "nang-luong",
       "moi-truong"
     ],
-    "src": "Patterson và cộng sự, IEEE Computer (2022); phân tích chi phí suy luận của các nhà vận hành trung tâm dữ liệu"
+    "src": "Patterson và cộng sự, IEEE Computer (2022); phân tích chi phí suy luận của các nhà vận hành trung tâm dữ liệu",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "cn-117",
@@ -218,7 +227,10 @@
       "kien-truc",
       "danh-gia"
     ],
-    "src": "Narayanan và cộng sự, Bitcoin and Cryptocurrency Technologies (2016); phân tích của Wüst & Gervais (2018)"
+    "src": "Narayanan và cộng sự, Bitcoin and Cryptocurrency Technologies (2016); phân tích của Wüst & Gervais (2018)",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "cn-120",
@@ -442,7 +454,10 @@
       "dien-thoai",
       "huyen-thoai"
     ],
-    "src": "Tài liệu quản lý bộ nhớ của iOS và Android; phát biểu của kỹ sư nền tảng Apple và Google"
+    "src": "Tài liệu quản lý bộ nhớ của iOS và Android; phát biểu của kỹ sư nền tảng Apple và Google",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "cn-145",
