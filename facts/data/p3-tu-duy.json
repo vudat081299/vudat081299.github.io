@@ -18,8 +18,8 @@
     "id": "td-240",
     "cat": "tu-duy",
     "sub": "nhan-qua",
-    "t": "Tác dụng của một can thiệp trung bình có thể dương trong khi nó có hại với nhiều người",
-    "s": "Một loại thuốc làm giảm 5% nguy cơ trung bình có thể giúp mạnh một nhóm nhỏ và không giúp gì phần còn lại, hoặc giúp nhóm này và làm hại nhóm khác. Trung bình che mất tính không đồng nhất, nên câu hỏi thực dụng luôn là 'có hiệu quả với ai'.",
+    "t": "Một loại thuốc có tác dụng tốt tính trung bình vẫn có thể gây hại cho nhiều người dùng nó",
+    "s": "Thuốc làm giảm 5% nguy cơ tính trên cả nhóm có thể giúp mạnh một số ít người và không giúp gì phần còn lại, hoặc giúp nhóm này trong khi làm hại nhóm khác. Con số trung bình che mất chuyện người này khác người kia, nên câu hỏi thực dụng luôn là 'có hiệu quả với ai'.",
     "tags": [
       "can-thiep",
       "phan-nhom"
@@ -54,7 +54,7 @@
     "id": "td-258",
     "cat": "tu-duy",
     "sub": "ra-quyet-dinh",
-    "t": "Người ta chọn khác nhau giữa 'được mô tả' và 'được trải nghiệm' cùng một xác suất",
+    "t": "Nghe 'khả năng 1%' và tự trải nghiệm khả năng 1% dẫn tới hai lựa chọn khác nhau",
     "s": "Khi nghe mô tả xác suất, người ta phản ứng quá mức với sự kiện hiếm; khi tự trải nghiệm qua nhiều lượt, người ta lại phản ứng dưới mức. Đây là lý do cảnh báo bằng chữ về rủi ro hiếm ít hiệu lực với người đã làm việc đó nhiều lần mà chưa gặp chuyện.",
     "tags": [
       "xac-suat",
@@ -141,8 +141,8 @@
     "id": "td-305",
     "cat": "tu-duy",
     "sub": "hoc-va-nho",
-    "t": "Trí nhớ làm việc bị chiếm bởi thứ không liên quan sẽ làm bạn học kém, và giao diện rối là một nguồn",
-    "s": "Tải nhận thức có ba phần: phần do bản chất nội dung, phần do cách trình bày, và phần dành cho việc hiểu thật. Chỉ phần thứ hai là cắt được, nên bố cục gọn, bớt trang trí và bỏ thông tin dư là can thiệp học tập rẻ nhất.",
+    "t": "Giao diện rối làm người học kém đi, vì nó chiếm chỗ của việc hiểu",
+    "s": "Đầu người học cùng lúc phải xử lý ba thứ: bản thân nội dung, cách nội dung được trình bày, và việc hiểu thật. Chỉ phần thứ hai là cắt được — nên bố cục gọn, bớt trang trí và bỏ thông tin dư là can thiệp học tập rẻ nhất.",
     "tags": [
       "tai-nhan-thuc",
       "trinh-bay"

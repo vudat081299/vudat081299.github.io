@@ -19,7 +19,7 @@
     "id": "kd-105",
     "cat": "kinh-doanh",
     "sub": "du-an",
-    "t": "Ước lượng của kỹ sư sai theo một hướng, và nhân hệ số vẫn không đủ",
+    "t": "Kỹ sư ước lượng theo đường đi thuận lợi, nên nhân đôi con số vẫn thường không đủ",
     "s": "Nguyên nhân không phải lười mà là ước lượng dựa trên đường đi thuận lợi, bỏ qua phần tích hợp, sửa lỗi, chờ đợi và gián đoạn — vốn chiếm phần lớn thời gian thực tế. Cách sửa có bằng chứng nhất là dùng dữ liệu lịch sử của chính đội, không phải nhân đôi cảm tính.",
     "tags": [
       "ke-hoach",

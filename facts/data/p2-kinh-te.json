@@ -124,7 +124,7 @@
     "id": "kt-112",
     "cat": "kinh-te",
     "sub": "dau-tu",
-    "t": "Giá trái phiếu và lợi suất luôn đi ngược chiều nhau",
+    "t": "Lãi suất thị trường tăng thì giá trái phiếu đang lưu hành phải giảm, nên 'kênh an toàn' vẫn lỗ nặng được",
     "s": "Trái phiếu trả một dòng tiền cố định. Nếu lãi suất thị trường tăng, trái phiếu cũ trở nên kém hấp dẫn nên giá của nó phải giảm để lợi suất tương đương. Đây là lý do 'kênh an toàn' vẫn có thể lỗ nặng trong năm lãi suất tăng nhanh.",
     "tags": [
       "trai-phieu",
@@ -176,7 +176,7 @@
     "id": "kt-116",
     "cat": "kinh-te",
     "sub": "thue-chinh-sach",
-    "t": "Đường cong lợi suất đảo ngược đi trước gần như mọi cuộc suy thoái Mỹ nửa thế kỷ qua",
+    "t": "Khi lãi suất cho vay ngắn hạn vượt lãi suất dài hạn, gần như mọi lần đều có suy thoái Mỹ theo sau trong 6–24 tháng",
     "s": "Khi lãi suất trái phiếu ngắn hạn cao hơn dài hạn, thị trường đang định giá rằng lãi suất sẽ phải giảm — thường vì kinh tế yếu đi. Tín hiệu này có thành tích tốt bất thường, nhưng độ trễ giữa tín hiệu và suy thoái dao động từ 6 tới 24 tháng, nên nó vô dụng cho việc chọn thời điểm.",
     "tags": [
       "vi-mo",
@@ -189,7 +189,7 @@
     "id": "kt-117",
     "cat": "kinh-te",
     "sub": "gia-va-thi-truong",
-    "t": "Chi phí biên gần bằng không là thứ khiến kinh tế số hành xử khác hẳn",
+    "t": "Bán thêm một bản sao phần mềm gần như không tốn gì, và điều đó đổi hẳn cách thị trường số vận hành",
     "s": "Bán thêm một bản sao phần mềm gần như không tốn gì, trong khi bán thêm một tô phở thì tốn. Điều này dẫn tới cấu trúc thị trường người thắng lấy phần lớn, định giá theo giá trị chứ không theo chi phí, và việc miễn phí trở thành chiến lược chứ không phải hào phóng.",
     "tags": [
       "kinh-te-so",
@@ -286,7 +286,7 @@
     "id": "kt-124",
     "cat": "kinh-te",
     "sub": "gia-va-thi-truong",
-    "t": "Hàng Veblen: giá cao hơn làm cầu tăng lên",
+    "t": "Với hàng xa xỉ, giá cao chính là sản phẩm — giảm giá có thể làm doanh số giảm theo",
     "s": "Với một số hàng hoá, giá chính là sản phẩm — nó phát tín hiệu về địa vị. Giảm giá làm giảm giá trị tín hiệu và có thể giảm doanh số. Đây là lý do các thương hiệu xa xỉ thà tiêu huỷ hàng tồn còn hơn bán rẻ.",
     "tags": [
       "gia-ca",
@@ -328,7 +328,7 @@
     "id": "kt-128",
     "cat": "kinh-te",
     "sub": "gia-va-thi-truong",
-    "t": "Thị trường hai phía phải trợ giá cho một bên để bên kia có giá trị",
+    "t": "Sàn thương mại và ứng dụng gọi xe làm gần như miễn phí cho một phía để phía kia chịu trả tiền",
     "s": "Sàn thương mại điện tử, ứng dụng gọi xe, thẻ tín dụng đều đối mặt bài toán con gà quả trứng. Lời giải chung là làm gần như miễn phí cho phía nhạy cảm với giá hơn, rồi thu tiền của phía kia. Ai không hiểu điều này thường thắc mắc vì sao đối thủ 'đốt tiền' mà vẫn sống.",
     "tags": [
       "nen-tang",
@@ -367,7 +367,7 @@
     "id": "kt-132",
     "cat": "kinh-te",
     "sub": "dau-tu",
-    "t": "Vàng bảo toàn sức mua rất dài hạn nhưng lợi suất thực thấp hơn cổ phiếu nhiều",
+    "t": "Vàng giữ được sức mua qua hàng thế kỷ nhưng sinh lời sau lạm phát thấp hơn cổ phiếu nhiều",
     "s": "Trên các chuỗi dữ liệu hơn một thế kỷ, vàng cho lợi suất thực dương nhỏ, còn cổ phiếu cho khoảng 5–7%/năm sau lạm phát. Vàng không tạo ra dòng tiền, nên giá trị của nó hoàn toàn là điều người sau sẵn lòng trả — công dụng thật của nó là phòng thủ, không phải tích luỹ.",
     "tags": [
       "vang",
@@ -393,7 +393,7 @@
     "id": "kt-134",
     "cat": "kinh-te",
     "sub": "dau-tu",
-    "t": "Giá thuê nhà cho biết thị trường đang định giá dòng tiền hay định giá kỳ vọng",
+    "t": "Tỉ số giá bán chia tiền thuê một năm cho biết người mua đang trả cho dòng tiền hay cho kỳ vọng tăng giá",
     "s": "Tỉ số giá bán trên tiền thuê một năm là thước đo nhanh. Tỉ số cao bất thường nghĩa là người mua đang trả tiền cho kỳ vọng tăng giá chứ không cho dòng tiền — điều đó có thể đúng, nhưng nó là một loại rủi ro khác hẳn.",
     "tags": [
       "bat-dong-san",
@@ -419,8 +419,8 @@
     "id": "kt-136",
     "cat": "kinh-te",
     "sub": "chi-tieu-tiet-kiem",
-    "t": "Trực giác của con người về chiết khấu không nhất quán theo thời gian",
-    "s": "Người ta chiết khấu rất mạnh trong ngắn hạn và rất nhẹ trong dài hạn, tạo ra đường cong hypebol thay vì đường mũ. Hệ quả đo được: cùng một người sẽ đưa ra hai quyết định mâu thuẫn nhau về cùng một khoản tiền, chỉ vì khoảng cách tới hiện tại khác nhau.",
+    "t": "Cùng một người đưa ra hai quyết định mâu thuẫn về cùng một khoản tiền, chỉ vì khoảng cách tới hiện tại khác nhau",
+    "s": "Người ta coi một tháng chờ đợi ngay từ bây giờ là rất đắt, nhưng coi một tháng chờ đợi sau đây năm năm là gần như miễn phí. Vì vậy 'nhận 100 hôm nay hay 110 sau một tháng' và 'nhận 100 sau 5 năm hay 110 sau 5 năm 1 tháng' cho hai câu trả lời trái ngược, dù khoản chênh và khoảng chờ y hệt nhau.",
     "tags": [
       "hanh-vi",
       "chiet-khau",
@@ -523,7 +523,7 @@
     "id": "kt-145",
     "cat": "kinh-te",
     "sub": "lai-va-no",
-    "t": "Quy tắc 114 và 144: nhân ba và nhân bốn số tiền",
+    "t": "Chia 114 cho lãi suất ra số năm tiền gấp ba, chia 144 ra số năm gấp bốn",
     "s": "Chia 114 cho lãi suất ra số năm để tiền gấp ba; chia 144 ra số năm để gấp bốn. Ở mức 9%/năm: gấp đôi sau 8 năm, gấp ba sau khoảng 13 năm, gấp bốn sau 16 năm. Bộ ba quy tắc này đủ để bạn kiểm tra nhanh mọi lời hứa lợi nhuận mà không cần máy tính.",
     "tags": [
       "lai-kep",

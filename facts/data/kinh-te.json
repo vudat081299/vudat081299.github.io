@@ -56,7 +56,7 @@
     "id": "kt-005",
     "cat": "kinh-te",
     "sub": "dau-tu",
-    "t": "Đa số quỹ chủ động thua chỉ số tham chiếu sau khi trừ phí, và càng dài càng thua",
+    "t": "80–95% quỹ cổ phiếu chủ động thua chỉ số chung của thị trường trong khung 10–20 năm",
     "s": "Báo cáo SPIVA theo dõi việc này hàng năm ở nhiều thị trường: trong khung 10–20 năm, tỉ lệ quỹ cổ phiếu chủ động thua chỉ số của chính nhóm mình thường ở mức 80–95%. Điều đó không có nghĩa không ai thắng được thị trường, mà có nghĩa xác suất bạn chọn đúng người thắng trước là rất thấp.",
     "tags": [
       "dau-tu",
@@ -69,7 +69,7 @@
     "id": "kt-006",
     "cat": "kinh-te",
     "sub": "lam-phat-tien",
-    "t": "Lãi suất thực bằng lãi suất danh nghĩa trừ lạm phát",
+    "t": "Gửi tiết kiệm 6%/năm khi lạm phát 4% thì bạn chỉ giàu thêm khoảng 2%/năm",
     "s": "Gửi tiết kiệm 6%/năm trong khi lạm phát 4% nghĩa là bạn thực sự giàu thêm khoảng 2%/năm, không phải 6%. Rất nhiều quyết định tài chính sai vì so sánh các con số danh nghĩa ở những thời điểm có mức lạm phát khác nhau.",
     "tags": [
       "lam-phat",
@@ -108,7 +108,7 @@
     "id": "kt-009",
     "cat": "kinh-te",
     "sub": "dong-co-kinh-te",
-    "t": "Thị trường xe cũ dạy ta vì sao thông tin bất cân xứng giết chết cả thị trường",
+    "t": "Khi người mua không phân biệt được xe tốt và xe hỏng, người bán xe tốt rút khỏi thị trường",
     "s": "George Akerlof chỉ ra: nếu người mua không phân biệt được xe tốt và xe hỏng, họ chỉ trả giá trung bình; người bán xe tốt rút lui; chất lượng còn lại giảm; giá lại giảm tiếp. Giải pháp trong thực tế là các cơ chế phát tín hiệu: bảo hành, kiểm định bên thứ ba, danh tiếng, hợp đồng ràng buộc.",
     "d": "Đây là mô hình dùng được cho mọi thị trường mà bạn tham gia: tuyển dụng, thuê nhà thầu, mua bảo hiểm, gọi vốn. Hỏi đúng một câu — 'bên nào đang biết nhiều hơn, và cơ chế nào buộc họ phải trung thực?' — thường đủ để tránh phần lớn giao dịch tệ.",
     "tags": [
@@ -148,8 +148,8 @@
     "id": "kt-013",
     "cat": "kinh-te",
     "sub": "dau-tu",
-    "t": "Đa dạng hoá là bữa trưa miễn phí duy nhất trong đầu tư",
-    "s": "Câu của Harry Markowitz. Ghép các tài sản không biến động cùng nhịp làm giảm biến động của cả danh mục mà không nhất thiết giảm lợi suất kỳ vọng. Nhưng phần rủi ro hệ thống — cái tác động lên toàn thị trường — thì không đa dạng hoá đi đâu được.",
+    "t": "Ghép các tài sản không lên xuống cùng nhịp làm giảm dao động của cả danh mục mà không phải giảm lợi nhuận",
+    "s": "Đây là câu của Harry Markowitz, người được Nobel cho ý này. Nhưng phần rủi ro chung của cả thị trường — thứ kéo mọi tài sản xuống cùng lúc trong một cuộc khủng hoảng — thì không chia nhỏ đi đâu được, nên đa dạng hoá giảm được loại rủi ro thứ nhất chứ không giảm loại thứ hai.",
     "tags": [
       "dau-tu",
       "rui-ro",
@@ -203,8 +203,8 @@
     "id": "kt-017",
     "cat": "kinh-te",
     "sub": "bao-hiem-rui-ro",
-    "t": "Bảo hiểm có kỳ vọng âm nhưng vẫn là quyết định đúng",
-    "s": "Về trung bình, người mua bảo hiểm nhận lại ít hơn số phí đã đóng — nếu không thì công ty bảo hiểm đã phá sản. Nó vẫn hợp lý vì hữu dụng của tiền là hàm lõm: mất 100% tài sản đau hơn nhiều lần so với việc mất vài phần trăm mỗi năm. Nguyên tắc: bảo hiểm cho những gì bạn không thể tự gánh, tự gánh những gì bạn chịu được.",
+    "t": "Người mua bảo hiểm trung bình nhận lại ít hơn số phí đã đóng, và mua vẫn là quyết định đúng",
+    "s": "Nếu người mua nhận lại nhiều hơn thì công ty bảo hiểm đã phá sản. Mua vẫn hợp lý vì thiệt hại không tăng đều theo số tiền: mất 100% tài sản đẩy bạn ra khỏi cuộc chơi, còn đóng một khoản phí đều đặn thì không. Nguyên tắc rút ra: bảo hiểm cho những thứ bạn không gánh nổi, tự chịu những thứ bạn gánh được.",
     "tags": [
       "bao-hiem",
       "rui-ro",
@@ -216,7 +216,7 @@
     "id": "kt-018",
     "cat": "kinh-te",
     "sub": "lam-phat-tien",
-    "t": "Tiền xấu đuổi tiền tốt ra khỏi lưu thông",
+    "t": "Khi hai loại tiền được coi ngang giá mà một loại có giá trị thật cao hơn, người ta tiêu loại kém và cất loại tốt",
     "s": "Định luật Gresham: khi hai loại tiền cùng được luật công nhận ngang giá nhưng một loại có giá trị nội tại cao hơn, người ta tiêu loại kém và cất giữ loại tốt. Cùng logic đó giải thích vì sao khi lạm phát cao, người ta tiêu nội tệ thật nhanh và giữ ngoại tệ hoặc vàng.",
     "tags": [
       "tien-te",

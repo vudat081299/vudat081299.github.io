@@ -75,8 +75,8 @@
     "id": "tl-210",
     "cat": "tam-ly",
     "sub": "thien-kien",
-    "t": "Con người xử lý 'không mất' và 'được' bằng hai hệ khác nhau, nên câu chữ đổi được quyết định",
-    "s": "Cùng một chương trình mô tả là 'cứu được 200 trên 600 người' hay 'để 400 trên 600 người chết' cho hai lựa chọn đa số trái ngược. Đây là kết quả nền tảng của lý thuyết triển vọng, và nó vẫn xuất hiện ở bác sĩ, luật sư và người có huấn luyện thống kê.",
+    "t": "'Cứu được 200 trên 600 người' và 'để 400 trên 600 người chết' làm đa số chọn ngược nhau",
+    "s": "Hai câu mô tả đúng cùng một chương trình, nhưng câu đầu khiến đa số chọn phương án chắc chắn còn câu sau khiến đa số chọn phương án mạo hiểm. Đây là kết quả nền tảng cho thấy con người phản ứng với việc điều gì được đóng khung là 'được' hay 'mất', và nó vẫn xuất hiện ở bác sĩ, luật sư và người có huấn luyện thống kê.",
     "tags": [
       "dong-khung",
       "trien-vong"
@@ -405,8 +405,8 @@
     "id": "tl-255",
     "cat": "tam-ly",
     "sub": "cam-xuc",
-    "t": "Đánh giá lại và nén cảm xúc cho hai kết quả khác nhau: đánh giá lại giảm cả trải nghiệm lẫn biểu hiện, nén chỉ giảm biểu hiện và làm tăng phản ứng tim mạch",
-    "s": "Hai chiến lược điều tiết cho hai kết quả khác nhau: đánh giá lại làm giảm cả trải nghiệm lẫn biểu hiện và không tốn thêm nguồn lực nhận thức, còn nén lại chỉ giảm biểu hiện, giữ nguyên trải nghiệm, làm tăng phản ứng sinh lý và làm giảm trí nhớ về cuộc trò chuyện. Gross đo được nhóm nén cảm xúc nhớ kém hơn về cuộc trò chuyện vừa diễn ra, dù chỉ nén trong 2 phút.",
+    "t": "Nghĩ lại về tình huống thì cảm xúc dịu thật; nén nó xuống thì chỉ mặt ngoài dịu, còn tim đập mạnh hơn",
+    "s": "Hai cách xử lý cảm xúc cho hai kết quả khác nhau: nghĩ lại về tình huống theo hướng khác làm giảm cả cảm giác bên trong lẫn biểu hiện bên ngoài mà không tốn thêm sức; còn cố nén thì chỉ giảm biểu hiện, giữ nguyên cảm giác, làm tăng phản ứng tim mạch và làm giảm trí nhớ về cuộc trò chuyện đang diễn ra.",
     "tags": [
       "dieu-tiet",
       "nen"
@@ -441,7 +441,7 @@
     "id": "tl-258",
     "cat": "tam-ly",
     "sub": "cam-xuc",
-    "t": "Thời gian ngoài trời và trong thiên nhiên có tác động đo được lên tâm trạng và chú ý",
+    "t": "Đi bộ trong công viên cải thiện tâm trạng và khả năng tập trung hơn đi bộ cùng thời lượng trong phố",
     "s": "Các thử nghiệm cho thấy đi bộ trong công viên cải thiện tâm trạng và khả năng tập trung hơn đi bộ cùng thời lượng trong phố. Hiệu ứng không lớn nhưng nhất quán và gần như không có chi phí, nên nó là một trong những can thiệp có tỉ lệ lợi ích trên nỗ lực cao nhất.",
     "tags": [
       "thien-nhien",
@@ -465,7 +465,7 @@
     "id": "tl-260",
     "cat": "tam-ly",
     "sub": "cam-xuc",
-    "t": "Cảm giác cô đơn và số người quanh bạn là hai biến khác nhau",
+    "t": "Cô đơn là khoảng cách giữa quan hệ bạn muốn và quan hệ bạn có, nên ở giữa đám đông vẫn cô đơn được",
     "s": "Cô đơn là khoảng cách giữa quan hệ bạn muốn và quan hệ bạn có, nên người ở giữa đám đông vẫn cô đơn và người sống một mình có thể không. Đây là lý do các can thiệp kiểu 'cho họ tham gia hoạt động nhóm' thường ít hiệu quả hơn can thiệp vào chất lượng một vài quan hệ.",
     "tags": [
       "co-don",
@@ -807,7 +807,7 @@
     "id": "tl-292",
     "cat": "tam-ly",
     "sub": "tri-nho",
-    "t": "Thông tin gây cảm xúc mạnh được nhớ tốt hơn ở phần trung tâm và tệ hơn ở phần ngoại vi",
+    "t": "Nhân chứng của một vụ có vũ khí nhớ rõ vũ khí và nhớ kém mặt người",
     "s": "Nhân chứng của một vụ có vũ khí nhớ rõ vũ khí và nhớ kém mặt người — hiện tượng 'tập trung vào vũ khí'. Nghĩa là cảm xúc mạnh không làm trí nhớ tốt lên hay xấu đi một cách đồng đều, nó thu hẹp phạm vi.",
     "tags": [
       "cam-xuc",
@@ -891,7 +891,7 @@
     "id": "tl-299",
     "cat": "tam-ly",
     "sub": "ban-than",
-    "t": "Bản sắc dự báo hành vi tốt hơn mục tiêu",
+    "t": "'Tôi không hút thuốc' giữ được lâu hơn 'tôi đang cố cai thuốc'",
     "s": "'Tôi không hút thuốc' vững hơn 'tôi đang cố cai thuốc', vì nó không đòi ra quyết định lại mỗi lần bị mời. Trong thí nghiệm, cách diễn đạt bằng danh từ chỉ con người ('hãy là một người đi bầu') làm tăng hành vi thật so với cách diễn đạt bằng động từ.",
     "tags": [
       "ban-sac",
@@ -963,7 +963,7 @@
     "id": "tl-305",
     "cat": "tam-ly",
     "sub": "ban-than",
-    "t": "Tự tin và năng lực tương quan yếu, và người quanh bạn dùng tự tin làm thước đo năng lực",
+    "t": "Người tự tin không nhất thiết là người giỏi, nhưng người xung quanh vẫn dùng tự tin để đoán năng lực",
     "s": "Đây là hai kết quả riêng, ghép lại thì có hệ quả bất tiện: hệ thống xã hội thưởng cho biểu hiện tự tin nhiều hơn cho độ chính xác. Với người làm việc nghiêm túc, hệ quả thực dụng là phải học cách trình bày mức chắc chắn rõ ràng, không phải học cách tỏ ra chắc chắn.",
     "tags": [
       "tu-tin",
@@ -987,7 +987,7 @@
     "id": "tl-307",
     "cat": "tam-ly",
     "sub": "ban-than",
-    "t": "Nhắc lại giá trị quan trọng nhất của mình trước một tình huống bị đe doạ làm hiệu suất giữ được",
+    "t": "Viết vài phút về một điều mình coi trọng làm giảm phản ứng phòng thủ trước thông tin bất lợi",
     "s": "Bài tập tự khẳng định giá trị — viết vài phút về một điều mình coi trọng — làm giảm phản ứng phòng thủ trước thông tin bất lợi và giảm khoảng cách kết quả trong một số thử nghiệm giáo dục. Hiệu ứng phụ thuộc nhiều vào bối cảnh và không phải lúc nào cũng nhân bản được.",
     "tags": [
       "tu-khang-dinh",
@@ -1023,7 +1023,7 @@
     "id": "tl-310",
     "cat": "tam-ly",
     "sub": "nhin-nguoi-khac",
-    "t": "Ẩn danh hoá hồ sơ làm thay đổi kết quả tuyển chọn một cách đo được",
+    "t": "Dàn nhạc Mỹ chuyển sang thi tuyển sau màn che thì tỉ lệ nhạc công nữ qua được các vòng tăng lên",
     "s": "Khi các dàn nhạc Mỹ chuyển sang thi tuyển sau màn che, tỉ lệ nhạc công nữ vượt qua các vòng tăng lên đáng kể. Nghiên cứu này thường bị trích quá mạnh so với cỡ mẫu, nhưng nguyên tắc rộng hơn thì vững: giấu thông tin không liên quan làm đánh giá chính xác hơn.",
     "tags": [
       "tuyen-chon",
@@ -1086,7 +1086,7 @@
     "id": "tl-315",
     "cat": "tam-ly",
     "sub": "nhin-nguoi-khac",
-    "t": "Người ta tuân theo nhóm về nhận thức, không chỉ về phát biểu",
+    "t": "Trong thí nghiệm Asch, một số người thật sự nhìn thấy đoạn thẳng khác đi, không chỉ nói theo cho xong",
     "s": "Trong thí nghiệm Asch, một số người tham gia thật sự nhìn thấy đoạn thẳng khác đi, không chỉ nói theo cho xong. Phân biệt hai loại tuân thủ này quan trọng: loại thứ hai biến mất khi trả lời riêng, loại thứ nhất thì không.",
     "tags": [
       "tuan-thu",
@@ -1170,7 +1170,7 @@
     "id": "tl-323",
     "cat": "tam-ly",
     "sub": "nhin-nguoi-khac",
-    "t": "Người ta đánh giá khuôn mặt theo hai chiều rất nhanh, và các phán đoán đó dự báo kết quả bầu cử",
+    "t": "Người ta chấm mức đáng tin và mức mạnh mẽ của một khuôn mặt trong dưới một giây, và điểm đó dự báo kết quả bầu cử",
     "s": "Ảnh chân dung được chấm về mức đáng tin và mức mạnh mẽ trong dưới một giây, và các điểm này tương quan với kết quả bầu cử thực tế ở nhiều nước. Điều đáng lo là chúng gần như không tương quan với năng lực thật.",
     "tags": [
       "khuon-mat",
@@ -1338,7 +1338,7 @@
     "id": "tl-338",
     "cat": "tam-ly",
     "sub": "nhan-cach",
-    "t": "Tính cách chịu ảnh hưởng di truyền đáng kể, và phần môi trường lại chủ yếu không phải gia đình",
+    "t": "Nghiên cứu sinh đôi cho ước lượng di truyền khoảng 40–50% cho phần lớn đặc điểm tính cách",
     "s": "Các nghiên cứu sinh đôi cho ước lượng di truyền khoảng 40–50% cho phần lớn đặc điểm tính cách. Phát hiện gây ngạc nhiên hơn là phần môi trường có ảnh hưởng lại chủ yếu là môi trường riêng của từng người, không phải môi trường chung của các anh chị em trong một nhà.",
     "tags": [
       "di-truyen",
@@ -1410,7 +1410,7 @@
     "id": "tl-344",
     "cat": "tam-ly",
     "sub": "nhan-cach",
-    "t": "Không có 'kiểu tính cách', chỉ có mức độ trên các chiều liên tục",
+    "t": "Phân bố tính cách trong dân số là một dải liên tục, không tách thành các kiểu người rời nhau",
     "s": "Dữ liệu phân bố tính cách gần như luôn liên tục và một đỉnh, không tách thành các cụm rời. Vì vậy mọi hệ thống chia người thành các loại — kể cả các hệ nghe hiện đại — đều tạo ra ranh giới nhân tạo và làm mất thông tin ở gần ngưỡng.",
     "tags": [
       "phan-loai",
@@ -1422,7 +1422,7 @@
     "id": "tl-345",
     "cat": "tam-ly",
     "sub": "nhan-cach",
-    "t": "Tính cách ảnh hưởng tới tuổi thọ, và yếu tố mạnh nhất không phải mức lạc quan",
+    "t": "Tận tâm là đặc điểm tính cách dự báo tuổi thọ ổn định nhất, hơn cả mức lạc quan",
     "s": "Trong nghiên cứu theo dõi dài hạn, mức tận tâm là đặc điểm tính cách dự báo tuổi thọ ổn định nhất — có thể vì nó gắn với hành vi sức khoẻ, tuân thủ điều trị và ít hành vi rủi ro. Lạc quan cũng có liên hệ nhưng yếu hơn và dễ bị nhiễu bởi biến khác.",
     "tags": [
       "tuoi-tho",
@@ -1446,8 +1446,8 @@
     "id": "tl-347",
     "cat": "tam-ly",
     "sub": "nhan-cach",
-    "t": "Kỹ năng giao tiếp và sở thích giao tiếp là 2 chiều độc lập trong đo lường tính cách",
-    "s": "Kỹ năng và sở thích là hai chiều độc lập, nhưng ta thường suy từ cái này sang cái kia. Điều này dẫn tới hai lỗi trong công việc: giao việc tiếp khách cho người làm tốt nhưng cạn năng lượng vì nó, và bỏ qua người muốn học nhưng chưa giỏi. Hướng ngoại đo mức tìm kiếm kích thích xã hội, không đo năng lực xã hội — hai thang này tương quan yếu.",
+    "t": "Thang đo hướng ngoại đo mức một người tìm kiếm tiếp xúc xã hội, không đo mức họ giao tiếp giỏi",
+    "s": "Giỏi và thích là hai chiều riêng, nhưng suy từ chiều này sang chiều kia là chuyện rất dễ xảy ra. Nó dẫn tới hai lỗi trong công việc: giao việc tiếp khách cho người làm tốt nhưng cạn năng lượng vì nó, và bỏ qua người muốn học nhưng chưa giỏi. Có người hướng nội nói trước đám đông rất tốt và về nhà kiệt sức; có người hướng ngoại thích tiệc mà kể chuyện dở.",
     "tags": [
       "ky-nang",
       "so-thich"
@@ -1500,7 +1500,7 @@
     "id": "tl-351",
     "cat": "tam-ly",
     "sub": "huyen-thoai-tam-ly",
-    "t": "Không có bằng chứng cho 'trẻ chỉ số' hay các chương trình luyện trí nhớ làm tăng trí thông minh chung",
+    "t": "Các bài luyện trí nhớ chỉ làm bạn giỏi chính bài đó, không làm tăng trí thông minh chung",
     "s": "Các bài luyện trí nhớ làm việc cải thiện chính bài đó và các bài rất giống nó, nhưng không chuyển sang khả năng nhận thức chung hay kết quả học tập. Đây là một trong những kết luận ổn định nhất trong nghiên cứu can thiệp nhận thức, và nó đi ngược toàn bộ ngành ứng dụng luyện não.",
     "tags": [
       "luyen-nao",

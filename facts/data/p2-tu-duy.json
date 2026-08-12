@@ -3,7 +3,7 @@
     "id": "td-106",
     "cat": "tu-duy",
     "sub": "hoc-va-nho",
-    "t": "Ảo tưởng chiều sâu giải thích: bạn tưởng mình hiểu, cho tới khi phải giải thích",
+    "t": "Bạn tưởng mình hiểu cái khoá kéo hoạt động thế nào, cho tới khi phải viết ra từng bước",
     "s": "Hỏi người ta hiểu cái khoá kéo, cái bồn cầu hay xe đạp ở mức nào từ 1 đến 7, họ chấm cao. Bắt họ viết ra cơ chế hoạt động từng bước, rồi chấm lại — điểm tụt hẳn. Cảm giác hiểu và việc hiểu là hai thứ khác nhau, và cái thứ nhất đến trước rất nhiều.",
     "d": "Điều đáng giá nhất: hiệu ứng này cũng làm giảm sự cực đoan về chính trị. Khi người ta được yêu cầu giải thích cơ chế của một chính sách họ ủng hộ mạnh, mức tự tin của họ giảm và quan điểm bớt cực đoan — trong khi yêu cầu họ nêu lý do ủng hộ thì không có tác dụng đó.\n\nDùng được ngay: trong tranh luận, đừng hỏi 'vì sao bạn nghĩ vậy'. Hãy hỏi 'nó vận hành cụ thể ra sao'.",
     "tags": [
@@ -69,8 +69,8 @@
     "id": "td-113",
     "cat": "tu-duy",
     "sub": "du-doan",
-    "t": "Trí tuệ đám đông chỉ đúng khi các sai số độc lập với nhau",
-    "s": "Trung bình phỏng đoán của nhiều người thường chính xác đến ngạc nhiên — vì sai số dương và âm triệt tiêu. Nhưng khi mọi người nhìn thấy đáp án của nhau, sai số trở nên tương quan và độ chính xác của đám đông sụp đổ trong khi mức tự tin lại tăng. Đó chính là cơ chế của bong bóng và của các cơn sốt trên mạng xã hội.",
+    "t": "Trung bình phỏng đoán của đám đông chỉ chính xác khi mỗi người đoán sai theo một hướng riêng",
+    "s": "Trung bình phỏng đoán của nhiều người thường chính xác đến ngạc nhiên, vì người đoán quá cao và người đoán quá thấp triệt tiêu nhau. Nhưng khi mọi người nhìn thấy đáp án của nhau, họ bắt đầu sai cùng một hướng: độ chính xác của đám đông sụp đổ trong khi mức tự tin lại tăng. Đó chính là cơ chế của bong bóng và của các cơn sốt trên mạng xã hội.",
     "tags": [
       "nhom",
       "du-bao",

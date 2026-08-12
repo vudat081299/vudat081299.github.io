@@ -55,8 +55,8 @@
     "id": "xh-105",
     "cat": "xa-hoi",
     "sub": "dan-so",
-    "t": "Cứ 10 người từng sống trên Trái Đất thì khoảng 7% đang sống hôm nay",
-    "s": "Ước tính khoảng 117 tỷ người đã từng sinh ra, so với 8 tỷ đang sống. Con số này đủ để bác bỏ câu nói phổ biến rằng người đang sống nhiều hơn tất cả người đã chết cộng lại — nhưng nó cũng cho thấy quy mô của thời hiện tại lớn tới mức nào.",
+    "t": "Khoảng 117 tỉ người đã từng sinh ra trên Trái Đất, và 8 tỉ trong số đó đang sống hôm nay",
+    "s": "Tức là người đang sống chiếm khoảng 7% tổng số người từng sinh ra. Con số này bác bỏ câu nói phổ biến rằng người đang sống nhiều hơn tất cả người đã chết cộng lại — nhưng 7% vẫn là một tỉ lệ lớn đến bất ngờ với một khoảng thời gian ngắn như hiện tại.",
     "tags": [
       "dan-so",
       "lich-su",
@@ -68,7 +68,7 @@
     "id": "xh-106",
     "cat": "xa-hoi",
     "sub": "toi-pham-an-toan",
-    "t": "Tỉ lệ tử vong do bạo lực đã giảm mạnh trong lịch sử dài",
+    "t": "Tỉ lệ chết vì bạo lực ở các xã hội tiền nhà nước cao hơn nhiều lần thế kỷ 20, kể cả khi tính cả hai cuộc thế chiến",
     "s": "Bằng chứng khảo cổ và dân tộc học cho thấy tỉ lệ chết vì bạo lực trong các xã hội tiền nhà nước cao hơn nhiều lần so với thế kỷ 20, kể cả khi tính cả hai cuộc thế chiến. Kết luận này bị tranh cãi về phương pháp và cỡ mẫu, nhưng chiều hướng giảm trong vài thế kỷ gần đây thì có dữ liệu vững.",
     "tags": [
       "bao-luc",
@@ -272,8 +272,8 @@
     "id": "xh-124",
     "cat": "xa-hoi",
     "sub": "bat-binh-dang",
-    "t": "Dịch chuyển xã hội giữa các thế hệ chậm hơn nhiều so với đo bằng thu nhập một đời",
-    "s": "Khi theo dõi họ hàng hiếm gặp qua nhiều thế kỷ ở nhiều nước, tương quan địa vị giữa các thế hệ cao hơn hẳn con số ước lượng từ dữ liệu thu nhập cha–con. Ước lượng này gây tranh cãi, nhưng nó cảnh báo rằng dịch chuyển đo trong một thế hệ có thể đánh giá quá lạc quan.",
+    "t": "Theo dõi họ hàng qua nhiều thế kỷ cho thấy địa vị xã hội truyền lại bền hơn nhiều so với đo bằng thu nhập cha–con",
+    "s": "Bằng cách lần theo những họ hiếm gặp qua hàng trăm năm ở nhiều nước, mức giống nhau về địa vị giữa các thế hệ cao hơn hẳn con số ước lượng từ dữ liệu thu nhập của một đời. Ước lượng này gây tranh cãi về phương pháp, nhưng nó cảnh báo rằng đo dịch chuyển xã hội trong một thế hệ có thể cho kết quả quá lạc quan.",
     "tags": [
       "dich-chuyen",
       "bat-binh-dang",
@@ -285,8 +285,8 @@
     "id": "xh-126",
     "cat": "xa-hoi",
     "sub": "the-che-hop-tac",
-    "t": "Thể chế bao trùm hay bòn rút giải thích chênh lệch giàu nghèo giữa các nước tốt hơn địa lý",
-    "s": "Hai nửa của cùng một thành phố bị chia bởi biên giới — cùng khí hậu, cùng dân tộc, cùng lịch sử tới một thời điểm — có mức sống chênh nhau nhiều lần. Điều khác nhau là luật chơi: quyền sở hữu, khả năng gia nhập thị trường và giới hạn quyền lực.",
+    "t": "Hai nửa của cùng một thành phố bị chia bởi một đường biên giới có mức sống chênh nhau nhiều lần",
+    "s": "Cùng khí hậu, cùng dân tộc, cùng lịch sử tới một thời điểm, mà một bên giàu hơn bên kia nhiều lần. Điều khác nhau là luật chơi: ai được sở hữu tài sản, ai được vào thị trường, và quyền lực bị giới hạn tới đâu. Đây là bằng chứng chính cho lập luận rằng thể chế giải thích chênh lệch giàu nghèo giữa các nước tốt hơn địa lý.",
     "tags": [
       "the-che",
       "phat-trien",
@@ -298,8 +298,8 @@
     "id": "xh-129",
     "cat": "xa-hoi",
     "sub": "bau-cu-chinh-tri",
-    "t": "Định lý cử tri trung vị: trong hệ 2 lựa chọn trên 1 chiều quan điểm, cả hai bên đều dịch về vị trí trung vị",
-    "s": "Trong hệ thống hai lựa chọn với một chiều quan điểm, chiến lược tối ưu của mỗi bên là dịch về phía cử tri ở vị trí trung vị. Đây là lý do các cương lĩnh trông giống nhau hơn ta mong đợi — và mô hình này hỏng khi cử tri không xếp trên một chiều duy nhất.",
+    "t": "Trong cuộc đua chỉ có hai bên, cả hai đều dịch về phía người ở giữa, nên cương lĩnh trông giống nhau",
+    "s": "Nếu quan điểm cử tri xếp được trên một trục từ trái sang phải, bên nào dịch về phía người đứng đúng giữa trục cũng lấy được nhiều phiếu hơn — nên cả hai đều dịch. Đây là lý do các cương lĩnh trông giống nhau hơn ta mong đợi, và mô hình này hỏng khi cử tri không xếp được trên một trục duy nhất.",
     "tags": [
       "bau-cu",
       "chinh-tri",
@@ -437,8 +437,8 @@
     "id": "xh-140",
     "cat": "xa-hoi",
     "sub": "the-che-hop-tac",
-    "t": "Ostrom tìm ra tám nguyên tắc để cộng đồng tự quản tài nguyên chung thành công",
-    "s": "Ranh giới rõ, luật phù hợp điều kiện địa phương, người dùng tham gia làm luật, có giám sát, chế tài tăng dần, cơ chế giải quyết tranh chấp rẻ, quyền tự tổ chức được công nhận, và tổ chức nhiều tầng. Bà nhận Nobel Kinh tế năm 2009 cho công trình này.",
+    "t": "Cộng đồng tự quản được tài nguyên chung khi có ranh giới rõ, người dùng tự làm luật và chế tài tăng dần",
+    "s": "Elinor Ostrom tổng hợp tám điều kiện từ hàng trăm trường hợp thật: ranh giới rõ, luật phù hợp điều kiện địa phương, người dùng tham gia làm luật, có giám sát, chế tài tăng dần, cơ chế giải quyết tranh chấp rẻ, quyền tự tổ chức được công nhận, và tổ chức nhiều tầng. Bà nhận Nobel Kinh tế năm 2009 cho công trình này, vì nó bác bỏ ý cho rằng tài nguyên chung tất yếu bị khai thác cạn.",
     "tags": [
       "tai-nguyen",
       "cong-dong",
@@ -450,7 +450,7 @@
     "id": "xh-141",
     "cat": "xa-hoi",
     "sub": "the-che-hop-tac",
-    "t": "Niềm tin xã hội là biến số dự báo mạnh cho tăng trưởng và chất lượng thể chế",
+    "t": "Tỉ lệ người tin 'phần lớn người khác đáng tin' chênh nhau rất lớn giữa các nước, và nó đi cùng hiệu quả kinh tế",
     "s": "Tỉ lệ người trả lời 'phần lớn người khác đáng tin' khác nhau rất lớn giữa các quốc gia và tương quan chặt với hiệu quả kinh tế, mức tuân thủ thuế và chi phí giao dịch. Niềm tin làm hợp đồng ngắn đi và giám sát rẻ đi.",
     "tags": [
       "niem-tin",
@@ -518,7 +518,7 @@
     "id": "xh-146",
     "cat": "xa-hoi",
     "sub": "bat-binh-dang",
-    "t": "GDP bình quân đầu người và mức sống trung vị có thể đi hai hướng khác nhau",
+    "t": "GDP đầu người tăng mà thu nhập của người ở giữa đứng yên là chuyện xảy ra được",
     "s": "Nếu tăng trưởng tập trung ở nhóm trên, GDP đầu người tăng trong khi thu nhập của người ở giữa đứng yên. Đây là lý do một quốc gia có thể vừa có số liệu vĩ mô đẹp vừa có cảm nhận phổ biến rằng cuộc sống không khá lên.",
     "tags": [
       "gdp",

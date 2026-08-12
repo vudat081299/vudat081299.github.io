@@ -167,7 +167,7 @@
     "id": "xh-013",
     "cat": "xa-hoi",
     "sub": "bat-binh-dang",
-    "t": "Khoảng 6 trên 10 lao động toàn cầu làm việc trong khu vực phi chính thức",
+    "t": "Khoảng 6 trên 10 lao động toàn cầu làm việc không hợp đồng, không bảo hiểm xã hội",
     "s": "Tổ chức Lao động Quốc tế ước tính khoảng 60% lực lượng lao động thế giới làm việc phi chính thức — không hợp đồng, không bảo hiểm xã hội, không được luật lao động bảo vệ đầy đủ. Ở nhiều nền kinh tế đang phát triển, đây là chuẩn mực chứ không phải ngoại lệ.",
     "tags": [
       "lao-dong",
@@ -193,8 +193,8 @@
     "id": "xh-017",
     "cat": "xa-hoi",
     "sub": "bat-binh-dang",
-    "t": "Bất bình đẳng trong một quốc gia đo bằng hệ số Gini, nhưng con số này giấu nhiều thứ",
-    "s": "Gini bằng 0 nghĩa là mọi người thu nhập như nhau, bằng 1 nghĩa là một người lấy hết. Hai nước cùng Gini có thể có cấu trúc hoàn toàn khác nhau: một nơi tầng lớp trung lưu rỗng, nơi kia có nhóm siêu giàu rất nhỏ. Luôn nhìn thêm tỉ trọng thu nhập của nhóm 10% trên cùng và 40% dưới cùng.",
+    "t": "Hai nước có cùng một chỉ số bất bình đẳng vẫn có thể có cấu trúc thu nhập hoàn toàn khác nhau",
+    "s": "Chỉ số hay dùng nhất là Gini: bằng 0 nghĩa là mọi người thu nhập như nhau, bằng 1 nghĩa là một người lấy hết. Nhưng hai nước cùng điểm Gini có thể rất khác nhau — một nơi tầng lớp trung lưu rỗng, nơi kia có một nhóm siêu giàu rất nhỏ. Vì vậy phải nhìn thêm phần thu nhập mà nhóm 10% trên cùng và nhóm 40% dưới cùng nhận được.",
     "tags": [
       "bat-binh-dang",
       "do-luong",
