@@ -46,8 +46,8 @@
     "id": "sh-004",
     "cat": "so-hoc",
     "sub": "co-mau-p-value",
-    "t": "p < 0,05 không có nghĩa là 'có 95% khả năng đúng'",
-    "s": "Giá trị p trả lời câu hỏi: nếu giả thuyết không có hiệu ứng là đúng, xác suất quan sát được dữ liệu cực đoan như thế này là bao nhiêu. Nó không nói xác suất giả thuyết của bạn đúng. Năm 2016, Hiệp hội Thống kê Hoa Kỳ phải ra tuyên bố chính thức để đính chính cách hiểu sai này.",
+    "t": "Con số 'p nhỏ hơn 0,05' không có nghĩa là kết quả có 95% khả năng đúng",
+    "s": "Con số đó trả lời một câu hỏi khác hẳn: nếu thật ra chẳng có hiệu ứng nào, thì khả năng thu được dữ liệu lệch nhiều như đã thấy là bao nhiêu. Nó không nói gì về khả năng giả thuyết của bạn đúng — muốn biết điều đó còn phải tính tới hiệu ứng này vốn có bao nhiêu phần khả năng tồn tại. Năm 2016, Hiệp hội Thống kê Mỹ ra tuyên bố chính thức cảnh báo đúng cách hiểu sai này.",
     "d": "Kèm theo đó là hai bệnh phổ biến: p-hacking (thử nhiều phân tích tới khi ra p đẹp) và HARKing (đặt giả thuyết sau khi đã nhìn kết quả). Cách phòng đã thành chuẩn ở nhiều ngành: đăng ký thiết kế và phân tích trước khi thu dữ liệu.",
     "tags": [
       "thong-ke",
@@ -87,21 +87,21 @@
     "cat": "so-hoc",
     "sub": "so-lieu-lua",
     "viz": "benford",
-    "t": "Chữ số đầu tiên của dữ liệu thật thường là số 1, khoảng 30% số lần",
-    "s": "Định luật Benford mô tả phân bố chữ số đầu trong nhiều tập dữ liệu tự nhiên (dân số, hoá đơn, số liệu kế toán, độ dài sông): chữ số 1 xuất hiện khoảng 30,1%, chữ số 9 chỉ khoảng 4,6%. Kiểm toán viên dùng nó để đánh dấu các bộ sổ sách có dấu hiệu bịa số.",
+    "t": "Chữ số đầu tiên của dữ liệu thật là số 1 trong khoảng 30% trường hợp, không phải 11%",
+    "s": "Nếu chín chữ số đầu chia đều thì mỗi chữ số phải chiếm 11,1%. Thực tế trong nhiều tập dữ liệu tự nhiên — dân số, hoá đơn điện, số liệu kế toán, độ dài sông — chữ số 1 xuất hiện khoảng 30,1% còn chữ số 9 chỉ 4,6%. Kiểm toán viên và cơ quan thuế dùng chênh lệch này để đánh dấu sổ sách có dấu hiệu bịa số.",
     "tags": [
       "gian-lan",
       "kiem-toan",
       "du-lieu"
     ],
-    "src": "Simon Newcomb (1881); Frank Benford (1938); ứng dụng kiểm toán: Mark Nigrini (1999)"
+    "src": "Simon Newcomb (1881); Frank Benford (1938); Nigrini, Benford's Law (2012)"
   },
   {
     "id": "sh-008",
     "cat": "so-hoc",
     "sub": "tuong-quan",
-    "t": "Bốn tập dữ liệu có cùng trung bình, phương sai và hệ số tương quan nhưng trông hoàn toàn khác nhau",
-    "s": "Bộ tứ Anscombe (1973) là ví dụ kinh điển; phiên bản hiện đại 'Datasaurus' còn tạo được cả một con khủng long và mười hai hình khác cùng thống kê mô tả tới hai chữ số thập phân. Kết luận thực dụng: luôn vẽ dữ liệu ra trước khi tin vào các con số tóm tắt.",
+    "t": "Bốn tập dữ liệu có cùng mọi con số tóm tắt nhưng vẽ ra bốn hình hoàn toàn khác nhau",
+    "s": "Bộ tứ Anscombe (1973) khớp nhau tới hai chữ số thập phân ở trung bình, độ phân tán và mức độ hai biến đi cùng nhau — nhưng một tập là đường thẳng, một tập là đường cong, một tập bị một điểm lạ kéo lệch. Phiên bản hiện đại 'Datasaurus' còn dựng được cả một con khủng long với cùng bộ số đó. Kết luận thực dụng: luôn vẽ dữ liệu ra trước khi tóm tắt nó.",
     "tags": [
       "du-lieu",
       "truc-quan",
@@ -120,7 +120,10 @@
       "thu-nhap",
       "phan-tich"
     ],
-    "src": "Thống kê mô tả cơ bản; xem Darrell Huff, How to Lie with Statistics (1954)"
+    "src": "Thống kê mô tả cơ bản; xem Darrell Huff, How to Lie with Statistics (1954)",
+    "khac_voi": [
+      "th-337"
+    ]
   },
   {
     "id": "sh-010",
@@ -141,13 +144,13 @@
     "cat": "so-hoc",
     "sub": "ngau-nhien",
     "t": "Nguỵ biện con bạc: đồng xu không nhớ nó vừa ra mặt gì",
-    "s": "Sau năm lần liên tiếp ra sấp, xác suất lần thứ sáu ra ngửa vẫn là 50%. Luật số lớn nói tỉ lệ hội tụ về 0,5 khi số lần tăng vô hạn, không nói có lực nào 'kéo về cho cân'. Cùng sai lầm này khiến người ta trung bình giá xuống với cổ phiếu đang giảm chỉ vì 'nó giảm nhiều rồi'.",
+    "s": "Sau năm lần liên tiếp ra sấp, xác suất lần thứ sáu ra ngửa vẫn là 50%. Kỷ lục ghi nhận ở sòng bạc Monte Carlo năm 1913 là 26 lần liên tiếp cùng một màu, và rất nhiều người mất tiền vì cược ngược lại. Tỉ lệ có hội tụ về 0,5 khi số lần tăng vô hạn, nhưng không có lực nào 'kéo về cho cân'.",
     "tags": [
       "xac-suat",
       "thien-kien",
       "dau-tu"
     ],
-    "src": "Laplace (1820); Tversky & Kahneman (1971)"
+    "src": "Laplace (1820); Tversky & Kahneman, Psychological Bulletin (1971)"
   },
   {
     "id": "sh-012",
@@ -168,7 +171,7 @@
     "cat": "so-hoc",
     "sub": "dem-va-to-hop",
     "t": "Xác suất trúng giải đặc biệt xổ số 6/45 là 1 trên hơn 8,1 triệu",
-    "s": "Số cách chọn 6 số từ 45 là C(45,6) = 8.145.060. Mua thêm vé làm tăng cơ hội theo tỉ lệ tuyến tính rất nhỏ: mua 100 vé vẫn chỉ khoảng 1 trên 81.450. Về kỳ vọng toán học, xổ số là một loại thuế tự nguyện — điều đó không sai trái, chỉ cần biết mình đang mua cái gì.",
+    "s": "Số cách chọn 6 số từ 45 là C(45,6) = 8.145.060. Mua thêm vé làm tăng cơ hội theo tỉ lệ tuyến tính rất nhỏ: mua 100 vé vẫn chỉ khoảng 1 trên 81.450. Tính trung bình dài hạn, người mua luôn nhận về ít hơn số tiền bỏ ra — phần chênh chính là khoản mà nhà nước thu.",
     "tags": [
       "xac-suat",
       "co-bac",
@@ -207,14 +210,17 @@
     "id": "sh-016",
     "cat": "so-hoc",
     "sub": "trung-binh-phan-bo",
-    "t": "Phân phối chuẩn: 68 – 95 – 99,7",
-    "s": "Trong phân phối chuẩn, khoảng 68% giá trị nằm trong một độ lệch chuẩn quanh trung bình, 95% trong hai và 99,7% trong ba. Đây là bộ số nên thuộc lòng — nhưng cũng nên nhớ rằng thu nhập, quy mô công ty, thiệt hại thiên tai và giá tài sản KHÔNG phân phối chuẩn.",
+    "t": "Trong hình chuông, 68% giá trị nằm trong một độ lệch chuẩn quanh trung bình, 95% trong hai và 99,7% trong ba",
+    "s": "Độ lệch chuẩn là thước đo mức dao động: nó cho biết các giá trị thường cách trung bình bao xa. Bộ ba 68–95–99,7 đáng thuộc lòng vì nó cho biết ngay một giá trị lệch tới mức nào là lạ. Nhưng nó chỉ đúng với hình chuông — mà thu nhập, quy mô công ty và thiệt hại thiên tai đều không có hình chuông, nên áp bộ số này vào chúng sẽ đánh giá thấp nghiêm trọng khả năng xảy ra các trường hợp cực đoan.",
     "tags": [
       "thong-ke",
       "phan-phoi",
       "rui-ro"
     ],
-    "src": "Quy tắc thực nghiệm cho phân phối Gauss"
+    "src": "Quy tắc thực nghiệm cho phân phối Gauss",
+    "xem_ok": [
+      "thuat-ngu"
+    ]
   },
   {
     "id": "sh-017",
@@ -289,13 +295,13 @@
     "id": "sh-022",
     "cat": "so-hoc",
     "sub": "co-mau-p-value",
-    "t": "Với dữ liệu đủ lớn, mọi khác biệt đều có ý nghĩa thống kê — kể cả khác biệt vô nghĩa",
-    "s": "Ý nghĩa thống kê chỉ nói hiệu ứng khác 0; nó không nói hiệu ứng đủ lớn để bạn quan tâm. Với một triệu người dùng, chênh lệch tỉ lệ nhấp 0,01% có thể cho p rất nhỏ mà chẳng đáng làm gì. Luôn hỏi thêm: độ lớn hiệu ứng là bao nhiêu, và khoảng tin cậy rộng cỡ nào?",
+    "t": "Đo trên đủ nhiều người thì mọi khác biệt đều 'đạt chuẩn thống kê', kể cả khác biệt không ai quan tâm",
+    "s": "Phép kiểm chỉ trả lời hiệu ứng có khác 0 hay không, không trả lời nó lớn tới đâu. Với một triệu người dùng, chênh lệch tỉ lệ nhấp 0,01% cũng cho con số 'đạt chuẩn'. Một loại thuốc hạ huyết áp 0,5 mmHg cũng vậy: đạt chuẩn với thừa số an toàn, mà vẫn vô dụng trên lâm sàng.",
     "tags": [
       "thong-ke",
       "ab-testing",
       "san-pham"
     ],
-    "src": "Jacob Cohen, Statistical Power Analysis (1988); Sullivan & Feinn, Journal of Graduate Medical Education (2012)"
+    "src": "Ziliak & McCloskey, The Cult of Statistical Significance (2008); ASA statement on p-values (2016)"
   }
 ]

@@ -3,8 +3,8 @@
     "id": "td-231",
     "cat": "tu-duy",
     "sub": "nhan-qua",
-    "t": "Hai chuỗi thời gian cùng có xu hướng tăng cho hệ số tương quan trên 0,9 dù chẳng liên quan gì nhau",
-    "s": "Tiêu thụ pho mát và số người chết vì rối vào ga trải giường, số vụ chết đuối và phim của một diễn viên — các cặp này tương quan rất cao chỉ vì cả hai đều là chuỗi thời gian có xu hướng. Đây là lý do phân tích chuỗi thời gian phải loại xu hướng trước khi nói bất cứ điều gì về quan hệ.",
+    "t": "Hai chuỗi số cùng có xu hướng tăng thì đi cùng nhau tới hơn 0,9 dù chẳng liên quan gì nhau",
+    "s": "Tiêu thụ pho mát và số người chết vì rối vào ga trải giường, số vụ chết đuối và số phim của một diễn viên — các cặp này khớp nhau gần như hoàn hảo chỉ vì cả hai đều tăng dần theo năm. Đây là lý do phải loại bỏ phần xu hướng chung trước khi kết luận hai chuỗi thời gian có liên hệ.",
     "tags": [
       "tuong-quan",
       "chuoi-thoi-gian"

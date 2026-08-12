@@ -318,14 +318,14 @@
     "id": "sv-125",
     "cat": "sinh-vat",
     "sub": "chim-va-bay",
-    "t": "Quạ chế tạo công cụ và biết uốn dây thép thành móc câu",
-    "s": "Quạ New Caledonia chế tạo và sử dụng công cụ trong tự nhiên, và trong phòng thí nghiệm một con đã tự uốn một đoạn dây thẳng thành móc để lấy thức ăn khỏi ống — hành vi chưa từng thấy ở tự nhiên và không được dạy.",
+    "t": "Quạ New Caledonia chế tạo công cụ qua nhiều bước và giữ lại cái tốt để dùng lại",
+    "s": "Chúng uốn dây thép thành móc câu để lấy thức ăn khỏi ống, biết ghép nhiều mảnh thành một công cụ dài hơn, và mang theo công cụ ưa thích thay vì làm lại từ đầu. Chưa loài nào ngoài linh trưởng được ghi nhận làm cả ba việc đó.",
     "tags": [
       "qua",
       "cong-cu",
       "tri-thong-minh"
     ],
-    "src": "Weir, Chappell & Kacelnik, Science (2002); Hunt, Nature (1996)"
+    "src": "Weir, Chappell & Kacelnik, Science (2002); Hunt & Gray, Proceedings of the Royal Society B (2004)"
   },
   {
     "id": "sv-126",
@@ -390,7 +390,10 @@
       "toi-uu",
       "thuat-toan"
     ],
-    "src": "Goss và cộng sự, Naturwissenschaften (1989); Dorigo, Ant Colony Optimization (2004)"
+    "src": "Goss và cộng sự, Naturwissenschaften (1989); Dorigo, Ant Colony Optimization (2004)",
+    "khac_voi": [
+      "th-326"
+    ]
   },
   {
     "id": "sv-131",
@@ -481,7 +484,10 @@
       "so-lieu",
       "hieu-lam"
     ],
-    "src": "Số liệu tấn công động vật hoang dã ở châu Phi; báo cáo của các cơ quan bảo tồn khu vực"
+    "src": "Số liệu tấn công động vật hoang dã ở châu Phi; báo cáo của các cơ quan bảo tồn khu vực",
+    "khac_voi": [
+      "sv-138"
+    ]
   },
   {
     "id": "sv-138",

@@ -231,7 +231,7 @@
     "cat": "suc-khoe",
     "sub": "huyen-thoai-suc-khoe",
     "t": "Đường không gây tăng động ở trẻ em",
-    "s": "Nhiều thử nghiệm mù đôi không tìm thấy khác biệt hành vi giữa nhóm dùng đường và nhóm dùng chất tạo ngọt. Điều thay đổi là đánh giá của cha mẹ: khi được nói con vừa ăn đường, họ chấm con mình tăng động hơn — dù thực tế không có đường. Điều đáng chú ý: khi cha mẹ tin con vừa ăn đường, họ đánh giá hành vi của con là tăng động hơn — nên hiệu ứng nằm ở người quan sát.",
+    "s": "Nhiều thử nghiệm trong đó cả trẻ, cha mẹ lẫn người quan sát đều không biết ai được ăn đường đã không tìm thấy khác biệt hành vi nào. Điều thay đổi là đánh giá của cha mẹ: khi được nói con vừa ăn đường, họ chấm con mình tăng động hơn.",
     "tags": [
       "duong",
       "tre-em",
@@ -494,7 +494,7 @@
     "cat": "suc-khoe",
     "sub": "van-dong",
     "t": "Tập thể dục cải thiện giấc ngủ, nhưng tập nặng sát giờ ngủ thì tuỳ người",
-    "s": "Phân tích tổng hợp cho thấy vận động đều đặn cải thiện chất lượng giấc ngủ, và tập buổi tối không gây hại với đa số người. Ngoại lệ là tập cường độ rất cao trong khoảng một giờ trước khi ngủ, vốn có thể làm chậm vào giấc ở người nhạy cảm.",
+    "s": "Gộp kết quả của nhiều nghiên cứu cho thấy vận động đều đặn cải thiện chất lượng giấc ngủ, và tập buổi tối không gây hại với đa số người. Ngoại lệ là tập rất nặng trong khoảng một giờ trước khi ngủ, vốn có thể làm khó ngủ ở một số người.",
     "tags": [
       "van-dong",
       "giac-ngu",
@@ -506,8 +506,8 @@
     "id": "sk-143",
     "cat": "suc-khoe",
     "sub": "suc-khoe-tinh-than",
-    "t": "Thiền chánh niệm cải thiện lo âu với độ lớn hiệu ứng 0,38, nhưng không có bằng chứng nó hơn tập thể dục hay CBT",
-    "s": "Tổng quan 47 thử nghiệm trên 3.515 người: so với nhóm đối chứng trung tính, thiền cho lo âu 0,38 sau tám tuần và 0,22 sau ba đến sáu tháng, trầm cảm 0,30 và đau 0,33 — bằng chứng mức vừa. Nhưng khi đối chứng là một can thiệp thật như tập thể dục, thư giãn hay trị liệu hành vi nhận thức, bằng chứng cho thấy thiền vượt trội chỉ ở mức thấp. Ít được nói tới hơn: một tỉ lệ người tham gia báo cáo trải nghiệm khó chịu như tăng lo lắng hoặc cảm giác xa cách, đặc biệt trong các khoá tập trung dài.",
+    "t": "Thiền chánh niệm giảm lo âu ở mức 0,38 trên thang hiệu quả, nhưng không có bằng chứng nó hơn tập thể dục hay trị liệu nhận thức",
+    "s": "Tổng quan 47 thử nghiệm trên 3.515 người, đo theo thang chuẩn hoá mà 0,2 là nhỏ và 0,5 là vừa: lo âu 0,38 sau tám tuần và 0,22 sau ba đến sáu tháng, trầm cảm 0,30, đau 0,33 — mức bằng chứng vừa. Nhưng khi đối chứng là một hoạt động khác thay vì không làm gì, phần hơn của thiền biến mất.",
     "tags": [
       "thien",
       "bang-chung",
@@ -575,7 +575,7 @@
     "cat": "suc-khoe",
     "sub": "suc-khoe-tinh-than",
     "t": "Trầm cảm không phải do 'thiếu serotonin', và điều đó không có nghĩa thuốc không hiệu quả",
-    "s": "Một tổng quan lớn kết luận không có bằng chứng nhất quán cho giả thuyết mất cân bằng serotonin. Nhưng thuốc chống trầm cảm vẫn cho hiệu quả hơn giả dược trong các phân tích tổng hợp — cơ chế chưa rõ không đồng nghĩa với không tác dụng.",
+    "s": "Một tổng quan lớn kết luận không có bằng chứng nhất quán cho giả thuyết mất cân bằng serotonin. Nhưng khi gộp kết quả các thử nghiệm lại, thuốc chống trầm cảm vẫn hiệu quả hơn giả dược — nghĩa là thuốc có tác dụng qua một cơ chế mà người ta chưa xác định được, chứ không phải không có tác dụng.",
     "tags": [
       "tram-cam",
       "co-che",

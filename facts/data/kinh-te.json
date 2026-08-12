@@ -4,7 +4,7 @@
     "cat": "kinh-te",
     "sub": "lai-va-no",
     "t": "Quy tắc 72: chia 72 cho lãi suất là ra số năm nhân đôi tiền",
-    "s": "Lãi 6%/năm thì tiền nhân đôi sau khoảng 12 năm; 9% thì khoảng 8 năm; 12% thì khoảng 6 năm. Phép nhẩm này cũng chạy ngược cho lạm phát: lạm phát 4%/năm làm sức mua giảm một nửa sau khoảng 18 năm. Chạy ngược như vậy cũng cho thấy 'giữ tiền mặt cho an toàn' là một quyết định có rủi ro — chỉ là rủi ro chậm và không có thông báo.",
+    "s": "Chia 72 cho lãi suất phần trăm là ra số năm để tiền nhân đôi: 7%/năm thì khoảng 10 năm, 12%/năm thì 6 năm. Phép chia này chỉ lệch vài phần trăm so với công thức đúng ở các mức lãi thường gặp, và nó cho thấy vì sao chênh 2%/năm lại đổi hẳn kết quả sau vài chục năm.",
     "tags": [
       "lai-kep",
       "nham",
@@ -229,14 +229,17 @@
     "id": "kt-019",
     "cat": "kinh-te",
     "sub": "gia-va-thi-truong",
-    "t": "Người Mỹ phản ứng với giá xăng yếu đi khoảng năm lần trong 25 năm: độ co giãn từ −0,21 xuống −0,034",
-    "s": "Độ co giãn giá của cầu đo phần trăm thay đổi lượng mua khi giá đổi 1%. Đo trên cùng một thị trường, giai đoạn 1975–1980 cho khoảng −0,21 đến −0,34, còn 2001–2006 chỉ còn −0,034 đến −0,077 — giá xăng tăng 10% gần như không làm người Mỹ đổ ít hơn. Nguyên nhân được nêu là xe cộ, nơi ở và chỗ làm đã cố định quanh việc phải lái xe, nên trong ngắn hạn không còn chỗ để cắt.",
+    "t": "Người Mỹ phản ứng với giá xăng yếu đi khoảng năm lần trong 25 năm",
+    "s": "Đo mức phản ứng bằng phần trăm thay đổi lượng mua khi giá đổi 1% — kinh tế học gọi là độ co giãn — thì giai đoạn 1975–1980 cho khoảng −0,21 đến −0,34, còn 2001–2006 chỉ còn −0,034 đến −0,077. Nghĩa là giá xăng tăng 10% gần như không làm người Mỹ đổ ít hơn. Nguyên nhân được nêu là xe cộ, nơi ở và chỗ làm đã cố định quanh việc phải lái xe, nên trong ngắn hạn không còn chỗ để cắt.",
     "tags": [
       "gia",
       "cung-cau",
       "kinh-doanh"
     ],
-    "src": "Hughes, Knittel & Sperling, The Energy Journal (2008); khái niệm co giãn từ Alfred Marshall, Principles of Economics (1890)"
+    "src": "Hughes, Knittel & Sperling, The Energy Journal (2008); khái niệm co giãn từ Alfred Marshall, Principles of Economics (1890)",
+    "xem_ok": [
+      "thuat-ngu"
+    ]
   },
   {
     "id": "kt-020",

@@ -87,7 +87,7 @@
     "cat": "kinh-doanh",
     "sub": "to-chuc",
     "t": "Số của Dunbar (150) là một ước lượng thô, và nó đang bị tranh cãi",
-    "s": "Robin Dunbar suy ra giới hạn khoảng 150 quan hệ xã hội ổn định từ tương quan giữa kích thước tân vỏ não và quy mô bầy đàn ở linh trưởng. Một phân tích năm 2021 dùng phương pháp thống kê hiện đại cho khoảng tin cậy rộng đến mức vô dụng (từ vài chục tới vài nghìn).",
+    "s": "Robin Dunbar suy ra giới hạn khoảng 150 quan hệ xã hội ổn định từ mối liên hệ giữa kích thước vỏ não và quy mô bầy đàn ở linh trưởng. Một phân tích năm 2021 làm lại bằng phương pháp thống kê hiện đại cho dải ước lượng rộng từ khoảng 4 tới hơn 500 người — rộng tới mức không dùng được. Con số 150 vẫn được nhắc như một hằng số, nhưng nó không phải.",
     "d": "Dùng nó như một lời nhắc định tính thì vẫn tốt: khả năng duy trì quan hệ thật của một người là hữu hạn và nhỏ hơn danh bạ điện thoại rất nhiều. Dùng nó như một hằng số để thiết kế tổ chức thì là lạm dụng con số.",
     "tags": [
       "to-chuc",
@@ -100,8 +100,8 @@
     "id": "kd-022",
     "cat": "kinh-doanh",
     "sub": "du-an",
-    "t": "Hầu hết dự án lớn vượt ngân sách, và mức vượt phân bố theo đuôi dày",
-    "s": "Cơ sở dữ liệu hơn 16.000 dự án của Bent Flyvbjerg cho thấy đa số vượt chi phí hoặc trễ tiến độ, và một tỉ lệ nhỏ vượt rất xa mức trung bình. Nghĩa là rủi ro dự án không phân bố chuẩn: kế hoạch dự phòng tính theo 'trung bình cộng thêm 10%' gần như luôn thiếu.",
+    "t": "Hầu hết dự án lớn vượt ngân sách, và một phần nhỏ vượt xa tới mức không kế hoạch dự phòng nào đỡ nổi",
+    "s": "Cơ sở dữ liệu hơn 16.000 dự án của Bent Flyvbjerg cho thấy đa số vượt chi phí hoặc trễ tiến độ, và mức vượt không tụ quanh một giá trị trung bình: một tỉ lệ nhỏ vượt gấp nhiều lần. Nghĩa là cộng thêm 10% dự phòng theo thói quen là tính sai bản chất rủi ro.",
     "tags": [
       "du-an",
       "rui-ro",

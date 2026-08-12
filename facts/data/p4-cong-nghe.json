@@ -134,25 +134,12 @@
     "cat": "cong-nghe",
     "sub": "dien-thoai-pin",
     "t": "Độ phân giải cao hơn khả năng phân giải của mắt bạn không cải thiện gì mà chỉ tốn pin",
-    "s": "Ở khoảng cách xem thông thường, mắt người phân biệt được khoảng 60 điểm ảnh mỗi độ góc nhìn. Vượt ngưỡng đó, thêm điểm ảnh chỉ làm tăng công suất xử lý và tiêu thụ điện.",
+    "s": "Ở khoảng cách xem thông thường, mắt người phân biệt được khoảng 60 điểm ảnh mỗi độ góc nhìn. Vượt ngưỡng đó, thêm điểm ảnh chỉ làm tăng công suất xử lý và tiêu thụ điện. Thứ còn thay đổi được cảm nhận là độ tương phản, dải màu và số lần làm mới màn hình mỗi giây.",
     "tags": [
       "man-hinh",
       "do-phan-giai",
       "mat"
     ],
-    "src": "Deering, SIGGRAPH (1998); Apple Retina specifications"
-  },
-  {
-    "id": "cn-240",
-    "cat": "cong-nghe",
-    "sub": "huyen-thoai-cong-nghe",
-    "t": "Wi-Fi không phải viết tắt của cái gì cả, và Bluetooth được đặt theo tên một vị vua Viking",
-    "s": "Wi-Fi là tên thương hiệu do một công ty tiếp thị nghĩ ra năm 1999. Logo Bluetooth là hai chữ rune ghép lại, viết tắt tên Harald Bluetooth, vị vua đã hợp nhất Đan Mạch và Na Uy.",
-    "tags": [
-      "wifi",
-      "bluetooth",
-      "ten-goi"
-    ],
-    "src": "Wi-Fi Alliance; Bluetooth SIG"
+    "src": "Deering, SIGGRAPH (1998); thông số Retina của Apple"
   }
 ]

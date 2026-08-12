@@ -3,7 +3,7 @@
 Trang tĩnh, không build, không phụ thuộc. Dựng bằng [web-builder](../web-builder/) v0.6
 (`../web-builder/web-builder.css`) + `facts.css` (chrome riêng, prefix `fx-*`) + `app.js`.
 
-**1.989 fact** trên 20 chủ đề, chia thành 161 cụm nhỏ, trong đó 13 fact có minh hoạ tương tác.
+**1.959 fact** trên 20 chủ đề, chia thành 161 cụm nhỏ, trong đó 13 fact có minh hoạ tương tác.
 
 > Sửa hoặc thêm fact thì đọc [CLAUDE.md](CLAUDE.md) trước — ở đó có pipeline thêm fact và
 > cơ chế chống trùng. File này chỉ nói về kiến trúc.
@@ -67,9 +67,11 @@ python3 facts/tools/factlint.py check && python3 facts/tools/factlint.py verify
 ```
 
 `check` kiểm id trùng, `cat`/`sub` sai, thiếu `src`, `viz` trỏ vào hàm không tồn tại, và quét
-cả thư viện tìm các cặp fact gần trùng nhau. `verify` là **cổng định nghĩa**: nó loại fact
-tường thuật, fact lời khuyên, fact meta về nghiên cứu và xu hướng hành vi không mỏ neo —
-xem [CLAUDE.md](CLAUDE.md) §1. Xem thêm `stats` (phân bố theo cụm) và `near "<văn bản>"`
+cả thư viện tìm các cặp fact gần trùng nhau — bằng ba lưới: trong cụm, trong chủ đề, và một
+lưới so **riêng tiêu đề** (hai fact cùng tiêu đề mà tóm tắt viết khác nhau thì hai lưới đầu
+không thấy). `verify` là **cổng định nghĩa**: nó loại fact tường thuật, fact lời khuyên, fact
+meta về nghiên cứu, xu hướng hành vi không mỏ neo, và fact chỉ người trong ngành mới đọc được
+— xem [CLAUDE.md](CLAUDE.md) §1. Xem thêm `stats` (phân bố theo cụm) và `near "<văn bản>"`
 (tra một fact sắp thêm).
 
 Cả hai cổng chạy tự động: qua hook `PostToolUse` mỗi lần sửa `data/`, và qua `pre-commit`

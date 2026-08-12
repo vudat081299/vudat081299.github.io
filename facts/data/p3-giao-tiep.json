@@ -110,7 +110,8 @@
       "xu-huong-mo-ho"
     ],
     "khac_voi": [
-      "na-316"
+      "na-316",
+      "na-315"
     ]
   },
   {
@@ -217,7 +218,7 @@
     "cat": "giao-tiep",
     "sub": "huyen-thoai-giao-tiep",
     "t": "Nam và nữ không nói số lượng từ khác nhau đáng kể mỗi ngày",
-    "s": "Con số 'nữ nói 20.000 từ, nam nói 7.000' lưu hành rộng nhưng không có nguồn nghiên cứu. Khi đo thật bằng thiết bị ghi âm trên gần 400 người, hai nhóm đều ở khoảng 16.000 từ mỗi ngày với khác biệt không có ý nghĩa thống kê.",
+    "s": "Con số 'nữ nói 20.000 từ, nam nói 7.000' lưu hành rộng nhưng không có nguồn nghiên cứu. Khi đo thật bằng thiết bị ghi âm trên gần 400 người, hai nhóm đều ở khoảng 16.000 từ mỗi ngày, và khác biệt giữa hai nhóm nhỏ hơn nhiều so với khác biệt giữa người nói nhiều nhất và người nói ít nhất trong cùng một nhóm.",
     "tags": [
       "gioi",
       "huyen-thoai"

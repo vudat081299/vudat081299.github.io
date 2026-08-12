@@ -193,7 +193,10 @@
       "mat-do",
       "vat-ly"
     ],
-    "src": "NASA Goddard, Neutron Stars; Lattimer & Prakash, Science (2004)"
+    "src": "NASA Goddard, Neutron Stars; Lattimer & Prakash, Science (2004)",
+    "khac_voi": [
+      "vl-244"
+    ]
   },
   {
     "id": "vt-016",
@@ -277,8 +280,8 @@
     "id": "vt-022",
     "cat": "vu-tru",
     "sub": "thang-thoi-gian",
-    "t": "Trái Đất đã từng có ngày chỉ dài khoảng 18 giờ",
-    "s": "Phân tích các lớp trầm tích chu kỳ và hoá thạch san hô cho thấy khoảng 1,4 tỷ năm trước, một ngày trên Trái Đất chỉ khoảng 18 tiếng, và Mặt Trăng ở gần hơn nhiều. Thời gian một ngày không phải hằng số — nó là kết quả của một quá trình vật lý vẫn đang tiếp diễn.",
+    "t": "Trái Đất đã từng có ngày chỉ dài khoảng 18 giờ, cách đây khoảng 1,4 tỉ năm",
+    "s": "Các lớp trầm tích lắng theo chu kỳ cho phép đọc lại độ dài ngày thời đó. Ngày dài dần vì ma sát thuỷ triều hãm vòng quay Trái Đất lại và Mặt Trăng lùi xa dần — một quá trình vẫn đang tiếp diễn, nên độ dài một ngày không phải hằng số.",
     "tags": [
       "trai-dat",
       "thoi-gian",

@@ -260,8 +260,8 @@
     "id": "kt-122",
     "cat": "kinh-te",
     "sub": "thue-chinh-sach",
-    "t": "Thuế đánh vào ai không quyết định bởi luật mà bởi độ co giãn",
-    "s": "Luật có thể ghi rằng doanh nghiệp nộp thuế, nhưng gánh nặng thật rơi vào bên nào ít nhạy cảm với giá hơn. Đó là lý do thuế thuốc lá phần lớn do người hút chịu, còn thuế đánh vào mặt hàng dễ thay thế thì phần lớn do người bán chịu.",
+    "t": "Thuế đánh vào ai không do luật quyết định mà do bên nào ít chịu bỏ mua hơn",
+    "s": "Luật có thể ghi rằng doanh nghiệp nộp thuế, nhưng gánh nặng thật rơi vào bên nào ít nhạy cảm với giá hơn. Đó là lý do thuế thuốc lá phần lớn do người hút chịu — họ vẫn mua dù giá tăng — còn thuế đánh vào mặt hàng dễ thay thế thì người bán phải chịu, vì tăng giá là mất khách.",
     "tags": [
       "thue",
       "gia-ca",

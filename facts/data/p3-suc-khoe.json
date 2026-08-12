@@ -63,7 +63,8 @@
     "src": "Harvey & Tang, Psychological Bulletin (2012)",
     "khac_voi": [
       "sk-221",
-      "sk-212"
+      "sk-212",
+      "sk-211"
     ]
   },
   {
@@ -131,7 +132,7 @@
     "cat": "suc-khoe",
     "sub": "giac-ngu",
     "t": "Tắm nước ấm trước khi ngủ giúp dễ ngủ vì nó làm cơ thể nguội đi sau đó",
-    "s": "Nghe nghịch lý nhưng cơ chế là giãn mạch ngoại vi: nước ấm đẩy máu ra da, nên sau khi ra khỏi bồn nhiệt độ lõi giảm nhanh hơn — và giảm nhiệt độ lõi là tín hiệu khởi động giấc ngủ. Phân tích tổng hợp cho thấy tắm khoảng 1–2 giờ trước khi ngủ có hiệu quả đo được.",
+    "s": "Nghe nghịch lý nhưng cơ chế là giãn mạch ngoại vi: nước ấm đẩy máu ra da, nên sau khi ra khỏi bồn nhiệt độ trong cơ thể giảm nhanh hơn — và chính việc nhiệt độ trong cơ thể giảm là tín hiệu khởi động giấc ngủ. Gộp nhiều nghiên cứu lại, tắm nước 40–42,5 độ trước khi ngủ 1–2 tiếng rút ngắn thời gian vào giấc khoảng 10 phút.",
     "tags": [
       "nhiet-do",
       "giac-ngu"
@@ -362,7 +363,7 @@
     "cat": "suc-khoe",
     "sub": "an-uong",
     "t": "Chất xơ là thành phần dinh dưỡng có bằng chứng vững nhất và bị thiếu nhiều nhất",
-    "s": "Phân tích tổng hợp các nghiên cứu theo dõi và thử nghiệm cho thấy tăng chất xơ liên quan tới giảm nguy cơ tim mạch, tiểu đường type 2 và ung thư đại trực tràng, với đường liều đáp ứng rõ. Phần lớn dân số ăn dưới mức khuyến nghị khoảng 25–30 g mỗi ngày.",
+    "s": "Gộp các nghiên cứu theo dõi dài hạn và các thử nghiệm lại, tăng chất xơ liên quan tới giảm nguy cơ tim mạch, tiểu đường type 2 và ung thư đại trực tràng, và càng ăn nhiều thì nguy cơ càng giảm. Phần lớn dân số các nước phát triển ăn dưới một nửa mức khuyến nghị 25–30 gam mỗi ngày.",
     "tags": [
       "chat-xo",
       "bang-chung"
@@ -410,7 +411,7 @@
     "cat": "suc-khoe",
     "sub": "an-uong",
     "t": "Chất béo bão hoà là chủ đề mà bằng chứng yếu hơn mức tranh luận công khai giả định",
-    "s": "Các phân tích tổng hợp cho thấy thay chất béo bão hoà bằng chất béo không bão hoà đa làm giảm biến cố tim mạch, nhưng thay bằng tinh bột tinh chế thì không. Nghĩa là câu hỏi 'thay bằng gì' quan trọng hơn câu hỏi 'giảm bao nhiêu'.",
+    "s": "Gộp nhiều nghiên cứu lại thì thay chất béo bão hoà bằng chất béo không bão hoà đa làm giảm biến cố tim mạch, nhưng thay bằng tinh bột tinh chế thì không. Nghĩa là câu hỏi đúng không phải 'bỏ chất béo bão hoà hay không' mà là 'thay bằng gì'.",
     "tags": [
       "chat-beo",
       "tim-mach"
@@ -862,8 +863,8 @@
     "id": "sk-300",
     "cat": "suc-khoe",
     "sub": "thuoc-va-vaccine",
-    "t": "Thuốc generic phải chứng minh toàn bộ khoảng tin cậy 90% nồng độ trong máu nằm giữa 80% và 125% của thuốc gốc",
-    "s": "Điều kiện là cả khoảng tin cậy phải nằm trong dải đó, không phải chỉ giá trị trung bình — nên chênh lệch thật giữa hai thuốc nhỏ hơn nhiều so với con số 80–125% khi đọc thoáng qua. Cả nồng độ đỉnh và tổng lượng thuốc hấp thu theo thời gian đều phải đạt. Một số ít thuốc có khoảng điều trị hẹp vẫn cần cẩn thận khi đổi.",
+    "t": "Thuốc generic phải chứng minh cả dải ước lượng nồng độ trong máu nằm trong khoảng 80–125% của thuốc gốc",
+    "s": "Điều kiện là toàn bộ dải sai số phải nằm trong khoảng đó, không phải chỉ giá trị trung bình — nên chênh lệch thật giữa hai thuốc nhỏ hơn nhiều so với cảm giác khi đọc thoáng con số 80–125%. Cả nồng độ đỉnh và tổng lượng thuốc vào máu đều phải đạt.",
     "tags": [
       "generic",
       "tuong-duong"
@@ -887,7 +888,7 @@
     "cat": "suc-khoe",
     "sub": "suc-khoe-tinh-than",
     "t": "Trị liệu tâm lý và thuốc chống trầm cảm cho hiệu quả gần nhau ở trầm cảm nhẹ đến vừa, và kết hợp cả 2 tốt hơn từng cái riêng",
-    "s": "Các phân tích tổng hợp cho thấy hiệu quả gần nhau, và kết hợp hai phương pháp tốt hơn từng phương pháp riêng. Điều khác nhau là mô hình tái phát: hiệu quả của trị liệu có xu hướng bền hơn sau khi ngừng điều trị.",
+    "s": "Gộp kết quả nhiều thử nghiệm lại, hai cách cho hiệu quả gần nhau ở trầm cảm nhẹ đến vừa, và kết hợp cả hai tốt hơn từng cách riêng. Điều khác nhau là chuyện tái phát: tác dụng của trị liệu có xu hướng bền hơn sau khi ngừng, còn thuốc thì hết tác dụng sau khi dừng.",
     "tags": [
       "tram-cam",
       "dieu-tri"
@@ -938,7 +939,7 @@
     "cat": "suc-khoe",
     "sub": "suc-khoe-tinh-than",
     "t": "Chất lượng quan hệ giữa người trị liệu và người được trị liệu dự báo kết quả mạnh hơn phương pháp",
-    "s": "Trong các phân tích tổng hợp, liên minh trị liệu tương quan ổn định với kết quả, và khác biệt giữa các trường phái trị liệu thì nhỏ. Về mặt thực dụng, điều này có nghĩa đổi người trị liệu khi không hợp là quyết định hợp lý chứ không phải bỏ cuộc.",
+    "s": "Gộp kết quả nhiều nghiên cứu lại, mức tin tưởng và hợp tác giữa hai người dự báo kết quả điều trị ổn định hơn là trường phái trị liệu được dùng — khác biệt giữa các trường phái thì nhỏ. Về mặt thực dụng, điều này có nghĩa đổi người trị liệu khi không hợp là một quyết định có cơ sở.",
     "tags": [
       "tri-lieu",
       "lien-minh"

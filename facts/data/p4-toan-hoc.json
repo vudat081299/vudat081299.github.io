@@ -49,7 +49,10 @@
       "so-hoc",
       "duy-nhat"
     ],
-    "src": "Định lý cơ bản của số học; Gauss, Disquisitiones Arithmeticae (1801)"
+    "src": "Định lý cơ bản của số học; Gauss, Disquisitiones Arithmeticae (1801)",
+    "khac_voi": [
+      "vt-233"
+    ]
   },
   {
     "id": "th-205",
@@ -284,19 +287,6 @@
       "huyen-thoai"
     ],
     "src": "Markowsky, College Mathematics Journal (1992)"
-  },
-  {
-    "id": "th-223",
-    "cat": "toan-hoc",
-    "sub": "day-so-va-ti-le",
-    "t": "Tăng trưởng 7%/năm làm gấp đôi sau khoảng 10 năm, và quy tắc 72 cho ra con số đó chỉ bằng một phép chia",
-    "s": "Chia 72 cho lãi suất phần trăm được số năm nhân đôi. Sai số dưới 1% với lãi suất trong khoảng 6–10%, đủ chính xác cho mọi ước lượng nhẩm.",
-    "tags": [
-      "quy-tac-72",
-      "lai-kep",
-      "uoc-luong"
-    ],
-    "src": "Luca Pacioli, Summa de arithmetica (1494)"
   },
   {
     "id": "th-225",
@@ -575,19 +565,6 @@
     ]
   },
   {
-    "id": "th-248",
-    "cat": "toan-hoc",
-    "sub": "nghich-ly-toan",
-    "t": "Trong bỏ phiếu có từ 3 lựa chọn trở lên, không hệ thống nào thoả mãn cùng lúc mọi tiêu chí công bằng hợp lý",
-    "s": "Định lý bất khả thi của Arrow chứng minh điều này năm 1951. Nó không nói mọi hệ bầu cử đều tệ như nhau, chỉ nói không có hệ nào hoàn hảo theo tập tiêu chí đó.",
-    "tags": [
-      "arrow",
-      "bau-cu",
-      "bat-kha-thi"
-    ],
-    "src": "Arrow, Journal of Political Economy (1950); Giải Nobel Kinh tế 1972"
-  },
-  {
     "id": "th-249",
     "cat": "toan-hoc",
     "sub": "nghich-ly-toan",
@@ -650,7 +627,10 @@
       "ky-vong",
       "huu-dung"
     ],
-    "src": "Daniel Bernoulli (1738)"
+    "src": "Daniel Bernoulli (1738)",
+    "khac_voi": [
+      "th-349"
+    ]
   },
   {
     "id": "th-256",
@@ -682,8 +662,8 @@
     "id": "th-260",
     "cat": "toan-hoc",
     "sub": "toi-uu-va-thuat-toan",
-    "t": "Nén dữ liệu không mất mát có giới hạn cứng, và giới hạn đó là entropy của nguồn",
-    "s": "Shannon chứng minh năm 1948 rằng không thuật toán nào nén được dưới mức entropy trung bình mỗi ký hiệu. Vì vậy không tồn tại phần mềm nén được mọi tệp thêm một lần nữa mà không mất gì.",
+    "t": "Nén dữ liệu không mất mát có một giới hạn cứng, và không phần mềm nào vượt được nó",
+    "s": "Shannon chứng minh năm 1948 rằng lượng bit tối thiểu để ghi một nguồn tin bằng đúng mức bất định trung bình của nguồn đó — càng khó đoán ký hiệu tiếp theo thì càng không nén được. Vì vậy không tồn tại phần mềm nén được mọi tệp thêm một lần nữa mà không mất gì; một tệp đã nén tối ưu thì trông như dữ liệu ngẫu nhiên.",
     "tags": [
       "shannon",
       "entropy",
@@ -807,19 +787,6 @@
       "mat"
     ],
     "src": "Möbius & Listing (1858)"
-  },
-  {
-    "id": "th-271",
-    "cat": "toan-hoc",
-    "sub": "day-so-va-ti-le",
-    "t": "Chữ số đầu tiên trong dữ liệu thật là số 1 trong khoảng 30% trường hợp, không phải 11% như trực giác",
-    "s": "Định luật Benford đúng với dữ liệu trải nhiều bậc độ lớn: dân số thành phố, hoá đơn điện, số liệu kế toán. Cơ quan thuế nhiều nước dùng nó để sàng lọc báo cáo có dấu hiệu bịa số.",
-    "tags": [
-      "benford",
-      "gian-lan",
-      "thong-ke"
-    ],
-    "src": "Benford (1938); Nigrini, Benford's Law (2012)"
   },
   {
     "id": "th-273",
@@ -955,8 +922,8 @@
     "id": "th-289",
     "cat": "toan-hoc",
     "sub": "do-thi-mang-luoi",
-    "t": "Xếp hạng trang web của Google ban đầu dựa trên một bài toán vectơ riêng của ma trận liên kết",
-    "s": "PageRank coi web là đồ thị và tính xác suất một người lướt ngẫu nhiên dừng ở mỗi trang. Ma trận đó có hàng tỉ chiều, và việc giải được nó ở quy mô đó là bước đột phá kỹ thuật của Google.",
+    "t": "Xếp hạng trang web của Google ban đầu là nghiệm của một bài toán trên đồ thị hàng tỉ đỉnh",
+    "s": "PageRank coi web là đồ thị và tính xác suất một người bấm link ngẫu nhiên mãi mãi sẽ dừng ở mỗi trang — trang được nhiều trang quan trọng trỏ tới thì xác suất cao. Bài toán có hàng tỉ chiều, và việc giải được nó ở quy mô đó là bước đột phá kỹ thuật của Google.",
     "tags": [
       "pagerank",
       "vecto-rieng",
@@ -1612,7 +1579,7 @@
     "cat": "toan-hoc",
     "sub": "mat-ma",
     "t": "Số ngẫu nhiên dùng trong mật mã phải không đoán được, và một lỗi sinh số đã làm lộ khoá của hàng nghìn máy chủ",
-    "s": "Nghiên cứu năm 2012 quét toàn bộ Internet và tìm ra hàng chục nghìn khoá RSA chia sẻ thừa số chung do sinh số kém entropy. Một khi hai khoá chung thừa số, cả hai bị phá trong tích tắc.",
+    "s": "Nghiên cứu năm 2012 quét toàn bộ Internet và tìm ra hàng chục nghìn khoá RSA chia sẻ thừa số chung, vì máy chủ sinh khoá ngay lúc mới khởi động khi chưa kịp thu thập đủ dữ liệu ngẫu nhiên từ môi trường. Một khi hai khoá dùng chung thừa số, cả hai bị phá trong tích tắc.",
     "tags": [
       "ngau-nhien",
       "rsa",

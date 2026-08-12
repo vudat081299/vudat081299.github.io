@@ -41,6 +41,12 @@ NEAR_SOFT = 0.42
 NEAR_HARD = 0.62
 # Ngưỡng riêng cho cặp KHÁC chủ đề — thấp hơn NEAR_HARD có chủ ý, xem scan_dupes.
 NEAR_CROSS = 0.52
+# Lưới riêng chỉ so TIÊU ĐỀ. Hai fact trùng tiêu đề từng chữ vẫn có thể chỉ đạt 0,545 trên
+# toàn văn nếu hai phần tóm tắt dùng từ vựng khác nhau — sh-113/sh-210 đúng là ca đó và đã
+# lọt qua cả đợt rà. TITLE_MIN_SHARE lọc nhiễu tiêu đề ngắn: hai tiêu đề 6 chữ chung 3 chữ
+# phổ thông cho điểm rất cao mà chẳng liên quan.
+NEAR_TITLE = 0.70
+TITLE_MIN_SHARE = 4
 
 # Cụm quá to thì việc "chỉ so trong cụm" mất tác dụng — tách cụm khi vượt mốc này.
 CLUSTER_MAX = 90
@@ -253,6 +259,33 @@ def candidate_pairs(facts, df):
     return tight
 
 
+def title_pairs(facts):
+    """
+    Lưới thứ ba: so RIÊNG tiêu đề, bỏ hẳn phần tóm tắt.
+
+    Lý do tồn tại: điểm toàn văn là bình quân của tiêu đề (trọng số 2) và tóm tắt, nên hai
+    fact cùng một tiêu đề mà tóm tắt viết bằng từ khác nhau sẽ bị tóm tắt kéo xuống dưới mọi
+    ngưỡng. sh-113 và sh-210 trùng tiêu đề TỪNG CHỮ mà chỉ đạt 0,545 toàn văn.
+
+    Đo ở quy mô 1.989 fact: 26 cặp vượt (0,70 + chung ≥ 4 token), trong đó 22 cặp là trùng
+    thật — 6 cặp trùng tiêu đề tuyệt đối. Độ chính xác 85%, đủ cao để chặn commit.
+    """
+    vt = []
+    for f in facts:
+        c = Counter(tokens(f.get('t') or ''))
+        n = sqrt(sum(x * x for x in c.values())) or 1.0
+        vt.append((set(c), {k: x / n for k, x in c.items()}))
+    out = {}
+    for i in range(len(facts)):
+        for j in range(i + 1, len(facts)):
+            if len(vt[i][0] & vt[j][0]) < TITLE_MIN_SHARE:
+                continue
+            s = cosine(vt[i][1], vt[j][1])
+            if s >= NEAR_TITLE:
+                out[(i, j)] = s
+    return out
+
+
 def scan_dupes(facts, limit=None):
     """
     Quét MỌI cặp, nhưng ngưỡng báo khác nhau theo hạng — vì cùng một điểm tương đồng mang
@@ -279,6 +312,7 @@ def scan_dupes(facts, limit=None):
     """
     vecs, df, _ = build_index(facts)
     tight = candidate_pairs(facts, df)
+    tpairs = title_pairs(facts)
     cat = [f.get('cat') for f in facts]
     ok = set()
     for i, f in enumerate(facts):
@@ -289,15 +323,20 @@ def scan_dupes(facts, limit=None):
         for j in range(i + 1, len(facts)):
             if frozenset((facts[i].get('id'), facts[j].get('id'))) in ok:
                 continue
+            s = cosine(vecs[i], vecs[j])
+            if (i, j) in tpairs:
+                # Trùng tiêu đề: báo bất kể điểm toàn văn, và báo theo điểm TIÊU ĐỀ vì đó
+                # mới là con số nói lên vấn đề.
+                out.append((tpairs[(i, j)], i, j, 'TT'))
+                continue
             if (i, j) in tight:
                 floor = NEAR_SOFT
             elif cat[i] == cat[j]:
                 floor = NEAR_HARD
             else:
                 floor = NEAR_CROSS
-            s = cosine(vecs[i], vecs[j])
             if s >= floor:
-                out.append((s, i, j))
+                out.append((s, i, j, ''))
     out.sort(reverse=True)
     return out if limit is None else out[:limit]
 
@@ -315,13 +354,14 @@ def cmd_check(argv):
               % (len(vk), sum(1 for f in facts if f.get('viz'))))
 
     dupes = scan_dupes(facts)
-    hard = [d for d in dupes if d[0] >= NEAR_HARD]
+    titles = [d for d in dupes if d[3] == 'TT']
+    hard = [d for d in dupes if d[3] == 'TT' or d[0] >= NEAR_HARD]
 
     if dupes:
-        print('\n— Cặp gần trùng (%d cặp ≥ %.2f, trong đó %d cặp ≥ %.2f) —'
-              % (len(dupes), NEAR_SOFT, len(hard), NEAR_HARD))
-        for s, i, j in dupes:
-            mark = '!!' if s >= NEAR_HARD else '..'
+        print('\n— Cặp gần trùng (%d cặp ≥ %.2f, trong đó %d cặp ≥ %.2f, %d cặp trùng tiêu đề) —'
+              % (len(dupes), NEAR_SOFT, len(hard) - len(titles), NEAR_HARD, len(titles)))
+        for s, i, j, kind in dupes:
+            mark = 'TT' if kind == 'TT' else ('!!' if s >= NEAR_HARD else '..')
             print('%s %.2f  %s [%s/%s]  %s' % (mark, s, facts[i]['id'],
                                                facts[i].get('cat'), facts[i].get('sub', '-'),
                                                facts[i]['t']))
@@ -498,6 +538,49 @@ MO_HO_TI_LE = re.compile(r'(phần lớn|đa số|hầu hết)')
 KHUNG_GIA_DINH = re.compile(r'(nếu|giả sử|giả dụ|ví dụ|chẳng hạn|cứ cho là|thử tưởng tượng)')
 SO_TRONG_CAU = re.compile(r'\d[\d.,]*')
 
+# Cổng TỰ CHỨA (CLAUDE.md §1.5): fact vay kiến thức mà người đọc chưa chắc có thì không đọc
+# được. Đây là danh sách những từ phải học đúng ngành đó mới hiểu — không phải mọi từ khó.
+#
+# Danh sách này đã được thu gọn hai lần bằng cách đo. Bản đầu có 'số nguyên tố', 'luỹ thừa',
+# 'logarit', 'đồng vị', 'động lượng', 'biên độ', 'chiết suất' → gắn cờ 150 fact mà phần lớn
+# đọc được bình thường, vì đó là chương trình phổ thông. Cũng đã bỏ 'hiệu lực' và 'độ tin cậy'
+# vì chúng có nghĩa thường ("hiệu lực pháp lý", "mức tin tưởng") nên bắt oan.
+#
+# Không dùng bộ lọc "có dấu giải thích trong câu" (dấu —, :, ngoặc, "tức là"): đã đo, nó chia
+# 150 fact thành 70/80 mà cả hai nhóm đều lẫn fact lành với fact hỏng. Bậc của từ quyết định,
+# không phải dấu câu.
+THUAT_NGU = [
+    # thống kê & phương pháp nghiên cứu
+    'p-value', 'giá trị p', 'ý nghĩa thống kê', 'giả thuyết không', 'phân loại nhị phân',
+    'phương sai', 'độ lệch chuẩn', 'sai số chuẩn', 'khoảng tin cậy', 'bậc tự do',
+    'công suất thống kê', 'hệ số tương quan', 'hồi quy', 'biến kiểm soát', 'biến gây nhiễu',
+    'mô hình nhân quả', 'hồi quy về trung bình', 'phân phối chuẩn', 'phân bố chuẩn',
+    'tứ phân vị', 'phân tích tổng hợp', 'meta-analysis', 'mù đôi', 'ngẫu nhiên hoá',
+    'ngẫu nhiên hóa', 'độ lớn hiệu ứng', 'hiệu ứng d', 'cỡ hiệu ứng',
+    # y tế & dịch tễ
+    'tỉ số chênh', 'tỷ số chênh', 'nguy cơ tương đối', 'nguy cơ tuyệt đối',
+    'số cần điều trị', 'tương đương sinh học', 'dược động học',
+    # kinh tế
+    'độ co giãn', 'ngoại ứng', 'cận biên', 'hiệu suất giảm dần', 'giá trị kỳ vọng',
+    # khoa học tự nhiên
+    'áp suất thẩm thấu', 'áp suất riêng phần', 'biểu hiện gen', 'methyl hoá', 'methyl hóa',
+    'entropy',
+    # toán — chỉ những thứ ngoài chương trình phổ thông. 'ma trận' và 'tích phân' đã bị bỏ:
+    # cả hai học ở lớp 10–12, và 'tích phân' còn bắt oan chuỗi con ("Phân tích phân tử").
+    'vectơ riêng', 'vector riêng', 'tiệm cận', 'kỳ vọng toán',
+]
+_VN = (r'\wàáảãạăắằẳẵặâấầẩẫậèéẻẽẹêếềểễệìíỉĩịòóỏõọôốồổỗộơớờởỡợùúủũụưứừửữựỳýỷỹỵđ')
+THUAT_NGU_PATS = [(t, re.compile(r'(?<![' + _VN + r'])' + re.escape(t) + r'(?![' + _VN + r'])',
+                                 re.I))
+                  for t in sorted(set(THUAT_NGU), key=len, reverse=True)]
+
+
+def _thuat_ngu(t, ts):
+    for term, p in THUAT_NGU_PATS:
+        if p.search(ts):
+            return term
+    return None
+
 
 def _mo_neo_gia_dinh(t, ts):
     nums = list(SO_TRONG_CAU.finditer(ts))
@@ -560,6 +643,13 @@ def verify_fact(f):
 
     if 'thieu-mo-neo' not in mien and not has_digit and len(ts) < 220:
         return ('XEM', 'thieu-mo-neo', 'không có con số nào trong t+s — kiểm tra cổng mỏ neo')
+
+    if 'thuat-ngu' not in mien:
+        term = _thuat_ngu(t, ts)
+        if term:
+            return ('XEM', 'thuat-ngu',
+                    'dùng "%s" — thuật ngữ phải học ngành đó mới hiểu; fact có tự giải thích '
+                    'bằng lời thường không?' % term)
     return None
 
 
@@ -567,7 +657,7 @@ def all_warn_rule_ids():
     """Mọi rule id có thể xuất hiện ở mức XEM — dùng để soát field xem_ok."""
     ids = {rid for rid, _, _, _ in RULES_WARN}
     ids |= {rid for rid, _, _, _ in RULES_REJECT_IF_NO_DIGIT}
-    ids |= {'mo-neo-gia-dinh', 'do-lon-bang-chu', 'thieu-mo-neo'}
+    ids |= {'mo-neo-gia-dinh', 'do-lon-bang-chu', 'thieu-mo-neo', 'thuat-ngu'}
     return ids
 
 

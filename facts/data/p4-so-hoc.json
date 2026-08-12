@@ -3,52 +3,13 @@
     "id": "sh-207",
     "cat": "so-hoc",
     "sub": "co-mau-p-value",
-    "t": "Ngưỡng 0,05 là một lựa chọn tuỳ tiện do Ronald Fisher đề xuất, không phải một hằng số tự nhiên",
-    "s": "Ông viết năm 1926 rằng mức đó 'tiện lợi'. Hơn 800 nhà khoa học đã ký kiến nghị năm 2019 kêu gọi bỏ hẳn cách phân loại nhị phân 'có ý nghĩa' và 'không có ý nghĩa'.",
+    "t": "Cái mốc quyết định một kết quả nghiên cứu được coi là 'có thật' hay 'không có gì' được chọn cho tiện",
+    "s": "Ronald Fisher năm 1926 đề nghị lấy mốc 1 trên 20: chấp nhận một kết quả nếu khả năng nó xuất hiện chỉ do may mắn thấp hơn 5%. Ông viết thẳng rằng mức đó 'tiện lợi'. Năm 2019, hơn 800 nhà khoa học ký kiến nghị trên Nature đòi bỏ cách chia đôi này, vì một kết quả 4,9% và một kết quả 5,1% gần như giống nhau nhưng bị kết luận trái ngược.",
     "tags": [
       "p-value",
       "fisher",
       "tranh-luan"
     ],
     "src": "Fisher (1926); Amrhein, Greenland & McShane, Nature (2019)"
-  },
-  {
-    "id": "sh-210",
-    "cat": "so-hoc",
-    "sub": "co-mau-p-value",
-    "t": "Nghiên cứu càng nhỏ thì kết quả càng cực đoan theo cả hai hướng",
-    "s": "Với cỡ mẫu bé, phương sai của ước lượng lớn nên các giá trị bất thường xuất hiện thường xuyên hơn. Đây là lý do các 'phát hiện gây sốc' hay đến từ nghiên cứu nhỏ và hay không lặp lại được.",
-    "tags": [
-      "co-mau",
-      "phuong-sai",
-      "lap-lai"
-    ],
-    "src": "Button và cộng sự, Nature Reviews Neuroscience (2013)"
-  },
-  {
-    "id": "sh-215",
-    "cat": "so-hoc",
-    "sub": "tuong-quan",
-    "t": "Kiểm soát thêm một biến có thể làm kết luận sai đi chứ không phải đúng thêm",
-    "s": "Nếu biến đó nằm trên đường nhân quả giữa nguyên nhân và kết quả, kiểm soát nó sẽ xoá mất chính hiệu ứng cần đo. Việc chọn biến kiểm soát đòi hỏi một mô hình nhân quả, không chỉ đòi dữ liệu.",
-    "tags": [
-      "nhan-qua",
-      "bien-kiem-soat",
-      "phuong-phap"
-    ],
-    "src": "Pearl & Mackenzie, The Book of Why (2018)"
-  },
-  {
-    "id": "sh-222",
-    "cat": "so-hoc",
-    "sub": "ngau-nhien",
-    "t": "Nguỵ biện con bạc: đồng xu không nhớ nó vừa ra mặt gì",
-    "s": "Xác suất mặt ngửa vẫn là 1/2 sau 10 lần sấp liên tiếp. Kỷ lục ghi nhận ở sòng bạc Monte Carlo năm 1913 là 26 lần liên tiếp cùng một màu, và rất nhiều người đã mất tiền vì cược ngược lại.",
-    "tags": [
-      "nguy-bien-con-bac",
-      "xac-suat",
-      "monte-carlo"
-    ],
-    "src": "Tversky & Kahneman, Psychological Bulletin (1971)"
   }
 ]

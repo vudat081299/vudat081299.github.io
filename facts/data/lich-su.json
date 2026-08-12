@@ -56,7 +56,7 @@
     "cat": "lich-su",
     "sub": "co-dai",
     "t": "Bê tông La Mã tự lành vết nứt, và cơ chế mới được giải mã năm 2023",
-    "s": "Các cục vôi trắng nhỏ trong bê tông La Mã từng bị coi là dấu hiệu trộn ẩu. Nghiên cứu ở MIT cho thấy chúng là kết quả của kỹ thuật trộn nóng: khi nước thấm vào vết nứt, vôi phản ứng và kết tinh lại, tự bịt vết nứt. Đó là lý do đê chắn sóng La Mã vẫn đứng sau 2.000 năm ngâm nước biển.",
+    "s": "Các cục vôi trắng nhỏ trong bê tông La Mã từng bị coi là dấu hiệu trộn ẩu. Nghiên cứu ở MIT cho thấy chúng là kết quả của kỹ thuật trộn nóng: khi nước thấm vào vết nứt, vôi phản ứng và kết tinh lại, tự bịt vết nứt. Đê chắn sóng La Mã vẫn đứng sau 2.000 năm ngâm nước biển, còn bê tông cốt thép hiện đại thường xuống cấp sau 50–100 năm.",
     "tags": [
       "la-ma",
       "vat-lieu",
@@ -186,14 +186,14 @@
     "id": "ls-015",
     "cat": "lich-su",
     "sub": "viet-nam",
-    "t": "Kỳ thi Nho học cuối cùng ở Việt Nam diễn ra năm 1919",
-    "s": "Chế độ khoa cử kéo dài gần 900 năm kể từ khoa thi đầu tiên năm 1075 chấm dứt tại trường thi Huế. Chữ Quốc ngữ — vốn do các giáo sĩ phương Tây tạo ra từ thế kỷ 17 để phiên âm tiếng Việt — chỉ trở thành chữ viết phổ thông của cả nước trong vài thập kỷ sau đó.",
+    "t": "Kỳ thi Nho học cuối cùng ở Việt Nam diễn ra năm 1919, muộn hơn Trung Quốc 14 năm",
+    "s": "Chế độ khoa cử kéo dài gần 850 năm kể từ khoa thi đầu tiên năm 1075 chấm dứt tại trường thi Huế, trong khi Trung Quốc đã bãi bỏ từ năm 1905. Chữ Quốc ngữ chỉ trở thành chữ viết phổ thông của cả nước trong vài thập kỷ sau đó.",
     "tags": [
       "viet-nam",
       "giao-duc",
       "chu-viet"
     ],
-    "src": "Đại Nam thực lục; nghiên cứu về khoa cử Việt Nam của Nguyễn Thị Chân Quỳnh"
+    "src": "Đại Nam thực lục; Nguyễn Thị Chân Quỳnh, nghiên cứu về khoa cử Việt Nam; Woodside, Vietnam and the Chinese Model"
   },
   {
     "id": "ls-016",
@@ -272,7 +272,10 @@
       "vu-tru",
       "trung-quoc"
     ],
-    "src": "NASA Earth Observatory; phát biểu của Dương Lợi Vĩ (2003)"
+    "src": "NASA Earth Observatory; phát biểu của Dương Lợi Vĩ (2003)",
+    "khac_voi": [
+      "vt-137"
+    ]
   },
   {
     "id": "ls-022",

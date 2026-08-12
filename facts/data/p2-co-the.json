@@ -84,13 +84,13 @@
     "cat": "co-the",
     "sub": "giac-quan-khac",
     "t": "Phần lớn cái bạn gọi là 'vị' thực ra là mùi",
-    "s": "Lưỡi chỉ phân biệt được năm vị cơ bản; sự phong phú của hương vị đến từ mùi đi ngược lên mũi từ khoang miệng. Đó là lý do đồ ăn nhạt hẳn khi bạn nghẹt mũi, và là cơ sở của mẹo bịt mũi khi phải uống thứ khó uống.",
+    "s": "Bịt mũi ăn thì táo và hành tây khó phân biệt. Lưỡi chỉ báo năm vị cơ bản; phần còn lại của cái ta gọi là 'vị' đến từ mùi bay ngược lên mũi từ phía trong họng, nên cảm nhận đồ ăn sụp hẳn khi ngạt mũi.",
     "tags": [
       "vi-giac",
       "khuu-giac",
       "doi-thuong"
     ],
-    "src": "Sinh lý học vị giác; Small & Prescott, Experimental Brain Research (2005)",
+    "src": "Rozin, Perception & Psychophysics (1982); Small và cộng sự, Neuron (2005)",
     "xem_ok": [
       "do-lon-bang-chu"
     ],
@@ -164,7 +164,10 @@
       "huyen-thoai",
       "sinh-ly"
     ],
-    "src": "Provine, Tate & Geldmacher, Behavioral and Neural Biology (1987); Gallup & Eldakar, Frontiers in Neuroscience (2012)"
+    "src": "Provine, Tate & Geldmacher, Behavioral and Neural Biology (1987); Gallup & Eldakar, Frontiers in Neuroscience (2012)",
+    "khac_voi": [
+      "ct-114"
+    ]
   },
   {
     "id": "ct-114",

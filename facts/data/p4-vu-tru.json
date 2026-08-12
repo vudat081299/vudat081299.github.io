@@ -4,7 +4,7 @@
     "cat": "vu-tru",
     "sub": "he-mat-troi",
     "t": "Bão bụi trên Sao Hoả có thể phủ cả hành tinh nhưng gió ở đó không đủ mạnh để thổi bay người",
-    "s": "Khí quyển Sao Hoả chỉ đặc bằng khoảng 0,6% Trái Đất, nên gió 100 km/h ở đó tạo lực tương đương gió khoảng 10 km/h ở đây. Phim ảnh mô tả bão Sao Hoả quật ngã tàu vũ trụ là sai về vật lý.",
+    "s": "Khí quyển Sao Hoả chỉ đặc bằng khoảng 0,6% Trái Đất, nên gió 100 km/h ở đó tạo lực tương đương gió khoảng 10 km/h ở đây. Bão bụi có thể phủ kín cả hành tinh, nhưng cảnh phim bão Sao Hoả quật ngã tàu vũ trụ là sai về vật lý.",
     "tags": [
       "sao-hoa",
       "bao",
@@ -104,19 +104,6 @@
     "src": "Planck Collaboration, A&A (2020)"
   },
   {
-    "id": "vt-242",
-    "cat": "vu-tru",
-    "sub": "thang-thoi-gian",
-    "t": "Trái Đất đã từng có ngày chỉ dài khoảng 18 giờ, cách đây khoảng 1,4 tỉ năm",
-    "s": "Con số được suy ra từ các chu kỳ Milankovitch ghi trong trầm tích cổ. Ngày dài dần vì Mặt Trăng lùi xa và ma sát thuỷ triều hãm vòng quay lại.",
-    "tags": [
-      "ngay",
-      "thang-thoi-gian",
-      "dia-chat"
-    ],
-    "src": "Meyers & Malinverno, PNAS (2018)"
-  },
-  {
     "id": "vt-245",
     "cat": "vu-tru",
     "sub": "kham-pha-khong-gian",
@@ -134,13 +121,13 @@
     "cat": "vu-tru",
     "sub": "kham-pha-khong-gian",
     "t": "Rác vũ trụ ở quỹ đạo thấp đang tạo nguy cơ phản ứng dây chuyền có thể khoá quỹ đạo trong nhiều thế hệ",
-    "s": "Có hơn 36.000 mảnh lớn hơn 10 cm đang được theo dõi và hàng trăm triệu mảnh nhỏ hơn. Ở tốc độ khoảng 28.000 km/h, một mảnh 1 cm có động năng tương đương một quả lựu đạn.",
+    "s": "Hội chứng Kessler mô tả kịch bản mảnh vỡ va chạm sinh thêm mảnh vỡ cho tới khi một số quỹ đạo không dùng được. Hiện có hơn 36.000 mảnh lớn hơn 10 cm đang được theo dõi và hàng trăm triệu mảnh nhỏ hơn; ở tốc độ khoảng 28.000 km/h, một mảnh 1 cm mang động năng tương đương một quả lựu đạn.",
     "tags": [
       "rac-vu-tru",
       "kessler",
       "quy-dao"
     ],
-    "src": "ESA Space Debris Office; Kessler & Cour-Palais, JGR (1978)"
+    "src": "Kessler & Cour-Palais, Journal of Geophysical Research (1978); ESA Space Debris Office"
   },
   {
     "id": "vt-248",

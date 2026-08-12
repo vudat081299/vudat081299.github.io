@@ -17,14 +17,14 @@
     "id": "xh-002",
     "cat": "xa-hoi",
     "sub": "bau-cu-chinh-tri",
-    "t": "Không có hệ thống bầu cử nào vừa công bằng vừa nhất quán về mặt toán học",
-    "s": "Định lý bất khả thi của Kenneth Arrow chứng minh: với từ ba lựa chọn trở lên, không tồn tại quy tắc gộp ý kiến cá nhân thành ý kiến tập thể mà thoả mãn đồng thời một nhóm nhỏ tiêu chí hợp lý. Mọi hệ thống bầu cử thực tế đều là một tập hợp các đánh đổi, không phải một hệ hoàn hảo bị cài đặt sai.",
+    "t": "Khi có từ 3 lựa chọn trở lên, không hệ thống bầu cử nào thoả mãn cùng lúc mọi tiêu chí công bằng hợp lý",
+    "s": "Kenneth Arrow chứng minh điều này năm 1951 và được giải Nobel kinh tế. Nghĩa là mọi cách kiểm phiếu đều phải hy sinh một tiêu chí nào đó — tranh luận về luật bầu cử là tranh luận hy sinh cái nào, không phải tìm cách hoàn hảo.",
     "tags": [
       "bau-cu",
       "lua-chon-tap-the",
       "the-che"
     ],
-    "src": "Kenneth Arrow, Social Choice and Individual Values (1951); Nobel Kinh tế 1972"
+    "src": "Kenneth Arrow, Social Choice and Individual Values (1951)"
   },
   {
     "id": "xh-003",
@@ -46,14 +46,17 @@
     "id": "xh-004",
     "cat": "xa-hoi",
     "sub": "do-thi-giao-thong",
-    "t": "Thêm đường có thể làm giao thông tắc hơn",
-    "s": "Nghịch lý Braess: trong một mạng lưới mà mỗi người tự chọn tuyến nhanh nhất cho mình, việc mở thêm một tuyến mới có thể khiến thời gian đi lại của tất cả tăng lên. Hiện tượng ngược lại cũng đã được ghi nhận: đóng một số trục đường ở Seoul và New York làm giao thông tốt lên.",
+    "t": "Mở thêm một tuyến đường có thể làm thời gian đi lại của tất cả mọi người tăng lên",
+    "s": "Nghịch lý Braess: trong mạng lưới mà mỗi người tự chọn tuyến nhanh nhất cho riêng mình, tuyến mới hút xe khỏi các tuyến cũ theo cách làm cả hệ chậm đi. Chiều ngược lại cũng đã được ghi nhận: đóng một số trục đường ở Seoul và New York làm giao thông tốt lên.",
     "tags": [
       "giao-thong",
       "he-thong",
       "do-thi"
     ],
-    "src": "Dietrich Braess (1968); Youn, Gastner & Jeong, Physical Review Letters (2008)"
+    "src": "Dietrich Braess (1968); Youn, Gastner & Jeong, Physical Review Letters (2008)",
+    "khac_voi": [
+      "xh-213"
+    ]
   },
   {
     "id": "xh-005",
@@ -73,7 +76,7 @@
     "cat": "xa-hoi",
     "sub": "do-thi-giao-thong",
     "t": "Hơn một nửa nhân loại đã sống ở đô thị, và tỉ lệ đó vẫn đang tăng",
-    "s": "Liên Hợp Quốc ước tính khoảng 55% dân số thế giới sống ở khu vực đô thị năm 2018, dự báo lên khoảng 68% vào năm 2050. Đô thị hoá kéo theo năng suất cao hơn nhưng cũng kéo theo giá nhà, tắc nghẽn và khoảng cách giàu nghèo trong cùng một thành phố.",
+    "s": "Mốc một nửa được vượt qua vào khoảng năm 2007. Liên Hợp Quốc ước tính khoảng 55% dân số thế giới sống ở đô thị năm 2018 và dự báo lên khoảng 68% vào năm 2050.",
     "tags": [
       "do-thi",
       "dan-so",
@@ -99,7 +102,7 @@
     "cat": "xa-hoi",
     "sub": "dan-so",
     "t": "Việt Nam có khoảng 100 triệu dân và đang già hoá nhanh vào loại nhất thế giới",
-    "s": "Tổng cục Thống kê xác nhận dân số vượt 100 triệu vào năm 2023. Thời kỳ 'dân số vàng' — số người trong tuổi lao động lớn hơn nhiều số người phụ thuộc — được các dự báo đặt kết thúc vào khoảng thập niên 2030, sớm hơn nhiều nước có cùng mức thu nhập.",
+    "s": "Tổng cục Thống kê xác nhận dân số vượt 100 triệu vào năm 2023. Việt Nam mất khoảng 20 năm để chuyển từ 'đang già hoá' sang 'già', trong khi Pháp mất hơn 100 năm — nghĩa là ít thời gian chuẩn bị hệ thống an sinh hơn nhiều.",
     "d": "Ý nghĩa với một người đang đi làm: hệ thống hưu trí và y tế sẽ chịu áp lực đúng vào lúc thế hệ hiện tại nghỉ hưu, nên kế hoạch tài chính cá nhân không nên giả định mức chi trả hưu trí giữ nguyên như hôm nay. Đây là lý do thực dụng để bắt đầu tích luỹ sớm chứ không phải để bi quan.",
     "tags": [
       "viet-nam",

@@ -390,18 +390,6 @@
     "src": "Christina Maslach & Michael Leiter, The Truth About Burnout (1997); WHO ICD-11 (2019)"
   },
   {
-    "id": "tl-253",
-    "cat": "tam-ly",
-    "sub": "cam-xuc",
-    "t": "Đặt tên cho cảm xúc bằng từ chính xác làm nó dễ điều tiết hơn từ chung chung",
-    "s": "Người có vốn từ cảm xúc phong phú — phân biệt được bực, tủi, thất vọng, bị coi nhẹ — điều tiết cảm xúc tốt hơn và ít dùng các cách xử lý gây hại hơn. Cơ chế là phân giải: cảm xúc mô tả càng chính xác thì hành động ứng phó càng nhắm đúng.",
-    "tags": [
-      "cam-xuc",
-      "tu-vung"
-    ],
-    "src": "Lisa Feldman Barrett về emotional granularity; Kashdan, Barrett & McKnight (2015)"
-  },
-  {
     "id": "tl-254",
     "cat": "tam-ly",
     "sub": "cam-xuc",
@@ -940,7 +928,7 @@
     "cat": "tam-ly",
     "sub": "ban-than",
     "t": "Nghĩ mình có thể thay đổi làm bạn thay đổi được nhiều hơn, nhưng hiệu ứng nhỏ hơn quảng bá",
-    "s": "Tư duy phát triển có liên hệ với kết quả học tập, nhưng các phân tích tổng hợp lớn cho hiệu ứng nhỏ và tập trung ở nhóm học sinh yếu hoặc gặp khó khăn. Nghĩa là nó có giá trị nhưng không phải chìa khoá vạn năng như nhiều bài phổ biến trình bày.",
+    "s": "Tư duy phát triển có liên hệ với kết quả học tập, nhưng khi gộp hàng trăm nghiên cứu lại thì hiệu ứng nhỏ và tập trung ở nhóm học sinh yếu hoặc gặp khó khăn. Nghĩa là nó có giá trị nhưng không phải chìa khoá như cách nó được quảng bá.",
     "tags": [
       "tu-duy-phat-trien",
       "hieu-ung"
@@ -1087,7 +1075,7 @@
     "cat": "tam-ly",
     "sub": "nhin-nguoi-khac",
     "t": "Tiếp xúc giữa các nhóm chỉ giảm định kiến khi thoả một số điều kiện, không phải mọi tiếp xúc",
-    "s": "Phân tích tổng hợp trên hàng trăm nghiên cứu cho thấy tiếp xúc giảm định kiến rõ nhất khi hai bên có vị thế tương đương, có mục tiêu chung, phải hợp tác và được thể chế hỗ trợ. Tiếp xúc không có các điều kiện đó có thể không tác dụng hoặc làm xấu hơn.",
+    "s": "Gộp hàng trăm nghiên cứu lại cho thấy tiếp xúc giảm định kiến rõ nhất khi hai bên có vị thế tương đương, có mục tiêu chung, phải hợp tác với nhau và được thể chế hỗ trợ. Tiếp xúc không có các điều kiện đó có thể không giảm định kiến, và trong một số trường hợp làm nó nặng thêm.",
     "tags": [
       "dinh-kien",
       "tiep-xuc"
@@ -1324,7 +1312,7 @@
     "cat": "tam-ly",
     "sub": "nhan-cach",
     "t": "Tận tâm là yếu tố tính cách dự báo hiệu suất công việc tốt nhất trong hầu hết nghề",
-    "s": "Trong các phân tích tổng hợp lớn về tuyển dụng, mức tận tâm có liên hệ ổn định với hiệu suất ở gần như mọi loại công việc, còn các yếu tố khác chỉ dự báo tốt ở một số nghề cụ thể. Tuy vậy hệ số tương quan vẫn ở mức vừa phải, nên nó không thay được đánh giá thực tế.",
+    "s": "Gộp các nghiên cứu tuyển dụng lại, mức tận tâm có liên hệ ổn định với hiệu suất ở gần như mọi loại công việc, còn các yếu tố tính cách khác chỉ dự báo tốt ở một số nghề cụ thể. Tuy vậy mức liên hệ chỉ khoảng 0,2 — đủ để có ích khi tuyển hàng nghìn người, không đủ để phán về một người.",
     "tags": [
       "tan-tam",
       "hieu-suat"
@@ -1375,7 +1363,7 @@
     "cat": "tam-ly",
     "sub": "nhan-cach",
     "t": "Chỉ số IQ dự báo được nhiều thứ nhưng giải thích được ít hơn mức tranh luận công khai giả định",
-    "s": "Nó tương quan có ý nghĩa với thành tích học tập, thu nhập và một số kết quả sức khoẻ, nhưng phần phương sai giải thích được thường dưới một phần tư. Nghĩa là nó là một biến trong nhiều biến, và dùng nó để dự đoán cá nhân cụ thể là sai cách dùng.",
+    "s": "Nó có liên hệ thật với thành tích học tập, thu nhập và một số kết quả sức khoẻ, nhưng chỉ giải thích được dưới một phần tư sự khác biệt giữa người này và người kia — ba phần tư còn lại là những thứ khác. Nghĩa là nó là một yếu tố trong nhiều yếu tố, và dùng nó để phán về một cá nhân là dùng sai.",
     "tags": [
       "iq",
       "du-bao"
@@ -1498,12 +1486,15 @@
     "cat": "tam-ly",
     "sub": "huyen-thoai-tam-ly",
     "t": "Trò chơi điện tử bạo lực không có liên hệ rõ với bạo lực thực tế",
-    "s": "Sau hàng trăm nghiên cứu và nhiều phân tích tổng hợp trái ngược nhau, hiệu ứng lên hành vi hung hăng trong phòng thí nghiệm nhỏ và không chuyển thành bạo lực thật ở mức dân số. Đây là ví dụ về một câu hỏi nghiên cứu bị định hình bởi lo lắng xã hội hơn là bởi dữ liệu.",
+    "s": "Ferguson gộp lại hàng trăm nghiên cứu và kết luận phần liên hệ còn lại sau khi trừ thiên lệch công bố là quá nhỏ để có ý nghĩa thực tế. Một nghiên cứu năm 2019 đăng ký giả thuyết trước khi thu dữ liệu và đo hành vi qua lời người chăm sóc thay vì để thanh thiếu niên tự khai — hai cách chặn thiên lệch — cũng không tìm thấy liên hệ nào. Các lần gộp kết quả trước đó cho kết luận trái ngược nhau.",
     "tags": [
       "tro-choi",
       "bao-luc"
     ],
-    "src": "Ferguson, Perspectives on Psychological Science (2015); Przybylski & Weinstein, Royal Society Open Science (2019)"
+    "src": "Ferguson, Perspectives on Psychological Science (2015); Przybylski & Weinstein, Royal Society Open Science (2019)",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "tl-351",

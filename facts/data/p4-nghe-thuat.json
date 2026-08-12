@@ -72,7 +72,7 @@
     "cat": "nghe-thuat",
     "sub": "am-thanh-va-nhac-cu",
     "t": "Đàn Stradivari không được chứng minh là hay hơn đàn hiện đại trong các thử nghiệm mù",
-    "s": "Trong thử nghiệm mù đôi năm 2014, nghệ sĩ độc tấu không phân biệt được đàn cổ với đàn mới và phần lớn còn chọn đàn mới. Kết quả gây tranh cãi mạnh trong giới nhạc cổ điển.",
+    "s": "Trong một thử nghiệm năm 2014 mà cả nghệ sĩ lẫn người nghe đều không biết đang chơi đàn nào, các nghệ sĩ độc tấu không phân biệt được đàn cổ với đàn mới, và phần lớn còn chọn đàn mới. Kết quả gây tranh cãi mạnh trong giới nhạc cổ điển.",
     "tags": [
       "stradivari",
       "thu-nghiem-mu",
@@ -172,7 +172,10 @@
       "hoi-dieu",
       "ky-am"
     ],
-    "src": "Trần Văn Khê, Âm nhạc truyền thống Việt Nam; UNESCO Ca trù"
+    "src": "Trần Văn Khê, Âm nhạc truyền thống Việt Nam; UNESCO Ca trù",
+    "khac_voi": [
+      "na-318"
+    ]
   },
   {
     "id": "na-214",
@@ -1924,19 +1927,6 @@
       "dinh-dang"
     ],
     "src": "Thư viện Quốc hội Mỹ, Digital Preservation; ISO 14721 OAIS"
-  },
-  {
-    "id": "na-362",
-    "cat": "nghe-thuat",
-    "sub": "mau-va-chat-lieu",
-    "t": "Vàng lá dùng trong tranh tôn giáo mỏng tới mức 1 gam vàng phủ được khoảng 1 mét vuông",
-    "s": "Nó được dát bằng cách búa liên tục giữa các lớp da. Chi phí thật của nền vàng nằm ở công dát và công dán chứ không ở lượng vàng.",
-    "tags": [
-      "vang-la",
-      "tranh",
-      "ky-thuat"
-    ],
-    "src": "Bảo tàng Quốc gia London, Technical Bulletin"
   },
   {
     "id": "na-363",

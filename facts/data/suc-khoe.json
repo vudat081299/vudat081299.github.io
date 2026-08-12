@@ -23,7 +23,10 @@
       "trao-doi-chat",
       "thoi-quen"
     ],
-    "src": "Depner et al., Current Biology (2019)"
+    "src": "Depner et al., Current Biology (2019)",
+    "khac_voi": [
+      "sk-205"
+    ]
   },
   {
     "id": "sk-003",
@@ -180,7 +183,10 @@
       "y-te",
       "cong-dong"
     ],
-    "src": "Antimicrobial Resistance Collaborators, The Lancet (2022)"
+    "src": "Antimicrobial Resistance Collaborators, The Lancet (2022)",
+    "khac_voi": [
+      "tp-279"
+    ]
   },
   {
     "id": "sk-015",
@@ -245,7 +251,10 @@
       "tri-nho",
       "hoc-tap"
     ],
-    "src": "Rasch & Born, Physiological Reviews (2013)"
+    "src": "Rasch & Born, Physiological Reviews (2013)",
+    "khac_voi": [
+      "sk-205"
+    ]
   },
   {
     "id": "sk-021",
@@ -277,8 +286,8 @@
     "id": "sk-023",
     "cat": "suc-khoe",
     "sub": "suc-khoe-tinh-than",
-    "t": "Đi bộ hoặc chạy bộ giảm triệu chứng trầm cảm với độ lớn hiệu ứng 0,62, yoga 0,55, tập sức mạnh 0,49",
-    "s": "Phân tích mạng 218 nghiên cứu trên 14.170 người, so với nhóm đối chứng có hoạt động. Cường độ được kê càng cao thì hiệu quả càng lớn. Nhóm tác giả tự đánh giá độ tin cậy của bằng chứng là thấp với đi bộ và chạy bộ, và rất thấp với các hình thức còn lại — nên thứ tự giữa các môn chưa nên coi là chắc, chỉ có kết luận chung 'vận động có tác dụng đo được' là vững.",
+    "t": "Đi bộ hoặc chạy bộ giảm triệu chứng trầm cảm mạnh hơn yoga và tập sức mạnh, theo thứ tự 0,62 – 0,55 – 0,49",
+    "s": "Các con số này đo theo một thang chuẩn hoá mà 0,2 được coi là hiệu quả nhỏ, 0,5 là vừa và 0,8 là lớn. Kết quả từ việc gộp 218 nghiên cứu trên 14.170 người, so với nhóm đối chứng vẫn có hoạt động; cường độ được kê càng cao thì hiệu quả càng lớn. Nhóm tác giả tự đánh giá độ chắc chắn của bằng chứng là thấp tới rất thấp.",
     "tags": [
       "tram-cam",
       "van-dong",

@@ -435,19 +435,6 @@
     "src": "ASTM A240; Sedriks, Corrosion of Stainless Steels"
   },
   {
-    "id": "hh-234",
-    "cat": "hoa-hoc",
-    "sub": "vat-lieu",
-    "t": "Bê tông La Mã bền hơn nhiều loại bê tông hiện đại, và cơ chế tự lành của nó mới được giải mã năm 2023",
-    "s": "Các cục vôi sống trong bê tông phản ứng với nước rò vào vết nứt, tạo canxi cacbonat lấp kín. Cảng và đê La Mã dưới nước biển vẫn đứng sau 2.000 năm trong khi bê tông cốt thép hiện đại thường xuống cấp sau 50–100 năm.",
-    "tags": [
-      "be-tong",
-      "la-ma",
-      "tu-lanh"
-    ],
-    "src": "Seymour và cộng sự, Science Advances (2023)"
-  },
-  {
     "id": "hh-235",
     "cat": "hoa-hoc",
     "sub": "vat-lieu",
@@ -1513,7 +1500,7 @@
     "cat": "hoa-hoc",
     "sub": "nuoc-va-dung-moi",
     "t": "Nước biển và nước ngọt trộn với nhau giải phóng năng lượng đủ để phát điện",
-    "s": "Chênh lệch nồng độ muối tạo áp suất thẩm thấu tương đương cột nước cao khoảng 270 mét. Nhà máy điện thẩm thấu đầu tiên chạy thử ở Na Uy năm 2009 nhưng chưa hiệu quả về kinh tế.",
+    "s": "Chênh lệch nồng độ muối tạo một lực đẩy nước qua màng, mạnh tương đương cột nước cao khoảng 270 mét — tức là mỗi cửa sông về lý thuyết là một con thác. Nhà máy điện đầu tiên khai thác nguyên lý này chạy thử ở Na Uy năm 2009 nhưng chưa hiệu quả về kinh tế.",
     "tags": [
       "tham-thau",
       "nang-luong",
@@ -1815,13 +1802,13 @@
     "cat": "hoa-hoc",
     "sub": "kim-loai",
     "t": "Vàng có thể dát mỏng tới khoảng 0,1 micromet, mỏng tới mức ánh sáng xanh xuyên qua được",
-    "s": "Một gam vàng dát được thành lá rộng khoảng 1 mét vuông. Lá vàng mỏng nhìn xuyên qua có màu lục lam chứ không phải vàng.",
+    "s": "Một gam vàng dát được ra khoảng một mét vuông, dày cỡ 0,1 micromet — mỏng tới mức ánh sáng xanh xuyên qua được, nên vàng lá soi lên đèn có màu lục. Đây là lý do một lượng vàng rất nhỏ phủ kín được cả một bức tranh tôn giáo.",
     "tags": [
       "vang",
       "dat-mong",
       "quang-hoc"
     ],
-    "src": "Bảo tàng Anh; Sổ tay CRC Handbook"
+    "src": "Tính chất cơ học của vàng, CRC Handbook of Chemistry and Physics; kỹ thuật dát vàng lá truyền thống"
   },
   {
     "id": "hh-343",

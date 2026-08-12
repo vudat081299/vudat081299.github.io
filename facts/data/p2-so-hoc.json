@@ -41,24 +41,11 @@
     "src": "Simmons, Nelson & Simonsohn, 'False-Positive Psychology', Psychological Science (2011)"
   },
   {
-    "id": "sh-111",
-    "cat": "so-hoc",
-    "sub": "co-mau-p-value",
-    "t": "Kích thước hiệu ứng quan trọng hơn ý nghĩa thống kê",
-    "s": "Một loại thuốc giảm huyết áp 0,5 mmHg với p < 0,001 vẫn vô dụng trên lâm sàng. Câu hỏi đúng luôn có hai phần: hiệu ứng có thật không, và nó lớn tới đâu. Báo chí thường chỉ đưa phần đầu, mà phần đầu một mình thì không hành động được.",
-    "tags": [
-      "hieu-ung",
-      "y-te",
-      "doc-so"
-    ],
-    "src": "Cohen, 'The Earth Is Round (p < .05)', American Psychologist (1994)"
-  },
-  {
     "id": "sh-112",
     "cat": "so-hoc",
     "sub": "co-mau-p-value",
-    "t": "Khoảng tin cậy nói nhiều hơn một con số duy nhất",
-    "s": "'Hiệu quả 30%' và 'hiệu quả 30%, khoảng tin cậy từ 2% đến 58%' là hai thông tin rất khác nhau. Khoảng rộng nghĩa là nghiên cứu nhỏ hoặc nhiễu lớn. Bất kỳ con số nào không kèm khoảng đều đang giấu mức không chắc chắn của chính nó.",
+    "t": "Cùng một kết quả 'hiệu quả 30%' có thể ứng với khoảng thật từ 2% đến 58%",
+    "s": "Mọi con số đo được đều có một dải sai số quanh nó, và dải đó rộng hay hẹp tuỳ nghiên cứu lớn hay nhỏ. 'Hiệu quả 30%' đứng một mình và 'hiệu quả 30%, dải từ 2% đến 58%' là hai thông tin rất khác nhau: cái thứ hai nói rằng hiệu quả thật có thể chỉ là 2%. Con số nào không kèm dải sai số đều đang giấu đi mức mơ hồ của chính nó.",
     "tags": [
       "khoang-tin-cay",
       "doc-so",
@@ -71,13 +58,13 @@
     "cat": "so-hoc",
     "sub": "co-mau-p-value",
     "t": "Nghiên cứu càng nhỏ thì kết quả càng cực đoan theo cả hai hướng",
-    "s": "Vẽ biểu đồ tỉ lệ ung thư theo huyện, các huyện có tỉ lệ cao nhất và thấp nhất đều là huyện ít dân — vì mẫu nhỏ thì phương sai lớn. Rất nhiều kết luận về 'mô hình trường học nhỏ tốt hơn' đã ra đời từ đúng cái bẫy này.",
+    "s": "Vẽ biểu đồ tỉ lệ ung thư theo huyện, các huyện có tỉ lệ cao nhất và thấp nhất đều là huyện ít dân — càng ít người thì một vài ca thêm hay bớt càng đẩy tỉ lệ đi xa. Đây là lý do các 'phát hiện gây sốc' hay đến từ nghiên cứu nhỏ rồi không lặp lại được, và là nguồn gốc của rất nhiều kết luận kiểu 'trường học nhỏ dạy tốt hơn'.",
     "tags": [
       "co-mau",
       "phuong-sai",
       "hieu-lam"
     ],
-    "src": "Wainer & Zwerling, Phi Delta Kappan (2006); mô tả trong Kahneman, Thinking, Fast and Slow (2011)",
+    "src": "Wainer & Zwerling, Phi Delta Kappan (2006); Button và cộng sự, Nature Reviews Neuroscience (2013)",
     "xem_ok": [
       "do-lon-bang-chu"
     ]
@@ -86,14 +73,14 @@
     "id": "sh-114",
     "cat": "so-hoc",
     "sub": "tuong-quan",
-    "t": "Hồi quy về trung bình giả vờ là hiệu quả của mọi can thiệp",
-    "s": "Chọn nhóm tệ nhất, làm bất cứ điều gì, đo lại — nhóm đó sẽ khá lên kể cả khi can thiệp vô dụng. Đây là lý do bắt buộc phải có nhóm đối chứng, và là nguồn gốc niềm tin vào vô số phương pháp chữa bệnh và đào tạo không hiệu quả.",
+    "t": "Chọn ra nhóm tệ nhất rồi đo lại thì nhóm đó khá lên, kể cả khi không làm gì cả",
+    "s": "Một phần thành tích tệ nhất là do gặp ngày xấu, và ngày xấu không lặp lại đúng như thế lần sau. Đây là lý do bắt buộc phải có nhóm đối chứng để so: không có nó thì mọi can thiệp đều trông như có tác dụng, và đó chính là nguồn gốc niềm tin vào vô số phương pháp chữa bệnh và dạy học vô hiệu.",
     "tags": [
       "hoi-quy",
       "doi-chung",
       "danh-gia"
     ],
-    "src": "Francis Galton (1886); Barnett, van der Pols & Dobson, International Journal of Epidemiology (2005)"
+    "src": "Galton (1886); Kahneman, Thinking, Fast and Slow (2011)"
   },
   {
     "id": "sh-115",
@@ -107,19 +94,6 @@
       "canh-bao"
     ],
     "src": "Vấn đề đa so sánh; Ioannidis, PLOS Medicine (2005)"
-  },
-  {
-    "id": "sh-116",
-    "cat": "so-hoc",
-    "sub": "co-mau-p-value",
-    "t": "Phần lớn phát hiện nghiên cứu đã công bố có thể là sai",
-    "s": "Bài báo được trích dẫn nhiều nhất trong lịch sử PLOS Medicine chỉ ra rằng khi lĩnh vực có nhiều nghiên cứu nhỏ, hiệu ứng nhỏ, nhiều bậc tự do phân tích và nhiều nhóm cạnh tranh, xác suất một phát hiện công bố là đúng có thể dưới 50%.",
-    "tags": [
-      "khoa-hoc",
-      "lap-lai",
-      "canh-bao"
-    ],
-    "src": "John Ioannidis, 'Why Most Published Research Findings Are False', PLOS Medicine (2005)"
   },
   {
     "id": "sh-117",
@@ -209,27 +183,14 @@
     "id": "sh-123",
     "cat": "so-hoc",
     "sub": "tuong-quan",
-    "t": "Biến gây nhiễu: ăn kem và chết đuối cùng tăng vào mùa hè",
-    "s": "Hai đại lượng cùng bị điều khiển bởi một nguyên nhân thứ ba sẽ tương quan chặt mà chẳng liên quan gì tới nhau. Muốn nói nhân quả từ dữ liệu quan sát, bạn phải nêu ra và xử lý được các biến gây nhiễu — đó là lý do thí nghiệm có phân bổ ngẫu nhiên có giá trị cao hơn hẳn.",
+    "t": "Ăn kem và chết đuối cùng tăng vào mùa hè, và không cái nào gây ra cái nào",
+    "s": "Hai đại lượng cùng bị điều khiển bởi một nguyên nhân thứ ba — ở đây là trời nóng — sẽ đi lên đi xuống cùng nhau mà chẳng liên quan gì tới nhau. Muốn nói cái này gây ra cái kia từ dữ liệu quan sát, phải kể ra được và xử lý được những nguyên nhân thứ ba như vậy; và không có cách nào chắc chắn rằng mình đã kể hết.",
     "tags": [
       "nhan-qua",
       "gay-nhieu",
       "co-ban"
     ],
     "src": "Nguyên lý confounding trong dịch tễ học; Hill, 'The Environment and Disease' (1965)"
-  },
-  {
-    "id": "sh-124",
-    "cat": "so-hoc",
-    "sub": "co-mau-p-value",
-    "t": "Phân bổ ngẫu nhiên là công nghệ, không phải thủ tục",
-    "s": "Nó giải quyết được vấn đề mà không lượng dữ liệu nào giải quyết nổi: cân bằng cả những biến gây nhiễu mà bạn không biết là tồn tại. Đây là lý do một thí nghiệm ngẫu nhiên 200 người có thể đáng tin hơn một nghiên cứu quan sát 200.000 người.",
-    "tags": [
-      "thi-nghiem",
-      "nhan-qua",
-      "phuong-phap"
-    ],
-    "src": "Ronald Fisher, The Design of Experiments (1935)"
   },
   {
     "id": "sh-125",
@@ -327,8 +288,8 @@
     "id": "sh-135",
     "cat": "so-hoc",
     "sub": "trung-binh-phan-bo",
-    "t": "Định lý giới hạn trung tâm giải thích vì sao hình chuông ở khắp nơi",
-    "s": "Tổng của nhiều yếu tố nhỏ độc lập sẽ tiến tới phân bố chuẩn bất kể từng yếu tố phân bố kiểu gì. Đây là lý do chiều cao, sai số đo, điểm thi có hình chuông — và cũng là cảnh báo: nếu các yếu tố không độc lập, hình chuông biến mất và đuôi dày lên.",
+    "t": "Cộng nhiều yếu tố nhỏ độc lập lại thì kết quả ra hình chuông, bất kể từng yếu tố phân bố kiểu gì",
+    "s": "Đây là lý do chiều cao, sai số đo và điểm thi đều có hình chuông: mỗi thứ là tổng của nhiều nguyên nhân nhỏ, và trong thực hành cộng khoảng 30 giá trị độc lập lại là đã đủ để hình chuông hiện ra rõ. Nhưng điều kiện 'độc lập' là thật: khi các yếu tố ảnh hưởng lẫn nhau — như giá cổ phiếu trong một cơn hoảng loạn — hình chuông biến mất và các cú sốc lớn xuất hiện thường xuyên hơn nhiều so với hình chuông dự đoán.",
     "tags": [
       "phan-bo",
       "ly-thuyet",

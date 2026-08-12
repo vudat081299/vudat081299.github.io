@@ -123,6 +123,55 @@ tâm dữ liệu, không phải tổng của những lần tìm kiếm và tin n
 `cn-206` được 0,129 còn `cn-020` (fact lành) chỉ 0,107. Tóm tắt tốt thì diễn giải bằng từ mới,
 nên trùng ít là dấu hiệu tốt.
 
+### 1.5 Fact phải tự chứa — không vay kiến thức người đọc chưa chắc có
+
+> Cổng này được thêm ngày 12/08/2026 sau khi chủ trang mở trang lên và gặp `sh-207`:
+> *"Ngưỡng 0,05 là một lựa chọn tuỳ tiện do Ronald Fisher đề xuất, không phải một hằng số tự
+> nhiên / … kêu gọi bỏ hẳn cách phân loại nhị phân 'có ý nghĩa' và 'không có ý nghĩa'."*
+> Ngưỡng của cái gì? Vượt ngưỡng thì sao? "Có ý nghĩa" với ai? Câu đó chỉ đọc được nếu bạn
+> **đã biết** p-value là gì — mà người đã biết thì không cần fact, còn người chưa biết thì đọc
+> xong vẫn chưa biết. Fact đó không có người đọc nào cả.
+
+**Phép thử: một người 15 tuổi chưa học ngành đó đọc xong có nắm được không.** Fact viết cho
+người trong ngành thì để trong ngành, đừng để trong thư viện này.
+
+Ba việc phải làm, theo thứ tự ưu tiên:
+
+1. **Nói ra thứ đang được nói tới.** "Ngưỡng 0,05" → "cái mốc quyết định một kết quả nghiên
+   cứu được coi là 'có thật' hay 'không có gì'". Không có ngoại lệ cho chỗ này.
+2. **Thay thuật ngữ bằng lời thường**, kể cả khi dài hơn. "Phân tích tổng hợp" → "gộp kết quả
+   của nhiều nghiên cứu". "Phương sai lớn" → "kết quả dao động mạnh hơn". "Mù đôi" → "cả người
+   ăn lẫn người đánh giá đều không biết ai được ăn gì".
+3. **Nếu buộc phải dùng thuật ngữ thì định nghĩa nó ngay trong câu đầu**, rồi khai
+   `"xem_ok": ["thuat-ngu"]`. `kt-019` là ca mẫu: nó nói thẳng "đo bằng phần trăm thay đổi
+   lượng mua khi giá đổi 1% — kinh tế học gọi là độ co giãn".
+
+Con số đo theo thang chuẩn hoá thì **phải nói thang đó nghĩa là gì**: "0,62" một mình vô nghĩa,
+"0,62 trên thang mà 0,2 là nhỏ, 0,5 là vừa, 0,8 là lớn" thì đọc được.
+
+`verify` bắt bằng một danh sách thuật ngữ (`THUAT_NGU` trong `factlint.py`), mức `XEM`. Danh
+sách đó **chỉ chứa từ phải học đúng ngành mới hiểu**, và đã thu gọn hai lần bằng cách đo:
+
+| Đã bỏ khỏi danh sách | Vì sao |
+|---|---|
+| số nguyên tố, luỹ thừa, logarit, đồng vị, động lượng, biên độ, chiết suất, ma trận, tích phân | chương trình phổ thông — gắn cờ 150 fact mà phần lớn đọc được bình thường |
+| hiệu lực, độ tin cậy | có nghĩa thường ("hiệu lực pháp lý", "mức tin tưởng") nên bắt oan |
+| `tích phân` (thêm lý do) | bắt oan chuỗi con: "Phân **tích phân** tử" |
+
+Và **đừng thêm bộ lọc "câu có dấu giải thích"** (dấu `—`, `:`, ngoặc, "tức là"): đã đo, nó chia
+150 fact thành 70/80 mà cả hai nhóm đều lẫn fact lành với fact hỏng. Bậc của từ quyết định,
+không phải dấu câu.
+
+### 1.6 Ba dạng đã đo và **rớt** — đừng dựng lại
+
+Cả ba nghe hợp lý và đều bị số liệu bác. Ghi ra đây để phiên sau không mất công lần nữa.
+
+| Dạng định bắt | Số fact khớp | Vì sao rớt |
+|---|---|---|
+| Định nghĩa bằng phủ định ("không phải là X") | 124 | gần như toàn fact lành: *"Trí nhớ không phải bản ghi, nó là bản dựng lại"*, *"Wi-Fi không phải viết tắt của cái gì cả"*. Chúng nêu cái đúng trước rồi mới phủ định — máy không phân biệt được với `sh-207` phủ định một tính chất trừu tượng |
+| Hiệu ứng/định luật mang tên riêng trong tiêu đề | 13 | cả 13 nêu luôn nội dung ngay sau tên: *"Định luật Little: giữ gấp 2 số việc làm dở cùng lúc thì mỗi việc mất gấp 2 thời gian"*. Đọc là hiểu, không cần biết Little là ai |
+| Đại lượng trần ("ngưỡng/mức/chỉ số" + số) | 12 | "mức 8%/năm", "mốc 8 tỷ" đều rõ nghĩa |
+
 ---
 
 ## 2. Pipeline thêm fact — làm đúng thứ tự này
@@ -275,6 +324,20 @@ nhiều so với để một fact trùng lọt ra trang.
 Lưới này báo từ **0,62** trở lên, không phải 0,42 như trong cụm: hai fact khác cụm trong cùng
 chủ đề dùng chung nhiều từ vựng là chuyện thường, và hạ xuống 0,42 thì thêm 99 cặp gần như
 toàn nhiễu. Cổng ồn là cổng không ai đọc.
+
+**Lưới thứ ba, vì hai lưới trên vẫn có lỗ — so RIÊNG tiêu đề.** Điểm toàn văn là bình quân
+của tiêu đề (trọng số 2) và tóm tắt, nên hai fact **cùng một tiêu đề từng chữ** mà tóm tắt viết
+bằng từ khác nhau sẽ bị phần tóm tắt kéo xuống dưới mọi ngưỡng. `sh-113` và `sh-210` trùng tiêu
+đề tuyệt đối mà chỉ đạt **0,545** toàn văn — chúng đã lọt qua nguyên một đợt rà.
+
+Luật: tiêu đề giống ≥ **0,70** và chung ≥ **4 token** thì báo, bất kể điểm toàn văn, và
+**chặn commit** như mức 0,62. Đo ở 1.989 fact: 26 cặp vượt, 22 cặp là trùng thật, trong đó 6
+cặp trùng tiêu đề tuyệt đối — độ chính xác 85%. Điều kiện 4 token là để lọc nhiễu tiêu đề
+ngắn: hai tiêu đề 6 chữ chung 3 chữ phổ thông cho điểm rất cao mà chẳng liên quan.
+
+Lưới này còn bắt được trùng **vắt qua chủ đề** mà hai lưới trên bỏ qua: Y2K nằm ở cả
+`cong-nghe` và `lich-su`, bê tông La Mã ở `lich-su` và `hoa-hoc`, định luật Benford ở `so-hoc`
+và `toan-hoc`.
 
 **Cụm phình quá to thì tách.** `factlint stats` cảnh báo khi một cụm vượt 90 fact. Lúc đó
 thêm cụm mới vào `manifest.clusters` và chia lại — vì cụm to thì mất đúng cái lợi đang khai

@@ -121,7 +121,7 @@
     "cat": "thuc-pham",
     "sub": "hoa-hoc-nau-an",
     "t": "Bột ngọt là muối của một axit amin có sẵn trong cà chua, phô mai và nước mắm",
-    "s": "Glutamat tự do trong nước mắm và trong phô mai Parmesan cao hơn nhiều so với lượng bột ngọt thường dùng khi nấu. Các thử nghiệm mù đôi không lặp lại được 'hội chứng nhà hàng Trung Hoa'.",
+    "s": "Glutamat tự do trong nước mắm và trong phô mai Parmesan cao hơn nhiều so với lượng bột ngọt thường dùng khi nấu. Các thử nghiệm mà cả người ăn lẫn người đánh giá đều không biết ai được ăn gì đã không lặp lại được 'hội chứng nhà hàng Trung Hoa'.",
     "tags": [
       "bot-ngot",
       "umami",
@@ -286,7 +286,10 @@
       "vi-sinh",
       "banh-mi"
     ],
-    "src": "Landis và cộng sự, eLife (2021)"
+    "src": "Landis và cộng sự, eLife (2021)",
+    "khac_voi": [
+      "tp-312"
+    ]
   },
   {
     "id": "tp-227",
@@ -364,7 +367,7 @@
     "cat": "thuc-pham",
     "sub": "bao-quan",
     "t": "Muối và đường bảo quản thực phẩm bằng cách hút nước ra khỏi tế bào vi khuẩn",
-    "s": "Áp suất thẩm thấu cao làm vi sinh vật mất nước và ngừng hoạt động. Đây là công nghệ bảo quản cổ nhất còn dùng, và nó không cần điện.",
+    "s": "Nồng độ muối hoặc đường cao bên ngoài hút nước từ trong tế bào vi sinh vật ra, làm chúng mất nước và ngừng hoạt động. Đây là công nghệ bảo quản cổ nhất còn dùng, và nó không cần điện.",
     "tags": [
       "muoi",
       "tham-thau",
@@ -660,19 +663,6 @@
       "mui"
     ],
     "src": "Eriksson và cộng sự, Flavour (2012)"
-  },
-  {
-    "id": "tp-260",
-    "cat": "thuc-pham",
-    "sub": "gia-vi-huong-lieu",
-    "t": "Vị của thức ăn phần lớn đến từ mũi, không từ lưỡi",
-    "s": "Lưỡi chỉ phân biệt 5 vị cơ bản; hàng nghìn sắc thái còn lại do khứu giác sau miệng cung cấp. Bịt mũi ăn hành tây và táo, phần lớn người không phân biệt được.",
-    "tags": [
-      "vi-giac",
-      "khuu-giac",
-      "cam-quan"
-    ],
-    "src": "Shepherd, Neurogastronomy (2011); Spence, Gastrophysics"
   },
   {
     "id": "tp-261",

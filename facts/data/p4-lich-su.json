@@ -13,58 +13,6 @@
     "src": "Đại Việt sử ký toàn thư; Taylor, The Birth of Vietnam (1983)"
   },
   {
-    "id": "ls-205",
-    "cat": "lich-su",
-    "sub": "viet-nam",
-    "t": "Kỳ thi Nho học cuối cùng ở Việt Nam diễn ra năm 1919, muộn hơn Trung Quốc 14 năm",
-    "s": "Trung Quốc bãi bỏ khoa cử năm 1905. Hệ thống này đã tồn tại ở Việt Nam từ năm 1075, tức gần 850 năm.",
-    "tags": [
-      "khoa-cu",
-      "giao-duc",
-      "viet-nam"
-    ],
-    "src": "Đại Việt sử ký toàn thư; Woodside, Vietnam and the Chinese Model"
-  },
-  {
-    "id": "ls-232",
-    "cat": "lich-su",
-    "sub": "can-hien-dai",
-    "t": "Xăng pha chì tồn tại nửa thế kỷ dù người ta đã biết chì độc từ thời La Mã",
-    "s": "Nó được bán từ năm 1923 và chỉ bị loại bỏ hoàn toàn trên toàn cầu vào năm 2021. Nồng độ chì trong máu trẻ em Mỹ giảm hơn 90% sau khi cấm.",
-    "tags": [
-      "xang-pha-chi",
-      "doc",
-      "chinh-sach"
-    ],
-    "src": "UNEP (2021); US CDC; Needleman, Annual Review of Public Health (2004)"
-  },
-  {
-    "id": "ls-235",
-    "cat": "lich-su",
-    "sub": "can-hien-dai",
-    "t": "Sự cố Y2K không xảy ra vì người ta đã bỏ ra hàng trăm tỉ đô để sửa nó trước",
-    "s": "Ước tính chi phí toàn cầu khoảng 300–600 tỉ đô trong nhiều năm chuẩn bị. Đây là ví dụ điển hình của nghịch lý phòng ngừa: việc thành công trông giống như việc chưa bao giờ cần thiết.",
-    "tags": [
-      "y2k",
-      "phong-ngua",
-      "cong-nghe"
-    ],
-    "src": "US Senate Special Committee on the Year 2000 Technology Problem (2000)"
-  },
-  {
-    "id": "ls-236",
-    "cat": "lich-su",
-    "sub": "phat-minh",
-    "t": "Nhiều phát minh lớn được tạo ra độc lập bởi nhiều người gần như cùng lúc",
-    "s": "Điện thoại, bóng đèn, giải tích và thuyết tiến hoá đều có ít nhất hai người đi tới độc lập trong khoảng thời gian ngắn. Một tổng hợp năm 1922 liệt kê 148 trường hợp phát minh song song.",
-    "tags": [
-      "phat-minh",
-      "song-song",
-      "lich-su"
-    ],
-    "src": "Ogburn & Thomas, Political Science Quarterly (1922)"
-  },
-  {
     "id": "ls-251",
     "cat": "lich-su",
     "sub": "y-te-lich-su",
@@ -180,19 +128,6 @@
       "y-te"
     ],
     "src": "Harrison, The Medical War (2010)"
-  },
-  {
-    "id": "ls-268",
-    "cat": "lich-su",
-    "sub": "huyen-thoai-lich-su",
-    "t": "Không có bằng chứng cho việc người trung cổ tin rằng Trái Đất phẳng",
-    "s": "Các học giả trung cổ đọc Ptolemy và Aristotle, cả hai đều mô tả Trái Đất hình cầu. Huyền thoại này được truyền bá bởi các tác giả thế kỷ 19 muốn dựng câu chuyện khoa học chống tôn giáo.",
-    "tags": [
-      "trai-dat-phang",
-      "huyen-thoai",
-      "trung-co"
-    ],
-    "src": "Russell, Inventing the Flat Earth (1991)"
   },
   {
     "id": "ls-271",

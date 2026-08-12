@@ -96,7 +96,10 @@
       "hoc-tap",
       "ngu-phap"
     ],
-    "src": "Nghiên cứu thụ đắc ngôn ngữ; Pinker, The Language Instinct (1994)"
+    "src": "Nghiên cứu thụ đắc ngôn ngữ; Pinker, The Language Instinct (1994)",
+    "khac_voi": [
+      "nn-108"
+    ]
   },
   {
     "id": "nn-108",
@@ -288,19 +291,6 @@
       "hoc-tap"
     ],
     "src": "Nghiên cứu văn tự học Hán; Boltz, The Origin and Early Development of the Chinese Writing System (1994)"
-  },
-  {
-    "id": "nn-123",
-    "cat": "ngon-ngu",
-    "sub": "chu-viet",
-    "t": "Chữ viết chỉ được phát minh độc lập vài lần trong lịch sử loài người",
-    "s": "Các trường hợp được chấp nhận rộng rãi là Lưỡng Hà, Trung Hoa, Mesoamerica và có thể Ai Cập. Mọi hệ chữ khác đều là vay mượn hoặc phái sinh. So với nông nghiệp — được phát minh độc lập nhiều lần hơn — chữ viết là một bước nhảy hiếm hơn nhiều.",
-    "tags": [
-      "chu-viet",
-      "nguon-goc",
-      "lich-su"
-    ],
-    "src": "Daniels & Bright, The World's Writing Systems (1996)"
   },
   {
     "id": "nn-124",
