@@ -88,7 +88,10 @@
       "tan-so",
       "am-thanh"
     ],
-    "src": "Christian Doppler (1842)"
+    "src": "Christian Doppler (1842)",
+    "xem_ok": [
+      "dinh-luat-dat-ten"
+    ]
   },
   {
     "id": "vl-208",
@@ -1089,7 +1092,10 @@
       "luong-tu",
       "mat-troi"
     ],
-    "src": "Gamow (1928); Bảng dữ liệu SOHO/NASA"
+    "src": "Gamow (1928); Bảng dữ liệu SOHO/NASA",
+    "xem_ok": [
+      "dinh-luat-dat-ten"
+    ]
   },
   {
     "id": "vl-290",

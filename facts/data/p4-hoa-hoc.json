@@ -374,7 +374,10 @@
       "phan-tu",
       "thang-bac"
     ],
-    "src": "Số Avogadro theo định nghĩa SI 2019"
+    "src": "Số Avogadro theo định nghĩa SI 2019",
+    "xem_ok": [
+      "xu-huong-mo-ho"
+    ]
   },
   {
     "id": "hh-230",

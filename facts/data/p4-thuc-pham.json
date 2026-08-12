@@ -315,14 +315,17 @@
     "id": "tp-229",
     "cat": "thuc-pham",
     "sub": "len-men",
-    "t": "Cà phê phải lên men trước khi rang, và bước đó ảnh hưởng tới mùi nhiều hơn nhiều người nghĩ",
+    "t": "Cà phê phải lên men 12–36 giờ trước khi rang, và cùng một giống cây cho hương khác nhau tuỳ cách lên men",
     "s": "Lớp thịt quả được phân giải bằng vi sinh vật trong 12–36 giờ. Phương pháp chế biến ướt, khô hay honey tạo hồ sơ hương khác nhau rõ rệt trên cùng một giống cây.",
     "tags": [
       "ca-phe",
       "len-men",
       "che-bien"
     ],
-    "src": "Specialty Coffee Association; Lee và cộng sự, Food Chemistry (2015)"
+    "src": "Specialty Coffee Association; Lee và cộng sự, Food Chemistry (2015)",
+    "xem_ok": [
+      "xu-huong-mo-ho"
+    ]
   },
   {
     "id": "tp-230",

@@ -129,7 +129,10 @@
       "xuat-ban",
       "thien-lech"
     ],
-    "src": "Rosenthal, 'The File Drawer Problem', Psychological Bulletin (1979); yêu cầu đăng ký của ICMJE (2005)"
+    "src": "Rosenthal, 'The File Drawer Problem', Psychological Bulletin (1979); yêu cầu đăng ký của ICMJE (2005)",
+    "xem_ok": [
+      "mo-neo-gia-dinh"
+    ]
   },
   {
     "id": "sh-118",
@@ -194,7 +197,10 @@
       "tuong-quan",
       "nghich-ly"
     ],
-    "src": "Joseph Berkson, Biometrics Bulletin (1946)"
+    "src": "Joseph Berkson, Biometrics Bulletin (1946)",
+    "xem_ok": [
+      "dinh-luat-dat-ten"
+    ]
   },
   {
     "id": "sh-123",
@@ -338,7 +344,10 @@
       "quan-tri-von",
       "toi-uu"
     ],
-    "src": "John Kelly, Bell System Technical Journal (1956); Thorp, The Kelly Criterion in Blackjack, Sports Betting, and the Stock Market (2006)"
+    "src": "John Kelly, Bell System Technical Journal (1956); Thorp, The Kelly Criterion in Blackjack, Sports Betting, and the Stock Market (2006)",
+    "xem_ok": [
+      "dinh-luat-dat-ten"
+    ]
   },
   {
     "id": "sh-137",

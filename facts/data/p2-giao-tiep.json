@@ -49,7 +49,10 @@
       "ban-be",
       "thoi-gian"
     ],
-    "src": "Jeffrey Hall, Journal of Social and Personal Relationships (2019)"
+    "src": "Jeffrey Hall, Journal of Social and Personal Relationships (2019)",
+    "xem_ok": [
+      "xu-huong-mo-ho"
+    ]
   },
   {
     "id": "gt-110",
@@ -140,7 +143,10 @@
       "dong-cam",
       "lanh-dao"
     ],
-    "src": "Galinsky và cộng sự, Psychological Science (2006)"
+    "src": "Galinsky và cộng sự, Psychological Science (2006)",
+    "xem_ok": [
+      "xu-huong-mo-ho"
+    ]
   },
   {
     "id": "gt-119",
@@ -321,6 +327,9 @@
       "lanh-dao",
       "an-tuong"
     ],
-    "src": "Sorrentino & Boutillier, Journal of Experimental Social Psychology (1975); MacLaren và cộng sự (2020)"
+    "src": "Sorrentino & Boutillier, Journal of Experimental Social Psychology (1975); MacLaren và cộng sự (2020)",
+    "xem_ok": [
+      "do-du"
+    ]
   }
 ]

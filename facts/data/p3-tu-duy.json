@@ -9,7 +9,10 @@
       "tuong-quan",
       "chuoi-thoi-gian"
     ],
-    "src": "Tyler Vigen, Spurious Correlations (2015); vấn đề hồi quy giả trong Granger & Newbold (1974)"
+    "src": "Tyler Vigen, Spurious Correlations (2015); vấn đề hồi quy giả trong Granger & Newbold (1974)",
+    "xem_ok": [
+      "xu-huong-mo-ho"
+    ]
   },
   {
     "id": "td-240",
@@ -196,12 +199,15 @@
     "cat": "tu-duy",
     "sub": "sang-tao",
     "t": "Chất lượng ý tưởng trung bình tăng dần trong một buổi nghĩ — ý hay nằm ở nửa sau danh sách, không ở 5 ý đầu",
-    "s": "Chất lượng ý tưởng trung bình có xu hướng tăng dần trong một buổi nghĩ, vì các phương án hiển nhiên bị dùng hết trước. Hệ quả rất thực dụng: đặt hạn mức số lượng, và đừng dừng ở ý tưởng đầu tiên nghe được.",
+    "s": "Chất lượng ý tưởng trung bình tăng dần trong một buổi nghĩ, vì các phương án hiển nhiên bị dùng hết trước — nên năm ý đầu là năm ý dễ nghĩ nhất, không phải năm ý tốt nhất. Đây gọi là hiệu ứng chuỗi ý tưởng: phần đuôi danh sách chứa các phương án phải bỏ công tìm mới ra.",
     "tags": [
       "y-tuong",
       "so-luong"
     ],
-    "src": "Nghiên cứu về serial order effect trong sinh ý tưởng; Beaty & Silvia, Psychology of Aesthetics (2012)"
+    "src": "Nghiên cứu về serial order effect trong sinh ý tưởng; Beaty & Silvia, Psychology of Aesthetics (2012)",
+    "xem_ok": [
+      "xu-huong-mo-ho"
+    ]
   },
   {
     "id": "td-320",

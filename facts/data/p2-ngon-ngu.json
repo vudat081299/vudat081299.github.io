@@ -354,14 +354,17 @@
     "id": "nn-129",
     "cat": "ngon-ngu",
     "sub": "ngu-phap-tu-vung",
-    "t": "Định luật Zipf: từ phổ biến thứ hai xuất hiện bằng khoảng một nửa từ phổ biến nhất",
-    "s": "Tần suất tỉ lệ nghịch với thứ hạng, và quy luật này đúng ở mọi ngôn ngữ được kiểm tra. Hệ quả thực tế cho người học ngoại ngữ: khoảng 1.000 từ phổ biến nhất bao phủ phần lớn hội thoại đời thường, còn 10.000 từ tiếp theo chỉ thêm được phần nhỏ.",
+    "t": "Định luật Zipf: từ phổ biến thứ 2 xuất hiện bằng khoảng 1/2 từ phổ biến nhất, thứ 3 bằng khoảng 1/3",
+    "s": "Tần suất tỉ lệ nghịch với thứ hạng, và quy luật giữ với mọi ngôn ngữ được kiểm tra, cả với dân số thành phố và lượt truy cập website. Hệ quả cho người học ngoại ngữ: khoảng 1.000 từ phổ biến nhất bao phủ phần lớn hội thoại đời thường, còn 10.000 từ tiếp theo chỉ thêm được phần nhỏ. Nguyên nhân sâu xa của quy luật vẫn chưa được giải thích trọn vẹn.",
     "tags": [
       "zipf",
       "hoc-ngoai-ngu",
       "thong-ke"
     ],
-    "src": "Zipf (1949); nghiên cứu về độ phủ từ vựng trong ngữ liệu"
+    "src": "Zipf, Human Behavior and the Principle of Least Effort (1949); nghiên cứu về độ phủ từ vựng trong ngữ liệu",
+    "xem_ok": [
+      "dinh-luat-dat-ten"
+    ]
   },
   {
     "id": "nn-130",
@@ -426,7 +429,10 @@
       "thuyet-phuc",
       "thiet-ke"
     ],
-    "src": "Reber & Schwarz, Consciousness and Cognition (1999); McGlone & Tofighbakhsh, Psychological Science (2000)"
+    "src": "Reber & Schwarz, Consciousness and Cognition (1999); McGlone & Tofighbakhsh, Psychological Science (2000)",
+    "xem_ok": [
+      "do-du"
+    ]
   },
   {
     "id": "nn-136",
@@ -504,7 +510,10 @@
       "thi-giac",
       "ao-giac"
     ],
-    "src": "McGurk & MacDonald, Nature (1976)"
+    "src": "McGurk & MacDonald, Nature (1976)",
+    "xem_ok": [
+      "dinh-luat-dat-ten"
+    ]
   },
   {
     "id": "nn-142",

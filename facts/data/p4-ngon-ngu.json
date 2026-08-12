@@ -24,18 +24,5 @@
       "sumer"
     ],
     "src": "Schmandt-Besserat, How Writing Came About (1996)"
-  },
-  {
-    "id": "nn-215",
-    "cat": "ngon-ngu",
-    "sub": "ngu-phap-tu-vung",
-    "t": "Định luật Zipf: từ phổ biến thứ 2 xuất hiện bằng khoảng 1/2 từ phổ biến nhất, thứ 3 bằng khoảng 1/3",
-    "s": "Quy luật này đúng với hầu hết văn bản đủ dài ở mọi ngôn ngữ, và cả với dân số thành phố hay lượt truy cập website. Nguyên nhân sâu xa của nó vẫn chưa được giải thích trọn vẹn.",
-    "tags": [
-      "zipf",
-      "phan-bo",
-      "thong-ke"
-    ],
-    "src": "Zipf, Human Behavior and the Principle of Least Effort (1949)"
   }
 ]
