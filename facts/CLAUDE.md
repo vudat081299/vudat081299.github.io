@@ -220,6 +220,25 @@ Cả hai phải sạch lỗi.
   Cặp cùng chủ đề nhưng **khác cụm** chỉ được báo từ 0,62 trở lên, không báo từ 0,42 — xem §3.
 - `verify` — cổng định nghĩa §1. Nó phân ba mức: `LOẠI` là vi phạm chắc chắn và **phải xoá
   hoặc viết lại**; `XEM` là nghi ngờ, phải đọc bằng mắt rồi tự quyết; còn lại là đạt.
+
+**Đã soi rồi thì ghi lại — bằng `xem_ok`.** Một luật mức `XEM` báo oan là chuyện bình thường
+(mỏ neo của fact là cơ chế chứ không phải con số, hoặc từ chỉ độ lớn chỉ là văn nói). Khi đã
+đọc và kết luận nó oan, thêm vào fact:
+
+```json
+"xem_ok": ["do-lon-bang-chu"]
+```
+
+Không có field này thì danh sách `XEM` **không bao giờ hội tụ**: phiên sau mở ra thấy 142 fact
+và không phân biệt được cái nào đã có người soi, cái nào chưa. `verify` đếm riêng số fact được
+miễn, `check` báo lỗi nếu rule id không tồn tại.
+
+Hai điều kiện khi dùng:
+
+1. **Chỉ thêm sau khi thật sự đọc fact đó.** Nó là ghi chép "người thật đã soi cái này", không
+   phải công tắc làm cổng im lặng. Thêm bừa thì lần sau không ai tin được field này nữa.
+2. **Không miễn được mức `LOẠI`.** Nếu một fact thật sự cần vượt `LOẠI` thì luật sai — đi sửa
+   luật, đừng miễn cho một fact.
   Đây là cổng chặn commit, không phải gợi ý.
 
 ---
