@@ -7,6 +7,9 @@ Thư viện fact tiếng Việt cho người trưởng thành. Trang tĩnh, khô
 Kiến trúc, cách chạy tại máy và cấu trúc file: xem [README.md](README.md). File này nói về
 **quy trình** và **các quy tắc không được vi phạm**.
 
+Nhật ký các đợt rà soát, những gì đã đo và **những gì còn nợ**: xem [HANDOFF.md](HANDOFF.md).
+Đọc file đó trước khi bắt đầu một đợt rà mới — nó ghi rõ chỗ nào đã soi và chỗ nào chưa.
+
 ---
 
 ## 1. Một fact là gì

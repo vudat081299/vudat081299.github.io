@@ -542,7 +542,10 @@
       "dien-anh",
       "tieu-chuan"
     ],
-    "src": "SMPTE; Bordwell & Thompson, Film Art"
+    "src": "SMPTE; Bordwell & Thompson, Film Art",
+    "khac_voi": [
+      "na-338"
+    ]
   },
   {
     "id": "na-243",
@@ -575,7 +578,7 @@
     "cat": "nghe-thuat",
     "sub": "nhiep-anh-dien-anh",
     "t": "Cảm biến máy ảnh không nhìn thấy màu — mỗi điểm ảnh chỉ đo cường độ qua một kính lọc",
-    "s": "Ma trận Bayer đặt kính lọc đỏ, lục, lam theo mẫu có gấp đôi số ô lục vì mắt người nhạy nhất với lục. Màu của từng điểm ảnh là kết quả nội suy từ các ô lân cận.",
+    "s": "Ma trận Bayer đặt kính lọc đỏ, lục, lam theo mẫu có gấp đôi số ô lục vì mắt người nhạy nhất với lục. Màu của từng điểm ảnh là kết quả nội suy từ các ô lân cận, chứ không phải đo được trực tiếp. Cùng lý do đó, tín hiệu độ sáng trong video được tính với trọng số lục lớn nhất.",
     "tags": [
       "bayer",
       "cam-bien",
@@ -759,7 +762,7 @@
     "id": "na-259",
     "cat": "nghe-thuat",
     "sub": "kien-truc",
-    "t": "Tường dày ở kiến trúc truyền thống vùng nóng hoạt động như bộ trễ nhiệt, không như lớp cách nhiệt",
+    "t": "Tường dày ở vùng nóng làm chậm nhiệt đi vào nhà chứ không ngăn nó, nên trong nhà mát nhất lúc ngoài trời nóng nhất",
     "s": "Khối lượng lớn hấp thụ nhiệt ban ngày và thải ra ban đêm, làm biên độ nhiệt trong nhà giảm mạnh. Cách này chỉ hiệu quả ở nơi chênh lệch ngày đêm lớn, nên nó phổ biến ở sa mạc chứ không ở vùng nhiệt đới ẩm.",
     "tags": [
       "tuong-day",
@@ -1104,7 +1107,7 @@
     "id": "na-286",
     "cat": "nghe-thuat",
     "sub": "ly-thuyet-nhac",
-    "t": "Nhạc số lấy mẫu 44.100 lần mỗi giây vì tai người nghe tới 20.000 Hz và định lý lấy mẫu đòi hơn gấp đôi",
+    "t": "Nhạc số lấy mẫu 44.100 lần mỗi giây, vì muốn ghi lại được âm 20.000 Hz thì phải đo hơn hai lần mỗi chu kỳ",
     "s": "Định lý Nyquist–Shannon nói tần số lấy mẫu phải lớn hơn hai lần tần số cao nhất cần tái tạo. Con số lẻ 44.100 đến từ việc tận dụng thiết bị ghi video thời đó.",
     "tags": [
       "nyquist",
@@ -2034,19 +2037,6 @@
       "anh"
     ],
     "src": "ISO/IEC 10918; Wallace, Communications of the ACM (1991)"
-  },
-  {
-    "id": "na-371",
-    "cat": "nghe-thuat",
-    "sub": "mau-va-chat-lieu",
-    "t": "Mắt người nhạy với màu lục hơn hai màu còn lại, và cảm biến máy ảnh được thiết kế theo đúng thiên lệch đó",
-    "s": "Ma trận Bayer có số ô lọc lục gấp đôi ô đỏ và ô lam. Cùng lý do, tín hiệu độ sáng trong video được tính với trọng số lục lớn nhất.",
-    "tags": [
-      "thi-giac",
-      "bayer",
-      "do-sang"
-    ],
-    "src": "ITU-R BT.709; Bayer (1976)"
   },
   {
     "id": "na-372",

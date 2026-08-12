@@ -107,7 +107,7 @@
     "id": "cn-010",
     "cat": "cong-nghe",
     "sub": "may-tinh-chip",
-    "t": "Định luật Moore là một quan sát kinh doanh, không phải định luật vật lý",
+    "t": "Số transistor trên một chip tăng gấp đôi khoảng mỗi hai năm vì cả ngành lấy đó làm mục tiêu, không vì một định luật vật lý",
     "s": "Gordon Moore năm 1965 nhận thấy số transistor trên một chip tăng gấp đôi khoảng mỗi năm, rồi hiệu chỉnh thành hai năm. Nó tự đúng một phần vì cả ngành lấy nó làm mục tiêu lập kế hoạch. Tốc độ này đã chậm lại rõ rệt, và hiệu năng ngày nay tăng chủ yếu nhờ kiến trúc chuyên dụng chứ không nhờ thu nhỏ thuần tuý.",
     "tags": [
       "chip",
@@ -124,7 +124,7 @@
     "cat": "cong-nghe",
     "sub": "ai-thuat-toan",
     "t": "Mô hình ngôn ngữ lớn sinh chữ theo xác suất, nên nó có thể bịa rất trơn tru",
-    "s": "Nó dự đoán mảnh chữ tiếp theo dựa trên phân bố học được, không tra cứu một cơ sở dữ liệu sự thật. Vì vậy văn phong tự tin không phải chỉ báo cho độ chính xác, và những thứ dễ bịa nhất lại đúng là thứ nghe thuyết phục nhất: số liệu, trích dẫn, tên tài liệu tham khảo.",
+    "s": "Nó dự đoán mảnh chữ tiếp theo dựa trên phân bố học được, không tra cứu một cơ sở dữ liệu sự thật — đây là khác biệt cốt lõi so với công cụ tìm kiếm. Một câu trả lời trôi chảy và một câu trả lời đúng được tạo ra bằng cùng một cơ chế, nên độ trôi chảy không phải tín hiệu về độ chính xác, và những thứ dễ bịa nhất lại đúng là thứ nghe thuyết phục nhất.",
     "d": "Cách dùng của người trưởng thành: dùng nó để soạn, tóm tắt, đặt câu hỏi ngược, tìm góc nhìn — rồi tự kiểm chứng mọi con số, tên riêng và điều khoản pháp lý ở nguồn gốc. Chi phí kiểm tra một dữ kiện luôn thấp hơn chi phí trích dẫn nhầm một dữ kiện.",
     "tags": [
       "ai",

@@ -367,7 +367,7 @@
     "cat": "thuc-pham",
     "sub": "bao-quan",
     "t": "Muối và đường bảo quản thực phẩm bằng cách hút nước ra khỏi tế bào vi khuẩn",
-    "s": "Nồng độ muối hoặc đường cao bên ngoài hút nước từ trong tế bào vi sinh vật ra, làm chúng mất nước và ngừng hoạt động. Đây là công nghệ bảo quản cổ nhất còn dùng, và nó không cần điện.",
+    "s": "Nồng độ muối hoặc đường cao bên ngoài hút nước từ trong tế bào vi sinh vật ra, làm chúng mất nước và ngừng hoạt động. Hai chất cần nồng độ rất khác nhau: mứt phải khoảng 65% đường mới ức chế được vi sinh vật, còn muối chỉ cần khoảng 20%. Đây là công nghệ bảo quản cổ nhất còn dùng, và nó không cần điện.",
     "tags": [
       "muoi",
       "tham-thau",
@@ -1038,7 +1038,7 @@
     "id": "tp-289",
     "cat": "thuc-pham",
     "sub": "an-toan-thuc-pham",
-    "t": "Măng tươi và sắn chứa cyanogenic glycoside, và luộc mở nắp là bước làm giảm độc",
+    "t": "Măng tươi và sắn chứa chất sinh ra xyanua, và luộc mở nắp là bước làm giảm độc",
     "s": "Sắn đắng chưa xử lý đã gây ngộ độc hàng loạt ở nhiều nước. Ngâm, luộc và đổ nước là quy trình dân gian có cơ sở hoá học thật: chất độc dễ bay hơi và tan trong nước.",
     "tags": [
       "mang",
@@ -1382,23 +1382,10 @@
     "src": "US TTB; Jayabalan và cộng sự, Comprehensive Reviews in Food Science (2014)"
   },
   {
-    "id": "tp-317",
-    "cat": "thuc-pham",
-    "sub": "bao-quan",
-    "t": "Đường và muối bảo quản bằng cùng một cơ chế, nhưng cần nồng độ rất khác nhau",
-    "s": "Mứt cần khoảng 65% đường mới ức chế được vi sinh vật, trong khi muối chỉ cần khoảng 20%. Cả hai đều hạ hoạt độ nước xuống dưới ngưỡng vi khuẩn sống được.",
-    "tags": [
-      "hoat-do-nuoc",
-      "mut",
-      "muoi"
-    ],
-    "src": "Jay, Modern Food Microbiology"
-  },
-  {
     "id": "tp-318",
     "cat": "thuc-pham",
     "sub": "bao-quan",
-    "t": "Hoạt độ nước chứ không phải độ ẩm quyết định thực phẩm có hỏng hay không",
+    "t": "Mật ong có nước nhưng không hỏng, vì lượng nước đó bị giữ chặt tới mức vi sinh vật không dùng được",
     "s": "Mật ong có nước nhưng hoạt độ nước dưới 0,6 nên vi sinh vật không dùng được. Đây là chỉ số mà công nghiệp thực phẩm dùng thay cho 'khô' hay 'ướt'.",
     "tags": [
       "hoat-do-nuoc",
@@ -1803,7 +1790,7 @@
     "id": "tp-353",
     "cat": "thuc-pham",
     "sub": "bao-quan",
-    "t": "Rau lá héo hồi lại được khi ngâm nước lạnh vì tế bào lấy lại áp suất trương",
+    "t": "Rau lá héo hồi lại được khi ngâm nước lạnh vì tế bào hút nước và căng trở lại",
     "s": "Nước đi vào tế bào qua thẩm thấu và làm thành tế bào căng trở lại. Cơ chế này chỉ hoạt động khi tế bào chưa chết hẳn.",
     "tags": [
       "rau",

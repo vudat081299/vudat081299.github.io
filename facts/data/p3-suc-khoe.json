@@ -83,8 +83,8 @@
     "id": "sk-208",
     "cat": "suc-khoe",
     "sub": "giac-ngu",
-    "t": "Hệ glymphatic — dòng dịch dọc mạch máu não — chảy mạnh lên khi ngủ và cuốn theo cả amyloid beta",
-    "s": "Hệ glymphatic — dòng dịch dọc theo mạch máu trong não — hoạt động mạnh hơn khi ngủ, giúp loại các sản phẩm chuyển hoá bao gồm amyloid beta. Cơ chế được phát hiện ở chuột và bằng chứng ở người còn đang được xây, nên đây là giả thuyết mạnh chứ chưa phải kết luận. Ở chuột, khoảng gian bào giãn thêm khoảng 60% khi ngủ, làm dòng dịch đi qua dễ hơn hẳn.",
+    "t": "Dòng dịch rửa não chảy mạnh lên khi ngủ và cuốn theo cả loại protein tích tụ trong bệnh Alzheimer",
+    "s": "Não có một hệ thống dẫn dịch chạy dọc theo mạch máu, hoạt động mạnh hơn khi ngủ và mang đi các sản phẩm thải của quá trình chuyển hoá, trong đó có amyloid beta — loại protein đóng bánh trong não người bệnh Alzheimer. Cơ chế được phát hiện ở chuột và bằng chứng ở người còn đang được xây, nên đây là giả thuyết mạnh chứ chưa phải kết luận.",
     "tags": [
       "nao",
       "glymphatic"
@@ -167,7 +167,7 @@
     "id": "sk-215",
     "cat": "suc-khoe",
     "sub": "giac-ngu",
-    "t": "Lệch nhịp xã hội — ngủ khác giờ vào cuối tuần — liên quan tới rủi ro chuyển hoá",
+    "t": "Chênh lệch giờ ngủ giữa ngày làm và ngày nghỉ đi cùng chỉ số khối cơ thể cao hơn, độc lập với tổng thời lượng ngủ",
     "s": "Chênh lệch giữa giờ ngủ ngày làm và ngày nghỉ tương quan với chỉ số khối cơ thể, mức triglyceride và nguy cơ chuyển hoá, độc lập với tổng thời lượng ngủ. Nghĩa là 'ngủ nướng bù' không trung tính về mặt sinh học.",
     "tags": [
       "lech-nhip",
@@ -210,18 +210,6 @@
       "do-luong"
     ],
     "src": "de Zambotti và cộng sự, Chronobiology International (2018); Baron và cộng sự, Journal of Clinical Sleep Medicine (2017)"
-  },
-  {
-    "id": "sk-223",
-    "cat": "suc-khoe",
-    "sub": "van-dong",
-    "t": "Lợi ích của vận động xuất hiện ở mức thấp hơn nhiều so với khuyến nghị chính thức",
-    "s": "Đường liên hệ giữa mức vận động và giảm nguy cơ tử vong có dạng cong: phần dốc nhất nằm ở đoạn từ gần như không vận động lên mức nhẹ. Nghĩa là người ít vận động nhất được lợi nhiều nhất từ mỗi đơn vị nỗ lực đầu tiên.",
-    "tags": [
-      "lieu-dap-ung",
-      "van-dong"
-    ],
-    "src": "Ekelund và cộng sự, BMJ (2019); Arem và cộng sự, JAMA Internal Medicine (2015)"
   },
   {
     "id": "sk-224",
@@ -299,7 +287,7 @@
     "id": "sk-232",
     "cat": "suc-khoe",
     "sub": "van-dong",
-    "t": "Vận động có tác dụng lên nhận thức ở người lớn tuổi, và đây là một trong ít can thiệp có bằng chứng",
+    "t": "Tập nhịp điệu cải thiện khả năng lập kế hoạch và tập trung ở người lớn tuổi trong các thử nghiệm ngẫu nhiên",
     "s": "Các thử nghiệm ngẫu nhiên cho thấy tập nhịp điệu cải thiện một số chức năng điều hành và có liên hệ với thể tích vùng hải mã. Hiệu ứng vừa phải và không phải mọi nghiên cứu đều tìm thấy, nhưng nó vững hơn hầu hết sản phẩm 'luyện não'.",
     "tags": [
       "nhan-thuc",
@@ -335,7 +323,7 @@
     "id": "sk-236",
     "cat": "suc-khoe",
     "sub": "van-dong",
-    "t": "Sức bền tim mạch là một trong các yếu tố dự báo tử vong mạnh nhất từng được đo",
+    "t": "Mức thể lực đo bằng nghiệm pháp gắng sức dự báo tử vong mạnh hơn hút thuốc, tiểu đường hay huyết áp cao",
     "s": "Trong các nghiên cứu theo dõi hàng chục nghìn người, mức thể lực đo bằng nghiệm pháp gắng sức dự báo tử vong mạnh hơn hút thuốc, tiểu đường hay huyết áp cao. Điều đáng chú ý là nó cải thiện được ở mọi tuổi.",
     "tags": [
       "the-luc",
@@ -410,7 +398,7 @@
     "id": "sk-244",
     "cat": "suc-khoe",
     "sub": "an-uong",
-    "t": "Chất béo bão hoà là chủ đề mà bằng chứng yếu hơn mức tranh luận công khai giả định",
+    "t": "Thay chất béo bão hoà bằng chất béo không bão hoà đa giảm biến cố tim mạch, thay bằng tinh bột tinh chế thì không",
     "s": "Gộp nhiều nghiên cứu lại thì thay chất béo bão hoà bằng chất béo không bão hoà đa làm giảm biến cố tim mạch, nhưng thay bằng tinh bột tinh chế thì không. Nghĩa là câu hỏi đúng không phải 'bỏ chất béo bão hoà hay không' mà là 'thay bằng gì'.",
     "tags": [
       "chat-beo",
@@ -569,7 +557,7 @@
     "id": "sk-260",
     "cat": "suc-khoe",
     "sub": "chat-kich-thich",
-    "t": "Caffeine cải thiện hiệu suất thể chất một cách đo được, và đây là một trong ít chất bổ sung có bằng chứng vững",
+    "t": "Uống 3–6 mg caffeine cho mỗi kg cân nặng trước khi vận động làm tăng sức bền và giảm cảm giác gắng sức",
     "s": "Liều khoảng 3–6 mg mỗi kg cân nặng trước vận động làm tăng sức bền và giảm cảm giác gắng sức trong nhiều loại bài tập. Hiệu ứng nhất quán tới mức caffeine từng nằm trong danh sách chất bị kiểm soát của thể thao thi đấu.",
     "tags": [
       "the-thao",
@@ -656,7 +644,7 @@
     "id": "sk-272",
     "cat": "suc-khoe",
     "sub": "benh-va-tam-soat",
-    "t": "Chỉ số nguy cơ tim mạch 10 năm hữu ích hơn từng con số riêng lẻ",
+    "t": "Ba chỉ số ở mức ranh giới đáng lo hơn một chỉ số cao đơn lẻ, nên bác sĩ tính nguy cơ tổng hợp 10 năm",
     "s": "Huyết áp, cholesterol, tuổi, giới, hút thuốc và tiểu đường tương tác với nhau, nên một chỉ số cao đơn lẻ có thể ít đáng lo hơn ba chỉ số ở mức ranh giới. Các thang tính nguy cơ tổng hợp là cơ sở để quyết định dùng thuốc, không phải từng ngưỡng riêng.",
     "tags": [
       "nguy-co",
@@ -680,7 +668,7 @@
     "id": "sk-275",
     "cat": "suc-khoe",
     "sub": "benh-va-tam-soat",
-    "t": "Tiểu đường type 2 có thể vào giai đoạn thuyên giảm bằng giảm cân đáng kể",
+    "t": "Gần một nửa người tiểu đường type 2 trong thử nghiệm DiRECT hết bệnh sau một năm giảm cân có kiểm soát",
     "s": "Trong thử nghiệm DiRECT, gần một nửa người tham gia đạt thuyên giảm sau một năm với chương trình giảm cân có kiểm soát, và tỉ lệ phụ thuộc mạnh vào mức cân giảm được. Đây là thay đổi lớn so với quan niệm bệnh chỉ tiến triển một chiều.",
     "tags": [
       "tieu-duong",

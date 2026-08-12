@@ -831,7 +831,7 @@
     "id": "th-278",
     "cat": "toan-hoc",
     "sub": "vo-han-va-tap-hop",
-    "t": "Hầu như mọi số thực đều không phải nghiệm của bất kỳ phương trình đa thức hệ số nguyên nào",
+    "t": "Số như pi không thể là nghiệm của bất kỳ phương trình đại số nào, và gần như mọi số trên trục số cũng vậy",
     "s": "Tập số đại số đếm được, nên tập số siêu việt chiếm gần như toàn bộ trục số. Nhưng chứng minh một số cụ thể là siêu việt lại rất khó: pi mãi tới năm 1882 mới được chứng minh.",
     "tags": [
       "so-sieu-viet",
@@ -1078,7 +1078,7 @@
     "id": "th-305",
     "cat": "toan-hoc",
     "sub": "vo-han-va-tap-hop",
-    "t": "Tập các số hữu tỉ đếm được dù nó dày đặc trên trục số",
+    "t": "Giữa hai số bất kỳ có vô hạn phân số, nhưng tổng số phân số vẫn 'bằng' tổng số số nguyên",
     "s": "Cantor sắp xếp mọi phân số vào một lưới rồi đi zigzag để đánh số hết. Nghĩa là giữa hai số bất kỳ có vô hạn phân số, mà tổng số phân số vẫn 'bằng' tổng số số tự nhiên.",
     "tags": [
       "huu-ti",
@@ -1117,7 +1117,7 @@
     "id": "th-308",
     "cat": "toan-hoc",
     "sub": "hinh-hoc",
-    "t": "Trong hình học phi Euclid, tổng ba góc tam giác cho biết diện tích của nó",
+    "t": "Trong hình học trên mặt cầu, tổng ba góc của một tam giác cho biết diện tích của nó",
     "s": "Trên mặt cầu, phần vượt quá 180 độ tỉ lệ thuận với diện tích tam giác. Đây là lý do không thể phóng to hay thu nhỏ một tam giác trên mặt cầu mà giữ nguyên hình dạng.",
     "tags": [
       "phi-euclid",
@@ -1435,7 +1435,7 @@
     "id": "th-333",
     "cat": "toan-hoc",
     "sub": "nghich-ly-toan",
-    "t": "Trực giác về tỉ lệ hỏng nặng khi so hai nhóm có kích thước khác nhau",
+    "t": "Bệnh viện chữa 100 ca nặng với tỉ lệ sống 60% có thể giỏi hơn bệnh viện chữa 1.000 ca nhẹ với tỉ lệ 90%",
     "s": "Một bệnh viện chữa 100 ca nặng với tỉ lệ sống 60% giỏi hơn bệnh viện chữa 1.000 ca nhẹ với tỉ lệ 90%, nhưng bảng xếp hạng thô lại nói ngược. Đây là lý do y tế phải hiệu chỉnh theo mức độ bệnh.",
     "tags": [
       "hieu-chinh-rui-ro",
@@ -1591,7 +1591,7 @@
     "id": "th-345",
     "cat": "toan-hoc",
     "sub": "toi-uu-va-thuat-toan",
-    "t": "Sắp xếp một danh sách gần như đã sắp xếp mất thời gian tuyến tính, còn danh sách ngẫu nhiên mất n log n",
+    "t": "Sắp xếp một danh sách gần như đã đúng thứ tự nhanh hơn hẳn so với sắp xếp một danh sách ngẫu nhiên",
     "s": "Thuật toán chèn khai thác được các đoạn đã có thứ tự, còn quicksort lại có thể rơi vào trường hợp xấu nhất bậc n bình phương. Đây là lý do thư viện chuẩn dùng thuật toán lai chứ không dùng một thuật toán thuần.",
     "tags": [
       "sap-xep",

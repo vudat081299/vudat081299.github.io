@@ -730,8 +730,8 @@
     "id": "vl-258",
     "cat": "vat-ly",
     "sub": "chat-long-khi",
-    "t": "Dòng chảy rối bắt đầu khi số Reynolds vượt khoảng 2.300 trong ống tròn, và đó là ranh giới khá sắc",
-    "s": "Dưới ngưỡng đó dòng chảy tầng, các lớp trượt lên nhau êm; trên ngưỡng, xoáy xuất hiện và trở lực tăng vọt. Cùng một công thức áp dụng cho ống nước gia đình, mạch máu và đường ống dẫn dầu xuyên quốc gia.",
+    "t": "Dòng nước chảy êm chuyển thành chảy xoáy rất đột ngột, không chuyển dần",
+    "s": "Dưới một ngưỡng nhất định, các lớp nước trượt lên nhau êm; vượt ngưỡng đó, xoáy xuất hiện và trở lực tăng vọt. Ngưỡng được tính bằng một tỉ số giữa quán tính và độ nhớt của chất lỏng — với ống tròn nó nằm quanh giá trị 2.300. Cùng công thức áp dụng cho ống nước gia đình, mạch máu và đường ống dầu.",
     "tags": [
       "reynolds",
       "dong-chay",
@@ -834,7 +834,7 @@
     "id": "vl-267",
     "cat": "vat-ly",
     "sub": "do-luong-don-vi",
-    "t": "Nhiệt độ ngoài trời 35 °C nguy hiểm hơn nhiều khi độ ẩm cao, và ngưỡng sinh lý là nhiệt độ bầu ướt 35 °C",
+    "t": "Ở 35 °C với độ ẩm rất cao, mồ hôi không bay hơi được nữa nên cơ thể không hạ nhiệt được dù ngồi trong bóng râm",
     "s": "Trên ngưỡng đó, mồ hôi không bay hơi được nữa nên cơ thể không thể hạ nhiệt dù ngồi trong bóng râm và uống đủ nước. Vài nơi ở vùng Vịnh và Nam Á đã chạm ngưỡng này trong thời gian ngắn.",
     "tags": [
       "nhiet-bau-uot",
@@ -1097,8 +1097,8 @@
     "id": "vl-289",
     "cat": "vat-ly",
     "sub": "hat-va-luong-tu",
-    "t": "Hiệu ứng đường hầm lượng tử cho phép hạt vượt qua rào năng lượng mà theo cơ học cổ điển nó không thể vượt",
-    "s": "Mặt Trời cháy được nhờ hiệu ứng này: nhiệt độ lõi 15 triệu độ vẫn chưa đủ để hai proton thắng lực đẩy điện, nhưng xác suất chui hầm khác không. Bộ nhớ flash cũng ghi và xoá dữ liệu bằng cơ chế đó.",
+    "t": "Mặt Trời cháy được nhờ các hạt đi xuyên qua một rào năng lượng mà lẽ ra chúng không đủ sức vượt",
+    "s": "Nhiệt độ lõi 15 triệu độ vẫn chưa đủ để hai proton thắng lực đẩy điện giữa chúng, nhưng theo cơ học lượng tử vẫn có một khả năng khác không rằng hạt xuất hiện ở phía bên kia rào — và ở quy mô số hạt trong lõi Mặt Trời thì khả năng nhỏ đó đủ để duy trì phản ứng. Bộ nhớ flash cũng ghi và xoá dữ liệu bằng chính hiện tượng này.",
     "tags": [
       "duong-ham",
       "luong-tu",
@@ -1577,7 +1577,7 @@
     "id": "vl-338",
     "cat": "vat-ly",
     "sub": "do-luong-don-vi",
-    "t": "Nhiệt độ cảm nhận và nhiệt độ đo được là hai đại lượng khác nhau, và cả hai đều có công thức riêng",
+    "t": "Cùng nhiệt độ 35 độ, độ ẩm 40% và 80% cho cảm nhận chênh nhau hơn 10 độ",
     "s": "Chỉ số nhiệt kết hợp nhiệt độ với độ ẩm; chỉ số gió lạnh kết hợp nhiệt độ với tốc độ gió. Cùng 35 độ, độ ẩm 40% và 80% cho cảm nhận chênh nhau hơn 10 độ.",
     "tags": [
       "chi-so-nhiet",

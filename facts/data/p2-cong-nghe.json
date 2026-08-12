@@ -3,7 +3,7 @@
     "id": "cn-102",
     "cat": "cong-nghe",
     "sub": "bao-mat-mat-khau",
-    "t": "Passkey loại bỏ hoàn toàn nguy cơ bị lừa nhập mật khẩu vào trang giả",
+    "t": "Đăng nhập bằng khoá lưu trong máy không thể bị lừa nhập vào trang giả, vì khoá gắn với đúng tên miền",
     "s": "Khoá bí mật không bao giờ rời khỏi thiết bị và được ràng buộc với đúng tên miền, nên một trang giả không thể nhận được gì có ích. Đây là thay đổi cấu trúc chứ không phải cải tiến nhỏ — nó xoá bỏ cả một lớp tấn công.",
     "tags": [
       "passkey",
@@ -45,7 +45,7 @@
     "id": "cn-106",
     "cat": "cong-nghe",
     "sub": "rieng-tu-quang-cao",
-    "t": "Siêu dữ liệu thường tiết lộ nhiều hơn nội dung",
+    "t": "Ai gọi cho ai vào lúc nào tiết lộ nhiều hơn nội dung cuộc gọi",
     "s": "Biết bạn gọi cho một phòng khám chuyên khoa lúc 2 giờ sáng, gọi tiếp cho người thân, rồi gọi cho công ty bảo hiểm — không cần nghe một từ nào cũng đủ dựng lại câu chuyện. Đây là lý do bảo vệ siêu dữ liệu là bài toán khó hơn nhiều so với mã hoá nội dung.",
     "tags": [
       "rieng-tu",
@@ -139,7 +139,7 @@
     "id": "cn-113",
     "cat": "cong-nghe",
     "sub": "ai-thuat-toan",
-    "t": "Bong bóng lọc nhỏ hơn ta tưởng, nhưng tự chọn lọc thì lớn",
+    "t": "Người dùng mạng xã hội gặp quan điểm đối lập nhiều hơn dự đoán, và sự đồng nhất đến từ chính lựa chọn theo dõi của họ",
     "s": "Các nghiên cứu đo thực tế cho thấy người dùng mạng xã hội tiếp xúc với quan điểm đối lập nhiều hơn dự đoán về bong bóng thuật toán. Cái tạo ra sự đồng nhất chủ yếu là lựa chọn của chính người dùng về việc theo dõi ai và bỏ theo dõi ai.",
     "tags": [
       "bong-bong-loc",
@@ -147,19 +147,6 @@
       "bang-chung"
     ],
     "src": "Bakshy, Messing & Adamic, Science (2015); Guess và cộng sự, Science (2023)"
-  },
-  {
-    "id": "cn-114",
-    "cat": "cong-nghe",
-    "sub": "ai-thuat-toan",
-    "t": "Mô hình ngôn ngữ không tra cứu — nó dự đoán từ tiếp theo",
-    "s": "Điều đó nghĩa là một câu trả lời trôi chảy và một câu trả lời đúng được tạo ra bằng cùng một cơ chế, nên độ trôi chảy không phải tín hiệu về độ chính xác. Đây là khác biệt cốt lõi so với công cụ tìm kiếm và là nguồn gốc của mọi lỗi bịa đặt.",
-    "tags": [
-      "ai",
-      "co-che",
-      "gioi-han"
-    ],
-    "src": "Vaswani và cộng sự, 'Attention Is All You Need' (2017); Bender và cộng sự, FAccT (2021)"
   },
   {
     "id": "cn-115",
@@ -379,7 +366,7 @@
     "id": "cn-136",
     "cat": "cong-nghe",
     "sub": "may-tinh-chip",
-    "t": "Định luật Amdahl: phần không song song hoá được đặt trần cho mọi cải thiện",
+    "t": "Nếu 10% chương trình buộc phải chạy tuần tự thì dù có vô hạn bộ xử lý cũng chỉ nhanh lên tối đa 10 lần",
     "s": "Nếu 10% chương trình chạy tuần tự, thì dù có vô hạn bộ xử lý bạn cũng chỉ nhanh lên tối đa 10 lần. Đây là lý do thêm nhân CPU không làm mọi thứ nhanh tương ứng, và cũng là ẩn dụ tốt cho việc thêm người vào một quy trình có nút thắt cổ chai.",
     "tags": [
       "hieu-suat",
@@ -395,8 +382,8 @@
     "id": "cn-138",
     "cat": "cong-nghe",
     "sub": "du-lieu-luu-tru",
-    "t": "Định lý CAP: hệ phân tán chỉ chọn được hai trong ba tính chất khi có sự cố mạng",
-    "s": "Khi mạng bị chia cắt, bạn phải chọn giữa nhất quán và khả dụng. Đây không phải lựa chọn thiết kế tuỳ hứng mà là giới hạn toán học — và mọi cơ sở dữ liệu phân tán đều nằm ở đâu đó trên đánh đổi này.",
+    "t": "Khi đường mạng giữa các máy chủ bị cắt, hệ thống phải chọn: trả lời bằng dữ liệu cũ, hoặc không trả lời",
+    "s": "Đây không phải lựa chọn thiết kế tuỳ hứng mà là giới hạn toán học đã được chứng minh: không hệ phân tán nào vừa luôn trả lời, vừa luôn trả lời đúng dữ liệu mới nhất, vừa chịu được đường mạng bị cắt. Mọi cơ sở dữ liệu phân tán đều nằm ở đâu đó trên đánh đổi này.",
     "tags": [
       "phan-tan",
       "kien-truc",

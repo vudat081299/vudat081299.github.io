@@ -23,7 +23,10 @@
       "bao-ton",
       "toan-cau"
     ],
-    "src": "Ethnologue; UNESCO Atlas of the World's Languages in Danger"
+    "src": "Ethnologue; UNESCO Atlas of the World's Languages in Danger",
+    "khac_voi": [
+      "nn-101"
+    ]
   },
   {
     "id": "nn-003",
@@ -152,7 +155,7 @@
     "id": "nn-015",
     "cat": "ngon-ngu",
     "sub": "ngu-phap-tu-vung",
-    "t": "Người trưởng thành bản ngữ biết khoảng 15.000–20.000 họ từ",
+    "t": "Người trưởng thành bản ngữ biết khoảng 15.000–20.000 nhóm từ, nhưng 2.000–3.000 từ hay gặp nhất đã bao phủ hơn 90% văn bản",
     "s": "Nhưng chỉ khoảng 2.000–3.000 từ phổ biến nhất đã bao phủ trên 90% văn bản đời thường. Đó là lý do chiến lược học ngoại ngữ hiệu quả nhất cho người bận rộn là nắm chắc lõi tần suất cao trước, thay vì học từ vựng theo chủ đề rời rạc.",
     "tags": [
       "tu-vung",

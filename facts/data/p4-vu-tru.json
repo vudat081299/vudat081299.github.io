@@ -13,32 +13,6 @@
     "src": "NASA Mars Exploration Program"
   },
   {
-    "id": "vt-208",
-    "cat": "vu-tru",
-    "sub": "he-mat-troi",
-    "t": "Sao Thổ có khối lượng riêng nhỏ hơn nước, nên về lý thuyết nó nổi được",
-    "s": "Khối lượng riêng trung bình khoảng 0,687 g mỗi centimet khối. Vành đai của nó rộng khoảng 280.000 km nhưng thường chỉ dày khoảng 10 mét.",
-    "tags": [
-      "sao-tho",
-      "khoi-luong-rieng",
-      "vanh-dai"
-    ],
-    "src": "NASA Cassini Mission; Planetary Fact Sheet"
-  },
-  {
-    "id": "vt-217",
-    "cat": "vu-tru",
-    "sub": "mat-trang-thuy-trieu",
-    "t": "Không có 'mặt tối' của Mặt Trăng — mặt xa nhận đúng bằng lượng ánh sáng mặt gần",
-    "s": "Mặt xa cũng có ngày và đêm, mỗi bên khoảng 14 ngày Trái Đất. Nó chỉ 'tối' theo nghĩa ta không quan sát được từ Trái Đất, không theo nghĩa thiếu ánh sáng.",
-    "tags": [
-      "mat-trang",
-      "huyen-thoai",
-      "chieu-sang"
-    ],
-    "src": "NASA Lunar Reconnaissance Orbiter"
-  },
-  {
     "id": "vt-218",
     "cat": "vu-tru",
     "sub": "mat-trang-thuy-trieu",

@@ -175,8 +175,8 @@
     "id": "ls-119",
     "cat": "lich-su",
     "sub": "phat-minh",
-    "t": "Quy trình Haber-Bosch nuôi sống khoảng một nửa dân số thế giới hiện nay",
-    "s": "Nó lấy nitơ từ không khí để làm phân bón, phá vỡ giới hạn tự nhiên về sản lượng nông nghiệp. Ước tính rằng nếu không có nó, Trái Đất không thể nuôi số người đang sống. Nó cũng tiêu thụ khoảng 1–2% năng lượng toàn cầu.",
+    "t": "Cách lấy nitơ từ không khí để làm phân bón đang nuôi khoảng một nửa dân số thế giới",
+    "s": "Quy trình Haber-Bosch phá vỡ giới hạn tự nhiên về sản lượng nông nghiệp: trước nó, lượng nitơ dùng được cho cây phụ thuộc vào vi khuẩn trong đất và phân chuồng. Ước tính nếu không có nó, Trái Đất không thể nuôi số người đang sống — khoảng một nửa lượng nitơ trong cơ thể bạn đi qua một nhà máy phân bón.",
     "tags": [
       "nong-nghiep",
       "hoa-hoc",
@@ -264,19 +264,6 @@
       "phu-nu"
     ],
     "src": "Ghi chú của Ada Lovelace về bài viết của Menabrea (1843)"
-  },
-  {
-    "id": "ls-127",
-    "cat": "lich-su",
-    "sub": "phat-minh",
-    "t": "Bản đồ thế giới quen thuộc bóp méo diện tích nghiêm trọng",
-    "s": "Phép chiếu Mercator giữ đúng góc để phục vụ hàng hải, đổi lại làm phình các vùng gần cực. Greenland trông to bằng châu Phi trong khi diện tích thật chỉ khoảng một phần mười bốn. Không phép chiếu phẳng nào giữ được cả hình dạng lẫn diện tích.",
-    "tags": [
-      "ban-do",
-      "bop-meo",
-      "dia-ly"
-    ],
-    "src": "Nguyên lý phép chiếu bản đồ; định lý Gauss về mặt cong"
   },
   {
     "id": "ls-128",

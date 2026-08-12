@@ -81,7 +81,7 @@
     "id": "hh-207",
     "cat": "hoa-hoc",
     "sub": "nguyen-to",
-    "t": "Thuỷ ngân là kim loại duy nhất ở thể lỏng tại nhiệt độ phòng, và lý do nằm ở hiệu ứng tương đối tính",
+    "t": "Thuỷ ngân là kim loại duy nhất ở thể lỏng tại nhiệt độ phòng, và nó nóng chảy ở −38,8 °C",
     "s": "Electron lớp trong của thuỷ ngân chuyển động đủ nhanh để hiệu ứng tương đối làm co quỹ đạo, khiến các nguyên tử liên kết yếu với nhau. Điểm nóng chảy của nó là −38,8 °C.",
     "tags": [
       "thuy-ngan",
@@ -779,7 +779,7 @@
     "id": "hh-263",
     "cat": "hoa-hoc",
     "sub": "kim-loai",
-    "t": "Titan có độ bền riêng cao nhất trong các kim loại thông dụng, nhưng khó gia công vì nó cháy được",
+    "t": "Titan bền hơn thép theo khối lượng nhưng khó gia công, vì bột và phoi titan cháy được trong không khí",
     "s": "Bột titan và phoi titan bốc cháy trong không khí và không dập được bằng nước. Nó cũng phản ứng mạnh với oxy khi nóng nên phải hàn trong môi trường khí trơ.",
     "tags": [
       "titan",
@@ -1194,7 +1194,10 @@
       "phan-bon",
       "nang-luong"
     ],
-    "src": "Smil, Enriching the Earth (2001); IEA"
+    "src": "Smil, Enriching the Earth (2001); IEA",
+    "khac_voi": [
+      "ls-119"
+    ]
   },
   {
     "id": "hh-295",
@@ -1278,7 +1281,7 @@
     "id": "hh-301",
     "cat": "hoa-hoc",
     "sub": "nguyen-to",
-    "t": "Nguyên tố duy nhất được đặt tên theo một người còn sống khi đặt là seaborgi",
+    "t": "Nguyên tố duy nhất được đặt tên theo một người còn sống lúc đặt tên là seaborgium",
     "s": "Glenn Seaborg còn sống năm 1997 khi nguyên tố 106 được đặt tên, và quyết định này gây tranh cãi. Ông cũng là người duy nhất từng nhận thư gửi tới một địa chỉ có tên nguyên tố mang tên mình.",
     "tags": [
       "seaborgi",

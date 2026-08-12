@@ -145,30 +145,17 @@
     "src": "Schröder & Smith, Monthly Notices of the Royal Astronomical Society (2008)"
   },
   {
-    "id": "vt-112",
-    "cat": "vu-tru",
-    "sub": "mat-trang-thuy-trieu",
-    "t": "Mặt Trăng đang làm ngày trên Trái Đất dài ra, và cách đây 620 triệu năm một ngày chỉ hơn 21 giờ",
-    "s": "Ma sát thuỷ triều chuyển động lượng quay của Trái Đất sang quỹ đạo Mặt Trăng. Bằng chứng đến từ các lớp trầm tích thuỷ triều hoá thạch, ghi lại số ngày trong một tháng âm lịch của các thời kỳ khác nhau.",
-    "tags": [
-      "mat-trang",
-      "thuy-trieu",
-      "dia-chat"
-    ],
-    "src": "Williams, Reviews of Geophysics (2000)"
-  },
-  {
     "id": "vt-113",
     "cat": "vu-tru",
     "sub": "mat-trang-thuy-trieu",
     "t": "Không có 'mặt tối' của Mặt Trăng — chỉ có mặt xa",
-    "s": "Mặt xa nhận đúng bằng lượng ánh sáng Mặt Trời như mặt gần, chỉ là nó không bao giờ quay về phía Trái Đất do khoá thuỷ triều. Con người chỉ nhìn thấy nó lần đầu năm 1959 qua tàu Luna 3 của Liên Xô.",
+    "s": "Mặt xa nhận đúng bằng lượng ánh sáng Mặt Trời như mặt gần, và cũng có ngày và đêm dài khoảng 14 ngày Trái Đất mỗi bên. Nó chỉ 'tối' theo nghĩa ta không quan sát được từ Trái Đất, vì khoá thuỷ triều làm nó không bao giờ quay về phía ta. Con người nhìn thấy nó lần đầu năm 1959 qua tàu Luna 3 của Liên Xô.",
     "tags": [
       "mat-trang",
       "hieu-lam",
       "lich-su"
     ],
-    "src": "Nhiệm vụ Luna 3 (1959); cơ học khoá thuỷ triều"
+    "src": "Nhiệm vụ Luna 3 (1959); NASA Lunar Reconnaissance Orbiter; cơ học khoá thuỷ triều"
   },
   {
     "id": "vt-115",
@@ -226,7 +213,7 @@
     "id": "vt-121",
     "cat": "vu-tru",
     "sub": "he-mat-troi",
-    "t": "Sao Mộc có đủ khối lượng để làm tâm quay chung của nó với Mặt Trời nằm ngoài bề mặt Mặt Trời",
+    "t": "Sao Mộc không quay quanh Mặt Trời — cả hai quay quanh một điểm nằm ngoài bề mặt Mặt Trời",
     "s": "Về mặt kỹ thuật, Sao Mộc không quay quanh Mặt Trời mà cả hai quay quanh một điểm chung nằm hơi phía trên bề mặt Mặt Trời. Đây cũng là nguyên lý mà các nhà thiên văn dùng để phát hiện hành tinh quanh các sao khác.",
     "tags": [
       "sao-moc",
@@ -252,7 +239,7 @@
     "id": "vt-123",
     "cat": "vu-tru",
     "sub": "he-mat-troi",
-    "t": "Sao Diêm Vương bị loại khỏi danh sách hành tinh vì một tiêu chí về quỹ đạo",
+    "t": "Sao Diêm Vương bị loại khỏi danh sách hành tinh vì nó không dọn sạch được vùng quỹ đạo của mình",
     "s": "Định nghĩa năm 2006 của Liên đoàn Thiên văn Quốc tế yêu cầu một hành tinh phải 'dọn sạch vùng lân cận quỹ đạo'. Sao Diêm Vương chia sẻ vùng của mình với vô số thiên thể vành đai Kuiper, trong đó có Eris nặng hơn nó.",
     "tags": [
       "sao-diem-vuong",
@@ -499,7 +486,7 @@
     "id": "vt-147",
     "cat": "vu-tru",
     "sub": "kham-pha-khong-gian",
-    "t": "Trạm Vũ trụ Quốc tế là công trình đắt nhất từng được xây dựng",
+    "t": "Trạm Vũ trụ Quốc tế tốn hơn 150 tỉ đô, đắt nhất trong mọi công trình từng được xây",
     "s": "Tổng chi phí ước tính trên 150 tỷ đô la với sự tham gia của 15 quốc gia. Nó bay ở độ cao khoảng 400 km và phải được đẩy lên định kỳ, vì khí quyển ở độ cao đó vẫn đủ đặc để làm nó rơi dần.",
     "tags": [
       "iss",

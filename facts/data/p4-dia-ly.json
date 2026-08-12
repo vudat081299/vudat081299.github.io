@@ -250,7 +250,7 @@
     "id": "dl-222",
     "cat": "dia-ly",
     "sub": "khi-hau-thoi-tiet",
-    "t": "Thời tiết và khí hậu là hai đại lượng khác nhau: một cái là trạng thái, một cái là phân bố thống kê trong 30 năm",
+    "t": "Thời tiết là trời hôm nay; khí hậu là thống kê của trời trong khoảng ba mươi năm",
     "s": "Vì vậy một mùa đông lạnh không phản bác xu hướng nóng lên, giống như một ngày mưa không phản bác việc Sa mạc Sahara khô. Chuẩn 30 năm do WMO đặt ra.",
     "tags": [
       "thoi-tiet",
@@ -618,13 +618,16 @@
     "cat": "dia-ly",
     "sub": "ban-do-toa-do",
     "t": "Bản đồ Mercator phóng to Greenland lên gấp khoảng 14 lần so với diện tích thật của nó",
-    "s": "Greenland trông bằng châu Phi nhưng thật ra nhỏ hơn khoảng 14 lần. Mercator được thiết kế để giữ đúng góc cho hàng hải, và cái giá phải trả là diện tích ở vĩ độ cao bị nở ra.",
+    "s": "Greenland trông bằng châu Phi nhưng thật ra nhỏ hơn khoảng 14 lần. Mercator được thiết kế để giữ đúng góc cho hàng hải — cần thiết để lái tàu theo một hướng cố định — và cái giá phải trả là diện tích ở vĩ độ cao bị nở ra. Vì vậy nó không sai, nó chỉ đang đánh đổi.",
     "tags": [
       "mercator",
       "ban-do",
       "sai-lech"
     ],
-    "src": "Mercator (1569); Snyder, Map Projections: A Working Manual"
+    "src": "Mercator (1569); Snyder, Map Projections: A Working Manual; định lý Gauss về mặt cong",
+    "khac_voi": [
+      "dl-253"
+    ]
   },
   {
     "id": "dl-253",
@@ -1692,7 +1695,7 @@
     "id": "dl-336",
     "cat": "dia-ly",
     "sub": "thien-tai",
-    "t": "Núi lửa phun không chỉ nguy hiểm vì dung nham — dòng chảy pyroclastic mới là thứ giết người nhiều nhất",
+    "t": "Thứ giết người nhiều nhất khi núi lửa phun không phải dung nham mà là dòng khí và tro nóng 700 độ",
     "s": "Nó là hỗn hợp khí và tro nóng tới 700 độ chảy xuống sườn núi ở tốc độ hơn 100 km/h. Đây là thứ đã chôn vùi Pompeii chứ không phải dung nham.",
     "tags": [
       "nui-lua",
