@@ -393,27 +393,14 @@
     "id": "cn-139",
     "cat": "cong-nghe",
     "sub": "may-tinh-chip",
-    "t": "Trung tâm dữ liệu tiêu tốn nhiều nước hơn người ta nghĩ, không chỉ điện",
-    "s": "Làm mát bằng bay hơi tiêu thụ lượng nước đáng kể, và các cơ sở lớn thường đặt ở nơi vốn khan hiếm nước vì đất và điện rẻ. Đây là một chi phí môi trường ít được đưa vào các báo cáo về hạ tầng số.",
+    "t": "Trung tâm dữ liệu ở Mỹ dùng khoảng 1,7 tỉ lít nước mỗi ngày để làm mát",
+    "s": "Con số đó bằng 0,14% tổng lượng nước Mỹ tiêu thụ mỗi ngày (1.218 tỉ lít), tức nhỏ so với nông nghiệp — nhưng ở một số cơ sở, 57% lượng nước làm mát là nước sinh hoạt đã xử lý đạt chuẩn uống được, và các trung tâm lớn hay đặt tại vùng khan hiếm nước vì đất và điện rẻ. Chính con số 1,7 tỉ chỉ là ước lượng: dưới một phần ba nhà vận hành có đo lượng nước họ dùng, nên đây là chỗ dữ liệu mỏng nhất trong hạch toán môi trường của hạ tầng số.",
     "tags": [
       "trung-tam-du-lieu",
       "nuoc",
       "moi-truong"
     ],
-    "src": "Mytton, Nature Sustainability (2021); báo cáo sử dụng nước của các nhà vận hành đám mây"
-  },
-  {
-    "id": "cn-140",
-    "cat": "cong-nghe",
-    "sub": "may-tinh-chip",
-    "t": "Một tìm kiếm hay một tin nhắn tốn rất ít năng lượng — tổng số lượng mới là vấn đề",
-    "s": "Chi phí năng lượng của một thao tác đơn lẻ nhỏ tới mức vô nghĩa cho quyết định cá nhân. Bài toán môi trường của công nghệ số nằm ở quy mô tổng thể và ở nguồn điện được dùng, không ở việc bạn có gửi thêm một email hay không.",
-    "tags": [
-      "nang-luong",
-      "moi-truong",
-      "quy-mo"
-    ],
-    "src": "Phân tích năng lượng ICT của IEA; Masanet và cộng sự, Science (2020)"
+    "src": "Mytton, npj Clean Water (2021)"
   },
   {
     "id": "cn-141",

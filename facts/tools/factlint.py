@@ -191,11 +191,23 @@ def cosine(a, b):
 
 def candidate_pairs(facts, df):
     """
-    Sinh cặp cần so, theo hai đường:
-      - cùng (cat, sub): so hết trong cụm.
+    Sinh cặp cần so, chia làm hai hạng vì độ chính xác của chúng khác nhau.
+
+    Hạng CHẶT — báo từ NEAR_SOFT trở lên:
+      - cùng (cat, sub): so hết trong cụm. Trùng thật gần như luôn nằm ở đây.
       - dùng chung một token hiếm: bắt trường hợp đặt sai cụm.
+
+    Hạng RỘNG — chỉ báo từ NEAR_HARD trở lên:
+      - cùng cat, khác sub. Lưới token hiếm bỏ sót khi hai fact trùng ý nhưng chỉ
+        dùng chung các từ phổ thông: cn-140 và cn-206 đạt 0,71 mà không cặp nào bắt
+        được, vì mọi từ chung của chúng ('năng lượng', 'tìm kiếm') đều có df > 40.
+        So hết trong chủ đề đắt thêm ~115% số cặp nhưng chỉ tốn thêm ~0,1s ở quy mô
+        2.000 fact, nên rẻ hơn nhiều so với việc để một fact trùng lọt ra trang.
+        Ngưỡng ở đây cao hơn vì trong cùng chủ đề, hai fact khác cụm dùng chung nhiều
+        từ vựng là chuyện thường — hạ xuống NEAR_SOFT thì thêm ~99 cặp gần như toàn
+        nhiễu, mà cổng ồn là cổng không ai đọc.
     """
-    pairs = set()
+    tight = set()
 
     by_cluster = defaultdict(list)
     for i, f in enumerate(facts):
@@ -203,7 +215,7 @@ def candidate_pairs(facts, df):
     for idxs in by_cluster.values():
         for a in range(len(idxs)):
             for b in range(a + 1, len(idxs)):
-                pairs.add((idxs[a], idxs[b]))
+                tight.add((idxs[a], idxs[b]))
 
     by_rare = defaultdict(list)
     for i, f in enumerate(facts):
@@ -215,17 +227,30 @@ def candidate_pairs(facts, df):
             continue
         for a in range(len(idxs)):
             for b in range(a + 1, len(idxs)):
-                pairs.add((min(idxs[a], idxs[b]), max(idxs[a], idxs[b])))
-    return pairs
+                tight.add((min(idxs[a], idxs[b]), max(idxs[a], idxs[b])))
+
+    wide = set()
+    by_cat = defaultdict(list)
+    for i, f in enumerate(facts):
+        by_cat[f.get('cat')].append(i)
+    for idxs in by_cat.values():
+        for a in range(len(idxs)):
+            for b in range(a + 1, len(idxs)):
+                p = (idxs[a], idxs[b])
+                if p not in tight:
+                    wide.add(p)
+    return tight, wide
 
 
 def scan_dupes(facts, limit=None):
     vecs, df, _ = build_index(facts)
+    tight, wide = candidate_pairs(facts, df)
     out = []
-    for i, j in candidate_pairs(facts, df):
-        s = cosine(vecs[i], vecs[j])
-        if s >= NEAR_SOFT:
-            out.append((s, i, j))
+    for pairs, floor in ((tight, NEAR_SOFT), (wide, NEAR_HARD)):
+        for i, j in pairs:
+            s = cosine(vecs[i], vecs[j])
+            if s >= floor:
+                out.append((s, i, j))
     out.sort(reverse=True)
     return out if limit is None else out[:limit]
 
@@ -390,7 +415,52 @@ RULES_WARN = [
     ('do-du', 'câu tự hạ mức chắc chắn ngay ở tiêu đề', 't', [
         re.compile(r'(có thể đã|có lẽ|dường như|hình như|được cho là)'),
     ]),
+    # Fact nói về khoảng cách giữa cái người đọc tưởng và cái có thật thì mỏ neo phải là
+    # con số của cái có thật, không phải "hơn bạn nghĩ". cn-139 và cn-206 sống sót nhiều
+    # tháng chỉ nhờ chỗ này. Vẫn là XEM chứ không LOẠI: hiệu ứng đèn chiếu và vài fact
+    # tâm lý khác có claim thật nằm đúng ở khoảng cách đó — nhưng chúng phải kèm số.
+    ('tuong-tuong-nguoi-doc', 'so với cái người đọc tưởng, không so với một con số', 'ts', [
+        re.compile(r'(hơn|khác với|trái với) (những gì )?'
+                   r'(người ta|nhiều người|phần lớn|đa số|bạn|chúng ta|ai|người dùng|mọi người)'
+                   r'[^.]{0,25}(nghĩ|tưởng|hình dung|ngờ|biết|tin|đoán|mong)'),
+        re.compile(r'ít ai (biết|ngờ|nghĩ)|không ai (ngờ|nghĩ)'),
+        re.compile(r'(người ta|nhiều người) (vẫn )?tưởng'),
+    ]),
 ]
+
+# Khẳng định một độ lớn bằng chữ trong khi không có con số nào — "đáng kể" là chỗ đúng ra
+# phải có số. Cổng 'thieu-mo-neo' bỏ sót vì nó chỉ nổ khi t+s ngắn hơn 220 ký tự, mà 811
+# fact không có chữ số nào dài hơn mức đó; phần lớn trong số đó neo bằng cơ chế nên hợp lệ,
+# nên không thể bỏ ngưỡng dài — chỉ có thể hỏi thẳng: có từ chỉ độ lớn mà không có số?
+MO_HO_DO_LON = re.compile(
+    r'(đáng kể|rất nhiều|rất ít|rất lớn|rất nhỏ|khá lớn|khá nhiều|không nhỏ'
+    r'|nhỏ tới mức|lớn tới mức|nhiều tới mức|một lượng lớn|nhiều hơn hẳn|lớn hơn hẳn'
+    r'|hàng loạt|ít được)')
+# Họ từ chỉ tỉ lệ chỉ tính khi nằm ở TIÊU ĐỀ: ở đó chúng là claim, còn trong phần tóm tắt
+# chúng thường chỉ là văn nói bình thường (đo được: tính cả phần tóm tắt thì 150 fact bị
+# gắn cờ thay vì 87, và phần thêm gần như toàn nhiễu).
+MO_HO_TI_LE = re.compile(r'(phần lớn|đa số|hầu hết)')
+
+# Mọi con số đều nằm trong một khung giả định thì không có con số nào là mỏ neo: bỏ nó đi
+# mà câu vẫn nguyên nghĩa. Bản sh-125 cũ ("Nếu phải cho 100 người uống thuốc…") là ca mẫu.
+# Không tính "có thể" vì trong tiếng Việt nó thường là tình thái của một khả năng thật
+# ("sai số có thể tới 20%"), không phải khung giả định.
+KHUNG_GIA_DINH = re.compile(r'(nếu|giả sử|giả dụ|ví dụ|chẳng hạn|cứ cho là|thử tưởng tượng)')
+SO_TRONG_CAU = re.compile(r'\d[\d.,]*')
+
+
+def _mo_neo_gia_dinh(t, ts):
+    nums = list(SO_TRONG_CAU.finditer(ts))
+    if not nums:
+        return False
+    return all(KHUNG_GIA_DINH.search(ts[max(0, m.start() - 45):m.start()].lower())
+               for m in nums)
+
+
+def _do_lon_bang_chu(t, ts):
+    if HAS_DIGIT.search(ts):
+        return False
+    return bool(MO_HO_DO_LON.search(ts.lower()) or MO_HO_TI_LE.search(t.lower()))
 
 
 def verify_fact(f):
@@ -416,6 +486,14 @@ def verify_fact(f):
         for p in pats:
             if p.search(hay):
                 return ('XEM', rid, note)
+
+    if _mo_neo_gia_dinh(t, ts):
+        return ('XEM', 'mo-neo-gia-dinh',
+                'mọi con số đều nằm trong câu giả định — chưa đo gì thật')
+
+    if _do_lon_bang_chu(t, ts):
+        return ('XEM', 'do-lon-bang-chu',
+                'khẳng định một độ lớn bằng chữ mà không có con số nào')
 
     if not has_digit and len(ts) < 220:
         return ('XEM', 'thieu-mo-neo', 'không có con số nào trong t+s — kiểm tra cổng mỏ neo')

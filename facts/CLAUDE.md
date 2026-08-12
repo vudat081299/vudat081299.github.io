@@ -96,6 +96,33 @@ tự bắt bằng mắt.
 Viết bằng tiếng Việt thường ngày. Không "nghiên cứu cho thấy", không "các nhà khoa học đã
 chứng minh". Nêu thẳng con số và nêu thẳng ai tìm ra nó.
 
+### 1.3 Ba cách mỏ neo giả vờ là mỏ neo thật
+
+Một fact có chữ số trong `t`/`s` chưa chắc có mỏ neo. Ba dạng dưới đây từng lọt qua cả
+`verify` lẫn mắt người và phải đi gộp lại; giờ `verify` bắt cả ba ở mức `XEM`.
+
+| Dạng | Phép thử | Ca mẫu |
+|---|---|---|
+| **Số giả định** — mọi con số nằm trong câu "nếu / ví dụ / giả sử" | Bỏ con số đi mà câu vẫn nguyên nghĩa → nó không phải mỏ neo | *"Nếu phải cho 100 người uống thuốc trong 5 năm…"* — số 100 là số bịa để minh hoạ |
+| **Độ lớn bằng chữ** — "đáng kể", "rất nhiều", "phần lớn" mà không có số nào | Chỗ nào viết "đáng kể" là chỗ đúng ra phải có một con số | *"Làm mát bằng bay hơi tiêu thụ lượng nước đáng kể"* — đáng kể là bao nhiêu? |
+| **So với cái người đọc tưởng** — "hơn người ta nghĩ", "ít ai biết" | Đó là khẳng định về sức tưởng tượng của người đọc, không phải về thế giới | *"Trung tâm dữ liệu tiêu tốn nhiều nước hơn người ta nghĩ"* |
+
+Dạng thứ ba có ngoại lệ thật: vài fact tâm lý có claim nằm đúng ở khoảng cách giữa cái người
+ta tưởng và cái đo được (hiệu ứng đèn chiếu). Nhưng khi đó **con số của cái đo được phải có
+mặt** — nếu không thì fact chỉ còn lại phần "bạn tưởng sai", mà đó không phải một mỏ neo.
+
+### 1.4 Tiêu đề và thân bài phải nói về cùng một thứ
+
+Lỗi nặng nhất từng gặp là dán ba fact khác nhau thành một: `cn-206` có tiêu đề của `cn-140`,
+câu đầu là tiêu đề của `cn-020`, câu sau là tiêu đề của `cn-139`. Không cổng nào bắt được vì
+mỗi mảnh riêng lẻ đều hợp lệ. Phép thử duy nhất là đọc: **con số trong `s` có chứng minh đúng
+cái mà `t` khẳng định không?** Với `cn-206` thì không — 1–1,5% điện năng là của toàn bộ trung
+tâm dữ liệu, không phải tổng của những lần tìm kiếm và tin nhắn.
+
+Đừng thử tự động hoá chỗ này bằng cách so từ vựng giữa `t` và `s`: đã đo, và nó vô dụng —
+`cn-206` được 0,129 còn `cn-020` (fact lành) chỉ 0,107. Tóm tắt tốt thì diễn giải bằng từ mới,
+nên trùng ít là dấu hiệu tốt.
+
 ---
 
 ## 2. Pipeline thêm fact — làm đúng thứ tự này
@@ -190,6 +217,7 @@ Cả hai phải sạch lỗi.
 
 - `check` — cấu trúc + cặp gần trùng. Cặp nào ≥ 0,62 mà bạn cố ý giữ thì phải giải thích được
   vì sao chúng là hai claim khác nhau; không giải thích được thì nó là trùng, đi gộp lại.
+  Cặp cùng chủ đề nhưng **khác cụm** chỉ được báo từ 0,62 trở lên, không báo từ 0,42 — xem §3.
 - `verify` — cổng định nghĩa §1. Nó phân ba mức: `LOẠI` là vi phạm chắc chắn và **phải xoá
   hoặc viết lại**; `XEM` là nghi ngờ, phải đọc bằng mắt rồi tự quyết; còn lại là đạt.
   Đây là cổng chặn commit, không phải gợi ý.
@@ -204,10 +232,19 @@ Vấn đề: so một fact mới với `n−1` fact còn lại là bất khả t
 nhau gần như luôn cùng chủ đề *và* cùng cụm, nên chỉ cần so trong cụm. Với 3.000 fact và
 ~118 cụm thì mỗi cụm khoảng 25 fact — đọc hết được bằng mắt.
 
-**Lưới an toàn cho trường hợp đặt sai cụm:** `factlint check` còn dựng một chỉ mục nghịch đảo
-trên các token *hiếm* (kể cả con số), và chỉ so hai fact khi chúng dùng chung một token hiếm.
-Chi phí gần như tuyến tính, nên nó vẫn chạy được ở quy mô rất lớn. Nhờ vậy một fact bị xếp
-lệch cụm vẫn có cơ hội bị bắt.
+**Lưới an toàn thứ nhất cho trường hợp đặt sai cụm:** `factlint check` còn dựng một chỉ mục
+nghịch đảo trên các token *hiếm* (kể cả con số), và chỉ so hai fact khi chúng dùng chung một
+token hiếm. Chi phí gần như tuyến tính, nên nó vẫn chạy được ở quy mô rất lớn.
+
+**Lưới thứ hai, vì lưới thứ nhất có lỗ:** hai fact trùng ý nhưng chỉ dùng chung các từ *phổ
+thông* thì không cặp nào bắt được — `cn-140` và `cn-206` đạt 0,71 mà lọt, vì mọi từ chung của
+chúng ("năng lượng", "tìm kiếm") đều có `df > 40`. Nên `check` còn so **hết mọi cặp trong cùng
+`cat`**, kể cả khác cụm. Đo ở quy mô 2.000 fact: +115% số cặp nhưng chỉ +0,1 giây, rẻ hơn
+nhiều so với để một fact trùng lọt ra trang.
+
+Lưới này báo từ **0,62** trở lên, không phải 0,42 như trong cụm: hai fact khác cụm trong cùng
+chủ đề dùng chung nhiều từ vựng là chuyện thường, và hạ xuống 0,42 thì thêm 99 cặp gần như
+toàn nhiễu. Cổng ồn là cổng không ai đọc.
 
 **Cụm phình quá to thì tách.** `factlint stats` cảnh báo khi một cụm vượt 90 fact. Lúc đó
 thêm cụm mới vào `manifest.clusters` và chia lại — vì cụm to thì mất đúng cái lợi đang khai

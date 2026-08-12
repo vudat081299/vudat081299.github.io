@@ -52,19 +52,6 @@
     "src": "Tversky & Kahneman, Psychological Bulletin (1971)"
   },
   {
-    "id": "sh-223",
-    "cat": "so-hoc",
-    "sub": "dem-va-to-hop",
-    "t": "Luật của những con số thật sự lớn: điều một-phần-triệu xảy ra mỗi ngày ở quy mô dân số lớn",
-    "s": "Với 100 triệu người, một sự kiện có xác suất một phần triệu mỗi ngày vẫn xảy ra khoảng 100 lần mỗi ngày. Vì vậy trùng hợp phi thường là điều thống kê bắt buộc phải có.",
-    "tags": [
-      "trung-hop",
-      "xac-suat",
-      "quy-mo"
-    ],
-    "src": "Diaconis & Mosteller, Journal of the American Statistical Association (1989)"
-  },
-  {
     "id": "sh-224",
     "cat": "so-hoc",
     "sub": "dem-va-to-hop",
