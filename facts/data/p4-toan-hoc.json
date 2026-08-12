@@ -582,7 +582,10 @@
       "gop-nhom",
       "thong-ke"
     ],
-    "src": "Bickel, Hammel & O'Connell, Science (1975)"
+    "src": "Bickel, Hammel & O'Connell, Science (1975)",
+    "xem_ok": [
+      "so-sanh-cach-lam"
+    ]
   },
   {
     "id": "th-248",
@@ -1700,6 +1703,9 @@
       "aks",
       "mat-ma"
     ],
-    "src": "Agrawal, Kayal & Saxena, Annals of Mathematics (2004)"
+    "src": "Agrawal, Kayal & Saxena, Annals of Mathematics (2004)",
+    "xem_ok": [
+      "so-sanh-cach-lam"
+    ]
   }
 ]

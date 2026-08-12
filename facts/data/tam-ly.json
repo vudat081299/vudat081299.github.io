@@ -70,8 +70,8 @@
     "id": "tl-006",
     "cat": "tam-ly",
     "sub": "ban-than",
-    "t": "Người ta chú ý tới bạn ít hơn bạn tưởng rất nhiều",
-    "s": "Hiệu ứng ánh đèn sân khấu: sinh viên mặc áo phông quê mùa bước vào phòng ước lượng khoảng một nửa số người sẽ để ý, thực tế chỉ khoảng một phần tư nhận ra. Cùng cơ chế đó khiến bạn nhớ mãi câu nói vụng về trong cuộc họp mà không ai khác còn nhớ.",
+    "t": "Sinh viên mặc áo phông quê mùa đoán 50% người trong phòng sẽ để ý, thực tế chỉ 25% nhận ra",
+    "s": "Hiệu ứng ánh đèn sân khấu, đo bằng cách hỏi cả hai phía: người mặc ước lượng khoảng một nửa số người sẽ để ý, còn số người thật sự nhận ra chỉ khoảng một phần tư. Cùng cơ chế đó khiến bạn nhớ mãi câu nói vụng về trong cuộc họp mà không ai khác còn nhớ.",
     "tags": [
       "thien-kien",
       "tu-tin",

@@ -569,7 +569,10 @@
       "khi-nha-kinh",
       "khi-hau"
     ],
-    "src": "IPCC AR6 WG1, Chương 7"
+    "src": "IPCC AR6 WG1, Chương 7",
+    "xem_ok": [
+      "so-sanh-cach-lam"
+    ]
   },
   {
     "id": "hh-246",
@@ -1882,7 +1885,10 @@
       "khang-khuan",
       "fda"
     ],
-    "src": "US FDA (2016); Aiello và cộng sự, Clinical Infectious Diseases (2007)"
+    "src": "US FDA (2016); Aiello và cộng sự, Clinical Infectious Diseases (2007)",
+    "xem_ok": [
+      "so-sanh-cach-lam"
+    ]
   },
   {
     "id": "hh-350",

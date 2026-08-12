@@ -55,8 +55,8 @@
     "id": "kd-115",
     "cat": "kinh-doanh",
     "sub": "do-luong",
-    "t": "Bốn chỉ số DORA dự báo hiệu quả tổ chức tốt hơn phần lớn khảo sát nội bộ",
-    "s": "Tần suất triển khai, thời gian từ commit tới sản xuất, tỉ lệ thay đổi gây lỗi, và thời gian khôi phục. Nghiên cứu nhiều năm trên hàng nghìn tổ chức cho thấy nhóm tốt ở cả bốn có kết quả kinh doanh tốt hơn — và quan trọng là tốc độ không đánh đổi với ổn định như người ta tưởng.",
+    "t": "Trong phần mềm, tốc độ và độ ổn định đi cùng nhau chứ không đánh đổi: nhóm triển khai nhiều nhất cũng là nhóm ít lỗi nhất",
+    "s": "Bốn chỉ số DORA — tần suất triển khai, thời gian từ commit tới sản xuất, tỉ lệ thay đổi gây lỗi, thời gian khôi phục — được đo trên hàng nghìn tổ chức qua nhiều năm. Nhóm mạnh về hai chỉ số tốc độ cũng mạnh về hai chỉ số ổn định, tức không có sự đánh đổi mà trực giác quản lý thường giả định. Dữ liệu là khảo sát tự khai, nên đây là tương quan trên mẫu tự chọn, không phải thực nghiệm.",
     "tags": [
       "chi-so",
       "ky-thuat",

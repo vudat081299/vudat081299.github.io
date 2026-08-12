@@ -244,14 +244,17 @@
       "rui-ro",
       "ke-hoach"
     ],
-    "src": "Weinstein, JPSP (1980); Sharot và cộng sự, Nature Neuroscience (2011)"
+    "src": "Weinstein, JPSP (1980); Sharot và cộng sự, Nature Neuroscience (2011)",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "tl-126",
     "cat": "tam-ly",
     "sub": "ban-than",
-    "t": "Cảm giác mình là kẻ mạo danh phổ biến tới mức gần như là mặc định",
-    "s": "Trong các khảo sát ở nhiều ngành nghề, một tỉ lệ rất lớn người trưởng thành có năng lực báo cáo từng cảm thấy mình không xứng đáng với vị trí đang có và sợ bị phát hiện. Nó thường mạnh nhất ở người đang tiến bộ nhanh — vì họ liên tục ở trong tình huống mà mình thật sự chưa thạo.",
+    "t": "Tỉ lệ người mắc hội chứng kẻ mạo danh được báo cáo từ 9% tới 82%, và khoảng cách đó là do cách đo",
+    "s": "Tổng quan 62 nghiên cứu trên 14.161 người cho ra dải rộng như vậy chủ yếu vì mỗi nghiên cứu dùng thang đo và mốc cắt khác nhau — nên câu 'gần như ai cũng bị' là hệ quả của việc chọn mốc thấp, không phải một phát hiện. Nó thường mạnh nhất ở người đang tiến bộ nhanh — vì họ liên tục ở trong tình huống mà mình thật sự chưa thạo.",
     "tags": [
       "tu-tin",
       "su-nghiep",

@@ -315,8 +315,8 @@
     "id": "vl-225",
     "cat": "vat-ly",
     "sub": "luc-va-chuyen-dong",
-    "t": "Con quay giữ được thăng bằng nhờ mô men động lượng, và cùng nguyên lý đó giữ xe đạp không đổ theo cách khác với người ta tưởng",
-    "s": "Thí nghiệm với xe đạp có bánh phản quay cho thấy hiệu ứng con quay không phải yếu tố chính; ổn định đến chủ yếu từ hình học lái và phân bố khối lượng. Xe đạp tự cân bằng được khi đang lăn ngay cả khi triệt tiêu hết hiệu ứng con quay.",
+    "t": "Xe đạp đang lăn vẫn tự cân bằng được khi đã triệt tiêu hết hiệu ứng con quay",
+    "s": "Kooijman và cộng sự dựng một xe đạp có bánh phản quay để khử mô men động lượng, và nó vẫn tự dựng lại khi bị đẩy nghiêng. Ổn định đến từ hình học lái và phân bố khối lượng, không từ hiệu ứng con quay như cách giải thích phổ biến trong sách phổ thông.",
     "tags": [
       "xe-dap",
       "mo-men",
@@ -471,7 +471,7 @@
     "id": "vl-237",
     "cat": "vat-ly",
     "sub": "dien-tu",
-    "t": "Sét đánh từ dưới lên nhiều hơn người ta tưởng: tia dẫn đường đi xuống, nhưng tia hồi mới là tia sáng chói",
+    "t": "Tia sáng chói của một cú sét đi từ đất lên mây, với dòng trung bình 30.000 ampe",
     "s": "Tia dẫn đường bậc thang đi từ mây xuống rất mờ; khi nó gần mặt đất, một tia hồi phóng ngược lên với dòng trung bình 30.000 ampe và đó là thứ mắt ta thấy. Toàn bộ quá trình mất chưa tới một phần nghìn giây.",
     "tags": [
       "set",

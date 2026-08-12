@@ -345,7 +345,10 @@
       "duong-huyet",
       "ca-nhan-hoa"
     ],
-    "src": "Zeevi và cộng sự, Cell (2015); Berry và cộng sự, Nature Medicine (2020) — nghiên cứu PREDICT"
+    "src": "Zeevi và cộng sự, Cell (2015); Berry và cộng sự, Nature Medicine (2020) — nghiên cứu PREDICT",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "sk-239",
@@ -375,8 +378,8 @@
     "id": "sk-242",
     "cat": "suc-khoe",
     "sub": "an-uong",
-    "t": "Muối làm tăng huyết áp ở phần lớn người nhưng mức đáp ứng rất khác nhau",
-    "s": "Khoảng một phần ba tới một nửa người tăng huyết áp thuộc nhóm nhạy với muối, và ở nhóm này giảm muối có tác dụng rõ. Với người không nhạy, tác dụng nhỏ hơn — nhưng vì không có xét nghiệm phổ thông để biết mình thuộc nhóm nào, khuyến nghị chung vẫn là giảm.",
+    "t": "Khoảng 33–50% người tăng huyết áp thuộc nhóm nhạy với muối, số còn lại đáp ứng yếu",
+    "s": "Ở nhóm nhạy muối, giảm lượng muối ăn hạ huyết áp rõ. Với người không nhạy, tác dụng nhỏ hơn — nhưng vì không có xét nghiệm phổ thông để biết mình thuộc nhóm nào, khuyến nghị chung vẫn là giảm.",
     "tags": [
       "muoi",
       "huyet-ap"
@@ -597,7 +600,10 @@
       "nicotine",
       "khoi"
     ],
-    "src": "Royal College of Physicians, Nicotine without smoke (2016)"
+    "src": "Royal College of Physicians, Nicotine without smoke (2016)",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "sk-264",
@@ -801,7 +807,10 @@
       "khang-sinh",
       "hop-ly"
     ],
-    "src": "Lemiengre và cộng sự, Cochrane (2018); Smith và cộng sự, Cochrane (2017)"
+    "src": "Lemiengre và cộng sự, Cochrane (2018); Smith và cộng sự, Cochrane (2017)",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "sk-295",
@@ -843,8 +852,8 @@
     "id": "sk-300",
     "cat": "suc-khoe",
     "sub": "thuoc-va-vaccine",
-    "t": "Thuốc generic phải chứng minh tương đương sinh học, nên khác biệt với thuốc gốc rất nhỏ",
-    "s": "Yêu cầu quản lý là nồng độ trong máu nằm trong khoảng dung sai xác định so với thuốc gốc. Một số ít thuốc có khoảng điều trị hẹp cần cẩn thận khi đổi, nhưng với phần lớn thuốc thì chênh lệch giá không phản ánh chênh lệch hiệu quả.",
+    "t": "Thuốc generic phải chứng minh toàn bộ khoảng tin cậy 90% nồng độ trong máu nằm giữa 80% và 125% của thuốc gốc",
+    "s": "Điều kiện là cả khoảng tin cậy phải nằm trong dải đó, không phải chỉ giá trị trung bình — nên chênh lệch thật giữa hai thuốc nhỏ hơn nhiều so với con số 80–125% khi đọc thoáng qua. Cả nồng độ đỉnh và tổng lượng thuốc hấp thu theo thời gian đều phải đạt. Một số ít thuốc có khoảng điều trị hẹp vẫn cần cẩn thận khi đổi.",
     "tags": [
       "generic",
       "tuong-duong"
@@ -927,8 +936,8 @@
     "id": "sk-308",
     "cat": "suc-khoe",
     "sub": "suc-khoe-tinh-than",
-    "t": "Thời gian dùng mạng xã hội có liên hệ với sức khoẻ tinh thần, nhưng hiệu ứng nhỏ và chiều nhân quả chưa rõ",
-    "s": "Các phân tích trên dữ liệu lớn cho tương quan rất nhỏ — nhỏ hơn nhiều so với mức tranh luận công khai giả định — và các nghiên cứu theo dõi cho thấy chiều ngược cũng có: người đang khó chịu dùng nhiều hơn. Cách dùng có thể quan trọng hơn thời lượng.",
+    "t": "Thời gian dùng thiết bị số giải thích nhiều nhất 0,4% khác biệt về sức khoẻ tinh thần của thanh thiếu niên",
+    "s": "Orben và Przybylski chạy toàn bộ tổ hợp lựa chọn phân tích có thể trên ba bộ dữ liệu lớn, trong đó có hơn 11.000 trẻ sinh năm 2000–2002 của Millennium Cohort Study, và mức trần của phần biến thiên giải thích được là 0,4%. Các nghiên cứu theo dõi còn cho thấy chiều ngược cũng có: người đang khó chịu dùng nhiều hơn.",
     "tags": [
       "mang-xa-hoi",
       "hieu-ung"
@@ -969,7 +978,10 @@
       "sang-chan",
       "can-thiep"
     ],
-    "src": "Rose và cộng sự, Cochrane Reviews (2002); Bonanno, American Psychologist (2004)"
+    "src": "Rose và cộng sự, Cochrane Reviews (2002); Bonanno, American Psychologist (2004)",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "sk-315",
@@ -1017,7 +1029,10 @@
       "mo-hoi",
       "thai-doc"
     ],
-    "src": "Genuis và cộng sự, Archives of Environmental Contamination (2011); Laukkanen và cộng sự, JAMA IM (2015) về xông hơi"
+    "src": "Genuis và cộng sự, Archives of Environmental Contamination (2011); Laukkanen và cộng sự, JAMA IM (2015) về xông hơi",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "sk-320",

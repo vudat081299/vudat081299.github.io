@@ -261,7 +261,10 @@
       "thoi-quen",
       "kien-tri"
     ],
-    "src": "Lally, van Jaarsveld, Potts & Wardle, European Journal of Social Psychology (2010)"
+    "src": "Lally, van Jaarsveld, Potts & Wardle, European Journal of Social Psychology (2010)",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "tl-235",
@@ -645,7 +648,10 @@
       "chi-tiet",
       "nhan-biet"
     ],
-    "src": "Nickerson & Adams, Cognitive Psychology (1979) — thí nghiệm vẽ lại đồng xu"
+    "src": "Nickerson & Adams, Cognitive Psychology (1979) — thí nghiệm vẽ lại đồng xu",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "tl-278",
@@ -879,8 +885,8 @@
     "id": "tl-298",
     "cat": "tam-ly",
     "sub": "ban-than",
-    "t": "Người ta thay đổi niềm tin để khớp với hành vi đã làm, kể cả với việc rất nhỏ",
-    "s": "Sau khi ký một bản kiến nghị nhỏ, người ta trở nên ủng hộ vấn đề đó hơn; sau khi nói dối vì một khoản tiền không đáng, người ta bắt đầu tin điều mình nói. Nghĩa là con đường ngắn nhất tới việc đổi quan điểm của một người thường là làm họ thực hiện một hành động nhỏ.",
+    "t": "Người được trả 1 đô để nói dối rồi tin lời mình hơn người được trả 20 đô",
+    "s": "Festinger và Carlsmith cho sinh viên làm một việc tẻ nhạt hàng tiếng — quay chốt gỗ, xếp cuộn chỉ — rồi trả tiền để họ nói với người tiếp theo rằng việc đó thú vị. Nhóm nhận 20 đô về sau vẫn đánh giá việc đó tẻ nhạt: số tiền là lý do đủ để nói dối. Nhóm nhận 1 đô không có lý do nào ngoài chính mình, nên họ đổi niềm tin cho khớp và đánh giá việc đó thú vị hơn thật. Nghĩa là con đường ngắn nhất tới việc đổi quan điểm của một người thường là làm họ thực hiện một hành động nhỏ.",
     "tags": [
       "bat-hoa",
       "hanh-vi"
@@ -1029,7 +1035,10 @@
       "tuyen-chon",
       "an-danh"
     ],
-    "src": "Goldin & Rouse, American Economic Review (2000); các phân tích lại chỉ ra hạn chế về cỡ mẫu"
+    "src": "Goldin & Rouse, American Economic Review (2000); các phân tích lại chỉ ra hạn chế về cỡ mẫu",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "tl-311",
@@ -1221,7 +1230,10 @@
       "trung-phat",
       "hop-tac"
     ],
-    "src": "Fehr & Gächter, Nature (2002); Henrich và cộng sự, Science (2006) — so sánh liên văn hoá"
+    "src": "Fehr & Gächter, Nature (2002); Henrich và cộng sự, Science (2006) — so sánh liên văn hoá",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "tl-328",
@@ -1233,7 +1245,10 @@
       "nhan-dien",
       "nhan-chung"
     ],
-    "src": "Meissner & Brigham, Psychology, Public Policy and Law (2001)"
+    "src": "Meissner & Brigham, Psychology, Public Policy and Law (2001)",
+    "xem_ok": [
+      "do-lon-bang-chu"
+    ]
   },
   {
     "id": "tl-330",

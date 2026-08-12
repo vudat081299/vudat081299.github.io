@@ -277,7 +277,7 @@
     "cat": "thuc-pham",
     "sub": "len-men",
     "t": "Bánh mì bột chua nổi bằng vi sinh vật hoang dã, và mỗi bột cái có hệ vi sinh riêng",
-    "s": "Nghiên cứu 500 mẫu bột cái từ nhiều nước cho thấy thành phần vi sinh khác nhau rõ rệt nhưng không tương quan chặt với vị trí địa lý như người ta tưởng. Bột cái lâu năm nhất còn hoạt động được ghi nhận trên 100 năm tuổi.",
+    "s": "Nghiên cứu 500 mẫu bột cái từ nhiều nước cho thấy thành phần vi sinh khác nhau rõ rệt giữa các mẫu, nhưng vị trí địa lý không dự báo được thành phần đó. Bột cái lâu năm nhất còn hoạt động được ghi nhận trên 100 năm tuổi.",
     "tags": [
       "bot-chua",
       "vi-sinh",
@@ -1586,19 +1586,6 @@
     "src": "BBC, The Norwegian campaign behind Japan's love of salmon sushi (2015)"
   },
   {
-    "id": "tp-336",
-    "cat": "thuc-pham",
-    "sub": "nguon-goc-mon-an",
-    "t": "Kem que được cho là do một cậu bé 11 tuổi phát minh tình cờ năm 1905",
-    "s": "Frank Epperson để quên cốc nước soda có que khuấy ngoài trời qua đêm lạnh. Ông đăng ký bằng sáng chế 18 năm sau đó.",
-    "tags": [
-      "kem-que",
-      "phat-minh",
-      "lich-su"
-    ],
-    "src": "Epperson, bằng sáng chế Mỹ 1505592 (1924)"
-  },
-  {
     "id": "tp-337",
     "cat": "thuc-pham",
     "sub": "nguon-goc-mon-an",
@@ -1843,7 +1830,10 @@
       "thu-phan",
       "da-dang"
     ],
-    "src": "Garibaldi và cộng sự, Science (2013)"
+    "src": "Garibaldi và cộng sự, Science (2013)",
+    "xem_ok": [
+      "so-sanh-cach-lam"
+    ]
   },
   {
     "id": "tp-358",

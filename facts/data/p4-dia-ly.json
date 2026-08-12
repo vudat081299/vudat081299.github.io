@@ -991,7 +991,7 @@
     "id": "dl-282",
     "cat": "dia-ly",
     "sub": "khi-hau-thoi-tiet",
-    "t": "Mây nặng hơn bạn tưởng: một đám mây tích trung bình chứa khoảng 500 tấn nước",
+    "t": "Một đám mây tích trung bình chứa khoảng 500 tấn nước mà vẫn không rơi xuống",
     "s": "Nó không rơi vì các giọt nước cực nhỏ, đường kính khoảng 20 micromet, có vận tốc rơi chậm hơn dòng khí đi lên. Mưa chỉ xảy ra khi giọt lớn lên tới khoảng 1 mm.",
     "tags": [
       "may",
@@ -1693,8 +1693,8 @@
     "id": "dl-337",
     "cat": "dia-ly",
     "sub": "khi-hau-thoi-tiet",
-    "t": "Việt Nam nằm trong nhóm quốc gia chịu ảnh hưởng nặng nhất của biến đổi khí hậu do địa hình ven biển thấp",
-    "s": "Nếu mực nước biển dâng 1 mét, khoảng 39% diện tích đồng bằng sông Cửu Long có nguy cơ ngập. Đây là ước tính theo kịch bản, không phải dự báo chắc chắn.",
+    "t": "Mực nước biển dâng 1 mét thì khoảng 39% diện tích đồng bằng sông Cửu Long có nguy cơ ngập",
+    "s": "Đây là con số của kịch bản, không phải dự báo: nó nói nếu mức dâng đạt 1 mét thì phần diện tích chịu rủi ro là bao nhiêu, chứ không nói khi nào đạt mức đó. Địa hình đồng bằng thấp và bằng phẳng là lý do một mét nước đổi thành gần 40% diện tích.",
     "tags": [
       "viet-nam",
       "nuoc-bien-dang",
@@ -1784,7 +1784,7 @@
     "id": "dl-344",
     "cat": "dia-ly",
     "sub": "khi-hau-thoi-tiet",
-    "t": "Đêm đang ấm lên nhanh hơn ngày, và điều đó ảnh hưởng tới cây trồng nhiều hơn người ta tưởng",
+    "t": "Đêm đang ấm lên nhanh hơn ngày, và cây lúa mất năng suất vì hô hấp mạnh hơn trong đêm ấm",
     "s": "Nhiệt độ tối thiểu ban đêm tăng nhanh hơn nhiệt độ tối đa ban ngày ở phần lớn vùng đất. Cây lúa hô hấp mạnh hơn vào đêm ấm nên mất năng lượng đã tích luỹ ban ngày.",
     "tags": [
       "nhiet-do",

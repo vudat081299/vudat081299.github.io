@@ -161,6 +161,15 @@ def check_shape(man, facts, vk):
             warns.append('%s: không có tags' % where)
         if len(f.get('s', '')) < 40:
             warns.append('%s: tóm tắt quá ngắn (%d ký tự)' % (where, len(f.get('s', ''))))
+        if 'xem_ok' in f:
+            known = all_warn_rule_ids()
+            if not isinstance(f['xem_ok'], list) or not f['xem_ok']:
+                errs.append('%s: "xem_ok" phải là mảng rule id không rỗng' % where)
+            else:
+                for rid in f['xem_ok']:
+                    if rid not in known:
+                        errs.append('%s: xem_ok "%s" không phải luật nào — %s'
+                                    % (where, rid, ', '.join(sorted(known))))
     return errs, warns
 
 
@@ -424,7 +433,10 @@ RULES_WARN = [
                    r'(người ta|nhiều người|phần lớn|đa số|bạn|chúng ta|ai|người dùng|mọi người)'
                    r'[^.]{0,25}(nghĩ|tưởng|hình dung|ngờ|biết|tin|đoán|mong)'),
         re.compile(r'ít ai (biết|ngờ|nghĩ)|không ai (ngờ|nghĩ)'),
-        re.compile(r'(người ta|nhiều người) (vẫn )?tưởng'),
+        # Phải có "như"/"so với" dẫn vào, nếu không thì bắt oan những chỗ niềm tin của
+        # người tham gia là thứ thí nghiệm điều khiển: kt-143 "khi người ta tưởng nó mua
+        # ở khách sạn sang" là biến độc lập của Thaler, không phải lời tự nhận xét.
+        re.compile(r'(như|so với) (người ta|nhiều người) (vẫn )?(tưởng|nghĩ)'),
     ]),
 ]
 
@@ -464,10 +476,18 @@ def _do_lon_bang_chu(t, ts):
 
 
 def verify_fact(f):
-    """Trả về (severity, rule_id, note) hoặc None nếu đạt. severity: 'LOẠI' | 'XEM'."""
+    """
+    Trả về (severity, rule_id, note) hoặc None nếu đạt. severity: 'LOẠI' | 'XEM'.
+
+    Một fact có thể miễn một luật mức XEM bằng field "xem_ok": ["rule-id", …]. Chỉ dùng
+    field đó SAU KHI đã đọc fact và kết luận luật báo oan — nó là ghi chép "người thật đã
+    soi cái này", không phải cách làm cổng im lặng. Không miễn được mức LOẠI: nếu một fact
+    thật sự cần vượt mức LOẠI thì luật sai, đi sửa luật.
+    """
     t = f.get('t', '')
     ts = t + ' ' + f.get('s', '')
     has_digit = bool(HAS_DIGIT.search(ts))
+    mien = f.get('xem_ok') or []
 
     for rid, note, field, pats in RULES_REJECT:
         hay = t if field == 't' else ts
@@ -479,25 +499,38 @@ def verify_fact(f):
         hay = t if field == 't' else ts
         for p in pats:
             if p.search(hay):
-                return ('LOẠI' if not has_digit else 'XEM', rid, note)
+                if not has_digit:
+                    return ('LOẠI', rid, note)
+                if rid not in mien:
+                    return ('XEM', rid, note)
 
     for rid, note, field, pats in RULES_WARN:
+        if rid in mien:
+            continue
         hay = t if field == 't' else ts
         for p in pats:
             if p.search(hay):
                 return ('XEM', rid, note)
 
-    if _mo_neo_gia_dinh(t, ts):
+    if 'mo-neo-gia-dinh' not in mien and _mo_neo_gia_dinh(t, ts):
         return ('XEM', 'mo-neo-gia-dinh',
                 'mọi con số đều nằm trong câu giả định — chưa đo gì thật')
 
-    if _do_lon_bang_chu(t, ts):
+    if 'do-lon-bang-chu' not in mien and _do_lon_bang_chu(t, ts):
         return ('XEM', 'do-lon-bang-chu',
                 'khẳng định một độ lớn bằng chữ mà không có con số nào')
 
-    if not has_digit and len(ts) < 220:
+    if 'thieu-mo-neo' not in mien and not has_digit and len(ts) < 220:
         return ('XEM', 'thieu-mo-neo', 'không có con số nào trong t+s — kiểm tra cổng mỏ neo')
     return None
+
+
+def all_warn_rule_ids():
+    """Mọi rule id có thể xuất hiện ở mức XEM — dùng để soát field xem_ok."""
+    ids = {rid for rid, _, _, _ in RULES_WARN}
+    ids |= {rid for rid, _, _, _ in RULES_REJECT_IF_NO_DIGIT}
+    ids |= {'mo-neo-gia-dinh', 'do-lon-bang-chu', 'thieu-mo-neo'}
+    return ids
 
 
 def cmd_verify(argv):
@@ -526,7 +559,9 @@ def cmd_verify(argv):
         (rej if v[0] == 'LOẠI' else warn).append((f, v))
 
     scanned = sum(1 for f in facts if in_scope(f))
-    print('%d fact được soi · %d LOẠI · %d XEM' % (scanned, len(rej), len(warn)))
+    mien = sum(1 for f in facts if in_scope(f) and f.get('xem_ok'))
+    print('%d fact được soi · %d LOẠI · %d XEM · %d đã soi và cố ý giữ (xem_ok)'
+          % (scanned, len(rej), len(warn), mien))
 
     if rej:
         by_rule = defaultdict(list)

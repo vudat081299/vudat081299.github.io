@@ -315,7 +315,7 @@
     "cat": "giao-tiep",
     "sub": "nhom-va-hop",
     "t": "Trong nhóm, người nói nhiều nhất thường được cho là lãnh đạo — bất kể nói gì",
-    "s": "Hiệu ứng 'babble': lượng thời gian phát biểu tương quan mạnh với việc được nhóm nhìn nhận là người dẫn dắt, mạnh hơn cả chất lượng đóng góp. Biết điều này có hai công dụng: nói nhiều hơn nếu bạn đang bị bỏ qua, và cảnh giác khi bạn đang chọn người dựa vào ấn tượng ấy.",
+    "s": "Hiệu ứng 'babble': lượng thời gian phát biểu tương quan mạnh với việc được nhóm nhìn nhận là người dẫn dắt, mạnh hơn cả chất lượng đóng góp. Tương quan này giữ nguyên khi nội dung phát biểu được kiểm soát, nên thứ nhóm đang đọc là thời lượng nói, không phải chất lượng ý kiến.",
     "tags": [
       "nhom",
       "lanh-dao",
