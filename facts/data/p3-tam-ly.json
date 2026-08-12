@@ -135,8 +135,8 @@
     "id": "tl-218",
     "cat": "tam-ly",
     "sub": "thien-kien",
-    "t": "Người ta bỏ qua tỉ lệ nền khi có một mô tả sinh động về cá nhân",
-    "s": "Cho biết trong phòng có 70 kỹ sư và 30 luật sư, rồi mô tả một người 'thích giải đố, ít nói' — người ta đoán luật sư nếu mô tả nghe giống hình mẫu luật sư, dù xác suất nền nói ngược lại. Cách chữa duy nhất là bắt đầu từ con số nền rồi mới điều chỉnh.",
+    "t": "Một mô tả sinh động về cá nhân làm người ta quên mất con số đông",
+    "s": "Cho biết trong phòng có 70 kỹ sư và 30 luật sư, rồi mô tả một người 'thích giải đố, ít nói' — người ta đoán luật sư nếu mô tả nghe giống hình mẫu luật sư, dù tỉ lệ 70/30 nói ngược lại. Cách chữa duy nhất là bắt đầu từ con số đông rồi mới điều chỉnh theo mô tả, chứ không phải ngược lại.",
     "tags": [
       "ti-le-nen",
       "dai-dien"

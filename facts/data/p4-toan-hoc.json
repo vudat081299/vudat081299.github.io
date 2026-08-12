@@ -620,8 +620,8 @@
     "id": "th-255",
     "cat": "toan-hoc",
     "sub": "nghich-ly-toan",
-    "t": "Kỳ vọng của một biến ngẫu nhiên có thể là vô hạn dù mọi kết quả đều hữu hạn",
-    "s": "Nghịch lý St. Petersburg: một trò tung đồng xu trả 2 mũ n đồng có kỳ vọng vô hạn, nhưng gần như không ai chịu trả quá vài chục đồng để tham gia. Bernoulli giải bằng khái niệm hữu dụng biên giảm dần.",
+    "t": "Một trò cá cược có thể có giá trị trung bình vô hạn mà không ai chịu trả quá vài chục đồng để chơi",
+    "s": "Nghịch lý St. Petersburg: tung đồng xu tới khi ra sấp, trả 2 đồng nếu sấp ngay lần đầu, 4 đồng nếu lần thứ hai, 8 đồng nếu lần thứ ba, cứ thế nhân đôi. Mỗi khả năng ít gặp hơn lại trả nhiều hơn đúng bằng phần bù, nên cộng tất cả lại thì số tiền nhận trung bình là vô hạn. Bernoulli giải thích khoảng cách với thực tế bằng việc đồng thứ một triệu có giá trị với người ta ít hơn đồng đầu tiên.",
     "tags": [
       "st-petersburg",
       "ky-vong",

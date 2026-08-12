@@ -31,14 +31,14 @@
     "id": "sh-110",
     "cat": "so-hoc",
     "sub": "co-mau-p-value",
-    "t": "Đào dữ liệu cho tới khi có p < 0,05 là một kỹ thuật, và nó có tên",
-    "s": "Thử nhiều biến, nhiều cách chia nhóm, nhiều điểm dừng thu thập dữ liệu rồi chỉ báo cáo cái đẹp nhất. Mô phỏng cho thấy chỉ vài mức tự do như vậy đã đủ đẩy tỉ lệ dương tính giả từ 5% lên trên 60%. Cách chống hiệu quả nhất là đăng ký kế hoạch phân tích trước khi nhìn dữ liệu.",
+    "t": "Thử nhiều cách phân tích rồi chỉ báo cáo cái đẹp nhất đẩy tỉ lệ phát hiện giả từ 5% lên trên 60%",
+    "s": "Thử nhiều biến, nhiều cách chia nhóm, và dừng thu thập dữ liệu ngay khi con số trông đẹp — mô phỏng cho thấy chỉ vài mức tự do như vậy là đủ đưa tỉ lệ dương tính giả từ 5% lên trên 60%. Cách chống hiệu quả nhất là công bố kế hoạch phân tích trước khi xem dữ liệu, để không còn chỗ chọn sau.",
     "tags": [
       "p-value",
       "khoa-hoc",
       "gian-lan"
     ],
-    "src": "Simmons, Nelson & Simonsohn, 'False-Positive Psychology', Psychological Science (2011)"
+    "src": "Simmons, Nelson & Simonsohn, Psychological Science (2011)"
   },
   {
     "id": "sh-112",
@@ -86,8 +86,8 @@
     "id": "sh-115",
     "cat": "so-hoc",
     "sub": "tuong-quan",
-    "t": "Tương quan giữa hai biến ngẫu nhiên có thể trông rất chặt nếu bạn thử đủ nhiều cặp",
-    "s": "Với ngưỡng 5%, cứ 20 phép so sánh độc lập thì trung bình có 1 phép ra kết quả 'có ý nghĩa' hoàn toàn do may rủi. Một nghiên cứu quét 100 biến sẽ tìm ra khoảng 5 phát hiện giả — và chúng thường là những phát hiện được đăng báo.",
+    "t": "Thử đủ nhiều cặp số thì chắc chắn tìm được một cặp trông như có liên hệ chặt chẽ",
+    "s": "Với mốc 5%, cứ 20 phép so sánh độc lập thì trung bình có 1 phép cho kết quả 'đạt chuẩn' hoàn toàn do may rủi. Một nghiên cứu quét 100 biến sẽ tìm ra khoảng 5 phát hiện giả — và chúng thường chính là những phát hiện được đăng báo, vì chúng là những cái nghe lạ nhất.",
     "tags": [
       "da-so-sanh",
       "khoa-hoc",
@@ -99,8 +99,8 @@
     "id": "sh-117",
     "cat": "so-hoc",
     "sub": "co-mau-p-value",
-    "t": "Thiên lệch xuất bản: nghiên cứu không tìm thấy gì thì không được đăng",
-    "s": "Nếu 20 nhóm nghiên cứu cùng một câu hỏi và chỉ nhóm có kết quả dương tính được đăng, tài liệu khoa học sẽ cho thấy một hiệu ứng vững chắc không tồn tại. Đây là lý do đăng ký thử nghiệm lâm sàng trước khi làm trở thành bắt buộc trong y học.",
+    "t": "Nghiên cứu không tìm thấy gì thường không được đăng, nên tài liệu khoa học lệch về phía có kết quả",
+    "s": "Nếu 20 nhóm cùng nghiên cứu một câu hỏi và chỉ nhóm ra kết quả dương tính được đăng, người đọc sẽ thấy một hiệu ứng vững chắc không tồn tại — 19 kết quả 'không thấy gì' nằm trong ngăn kéo. Đây là lý do y học bắt buộc đăng ký thử nghiệm lâm sàng trước khi làm: để sau đó đếm được cả những nghiên cứu không bao giờ công bố.",
     "tags": [
       "khoa-hoc",
       "xuat-ban",
@@ -154,8 +154,8 @@
     "id": "sh-121",
     "cat": "so-hoc",
     "sub": "co-mau-p-value",
-    "t": "Thiên lệch chọn mẫu giết nhiều nghiên cứu hơn cỡ mẫu nhỏ",
-    "s": "Khảo sát trên mạng chỉ hỏi người dùng mạng; khảo sát khách hàng chỉ hỏi người còn ở lại; nghiên cứu về người thành công chỉ hỏi người còn sống. Tăng cỡ mẫu của một mẫu lệch chỉ làm bạn tự tin hơn vào một kết luận sai.",
+    "t": "Hỏi thêm người trên một mẫu đã lệch chỉ làm kết luận sai trở nên chắc chắn hơn",
+    "s": "Khảo sát trên mạng chỉ hỏi người dùng mạng; khảo sát khách hàng chỉ hỏi người còn ở lại; nghiên cứu về người thành công chỉ hỏi người còn sống. Ở những mẫu như vậy, tăng số người được hỏi làm khoảng sai số hẹp lại quanh một con số vốn đã sai — nên nó tạo ra sự tự tin chứ không tạo ra độ chính xác.",
     "tags": [
       "lay-mau",
       "thien-lech",
@@ -210,8 +210,8 @@
     "id": "sh-127",
     "cat": "so-hoc",
     "sub": "xac-suat-co-dieu-kien",
-    "t": "Tần suất tự nhiên dễ hiểu hơn xác suất, kể cả với bác sĩ",
-    "s": "Khi bài toán chẩn đoán được viết bằng phần trăm, phần lớn bác sĩ trả lời sai. Cùng bài toán viết bằng 'trong 1.000 người thì...', tỉ lệ trả lời đúng tăng lên nhiều lần. Đây không phải vấn đề trí tuệ mà là vấn đề định dạng.",
+    "t": "Cùng một bài toán chẩn đoán, viết bằng phần trăm thì phần lớn bác sĩ trả lời sai, viết bằng 'trong 1.000 người' thì phần lớn trả lời đúng",
+    "s": "Gigerenzer đưa cùng một câu hỏi về xét nghiệm ung thư vú cho các bác sĩ theo hai cách trình bày. Ở dạng phần trăm — 'tỉ lệ mắc 1%, xét nghiệm bắt được 90% người mắc, báo dương tính sai cho khoảng 9% người lành' — đa số trả lời sai, thường cao gấp nhiều lần đáp án đúng. Ở dạng 'trong 1.000 người thì 10 người mắc, xét nghiệm bắt được 9 người trong đó và báo sai cho 89 người lành' — đa số trả lời đúng. Đây là vấn đề cách trình bày, không phải vấn đề trí tuệ.",
     "tags": [
       "bayes",
       "y-te",
@@ -224,7 +224,7 @@
     "cat": "so-hoc",
     "sub": "xac-suat-co-dieu-kien",
     "t": "Với sự kiện cực hiếm, một hệ thống cảnh báo chính xác cao vẫn báo động giả gần như toàn bộ",
-    "s": "Sàng lọc khủng bố, phát hiện gian lận, tầm soát bệnh cực hiếm đều gặp bài toán này: khi tỉ lệ nền là một phần triệu, dù độ đặc hiệu 99,9% thì cứ mỗi ca thật sẽ có khoảng một nghìn báo động giả. Đó là toán học, không phải công nghệ kém.",
+    "s": "Sàng lọc khủng bố, phát hiện gian lận, tầm soát bệnh cực hiếm đều gặp bài toán này: nếu cứ một triệu người mới có một ca thật, thì dù hệ thống chỉ báo sai 1 trên 1.000 người lành, mỗi ca thật vẫn kèm khoảng một nghìn báo động giả. Đó là toán học, không phải công nghệ kém.",
     "tags": [
       "bayes",
       "an-ninh",
@@ -275,8 +275,8 @@
     "id": "sh-134",
     "cat": "so-hoc",
     "sub": "co-mau-p-value",
-    "t": "Quy tắc ba: không thấy sự cố nào trong n lần thử không có nghĩa xác suất bằng 0",
-    "s": "Nếu 300 người dùng thuốc mà không ai gặp tác dụng phụ nghiêm trọng, giới hạn trên 95% của tỉ lệ đó là khoảng 3/300 = 1%. Công thức đơn giản: chia 3 cho cỡ mẫu. Đây là cách nhanh nhất để biết một 'chưa từng xảy ra' có ý nghĩa tới đâu.",
+    "t": "300 người dùng thuốc mà không ai gặp tác dụng phụ chỉ đảm bảo tỉ lệ đó dưới khoảng 1%",
+    "s": "Chia 3 cho số người đã thử là ra giới hạn trên: 3 chia 300 bằng 1%. Nghĩa là 'chưa từng xảy ra trong thử nghiệm' không có nghĩa xác suất bằng 0 — muốn khẳng định tỉ lệ dưới 1 phần nghìn thì phải thử trên khoảng 3.000 người.",
     "tags": [
       "cong-cu",
       "an-toan",
@@ -319,7 +319,7 @@
     "cat": "so-hoc",
     "sub": "ngau-nhien",
     "t": "Kỳ vọng dương vẫn có thể dẫn tới phá sản chắc chắn",
-    "s": "Trò chơi nhân vốn với 1,5 hoặc 0,6 mỗi lượt có kỳ vọng dương, nhưng một người chơi liên tục sẽ mất gần hết vốn vì 1,5 × 0,6 = 0,9. Trung bình của nhiều người khác trung bình của một người theo thời gian — và bạn sống trong cái thứ hai.",
+    "s": "Một canh bạc có giá trị trung bình dương cho cả đám đông vẫn có thể dẫn tới phá sản gần như chắc chắn cho một người chơi lặp lại, nếu mỗi lần thua ăn vào vốn dùng để chơi tiếp. Trung bình của đám đông và trung bình của một người theo thời gian là hai con số khác nhau, và bạn sống theo con số thứ hai — nên quản trị rủi ro cá nhân phải ưu tiên 'không bị loại khỏi cuộc chơi' trước khi tối ưu lợi nhuận.",
     "tags": [
       "ergodicity",
       "rui-ro",
@@ -344,27 +344,14 @@
     "id": "sh-139",
     "cat": "so-hoc",
     "sub": "dem-va-to-hop",
-    "t": "Đánh đổi khai thác và khám phá có lời giải toán học",
-    "s": "Thử nhà hàng mới hay quay lại chỗ quen? Lời giải phụ thuộc vào việc bạn còn bao nhiêu lượt: còn nhiều thì khám phá, sắp hết thì khai thác. Đây là lý do người trẻ nên thử nhiều và người sắp chuyển đi nên quay lại chỗ mình thích nhất.",
+    "t": "Thử nhà hàng mới hay quay lại chỗ quen: lời giải phụ thuộc vào việc bạn còn bao nhiêu lượt",
+    "s": "Bài toán này có lời giải toán học, và hình dạng của lời giải là: càng còn nhiều lượt thì càng nên thử cái mới, càng sắp hết lượt thì càng nên quay lại cái tốt nhất đã biết. Đây là lý do người trẻ nên thử nhiều và người sắp chuyển đi nên quay lại chỗ mình thích nhất.",
     "tags": [
       "toi-uu",
       "quyet-dinh",
       "doi-song"
     ],
     "src": "Bài toán multi-armed bandit; Christian & Griffiths, Algorithms to Live By (2016)"
-  },
-  {
-    "id": "sh-141",
-    "cat": "so-hoc",
-    "sub": "ngau-nhien",
-    "t": "Trực giác về ngẫu nhiên hỏng theo cách có thể dự đoán được",
-    "s": "Người ta thấy quy luật trong nhiễu, tin rằng may rủi 'phải cân bằng lại', và cho rằng chuỗi đều đặn là ngẫu nhiên hơn chuỗi vón cục. Ba lỗi này cộng lại giải thích phần lớn niềm tin vào phong độ, vào số đề và vào việc 'thị trường sắp đảo chiều'.",
-    "tags": [
-      "ngau-nhien",
-      "truc-giac",
-      "co-bac"
-    ],
-    "src": "Tversky & Kahneman, Psychological Bulletin (1971); Ayton & Fischer, Memory & Cognition (2004)"
   },
   {
     "id": "sh-142",
@@ -380,24 +367,11 @@
     "src": "Tversky & Kahneman, 'Belief in the Law of Small Numbers' (1971)"
   },
   {
-    "id": "sh-143",
-    "cat": "so-hoc",
-    "sub": "co-mau-p-value",
-    "t": "Kiểm định A/B dừng sớm khi thấy kết quả đẹp là cách tự lừa mình phổ biến nhất",
-    "s": "Nếu bạn nhìn kết quả liên tục và dừng ngay khi p < 0,05, tỉ lệ dương tính giả tăng vọt vì bạn đã thực hiện rất nhiều phép kiểm định. Cách sửa: định cỡ mẫu trước, hoặc dùng phương pháp kiểm định tuần tự được thiết kế cho việc nhìn liên tục.",
-    "tags": [
-      "ab-test",
-      "san-pham",
-      "sai-lam"
-    ],
-    "src": "Johari và cộng sự, 'Peeking at A/B Tests', KDD (2017)"
-  },
-  {
     "id": "sh-144",
     "cat": "so-hoc",
     "sub": "tuong-quan",
     "t": "Mô hình đúng trên dữ liệu cũ không có nghĩa nó đúng trên dữ liệu mới",
-    "s": "Với đủ tham số, bạn khớp được mọi thứ — kể cả nhiễu. Đây là lý do mọi mô hình dự báo nghiêm túc đều phải được kiểm trên dữ liệu chưa từng thấy, và vì sao các chiến lược đầu tư 'đã kiểm chứng trên lịch sử' thường không lặp lại được.",
+    "s": "Với đủ tham số thì khớp được mọi thứ, kể cả nhiễu thuần: một đa thức bậc 9 đi qua đúng 10 điểm bất kỳ, kể cả 10 điểm hoàn toàn ngẫu nhiên. Đây là lý do mọi mô hình dự báo nghiêm túc đều phải được kiểm trên dữ liệu chưa từng thấy, và vì sao các chiến lược đầu tư 'đã kiểm chứng trên lịch sử' thường không lặp lại được.",
     "tags": [
       "mo-hinh",
       "qua-khop",
@@ -409,8 +383,8 @@
     "id": "sh-145",
     "cat": "so-hoc",
     "sub": "tuong-quan",
-    "t": "Một tương quan bị dùng làm mục tiêu điều khiển thì tan rã — phiên bản thống kê của định luật Goodhart",
-    "s": "Mối quan hệ quan sát được trong dữ liệu lịch sử phản ánh một cơ chế nhất định. Khi bạn can thiệp vào cơ chế đó, quan hệ cũ không còn giữ. Đây là lý do mô hình dự báo tốt có thể trở thành công cụ điều khiển tồi.",
+    "t": "Khi một chỉ số được dùng làm mục tiêu, nó thôi đo được thứ nó từng đo",
+    "s": "Mối quan hệ quan sát được trong dữ liệu cũ phản ánh một cơ chế nhất định; can thiệp vào cơ chế đó thì quan hệ cũ không còn giữ. Khi trường học bị đánh giá bằng điểm thi, điểm thi tăng mà năng lực không nhất thiết tăng — vì có nhiều cách làm tăng điểm thi hơn là dạy tốt hơn. Vì vậy một mô hình dự báo tốt có thể là công cụ điều khiển tồi.",
     "tags": [
       "nhan-qua",
       "chi-so",

@@ -21,7 +21,7 @@
     "viz": "bayes",
     "t": "Xét nghiệm chính xác 99% cho kết quả dương tính vẫn có thể chỉ đúng 9%",
     "s": "Giả sử bệnh có tỉ lệ 1/1000, xét nghiệm bắt đúng 99% người bệnh và báo sai 1% người khoẻ. Trong 100.000 người: 100 người bệnh cho ~99 dương tính đúng, 99.900 người khoẻ cho ~999 dương tính giả. Xác suất bạn thật sự mắc bệnh khi có kết quả dương tính chỉ khoảng 9%.",
-    "d": "Đây là lý do tầm soát đại trà cho bệnh hiếm gây hại nhiều hơn lợi nếu không có bước xác nhận. Cùng phép tính này áp dụng cho hệ thống phát hiện gian lận, lọc thư rác, và mọi thuật toán 'phát hiện rủi ro': khi tỉ lệ nền thấp, đa số cảnh báo là cảnh báo giả.",
+    "d": "Chỗ hỏng của trực giác nằm ở việc trộn lẫn hai câu hỏi khác nhau: 'trong số người mắc bệnh, xét nghiệm bắt được bao nhiêu phần trăm' và 'trong số người có kết quả dương, bao nhiêu phần trăm thật sự mắc'. Con số 99% trả lời câu đầu; câu bạn quan tâm là câu sau, và nó phụ thuộc hoàn toàn vào việc bệnh đó phổ biến tới đâu.\n\nĐây là lý do tầm soát đại trà cho bệnh hiếm gây hại nhiều hơn lợi nếu không có bước xác nhận. Cùng phép tính này áp dụng cho hệ thống phát hiện gian lận, lọc thư rác, và mọi thuật toán 'phát hiện rủi ro': khi ca thật rất hiếm, đa số cảnh báo là cảnh báo giả.",
     "tags": [
       "bayes",
       "y-te",
@@ -236,38 +236,11 @@
     "src": "Định luật Zipf (1949); Clauset, Shalizi & Newman, SIAM Review (2009)"
   },
   {
-    "id": "sh-018",
-    "cat": "so-hoc",
-    "sub": "trung-binh-phan-bo",
-    "t": "Trung bình theo thời gian khác trung bình theo tập hợp — và bạn sống theo cái thứ nhất",
-    "s": "Một canh bạc có kỳ vọng dương cho cả đám đông vẫn có thể dẫn tới phá sản gần như chắc chắn cho một cá nhân chơi lặp lại, nếu mỗi lần thua ăn vào vốn. Đây là lý do quản trị rủi ro cá nhân phải ưu tiên 'không bị loại khỏi cuộc chơi' trước khi tối ưu lợi suất kỳ vọng.",
-    "d": "Ví dụ dễ hình dung: tung đồng xu, thắng thì tài sản tăng 50%, thua thì giảm 40%. Kỳ vọng mỗi lượt là +5%, nghe rất hời. Nhưng một lần thắng rồi một lần thua cho ra 1,5 × 0,6 = 0,9 — chơi lâu thì tài sản của một người co lại dần, dù trung bình của cả đám đông vẫn tăng.",
-    "tags": [
-      "rui-ro",
-      "dau-tu",
-      "ergodic"
-    ],
-    "src": "Ole Peters, Nature Physics (2019)"
-  },
-  {
-    "id": "sh-019",
-    "cat": "so-hoc",
-    "sub": "xac-suat-co-dieu-kien",
-    "t": "Độ nhạy và độ đặc hiệu không đủ để hiểu một xét nghiệm — phải biết cả tỉ lệ nền",
-    "s": "Độ nhạy trả lời 'trong số người mắc bệnh, xét nghiệm bắt được bao nhiêu phần trăm'. Giá trị dự báo dương tính trả lời 'trong số người có kết quả dương, bao nhiêu phần trăm thật sự mắc'. Câu thứ hai mới là câu bạn quan tâm, và nó thay đổi hoàn toàn theo mức phổ biến của bệnh trong nhóm được xét nghiệm.",
-    "tags": [
-      "y-te",
-      "bayes",
-      "xet-nghiem"
-    ],
-    "src": "Dịch tễ học cơ bản; Gigerenzer, Reckoning with Risk (2002)"
-  },
-  {
     "id": "sh-020",
     "cat": "so-hoc",
     "sub": "co-mau-p-value",
-    "t": "Cách đặt câu hỏi khảo sát quyết định câu trả lời",
-    "s": "Người Mỹ ủng hộ 'giúp đỡ người nghèo' nhiều hơn hẳn 'phúc lợi xã hội', dù nội dung tương tự. Thay đổi thứ tự lựa chọn, thêm một từ mang sắc thái, hay đặt câu hỏi sau một câu hỏi gợi ý đều làm dịch chuyển kết quả vài chục phần trăm. Khi đọc bất kỳ khảo sát nào, hãy tìm bản gốc câu hỏi trước khi tin con số.",
+    "t": "Đổi 'phúc lợi xã hội' thành 'giúp đỡ người nghèo' làm tỉ lệ ủng hộ nhảy vài chục phần trăm",
+    "s": "Nội dung hai cụm từ gần như nhau nhưng người Mỹ ủng hộ cụm thứ hai nhiều hơn hẳn. Thay đổi thứ tự lựa chọn, thêm một từ mang sắc thái, hay đặt câu hỏi ngay sau một câu hỏi gợi ý đều dịch chuyển kết quả tương tự. Vì vậy con số của một khảo sát chỉ đọc được khi biết câu hỏi được đặt bằng chữ gì.",
     "tags": [
       "khao-sat",
       "ngon-tu",
@@ -277,19 +250,6 @@
     "xem_ok": [
       "do-lon-bang-chu"
     ]
-  },
-  {
-    "id": "sh-021",
-    "cat": "so-hoc",
-    "sub": "co-mau-p-value",
-    "t": "Dữ liệu thiếu thường mang nhiều thông tin hơn dữ liệu có",
-    "s": "Khách hài lòng ít khi viết đánh giá; dự án thất bại ít khi được viết case study; bệnh nhân bỏ giữa chừng ít khi có mặt trong kết quả cuối. Trước khi phân tích bất kỳ tập dữ liệu nào, câu hỏi đầu tiên nên là: ai đã bị loại khỏi bảng này, và họ khác những người còn lại ở điểm nào?",
-    "tags": [
-      "du-lieu",
-      "thien-lech",
-      "phan-tich"
-    ],
-    "src": "Nguyên lý thiên lệch chọn mẫu và mất mẫu; xem Rothman, Modern Epidemiology"
   },
   {
     "id": "sh-022",

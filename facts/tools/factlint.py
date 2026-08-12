@@ -560,6 +560,12 @@ THUAT_NGU = [
     # y tế & dịch tễ
     'tỉ số chênh', 'tỷ số chênh', 'nguy cơ tương đối', 'nguy cơ tuyệt đối',
     'số cần điều trị', 'tương đương sinh học', 'dược động học',
+    # 'độ nhạy' trần đã bị bỏ: đo mới thấy nó đa nghĩa như 'hiệu lực' — "độ nhạy của micro",
+    # "độ nhạy mũi chó" là tiếng Việt thường. Chỉ giữ hai nghĩa chuyên môn thật.
+    'độ đặc hiệu', 'độ nhạy insulin', 'tỉ lệ nền', 'tỷ lệ nền',
+    # bị bỏ sót ở bản đầu, tìm ra khi đọc tay cụm so-hoc: sh-019 dùng cả ba từ này
+    # trong một tiêu đề mà không giải thích từ nào.
+    'biến ngẫu nhiên', 'thiên lệch xuất bản',
     # kinh tế
     'độ co giãn', 'ngoại ứng', 'cận biên', 'hiệu suất giảm dần', 'giá trị kỳ vọng',
     # khoa học tự nhiên
