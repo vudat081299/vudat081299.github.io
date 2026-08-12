@@ -1,18 +1,5 @@
 [
   {
-    "id": "sh-202",
-    "cat": "so-hoc",
-    "sub": "so-lieu-lua",
-    "t": "Số cần điều trị cho biết phải chữa bao nhiêu người mới có 1 người thật sự được lợi",
-    "s": "Một loại thuốc có 'hiệu quả rõ rệt' vẫn có thể cần điều trị 100 người để ngăn 1 biến cố. Đây là con số dễ hiểu nhất để so lợi ích với tác dụng phụ.",
-    "tags": [
-      "so-can-dieu-tri",
-      "y-hoc",
-      "quyet-dinh"
-    ],
-    "src": "Laupacis, Sackett & Roberts, NEJM (1988)"
-  },
-  {
     "id": "sh-207",
     "cat": "so-hoc",
     "sub": "co-mau-p-value",

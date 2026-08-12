@@ -1,5 +1,5 @@
 {
-  "updated": "09/08/2026",
+  "updated": "12/08/2026",
   "note": "Thêm fact hàng tuần: tạo data/weekly/<năm>-w<tuần>.json rồi thêm tên file vào cuối mảng files. File đứng sau = fact mới hơn.",
   "categories": [
     {
