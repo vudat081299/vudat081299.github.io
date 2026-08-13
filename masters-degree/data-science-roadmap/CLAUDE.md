@@ -47,6 +47,7 @@ Rồi tìm việc mình định làm trong bảng này:
 | **chuyển một khối ra ngoài mạch chính** | §7 · [docs/design.md](docs/design.md) §1 | `gate.mjs --advice` | popup là mặc định; chọn drawer thì phải viết ra lý do |
 | **sửa lịch 8 tuần / 14 ngày** | §8 · [docs/editing.md](docs/editing.md) việc 4 | `node tools/audit.mjs` | `G-PLAN` qua |
 | **sửa trang Roadmap học nhanh** | §4 (hai cổng `G-ROADMAP*`) · `tools/build-roadmap.mjs` | `node tools/build-roadmap.mjs` | `G-ROADMAP` im. **Đừng sửa tay `roadmap.html`** — nó là sản phẩm sinh ra |
+| **thêm / sửa câu hỏi trắc nghiệm** | [docs/editing.md](docs/editing.md) **việc 7** · object `QUIZ` trong HTML | `gate.mjs` (cổng `G-QUIZ`) rồi `build-roadmap.mjs` | `G-QUIZ` qua · mở trang xem carousel chạy hết một vòng |
 | **thêm / sửa một cổng** | §4 · [docs/editing.md](docs/editing.md) việc 6 | `node tools/gate.test.mjs` | test xanh · thêm tên cổng vào §4 (`G-DOC` bắt) |
 | **ghi việc học của mình** | [LEARNING-LOG.md](LEARNING-LOG.md) | `learn.mjs --add` hoặc nút **Notes** trên trang | `learn.mjs --check` im |
 | **đóng phiên / commit / push** | §12 | `node tools/session.mjs --close` | HANDOFF đã ghi · `G-HANDOFF` im |
@@ -234,7 +235,7 @@ thức ở [docs/design.md](docs/design.md), kèm ba cái bẫy của pane previ
 Bảng này phải khớp mảng `GATES` trong `gate.mjs` — cổng `G-DOC` tự đối chiếu và nhắc nếu
 lệch. In danh sách thật bất cứ lúc nào: `node tools/gate.mjs --gates`.
 
-**Chặn commit — 10 cổng:**
+**Chặn commit — 11 cổng:**
 
 | cổng | canh điều gì |
 |---|---|
@@ -248,6 +249,7 @@ lệch. In danh sách thật bất cứ lúc nào: `node tools/gate.mjs --gates`
 | `G-NO-DETAILS` | không dùng `<details>` cho kiến thức |
 | `G-FWD` | tiêu chí đạt / deliverable tuần không đòi thứ chưa được dạy |
 | `G-PLAN` | lịch 14 ngày & 8 tuần nhất quán — **bản node của `auditPlan()`**, xem §3 |
+| `G-QUIZ` | mỗi câu hỏi trắc nghiệm (`QUIZ`) đủ trường và `a` trỏ đúng một đáp án CÓ THẬT — `a` lệch là chấm sai đáp án, một lỗi chạy được. Câu hỏi có ĐÚNG/HAY không thì máy không kiểm, đó là việc đọc của người |
 
 **`G-SYNTAX` — cái bẫy backtick, và vì sao nó xứng đáng có một cổng riêng.** Trang là một
 file HTML tự chứa, nên phần lớn nội dung động nằm trong **template literal** của JS
@@ -266,7 +268,7 @@ nào để mở trình duyệt kiểm lại JS.
 tên class/token bằng chữ trần (`wb-steps`, không phải `` `wb-steps` ``). Muốn dùng backtick
 thì đưa chú thích ra ngoài template, thành comment JS phía trên hàm.
 
-**Chỉ nhắc, người quyết định — 14 cổng** (`G-FWD` có mặt ở cả hai bảng: chặn ở mức tiêu chí
+**Chỉ nhắc, người quyết định — 15 cổng** (`G-FWD` có mặt ở cả hai bảng: chặn ở mức tiêu chí
 đạt, chỉ nhắc ở mức thân bài):
 
 | cổng | nhắc điều gì |
@@ -286,6 +288,7 @@ thì đưa chú thích ra ngoài template, thành comment JS phía trên hàm.
 | `G-DOC` | có cổng trong code mà `CLAUDE.md` không nhắc tên |
 | `G-HANDOFF` | đổi trang hoặc bộ cổng mà `HANDOFF.md` không đổi — xem §12 |
 | `G-LEARN` | sổ học đọc được, và **≥2 bài cùng tắc ở một khái niệm** = khái niệm đó dạy quá muộn (§13) |
+| `G-QUIZ-COV` | bài chưa có câu hỏi trắc nghiệm tự kiểm nào (chỉ liệt kê — thêm quiz là việc nội dung) |
 
 **Hai cổng `G-ROADMAP*` canh trang thứ hai** (`roadmap.html`). Trang đó được **sinh** từ
 đúng nguồn này — và bộ sinh còn trích thẳng CSS/JS của trang chính — nên phần cấu trúc tự

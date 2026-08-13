@@ -17,6 +17,53 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 
 ---
 
+## Phiên 2026-08-14 (s) — trắc nghiệm tự kiểm mỗi bài (carousel) + popup ở roadmap · cổng G-QUIZ · 475 câu
+
+Yêu cầu chủ trang: mỗi bài có câu hỏi trắc nghiệm ở dưới, **đủ phủ kiến thức chính**, dạng
+**collapse/carousel** (bấm thì câu tua trái/phải), **chọn đáp án KHÔNG tự chuyển câu**, làm hết
+thì **chấm điểm**. Ở **roadmap** thì không để dưới bài mà làm **popup** (tham khảo `facts/index.html`).
+Minimalism, dùng skill web-builder, cập nhật docs, verify → commit → push.
+
+### 1. Một module carousel, chạy ở HAI trang
+`DSQuiz.mount(root, questions)` (khối "QUIZ MODULE" trong `<script>`) dựng cả carousel — một câu mỗi
+lần, tua bằng ‹ › / chấm tròn / phím ←/→; chọn đáp án chỉ đánh dấu (KHÔNG nhảy câu); trả lời hết mới
+bật "Chấm điểm"; chấm xong hiện đúng/sai + giải thích + điểm, có "Làm lại". Trang chính cắm ở cuối mỗi
+bài (`quizSection` sau `gainBox`, trước tự-đánh-giá). `roadmap.html` gọi ĐÚNG module đó trong một popup
+(`wb-modal` kiểu facts) — `build-roadmap.mjs` TRÍCH nguyên khối JS + mọi rule `.ds-quiz` (như cách trích
+khối tương tác, CLAUDE.md §2 luật 3). Look + behaviour đầy đủ: [docs/design.md §10](docs/design.md).
+
+### 2. Nội dung: object `QUIZ`, một nguồn sự thật
+Câu hỏi ở object `QUIZ` trong HTML (`read-html` đọc, `build-roadmap` nhúng vào popup — không gõ hai
+lần). **84/84 bài · 475 câu** (3–8 câu/bài tuỳ độ dày; bài ★ 6–8). Viết bằng cách đọc CHÍNH bài rồi neo
+từng câu vào chữ trong bài; mồi nhử là hiểu nhầm bài nêu ra để sửa. Luật nội dung + dạng `{q,o,a,why}`
+ở [editing.md việc 7](docs/editing.md).
+
+### 3. Cổng `G-QUIZ` (chặn) + `G-QUIZ-COV` (nhắc)
+`G-QUIZ` kiểm phần máy kiểm được: đủ trường, `a` trỏ đúng đáp án CÓ THẬT, id có trong TREE — `a` lệch là
+chấm sai đáp án, một lỗi chạy được. `G-QUIZ-COV` liệt kê bài chưa có câu. Cả hai có ca NỔ + ca IM trong
+`gate.test.mjs` (chèn khoá trùng ở CUỐI object QUIZ, bản cuối thắng — ca test không phụ thuộc nội dung).
+
+### Ba cái bẫy đã dính (cách chữa ghi ở design.md §10)
+- `.ds-quiz__why[hidden]` phải tự khai `display:none` (`display:flex` thắng `[hidden]` — cùng lỗi `.wb-drawer` §1.2).
+- Margin dọc quiz trỏ vào thang `--ds-sp-*` (G-SPACING), và roadmap khai sẵn `--ds-t-h3/-body` + `--ds-sp-text/-block` cho bản trích.
+- Popup: mount vào một div CON (mount gắn class `.ds-quiz` lên chính root nên rule bỏ-khung phải trúng hậu duệ) + `#quizModal` z-index 200 (trên drawer 101 của kit).
+
+### Cố ý KHÔNG làm
+- **Không KaTeX trong câu hỏi.** Popup roadmap không nạp KaTeX; ký hiệu toán viết Unicode. Text câu hỏi là HTML tin cậy (`<code>/<b>/<i>`) như PAYOFF/ACCEPT.
+- **Không chấm ngay mỗi câu / không tự nhảy câu** — chủ trang chốt: chọn không chuyển câu, chấm khi xong hết.
+- **Không nối quiz vào tiến độ/pháo giấy** — quiz là tự kiểm, tách khỏi cơ chế đánh dấu mức.
+- **Không đụng "Roadmap độc lập — bốn gạch cuối".** Quiz phủ phần *self-check có đáp án* cho cả hai trang, nhưng ba gạch còn lại (mental model / visual / worked example mỗi node) vẫn là quyết định giáo trình riêng, chưa chốt.
+
+### Verify
+Cổng CHẶN xanh (`G-QUIZ` qua · `G-SYNTAX` qua với 475 câu). `gate.test.mjs`: **61 đạt · 0 trượt** (thêm ca
+`G-QUIZ` + `G-QUIZ-COV`). `G-QUIZ-COV` im (84/84). Mở trang bằng mắt: carousel chạy hết một vòng
+(chọn → chấm → làm lại) ở `s-intro`/`m-bayes`, ký hiệu Unicode hiện đúng, không rò `$…$`; 375px không cuộn
+ngang; sáng/tối đều đọc được; popup roadmap mở từ nút trong ngăn (`ml-metrics` 7 câu) chấm điểm được.
+
+Chạm vào: `(data-science-roadmap.html + tools/read-html.mjs + tools/gate.mjs + tools/gate.test.mjs + tools/build-roadmap.mjs + roadmap.html sinh lại + CLAUDE.md + docs/design.md + docs/editing.md)`
+
+---
+
 ## Phiên 2026-08-12 (r) — ba mốc HIỆN trong lịch 14 ngày · session.mjs hỏi remote · một bản luật hook
 
 Chủ trang đọc `s-plan14` và hỏi đúng một câu: *"sao ngày 6 và 14 ngày không thấy liên quan

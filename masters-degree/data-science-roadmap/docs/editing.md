@@ -78,6 +78,7 @@ liệu — nó đổi liên tục.
 | `WEEKS` | lịch 8 tuần: `ids`, `out`, `needs`, `proof`, `next`, `mile` | bài | **có** — phải phủ hết bài |
 | `DAYS` | lịch 14 ngày: `ids`, `out`, `proof`, `note`, `mile` | bài | không — chỉ bài vào fast track |
 | `ACCEPT` | tiêu chí đạt | bài | không, nhưng bài bắt buộc gần như luôn cần |
+| `QUIZ` | câu hỏi trắc nghiệm tự kiểm: `[{q,o,a,why}]` mỗi bài (xem việc 7) | bài | nên có — `G-QUIZ-COV` liệt kê bài thiếu |
 | `SCOPE` | nhãn phạm vi (`aware`/`skeleton`/`weeks`) | bài | không |
 | `DELIV_MIN` | sàn phút cho cột deliverable | bài | không |
 | `READONLY_OK` | bài bắt buộc được phép chỉ-đọc (bài tra cứu) | bài | không |
@@ -284,6 +285,42 @@ Ba cách đầu **đóng vĩnh viễn** một phát hiện, nên chúng bắt bu
 nói *vì sao cổng bắt sai ở chỗ này* — không phải "đã xem rồi". Cách thứ tư là **nợ**: nó
 in lại mỗi lần chạy cổng cho tới khi bị xoá. Đừng dùng waiver cho việc mà ba cách đầu mới
 là câu trả lời đúng, và đừng dùng ba cách đầu để làm im một lỗi thật.
+
+---
+
+## Việc 7 · Thêm hoặc sửa câu hỏi trắc nghiệm
+
+Câu hỏi tự kiểm nằm ở object `QUIZ` trong `<script>` (grep `^const QUIZ`), **một mảng mỗi
+bài**, khoá là id bài. Đây là nguồn sự thật DUY NHẤT: `roadmap.html` TRÍCH `QUIZ` lúc build
+(read-html đọc, build-roadmap nhúng vào popup). Đừng gõ câu hỏi lần thứ hai ở đâu khác. Hình
+thức + hành xử của carousel: [design.md §10](design.md).
+
+**Dạng một câu** — chỉ bốn trường, cùng lối viết cụt như `TREE`/`ACCEPT`:
+
+```js
+'f-cyclic':[
+  { q:'Vì sao mã hoá giờ bằng sin/cos thay vì để số 0–23?',
+    o:['Để giảm số cột','Để 23h và 0h nằm cạnh nhau trong không gian feature',
+       'Vì cây quyết định bắt buộc','Để chuẩn hoá về [0,1]'],
+    a:1,                                  // chỉ số 0-based của đáp án ĐÚNG trong `o`
+    why:'23 và 0 xa nhau trên trục số nhưng liền nhau trong ngày; sin/cos đặt chúng cạnh nhau.' },
+],
+```
+
+- `q` (đề, HTML inline `<code>/<b>/<i>` được, **KHÔNG `$…$`** — popup roadmap không có KaTeX,
+  dùng Unicode `× ² √ α σ ≈`), `o` (2–6 lựa chọn), `a` (0-based, phải trong `0..o.length−1`),
+  `why` (giải thích, bắt buộc).
+- **Luật nội dung** (máy không kiểm được — đây là docs/writing.md cho quiz): chỉ hỏi thứ CÓ
+  trong bài; phủ kiến thức CHÍNH (không mẹo vặt); đúng một đáp án đúng; mồi nhử là hiểu nhầm
+  THẬT (lý tưởng là cái bài nêu ra để sửa); đủ để phủ ý chính, thường 4–6 câu (bài ★ dày:
+  6–8), **đừng nhồi**. Trộn vị trí đáp án đúng.
+
+**Cổng.** `G-QUIZ` (CHẶN) kiểm phần MÁY kiểm được: đủ trường, `a` trỏ đúng ô có thật, id có
+trong `TREE`. `G-QUIZ-COV` (nhắc) liệt kê bài chưa có câu nào. "Câu hỏi đúng/hay" thì cổng
+không biết — tự đọc lại.
+
+**Xong thì:** `node tools/build-roadmap.mjs` (đẩy sang popup roadmap) và mở trang xem carousel
+chạy hết một vòng (chọn → chấm → làm lại) ở cả hai chế độ.
 
 ---
 

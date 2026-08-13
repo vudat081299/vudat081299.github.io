@@ -799,3 +799,59 @@ với bài không có deliverable, hoặc đạt-deliverable với bài có), tr
   alpha, đừng `getImageData` cả canvas mỗi khung. Nhớ trả lại hai hàm gốc khi xong. Muốn
   so trước/sau thì `git show HEAD:<file> > scratchpad/old.html` rồi đo hai bản cùng một
   cỡ cửa sổ.
+
+---
+
+## 10. Trắc nghiệm tự kiểm (`.ds-quiz`)
+
+Mỗi bài có một bộ câu hỏi trắc nghiệm ở cuối. Nội dung câu hỏi ở object `QUIZ` trong HTML —
+**cách thêm/sửa và luật nội dung ở [editing.md](editing.md) việc 7**; mục này chỉ nói *nó
+trông thế nào, nằm ở đâu, hành xử ra sao*.
+
+**Nằm ở đâu.** Trang chính: một `<section class="ds-quiz-mount">` chèn trong `render()` **ngay
+sau hộp kết bài (`gainBox`)**, trước `.ds-nodefoot` (tự đánh giá + pager). Thứ tự đó là chủ ý:
+đọc bài → thấy mình vừa được gì → **tự kiểm** → mới đánh dấu mức. Bài không có câu hỏi thì
+`quizSection` trả chuỗi rỗng, không có ô nào.
+
+**Một module, hai trang.** `DSQuiz.mount(root, questions)` (khối "QUIZ MODULE" trong
+`<script>`) dựng cả carousel. Trang chính gọi nó trong `enhance()`; `roadmap.html` gọi đúng
+nó trong một **popup** (`build-roadmap.mjs` TRÍCH nguyên khối JS + mọi rule `.ds-quiz`, y như
+cách nó trích khối tương tác — CLAUDE.md §2 luật 3). Sửa carousel là sửa ở trang chính rồi
+build lại, đừng chạm `roadmap.html`.
+
+**Hành xử (chủ trang yêu cầu, giữ đúng bốn điều):**
+
+1. **Một câu mỗi lần, tua ngang.** `.ds-quiz__track` dịch bằng `translateX(-cur*100%)`,
+   `.ds-quiz__viewport` cắt bằng `overflow:hidden`. Tua bằng nút ‹ ›, chấm tròn, hoặc phím ←/→.
+2. **Chọn đáp án KHÔNG tự chuyển câu.** Bấm một ô chỉ đánh dấu `aria-checked`; đổi được tới
+   khi chấm. Đây là điều khác một quiz thường và là yêu cầu rõ của chủ trang — đừng "tiện tay"
+   cho nhảy câu.
+3. **Trả lời HẾT mới bật nút Chấm điểm** (nhãn đếm `Chấm điểm · k/N`). Chấm xong: mỗi ô hiện
+   đúng/sai, `.ds-quiz__why` bung ra, có dải điểm, nút đổi thành **Làm lại**.
+4. **Làm lại** xoá sạch về câu 1.
+
+**Màu theo thang §1 / CLAUDE.md.** Trung tính hoàn toàn tới khi chấm: ô đang chọn chỉ tô
+`--wb-ink-hover` + viền `--wb-fg`. **Chỉ sau khi chấm** mới có màu trạng thái — xanh
+(`--wb-success*`) cho đáp án đúng, đỏ (`--wb-danger*`) cho ô người dùng chọn sai; ô còn lại lùi
+về nền trang + chữ mờ. Đúng/sai *là* trạng thái, nên đây là chỗ hợp lệ để tiêu màu.
+
+**Ba cái bẫy đã dính, giữ nguyên cách chữa:**
+
+- **`.ds-quiz__why[hidden]` phải tự khai `display:none`.** `.ds-quiz__why{display:flex}` thắng
+  `[hidden]{display:none}` của trình duyệt ở cùng độ đặc hiệu (đúng lỗi `.wb-drawer[hidden]` ở
+  §1.2) — thiếu dòng đó thì giải thích hiện ra trước khi chấm.
+- **Margin dọc trong quiz trỏ vào thang `--ds-sp-*`** (§0.6), không px trần — nếu không `G-SPACING`
+  kêu, và `roadmap.html` phải khai sẵn `--ds-sp-text/-block` để bản trích chạy.
+- **Popup roadmap: đừng lồng hai khung.** `DSQuiz.mount` gắn class `.ds-quiz` (có viền + nền)
+  lên chính phần tử nhận, nên trong modal phải mount vào **một div CON** rồi
+  `#quizModalBody .ds-quiz{border:0;background:none;padding:0}` mới bỏ được khung trong. Popup
+  cũng ẩn tiêu đề "Kiểm tra nhanh" (đầu modal đã ghi tên bài), giữ lại dòng hướng dẫn.
+
+**Popup ở roadmap = modal của kit** (`wb-overlay--blur` + `wb-modal`, tham khảo `facts/index.html`),
+**khác** ngăn tóm tắt (ngăn KHÔNG phủ). Kit cho `.wb-overlay` z-index 100, `.wb-drawer` 101, nên
+`#quizModal` phải nâng lên (`z-index:200`) để nằm TRÊN ngăn. Đóng bằng ✕ / Esc / bấm nền, và
+bấm-nền dùng chốt `pointerdown`+`pointerup` để kéo chữ ra nền không đóng oan (lỗi phiên (q)); Esc
+đóng popup TRƯỚC, rồi mới tới ngăn.
+
+**Không dùng KaTeX trong câu hỏi.** Popup roadmap không nạp KaTeX; text câu hỏi là HTML tin cậy
+(`<code>/<b>/<i>`) nhưng **không** `$…$` — ký hiệu toán viết bằng Unicode.
