@@ -99,6 +99,9 @@ const gripCss = () => pickCss(/\.ds-(grip|dragging)\b/, 'tay kéo bề rộng ng
    nguyên văn. pickCss ném lỗi nếu không trích được gì, nên nếu ai xoá rule ở trang
    chính thì build đổ ngay chứ không âm thầm mất luật. */
 const headCss = () => pickCss(/\.wb-drawer__head\b/, 'đầu ngăn không có dòng phụ');
+/* CSS của carousel trắc nghiệm — mọi rule khớp `.ds-quiz`. Cùng lý do như vizCss():
+   một bản CSS ở trang chính, roadmap trích lúc build. */
+const quizCss = () => pickCss(/\.ds-quiz/, 'trắc nghiệm');
 
 /* JS của tay kéo: `dsZoom()` + `makeEdgeResizer()` nguyên văn từ trang chính.
    Cùng lý do như vizJs() — CLAUDE.md §2 luật 3, và chú thích ngay trên hàm đó
@@ -108,6 +111,16 @@ function resizerJs() {
   const i = RAW.indexOf('const dsZoom = () =>');
   const j = RAW.indexOf('\nmakeEdgeResizer({', i);
   if (i < 0 || j < 0) throw new Error('build-roadmap: không tìm thấy makeEdgeResizer() trong HTML nguồn');
+  return RAW.slice(i, j).trimEnd();
+}
+
+/* JS của carousel trắc nghiệm: `const DSQuiz = (() => {…})();` nguyên văn giữa hai
+   mốc "QUIZ MODULE — start/end" của trang chính. Module tự chứa (chỉ DOM + tham số)
+   nên chạy y nguyên trong popup roadmap. Sửa ở trang chính rồi build lại. */
+function quizJs() {
+  const i = RAW.indexOf('const DSQuiz = (() =>');
+  const j = RAW.indexOf('/* ══ QUIZ MODULE — end');
+  if (i < 0 || j < 0) throw new Error('build-roadmap: không tìm thấy QUIZ MODULE trong HTML nguồn');
   return RAW.slice(i, j).trimEnd();
 }
 
@@ -173,6 +186,9 @@ const DATA = P.TREE.map(ph => ({
       points: s?.points || [],
       viz: s?.viz || '',
       vizIds: VIZOF[k.id] || [],
+      /* Câu hỏi trắc nghiệm — TRÍCH thẳng từ QUIZ của trang chính (read-html đọc).
+         Nguồn sự thật vẫn ở một chỗ; đây chỉ là bản nhúng để popup roadmap dựng. */
+      quiz: P.QUIZ[k.id] || [],
     };
   }),
 }));
@@ -310,6 +326,26 @@ ${levelsHtml}
   <div class="wb-drawer__body wb-scroll-y" id="drBody"></div>
 </aside>
 
+<!-- Popup trắc nghiệm. Chủ trang chốt: ở roadmap câu hỏi KHÔNG nằm dưới bài mà là
+     một POPUP (tham khảo facts/index.html) — mở từ nút trong ngăn tóm tắt. Đây là
+     modal THẬT (aria-modal, phủ mờ), khác ngăn tóm tắt (không phủ). Kit cho overlay
+     z-index 100 mà drawer 101, nên #quizModal được nâng lên trên ở STYLE(). Đóng
+     bằng ✕ / Esc / bấm nền — bấm nền dùng chốt pointerdown+pointerup để kéo chữ từ
+     trong hộp ra nền không đóng oan (đúng lỗi phiên (q)). Carousel bên trong do
+     DSQuiz.mount() dựng — cùng module với trang chính. -->
+<div class="wb-overlay wb-overlay--blur rm-quizov" id="quizModal">
+  <div class="wb-modal rm-quizmodal" role="dialog" aria-modal="true" aria-labelledby="quizModalTitle">
+    <div class="wb-modal__head">
+      <div>
+        <span class="wb-cap"><span class="wb-ico wb-ico--xs" aria-hidden="true">quiz</span> Tự kiểm kiến thức</span>
+        <h2 class="wb-modal__title" id="quizModalTitle"></h2>
+      </div>
+      <button class="wb-close" id="quizClose" type="button" aria-label="Đóng" title="Đóng (Esc)"></button>
+    </div>
+    <div class="wb-modal__body wb-scroll-y" id="quizModalBody"></div>
+  </div>
+</div>
+
 <script>
 const DATA = ${JSON.stringify(DATA)};
 ${SCRIPT()}
@@ -317,6 +353,9 @@ ${SCRIPT()}
 /* ==== khối tương tác — TRÍCH nguyên văn từ data-science-roadmap.html lúc build.
    Đừng sửa ở đây: sửa ở trang chính rồi chạy lại node tools/build-roadmap.mjs. ==== */
 ${vizJs()}
+
+/* ==== carousel trắc nghiệm — cũng TRÍCH nguyên văn (module DSQuiz tự chứa). ==== */
+${quizJs()}
 
 /* ==== tay kéo bề rộng ngăn — cũng TRÍCH nguyên văn. Cùng lý do. ==== */
 ${resizerJs()}
@@ -572,7 +611,8 @@ ${gripCss().split('\n').map(l => '  ' + l).join('\n')}
      chính; --ds-fs cố định 15px vì drawer không có cột bài để giãn theo. */
   :root{
     --ds-fs:15px;
-    --ds-t-hero:calc(var(--ds-fs) * 1.72); --ds-t-sub:calc(var(--ds-fs) * .92);
+    --ds-t-hero:calc(var(--ds-fs) * 1.72); --ds-t-h3:calc(var(--ds-fs) * 1.12);
+    --ds-t-body:var(--ds-fs); --ds-t-sub:calc(var(--ds-fs) * .92);
     --ds-t-cap:calc(var(--ds-fs) * .84);
     --ds-sp-hair:4px; --ds-sp-tight:6px; --ds-sp-near:8px; --ds-sp-text:14px; --ds-sp-block:20px;
   }
@@ -582,6 +622,22 @@ ${gripCss().split('\n').map(l => '  ' + l).join('\n')}
   .rm-sec .ds-viz + .ds-viz{margin-top:14px}
   .rm-vizcap{font-size:12px;line-height:1.55;color:var(--wb-fg-subtle);margin:8px 0 0}
 ${vizCss().split('\n').map(l => '  ' + l).join('\n')}
+
+  /* ==== carousel trắc nghiệm — CSS TRÍCH từ trang chính (quizCss), + vài dòng riêng
+     cho popup của roadmap. Token --ds-t-* mà nó cần đã khai ở khối :root trên. ==== */
+${quizCss().split('\n').map(l => '  ' + l).join('\n')}
+  /* Popup trắc nghiệm phải nằm TRÊN ngăn tóm tắt: kit cho .wb-overlay 100, .wb-drawer 101. */
+  #quizModal{z-index:200}
+  .rm-quizmodal{width:min(560px,94vw);max-height:88vh}
+  .rm-quizmodal .wb-modal__body{padding:20px 22px 24px}
+  /* Trong popup, quiz bỏ khung riêng — modal đã là khung, đừng lồng hai viền. */
+  #quizModalBody .ds-quiz{border:0;background:none;padding:0}
+  /* Tiêu đề "Kiểm tra nhanh" thừa trong popup (đầu modal đã ghi tên bài + "Tự kiểm
+     kiến thức"); giữ lại dòng hướng dẫn "N câu · …". */
+  #quizModalBody .ds-quiz__title{display:none}
+  #quizModalBody .ds-quiz__sub{margin-top:0}
+  /* Nút mở quiz trong ngăn tóm tắt. */
+  .rm-quizbtn{margin-top:2px}
 `; }
 
 /* =============================== SCRIPT =============================== */
@@ -611,9 +667,9 @@ try{const prog=JSON.parse(localStorage.getItem('ds-roadmap-progress-v3')||'{}');
    không phủ mà vẫn khoá cuộn là nửa vời — nhường chỗ để đọc danh sách rồi lại
    không cho cuộn danh sách. Lớp rm-open trên <html> là thứ CSS bám vào để thân
    trang nhường chỗ; đặt ngay chứ không trong rAF vì rAF bị treo khi tab ẩn. */
-const drawer=$('#drawer');let lastFocus=null;
+const drawer=$('#drawer');let lastFocus=null;let curLesson=null;
 const PRINAME={core:'Bắt buộc',good:'Nên biết',skim:'Định vị là đủ'};
-function open(id){const l=byId[id];if(!l)return;lastFocus=document.activeElement;
+function open(id){const l=byId[id];if(!l)return;lastFocus=document.activeElement;curLesson=l;
   /* Tên bài ở đầu ngăn (wb-drawer__title), chặng ở dòng phụ — cùng khuôn đầu ngăn
      với trang chính. innerHTML chỉ để chèn ngôi sao; tên bài vẫn qua esc(). */
   $('#drTitle').innerHTML=(l.star?'<span class="rm-dh__star" aria-hidden="true">★</span>':'')+esc(l.t);
@@ -651,6 +707,8 @@ function body(l){
     +'<div class="rm-po__row"><span class="rm-po__k">Dẫn tới</span><span>'+l.payoff[1]+'</span></div></div></div>';
   if(l.accept&&l.accept.length)h+='<div class="rm-sec"><p class="rm-sec__h">Tiêu chí đạt</p><ul class="rm-acc">'
     +l.accept.map(a=>'<li><span class="rm-acc__k">'+esc(a.k)+'</span><span>'+a.v+'</span></li>').join('')+'</ul></div>';
+  if(l.quiz&&l.quiz.length)h+='<div class="rm-sec"><button type="button" class="wb-btn wb-btn--outline wb-btn--sm rm-quizbtn" data-quiz-open>'
+    +'<span class="wb-ico wb-ico--sm" aria-hidden="true">quiz</span> Kiểm tra kiến thức · '+l.quiz.length+' câu</button></div>';
   h+='<a class="rm-full" href="data-science-roadmap.html#/'+l.id+'">Mở bài đầy đủ →</a>';
   return h;
 }
@@ -688,7 +746,33 @@ document.querySelectorAll('.rm-node').forEach(n=>n.addEventListener('click',()=>
   apply(true);
 })();
 $('#drClose').addEventListener('click',close);
-addEventListener('keydown',e=>{if(e.key==='Escape'&&!drawer.hidden)close();});
+
+/* ==== popup trắc nghiệm — mở từ nút trong ngăn tóm tắt (data-quiz-open). Carousel
+   do DSQuiz.mount() dựng, cùng module với trang chính. ==== */
+const quizOv=$('#quizModal');
+function openQuiz(){
+  if(!curLesson||!curLesson.quiz||!curLesson.quiz.length)return;
+  $('#quizModalTitle').textContent=curLesson.t;
+  /* Mount vào một div CON (không mount thẳng vào #quizModalBody): DSQuiz.mount gắn
+     class .ds-quiz lên chính phần tử nhận, nên mount thẳng thì .ds-quiz nằm trên
+     #quizModalBody và rule bỏ-khung "#quizModalBody .ds-quiz" (hậu duệ) không trúng. */
+  const b=$('#quizModalBody'); b.innerHTML='<div></div>';
+  DSQuiz.mount(b.firstElementChild,curLesson.quiz);
+  quizOv.classList.add('is-open'); $('#quizClose').focus();
+}
+function closeQuiz(){quizOv.classList.remove('is-open'); $('#quizModalBody').innerHTML='';}
+document.addEventListener('click',e=>{if(e.target.closest('[data-quiz-open]'))openQuiz();});
+$('#quizClose').addEventListener('click',closeQuiz);
+/* Bấm nền đóng — nhưng chỉ khi pointerdown VÀ pointerup đều trúng chính nền, để kéo
+   chữ từ trong hộp ra nền không đóng oan (lỗi phiên (q), như facts/app.js). */
+let qDown=false;
+quizOv.addEventListener('pointerdown',e=>{qDown=(e.target===quizOv);});
+quizOv.addEventListener('pointerup',e=>{if(qDown&&e.target===quizOv)closeQuiz();qDown=false;});
+
+/* Esc: đóng popup trắc nghiệm TRƯỚC (nó nằm trên ngăn), rồi mới tới ngăn tóm tắt. */
+addEventListener('keydown',e=>{if(e.key!=='Escape')return;
+  if(quizOv.classList.contains('is-open')){closeQuiz();return;}
+  if(!drawer.hidden)close();});
 
 /* announce() — bản tối giản của hàm cùng tên ở trang chính, đủ cho thứ duy nhất gọi
    nó ở đây (makeEdgeResizer khi đưa bề rộng về mặc định). Vẫn giữ mẹo xoá-rồi-đặt-lại

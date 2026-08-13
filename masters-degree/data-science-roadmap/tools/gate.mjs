@@ -62,7 +62,7 @@ const arg = f => { const i = argv.indexOf(f); return i >= 0 ? argv[i + 1] : null
 const P = readPage(HTML);
 const {
   src, lines,
-  TREE, WEEKS, DAYS, PAYOFF, COMPS, ACCEPT, SCOPE, PORTFOLIO, PHASE_OUTCOME,
+  TREE, WEEKS, DAYS, PAYOFF, COMPS, ACCEPT, QUIZ, SCOPE, PORTFOLIO, PHASE_OUTCOME,
   TPL, tplBy, nodeTpl, refsIn,
   LEAVES, byId, orderOf, FAST, weekOf, nextOf, mins,
 } = P;
@@ -227,6 +227,8 @@ const GATES = [
   ['G-LEARN',      'nhắc', 'sổ học đọc được, và chỗ tắc trùng nhau = dạy quá muộn'],
   ['G-ROADMAP',    'nhắc', 'roadmap.html còn khớp bản sinh lại từ nguồn (chặn khi commit)'],
   ['G-ROADMAP-SUM','nhắc', 'tóm tắt roadmap thiếu bài, hoặc bài đã đổi sau khi tóm tắt'],
+  ['G-QUIZ',       'chặn', 'câu hỏi trắc nghiệm đủ trường và có đáp án đúng hợp lệ'],
+  ['G-QUIZ-COV',   'nhắc', 'bài chưa có câu hỏi trắc nghiệm tự kiểm nào'],
 ];
 
 /* Waiver: một lỗi CHẶN đã biết, đã có hướng sửa, nhưng cách sửa là một quyết định
@@ -334,6 +336,42 @@ if (rmErr) {
     + '    này thành con dấu cao su.');
   if (unstamped.length) W(`G-ROADMAP-SUM: ${unstamped.length} bản tóm tắt chưa có vân tay nội dung — `
     + 'chạy `node tools/build-roadmap.mjs --stamp` một lần để lấy mốc.');
+}
+
+/* --- G-QUIZ / G-QUIZ-COV: câu hỏi trắc nghiệm tự kiểm ----------------------
+   G-QUIZ (CHẶN)     — phần MÁY kiểm được: mỗi câu đủ trường, và `a` trỏ đúng một
+                       đáp án CÓ THẬT. `a` lệch = bấm "Chấm điểm" chấm sai đáp án —
+                       một lỗi chạy được, nên chặn. Câu hỏi có ĐÚNG/HAY không thì máy
+                       không kiểm được: đó là việc đọc của người (như docs/writing.md).
+   G-QUIZ-COV (nhắc) — bài chưa có câu nào. Chỉ liệt kê: thêm quiz là việc nội dung. */
+{
+  const quizIds = Object.keys(QUIZ);
+  const badId = quizIds.filter(id => !byId[id]);
+  if (badId.length) F(`G-QUIZ: QUIZ có bài không có trong TREE: ${badId.join(', ')} — sửa id hoặc xoá.`);
+
+  const problems = [];
+  for (const id of quizIds) {
+    if (!byId[id]) continue;
+    const qs = QUIZ[id];
+    if (!Array.isArray(qs)) { problems.push(`${id}: QUIZ["${id}"] không phải mảng`); continue; }
+    qs.forEach((q, i) => {
+      const at = `${id} câu ${i + 1}`;
+      if (!q || typeof q !== 'object') { problems.push(`${at}: không phải object`); return; }
+      if (typeof q.q !== 'string' || !q.q.trim()) problems.push(`${at}: thiếu đề bài (q)`);
+      const nOpt = Array.isArray(q.o) ? q.o.length : 0;
+      if (nOpt < 2) problems.push(`${at}: cần ≥2 lựa chọn (o)`);
+      else if (q.o.some(o => typeof o !== 'string' || !o.trim())) problems.push(`${at}: có lựa chọn rỗng`);
+      if (!Number.isInteger(q.a)) problems.push(`${at}: đáp án đúng (a) phải là số nguyên`);
+      else if (nOpt && (q.a < 0 || q.a >= nOpt)) problems.push(`${at}: a=${q.a} ngoài khoảng 0..${nOpt - 1}`);
+      if (typeof q.why !== 'string' || !q.why.trim()) problems.push(`${at}: thiếu giải thích (why)`);
+    });
+  }
+  if (problems.length) F(`G-QUIZ: ${problems.length} câu hỏi trắc nghiệm hỏng:\n    `
+    + problems.slice(0, 12).join('\n    ') + (problems.length > 12 ? `\n    … và ${problems.length - 12} chỗ nữa` : ''));
+
+  const noQuiz = LEAVES.filter(l => !QUIZ[l.id] || !QUIZ[l.id].length).map(l => l.id);
+  if (noQuiz.length) W(`G-QUIZ-COV: ${noQuiz.length}/${LEAVES.length} bài chưa có câu hỏi trắc nghiệm tự kiểm `
+    + `(${noQuiz.slice(0, 8).join(', ')}${noQuiz.length > 8 ? '…' : ''}).`);
 }
 
 /* --- G-ORDER: thứ tự template trong file == thứ tự học ------------------- */

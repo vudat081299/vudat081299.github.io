@@ -172,6 +172,14 @@ const CASES = [
      bắt — một ca `let x = ;` cũng làm cổng nổ, nhưng không chứng minh được gì cả. */
   ['G-SYNTAX', 'backtick trong comment HTML bên trong template literal', h =>
     once(h, '<ol class="wb-steps ds-map">', '<!-- `wb-steps` -->\n      <ol class="wb-steps ds-map">')],
+  /* Chèn vào CUỐI object QUIZ (ngay trước `};` của nó) một khoá 's-how' TRÙNG — khoá
+     literal trùng thì bản CUỐI thắng, nên nó ghi đè quiz thật của s-how. Không phụ
+     thuộc nội dung câu hỏi thật (sẽ đổi khi thêm bài), chỉ phụ thuộc mốc kết thúc
+     object, nên ca test không tự hỏng mỗi lần thêm quiz. */
+  ['G-QUIZ', 'đáp án đúng (a) trỏ ra ngoài số lựa chọn', h =>
+    once(h, '\n};\n\n/* Ma trận năng lực', "\n  's-how':[{ q:'x?', o:['a','b'], a:9, why:'y' }],\n};\n\n/* Ma trận năng lực")],
+  ['G-QUIZ-COV', 'một bài có mảng câu hỏi rỗng', h =>
+    once(h, '\n};\n\n/* Ma trận năng lực', "\n  's-how':[],\n};\n\n/* Ma trận năng lực")],
 ];
 
 /* Các ca không sửa HTML mà sửa file khác. Mỗi ca tự dọn ở `after` nếu nó chạm vào

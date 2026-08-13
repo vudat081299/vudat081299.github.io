@@ -89,6 +89,7 @@ export function readPage(htmlPath) {
   const PAYOFF        = V('PAYOFF');
   const COMPS         = V('COMPS');
   const ACCEPT        = V('ACCEPT');
+  const QUIZ          = V('QUIZ');
   const SCOPE         = V('SCOPE');
   const PORTFOLIO     = V('PORTFOLIO');
   const PHASE_OUTCOME = V('PHASE_OUTCOME');
@@ -125,7 +126,7 @@ export function readPage(htmlPath) {
 
   return {
     src, lines, htmlPath,
-    TREE, WEEKS, DAYS, PAYOFF, COMPS, ACCEPT, SCOPE, PORTFOLIO,
+    TREE, WEEKS, DAYS, PAYOFF, COMPS, ACCEPT, QUIZ, SCOPE, PORTFOLIO,
     PHASE_OUTCOME, COMP_PHASE, DELIV_MIN, READONLY_OK,
     TPL, tplBy, nodeTpl, refsIn,
     LEAVES, byId, orderOf, FAST, weekOf, dayOf, nextOf,
