@@ -824,36 +824,33 @@ nguyên khối JS + mọi rule `.ds-quiz`, y như cách nó trích khối tươn
 `fetch('data/quiz.json')` — nên **sửa câu hỏi không cần build lại roadmap**, chỉ sửa carousel
 mới cần. Sửa carousel là sửa ở trang chính rồi build lại, đừng chạm `roadmap.html`.
 
-**Khung ngoài dùng neumorphism — và CHỈ khung ngoài, CHỈ ở trang này.** Mọi khối khác trong
-bài là viền chỉ `--wb-border` + nền `--wb-surface`; ô quiz là chỗ duy nhất đòi người đọc *làm*
-chứ không *đọc*, nên lướt qua phải nhận ra ngay, và cách nói điều đó là một khối **nổi lên
-khỏi mặt trang**.
+**Ô quiz nổi hơn mọi khối khác — bằng BÓNG, không bằng một lối trình bày riêng.** Nó là chỗ
+duy nhất trong bài đòi người đọc *làm* chứ không *đọc*, nên lướt qua phải nhận ra ngay. Nhưng
+nó vẫn là một mục của bài: **nền, viền, bo góc giữ y nguyên ngôn ngữ card của kit**
+(`--wb-surface` + `--wb-bw solid --wb-border` + `--wb-radius-lg`), thứ duy nhất khác là độ nổi.
 
-**Phạm vi là một quyết định, không phải sự dở dang.** Bên trong — ô đáp án, huy hiệu chữ cái,
-dải điểm, vạch tiến độ, nút — giữ nguyên ngôn ngữ viền-chỉ của kit. Bóng lồng trong bóng thì
-cái khung hết nổi mà chi tiết bên trong cũng mờ đi: hai lớp cạnh tranh nhau, không lớp nào
-thắng. **Đừng "làm nốt cho đồng bộ"** — một bản đã thử neumorphism cho cả cây và phải gỡ.
+Kit có hai bậc bóng — `--wb-shadow-sm` (card thường trong bài) và `--wb-shadow-md` (modal,
+drawer, toast). Ô quiz lấy một **bậc thứ ba**, rộng và đậm hơn cả `md`, vì nó phải hơn mọi thứ
+đang có trên trang mà vẫn nằm trong mạch bài. Giữ đúng cấu trúc hai lớp của kit: một lớp tiếp
+xúc sát mép + một lớp toả rộng.
 
-Hai luật bắt buộc của lối này:
+```css
+box-shadow: 0 2px 6px rgba(16,17,18,.06), 0 14px 40px rgba(16,17,18,.16);   /* sáng */
+box-shadow: 0 2px 6px rgba(255,255,255,.06), 0 14px 40px rgba(255,255,255,.07); /* tối */
+```
 
-1. **Nền khung phải TRÙNG nền phía sau** — `--wb-canvas`, KHÔNG phải `--wb-surface`.
-   Neumorphism là "nổi lên *từ* mặt phẳng"; khác màu thì nó thành một card dán lên.
-2. **Độ nổi do hai bóng ngược hướng, không do viền** → `border: 0`, sáng ở **trên-trái**, bóng
-   đổ **dưới-phải**.
+**Dark không đảo được.** Nền tối thì bóng đen vô hình, nên kit đổ bóng bằng **ánh sáng trắng**
+ở chế độ tối. Quầng trắng lên nhanh hơn bóng đen, nên độ mờ lớp toả phải thấp hơn hẳn bản sáng
+(`.07` so với `.16`) — bằng nhau thì khối trông như đang phát sáng.
 
-Hai biến `--q-lo` / `--q-hi` khai **trên chính `.ds-quiz`**, KHÔNG ở `:root` — bộ trích của
-`build-roadmap` lọc theo selector khớp `.ds-quiz`. Cùng lý do với rule `.dark .ds-quiz`, đặt
-**cạnh** rule kia. Dark **không đảo thẳng được**: nền tối thì "ánh sáng" phải rất mờ (`.05`)
-còn bóng phải rất đậm (`.72`); để cân bằng như bản sáng thì khối trông như đang phát sáng.
+Rule `.dark .ds-quiz` đặt **cạnh** rule kia, không ở `:root`: bộ trích của `build-roadmap` lọc
+theo selector khớp `.ds-quiz`, khai chỗ khác là roadmap không nhận được.
 
-**`roadmap.html` KHÔNG dùng lối này** (chủ trang chốt). Nó tự động không nhận gì, vì popup ở
-đó gỡ hẳn khung ngoài (`#quizModalBody .ds-quiz{…box-shadow:none}`) — và **đó chính là lý do
-luật neumorphism phải dừng ở khung**: thêm một luật cho phần tử *bên trong* là nó rò sang
-trang kia ngay, không có gì chặn.
-
-*Hệ quả đã biết:* khung đổi sang `--wb-canvas` nên ô đáp án (cũng `--wb-canvas`) giờ trùng màu
-khung, chỉ còn hairline phân tách — đúng như mọi hairline khác của trang. Muốn ô nổi lên khỏi
-khung thì đổi **một** token: `.ds-quiz__opt { background: var(--wb-surface) }`.
+**Bóng dừng ở khung, không đi vào trong.** Bóng lồng trong bóng thì cái khung hết nổi mà chi
+tiết bên trong cũng mờ đi — hai lớp cạnh tranh nhau, không lớp nào thắng. Và có một hệ quả kỹ
+thuật: `roadmap.html` gỡ khung ngoài (`#quizModalBody .ds-quiz{…box-shadow:none}`) nên nó tự
+động không nhận bóng này (chủ trang chốt để nguyên trang kia) — nhưng **luật đó chỉ chặn được
+đúng cái khung**. Thêm bóng cho một phần tử *bên trong* là rò sang trang kia ngay.
 
 **Hành xử (chủ trang yêu cầu, giữ đúng bốn điều):**
 

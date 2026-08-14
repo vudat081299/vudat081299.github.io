@@ -18,9 +18,9 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 
 ---
 
-## Phiên 2026-08-14 (u) — neumorphism cho ô quiz · cửa sổ carousel · chặn token thiếu
+## Phiên 2026-08-14 (u) — độ nổi ô quiz · cửa sổ carousel · chặn token thiếu
 
-Ba việc chủ trang giao, ba commit.
+Ba việc chủ trang giao, ba commit (+ hai lượt sửa phạm vi sau đó, xem mục độ nổi).
 
 ### Cửa sổ carousel: lỗi TÔI tạo ra ở phiên (t)
 
@@ -34,21 +34,30 @@ Kèm theo, `gap` giữa hai câu đang là 0 — cửa sổ khít thì không th
 dán liền nhau thành một dải chữ. Có `gap` thì transform phải trừ thêm `cur × gap`; gom vào
 `place()` và **đọc gap lại từ computed style** nên con số vẫn chỉ nằm ở CSS.
 
-### Neumorphism thay viền đen — CHỈ KHUNG NGOÀI, CHỈ TRANG DS
+### Độ nổi ô quiz — ba lượt, kết quả là MỘT BẬC BÓNG, không phải một lối trình bày
 
-Chủ trang bảo bỏ viền 2px vừa thêm ở phiên (t), thử neumorphism. Bản đầu tôi làm cho **cả
-cây** (ô đáp án lõm như phím bấm, huy hiệu đảo chiều, nút, vạch tiến độ) — chủ trang **bác**:
-chỉ card ngoài ở trang DS, `roadmap.html` để nguyên, phần tử bên trong giữ nguyên. Đã gỡ.
+Đây là chỗ tốn nhiều lượt nhất phiên này; ghi cả đường đi vì cái sai lặp lại được.
 
-**Phạm vi đó là quyết định, đừng "làm nốt cho đồng bộ".** Và nó tự bảo vệ đúng một lớp: popup
-roadmap gỡ hẳn khung ngoài, nên luật đặt trên `.ds-quiz` không rò sang; thêm một luật
-neumorphism cho phần tử BÊN TRONG là rò ngay, không có gì chặn. Hai luật còn lại + lý do dark
-không đảo thẳng được: `docs/design.md` §10.
+1. Phiên (t) thêm **viền đen 2px** để ô nhận ra được khi lướt. Chủ trang bác.
+2. Chủ trang bảo thử **neumorphism**. Tôi làm cho **cả cây** (ô đáp án lõm như phím bấm, huy
+   hiệu đảo chiều, nút, vạch tiến độ) → bác: chỉ card ngoài, `roadmap.html` để nguyên, bên
+   trong giữ nguyên. Thu về đúng khung.
+3. Chủ trang **bỏ hẳn neumorphism**: *"giờ chỉ cần shadow mạnh hơn rộng hơn cho card này"*.
 
-Hệ quả đã biết và đã nói với chủ trang: khung chuyển sang `--wb-canvas` (bắt buộc, nếu không
-thì không phải neumorphism) nên ô đáp án — cũng `--wb-canvas` — giờ trùng màu khung, chỉ còn
-hairline phân tách. Muốn ô nổi lên thì đổi một token, đã ghi sẵn ở §10. **Chưa làm vì chủ
-trang bảo giữ nguyên phần bên trong.**
+**Kết quả cuối, đang chạy:** ô quay lại đúng ngôn ngữ card của kit — `--wb-surface`,
+`--wb-bw solid --wb-border`, `--wb-radius-lg`, `padding 18px 20px` — và thứ duy nhất khác mọi
+khối khác là **bóng**: một bậc thứ ba, rộng hơn cả `--wb-shadow-md` của kit
+(`0 14px 40px rgba(16,17,18,.16)`, tối thì `.07` trắng). Đo trên trang thật: khối cạnh nó hoặc
+không có bóng, hoặc là `sm` (blur 3px). Nên chênh lệch là **40px so với 3px**, thấy rõ.
+
+**Bài học của cả ba lượt:** cái đúng không phải một *lối trình bày riêng* cho ô quiz, mà là
+**cùng ngôn ngữ, khác một bậc**. Cả viền đen lẫn neumorphism đều tách ô ra khỏi hệ thống; bậc
+bóng thì không. Nếu lần sau lại thấy "ô này cần nổi hơn" thì nghĩ theo hướng bậc, đừng nghĩ
+theo hướng phong cách.
+
+**Bóng dừng ở khung.** Popup roadmap gỡ hẳn khung ngoài nên luật đặt trên `.ds-quiz` không rò
+sang — nhưng nó **chỉ chặn được đúng cái khung**; thêm bóng cho phần tử BÊN TRONG là rò ngay,
+không có gì chặn. Lý do dark không đảo thẳng được: `docs/design.md` §10.
 
 ### Câu hỏi về chuẩn margin — trả lời: ĐÃ CÓ, và 44px là học từ nó
 
@@ -67,18 +76,26 @@ build** — không phải cổng riêng, vì bắt ở build thì bản hỏng k
 ### Cố ý KHÔNG làm
 
 - **Không đổi `--ds-measure` / `--ds-fs`** — quyết định của chủ trang, `CLAUDE.md` §10 bắt hỏi.
-- **Không đưa neumorphism ra chỗ khác trong bài.** Nó chỉ có nghĩa vì nó là block DUY NHẤT
-  khác kiểu; dùng ở khối thứ hai là mất tác dụng cả hai.
+- **Không đưa bậc bóng này ra khối thứ hai trong bài.** Nó chỉ có nghĩa vì nó là block DUY
+  NHẤT nổi hơn phần còn lại; dùng ở khối thứ hai là mất tác dụng cả hai.
 - **Không đổi kích thước/nhịp của quiz theo cảm tính** — mọi margin trong ô đều trỏ vào một
   bậc `--ds-sp-*` có sẵn.
 
-### Vẫn chưa nhìn được bằng mắt — và lần này nó còn đánh lừa phép đo
+### Pane preview: chụp được, nhưng CHỈ vùng đã vẽ khi cuộn = 0
 
-Pane preview vẫn không vẽ (`visibilityState = 'hidden'`), ảnh chụp vẫn đen. Mới: **CSS
-transition bị treo hẳn** ở trạng thái đó, nên `getComputedStyle` trả về giá trị *trước khi*
-chuyển — có lúc `transform` đọc ra identity dù inline style đúng, và `box-shadow` đọc ra hình
-khối cũ. Suýt sửa oan hai chỗ. Cách đo đúng: **chèn `transition: none !important` rồi mới
-đo**, hoặc đọc thẳng giá trị inline. Ghi ra đây vì phiên sau chắc chắn gặp lại.
+Suốt hai lượt đầu phiên này pane không vẽ gì (`visibilityState = 'hidden'`, ảnh đen), nên tôi
+chỉ kiểm được bằng số đo. Lượt cuối thì **chụp được** — nhưng chỉ ở `scrollY = 0`; cuộn xuống
+rồi chụp ra ảnh trắng trơn, kể cả khi `getBoundingClientRect()` nói khối đang nằm trong khung
+nhìn. Tab ẩn thì compositor không vẽ phần mới cuộn tới.
+
+**Cách chụp được một khối nằm sâu trong trang:** `scrollTo(0,0)` rồi đặt tạm khối đó
+`position:fixed; top:70px; left:60px` — nó rơi vào vùng đã vẽ và hiện ra. Đổi theme bằng cách
+bật/tắt class `dark` trên `<html>` để chụp cả hai chế độ. Nhớ `navigate` lại để xoá style tạm.
+
+Bẫy còn nguyên giá trị: khi pane không vẽ, **CSS transition bị treo hẳn**, nên
+`getComputedStyle` trả giá trị *trước khi* chuyển — `transform` đọc ra identity dù inline style
+đúng, `box-shadow` đọc ra hình khối cũ. Suýt sửa oan hai chỗ. Chèn `transition: none !important`
+rồi mới đo, hoặc đọc thẳng inline.
 
 ---
 

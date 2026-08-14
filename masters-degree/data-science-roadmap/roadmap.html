@@ -328,14 +328,12 @@
 
   /* ==== carousel trắc nghiệm — CSS TRÍCH từ trang chính (quizCss), + vài dòng riêng
      cho popup của roadmap. Token --ds-t-* mà nó cần đã khai ở khối :root trên. ==== */
-  .ds-quiz{
-      --q-lo: rgba(9, 9, 11, .13);        
-      --q-hi: rgba(255, 255, 255, .95);   
-      margin: var(--ds-sp-sec) 0 0;
-      border: 0; border-radius: 22px;
-      background: var(--wb-canvas); padding: 22px 24px;
-      box-shadow: 8px 8px 18px var(--q-lo), -8px -8px 18px var(--q-hi); }
-  .dark .ds-quiz{ --q-lo: rgba(0, 0, 0, .72); --q-hi: rgba(255, 255, 255, .05); }
+  .ds-quiz{ margin: var(--ds-sp-sec) 0 0;
+      border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius-lg);
+      background: var(--wb-surface); padding: 18px 20px;
+      box-shadow: 0 2px 6px rgba(16, 17, 18, .06), 0 14px 40px rgba(16, 17, 18, .16); }
+  .dark .ds-quiz{
+      box-shadow: 0 2px 6px rgba(255, 255, 255, .06), 0 14px 40px rgba(255, 255, 255, .07); }
   .ds-quiz, .ds-quiz *, .ds-quiz *::before, .ds-quiz *::after{ box-sizing: border-box; }
   .ds-quiz__head{ margin-bottom: var(--ds-sp-block); padding-bottom: var(--ds-sp-near);
       border-bottom: var(--wb-bw) solid var(--wb-border); }
@@ -407,11 +405,10 @@
   #quizModal{z-index:200}
   .rm-quizmodal{width:min(560px,94vw);max-height:88vh}
   .rm-quizmodal .wb-modal__body{padding:20px 22px 24px}
-  /* Trong popup, quiz bỏ khung riêng — modal đã là khung, đừng lồng hai viền. */
-  /* Bỏ khung ngoài — modal đã là khung. Dòng này cũng là thứ giữ cho trang NÀY không
-     dính neumorphism của trang chính (chủ trang chốt: chỉ trang DS mới có): lối đó
-     chỉ đặt trên .ds-quiz, mà ở đây .ds-quiz bị gỡ sạch viền/nền/bóng. Nên nếu ai
-     thêm luật neumorphism cho một phần tử BÊN TRONG quiz, nó sẽ rò sang đây. */
+  /* Bỏ khung ngoài — modal đã là khung, đừng lồng hai viền. Dòng này cũng là thứ giữ
+     cho trang NÀY không dính bóng-nổi của trang chính (chủ trang chốt: chỉ trang DS
+     mới có): bóng đó chỉ đặt trên .ds-quiz, mà ở đây .ds-quiz bị gỡ sạch viền/nền/
+     bóng. Nên nếu ai thêm bóng cho một phần tử BÊN TRONG quiz, nó sẽ rò sang đây. */
   #quizModalBody .ds-quiz{border:0;background:none;padding:0;margin:0;box-shadow:none}
   /* Tiêu đề "Kiểm tra nhanh" thừa trong popup (đầu modal đã ghi tên bài + "Tự kiểm
      kiến thức"); giữ lại dòng hướng dẫn "N câu · …". */

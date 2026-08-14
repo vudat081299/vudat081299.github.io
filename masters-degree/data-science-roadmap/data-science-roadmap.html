@@ -1349,40 +1349,28 @@
   /* margin-top = --ds-sp-sec, đúng bậc mà .ds-nodefoot ngay dưới đang dùng: quiz là
      một MỤC của bài, không phải phần đuôi của hộp kết bài phía trên. Đặt trên
      `.ds-quiz` chứ không phải `.ds-quiz-mount` — ô chưa mount phải cao 0px. */
-  /* ── NEUMORPHISM — CHỈ Ở KHUNG NGOÀI, CHỈ Ở TRANG NÀY ───────────────────────
+  /* ── ĐỘ NỔI: MỘT BẬC BÓNG CAO HƠN, KHÔNG PHẢI MỘT LỐI TRÌNH BÀY KHÁC ───────
      Ô này phải NHẬN RA ĐƯỢC khi lướt qua: cả bài toàn khối viền chỉ --wb-border,
-     gần như không thấy. Cách nói điều đó ở đây là một khối NỔI LÊN khỏi mặt trang.
+     gần như không thấy. Nhưng nó vẫn là một MỤC của bài, nên nền / viền / bo góc
+     giữ y nguyên ngôn ngữ card của kit — thứ duy nhất khác là BÓNG.
 
-     PHẠM VI LÀ MỘT QUYẾT ĐỊNH, KHÔNG PHẢI SỰ DỞ DANG (chủ trang chốt 2026-08-14).
-     Chỉ cái KHUNG dùng lối này. Mọi thứ bên trong — ô đáp án, huy hiệu chữ cái,
-     dải điểm, vạch tiến độ, nút — giữ nguyên ngôn ngữ viền-chỉ của kit. Lý do:
-     bóng lồng trong bóng thì cái khung hết nổi mà chi tiết bên trong cũng mờ đi,
-     hai lớp cạnh tranh nhau và không lớp nào thắng. Đừng "làm nốt cho đồng bộ".
+     Kit có hai bậc: --wb-shadow-sm (card thường) và --wb-shadow-md (modal, drawer,
+     toast — tầng nổi). Ô này lấy một bậc thứ ba, rộng và đậm hơn cả md, vì nó phải
+     hơn mọi thứ đang có mà vẫn nằm trong mạch bài. Giữ đúng cấu trúc hai lớp của
+     kit: một lớp tiếp xúc sát mép + một lớp toả rộng.
 
-     Hai luật bắt buộc của lối này:
-       1. Nền khung phải TRÙNG nền phía sau — --wb-canvas, KHÔNG phải --wb-surface.
-          Neumorphism là "nổi lên TỪ mặt phẳng"; khác màu thì thành card dán lên.
-       2. Độ nổi do hai bóng NGƯỢC HƯỚNG, không do viền → border: 0. Sáng ở
-          TRÊN-TRÁI, bóng đổ DƯỚI-PHẢI.
+     Dark KHÔNG đảo được: nền tối thì bóng đen vô hình, nên kit đổ bóng bằng ánh
+     sáng TRẮNG ở chế độ tối. Quầng trắng lên nhanh hơn bóng đen nên độ mờ phải
+     thấp hơn hẳn bản sáng (.07 so với .16), nếu không khối trông như phát sáng.
 
-     Hai biến khai trên chính .ds-quiz (không phải :root) vì bộ trích CSS của
-     build-roadmap lọc theo selector khớp .ds-quiz.
-
-     Dark KHÔNG đảo thẳng được: nền tối thì "ánh sáng" phải rất mờ (.05) còn bóng
-     phải rất đậm (.72); để cân bằng như bản sáng thì khối trông như đang phát sáng.
-
-     ROADMAP.HTML KHÔNG DÙNG LỐI NÀY (chủ trang chốt). Nó tự động không nhận gì, vì
-     popup ở đó bỏ hẳn khung ngoài (#quizModalBody .ds-quiz{…box-shadow:none}) — và
-     đó chính là lý do luật neumorphism phải dừng ở khung: thêm một luật cho phần tử
-     BÊN TRONG là nó rò sang trang kia ngay, không có gì chặn. */
-  .ds-quiz {
-    --q-lo: rgba(9, 9, 11, .13);        /* bóng đổ  — dưới-phải */
-    --q-hi: rgba(255, 255, 255, .95);   /* ánh sáng — trên-trái */
-    margin: var(--ds-sp-sec) 0 0;
-    border: 0; border-radius: 22px;
-    background: var(--wb-canvas); padding: 22px 24px;
-    box-shadow: 8px 8px 18px var(--q-lo), -8px -8px 18px var(--q-hi); }
-  .dark .ds-quiz { --q-lo: rgba(0, 0, 0, .72); --q-hi: rgba(255, 255, 255, .05); }
+     ROADMAP.HTML: popup ở đó bỏ hẳn khung ngoài (#quizModalBody .ds-quiz{…
+     box-shadow:none}) nên không nhận bóng này — chủ trang chốt để nguyên trang kia. */
+  .ds-quiz { margin: var(--ds-sp-sec) 0 0;
+    border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius-lg);
+    background: var(--wb-surface); padding: 18px 20px;
+    box-shadow: 0 2px 6px rgba(16, 17, 18, .06), 0 14px 40px rgba(16, 17, 18, .16); }
+  .dark .ds-quiz {
+    box-shadow: 0 2px 6px rgba(255, 255, 255, .06), 0 14px 40px rgba(255, 255, 255, .07); }
   /* box-sizing: kit chỉ đặt border-box cho phần tử wb-*, phần còn lại của trang là
      content-box. Trong một carousel thì đó là lỗi CHẠY ĐƯỢC, không phải chuyện gọn
      gàng: slide `flex:0 0 100%` + `padding:0 1px` thành rộng hơn khung 2px, mà track

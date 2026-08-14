@@ -649,11 +649,10 @@ ${quizCss().split('\n').map(l => '  ' + l).join('\n')}
   #quizModal{z-index:200}
   .rm-quizmodal{width:min(560px,94vw);max-height:88vh}
   .rm-quizmodal .wb-modal__body{padding:20px 22px 24px}
-  /* Trong popup, quiz bỏ khung riêng — modal đã là khung, đừng lồng hai viền. */
-  /* Bỏ khung ngoài — modal đã là khung. Dòng này cũng là thứ giữ cho trang NÀY không
-     dính neumorphism của trang chính (chủ trang chốt: chỉ trang DS mới có): lối đó
-     chỉ đặt trên .ds-quiz, mà ở đây .ds-quiz bị gỡ sạch viền/nền/bóng. Nên nếu ai
-     thêm luật neumorphism cho một phần tử BÊN TRONG quiz, nó sẽ rò sang đây. */
+  /* Bỏ khung ngoài — modal đã là khung, đừng lồng hai viền. Dòng này cũng là thứ giữ
+     cho trang NÀY không dính bóng-nổi của trang chính (chủ trang chốt: chỉ trang DS
+     mới có): bóng đó chỉ đặt trên .ds-quiz, mà ở đây .ds-quiz bị gỡ sạch viền/nền/
+     bóng. Nên nếu ai thêm bóng cho một phần tử BÊN TRONG quiz, nó sẽ rò sang đây. */
   #quizModalBody .ds-quiz{border:0;background:none;padding:0;margin:0;box-shadow:none}
   /* Tiêu đề "Kiểm tra nhanh" thừa trong popup (đầu modal đã ghi tên bài + "Tự kiểm
      kiến thức"); giữ lại dòng hướng dẫn "N câu · …". */
