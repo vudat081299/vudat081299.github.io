@@ -632,7 +632,7 @@ ${quizCss().split('\n').map(l => '  ' + l).join('\n')}
   .rm-quizmodal{width:min(560px,94vw);max-height:88vh}
   .rm-quizmodal .wb-modal__body{padding:20px 22px 24px}
   /* Trong popup, quiz bỏ khung riêng — modal đã là khung, đừng lồng hai viền. */
-  #quizModalBody .ds-quiz{border:0;background:none;padding:0}
+  #quizModalBody .ds-quiz{border:0;background:none;padding:0;margin:0;box-shadow:none}
   /* Tiêu đề "Kiểm tra nhanh" thừa trong popup (đầu modal đã ghi tên bài + "Tự kiểm
      kiến thức"); giữ lại dòng hướng dẫn "N câu · …". */
   #quizModalBody .ds-quiz__title{display:none}

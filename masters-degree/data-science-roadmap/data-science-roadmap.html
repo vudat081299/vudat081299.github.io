@@ -1346,7 +1346,11 @@
      rule khớp `.ds-quiz` (xem quizCss()). Nên đừng neo rule quiz vào .ds-prose.
      MÀU: trung tính tới khi CHẤM; chỉ lúc chấm mới có xanh/đỏ — đúng thang màu
      §1 (màu chỉ dành cho trạng thái thật: đúng/sai là trạng thái). */
-  .ds-quiz { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius-lg);
+  /* margin-top = --ds-sp-sec, đúng bậc mà .ds-nodefoot ngay dưới đang dùng: quiz là
+     một MỤC của bài, không phải phần đuôi của hộp kết bài phía trên. Đặt trên
+     `.ds-quiz` chứ không phải `.ds-quiz-mount` — ô chưa mount phải cao 0px. */
+  .ds-quiz { margin: var(--ds-sp-sec) 0 0;
+    border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius-lg);
     background: var(--wb-surface); padding: 18px 20px; }
   .ds-quiz__head { margin-bottom: var(--ds-sp-text); }
   .ds-quiz__title { display: flex; align-items: center; gap: 7px; margin: 0;
