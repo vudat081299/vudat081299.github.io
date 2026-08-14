@@ -34,11 +34,21 @@ Kèm theo, `gap` giữa hai câu đang là 0 — cửa sổ khít thì không th
 dán liền nhau thành một dải chữ. Có `gap` thì transform phải trừ thêm `cur × gap`; gom vào
 `place()` và **đọc gap lại từ computed style** nên con số vẫn chỉ nằm ở CSS.
 
-### Neumorphism thay viền đen
+### Neumorphism thay viền đen — CHỈ KHUNG NGOÀI, CHỈ TRANG DS
 
-Chủ trang bảo bỏ viền 2px vừa thêm ở phiên (t), thử neumorphism. Bốn luật + lý do dark không
-đảo thẳng được: `docs/design.md` §10. Điểm đáng giữ: chọn đáp án = **lõm như phím vừa bấm**,
-nên trạng thái chọn đọc được bằng hình khối và thang màu §1 vẫn nguyên.
+Chủ trang bảo bỏ viền 2px vừa thêm ở phiên (t), thử neumorphism. Bản đầu tôi làm cho **cả
+cây** (ô đáp án lõm như phím bấm, huy hiệu đảo chiều, nút, vạch tiến độ) — chủ trang **bác**:
+chỉ card ngoài ở trang DS, `roadmap.html` để nguyên, phần tử bên trong giữ nguyên. Đã gỡ.
+
+**Phạm vi đó là quyết định, đừng "làm nốt cho đồng bộ".** Và nó tự bảo vệ đúng một lớp: popup
+roadmap gỡ hẳn khung ngoài, nên luật đặt trên `.ds-quiz` không rò sang; thêm một luật
+neumorphism cho phần tử BÊN TRONG là rò ngay, không có gì chặn. Hai luật còn lại + lý do dark
+không đảo thẳng được: `docs/design.md` §10.
+
+Hệ quả đã biết và đã nói với chủ trang: khung chuyển sang `--wb-canvas` (bắt buộc, nếu không
+thì không phải neumorphism) nên ô đáp án — cũng `--wb-canvas` — giờ trùng màu khung, chỉ còn
+hairline phân tách. Muốn ô nổi lên thì đổi một token, đã ghi sẵn ở §10. **Chưa làm vì chủ
+trang bảo giữ nguyên phần bên trong.**
 
 ### Câu hỏi về chuẩn margin — trả lời: ĐÃ CÓ, và 44px là học từ nó
 

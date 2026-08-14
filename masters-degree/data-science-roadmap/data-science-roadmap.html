@@ -1349,38 +1349,39 @@
   /* margin-top = --ds-sp-sec, đúng bậc mà .ds-nodefoot ngay dưới đang dùng: quiz là
      một MỤC của bài, không phải phần đuôi của hộp kết bài phía trên. Đặt trên
      `.ds-quiz` chứ không phải `.ds-quiz-mount` — ô chưa mount phải cao 0px. */
-  /* ── NEUMORPHISM ────────────────────────────────────────────────────────────
-     Ô này phải NHẬN RA ĐƯỢC khi lướt qua — cả bài toàn khối viền chỉ --wb-border,
-     gần như không thấy. Bản trước dùng viền 2px màu chữ; bản này đổi sang khối nổi.
+  /* ── NEUMORPHISM — CHỈ Ở KHUNG NGOÀI, CHỈ Ở TRANG NÀY ───────────────────────
+     Ô này phải NHẬN RA ĐƯỢC khi lướt qua: cả bài toàn khối viền chỉ --wb-border,
+     gần như không thấy. Cách nói điều đó ở đây là một khối NỔI LÊN khỏi mặt trang.
 
-     Luật của lối này, sai một cái là hỏng cả:
-       1. Nền khối phải TRÙNG nền phía sau (--wb-canvas, không phải --wb-surface).
-          Neumorphism là "nổi lên TỪ mặt phẳng"; khác màu thì thành cái card dán lên.
-       2. Độ nổi do HAI bóng ngược hướng, không do viền — nên border: 0 khắp nơi.
-       3. Một nguồn sáng cho cả trang: sáng ở TRÊN-TRÁI, bóng đổ DƯỚI-PHẢI. Đảo
-          hướng ở một chỗ là mắt đọc ra ngay dù không chỉ được tên lỗi.
-       4. Nổi = bấm được. Lõm = đang bật, hoặc chỉ để đọc. Phẳng = không còn tác dụng.
-          Đây là chỗ lối này thật sự có ích chứ không chỉ trang trí: ô đáp án đang
-          chọn LÕM XUỐNG như một phím vừa bấm, ô chưa chọn thì nổi lên.
+     PHẠM VI LÀ MỘT QUYẾT ĐỊNH, KHÔNG PHẢI SỰ DỞ DANG (chủ trang chốt 2026-08-14).
+     Chỉ cái KHUNG dùng lối này. Mọi thứ bên trong — ô đáp án, huy hiệu chữ cái,
+     dải điểm, vạch tiến độ, nút — giữ nguyên ngôn ngữ viền-chỉ của kit. Lý do:
+     bóng lồng trong bóng thì cái khung hết nổi mà chi tiết bên trong cũng mờ đi,
+     hai lớp cạnh tranh nhau và không lớp nào thắng. Đừng "làm nốt cho đồng bộ".
 
-     Bốn biến dưới đây là toàn bộ ngôn ngữ đó. Chúng khai trên .ds-quiz (không phải
-     :root) vì bộ trích CSS của build-roadmap lọc theo selector khớp .ds-quiz — khai
-     ở :root thì roadmap.html mất sạch bóng. Hậu duệ thừa kế nên dùng được ở mọi rule.
+     Hai luật bắt buộc của lối này:
+       1. Nền khung phải TRÙNG nền phía sau — --wb-canvas, KHÔNG phải --wb-surface.
+          Neumorphism là "nổi lên TỪ mặt phẳng"; khác màu thì thành card dán lên.
+       2. Độ nổi do hai bóng NGƯỢC HƯỚNG, không do viền → border: 0. Sáng ở
+          TRÊN-TRÁI, bóng đổ DƯỚI-PHẢI.
 
-     Dark: không đảo được thẳng. Nền tối thì "ánh sáng" phải rất mờ (.05) còn bóng
-     phải rất đậm (.72) — để bằng nhau như bản sáng thì khối trông như phát sáng. */
+     Hai biến khai trên chính .ds-quiz (không phải :root) vì bộ trích CSS của
+     build-roadmap lọc theo selector khớp .ds-quiz.
+
+     Dark KHÔNG đảo thẳng được: nền tối thì "ánh sáng" phải rất mờ (.05) còn bóng
+     phải rất đậm (.72); để cân bằng như bản sáng thì khối trông như đang phát sáng.
+
+     ROADMAP.HTML KHÔNG DÙNG LỐI NÀY (chủ trang chốt). Nó tự động không nhận gì, vì
+     popup ở đó bỏ hẳn khung ngoài (#quizModalBody .ds-quiz{…box-shadow:none}) — và
+     đó chính là lý do luật neumorphism phải dừng ở khung: thêm một luật cho phần tử
+     BÊN TRONG là nó rò sang trang kia ngay, không có gì chặn. */
   .ds-quiz {
-    --q-bg:   var(--wb-canvas);
-    --q-lo:   rgba(9, 9, 11, .13);        /* bóng đổ   — dưới-phải */
-    --q-hi:   rgba(255, 255, 255, .95);   /* ánh sáng  — trên-trái */
-    --q-up:   8px 8px 18px var(--q-lo), -8px -8px 18px var(--q-hi);
-    --q-up-s: 4px 4px 9px  var(--q-lo), -4px -4px 9px  var(--q-hi);
-    --q-in:   inset 4px 4px 9px var(--q-lo), inset -4px -4px 9px var(--q-hi);
-    --q-in-s: inset 2px 2px 4px var(--q-lo), inset -2px -2px 4px var(--q-hi);
+    --q-lo: rgba(9, 9, 11, .13);        /* bóng đổ  — dưới-phải */
+    --q-hi: rgba(255, 255, 255, .95);   /* ánh sáng — trên-trái */
     margin: var(--ds-sp-sec) 0 0;
     border: 0; border-radius: 22px;
-    background: var(--q-bg); padding: 22px 24px;
-    box-shadow: var(--q-up); }
+    background: var(--wb-canvas); padding: 22px 24px;
+    box-shadow: 8px 8px 18px var(--q-lo), -8px -8px 18px var(--q-hi); }
   .dark .ds-quiz { --q-lo: rgba(0, 0, 0, .72); --q-hi: rgba(255, 255, 255, .05); }
   /* box-sizing: kit chỉ đặt border-box cho phần tử wb-*, phần còn lại của trang là
      content-box. Trong một carousel thì đó là lỗi CHẠY ĐƯỢC, không phải chuyện gọn
@@ -1389,9 +1390,8 @@
      ra và câu đang đọc bị cắt (đo được 6px ở câu 4). Ô đáp án `width:100%` + padding
      13px cũng tràn 26px vì cùng lý do. Khai một lần cho cả cây, đừng vá từng chỗ. */
   .ds-quiz, .ds-quiz *, .ds-quiz *::before, .ds-quiz *::after { box-sizing: border-box; }
-  /* Không còn đường kẻ ngăn ở đầu ô và ở thanh dưới: trong lối này sự tách bạch đến
-     từ ĐỘ NỔI, thêm hairline vào là trộn hai ngôn ngữ. Chỗ trống thay cho nét kẻ. */
-  .ds-quiz__head { margin-bottom: var(--ds-sp-sub); }
+  .ds-quiz__head { margin-bottom: var(--ds-sp-block); padding-bottom: var(--ds-sp-near);
+    border-bottom: var(--wb-bw) solid var(--wb-border); }
   .ds-quiz__headrow { display: flex; align-items: center; gap: 12px; }
   .ds-quiz__title { display: flex; align-items: center; gap: 7px; margin: 0;
     font-size: var(--ds-t-h3); font-weight: 700; }
@@ -1415,41 +1415,32 @@
   @media (prefers-reduced-motion: reduce) { .ds-quiz__track { transition: none; } }
   .ds-quiz__slide { flex: 0 0 100%; min-width: 100%; align-self: flex-start; padding: 4px; }
   .ds-quiz__q { margin: 0 0 var(--ds-sp-text); font-size: var(--ds-t-body); font-weight: 600; line-height: 1.55; }
-  .ds-quiz__opts { display: flex; flex-direction: column; gap: 12px; }
-  /* Ô đáp án NỔI khi chưa chọn, LÕM khi đang chọn — như một phím vừa bấm xuống. Đây
-     là lý do lối này đáng dùng ở đây: trạng thái chọn đọc được bằng hình khối, không
-     cần thêm màu, nên thang màu §1 vẫn nguyên (màu chỉ để dành cho đúng/sai). */
-  .ds-quiz__opt { display: flex; gap: 12px; align-items: flex-start; width: 100%; text-align: left;
-    padding: 13px 15px; border: 0; border-radius: 14px;
-    background: var(--q-bg); color: var(--wb-fg); font: inherit; font-size: var(--ds-t-sub);
-    line-height: 1.5; cursor: pointer; box-shadow: var(--q-up-s);
-    transition: box-shadow .16s ease, background .16s ease; }
-  .ds-quiz__opt:hover { box-shadow: var(--q-up); }
-  .ds-quiz__opt:focus-visible { outline: none; box-shadow: var(--q-up-s), 0 0 0 3px var(--wb-ring); }
-  .ds-quiz__opt[aria-checked="true"] { box-shadow: var(--q-in); font-weight: 600; }
-  /* Huy hiệu chữ cái đảo chiều theo ô: ô nổi thì nó lõm, ô lõm thì nó nổi lên. */
-  .ds-quiz__mark { flex: none; width: 24px; height: 24px; border-radius: 50%; display: inline-flex;
+  .ds-quiz__opts { display: flex; flex-direction: column; gap: 8px; }
+  .ds-quiz__opt { display: flex; gap: 10px; align-items: flex-start; width: 100%; text-align: left;
+    padding: 11px 13px; border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius);
+    background: var(--wb-canvas); color: var(--wb-fg); font: inherit; font-size: var(--ds-t-sub);
+    line-height: 1.5; cursor: pointer; transition: border-color .12s ease, background .12s ease; }
+  .ds-quiz__opt:hover { border-color: var(--wb-border-strong); background: var(--wb-surface-hover); }
+  .ds-quiz__opt:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
+  .ds-quiz__opt[aria-checked="true"] { border-color: var(--wb-fg); background: var(--wb-ink-hover); }
+  .ds-quiz__mark { flex: none; width: 22px; height: 22px; border-radius: 50%; display: inline-flex;
     align-items: center; justify-content: center; font-size: var(--ds-t-cap); font-weight: 700; line-height: 1;
-    border: 0; color: var(--wb-fg-subtle); background: var(--q-bg); box-shadow: var(--q-in-s);
+    border: var(--wb-bw) solid var(--wb-border-strong); color: var(--wb-fg-muted);
     font-variant-numeric: tabular-nums; }
-  .ds-quiz__opt[aria-checked="true"] .ds-quiz__mark {
-    color: var(--wb-fg); box-shadow: 2px 2px 5px var(--q-lo), -2px -2px 5px var(--q-hi); }
-  .ds-quiz__otext { padding-top: 2px; }
-  /* SAU khi chấm: xanh = đáp án đúng, đỏ = ô người dùng chọn sai. Cả hai LÕM — chúng
-     là kết quả để đọc, không còn bấm được nữa. */
-  .ds-quiz__opt.is-correct { background: var(--wb-success-soft); box-shadow: var(--q-in); }
-  .ds-quiz__opt.is-correct .ds-quiz__mark { background: var(--wb-success); color: var(--wb-success-fg); box-shadow: none; }
-  .ds-quiz__opt.is-wrong { background: var(--wb-danger-soft); box-shadow: var(--q-in); }
-  .ds-quiz__opt.is-wrong .ds-quiz__mark { background: var(--wb-danger); color: var(--wb-danger-fg); box-shadow: none; }
+  .ds-quiz__opt[aria-checked="true"] .ds-quiz__mark { background: var(--wb-fg); color: var(--wb-canvas); border-color: var(--wb-fg); }
+  .ds-quiz__otext { padding-top: 1px; }
+  /* SAU khi chấm: xanh = đáp án đúng, đỏ = ô người dùng chọn sai. */
+  .ds-quiz__opt.is-correct { border-color: var(--wb-success); background: var(--wb-success-soft); }
+  .ds-quiz__opt.is-correct .ds-quiz__mark { background: var(--wb-success); color: var(--wb-success-fg); border-color: var(--wb-success); }
+  .ds-quiz__opt.is-wrong { border-color: var(--wb-danger); background: var(--wb-danger-soft); }
+  .ds-quiz__opt.is-wrong .ds-quiz__mark { background: var(--wb-danger); color: var(--wb-danger-fg); border-color: var(--wb-danger); }
   .ds-quiz__opt:disabled { cursor: default; }
-  /* Ô không phải đáp án đúng cũng không phải ô đã chọn: PHẲNG HẲN — trong lối này
-     phẳng nghĩa là "không còn tác dụng", đúng thứ cần nói. `:not()` để hai ô kia giữ
-     hình khối của chúng. */
-  .ds-quiz__opt:disabled:not(.is-correct):not(.is-wrong) {
-    background: transparent; color: var(--wb-fg-muted); box-shadow: none; }
-  .ds-quiz__opt:disabled:not(.is-correct):not(.is-wrong) .ds-quiz__mark { box-shadow: none; }
-  .ds-quiz__why { display: flex; gap: 10px; margin: var(--ds-sp-text) 0 0; padding: 13px 15px;
-    background: var(--q-bg); border-radius: 14px; box-shadow: var(--q-in);
+  /* Sau khi chấm, các ô KHÔNG phải đáp án đúng/sai lùi về nền trang + chữ mờ, để mắt
+     dồn vào ô xanh/đỏ. Khai tường minh (không để trình duyệt tự tô nút disabled) nên
+     hai chế độ sáng/tối nhất quán. `:not()` để ô is-correct/is-wrong giữ màu của nó. */
+  .ds-quiz__opt:disabled:not(.is-correct):not(.is-wrong) { background: var(--wb-canvas); color: var(--wb-fg-muted); }
+  .ds-quiz__why { display: flex; gap: 8px; margin: var(--ds-sp-text) 0 0; padding: 10px 12px;
+    background: var(--wb-surface-2); border-radius: var(--wb-radius);
     font-size: var(--ds-t-sub); line-height: 1.55; color: var(--wb-fg-muted); }
   /* `display:flex` ở trên thắng [hidden]{display:none} của trình duyệt ở cùng độ đặc
      hiệu (cùng lỗi với .wb-drawer[hidden] — design.md §1.2), nên phải tự khai lại. */
@@ -1459,18 +1450,19 @@
      xem câu sai, nên kết quả phải đứng yên ở trên chứ không trôi mất dưới đáy. */
   /* Một dòng chữ chảy, KHÔNG phải flex + gap: gap vẽ ra khoảng trắng cho mắt nhưng
      không có ký tự nào, nên trình đọc màn hình đọc liền "4/5câu đúng". */
-  .ds-quiz__score { margin: 0 0 var(--ds-sp-sub); padding: 14px 16px;
-    border-radius: 14px; border: 0; background: var(--q-bg); box-shadow: var(--q-in);
-    font-size: var(--ds-t-sub); line-height: 1.6; }
+  .ds-quiz__score { margin: 0 0 var(--ds-sp-block); padding: 11px 14px;
+    border-radius: var(--wb-radius); border: var(--wb-bw) solid var(--wb-border);
+    background: var(--wb-surface-2); font-size: var(--ds-t-sub); line-height: 1.6; }
   .ds-quiz__score[hidden] { display: none; }
-  .ds-quiz__score.is-full { background: var(--wb-success-soft); }
+  .ds-quiz__score.is-full { border-color: var(--wb-success); background: var(--wb-success-soft); }
   .ds-quiz__score b { margin-right: 5px; font-size: var(--ds-t-h2); font-weight: 700;
     font-variant-numeric: tabular-nums; }
   .ds-quiz__grade { color: var(--wb-fg-muted); }
   /* MỘT hàng cho cả tua lẫn chấm (trước là hai hàng căn giữa chồng lên nhau). Trái:
      ‹ › · giữa: vạch tiến độ · phải: nút hành động. */
   .ds-quiz__bar { display: flex; align-items: center; gap: 12px;
-    margin-top: var(--ds-sp-sub); }
+    margin-top: var(--ds-sp-block); padding-top: var(--ds-sp-near);
+    border-top: var(--wb-bw) solid var(--wb-border); }
   .ds-quiz__pager { display: flex; gap: 4px; flex: none; }
   /* Vạch thay chấm tròn: với 4–8 câu thì một dãy vạch đọc ra tiến độ nhanh hơn, và
      đủ chỗ để mang màu đúng/sai sau khi chấm. Nút cao 20px cho ngón tay bấm được,
@@ -1481,31 +1473,17 @@
      lại khi chật) mà không sinh một max-width cứng cho G-MEASURE phải bỏ qua. */
   .ds-quiz__step { flex: 0 1 38px; height: 20px; padding: 0; border: 0;
     background: none; cursor: pointer; display: flex; align-items: center; }
-  /* Vạch chưa tới = rãnh LÕM rỗng; vạch đã trả lời / đang đứng = thanh tô đầy rãnh
-     đó. Cùng một ngôn ngữ với ô đáp án, không phải một thang màu thứ hai. */
-  .ds-quiz__step::before { content: ''; display: block; width: 100%; height: 6px;
-    border-radius: 999px; background: var(--q-bg); box-shadow: var(--q-in-s);
-    transition: background .14s ease, box-shadow .14s ease; }
-  .ds-quiz__step:hover::before { background: var(--wb-neutral); }
-  .ds-quiz__step.is-done::before { background: var(--wb-neutral); box-shadow: none; }
-  .ds-quiz__step.is-cur::before { background: var(--wb-fg); box-shadow: none; }
-  .ds-quiz__step.is-right::before { background: var(--wb-success); box-shadow: none; }
-  .ds-quiz__step.is-wrong::before { background: var(--wb-danger); box-shadow: none; }
+  .ds-quiz__step::before { content: ''; display: block; width: 100%; height: 4px;
+    border-radius: 999px; background: var(--wb-border-strong); opacity: .45;
+    transition: background .14s ease, height .14s ease, opacity .14s ease; }
+  .ds-quiz__step:hover::before { opacity: .8; }
+  .ds-quiz__step.is-done::before { background: var(--wb-neutral); opacity: 1; }
+  .ds-quiz__step.is-cur::before { background: var(--wb-fg); opacity: 1; height: 6px; }
+  .ds-quiz__step.is-right::before { background: var(--wb-success); opacity: 1; }
+  .ds-quiz__step.is-wrong::before { background: var(--wb-danger); opacity: 1; }
   .ds-quiz__step:focus-visible { outline: none; }
   .ds-quiz__step:focus-visible::before { box-shadow: 0 0 0 3px var(--wb-ring); }
-  .ds-quiz__act { flex: none; min-width: 124px; font-weight: 600; }
-  /* Nút của kit có viền + nền riêng — để nguyên thì trong ô này thành hai ngôn ngữ
-     hình khối cạnh nhau. Kéo chúng về cùng bộ bóng: nổi → di chuột nổi hơn → bấm thì
-     LÕM (đúng cảm giác một phím thật) → khoá thì phẳng hẳn.
-     `:disabled` phải khai opacity: 1 vì kit làm mờ nút khoá; ở đây "khoá" đã được
-     nói bằng mặt phẳng rồi, mờ thêm nữa thì không đọc nổi chữ "Chấm điểm · 3/6". */
-  .ds-quiz .wb-btn { border: 0; border-radius: 12px; background: var(--q-bg);
-    color: var(--wb-fg); box-shadow: var(--q-up-s); transition: box-shadow .16s ease; }
-  .ds-quiz .wb-btn:hover:not(:disabled) { box-shadow: var(--q-up); }
-  .ds-quiz .wb-btn:active:not(:disabled) { box-shadow: var(--q-in); }
-  .ds-quiz .wb-btn:focus-visible { outline: none; box-shadow: var(--q-up-s), 0 0 0 3px var(--wb-ring); }
-  .ds-quiz .wb-btn:disabled { box-shadow: none; background: transparent;
-    color: var(--wb-fg-subtle); opacity: 1; }
+  .ds-quiz__act { flex: none; min-width: 124px; }
   /* Trên điện thoại một hàng ba khối làm vạch tiến độ teo còn ~10px mỗi vạch — bấm
      trượt. Cho vạch nguyên một hàng riêng ở TRÊN (order:-1), nút chia hàng dưới.
      560px là ngưỡng lớp vỏ đang dùng sẵn, không thêm ngưỡng thứ sáu. */
