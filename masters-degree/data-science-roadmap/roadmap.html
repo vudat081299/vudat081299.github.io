@@ -327,8 +327,10 @@
   /* ==== carousel trắc nghiệm — CSS TRÍCH từ trang chính (quizCss), + vài dòng riêng
      cho popup của roadmap. Token --ds-t-* mà nó cần đã khai ở khối :root trên. ==== */
   .ds-quiz{ margin: var(--ds-sp-sec) 0 0;
-      border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius-lg);
-      background: var(--wb-surface); padding: 18px 20px; }
+      border: 2px solid var(--wb-fg); border-radius: var(--wb-radius-lg);
+      background: var(--wb-surface); padding: 18px 20px;
+      box-shadow: var(--wb-shadow-md); }
+  .dark .ds-quiz{ border-color: var(--wb-gray-500); }
   .ds-quiz, .ds-quiz *, .ds-quiz *::before, .ds-quiz *::after{ box-sizing: border-box; }
   .ds-quiz__head{ margin-bottom: var(--ds-sp-block); padding-bottom: var(--ds-sp-near);
       border-bottom: var(--wb-bw) solid var(--wb-border); }
