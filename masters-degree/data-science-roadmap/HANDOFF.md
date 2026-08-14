@@ -18,7 +18,7 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 
 ---
 
-## Phiên 2026-08-14 (v) — rà bao phủ quiz · 475 → 928 câu · hai cổng mới
+## Phiên 2026-08-14 (v) — rà bao phủ quiz · 475 → 941 câu · hai cổng mới
 
 Chủ trang hỏi "mỗi bộ câu hỏi đã bao phủ toàn bộ kiến thức của bài chưa, tôi muốn nó đầy đủ".
 
@@ -52,13 +52,31 @@ Bài học chung: **bản trích cho subagent là một nguồn lỗi im lặng.
 agent không thấy — và cái không thấy thì không có trong báo cáo. Lần sau: đối chiếu số mục /
 số tiêu chí trong bản trích với số đếm từ nguồn TRƯỚC khi giao việc.
 
-### Vì sao KHÔNG chạy vòng bù cho `data-viz`
+### Vòng bù `data-viz` — tôi định bỏ, chủ trang bảo chạy, và chạy là đúng
 
-Đã dựng xong đầu vào rồi bỏ. Đo lại sau khi trộn: 7/7 khối lấy mẫu đều đã có câu hỏi đúng vào
-hiểu nhầm đó (`t-sklearn` câu 3+4, `d-split` câu 2/7/9, `m-vector` câu 1+2, `s-pipeline` câu
-5+9…). Lý do: câu mới được viết từ chính mục CHỨA khối đó. Chạy thêm một vòng sẽ sinh ~40 câu
-trùng ý. Phép đo trùng-từ-khoá cũng tự tố cáo là yếu — đổi ngưỡng 0,5 → 0,8 thì số "còn hở"
-nhảy 0 → 16, nên kết luận dựa vào đọc tay chứ không dựa vào nó.
+Tôi đã dựng xong đầu vào rồi định bỏ, lý do: 7/7 khối lấy mẫu đều đã có câu hỏi chạm tới hiểu
+nhầm của nó, nên vòng bù sẽ sinh ~40 câu trùng ý. Chủ trang bảo chạy. **Kết quả: 44 khối, 31
+đã phủ, 13 câu thật sự thiếu** — suy từ mẫu 7 khối là suy sai, và cái sai đó không nằm ở tỉ lệ
+mà ở chỗ mẫu của tôi toàn rơi vào trường `wrong:`.
+
+**Khuôn lộ ra sau khi rà đủ 44 khối: `wrong:` gần như đã phủ, `see:` thì chưa.** Hợp lý —
+`wrong:` là hiểu nhầm nên nó cũng được nêu trong thân bài, mà thân bài thì vòng trước đã rà.
+Còn `see:` là *thứ chỉ thấy được khi kéo/bấm khối*, nó không có bản sao nào trong chữ. 9/13
+câu mới đến từ `see:`.
+
+Vài câu đáng giữ làm ví dụ về loại nội dung này: `ml-imb` — hiệu chỉnh là biến đổi đơn điệu
+tăng nên **AUC không nhúc nhích**, và AUC cao không cho quyền nhân xác suất với tiền;
+`q-analytics` — chỗ tụt sâu nhất của phễu không phải chỗ đáng sửa nhất; `f-time` — giao dịch
+gian lận đầu tiên tự kéo "mức thường ngày" lên nên `z_vs_history` tự làm mờ mình đúng lúc
+chuỗi rút đang diễn ra.
+
+**Cách đo tự tố cáo là yếu, và tôi đã dựa vào nó quá lâu.** Phép trùng-từ-khoá cho "0 còn hở"
+ở ngưỡng 0,5 nhưng "16 còn hở" ở ngưỡng 0,8 — một phép đo mà kết luận lật theo hằng số thì nó
+không phải bằng chứng. Cái ra kết quả đúng là giao cho agent đọc từng khối và đối chiếu với
+**toàn bộ** câu của bài, với chốt "mặc định không viết gì".
+
+Sau vòng này: **941 câu**, trung vị 10, vị trí đáp án đúng A/B/C/D = 22,5 / 28,1 / 27,8 /
+21,6%.
 
 ### Đáp án dồn về ô B — và cái giá của việc sửa
 

@@ -297,7 +297,7 @@ nhúng câu hỏi vào HTML nữa, nên sửa file JSON là **cả hai trang đ�
 `tools/` đọc thẳng cùng file đó (`read-html.mjs` → `readQuiz()`). Hình thức + hành xử của
 carousel: [design.md §10](design.md).
 
-Vì sao tách khỏi HTML: bộ câu hỏi lúc tách là 475 câu ≈ 360 KB chữ (nay 928 câu). Để trong HTML thì mọi công cụ (và mọi người)
+Vì sao tách khỏi HTML: bộ câu hỏi lúc tách là 475 câu ≈ 360 KB chữ (nay 941 câu). Để trong HTML thì mọi công cụ (và mọi người)
 phải nạp toàn bộ nội dung chỉ để sửa một dòng layout — trang chính đã giảm 370 KB, `roadmap.html`
 giảm 355 KB nhờ bước này. Đây là bước đầu của hướng **HTML chỉ còn design + layout, nội dung
 nạp từ file ngoài**; phần nội dung bài học vẫn đang ở trong HTML và sẽ tách sau.
