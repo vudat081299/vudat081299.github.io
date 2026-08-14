@@ -1376,7 +1376,6 @@
      và bộ đếm vẫn phải nằm bên phải. */
   .ds-quiz__count { margin-left: auto; flex: none; font-size: var(--ds-t-cap); font-weight: 600;
     color: var(--wb-fg-subtle); font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .ds-quiz__sub { margin: 3px 0 0; font-size: var(--ds-t-cap); color: var(--wb-fg-muted); line-height: 1.5; }
   /* padding 4px + margin −4px: chỗ cho vòng focus 3px của ô đáp án hiện ra mà không
      làm slide rộng thêm (padding trên slide chính là cái đã gây trôi). */
   .ds-quiz__viewport { overflow: hidden; padding: 4px; margin: -4px; touch-action: pan-y; }
@@ -1588,7 +1587,7 @@
     <div class="wb-drawer__head">
       <div>
         <h4 class="wb-drawer__title" id="asideTitle">Thông tin thêm</h4>
-        <p class="wb-drawer__sub" id="asideSub">Không bắt buộc — đóng lại là về đúng chỗ đang đọc</p>
+        <p class="wb-drawer__sub" id="asideSub">Không bắt buộc</p>
       </div>
       <button class="wb-close" data-modal-close aria-label="Đóng"></button>
     </div>
@@ -1613,7 +1612,7 @@
         <!-- MỘT câu. Bản trước ba câu, và câu thứ ba ("kéo mép trái để đổi bề rộng")
              không còn việc gì: tay kéo là một viên LUÔN THẤY ở mép trái và có `title`
              của riêng nó, nên nó tự nói được. -->
-        <p class="wb-drawer__sub">Lưu trong trình duyệt này — trang phía sau vẫn đọc và bấm được.</p>
+        <p class="wb-drawer__sub">Lưu trong trình duyệt này.</p>
       </div>
       <button class="wb-close" data-notes-close aria-label="Đóng Notes"></button>
     </div>
@@ -3113,7 +3112,7 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
     <tr><td><button class="ds-math" data-math="expvar">kỳ vọng &amp; phương sai</button></td><td>Một <b>công thức</b>, hiện giữa màn hình: giải thích từ đầu, ví dụ bằng số, và luôn có dòng <i>“trong code nó là hàm nào”</i></td><td>Khi đoạn toán đó chắn đường hiểu của bạn</td></tr>
     <tr><td><button class="ds-aside" data-aside="cmp-run">So sánh chỗ chạy code</button></td><td>Một <b>nhánh phụ</b>, trượt ra từ bên phải: so sánh công cụ, phương án thay thế, phần đào sâu</td><td>Khi bạn đang phân vân chọn cái gì, hoặc tò mò</td></tr>
   </table>
-  <p>Bấm thử cả hai ngay bây giờ. Bạn <b>không cần</b> mở hết — đọc thẳng một mạch mà bỏ qua toàn bộ chip thì vẫn ra được sản phẩm.</p>
+  <p>Bạn <b>không cần</b> mở hết — đọc thẳng một mạch mà bỏ qua toàn bộ chip thì vẫn ra được sản phẩm.</p>
   <p>Đặc biệt, gần như <b>mỗi bước đều có 3–5 công cụ làm cùng một việc</b>. Việc so sánh chúng nằm hết trong ngăn bên phải, và bảng nào cũng có cột “chạy online được không” cùng một dòng chọn thay cho người có máy yếu.</p>
 
   <h2>Ba loại phát biểu — và vì sao phải phân biệt</h2>
@@ -5060,7 +5059,7 @@ ValueError: X has 28 features, but LogisticRegression is expecting 30 features a
   <p><button class="ds-math" data-math="gdupdate">Bóc từng ký hiệu + chạy tay một bước</button></p>
 
   <h2>Nhìn thấy nó chạy</h2>
-  <p>Kéo hai thanh dưới đây. Đây là toàn bộ quá trình huấn luyện, thu nhỏ về một tham số duy nhất:</p>
+  <p>Toàn bộ quá trình huấn luyện, thu nhỏ về một tham số duy nhất:</p>
   <div data-viz="gd"></div>
 
   <h2>Ba hiện tượng bạn sẽ gặp thật, và giờ bạn giải thích được</h2>
@@ -6084,7 +6083,7 @@ print("số cây thực dùng:", model.best_iteration_)</div>
   <p>Overfitting là mô hình <b>học thuộc dữ liệu train thay vì học quy luật</b>. Đây là kẻ thù trung tâm của machine learning, và mọi kỹ thuật bạn học từ đây trở đi đều là cách chống nó.</p>
 
   <h2>Nhìn thấy nó</h2>
-  <p>Kéo thanh "độ phức tạp". Chú ý hai con số bên dưới đi theo hai hướng khác nhau:</p>
+  <p>Hai con số bên dưới đi theo hai hướng khác nhau:</p>
   <div data-viz="overfit"></div>
 
   <h2>Chẩn đoán</h2>
@@ -11579,7 +11578,6 @@ const DSQuiz = (() => {
           <p class="ds-quiz__title"><span class="wb-ico wb-ico--sm" aria-hidden="true">quiz</span> Kiểm tra nhanh</p>
           <span class="ds-quiz__count" aria-hidden="true"></span>
         </div>
-        <p class="ds-quiz__sub">${qs.length} câu · trả lời hết rồi chấm điểm. Chọn đáp án không tự chuyển câu — tua bằng ← → hoặc nút dưới.</p>
       </div>
       <div class="ds-quiz__score" role="status" aria-live="polite" hidden></div>
       <div class="ds-quiz__viewport"><div class="ds-quiz__track">${slides}</div></div>
@@ -11885,7 +11883,7 @@ function renderHome() {
     <section class="wb-section" id="homeMatrix"></section>
     <section class="wb-section" id="homePortfolio"></section>
     <section class="wb-section"><h2>Đi qua giáo trình: mỗi chặng cho bạn gì</h2>
-      <p class="wb-section__desc">Mười một chặng (đánh số 0–10), sắp theo phụ thuộc — bài sau cần bài trước, không phải xếp theo chủ đề. Dòng mô tả dưới mỗi tên chặng là thứ bạn <b>làm được sau khi học xong chặng đó</b>. Bấm vào bất kỳ bài nào để vào học.</p>
+      <p class="wb-section__desc">Mười một chặng (đánh số 0–10), sắp theo phụ thuộc — bài sau cần bài trước, không phải xếp theo chủ đề. Dòng mô tả dưới mỗi tên chặng là thứ bạn <b>làm được sau khi học xong chặng đó</b>.</p>
       <!-- wb-steps, KHÔNG phải grid tự vẽ: các chặng là một CHUỖI có thứ tự (chặng sau
            cần chặng trước), nên nó phải có đúng đường nối dọc mà lịch 14 ngày đang có.
            Bản trước dùng .ds-map__phase + .ds-map__num — cùng một hình (số trong vòng
@@ -12356,7 +12354,7 @@ document.addEventListener('click', e => {
     const key = more.dataset.aside;
     const tpl = document.querySelector(`template[data-aside="${key}"]`);
     $('#asideTitle').textContent = tpl?.dataset.title || 'Thông tin thêm';
-    $('#asideSub').textContent = tpl?.dataset.sub || 'Không bắt buộc — đóng lại là về đúng chỗ đang đọc';
+    $('#asideSub').textContent = tpl?.dataset.sub || 'Không bắt buộc';
     const body = $('#asideBody');
     body.innerHTML = '';
     if (tpl) body.append(tpl.content.cloneNode(true));

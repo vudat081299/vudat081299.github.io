@@ -1017,7 +1017,7 @@
   }
  },
  "srcHash": {
-  "s-how": "1d41acf5",
+  "s-how": "5a36a89b",
   "s-intro": "f6e2bda8",
   "s-pipeline": "7a4f4e70",
   "s-families": "6038141c",
@@ -1039,7 +1039,7 @@
   "d-split": "bf87943e",
   "d-clean": "84688a0c",
   "m-vector": "60e823c7",
-  "m-deriv": "e019ac32",
+  "m-deriv": "bf90a921",
   "m-prob": "7e3b49e7",
   "m-bayes": "d7dd6fd4",
   "f-what": "d9d2254f",
@@ -1056,7 +1056,7 @@
   "ml-metrics": "437270af",
   "ml-loss": "33458e7b",
   "ml-trees": "391443e2",
-  "ml-overfit": "025dec95",
+  "ml-overfit": "393e7ebe",
   "ml-cv": "a436bdc3",
   "m-infer": "9b552fd7",
   "ml-imb": "ec25f3da",

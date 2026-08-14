@@ -339,7 +339,6 @@
       font-size: var(--ds-t-h3); font-weight: 700; }
   .ds-quiz__count{ margin-left: auto; flex: none; font-size: var(--ds-t-cap); font-weight: 600;
       color: var(--wb-fg-subtle); font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .ds-quiz__sub{ margin: 3px 0 0; font-size: var(--ds-t-cap); color: var(--wb-fg-muted); line-height: 1.5; }
   .ds-quiz__viewport{ overflow: hidden; padding: 4px; margin: -4px; touch-action: pan-y; }
   .ds-quiz__track{ display: flex; transition: transform .28s cubic-bezier(.4,0,.2,1); }
   @media (prefers-reduced-motion: reduce){.ds-quiz__track{ transition: none; }}
@@ -407,7 +406,6 @@
   /* Tiêu đề "Kiểm tra nhanh" thừa trong popup (đầu modal đã ghi tên bài + "Tự kiểm
      kiến thức"); giữ lại dòng hướng dẫn "N câu · …". */
   #quizModalBody .ds-quiz__title{display:none}
-  #quizModalBody .ds-quiz__sub{margin-top:0}
   /* Nút mở quiz trong ngăn tóm tắt. */
   .rm-quizbtn{margin-top:2px}
   .rm-quizerr{margin:0;color:var(--wb-fg-muted);font-size:var(--ds-t-sub)}
@@ -446,7 +444,7 @@
        hero + chân trang là khung của trang, không phải chỗ dạy. -->
   <section class="rm-hero">
     <h1 class="rm-hero__h">Quick Roadmap</h1>
-    <p class="rm-hero__sub">A condensed map of Data Science, from zero to a real product you actually build. Tap any step for its <b>core idea</b>, the key figures, and what done means — a few minutes each, not seconds.</p>
+    <p class="rm-hero__sub">A condensed map of Data Science, from zero to a real product you actually build. Every step carries its <b>core idea</b>, the key figures, and what done means — a few minutes each, not seconds.</p>
     <div class="rm-hero__stats">
       <span><b data-o="nsteps">65</b> steps</span><span><b>11</b> phases</span><span><b data-o="nhours" data-core="88.5" data-all="106.5">88.5</b> hours</span>
     </div>
@@ -1072,7 +1070,7 @@
     </button></div>
   </section>
   </div>
-  <footer class="rm-foot"><span data-o="nfoot">65</span> core steps · 11 phases, condensed. Toggle above to see all 84.</footer>
+  <footer class="rm-foot"><span data-o="nfoot">65</span> core steps · 11 phases, condensed.</footer>
 </main>
 
 <!-- Vùng thông báo cho trình đọc màn hình. Có mặt vì makeEdgeResizer() (trích từ
@@ -4366,7 +4364,6 @@ const DSQuiz = (() => {
           <p class="ds-quiz__title"><span class="wb-ico wb-ico--sm" aria-hidden="true">quiz</span> Kiểm tra nhanh</p>
           <span class="ds-quiz__count" aria-hidden="true"></span>
         </div>
-        <p class="ds-quiz__sub">${qs.length} câu · trả lời hết rồi chấm điểm. Chọn đáp án không tự chuyển câu — tua bằng ← → hoặc nút dưới.</p>
       </div>
       <div class="ds-quiz__score" role="status" aria-live="polite" hidden></div>
       <div class="ds-quiz__viewport"><div class="ds-quiz__track">${slides}</div></div>

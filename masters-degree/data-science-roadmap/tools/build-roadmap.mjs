@@ -275,7 +275,7 @@ ${STYLE()}
        hero + chân trang là khung của trang, không phải chỗ dạy. -->
   <section class="rm-hero">
     <h1 class="rm-hero__h">Quick Roadmap</h1>
-    <p class="rm-hero__sub">A condensed map of Data Science, from zero to a real product you actually build. Tap any step for its <b>core idea</b>, the key figures, and what done means — a few minutes each, not seconds.</p>
+    <p class="rm-hero__sub">A condensed map of Data Science, from zero to a real product you actually build. Every step carries its <b>core idea</b>, the key figures, and what done means — a few minutes each, not seconds.</p>
     <div class="rm-hero__stats">
       <span><b data-o="nsteps">${CORE_N}</b> steps</span><span><b>11</b> phases</span><span><b data-o="nhours" data-core="${(Math.round(coreMin/30)/2).toString()}" data-all="${(Math.round(totalMin/30)/2).toString()}">${(Math.round(coreMin/30)/2).toString()}</b> hours</span>
     </div>
@@ -288,7 +288,7 @@ ${STYLE()}
   <div class="rm-path">
 ${levelsHtml}
   </div>
-  <footer class="rm-foot"><span data-o="nfoot">${CORE_N}</span> core steps · 11 phases, condensed. Toggle above to see all 84.</footer>
+  <footer class="rm-foot"><span data-o="nfoot">${CORE_N}</span> core steps · 11 phases, condensed.</footer>
 </main>
 
 <!-- Vùng thông báo cho trình đọc màn hình. Có mặt vì makeEdgeResizer() (trích từ
@@ -636,7 +636,6 @@ ${quizCss().split('\n').map(l => '  ' + l).join('\n')}
   /* Tiêu đề "Kiểm tra nhanh" thừa trong popup (đầu modal đã ghi tên bài + "Tự kiểm
      kiến thức"); giữ lại dòng hướng dẫn "N câu · …". */
   #quizModalBody .ds-quiz__title{display:none}
-  #quizModalBody .ds-quiz__sub{margin-top:0}
   /* Nút mở quiz trong ngăn tóm tắt. */
   .rm-quizbtn{margin-top:2px}
   .rm-quizerr{margin:0;color:var(--wb-fg-muted);font-size:var(--ds-t-sub)}
