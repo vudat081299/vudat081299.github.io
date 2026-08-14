@@ -1352,17 +1352,30 @@
   .ds-quiz { margin: var(--ds-sp-sec) 0 0;
     border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius-lg);
     background: var(--wb-surface); padding: 18px 20px; }
-  .ds-quiz__head { margin-bottom: var(--ds-sp-text); }
+  /* box-sizing: kit chỉ đặt border-box cho phần tử wb-*, phần còn lại của trang là
+     content-box. Trong một carousel thì đó là lỗi CHẠY ĐƯỢC, không phải chuyện gọn
+     gàng: slide `flex:0 0 100%` + `padding:0 1px` thành rộng hơn khung 2px, mà track
+     lại dịch đúng `cur × 100%` khung — nên tới câu i thì lệch 2i px, câu bên cạnh thò
+     ra và câu đang đọc bị cắt (đo được 6px ở câu 4). Ô đáp án `width:100%` + padding
+     13px cũng tràn 26px vì cùng lý do. Khai một lần cho cả cây, đừng vá từng chỗ. */
+  .ds-quiz, .ds-quiz *, .ds-quiz *::before, .ds-quiz *::after { box-sizing: border-box; }
+  .ds-quiz__head { margin-bottom: var(--ds-sp-block); padding-bottom: var(--ds-sp-near);
+    border-bottom: var(--wb-bw) solid var(--wb-border); }
+  .ds-quiz__headrow { display: flex; align-items: center; gap: 12px; }
   .ds-quiz__title { display: flex; align-items: center; gap: 7px; margin: 0;
     font-size: var(--ds-t-h3); font-weight: 700; }
+  /* margin-left:auto (không phải space-between): trong popup roadmap tiêu đề bị ẩn,
+     và bộ đếm vẫn phải nằm bên phải. */
+  .ds-quiz__count { margin-left: auto; flex: none; font-size: var(--ds-t-cap); font-weight: 600;
+    color: var(--wb-fg-subtle); font-variant-numeric: tabular-nums; white-space: nowrap; }
   .ds-quiz__sub { margin: 3px 0 0; font-size: var(--ds-t-cap); color: var(--wb-fg-muted); line-height: 1.5; }
-  .ds-quiz__viewport { overflow: hidden; }
+  /* padding 4px + margin −4px: chỗ cho vòng focus 3px của ô đáp án hiện ra mà không
+     làm slide rộng thêm (padding trên slide chính là cái đã gây trôi). */
+  .ds-quiz__viewport { overflow: hidden; padding: 4px; margin: -4px; touch-action: pan-y; }
   .ds-quiz__track { display: flex; transition: transform .28s cubic-bezier(.4,0,.2,1); }
   @media (prefers-reduced-motion: reduce) { .ds-quiz__track { transition: none; } }
-  .ds-quiz__slide { flex: 0 0 100%; min-width: 100%; padding: 2px 1px; align-self: flex-start; }
+  .ds-quiz__slide { flex: 0 0 100%; min-width: 100%; align-self: flex-start; }
   .ds-quiz__q { margin: 0 0 var(--ds-sp-text); font-size: var(--ds-t-body); font-weight: 600; line-height: 1.55; }
-  .ds-quiz__qn { display: inline-block; margin-right: 8px; font-size: var(--ds-t-cap);
-    font-weight: 700; color: var(--wb-fg-subtle); font-variant-numeric: tabular-nums; }
   .ds-quiz__opts { display: flex; flex-direction: column; gap: 8px; }
   .ds-quiz__opt { display: flex; gap: 10px; align-items: flex-start; width: 100%; text-align: left;
     padding: 11px 13px; border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius);
@@ -1394,24 +1407,52 @@
      hiệu (cùng lỗi với .wb-drawer[hidden] — design.md §1.2), nên phải tự khai lại. */
   .ds-quiz__why[hidden] { display: none; }
   .ds-quiz__why .wb-ico { flex: none; margin-top: 1px; color: var(--wb-fg-subtle); }
-  .ds-quiz__score { margin: var(--ds-sp-text) 0 0; padding: 11px 14px; border-radius: var(--wb-radius);
-    background: var(--wb-surface-2); font-size: var(--ds-t-sub); text-align: center; line-height: 1.5; }
-  .ds-quiz__score b { font-size: var(--ds-t-h3); font-variant-numeric: tabular-nums; }
+  /* Dải điểm nằm NGAY DƯỚI đầu ô, không nằm cuối: chấm xong người đọc thường tua lại
+     xem câu sai, nên kết quả phải đứng yên ở trên chứ không trôi mất dưới đáy. */
+  /* Một dòng chữ chảy, KHÔNG phải flex + gap: gap vẽ ra khoảng trắng cho mắt nhưng
+     không có ký tự nào, nên trình đọc màn hình đọc liền "4/5câu đúng". */
+  .ds-quiz__score { margin: 0 0 var(--ds-sp-block); padding: 11px 14px;
+    border-radius: var(--wb-radius); border: var(--wb-bw) solid var(--wb-border);
+    background: var(--wb-surface-2); font-size: var(--ds-t-sub); line-height: 1.6; }
+  .ds-quiz__score[hidden] { display: none; }
+  .ds-quiz__score.is-full { border-color: var(--wb-success); background: var(--wb-success-soft); }
+  .ds-quiz__score b { margin-right: 5px; font-size: var(--ds-t-h2); font-weight: 700;
+    font-variant-numeric: tabular-nums; }
   .ds-quiz__grade { color: var(--wb-fg-muted); }
-  .ds-quiz__nav { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: var(--ds-sp-block); }
-  .ds-quiz__dots { display: flex; align-items: center; gap: 7px; }
-  .ds-quiz__dot { width: 9px; height: 9px; padding: 0; border-radius: 50%; cursor: pointer;
-    background: transparent; border: var(--wb-bw) solid var(--wb-border-strong);
-    transition: transform .12s ease, background .12s ease, border-color .12s ease; }
-  .ds-quiz__dot.is-done { background: var(--wb-neutral); }
-  .ds-quiz__dot.is-cur { border-color: var(--wb-fg); transform: scale(1.3); }
-  .ds-quiz__dot.is-right { background: var(--wb-success); border-color: var(--wb-success); }
-  .ds-quiz__dot.is-wrong { background: var(--wb-danger); border-color: var(--wb-danger); }
-  .ds-quiz__dot:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
-  .ds-quiz__pos { min-width: 36px; text-align: center; font-size: var(--ds-t-cap);
-    color: var(--wb-fg-subtle); font-variant-numeric: tabular-nums; }
-  .ds-quiz__foot { display: flex; justify-content: center; margin-top: var(--ds-sp-text); }
-  .ds-quiz__act { min-width: 160px; }
+  /* MỘT hàng cho cả tua lẫn chấm (trước là hai hàng căn giữa chồng lên nhau). Trái:
+     ‹ › · giữa: vạch tiến độ · phải: nút hành động. */
+  .ds-quiz__bar { display: flex; align-items: center; gap: 12px;
+    margin-top: var(--ds-sp-block); padding-top: var(--ds-sp-near);
+    border-top: var(--wb-bw) solid var(--wb-border); }
+  .ds-quiz__pager { display: flex; gap: 4px; flex: none; }
+  /* Vạch thay chấm tròn: với 4–8 câu thì một dãy vạch đọc ra tiến độ nhanh hơn, và
+     đủ chỗ để mang màu đúng/sai sau khi chấm. Nút cao 20px cho ngón tay bấm được,
+     phần NHÌN THẤY là ::before dày 4px — đổi dày mỏng không đẩy layout. */
+  .ds-quiz__steps { display: flex; align-items: center; justify-content: center;
+    gap: 5px; flex: 1 1 60px; }
+  /* `flex: 0 1 38px` chứ không phải `flex:1 1 0 + max-width`: cùng kết quả (38px, co
+     lại khi chật) mà không sinh một max-width cứng cho G-MEASURE phải bỏ qua. */
+  .ds-quiz__step { flex: 0 1 38px; height: 20px; padding: 0; border: 0;
+    background: none; cursor: pointer; display: flex; align-items: center; }
+  .ds-quiz__step::before { content: ''; display: block; width: 100%; height: 4px;
+    border-radius: 999px; background: var(--wb-border-strong); opacity: .45;
+    transition: background .14s ease, height .14s ease, opacity .14s ease; }
+  .ds-quiz__step:hover::before { opacity: .8; }
+  .ds-quiz__step.is-done::before { background: var(--wb-neutral); opacity: 1; }
+  .ds-quiz__step.is-cur::before { background: var(--wb-fg); opacity: 1; height: 6px; }
+  .ds-quiz__step.is-right::before { background: var(--wb-success); opacity: 1; }
+  .ds-quiz__step.is-wrong::before { background: var(--wb-danger); opacity: 1; }
+  .ds-quiz__step:focus-visible { outline: none; }
+  .ds-quiz__step:focus-visible::before { box-shadow: 0 0 0 3px var(--wb-ring); }
+  .ds-quiz__act { flex: none; min-width: 124px; }
+  /* Trên điện thoại một hàng ba khối làm vạch tiến độ teo còn ~10px mỗi vạch — bấm
+     trượt. Cho vạch nguyên một hàng riêng ở TRÊN (order:-1), nút chia hàng dưới.
+     560px là ngưỡng lớp vỏ đang dùng sẵn, không thêm ngưỡng thứ sáu. */
+  @media (max-width: 560px) {
+    .ds-quiz__bar { flex-wrap: wrap; row-gap: var(--ds-sp-near); }
+    .ds-quiz__steps { order: -1; flex: 1 1 100%; }
+    .ds-quiz__act { flex: 1 1 auto; }
+  }
 </style>
 </head>
 
@@ -11517,27 +11558,31 @@ const DSQuiz = (() => {
         ? `<p class="ds-quiz__why" hidden><span class="wb-ico wb-ico--xs" aria-hidden="true">lightbulb</span><span>${q.why}</span></p>`
         : '';
       return `<div class="ds-quiz__slide" data-qi="${i}" role="group" aria-label="Câu ${i + 1}">
-          <p class="ds-quiz__q"><span class="ds-quiz__qn">Câu ${i + 1}/${qs.length}</span>${q.q}</p>
+          <p class="ds-quiz__q">${q.q}</p>
           <div class="ds-quiz__opts" role="radiogroup" aria-label="Đáp án">${opts}</div>
           ${why}
         </div>`;
     }).join('');
-    const dots = qs.map((_, i) =>
-      `<button type="button" class="ds-quiz__dot" data-di="${i}" aria-label="Tới câu ${i + 1}"></button>`).join('');
+    const steps = qs.map((_, i) =>
+      `<button type="button" class="ds-quiz__step" data-di="${i}" aria-label="Tới câu ${i + 1}"></button>`).join('');
     return `
       <div class="ds-quiz__head">
-        <p class="ds-quiz__title"><span class="wb-ico wb-ico--sm" aria-hidden="true">quiz</span> Kiểm tra nhanh</p>
+        <div class="ds-quiz__headrow">
+          <p class="ds-quiz__title"><span class="wb-ico wb-ico--sm" aria-hidden="true">quiz</span> Kiểm tra nhanh</p>
+          <span class="ds-quiz__count" aria-hidden="true"></span>
+        </div>
         <p class="ds-quiz__sub">${qs.length} câu · trả lời hết rồi chấm điểm. Chọn đáp án không tự chuyển câu — tua bằng ← → hoặc nút dưới.</p>
       </div>
-      <div class="ds-quiz__viewport"><div class="ds-quiz__track">${slides}</div></div>
       <div class="ds-quiz__score" role="status" aria-live="polite" hidden></div>
-      <div class="ds-quiz__nav">
-        <button type="button" class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm" data-q-prev aria-label="Câu trước"><span class="wb-ico" aria-hidden="true">chevron_left</span></button>
-        <div class="ds-quiz__dots">${dots}</div>
-        <span class="ds-quiz__pos" aria-hidden="true"></span>
-        <button type="button" class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm" data-q-next aria-label="Câu sau"><span class="wb-ico" aria-hidden="true">chevron_right</span></button>
-      </div>
-      <div class="ds-quiz__foot"><button type="button" class="wb-btn wb-btn--sm ds-quiz__act" data-q-act></button></div>`;
+      <div class="ds-quiz__viewport"><div class="ds-quiz__track">${slides}</div></div>
+      <div class="ds-quiz__bar">
+        <div class="ds-quiz__pager">
+          <button type="button" class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm" data-q-prev aria-label="Câu trước"><span class="wb-ico" aria-hidden="true">chevron_left</span></button>
+          <button type="button" class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--sm" data-q-next aria-label="Câu sau"><span class="wb-ico" aria-hidden="true">chevron_right</span></button>
+        </div>
+        <div class="ds-quiz__steps">${steps}</div>
+        <button type="button" class="wb-btn wb-btn--sm ds-quiz__act" data-q-act></button>
+      </div>`;
   }
 
   function mount(root, qs) {
@@ -11545,9 +11590,10 @@ const DSQuiz = (() => {
     root.classList.add('ds-quiz');
     root.innerHTML = shell(qs);
     const q = sel => root.querySelector(sel);
-    const track = q('.ds-quiz__track'), dots = [...root.querySelectorAll('.ds-quiz__dot')];
+    const track = q('.ds-quiz__track'), steps = [...root.querySelectorAll('.ds-quiz__step')];
     const prevB = q('[data-q-prev]'), nextB = q('[data-q-next]'), actB = q('[data-q-act]');
-    const scoreEl = q('.ds-quiz__score'), posEl = q('.ds-quiz__pos');
+    const scoreEl = q('.ds-quiz__score'), countEl = q('.ds-quiz__count');
+    const vp = q('.ds-quiz__viewport');
     const slides = [...root.querySelectorAll('.ds-quiz__slide')];
     const ans = new Array(qs.length).fill(-1);
     let cur = 0, graded = false;
@@ -11557,11 +11603,11 @@ const DSQuiz = (() => {
       cur = Math.max(0, Math.min(i, qs.length - 1));
       track.style.transform = `translateX(-${cur * 100}%)`;
       prevB.disabled = cur === 0; nextB.disabled = cur === qs.length - 1;
-      posEl.textContent = `${cur + 1}/${qs.length}`;
-      syncDots();
+      countEl.textContent = `${cur + 1} / ${qs.length}`;
+      syncSteps();
     }
-    function syncDots() {
-      dots.forEach((d, i) => {
+    function syncSteps() {
+      steps.forEach((d, i) => {
         d.classList.toggle('is-cur', i === cur);
         d.classList.toggle('is-done', !graded && ans[i] >= 0);
         d.classList.toggle('is-right', graded && ans[i] === qs[i].a);
@@ -11579,7 +11625,7 @@ const DSQuiz = (() => {
       const qi = +slide.dataset.qi; ans[qi] = oi;
       slide.querySelectorAll('.ds-quiz__opt').forEach(o =>
         o.setAttribute('aria-checked', +o.dataset.oi === oi ? 'true' : 'false'));
-      syncDots(); syncAct();
+      syncSteps(); syncAct();
     }
     function grade() {
       graded = true;
@@ -11596,13 +11642,14 @@ const DSQuiz = (() => {
         const why = slide.querySelector('.ds-quiz__why'); if (why) why.hidden = false;
       });
       const pct = Math.round(right / qs.length * 100);
-      scoreEl.innerHTML = `<b>${right}/${qs.length}</b> câu đúng · ${pct}% — <span class="ds-quiz__grade">${verdict(pct)}</span>`;
+      scoreEl.innerHTML = `<b>${right}/${qs.length}</b> câu đúng — <span class="ds-quiz__grade">${verdict(pct)}</span>`;
+      scoreEl.classList.toggle('is-full', right === qs.length);
       scoreEl.hidden = false;
-      syncDots(); syncAct();
+      syncSteps(); syncAct();
     }
     function reset() {
       graded = false; ans.fill(-1);
-      scoreEl.hidden = true; scoreEl.textContent = '';
+      scoreEl.hidden = true; scoreEl.textContent = ''; scoreEl.classList.remove('is-full');
       slides.forEach(slide => slide.querySelectorAll('.ds-quiz__opt').forEach(o => {
         o.classList.remove('is-correct', 'is-wrong'); o.disabled = false;
         o.setAttribute('aria-checked', 'false');
@@ -11614,9 +11661,48 @@ const DSQuiz = (() => {
     root.addEventListener('click', e => {
       const opt = e.target.closest('.ds-quiz__opt');
       if (opt) { pick(opt.closest('.ds-quiz__slide'), +opt.dataset.oi); return; }
-      const dot = e.target.closest('.ds-quiz__dot');
-      if (dot) go(+dot.dataset.di);
+      const step = e.target.closest('.ds-quiz__step');
+      if (step) go(+step.dataset.di);
     });
+
+    /* Vuốt ngang — cho ngón tay/bút, và cho vuốt hai ngón trên trackpad. Nút ‹ › và
+       phím ←/→ vẫn là đường chính trên desktop; hai thứ này chỉ thêm cách vào.
+       CHUỘT bị loại khỏi kéo: giữ trái rồi rê là thao tác BÔI CHỮ, cướp nó đi thì
+       người đọc không copy được đề bài. */
+    let dragFrom = null, dragDx = 0;
+    function dragTo(dx) {
+      // hết đường thì kéo chùn còn 1/3 — tay biết là đã tới mép, không phải kẹt
+      if ((cur === 0 && dx > 0) || (cur === qs.length - 1 && dx < 0)) dx /= 3;
+      dragDx = dx;
+      track.style.transition = 'none';
+      track.style.transform = `translateX(calc(${-cur * 100}% + ${dx}px))`;
+    }
+    function dragEnd() {
+      if (dragFrom === null) return;
+      dragFrom = null; track.style.transition = '';
+      const d = dragDx; dragDx = 0;
+      const need = Math.min(90, (vp.getBoundingClientRect().width || 300) / 4);
+      go(Math.abs(d) > need ? cur + (d < 0 ? 1 : -1) : cur);   // dưới ngưỡng: go(cur) đưa về chỗ cũ
+    }
+    vp.addEventListener('pointerdown', e => {
+      if (e.pointerType === 'mouse') return;
+      dragFrom = e.clientX; dragDx = 0;
+    });
+    vp.addEventListener('pointermove', e => { if (dragFrom !== null) dragTo(e.clientX - dragFrom); });
+    vp.addEventListener('pointerup', dragEnd);
+    vp.addEventListener('pointercancel', dragEnd);
+
+    /* Trackpad: vuốt ngang là sự kiện wheel có deltaX, không phải pointer. Chỉ nhận
+       khi ý định NGANG rõ ràng (|deltaX| > 1,5 × |deltaY|) — nếu không thì cướp mất
+       cuộn dọc của trang. Cộng dồn rồi mới nhảy một câu, để một cú vuốt = một câu. */
+    let wAcc = 0, wAt = 0;
+    vp.addEventListener('wheel', e => {
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY) * 1.5) return;
+      e.preventDefault();
+      if (e.timeStamp - wAt > 300) wAcc = 0;
+      wAt = e.timeStamp; wAcc += e.deltaX;
+      if (Math.abs(wAcc) > 70) { go(cur + (wAcc > 0 ? 1 : -1)); wAcc = 0; }
+    }, { passive: false });
     prevB.addEventListener('click', () => go(cur - 1));
     nextB.addEventListener('click', () => go(cur + 1));
     actB.addEventListener('click', () => (graded ? reset() : grade()));
