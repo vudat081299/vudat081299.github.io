@@ -824,12 +824,32 @@ nguyên khối JS + mọi rule `.ds-quiz`, y như cách nó trích khối tươn
 `fetch('data/quiz.json')` — nên **sửa câu hỏi không cần build lại roadmap**, chỉ sửa carousel
 mới cần. Sửa carousel là sửa ở trang chính rồi build lại, đừng chạm `roadmap.html`.
 
-**Ô này là block DUY NHẤT trong bài mang viền nặng.** 2px `--wb-fg` + `--wb-shadow-md`, trong
-khi mọi khối khác chỉ có viền chỉ `--wb-border`. Lý do: đây là chỗ duy nhất đòi người đọc *làm*
-chứ không *đọc*, nên lướt qua phải nhận ra ngay. Thêm một block thứ hai nặng bằng nó là mất
-sạch tác dụng của cả hai. Dark mode hạ viền về `--wb-gray-500` (`--wb-fg` là trắng gần tuyệt
-đối, chói trên `#131316`) — rule `.dark .ds-quiz` đặt **cạnh** rule kia, KHÔNG dùng token khai
-ở `:root`, vì bộ trích của `build-roadmap` lọc theo selector khớp `.ds-quiz`.
+**Ô này là block DUY NHẤT trong bài dùng neumorphism.** Mọi khối khác là viền chỉ
+`--wb-border` + nền `--wb-surface`. Lý do: đây là chỗ duy nhất đòi người đọc *làm* chứ không
+*đọc*, nên lướt qua phải nhận ra ngay. Thêm một block thứ hai cùng lối là mất sạch tác dụng
+của cả hai.
+
+Bốn luật, sai một cái là hỏng cả lối:
+
+1. **Nền khối phải TRÙNG nền phía sau** — `--q-bg: var(--wb-canvas)`, KHÔNG phải `--wb-surface`.
+   Neumorphism là "nổi lên *từ* mặt phẳng"; khác màu thì nó thành một card dán lên.
+2. **Độ nổi do hai bóng ngược hướng, không do viền** → `border: 0` khắp nơi, kể cả hai đường
+   kẻ ngăn ở đầu ô và thanh dưới (thay bằng khoảng trống `--ds-sp-sub`).
+3. **Một nguồn sáng cho tất cả:** sáng ở **trên-trái**, bóng đổ **dưới-phải**. Đảo hướng ở một
+   chỗ thì mắt đọc ra ngay dù không gọi được tên lỗi.
+4. **Nổi = bấm được · lõm = đang bật hoặc chỉ để đọc · phẳng = hết tác dụng.** Đây là chỗ lối
+   này có ích thật chứ không chỉ trang trí: ô đáp án đang chọn **lõm như phím vừa bấm** (huy
+   hiệu chữ cái đảo chiều theo), sau khi chấm thì ô đúng/sai lõm còn ô không liên quan phẳng
+   hẳn. Trạng thái *chọn* đọc được bằng hình khối nên **thang màu §1 vẫn nguyên** — màu chỉ
+   dành cho đúng/sai.
+
+Bốn biến `--q-bg` / `--q-lo` / `--q-hi` + bộ `--q-up|up-s|in|in-s` là toàn bộ ngôn ngữ đó, và
+chúng khai **trên chính `.ds-quiz`**, KHÔNG ở `:root` — bộ trích của `build-roadmap` lọc theo
+selector khớp `.ds-quiz`, khai ở `:root` là `roadmap.html` mất sạch bóng. Cùng lý do với rule
+`.dark .ds-quiz`, đặt **cạnh** rule kia. Dark **không đảo thẳng được**: nền tối thì "ánh sáng"
+phải rất mờ (`.05`) còn bóng phải rất đậm (`.72`); để cân bằng như bản sáng thì khối trông như
+đang phát sáng. Popup roadmap phải đổi `--q-bg` sang `--wb-surface` (nền modal), nếu không mọi
+ô đáp án trong đó lệch nền.
 
 **Hành xử (chủ trang yêu cầu, giữ đúng bốn điều):**
 
@@ -870,8 +890,21 @@ về nền trang + chữ mờ. Đúng/sai *là* trạng thái, nên đây là ch
   chuyện gọn gàng: slide `flex:0 0 100%` cộng thêm `padding:0 1px` thành rộng hơn khung 2px,
   trong khi track dịch đúng `cur × 100%` **khung** — nên tới câu *i* lệch `2i` px, câu bên cạnh
   thò ra và câu đang đọc bị cắt (đo được 6px ở câu 4). Ô đáp án `width:100%` + padding 13px cũng
-  tràn 26px vì cùng lý do. **Đừng đặt padding ngang lên `.ds-quiz__slide`** — chỗ cho vòng focus
-  nằm ở viewport (`padding:4px; margin:-4px`).
+  tràn 26px vì cùng lý do.
+- **`overflow:hidden` cắt ở PADDING-box, nên `.ds-quiz__viewport` KHÔNG được có padding ngang.**
+  Một bản đã để `padding:4px` ở đó để lấy chỗ cho vòng focus — và đó chính là một khe 4px mỗi
+  bên cho câu bên cạnh ló ra (đo được). Chỗ cho vòng focus nằm **trong `.ds-quiz__slide`**; nhờ
+  border-box ở gạch trên, padding trong slide không làm nó rộng thêm pixel nào.
+- **Hai câu phải có `gap`, dù cửa sổ đã khít.** Lúc kéo tay hoặc lúc trượt, mắt phải thấy chúng
+  là hai tấm rời chứ không phải một dải chữ liền. `gap` đặt ở `.ds-quiz__track`; JS **đọc lại**
+  giá trị đó từ computed style (`place()`) và trừ thêm `cur × gap` vào transform — không có
+  bước đó thì càng tua càng lệch đúng bằng tổng gap. Số chỉ nằm ở CSS, một chỗ.
+- **`roadmap.html` khai lại token `--ds-*` bằng tay, mà CSS thì trích tự động.** Thêm một
+  `var(--ds-…)` mới vào rule `.ds-quiz` ở trang chính là roadmap **im lặng** mất luật đó —
+  `var()` không giải được làm cả khai báo vô hiệu, không cảnh báo. Đã dính hai chỗ cùng lúc
+  (`gap` về 0, `--ds-t-h2` của dải điểm rơi về cỡ chữ thừa kế). `build-roadmap.mjs` giờ đối
+  chiếu tên-dùng với tên-khai và **ném** ngay lúc build; gặp lỗi đó thì thêm token vào khối
+  `:root` trong `STYLE()`, **cùng giá trị với trang chính**.
 - **`.ds-quiz__why[hidden]` phải tự khai `display:none`.** `.ds-quiz__why{display:flex}` thắng
   `[hidden]{display:none}` của trình duyệt ở cùng độ đặc hiệu (đúng lỗi `.wb-drawer[hidden]` ở
   §1.2) — thiếu dòng đó thì giải thích hiện ra trước khi chấm. Cùng lý do, `.ds-quiz__score` cố ý

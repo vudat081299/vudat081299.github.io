@@ -18,6 +18,60 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 
 ---
 
+## Phiên 2026-08-14 (u) — neumorphism cho ô quiz · cửa sổ carousel · chặn token thiếu
+
+Ba việc chủ trang giao, ba commit.
+
+### Cửa sổ carousel: lỗi TÔI tạo ra ở phiên (t)
+
+Phiên (t) sửa lỗi trôi bằng `box-sizing` (đúng) rồi thêm `padding:4px` vào
+`.ds-quiz__viewport` để lấy chỗ cho vòng focus (**sai**). `overflow:hidden` cắt ở *padding-box*,
+nên cái padding đó chính là khe 4px mỗi bên cho câu bên cạnh ló ra. Chủ trang chỉ ra, đo lại
+đúng: cửa sổ 1023px / một câu 1015px. Bài học đủ chung để viết vào `docs/design.md` §10:
+**đừng bao giờ trả padding ngang về viewport**.
+
+Kèm theo, `gap` giữa hai câu đang là 0 — cửa sổ khít thì không thò, nhưng lúc kéo tay hai câu
+dán liền nhau thành một dải chữ. Có `gap` thì transform phải trừ thêm `cur × gap`; gom vào
+`place()` và **đọc gap lại từ computed style** nên con số vẫn chỉ nằm ở CSS.
+
+### Neumorphism thay viền đen
+
+Chủ trang bảo bỏ viền 2px vừa thêm ở phiên (t), thử neumorphism. Bốn luật + lý do dark không
+đảo thẳng được: `docs/design.md` §10. Điểm đáng giữ: chọn đáp án = **lõm như phím vừa bấm**,
+nên trạng thái chọn đọc được bằng hình khối và thang màu §1 vẫn nguyên.
+
+### Câu hỏi về chuẩn margin — trả lời: ĐÃ CÓ, và 44px là học từ nó
+
+Chủ trang hỏi "web DS này đã có chuẩn design gì chưa". Có: thang `--ds-sp-*`, 6 bậc, luật ở
+`docs/design.md` §0.6, `G-SPACING` canh. Đo lại trên trang thật: 44px trước mỗi `h2`, 28 trước
+`h3`, 20 sau một khối, 14 giữa hai đoạn, 8 tiêu đề→thân. `margin-top: --ds-sp-sec` (44px) của
+quiz khớp đúng bậc mà `.ds-nodefoot` ngay dưới dùng, nên **không sửa gì** — chỉ trả lời.
+
+### Lỗ đã bịt: token khai tay ở roadmap.html
+
+`roadmap.html` khai lại token `--ds-*` **bằng tay** trong khi CSS thì **trích tự động**. Thêm
+một `var(--ds-…)` mới vào rule `.ds-quiz` là roadmap im lặng mất luật đó. Dính thật hai chỗ
+cùng lúc phiên này. `build-roadmap.mjs` giờ đối chiếu tên-dùng với tên-khai và **ném lúc
+build** — không phải cổng riêng, vì bắt ở build thì bản hỏng không bao giờ ra tới đĩa.
+
+### Cố ý KHÔNG làm
+
+- **Không đổi `--ds-measure` / `--ds-fs`** — quyết định của chủ trang, `CLAUDE.md` §10 bắt hỏi.
+- **Không đưa neumorphism ra chỗ khác trong bài.** Nó chỉ có nghĩa vì nó là block DUY NHẤT
+  khác kiểu; dùng ở khối thứ hai là mất tác dụng cả hai.
+- **Không đổi kích thước/nhịp của quiz theo cảm tính** — mọi margin trong ô đều trỏ vào một
+  bậc `--ds-sp-*` có sẵn.
+
+### Vẫn chưa nhìn được bằng mắt — và lần này nó còn đánh lừa phép đo
+
+Pane preview vẫn không vẽ (`visibilityState = 'hidden'`), ảnh chụp vẫn đen. Mới: **CSS
+transition bị treo hẳn** ở trạng thái đó, nên `getComputedStyle` trả về giá trị *trước khi*
+chuyển — có lúc `transform` đọc ra identity dù inline style đúng, và `box-shadow` đọc ra hình
+khối cũ. Suýt sửa oan hai chỗ. Cách đo đúng: **chèn `transition: none !important` rồi mới
+đo**, hoặc đọc thẳng giá trị inline. Ghi ra đây vì phiên sau chắc chắn gặp lại.
+
+---
+
 ## Phiên 2026-08-14 (t) — quiz ra file ngoài · sửa lỗi trôi carousel · rà chữ dạy đời
 
 Sáu commit, mỗi gạch đầu dòng của chủ trang một commit (yêu cầu rõ).
