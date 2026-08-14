@@ -1376,12 +1376,21 @@
      và bộ đếm vẫn phải nằm bên phải. */
   .ds-quiz__count { margin-left: auto; flex: none; font-size: var(--ds-t-cap); font-weight: 600;
     color: var(--wb-fg-subtle); font-variant-numeric: tabular-nums; white-space: nowrap; }
-  /* padding 4px + margin −4px: chỗ cho vòng focus 3px của ô đáp án hiện ra mà không
-     làm slide rộng thêm (padding trên slide chính là cái đã gây trôi). */
-  .ds-quiz__viewport { overflow: hidden; padding: 4px; margin: -4px; touch-action: pan-y; }
-  .ds-quiz__track { display: flex; transition: transform .28s cubic-bezier(.4,0,.2,1); }
+  /* CỬA SỔ CẮT PHẢI RỘNG ĐÚNG BẰNG MỘT CÂU. `overflow:hidden` cắt ở PADDING-box, nên
+     mọi padding ngang đặt ở đây chính là một khe cho câu bên cạnh ló ra — bản trước
+     để `padding:4px` (lấy chỗ cho vòng focus) và đó là 4px thò mỗi bên, đo được.
+     Chỗ cho vòng focus chuyển VÀO TRONG slide: nhờ border-box ở trên, padding trong
+     slide không làm nó rộng thêm một pixel nào. Đừng bao giờ trả padding về viewport.
+
+     `gap` giữa hai slide: dù cửa sổ đã khít, hai câu vẫn không được dán vào nhau —
+     lúc kéo tay hoặc lúc trượt, mắt phải thấy chúng là HAI tấm rời chứ không phải
+     một dải chữ liền. Khoảng cách này JS phải biết (transform trừ thêm cur × gap),
+     nên nó đọc lại từ computed style chứ không gõ số lần thứ hai. */
+  .ds-quiz__viewport { overflow: hidden; touch-action: pan-y; }
+  .ds-quiz__track { display: flex; gap: var(--ds-sp-sec);
+    transition: transform .28s cubic-bezier(.4,0,.2,1); }
   @media (prefers-reduced-motion: reduce) { .ds-quiz__track { transition: none; } }
-  .ds-quiz__slide { flex: 0 0 100%; min-width: 100%; align-self: flex-start; }
+  .ds-quiz__slide { flex: 0 0 100%; min-width: 100%; align-self: flex-start; padding: 4px; }
   .ds-quiz__q { margin: 0 0 var(--ds-sp-text); font-size: var(--ds-t-body); font-weight: 600; line-height: 1.55; }
   .ds-quiz__opts { display: flex; flex-direction: column; gap: 8px; }
   .ds-quiz__opt { display: flex; gap: 10px; align-items: flex-start; width: 100%; text-align: left;
@@ -11605,9 +11614,18 @@ const DSQuiz = (() => {
     let cur = 0, graded = false;
 
     const answered = () => ans.filter(a => a >= 0).length;
+    /* Khoảng hở giữa hai slide do CSS quyết (`.ds-quiz__track{gap}`), nhưng transform
+       phải trừ thêm `cur × gap` — nếu không thì càng tua càng lệch đúng bằng tổng gap.
+       Đọc lại từ computed style để số chỉ nằm ở MỘT chỗ; nó là px cố định nên đọc
+       một lần lúc mount là đủ. */
+    const gapPx = parseFloat(getComputedStyle(track).columnGap) || 0;
+    /* `+ ${n}px` với n âm là calc hợp lệ; `- -Npx` thì không — nên luôn cộng một số có dấu. */
+    const place = (extra = 0) =>
+      track.style.transform = `translateX(calc(${-cur * 100}% + ${extra - cur * gapPx}px))`;
+
     function go(i) {
       cur = Math.max(0, Math.min(i, qs.length - 1));
-      track.style.transform = `translateX(-${cur * 100}%)`;
+      place();
       prevB.disabled = cur === 0; nextB.disabled = cur === qs.length - 1;
       countEl.textContent = `${cur + 1} / ${qs.length}`;
       /* Câu không hiện thì `inert`: nếu không, Tab đi xuyên qua CẢ 5 câu (~20 điểm
@@ -11688,7 +11706,7 @@ const DSQuiz = (() => {
       if ((cur === 0 && dx > 0) || (cur === qs.length - 1 && dx < 0)) dx /= 3;
       dragDx = dx;
       track.style.transition = 'none';
-      track.style.transform = `translateX(calc(${-cur * 100}% + ${dx}px))`;
+      place(dx);
     }
     function dragEnd() {
       if (dragFrom === null) return;
