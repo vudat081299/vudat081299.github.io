@@ -1,7 +1,8 @@
 # Handoff — data-science-roadmap.html
 
-File là single-page app (~16,3k dòng, tự chứa) dựng trên web-builder CSS. Nội dung bài nằm
-trong các `<template data-node="…">`, router hash dựng ra.
+File là single-page app (~16,7k dòng) dựng trên web-builder CSS. Nội dung bài nằm trong các
+`<template data-node="…">`, router hash dựng ra. **Không còn tự chứa hoàn toàn:** câu hỏi trắc
+nghiệm ở `data/quiz.json`, trang fetch lúc chạy (xem phiên (t) bên dưới).
 
 **Đọc [CLAUDE.md](CLAUDE.md) trước.** Đừng mở cả file HTML để tìm hiểu — dùng `TOC.md`
 và `node tools/gate.mjs --show <id>`.
@@ -14,6 +15,67 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 - `node tools/gate.mjs` đã bao gồm `auditPlan()` (cổng `G-PLAN`) — **không cần mở trình
   duyệt để kiểm lịch học nữa**.
 - `node tools/gate.test.mjs` — test cho chính bộ cổng. Chạy khi sửa `tools/`.
+
+---
+
+## Phiên 2026-08-14 (t) — quiz ra file ngoài · sửa lỗi trôi carousel · rà chữ dạy đời
+
+Sáu commit, mỗi gạch đầu dòng của chủ trang một commit (yêu cầu rõ).
+
+### 1. `data/quiz.json` — bước đầu của "HTML chỉ còn design + layout"
+
+**Chủ trang chốt hướng dài hạn:** nội dung text phải nạp từ file ngoài, HTML chỉ dựng giao
+diện. Lý do là chi phí đọc — cả người lẫn công cụ phải nạp toàn bộ nội dung để sửa một dòng
+layout, và file lớn thì tool còn không mở nổi. Phiên này tách **quiz trước**; nội dung bài học
+tách sau, **đừng tự khởi động**. `CLAUDE.md` §2 luật 3 đã viết lại theo hướng đó, kèm khuôn để
+theo (file dưới `data/`, trang fetch tương đối và sống được khi fetch hỏng, `read-html.mjs` có
+hàm đọc thẳng cho `tools/`).
+
+Điểm thiết kế đáng giữ: **cả hai trang fetch CÙNG file**, `roadmap.html` không nhúng câu hỏi
+nữa (chỉ nhúng `quizN` để in nhãn nút). Nên sửa nội dung câu hỏi **không phải build lại gì**.
+HTML −370 KB, roadmap −355 KB.
+
+Giá phải trả, đã cân nhắc và chấp nhận: mở bằng `file://` thì fetch bị CORS chặn → mất quiz,
+phần còn lại chạy y nguyên. Bản thật chạy trên GitHub Pages nên không đáng đổi lấy việc nhúng
+lại 360 KB.
+
+### 2. Lỗi trôi carousel — nguyên nhân gốc là `box-sizing`, không phải carousel
+
+Chủ trang thấy "câu bên cạnh thò ra 2–5px, câu đang đọc bị cắt". Đo ra: kit chỉ đặt
+`border-box` cho phần tử `wb-*`, phần còn lại của trang là `content-box`. Slide `flex:0 0 100%`
++ `padding:0 1px` rộng hơn khung 2px, track dịch đúng `cur × 100%` **khung** → câu *i* lệch
+`2i` px (đo 6px ở câu 4). Ô đáp án `width:100%` + padding 13px cũng đang tràn 26px, im lặng.
+
+Chữa ở **lớp**, không ở chỗ: `box-sizing: border-box` cho cả cây `.ds-quiz`. Chỗ cho vòng focus
+chuyển sang viewport (`padding:4px; margin:-4px`) chứ không đặt lên slide nữa.
+
+### 3–6. Còn lại
+
+Nav + điểm gộp một hàng, chấm tròn → vạch, số câu gom về một chỗ (từng nằm ba chỗ); viền 2px +
+bóng cho ô quiz; bỏ 9 câu dạy người đọc thao tác hiển nhiên; `inert` cho câu ngoài khung +
+phím ← → ↑ ↓ / `1…6`. Chi tiết trong `docs/design.md` §10 và message từng commit.
+
+### Cố ý KHÔNG làm
+
+- **Không tách nội dung bài học ra khỏi HTML.** Chủ trang nói rõ "tách content để tương lai
+  tính". Việc đó chạm 84 template + router + `read-html.mjs` + cả bộ cổng — không phải việc
+  làm kèm.
+- **Không đụng `s-lookup` / `t-stack` / phần còn lại của trang** khi rà chữ. Bản rà chỉ nhắm
+  bốn dạng câu (chỉ dẫn thao tác hiển nhiên / đếm lại thứ đã hiện / trấn an / dạy cách đọc
+  trang) và cố ý **không** bắt các nhãn `ds-viz__label` dạng "Kéo X — xem Y": vế sau nói *nhìn
+  cái gì*, đó là nội dung dạy học. Chỉ những câu trong thân bài **lặp lại** nhãn đó mới bị cắt.
+- **Không nối quiz vào tiến độ/pháo giấy** — giữ nguyên quyết định phiên (s).
+- **Không tự chuyển câu khi chọn đáp án** — giữ nguyên yêu cầu phiên (s), dù giờ đã có vuốt.
+- **Không thêm cổng cho lỗi `box-sizing`.** Đã cân nhắc: một cổng quét `content-box` gây trôi
+  thì phải hiểu layout, mà bộ cổng đọc HTML như văn bản. Thay vào đó viết cái bẫy vào
+  `docs/design.md` §10 kèm số đo — chỗ người sửa carousel chắc chắn đọc.
+
+### Không kiểm được bằng mắt
+
+Ảnh chụp trong pane preview trả về khung đen (`document.visibilityState = 'hidden'` → renderer
+không vẽ). Đã thay bằng **đo trong trang**: tràn ngang, bề rộng slide so với khung, thứ tự hàng
+ở 1440/375px, màu viền ở cả hai chế độ, và chạy trọn vòng chọn → chấm → làm lại. **Phiên sau
+nếu mở được pane thì nên nhìn một lượt** — số đo không thay được câu "nó có đẹp không".
 
 ---
 

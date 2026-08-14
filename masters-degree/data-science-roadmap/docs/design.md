@@ -824,10 +824,20 @@ nguyên khối JS + mọi rule `.ds-quiz`, y như cách nó trích khối tươn
 `fetch('data/quiz.json')` — nên **sửa câu hỏi không cần build lại roadmap**, chỉ sửa carousel
 mới cần. Sửa carousel là sửa ở trang chính rồi build lại, đừng chạm `roadmap.html`.
 
+**Ô này là block DUY NHẤT trong bài mang viền nặng.** 2px `--wb-fg` + `--wb-shadow-md`, trong
+khi mọi khối khác chỉ có viền chỉ `--wb-border`. Lý do: đây là chỗ duy nhất đòi người đọc *làm*
+chứ không *đọc*, nên lướt qua phải nhận ra ngay. Thêm một block thứ hai nặng bằng nó là mất
+sạch tác dụng của cả hai. Dark mode hạ viền về `--wb-gray-500` (`--wb-fg` là trắng gần tuyệt
+đối, chói trên `#131316`) — rule `.dark .ds-quiz` đặt **cạnh** rule kia, KHÔNG dùng token khai
+ở `:root`, vì bộ trích của `build-roadmap` lọc theo selector khớp `.ds-quiz`.
+
 **Hành xử (chủ trang yêu cầu, giữ đúng bốn điều):**
 
 1. **Một câu mỗi lần, tua ngang.** `.ds-quiz__track` dịch bằng `translateX(-cur*100%)`,
-   `.ds-quiz__viewport` cắt bằng `overflow:hidden`. Tua bằng nút ‹ ›, chấm tròn, hoặc phím ←/→.
+   `.ds-quiz__viewport` cắt bằng `overflow:hidden`. Bốn cách tua: nút ‹ ›, vạch tiến độ, phím
+   ←/→, và **vuốt** — kéo ngón tay/bút (có chùn ở mép), hoặc vuốt ngang trên trackpad (sự kiện
+   `wheel` có `deltaX`, chỉ nhận khi `|deltaX| > 1,5 × |deltaY|` để không cướp cuộn dọc).
+   **Chuột bị loại khỏi kéo** — giữ trái rồi rê là thao tác bôi chữ.
 2. **Chọn đáp án KHÔNG tự chuyển câu.** Bấm một ô chỉ đánh dấu `aria-checked`; đổi được tới
    khi chấm. Đây là điều khác một quiz thường và là yêu cầu rõ của chủ trang — đừng "tiện tay"
    cho nhảy câu.
@@ -835,22 +845,44 @@ mới cần. Sửa carousel là sửa ở trang chính rồi build lại, đừn
    đúng/sai, `.ds-quiz__why` bung ra, có dải điểm, nút đổi thành **Làm lại**.
 4. **Làm lại** xoá sạch về câu 1.
 
+**Bố cục — mỗi thông tin đúng MỘT chỗ.** Đầu ô: tên + bộ đếm `3 / 5` (`.ds-quiz__count`,
+`margin-left:auto` để vẫn nằm phải khi popup ẩn tiêu đề). Dải điểm nằm **ngay dưới đầu ô**, không
+ở đáy: chấm xong người đọc tua lại xem câu sai, kết quả phải đứng yên ở trên. Đáy là **một** hàng
+`.ds-quiz__bar`: ‹ › · vạch tiến độ · nút hành động. Số câu từng nằm ba chỗ (trong đề, ở dãy chấm,
+ở một ô `k/N` riêng) — giờ một chỗ. ≤560px vạch tiến độ xuống hàng riêng, nếu không mỗi vạch teo
+còn ~10px.
+
+**Bàn phím + thứ tự Tab.** Câu không hiện phải `inert` + `aria-hidden`: thiếu nó thì Tab đi
+xuyên cả N câu (~28 điểm dừng cho bài 5 câu) và trình đọc màn hình đọc luôn những câu nằm ngoài
+khung. ← → **luôn** đổi câu, kể cả khi tiêu điểm đang ở một đáp án; ↑ ↓ đi giữa các đáp án
+(quy ước radiogroup); `1…6` / `a…f` chọn thẳng. Listener gắn trên `root` nên không cướp phím của
+trang hay panel ghi chú.
+
 **Màu theo thang §1 / CLAUDE.md.** Trung tính hoàn toàn tới khi chấm: ô đang chọn chỉ tô
 `--wb-ink-hover` + viền `--wb-fg`. **Chỉ sau khi chấm** mới có màu trạng thái — xanh
 (`--wb-success*`) cho đáp án đúng, đỏ (`--wb-danger*`) cho ô người dùng chọn sai; ô còn lại lùi
 về nền trang + chữ mờ. Đúng/sai *là* trạng thái, nên đây là chỗ hợp lệ để tiêu màu.
 
-**Ba cái bẫy đã dính, giữ nguyên cách chữa:**
+**Bốn cái bẫy đã dính, giữ nguyên cách chữa:**
 
+- **`box-sizing: border-box` cho CẢ cây `.ds-quiz`.** Kit chỉ đặt border-box cho phần tử `wb-*`;
+  phần còn lại của trang là `content-box`. Trong một carousel đó là lỗi **chạy được**, không phải
+  chuyện gọn gàng: slide `flex:0 0 100%` cộng thêm `padding:0 1px` thành rộng hơn khung 2px,
+  trong khi track dịch đúng `cur × 100%` **khung** — nên tới câu *i* lệch `2i` px, câu bên cạnh
+  thò ra và câu đang đọc bị cắt (đo được 6px ở câu 4). Ô đáp án `width:100%` + padding 13px cũng
+  tràn 26px vì cùng lý do. **Đừng đặt padding ngang lên `.ds-quiz__slide`** — chỗ cho vòng focus
+  nằm ở viewport (`padding:4px; margin:-4px`).
 - **`.ds-quiz__why[hidden]` phải tự khai `display:none`.** `.ds-quiz__why{display:flex}` thắng
   `[hidden]{display:none}` của trình duyệt ở cùng độ đặc hiệu (đúng lỗi `.wb-drawer[hidden]` ở
-  §1.2) — thiếu dòng đó thì giải thích hiện ra trước khi chấm.
+  §1.2) — thiếu dòng đó thì giải thích hiện ra trước khi chấm. Cùng lý do, `.ds-quiz__score` cố ý
+  **không** dùng flex: một dòng chữ chảy, vì `gap` vẽ khoảng trắng cho mắt mà không có ký tự nào
+  nên trình đọc màn hình đọc liền "4/5câu đúng".
 - **Margin dọc trong quiz trỏ vào thang `--ds-sp-*`** (§0.6), không px trần — nếu không `G-SPACING`
   kêu, và `roadmap.html` phải khai sẵn `--ds-sp-text/-block` để bản trích chạy.
-- **Popup roadmap: đừng lồng hai khung.** `DSQuiz.mount` gắn class `.ds-quiz` (có viền + nền)
-  lên chính phần tử nhận, nên trong modal phải mount vào **một div CON** rồi
-  `#quizModalBody .ds-quiz{border:0;background:none;padding:0}` mới bỏ được khung trong. Popup
-  cũng ẩn tiêu đề "Kiểm tra nhanh" (đầu modal đã ghi tên bài), giữ lại dòng hướng dẫn.
+- **Popup roadmap: đừng lồng hai khung.** `DSQuiz.mount` gắn class `.ds-quiz` (có viền + nền +
+  `margin-top` + bóng) lên chính phần tử nhận, nên trong modal phải mount vào **một div CON** rồi
+  `#quizModalBody .ds-quiz{border:0;background:none;padding:0;margin:0;box-shadow:none}` mới bỏ
+  được khung trong. Popup cũng ẩn tiêu đề "Kiểm tra nhanh" — đầu modal đã ghi tên bài.
 
 **Popup ở roadmap = modal của kit** (`wb-overlay--blur` + `wb-modal`, tham khảo `facts/index.html`),
 **khác** ngăn tóm tắt (ngăn KHÔNG phủ). Kit cho `.wb-overlay` z-index 100, `.wb-drawer` 101, nên
