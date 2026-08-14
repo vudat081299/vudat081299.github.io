@@ -49,6 +49,7 @@ Rồi tìm việc mình định làm trong bảng này:
 | **sửa trang Roadmap học nhanh** | §4 (hai cổng `G-ROADMAP*`) · `tools/build-roadmap.mjs` | `node tools/build-roadmap.mjs` | `G-ROADMAP` im. **Đừng sửa tay `roadmap.html`** — nó là sản phẩm sinh ra |
 | **thêm / sửa câu hỏi trắc nghiệm** | [docs/editing.md](docs/editing.md) **việc 7** · object `QUIZ` trong HTML | `gate.mjs` (cổng `G-QUIZ`) rồi `build-roadmap.mjs` | `G-QUIZ` qua · mở trang xem carousel chạy hết một vòng |
 | **thêm / sửa một cổng** | §4 · [docs/editing.md](docs/editing.md) việc 6 | `node tools/gate.test.mjs` | test xanh · thêm tên cổng vào §4 (`G-DOC` bắt) |
+| **thêm / sửa câu hỏi trắc nghiệm** | [docs/editing.md](docs/editing.md) **việc 7** — nội dung ở `data/quiz.json`, KHÔNG trong HTML | `gate.mjs` | `G-QUIZ` qua · `G-QUIZ-COV` im |
 | **ghi việc học của mình** | [LEARNING-LOG.md](LEARNING-LOG.md) | `learn.mjs --add` hoặc nút **Notes** trên trang | `learn.mjs --check` im |
 | **đóng phiên / commit / push** | §12 | `node tools/session.mjs --close` | HANDOFF đã ghi · `G-HANDOFF` im |
 
@@ -67,7 +68,7 @@ HANDOFF; trong docs chỉ ghi **luật, và con số đang dùng**.
 
 ## 0. Đừng mở file HTML để tìm hiểu
 
-`data-science-roadmap.html` là **~16,3k dòng, ~1,36 MB**. Đọc cả file tốn ~350k token và gần
+`data-science-roadmap.html` là **~16,6k dòng, ~1,4 MB**. Đọc cả file tốn ~350k token và gần
 như luôn là việc vô ích.
 
 Thứ tự đọc đúng:
@@ -106,12 +107,17 @@ lịch 8 tuần, fast track 14 ngày — đều tính từ đúng ba trường �
 Một chiều, không vòng:
 
 ```
-data-science-roadmap.html      ← NGUỒN SỰ THẬT DUY NHẤT
+data-science-roadmap.html      ← NGUỒN SỰ THẬT cho bài học, layout, bộ cổng
   │  phụ thuộc: ../../web-builder/web-builder.css (token + component wb-*)
+  │             data/quiz.json  — fetch lúc chạy; thiếu thì mất quiz, trang vẫn chạy
   │  KHÔNG phụ thuộc bất cứ thứ gì khác trong thư mục này
+  │
+data/quiz.json                 ← NGUỒN SỰ THẬT cho câu hỏi trắc nghiệm (84 bài · 475 câu)
+  │  CẢ HAI trang fetch chính file này lúc chạy — không trang nào nhúng câu hỏi
   ↓ đọc
 tools/read-html.mjs   luật đọc dữ liệu ra khỏi HTML — dùng chung, chỉ có MỘT bản
   ├─ tools/gate.mjs   ──sinh──→  TOC.md   (SẢN PHẨM — không sửa tay, không phải nguồn)
+  │     (đọc cả data/quiz.json — hàm readQuiz(), cùng file trang fetch)
   ├─ tools/build-roadmap.mjs ──sinh──→ roadmap.html  (SẢN PHẨM — trang học nhanh; nó còn
   │     TRÍCH CSS/JS của trang chính lúc build, nên sửa trang chính là bản đã sinh thành cũ)
   │     + tools/roadmap-summaries.json   84 bản tóm tắt (DỮ LIỆU, một workflow viết ra)
@@ -141,6 +147,7 @@ Mỗi file **một lý do để đổi** — đó là cách giữ cho bộ tài 
 | `docs/writing.md` | tiêu chuẩn *chất lượng nội dung* đổi |
 | `docs/editing.md` | *cấu trúc kỹ thuật* của trang đổi (thêm khối dữ liệu, thêm class) |
 | `docs/design.md` | *hình thức* đổi (component mới, luật trình bày mới) |
+| `data/quiz.json` | thêm/sửa câu hỏi trắc nghiệm — không đụng HTML, không build lại gì |
 | `TOC.md` | tự động, mỗi lần nội dung đổi |
 | `tools/*` | thêm/sửa cổng, hoặc thêm/sửa lệnh phiên |
 | `HANDOFF.md` | mỗi phiên |
@@ -155,9 +162,16 @@ Bốn luật không được vi phạm:
    trang vẫn chạy y nguyên. Cổng là thứ *soi* trang, không phải thứ trang cần để sống.
 2. **`TOC.md` và `roadmap.html` không bao giờ là nguồn.** Cả hai là SẢN PHẨM sinh ra; lệch
    với HTML thì HTML đúng. **Đừng sửa tay `roadmap.html`** — lượt sinh sau xoá sạch.
-3. **Không thêm file thứ hai chứa nội dung bài học.** Nội dung ở một chỗ. Muốn tra cứu
-   nhanh thì sinh ra bản index (như TOC.md) hoặc một VIEW sinh từ nguồn (như
-   `roadmap.html`), đừng gõ tay một bản sao nội dung.
+3. **Mỗi mẩu nội dung có đúng MỘT nguồn.** Luật này *không* cấm tách nội dung ra file
+   riêng — nó cấm **bản sao thứ hai**. Muốn tra cứu nhanh thì sinh ra bản index (như
+   `TOC.md`) hoặc một VIEW sinh từ nguồn (như `roadmap.html`), đừng gõ tay một bản sao.
+
+   **Hướng đang đi: HTML chỉ còn design + layout, nội dung nạp từ file ngoài** (chủ trang
+   chốt 2026-08-14). Câu hỏi trắc nghiệm đã tách xong — `data/quiz.json`, và cả hai trang
+   fetch chính nó nên vẫn đúng một nguồn. Nội dung bài học còn trong HTML và sẽ tách sau;
+   **đừng tự khởi động việc đó**, nhưng thứ nội dung MỚI thì đặt ra ngoài ngay từ đầu.
+   Khuôn để theo: một file dưới `data/`, trang `fetch` tương đối và chạy được kể cả khi
+   fetch hỏng, `read-html.mjs` có một hàm đọc thẳng file đó cho `tools/`.
 4. **`LEARNING-LOG.md` là dữ liệu, không phải nội dung trang.** Xoá nó thì cổng vẫn chạy,
    chỉ mất `G-LEARN`. Mục `## Sổ` trong nó **chỉ được thêm vào cuối** — xem §13.
 

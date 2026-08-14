@@ -186,9 +186,10 @@ const DATA = P.TREE.map(ph => ({
       points: s?.points || [],
       viz: s?.viz || '',
       vizIds: VIZOF[k.id] || [],
-      /* Câu hỏi trắc nghiệm — TRÍCH thẳng từ QUIZ của trang chính (read-html đọc).
-         Nguồn sự thật vẫn ở một chỗ; đây chỉ là bản nhúng để popup roadmap dựng. */
-      quiz: P.QUIZ[k.id] || [],
+      /* Chỉ SỐ CÂU, không nhúng câu hỏi. Nội dung ở data/quiz.json và trang này
+         fetch đúng file đó khi người đọc mở popup — cùng nguồn với trang chính,
+         và roadmap.html không phình lên 360 KB chữ mà 99% lượt xem không mở tới. */
+      quizN: (P.QUIZ[k.id] || []).length,
     };
   }),
 }));
@@ -638,6 +639,7 @@ ${quizCss().split('\n').map(l => '  ' + l).join('\n')}
   #quizModalBody .ds-quiz__sub{margin-top:0}
   /* Nút mở quiz trong ngăn tóm tắt. */
   .rm-quizbtn{margin-top:2px}
+  .rm-quizerr{margin:0;color:var(--wb-fg-muted);font-size:var(--ds-t-sub)}
 `; }
 
 /* =============================== SCRIPT =============================== */
@@ -707,8 +709,8 @@ function body(l){
     +'<div class="rm-po__row"><span class="rm-po__k">Dẫn tới</span><span>'+l.payoff[1]+'</span></div></div></div>';
   if(l.accept&&l.accept.length)h+='<div class="rm-sec"><p class="rm-sec__h">Tiêu chí đạt</p><ul class="rm-acc">'
     +l.accept.map(a=>'<li><span class="rm-acc__k">'+esc(a.k)+'</span><span>'+a.v+'</span></li>').join('')+'</ul></div>';
-  if(l.quiz&&l.quiz.length)h+='<div class="rm-sec"><button type="button" class="wb-btn wb-btn--outline wb-btn--sm rm-quizbtn" data-quiz-open>'
-    +'<span class="wb-ico wb-ico--sm" aria-hidden="true">quiz</span> Kiểm tra kiến thức · '+l.quiz.length+' câu</button></div>';
+  if(l.quizN)h+='<div class="rm-sec"><button type="button" class="wb-btn wb-btn--outline wb-btn--sm rm-quizbtn" data-quiz-open>'
+    +'<span class="wb-ico wb-ico--sm" aria-hidden="true">quiz</span> Kiểm tra kiến thức · '+l.quizN+' câu</button></div>';
   h+='<a class="rm-full" href="data-science-roadmap.html#/'+l.id+'">Mở bài đầy đủ →</a>';
   return h;
 }
@@ -750,15 +752,29 @@ $('#drClose').addEventListener('click',close);
 /* ==== popup trắc nghiệm — mở từ nút trong ngăn tóm tắt (data-quiz-open). Carousel
    do DSQuiz.mount() dựng, cùng module với trang chính. ==== */
 const quizOv=$('#quizModal');
+/* Câu hỏi nạp từ data/quiz.json — cùng file trang chính dùng, cạnh trang này. Một
+   lần cho cả phiên; lỗi mạng thì trả object rỗng và popup báo thay vì mở hộp trắng. */
+let QUIZ=null,quizLoad=null;
+function loadQuiz(){
+  if(!quizLoad)quizLoad=fetch(new URL('data/quiz.json',location.href))
+    .then(r=>r.ok?r.json():{}).catch(()=>({})).then(d=>(QUIZ=d));
+  return quizLoad;
+}
 function openQuiz(){
-  if(!curLesson||!curLesson.quiz||!curLesson.quiz.length)return;
-  $('#quizModalTitle').textContent=curLesson.t;
-  /* Mount vào một div CON (không mount thẳng vào #quizModalBody): DSQuiz.mount gắn
-     class .ds-quiz lên chính phần tử nhận, nên mount thẳng thì .ds-quiz nằm trên
-     #quizModalBody và rule bỏ-khung "#quizModalBody .ds-quiz" (hậu duệ) không trúng. */
+  if(!curLesson||!curLesson.quizN)return;
+  const l=curLesson;
+  $('#quizModalTitle').textContent=l.t;
   const b=$('#quizModalBody'); b.innerHTML='<div></div>';
-  DSQuiz.mount(b.firstElementChild,curLesson.quiz);
   quizOv.classList.add('is-open'); $('#quizClose').focus();
+  loadQuiz().then(d=>{
+    if(curLesson!==l||!quizOv.classList.contains('is-open'))return;
+    const qs=(d||{})[l.id];
+    /* Mount vào một div CON (không mount thẳng vào #quizModalBody): DSQuiz.mount gắn
+       class .ds-quiz lên chính phần tử nhận, nên mount thẳng thì .ds-quiz nằm trên
+       #quizModalBody và rule bỏ-khung "#quizModalBody .ds-quiz" (hậu duệ) không trúng. */
+    if(qs&&qs.length)DSQuiz.mount(b.firstElementChild,qs);
+    else b.innerHTML='<p class="rm-quizerr">Không nạp được data/quiz.json.</p>';
+  });
 }
 function closeQuiz(){quizOv.classList.remove('is-open'); $('#quizModalBody').innerHTML='';}
 document.addEventListener('click',e=>{if(e.target.closest('[data-quiz-open]'))openQuiz();});

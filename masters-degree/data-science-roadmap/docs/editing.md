@@ -78,7 +78,7 @@ liệu — nó đổi liên tục.
 | `WEEKS` | lịch 8 tuần: `ids`, `out`, `needs`, `proof`, `next`, `mile` | bài | **có** — phải phủ hết bài |
 | `DAYS` | lịch 14 ngày: `ids`, `out`, `proof`, `note`, `mile` | bài | không — chỉ bài vào fast track |
 | `ACCEPT` | tiêu chí đạt | bài | không, nhưng bài bắt buộc gần như luôn cần |
-| `QUIZ` | câu hỏi trắc nghiệm tự kiểm: `[{q,o,a,why}]` mỗi bài (xem việc 7) | bài | nên có — `G-QUIZ-COV` liệt kê bài thiếu |
+| `QUIZ` | câu hỏi trắc nghiệm — **KHÔNG ở trong HTML**, ở `data/quiz.json` (xem việc 7) | bài | nên có — `G-QUIZ-COV` liệt kê bài thiếu |
 | `SCOPE` | nhãn phạm vi (`aware`/`skeleton`/`weeks`) | bài | không |
 | `DELIV_MIN` | sàn phút cho cột deliverable | bài | không |
 | `READONLY_OK` | bài bắt buộc được phép chỉ-đọc (bài tra cứu) | bài | không |
@@ -290,22 +290,32 @@ là câu trả lời đúng, và đừng dùng ba cách đầu để làm im m�
 
 ## Việc 7 · Thêm hoặc sửa câu hỏi trắc nghiệm
 
-Câu hỏi tự kiểm nằm ở object `QUIZ` trong `<script>` (grep `^const QUIZ`), **một mảng mỗi
-bài**, khoá là id bài. Đây là nguồn sự thật DUY NHẤT: `roadmap.html` TRÍCH `QUIZ` lúc build
-(read-html đọc, build-roadmap nhúng vào popup). Đừng gõ câu hỏi lần thứ hai ở đâu khác. Hình
-thức + hành xử của carousel: [design.md §10](design.md).
+Câu hỏi tự kiểm nằm ở **`data/quiz.json`**, không nằm trong HTML. Khoá là id bài, giá trị là
+một mảng câu. Đây là nguồn sự thật DUY NHẤT và **cả hai trang đều `fetch` đúng file này lúc
+chạy** — trang chính nạp lười khi mở bài, `roadmap.html` nạp khi mở popup. Không trang nào
+nhúng câu hỏi vào HTML nữa, nên sửa file JSON là **cả hai trang đổi ngay, không cần build**.
+`tools/` đọc thẳng cùng file đó (`read-html.mjs` → `readQuiz()`). Hình thức + hành xử của
+carousel: [design.md §10](design.md).
 
-**Dạng một câu** — chỉ bốn trường, cùng lối viết cụt như `TREE`/`ACCEPT`:
+Vì sao tách khỏi HTML: 475 câu là ~360 KB chữ. Để trong HTML thì mọi công cụ (và mọi người)
+phải nạp toàn bộ nội dung chỉ để sửa một dòng layout — trang chính đã giảm 370 KB, `roadmap.html`
+giảm 355 KB nhờ bước này. Đây là bước đầu của hướng **HTML chỉ còn design + layout, nội dung
+nạp từ file ngoài**; phần nội dung bài học vẫn đang ở trong HTML và sẽ tách sau.
 
-```js
-'f-cyclic':[
-  { q:'Vì sao mã hoá giờ bằng sin/cos thay vì để số 0–23?',
-    o:['Để giảm số cột','Để 23h và 0h nằm cạnh nhau trong không gian feature',
-       'Vì cây quyết định bắt buộc','Để chuẩn hoá về [0,1]'],
-    a:1,                                  // chỉ số 0-based của đáp án ĐÚNG trong `o`
-    why:'23 và 0 xa nhau trên trục số nhưng liền nhau trong ngày; sin/cos đặt chúng cạnh nhau.' },
-],
+**Dạng một câu** — chỉ bốn trường, JSON thuần (`"…"`, không phải `'…'`):
+
+```json
+"f-cyclic": [
+  { "q": "Vì sao mã hoá giờ bằng sin/cos thay vì để số 0–23?",
+    "o": ["Để giảm số cột", "Để 23h và 0h nằm cạnh nhau trong không gian feature",
+          "Vì cây quyết định bắt buộc", "Để chuẩn hoá về [0,1]"],
+    "a": 1,
+    "why": "23 và 0 xa nhau trên trục số nhưng liền nhau trong ngày; sin/cos đặt chúng cạnh nhau." }
+]
 ```
+
+`a` là chỉ số **0-based** của đáp án đúng trong `o`. File ghi **một câu một dòng** để diff git
+đọc được — giữ lối đó khi thêm câu.
 
 - `q` (đề, HTML inline `<code>/<b>/<i>` được, **KHÔNG `$…$`** — popup roadmap không có KaTeX,
   dùng Unicode `× ² √ α σ ≈`), `o` (2–6 lựa chọn), `a` (0-based, phải trong `0..o.length−1`),
@@ -319,8 +329,10 @@ thức + hành xử của carousel: [design.md §10](design.md).
 trong `TREE`. `G-QUIZ-COV` (nhắc) liệt kê bài chưa có câu nào. "Câu hỏi đúng/hay" thì cổng
 không biết — tự đọc lại.
 
-**Xong thì:** `node tools/build-roadmap.mjs` (đẩy sang popup roadmap) và mở trang xem carousel
-chạy hết một vòng (chọn → chấm → làm lại) ở cả hai chế độ.
+**Xong thì:** `node tools/gate.mjs` rồi mở trang xem carousel chạy hết một vòng (chọn → chấm →
+làm lại) ở cả hai chế độ. **Không** phải build lại `roadmap.html` khi chỉ sửa nội dung câu hỏi
+— nó fetch cùng file JSON. Chỉ build lại khi **số câu** của một bài đổi (nhãn nút trong ngăn
+tóm tắt in số đó) hoặc khi sửa chính module carousel trong HTML.
 
 ---
 

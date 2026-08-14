@@ -49,7 +49,9 @@ writeFileSync(join(TMP, '.claude', 'settings.json'),
 
 /* roadmap.html có trong danh sách vì nó cũng là SẢN PHẨM sinh ra (cổng G-ROADMAP so nó
    với bản sinh lại). Thiếu nó thì chiều IM đỏ vì "chưa có roadmap.html". */
-const COPIES = ['data-science-roadmap.html', 'roadmap.html', 'TOC.md', 'CLAUDE.md', 'HANDOFF.md', 'LEARNING-LOG.md'];
+const COPIES = ['data-science-roadmap.html', 'roadmap.html', 'TOC.md', 'CLAUDE.md', 'HANDOFF.md',
+  'LEARNING-LOG.md', 'data/quiz.json'];
+mkdirSync(join(DS, 'data'), { recursive: true });
 for (const f of COPIES) cpSync(join(REAL, f), join(DS, f));
 cpSync(join(REAL, 'tools'), join(DS, 'tools'), { recursive: true });
 
@@ -73,6 +75,13 @@ const CL0   = ORIG['CLAUDE.md'];
 
 function reset() {
   for (const f of COPIES) writeFileSync(join(DS, f), ORIG[f]);
+}
+
+/* Ghi đè vài khoá của data/quiz.json trong sân tạm. reset() phục hồi (file nằm
+   trong COPIES), nên ca dùng nó không cần `after`. */
+function writeQuiz(patch) {
+  const q = JSON.parse(ORIG['data/quiz.json']);
+  writeFileSync(join(DS, 'data', 'quiz.json'), JSON.stringify({ ...q, ...patch }));
 }
 
 function runGate() {
@@ -172,19 +181,18 @@ const CASES = [
      bắt — một ca `let x = ;` cũng làm cổng nổ, nhưng không chứng minh được gì cả. */
   ['G-SYNTAX', 'backtick trong comment HTML bên trong template literal', h =>
     once(h, '<ol class="wb-steps ds-map">', '<!-- `wb-steps` -->\n      <ol class="wb-steps ds-map">')],
-  /* Chèn vào CUỐI object QUIZ (ngay trước `};` của nó) một khoá 's-how' TRÙNG — khoá
-     literal trùng thì bản CUỐI thắng, nên nó ghi đè quiz thật của s-how. Không phụ
-     thuộc nội dung câu hỏi thật (sẽ đổi khi thêm bài), chỉ phụ thuộc mốc kết thúc
-     object, nên ca test không tự hỏng mỗi lần thêm quiz. */
-  ['G-QUIZ', 'đáp án đúng (a) trỏ ra ngoài số lựa chọn', h =>
-    once(h, '\n};\n\n/* Ma trận năng lực', "\n  's-how':[{ q:'x?', o:['a','b'], a:9, why:'y' }],\n};\n\n/* Ma trận năng lực")],
-  ['G-QUIZ-COV', 'một bài có mảng câu hỏi rỗng', h =>
-    once(h, '\n};\n\n/* Ma trận năng lực', "\n  's-how':[],\n};\n\n/* Ma trận năng lực")],
 ];
 
 /* Các ca không sửa HTML mà sửa file khác. Mỗi ca tự dọn ở `after` nếu nó chạm vào
    thứ nằm NGOÀI những gì reset() phục hồi (ví dụ .git/hooks/). */
 const OTHER_CASES = [
+  /* Câu hỏi nằm ở data/quiz.json, không còn trong HTML — nên hai ca này sửa JSON.
+     Ghi đè khoá 's-how' bằng JSON.parse/stringify chứ không chèn text: không phụ
+     thuộc nội dung câu hỏi thật (sẽ đổi khi thêm bài) lẫn cách xuống dòng của file. */
+  ['G-QUIZ', 'đáp án đúng (a) trỏ ra ngoài số lựa chọn', () => {
+    writeQuiz({ 's-how': [{ q: 'x?', o: ['a', 'b'], a: 9, why: 'y' }] });
+  }],
+  ['G-QUIZ-COV', 'một bài có mảng câu hỏi rỗng', () => { writeQuiz({ 's-how': [] }); }],
   ['G-TOC-STALE', 'TOC.md còn số dòng cũ', () => {
     // Dải dòng ĐẦU TIÊN trong bảng, tìm bằng khuôn chứ không bằng con số cụ thể —
     // gõ số vào đây thì test tự hỏng mỗi lần trang dài ra vài dòng.

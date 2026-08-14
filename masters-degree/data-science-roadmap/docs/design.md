@@ -804,20 +804,25 @@ với bài không có deliverable, hoặc đạt-deliverable với bài có), tr
 
 ## 10. Trắc nghiệm tự kiểm (`.ds-quiz`)
 
-Mỗi bài có một bộ câu hỏi trắc nghiệm ở cuối. Nội dung câu hỏi ở object `QUIZ` trong HTML —
-**cách thêm/sửa và luật nội dung ở [editing.md](editing.md) việc 7**; mục này chỉ nói *nó
-trông thế nào, nằm ở đâu, hành xử ra sao*.
+Mỗi bài có một bộ câu hỏi trắc nghiệm ở cuối. Nội dung câu hỏi ở **`data/quiz.json`**, không
+trong HTML — **cách thêm/sửa và luật nội dung ở [editing.md](editing.md) việc 7**; mục này chỉ
+nói *nó trông thế nào, nằm ở đâu, hành xử ra sao*.
 
 **Nằm ở đâu.** Trang chính: một `<section class="ds-quiz-mount">` chèn trong `render()` **ngay
 sau hộp kết bài (`gainBox`)**, trước `.ds-nodefoot` (tự đánh giá + pager). Thứ tự đó là chủ ý:
-đọc bài → thấy mình vừa được gì → **tự kiểm** → mới đánh dấu mức. Bài không có câu hỏi thì
-`quizSection` trả chuỗi rỗng, không có ô nào.
+đọc bài → thấy mình vừa được gì → **tự kiểm** → mới đánh dấu mức.
 
-**Một module, hai trang.** `DSQuiz.mount(root, questions)` (khối "QUIZ MODULE" trong
-`<script>`) dựng cả carousel. Trang chính gọi nó trong `enhance()`; `roadmap.html` gọi đúng
-nó trong một **popup** (`build-roadmap.mjs` TRÍCH nguyên khối JS + mọi rule `.ds-quiz`, y như
-cách nó trích khối tương tác — CLAUDE.md §2 luật 3). Sửa carousel là sửa ở trang chính rồi
-build lại, đừng chạm `roadmap.html`.
+**Ô cắm luôn được phát ra, kể cả khi bài không có câu hỏi.** Lúc `render()` chạy thì JSON có
+thể chưa về, nên `quizSection()` không thể hỏi "bài này có quiz không". Ô rỗng vô hại: class
+`.ds-quiz` (viền + nền + `margin-top`) do `mount()` gắn, nên chưa mount thì section không
+chiếm một pixel nào. **Đừng đặt luật hình thức lên `.ds-quiz-mount`** — đặt lên `.ds-quiz`.
+
+**Một module, hai trang, một file nội dung.** `DSQuiz.mount(root, questions)` (khối "QUIZ
+MODULE" trong `<script>`) dựng cả carousel. Trang chính gọi nó trong `enhance()` sau khi
+`loadQuiz()` xong; `roadmap.html` gọi đúng nó trong một **popup** (`build-roadmap.mjs` TRÍCH
+nguyên khối JS + mọi rule `.ds-quiz`, y như cách nó trích khối tương tác). Cả hai trang
+`fetch('data/quiz.json')` — nên **sửa câu hỏi không cần build lại roadmap**, chỉ sửa carousel
+mới cần. Sửa carousel là sửa ở trang chính rồi build lại, đừng chạm `roadmap.html`.
 
 **Hành xử (chủ trang yêu cầu, giữ đúng bốn điều):**
 

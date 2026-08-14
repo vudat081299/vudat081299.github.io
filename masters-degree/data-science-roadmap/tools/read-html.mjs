@@ -10,7 +10,8 @@
    của từng biến trong <script> rồi chạy nó trong sandbox. File 1 MB mất ~50ms.
    ========================================================================== */
 
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 import vm from 'node:vm';
 
 /* Tìm ngoặc đóng khớp với ngoặc mở ở vị trí `start`.
@@ -77,6 +78,17 @@ function scanTemplates(src) {
   return out;
 }
 
+/* Câu hỏi trắc nghiệm KHÔNG nằm trong HTML — chúng ở data/quiz.json, cạnh trang.
+   Trang tự fetch file đó lúc chạy; tools/ đọc thẳng từ đĩa. Một nguồn, hai đường
+   vào. Thiếu file thì trả object rỗng (G-QUIZ-COV sẽ kêu đủ to), nhưng file HỎNG
+   thì ném — im lặng nuốt lỗi cú pháp nghĩa là cả 475 câu biến mất mà cổng vẫn xanh. */
+export function readQuiz(htmlPath) {
+  const p = join(dirname(htmlPath), 'data', 'quiz.json');
+  if (!existsSync(p)) return {};
+  try { return JSON.parse(readFileSync(p, 'utf8')); }
+  catch (e) { throw new Error(`data/quiz.json không phải JSON hợp lệ: ${e.message}`); }
+}
+
 /* Đọc cả trang ra một object. Mọi công cụ trong tools/ đều bắt đầu từ đây. */
 export function readPage(htmlPath) {
   const src = readFileSync(htmlPath, 'utf8');
@@ -89,7 +101,7 @@ export function readPage(htmlPath) {
   const PAYOFF        = V('PAYOFF');
   const COMPS         = V('COMPS');
   const ACCEPT        = V('ACCEPT');
-  const QUIZ          = V('QUIZ');
+  const QUIZ          = readQuiz(htmlPath);
   const SCOPE         = V('SCOPE');
   const PORTFOLIO     = V('PORTFOLIO');
   const PHASE_OUTCOME = V('PHASE_OUTCOME');
