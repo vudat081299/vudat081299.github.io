@@ -353,7 +353,7 @@
   .ds-quiz__opt:focus-visible{ outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
   .ds-quiz__opt[aria-checked="true"]{ border-color: var(--wb-fg); background: var(--wb-ink-hover); }
   .ds-quiz__mark{ flex: none; width: 22px; height: 22px; border-radius: 50%; display: inline-flex;
-      align-items: center; justify-content: center; font-size: 12px; font-weight: 700; line-height: 1;
+      align-items: center; justify-content: center; font-size: var(--ds-t-cap); font-weight: 700; line-height: 1;
       border: var(--wb-bw) solid var(--wb-border-strong); color: var(--wb-fg-muted);
       font-variant-numeric: tabular-nums; }
   .ds-quiz__opt[aria-checked="true"] .ds-quiz__mark{ background: var(--wb-fg); color: var(--wb-canvas); border-color: var(--wb-fg); }
@@ -4396,6 +4396,13 @@ const DSQuiz = (() => {
       track.style.transform = `translateX(-${cur * 100}%)`;
       prevB.disabled = cur === 0; nextB.disabled = cur === qs.length - 1;
       countEl.textContent = `${cur + 1} / ${qs.length}`;
+      /* Câu không hiện thì `inert`: nếu không, Tab đi xuyên qua CẢ 5 câu (~20 điểm
+         dừng cho một bài 5 câu), và trình đọc màn hình đọc luôn 4 câu đang nằm
+         ngoài khung. Trang vẫn thấy chúng khi kéo — inert chỉ chặn tương tác. */
+      slides.forEach((s, k) => {
+        s.inert = k !== cur;
+        s.setAttribute('aria-hidden', k === cur ? 'false' : 'true');
+      });
       syncSteps();
     }
     function syncSteps() {
@@ -4498,10 +4505,28 @@ const DSQuiz = (() => {
     prevB.addEventListener('click', () => go(cur - 1));
     nextB.addEventListener('click', () => go(cur + 1));
     actB.addEventListener('click', () => (graded ? reset() : grade()));
+    /* Bàn phím. Listener nằm trên `root` nên chỉ bắt khi tiêu điểm đang trong ô quiz
+       — không cướp phím của trang hay của panel ghi chú.
+         ← →      đổi câu, kể cả khi đang đứng ở một đáp án (trước đây bị bỏ qua ở
+                  đó, nên tab tới đáp án là mất luôn cách tua bằng phím)
+         ↑ ↓      đi giữa các đáp án trong câu — đúng quy ước của radiogroup
+         1…6 a…f  chọn thẳng một đáp án */
     root.addEventListener('keydown', e => {
-      if (e.target.closest('.ds-quiz__opt')) return;   // để phím cho nút đáp án
-      if (e.key === 'ArrowLeft') { go(cur - 1); e.preventDefault(); }
-      else if (e.key === 'ArrowRight') { go(cur + 1); e.preventDefault(); }
+      if (e.altKey || e.ctrlKey || e.metaKey) return;
+      const k = e.key;
+      if (k === 'ArrowLeft')  { go(cur - 1); e.preventDefault(); return; }
+      if (k === 'ArrowRight') { go(cur + 1); e.preventDefault(); return; }
+      const slide = slides[cur];
+      const opts = [...slide.querySelectorAll('.ds-quiz__opt')];
+      if (!opts.length || graded) return;
+      if (k === 'ArrowUp' || k === 'ArrowDown') {
+        const at = opts.indexOf(e.target.closest('.ds-quiz__opt'));
+        const to = at < 0 ? 0 : (at + (k === 'ArrowDown' ? 1 : opts.length - 1)) % opts.length;
+        opts[to].focus(); e.preventDefault(); return;
+      }
+      const n = /^[1-9]$/.test(k) ? +k - 1
+        : /^[a-fA-F]$/.test(k) ? k.toLowerCase().charCodeAt(0) - 97 : -1;
+      if (n >= 0 && n < opts.length) { opts[n].focus(); pick(slide, n); e.preventDefault(); }
     });
 
     go(0); syncAct();
