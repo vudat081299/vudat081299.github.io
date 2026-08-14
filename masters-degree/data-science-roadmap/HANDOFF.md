@@ -18,6 +18,82 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 
 ---
 
+## Phiên 2026-08-14 (v) — rà bao phủ quiz · 475 → 928 câu · hai cổng mới
+
+Chủ trang hỏi "mỗi bộ câu hỏi đã bao phủ toàn bộ kiến thức của bài chưa, tôi muốn nó đầy đủ".
+
+### Chẩn đoán: tổng thì đủ, phân bố thì lệch
+
+475 câu cho 473 mục — nhìn tổng tưởng vừa. Nhưng số câu được phát theo **định mức ~6 câu mỗi
+bài** bất kể bài 400 chữ hay 6.400 chữ: 68/84 bài có đúng 5 hoặc 6 câu. Hệ quả đo được:
+**29/84 bài có ít câu hơn số mục của chính nó**, trong khi bài ngắn thì dư. `pr-eval` 12 mục /
+7 câu (917 chữ mỗi câu); `r-stack` 13 mục / 5 câu; `f-store` 3 mục / 3 câu.
+
+Sau khi bù: **928 câu, 0/84 bài thiếu** theo chuẩn "mỗi mục ít nhất một câu". Số câu mỗi bài
+giờ chạy 5–24, trung vị 10.
+
+### Phạm vi — hai quyết định, ghi lại vì phiên sau sẽ hỏi
+
+- **Popup / ngăn phải KHÔNG bị hỏi.** Đó là nhánh phụ (§7 — "bỏ qua vẫn học được bài"), nên
+  hỏi vào đó là phạt đúng người đã bỏ qua theo thiết kế.
+- **Khối `data-viz` CÓ bị hỏi.** Nó thuộc mạch chính. Hai trường `see:` / `wrong:` của nó nằm
+  trong `<script>` nên vô hình khi đọc `<template>` — mà `wrong:` chính là hiểu nhầm bài muốn
+  gỡ, loại nội dung đáng hỏi nhất. 43 khối, 40 bài.
+
+### Hai lỗ trong bản trích, cả hai do subagent bắt được
+
+1. **`ACCEPT` là mảng `{k,v}` chứ không phải mảng chuỗi** — bản trích đầu in ra `[object
+   Object]`, xoá sạch tiêu chí đạt của **cả 22 bài có ACCEPT**, đúng phần quan trọng nhất phải
+   kiểm. Bốn agent tự vào HTML lấy lại; ba bài (`d-data`, `d-leak`, `m-bayes`) chỉ soi được
+   mạch chính ở vòng đó. Đã sửa trước vòng hai.
+2. **`data-viz` trích ra rỗng** (mục 2 ở trên). Lô 7 phát hiện.
+
+Bài học chung: **bản trích cho subagent là một nguồn lỗi im lặng.** Nó không nổ, chỉ làm
+agent không thấy — và cái không thấy thì không có trong báo cáo. Lần sau: đối chiếu số mục /
+số tiêu chí trong bản trích với số đếm từ nguồn TRƯỚC khi giao việc.
+
+### Vì sao KHÔNG chạy vòng bù cho `data-viz`
+
+Đã dựng xong đầu vào rồi bỏ. Đo lại sau khi trộn: 7/7 khối lấy mẫu đều đã có câu hỏi đúng vào
+hiểu nhầm đó (`t-sklearn` câu 3+4, `d-split` câu 2/7/9, `m-vector` câu 1+2, `s-pipeline` câu
+5+9…). Lý do: câu mới được viết từ chính mục CHỨA khối đó. Chạy thêm một vòng sẽ sinh ~40 câu
+trùng ý. Phép đo trùng-từ-khoá cũng tự tố cáo là yếu — đổi ngưỡng 0,5 → 0,8 thì số "còn hở"
+nhảy 0 → 16, nên kết luận dựa vào đọc tay chứ không dựa vào nó.
+
+### Đáp án dồn về ô B — và cái giá của việc sửa
+
+453 câu mới dồn **40,6% đáp án vào ô B** (bộ cũ: cao nhất 30,7%). Đoán bừa "chọn B" ăn 40%.
+Đã rải lại về 25% mỗi ô bằng hoán vị hai lựa chọn, bỏ qua 9 câu có lựa chọn tham chiếu lẫn
+nhau ("cả ba đáp án trên").
+
+**Việc đó làm hỏng 2 câu**, và đó là phát hiện đáng giá nhất phiên này: giải thích viết "đáp
+án cuối sai vì…" phụ thuộc vào **thứ tự lựa chọn**. Quét ra 11 câu mới + **7 câu CŨ có sẵn từ
+trước** cùng lỗi. Đã đổi hết sang gọi theo nội dung, và thêm cổng `G-QUIZ-POS` để lớp lỗi này
+không quay lại.
+
+### Hồi quy layout do chính lượt này gây ra
+
+Vạch tiến độ dưới carousel thiết kế cho "4–8 câu" (comment cũ ghi thẳng vậy). 24 câu ở màn
+375px làm mỗi vạch teo còn **7px** — nhỏ hơn cả mốc ~10px mà media query 560px đã sinh ra để
+chữa. Sửa: cho vạch `flex-wrap` + sàn `min-width`, và hạ `flex-basis` xuống 22px trên điện
+thoại (flexbox xuống hàng theo *basis* rồi mới co — hạ `min-width` không đổi số hàng).
+
+**Popup roadmap cần luật RIÊNG cho việc này**: modal chỉ rộng 560px nhưng *cửa sổ* thì không,
+nên media query theo viewport không chạm tới nó — không có luật riêng thì 24 vạch thành 6
+hàng. Đo lại sau khi sửa: trang chính 2 hàng (desktop) / 3 hàng (375px), popup 2 hàng.
+
+### Cố ý KHÔNG làm
+
+- **Không tách bài dài thành nhiều cụm quiz.** `pr-code` 24 câu và `pr-eval` 23 câu thì cái
+  tên "Kiểm tra nhanh" không còn đúng. Nhưng chia cụm là quyết định giáo trình (chia theo
+  mục? theo mức?) và nó đổi cả cách đọc điểm — chủ trang quyết, không phải phiên này.
+- **Không giảm số câu cho vừa cái tên.** Chủ trang nói rõ "tôi muốn nó đầy đủ".
+- **Không đụng nội dung bài học.** Vài agent nêu chỗ bài viết mỏng; đó là việc khác.
+- **Không viết câu cho mục chỉ là danh mục tra cứu** (`r-glossary` phần từ vựng một dòng,
+  `r-books` mục "Khi bí"). Hỏi vào đó chỉ ra câu thuộc lòng.
+
+---
+
 ## Phiên 2026-08-14 (u) — độ nổi ô quiz · cửa sổ carousel · chặn token thiếu
 
 Ba việc chủ trang giao, ba commit (+ hai lượt sửa phạm vi sau đó, xem mục độ nổi).

@@ -111,7 +111,7 @@ data-science-roadmap.html      ← NGUỒN SỰ THẬT cho bài học, layout, b
   │             data/quiz.json  — fetch lúc chạy; thiếu thì mất quiz, trang vẫn chạy
   │  KHÔNG phụ thuộc bất cứ thứ gì khác trong thư mục này
   │
-data/quiz.json                 ← NGUỒN SỰ THẬT cho câu hỏi trắc nghiệm (84 bài · 475 câu)
+data/quiz.json                 ← NGUỒN SỰ THẬT cho câu hỏi trắc nghiệm (84 bài · 928 câu)
   │  CẢ HAI trang fetch chính file này lúc chạy — không trang nào nhúng câu hỏi
   ↓ đọc
 tools/read-html.mjs   luật đọc dữ liệu ra khỏi HTML — dùng chung, chỉ có MỘT bản

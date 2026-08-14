@@ -297,7 +297,7 @@ nhúng câu hỏi vào HTML nữa, nên sửa file JSON là **cả hai trang đ�
 `tools/` đọc thẳng cùng file đó (`read-html.mjs` → `readQuiz()`). Hình thức + hành xử của
 carousel: [design.md §10](design.md).
 
-Vì sao tách khỏi HTML: 475 câu là ~360 KB chữ. Để trong HTML thì mọi công cụ (và mọi người)
+Vì sao tách khỏi HTML: bộ câu hỏi lúc tách là 475 câu ≈ 360 KB chữ (nay 928 câu). Để trong HTML thì mọi công cụ (và mọi người)
 phải nạp toàn bộ nội dung chỉ để sửa một dòng layout — trang chính đã giảm 370 KB, `roadmap.html`
 giảm 355 KB nhờ bước này. Đây là bước đầu của hướng **HTML chỉ còn design + layout, nội dung
 nạp từ file ngoài**; phần nội dung bài học vẫn đang ở trong HTML và sẽ tách sau.
@@ -322,12 +322,37 @@ nạp từ file ngoài**; phần nội dung bài học vẫn đang ở trong HTM
   `why` (giải thích, bắt buộc).
 - **Luật nội dung** (máy không kiểm được — đây là docs/writing.md cho quiz): chỉ hỏi thứ CÓ
   trong bài; phủ kiến thức CHÍNH (không mẹo vặt); đúng một đáp án đúng; mồi nhử là hiểu nhầm
-  THẬT (lý tưởng là cái bài nêu ra để sửa); đủ để phủ ý chính, thường 4–6 câu (bài ★ dày:
-  6–8), **đừng nhồi**. Trộn vị trí đáp án đúng.
+  THẬT (lý tưởng là cái bài nêu ra để sửa).
+
+### Chuẩn bao phủ — số câu đi theo BÀI, không theo định mức
+
+**Mỗi mục `h2`/`h3` của mạch chính ít nhất một câu, và mỗi tiêu chí `ACCEPT` ít nhất một
+câu.** Đó là lý do số câu chạy từ 5 (`pr-cost`) tới 24 (`pr-code`) chứ không phải "4–6 câu
+mỗi bài" như bản đầu — định mức đó là cách bỏ sót có hệ thống: đo 2026-08-14 thấy 29/84 bài
+có ít câu hơn số mục của chính nó, trong khi các bài ngắn thì dư. `G-QUIZ-COV` canh đúng
+tỉ lệ này.
+
+**Phạm vi dừng ở mạch chính.** Nội dung trong popup / ngăn phải là nhánh phụ (CLAUDE.md §7 —
+"bỏ qua vẫn học được bài"), nên **không hỏi**: hỏi vào đó là phạt người đọc đã bỏ qua theo
+đúng thiết kế. Ngược lại, khối tương tác `data-viz` **có** thuộc mạch chính — hai trường
+`see:` / `wrong:` của nó nằm trong `<script>` nên không thấy khi đọc `<template>`, mà `wrong:`
+chính là hiểu nhầm bài muốn gỡ: loại nội dung đáng hỏi nhất.
+
+**Ba thứ không hỏi:** con số phải nhớ (phiên bản thư viện, số lớp của GPT-3), cú pháp thuần
+tuý, và mục chỉ là danh mục tra cứu. Bài tra cứu (`r-*`) hỏi **quyết định và phân biệt**, không
+hỏi thuộc lòng danh sách.
+
+**Rải vị trí đáp án đúng.** Đo được: một bộ 453 câu do máy sinh dồn 40,6% đáp án vào ô B —
+đoán bừa "chọn B" ăn 40% thay vì 25%. Rải lại về ~25% mỗi ô.
+
+**Giải thích gọi lựa chọn bằng NỘI DUNG, không bằng vị trí.** `Phương án "…" sai ở chỗ…`,
+không phải `Đáp án cuối sai vì…`. Câu viết theo vị trí sẽ nói sai ngay lần đầu ai đó đảo thứ
+tự lựa chọn — đã xảy ra thật với 2/11 câu. `G-QUIZ-POS` canh.
 
 **Cổng.** `G-QUIZ` (CHẶN) kiểm phần MÁY kiểm được: đủ trường, `a` trỏ đúng ô có thật, id có
-trong `TREE`. `G-QUIZ-COV` (nhắc) liệt kê bài chưa có câu nào. "Câu hỏi đúng/hay" thì cổng
-không biết — tự đọc lại.
+trong `TREE`. `G-QUIZ-COV` (nhắc) liệt kê bài chưa có câu nào **và bài có ít câu hơn số mục**.
+`G-QUIZ-POS` (nhắc) bắt giải thích trỏ theo vị trí. "Câu hỏi đúng/hay" thì cổng không biết —
+tự đọc lại.
 
 **Xong thì:** `node tools/gate.mjs` rồi mở trang xem carousel chạy hết một vòng (chọn → chấm →
 làm lại) ở cả hai chế độ. **Không** phải build lại `roadmap.html` khi chỉ sửa nội dung câu hỏi
