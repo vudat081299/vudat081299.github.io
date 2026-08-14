@@ -386,8 +386,8 @@
       border-top: var(--wb-bw) solid var(--wb-border); }
   .ds-quiz__pager{ display: flex; gap: 4px; flex: none; }
   .ds-quiz__steps{ display: flex; align-items: center; justify-content: center;
-      gap: 5px; flex: 1 1 60px; }
-  .ds-quiz__step{ flex: 0 1 38px; height: 20px; padding: 0; border: 0;
+      flex-wrap: wrap; gap: 6px 5px; flex: 1 1 60px; }
+  .ds-quiz__step{ flex: 0 1 38px; min-width: 16px; height: 20px; padding: 0; border: 0;
       background: none; cursor: pointer; display: flex; align-items: center; }
   .ds-quiz__step::before{ content: ''; display: block; width: 100%; height: 4px;
       border-radius: 999px; background: var(--wb-border-strong); opacity: .45;
@@ -400,7 +400,7 @@
   .ds-quiz__step:focus-visible{ outline: none; }
   .ds-quiz__step:focus-visible::before{ box-shadow: 0 0 0 3px var(--wb-ring); }
   .ds-quiz__act{ flex: none; min-width: 124px; }
-  @media (max-width: 560px){.ds-quiz__bar{ flex-wrap: wrap; row-gap: var(--ds-sp-near); }.ds-quiz__steps{ order: -1; flex: 1 1 100%; }.ds-quiz__act{ flex: 1 1 auto; }}
+  @media (max-width: 560px){.ds-quiz__bar{ flex-wrap: wrap; row-gap: var(--ds-sp-near); }.ds-quiz__steps{ order: -1; flex: 1 1 100%; }.ds-quiz__step{ flex-basis: 22px; }.ds-quiz__act{ flex: 1 1 auto; }}
   /* Popup trắc nghiệm phải nằm TRÊN ngăn tóm tắt: kit cho .wb-overlay 100, .wb-drawer 101. */
   #quizModal{z-index:200}
   .rm-quizmodal{width:min(560px,94vw);max-height:88vh}
@@ -410,6 +410,14 @@
      mới có): bóng đó chỉ đặt trên .ds-quiz, mà ở đây .ds-quiz bị gỡ sạch viền/nền/
      bóng. Nên nếu ai thêm bóng cho một phần tử BÊN TRONG quiz, nó sẽ rò sang đây. */
   #quizModalBody .ds-quiz{border:0;background:none;padding:0;margin:0;box-shadow:none}
+  /* Vạch tiến độ trong popup: modal chỉ rộng 560px nhưng CỬA SỔ thì không, nên media
+     query 560px của trang chính (theo viewport) không chạm tới đây. Không có luật này
+     thì bài 24 câu xếp vạch thành 6 hàng. Cùng cách chữa như trên điện thoại: cho vạch
+     một hàng riêng ở trên, rồi rút cỡ vạch để số hàng về 2 (flexbox xuống hàng theo
+     flex-basis rồi mới co, nên phải hạ basis chứ không phải hạ min-width). */
+  #quizModalBody .ds-quiz__bar{flex-wrap:wrap;row-gap:10px}
+  #quizModalBody .ds-quiz__steps{order:-1;flex:1 1 100%}
+  #quizModalBody .ds-quiz__step{flex-basis:22px}
   /* Tiêu đề "Kiểm tra nhanh" thừa trong popup (đầu modal đã ghi tên bài + "Tự kiểm
      kiến thức"); giữ lại dòng hướng dẫn "N câu · …". */
   #quizModalBody .ds-quiz__title{display:none}

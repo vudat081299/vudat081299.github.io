@@ -1452,14 +1452,20 @@
     margin-top: var(--ds-sp-block); padding-top: var(--ds-sp-near);
     border-top: var(--wb-bw) solid var(--wb-border); }
   .ds-quiz__pager { display: flex; gap: 4px; flex: none; }
-  /* Vạch thay chấm tròn: với 4–8 câu thì một dãy vạch đọc ra tiến độ nhanh hơn, và
-     đủ chỗ để mang màu đúng/sai sau khi chấm. Nút cao 20px cho ngón tay bấm được,
-     phần NHÌN THẤY là ::before dày 4px — đổi dày mỏng không đẩy layout. */
+  /* Vạch thay chấm tròn: một dãy vạch đọc ra tiến độ nhanh hơn chấm tròn, và đủ chỗ
+     để mang màu đúng/sai sau khi chấm. Nút cao 20px cho ngón tay bấm được, phần
+     NHÌN THẤY là ::before dày 4px — đổi dày mỏng không đẩy layout.
+
+     XUỐNG HÀNG LÀ BẮT BUỘC, KHÔNG PHẢI TRANG TRÍ. Số câu mỗi bài không còn là 4–8
+     như bản đầu; sau lượt rà bao phủ 2026-08-14 nó chạy từ 5 tới 24. Chỉ co mà
+     không xuống hàng thì 24 vạch ở cửa sổ 375px teo còn 7px mỗi vạch — nhỏ hơn cả
+     mức ~10px mà chính media query dưới đây sinh ra để chữa. Nên: co tới sàn
+     `min-width` rồi XUỐNG HÀNG, đừng co tiếp. */
   .ds-quiz__steps { display: flex; align-items: center; justify-content: center;
-    gap: 5px; flex: 1 1 60px; }
+    flex-wrap: wrap; gap: 6px 5px; flex: 1 1 60px; }
   /* `flex: 0 1 38px` chứ không phải `flex:1 1 0 + max-width`: cùng kết quả (38px, co
      lại khi chật) mà không sinh một max-width cứng cho G-MEASURE phải bỏ qua. */
-  .ds-quiz__step { flex: 0 1 38px; height: 20px; padding: 0; border: 0;
+  .ds-quiz__step { flex: 0 1 38px; min-width: 16px; height: 20px; padding: 0; border: 0;
     background: none; cursor: pointer; display: flex; align-items: center; }
   .ds-quiz__step::before { content: ''; display: block; width: 100%; height: 4px;
     border-radius: 999px; background: var(--wb-border-strong); opacity: .45;
@@ -1478,6 +1484,11 @@
   @media (max-width: 560px) {
     .ds-quiz__bar { flex-wrap: wrap; row-gap: var(--ds-sp-near); }
     .ds-quiz__steps { order: -1; flex: 1 1 100%; }
+    /* Vạch ngắn hơn ở đây là để ĐỔI SỐ HÀNG, không phải để tiết kiệm chỗ ngang:
+       flexbox xuống hàng theo flex-basis rồi mới co, nên giữ 38px thì 24 vạch thành
+       4 hàng (98px) trên màn 375px. 22px cho 2 hàng, mà vẫn gấp ba cái mốc ~7px mà
+       bản chỉ-co để lại. */
+    .ds-quiz__step { flex-basis: 22px; }
     .ds-quiz__act { flex: 1 1 auto; }
   }
 </style>

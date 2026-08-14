@@ -654,6 +654,14 @@ ${quizCss().split('\n').map(l => '  ' + l).join('\n')}
      mới có): bóng đó chỉ đặt trên .ds-quiz, mà ở đây .ds-quiz bị gỡ sạch viền/nền/
      bóng. Nên nếu ai thêm bóng cho một phần tử BÊN TRONG quiz, nó sẽ rò sang đây. */
   #quizModalBody .ds-quiz{border:0;background:none;padding:0;margin:0;box-shadow:none}
+  /* Vạch tiến độ trong popup: modal chỉ rộng 560px nhưng CỬA SỔ thì không, nên media
+     query 560px của trang chính (theo viewport) không chạm tới đây. Không có luật này
+     thì bài 24 câu xếp vạch thành 6 hàng. Cùng cách chữa như trên điện thoại: cho vạch
+     một hàng riêng ở trên, rồi rút cỡ vạch để số hàng về 2 (flexbox xuống hàng theo
+     flex-basis rồi mới co, nên phải hạ basis chứ không phải hạ min-width). */
+  #quizModalBody .ds-quiz__bar{flex-wrap:wrap;row-gap:10px}
+  #quizModalBody .ds-quiz__steps{order:-1;flex:1 1 100%}
+  #quizModalBody .ds-quiz__step{flex-basis:22px}
   /* Tiêu đề "Kiểm tra nhanh" thừa trong popup (đầu modal đã ghi tên bài + "Tự kiểm
      kiến thức"); giữ lại dòng hướng dẫn "N câu · …". */
   #quizModalBody .ds-quiz__title{display:none}
