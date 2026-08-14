@@ -47,9 +47,8 @@ Rồi tìm việc mình định làm trong bảng này:
 | **chuyển một khối ra ngoài mạch chính** | §7 · [docs/design.md](docs/design.md) §1 | `gate.mjs --advice` | popup là mặc định; chọn drawer thì phải viết ra lý do |
 | **sửa lịch 8 tuần / 14 ngày** | §8 · [docs/editing.md](docs/editing.md) việc 4 | `node tools/audit.mjs` | `G-PLAN` qua |
 | **sửa trang Roadmap học nhanh** | §4 (hai cổng `G-ROADMAP*`) · `tools/build-roadmap.mjs` | `node tools/build-roadmap.mjs` | `G-ROADMAP` im. **Đừng sửa tay `roadmap.html`** — nó là sản phẩm sinh ra |
-| **thêm / sửa câu hỏi trắc nghiệm** | [docs/editing.md](docs/editing.md) **việc 7** · object `QUIZ` trong HTML | `gate.mjs` (cổng `G-QUIZ`) rồi `build-roadmap.mjs` | `G-QUIZ` qua · mở trang xem carousel chạy hết một vòng |
 | **thêm / sửa một cổng** | §4 · [docs/editing.md](docs/editing.md) việc 6 | `node tools/gate.test.mjs` | test xanh · thêm tên cổng vào §4 (`G-DOC` bắt) |
-| **thêm / sửa câu hỏi trắc nghiệm** | [docs/editing.md](docs/editing.md) **việc 7** — nội dung ở `data/quiz.json`, KHÔNG trong HTML | `gate.mjs` | `G-QUIZ` qua · `G-QUIZ-COV` im |
+| **thêm / sửa câu hỏi trắc nghiệm** | [docs/editing.md](docs/editing.md) **việc 7** — nội dung ở `data/quiz.json`, KHÔNG trong HTML | `gate.mjs` | `G-QUIZ` qua · `G-QUIZ-COV` và `G-QUIZ-POS` im |
 | **ghi việc học của mình** | [LEARNING-LOG.md](LEARNING-LOG.md) | `learn.mjs --add` hoặc nút **Notes** trên trang | `learn.mjs --check` im |
 | **đóng phiên / commit / push** | §12 | `node tools/session.mjs --close` | HANDOFF đã ghi · `G-HANDOFF` im |
 
@@ -302,7 +301,21 @@ thì đưa chú thích ra ngoài template, thành comment JS phía trên hàm.
 | `G-DOC` | có cổng trong code mà `CLAUDE.md` không nhắc tên |
 | `G-HANDOFF` | đổi trang hoặc bộ cổng mà `HANDOFF.md` không đổi — xem §12 |
 | `G-LEARN` | sổ học đọc được, và **≥2 bài cùng tắc ở một khái niệm** = khái niệm đó dạy quá muộn (§13) |
-| `G-QUIZ-COV` | bài chưa có câu hỏi trắc nghiệm tự kiểm nào (chỉ liệt kê — thêm quiz là việc nội dung) |
+| `G-QUIZ-COV` | bài chưa có quiz, **hoặc có ít câu hơn số mục của chính nó** — xem ngay dưới bảng |
+| `G-QUIZ-POS` | giải thích gọi lựa chọn theo VỊ TRÍ (`đáp án cuối`) — đảo thứ tự lựa chọn là nó nói sai |
+
+**`G-QUIZ-COV` đếm câu SO VỚI BÀI, không đếm có/không.** Bản đầu chỉ hỏi "bài này có câu
+nào chưa" — và nó im suốt, vì bài nào cũng có ~6 câu. Đo lại 2026-08-14 mới thấy chỗ hỏng
+thật: **0/84 bài trắng quiz, nhưng 29/84 bài có ít câu hơn số mục của chính nó.** Số câu
+được phát theo định mức ~6 câu/bài chứ không theo lượng nội dung, nên `pr-eval` (12 mục,
+6.418 chữ) và `f-store` (3 mục, 400 chữ) cùng được ~6 câu. Cổng giờ so `số câu` với `số mục
+h2/h3 của mạch chính`. Không phải mục nào cũng đáng một câu — nên nó **chỉ nhắc** — nhưng
+lệch nhiều thì gần như chắc là bỏ sót.
+
+**`G-QUIZ-POS` canh một lớp lỗi chỉ nổ khi bạn động vào.** Một giải thích viết "đáp án cuối
+sai vì…" đang đúng, nhưng nó phụ thuộc vào **thứ tự lựa chọn**. Đo được: lượt rải lại vị trí
+đáp án cho 453 câu (chống việc "cứ chọn B" trúng 40%) làm **2 trong 11** câu loại này thành
+sai thật. Viết đúng là gọi lựa chọn bằng nội dung — `Phương án "…" sai ở chỗ…`.
 
 **Hai cổng `G-ROADMAP*` canh trang thứ hai** (`roadmap.html`). Trang đó được **sinh** từ
 đúng nguồn này — và bộ sinh còn trích thẳng CSS/JS của trang chính — nên phần cấu trúc tự

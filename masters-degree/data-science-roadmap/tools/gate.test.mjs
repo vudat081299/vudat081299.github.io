@@ -193,6 +193,14 @@ const OTHER_CASES = [
     writeQuiz({ 's-how': [{ q: 'x?', o: ['a', 'b'], a: 9, why: 'y' }] });
   }],
   ['G-QUIZ-COV', 'một bài có mảng câu hỏi rỗng', () => { writeQuiz({ 's-how': [] }); }],
+  // Bài nào cũng có ≥3 mục, nên MỘT câu duy nhất chắc chắn ít hơn số mục — không
+  // phải gõ số mục thật vào test (số đó đổi mỗi lần bài được viết lại).
+  ['G-QUIZ-COV', 'một bài có ít câu hơn số mục của chính nó', () => {
+    writeQuiz({ 's-how': [{ q: 'chỉ một câu cho cả bài?', o: ['a', 'b'], a: 0, why: 'y' }] });
+  }],
+  ['G-QUIZ-POS', 'giải thích gọi lựa chọn theo vị trí', () => {
+    writeQuiz({ 's-how': [{ q: 'x?', o: ['a', 'b'], a: 0, why: 'Đáp án cuối sai vì nó ngược.' }] });
+  }],
   ['G-TOC-STALE', 'TOC.md còn số dòng cũ', () => {
     // Dải dòng ĐẦU TIÊN trong bảng, tìm bằng khuôn chứ không bằng con số cụ thể —
     // gõ số vào đây thì test tự hỏng mỗi lần trang dài ra vài dòng.

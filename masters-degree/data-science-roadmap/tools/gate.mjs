@@ -228,7 +228,8 @@ const GATES = [
   ['G-ROADMAP',    'nhắc', 'roadmap.html còn khớp bản sinh lại từ nguồn (chặn khi commit)'],
   ['G-ROADMAP-SUM','nhắc', 'tóm tắt roadmap thiếu bài, hoặc bài đã đổi sau khi tóm tắt'],
   ['G-QUIZ',       'chặn', 'câu hỏi trắc nghiệm đủ trường và có đáp án đúng hợp lệ'],
-  ['G-QUIZ-COV',   'nhắc', 'bài chưa có câu hỏi trắc nghiệm tự kiểm nào'],
+  ['G-QUIZ-COV',   'nhắc', 'bài chưa có quiz, hoặc có ít câu hơn số mục của chính nó'],
+  ['G-QUIZ-POS',   'nhắc', 'giải thích gọi lựa chọn theo vị trí ("đáp án cuối") — đảo thứ tự là sai'],
 ];
 
 /* Waiver: một lỗi CHẶN đã biết, đã có hướng sửa, nhưng cách sửa là một quyết định
@@ -369,9 +370,44 @@ if (rmErr) {
   if (problems.length) F(`G-QUIZ: ${problems.length} câu hỏi trắc nghiệm hỏng:\n    `
     + problems.slice(0, 12).join('\n    ') + (problems.length > 12 ? `\n    … và ${problems.length - 12} chỗ nữa` : ''));
 
+  /* G-QUIZ-POS: giải thích trỏ tới VỊ TRÍ lựa chọn ("đáp án cuối", "phương án đầu").
+     Máy không biết câu đó đang đúng hay sai, nhưng biết nó MONG MANH: đảo thứ tự
+     lựa chọn một lần là nó nói sai, mà không cổng nào bắt được. Đo 2026-08-14: rải
+     lại vị trí đáp án cho 453 câu làm 2/11 câu loại này thành sai thật. Cách viết
+     đúng là gọi lựa chọn bằng NỘI DUNG: Phương án "…" sai ở chỗ… */
+  const POSREF = /(đáp án|phương án|lựa chọn)\s+(cuối(?!\s*cùng\s*là\s*đúng)|đầu|thứ\s+(nhất|hai|ba|tư|[1-4]))/i;
+  const posref = [];
+  for (const id of quizIds) {
+    if (!byId[id] || !Array.isArray(QUIZ[id])) continue;
+    QUIZ[id].forEach((q, i) => {
+      const m = typeof q?.why === 'string' && q.why.replace(/<[^>]+>/g, '').match(POSREF);
+      if (m) posref.push(`${id} câu ${i + 1}: «${m[0]}»`);
+    });
+  }
+  if (posref.length) W(`G-QUIZ-POS: ${posref.length} giải thích gọi lựa chọn theo VỊ TRÍ:\n    `
+    + posref.slice(0, 8).join('\n    ') + (posref.length > 8 ? `\n    … và ${posref.length - 8} chỗ nữa` : '')
+    + '\n    Đảo thứ tự lựa chọn là chúng nói sai. Gọi bằng nội dung: Phương án "…" sai ở chỗ…');
+
+  /* G-QUIZ-COV: bài không có câu nào là ca nặng nhất, nhưng không phải ca hay gặp
+     nhất. Đo 2026-08-14 trước lượt bổ sung: 0/84 bài trắng quiz, mà 29/84 bài có ít
+     câu hơn số MỤC của chính nó — số câu được phát theo định mức ~6 câu/bài, không
+     theo lượng nội dung (pr-eval 12 mục / 7 câu; f-store 3 mục / 3 câu). Nên cổng đo
+     theo chuẩn "mỗi mục mạch chính ít nhất một câu" thay vì đếm có/không. */
   const noQuiz = LEAVES.filter(l => !QUIZ[l.id] || !QUIZ[l.id].length).map(l => l.id);
   if (noQuiz.length) W(`G-QUIZ-COV: ${noQuiz.length}/${LEAVES.length} bài chưa có câu hỏi trắc nghiệm tự kiểm `
     + `(${noQuiz.slice(0, 8).join(', ')}${noQuiz.length > 8 ? '…' : ''}).`);
+
+  const thin = [];
+  for (const l of LEAVES) {
+    const n = (QUIZ[l.id] || []).length;
+    if (!n || !nodeTpl[l.id]) continue;                 // ca trắng đã do dòng trên báo
+    const heads = [...nodeTpl[l.id].body.matchAll(/<h([23])[^>]*>([\s\S]*?)<\/h\1>/g)]
+      .map(m => m[2].replace(/<[^>]+>/g, '').trim()).filter(t => t.length > 2).length;
+    if (n < heads) thin.push(`${l.id} (${n} câu / ${heads} mục)`);
+  }
+  if (thin.length) W(`G-QUIZ-COV: ${thin.length}/${LEAVES.length} bài có ít câu hơn số mục của chính nó:\n    `
+    + thin.slice(0, 10).join(' · ') + (thin.length > 10 ? `\n    … và ${thin.length - 10} bài nữa` : '')
+    + '\n    Không phải mục nào cũng đáng một câu, nhưng lệch nhiều thì gần như chắc là bỏ sót.');
 }
 
 /* --- G-ORDER: thứ tự template trong file == thứ tự học ------------------- */
