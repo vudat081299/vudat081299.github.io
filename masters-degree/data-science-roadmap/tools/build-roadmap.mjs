@@ -373,6 +373,22 @@ makeEdgeResizer({
 </body>
 </html>`;
 
+/* Trang này KHAI LẠI BẰNG TAY các token --ds-* (khối :root ở STYLE()), vì nó không
+   dùng khối :root của trang chính. Mà CSS thì được TRÍCH tự động — nên chỉ cần ai đó
+   thêm `var(--ds-sp-sec)` vào một rule .ds-quiz ở trang chính là roadmap.html im lặng
+   mất luật đó: `var()` không giải được làm cả khai báo thành vô hiệu, không cảnh báo
+   gì cả. Đã dính thật: `gap` giữa hai câu về 0 và `--ds-t-h2` của dải điểm rơi về cỡ
+   chữ thừa kế.
+
+   Nên: đối chiếu TÊN ĐƯỢC DÙNG với TÊN ĐƯỢC KHAI, ngay lúc build, và ném. Không phải
+   một cổng riêng — bắt ở đây thì bản hỏng không bao giờ được ghi ra đĩa. */
+const declared = new Set([...html.matchAll(/(--ds-[\w-]+)\s*:/g)].map(m => m[1]));
+const missing = [...new Set([...html.matchAll(/var\((--ds-[\w-]+)/g)].map(m => m[1]))]
+  .filter(n => !declared.has(n));
+if (missing.length) throw new Error(
+  `build-roadmap: roadmap.html DÙNG token chưa khai: ${missing.join(', ')}\n` +
+  `  → thêm vào khối :root trong STYLE() của build-roadmap.mjs, cùng giá trị với trang chính.`);
+
 /* Từ đây trở xuống là phần CHỈ chạy khi gọi thẳng từ dòng lệnh. File này cũng được
    gate.mjs `import` (cổng G-ROADMAP so file trên đĩa với `html` ở trên) — nên import
    phải KHÔNG ghi gì và KHÔNG in gì. Mọi thứ ở trên chỉ đọc, nên chỉ cần rào chỗ này. */
@@ -612,10 +628,12 @@ ${gripCss().split('\n').map(l => '  ' + l).join('\n')}
      chính; --ds-fs cố định 15px vì drawer không có cột bài để giãn theo. */
   :root{
     --ds-fs:15px;
-    --ds-t-hero:calc(var(--ds-fs) * 1.72); --ds-t-h3:calc(var(--ds-fs) * 1.12);
+    --ds-t-hero:calc(var(--ds-fs) * 1.72); --ds-t-h1:calc(var(--ds-fs) * 1.5);
+    --ds-t-h2:calc(var(--ds-fs) * 1.28); --ds-t-h3:calc(var(--ds-fs) * 1.12);
     --ds-t-body:var(--ds-fs); --ds-t-sub:calc(var(--ds-fs) * .92);
-    --ds-t-cap:calc(var(--ds-fs) * .84);
-    --ds-sp-hair:4px; --ds-sp-tight:6px; --ds-sp-near:8px; --ds-sp-text:14px; --ds-sp-block:20px;
+    --ds-t-cap:calc(var(--ds-fs) * .84); --ds-t-label:calc(var(--ds-fs) * .78);
+    --ds-sp-hair:4px; --ds-sp-tight:6px; --ds-sp-near:8px; --ds-sp-text:14px;
+    --ds-sp-block:20px; --ds-sp-sub:28px; --ds-sp-sec:44px;
   }
   /* Nhịp của khối trong drawer — trang chính đặt nhịp này ở .ds-prose > .ds-viz,
      rule đó bị loại khi trích vì .ds-prose không tồn tại ở đây. */
@@ -632,7 +650,11 @@ ${quizCss().split('\n').map(l => '  ' + l).join('\n')}
   .rm-quizmodal{width:min(560px,94vw);max-height:88vh}
   .rm-quizmodal .wb-modal__body{padding:20px 22px 24px}
   /* Trong popup, quiz bỏ khung riêng — modal đã là khung, đừng lồng hai viền. */
-  #quizModalBody .ds-quiz{border:0;background:none;padding:0;margin:0;box-shadow:none}
+  /* Bỏ khung ngoài (modal đã là khung), NHƯNG phải đổi --q-bg: bóng neumorphism chỉ
+     đúng khi nền khối trùng nền phía sau, mà nền modal là --wb-surface chứ không
+     phải --wb-canvas của trang. Không đổi thì mọi ô đáp án trong popup lệch nền. */
+  #quizModalBody .ds-quiz{border:0;background:none;padding:0;margin:0;box-shadow:none;
+    --q-bg:var(--wb-surface)}
   /* Tiêu đề "Kiểm tra nhanh" thừa trong popup (đầu modal đã ghi tên bài + "Tự kiểm
      kiến thức"); giữ lại dòng hướng dẫn "N câu · …". */
   #quizModalBody .ds-quiz__title{display:none}

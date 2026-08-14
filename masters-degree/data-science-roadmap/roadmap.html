@@ -245,10 +245,12 @@
      chính; --ds-fs cố định 15px vì drawer không có cột bài để giãn theo. */
   :root{
     --ds-fs:15px;
-    --ds-t-hero:calc(var(--ds-fs) * 1.72); --ds-t-h3:calc(var(--ds-fs) * 1.12);
+    --ds-t-hero:calc(var(--ds-fs) * 1.72); --ds-t-h1:calc(var(--ds-fs) * 1.5);
+    --ds-t-h2:calc(var(--ds-fs) * 1.28); --ds-t-h3:calc(var(--ds-fs) * 1.12);
     --ds-t-body:var(--ds-fs); --ds-t-sub:calc(var(--ds-fs) * .92);
-    --ds-t-cap:calc(var(--ds-fs) * .84);
-    --ds-sp-hair:4px; --ds-sp-tight:6px; --ds-sp-near:8px; --ds-sp-text:14px; --ds-sp-block:20px;
+    --ds-t-cap:calc(var(--ds-fs) * .84); --ds-t-label:calc(var(--ds-fs) * .78);
+    --ds-sp-hair:4px; --ds-sp-tight:6px; --ds-sp-near:8px; --ds-sp-text:14px;
+    --ds-sp-block:20px; --ds-sp-sub:28px; --ds-sp-sec:44px;
   }
   /* Nhịp của khối trong drawer — trang chính đặt nhịp này ở .ds-prose > .ds-viz,
      rule đó bị loại khi trích vì .ds-prose không tồn tại ở đây. */
@@ -326,14 +328,21 @@
 
   /* ==== carousel trắc nghiệm — CSS TRÍCH từ trang chính (quizCss), + vài dòng riêng
      cho popup của roadmap. Token --ds-t-* mà nó cần đã khai ở khối :root trên. ==== */
-  .ds-quiz{ margin: var(--ds-sp-sec) 0 0;
-      border: 2px solid var(--wb-fg); border-radius: var(--wb-radius-lg);
-      background: var(--wb-surface); padding: 18px 20px;
-      box-shadow: var(--wb-shadow-md); }
-  .dark .ds-quiz{ border-color: var(--wb-gray-500); }
+  .ds-quiz{
+      --q-bg:   var(--wb-canvas);
+      --q-lo:   rgba(9, 9, 11, .13);        
+      --q-hi:   rgba(255, 255, 255, .95);   
+      --q-up:   8px 8px 18px var(--q-lo), -8px -8px 18px var(--q-hi);
+      --q-up-s: 4px 4px 9px  var(--q-lo), -4px -4px 9px  var(--q-hi);
+      --q-in:   inset 4px 4px 9px var(--q-lo), inset -4px -4px 9px var(--q-hi);
+      --q-in-s: inset 2px 2px 4px var(--q-lo), inset -2px -2px 4px var(--q-hi);
+      margin: var(--ds-sp-sec) 0 0;
+      border: 0; border-radius: 22px;
+      background: var(--q-bg); padding: 22px 24px;
+      box-shadow: var(--q-up); }
+  .dark .ds-quiz{ --q-lo: rgba(0, 0, 0, .72); --q-hi: rgba(255, 255, 255, .05); }
   .ds-quiz, .ds-quiz *, .ds-quiz *::before, .ds-quiz *::after{ box-sizing: border-box; }
-  .ds-quiz__head{ margin-bottom: var(--ds-sp-block); padding-bottom: var(--ds-sp-near);
-      border-bottom: var(--wb-bw) solid var(--wb-border); }
+  .ds-quiz__head{ margin-bottom: var(--ds-sp-sub); }
   .ds-quiz__headrow{ display: flex; align-items: center; gap: 12px; }
   .ds-quiz__title{ display: flex; align-items: center; gap: 7px; margin: 0;
       font-size: var(--ds-t-h3); font-weight: 700; }
@@ -345,65 +354,79 @@
   @media (prefers-reduced-motion: reduce){.ds-quiz__track{ transition: none; }}
   .ds-quiz__slide{ flex: 0 0 100%; min-width: 100%; align-self: flex-start; padding: 4px; }
   .ds-quiz__q{ margin: 0 0 var(--ds-sp-text); font-size: var(--ds-t-body); font-weight: 600; line-height: 1.55; }
-  .ds-quiz__opts{ display: flex; flex-direction: column; gap: 8px; }
-  .ds-quiz__opt{ display: flex; gap: 10px; align-items: flex-start; width: 100%; text-align: left;
-      padding: 11px 13px; border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius);
-      background: var(--wb-canvas); color: var(--wb-fg); font: inherit; font-size: var(--ds-t-sub);
-      line-height: 1.5; cursor: pointer; transition: border-color .12s ease, background .12s ease; }
-  .ds-quiz__opt:hover{ border-color: var(--wb-border-strong); background: var(--wb-surface-hover); }
-  .ds-quiz__opt:focus-visible{ outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
-  .ds-quiz__opt[aria-checked="true"]{ border-color: var(--wb-fg); background: var(--wb-ink-hover); }
-  .ds-quiz__mark{ flex: none; width: 22px; height: 22px; border-radius: 50%; display: inline-flex;
+  .ds-quiz__opts{ display: flex; flex-direction: column; gap: 12px; }
+  .ds-quiz__opt{ display: flex; gap: 12px; align-items: flex-start; width: 100%; text-align: left;
+      padding: 13px 15px; border: 0; border-radius: 14px;
+      background: var(--q-bg); color: var(--wb-fg); font: inherit; font-size: var(--ds-t-sub);
+      line-height: 1.5; cursor: pointer; box-shadow: var(--q-up-s);
+      transition: box-shadow .16s ease, background .16s ease; }
+  .ds-quiz__opt:hover{ box-shadow: var(--q-up); }
+  .ds-quiz__opt:focus-visible{ outline: none; box-shadow: var(--q-up-s), 0 0 0 3px var(--wb-ring); }
+  .ds-quiz__opt[aria-checked="true"]{ box-shadow: var(--q-in); font-weight: 600; }
+  .ds-quiz__mark{ flex: none; width: 24px; height: 24px; border-radius: 50%; display: inline-flex;
       align-items: center; justify-content: center; font-size: var(--ds-t-cap); font-weight: 700; line-height: 1;
-      border: var(--wb-bw) solid var(--wb-border-strong); color: var(--wb-fg-muted);
+      border: 0; color: var(--wb-fg-subtle); background: var(--q-bg); box-shadow: var(--q-in-s);
       font-variant-numeric: tabular-nums; }
-  .ds-quiz__opt[aria-checked="true"] .ds-quiz__mark{ background: var(--wb-fg); color: var(--wb-canvas); border-color: var(--wb-fg); }
-  .ds-quiz__otext{ padding-top: 1px; }
-  .ds-quiz__opt.is-correct{ border-color: var(--wb-success); background: var(--wb-success-soft); }
-  .ds-quiz__opt.is-correct .ds-quiz__mark{ background: var(--wb-success); color: var(--wb-success-fg); border-color: var(--wb-success); }
-  .ds-quiz__opt.is-wrong{ border-color: var(--wb-danger); background: var(--wb-danger-soft); }
-  .ds-quiz__opt.is-wrong .ds-quiz__mark{ background: var(--wb-danger); color: var(--wb-danger-fg); border-color: var(--wb-danger); }
+  .ds-quiz__opt[aria-checked="true"] .ds-quiz__mark{
+      color: var(--wb-fg); box-shadow: 2px 2px 5px var(--q-lo), -2px -2px 5px var(--q-hi); }
+  .ds-quiz__otext{ padding-top: 2px; }
+  .ds-quiz__opt.is-correct{ background: var(--wb-success-soft); box-shadow: var(--q-in); }
+  .ds-quiz__opt.is-correct .ds-quiz__mark{ background: var(--wb-success); color: var(--wb-success-fg); box-shadow: none; }
+  .ds-quiz__opt.is-wrong{ background: var(--wb-danger-soft); box-shadow: var(--q-in); }
+  .ds-quiz__opt.is-wrong .ds-quiz__mark{ background: var(--wb-danger); color: var(--wb-danger-fg); box-shadow: none; }
   .ds-quiz__opt:disabled{ cursor: default; }
-  .ds-quiz__opt:disabled:not(.is-correct):not(.is-wrong){ background: var(--wb-canvas); color: var(--wb-fg-muted); }
-  .ds-quiz__why{ display: flex; gap: 8px; margin: var(--ds-sp-text) 0 0; padding: 10px 12px;
-      background: var(--wb-surface-2); border-radius: var(--wb-radius);
+  .ds-quiz__opt:disabled:not(.is-correct):not(.is-wrong){
+      background: transparent; color: var(--wb-fg-muted); box-shadow: none; }
+  .ds-quiz__opt:disabled:not(.is-correct):not(.is-wrong) .ds-quiz__mark{ box-shadow: none; }
+  .ds-quiz__why{ display: flex; gap: 10px; margin: var(--ds-sp-text) 0 0; padding: 13px 15px;
+      background: var(--q-bg); border-radius: 14px; box-shadow: var(--q-in);
       font-size: var(--ds-t-sub); line-height: 1.55; color: var(--wb-fg-muted); }
   .ds-quiz__why[hidden]{ display: none; }
   .ds-quiz__why .wb-ico{ flex: none; margin-top: 1px; color: var(--wb-fg-subtle); }
-  .ds-quiz__score{ margin: 0 0 var(--ds-sp-block); padding: 11px 14px;
-      border-radius: var(--wb-radius); border: var(--wb-bw) solid var(--wb-border);
-      background: var(--wb-surface-2); font-size: var(--ds-t-sub); line-height: 1.6; }
+  .ds-quiz__score{ margin: 0 0 var(--ds-sp-sub); padding: 14px 16px;
+      border-radius: 14px; border: 0; background: var(--q-bg); box-shadow: var(--q-in);
+      font-size: var(--ds-t-sub); line-height: 1.6; }
   .ds-quiz__score[hidden]{ display: none; }
-  .ds-quiz__score.is-full{ border-color: var(--wb-success); background: var(--wb-success-soft); }
+  .ds-quiz__score.is-full{ background: var(--wb-success-soft); }
   .ds-quiz__score b{ margin-right: 5px; font-size: var(--ds-t-h2); font-weight: 700;
       font-variant-numeric: tabular-nums; }
   .ds-quiz__grade{ color: var(--wb-fg-muted); }
   .ds-quiz__bar{ display: flex; align-items: center; gap: 12px;
-      margin-top: var(--ds-sp-block); padding-top: var(--ds-sp-near);
-      border-top: var(--wb-bw) solid var(--wb-border); }
+      margin-top: var(--ds-sp-sub); }
   .ds-quiz__pager{ display: flex; gap: 4px; flex: none; }
   .ds-quiz__steps{ display: flex; align-items: center; justify-content: center;
       gap: 5px; flex: 1 1 60px; }
   .ds-quiz__step{ flex: 0 1 38px; height: 20px; padding: 0; border: 0;
       background: none; cursor: pointer; display: flex; align-items: center; }
-  .ds-quiz__step::before{ content: ''; display: block; width: 100%; height: 4px;
-      border-radius: 999px; background: var(--wb-border-strong); opacity: .45;
-      transition: background .14s ease, height .14s ease, opacity .14s ease; }
-  .ds-quiz__step:hover::before{ opacity: .8; }
-  .ds-quiz__step.is-done::before{ background: var(--wb-neutral); opacity: 1; }
-  .ds-quiz__step.is-cur::before{ background: var(--wb-fg); opacity: 1; height: 6px; }
-  .ds-quiz__step.is-right::before{ background: var(--wb-success); opacity: 1; }
-  .ds-quiz__step.is-wrong::before{ background: var(--wb-danger); opacity: 1; }
+  .ds-quiz__step::before{ content: ''; display: block; width: 100%; height: 6px;
+      border-radius: 999px; background: var(--q-bg); box-shadow: var(--q-in-s);
+      transition: background .14s ease, box-shadow .14s ease; }
+  .ds-quiz__step:hover::before{ background: var(--wb-neutral); }
+  .ds-quiz__step.is-done::before{ background: var(--wb-neutral); box-shadow: none; }
+  .ds-quiz__step.is-cur::before{ background: var(--wb-fg); box-shadow: none; }
+  .ds-quiz__step.is-right::before{ background: var(--wb-success); box-shadow: none; }
+  .ds-quiz__step.is-wrong::before{ background: var(--wb-danger); box-shadow: none; }
   .ds-quiz__step:focus-visible{ outline: none; }
   .ds-quiz__step:focus-visible::before{ box-shadow: 0 0 0 3px var(--wb-ring); }
-  .ds-quiz__act{ flex: none; min-width: 124px; }
+  .ds-quiz__act{ flex: none; min-width: 124px; font-weight: 600; }
+  .ds-quiz .wb-btn{ border: 0; border-radius: 12px; background: var(--q-bg);
+      color: var(--wb-fg); box-shadow: var(--q-up-s); transition: box-shadow .16s ease; }
+  .ds-quiz .wb-btn:hover:not(:disabled){ box-shadow: var(--q-up); }
+  .ds-quiz .wb-btn:active:not(:disabled){ box-shadow: var(--q-in); }
+  .ds-quiz .wb-btn:focus-visible{ outline: none; box-shadow: var(--q-up-s), 0 0 0 3px var(--wb-ring); }
+  .ds-quiz .wb-btn:disabled{ box-shadow: none; background: transparent;
+      color: var(--wb-fg-subtle); opacity: 1; }
   @media (max-width: 560px){.ds-quiz__bar{ flex-wrap: wrap; row-gap: var(--ds-sp-near); }.ds-quiz__steps{ order: -1; flex: 1 1 100%; }.ds-quiz__act{ flex: 1 1 auto; }}
   /* Popup trắc nghiệm phải nằm TRÊN ngăn tóm tắt: kit cho .wb-overlay 100, .wb-drawer 101. */
   #quizModal{z-index:200}
   .rm-quizmodal{width:min(560px,94vw);max-height:88vh}
   .rm-quizmodal .wb-modal__body{padding:20px 22px 24px}
   /* Trong popup, quiz bỏ khung riêng — modal đã là khung, đừng lồng hai viền. */
-  #quizModalBody .ds-quiz{border:0;background:none;padding:0;margin:0;box-shadow:none}
+  /* Bỏ khung ngoài (modal đã là khung), NHƯNG phải đổi --q-bg: bóng neumorphism chỉ
+     đúng khi nền khối trùng nền phía sau, mà nền modal là --wb-surface chứ không
+     phải --wb-canvas của trang. Không đổi thì mọi ô đáp án trong popup lệch nền. */
+  #quizModalBody .ds-quiz{border:0;background:none;padding:0;margin:0;box-shadow:none;
+    --q-bg:var(--wb-surface)}
   /* Tiêu đề "Kiểm tra nhanh" thừa trong popup (đầu modal đã ghi tên bài + "Tự kiểm
      kiến thức"); giữ lại dòng hướng dẫn "N câu · …". */
   #quizModalBody .ds-quiz__title{display:none}
