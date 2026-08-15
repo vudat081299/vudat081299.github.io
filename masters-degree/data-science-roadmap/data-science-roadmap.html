@@ -6410,7 +6410,7 @@ print(study.best_params, study.best_value)</div>
   <h2>Code</h2>
   <div class="ds-code"><b>import</b> shap
 model = pipe.named_steps["model"]
-X_t   = pipe.named_steps["prep"].transform(X_test)      <i># dữ liệu đã biến đổi</i>
+X_t   = pipe[:-1].transform(X_test)                     <i># MỌI bước trừ model, không chỉ "prep"</i>
 names = pipe.named_steps["prep"].get_feature_names_out()
 
 explainer = shap.TreeExplainer(model)                   <i># nhanh, cho mô hình cây</i>
@@ -6420,6 +6420,7 @@ exp.feature_names = <b>list</b>(names)
 shap.plots.beeswarm(exp)                                <i># toàn cục — hình chính của luận văn</i>
 shap.plots.bar(exp)                                     <i># xếp hạng độ quan trọng</i>
 shap.plots.waterfall(exp[0])                            <i># MỘT ca cụ thể — exp[0] là mẫu số 0</i></div>
+  <p class="wb-help">Vì sao <code>pipe[:-1]</code> chứ không phải <code>named_steps["prep"]</code>: pipeline thật của dự án là <code>derive → prep → model</code>, và <code>prep</code> chọn cột <b>theo tên</b> — mà <code>amount_log</code>, <code>hour_sin</code>… chỉ ra đời ở bước <code>derive</code>. Gọi thẳng <code>prep.transform(X_test)</code> trên bảng thô là báo thiếu cột. <code>pipe[:-1]</code> luôn đúng vì nó là "mọi thứ mô hình nhìn thấy, trừ chính mô hình", bất kể pipeline có mấy bước.</p>
   <div class="wb-alert wb-alert--warning wb-alert--plain"><div class="wb-alert__body">
     <p class="wb-alert__title">Dùng <code>explainer(X)</code>, đừng dùng <code>explainer.shap_values(X)</code></p>
     <p class="wb-alert__msg">Bạn sẽ thấy rất nhiều hướng dẫn cũ viết <code>shap_values = explainer.shap_values(X)</code> rồi <code>shap_values[0]</code> cho "mẫu đầu tiên". Với bài toán hai lớp, <b>tuỳ phiên bản shap</b> mà hàm đó trả về một mảng <code>(n_mẫu, n_cột)</code> hoặc một danh sách hai mảng cho hai lớp — nên <code>shap_values[0]</code> khi thì là mẫu số 0, khi thì là <i>toàn bộ lớp 0</i>. Hình vẽ ra vẫn có, chỉ là sai. API mới <code>explainer(X)</code> trả về đối tượng <code>Explanation</code> có nhãn rõ ràng và không mập mờ như vậy.</p>
