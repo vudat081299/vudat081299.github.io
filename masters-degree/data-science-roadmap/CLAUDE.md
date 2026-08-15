@@ -48,7 +48,7 @@ Rồi tìm việc mình định làm trong bảng này:
 | **sửa lịch 8 tuần / 14 ngày** | §8 · [docs/editing.md](docs/editing.md) việc 4 | `node tools/audit.mjs` | `G-PLAN` qua |
 | **sửa trang Roadmap học nhanh** | §4 (hai cổng `G-ROADMAP*`) · `tools/build-roadmap.mjs` | `node tools/build-roadmap.mjs` | `G-ROADMAP` im. **Đừng sửa tay `roadmap.html`** — nó là sản phẩm sinh ra |
 | **thêm / sửa một cổng** | §4 · [docs/editing.md](docs/editing.md) việc 6 | `node tools/gate.test.mjs` | test xanh · thêm tên cổng vào §4 (`G-DOC` bắt) |
-| **thêm / sửa câu hỏi trắc nghiệm** | [docs/editing.md](docs/editing.md) **việc 7** — nội dung ở `data/quiz.json`, KHÔNG trong HTML | `gate.mjs` | `G-QUIZ` qua · `G-QUIZ-COV` và `G-QUIZ-POS` im |
+| **thêm / sửa câu hỏi trắc nghiệm** | [docs/editing.md](docs/editing.md) **việc 7** — nội dung ở `data/quiz.json`, KHÔNG trong HTML | `gate.mjs` | `G-QUIZ` qua · `G-QUIZ-COV`, `G-QUIZ-POS`, `G-QUIZ-GUESS` im |
 | **ghi việc học của mình** | [LEARNING-LOG.md](LEARNING-LOG.md) | `learn.mjs --add` hoặc nút **Notes** trên trang | `learn.mjs --check` im |
 | **đóng phiên / commit / push** | §12 | `node tools/session.mjs --close` | HANDOFF đã ghi · `G-HANDOFF` im |
 
@@ -281,7 +281,7 @@ nào để mở trình duyệt kiểm lại JS.
 tên class/token bằng chữ trần (`wb-steps`, không phải `` `wb-steps` ``). Muốn dùng backtick
 thì đưa chú thích ra ngoài template, thành comment JS phía trên hàm.
 
-**Chỉ nhắc, người quyết định — 15 cổng** (`G-FWD` có mặt ở cả hai bảng: chặn ở mức tiêu chí
+**Chỉ nhắc, người quyết định — 16 cổng** (`G-FWD` có mặt ở cả hai bảng: chặn ở mức tiêu chí
 đạt, chỉ nhắc ở mức thân bài):
 
 | cổng | nhắc điều gì |
@@ -303,6 +303,7 @@ thì đưa chú thích ra ngoài template, thành comment JS phía trên hàm.
 | `G-LEARN` | sổ học đọc được, và **≥2 bài cùng tắc ở một khái niệm** = khái niệm đó dạy quá muộn (§13) |
 | `G-QUIZ-COV` | bài chưa có quiz, **hoặc có ít câu hơn số mục của chính nó** — xem ngay dưới bảng |
 | `G-QUIZ-POS` | giải thích gọi lựa chọn theo VỊ TRÍ (`đáp án cuối`) — đảo thứ tự lựa chọn là nó nói sai |
+| `G-QUIZ-GUESS` | câu **trả lời được mà không cần hiểu bài** — đáp án đúng lộ ra vì dài nhất — xem ngay dưới bảng |
 
 **`G-QUIZ-COV` đếm câu SO VỚI BÀI, không đếm có/không.** Bản đầu chỉ hỏi "bài này có câu
 nào chưa" — và nó im suốt, vì bài nào cũng có ~6 câu. Đo lại 2026-08-14 mới thấy chỗ hỏng
@@ -311,6 +312,16 @@ thật: **0/84 bài trắng quiz, nhưng 29/84 bài có ít câu hơn số mục
 6.418 chữ) và `f-store` (3 mục, 400 chữ) cùng được ~6 câu. Cổng giờ so `số câu` với `số mục
 h2/h3 của mạch chính`. Không phải mục nào cũng đáng một câu — nên nó **chỉ nhắc** — nhưng
 lệch nhiều thì gần như chắc là bỏ sót.
+
+**`G-QUIZ-GUESS` hỏi câu mà ba cổng quiz kia không hỏi: "câu này có kiểm được hiểu
+biết không".** `G-QUIZ` đếm trường, `G-QUIZ-COV` đếm câu — cả hai đều đo *sự tồn tại*.
+Đo 2026-08-15 tìm ra chỗ thủng: chiến lược **"chọn lựa chọn DÀI NHẤT" đúng 869/941 =
+92,3%**, vì đáp án đúng là lựa chọn duy nhất được viết đủ nghĩa còn distractor bị cắt
+cụt. Người không biết Data Science, chỉ đếm ký tự, làm đúng 92%. Lỗ không khu trú:
+74/84 bài ≥80%, bài kín nhất cũng 58%. Sau lượt sửa 711 câu: **70,6% · độ dài trung vị
+2,19× → 1,14×**. Cổng đo hai mức — cả bộ >75%, và **không dung thứ câu nào ≥2,5×**.
+Cách sửa đúng khi cổng kêu: **nới distractor cho mỗi cái mang lý lẽ sai của riêng nó,
+ĐỪNG cắt đáp án cho ngắn lại** — phần bị cắt thường là lý lẽ, mà lý lẽ thuộc về `why`.
 
 **`G-QUIZ-POS` canh một lớp lỗi chỉ nổ khi bạn động vào.** Một giải thích viết "đáp án cuối
 sai vì…" đang đúng, nhưng nó phụ thuộc vào **thứ tự lựa chọn**. Đo được: lượt rải lại vị trí

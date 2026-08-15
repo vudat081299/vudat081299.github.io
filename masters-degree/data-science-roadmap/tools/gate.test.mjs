@@ -201,6 +201,18 @@ const OTHER_CASES = [
   ['G-QUIZ-POS', 'giải thích gọi lựa chọn theo vị trí', () => {
     writeQuiz({ 's-how': [{ q: 'x?', o: ['a', 'b'], a: 0, why: 'Đáp án cuối sai vì nó ngược.' }] });
   }],
+  /* G-QUIZ-GUESS đo trên CẢ BỘ, nên sửa một bài không đủ để nó kêu — ca NỔ phải làm
+     nghiêng toàn bộ. Dựng lại mọi câu theo đúng hình dạng bộ câu TRƯỚC lượt sửa
+     2026-08-15: đáp án đúng là lựa chọn duy nhất được viết đủ nghĩa, ba cái kia cụt. */
+  ['G-QUIZ-GUESS', 'cả bộ có đáp án đúng dài hơn hẳn ba lựa chọn kia', () => {
+    const q = JSON.parse(ORIG['data/quiz.json']);
+    for (const id of Object.keys(q)) q[id] = q[id].map(it => ({
+      ...it, a: 0,
+      o: ['đáp án đúng, là lựa chọn duy nhất mang cả cơ chế lẫn hậu quả nên dài hẳn ra',
+        'ngắn cụt', 'cũng cụt', 'cụt nốt'],
+    }));
+    writeFileSync(join(DS, 'data', 'quiz.json'), JSON.stringify(q));
+  }],
   ['G-TOC-STALE', 'TOC.md còn số dòng cũ', () => {
     // Dải dòng ĐẦU TIÊN trong bảng, tìm bằng khuôn chứ không bằng con số cụ thể —
     // gõ số vào đây thì test tự hỏng mỗi lần trang dài ra vài dòng.

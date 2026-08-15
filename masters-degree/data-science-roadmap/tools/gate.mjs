@@ -230,6 +230,7 @@ const GATES = [
   ['G-QUIZ',       'chặn', 'câu hỏi trắc nghiệm đủ trường và có đáp án đúng hợp lệ'],
   ['G-QUIZ-COV',   'nhắc', 'bài chưa có quiz, hoặc có ít câu hơn số mục của chính nó'],
   ['G-QUIZ-POS',   'nhắc', 'giải thích gọi lựa chọn theo vị trí ("đáp án cuối") — đảo thứ tự là sai'],
+  ['G-QUIZ-GUESS', 'nhắc', 'câu trả lời được mà không cần hiểu bài — đáp án đúng lộ ra vì dài nhất'],
 ];
 
 /* Waiver: một lỗi CHẶN đã biết, đã có hướng sửa, nhưng cách sửa là một quyết định
@@ -387,6 +388,53 @@ if (rmErr) {
   if (posref.length) W(`G-QUIZ-POS: ${posref.length} giải thích gọi lựa chọn theo VỊ TRÍ:\n    `
     + posref.slice(0, 8).join('\n    ') + (posref.length > 8 ? `\n    … và ${posref.length - 8} chỗ nữa` : '')
     + '\n    Đảo thứ tự lựa chọn là chúng nói sai. Gọi bằng nội dung: Phương án "…" sai ở chỗ…');
+
+  /* G-QUIZ-GUESS: câu trả lời được mà KHÔNG cần hiểu bài.
+
+     Vì sao cần một cổng cho việc này, khi đã có G-QUIZ (đủ trường) và G-QUIZ-COV
+     (đủ câu): cả hai cổng đó đếm sự TỒN TẠI của câu hỏi, không cổng nào hỏi "câu
+     này có kiểm được hiểu biết không". Đo 2026-08-15 phát hiện bộ 941 câu bị thủng
+     đúng chỗ đó — chiến lược "chọn lựa chọn DÀI NHẤT" đúng 869/941 = 92,3%, vì đáp
+     án đúng là lựa chọn duy nhất được viết đủ nghĩa còn distractor bị cắt cụt. Một
+     người không biết gì về Data Science, chỉ đếm ký tự, làm đúng 92% bài kiểm tra.
+
+     Cổng đo hai thứ, cố ý khác nhau:
+       · TOÀN BỘ  — tỉ lệ "đoán dài nhất" trên cả bộ. Ngẫu nhiên là 25%; cao hơn
+         nhiều là cả bộ đang nghiêng, không phải vài câu lẻ. Ngưỡng 75% đặt ngay
+         trên trạng thái sau lượt sửa 2026-08-15 (70,6%).
+       · TỪNG CÂU — KHÔNG dung thứ ca nào ≥2,5×. Ở mức đó đáp án dài hơn gấp đôi
+         MỌI lựa chọn khác, mắt nhận ra ngay mà không cần đọc. Sau lượt sửa không
+         còn câu nào chạm mức này, nên ngưỡng là zero-tolerance chứ không phải một
+         con số đặt cho vừa nợ.
+
+     Vì sao KHÔNG đặt ngưỡng từng-câu ở 2× (mức đáng lo thật): còn 19 câu ở
+     2,0–2,3× sau lượt sửa, và đặt ngưỡng cho vừa nợ thì cổng thành con dấu cao su.
+     19 câu đó là nợ đã ghi, không phải chuẩn mới — xem HANDOFF phiên (w). Cả hai
+     ngưỡng ở đây đều là NGƯỠNG BÁO ĐỘNG, không phải mục tiêu; mục tiêu vẫn là 25%
+     và 1,0×. */
+  {
+    const txt = s => String(s).replace(/<[^>]+>/g, '');
+    let n = 0, longest = 0; const skewed = [];
+    for (const id of quizIds) {
+      if (!byId[id] || !Array.isArray(QUIZ[id])) continue;
+      QUIZ[id].forEach((q, i) => {
+        if (!Array.isArray(q?.o) || !Number.isInteger(q?.a) || !q.o[q.a]) return;
+        const L = q.o.map(o => txt(o).length);
+        n++;
+        if (L[q.a] === Math.max(...L)) longest++;
+        const others = L.filter((_, j) => j !== q.a);
+        const r = L[q.a] / (others.reduce((a, b) => a + b, 0) / others.length);
+        if (r >= 2.5) skewed.push(`${id} câu ${i + 1} (${r.toFixed(1)}×)`);
+      });
+    }
+    const pct = n ? 100 * longest / n : 0;
+    if (pct > 75) W(`G-QUIZ-GUESS: chiến lược "chọn lựa chọn DÀI NHẤT" đúng ${longest}/${n} = ${pct.toFixed(1)}% `
+      + `(đoán ngẫu nhiên là 25%).\n    Đáp án đúng đang là lựa chọn duy nhất được viết đủ nghĩa. `
+      + `Cách sửa: nới distractor cho mỗi cái mang lý lẽ sai của riêng nó — ĐỪNG cắt đáp án cho ngắn lại.`);
+    if (skewed.length) W(`G-QUIZ-GUESS: ${skewed.length} câu có đáp án dài ≥2,5× trung bình ba lựa chọn kia:\n    `
+      + skewed.slice(0, 10).join(' · ') + (skewed.length > 10 ? `\n    … và ${skewed.length - 10} câu nữa` : '')
+      + '\n    Ở mức lệch này người đọc nhận ra đáp án bằng mắt, không cần hiểu bài.');
+  }
 
   /* G-QUIZ-COV: bài không có câu nào là ca nặng nhất, nhưng không phải ca hay gặp
      nhất. Đo 2026-08-14 trước lượt bổ sung: 0/84 bài trắng quiz, mà 29/84 bài có ít
