@@ -769,7 +769,7 @@
     "Ba dạng rò rỉ thời gian: chuẩn hoá bằng thống kê cả chuỗi (chỉ fit trên quá khứ từng fold), rolling/lag quên shift(1) nên cửa sổ chứa chính điểm cần dự đoán, feature ngoại sinh chưa tồn tại lúc dự báo (nhiệt độ thật ngày mai)",
     "Hai baseline bắt buộc chỉ hai dòng: naive = y.shift(1), seasonal-naive = y.shift(7) — với nhiều chuỗi thực tế chúng thắng cả Prophet lẫn LSTM",
     "MASE = MAE của bạn chia cho MAE của naive-một-bước đo TRÊN TRAIN (Hyndman, một hằng số cố định); mase<1 tốt hơn naive, ≥1 vô dụng; chia cho naive trên tập test là relative MAE chứ không phải MASE",
-    "Bản đồ mô hình đặt vai không xếp hạng: naive/ETS/ARIMA/Prophet là baseline, boosting+lag là mặc định tốt NẾU khử xu hướng trước, LSTM/Transformer không phải mặc định; thứ tự .shift(1).rolling(w) chứ không phải ngược lại",
+    "Bản đồ mô hình đặt vai không xếp hạng: naive/ETS/ARIMA/Prophet là baseline, boosting+lag là mặc định tốt NẾU khử xu hướng trước, LSTM/Transformer không phải mặc định; rolling/lag bắt buộc có .shift(1) — đặt trước hay sau .rolling(w) đều ra cùng một cột, thiếu hẳn nó mới là rò rỉ",
     "Prophet đang ở chế độ bảo trì (README chỉ nhận sửa lỗi, kiểm 3/8/2026); điểm mạnh là tách thành phần để giải thích chứ không phải độ chính xác"
    ],
    "viz": "Ba hình động: decomp (tách STL xu hướng+mùa vụ+phần dư), walkforward (trượt mốc train/test), lag; period=7 cho dữ liệu ngày có mùa vụ tuần."
@@ -1080,7 +1080,7 @@
   "dl-llm": "b6ea09a4",
   "dl-tab": "e06c5e83",
   "q-regress": "a2fbd555",
-  "q-forecast": "97cebcf2",
+  "q-forecast": "b28350a4",
   "q-multi": "4f49b0d6",
   "q-nlp": "ca0376a6",
   "q-cv": "cab77c55",

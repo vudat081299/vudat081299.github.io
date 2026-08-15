@@ -9009,7 +9009,7 @@ df["dow"]     = df["ds"].dt.dayofweek
 df["dow_sin"] = np.sin(2*np.pi*df["dow"]/7)
 df["dow_cos"] = np.cos(2*np.pi*df["dow"]/7)
 df["is_holiday"] = df["ds"].isin(HOLIDAYS).astype(<b>int</b>)</div>
-  <p>Thứ tự <code>.shift(1).rolling(w)</code> chứ không phải <code>.rolling(w).shift(1)</code> — cả hai đều chạy, chỉ một cái đúng. Viết một test cho nó, theo đúng loại test số 4 ở bài <b>Làm việc với AI</b>.</p>
+  <p>Thứ phải có là <code>.shift(1)</code>, không phải một thứ tự đặc biệt: <code>.rolling(w)</code> trần gộp cả giá trị của chính hôm nay — thứ chưa tồn tại lúc bạn dự báo. Đặt <code>.shift(1)</code> trước hay sau <code>.rolling(w)</code> đều ra cùng một cột, nên đừng đi tìm khác biệt ở đó; chỗ mất điểm là quên nó. Viết một test cho nó, theo đúng loại test số 4 ở bài <b>Làm việc với AI</b>.</p>
 
   <h2>Quy trình một dự án forecasting, theo thứ tự</h2>
   <ol>
