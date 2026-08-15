@@ -708,7 +708,7 @@
     "Nạp model lười — để container thiếu model báo lỗi rõ ở /health (503) thay vì chết lúc import — nhưng chỉ nạp MỘT lần vì joblib.load mất ~200ms, gọi mỗi request là phá sạch ngân sách độ trễ (lifespan nạp sẵn lúc khởi động)",
     "Ba endpoint: /score, /health, /model-card; /model-card trả cả ma trận chi phí và cửa sổ huấn luyện để trả lời 'ngưỡng ở đâu ra' trong buổi bảo vệ",
     "Nguồn train–serve skew thứ hai: sáu cột hist_*/n_tx_* lúc serve lấy ở đâu — ba cách (caller cung cấp / kho trạng thái Redis với state_from_history / tính lại tại chỗ); tính khác lúc train thì model vẫn chạy, vẫn trả xác suất, chỉ là sai",
-    "Dockerfile phải apt-get install libgomp1 vì LightGBM cần OpenMP; thiếu nó thì container build xong bình thường rồi mới chết lúc import với 'Library not loaded: libomp' (macOS: brew install libomp, hoặc MODEL_KIND='hgb' chỉ cần scikit-learn)",
+    "Dockerfile phải apt-get install libgomp1 vì LightGBM cần OpenMP; thiếu nó thì container build xong bình thường rồi mới chết lúc import với 'OSError: libgomp.so.1: cannot open shared object file' (trên macOS cùng nguyên nhân nhưng báo khác hẳn: 'Library not loaded: libomp.dylib', chữa bằng brew install libomp, hoặc MODEL_KIND='hgb' chỉ cần scikit-learn)",
     "Ghim đúng phiên bản trong requirements.txt: 'không tái lập được' là lỗi nặng nhất một luận văn có thể mắc vì nó vô hiệu hoá mọi con số; toàn bộ quy trình từ thư mục rỗng ~19 giây tính toán"
    ],
    "viz": "Hai lời gọi /score trên cùng thẻ C00123 khác nhau 1.355 lần: 03h/8,5tr/vừa quẹt 6 lần trong 1h ra risk 0,374 (BLOCK); 14h/150k/không dồn dập ra 0,00028 (ALLOW)."
@@ -718,7 +718,7 @@
    "points": [
     "Ba loại drift: data drift đổi P(X), concept drift đổi P(y|X) — nguy hiểm nhất vì đầu vào trông vẫn bình thường, label drift đổi P(y)",
     "Đo drift bằng PSI = Σ(aᵢ−eᵢ)·ln(aᵢ/eᵢ) so phân phối hiện tại với lúc train; <0,10 ổn định (không làm gì), 0,10–0,25 theo dõi sát, >0,25 retrain — các ngưỡng là quy ước ngành credit scoring, phải trích dẫn",
-    "Trong code psi() bắt buộc np.unique(edges) để bỏ cạnh phân vị trùng, nếu không cột có >10% giá trị 0 (như n_tx_1h) làm np.histogram báo 'bins must increase monotonically'",
+    "Trong code psi() nên np.unique(edges) để bỏ cạnh phân vị trùng — KHÔNG phải để chặn lỗi (np.histogram chỉ ném 'bins must increase monotonically' khi cạnh GIẢM, cạnh bằng nhau đi qua) mà vì khoảng bề rộng 0 luôn rỗng: cột nhiều số 0 như n_tx_1h xin 10 khoảng chỉ nhận 8 (30% số 0) hay 5 (60%), nên PSI tính trên lưới thô hơn tưởng",
     "Nhóm chỉ số 'Đầu ra' (phân phối điểm rủi ro, tỉ lệ CHẶN/XÁC MINH) quý nhất vì không cần nhãn → phát hiện bất thường ngay lập tức thay vì chờ nhãn trễ 60 ngày",
     "Retrain theo lịch (mỗi tháng trên 12 tháng gần nhất) là lựa chọn cho luận văn; sau khi train lại chạy shadow mode một tuần so quyết định bản mới với bản cũ, nếu được thì A/B test trên 5% lưu lượng",
     "Vòng phản hồi tự đầu độc (selective labels): mô hình chặn → không có nhãn thật → dữ liệu train tương lai chỉ chứa cái cho qua; nêu được vấn đề này trong luận văn đã là điểm cộng. Cách hay được nhắc là cho qua ngẫu nhiên một tỉ lệ nhỏ giao dịch đáng lẽ bị chặn — nhưng đó là can thiệp rủi ro bằng tiền thật của khách, KHÔNG có tỉ lệ phổ quát, và phải có người đủ thẩm quyền quyết định, trần thiệt hại, đường khiếu nại. Phương án rẻ hơn và an toàn hơn cho luận văn: xác minh THỦ CÔNG một mẫu ngẫu nhiên trong vùng bị chặn"
@@ -1066,8 +1066,8 @@
   "pr-arch": "4521ae12",
   "pr-code": "b31bca49",
   "pr-eval": "1257174e",
-  "pr-serve": "229d3360",
-  "pr-monitor": "0c559838",
+  "pr-serve": "c09b6ce0",
+  "pr-monitor": "03558fa7",
   "pr-mlops": "0fea8d9a",
   "pr-cost": "97d103b4",
   "dl-nn": "103755a4",

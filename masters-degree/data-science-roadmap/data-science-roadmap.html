@@ -8174,8 +8174,8 @@ $ curl -s -X POST localhost:8000/score -H "Content-Type: application/json" -d '{
   <div class="ds-code">FROM python:3.11-slim
 
 # libgomp: LightGBM cần OpenMP. Thiếu nó thì container build xong vẫn chết lúc
-# import với "Library not loaded: libomp" — lỗi tốn hàng giờ vì nó không xuất
-# hiện lúc pip install.
+# import với "libgomp.so.1: cannot open shared object file" — lỗi tốn hàng giờ
+# vì nó không xuất hiện lúc pip install.
 RUN apt-get update &amp;&amp; apt-get install -y --no-install-recommends libgomp1 \
     &amp;&amp; rm -rf /var/lib/apt/lists/*
 
@@ -8193,7 +8193,7 @@ CMD ["uvicorn", "src.serve:app", "--host", "0.0.0.0", "--port", "8000"]</div>
   <p class="ds-codecap">Dockerfile</p>
   <div class="ds-code">docker build -t fraud-api .
 docker run -p 8000:8000 fraud-api</div>
-  <p>Dòng <code>libgomp1</code> đáng nhắc riêng: LightGBM cần OpenMP, và thiếu nó thì container <b>build xong bình thường</b> rồi mới chết lúc import với <code>Library not loaded: libomp</code>. Lỗi này ngốn hàng giờ vì nó không xuất hiện ở bước <code>pip install</code>. Trên máy macOS thì tương đương là <code>brew install libomp</code> — hoặc đặt <code>MODEL_KIND = "hgb"</code> trong <code>config.py</code> để dùng bản chỉ cần scikit-learn.</p>
+  <p>Dòng <code>libgomp1</code> đáng nhắc riêng: LightGBM cần OpenMP, và thiếu nó thì container <b>build xong bình thường</b> rồi mới chết lúc import với <code>OSError: libgomp.so.1: cannot open shared object file</code>. Lỗi này ngốn hàng giờ vì nó không xuất hiện ở bước <code>pip install</code>. Trên máy macOS thì cùng một nguyên nhân nhưng thông báo khác hẳn — <code>Library not loaded: … libomp.dylib</code> — và cách chữa là <code>brew install libomp</code> — hoặc đặt <code>MODEL_KIND = "hgb"</code> trong <code>config.py</code> để dùng bản chỉ cần scikit-learn.</p>
 
   <h2><code>requirements.txt</code> và <code>Makefile</code></h2>
   <div class="ds-code"># Ghim đúng phiên bản. Không ghim = ba tháng sau repo không chạy lại được,
@@ -8276,7 +8276,7 @@ uvicorn src.serve:app --port 8000           <i># → http://localhost:8000/docs<
     e = np.histogram(expected, edges)[0] / len(expected) + 1e-6
     a = np.histogram(actual,   edges)[0] / len(actual)   + 1e-6
     <b>return</b> <b>float</b>(((a - e) * np.log(a / e)).sum())</div>
-  <p class="wb-help">Dòng <code>np.unique</code> là bắt buộc trong thực tế: với cột mà hơn 10% giá trị bằng 0 (rất phổ biến — <code>n_tx_1h</code> chẳng hạn), các phân vị thấp trùng nhau và <code>np.histogram</code> sẽ báo <i>“bins must increase monotonically”</i>.</p>
+  <p class="wb-help">Dòng <code>np.unique</code> đáng giữ, nhưng <b>không phải vì nó chặn một lỗi</b>: với cột mà hơn 10% giá trị bằng 0 (rất phổ biến — <code>n_tx_1h</code> chẳng hạn), các phân vị thấp trùng nhau, và <code>np.histogram</code> <i>vẫn chạy</i> — nó chỉ ném <i>“bins must increase monotonically”</i> khi cạnh <b>giảm</b>, còn cạnh bằng nhau thì đi qua. Cái bạn mất im lặng hơn một lỗi: khoảng bề rộng 0 thì luôn rỗng, nên bạn xin 10 khoảng mà nhận về ít hơn — đo trên cột gamma pha số 0 thì 30% số 0 còn <b>8</b> khoảng thật, 60% còn <b>5</b> — và PSI được tính trên lưới thô hơn bạn tưởng. <code>np.unique</code> không cứu số khoảng; nó chỉ làm chỗ hụt đó hiện ra thay vì trốn trong một mảng cạnh trùng.</p>
   <table>
     <tr><th>PSI</th><th>Kết luận</th><th>Hành động</th></tr>
     <tr><td>&lt; 0,10</td><td>Ổn định</td><td>Không làm gì</td></tr>
