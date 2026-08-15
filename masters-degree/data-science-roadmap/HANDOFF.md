@@ -18,6 +18,118 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 
 ---
 
+## Phiên 2026-08-15 (w) — rà tính đúng/sai quiz · lỗ "đoán dài nhất" 92,3% → 70,6%
+
+Chủ trang: *"review tính đúng sai của câu hỏi, câu trả lời, và các đáp án song hành cùng
+nó, làm sao cho người đọc phải thực sự hiểu kiến thức thì mới trả lời được"*.
+
+### Chẩn đoán: phiên (v) làm quiz ĐỦ, phiên này phát hiện nó không KIỂM được gì
+
+Phiên (v) đưa 475 → 941 câu, mọi mục có ít nhất một câu. Nhưng không ai hỏi câu tiếp theo:
+**những câu đó có kiểm được hiểu biết không.** Đo ra thì không:
+
+```
+chiến lược "chọn lựa chọn DÀI NHẤT"  →  đúng 869/941 = 92,3%
+độ dài đáp án đúng ÷ trung bình 3 lựa chọn kia  →  trung vị 2,19×
+```
+
+Một người không biết gì về Data Science, chỉ đếm ký tự, làm đúng 92% bài kiểm tra.
+
+**Lỗ này toàn cục, không khu trú** — và đó là phát hiện quan trọng hơn con số: 74/84 bài
+≥80%, bài "kín" nhất (`s-lookup`) cũng 58%. Không có tập con nào để khoanh vùng; cả bộ được
+viết bằng cùng một thói quen — đáp án đúng là lựa chọn duy nhất được viết đủ nghĩa (mang cả
+cơ chế lẫn hậu quả), ba distractor bị cắt còn một mệnh đề trần.
+
+### Đã làm — 717 câu, 84/84 bài
+
+| lớp lỗi | số câu | cách sửa |
+|---|---|---|
+| lệch độ dài | 502 | nới distractor cho mỗi cái mang lý lẽ sai của riêng nó |
+| hỏi nhớ chữ | 100 | đổi thành tình huống phải áp dụng |
+| distractor không ai chọn | 54 | thay bằng hiểu nhầm thật mà chính bài đi gỡ |
+| từ tuyệt đối chỉ ở distractor | 50 | bỏ "luôn"/"không bao giờ" — loại được bằng phản xạ làm bài |
+| **chấm sai người hiểu bài** | **6** | xem bảng dưới |
+
+Kết quả đo lại: **70,6%** (từ 92,3%) · độ dài trung vị **1,14×** (từ 2,19×) · từ tuyệt đối
+chỉ ở distractor **1** (từ 17) · vị trí đáp án A/B/C/D = 23,0/28,9/27,8/20,3%.
+
+### Sáu câu chấm sai — bốn cái chỉ lộ ra khi đọc đối chiếu thân bài
+
+`t-env#7` "Codespaces vì có VS Code đầy đủ" bị chấm sai, nhưng bảng "Đường đi mặc định" của
+chính bài ghi *"sửa `src/*.py` → github.dev **hoặc Codespaces**"* · `f-cat#2` "LabelEncoder
+không xử lý được giá trị lạ" là nhược điểm THẬT nên cũng đúng · `q-forecast#7` xem mục dưới ·
+`ml-cv#0` phủ định chồng phủ định ("std KHÔNG phải là gì" + lựa chọn mở bằng "Không phải…") ·
+`t-pandas#7` "đảo thứ tự hai điều kiện" có hai cách đọc, một cách cho **không đáp án nào
+đúng** · `d-eda#5` gán nhầm Thì 1/Thì 2, mà ranh giới hai thì là ý chính của bài.
+
+### Một lỗi trong THÂN BÀI, tìm được nhờ rà quiz
+
+`q-forecast` viết *".shift(1).rolling(w) chứ không phải .rolling(w).shift(1) — cả hai đều
+chạy, chỉ một cái đúng"*. **Sai.** Kiểm bằng pandas: hai cách cho cùng một cột, khớp từng
+dòng kể cả vị trí `NaN`. Chỗ rò rỉ thật là **quên `.shift(1)`** — và khối tương tác của
+chính bài đã nói đúng điều đó (`shift(1).rolling(w) — đúng` / `rolling(w) — rò rỉ`), nên
+trước lượt này thân bài đang mâu thuẫn với hình của nó. Bản tóm tắt roadmap chép lại nguyên
+mệnh đề sai, đã sửa theo.
+
+Đáng ghi vì nó nói một điều về quy trình: **rà quiz là một cách soi nội dung bài.** Câu hỏi
+buộc phải phát biểu lại kiến thức ở dạng đúng/sai nhị phân, nên chỗ bài viết mơ hồ hay sai
+thì câu hỏi làm nó lộ ra.
+
+### Cách làm — và hai chỗ suýt hỏng
+
+13 agent đọc từng câu đối chiếu thân bài. Bản trích cho agent gồm: mạch chính · tiêu chí
+đạt · **khối tương tác** (`see:`/`wrong:` nằm trong `<script>`) · *tên* nhánh phụ (không nội
+dung) · toàn bộ câu hỏi. **Đếm-đối-chiếu với nguồn TRƯỚC khi giao** — 941/941 câu, 63/63
+tiêu chí đạt, 50/50 khối tương tác. Đây đúng là bước phiên (v) bỏ và mất hai vòng vì nó.
+
+1. **Agent tái sinh lỗi `G-QUIZ-POS` ở tỉ lệ ~1%.** Bảy bản sửa viết "Phương án đầu…",
+   "Phương án cuối…" trong `why` — đúng lớp lỗi phiên (v) dựng cổng để chặn. Bản áp
+   (`apply.mjs`, kiểm 10 lớp lỗi trước khi ghi) bắt cả bảy, đã chữa tay sang gọi theo nội
+   dung. **Đừng áp thẳng bản sửa của agent.**
+2. **Cả 12 agent lô đầu chết cùng lúc** vì org chạm hạn mức chi tiêu tháng. Chúng kịp ghi
+   209 bản sửa / 27 bài, nhưng hai agent dùng trùng tên file và ghi đè nhau. Lượt phóng lại
+   bắt **một file mỗi bài, ghi ngay sau khi đọc xong bài đó** — nếu chết giữa chừng thì chỉ
+   mất bài đang làm.
+
+### Nợ đang mang — ghi ra để đừng ai tưởng đã xong
+
+- **"Chọn dài nhất" còn 70,6%, mục tiêu là 25%.** Nguyên nhân là lỗi của tôi trong bản giao
+  việc: `BRIEF.md` viết *"nới distractor cho ngang đáp án"*, mà **ngang thì thế hoà vẫn
+  nghiêng về đáp án** — dài hơn một ký tự cũng là dài nhất. Lượt sau phải yêu cầu **"ít nhất
+  một distractor DÀI HƠN đáp án"**. Phần thực chất đã cải thiện thật (2,19× → 1,14×), phần
+  còn lại là thế hoà.
+- **19 câu còn ≥2×** (`s-intro#3` `s-plan8w#3` `t-colab#11` `d-split#8` `ml-linear#6`
+  `ml-metrics#3` `pr-code#8` `pr-code#21` `pr-eval#4` `q-multi#4` `r-stack#4` `#6` `#11`
+  `#16` `r-mistakes#8` `#10` `#18` `r-glossary#8` `#12`). `G-QUIZ-GUESS` đặt ngưỡng
+  từng-câu ở **2,5×** chứ không phải 2×, cố ý: đặt ngưỡng cho vừa nợ thì cổng thành con dấu
+  cao su. 19 câu này là nợ, không phải chuẩn mới.
+
+### Cố ý KHÔNG làm
+
+- **Không rà lại tính đúng/sai bằng một lượt độc lập.** `BRIEF.md` mở đầu bằng con số 92,3%,
+  và tỉ lệ báo cáo phản ánh đúng thứ tự đó: 502 `do-dai` / 6 `chan`. Có thể bộ câu thật sự
+  đúng (phiên (v) đã rà nội dung), cũng có thể bản giao việc mồi agent nhìn một trục và làm
+  mờ trục kia. **Chưa có bằng chứng chọn giữa hai khả năng**, nên đừng đọc "6 lỗi chặn" là
+  "bộ câu đã sạch về kiến thức". Muốn chắc thì cần một lượt **chỉ hỏi đúng/sai, không nhắc
+  gì tới độ dài** — hai lượt không mồi lẫn nhau.
+- **Không sửa 110 câu còn cụm "theo bài".** Đếm cụm từ bắt CHỮ chứ không bắt HÌNH DẠNG: phần
+  lớn đã là tình huống (*"Bạn train mô hình bằng log loss, nhưng báo cáo lại nói…"*) và giữ
+  "theo bài" như một giới hạn phạm vi, nghĩa là "trả lời theo khung bài này". Còn ca thật
+  sót lại (`s-how#0`), nhưng không phải 110 — đừng chạy sed trên cụm đó.
+- **Không tách bài dài thành nhiều cụm quiz.** Nợ cũ từ (v), vẫn là quyết định giáo trình.
+- **Không đụng nội dung bài học** ngoài một câu ở `q-forecast` — vì câu đó SAI, không phải
+  vì nó mỏng.
+
+### Verify
+
+`gate.mjs` CHẶN qua · `gate.test.mjs` **66 đạt / 0 trượt** · `G-QUIZ-GUESS` im ở trạng thái
+mới · mở trang thật: 1429px không cuộn ngang, ô quiz 1059px = đúng `--ds-measure`, bốn lựa
+chọn cùng cao 66px cùng rộng 1009px; 375px với `pr-code` (24 câu) vẫn **22px/vạch · 3 hàng**
+— đúng con số (v) chốt, không hồi quy. Screenshot ra khung đen khi cuộn sâu, đúng như mục
+"Chạy preview" đã ghi — verify bằng DOM.
+
+---
+
 ## Phiên 2026-08-14 (v) — rà bao phủ quiz · 475 → 941 câu · hai cổng mới
 
 Chủ trang hỏi "mỗi bộ câu hỏi đã bao phủ toàn bộ kiến thức của bài chưa, tôi muốn nó đầy đủ".
