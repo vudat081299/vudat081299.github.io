@@ -173,10 +173,16 @@
        KHÔNG viết `33vw` trần — xem khối ⑥ về đơn vị viewport. */
     --ds-aside-w: clamp(340px, calc(33.333 * var(--ds-vw)), 720px);
     --ds-bleed:      0px;  /* mặc định KHÔNG tràn; #main tính lại bên dưới */
-    /* 1% cửa sổ THẬT. `zoom` không điều chỉnh đơn vị viewport (xem khối ⑥), nên mọi
-       chỗ cần "cao/rộng bằng cửa sổ" phải dùng hai token này, KHÔNG dùng vh/vw trần. */
-    --ds-vh: calc(1vh / var(--ds-zoom));
-    --ds-vw: calc(1vw / var(--ds-zoom));
+    /* 1% cửa sổ THẬT — cố ý dùng `dvh`/`dvw` (không phải `vh`/`vw`) làm gốc: trên mobile,
+       thanh địa chỉ ẩn/hiện lúc cuộn làm viewport THẬT co giãn, và `dvh` là đơn vị theo
+       kịp việc đó còn `vh` thì đứng yên theo viewport LỚN NHẤT. Dùng `vh` ở đây từng làm
+       TOC (drawer bên trái, `position:fixed; height:var(--wb-shell-h)` dưới 900px) cao
+       hơn/thấp hơn cửa sổ thật một nhịp, và đúng lúc cuộn quá đầu drawer thì mép dưới hở
+       ra, lộ nội dung trang nằm bên dưới nó. `zoom` không điều chỉnh đơn vị viewport (xem
+       khối ⑥) — cả `vh` lẫn `dvh` đều bị vậy như nhau — nên mọi chỗ cần "cao/rộng bằng cửa
+       sổ" phải dùng hai token này, KHÔNG dùng vh/vw/dvh/dvw trần. */
+    --ds-vh: calc(1dvh / var(--ds-zoom));
+    --ds-vw: calc(1dvw / var(--ds-zoom));
     /* Kit tự khai `--wb-shell-h: 100dvh` kèm chú thích "override if the page is zoomed".
        Đây là chỗ override đó: thiếu nó thì thanh bên và ngăn trượt cụt đúng 10% chiều cao. */
     --wb-shell-h: calc(100 * var(--ds-vh));
@@ -204,7 +210,7 @@
      GIỮ token `--ds-zoom` cùng `--ds-vh`/`--ds-vw` chứ không xoá: chúng là chỗ luật
      "không viết vh/vw/dvh trần" bám vào, và `gate.test.mjs` có một ca canh đúng việc
      đó. Xoá đi thì lần sau ai đặt lại `zoom` sẽ dựng lại cả ba cái bẫy trên từ đầu.
-     Với ⑥ = 1 thì `--ds-vh` = 1vh, phép chia thành phép nhân 1 — không tốn gì. */
+     Với ⑥ = 1 thì `--ds-vh` = 1dvh, phép chia thành phép nhân 1 — không tốn gì. */
   html { zoom: var(--ds-zoom); }
   /* Suy ra, đừng sửa tay. --ds-bleed là mức tràn MỖI BÊN của bảng:
        · trần    = (--ds-wide − --ds-measure) / 2 → 100px, đủ để bảng đạt 1060px
