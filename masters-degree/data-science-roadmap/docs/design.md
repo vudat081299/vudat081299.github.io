@@ -233,13 +233,21 @@ console.log(lines.map(s => s.length), lines);   // ĐỌC chuỗi, đừng chỉ
 
 ### 0.4 Không zoom (`--ds-zoom: 1`) — và vì sao vẫn giữ token
 
-Luật, không có ngoại lệ: **trong trang này không viết `vh`/`vw`/`dvh` trần.** Dùng hai
+Luật, không có ngoại lệ: **trong trang này không viết `vh`/`vw`/`dvh`/`dvw` trần.** Dùng hai
 token ở `:root`:
 
 ```css
---ds-vh: calc(1vh / var(--ds-zoom));   /* 1% chiều cao cửa sổ THẬT */
---ds-vw: calc(1vw / var(--ds-zoom));   /* 1% chiều rộng cửa sổ THẬT */
+--ds-vh: calc(1dvh / var(--ds-zoom));   /* 1% chiều cao cửa sổ THẬT */
+--ds-vw: calc(1dvw / var(--ds-zoom));   /* 1% chiều rộng cửa sổ THẬT */
 ```
+
+**Gốc là `dvh`/`dvw`, không phải `vh`/`vw`.** Trên mobile, thanh địa chỉ ẩn/hiện lúc cuộn
+làm viewport THẬT co giãn — `dvh` theo kịp việc đó, `vh` thì đứng yên theo viewport LỚN
+NHẤT. Bản trước dùng `vh` (chỉ để tránh việc `zoom` không chia đơn vị viewport, xem dưới),
+và hệ quả là TOC (`.wb-shell__side` thành drawer `position:fixed; height:var(--wb-shell-h)`
+dưới 900px) cao lệch cửa sổ thật một nhịp trên mobile — đúng lúc cuộn quá đầu drawer thì mép
+dưới hở ra, lộ nội dung trang nằm bên dưới nó (bắt 2026-08-16). `zoom` không điều chỉnh đơn
+vị viewport dù là `vh` hay `dvh` (xem dưới), nên đổi gốc sang `dvh` không mất gì.
 
 Chỗ đang dùng: `--wb-shell-h` (override token của kit — kit tự ghi chú "override if the page
 is zoomed"), `.wb-drawer` (height + max-width, sửa ở **lớp** nên cả ngăn phụ lẫn dock đúng
@@ -259,7 +267,7 @@ lớp vỏ 10% ở chỗ kit ghi px cứng — và phải trả ba cái giá, n�
 
 Lợi ích đó giờ mua bằng thang §0.2: cột bài không còn đọc px của kit nữa. Giữ token vì luật
 trên bám vào nó, và vì xoá đi thì lần sau ai bật lại `zoom` sẽ dựng lại cả ba cái bẫy từ
-đầu. Với `--ds-zoom: 1` thì `--ds-vh` = `1vh`: không tốn gì.
+đầu. Với `--ds-zoom: 1` thì `--ds-vh` = `1dvh`: không tốn gì.
 
 Hai thứ khác cùng gốc:
 

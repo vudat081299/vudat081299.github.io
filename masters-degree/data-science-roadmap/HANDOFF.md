@@ -18,6 +18,46 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 
 ---
 
+## Phiên 2026-08-16 (w) — TOC bên trái lộ nội dung phía sau khi cuộn quá đầu (mobile)
+
+Chủ trang báo: ở TOC bên trái (`#sidenav`, cây lộ trình), cuộn quá giới hạn thì lộ nội dung
+của layer nằm dưới nó.
+
+### Chẩn đoán
+
+`--ds-vh`/`--ds-vw` (khối `:root`, dòng ⑥) từng lấy gốc từ `1vh`/`1vw` trần, không phải
+`1dvh`/`1dvw` — đổi từ bản gốc của kit (`--wb-shell-h: 100dvh`) sang `vh` **chỉ để** tránh
+việc `zoom` không chia đơn vị viewport (§0.4 docs/design.md), và làm rơi mất tác dụng thật
+của `dvh`: theo kịp việc thanh địa chỉ mobile ẩn/hiện lúc cuộn làm viewport THẬT co giãn.
+Dưới 900px, `.wb-shell__side` (TOC) đổi vai thành drawer `position:fixed; height:
+var(--wb-shell-h)`. Với gốc là `vh` tĩnh, chiều cao đó lệch cửa sổ thật một nhịp đúng lúc
+thanh địa chỉ đổi trạng thái khi cuộn — mép dưới drawer hở ra, lộ trang nằm sau nó. Đây
+đúng là điều `dvh` sinh ra để tránh; bản override đã bỏ sót phần đó.
+
+**Không tái hiện được bằng mắt trong phiên này**: Browser pane preview của tool cứ hang
+(`computer scroll` timeout liên tục) và screenshot có lúc trả về khung đen dù DOM/CSS đọc
+qua JS vẫn đúng — nghi là giới hạn của sandbox chạy phiên này (không phải bug của trang), vì
+lỗi mô tả (lộ layer khi cuộn quá đầu) đặc trưng cho khác biệt viewport-lớn-nhất-vs-viewport-
+thật trên mobile Safari/Chrome, mà preview desktop giả lập trong tool không dựng lại được
+(không có thanh địa chỉ thật để ẩn/hiện). Đã xác nhận qua code + `getComputedStyle` rằng
+`--ds-vh` giờ resolve đúng thành `calc(1dvh / 1)`, và desktop lẫn drawer mobile tĩnh (mở
+qua click, không qua cuộn) vẫn layout đúng như trước (không có gì regress).
+
+### Sửa
+
+`--ds-vh: calc(1vh / var(--ds-zoom))` → `calc(1dvh / var(--ds-zoom))`, tương tự `--ds-vw`.
+Cả hai vẫn đi qua đúng cổng `gate.test.mjs` đã canh sẵn (nó chỉ đòi token được định nghĩa
+bằng `calc()`, không khoá cứng đơn vị `vh`). `zoom` vẫn không điều chỉnh đơn vị viewport dù
+là `vh` hay `dvh` — nên đổi gốc không mất gì (docs/design.md §0.4 đã ghi rõ). Cập nhật hai
+chú thích trong `<style>` + §0.4 docs/design.md cho khớp.
+
+**Nếu chủ trang vẫn thấy lộ layer sau khi deploy**: khả năng khác cần xét là rubber-band của
+trackpad macOS trên chính desktop (`overscroll-behavior: contain` chặn scroll chaining nhưng
+không chắc chặn hết animation bounce ở biên trên mọi engine) — chưa có bằng chứng cho nhánh
+này, ghi lại để phiên sau không phải dò lại từ đầu.
+
+---
+
 ## Phiên 2026-08-14 (v) — rà bao phủ quiz · 475 → 941 câu · hai cổng mới
 
 Chủ trang hỏi "mỗi bộ câu hỏi đã bao phủ toàn bộ kiến thức của bài chưa, tôi muốn nó đầy đủ".
