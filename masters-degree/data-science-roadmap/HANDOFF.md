@@ -23,43 +23,18 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 Chủ trang báo: ở TOC bên trái (`#sidenav`, cây lộ trình), cuộn quá giới hạn thì lộ nội dung
 của layer nằm dưới nó.
 
-### Chẩn đoán
+### Lần đầu — SAI, nhưng vẫn đáng giữ như một fix riêng
 
-`--ds-vh`/`--ds-vw` (khối `:root`, dòng ⑥) từng lấy gốc từ `1vh`/`1vw` trần, không phải
-`1dvh`/`1dvw` — đổi từ bản gốc của kit (`--wb-shell-h: 100dvh`) sang `vh` **chỉ để** tránh
-việc `zoom` không chia đơn vị viewport (§0.4 docs/design.md), và làm rơi mất tác dụng thật
-của `dvh`: theo kịp việc thanh địa chỉ mobile ẩn/hiện lúc cuộn làm viewport THẬT co giãn.
-Dưới 900px, `.wb-shell__side` (TOC) đổi vai thành drawer `position:fixed; height:
-var(--wb-shell-h)`. Với gốc là `vh` tĩnh, chiều cao đó lệch cửa sổ thật một nhịp đúng lúc
-thanh địa chỉ đổi trạng thái khi cuộn — mép dưới drawer hở ra, lộ trang nằm sau nó. Đây
-đúng là điều `dvh` sinh ra để tránh; bản override đã bỏ sót phần đó.
+Đoán đầu tiên: `--ds-vh`/`--ds-vw` lấy gốc từ `1vh`/`1vw` trần thay vì `1dvh`/`1dvw`, làm
+drawer TOC trên mobile (<900px) lệch cửa sổ thật một nhịp lúc thanh địa chỉ ẩn/hiện. Đã sửa
+(`calc(1dvh / var(--ds-zoom))`) + cập nhật `docs/design.md` §0.4. Chủ trang xác nhận: **không
+khác gì** — sai chẩn đoán. Giữ lại thay đổi này vì bản thân nó vẫn là một cải thiện đúng, chỉ
+là không phải nguyên nhân của bug đang báo.
 
-**Không tái hiện được bằng mắt trong phiên này**: Browser pane preview của tool cứ hang
-(`computer scroll` timeout liên tục) và screenshot có lúc trả về khung đen dù DOM/CSS đọc
-qua JS vẫn đúng — nghi là giới hạn của sandbox chạy phiên này (không phải bug của trang), vì
-lỗi mô tả (lộ layer khi cuộn quá đầu) đặc trưng cho khác biệt viewport-lớn-nhất-vs-viewport-
-thật trên mobile Safari/Chrome, mà preview desktop giả lập trong tool không dựng lại được
-(không có thanh địa chỉ thật để ẩn/hiện). Đã xác nhận qua code + `getComputedStyle` rằng
-`--ds-vh` giờ resolve đúng thành `calc(1dvh / 1)`, và desktop lẫn drawer mobile tĩnh (mở
-qua click, không qua cuộn) vẫn layout đúng như trước (không có gì regress).
+### Cập nhật cùng ngày — chẩn đoán đúng, chủ trang gửi ảnh chụp lúc lỗi xảy ra
 
-### Sửa
-
-`--ds-vh: calc(1vh / var(--ds-zoom))` → `calc(1dvh / var(--ds-zoom))`, tương tự `--ds-vw`.
-Cả hai vẫn đi qua đúng cổng `gate.test.mjs` đã canh sẵn (nó chỉ đòi token được định nghĩa
-bằng `calc()`, không khoá cứng đơn vị `vh`). `zoom` vẫn không điều chỉnh đơn vị viewport dù
-là `vh` hay `dvh` — nên đổi gốc không mất gì (docs/design.md §0.4 đã ghi rõ). Cập nhật hai
-chú thích trong `<style>` + §0.4 docs/design.md cho khớp.
-
-**Nếu chủ trang vẫn thấy lộ layer sau khi deploy**: khả năng khác cần xét là rubber-band của
-trackpad macOS trên chính desktop (`overscroll-behavior: contain` chặn scroll chaining nhưng
-không chắc chặn hết animation bounce ở biên trên mọi engine) — chưa có bằng chứng cho nhánh
-này, ghi lại để phiên sau không phải dò lại từ đầu.
-
-### Cập nhật cùng ngày — bản trên SAI, chủ trang gửi ảnh chụp lúc lỗi xảy ra
-
-Chủ trang xác nhận: đổi `--ds-vh` sang `dvh` không khác gì, và mô tả lại chính xác hơn — kéo
-mạnh (không phải cuộn thường) quá đầu cây TOC, trên **Chrome/Mac**, thì lộ ra content của
+Chủ trang mô tả lại chính xác hơn — kéo mạnh (không phải cuộn thường) quá đầu cây TOC, trên
+**Chrome/Mac**, thì lộ ra content của
 layer sau nó (không cố định là gì, "bất kì cái gì" nằm ở vị trí đó lúc đó). Kèm ảnh chụp thật:
 `#sidenav` render như một thẻ trắng nổi, bo góc, có đổ bóng, KHÔNG cao hết cửa sổ — nội dung
 chính (một alert đỏ, một tiêu đề) hiện xuyên ra ở mép trên/phải/dưới của thẻ đó, như thể
