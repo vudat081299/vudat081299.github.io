@@ -578,10 +578,28 @@
      cột nội dung bên phải chưa phải nhường chỗ. Rộng hơn nữa thì mục lục bắt đầu
      tranh chú ý với bài đang đọc. */
   .wb-shell { --wb-sidenav-w: 330px; }
+  /* Kit đặt CẢ sticky lẫn overflow-y:auto trên CÙNG một phần tử (.wb-shell__side).
+     Đây là tổ hợp Chromium xử lý không ổn định: sau một cú cuộn nhanh/mạnh, phần tử
+     vừa phải "dính" theo scroll của TRANG vừa tự cuộn nội dung của CHÍNH NÓ — hai vai
+     tranh nhau, và trình duyệt có thể tính sai kích thước/vị trí của nó một nhịp, làm
+     nó co về đúng bằng nội dung rồi nổi lên như một thẻ trôi nổi. Vì nó không còn
+     chiếm đúng chỗ trong hàng flex, nội dung chính chảy tràn vào ngay bên dưới/quanh
+     nó — nhìn như "lộ layer phía sau". Chủ trang báo 2026-08-16, kèm ảnh chụp lúc lỗi
+     xảy ra trên Chrome/Mac sau khi kéo mạnh trong cây.
+     Sửa bằng cách TÁCH hai vai ra hai phần tử: #sidenav (ngoài) chỉ còn lo sticky +
+     kích thước + clip — không tự cuộn nữa; `.ds-rail` (trong, con trực tiếp) mới là
+     nơi thật sự cuộn. `overflow: hidden` ở ngoài còn là một lớp chắn: dù `.ds-rail`
+     có tính sai gì trong lúc cuộn, nó cũng không vẽ tràn ra ngoài khung #sidenav. */
+  #sidenav { overflow: hidden; padding: 0; }
   /* macOS phủ thanh cuộn NỔI lên mép phải: với padding phải 12px của kit, cột phút
      (r/x/d) ở đuôi mỗi hàng trong cây bị thanh cuộn che. Nới mép phải để nội dung
-     tránh hẳn ra khỏi vùng thanh cuộn. Chủ trang báo 2026-08-04. */
-  #sidenav { padding-right: 22px; }
+     tránh hẳn ra khỏi vùng thanh cuộn. Chủ trang báo 2026-08-04 — padding dọn từ
+     `#sidenav` sang đây khi tách vai cuộn (xem khối chú thích ngay trên). */
+  #sidenav > .ds-rail {
+    height: 100%; box-sizing: border-box;
+    overflow-y: auto; overscroll-behavior: contain; scroll-padding-block-end: 12px;
+    padding: 14px 22px 56px 12px;
+  }
   /* Lớp vỏ điều hướng — thanh trên, thanh bên (mục lục), chân trang — KHÔNG cho bôi
      đen chữ: đó là chỗ để BẤM, không phải chỗ để chép. Ô tìm kiếm là ngoại lệ, vì người
      dùng gõ và sửa chữ trong đó. Chủ trang chốt 2026-08-04. */
@@ -1329,20 +1347,23 @@
     border-radius: var(--wb-radius-sm); background: var(--wb-surface-2);
   }
   /* Thanh cuộn theo chủ đề cho những vùng cuộn của riêng trang này — cùng bộ quy tắc
-     §27 của kit, chỉ là kit không biết trước tên các lớp ds-*. */
-  .ds-code, .wb-shell__side, .ds-mathmodal .wb-modal__body, .wb-drawer__body {
+     §27 của kit, chỉ là kit không biết trước tên các lớp ds-*.
+     `.ds-rail`, không phải `.wb-shell__side`: vùng cuộn thật đã dọn sang đó (xem chú
+     thích ở #sidenav > .ds-rail phía trên) — canh nhầm phần tử thì thanh cuộn tuỳ biến
+     này không hiện ra, vì `.wb-shell__side` giờ không còn tự cuộn nữa. */
+  .ds-code, .ds-rail, .ds-mathmodal .wb-modal__body, .wb-drawer__body {
     scrollbar-width: thin; scrollbar-color: var(--wb-border-strong) transparent;
   }
-  .ds-code::-webkit-scrollbar, .wb-shell__side::-webkit-scrollbar,
+  .ds-code::-webkit-scrollbar, .ds-rail::-webkit-scrollbar,
   .ds-mathmodal .wb-modal__body::-webkit-scrollbar, .wb-drawer__body::-webkit-scrollbar { width: 10px; height: 10px; }
-  .ds-code::-webkit-scrollbar-track, .wb-shell__side::-webkit-scrollbar-track,
+  .ds-code::-webkit-scrollbar-track, .ds-rail::-webkit-scrollbar-track,
   .ds-mathmodal .wb-modal__body::-webkit-scrollbar-track, .wb-drawer__body::-webkit-scrollbar-track { background: transparent; }
-  .ds-code::-webkit-scrollbar-thumb, .wb-shell__side::-webkit-scrollbar-thumb,
+  .ds-code::-webkit-scrollbar-thumb, .ds-rail::-webkit-scrollbar-thumb,
   .ds-mathmodal .wb-modal__body::-webkit-scrollbar-thumb, .wb-drawer__body::-webkit-scrollbar-thumb {
     background: var(--wb-border-strong); border-radius: var(--wb-radius-pill);
     border: 3px solid transparent; background-clip: content-box;
   }
-  .ds-code::-webkit-scrollbar-thumb:hover, .wb-shell__side::-webkit-scrollbar-thumb:hover,
+  .ds-code::-webkit-scrollbar-thumb:hover, .ds-rail::-webkit-scrollbar-thumb:hover,
   .ds-mathmodal .wb-modal__body::-webkit-scrollbar-thumb:hover, .wb-drawer__body::-webkit-scrollbar-thumb:hover { background: var(--wb-fg-subtle); }
 
   /* ═══════════════════════════════════════════════════════════════════════

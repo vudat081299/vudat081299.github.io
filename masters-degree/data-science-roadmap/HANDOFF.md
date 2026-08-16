@@ -56,6 +56,41 @@ trackpad macOS trên chính desktop (`overscroll-behavior: contain` chặn scrol
 không chắc chặn hết animation bounce ở biên trên mọi engine) — chưa có bằng chứng cho nhánh
 này, ghi lại để phiên sau không phải dò lại từ đầu.
 
+### Cập nhật cùng ngày — bản trên SAI, chủ trang gửi ảnh chụp lúc lỗi xảy ra
+
+Chủ trang xác nhận: đổi `--ds-vh` sang `dvh` không khác gì, và mô tả lại chính xác hơn — kéo
+mạnh (không phải cuộn thường) quá đầu cây TOC, trên **Chrome/Mac**, thì lộ ra content của
+layer sau nó (không cố định là gì, "bất kì cái gì" nằm ở vị trí đó lúc đó). Kèm ảnh chụp thật:
+`#sidenav` render như một thẻ trắng nổi, bo góc, có đổ bóng, KHÔNG cao hết cửa sổ — nội dung
+chính (một alert đỏ, một tiêu đề) hiện xuyên ra ở mép trên/phải/dưới của thẻ đó, như thể
+`#sidenav` không còn chiếm chỗ thật trong hàng flex nữa.
+
+**Chẩn đoán lần hai (đúng — có bằng chứng, không phải suy đoán tự dựng):** kit đặt CẢ
+`position: sticky` LẪN `overflow-y: auto` trên CÙNG một phần tử (`.wb-shell__side`). Đây là tổ
+hợp Chromium biết xử lý sai: phần tử vừa phải "dính" theo scroll của khung ngoài, vừa tự cuộn
+nội dung của chính nó — sau một cú cuộn nhanh/mạnh, việc tính lại kích thước/vị trí của nó có
+thể trật một nhịp, làm nó co về đúng bằng nội dung rồi nổi lên như một thẻ (khớp ảnh chụp: bo
+góc + đổ bóng là dấu của `.wb-card`/box-shadow, không phải dấu của `.wb-shell__side` bình
+thường — phần tử "thật" không có hai thứ đó). Vì nó không còn chiếm chỗ trong flex, nội dung
+chính chảy tràn ngay bên dưới/quanh vị trí cũ của nó.
+
+**Sửa:** tách hai vai ra hai phần tử. `#sidenav` (ngoài) chỉ còn lo sticky + kích thước +
+`overflow: hidden` (clip cứng, không tự cuộn). `#sidenav > .ds-rail` (trong, con trực tiếp có
+sẵn trong HTML, không cần thêm khối mới) nhận `overflow-y: auto` + `overscroll-behavior:
+contain` + toàn bộ padding (dọn từ `#sidenav` sang, giữ đúng số cũ `14px 22px 56px 12px`).
+Bốn selector thanh cuộn tuỳ biến (`::-webkit-scrollbar*`) đổi theo từ `.wb-shell__side` sang
+`.ds-rail`, vì đó mới là phần tử thật sự cuộn.
+
+**Mức tin cậy — nói thẳng:** đây là chẩn đoán tốt nhất dựa trên ảnh chụp thật + một anti-
+pattern CSS/Chromium đã biết (sticky + overflow:auto cùng một phần tử), KHÔNG phải một repro
+tôi tự tay bấm ra được. Trong phiên này tôi thử lại đúng cách chủ trang gợi ý (đổi nền tương
+phản mạnh để lộ chỗ hở) và ban đầu tưởng bắt được — màn hình chụp còn lại toàn một màu — nhưng
+đối chiếu bằng cách đọc thẳng nội dung DOM (không qua ảnh) thì nội dung vẫn còn nguyên, tức
+đó là lỗi của chính công cụ chụp ảnh trong sandbox, không phải lỗi thật. Nên: đã kiểm không có
+regression (layout/padding/khoảng cuộn giống hệt trước, cổng + test đều xanh), nhưng **CHƯA**
+tự tay xác nhận thao tác "kéo mạnh quá đầu" trên Chrome/Mac hết lộ layer. Nếu chủ trang thử
+lại mà vẫn còn, báo cụ thể: còn thấy thẻ nổi bo góc đó không, hay đổi dạng khác.
+
 ---
 
 ## Phiên 2026-08-14 (v) — rà bao phủ quiz · 475 → 941 câu · hai cổng mới
