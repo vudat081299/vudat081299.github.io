@@ -71,7 +71,7 @@ lại mà vẫn còn, báo cụ thể: còn thấy thẻ nổi bo góc đó khô
 
 ---
 
-## Phiên 2026-08-15 (x) — rà đúng/sai độc lập · độ dài hết mang tín hiệu (92,3% → 26,7%)
+## Phiên 2026-08-15 (x) — rà đúng/sai độc lập · độ dài hết mang tín hiệu (92,3% → 25,4%)
 
 Chủ trang: *"chạy tất cả"* — cả hai lượt còn nợ của phiên (w), rồi commit và push.
 
@@ -106,12 +106,12 @@ thất bại vì **luật nói về MỘT CÂU thay vì về PHÂN PHỐI**:
 |---|---|---|---|
 | (w) | "nới distractor cho **ngang** đáp án" | 92,3% → **70,6%** | ngang → **thế hoà**, hoà vẫn ăn 50% |
 | (x) A | "**ít nhất một** distractor dài hơn" | hạng 1 về 0%, nhưng "chọn cái dài **THỨ NHÌ**" ăn **82,3%** | agent cho đúng một cái → đáp án dồn vào hạng 2 |
-| (x) C | "hạng độ dài của đáp án phải **rải đều 1–4**" | **25,6%** (ngẫu nhiên 25%) | ✓ |
+| (x) C | "hạng độ dài của đáp án phải **rải đều 1–4**" | **25,4%** (ngẫu nhiên 25%) | ✓ |
 
 ```
 hạng 1   hạng 2   hạng 3   hạng 4     chiến lược đoán tốt nhất
  0,0      82,3      8,6      9,1          82,3%   ← sau lượt A
-24,5      25,6     24,3     25,5          25,6%   ← nay
+24,8      25,2     24,7     25,4          25,4%   ← nay
 ```
 
 **Bài học, viết ra vì nó tổng quát hơn chuyện quiz:** bịt một lối tắt bằng ràng buộc đúng
@@ -127,7 +127,7 @@ Nay nó đo cả bốn hạng, kêu khi hạng nào vượt 40%, và `gate.test`
 
 | | đầu (w) | nay |
 |---|---|---|
-| chiến lược đoán theo độ dài tốt nhất | 92,3% | **25,6%** |
+| chiến lược đoán theo độ dài tốt nhất | 92,3% | **25,4%** |
 | câu lệch độ dài ≥1,5× | 788 | **43** |
 | `why` không nói phương án sai sai ở đâu | 742 | **52** |
 | từ tuyệt đối chỉ nằm ở distractor | 17 | **2** |
@@ -135,9 +135,9 @@ Nay nó đo cả bốn hạng, kêu khi hạng nào vượt 40%, và `gate.test`
 
 ### Nợ còn lại — có số, có cách làm
 
-- **3 lô D chưa về khi phiên đóng** (hạn mức chi tiêu org chặn agent **ba lần** trong phiên).
+- **Findings chưa áp** (nếu lô nào về sau khi phiên đóng) (hạn mức chi tiêu org chặn agent **ba lần** trong phiên).
   Findings của chúng nằm ở `scratchpad/findings/`; chạy `node apply.mjs --check` rồi
-  `--apply nhac`. Nhưng **25,6% đã bằng ngẫu nhiên** — phần này là làm cho đẹp, không phải nợ thật.
+  `--apply nhac`. Nhưng **25,4% đã bằng ngẫu nhiên** — phần này là làm cho đẹp, không phải nợ thật.
 - **43 câu còn lệch ≥1,5×** và **52 `why` chưa bác phương án sai**. Cả hai đều dưới ngưỡng
   cổng, không chặn gì.
 - **Ngoại lệ của phép chia hạng đều:** câu có đáp án **dưới ~40 ký tự không thể đạt hạng 1**
