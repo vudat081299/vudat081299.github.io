@@ -3133,15 +3133,27 @@
 .wb-shell__side {
   position: sticky; top: var(--wb-navbar-h); align-self: flex-start; flex: none;
   width: var(--wb-sidenav-w); height: calc(var(--wb-shell-h) - var(--wb-navbar-h));
-  padding: 14px 12px 56px;              /* tail room so the last link scrolls clear */
   background: var(--wb-surface);
   border-right: var(--wb-bw) solid var(--wb-border);   /* the ONE divider — on the right */
-  overflow-y: auto; scroll-padding-block-end: 12px;
-  overscroll-behavior: contain;         /* the rail's scroll stays put — no chaining to the page behind it */
+  overflow: hidden;                     /* the child scrolls now — see comment below */
 }
-/* The slot already paints the rail surface, so a .wb-sidenav dropped inside it
-   contributes its link styling only — no second border, width or background. */
-.wb-shell__side > .wb-sidenav { width: 100%; padding: 0; background: none; border-right: 0; }
+/* Sticky positioning and the element's OWN scrolling used to live on the SAME
+   node (this used to carry overflow-y:auto directly). Chromium can mistrack a
+   sticky box's size/position after a fast, aggressive scroll when that box is
+   ALSO its own scroll container: the rail collapses to its content height and
+   floats over the page, with main content showing through where it used to
+   sit — reported against a consuming page (data-science-roadmap) and
+   confirmed via screenshot (2026-08-16). Splitting the two roles fixes it:
+   `.wb-shell__side` only sticks + clips (`overflow: hidden`, no scroll math of
+   its own); `.wb-sidenav` — already the documented single child (see the
+   shell markup above) — now carries the real `overflow-y: auto` plus the
+   padding that used to sit on the slot (tail room so the last link scrolls
+   clear). No markup change needed: every consumer already nests content this
+   way. Fixed upstream too: web-builder-skill@2991d09. */
+.wb-shell__side > .wb-sidenav {
+  width: 100%; height: 100%; padding: 14px 12px 56px; background: none; border-right: 0;
+  overflow-y: auto; overscroll-behavior: contain; scroll-padding-block-end: 12px;
+}
 /* min-width:0 is load-bearing: without it a wide table or a long unbroken string
    pushes the main column past the viewport instead of scrolling inside it. */
 .wb-shell__main { flex: 1 1 auto; min-width: 0; }
