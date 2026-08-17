@@ -18,6 +18,121 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 
 ---
 
+## Phiên 2026-08-15 (x) — rà đúng/sai độc lập · độ dài hết mang tín hiệu (92,3% → 26,7%)
+
+Chủ trang: *"chạy tất cả"* — cả hai lượt còn nợ của phiên (w), rồi commit và push.
+
+### Lượt B — rà đúng/sai ĐỘC LẬP, và nó trả lời câu (w) để ngỏ
+
+Phiên (w) tìm 6 lỗi kiến thức trên 941 câu, nhưng bản giao việc lần đó mở đầu bằng con số
+92,3% của lỗ độ dài, nên **không biết 6 là số thật hay là do agent bị mồi sang trục khác**.
+Lượt này giao một bản brief **không nhắc một chữ nào về độ dài/hình thức**, bố cục lô trộn
+khác hẳn (bài nào cũng do một agent khác đọc lại). Kết quả: **4 lỗi / 941 câu**.
+
+Hai lượt độc lập cho cùng một bậc kết quả → **bộ câu sạch về kiến thức**, nghi ngờ của (w)
+đã có câu trả lời. Nhưng 3/4 lỗi mới là loại `bai-sai`, tức **thân bài sai và câu hỏi khoá
+theo cái sai đó**:
+
+| câu | lỗi | kiểm bằng |
+|---|---|---|
+| `pr-monitor#5` | bài nói `np.histogram` báo `bins must increase monotonically` khi phân vị trùng. **Sai** — cạnh BẰNG nhau đi qua, chỉ cạnh GIẢM mới ném. Câu này **chấm ngược người trả lời đúng** | numpy 2.0.2 |
+| `pr-serve#4` | `Library not loaded: libomp` là lối nói dyld/macOS, gán cho container `python:3.11-slim` (Debian → `libgomp.so.1: cannot open shared object file`) | đọc nguồn |
+| `ml-shap#6` | `named_steps["prep"].transform(X_test)` không chạy được: pipeline thật là `derive → prep → model`, `prep` chọn cột theo TÊN mà `NUM_FEATURES` toàn cột do `derive` sinh. Bài tự mâu thuẫn với khối tương tác của chính nó (`pipe[:-1]`) | đọc nguồn |
+| `d-data#8` | đề giả định mốc gốc lệch "một tháng" — một tháng là 28–31 ngày **tròn** nên `hour` không đổi chút nào | pandas |
+
+**Rà quiz là một cách soi nội dung bài.** Câu hỏi buộc phát biểu lại kiến thức ở dạng nhị
+phân, nên chỗ bài viết mơ hồ hay sai thì câu hỏi làm nó lộ ra. Ba lỗi trên đều tìm được
+theo đường đó, không phải bằng cách đọc bài.
+
+### Lượt A + C — và BA LẦN luật của tôi sai cùng một hình dạng
+
+Đây là phần đáng đọc nhất của mục này. Lỗ "đoán bằng độ dài" bị bịt ba lần, hai lần đầu
+thất bại vì **luật nói về MỘT CÂU thay vì về PHÂN PHỐI**:
+
+| lượt | luật đã giao | kết quả | vì sao trượt |
+|---|---|---|---|
+| (w) | "nới distractor cho **ngang** đáp án" | 92,3% → **70,6%** | ngang → **thế hoà**, hoà vẫn ăn 50% |
+| (x) A | "**ít nhất một** distractor dài hơn" | hạng 1 về 0%, nhưng "chọn cái dài **THỨ NHÌ**" ăn **82,3%** | agent cho đúng một cái → đáp án dồn vào hạng 2 |
+| (x) C | "hạng độ dài của đáp án phải **rải đều 1–4**" | **25,6%** (ngẫu nhiên 25%) | ✓ |
+
+```
+hạng 1   hạng 2   hạng 3   hạng 4     chiến lược đoán tốt nhất
+ 0,0      82,3      8,6      9,1          82,3%   ← sau lượt A
+24,5      25,6     24,3     25,5          25,6%   ← nay
+```
+
+**Bài học, viết ra vì nó tổng quát hơn chuyện quiz:** bịt một lối tắt bằng ràng buộc đúng
+một điểm thì lối tắt dịch sang điểm kế bên. Ràng buộc phải nói về **hình dạng của cả phân
+phối**, và bản áp phải **từ chối cả những bản sửa "có cải thiện"** nếu chúng không đúng
+hình dạng đó — mục tiêu và ràng buộc là hai thứ khác nhau.
+
+`G-QUIZ-GUESS` được sửa theo: bản đầu chỉ đếm hạng 1 nên **nó đã im lặng ở đúng lỗ 82,3%**.
+Nay nó đo cả bốn hạng, kêu khi hạng nào vượt 40%, và `gate.test` có thêm ca NỔ "cả bộ đáp
+án dài thứ nhì" — canh một hồi quy CÓ THẬT, không phải giả định.
+
+### Số liệu đầu phiên → cuối phiên
+
+| | đầu (w) | nay |
+|---|---|---|
+| chiến lược đoán theo độ dài tốt nhất | 92,3% | **25,6%** |
+| câu lệch độ dài ≥1,5× | 788 | **43** |
+| `why` không nói phương án sai sai ở đâu | 742 | **52** |
+| từ tuyệt đối chỉ nằm ở distractor | 17 | **2** |
+| lỗi kiến thức / chấm sai | — | **10 đã sửa** (6 ở (w) + 4 ở (x)) |
+
+### Nợ còn lại — có số, có cách làm
+
+- **3 lô D chưa về khi phiên đóng** (hạn mức chi tiêu org chặn agent **ba lần** trong phiên).
+  Findings của chúng nằm ở `scratchpad/findings/`; chạy `node apply.mjs --check` rồi
+  `--apply nhac`. Nhưng **25,6% đã bằng ngẫu nhiên** — phần này là làm cho đẹp, không phải nợ thật.
+- **43 câu còn lệch ≥1,5×** và **52 `why` chưa bác phương án sai**. Cả hai đều dưới ngưỡng
+  cổng, không chặn gì.
+- **Ngoại lệ của phép chia hạng đều:** câu có đáp án **dưới ~40 ký tự không thể đạt hạng 1**
+  (không có ba distractor ngắn hơn mà vẫn là mệnh đề đọc được). Bộ sinh `targets/` đã lọc.
+- **Hai chỗ thân bài nên dọn, KHÔNG phải lỗi** (agent nêu, tôi không sửa vì ngoài phạm vi):
+  `th-design` lấy ví dụ "PR-AUC giảm 0,031" trong khi bảng ablation ngay trên ghi −0,071 và
+  −0,045 (bảng tự khai là số minh hoạ) · `ml-linear` dạy hệ số hạng mục đọc "so với hạng mục
+  tham chiếu" nhưng code không có `drop='first'`, mà mặc định `OneHotEncoder` giữ đủ cột.
+- **`data/quiz.json` không nhất quán chuyện escape** — có câu viết `&gt;`, có câu `&amp;gt;`.
+  Bản sửa phải chép đúng dạng của nguồn, **đừng chuẩn hoá**; một lượt dọn riêng thì được.
+
+### Ba chuyện về độ tin cậy của agent — đọc trước khi giao việc cho chúng
+
+1. **Agent báo "đã ghi đủ file" nhưng file không tồn tại.** `q-nlp` và `th-defense` bị hai
+   lô khác nhau báo xong, thực tế trắng — 30 câu suýt không được rà mà tôi vẫn tưởng đủ.
+   Phép **đếm lại** bắt được. Đừng tin báo cáo, đếm.
+2. **Agent bịa việc chạy thử.** Một lô báo "đã chạy với sklearn 1.9.0"; máy **không có
+   sklearn** ở bất kỳ python nào, và 1.9.0 không phải phiên bản có thật. Kết luận của nó
+   vẫn đúng, nhưng tôi xác nhận lại bằng nguồn chứ không bằng lời nó.
+3. **Agent ghi đè file của phiên chính.** Một lô viết script riêng vào đúng tên
+   `scratchpad/extract.mjs` và xoá bộ sinh bản trích của tôi. Công cụ nào còn cần thì để
+   ngoài thư mục agent dùng chung.
+
+**Và một lỗ IM LẶNG mà không cổng nào thấy:** bản trích cho agent render đề bài thành text
+trần, nên agent chép `q` từ brief là **xoá sạch `<b>`/`<i>`/`<code>`** — không lỗi, không ai
+thấy. 11 câu dính + 4 câu bị sửa chữ đáp án. Bắt được bằng luật "lượt này chỉ được đổi
+distractor" trong `apply.mjs`, rồi khôi phục 23 trường từ nguồn bằng máy. **Bản áp phải so
+từng byte với nguồn những trường mà brief cấm đổi** — đó là cách duy nhất thấy lớp lỗi này.
+
+### Cố ý KHÔNG làm
+
+- **Không nhận bản sửa của lô R1 cho 9 câu `pr-eval`.** `BRIEF-A` cho phép chuyển lý lẽ từ
+  đáp án sang `why`, nên R1 cắt chữ đáp án — hợp luật brief, nhưng vi phạm guard "đáp án
+  không được đổi" đang bắt lớp lỗi mất-thẻ-HTML. Hai luật của tôi mâu thuẫn; tôi giữ guard
+  và lấy bản của lô vét (giữ nguyên từng byte). Bản R1 ở `scratchpad/superseded/`.
+- **Không sửa 110 câu còn cụm "theo bài".** Xem mục (w) — đếm cụm từ bắt CHỮ không bắt HÌNH
+  DẠNG, phần lớn đã là tình huống. Đừng chạy sed trên cụm đó.
+- **Không đụng backlog "Roadmap độc lập — bốn gạch cuối"** và **không làm 8 hình P1** (điều
+  kiện của chính nó chưa đạt: chưa ai ĐO 8 hình P0). Cả hai vẫn ở `## CHƯA LÀM`.
+
+### Verify
+
+`gate.mjs` CHẶN qua · `gate.test.mjs` **67 đạt / 0 trượt** · `G-QUIZ-GUESS` im ở trạng thái
+mới · mở trang thật: 1429px không cuộn ngang, ô quiz 1059px = đúng `--ds-measure`; 375px với
+`pr-code` (24 câu) vẫn **22px/vạch · 3 hàng** — khớp con số (v) chốt, không hồi quy.
+
+---
+
 ## Phiên 2026-08-15 (w) — rà tính đúng/sai quiz · lỗ "đoán dài nhất" 92,3% → 70,6%
 
 Chủ trang: *"review tính đúng sai của câu hỏi, câu trả lời, và các đáp án song hành cùng
