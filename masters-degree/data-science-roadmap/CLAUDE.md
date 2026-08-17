@@ -318,10 +318,24 @@ biết không".** `G-QUIZ` đếm trường, `G-QUIZ-COV` đếm câu — cả h
 Đo 2026-08-15 tìm ra chỗ thủng: chiến lược **"chọn lựa chọn DÀI NHẤT" đúng 869/941 =
 92,3%**, vì đáp án đúng là lựa chọn duy nhất được viết đủ nghĩa còn distractor bị cắt
 cụt. Người không biết Data Science, chỉ đếm ký tự, làm đúng 92%. Lỗ không khu trú:
-74/84 bài ≥80%, bài kín nhất cũng 58%. Sau lượt sửa 711 câu: **70,6% · độ dài trung vị
-2,19× → 1,14×**. Cổng đo hai mức — cả bộ >75%, và **không dung thứ câu nào ≥2,5×**.
-Cách sửa đúng khi cổng kêu: **nới distractor cho mỗi cái mang lý lẽ sai của riêng nó,
+74/84 bài ≥80%, bài kín nhất cũng 58%.
+
+**Cổng đo PHÂN PHỐI HẠNG, không đo riêng hạng 1 — và đó là bài học đắt nhất của lớp
+lỗi này.** Bản đầu của cổng chỉ hỏi "đáp án có phải dài nhất không". Bịt hạng 1 xong
+(92,3% → 0%) thì **lối tắt không mất, nó dịch sang hạng kế bên**: "chọn cái dài THỨ NHÌ"
+ăn **82,3%**, mà cổng vẫn xanh. Nguyên nhân ở luật giao việc — nó nói về *một câu* ("ít
+nhất một distractor dài hơn") nên agent cho đúng một cái, và đáp án rơi vào hạng 2 gần
+như mọi câu. Trước đó một lượt nữa, luật "nới cho *ngang* đáp án" sinh ra **thế hoà**,
+cũng vẫn đoán được. Hai lần cùng một hình dạng sai.
+
+Luật đúng nói về phân phối: **hạng độ dài của đáp án phải rải đều 1–4, mỗi hạng ~25%**.
+Khi đó mọi chiến lược theo độ dài đều về 25%. Cổng kêu khi **hạng nào vượt 40%**, và nó
+in cả bốn hạng ra. Ngoại lệ đã biết: câu có đáp án rất ngắn (dưới ~40 ký tự) **không thể**
+đạt hạng 1 — không có ba distractor ngắn hơn mà vẫn đọc được.
+
+Cách sửa đúng khi cổng kêu: **nới/rút distractor cho mỗi cái mang lý lẽ sai của riêng nó,
 ĐỪNG cắt đáp án cho ngắn lại** — phần bị cắt thường là lý lẽ, mà lý lẽ thuộc về `why`.
+Mức đang dùng và phần còn nợ: HANDOFF phiên (x).
 
 **`G-QUIZ-POS` canh một lớp lỗi chỉ nổ khi bạn động vào.** Một giải thích viết "đáp án cuối
 sai vì…" đang đúng, nhưng nó phụ thuộc vào **thứ tự lựa chọn**. Đo được: lượt rải lại vị trí

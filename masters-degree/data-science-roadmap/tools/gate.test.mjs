@@ -213,6 +213,20 @@ const OTHER_CASES = [
     }));
     writeFileSync(join(DS, 'data', 'quiz.json'), JSON.stringify(q));
   }],
+  /* Ca NỔ thứ hai, và nó là ca mà bản ĐẦU của cổng bỏ lọt: đáp án KHÔNG phải dài nhất
+     — nó là dài THỨ NHÌ ở mọi câu. Bản đầu chỉ đếm hạng 1 nên im hoàn toàn, trong khi
+     "chọn cái dài thứ nhì" ăn 100%. Đó chính là lỗ thật đã xảy ra ngày 2026-08-15 sau
+     lượt bịt hạng 1 (82,3%), nên ca này canh một hồi quy CÓ THẬT, không phải giả định. */
+  ['G-QUIZ-GUESS', 'cả bộ có đáp án đúng dài THỨ NHÌ (bản đầu của cổng bỏ lọt)', () => {
+    const q = JSON.parse(ORIG['data/quiz.json']);
+    for (const id of Object.keys(q)) q[id] = q[id].map(it => ({
+      ...it, a: 1,
+      o: ['một distractor được viết dài hơn đáp án đúng một chút, đủ để chiếm hạng nhất',
+        'đáp án đúng, dài thứ nhì trong bốn lựa chọn của câu này',
+        'ngắn hơn hẳn', 'ngắn nhất'],
+    }));
+    writeFileSync(join(DS, 'data', 'quiz.json'), JSON.stringify(q));
+  }],
   ['G-TOC-STALE', 'TOC.md còn số dòng cũ', () => {
     // Dải dòng ĐẦU TIÊN trong bảng, tìm bằng khuôn chứ không bằng con số cụ thể —
     // gõ số vào đây thì test tự hỏng mỗi lần trang dài ra vài dòng.

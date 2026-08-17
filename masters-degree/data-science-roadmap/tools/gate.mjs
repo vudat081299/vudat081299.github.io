@@ -414,23 +414,33 @@ if (rmErr) {
      và 1,0×. */
   {
     const txt = s => String(s).replace(/<[^>]+>/g, '');
-    let n = 0, longest = 0; const skewed = [];
+    let n = 0; const rank = [0, 0, 0, 0]; const skewed = [];
     for (const id of quizIds) {
       if (!byId[id] || !Array.isArray(QUIZ[id])) continue;
       QUIZ[id].forEach((q, i) => {
         if (!Array.isArray(q?.o) || !Number.isInteger(q?.a) || !q.o[q.a]) return;
         const L = q.o.map(o => txt(o).length);
         n++;
-        if (L[q.a] === Math.max(...L)) longest++;
+        rank[[...L].sort((a, b) => b - a).indexOf(L[q.a])]++;
         const others = L.filter((_, j) => j !== q.a);
         const r = L[q.a] / (others.reduce((a, b) => a + b, 0) / others.length);
         if (r >= 2.5) skewed.push(`${id} câu ${i + 1} (${r.toFixed(1)}×)`);
       });
     }
-    const pct = n ? 100 * longest / n : 0;
-    if (pct > 75) W(`G-QUIZ-GUESS: chiến lược "chọn lựa chọn DÀI NHẤT" đúng ${longest}/${n} = ${pct.toFixed(1)}% `
-      + `(đoán ngẫu nhiên là 25%).\n    Đáp án đúng đang là lựa chọn duy nhất được viết đủ nghĩa. `
-      + `Cách sửa: nới distractor cho mỗi cái mang lý lẽ sai của riêng nó — ĐỪNG cắt đáp án cho ngắn lại.`);
+    const pct = n ? 100 * rank[0] / n : 0;
+    /* Đo CẢ BỐN hạng, không riêng hạng 1. Bản đầu của cổng này chỉ hỏi "đáp án có
+       phải dài nhất không", và nó đã IM LẶNG ở đúng chỗ thủng: sau lượt bịt hạng 1,
+       "chọn cái dài THỨ NHÌ" ăn 82,3% mà cổng vẫn xanh. Lối tắt không mất, nó dịch
+       sang hạng kế bên — nên thứ phải canh là PHÂN PHỐI, và hạng nào vượt ngưỡng
+       cũng là hở như nhau. */
+    const worst = rank.indexOf(Math.max(...rank));
+    const worstPct = n ? 100 * rank[worst] / n : 0;
+    const TEN = ['DÀI NHẤT', 'dài THỨ NHÌ', 'dài THỨ BA', 'NGẮN NHẤT'];
+    if (worstPct > 40) W(`G-QUIZ-GUESS: chiến lược "chọn lựa chọn ${TEN[worst]}" đúng ${rank[worst]}/${n} = ${worstPct.toFixed(1)}% `
+      + `(đoán ngẫu nhiên là 25%).\n    Phân phối hạng độ dài của đáp án đúng: `
+      + rank.map((c, i) => `hạng ${i + 1} ${(100 * c / n).toFixed(1)}%`).join(' · ')
+      + `\n    Bịt một hạng mà không rải đều thì lối tắt chỉ chuyển sang hạng kế bên — đã xảy ra một lần.`
+      + `\n    Cách sửa: nới/rút distractor cho mỗi cái mang lý lẽ sai của riêng nó, ĐỪNG cắt đáp án.`);
     if (skewed.length) W(`G-QUIZ-GUESS: ${skewed.length} câu có đáp án dài ≥2,5× trung bình ba lựa chọn kia:\n    `
       + skewed.slice(0, 10).join(' · ') + (skewed.length > 10 ? `\n    … và ${skewed.length - 10} câu nữa` : '')
       + '\n    Ở mức lệch này người đọc nhận ra đáp án bằng mắt, không cần hiểu bài.');
