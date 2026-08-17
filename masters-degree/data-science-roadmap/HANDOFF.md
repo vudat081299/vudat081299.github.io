@@ -18,6 +18,119 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 
 ---
 
+## Phiên 2026-08-17 (z) — roadmap đứng một mình (bốn gạch cuối) · nợ dư quiz về 0
+
+Chủ trang: *"còn gì chưa xong thì làm nốt luôn đi"*. Backlog `## CHƯA LÀM` còn 5 mục; hai
+mục làm được đã làm xong, ba mục còn lại **không** làm và lý do ở cuối.
+
+### 1. Hợp đồng "Roadmap độc lập" — xong cả bốn gạch cuối
+
+Mục `## CHƯA LÀM` đã **xoá** (hợp đồng 7/7 gạch). Trước phiên này `roadmap.html` chỉ có 2/4
+vật mỗi bước, nên cách gọi trung thực của nó là *visual syllabus*; giờ nó là một khoá học
+ngắn thật.
+
+| gạch | làm gì |
+|---|---|
+| bốn vật mỗi bước core | thêm `example` + `check` cho **cả 65 bước** vào `roadmap-summaries.json` |
+| code chạy được / ví dụ số | `kind:"code"` cho bài code, `kind:"num"` cho bài khái niệm |
+| capstone | 8 bước sau mạch chính, mỗi bước một tiêu chí đạt kiểm được |
+| hết phụ thuộc trang DS | bỏ link "Mở bài đầy đủ →", 2 href navbar, và tiến độ đọc ké |
+
+**Số đo đáng tin tới đâu:** 46/65 snippet là pandas/numpy thuần và agent chạy thật. Tôi
+**tự chạy lại 8 cái** (`d-leak d-split dl-attn f-cyclic ml-cv pr-eval t-numpy th-stats`) và
+output khớp trường `out` **từng byte cả 8**. Bài cần sklearn/torch (không có trên máy) thì
+`out` chỉ chứa số học kiểm được hoặc số đã có trong bài — agent nào không kiểm được đều nói
+ra thay vì bịa.
+
+**Tiến độ dùng khoá MỚI `rm-progress-v1`, không dùng lại `ds-roadmap-progress-v3`.** Lý do
+không phải thẩm mỹ: hai trang đếm bằng đơn vị khác nhau (bên kia ba mức đọc/thực hành/
+deliverable, bên này xong-hoặc-chưa), ghi chung một khoá là trang này **ghi đè tiến độ học
+thật** của chủ trang ở trang kia.
+
+**Ngăn phải: 1/3 cửa sổ → 47%.** Đây là thứ chỉ thấy khi mở trang, và nó là ví dụ cho việc
+"đo trước khi chọn số". Ở 1440px, mono 12,5px = 7,53px/ký tự, khung ngăn ăn 89px:
+
+| bề rộng | ngăn | ký tự/dòng vừa | kết quả |
+|---|---|---|---|
+| 1/3 (cũ) | 479px | 52 | **mọi** snippet cuộn ngang, kể cả dòng 70 ký tự |
+| 44% | 634px | 72 | dòng 73 ký tự vẫn cuộn |
+| **47%** | 677px | **78** | 0/65 khối code cuộn ngang ✓ |
+
+Đi kèm là trần **76 ký tự/dòng** trong `example.code`, áp bằng bộ kiểm. Trần này đến *giữa*
+lượt nên 19 file phải ngắt dòng lại — và mọi agent đều **chạy lại snippet sau khi ngắt** rồi
+so `out`, không ai chỉ đếm ký tự.
+
+**Cổng mới `G-ROADMAP-4`** (nhắc) đếm bốn vật của từng bước core, kèm ca NỔ trong
+`gate.test.mjs`. Hợp đồng này đã nằm trong HANDOFF **nhiều phiên mà không gì canh** — tức nó
+chỉ sống trong đầu người đọc handoff, đúng thứ luật 1 của repo gốc cấm.
+
+### 2. Nợ dư của quiz — cả hai mục về 0
+
+| | phiên (x) | nay |
+|---|---|---|
+| câu đáp án lệch ≥1,5× | 51 | **0** |
+| `why` không bác phương án sai nào | 49 | **0** |
+| hạng độ dài đáp án | 24,8 / 25,2 / 24,7 / 25,4% | 26,4 / 26,5 / 22,5 / 24,7% |
+| chiến lược đoán theo độ dài tốt nhất | 25,4% | **26,7%** (ngẫu nhiên 25%) |
+
+(Hai con số 51/49 lệch với 43/52 ghi ở phiên (x) vì heuristic khác nhau — bản này lấy trung
+bình ba lựa chọn kia, bản trước lấy lựa chọn dài nhất. Không ai sai, chỉ là hai thước.)
+
+Cách chữa loại lệch: **nới distractor, KHÔNG rút đáp án.** Phần bị rút ở đáp án luôn là lý
+lẽ, mà lý lẽ thuộc về `why`. Và mỗi distractor được nới phải mang **một lý lẽ sai riêng**,
+không phải ba cách nói cùng một ý — nới bằng cách diễn đạt lại là gian lận với chính cổng.
+
+### 3. Bốn dương tính giả do CHÍNH TÔI viết luật quá rộng — cùng một hình dạng
+
+Đây là phần đáng đọc nhất của mục này, vì nó lặp lại đúng lỗi của lượt rà quiz phiên (x):
+**luật khớp KÝ TỰ thay vì khớp Ý.**
+
+| luật tôi viết | nó tố oan | thật ra đó là |
+|---|---|---|
+| `/còn lại\|tương tự/` = chỗ bỏ lửng | `s-plan14` | "còn lại 4.520 − 940" — một phép trừ |
+| `/\.\.\.\|…/` = chỗ bỏ lửng | `pr-arch` | "500 … 3.000 ms" — một khoảng giá trị |
+| như trên, bản "phải có số hai bên" | `th-stats` | `{lo:+.4f} … {hi:+.4f}` — phân cách trong f-string |
+| `phương án (A\|B\|C\|D)\b` = gọi theo vị trí | 3 câu | "phương án còn lại", "Phương án dựa vào…" |
+
+Ca thứ tư là **cùng một cái bẫy `\b` đã cắn ở phiên (x)**: trong JS, ranh giới từ nằm giữa
+`d` và một chữ có dấu (`ò`, `ự`), nên `\b` sau `A-D` khớp cả chữ Việt. Bản đúng:
+`phương án ([A-D])(?![\p{L}])` với cờ `u`. Bản cuối của luật bỏ lửng cũng chuyển từ "khớp
+ký tự" sang "khớp vị trí": chỉ bắt dòng **chỉ có** dấu ba chấm, hoặc `# …`.
+
+Rút ra, và nó áp cho mọi cổng tương lai: **luật mới phải chạy thử trên toàn bộ dữ liệu hiện
+có trước khi tin nó** — cả bốn ca trên đều lộ ra ngay lần chạy đầu, không ca nào cần suy
+luận. Bốn lần trong một phiên là đủ để coi đây là mặc định, không phải may.
+
+### 4. Cố ý KHÔNG làm
+
+- **Tám hình P1** — điều kiện của chính nó chưa đạt: audit n9 nói *"làm 8 hình P0 trước, ĐO
+  comprehension/usability, chỉ sau đó mới làm P1"*. Đo comprehension cần người đọc thật;
+  agent không đo được, và bỏ qua bước đo là bỏ luôn lý do xếp thứ tự. Vẫn ở `## CHƯA LÀM`.
+- **Nhãn Foundation / Applied / Advanced** — mục `## CHƯA LÀM` **tự nói** *"cần thì chủ trang
+  gọi tên nó ra, 'làm hết backlog' không tính"*. Lượt này chính là "làm hết backlog", nên
+  không tính. Không làm.
+- **Không bỏ 7 chỗ nhắc `data-science-roadmap.html` còn lại trong `roadmap.html`** — cả 7 đều
+  nằm trong **comment**, ghi nguồn build (navbar/CSS/JS được TRÍCH từ trang chính lúc build).
+  Hợp đồng nói *"reader-facing phải tự chứa"*, và nó nói thẳng rằng lấy trang DS làm nguồn
+  build là **chi tiết triển khai, không phải quan hệ lộ ra cho người đọc**. Xoá comment là
+  xoá đúng thứ giữ cho phiên sau biết sửa ở đâu.
+- **Không tự chuẩn hoá escape trong `data/quiz.json`** (`&gt;` vs `&amp;gt;` còn lẫn nhau) —
+  vẫn theo luật cũ: sửa câu nào thì copy dạng của nguồn câu đó, đừng chuẩn hoá cả file.
+
+### 5. Còn nợ của riêng phiên này
+
+- **124 câu có "thế hoà"** — có distractor chênh đáp án dưới 3 ký tự. Không phải lỗ đoán
+  (hoà làm "chọn dài nhất" thành tung xúc xắc giữa hai cái, tức *dịu* tín hiệu đi), nhưng nó
+  làm **thước đo hạng bị nhiễu**: hạng của đáp án nhảy khi chênh 1 ký tự. Ai giao lô sửa quiz
+  tiếp thì soát `min |len_i − len_a| < 3` **trước** khi giao, vì bộ áp sẽ chặn những câu đó
+  ngay cả khi lô không nhắm vào chúng (đã xảy ra 5 lần trong lượt này).
+- **`s-plan14` có ví dụ dạy số mà trang rút gọn không tự dựng lại được**: `DATA` của
+  `roadmap.html` mang `week` và `fast` cho từng bài nhưng **không mang `day`**, nên 14 tổng
+  theo ngày là số ví dụ *nói ra* chứ không phải số người đọc cộng lại được ở đó. Số học vẫn
+  kiểm được. Muốn khép hẳn thì thêm `day` vào `DATA` trong `build-roadmap.mjs`.
+
+---
+
 ## Phiên 2026-08-16 (y) — TOC bên trái lộ nội dung phía sau khi cuộn quá đầu (mobile)
 
 > **Nhãn đổi từ (w) sang (y) lúc merge.** Hai phiên chạy song song cùng chọn chữ (w); phiên
