@@ -119,15 +119,14 @@ luận. Bốn lần trong một phiên là đủ để coi đây là mặc đị
 
 ### 5. Còn nợ của riêng phiên này
 
-- **124 câu có "thế hoà"** — có distractor chênh đáp án dưới 3 ký tự. Không phải lỗ đoán
-  (hoà làm "chọn dài nhất" thành tung xúc xắc giữa hai cái, tức *dịu* tín hiệu đi), nhưng nó
-  làm **thước đo hạng bị nhiễu**: hạng của đáp án nhảy khi chênh 1 ký tự. Ai giao lô sửa quiz
-  tiếp thì soát `min |len_i − len_a| < 3` **trước** khi giao, vì bộ áp sẽ chặn những câu đó
-  ngay cả khi lô không nhắm vào chúng (đã xảy ra 5 lần trong lượt này).
-- **`s-plan14` có ví dụ dạy số mà trang rút gọn không tự dựng lại được**: `DATA` của
-  `roadmap.html` mang `week` và `fast` cho từng bài nhưng **không mang `day`**, nên 14 tổng
-  theo ngày là số ví dụ *nói ra* chứ không phải số người đọc cộng lại được ở đó. Số học vẫn
-  kiểm được. Muốn khép hẳn thì thêm `day` vào `DATA` trong `build-roadmap.mjs`.
+Hai món đo được trong phiên này (**124 câu quiz ở "thế hoà"** và **`s-plan14` thiếu `day`
+trong `DATA`**) đã được đưa lên mục `## CHƯA LÀM` → *Nợ nhỏ đã ĐO, chưa làm*, cùng với món
+escape `quiz.json` còn treo từ (x). Chi tiết ở đó, **không lặp lại ở đây**: một việc đang mở
+mà được mô tả ở hai chỗ là cách nhanh nhất làm `HANDOFF.md` hết đáng tin, và `## CHƯA LÀM`
+là chỗ `session.mjs` in ra mỗi lần mở phiên.
+
+Ngoài ba món đó, phiên này không để lại việc dở nào: cổng CHẶN qua, `gate.test.mjs` 69/0,
+`gate.mjs --advice` **0 khuyến nghị**, `G-ROADMAP-4` im (65/65 bước core đủ bốn vật).
 
 ---
 
@@ -3359,6 +3358,25 @@ neighborhood) · `q-cv` (classification/detection/segmentation triptych) · `f-t
 Ba bài **chưa có trường `viz` nào** trong `roadmap-summaries.json`: `pr-mlops`, `q-nlp`,
 `r-glossary`.
 
+### Nợ nhỏ đã ĐO, chưa làm — mỗi món một lượt riêng, không làm kèm
+
+Ba món dưới đây khác "Tám hình P1" ở chỗ **không bị chặn bởi điều kiện nào** — chỉ là chưa
+tới lượt. Đều đã có số đo, nên ai làm cũng không phải đi đo lại.
+
+- **124 câu quiz có "thế hoà"**: có distractor chênh đáp án **dưới 3 ký tự**. *Không* phải lỗ
+  đoán — hoà làm chiến lược "chọn dài nhất" thành tung xúc xắc giữa hai lựa chọn, tức làm
+  *dịu* tín hiệu. Cái nó phá là **thước đo**: hạng độ dài của đáp án nhảy khi chênh 1 ký tự,
+  nên phân phối hạng mà `G-QUIZ-GUESS` in ra bị nhiễu. Hệ quả thực tế cho phiên sau: bộ áp
+  của lượt sửa quiz **chặn mọi câu ở thế hoà**, kể cả câu lô đó không nhắm tới (đã xảy ra 5
+  lần ở phiên (z), phải gỡ tay từng ca). **Soát `min |len_i − len_a| < 3` trước khi giao lô.**
+- **`s-plan14`: ví dụ trên trang học nhanh dạy số mà trang đó không tự dựng lại được.** `DATA`
+  trong `build-roadmap.mjs` mang `week` và `fast` cho từng bài nhưng **không mang `day`**, nên
+  14 tổng theo ngày là số ví dụ *nói ra* chứ không phải số người đọc cộng lại được ở đó (số
+  học vẫn kiểm được, nên đây là chưa tròn, không phải sai). Khép hẳn = thêm `day` vào `DATA`.
+- **`data/quiz.json` không nhất quán chuyện escape** — có câu viết `&gt;`, có câu `&amp;gt;`
+  (nợ từ (x)). Luật khi sửa lẻ vẫn là **chép đúng dạng của nguồn câu đó, đừng chuẩn hoá**;
+  một lượt dọn riêng cho cả file thì được, và phải kèm cổng nếu không nó lệch lại.
+
 ### Đang chờ chủ trang gọi — agent đừng tự làm
 
 - **Nhãn Foundation / Applied / Advanced.** (n5) để lại: trang đã có 3 chip ưu tiên + chip
@@ -3376,6 +3394,8 @@ Ba bài **chưa có trường `viz` nào** trong `roadmap-summaries.json`: `pr-m
 | Đổi thứ tự mạch chính | **xong** | (n4) đổi thứ tự chặng; (p) đổi thêm một đường nối trong chặng 2 (`d-eda` lên trước `d-split`) |
 | 11 chặng | **giữ** | audit n9 §3: "chưa có lý do đủ mạnh để đảo toàn bộ curriculum" — chỉ sửa ba đường nối, cả ba đã sửa ở (p) |
 | Cổng "từ tuyệt đối" bản rộng | **bác, có số đo** | quét `luôn`/`duy nhất`/`bảo đảm` cho 22 kết quả, gần hết là dương tính giả. `G-ABS` chỉ bắt hình dạng "ngưỡng % + mệnh lệnh" — xem (p) mục 5 |
+| 110 câu quiz còn cụm "theo bài" | **giữ, đừng sed** | (x): đếm CỤM TỪ bắt chữ chứ không bắt hình dạng — phần lớn 110 câu đó đã là câu tình huống thật. Chạy `sed` trên cụm đó là sửa thứ không hỏng |
+| 7 chỗ nhắc `data-science-roadmap.html` trong `roadmap.html` | **giữ** | (z): cả 7 nằm trong **comment** ghi nguồn build. Hợp đồng "Roadmap độc lập" nói thẳng lấy trang DS làm nguồn build là *chi tiết triển khai, không phải quan hệ lộ ra cho người đọc*. Xoá là xoá thứ giữ cho phiên sau biết sửa ở đâu |
 
 ### Một thứ để biết trước, KHÔNG phải việc
 
