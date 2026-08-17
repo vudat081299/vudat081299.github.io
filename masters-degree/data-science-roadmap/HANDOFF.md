@@ -3233,25 +3233,6 @@ mục `###` dưới đây **mỗi lần mở phiên**, nên việc nào xong th�
 "đã xử" là cách nhanh nhất làm dòng CHƯA LÀM thành tiếng ồn — chính lỗi đó đã sống từ (n5)
 tới (n8), khiến bốn việc đã làm vẫn được in ra suốt bốn phiên.
 
-### Roadmap độc lập — bốn gạch cuối, làm CÙNG MỘT LƯỢT
-
-Hợp đồng và bảy gạch đầy đủ ở mục `## Phiên (n9)`. Ba gạch đã xong (core spine mặc định,
-`sourceHash` gate, hero không hứa quá). Bốn gạch còn lại **là một đơn vị công việc, đừng
-tách**:
-
-- mỗi core node bốn vật: mental model một câu → visual → worked example / snippet chạy được
-  → self-check có đáp án;
-- coding node có code tối thiểu chạy được, conceptual node có ví dụ số nhỏ;
-- sau core spine, reader tự làm được một capstone nhỏ;
-- **rồi mới** bỏ link "Mở bài đầy đủ →", link navbar về trang DS, và progress dùng chung.
-
-**Vì sao không tách:** bỏ link trước khi có chiều sâu chỉ làm trang tệ đi — người đọc mất
-đường thoát sang nội dung thật mà không được bù lại gì. Chừng nào chưa xong cả bốn, gọi trang
-đó là *visual syllabus / companion* mới trung thực (audit n9 tự kết luận vậy).
-
-Ước lượng: ~65 ví dụ có số + ~65 câu tự kiểm, mỗi cái phải khớp bài gốc. Đây là một phiên
-riêng, không phải phần đuôi của phiên khác.
-
 ### Tám hình P1 — chỉ làm SAU khi đo được 8 hình P0
 
 Audit n9 §5 xếp thứ tự rõ: *"làm 8 visual P0 trước, đo comprehension/usability; chỉ sau đó
