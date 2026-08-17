@@ -247,11 +247,18 @@ Nay nó đo cả bốn hạng, kêu khi hạng nào vượt 40%, và `gate.test`
 
 ### Nợ còn lại — có số, có cách làm
 
-- **Findings chưa áp** (nếu lô nào về sau khi phiên đóng) (hạn mức chi tiêu org chặn agent **ba lần** trong phiên).
-  Findings của chúng nằm ở `scratchpad/findings/`; chạy `node apply.mjs --check` rồi
-  `--apply nhac`. Nhưng **25,4% đã bằng ngẫu nhiên** — phần này là làm cho đẹp, không phải nợ thật.
-- **43 câu còn lệch ≥1,5×** và **52 `why` chưa bác phương án sai**. Cả hai đều dưới ngưỡng
-  cổng, không chặn gì.
+> **Đã đóng ở phiên (z) 2026-08-17** — hai gạch đầu tiên dưới đây KHÔNG còn mở, giữ lại để
+> đọc được mạch. Gạch thứ ba và thứ tư thì vẫn đúng nguyên (một là ngoại lệ của phép đo, một
+> đã sửa xong ở (z)); món escape `quiz.json` đã lên `## CHƯA LÀM`.
+
+- ~~**Findings chưa áp**~~ — kiểm lại ở (z): **242 finding, 100% là `kind:"do-dai"` /
+  `sev:"nhac"`, KHÔNG có finding đúng/sai nào.** Mục tiêu của chúng đã đạt bằng đường khác
+  (lệch ≥1,5× về 0, chiến lược đoán theo độ dài 26,7% vs ngẫu nhiên 25%), nên chúng là **đã
+  bị vượt qua, không phải nợ**. Và **đừng đi tìm `scratchpad/findings/`**: scratchpad thuộc
+  một phiên cụ thể, nó không đi theo repo và giờ coi như không còn.
+- ~~**43 câu còn lệch ≥1,5×** và **52 `why` chưa bác phương án sai**~~ — **xong ở (z)**, cả
+  hai về **0**. (Phiên (z) đo ra 51/49 chứ không phải 43/52: hai heuristic khác nhau — (x)
+  lấy lựa chọn dài nhất làm mốc, (z) lấy trung bình ba lựa chọn kia.)
 - **Ngoại lệ của phép chia hạng đều:** câu có đáp án **dưới ~40 ký tự không thể đạt hạng 1**
   (không có ba distractor ngắn hơn mà vẫn là mệnh đề đọc được). Bộ sinh `targets/` đã lọc.
 - **Hai chỗ thân bài nên dọn, KHÔNG phải lỗi** (agent nêu, tôi không sửa vì ngoài phạm vi):
