@@ -258,8 +258,20 @@ const OTHER_CASES = [
     delete j.srcHash['m-bayes'];
     writeFileSync(p, JSON.stringify(j, null, 1) + '\n');
   }, () => writeFileSync(join(DS, 'tools', 'roadmap-summaries.json'), SUMS0)],
+  /* Chiều NỔ của G-ROADMAP-4: xoá ví dụ và self-check của một bước core. Ca này đáng có
+     vì hợp đồng "bốn vật" đã từng chỉ sống trong HANDOFF — không cổng nào canh, nên
+     không phiên nào biết nó tồn tại. Xoá cả `example` lẫn `check` chứ không chỉ một:
+     cổng phải kể ra CẢ HAI thứ thiếu, và bản đầu chỉ đếm "có/không" thì nói được một. */
+  ['G-ROADMAP-4', 'một bước core mất ví dụ và self-check', () => {
+    const p = join(DS, 'tools', 'roadmap-summaries.json');
+    SUMS1 = readFileSync(p, 'utf8');
+    const j = JSON.parse(SUMS1);
+    delete j.summaries['d-eda'].example;
+    delete j.summaries['d-eda'].check;
+    writeFileSync(p, JSON.stringify(j, null, 1) + '\n');
+  }, () => writeFileSync(join(DS, 'tools', 'roadmap-summaries.json'), SUMS1)],
 ];
-let SUMS0 = null;
+let SUMS0 = null, SUMS1 = null;
 
 /* --- chạy ---------------------------------------------------------------- */
 const ALL_GATES = execFileSync(process.execPath, [join(DS, 'tools', 'gate.mjs'), '--gates'],

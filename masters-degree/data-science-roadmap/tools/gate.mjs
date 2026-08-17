@@ -227,6 +227,7 @@ const GATES = [
   ['G-LEARN',      'nhắc', 'sổ học đọc được, và chỗ tắc trùng nhau = dạy quá muộn'],
   ['G-ROADMAP',    'nhắc', 'roadmap.html còn khớp bản sinh lại từ nguồn (chặn khi commit)'],
   ['G-ROADMAP-SUM','nhắc', 'tóm tắt roadmap thiếu bài, hoặc bài đã đổi sau khi tóm tắt'],
+  ['G-ROADMAP-4',  'nhắc', 'bước core trên trang học nhanh thiếu một trong bốn vật (mental model · hình · ví dụ · self-check)'],
   ['G-QUIZ',       'chặn', 'câu hỏi trắc nghiệm đủ trường và có đáp án đúng hợp lệ'],
   ['G-QUIZ-COV',   'nhắc', 'bài chưa có quiz, hoặc có ít câu hơn số mục của chính nó'],
   ['G-QUIZ-POS',   'nhắc', 'giải thích gọi lựa chọn theo vị trí ("đáp án cuối") — đảo thứ tự là sai'],
@@ -338,6 +339,31 @@ if (rmErr) {
     + '    này thành con dấu cao su.');
   if (unstamped.length) W(`G-ROADMAP-SUM: ${unstamped.length} bản tóm tắt chưa có vân tay nội dung — `
     + 'chạy `node tools/build-roadmap.mjs --stamp` một lần để lấy mốc.');
+
+  /* --- G-ROADMAP-4: bốn vật của một bước core ------------------------------
+     Hợp đồng "Roadmap độc lập" đòi mỗi bước core có ĐÚNG BỐN vật: mental model một
+     câu, một hình, một ví dụ chạy được / có số, một self-check có đáp án. Thiếu vật
+     thứ ba hoặc thứ tư thì trang chỉ tạo NHẬN BIẾT — đọc xong không kiểm được mình
+     hiểu chưa — và đó chính là lý do phải gọi nó là visual syllabus thay vì khoá học.
+     Cổng này tồn tại vì hợp đồng đó nằm trong HANDOFF suốt nhiều phiên mà không có gì
+     canh: hợp đồng trong đầu người thì phiên sau không biết nó tồn tại (CLAUDE.md gốc
+     repo, luật 1). Chỉ NHẮC, không chặn: bước good/skim mặc định bị ẩn nên không cần
+     đủ bốn vật, và cổng chỉ đếm bước core. */
+  const four = LEAVES.filter(l => l.p === 'core').map(l => {
+    const s = RM.sums[l.id] || {};
+    const lack = [];
+    if (!s.tldr) lack.push('mental model');
+    if (!s.viz) lack.push('hình');
+    if (!s.example?.code || !s.example?.out) lack.push('ví dụ');
+    if (!s.check?.q || !s.check?.a) lack.push('self-check');
+    return { id: l.id, lack };
+  }).filter(x => x.lack.length);
+  if (four.length) W(`G-ROADMAP-4: ${four.length}/${LEAVES.filter(l => l.p === 'core').length} bước core `
+    + 'chưa đủ bốn vật (mental model · hình · ví dụ · self-check):\n'
+    + four.slice(0, 8).map(x => `      ${x.id} — thiếu ${x.lack.join(', ')}`).join('\n')
+    + (four.length > 8 ? `\n      … và ${four.length - 8} bước nữa` : '')
+    + '\n    Ví dụ và self-check là DỮ LIỆU trong roadmap-summaries.json (trường `example`, `check`),\n'
+    + '    không sinh được từ trang chính — xem hợp đồng ở HANDOFF.md mục CHƯA LÀM.');
 }
 
 /* --- G-QUIZ / G-QUIZ-COV: câu hỏi trắc nghiệm tự kiểm ----------------------

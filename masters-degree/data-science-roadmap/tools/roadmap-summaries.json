@@ -10,7 +10,17 @@
     "Ba loại phát biểu về công cụ: 'ổn định' (sự thật kỹ thuật, tin được) / 'hạn mức' (số nhà cung cấp đặt, phải kiểm lại đúng ngày dùng) / 'nhận định' (ý kiến, được phép không đồng ý); nguồn kiểm ngày 3/8/2026.",
     "Tiến độ nên tính theo khối lượng thật (một bài code 150′ nặng hơn nhiều bài đọc 10′), không phải theo số bài đã xem qua; đọc xong không thực hành gì thì phần nhớ lại rơi nhanh nhất ngay trong một hai ngày đầu — không có tỉ lệ phần trăm phổ quát, mức rơi tuỳ vật liệu và cách đo, nhưng chiều thì chắc: truy xuất chủ động giữ lại nhiều hơn đọc lại."
    ],
-   "viz": "Hai thẻ đối chiếu lộ trình chuẩn (tổng giờ, 6–8 tuần, phần Bắt buộc ~giờ/tuần) vs Fast track (14 ngày, ~giờ/ngày mỗi ngày không nghỉ)."
+   "viz": "Hai thẻ đối chiếu lộ trình chuẩn (tổng giờ, 6–8 tuần, phần Bắt buộc ~giờ/tuần) vs Fast track (14 ngày, ~giờ/ngày mỗi ngày không nghỉ).",
+   "example": {
+    "kind": "num",
+    "lead": "Cùng một nội dung lõi, hai ngân sách giờ khác nhau: phép chia dưới đây cho thấy với 2 giờ rảnh mỗi ngày thì lộ trình nào vừa, và chọn sai thì hụt bao nhiêu.",
+    "code": "Lộ trình chuẩn:  6.395 phút = 106,6 giờ  ->  / 8 tuần  = 13,3 giờ/tuần\nFast track:      4.520 phút =  75,3 giờ  ->  / 14 ngày =  5,4 giờ/ngày\n\nBạn thật sự rảnh 2 giờ/ngày:\n  chuẩn      : 2 x 7  = 14,0 giờ/tuần   so với 13,3 cần  -> vừa\n  fast track : 2 x 14 = 28 giờ trong 14 ngày, cần 75,3\n               28 / 75,3 = 0,37   thiếu 75,3 - 28 = 47,3 giờ",
+    "out": "chuẩn: 14,0 >= 13,3 giờ/tuần -> đi hết được trong 8 tuần\nfast track: chỉ mua được 37% ngân sách, hụt 47,3 giờ\nnghĩa là hai lộ trình không thay thế nhau bằng cách \"đọc nhanh hơn\""
+   },
+   "check": {
+    "q": "Bạn chỉ có 2 tuần. Bài Chuỗi thời gian mang nhãn Bắt buộc nhưng thuộc lộ trình 6–8 tuần. Bạn nhét nó vào 14 ngày hay hoãn nó lại?",
+    "a": "Hoãn. Hai chiều nhãn độc lập nhau: nhãn lộ trình nói 14 ngày không có chỗ cho bài đó, nhãn ưu tiên nói nó không được bỏ hẳn. Nên đúng là hoãn có kế hoạch quay lại, không phải nhét vào rồi cắt phần thực hành của bài khác."
+   }
   },
   "s-intro": {
    "tldr": "Data Science KHÔNG phải 'train model' — phần lớn việc thật là đóng khung bài toán, lấy và làm sạch dữ liệu, quyết định đo cái gì; và rất nhiều câu hỏi chỉ cần SQL/biểu đồ chứ không cần Machine Learning.",
@@ -22,7 +32,17 @@
     "Grain = một dòng đại diện cho cái gì (unit of observation); câu quan trọng nhất bài: chưa xác định được grain thì CHƯA được train model.",
     "Cột 'khách khiếu nại sau?' không được làm feature vì tại thời điểm quẹt thẻ chưa biết nó — dùng nó là data leakage; hai loại lỗi false positive (chặn nhầm khách thật) vs false negative (lọt gian lận) đổi ngược chiều khi xê dịch ngưỡng."
    ],
-   "viz": "Bảng đồ chơi 6 giao dịch × 7 cột (id, số tiền, giờ, quẹt/1h, thẻ mới?, khách khiếu nại sau?, gian lận?) — mọi thuật ngữ được neo vào đúng ô của bảng này."
+   "viz": "Bảng đồ chơi 6 giao dịch × 7 cột (id, số tiền, giờ, quẹt/1h, thẻ mới?, khách khiếu nại sau?, gian lận?) — mọi thuật ngữ được neo vào đúng ô của bảng này.",
+   "example": {
+    "kind": "num",
+    "lead": "Chạy một baseline luật thủ công trên đúng 6 giao dịch của bảng đồ chơi rồi đếm, để thấy một con số tổng như 67% đúng không phân biệt được model dùng được với model bỏ đi.",
+    "code": "Luật baseline: chặn nếu giờ trong 0..5 VÀ thẻ mới = có\n\nt001 (23h, thẻ mới, nhãn 1) -> không chặn -> lọt lưới\nt003 ( 2h, thẻ mới, nhãn 1) -> chặn       -> bắt đúng\nt006 ( 3h, thẻ mới, nhãn 0) -> chặn       -> báo động sai\nt002/t004/t005 (12h, 9h, 14h, thẻ cũ) -> không chặn -> đúng\n\nbắt được   = 1/2 vụ gian lận\nchặn nhầm  = 1/2 lệnh chặn\nđoán đúng  = 4/6 dòng\nSo với baseline \"luôn đoán 0\": đoán đúng cũng 4/6, bắt 0/2",
+    "out": "bắt 1/2 = 50% gian lận · 1 trong 2 lệnh chặn là báo động sai\nđoán đúng 4/6 = 67% dòng\n\"luôn đoán 0\" cũng đúng 4/6 = 67% mà bắt 0 vụ -> 67% không phân biệt được hai cách"
+   },
+   "check": {
+    "q": "Bạn đổi baseline thành chặn nếu quẹt/1h ≥ 4. Trên đúng 6 giao dịch đó, nó bắt mấy vụ gian lận và chặn nhầm mấy lệnh?",
+    "a": "Nó chặn t001, t003, t006 nên bắt cả 2 vụ và nhầm 1 lệnh. Nó hơn luật giờ + thẻ mới ở chỗ không còn lọt vụ lúc 23h, đổi lại vẫn phiền đúng một khách thật — đó là hai loại lỗi đổi ngược chiều nhau khi ta đổi luật chặn."
+   }
   },
   "s-pipeline": {
    "tldr": "Mọi product AI thật đều đi qua cùng 10 bước; khi không biết một khái niệm 'thuộc về đâu' thì nó luôn rơi vào một trong 10 ô — sin/cos ở bước 5, SHAP ở bước 7, drift ở bước 10.",
@@ -33,7 +53,17 @@
     "Bước 9 deploy: feature lúc chạy thật phải tính GIỐNG HỆT lúc train (tránh training/serving skew), dùng Pipeline chung.",
     "Quy trình là VÒNG LẶP không phải đường thẳng: đánh giá bước 8 tệ → quay về bước 5 nghĩ feature → thiếu dữ liệu → quay bước 2; một dự án bình thường đi vòng 5–15 lần."
    ],
-   "viz": "Bảng phân bổ thời gian thực tế vs khoá học dạy: đóng khung ~10% (khoá dạy ~0%), lấy-xem-sạch-feature (2–5) ~60% (dạy ~15%), train-tune-đánh giá (6–8) ~15% (dạy ~80%), deploy-giám sát (9–10) ~15% (dạy ~5%)."
+   "viz": "Bảng phân bổ thời gian thực tế vs khoá học dạy: đóng khung ~10% (khoá dạy ~0%), lấy-xem-sạch-feature (2–5) ~60% (dạy ~15%), train-tune-đánh giá (6–8) ~15% (dạy ~80%), deploy-giám sát (9–10) ~15% (dạy ~5%).",
+   "example": {
+    "kind": "num",
+    "lead": "Đổ một ngân sách 100 giờ vào 10 bước theo tỉ lệ thời gian thật, rồi đổ lại theo tỉ lệ một khoá học dạy: chỗ lệch chính là chỗ người mới bị kẹt.",
+    "code": "Ngân sách một dự án: 100 giờ\n\nbước 1     đóng khung             10%  -> 10 giờ   (khoá dạy  0%  ->  0 giờ)\nbước 2-5   lấy/xem/sạch/feature   60%  -> 60 giờ   (khoá dạy 15%  -> 15 giờ)\nbước 6-8   train/tune/đánh giá    15%  -> 15 giờ   (khoá dạy 80%  -> 80 giờ)\nbước 9-10  deploy/giám sát        15%  -> 15 giờ   (khoá dạy  5%  ->  5 giờ)\n\nhụt lớn nhất  = 60 - 15 = 45 giờ ở nhóm 2-5\nthừa lớn nhất = 80 - 15 = 65 giờ ở nhóm 6-8",
+    "out": "nhóm 2-5: chuẩn bị 15 giờ cho việc cần 60 -> hụt 45 giờ\nnhóm 6-8: được dạy 80 giờ cho việc chỉ tiêu 15 -> thừa 65 giờ\ntổng lệch = 45 + 65 = 110 giờ trên một ngân sách 100 giờ"
+   },
+   "check": {
+    "q": "Đánh giá ở bước 8 cho kết quả tệ và bạn định đổ thêm 20 giờ vào bước 7 để tune. Theo bảng phân bổ, 20 giờ đó nên đi vào bước nào?",
+    "a": "Bước 5, feature engineering. Nhóm 2–5 chiếm ~60% thời gian thật còn nhóm 6–8 chỉ ~15%, và đường quay lại bình thường của vòng lặp là 8 về 5, rồi về 2 nếu thấy thiếu dữ liệu; tune thêm trên cùng một bộ cột là đổ giờ vào chỗ đã thừa sẵn."
+   }
   },
   "s-families": {
    "tldr": "10 bước là trục DỌC (mọi dự án giống nhau); họ bài toán là trục NGANG — thứ thật sự chuyển giao giữa các họ là bộ câu hỏi/quy trình 10 bước, còn cách đóng khung, biểu diễn, làm feature (bước 3–5) và nhất là chia tập (6) + đo lường (8) thì đổi theo họ.",
@@ -45,7 +75,17 @@
     "Tám câu định vị một dự án lạ: (1) họ nào? (2) input/output chính xác? (3) baseline ngu ngốc bắt buộc? (4) chia tập (thời gian/nhóm lặp/lớp hiếm)? (5) metric có khớp thứ tổ chức quan tâm? (6) rò rỉ ở đâu (cột nào chỉ có SAU sự việc)? (7) có thật cần deep learning? (8) chạy bằng cloud stack nào? — chép vào docs/problem-statement.md.",
     "Dự án thật thường là TỔ HỢP nhiều họ (vd 'dự báo nhu cầu để tự đặt hàng' = forecasting + tối ưu + đôi khi nhân quả) — tách ra rồi định vị từng lớp, đừng ép vào một ô."
    ],
-   "viz": "Bảng tổng hợp 9 họ × 5 cột (Họ · Đầu ra · Baseline bắt buộc · Chia tập · Metric chính) kèm khối viz 'families' bấm vào xem hồ sơ từng họ."
+   "viz": "Bảng tổng hợp 9 họ × 5 cột (Họ · Đầu ra · Baseline bắt buộc · Chia tập · Metric chính) kèm khối viz 'families' bấm vào xem hồ sơ từng họ.",
+   "example": {
+    "kind": "num",
+    "lead": "Cùng một chuỗi doanh số 14 ngày, hai baseline bắt buộc của họ forecasting cho hai con số cách nhau 7 lần — nên một model MAE 3,5 có thể vừa thắng vừa thua tuỳ bạn so với cái nào.",
+    "code": "Doanh số 14 ngày (tuần lặp lại), test = ngày 8-14:\n  ngày 1-7 : 10 12 11 13 30 32  9\n  ngày 8-14: 11 13 12 14 31 33 10\n\nnaive (hôm nay = hôm qua):\n  |11-9| |13-11| |12-13| |14-12| |31-14| |33-31| |10-33|\n  =  2  +  2  +  1  +  2  +  17 +  2  +  23  = 49  -> MAE 49/7 = 7,0\n\nseasonal-naive (hôm nay = cùng thứ tuần trước):\n  1 + 1 + 1 + 1 + 1 + 1 + 1 = 7                -> MAE  7/7 = 1,0\n\nmodel LightGBM có lag: MAE 3,5",
+    "out": "naive MAE 7,0 · seasonal-naive MAE 1,0 · model MAE 3,5\nmodel thắng naive 2 lần nhưng thua seasonal-naive 3,5 lần\nbỏ baseline seasonal của họ forecasting là công bố một kết quả tệ hơn phép sao chép tuần trước"
+   },
+   "check": {
+    "q": "Bạn nhận một dự án gợi ý sản phẩm và định chia train/test ngẫu nhiên 80/20. Theo bảng chín họ thì chia thế nào mới đúng, và baseline bắt buộc là gì?",
+    "a": "Chia leave-last-out theo thời gian, giữ tương tác cuối của mỗi người dùng làm test, và baseline là popularity. Chia ngẫu nhiên cho model thấy hành vi tương lai của chính người dùng đó rồi bắt nó đoán quá khứ, nên điểm cao lên mà không nói được gì về lúc chạy thật."
+   }
   },
   "s-lookup": {
    "tldr": "Bảng tra ngược thực dụng: đi từ một triệu chứng cụ thể → bước nào trong 10 bước, công cụ nào, bài nào — dùng khi đang bí đúng một chỗ chứ không đọc tuần tự.",
@@ -57,7 +97,17 @@
     "Chọn metric: lớp dương hiếm → PR-AUC; cân bằng → ROC-AUC; nhiều lớp → macro-F1; số thực → MAE/RMSE; dự báo → MASE; xếp hạng → NDCG@K; LUÔN kèm một chỉ số quy ra tiền. Dữ liệu bảng: ~1.000 mẫu của lớp hiếm là bắt đầu ổn (kinh nghiệm thực dụng, không phải ngưỡng lý thuyết — đường cong học tập của chính bạn mới là câu trả lời), số ca dương quan trọng hơn số dòng tổng.",
     "Bảng công cụ mặc định: pandas (~60% dòng code) · numpy · scikit-learn Pipeline/ColumnTransformer (nơi gắn sin/cos để không lệch train/serve) · LightGBM · PyTorch + Hugging Face · statsmodels ETS/ARIMA · SHAP · MLflow · FastAPI + Docker · Streamlit · Overleaf — mỗi ô chỉ là MỘT mặc định, có 2–4 đối thủ."
    ],
-   "viz": "Ba bảng triệu chứng → bước → cách sửa; ví dụ then chốt 'Accuracy 99,8% mà bắt được 0 vụ gian lận → bước 8 → nhãn lệch, dùng PR-AUC thay accuracy'."
+   "viz": "Ba bảng triệu chứng → bước → cách sửa; ví dụ then chốt 'Accuracy 99,8% mà bắt được 0 vụ gian lận → bước 8 → nhãn lệch, dùng PR-AUC thay accuracy'.",
+   "example": {
+    "kind": "num",
+    "lead": "Dựng lại triệu chứng \"accuracy 99,8% mà bắt được 0 vụ\" bằng số, rồi đặt cạnh một model dùng được: model tốt hơn lại có accuracy THẤP hơn.",
+    "code": "Một ngày: 100.000 giao dịch, trong đó 200 vụ gian lận (0,2%)\n\nmodel A = \"luôn đoán không gian lận\"\n  đúng 99.800/100.000 = 99,80%   bắt 0/200 vụ\n\nmodel B = bắt 120/200 vụ, báo nhầm 300 giao dịch sạch\n  đúng (120 + 99.500)/100.000 = 99.620/100.000 = 99,62%\n\nchênh accuracy = 99,80 - 99,62 = 0,18 điểm, nghiêng về model A",
+    "out": "model A: accuracy 99,80% · bắt 0/200 vụ\nmodel B: accuracy 99,62% · bắt 120/200 vụ, báo nhầm 300\nchọn theo accuracy là chọn A -> triệu chứng ở bước 8, đổi sang PR-AUC"
+   },
+   "check": {
+    "q": "Model của bạn cho ROC-AUC 0,999 trên tập test và bạn định đưa số đó vào luận văn. Bạn kiểm cái gì trước, và ở bước nào của quy trình?",
+    "a": "Đi tìm data leakage ở bước 2 và bước 5 trước khi tin con số. Điểm đẹp không tưởng gần như luôn là một cột chỉ tồn tại sau khi sự việc xảy ra đã lọt vào feature; nó không lộ ra ở tập test vì tập test cũng có cột đó, chỉ lộ khi đưa lên chạy thật."
+   }
   },
   "s-plan8w": {
    "tldr": "Lộ trình chính của trang; 'giờ' giả định bạn ĐÃ biết lập trình (từ số 0 phải nhân thêm, thành nhiều tuần hơn). Cốt lõi: thứ tự bài bị khoá bởi phụ thuộc kiến thức, và mỗi tuần phải kết bằng một deliverable commit được chứ không phải 'đã đọc xong'.",
@@ -69,7 +119,17 @@
     "Nhịp một tuần: ba buổi × 3 giờ (không phải mỗi ngày 1,5 giờ) vì data science cần khối thời gian liền để nạp lại ngữ cảnh; buổi cuối tuần LUÔN dành cho deliverable; mỗi buổi ghi một dòng vào bảng thí nghiệm — bảng đó chính là chương 4 luận văn.",
     "Cột 'Nộp được gì' là phần quan trọng nhất; tuần nào > 14 giờ (nhãn 'nặng') thì giãn thành hai tuần hoặc cắt bài 'Nên biết', KHÔNG bỏ phần thực hành vì đó là chỗ kiến thức bám lại."
    ],
-   "viz": "Bảng 8 tuần mỗi tuần một deliverable (khối planWeeks), giờ tách ba loại đọc/thực hành/deliverable; tuần 1, 2 và 7 nặng nhất ~14–16 giờ."
+   "viz": "Bảng 8 tuần mỗi tuần một deliverable (khối planWeeks), giờ tách ba loại đọc/thực hành/deliverable; tuần 1, 2 và 7 nặng nhất ~14–16 giờ.",
+   "example": {
+    "kind": "num",
+    "lead": "Cộng giờ của chính các bài trong tuần 7 rồi chia cho nhịp ba buổi × 3 giờ: con số cho thấy tuần nặng nhất một mình đã dài gần hai tuần thật.",
+    "code": "Giờ một tuần = đọc + thực hành + deliverable của chính các bài tuần đó.\n\nTuần 7 (9 bài): 430 + 230 + 315 = 975 phút = 16,25 giờ\n  ngưỡng nhãn \"nặng\" = 14 giờ  ->  16,25 > 14  -> nặng\n\nNhịp đề xuất: 3 buổi x 3 giờ = 9 giờ/tuần\n  tuần 7      : 16,25 / 9  = 1,8 tuần\n  cả lộ trình : 6.395 phút = 106,6 giờ ; 106,6 / 9 = 11,8 tuần",
+    "out": "tuần 7 = 975 phút = 16,25 giờ, vượt ngưỡng nặng 14 giờ\nở nhịp 9 giờ/tuần: tuần 7 chiếm 1,8 tuần, cả lộ trình chiếm 11,8 tuần\n\"6–8 tuần\" là 8 ô lịch, không phải 8 tuần đồng hồ của mọi người"
+   },
+   "check": {
+    "q": "Tuần 7 của bạn ra 16,25 giờ mà bạn chỉ có 9 giờ. Bạn cắt phần thực hành của hai mini-project, hay giãn tuần 7 thành hai tuần?",
+    "a": "Giãn thành hai tuần, hoặc cắt bài mang nhãn Nên biết trong tuần đó. Cắt phần thực hành của hai mini-project là cắt đúng thứ tuần 7 tồn tại để tạo ra: bằng chứng rằng bạn làm được trên hai họ bài toán khác nhau, chứ không chỉ đọc về chúng."
+   }
   },
   "s-plan14": {
    "tldr": "Bản nén của lộ trình 8 tuần để đi trọn MỘT vòng end-to-end; lịch có BA mốc, gắn nhãn Mốc 1/2/3 ngay trong danh sách ngày — ngày 6 có vòng chạy khép kín, ngày 11 có sản phẩm demo được, ngày 14 có đủ nguyên liệu viết luận văn.",
@@ -81,7 +141,17 @@
     "Lấp chỗ trống sau ngày 14 theo thứ tự (không tuỳ chọn, chỉ hoãn): forecasting → A/B testing & tư duy nhân quả → hồi quy/multiclass → NLP/CV/gợi ý/analytics → mini-project chuyển giao làm thật 2/6.",
     "Nếu chỉ 3 giờ/ngày: 14 ngày mua ~42 giờ nên phải cắt thật (không cắt kiểu 'đọc nhanh hơn'); không bao giờ cắt cột deliverable; 'Bản đồ các họ bài toán' nằm trong danh sách không được cắt vì là thứ duy nhất trong 14 ngày dạy CHUYỂN GIAO."
    ],
-   "viz": "Khối lịch 14 ngày (planDays) + viz plan14 vẽ hình dạng giờ mỗi ngày, cho thấy ngày nhẹ được xếp cạnh ngày nặng; ba số ngày 6 · 11 · 14 in đậm dưới trục là ba mốc."
+   "viz": "Khối lịch 14 ngày (planDays) + viz plan14 vẽ hình dạng giờ mỗi ngày, cho thấy ngày nhẹ được xếp cạnh ngày nặng; ba số ngày 6 · 11 · 14 in đậm dưới trục là ba mốc.",
+   "example": {
+    "kind": "num",
+    "lead": "Đặt 14 con số giờ mỗi ngày cạnh ngân sách 3 giờ/ngày, rồi thử cắt trọn ba ngày cải tiến mô hình: phép trừ cho thấy cắt tới đó vẫn chưa đủ.",
+    "code": "Giờ mỗi ngày (tổng đọc + thực hành + deliverable của các bài trong ngày):\n  N1 5h50  N2 5h10  N3 4h45  N4 6h25  N5 5h30  N6 3h30  N7 5h45\n  N8 4h45  N9 5h10  N10 5h45 N11 5h05 N12 5h30 N13 6h25 N14 5h45\n  tổng = 4.520 phút = 75,3 giờ\n\nBạn có 3 giờ/ngày:  3 x 14 = 42 giờ   ->  thiếu 75,3 - 42 = 33,3 giờ\n\nCắt trọn N7 + N8 + N9 (cải tiến mô hình giữa Mốc 1 và Mốc 2):\n  345 + 285 + 310 = 940 phút = 15,7 giờ\n  còn lại 4.520 - 940 = 3.580 phút = 59,7 giờ  ->  vẫn thừa 17,7 giờ",
+    "out": "cần 75,3 giờ, có 42 -> thiếu 33,3 giờ\ncắt trọn ba ngày cải tiến chỉ trả lại 15,7 giờ, còn 59,7 -> vẫn thừa 17,7\nphải cắt tiếp theo danh sách, và ba ngày mốc (3h30 · 5h05 · 5h45) không nằm trong đó"
+   },
+   "check": {
+    "q": "Bạn hụt giờ và phải bỏ đúng một ngày: ngày 6 (train logistic, in ra một con số validation) hoặc ngày 8 (feature engineering). Bỏ ngày nào?",
+    "a": "Bỏ ngày 8. Ngày 6 là Mốc 1, tức vòng chạy khép kín từ dữ liệu tới một con số đọc được; mất nó thì Mốc 2 không có gì để đóng vào API và Mốc 3 không có gì để lập bảng kết quả. Bỏ ngày 8 chỉ làm mô hình yếu hơn, cả ba mốc vẫn tới được."
+   }
   },
   "t-env": {
    "tldr": "Chỗ làm việc chia đúng ba vai — nơi code sống (GitHub, bản thật duy nhất), nơi code chạy (Colab, đóng tab là mất), nơi có terminal thật (Codespaces cho pytest/Docker) — và việc quan trọng nhất là ghim phiên bản thư viện để kết quả tái lập được.",
@@ -93,7 +163,17 @@
     "Cấu trúc thư mục dựng từ ngày 1: data/raw là CHỈ-ĐỌC, mọi biến đổi phải là code trong src/ chạy từ raw ra processed",
     "Notebook để nghĩ, .py để chạy: trước khi tin số nào phải Restart Kernel and Run All; commit kèm con số vào message (vd 'baseline auc 0.87')"
    ],
-   "viz": "Bảng ba vai (nơi code sống / chạy / có terminal) và cây thư mục dự án fraud-detection với data/raw đánh dấu KHÔNG BAO GIỜ sửa."
+   "viz": "Bảng ba vai (nơi code sống / chạy / có terminal) và cây thư mục dự án fraud-detection với data/raw đánh dấu KHÔNG BAO GIỜ sửa.",
+   "example": {
+    "kind": "code",
+    "lead": "Một lượt gõ dựng xong cấu trúc dự án rồi ghim phiên bản: requirements.txt biến hai thư viện thành hai dòng có số cụ thể, và cây thư mục đếm ra 9 thư mục trước khi có dòng dữ liệu nào.",
+    "code": "mkdir -p fraud-detection/{data/raw,data/processed,notebooks}\nmkdir -p fraud-detection/{src,models,reports/figures}\ncd fraud-detection\nprintf 'data/\\n.venv/\\n' > .gitignore\npip freeze | grep -E '^(pandas|numpy)==' > requirements.txt\ncat requirements.txt\nfind . -type d | wc -l",
+    "out": "numpy==2.0.2\npandas==2.3.3\n9"
+   },
+   "check": {
+    "q": "Bạn để một Codespace 2 nhân chạy nền 8 giờ mỗi ngày trong 10 ngày trên bậc GitHub Free: hết hạn mức 120 core-hour trong tháng chưa, và số nào phải nhân vào?",
+    "a": "Hết, và vượt: 2 nhân × 8 giờ × 10 ngày = 160 core-hour so với 120 được cấp. Hạn mức đếm theo core-hour chứ không theo giờ đồng hồ, nên số nhân của máy là thừa số phải nhân vào — đó là lý do tắt Codespace khi xong đáng làm hơn là để nó chạy nền."
+   }
   },
   "t-online": {
    "tldr": "Máy yếu không phải rào cản: cả 10 bước của dự án — kể cả đóng gói Docker — đều có bản chạy trong tab trình duyệt, miễn giữ đúng luật code sống trong src/ trên GitHub chứ không trong ô notebook.",
@@ -105,7 +185,17 @@
     "Nhịp làm việc: sửa src/ ở tab github.dev (bấm phím . trên repo) rồi commit, quay lại Colab !git pull — %autoreload 2 để thấy thay đổi ngay",
     "Ranh giới cấm: dữ liệu giao dịch thật của công ty KHÔNG được tải lên Drive/Kaggle/HF kể cả để riêng tư; chỉ dùng dữ liệu công khai hoặc mô phỏng"
    ],
-   "viz": "Bảng 10 bước × 'mở tab nào' × 'máy bạn phải làm gì' — cột cuối gần như toàn 'Không gì cả'."
+   "viz": "Bảng 10 bước × 'mở tab nào' × 'máy bạn phải làm gì' — cột cuối gần như toàn 'Không gì cả'.",
+   "example": {
+    "kind": "code",
+    "lead": "Nhịp làm việc online gói trong một ô: hàm sống trong src trên GitHub, bạn sửa nó ở tab bên cạnh rồi git pull, và cùng một lệnh gọi ra số mới mà không phải khởi động lại kernel.",
+    "code": "# src/features.py trong repo:  def fee(x): return x * 0.01\n!git clone -q https://github.com/ban/fraud-detection.git\n%cd fraud-detection\n%load_ext autoreload\n%autoreload 2\nfrom src.features import fee\nprint(fee(1000))\n\n# sang tab github.dev, sua 0.01 thanh 0.02, commit, roi chay hai dong duoi\n!git pull -q\nprint(fee(1000))",
+    "out": "10.0\n20.0"
+   },
+   "check": {
+    "q": "Máy bạn 4 GB RAM và bước 9 cần dựng ảnh Docker cho API: trong sáu chỗ của đường đi online, bạn mở tab nào, và vì sao không phải Colab?",
+    "a": "Codespaces — nó cho một máy Linux đã có sẵn Docker nên gõ docker build được thật, trong khi Colab chỉ là notebook trên máy ảo không có Docker và phiên của nó bốc hơi. Dựng xong thì tắt Codespace ngay, vì nó tiêu hạn mức theo giờ chạy."
+   }
   },
   "t-colab": {
    "tldr": "Colab là một máy tính đi mượn kèm GPU nhưng bốc hơi sau vài tiếng; trong 14 ngày nó chỉ thắng máy bạn ở đúng ba việc, và mô hình chính (LightGBM) không cần GPU chút nào.",
@@ -117,7 +207,17 @@
     "Lấy dữ liệu 4 cách; cách (b) đọc từ Drive là đáng đầu tư nhất (tải lên một lần, mỗi phiên sau mất 5 giây), tránh cách (d) files.upload phải làm lại mỗi phiên",
     "Bốn giới hạn: phiên ngắt (tối đa ~12h), máy ảo bị xoá sạch, GPU không bảo đảm, không phải chỗ chạy sản phẩm — chống bằng checkpoint ra Drive + pip install ghim phiên bản"
    ],
-   "viz": "Bảng quyết định 'làm gì ở đâu' cột Colab/Codespaces/Máy bạn, với dòng LightGBM ✔ mặc định Colab và dòng dữ liệu nhạy cảm ✔ bắt buộc máy bạn."
+   "viz": "Bảng quyết định 'làm gì ở đâu' cột Colab/Codespaces/Máy bạn, với dòng LightGBM ✔ mặc định Colab và dòng dữ liệu nhạy cảm ✔ bắt buộc máy bạn.",
+   "example": {
+    "kind": "code",
+    "lead": "Ô đầu tiên đúng của một phiên Colab: dữ liệu đọc từ Drive nên phiên sau không phải tải lại, và dòng cuối cho biết runtime hôm nay có GPU thật hay không trước khi bạn kịp tin nó.",
+    "code": "!git clone -q https://github.com/ban/fraud-detection.git\n%cd fraud-detection\n!pip install -q -r requirements.txt\n\nfrom google.colab import drive\ndrive.mount('/content/drive')\nDATA = '/content/drive/MyDrive/fraud/data'\n\nimport pandas as pd, torch\n# doc tu Drive: vai giay moi phien, khong tai lai\ndf = pd.read_csv(f'{DATA}/creditcard.csv')\nprint(df.shape)\nprint(torch.cuda.is_available())",
+    "out": "(284807, 31)\nFalse"
+   },
+   "check": {
+    "q": "Bạn sắp train LightGBM trên 284.807 dòng và định đổi runtime sang GPU trước cho chắc: nên bật không, và GPU đáng mượn cho việc nào?",
+    "a": "Đừng bật. Ở cỡ dữ liệu này LightGBM thường xong trong khoảng vài giây tới vài chục giây trên CPU thường và GPU không nhanh hơn đáng kể. GPU chỉ đáng mượn cho sinh embedding cột chữ và huấn luyện mạng nơ-ron; bật thừa còn làm bạn dễ bị từ chối cấp đúng lúc thật sự cần."
+   }
   },
   "t-ai": {
    "tldr": "Dùng AI coding assistant biến bạn từ người gõ code thành người ra đề và người kiểm tra; nguy hiểm đặc trưng của DS là sai lầm tự tin không làm chương trình đổ mà chỉ làm con số sai — trông y hệt con số đúng.",
@@ -129,7 +229,17 @@
     "Ba chỗ đọc code AI trước: ranh giới train/test (fit_transform trên X đầy đủ là cờ đỏ), thứ tự thời gian (sort_values trước rolling/shift), xử lý thiếu và chia cho 0",
     "Tuyệt đối không đưa vào prompt: khoá API, dữ liệu khách thật (kể cả vài dòng mẫu) — dán schema hoặc dữ liệu giả bằng numpy.random; con số/trích dẫn AI bịa không bao giờ đưa vào luận văn"
    ],
-   "viz": "Khối code tests/test_features.py bốn hàm assert, trong đó test_cyclic_encoding kiểm hour [0,6,12,18] → hour_sin [0,1,0,-1]."
+   "viz": "Khối code tests/test_features.py bốn hàm assert, trong đó test_cyclic_encoding kiểm hour [0,6,12,18] → hour_sin [0,1,0,-1].",
+   "example": {
+    "kind": "code",
+    "lead": "AI chia cho 23 thay vì 24 trong mã hoá chu kỳ: code chạy êm, số in ra 0,998 trông y như 1, và chỉ một assert giá trị biết trước mới nói được rằng 3 trên 4 phần tử đã sai.",
+    "code": "import numpy as np, pandas as pd\n\ndef add_derived(df):        # ban AI tra ve: chia cho 23\n    df = df.copy()\n    df[\"hour_sin\"] = np.sin(2 * np.pi * df[\"hour\"] / 23)\n    return df\n\nout = add_derived(pd.DataFrame({\"hour\": [0, 6, 12, 18]}))\nprint(out[\"hour_sin\"].round(3).tolist())\nnp.testing.assert_allclose(out[\"hour_sin\"], [0, 1, 0, -1], atol=1e-9)",
+    "out": "[0.0, 0.998, -0.136, -0.979]\nAssertionError: Not equal to tolerance rtol=1e-07, atol=1e-09\nMismatched elements: 3 / 4 (75%)"
+   },
+   "check": {
+    "q": "Điểm valid tăng vọt sau khi bạn nhận một hàm feature từ AI và không có lỗi nào in ra: trong bốn loại assert, loại nào bắt được nguyên nhân hay gặp nhất, và nó so cái gì?",
+    "a": "Loại không rò rỉ: sắp theo ts, lấy giao dịch đầu tiên của mỗi card_id, và bắt buộc n_tx_1h phải là 0 hoặc NaN vì dòng đó chưa có quá khứ nào để đếm. Rò rỉ là lỗi duy nhất làm điểm số đẹp lên, nên nó không bao giờ tự lộ bằng một thông báo lỗi."
+   }
   },
   "t-pandas": {
    "tldr": "pandas là Excel viết bằng code, và bạn chỉ cần 15 thao tác — chúng chiếm khoảng 90% số dòng bạn sẽ viết trong cả dự án; sức mạnh thật nằm ở vector hoá (phép tính trên cả cột, thường nhanh hơn vòng lặp Python một tới hai bậc độ lớn, tuỳ phép tính và máy) và groupby+merge để tạo feature so-với-mức-thường của chính khách hàng.",
@@ -141,7 +251,17 @@
     "Sau mỗi merge kiểm df.shape ngay: nếu số dòng TĂNG thì bảng phải có khoá trùng và bạn vừa nhân bản dữ liệu — lỗi im lặng nguy hiểm nhất",
     "Cảnh báo trung thực: trong creditcard.csv cột Time là số giây kể từ giao dịch đầu, nên hour lệch một hằng số so với giờ thật — đừng viết 'gian lận lúc 2h sáng', viết 'một khung giờ nhất định'"
    ],
-   "viz": "Bài tập tạo cột hour = (df.Time // 3600) % 24 rồi groupby ra tỉ lệ gian lận theo từng giờ, dẫn thẳng tới bài Biến chu kỳ."
+   "viz": "Bài tập tạo cột hour = (df.Time // 3600) % 24 rồi groupby ra tỉ lệ gian lận theo từng giờ, dẫn thẳng tới bài Biến chu kỳ.",
+   "example": {
+    "kind": "code",
+    "lead": "Cùng số tiền 100: với khách A nó là 0,07 lần mức thường của chính khách, với khách B là 1,36 lần — số thô không nói gì, tỉ lệ mới nói, và shape in ra trước sau merge để bắt lỗi nhân bản dòng.",
+    "code": "import pandas as pd\ndf = pd.DataFrame({\"card_id\": [\"A\", \"A\", \"A\", \"B\", \"B\", \"B\"],\n                   \"Amount\":  [100., 120., 4000., 50., 70., 100.]})\nprint(df.shape)\n\nstats = df.groupby(\"card_id\").agg(\n    n_tx    = (\"Amount\", \"count\"),\n    avg_amt = (\"Amount\", \"mean\"),\n).reset_index()\ndf = df.merge(stats, on=\"card_id\", how=\"left\")\nprint(df.shape)\ndf[\"amt_vs_avg\"] = (df[\"Amount\"] / df[\"avg_amt\"]).round(2)\ncols =[\"card_id\", \"Amount\", \"avg_amt\", \"amt_vs_avg\"]\nprint(df.loc[[0, 5], cols].round(2).to_string(index=False))",
+    "out": "(6, 2)\n(6, 4)\ncard_id  Amount  avg_amt  amt_vs_avg\n      A   100.0  1406.67        0.07\n      B   100.0    73.33        1.36"
+   },
+   "check": {
+    "q": "Sau merge, shape đổi từ (6, 2) sang (9, 4) chứ không phải (6, 4): bạn kiểm cột nào của bảng bên phải, và chuyện gì vừa xảy ra?",
+    "a": "Kiểm stats.card_id.duplicated().any() — bảng phải có khoá trùng nên một giao dịch khớp nhiều dòng và pandas nhân bản dữ liệu, làm mọi con số tổng hợp sau đó phình lên. groupby kèm reset_index phải cho đúng một dòng mỗi khoá; số dòng tăng sau merge luôn là dấu hiệu này."
+   }
   },
   "t-sql": {
    "tldr": "SQL là bốn thao tác pandas đã biết (lọc, nhóm, tổng hợp, nối) viết ở chỗ khác; giá trị lớn nhất là window function tính point-in-time feature ngay trên máy chủ, nhưng nó cũng làm rò rỉ dữ liệu dễ hơn pandas vì lỗi nấp trong một dòng trông vô hại.",
@@ -153,7 +273,17 @@
     "Rò rỉ SQL: AVG(amount) OVER (PARTITION BY card_id) thiếu ORDER BY + khung cửa sổ sẽ tính trung bình cả tương lai; luật là mọi window feature phải có ORDER BY ts VÀ khung loại trừ dòng hiện tại (1 PRECEDING / EXCLUDE CURRENT ROW)",
     "Chạy SQL từ Python: DuckDB tập ngay trên file CSV không cần cài máy chủ (cách nhanh nhất khi có 2 tuần); kết nối thật thì lấy chuỗi kết nối từ biến môi trường và truyền tham số qua params= chống SQL injection"
    ],
-   "viz": "Khối SQL point-in-time với AVG(...) OVER (PARTITION BY card_id ORDER BY ts ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING) chú thích = s.shift(1).expanding().mean()."
+   "viz": "Khối SQL point-in-time với AVG(...) OVER (PARTITION BY card_id ORDER BY ts ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING) chú thích = s.shift(1).expanding().mean().",
+   "example": {
+    "kind": "code",
+    "lead": "Bốn giao dịch, hai thẻ: cột hist_mean chỉ nhìn về quá khứ nên giao dịch đầu tiên của mỗi thẻ ra NULL, và đó là phép kiểm rò rỉ bạn xác nhận được bằng mắt trên bốn dòng.",
+    "code": "-- DuckDB: chay duoc nguyen van, khong can bang that\nWITH tx(tx_id, card_id, ts, amount) AS (VALUES\n  (1, 'A', '2026-01-01 09:00', 100), (2, 'A', '2026-01-01 10:00', 300),\n  (3, 'A', '2026-01-01 11:00', 200), (4, 'B', '2026-01-01 09:30',  50))\nSELECT tx_id, card_id, amount,\n       AVG(amount) OVER (\n           PARTITION BY card_id ORDER BY ts\n           ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING\n       ) AS hist_mean\nFROM tx\nORDER BY card_id, ts;",
+    "out": "1  A  100   NULL\n2  A  300  100.0\n3  A  200  200.0\n4  B   50   NULL"
+   },
+   "check": {
+    "q": "Bỏ ORDER BY và khung cửa sổ đi, chỉ còn AVG(amount) OVER (PARTITION BY card_id): dòng tx_id 1 của thẻ A ra số nào, và vì sao con số đó là rò rỉ?",
+    "a": "Ra 200,0 vì nó lấy trung bình cả ba giao dịch của thẻ A, gồm hai giao dịch xảy ra sau nó — trong khi dòng đó chưa có quá khứ nào nên giá trị đúng là NULL. Câu ngắn hơn, chạy trơn, và sai im lặng: mọi window feature phải có ORDER BY ts kèm khung loại trừ dòng hiện tại."
+   }
   },
   "t-numpy": {
    "tldr": "numpy là lớp nền dưới pandas và mọi mô hình nhận đầu vào là mảng numpy; điểm cốt lõi là phép toán theo phần tử trên cả mảng cùng lúc (chạy bằng C, thường nhanh hơn vòng lặp Python một tới hai bậc độ lớn — tự đo bằng %timeit chứ đừng trích con số), và hai thứ gây lỗi nhiều nhất là shape và broadcasting.",
@@ -165,7 +295,17 @@
     "axis là chiều bị bóp mất: axis=0 gộp dọc theo hàng ra một giá trị mỗi cột, axis=1 ngược lại",
     "Seed là điều kiện bắt buộc của luận văn: default_rng(42) và random_state=42 ở mọi chỗ có ngẫu nhiên (chia tập, khởi tạo mô hình, subsample), không thì không phân biệt được 'tốt hơn' với 'may'"
    ],
-   "viz": "Hình broadcasting kéo được: ba cặp shape ((3,4)+(4,), (3,1)+(1,4), và ca hỏng (3,4)+(3,)) vẽ thành lưới ô, ô mờ là ô NumPy tự nhân bản ra — thấy ngay trục nào được lặp và vì sao ca thứ ba nổ."
+   "viz": "Hình broadcasting kéo được: ba cặp shape ((3,4)+(4,), (3,1)+(1,4), và ca hỏng (3,4)+(3,)) vẽ thành lưới ô, ô mờ là ô NumPy tự nhân bản ra — thấy ngay trục nào được lặp và vì sao ca thứ ba nổ.",
+   "example": {
+    "kind": "code",
+    "lead": "X trừ mu vẫn ra (6, 3) như mong đợi, nhưng một cột trừ chính nó ở dạng cột lại nở thành (6, 6): broadcasting không báo lỗi, nó lặng lẽ tạo mảng to hơn cái bạn định tạo.",
+    "code": "import numpy as np\nrng = np.random.default_rng(42)\nX = rng.random((6, 3))\nmu = X.mean(axis=0)            # axis=0 la chieu bi bop mat\nprint(X.shape, mu.shape, (X - mu).shape)\n\ncol = X[:, 0]                  # mot cot du lieu, nhung shape la (6,)\nprint(col.shape, col.reshape(-1, 1).shape)\nprint((col - col.reshape(-1, 1)).shape)   # (6,) tru (6,1): khong bao loi\nprint(mu.round(3))",
+    "out": "(6, 3) (3,) (6, 3)\n(6,) (6, 1)\n(6, 6)\n[0.592 0.511 0.566]"
+   },
+   "check": {
+    "q": "sklearn báo Expected 2D array, got 1D array trên một mảng shape (1000,): bạn sửa bằng reshape nào, và vì sao reshape(1, -1) chạy được mà vẫn sai?",
+    "a": "Dùng .reshape(-1, 1) để ra (1000, 1) = 1000 mẫu, mỗi mẫu một đặc trưng. reshape(1, -1) ra (1, 1000) nên sklearn hiểu là một mẫu duy nhất có 1000 đặc trưng: shape hợp lệ, không lỗi, kết quả vô nghĩa — đúng loại lỗi chỉ có việc in shape từng bước mới bắt được."
+   }
   },
   "t-sklearn": {
    "tldr": "Cả scikit-learn quy về bốn khái niệm: Estimator (có fit), Transformer (fit ở train, transform khắp nơi), Pipeline (nối thành một đối tượng), ColumnTransformer (mỗi loại cột một cách xử lý) — nắm bốn cái này thì dùng được cả thư viện kể cả lớp chưa từng thấy.",
@@ -177,7 +317,17 @@
     "Pipeline không phải bùa hộ mệnh: vẫn rò nếu tạo feature từ tương lai, tổng hợp trên toàn bộ dữ liệu, hay tính feature TRƯỚC khi vào pipeline",
     "ColumnTransformer điều phối mỗi loại cột: num→StandardScaler, cat→OneHotEncoder(handle_unknown='ignore' để không nổ khi gặp thành phố mới lúc chạy thật), cột giờ→sin/cos"
    ],
-   "viz": "Hình kéo được so hai cách gọi fit: fit trên TRAIN (đúng) vs fit trên TẤT CẢ (rò rỉ) — cùng một giao dịch lớn 900 ở tập valid, z-score tụt hẳn khi μ/σ được tính từ cả valid, tức nó tự bình thường hoá chính mình."
+   "viz": "Hình kéo được so hai cách gọi fit: fit trên TRAIN (đúng) vs fit trên TẤT CẢ (rò rỉ) — cùng một giao dịch lớn 900 ở tập valid, z-score tụt hẳn khi μ/σ được tính từ cả valid, tức nó tự bình thường hoá chính mình.",
+   "example": {
+    "kind": "code",
+    "lead": "Cùng một giao dịch 900 ở tập valid: z-score là 56,57 khi scaler chỉ học từ train, nhưng tụt còn 2,00 khi scaler được fit trên cả valid — giao dịch lớn tự bình thường hoá chính mình.",
+    "code": "import numpy as np\nfrom sklearn.preprocessing import StandardScaler\n\n# train: 4 giao dich binh thuong; valid: mot giao dich lon\nXtr = np.array([[100.], [120.], [80.], [100.]])\nXva = np.array([[900.]])\n\nsc = StandardScaler().fit(Xtr)      # DUNG: fit chi tren train\nz = sc.transform(Xva)[0, 0]\nprint(sc.mean_[0], round(sc.scale_[0], 3), round(z, 2))\n\nleak = StandardScaler().fit(np.vstack([Xtr, Xva]))   # RO RI: fit ca valid\nz2 = leak.transform(Xva)[0, 0]\nprint(leak.mean_[0], round(leak.scale_[0], 3), round(z2, 2))",
+    "out": "100.0 14.142 56.57\n260.0 320.25 2.0"
+   },
+   "check": {
+    "q": "Pipeline chạy xong, predict trên tập test có 0,17% gian lận trả về toàn số 0: mô hình hỏng hay bạn gọi sai hàm, và gọi gì thay thế?",
+    "a": "Không hỏng — predict cắt cứng ở ngưỡng 0,5, mà với 0,17% nhãn dương thì gần như không dòng nào vượt 0,5. Lấy predict_proba rồi tự chọn ngưỡng theo cái giá của báo động sai so với cái giá bỏ sót; xác suất mới là thứ mô hình thật sự học được."
+   }
   },
   "m-vector": {
    "tldr": "Một dòng dữ liệu n cột là một điểm trong không gian n chiều, và RẤT NHIỀU thuật toán ML nhìn được qua lăng kính hình học trên đám điểm đó (một cách nhìn hữu ích, không phải bản chất duy nhất — cây quyết định tự nhiên hơn khi nhìn như chuỗi câu hỏi có/không). Vì khoảng cách Euclid bị đơn vị đo chi phối nên phải chuẩn hoá trước mọi mô hình đo khoảng cách; ma trận là cả bảng và mọi lỗi shape đều nói cùng một điều.",
@@ -189,7 +339,17 @@
     "Lỗi 'X has 28 features, but expecting 30' gần như luôn do one-hot thiếu hạng mục ở tập valid, hoặc drop cột lệch giữa hai tập; đặt bước biến đổi TRONG Pipeline chặn đúng lỗi này.",
     "Thói quen: in X.shape sau mỗi bước biến đổi — 80% lỗi tuần đầu là lỗi shape và .shape chỉ thẳng vào chỗ sai."
    ],
-   "viz": "Bảng bốn shape (X, y, w, y_prob) kèm ví dụ số khoảng cách Euclid ≈100,7 giữa hai giao dịch chênh 100đ và 12 giờ."
+   "viz": "Bảng bốn shape (X, y, w, y_prob) kèm ví dụ số khoảng cách Euclid ≈100,7 giữa hai giao dịch chênh 100đ và 12 giờ.",
+   "example": {
+    "kind": "num",
+    "lead": "Đo khoảng cách giữa cùng ba giao dịch hai lần — một lần bằng đơn vị gốc, một lần bằng độ lệch chuẩn — và thứ tự ai gần ai đổi hẳn.",
+    "code": "A = (1.000.000đ, 10h)   B = (1.000.100đ, 22h)   C = (1.020.000đ, 10h)\nđộ lệch chuẩn của cả cột:  amount = 10.000đ,  hour = 6h\n\nđơn vị gốc:\n  d(A,B) = √(100² + 12²)      = 100,7\n  d(A,C) = √(20.000² + 0²)    = 20.000\n\nchia mỗi cột cho độ lệch chuẩn của nó:\n  d(A,B) = √((100/10.000)² + (12/6)²)  = √(0,0001 + 4) = 2,000025\n  d(A,C) = √((20.000/10.000)² + 0²)    = √4            = 2,000000",
+    "out": "đơn vị gốc:   B gần A hơn C tới 199 lần (100,7 so với 20.000)\nsau chuẩn hoá: 2,000025 so với 2,000000 — gần như bằng nhau\nvì 20.000đ và 12 giờ đều đúng bằng 2 độ lệch chuẩn"
+   },
+   "check": {
+    "q": "y_prob của bạn ra shape (1000, 2) nhưng hàm chấm điểm cần (1000,). Bạn lấy cột nào, và cột còn lại chứa gì?",
+    "a": "Lấy y_prob[:, 1]. Shape (1000, 2) là một cột cho mỗi lớp; cột chỉ số 1 là xác suất lớp dương, còn cột chỉ số 0 chỉ là 1 trừ đi nó nên không mang thêm thông tin nào. Dấu phẩy lẻ trong (1000,) nghĩa là một chiều, khác (1000, 1)."
+   }
   },
   "m-deriv": {
    "tldr": "'Máy học' cụ thể là: có một bộ tham số, một hàm mất mát chấm điểm mức sai, và lặp đi lặp lại việc nhích bộ số theo hướng làm điểm sai giảm. Gradient chỉ hướng dốc lên nhanh nhất nên mỗi bước là trừ đi gradient nhân độ dài bước.",
@@ -201,7 +361,17 @@
     "loss: nan sau vài bước = lr quá lớn, mỗi bước văng qua đáy → giảm lr 10 lần.",
     "Loss đứng yên = lr quá nhỏ hoặc kẹt vùng phẳng → tăng lr, dùng Adam thay SGD; loss nhảy lên xuống = lr hơi lớn hoặc batch quá nhỏ nên gradient nhiễu → giảm lr, tăng batch size."
    ],
-   "viz": "Widget kéo hai thanh (data-viz='gd') mô phỏng toàn bộ quá trình huấn luyện thu nhỏ về một tham số duy nhất."
+   "viz": "Widget kéo hai thanh (data-viz='gd') mô phỏng toàn bộ quá trình huấn luyện thu nhỏ về một tham số duy nhất.",
+   "example": {
+    "kind": "num",
+    "lead": "Chạy tay ba bước của quy tắc w ← w − α∇J(w) trên đúng một tham số, rồi đổi độ dài bước thành 1,5 để thấy chính cái làm loss văng ra nan.",
+    "code": "J(w) = (w − 3)²        J'(w) = 2(w − 3)        w bắt đầu = 0, J = 9,000\n\nα = 0,1\nbước 1: J'(0)    = −6,00 → w = 0    − 0,1×(−6,00) = 0,600   J = 5,760\nbước 2: J'(0,60) = −4,80 → w = 0,60 + 0,480       = 1,080   J = 3,686\nbước 3: J'(1,08) = −3,84 → w = 1,08 + 0,384       = 1,464   J = 2,359\n\ncùng điểm bắt đầu, α = 1,5\nbước 1: J'(0)    = −6,00 → w = 0    − 1,5×(−6,00) = 9,000   J = 36,000",
+    "out": "α = 0,1:  J đi 9,000 → 5,760 → 3,686 → 2,359, w bò dần về 3\nα = 1,5:  J đi 9,000 → 36,000 chỉ sau MỘT bước, rồi càng văng xa\ncùng hàm, cùng gradient −6,00; khác nhau duy nhất ở độ dài bước"
+   },
+   "check": {
+    "q": "Vẫn J(w) = (w − 3)² và w bắt đầu ở 0, nhưng bạn đặt α = 0,5. Sau đúng một bước w bằng bao nhiêu, và bước thứ hai nhích đi đâu?",
+    "a": "w = 0 − 0,5×(−6) = 3, rơi đúng đáy. Bước thứ hai không nhích chút nào vì J'(3) = 0 nên phần trừ đi bằng 0. Nghĩa là độ dài bước không phải càng nhỏ càng đúng: giá trị tốt phụ thuộc độ cong của hàm mất mát, và ở đây 0,5 về đích trong một bước còn 0,1 cần hàng chục bước."
+   }
   },
   "m-prob": {
    "tldr": "Xác suất phục vụ hai việc: mô tả một cột dữ liệu (thường bao nhiêu, dao động cỡ nào) và đọc đúng đầu ra mô hình (0,73 nghĩa gì). Với dữ liệu tiền trung bình gần như luôn gây hiểu nhầm, và con số xác suất chỉ đáng tin khi mô hình được hiệu chỉnh.",
@@ -213,7 +383,17 @@
     "0,73 chỉ nghĩa '73% thật sự là gian lận' nếu mô hình được hiệu chỉnh (calibrated). Bài này KHÔNG dạy cách hiệu chỉnh: muốn kiểm và sửa thì phải có mô hình đã train và một tập validation, nên phần đó nằm ở bài Đo lường (ml-metrics) — ở đây chỉ cần biết con số 0–1 có thể xếp hạng đúng mà giá trị vẫn lệch.",
     "Cây, rừng, boosting không giả định feature theo một họ phân phối THAM SỐ nào — nhưng 'không giả định phân phối' khác 'không giả định gì': chúng vẫn giả định train và lúc chạy thật cùng nguồn (i.i.d.), nhãn đủ đúng, mẫu đủ đại diện; giả định phân phối chuẩn chỉ cần cho một số kiểm định thống kê và khoảng tin cậy của hồi quy tuyến tính — tức phần luận văn, không phải phần mô hình."
    ],
-   "viz": "Histogram kéo được: kéo độ dài đuôi và xem trung bình rời khỏi trung vị — ở mức lớn nhất hơn 80% giao dịch nằm DƯỚI mức trung bình. Kèm đoạn code z-score cá nhân hoá theo card_id."
+   "viz": "Histogram kéo được: kéo độ dài đuôi và xem trung bình rời khỏi trung vị — ở mức lớn nhất hơn 80% giao dịch nằm DƯỚI mức trung bình. Kèm đoạn code z-score cá nhân hoá theo card_id.",
+   "example": {
+    "kind": "num",
+    "lead": "Cùng một giao dịch 500.000đ, tính z-score cá nhân hoá cho hai thẻ có lịch sử chi khác nhau: một thẻ ra 18,97, thẻ kia ra 0,00.",
+    "code": "thẻ A, 5 giao dịch: 180k 190k 200k 210k 220k → mean 200,00k  std  15,81k\nthẻ B, 5 giao dịch: 100k 300k 500k 700k 900k → mean 500,00k  std 316,23k\n(std là df.std của pandas, chia n−1)\n\ngiao dịch mới cần chấm: 500.000đ — thử trên cả hai thẻ\nz(A) = (500,00 − 200,00) /  15,81 = 300,00 /  15,81 = 18,97\nz(B) = (500,00 − 500,00) / 316,23 =   0,00 / 316,23 =  0,00",
+    "out": "z(A) = 18,97 → 500k là bất thường cực độ đối với thẻ A\nz(B) =  0,00 → 500k đúng bằng mức trung bình của thẻ B\ncùng con số 500.000đ, cùng cột amount, hai kết luận trái ngược"
+   },
+   "check": {
+    "q": "Một mô hình chưa hiệu chỉnh chấm 0,73 cho giao dịch 10 triệu. Bạn được phép dùng con số đó làm gì, và không được dùng làm gì?",
+    "a": "Được dùng để xếp hàng xác minh: ca 0,73 đứng trên ca 0,40 nên gọi trước. Không được nhân 0,73 với 10 triệu ra tổn thất kỳ vọng 7,3 triệu, vì xếp hạng đúng không kéo theo giá trị đúng — chỉ mô hình đã hiệu chỉnh mới cho phép đọc 0,73 là 73% số ca cùng điểm đó thật sự gian lận."
+   }
   },
   "m-bayes": {
    "tldr": "Bayes là công cụ tư duy giải thích vì sao một mô hình 'chính xác 99%' vẫn có thể vô dụng: khi lớp dương quá hiếm, precision tụt xuống chỉ 16,6% — hệ quả toán học không kỹ thuật nào xoá được, chỉ có thể đánh đổi.",
@@ -224,7 +404,17 @@
     "Naive Bayes là một mô hình (không phải chỉ định lý): giả định feature độc lập có điều kiện khi đã biết lớp — gần như luôn sai, nhưng cực nhanh, cần ít dữ liệu, tốt cho phân loại văn bản; với dữ liệu bảng chỉ đáng làm baseline rẻ (GaussianNB().fit).",
     "Tư duy Bayes cốt lõi: bằng chứng mới cập nhật niềm tin cũ chứ không thay thế nó; tín hiệu yếu không đủ lật niềm tin 'gian lận rất hiếm', nên hệ thống thật xếp hàng theo điểm rủi ro rồi xác minh ca cao nhất thay vì chặn ngay."
    ],
-   "viz": "Ví dụ chạy hết bằng số trên 100.000 giao dịch, cho ra precision 16,6% ở base rate 0,2%."
+   "viz": "Ví dụ chạy hết bằng số trên 100.000 giao dịch, cho ra precision 16,6% ở base rate 0,2%.",
+   "example": {
+    "kind": "num",
+    "lead": "Giữ nguyên 100.000 giao dịch và 0,2% gian lận, siết ngưỡng đúng một lần rồi đếm lại: precision đi từ 16,6% lên 64,3%, và giá phải trả hiện ra bằng số.",
+    "code": "100.000 giao dịch, 0,2% gian lận → 200 ca gian lận, 99.800 giao dịch sạch\n\nngưỡng lỏng: bắt 99% gian lận, báo nhầm 1,0% giao dịch sạch\n  báo đúng = 200 × 0,99 = 198,0     báo nhầm = 99.800 × 0,010 = 998,0\n  precision = 198,0 / (198,0 + 998,0) = 16,6%     bỏ sót  2 ca\n\nngưỡng siết: bắt 90% gian lận, báo nhầm 0,1% giao dịch sạch\n  báo đúng = 200 × 0,90 = 180,0     báo nhầm = 99.800 × 0,001 =  99,8\n  precision = 180,0 / (180,0 +  99,8) = 64,3%     bỏ sót 20 ca",
+    "out": "lỏng: 1.196 báo động, 198 đúng — precision 16,6%, bỏ sót  2/200\nsiết:   280 báo động, 180 đúng — precision 64,3%, bỏ sót 20/200\nprecision gấp 3,9 lần, giá của nó là 18 ca gian lận lọt thêm"
+   },
+   "check": {
+    "q": "Vẫn bắt 99% gian lận và báo nhầm 1% giao dịch sạch, nhưng chạy trên 1.000.000 giao dịch chỉ có 0,02% gian lận. Trong 100 lần báo động thì mấy lần đúng?",
+    "a": "Khoảng 2 lần: 200 × 0,99 = 198 báo đúng so với 999.800 × 0,01 = 9.998 báo nhầm, tức precision 1,94%. Mô hình không đổi một chữ, chỉ tỉ lệ nền giảm 10 lần, mà precision rơi từ 16,6% xuống 1,94% — nên thứ phải kiểm trước là tỉ lệ nền, không phải thuật toán."
+   }
   },
   "m-infer": {
    "tldr": "Đây là phần thống kê hội đồng thực sự soi: để nói 'mô hình tốt hơn' phải chứng minh chênh lệch (vd AUC 0,910→0,921, chênh 0,011) không phải may rủi. Công cụ mặc định là bootstrap ghép cặp trên hiệu — nếu khoảng tin cậy của Δ chứa 0 thì chưa có bằng chứng khác biệt.",
@@ -236,7 +426,17 @@
     "Bốn công cụ (bootstrap ghép cặp, McNemar, p-value, nhiều seed) là toàn bộ thống kê phần thực nghiệm luận văn thạc sĩ ứng dụng cần; ANOVA, phi tham số, Bayes đầy đủ nằm ngoài phạm vi.",
     "Ngoại lệ cứng: đề tài có A/B test thì power analysis / tính cỡ mẫu là BẮT BUỘC — chạy A/B test thiếu cỡ mẫu là tiêu cả tuần để nhận về kết luận 'không có khác biệt' mà không được phép tin."
    ],
-   "viz": "Mẫu câu luận văn: PR-AUC 0,412 (KTC 95% bootstrap 0,388–0,437) vs baseline LightGBM 0,367, bootstrap ghép cặp Δ=0,045 (KTC 0,021–0,068) không chứa 0, McNemar χ²(1)=24,3 p<0,001, trung bình trên 5 seed."
+   "viz": "Mẫu câu luận văn: PR-AUC 0,412 (KTC 95% bootstrap 0,388–0,437) vs baseline LightGBM 0,367, bootstrap ghép cặp Δ=0,045 (KTC 0,021–0,068) không chứa 0, McNemar χ²(1)=24,3 p<0,001, trung bình trên 5 seed.",
+   "example": {
+    "kind": "num",
+    "lead": "Năm vòng bootstrap ghép cặp trên cùng chỉ số hàng: hai khoảng riêng chồng lấn nhau, còn khoảng của hiệu thì không chạm 0 một lần nào.",
+    "code": "mỗi vòng bốc lại CÙNG chỉ số hàng rồi chấm cả hai mô hình trên đó\n\nvòng   baseline   mới      Δ = mới − baseline\n1      0,908      0,922    +0,014\n2      0,915      0,924    +0,009\n3      0,902      0,915    +0,013\n4      0,921      0,930    +0,009\n5      0,906      0,918    +0,012\n\nkhoảng baseline: 0,902–0,921      khoảng mới: 0,915–0,930\nkhoảng của Δ:    0,009–0,014",
+    "out": "hai khoảng riêng chồng lấn ở dải 0,915–0,921 → so bằng mắt: chưa rõ\nkhoảng của Δ là 0,009–0,014, không chứa 0 → chênh lệch là thật\ncùng 10 con số, hai kết luận; chỉ khoảng của Δ trả lời đúng câu hỏi"
+   },
+   "check": {
+    "q": "Tập test có 20.000 giao dịch của 800 thẻ, và bạn bootstrap bằng cách bốc lại 20.000 dòng có hoàn lại. Khoảng tin cậy sẽ lệch về hướng nào?",
+    "a": "Hẹp giả tạo. Nhiều dòng thuộc cùng một thẻ nên số quan sát độc lập gần 800 hơn là 20.000, và bốc theo dòng làm như cỡ mẫu lớn hơn thực tế tới 25 lần. Cách đúng là bốc lại 800 card_id rồi lấy hết giao dịch của những thẻ được bốc, và nói rõ đơn vị bốc lại trong luận văn."
+   }
   },
   "d-framing": {
    "tldr": "Phần lớn dự án AI thất bại không phải vì mô hình kém mà vì mô hình trả lời sai câu hỏi; đóng khung là trả lời sáu câu bằng chữ TRƯỚC khi mở notebook, biến mong muốn kinh doanh mơ hồ thành bài toán ML giải được.",
@@ -247,7 +447,17 @@
     "Đóng khung gian lận thành ranking (chỉ số precision@k, recall@k) thực tế và dễ có đóng góp mới hơn phân loại, vì đội xác minh chỉ xử lý được N ca/ngày nên câu hỏi thật là 'N ca nào?'.",
     "Viết docs/problem-statement.md với sáu câu trả lời — nó thành phần Giới thiệu + Phát biểu bài toán của luận văn gần như nguyên văn, và là bộ lọc cho mọi ý tưởng feature mới."
    ],
-   "viz": "Bảng sáu câu đóng khung với ví dụ gian lận (dự đoán xác suất giao dịch bị khiếu nại gian lận trong 60 ngày, chấm điểm ngay lúc quẹt thẻ) — và ví dụ cột trang_thai_xu_ly cho AUC 0,998 nhưng chỉ điền sau khi có kết luận nên vô dụng."
+   "viz": "Bảng sáu câu đóng khung với ví dụ gian lận (dự đoán xác suất giao dịch bị khiếu nại gian lận trong 60 ngày, chấm điểm ngay lúc quẹt thẻ) — và ví dụ cột trang_thai_xu_ly cho AUC 0,998 nhưng chỉ điền sau khi có kết luận nên vô dụng.",
+   "example": {
+    "kind": "num",
+    "lead": "Lấy đúng hai con số chi phí của câu 5 rồi so hai ngưỡng: tiền chọn ngưỡng thấp, nhưng câu 6 lại loại nó — đó là lúc sáu câu phải nói chuyện với nhau.",
+    "code": "Câu 5: bỏ lọt = 3.000.000đ/vụ · chặn nhầm = 40.000đ/lệnh\nMột ngày: 10.000 giao dịch, 20 vụ gian lận\n\nngưỡng cao  (bắt 8/20, chặn nhầm 15):\n  12 x 3.000.000 + 15 x 40.000  = 36.000.000 + 600.000   = 36.600.000đ\nngưỡng thấp (bắt 15/20, chặn nhầm 120):\n   5 x 3.000.000 + 120 x 40.000 = 15.000.000 + 4.800.000 = 19.800.000đ\n\nCâu 6: chặn nhầm phải < 0,5% x 10.000 = 50 lệnh/ngày\n  ngưỡng cao 15 <= 50 (đạt) · ngưỡng thấp 120 > 50 (không đạt)",
+    "out": "ngưỡng thấp rẻ hơn 36.600.000 - 19.800.000 = 16.800.000đ/ngày\nnhưng 120 lệnh chặn nhầm vượt mức 50 mà câu 6 cho phép\n=> phải tìm ngưỡng giữa, hoặc quay lại thương lượng lại câu 6 với người dùng"
+   },
+   "check": {
+    "q": "Đội xác minh chỉ xử lý được 500 ca mỗi ngày. Bạn đóng khung bài toán thành phân loại nhị phân hay thành ranking, và chỉ số đi kèm là gì?",
+    "a": "Ranking, với precision@500 và recall@500. Câu hỏi thật của đội không phải \"ca nào là gian lận\" mà \"500 ca nào hôm nay\", nên một nhãn có/không cho từng giao dịch không dùng được ngay còn một danh sách xếp hạng thì cắt đúng ở 500 là chạy được."
+   }
   },
   "d-data": {
    "tldr": "Chốt MỘT bộ dữ liệu chính rồi viết lớp adapter đưa nó về một schema chuẩn 8 cột, để đổi dataset chỉ là viết thêm một hàm chứ không sửa dòng nào ở features/train/serve.",
@@ -259,7 +469,17 @@
     "target_rate giải bằng chia đôi (_solve_intercept) chứ không dò tay; cộng 1 vào hằng số logit là nhân odds lên e≈2,72 lần. Hai xấp xỉ IEEE phải nêu trong luận văn: card1 là mã đã băm gần với thẻ, mốc gốc 2017-12-01 chỉ là quy ước cộng đồng Kaggle.",
     "prepare_data sinh transactions.parquet + datacard.json — datacard chính là bảng mô tả dữ liệu chương 3 luận văn cần, sinh tự động nên không bao giờ lệch với dữ liệu thật."
    ],
-   "viz": "Output datacard.json của bộ sim: rows 400000, cards 3986, fraud_rate 0.002035, from 2025-01-01 tới 2025-06-29, chạy trong 2,0 giây trên laptop bình thường không cần GPU."
+   "viz": "Output datacard.json của bộ sim: rows 400000, cards 3986, fraud_rate 0.002035, from 2025-01-01 tới 2025-06-29, chạy trong 2,0 giây trên laptop bình thường không cần GPU.",
+   "example": {
+    "kind": "code",
+    "lead": "Ba dòng thô kiểu IEEE-CIS đi qua adapter: tên cột lạ thành schema chuẩn, giao dịch amount âm bị loại, và thứ tự thời gian bị ép lại trước khi trả về.",
+    "code": "import pandas as pd\nraw = pd.DataFrame({\"TransactionID\": [1, 2, 3],\n                    \"TransactionDT\": [86400, 3600, 7200],\n                    \"TransactionAmt\": [120.0, -5.0, 3400.0],\n                    \"card1\": [13926, 13926, 17188], \"isFraud\": [0, 0, 1]})\nts = pd.Timestamp(\"2017-12-01\") + pd.to_timedelta(raw.TransactionDT, \"s\")\ndf = pd.DataFrame({\"tx_id\": raw.TransactionID.astype(str), \"timestamp\": ts,\n                   \"card_id\": \"IEEE-\" + raw.card1.astype(str),\n                   \"amount\": raw.TransactionAmt, \"is_fraud\": raw.isFraud})\ndf = df[df.amount > 0].sort_values(\"timestamp\").reset_index(drop=True)\nassert df.is_fraud.isin([0, 1]).all(), \"nhãn phải là 0/1\"\nassert df.timestamp.is_monotonic_increasing, \"phải sắp theo thời gian\"\nprint(df.to_string(index=False))\nprint(\"bỏ\", len(raw) - len(df), \"dòng amount <= 0\")",
+    "out": "tx_id           timestamp    card_id  amount  is_fraud\n    3 2017-12-01 02:00:00 IEEE-17188  3400.0         1\n    1 2017-12-02 00:00:00 IEEE-13926   120.0         0\nbỏ 1 dòng amount <= 0"
+   },
+   "check": {
+    "q": "Dữ liệu công ty gửi sang chỉ có ngày trong tuần và giờ, không có mốc thời gian tuyệt đối. Bạn viết adapter đưa nó về schema chuẩn được không?",
+    "a": "Không — timestamp là cột bắt buộc, thiếu nó là mất cả ba thứ dựa vào trục thời gian: chia tập theo thời gian, tính cửa sổ lịch sử, và mã hoá sin/cos. Phải xin lại một cột thời gian thật, hoặc đổi bài toán và nói rõ giới hạn đó."
+   }
   },
   "d-eda": {
    "tldr": "EDA là nhìn dữ liệu bằng mắt trước khi giao cho máy để bắt những thứ sẽ phá mô hình; then chốt là EDA có HAI THÌ ngăn bởi bước chia tập, trộn chúng là tự biến bộ não thành đường rò rỉ.",
@@ -271,7 +491,17 @@
     "Biểu đồ tỉ lệ gian lận theo nhóm (df_train.groupby('hour')['Class'].mean()) là biểu đồ hữu ích nhất cho bài fraud và là chỗ tự tìm ra động lực cho sin/cos.",
     "Bốn câu Thì 1 phải trả lời được trước khi chia tập: một dòng là gì, nhãn được tạo ra thế nào (trễ bao lâu), có thứ tự thời gian không, có nhóm lặp không."
    ],
-   "viz": "Hình bốn ô kéo được: cùng một bộ dữ liệu, mỗi ô trả lời MỘT câu khác nhau (phân phối / tỉ lệ theo nhóm / tỉ lệ thiếu / tương quan với nhãn) — bỏ ô nào là mất hẳn câu đó, ví dụ bỏ ô tương quan thì chargeback_flag đi thẳng vào mô hình."
+   "viz": "Hình bốn ô kéo được: cùng một bộ dữ liệu, mỗi ô trả lời MỘT câu khác nhau (phân phối / tỉ lệ theo nhóm / tỉ lệ thiếu / tương quan với nhãn) — bỏ ô nào là mất hẳn câu đó, ví dụ bỏ ô tương quan thì chargeback_flag đi thẳng vào mô hình.",
+   "example": {
+    "kind": "code",
+    "lead": "Ba dòng in của Thì 1 trên 500 giao dịch: 8,3 dòng mỗi thẻ và một trục thời gian sáu tháng đã đủ để chốt cách chia tập, mà chưa nhìn quan hệ feature–nhãn lần nào.",
+    "code": "import numpy as np, pandas as pd\nrng, n = np.random.default_rng(0), 500\ncards = [f\"C{i:03d}\" for i in range(60)]\nts = pd.Timestamp(\"2025-01-01\") + pd.to_timedelta(\n    rng.integers(0, 180 * 86400, n), \"s\")\ndf = pd.DataFrame({\"tx_id\": [f\"S{i:04d}\" for i in range(n)], \"ts\": ts,\n                   \"card_id\": rng.choice(cards, n),\n                   \"amount\": np.exp(rng.normal(12, 1.4, n)),\n                   \"Class\": (rng.random(n) < 0.004).astype(int)})\nprint(\"dòng:\", len(df), \"· thẻ:\", df.card_id.nunique(),\n      \"→ mỗi thẻ\", round(len(df) / df.card_id.nunique(), 1), \"dòng\")\nprint(\"thời gian:\", df.ts.min().date(), \"→\", df.ts.max().date())\nprint(\"trùng:\", df.duplicated().sum(), \"· tỉ lệ dương:\",\n      round(df.Class.mean(), 4))",
+    "out": "dòng: 500 · thẻ: 60 → mỗi thẻ 8.3 dòng\nthời gian: 2025-01-01 → 2025-06-29\ntrùng: 0 · tỉ lệ dương: 0.006"
+   },
+   "check": {
+    "q": "Bạn định chạy thêm tương quan giữa amount và Class ngay trong Thì 1, trên toàn bộ dữ liệu, để biết nên giữ cột nào. Được không?",
+    "a": "Không — đó là việc của Thì 2 vì nó dùng quan hệ feature–nhãn, nên chỉ chạy trên train sau khi chia. Xem trên toàn bộ dữ liệu thì bạn chọn feature dựa cả trên tập test, và loại rò rỉ đi qua đầu người đó không công cụ nào phát hiện được."
+   }
   },
   "d-clean": {
    "tldr": "'Làm sạch' là HAI việc chạy ở hai thời điểm khác nhau: (A) sửa tuyệt đối — đổi kiểu, chuẩn hoá chuỗi, bỏ TRÙNG LẶP CHÍNH XÁC, bỏ giá trị bất khả thi — chạy TRƯỚC khi chia tập, cùng lúc chốt schema; (B) sửa học từ dữ liệu — điền thiếu, cắt ngưỡng, scale — chạy SAU khi chia, fit chỉ trên train rồi transform cho valid/test, và phải nằm trong Pipeline.",
@@ -283,7 +513,17 @@
     "Trùng lặp là loại A nên phải bỏ TRƯỚC khi chia tập: nếu chia trước rồi mới bỏ trùng thì một bản có thể ở train và bản kia ở test, mô hình học thuộc đúng dòng nó sắp bị hỏi. drop_duplicates(subset=['tx_id']) rồi assert is_unique; ép kiểu sớm với errors='coerce' (biến giá trị hỏng thành NaN, đếm được bằng .isna().sum()); chuẩn hoá chuỗi strip+lower thường giảm ~30% số giá trị khác nhau nên one-hot nhẹ đi 30%.",
     "Ranh giới làm sạch vs feature engineering: nếu phép biến đổi HỌC tham số từ dữ liệu (trung vị để điền, μ/σ để scale, danh sách hạng mục để one-hot) thì phải nằm trong Pipeline; chỉ phép sửa tuyệt đối (đổi kiểu, bỏ trùng) mới được làm ngoài."
    ],
-   "viz": "Bảng ba kiểu thiếu (ngẫu nhiên / mang thông tin / do cấu trúc) với ví dụ và cách xử lý tương ứng; code winsorize df['amount'].clip(lo, hi) với ngưỡng quantile([0.001, 0.999])."
+   "viz": "Bảng ba kiểu thiếu (ngẫu nhiên / mang thông tin / do cấu trúc) với ví dụ và cách xử lý tương ứng; code winsorize df['amount'].clip(lo, hi) với ngưỡng quantile([0.001, 0.999]).",
+   "example": {
+    "kind": "code",
+    "lead": "Ngưỡng winsorize 90% tính từ train ra 1658, tính từ toàn bộ dữ liệu ra 4334 — chênh 2,6 lần chỉ vì giao dịch lớn nằm trong test đã tự nới ngưỡng cho chính nó.",
+    "code": "import pandas as pd\namount = pd.Series([50., 62., 71., 88., 95., 120., 140., 5200.,\n                    60., 130., 4800., 110.])\ntrain, test = amount.iloc[:8], amount.iloc[8:]\nprint(\"median(train) =\", train.median(),\n      \"· mean(train) =\", round(train.mean(), 1))\nhi_train = train.quantile(0.90)\nhi_all = amount.quantile(0.90)\nprint(\"hi 90% từ train:\", round(hi_train, 1),\n      \"· từ toàn bộ:\", round(hi_all, 1))\nprint(\"amount 4800 ở test → clip theo train:\",\n      round(test.clip(upper=hi_train).max(), 1),\n      \"· theo toàn bộ:\", round(test.clip(upper=hi_all).max(), 1))",
+    "out": "median(train) = 91.5 · mean(train) = 728.2\nhi 90% từ train: 1658.0 · từ toàn bộ: 4334.0\namount 4800 ở test → clip theo train: 1658.0 · theo toàn bộ: 4334.0"
+   },
+   "check": {
+    "q": "Bạn chia tập xong mới phát hiện tx_id còn trùng. Bỏ trùng ngay trên từng tập rồi đi tiếp được không?",
+    "a": "Không — hai bản của cùng một giao dịch có thể đã rơi vào hai tập khác nhau, và bỏ trùng trong từng tập không tách được cặp đó. Bỏ trùng là phép sửa tuyệt đối, không cần biết tập nào, nên phải chạy trước bước chia; ở đây thì làm lại: drop_duplicates theo tx_id rồi chia lại."
+   }
   },
   "d-leak": {
    "tldr": "Data leakage là khi mô hình được nhìn thông tin mà lúc dự đoán thật nó sẽ không có, cho điểm đẹp trên giấy nhưng vô dụng khi chạy; đây là lỗi nghiêm trọng nhất — một mô hình bị rò rỉ là một luận văn SAI mà phản biện phát hiện trong 5 phút.",
@@ -295,7 +535,17 @@
     "Kiểu 5 rò rỉ qua feature tổng hợp: groupby('card_id')['amount'].transform('mean') gồm cả giao dịch TƯƠNG LAI → chữa bằng sort_values('ts') rồi shift(1).expanding().mean(), shift(1) đẩy chuỗi xuống để giao dịch hiện tại không tự tính vào trung bình của chính nó.",
     "Kiểu 6 rò rỉ qua chính bạn: thử 30 cấu hình nhìn điểm test mỗi lần biến test thành validation → chữa bằng ba tập (train học, validation chọn, test báo cáo), chạm test đúng một lần. Quy trình kiểm 6 bước gồm in feature importance và soi cột nào chiếm >50%."
    ],
-   "viz": "Hình data-viz='leak' minh hoạ câu hỏi gốc 'tại thời điểm dự đoán tôi biết những gì'; và cặp code đối chiếu transform('mean') SAI vs sort_values('ts').shift(1).expanding().mean() ĐÚNG."
+   "viz": "Hình data-viz='leak' minh hoạ câu hỏi gốc 'tại thời điểm dự đoán tôi biết những gì'; và cặp code đối chiếu transform('mean') SAI vs sort_values('ts').shift(1).expanding().mean() ĐÚNG.",
+   "example": {
+    "kind": "code",
+    "lead": "Cùng một cột trung bình theo thẻ, tính hai cách trên bốn giao dịch: cách sai cho mọi dòng thấy trước giao dịch 9000 ở tương lai, cách đúng chỉ thấy quá khứ.",
+    "code": "import pandas as pd\ndf = pd.DataFrame({\"card_id\": [\"C1\"] * 4,\n                   \"amount\": [100.0, 120.0, 110.0, 9000.0],\n                   \"ts\": pd.to_datetime([\"2025-01-01\", \"2025-01-02\",\n                                         \"2025-01-03\", \"2025-01-04\"])})\ndf = df.sort_values(\"ts\")\ng = df.groupby(\"card_id\")[\"amount\"]\ndf[\"sai\"] = g.transform(\"mean\")\ndf[\"dung\"] = g.transform(lambda s: s.shift(1).expanding().mean())\nprint(df[[\"ts\", \"amount\", \"sai\", \"dung\"]].to_string(index=False))",
+    "out": "        ts  amount    sai  dung\n2025-01-01   100.0 2332.5   NaN\n2025-01-02   120.0 2332.5 100.0\n2025-01-03   110.0 2332.5 110.0\n2025-01-04  9000.0 2332.5 110.0"
+   },
+   "check": {
+    "q": "Bạn đã chia tập theo thời gian rất cẩn thận, nhưng cột avg_amt vẫn tính bằng transform mean trên toàn bộ dữ liệu. Chia đúng có cứu được không?",
+    "a": "Không. Rò rỉ đã nằm trong chính giá trị của cột: một dòng ở train mang trung bình gồm cả giao dịch tương lai của thẻ đó, nên đường ranh giữa các tập vẽ đúng thì thông tin tương lai vẫn đi cùng dòng qua ranh giới. Phải sửa cách tính cột, bằng shift(1) rồi expanding mean."
+   }
   },
   "d-split": {
    "tldr": "Chia tập là nơi bạn tự tạo ra BÀI THI cho mô hình; chia sai thì mọi con số về sau đều vô nghĩa vì mô hình đang thi một đề dễ hơn thực tế.",
@@ -308,7 +558,17 @@
     "Kiểm sau khi chia bằng assert (không nhìn bằng mắt): train.ts.max() < test.ts.min() (rò rỉ thời gian), không giao card_id giữa train/test (rò rỉ nhóm), so tỉ lệ dương hai tập; và nhãn đến trễ 60 ngày thì cắt bỏ vùng đệm 60 ngày cuối vì nhãn ở đó chưa đầy đủ.",
     "Điều kiện trước khi chia: đã kiểm cấu trúc (Thì 1 của bài EDA đứng ngay trước) và đã bỏ TRÙNG LẶP CHÍNH XÁC — bỏ trùng sau khi chia là một đường rò rỉ, vì hai bản của cùng một giao dịch có thể rơi vào train và test."
    ],
-   "viz": "Hình data-viz='split' cho thấy ba cách chia (thời gian / nhóm / phân tầng) trên cùng một tập dữ liệu; kèm code cắt train/valid/test theo mốc iloc 0.70 và 0.85 với dòng print khoảng thời gian từng tập."
+   "viz": "Hình data-viz='split' cho thấy ba cách chia (thời gian / nhóm / phân tầng) trên cùng một tập dữ liệu; kèm code cắt train/valid/test theo mốc iloc 0.70 và 0.85 với dòng print khoảng thời gian từng tập.",
+   "example": {
+    "kind": "code",
+    "lead": "Cắt 20 giao dịch ở mốc iloc 0,70 và 0,85: dòng in khoảng thời gian chứng minh train đứng trước test, còn dòng cuối cho thấy chia theo thời gian không tự làm rời nhóm thẻ.",
+    "code": "import pandas as pd\ndf = pd.DataFrame({\"ts\": pd.date_range(\"2025-01-01\", periods=20, freq=\"D\"),\n                   \"card_id\": [f\"C{i % 4}\" for i in range(20)],\n                   \"Class\": [0] * 18 + [1, 0]})\ndf = df.sort_values(\"ts\"); n = len(df)\ntrain = df.iloc[: int(n * 0.70)]\nvalid = df.iloc[int(n * 0.70): int(n * 0.85)]\ntest = df.iloc[int(n * 0.85):]\nprint(len(train), len(valid), len(test))\nprint(f\"train {train.ts.min():%m-%d}→{train.ts.max():%m-%d}\"\n      f\" · test {test.ts.min():%m-%d}→{test.ts.max():%m-%d}\")\nassert train.ts.max() < test.ts.min(), \"rò rỉ thời gian!\"\nprint(\"giao card_id train ∩ test:\",\n      len(set(train.card_id) & set(test.card_id)))",
+    "out": "14 3 3\ntrain 01-01→01-14 · test 01-18→01-20\ngiao card_id train ∩ test: 3"
+   },
+   "check": {
+    "q": "Dữ liệu 12 tháng, test là 15% cuối, nhãn gian lận chỉ chốt sau 60 ngày. Tập test của bạn nằm ở đâu so với vùng nhãn chưa đầy đủ?",
+    "a": "15% của 12 tháng ≈ 54 ngày, nên cả tập test nằm gọn trong vùng đệm 60 ngày cuối: nhiều ca gian lận ở đó vẫn đang bị gán là sạch, làm precision trông tệ hơn thực tế. Xử lý bằng cách cắt bỏ 60 ngày cuối rồi mới chia, và nói rõ trong luận văn."
+   }
   },
   "f-what": {
    "tldr": "Feature engineering là viết code biến cột thô thành cột số mô hình học được, và đảm bảo đúng đoạn code đó chạy lại y hệt lúc dự đoán thật. Nó chạy hai lần trong đời (train và serve) nên phải cho kết quả giống hệt — và trên dữ liệu bảng nó thường quyết định kết quả nhiều hơn việc chọn mô hình (cán cân đảo lại khi bộ feature đã bão hoà, hoặc khi dữ liệu là ảnh/chữ nơi mô hình tự học biểu diễn).",
@@ -320,7 +580,17 @@
     "Nhịp làm việc: baseline → MỘT giả thuyết nói bằng lời → 5 dòng pandas → đo lại → giữ nếu tăng, bỏ nếu không → lặp; đừng thêm 20 feature cùng lúc",
     "Bảng đo mỗi vòng chính là bảng ablation của luận văn — ghi từ ngày đầu, đừng dựng lại từ trí nhớ ngày cuối"
    ],
-   "viz": "Bảng một cột timestamp thô nở thành bốn cột có ý nghĩa (hour_sin/cos, is_weekend, secs_since_last_tx, n_tx_last_1h); và nhịp baseline PR-AUC 0,367 → thêm hour_sin/cos → 0,384."
+   "viz": "Bảng một cột timestamp thô nở thành bốn cột có ý nghĩa (hour_sin/cos, is_weekend, secs_since_last_tx, n_tx_last_1h); và nhịp baseline PR-AUC 0,367 → thêm hour_sin/cos → 0,384.",
+   "example": {
+    "kind": "code",
+    "lead": "Cùng một giao dịch 500.000 đi qua hai đường: một bên dùng mu và sd đã lưu từ lô train, bên kia để API tự tính lại mu từ dữ liệu hôm nay.",
+    "code": "import pandas as pd\ntrain = pd.Series([100_000, 250_000, 400_000])     # lô train\ntoday = pd.Series([250_000, 310_000, 370_000])     # lô hôm nay\nmu, sd = train.mean(), train.std(ddof=0)           # tham số ĐÃ LƯU\nx = 500_000                                        # cùng MỘT giao dịch\nsd_today = today.std(ddof=0)\nprint(\"mu/sd luu tu train  :\", round((x - mu) / sd, 3), \"| mu =\", int(mu))\nprint(\"API tinh lai hom nay:\", round((x - today.mean()) / sd_today, 3),\n      \"| mu =\", int(today.mean()))",
+    "out": "mu/sd luu tu train  : 2.041 | mu = 250000\nAPI tinh lai hom nay: 3.878 | mu = 310000"
+   },
+   "check": {
+    "q": "Bạn thêm hai feature: log1p(amount) và n_tx_1h, rồi gói cả hai vào một Pipeline lưu chung với mô hình — feature nào vẫn còn lệch được giữa train và serve?",
+    "a": "n_tx_1h. Phép log1p không học tham số nên chạy ở đâu cũng ra đúng một số, còn n_tx_1h cần lịch sử: lúc train tính bằng pandas trên cả file, lúc serve tính từ một kho trạng thái — hai đường code khác nhau mà Pipeline không nhìn thấy."
+   }
   },
   "f-numeric": {
    "tldr": "Cột số trông đã sẵn sàng nhưng thường không: scale, log, clip, binning xử lý bốn vấn đề khác nhau, và biết dùng cái nào quan trọng hơn biết cả bốn. Nhóm mạnh nhất lại ít được dạy nhất — feature tỉ lệ, vì nó đưa ngữ cảnh vào một con số.",
@@ -332,7 +602,17 @@
     "Binning bằng pd.cut cho quan hệ phi tuyến hình chữ U, nhưng với cây/boosting binning gần như luôn làm tệ đi (ép ngưỡng của bạn lên cây đã tự tìm ngưỡng tối ưu, mất thông tin)",
     "Thứ tự đúng: sửa lỗi (ngoài Pipeline) → tạo feature tỉ lệ/log/sin-cos → điền thiếu (SimpleImputer) → scale; điền thiếu TRƯỚC scale vì scale không xử lý NaN, tạo tỉ lệ TRƯỚC scale vì muốn tỉ lệ của giá trị gốc"
    ],
-   "viz": "Ví dụ số: 'giao dịch này gấp 42 lần mức bình thường của chính khách hàng này' là một tín hiệu, trong khi 'giao dịch 5 triệu' chỉ là một con số vô ngữ cảnh."
+   "viz": "Ví dụ số: 'giao dịch này gấp 42 lần mức bình thường của chính khách hàng này' là một tín hiệu, trong khi 'giao dịch 5 triệu' chỉ là một con số vô ngữ cảnh.",
+   "example": {
+    "kind": "code",
+    "lead": "Hai giao dịch cùng 5.000.000 và cùng amount_log, nhưng cột tỉ lệ tách chúng ra: một cái gấp 42 lần mức thường của khách đó, cái kia chỉ gấp 1,04.",
+    "code": "import numpy as np, pandas as pd\ndf = pd.DataFrame({\"card_id\": [\"A\", \"B\"],\n                   \"amount\": [5_000_000, 5_000_000],\n                   \"user_avg_amount\": [119_047, 4_800_000]})\ndf[\"amt_vs_user_avg\"] = df[\"amount\"] / (df[\"user_avg_amount\"] + 1)\ndf[\"amount_log\"] = np.log1p(df[\"amount\"])\nprint(df.round(2).to_string(index=False))",
+    "out": "card_id  amount  user_avg_amount  amt_vs_user_avg  amount_log\n      A 5000000           119047            42.00       15.42\n      B 5000000          4800000             1.04       15.42"
+   },
+   "check": {
+    "q": "Mô hình chính của bạn là LightGBM và bạn định thêm StandardScaler cho amount rồi pd.cut chia amount thành 5 khoảng — bước nào vô ích, bước nào có hại?",
+    "a": "Scale vô ích, binning có hại. Cây cắt theo thứ hạng nên mọi phép biến đổi đơn điệu không đổi gì; còn pd.cut thay ngưỡng mà cây tự tìm được bằng ngưỡng bạn áp đặt và làm mất thông tin trong mỗi khoảng. Giữ scale nếu bạn còn baseline hồi quy logistic."
+   }
   },
   "f-cat": {
    "tldr": "Mô hình chỉ ăn số nên cột hạng mục phải thành số, và cách biến đổi quyết định rất nhiều: chọn sai thì hoặc mô hình học sai thứ tự giả, hoặc bảng phình ra hàng nghìn cột. Câu hỏi đầu tiên luôn là đếm số giá trị khác nhau (nunique).",
@@ -344,7 +624,17 @@
     "LightGBM xử lý cột category nguyên bản qua categorical_feature=[...], tự nhóm giá trị tối ưu, thường tốt hơn one-hot và không phình cột — nhưng gắn chặt với LightGBM nên baseline logistic vẫn cần nhánh one-hot riêng trong ColumnTransformer",
     "Hashing băm vào 2^16 ô cố định: bộ nhớ không đổi nhưng có va chạm và mất khả năng giải thích, hiếm khi cần cho luận văn"
    ],
-   "viz": "Bảng quyết định số-giá-trị-khác-nhau → cách xử lý: 2 / 3–15 / 15–100 / 100–10.000 / >10.000, mỗi mức một encoder khác nhau."
+   "viz": "Bảng quyết định số-giá-trị-khác-nhau → cách xử lý: 2 / 3–15 / 15–100 / 100–10.000 / >10.000, mỗi mức một encoder khác nhau.",
+   "example": {
+    "kind": "code",
+    "lead": "Đếm nunique trước khi chọn encoder: city có 3 giá trị nên one-hot ra 3 cột, còn merchant_id 799 giá trị thì đúng phép one-hot đó nở thành 799 cột.",
+    "code": "import numpy as np, pandas as pd\nrng = np.random.default_rng(0)\ndf = pd.DataFrame({\"city\": rng.choice([\"HN\", \"HUE\", \"DN\"], 5000),\n                   \"merchant_id\": rng.integers(0, 800, 5000).astype(str),\n                   \"card_id\": rng.integers(0, 12000, 5000).astype(str)})\nprint(df.nunique().sort_values(ascending=False).to_string())\nn_mid = pd.get_dummies(df[\"merchant_id\"]).shape[1]\nprint(\"one-hot city       :\", pd.get_dummies(df[\"city\"]).shape[1], \"cot\")\nprint(\"one-hot merchant_id:\", n_mid, \"cot\")",
+    "out": "card_id        4077\nmerchant_id     799\ncity              3\none-hot city       : 3 cot\none-hot merchant_id: 799 cot"
+   },
+   "check": {
+    "q": "Cột merchant_id có 799 giá trị và baseline là hồi quy logistic nên 799 cột one-hot bị loại — bạn chọn cách mã hoá nào, và tham số nào bắt buộc đi kèm?",
+    "a": "Target encoding, kèm cross-fitting và smoothing: TargetEncoder(smooth='auto', cv=5). Nó thay 799 cột bằng một cột tỉ lệ nhãn dương, nhưng vì tính từ chính nhãn nên tính một lần trên cả tập train là rò rỉ; smoothing kéo cửa hàng chỉ có 3 giao dịch về gần trung bình toàn cục."
+   }
   },
   "f-cyclic": {
    "tldr": "23h và 0h chỉ cách nhau một giờ thật nhưng biểu diễn số nguyên 0–23 đặt chúng ở hai cực xa nhất của thang đo. Sin/cos hoá uốn đường thẳng thành vòng tròn để bảo toàn khoảng cách — một cột hour thành hai cột hour_sin và hour_cos.",
@@ -356,7 +646,17 @@
     "Đa hài: một cặp sin/cos chỉ dựng được một sóng lên-xuống; thực tế có hai đỉnh (trưa và tối) thì thêm cặp chu kỳ một nửa (lặp k=1,2,3)",
     "Cây/boosting KHÔNG cần sin/cos — chúng biểu diễn 'giờ≥22 HOẶC giờ≤3' bằng hai lần chia ngưỡng; nếu mô hình chính là LightGBM thì đừng kỳ vọng cải thiện lớn, phải đo trước khi khẳng định"
    ],
-   "viz": "Viz đồng hồ kéo được (data-viz='clock') cho A=23,B=0; và bảng luận văn: sin/cos đẩy PR-AUC logistic 0,281→0,343 nhưng gần như không đổi LightGBM 0,367→0,371."
+   "viz": "Viz đồng hồ kéo được (data-viz='clock') cho A=23,B=0; và bảng luận văn: sin/cos đẩy PR-AUC logistic 0,281→0,343 nhưng gần như không đổi LightGBM 0,367→0,371.",
+   "example": {
+    "kind": "code",
+    "lead": "Bảng sin/cos của bốn giờ cho hai con số đáng nhớ: 23h và 0h cách nhau 0,261 trên vòng tròn thay vì 23 đơn vị, còn 3h với 9h chỉ tách ra được khi có thêm cos.",
+    "code": "import numpy as np\nh = np.array([23, 0, 3, 9])\ns, c = np.sin(2 * np.pi * h / 24), np.cos(2 * np.pi * h / 24)\nprint(\"hour\", h)\nprint(\"sin \", s.round(3))\nprint(\"cos \", c.round(3))\nd_23_0 = np.hypot(s[0] - s[1], c[0] - c[1])\nd_3_9 = np.hypot(s[2] - s[3], c[2] - c[3])\nprint(\"23h->0h   |23-0| =\", abs(23 - 0),\n      \"| tren vong tron =\", round(float(d_23_0), 3))\nprint(\"3h vs 9h  chi sin =\", round(float(abs(s[2] - s[3])), 3),\n      \"| ca sin+cos =\", round(float(d_3_9), 3))",
+    "out": "hour [23  0  3  9]\nsin  [-0.259  0.     0.707  0.707]\ncos  [ 0.966  1.     0.707 -0.707]\n23h->0h   |23-0| = 23 | tren vong tron = 0.261\n3h vs 9h  chi sin = 0.0 | ca sin+cos = 1.414"
+   },
+   "check": {
+    "q": "Bạn mã hoá cột phút bằng sin(2*pi*minute/24) thay vì chia 60 — phút 0, 24 và 48 nhận giá trị gì, và điều đó hỏng ở đâu?",
+    "a": "Cả ba ra sin = 0 và cos = 1, tức cùng một điểm trên vòng tròn, vì chia sai chu kỳ làm phút quấn 2,5 vòng trong một giờ. Chu kỳ T phải bằng số giá trị của chính đại lượng đó: 60 cho phút, 24 cho giờ, 7 cho ngày trong tuần."
+   }
   },
   "f-time": {
    "tldr": "Nhóm feature mạnh nhất cho bài toán gian lận và cũng dễ rò rỉ nhất: một giao dịch đơn lẻ nói rất ít, nhưng giao dịch đó trong bối cảnh những gì vừa xảy ra nói rất nhiều. Điều kiện sống còn là mỗi dòng chỉ được biết thông tin có TRƯỚC nó.",
@@ -369,7 +669,17 @@
     "Ba dòng kiểm rò rỉ: (1) đã sort_values('ts')? (2) có .shift(1)/closed='left'? (3) dòng đầu mỗi khách có phải NaN không — nếu không phải là đang rò rỉ, vì khách mới không có lịch sử",
     "Lúc serve khó tính (một giao dịch, 50ms): truy vấn CSDL đủ cho luận văn / Redis counter <1ms là chuẩn công nghiệp / feature store; nói Redis là hướng mở rộng ở phần Hạn chế"
    ],
-   "viz": "Bảng danh sách feature chống gian lận theo nhóm (Tốc độ / Số tiền / Vị trí / Thói quen) kèm giả thuyết đằng sau mỗi feature, ví dụ km_from_last_tx/hours_elapsed = tốc độ di chuyển bất khả thi."
+   "viz": "Bảng danh sách feature chống gian lận theo nhóm (Tốc độ / Số tiền / Vị trí / Thói quen) kèm giả thuyết đằng sau mỗi feature, ví dụ km_from_last_tx/hours_elapsed = tốc độ di chuyển bất khả thi.",
+   "example": {
+    "kind": "code",
+    "lead": "Bốn giao dịch của một thẻ với hai cột đếm đặt cạnh nhau: closed='left' cho 3 ở dòng cuối còn bản thiếu nó cho 4, và con số 4 đã chứa chính giao dịch đang đoán.",
+    "code": "import pandas as pd\nts = pd.Timestamp(\"2026-03-14 22:00\") + pd.to_timedelta([0,10,20,50], \"m\")\ndf = pd.DataFrame({\"card_id\": [\"A\"] * 4, \"ts\": ts,\n                   \"amount\": [200_000, 250_000, 300_000, 5_000_000]})\ndf = df.sort_values([\"card_id\", \"ts\"]).set_index(\"ts\")\ng = df.groupby(\"card_id\")[\"amount\"]\ndf[\"n_1h_dung\"] = g.rolling(\"1h\", closed=\"left\").count().to_numpy()\ndf[\"n_1h_rori\"] = g.rolling(\"1h\").count().to_numpy()   # thieu closed\nhist = lambda s: s.shift(1).expanding()\ndf[\"hist_mean\"] = g.transform(lambda s: hist(s).mean()).to_numpy()\nhist_std = g.transform(lambda s: hist(s).std()).to_numpy()\ndf[\"z_vs_hist\"] = (df[\"amount\"] - df[\"hist_mean\"]) / (hist_std + 1e-6)\nout = df.reset_index().round(2).drop(columns=\"card_id\")\nprint(out.assign(ts=out[\"ts\"].dt.strftime(\"%H:%M\")).to_string(index=False))",
+    "out": "   ts  amount  n_1h_dung  n_1h_rori  hist_mean  z_vs_hist\n22:00  200000        NaN        1.0        NaN        NaN\n22:10  250000        1.0        2.0   200000.0        NaN\n22:20  300000        2.0        3.0   225000.0       2.12\n22:50 5000000        3.0        4.0   250000.0      95.00"
+   },
+   "check": {
+    "q": "Cột hist_mean của bạn ở dòng đầu tiên của mỗi card_id ra đúng bằng amount của chính dòng đó — lỗi nằm ở đâu?",
+    "a": "Thiếu .shift(1) trước .expanding(), nên cửa sổ tích luỹ tính cả dòng hiện tại và giao dịch đầu tiên lấy chính mình làm lịch sử. Đó là rò rỉ: khách mới chưa có gì trước đó nên hist_mean phải là NaN. Vai trò của shift ở đây giống closed='left' ở nhóm rolling."
+   }
   },
   "f-text": {
    "tldr": "Biến cột chữ tự do thành số theo ba mức từ rẻ tới đắt. Với dữ liệu bảng ít text, mức rẻ nhất thường lấy được phần lớn tín hiệu, và TF-IDF thắng embedding vì giữ được khả năng giải thích mà hội đồng thích.",
@@ -392,7 +702,17 @@
     "Bốn lợi ích miễn phí: chặn rò rỉ tiền xử lý trong CV (cross_val_score fit lại scaler/encoder BÊN TRONG từng fold), không lệch train/serve, tune xuyên tầng (model__num_leaves, prep__num__impute__strategy), tái lập được cho người phản biện",
     "Trong num_pipe, SimpleImputer đặt trước StandardScaler; add_indicator=True giữ thêm cột cờ đánh dấu chỗ từng thiếu"
    ],
-   "viz": "Bảng đối chiếu hai cột notebook vs api.py chỉ ra ba dòng dễ lệch: hour_sin bằng np.sin vs math.sin, get_dummies vs one_hot tự viết, (x−mu)/sigma vs (x−250000)/180000 hardcode."
+   "viz": "Bảng đối chiếu hai cột notebook vs api.py chỉ ra ba dòng dễ lệch: hour_sin bằng np.sin vs math.sin, get_dummies vs one_hot tự viết, (x−mu)/sigma vs (x−250000)/180000 hardcode.",
+   "example": {
+    "kind": "code",
+    "lead": "Cùng một giao dịch chạy qua hàm derive hai lần — trong lô train hai dòng, rồi một mình như lúc API nhận nó — và bốn cột dẫn xuất khớp nhau tới bốn số thập phân.",
+    "code": "import numpy as np, pandas as pd\ndef add_derived(df):               # tầng 1: không học tham số\n    h = pd.to_datetime(df[\"timestamp\"]).dt.hour\n    return df.assign(hour=h, hour_sin=np.sin(2 * np.pi * h / 24),\n                     amount_log=np.log1p(df[\"amount\"]),\n                     amt_vs_hist=df[\"amount\"] / (df[\"hist_mean\"] + 1))\ntx = {\"timestamp\": \"2026-03-14 23:47:12\", \"amount\": 5_000_000,\n      \"hist_mean\": 119_047}\ntrain = pd.DataFrame([tx, {**tx, \"amount\": 90_000}])\ncols = [\"hour\", \"hour_sin\", \"amount_log\", \"amt_vs_hist\"]\npick = lambda x: add_derived(x)[cols].round(4).iloc[0].to_dict()\nprint(\"train, dong 0:\", pick(train))\nprint(\"serve, 1 dong:\", pick(pd.DataFrame([tx])))",
+    "out": "train, dong 0: {'hour': 23.0, 'hour_sin': -0.2588, 'amount_log': 15.4249, 'amt_vs_hist': 41.9999}\nserve, 1 dong: {'hour': 23.0, 'hour_sin': -0.2588, 'amount_log': 15.4249, 'amt_vs_hist': 41.9999}"
+   },
+   "check": {
+    "q": "Bạn đưa n_tx_1h vào danh sách NUM của ColumnTransformer rồi joblib.dump cả Pipeline — nguồn lệch train/serve nào vẫn còn nguyên?",
+    "a": "Chính giá trị của n_tx_1h. ColumnTransformer chỉ điền thiếu và scale một cột đã có sẵn trong DataFrame đầu vào, còn con số đó được tính ngoài Pipeline: bằng pandas trên cả bảng lúc train, bằng truy vấn CSDL hoặc Redis lúc serve. Pipeline khoá được mu và sigma, không khoá được cách tính."
+   }
   },
   "f-select": {
    "tldr": "Sau vài vòng FE có 200 cột, nhưng với LightGBM thường cứ giữ hết ở vòng đầu vì nó ít bị cột vô dụng làm hỏng (ít bị, không phải miễn nhiễm: cột nhiễu vẫn tốn thời gian train và tăng phương sai). Chọn lọc feature đáng làm khi cần giải thích, giảm chi phí lúc serve, hoặc khi số cột vượt xa số mẫu.",
@@ -428,7 +748,17 @@
     "Quy trình chọn mô hình đúng thứ tự: baseline ngu nhất → logistic + feature cơ bản → LightGBM mặc định (không tune) → cải tiến feature (nơi nhiều điểm nhất) → tune siêu tham số (kinh nghiệm phổ biến trên dữ liệu bảng là cỡ 1–3%, không phải con số bảo đảm) → ensemble/stacking (thường không đáng công)",
     "Bảng 5 mô hình chỉ áp cho phân loại trên dữ liệu bảng; chuỗi thời gian, gợi ý, nhân quả có gia đình mô hình riêng (chặng 8)"
    ],
-   "viz": "Hai bảng đối chiếu: loại học theo 'bạn có gì', và 5 mô hình theo điểm mạnh/điểm yếu/dùng khi"
+   "viz": "Hai bảng đối chiếu: loại học theo 'bạn có gì', và 5 mô hình theo điểm mạnh/điểm yếu/dùng khi",
+   "example": {
+    "kind": "num",
+    "lead": "Cùng một mạch số liệu, đặt cạnh nhau khoản lời của bước 4 (cải tiến feature) và bước 5 (tune siêu tham số) trong quy trình chọn mô hình.",
+    "code": "LightGBM mặc định, không tune (bước 3)   PR-AUC = 0,367\n+ cải tiến feature        (bước 4)       PR-AUC = 0,412   →  +0,045\ntune siêu tham số         (bước 5), kinh nghiệm phổ biến 1–3%:\n    0,412 × 1% = +0,0041\n    0,412 × 3% = +0,0124\nso sánh:  0,045 / 0,0124 = 3,6 lần    ·    0,045 / 0,0041 = 11 lần",
+    "out": "bước 4 cho +0,045   ·   bước 5 cho +0,004 đến +0,012\nbước 4 đáng giá gấp 3,6 đến 11 lần bước 5"
+   },
+   "check": {
+    "q": "Bạn còn ba ngày, LightGBM mặc định đang ở PR-AUC 0,367; dồn vào tune siêu tham số hay vào cải tiến feature, và con số nào biện minh cho lựa chọn?",
+    "a": "Cải tiến feature. Bước đó cho +0,045, còn tune ở mức 1–3% chỉ cho +0,004 đến +0,012 — kém 3,6 đến 11 lần, nên ba ngày bỏ vào tune là bỏ vào chỗ ít điểm nhất. Chỉ tune sau khi ý tưởng feature đã cạn."
+   }
   },
   "ml-linear": {
    "tldr": "Hồi quy tuyến tính dự đoán một con số bằng tổng có trọng số của đầu vào; hồi quy logistic đẩy tổng đó qua sigmoid để ra xác suất và thực chất là mô hình phân loại — giá trị lớn nhất của chúng là làm baseline giải thích được và làm mốc so sánh cho mô hình phức tạp.",
@@ -441,7 +771,17 @@
     "Code dùng Pipeline với LogisticRegression(C=1.0 nghịch đảo mức phạt, class_weight='balanced', max_iter=2000); lưu y_prob_valid từ predict_proba trên VALIDATION (không phải test) để bài sau tính chỉ số",
     "Giữ logistic trong luận văn vì: là mốc so sánh (0,412 so với 0,281 mới có thông tin), cho biết bài toán phi tuyến tới mức nào, và giải thích được khi cần trả lời 'vì sao chặn giao dịch này'"
    ],
-   "viz": "Ví dụ số: coef is_rapid = 1,42 → odds ratio 4,14 → odds gian lận gấp 4,1 lần khi giao dịch dưới 60 giây sau giao dịch trước"
+   "viz": "Ví dụ số: coef is_rapid = 1,42 → odds ratio 4,14 → odds gian lận gấp 4,1 lần khi giao dịch dưới 60 giây sau giao dịch trước",
+   "example": {
+    "kind": "code",
+    "lead": "Một hệ số logistic 1,42 cố định, đẩy qua sigmoid ở hai mức xác suất nền khác nhau, để thấy odds ratio thì bất biến còn mức tăng xác suất thì không.",
+    "code": "import numpy as np\ncoef = 1.42                          # hệ số của is_rapid\nprint(\"odds ratio:\", round(np.exp(coef), 4))\nfor p0 in (0.02, 0.50):              # xác suất nền trước khi is_rapid = 1\n    odds = p0/(1 - p0) * np.exp(coef)\n    print(f\"p từ {p0:.2f} -> {odds/(1 + odds):.4f}\")",
+    "out": "odds ratio: 4.1371\np từ 0.02 -> 0.0779\np từ 0.50 -> 0.8053"
+   },
+   "check": {
+    "q": "Hệ số của is_rapid là 1,42 và đồng nghiệp viết vào luận văn rằng xác suất gian lận tăng 1,42; bạn sửa câu đó thành gì?",
+    "a": "Viết là odds gian lận tăng gấp 4,14 lần, với các yếu tố khác không đổi. Hệ số cộng vào log-odds nên mức tăng của xác suất phụ thuộc điểm khởi đầu: từ 0,02 nó lên 0,078, nhưng từ 0,50 nó lên 0,805 — cùng một hệ số, hai con số hoàn toàn khác."
+   }
   },
   "ml-metrics": {
    "tldr": "Chọn nhầm chỉ số đánh giá làm hỏng cả luận văn vì mô hình tối ưu đúng thứ bạn đo; với dữ liệu lệch nhãn PR-AUC là chỉ số chính, accuracy vô dụng, và bước chọn ngưỡng theo chi phí (không dùng mặc định 0,5) là bước hầu hết luận văn bỏ qua.",
@@ -454,7 +794,17 @@
     "Chọn ngưỡng trên validation rồi áp cố định lên test; chọn ngưỡng trên test là một dạng rò rỉ",
     "Cột 'thiệt hại triệu ₫/tháng' là cột hội đồng nhớ: biến 'PR-AUC tăng 0,045' thành 'tiết kiệm 112 triệu/tháng'; đừng báo cáo accuracy 99,8% vì lộ ra chưa hiểu bài toán lệch"
    ],
-   "viz": "Viz kéo ngưỡng (data-viz=thresh) xem hậu quả, hình reliability diagram cho phần hiệu chỉnh, và bảng kết quả luận văn 4 dòng (luật thủ công / logistic 0,281 / LightGBM 0,367 / đề xuất 0,412) kèm cột thiệt hại triệu ₫"
+   "viz": "Viz kéo ngưỡng (data-viz=thresh) xem hậu quả, hình reliability diagram cho phần hiệu chỉnh, và bảng kết quả luận văn 4 dòng (luật thủ công / logistic 0,281 / LightGBM 0,367 / đề xuất 0,412) kèm cột thiệt hại triệu ₫",
+   "example": {
+    "kind": "code",
+    "lead": "Quét ba ngưỡng trên mười giao dịch validation với chi phí bỏ lọt 3 triệu và xác minh nhầm 40 nghìn, để thấy ngưỡng mặc định 0,5 đắt gấp mấy lần ngưỡng chọn theo tiền.",
+    "code": "import numpy as np\ny    = np.array([1, 0, 1, 0, 0, 1, 0, 0, 0, 0])   # Class trên validation\nprob = np.array([.9, .7, .4, .35, .3, .2, .15, .1, .05, .02])\nCOST_FN, COST_FP = 3_000_000, 40_000\nfor t in [0.5, 0.25, 0.12]:\n    pred = (prob >= t).astype(int)\n    fn = ((y == 1) & (pred == 0)).sum()\n    fp = ((y == 0) & (pred == 1)).sum()\n    print(f\"ngưỡng {t}: FN={fn} FP={fp}\",\n          f\"thiệt hại={fn*COST_FN + fp*COST_FP:,} ₫\")",
+    "out": "ngưỡng 0.5: FN=2 FP=1 thiệt hại=6,040,000 ₫\nngưỡng 0.25: FN=1 FP=3 thiệt hại=3,120,000 ₫\nngưỡng 0.12: FN=0 FP=4 thiệt hại=160,000 ₫"
+   },
+   "check": {
+    "q": "Bạn quét ngưỡng chi phí trên tập test vì nó nhiều dữ liệu hơn validation rồi báo cáo luôn thiệt hại tại ngưỡng đó; con số nào vừa hỏng và hỏng theo hướng nào?",
+    "a": "Thiệt hại báo cáo, và nó hỏng theo hướng lạc quan. Quét trên test là dùng test để ra một quyết định, nên con số nhận được là mức tốt nhất có thể trên đúng bộ đó chứ không phải mức hệ thống đạt được khi chạy thật. Ngưỡng chọn trên validation rồi áp cố định lên test."
+   }
   },
   "ml-loss": {
    "tldr": "'Học' chỉ gồm ba mảnh — mô hình, hàm mất mát (chấm điểm sai), bộ tối ưu (sửa) — và đổi bất kỳ mảnh nào ra thuật toán khác; điểm mấu chốt là hàm mất mát (cái máy tối ưu; nếu tối ưu bằng gradient thì phải khả vi) khác chỉ số đánh giá (chỉ cần có nghĩa), nên train bằng log loss rồi mới chọn ngưỡng để tối ưu chỉ số quyết định.",
@@ -466,7 +816,17 @@
     "Ba biến thể gradient descent theo lượng dữ liệu mỗi bước: Batch GD (toàn bộ, chính xác nhưng chậm, không dùng thực tế), SGD (một mẫu, nhanh nhưng nhiễu), Mini-batch (32–512 mẫu, mặc định của mọi thứ)",
     "Ba bộ tối ưu thông minh hơn: Momentum (cộng dồn phần bước trước như quán tính), Adam (tự điều chỉnh độ dài bước riêng từng tham số, mặc định cho deep learning), AdamW (Adam xử lý weight decay đúng hơn, chuẩn cho Transformer)"
    ],
-   "viz": "Bảng đối chiếu hàm mất mát vs chỉ số đánh giá (dùng lúc nào, yêu cầu khả vi hay không, ví dụ), và viz gradient descent data-viz='gd'"
+   "viz": "Bảng đối chiếu hàm mất mát vs chỉ số đánh giá (dùng lúc nào, yêu cầu khả vi hay không, ví dụ), và viz gradient descent data-viz='gd'",
+   "example": {
+    "kind": "code",
+    "lead": "Ba bộ dự đoán trên cùng bốn ca: hai bộ có F1 y hệt nhau mà log loss chênh gần hai lần, và bộ tự tin nhưng sai một ca thì log loss nhảy gấp bốn.",
+    "code": "import numpy as np\ny = np.array([1, 1, 0, 0])\nmo = {\"đều tay\":       np.array([.6, .6, .4, .4]),\n      \"tự tin, đúng\":  np.array([.99, .55, .45, .01]),\n      \"tự tin, sai 1\": np.array([.99, .02, .45, .01])}\nlogloss = lambda p: -np.mean(y*np.log(p) + (1 - y)*np.log(1 - p))\nfor k, p in mo.items():\n    pred = (p >= 0.5).astype(int)\n    f1 = 2*((pred == 1) & (y == 1)).sum() / (pred.sum() + y.sum())\n    print(k, \"F1 =\", round(f1, 2), \" log loss =\", round(logloss(p), 3))",
+    "out": "đều tay F1 = 1.0  log loss = 0.511\ntự tin, đúng F1 = 1.0  log loss = 0.304\ntự tin, sai 1 F1 = 0.67  log loss = 1.132"
+   },
+   "check": {
+    "q": "Hai cấu hình đầu cùng cho F1 = 1,0 nhưng log loss 0,511 và 0,304; vì sao gradient descent phân biệt được hai cấu hình đó mà F1 thì không?",
+    "a": "Vì log loss đọc chính giá trị xác suất nên nó đổi liên tục theo tham số và có đạo hàm để đi theo. F1 chỉ đếm số ca sau khi đã cắt ngưỡng, nên nó giữ nguyên 1,0 trên cả một vùng tham số rộng và cho gradient bằng 0 — không có hướng nào để sửa."
+   }
   },
   "ml-trees": {
    "tldr": "Cây → Random Forest → Boosting là ba tầng, mỗi tầng sửa nhược điểm tầng trước: một cây overfit vì học thuộc, Random Forest lấy trung bình 500 cây được ngẫu nhiên hoá cho ÍT TƯƠNG QUAN với nhau (không phải độc lập — chúng học từ cùng một nguồn dữ liệu) để triệt tiêu bớt sai số ngẫu nhiên, còn Gradient Boosting cho mỗi cây nông sửa lỗi cây trước để đạt hiệu năng đỉnh — LightGBM là mô hình chính, dừng ở đó đừng đi so thư viện.",
@@ -479,7 +839,17 @@
     "Ba siêu tham số quan trọng theo thứ tự: num_leaves (overfit→giảm 15/7, underfit→tăng 63/127), learning_rate (giảm 0,01–0,03 khi cần chất lượng tối đa, tăng n_estimators kèm), min_child_samples (tăng mạnh khi lệch — mặc định 20 quá nhỏ với 0,17% dương)",
     "Early stopping là cơ chế chống overfit quan trọng nhất: để early_stopping(100) dừng khi validation ngừng cải thiện; eval_set BẮT BUỘC là validation, tuyệt đối không phải test"
    ],
-   "viz": "Cây quyết định ASCII (Số tiền > 2tr? → Giờ 0–4? → 87% gian lận) và bảng đối chiếu Random Forest vs Gradient Boosting trên 5 tiêu chí"
+   "viz": "Cây quyết định ASCII (Số tiền > 2tr? → Giờ 0–4? → 87% gian lận) và bảng đối chiếu Random Forest vs Gradient Boosting trên 5 tiêu chí",
+   "example": {
+    "kind": "code",
+    "lead": "Tám giao dịch và ba câu hỏi chia ứng viên, chấm bằng Gini có trọng số, để thấy cùng một cột với hai ngưỡng khác nhau cho hai chất lượng chia khác hẳn.",
+    "code": "import numpy as np\namount = np.array([0.2, 5.0, 0.3, 8.0, 0.5, 12.0, 0.1, 0.4])   # triệu ₫\nhour   = np.array([ 14,   2,   9,   3,  20,    1,  11,  16])\nClass  = np.array([  0,   1,   0,   1,   0,    1,   0,   1])\ngini = lambda v: 1 - (v.mean()**2 + (1 - v.mean())**2)\ndef wgini(mask):\n    a, b = Class[mask], Class[~mask]\n    return (len(a)*gini(a) + len(b)*gini(b)) / len(Class)\nprint(\"Gini gốc (chưa chia):\", round(gini(Class), 3))\ncand = [(\"hour\", hour, 4), (\"hour\", hour, 12), (\"amount\", amount, 2.0)]\nfor name, col, t in cand:\n    print(f\"chia {name} < {t}: Gini = {wgini(col < t):.3f}\")",
+    "out": "Gini gốc (chưa chia): 0.5\nchia hour < 4: Gini = 0.200\nchia hour < 12: Gini = 0.467\nchia amount < 2.0: Gini = 0.200"
+   },
+   "check": {
+    "q": "Bạn để n_estimators=2000 và truyền eval_set là tập test cho early stopping; cơ chế vẫn dừng đúng lúc, vậy con số nào trong luận văn đã hỏng?",
+    "a": "Điểm test báo cáo. Số cây được giữ lại là một quyết định huấn luyện, và nó vừa được chọn dựa trên tập test, nên test không còn là lần mở duy nhất và điểm của nó bị đẩy lên. eval_set phải là validation; test chỉ chấm sau khi mọi tham số đã chốt."
+   }
   },
   "ml-overfit": {
    "tldr": "Overfitting là mô hình học thuộc dữ liệu train thay vì học quy luật — kẻ thù trung tâm mà mọi kỹ thuật về sau đều để chống nó; chẩn đoán bằng cặp sai số train/test, và loại nguy hiểm hơn là overfit ẩn lên tập validation khi thử nhiều cấu hình.",
@@ -491,7 +861,17 @@
     "Bảy cách chống overfit theo hiệu quả: thêm dữ liệu (mạnh nhất, khó nhất), giảm độ phức tạp (num_leaves↓ max_depth↓), early stopping (mạnh, gần như miễn phí), regularization L1/L2 (mạnh cho tuyến tính và mạng), lấy mẫu ngẫu nhiên (subsample/colsample 0.8), bỏ bớt feature, ensemble",
     "Overfit ẩn nguy hiểm hơn: thử 50 cấu hình rồi chọn cái điểm validation cao nhất có thể chỉ là may mắn hợp với tập validation đó — bạn đã dùng validation như tập train thứ hai; cách phòng là giữ test tách biệt và chỉ chạm MỘT lần, nếu test tụt hẳn so validation thì con số đúng để báo cáo là test"
    ],
-   "viz": "Viz kéo thanh 'độ phức tạp' data-viz='overfit' (hai con số sai số đi ngược hướng), viz đường cong học data-viz='learncurve', và ẩn dụ bắn bia cho bias–variance"
+   "viz": "Viz kéo thanh 'độ phức tạp' data-viz='overfit' (hai con số sai số đi ngược hướng), viz đường cong học data-viz='learncurve', và ẩn dụ bắn bia cho bias–variance",
+   "example": {
+    "kind": "code",
+    "lead": "Năm mươi cấu hình thật sự giỏi bằng nhau, chỉ khác nhau vì nhiễu đo trên validation, rồi cái có điểm validation cao nhất được chọn ra và chấm lại trên test.",
+    "code": "import numpy as np\nrng = np.random.default_rng(42)\nthuc = 0.360                              # 50 cấu hình giỏi y như nhau\nvalid = thuc + rng.normal(0, 0.02, 50)    # mỗi lần đo validation có nhiễu\ni = int(valid.argmax())\ntest = thuc + rng.normal(0, 0.02)         # chấm lại đúng cấu hình vừa chọn\nprint(\"valid cao nhất:\", round(valid[i], 3), \"— cấu hình\", i)\nprint(\"trung bình 50 điểm valid:\", round(valid.mean(), 3))\nprint(\"test của chính cấu hình đó:\", round(test, 3))",
+    "out": "valid cao nhất: 0.403 — cấu hình 30\ntrung bình 50 điểm valid: 0.362\ntest của chính cấu hình đó: 0.366"
+   },
+   "check": {
+    "q": "Sau khi thử 50 cấu hình, cái tốt nhất đạt validation 0,403 nhưng test ra 0,366; bạn đưa con số nào vào bảng kết quả và giải thích khoảng cách đó ra sao?",
+    "a": "Đưa 0,366. Lấy cái cao nhất trong 50 lần đo có nhiễu là lấy kèm cả phần may mắn hợp riêng với tập validation, nên 0,403 đã bị thổi lên và validation vừa bị dùng như một tập train thứ hai. Test chưa tham gia lần chọn nào nên nó còn trung thực."
+   }
   },
   "ml-cv": {
    "tldr": "Một lần chia train/test cho một con số mà không biết nó dao động bao nhiêu; k-fold cho nhiều con số nên thấy cả trung bình lẫn mức dao động giữa các lần chia (báo cáo mean ± std). Đọc đúng phạm vi: std giữa fold là THỐNG KÊ MÔ TẢ, không phải khoảng tin cậy (các fold dùng chung phần lớn dữ liệu train nên không độc lập) và cũng không phải 'độ ổn định của mô hình'; nó trả lời đúng một câu — cải tiến của tôi có lớn hơn mức dao động tự nhiên không, và phải chọn loại fold khớp cấu trúc dữ liệu — dùng TimeSeriesSplit khi có thời gian để tránh rò rỉ tương lai.",
@@ -503,7 +883,17 @@
     "Đọc kết quả CV: std nhỏ (vd ±0,008) là ổn định tin được; std lớn (vd ±0,14) là BẤT ỔN đừng tin trung bình — nghĩa là dữ liệu không đồng nhất, quá ít mẫu dương, hoặc mô hình quá nhạy; điều tra fold tệ nhất vì nó thường chỉ ra hiện tượng thật đáng viết vào luận văn",
     "Nested CV cần khi dùng CV để chọn siêu tham số rồi lại báo cáo chính điểm CV đó (bị thổi phồng): vòng trong chọn tham số, vòng ngoài đánh giá — nhưng tốn 15× chi phí; với 2 tuần, dùng ba tập tách biệt (train/valid/test), tune trên valid báo cáo trên test là rẻ hơn và hoàn toàn hợp lệ"
    ],
-   "viz": "Viz bốn kiểu fold data-viz='cvfolds', và ví dụ số hai bộ fold scores: [0.412,0.398,0.421,0.405,0.417] mean 0,411 std 0,008 ổn định vs [0.51,0.22,0.48,0.19,0.44] mean 0,368 std 0,14 bất ổn"
+   "viz": "Viz bốn kiểu fold data-viz='cvfolds', và ví dụ số hai bộ fold scores: [0.412,0.398,0.421,0.405,0.417] mean 0,411 std 0,008 ổn định vs [0.51,0.22,0.48,0.19,0.44] mean 0,368 std 0,14 bất ổn",
+   "example": {
+    "kind": "code",
+    "lead": "Mười ngày giao dịch chia theo hai kiểu fold, in ra dải ngày của từng fold, và đếm bằng số bao nhiêu ngày tương lai lọt vào tập train khi trộn ngẫu nhiên.",
+    "code": "import numpy as np\nts = np.arange(10)                        # 10 ngày, đã sắp theo thời gian\nfor k in range(3):\n    tr, va = ts[:4 + 2*k], ts[4 + 2*k : 6 + 2*k]\n    print(f\"TimeSeriesSplit fold {k+1}:\",\n          f\"train {tr.min()}-{tr.max()}  valid {va.min()}-{va.max()}\")\nsh = np.random.default_rng(0).permutation(ts)\ntr, va = sh[:8], sh[8:]\nprint(\"KFold shuffle fold 1: valid = ngày\", sorted(va.tolist()))\nprint(\"số ngày train nằm SAU ngày valid sớm nhất:\",\n      int((tr > va.min()).sum()))",
+    "out": "TimeSeriesSplit fold 1: train 0-3  valid 4-5\nTimeSeriesSplit fold 2: train 0-5  valid 6-7\nTimeSeriesSplit fold 3: train 0-7  valid 8-9\nKFold shuffle fold 1: valid = ngày [1, 8]\nsố ngày train nằm SAU ngày valid sớm nhất: 7"
+   },
+   "check": {
+    "q": "Baseline cho 5 điểm fold với trung bình 0,332 và độ lệch chuẩn 0,041, cấu hình mới lên trung bình 0,347; bạn viết là đã cải tiến được hay chưa?",
+    "a": "Chưa. Mức tăng 0,015 nhỏ hơn mức dao động giữa các fold là 0,041, nên chênh lệch đó nằm gọn trong khoảng mà chỉ đổi cách chia dữ liệu cũng tạo ra được. Cần khoảng cách lớn hơn dao động, hoặc một kiểm định đàng hoàng, mới gọi là kết quả."
+   }
   },
   "ml-imb": {
    "tldr": "Với 0,17% gian lận (1,7 ca/1000 giao dịch), mô hình luôn đoán 'sạch' đạt accuracy 99,83% mà vô dụng; điều quan trọng nhất là đổi chỉ số và chọn ngưỡng đúng — hai bước miễn phí đứng trên cùng — quan trọng hơn nhiều so với cân bằng lại dữ liệu bằng SMOTE mà nhiều người nhảy thẳng vào.",
@@ -516,7 +906,17 @@
     "Thành thật về SMOTE: nhiều nghiên cứu cho thấy nó KHÔNG tốt hơn class_weight một cách nhất quán, đôi khi tệ hơn; nổi tiếng hơn mức hiệu quả — nhưng so sánh SMOTE vs class_weight vs không làm gì với kiểm định thống kê là một đóng góp có ích kể cả khi kết luận 'SMOTE không giúp'",
     "Đổi cách đóng khung: phát hiện bất thường (học 'thế nào là bình thường', tốt khi kiểu gian lận mới liên tục xuất hiện) hoặc xếp hạng theo rủi ro đưa top-N cho đội xác minh (precision@k) — thường là cách đóng khung sát thực tế nhất"
    ],
-   "viz": "Viz đổi tỉ lệ lớp dương xem chỉ số nào nhúc nhích data-viz='prcurve', và bảng thí nghiệm mẫu: baseline PR-AUC 0,312 → +class_weight 0,367 → +SMOTE 0,361 (không cải thiện, tốn 4× thời gian) → +chọn ngưỡng chi phí 0,367 (PR-AUC không đổi nhưng tiền tiết kiệm +23%)"
+   "viz": "Viz đổi tỉ lệ lớp dương xem chỉ số nào nhúc nhích data-viz='prcurve', và bảng thí nghiệm mẫu: baseline PR-AUC 0,312 → +class_weight 0,367 → +SMOTE 0,361 (không cải thiện, tốn 4× thời gian) → +chọn ngưỡng chi phí 0,367 (PR-AUC không đổi nhưng tiền tiết kiệm +23%)",
+   "example": {
+    "kind": "code",
+    "lead": "Điểm của mô hình huấn luyện trên dữ liệu đã cân bằng 50/50, quy về tỉ lệ nền thật 0,17%, để đo phép nhân với 3 triệu đồng sai bao nhiêu lần.",
+    "code": "import numpy as np\n# tỉ lệ nền thật vs sau khi cân bằng 50/50\npi, pi_bal = 0.0017, 0.5\np_bal = np.array([0.50, 0.70, 0.90])  # điểm mô hình trả về sau khi resample\nodds = p_bal/(1 - p_bal) * (pi/(1 - pi)) / (pi_bal/(1 - pi_bal))\np_true = odds/(1 + odds)\nfor a, b in zip(p_bal, p_true):\n    print(f\"điểm {a:.2f} -> xác suất thật {b:.4f}\",\n          f\"| kỳ vọng mất {a*3e6:,.0f} ₫ vs {b*3e6:,.0f} ₫\")",
+    "out": "điểm 0.50 -> xác suất thật 0.0017 | kỳ vọng mất 1,500,000 ₫ vs 5,100 ₫\nđiểm 0.70 -> xác suất thật 0.0040 | kỳ vọng mất 2,100,000 ₫ vs 11,873 ₫\nđiểm 0.90 -> xác suất thật 0.0151 | kỳ vọng mất 2,700,000 ₫ vs 45,284 ₫"
+   },
+   "check": {
+    "q": "Còn hai ngày, mô hình đang được báo cáo bằng accuracy 99,83% và bạn chưa đổi chỉ số; hai ngày đó dành cho SMOTE hay cho việc gì khác?",
+    "a": "Đổi chỉ số sang PR-AUC rồi chọn ngưỡng theo chi phí — hai bước đầu của thứ tự ưu tiên, không tốn thời gian train và luôn đáng làm. SMOTE đứng thứ tư; chạy nó khi chưa có chỉ số đúng thì bạn không đo được nó giúp hay hại."
+   }
   },
   "ml-tune": {
    "tldr": "Tuning siêu tham số thường là bước cho thêm ít nhất (kinh nghiệm phổ biến trên dữ liệu bảng: cỡ 1–3%, không phải hằng số) mà ngốn nhiều giờ máy nhất nên làm sau cùng khi feature đã ổn; random search thường thắng grid với cùng ngân sách, Optuna học từ các lần thử trước, và có bốn quy tắc để không tự lừa mình.",
@@ -566,7 +966,17 @@
     "Vòng lặp huấn luyện đúng 5 bước: zero_grad → forward → loss → backward → step; là toàn bộ việc train mọi mạng từ 3 tầng tới GPT, chỉ khác kiến trúc và quy mô",
     "Dữ liệu bảng: 2–3 lớp ẩn, 32–256 nơ-ron mỗi lớp; cần tới 10 tầng cho bảng thì gần như chắc LightGBM tốt hơn với 1% công sức"
    ],
-   "viz": "Hình một lượt truyền xuôi kéo được: kéo số dòng trong batch thì mọi shape đổi cột đầu nhưng SỐ THAM SỐ không đổi; kéo số nơ-ron thì cả hai đổi — và các ô ReLU không đổi shape, không có tham số nào."
+   "viz": "Hình một lượt truyền xuôi kéo được: kéo số dòng trong batch thì mọi shape đổi cột đầu nhưng SỐ THAM SỐ không đổi; kéo số nơ-ron thì cả hai đổi — và các ô ReLU không đổi shape, không có tham số nào.",
+   "example": {
+    "kind": "code",
+    "lead": "Ba lớp nhân ma trận không có ReLU cho ra đúng cùng một số với một ma trận 4x1 duy nhất; chèn ReLU vào giữa là con số đổi hẳn.",
+    "code": "import numpy as np\nrng = np.random.default_rng(1)\nn = rng.normal\nx, W1, W2, W3 = n(size=(1,4)), n(size=(4,8)), n(size=(8,8)), n(size=(8,1))\nlin  = x @ W1 @ W2 @ W3               # 3 lớp, KHÔNG hàm phi tuyến\none  = x @ (W1 @ W2 @ W3)             # gộp 3 ma trận thành 1\nrelu = np.maximum(0, np.maximum(0, x @ W1) @ W2) @ W3   # 3 lớp, CÓ ReLU\nprint(\"gộp W1@W2@W3 ra shape:\", (W1 @ W2 @ W3).shape)\nprint(\"ba lớp tuyến tính    :\", round(lin.item(), 6))\nprint(\"một ma trận 4x1      :\", round(one.item(), 6))\nprint(\"chênh lệch           :\", abs(lin - one).item())\nprint(\"ba lớp có ReLU       :\", round(relu.item(), 6))",
+    "out": "gộp W1@W2@W3 ra shape: (4, 1)\nba lớp tuyến tính    : -14.777204\nmột ma trận 4x1      : -14.777204\nchênh lệch           : 5.329070518200751e-15\nba lớp có ReLU       : -2.259593"
+   },
+   "check": {
+    "q": "Bạn xếp 5 lớp tổng-có-trọng-số liên tiếp rồi sigmoid ở cuối, quên hết ReLU ở giữa, và mạng chỉ mạnh đúng bằng một hồi quy logistic. Vì sao thêm lớp không giúp gì?",
+    "a": "Tích của 5 ma trận vẫn là một ma trận, nên toàn mạng còn lại đúng một phép tuyến tính rồi một sigmoid — đó chính là định nghĩa hồi quy logistic. Chèn ReLU sau mỗi lớp ẩn là xong: hàm phi tuyến mới là thứ khiến độ sâu có nghĩa."
+   }
   },
   "dl-backprop": {
    "tldr": "Backpropagation chỉ là quy tắc dây chuyền của giải tích áp dụng có tổ chức: nó tính hết đạo hàm của mọi trọng số trong một lần chạy ngược, tốn xấp xỉ một lần chạy xuôi — đó là lý do deep learning khả thi về tính toán.",
@@ -578,7 +988,17 @@
     "Residual connection (nối tắt x + f(x)) tạo đường cho gradient chảy thẳng về đầu không bị nhân nhỏ dần — lý do Transformer có nối tắt ở mỗi khối",
     "Thực tế chỉ cần ba dòng: zero_grad() (PyTorch cộng dồn gradient, quên là lỗi kinh điển), loss.backward(), optimizer.step()"
    ],
-   "viz": "Ví dụ số kiểm chứng được: đạo hàm sigmoid tối đa 0,25; nhân 20 lớp cho 0,25^20 ≈ 10^-12, gradient tới lớp đầu gần như bằng 0"
+   "viz": "Ví dụ số kiểm chứng được: đạo hàm sigmoid tối đa 0,25; nhân 20 lớp cho 0,25^20 ≈ 10^-12, gradient tới lớp đầu gần như bằng 0",
+   "example": {
+    "kind": "code",
+    "lead": "Một chuỗi 3 lớp sigmoid tính tay: gradient theo quy tắc dây chuyền khớp tới 6 chữ số với cách nhích trọng số rồi chạy lại, và đã nhỏ đi 40 lần chỉ sau ba lớp.",
+    "code": "import numpy as np\nsig = lambda z: 1 / (1 + np.exp(-z))\nx, y, w = 1.0, 1.0, np.array([0.5, 0.5, 0.5])   # 3 lớp sigmoid nối tiếp\ndef forward(w):\n    a1 = sig(w[0] * x); a2 = sig(w[1] * a1); p = sig(w[2] * a2)\n    return a1, a2, p, 0.5 * (p - y) ** 2\na1, a2, p, loss = forward(w)\ndp = (p - y) * p * (1 - p); g3 = dp * a2; d2 = dp * w[2]   # đi ngược\ng1 = d2 * a2 * (1 - a2) * w[1] * a1 * (1 - a1) * x\nh = 1e-6; wp = w.copy(); wm = w.copy(); wp[0] += h; wm[0] -= h\nfd = (forward(wp)[3] - forward(wm)[3]) / (2 * h)\nprint(\"loss =\", round(loss, 6), \" grad w3 =\", round(g3, 6))\nprint(\"grad w1 =\", round(g1, 6), \" nhích w1 đo tay =\", round(fd, 6))\nprint(\"tỉ số grad w3 / grad w1 =\", round(g3 / g1, 1))",
+    "out": "loss = 0.091741  grad w3 = -0.06054\ngrad w1 = -0.001504  nhích w1 đo tay = -0.001504\ntỉ số grad w3 / grad w1 = 40.3"
+   },
+   "check": {
+    "q": "Gradient của w1 đã nhỏ hơn w3 tới 40 lần chỉ sau 3 lớp sigmoid. Mạng thật của bạn có 20 lớp và loss đứng yên: bạn vặn lr, thêm epoch, hay đổi hàm kích hoạt?",
+    "a": "Đổi hàm kích hoạt. Vặn lr hay thêm epoch đều đang nhân với cùng một gradient gần bằng 0: đạo hàm sigmoid tối đa 0,25 nên 20 lớp cho 0,25 lũy thừa 20, cỡ 10 mũ trừ 12. ReLU không bóp phần dương, thêm nối tắt thì gradient về được tới lớp đầu."
+   }
   },
   "dl-train": {
    "tldr": "Đây là bộ điều khiển huấn luyện: learning rate là nút quan trọng nhất, và có một quy trình gỡ lỗi cụ thể khi mạng không học — đứng đầu là thử overfit 100 mẫu.",
@@ -590,7 +1010,17 @@
     "Gỡ lỗi khi mạng không học: (1) thử overfit 100 mẫu tới loss ≈ 0 — không được là mã có lỗi (nhãn lệch hàng, quên zero_grad); (2) kiểm NaN/scale; (3) quét lr 1e-2/1e-3/1e-4; (4) loss khớp bài toán; (5) kiểm shape pred vs y",
     "Cho luận văn: dùng MLflow hoặc Weights & Biases ghi tự động tham số + đường cong loss; đường cong train/validation là một hình chuẩn mực của chương thực nghiệm"
    ],
-   "viz": "Hình bốn dạng đường loss kéo được (thiếu khớp / vừa / quá khớp / nhiễu-lr-quá-lớn): thứ đáng đọc là KHE HỞ giữa hai đường và HƯỚNG của đường validation, không phải độ cao; ca quá khớp vẽ luôn chỗ early stopping dừng."
+   "viz": "Hình bốn dạng đường loss kéo được (thiếu khớp / vừa / quá khớp / nhiễu-lr-quá-lớn): thứ đáng đọc là KHE HỞ giữa hai đường và HƯỚNG của đường validation, không phải độ cao; ca quá khớp vẽ luôn chỗ early stopping dừng.",
+   "example": {
+    "kind": "num",
+    "lead": "Cùng một lần chạy, đọc bằng hai cột số: đường validation quay đầu ở epoch 5 trong khi train vẫn đẹp dần tới epoch 10, và đoạn đó tốn gần 2.000 step vô ích.",
+    "code": "100.000 mẫu, batch 256   →  ceil(100.000 / 256) = 391 step mỗi epoch\nepoch      :  1     2     3     4     5     6     7     8     9    10\ntrain loss : 0,40  0,28  0,20  0,14  0,09  0,05  0,03  0,02  0,02  0,01\nvalid loss : 0,42  0,31  0,25  0,22  0,21  0,23  0,26  0,29  0,30  0,32\nkhe hở     : 0,02  0,03  0,05  0,08  0,12  0,18  0,23  0,27  0,28  0,31\nvalid thấp nhất = 0,21 ở epoch 5; patience 5 → dừng sau epoch 10",
+    "out": "điểm nên lấy: epoch 5 — valid 0,21, khe hở 0,12\nchạy tới epoch 10: train 0,01 nhưng valid 0,32, khe hở 0,31 = gấp 2,6 lần\n5 epoch chạy thêm = 5 × 391 = 1.955 step, chỉ để mô hình tệ hơn\nnên nạp lại trọng số của epoch 5, không lấy trọng số cuối"
+   },
+   "check": {
+    "q": "Train loss xuống 0,01 mà valid lên 0,32, và bạn còn 20 epoch trong ngân sách máy. Bạn dùng 20 epoch đó để train tiếp, hay dừng và đổi thứ khác?",
+    "a": "Dừng. Validation đã đi lên từ epoch 6 nên mỗi epoch thêm chỉ nới khe hở rộng ra, không có lý do nào để nó tự quay lại. Ngân sách đó nên đổ vào dropout mạnh hơn, weight decay, hoặc mạng nhỏ hơn, rồi train lại và xem điểm quay đầu có dịch ra sau không."
+   }
   },
   "dl-embed": {
    "tldr": "Embedding là học một vector ngắn cho mỗi thực thể thay cho one-hot: các số không do người chọn mà mô hình tự học sao cho giảm loss, khiến những thực thể hành vi giống nhau có vector gần nhau — nền tảng của mọi thứ từ hệ gợi ý tới ChatGPT.",
@@ -602,7 +1032,17 @@
     "Ví von hỏng: embedding không hiểu nghĩa, chỉ mã hoá thống kê đồng xuất hiện — nên nó học luôn cả định kiến trong dữ liệu, là vấn đề đạo đức thật",
     "Mẹo thực dụng: train embedding bằng mạng nơ-ron rồi lấy 16 cột đó làm feature cho LightGBM; kết hợp thường tốt hơn cả hai cách riêng lẻ"
    ],
-   "viz": "Code lớp FraudNet ghép merchant_emb với x_num; sau train, merchant_emb.weight (50.000×16) chiếu bằng UMAP/t-SNE thành hình cho luận văn — các cửa hàng rủi ro cao gom vào một vùng"
+   "viz": "Code lớp FraudNet ghép merchant_emb với x_num; sau train, merchant_emb.weight (50.000×16) chiếu bằng UMAP/t-SNE thành hình cho luận văn — các cửa hàng rủi ro cao gom vào một vùng",
+   "example": {
+    "kind": "code",
+    "lead": "Một bảng tra 4 x 3 cho thấy hai điều cùng lúc: tra bảng đúng bằng one-hot nhân ma trận, và one-hot đặt mọi cửa hàng cách nhau y hệt 1,414 còn embedding thì không.",
+    "code": "import numpy as np\n# bảng tra 4 cửa hàng x 3 chiều, mọi ô là một tham số học được\ntable = np.array([[ 0.9, 0.2, -0.1],    # 0 cửa hàng vàng bạc\n                  [-0.8, 0.7,  0.3],    # 1 quán phở\n                  [ 0.8, 0.3, -0.2],    # 2 tiệm kim hoàn\n                  [-0.7, 0.6,  0.4]])   # 3 quán cà phê\nonehot = np.eye(4)\nd = lambda M: np.round(np.linalg.norm(M[:, None] - M[None, :], axis=-1), 3)\nprint(\"table[2]           :\", table[2])\nprint(\"onehot[2] @ table  :\", onehot[2] @ table)\nprint(\"cách nhau one-hot  :\", np.unique(d(onehot)[d(onehot) > 0]))\nprint(\"cách nhau embedding: 0-2 =\", d(table)[0,2], \"0-1 =\", d(table)[0,1])\nprint(\"số ô: one-hot\", 50_000 * 50_000, \"| embedding\", 50_000 * 16)",
+    "out": "table[2]           : [ 0.8  0.3 -0.2]\nonehot[2] @ table  : [ 0.8  0.3 -0.2]\ncách nhau one-hot  : [1.414]\ncách nhau embedding: 0-2 = 0.173 0-1 = 1.817\nsố ô: one-hot 2500000000 | embedding 800000"
+   },
+   "check": {
+    "q": "Bạn thay one-hot cho 8.000 mã thiết bị bằng một embedding. Theo quy tắc n lũy thừa 0,25 thì chọn bao nhiêu chiều, và bảng tra đó có bao nhiêu tham số?",
+    "a": "8.000 lũy thừa 0,25 bằng 9,46 nên khoảng 9 đến 16 chiều; lấy 16 thì bảng là 8.000 x 16 = 128.000 tham số. Rẻ, vì nó thay chỗ 8.000 cột one-hot — và vì mọi ô đều học được, những thiết bị dùng giống nhau tự trôi lại gần nhau chứ không ai gán."
+   }
   },
   "dl-cnn-rnn": {
    "tldr": "CNN và RNN/LSTM thống trị 2012–2017; RNN thì đã bị Transformer thay gần hết TRONG XỬ LÝ NGÔN NGỮ, còn CNN vẫn rất phổ biến và cạnh tranh trong thị giác máy tính (nhất là khi dữ liệu vừa phải, cần chạy nhanh, hoặc chạy trên thiết bị nhúng), nhưng vẫn là baseline hợp lệ khi dữ liệu ít, tài nguyên hạn chế hoặc chuỗi ngắn — điều quyết định là hiểu vì sao chúng bị thay.",
@@ -627,7 +1067,17 @@
     "Cái giá là bình phương độ dài: mỗi token nhìn mọi token cho ma trận n×n, gấp đôi độ dài = gấp bốn chi phí (chuỗi 1.000 token = 1 triệu ô) — lý do context window đắt và là đề tài FlashAttention/Linformer/Performer",
     "Cảnh báo trung thực: trên dữ liệu bảng vừa và nhỏ, self-attention trên chuỗi giao dịch thường vẫn thua LightGBM với feature thủ công tốt"
    ],
-   "viz": "Widget attention kéo được (data-viz=attn): bấm vào một từ như 'Đà Nẵng' để thấy nó nhìn những từ nào để hiểu chính nó"
+   "viz": "Widget attention kéo được (data-viz=attn): bấm vào một từ như 'Đà Nẵng' để thấy nó nhìn những từ nào để hiểu chính nó",
+   "example": {
+    "kind": "code",
+    "lead": "Bốn bước attention chạy trên ba token: điểm khớp Q nhân K chia căn d_k rồi softmax làm cho token nó dồn 0,639 trọng số vào mèo, và vector của nó đổi hẳn.",
+    "code": "import numpy as np\n# 3 token: 0 \"mèo\", 1 \"đường\", 2 \"nó\"; Q,K,V sinh từ x qua 3 ma trận\nQ = np.array([[1.0, 0.0], [0.0, 1.0], [2.0, 0.0]])   # \"nó\" hỏi: ai sống?\nK = np.array([[1.0, 0.0], [0.0, 1.0], [0.2, 0.2]])   # \"mèo\" quảng cáo\nV = np.array([[10.0, 0.0], [0.0, 10.0], [1.0, 1.0]])\nscores = Q @ K.T / np.sqrt(Q.shape[1])     # chấm điểm rồi chia căn d_k\ne = np.exp(scores - scores.max(axis=1, keepdims=True))\nW = e / e.sum(axis=1, keepdims=True)       # softmax từng dòng\nprint(\"ma trận điểm\", scores.shape, \"->\", scores.size, \"ô\")\nprint(\"trọng số của 'nó'  :\", W[2].round(3), \"tổng =\", W[2].sum().round(6))\nprint(\"vector cũ của 'nó' :\", V[2])\nprint(\"vector mới của 'nó':\", (W @ V)[2].round(3))",
+    "out": "ma trận điểm (3, 3) -> 9 ô\ntrọng số của 'nó'  : [0.639 0.155 0.206] tổng = 1.0\nvector cũ của 'nó' : [1. 1.]\nvector mới của 'nó': [6.593 1.759]"
+   },
+   "check": {
+    "q": "Chuỗi 1.000 token cho ma trận điểm 1 triệu ô. Bạn nới context window lên 4.000 token thì ma trận thành bao nhiêu ô, và gấp mấy lần?",
+    "a": "16 triệu ô, gấp 16 lần. Ma trận là n nhân n nên chi phí đi theo bình phương: dài gấp 4 thì 4 bình phương = 16. Đó là lý do context dài đắt, và là chỗ FlashAttention hay sliding window nhắm vào."
+   }
   },
   "dl-tf": {
    "tldr": "Transformer là kiến trúc hoàn chỉnh xây quanh attention: một khối gồm bốn thành phần mà đầu ra cùng kích thước đầu vào nên ghép nối tiếp được tuỳ ý về hình dạng (độ sâu thật bị chặn bởi compute, bộ nhớ và độ ổn định khi train — không phải vô hạn), và positional encoding chính là mẹo sin/cos vòng tròn áp cho vị trí.",
@@ -639,7 +1089,17 @@
     "Positional encoding vì attention mù về thứ tự: self-attention hoán vị-đồng biến (đảo hai token thì hai vector đầu ra chỉ đổi chỗ, giá trị không đổi) nên lớp đó nhìn câu như một TÚI token — 'chó cắn người' và 'người cắn chó' cho cùng một bộ vector; phải cộng thêm tín hiệu sin/cos vào embedding để mã hoá vị trí",
     "Đây chính là mẹo sin/cos của giờ 23h–0h nhưng dùng nhiều chu kỳ chồng lên nhau (từ rất ngắn tới rất dài) để vừa phân biệt vị trí liền kề vừa nắm khoảng cách xa; các mô hình hiện đại (LLaMA, GPT-NeoX) dùng RoPE dựa trên phép quay vòng tròn"
    ],
-   "viz": "Sơ đồ ASCII một khối Transformer: đầu vào x rẽ nhánh residual qua Multi-Head Attention → cộng → LayerNorm → Feed-Forward → cộng → LayerNorm, đầu ra cùng kích thước đầu vào"
+   "viz": "Sơ đồ ASCII một khối Transformer: đầu vào x rẽ nhánh residual qua Multi-Head Attention → cộng → LayerNorm → Feed-Forward → cộng → LayerNorm, đầu ra cùng kích thước đầu vào",
+   "example": {
+    "kind": "num",
+    "lead": "Đếm tham số một khối 512 chiều cho ra con số vì sao feed-forward mới là chỗ chứa dung lượng: nó gấp đúng 2 lần attention, còn LayerNorm gần như không tốn gì.",
+    "code": "d_model = 512, d_ff = 2048, bỏ bias cho gọn\nattention: 4 ma trận 512 x 512   → 4 × 262.144   = 1.048.576\nfeed-forward: 512x2048 rồi 2048x512 → 2 × 1.048.576 = 2.097.152\nLayerNorm x 2: mỗi cái gamma + beta → 2 × (512+512) =     2.048\nmột khối = 1.048.576 + 2.097.152 + 2.048          = 3.147.776",
+    "out": "feed-forward = 2.097.152 / 3.147.776 = 66,6% tham số của một khối\nattention 33,3%, LayerNorm chỉ 0,065% — gần như không tốn gì\n96 khối như thế = 302.186.496 tham số, chưa tính embedding"
+   },
+   "check": {
+    "q": "Bạn đảo chỗ hai token trong câu rồi chạy lại một khối Transformer chưa cộng positional encoding. Hai vector đầu ra đổi giá trị, hay chỉ đổi chỗ cho nhau?",
+    "a": "Chỉ đổi chỗ. Cả attention lẫn feed-forward đều hoán vị-đồng biến, nên khối nhìn câu như một túi token: chó cắn người và người cắn chó cho cùng một bộ vector. Vì thế phải cộng tín hiệu sin/cos của vị trí vào embedding trước khi đưa vào khối."
+   }
   },
   "dl-llm": {
    "tldr": "LLM là một Transformer decoder-only rất lớn huấn luyện đúng một nhiệm vụ là đoán token tiếp theo; mọi khả năng khác nổi lên từ đó, và hallucination là hệ quả trực tiếp của cách nó sinh token chứ không phải lỗi vặt sẽ được vá.",
@@ -675,7 +1135,17 @@
     "Selective labels problem: giao dịch đã bị chặn thì không bao giờ biết có thật gian lận không → mô hình chỉ học từ cái nó cho qua, một thiên lệch tự tạo",
     "Phải ghi log đầy đủ cả feature đã tính, nếu không thì không debug, không đo drift, không retrain được"
    ],
-   "viz": "Sơ đồ đường đi một giao dịch: quẹt thẻ → API chấm điểm (tra Redis/CSDL + predict_proba) → quyết định theo ngưỡng → ghi log → kho dữ liệu/giám sát drift/retrain, kèm bảng ngân sách độ trễ cộng ra ~50ms."
+   "viz": "Sơ đồ đường đi một giao dịch: quẹt thẻ → API chấm điểm (tra Redis/CSDL + predict_proba) → quyết định theo ngưỡng → ghi log → kho dữ liệu/giám sát drift/retrain, kèm bảng ngân sách độ trễ cộng ra ~50ms.",
+   "example": {
+    "kind": "num",
+    "lead": "Cộng bốn chặng của ngân sách độ trễ ra 50ms, rồi chèn một lời gọi LLM vào giữa để thấy nó không chậm hơn một chút mà chậm hơn cả ngân sách vài chục lần.",
+    "code": "ngân sách = mạng 10 + feature lịch sử 15 + pipeline&model 20 + log 5\nđộ trễ khi chèn một lời gọi LLM = ngân sách + 500 … 3.000 ms\nsố luồng cần có = 300 giao dịch/giây × thời gian xử lý (giây)",
+    "out": "ngân sách   =   50 ms   (mức công nghiệp 100 ms → còn dư 50 ms)\n+ LLM 500   =  550 ms   = 11,0 × ngân sách\n+ LLM 3.000 = 3050 ms   = 61,0 × ngân sách\n300/giây × 0,050 s = 15 luồng  ·  × 0,850 s = 255 luồng (17 lần)"
+   },
+   "check": {
+    "q": "Đội hạ tầng cấp 15 tiến trình chấm điểm cho 300 giao dịch mỗi giây, và có người đề nghị chèn một lời gọi LLM 800ms để sinh lời giải thích. Bạn phản đối bằng con số nào?",
+    "a": "300 × 0,850 = 255 tiến trình, gấp 17 lần số đang có: lời gọi đó không làm hệ chậm hơn mà đòi thêm 240 máy để giữ nguyên lưu lượng. Muốn có lời giải thích thì sinh nó sau khi quyết định đã trả về, ngoài đường chặn."
+   }
   },
   "pr-code": {
    "tldr": "Toàn bộ đường code từ thư mục rỗng tới một artifact .joblib đã huấn luyện, chia thành sáu file trách nhiệm tách bạch; điểm lõi là mọi biến đổi dữ liệu phải nằm TRONG Pipeline để hàm sinh feature chạy y hệt nhau ở train (278 nghìn dòng), eval và serve (một dòng).",
@@ -687,7 +1157,17 @@
     "split.py có ba cách chia = ba câu hỏi tổng quát hoá khác nhau (theo thời gian / theo nhóm card_id / cả hai) + embargo bỏ trống vài ngày vì nhãn đến trễ; báo cáo cách (1) làm chính, (3) làm kiểm tra độ bền",
     "pipeline.py KHÔNG đặt class_weight='balanced' làm mặc định: trên bộ này nó làm PR-AUC tệ đi (0,029→0,026) và phá hỏng hiệu chỉnh xác suất (Brier 0,0021→0,019)"
    ],
-   "viz": "Bản ghi chạy thật in PR-AUC 0,0294 với base_rate 0,00213 (gấp 13,8 lần đoán bừa), đọc kèm MỐC ORACLE 0,05–0,07 đo được trên bộ mô phỏng (trần lý thuyết của AP luôn là 1 và vô dụng; mốc oracle là AP khi chấm điểm bằng chính xác suất sinh dữ liệu, phải công bố seed/số lần chạy/khoảng) nên mô hình đạt ~60% mức tối đa đo được."
+   "viz": "Bản ghi chạy thật in PR-AUC 0,0294 với base_rate 0,00213 (gấp 13,8 lần đoán bừa), đọc kèm MỐC ORACLE 0,05–0,07 đo được trên bộ mô phỏng (trần lý thuyết của AP luôn là 1 và vô dụng; mốc oracle là AP khi chấm điểm bằng chính xác suất sinh dữ liệu, phải công bố seed/số lần chạy/khoảng) nên mô hình đạt ~60% mức tối đa đo được.",
+   "example": {
+    "kind": "code",
+    "lead": "Cùng một hàm sinh feature chạy trên cả bảng rồi trên đúng một dòng của nó, cho thấy 23h và 0h nằm cạnh nhau sau sin/cos, và thẻ chưa có lịch sử ra NaN chứ không phải một con số.",
+    "code": "import numpy as np, pandas as pd\ndef add_derived(df):                 # y hệt ở train, eval và serve\n    h = pd.to_datetime(df[\"timestamp\"]).dt.hour\n    out = df.assign(hour=h,\n                    hour_sin=np.sin(2 * np.pi * h / 24),\n                    hour_cos=np.cos(2 * np.pi * h / 24),\n                    amt_vs_hist=df[\"amount\"] / (df[\"hist_mean\"] + 1.0))\n    return out.round(4)\nts = [\"2025-06-19T23:00\", \"2025-06-20T00:00\", \"2025-06-20T03:12\"]\nd = pd.DataFrame({\"timestamp\": ts, \"amount\": [8_500_000.0] * 3,\n                  \"hist_mean\": [210_000.0, np.nan, 0.0]})\nprint(add_derived(d).iloc[:, 3:].to_string(index=False))\nprint(\"1 dòng cho đúng dòng đó của bảng:\",\n      add_derived(d.iloc[[1]]).equals(add_derived(d).iloc[[1]]))",
+    "out": " hour  hour_sin  hour_cos  amt_vs_hist\n   23   -0.2588    0.9659       40.476\n    0    0.0000    1.0000          NaN\n    3    0.7071    0.7071  8500000.000\n1 dòng cho đúng dòng đó của bảng: True"
+   },
+   "check": {
+    "q": "Thẻ chưa có lịch sử để hist_mean là NaN, thẻ đã đo và trung bình bằng 0 thì hist_mean là 0. Cột amt_vs_hist ra hai giá trị nào, và vì sao không được điền 0 cho thẻ mới?",
+    "a": "NaN cho thẻ mới, và 8.500.000 cho thẻ có hist_mean bằng 0. Điền 0 vào chỗ chưa biết là gán cho thẻ mới đúng cái tỉ lệ khổng lồ của trường hợp thứ hai; để NaN thì bước điền khuyết vừa điền vừa bật cờ báo ô đó vốn trống."
+   }
   },
   "pr-eval": {
    "tldr": "Biến một file .joblib và một PR-AUC validation thành bộ bằng chứng luận văn: quy trình đánh giá không tự lừa (test mở đúng một lần), ngưỡng có lý do bằng tiền, khoảng tin cậy đúng loại, baseline theo luật và bảng công bằng — điểm xuyên suốt là mọi con số phải so được và có ràng buộc vận hành thật.",
@@ -699,7 +1179,17 @@
     "paired_ci so hai mô hình bằng bootstrap GHÉP CẶP trên hiệu Δ trên cùng mẫu; 'có ý nghĩa' chỉ khi khoảng của Δ không chứa 0 — không được so hai khoảng riêng xem có chồng lấn",
     "Baseline phải là luật thủ công (src/rules.py — hệ thống thật mô hình phải thay thế), so TẠI ĐIỂM VẬN HÀNH chứ không bằng PR-AUC vì luật cho một điểm còn mô hình cho một đường cong; final_eval khoá bằng --confirm-freeze + freeze_hash + từ chối ghi đè"
    ],
-   "viz": "Khối JSON kết quả cuối thật: PR-AUC 0,0485 (base 0,00228 → ~21 lần đoán bừa, sát MỐC ORACLE 0,05–0,07 đo được trên bộ mô phỏng — đó là mốc thực nghiệm của bộ dữ liệu này, không phải trần lý thuyết của AP vốn luôn bằng 1), recall hiệu dụng 21,8%, tiết kiệm 14,8% chi phí; và bảng công bằng cho FPR nhóm web/pos lệch 6,7×."
+   "viz": "Khối JSON kết quả cuối thật: PR-AUC 0,0485 (base 0,00228 → ~21 lần đoán bừa, sát MỐC ORACLE 0,05–0,07 đo được trên bộ mô phỏng — đó là mốc thực nghiệm của bộ dữ liệu này, không phải trần lý thuyết của AP vốn luôn bằng 1), recall hiệu dụng 21,8%, tiết kiệm 14,8% chi phí; và bảng công bằng cho FPR nhóm web/pos lệch 6,7×.",
+   "example": {
+    "kind": "code",
+    "lead": "Cùng một tập 10.000 giao dịch của 400 thẻ, lấy lại theo dòng và lấy lại theo thẻ cho hai khoảng tin cậy lệch nhau gần năm lần bề rộng.",
+    "code": "import numpy as np\nrng = np.random.default_rng(7)\ncard = np.repeat(np.arange(400), 25)        # 400 thẻ × 25 giao dịch\nbad = rng.random(400) < 0.05                # 5% thẻ bị chiếm cả thẻ\ny = np.where(bad[card], rng.random(10_000) < 0.8,\n             rng.random(10_000) < 0.002)\ndong = [np.array([i]) for i in range(10_000)]\nthe = [np.flatnonzero(card == c) for c in range(400)]\nfor ten, u in [(\"dòng\", dong), (\"thẻ \", the)]:\n    pick = [rng.integers(0, len(u), len(u)) for _ in range(400)]\n    b = [y[np.concatenate([u[k] for k in s])].mean() for s in pick]\n    lo, hi = np.percentile(b, [2.5, 97.5])\n    print(f\"theo {ten} n={len(u):5d} CI [{lo:.4f}, {hi:.4f}]\"\n          f\" rộng {hi-lo:.4f}\")",
+    "out": "theo dòng n=10000 CI [0.0380, 0.0451] rộng 0.0071\ntheo thẻ  n=  400 CI [0.0270, 0.0599] rộng 0.0329"
+   },
+   "check": {
+    "q": "Bạn báo cáo khoảng tin cậy lấy lại theo dòng, rộng 0,0071, rồi tuyên bố cải thiện có ý nghĩa. Con số 400 trong dữ liệu nói bạn sai ở đâu?",
+    "a": "Bạn chỉ có 400 quan sát độc lập chứ không phải 10.000, vì gian lận xảy ra theo cả thẻ nên các dòng cùng thẻ không độc lập. Khoảng đúng rộng 0,0329, gấp 4,6 lần, đủ để chênh lệch bạn vừa gọi là có ý nghĩa nằm gọn trong nhiễu."
+   }
   },
   "pr-serve": {
    "tldr": "Đóng gói mô hình thành dịch vụ FastAPI + Docker, và bịt cái khe hở làm nhiều hệ thống thật chạy lệch khỏi số đã đo: ngưỡng phải đi cùng model trong cùng một artifact và service đọc từ đó, thay vì ai đó viết cứng 0,4/0,9 vào serve.py.",
@@ -711,7 +1201,17 @@
     "Dockerfile phải apt-get install libgomp1 vì LightGBM cần OpenMP; thiếu nó thì container build xong bình thường rồi mới chết lúc import với 'OSError: libgomp.so.1: cannot open shared object file' (trên macOS cùng nguyên nhân nhưng báo khác hẳn: 'Library not loaded: libomp.dylib', chữa bằng brew install libomp, hoặc MODEL_KIND='hgb' chỉ cần scikit-learn)",
     "Ghim đúng phiên bản trong requirements.txt: 'không tái lập được' là lỗi nặng nhất một luận văn có thể mắc vì nó vô hiệu hoá mọi con số; toàn bộ quy trình từ thư mục rỗng ~19 giây tính toán"
    ],
-   "viz": "Hai lời gọi /score trên cùng thẻ C00123 khác nhau 1.355 lần: 03h/8,5tr/vừa quẹt 6 lần trong 1h ra risk 0,374 (BLOCK); 14h/150k/không dồn dập ra 0,00028 (ALLOW)."
+   "viz": "Hai lời gọi /score trên cùng thẻ C00123 khác nhau 1.355 lần: 03h/8,5tr/vừa quẹt 6 lần trong 1h ra risk 0,374 (BLOCK); 14h/150k/không dồn dập ra 0,00028 (ALLOW).",
+   "example": {
+    "kind": "code",
+    "lead": "Cùng một đoạn quyết định, hai artifact khác nhau: chỉ thay file bundle là giao dịch 0,075 chuyển từ REVIEW sang BLOCK, không một dòng code dịch vụ nào bị sửa.",
+    "code": "import pathlib, pickle\nimport numpy as np\ndef decide(p, th):                 # MỘT chỗ quyết định, dùng chung\n    return np.where(p >= th[\"block\"], \"BLOCK\",\n                    np.where(p >= th[\"review\"], \"REVIEW\", \"ALLOW\"))\np = np.array([0.000276, 0.0750, 0.373957])\narts = [(\"fraud-20260803\", {\"review\": 0.0411, \"block\": 0.0806}),\n        (\"fraud-20260824\", {\"review\": 0.0350, \"block\": 0.0720})]\nfor ver, th in arts:               # bản train lại, service KHÔNG sửa\n    f = pathlib.Path(\"bundle.pkl\")\n    f.write_bytes(pickle.dumps({\"v\": ver, \"thresholds\": th}))\n    b = pickle.loads(f.read_bytes())        # service chỉ ĐỌC ngưỡng\n    print(b[\"v\"], b[\"thresholds\"], decide(p, b[\"thresholds\"]))",
+    "out": "fraud-20260803 {'review': 0.0411, 'block': 0.0806} ['ALLOW' 'REVIEW' 'BLOCK']\nfraud-20260824 {'review': 0.035, 'block': 0.072} ['ALLOW' 'BLOCK' 'BLOCK']"
+   },
+   "check": {
+    "q": "Sau lần train lại, ngưỡng chặn hạ từ 0,0806 xuống 0,0720. Đoạn nào trong dịch vụ phải sửa để nó chặn theo ngưỡng mới, và làm sao chứng minh bạn không bỏ sót?",
+    "a": "Không đoạn nào, vì ngưỡng nằm trong artifact nên nạp file mới là quyết định đổi theo. Chứng minh bằng một test đọc chính mã dịch vụ để bắt hằng số ngưỡng, cộng một test so từng dòng quyết định của API với bản chấm offline trên cùng dữ liệu."
+   }
   },
   "pr-monitor": {
    "tldr": "Mô hình không hỏng ngay mà mục dần, nên cần một lớp giám sát phân biệt ba loại drift và một chiến lược retrain; đặc thù bài gian lận là vòng phản hồi tự đầu độc — mô hình chỉ thu được nhãn của những giao dịch nó cho qua.",
@@ -723,7 +1223,17 @@
     "Retrain theo lịch (mỗi tháng trên 12 tháng gần nhất) là lựa chọn cho luận văn; sau khi train lại chạy shadow mode một tuần so quyết định bản mới với bản cũ, nếu được thì A/B test trên 5% lưu lượng",
     "Vòng phản hồi tự đầu độc (selective labels): mô hình chặn → không có nhãn thật → dữ liệu train tương lai chỉ chứa cái cho qua; nêu được vấn đề này trong luận văn đã là điểm cộng. Cách hay được nhắc là cho qua ngẫu nhiên một tỉ lệ nhỏ giao dịch đáng lẽ bị chặn — nhưng đó là can thiệp rủi ro bằng tiền thật của khách, KHÔNG có tỉ lệ phổ quát, và phải có người đủ thẩm quyền quyết định, trần thiệt hại, đường khiếu nại. Phương án rẻ hơn và an toàn hơn cho luận văn: xác minh THỦ CÔNG một mẫu ngẫu nhiên trong vùng bị chặn"
    ],
-   "viz": "Bảng ngưỡng PSI ba mức hành động; ví dụ tỉ lệ chặn nhảy từ 0,4% lên 3% trong một đêm là tín hiệu hỏng phát hiện được ngay không cần nhãn."
+   "viz": "Bảng ngưỡng PSI ba mức hành động; ví dụ tỉ lệ chặn nhảy từ 0,4% lên 3% trong một đêm là tín hiệu hỏng phát hiện được ngay không cần nhãn.",
+   "example": {
+    "kind": "code",
+    "lead": "Một cột có 30% giá trị bằng 0 làm bạn xin 10 khoảng phân vị mà chỉ nhận về 8, nên PSI đọc được đang tính trên lưới thô hơn bạn tưởng.",
+    "code": "import numpy as np\nrng = np.random.default_rng(0)\ndef gen(s):\n    return np.where(rng.random(50_000) < 0.30, 0.0,\n                    rng.gamma(2, s, 50_000))\nref, cur = gen(2.0), gen(3.0)      # lúc train  /  tháng này\nedges = np.unique(np.percentile(ref, np.linspace(0, 100, 11)))\nedges[0], edges[-1] = -np.inf, np.inf        # xin 10 khoảng\ne = np.histogram(ref, edges)[0] / len(ref) + 1e-6\na = np.histogram(cur, edges)[0] / len(cur) + 1e-6\npsi = float(((a - e) * np.log(a / e)).sum())\nband = (\"ổn định\" if psi < 0.10 else\n        \"theo dõi sát\" if psi < 0.25 else \"retrain\")\nprint(f\"xin 10 khoảng, nhận {len(edges)-1}  PSI = {psi:.4f}  → {band}\")",
+    "out": "xin 10 khoảng, nhận 8  PSI = 0.1920  → theo dõi sát"
+   },
+   "check": {
+    "q": "PSI của n_tx_1h là 0,1920 và bạn xin 10 khoảng nhưng chỉ nhận 8. Bạn làm gì với mô hình, và hai khoảng kia biến mất đi đâu?",
+    "a": "Chưa retrain: 0,1920 nằm trong dải 0,10–0,25 nên theo dõi sát và chuẩn bị. Hai khoảng mất vì 30% số 0 làm các cạnh phân vị thấp trùng nhau, khoảng bề rộng 0 thì luôn rỗng; np.unique chỉ làm chỗ hụt hiện ra, không lấy lại số khoảng."
+   }
   },
   "pr-mlops": {
    "tldr": "Chỉ cần một phần rất nhỏ của MLOps để dự án tái lập được và biến trực tiếp thành bảng kết quả luận văn: ghi lại thí nghiệm, phiên bản hoá dữ liệu, chốt phiên bản thư viện, và một CI tối thiểu.",
@@ -746,7 +1256,17 @@
     "Dòng baseline luật thủ công phải tự tạo (từ src/rules.py chạy trên đúng tập test), không đi mượn — đó là dòng so sánh duy nhất hội đồng thật sự quan tâm; bảng trong bài dùng số minh hoạ (31%/64%) khác số chạy thật ở pr-eval (12,4%/21,8%)",
     "Ba câu dùng trong bảo vệ: chỉ số quyết định là tổng thiệt hại quy đổi (không phải PR-AUC); ngưỡng chọn bằng tối thiểu hoá hàm chi phí trên validation, không theo mặc định 0,5; khảo sát độ nhạy gấp 8 lần và kết luận không đổi"
    ],
-   "viz": "Bảng quét độ nhạy chi phí FP: 20k→ngưỡng 0,214 / thiệt hại 612 triệu; 40k→0,318/698tr; 80k→0,447/801tr; 160k→0,602/944tr — ngưỡng dịch nhưng luôn thắng baseline."
+   "viz": "Bảng quét độ nhạy chi phí FP: 20k→ngưỡng 0,214 / thiệt hại 612 triệu; 40k→0,318/698tr; 80k→0,447/801tr; 160k→0,602/944tr — ngưỡng dịch nhưng luôn thắng baseline.",
+   "example": {
+    "kind": "num",
+    "lead": "Quét chi phí một ca xác minh qua bốn mức gấp 8 lần nhau để xem kết luận có đổi không, rồi tính thẳng mức mà nó mới đổi.",
+    "code": "100.000 giao dịch/tháng · 0,2% gian lận = 200 vụ × 3.000.000₫ = 600 tr\nA ngưỡng 0,5:      bắt 44%, gắn cờ 190 ca/tháng\nB ngưỡng chi phí:  bắt 64%, gắn cờ 500 ca (= trần sức chứa 0,5%)\nthiệt hại = (1 − recall) × 600 tr + số ca × chi phí một ca xác minh\nA = B khi  0,20 × 600 tr = (500 − 190) × c  →  c = 387.097₫",
+    "out": "c =  20.000₫ → A 339,8 tr | B 226,0 tr → B rẻ hơn 113,8 tr\nc =  40.000₫ → A 343,6 tr | B 236,0 tr → B rẻ hơn 107,6 tr\nc =  80.000₫ → A 351,2 tr | B 256,0 tr → B rẻ hơn  95,2 tr\nc = 160.000₫ → A 366,4 tr | B 296,0 tr → B rẻ hơn  70,4 tr\nkhông làm gì = 600,0 tr → cả A và B đều thắng trong toàn khoảng"
+   },
+   "check": {
+    "q": "Người phản biện nói 40.000₫ cho một ca xác minh là số bạn đoán. Bạn trả lời bằng con số nào để kết luận không sụp theo giả định đó?",
+    "a": "Điểm đổi chiều là 387.097₫, gần 10 lần con số đã dùng: dưới mức đó phương án theo chi phí luôn rẻ hơn, nên kết luận đứng vững trong cả khoảng 20.000–160.000₫ đã khảo sát chứ không phụ thuộc việc đoán đúng 40.000₫."
+   }
   },
   "q-regress": {
    "tldr": "Chuyển từ phân loại sang hồi quy giữ nguyên gần hết pipeline (đóng khung, EDA, feature); chỗ vỡ chỉ nằm ở chia tập và đo lường, và một con số dự đoán đơn lẻ kém hữu ích hơn một khoảng dự đoán có kiểm chứng độ phủ.",
@@ -758,7 +1278,17 @@
     "Khoảng dự đoán rẻ nhất với LightGBM là hồi quy phân vị: train 3 mô hình objective='quantile' cho alpha 0.1/0.5/0.9; dòng quan trọng nhất là kiểm coverage thực tế phải khớp ~80% đã công bố",
     "Ba sai lầm: không nhìn phân phối phần dư (phễu→dự đoán log(y); có cấu trúc→thiếu feature), không chặn giá trị vô lý (thời gian giao âm) và không đếm số lần phải kẹp, dùng R² làm chỉ số chính"
    ],
-   "viz": "Hình phần dư kéo được: ba tình huống (mô hình ổn / thiếu một phi tuyến / sai số nở theo x) cộng thanh trượt độ rộng khoảng dự đoán và ĐỘ PHỦ THỰC TẾ — MAE gần như không đổi giữa ca 1 và ca 2 trong khi phần dư đã cong rõ."
+   "viz": "Hình phần dư kéo được: ba tình huống (mô hình ổn / thiếu một phi tuyến / sai số nở theo x) cộng thanh trượt độ rộng khoảng dự đoán và ĐỘ PHỦ THỰC TẾ — MAE gần như không đổi giữa ca 1 và ca 2 trong khi phần dư đã cong rõ.",
+   "example": {
+    "kind": "code",
+    "lead": "Ba dòng số trên cùng 8 đơn giao hàng: mô hình B thắng ở MAE nhưng thua hẳn ở RMSE, còn baseline trung vị cho biết mức tối thiểu phải vượt.",
+    "code": "import numpy as np\ny = np.array([18, 22, 25, 30, 35, 40, 28, 33])   # phut giao thuc te\na = np.array([22, 18, 29, 26, 31, 44, 32, 29])   # lech 4 phut moi don\nb = np.array([19, 21, 26, 29, 34, 41, 29, 53])   # lech 1, MOT don lech 20\nmae  = lambda p: float(np.abs(y - p).mean())\nrmse = lambda p: float(np.sqrt(((y - p) ** 2).mean()))\nbase = np.full(len(y), np.median(y))             # luon doan trung vi\nfor name, p in [(\"baseline\", base), (\"A\", a), (\"B\", b)]:\n    print(f\"{name:9s} MAE={mae(p):5.2f}  RMSE={rmse(p):5.2f}\")",
+    "out": "baseline  MAE= 5.62  RMSE= 6.72\nA         MAE= 4.00  RMSE= 4.00\nB         MAE= 3.38  RMSE= 7.13"
+   },
+   "check": {
+    "q": "Sai một phút chỉ làm một xe chạy chậm, còn sai 20 phút làm khách huỷ đơn — giữa A và B bạn chốt mô hình nào?",
+    "a": "Chọn A. Chi phí tăng nhanh hơn tuyến tính nên RMSE là chỉ số quyết định, và A có RMSE 4,00 so với 7,13 của B, đổi lại MAE cao hơn 0,62 phút. Một cú sai 20 phút của B xoá sạch lợi thế trung bình của nó, mà MAE thì không nhìn thấy điều đó."
+   }
   },
   "q-forecast": {
    "tldr": "Forecasting trông giống hồi quy nhưng phải viết lại gần hết vì dòng hôm nay là hệ quả của dòng hôm qua; chia tập walk-forward và baseline naive/seasonal-naive là bắt buộc, và mọi con số phải đọc qua MASE (so với naive).",
@@ -772,7 +1302,17 @@
     "Bản đồ mô hình đặt vai không xếp hạng: naive/ETS/ARIMA/Prophet là baseline, boosting+lag là mặc định tốt NẾU khử xu hướng trước, LSTM/Transformer không phải mặc định; rolling/lag bắt buộc có .shift(1) — đặt trước hay sau .rolling(w) đều ra cùng một cột, thiếu hẳn nó mới là rò rỉ",
     "Prophet đang ở chế độ bảo trì (README chỉ nhận sửa lỗi, kiểm 3/8/2026); điểm mạnh là tách thành phần để giải thích chứ không phải độ chính xác"
    ],
-   "viz": "Ba hình động: decomp (tách STL xu hướng+mùa vụ+phần dư), walkforward (trượt mốc train/test), lag; period=7 cho dữ liệu ngày có mùa vụ tuần."
+   "viz": "Ba hình động: decomp (tách STL xu hướng+mùa vụ+phần dư), walkforward (trượt mốc train/test), lag; period=7 cho dữ liệu ngày có mùa vụ tuần.",
+   "example": {
+    "kind": "code",
+    "lead": "Cùng một chuỗi 8 ngày, ba cột cạnh nhau: cột rolling trần đã gộp giá trị của chính hôm nay, còn hai thứ tự shift và rolling cho ra đúng một cột trùng từng dòng.",
+    "code": "import pandas as pd\ny = pd.Series([10, 12, 11, 15, 14, 18, 17, 20], name=\"y\")   # 8 ngay\nleak = y.rolling(3).mean()            # gop CA gia tri hom nay -> ro ri\npre  = y.shift(1).rolling(3).mean()   # shift TRUOC roi rolling\npost = y.rolling(3).mean().shift(1)   # rolling TRUOC roi shift\nprint(\"pre == post ?\", pre.equals(post))\ndf = pd.DataFrame({\"y\": y, \"leak\": leak, \"an_toan\": pre})\nprint(df.tail(3).to_string())",
+    "out": "pre == post ? True\n    y       leak    an_toan\n5  18  15.666667  13.333333\n6  17  16.333333  15.666667\n7  20  18.333333  16.333333"
+   },
+   "check": {
+    "q": "MAE của mô hình bạn là 4,2 còn naive một bước đo trên train có MAE 6,0 — MASE bằng bao nhiêu, và bạn viết câu gì vào bảng kết quả?",
+    "a": "MASE = 4,2 / 6,0 = 0,70, tức sai ít hơn naive 30%. Mẫu số là một hằng số của chuỗi nên đổi mô hình không đổi nó, và đó là lý do con số so được giữa các fold; nếu chia cho MAE của naive tính trên chính tập test thì phải gọi tên là relative MAE, vì mẫu số đổi theo từng fold."
+   }
   },
   "q-multi": {
    "tldr": "Lên nhiều lớp thì code gần như không đổi (LGBMClassifier tự xử lý), nhưng cách gộp per-class metric thành một con số quyết định bạn báo cáo trung thực hay không — macro và weighted trên cùng một mô hình có thể chênh nhau rất xa.",
@@ -834,7 +1374,17 @@
     "Bốn lỗi làm hỏng A/B test: dừng sớm khi thấy đẹp (peeking → dương tính giả tăng vọt), thử nhiều chỉ số/phân khúc (20 phép kiểm ở 5% có ~1 cái 'ý nghĩa' do ngẫu nhiên), rò rỉ giữa hai nhóm (interference → ngẫu nhiên hoá theo cụm), hiệu ứng mới lạ (chạy đủ dài, nhìn theo tuần)",
     "Khi không thể chạy thí nghiệm, bốn phương pháp quasi-experimental (định vị được là đủ): difference-in-differences (giả định xu hướng song song), regression discontinuity (ngưỡng), propensity score matching (giả định không còn biến nhiễu chưa đo — mạnh và không kiểm được), biến công cụ IV; mỗi cái đổi kết luận nhân quả lấy một giả định không kiểm chứng trực tiếp được"
    ],
-   "viz": "Code cỡ mẫu: p0=0.10, mde=0.01 → Cohen's h qua arcsin → zt_ind_solve_power(alpha=0.05, power=0.8) ra số người MỖI nhóm."
+   "viz": "Code cỡ mẫu: p0=0.10, mde=0.01 → Cohen's h qua arcsin → zt_ind_solve_power(alpha=0.05, power=0.8) ra số người MỖI nhóm.",
+   "example": {
+    "kind": "code",
+    "lead": "Hai nhóm, hai kỳ, bốn con số doanh số: so hai nhóm ở kỳ sau cho 14, còn hiệu của hai hiệu chỉ cho 4 — phần chênh còn lại là khoảng cách vốn có từ trước can thiệp.",
+    "code": "import pandas as pd\nd = pd.DataFrame({\n    \"nhom\": [\"can_thiep\", \"can_thiep\", \"doi_chung\", \"doi_chung\"],\n    \"ky\":   [\"truoc\", \"sau\", \"truoc\", \"sau\"],\n    \"doanh_so\": [30.0, 38.0, 20.0, 24.0]})\np = d.pivot(index=\"nhom\", columns=\"ky\", values=\"doanh_so\")\nnaive = p.loc[\"can_thiep\", \"sau\"] - p.loc[\"doi_chung\", \"sau\"]\nd_ct  = p.loc[\"can_thiep\", \"sau\"] - p.loc[\"can_thiep\", \"truoc\"]\nd_dc  = p.loc[\"doi_chung\", \"sau\"] - p.loc[\"doi_chung\", \"truoc\"]\nprint(\"so hai nhom sau can thiep:\", naive)\nprint(\"thay doi ct:\", d_ct, \"| thay doi dc:\", d_dc)\nprint(\"DiD =\", d_ct - d_dc)",
+    "out": "so hai nhom sau can thiep: 14.0\nthay doi ct: 8.0 | thay doi dc: 4.0\nDiD = 4.0"
+   },
+   "check": {
+    "q": "Vẽ 6 kỳ trước can thiệp thì nhóm can thiệp đã tăng 2 mỗi kỳ trong khi nhóm đối chứng đi ngang; ước lượng 4 kia còn đọc được không?",
+    "a": "Không, vì giả định xu hướng song song đã vỡ: phần tăng 2 của riêng nhóm can thiệp bị cộng vào tác động, nên 4 đang bị thổi lên và con số gần sự thật hơn là 2. Vẽ giai đoạn trước chính là cách kiểm giả định đó, và khi nó vỡ thì phải khử xu hướng riêng của từng nhóm hoặc đổi sang thiết kế khác."
+   }
   },
   "q-analytics": {
    "tldr": "Phần lớn giá trị hằng ngày của data team đến từ trả lời câu hỏi bằng dữ liệu đã có, không train gì; sai lầm tốn kém nhất của người mới là mang mô hình dự đoán tới một câu hỏi analytics ('vì sao doanh số giảm' cần truy vấn tách nhỏ, không cần mô hình).",
@@ -859,7 +1409,17 @@
     "Tiêu chí chọn dataset: công khai không cần xin quyền, nhỏ/vừa dưới vài trăm MB vừa RAM Colab, tải bằng một dòng, có giấy phép rõ (ghi vào data/README.md), không cần GPU mạnh, phù hợp bài học không phải nổi tiếng (Titanic không dạy rò rỉ thời gian, MNIST bão hoà >99%)",
     "Bảng 'giữ gì/đổi gì' bảy chiều so với dự án fraud: họ bài toán, chia tập, baseline, metric chính (fraud = PR-AUC + chi phí quy tiền), rủi ro rò rỉ chính, có cần deep learning, sai lầm đặc trưng"
    ],
-   "viz": "Code A/B tự sinh (mini-project 6): confounder heavy, TRUE_EFFECT=0.02; ước lượng quan sát thô lệch gấp nhiều lần sự thật còn ước lượng RCT bám sát 0,02 — mười lăm phút thấy vì sao 'mô hình chính xác' không bằng 'kết luận đúng'."
+   "viz": "Code A/B tự sinh (mini-project 6): confounder heavy, TRUE_EFFECT=0.02; ước lượng quan sát thô lệch gấp nhiều lần sự thật còn ước lượng RCT bám sát 0,02 — mười lăm phút thấy vì sao 'mô hình chính xác' không bằng 'kết luận đúng'.",
+   "example": {
+    "kind": "num",
+    "lead": "Đặt ngân sách 5 giờ của bài cạnh giá thật của một notebook làm tới cùng, để thấy thực đơn 6 đề chỉ đủ chỗ cho 2 và một buổi trót đi tune thì xoá đúng cái nào.",
+    "code": "ngân sách bài: 5,0 giờ  ·  một mini-project 5 bước, KHÔNG tune: ~2,5 giờ\n\nlàm thật cả 6 đề:  6 × 2,5 = 15,0 giờ  →  15,0 / 5,0 = gấp 3,0 ngân sách\nlàm thật 2 đề:     2 × 2,5 =  5,0 giờ  →  khớp ngân sách\n4 đề còn lại:      4 bảng × 7 chiều = 28 ô phác thảo, để tra sau\n\nmột notebook trượt sang 4,0 giờ vì đi tune:\n  4,0 + 2,5 = 6,5 giờ > 5,0  →  mất hẳn đề thứ hai\n  1,5 giờ tuning đổi lấy 0 dòng cho bảng ở bước 5",
+    "out": "2 notebook × 2,5 giờ = 5,0 giờ khớp ngân sách; 6 notebook = 15,0 giờ thì không\nnộp được: 2 bảng hoàn chỉnh + 4 bảng phác thảo = 6 × 7 = 42 ô đã điền\n1,5 giờ tuning ngoài kế hoạch xoá đúng 1 trong 2 họ bài toán mới"
+   },
+   "check": {
+    "q": "Notebook forecasting đã ngốn 4 giờ, MASE đang 0,91 và bạn vừa nghĩ ra ba tham số nữa muốn thử — bạn làm gì tiếp?",
+    "a": "Dừng thử tham số, ghi lại con số đang có rồi viết bảng giữ gì / đổi gì, vì sản phẩm của mini-project là bảng đó chứ không phải MASE thấp nhất. Quá một buổi cho một cái là dấu hiệu đang tối ưu thay vì đang học chuyển giao, và 1,5 giờ còn lại là toàn bộ chỗ dành cho họ bài toán thứ hai."
+   }
   },
   "th-topic": {
    "tldr": "Luận văn thạc sĩ không cần phát minh mới, chỉ cần một khoảng trống nhỏ, xác định được, và lấp bằng bằng chứng. \"Delta\" (phần đóng góp) chỉ cần nằm ở MỘT ô trong công thức đề tài, và ô rẻ nhất mà vẫn hợp lệ là bối cảnh mới.",
@@ -870,7 +1430,17 @@
     "4 bẫy: quá rộng (không câu hỏi cụ thể), không baseline, phụ thuộc dữ liệu chưa có trong tay (rủi ro số một — xác nhận có dữ liệu TRƯỚC khi chốt đề tài), chỉ \"thử 5 mô hình xem cái nào tốt\"",
     "Đề cương 1 trang gồm 6 mục: bối cảnh, khoảng trống (dẫn nguồn), câu hỏi nghiên cứu, phương pháp, đóng góp dự kiến, rủi ro — mục câu hỏi phải viết được thành dạng có/không hoặc so sánh được, không thì đề tài chưa đủ sắc"
    ],
-   "viz": "Bảng 5 dòng \"delta nằm ở đâu\" kèm ví dụ và độ khó — ví dụ bối cảnh Z: áp kỹ thuật đã có cho dữ liệu giao dịch ngân hàng Việt Nam nơi mẫu chi tiêu theo Tết khác dữ liệu phương Tây"
+   "viz": "Bảng 5 dòng \"delta nằm ở đâu\" kèm ví dụ và độ khó — ví dụ bối cảnh Z: áp kỹ thuật đã có cho dữ liệu giao dịch ngân hàng Việt Nam nơi mẫu chi tiêu theo Tết khác dữ liệu phương Tây",
+   "example": {
+    "kind": "num",
+    "lead": "Chấm hai đề tài bằng cùng một thang — mỗi ô của công thức nêu rõ được 1 điểm, mỗi ô có delta thêm 2, mỗi bẫy trừ 3 — để thấy khoảng cách giữa chúng là 14 điểm.",
+    "code": "Thang chấm: nêu rõ được một ô = 1đ (tối đa 5) · ô có delta = +2đ\n            mỗi bẫy dính phải = −3đ\n\nĐề tài 1 — \"Ứng dụng AI trong ngân hàng\"\n  nêu rõ  X0 Y0 Z1 B0 M0 = 1đ    delta 0 ô = 0đ\n  bẫy     quá rộng + không baseline = −6đ   tổng = 1 + 0 − 6 = −5\n\nĐề tài 2 — 5 cách mã hoá chu kỳ × 3 họ mô hình cho gian lận thẻ ở\n           VN, baseline LightGBM đã tune, đo bằng PR-AUC\n  nêu rõ  X1 Y1 Z1 B1 M1 = 5đ    delta 2 ô (Z + so sánh) = +4đ\n  bẫy     không dính = 0đ                   tổng = 5 + 4 − 0 = 9",
+    "out": "Đề tài 1: −5 điểm → loại\nĐề tài 2:  9 điểm → chốt được\nkhoảng cách 14 điểm, và nó sinh ra từ việc VIẾT RA đủ năm ô"
+   },
+   "check": {
+    "q": "Đề tài của bạn đặt delta ở ô bối cảnh Z: dữ liệu giao dịch của một ngân hàng cụ thể, nhưng bộ phận rủi ro chưa đồng ý cho truy cập. Bạn làm gì trước khi chốt?",
+    "a": "Xác nhận dữ liệu đã nằm trong tay trước, vì delta đặt ở Z làm cả đề tài phụ thuộc đúng bộ dữ liệu đó — mất nó là mất luôn đóng góp, không phải mất một thí nghiệm. Chưa có đồng ý bằng văn bản thì dùng bộ công khai làm nền và giữ dữ liệu ngân hàng như phần mở rộng, hoặc dời delta sang ô so sánh có hệ thống vì ô đó chạy được trên dữ liệu công khai."
+   }
   },
   "th-read": {
    "tldr": "Đọc 15-30 paper tuần tự từng chữ là cách chắc chắn không kịp; phương pháp ba lượt (chuẩn mực nghiên cứu) sàng nhanh rồi mới đọc sâu, và mọi phần Kết quả phải được đọc hoài nghi.",
@@ -881,7 +1451,17 @@
     "4 câu hỏi hoài nghi khi đọc Kết quả: baseline có được tune tử tế không, có khoảng tin cậy/độ lệch chuẩn không, chia tập thế nào (dữ liệu thời gian chia ngẫu nhiên = thổi phồng), báo cáo bao nhiêu cấu hình",
     "Nguồn tìm paper: Google Scholar (\"Cited by\"), Connected Papers (dựng sơ đồ bài liên quan), arXiv/Papers with Code (bài mới kèm mã), Semantic Scholar — không bao giờ trích dẫn bài chưa đọc tới ít nhất lượt 1"
    ],
-   "viz": "Ví dụ số cảnh báo: \"AUC 0,921 vs 0,918\" không chứng minh gì nếu độ lệch chuẩn giữa các seed là 0,01"
+   "viz": "Ví dụ số cảnh báo: \"AUC 0,921 vs 0,918\" không chứng minh gì nếu độ lệch chuẩn giữa các seed là 0,01",
+   "example": {
+    "kind": "num",
+    "lead": "Ngân sách giờ cho 30 paper khi lượt 1 làm đúng việc của nó là loại 80%: ba lượt tốn 22 giờ, còn đọc tuần tự từng chữ tốn 135 giờ.",
+    "code": "30 paper × 5 phút   (lượt 1)      = 150 phút = 2,5 giờ\nloại 80% → còn 30 × 0,20          = 6 paper\n6 paper × 60 phút   (lượt 2)      = 360 phút = 6,0 giờ\n3 paper × 4,5 giờ   (lượt 3)      = 13,5 giờ\ntổng ba lượt = 2,5 + 6,0 + 13,5   = 22,0 giờ\n\nđọc tuần tự: 30 × 4,5 giờ = 135 giờ → gấp 135/22 = 6,1 lần",
+    "out": "ba lượt:      22,0 giờ (2,5 sàng + 6,0 đọc hiểu + 13,5 đọc sâu)\ntuần tự:     135,0 giờ\nlượt 1 tốn 2,5/22 = 11% ngân sách và cắt đi 24 trong 30 paper"
+   },
+   "check": {
+    "q": "Sau lượt 1 bạn giữ lại 24 trong 30 paper vì bài nào cũng thấy hơi liên quan. Ngân sách lượt 2 thành bao nhiêu giờ, và tiêu chí loại của bạn sai ở đâu?",
+    "a": "24 × 1 giờ = 24 giờ, tự nó đã vượt cả 22 giờ của ba lượt cộng lại, nên lượt 3 không còn chỗ và bạn sẽ đọc sâu đúng 0 paper. Tiêu chí sai vì hơi liên quan không phải một trong bốn câu của lượt 1; câu quyết định là paper này có trả lời hoặc cạnh tranh với đúng câu hỏi nghiên cứu của mình không — không thì loại, kể cả khi nó thú vị."
+   }
   },
   "th-repro": {
    "tldr": "Tái lập một paper trước khi tự làm cho bạn một mốc đã biết là đúng, nên khi kết quả của bạn lạ, bạn biết ngay lỗi ở mình hay ở dữ liệu — và ngay cả khi không khớp được số, một báo cáo trung thực về chỗ lệch vẫn có giá trị học thuật thật.",
@@ -892,7 +1472,17 @@
     "Khi không tái lập được, thứ tự kiểm: khác phiên bản dữ liệu (đối chiếu số dòng+tỉ lệ nhãn), khác cách chia tập (nhiều paper không nói rõ — đó là phát hiện đáng nêu), tiền xử lý ẩn trong code, \"AUC\" là ROC hay PR, khác phiên bản lib (thử đúng requirements.txt của họ)",
     "Làm công trình của mình tái lập được: cố định seed (numpy, sklearn random_state, torch, PYTHONHASHSEED), pip freeze > requirements.txt, một lệnh chạy hết (python -m src.train), in rõ khoảng thời gian từng tập, công bố code GitHub, báo cáo trung bình ± độ lệch chuẩn của 5 lần chạy"
    ],
-   "viz": "Bảng chẩn đoán khi không khớp số (5 nghi ngờ × cách kiểm) và quy tắc thay cho ngưỡng phần trăm: mốc so sánh là độ bất định của chính bài gốc, hoặc dao động seed khi chạy lại mã nguồn của họ"
+   "viz": "Bảng chẩn đoán khi không khớp số (5 nghi ngờ × cách kiểm) và quy tắc thay cho ngưỡng phần trăm: mốc so sánh là độ bất định của chính bài gốc, hoặc dao động seed khi chạy lại mã nguồn của họ",
+   "example": {
+    "kind": "code",
+    "lead": "Số tôi chạy ra thấp hơn bài báo 2,8% nghe như thất bại, nhưng đối chiếu với dao động 5 seed của chính mã nguồn họ thì nó nằm trong mốc — còn số họ công bố thì không.",
+    "code": "import numpy as np\ntheirs = np.array([0.374, 0.381, 0.386, 0.379, 0.389])  # chạy lại code họ\npaper, mine = 0.392, 0.381        # số họ công bố, và số tôi chạy ra\nlo, hi = theirs.min(), theirs.max()\nprint(f\"mốc = dao động seed của chính mã nguồn họ: {lo:.3f}-{hi:.3f}\")\nprint(f\"độ lệch chuẩn của mốc đó: {theirs.std(ddof=1):.4f}\")\nprint(f\"Δ tuyệt đối {mine-paper:+.3f}, tương đối {(mine-paper)/paper:+.1%}\")\nprint(f\"số của tôi nằm trong mốc? {bool(lo <= mine <= hi)}\")\nprint(f\"số của paper nằm trong mốc đó? {bool(lo <= paper <= hi)}\")",
+    "out": "mốc = dao động seed của chính mã nguồn họ: 0.374-0.389\nđộ lệch chuẩn của mốc đó: 0.0059\nΔ tuyệt đối -0.011, tương đối -2.8%\nsố của tôi nằm trong mốc? True\nsố của paper nằm trong mốc đó? False"
+   },
+   "check": {
+    "q": "Bạn tái chạy ra AP 0,381, bài báo ghi 0,392, và bài báo không công bố độ lệch chuẩn nào. Bạn lấy đâu ra mốc để nói được là mình tái lập thành công?",
+    "a": "Chạy lại chính mã nguồn của họ với 5 seed khác nhau, rồi lấy dải dao động đó làm mốc — ở đây 0,374 đến 0,389, nên 0,381 nằm trong mốc. Không có ngưỡng phần trăm nào thay được: chênh 0,011 là 2,8% trên AP 0,392 nhưng sẽ là 22% nếu chỉ số nằm quanh 0,05, và mỗi bài toán một mức nhiễu riêng."
+   }
   },
   "th-design": {
    "tldr": "Phần thực nghiệm là nơi luận văn được chấm thật: mỗi thí nghiệm phải trả lời đúng một câu hỏi định trước, và bảng ablation là thứ chứng minh đóng góp của bạn thực sự LÀ nguyên nhân của cải thiện chứ không phải may.",
@@ -904,7 +1494,17 @@
     "Bảng theo dõi thí nghiệm ghi từ ngày đầu (#, ngày, mô tả, features, model, seed, PR-AUC valid, ghi chú) — MLflow tự sinh hoặc CSV; bảng này CHÍNH LÀ chương kết quả",
     "5 sai lầm: đổi nhiều thứ cùng lúc (sửa: một biến mỗi lần), chỉ một seed (5 seed ± std), tune trên test (tune valid, test chạm một lần), baseline yếu, không có ablation"
    ],
-   "viz": "Bảng ablation minh hoạ (đọc đúng phạm vi: ablation cho ĐÓNG GÓP BIÊN trong đúng setup này, không phải bằng chứng nhân quả — các thành phần tương tác nhau, thứ tự bỏ ảnh hưởng kết quả, mỗi dòng vẫn có nhiễu seed): đầy đủ PR-AUC 0,412; −sin/cos −0,014; −feature tốc độ −0,071 (lớn nhất); −lệch thói quen −0,045; −chọn ngưỡng theo chi phí Δ=0 nhưng thiệt hại +23%"
+   "viz": "Bảng ablation minh hoạ (đọc đúng phạm vi: ablation cho ĐÓNG GÓP BIÊN trong đúng setup này, không phải bằng chứng nhân quả — các thành phần tương tác nhau, thứ tự bỏ ảnh hưởng kết quả, mỗi dòng vẫn có nhiễu seed): đầy đủ PR-AUC 0,412; −sin/cos −0,014; −feature tốc độ −0,071 (lớn nhất); −lệch thói quen −0,045; −chọn ngưỡng theo chi phí Δ=0 nhưng thiệt hại +23%",
+   "example": {
+    "kind": "num",
+    "lead": "Bốn dòng ablation của cùng một bảng đặt cạnh độ lệch chuẩn 0,006 giữa 5 seed, để thấy dòng nào đã cho phép viết một câu kết luận và dòng nào chưa.",
+    "code": "độ lệch chuẩn giữa 5 seed (dòng 6 bảng theo dõi) = 0,006\n\n− feature tốc độ giao dịch   Δ = −0,071 → |Δ|/std = 11,8\n− lệch so với thói quen      Δ = −0,045 → |Δ|/std =  7,5\n− feature chu kỳ (sin/cos)   Δ = −0,014 → |Δ|/std =  2,3\n− chọn ngưỡng theo chi phí   Δ =  0,000 → |Δ|/std =  0,0",
+    "out": "tốc độ và lệch thói quen: 11,8 và 7,5 lần nhiễu seed → nói được\nsin/cos: 2,3 lần, Δ trần chưa tách khỏi nhiễu → cần khoảng tin cậy\nngưỡng chi phí: 0,0 lần ở PR-AUC, nhưng bỏ đi thì thiệt hại +23%"
+   },
+   "check": {
+    "q": "Dòng tháo chọn ngưỡng theo chi phí cho Δ PR-AUC bằng 0 nhưng thiệt hại tăng 23%. Bạn kết luận gì về thành phần đó, và báo cáo dòng đó bằng chỉ số nào?",
+    "a": "Không kết luận nó vô dụng: nó không đổi thứ tự xếp hạng nên PR-AUC — một chỉ số chỉ đọc thứ hạng — không thể thấy nó, trong khi nó đổi điểm cắt, và điểm cắt mới là chỗ sinh ra chi phí. Dòng đó phải báo cáo bằng tổng thiệt hại quy ra tiền; ablation chỉ đo được đúng thứ mà chỉ số của nó đo."
+   }
   },
   "th-stats": {
    "tldr": "Có hai con số 0,412 và 0,367 chưa đủ để nói \"tốt hơn\"; phải chứng minh chênh lệch là thật bằng ba việc, và quyết định \"tốt hơn\" chỉ được kết luận bằng kiểm định GHÉP CẶP trên cùng dữ liệu, không bằng việc so hai khoảng tin cậy riêng có chồng lấn hay không.",
@@ -916,7 +1516,17 @@
     "\"Có ý nghĩa thống kê\" ≠ \"quan trọng\": luôn báo độ lớn hiệu ứng cùng p, tốt hơn là quy ra tiền; và kết quả KHÔNG có ý nghĩa (vd Δ=0,004; KTC 95%: −0,008…0,015, phù hợp lý thuyết cây không dùng khoảng cách Euclid) vẫn là luận văn tốt vì có giả thuyết + kiểm chứng + giải thích",
     "Bootstrap phải bốc lại ĐƠN VỊ ĐỘC LẬP, không phải dòng: code mẫu bốc lại theo card_id (cluster bootstrap) chứ không rng.integers trên chỉ số hàng — dữ liệu thẻ có nhiều dòng cùng một thẻ nên bốc theo dòng cho khoảng tin cậy hẹp giả. Trong luận văn phải viết rõ đã bốc theo đơn vị nào."
    ],
-   "viz": "Đoạn code bootstrap ghép cặp 1000 vòng lấy cùng chỉ số hàng cho p_new và p_old, in Δ với KTC 95% và quy tắc \"khoảng không chứa 0 = khác biệt có ý nghĩa\""
+   "viz": "Đoạn code bootstrap ghép cặp 1000 vòng lấy cùng chỉ số hàng cho p_new và p_old, in Δ với KTC 95% và quy tắc \"khoảng không chứa 0 = khác biệt có ý nghĩa\"",
+   "example": {
+    "kind": "code",
+    "lead": "Bootstrap ghép cặp 1000 vòng trên hiệu PR-AUC của hai mô hình, bốc lại theo thẻ chứ không theo dòng, cho một khoảng không chứa 0 — lúc đó mới được gọi là tốt hơn.",
+    "code": "import numpy as np\nrng = np.random.default_rng(42)\ny = (rng.random(300) < .15).astype(int).repeat(4)   # 300 thẻ × 4 dòng\nh = rng.random(300).repeat(4) + rng.random(1200)*.04\na, b = y*.240 + h*.760, y*.215 + h*.785   # p_new, p_old, cùng tập test\ndef ap(t, s):                             # PR-AUC = average precision\n    v = t[np.argsort(-s)]\n    return ((np.cumsum(v)/np.arange(1, v.size+1)) * v).sum() / v.sum()\nd = []\nfor _ in range(1000):\n    i = (rng.integers(0,300,300)[:,None]*4 + np.arange(4)).ravel()\n    d.append(ap(y[i], a[i]) - ap(y[i], b[i]))\nlo, hi = np.percentile(d, [2.5, 97.5])\nprint(f\"Δ = {np.mean(d):+.4f}   KTC 95%: {lo:+.4f} … {hi:+.4f}\")",
+    "out": "Δ = +0.0615   KTC 95%: +0.0363 … +0.0926"
+   },
+   "check": {
+    "q": "Tập test của bạn có nhiều dòng cùng một card_id. Bạn đổi dòng bốc lại thành rng.integers trên chỉ số hàng cho gọn — khoảng tin cậy thay đổi thế nào?",
+    "a": "Nó hẹp lại gần một nửa: trên đúng dữ liệu của ví dụ, bốc theo dòng cho khoảng rộng khoảng 0,03 còn bốc theo thẻ cho khoảng 0,06. Đó là độ hẹp giả, vì bốc theo dòng coi bốn dòng của cùng một thẻ là bốn quan sát độc lập nên nó tưởng cỡ mẫu lớn hơn thực tế. Bốc theo đơn vị nào thì phải viết ra trong luận văn."
+   }
   },
   "th-write": {
    "tldr": "Viết luận văn nhanh khi biết mỗi chương trả lời một câu hỏi cố định; và trong chương Kết quả phải tách rạch ròi ba tầng — số liệu, diễn giải, hàm ý — vì trộn lẫn chúng là chỗ nhiều luận văn trượt.",
@@ -927,7 +1537,17 @@
     "Mục Hạn chế viết nghiêm túc vì hội đồng SẼ tìm ra: dữ liệu một tổ chức/giai đoạn, nhãn trễ 30-60 ngày + selective labels, chi phí FP là giả định, chưa A/B test, tác động công bằng — nêu trước thì kiểm soát được câu chuyện",
     "Chiến thuật ngày cuối: viết chương 4-5 trước (gần dữ liệu nhất), làm bảng/hình trước rồi mỗi đoạn văn chỉ mô tả một bảng, chương 2 viết sau chương 5, chương 1 và 6 viết cuối và phải khớp nhau từng đóng góp"
    ],
-   "viz": "Bảng 3 tầng chương Kết quả: Kết quả=\"đạt PR-AUC 0,412 so với 0,367 baseline\" (chỉ số), Diễn giải=\"cải thiện đến từ feature tốc độ\" (cơ chế), Hàm ý=\"ngân hàng nên ưu tiên hạ tầng feature thời gian thực\" (nói rõ là suy luận của bạn)"
+   "viz": "Bảng 3 tầng chương Kết quả: Kết quả=\"đạt PR-AUC 0,412 so với 0,367 baseline\" (chỉ số), Diễn giải=\"cải thiện đến từ feature tốc độ\" (cơ chế), Hàm ý=\"ngân hàng nên ưu tiên hạ tầng feature thời gian thực\" (nói rõ là suy luận của bạn)",
+   "example": {
+    "kind": "num",
+    "lead": "Quy chế trường đòi 60 trang chứ không phải 87,5 như bảng mẫu, nên nhân cả sáu chương bằng cùng một hệ số 0,686 — tỉ lệ giữ nguyên, con số tuyệt đối thì không.",
+    "code": "tổng trung điểm bảng mẫu: 10+20+20+12,5+20+5 = 87,5 trang\nquy chế trường đòi 60 trang → hệ số = 60 / 87,5 = 0,686\n\n1 Mở đầu        10   × 0,686 =  6,9 →  7\n2 Tổng quan     20   × 0,686 = 13,7 → 14\n3 Phương pháp   20   × 0,686 = 13,7 → 14\n4 Thực nghiệm   12,5 × 0,686 =  8,6 →  9\n5 Kết quả       20   × 0,686 = 13,7 → 14\n6 Kết luận       5   × 0,686 =  3,4 →  3\ntổng sau làm tròn = 7+14+14+9+14+3 = 61 trang",
+    "out": "61 trang, dôi 1 trang so với 60 → cắt tiếp ở chương 2\nchương 4+5 = 23/61 = 38%, sát tỉ lệ 37% của bảng mẫu (32,5/87,5)\nchương 6 còn 3 trang, vẫn phải khớp từng đóng góp với chương 1"
+   },
+   "check": {
+    "q": "Bạn viết trong chương 5: PR-AUC 0,412 so với 0,367 của baseline, cho thấy ngân hàng nên đầu tư hạ tầng feature thời gian thực. Bạn tách câu đó ra thế nào?",
+    "a": "Thành ba câu ở ba tầng: số liệu là 0,412 so với 0,367 rồi dừng; diễn giải là cải thiện đến từ nhóm feature tốc độ, tức gian lận biểu hiện qua cụm giao dịch dày; hàm ý là ngân hàng nên ưu tiên hạ tầng thời gian thực, kèm chữ nói rõ đây là suy luận của bạn. Câu gốc nhảy từ tầng một sang tầng ba, bỏ mất cơ chế và không đánh dấu chỗ nào là ý kiến."
+   }
   },
   "th-tools": {
    "tldr": "Công cụ đúng tiết kiệm hàng chục giờ ở giai đoạn viết: Overleaf/LaTeX trị công thức và đánh số tự động, Zotero trị tài liệu tham khảo, MLflow/W&B trị bảng kết quả — cài trong một buổi tối.",
@@ -950,7 +1570,17 @@
     "Khi không biết — công thức 3 bước: THỪA NHẬN \"chỗ này em chưa kiểm chứng\" → NÓI PHẦN BIẾT \"em nghĩ theo hướng… nhưng chưa đo\" → CHUYỂN THÀNH VIỆC \"đây là thí nghiệm em sẽ chạy\"; tuyệt đối không bịa số, nói vòng vo, hay trả lời câu khác",
     "5 lỗi trình bày: dồn 10 phút lý thuyết nền còn 5 phút kết quả (đảo tỉ lệ), đọc slide, xin lỗi về hạn chế (trình bày như lựa chọn có căn cứ), cãi phản biện, không tập nói thành tiếng (lần đầu thường vượt giờ 40% — nói to bấm giờ tối thiểu 3 lần)"
    ],
-   "viz": "Bảng 12 slide × phút × thông điệp duy nhất, và lịch 3 ngày cuối T−3 dựng slide (bảng/hình trước) / T−2 tập nói + quay video demo / T−1 luyện 24 câu hỏi đáp"
+   "viz": "Bảng 12 slide × phút × thông điệp duy nhất, và lịch 3 ngày cuối T−3 dựng slide (bảng/hình trước) / T−2 tập nói + quay video demo / T−1 luyện 24 câu hỏi đáp",
+   "example": {
+    "kind": "num",
+    "lead": "Cộng cột Phút của 12 slide ra 18,5 phút, nghe như vừa trần 20 phút — cho tới khi nhân với mức vượt giờ 40% của lần nói to đầu tiên.",
+    "code": "cộng cột Phút của 12 slide:\n0,5+1,5+1,5+1,5+1,5+1,5+2+1,5+2,5+1,5+1,5+1,5 = 18,5 phút\ntrần cho phép                                 = 20 phút\n\nlần nói to đầu tiên vượt 40%: 18,5 × 1,40     = 25,9 phút\n                        → tràn 25,9 − 20      =  5,9 phút\nkịch bản phải rút về:         20 / 1,40       = 14,3 phút\nphải cắt:                     18,5 − 14,3     =  4,2 phút\n\ntrọng số điểm ở hỏi đáp: 40% + 30% = 70% → ngân sách ôn 2/3",
+    "out": "kịch bản như thiết kế: 18,5 phút, nằm trong 15–20 phút\nsau mức vượt 40% của lần đầu: 25,9 phút → tràn 5,9 phút\nmuốn an toàn phải cắt 4,2 phút, về kịch bản 14,3 phút\nvà 70% điểm nằm ở 20–30 phút hỏi đáp mà slide không nói hộ được"
+   },
+   "check": {
+    "q": "Bạn phải cắt 4,2 phút khỏi kịch bản 18,5 phút; slide Kết quả chính đang 2,5 phút và slide Kiến trúc hệ thống 1,5 phút đều còn dài. Bạn cắt ở đâu?",
+    "a": "Cắt ở phần nền và kiến trúc, giữ nguyên Kết quả chính và Đóng góp. Hội đồng đã biết mô hình cây hay Transformer là gì nhưng không biết bạn làm gì, nên lỗi hay gặp nhất đúng là dồn thời gian cho lý thuyết nền rồi hụt chỗ cho kết quả. Slide 9 là chỗ có số và có cột quy ra tiền, cắt nó là cắt đúng phần được chấm."
+   }
   },
   "r-stack": {
    "tldr": "Ở mỗi bước của quy trình 10 bước có một bộ công cụ cố định, một lệnh mở màn, và một hiện vật (file/artifact) phải có khi xong — bám theo bộ này thì mỗi bước để lại đúng thứ dùng lại được cho luận văn và cho bước sau.",
@@ -964,7 +1594,17 @@
     "Bước 9 phục vụ bằng FastAPI/uvicorn + Docker (dựng trong Codespaces nếu máy yếu) + Streamlit demo; nạp joblib MỘT lần lúc khởi động chứ không mỗi request (200ms phá ngân sách 50ms).",
     "Bước 10 giám sát bằng hàm psi() ~6 dòng numpy + logging + cron (không cần Airflow); phải log cả feature đã tính, không chỉ điểm số."
    ],
-   "viz": "Bảng 10 bước, mỗi bước bốn ô Công cụ / Gõ gì / Xong thì có / Bẫy; kèm vòng lặp một ngày 8 bước từ terminal→jupyter→src→train→git commit ghi con số (pr-auc 0.394→0.412)."
+   "viz": "Bảng 10 bước, mỗi bước bốn ô Công cụ / Gõ gì / Xong thì có / Bẫy; kèm vòng lặp một ngày 8 bước từ terminal→jupyter→src→train→git commit ghi con số (pr-auc 0.394→0.412).",
+   "example": {
+    "kind": "num",
+    "lead": "Nhân vòng lặp 8 bước với số lần nó chạy trong một tuần, để thấy bước 7 không phải thủ tục mà là hiệu số giữa 25–50 dòng tra được và không dòng nào.",
+    "code": "vòng lặp một ngày: 8 bước · chạy 5–10 vòng/ngày · tuần làm 5 ngày\n  →  5 × 5 = 25  đến  10 × 5 = 50 vòng trong tuần\n\ncó bước 7 (git commit ghi con số):\n  25–50 commit, mỗi cái một cấu hình kèm một con số\n  một dòng thật: them z_vs_history, pr-auc 0.394 -> 0.412  →  +0,018\n\nbỏ bước 7:\n  vẫn 25–50 vòng, nhưng 0 dòng tra lại được\n  còn trong tay đúng 1 file model, không biết cấu hình nào cho con số nào",
+    "out": "25–50 vòng mỗi tuần, và bước 7 quyết định chúng thành 25–50 dòng hay 0 dòng\nmỗi dòng tự mang delta của nó: 0,412 − 0,394 = +0,018 PR-AUC"
+   },
+   "check": {
+    "q": "Bước 9 cần hour_sin của giao dịch vừa tới, mà công thức tính nó nằm trong src/features.py của bước 5 — trong serve.py bạn gõ gì?",
+    "a": "Không gõ lại công thức: nạp models/fraud_v1.joblib, hiện vật của bước 7 vốn đã chứa cả phần feature engineering, và nạp một lần lúc khởi động chứ không phải mỗi request. Viết logic lần thứ hai thì hai bản lệch nhau âm thầm, không có gì báo lỗi cả."
+   }
   },
   "r-roadmapsh": {
    "tldr": "roadmap.sh AI/Data Scientist chỉ có 8 ô trừu tượng, 3 trong đó chỉ là cửa dẫn sang các lộ trình hàng trăm ô; với mục tiêu một luận văn dữ liệu bảng trong 2 tuần thì hơn nửa bản đồ không liên quan, và những chỗ quyết định đúng/sai lại KHÔNG có ô nào.",
@@ -990,7 +1630,17 @@
     "Tái lập: báo một seed → 5 seed trung bình ± độ lệch chuẩn, random_state=42; notebook chạy lộn xộn → Restart & Run All trước khi tin con số; ghi thí nghiệm bằng MLflow/CSV từ ngày đầu.",
     "Feature engineering viết hai lần cho train và serve → một Pipeline, một file .joblib; feature xong mới tune."
    ],
-   "viz": "Ba bảng #/Lỗi/Sửa (Dữ liệu, Mô hình, Kỹ thuật) 20 dòng; điển hình dòng 15: cân về 50/50 phá hiệu chỉnh xác suất, nên giữ 5–10%."
+   "viz": "Ba bảng #/Lỗi/Sửa (Dữ liệu, Mô hình, Kỹ thuật) 20 dòng; điển hình dòng 15: cân về 50/50 phá hiệu chỉnh xác suất, nên giữ 5–10%.",
+   "example": {
+    "kind": "num",
+    "lead": "Trên cùng 100.000 giao dịch, đặt một mô hình rỗng cạnh một mô hình dùng được rồi đọc hai chỉ số: accuracy xếp cái rỗng lên trên, recall xếp ngược lại.",
+    "code": "100.000 giao dịch, 0,2% gian lận  →  200 ca gian lận, 99.800 giao dịch sạch\n\nA. luôn đoán sạch — một dòng, không học gì:\n   accuracy = 99.800 / 100.000 = 99,80%      recall = 0 / 200 = 0%\n   PR-AUC   = tỉ lệ nền        =  0,002\n\nB. mô hình thật, ngưỡng chọn theo chi phí trên validation:\n   bắt 150/200 ca, báo nhầm 600 giao dịch sạch\n   accuracy = (99.800 − 600 + 150) / 100.000 = 99,35%\n   recall   = 150 / 200 = 75%      precision = 150 / 750 = 20%",
+    "out": "A hơn B 0,45 điểm % accuracy (99,80 so với 99,35) mà bắt được 0 ca gian lận\nB bắt 150/200 ca với precision 20% — accuracy không hề nói ra điều đó\nlấy accuracy làm chỉ số chính là chọn A, và giá của lỗi số 8 đúng bằng 150 ca"
+   },
+   "check": {
+    "q": "Bạn chia ngẫu nhiên dữ liệu giao dịch và được PR-AUC 0,92 trong khi bảng tuần trước là 0,41 — việc đầu tiên bạn làm là gì?",
+    "a": "Đi tìm chỗ rò rỉ trước khi ghi con số đó vào đâu cả. Chia ngẫu nhiên dữ liệu có thời gian cho mô hình học từ tháng sau rồi chấm điểm tháng trước, đúng lỗi số 1; và feature cửa sổ quên shift(1) cũng cho kiểu nhảy vọt này, lỗi số 4. Chia lại theo thời gian rồi đo lại."
+   }
   },
   "r-glossary": {
    "tldr": "Bảng tra thuật ngữ sắp theo nhóm (nền tảng → feature → huấn luyện → đánh giá → triển khai) để khái niệm liên quan nằm cạnh nhau; là chỗ tra lại một dòng, không thay cho định nghĩa tại chỗ ở s-intro.",

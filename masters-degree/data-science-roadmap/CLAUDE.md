@@ -281,7 +281,7 @@ nào để mở trình duyệt kiểm lại JS.
 tên class/token bằng chữ trần (`wb-steps`, không phải `` `wb-steps` ``). Muốn dùng backtick
 thì đưa chú thích ra ngoài template, thành comment JS phía trên hàm.
 
-**Chỉ nhắc, người quyết định — 16 cổng** (`G-FWD` có mặt ở cả hai bảng: chặn ở mức tiêu chí
+**Chỉ nhắc, người quyết định — 17 cổng** (`G-FWD` có mặt ở cả hai bảng: chặn ở mức tiêu chí
 đạt, chỉ nhắc ở mức thân bài):
 
 | cổng | nhắc điều gì |
@@ -289,6 +289,7 @@ thì đưa chú thích ra ngoài template, thành comment JS phía trên hàm.
 | `G-TOC-STALE` | `TOC.md` còn số dòng cũ (khi commit thì thành lỗi chặn) |
 | `G-ROADMAP` | `roadmap.html` không còn khớp bản sinh lại từ nguồn (khi commit thì thành lỗi chặn) |
 | `G-ROADMAP-SUM` | bài đã đổi nội dung **sau khi** bản tóm tắt của nó được viết, hoặc bài chưa có tóm tắt |
+| `G-ROADMAP-4` | bước core trên `roadmap.html` thiếu một trong **bốn vật** — xem ngay dưới bảng |
 | `G-LAYER` | mục tự khai là nhánh phụ, hoặc bài dài quá 200 dòng |
 | `G-DUMP` | đoạn văn đọc lại một bảng số thay vì nói ý |
 | `G-ABS` | một ngưỡng `%` được viết như quy luật, không gắn nhãn "điểm khởi đầu" — xem ngay dưới bảng |
@@ -342,7 +343,7 @@ sai vì…" đang đúng, nhưng nó phụ thuộc vào **thứ tự lựa chọ
 đáp án cho 453 câu (chống việc "cứ chọn B" trúng 40%) làm **2 trong 11** câu loại này thành
 sai thật. Viết đúng là gọi lựa chọn bằng nội dung — `Phương án "…" sai ở chỗ…`.
 
-**Hai cổng `G-ROADMAP*` canh trang thứ hai** (`roadmap.html`). Trang đó được **sinh** từ
+**Ba cổng `G-ROADMAP*` canh trang thứ hai** (`roadmap.html`). Trang đó được **sinh** từ
 đúng nguồn này — và bộ sinh còn trích thẳng CSS/JS của trang chính — nên phần cấu trúc tự
 đúng; `G-ROADMAP` chỉ kiểm file trên đĩa còn bằng bản sinh lại không. Phần **không** sinh
 được là 84 bản tóm tắt trong `tools/roadmap-summaries.json`. Máy không đọc được "tóm tắt này
@@ -351,6 +352,24 @@ tay nội dung, đóng dấu bằng `node tools/build-roadmap.mjs --stamp`. Cổ
 tóm tắt của đúng những bài đó**, sửa nếu lệch, rồi mới đóng dấu lại. Đóng dấu mà không đọc
 thì cổng này thành con dấu cao su. (Đã bắt được một ca thật: tóm tắt `s-plan8w` còn ghi
 "deep learning ở tuần 5" sau khi trang đổi sang tuần 6.)
+
+**`G-ROADMAP-4` canh một HỢP ĐỒNG, không canh một trường thiếu.** Trang học nhanh phải
+**tự chứa với người đọc**: đọc hết nó là học được, không cần mở trang đầy đủ. Điều đó đòi
+mỗi bước của mạch chính có đúng **bốn vật** — mental model một câu (`tldr`), một hình
+(`viz` hoặc khối `data-viz` thật), **một ví dụ chạy được / có số** (`example`), **một
+self-check có đáp án** (`check`). Thiếu hai cái sau thì trang chỉ tạo *nhận biết*: đọc
+xong không có cách nào biết mình hiểu chưa — và lúc đó cách gọi trung thực là *visual
+syllabus*, không phải khoá học.
+
+Cổng này tồn tại vì hợp đồng đó **đã nằm trong `HANDOFF.md` suốt nhiều phiên mà không có
+gì canh**, tức nó chỉ sống trong đầu người đọc handoff (`CLAUDE.md` gốc repo, luật 1: cổng
+phải nằm trong repo). Nó chỉ **nhắc** và chỉ đếm bước `core`: bước `good`/`skim` mặc định
+bị ẩn nên không cần đủ bốn vật. `example` và `check` là **dữ liệu** trong
+`roadmap-summaries.json` — không sinh được từ trang chính, vì ví dụ ở trang chính dài cả
+trăm dòng còn ở đây phải gõ lại được trong một phút. Hai trần đo được, đừng nới bừa: **mỗi
+dòng `code` ≤ 76 ký tự** (ngăn phải rộng 44% cửa sổ ≈ 634px ở 1440, vừa ~78 ký tự mono —
+dài hơn là cuộn ngang để đọc một dòng code), và **`out` phải có ít nhất một chữ số** (ví
+dụ không có kết quả thì không đối chiếu được, tức không phải ví dụ).
 
 **`G-ABS` canh một hình dạng câu, không canh một danh sách từ.** Lỗi hay gặp nhất trong bản
 audit 2026-08-07 không phải "nói sai" mà **"nói chắc quá"**: một con số đúng trong một bối

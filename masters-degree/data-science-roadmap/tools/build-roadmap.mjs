@@ -186,6 +186,13 @@ const DATA = P.TREE.map(ph => ({
       points: s?.points || [],
       viz: s?.viz || '',
       vizIds: VIZOF[k.id] || [],
+      /* Vật thứ ba và thứ tư của mỗi bước core (hợp đồng "Roadmap độc lập"): một ví dụ
+         chạy được / có số, và một self-check có đáp án. Không sinh được từ trang chính —
+         trang chính có ví dụ NHƯNG dài cả trăm dòng, còn ở đây phải gõ lại được trong
+         một phút. Nên chúng là DỮ LIỆU trong roadmap-summaries.json, và cổng
+         G-ROADMAP-4 canh việc mọi bước core có đủ bốn vật. */
+      example: s?.example || null,
+      check: s?.check || null,
       /* Chỉ SỐ CÂU, không nhúng câu hỏi. Nội dung ở data/quiz.json và trang này
          fetch đúng file đó khi người đọc mở popup — cùng nguồn với trang chính,
          và roadmap.html không phình lên 360 KB chữ mà 99% lượt xem không mở tới. */
@@ -226,6 +233,55 @@ const levelsHtml = DATA.map((ph, pi) => {
   </section>`;
 }).join('\n');
 
+/* ---- capstone: một vòng đủ, làm sau mạch chính ---------------------------------
+ * Gạch cuối của hợp đồng "Roadmap độc lập": đọc hết mạch chính thì phải TỰ LÀM được
+ * một vòng, không phải mở trang dạy đầy đủ. Tám bước dưới đây đúng thứ tự đã chốt ở
+ * audit n9. Trường use không chỉ để trang trí: builder KIỂM nó phải là id của một
+ * bước core thật, nên đổi tên hoặc xoá một bài là build vỡ ngay chứ không âm thầm
+ * trỏ hụt.
+ */
+const CAPSTONE = [
+  { t: 'Đóng khung bài toán', use: ['d-framing', 's-pipeline'],
+    act: 'Viết ra ba câu: một hàng dữ liệu là gì, nhãn được tạo ra thế nào và trễ bao lâu, quyết định nào sẽ đổi khi có mô hình.',
+    done: 'Ba câu đó viết ra được mà không cần mở dữ liệu xem lại.' },
+  { t: 'Chia tập mà không rò rỉ', use: ['d-leak', 'd-split'],
+    act: 'Chia theo thời gian nếu dữ liệu có thứ tự, theo nhóm nếu một thẻ xuất hiện nhiều lần — rồi tự tìm cách phá chính cách chia của mình.',
+    done: 'Không card_id nào nằm ở cả train và test, và mốc thời gian của test đứng sau toàn bộ train.' },
+  { t: 'Baseline trước mô hình', use: ['ml-linear'],
+    act: 'Chạy hai mốc: luật thủ công đang dùng, và hồi quy logistic trên bộ cột thô.',
+    done: 'Có hai con số để so, và bạn đọc được bài toán phi tuyến tới mức nào từ khoảng cách giữa chúng.' },
+  { t: 'Chốt chỉ số trước khi tune', use: ['ml-metrics'],
+    act: 'Chọn một chỉ số chính khớp với mức lệch nhãn của bạn, và ghi ra vì sao không chọn accuracy.',
+    done: 'Chỉ số chính được chốt TRƯỚC khi bạn xem kết quả đầu tiên — chọn sau là chọn theo cái đang thắng.' },
+  { t: 'Feature nằm trong một Pipeline', use: ['f-pipeline', 'f-cyclic', 'f-time'],
+    act: 'Đưa mọi bước học tham số vào Pipeline; mã hoá giờ bằng sin/cos; feature theo thời gian phải shift trước khi gộp.',
+    done: 'Chạy lại từ dữ liệu thô ra dự đoán bằng một lệnh, và không bước nào nhìn thấy tương lai.' },
+  { t: 'Đánh giá kèm độ bất định và chi phí', use: ['pr-eval', 'pr-cost'],
+    act: 'Bootstrap theo cụm để ra khoảng tin cậy, rồi quy chênh lệch ra tiền ở ngưỡng vận hành.',
+    done: 'Câu kết luận có khoảng tin cậy đi kèm, và có một con số tiền mà người không làm kỹ thuật hiểu được.' },
+  { t: 'Đóng gói chạy lại được', use: ['pr-arch', 'pr-code', 'pr-serve'],
+    act: 'Khoá phiên bản thư viện, tách cấu hình khỏi code, dựng một endpoint nhận một giao dịch và trả xác suất.',
+    done: 'Người khác lấy repo về, chạy đúng lệnh trong README, và ra cùng con số bạn báo cáo.' },
+  { t: 'Mô tả cách theo dõi', use: ['pr-monitor'],
+    act: 'Viết ra: đo trôi dữ liệu bằng gì, ngưỡng nào thì báo, và ai làm gì khi báo.',
+    done: 'Một trang mô tả monitor mà người vận hành đọc xong biết phải làm gì — chưa cần dựng hệ thống thật.' },
+];
+
+const CORE_IDS = new Set(CORE.map(l => l.id));
+const capstoneHtml = CAPSTONE.map((c, i) => {
+  const bad = c.use.filter(u => !CORE_IDS.has(u));
+  if (bad.length) throw new Error(`capstone bước ${i + 1} trỏ tới id không phải bước core: ${bad.join(', ')}`);
+  return `<li class="rm-cap__it">
+      <span class="rm-cap__no">${i + 1}</span>
+      <div class="rm-cap__x">
+        <p class="rm-cap__t">${esc(c.t)}</p>
+        <p class="rm-cap__do">${esc(c.act)}</p>
+        <p class="rm-cap__done"><span class="rm-cap__k">Đạt khi</span>${esc(c.done)}</p>
+        <p class="rm-cap__use">${c.use.map(u => esc(clean(P.byId[u].t))).join(' · ')}</p>
+      </div>
+    </li>`;
+}).join('\n');
+
 const html = `<!doctype html>
 <!-- class="wb-scrollbars": thanh cuộn theo chủ đề cho CẢ TRANG (kit §27) — cùng
      component, cùng chỗ đặt với data-science-roadmap.html. Thiếu nó thì trang này
@@ -246,9 +302,12 @@ ${STYLE()}
 <body>
 
 <!-- Navbar CHÉP NGUYÊN từ data-science-roadmap.html (cùng class wb-navbar/ds-logo/ds-theme/
-     ds-brand) — không tự vẽ lại, để hai trang luôn cùng một hình khi trang kia đổi. -->
+     ds-brand) — không tự vẽ lại, để hai trang luôn cùng một hình khi trang kia đổi.
+     Nhưng HAI href thì KHÁC: logo và brand trước đây trỏ sang trang dạy đầy đủ. Hợp đồng
+     "Roadmap độc lập" bỏ mọi đường dẫn lộ ra cho người đọc, nên cả hai trỏ về chính
+     trang này (roadmap.html) — vẫn là "về đầu trang", không còn là "sang trang kia". -->
 <header class="wb-navbar wb-navbar--sticky wb-navbar--glass">
-  <a class="wb-btn wb-btn--ghost wb-btn--icon ds-logobtn" href="data-science-roadmap.html" aria-label="Về trang lộ trình đầy đủ" title="Về trang lộ trình đầy đủ">
+  <a class="wb-btn wb-btn--ghost wb-btn--icon ds-logobtn" href="roadmap.html" aria-label="Back to the top of the roadmap" title="Back to the top">
     <span class="ds-logo" aria-hidden="true">
       <svg viewBox="0 0 24 24" width="24" height="24" role="img" focusable="false">
         <rect class="ds-logo__sq" x="1.5" y="1.5" width="21" height="21" rx="6.5"/>
@@ -257,7 +316,7 @@ ${STYLE()}
       </svg>
     </span>
   </a>
-  <a class="wb-navbar__brand ds-brand" href="data-science-roadmap.html#/home">Data Science</a>
+  <a class="wb-navbar__brand ds-brand" href="roadmap.html">Data Science</a>
   <span class="ds-brand__sub">Roadmap</span>
   <div class="wb-navbar__spacer"></div>
   <div class="wb-navbar__actions">
@@ -288,6 +347,16 @@ ${STYLE()}
   <div class="rm-path">
 ${levelsHtml}
   </div>
+  <!-- Capstone NÓI TIẾNG VIỆT: nó là nội dung dạy, không phải khung trang. Ranh giới
+       của trang này là thanh trên + hero + chân trang mới là vùng tiếng Anh (CLAUDE.md
+       §11) — mọi thứ trong mạch học, kể cả tên chặng và tóm tắt bước, đều tiếng Việt. -->
+  <section class="rm-cap" id="capstone">
+    <h2 class="rm-cap__h">Capstone — một vòng đủ, tự làm sau mạch chính</h2>
+    <p class="rm-cap__sub">Tám bước dưới đây là bài kiểm thật của cả lộ trình: làm hết ${CORE_N} bước ở trên rồi mà không tự đi được tám bước này thì phần chưa vững nằm ở đúng chỗ bạn tắc. Mỗi bước có một tiêu chí đạt kiểm được, không phải "đã đọc".</p>
+    <ol class="rm-cap__list">
+${capstoneHtml}
+    </ol>
+  </section>
   <footer class="rm-foot"><span data-o="nfoot">${CORE_N}</span> core steps · 11 phases, condensed.</footer>
 </main>
 
@@ -429,7 +498,16 @@ function STYLE() { return String.raw`
        cùng sàn/trần với ngăn phụ của trang chính (token ⑪) — hai ngăn trượt-từ-phải
        trong cùng một bộ trang thì phải mở ra bằng nhau. Trước đây là min(50vw,760px)
        cố định: rộng hơn ngăn phụ trang chính và không kéo được. */
-    --rm-drawer-w:clamp(340px, calc(33.333 * var(--ds-vw)), 720px);
+    /* Mặc định 47% cửa sổ, không còn 1/3. Ngăn này giờ có ví dụ code là thứ nặng nhất
+       trong nó, nên bề rộng phải đo theo DÒNG CODE, không theo chữ.
+       Chuỗi số đo thật ở cửa sổ 1440px, mono 12,5px = 7,53px/ký tự, và khối code mất
+       89px cho khung ngăn + đệm:
+         1/3  → ngăn 479px → 52 ký tự  (mọi snippet cuộn ngang, kể cả dòng 70 ký tự)
+         44%  → ngăn 634px → 72 ký tự  (vẫn thiếu: dòng 73 ký tự đã cuộn)
+         47%  → ngăn 677px → 78 ký tự  ✓ trần của bộ kiểm ví dụ là 76 ký tự/dòng
+       Cửa sổ hẹp hơn thì code vẫn cuộn trong khối của nó — đó là lý do khối có
+       overflow-x, và tay kéo vẫn cho người đọc tự nới. Trần 720px giữ nguyên. */
+    --rm-drawer-w:clamp(340px, calc(47 * var(--ds-vw)), 720px);
     /* Vàng, không phải cam: kit không có token "yellow" riêng (chỉ có --wb-warning là cam
        #d97706/#f59e0b) nên khai literal cho đúng cảm giác "ngôi sao vàng". */
     --rm-star:#f5c518;
@@ -543,6 +621,25 @@ function STYLE() { return String.raw`
   .rm-node.is-done .rm-node__dot::after{content:"✓";position:absolute;font-size:15px;color:var(--wb-info-text)}
   .rm-node.is-done .rm-node__dot .rm-node__i,.rm-node.is-done .rm-node__dot .rm-node__star{visibility:hidden}
   .rm-node.is-done .rm-node__t{color:var(--wb-fg-subtle)}
+  /* ---- capstone ----------------------------------------------------------------
+     Cột hẹp hơn đường đi (đường đi là hai bên, cái này là văn xuôi đọc thẳng), và
+     KHÔNG dùng max-width cứng cho chữ: bám --wb-measure như phần còn lại của kit. */
+  .rm-cap{margin:64px auto 0;max-width:var(--wb-measure);padding:0 20px}
+  .rm-cap__h{font-size:22px;font-weight:800;line-height:1.3;margin:0 0 10px;letter-spacing:-.01em}
+  .rm-cap__sub{font-size:14.5px;line-height:1.65;color:var(--wb-fg-muted);margin:0 0 26px}
+  .rm-cap__list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px}
+  .rm-cap__it{display:flex;gap:14px;padding:16px 18px;border-radius:12px;
+    background:var(--wb-surface);border:var(--wb-bw) solid var(--wb-border)}
+  .rm-cap__no{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+    font-size:12.5px;font-weight:800;background:var(--wb-fg);color:var(--wb-canvas)}
+  .rm-cap__x{min-width:0}
+  .rm-cap__t{font-size:15px;font-weight:750;line-height:1.4;margin:2px 0 7px}
+  .rm-cap__do{font-size:14px;line-height:1.6;margin:0 0 9px}
+  .rm-cap__done{font-size:13.5px;line-height:1.6;margin:0;color:var(--wb-fg-muted)}
+  .rm-cap__k{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;
+    color:var(--wb-fg-subtle);border:var(--wb-bw) solid var(--wb-border-strong);border-radius:5px;
+    padding:1px 6px;margin-right:8px;white-space:nowrap}
+  .rm-cap__use{font-size:12px;line-height:1.5;color:var(--wb-fg-subtle);margin:9px 0 0}
   .rm-foot{text-align:center;margin-top:50px;font-size:12px;color:var(--wb-fg-subtle);line-height:1.6}
   /* ---- drawer 1/3 cửa sổ, kéo được ---- */
   /* Chỉ dành cho trình đọc màn hình — vùng thông báo của announce(). */
@@ -601,9 +698,29 @@ ${gripCss().split('\n').map(l => '  ' + l).join('\n')}
   .rm-acc__k{flex:none;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--wb-fg-subtle);
     border:var(--wb-bw) solid var(--wb-border-strong);border-radius:5px;padding:1px 6px;white-space:nowrap}
   .rm-acc code,.rm-po code,.rm-tldr code{font-family:var(--wb-font-mono);font-size:.9em;background:var(--wb-surface-2);padding:1px 5px;border-radius:4px}
-  .rm-full{display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:11px 18px;border-radius:10px;
-    background:var(--wb-fg);color:var(--wb-canvas);text-decoration:none;font-weight:700;font-size:14px}
-  .rm-full:hover{opacity:.9}
+  /* ---- ví dụ + self-check + nút đã xong (vật thứ 3 và 4 của mỗi bước core) ---- */
+  .rm-exlead{font-size:14px;line-height:1.55;margin:0 0 9px;color:var(--wb-fg)}
+  .rm-ex{margin:0;padding:12px 14px;border-radius:10px;overflow-x:auto;
+    background:var(--wb-surface-2);border:var(--wb-bw) solid var(--wb-border)}
+  .rm-ex code{font-family:var(--wb-font-mono);font-size:12.5px;line-height:1.65;
+    white-space:pre;background:none;padding:0;color:var(--wb-fg)}
+  /* Khối kết quả phải TRÔNG khác khối lệnh, nếu không người đọc gõ luôn cả kết quả.
+     Viền trái đặc là dấu hiệu đủ rẻ; không dùng màu để không phụ thuộc chế độ sáng/tối. */
+  .rm-ex--out{margin-top:8px;border-left-width:3px;border-left-color:var(--wb-fg-subtle)}
+  .rm-ex--out code{color:var(--wb-fg-muted)}
+  .rm-ck__q{font-size:14.5px;line-height:1.55;margin:0 0 10px;color:var(--wb-fg)}
+  .rm-ck__btn{font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;padding:6px 12px;border-radius:8px;
+    background:none;color:var(--wb-fg);border:var(--wb-bw) solid var(--wb-border-strong)}
+  .rm-ck__btn:hover{background:var(--wb-surface-2)}
+  .rm-ck__a{font-size:14px;line-height:1.6;margin:10px 0 0;padding:11px 13px;border-radius:10px;
+    background:var(--wb-surface-2);border:var(--wb-bw) solid var(--wb-border);color:var(--wb-fg)}
+  .rm-done{display:inline-flex;align-items:center;gap:9px;margin-top:14px;padding:11px 18px;border-radius:10px;
+    font:inherit;font-weight:700;font-size:14px;cursor:pointer;
+    background:none;color:var(--wb-fg);border:var(--wb-bw) solid var(--wb-border-strong)}
+  .rm-done:hover{background:var(--wb-surface-2)}
+  .rm-done__tick{opacity:.35}
+  .rm-done[aria-pressed="true"]{background:var(--wb-fg);color:var(--wb-canvas);border-color:var(--wb-fg)}
+  .rm-done[aria-pressed="true"] .rm-done__tick{opacity:1}
   /* ---- mobile: dồn node về một bên, drawer full ---- */
   @media (max-width:680px){
     .rm-path::before{left:18px}
@@ -685,12 +802,19 @@ $('#themeBtn').addEventListener('click',()=>{const d=document.documentElement.cl
   try{localStorage.setItem('ds-theme',d?'dark':'light')}catch(e){} syncTheme();});
 syncTheme();
 
-/* đọc tiến độ trang chính (cùng origin, cùng khoá 'ds-roadmap-progress-v3') → chấm ✓ node
-   đã ĐẠT mức cao nhất, giống nhãn is-done ở cây trang chính (lvl >= maxLevel). */
-try{const prog=JSON.parse(localStorage.getItem('ds-roadmap-progress-v3')||'{}');
-  document.querySelectorAll('.rm-node').forEach(n=>{const l=byId[n.dataset.id];
-    if(!l)return; const lvl=prog[l.id]||0; if(lvl>0&&lvl>=l.max)n.classList.add('is-done');});
-}catch(e){}
+/* Tiến độ của CHÍNH trang này. Khối này TRƯỚC ĐÂY đọc khoá 'ds-roadmap-progress-v3'
+   của trang dạy đầy đủ, nên người đọc chỉ thấy dấu ✓ nếu họ đã học ở trang kia — một
+   phụ thuộc lộ ra cho người đọc, và hợp đồng "Roadmap độc lập" bỏ nó.
+   Khoá MỚI chứ không dùng lại khoá cũ: hai trang đếm bằng đơn vị khác nhau (bên kia ba
+   mức đọc/thực hành/deliverable, bên này xong-hoặc-chưa), ghi chung một khoá là bên này
+   ghi đè tiến độ bên kia — mất dữ liệu thật của người học. */
+const PKEY='rm-progress-v1';
+let DONE={};try{DONE=JSON.parse(localStorage.getItem(PKEY)||'{}')}catch(e){DONE={}}
+function isDone(id){return !!DONE[id];}
+function setDone(id,v){if(v)DONE[id]=1;else delete DONE[id];
+  try{localStorage.setItem(PKEY,JSON.stringify(DONE))}catch(e){}
+  const n=document.querySelector('.rm-node[data-id="'+id+'"]');if(n)n.classList.toggle('is-done',!!v);}
+document.querySelectorAll('.rm-node').forEach(n=>{if(isDone(n.dataset.id))n.classList.add('is-done');});
 
 /* drawer */
 /* Không lớp phủ, nên KHÔNG khoá cuộn trang (chủ trang chốt 2026-08-06): một ngăn
@@ -706,6 +830,16 @@ function open(id){const l=byId[id];if(!l)return;lastFocus=document.activeElement
   $('#drPhase').textContent='Chặng '+l.ph.no+' · '+l.ph.name;
   $('#drBody').innerHTML=body(l);
   $$('[data-viz]',$('#drBody')).forEach(initViz);
+  /* Đáp án self-check gập lại — mở/đóng bằng chính nút, và nhãn nút phải đổi theo,
+     nếu không người đọc bấm lần thứ hai mà không biết nó làm gì. */
+  $$('[data-ck]',$('#drBody')).forEach(b=>b.addEventListener('click',()=>{
+    const a=b.parentNode.querySelector('.rm-ck__a'),shown=!a.hidden;
+    a.hidden=shown;b.setAttribute('aria-expanded',String(!shown));
+    b.textContent=shown?'Xem đáp án':'Ẩn đáp án';}));
+  const db=$('[data-done]',$('#drBody'));
+  if(db)db.addEventListener('click',()=>{const v=db.getAttribute('aria-pressed')!=='true';
+    setDone(l.id,v);db.setAttribute('aria-pressed',String(v));
+    $('.rm-done__t',db).textContent=v?'Đã xong bước này':'Đánh dấu đã xong';});
   drawer.hidden=false;document.documentElement.classList.add('rm-open');
   requestAnimationFrame(()=>{drawer.classList.add('is-open');});
   $('#drClose').focus();}
@@ -732,6 +866,25 @@ function body(l){
   } else if(l.viz){
     h+='<div class="rm-sec"><p class="rm-sec__h">Hình / ví dụ then chốt</p><div class="rm-viz">'+esc(l.viz)+'</div></div>';
   }
+  /* Ví dụ: kind="code" thì là snippet gõ lại được, kind="num" thì là phép tính có số
+     cho bài khái niệm. Cả hai đặt trong khối mono vì cả hai đều là thứ để ĐỐI CHIẾU
+     từng dòng, không phải để đọc như văn. Khối "ra" chỉ hiện khi có. */
+  if(l.example&&l.example.code){
+    h+='<div class="rm-sec"><p class="rm-sec__h">'+(l.example.kind==='num'?'Ví dụ có số':'Ví dụ chạy được')+'</p>'
+      +(l.example.lead?'<p class="rm-exlead">'+esc(l.example.lead)+'</p>':'')
+      +'<pre class="rm-ex"><code>'+esc(l.example.code)+'</code></pre>'
+      +(l.example.out?'<pre class="rm-ex rm-ex--out"><code>'+esc(l.example.out)+'</code></pre>':'')
+      +'</div>';
+  }
+  /* Self-check: đáp án GẤP LẠI. Đây là chỗ duy nhất trên trang dùng lối gập, và có lý
+     do — thấy đáp án trước khi tự trả lời thì self-check mất hết công dụng. Nó không
+     phải kiến thức bị giấu (thứ mà trang chính cấm gập bằng cổng G-NO-DETAILS): nó là
+     đáp án của một câu người đọc phải trả lời trước. */
+  if(l.check&&l.check.q){
+    h+='<div class="rm-sec"><p class="rm-sec__h">Tự kiểm</p><p class="rm-ck__q">'+esc(l.check.q)+'</p>'
+      +'<button type="button" class="rm-ck__btn" data-ck aria-expanded="false">Xem đáp án</button>'
+      +'<p class="rm-ck__a" hidden>'+esc(l.check.a)+'</p></div>';
+  }
   if(l.payoff)h+='<div class="rm-sec"><p class="rm-sec__h">Xong bước này</p><div class="rm-po">'
     +'<div class="rm-po__row"><span class="rm-po__k">Bạn có</span><span>'+l.payoff[0]+'</span></div>'
     +'<div class="rm-po__row"><span class="rm-po__k">Dẫn tới</span><span>'+l.payoff[1]+'</span></div></div></div>';
@@ -739,7 +892,15 @@ function body(l){
     +l.accept.map(a=>'<li><span class="rm-acc__k">'+esc(a.k)+'</span><span>'+a.v+'</span></li>').join('')+'</ul></div>';
   if(l.quizN)h+='<div class="rm-sec"><button type="button" class="wb-btn wb-btn--outline wb-btn--sm rm-quizbtn" data-quiz-open>'
     +'<span class="wb-ico wb-ico--sm" aria-hidden="true">quiz</span> Kiểm tra kiến thức · '+l.quizN+' câu</button></div>';
-  h+='<a class="rm-full" href="data-science-roadmap.html#/'+l.id+'">Mở bài đầy đủ →</a>';
+  /* Chỗ này TRƯỚC ĐÂY là link "Mở bài đầy đủ →" sang trang dạy đầy đủ. Đã bỏ theo
+     hợp đồng "Roadmap độc lập": trang phải tự chứa với người đọc, không nhắc sang
+     trang kia. Bỏ được vì bước nào cũng đã có đủ bốn vật (mental model, hình, ví dụ,
+     self-check) — bỏ trước khi có chiều sâu thì chỉ làm trang tệ đi, đó là lý do bốn
+     gạch cuối của hợp đồng phải làm cùng một lượt. Thay bằng nút đánh dấu đã xong,
+     tức tiến độ của CHÍNH trang này, không đọc ké tiến độ trang kia nữa. */
+  h+='<button type="button" class="rm-done" data-done aria-pressed="'+(isDone(l.id)?'true':'false')+'">'
+    +'<span class="rm-done__tick" aria-hidden="true">✓</span>'
+    +'<span class="rm-done__t">'+(isDone(l.id)?'Đã xong bước này':'Đánh dấu đã xong')+'</span></button>';
   return h;
 }
 function fmt(m){return m<60?m+'′':(m%60?Math.floor(m/60)+'h'+String(m%60).padStart(2,'0'):Math.floor(m/60)+'h');}
