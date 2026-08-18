@@ -1,3 +1,18 @@
+## ĐANG LÀM
+
+**Chữ navbar "Data Science" → "DS" — TẠM THỜI, chủ trang sẽ tự revert ~2026-08-25.**
+Đổi 2026-08-18 theo yêu cầu trực tiếp của chủ trang ("tạm thời thôi, 1 tuần sau tôi sẽ
+revert lại"). Đã sửa ở **hai chỗ**, cả hai đều commit:
+- `data-science-roadmap.html` dòng ~1545 (`<a class="wb-navbar__brand ds-brand" href="#/home">`)
+- `tools/build-roadmap.mjs` dòng ~319 (template sinh `roadmap.html`) — **rồi chạy lại**
+  `node tools/build-roadmap.mjs` để `roadmap.html` khớp; đừng sửa tay file sinh đó.
+
+Việc revert: đổi `DS` lại thành `Data Science` ở cả hai chỗ trên, chạy lại
+`node tools/build-roadmap.mjs`, commit. Agent phiên sau: **đừng tự ý revert trước khi chủ
+trang xác nhận** — mốc ~1 tuần chỉ là ước lượng của chủ trang, không phải deadline cứng.
+
+---
+
 # Handoff — data-science-roadmap.html
 
 File là single-page app (~16,7k dòng) dựng trên web-builder CSS. Nội dung bài nằm trong các
