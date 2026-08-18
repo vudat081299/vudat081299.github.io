@@ -316,7 +316,7 @@ ${STYLE()}
       </svg>
     </span>
   </a>
-  <a class="wb-navbar__brand ds-brand" href="roadmap.html">Data Science</a>
+  <a class="wb-navbar__brand ds-brand" href="roadmap.html">DS</a>
   <span class="ds-brand__sub">Roadmap</span>
   <div class="wb-navbar__spacer"></div>
   <div class="wb-navbar__actions">
