@@ -179,7 +179,10 @@ const DATA = P.TREE.map(ph => ({
     return {
       id: k.id, t: clean(k.t), star: star(k.t), pri: k.p, mins: P.mins(k),
       max: k.d > 0 ? 3 : (k.x > 0 ? 2 : 1),
-      fast: P.FAST.has(k.id), week: P.weekOf[k.id] || null,
+      /* `day` đi cùng `fast`: ví dụ của s-plan14 đặt 14 tổng giờ theo ngày cạnh ngân
+         sách 3 h/ngày, và nếu trang này không biết bài nào thuộc ngày nào thì 14 con số
+         đó là số NÓI RA chứ không phải số người đọc cộng lại được ngay tại đây. */
+      fast: P.FAST.has(k.id), day: P.dayOf[k.id] || null, week: P.weekOf[k.id] || null,
       payoff: P.PAYOFF[k.id] ? P.PAYOFF[k.id].map(strip) : null,
       accept: (P.ACCEPT[k.id] || []).map(a => ({ k: a.k, v: inlineOk(a.v) })),
       tldr: s?.tldr || (P.PAYOFF[k.id] ? strip(P.PAYOFF[k.id][0]) : ''),
@@ -851,7 +854,7 @@ function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'
 function body(l){
   const chips=[]; chips.push('<span class="rm-chip rm-chip--'+l.pri+'">'+PRINAME[l.pri]+'</span>');
   chips.push('<span class="rm-chip" title="Thời lượng học BÀI ĐẦY ĐỦ (đọc + thực hành + deliverable), không phải thời gian đọc bản rút gọn này">'+fmt(l.mins)+' · bài đầy đủ</span>');
-  if(l.fast)chips.push('<span class="rm-chip rm-chip--fast">Fast track 14 ngày</span>');
+  if(l.fast)chips.push('<span class="rm-chip rm-chip--fast">Fast track 14 ngày'+(l.day?' · ngày '+l.day:'')+'</span>');
   if(l.week)chips.push('<span class="rm-chip">Tuần '+l.week+'</span>');
   /* KHÔNG lặp lại tên bài ở đây — nó đã là wb-drawer__title ở đầu ngăn. */
   let h='<div class="rm-chips">'+chips.join('')+'</div>';
