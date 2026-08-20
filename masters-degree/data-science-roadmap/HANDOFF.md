@@ -33,6 +33,117 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 
 ---
 
+## Phiên 2026-08-20 (aa) — ba món "nợ nhỏ đã ĐO" về 0 · hai cổng mới cho quiz · và một món trong đó đo bằng THƯỚC SAI
+
+Chủ trang: *"còn gì làm nốt đi… rà soát toàn bộ handoff xem còn gì không làm nốt đi"*, kèm
+trần **dưới 5 subagent** và *"cung cấp vừa đủ context, không được thừa"*. Đã rà cả file, kể
+cả mục `Còn nợ của riêng phiên này` của **mọi** phiên (lần trước tôi tin bản rà của (n8) chứ
+không tự soi). Kết quả: các phiên ≤ (n8) đã đóng thật; ngoài mục `## CHƯA LÀM` chỉ còn **một**
+món đo được chưa ai đóng — "19 câu lệch ≥2×" của phiên (w).
+
+### 1. Món nợ được đo bằng THƯỚC SAI — phần đáng đọc nhất của mục này
+
+Mục `Nợ nhỏ đã ĐO` ghi *"124 câu quiz có thế hoà"*. Con số đó **sai**, và sai theo một kiểu
+đã cắn dự án này năm lần: nó đếm độ dài **kể cả thẻ HTML**, còn `G-QUIZ-GUESS` — đúng cái
+cổng mà thế hoà làm nhiễu — đếm **sau khi bỏ thẻ**. Hai thước cho hai danh sách khác nhau:
+
+```
+đếm cả thẻ   124 câu
+bỏ thẻ        77 câu      trùng nhau chỉ 66
+```
+
+Tức **58 câu trong danh sách cũ không ảnh hưởng gì tới cổng**, còn **11 câu có ảnh hưởng thì
+chưa từng nằm trong danh sách**. Tôi đã phóng 4 agent theo danh sách sai rồi mới phát hiện,
+và phải nhắn lại giữa lượt cho cả bốn (kèm lệnh xoá những file thuộc câu không hỏng — sửa một
+câu không hỏng là thêm rủi ro không đổi lấy gì).
+
+**Luật rút ra, tổng quát hơn chuyện quiz:** một món nợ phải được đo bằng **đúng thước của cái
+cổng nó làm hỏng**, không phải bằng thước dễ viết nhất. Và con số trong `HANDOFF.md` cũng cần
+được đo lại chứ không được tin — nó là số của phiên viết ra nó, không phải chân lý.
+
+### 2. Ba món của `Nợ nhỏ đã ĐO` — cả ba đóng, nhưng món thứ ba đóng KHÁC cách nó được viết
+
+| món | trước | sau |
+|---|---|---|
+| thế hoà (chênh đáp án <3 ký tự, bỏ thẻ) | 77 | **0** |
+| lệch ≥1,5× (bỏ thẻ) — nợ mở từ phiên (w) | 5 | **0** |
+| `s-plan14` thiếu `day` trong `DATA` | 14 số NÓI RA | **dựng lại được tại chỗ** |
+| escape `quiz.json` lẫn `&gt;` với `&amp;gt;` | — | **triệu chứng KHÔNG tồn tại** — xem dưới |
+
+Phân phối hạng sau lượt sửa: **24,3 · 25,2 · 24,7 · 25,8%**, chiến lược đoán theo độ dài tốt
+nhất **25,8%** (ngẫu nhiên 25%). Và "19 câu lệch ≥2×" của phiên (w) đo lại ra **0** — đóng.
+
+`s-plan14`: `P.dayOf` đã có sẵn trong `read-html.mjs`, chỉ thiếu một dòng đưa vào `DATA` và
+ghép vào chip fast track (`Fast track 14 ngày · ngày N`). Kiểm bằng cách cộng `mins` theo
+`day` từ `DATA` trong `roadmap.html` đã sinh: ra **đúng 14 con số** của ví dụ (N1 5h50 …
+N14 5h45) và **đúng tổng 4.520 phút = 75,3 giờ**.
+
+**Món escape: triệu chứng như mô tả không có thật, và tôi cố ý KHÔNG chuẩn hoá.** Đo `quiz.json`:
+`&amp;gt;` xuất hiện **0 lần** — cặp `&gt;` / `&amp;gt;` mà (x) ghi lại không tồn tại. Bất nhất
+thật là **trần vs escape** (15 dấu `>` trần, 13 dấu `<` trần, 56 dấu `&` trần cạnh 20 `&gt;`,
+9 `&lt;`), nhưng **cả hai dạng render y hệt nhau**, và số chỗ **thật sự hỏng là 0**. Nên chuẩn
+hoá cả file là sửa ~84 chỗ để đổi lấy **không gì người đọc thấy**, mà mỗi chỗ chạm là một cơ
+hội phá thứ đang đúng. Thay vào đó bịt lớp lỗi thật bằng một cổng — mục 3.
+
+### 3. Hai cổng mới
+
+- **`G-QUIZ-ESC` (CHẶN)** — cả ba trường chữ của một câu vào trang bằng `innerHTML`, nên một
+  dấu `<` trần **đứng ngay trước chữ cái** làm trình duyệt mở một thẻ không tồn tại và **ăn
+  sạch chữ tới dấu `>` kế tiếp**: không lỗi, không cảnh báo, chỉ mất chữ. Ba hình dạng bị
+  chặn: `<` trần trước chữ cái · `&` trần thành entity khác · thẻ hở/đóng lệch. Cổng **không**
+  đòi "luôn viết `&lt;`/`&gt;`/`&amp;`" — bắt rộng thế thì nó nổ vào mọi câu tương lai viết
+  `recall > 0,8`, tức thành tiếng ồn.
+- **`G-QUIZ-TIE` (nhắc)** — thế hoà, đo **sau khi bỏ thẻ**, cùng thước `G-QUIZ-GUESS` dùng.
+
+Cổng `G-QUIZ-TIE` **trượt ca "im" cho tới khi nợ về 0** — đúng như thiết kế, nên nó buộc phải
+commit SAU lượt sửa. Đó là một tính chất tốt, không phải trở ngại: một cổng nhắc mà xanh ngay
+lúc thêm vào thì không chứng minh được nó đang canh gì.
+
+### 4. Lần thứ NĂM luật của tôi khớp KÝ TỰ thay vì khớp Ý
+
+Bản kiểm của tôi có luật *"distractor nào sửa thì phải nhích ≥3 ký tự"* — một **proxy** cho
+"đã thêm hoặc bỏ một lý lẽ". Nó từ chối oan 2 câu mà lựa chọn là **thuật ngữ trần**:
+`Optuna` → `LightGBM` chỉ nhích 2 ký tự nhưng đổi hẳn lý lẽ sai (importance toàn tập vs đóng
+góp từng dòng), `RMSE` → `R²` giữ đúng vai "metric hồi quy" mà **ngắn đi** 2. Một tên công cụ
+6 ký tự không có mệnh đề nào để mang lý lẽ. Sửa: miễn luật khi lựa chọn gốc ≤20 ký tự và
+không có dấu câu. Cùng hình dạng với bốn ca của phiên (z) — **đây là lớp lỗi hay tái phát nhất
+của tôi trên dự án này.**
+
+Một ca bó khác đáng biết: `t-numpy#6` có đáp án `np.expm1(y)` **11 ký tự, hạng 3**, nên
+distractor đang hoà (`np.exp(y)`, 9) **buộc phải xuống ≤8** — nới lên là đổi hạng. Đã rút
+thành `np.exp`. Với một lựa chọn là mẩu code 9 ký tự thì không có lý lẽ nào để bỏ; muốn giữ
+luật tuyệt đối thì phải đổi cả đáp án, và đó là việc khác.
+
+### 5. Một rủi ro do agent tạo ra — thư mục làm việc DÙNG CHUNG
+
+Một lô chạy `rm -rf fix/` trên **cả thư mục dùng chung** khi đổi thước đo, không chỉ trên phần
+của nó. Một lô khác báo 15 file của mình *"biến mất giữa lượt"* rồi tự ghi lại. Cuối cùng
+không mất gì (đếm ra đúng **82 = 77 + 5**), nhưng chỉ vì hai lô tình cờ ghi lại sau. **Bài
+học: brief cho agent phải nói thẳng "chỉ xoá file MÌNH ghi, không bao giờ xoá cả thư mục"** —
+đây là lần thứ hai một agent đụng vào file dùng chung của phiên khác (lần đầu: phiên (x), ghi
+đè `scratchpad/extract.mjs`). Và **đếm, đừng tin báo cáo**: tôi đối chiếu từng câu trong bốn
+lô với file trên đĩa trước khi nạp.
+
+### 6. Cố ý KHÔNG làm
+
+- **Không chuẩn hoá escape trong `quiz.json`** — lý do đầy đủ ở mục 2. Đã đưa vào bảng
+  `Đã quyết là GIỮ NGUYÊN` để đừng ai mở lại.
+- **Không revert chữ navbar `DS` → `Data Science`.** Mục `## ĐANG LÀM` nói rõ đây là việc chờ
+  **chủ trang xác nhận**, mốc ~2026-08-25 chỉ là ước lượng. Không tự làm.
+- **Không làm 8 hình P1** — điều kiện của chính nó vẫn chưa đạt: chưa ai ĐO comprehension của
+  8 hình P0, và việc đo đó cần người đọc thật.
+- **Không làm nhãn Foundation / Applied / Advanced** — backlog tự nói "cần thì chủ trang gọi
+  tên nó ra".
+- **Không đổi đáp án của `t-numpy#6`** (mục 4) — đó là sửa nội dung một câu, ngoài phạm vi một
+  lượt dọn độ dài.
+
+### 7. Còn nợ của riêng phiên này
+
+- Không có. Cả 4 lô đã nạp, `gate.mjs` CHẶN qua, `gate.test.mjs` **74 đạt / 0 trượt**,
+  `G-QUIZ-TIE` và `G-QUIZ-ESC` đều im.
+
+---
+
 ## Phiên 2026-08-17 (z) — roadmap đứng một mình (bốn gạch cuối) · nợ dư quiz về 0
 
 Chủ trang: *"còn gì chưa xong thì làm nốt luôn đi"*. Backlog `## CHƯA LÀM` còn 5 mục; hai
@@ -402,7 +513,8 @@ tiêu chí đạt, 50/50 khối tương tác. Đây đúng là bước phiên (v
   còn lại là thế hoà.
 - **19 câu còn ≥2×** (`s-intro#3` `s-plan8w#3` `t-colab#11` `d-split#8` `ml-linear#6`
   `ml-metrics#3` `pr-code#8` `pr-code#21` `pr-eval#4` `q-multi#4` `r-stack#4` `#6` `#11`
-  `#16` `r-mistakes#8` `#10` `#18` `r-glossary#8` `#12`). `G-QUIZ-GUESS` đặt ngưỡng
+  `#16` `r-mistakes#8` `#10` `#18` `r-glossary#8` `#12`) — **đóng ở phiên (aa) 2026-08-20:
+  đo lại ra 0 câu ≥2× và 0 câu ≥1,5×**. `G-QUIZ-GUESS` đặt ngưỡng
   từng-câu ở **2,5×** chứ không phải 2×, cố ý: đặt ngưỡng cho vừa nợ thì cổng thành con dấu
   cao su. 19 câu này là nợ, không phải chuẩn mới.
 
@@ -3380,25 +3492,6 @@ neighborhood) · `q-cv` (classification/detection/segmentation triptych) · `f-t
 Ba bài **chưa có trường `viz` nào** trong `roadmap-summaries.json`: `pr-mlops`, `q-nlp`,
 `r-glossary`.
 
-### Nợ nhỏ đã ĐO, chưa làm — mỗi món một lượt riêng, không làm kèm
-
-Ba món dưới đây khác "Tám hình P1" ở chỗ **không bị chặn bởi điều kiện nào** — chỉ là chưa
-tới lượt. Đều đã có số đo, nên ai làm cũng không phải đi đo lại.
-
-- **124 câu quiz có "thế hoà"**: có distractor chênh đáp án **dưới 3 ký tự**. *Không* phải lỗ
-  đoán — hoà làm chiến lược "chọn dài nhất" thành tung xúc xắc giữa hai lựa chọn, tức làm
-  *dịu* tín hiệu. Cái nó phá là **thước đo**: hạng độ dài của đáp án nhảy khi chênh 1 ký tự,
-  nên phân phối hạng mà `G-QUIZ-GUESS` in ra bị nhiễu. Hệ quả thực tế cho phiên sau: bộ áp
-  của lượt sửa quiz **chặn mọi câu ở thế hoà**, kể cả câu lô đó không nhắm tới (đã xảy ra 5
-  lần ở phiên (z), phải gỡ tay từng ca). **Soát `min |len_i − len_a| < 3` trước khi giao lô.**
-- **`s-plan14`: ví dụ trên trang học nhanh dạy số mà trang đó không tự dựng lại được.** `DATA`
-  trong `build-roadmap.mjs` mang `week` và `fast` cho từng bài nhưng **không mang `day`**, nên
-  14 tổng theo ngày là số ví dụ *nói ra* chứ không phải số người đọc cộng lại được ở đó (số
-  học vẫn kiểm được, nên đây là chưa tròn, không phải sai). Khép hẳn = thêm `day` vào `DATA`.
-- **`data/quiz.json` không nhất quán chuyện escape** — có câu viết `&gt;`, có câu `&amp;gt;`
-  (nợ từ (x)). Luật khi sửa lẻ vẫn là **chép đúng dạng của nguồn câu đó, đừng chuẩn hoá**;
-  một lượt dọn riêng cho cả file thì được, và phải kèm cổng nếu không nó lệch lại.
-
 ### Đang chờ chủ trang gọi — agent đừng tự làm
 
 - **Nhãn Foundation / Applied / Advanced.** (n5) để lại: trang đã có 3 chip ưu tiên + chip
@@ -3418,6 +3511,8 @@ tới lượt. Đều đã có số đo, nên ai làm cũng không phải đi đ
 | Cổng "từ tuyệt đối" bản rộng | **bác, có số đo** | quét `luôn`/`duy nhất`/`bảo đảm` cho 22 kết quả, gần hết là dương tính giả. `G-ABS` chỉ bắt hình dạng "ngưỡng % + mệnh lệnh" — xem (p) mục 5 |
 | 110 câu quiz còn cụm "theo bài" | **giữ, đừng sed** | (x): đếm CỤM TỪ bắt chữ chứ không bắt hình dạng — phần lớn 110 câu đó đã là câu tình huống thật. Chạy `sed` trên cụm đó là sửa thứ không hỏng |
 | 7 chỗ nhắc `data-science-roadmap.html` trong `roadmap.html` | **giữ** | (z): cả 7 nằm trong **comment** ghi nguồn build. Hợp đồng "Roadmap độc lập" nói thẳng lấy trang DS làm nguồn build là *chi tiết triển khai, không phải quan hệ lộ ra cho người đọc*. Xoá là xoá thứ giữ cho phiên sau biết sửa ở đâu |
+| Chuẩn hoá escape trong `data/quiz.json` | **không chuẩn hoá** | (aa): triệu chứng như (x) mô tả KHÔNG có thật — `&amp;gt;` xuất hiện **0 lần**. Bất nhất thật là trần vs escape (15 `>`, 13 `<`, 56 `&` trần), nhưng **cả hai dạng render y hệt**, và số chỗ thật sự hỏng là **0**. Chuẩn hoá = sửa ~84 chỗ đổi lấy không gì người đọc thấy, mỗi chỗ chạm là một cơ hội phá thứ đang đúng. Lớp lỗi thật đã có `G-QUIZ-ESC` canh |
+| Đòi `G-QUIZ-ESC` bắt mọi dấu `<` / `>` / `&` trần | **bác, có số đo** | (aa): 941 câu có 15 `>` trần, 13 `<` trần, 56 `&` trần và **không cái nào hỏng**. Cổng bắt rộng thế sẽ nổ vào mọi câu tương lai viết `recall > 0,8` — thành tiếng ồn. Nó chỉ bắt ba hình dạng LÀM MẤT CHỮ |
 
 ### Một thứ để biết trước, KHÔNG phải việc
 
