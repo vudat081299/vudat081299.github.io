@@ -11,6 +11,9 @@ Việc revert: đổi `DS` lại thành `Data Science` ở cả hai chỗ trên,
 `node tools/build-roadmap.mjs`, commit. Agent phiên sau: **đừng tự ý revert trước khi chủ
 trang xác nhận** — mốc ~1 tuần chỉ là ước lượng của chủ trang, không phải deadline cứng.
 
+**2026-08-20, chủ trang: *"revert chữ navbar DS → Data Science để sau"*.** Tức mốc ~08-25 đã
+bị hoãn có chủ ý, không phải bị quên. Vẫn chờ chủ trang gọi; đừng hỏi lại mỗi phiên.
+
 ---
 
 # Handoff — data-science-roadmap.html
@@ -3491,6 +3494,37 @@ neighborhood) · `q-cv` (classification/detection/segmentation triptych) · `f-t
 
 Ba bài **chưa có trường `viz` nào** trong `roadmap-summaries.json`: `pr-mlops`, `q-nlp`,
 `r-glossary`.
+
+**Bộ đo, dựng sẵn để chủ trang chạy được ngay (2026-08-20).** Điều kiện chặn của mục này là
+*"đo comprehension/usability 8 hình P0 trước"*, và việc đó cần **người đọc thật** — agent
+không đo được. Tám URL dưới đây đã kiểm live trên GitHub Pages: cả 9 mount (8 P0 + `calib`
+có sẵn) đều render SVG và đều có `.ds-viz__alt`.
+
+Nền: `https://vudat081299.github.io/masters-degree/data-science-roadmap/data-science-roadmap.html#/<id>`
+
+| hình | bài (`<id>`) | câu hình đó PHẢI làm trả lời được sau khi xem, không cần đọc thân bài |
+|---|---|---|
+| `meanmed` | `m-prob` | Kéo đuôi phải ra xa: trung bình hay trung vị chạy nhiều hơn, và vì sao? |
+| `broadcast` | `t-numpy` | Cặp shape nào ghép được, cặp nào hỏng, và **ô mờ** nghĩa là gì? |
+| `fittransform` | `t-sklearn` | Cùng một giao dịch ở tập valid, vì sao `z` của nó đổi khi bạn fit trên tất cả? |
+| `edapanel` | `d-eda` | Bốn ô trả lời bốn câu **khác nhau** nào — kể tên được cả bốn không? |
+| `nnforward` | `dl-nn` | Kéo batch lên: shape nào đổi, **số tham số** có đổi không, vì sao? |
+| `losscurve` | `dl-train` | Trong bốn hình dạng, cái nào là overfit, và early stopping dừng ở đâu? |
+| `residual` | `q-regress` | Hình phần dư nào nói mô hình còn **thiếu một feature**? Khoảng phủ được bao nhiêu phần thực tế? |
+| `confmat` | `q-multi` | **Cùng một** ma trận, vì sao macro-F1 0,54 mà micro-F1 0,97? |
+
+Cách ghi kết quả — hai đường, cả hai đổ về `LEARNING-LOG.md`:
+
+```bash
+node tools/learn.mjs --add <id> tac "xem meanmed xong vẫn không biết đuôi ảnh hưởng cái nào"
+node tools/learn.mjs --add <id> go  "hiểu sau khi kéo thanh trượt tới mức 3"
+```
+
+hoặc bấm **Notes** trên trang (phím `n`), tải bản xuất về rồi `node tools/learn.mjs --sync`.
+
+**Quyết định sau khi đo, viết trước để khỏi tranh luận lại:** hình nào **trượt** câu hỏi của
+nó thì **sửa hình đó trước**, không làm P1 — thêm 8 hình mới trên một khuôn chưa chứng minh
+được là nhân bản một lỗi 8 lần. Cả 8 đạt thì P1 mở.
 
 ### Đang chờ chủ trang gọi — agent đừng tự làm
 
