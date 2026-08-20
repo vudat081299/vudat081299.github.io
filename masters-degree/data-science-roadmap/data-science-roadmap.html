@@ -15218,7 +15218,7 @@ VIZ.meanmed = el => {
       <p class="ds-viz__readout" data-o="r">—</p>
       <p class="ds-viz__alt" data-o="alt"></p>
       ${seeBlock({
-        see: 'ở mức nhỏ nhất hai vạch gần như chồng lên nhau. Kéo sang phải: <b>trung vị đứng yên</b> vì nó chỉ hỏi “giá trị ở giữa là bao nhiêu”, còn <b>trung bình chạy theo đuôi</b> — chỉ ba giao dịch cũng kéo được nó ra khỏi vùng mà 97% dữ liệu nằm. Đọc dòng số dưới hình: tỉ lệ giao dịch <i>dưới mức trung bình</i> tăng dần tới hơn 80%.',
+        see: 'ở mức nhỏ nhất hai vạch gần như chồng lên nhau. Kéo sang phải: <b>trung vị đứng yên</b> vì nó chỉ hỏi “giá trị ở giữa là bao nhiêu”, còn <b>trung bình chạy theo đuôi</b> — chỉ ba giao dịch cũng kéo được nó ra khỏi vùng mà 97% dữ liệu nằm. Đọc dòng số dưới hình: tỉ lệ giao dịch <i>dưới mức trung bình</i> tăng dần tới hơn 80%. Trục cố ý <b>cắt ở phân vị 95</b> để phần thân còn đọc được — mấy giao dịch ra ngoài khung được ghi thành một dòng ở góc dưới phải, không dồn vào cột cuối.',
         wrong: '“trung bình là con số đại diện”. Nó đại diện cho <i>tổng chia đều</i>, chứ không cho <i>một giao dịch điển hình</i>. Với tiền, thu nhập, lượt xem — mọi thứ có đuôi dài — câu hỏi “một giao dịch thường là bao nhiêu” phải trả lời bằng trung vị. Trung bình vẫn đúng chỗ của nó: khi bạn cần TỔNG (doanh thu, thiệt hại cả tháng), vì tổng = trung bình × số dòng.',
         code: '<code>df.describe()</code> in sẵn cả hai: hàng <code>mean</code> và hàng <code>50%</code>. Hai hàng đó lệch nhau nhiều là dấu hiệu đuôi dài — và là lúc nên xem thêm <code>np.log1p</code> ở bài Biến số.',
       })}
@@ -15234,8 +15234,18 @@ VIZ.meanmed = el => {
     const v = BASE.concat(big).sort((a, b) => a - b);
     const mean = v.reduce((s, x) => s + x, 0) / v.length;
     const med = v[Math.floor(v.length / 2)];
-    const hi = Math.max(v[v.length - 1], mean * 1.15), NB = 46, bins = new Array(NB).fill(0);
-    v.forEach(x => bins[Math.min(NB - 1, Math.floor(x / hi * NB))]++);
+    /* Trục KHÔNG lấy giá trị lớn nhất làm mốc. Lấy max thì ở mức đuôi cao (gấp >5 lần)
+       toàn bộ phần thân dữ liệu VÀ cả hai vạch bị nén vào sát mép trái — tức hình hỏng
+       ĐÚNG ở chỗ bài học của nó mạnh nhất, còn dòng "Bạn thấy gì" thì hứa ngược lại
+       ("kéo sang phải: trung bình chạy theo đuôi"). Chủ trang phát hiện 2026-08-20.
+       Mốc là phân vị 95 hoặc 1,35× trung bình, cái nào lớn hơn: phần thân luôn đọc được
+       và vạch trung bình luôn còn trong khung, cách vạch trung vị một khoảng thấy rõ.
+       Ba giao dịch lớn ra ngoài khung thì ĐẾM và nói ra, không dồn vào bin cuối —
+       dồn thì hình mọc một cột giả trông như một cụm dữ liệu thật. */
+    const p95 = v[Math.floor(v.length * 0.95)];
+    const hi = Math.max(p95 * 1.05, mean * 1.35), NB = 46, bins = new Array(NB).fill(0);
+    let over = 0;
+    v.forEach(x => { const b = Math.floor(x / hi * NB); if (b >= NB) over++; else bins[b]++; });
     const mx = Math.max(...bins), X = x => 14 + (x / hi) * 292;
     g.innerHTML = bins.map((n, i) => {
       const bh = (n / mx) * 74;
@@ -15247,12 +15257,14 @@ VIZ.meanmed = el => {
       + `<line x1="${X(mean)}" y1="20" x2="${X(mean)}" y2="89" stroke="var(--wb-warning)" stroke-width="1.6" stroke-dasharray="3 2"/>`
       + `<text x="${X(mean)}" y="18" font-size="7" text-anchor="middle" fill="var(--wb-warning)">trung bình</text>`
       + `<text x="14" y="101" font-size="7" fill="var(--wb-fg-subtle)">0</text>`
-      + `<text x="306" y="101" font-size="7" text-anchor="end" fill="var(--wb-fg-subtle)">${Math.round(hi).toLocaleString('vi')} nghìn ₫</text>`;
+      + `<text x="306" y="101" font-size="7" text-anchor="end" fill="var(--wb-fg-subtle)">${Math.round(hi).toLocaleString('vi')} nghìn ₫</text>`
+      + (over ? `<text x="306" y="113" font-size="7" text-anchor="end" fill="var(--wb-warning)">→ ${over} giao dịch vượt khung, lớn nhất ${Math.round(v[v.length - 1]).toLocaleString('vi')} nghìn ₫</text>` : '');
     const below = v.filter(x => x < mean).length / v.length * 100;
     tv.textContent = 'gấp ' + k + ' lần';
     r.innerHTML = `trung vị <b>${Math.round(med).toLocaleString('vi')} nghìn ₫</b> · trung bình <b>${Math.round(mean).toLocaleString('vi')} nghìn ₫</b> — `
       + `chênh <b>${(mean / med).toFixed(1).replace('.', ',')} lần</b>, và <b>${below.toFixed(0)}%</b> số giao dịch nằm DƯỚI mức trung bình`;
     alt.textContent = `Histogram 103 giao dịch. Ba giao dịch lớn nhất gấp khoảng ${k} lần mức thường. `
+      + (over ? `Trục cắt ở ${Math.round(hi)} nghìn đồng, ${over} giao dịch nằm ngoài khung. ` : '')
       + `Trung vị ${Math.round(med)} nghìn đồng, trung bình ${Math.round(mean)} nghìn đồng, `
       + `tỉ lệ giao dịch nằm dưới mức trung bình là ${below.toFixed(0)} phần trăm.`;
   };
@@ -15279,7 +15291,7 @@ VIZ.broadcast = el => {
       <p class="ds-viz__readout" data-o="r">—</p>
       <p class="ds-viz__alt" data-o="alt"></p>
       ${seeBlock({
-        see: 'ô <b>mờ</b> là ô NumPy tự nhân bản ra — nó không tồn tại trong bộ nhớ, chỉ được đọc lại nhiều lần. Ở <b>(3,4)+(4,)</b> một hàng bị lặp xuống 3 lần; ở <b>(3,1)+(1,4)</b> cả hai đều nở và kết quả to hơn cả hai đầu vào. Ở ca <b>hỏng</b>, không ô nào lặp được vì 4 và 3 không khớp mà cũng không có số 1 nào để nở.',
+        see: 'ô <b>nét đứt</b> là ô NumPy tự nhân bản ra — nó không tồn tại trong bộ nhớ, chỉ được đọc lại nhiều lần. Ở <b>(3,4)+(4,)</b> một hàng bị lặp xuống 3 lần; ở <b>(3,1)+(1,4)</b> cả hai đều nở và kết quả to hơn cả hai đầu vào. Ở ca <b>hỏng</b>, không ô nào lặp được vì 4 và 3 không khớp mà cũng không có số 1 nào để nở.',
         wrong: '“shape khác nhau thì cộng không được”. Ngược lại — broadcasting tồn tại chính để cộng được. Quy tắc chỉ có hai dòng: <b>căn từ phải sang</b>, và mỗi cặp chiều phải <b>bằng nhau hoặc có một bên bằng 1</b>. Hiểu hai dòng đó thì đọc mọi lỗi shape trong một phút.',
         code: 'Khi bí, in <code>a.shape, b.shape</code> rồi căn từ phải sang bằng mắt. Cần nói rõ một chiều là hàng hay cột thì dùng <code>b.reshape(-1, 1)</code> (thành cột) hoặc <code>b[None, :]</code> (thành hàng) — đừng để NumPy đoán hộ.',
       })}
@@ -15312,11 +15324,17 @@ VIZ.broadcast = el => {
         + `<text x="${16 + 4 * 15 + 20 + 3 * 15 + 10}" y="35" font-size="11" fill="var(--wb-danger)">✕</text>`
         + `<text x="${16 + 4 * 15 + 20 + 3 * 15 + 24}" y="35" font-size="8" fill="var(--wb-danger)">ValueError</text>`;
     }
+    /* Chú giải phải nằm TRÊN hình. Trước đây nghĩa của ô nét đứt chỉ được nói trong khối
+       "Bạn thấy gì" ở dưới, nên người đọc thấy mấy ô viền đứt mà không có chỗ nào tra —
+       chủ trang 2026-08-20: "tôi có thấy ô nét đứt, nhưng chưa hiểu rõ". Và chữ cũ gọi
+       nó là "ô MỜ" trong khi mắt nhận ra nó bằng NÉT ĐỨT: một vật, hai tên. */
+    if (c.ok) g.innerHTML += `<rect x="16" y="86" width="9" height="9" rx="2" fill="var(--wb-border)" stroke="var(--wb-border-strong)" stroke-dasharray="2 1.5"/>`
+      + `<text x="30" y="93.5" font-size="7" fill="var(--wb-fg-subtle)">ô nét đứt = NumPy tự lặp ra, không nằm trong bộ nhớ</text>`;
     r.innerHTML = c.ok
       ? `<b>${c.t} → (${c.out.join(',')})</b> · ${c.why}`
       : `<b>${c.t} → lỗi</b> · ${c.why}`;
     alt.textContent = c.ok
-      ? `Cặp shape ${c.t} cho kết quả shape ${c.out.join(' nhân ')}. ${c.why}`
+      ? `Cặp shape ${c.t} cho kết quả shape ${c.out.join(' nhân ')}. Ô vẽ nét đứt là ô NumPy tự lặp ra, không nằm trong bộ nhớ. ${c.why}`
       : `Cặp shape ${c.t} không broadcast được. ${c.why}`;
   };
   wireSeg(el, draw); draw('row');
@@ -15360,7 +15378,11 @@ VIZ.fittransform = el => {
       + `<text x="${X(0)}" y="86" font-size="7" text-anchor="middle" fill="var(--wb-fg-subtle)">z = 0</text>`
       + TR.map(x => `<circle cx="${X(z(x))}" cy="72" r="2.6" fill="var(--wb-border-strong)"/>`).join('')
       + VA.map((x, i) => `<circle cx="${X(zs[i])}" cy="62" r="3.2" fill="${x === 900 ? 'var(--wb-warning)' : 'var(--wb-fg)'}"/>`).join('')
-      + `<text x="160" y="52" font-size="7" fill="var(--wb-fg-subtle)">▲ valid (tròn trên) · ● train (tròn dưới)</text>`
+      /* Chú giải ở y=44, KHÔNG phải 52: nhãn 900 nằm ở y=56 và nó bị đẩy sát mép phải
+         (giao dịch 900 luôn là điểm xa nhất), nên ở y=52 hai khối chữ đè lên nhau —
+         chủ trang phát hiện 2026-08-20. Và chú giải cũ ghi "▲ valid" trong khi code vẽ
+         <circle> cho CẢ HAI hàng: không có tam giác nào trên hình. */
+      + `<text x="160" y="44" font-size="7" fill="var(--wb-fg-subtle)">● trên = valid · ● dưới = train</text>`
       + `<text x="${Math.min(300, X(z(900)))}" y="56" font-size="7" text-anchor="middle" fill="var(--wb-warning)">900</text>`;
     r.innerHTML = mode === 'ok'
       ? `Giao dịch 900 ở tập valid nhận <b>z = ${z(900).toFixed(2).replace('.', ',')}</b> — nó nổi bật đúng như nó phải nổi bật.`
@@ -15484,8 +15506,19 @@ VIZ.nnforward = el => {
       const hh = 8 + Math.min(40, Math.log2(st.s[1] + 1) * 9);
       return `<rect x="${x}" y="${54 - hh / 2}" width="${W - 6}" height="${hh}" rx="3" fill="${fill}"/>`
         + `<text x="${x + (W - 6) / 2}" y="${44 - hh / 2}" font-size="6" text-anchor="middle" fill="var(--wb-fg-subtle)">${st.t}</text>`
-        + `<text x="${x + (W - 6) / 2}" y="${72 + hh / 2}" font-size="6.5" text-anchor="middle" fill="var(--wb-fg)">(${st.s.join(',')})</text>`
-        + `<text x="${x + (W - 6) / 2}" y="${82 + hh / 2}" font-size="6" text-anchor="middle" fill="${st.p ? 'var(--wb-fg-subtle)' : 'var(--wb-border-strong)'}">${st.p ? st.p.toLocaleString('vi') + ' tham số' : 'không tham số'}</text>`
+        /* Gọi tên dòng này là "shape". Để trần thì hai dòng dưới mỗi khối đều là số, và
+           người đọc lấy hai số TRONG TUPLE làm câu trả lời cho "số tham số" — chủ trang
+           2026-08-20: "kéo slider thứ 2 tôi thấy tham số thứ 2 trong (a,b) thay đổi".
+           Không đổi chữ "tham số" thành "trọng số": trong chính bài này "trọng số" đã
+           mang nghĩa khác (trọng số attention cộng bằng 1), và §11 cấm hai tên một khái
+           niệm — cũng như một tên hai khái niệm.
+           Chữ "shape" chỉ gắn ở khối ĐẦU: gắn cả bảy thì nhãn của hai khối cạnh nhau đè
+           lên nhau (đo được 5 cặp chồng trong viewBox 320). Khối đầu làm khoá cho cả hàng. */
+        + `<text x="${x + (W - 6) / 2}" y="${72 + hh / 2}" font-size="6" text-anchor="middle" fill="var(--wb-fg)">${i ? '' : 'shape '}(${st.s.join(',')})</text>`
+        /* font-size 5,5 chứ không 6: ở mức nơ-ron cao nhãn thành "8.256 tham số" (13 ký tự)
+           mà bước giữa hai khối chỉ 41,7 đơn vị viewBox, nên nhãn của hai khối cạnh nhau
+           đè lên nhau — đo được 4 cặp chồng ở mức tối đa. Lỗi có sẵn, không do lượt này. */
+        + `<text x="${x + (W - 6) / 2}" y="${82 + hh / 2}" font-size="5.5" text-anchor="middle" fill="${st.p ? 'var(--wb-fg-subtle)' : 'var(--wb-border-strong)'}">${st.p ? st.p.toLocaleString('vi') + ' tham số' : 'không tham số'}</text>`
         + (i < steps.length - 1 ? `<text x="${x + W - 4}" y="57" font-size="7" fill="var(--wb-fg-subtle)">›</text>` : '');
     }).join('');
     const total = steps.reduce((s, x) => s + x.p, 0);
