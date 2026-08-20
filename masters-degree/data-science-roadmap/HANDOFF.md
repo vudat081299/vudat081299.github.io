@@ -36,7 +36,7 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 
 ---
 
-## Phiên 2026-08-20 (aa) — ba món "nợ nhỏ đã ĐO" về 0 · hai cổng mới cho quiz · và một món trong đó đo bằng THƯỚC SAI
+## Phiên 2026-08-20 (aa) — ba món "nợ nhỏ đã ĐO" về 0 · hai cổng mới cho quiz · 4 lỗi trong hình P0 · và hai lần tôi đo bằng THƯỚC SAI
 
 Chủ trang: *"còn gì làm nốt đi… rà soát toàn bộ handoff xem còn gì không làm nốt đi"*, kèm
 trần **dưới 5 subagent** và *"cung cấp vừa đủ context, không được thừa"*. Đã rà cả file, kể
@@ -140,10 +140,42 @@ lô với file trên đĩa trước khi nạp.
 - **Không đổi đáp án của `t-numpy#6`** (mục 4) — đó là sửa nội dung một câu, ngoài phạm vi một
   lượt dọn độ dài.
 
-### 7. Còn nợ của riêng phiên này
+### 7. Chủ trang đo usability 8 hình P0 — và bộ câu hỏi tôi đưa là SAI LOẠI
 
-- Không có. Cả 4 lô đã nạp, `gate.mjs` CHẶN qua, `gate.test.mjs` **74 đạt / 0 trượt**,
-  `G-QUIZ-TIE` và `G-QUIZ-ESC` đều im.
+Tôi đưa chủ trang 8 câu **comprehension** trong khi sổ học đang **0/84 bài đã chạm**. Chủ
+trang: *"cái này tôi tưởng khi nào học tới thì mới trả lời được chứ, giờ bạn hỏi thì tôi
+chịu"* — và *"tôi không hiểu vì sao bạn muốn tôi review mấy cái này, cái này như kiểu kiểm
+tra UI của diagram vậy"*. Cả hai câu đúng: **usability** ai cũng đo được, **comprehension**
+thì chỉ người đã học tới bài đó. Audit gộp hai chữ đó vào một dòng và tôi đọc nó như một
+việc. Điều kiện chặn của mục backlog đã được viết lại theo hai nửa.
+
+Dù vậy vòng usability trả về **4 lỗi thật** — chủ trang tìm ra cái đầu tiên (`fittransform`
+có nhãn 900 đè chú giải), tôi đo ra ba cái còn lại cùng loại. Chi tiết trong commit; tóm lại:
+
+| hình | lỗi |
+|---|---|
+| `fittransform` | nhãn `900` đè chú giải · chú giải ghi `▲ valid` mà code vẽ `<circle>` cho cả hai hàng |
+| `meanmed` | trục lấy giá trị lớn nhất làm mốc → ở đuôi cao cả thân dữ liệu lẫn hai vạch nén vào mép trái, tức **hỏng đúng chỗ bài học mạnh nhất** |
+| `broadcast` | không có chú giải trên hình; chữ gọi "ô **mờ**" trong khi mắt thấy **nét đứt** |
+| `nnforward` | hai dòng dưới mỗi khối đều là số nên tuple shape bị đọc thành "số tham số"; và một lỗi có sẵn: nhãn tham số đè nhau ở mức thanh trượt tối đa |
+
+**Một dữ liệu tốt:** chủ trang chưa học bài nào mà trả lời **đúng cả ba** ca broadcasting chỉ
+bằng cách xem hình — `broadcast` dạy được độc lập. Bảy hình còn lại chưa có bằng chứng đó.
+
+### 8. Nhãn Foundation / Applied / Advanced — xoá khỏi backlog
+
+Chủ trang: *"cái này bạn tự chọn phương án tốt nhất cho project Data science này"*. Chọn
+**xoá**, lý do trong bảng `Đã quyết là GIỮ NGUYÊN`. Ngắn gọn: mỗi bài đã mang 5 trục nhãn,
+"Advanced" gần như trùng hai nhãn đã có, và mục tiêu trang là *quỹ đạo tới một product +
+luận văn* — thứ phục vụ nó là **làm gì tiếp**, không phải một bảng phân loại nữa.
+
+### 9. Còn nợ của riêng phiên này
+
+- **Comprehension của 7 hình P0 còn lại chưa có bằng chứng nào** — và đó là *đúng*, không
+  phải nợ kỹ thuật: nó chỉ có được khi chủ trang học tới từng bài. Đừng dựng thêm một "buổi
+  đo".
+- `gate.mjs` CHẶN qua, `gate.test.mjs` **74 đạt / 0 trượt**, `G-QUIZ-TIE` và `G-QUIZ-ESC`
+  đều im, quét chồng lấn 4 hình ở 3 mức thanh trượt sạch.
 
 ---
 
@@ -3482,7 +3514,7 @@ mục `###` dưới đây **mỗi lần mở phiên**, nên việc nào xong th�
 "đã xử" là cách nhanh nhất làm dòng CHƯA LÀM thành tiếng ồn — chính lỗi đó đã sống từ (n5)
 tới (n8), khiến bốn việc đã làm vẫn được in ra suốt bốn phiên.
 
-### Tám hình P1 — chỉ làm SAU khi đo được 8 hình P0
+### Tám hình P1 — usability của 8 hình P0 đã sạch, còn chờ comprehension từ sổ học
 
 Audit n9 §5 xếp thứ tự rõ: *"làm 8 visual P0 trước, đo comprehension/usability; chỉ sau đó
 mới làm P1"*. Tám hình P0 đã xong ở phiên (p). Danh sách P1: `s-plan8w` (dependency/workload
@@ -3495,14 +3527,34 @@ neighborhood) · `q-cv` (classification/detection/segmentation triptych) · `f-t
 Ba bài **chưa có trường `viz` nào** trong `roadmap-summaries.json`: `pr-mlops`, `q-nlp`,
 `r-glossary`.
 
-**Bộ đo, dựng sẵn để chủ trang chạy được ngay (2026-08-20).** Điều kiện chặn của mục này là
-*"đo comprehension/usability 8 hình P0 trước"*, và việc đó cần **người đọc thật** — agent
-không đo được. Tám URL dưới đây đã kiểm live trên GitHub Pages: cả 9 mount (8 P0 + `calib`
-có sẵn) đều render SVG và đều có `.ds-viz__alt`.
+**Điều kiện chặn phải TÁCH LÀM HAI — chạy thử 2026-08-20 mới thấy.** Audit viết
+*"đo comprehension/usability"* và các phiên trước đọc nó như một việc; nó là **hai việc, hai
+người đo khác nhau**:
+
+| nửa | ai đo được | trạng thái |
+|---|---|---|
+| **usability** — hình có đọc được không: chữ đè nhau, nhãn vượt khung, chú giải khớp thứ vẽ ra, điều khiển chạy | **bất kỳ ai**, không cần biết Data Science | **đã chạy một vòng ở (aa): 4 lỗi thật, đã sửa cả 4** |
+| **comprehension** — xem hình xong có hiểu ý không | **chỉ người đã học tới bài đó** | **chưa chạy được**: sổ học đang 0/84 bài đã chạm |
+
+Lượt (aa) đưa chủ trang một bộ câu hỏi comprehension và **đó là lỗi giao việc**: chủ trang
+chưa học bài nào, nên trả lời *"cái này tôi tưởng khi nào học tới thì mới trả lời được chứ"*
+— câu đó đúng. Comprehension **không phải một buổi đo**, nó tự tích lại trong
+`LEARNING-LOG.md` khi chủ trang học tới từng bài (loại `tac` = chỗ đọc mà không hiểu). Nên:
+
+> **Điều kiện mở P1, viết lại:** usability của 8 hình P0 sạch (đã đạt), **và** có ≥3 bài
+> trong số 8 bài đó được chủ trang học tới mà `LEARNING-LOG.md` không ghi `tac` vào hình.
+> Đừng dựng thêm một "buổi đo" nữa — nó sẽ lại hỏi người chưa học.
+
+Một dữ liệu tốt lọt ra từ lượt đó: chủ trang **chưa học bài nào** mà vẫn trả lời **đúng cả ba**
+ca broadcasting chỉ bằng cách xem hình `broadcast` — tức hình đó dạy được độc lập, đúng như
+hợp đồng. Bảy hình còn lại chưa có bằng chứng tương đương.
+
+**Bộ đo usability, dựng sẵn để chạy lại bất cứ lúc nào.** Tám URL dưới đây đã kiểm live trên
+GitHub Pages: cả 9 mount (8 P0 + `calib` có sẵn) đều render SVG và đều có `.ds-viz__alt`.
 
 Nền: `https://vudat081299.github.io/masters-degree/data-science-roadmap/data-science-roadmap.html#/<id>`
 
-| hình | bài (`<id>`) | câu hình đó PHẢI làm trả lời được sau khi xem, không cần đọc thân bài |
+| hình | bài (`<id>`) | câu comprehension — **chỉ hỏi khi đã học tới bài đó** (xem bảng trên) |
 |---|---|---|
 | `meanmed` | `m-prob` | Kéo đuôi phải ra xa: trung bình hay trung vị chạy nhiều hơn, và vì sao? |
 | `broadcast` | `t-numpy` | Cặp shape nào ghép được, cặp nào hỏng, và **ô mờ** nghĩa là gì? |
@@ -3522,16 +3574,10 @@ node tools/learn.mjs --add <id> go  "hiểu sau khi kéo thanh trượt tới m�
 
 hoặc bấm **Notes** trên trang (phím `n`), tải bản xuất về rồi `node tools/learn.mjs --sync`.
 
-**Quyết định sau khi đo, viết trước để khỏi tranh luận lại:** hình nào **trượt** câu hỏi của
-nó thì **sửa hình đó trước**, không làm P1 — thêm 8 hình mới trên một khuôn chưa chứng minh
-được là nhân bản một lỗi 8 lần. Cả 8 đạt thì P1 mở.
-
-### Đang chờ chủ trang gọi — agent đừng tự làm
-
-- **Nhãn Foundation / Applied / Advanced.** (n5) để lại: trang đã có 3 chip ưu tiên + chip
-  14 ngày + nhãn `SCOPE`, và (r) vừa thêm chip mốc vào lịch 14 ngày — thêm một trục nữa là
-  thêm nhiễu. Đây là quyết định về *cách trình bày giáo trình*, không phải việc kỹ thuật —
-  cần thì chủ trang gọi tên nó ra, "làm hết backlog" không tính.
+**Quyết định, viết trước để khỏi tranh luận lại:** hình nào **trượt** thì **sửa hình đó
+trước**, không làm P1 — thêm 8 hình mới trên một khuôn chưa chứng minh được là nhân bản một
+lỗi 8 lần. Lượt usability đầu tiên đã chứng minh điều đó không phải lo xa: **4/8 hình có lỗi
+thật**, trong đó `meanmed` hỏng đúng chỗ bài học của nó mạnh nhất.
 
 ### Đã quyết là GIỮ NGUYÊN — đừng revisit
 
@@ -3546,6 +3592,7 @@ nó thì **sửa hình đó trước**, không làm P1 — thêm 8 hình mới t
 | 110 câu quiz còn cụm "theo bài" | **giữ, đừng sed** | (x): đếm CỤM TỪ bắt chữ chứ không bắt hình dạng — phần lớn 110 câu đó đã là câu tình huống thật. Chạy `sed` trên cụm đó là sửa thứ không hỏng |
 | 7 chỗ nhắc `data-science-roadmap.html` trong `roadmap.html` | **giữ** | (z): cả 7 nằm trong **comment** ghi nguồn build. Hợp đồng "Roadmap độc lập" nói thẳng lấy trang DS làm nguồn build là *chi tiết triển khai, không phải quan hệ lộ ra cho người đọc*. Xoá là xoá thứ giữ cho phiên sau biết sửa ở đâu |
 | Chuẩn hoá escape trong `data/quiz.json` | **không chuẩn hoá** | (aa): triệu chứng như (x) mô tả KHÔNG có thật — `&amp;gt;` xuất hiện **0 lần**. Bất nhất thật là trần vs escape (15 `>`, 13 `<`, 56 `&` trần), nhưng **cả hai dạng render y hệt**, và số chỗ thật sự hỏng là **0**. Chuẩn hoá = sửa ~84 chỗ đổi lấy không gì người đọc thấy, mỗi chỗ chạm là một cơ hội phá thứ đang đúng. Lớp lỗi thật đã có `G-QUIZ-ESC` canh |
+| Nhãn Foundation / Applied / Advanced | **xoá khỏi backlog** | (aa), chủ trang giao agent tự chọn. Mỗi bài đã mang **5 trục nhãn** (ưu tiên · `SCOPE` · fast track + ngày · tuần · mốc); trục thứ sáu là thêm nhiễu, và "Advanced" gần như trùng `Định vị là đủ` + `cần nhiều tuần + mentor` đã có. Mục tiêu trang là **quỹ đạo tới một product + luận văn**, thứ phục vụ nó là *làm gì tiếp*, không phải một bảng phân loại nữa. Nằm im từ (n5) tới (aa) mà không ai cần — đó là câu trả lời |
 | Đòi `G-QUIZ-ESC` bắt mọi dấu `<` / `>` / `&` trần | **bác, có số đo** | (aa): 941 câu có 15 `>` trần, 13 `<` trần, 56 `&` trần và **không cái nào hỏng**. Cổng bắt rộng thế sẽ nổ vào mọi câu tương lai viết `recall > 0,8` — thành tiếng ồn. Nó chỉ bắt ba hình dạng LÀM MẤT CHỮ |
 
 ### Một thứ để biết trước, KHÔNG phải việc
