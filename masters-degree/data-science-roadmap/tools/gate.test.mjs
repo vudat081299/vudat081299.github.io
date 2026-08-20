@@ -227,6 +227,16 @@ const OTHER_CASES = [
     }));
     writeFileSync(join(DS, 'data', 'quiz.json'), JSON.stringify(q));
   }],
+  /* Dựng lại ĐÚNG hình dạng làm mất chữ, không phải một dấu `<` bất kỳ: `<b` ở đây bị
+     trình duyệt đọc thành thẻ mở và nó ăn sạch chữ tới dấu `>` kế tiếp. Một ca `&gt;`
+     hay `>` trần thì cổng phải IM — chiều "im" ở trên canh việc đó, vì 15 dấu `>` trần
+     và 56 dấu `&` trần trong bộ câu thật đều vô hại. */
+  ['G-QUIZ-ESC', 'dấu < trần trước chữ cái — trình duyệt ăn mất chữ', () => {
+    writeQuiz({ 's-how': [{ q: 'khi a <b thì cột nào bị loại?', o: ['x', 'y'], a: 0, why: 'vì a nhỏ hơn b' }] });
+  }],
+  ['G-QUIZ-TIE', 'distractor chênh đáp án đúng 1 ký tự', () => {
+    writeQuiz({ 's-how': [{ q: 'x?', o: ['đáp án đúng dài hai mươi tám ký', 'distractor dài hai mươi bảy k'], a: 0, why: 'Phương án kia sai vì nó ngược chiều.' }] });
+  }],
   ['G-TOC-STALE', 'TOC.md còn số dòng cũ', () => {
     // Dải dòng ĐẦU TIÊN trong bảng, tìm bằng khuôn chứ không bằng con số cụ thể —
     // gõ số vào đây thì test tự hỏng mỗi lần trang dài ra vài dòng.

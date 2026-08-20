@@ -248,7 +248,7 @@ thức ở [docs/design.md](docs/design.md), kèm ba cái bẫy của pane previ
 Bảng này phải khớp mảng `GATES` trong `gate.mjs` — cổng `G-DOC` tự đối chiếu và nhắc nếu
 lệch. In danh sách thật bất cứ lúc nào: `node tools/gate.mjs --gates`.
 
-**Chặn commit — 11 cổng:**
+**Chặn commit — 12 cổng:**
 
 | cổng | canh điều gì |
 |---|---|
@@ -263,6 +263,7 @@ lệch. In danh sách thật bất cứ lúc nào: `node tools/gate.mjs --gates`
 | `G-FWD` | tiêu chí đạt / deliverable tuần không đòi thứ chưa được dạy |
 | `G-PLAN` | lịch 14 ngày & 8 tuần nhất quán — **bản node của `auditPlan()`**, xem §3 |
 | `G-QUIZ` | mỗi câu hỏi trắc nghiệm (`QUIZ`) đủ trường và `a` trỏ đúng một đáp án CÓ THẬT — `a` lệch là chấm sai đáp án, một lỗi chạy được. Câu hỏi có ĐÚNG/HAY không thì máy không kiểm, đó là việc đọc của người |
+| `G-QUIZ-ESC` | chữ trong quiz bị trình duyệt **ăn mất** khi render — xem ngay dưới bảng |
 
 **`G-SYNTAX` — cái bẫy backtick, và vì sao nó xứng đáng có một cổng riêng.** Trang là một
 file HTML tự chứa, nên phần lớn nội dung động nằm trong **template literal** của JS
@@ -281,7 +282,7 @@ nào để mở trình duyệt kiểm lại JS.
 tên class/token bằng chữ trần (`wb-steps`, không phải `` `wb-steps` ``). Muốn dùng backtick
 thì đưa chú thích ra ngoài template, thành comment JS phía trên hàm.
 
-**Chỉ nhắc, người quyết định — 17 cổng** (`G-FWD` có mặt ở cả hai bảng: chặn ở mức tiêu chí
+**Chỉ nhắc, người quyết định — 19 cổng** (`G-FWD` có mặt ở cả hai bảng: chặn ở mức tiêu chí
 đạt, chỉ nhắc ở mức thân bài):
 
 | cổng | nhắc điều gì |
@@ -305,6 +306,7 @@ thì đưa chú thích ra ngoài template, thành comment JS phía trên hàm.
 | `G-QUIZ-COV` | bài chưa có quiz, **hoặc có ít câu hơn số mục của chính nó** — xem ngay dưới bảng |
 | `G-QUIZ-POS` | giải thích gọi lựa chọn theo VỊ TRÍ (`đáp án cuối`) — đảo thứ tự lựa chọn là nó nói sai |
 | `G-QUIZ-GUESS` | câu **trả lời được mà không cần hiểu bài** — đáp án đúng lộ ra vì dài nhất — xem ngay dưới bảng |
+| `G-QUIZ-TIE` | distractor chênh đáp án **dưới 3 ký tự** — không phải lỗ đoán, nó làm nhiễu thước đo của `G-QUIZ-GUESS` — xem ngay dưới bảng |
 
 **`G-QUIZ-COV` đếm câu SO VỚI BÀI, không đếm có/không.** Bản đầu chỉ hỏi "bài này có câu
 nào chưa" — và nó im suốt, vì bài nào cũng có ~6 câu. Đo lại 2026-08-14 mới thấy chỗ hỏng
@@ -337,6 +339,28 @@ in cả bốn hạng ra. Ngoại lệ đã biết: câu có đáp án rất ng�
 Cách sửa đúng khi cổng kêu: **nới/rút distractor cho mỗi cái mang lý lẽ sai của riêng nó,
 ĐỪNG cắt đáp án cho ngắn lại** — phần bị cắt thường là lý lẽ, mà lý lẽ thuộc về `why`.
 Mức đang dùng và phần còn nợ: HANDOFF phiên (x).
+
+**`G-QUIZ-ESC` bắt HÌNH DẠNG LÀM MẤT CHỮ, không bắt sự bất nhất hình thức.** Cả ba trường
+chữ của một câu được nhét vào trang bằng `innerHTML`, nên thẻ trong chữ là có chủ ý (2.506
+cặp `<code>`, 342 cặp `<b>`) — và đó cũng là chỗ hở: một dấu `<` trần **đứng ngay trước chữ
+cái** làm trình duyệt mở một thẻ không tồn tại và **ăn sạch chữ tới dấu `>` kế tiếp**. Không
+lỗi, không cảnh báo, chỉ mất chữ. Ba hình dạng bị chặn: `<` trần trước chữ cái · `&` trần tạo
+thành một entity khác · thẻ hở / đóng lệch (style loang ra phần chữ sau nó).
+
+Cổng **không** đòi "phải luôn viết `&lt;` / `&gt;` / `&amp;`". Đo 2026-08-20: 941 câu có 15
+dấu `>` trần, 13 dấu `<` trần, 56 dấu `&` trần và **không cái nào hỏng** — `>` trần luôn
+render đúng, `< 0,05` cũng vậy (trình duyệt chỉ mở thẻ khi sau `<` là chữ cái). Bắt rộng hơn
+thì cổng sẽ nổ vào mọi câu tương lai viết `recall > 0,8`, tức thành tiếng ồn. Cả ba hình dạng
+thật đang ở **0**; cổng giữ mức đó.
+
+**`G-QUIZ-TIE` đo cùng thước với `G-QUIZ-GUESS`, và đó là điểm dễ làm sai.** Thế hoà
+(distractor chênh đáp án dưới 3 ký tự) **không** phải lỗ đoán — hoà làm chiến lược "chọn cái
+dài nhất" thành tung xúc xắc, tức làm *dịu* tín hiệu. Cái nó phá là **thước đo**: hạng độ dài
+nhảy khi chênh đúng 1 ký tự, nên phân phối hạng mà `G-QUIZ-GUESS` in ra bị nhiễu ở đúng những
+câu đó. Độ dài phải đếm **sau khi bỏ thẻ** — cùng thước cổng kia dùng, và cũng là thứ người
+đọc thấy. Đếm cả thẻ cho một danh sách khác hẳn (**124 câu thay vì 77, trùng 66**), và lượt
+dọn 2026-08-20 đã giao việc theo thước sai vì thế. Sửa bằng cách rút distractor cho ngắn hẳn
+hoặc nới cho dài hẳn, **không đổi hạng của đáp án**.
 
 **`G-QUIZ-POS` canh một lớp lỗi chỉ nổ khi bạn động vào.** Một giải thích viết "đáp án cuối
 sai vì…" đang đúng, nhưng nó phụ thuộc vào **thứ tự lựa chọn**. Đo được: lượt rải lại vị trí

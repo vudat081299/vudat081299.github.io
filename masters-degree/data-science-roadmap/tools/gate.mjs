@@ -232,6 +232,8 @@ const GATES = [
   ['G-QUIZ-COV',   'nhắc', 'bài chưa có quiz, hoặc có ít câu hơn số mục của chính nó'],
   ['G-QUIZ-POS',   'nhắc', 'giải thích gọi lựa chọn theo vị trí ("đáp án cuối") — đảo thứ tự là sai'],
   ['G-QUIZ-GUESS', 'nhắc', 'câu trả lời được mà không cần hiểu bài — đáp án đúng lộ ra vì dài nhất'],
+  ['G-QUIZ-ESC',   'chặn', 'chữ trong quiz có dấu < / & làm trình duyệt ĂN MẤT chữ khi render'],
+  ['G-QUIZ-TIE',   'nhắc', 'distractor chênh đáp án dưới 3 ký tự — làm nhiễu thước đo của G-QUIZ-GUESS'],
 ];
 
 /* Waiver: một lỗi CHẶN đã biết, đã có hướng sửa, nhưng cách sửa là một quyết định
@@ -470,6 +472,84 @@ if (rmErr) {
     if (skewed.length) W(`G-QUIZ-GUESS: ${skewed.length} câu có đáp án dài ≥2,5× trung bình ba lựa chọn kia:\n    `
       + skewed.slice(0, 10).join(' · ') + (skewed.length > 10 ? `\n    … và ${skewed.length - 10} câu nữa` : '')
       + '\n    Ở mức lệch này người đọc nhận ra đáp án bằng mắt, không cần hiểu bài.');
+  }
+
+  /* G-QUIZ-ESC (CHẶN): chữ trong quiz bị trình duyệt ĂN MẤT khi render.
+
+     Cả ba trường chữ của một câu (`q`, `why`, mỗi `o[*]`) được nhét vào trang bằng
+     innerHTML — quizSection dựng chuỗi rồi `root.innerHTML = shell(qs)`. Nên thẻ trong
+     chữ là CÓ CHỦ Ý (2.506 cặp <code>, 342 cặp <b>, 205 cặp <i>), và đó cũng là chỗ hở:
+     một dấu `<` trần đứng ngay trước chữ cái làm trình duyệt mở một thẻ không tồn tại và
+     **ăn sạch chữ tới dấu `>` kế tiếp**. Không lỗi, không cảnh báo, chỉ mất chữ — đúng
+     lớp lỗi im lặng mà bộ cổng này đã bị cắn một lần (bản trích render đề bài thành text
+     trần và agent chép lại là xoá hết thẻ, không cổng nào thấy).
+
+     Cổng chỉ bắt HÌNH DẠNG LÀM MẤT CHỮ, không bắt sự bất nhất hình thức. Đo 2026-08-20:
+     trong 941 câu có 15 dấu `>` trần, 13 dấu `<` trần và 56 dấu `&` trần, và **không cái
+     nào hỏng** — `>` trần luôn render đúng, `< 0,05` cũng vậy (trình duyệt chỉ mở thẻ khi
+     sau `<` là chữ cái). Nên bắt "phải viết &lt; / &gt; / &amp;" là bắt sai: nó sẽ nổ vào
+     mọi câu tương lai viết `recall > 0,8`, tức thành tiếng ồn. Ba hình dạng dưới đây thì
+     đúng là lỗi chạy được, và cả ba đang ở 0 — cổng giữ mức 0 đó. */
+  {
+    /* Cho phép cả thẻ CÓ thuộc tính và `<br>`, dù bộ câu hiện tại chỉ dùng 7 dạng thẻ
+       trần: một cổng CHẶN nổ vào `<code class="x">` là dương tính giả, và dương tính giả
+       trên cổng chặn thì đắt hơn nhiều so với một lỗ hẹp. */
+    const TAG_OK = /<\/?(?:b|i|code|em|strong|br)(?:\s[^<>]*)?\/?>/g;
+    const ENT_OK = /&(?:amp|lt|gt|quot|apos|nbsp|#\d+|#x[0-9a-fA-F]+);/g;
+    const eaten = [];
+    for (const id of quizIds) {
+      if (!byId[id] || !Array.isArray(QUIZ[id])) continue;
+      QUIZ[id].forEach((q, i) => {
+        const fields = [['q', q?.q], ['why', q?.why]]
+          .concat((Array.isArray(q?.o) ? q.o : []).map((o, j) => [`o${j}`, o]));
+        for (const [k, v] of fields) {
+          if (typeof v !== 'string') continue;
+          const rest = v.replace(TAG_OK, '').replace(ENT_OK, '');
+          if (/<[a-zA-Z/!?]/.test(rest)) eaten.push(`${id} câu ${i + 1} (${k}): dấu < trần trước chữ cái — trình duyệt mở thẻ lạ và ăn mất chữ, viết &lt;`);
+          const badEnt = rest.match(/&[a-zA-Z]{2,8};/);
+          if (badEnt) eaten.push(`${id} câu ${i + 1} (${k}): "${badEnt[0]}" thành một ký tự khác khi render, viết &amp;`);
+          /* Thẻ hở không ăn chữ nhưng làm style loang ra hết slide — cùng loại hậu quả:
+             người đọc thấy một thứ khác thứ đã viết. */
+          const st = [];
+          let ok = true;
+          for (const m of v.matchAll(/<(\/?)(b|i|code|em|strong)(?:\s[^<>]*)?>/g)) {
+            if (m[1]) { if (st.pop() !== m[2]) { ok = false; break; } } else st.push(m[2]);
+          }
+          if (!ok || st.length) eaten.push(`${id} câu ${i + 1} (${k}): thẻ ${st.length ? 'hở <' + st[st.length - 1] + '>' : 'đóng lệch'} — style loang ra phần chữ sau nó`);
+        }
+      });
+    }
+    if (eaten.length) F(`G-QUIZ-ESC: ${eaten.length} chỗ trong quiz bị mất chữ hoặc lệch style khi render:\n    `
+      + eaten.slice(0, 12).join('\n    ') + (eaten.length > 12 ? `\n    … và ${eaten.length - 12} chỗ nữa` : ''));
+  }
+
+  /* G-QUIZ-TIE (nhắc): distractor chênh đáp án dưới 3 ký tự.
+
+     Đây KHÔNG phải một lỗ đoán — thế hoà làm chiến lược "chọn cái dài nhất" thành tung
+     xúc xắc giữa hai lựa chọn, tức nó làm *dịu* tín hiệu. Cái nó phá là THƯỚC ĐO của
+     G-QUIZ-GUESS: hạng độ dài của đáp án nhảy khi chênh đúng 1 ký tự, nên phân phối hạng
+     mà cổng kia in ra bị nhiễu ở đúng những câu này, và một lượt sửa nhỏ có thể làm con
+     số đổi mà không có gì thật đổi.
+
+     Đo bằng độ dài SAU KHI bỏ thẻ — cùng thước với G-QUIZ-GUESS, và cũng là thứ người
+     đọc nhìn thấy. Đếm cả thẻ cho một danh sách khác hẳn (124 câu thay vì 77, trùng 66);
+     bản đầu của lượt dọn 2026-08-20 đã giao việc theo thước sai vì thế. */
+  {
+    const txt = s => String(s).replace(/<[^>]+>/g, '');
+    const ties = [];
+    for (const id of quizIds) {
+      if (!byId[id] || !Array.isArray(QUIZ[id])) continue;
+      QUIZ[id].forEach((q, i) => {
+        if (!Array.isArray(q?.o) || !Number.isInteger(q?.a) || !q.o[q.a]) return;
+        const L = q.o.map(o => txt(o).length);
+        const g = Math.min(...L.filter((_, j) => j !== q.a).map(v => Math.abs(v - L[q.a])));
+        if (g < 3) ties.push(`${id} câu ${i + 1} (chênh ${g})`);
+      });
+    }
+    if (ties.length) W(`G-QUIZ-TIE: ${ties.length} câu có distractor chênh đáp án dưới 3 ký tự:\n    `
+      + ties.slice(0, 10).join(' · ') + (ties.length > 10 ? `\n    … và ${ties.length - 10} câu nữa` : '')
+      + '\n    Hạng độ dài nhảy khi chênh 1 ký tự, nên phân phối hạng của G-QUIZ-GUESS bị nhiễu ở đúng những câu này.'
+      + '\n    Cách sửa: rút distractor cho ngắn hẳn hoặc nới cho dài hẳn — KHÔNG đổi hạng của đáp án.');
   }
 
   /* G-QUIZ-COV: bài không có câu nào là ca nặng nhất, nhưng không phải ca hay gặp
