@@ -3544,6 +3544,7 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
     <li><b>Chia tập (tuần 2) phải xong trước feature engineering (tuần 3).</b> Làm ngược là công thức chuẩn để rò rỉ dữ liệu.</li>
     <li><b>Đo lường (tuần 4) phải xong trước tuning.</b> Tune theo một chỉ số sai thì càng tune càng tệ, mà bảng kết quả vẫn đẹp lên.</li>
   </ul>
+  <div data-viz="plan8dep"></div>
   <p>Ngoài ba ràng buộc đó, bạn đảo được. Nếu phải nộp đề cương sớm, kéo tuần 8 lên trước tuần 6 — bạn cần biết mình sẽ chứng minh cái gì trước khi biết cách làm.</p>
 
   <h2>Nếu bạn chỉ có 6 tuần</h2>
@@ -5622,6 +5623,8 @@ m = SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2")   <i># có ti�
 emb = m.encode(df["description"].tolist())    <i># (n, 384) — 384 cột số</i></div>
   <p>Đánh đổi: 384 cột đặc, chậm hơn nhiều, và <b>mất khả năng giải thích</b> — bạn không nói được "chiều thứ 217 nghĩa là gì". Với dữ liệu bảng có ít text, TF-IDF thường thắng. Chỉ lên mức 3 khi text là nguồn thông tin chính.</p>
 
+  <div data-viz="textlevels"></div>
+
   <div class="wb-alert wb-alert--info wb-alert--plain"><div class="wb-alert__body">
     <p class="wb-alert__title">Một hướng đề tài</p>
     <p class="wb-alert__msg">So sánh ba mức trên cùng một bài toán, đo cả <b>hiệu năng</b> lẫn <b>chi phí suy luận</b> (mili-giây/giao dịch) và <b>khả năng giải thích</b>, là một đóng góp thực tế và vừa sức cho luận văn thạc sĩ ứng dụng — nhất là với dữ liệu tiếng Việt, nơi rất ít nghiên cứu đối chiếu.</p>
@@ -6381,6 +6384,8 @@ pipe = ImbPipeline([
   </table>
   <p>Vì sao random thường thắng grid: trong 10 tham số thường chỉ 2–3 cái thật sự quan trọng. Grid lãng phí phần lớn ngân sách để thử các tổ hợp khác nhau của những tham số vô nghĩa.</p>
 
+  <div data-viz="tunesearch"></div>
+
   <h2>Optuna — mẫu dùng được ngay</h2>
   <div class="ds-code"><b>import</b> optuna
 <b>from</b> sklearn.model_selection <b>import</b> cross_val_score
@@ -6499,6 +6504,8 @@ df["anomaly_score"] = -iso.score_samples(X)     <i># cao = lạ hơn</i></div>
   <div class="ds-code">df["iso_score"] = -iso.score_samples(X)
 FEATURES = [..., "iso_score"]       <i># thêm vào danh sách feature của LightGBM</i></div>
   <p>Lý do nó hoạt động tốt: mô hình có giám sát học rất giỏi các kiểu gian lận <b>đã biết</b>, còn điểm bất thường bắt được cái <b>chưa từng thấy</b>. Hai tín hiệu bổ sung nhau, và cách kết hợp này là một đóng góp hợp lệ, dễ trình bày cho một luận văn thạc sĩ ứng dụng.</p>
+
+  <div data-viz="unsupmix"></div>
 
   <div class="wb-alert wb-alert--warning wb-alert--plain"><div class="wb-alert__body">
     <p class="wb-alert__title">Đánh giá mô hình không giám sát rất khó</p>
@@ -8393,6 +8400,8 @@ jobs:
       - run: pytest -q</div>
   <p>Mười lăm dòng, và mỗi lần push bạn biết ngay code còn chạy không. Dấu tick xanh trên repo cũng là một tín hiệu chất lượng khi hội đồng xem.</p>
 
+  <div data-viz="repro"></div>
+
   <p class="ds-more"><button class="ds-aside" data-aside="x-mlops-skip">MLOps: những thứ chưa cần ở quy mô này</button></p>
   <h2>Danh sách kiểm tra repo trước khi nộp</h2>
   <ul>
@@ -8432,6 +8441,7 @@ jobs:
 FP=  40,000₫  →  ngưỡng 0,318  |  thiệt hại    698 triệu
 FP=  80,000₫  →  ngưỡng 0,447  |  thiệt hại    801 triệu
 FP= 160,000₫  →  ngưỡng 0,602  |  thiệt hại    944 triệu</div>
+  <div data-viz="sens"></div>
   <p>Kết luận viết được: <i>"Ngưỡng tối ưu nhạy với giả định chi phí, nhưng mô hình đề xuất vượt baseline trong toàn bộ khoảng khảo sát 20.000–160.000₫."</i> Câu này mạnh hơn nhiều so với việc chọn đại một con số.</p>
 
   <h2>So sánh cuối cùng nên có</h2>
@@ -8625,6 +8635,8 @@ sched.step()</div>
 <i># thực chất là một bảng tra cứu 50.000 × 32, và mọi ô đều là tham số học được</i>
 vec = emb(torch.tensor([1234]))   <i># → vector 32 chiều của cửa hàng #1234</i></div>
   <p>Quy tắc chọn số chiều: $\min(50, \sqrt[4]{n})$ hoặc đơn giản là $n^{0{,}25}$. Với 50.000 giá trị → khoảng 15–32 chiều.</p>
+
+  <div data-viz="embed"></div>
 
   <h2>Vì sao "gần nhau" lại có nghĩa</h2>
   <p>Không ai bảo mô hình rằng hai cửa hàng giống nhau. Nhưng nếu chúng xuất hiện trong những bối cảnh tương tự (cùng loại khách, cùng khoảng tiền, cùng khung giờ), thì đặt vector của chúng gần nhau <b>làm giảm loss</b> — nên gradient descent tự đẩy chúng lại gần.</p>
@@ -9171,6 +9183,8 @@ pipe = make_pipeline(
   </table></div>
   <p>Cột “chi phí gán nhãn” là cột quyết định phạm vi dự án nhiều hơn cả độ khó kỹ thuật. Rất nhiều dự án CV thất bại không phải vì mô hình mà vì <b>không đủ ảnh có nhãn</b>. Câu hỏi đầu tiên khi nhận một dự án CV là “ai gán nhãn, mất bao lâu, và có nhất quán không?”</p>
   <p>Mẹo thu hẹp phạm vi: nếu detection quá đắt, hỏi xem <b>classification trên ảnh đã cắt</b> có giải quyết được vấn đề nghiệp vụ không. Rất thường là có.</p>
+
+  <div data-viz="cvtask"></div>
 
   <h2>CNN và vision transformer — định vị</h2>
   <p>Bài <b>CNN &amp; RNN</b> ở chặng 7 đã giải thích ý tưởng CNN. Phần cần thêm ở đây gọn:</p>
@@ -15744,6 +15758,685 @@ VIZ.confmat = el => {
       + `macro-F1 ${macro.toFixed(2)}, weighted-F1 ${weighted.toFixed(2)}, micro-F1 ${micro.toFixed(2)}.`;
   };
   wireSeg(el, draw); draw('raw');
+};
+
+/* -- 6.50 Ba chỗ trong lộ trình 8 tuần KHÔNG được đảo ----------
+   PAYOFF của s-plan8w hứa "sơ đồ phụ thuộc giữa các chặng", và bảng 8 tuần ở
+   trên không phải sơ đồ đó: bảng nói tuần nào làm gì, nó không nói đảo tuần nào
+   thì hỏng gì. Ba cột dưới đây là TOÀN BỘ phần cố định của lộ trình, nên hình
+   phải nói cả nửa còn lại — mọi thứ ngoài ba cột này đảo được. Nửa đó mới là
+   phần người học cần, vì nó cho phép họ tự xếp lại lịch mà không phá gì. */
+VIZ.plan8dep = el => {
+  const P = [
+    { k: 'split', w: [2, 3], a: 'Chia tập · T2', b: 'Feature · T3',
+      why: 'Feature chỉ được học thống kê trên phần train.',
+      broke: 'Tính scale, target-encoding hay tần suất trên cả bảng rồi mới chia: số của test đã lọt vào train. Điểm validation đẹp lên, chạy thật thì tụt, và không có dòng nào trong bảng kết quả tố giác việc đó.' },
+    { k: 'metric', w: [4], a: 'Đo lường · T4', b: 'Tuning · T4',
+      why: 'Tuning tối đa hoá đúng con số bạn đưa cho nó.',
+      broke: 'Tune theo accuracy trong bài chỉ có 0,2% gian lận: 60 lần thử đều đi về phía “đoán sạch hết”. Bảng kết quả vẫn đẹp lên từng dòng trong khi mô hình tệ đi.' },
+    { k: 'dl', w: [6, 7], a: 'Deep learning · T6', b: 'Họ bài toán · T7',
+      why: 'Chín họ bài toán ở T7 dùng lại đúng những thứ T6 dạy.',
+      broke: 'NLP cần embedding, computer vision cần mạng nơ-ron, forecasting có một nhánh LSTM. Học T7 trước thì chín họ đó thành một danh sách tên gọi: nhận ra được, không định vị được.' },
+  ];
+  el.innerHTML = `
+    <div class="wb-card"><div class="wb-card__body">
+      <p class="ds-viz__label">Ba cột dưới đây là toàn bộ phần cố định của lộ trình. Bấm một cột để xem đảo nó thì hỏng gì</p>
+      ${seg('Ràng buộc thứ tự', [{ k: 'all', t: 'Cả ba' }, { k: 'split', t: 'Chia tập → Feature' },
+        { k: 'metric', t: 'Đo lường → Tuning' }, { k: 'dl', t: 'DL → Họ bài toán' }], 'all')}
+      <svg viewBox="0 0 320 120" aria-hidden="true"><g data-o="g"></g></svg>
+      <p class="ds-viz__readout" data-o="head">—</p>
+      <p class="ds-viz__sub" data-o="body">—</p>
+      <p class="ds-viz__alt" data-o="alt"></p>
+      ${seeBlock({
+        see: 'chỉ có <b>ba</b> mũi tên, và cả ba đều nằm giữa hai việc <i>liền nhau</i>. Nghĩa là lộ trình 8 tuần <b>không</b> phải một chuỗi cứng — nó là ba cặp bị khoá, còn lại thì tự do. Cần nộp đề cương sớm thì kéo tuần 8 lên trước tuần 6 mà không phá gì cả.',
+        wrong: '“phải học đúng thứ tự trang này xếp, sai một tuần là hỏng”. Sai — và niềm tin đó làm người học bỏ cả lộ trình khi lịch cá nhân của họ không khớp. Cái hỏng thật chỉ có ba chỗ, và cả ba đều là <b>rò rỉ hoặc tối ưu sai mục tiêu</b>, không phải “thiếu nền tảng”.',
+        code: 'ba mũi tên này chính là ba lỗi mà một bảng kết quả <i>không thể</i> phát hiện — vì cả ba đều làm con số <b>đẹp lên</b>. Đó là lý do chúng được khoá bằng thứ tự thay vì bằng một bước kiểm.',
+      })}
+    </div></div>`;
+  const g = el.querySelector('[data-o="g"]');
+  const box = (x, y, w, h, on) =>
+    `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="4" fill="${on ? 'var(--wb-surface)' : 'none'}"
+       stroke="${on ? 'var(--wb-fg)' : 'var(--wb-border)'}" stroke-width="${on ? 1.4 : 1}"/>`;
+  const lab = (x, y, t, on, fs) =>
+    `<text x="${x}" y="${y}" text-anchor="middle" font-size="${fs || 7}"
+       fill="${on ? 'var(--wb-fg)' : 'var(--wb-fg-subtle)'}">${t}</text>`;
+  const draw = () => {
+    const m = el.querySelector('[data-seg][aria-pressed="true"]').dataset.seg;
+    const hotW = new Set(m === 'all' ? [2, 3, 4, 6, 7] : P.find(p => p.k === m).w);
+    let s = '';
+    for (let i = 0; i < 8; i++) {
+      const on = hotW.has(i + 1), x = 6.5 + i * 39;
+      s += box(x, 4, 34, 13, on) + lab(x + 17, 13.5, 'T' + (i + 1), on, 6);
+    }
+    P.forEach((p, i) => {
+      const on = m === 'all' || m === p.k, x = 8 + i * 104, cx = x + 48;
+      s += box(x, 30, 96, 26, on) + lab(cx, 46, p.a, on);
+      s += lab(cx, 66, 'phải xong trước', on, 6);
+      s += `<line x1="${cx}" y1="70" x2="${cx}" y2="79" stroke="${on ? 'var(--wb-fg)' : 'var(--wb-border)'}" stroke-width="${on ? 1.4 : 1}"/>`
+        + `<path d="M${cx - 3.2} 79 L${cx + 3.2} 79 L${cx} 84 Z" fill="${on ? 'var(--wb-fg)' : 'var(--wb-border)'}"/>`;
+      s += box(x, 88, 96, 26, on) + lab(cx, 104, p.b, on);
+    });
+    g.innerHTML = s;
+    const head = el.querySelector('[data-o="head"]'), body = el.querySelector('[data-o="body"]');
+    if (m === 'all') {
+      head.textContent = 'Ba ràng buộc — và chỉ ba';
+      body.innerHTML = 'Mọi thứ ngoài ba cột này <b>đảo được</b>. Tuần 8 (chuẩn bị bảo vệ) kéo lên trước tuần 6 được; tuần 7 giãn thành hai tuần được; các bài “Nên biết” bỏ được. Bấm từng cột để xem cái giá của việc đảo nó.';
+    } else {
+      const p = P.find(x => x.k === m);
+      head.textContent = p.a + ' → ' + p.b;
+      body.innerHTML = '<b>' + p.why + '</b> ' + p.broke;
+    }
+    el.querySelector('[data-o="alt"]').textContent =
+      'Sơ đồ phụ thuộc của lộ trình 8 tuần. Hàng trên: tám ô T1–T8 (tám tuần), ' +
+      (m === 'all' ? 'các tuần 2, 3, 4, 6, 7 được tô đậm' : 'các tuần ' + P.find(x => x.k === m).w.join(' và ') + ' được tô đậm') +
+      '. Dưới đó là ba cột, mỗi cột một mũi tên đi xuống mang chữ “phải xong trước”: ' +
+      P.map(p => p.a + ' phải xong trước ' + p.b).join('; ') + '. ' +
+      (m === 'all' ? 'Không có mũi tên nào khác, nên mọi thứ ngoài ba cặp này đảo được.'
+        : 'Cột đang chọn: ' + P.find(x => x.k === m).why + ' ' + P.find(x => x.k === m).broke);
+  };
+  wireSeg(el, draw); draw();
+};
+
+/* -- 6.51 Ba mức xử lý cột chữ, đo trên cùng hai câu -----------
+   f-text xếp ba mức theo giá (rẻ → đắt), nhưng cái người học phải quyết là
+   thứ khác: mức nào ĐO ĐƯỢC cái mình cần. Hình này chạy đúng ba mức trên hai
+   câu cùng nghĩa khác tiếng, nên câu trả lời đọc ra được từ một con số duy
+   nhất — và nó cho thấy mức 1 nói "giống 99%" vì lý do sai hoàn toàn. */
+VIZ.textlevels = el => {
+  const SA = 'HOÀN TIỀN khẩn 24h'.normalize('NFC'), SB = 'urgent refund now'.normalize('NFC');
+  const f1 = s => [s.length, (s.match(/\d/g) || []).length,
+    (s.match(/[A-Z]/g) || []).length / (s.length + 1), /refund|urgent|verify/.test(s.toLowerCase()) ? 1 : 0];
+  const vA = f1(SA), vB = f1(SB);
+  const cos = (p, q) => {
+    const d = p.reduce((s, x, i) => s + x * q[i], 0);
+    const n = Math.hypot(...p) * Math.hypot(...q);
+    return n ? d / n : 0;
+  };
+  const tokA = ['hoàn', 'tiền', 'khẩn', '24h'], tokB = ['urgent', 'refund', 'now'];
+  const shared = tokA.filter(t => tokB.includes(t)).length;
+  const rng = (s => () => { s = (s * 48271) % 2147483647; return s / 2147483647; })(20260821);
+  const dA = [], dB = [];
+  for (let i = 0; i < 24; i++) { const a = rng(); dA.push(a); dB.push(0.74 * a + 0.26 * rng()); }
+  const n2 = (x) => x.toFixed(2).replace('.', ',');
+  el.innerHTML = `
+    <div class="wb-card"><div class="wb-card__body">
+      <p class="ds-viz__label">Hai câu cùng nghĩa, khác tiếng — mỗi mức mã hoá trả lời “chúng giống nhau bao nhiêu” một cách khác</p>
+      <p class="ds-viz__sub"><b>A</b> = “${SA}”  ·  <b>B</b> = “${SB}”</p>
+      ${seg('Mức xử lý', [{ k: 'm1', t: 'Mức 1 · thủ công' }, { k: 'm2', t: 'Mức 2 · TF-IDF' },
+        { k: 'm3', t: 'Mức 3 · embedding' }], 'm1')}
+      <svg viewBox="0 0 320 76" aria-hidden="true" style="margin-top:6px"><g data-o="g"></g></svg>
+      <div class="wb-grid wb-grid--3" style="margin-top:10px">
+        <div><p class="ds-viz__sub">Số cột đưa vào mô hình</p><p class="ds-viz__readout" data-o="nc">—</p></div>
+        <div><p class="ds-viz__sub">Độ giống giữa A và B</p><p class="ds-viz__readout" data-o="sim">—</p></div>
+        <div><p class="ds-viz__sub">Giải thích được không</p><p class="ds-viz__readout" data-o="exp">—</p></div>
+      </div>
+      <p class="ds-viz__sub" data-o="note">—</p>
+      <p class="ds-viz__alt" data-o="alt"></p>
+      ${seeBlock({
+        see: 'mức 1 báo <b>giống 99%</b> — và đó là con số <i>tệ nhất</i> trong ba mức, vì nó giống nhờ <b>độ dài</b> (18 và 17 ký tự). Cột duy nhất mang nghĩa, <code>has_keyword</code>, lệch nhau 0 và 1, nhưng nó bị ba cột kia lớn hơn hàng chục lần dìm mất. Mức 2 báo <b>0,00</b>: đúng theo định nghĩa của nó (không chung một từ nào) và sai theo nghĩa. Chỉ mức 3 báo một số phản ánh nghĩa.',
+        wrong: '“cosine cao thì hai văn bản gần nghĩa”. Cosine không biết gì về nghĩa — nó chỉ đo góc giữa hai vector, nên nó tốt đúng bằng cái vector bạn đưa vào. Ở mức 1, chưa scale thì cosine gần như chỉ đo cột có giá trị lớn nhất.',
+        code: 'đó là lý do đặc trưng thủ công phải đi qua <code>StandardScaler</code> trước mọi phép đo khoảng cách, và là lý do bài <b>Chuẩn hoá</b> đứng trước bài này trong lộ trình.',
+      })}
+    </div></div>`;
+  const g = el.querySelector('[data-o="g"]');
+  const cell = (x, y, w, h, op) =>
+    `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="2" fill="var(--wb-fg)" fill-opacity="${op}" stroke="var(--wb-border)" stroke-width="0.6"/>`;
+  const draw = () => {
+    const m = el.querySelector('[data-seg][aria-pressed="true"]').dataset.seg;
+    let s = '';
+    const rowLab = (y, t) => `<text x="16" y="${y}" text-anchor="end" font-size="7" fill="var(--wb-fg-muted)">${t}</text>`;
+    if (m === 'm1') {
+      const H = ['độ dài', 'số chữ số', 'tỉ lệ chữ HOA', 'có từ khoá'];
+      const fmt = v => [String(v[0]), String(v[1]), n2(v[2]), String(v[3])];
+      const tA = fmt(vA), tB = fmt(vB);
+      H.forEach((h, i) => {
+        s += `<text x="${54 + i * 68}" y="12" text-anchor="middle" font-size="6" fill="var(--wb-fg-subtle)">${h}</text>`;
+      });
+      [[18, tA], [44, tB]].forEach(([y, t]) => {
+        t.forEach((v, i) => {
+          s += cell(20 + i * 68, y, 66, 22, 0.06)
+            + `<text x="${54 + i * 68}" y="${y + 14.5}" text-anchor="middle" font-size="8" fill="var(--wb-fg)">${v}</text>`;
+        });
+      });
+      s += rowLab(32.5, 'A') + rowLab(58.5, 'B');
+      s += `<text x="160" y="72" text-anchor="middle" font-size="6" fill="var(--wb-fg-subtle)">4 cột — ba cột đầu cỡ hàng chục, cột cuối cỡ 0–1</text>`;
+    } else {
+      const capTop = m === 'm2' ? '24 trong 300 cột đầu — ô tô đậm là cột có giá trị khác 0'
+        : '24 trong 384 cột đầu — cột nào cũng có giá trị';
+      s += `<text x="160" y="12" text-anchor="middle" font-size="6" fill="var(--wb-fg-subtle)">${capTop}</text>`;
+      const colA = [2, 7, 13, 19], colB = [4, 11, 18];
+      for (let i = 0; i < 24; i++) {
+        const x = 20 + i * 12;
+        const oA = m === 'm2' ? (colA.includes(i) ? 0.55 : 0.04) : 0.10 + 0.34 * dA[i];
+        const oB = m === 'm2' ? (colB.includes(i) ? 0.55 : 0.04) : 0.10 + 0.34 * dB[i];
+        s += cell(x, 20, 11, 14, oA) + cell(x, 40, 11, 14, oB);
+      }
+      s += rowLab(30, 'A') + rowLab(50, 'B');
+      const capBot = m === 'm2' ? 'A dùng 4 cột · B dùng 3 cột · 0 cột dùng chung'
+        : 'hai hàng đậm nhạt gần giống nhau ở phần lớn cột';
+      s += `<text x="160" y="70" text-anchor="middle" font-size="6" fill="var(--wb-fg-subtle)">${capBot}</text>`;
+    }
+    g.innerHTML = s;
+    const o = k => el.querySelector(`[data-o="${k}"]`);
+    if (m === 'm1') {
+      const c = cos(vA, vB);
+      o('nc').textContent = '4';
+      o('sim').textContent = n2(c);
+      o('exp').textContent = 'Được';
+      o('note').innerHTML = `Vector A = [${vA[0]}, ${vA[1]}, ${n2(vA[2])}, ${vA[3]}], B = [${vB[0]}, ${vB[1]}, ${n2(vB[2])}, ${vB[3]}]. `
+        + `Cosine ${n2(c)} — <b>gần như hoàn toàn do cột “độ dài”</b>: 18 × 17 đã chiếm hết tử số. Cột <code>has_keyword</code> lệch 0 với 1 — cột duy nhất mang nghĩa — nhưng nó góp 0 vào tử số và bị ba cột cỡ hàng chục dìm mất.`;
+    } else if (m === 'm2') {
+      o('nc').textContent = '300';
+      o('sim').textContent = n2(0);
+      o('exp').textContent = 'Được';
+      o('note').innerHTML = `A có ${tokA.length} từ (${tokA.join(', ')}), B có ${tokB.length} từ (${tokB.join(', ')}), <b>${shared} từ dùng chung</b>. `
+        + 'Không chung một cột nào thì tử số của cosine bằng 0 — TF-IDF kết luận hai câu <b>không liên quan gì nhau</b>. Đúng theo cách nó đếm, sai theo nghĩa.';
+    } else {
+      o('nc').textContent = '384';
+      o('sim').textContent = '≈ 0,74';
+      o('exp').textContent = 'Không';
+      o('note').innerHTML = 'Con số 0,74 là <b>số minh hoạ</b> cho một mô hình đa ngữ, không phải số đo được trên trang này — nhưng dấu của nó thì chắc: cùng nghĩa khác tiếng thì embedding đa ngữ cho giá trị cao, còn TF-IDF luôn cho 0. Cái giá: 384 cột đặc, chậm hơn nhiều, và không có cột nào bạn chỉ vào được để giải thích.';
+    }
+    o('alt').textContent =
+      (m === 'm1'
+        ? `Mức 1: bốn ô cho mỗi câu, ghi độ dài / số chữ số / tỉ lệ chữ hoa / có từ khoá. Hàng A: ${vA[0]}, ${vA[1]}, ${n2(vA[2])}, ${vA[3]}. Hàng B: ${vB[0]}, ${vB[1]}, ${n2(vB[2])}, ${vB[3]}. Số cột 4, độ giống ${n2(cos(vA, vB))}, giải thích được.`
+        : m === 'm2'
+          ? `Mức 2: hai hàng, mỗi hàng 24 ô đại diện 24 trong 300 cột TF-IDF. Hàng A tô đậm 4 ô, hàng B tô đậm 3 ô, không ô nào cùng vị trí. Số cột 300, độ giống 0,00, giải thích được.`
+          : `Mức 3: hai hàng, mỗi hàng 24 ô đều có màu với độ đậm khác nhau, và hai hàng có hình dạng gần giống nhau. Số cột 384, độ giống khoảng 0,74 (số minh hoạ), không giải thích được từng cột.`);
+  };
+  wireSeg(el, draw); draw();
+};
+
+/* -- 6.52 Vì sao random thắng grid với cùng ngân sách ----------
+   ml-tune nói câu đó bằng chữ ("trong 10 tham số thường chỉ 2–3 cái quan
+   trọng"), và bằng chữ thì nó nghe như một mẹo. Hình này cho đếm: cùng 36 lần
+   train, grid thử 6 giá trị của trục quan trọng, random thử 36. Con số đó là
+   toàn bộ lý lẽ, và nó chỉ hiện ra khi nhìn HÌNH CHIẾU xuống trục ngang. */
+VIZ.tunesearch = el => {
+  const OPT = 0.72, SIG = 0.13;
+  const f = x => 0.60 + 0.22 * Math.exp(-((x - OPT) ** 2) / (2 * SIG * SIG));
+  const n3 = v => v.toFixed(3).replace('.', ',');
+  el.innerHTML = `
+    <div class="wb-card"><div class="wb-card__body">
+      <p class="ds-viz__label">Hai tham số, nhưng chỉ trục ngang ảnh hưởng tới kết quả. Kéo ngân sách, đổi cách dò</p>
+      ${seg('Cách dò', [{ k: 'grid', t: 'Grid search' }, { k: 'rand', t: 'Random search' },
+        { k: 'tpe', t: 'Optuna (TPE)' }], 'grid')}
+      <div class="ds-ctrl"><div class="ds-ctrl__top"><span class="ds-ctrl__name">Ngân sách — số lần train cho phép</span><span class="ds-ctrl__val" data-o="nb">36</span></div>
+        <input class="wb-range" type="range" min="9" max="64" value="36" data-i="n" aria-label="Ngân sách, số lần train"></div>
+      <svg viewBox="0 0 320 180" aria-hidden="true"><g data-o="g"></g></svg>
+      <div class="wb-grid wb-grid--3" style="margin-top:10px">
+        <div><p class="ds-viz__sub">Số lần train đã dùng</p><p class="ds-viz__readout" data-o="used">—</p></div>
+        <div><p class="ds-viz__sub">Số giá trị của trục ngang</p><p class="ds-viz__readout" data-o="dist">—</p></div>
+        <div><p class="ds-viz__sub">Điểm CV tốt nhất</p><p class="ds-viz__readout" data-o="best">—</p></div>
+      </div>
+      <p class="ds-viz__sub" data-o="note">—</p>
+      <p class="ds-viz__alt" data-o="alt"></p>
+      ${seeBlock({
+        see: 'đặt ngân sách 36 rồi đổi qua lại grid ↔ random. Số điểm trên hình <b>không đổi</b>, nhưng dải vạch dưới cùng — hình chiếu xuống trục quan trọng — đổi từ <b>6 vạch</b> thành <b>36 vạch</b>. Grid đã tiêu 30 lần train để thử lại 6 giá trị cũ của trục quan trọng, chỉ vì trục vô nghĩa đổi. Optuna thêm một thứ nữa: sau ~8 lần đầu nó <b>dồn điểm về vùng tốt</b> thay vì rải đều.',
+        wrong: '“grid đầy đủ hơn nên chắc chắn hơn”. Grid đầy đủ trên <i>lưới nó tự đặt ra</i>, không đầy đủ trên khoảng giá trị. Với cùng ngân sách, số giá trị nó thử của MỖI trục chỉ là căn bậc <i>số trục</i> của ngân sách — 6 trục, 64 lần train, còn <b>2 giá trị mỗi trục</b>.',
+        code: 'trong <code>ml-tune</code> mẫu Optuna dò 6 tham số. Grid tương đương cần 4⁶ = 4.096 lần train chỉ để có 4 giá trị mỗi tham số — đó là lý do mẫu ở bài này không phải grid.',
+      })}
+    </div></div>`;
+  const g = el.querySelector('[data-o="g"]');
+  const X0 = 46, X1 = 306, Y0 = 14, Y1 = 134;
+  const px = x => X0 + x * (X1 - X0), py = y => Y1 - y * (Y1 - Y0);
+  const draw = () => {
+    const mode = el.querySelector('[data-seg][aria-pressed="true"]').dataset.seg;
+    const N = +el.querySelector('[data-i="n"]').value;
+    el.querySelector('[data-o="nb"]').textContent = N;
+    const pts = [];
+    if (mode === 'grid') {
+      const side = Math.floor(Math.sqrt(N));
+      for (let i = 0; i < side; i++) for (let j = 0; j < side; j++)
+        pts.push([(i + 0.5) / side, (j + 0.5) / side]);
+    } else {
+      const rng = (s => () => { s = (s * 48271) % 2147483647; return s / 2147483647; })(20260821 + N);
+      if (mode === 'rand') { for (let i = 0; i < N; i++) pts.push([rng(), rng()]); }
+      else {
+        const warm = Math.min(8, N);
+        for (let i = 0; i < warm; i++) pts.push([rng(), rng()]);
+        for (let i = warm; i < N; i++) {
+          let bx = pts[0][0], bv = f(bx);
+          pts.forEach(p => { if (f(p[0]) > bv) { bv = f(p[0]); bx = p[0]; } });
+          const sd = 0.30 * Math.pow(0.965, i - warm);
+          const u = Math.max(0, Math.min(1, bx + (rng() + rng() + rng() - 1.5) * sd));
+          pts.push([u, rng()]);
+        }
+      }
+    }
+    const xs = [...new Set(pts.map(p => p[0].toFixed(4)))];
+    const best = Math.max(...pts.map(p => f(p[0])));
+    let s = `<rect x="${X0}" y="${Y0}" width="${X1 - X0}" height="${Y1 - Y0}" fill="none" stroke="var(--wb-border)" stroke-width="1"/>`;
+    s += `<rect x="${px(OPT - SIG)}" y="${Y0}" width="${px(OPT + SIG) - px(OPT - SIG)}" height="${Y1 - Y0}" fill="var(--wb-fg)" fill-opacity="0.05"/>`;
+    s += `<line x1="${px(OPT)}" y1="${Y0}" x2="${px(OPT)}" y2="${Y1}" stroke="var(--wb-border-strong)" stroke-width="1" stroke-dasharray="3 2.5"/>`;
+    s += `<text x="${px(OPT)}" y="10" text-anchor="middle" font-size="6" fill="var(--wb-fg-subtle)">vùng tối ưu thật</text>`;
+    pts.forEach(p => {
+      const on = f(p[0]) > 0.60 + 0.22 * Math.exp(-0.5);
+      s += `<circle cx="${px(p[0]).toFixed(1)}" cy="${py(p[1]).toFixed(1)}" r="${on ? 3 : 2.2}"
+        fill="${on ? 'var(--wb-fg)' : 'none'}" stroke="var(--wb-neutral-strong)" stroke-width="1"/>`;
+    });
+    s += `<line x1="${X0}" y1="146" x2="${X1}" y2="146" stroke="var(--wb-border)" stroke-width="1"/>`;
+    xs.forEach(v => {
+      const x = px(+v).toFixed(1);
+      s += `<line x1="${x}" y1="141" x2="${x}" y2="151" stroke="var(--wb-fg)" stroke-width="1"/>`;
+    });
+    s += `<text x="160" y="162" text-anchor="middle" font-size="6" fill="var(--wb-fg-subtle)">hình chiếu: ${xs.length} giá trị khác nhau của trục ngang đã được thử</text>`;
+    s += `<text x="176" y="174" text-anchor="middle" font-size="6.5" fill="var(--wb-fg-muted)">tham số quan trọng (num_leaves) →</text>`;
+    s += `<text x="0" y="0" font-size="6.5" fill="var(--wb-fg-muted)" text-anchor="middle" transform="translate(38 74) rotate(-90)">tham số vô nghĩa</text>`;
+    g.innerHTML = s;
+    const o = k => el.querySelector(`[data-o="${k}"]`);
+    o('used').textContent = pts.length + (mode === 'grid' && pts.length < N ? ' / ' + N : '');
+    o('dist').textContent = xs.length;
+    o('best').textContent = n3(best);
+    o('note').innerHTML = mode === 'grid'
+      ? `Lưới ${Math.floor(Math.sqrt(N))} × ${Math.floor(Math.sqrt(N))} = ${pts.length} lần train${pts.length < N ? ` — ngân sách ${N} nhưng lưới vuông chỉ dùng được ${pts.length}, phần dư <b>bỏ không</b>` : ''}. Trục quan trọng chỉ được thử <b>${xs.length}</b> giá trị; ${pts.length - xs.length} lần train còn lại thử lại đúng ${xs.length} giá trị đó với trục vô nghĩa khác.`
+      : mode === 'rand'
+        ? `${pts.length} lần train, <b>${xs.length}</b> giá trị khác nhau của trục quan trọng — mỗi lần train là một giá trị mới. Cùng ngân sách với grid, độ phân giải trên trục thật sự quan trọng gấp ${(xs.length / Math.max(1, Math.floor(Math.sqrt(N)))).toFixed(1).replace('.', ',')} lần.`
+        : `8 lần đầu rải ngẫu nhiên để dò địa hình, ${Math.max(0, pts.length - 8)} lần sau dồn quanh giá trị tốt nhất đang có (bán kính co dần). Vạch dưới cùng vì thế <b>dày ở vùng tối ưu, thưa ở hai bên</b> — đó là toàn bộ khác biệt giữa Optuna và random.`;
+    o('alt').textContent =
+      `Không gian hai tham số. Trục ngang là tham số quan trọng, trục dọc là tham số gần như vô nghĩa; một dải mờ đánh dấu vùng tối ưu thật quanh giá trị ${n3(OPT)} của trục ngang. `
+      + `Cách dò: ${mode === 'grid' ? 'grid search' : mode === 'rand' ? 'random search' : 'Optuna/TPE'}, ngân sách ${N} lần train, dùng thật ${pts.length} lần. `
+      + `Dải vạch dưới hình là hình chiếu của các điểm xuống trục ngang: ${xs.length} vạch, tức ${xs.length} giá trị khác nhau đã được thử. `
+      + `Điểm CV tốt nhất tìm được ${n3(best)}. `
+      + (mode === 'grid' ? 'Các điểm nằm đúng trên một lưới vuông, nên nhiều điểm chiếu trùng nhau xuống cùng một vạch.'
+        : mode === 'rand' ? 'Các điểm rải đều khắp hình, không điểm nào chiếu trùng điểm nào.'
+          : 'Các điểm tụ lại quanh vùng tối ưu, thưa dần về hai bên.');
+  };
+  el.addEventListener('input', draw); wireSeg(el, draw); draw();
+};
+
+/* -- 6.53 Điểm bất thường bắt được cái mà nhãn không có --------
+   ml-unsup kết luận "đừng chọn một trong hai" và đưa hai dòng code. Chỗ khó
+   không phải cú pháp mà là VÌ SAO nó cộng thêm được: mô hình có giám sát chỉ
+   nhìn được vùng nó đã thấy nhãn, còn kiểu gian lận mới nằm ngoài vùng đó.
+   Hai vùng đó vẽ ra được, và khi vẽ ra thì ba con số tự đếm được từ hình. */
+VIZ.unsupmix = el => {
+  const NC = [0.42, 0.50], SD = 0.11, KC = [0.60, 0.40], KSD = 0.045, MC = [0.20, 0.84], MSD = 0.038;
+  const rng = (s => () => { s = (s * 48271) % 2147483647; return s / 2147483647; })(20260821);
+  const gauss = () => (rng() + rng() + rng() + rng() + rng() + rng() - 3) * 1.4142;
+  const PTS = [];
+  for (let i = 0; i < 170; i++) PTS.push({ g: 0, x: NC[0] + gauss() * SD, y: NC[1] + gauss() * SD });
+  for (let i = 0; i < 12; i++) PTS.push({ g: 1, x: KC[0] + gauss() * KSD, y: KC[1] + gauss() * KSD });
+  for (let i = 0; i < 6; i++) PTS.push({ g: 2, x: MC[0] + gauss() * MSD, y: MC[1] + gauss() * MSD });
+  const SUP_R = 0.105;
+  const d = (p, c) => Math.hypot(p.x - c[0], p.y - c[1]);
+  el.innerHTML = `
+    <div class="wb-card"><div class="wb-card__body">
+      <p class="ds-viz__label">188 giao dịch. Kéo độ nhạy của bộ phát hiện bất thường, đổi qua ba cách chặn</p>
+      ${seg('Cách chặn', [{ k: 'sup', t: 'Chỉ mô hình có giám sát' }, { k: 'iso', t: 'Chỉ điểm bất thường' },
+        { k: 'both', t: 'Cộng cả hai' }], 'sup')}
+      <div class="ds-ctrl"><div class="ds-ctrl__top"><span class="ds-ctrl__name">Độ nhạy bộ bất thường (<code>contamination</code>)</span><span class="ds-ctrl__val" data-o="sv">—</span></div>
+        <input class="wb-range" type="range" min="1" max="100" value="50" data-i="s" aria-label="Độ nhạy bộ phát hiện bất thường"></div>
+      <svg viewBox="0 0 320 150" aria-hidden="true"><g data-o="g"></g></svg>
+      ${key([['var(--wb-fg)', 'gian lận kiểu ĐÃ CÓ NHÃN (12)'], ['var(--wb-warning)', 'gian lận kiểu MỚI (6)'], ['var(--wb-border-strong)', 'giao dịch sạch (170)']])}
+      <div class="wb-grid wb-grid--3" style="margin-top:10px">
+        <div><p class="ds-viz__sub">Đã có nhãn — bắt được</p><p class="ds-viz__readout" data-o="k">—</p></div>
+        <div><p class="ds-viz__sub">Kiểu MỚI — bắt được</p><p class="ds-viz__readout" data-o="m">—</p></div>
+        <div><p class="ds-viz__sub">Ca sạch bị chặn oan</p><p class="ds-viz__readout" data-o="f">—</p></div>
+      </div>
+      <p class="ds-viz__sub" data-o="note">—</p>
+      <p class="ds-viz__alt" data-o="alt"></p>
+      ${seeBlock({
+        see: 'để độ nhạy ở giữa rồi đổi qua lại. <b>Chỉ có giám sát</b>: bắt gần hết cụm đã có nhãn, bắt <b>0</b> ca kiểu mới — vì cụm mới nằm ngoài vùng nó từng thấy nhãn. <b>Chỉ bất thường</b>: bắt gần hết cụm mới, nhưng <b>bỏ lọt</b> phần lớn cụm đã biết, vì cụm đó nằm sát đám sạch nên nó không “lạ”. Hai bộ dò bỏ lọt hai chỗ khác nhau — đó là lý do cộng lại thì hơn cả hai.',
+        wrong: '“bộ phát hiện bất thường là bản yếu hơn của mô hình có giám sát”. Không phải yếu hơn — <b>khác chỗ mù</b>. Gian lận đã biết thường <i>trông rất bình thường</i> (kẻ gian bắt chước hành vi thật), nên nó là ca dễ nhất cho nhãn và khó nhất cho “độ lạ”.',
+        code: 'kéo độ nhạy lên cao nhất và xem cột thứ ba: cộng thêm ca kiểu mới luôn phải trả bằng ca sạch bị chặn oan. Đó chính là con số bài <b>Quy ra tiền</b> đem nhân với chi phí FP.',
+      })}
+    </div></div>`;
+  const g = el.querySelector('[data-o="g"]');
+  const X0 = 10, X1 = 296, Y0 = 6, Y1 = 126;
+  const px = x => X0 + x * (X1 - X0), py = y => Y1 - y * (Y1 - Y0);
+  const draw = () => {
+    const mode = el.querySelector('[data-seg][aria-pressed="true"]').dataset.seg;
+    const sv = +el.querySelector('[data-i="s"]').value;
+    const R = 0.44 - (sv / 100) * 0.26;
+    el.querySelector('[data-o="sv"]').textContent = (sv / 10).toFixed(1).replace('.', ',') + '%';
+    const flag = p => {
+      const bySup = d(p, KC) <= SUP_R, byIso = d(p, NC) >= R;
+      return mode === 'sup' ? bySup : mode === 'iso' ? byIso : (bySup || byIso);
+    };
+    const C = [0, 0, 0], T = [0, 0, 0];
+    PTS.forEach(p => { T[p.g]++; if (flag(p)) C[p.g]++; });
+    let s = `<rect x="${X0}" y="${Y0}" width="${X1 - X0}" height="${Y1 - Y0}" fill="none" stroke="var(--wb-border)" stroke-width="1"/>`;
+    if (mode !== 'iso')
+      s += `<ellipse cx="${px(KC[0]).toFixed(1)}" cy="${py(KC[1]).toFixed(1)}" rx="${(SUP_R * (X1 - X0)).toFixed(1)}" ry="${(SUP_R * (Y1 - Y0)).toFixed(1)}"
+        fill="none" stroke="var(--wb-fg)" stroke-width="1.2" stroke-dasharray="4 3"/>`;
+    if (mode !== 'sup')
+      s += `<ellipse cx="${px(NC[0]).toFixed(1)}" cy="${py(NC[1]).toFixed(1)}" rx="${(R * (X1 - X0)).toFixed(1)}" ry="${(R * (Y1 - Y0)).toFixed(1)}"
+        fill="none" stroke="var(--wb-neutral-strong)" stroke-width="1.2"/>`;
+    const COL = ['var(--wb-border-strong)', 'var(--wb-fg)', 'var(--wb-warning)'];
+    PTS.forEach(p => {
+      const on = flag(p);
+      s += `<circle cx="${px(p.x).toFixed(1)}" cy="${py(p.y).toFixed(1)}" r="${p.g ? 2.8 : 2}"
+        fill="${p.g ? COL[p.g] : 'none'}" stroke="${on ? 'var(--wb-fg)' : COL[p.g]}" stroke-width="${on ? 1.6 : 0.9}"/>`;
+    });
+    s += `<ellipse cx="16" cy="132" rx="6" ry="3.2" fill="none" stroke="var(--wb-fg)" stroke-width="1.2" stroke-dasharray="3 2"/>`
+      + `<text x="26" y="134.5" font-size="6" fill="var(--wb-fg-muted)">vùng mô hình có giám sát đã học</text>`
+      + `<ellipse cx="16" cy="142" rx="6" ry="3.2" fill="none" stroke="var(--wb-neutral-strong)" stroke-width="1.2"/>`
+      + `<text x="26" y="144.5" font-size="6" fill="var(--wb-fg-muted)">ranh giới “lạ”: ngoài đường này là bất thường</text>`;
+    g.innerHTML = s;
+    const o = k => el.querySelector(`[data-o="${k}"]`);
+    o('k').textContent = `${C[1]} / ${T[1]}`;
+    o('m').textContent = `${C[2]} / ${T[2]}`;
+    o('f').textContent = `${C[0]} / ${T[0]}`;
+    o('note').innerHTML = mode === 'sup'
+      ? `Mô hình có giám sát chỉ chặn trong vùng nét đứt — vùng nó từng thấy nhãn. Cụm gian lận kiểu mới nằm hoàn toàn ngoài vùng đó, nên <b>thanh độ nhạy không đổi được con số nào</b>: kéo hết sang phải cũng vậy. Đó chính là chỗ mù mà nhãn không lấp được.`
+      : mode === 'iso'
+        ? `Bộ bất thường chặn mọi thứ ngoài đường tròn. Cụm đã có nhãn nằm <b>bên trong</b> đám sạch nên nó lọt, trừ khi bạn kéo độ nhạy lên tới mức chặn oan hàng chục ca sạch. Bán kính hiện tại ${R.toFixed(2).replace('.', ',')} (đơn vị của trục).`
+        : `Cộng hai bộ dò: ${C[1]}/${T[1]} ca đã biết (do vùng nét đứt) cộng ${C[2]}/${T[2]} ca kiểu mới (do đường tròn), trả bằng ${C[0]} ca sạch bị chặn oan. Đây là cấu hình mà bài này gọi là <b>đóng góp hợp lệ cho luận văn</b> — và cột thứ ba là cái giá phải nói ra kèm.`;
+    o('alt').textContent =
+      `Biểu đồ tán xạ 188 giao dịch trên hai trục đặc trưng. 170 điểm sạch tụ thành một đám ở giữa; 12 điểm gian lận đã có nhãn tụ thành cụm nhỏ nằm ngay mép phải đám sạch; 6 điểm gian lận kiểu mới tụ thành cụm ở góc trên bên trái, tách hẳn. `
+      + `Cách chặn đang chọn: ${mode === 'sup' ? 'chỉ mô hình có giám sát — một đường nét đứt bao quanh cụm đã có nhãn' : mode === 'iso' ? `chỉ điểm bất thường — một đường tròn bán kính ${R.toFixed(2)} quanh tâm đám sạch, ngoài đường là bị chặn` : `cộng cả hai — cả đường nét đứt lẫn đường tròn bán kính ${R.toFixed(2)}`}. `
+      + `Độ nhạy ${(sv / 10).toFixed(1)}%. Kết quả: bắt ${C[1]} trên ${T[1]} ca gian lận đã có nhãn, ${C[2]} trên ${T[2]} ca gian lận kiểu mới, và chặn oan ${C[0]} trên ${T[0]} ca sạch. Điểm bị chặn được vẽ viền đậm.`;
+  };
+  el.addEventListener('input', draw); wireSeg(el, draw); draw();
+};
+
+/* -- 6.54 Ngưỡng theo chi phí, và phân tích độ nhạy ------------
+   pr-cost in ra bốn dòng kết quả rồi rút một câu kết luận. Câu đó ("kết luận
+   không đổi trong toàn khoảng") là thứ đáng nhất trong bài, nhưng đọc bốn dòng
+   số thì không thấy được — nó là một phát biểu về HÌNH DẠNG của đường chi phí.
+   Hình này vẽ đúng đường đó và hai mốc so sánh, nên câu kết luận đọc ra được. */
+VIZ.sens = el => {
+  const NPOS = 200, NNEG = 99800, CFN = 3e6, VER = 40000, YMAX = 950e6, T0 = 0.55, T1 = 0.98;
+  const TP = t => NPOS * (1 - Math.pow(t, 3)), FP = t => NNEG * Math.pow(1 - t, 4);
+  const cost = (t, c) => (NPOS - TP(t)) * CFN + FP(t) * c + TP(t) * VER;
+  const rule = c => 138 * CFN + 3038 * c + 62 * VER;
+  const tr = v => Math.round(v / 1e6).toLocaleString('vi');
+  const n3 = v => v.toFixed(3).replace('.', ',');
+  el.innerHTML = `
+    <div class="wb-card"><div class="wb-card__body">
+      <p class="ds-viz__label">100.000 giao dịch · 200 vụ gian lận · mỗi vụ để lọt mất 3 triệu. Kéo chi phí một lần báo nhầm</p>
+      <div class="ds-ctrl"><div class="ds-ctrl__top"><span class="ds-ctrl__name">Chi phí một ca báo nhầm (FP) — con số bạn <b>không</b> biết chắc</span><span class="ds-ctrl__val" data-o="cv">40.000₫</span></div>
+        <input class="wb-range" type="range" min="20" max="160" value="40" data-i="c" aria-label="Chi phí một ca báo nhầm, nghìn đồng"></div>
+      <svg viewBox="0 0 320 150" aria-hidden="true"><g data-o="g"></g></svg>
+      <div class="wb-grid wb-grid--3" style="margin-top:10px">
+        <div><p class="ds-viz__sub">Ngưỡng chặn tối ưu</p><p class="ds-viz__readout" data-o="t">—</p></div>
+        <div><p class="ds-viz__sub">Thiệt hại ở ngưỡng đó</p><p class="ds-viz__readout" data-o="c">—</p></div>
+        <div><p class="ds-viz__sub">Rẻ hơn luật thủ công</p><p class="ds-viz__readout" data-o="d">—</p></div>
+      </div>
+      <p class="ds-viz__sub" data-o="note">—</p>
+      <p class="ds-viz__alt" data-o="alt"></p>
+      ${seeBlock({
+        see: 'kéo thanh từ đầu tới cuối — gấp <b>8 lần</b> chi phí FP. Đáy của đường cong <b>dịch sang phải</b> (chặn ít hơn, vì mỗi lần chặn oan giờ đắt hơn) và <b>cao lên</b>. Nhưng nó <b>chưa bao giờ</b> vượt lên trên hai đường ngang. Đó chính là câu kết luận của bài này, và nó là một phát biểu về <i>hình dạng</i> — bốn dòng số in ra ở trên không cho thấy được.',
+        wrong: '“không biết chi phí FP thì không quy ra tiền được”. Ngược lại: chính vì không biết mà phải quét cả khoảng — và nếu kết luận giữ nguyên trên toàn khoảng thì <b>việc không biết đã không còn là điểm yếu</b>. Đó là toàn bộ ý của phân tích độ nhạy.',
+        code: 'kéo lên quá ~60.000₫ thì <b>luật thủ công tụt xuống dưới đường “không làm gì”</b> — một luật chặn quá tay đắt hơn là không chặn gì. Đó là con số mạnh nhất bạn có thể đưa cho hội đồng, và nó chỉ hiện ra khi có ma trận chi phí.',
+      })}
+    </div></div>`;
+  const g = el.querySelector('[data-o="g"]');
+  const X0 = 34, X1 = 306, Y0 = 12, Y1 = 122;
+  const px = t => X0 + (t - T0) / (T1 - T0) * (X1 - X0);
+  const py = v => Math.max(Y0, Math.min(Y1, Y1 - v / YMAX * (Y1 - Y0)));
+  const draw = () => {
+    const c = +el.querySelector('[data-i="c"]').value * 1000;
+    el.querySelector('[data-o="cv"]').textContent = c.toLocaleString('vi') + '₫';
+    let bt = T0, bv = Infinity;
+    for (let i = 0; i <= 430; i++) { const t = T0 + i * 0.001, v = cost(t, c); if (v < bv) { bv = v; bt = t; } }
+    const rv = rule(c), nv = NPOS * CFN;
+    let d = '';
+    for (let i = 0; i <= 90; i++) { const t = T0 + (T1 - T0) * i / 90; d += (i ? 'L' : 'M') + px(t).toFixed(1) + ' ' + py(cost(t, c)).toFixed(1); }
+    let s = `<rect x="${X0}" y="${Y0}" width="${X1 - X0}" height="${Y1 - Y0}" fill="none" stroke="var(--wb-border)" stroke-width="1"/>`;
+    [0, 300e6, 600e6, 900e6].forEach(v => {
+      s += `<line x1="${X0}" y1="${py(v).toFixed(1)}" x2="${X1}" y2="${py(v).toFixed(1)}" stroke="var(--wb-border)" stroke-width="0.6"/>`
+        + `<text x="30" y="${(py(v) + 2).toFixed(1)}" text-anchor="end" font-size="6" fill="var(--wb-fg-subtle)">${tr(v)}</text>`;
+    });
+    s += `<line x1="${X0}" y1="${py(nv).toFixed(1)}" x2="${X1}" y2="${py(nv).toFixed(1)}" stroke="var(--wb-neutral-strong)" stroke-width="1" stroke-dasharray="5 3"/>`
+      + `<text x="${X0 + 2}" y="${(py(nv) - 4).toFixed(1)}" font-size="6" fill="var(--wb-fg-muted)">không làm gì</text>`;
+    s += `<line x1="${X0}" y1="${py(rv).toFixed(1)}" x2="${X1}" y2="${py(rv).toFixed(1)}" stroke="var(--wb-warning)" stroke-width="1" stroke-dasharray="2 2"/>`
+      + `<text x="${X1 - 2}" y="${(py(rv) + (rv > nv ? -4 : 9)).toFixed(1)}" text-anchor="end" font-size="6" fill="var(--wb-fg-muted)">luật thủ công</text>`;
+    s += `<path d="${d}" fill="none" stroke="var(--wb-fg)" stroke-width="1.6"/>`;
+    s += `<line x1="${px(bt).toFixed(1)}" y1="${py(bv).toFixed(1)}" x2="${px(bt).toFixed(1)}" y2="${Y1}" stroke="var(--wb-fg)" stroke-width="1" stroke-dasharray="3 2"/>`
+      + `<circle cx="${px(bt).toFixed(1)}" cy="${py(bv).toFixed(1)}" r="3.2" fill="var(--wb-fg)"/>`
+      + `<text x="${px(bt).toFixed(1)}" y="${(py(bv) - 6).toFixed(1)}" text-anchor="middle" font-size="6.5" fill="var(--wb-fg)">ngưỡng ${bt.toFixed(2).replace('.', ',')}</text>`;
+    [T0, 0.7, 0.85, T1].forEach(t => {
+      s += `<text x="${px(t).toFixed(1)}" y="133" text-anchor="middle" font-size="6" fill="var(--wb-fg-subtle)">${t.toFixed(2).replace('.', ',')}</text>`;
+    });
+    s += `<text x="170" y="144" text-anchor="middle" font-size="6.5" fill="var(--wb-fg-muted)">ngưỡng chặn</text>`
+      + `<text x="0" y="0" font-size="6.5" fill="var(--wb-fg-muted)" text-anchor="middle" transform="translate(12 67) rotate(-90)">thiệt hại (triệu ₫)</text>`;
+    g.innerHTML = s;
+    const o = k => el.querySelector(`[data-o="${k}"]`);
+    o('t').textContent = n3(bt);
+    o('c').textContent = tr(bv) + ' triệu';
+    o('d').textContent = tr(rv - bv) + ' triệu';
+    o('note').innerHTML = `Ở mức ${(c / 1000).toLocaleString('vi')}.000₫ mỗi ca báo nhầm: ngưỡng tối ưu <b>${n3(bt)}</b> (không phải 0,5), chặn ${Math.round(TP(bt))} vụ gian lận và ${Math.round(FP(bt))} ca sạch. `
+      + `Thiệt hại <b>${tr(bv)} triệu</b>, so với ${tr(rv)} triệu của luật thủ công và ${tr(nv)} triệu nếu không làm gì. `
+      + (rv > nv ? '<b>Ở mức chi phí này luật thủ công đã đắt hơn cả việc không chặn gì</b> — nó chặn quá tay.' : 'Luật thủ công vẫn còn tốt hơn việc không làm gì, nhưng mô hình rẻ hơn nó ' + tr(rv - bv) + ' triệu.');
+    o('alt').textContent =
+      `Đường chi phí theo ngưỡng chặn, từ ngưỡng 0,55 tới 0,98, trục dọc là thiệt hại quy ra tiền từ 0 tới 950 triệu đồng. `
+      + `Với chi phí một ca báo nhầm ${c.toLocaleString('vi')} đồng: đường cong hình chữ U, đáy ở ngưỡng ${n3(bt)} với thiệt hại ${tr(bv)} triệu đồng. `
+      + `Hai đường ngang để so sánh: “không làm gì” ở ${tr(nv)} triệu, và “luật thủ công” ở ${tr(rv)} triệu. `
+      + `Đáy đường cong nằm thấp hơn cả hai đường ngang. Ở ngưỡng tối ưu, mô hình chặn ${Math.round(TP(bt))} trong 200 vụ gian lận và chặn oan ${Math.round(FP(bt))} ca sạch.`;
+  };
+  el.addEventListener('input', draw); draw();
+};
+
+/* -- 6.55 Chuỗi tái lập: thiếu một mắt thì đứt ở đâu -----------
+   pr-mlops liệt kê bốn việc và mỗi việc có lý do riêng. Bốn lý do đó thật ra
+   là MỘT: người phản biện phải dựng lại được đúng con số của bạn. Vẽ chuỗi ra
+   thì bốn việc thành bốn mắt của cùng một chuỗi, và câu "vì sao phải làm" đổi
+   từ một danh sách thành một triệu chứng cụ thể ở đúng một chỗ. */
+VIZ.repro = el => {
+  const N = [
+    { t: 'code', g1: 'git', g2: '(mặc định có)', k: null },
+    { t: 'dữ liệu', g1: 'DVC hoặc tên', g2: 'file có ngày', k: 'data' },
+    { t: 'thư viện', g1: 'requirements', g2: '.txt đã chốt', k: 'lib' },
+    { t: 'seed', g1: 'random_state', g2: '+ CI mỗi push', k: 'seed' },
+    { t: 'con số', g1: 'MLflow hoặc', g2: 'một file CSV', k: 'log' },
+  ];
+  const SYM = {
+    ok: ['0,812 — khớp đúng con số trong luận văn',
+      'Người phản biện gõ <code>python -m src.train</code> và ra <b>0,812</b>, đúng con số ở chương 4. Bốn việc ở trên là tất cả những gì cần để câu này đúng — không cần Docker, không cần Kubernetes, không cần feature store.'],
+    data: ['không dựng lại được con số nào',
+      'File trong <code>data/raw/</code> đã bị sửa hồi tháng 3 và không ai biết bản cũ ở đâu. Code y nguyên, thư viện y nguyên, seed y nguyên — <b>vẫn không dựng lại được gì</b>. Đây là mắt đứt tệ nhất vì nó làm ba mắt còn lại vô nghĩa.'],
+    lib: ['0,79 thay vì 0,812 — và không ai biết vì sao',
+      'Người phản biện cài <code>scikit-learn</code> mới hơn bản bạn dùng. Số ra khác, không có thông báo lỗi nào, và bạn <b>không có cách chứng minh mình không sai</b>. Một dòng <code>pip freeze</code> chặn được toàn bộ chuyện này.'],
+    seed: ['0,806 rồi 0,819 — trên chính máy bạn',
+      'Chạy lại hai lần ra hai số. Chênh <b>0,013</b>, mà khoảng cách giữa hai mô hình bạn đang so chỉ có 0,008 — tức <b>nhiễu chạy lại lớn hơn thứ bạn đang đo</b>. Mọi dòng trong bảng so sánh của bạn mất nghĩa cùng lúc.'],
+    log: ['có số, nhưng không biết số nào của cấu hình nào',
+      'Chuỗi vẫn liền, chạy lại vẫn ra số — nhưng 40 lần chạy trong ba tuần không được ghi lại. Bảng chương 4 phải dựng từ trí nhớ và ảnh chụp màn hình. <b>Mắt này đứt muộn nhất và đau nhất</b>, vì nó chỉ lộ ra lúc viết luận văn, khi không còn thời gian chạy lại.'],
+  };
+  el.innerHTML = `
+    <div class="wb-card"><div class="wb-card__body">
+      <p class="ds-viz__label">Bốn việc ở trên là bốn mắt của một chuỗi. Bấm để bỏ một mắt và xem chuỗi đứt ở đâu</p>
+      ${seg('Thiếu gì', [{ k: 'ok', t: 'Đủ cả bốn' }, { k: 'data', t: 'Thiếu phiên bản dữ liệu' },
+        { k: 'lib', t: 'Thiếu requirements.txt' }, { k: 'seed', t: 'Thiếu seed cố định' },
+        { k: 'log', t: 'Thiếu sổ thí nghiệm' }], 'ok')}
+      <svg viewBox="0 0 320 72" aria-hidden="true"><g data-o="g"></g></svg>
+      <p class="ds-viz__readout" data-o="head">—</p>
+      <p class="ds-viz__sub">con số người phản biện đọc được khi chạy lại repo của bạn</p>
+      <p class="ds-viz__sub" data-o="body">—</p>
+      <p class="ds-viz__alt" data-o="alt"></p>
+      ${seeBlock({
+        see: 'bốn mắt đứt ở bốn chỗ khác nhau và triệu chứng <b>không giống nhau chút nào</b>. Thiếu phiên bản dữ liệu thì mất sạch; thiếu <code>requirements.txt</code> thì ra số khác mà <i>không có lỗi nào</i>; thiếu seed thì nhiễu lớn hơn hiệu ứng bạn đang đo; thiếu sổ thí nghiệm thì chạy được nhưng không viết được. Vì thế không có mắt nào thay được mắt nào.',
+        wrong: '“MLflow là thứ quan trọng nhất trong bốn cái”. Nó là mắt <b>cuối</b>, và nó vô dụng nếu ba mắt trước đứt — ghi lại một con số không dựng lại được thì chỉ là ghi lại một tin đồn. Thứ tự đáng làm là từ trái qua phải, và mắt <i>rẻ nhất</i> (<code>pip freeze</code>, một dòng) nằm giữa.',
+        code: 'ba mắt đầu là ba dòng trong danh sách kiểm repo ở dưới bài này. Mắt thứ tư là <code>mlflow</code> hoặc một file CSV bạn ghi kỷ luật — bài này nói rõ CSV đạt 80% giá trị, và 80% của mắt cuối vẫn hơn 0% của nó.',
+      })}
+    </div></div>`;
+  const g = el.querySelector('[data-o="g"]');
+  const draw = () => {
+    const m = el.querySelector('[data-seg][aria-pressed="true"]').dataset.seg;
+    let s = '';
+    N.forEach((n, i) => {
+      const x = 1 + i * 66, bad = n.k === m;
+      const col = bad ? 'var(--wb-danger)' : 'var(--wb-fg)';
+      s += `<rect x="${x}" y="22" width="54" height="24" rx="4" fill="${bad ? 'none' : 'var(--wb-surface)'}"
+        stroke="${col}" stroke-width="1.3"${bad ? ' stroke-dasharray="4 2.5"' : ''}/>`
+        + `<text x="${x + 27}" y="37" text-anchor="middle" font-size="7" fill="${col}">${bad ? '?' : n.t}</text>`
+        + `<text x="${x + 27}" y="56" text-anchor="middle" font-size="5.5" fill="${bad ? col : 'var(--wb-fg-subtle)'}">${n.g1}</text>`
+        + `<text x="${x + 27}" y="64" text-anchor="middle" font-size="5.5" fill="${bad ? col : 'var(--wb-fg-subtle)'}">${n.g2}</text>`;
+      if (i < N.length - 1) {
+        const a = x + 54, b = x + 66, cut = bad;
+        if (cut) {
+          s += `<line x1="${a + 1}" y1="30" x2="${b - 1}" y2="38" stroke="var(--wb-danger)" stroke-width="1.3"/>`
+            + `<line x1="${a + 1}" y1="38" x2="${b - 1}" y2="30" stroke="var(--wb-danger)" stroke-width="1.3"/>`;
+        } else {
+          s += `<line x1="${a}" y1="34" x2="${b - 3.5}" y2="34" stroke="var(--wb-border-strong)" stroke-width="1"/>`
+            + `<path d="M${b - 4} 31.6 L${b - 4} 36.4 L${b} 34 Z" fill="var(--wb-border-strong)"/>`;
+        }
+      }
+    });
+    s += `<text x="160" y="12" text-anchor="middle" font-size="6" fill="var(--wb-fg-subtle)">chuỗi từ commit của bạn tới con số người phản biện đọc được</text>`;
+    g.innerHTML = s;
+    el.querySelector('[data-o="head"]').textContent = SYM[m][0];
+    el.querySelector('[data-o="body"]').innerHTML = SYM[m][1];
+    el.querySelector('[data-o="alt"]').textContent =
+      'Chuỗi năm ô nối bằng mũi tên, từ trái sang phải: code (git), dữ liệu (DVC hoặc tên file có ngày), thư viện (requirements.txt đã chốt), seed (random_state và CI mỗi lần push), con số (MLflow hoặc một file CSV). '
+      + (m === 'ok'
+        ? 'Cả năm ô liền mạch, không mắt nào đứt. Người phản biện chạy lại và đọc được 0,812, khớp con số trong luận văn.'
+        : `Ô “${N.find(n => n.k === m).t}” đang bị bỏ: nó vẽ nét đứt và mang dấu hỏi thay cho tên${m === 'log' ? ' (đây là ô cuối chuỗi nên không có mũi tên nào sau nó)' : ', và mũi tên sau nó thành một dấu nhân'}. Kết quả người phản biện đọc được: ${SYM[m][0]}.`)
+      + ' Các con số 0,812 / 0,79 / 0,806 / 0,819 là số minh hoạ.';
+  };
+  wireSeg(el, draw); draw();
+};
+
+/* -- 6.56 One-hot đặt mọi thực thể cách đều nhau ---------------
+   dl-embed nói "mọi cửa hàng cách đều nhau" và đó là mệnh đề khó tin nhất
+   trong bài — người đọc dễ nghĩ đó là cách nói cho vui. Nó là một đẳng thức:
+   hai vector one-hot khác nhau LUÔN cách nhau đúng √2, bất kể hai cửa hàng ấy
+   giống nhau đến đâu. Ma trận khoảng cách cho thấy nguyên văn điều đó — phẳng
+   tuyệt đối — và sau khi train thì nó có cấu trúc khối. Không vẽ 6 điểm cách
+   đều nhau trên mặt phẳng được (2 chiều không đủ), nên vẽ bảng số. */
+VIZ.embed = el => {
+  const NM = ['kim hoàn', 'vàng bạc', 'trang sức', 'quán phở', 'bún bò', 'cà phê'];
+  const E = [
+    [0, 0.31, 0.28, 1.72, 1.68, 1.80],
+    [0.31, 0, 0.35, 1.66, 1.74, 1.62],
+    [0.28, 0.35, 0, 1.78, 1.70, 1.84],
+    [1.72, 1.66, 1.78, 0, 0.42, 0.55],
+    [1.68, 1.74, 1.70, 0.42, 0, 0.49],
+    [1.80, 1.62, 1.84, 0.55, 0.49, 0],
+  ];
+  const n2 = v => v.toFixed(2).replace('.', ',');
+  el.innerHTML = `
+    <div class="wb-card"><div class="wb-card__body">
+      <p class="ds-viz__label">Khoảng cách giữa sáu cửa hàng, đo theo hai cách mã hoá. Kéo số lượng cửa hàng để xem số cột</p>
+      ${seg('Cách mã hoá', [{ k: 'oh', t: 'One-hot' }, { k: 'em', t: 'Embedding (sau khi train)' }], 'oh')}
+      <div class="ds-ctrl"><div class="ds-ctrl__top"><span class="ds-ctrl__name">Số mã cửa hàng khác nhau trong dữ liệu</span><span class="ds-ctrl__val" data-o="nv">—</span></div>
+        <input class="wb-range" type="range" min="1" max="50" value="50" data-i="n" aria-label="Số mã cửa hàng khác nhau"></div>
+      <svg viewBox="0 0 320 118" aria-hidden="true"><g data-o="g"></g></svg>
+      <div class="wb-grid wb-grid--3" style="margin-top:10px">
+        <div><p class="ds-viz__sub">Số cột đưa vào mô hình</p><p class="ds-viz__readout" data-o="nc">—</p></div>
+        <div><p class="ds-viz__sub">kim hoàn ↔ vàng bạc</p><p class="ds-viz__readout" data-o="near">—</p></div>
+        <div><p class="ds-viz__sub">kim hoàn ↔ quán phở</p><p class="ds-viz__readout" data-o="far">—</p></div>
+      </div>
+      <p class="ds-viz__sub" data-o="note">—</p>
+      <p class="ds-viz__alt" data-o="alt"></p>
+      ${seeBlock({
+        see: 'ở <b>One-hot</b>, mọi ô ngoài đường chéo đều là <b>1,41</b> — bảng phẳng tuyệt đối. Không phải “gần đúng là bằng nhau”: hai vector one-hot khác nhau luôn lệch nhau ở đúng hai vị trí, nên khoảng cách luôn là √2. Bảng đó <b>không chứa một chút thông tin nào</b> về việc cửa hàng nào giống cửa hàng nào. Đổi sang <b>Embedding</b> thì hai khối vuông đậm hiện ra ở góc trên-trái và góc dưới-phải: mô hình đã tự nhóm cùng nghề, và không ai gán nhãn nghề cho nó.',
+        wrong: '“embedding nén dữ liệu lại nên mất thông tin”. Nó bỏ <i>số cột</i> và <b>thêm</b> thông tin quan hệ — thứ mà one-hot không có ở bất kỳ số cột nào. 50.000 cột chứa ít thông tin về sự giống nhau hơn 15 cột đã train.',
+        code: 'ba khoảng cách trong bảng Embedding là <b>số minh hoạ</b> cho một mô hình đã train xong, không phải số đo trên trang này. Cái chắc chắn là bảng One-hot: 1,41 ở mọi ô là một đẳng thức, kiểm được bằng bút chì.',
+      })}
+    </div></div>`;
+  const g = el.querySelector('[data-o="g"]');
+  const CW = 34, CH = 14, GX = 70, GY = 26;
+  const draw = () => {
+    const m = el.querySelector('[data-seg][aria-pressed="true"]').dataset.seg;
+    const v = +el.querySelector('[data-i="n"]').value;
+    const n = Math.round(100 * Math.pow(500, (v - 1) / 49));
+    const dim = Math.min(50, Math.ceil(Math.pow(n, 0.25)));
+    el.querySelector('[data-o="nv"]').textContent = n.toLocaleString('vi');
+    let s = '';
+    NM.forEach((t, j) => {
+      s += `<text x="${GX + j * CW + CW / 2}" y="22" text-anchor="middle" font-size="5.5" fill="var(--wb-fg-subtle)">${t}</text>`;
+      s += `<text x="66" y="${GY + j * CH + 9.5}" text-anchor="end" font-size="5.5" fill="var(--wb-fg-subtle)">${t}</text>`;
+    });
+    for (let i = 0; i < 6; i++) for (let j = 0; j < 6; j++) {
+      const val = i === j ? 0 : (m === 'oh' ? Math.SQRT2 : E[i][j]);
+      const op = i === j ? 0.02 : 0.34 * Math.max(0, 1 - val / 1.9);
+      s += `<rect x="${GX + j * CW}" y="${GY + i * CH}" width="${CW - 1}" height="${CH - 1}" rx="1.5"
+        fill="var(--wb-fg)" fill-opacity="${op.toFixed(3)}" stroke="var(--wb-border)" stroke-width="0.5"/>`
+        + `<text x="${GX + j * CW + (CW - 1) / 2}" y="${GY + i * CH + 9.5}" text-anchor="middle" font-size="5.5"
+          fill="${i === j ? 'var(--wb-fg-subtle)' : 'var(--wb-fg)'}">${n2(val)}</text>`;
+    }
+    s += `<text x="172" y="116" text-anchor="middle" font-size="6" fill="var(--wb-fg-subtle)">ô càng đậm = hai cửa hàng càng gần nhau trong không gian vector</text>`;
+    g.innerHTML = s;
+    const o = k => el.querySelector(`[data-o="${k}"]`);
+    o('nc').textContent = m === 'oh' ? n.toLocaleString('vi') : String(dim);
+    o('near').textContent = m === 'oh' ? n2(Math.SQRT2) : n2(E[0][1]);
+    o('far').textContent = m === 'oh' ? n2(Math.SQRT2) : n2(E[0][3]);
+    o('note').innerHTML = m === 'oh'
+      ? `${n.toLocaleString('vi')} mã cửa hàng → <b>${n.toLocaleString('vi')} cột</b>, mỗi dòng có đúng một số 1. Hai ô bất kỳ ngoài đường chéo đều bằng 1,41 = √2, nên hai cột cuối trong ba cột số ở trên <b>luôn bằng nhau</b>: bảng không phân biệt được cùng nghề với khác nghề. Cửa hàng chỉ có 3 giao dịch thì cột riêng của nó gần như không học được gì.`
+      : `${n.toLocaleString('vi')} mã cửa hàng → <b>${dim} cột</b> (quy tắc ⁴√n, chặn trên 50), ít hơn ${Math.round(n / dim).toLocaleString('vi')} lần. Bảng tra ${n.toLocaleString('vi')} × ${dim} = ${(n * dim).toLocaleString('vi')} tham số, và mọi ô trong đó đều học được. Cùng nghề ${n2(E[0][1])} so với khác nghề ${n2(E[0][3])} — chênh <b>${(E[0][3] / E[0][1]).toFixed(1).replace('.', ',')} lần</b>, tức bảng giờ đã <i>mang thông tin</i>.`;
+    o('alt').textContent =
+      `Ma trận khoảng cách 6 × 6 giữa sáu cửa hàng: ${NM.join(', ')}. Ba tên đầu là cùng một nghề (trang sức), ba tên sau là cùng một nghề (ăn uống). Ô càng đậm là hai cửa hàng càng gần nhau. `
+      + (m === 'oh'
+        ? `Cách mã hoá one-hot với ${n.toLocaleString('vi')} cột: mọi ô ngoài đường chéo đều bằng 1,41, tức căn hai — bảng hoàn toàn phẳng, không có khối nào. kim hoàn ↔ vàng bạc 1,41 và kim hoàn ↔ quán phở cũng 1,41.`
+        : `Cách mã hoá embedding với ${dim} cột: bảng có hai khối đậm, một khối ba dòng đầu với ba cột đầu (giá trị 0,28 tới 0,35) và một khối ba dòng cuối với ba cột cuối (0,42 tới 0,55); phần chéo nhau giữa hai nghề nhạt, giá trị 1,62 tới 1,84. kim hoàn ↔ vàng bạc ${n2(E[0][1])} còn kim hoàn ↔ quán phở ${n2(E[0][3])}. Các số này là số minh hoạ.`);
+  };
+  el.addEventListener('input', draw); wireSeg(el, draw); draw();
+};
+
+/* -- 6.57 Ba loại bài toán ảnh: cùng một ảnh, ba đầu ra --------
+   q-cv nói rõ "phân biệt bằng đầu ra", và bảng ở trên mô tả ba đầu ra đó bằng
+   chữ. Chữ làm ba loại nghe như ba mức khó của cùng một việc. Vẽ ra thì thấy
+   chúng là ba việc khác nhau — và cột đắt nhất không phải mô hình mà là NHÃN,
+   thứ quyết định phạm vi đồ án nhiều hơn mọi lựa chọn kiến trúc. */
+VIZ.cvtask = el => {
+  const M = {
+    cls: { out: '1 nhãn / ảnh', sec: 3, met: 'macro-F1', cap: 'cả ảnh → một nhãn: “có lỗi”',
+      note: 'Người gán nhãn chỉ cần bấm một trong hai nút. <b>1.000 ảnh ≈ 50 phút.</b> Đây là lý do câu hỏi “<i>classification trên ảnh đã cắt có giải quyết được vấn đề nghiệp vụ không</i>” đáng hỏi trước mọi thứ khác — nó thường là <b>có</b>, và nó rẻ hơn hai loại kia hàng chục tới hàng trăm lần.' },
+    det: { out: 'hộp bao + nhãn', sec: 40, met: 'mAP theo IoU', cap: '3 hộp bao + nhãn + điểm tin cậy',
+      note: 'Người gán nhãn phải kéo từng hộp cho khít. <b>1.000 ảnh ≈ 11 giờ</b>, và hộp kéo lệch nhau giữa hai người là một nguồn sai số không có trong classification. Câu hỏi bắt buộc trước khi chọn loại này: <i>ai kéo hộp, mất bao lâu, và hai người có kéo giống nhau không?</i>' },
+    seg: { out: 'nhãn từng pixel', sec: 360, met: 'IoU · Dice', cap: 'mỗi pixel một nhãn — 2 lớp + nền',
+      note: 'Người gán nhãn phải tô viền từng vật. <b>1.000 ảnh ≈ 100 giờ</b> — hơn hai tuần làm việc toàn thời gian chỉ để có nhãn, chưa train gì. Rất nhiều đồ án CV chết ở đây, không phải ở mô hình.' },
+  };
+  const OBJ = [[82, 30, 'đạt 0,94', 0], [150, 52, 'đạt 0,91', 0], [196, 100, 'lỗi 0,88', 1]];
+  el.innerHTML = `
+    <div class="wb-card"><div class="wb-card__body">
+      <p class="ds-viz__label">Cùng một ảnh dây chuyền sản xuất. Ba loại bài toán khác nhau ở <b>đầu ra</b>, và giá của đầu ra là giá gán nhãn</p>
+      ${seg('Loại bài toán', [{ k: 'cls', t: 'Classification' }, { k: 'det', t: 'Detection' },
+        { k: 'seg', t: 'Segmentation' }], 'cls')}
+      <svg viewBox="0 0 320 168" aria-hidden="true"><g data-o="g"></g></svg>
+      <div class="wb-grid wb-grid--3" style="margin-top:10px">
+        <div><p class="ds-viz__sub">Đầu ra phải tạo ra</p><p class="ds-viz__readout" data-o="out">—</p></div>
+        <div><p class="ds-viz__sub">Gán nhãn một ảnh mất</p><p class="ds-viz__readout" data-o="sec">—</p></div>
+        <div><p class="ds-viz__sub">Chỉ số đo</p><p class="ds-viz__readout" data-o="met">—</p></div>
+      </div>
+      <p class="ds-viz__sub" data-o="note">—</p>
+      <p class="ds-viz__alt" data-o="alt"></p>
+      ${seeBlock({
+        see: 'ba đầu ra <b>không</b> là ba mức khó của cùng một việc — chúng là ba việc khác nhau, và cái đổi nhiều nhất giữa chúng không phải mô hình mà là <b>công gán nhãn</b>: 50 phút, 11 giờ, 100 giờ cho cùng 1.000 ảnh. Cột đó quyết định phạm vi đồ án trước cả khi bạn chọn kiến trúc.',
+        wrong: '“segmentation chính xác hơn nên tốt hơn”. Chính xác hơn về <i>hình dạng</i>, và bạn phải trả bằng gấp <b>120 lần</b> công gán nhãn. Nếu câu hỏi nghiệp vụ chỉ là “ảnh này có lỗi không” thì segmentation là chi phí thuần, không phải chất lượng thêm.',
+        code: 'các con số giây/ảnh là <b>số minh hoạ</b> theo đúng ba mức bài này nêu (vài giây · vài chục giây · nhiều phút). Số của bạn phải tự đo trên 20 ảnh đầu, trước khi cam kết phạm vi — đó là phép đo rẻ nhất trong cả đồ án.',
+      })}
+    </div></div>`;
+  const g = el.querySelector('[data-o="g"]');
+  const draw = () => {
+    const m = el.querySelector('[data-seg][aria-pressed="true"]').dataset.seg, d = M[m];
+    let s = `<text x="160" y="7" text-anchor="middle" font-size="6" fill="var(--wb-fg-subtle)">cùng một ảnh đầu vào</text>`
+      + `<rect x="60" y="8" width="200" height="140" rx="3" fill="var(--wb-canvas)" stroke="var(--wb-border-strong)" stroke-width="1.2"/>`;
+    if (m === 'seg') {
+      for (let x = 60; x <= 260; x += 8) s += `<line x1="${x}" y1="8" x2="${x}" y2="148" stroke="var(--wb-border)" stroke-width="0.35"/>`;
+      for (let y = 8; y <= 148; y += 8) s += `<line x1="60" y1="${y}" x2="260" y2="${y}" stroke="var(--wb-border)" stroke-width="0.35"/>`;
+    }
+    OBJ.forEach(([x, y, t, bad]) => {
+      const fill = m === 'seg' ? (bad ? 'var(--wb-warning)' : 'var(--wb-fg)') : 'var(--wb-border)';
+      const op = m === 'seg' ? 0.55 : 0.9;
+      s += `<rect x="${x}" y="${y}" width="40" height="40" rx="10" fill="${fill}" fill-opacity="${op}"
+        stroke="var(--wb-border-strong)" stroke-width="0.8"/>`;
+      if (m === 'det') {
+        s += `<rect x="${x - 4}" y="${y - 4}" width="48" height="48" fill="none"
+          stroke="${bad ? 'var(--wb-warning)' : 'var(--wb-fg)'}" stroke-width="1.4"/>`
+          + `<text x="${x - 4}" y="${y - 8}" font-size="6" fill="${bad ? 'var(--wb-warning)' : 'var(--wb-fg)'}">${t}</text>`;
+      }
+    });
+    if (m === 'cls')
+      s += `<rect x="88" y="118" width="84" height="20" rx="10" fill="var(--wb-warning)" fill-opacity="0.18" stroke="var(--wb-warning)" stroke-width="1.2"/>`
+        + `<text x="130" y="131" text-anchor="middle" font-size="7" fill="var(--wb-fg)">có lỗi</text>`;
+    s += `<text x="160" y="162" text-anchor="middle" font-size="6.5" fill="var(--wb-fg-muted)">${d.cap}</text>`;
+    g.innerHTML = s;
+    const o = k => el.querySelector(`[data-o="${k}"]`);
+    o('out').textContent = d.out;
+    o('sec').textContent = d.sec < 60 ? d.sec + ' giây' : (d.sec / 60) + ' phút';
+    o('met').textContent = d.met;
+    o('note').innerHTML = d.note;
+    o('alt').textContent =
+      `Một khung ảnh chứa ba vật: hai vật đạt và một vật lỗi ở góc dưới bên phải. Loại bài toán đang chọn: ${m === 'cls' ? 'classification' : m === 'det' ? 'detection' : 'segmentation'}. `
+      + (m === 'cls' ? 'Đầu ra vẽ ra là một chip nhãn duy nhất ở giữa ảnh, ghi “có lỗi” — không có toạ độ nào.'
+        : m === 'det' ? 'Đầu ra vẽ ra là ba hộp bao quanh ba vật, mỗi hộp kèm nhãn và điểm tin cậy: đạt 0,94, đạt 0,91, lỗi 0,88.'
+          : 'Đầu ra vẽ ra là mặt nạ tô kín từng vật trên một lưới pixel, hai vật đạt một màu và vật lỗi một màu khác, phần nền để trống.')
+      + ` Gán nhãn một ảnh mất khoảng ${d.sec} giây, tức khoảng ${d.sec * 1000 < 7200 ? Math.round(d.sec * 1000 / 60) + ' phút' : Math.round(d.sec * 1000 / 3600) + ' giờ'} cho 1.000 ảnh. Chỉ số đo: ${d.met}. Các con số thời gian là số minh hoạ.`;
+  };
+  wireSeg(el, draw); draw();
 };
 
 /* ============================================================
