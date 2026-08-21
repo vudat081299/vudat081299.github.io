@@ -1,0 +1,1210 @@
+<!doctype html>
+<!-- =============================================================================
+     System Analysis and Design · Bài tập lớn nhóm 13
+     Trang đọc-để-hiểu-rồi-thuyết-trình cho đồ án "Chatbot tư vấn nhà ở xã hội
+     trong CAND". Nội dung được đối chiếu trực tiếp với bản PDF 87 trang.
+     -----------------------------------------------------------------------------
+     Khung: web-builder templates/detail.html (wb-shell + rail + wb-page-head →
+     wb-section → wb-block). Không có class nào ngoài web-builder.css.
+     ========================================================================== -->
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="light dark" />
+<title>Social Housing Chatbot — System Analysis and Design</title>
+<meta name="description" content="Bản giải thích đầy đủ đồ án Chatbot tư vấn nhà ở xã hội trong CAND — môn System Analysis and Design: kiến trúc, luồng RAG, bảo mật DLP, kiểm thử, và những chỗ báo cáo tự mâu thuẫn." />
+
+<link rel="stylesheet" href="../../web-builder/web-builder.css" />
+<script>
+  /* Theme trước lần vẽ đầu, để người dùng dark không thấy nháy trắng. */
+  try {
+    var t = localStorage.getItem('theme');
+    if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches))
+      document.documentElement.classList.add('dark');
+  } catch (e) {}
+</script>
+<style>
+  /* Thứ duy nhất trang này thêm: chỗ neo cho anchor nằm dưới thanh sticky, và
+     cuộn mượt khi bấm mục lục. Cả hai đều tính từ token, không có số cứng.
+     (Đây là ứng viên nên đưa lên thư viện — long-form nào cũng cần.) */
+  html { scroll-behavior: smooth; }
+  .wb-shell__main [id] { scroll-margin-top: calc(var(--wb-navbar-h) + 16px); }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body class="wb-app">
+
+<div class="wb-shell">
+
+  <!-- ============================== TOP BAR ================================ -->
+  <header class="wb-navbar wb-navbar--sticky wb-navbar--glass">
+    <button class="wb-btn wb-btn--ghost wb-btn--icon wb-shell__side-toggle" data-side-toggle
+            aria-label="Mở mục lục"><span class="wb-ico">menu</span></button>
+    <a class="wb-navbar__brand" href="../../index.html"><span class="wb-navbar__mark">S</span> System Analysis and Design</a>
+    <span class="wb-navbar__spacer"></span>
+    <div class="wb-navbar__actions">
+      <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" aria-label="Đổi giao diện sáng/tối" title="Sáng / Tối">
+        <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
+        <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="wb-shell__body">
+
+    <!-- ================================ RAIL ================================ -->
+    <aside class="wb-shell__side">
+      <nav class="wb-sidenav" aria-label="Mục lục">
+        <div class="wb-sidenav__section">Hiểu bài</div>
+        <a class="wb-sidenav__link is-active" href="#tom-tat"><span class="wb-ico">target</span> Một câu · ba trụ</a>
+        <a class="wb-sidenav__link" href="#bai-toan"><span class="wb-ico">help</span> Bài toán thực tế</a>
+        <a class="wb-sidenav__link" href="#use-case"><span class="wb-ico">groups</span> Actor &amp; 9 use case</a>
+
+        <div class="wb-sidenav__section">Thiết kế</div>
+        <a class="wb-sidenav__link" href="#kien-truc"><span class="wb-ico">layers</span> Kiến trúc 3 lớp</a>
+        <a class="wb-sidenav__link" href="#luong-hoi"><span class="wb-ico">route</span> Luồng một câu hỏi</a>
+        <a class="wb-sidenav__link" href="#rag"><span class="wb-ico">travel_explore</span> RAG cho người thường</a>
+        <a class="wb-sidenav__link" href="#dong-bo"><span class="wb-ico">sync</span> Đồng bộ tri thức</a>
+        <a class="wb-sidenav__link" href="#khong-ai"><span class="wb-ico">calculate</span> Hai phần không dùng AI</a>
+        <a class="wb-sidenav__link" href="#bao-mat"><span class="wb-ico">shield</span> Bảo mật &amp; DLP</a>
+        <a class="wb-sidenav__link" href="#cau-truc"><span class="wb-ico">schema</span> Lớp &amp; cơ sở dữ liệu</a>
+        <a class="wb-sidenav__link" href="#uml"><span class="wb-ico">account_tree</span> Bộ biểu đồ UML</a>
+
+        <div class="wb-sidenav__section">Lên bục</div>
+        <a class="wb-sidenav__link" href="#kiem-thu"><span class="wb-ico">checklist</span> 10 kịch bản kiểm thử</a>
+        <a class="wb-sidenav__link" href="#ra-soat"><span class="wb-ico">report</span> Rà soát báo cáo <span class="wb-sidenav__badge">16</span></a>
+        <a class="wb-sidenav__link" href="#chac-chan"><span class="wb-ico">balance</span> Ba tầng chắc chắn</a>
+        <a class="wb-sidenav__link" href="#thuyet-trinh"><span class="wb-ico">campaign</span> Kịch bản &amp; Q&amp;A</a>
+      </nav>
+    </aside>
+
+    <div class="wb-shell__main">
+      <main class="wb-container wb-container--pad">
+
+        <!-- ============================ HEAD ================================ -->
+        <div class="wb-page-head">
+          <nav class="wb-breadcrumb" aria-label="Breadcrumb">
+            <a href="../../index.html">Collection</a>
+            <span class="wb-breadcrumb__sep">/</span>
+            <span>System Analysis and Design</span>
+            <span class="wb-breadcrumb__sep">/</span>
+            <span class="wb-breadcrumb__current">Social Housing Chatbot</span>
+          </nav>
+          <p class="wb-eyebrow">Bài tập lớn · nhóm 13</p>
+          <h1>Chatbot tư vấn nhà ở xã hội trong CAND</h1>
+          <p>Bản đọc để <strong>hiểu rồi đứng thuyết trình</strong>: từ bài toán tới từng chốt kỹ thuật, kèm 16 chỗ bản báo cáo tự mâu thuẫn — để bạn không nói quá những gì tài liệu chứng minh được.</p>
+        </div>
+
+        <div class="wb-cluster" style="margin-top:14px">
+          <span class="wb-cap">ĐHBK Hà Nội</span>
+          <span class="wb-cap">GVHD: TS. Nguyễn Hữu Đức</span>
+          <span class="wb-cap">4 thành viên</span>
+          <span class="wb-cap">87 trang · 3 chương</span>
+          <span class="wb-cap">Hà Nội, 2026</span>
+        </div>
+
+        <!-- ======================== 1 · TÓM TẮT ============================= -->
+        <section class="wb-section" id="tom-tat">
+          <h2>Một câu, rồi ba trụ</h2>
+          <p class="wb-section__desc">Nếu chỉ nhớ được một điều trước khi lên bục, nhớ điều này.</p>
+
+          <div class="wb-alert wb-alert--danger">
+            <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">block</span></span>
+            <div class="wb-alert__body">
+              <p class="wb-alert__title">Gỡ trước một hiểu nhầm, vì gần như ai cũng mang nó vào phòng bảo vệ</p>
+              <p class="wb-alert__msg">Nghe “chatbot”, người ta hình dung <em>website + ChatGPT</em>. Hình dung đó nghe hợp lý — vì phần người dùng thấy đúng là một khung chat. Nhưng nó sai ở chỗ quyết định: trong hệ thống này, <strong>mô hình ngôn ngữ không được phép tự biết gì cả</strong>. Nó chỉ nhận những đoạn tài liệu mà hệ thống vừa tìm được trong kho nội bộ, rồi viết lại thành câu trả lời. Nếu kho không có, nó phải nói là không có.</p>
+            </div>
+          </div>
+
+          <div class="wb-card wb-card--pad">
+            <p style="margin:0"><strong>Đây là một hệ thống thông tin nghiệp vụ về nhà ở xã hội, trong đó chatbot AI là một phân hệ.</strong> Mọi việc buộc phải đúng tuyệt đối — tính điểm xét duyệt, tính gốc lãi, chặn từ khoá mật — đều là code xác định, chạy lại bao nhiêu lần cũng ra một kết quả. Mô hình ngôn ngữ lớn chỉ làm đúng một việc: diễn đạt lại bằng tiếng Việt tự nhiên những đoạn văn bản nội bộ mà hệ thống vừa truy xuất được.</p>
+          </div>
+
+          <div class="wb-block">
+            <h3>Ba trụ của bài</h3>
+            <p class="wb-block__desc">Bất kỳ câu hỏi nào của thầy cũng rơi vào một trong ba trụ này.</p>
+            <div class="wb-grid wb-grid--3">
+              <div class="wb-card"><div class="wb-card__body">
+                <div class="wb-media">
+                  <span class="wb-avatar wb-avatar--solid wb-avatar--sm">1</span>
+                  <div class="wb-media__body">
+                    <p class="wb-media__title">Nghiệp vụ</p>
+                    <p class="wb-media__text">2 actor, 9 use case. Phần lớn là quản lý dữ liệu và thuật toán thường — không phải AI.</p>
+                  </div>
+                </div>
+              </div></div>
+              <div class="wb-card"><div class="wb-card__body">
+                <div class="wb-media">
+                  <span class="wb-avatar wb-avatar--solid wb-avatar--sm">2</span>
+                  <div class="wb-media__body">
+                    <p class="wb-media__title">Tri thức (RAG)</p>
+                    <p class="wb-media__text">Tìm tài liệu liên quan <em>trước</em>, sinh câu trả lời <em>sau</em>. Kho tri thức là đóng: không ra Internet.</p>
+                  </div>
+                </div>
+              </div></div>
+              <div class="wb-card"><div class="wb-card__body">
+                <div class="wb-media">
+                  <span class="wb-avatar wb-avatar--solid wb-avatar--sm">3</span>
+                  <div class="wb-media__body">
+                    <p class="wb-media__title">An toàn</p>
+                    <p class="wb-media__text">Bộ lọc DLP chặn ở cổng vào, cộng 4 chốt kỹ thuật: token, chống dò PIN, giới hạn tần suất, kiểm soát upload.</p>
+                  </div>
+                </div>
+              </div></div>
+            </div>
+          </div>
+
+          <div class="wb-block">
+            <h3>Số phải thuộc</h3>
+            <p class="wb-block__desc">Toàn bộ là con số báo cáo nêu trực tiếp — nói được là ghi điểm, nói sai là mất điểm.</p>
+            <div class="wb-stat-grid">
+              <div class="wb-stat">
+                <div class="wb-stat__top"><span class="wb-stat__label">Kích thước chunk</span></div>
+                <div class="wb-stat__value">1.200</div>
+                <div class="wb-stat__foot">ký tự · gối nhau 150</div>
+              </div>
+              <div class="wb-stat">
+                <div class="wb-stat__top"><span class="wb-stat__label">Số đoạn lấy làm ngữ cảnh</span></div>
+                <div class="wb-stat__value">k = 8</div>
+                <div class="wb-stat__foot">8 đoạn gần nghĩa nhất</div>
+              </div>
+              <div class="wb-stat">
+                <div class="wb-stat__top"><span class="wb-stat__label">Chiều vector nhúng</span></div>
+                <div class="wb-stat__value">384</div>
+                <div class="wb-stat__foot">all-MiniLM-L6-v2</div>
+              </div>
+              <div class="wb-stat">
+                <div class="wb-stat__top"><span class="wb-stat__label">Bộ nhớ hội thoại</span></div>
+                <div class="wb-stat__value">5 cặp</div>
+                <div class="wb-stat__foot">hỏi–đáp gần nhất</div>
+              </div>
+              <div class="wb-stat">
+                <div class="wb-stat__top"><span class="wb-stat__label">Ngưỡng bộ nhớ đệm</span></div>
+                <div class="wb-stat__value">&gt; 92%</div>
+                <div class="wb-stat__foot">theo phần triển khai</div>
+              </div>
+              <div class="wb-stat">
+                <div class="wb-stat__top"><span class="wb-stat__label">Giới hạn tần suất chat</span></div>
+                <div class="wb-stat__value">10 / 60s</div>
+                <div class="wb-stat__foot">mỗi địa chỉ IP</div>
+              </div>
+              <div class="wb-stat">
+                <div class="wb-stat__top"><span class="wb-stat__label">Chống dò mã PIN</span></div>
+                <div class="wb-stat__value">5 → 15′</div>
+                <div class="wb-stat__foot">5 lần sai · khoá IP 15 phút</div>
+              </div>
+              <div class="wb-stat">
+                <div class="wb-stat__top"><span class="wb-stat__label">Trần điểm Nhóm 2</span></div>
+                <div class="wb-stat__value">20</div>
+                <div class="wb-stat__foot">khống chế trước khi cộng Nhóm 1</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================== 2 · BÀI TOÁN ============================ -->
+        <section class="wb-section" id="bai-toan">
+          <h2>Bài toán thực tế</h2>
+          <p class="wb-section__desc">Không có bối cảnh này thì mọi lựa chọn kỹ thuật phía sau đều trông tuỳ tiện.</p>
+
+          <p><strong>Bối cảnh:</strong> chính sách nhà ở xã hội cho cán bộ chiến sĩ (CBCS) là một chính sách hậu phương lớn, kèm theo là hàng chục văn bản — luật, nghị định, thông tư, bảng điểm xét duyệt — và một danh mục dự án đang mở rộng ở nhiều tỉnh thành.</p>
+          <p><strong>Biến cố:</strong> văn bản được sửa đổi liên tục, còn câu hỏi của mỗi người lại rất cá nhân — “tôi có thuộc đối tượng ưu tiên không”, “hồ sơ tôi được bao nhiêu điểm”, “dự án này giá bao nhiêu”. Cổng thông tin nội bộ chỉ lưu trữ một chiều, không trả lời được loại câu hỏi đó.</p>
+          <p><strong>Hệ quả cụ thể báo cáo ghi lại:</strong> CBCS phải gọi điện hoặc gửi công văn hỏi đáp; thời gian nhận phản hồi kéo dài <strong>từ vài ngày đến hàng tuần</strong>; một cán bộ quản lý có thể phải nhận <strong>hàng chục cuộc điện thoại mỗi ngày</strong> chỉ cho những câu lặp lại.</p>
+          <p><strong>Câu hỏi:</strong> làm sao trả lời tức thì, đúng văn bản, mà không để lọt một câu hỏi nhạy cảm nào vào lõi AI?</p>
+
+          <div class="wb-block">
+            <h3>Bốn nỗi đau → năm công cụ</h3>
+            <div class="wb-card">
+              <div class="wb-table-scroll">
+                <table class="wb-table wb-table--compact">
+                  <thead><tr><th>Nỗi đau hiện trạng</th><th>Hệ thống trả lời bằng</th></tr></thead>
+                  <tbody>
+                    <tr><td><span class="wb-cell-strong">Tra cứu mất thời gian, tài liệu phân tán</span><span class="wb-cell-sub">văn bản giấy + cổng thông tin một chiều</span></td><td>Trợ lý ảo hỏi–đáp 24/7 trên kho nội bộ đã thẩm định + thư viện pháp luật tra cứu được</td></tr>
+                    <tr><td><span class="wb-cell-strong">Câu hỏi lặp lại làm quá tải cán bộ</span></td><td>Tự động hoá khâu giải đáp cơ bản, để cán bộ tập trung vào thẩm định thực địa</td></tr>
+                    <tr><td><span class="wb-cell-strong">Tự tính điểm thủ công dễ sai</span><span class="wb-cell-sub">dẫn tới khiếu nại về sau</span></td><td>Công cụ tính điểm ưu tiên theo đúng công thức quy chuẩn, có phân loại hồ sơ</td></tr>
+                    <tr><td><span class="wb-cell-strong">Không có công cụ dự toán tài chính</span></td><td>Phân hệ tính gốc/lãi theo dư nợ giảm dần</td></tr>
+                    <tr><td><span class="wb-cell-strong">Điền sai biểu mẫu, hồ sơ bị trả lại</span></td><td>Thư viện biểu mẫu số hoá, xem trước và tải PDF</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="wb-block">
+            <h3>Căn cứ pháp lý — chỗ này hay bị bỏ qua khi ôn</h3>
+            <p class="wb-block__desc">Báo cáo liệt kê 10 văn bản. Hai văn bản dưới đây là <em>gốc thẩm quyền</em> của thuật toán tính điểm, nên nếu bị hỏi “điểm ở đâu ra” thì trả lời bằng đúng hai cái này.</p>
+            <ul class="wb-list">
+              <li class="wb-list__item">
+                <span class="wb-list__title">Quyết định 10343/QĐ-BCA-H02<span class="wb-list__sub">31/12/2025 — ban hành Bảng điểm xét duyệt đối tượng mua, thuê mua, thuê nhà ở cho lực lượng CAND</span></span>
+                <span class="wb-list__end"><span class="wb-cap wb-cap--sm">bảng điểm</span></span>
+              </li>
+              <li class="wb-list__item">
+                <span class="wb-list__title">Thông tư 56/2024/TT-BCA<span class="wb-list__sub">05/11/2024 — quy định chi tiết Luật Nhà ở trong CAND</span></span>
+                <span class="wb-list__end"><span class="wb-cap wb-cap--sm">nghiệp vụ ngành</span></span>
+              </li>
+              <li class="wb-list__item">
+                <span class="wb-list__title">Luật Nhà ở 2023 · Nghị định 100/2024 (sửa bởi 261/2025) · Nghị định 95/2024 · Nghị định 192/2025<span class="wb-list__sub">khung phát triển và quản lý nhà ở xã hội</span></span>
+                <span class="wb-list__end"><span class="wb-cap wb-cap--sm">nền chung</span></span>
+              </li>
+              <li class="wb-list__item">
+                <span class="wb-list__title">Nghị định 13/2023 về bảo vệ dữ liệu cá nhân · Luật An ninh mạng<span class="wb-list__sub">là lý do tồn tại của lớp DLP và của việc chặn CCCD, số hiệu sĩ quan</span></span>
+                <span class="wb-list__end"><span class="wb-cap wb-cap--sm">bảo mật</span></span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="wb-block">
+            <h3>Công trình liên quan — và “vậy nhóm mới ở đâu”</h3>
+            <p class="wb-block__desc">Câu này thường được hỏi và báo cáo có sẵn phần trả lời ở Mở đầu.</p>
+            <div class="wb-card">
+              <div class="wb-table-scroll">
+                <table class="wb-table wb-table--compact">
+                  <thead><tr><th>Công trình</th><th>Nó làm gì</th></tr></thead>
+                  <tbody>
+                    <tr><td><span class="wb-cell-strong">COPLINK</span><span class="wb-cell-sub">Hoa Kỳ</span></td><td>Tích hợp dữ liệu nhiều nguồn, phân tích liên hệ vụ án — nghiệp vụ điều tra, không phải hỏi đáp chính sách</td></tr>
+                    <tr><td><span class="wb-cell-strong">INTERPOL CKE &amp; Europol EC3</span></td><td>Mạng chia sẻ tri thức tội phạm mạng giữa các quốc gia</td></tr>
+                    <tr><td><span class="wb-cell-strong">HDB Bot</span><span class="wb-cell-sub">Singapore</span></td><td>Hỏi đáp tự động về chính sách nhà ở xã hội, gói vay, quy trình đăng ký — <strong>gần đề tài nhất</strong></td></tr>
+                    <tr><td><span class="wb-cell-strong">Trợ lý ảo VNeID · iHanoi</span></td><td>Giải đáp thủ tục hành chính công 24/7 trong nước</td></tr>
+                    <tr><td><span class="wb-cell-strong">“Thanh tra viên AI” · ai.thanhtravien.vn</span><span class="wb-cell-sub">Thanh tra TP.HCM</span></td><td>Giải đáp quy trình kê khai tài sản, phân loại đơn thư khiếu nại</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <p style="margin-top:12px">Điểm nhóm tự nhận là đóng góp: <strong>đặt một lớp kiểm duyệt DLP chuyên biệt của ngành ngay trước kiến trúc RAG</strong>, trong môi trường tri thức đóng — chứ không phải bản thân chatbot hay bản thân RAG. Nói đúng phạm vi đó thì không ai bắt lỗi được.</p>
+          </div>
+        </section>
+
+        <!-- ======================== 3 · USE CASE ============================ -->
+        <section class="wb-section" id="use-case">
+          <h2>Hai actor và 9 use case</h2>
+          <p class="wb-section__desc">Bảng 2.2 của báo cáo. Con số <strong>9</strong> là con số phải thuộc — đừng tự thêm cái thứ 10.</p>
+
+          <div class="wb-grid wb-grid--2">
+            <div class="wb-card"><div class="wb-card__body">
+              <div class="wb-media">
+                <span class="wb-avatar wb-avatar--sm">CB</span>
+                <div class="wb-media__body">
+                  <p class="wb-media__title">CBCS — cán bộ chiến sĩ</p>
+                  <p class="wb-media__text">Người dùng cuối: tra cứu dự án, kiểm tra văn bản pháp luật, hỏi trợ lý ảo, tự đánh giá điểm ưu tiên của hồ sơ mình.</p>
+                </div>
+              </div>
+            </div></div>
+            <div class="wb-card"><div class="wb-card__body">
+              <div class="wb-media">
+                <span class="wb-avatar wb-avatar--sm">QT</span>
+                <div class="wb-media__body">
+                  <p class="wb-media__title">QTV — quản trị viên</p>
+                  <p class="wb-media__text">Bộ phận vận hành: quản lý danh sách dự án, tải biểu mẫu và tài liệu pháp lý, giám sát nhật ký an toàn, cập nhật cơ sở tri thức.</p>
+                </div>
+              </div>
+            </div></div>
+          </div>
+
+          <div class="wb-card" style="margin-top:16px">
+            <div class="wb-table-scroll">
+              <table class="wb-table wb-table--compact">
+                <thead><tr><th>#</th><th>Use case</th><th>Actor</th><th>Nội dung</th></tr></thead>
+                <tbody>
+                  <tr><td>1</td><td><span class="wb-cell-strong">Trò chuyện với Chatbot</span></td><td><span class="wb-cap wb-cap--sm">CBCS</span></td><td>Hỏi đáp quy định, thông tư bằng ngôn ngữ tự nhiên, có RAG + LLM đứng sau</td></tr>
+                  <tr><td>2</td><td><span class="wb-cell-strong">Tra cứu dự án</span></td><td><span class="wb-cap wb-cap--sm">CBCS</span></td><td>Danh sách, vị trí, quy mô, tiến độ thi công, mức giá các dự án của lực lượng</td></tr>
+                  <tr><td>3</td><td><span class="wb-cell-strong">Tính điểm ưu tiên</span></td><td><span class="wb-cap wb-cap--sm">CBCS</span></td><td>Tự động tính điểm xét duyệt theo thâm niên, cấp bậc, thành tích</td></tr>
+                  <tr><td>4</td><td><span class="wb-cell-strong">Tải tài liệu</span></td><td><span class="wb-cap wb-cap--sm">CBCS</span></td><td>Tìm kiếm, xem trước, tải xuống biểu mẫu và văn bản pháp quy</td></tr>
+                  <tr><td>5</td><td><span class="wb-cell-strong">Dự toán tài chính</span></td><td><span class="wb-cap wb-cap--sm">CBCS</span></td><td>Ước tính lãi vay, dư nợ gốc, kế hoạch thanh toán hàng tháng</td></tr>
+                  <tr><td>6</td><td><span class="wb-cell-strong">Quản lý dự án</span></td><td><span class="wb-cap wb-cap--sm">QTV</span></td><td>Thêm, sửa, xoá metadata dự án; đồng bộ vào kho tri thức</td></tr>
+                  <tr><td>7</td><td><span class="wb-cell-strong">Quản lý tài liệu</span></td><td><span class="wb-cap wb-cap--sm">QTV</span></td><td>Cập nhật hồ sơ số của thông tư, quy định; quản lý tệp PDF trên máy chủ</td></tr>
+                  <tr><td>8</td><td><span class="wb-cell-strong">Nhật ký an toàn</span></td><td><span class="wb-cap wb-cap--sm">QTV</span></td><td>Xem lịch sử truy vấn, giám sát cảnh báo an ninh</td></tr>
+                  <tr><td>9</td><td><span class="wb-cell-strong">Đồng bộ tri thức AI</span></td><td><span class="wb-cap wb-cap--sm">QTV</span></td><td>Kích hoạt chia đoạn, số hoá vector, tải lại CSDL tri thức</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="wb-alert wb-alert--warning" style="margin-top:16px">
+            <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">warning</span></span>
+            <div class="wb-alert__body">
+              <p class="wb-alert__title">Hai chức năng có ở Chương 1 nhưng không được mô hình hoá ở Chương 2</p>
+              <p class="wb-alert__msg"><strong>Tra cứu tiến độ hồ sơ bằng số CCCD</strong> xuất hiện cả ở mục chức năng (§1.1.4) <em>và</em> ở yêu cầu chức năng (§1.3.1) — nhưng không có use case, không có kiểm thử. <strong>Nhận diện giọng nói qua mi-crô</strong> cũng vậy: nêu ở §1.1.4 rồi thôi. Cách nói an toàn: “Chương 1 nêu chúng như yêu cầu phía người dùng; mô hình use case chi tiết ở Chương 2 không tiếp tục mô hình hoá riêng.” Tuyệt đối đừng biến chúng thành “use case thứ 10”.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================== 4 · KIẾN TRÚC =========================== -->
+        <section class="wb-section" id="kien-truc">
+          <h2>Kiến trúc 3 lớp</h2>
+          <p class="wb-section__desc">Mục 2.4 của báo cáo. Đọc từ trên xuống: người dùng bấm ở lớp 1, quyết định xảy ra ở lớp 2, dữ liệu và AI nằm ở lớp 3.</p>
+
+          <div class="wb-stack">
+            <div class="wb-card">
+              <div class="wb-card__head"><h3 class="wb-card__title">Lớp 1 — Giao diện</h3><span class="wb-cap wb-cap--sm">HTML5 · CSS3 · Vanilla JS · TailwindCSS</span></div>
+              <div class="wb-card__body">
+                <p style="margin:0">Hiển thị thông tin, tiếp nhận thao tác, gọi API của backend. Hai giao diện: <strong>CBCS</strong> (một trang duy nhất — SPA) và <strong>Admin</strong>. Khung chat là cửa sổ nổi góc dưới bên phải, thu nhỏ/mở rộng được.</p>
+              </div>
+            </div>
+
+            <div class="wb-card">
+              <div class="wb-card__head"><h3 class="wb-card__title">Lớp 2 — Xử lý trung tâm</h3><span class="wb-cap wb-cap--sm">FastAPI trên Uvicorn</span></div>
+              <div class="wb-card__body">
+                <p>Bộ não. Báo cáo gọi tên đúng những khối này, nên đây là danh sách nên thuộc:</p>
+                <div class="wb-cluster">
+                  <span class="wb-cap">Định tuyến API</span>
+                  <span class="wb-cap">Bộ quét bảo mật DLP</span>
+                  <span class="wb-cap">Xác thực Bearer Token</span>
+                  <span class="wb-cap">Khoá IP chống dò PIN</span>
+                  <span class="wb-cap">Giới hạn tần suất chat</span>
+                  <span class="wb-cap">Kiểm tra tệp tải lên</span>
+                  <span class="wb-cap">Thuật toán tính điểm</span>
+                  <span class="wb-cap">Đồng bộ dữ liệu</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="wb-card">
+              <div class="wb-card__head"><h3 class="wb-card__title">Lớp 3 — Cơ sở dữ liệu và Trí tuệ nhân tạo</h3><span class="wb-cap wb-cap--sm">SQLite · ChromaDB · LLaMA-3</span></div>
+              <div class="wb-card__body">
+                <p style="margin:0">Ba thành phần, ba vai hoàn toàn khác nhau: <strong>SQLite</strong> lưu vết hoạt động (audit log), <strong>ChromaDB</strong> lưu kho tri thức dạng vector cho RAG, <strong>LLaMA-3</strong> nhận câu hỏi kèm ngữ cảnh rồi sinh câu trả lời tự nhiên.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="wb-alert wb-alert--info" style="margin-top:16px">
+            <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span>
+            <div class="wb-alert__body">
+              <p class="wb-alert__title">Chỗ dễ nhầm nhất trong cả báo cáo: “Layer 3” ≠ “cơ chế lưu trữ”</p>
+              <p class="wb-alert__msg">Mục 2.4 (kiến trúc) nói Layer 3 gồm <strong>SQLite + ChromaDB + LLaMA-3</strong>. Mục 2.3.3 (thiết kế cơ sở dữ liệu) nói cơ chế lưu trữ lai gồm <strong>SQLite + JSON + ChromaDB</strong>. Đây là <em>hai trục phân loại khác nhau</em>, không phải báo cáo thay LLM bằng JSON: một trục kể các thành phần của tầng dưới cùng, một trục kể các cách lưu dữ liệu. JSON không phải mô hình, LLM không phải kho lưu trữ.</p>
+            </div>
+          </div>
+
+          <div class="wb-block">
+            <h3>Ba kho, ba loại câu hỏi</h3>
+            <p class="wb-block__desc">Cách phân biệt gọn nhất: mỗi kho giỏi trả lời một <em>dạng</em> câu hỏi.</p>
+            <div class="wb-card">
+              <div class="wb-table-scroll">
+                <table class="wb-table wb-table--compact">
+                  <thead><tr><th>Kho</th><th>Trả lời được câu hỏi dạng</th><th>Đựng gì trong bài này</th></tr></thead>
+                  <tbody>
+                    <tr><td><span class="wb-cell-strong">SQLite</span></td><td>“Ai hỏi gì, lúc nào, có bị chặn không?” — cần <strong>chính xác từng bản ghi</strong></td><td>Bảng <code>audit_logs</code></td></tr>
+                    <tr><td><span class="wb-cell-strong">Tệp JSON</span></td><td>“Danh sách dự án hiện có là gì?” — cần <strong>đọc, hiển thị, sửa nhanh</strong></td><td>Danh mục dự án, danh sách tài liệu</td></tr>
+                    <tr><td><span class="wb-cell-strong">ChromaDB</span></td><td>“Đoạn văn bản nào <em>gần nghĩa</em> với câu hỏi này?” — không cần khớp chữ</td><td>Các khối văn bản đã nhúng thành vector</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <p style="margin-top:12px">Vì sao vừa JSON vừa ChromaDB? Vì hai việc khác nhau: JSON phục vụ <strong>dữ liệu ứng dụng có cấu trúc</strong> (vẽ danh sách, sửa một trường), ChromaDB phục vụ <strong>truy xuất tri thức theo ngữ nghĩa</strong>. Đây là suy luận hợp lý từ kiến trúc, không phải câu chữ báo cáo — nên nói “có thể hiểu là…”.</p>
+          </div>
+        </section>
+
+        <!-- ======================== 5 · LUỒNG HỎI =========================== -->
+        <section class="wb-section" id="luong-hoi">
+          <h2>Luồng một câu hỏi — 10 chốt, xếp theo giá</h2>
+          <p class="wb-section__desc">Đây là thứ đáng thuộc nhất. Và nó có một logic ẩn mà báo cáo không nói ra thành lời.</p>
+
+          <div class="wb-card wb-card--pad">
+            <p style="margin:0"><strong>Chuỗi chốt được xếp theo giá tính toán tăng dần, chốt rẻ nhất đứng trước.</strong> Bằng chứng nằm ngay trong kiểm thử: câu hỏi vi phạm bảo mật bị chặn với độ trễ <strong>0.00s</strong>, vì DLP chỉ là xử lý chuỗi — nó không cần vector, không cần gọi mạng. Còn LLM, thứ tốn 1–2 giây và tốn tiền API, đứng cuối cùng. Mỗi chốt phía trước đều có quyền kết thúc yêu cầu <em>trước khi</em> phải trả giá cho chốt sau.</p>
+          </div>
+
+          <ol class="wb-steps" style="margin-top:18px">
+            <li class="wb-steps__item">
+              <span class="wb-steps__marker">1</span>
+              <div class="wb-steps__content">
+                <p class="wb-steps__title">Frontend gửi câu hỏi</p>
+                <p class="wb-steps__desc">Khung chat gọi API của FastAPI qua HTTPS.</p>
+              </div>
+            </li>
+            <li class="wb-steps__item">
+              <span class="wb-steps__marker">2</span>
+              <div class="wb-steps__content">
+                <p class="wb-steps__title">DLP — kiểm duyệt an toàn</p>
+                <p class="wb-steps__desc">Chuẩn hoá Unicode, bỏ dấu, bỏ ký tự đặc biệt, đối sánh từ điển 4 nhóm nghiệp vụ + regex dữ liệu định danh. Vi phạm → chặn, ghi log <code>DANGER</code> kèm từ khoá, trả lời theo văn phong nghiêm trang của ngành.</p>
+                <span class="wb-steps__note">Giá gần 0 · có quyền kết thúc luôn</span>
+              </div>
+            </li>
+            <li class="wb-steps__item">
+              <span class="wb-steps__marker">3</span>
+              <div class="wb-steps__content">
+                <p class="wb-steps__title">Nhận diện nghiệp vụ đặc thù</p>
+                <p class="wb-steps__desc">Nếu câu hỏi chứa “tính điểm” / “xét điểm”, hệ thống điều hướng sang công cụ tính điểm <strong>mà không gọi LLM</strong>.</p>
+                <span class="wb-steps__note">Giá gần 0 · có quyền kết thúc luôn</span>
+              </div>
+            </li>
+            <li class="wb-steps__item">
+              <span class="wb-steps__marker">4</span>
+              <div class="wb-steps__content">
+                <p class="wb-steps__title">Bộ nhớ đệm ngữ nghĩa</p>
+                <p class="wb-steps__desc">Nhúng câu hỏi rồi so độ tương đồng với các câu đã trả lời trong phiên. Trùng khớp trên ngưỡng → lấy lại câu trả lời cũ.</p>
+                <span class="wb-steps__note">Giá = 1 lần nhúng · có quyền kết thúc luôn</span>
+              </div>
+            </li>
+            <li class="wb-steps__item">
+              <span class="wb-steps__marker">5</span>
+              <div class="wb-steps__content">
+                <p class="wb-steps__title">Nhúng câu hỏi thành vector</p>
+                <p class="wb-steps__desc">Mô hình <code>all-MiniLM-L6-v2</code> biến câu hỏi thành một dãy 384 số.</p>
+              </div>
+            </li>
+            <li class="wb-steps__item">
+              <span class="wb-steps__marker">6</span>
+              <div class="wb-steps__content">
+                <p class="wb-steps__title">Truy xuất từ ChromaDB</p>
+                <p class="wb-steps__desc">Lấy <strong>Top 8</strong> khối văn bản có vector gần nhất làm ngữ cảnh.</p>
+              </div>
+            </li>
+            <li class="wb-steps__item">
+              <span class="wb-steps__marker">7</span>
+              <div class="wb-steps__content">
+                <p class="wb-steps__title">Ghép prompt</p>
+                <p class="wb-steps__desc">Prompt template riêng cho lĩnh vực Công an (“Bạn là Trợ lý ảo chính thức của Bộ Công an…”) + 8 đoạn ngữ cảnh + câu hỏi + tối đa 5 cặp hỏi–đáp gần nhất.</p>
+              </div>
+            </li>
+            <li class="wb-steps__item">
+              <span class="wb-steps__marker">8</span>
+              <div class="wb-steps__content">
+                <p class="wb-steps__title">Gọi LLaMA-3 qua Groq</p>
+                <p class="wb-steps__desc">Model chính <code>llama-3.3-70b-versatile</code>; lỗi kết nối / quá tải / khoá API thì bắt ngoại lệ và chuyển sang model dự phòng. 6 khoá API xoay vòng để tránh lỗi quá nhiều truy vấn.</p>
+                <span class="wb-steps__note">Chốt đắt nhất · 1–2 giây</span>
+              </div>
+            </li>
+            <li class="wb-steps__item">
+              <span class="wb-steps__marker">9</span>
+              <div class="wb-steps__content">
+                <p class="wb-steps__title">Trả kết quả về giao diện</p>
+              </div>
+            </li>
+            <li class="wb-steps__item">
+              <span class="wb-steps__marker">10</span>
+              <div class="wb-steps__content">
+                <p class="wb-steps__title">Ghi nhật ký vào SQLite</p>
+                <p class="wb-steps__desc">Câu hỏi, câu trả lời, trạng thái <code>SAFE</code>/<code>DANGER</code>, từ khoá vi phạm, mốc thời gian.</p>
+              </div>
+            </li>
+          </ol>
+
+          <div class="wb-alert wb-alert--success" style="margin-top:16px">
+            <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">lightbulb</span></span>
+            <div class="wb-alert__body">
+              <p class="wb-alert__title">Câu nói ăn điểm khi trình bày luồng này</p>
+              <p class="wb-alert__msg">“Thứ tự các chốt không phải tuỳ ý: chốt nào rẻ và có quyền quyết định dứt điểm thì đứng trước. Nhờ vậy một câu hỏi vi phạm bảo mật bị chặn với độ trễ 0.00 giây — nó chưa bao giờ chạm tới vector database hay LLM.”</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================== 6 · RAG ================================= -->
+        <section class="wb-section" id="rag">
+          <h2>RAG, giải thích cho người thường</h2>
+          <p class="wb-section__desc">Bốn khái niệm, mỗi khái niệm một hình dung đời thường — và chỗ hình dung đó hỏng.</p>
+
+          <div class="wb-block">
+            <h3>RAG = thi mở sách</h3>
+            <p>Một sinh viên thi <em>đóng</em> sách phải nhớ luật trong đầu; nhớ sai thì viết sai một cách rất tự tin. Thi <em>mở</em> sách thì khác: em được đưa đúng mấy trang liên quan, rồi mới viết câu trả lời bằng lời của mình. <strong>RAG là cách bắt mô hình thi mở sách:</strong> tìm tài liệu trước, sinh câu trả lời sau.</p>
+            <p><strong>Ánh xạ:</strong> “mấy trang liên quan” = 8 khối văn bản ChromaDB trả về · “viết bằng lời của mình” = LLaMA-3 sinh câu trả lời · “kho sách” = kho tri thức nội bộ đã thẩm định, và <em>chỉ</em> kho đó.</p>
+            <p><strong>Chỗ ví von hỏng — phải nói ra:</strong> sinh viên biết mình đang bí và có thể lật thêm trang khác; mô hình thì không — nó nhận đúng 8 đoạn được đưa và không đòi thêm. Nếu bước tìm kiếm đưa sai đoạn, mô hình vẫn viết ra một câu trả lời trôi chảy dựa trên đoạn sai đó. Và mô hình không “hiểu” luật; nó khớp mẫu ngôn ngữ trên văn bản được đưa.</p>
+          </div>
+
+          <div class="wb-block">
+            <h3>Embedding = đặt toạ độ cho ý nghĩa</h3>
+            <p>Hình dung mỗi đoạn văn bản được đặt lên một tấm bản đồ, sao cho <strong>hai đoạn nói cùng chuyện thì nằm gần nhau</strong>, dù dùng từ khác nhau. “Điều kiện mua nhà ở xã hội” và “ai được phép đăng ký mua NOXH” không trùng một chữ nào nhưng nằm cạnh nhau trên bản đồ đó. Trong bài này, mỗi điểm trên bản đồ là một dãy <strong>384 số</strong>, do <code>all-MiniLM-L6-v2</code> sinh ra.</p>
+            <p><strong>Chỗ hỏng:</strong> bản đồ này chỉ có 384 chiều — nó là một bản tóm lược có mất mát. Nó bắt “chủ đề” rất tốt nhưng bắt “phủ định” khá tệ: “đã có nhà thuộc sở hữu” và “chưa có nhà thuộc sở hữu” dùng gần hết chữ giống nhau nên có thể nằm rất gần, dù nghĩa ngược nhau. Đây chính là loại lỗi mà một hệ RAG hay mắc.</p>
+          </div>
+
+          <div class="wb-block">
+            <h3>Chunk 1.200 / gối 150 = photocopy có phần chồng mép</h3>
+            <p>Không thể nhồi cả cuốn thông tư vào một điểm trên bản đồ, nên tài liệu bị cắt thành khối. Báo cáo dùng <code>RecursiveCharacterTextSplitter</code>, <code>chunk_size = 1200</code>, <code>chunk_overlap = 150</code>, và <strong>ưu tiên cắt tại dấu xuống dòng</strong> (<code>\n\n</code> rồi <code>\n</code>) để không cắt vỡ cấu trúc điều luật.</p>
+            <p>Phần gối 150 ký tự giống như photocopy chồng mép: câu nằm vắt qua chỗ cắt vẫn còn nguyên ở một trong hai bản.</p>
+            <p><strong>Chỗ hỏng:</strong> gối mép chỉ cứu được câu bị cắt giữa, nó không cứu được ngữ cảnh xa. Nếu khoản “trừ trường hợp quy định tại Điều 5” nằm cách chỗ định nghĩa 3.000 ký tự, thì 150 ký tự gối không giúp gì cả.</p>
+          </div>
+
+          <div class="wb-block">
+            <h3>Bộ nhớ đệm ngữ nghĩa = “câu này vừa có người hỏi”</h3>
+            <p>Trước khi làm cả quy trình đắt tiền, hệ thống kiểm tra xem trong phiên có ai vừa hỏi câu <em>gần giống</em> chưa — giống về nghĩa, không cần giống chữ. Kiểm thử của báo cáo dùng đúng cặp “tư vấn dự án Valenta Nguyễn Xiển” và “dự án valenta nguyen xien”, và trả về ngay với độ trễ 0s.</p>
+            <p><strong>Chỗ hỏng:</strong> hai câu giống nhau 92% vẫn có thể khác nhau đúng ở chữ quyết định — một tên dự án, một con số, một chữ “không”. Khi đó bộ đệm trả về câu trả lời sai một cách rất nhanh. Ngoài ra bộ đệm này ở phạm vi <strong>phiên làm việc</strong>, nên kết quả 0s của kiểm thử phụ thuộc vào việc hai câu được hỏi trong cùng phiên.</p>
+          </div>
+
+          <div class="wb-alert wb-alert--danger">
+            <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">block</span></span>
+            <div class="wb-alert__body">
+              <p class="wb-alert__title">Đừng nói “có RAG nên không bao giờ bịa”</p>
+              <p class="wb-alert__msg">RAG ràng buộc <em>nguồn</em> ngữ cảnh và làm mô hình bám sát dữ liệu nội bộ — đó là điều báo cáo chứng minh được, và kiểm thử câu hỏi ngoài phạm vi (“Tháp Eiffel cao bao nhiêu mét?”) cho thấy nó trả lời “không có dữ liệu” thay vì tự do bịa. Nhưng từ tài liệu hiện có <strong>không suy ra được một đảm bảo rằng hallucination bằng 0</strong>. Cách nói đúng: “RAG được dùng nhằm hạn chế việc mô hình trả lời ngoài kho tri thức và tăng độ chính xác theo dữ liệu nội bộ.”</p>
+            </div>
+          </div>
+
+          <div class="wb-block">
+            <h3>LangChain đứng ở đâu</h3>
+            <p>LangChain là bộ khung điều phối luồng AI — nó nối câu hỏi → bộ truy xuất → ngữ cảnh → LLM → câu trả lời. Báo cáo nêu cụ thể <code>ConversationalRetrievalChain</code> để giữ mạch hội thoại: hỏi “dự án ở Hà Nội thế nào?”, rồi hỏi tiếp “còn Đà Nẵng?”, câu sau vẫn được hiểu nhờ câu trước. Cơ chế giữ mạch là <strong>bộ nhớ trượt</strong>, chỉ giữ tối đa 5 cặp hỏi–đáp gần nhất để không tràn context window và không tốn token vô ích.</p>
+          </div>
+        </section>
+
+        <!-- ======================== 7 · ĐỒNG BỘ ============================= -->
+        <section class="wb-section" id="dong-bo">
+          <h2>Luồng cập nhật tri thức</h2>
+          <p class="wb-section__desc">Luồng thứ hai phải thuộc. Hiểu hai luồng — hỏi và cập nhật — là hiểu phần lớn hệ thống.</p>
+
+          <ol class="wb-steps wb-steps--dot">
+            <li class="wb-steps__item">
+              <span class="wb-steps__marker"></span>
+              <div class="wb-steps__content">
+                <p class="wb-steps__title">QTV sửa dữ liệu trên trang quản trị</p>
+                <p class="wb-steps__desc">Thêm dự án mới, hoặc sửa metadata văn bản trong Thư viện pháp luật.</p>
+              </div>
+            </li>
+            <li class="wb-steps__item">
+              <span class="wb-steps__marker"></span>
+              <div class="wb-steps__content">
+                <p class="wb-steps__title">Backend sinh tệp văn bản nguồn cho RAG</p>
+                <p class="wb-steps__desc"><code>/admin/update/projects</code> sinh <code>update-duan.txt</code>; sửa thư viện pháp luật thì sinh <code>update-phapluat.txt</code>.</p>
+              </div>
+            </li>
+            <li class="wb-steps__item">
+              <span class="wb-steps__marker"></span>
+              <div class="wb-steps__content">
+                <p class="wb-steps__title">QTV bấm “Đồng bộ CSDL RAG”</p>
+                <p class="wb-steps__desc">Gọi <code>/admin/sync-rag</code>. Đây là hành động <em>có chủ đích</em> — sửa dữ liệu không tự động nạp lại tri thức.</p>
+              </div>
+            </li>
+            <li class="wb-steps__item">
+              <span class="wb-steps__marker"></span>
+              <div class="wb-steps__content">
+                <p class="wb-steps__title">Giải phóng tài nguyên trước khi ghi đè</p>
+                <p class="wb-steps__desc">Máy chủ gán kết nối vector DB về <code>None</code> và gọi thu gom rác, để tránh lỗi khoá tệp khi ghi đè ChromaDB. Chi tiết nhỏ nhưng nói ra thì rất “có làm thật”.</p>
+              </div>
+            </li>
+            <li class="wb-steps__item">
+              <span class="wb-steps__marker"></span>
+              <div class="wb-steps__content">
+                <p class="wb-steps__title">Tiến trình con chạy <code>ingest.py</code></p>
+                <p class="wb-steps__desc">Đọc các tệp <code>.txt</code> trong thư mục <code>data</code> → chia chunk 1.200/150 → nhúng bằng <code>all-MiniLM-L6-v2</code> → ghi vào ChromaDB. Dữ liệu vector cũ bị <strong>xoá sạch và nạp lại toàn bộ</strong>, để tri thức lỗi thời không gây nhiễu.</p>
+              </div>
+            </li>
+            <li class="wb-steps__item">
+              <span class="wb-steps__marker"></span>
+              <div class="wb-steps__content">
+                <p class="wb-steps__title"><code>os.utime()</code> chạm vào tệp cấu hình</p>
+                <p class="wb-steps__desc">Đổi mốc thời gian tệp để Uvicorn tự khởi động lại và nhận kết nối vector DB mới. Kiểm thử đo được: chatbot trả lời đúng dự án mới sau <strong>5–10 giây</strong>.</p>
+              </div>
+            </li>
+          </ol>
+
+          <div class="wb-alert wb-alert--warning" style="margin-top:16px">
+            <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">warning</span></span>
+            <div class="wb-alert__body">
+              <p class="wb-alert__title">Hai chỗ tên gọi dễ làm bạn nói sai</p>
+              <p class="wb-alert__msg">
+                <strong>1.</strong> <code>convert_vector()</code> nghe như “tự nhúng vector”, nhưng bảng lớp của báo cáo định nghĩa nó là “trích xuất và định dạng metadata để ghi vào tệp nạp tri thức RAG”. Nó chỉ <em>xuất text</em>; việc nhúng do <code>ingest.py</code> làm. Đừng nói “<code>ProjectItem.convert_vector()</code> embedding dữ liệu vào ChromaDB”.<br />
+                <strong>2.</strong> Bảng 2.11 viết bước cuối là “cập nhật timestamp để <em>tải lại mô hình ngôn ngữ LLaMA-3</em>”. Không chính xác: LLaMA-3 chạy ở phía Groq, máy chủ không có mô hình nào để tải lại. Thứ khởi động lại là tiến trình FastAPI cùng kết nối ChromaDB của nó. Nếu bị hỏi, nói đúng như vậy — nó cho thấy bạn hiểu hệ thống hơn là thuộc lòng bảng.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================== 8 · KHÔNG AI ============================ -->
+        <section class="wb-section" id="khong-ai">
+          <h2>Hai phân hệ cố tình không dùng AI</h2>
+          <p class="wb-section__desc">Và biết <em>vì sao</em> không dùng thì quan trọng hơn biết là không dùng.</p>
+
+          <div class="wb-card wb-card--pad">
+            <p style="margin:0">Nguyên tắc phân vai của cả hệ thống, nói được trong một câu: <strong>việc có quy tắc cố định thì viết bằng code; việc phải diễn đạt tri thức bằng ngôn ngữ tự nhiên thì mới đưa cho RAG + LLM.</strong> Tính điểm và tính lãi vay là loại thứ nhất — cùng đầu vào phải cho ra cùng kết quả, và phải giải thích được từng điểm cộng khi có khiếu nại. Một mô hình sinh ngôn ngữ không cho bạn tính chất đó.</p>
+          </div>
+
+          <div class="wb-block">
+            <h3>Tính điểm ưu tiên</h3>
+            <p>Bảy trường đầu vào, theo lớp <code>ScoreRequest</code>:</p>
+            <div class="wb-card">
+              <div class="wb-table-scroll">
+                <table class="wb-table wb-table--compact">
+                  <thead><tr><th>Trường</th><th>Kiểu</th><th>Ý nghĩa</th><th>Ràng buộc báo cáo ghi</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>housing</code></td><td>Integer</td><td>Hoàn cảnh khó khăn về nhà ở hiện tại</td><td>từ 0 đến 60 điểm</td></tr>
+                    <tr><td><code>seniority</code></td><td>Integer</td><td>Thâm niên công tác</td><td>≥ 0</td></tr>
+                    <tr><td><code>rank</code></td><td>Integer</td><td>Cấp bậc hàm hiện tại</td><td>≥ 0</td></tr>
+                    <tr><td><code>law</code></td><td>Boolean</td><td>Trạng thái chấp hành kỷ luật</td><td>True / False</td></tr>
+                    <tr><td><code>family</code></td><td>Integer</td><td>Hoàn cảnh gia đình chính sách</td><td>0, 2 hoặc 3 điểm</td></tr>
+                    <tr><td><code>remote</code></td><td>Boolean</td><td>Công tác tại địa bàn khó khăn, biên giới</td><td>True / False</td></tr>
+                    <tr><td><code>other</code></td><td>Integer</td><td>Ưu tiên bổ sung khác</td><td>≥ 0</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <p style="margin-top:14px"><strong>Quy tắc nghiệp vụ quan trọng nhất của cả bài:</strong> tổng điểm các tiêu chí <strong>Nhóm 2 không được vượt quá 20 điểm</strong>. Nếu tổng thực tế lớn hơn 20 thì khống chế về đúng 20, <em>rồi mới</em> cộng với điểm Nhóm 1 để ra tổng điểm xét duyệt. Đầu ra là tổng điểm + phân loại hồ sơ: <span class="wb-cap wb-cap--sm">Ưu tiên đặc biệt</span> <span class="wb-cap wb-cap--sm">Khả năng duyệt cao</span> <span class="wb-cap wb-cap--sm">Hồ sơ tiêu chuẩn</span></p>
+
+            <div class="wb-alert wb-alert--danger" style="margin-top:14px">
+              <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">priority_high</span></span>
+              <div class="wb-alert__body">
+                <p class="wb-alert__title">Ba cái bẫy nằm ngay trong phần tính điểm</p>
+                <p class="wb-alert__msg">
+                  <strong>a.</strong> Báo cáo nêu quy tắc “Nhóm 2 ≤ 20” nhưng <strong>không chỗ nào liệt kê tiêu chí nào thuộc Nhóm 1, tiêu chí nào thuộc Nhóm 2</strong>. Nếu bị hỏi, đừng đoán — trả lời: “Báo cáo dẫn quy tắc khống chế theo bảng điểm của Bộ Công an (Quyết định 10343/QĐ-BCA-H02); phần phân nhóm chi tiết thuộc văn bản gốc, đồ án không trình bày lại.”<br />
+                  <strong>b.</strong> Bảng 2.20 ràng buộc <code>housing</code> tối đa <strong>60</strong> điểm, nhưng kiểm thử §3.4.5 lại nhập “Chưa có nhà ở thuộc sở hữu mình (<strong>70đ</strong>)”. Hai chỗ lệch nhau.<br />
+                  <strong>c.</strong> Kết quả kiểm thử là <strong>76 điểm</strong>, nhưng danh sách đầu vào in trong báo cáo (70 + 5 + 4 …) kết thúc bằng dấu ba chấm và <strong>không cộng lại thành 76</strong>. Đừng cố tái tạo phép cộng đó trên bục. Nói: “Bộ máy tính điểm trả về 76 điểm, phân loại Khả năng duyệt cao; báo cáo in một phần danh sách tiêu chí đã nhập.”
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="wb-block">
+            <h3>Dự toán tài chính — dư nợ giảm dần</h3>
+            <p>Đầu vào ba tham số: số tiền vay, lãi suất năm, thời hạn. Đầu ra theo yêu cầu chức năng: gốc và lãi phải trả của <strong>6 kỳ đầu</strong>, <strong>6 kỳ cuối</strong>, và <strong>tổng số tiền lãi</strong>.</p>
+            <p>Cách hiểu “dư nợ giảm dần”: <strong>gốc trả đều mỗi tháng, lãi tính trên phần còn nợ</strong>. Vì phần còn nợ giảm dần nên tiền phải trả tháng sau luôn nhẹ hơn tháng trước — khác hẳn kiểu trả đều hằng tháng của nhiều ngân hàng thương mại.</p>
+
+            <div class="wb-card">
+              <div class="wb-card__head"><h4 class="wb-card__title">Ví dụ tính tay</h4><span class="wb-cap wb-cap--sm wb-cap--dashed">ví dụ tôi tự tính, không có trong báo cáo</span></div>
+              <div class="wb-card__body">
+                <p>Vay <strong>800.000.000 đ</strong>, lãi <strong>6,6%/năm</strong>, thời hạn <strong>20 năm = 240 tháng</strong>. Lãi tháng = 6,6% / 12 = <strong>0,55%</strong>.</p>
+                <div class="wb-table-scroll">
+                  <table class="wb-table wb-table--compact">
+                    <thead><tr><th>Kỳ</th><th class="wb-num">Gốc</th><th class="wb-num">Lãi</th><th class="wb-num">Phải trả</th></tr></thead>
+                    <tbody>
+                      <tr><td>Tháng 1</td><td class="wb-num">3.333.333</td><td class="wb-num">4.400.000</td><td class="wb-num wb-num--strong">7.733.333</td></tr>
+                      <tr><td>Tháng 2</td><td class="wb-num">3.333.333</td><td class="wb-num">4.381.667</td><td class="wb-num wb-num--strong">7.715.000</td></tr>
+                      <tr><td>Tháng 240</td><td class="wb-num">3.333.333</td><td class="wb-num">18.333</td><td class="wb-num wb-num--strong">3.351.666</td></tr>
+                    </tbody>
+                    <tfoot><tr><td>Tổng lãi cả kỳ hạn</td><td class="wb-num">—</td><td class="wb-num wb-num--strong">530.200.000</td><td class="wb-num">—</td></tr></tfoot>
+                  </table>
+                </div>
+                <p style="margin-top:12px">Gốc mỗi tháng = 800.000.000 / 240. Lãi tháng 1 = 800.000.000 × 0,55%. Tổng lãi = 4.400.000 × (240+1)/2, vì dãy lãi giảm đều nên lấy trung bình cộng đầu–cuối. Con số cuối cùng nói lên một điều đáng nhớ khi thuyết trình: <strong>tiền lãi bằng khoảng hai phần ba số tiền vay</strong> — đó mới là lý do phân hệ này tồn tại.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================== 9 · BẢO MẬT ============================= -->
+        <section class="wb-section" id="bao-mat">
+          <h2>Bảo mật — DLP và bốn chốt kỹ thuật</h2>
+          <p class="wb-section__desc">Phần nhóm tự nhận là đóng góp chính. Cũng là phần dễ nói quá nhất.</p>
+
+          <div class="wb-block">
+            <h3>DLP = người gác cổng đọc câu hỏi trước khi cho vào</h3>
+            <p>DLP (Data Loss Prevention) là lớp kiểm duyệt đứng <em>trước</em> toàn bộ xử lý AI. Hình dung một người gác cổng cơ quan: ai muốn vào cũng phải trình bày mục đích ở cổng, và người gác có danh sách những chuyện không được phép hỏi.</p>
+            <p><strong>Bốn nhóm từ khoá nhạy cảm</strong> theo phân loại của báo cáo:</p>
+            <div class="wb-card">
+              <div class="wb-table-scroll">
+                <table class="wb-table wb-table--compact">
+                  <thead><tr><th>Nhóm</th><th>Chặn dò hỏi về</th></tr></thead>
+                  <tbody>
+                    <tr><td><span class="wb-cell-strong">1 · Bí mật nhà nước và kế hoạch nghiệp vụ</span></td><td>Tài liệu có độ mật, chuyên án, phương án, tác chiến</td></tr>
+                    <tr><td><span class="wb-cell-strong">2 · Lực lượng và quân số</span></td><td>Cơ cấu biên chế, quân số, danh sách và lịch trực cán bộ chiến sĩ</td></tr>
+                    <tr><td><span class="wb-cell-strong">3 · Trang bị và phương tiện nghiệp vụ</span></td><td>Kho vũ khí, súng đạn, tần số bộ đàm, biển số xe nghiệp vụ hoá trang</td></tr>
+                    <tr><td><span class="wb-cell-strong">4 · Hệ thống nội bộ</span></td><td>Mạng nội bộ Bộ Công an, cơ sở dữ liệu dân cư</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="wb-block">
+            <h3>Chống lách và chống báo động giả — hai mặt của cùng một bài toán</h3>
+            <div class="wb-grid wb-grid--2">
+              <div class="wb-card">
+                <div class="wb-card__head"><h4 class="wb-card__title">Chống lách</h4></div>
+                <div class="wb-card__body">
+                  <p>Câu hỏi được chuẩn hoá Unicode, <strong>bỏ dấu tiếng Việt</strong>, loại ký tự đặc biệt về dạng chuỗi thô, rồi mới đối sánh từ điển. Nhờ vậy “quân số” và “quan so” đều bị bắt.</p>
+                  <p style="margin-bottom:0">Thêm các bộ regex chặn rò rỉ dữ liệu định danh: <strong>CCCD 12 số</strong>, số điện thoại, email, IP hệ thống. Riêng <strong>số hiệu sĩ quan 6–7 chữ số</strong> — vì dễ trùng với số thường — được kiểm tra thêm <strong>vùng ngữ cảnh 30 ký tự</strong> quanh các từ như “số hiệu”, “sĩ quan”.</p>
+                </div>
+              </div>
+              <div class="wb-card">
+                <div class="wb-card__head"><h4 class="wb-card__title">Chống báo động giả (whitelist)</h4></div>
+                <div class="wb-card__body">
+                  <p>Ví dụ chính báo cáo nêu: cụm <strong>“mật độ xây dựng”</strong>. Nếu chỉ thấy chữ “mật” là chặn, thì một câu hỏi hoàn toàn bình thường về quy mô dự án bị đánh dấu vi phạm.</p>
+                  <p style="margin-bottom:0">Whitelist là danh sách ngoại lệ cho phép loại trừ những ngữ cảnh hợp lệ như vậy — vừa giảm báo động giả, vừa đỡ chặn oan người dùng thật.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="wb-alert wb-alert--danger">
+            <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">block</span></span>
+            <div class="wb-alert__body">
+              <p class="wb-alert__title">Hai điều không được khẳng định về DLP</p>
+              <p class="wb-alert__msg">
+                <strong>1. Không nói “không thể bypass”.</strong> Báo cáo có dùng cụm “bảo đảm tuyệt đối”, nhưng cơ chế được mô tả là từ điển từ khoá + chuẩn hoá Unicode + whitelist + regex + kiểm tra ngữ cảnh. Đó là một bộ rule, và bộ rule nào cũng có ca chưa nằm trong rule. Nói đúng phạm vi: “trong phạm vi rule và các kịch bản kiểm thử của đồ án, DLP đã chặn thành công.”<br />
+                <strong>2. DLP quét <em>đầu vào</em>.</strong> Toàn bộ mô tả trong báo cáo là kiểm duyệt câu hỏi trước khi vào lõi AI; không có mô tả chốt quét câu trả lời trên đường ra. Nghĩa là nếu bản thân kho tri thức chứa thứ nhạy cảm, DLP không phải là thứ ngăn nó đi ra. Điều thực sự giữ vai đó là <em>kho tri thức đóng và đã được thẩm định</em> — nói vậy mới đúng cơ chế.
+              </p>
+            </div>
+          </div>
+
+          <div class="wb-block">
+            <h3>Bốn chốt kỹ thuật</h3>
+            <div class="wb-card">
+              <div class="wb-table-scroll">
+                <table class="wb-table wb-table--compact">
+                  <thead><tr><th>Chốt</th><th>Cách làm</th><th>Kết quả khi vi phạm</th></tr></thead>
+                  <tbody>
+                    <tr><td><span class="wb-cell-strong">Xác thực quản trị</span><span class="wb-cell-sub">mọi API /admin/…</span></td><td>QTV nhập PIN → máy chủ sinh token phiên bằng SHA-256 (PIN + khoá bí mật ngẫu nhiên) → trình duyệt giữ token, tự đính kèm vào header <code>Authorization: Bearer …</code>, truyền trên HTTPS</td><td><span class="wb-cap wb-cap--sm wb-cap--danger">401 Unauthorized</span></td></tr>
+                    <tr><td><span class="wb-cell-strong">Chống dò mã PIN</span></td><td>Đếm số lần nhập sai theo địa chỉ IP; sai quá 5 lần liên tiếp thì khoá IP 15 phút — trong thời gian khoá, nhập đúng PIN cũng bị chặn</td><td><span class="wb-cap wb-cap--sm wb-cap--danger">429 Too Many Requests</span></td></tr>
+                    <tr><td><span class="wb-cell-strong">Giới hạn tần suất chat</span></td><td>Tối đa 10 truy vấn / 60 giây / IP, chống lạm dụng và chống làm cạn quota API của LLM</td><td>Yêu cầu bị từ chối</td></tr>
+                    <tr><td><span class="wb-cell-strong">Kiểm soát tải tệp</span></td><td>Chỉ nhận <strong>PDF</strong>, dung lượng <strong>≤ 15MB</strong>; tên tệp được làm sạch bằng <code>os.path.basename()</code> để chống ghi đè tệp hệ thống</td><td>Từ chối tệp sai định dạng / quá nặng</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <p style="margin-top:12px">Thêm một chi tiết đáng nêu mà nhiều người ôn bỏ sót: <strong>Uvicorn được khởi chạy với <code>ssl_keyfile</code> và <code>ssl_certfile</code></strong> — hệ thống dùng chứng chỉ tự ký để mã hoá toàn bộ dữ liệu truyền tải qua HTTPS. Đây là bằng chứng cụ thể cho định hướng “triển khai trong mạng nghiệp vụ”, mạnh hơn là chỉ nói suông.</p>
+          </div>
+
+          <div class="wb-block">
+            <h3>Nhật ký an toàn — thứ khiến DLP có ý nghĩa</h3>
+            <p>Một bộ lọc mà không ai xem lại được thì không kiểm chứng được. Bảng <code>audit_logs</code> trong SQLite lưu: câu hỏi, câu trả lời, trạng thái <code>SAFE</code>/<code>DANGER</code>, <strong>từ khoá vi phạm thực tế</strong>, và mốc thời gian. Chính trường “từ khoá vi phạm” là thứ cho phép QTV truy vết vì sao một câu bị chặn — và cũng là thứ cho phép chỉnh whitelist khi chặn oan.</p>
+          </div>
+        </section>
+
+        <!-- ======================== 10 · CẤU TRÚC =========================== -->
+        <section class="wb-section" id="cau-truc">
+          <h2>Thiết kế lớp và cơ sở dữ liệu</h2>
+          <p class="wb-section__desc">Bảy lớp, bốn cấu trúc dữ liệu. Phần này thuộc được là trả lời trôi mọi câu hỏi về Chương 2.</p>
+
+          <div class="wb-block">
+            <h3>Bảy lớp trong biểu đồ lớp</h3>
+            <div class="wb-card">
+              <div class="wb-table-scroll">
+                <table class="wb-table wb-table--compact">
+                  <thead><tr><th>Lớp</th><th>Vai</th><th>Phương thức báo cáo nêu</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>FastAPI_Server</code><span class="wb-cell-sub">Bộ điều khiển dịch vụ</span></td><td>Điều phối toàn hệ thống</td><td><code>initialize_ai_system()</code> · <code>verify_admin_pin()</code> · <code>chat_endpoint()</code> · <code>calculate_score()</code> · <code>sync_rag()</code></td></tr>
+                    <tr><td><code>Ingest_Script</code><span class="wb-cell-sub">Kịch bản nạp dữ liệu</span></td><td>Tạo và cập nhật vector database</td><td><code>create_vector_db()</code> · <code>chunk_text()</code> · <code>embed_vectors()</code></td></tr>
+                    <tr><td><code>QA_Chain</code><span class="wb-cell-sub">Tích hợp AI</span></td><td>Nơi LLM gặp vector DB — thuộc tính <code>llm: ChatGroq</code> và <code>vector_db: Chroma</code></td><td><code>invoke()</code> · <code>retrieve_context()</code></td></tr>
+                    <tr><td><code>ChatRequest</code></td><td>Đối tượng yêu cầu hội thoại</td><td><code>validate_input()</code></td></tr>
+                    <tr><td><code>ScoreRequest</code></td><td>Bảy trường điểm đầu vào</td><td><code>validate_score()</code></td></tr>
+                    <tr><td><code>ProjectItem</code></td><td>Dự án — 11 thuộc tính</td><td><code>save()</code> · <code>modified()</code> · <code>convert_vector()</code></td></tr>
+                    <tr><td><code>DocumentItem</code></td><td>Văn bản pháp quy — 6 thuộc tính</td><td><code>upload()</code> · <code>save()</code> · <code>modifed()</code> · <code>convert_vector()</code></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <p style="margin-top:12px"><code>QA_Chain</code> là lớp đáng chỉ vào nhất khi thuyết trình: nó là chỗ <strong>duy nhất</strong> mô hình ngôn ngữ và cơ sở dữ liệu vector gặp nhau, nên nó chính là hiện thân của RAG trong thiết kế lớp.</p>
+          </div>
+
+          <div class="wb-block">
+            <h3>Bốn cấu trúc dữ liệu</h3>
+            <div class="wb-card">
+              <div class="wb-table-scroll">
+                <table class="wb-table wb-table--compact">
+                  <thead><tr><th>Bảng / kho</th><th>Nơi lưu</th><th>Các trường</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>Audit_Logs</code></td><td>SQLite</td><td><code>id</code> (PK) · <code>user_query</code> · <code>ai_response</code> · <code>security_status</code> · <code>trigger_word</code> · <code>timestamp</code></td></tr>
+                    <tr><td><code>Projects_Json</code></td><td>Tệp JSON</td><td><code>name</code> (PK) · <code>location</code> · <code>status</code> · <code>description</code> · <code>size</code> · <code>price</code> · <code>area</code> · <code>expected_handover</code> · <code>start_date</code> · <code>priority</code> · <code>note</code></td></tr>
+                    <tr><td><code>Documents_Json</code></td><td>Tệp JSON</td><td><code>title</code> (PK) · <code>num</code> · <code>date</code> · <code>agency</code> · <code>filename</code> · <code>content</code></td></tr>
+                    <tr><td><code>Chroma_Vector_DB</code></td><td>ChromaDB</td><td><code>id</code> (PK) · <code>embedding</code> (mảng số thực) · <code>document_content</code> · <code>metadata</code></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <p style="margin-top:12px">Trong <code>Documents_Json</code>, trường <code>content</code> chính là <strong>cầu nối sang RAG</strong>: nó giữ nội dung để truy xuất ngữ cảnh, còn <code>filename</code> giữ tệp PDF để người dùng tải về. Hai đường khác nhau cho cùng một văn bản.</p>
+
+            <div class="wb-alert wb-alert--warning" style="margin-top:14px">
+              <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">warning</span></span>
+              <div class="wb-alert__body">
+                <p class="wb-alert__title">Nếu thầy hỏi vào thiết kế, ba chỗ này là điểm yếu thật</p>
+                <p class="wb-alert__msg">
+                  <strong>a.</strong> Khoá chính của <code>Projects_Json</code> là <code>name</code>, của <code>Documents_Json</code> là <code>title</code> — <em>chuỗi hiển thị làm danh tính</em>. Đổi tên một dự án là mất liên kết. Nếu bị hỏi, đừng bảo vệ; nhận và nói hướng sửa: thêm khoá thay thế (<code>id</code>) rồi cho <code>name</code> làm nhãn.<br />
+                  <strong>b.</strong> Thuộc tính <code>app</code> của <code>FastAPI_Server</code> được ghi kiểu là <code>FastAPI_Server</code> — tự tham chiếu; đúng ra là kiểu <code>FastAPI</code>.<br />
+                  <strong>c.</strong> Vài chỗ đặt tên chưa nhất quán: mục 2.3.1.1 gọi lớp là “Bộ điều khiển dịch vụ” còn danh mục bảng biểu gọi là “Bộ định tuyến”; <code>DocumentItem</code> có phương thức viết sai chính tả là <code>modifed()</code>.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================== 11 · UML ================================ -->
+        <section class="wb-section" id="uml">
+          <h2>Bộ biểu đồ UML — mỗi loại trả lời một câu hỏi</h2>
+          <p class="wb-section__desc">Đừng thuộc từng mũi tên. Thuộc <em>câu hỏi mà mỗi loại biểu đồ trả lời</em> — đó cũng chính là thứ môn học này kiểm tra.</p>
+
+          <div class="wb-card">
+            <div class="wb-table-scroll">
+              <table class="wb-table wb-table--compact">
+                <thead><tr><th>Loại biểu đồ</th><th>Trả lời câu hỏi</th><th>Trong bài này có</th></tr></thead>
+                <tbody>
+                  <tr><td><span class="wb-cell-strong">Use Case</span></td><td>Ai được làm gì?</td><td>1 tổng quát + 9 chi tiết (mỗi use case một cái)</td></tr>
+                  <tr><td><span class="wb-cell-strong">Tuần tự (Sequence)</span></td><td>Các thành phần gọi nhau theo <em>thứ tự thời gian</em> nào?</td><td>3: xử lý câu hỏi · tính điểm và phân loại · đồng bộ RAG</td></tr>
+                  <tr><td><span class="wb-cell-strong">Cộng tác (Collaboration)</span></td><td><em>Những đối tượng nào</em> trao đổi với nhau? (cùng nội dung sequence, nhìn theo quan hệ thay vì theo thời gian)</td><td>3: luồng Chatbot · luồng tính điểm · luồng đồng bộ RAG</td></tr>
+                  <tr><td><span class="wb-cell-strong">Trạng thái (State)</span></td><td>Một đối tượng đi qua những trạng thái nào?</td><td>3: hồ sơ dự án · cơ sở tri thức RAG · bộ lọc DLP</td></tr>
+                  <tr><td><span class="wb-cell-strong">Hoạt động (Activity)</span></td><td>Quy trình chạy thế nào, rẽ nhánh ở đâu?</td><td>3: xử lý câu hỏi · tính điểm và phân loại · quản lý dữ liệu</td></tr>
+                  <tr><td><span class="wb-cell-strong">Lớp (Class)</span></td><td>Các lớp có dữ liệu và phương thức gì?</td><td>1 biểu đồ lớp tổng quát, 7 lớp</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="wb-alert wb-alert--info" style="margin-top:16px">
+            <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span>
+            <div class="wb-alert__body">
+              <p class="wb-alert__title">Vì sao có cả sequence lẫn collaboration cho cùng ba luồng</p>
+              <p class="wb-alert__msg">Đây là câu hỏi rất dễ bị hỏi vì trông như làm trùng. Hai biểu đồ mô tả <em>cùng một</em> tương tác nhưng nhấn hai thứ khác nhau: sequence nhấn <strong>trình tự</strong> (ai gọi trước, ai gọi sau), collaboration nhấn <strong>cấu trúc liên kết</strong> (thành phần nào nối với thành phần nào). Chọn ba luồng làm cả hai — chatbot, tính điểm, đồng bộ RAG — cũng chính là ba luồng quan trọng nhất của hệ thống.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================== 12 · KIỂM THỬ =========================== -->
+        <section class="wb-section" id="kiem-thu">
+          <h2>Mười kịch bản kiểm thử</h2>
+          <p class="wb-section__desc">Mục 3.4 của báo cáo. Cả 10 đều kết luận <strong>Đạt</strong>. Biết cách đọc chúng thì trả lời phản biện được, chứ không chỉ đọc lại bảng.</p>
+
+          <div class="wb-card">
+            <div class="wb-table-scroll">
+              <table class="wb-table wb-table--compact">
+                <thead><tr><th>#</th><th>Kiểm thử</th><th>Đầu vào / thao tác</th><th>Kết quả thực tế</th><th>KL</th></tr></thead>
+                <tbody>
+                  <tr><td>1</td><td><span class="wb-cell-strong">Bảo mật truy vấn</span></td><td>“Danh sách quân số phòng công tác chính trị?”</td><td>Chặn, cảnh báo, ghi log DANGER — độ trễ <strong>0.00s</strong></td><td><span class="wb-cap wb-cap--sm">Đạt</span></td></tr>
+                  <tr><td>2</td><td><span class="wb-cell-strong">Trả lời đúng nghiệp vụ</span></td><td>“Đối tượng nào được ưu tiên mua dự án Tân Lập 99?”</td><td>Trích xuất đúng tài liệu, văn phong chuẩn; kỳ vọng độ trễ dưới 2s</td><td><span class="wb-cap wb-cap--sm">Đạt</span></td></tr>
+                  <tr><td>3</td><td><span class="wb-cell-strong">Nghiệp vụ ngoại lệ</span></td><td>“Tòa tháp Eiffel cao bao nhiêu mét?”</td><td>Trả lời không có dữ liệu trong tài liệu, không tự do trả lời</td><td><span class="wb-cap wb-cap--sm">Đạt</span></td></tr>
+                  <tr><td>4</td><td><span class="wb-cell-strong">Bộ nhớ tạm</span></td><td>“tư vấn dự án Valenta Nguyễn Xiển” rồi “dự án valenta nguyen xien”</td><td>Phản hồi tức thì, độ trễ <strong>0s</strong>, lấy từ bộ đệm</td><td><span class="wb-cap wb-cap--sm">Đạt</span></td></tr>
+                  <tr><td>5</td><td><span class="wb-cell-strong">Công cụ tính điểm</span></td><td>Chưa có nhà (70đ), thâm niên (5đ), cấp bậc sĩ quan cấp uý (4đ)…</td><td><strong>76 điểm</strong> — phân loại “Khả năng duyệt cao”</td><td><span class="wb-cap wb-cap--sm">Đạt</span></td></tr>
+                  <tr><td>6</td><td><span class="wb-cell-strong">Cập nhật tri thức tức thời</span></td><td>Thêm dự án “VALENTA NGUYỄN XIỂN” rồi bấm Đồng bộ RAG</td><td>Vector DB làm mới, chatbot tư vấn đúng dự án mới (kỳ vọng 5–10s)</td><td><span class="wb-cap wb-cap--sm">Đạt</span></td></tr>
+                  <tr><td>7</td><td><span class="wb-cell-strong">Nhật ký an toàn</span></td><td>QTV mở phân hệ Nhật ký</td><td>Hiển thị đầy đủ dữ liệu từ bảng <code>audit_logs</code></td><td><span class="wb-cap wb-cap--sm">Đạt</span></td></tr>
+                  <tr><td>8</td><td><span class="wb-cell-strong">Xác thực API quản trị</span></td><td><code>curl</code> gọi <code>/admin/list-pdfs</code> không kèm token hợp lệ</td><td>Chặn toàn bộ — <strong>401 Unauthorized</strong></td><td><span class="wb-cap wb-cap--sm">Đạt</span></td></tr>
+                  <tr><td>9</td><td><span class="wb-cell-strong">Chống brute-force PIN</span></td><td>Nhập sai PIN quá 5 lần từ cùng một IP</td><td>Khoá IP đúng 15 phút — <strong>429</strong> kèm đếm ngược</td><td><span class="wb-cap wb-cap--sm">Đạt</span></td></tr>
+                  <tr><td>10</td><td><span class="wb-cell-strong">Tải lên tệp an toàn</span></td><td>Thử JPEG, DOCX, và PDF &gt; 15MB</td><td>Từ chối cả ba trường hợp</td><td><span class="wb-cap wb-cap--sm">Đạt</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="wb-block">
+            <h3>Ba cách đọc bảng này thông minh hơn</h3>
+            <ul class="wb-list">
+              <li class="wb-list__item"><span class="wb-list__title">Test 1 chứng minh <em>thứ tự</em> kiến trúc, không chỉ chứng minh DLP<span class="wb-list__sub">Độ trễ 0.00s chỉ có thể xảy ra nếu bộ lọc nằm trước cả bước nhúng vector — nó là bằng chứng cho sơ đồ luồng, dùng được khi bị hỏi “sao biết DLP đứng trước?”.</span></span></li>
+              <li class="wb-list__item"><span class="wb-list__title">Test 3 mới là test đáng giá nhất về AI<span class="wb-list__sub">Chứng minh mô hình <em>từ chối</em> khi không có dữ liệu — tức prompt và ràng buộc ngữ cảnh có tác dụng. Một chatbot trả lời đúng câu dễ thì không nói được gì; biết nói “không có” mới nói được điều gì đó.</span></span></li>
+              <li class="wb-list__item"><span class="wb-list__title">Đây là 10 <em>test case chức năng</em>, không phải một bộ benchmark<span class="wb-list__sub">Mỗi kiểm thử là một ca. Không có tập câu hỏi lớn, không có tỷ lệ đúng/sai thống kê. Đó là lý do con số “trên 95%” ở Chương 1 không thể tự kiểm chứng lại từ Chương 3.</span></span></li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ======================== 13 · RÀ SOÁT ============================ -->
+        <section class="wb-section" id="ra-soat">
+          <h2>Rà soát báo cáo — 16 chỗ cần cẩn thận</h2>
+          <p class="wb-section__desc">Bạn không viết bản này, nên đây là phần quan trọng nhất: biết trước chỗ nào bị hỏi thì <em>gãy</em>. Cột cuối là câu nên nói — trung thành với báo cáo mà không tự nâng claim.</p>
+
+          <div class="wb-card">
+            <div class="wb-table-scroll">
+              <table class="wb-table wb-table--compact">
+                <thead><tr><th>Mức</th><th>Chỗ lệch</th><th>Báo cáo nói gì</th><th>Nói thế nào trên bục</th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td><span class="wb-cap wb-cap--sm wb-cap--danger">cao</span></td>
+                    <td><span class="wb-cell-strong">Loại tài liệu</span></td>
+                    <td>Bìa ghi <strong>BÀI TẬP LỚN</strong> môn Phân tích thiết kế hệ thống; nhưng Phần mở đầu gọi công trình là “<strong>đồ án tốt nghiệp</strong>” và viết ở ngôi “<strong>em</strong>” số ít, dù nhóm có 4 thành viên.</td>
+                    <td>Đây là dấu vết sao chép mẫu văn. Nếu bị chỉ ra, nhận ngay và gọi đúng tên: “bài tập lớn của nhóm 13”. Đừng bao giờ tự nói “đồ án tốt nghiệp của em”.</td>
+                  </tr>
+                  <tr>
+                    <td><span class="wb-cap wb-cap--sm wb-cap--danger">cao</span></td>
+                    <td><span class="wb-cell-strong">Chạy nội bộ vs Groq API</span></td>
+                    <td>Kết luận nói hệ thống “có khả năng triển khai độc lập trên máy chủ nội bộ <strong>không kết nối mạng Internet</strong>”. Nhưng bản triển khai gọi <strong>Groq API</strong> với 6 khoá xoay vòng.</td>
+                    <td>“Thiết kế hướng tới môi trường nội bộ; bản thử nghiệm trong báo cáo hiện dùng Groq API cho inference, còn triển khai hoàn toàn trên hạ tầng nội bộ được đặt ở phần hướng phát triển.” Tuyệt đối không trả lời “có, hệ thống air-gapped”.</td>
+                  </tr>
+                  <tr>
+                    <td><span class="wb-cap wb-cap--sm wb-cap--danger">cao</span></td>
+                    <td><span class="wb-cell-strong">Độ chính xác trên 95%</span></td>
+                    <td>§1.2.5.2 ghi độ chính xác “đạt mức trên 95%, <strong>loại bỏ hoàn toàn</strong> các thông tin sai lệch”.</td>
+                    <td>“Báo cáo ghi nhận mức trên 95%; các test case được trình bày cho thấy hệ thống trả lời đúng các tình huống thử nghiệm. Tài liệu hiện tại không trình bày chi tiết bộ benchmark thống kê của con số đó.”</td>
+                  </tr>
+                  <tr>
+                    <td><span class="wb-cap wb-cap--sm wb-cap--danger">cao</span></td>
+                    <td><span class="wb-cell-strong">Nhóm 1 / Nhóm 2</span></td>
+                    <td>Quy tắc “Nhóm 2 ≤ 20 điểm” là business rule trung tâm, nhưng <strong>không chỗ nào định nghĩa hai nhóm</strong>.</td>
+                    <td>Dẫn về văn bản gốc: Quyết định 10343/QĐ-BCA-H02 (31/12/2025) và Thông tư 56/2024/TT-BCA. Nói rõ đồ án áp dụng bảng điểm chứ không trình bày lại phân nhóm.</td>
+                  </tr>
+                  <tr>
+                    <td><span class="wb-cap wb-cap--sm wb-cap--warning">vừa</span></td>
+                    <td><span class="wb-cell-strong">Tốc độ phản hồi</span></td>
+                    <td>Ba con số ở ba chỗ: Chương 1 nói “dưới <strong>3 đến 5 giây</strong>”; kỳ vọng của test 2 là “dưới <strong>2s</strong>”; đánh giá cuối §3.4.11 nói trung bình “<strong>1 đến 2 giây</strong>”.</td>
+                    <td>Chỉ trích dẫn con số thực nghiệm: “trong phần thử nghiệm cuối, tốc độ phản hồi trung bình được ghi nhận khoảng 1–2 giây.” Không gộp ba con số thành một phép đo.</td>
+                  </tr>
+                  <tr>
+                    <td><span class="wb-cap wb-cap--sm wb-cap--warning">vừa</span></td>
+                    <td><span class="wb-cell-strong">Ngưỡng bộ nhớ đệm</span></td>
+                    <td>Phần triển khai: cache hit khi trùng khớp <strong>&gt; 92%</strong>. Phần kiểm thử: “câu hỏi tương đồng trên <strong>85%</strong>”.</td>
+                    <td>“Phần triển khai mô tả ngưỡng trên 92%; phần kiểm thử dùng một cặp truy vấn có độ tương đồng cao để xác minh cơ chế.” Đừng khẳng định threshold là 85%.</td>
+                  </tr>
+                  <tr>
+                    <td><span class="wb-cap wb-cap--sm wb-cap--warning">vừa</span></td>
+                    <td><span class="wb-cell-strong">Ràng buộc điểm nhà ở</span></td>
+                    <td><code>housing</code> ràng buộc “từ 0 đến 60 điểm” (Bảng 2.20), nhưng kiểm thử nhập <strong>70đ</strong> cho “chưa có nhà thuộc sở hữu”.</td>
+                    <td>Nếu bị hỏi: nhận là ràng buộc trong bảng thiết kế chưa đồng bộ với bảng điểm dùng khi kiểm thử.</td>
+                  </tr>
+                  <tr>
+                    <td><span class="wb-cap wb-cap--sm wb-cap--warning">vừa</span></td>
+                    <td><span class="wb-cell-strong">Phép cộng ra 76 điểm</span></td>
+                    <td>Danh sách đầu vào in trong báo cáo kết thúc bằng “…” và không cộng lại thành 76.</td>
+                    <td>Chỉ đọc kết quả và phân loại. Không tái tạo phép cộng trên bục.</td>
+                  </tr>
+                  <tr>
+                    <td><span class="wb-cap wb-cap--sm wb-cap--warning">vừa</span></td>
+                    <td><span class="wb-cell-strong">Khả năng chịu tải</span></td>
+                    <td>§1.3.2.2 đặt yêu cầu phục vụ “<strong>hàng chục ngàn</strong> cán bộ chiến sĩ truy cập cùng lúc”.</td>
+                    <td>Đó là <em>yêu cầu phi chức năng</em>, không phải kết quả đo. Hạ tầng được mô tả là SQLite + một tiến trình Uvicorn, và chat bị giới hạn 10 truy vấn/60s/IP. Nói: “báo cáo đặt ra yêu cầu mở rộng; phần thực nghiệm không kiểm thử tải đồng thời.”</td>
+                  </tr>
+                  <tr>
+                    <td><span class="wb-cap wb-cap--sm wb-cap--warning">vừa</span></td>
+                    <td><span class="wb-cell-strong">DLP “bảo đảm tuyệt đối”</span></td>
+                    <td>Câu chữ ở Chương 1 và §3.4.11 rất mạnh (“an toàn thông tin được đảm bảo tuyệt đối”).</td>
+                    <td>“Trong phạm vi rule và các test case của đồ án, DLP đã chặn thành công các trường hợp được kiểm thử.” Không nói “không có cách nào bypass”.</td>
+                  </tr>
+                  <tr>
+                    <td><span class="wb-cap wb-cap--sm wb-cap--warning">vừa</span></td>
+                    <td><span class="wb-cell-strong">Chức năng có ở Ch1, mất ở Ch2</span></td>
+                    <td>Tra cứu tiến độ hồ sơ bằng CCCD (nêu ở cả §1.1.4 và §1.3.1) và nhận diện giọng nói qua mi-crô — không có use case, không có kiểm thử.</td>
+                    <td>“Chương 1 nêu như yêu cầu phía người dùng; mô hình use case ở Chương 2 không mô hình hoá riêng.” Không tự thêm use case thứ 10.</td>
+                  </tr>
+                  <tr>
+                    <td><span class="wb-cap wb-cap--sm wb-cap--warning">vừa</span></td>
+                    <td><span class="wb-cell-strong">Tra cứu dự án nằm ở đâu</span></td>
+                    <td>Bảng 2.4 mô tả người dùng xem danh sách dự án <strong>trong khung chat</strong>, hiển thị bằng các gạch đầu dòng. Nhưng §1.1.4 và §2.5.1.3 lại mô tả một <strong>lưới thẻ dự án trên trang chủ</strong> kèm ô tìm kiếm.</td>
+                    <td>Nói cả hai đường vào: có mục dự án trên trang chủ dạng thẻ, và chatbot cũng trả lời được về dự án qua RAG. Không khẳng định chỉ một trong hai.</td>
+                  </tr>
+                  <tr>
+                    <td><span class="wb-cap wb-cap--sm">nhẹ</span></td>
+                    <td><span class="wb-cell-strong">Cơ chế nạp lại máy chủ</span></td>
+                    <td><code>os.utime()</code> đổi mốc thời gian tệp cấu hình để Uvicorn tự khởi động lại; Bảng 2.11 gọi việc này là “tải lại mô hình ngôn ngữ LLaMA-3”.</td>
+                    <td>Auto-reload là cơ chế của môi trường phát triển. Và LLaMA-3 chạy ở Groq nên không có mô hình nào được tải lại — thứ khởi động lại là tiến trình FastAPI cùng kết nối ChromaDB.</td>
+                  </tr>
+                  <tr>
+                    <td><span class="wb-cap wb-cap--sm">nhẹ</span></td>
+                    <td><span class="wb-cell-strong">Khoá chính là chuỗi hiển thị</span></td>
+                    <td><code>Projects_Json.name</code> và <code>Documents_Json.title</code> làm Primary Key.</td>
+                    <td>Nhận và nêu hướng sửa: thêm <code>id</code> làm khoá thay thế, để <code>name</code> làm nhãn.</td>
+                  </tr>
+                  <tr>
+                    <td><span class="wb-cap wb-cap--sm">nhẹ</span></td>
+                    <td><span class="wb-cell-strong">Sai sót soạn thảo</span></td>
+                    <td>Bảng 2.4 mang caption “UseCase Trò chuyện với Chatbot” dù nội dung là Tra cứu dự án; danh mục bảng biểu gọi lớp là “Bộ định tuyến” còn mục 2.3.1.1 gọi “Bộ điều khiển dịch vụ”; phương thức <code>modifed()</code> sai chính tả; thuộc tính <code>app</code> tự tham chiếu kiểu.</td>
+                    <td>Không cần nêu chủ động. Nếu bị chỉ ra thì nhận là lỗi soạn thảo, không phải lỗi thiết kế.</td>
+                  </tr>
+                  <tr>
+                    <td><span class="wb-cap wb-cap--sm">nhẹ</span></td>
+                    <td><span class="wb-cell-strong">Model dự phòng &amp; một NFR lạ tầng</span></td>
+                    <td>Danh sách dự phòng gồm <code>llama-3.1-8b-instant</code> và <code>mixtral-8x7b-32768</code>. Và §1.3.2.2 có một yêu cầu phi chức năng ở mức rất thấp tầng: “máy chủ phải tự động vô hiệu hoá các thuật toán xử lý song song không cần thiết ở mức hệ điều hành”.</td>
+                    <td>Nhà cung cấp thay đổi danh mục model theo thời gian, nên <strong>nếu phải demo thì kiểm tra lại model nào còn được phục vụ</strong>; báo cáo không bàn tới vòng đời model. Còn yêu cầu kia thực chất là một chi tiết cấu hình (tắt song song hoá của thư viện tokenizer), đặt trong mục yêu cầu phi chức năng là lệch tầng.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================== 14 · CHẮC CHẮN ========================== -->
+        <section class="wb-section" id="chac-chan">
+          <h2>Ba tầng chắc chắn khi trả lời</h2>
+          <p class="wb-section__desc">Trước mỗi câu trả lời, tự hỏi: điều tôi định nói thuộc tầng nào? Nói sai tầng là cách mất điểm nhanh nhất, kể cả khi nội dung đúng.</p>
+
+          <div class="wb-grid wb-grid--3">
+            <div class="wb-card">
+              <div class="wb-card__head"><h3 class="wb-card__title">A · Nói chắc</h3><span class="wb-cap wb-cap--sm wb-cap--success">báo cáo nêu trực tiếp</span></div>
+              <div class="wb-card__body">
+                <div class="wb-cluster">
+                  <span class="wb-cap wb-cap--sm">FastAPI</span><span class="wb-cap wb-cap--sm">Uvicorn</span>
+                  <span class="wb-cap wb-cap--sm">LangChain</span><span class="wb-cap wb-cap--sm">Groq</span>
+                  <span class="wb-cap wb-cap--sm">llama-3.3-70b-versatile</span>
+                  <span class="wb-cap wb-cap--sm">all-MiniLM-L6-v2</span>
+                  <span class="wb-cap wb-cap--sm">ChromaDB</span><span class="wb-cap wb-cap--sm">SQLite</span>
+                  <span class="wb-cap wb-cap--sm">JSON</span><span class="wb-cap wb-cap--sm">TailwindCSS</span>
+                  <span class="wb-cap wb-cap--sm">chunk 1200 / overlap 150</span>
+                  <span class="wb-cap wb-cap--sm">k = 8</span><span class="wb-cap wb-cap--sm">384 chiều</span>
+                  <span class="wb-cap wb-cap--sm">5 cặp hội thoại</span>
+                  <span class="wb-cap wb-cap--sm">DLP 4 nhóm</span>
+                  <span class="wb-cap wb-cap--sm">5 sai PIN → khoá 15′</span>
+                  <span class="wb-cap wb-cap--sm">10 req / 60s / IP</span>
+                  <span class="wb-cap wb-cap--sm">PDF ≤ 15MB</span>
+                  <span class="wb-cap wb-cap--sm">Nhóm 2 ≤ 20 điểm</span>
+                  <span class="wb-cap wb-cap--sm">10 test case</span>
+                </div>
+              </div>
+            </div>
+            <div class="wb-card">
+              <div class="wb-card__head"><h3 class="wb-card__title">B · Nói kèm “có thể hiểu là”</h3><span class="wb-cap wb-cap--sm wb-cap--warning">suy ra hợp lý</span></div>
+              <div class="wb-card__body">
+                <ul class="wb-list wb-list--flush">
+                  <li class="wb-list__item"><span class="wb-list__title">JSON phục vụ dữ liệu ứng dụng, ChromaDB phục vụ truy xuất ngữ nghĩa</span></li>
+                  <li class="wb-list__item"><span class="wb-list__title">Bài toán có quy tắc cố định thì viết code hợp hơn giao cho LLM</span></li>
+                  <li class="wb-list__item"><span class="wb-list__title">Các chốt được xếp theo giá tính toán tăng dần</span></li>
+                  <li class="wb-list__item"><span class="wb-list__title">Kho tri thức đóng là thứ thật sự giữ vai chống lộ, chứ không phải DLP</span></li>
+                </ul>
+              </div>
+            </div>
+            <div class="wb-card">
+              <div class="wb-card__head"><h3 class="wb-card__title">C · Không khẳng định</h3><span class="wb-cap wb-cap--sm wb-cap--danger">tài liệu không chứng minh</span></div>
+              <div class="wb-card__body">
+                <ul class="wb-list wb-list--flush">
+                  <li class="wb-list__item"><span class="wb-list__title">DLP không thể bị bypass</span></li>
+                  <li class="wb-list__item"><span class="wb-list__title">Hallucination bằng 0</span></li>
+                  <li class="wb-list__item"><span class="wb-list__title">Chịu được hàng chục nghìn người dùng đồng thời</span></li>
+                  <li class="wb-list__item"><span class="wb-list__title">Hệ thống hiện tại hoàn toàn offline</span></li>
+                  <li class="wb-list__item"><span class="wb-list__title">Con số 95% đã được benchmark đầy đủ</span></li>
+                  <li class="wb-list__item"><span class="wb-list__title">Bất kỳ endpoint nào ngoài những cái báo cáo nêu tên</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================== 15 · THUYẾT TRÌNH ======================= -->
+        <section class="wb-section" id="thuyet-trinh">
+          <h2>Kịch bản thuyết trình và Q&amp;A</h2>
+
+          <div class="wb-block">
+            <h3>Dàn 10 phút</h3>
+            <p class="wb-block__desc">Thứ tự này bám kim tự tháp: câu trả lời trước, chi tiết sau — người nghe dừng ở phút nào cũng đã nắm được ý chính.</p>
+            <div class="wb-card">
+              <div class="wb-table-scroll">
+                <table class="wb-table wb-table--compact">
+                  <thead><tr><th>Phút</th><th>Nói gì</th><th>Chốt để lại</th></tr></thead>
+                  <tbody>
+                    <tr><td>0–1</td><td>Bài toán: văn bản phân tán, câu hỏi cá nhân hoá, cán bộ quá tải</td><td>“Phản hồi truyền thống mất vài ngày đến hàng tuần.”</td></tr>
+                    <tr><td>1–2</td><td>Hệ thống là gì: cổng thông tin nghiệp vụ, chatbot là một phân hệ</td><td>“Không phải website + ChatGPT.”</td></tr>
+                    <tr><td>2–3</td><td>2 actor, 9 use case — chỉ vào biểu đồ use case tổng quát</td><td>Con số 9.</td></tr>
+                    <tr><td>3–4</td><td>Kiến trúc 3 lớp, và ba kho trả lời ba dạng câu hỏi</td><td>Layer 3 ≠ cơ chế lưu trữ.</td></tr>
+                    <tr><td>4–6</td><td><strong>Luồng một câu hỏi qua 10 chốt</strong> — phần trọng tâm</td><td>“Chốt rẻ và dứt điểm thì đứng trước; DLP chặn ở 0.00s.”</td></tr>
+                    <tr><td>6–7</td><td>Luồng cập nhật tri thức: sửa → sinh .txt → sync → ingest → Chroma</td><td>“Tri thức mới dùng được sau 5–10 giây.”</td></tr>
+                    <tr><td>7–8</td><td>Hai phân hệ cố tình không dùng AI, và vì sao</td><td>“Việc có quy tắc cố định thì viết code.”</td></tr>
+                    <tr><td>8–9</td><td>Bảo mật: DLP 4 nhóm + chống lách + whitelist, rồi 4 chốt kỹ thuật</td><td>Whitelist “mật độ xây dựng”.</td></tr>
+                    <tr><td>9–10</td><td>Kết quả kiểm thử và giới hạn phạm vi</td><td>“10 test case chức năng đều đạt; trung bình 1–2 giây.”</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="wb-block">
+            <h3>Mười bốn câu hỏi dự kiến</h3>
+            <p class="wb-block__desc">Mở từng câu để xem cách trả lời. Nguyên tắc chung: trả lời trong phạm vi báo cáo chứng minh được, và nói thẳng khi báo cáo không nói.</p>
+            <div class="wb-accordion">
+              <details class="wb-accordion__item">
+                <summary>Vì sao không để mô hình ngôn ngữ tính điểm ưu tiên?</summary>
+                <div class="wb-accordion__body">Vì tính điểm cần <strong>tính xác định</strong> và <strong>tính giải thích được</strong>: cùng đầu vào phải cho cùng kết quả, và khi có khiếu nại phải chỉ ra được từng điểm cộng đến từ tiêu chí nào theo bảng điểm của Bộ Công an. Mô hình sinh ngôn ngữ không bảo đảm hai tính chất đó. Nên kiến trúc thực tế là: việc có quy tắc cố định → code; việc phải diễn đạt tri thức bằng ngôn ngữ tự nhiên → RAG + LLM.</div>
+              </details>
+              <details class="wb-accordion__item">
+                <summary>Nếu kho tri thức không có thông tin thì chatbot làm gì?</summary>
+                <div class="wb-accordion__body">Trả lời là không có dữ liệu trong tài liệu, thay vì tự trả lời tự do. Đây là nội dung kiểm thử §3.4.3 với câu hỏi “Tháp Eiffel cao bao nhiêu mét?”, và kết quả là hệ thống tuân thủ prompt định hướng. Đó cũng là kiểm thử đáng giá nhất về mặt AI trong cả bài.</div>
+              </details>
+              <details class="wb-accordion__item">
+                <summary>RAG khác fine-tune thế nào, và vì sao nhóm chọn RAG?</summary>
+                <div class="wb-accordion__body">Fine-tune là <em>huấn luyện lại</em> mô hình để tri thức nằm trong trọng số; RAG để tri thức nằm <em>ngoài</em> mô hình, trong một cơ sở dữ liệu có thể sửa. Với bài này RAG hợp hơn vì văn bản pháp luật được sửa đổi liên tục: cập nhật một thông tư chỉ cần nạp lại vector, không phải huấn luyện lại. Lưu ý: <strong>báo cáo không bàn tới fine-tune</strong>, nên đây là phần bạn giải thích thêm — nói rõ là như vậy.</div>
+              </details>
+              <details class="wb-accordion__item">
+                <summary>Hệ thống hiện tại có hoàn toàn tách biệt Internet không?</summary>
+                <div class="wb-accordion__body">Không nên trả lời “có”. Câu trả lời an toàn và đúng tài liệu: “Thiết kế hướng tới môi trường mạng nội bộ, và có tích hợp HTTPS bằng chứng chỉ tự ký. Nhưng bản thử nghiệm trong báo cáo dùng Groq API cho inference, nên hiện tại vẫn cần kết nối ra ngoài. Việc đóng gói toàn bộ để chạy hoàn toàn trên máy chủ nội bộ được đặt ở phần hướng phát triển.”</div>
+              </details>
+              <details class="wb-accordion__item">
+                <summary>Nhóm 2 gồm những tiêu chí nào mà bị khống chế 20 điểm?</summary>
+                <div class="wb-accordion__body">Báo cáo nêu quy tắc khống chế nhưng không liệt kê phân nhóm. Trả lời trung thực và dẫn nguồn: “Thuật toán áp dụng Bảng điểm xét duyệt ban hành theo Quyết định 10343/QĐ-BCA-H02 ngày 31/12/2025, cùng Thông tư 56/2024/TT-BCA. Phần phân nhóm chi tiết thuộc văn bản gốc; đồ án áp dụng quy tắc khống chế mức trần 20 điểm cho Nhóm 2 trước khi cộng với Nhóm 1.”</div>
+              </details>
+              <details class="wb-accordion__item">
+                <summary>Vì sao chọn k = 8? Vì sao chunk 1.200 và overlap 150?</summary>
+                <div class="wb-accordion__body">Đây là tham số cấu hình trong <code>ingest.py</code> và phần truy vấn; <strong>báo cáo nêu giá trị nhưng không trình bày thí nghiệm so sánh</strong> để chọn ra chúng. Nói đúng như vậy, rồi giải thích cơ chế: chunk lớn giữ được nhiều ngữ cảnh nhưng làm loãng phần liên quan; chunk nhỏ thì sắc hơn nhưng dễ cắt vỡ điều luật, và overlap 150 ký tự là để câu vắt qua chỗ cắt không bị mất. k lớn thì an toàn hơn về độ bao phủ nhưng tốn token và dễ đưa nhiễu vào prompt.</div>
+              </details>
+              <details class="wb-accordion__item">
+                <summary>DLP có thể bị lách không?</summary>
+                <div class="wb-accordion__body">“Có thể. Cơ chế là từ điển từ khoá, chuẩn hoá Unicode bỏ dấu, whitelist, regex và kiểm tra ngữ cảnh — nó chặn được các dạng lách đã lường trước, gồm cả các ca kiểm thử trong báo cáo. Nhưng báo cáo không chứng minh không thể bypass, và chúng em không khẳng định điều đó.” Câu trả lời này mạnh hơn là khăng khăng “không thể”.</div>
+              </details>
+              <details class="wb-accordion__item">
+                <summary>Vì sao dùng JSON cho dự án mà không đưa hết vào SQLite?</summary>
+                <div class="wb-accordion__body">Báo cáo gọi đây là cơ chế lưu trữ lai và xếp JSON vào loại “kho lưu trữ cấu trúc nhẹ”: danh mục dự án, danh sách tài liệu — dữ liệu không phức tạp nhưng cần sửa nhanh và linh hoạt. Còn nhật ký cần truy vấn chính xác từng bản ghi nên nằm ở SQLite. Đây là phần suy luận từ kiến trúc, nên nói “có thể hiểu là”. Nếu bị hỏi tiếp về nhược điểm thì nhận: JSON không có transaction, không có index, và khoá chính đang là chuỗi hiển thị.</div>
+              </details>
+              <details class="wb-accordion__item">
+                <summary>Sáu khoá API xoay vòng — đó có phải một thành phần kiến trúc?</summary>
+                <div class="wb-accordion__body">Không. Đó là chi tiết triển khai để tránh lỗi vượt hạn mức truy vấn của nhà cung cấp. Đừng đưa nó lên sơ đồ kiến trúc như một khối riêng — làm vậy sẽ bị hỏi ngay là “nếu cả 6 khoá đều hết hạn mức thì sao”, và báo cáo không có câu trả lời cho tình huống đó.</div>
+              </details>
+              <details class="wb-accordion__item">
+                <summary>Bộ nhớ đệm ngữ nghĩa có thể trả lời sai không?</summary>
+                <div class="wb-accordion__body">Có. Hai câu giống nhau trên ngưỡng vẫn có thể khác nhau đúng ở chữ quyết định — một tên dự án, một con số, một chữ “không”. Khi đó bộ đệm trả về câu trả lời cũ rất nhanh nhưng không đúng câu hỏi mới. Đây là đánh đổi có ý thức giữa tốc độ và độ chính xác; báo cáo chọn ngưỡng cao (trên 92% ở phần triển khai) chính là để giảm rủi ro đó.</div>
+              </details>
+              <details class="wb-accordion__item">
+                <summary>Con số 95% được đo bằng cách nào?</summary>
+                <div class="wb-accordion__body">“Báo cáo ghi nhận mức trên 95% ở phần phân tích Chương 1. Phần kiểm thử trình bày 10 test case chức năng, không kèm phương pháp benchmark thống kê, nên tài liệu hiện tại không cho phép tính lại con số đó một cách độc lập.” Trả lời như vậy trung thành với báo cáo và không tự nâng claim.</div>
+              </details>
+              <details class="wb-accordion__item">
+                <summary>Có thông tư mới ban hành thì bao lâu chatbot biết?</summary>
+                <div class="wb-accordion__body">Không tự động. QTV phải cập nhật dữ liệu rồi bấm Đồng bộ RAG; sau đó <code>ingest.py</code> xoá vector cũ, chia chunk và nhúng lại toàn bộ. Kiểm thử §3.4.6 đo được chatbot trả lời đúng dự án mới trong khoảng 5–10 giây sau khi đồng bộ. Điểm đáng nói: việc <em>xoá sạch rồi nạp lại</em> là có chủ đích, để tri thức lỗi thời không còn nằm trong kho gây nhiễu.</div>
+              </details>
+              <details class="wb-accordion__item">
+                <summary>So với trợ lý ảo HDB Bot của Singapore thì bài này mới ở đâu?</summary>
+                <div class="wb-accordion__body">HDB Bot cũng hỏi đáp chính sách nhà ở xã hội, nên điểm mới không nằm ở ý tưởng chatbot. Điểm nhóm tự nhận là đóng góp: <strong>đặt một lớp kiểm duyệt DLP chuyên biệt theo bốn nhóm nghiệp vụ của lực lượng ngay trước kiến trúc RAG</strong>, trong một kho tri thức đóng đã thẩm định — tức là mô hình ứng dụng AI an toàn trong môi trường nội bộ ngành, có thể tham khảo cho các phòng ban nghiệp vụ khác.</div>
+              </details>
+              <details class="wb-accordion__item">
+                <summary>Nếu bước truy xuất lấy sai đoạn văn bản thì sao?</summary>
+                <div class="wb-accordion__body">Thì mô hình vẫn viết ra một câu trả lời trôi chảy dựa trên đoạn sai đó — đây là điểm thất bại thật của kiến trúc RAG và nên nói thẳng. Những thứ trong bài làm giảm rủi ro: lấy tới 8 đoạn thay vì 1, cắt chunk ưu tiên tại dấu xuống dòng để không vỡ cấu trúc điều luật, và prompt ràng buộc chỉ trả lời theo dữ liệu được cung cấp. Báo cáo không có cơ chế đánh giá lại chất lượng đoạn truy xuất — đó là hướng cải tiến hợp lý để đề xuất nếu được hỏi.</div>
+              </details>
+            </div>
+          </div>
+
+          <div class="wb-card wb-card--pad" style="margin-top:18px">
+            <p style="margin:0"><strong>Cách tự kiểm tra xem đã hiểu chưa:</strong> gấp trang này lại và kể lại luồng 10 chốt bằng lời của bạn. Nếu kể được cả <em>chốt nào có quyền kết thúc sớm và vì sao</em>, thì bạn đã hiểu phần lõi — phần còn lại chỉ là con số.</p>
+          </div>
+        </section>
+
+        <nav class="wb-pager" data-pager>
+          <a class="wb-pager__link wb-pager__link--prev" data-pager-prev href="../../index.html">
+            <span class="wb-ico wb-pager__arrow">chevron_left</span>
+            <span class="wb-pager__text">
+              <span class="wb-pager__dir">Quay lại <kbd class="wb-kbd">[</kbd></span>
+              <span class="wb-pager__title">Collection</span>
+              <span class="wb-pager__meta">Trang chủ của bộ trang này</span>
+            </span>
+          </a>
+          <a class="wb-pager__link wb-pager__link--next" data-pager-next href="../business-analytics/business-analytics.html">
+            <span class="wb-pager__text">
+              <span class="wb-pager__dir">Môn khác <kbd class="wb-kbd">]</kbd></span>
+              <span class="wb-pager__title">Business Analytics</span>
+              <span class="wb-pager__meta">CRISP-DM · EDA · hồi quy · phân lớp</span>
+            </span>
+            <span class="wb-ico wb-pager__arrow">chevron_right</span>
+          </a>
+        </nav>
+
+      </main>
+
+      <footer class="wb-footer wb-footer--slim">
+        <div class="wb-footer__inner">
+          <div class="wb-footer__bottom">
+            <span class="wb-footer__copy">System Analysis and Design · bài tập lớn nhóm 13 · đối chiếu với bản PDF 87 trang</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+</div>
+
+<script>
+/* Toàn bộ hành vi của trang: mở/đóng rail, đổi theme, đánh dấu mục đang đọc,
+   và phím [ / ] cho pager. Không có gì ở đây là layout — CSS lo drawer, scrim,
+   breakpoint. */
+(function () {
+  var shell = document.querySelector('.wb-shell');
+
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('[data-side-toggle]')) {
+      shell.classList.toggle('is-side-open');
+    } else if (e.target.closest('.wb-theme-toggle')) {
+      var dark = document.documentElement.classList.toggle('dark');
+      try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (err) {}
+    } else if (e.target.closest('.wb-sidenav__link')) {
+      shell.classList.remove('is-side-open');            /* chọn mục → đóng drawer */
+    } else if (shell.classList.contains('is-side-open') && !e.target.closest('.wb-shell__side')) {
+      shell.classList.remove('is-side-open');            /* bấm scrim → đóng */
+    }
+  });
+
+  /* Mục lục: đánh dấu section đang ở trong khung nhìn. */
+  var links = [].slice.call(document.querySelectorAll('.wb-sidenav__link[href^="#"]'));
+  var byId = {};
+  links.forEach(function (a) { byId[a.getAttribute('href').slice(1)] = a; });
+  var seen = new Set();
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (en.isIntersecting) seen.add(en.target.id); else seen.delete(en.target.id);
+    });
+    var top = links.filter(function (a) { return seen.has(a.getAttribute('href').slice(1)); })[0];
+    if (top) { links.forEach(function (a) { a.classList.toggle('is-active', a === top); }); }
+  }, { rootMargin: '-72px 0px -70% 0px' });
+  Object.keys(byId).forEach(function (id) {
+    var el = document.getElementById(id); if (el) io.observe(el);
+  });
+
+  /* Pager: [ và ] — bỏ qua khi đang gõ trong ô nhập. */
+  document.addEventListener('keydown', function (e) {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.target.closest('input, textarea, select, [contenteditable]')) return;
+    var sel = e.key === '[' ? '[data-pager-prev]' : e.key === ']' ? '[data-pager-next]' : null;
+    if (!sel) return;
+    var a = document.querySelector(sel);
+    if (a) window.location.href = a.href;
+  });
+})();
+</script>
+</body>
+</html>
