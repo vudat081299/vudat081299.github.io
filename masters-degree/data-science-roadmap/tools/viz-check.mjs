@@ -178,6 +178,15 @@ const res = JSON.parse(m[1]);
 if (JSON_OUT) { console.log(JSON.stringify(res, null, 1)); process.exit(res.bad.length ? 1 : 0); }
 
 console.log(`viz-check · ${res.nViz} mount hình · ${res.nState} trạng thái điều khiển đã thử`);
+/* 0 mount = trang không render được (điển hình: SyntaxError trong script chính, và lúc đó
+   G-SYNTAX cũng đang đỏ). Bản đầu in "✓ sạch" trong đúng tình huống đó — một phép kiểm ĐẬU
+   khi trang trắng thì tệ hơn không có phép kiểm nào. Ngưỡng 30 là mức sàn thô: trang đang
+   có 50 mount, nên tụt xuống dưới 30 là mất hàng loạt, không phải xoá một hình. */
+if (res.nViz < 30) {
+  console.error(`✗ chỉ thấy ${res.nViz} mount hình (trang đang có ~50) — trang gần như không render được.`);
+  console.error('  Chạy `node tools/gate.mjs` trước: G-SYNTAX bắt lỗi làm cả script chết.');
+  process.exit(1);
+}
 if (!res.bad.length) { console.log('✓ không nhãn nào đè nhau, không nhãn nào vượt khung, không mount rỗng'); process.exit(0); }
 
 /* Gộp theo (hình, loại lỗi): một nhãn đè nhau thường nổ ở cả ba mức thanh trượt, in ba
