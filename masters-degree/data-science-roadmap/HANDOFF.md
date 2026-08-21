@@ -169,6 +169,39 @@ Chủ trang: *"cái này bạn tự chọn phương án tốt nhất cho project
 "Advanced" gần như trùng hai nhãn đã có, và mục tiêu trang là *quỹ đạo tới một product +
 luận văn* — thứ phục vụ nó là **làm gì tiếp**, không phải một bảng phân loại nữa.
 
+### 10. Chủ trang hỏi *"vì sao bạn không tự vẽ và tự kiểm tra được à"* — và câu đó đúng
+
+Tôi đã coi điều kiện chặn của audit là bắt buộc mà không hỏi nó còn đúng không. Tách ra thì
+thấy khoảng trống hẹp hơn nhiều so với những gì tôi nói: **vẽ** thì làm được, **kiểm hình có
+đọc được không** thì cũng làm được — tôi vừa làm bằng `getBBox` trong lượt sửa 4 hình. Và lỗi
+`meanmed` hoá ra **không phải** lỗi comprehension: nó là *lời hứa trong chữ không khớp hành vi
+của hình*, thứ máy đo được (khoảng cách hai vạch phải tăng đơn điệu theo thanh trượt).
+
+Nên nửa usability đã được đưa vào repo thành **`tools/viz-check.mjs`** (Chrome headless, 50
+mount × 204 trạng thái điều khiển). Chạy lần đầu: **6 chỗ hỏng thật**, không cái nào từng được
+ai báo — vì cả 6 chỉ nổ ở một số trạng thái nhất định, mở trang bằng mắt một lần không thấy.
+Nặng nhất là `tfblock`: cả một bảng 3 hàng nằm dưới khung 27,5 đơn vị, **bị cắt sạch** ở mức
+thanh trượt giữa và cao.
+
+**Ba lần tôi viết sai phép đo trước khi đúng** — ghi ra vì đây là bẫy riêng của loại kiểm này,
+và nó là **lần thứ sáu, thứ bảy, thứ tám** của cùng một hình dạng lỗi (luật khớp bề mặt thay
+vì khớp ý):
+
+| bản | tố oan | vì sao |
+|---|---|---|
+| đòi mọi mount có `<svg>` | 7 hình | 7 hình dựng bằng **HTML**, không có SVG nào |
+| `getBBox()` trần | `calib`, `scale2d` | hộp nằm trong hệ toạ độ **riêng của chữ** → nhãn trục xoay 90° có x âm mà sau khi xoay vẫn trong khung |
+| `getCTM()` | **1.132 lỗi giả** | trả toạ độ **viewport pixel**, còn `viewBox` là đơn vị user — so hai hệ khác nhau |
+| đếm cả chữ `opacity: 0` | 75 ca `confmat` | `confmat` vẽ mỗi số **hai lần** với opacity bù nhau, để đổi màu chữ trên ô đậm |
+
+Đúng là `svg.getScreenCTM().inverse().multiply(text.getScreenCTM())`, và bỏ chữ không hiện.
+
+Và tôi tự dính đúng cái bẫy `CLAUDE.md` §4 cảnh báo: viết **backtick trong một comment HTML
+nằm bên trong template literal** → `SyntaxError`, cả trang trắng. `G-SYNTAX` bắt trong cùng
+lượt. Từ đó lộ một lỗ trong chính `viz-check`: lúc trang trắng nó in *"0 mount · ✓ sạch"* —
+**một phép kiểm ĐẬU khi trang không render được thì tệ hơn không có phép kiểm nào.** Giờ dưới
+30 mount là thoát 1 và chỉ sang `G-SYNTAX`.
+
 ### 9. Còn nợ của riêng phiên này
 
 - **Comprehension của 7 hình P0 còn lại chưa có bằng chứng nào** — và đó là *đúng*, không
@@ -3514,7 +3547,7 @@ mục `###` dưới đây **mỗi lần mở phiên**, nên việc nào xong th�
 "đã xử" là cách nhanh nhất làm dòng CHƯA LÀM thành tiếng ồn — chính lỗi đó đã sống từ (n5)
 tới (n8), khiến bốn việc đã làm vẫn được in ra suốt bốn phiên.
 
-### Tám hình P1 — usability của 8 hình P0 đã sạch, còn chờ comprehension từ sổ học
+### Tám hình P1 — KHÔNG còn bị chặn, chỉ còn việc vẽ
 
 Audit n9 §5 xếp thứ tự rõ: *"làm 8 visual P0 trước, đo comprehension/usability; chỉ sau đó
 mới làm P1"*. Tám hình P0 đã xong ở phiên (p). Danh sách P1: `s-plan8w` (dependency/workload
@@ -3541,9 +3574,17 @@ chưa học bài nào, nên trả lời *"cái này tôi tưởng khi nào học
 — câu đó đúng. Comprehension **không phải một buổi đo**, nó tự tích lại trong
 `LEARNING-LOG.md` khi chủ trang học tới từng bài (loại `tac` = chỗ đọc mà không hiểu). Nên:
 
-> **Điều kiện mở P1, viết lại:** usability của 8 hình P0 sạch (đã đạt), **và** có ≥3 bài
-> trong số 8 bài đó được chủ trang học tới mà `LEARNING-LOG.md` không ghi `tac` vào hình.
-> Đừng dựng thêm một "buổi đo" nữa — nó sẽ lại hỏi người chưa học.
+> **Điều kiện mở P1, bản cuối (aa):** **không còn bị chặn.** Nửa usability giờ là một công
+> cụ trong repo — `node tools/viz-check.mjs` — nên "chứng minh khuôn hình dùng được" không
+> cần người đọc nữa: nó kiểm 50 mount × 204 trạng thái và đang **sạch**. Nửa comprehension
+> thì tự tích trong `LEARNING-LOG.md` khi chủ trang học tới từng bài, **và nó không phải điều
+> kiện chặn** — trang này không chặn việc viết chữ để chờ đo comprehension, thì cũng không
+> có lý gì chặn việc vẽ hình.
+>
+> Việc còn lại chỉ là **vẽ**, và đó là việc của agent. Ba thứ phải làm cùng lúc với mỗi hình
+> mới: (1) `viz-check` sạch, (2) lời hứa trong khối "Bạn thấy gì" phải khớp **hành vi thật ở
+> mọi mức điều khiển** — đó chính là lỗi `meanmed`, và nó đo được, (3) `.ds-viz__alt` chứa
+> mọi thông tin có trong SVG.
 
 Một dữ liệu tốt lọt ra từ lượt đó: chủ trang **chưa học bài nào** mà vẫn trả lời **đúng cả ba**
 ca broadcasting chỉ bằng cách xem hình `broadcast` — tức hình đó dạy được độc lập, đúng như
