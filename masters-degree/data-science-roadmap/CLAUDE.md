@@ -35,7 +35,7 @@ Rồi tìm việc mình định làm trong bảng này:
 | **sửa chữ trong một bài** | `node tools/gate.mjs --show <id>` · [docs/writing.md](docs/writing.md) | `gate.mjs --advice` | cổng CHẶN qua · không sinh khuyến nghị mới |
 | **thêm / xoá / dời một bài** | §6 (bốn câu phải trả lời) → [docs/editing.md](docs/editing.md) việc 1–2 | `gate.mjs --write` rồi `git add TOC.md` | `G-TOC-STRUCT` qua · đọc lại `G-NEXT` |
 | **thêm / xoá / dời một chặng** | [docs/editing.md](docs/editing.md) **việc 3** | `gate.mjs --write` | như trên. Giữ nguyên `id` chặng, đừng đổi số |
-| **thêm hình / bảng / code** | §10 (một mép phải) · [docs/design.md](docs/design.md) | `gate.mjs --advice` + **mở trang bằng mắt** | không cuộn ngang ở 1440 / 1100 / 375px |
+| **thêm hình / bảng / code** | §10 (một mép phải) · [docs/design.md](docs/design.md) | `gate.mjs --advice` + **`node tools/viz-check.mjs`** + mở trang bằng mắt | `viz-check` sạch · không cuộn ngang ở 1440 / 1100 / 375px |
 | **đổi giao diện, thêm nút, thêm component** | **[docs/design.md](docs/design.md)** · §7 · §10 | mở trang, kiểm **cả sáng lẫn tối** | `G-MEASURE` im · hai chế độ đều đọc được |
 | **đổi chữ / thêm một ô ở thanh trên** | [docs/design.md](docs/design.md) **§0.1** | mở trang | thanh trên: chữ tiếng Anh, mọi ô cùng `--ds-navctl` |
 | **đổi chữ ở thanh bên / chân trang / panel** | [docs/design.md](docs/design.md) **§0.1** | mở trang | không còn chữ tiếng Anh nào ngoài tên icon và `Notes` |
@@ -190,9 +190,30 @@ node tools/audit.mjs            # chỉ phần lịch học — bản node của
 node tools/build-roadmap.mjs    # sinh riêng roadmap.html; --stamp = đóng dấu lại tóm tắt
 node tools/learn.mjs            # tóm tắt sổ học; --add / --sync / --write / --check
 node tools/gate.test.mjs        # test cho chính bộ cổng
+node tools/viz-check.mjs        # HÌNH có đọc được không — chạy Chrome thật, xem ngay dưới
 tools/install-hooks.sh          # lớp 1 + cấu hình preview (một lần mỗi máy / mỗi bản clone)
 sh ../../facts/tools/install-hooks.sh   # lớp 2–3 — bộ điều phối git hook cho CẢ repo
 ```
+
+**`viz-check.mjs` là phép kiểm duy nhất cần một trình duyệt thật, và nó KHÔNG phải cổng.**
+`gate.mjs` đọc HTML như **văn bản**, nên không cổng nào biết một nhãn SVG có đè lên nhãn khác
+hay có bị cắt ngoài `viewBox` không. Bốn lỗi tìm được 2026-08-20 đều thuộc loại đó, và cái
+đầu tiên do **chủ trang nhìn thấy** — tức phép kiểm này đang nằm trong mắt người. File đó đưa
+nó vào repo: tiêm một script vào bản sao của trang, chạy `Google Chrome --headless --dump-dom`,
+thử **mọi trạng thái điều khiển** của cả 50 mount hình (mỗi lựa chọn phân đoạn × min/giữa/max
+mỗi thanh trượt) và kiểm bốn thứ: mount có render không · hai nhãn có đè nhau · nhãn có tràn
+ngoài `viewBox` · `.ds-viz__alt` có chữ không. Không có Chrome thì nó in một dòng rồi thoát 0.
+
+Nó **không** vào ba lớp hook: nó cần Chrome nên không chạy được ở mọi máy, và một cổng chặn
+commit mà phụ thuộc môi trường thì sẽ bị `--no-verify` cho tới lúc chết. Chạy nó khi **thêm
+hoặc sửa hình**.
+
+Ba lần tôi viết sai phép đo trước khi đúng — ghi ra vì đây là cái bẫy của chính loại kiểm này:
+`getBBox()` trần tố oan nhãn trục **xoay 90°** (hộp trong hệ toạ độ riêng của chữ) · `getCTM()`
+trả toạ độ trong **viewport pixel** trong khi `viewBox` là đơn vị user, so hai hệ đó cho 1.132
+lỗi giả · và đòi mọi mount phải có `<svg>` tố oan **7 hình dựng bằng HTML**. Đúng là:
+`svg.getScreenCTM().inverse().multiply(text.getScreenCTM())`, và bỏ chữ có `opacity: 0` (một
+hình vẽ mỗi số **hai lần** với opacity bù nhau để đổi màu trên ô đậm).
 
 `install-hooks.sh` phải tồn tại vì **cả `.git/hooks/` lẫn `.claude/` đều không được git
 theo dõi** (`.claude/` nằm trong `.gitignore`), nên hook không tự theo repo về máy mới.
