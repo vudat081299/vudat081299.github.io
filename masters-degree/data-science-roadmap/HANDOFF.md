@@ -36,6 +36,95 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 
 ---
 
+## Phiên 2026-08-21 (ab) — tám hình P1, và hai lỗi mà `viz-check` cho qua vì nó chỉ so CHỮ với CHỮ
+
+Chủ trang: *"vẽ hết trong 1 lượt đi"*. Món cuối trong `## CHƯA LÀM` — mục đó giờ **không còn
+việc nào**.
+
+### 1. Tám hình, mỗi bài một hình
+
+| bài | tên | nó dạy cái gì mà chữ trong bài không dạy được |
+|---|---|---|
+| `s-plan8w` | `plan8dep` | `PAYOFF` hứa "sơ đồ phụ thuộc giữa các chặng" và trước lượt này **không có sơ đồ đó**. Ba cột mũi tên "phải xong trước" — và nửa quan trọng hơn: **chỉ có ba**, nên mọi thứ khác đảo được |
+| `f-text` | `textlevels` | chạy cả ba mức trên đúng hai câu cùng nghĩa khác tiếng. Mức 1 báo **giống 0,99** — con số *tệ nhất* trong ba mức, vì cosine đang đo độ dài (18 và 17 ký tự) |
+| `ml-tune` | `tunesearch` | "random thắng grid" thành một phép đếm: cùng 36 lần train, hình chiếu xuống trục quan trọng cho grid **6 vạch**, random **36 vạch** |
+| `ml-unsup` | `unsupmix` | vì sao cộng hai bộ dò lại hơn cả hai: 10/12 + 0/6 (giám sát) · 1/12 + 6/6 (bất thường) · 11/12 + 6/6 (cộng). Hai chỗ mù khác nhau, đếm được từ hình |
+| `pr-cost` | `sens` | câu kết luận của bài là một phát biểu về **hình dạng** đường cong, mà bốn dòng số in ra không cho thấy. Kèm một thứ bài không nói: quá ~60.000₫ thì luật thủ công đắt hơn cả việc không chặn gì |
+| `pr-mlops` | `repro` | bốn việc rời thành bốn **mắt của một chuỗi**, và bốn triệu chứng đứt khác nhau hẳn — nên không mắt nào thay được mắt nào |
+| `dl-embed` | `embed` | "mọi cửa hàng cách đều nhau" là một **đẳng thức** (√2 ở mọi ô), không phải cách nói cho vui. Ma trận phẳng tuyệt đối → có hai khối theo nghề sau khi train |
+| `q-cv` | `cvtask` | ba đầu ra **không** là ba mức khó của một việc; cái đổi nhiều nhất là công gán nhãn — 50 phút · 11 giờ · 100 giờ cho cùng 1.000 ảnh |
+
+Ba điều kiện mà (aa) đặt ra cho mỗi hình mới đều đã kiểm: `viz-check` sạch · lời hứa trong khối
+"Điều cần thấy" khớp hành vi thật ở **mọi** mức điều khiển (kiểm bằng cách dump readout ở từng
+trạng thái, xem mục 3) · `.ds-viz__alt` chứa mọi thông tin có trong SVG.
+
+`viz-check` sau lượt này: **58 mount · 246 trạng thái · sạch** (trước: 50 · 204).
+
+### 2. Hai lỗi thật mà `viz-check` cho qua — và vì sao nó cho qua
+
+Cả hai do **xem ảnh chụp** mới thấy:
+
+- **`sens`**: nhãn `luật thủ công` đặt cách 4px phía trên đường của chính nó, nhưng đường
+  `không làm gì` chỉ cách đó ~10px ở mức 40.000₫ — nhãn rơi **đúng lên** đường kia. Sửa: đặt
+  nhãn về phía **xa** đường còn lại (`rv > nv ? -4 : +9`).
+- **`unsupmix`**: hai ô chú giải đặt cạnh nhau, nhãn thứ nhất chạy đè vào **swatch** của ô thứ
+  hai. Sửa: xếp thành hai dòng.
+
+**`viz-check` chỉ so `<text>` với `<text>`** (và so với `viewBox`). Nó không biết một nhãn có
+đè lên `<line>`, `<rect>` hay `<ellipse>` không. Đó là **giới hạn đã biết**, không phải bug —
+và nó nghĩa là ảnh chụp vẫn còn việc phải làm sau khi cổng đã xanh.
+
+**Vì sao tôi không mở rộng nó ngay:** phần lớn nhãn trong trang này **cố ý** nằm sát một
+đường (nhãn trục, nhãn mốc, nhãn cạnh đường ngang). Một phép kiểm "chữ chạm hình" mà chưa đo
+sẽ nổ vào hàng loạt chỗ đúng, và một cổng nổ vào chỗ đúng thì chết vì bị bỏ qua — đúng lớp
+lỗi mà (x), (z) và (aa) đã dính bốn lần. **Việc phải làm trước khi viết luật: đếm xem trên 58
+mount × 246 trạng thái hiện tại có bao nhiêu cặp chữ–hình chồng nhau, và bao nhiêu trong số
+đó là cố ý.** Chưa có con số đó thì chưa viết luật.
+
+### 3. Ba lần tôi tự làm chậm mình — ghi ra vì cả ba đều lặp lại được
+
+1. **Probe viết vào scratchpad.** Trang nạp `../../web-builder/web-builder.css` bằng đường dẫn
+   **tương đối**, nên bản sao đặt ngoài thư mục trang mất sạch token CSS: hình ra ô **đen**,
+   chữ mất hẳn. Tôi đọc lầm nó là lỗi theme và đi sửa theme. `viz-check.mjs` ghi bản sao
+   **cạnh trang** đúng vì lý do này — đọc nó trước thì đỡ hai lượt.
+2. **Đoán bề rộng chữ.** Tôi tính chữ Việt ~3,3px/ký tự ở `font-size: 6`; thật là **~3,6**.
+   Nhãn 30 ký tự thành 108px chứ không phải 99px, và đó là nguyên nhân lỗi `unsupmix`. Luật:
+   **đừng xếp hai nhãn SVG cạnh nhau bằng phép đoán bề rộng — xếp chúng thành hai dòng.**
+3. **Probe của tôi có lỗi `s.min++`** (mutate `min` của thanh trượt), làm trạng thái "mid"
+   thành "max" ở lượt dump đầu. Bốn con số tôi tưởng đã kiểm thật ra chưa. Phát hiện vì
+   `random search` với ngân sách 9 lại in ra 10 điểm.
+
+### 4. `--stamp` chạy trước khi tôi sửa `roadmap-summaries.json`
+
+Tôi **đã đọc** cả 8 bản tóm tắt và đã quyết định `tldr`/`points`/`example`/`check` còn đúng
+(lượt này chỉ **thêm** hình, không đổi chữ) còn trường `viz` thì lạc hậu cả 8. Nhưng lệnh
+`--stamp` chạy **trước** lượt sửa, vì script sửa của tôi nổ ở cấu trúc JSON
+(`{generatedBy, count, summaries, srcHash}`, không phải `{id: …}` phẳng). Vân tay là vân tay
+của **nội dung bài**, không phải của bản tóm tắt, nên con dấu vẫn đúng — nhưng **thứ tự thì
+sai**, và đó đúng hình dạng "con dấu cao su" mà `CLAUDE.md` §4 cảnh báo. Trường `viz` của cả
+8 bài giờ mô tả hình mới.
+
+### 5. Cố ý KHÔNG làm
+
+- **Không revert chữ navbar `DS` → `Data Science`.** Chủ trang hoãn có chủ ý (`## ĐANG LÀM`),
+  vẫn chờ chủ trang gọi.
+- **Không mở rộng `viz-check` sang "chữ đè hình"** — xem mục 2, cần đo trước.
+- **Không thêm hình thứ hai cho bài nào.** `G-VIZ` đòi ≥1, và một hình trang trí tệ hơn không
+  có hình (`CLAUDE.md` §10). Tám bài giờ mỗi bài đúng một hình mang một ý.
+- **Không đổi `.ds-viz svg { max-width: 440px }`** để hình rộng hơn. Cột nội dung 1060px nên
+  hình 440px trông nhỏ, nhưng đó là **một mép chung** với 50 hình cũ; nới cho 8 hình mới là
+  tạo hai khuôn. Muốn nới thì nới cả 58 và hỏi chủ trang trước (§10: cột/chữ là quyết định
+  của chủ trang).
+
+### 6. Còn nợ của riêng phiên này
+
+Không. `## CHƯA LÀM` giờ chỉ còn hai mục, **cả hai đều không phải việc**
+(*Đã quyết là GIỮ NGUYÊN* và *Một thứ để biết trước*). Cổng CHẶN qua ·
+`gate.mjs --advice` **0 khuyến nghị** · `gate.test.mjs` **74 đạt / 0 trượt** ·
+`viz-check` **58 mount × 246 trạng thái sạch** · `audit` nhất quán.
+
+---
+
 ## Phiên 2026-08-20 (aa) — ba món "nợ nhỏ đã ĐO" về 0 · hai cổng mới cho quiz · 4 lỗi trong hình P0 · và hai lần tôi đo bằng THƯỚC SAI
 
 Chủ trang: *"còn gì làm nốt đi… rà soát toàn bộ handoff xem còn gì không làm nốt đi"*, kèm
@@ -3547,79 +3636,6 @@ mục `###` dưới đây **mỗi lần mở phiên**, nên việc nào xong th�
 "đã xử" là cách nhanh nhất làm dòng CHƯA LÀM thành tiếng ồn — chính lỗi đó đã sống từ (n5)
 tới (n8), khiến bốn việc đã làm vẫn được in ra suốt bốn phiên.
 
-### Tám hình P1 — KHÔNG còn bị chặn, chỉ còn việc vẽ
-
-Audit n9 §5 xếp thứ tự rõ: *"làm 8 visual P0 trước, đo comprehension/usability; chỉ sau đó
-mới làm P1"*. Tám hình P0 đã xong ở phiên (p). Danh sách P1: `s-plan8w` (dependency/workload
-timeline 8 tuần) · `ml-tune` (grid vs random vs TPE trên cùng search space) · `ml-unsup`
-(cluster/outlier 2D có slider) · `pr-cost` (threshold → FP/FN → cost curve; hiện có bảng) ·
-`pr-mlops` (lineage graph data → run → registry → deploy) · `dl-embed` (lookup table → 2D
-neighborhood) · `q-cv` (classification/detection/segmentation triptych) · `f-text`/`q-nlp`
-(document → token → term matrix/embedding → output).
-
-Ba bài **chưa có trường `viz` nào** trong `roadmap-summaries.json`: `pr-mlops`, `q-nlp`,
-`r-glossary`.
-
-**Điều kiện chặn phải TÁCH LÀM HAI — chạy thử 2026-08-20 mới thấy.** Audit viết
-*"đo comprehension/usability"* và các phiên trước đọc nó như một việc; nó là **hai việc, hai
-người đo khác nhau**:
-
-| nửa | ai đo được | trạng thái |
-|---|---|---|
-| **usability** — hình có đọc được không: chữ đè nhau, nhãn vượt khung, chú giải khớp thứ vẽ ra, điều khiển chạy | **bất kỳ ai**, không cần biết Data Science | **đã chạy một vòng ở (aa): 4 lỗi thật, đã sửa cả 4** |
-| **comprehension** — xem hình xong có hiểu ý không | **chỉ người đã học tới bài đó** | **chưa chạy được**: sổ học đang 0/84 bài đã chạm |
-
-Lượt (aa) đưa chủ trang một bộ câu hỏi comprehension và **đó là lỗi giao việc**: chủ trang
-chưa học bài nào, nên trả lời *"cái này tôi tưởng khi nào học tới thì mới trả lời được chứ"*
-— câu đó đúng. Comprehension **không phải một buổi đo**, nó tự tích lại trong
-`LEARNING-LOG.md` khi chủ trang học tới từng bài (loại `tac` = chỗ đọc mà không hiểu). Nên:
-
-> **Điều kiện mở P1, bản cuối (aa):** **không còn bị chặn.** Nửa usability giờ là một công
-> cụ trong repo — `node tools/viz-check.mjs` — nên "chứng minh khuôn hình dùng được" không
-> cần người đọc nữa: nó kiểm 50 mount × 204 trạng thái và đang **sạch**. Nửa comprehension
-> thì tự tích trong `LEARNING-LOG.md` khi chủ trang học tới từng bài, **và nó không phải điều
-> kiện chặn** — trang này không chặn việc viết chữ để chờ đo comprehension, thì cũng không
-> có lý gì chặn việc vẽ hình.
->
-> Việc còn lại chỉ là **vẽ**, và đó là việc của agent. Ba thứ phải làm cùng lúc với mỗi hình
-> mới: (1) `viz-check` sạch, (2) lời hứa trong khối "Bạn thấy gì" phải khớp **hành vi thật ở
-> mọi mức điều khiển** — đó chính là lỗi `meanmed`, và nó đo được, (3) `.ds-viz__alt` chứa
-> mọi thông tin có trong SVG.
-
-Một dữ liệu tốt lọt ra từ lượt đó: chủ trang **chưa học bài nào** mà vẫn trả lời **đúng cả ba**
-ca broadcasting chỉ bằng cách xem hình `broadcast` — tức hình đó dạy được độc lập, đúng như
-hợp đồng. Bảy hình còn lại chưa có bằng chứng tương đương.
-
-**Bộ đo usability, dựng sẵn để chạy lại bất cứ lúc nào.** Tám URL dưới đây đã kiểm live trên
-GitHub Pages: cả 9 mount (8 P0 + `calib` có sẵn) đều render SVG và đều có `.ds-viz__alt`.
-
-Nền: `https://vudat081299.github.io/masters-degree/data-science-roadmap/data-science-roadmap.html#/<id>`
-
-| hình | bài (`<id>`) | câu comprehension — **chỉ hỏi khi đã học tới bài đó** (xem bảng trên) |
-|---|---|---|
-| `meanmed` | `m-prob` | Kéo đuôi phải ra xa: trung bình hay trung vị chạy nhiều hơn, và vì sao? |
-| `broadcast` | `t-numpy` | Cặp shape nào ghép được, cặp nào hỏng, và **ô mờ** nghĩa là gì? |
-| `fittransform` | `t-sklearn` | Cùng một giao dịch ở tập valid, vì sao `z` của nó đổi khi bạn fit trên tất cả? |
-| `edapanel` | `d-eda` | Bốn ô trả lời bốn câu **khác nhau** nào — kể tên được cả bốn không? |
-| `nnforward` | `dl-nn` | Kéo batch lên: shape nào đổi, **số tham số** có đổi không, vì sao? |
-| `losscurve` | `dl-train` | Trong bốn hình dạng, cái nào là overfit, và early stopping dừng ở đâu? |
-| `residual` | `q-regress` | Hình phần dư nào nói mô hình còn **thiếu một feature**? Khoảng phủ được bao nhiêu phần thực tế? |
-| `confmat` | `q-multi` | **Cùng một** ma trận, vì sao macro-F1 0,54 mà micro-F1 0,97? |
-
-Cách ghi kết quả — hai đường, cả hai đổ về `LEARNING-LOG.md`:
-
-```bash
-node tools/learn.mjs --add <id> tac "xem meanmed xong vẫn không biết đuôi ảnh hưởng cái nào"
-node tools/learn.mjs --add <id> go  "hiểu sau khi kéo thanh trượt tới mức 3"
-```
-
-hoặc bấm **Notes** trên trang (phím `n`), tải bản xuất về rồi `node tools/learn.mjs --sync`.
-
-**Quyết định, viết trước để khỏi tranh luận lại:** hình nào **trượt** thì **sửa hình đó
-trước**, không làm P1 — thêm 8 hình mới trên một khuôn chưa chứng minh được là nhân bản một
-lỗi 8 lần. Lượt usability đầu tiên đã chứng minh điều đó không phải lo xa: **4/8 hình có lỗi
-thật**, trong đó `meanmed` hỏng đúng chỗ bài học của nó mạnh nhất.
-
 ### Đã quyết là GIỮ NGUYÊN — đừng revisit
 
 | việc | quyết định | vì sao |
@@ -3637,6 +3653,19 @@ thật**, trong đó `meanmed` hỏng đúng chỗ bài học của nó mạnh n
 | Đòi `G-QUIZ-ESC` bắt mọi dấu `<` / `>` / `&` trần | **bác, có số đo** | (aa): 941 câu có 15 `>` trần, 13 `<` trần, 56 `&` trần và **không cái nào hỏng**. Cổng bắt rộng thế sẽ nổ vào mọi câu tương lai viết `recall > 0,8` — thành tiếng ồn. Nó chỉ bắt ba hình dạng LÀM MẤT CHỮ |
 
 ### Một thứ để biết trước, KHÔNG phải việc
+
+- **Comprehension của 16 hình tương tác tự tích trong `LEARNING-LOG.md`, không phải một buổi
+  đo.** Nó **không** chặn gì (xem (aa) và (ab)); nó chỉ cần một đường ghi. Chủ trang học tới
+  bài nào mà xem hình xong vẫn không hiểu thì ghi một dòng:
+  ```bash
+  node tools/learn.mjs --add <id> tac "xem <tên hình> xong vẫn không biết <cái gì>"
+  ```
+  hoặc bấm **Notes** trên trang (phím `n`) → tải bản xuất → `node tools/learn.mjs --sync`.
+  Mở một hình bất kỳ:
+  `https://vudat081299.github.io/masters-degree/data-science-roadmap/data-science-roadmap.html#/<id>`
+  Bằng chứng duy nhất đang có thuộc loại này: (aa) — chủ trang **chưa học bài nào** mà vẫn đọc
+  đúng cả ba ca của hình `broadcast`. 15 hình còn lại chưa có bằng chứng tương đương, và đó là
+  trạng thái bình thường, không phải nợ.
 
 - **Có một ngày fast track nằm đúng ngưỡng dưới 3,5 giờ của `G-PLAN`.** Từ (n4) đó là
   **ngày 6** — cố ý nhẹ nhất vì là ngày deliverable, giờ đổ vào việc CHẠY. Cắt thời lượng bài
