@@ -383,8 +383,8 @@
     "id": "th-232",
     "cat": "toan-hoc",
     "sub": "mat-ma",
-    "t": "Khoá AES 256 bit có số tổ hợp lớn hơn số nguyên tử ước tính trong vũ trụ quan sát được",
-    "s": "2 mũ 256 xấp xỉ 10 mũ 77, còn số nguyên tử trong vũ trụ quan sát được ước khoảng 10 mũ 80. Vét cạn khoá là bất khả thi về mặt năng lượng chứ không chỉ về thời gian.",
+    "t": "Khoá AES 256 bit có ÍT tổ hợp hơn số nguyên tử trong vũ trụ quan sát được, mà vét cạn vẫn bất khả thi",
+    "s": "2 mũ 256 xấp xỉ 10 mũ 77, còn số nguyên tử trong vũ trụ quan sát được ước khoảng 10 mũ 80 — tức khoá còn nhỏ hơn khoảng một nghìn lần. Điều chặn kẻ tấn công không phải cỡ con số mà là năng lượng: chỉ riêng việc lật đủ số bit để đếm hết 2 mũ 256 trạng thái đã vượt xa mọi nguồn năng lượng loài người có. Vét cạn khoá là bất khả thi về mặt năng lượng chứ không chỉ về thời gian.",
     "tags": [
       "aes",
       "khoa",
@@ -500,8 +500,8 @@
     "id": "th-242",
     "cat": "toan-hoc",
     "sub": "toi-uu-va-thuat-toan",
-    "t": "Bài toán người bán hàng với 20 thành phố có hơn 60 tỉ tỉ lộ trình khả dĩ",
-    "s": "Số hoán vị tăng theo giai thừa nên vét cạn hết khả năng rất nhanh. Các lời giải thực tế dùng heuristic và quy hoạch nguyên, và bài toán này vẫn là chuẩn mực để so sánh thuật toán tối ưu.",
+    "t": "Bài toán người bán hàng với 20 thành phố có hơn 60 triệu tỉ lộ trình khả dĩ",
+    "s": "Con số chính xác là 19 giai thừa chia 2, tức khoảng 6,1 nhân 10 mũ 16. Số hoán vị tăng theo giai thừa nên vét cạn hết khả năng rất nhanh. Các lời giải thực tế dùng heuristic và quy hoạch nguyên, và bài toán này vẫn là chuẩn mực để so sánh thuật toán tối ưu.",
     "tags": [
       "tsp",
       "to-hop",

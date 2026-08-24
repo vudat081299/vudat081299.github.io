@@ -227,8 +227,8 @@
     "id": "vl-218",
     "cat": "vat-ly",
     "sub": "nhiet-va-nang-luong",
-    "t": "Nhà máy nhiệt điện tốt nhất chỉ chuyển được khoảng 45% năng lượng nhiên liệu thành điện, phần còn lại thoát ra dạng nhiệt",
-    "s": "Giới hạn Carnot phụ thuộc chênh lệch nhiệt độ giữa nguồn nóng và nguồn lạnh, và không có thiết kế nào vượt qua được nó. Nhà máy tuabin khí chu trình hỗn hợp hiện đại đạt khoảng 60–64%, còn nhà máy than thường quanh 33–45%.",
+    "t": "Nhà máy điện đốt nhiên liệu vứt bỏ phần lớn năng lượng dưới dạng nhiệt: nhà máy than chỉ đạt khoảng 33–45%",
+    "s": "Giới hạn Carnot phụ thuộc chênh lệch nhiệt độ giữa nguồn nóng và nguồn lạnh, và không có thiết kế nào vượt qua được nó. Nhà máy than thường quanh 33–45%; tuabin khí chu trình hỗn hợp hiện đại đạt khoảng 60–64% nhờ dùng lại nhiệt thải của tầng thứ nhất để chạy tầng thứ hai.",
     "tags": [
       "hieu-suat",
       "carnot",
@@ -1234,7 +1234,7 @@
     "cat": "vat-ly",
     "sub": "nhiet-va-nang-luong",
     "t": "Máy sấy tóc và ấm siêu tốc tiêu thụ nhiều điện hơn tủ lạnh, nhưng tủ lạnh vẫn tốn tiền điện hơn",
-    "s": "Công suất tức thời khác tổng năng lượng tiêu thụ. Ấm 2.000 W dùng 3 phút hết 0,1 kWh, còn tủ lạnh 100 W chạy cả ngày hết khoảng 1 kWh.",
+    "s": "Công suất tức thời khác tổng năng lượng tiêu thụ. Ấm 2.000 W dùng 3 phút hết 0,1 kWh. Tủ lạnh chỉ khoảng 100 W nhưng chạy ngắt quãng suốt ngày đêm, trung bình khoảng 40 W liên tục, nên nó hết khoảng 1 kWh mỗi ngày — gấp mười lần ấm nước.",
     "tags": [
       "cong-suat",
       "nang-luong",
