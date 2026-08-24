@@ -10,11 +10,18 @@
  * đây là phép kiểm phụ thuộc môi trường, không phải cổng chặn commit.
  *
  * Nó KHÔNG kiểm "hình có dạy được không" — thứ đó cần người đọc thật, xem HANDOFF mục
- * "Tám hình P1". Nó kiểm bốn thứ máy thấy được, ở MỌI trạng thái điều khiển:
+ * "Tám hình P1". Nó kiểm năm thứ máy thấy được, ở MỌI trạng thái điều khiển:
  *   1. mount có render ra svg không (mount rỗng = hình biến mất, im lặng)
  *   2. hai nhãn <text> có đè nhau không
  *   3. nhãn có tràn ra ngoài viewBox không
  *   4. .ds-viz__alt có chữ không (mọi thông tin trong SVG phải đọc được ở đó — CLAUDE.md §10)
+ *   5. VIỀN một <rect> có nằm trong hộp chữ không — tức nhãn dài hơn hộp chứa nó. CHỈ
+ *      <rect>, và đó là kết luận của một phép ĐO chứ không phải lựa chọn cho tiện: cùng
+ *      phép đo này áp cho MỌI loại hình (line/path/ellipse/polyline) cho 10 chỗ, và cả 10
+ *      là nhãn đặt CỐ Ý lên đúng thứ nó gọi tên — "0" trên đường 0, "train" trên đường
+ *      train, "trung vị" trên đường trung vị, ★ chính là cái mốc. Đó là direct labelling,
+ *      một kỹ thuật ĐÚNG, nên bắt cả chúng thì cổng thành tiếng ồn. Thu về <rect>: 0 chỗ
+ *      ở trạng thái ổn định, mà vẫn bắt được lớp lỗi thật. Xem CLAUDE.md §3.
  */
 import { readFileSync, writeFileSync, existsSync, mkdtempSync } from 'node:fs';
 import { join, dirname } from 'node:path';
@@ -87,6 +94,52 @@ const AUDIT = `
     }).filter(Boolean);
   };
   const hit = (a, b) => a.x1 < b.x2 - 0.5 && b.x1 < a.x2 - 0.5 && a.y1 < b.y2 - 0.5 && b.y1 < a.y2 - 0.5;
+
+  /* Bốn cạnh của mỗi <rect> CÓ NÉT, cùng hệ toạ độ với boxes() (xem chú thích ở trên: phải
+     nhân nghịch đảo getScreenCTM của svg, không dùng getCTM). */
+  const rectEdges = svg => {
+    let inv; try { inv = svg.getScreenCTM(); } catch (e) { inv = null; }
+    if (!inv) return [];
+    inv = inv.inverse();
+    const out = [];
+    for (const r of svg.querySelectorAll('rect')) {
+      if (!shown(r)) continue;
+      const cs = getComputedStyle(r);
+      /* KHÔNG tin getComputedStyle().stroke: với stroke="var(--wb-border-strong)" viết bằng
+         presentation attribute, Chrome trả 'none' ở computed style dù nó vẫn VẼ ra. Bản đầu
+         của phép kiểm này vì thế loại sạch mọi rect và ĐẬU trên một lỗi có thật. */
+      const st = r.getAttribute('stroke') || cs.stroke;
+      if (!st || st === 'none' || !(parseFloat(cs.strokeWidth || '0') > 0)) continue;
+      if (+cs.strokeOpacity === 0) continue;
+      let sc; try { sc = r.getScreenCTM(); } catch (e) { continue; }
+      if (!sc) continue;
+      const m = inv.multiply(sc);
+      const n = k => +(r.getAttribute(k) || 0);
+      const x = n('x'), y = n('y'), w = n('width'), h = n('height');
+      if (!(w > 0 && h > 0)) continue;
+      const P = (px, py) => ({ x: m.a * px + m.c * py + m.e, y: m.b * px + m.d * py + m.f });
+      const c = [P(x, y), P(x + w, y), P(x + w, y + h), P(x, y + h)];
+      for (let i = 0; i < 4; i++) out.push({ a: c[i], b: c[(i + 1) % 4] });
+    }
+    return out;
+  };
+  /* KHOẢNG HỞ từ hộp chữ tới cạnh gần nhất, đơn vị viewBox: 0 = cạnh nằm TRONG hộp chữ.
+     Ngưỡng 0,5 là số ĐO ĐƯỢC, không phải số chọn cho tiện — quét cả trang cho: lỗi thật
+     (nhãn rộng hơn hộp chứa nó) ở hở 0,00, còn ca hợp lệ gần nhất ở 0,91 (chú thích đặt
+     sát dưới một dải ô). Bản đầu làm ngược: co hộp chữ vào 0,6 rồi hỏi "có XUYÊN qua
+     không", nên nó ĐẬU đúng cái lỗi nó được viết ra để bắt — nhãn vừa khít hộp thì viền
+     chỉ CHẠM chứ không xuyên. */
+  const clearance = (E, B) => {
+    let best = Infinity;
+    for (const e of E) {
+      const xa = Math.min(e.a.x, e.b.x), xb = Math.max(e.a.x, e.b.x);
+      const ya = Math.min(e.a.y, e.b.y), yb = Math.max(e.a.y, e.b.y);
+      const dx = Math.max(0, B.x1 - xb, xa - B.x2);
+      const dy = Math.max(0, B.y1 - yb, ya - B.y2);
+      best = Math.min(best, Math.max(dx, dy));
+    }
+    return best;
+  };
   const bad = [];
   const auditOne = (viz, name, state) => {
     const svgs = [...viz.querySelectorAll('svg')];
@@ -107,6 +160,14 @@ const AUDIT = `
           if (hit(T[i], T[j])) bad.push({ viz: name, state, kind: 'chong', a: T[i].t, b: T[j].t,
             box: [+T[i].x1.toFixed(1), +T[i].x2.toFixed(1), +T[i].y1.toFixed(1), +T[i].y2.toFixed(1),
                   +T[j].x1.toFixed(1), +T[j].x2.toFixed(1), +T[j].y1.toFixed(1), +T[j].y2.toFixed(1)] });
+        }
+      }
+      const RE = rectEdges(svg);
+      if (RE.length) {
+        for (const o of T) {
+          const c = clearance(RE, o);
+          if (c < 0.5) bad.push({ viz: name, state, kind: 'chu-tran-hop', a: o.t,
+            box: [+c.toFixed(2), +o.x1.toFixed(1), +o.x2.toFixed(1), +o.y1.toFixed(1), +o.y2.toFixed(1)] });
         }
       }
       if (vbAttr) {
@@ -187,7 +248,7 @@ if (res.nViz < 30) {
   console.error('  Chạy `node tools/gate.mjs` trước: G-SYNTAX bắt lỗi làm cả script chết.');
   process.exit(1);
 }
-if (!res.bad.length) { console.log('✓ không nhãn nào đè nhau, không nhãn nào vượt khung, không mount rỗng'); process.exit(0); }
+if (!res.bad.length) { console.log('✓ không nhãn nào đè nhau hay tràn hộp, không nhãn nào vượt khung, không mount rỗng'); process.exit(0); }
 
 /* Gộp theo (hình, loại lỗi): một nhãn đè nhau thường nổ ở cả ba mức thanh trượt, in ba
    lần thì danh sách dài mà không thêm thông tin. */
@@ -201,6 +262,7 @@ console.log(`\n✗ ${g.size} chỗ hỏng (${res.bad.length} lần nổ):\n`);
 for (const v of [...g.values()].sort((a, b) => b.n - a.n)) {
   const what = v.kind === 'chong' ? `"${v.a}" đè "${v.b}"`
     : v.kind === 'vuot-khung' ? `"${v.a}" tràn ra ngoài viewBox`
+    : v.kind === 'chu-tran-hop' ? `"${v.a}" tràn hộp: viền một <rect> cách hộp chữ ${String(v.box[0]).replace('.', ',')} đơn vị (nhãn dài hơn hộp chứa nó?)`
     : v.kind === 'mount-rong' ? 'mount không render svg nào'
     : v.kind === 'svg-rong' ? 'svg rỗng' : 'ds-viz__alt trống';
   console.log(`  ✗ ${v.viz.padEnd(14)} ${what}`);

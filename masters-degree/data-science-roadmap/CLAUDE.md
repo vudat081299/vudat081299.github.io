@@ -200,13 +200,31 @@ sh ../../facts/tools/install-hooks.sh   # lớp 2–3 — bộ điều phối gi
 hay có bị cắt ngoài `viewBox` không. Bốn lỗi tìm được 2026-08-20 đều thuộc loại đó, và cái
 đầu tiên do **chủ trang nhìn thấy** — tức phép kiểm này đang nằm trong mắt người. File đó đưa
 nó vào repo: tiêm một script vào bản sao của trang, chạy `Google Chrome --headless --dump-dom`,
-thử **mọi trạng thái điều khiển** của cả 50 mount hình (mỗi lựa chọn phân đoạn × min/giữa/max
-mỗi thanh trượt) và kiểm bốn thứ: mount có render không · hai nhãn có đè nhau · nhãn có tràn
-ngoài `viewBox` · `.ds-viz__alt` có chữ không. Không có Chrome thì nó in một dòng rồi thoát 0.
+thử **mọi trạng thái điều khiển** của cả 58 mount hình (mỗi lựa chọn phân đoạn × min/giữa/max
+mỗi thanh trượt) và kiểm **năm** thứ: mount có render không · hai nhãn có đè nhau · nhãn có
+tràn ngoài `viewBox` · `.ds-viz__alt` có chữ không · **viền một `<rect>` có nằm trong hộp chữ
+không** (nhãn dài hơn hộp chứa nó). Không có Chrome thì nó in một dòng rồi thoát 0.
 
 Nó **không** vào ba lớp hook: nó cần Chrome nên không chạy được ở mọi máy, và một cổng chặn
 commit mà phụ thuộc môi trường thì sẽ bị `--no-verify` cho tới lúc chết. Chạy nó khi **thêm
 hoặc sửa hình**.
+
+**Phép kiểm thứ năm (`chu-tran-hop`) chỉ soi `<rect>`, và đó là một phép ĐO chứ không phải
+sự lười.** Cùng phép đo áp cho **mọi** loại hình (`line`/`path`/`ellipse`/`polyline`) cho
+**10 chỗ, và cả 10 đều đúng**: `"0"` nằm trên đường 0, `"train"` nằm trên đường train,
+`"trung vị"` nằm trên đường trung vị, `★` *chính là* cái mốc. Đó là **direct labelling** —
+đặt nhãn lên thứ nó gọi tên — một kỹ thuật đúng và nên khuyến khích. Bắt cả chúng thì phép
+kiểm thành tiếng ồn rồi chết. Thu về `<rect>`: **0 chỗ** ở trạng thái ổn định, mà lớp lỗi
+thật vẫn bị bắt — nhãn *vừa khít hoặc rộng hơn* hộp chứa nó, thứ gần như không bao giờ cố ý.
+Ngưỡng là **khoảng hở < 0,5 đơn vị `viewBox`**: đo được lỗi thật ở hở **0,00** còn ca hợp lệ
+gần nhất ở **0,91**.
+
+Hai cái bẫy riêng của phép kiểm thứ năm, cả hai đều làm nó **ĐẬU trên lỗi có thật**:
+`getComputedStyle(rect).stroke` trả **`none`** khi nét được viết bằng presentation attribute
+có `var()` (`stroke="var(--wb-border-strong)"`) dù nó vẫn vẽ ra — phải đọc `getAttribute`.
+Và hướng của phép thử: bản đầu co hộp chữ vào 0,6 rồi hỏi *"viền có XUYÊN qua không"*, nhưng
+nhãn vừa khít hộp thì viền chỉ **CHẠM** — đúng cái ca nó được viết ra để bắt. Phải đo khoảng
+hở, không đo sự xuyên qua.
 
 Ba lần tôi viết sai phép đo trước khi đúng — ghi ra vì đây là cái bẫy của chính loại kiểm này:
 `getBBox()` trần tố oan nhãn trục **xoay 90°** (hộp trong hệ toạ độ riêng của chữ) · `getCTM()`
