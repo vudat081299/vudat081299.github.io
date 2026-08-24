@@ -3,7 +3,7 @@
 Trang tĩnh, không build, không phụ thuộc. Dựng bằng [web-builder](../web-builder/) v0.6
 (`../web-builder/web-builder.css`) + `facts.css` (chrome riêng, prefix `fx-*`) + `app.js`.
 
-**1.884 fact + 8 truyện** trên 20 chủ đề, chia thành 162 cụm nhỏ; 13 fact có minh hoạ tương
+**1.884 fact + 22 truyện** trên 20 chủ đề, chia thành 162 cụm nhỏ; 13 fact có minh hoạ tương
 tác và 13 fact đã có lớp "vì sao" (câu hỏi mở đầu + phần giải thích đầy đủ).
 
 > Sửa hoặc thêm fact thì đọc [CLAUDE.md](CLAUDE.md) trước — ở đó có pipeline thêm fact và
