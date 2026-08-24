@@ -328,7 +328,14 @@
     ]
   },
   "day_du": [
-    "vu-tru/he-mat-troi"
+    "vu-tru/he-mat-troi",
+    "vu-tru/kham-pha-khong-gian",
+    "vu-tru/mat-trang-thuy-trieu",
+    "vu-tru/ngoi-sao-thien-ha",
+    "vu-tru/thang-khong-gian",
+    "vu-tru/thang-thoi-gian",
+    "vu-tru/trai-dat",
+    "vu-tru/vat-ly-vu-tru"
   ],
   "files": [
     "tu-duy.json",
