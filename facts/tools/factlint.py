@@ -476,8 +476,15 @@ RULES_REJECT = [
     ]),
 ]
 
-# Ba quy tắc dưới chỉ LOẠI khi fact không có mỏ neo số nào trong t+s.
-RULES_REJECT_IF_NO_DIGIT = [
+# Ba quy tắc dưới LOẠI khi fact không có MỎ NEO THẬT, và chỉ hạ xuống XEM khi có.
+# "Mỏ neo thật" = có con số VÀ con số đó không nằm trọn trong câu giả định (§1.3).
+#
+# Đừng nâng ba luật này lên LOẠI vô điều kiện — đã đo ngày 24/08/2026 và số liệu bác:
+# nâng thẳng chặn 28 fact, và đọc tay cả 28 thì KHÔNG cái nào sai. Riêng
+# 'dinh-luat-dat-ten' bản rộng chính là dạng mà CLAUDE.md §1.6 ghi "đã đo và RỚT, đừng
+# dựng lại" (13 fact, cả 13 nêu luôn nội dung ngay sau tên). Bản thắt theo mỏ neo dưới
+# đây chặn 0 fact hôm nay mà vẫn bịt được lớp lỗi thật — xem HANDOFF.md đợt 24/08.
+RULES_REJECT_IF_NO_ANCHOR = [
     ('dinh-luat-dat-ten', 'định luật/nguyên lý đặt theo tên người, không mỏ neo', 't', [
         re.compile(r'\b(Định luật|Nguyên lý|Dao cạo|Quy tắc|Nghịch lý|Hiệu ứng) [A-ZÀ-ỸĐ]'),
     ]),
@@ -622,12 +629,19 @@ def verify_fact(f):
             if p.search(hay):
                 return ('LOẠI', rid, note)
 
-    for rid, note, field, pats in RULES_REJECT_IF_NO_DIGIT:
+    for rid, note, field, pats in RULES_REJECT_IF_NO_ANCHOR:
         hay = t if field == 't' else ts
         for p in pats:
             if p.search(hay):
                 if not has_digit:
                     return ('LOẠI', rid, note)
+                # Có chữ số chưa phải có mỏ neo (§1.3). Con số nằm trọn trong câu giả
+                # định là số bịa để minh hoạ — bỏ nó đi câu vẫn nguyên nghĩa. Với ba luật
+                # này thì đó là LOẠI, không phải XEM: một "xu hướng hành vi" mà mỏ neo duy
+                # nhất là số giả định thì không còn mỏ neo nào.
+                if _mo_neo_gia_dinh(t, ts):
+                    return ('LOẠI', rid,
+                            note + ' — có chữ số nhưng mọi số đều nằm trong câu giả định')
                 if rid not in mien:
                     return ('XEM', rid, note)
 
@@ -662,7 +676,7 @@ def verify_fact(f):
 def all_warn_rule_ids():
     """Mọi rule id có thể xuất hiện ở mức XEM — dùng để soát field xem_ok."""
     ids = {rid for rid, _, _, _ in RULES_WARN}
-    ids |= {rid for rid, _, _, _ in RULES_REJECT_IF_NO_DIGIT}
+    ids |= {rid for rid, _, _, _ in RULES_REJECT_IF_NO_ANCHOR}
     ids |= {'mo-neo-gia-dinh', 'do-lon-bang-chu', 'thieu-mo-neo', 'thuat-ngu'}
     return ids
 
