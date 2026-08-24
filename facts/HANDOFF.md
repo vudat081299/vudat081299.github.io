@@ -6,6 +6,87 @@ công việc đã làm và không tưởng là mọi thứ đã xong.
 
 ---
 
+## Đợt 24/08/2026 (d) — chủ trang chỉnh lại trọng tâm
+
+**Nguyên văn:** *"Mục đích của tôi không phải là muốn bạn thêm giải thích vì sao, nhưng thôi
+cũng được, nhưng mục đích chính là bổ sung truyện ngắn, bổ sung fact và sửa lại diễn giải các
+fact đang có + tập trung lấy fact + truyện ngắn từ những nguồn uy tín, diễn giải tốt."*
+
+Đợt (c) đọc sai thứ tự ưu tiên: nó dồn công vào lớp "vì sao" và migrate 563 fact. Lớp đó
+không sai — chủ trang nói "thôi cũng được" — nhưng nó không phải việc chính. Đợt (d) làm ba
+việc theo đúng thứ tự chủ trang nêu.
+
+### 1. Truyện: 8 → 22
+
+`data/chuyen/dot-02.json`, 14 truyện phủ 14 chủ đề chưa có truyện nào. Mỗi truyện tra nguồn
+gốc trước khi viết, không dựa vào bài kể lại: báo cáo điều tra MCO/Tenerife, tám bản ghi nhớ
+SRG của Wald, Fisher 1935, Beaumont 1833, Marshall trên *Lancet* và *MJA*, Scoville & Milner
+1957, Billah & Scanlan 1991, Euler 1736, Ostrom 1990, Freeth *Nature* 2006, Soper *JAMA* 1907.
+
+Bốn truyện nói thẳng chỗ tranh cãi vì bỏ đi thì gọn hơn và sai hơn — cảnh Wald chỉ tay vào sơ
+đồ là do người đời sau kể thêm; Fisher không ghi kết quả của bà Bristol; tự thí nghiệm một
+người chỉ khép được mắt xích đầu; cửa sổ 1980–2011 làm Simon thua 4/5 kim loại.
+
+**Hai ngưỡng của cổng truyện giờ đã có mẫu để tin.** Trước đợt này cả 8 truyện do một người
+viết nên 1.200–8.000 ký tự và tối thiểu 4 đoạn chưa được thử. 22 truyện hiện tại nằm trong
+khoảng 1.778–2.551 ký tự, 5–6 đoạn — tức **trần 8.000 chưa bao giờ chạm tới**, và nếu sau này
+có ai muốn siết trần xuống thì đó là quyết định có số liệu, không phải cảm tính.
+
+### 2. Cổng mới `s-ke-nguoi-tim-ra`, và 98 fact viết lại
+
+Đây là chỗ "diễn giải học thuật" thật sự nằm. Đo: **94 fact có `s` lấy một nghiên cứu làm chủ
+ngữ** — *"Các nghiên cứu về mất nước cho thấy…"*. Đọc tay cả 94, ~80 lỗi thật → độ chính xác
+~85%, đủ cho mức `XEM`. Luật + bốn nhóm được miễn: [CLAUDE.md §1.8](CLAUDE.md).
+
+Viết lại 98, khai `xem_ok` 4, sửa 4 tiêu đề. Cái quan trọng không phải là bỏ cụm dẫn mà là
+**cái gì lấp vào chỗ trống** — con số cụ thể, cơ chế, hoặc chỗ tranh cãi gọi được tên:
+
+| | trước | sau |
+|---|---|---|
+| `ct-018` | "Các nghiên cứu về mất nước cho thấy khoảng 2%…" | "…2% khối lượng cơ thể — với người 60 kg là chừng 1,2 lít" |
+| `sk-243` | "Các nghiên cứu theo dõi lớn cho thấy…" | "…người uống cà phê đều đặn khác người không uống ở nhiều thứ khác, nên nhân quả chưa chắc" |
+| `sk-297` | "Các thử nghiệm lớn không tìm thấy…" | "…vì nồng độ vitamin D thấp phần lớn là dấu hiệu của ít ra ngoài, không phải nguyên nhân" |
+
+**§4 quy tắc 3 chặt hơn chứ không lỏng đi.** Bỏ cái nhãn "các nghiên cứu cho thấy" thì buộc
+phải nói ra giới hạn cụ thể mới giữ được sự trung thực — nhãn đó không cho biết bằng chứng
+mạnh hay yếu, nó chỉ làm câu dài thêm.
+
+Ba lần cổng bắt được văn của chính đợt sửa: `xh-138`/`tl-265` dính luật cũ vì bản viết mới,
+và ba dòng `xem_ok` báo "đã CHẾT" vì bản viết lại đã gỡ đúng điều kiện chúng đang miễn.
+
+### 3. 25 fact cho năm cụm mỏng nhất
+
+Chọn cụm bằng số đo: trung vị 11 fact/cụm, năm cụm dưới đây có 2–3.
+`co-the/mien-dich-vi-sinh`, `vu-tru/thang-thoi-gian`, `cong-nghe/dien-thoai-pin`,
+`ngon-ngu/ngon-ngu-ky-hieu`, `lich-su/trung-dai` — mỗi cụm +5.
+
+**Bước 3 của §2 đã trả công cho chính nó.** Quét mọi cặp mới–cũ cùng chủ đề từ 0,45:
+`nn-202`↔`nn-005` được 0,72 (nn-005 đã nói y hệt "ASL gần LSF hơn BSL" ngay trong `s`),
+`vt-251`↔`vt-001` được 0,62, `ls-275`↔`ls-114` được 0,54. Ba fact bị bỏ, phần chi tiết chúng
+có thêm thì nhập vào fact cũ theo §3 — nn-005 giờ có mốc Clerc 1817 và con số 60%, ls-114 giờ
+có "tiền công thực tăng gấp đôi" và Đạo luật Lao động 1351.
+
+`day_du` cũng chặn đúng: `co-the` và `vu-tru` đã khoá nên 10 fact mới ở hai chủ đề đó buộc
+phải có `q` + `d` đạt khuôn.
+
+### Còn nợ sau đợt này
+
+1. **1.336/1.909 fact chưa có lớp "vì sao"** (44/162 cụm đã khoá). Ưu tiên thấp theo lời chủ
+   trang, nhưng `day_du` sẽ tự bắt mọi fact mới thêm vào cụm đã khoá.
+2. **Chưa có cổng nào bắt `t` và `d` nói hai chuyện khác nhau.** §1.4 nói rõ so từ vựng là vô
+   dụng (đã đo). Với `d` dài 1.000+ ký tự thì chỗ này rộng hơn trước.
+3. **Cụm mỏng còn nhiều.** Sau đợt này vẫn còn `tu-duy/mo-hinh-tu-duy` (1),
+   `kinh-doanh/dam-phan` (1), `kinh-doanh/do-luong` (1), `kinh-doanh/tuyen-dung` (2),
+   `giao-tiep/huyen-thoai-giao-tiep` (2), `kinh-doanh/khoi-nghiep` (2), `tu-duy/rui-ro` (2),
+   `xa-hoi/luat-phap` (3). Nhóm `kinh-doanh` mỏng có lý do thật: phần lớn thứ viết được về
+   đàm phán và tuyển dụng là **lời khuyên**, mà §1.1 mục 2 loại thẳng. Ai làm cụm đó phải tìm
+   được claim về thế giới, không phải claim về cách làm việc.
+4. **`xa-hoi/luat-phap` bị bỏ qua trong đợt này** dù nằm trong danh sách mỏng: fact luật cần
+   đối chiếu đúng điều khoản của văn bản đang có hiệu lực, và đợt này không đủ thời gian tra
+   tới nơi. Đừng viết fact luật bằng trí nhớ.
+
+---
+
 ## Đợt 24/08/2026 (c) — đổi khuôn, không đổi nguồn
 
 **Câu hỏi của chủ trang:** có nguồn nào chuyên cung cấp fact không, vì fact lấy từ báo và
