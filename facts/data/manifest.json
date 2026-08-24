@@ -327,7 +327,9 @@
       "bao-ton-nghe-thuat"
     ]
   },
-  "day_du": [],
+  "day_du": [
+    "vu-tru/he-mat-troi"
+  ],
   "files": [
     "tu-duy.json",
     "tam-ly.json",

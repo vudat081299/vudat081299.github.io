@@ -3,8 +3,10 @@
     "id": "vt-205",
     "cat": "vu-tru",
     "sub": "he-mat-troi",
+    "q": "Vì sao một trận bão trên Sao Hoả không thể quật ngã người như trong phim?",
     "t": "Bão bụi trên Sao Hoả có thể phủ cả hành tinh nhưng gió ở đó không đủ mạnh để thổi bay người",
-    "s": "Khí quyển Sao Hoả chỉ đặc bằng khoảng 0,6% Trái Đất, nên gió 100 km/h ở đó tạo lực tương đương gió khoảng 10 km/h ở đây. Bão bụi có thể phủ kín cả hành tinh, nhưng cảnh phim bão Sao Hoả quật ngã tàu vũ trụ là sai về vật lý.",
+    "s": "Áp suất khí quyển Sao Hoả chỉ bằng khoảng 0,6% Trái Đất, nên gió 100 km/h ở đó tạo lực tương đương gió khoảng 10 km/h ở đây. Bão bụi có thể phủ kín cả hành tinh, nhưng cảnh phim bão Sao Hoả quật ngã tàu vũ trụ là sai về vật lý.",
+    "d": "Lực mà gió đè lên một vật phụ thuộc vào hai thứ: mật độ không khí và bình phương tốc độ. Trên Sao Hoả, vế thứ nhất gần như biến mất. Áp suất bề mặt ở đó chỉ bằng khoảng 0,6% Trái Đất, và mật độ không khí bằng chừng một phần tám mươi. Bình phương tốc độ không cứu nổi chênh lệch đó: một cơn gió 100 km/h trên Sao Hoả đẩy mạnh cỡ một cơn gió hơn 10 km/h ở đây — mức làm phất tà áo, không mức làm ngã người.\n\nCảm nhận được điều này bằng chính tay mình: vung tay trong không khí gần như không thấy cản, vung cùng tốc độ ấy dưới nước thì rất nặng. Tốc độ y hệt, lực khác hẳn, chỉ vì mật độ môi trường khác nhau.\n\nNhưng bão bụi Sao Hoả vẫn nguy hiểm thật, chỉ là nguy hiểm theo kiểu khác. Bụi mịn ở đó nhẹ và tích điện, một khi bốc lên thì lơ lửng rất lâu và có thể phủ kín cả hành tinh trong nhiều tháng, che mất nắng. Trận bão toàn cầu năm 2018 đã kết liễu tàu tự hành Opportunity theo đúng cách đó: không quật đổ nó, mà làm tấm pin mặt trời của nó đói nắng cho tới khi hết điện.",
     "tags": [
       "sao-hoa",
       "bao",
