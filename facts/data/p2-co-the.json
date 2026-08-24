@@ -54,6 +54,19 @@
     "src": "George Stratton, Psychological Review (1897)"
   },
   {
+    "id": "ct-106",
+    "cat": "co-the",
+    "sub": "giac-quan-khac",
+    "t": "Mọi vùng có nụ vị giác trên lưỡi đều nhận được cả năm vị, không có vùng nào chỉ chuyên một vị",
+    "s": "Đặt hạt muối lên đầu lưỡi hay cuối lưỡi thì đều nhận ra vị mặn; năm vị cơ bản là ngọt, mặn, chua, đắng và umami (vị ngọt thịt của nước dùng). Ngưỡng nhạy giữa các vùng có chênh nhau nhưng quá nhỏ để thành 'vùng riêng cho từng vị' — sơ đồ chia vùng trong sách giáo khoa cũ đến từ một bản dịch sai luận văn Đức năm 1901.",
+    "tags": [
+      "vi-giac",
+      "huyen-thoai",
+      "lich-su"
+    ],
+    "src": "Hänig (1901); phản bác của Collings, Perception & Psychophysics (1974); Bartoshuk, Physiology & Behavior (1993)"
+  },
+  {
     "id": "ct-107",
     "cat": "co-the",
     "sub": "giac-quan-khac",

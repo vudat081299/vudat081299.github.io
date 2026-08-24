@@ -134,10 +134,28 @@ vào id vừa xoá, và 4 fact mất mỏ neo hoặc dùng từ chỉ độ lớ
 6. **328 cặp `khac` chưa khai `khac_voi`** (mục 3) — làm được nhưng phải có lý do từng cặp.
 7. Danh sách 84 cặp trùng còn lại của đợt (a) vẫn nguyên.
 
+### 8. Một lỗi của chính đợt này, và cách nó bị bắt
+
+Script áp báo cáo xây danh sách xoá từ đề xuất R6 của agent. Đợt g3 đề nghị "giữ `ct-209`,
+bỏ `ct-106`" — nhưng `ct-209` đã bị xoá ở commit đầu tiên (`79b5327`, giữ `ct-106` thay vì
+`ct-209`). Script không kiểm điều kiện đó, nên nó bỏ luôn cái còn lại: **cả hai fact về bản
+đồ vị giác biến mất, tức đúng fact chủ trang phàn nàn đã mất khỏi thư viện.**
+
+Không cổng nào bắt được: xoá một fact hợp lệ không vi phạm luật nào. Nó bị bắt ở bước **mở
+trang qua HTTP** rồi tìm lại chính `ct-106` — bước mà CLAUDE.md §6 đã yêu cầu từ trước và
+lần này chứng minh được vì sao nó không phải thủ tục.
+
+Rà lại cả 77 cặp từng được đề xuất gộp: **0 cặp nào khác mất cả hai fact.** 47 fact bị xoá
+trong đợt, trong đó 41 qua gộp có fact hút nội dung và 6 xoá thẳng có chủ ý (`nn-106`
+`th-315` `th-343` `tl-326` `vl-216` `vl-333`).
+
+**Việc cho phiên sau:** thêm một phép kiểm vào bất kỳ script gộp nào — với mỗi cặp, xác nhận
+fact "được giữ" CÒN TỒN TẠI trước khi xoá fact kia.
+
 ### Số đo cuối đợt
 
 ```
-check : 1883 fact · 46 file · 20 chủ đề · 0 cặp >= 0,62 · 0 cặp trùng tiêu đề · exit 0
+check : 1884 fact · 46 file · 20 chủ đề · 0 cặp >= 0,62 · 0 cặp trùng tiêu đề · exit 0
 verify: 0 LOẠI · 4 XEM · 130 xem_ok (từ 151)
 đã đọc: 1.945 fact × 2 lượt toàn văn · 348 cặp · 142 khai miễn · 41 trường `d`
 ```
