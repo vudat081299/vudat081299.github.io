@@ -164,7 +164,7 @@
     "cat": "kinh-te",
     "sub": "chi-tieu-tiet-kiem",
     "t": "Quy tắc 4%: rút 4% danh mục năm đầu rồi điều chỉnh theo lạm phát",
-    "s": "Nghiên cứu gốc trên dữ liệu Mỹ 1926–1976 cho thấy mức rút này sống sót 30 năm trong mọi giai đoạn lịch sử được kiểm. Nhưng nó dựa trên một thị trường, một giai đoạn, và danh mục cổ phiếu–trái phiếu cụ thể. Coi nó là điểm khởi đầu để tính, không phải hằng số.",
+    "s": "Trên dữ liệu Mỹ 1926–1976, mức rút này sống sót đủ 30 năm trong mọi giai đoạn lịch sử được kiểm. Nhưng nó dựa trên một thị trường, một giai đoạn, và một danh mục cổ phiếu–trái phiếu cụ thể; áp sang thị trường khác hoặc giai đoạn lãi suất khác thì tỉ lệ an toàn đổi. Coi nó là điểm khởi đầu để tính, không phải hằng số.",
     "tags": [
       "huu-tri",
       "rut-von",
@@ -245,16 +245,13 @@
     "cat": "kinh-te",
     "sub": "thue-chinh-sach",
     "t": "Lời nguyền tài nguyên: nước phụ thuộc nặng vào xuất khẩu khoáng sản tăng trưởng chậm hơn khoảng 1 điểm phần trăm mỗi năm",
-    "s": "Các phân tích so sánh cho thấy quốc gia phụ thuộc nặng vào xuất khẩu tài nguyên có xu hướng tăng trưởng dài hạn kém hơn, do tỉ giá bị đẩy lên làm chết ngành sản xuất, do nguồn thu dễ dãi làm suy yếu thể chế, và do giá hàng hoá biến động mạnh. Không phải định mệnh — Na Uy và Botswana là phản ví dụ.",
+    "s": "Quốc gia phụ thuộc nặng vào xuất khẩu tài nguyên tăng trưởng dài hạn chậm hơn khoảng 1 điểm phần trăm mỗi năm, qua ba đường: tiền bán tài nguyên đẩy tỉ giá lên làm hàng sản xuất trong nước mất sức cạnh tranh, nguồn thu dễ dãi làm nhà nước bớt phụ thuộc vào thuế nên bớt phải giải trình, và giá hàng hoá dao động mạnh làm kế hoạch dài hạn khó lập. Không phải định mệnh — Na Uy và Botswana là phản ví dụ.",
     "tags": [
       "phat-trien",
       "the-che",
       "vi-mo"
     ],
-    "src": "Sachs & Warner, NBER (1995); phản biện và điều kiện hoá trong Mehlum, Moene & Torvik (2006)",
-    "xem_ok": [
-      "xu-huong-mo-ho"
-    ]
+    "src": "Sachs & Warner, NBER (1995); phản biện và điều kiện hoá trong Mehlum, Moene & Torvik (2006)"
   },
   {
     "id": "kt-122",

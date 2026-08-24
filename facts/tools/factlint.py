@@ -874,8 +874,8 @@ RULES_WARN = [
     # "một nghiên cứu quét 100 biến sẽ tìm ra 5 phát hiện giả"), fact nói về cách người ta
     # đánh giá nghiên cứu (tl-206), định lý có người chứng minh (th-311), và câu cải chính
     # tự hạ mức chắc chắn (na-236 "kết quả này không chứng minh…"). Những ca đó khai xem_ok.
-    ('s-ke-nguoi-tim-ra', 'phần tóm tắt kể ai tìm ra thay vì kể thế giới thế nào — '
-                          'xuất xứ thuộc về trường `src`', 's', [
+    ('s-ke-nguoi-tim-ra', 'kể ai tìm ra thay vì kể thế giới thế nào — '
+                          'xuất xứ thuộc về trường `src`', 'ts', [
         re.compile(r'(nghiên cứu|thí nghiệm|thử nghiệm|khảo sát|phân tích|tổng hợp|dữ liệu'
                    r'|bằng chứng|kết quả)[^.]{0,45}?\b'
                    r'(cho thấy|chỉ ra|ghi nhận|kết luận|phát hiện|xác nhận|chứng minh'

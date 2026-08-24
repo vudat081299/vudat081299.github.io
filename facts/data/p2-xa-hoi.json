@@ -73,7 +73,7 @@
     "cat": "xa-hoi",
     "sub": "toi-pham-an-toan",
     "t": "Tỉ lệ chết vì bạo lực ở các xã hội tiền nhà nước cao hơn nhiều lần thế kỷ 20, kể cả khi tính cả hai cuộc thế chiến",
-    "s": "Bằng chứng khảo cổ và dân tộc học cho thấy tỉ lệ chết vì bạo lực trong các xã hội tiền nhà nước cao hơn nhiều lần so với thế kỷ 20, kể cả khi tính cả hai cuộc thế chiến. Kết luận này bị tranh cãi về phương pháp và cỡ mẫu, nhưng chiều hướng giảm trong vài thế kỷ gần đây thì có dữ liệu vững.",
+    "s": "Đếm xương có dấu vết bạo lực ở các nghĩa địa tiền sử và đếm ca tử vong trong các xã hội săn bắt hái lượm còn tồn tại tới thế kỷ 20, tỉ lệ chết vì bạo lực ra cao hơn nhiều lần thế kỷ 20, kể cả khi tính cả hai cuộc thế chiến. Con số cụ thể bị tranh cãi gay gắt về cách chọn mẫu — nghĩa địa chiến trận dễ được khai quật hơn nghĩa địa thường — nhưng chiều hướng giảm trong vài thế kỷ gần đây thì có dữ liệu vững.",
     "tags": [
       "bao-luc",
       "lich-su",
@@ -125,7 +125,7 @@
     "cat": "xa-hoi",
     "sub": "van-hoa-truyen-thong",
     "t": "Đa số im lặng: người ta ước lượng sai quan điểm của số đông xung quanh mình",
-    "s": "Sự vô minh đa nguyên xảy ra khi hầu hết mọi người phản đối một chuẩn mực nhưng ai cũng tưởng mình là thiểu số. Nó duy trì các tập tục mà gần như không ai thật sự ủng hộ, và tan rất nhanh khi có dữ liệu công khai cho thấy đa số nghĩ khác.",
+    "s": "Vô minh đa nguyên xảy ra khi hầu hết mọi người trong một nhóm phản đối một chuẩn mực nhưng ai cũng tưởng mình là thiểu số duy nhất nghĩ thế, nên không ai nói ra và sự im lặng của người khác lại xác nhận điều họ tưởng. Nó giữ sống những tập tục mà gần như không ai thật sự ủng hộ, và tan rất nhanh khi có một con số công khai cho thấy đa số nghĩ khác.",
     "tags": [
       "chuan-muc",
       "nhom",
@@ -141,7 +141,7 @@
     "cat": "xa-hoi",
     "sub": "bau-cu-chinh-tri",
     "t": "Khoảng 3,5% dân số tham gia biểu tình bất bạo động chưa từng thất bại trong việc tạo thay đổi",
-    "s": "Phân tích hơn 300 chiến dịch từ 1900 đến 2006 cho thấy các phong trào bất bạo động thành công thường xuyên hơn phong trào vũ trang, và chưa có chiến dịch nào huy động được ngưỡng 3,5% dân số mà thất bại. Đây là quan sát thống kê, không phải công thức đảm bảo.",
+    "s": "Trên hơn 300 chiến dịch chính trị từ 1900 đến 2006, phong trào bất bạo động đạt mục tiêu thường xuyên hơn phong trào vũ trang khoảng gấp đôi, và chưa chiến dịch nào huy động được 3,5% dân số tham gia tích cực mà thất bại. Đây là một quan sát thống kê trên tập đã xảy ra, không phải công thức đảm bảo cho chiến dịch tiếp theo.",
     "tags": [
       "chinh-tri",
       "phong-trao",
@@ -167,7 +167,7 @@
     "cat": "xa-hoi",
     "sub": "the-che-hop-tac",
     "t": "Giấy phép hành nghề bảo vệ người trong nghề nhiều hơn bảo vệ khách hàng",
-    "s": "Với nhiều nghề, bằng chứng cho thấy yêu cầu cấp phép làm tăng thu nhập người hành nghề và giảm số người gia nhập, nhưng tác động lên chất lượng dịch vụ thì yếu hoặc không đo được. Ngoại lệ đáng kể là các nghề có rủi ro tính mạng rõ ràng.",
+    "s": "Với nhiều nghề, yêu cầu cấp phép làm tăng thu nhập người đang hành nghề và giảm số người mới gia nhập, trong khi tác động lên chất lượng dịch vụ thì yếu hoặc không đo được. Ngoại lệ đáng kể là các nghề mà một sai sót gây chết người ngay — bác sĩ, phi công, kỹ sư kết cấu.",
     "tags": [
       "nghe-nghiep",
       "chinh-sach",
@@ -329,7 +329,7 @@
     "cat": "xa-hoi",
     "sub": "toi-pham-an-toan",
     "t": "Luật bắt buộc đội mũ bảo hiểm ở Việt Nam giảm mạnh chấn thương sọ não",
-    "s": "Sau khi quy định có hiệu lực toàn quốc cuối năm 2007, các nghiên cứu ghi nhận tỉ lệ đội mũ tăng vọt và số ca chấn thương đầu do tai nạn xe máy giảm rõ rệt trong các bệnh viện được theo dõi. Đây là một trong những ví dụ chính sách công có hiệu quả đo được nhanh nhất.",
+    "s": "Quy định có hiệu lực toàn quốc từ 15/12/2007. Tỉ lệ đội mũ ở người đi xe máy nhảy từ mức thấp lên trên 90% trong vài tuần, và số ca chấn thương đầu do tai nạn xe máy tại các bệnh viện được theo dõi giảm rõ rệt ngay năm sau. Đây là một trong những chính sách công có hiệu quả đo được nhanh nhất.",
     "tags": [
       "viet-nam",
       "an-toan",
@@ -397,7 +397,7 @@
     "cat": "xa-hoi",
     "sub": "toi-pham-an-toan",
     "t": "Tù giam dài hơn có tác dụng răn đe yếu hơn khả năng bị bắt",
-    "s": "Tổng quan bằng chứng cho thấy điều làm giảm tội phạm là xác suất bị phát hiện, không phải mức án. Tăng thời hạn tù có chi phí rất cao và hiệu quả răn đe nhỏ, trong khi tăng hiện diện cảnh sát ở nơi có nguy cơ cao thì cho hiệu quả đo được.",
+    "s": "Thứ làm giảm tội phạm là xác suất bị phát hiện, không phải mức án. Mỗi năm tù thêm là một khoản chi ngân sách có thật, trong khi phần răn đe thêm gần như không đo được — người tính chuyện phạm tội hầu như không tính tới bản án dài hạn. Ngược lại, tăng hiện diện cảnh sát ở đúng những nơi có nguy cơ cao thì cho hiệu quả đo được ngay.",
     "tags": [
       "toi-pham",
       "chinh-sach",

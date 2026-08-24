@@ -31,8 +31,8 @@
     "cat": "tu-duy",
     "sub": "nhan-qua",
     "viz": "simpson",
-    "t": "Nghịch lý Simpson: cùng một dữ liệu có thể đảo ngược kết luận khi gộp nhóm",
-    "s": "Năm 1973, dữ liệu tuyển sinh sau đại học của UC Berkeley cho thấy nam được nhận nhiều hơn nữ rõ rệt. Nhưng khi tách theo từng khoa, phần lớn khoa lại nhận nữ với tỉ lệ ngang hoặc cao hơn. Lý do: nữ nộp nhiều hơn vào các khoa vốn có tỉ lệ chọi khắt khe.",
+    "t": "Nghịch lý Simpson: gộp các nhóm lại có thể đảo ngược hẳn kết luận rút ra từ cùng một bảng số",
+    "s": "Năm 1973, bảng tuyển sinh sau đại học của UC Berkeley có tỉ lệ nam được nhận cao hơn nữ rõ rệt. Tách ra theo từng khoa thì phần lớn khoa lại nhận nữ với tỉ lệ ngang hoặc cao hơn. Lý do nằm ở chỗ nữ nộp nhiều hơn vào các khoa vốn có tỉ lệ chọi khắt khe — gộp lại là gộp mất cái biến đó.",
     "d": "Một con số tổng hợp luôn che cấu trúc bên dưới nó: cùng một tỉ lệ gộp có thể ứng với hai bức tranh trái ngược nhau khi tách theo nhóm. Điều kiện để đảo chiều là các nhóm có kích cỡ rất khác nhau — như ở Berkeley, nơi nữ nộp nhiều vào các khoa có tỉ lệ chọi khắt khe hơn.",
     "tags": [
       "thong-ke",

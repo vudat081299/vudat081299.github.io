@@ -310,7 +310,7 @@
     "cat": "ngon-ngu",
     "sub": "ngu-phap-tu-vung",
     "t": "Ngôn ngữ nói nhanh hơn thì truyền ít thông tin hơn trên mỗi âm tiết",
-    "s": "Đo trên 17 ngôn ngữ, các nhà nghiên cứu thấy tốc độ truyền thông tin hội tụ quanh 39 bit mỗi giây bất kể ngôn ngữ. Tiếng Nhật và tiếng Tây Ban Nha nói nhanh nhưng mỗi âm tiết mang ít tin; tiếng Việt và tiếng Thái nói chậm hơn nhưng đậm đặc hơn.",
+    "s": "Đo trên 17 ngôn ngữ, tốc độ truyền thông tin hội tụ quanh 39 bit mỗi giây bất kể ngôn ngữ nào. Tiếng Nhật và tiếng Tây Ban Nha nói nhanh nhưng mỗi âm tiết mang ít tin; tiếng Việt và tiếng Thái nói chậm hơn nhưng mỗi âm tiết đậm đặc hơn. Hai chiều bù nhau gần như đúng bằng, như thể có một trần chung do bộ não người đặt ra.",
     "tags": [
       "thong-tin",
       "toc-do",

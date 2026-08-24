@@ -43,7 +43,7 @@
     "cat": "giao-tiep",
     "sub": "quan-he",
     "t": "Bạn bè cần khoảng 50 giờ để thành bạn thường và hơn 200 giờ để thành bạn thân",
-    "s": "Theo dõi người mới chuyển chỗ ở và sinh viên năm nhất, nhà nghiên cứu ước lượng số giờ ở cùng nhau cần thiết cho từng nấc quan hệ. Quan trọng hơn con số: thời gian dành cho trò chuyện đùa giỡn và chuyện đời thường có tác dụng, còn thời gian ngồi chung mà làm việc thì gần như không.",
+    "s": "Đếm số giờ ở cùng nhau của người mới chuyển chỗ ở và sinh viên năm nhất, mỗi nấc quan hệ có một ngưỡng riêng: khoảng 50 giờ để thành bạn thường, 90 giờ để thành bạn, hơn 200 giờ để thành bạn thân. Quan trọng hơn con số là loại thời gian: trò chuyện đùa giỡn và chuyện đời thường có tác dụng, còn ngồi chung mà làm việc thì gần như không.",
     "tags": [
       "quan-he",
       "ban-be",
@@ -246,7 +246,7 @@
     "cat": "giao-tiep",
     "sub": "huyen-thoai-giao-tiep",
     "t": "Con người rất kém trong việc phát hiện nói dối — đúng khoảng 54% số lần",
-    "s": "Tổng hợp hơn 200 nghiên cứu cho thấy tỉ lệ đoán đúng chỉ nhỉnh hơn tung đồng xu, và cảnh sát hay hải quan không giỏi hơn người thường bao nhiêu. Các dấu hiệu 'kinh điển' như tránh ánh mắt hay gãi mũi hầu như không có giá trị chẩn đoán.",
+    "s": "Tỉ lệ đoán đúng trung bình là 54%, tức chỉ nhỉnh hơn tung đồng xu, và cảnh sát hay hải quan không giỏi hơn người thường bao nhiêu — họ chỉ tự tin hơn. Các dấu hiệu 'kinh điển' như tránh ánh mắt hay gãi mũi hầu như không có giá trị chẩn đoán.",
     "tags": [
       "noi-doi",
       "huyen-thoai",
@@ -272,7 +272,7 @@
     "cat": "giao-tiep",
     "sub": "phi-ngon-ngu",
     "t": "Người có địa vị thấp hơn đọc cảm xúc chính xác hơn",
-    "s": "Nhiều nghiên cứu cho thấy người ở vị thế phụ thuộc giỏi hơn trong việc nhận diện cảm xúc của người khác — vì họ có nhiều động cơ hơn để chú ý. Điều này lật ngược giả định rằng lãnh đạo hiểu người tốt hơn nhân viên.",
+    "s": "Người ở vị thế phụ thuộc nhận diện cảm xúc của người khác chính xác hơn người ở vị thế trên, vì họ có nhiều động cơ hơn để chú ý: điều gì xảy ra với họ phụ thuộc vào tâm trạng của người kia, còn chiều ngược lại thì không. Điều này lật ngược giả định rằng lãnh đạo hiểu người tốt hơn nhân viên.",
     "tags": [
       "quyen-luc",
       "dong-cam",

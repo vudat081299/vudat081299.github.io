@@ -280,7 +280,7 @@
     "cat": "thuc-pham",
     "sub": "len-men",
     "t": "Bánh mì bột chua nổi bằng vi sinh vật hoang dã, và mỗi bột cái có hệ vi sinh riêng",
-    "s": "Nấm men hoang dã tạo CO₂ làm bánh nở, vi khuẩn lactic tạo axit làm bột chua và ức chế vi sinh vật lạ; tỉ lệ giữa hai nhóm quyết định độ chua và tốc độ nở. Nghiên cứu 500 mẫu bột cái từ nhiều nước cho thấy thành phần vi sinh khác nhau rõ rệt giữa các mẫu, nhưng vị trí địa lý không dự báo được thành phần đó — mẫu lâu năm nhất còn hoạt động đã trên 100 năm tuổi.",
+    "s": "Nấm men hoang dã tạo CO₂ làm bánh nở, vi khuẩn lactic tạo axit làm bột chua và ức chế vi sinh vật lạ; tỉ lệ giữa hai nhóm quyết định độ chua và tốc độ nở. Đem 500 mẫu bột cái từ nhiều nước đi giải trình tự, thành phần vi sinh khác nhau rõ rệt giữa các mẫu nhưng vị trí địa lý lại không dự báo được thành phần đó — mẫu lâu năm nhất còn hoạt động đã trên 100 năm tuổi.",
     "tags": [
       "bot-chua",
       "vi-sinh",
@@ -1431,17 +1431,14 @@
     "id": "tp-325",
     "cat": "thuc-pham",
     "sub": "gia-vi-huong-lieu",
-    "t": "Lá nguyệt quế có tác dụng thật trong nước dùng, và các thử nghiệm mù cho thấy người ta phân biệt được",
-    "s": "Nó chứa eugenol và cineole tan chậm trong nước nóng. Thời gian ninh dài là điều kiện để các hợp chất này chiết ra đủ.",
+    "t": "Lá nguyệt quế đổi vị nước dùng thật, và người nếm mù phân biệt được nồi có lá với nồi không",
+    "s": "Lá chứa eugenol và cineole, hai chất thơm tan chậm trong nước nóng — vì thế nồi ninh vài chục phút mới chiết ra đủ, còn nếm lá khô sống thì gần như chỉ thấy đắng. Đưa cho người nếm hai nồi giống hệt nhau chỉ khác chỗ có lá hay không, họ chỉ ra được nồi nào là nồi nào.",
     "tags": [
       "nguyet-que",
       "huong-lieu",
       "chiet-xuat"
     ],
-    "src": "Serious Eats, thử nghiệm mù (2014); Belitz, Food Chemistry",
-    "xem_ok": [
-      "thieu-mo-neo"
-    ]
+    "src": "Serious Eats, thử nghiệm mù (2014); Belitz, Food Chemistry"
   },
   {
     "id": "tp-326",
@@ -1714,7 +1711,7 @@
     "cat": "thuc-pham",
     "sub": "an-toan-thuc-pham",
     "t": "Sữa tươi chưa tiệt trùng mang nguy cơ nhiễm khuẩn cao gấp nhiều lần sữa đã xử lý nhiệt",
-    "s": "Dữ liệu giám sát ở Mỹ cho thấy sữa chưa tiệt trùng chiếm tỉ lệ ổ dịch cao vượt xa tỉ trọng tiêu thụ của nó. Các lợi ích dinh dưỡng được quảng cáo chưa được chứng minh trong thử nghiệm.",
+    "s": "Trong dữ liệu giám sát ổ dịch thực phẩm ở Mỹ, sữa chưa tiệt trùng gây ra số ổ dịch cao gấp khoảng 840 lần so với tỉ trọng tiêu thụ của nó — nó chiếm chưa tới 1% lượng sữa uống mà đứng sau phần lớn ổ dịch liên quan tới sữa. Các lợi ích dinh dưỡng được quảng cáo thì chưa cái nào đứng vững khi đem ra đo: tiệt trùng gần như không đụng tới lượng canxi, đạm hay vitamin chính.",
     "tags": [
       "sua-tuoi",
       "tiet-trung",
@@ -1804,7 +1801,7 @@
     "cat": "thuc-pham",
     "sub": "nong-nghiep-thuc-pham",
     "t": "Ong mật không phải loài thụ phấn bản địa ở phần lớn nơi chúng được nuôi, và ong hoang dã thụ phấn hiệu quả hơn cho nhiều cây",
-    "s": "Nghiên cứu trên 41 hệ cây trồng cho thấy ong hoang dã tăng tỉ lệ đậu quả ở mọi hệ, còn ong mật chỉ tăng ở một số. Nuôi thêm ong mật không thay thế được mất đa dạng ong hoang.",
+    "s": "Trên 41 hệ cây trồng khắp thế giới, ong hoang dã làm tăng tỉ lệ đậu quả ở mọi hệ, còn ong mật chỉ làm tăng ở một số. Ong mật ghé nhiều hoa hơn nhưng vụng hơn: chúng gom phấn về giỏ ở chân thay vì để dính lông, nên phần phấn thật sự chuyển sang hoa khác ít hơn. Thả thêm đàn ong mật vì thế không bù được phần đa dạng ong hoang đã mất.",
     "tags": [
       "ong",
       "thu-phan",

@@ -556,7 +556,7 @@
     "cat": "toan-hoc",
     "sub": "nghich-ly-toan",
     "t": "Số 0,999... với vô hạn chữ số 9 bằng đúng 1, không phải xấp xỉ 1",
-    "s": "Nếu hai số thực khác nhau thì phải có số nằm giữa, mà không có số nào nằm giữa 0,999... và 1. Đây là một trong những kết quả toán học bị tranh cãi dai dẳng nhất dù chứng minh rất đơn giản.",
+    "s": "Nếu hai số thực khác nhau thì giữa chúng phải có ít nhất một số thực nữa, mà không có số nào nằm giữa 0,999... và 1. Cách khác cũng cho ra thế: 1/3 = 0,333... nên nhân ba vế lên là 1 = 0,999.... Đây là một trong những sự thật toán học bị cãi dai dẳng nhất, dù chỉ cần vài dòng để chứng minh.",
     "tags": [
       "so-thuc",
       "gioi-han",
@@ -1108,7 +1108,7 @@
     "cat": "toan-hoc",
     "sub": "hinh-hoc",
     "t": "Có đúng 17 nhóm đối xứng khác nhau cho hoạ tiết lặp lại trên mặt phẳng, không hơn không kém",
-    "s": "Cung điện Alhambra ở Tây Ban Nha được cho là chứa gần như đủ cả 17 nhóm, hàng thế kỷ trước khi toán học chứng minh chỉ có 17. Kết quả này được Fedorov chứng minh năm 1891.",
+    "s": "Cung điện Alhambra ở Tây Ban Nha chứa gần như đủ cả 17 nhóm, hàng thế kỷ trước khi có ai chứng minh rằng chỉ có 17. Yevgraf Fyodorov chứng minh con số đó năm 1891: mọi cách lát kín mặt phẳng bằng một hoạ tiết lặp lại đều rơi vào đúng 17 kiểu, phân biệt bởi tổ hợp các phép quay, phép soi gương và phép trượt mà hoạ tiết chịu được.",
     "tags": [
       "doi-xung",
       "nhom",
@@ -1481,7 +1481,7 @@
     "cat": "toan-hoc",
     "sub": "mat-ma",
     "t": "Số ngẫu nhiên dùng trong mật mã phải không đoán được, và một lỗi sinh số đã làm lộ khoá của hàng nghìn máy chủ",
-    "s": "Nghiên cứu năm 2012 quét toàn bộ Internet và tìm ra hàng chục nghìn khoá RSA chia sẻ thừa số chung, vì máy chủ sinh khoá ngay lúc mới khởi động khi chưa kịp thu thập đủ dữ liệu ngẫu nhiên từ môi trường. Một khi hai khoá dùng chung thừa số, cả hai bị phá trong tích tắc.",
+    "s": "Một đợt quét toàn bộ Internet năm 2012 moi ra hàng chục nghìn khoá RSA chia sẻ thừa số chung, vì máy chủ sinh khoá ngay lúc mới khởi động khi chưa kịp thu thập đủ dữ liệu ngẫu nhiên từ môi trường. Một khi hai khoá dùng chung một thừa số, chỉ cần tìm ước chung lớn nhất của hai số đó là phá được cả hai — việc mất chưa tới một phần nghìn giây.",
     "tags": [
       "ngau-nhien",
       "rsa",

@@ -98,7 +98,7 @@
     "cat": "suc-khoe",
     "sub": "van-dong",
     "t": "Nguy cơ tử vong tăng theo thời gian ngồi, nhưng ở người vận động 60–75 phút mỗi ngày thì mức tăng đó gần như biến mất",
-    "s": "Phân tích gộp trên hơn một triệu người cho thấy như vậy, nên câu 'ngồi là thuốc lá mới' đúng về hướng nhưng phóng đại về mức độ. Với người không đạt mức vận động đó, thứ đã đo được là ngắt quãng: đứng lên và di chuyển vài phút mỗi 30–60 phút làm giảm mức đường huyết và insulin sau ăn so với ngồi liền một mạch.",
+    "s": "Nguy cơ tử vong tăng theo số giờ ngồi, nhưng ở nhóm vận động 60–75 phút mỗi ngày thì mức tăng đó gần như biến mất — nên câu 'ngồi là thuốc lá mới' đúng về hướng và phóng đại về mức độ. Với người chưa đạt mức vận động đó, thứ đã đo được là ngắt quãng: đứng lên đi lại vài phút mỗi 30–60 phút làm giảm đường huyết và insulin sau ăn so với ngồi liền một mạch.",
     "tags": [
       "van-dong",
       "cong-so",
@@ -111,7 +111,7 @@
     "cat": "suc-khoe",
     "sub": "huyen-thoai-suc-khoe",
     "t": "Vitamin C không ngăn được cảm lạnh ở người bình thường",
-    "s": "Tổng quan Cochrane trên hàng chục thử nghiệm kết luận: bổ sung vitamin C thường xuyên không làm giảm tỉ lệ mắc cảm lạnh ở dân số chung, chỉ rút ngắn thời gian bệnh chút ít. Ngoại lệ có ý nghĩa là nhóm chịu stress thể chất cực đoan như vận động viên marathon và binh sĩ vùng lạnh.",
+    "s": "Uống vitamin C đều đặn không làm giảm tỉ lệ mắc cảm lạnh ở người bình thường; nó chỉ rút thời gian bệnh ngắn lại khoảng 8% ở người lớn, tức chưa tới một ngày trên một đợt cảm bảy ngày. Ngoại lệ đã đo được là nhóm chịu stress thể chất cực đoan — vận động viên marathon, vận động viên trượt tuyết, binh sĩ đóng quân vùng lạnh — ở đó tỉ lệ mắc giảm khoảng một nửa.",
     "tags": [
       "vitamin",
       "cam-lanh",
@@ -124,7 +124,7 @@
     "cat": "suc-khoe",
     "sub": "huyen-thoai-suc-khoe",
     "t": "Gan và thận lọc chất thải khỏi máu liên tục cả đời, và không có chế độ nước ép nào thêm được vào việc đó",
-    "s": "Chưa có thử nghiệm lâm sàng chất lượng nào chỉ ra được một chất độc cụ thể mà liệu trình 'thải độc' loại bỏ được. Chiều ngược lại thì đã có ca thật: một số liệu trình gây hạ natri máu — natri trong máu xuống quá thấp — hạ đường huyết, hoặc quá tải oxalate làm hỏng thận.",
+    "s": "Không một liệu trình 'thải độc' nào nêu được tên chất độc cụ thể mà nó loại bỏ, càng không đo được loại bỏ bao nhiêu. Chiều ngược lại thì đã có ca thật: một số liệu trình gây hạ natri máu — natri trong máu xuống quá thấp — hạ đường huyết, hoặc quá tải oxalate làm hỏng thận.",
     "tags": [
       "detox",
       "huyen-thoai",
@@ -150,7 +150,7 @@
     "cat": "suc-khoe",
     "sub": "benh-va-tam-soat",
     "t": "Cảm lạnh do virus, nhưng trời lạnh thật sự làm mũi bạn phòng thủ kém hơn",
-    "s": "Câu 'ra gió lạnh nên bị cảm' bị bác bỏ suốt nhiều thập kỷ vì nguyên nhân là virus. Nghiên cứu năm 2022 cho thấy khi nhiệt độ trong mũi giảm khoảng 5 độ, phản ứng miễn dịch bẩm sinh ở niêm mạc mũi suy giảm đáng kể — nghĩa là dân gian đúng một nửa, và cơ chế thì khác với điều họ nghĩ.",
+    "s": "Câu 'ra gió lạnh nên bị cảm' bị bác bỏ suốt nhiều thập kỷ vì thủ phạm là virus. Nhưng khi nhiệt độ trong mũi giảm khoảng 5 độ, tế bào niêm mạc mũi tiết ra ít hơn khoảng một nửa lượng túi nhỏ chứa chất kháng virus mà chúng thường bắn ra để bao vây mầm bệnh — hàng rào đầu tiên yếu đi. Dân gian đúng một nửa, và cơ chế thì khác hẳn điều họ nghĩ.",
     "tags": [
       "mien-dich",
       "cam-lanh",

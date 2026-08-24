@@ -72,7 +72,7 @@
     "cat": "kinh-doanh",
     "sub": "su-nghiep",
     "t": "Làm việc trên 55 giờ mỗi tuần liên quan tới tăng nguy cơ đột quỵ và bệnh tim",
-    "s": "Phân tích của WHO và ILO trên 194 quốc gia ước tính hàng trăm nghìn ca tử vong mỗi năm gắn với thời gian làm việc dài. Đây là nghiên cứu quan sát nên không chứng minh nhân quả tuyệt đối, nhưng quy mô dữ liệu và tính nhất quán khiến nó khó bỏ qua.",
+    "s": "Đối chiếu giờ làm với bệnh tật ở 194 quốc gia, làm trên 55 giờ mỗi tuần gắn với hàng trăm nghìn ca tử vong do đột quỵ và bệnh tim thiếu máu cục bộ mỗi năm. Đây là dữ liệu quan sát nên nhân quả chưa chắc — người làm nhiều giờ cũng ngủ ít hơn và ít vận động hơn — nhưng quy mô và tính nhất quán giữa các nước khiến nó khó bỏ qua.",
     "tags": [
       "suc-khoe",
       "lam-viec",
@@ -85,7 +85,7 @@
     "cat": "kinh-doanh",
     "sub": "su-nghiep",
     "t": "Năng suất theo giờ giảm rõ sau khoảng 50 giờ mỗi tuần, và về gần không sau 55",
-    "s": "Nghiên cứu trên nhân viên trung tâm cuộc gọi cho thấy sản lượng không tăng tương ứng với giờ làm sau một ngưỡng, và người làm 70 giờ tạo ra gần như cùng lượng đầu ra với người làm 55 giờ. Phần 15 giờ dư đó không mất đi — nó bị chuyển thành lỗi và mệt mỏi.",
+    "s": "Đo sản lượng của nhân viên trung tâm cuộc gọi theo giờ làm, đầu ra thôi tăng tương ứng sau một ngưỡng: người làm 70 giờ tạo ra gần như cùng lượng đầu ra với người làm 55 giờ. Phần 15 giờ dư đó không biến mất — nó chuyển thành lỗi phải sửa lại và mệt mỏi kéo sang hôm sau.",
     "tags": [
       "nang-suat",
       "gio-lam",
@@ -140,7 +140,7 @@
     "cat": "kinh-doanh",
     "sub": "su-nghiep",
     "t": "Thu nhập cả đời bị ảnh hưởng mạnh bởi mức lương khởi điểm",
-    "s": "Vì tăng lương thường tính theo phần trăm trên mức hiện tại, chênh lệch ban đầu được nhân lên qua nhiều năm. Nghiên cứu về người tốt nghiệp vào năm suy thoái cho thấy tác động tiêu cực lên thu nhập kéo dài cả thập kỷ.",
+    "s": "Vì tăng lương thường tính theo phần trăm trên mức hiện tại, một chênh lệch nhỏ ở điểm xuất phát được nhân lên qua nhiều năm. Người tốt nghiệp đúng năm suy thoái chịu mức lương khởi điểm thấp hơn, và khoảng cách thu nhập so với khoá trước còn đo được sau cả thập kỷ mới khép lại.",
     "tags": [
       "luong",
       "su-nghiep",
@@ -166,7 +166,7 @@
     "cat": "kinh-doanh",
     "sub": "su-nghiep",
     "t": "Chuyển việc thường tăng lương nhanh hơn ở lại — và đó là thất bại của thị trường nội bộ",
-    "s": "Dữ liệu tiền lương ở nhiều nước cho thấy người đổi việc có mức tăng lương cao hơn người ở lại trong phần lớn giai đoạn. Điều này không nói ai cũng nên nhảy việc, nhưng nó nói rằng lòng trung thành không tự động được định giá đúng.",
+    "s": "Ở phần lớn giai đoạn và phần lớn nước có thống kê tiền lương, người đổi việc tăng lương nhanh hơn người ở lại — chênh lệch thường vài điểm phần trăm mỗi năm. Điều này không nói ai cũng phải nhảy việc, nhưng nó nói rằng thị trường bên ngoài định giá một người nhanh hơn bộ máy lương bên trong.",
     "tags": [
       "luong",
       "su-nghiep",

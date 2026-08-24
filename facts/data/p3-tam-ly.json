@@ -57,7 +57,10 @@
       "danh-gia",
       "phan-cuc"
     ],
-    "src": "Lord, Ross & Lepper, Journal of Personality and Social Psychology (1979)"
+    "src": "Lord, Ross & Lepper, Journal of Personality and Social Psychology (1979)",
+    "xem_ok": [
+      "s-ke-nguoi-tim-ra"
+    ]
   },
   {
     "id": "tl-207",
@@ -76,7 +79,7 @@
     "cat": "tam-ly",
     "sub": "thien-kien",
     "t": "'Cứu được 200 trên 600 người' và 'để 400 trên 600 người chết' làm đa số chọn ngược nhau",
-    "s": "Hai câu mô tả đúng cùng một chương trình, nhưng câu đầu khiến đa số chọn phương án chắc chắn còn câu sau khiến đa số chọn phương án mạo hiểm. Đây là kết quả nền tảng cho thấy con người phản ứng với việc điều gì được đóng khung là 'được' hay 'mất', và nó vẫn xuất hiện ở bác sĩ, luật sư và người có huấn luyện thống kê.",
+    "s": "Hai câu mô tả đúng cùng một chương trình, nhưng câu đầu khiến đa số chọn phương án chắc chắn còn câu sau khiến đa số chọn phương án mạo hiểm. Con người không phản ứng với con số mà phản ứng với việc con số được đóng khung là 'được' hay 'mất' — và điều đó vẫn xảy ra ở bác sĩ, luật sư và người có huấn luyện thống kê.",
     "tags": [
       "dong-khung",
       "trien-vong"
@@ -409,7 +412,7 @@
     "cat": "tam-ly",
     "sub": "cam-xuc",
     "t": "Đi bộ trong công viên cải thiện tâm trạng và khả năng tập trung hơn đi bộ cùng thời lượng trong phố",
-    "s": "Các thử nghiệm cho thấy đi bộ trong công viên cải thiện tâm trạng và khả năng tập trung hơn đi bộ cùng thời lượng trong phố. Hiệu ứng không lớn nhưng nhất quán và gần như không có chi phí, nên nó là một trong những can thiệp có tỉ lệ lợi ích trên nỗ lực cao nhất.",
+    "s": "Đi bộ 50 phút trong công viên cải thiện tâm trạng và khả năng tập trung hơn đi bộ đúng 50 phút dọc một trục đường đông xe. Hiệu ứng không lớn nhưng nhất quán và gần như không tốn gì, nên tỉ lệ lợi ích trên nỗ lực thuộc loại cao nhất trong các can thiệp tâm trạng đã đo được.",
     "tags": [
       "thien-nhien",
       "chu-y"
@@ -481,7 +484,7 @@
     "cat": "tam-ly",
     "sub": "cam-xuc",
     "t": "Đa số người quay lại gần mức hạnh phúc cũ sau biến cố lớn, trừ thất nghiệp kéo dài, ly hôn và mất người thân",
-    "s": "Dữ liệu theo dõi dài hạn cho thấy đa số người trở lại gần mức hạnh phúc cơ sở sau các sự kiện lớn — nhưng không phải mọi sự kiện: thất nghiệp kéo dài, ly hôn và mất người thân để lại dịch chuyển lâu hơn nhiều so với các sự kiện khác. Dữ liệu bảng của Đức theo dõi hơn 30.000 người cho thấy các nhóm này không trở lại mức cơ sở sau nhiều năm.",
+    "s": "Sau một biến cố lớn, đa số người trôi trở lại gần mức hạnh phúc cơ sở của chính mình trong vòng một đến hai năm. Theo dõi hơn 30.000 người ở Đức suốt nhiều năm, ba nhóm không quay lại mức cũ: thất nghiệp kéo dài, ly hôn, và mất người thân. Trúng số thì mức hạnh phúc trở lại nền cũ trong khoảng một năm.",
     "tags": [
       "hoi-phuc",
       "thich-ung"
@@ -787,7 +790,7 @@
     "cat": "tam-ly",
     "sub": "ban-than",
     "t": "Người đối xử với thất bại của mình như với thất bại của một người bạn thì kiên trì lâu hơn và ít trốn tránh hơn",
-    "s": "Trái với trực giác 'phải nghiêm khắc mới tiến bộ', các nghiên cứu cho thấy người đối xử với thất bại của mình như với thất bại của một người bạn thì kiên trì hơn, chịu nhận lỗi hơn và ít trốn tránh hơn. Tự phê phán tạo ra động lực tránh, vốn dễ dẫn tới bỏ. Trong các thử nghiệm, chênh lệch thời gian kiên trì giữa 2 nhóm đủ lớn để đo được ngay trong 1 buổi.",
+    "s": "Trái với trực giác 'phải nghiêm khắc mới tiến bộ', người đối xử với thất bại của mình như với thất bại của một người bạn thì kiên trì lâu hơn, chịu nhận lỗi hơn và ít trốn tránh hơn. Tự phê phán tạo ra động lực tránh né, mà tránh né thì dẫn tới bỏ cuộc. Chênh lệch thời gian kiên trì giữa hai nhóm đủ lớn để đo được ngay trong một buổi.",
     "tags": [
       "tu-thuong",
       "kien-tri"
@@ -967,7 +970,7 @@
     "cat": "tam-ly",
     "sub": "nhin-nguoi-khac",
     "t": "Tiếp xúc giữa các nhóm chỉ giảm định kiến khi thoả một số điều kiện, không phải mọi tiếp xúc",
-    "s": "Gộp hàng trăm nghiên cứu lại cho thấy tiếp xúc giảm định kiến rõ nhất khi hai bên có vị thế tương đương, có mục tiêu chung, phải hợp tác với nhau và được thể chế hỗ trợ. Tiếp xúc không có các điều kiện đó có thể không giảm định kiến, và trong một số trường hợp làm nó nặng thêm.",
+    "s": "Tiếp xúc giữa hai nhóm giảm định kiến rõ nhất khi thoả bốn điều kiện cùng lúc: hai bên có vị thế tương đương trong tình huống đó, có mục tiêu chung, phải hợp tác mới đạt được mục tiêu, và được thể chế hoặc luật lệ tại chỗ ủng hộ. Thiếu các điều kiện đó thì tiếp xúc có thể không giảm định kiến, và trong một số trường hợp làm nó nặng thêm.",
     "tags": [
       "dinh-kien",
       "tiep-xuc"
@@ -1315,7 +1318,7 @@
     "cat": "tam-ly",
     "sub": "huyen-thoai-tam-ly",
     "t": "Trò chơi điện tử bạo lực không có liên hệ rõ với bạo lực thực tế",
-    "s": "Ferguson gộp lại hàng trăm nghiên cứu và kết luận phần liên hệ còn lại sau khi trừ thiên lệch công bố là quá nhỏ để có ý nghĩa thực tế. Một nghiên cứu năm 2019 đăng ký giả thuyết trước khi thu dữ liệu và đo hành vi qua lời người chăm sóc thay vì để thanh thiếu niên tự khai — hai cách chặn thiên lệch — cũng không tìm thấy liên hệ nào. Các lần gộp kết quả trước đó cho kết luận trái ngược nhau.",
+    "s": "Sau khi trừ thiên lệch công bố khỏi hàng trăm kết quả đã gộp, phần liên hệ còn lại giữa trò chơi bạo lực và hành vi bạo lực thực tế quá nhỏ để có ý nghĩa thực tế. Một phép kiểm năm 2019 đăng ký giả thuyết trước khi thu dữ liệu và đo hành vi qua lời người chăm sóc thay vì để thanh thiếu niên tự khai — hai cách chặn thiên lệch — cũng không tìm ra liên hệ nào. Các lần gộp trước đó cho kết luận trái ngược nhau, nên đây là chỗ còn tranh cãi.",
     "tags": [
       "tro-choi",
       "bao-luc"
@@ -1387,7 +1390,7 @@
     "cat": "tam-ly",
     "sub": "huyen-thoai-tam-ly",
     "t": "Trẻ con không học tốt hơn nhờ video giáo dục dưới hai tuổi, và có thể học kém hơn",
-    "s": "Các thử nghiệm cho thấy trẻ dưới khoảng 2 tuổi học từ vựng từ người thật tốt hơn nhiều so với từ màn hình, hiện tượng gọi là thiếu hụt chuyển giao từ video. Một số nghiên cứu còn tìm thấy liên hệ nghịch giữa thời gian xem và vốn từ ở tuổi này.",
+    "s": "Trẻ dưới khoảng hai tuổi học từ vựng từ người thật tốt hơn nhiều so với từ màn hình, kể cả khi nội dung trên màn hình giống hệt — hiện tượng gọi là thiếu hụt chuyển giao từ video. Ở tuổi này còn đo được liên hệ nghịch giữa thời gian xem và vốn từ. Khoảng cách khép lại dần sau hai tuổi rưỡi, và gần như biến mất nếu màn hình là cuộc gọi video có người thật đáp lại.",
     "tags": [
       "tre-nho",
       "man-hinh"

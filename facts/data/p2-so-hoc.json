@@ -17,8 +17,8 @@
     "id": "sh-110",
     "cat": "so-hoc",
     "sub": "co-mau-p-value",
-    "t": "Thử nhiều cách phân tích rồi chỉ báo cáo cái đẹp nhất đẩy tỉ lệ phát hiện giả từ 5% lên trên 60%",
-    "s": "Thử nhiều biến, nhiều cách chia nhóm, và dừng thu thập dữ liệu ngay khi con số trông đẹp — mô phỏng cho thấy chỉ vài mức tự do như vậy là đủ đưa tỉ lệ dương tính giả từ 5% lên trên 60%. Cách chống hiệu quả nhất là công bố kế hoạch phân tích trước khi xem dữ liệu, để không còn chỗ chọn sau.",
+    "t": "Thử nhiều cách phân tích rồi chỉ báo cáo cái đẹp nhất đẩy tỉ lệ báo động giả từ 5% lên trên 60%",
+    "s": "Thử nhiều biến, thử nhiều cách chia nhóm, loại vài giá trị bất thường, và dừng thu thập dữ liệu ngay khi con số trông đẹp: chỉ bốn mức tự do như vậy là đủ đưa tỉ lệ dương tính giả từ 5% lên trên 60%. Cách chống hiệu quả nhất là công bố kế hoạch phân tích trước khi xem dữ liệu, để không còn chỗ nào chọn sau.",
     "tags": [
       "p-value",
       "khoa-hoc",
@@ -79,7 +79,10 @@
       "khoa-hoc",
       "canh-bao"
     ],
-    "src": "Vấn đề đa so sánh; Ioannidis, PLOS Medicine (2005)"
+    "src": "Vấn đề đa so sánh; Ioannidis, PLOS Medicine (2005)",
+    "xem_ok": [
+      "s-ke-nguoi-tim-ra"
+    ]
   },
   {
     "id": "sh-117",
@@ -92,7 +95,10 @@
       "xuat-ban",
       "thien-lech"
     ],
-    "src": "Rosenthal, 'The File Drawer Problem', Psychological Bulletin (1979); yêu cầu đăng ký của ICMJE (2005)"
+    "src": "Rosenthal, 'The File Drawer Problem', Psychological Bulletin (1979); yêu cầu đăng ký của ICMJE (2005)",
+    "xem_ok": [
+      "s-ke-nguoi-tim-ra"
+    ]
   },
   {
     "id": "sh-118",

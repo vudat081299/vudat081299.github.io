@@ -251,8 +251,7 @@ tên trong danh sách thì không bị đụng tới. Viết xong một cụm th
 ### 1.8 Phần tóm tắt kể **thế giới**, không kể **ai tìm ra**
 
 > Cổng này được thêm ngày 24/08/2026 sau khi chủ trang nói rằng fact trong thư viện "mang
-> tính học thuật rất khó đọc". Đo thử: **94 fact có `s` mở đầu bằng một nghiên cứu làm chủ
-> ngữ** — *"Các nghiên cứu về mất nước cho thấy…"*, *"Tổng hợp hơn 200 nghiên cứu cho
+> tính học thuật rất khó đọc". Đo thử: **94 fact có `s` lấy một nghiên cứu làm chủ ngữ** — *"Các nghiên cứu về mất nước cho thấy…"*, *"Tổng hợp hơn 200 nghiên cứu cho
 > thấy…"*, *"Thí nghiệm hành vi cho thấy…"*. Cụm đó ăn mất phần đầu câu — chỗ đắt nhất
 > trong 217 ký tự — mà không thêm một chữ nào về thế giới.
 
@@ -270,8 +269,8 @@ quả chưa chắc"*, *"cỡ mẫu 22 người"*, *"chưa lặp lại được �
 dán một cái nhãn *"các nghiên cứu cho thấy"* lên đầu câu. Nhãn đó không cho người đọc biết
 bằng chứng mạnh hay yếu; nó chỉ làm câu dài thêm.
 
-Cổng `s-ke-nguoi-tim-ra` báo mức `XEM`, độ chính xác đo được **khoảng 85%** (94 khớp,
-~80 lỗi thật). Bốn nhóm báo oan, và cả bốn đều có lý do giống nhau — chủ ngữ **đúng ra**
+Cổng `s-ke-nguoi-tim-ra` soi **cả tiêu đề lẫn tóm tắt** và báo mức `XEM`, độ chính xác
+đo được **khoảng 85%** (94 khớp trên `s`, ~80 lỗi thật; quét cả `t` thì thành 102). Bốn nhóm báo oan, và cả bốn đều có lý do giống nhau — chủ ngữ **đúng ra**
 phải là một nghiên cứu, vì fact nói về chính chuyện nghiên cứu:
 
 | Nhóm | Ca mẫu |

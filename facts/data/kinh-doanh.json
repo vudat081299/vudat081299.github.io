@@ -4,7 +4,7 @@
     "cat": "kinh-doanh",
     "sub": "tuyen-dung",
     "t": "Phỏng vấn tự do dự báo hiệu suất kém hơn bài kiểm tra thực hành",
-    "s": "Tổng hợp gần một thế kỷ dữ liệu tuyển dụng cho thấy phỏng vấn phi cấu trúc là một trong những công cụ dự báo yếu, trong khi bài làm thử công việc, phỏng vấn có cấu trúc chấm theo thang điểm định sẵn và bài kiểm tra năng lực nhận thức dự báo tốt hơn hẳn.",
+    "s": "Gộp gần một thế kỷ dữ liệu tuyển dụng lại, phỏng vấn phi cấu trúc nằm trong nhóm công cụ dự báo yếu nhất: người phỏng vấn tự chọn câu hỏi, tự chấm theo cảm nhận, nên phần lớn thứ đo được là mức dễ chịu khi trò chuyện. Bài làm thử đúng công việc, phỏng vấn có cấu trúc chấm theo thang định sẵn và bài kiểm tra năng lực nhận thức dự báo tốt hơn hẳn.",
     "d": "Bản cập nhật 2016 của Schmidt và cộng sự điều chỉnh giảm nhiều hệ số so với bản 1998 kinh điển, nhưng thứ tự thì giữ nguyên: có cấu trúc luôn thắng không cấu trúc. Điều đáng nói là gần như mọi nhà tuyển dụng đều tin trực giác của mình là ngoại lệ.",
     "tags": [
       "tuyen-dung",
@@ -60,7 +60,7 @@
     "cat": "kinh-doanh",
     "sub": "to-chuc",
     "t": "An toàn tâm lý — dám nói ra cái mình chưa biết mà không bị phạt — là yếu tố phân biệt nhóm mạnh rõ nhất trong 180 nhóm được khảo sát",
-    "s": "Dự án Aristotle khảo sát 180 nhóm nội bộ và không tìm thấy công thức về thành phần con người. Yếu tố nổi lên mạnh nhất là an toàn tâm lý: cảm giác có thể nói ra điều mình chưa biết, thừa nhận sai sót hoặc phản đối, mà không bị trừng phạt.",
+    "s": "Google mổ 180 nhóm nội bộ để tìm công thức về thành phần con người và không tìm ra: nhóm mạnh không khác nhóm yếu ở chỉ số IQ, thâm niên hay tính cách của thành viên. Thứ phân biệt rõ nhất là an toàn tâm lý — cảm giác có thể nói ra điều mình chưa biết, thừa nhận sai sót hoặc phản đối, mà không bị trừng phạt.",
     "d": "Khái niệm này do Amy Edmondson đưa ra từ 1999 sau một phát hiện ngược đời: các đội y tá được đánh giá tốt nhất lại BÁO CÁO nhiều lỗi hơn — không phải vì họ sai nhiều hơn mà vì họ dám nói ra. Nghĩa là số lỗi được ghi nhận trong một tổ chức đo hai thứ trộn vào nhau: số lỗi thật và mức an toàn để khai lỗi.",
     "tags": [
       "doi-nhom",
@@ -74,7 +74,7 @@
     "cat": "kinh-doanh",
     "sub": "dam-phan",
     "t": "Người nêu con số trước trong đàm phán thường có lợi thế",
-    "s": "Trái với lời khuyên phổ biến 'đừng bao giờ ra giá trước', các thí nghiệm đàm phán cho thấy đề nghị đầu tiên neo kết quả cuối và bên đưa ra nó thường lấy phần lớn hơn — miễn là con số có cơ sở và bạn có thông tin về vùng thoả thuận. Khi bạn hoàn toàn mù thông tin thì mới nên để đối phương nói trước.",
+    "s": "Đề nghị đầu tiên neo cả cuộc thương lượng: mọi con số nói sau đó đều được so với nó, kể cả khi bên kia biết mình đang bị neo. Bên đưa ra con số đầu thường lấy phần lớn hơn — miễn là con số có cơ sở và họ biết đại khái vùng thoả thuận nằm ở đâu. Ngoại lệ là khi một bên hoàn toàn mù thông tin về giá trị món hàng.",
     "tags": [
       "dam-phan",
       "gia",

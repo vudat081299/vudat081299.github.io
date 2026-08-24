@@ -59,7 +59,7 @@
     "cat": "cong-nghe",
     "sub": "rieng-tu-quang-cao",
     "t": "Bốn điểm dữ liệu vị trí đủ để nhận ra bạn trong số một triệu người",
-    "s": "Phân tích dữ liệu di động cho thấy chỉ cần bốn cặp thời gian–địa điểm là đủ để xác định duy nhất 95% cá nhân trong một tập dữ liệu đã bỏ hết tên. Lý do là lịch di chuyển của mỗi người gần như độc nhất: chỗ ngủ và chỗ làm đã lọc ra rất ít người, thêm hai điểm nữa là gần như chỉ còn một.",
+    "s": "Trong một tập dữ liệu di động đã bỏ hết tên, chỉ bốn cặp thời gian–địa điểm là đủ để xác định duy nhất 95% cá nhân. Lý do là lịch di chuyển của mỗi người gần như độc nhất: chỗ ngủ và chỗ làm đã lọc ra rất ít người, thêm hai điểm nữa là gần như chỉ còn một. Xoá tên khỏi dữ liệu vị trí vì thế không phải là ẩn danh.",
     "tags": [
       "rieng-tu",
       "an-danh",
@@ -127,7 +127,7 @@
     "cat": "cong-nghe",
     "sub": "ai-thuat-toan",
     "t": "Thuật toán gợi ý tối ưu cho mức tương tác, và nội dung gây phẫn nộ có mức tương tác cao nhất",
-    "s": "Phân tích các bài đăng chính trị cho thấy nội dung tấn công phe đối lập được chia sẻ nhiều hơn đáng kể so với nội dung ủng hộ phe mình. Hệ thống không được thiết kế để chia rẽ — nó chỉ khuếch đại thứ đã có sẵn tỉ lệ nhấp cao.",
+    "s": "Đếm lượt chia sẻ trên các bài đăng chính trị, nội dung tấn công phe đối lập lan xa hơn hẳn nội dung ủng hộ phe mình — mỗi từ chỉ phe đối lập trong bài làm tăng đáng kể xác suất được chia sẻ lại. Hệ thống gợi ý không được thiết kế để chia rẽ; nó chỉ tối ưu cho tương tác, và thứ có tương tác cao nhất sẵn là thứ làm người ta tức giận.",
     "tags": [
       "thuat-toan",
       "mang-xa-hoi",
@@ -331,7 +331,7 @@
     "cat": "cong-nghe",
     "sub": "may-tinh-chip",
     "t": "Emoji có mã Unicode chung nhưng mỗi nền tảng vẽ khác nhau, và điều đó từng gây hiểu lầm",
-    "s": "Nghiên cứu cho thấy cùng một emoji được người gửi và người nhận diễn giải với cảm xúc trái ngược khi hai bên dùng hệ điều hành khác nhau. Một số biểu tượng đã được các hãng vẽ lại sau khi phát hiện chênh lệch quá lớn.",
+    "s": "Cùng một mã emoji được người gửi và người nhận diễn giải với cảm xúc trái ngược khi hai bên dùng hệ điều hành khác nhau, vì mỗi hãng tự vẽ hình của mình: có thời biểu tượng 'mặt cười nhăn răng' hiện ra vui vẻ trên máy này và đau khổ trên máy kia. Một số biểu tượng đã được các hãng vẽ lại sau khi chênh lệch bị đo ra.",
     "tags": [
       "emoji",
       "unicode",

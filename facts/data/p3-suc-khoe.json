@@ -120,7 +120,7 @@
     "cat": "suc-khoe",
     "sub": "giac-ngu",
     "t": "Người trẻ tuổi thật sự có nhịp sinh học muộn hơn, không phải chỉ do thói quen",
-    "s": "Ở tuổi dậy thì, thời điểm tiết melatonin dịch muộn khoảng một đến hai giờ, và nó trở lại sớm hơn sau tuổi hai mươi. Đây là cơ sở sinh học cho đề xuất lùi giờ vào học, và các nghiên cứu ở nơi đã lùi giờ ghi nhận thời lượng ngủ tăng và điểm số cải thiện.",
+    "s": "Ở tuổi dậy thì, thời điểm cơ thể bắt đầu tiết melatonin dịch muộn khoảng một đến hai giờ so với trẻ nhỏ và người trưởng thành, rồi trở lại sớm hơn sau tuổi hai mươi. Đây là cơ sở sinh học cho đề xuất lùi giờ vào học; ở những nơi đã lùi, thời lượng ngủ của học sinh tăng và điểm số cải thiện.",
     "tags": [
       "tuoi-day-thi",
       "gio-hoc"
@@ -144,7 +144,7 @@
     "cat": "suc-khoe",
     "sub": "giac-ngu",
     "t": "Ngủ đủ làm tăng khả năng chống nhiễm, và điều này đo được bằng đáp ứng vaccine",
-    "s": "Trong các thử nghiệm, người bị giới hạn giấc ngủ quanh thời điểm tiêm tạo ra ít kháng thể hơn. Một nghiên cứu khác cho thấy người ngủ ít hơn 6 giờ có nguy cơ mắc cảm lạnh cao hơn khi được phơi nhiễm chủ động với virus.",
+    "s": "Người bị giới hạn giấc ngủ quanh thời điểm tiêm vaccine tạo ra ít kháng thể hơn rõ rệt so với người ngủ đủ, và khoảng cách còn đo được sau nhiều tháng. Ở chiều khác, người ngủ dưới 6 giờ có nguy cơ mắc cảm lạnh cao hơn khi được nhỏ virus vào mũi trong điều kiện kiểm soát — tức phơi nhiễm như nhau, kết quả khác nhau.",
     "tags": [
       "mien-dich",
       "vaccine"
@@ -240,7 +240,7 @@
     "cat": "suc-khoe",
     "sub": "van-dong",
     "t": "Tập nhịp điệu cải thiện khả năng lập kế hoạch và tập trung ở người lớn tuổi trong các thử nghiệm ngẫu nhiên",
-    "s": "Các thử nghiệm ngẫu nhiên cho thấy tập nhịp điệu cải thiện một số chức năng điều hành và có liên hệ với thể tích vùng hải mã. Hiệu ứng vừa phải và không phải mọi nghiên cứu đều tìm thấy, nhưng nó vững hơn hầu hết sản phẩm 'luyện não'.",
+    "s": "Ở người lớn tuổi được phân ngẫu nhiên vào nhóm tập nhịp điệu và nhóm không, nhóm tập cải thiện một số chức năng điều hành như lập kế hoạch và chuyển đổi nhiệm vụ, và có thể tích vùng hải mã lớn hơn. Hiệu ứng vừa phải và không phải phép kiểm nào cũng tìm thấy, nhưng nó vững hơn hầu hết sản phẩm 'luyện não' đang bán.",
     "tags": [
       "nhan-thuc",
       "tuoi-gia"
@@ -264,7 +264,7 @@
     "cat": "suc-khoe",
     "sub": "van-dong",
     "t": "Chạy không làm hỏng khớp gối ở người không có tổn thương sẵn",
-    "s": "Trái với lo lắng phổ biến, các nghiên cứu theo dõi dài hạn cho thấy người chạy giải trí có tỉ lệ thoái hoá khớp gối thấp hơn người ít vận động. Yếu tố nguy cơ thật là tăng tải quá nhanh và chấn thương trước đó, không phải bản thân việc chạy.",
+    "s": "Trái với lo lắng phổ biến, người chạy giải trí có tỉ lệ thoái hoá khớp gối thấp hơn người ít vận động — khoảng 3,5% so với 10% trong các nhóm được theo dõi dài hạn. Yếu tố nguy cơ thật là tăng tải quá nhanh và chấn thương có sẵn, không phải bản thân việc chạy. Ở vận động viên chạy chuyên nghiệp thì tỉ lệ lại cao hơn, vì tải trọng khác hẳn.",
     "tags": [
       "chay",
       "khop"
@@ -339,7 +339,7 @@
     "cat": "suc-khoe",
     "sub": "an-uong",
     "t": "Cà phê có liên hệ với giảm nguy cơ tử vong, kể cả loại đã lọc caffeine",
-    "s": "Các nghiên cứu theo dõi lớn cho thấy đường cong hình chữ U với đáy quanh 3–4 cốc mỗi ngày, và hiệu ứng tương tự với cà phê không caffeine — gợi ý rằng các hợp chất khác chứ không phải caffeine đứng sau. Đây là dữ liệu quan sát nên nhân quả chưa chắc.",
+    "s": "Quan hệ giữa lượng cà phê và nguy cơ tử vong có dạng chữ U với đáy quanh 3–4 cốc mỗi ngày, và cà phê đã lọc caffeine cho hình dạng tương tự — gợi ý rằng các hợp chất khác chứ không phải caffeine đứng sau. Đây là dữ liệu quan sát: người uống cà phê đều đặn khác người không uống ở nhiều thứ khác, nên nhân quả chưa chắc.",
     "tags": [
       "ca-phe",
       "tu-vong"
@@ -363,7 +363,7 @@
     "cat": "suc-khoe",
     "sub": "an-uong",
     "t": "Bỏ bữa sáng không làm tổng năng lượng tiêu hao giảm",
-    "s": "Trong các thử nghiệm ngẫu nhiên, việc ăn hay bỏ bữa sáng không tạo khác biệt về tổng năng lượng tiêu hao, và nhóm ăn bữa sáng có xu hướng nạp thêm calo trong ngày. Ý tưởng bữa sáng 'khởi động chuyển hoá' không có cơ sở thực nghiệm. Thử nghiệm ngẫu nhiên 6 tuần ở Bath không tìm thấy khác biệt về tiêu hao năng lượng giữa nhóm ăn sáng và nhóm nhịn.",
+    "s": "Ăn hay bỏ bữa sáng không tạo khác biệt về tổng năng lượng tiêu hao trong ngày, và nhóm ăn sáng có xu hướng nạp thêm calo chứ không bớt. Ý tưởng bữa sáng 'khởi động chuyển hoá' không có cơ sở thực nghiệm: một phép kiểm ngẫu nhiên kéo dài 6 tuần ở Bath đo trực tiếp mức tiêu hao và không thấy chênh lệch giữa nhóm ăn sáng và nhóm nhịn.",
     "tags": [
       "bua-sang",
       "chuyen-hoa"
@@ -414,7 +414,7 @@
     "cat": "suc-khoe",
     "sub": "an-uong",
     "t": "Đường trong nước uống có hại hơn cùng lượng đường trong thức ăn đặc",
-    "s": "Đồ uống có đường không tạo cảm giác no tương ứng, nên năng lượng từ chúng gần như cộng thêm vào tổng nạp. Đây là lý do các nghiên cứu tìm thấy liên hệ giữa nước ngọt và tăng cân mạnh hơn so với đường nói chung.",
+    "s": "Đồ uống có đường không tạo cảm giác no tương ứng với lượng calo nó mang, nên năng lượng từ chúng gần như cộng thẳng vào tổng nạp trong ngày thay vì thay thế phần ăn khác. Vì vậy liên hệ giữa nước ngọt và tăng cân mạnh hơn hẳn liên hệ giữa đường nói chung và tăng cân.",
     "tags": [
       "nuoc-ngot",
       "no"
@@ -621,7 +621,7 @@
     "cat": "suc-khoe",
     "sub": "benh-va-tam-soat",
     "t": "Mất thính lực không điều trị liên quan tới suy giảm nhận thức và nguy cơ mất trí nhớ",
-    "s": "Các nghiên cứu theo dõi tìm thấy liên hệ rõ, và thử nghiệm ACHIEVE cho thấy dùng máy trợ thính làm chậm suy giảm nhận thức ở nhóm nguy cơ cao. Điều này biến máy trợ thính từ tiện nghi thành can thiệp sức khoẻ.",
+    "s": "Mất thính lực không điều trị đi kèm tốc độ suy giảm nhận thức nhanh hơn và nguy cơ mất trí nhớ cao hơn. Trong thử nghiệm ACHIEVE, ở nhóm người cao tuổi có nguy cơ cao, dùng máy trợ thính làm chậm mức suy giảm nhận thức khoảng một nửa sau ba năm — điều biến máy trợ thính từ một tiện nghi thành một can thiệp sức khoẻ.",
     "tags": [
       "thinh-luc",
       "nhan-thuc"
@@ -729,7 +729,7 @@
     "cat": "suc-khoe",
     "sub": "thuoc-va-vaccine",
     "t": "Dùng aspirin hằng ngày để phòng bệnh tim không còn được khuyến nghị cho người chưa từng có biến cố",
-    "s": "Các thử nghiệm lớn cho thấy ở người nguy cơ trung bình, lợi ích giảm biến cố bị bù bởi tăng nguy cơ xuất huyết. Khuyến nghị đã đổi trong những năm gần đây, nên đây là ví dụ về một lời khuyên phổ biến bị đảo lại bởi bằng chứng mới.",
+    "s": "Ở người chưa từng có biến cố tim mạch và có nguy cơ trung bình, phần biến cố mà aspirin ngăn được gần như bằng đúng phần xuất huyết tiêu hoá và xuất huyết não mà nó gây thêm. Khuyến nghị đã đổi trong những năm gần đây vì lý do đó — một ví dụ về lời khuyên phổ biến bị đảo ngược bằng dữ liệu mới, chứ không phải bằng tranh luận.",
     "tags": [
       "aspirin",
       "phong-ngua"
@@ -768,7 +768,7 @@
     "cat": "suc-khoe",
     "sub": "thuoc-va-vaccine",
     "t": "Vitamin D bổ sung có bằng chứng cho xương ở người thiếu, và ít bằng chứng cho những thứ khác",
-    "s": "Các thử nghiệm lớn không tìm thấy tác dụng của bổ sung vitamin D lên ung thư, tim mạch hay nhiễm trùng ở người không thiếu. Đây là ví dụ điển hình về một chất có tương quan mạnh trong nghiên cứu quan sát mà không cho kết quả khi thử nghiệm can thiệp.",
+    "s": "Ở người không thiếu vitamin D, bổ sung thêm không làm giảm nguy cơ ung thư, bệnh tim mạch hay nhiễm trùng trong các thử nghiệm nhiều năm trên hàng chục nghìn người. Đây là ví dụ điển hình của một chất có tương quan rất mạnh trong dữ liệu quan sát mà không cho kết quả khi đem ra can thiệp thật — vì nồng độ vitamin D thấp phần lớn là dấu hiệu của ít ra ngoài và sức khoẻ kém, không phải nguyên nhân.",
     "tags": [
       "vitamin-d",
       "bang-chung"
@@ -840,7 +840,7 @@
     "cat": "suc-khoe",
     "sub": "suc-khoe-tinh-than",
     "t": "Hỏi trực tiếp về ý định tự tử không làm tăng nguy cơ",
-    "s": "Đây là một trong các lo ngại phổ biến nhất và nó đã được kiểm định: các nghiên cứu cho thấy việc hỏi không làm tăng ý nghĩ tự tử và thường làm giảm căng thẳng ở người được hỏi. Vì vậy im lặng vì sợ 'gợi ý' là quyết định sai hướng.",
+    "s": "Hỏi thẳng một người rằng họ có đang nghĩ tới việc tự tử không thì không làm tăng ý nghĩ đó, và thường làm giảm căng thẳng ở người được hỏi — đây là một trong những lo ngại đã được kiểm định nhiều lần nhất trong sức khoẻ tâm thần. Vì vậy im lặng vì sợ 'gợi ý' là quyết định sai hướng.",
     "tags": [
       "tu-tu",
       "phong-ngua"
@@ -876,7 +876,7 @@
     "cat": "suc-khoe",
     "sub": "suc-khoe-tinh-than",
     "t": "Thời gian dùng thiết bị số giải thích nhiều nhất 0,4% khác biệt về sức khoẻ tinh thần của thanh thiếu niên",
-    "s": "Orben và Przybylski chạy toàn bộ tổ hợp lựa chọn phân tích có thể trên ba bộ dữ liệu lớn, trong đó có hơn 11.000 trẻ sinh năm 2000–2002 của Millennium Cohort Study, và mức trần của phần biến thiên giải thích được là 0,4%. Các nghiên cứu theo dõi còn cho thấy chiều ngược cũng có: người đang khó chịu dùng nhiều hơn.",
+    "s": "Chạy toàn bộ tổ hợp lựa chọn phân tích có thể trên ba bộ dữ liệu lớn, trong đó có hơn 11.000 trẻ sinh năm 2000–2002 của Millennium Cohort Study, mức trần của phần biến thiên giải thích được là 0,4% — nhỏ hơn phần giải thích được bằng việc trẻ có ăn khoai tây hay không. Chiều nhân quả cũng đi cả hai hướng: người đang khó chịu trong người dùng thiết bị nhiều hơn.",
     "tags": [
       "mang-xa-hoi",
       "hieu-ung"
@@ -900,7 +900,7 @@
     "cat": "suc-khoe",
     "sub": "suc-khoe-tinh-than",
     "t": "Lo âu và trầm cảm hay đi cùng nhau, và điều đó ảnh hưởng tới cách điều trị",
-    "s": "Tỉ lệ đồng mắc cao tới mức nhiều nhà nghiên cứu cho rằng chúng chia sẻ một yếu tố nền chung. Về thực hành, điều này có nghĩa các can thiệp nhắm vào cả hai — như liệu pháp nhận thức hành vi xuyên chẩn đoán — thường phù hợp hơn điều trị riêng lẻ.",
+    "s": "Tỉ lệ đồng mắc giữa lo âu và trầm cảm cao tới mức trong tâm thần học có hẳn một giả thuyết rằng chúng chia sẻ một yếu tố nền chung chứ không phải hai bệnh tách rời. Về thực hành, điều đó có nghĩa các can thiệp nhắm vào cả hai — như liệu pháp nhận thức hành vi xuyên chẩn đoán — thường phù hợp hơn điều trị riêng lẻ từng cái.",
     "tags": [
       "dong-mac",
       "dieu-tri"
@@ -939,7 +939,7 @@
     "cat": "suc-khoe",
     "sub": "huyen-thoai-suc-khoe",
     "t": "Ăn thêm gelatin hay collagen không đi trực tiếp vào khớp hay da của bạn",
-    "s": "Protein được tiêu hoá thành các axit amin rồi cơ thể dùng chúng theo nhu cầu của mình. Có một số thử nghiệm nhỏ cho thấy tác dụng lên đau khớp và độ ẩm da, nhưng cơ chế nếu có thì là qua tín hiệu peptide, không phải qua việc 'bù trực tiếp'.",
+    "s": "Protein nào ăn vào cũng bị cắt thành các axit amin rời trong ruột rồi mới hấp thu, và cơ thể lắp chúng lại theo nhu cầu của mình chứ không theo nguồn gốc miếng ăn. Có một số phép kiểm nhỏ ghi nhận tác dụng lên đau khớp và độ ẩm da, nhưng cơ chế nếu có thì là qua các mẩu peptide đóng vai tín hiệu, không phải qua việc 'bù trực tiếp' collagen vào chỗ thiếu.",
     "tags": [
       "collagen",
       "co-che"
@@ -963,15 +963,12 @@
     "cat": "suc-khoe",
     "sub": "huyen-thoai-suc-khoe",
     "t": "Đổ mồ hôi không loại được 'độc tố' — nó gần như chỉ là nước và muối",
-    "s": "Phân tích thành phần mồ hôi cho thấy lượng kim loại nặng và các chất thải chuyển hoá thải qua da là rất nhỏ so với qua thận và gan. Xông hơi có một số lợi ích tim mạch được ghi nhận, nhưng cơ chế không phải thải độc.",
+    "s": "Mồ hôi gần như chỉ là nước, muối và một ít urê. Lượng kim loại nặng và chất thải chuyển hoá thoát ra qua da nhỏ hơn nhiều bậc so với lượng thận và gan xử lý mỗi ngày. Xông hơi có một số lợi ích tim mạch đã ghi nhận được, nhưng cơ chế nằm ở giãn mạch và nhịp tim tăng, không phải ở thải độc.",
     "tags": [
       "mo-hoi",
       "thai-doc"
     ],
-    "src": "Genuis và cộng sự, Archives of Environmental Contamination (2011); Laukkanen và cộng sự, JAMA IM (2015) về xông hơi",
-    "xem_ok": [
-      "do-lon-bang-chu"
-    ]
+    "src": "Genuis và cộng sự, Archives of Environmental Contamination (2011); Laukkanen và cộng sự, JAMA IM (2015) về xông hơi"
   },
   {
     "id": "sk-320",

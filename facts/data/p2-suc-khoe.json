@@ -30,7 +30,7 @@
     "cat": "suc-khoe",
     "sub": "giac-ngu",
     "t": "Đọc máy tính bảng thay vì sách giấy chỉ làm thời điểm buồn ngủ lệch khoảng 10 phút",
-    "s": "Thí nghiệm so sánh đọc sách giấy với đọc máy tính bảng cho thấy thời điểm buồn ngủ chỉ lệch khoảng 10 phút. Yếu tố ảnh hưởng lớn hơn là nội dung gây kích thích và việc màn hình giữ bạn thức lâu hơn — không phải bước sóng.",
+    "s": "Cho một nhóm đọc sách giấy và một nhóm đọc máy tính bảng trước khi ngủ, thời điểm buồn ngủ chỉ lệch khoảng 10 phút. Thứ ảnh hưởng lớn hơn nhiều là nội dung gây kích thích và việc màn hình giữ người ta thức lâu hơn — không phải bước sóng ánh sáng xanh.",
     "tags": [
       "giac-ngu",
       "man-hinh",
@@ -192,7 +192,7 @@
     "cat": "suc-khoe",
     "sub": "an-uong",
     "t": "Nhịn ăn gián đoạn giảm cân bằng đúng cơ chế nạp ít calo hơn, không phải bằng khung giờ",
-    "s": "Các thử nghiệm có kiểm soát cho thấy kết quả giảm cân tương đương khi tổng calo bằng nhau. Nó vẫn là công cụ hữu ích với người thấy dễ tuân thủ hơn khi có khung giờ rõ ràng — nhưng lợi ích đến từ việc ăn ít hơn, không từ khung giờ tự nó.",
+    "s": "Khi tổng calo bằng nhau, nhóm ăn theo khung giờ và nhóm ăn rải cả ngày giảm cân như nhau. Nhịn ăn gián đoạn vẫn là công cụ hữu ích với người thấy dễ tuân thủ hơn khi có khung giờ rõ ràng — nhưng phần giảm cân đến từ việc ăn ít hơn, không từ bản thân khung giờ.",
     "tags": [
       "dinh-duong",
       "nhin-an",
@@ -273,7 +273,7 @@
     "cat": "suc-khoe",
     "sub": "thuoc-va-vaccine",
     "t": "Đa số người khoẻ mạnh ăn đủ không cần vitamin tổng hợp",
-    "s": "Các thử nghiệm lớn không tìm thấy lợi ích rõ ràng của vitamin tổng hợp lên tử vong, bệnh tim hay ung thư ở người không thiếu chất. Ngoại lệ quan trọng: axit folic cho phụ nữ chuẩn bị mang thai, vitamin D ở vùng thiếu nắng, và B12 cho người ăn chay trường.",
+    "s": "Ở người không thiếu chất, vitamin tổng hợp không làm giảm tỉ lệ tử vong, bệnh tim hay ung thư trong các thử nghiệm kéo dài nhiều năm trên hàng chục nghìn người. Ngoại lệ quan trọng và có bằng chứng chắc: axit folic cho phụ nữ chuẩn bị mang thai, vitamin D ở vùng thiếu nắng, và B12 cho người ăn chay trường.",
     "tags": [
       "vitamin",
       "bang-chung",
@@ -286,7 +286,7 @@
     "cat": "suc-khoe",
     "sub": "thuoc-va-vaccine",
     "t": "Thực phẩm chức năng ở nhiều nước không phải chịu kiểm định hiệu quả trước khi bán",
-    "s": "Khác với thuốc, chúng thường chỉ cần đăng ký công bố. Các phân tích độc lập nhiều lần phát hiện sản phẩm chứa ít hoặc không chứa hoạt chất ghi trên nhãn, hoặc chứa thêm dược chất không khai báo. Đây là vấn đề quy định, không phải vấn đề của từng thương hiệu.",
+    "s": "Khác với thuốc, thực phẩm chức năng ở nhiều nước chỉ cần đăng ký công bố chứ không phải chứng minh hiệu quả trước khi bán. Đem sản phẩm trên kệ đi đo thì nhiều lô chứa ít hoặc không chứa hoạt chất ghi trên nhãn, và một số lô chứa thêm dược chất không khai báo. Đây là vấn đề của khung quy định, không phải của từng thương hiệu.",
     "tags": [
       "thuc-pham-chuc-nang",
       "quy-dinh",
@@ -299,7 +299,7 @@
     "cat": "suc-khoe",
     "sub": "thuoc-va-vaccine",
     "t": "Tỉ lệ tự kỷ ở trẻ đã tiêm vắc-xin MMR không khác tỉ lệ ở trẻ chưa tiêm, đo trên hàng triệu trẻ ở nhiều nước",
-    "s": "Các nghiên cứu theo dõi hàng triệu trẻ ở nhiều nước không tìm ra khác biệt nào giữa hai nhóm. Đối chiếu cỡ mẫu cho thấy khoảng cách: nghi ngờ ban đầu dựa trên 12 trẻ, còn phép kiểm dựa trên hàng triệu.",
+    "s": "Theo dõi hàng triệu trẻ ở Đan Mạch, Phần Lan, Anh và Mỹ, tỉ lệ tự kỷ ở nhóm đã tiêm và nhóm chưa tiêm không khác nhau. Đối chiếu cỡ mẫu cho thấy khoảng cách giữa hai bên: nghi ngờ ban đầu dựa trên 12 trẻ trong một bài báo về sau bị rút, còn phép kiểm dựa trên hàng triệu.",
     "tags": [
       "vac-xin",
       "tu-ky",
@@ -390,7 +390,7 @@
     "cat": "suc-khoe",
     "sub": "benh-va-tam-soat",
     "t": "Cận thị ở trẻ liên quan chặt tới thời gian ở ngoài trời, không chỉ tới việc nhìn gần",
-    "s": "Các thử nghiệm ở Đài Loan và Trung Quốc cho thấy tăng thời gian hoạt động ngoài trời làm giảm tỉ lệ cận thị mới ở trẻ. Cơ chế được cho là liên quan tới cường độ ánh sáng và dopamine võng mạc, chứ không đơn thuần là 'nghỉ mắt'.",
+    "s": "Cho học sinh ra ngoài trời thêm 40–80 phút mỗi ngày trong các thử nghiệm ở Đài Loan và Trung Quốc, tỉ lệ cận thị mới giảm rõ so với nhóm giữ nguyên lịch cũ. Cơ chế được cho là cường độ ánh sáng ngoài trời — cao gấp hàng chục lần trong phòng — kích thích võng mạc tiết dopamine, chất kìm hãm nhãn cầu dài ra, chứ không đơn thuần là 'nghỉ mắt'.",
     "tags": [
       "can-thi",
       "tre-em",
@@ -471,7 +471,7 @@
     "cat": "suc-khoe",
     "sub": "van-dong",
     "t": "Tập thể dục cải thiện giấc ngủ, nhưng tập nặng sát giờ ngủ thì tuỳ người",
-    "s": "Gộp kết quả của nhiều nghiên cứu cho thấy vận động đều đặn cải thiện chất lượng giấc ngủ, và tập buổi tối không gây hại với đa số người. Ngoại lệ là tập rất nặng trong khoảng một giờ trước khi ngủ, vốn có thể làm khó ngủ ở một số người.",
+    "s": "Vận động đều đặn cải thiện chất lượng giấc ngủ, và tập vào buổi tối không gây hại với đa số người — điều trái với khuyến cáo lưu truyền lâu nay. Ngoại lệ là tập rất nặng trong khoảng một giờ trước khi ngủ, vốn làm khó ngủ ở một số người vì thân nhiệt và nhịp tim chưa kịp hạ.",
     "tags": [
       "van-dong",
       "giac-ngu",

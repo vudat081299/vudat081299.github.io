@@ -150,7 +150,7 @@
     "cat": "tu-duy",
     "sub": "ra-quyet-dinh",
     "t": "Thiên kiến hành động: thủ môn nhảy vì đứng yên trông như không làm gì",
-    "s": "Phân tích các quả phạt đền cho thấy đứng nguyên giữa khung là chiến lược cản phá tốt nhất, nhưng thủ môn lao sang trái hoặc phải trong đại đa số lượt. Lý do không phải kỹ thuật mà là tâm lý: bị ghi bàn sau khi đã lao người thấy dễ chịu hơn bị ghi bàn khi đứng yên.",
+    "s": "Trên các quả phạt đền đã thống kê, đứng nguyên giữa khung là chiến lược cản phá tốt nhất, nhưng thủ môn lao sang trái hoặc phải trong khoảng 94% số lượt. Lý do không phải kỹ thuật mà là tâm lý: bị ghi bàn sau khi đã lao người thấy dễ chịu hơn bị ghi bàn khi đứng yên, dù kết quả trên bảng tỉ số giống hệt nhau.",
     "d": "Cùng dạng thiên lệch đo được ở chỗ khác trong bóng đá: thủ môn bị ghi bàn sau khi đứng yên bị chính đồng đội và khán giả đánh giá nặng hơn thủ môn bị ghi bàn sau khi đã bay người, dù kết quả như nhau. Nghĩa là cái được thưởng không phải tỉ lệ cản phá mà là dấu hiệu cho thấy đã cố gắng — và đó là một áp lực đến từ người xem, không từ bản thân trò chơi.",
     "tags": [
       "thien-kien",
@@ -193,7 +193,7 @@
     "cat": "tu-duy",
     "sub": "hoc-va-nho",
     "t": "Con số 7±2 của trí nhớ ngắn hạn thực ra gần 4 hơn",
-    "s": "Bài báo nổi tiếng năm 1956 của George Miller nói về 'con số kỳ diệu bảy'. Chính Miller viết nửa đùa, và các nghiên cứu kỹ hơn sau này cho thấy dung lượng thật khi không được nhẩm lại chỉ khoảng 3 đến 5 đơn vị. Đây là lý do số điện thoại, mã OTP và menu tốt đều được cắt thành cụm.",
+    "s": "George Miller đặt tên 'con số kỳ diệu bảy' năm 1956 và chính ông viết nửa đùa rằng con số đó cứ bám theo mình. Đo kỹ hơn về sau, dung lượng thật khi người ta không được nhẩm lại chỉ khoảng 3 đến 5 đơn vị. Đây là lý do số điện thoại, mã OTP và menu tốt đều được cắt thành cụm ba hoặc bốn.",
     "tags": [
       "tri-nho",
       "thiet-ke",
@@ -286,7 +286,7 @@
     "cat": "tu-duy",
     "sub": "du-doan",
     "t": "Nghịch lý sự phong phú: càng nhiều dữ liệu, càng nhiều quan hệ giả",
-    "s": "Trong một tập dữ liệu đủ lớn, luôn tồn tại các biến tương quan chặt với nhau hoàn toàn ngẫu nhiên. Số lượng cặp có thể so sánh tăng theo bình phương số biến, nên việc 'đào dữ liệu tới khi thấy điều gì đó' gần như chắc chắn tìm ra thứ trông giống phát hiện.",
+    "s": "Trong một tập dữ liệu đủ lớn, luôn tồn tại các biến tương quan chặt với nhau hoàn toàn ngẫu nhiên. Số cặp có thể so sánh tăng theo bình phương số biến — 100 biến cho gần 5.000 cặp — nên việc đào tới khi thấy điều gì đó gần như chắc chắn moi ra thứ trông giống một phát hiện.",
     "tags": [
       "du-lieu",
       "thong-ke",

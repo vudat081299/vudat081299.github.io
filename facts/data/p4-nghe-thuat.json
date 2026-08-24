@@ -254,7 +254,7 @@
     "cat": "nghe-thuat",
     "sub": "mau-va-chat-lieu",
     "t": "Màu xanh lam tự nhiên cực hiếm trong khoáng vật, và đó là lý do bột lapis từng đắt hơn vàng",
-    "s": "Ultramarine làm từ lapis lazuli nhập từ Afghanistan, nên hợp đồng thời Phục hưng ghi rõ ai trả tiền màu xanh. Ultramarine tổng hợp chỉ ra đời năm 1826 và làm giá rơi hàng nghìn lần.",
+    "s": "Ultramarine làm từ đá lapis lazuli, mà mỏ lapis dùng được thời đó chỉ có ở vùng Badakhshan nay thuộc Afghanistan — nên hợp đồng vẽ tranh thời Phục hưng ghi rõ ai trả tiền cho màu xanh và dùng bao nhiêu. Ultramarine nhân tạo mãi năm 1826 mới ra đời và làm giá rơi hàng nghìn lần.",
     "tags": [
       "ultramarine",
       "mau",
@@ -439,7 +439,7 @@
     "cat": "nghe-thuat",
     "sub": "hoi-hoa",
     "t": "Phân bố độ sáng trong bức 'Đêm đầy sao' khớp với công thức toán mô tả dòng chảy rối — cùng loại rối thấy ở khói và nước xoáy.",
-    "s": "Phân tích thống kê độ sáng của các điểm trong tranh cho ra phân bố gần với mô hình Kolmogorov — công thức mô tả cách xoáy lớn vỡ dần thành xoáy nhỏ trong một dòng chảy rối. Kết quả này không chứng minh hoạ sĩ 'nhìn thấy' dòng rối; nó chỉ nói nét vẽ xoáy của ông rơi vào cùng một thống kê.",
+    "s": "Đo độ sáng của từng điểm trong tranh rồi dựng phân bố chênh lệch sáng theo khoảng cách, kết quả gần với mô hình Kolmogorov — công thức mô tả cách xoáy lớn vỡ dần thành xoáy nhỏ trong một dòng chảy rối. Điều đó không chứng minh hoạ sĩ 'nhìn thấy' dòng rối; nó chỉ nói nét vẽ xoáy của ông rơi vào cùng một thống kê.",
     "tags": [
       "van-gogh",
       "dong-roi",
@@ -1260,7 +1260,7 @@
     "cat": "nghe-thuat",
     "sub": "ly-thuyet-nhac",
     "t": "Nhạc buồn không phải chậm mà chủ yếu là ít biến động, và tốc độ chỉ là một yếu tố",
-    "s": "Phân tích âm học cho thấy nhạc được đánh giá buồn có biên độ ổn định, quãng hẹp và ít nhấn mạnh. Cùng một giai điệu chơi chậm lại không tự động trở nên buồn.",
+    "s": "Nhạc bị người nghe đánh giá là buồn có chung ba đặc điểm âm học: biên độ đều đặn ít thay đổi, các nốt nằm trong quãng hẹp, và ít nhấn mạnh vào phách. Tốc độ chỉ là một yếu tố trong đó — cùng một giai điệu chơi chậm lại không tự động trở nên buồn nếu vẫn nhấn mạnh và vẫn nhảy quãng rộng.",
     "tags": [
       "cam-xuc",
       "nhac",
@@ -1299,7 +1299,7 @@
     "cat": "nghe-thuat",
     "sub": "ly-thuyet-nhac",
     "t": "Nhạc trong siêu thị chậm hơn làm khách đi chậm hơn và mua nhiều hơn, và hiệu ứng đo được",
-    "s": "Thí nghiệm thực địa cho thấy doanh thu chênh tới hàng chục phần trăm giữa nhạc nhanh và nhạc chậm. Đây là một trong ít can thiệp âm nhạc thương mại có bằng chứng thực địa rõ.",
+    "s": "Đổi nhạc nền trong siêu thị từ nhịp nhanh sang nhịp chậm, khách bước chậm lại, ở trong cửa hàng lâu hơn và doanh thu chênh tới hàng chục phần trăm. Đây là một trong ít can thiệp âm nhạc thương mại có bằng chứng thực địa rõ, chứ không chỉ đo trong phòng thí nghiệm.",
     "tags": [
       "nhac",
       "ban-le",
@@ -1341,7 +1341,7 @@
     "cat": "nghe-thuat",
     "sub": "ly-thuyet-nhac",
     "t": "Nhạc giảm cảm nhận đau một cách đo được ở bệnh nhân sau mổ",
-    "s": "Tổng hợp hơn 70 thử nghiệm ngẫu nhiên cho thấy giảm cả điểm đau lẫn nhu cầu thuốc giảm đau. Hiệu ứng nhỏ nhưng nhất quán và gần như không có tác dụng phụ.",
+    "s": "Gộp hơn 70 lượt thử ngẫu nhiên ở bệnh nhân sau mổ, nhóm được nghe nhạc chấm điểm đau thấp hơn và dùng ít thuốc giảm đau hơn nhóm không nghe. Hiệu ứng nhỏ nhưng nhất quán, gần như không có tác dụng phụ và gần như không tốn tiền — nên nó nằm trong hướng dẫn hậu phẫu ở nhiều nơi.",
     "tags": [
       "nhac",
       "dau",
@@ -1379,8 +1379,8 @@
     "id": "na-321",
     "cat": "nghe-thuat",
     "sub": "mau-va-chat-lieu",
-    "t": "Màu tím tổng hợp đầu tiên được tìm ra tình cờ bởi một sinh viên 18 tuổi đang cố tổng hợp thuốc chống sốt rét",
-    "s": "William Perkin phát hiện mauveine năm 1856 từ nhựa than đá. Nó khai sinh cả ngành công nghiệp thuốc nhuộm tổng hợp và gián tiếp cả ngành hoá dược.",
+    "t": "Màu tím nhân tạo đầu tiên ra đời tình cờ từ tay một sinh viên 18 tuổi đang cố chế thuốc chống sốt rét",
+    "s": "William Perkin đang thử tổng hợp quinine từ nhựa than đá năm 1856 thì thu được một mớ cặn đen; rửa bằng cồn thì ra dung dịch tím rực, và màu đó bám vào lụa không phai. Ông gọi nó là mauveine. Nó khai sinh cả ngành công nghiệp thuốc nhuộm tổng hợp, và cũng chính hoá học nhuộm ấy về sau sinh ra ngành hoá dược.",
     "tags": [
       "mauveine",
       "perkin",
@@ -1448,7 +1448,7 @@
     "cat": "nghe-thuat",
     "sub": "mau-va-chat-lieu",
     "t": "Bức tranh 'Tiếng thét' của Munch đang phai màu vì sắc tố vàng cadmi bị phân huỷ dưới độ ẩm",
-    "s": "Phân tích năm 2020 cho thấy độ ẩm chứ không phải ánh sáng là yếu tố chính. Bảo tàng đã đổi điều kiện trưng bày dựa trên kết quả đó.",
+    "s": "Sắc tố vàng cadmi sulfua trong tranh chuyển thành cadmi sulfat trắng đục rồi bong ra, và yếu tố đẩy phản ứng đó là độ ẩm chứ không phải ánh sáng — điều ngược với giả định thông thường trong bảo tồn. Bảo tàng đã siết độ ẩm trưng bày xuống dưới 45% dựa trên kết quả đó, thay vì hạ thêm độ rọi.",
     "tags": [
       "munch",
       "sac-to",
