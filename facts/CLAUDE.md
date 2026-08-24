@@ -228,6 +228,14 @@ thật: *"Làm sao để ngủ ngon?"*, *"Có nên uống cà phê buổi tối 
 Ba đoạn là **tối thiểu**, không phải khuôn cứng — thêm đoạn thì tốt. Nhưng dưới ba đoạn hoặc
 dưới 600 ký tự thì `check` báo lỗi, vì đó là lúc `d` chỉ đang nhắc lại `s` bằng từ khác.
 
+**Một luật cũ đã phải nới khi `d` thành phần chính.** `loi-khuyen` bắt `nên` + động từ ở mức
+`LOẠI`. Trên **tiêu đề** nó vẫn sạch (0 khớp trên 1.884 tiêu đề) nên giữ nguyên. Nhưng quét cả
+`t`+`s`+`d` thì được 17 chỗ, và đọc tay cả 17 thì **7 chỗ (41%) là liên từ "cho nên"**:
+*"Chim không có thụ thể phản ứng với capsaicin **nên ăn** ớt bình thường"*. Độ chính xác 59%
+là quá thấp cho một luật chặn commit — chính thư viện này đã bác những luật 22% và 11% vì lý
+do đó. Trong `d` nó hạ xuống mức `XEM`, rule id `nen-lam-gi`. Các mẫu còn lại của
+`loi-khuyen` (*hãy*, *đừng*, *mẹo*, *cách … nhất*) vẫn `LOẠI` trong `d`.
+
 **Cách cổng siết dần — không có ngày giờ G.** `manifest.day_du` liệt kê những cụm đã viết
 xong, dạng `"cat/sub"`. Fact trong cụm đó **bắt buộc** có `q` và `d` đạt khuôn; cụm chưa có
 tên trong danh sách thì không bị đụng tới. Viết xong một cụm thì thêm tên cụm vào danh sách

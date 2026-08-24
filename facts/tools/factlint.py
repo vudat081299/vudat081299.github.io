@@ -585,6 +585,16 @@ TRONG_NGOAC = re.compile(r"['\"«][^'\"»]{0,140}['\"»]")
 
 # "nên" nghĩa "should" chứ không phải liên từ "cho nên". Chỉ tính khi ngay sau nó là một
 # động từ hành động — cách này bỏ sót vài trường hợp nhưng gần như không báo nhầm.
+#
+# ĐO LẠI ngày 24/08/2026, khi `d` sắp thành phần chính của thư viện (§1.7) chứ không còn là
+# 40 mẩu phụ: quét RE_NEN trên toàn bộ t+s+d của 1.884 fact được 17 chỗ, và đọc tay cả 17 thì
+# **7 chỗ (41%) là liên từ "cho nên"**, không phải lời khuyên:
+#     sv-113 "Chim không có thụ thể phản ứng với capsaicin NÊN ĂN ớt bình thường"
+#     th-278 "Tập số đại số đếm được, NÊN TẬP số siêu việt chiếm gần như toàn bộ trục số"
+#     sk-254 "Đông lạnh diễn ra ngay sau thu hoạch NÊN GIỮ được vitamin tốt hơn"
+# Độ chính xác 59% là quá thấp cho một luật mức LOẠI — chính thư viện này đã bác những luật
+# 22% và 11% vì lý do đó. Trong TIÊU ĐỀ nó vẫn sạch (0 khớp trên 1.884 tiêu đề) nên giữ
+# nguyên mức LOẠI ở `t`; trong văn xuôi dài của `d` thì hạ xuống XEM, rule id `nen-lam-gi`.
 NEN_VERB = ('mua|bán|chọn|làm|dùng|nói|hỏi|viết|đọc|ăn|uống|ngủ|tập|chạy|đi|đến|gọi|nhắn'
             '|đầu tư|tiết kiệm|tính|đặt|để|tránh|bắt đầu|dừng|giữ|gửi|trả|xin|đợi|chờ'
             '|kiểm tra|đo|ghi|học|nghỉ|thử|xem|chia|gộp|tắt|bật')
@@ -856,8 +866,14 @@ def verify_fact(f):
             if rid != 'loi-khuyen':
                 continue
             for pat in pats:
+                if pat is RE_NEN:
+                    continue          # 41% báo oan trong văn xuôi dài — hạ xuống XEM, xem dưới
                 if pat.search(d_field):
                     return ('LOẠI', rid, note + ' — trong phần dài `d`')
+        if 'nen-lam-gi' not in mien and RE_NEN.search(d_field):
+            return ('XEM', 'nen-lam-gi',
+                    'có "nên + động từ" trong phần dài `d` — đọc xem đó là lời khuyên cho '
+                    'người đọc hay chỉ là liên từ "cho nên"')
         for rid, note, _f, pats in RULES_WARN:
             if rid not in RULES_QUET_QD or rid in mien:
                 continue
@@ -919,7 +935,7 @@ def all_warn_rule_ids():
     """Mọi rule id có thể xuất hiện ở mức XEM — dùng để soát field xem_ok."""
     ids = {rid for rid, _, _, _ in RULES_WARN}
     ids |= {rid for rid, _, _, _ in RULES_REJECT_IF_NO_ANCHOR}
-    ids |= {'mo-neo-gia-dinh', 'do-lon-bang-chu', 'thieu-mo-neo', 'thuat-ngu'}
+    ids |= {'mo-neo-gia-dinh', 'do-lon-bang-chu', 'thieu-mo-neo', 'thuat-ngu', 'nen-lam-gi'}
     return ids
 
 
@@ -953,6 +969,8 @@ def rule_still_hits(f, rid):
         return not HAS_DIGIT.search(ts) and len(ts) < 220
     if rid == 'thuat-ngu':
         return _thuat_ngu(t, ts) is not None
+    if rid == 'nen-lam-gi':
+        return bool(RE_NEN.search(f.get('d') or ''))
     return True
 
 
