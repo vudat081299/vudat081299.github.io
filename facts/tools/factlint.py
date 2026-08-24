@@ -471,6 +471,16 @@ RULES_REJECT = [
         re.compile(r'^(Vụ|Câu chuyện|Chuyện|Thí nghiệm|Bài báo|Trường hợp|Sự kiện) '),
         re.compile(r'(thí nghiệm|nghiên cứu) (nhà tù|của [A-ZÀ-ỸĐ])'),
     ]),
+    # CLAUDE.md §1.2 cấm dạng này từ 09/08/2026 ("fact sửa huyền thoại phải phát biểu cái
+    # ĐÚNG, không phát biểu cái sai") nhưng không có cổng nào bắt, và 6 fact sống sót tới
+    # 24/08/2026 — chủ trang tìm ra bằng mắt, không phải cổng. Đo cả thư viện: hai mẫu dưới
+    # bắt đúng 6 fact đó, 0 bắt oan.
+    ('t-phat-bieu-cai-sai', 'tiêu đề phát biểu cái SAI thay vì phát biểu cái đúng', 't', [
+        re.compile(r'\b(là|chỉ là) (một |chỉ )?(hiểu lầm|huyền thoại|chuyện bịa|tin nhầm'
+                   r'|lời bịa)', re.I),
+        re.compile(r'(huyền thoại|hiểu lầm|niềm tin)\s*[\'"«].{3,90}?[\'"»]\s*(là|không|đã)',
+                   re.I),
+    ]),
     ('meta-nghien-cuu', 'nói về số phận một nghiên cứu, không nói về thế giới', 't', [
         re.compile(r'không nhân bản|không lặp lại được|bị rút lại'),
         re.compile(r'(bài báo|nghiên cứu|kết quả) gốc'),
@@ -607,6 +617,27 @@ def _mo_neo_gia_dinh(t, ts):
                for m in nums)
 
 
+# Tóm tắt đi kể LỊCH SỬ MỘT NIỀM TIN thay vì diễn giải chính cái tiêu đề khẳng định.
+# ct-209 là ca mẫu: tiêu đề hứa "lưỡi cảm nhận cả năm vị ở mọi vùng", còn cả hai câu tóm
+# tắt nói về một bản dịch sai năm 1901 và về việc sơ đồ đó nằm trong sách giáo khoa bao lâu
+# — đọc xong không biết vùng nào của lưỡi nhận vị gì.
+#
+# Neo vào KÊNH TRUYỀN BÁ bằng văn bản/giảng dạy, không neo vào chủ ngữ: đã đo, "Nó bắt
+# nguồn từ…" bắt oan El Niño và Gutenberg (chủ ngữ là hiện tượng thật), còn một câu nói về
+# thế giới gần như không bao giờ lấy trọn nội dung là "sách giáo khoa / dịch sai / được dạy".
+# Điều kiện MỌI câu đều như vậy là chỗ giữ cho luật khỏi bắt oan: nêu nguồn gốc huyền thoại
+# làm câu phụ thì hợp lệ (§4 quy tắc 3), lấy nó làm toàn bộ phần tóm tắt thì không.
+# Đo ngày 24/08/2026 trên 1.945 fact: 13 fact nhắc kênh văn bản, luật chỉ bắt 1 — ct-209.
+KENH_NIEM_TIN = re.compile(
+    r'(sách giáo khoa|giáo trình|được dạy|vẫn dạy|còn dạy|được in|bản dịch|dịch sai|lỗi dịch'
+    r'|luận văn|luận án|được lặp lại|được nhắc lại|truyền miệng|tin đồn)', re.I)
+
+
+def _s_khong_ve_the_gioi(s):
+    cau = [c.strip() for c in re.split(r'(?<=[.!?])\s+', s) if c.strip()]
+    return bool(cau) and all(KENH_NIEM_TIN.search(c) for c in cau)
+
+
 def _do_lon_bang_chu(t, ts):
     if HAS_DIGIT.search(ts):
         return False
@@ -632,6 +663,11 @@ def verify_fact(f):
         for p in pats:
             if p.search(hay):
                 return ('LOẠI', rid, note)
+
+    if _s_khong_ve_the_gioi(f.get('s', '')):
+        return ('LOẠI', 's-khong-ve-the-gioi',
+                'mọi câu của phần tóm tắt nói về lịch sử một niềm tin, không câu nào nói về '
+                'thế giới — tóm tắt phải diễn giải chính cái tiêu đề khẳng định')
 
     for rid, note, field, pats in RULES_REJECT_IF_NO_ANCHOR:
         hay = t if field == 't' else ts

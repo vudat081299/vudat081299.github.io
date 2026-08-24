@@ -95,6 +95,13 @@ tự bắt bằng mắt.
   biến câu chuyện, và câu có chữ "có thể".
 - Fact sửa huyền thoại **được giữ** khi nó phát biểu cái **đúng**, không phát biểu cái sai:
   ✅ *"Lưỡi cảm nhận cả năm vị ở mọi vùng"*  ❌ *"Bản đồ vị giác là hiểu lầm do lỗi dịch"*.
+  Cổng `t-phat-bieu-cai-sai` bắt mức `LOẠI` mọi tiêu đề dạng *"X là huyền thoại / hiểu lầm"*.
+  Ngược lại của nó cũng bị chặn: **phần tóm tắt phải diễn giải chính cái tiêu đề khẳng định**,
+  không được lấy trọn dung lượng để kể *lịch sử của một niềm tin sai* — ai dịch sai năm nào,
+  sách giáo khoa in bao lâu. Nêu nguồn gốc huyền thoại làm câu phụ thì được (§4 quy tắc 3);
+  lấy nó làm toàn bộ phần tóm tắt thì cổng `s-khong-ve-the-gioi` chặn ở mức `LOẠI`.
+  Phép thử: xoá `s` đi — người đọc mất thông tin về **thế giới**, hay chỉ mất thông tin về
+  *lịch sử của một sai lầm*?
 
 Viết bằng tiếng Việt thường ngày. Không "nghiên cứu cho thấy", không "các nhà khoa học đã
 chứng minh". Nêu thẳng con số và nêu thẳng ai tìm ra nó.
@@ -165,15 +172,18 @@ Và **đừng thêm bộ lọc "câu có dấu giải thích"** (dấu `—`, `:
 150 fact thành 70/80 mà cả hai nhóm đều lẫn fact lành với fact hỏng. Bậc của từ quyết định,
 không phải dấu câu.
 
-### 1.6 Ba dạng đã đo và **rớt** — đừng dựng lại
+### 1.6 Sáu dạng đã đo và **rớt** — đừng dựng lại
 
-Cả ba nghe hợp lý và đều bị số liệu bác. Ghi ra đây để phiên sau không mất công lần nữa.
+Cả sáu nghe hợp lý và đều bị số liệu bác. Ghi ra đây để phiên sau không mất công lần nữa.
 
 | Dạng định bắt | Số fact khớp | Vì sao rớt |
 |---|---|---|
 | Định nghĩa bằng phủ định ("không phải là X") | 124 | gần như toàn fact lành: *"Trí nhớ không phải bản ghi, nó là bản dựng lại"*, *"Wi-Fi không phải viết tắt của cái gì cả"*. Chúng nêu cái đúng trước rồi mới phủ định — máy không phân biệt được với `sh-207` phủ định một tính chất trừu tượng |
 | Hiệu ứng/định luật mang tên riêng trong tiêu đề | 13 | cả 13 nêu luôn nội dung ngay sau tên: *"Định luật Little: giữ gấp 2 số việc làm dở cùng lúc thì mỗi việc mất gấp 2 thời gian"*. Đọc là hiểu, không cần biết Little là ai |
 | Đại lượng trần ("ngưỡng/mức/chỉ số" + số) | 12 | "mức 8%/năm", "mốc 8 tỷ" đều rõ nghĩa |
+| Tiêu đề dán hai nửa bằng ", và" | 357 | 18% thư viện, và gần hết là fact lành — nửa sau bổ nghĩa cho nửa trước: *"Mắt bạn có một điểm mù, và não âm thầm vá nó lại"*. Thắt lại thành ", và + chữ chỉ huyền thoại" thì còn 21 cặp mà **chỉ 1** hỏng (`ct-209`); 20 cái kia thêm một cải chính thật về thế giới: *"và đó là giới hạn dưới thật chứ không phải quy ước"* |
+| `s` có dấu hiệu kể nguồn gốc niềm tin ("bắt nguồn từ", "dịch sai", "sách giáo khoa") | 22 | 20/22 là fact lành, vì chủ ngữ của chúng là một **hiện tượng thật**: *"El Niño bắt nguồn từ dao động nhiệt độ nước mặt"*, *"máy in lan nhanh…"*. Chỉ neo vào từ chỉ nguồn gốc thì precision 9% |
+| Mọi con số trong fact đều đo **lịch sử một niềm tin** | 9 | precision 22%: cửa sổ ±60 ký tự quanh con số quá rộng, bắt oan Gaia, Gutenberg, Jenner. Bản dùng được là `s-khong-ve-the-gioi` — đòi **mọi câu** của `s` nhắc kênh văn bản/giảng dạy, precision 100% |
 
 ---
 
