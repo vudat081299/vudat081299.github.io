@@ -139,8 +139,8 @@
     "id": "sk-112",
     "cat": "suc-khoe",
     "sub": "chat-kich-thich",
-    "t": "Không có mức tiêu thụ rượu nào được chứng minh là có lợi cho sức khoẻ",
-    "s": "Các nghiên cứu cũ cho thấy người uống ít sống thọ hơn người không uống, nhưng phân tích sau đó chỉ ra nhóm 'không uống' lẫn nhiều người đã bỏ rượu vì bệnh. Các phân tích Mendelian randomization gần đây không tìm thấy ngưỡng bảo vệ.",
+    "t": "Không có mức uống rượu nào được chứng minh là có lợi cho sức khoẻ",
+    "s": "Các nghiên cứu cũ thấy người uống ít sống thọ hơn người không uống, nhưng nhóm 'không uống' lẫn nhiều người đã bỏ rượu vì bệnh — nhóm so sánh sai từ đầu. Cách kiểm mới chia người theo biến thể gen quyết định họ chịu rượu tốt hay kém, thứ có từ lúc sinh ra nên bệnh tật không làm lệch được, và nó cũng không tìm ra mức uống nào có lợi.",
     "tags": [
       "ruou",
       "bang-chung",
@@ -160,19 +160,6 @@
       "phan-loai"
     ],
     "src": "IARC Monographs, Volume 100E (2012)"
-  },
-  {
-    "id": "sk-114",
-    "cat": "suc-khoe",
-    "sub": "van-dong",
-    "t": "Tập luyện sức mạnh quan trọng với người lớn tuổi ít nhất ngang với tập tim mạch",
-    "s": "Mất khối cơ theo tuổi bắt đầu từ khoảng 30 và tăng tốc sau 60, dẫn tới yếu, dễ ngã và mất tự chủ. Khuyến nghị của WHO gồm ít nhất hai buổi tập tăng cường cơ mỗi tuần — phần thường bị bỏ qua nhất trong các hướng dẫn vận động.",
-    "tags": [
-      "van-dong",
-      "tuoi-gia",
-      "co-bap"
-    ],
-    "src": "WHO Guidelines on Physical Activity and Sedentary Behaviour (2020)"
   },
   {
     "id": "sk-115",
@@ -311,8 +298,8 @@
     "id": "sk-127",
     "cat": "suc-khoe",
     "sub": "thuoc-va-vaccine",
-    "t": "Vắc-xin MMR không gây tự kỷ: các nghiên cứu theo dõi trên hàng triệu trẻ ở nhiều nước không tìm thấy liên hệ nào",
-    "s": "Bài báo năm 1998 dựa trên 12 trẻ đã bị tạp chí rút lại và tác giả bị tước giấy phép hành nghề vì thao túng dữ liệu. Các nghiên cứu sau đó trên hàng triệu trẻ ở nhiều nước không tìm thấy bất kỳ liên hệ nào.",
+    "t": "Tỉ lệ tự kỷ ở trẻ đã tiêm vắc-xin MMR không khác tỉ lệ ở trẻ chưa tiêm, đo trên hàng triệu trẻ ở nhiều nước",
+    "s": "Các nghiên cứu theo dõi hàng triệu trẻ ở nhiều nước không tìm ra khác biệt nào giữa hai nhóm. Đối chiếu cỡ mẫu cho thấy khoảng cách: nghi ngờ ban đầu dựa trên 12 trẻ, còn phép kiểm dựa trên hàng triệu.",
     "tags": [
       "vac-xin",
       "tu-ky",
@@ -454,8 +441,8 @@
     "id": "sk-139",
     "cat": "suc-khoe",
     "sub": "benh-va-tam-soat",
-    "t": "Sức khoẻ răng miệng liên quan tới sức khoẻ tim mạch, nhưng nhân quả chưa rõ",
-    "s": "Viêm nha chu tương quan với bệnh tim mạch trong nhiều nghiên cứu quan sát, song các thử nghiệm can thiệp chưa chứng minh được rằng điều trị nha chu làm giảm biến cố tim mạch. Đây là ví dụ mẫu mực về khoảng cách giữa tương quan và khuyến nghị.",
+    "t": "Điều trị viêm nha chu chưa được chứng minh làm giảm biến cố tim mạch, dù hai bệnh đi cùng nhau trong các nghiên cứu quan sát",
+    "s": "Người viêm nha chu bị bệnh tim mạch nhiều hơn trong nhiều nghiên cứu theo dõi, nhưng khi đem chữa nha chu rồi đếm lại số ca nhồi máu và đột quỵ thì không thấy giảm. Nghĩa là hai thứ đi cùng nhau chưa chắc cái này gây ra cái kia.",
     "tags": [
       "rang-mieng",
       "tim-mach",
@@ -474,20 +461,10 @@
       "tuoi-tho",
       "hanh-phuc"
     ],
-    "src": "Harvard Study of Adult Development; Waldinger & Schulz, The Good Life (2023)"
-  },
-  {
-    "id": "sk-141",
-    "cat": "suc-khoe",
-    "sub": "van-dong",
-    "t": "Ngồi lâu liên tục có hại độc lập với việc bạn có tập thể dục hay không",
-    "s": "Thời gian ngồi tổng cộng liên quan tới nguy cơ tim mạch và chuyển hoá ngay cả ở người đạt khuyến nghị vận động — dù mức vận động cao làm giảm đáng kể tác động. Can thiệp có bằng chứng đơn giản nhất là ngắt quãng: đứng dậy vài phút mỗi 30–60 phút. Nhưng đứng suốt cũng không phải giải pháp — điều có bằng chứng là ngắt quãng: đứng lên và di chuyển vài phút mỗi giờ.",
-    "tags": [
-      "ngoi-lau",
-      "van-dong",
-      "van-phong"
-    ],
-    "src": "Ekelund và cộng sự, The Lancet (2016); Dunstan và cộng sự, Diabetes Care (2012)"
+    "src": "Harvard Study of Adult Development; Waldinger & Schulz, The Good Life (2023)",
+    "khac_voi": [
+      "sk-015"
+    ]
   },
   {
     "id": "sk-142",

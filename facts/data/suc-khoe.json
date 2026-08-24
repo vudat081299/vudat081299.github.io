@@ -71,8 +71,8 @@
     "id": "sk-006",
     "cat": "suc-khoe",
     "sub": "van-dong",
-    "t": "Mục tiêu 10.000 bước mỗi ngày khởi đầu là một chiến dịch quảng cáo",
-    "s": "Con số này đến từ tên chiếc máy đếm bước 'manpo-kei' (máy đo vạn bước) bán ở Nhật quanh Olympic Tokyo 1964. Nghiên cứu sau này cho thấy lợi ích về tử vong tăng rõ tới khoảng 7.000–8.000 bước rồi chững lại — nghĩa là mục tiêu thực tế hơn nhiều so với con số tròn trịa kia.",
+    "t": "Lợi ích giảm tử vong của việc đi bộ tăng rõ tới khoảng 7.000–8.000 bước mỗi ngày rồi chững lại",
+    "s": "Con số 10.000 không đến từ nghiên cứu nào: nó là tên chiếc máy đếm bước 'manpo-kei' (máy đo vạn bước) bán ở Nhật quanh Olympic Tokyo 1964. Các phép đo sau đó thấy đường cong đi ngang từ khoảng 7.000–8.000 bước, nên đoạn từ 8.000 lên 10.000 gần như không mua thêm được gì.",
     "tags": [
       "van-dong",
       "huyen-thoai",
@@ -84,8 +84,8 @@
     "id": "sk-007",
     "cat": "suc-khoe",
     "sub": "van-dong",
-    "t": "WHO khuyến nghị 150–300 phút vận động cường độ vừa mỗi tuần",
-    "s": "Cộng thêm hai buổi tập sức mạnh cho các nhóm cơ chính. Điểm ít người biết: khuyến nghị năm 2020 đã bỏ yêu cầu 'mỗi lần ít nhất 10 phút' — mọi vận động đều được tính, kể cả đi bộ lên cầu thang vài phút.",
+    "t": "Lợi ích của vận động cộng dồn theo tổng số phút trong tuần, không đòi mỗi lần phải đủ 10 phút",
+    "s": "Vì thế bản hướng dẫn năm 2020 bỏ hẳn ngưỡng 'mỗi lần ít nhất 10 phút' từng có trước đó: leo bộ ba phút hay đi bộ một đoạn ngắn đều được tính vào tổng 150–300 phút cường độ vừa mỗi tuần, cộng hai buổi tập sức mạnh cho các nhóm cơ chính.",
     "tags": [
       "van-dong",
       "khuyen-nghi",
@@ -97,14 +97,14 @@
     "id": "sk-008",
     "cat": "suc-khoe",
     "sub": "van-dong",
-    "t": "Ngồi nhiều có hại, nhưng vận động đủ nhiều thì bù lại được phần lớn",
-    "s": "Phân tích gộp trên hơn một triệu người cho thấy nguy cơ tử vong tăng theo thời gian ngồi, nhưng ở nhóm vận động 60–75 phút cường độ vừa mỗi ngày thì mức tăng đó gần như biến mất. Thông điệp 'ngồi là thuốc lá mới' đúng về hướng nhưng phóng đại về mức độ.",
+    "t": "Nguy cơ tử vong tăng theo thời gian ngồi, nhưng ở người vận động 60–75 phút mỗi ngày thì mức tăng đó gần như biến mất",
+    "s": "Phân tích gộp trên hơn một triệu người cho thấy như vậy, nên câu 'ngồi là thuốc lá mới' đúng về hướng nhưng phóng đại về mức độ. Với người không đạt mức vận động đó, thứ đã đo được là ngắt quãng: đứng lên và di chuyển vài phút mỗi 30–60 phút làm giảm mức đường huyết và insulin sau ăn so với ngồi liền một mạch.",
     "tags": [
       "van-dong",
       "cong-so",
       "rui-ro"
     ],
-    "src": "Ekelund et al., The Lancet (2016)"
+    "src": "Ekelund và cộng sự, The Lancet (2016); Dunstan và cộng sự, Diabetes Care (2012)"
   },
   {
     "id": "sk-009",
@@ -120,24 +120,11 @@
     "src": "Hemilä & Chalker, Cochrane Database of Systematic Reviews (2013)"
   },
   {
-    "id": "sk-010",
-    "cat": "suc-khoe",
-    "sub": "huyen-thoai-suc-khoe",
-    "t": "Quy tắc 'uống 8 ly nước mỗi ngày' không có nguồn khoa học rõ ràng",
-    "s": "Truy ngược lại, khuyến nghị này có lẽ bắt nguồn từ một tài liệu Mỹ năm 1945 vốn đã ghi rõ rằng phần lớn lượng nước đó nằm trong thức ăn — vế sau bị bỏ quên. Nhu cầu nước thay đổi theo cơ địa, thời tiết và vận động; ở người khoẻ mạnh, khát là chỉ báo đủ tốt.",
-    "tags": [
-      "nuoc",
-      "huyen-thoai",
-      "dinh-duong"
-    ],
-    "src": "Heinz Valtin, American Journal of Physiology (2002)"
-  },
-  {
     "id": "sk-011",
     "cat": "suc-khoe",
     "sub": "huyen-thoai-suc-khoe",
-    "t": "'Thải độc' bằng nước ép là marketing; gan và thận đã làm việc đó cả đời",
-    "s": "Chưa có thử nghiệm lâm sàng chất lượng nào chứng minh các chế độ detox thương mại loại bỏ được chất độc cụ thể nào ra khỏi cơ thể. Điều đáng lo hơn: một số liệu trình gây hạ natri máu, hạ đường huyết hoặc quá tải oxalate ở thận.",
+    "t": "Gan và thận lọc chất thải khỏi máu liên tục cả đời, và không có chế độ nước ép nào thêm được vào việc đó",
+    "s": "Chưa có thử nghiệm lâm sàng chất lượng nào chỉ ra được một chất độc cụ thể mà liệu trình 'thải độc' loại bỏ được. Chiều ngược lại thì đã có ca thật: một số liệu trình gây hạ natri máu — natri trong máu xuống quá thấp — hạ đường huyết, hoặc quá tải oxalate làm hỏng thận.",
     "tags": [
       "detox",
       "huyen-thoai",
@@ -192,8 +179,8 @@
     "id": "sk-015",
     "cat": "suc-khoe",
     "sub": "suc-khoe-tinh-than",
-    "t": "Quan hệ xã hội mạnh gắn với khả năng sống sót cao hơn khoảng 50%, gộp từ 148 nghiên cứu trên hơn 300 nghìn người",
-    "s": "Phân tích gộp 148 nghiên cứu trên hơn 300 nghìn người cho thấy quan hệ xã hội mạnh gắn với khả năng sống sót cao hơn khoảng 50%, mức tác động tương đương các yếu tố nguy cơ hành vi đã được công nhận. Đầu tư vào quan hệ không phải xa xỉ phẩm của người rảnh rỗi.",
+    "t": "Người có quan hệ xã hội mạnh có khả năng còn sống ở cuối kỳ theo dõi cao hơn khoảng 50% so với người ít quan hệ, gộp từ 148 nghiên cứu trên hơn 300 nghìn người",
+    "s": "Mức tác động đó ngang với các yếu tố nguy cơ hành vi mà y tế đã công nhận và cảnh báo từ lâu. Chỗ trực giác hỏng: quan hệ xã hội tưởng là chuyện tinh thần, nhưng nó đo được và đo ra cùng bậc với những rủi ro thể chất.",
     "tags": [
       "quan-he",
       "tuoi-tho",
@@ -218,8 +205,8 @@
     "id": "sk-017",
     "cat": "suc-khoe",
     "sub": "benh-va-tam-soat",
-    "t": "BMI là công cụ cho quần thể, không phải chẩn đoán cho cá nhân",
-    "s": "Chỉ số này do Adolphe Quetelet đề xuất từ thế kỷ 19 cho mục đích thống kê dân số, và nó không phân biệt được cơ với mỡ, cũng không cho biết mỡ nằm ở đâu. Vòng eo và tỉ lệ eo trên chiều cao dự báo rủi ro chuyển hoá tốt hơn ở cấp độ cá nhân.",
+    "t": "Tỉ lệ vòng eo trên chiều cao dự báo rủi ro chuyển hoá của một người tốt hơn BMI, vì BMI không phân biệt được cơ với mỡ và không cho biết mỡ nằm ở đâu",
+    "s": "BMI là một con số tính từ cân nặng và chiều cao, do Adolphe Quetelet đặt ra ở thế kỷ 19 để mô tả cả một dân số chứ không để chẩn đoán một người. Hai người cùng BMI có thể một người nhiều cơ, một người nhiều mỡ bụng — và rủi ro của họ khác nhau.",
     "tags": [
       "do-luong",
       "beo-phi",
@@ -231,8 +218,8 @@
     "id": "sk-018",
     "cat": "suc-khoe",
     "sub": "benh-va-tam-soat",
-    "t": "Hàn Quốc mở rộng siêu âm tuyến giáp: số ca ung thư được chẩn đoán tăng khoảng 15 lần mà tử vong gần như không đổi",
-    "s": "Sau khi Hàn Quốc mở rộng siêu âm tuyến giáp, số ca ung thư tuyến giáp được chẩn đoán tăng khoảng 15 lần trong hai thập kỷ, trong khi tỉ lệ tử vong do bệnh này gần như không đổi. Nghĩa là phần lớn ca phát hiện thêm là những khối u sẽ không bao giờ gây hại, nhưng bệnh nhân vẫn chịu phẫu thuật và uống thuốc suốt đời. Ví dụ rõ nhất là ung thư tuyến giáp ở Hàn Quốc: tỉ lệ chẩn đoán tăng nhiều lần sau khi mở rộng tầm soát trong khi tỉ lệ tử vong không đổi.",
+    "t": "Sau khi Hàn Quốc mở rộng siêu âm tuyến giáp, số ca ung thư tuyến giáp được chẩn đoán tăng khoảng 15 lần trong hai thập kỷ mà tỉ lệ tử vong gần như không đổi",
+    "s": "Phần phát hiện thêm gần như toàn bộ là những khối u sẽ không bao giờ gây hại, nhưng người bệnh vẫn chịu phẫu thuật và uống thuốc suốt đời. Chỗ trực giác hỏng nằm ở đây: tìm ra nhiều ung thư hơn không có nghĩa cứu được nhiều người hơn.",
     "tags": [
       "tam-soat",
       "ung-thu",

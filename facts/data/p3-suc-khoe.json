@@ -227,8 +227,8 @@
     "id": "sk-225",
     "cat": "suc-khoe",
     "sub": "van-dong",
-    "t": "Tập sức mạnh làm tăng mật độ xương, và đây là điều đi bộ không làm được",
-    "s": "Xương đáp ứng với lực tác động, nên các bài chịu tải và kháng lực có tác dụng lên mật độ xương rõ hơn hoạt động nhịp điệu cường độ thấp. Với người sau tuổi trung niên, đây là lý do tập kháng lực không phải lựa chọn thẩm mỹ mà là phòng ngừa gãy xương.",
+    "t": "Xương đắp thêm chất theo độ lớn của lực tác động, nên bài tập kháng lực và chịu tải làm tăng mật độ xương rõ hơn đi bộ",
+    "s": "Xương chỉ dày lên ở chỗ chịu lực, và lực khi đi bộ nhỏ hơn hẳn lực khi nâng hay khi nhảy. Với người sau tuổi trung niên, đó là lý do tập kháng lực thuộc phòng ngừa gãy xương chứ không thuộc chuyện thẩm mỹ.",
     "tags": [
       "xuong",
       "khang-luc"
@@ -240,12 +240,12 @@
     "cat": "suc-khoe",
     "sub": "van-dong",
     "t": "Khối cơ mất dần từ tuổi ba mươi nếu không tập, và mất cơ dự báo mất khả năng tự lập",
-    "s": "Sarcopenia — mất khối cơ và sức cơ theo tuổi — diễn ra khoảng 3–8% mỗi thập kỷ sau tuổi 30 và nhanh hơn sau 60. Nó là yếu tố dự báo mạnh cho té ngã và mất khả năng sinh hoạt độc lập, và nó đáp ứng với tập kháng lực ở mọi tuổi.",
+    "s": "Sarcopenia — mất khối cơ và sức cơ theo tuổi — diễn ra khoảng 3–8% mỗi thập kỷ sau tuổi 30 và nhanh hơn sau 60. Nó dự báo té ngã và mất khả năng sinh hoạt độc lập, và nó đáp ứng với tập kháng lực ở mọi tuổi: hướng dẫn của WHO đặt tối thiểu hai buổi tập tăng cường cơ mỗi tuần, phần thường bị bỏ qua nhất trong các khuyến nghị vận động.",
     "tags": [
       "sarcopenia",
       "tuoi"
     ],
-    "src": "Cruz-Jentoft và cộng sự, Age and Ageing (2019); Fiatarone và cộng sự, NEJM (1994)"
+    "src": "Cruz-Jentoft và cộng sự, Age and Ageing (2019); Fiatarone và cộng sự, NEJM (1994); WHO Guidelines on Physical Activity (2020)"
   },
   {
     "id": "sk-227",
@@ -258,18 +258,6 @@
       "hieu-qua"
     ],
     "src": "Schoenfeld & Contreras, Strength and Conditioning Journal (2013)"
-  },
-  {
-    "id": "sk-230",
-    "cat": "suc-khoe",
-    "sub": "van-dong",
-    "t": "Tập luyện gần như không hiệu quả để giảm cân nếu không đổi chế độ ăn",
-    "s": "Cơ thể bù trừ một phần năng lượng tiêu thêm bằng cách giảm hoạt động không chủ đích và tăng cảm giác đói. Vận động vẫn rất có giá trị — cho tim mạch, chuyển hoá, tâm trạng và duy trì cân sau khi giảm — nhưng nó là công cụ tồi để tạo thâm hụt năng lượng.",
-    "tags": [
-      "giam-can",
-      "bu-tru"
-    ],
-    "src": "Pontzer và cộng sự, Current Biology (2016); Thomas và cộng sự, Obesity Reviews (2012)"
   },
   {
     "id": "sk-231",
@@ -299,8 +287,8 @@
     "id": "sk-234",
     "cat": "suc-khoe",
     "sub": "van-dong",
-    "t": "Tập luyện cường độ cao ngắt quãng cho lợi ích tim mạch tương đương với ít thời gian hơn",
-    "s": "Các thử nghiệm so sánh cho thấy cải thiện VO2 max tương đương hoặc hơn với tổng thời gian tập ít hơn đáng kể. Nhược điểm là mức khó chịu cao hơn nên tỉ lệ duy trì thấp hơn — và chế độ duy trì được luôn thắng chế độ hiệu quả nhất trên giấy.",
+    "t": "Tập cường độ cao ngắt quãng cải thiện sức bền tim phổi tương đương tập vừa liên tục, với tổng thời gian tập ngắn hơn",
+    "s": "Thước đo được dùng là lượng oxy tối đa cơ thể lấy vào và dùng được trong một phút — chỉ số sức bền của tim và phổi. Nhược điểm là mức khó chịu cao hơn nên tỉ lệ bỏ cuộc cao hơn, và một chế độ duy trì được thắng một chế độ hiệu quả hơn trên giấy.",
     "tags": [
       "hiit",
       "hieu-qua"
@@ -323,8 +311,8 @@
     "id": "sk-236",
     "cat": "suc-khoe",
     "sub": "van-dong",
-    "t": "Mức thể lực đo bằng nghiệm pháp gắng sức dự báo tử vong mạnh hơn hút thuốc, tiểu đường hay huyết áp cao",
-    "s": "Trong các nghiên cứu theo dõi hàng chục nghìn người, mức thể lực đo bằng nghiệm pháp gắng sức dự báo tử vong mạnh hơn hút thuốc, tiểu đường hay huyết áp cao. Điều đáng chú ý là nó cải thiện được ở mọi tuổi.",
+    "t": "Thể lực đo trên máy chạy tăng dần độ khó dự báo tử vong mạnh hơn hút thuốc, tiểu đường hay huyết áp cao",
+    "s": "Phép đo là cho người chạy trên máy với độ khó tăng dần tới lúc không theo được nữa; mức chịu được chính là thước đo sức bền của tim và phổi. Theo dõi hàng chục nghìn người, mức này xếp hạng nguy cơ tử vong tốt hơn cả ba yếu tố kinh điển kia — và khác chúng, nó cải thiện được ở mọi tuổi.",
     "tags": [
       "the-luc",
       "tu-vong"
@@ -398,8 +386,8 @@
     "id": "sk-244",
     "cat": "suc-khoe",
     "sub": "an-uong",
-    "t": "Thay chất béo bão hoà bằng chất béo không bão hoà đa giảm biến cố tim mạch, thay bằng tinh bột tinh chế thì không",
-    "s": "Gộp nhiều nghiên cứu lại thì thay chất béo bão hoà bằng chất béo không bão hoà đa làm giảm biến cố tim mạch, nhưng thay bằng tinh bột tinh chế thì không. Nghĩa là câu hỏi đúng không phải 'bỏ chất béo bão hoà hay không' mà là 'thay bằng gì'.",
+    "t": "Thay chất béo bão hoà bằng chất béo không bão hoà đa làm giảm biến cố tim mạch, còn thay bằng tinh bột tinh chế thì không",
+    "s": "Cùng một lượng calo bỏ ra khỏi mỡ động vật, nếu thay bằng dầu thực vật nhiều nối đôi thì số ca nhồi máu giảm, còn thay bằng cơm trắng, bánh mì trắng hay đường thì không đổi. Nghĩa là câu hỏi đúng không phải 'có bỏ chất béo bão hoà hay không' mà 'thay bằng gì'.",
     "tags": [
       "chat-beo",
       "tim-mach"
@@ -473,8 +461,8 @@
     "id": "sk-252",
     "cat": "suc-khoe",
     "sub": "an-uong",
-    "t": "Chất tạo ngọt không calo không làm tăng nguy cơ ung thư ở mức dùng thông thường",
-    "s": "Các cơ quan an toàn thực phẩm đã đánh giá lại nhiều lần và giữ nguyên kết luận về mức an toàn hằng ngày. Năm 2023, aspartame được IARC xếp nhóm 2B — 'có thể gây ung thư' — nhưng cùng lúc ban đánh giá liều lượng giữ nguyên mức chấp nhận được, một khác biệt thường bị nhập nhằng trong tin tức.",
+    "t": "Chất tạo ngọt không calo ở mức dùng thông thường không làm tăng nguy cơ ung thư",
+    "s": "Năm 2023 aspartame bị xếp nhóm 2B — 'có thể gây ung thư' — nhưng nhóm đó nói về mức chắc chắn của bằng chứng, không nói về liều: cùng năm, ban đánh giá liều lượng giữ nguyên lượng ăn vào hằng ngày được coi là an toàn. Đó là hai câu hỏi khác nhau, và tin tức thường nhập chúng làm một.",
     "tags": [
       "chat-tao-ngot",
       "an-toan"
@@ -533,8 +521,8 @@
     "id": "sk-257",
     "cat": "suc-khoe",
     "sub": "chat-kich-thich",
-    "t": "Caffeine trong trà và cà phê được hấp thu khác nhau vì trà có L-theanine",
-    "s": "L-theanine trong trà làm giảm phần bồn chồn của caffeine trong các thí nghiệm ngắn hạn, nên cùng một liều caffeine cho trải nghiệm khác nhau. Đây là lý do một số người chịu được trà mà không chịu được cà phê ở cùng mức caffeine.",
+    "t": "Cùng một lượng caffeine từ trà gây bồn chồn ít hơn từ cà phê, vì trong lá trà còn có L-theanine",
+    "s": "L-theanine là một chất chỉ có nhiều trong lá trà; trong các thí nghiệm ngắn hạn nó làm giảm phần bồn chồn của caffeine. Vì thế cùng một liều caffeine cho trải nghiệm khác nhau, và có người chịu được trà mà không chịu được cà phê ở cùng mức caffeine.",
     "tags": [
       "tra",
       "l-theanine"
@@ -576,18 +564,6 @@
       "duong"
     ],
     "src": "Higgins, Tuttle & Higgins, Mayo Clinic Proceedings (2010); EFSA (2015)"
-  },
-  {
-    "id": "sk-262",
-    "cat": "suc-khoe",
-    "sub": "chat-kich-thich",
-    "t": "Thuốc lá điện tử ít độc hơn thuốc lá nhưng không phải vô hại, và bằng chứng dài hạn còn thiếu",
-    "s": "Các cơ quan y tế Anh xem nó là lựa chọn giảm hại cho người đang hút, trong khi các cơ quan Mỹ nhấn mạnh rủi ro với người trẻ chưa từng hút. Cả hai lập trường dựa trên cùng bằng chứng nhưng đặt trọng số khác nhau cho hai nhóm dân số khác nhau.",
-    "tags": [
-      "thuoc-la-dien-tu",
-      "giam-hai"
-    ],
-    "src": "Public Health England evidence review (2018); US Surgeon General Report on E-cigarettes (2016)"
   },
   {
     "id": "sk-263",
@@ -644,8 +620,8 @@
     "id": "sk-272",
     "cat": "suc-khoe",
     "sub": "benh-va-tam-soat",
-    "t": "Ba chỉ số ở mức ranh giới đáng lo hơn một chỉ số cao đơn lẻ, nên bác sĩ tính nguy cơ tổng hợp 10 năm",
-    "s": "Huyết áp, cholesterol, tuổi, giới, hút thuốc và tiểu đường tương tác với nhau, nên một chỉ số cao đơn lẻ có thể ít đáng lo hơn ba chỉ số ở mức ranh giới. Các thang tính nguy cơ tổng hợp là cơ sở để quyết định dùng thuốc, không phải từng ngưỡng riêng.",
+    "t": "Huyết áp, cholesterol, tuổi, giới, hút thuốc và tiểu đường cộng dồn với nhau, nên ba yếu tố ở mức ranh giới đẩy nguy cơ lên cao hơn một yếu tố cao đơn lẻ",
+    "s": "Vì thế bác sĩ không quyết định dùng thuốc theo từng ngưỡng riêng mà theo một con số gộp: xác suất bị nhồi máu cơ tim hoặc đột quỵ trong 10 năm tới, tính từ cả sáu yếu tố cùng lúc. Hai người có cùng mức cholesterol vẫn có thể được kê thuốc khác nhau chỉ vì các yếu tố còn lại khác nhau.",
     "tags": [
       "nguy-co",
       "tim-mach"

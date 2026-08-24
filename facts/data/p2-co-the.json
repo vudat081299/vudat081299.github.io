@@ -54,19 +54,6 @@
     "src": "George Stratton, Psychological Review (1897)"
   },
   {
-    "id": "ct-106",
-    "cat": "co-the",
-    "sub": "giac-quan-khac",
-    "t": "Mọi vùng có nụ vị giác trên lưỡi đều nhận được cả năm vị, không có vùng nào chỉ chuyên một vị",
-    "s": "Đặt hạt muối lên đầu lưỡi hay cuối lưỡi thì đều nhận ra vị mặn; năm vị cơ bản là ngọt, mặn, chua, đắng và umami (vị ngọt thịt của nước dùng). Ngưỡng nhạy giữa các vùng có chênh nhau nhưng quá nhỏ để thành 'vùng riêng cho từng vị' — sơ đồ chia vùng trong sách giáo khoa cũ đến từ một bản dịch sai luận văn Đức năm 1901.",
-    "tags": [
-      "vi-giac",
-      "huyen-thoai",
-      "lich-su"
-    ],
-    "src": "Hänig (1901); phản bác của Collings, Perception & Psychophysics (1974); Bartoshuk, Physiology & Behavior (1993)"
-  },
-  {
     "id": "ct-107",
     "cat": "co-the",
     "sub": "giac-quan-khac",
@@ -290,8 +277,8 @@
     "id": "ct-123",
     "cat": "co-the",
     "sub": "tim-mach-mau",
-    "t": "Méo một bên mặt, yếu một bên tay, nói líu — ba dấu hiệu đủ để nhận ra đột quỵ",
-    "s": "Méo một bên mặt, yếu một bên tay, nói líu hoặc không nói được — có bất kỳ dấu hiệu nào thì gọi cấp cứu ngay, vì mỗi phút chậm trễ làm chết thêm khoảng 1,9 triệu nơ-ron. Ngồi chờ xem có đỡ không là sai lầm phổ biến và tốn kém nhất.",
+    "t": "Trong một cơn đột quỵ do tắc mạch, khoảng 1,9 triệu nơ-ron chết mỗi phút chậm điều trị",
+    "s": "Ba dấu hiệu đủ để nhận ra nó mà không cần thiết bị nào: méo một bên mặt, yếu một bên tay, nói líu hoặc không nói được. Ở tốc độ gần hai triệu nơ-ron một phút, mười phút chờ xem có đỡ không là gần hai mươi triệu nơ-ron.",
     "tags": [
       "dot-quy",
       "cap-cuu",
@@ -421,7 +408,7 @@
     "cat": "co-the",
     "sub": "tieu-hoa-chuyen-hoa",
     "t": "Vận động nhiều hơn không làm bạn đốt nhiều năng lượng hơn tương ứng",
-    "s": "So sánh người săn bắt hái lượm Hadza với dân văn phòng phương Tây cho thấy tổng năng lượng tiêu thụ mỗi ngày gần bằng nhau, dù mức vận động chênh lệch rất lớn. Cơ thể có vẻ điều chỉnh các chi tiêu khác để giữ tổng ổn định — đó là lý do tập luyện một mình hiếm khi đủ để giảm cân.",
+    "s": "So sánh người săn bắt hái lượm Hadza với dân văn phòng phương Tây cho thấy tổng năng lượng tiêu thụ mỗi ngày gần bằng nhau, dù mức vận động chênh lệch rất lớn. Cơ thể bù lại phần đốt thêm bằng cách giảm hoạt động không chủ đích và tăng cảm giác đói — đó là lý do tập luyện một mình là công cụ tồi để tạo thâm hụt năng lượng, dù vẫn có giá trị cho tim mạch và cho việc giữ cân sau khi đã giảm.",
     "tags": [
       "nang-luong",
       "giam-can",
@@ -553,19 +540,6 @@
     "src": "Lynn Margulis, Journal of Theoretical Biology (1967); bằng chứng di truyền hiện đại"
   },
   {
-    "id": "ct-144",
-    "cat": "co-the",
-    "sub": "nao-than-kinh",
-    "t": "Não người tiêu thụ năng lượng gần như không đổi dù bạn đang nghĩ khó hay đang nghỉ",
-    "s": "Chênh lệch giữa trạng thái tập trung cao và trạng thái nghỉ chỉ vài phần trăm tổng tiêu thụ của não. Cảm giác 'nghĩ nhiều nên đói' chủ yếu đến từ căng thẳng và thói quen ăn khi làm việc, không từ một hoá đơn năng lượng thật sự lớn hơn.",
-    "tags": [
-      "nao-bo",
-      "nang-luong",
-      "hieu-lam"
-    ],
-    "src": "Raichle & Gusnard, PNAS (2002)"
-  },
-  {
     "id": "ct-145",
     "cat": "co-the",
     "sub": "nao-than-kinh",
@@ -577,19 +551,6 @@
       "chu-y"
     ],
     "src": "Raichle và cộng sự, PNAS (2001)"
-  },
-  {
-    "id": "ct-146",
-    "cat": "co-the",
-    "sub": "nao-than-kinh",
-    "t": "Não người vẫn tạo ra nơ-ron mới ở vùng hải mã — nhưng mức độ còn tranh cãi",
-    "s": "Một số nghiên cứu tìm thấy bằng chứng tạo nơ-ron mới ở người trưởng thành, một số khác không tìm thấy. Đây là ví dụ tốt cho việc đọc tin khoa học: một câu khẳng định chắc nịch theo cả hai hướng đều đang đi trước bằng chứng.",
-    "tags": [
-      "nao-bo",
-      "tranh-cai",
-      "khoa-hoc"
-    ],
-    "src": "Spalding và cộng sự, Cell (2013); Sorrells và cộng sự, Nature (2018); Moreno-Jiménez và cộng sự, Nature Medicine (2019)"
   },
   {
     "id": "ct-147",
