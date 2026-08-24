@@ -864,6 +864,24 @@ RULES_WARN = [
     # con số của cái có thật, không phải "hơn bạn nghĩ". cn-139 và cn-206 sống sót nhiều
     # tháng chỉ nhờ chỗ này. Vẫn là XEM chứ không LOẠI: hiệu ứng đèn chiếu và vài fact
     # tâm lý khác có claim thật nằm đúng ở khoảng cách đó — nhưng chúng phải kèm số.
+    # Phần tóm tắt kể AI TÌM RA thay vì kể THẾ GIỚI THẾ NÀO. Xuất xứ thuộc về trường `src`;
+    # `s` chỉ có ngần ấy chỗ, và "các nghiên cứu cho thấy" ăn mất phần đầu câu mà không thêm
+    # một chữ nào về thế giới. CLAUDE.md §1 cấm cụm này từ đầu nhưng chưa có cổng nào soi.
+    #
+    # Đo trên 1.884 fact: 94 khớp, đọc tay cả 94 thì khoảng 80 là lỗi thật — độ chính xác
+    # ~85%, ngang lưới trùng-tiêu-đề ở §3. Nên là XEM chứ không LOẠI, vì có một nhóm fact
+    # mà chủ ngữ đúng RA phải là một nghiên cứu: fact nói về cách nghiên cứu hỏng (sh-115
+    # "một nghiên cứu quét 100 biến sẽ tìm ra 5 phát hiện giả"), fact nói về cách người ta
+    # đánh giá nghiên cứu (tl-206), định lý có người chứng minh (th-311), và câu cải chính
+    # tự hạ mức chắc chắn (na-236 "kết quả này không chứng minh…"). Những ca đó khai xem_ok.
+    ('s-ke-nguoi-tim-ra', 'phần tóm tắt kể ai tìm ra thay vì kể thế giới thế nào — '
+                          'xuất xứ thuộc về trường `src`', 's', [
+        re.compile(r'(nghiên cứu|thí nghiệm|thử nghiệm|khảo sát|phân tích|tổng hợp|dữ liệu'
+                   r'|bằng chứng|kết quả)[^.]{0,45}?\b'
+                   r'(cho thấy|chỉ ra|ghi nhận|kết luận|phát hiện|xác nhận|chứng minh'
+                   r'|tìm thấy|tìm ra|ước lượng|ước tính)', re.I),
+        re.compile(r'\b(các )?nhà (khoa học|nghiên cứu|tâm lý học|kinh tế học)\b', re.I),
+    ]),
     ('tuong-tuong-nguoi-doc', 'so với cái người đọc tưởng, không so với một con số', 'ts', [
         re.compile(r'(hơn|khác với|trái với) (những gì )?'
                    r'(người ta|nhiều người|phần lớn|đa số|bạn|chúng ta|ai|người dùng|mọi người)'

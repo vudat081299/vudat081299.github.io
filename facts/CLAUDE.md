@@ -248,6 +248,41 @@ tên trong danh sách thì không bị đụng tới. Viết xong một cụm th
 
 `factlint stats` in tiến độ: cột `✓ vì sao` cho cụm đã khoá, `n/k vì sao` cho cụm đang viết dở.
 
+### 1.8 Phần tóm tắt kể **thế giới**, không kể **ai tìm ra**
+
+> Cổng này được thêm ngày 24/08/2026 sau khi chủ trang nói rằng fact trong thư viện "mang
+> tính học thuật rất khó đọc". Đo thử: **94 fact có `s` mở đầu bằng một nghiên cứu làm chủ
+> ngữ** — *"Các nghiên cứu về mất nước cho thấy…"*, *"Tổng hợp hơn 200 nghiên cứu cho
+> thấy…"*, *"Thí nghiệm hành vi cho thấy…"*. Cụm đó ăn mất phần đầu câu — chỗ đắt nhất
+> trong 217 ký tự — mà không thêm một chữ nào về thế giới.
+
+`src` đã là chỗ ghi xuất xứ, và nó nằm ngay dưới mỗi fact. Nhắc lại xuất xứ trong `s` vừa
+thừa vừa đẩy cái claim xuống nửa sau câu.
+
+| Trượt | Đạt |
+|---|---|
+| *"Các nghiên cứu về mất nước **cho thấy** mức thiếu hụt khoảng 2% khối lượng cơ thể làm giảm sức bền"* | *"Mất khoảng 2% khối lượng cơ thể bằng nước đã đủ làm sức bền giảm rõ"* |
+| *"**Tổng hợp hơn 200 nghiên cứu cho thấy** tỉ lệ đoán đúng chỉ nhỉnh hơn tung đồng xu"* | *"Tỉ lệ đoán đúng trung bình là 54%, tức chỉ nhỉnh hơn tung đồng xu"* |
+
+**Cái này khác hẳn với việc nói ra chỗ tranh cãi.** §4 quy tắc 3 vẫn bắt buộc — nhưng nói
+ra chỗ tranh cãi nghĩa là gọi tên **giới hạn cụ thể** (*"đây là dữ liệu quan sát nên nhân
+quả chưa chắc"*, *"cỡ mẫu 22 người"*, *"chưa lặp lại được ở nhóm khác"*), chứ không phải
+dán một cái nhãn *"các nghiên cứu cho thấy"* lên đầu câu. Nhãn đó không cho người đọc biết
+bằng chứng mạnh hay yếu; nó chỉ làm câu dài thêm.
+
+Cổng `s-ke-nguoi-tim-ra` báo mức `XEM`, độ chính xác đo được **khoảng 85%** (94 khớp,
+~80 lỗi thật). Bốn nhóm báo oan, và cả bốn đều có lý do giống nhau — chủ ngữ **đúng ra**
+phải là một nghiên cứu, vì fact nói về chính chuyện nghiên cứu:
+
+| Nhóm | Ca mẫu |
+|---|---|
+| fact nói về cách nghiên cứu hỏng | `sh-115` *"một nghiên cứu quét 100 biến sẽ tìm ra khoảng 5 phát hiện giả"* |
+| fact nói về cách người ta đánh giá nghiên cứu | `tl-206` *"cùng một nghiên cứu được đánh giá chặt hay yếu tuỳ kết luận"* |
+| định lý toán có người chứng minh | `th-311` *"kết quả này được Fedorov chứng minh năm 1891"* |
+| câu cải chính tự hạ mức chắc chắn | `na-236` *"kết quả này không chứng minh hoạ sĩ nhìn thấy dòng rối"* |
+
+Bốn nhóm đó khai `"xem_ok": ["s-ke-nguoi-tim-ra"]`.
+
 ---
 
 ## 2. Pipeline thêm fact — làm đúng thứ tự này
