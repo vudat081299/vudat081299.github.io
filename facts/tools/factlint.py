@@ -30,6 +30,7 @@ import re
 import sys
 import unicodedata
 from collections import Counter, defaultdict
+from difflib import SequenceMatcher
 from math import log, sqrt
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -139,6 +140,35 @@ def viz_keys():
 REQUIRED = ('id', 'cat', 't', 's', 'src')
 
 
+
+# `s` chỉ có 1–3 câu, nên chép lại tiêu đề ở câu đầu là vứt đi một phần ba chỗ trống —
+# và CLAUDE.md §1.4 nói thẳng "tóm tắt tốt thì diễn giải bằng từ mới".
+#
+# Ngưỡng 0,90 là số ĐO ĐƯỢC, không phải số chọn cho tiện. Quét cả 1.944 fact ngày
+# 24/08/2026 cho phân bố:
+#     >= 0,90   5 fact   cả 5 đều chép thuần, ct-111 chép TỪNG CHỮ
+#     0,75–0,90 20 fact
+#     0,60–0,75 26 fact  ← gần như toàn ca HỢP LỆ: nhắc lại tiêu đề rồi thêm dữ kiện mới
+# Đặt cổng ở 0,75 hay 0,60 là nổ vào 46 ca mà phần lớn đúng, và một cổng nổ vào chỗ
+# đúng thì chết vì bị bỏ qua. Ở 0,90 nó chỉ bắt đúng lớp lỗi "chép rồi mới viết".
+CHEP_TIEU_DE = 0.90
+_KHONG_CHU = re.compile(r'[^a-z0-9 ]')
+
+
+def _cau_dau(s):
+    return re.split(r'(?<=[.!?])\s', (s or '').strip())[0]
+
+
+def chep_tieu_de(t, s):
+    """Tỉ lệ giống giữa tiêu đề và CÂU ĐẦU của tóm tắt, sau khi bỏ dấu và dấu câu."""
+    a = _KHONG_CHU.sub(' ', strip_tones((t or '').lower()))
+    b = _KHONG_CHU.sub(' ', strip_tones(_cau_dau(s).lower()))
+    a, b = ' '.join(a.split()), ' '.join(b.split())
+    if len(b.split()) < 5:
+        return 0.0
+    return SequenceMatcher(None, a, b).ratio()
+
+
 def check_shape(man, facts, vk):
     errs, warns = [], []
     cats = {c['id'] for c in man['categories']}
@@ -169,6 +199,11 @@ def check_shape(man, facts, vk):
             warns.append('%s: không có tags' % where)
         if len(f.get('s', '')) < 40:
             warns.append('%s: tóm tắt quá ngắn (%d ký tự)' % (where, len(f.get('s', ''))))
+        r = chep_tieu_de(f.get('t'), f.get('s'))
+        if r >= CHEP_TIEU_DE:
+            errs.append('%s: câu đầu của "s" chép lại tiêu đề (giống %.0f%%) — s chỉ có '
+                        '1–3 câu, viết lại câu đó thành dữ kiện mới (CLAUDE.md §1.4)'
+                        % (where, 100 * r))
         if 'xem_ok' in f:
             known = all_warn_rule_ids()
             if not isinstance(f['xem_ok'], list) or not f['xem_ok']:
