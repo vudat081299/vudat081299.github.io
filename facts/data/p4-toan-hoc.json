@@ -202,7 +202,7 @@
     "cat": "toan-hoc",
     "sub": "hinh-hoc",
     "t": "Không thể trải phẳng một mặt cầu mà không làm méo, và mọi bản đồ thế giới đều phải chọn hy sinh cái gì",
-    "s": "Định lý Egregium của Gauss chứng minh độ cong nội tại không đổi được khi uốn. Phép chiếu Mercator giữ đúng góc nhưng phóng to Greenland lên gấp khoảng 14 lần so với thực tế.",
+    "s": "Định lý Egregium của Gauss chứng minh độ cong nội tại không đổi được khi uốn: mặt cầu có độ cong khác 0 nên không trải phẳng được, còn hình trụ và hình nón có độ cong bằng 0 nên cắt ra là trải phẳng — đó là lý do vỏ hộp hình trụ dập được từ một tấm phẳng. Phép chiếu Mercator giữ đúng góc nhưng phóng to Greenland lên gấp khoảng 14 lần so với thực tế.",
     "tags": [
       "ban-do",
       "mercator",
@@ -279,8 +279,8 @@
     "id": "th-222",
     "cat": "toan-hoc",
     "sub": "day-so-va-ti-le",
-    "t": "Tỉ lệ vàng không phổ biến trong nghệ thuật cổ điển như danh tiếng của nó",
-    "s": "Markowsky (1992) rà lại các ví dụ nổi tiếng — kim tự tháp Giza, đền Parthenon, tranh Leonardo — và thấy phần lớn là kết quả của việc chọn điểm đo cho khớp sau, với sai số 5–10% so với 1,618. Bản thân tỉ lệ này vẫn là một hằng số toán học thật với nhiều tính chất đẹp.",
+    "t": "Các tỉ lệ được cho là tỉ lệ vàng ở kim tự tháp Giza, đền Parthenon và tranh Leonardo lệch 5–10% so với 1,618 và chỉ khớp khi người đo tự chọn điểm đo",
+    "s": "Tỉ lệ vàng là con số 1,618: cắt một đoạn thẳng thành hai phần sao cho phần dài chia phần ngắn đúng bằng cả đoạn chia phần dài. Khi Markowsky rà lại từng ví dụ nổi tiếng năm 1992, các phép đo khớp được là do người đo chọn điểm bắt đầu và điểm kết thúc cho vừa, còn sai số vẫn ở mức 5–10%.",
     "tags": [
       "ti-le-vang",
       "nghe-thuat",
@@ -328,19 +328,6 @@
     "src": "Hall, American Journal of Physics (2005)"
   },
   {
-    "id": "th-228",
-    "cat": "toan-hoc",
-    "sub": "day-so-va-ti-le",
-    "t": "Số e xuất hiện lần đầu trong bài toán lãi kép, không phải trong giải tích",
-    "s": "Nếu gửi 1 đồng với lãi 100% một năm và ghép lãi liên tục, cuối năm được đúng e đồng, tức khoảng 2,71828. Bernoulli phát hiện giới hạn này khi nghiên cứu ghép lãi ngày càng dày.",
-    "tags": [
-      "so-e",
-      "lai-kep",
-      "bernoulli"
-    ],
-    "src": "Jacob Bernoulli (1683)"
-  },
-  {
     "id": "th-229",
     "cat": "toan-hoc",
     "sub": "day-so-va-ti-le",
@@ -357,8 +344,8 @@
     "id": "th-230",
     "cat": "toan-hoc",
     "sub": "day-so-va-ti-le",
-    "t": "Số phức không hề 'ảo' — chúng là công cụ bắt buộc để mô tả dòng điện xoay chiều và cơ học lượng tử",
-    "s": "Tên gọi 'ảo' do Descartes đặt với ý miệt thị và nó dính luôn. Không có số phức thì không tính được mạch điện, xử lý tín hiệu hay hàm sóng.",
+    "t": "Mạch điện xoay chiều, xử lý tín hiệu và hàm sóng lượng tử đều phải tính bằng số phức",
+    "s": "Một dao động cần hai con số mới mô tả xong: độ lớn và độ lệch pha. Số phức gói đúng hai con số đó vào một đại lượng, nên cộng trừ nhân chia là xong thay vì phải giải hệ lượng giác mỗi lần. Chữ 'ảo' chỉ là cái tên Descartes đặt năm 1637, không nói gì về chuyện chúng có thật hay không.",
     "tags": [
       "so-phuc",
       "ung-dung",
@@ -474,8 +461,8 @@
     "id": "th-240",
     "cat": "toan-hoc",
     "sub": "do-thi-mang-luoi",
-    "t": "Thuật toán tìm đường đi ngắn nhất của Dijkstra ra đời năm 1956 và nó vẫn chạy trong ứng dụng bản đồ của bạn",
-    "s": "Dijkstra nghĩ ra nó trong khoảng 20 phút khi ngồi quán cà phê ở Amsterdam, và ba năm sau mới công bố. Các bản đồ hiện đại dùng biến thể có gợi ý hướng để nhanh hơn nữa.",
+    "t": "Ứng dụng bản đồ tìm đường ngắn nhất bằng thuật toán Dijkstra công bố năm 1959, thường ở biến thể có thêm gợi ý hướng để chạy nhanh hơn",
+    "s": "Thuật toán loang dần ra từ điểm xuất phát và luôn xét tiếp nút gần nhất trong số chưa xét, nên khi tới đích thì đã chắc chắn không còn đường nào ngắn hơn. Biến thể có gợi ý hướng ưu tiên các nút nằm về phía đích, nhờ vậy bỏ qua được phần lớn bản đồ.",
     "tags": [
       "dijkstra",
       "thuat-toan",
@@ -513,8 +500,8 @@
     "id": "th-243",
     "cat": "toan-hoc",
     "sub": "toi-uu-va-thuat-toan",
-    "t": "Câu hỏi P có bằng NP hay không vẫn chưa có lời giải, và ai giải được sẽ nhận một triệu đô",
-    "s": "Đây là một trong bảy Bài toán Thiên niên kỷ của Viện Clay. Nếu P bằng NP thì phần lớn hệ mật mã hiện nay mất giá trị, còn nhiều bài toán tối ưu khó lại giải được nhanh.",
+    "t": "Chưa ai biết những bài toán mà máy tính kiểm tra được lời giải rất nhanh có phải cũng là những bài toán máy tính tự tìm ra lời giải nhanh hay không",
+    "s": "Nhóm 'tự tìm được nhanh' gọi là P, nhóm 'kiểm được nhanh' gọi là NP, và câu hỏi hai nhóm đó có trùng nhau không là một trong bảy Bài toán Thiên niên kỷ của Viện Clay, treo giải một triệu đô. Nếu chúng trùng nhau thì phần lớn hệ mật mã hiện nay mất giá trị, còn rất nhiều bài toán xếp lịch và tối ưu đang phải giải gần đúng sẽ giải được chính xác và nhanh.",
     "tags": [
       "p-vs-np",
       "do-phuc-tap",
@@ -576,19 +563,6 @@
       "truc-giac"
     ],
     "src": "Tall & Schwarzenberger, Mathematics Teaching (1978)"
-  },
-  {
-    "id": "th-251",
-    "cat": "toan-hoc",
-    "sub": "nghich-ly-toan",
-    "t": "Trong một nhóm ngẫu nhiên, người kiểm tra chất lượng luôn gặp lô hàng tệ hơn mức trung bình thật",
-    "s": "Nghịch lý thanh tra: lô lớn có nhiều cơ hội được chọn hơn lô nhỏ, nên mẫu bị lệch về phía lô lớn. Cùng cơ chế làm bạn luôn thấy xe buýt đến muộn hơn giãn cách công bố và lớp học đông hơn con số trung bình của trường.",
-    "tags": [
-      "nghich-ly-thanh-tra",
-      "thien-lech",
-      "thong-ke"
-    ],
-    "src": "Feller, An Introduction to Probability Theory"
   },
   {
     "id": "th-252",
@@ -893,19 +867,6 @@
     "src": "Plateau (1873); Taylor, Annals of Mathematics (1976)"
   },
   {
-    "id": "th-287",
-    "cat": "toan-hoc",
-    "sub": "hinh-hoc",
-    "t": "Không thể lấy một hình cầu và trải nó ra thành mặt phẳng, nhưng có thể làm ngược lại với hình trụ và hình nón",
-    "s": "Độ cong Gauss của mặt cầu khác 0 nên nó không khai triển được; hình trụ có độ cong Gauss bằng 0 nên cắt ra là trải phẳng được. Đây là lý do vỏ hộp hình trụ dập từ tấm phẳng còn quả cầu thì phải ghép múi.",
-    "tags": [
-      "do-cong-gauss",
-      "khai-trien",
-      "che-tao"
-    ],
-    "src": "Gauss (1827); do Carmo, Differential Geometry of Curves and Surfaces"
-  },
-  {
     "id": "th-288",
     "cat": "toan-hoc",
     "sub": "day-so-va-ti-le",
@@ -935,8 +896,8 @@
     "id": "th-290",
     "cat": "toan-hoc",
     "sub": "toi-uu-va-thuat-toan",
-    "t": "Bài toán xếp ba lô là NP-khó, nhưng vẫn giải nhanh được nếu trọng số là số nguyên nhỏ",
-    "s": "Quy hoạch động cho thời gian tỉ lệ với số món nhân dung lượng, tức nhanh trên thực tế nhưng vẫn là hàm mũ theo số bit biểu diễn. Đây là ví dụ chuẩn của độ phức tạp giả đa thức.",
+    "t": "Chọn các món có tổng khối lượng vừa một ba lô sao cho tổng giá trị lớn nhất là bài toán chưa ai có cách giải nhanh cho mọi trường hợp, nhưng giải được nhanh khi khối lượng các món là số nguyên nhỏ",
+    "s": "Cách giải nhanh đó lập một bảng: với mỗi mức khối lượng còn trống và mỗi món, ghi lại giá trị tốt nhất đạt được rồi tra ngược lại. Thời gian chạy tỉ lệ với số món nhân dung lượng ba lô — nên khi dung lượng là số nguyên nhỏ thì rất nhanh, còn khi nó là một con số khổng lồ thì bảng phình lên và cách này cũng bó tay.",
     "tags": [
       "xep-ba-lo",
       "np-kho",
@@ -984,30 +945,20 @@
     "src": "Archimedes, Đo hình tròn (khoảng 250 TCN)"
   },
   {
-    "id": "th-294",
-    "cat": "toan-hoc",
-    "sub": "day-so-va-ti-le",
-    "t": "Lãi 1%/tháng không phải 12%/năm mà là 12,68%/năm khi ghép lãi",
-    "s": "Công thức là 1,01 mũ 12 trừ 1. Chênh lệch nhỏ ở lãi suất thấp nhưng bùng lên ở lãi suất cao: 5%/tháng cho 79,6%/năm chứ không phải 60%.",
-    "tags": [
-      "lai-kep",
-      "ghep-lai",
-      "tai-chinh"
-    ],
-    "src": "Phép tính lãi kép cơ bản; Ngân hàng Nhà nước Việt Nam"
-  },
-  {
     "id": "th-295",
     "cat": "toan-hoc",
     "sub": "toi-uu-va-thuat-toan",
-    "t": "Kiểm tra một lời giải nhanh hơn tìm ra nó rất nhiều bậc, và đó là ý tưởng trung tâm của lớp bài toán NP",
-    "s": "Nhìn một lời giải Sudoku 9×9 thì kiểm trong vài giây, còn giải từ ô trống thì lâu hơn hàng nghìn lần. Toàn bộ mật mã hiện đại sống nhờ đúng khoảng cách giữa hai việc đó.",
+    "t": "Với mọi cách giải đã biết, kiểm một lời giải Sudoku 9×9 nhanh hơn tự giải nó hàng nghìn lần",
+    "s": "Nhìn một bảng đã điền thì kiểm trong vài giây; giải từ ô trống thì lâu hơn hàng nghìn lần. Toàn bộ mật mã hiện đại sống nhờ đúng khoảng cách đó — nhưng chưa ai chứng minh được khoảng cách ấy là bắt buộc chứ không phải chỉ vì ta chưa tìm ra cách giải nhanh.",
     "tags": [
       "np",
       "kiem-chung",
       "do-phuc-tap"
     ],
-    "src": "Cook, STOC (1971); Arora & Barak, Computational Complexity"
+    "src": "Cook, STOC (1971); Arora & Barak, Computational Complexity",
+    "khac_voi": [
+      "th-243"
+    ]
   },
   {
     "id": "th-298",
@@ -1065,8 +1016,8 @@
     "id": "th-304",
     "cat": "toan-hoc",
     "sub": "so-nguyen-to",
-    "t": "Số hoàn hảo — bằng tổng các ước thật của nó — rất hiếm, và tới nay mới biết 51 số",
-    "s": "6 và 28 là hai số đầu tiên. Chưa ai biết có số hoàn hảo lẻ nào hay không, dù đã kiểm tới 10 mũ 1500.",
+    "t": "Số hoàn hảo — số bằng đúng tổng các ước thật của nó — rất hiếm: tới nay mới biết 52 số",
+    "s": "6 bằng 1 cộng 2 cộng 3, và 28 bằng 1 cộng 2 cộng 4 cộng 7 cộng 14; đó là hai số đầu tiên. Mỗi số nguyên tố Mersenne cho đúng một số hoàn hảo chẵn, nên danh sách chỉ dài thêm mỗi lần GIMPS tìm được một số Mersenne mới. Chưa ai biết có số hoàn hảo lẻ nào hay không, dù đã kiểm tới 10 mũ 1500.",
     "tags": [
       "so-hoan-hao",
       "so-hoc",
@@ -1196,26 +1147,13 @@
     "cat": "toan-hoc",
     "sub": "day-so-va-ti-le",
     "t": "Lãi suất 100% một năm ghép lãi càng dày thì tiền càng nhiều, nhưng nó hội tụ chứ không tăng mãi",
-    "s": "Ghép mỗi năm được 2 lần vốn, mỗi tháng được 2,613, mỗi ngày được 2,7146, ghép liên tục được đúng e. Không có cách ghép nào cho quá 2,71828 lần.",
+    "s": "Ghép mỗi năm được 2 lần vốn, mỗi tháng được 2,613, mỗi ngày được 2,7146, ghép liên tục được đúng e — không cách ghép nào cho quá 2,71828 lần. Bernoulli tìm ra giới hạn này năm 1683 khi nghiên cứu ghép lãi ngày càng dày, tức số e xuất hiện trong bài toán lãi kép trước khi nó xuất hiện trong giải tích.",
     "tags": [
       "lai-kep",
       "so-e",
       "gioi-han"
     ],
     "src": "Bernoulli (1683)"
-  },
-  {
-    "id": "th-315",
-    "cat": "toan-hoc",
-    "sub": "day-so-va-ti-le",
-    "t": "Dãy Fibonacci xuất hiện trong bài toán sinh sản thỏ mà Fibonacci nêu năm 1202, và bài toán đó rất phi thực tế",
-    "s": "Nó giả định thỏ bất tử và sinh đều đặn. Giá trị thật của dãy nằm ở các tính chất toán học và ở chỗ nó xuất hiện trong cấu trúc xoắn của thực vật.",
-    "tags": [
-      "fibonacci",
-      "lich-su",
-      "thuc-vat"
-    ],
-    "src": "Fibonacci, Liber Abaci (1202)"
   },
   {
     "id": "th-316",
@@ -1286,8 +1224,8 @@
     "id": "th-321",
     "cat": "toan-hoc",
     "sub": "do-thi-mang-luoi",
-    "t": "Trong một nhóm bất kỳ, luôn có ít nhất hai người quen đúng cùng số người trong nhóm đó",
-    "s": "Đây là hệ quả của nguyên lý ngăn kéo áp lên bậc của các đỉnh. Kết quả đúng với mọi nhóm từ 2 người trở lên.",
+    "t": "Trong bất kỳ nhóm từ hai người trở lên, luôn có hai người quen đúng cùng số người trong nhóm",
+    "s": "Trong nhóm n người, mỗi người quen từ 0 tới n−1 người khác, tức n mức có thể. Nhưng 'quen 0 người' và 'quen tất cả n−1 người' không thể cùng xuất hiện trong một nhóm, nên thực tế chỉ còn n−1 mức cho n người — nhét n người vào n−1 mức thì chắc chắn có hai người trùng.",
     "tags": [
       "ngan-keo",
       "do-thi",
@@ -1361,24 +1299,11 @@
     "src": "Garey & Johnson, Computers and Intractability"
   },
   {
-    "id": "th-327",
-    "cat": "toan-hoc",
-    "sub": "toi-uu-va-thuat-toan",
-    "t": "Máy học không 'hiểu' dữ liệu — nó tìm hàm khớp dữ liệu, và một hàm khớp hoàn hảo dữ liệu cũ thường tệ với dữ liệu mới",
-    "s": "Đây là hiện tượng quá khớp, và nó là bài toán trung tâm của cả ngành. Định lý không có bữa trưa miễn phí chứng minh không tồn tại thuật toán học tốt nhất cho mọi bài toán.",
-    "tags": [
-      "qua-khop",
-      "may-hoc",
-      "dinh-ly"
-    ],
-    "src": "Wolpert & Macready, IEEE Transactions on Evolutionary Computation (1997)"
-  },
-  {
     "id": "th-329",
     "cat": "toan-hoc",
     "sub": "nghich-ly-toan",
-    "t": "Nghịch lý hai phong bì: lập luận đổi phong bì luôn có lợi nghe hợp lý nhưng dẫn tới vô lý",
-    "s": "Nếu đổi luôn có lợi thì đổi rồi đổi lại cũng có lợi, điều đó không thể đúng. Lỗi nằm ở chỗ dùng cùng một ký hiệu cho hai đại lượng khác nhau trong kỳ vọng.",
+    "t": "Với hai phong bì mà một cái chứa gấp đôi cái kia, lập luận 'đổi thì luôn được lợi' nghe hợp lý nhưng sai, vì nó đổi ý nghĩa của con số đang xét giữa hai bước tính",
+    "s": "Bạn mở một phong bì; cái còn lại có thể gấp đôi hoặc bằng một nửa số bạn đang giữ, nên trung bình của hai khả năng đó lớn hơn số đang giữ và đổi trông như luôn có lợi. Nhưng lập luận y hệt cũng đúng nếu bạn đang giữ phong bì kia, tức đổi rồi đổi lại cũng có lợi — điều không thể đúng. Chỗ hỏng là 'số tiền đang giữ' được dùng vừa như phong bì nhỏ vừa như phong bì lớn trong cùng một phép tính.",
     "tags": [
       "hai-phong-bi",
       "ky-vong",
@@ -1435,8 +1360,8 @@
     "id": "th-333",
     "cat": "toan-hoc",
     "sub": "nghich-ly-toan",
-    "t": "Bệnh viện chữa 100 ca nặng với tỉ lệ sống 60% có thể giỏi hơn bệnh viện chữa 1.000 ca nhẹ với tỉ lệ 90%",
-    "s": "Một bệnh viện chữa 100 ca nặng với tỉ lệ sống 60% giỏi hơn bệnh viện chữa 1.000 ca nhẹ với tỉ lệ 90%, nhưng bảng xếp hạng thô lại nói ngược. Đây là lý do y tế phải hiệu chỉnh theo mức độ bệnh.",
+    "t": "Tỉ lệ sống thô của một bệnh viện phản ánh mức độ nặng của bệnh nhân họ nhận nhiều hơn phản ánh chất lượng điều trị",
+    "s": "Nơi nhận 100 ca nặng và cứu được 60 người có thể đang làm tốt hơn nơi nhận 1.000 ca nhẹ và cứu được 900 người, vì hai nhóm bệnh nhân có mức nguy hiểm nền khác nhau — nhưng bảng xếp hạng theo tỉ lệ sống thô lại nói ngược. Vì vậy mọi so sánh kết quả y tế đều phải hiệu chỉnh theo mức độ bệnh trước khi xếp hạng.",
     "tags": [
       "hieu-chinh-rui-ro",
       "thong-ke",
@@ -1488,26 +1413,13 @@
     "cat": "toan-hoc",
     "sub": "day-so-va-ti-le",
     "t": "Trung bình nhân luôn nhỏ hơn hoặc bằng trung bình cộng, và đó là lý do lợi nhuận trung bình gây hiểu lầm",
-    "s": "Danh mục lãi 50% rồi lỗ 50% có trung bình cộng bằng 0 nhưng thực tế mất 25% vốn. Con số đúng cho tăng trưởng nhiều kỳ là trung bình nhân.",
+    "s": "Danh mục lãi 50% rồi lỗ 50% có trung bình cộng bằng 0 nhưng thực tế mất 25% vốn, và thứ tự không đổi kết quả: 1,5 nhân 0,5 luôn bằng 0,75, cũng như tăng 10% rồi giảm 10% luôn cho 0,99. Con số đúng cho tăng trưởng nhiều kỳ là trung bình nhân, và đó là lý do biến động lớn bào mòn vốn ngay cả khi giá quay về điểm xuất phát.",
     "tags": [
       "trung-binh-nhan",
       "dau-tu",
       "bat-dang-thuc"
     ],
     "src": "Bất đẳng thức AM-GM; CFA Institute Curriculum"
-  },
-  {
-    "id": "th-338",
-    "cat": "toan-hoc",
-    "sub": "day-so-va-ti-le",
-    "t": "Tăng 10% rồi giảm 10% không đưa bạn về chỗ cũ mà làm mất 1%",
-    "s": "Thứ tự không quan trọng: 1,1 nhân 0,9 luôn bằng 0,99. Đây là lý do biến động lớn bào mòn vốn ngay cả khi giá quay lại điểm xuất phát.",
-    "tags": [
-      "phan-tram",
-      "tang-truong",
-      "tai-chinh"
-    ],
-    "src": "Phép tính phần trăm cơ bản"
   },
   {
     "id": "th-339",
@@ -1560,19 +1472,6 @@
       "xac-suat"
     ],
     "src": "Rosenhouse, The Monty Hall Problem (2009)"
-  },
-  {
-    "id": "th-343",
-    "cat": "toan-hoc",
-    "sub": "do-thi-mang-luoi",
-    "t": "Mọi bản đồ metro, mạch điện và sơ đồ tổ chức đều là đồ thị, và cùng một thuật toán chạy được cho cả ba",
-    "s": "Lý thuyết đồ thị không quan tâm cái gì được nối, chỉ quan tâm cấu trúc nối. Đây là ví dụ điển hình của việc trừu tượng hoá làm một công cụ dùng được ở nhiều ngành.",
-    "tags": [
-      "do-thi",
-      "truu-tuong",
-      "ung-dung"
-    ],
-    "src": "Newman, Networks: An Introduction (2018)"
   },
   {
     "id": "th-344",
@@ -1633,8 +1532,8 @@
     "id": "th-349",
     "cat": "toan-hoc",
     "sub": "vo-han-va-tap-hop",
-    "t": "Trong một dãy vô hạn chữ số ngẫu nhiên, mọi chuỗi hữu hạn đều xuất hiện vô số lần",
-    "s": "Nếu số pi là số chuẩn — điều chưa được chứng minh — thì số điện thoại của bạn nằm đâu đó trong khai triển của nó. Chưa ai chứng minh được pi có tính chất này.",
+    "t": "Trong một dãy vô hạn chữ số mà mười chữ số xuất hiện đều đặn như nhau, mọi chuỗi hữu hạn — kể cả số điện thoại của bạn — đều xuất hiện vô số lần",
+    "s": "Dãy có tính chất đó gọi là dãy chuẩn: mỗi chuỗi con dài k chữ số xuất hiện với tần suất đúng bằng 1 trên 10 mũ k, nên chuỗi nào cũng phải xuất hiện, và đã xuất hiện một lần thì xuất hiện vô hạn lần. Số pi được cho là như vậy nhưng chưa ai chứng minh được, nên câu 'số điện thoại của bạn nằm trong pi' vẫn là một điều chưa biết.",
     "tags": [
       "so-chuan",
       "pi",

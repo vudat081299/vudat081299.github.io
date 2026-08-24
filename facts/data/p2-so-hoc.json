@@ -1,19 +1,5 @@
 [
   {
-    "id": "sh-107",
-    "cat": "so-hoc",
-    "sub": "trung-binh-phan-bo",
-    "viz": "normal-vs-power",
-    "t": "Chiều cao và tài sản phân bố hoàn toàn khác nhau — nhìn hai biểu đồ cạnh nhau",
-    "s": "Không ai cao gấp ba người trung bình, nhưng người giàu nhất có thể giàu gấp một triệu lần. Đại lượng theo hình chuông thì trung bình có ý nghĩa; đại lượng theo luật luỹ thừa thì trung bình gần như vô nghĩa và cái đuôi quyết định tất cả.",
-    "tags": [
-      "phan-bo",
-      "bat-binh-dang",
-      "duoi-day"
-    ],
-    "src": "Nassim Taleb, The Black Swan (2007); Clauset, Shalizi & Newman, SIAM Review (2009)"
-  },
-  {
     "id": "sh-108",
     "cat": "so-hoc",
     "sub": "dem-va-to-hop",
@@ -139,26 +125,13 @@
     "cat": "so-hoc",
     "sub": "nghich-ly-xac-suat",
     "t": "Nghịch lý thanh tra: bạn luôn rơi vào khoảng chờ dài hơn trung bình",
-    "s": "Nếu xe buýt trung bình 10 phút một chuyến nhưng giãn cách không đều, thời gian chờ trung bình của hành khách lớn hơn 5 phút — vì bạn có nhiều khả năng đến trong một khoảng trống dài hơn là trong một khoảng ngắn. Cùng lý do khiến đường luôn có vẻ đông hơn số liệu.",
+    "s": "Nếu xe buýt trung bình 10 phút một chuyến nhưng giãn cách không đều, thời gian chờ trung bình của hành khách lớn hơn 5 phút — vì bạn có nhiều khả năng đến trong một khoảng trống dài hơn là trong một khoảng ngắn. Cùng cơ chế làm người kiểm tra chất lượng hay gặp lô lớn hơn mức trung bình thật, và làm lớp học bạn ngồi trong đó đông hơn quy mô lớp trung bình mà trường công bố.",
     "tags": [
       "lay-mau",
       "hang-doi",
       "nghich-ly"
     ],
     "src": "Inspection paradox; mô tả trong Allen Downey, Think Stats (2014)"
-  },
-  {
-    "id": "sh-121",
-    "cat": "so-hoc",
-    "sub": "co-mau-p-value",
-    "t": "Hỏi thêm người trên một mẫu đã lệch chỉ làm kết luận sai trở nên chắc chắn hơn",
-    "s": "Khảo sát trên mạng chỉ hỏi người dùng mạng; khảo sát khách hàng chỉ hỏi người còn ở lại; nghiên cứu về người thành công chỉ hỏi người còn sống. Ở những mẫu như vậy, tăng số người được hỏi làm khoảng sai số hẹp lại quanh một con số vốn đã sai — nên nó tạo ra sự tự tin chứ không tạo ra độ chính xác.",
-    "tags": [
-      "lay-mau",
-      "thien-lech",
-      "khao-sat"
-    ],
-    "src": "Bài học từ khảo sát Literary Digest (1936); Meng, Annals of Applied Statistics (2018)"
   },
   {
     "id": "sh-122",
@@ -298,18 +271,14 @@
     "id": "sh-136",
     "cat": "so-hoc",
     "sub": "ngau-nhien",
-    "t": "Quy tắc Kelly: tỉ lệ cược tối ưu bằng lợi thế chia cho tỉ lệ trả thưởng, và người thực hành thường chỉ cược 1/2 mức đó",
-    "s": "Ngay cả khi có lợi thế, cược quá lớn dẫn tới phá sản gần như chắc chắn vì tăng trưởng vốn là phép nhân. Công thức Kelly cho tỉ lệ tối đa hoá tốc độ tăng trưởng dài hạn, và trong thực hành người ta thường cược một nửa mức đó vì ước lượng lợi thế luôn có sai số.",
+    "t": "Mức cược làm vốn tăng nhanh nhất bằng phần lợi thế của bạn chia cho số tiền thắng được trên mỗi đồng cược, và người thực hành thường chỉ đặt một nửa mức đó",
+    "s": "Lợi thế ở đây là phần chênh giữa khả năng thắng thật của bạn và khả năng mà tỉ lệ trả thưởng ngầm định. Cược quá mức tính được thì vốn tăng chậm lại rồi cụt dần, vì vốn tăng theo phép nhân: mất một nửa vốn thì phải thắng gấp đôi mới về chỗ cũ. Người thực hành cược một nửa mức đó vì con số lợi thế luôn là ước lượng, và ước lượng luôn lệch.",
     "tags": [
       "dau-tu",
       "quan-tri-von",
       "toi-uu"
     ],
-    "src": "John Kelly, Bell System Technical Journal (1956); Thorp, The Kelly Criterion in Blackjack, Sports Betting, and the Stock Market (2006)",
-    "xem_ok": [
-      "dinh-luat-dat-ten",
-      "xu-huong-mo-ho"
-    ]
+    "src": "John Kelly, Bell System Technical Journal (1956); Thorp, The Kelly Criterion in Blackjack, Sports Betting, and the Stock Market (2006)"
   },
   {
     "id": "sh-137",
@@ -388,22 +357,6 @@
       "mo-hinh"
     ],
     "src": "Lucas Critique, Robert Lucas (1976); Goodhart (1975)"
-  },
-  {
-    "id": "sh-146",
-    "cat": "so-hoc",
-    "sub": "ngau-nhien",
-    "t": "Xác suất trùng hợp trong một đời người cao hơn cảm giác rất nhiều",
-    "s": "Bạn gặp hàng chục nghìn tình huống mỗi năm; với đủ số lần thử, những trùng hợp xác suất một phần triệu sẽ xảy ra với ai đó, ở đâu đó, gần như mỗi ngày. Cảm giác 'không thể là ngẫu nhiên' đo lường sự hiếm của một sự kiện cụ thể, không đo số lần thử.",
-    "tags": [
-      "ngau-nhien",
-      "trung-hop",
-      "truc-giac"
-    ],
-    "src": "Diaconis & Mosteller, 'Methods for Studying Coincidences', JASA (1989)",
-    "xem_ok": [
-      "do-lon-bang-chu"
-    ]
   },
   {
     "id": "sh-147",

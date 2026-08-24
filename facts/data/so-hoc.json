@@ -74,7 +74,7 @@
     "cat": "so-hoc",
     "sub": "co-mau-p-value",
     "t": "Năm 1936, một khảo sát 2,4 triệu người dự đoán sai bầu cử Mỹ; một khảo sát 50 nghìn người đoán đúng",
-    "s": "Tạp chí Literary Digest gửi phiếu qua danh sách chủ ô tô và thuê bao điện thoại — nhóm giàu hơn mức trung bình trong thời Đại khủng hoảng — và dự đoán Landon thắng. George Gallup với mẫu nhỏ nhưng đại diện hơn đã đoán đúng Roosevelt. Mẫu lệch không sửa được bằng cách tăng cỡ mẫu.",
+    "s": "Tạp chí Literary Digest gửi phiếu qua danh sách chủ ô tô và thuê bao điện thoại — nhóm giàu hơn mức trung bình trong thời Đại khủng hoảng — nên dự đoán Landon thắng, còn George Gallup hỏi một mẫu nhỏ nhưng chọn cho giống dân số thật và đoán đúng. Trên một mẫu đã lệch, hỏi thêm người chỉ làm kết luận sai chắc chắn hơn: khảo sát trên mạng chỉ hỏi người dùng mạng, nghiên cứu về người thành công chỉ hỏi người còn sống.",
     "tags": [
       "khao-sat",
       "thien-lech",
@@ -227,13 +227,14 @@
     "cat": "so-hoc",
     "sub": "trung-binh-phan-bo",
     "t": "Nhiều hiện tượng quan trọng nhất theo luật luỹ thừa, không theo hình chuông",
-    "s": "Dân số thành phố, tần suất từ trong ngôn ngữ, quy mô động đất, thu nhập, số người theo dõi trên mạng — tất cả đều có đuôi dày: các giá trị cực đoan hiếm nhưng lớn đến mức chi phối tổng thể. Trong thế giới đuôi dày, 'trung bình' gần như vô nghĩa và một quan sát có thể lớn hơn tất cả phần còn lại cộng lại.",
+    "s": "Dân số thành phố, tần suất từ trong ngôn ngữ, quy mô động đất, thu nhập, số người theo dõi trên mạng — tất cả đều có đuôi dày: giá trị cực đoan hiếm nhưng lớn đến mức chi phối cả tổng. Chỗ khác nhau nhìn thấy ngay khi so hai đại lượng: không ai cao gấp ba người trung bình, nhưng người giàu nhất có thể giàu gấp một triệu lần — nên với đại lượng theo luật luỹ thừa, số trung bình gần như không nói gì.",
     "tags": [
       "phan-phoi",
       "rui-ro",
       "du-lieu"
     ],
-    "src": "Định luật Zipf (1949); Clauset, Shalizi & Newman, SIAM Review (2009)"
+    "src": "Định luật Zipf (1949); Clauset, Shalizi & Newman, SIAM Review (2009)",
+    "viz": "normal-vs-power"
   },
   {
     "id": "sh-020",

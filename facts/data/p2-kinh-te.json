@@ -393,8 +393,8 @@
     "id": "kt-134",
     "cat": "kinh-te",
     "sub": "dau-tu",
-    "t": "Tỉ số giá bán chia tiền thuê một năm cho biết người mua đang trả cho dòng tiền hay cho kỳ vọng tăng giá",
-    "s": "Tỉ số giá bán trên tiền thuê một năm là thước đo nhanh. Tỉ số cao bất thường nghĩa là người mua đang trả tiền cho kỳ vọng tăng giá chứ không cho dòng tiền — điều đó có thể đúng, nhưng nó là một loại rủi ro khác hẳn.",
+    "t": "Giá một căn nhà chia cho tiền thuê nó trong một năm cho biết bao nhiêu năm tiền thuê mới bù lại giá mua",
+    "s": "Tỉ số 20 nghĩa là phải 20 năm tiền thuê mới bằng giá mua. Tỉ số càng cao thì phần giá không được dòng tiền thuê nào đỡ càng lớn — người mua đang trả cho kỳ vọng tăng giá, và đó là một loại rủi ro khác hẳn rủi ro của dòng tiền.",
     "tags": [
       "bat-dong-san",
       "dinh-gia",
@@ -453,19 +453,6 @@
       "dau-tu"
     ],
     "src": "Nguyên lý rủi ro thanh khoản; phân tích các vụ đổ vỡ đòn bẩy như LTCM (1998)"
-  },
-  {
-    "id": "kt-140",
-    "cat": "kinh-te",
-    "sub": "dong-co-kinh-te",
-    "t": "Người bán biết nhiều hơn người mua ở gần như mọi giao dịch quan trọng của đời bạn",
-    "s": "Xe, nhà, bảo hiểm, khoá học, dịch vụ y tế — bên bán có thông tin về chất lượng mà bên mua phải suy đoán. Cách hạ bất cân xứng không phải là đọc nhiều quảng cáo hơn, mà là tìm tín hiệu tốn kém: bảo hành, cam kết hoàn tiền, danh tiếng lặp lại, bên thứ ba kiểm định.",
-    "tags": [
-      "thong-tin",
-      "mua-ban",
-      "tin-hieu"
-    ],
-    "src": "Akerlof (1970); Spence, Quarterly Journal of Economics (1973)"
   },
   {
     "id": "kt-141",

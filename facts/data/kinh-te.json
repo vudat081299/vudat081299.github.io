@@ -31,7 +31,7 @@
     "cat": "kinh-te",
     "sub": "lai-va-no",
     "t": "Nợ thẻ tín dụng 2,5%/tháng không phải 30%/năm mà là 34,5%/năm",
-    "s": "Vì lãi nhập gốc mỗi kỳ: 1,025 mũ 12 bằng khoảng 1,345. Cùng cơ chế lãi kép giúp bạn giàu khi đầu tư sẽ nghiền bạn khi mắc nợ tiêu dùng. Đây cũng là lý do trả hết nợ lãi cao là 'khoản đầu tư' có suất sinh lời chắc chắn cao nhất mà một người bình thường có thể tiếp cận.",
+    "s": "Vì lãi nhập gốc mỗi kỳ: 1,025 mũ 12 bằng khoảng 1,345. Chênh lệch nhỏ ở lãi suất thấp — 1%/tháng chỉ ra 12,68%/năm — nhưng bùng lên ở lãi suất cao: 5%/tháng thành 79,6%/năm chứ không phải 60%. Cùng cơ chế lãi kép giúp bạn giàu khi đầu tư sẽ nghiền bạn khi mắc nợ tiêu dùng.",
     "tags": [
       "no",
       "lai-kep",
@@ -135,8 +135,8 @@
     "id": "kt-012",
     "cat": "kinh-te",
     "sub": "thue-chinh-sach",
-    "t": "GDP chưa bao giờ được thiết kế để đo hạnh phúc — chính tác giả đã cảnh báo",
-    "s": "Simon Kuznets, người xây dựng hệ thống tài khoản quốc gia cho Mỹ, viết trong báo cáo gửi Quốc hội năm 1934 rằng phúc lợi của một quốc gia khó có thể suy ra từ chỉ số thu nhập quốc dân. GDP không đếm công việc nội trợ, không trừ ô nhiễm, và cộng cả chi phí khắc phục thiên tai vào phần tăng trưởng.",
+    "t": "GDP không đếm công việc nội trợ, không trừ ô nhiễm, và cộng cả chi phí khắc phục thiên tai vào phần tăng trưởng",
+    "s": "Nghĩa là một cơn bão vừa phá tài sản vừa làm GDP tăng, còn toàn bộ việc chăm sóc trong nhà thì không xuất hiện ở đâu cả. Simon Kuznets, người dựng hệ thống tài khoản quốc gia cho Mỹ năm 1934, nói thẳng rằng phúc lợi của một quốc gia không suy ra được từ con số thu nhập quốc dân.",
     "tags": [
       "do-luong",
       "vi-mo",
