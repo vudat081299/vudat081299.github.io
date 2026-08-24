@@ -178,6 +178,10 @@ def check_shape(man, facts, vk):
                     if rid not in known:
                         errs.append('%s: xem_ok "%s" không phải luật nào — %s'
                                     % (where, rid, ', '.join(sorted(known))))
+                    elif not rule_still_hits(f, rid):
+                        errs.append('%s: xem_ok "%s" đã CHẾT — luật đó không còn khớp fact '
+                                    'này, xoá dòng khai đi (nó đang bịt miệng cổng cho một '
+                                    'lần sửa sau)' % (where, rid))
         if 'khac_voi' in f:
             if not isinstance(f['khac_voi'], list) or not f['khac_voi']:
                 errs.append('%s: "khac_voi" phải là mảng id fact không rỗng' % where)
@@ -679,6 +683,34 @@ def all_warn_rule_ids():
     ids |= {rid for rid, _, _, _ in RULES_REJECT_IF_NO_ANCHOR}
     ids |= {'mo-neo-gia-dinh', 'do-lon-bang-chu', 'thieu-mo-neo', 'thuat-ngu'}
     return ids
+
+
+def rule_still_hits(f, rid):
+    """
+    Luật `rid` có còn khớp fact này không — dùng để bắt khai miễn xem_ok đã CHẾT.
+
+    Một `xem_ok` là ghi chép "người thật đã đọc fact này và kết luận luật báo oan". Khi
+    fact được viết lại và luật thôi khớp, dòng khai đó không còn nói về cái gì nữa. Nó
+    không sai ngay, nhưng nó là một cái bẫy đã cài sẵn: sửa tiêu đề về lại hình dạng cũ
+    thì luật khớp trở lại mà cổng đã bị bịt miệng từ trước, và không ai biết.
+
+    Đo ngày 24/08/2026: 6 khai miễn đã chết, tất cả sinh ra ở đợt viết lại 12/08.
+    """
+    t = f.get('t', '')
+    ts = t + ' ' + f.get('s', '')
+    for rid2, _, field, pats in list(RULES_REJECT_IF_NO_ANCHOR) + list(RULES_WARN):
+        if rid2 == rid:
+            hay = t if field == 't' else ts
+            return any(p.search(hay) for p in pats)
+    if rid == 'mo-neo-gia-dinh':
+        return _mo_neo_gia_dinh(t, ts)
+    if rid == 'do-lon-bang-chu':
+        return _do_lon_bang_chu(t, ts)
+    if rid == 'thieu-mo-neo':
+        return not HAS_DIGIT.search(ts) and len(ts) < 220
+    if rid == 'thuat-ngu':
+        return _thuat_ngu(t, ts) is not None
+    return True
 
 
 def cmd_verify(argv):
