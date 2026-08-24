@@ -46,6 +46,7 @@
     overlay:  $('#fact-detail'),
     dCat:     $('[data-d-cat]'),
     dTitle:   $('[data-d-title]'),
+    dQ:       $('[data-d-q]'),
     dViz:     $('[data-d-viz]'),
     dBody:    $('[data-d-body]'),
     dTags:    $('[data-d-tags]'),
@@ -133,7 +134,7 @@
         });
         state.facts.forEach(function (f, i) {
           f._n = i + 1;
-          var text = [f.t, f.s, f.d || '', (f.tags || []).join(' '), f.src || '',
+          var text = [f.q || '', f.t, f.s, f.d || '', (f.tags || []).join(' '), f.src || '',
                       (state.catMap[f.cat] || {}).label || ''].join(' ');
           f._blob = norm(text);              /* gõ không dấu */
           f._blobT = text.toLowerCase();     /* gõ có dấu */
@@ -225,6 +226,7 @@
             ? '<span class="wb-cap wb-cap--sm fx-card__viz"><span class="wb-ico wb-ico--xs">touch_app</span> Tương tác</span>'
             : '<span class="fx-card__no">#' + f._n + '</span>') +
         '</div>' +
+        (f.q ? '<p class="fx-card__q">' + mark(f.q, state.q) + '</p>' : '') +
         '<p class="wb-card__title">' + mark(f.t, state.q) + '</p>' +
         '<p class="fx-card__text">' + mark(f.s, state.q) + '</p>' +
         ((f.tags || []).length
@@ -235,7 +237,8 @@
       '</div>' +
       '<div class="wb-card__foot">' +
         '<span class="fx-card__src">' + esc(f.src || '') + '</span>' +
-        '<span class="fx-card__more">' + (f.viz ? 'Thử ngay' : (f.d ? 'Đọc tiếp' : 'Chi tiết')) +
+        '<span class="fx-card__more">' +
+          (f.viz ? 'Thử ngay' : (f.q ? 'Lời giải' : (f.d ? 'Đọc tiếp' : 'Chi tiết'))) +
           '<span class="wb-ico wb-ico--xs">chevron_right</span></span>' +
       '</div>';
     return node;
@@ -292,6 +295,8 @@
     state.openId = id;
     var cat = state.catMap[f.cat] || { label: f.cat };
     el.dCat.textContent = cat.label;
+    el.dQ.textContent = f.q || '';
+    el.dQ.hidden = !f.q;
     el.dTitle.textContent = f.t;
 
     renderViz(f);

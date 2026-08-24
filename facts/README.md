@@ -51,9 +51,10 @@ File đứng sau trong `files` = fact mới hơn, và chế độ sắp xếp m�
   "id": "td-023",                       // duy nhất toàn thư viện, tiền tố theo chủ đề
   "cat": "tu-duy",                      // phải khớp một id trong manifest.categories
   "sub": "mo-hinh-tu-duy",              // cụm nhỏ trong chủ đề — phải khớp manifest.clusters[cat]
-  "t": "Tiêu đề — một câu khẳng định",
+  "q": "Câu hỏi mở đầu — tuỳ chọn, nhưng có nó thì "d" thành bắt buộc (CLAUDE.md §1.7)",
+  "t": "Tiêu đề — một câu khẳng định, và là câu trả lời cho "q"",
   "s": "Tóm tắt hiện trên card, 1–3 câu. Đây là phần bắt buộc.",
-  "d": "Phần dài, tuỳ chọn. Ngăn đoạn bằng \n\n. Chỉ hiện trong modal chi tiết.",
+  "d": "Phần giải thích, ba đoạn ≥ 600 ký tự. Ngăn đoạn bằng \n\n. Chỉ hiện trong modal.",
   "viz": "birthday",                    // tuỳ chọn — khoá của một hàm trong viz.js
   "tags": ["nhan-1", "nhan-2"],         // không dấu, gạch nối; card hiện tối đa 3 nhãn
   "src": "Tác giả, Tạp chí (năm)"       // bắt buộc — xem quy tắc kiểm chứng

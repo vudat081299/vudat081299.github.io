@@ -43,9 +43,10 @@ Chúng có chung ba thứ, và cả ba là **bắt buộc**:
   "cat": "so-hoc",         // phải khớp manifest.categories[].id
   "sub": "nghich-ly-xac-suat",  // phải khớp manifest.clusters[cat] — xem §3
   "viz": "birthday",       // tuỳ chọn, khoá một hàm trong viz.js — xem §5
+  "q": "Cần bao nhiêu người trong một phòng để gần chắc có hai người trùng ngày sinh?",
   "t": "Chỉ cần 23 người trong phòng là xác suất có hai người trùng ngày sinh vượt 50%",
   "s": "1–3 câu. Nêu luôn con số và nêu luôn chỗ trực giác hỏng. Bắt buộc.",
-  "d": "Phần dài, tuỳ chọn. Ngăn đoạn bằng \n\n. Chỉ hiện trong modal.",
+  "d": "Phần giải thích. Ngăn đoạn bằng \n\n. Chỉ hiện trong modal — xem §1.7.",
   "tags": ["xac-suat", "truc-giac"],
   "src": "Tác giả, Tạp chí (năm)"   // bắt buộc — xem §4
 }
@@ -184,6 +185,55 @@ Cả sáu nghe hợp lý và đều bị số liệu bác. Ghi ra đây để ph
 | Tiêu đề dán hai nửa bằng ", và" | 357 | 18% thư viện, và gần hết là fact lành — nửa sau bổ nghĩa cho nửa trước: *"Mắt bạn có một điểm mù, và não âm thầm vá nó lại"*. Thắt lại thành ", và + chữ chỉ huyền thoại" thì còn 21 cặp mà **chỉ 1** hỏng (`ct-209`); 20 cái kia thêm một cải chính thật về thế giới: *"và đó là giới hạn dưới thật chứ không phải quy ước"* |
 | `s` có dấu hiệu kể nguồn gốc niềm tin ("bắt nguồn từ", "dịch sai", "sách giáo khoa") | 22 | 20/22 là fact lành, vì chủ ngữ của chúng là một **hiện tượng thật**: *"El Niño bắt nguồn từ dao động nhiệt độ nước mặt"*, *"máy in lan nhanh…"*. Chỉ neo vào từ chỉ nguồn gốc thì precision 9% |
 | Mọi con số trong fact đều đo **lịch sử một niềm tin** | 9 | precision 22%: cửa sổ ±60 ký tự quanh con số quá rộng, bắt oan Gaia, Gutenberg, Jenner. Bản dùng được là `s-khong-ve-the-gioi` — đòi **mọi câu** của `s` nhắc kênh văn bản/giảng dạy, precision 100% |
+
+
+### 1.7 Khuôn "vì sao" — câu hỏi mở đầu và phần giải thích bắt buộc
+
+> Cổng này được thêm ngày 24/08/2026 sau khi chủ trang nói thẳng mục tiêu của thư viện:
+> một nguồn học tập kiểu *10 vạn câu hỏi vì sao*, đọc xong mỗi mục là học thêm được một thứ.
+> Đo lại thư viện hôm đó: **1.884 fact, trung bình `t` 83 ký tự + `s` 217 ký tự, và chỉ 40
+> fact (2,1%) có trường `d`.** Tức 98% thư viện dài khoảng 300 ký tự. Ba trăm ký tự đủ để
+> **thông báo** một sự thật, không đủ để ai **học** được gì. Đây không phải lỗi chọn nguồn —
+> lấy fact từ đâu cũng vậy khi khuôn chỉ có ngần ấy chỗ.
+
+Khuôn đầy đủ có ba phần, mỗi phần một việc:
+
+| Trường | Vai | Bắt buộc khi |
+|---|---|---|
+| `q` | **câu hỏi mở đầu** — cửa vào, thứ người đọc gặp trước tiên | cụm đã khai `day_du` |
+| `t` | **câu trả lời** — vẫn là câu khẳng định đủ ba cổng §1 | luôn luôn |
+| `d` | **phần giải thích** — chỗ duy nhất người đọc thật sự học | có `q`, hoặc cụm đã khai `day_du` |
+
+```json
+{
+  "q": "Vì sao không khí ẩm lại nhẹ hơn không khí khô?",
+  "t": "Không khí lạnh nặng hơn không khí ấm, nhưng không khí ẩm lại nhẹ hơn không khí khô",
+  "s": "...",
+  "d": "Đoạn 1 — cơ chế.\n\nĐoạn 2 — so sánh đời thường.\n\nĐoạn 3 — chỗ gặp nó trong đời sống."
+}
+```
+
+**Viết `q` thế nào.** Một câu hỏi về **thế giới**, kết thúc bằng dấu hỏi, 15–120 ký tự.
+Ngôi thứ hai được phép và thường là đúng giọng: *"Vì sao bạn không cảm thấy Trái Đất quay?"*
+là câu hỏi về thế giới, không phải lời khuyên. Cái bị chặn ở mức `LOẠI` là câu hỏi **đòi một
+lời khuyên** — trả lời xong người đọc cầm về một việc phải làm chứ không phải một điều có
+thật: *"Làm sao để ngủ ngon?"*, *"Có nên uống cà phê buổi tối không?"*.
+
+**Viết `d` thế nào — ba đoạn, tối thiểu 600 ký tự.**
+
+1. **Cơ chế bằng lời thường.** Vì sao nó xảy ra, nói như nói với người 15 tuổi (§1.5).
+2. **Một phép so sánh đời thường.** Quy về thứ người đọc đã cầm nắm được.
+3. **Chỗ gặp nó trong đời sống.** Nó hiện ra ở đâu, khi nào người đọc từng thấy mà không biết.
+
+Ba đoạn là **tối thiểu**, không phải khuôn cứng — thêm đoạn thì tốt. Nhưng dưới ba đoạn hoặc
+dưới 600 ký tự thì `check` báo lỗi, vì đó là lúc `d` chỉ đang nhắc lại `s` bằng từ khác.
+
+**Cách cổng siết dần — không có ngày giờ G.** `manifest.day_du` liệt kê những cụm đã viết
+xong, dạng `"cat/sub"`. Fact trong cụm đó **bắt buộc** có `q` và `d` đạt khuôn; cụm chưa có
+tên trong danh sách thì không bị đụng tới. Viết xong một cụm thì thêm tên cụm vào danh sách
+**trong cùng commit** — đó là cái chốt giữ cho cụm không tụt lại. Danh sách chỉ dài thêm.
+
+`factlint stats` in tiến độ: cột `✓ vì sao` cho cụm đã khoá, `n/k vì sao` cho cụm đang viết dở.
 
 ---
 

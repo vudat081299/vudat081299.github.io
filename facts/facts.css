@@ -44,6 +44,15 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* Câu hỏi mở đầu (§1.7). Đứng TRÊN tiêu đề vì tiêu đề là câu trả lời — đọc ngược lại thì
+   mất hết chỗ tò mò. Giữ nhỏ và xám để nhịp lưới không đổi giữa card có `q` và card chưa có. */
+.fx-card__q {
+  margin: 0;
+  font-size: var(--wb-text-caption);
+  color: var(--wb-fg-muted);
+}
+.fx-card__q + .wb-card__title { margin-top: 2px; }
+
 /* Phần tóm tắt: cắt còn 5 dòng để mọi card cao đều nhau; bản đầy đủ nằm ở drawer. */
 .fx-card__text {
   margin-top: 8px;
@@ -82,6 +91,13 @@
 .fx-prose p { margin: 0 0 12px; font-size: var(--wb-text-body); }
 .fx-prose p:last-child { margin-bottom: 0; }
 .fx-prose .fx-prose__lead { font-size: var(--wb-text-title); color: var(--wb-fg); }
+
+/* Câu hỏi trong modal: cùng vai trò với trên card — cửa vào, đặt trên tiêu đề. */
+.fx-modal__q {
+  margin: 4px 0 0;
+  font-size: var(--wb-text-body);
+  color: var(--wb-fg-muted);
+}
 .fx-prose ul { margin: 0 0 12px; padding-left: 20px; font-size: var(--wb-text-body); }
 .fx-prose li { margin-bottom: 4px; }
 .fx-drawer-tags { margin-top: 16px; }

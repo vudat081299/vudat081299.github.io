@@ -64,6 +64,23 @@ TITLE_MIN_SHARE = 4
 # chứ không phải luật đã được kiểm rộng. Điều chắc chắn là hai mức lỏng hơn đã bị số liệu bác.
 TITLE_SUBSET_MIN = 3
 
+# ---------------------------------------------------------------- lớp "vì sao" (§1.7)
+#
+# Vấn đề đo được ngày 24/08/2026: 1.884 fact, trung bình t=83 + s=217 ký tự, và chỉ
+# 40 fact (2,1%) có trường `d`. Tức 98% thư viện dài ~300 ký tự — đủ để THÔNG BÁO một sự
+# thật, không đủ để người đọc HỌC được gì. Đổi nguồn không sửa được chỗ này; phải đổi khuôn.
+#
+# Khuôn mới: `q` là câu hỏi mở đầu (cửa vào), `t` giữ nguyên vai trò câu trả lời khẳng định,
+# `d` là phần giải thích bắt buộc theo ba đoạn: cơ chế bằng lời thường → một phép so sánh
+# đời thường → chỗ gặp nó trong đời sống.
+#
+# Cách bật cổng: KHÔNG có ngày giờ G. `manifest.day_du` liệt kê những cụm đã viết xong;
+# fact trong cụm đó BẮT BUỘC có `q` và `d` đạt khuôn. Danh sách chỉ dài thêm, nên cổng
+# siết dần theo tiến độ mà không bao giờ đỏ vì phần chưa làm tới.
+Q_MIN, Q_MAX = 15, 120
+D_MIN_CHARS = 600
+D_MIN_PARAS = 3
+
 # Cụm quá to thì việc "chỉ so trong cụm" mất tác dụng — tách cụm khi vượt mốc này.
 CLUSTER_MAX = 90
 
@@ -184,11 +201,63 @@ def chep_tieu_de(t, s):
     return SequenceMatcher(None, a, b).ratio()
 
 
+def check_vi_sao(f, where, bat_buoc):
+    """
+    Cổng khuôn "vì sao" (CLAUDE.md §1.7). `bat_buoc` bật khi cụm của fact đã được khai
+    trong manifest.day_du — tức cụm đó đã viết xong và không được phép tụt lại.
+
+    Ba điều được kiểm, cả ba là LỖI chứ không phải nhắc nhở:
+      - `q` phải là câu hỏi thật: kết thúc bằng dấu hỏi, dài trong khoảng Q_MIN–Q_MAX;
+      - có `q` thì phải có `d` — hỏi mà không trả lời đủ là trêu người đọc;
+      - `d` đi kèm `q` phải đạt D_MIN_PARAS đoạn và D_MIN_CHARS ký tự, vì đó chính là
+        chỗ duy nhất người đọc học được thứ gì hơn một dòng tin.
+
+    40 fact đời đầu có `d` mà chưa có `q` không bị đụng tới: khuôn chỉ áp khi fact đã
+    bước vào lớp mới, hoặc khi cụm của nó đã khai day_du.
+    """
+    errs = []
+    q = (f.get('q') or '').strip()
+    d = (f.get('d') or '').strip()
+
+    if 'q' in f and not q:
+        errs.append('%s: "q" rỗng — bỏ hẳn field đi thì hơn' % where)
+    if q:
+        if not q.endswith('?'):
+            errs.append('%s: "q" phải là câu hỏi, kết thúc bằng dấu hỏi' % where)
+        if not (Q_MIN <= len(q) <= Q_MAX):
+            errs.append('%s: "q" dài %d ký tự, phải trong khoảng %d-%d'
+                        % (where, len(q), Q_MIN, Q_MAX))
+        if not d:
+            errs.append('%s: có "q" mà không có "d" — câu hỏi nào cũng phải kèm phần trả '
+                        'lời đầy đủ, nếu không thì bỏ "q" đi (CLAUDE.md §1.7)' % where)
+    if bat_buoc:
+        if not q:
+            errs.append('%s: cụm đã khai day_du nên fact phải có "q" (CLAUDE.md §1.7)' % where)
+        if not d:
+            errs.append('%s: cụm đã khai day_du nên fact phải có "d" (CLAUDE.md §1.7)' % where)
+    if d and (q or bat_buoc):
+        doan = [x for x in d.split('\n\n') if x.strip()]
+        if len(doan) < D_MIN_PARAS:
+            errs.append('%s: "d" có %d đoạn, khuôn ba phần đòi tối thiểu %d — cơ chế / '
+                        'so sánh đời thường / chỗ gặp trong đời sống'
+                        % (where, len(doan), D_MIN_PARAS))
+        if len(d) < D_MIN_CHARS:
+            errs.append('%s: "d" dài %d ký tự, tối thiểu %d — dưới mức đó thì người đọc '
+                        'không cầm được gì hơn phần "s"' % (where, len(d), D_MIN_CHARS))
+    return errs
+
+
 def check_shape(man, facts, vk):
     errs, warns = [], []
     cats = {c['id'] for c in man['categories']}
     clusters = man.get('clusters', {})
+    day_du = set(man.get('day_du') or [])
     seen = {}
+
+    for key in sorted(day_du):
+        c, _, s = key.partition('/')
+        if c not in cats or s not in clusters.get(c, []):
+            errs.append('manifest.day_du: "%s" không phải cụm nào' % key)
 
     for f in facts:
         where = '%s / %s' % (f['_file'], f.get('id', '???'))
@@ -235,6 +304,8 @@ def check_shape(man, facts, vk):
         if 'khac_voi' in f:
             if not isinstance(f['khac_voi'], list) or not f['khac_voi']:
                 errs.append('%s: "khac_voi" phải là mảng id fact không rỗng' % where)
+        errs.extend(check_vi_sao(f, where,
+                                 '%s/%s' % (f.get('cat'), f.get('sub')) in day_du))
 
     ids = {f.get('id') for f in facts}
     for f in facts:
@@ -578,6 +649,24 @@ RULES_REJECT_IF_NO_ANCHOR = [
     ]),
 ]
 
+# Câu hỏi mở đầu (`q`) là cửa vào của fact nên nó chịu đúng những cổng mà `t` chịu. Cái bị
+# chặn KHÔNG phải ngôi thứ hai — "Vì sao bạn không cảm thấy Trái Đất quay?" là câu hỏi về thế
+# giới và là đúng giọng cần có. Cái bị chặn là câu hỏi ĐÒI một lời khuyên: trả lời nó xong thì
+# người đọc cầm về một việc phải làm, không phải một điều về thế giới.
+#
+# Trung thực về số đo: hai mẫu này ra đời khi thư viện có 0 fact mang `q`, nên chúng là cổng
+# dựng TRƯỚC chứ chưa phải cổng đã kiểm rộng — khác hẳn các luật ở trên vốn đo trên 1.9k fact.
+# Chúng chạy sạch trên 13 câu hỏi đầu tiên (cụm vu-tru/he-mat-troi). Cụm nào viết sau mà thấy
+# chúng bắt oan thì sửa luật, đừng miễn cho một fact.
+Q_DOI_LOI_KHUYEN = [
+    re.compile(r'^(Làm sao|Làm thế nào|Cách nào)[^?]{0,60}\bđể\b', re.I),
+    re.compile(r'^(Có nên|Nên hay không)\b', re.I),
+    re.compile(r'\bnên (chọn|làm|dùng|ăn|uống|mua|tránh) (gì|nào|thế nào|ra sao)'),
+]
+
+# Luật mức XEM được soi cả trong `q` và `d`, không chỉ trong `t`/`s`.
+RULES_QUET_QD = ('ngoi-thu-hai', 'huong-dan-doc')
+
 RULES_WARN = [
     ('huong-dan-doc', 'câu hướng dẫn người đọc thao tác — tách khỏi tiêu đề', 't', [
         re.compile(r'(thử ngay|thử đọc|thử xem|kéo thanh trượt|bấm nút|tự kiểm tra|nhìn vào đây)'),
@@ -770,11 +859,33 @@ def verify_fact(f):
                 if pat.search(d_field):
                     return ('LOẠI', rid, note + ' — trong phần dài `d`')
         for rid, note, _f, pats in RULES_WARN:
-            if rid not in ('ngoi-thu-hai', 'huong-dan-doc') or rid in mien:
+            if rid not in RULES_QUET_QD or rid in mien:
                 continue
             for pat in pats:
                 if pat.search(d_field):
                     return ('XEM', rid, note + ' — trong phần dài `d`')
+
+    # Trường `q` (§1.7). Nó đứng trước cả tiêu đề trên trang nên là thứ người đọc gặp đầu
+    # tiên; để nó trôi thành lời khuyên là hỏng đúng chỗ dễ thấy nhất.
+    q_field = f.get('q') or ''
+    if q_field:
+        for pat in Q_DOI_LOI_KHUYEN:
+            if pat.search(q_field):
+                return ('LOẠI', 'q-doi-loi-khuyen',
+                        'câu hỏi đòi một lời khuyên, không hỏi về thế giới — trả lời xong '
+                        'người đọc cầm về một việc phải làm chứ không phải một điều có thật')
+        for rid, note, _f, pats in RULES_REJECT:
+            if rid != 'loi-khuyen':
+                continue
+            for pat in pats:
+                if pat.search(TRONG_NGOAC.sub(' ', q_field)):
+                    return ('LOẠI', rid, note + ' — trong câu hỏi `q`')
+        for rid, note, _f, pats in RULES_WARN:
+            if rid not in RULES_QUET_QD or rid in mien:
+                continue
+            for pat in pats:
+                if pat.search(q_field):
+                    return ('XEM', rid, note + ' — trong câu hỏi `q`')
 
     for rid, note, field, pats in RULES_WARN:
         if rid in mien:
@@ -828,6 +939,11 @@ def rule_still_hits(f, rid):
     for rid2, _, field, pats in list(RULES_REJECT_IF_NO_ANCHOR) + list(RULES_WARN):
         if rid2 == rid:
             hay = t if field == 't' else ts
+            # Hai luật này được soi cả trong `q` và `d` (xem verify_fact). Không cộng hai
+            # trường đó vào đây thì một khai miễn sinh ra từ `d` sẽ bị gọi nhầm là "đã chết"
+            # và chủ fact bị bắt xoá đúng dòng ghi chép đang có tác dụng.
+            if rid in RULES_QUET_QD:
+                hay = ' '.join([hay, f.get('q') or '', f.get('d') or ''])
             return any(p.search(hay) for p in pats)
     if rid == 'mo-neo-gia-dinh':
         return _mo_neo_gia_dinh(t, ts)
@@ -906,7 +1022,9 @@ def cmd_stats(argv):
     man, facts = load()
     by_cat = Counter(f.get('cat') for f in facts)
     by_sub = Counter((f.get('cat'), f.get('sub')) for f in facts)
+    q_sub = Counter((f.get('cat'), f.get('sub')) for f in facts if (f.get('q') or '').strip())
     clusters = man.get('clusters', {})
+    day_du = set(man.get('day_du') or [])
 
     print('%d fact\n' % len(facts))
     fat = []
@@ -918,11 +1036,26 @@ def cmd_stats(argv):
             warn = '  ← tách cụm' if k > CLUSTER_MAX else ''
             if k > CLUSTER_MAX:
                 fat.append((cid, sub, k))
-            print('   · %-26s %4d%s' % (sub, k, warn))
+            nq = q_sub.get((cid, sub), 0)
+            # Cột "vì sao": ✓ = cụm đã khai day_du (cổng §1.7 đang khoá cụm này lại),
+            # n/k = đang viết dở. Cụm chưa động tới thì để trống cho đỡ rối mắt.
+            vs = ''
+            if '%s/%s' % (cid, sub) in day_du:
+                vs = '  ✓ vì sao'
+            elif nq:
+                vs = '  %d/%d vì sao' % (nq, k)
+            print('   · %-26s %4d%s%s' % (sub, k, warn, vs))
         unknown = [s for (c2, s) in by_sub if c2 == cid and s not in clusters.get(cid, [])]
         for s in sorted(set(unknown)):
             print('   · %-26s %4d  ← sub lạ' % (str(s), by_sub[(cid, s)]))
+    nq = sum(1 for f in facts if (f.get('q') or '').strip())
+    nd = sum(1 for f in facts if (f.get('d') or '').strip())
     print('\nviz: %d fact có minh hoạ' % sum(1 for f in facts if f.get('viz')))
+    print('vì sao (§1.7): %d/%d fact có câu hỏi `q` (%.1f%%) · %d có phần giải thích `d` '
+          '(%.1f%%) · %d/%d cụm đã khai day_du'
+          % (nq, len(facts), 100.0 * nq / max(1, len(facts)),
+             nd, 100.0 * nd / max(1, len(facts)),
+             len(day_du), sum(len(v) for v in clusters.values())))
     if fat:
         print('Cụm vượt %d fact, nên tách nhỏ: %s'
               % (CLUSTER_MAX, ', '.join('%s/%s (%d)' % x for x in fat)))
