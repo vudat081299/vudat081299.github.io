@@ -6,6 +6,74 @@ công việc đã làm và không tưởng là mọi thứ đã xong.
 
 ---
 
+## Đợt 24/08/2026 (c) — đổi khuôn, không đổi nguồn
+
+**Câu hỏi của chủ trang:** có nguồn nào chuyên cung cấp fact không, vì fact lấy từ báo và
+paper đọc ra rất học thuật; mục tiêu là một nguồn học tập kiểu *10 vạn câu hỏi vì sao*, và
+có thể thêm cả truyện ngắn, miễn mỗi lần đọc là học thêm được một thứ.
+
+**Có nguồn chuyên, và đã ghi vào [CLAUDE.md §2 bước 1](CLAUDE.md).** Nhưng đo lại thư viện
+thì thấy nguồn không phải chỗ hỏng:
+
+| | |
+|---|---|
+| Số fact | 1.884 |
+| Độ dài trung bình `t` | 83 ký tự |
+| Độ dài trung bình `s` | 217 ký tự |
+| Số fact có `d` | **40 — tức 2,1%** |
+
+98% thư viện dài khoảng 300 ký tự. Đủ để **thông báo** một sự thật, không đủ để ai **học**
+được gì — và lấy fact từ đâu cũng vậy khi khuôn chỉ có ngần ấy chỗ. Giọng học thuật cũng
+không đến từ nguồn mà đến từ chính luật: §1 bắt một câu khẳng định (trong khi "vì sao" là câu
+hỏi), bắt mỏ neo cứng đứng trước (nên `s` tiêu hết chỗ vào con số, không còn chỗ cho cơ chế
+và ví von), và §1.1 mục 1 cấm thẳng tường thuật.
+
+### 1. Hai thứ đã dựng
+
+**Lớp "vì sao" ([CLAUDE.md §1.7](CLAUDE.md)).** Thêm `q` (câu hỏi mở đầu, là cửa vào; `t` giữ
+vai câu trả lời) và siết `d` thành ba đoạn ≥ 600 ký tự: cơ chế bằng lời thường → so sánh đời
+thường → chỗ gặp nó trong đời sống. Cổng siết **dần** qua `manifest.day_du` — danh sách cụm
+đã viết xong, chỉ dài thêm, nên không bao giờ đỏ vì phần chưa làm tới. Cụm mẫu
+`vu-tru/he-mat-troi`, 13 fact, ~300 → ~1.350 ký tự mỗi fact.
+
+**Truyện ([CLAUDE.md §7](CLAUDE.md)).** Loại nội dung thứ hai, dùng chung `cat`/`sub` và chung
+lưới card, có bộ chuyển Tất cả / Fact / Chuyện. Cổng khác cổng fact ở đúng một chỗ — tường
+thuật là hình thức — và bù lại bằng trường bắt buộc `mang_di`, chịu đúng các luật `LOẠI` của
+cổng fact trừ `tuong-thuat`. Tám truyện đầu, 6 chủ đề.
+
+### 2. Bốn thay đổi cổng, và số đo của từng cái
+
+| Cổng | Việc | Đo được |
+|---|---|---|
+| `nen-lam-gi` | tách `nên`+động từ khỏi `loi-khuyen` trong `d`, LOẠI → XEM | 17 chỗ khớp trên t+s+d, **7 (41%) là liên từ "cho nên"** → 59% quá thấp cho một luật chặn commit |
+| `menh-lenh` | `hãy\|đừng\|chớ` soi cả `s`, không chỉ `t` | 5 fact khớp, **5/5 là lời khuyên thật** (100%). Đã viết lại cả 5 |
+| `re.I` cho `loi-khuyen` | chữ hoa đầu câu vốn lọt sạch | 27 chỗ khớp trước, 27 sau — **thêm 0**, tức không đổi gì hôm nay, chỉ bịt lỗ cho `d`/`body` |
+| `rule_still_hits` soi `q`+`d` | khai miễn `xem_ok` sinh ra từ `d` bị gọi nhầm là đã chết | lỗi có sẵn, chưa nổ vì `d` mới có 40 |
+
+Hai cổng mới (`q`, truyện) được **tự thử bằng ca dựng sẵn** trước khi tin: 6 ca cấu trúc `q`,
+4 ca `q` đòi lời khuyên, 3 ca `q` hợp lệ, 8 ca verify truyện, 5 ca cấu trúc truyện.
+
+### 3. Một chỗ trong cổng của chính mình viết sai, và cách phát hiện
+
+Luật `nen-lam-gi` cho truyện soi thẳng `body` thay vì bản đã bỏ ngoặc kép, nên câu hỏi được
+trích trong `ch-001` (*"nên đặt nhà máy ở đâu"*) bị tính là lời khuyên. Không phát hiện được
+bằng đọc code — phát hiện được vì chạy cổng trên nội dung thật ngay sau khi viết cổng.
+
+### 4. Còn nợ
+
+1. **161/162 cụm chưa có lớp "vì sao".** Đây là phần việc lớn nhất còn lại: 1.871 fact cần
+   `q` + `d`. Làm theo cụm, và **thêm tên cụm vào `manifest.day_du` trong cùng commit** —
+   đó là cái chốt duy nhất giữ cụm không tụt lại. Giọng văn mẫu: 13 fact của
+   `vu-tru/he-mat-troi`.
+2. **Truyện mới có 8, và 14 chủ đề chưa có truyện nào.** Chưa đủ để biết cổng `day-doi` và
+   ngưỡng độ dài 1.200–8.000 có đúng không — cả hai hiện đo trên 8 mẫu do cùng một người viết.
+3. **Chưa có cổng nào bắt được "tiêu đề và thân bài nói hai chuyện khác nhau" cho `d`.** §1.4
+   đã ghi rằng so từ vựng `t`/`s` là vô dụng; `d` dài hơn nên có thể khác, nhưng chưa đo.
+4. `s` mới chỉ được soi bởi nhóm mệnh lệnh. Các mẫu còn lại của `loi-khuyen` trên `s` chưa
+   đo: `mẹo` đã đo và **rớt** (20%), `cách…nhất` và `việc nên làm` thì chưa.
+
+---
+
 ## Đợt rà 24/08/2026 (b) — cổng "đọc xong cầm được gì", và 9 lần agent gộp quá tay
 
 > Đợt này chạy **song song** với đợt (a) ở dưới, hai phiên khác nhau, có điều phối qua tin

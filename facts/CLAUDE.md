@@ -261,6 +261,19 @@ cụm là điều kiện để bước 3 chạy được, và nó cũng làm b�
 thưa. Nguồn tốt: nghiên cứu gốc, cơ quan thống kê, sách chuyên khảo, các bài tổng hợp phản
 biện lại một kết quả nổi tiếng.
 
+**Nguồn chuyên làm fact — dùng làm ĐẦU MỐI, không dùng làm nguồn.** Chúng cho ý tưởng nhanh
+hơn nhiều so với đọc paper từ đầu, nhưng §4 quy tắc 2 không nới: lấy được cái ý rồi thì phải
+truy về nguồn gốc, rồi viết mới bằng tiếng Việt. Không dịch lại văn của họ.
+
+| Nguồn | Cho cái gì | Cảnh báo |
+|---|---|---|
+| Wikipedia **Did you know?** (kho `Wikipedia:Recent_additions`) | vài chục nghìn hook một dòng, mỗi hook có citation tại chỗ — đúng khuôn trường `t` | nhiễu nặng: rất nhiều hook là bài về một nhà thờ làng. CC BY-SA nên dịch được, nhưng phải ghi công |
+| Wikipedia **List of common misconceptions** | vài trăm mục có nguồn, đúng dạng "sửa huyền thoại" §1.2 | đã bị khai thác nhiều — tra trùng trước |
+| Wikipedia **Unusual articles** | ~1.500 mục kỳ lạ đã phân loại sẵn | là gợi ý, không phải bài viết |
+| **Now I Know**, **Damn Interesting**, **Futility Closet**, **Atlas Obscura** | đầu mối dạng truyện, đúng cỡ cho §7 | có bản quyền — chỉ lấy ý, tự truy nguồn, tự viết |
+| **QI** / *The Book of General Ignorance* | chuẩn giọng "bất ngờ vì bạn tưởng sai" | tỉ lệ sai đã được ghi nhận; kiểm lại từng cái |
+| *Mười vạn câu hỏi vì sao* (bản dịch Kim Đồng) | chuẩn giọng cho §1.7 | có bản quyền; nhiều mục viết cho trẻ em và một số đã lỗi thời |
+
 ### Bước 2 — Tinh gọn thành một claim
 
 Ép nó về **một** câu khẳng định. Nếu phải dùng chữ "và" để nối hai ý không phụ thuộc nhau
