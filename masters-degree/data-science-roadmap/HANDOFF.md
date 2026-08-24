@@ -36,7 +36,7 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 
 ---
 
-## Phiên 2026-08-21 (ab) — tám hình P1, và hai lỗi mà `viz-check` cho qua vì nó chỉ so CHỮ với CHỮ
+## Phiên 2026-08-21 (ab) — tám hình P1 · sáu lỗi ảnh chụp bắt được mà cổng cho qua · phép kiểm thứ năm cho `viz-check`
 
 Chủ trang: *"vẽ hết trong 1 lượt đi"*. Món cuối trong `## CHƯA LÀM` — mục đó giờ **không còn
 việc nào**.
@@ -71,17 +71,51 @@ Cả hai do **xem ảnh chụp** mới thấy:
   hai. Sửa: xếp thành hai dòng.
 
 **`viz-check` chỉ so `<text>` với `<text>`** (và so với `viewBox`). Nó không biết một nhãn có
-đè lên `<line>`, `<rect>` hay `<ellipse>` không. Đó là **giới hạn đã biết**, không phải bug —
-và nó nghĩa là ảnh chụp vẫn còn việc phải làm sau khi cổng đã xanh.
+đè lên `<line>`, `<rect>` hay `<ellipse>` không.
 
-**Vì sao tôi không mở rộng nó ngay:** phần lớn nhãn trong trang này **cố ý** nằm sát một
-đường (nhãn trục, nhãn mốc, nhãn cạnh đường ngang). Một phép kiểm "chữ chạm hình" mà chưa đo
-sẽ nổ vào hàng loạt chỗ đúng, và một cổng nổ vào chỗ đúng thì chết vì bị bỏ qua — đúng lớp
-lỗi mà (x), (z) và (aa) đã dính bốn lần. **Việc phải làm trước khi viết luật: đếm xem trên 58
-mount × 246 trạng thái hiện tại có bao nhiêu cặp chữ–hình chồng nhau, và bao nhiêu trong số
-đó là cố ý.** Chưa có con số đó thì chưa viết luật.
+### 3. Đo trước, rồi mới viết luật — và con số bác bỏ luật rộng
 
-### 3. Ba lần tôi tự làm chậm mình — ghi ra vì cả ba đều lặp lại được
+Luật "chữ đè hình" bản rộng **sai**, và đây là số đo. Áp đúng một phép đo (khoảng hở từ hộp
+chữ tới cạnh gần nhất < 0,5 đơn vị `viewBox`) cho **mọi** loại hình có nét trên 58 mount ×
+246 trạng thái: **10 chỗ, và cả 10 đều ĐÚNG**.
+
+```
+"0"          nằm trên đường 0          (residual)
+"train"      nằm trên đường train      (losscurve)
+"trung vị"   nằm trên đường trung vị   (meanmed)
+★            CHÍNH LÀ cái mốc          (scale2d)
++ 6 nhãn nữa đặt trên mũi tên / đường mà chúng gọi tên
+```
+
+Đó là **direct labelling** — đặt nhãn lên thứ nó gọi tên, một kỹ thuật *đúng* và nên khuyến
+khích. Một cổng bắt cả chúng sẽ thành tiếng ồn rồi chết vì bị bỏ qua, đúng lớp lỗi mà (x),
+(z) và (aa) đã dính bốn lần.
+
+Thu về **chỉ `<rect>`**: **0 chỗ** ở trạng thái ổn định, mà lớp lỗi thật vẫn bị bắt — *nhãn
+vừa khít hoặc rộng hơn hộp chứa nó*, thứ gần như không bao giờ cố ý. Nên phép kiểm thứ năm
+(`chu-tran-hop`) đã vào `viz-check.mjs`, và nó **bắt được 3 trong 4 lỗi ở mục 2** nếu đã có
+từ đầu.
+
+Nó còn tìm thêm **2 lỗi cũ chưa ai thấy**, cùng một lớp: `pipeline` — nhãn
+`features → model → API` rộng ~99 đơn vị trong hộp 70, và `causaldag` — `Nhiễu CHƯA đo được`
+rộng ~68,4 trong hộp 68. Sửa bằng cách **nới hộp** (bề rộng không đều là bình thường với sơ
+đồ đường ống) và **tách hai dòng**, không cắt chữ.
+
+**Hai cái bẫy của riêng phép kiểm này, và cả hai đều làm nó ĐẬU trên lỗi có thật** — tôi dính
+cả hai trong cùng một lượt:
+
+1. **`getComputedStyle(rect).stroke` trả `none`** khi nét viết bằng presentation attribute có
+   `var()` (`stroke="var(--wb-border-strong)"`) — dù nó vẫn vẽ ra. Bản đầu vì thế loại **sạch
+   mọi `<rect>`** và báo xanh. Phải đọc `getAttribute('stroke')`.
+2. **Hướng của phép thử sai.** Bản đầu co hộp chữ vào 0,6 rồi hỏi *"viền có XUYÊN qua
+   không"*. Nhưng nhãn *vừa khít* hộp thì viền chỉ **CHẠM** — tức nó đậu đúng cái ca nó được
+   viết ra để bắt. Phải **đo khoảng hở**, không đo sự xuyên qua.
+
+Cả hai chỉ lộ ra vì tôi **tiêm lại lỗi cũ và bắt buộc phép kiểm phải đỏ**. Đó là bước không
+được bỏ với mọi phép kiểm mới trong repo này: một phép kiểm chưa từng đỏ là một phép kiểm
+chưa biết có chạy hay không.
+
+### 4. Ba lần tôi tự làm chậm mình — ghi ra vì cả ba đều lặp lại được
 
 1. **Probe viết vào scratchpad.** Trang nạp `../../web-builder/web-builder.css` bằng đường dẫn
    **tương đối**, nên bản sao đặt ngoài thư mục trang mất sạch token CSS: hình ra ô **đen**,
@@ -94,7 +128,7 @@ mount × 246 trạng thái hiện tại có bao nhiêu cặp chữ–hình chồ
    thành "max" ở lượt dump đầu. Bốn con số tôi tưởng đã kiểm thật ra chưa. Phát hiện vì
    `random search` với ngân sách 9 lại in ra 10 điểm.
 
-### 4. `--stamp` chạy trước khi tôi sửa `roadmap-summaries.json`
+### 5. `--stamp` chạy trước khi tôi sửa `roadmap-summaries.json`
 
 Tôi **đã đọc** cả 8 bản tóm tắt và đã quyết định `tldr`/`points`/`example`/`check` còn đúng
 (lượt này chỉ **thêm** hình, không đổi chữ) còn trường `viz` thì lạc hậu cả 8. Nhưng lệnh
@@ -104,11 +138,12 @@ của **nội dung bài**, không phải của bản tóm tắt, nên con dấu 
 sai**, và đó đúng hình dạng "con dấu cao su" mà `CLAUDE.md` §4 cảnh báo. Trường `viz` của cả
 8 bài giờ mô tả hình mới.
 
-### 5. Cố ý KHÔNG làm
+### 6. Cố ý KHÔNG làm
 
 - **Không revert chữ navbar `DS` → `Data Science`.** Chủ trang hoãn có chủ ý (`## ĐANG LÀM`),
   vẫn chờ chủ trang gọi.
-- **Không mở rộng `viz-check` sang "chữ đè hình"** — xem mục 2, cần đo trước.
+- **Không mở rộng phép kiểm thứ năm sang `line`/`path`/`ellipse`** — mục 3 có số: 10/10 là
+  direct labelling cố ý. Đừng đo lại, đừng "thử xem sao".
 - **Không thêm hình thứ hai cho bài nào.** `G-VIZ` đòi ≥1, và một hình trang trí tệ hơn không
   có hình (`CLAUDE.md` §10). Tám bài giờ mỗi bài đúng một hình mang một ý.
 - **Không đổi `.ds-viz svg { max-width: 440px }`** để hình rộng hơn. Cột nội dung 1060px nên
@@ -116,12 +151,12 @@ sai**, và đó đúng hình dạng "con dấu cao su" mà `CLAUDE.md` §4 cản
   tạo hai khuôn. Muốn nới thì nới cả 58 và hỏi chủ trang trước (§10: cột/chữ là quyết định
   của chủ trang).
 
-### 6. Còn nợ của riêng phiên này
+### 7. Còn nợ của riêng phiên này
 
 Không. `## CHƯA LÀM` giờ chỉ còn hai mục, **cả hai đều không phải việc**
 (*Đã quyết là GIỮ NGUYÊN* và *Một thứ để biết trước*). Cổng CHẶN qua ·
 `gate.mjs --advice` **0 khuyến nghị** · `gate.test.mjs` **74 đạt / 0 trượt** ·
-`viz-check` **58 mount × 246 trạng thái sạch** · `audit` nhất quán.
+`viz-check` **58 mount × 246 trạng thái sạch, nay kiểm NĂM thứ** · `audit` nhất quán.
 
 ---
 
