@@ -419,7 +419,8 @@
     "p4-ngon-ngu.json",
     "p4-cong-nghe.json",
     "p4-xa-hoi.json",
-    "p4-so-hoc.json"
+    "p4-so-hoc.json",
+    "p5-cum-mong.json"
   ],
   "files_chuyen": [
     "chuyen/dot-01.json",

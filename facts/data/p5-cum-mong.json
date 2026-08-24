@@ -1,0 +1,347 @@
+[
+  {
+    "id": "cn-234",
+    "cat": "cong-nghe",
+    "sub": "dien-thoai-pin",
+    "t": "Pin lithium-ion không có 'hiệu ứng nhớ' — thói quen xả cạn rồi mới sạc là quy tắc của loại pin cũ đã tuyệt chủng",
+    "s": "Hiệu ứng nhớ là chuyện có thật, nhưng của pin niken-cadmi: sạc lại khi chưa xả hết làm tinh thể trong điện cực lớn dần và pin 'quên' phần dung lượng chưa dùng tới. Pin lithium-ion hoạt động bằng cách chuyển ion qua lại giữa hai điện cực và không có cơ chế đó. Ngược lại, xả xuống gần 0% là điều hại nhất: dưới một ngưỡng điện áp, cực đồng bắt đầu tan ra và pin hỏng vĩnh viễn — nên mạch bảo vệ trong máy tự ngắt trước khi tới đó, và con số 0% bạn thấy trên màn hình không phải 0% thật.",
+    "tags": [
+      "pin",
+      "lithium-ion",
+      "hieu-ung-nho"
+    ],
+    "src": "Isidor Buchmann, Batteries in a Portable World, tái bản lần 4 (Cadex Electronics, 2016); Vetter và cộng sự, Journal of Power Sources 147:269–281 (2005)"
+  },
+  {
+    "id": "cn-235",
+    "cat": "cong-nghe",
+    "sub": "dien-thoai-pin",
+    "t": "Con số mAh trên pin không so sánh được giữa hai thiết bị khác điện áp — đại lượng so được là watt-giờ",
+    "s": "mAh đếm dòng điện nhân thời gian, tức lượng điện tích, chứ không đếm năng lượng. Năng lượng bằng điện tích nhân điện áp: một cục sạc dự phòng ghi 20.000 mAh thường là ở 3,7 V của cell lithium bên trong, tức khoảng 74 Wh, nhưng khi nó đẩy điện ra cổng USB ở 5 V thì phần nạp được cho máy khác chỉ còn khoảng 13.000–15.000 mAh sau hao tổn chuyển đổi. Vì vậy hãng hàng không giới hạn pin xách tay theo Wh chứ không theo mAh — mốc phổ biến là 100 Wh.",
+    "tags": [
+      "pin",
+      "don-vi-do",
+      "sac-du-phong"
+    ],
+    "src": "IATA, Lithium Battery Guidance Document (bản hằng năm); IEC 61960 — tiêu chuẩn đo dung lượng pin lithium thứ cấp"
+  },
+  {
+    "id": "cn-236",
+    "cat": "cong-nghe",
+    "sub": "dien-thoai-pin",
+    "t": "Trời lạnh làm điện thoại tụt phần trăm đột ngột nhưng không lấy mất dung lượng thật — ấm lên là phần trăm quay lại",
+    "s": "Máy không đo lượng điện còn lại một cách trực tiếp; nó suy ra từ điện áp và dòng. Ở nhiệt độ thấp, chất điện phân đặc lại và ion di chuyển chậm hơn, nên điện trở trong tăng và điện áp sụt mạnh mỗi khi máy rút dòng — phần mềm đọc điện áp thấp đó và kết luận pin sắp cạn, đôi khi tắt máy ở mức hiển thị 30%. Mang vào chỗ ấm thì điện trở giảm, điện áp về mức cũ và phần trăm nhảy lại. Cái thật sự hại pin là sạc khi pin đang dưới 0 °C, vì lúc đó lithium đọng thành kim loại trên cực âm thay vì chui vào trong.",
+    "tags": [
+      "pin",
+      "nhiet-do",
+      "dien-tro-trong"
+    ],
+    "src": "Jaguemont, Boulon & Dubé, Applied Energy 164:99–114 (2016) — tổng quan pin lithium-ion ở nhiệt độ thấp"
+  },
+  {
+    "id": "cn-237",
+    "cat": "cong-nghe",
+    "sub": "dien-thoai-pin",
+    "t": "Pin phồng là do điện phân bị phân huỷ sinh khí bên trong túi kín, và cục pin phồng không được đâm hay ép",
+    "s": "Chất điện phân trong pin lithium-ion là dung môi hữu cơ dễ bay hơi. Khi pin bị sạc quá mức, để ở nhiệt độ cao lâu hoặc đơn giản là già đi, dung môi đó phản ứng ở bề mặt điện cực và sinh ra khí carbon dioxide, ethylene và một ít hydro. Vỏ mềm của pin điện thoại không có van xả nên khí bị nhốt lại và túi phồng lên. Đâm thủng hoặc ép một cục pin phồng làm hai điện cực chạm nhau, nhiệt độ vọt lên và chuỗi phản ứng tự duy trì — hiện tượng gọi là thoát nhiệt, đủ để bốc cháy.",
+    "tags": [
+      "pin",
+      "an-toan",
+      "dien-phan"
+    ],
+    "src": "Wang và cộng sự, Journal of Power Sources 208:210–224 (2012) — tổng quan an toàn nhiệt pin lithium-ion"
+  },
+  {
+    "id": "cn-238",
+    "cat": "cong-nghe",
+    "sub": "dien-thoai-pin",
+    "t": "Chỗ sóng yếu ngốn pin nhanh hơn hẳn, vì máy tự tăng công suất phát để với tới trạm",
+    "s": "Điện thoại và trạm phát liên tục thương lượng công suất: trạm bảo máy phát nhỏ lại khi tín hiệu tới đủ mạnh, và bảo phát to lên khi tín hiệu yếu. Dải điều chỉnh đó rất rộng — công suất phát của một máy 4G có thể chạy từ dưới một phần nghìn watt lên tới 0,2 watt, tức chênh nhau hàng trăm lần. Thêm vào đó, ở vùng ranh giới máy còn liên tục quét tìm và chuyển qua lại giữa các trạm. Đó là lý do một chuyến tàu xuyên vùng phủ sóng chập chờn rút pin nhanh hơn nhiều so với ngồi yên một chỗ có sóng đầy.",
+    "tags": [
+      "pin",
+      "song-di-dong",
+      "cong-suat-phat"
+    ],
+    "src": "3GPP TS 36.213 — điều khiển công suất đường lên của LTE; Carroll & Heiser, USENIX ATC 2010 — đo tiêu thụ năng lượng theo thành phần trên điện thoại thông minh"
+  },
+  {
+    "id": "ct-224",
+    "cat": "co-the",
+    "sub": "mien-dich-vi-sinh",
+    "q": "Vì sao trẻ vừa chào đời đã bị tiêm một mũi vitamin K?",
+    "t": "Trẻ sơ sinh được tiêm vitamin K ngay sau sinh vì ruột chúng chưa có vi khuẩn để tự làm ra chất đó",
+    "s": "Vitamin K là nguyên liệu để gan lắp ráp bốn yếu tố đông máu; ở người lớn, một phần đến từ thức ăn và một phần do vi khuẩn đường ruột tổng hợp. Ruột trẻ mới sinh gần như vô trùng, nhau thai lại cho rất ít vitamin K đi qua, và sữa mẹ chứa rất ít — nên trong vài tuần đầu trẻ ở trạng thái thiếu tự nhiên. Một mũi 1 mg tiêm bắp sau sinh ngăn được gần hết các ca chảy máu não muộn, vốn xảy ra ở khoảng 1 trên 15.000 trẻ không tiêm.",
+    "d": "Máu đông được là nhờ một dây chuyền phản ứng, và bốn mắt xích trong dây chuyền đó do gan lắp ráp. Gan chỉ lắp được chúng khi có vitamin K trong tay — thiếu vitamin K thì bốn protein ấy vẫn được sản xuất nhưng ở dạng hỏng, không bám được vào chỗ vết thương. Người lớn có hai nguồn vitamin K: rau lá xanh trong bữa ăn, và vi khuẩn sống trong ruột già tự tổng hợp ra.\n\nTrẻ mới sinh không có nguồn nào trong hai nguồn đó. Ruột của bé gần như vô trùng cho tới khi vi khuẩn từ mẹ và từ môi trường kịp dọn vào — chuyện mất vài tuần tới vài tháng. Nhau thai lại là một hàng rào rất kín với vitamin K, chỉ cho qua một lượng nhỏ. Và sữa mẹ, dù tốt ở gần như mọi mặt khác, chứa rất ít chất này. Kết quả là em bé nào cũng sinh ra trong tình trạng thiếu vitamin K một cách tự nhiên, không phải do mẹ ăn thiếu.\n\nCó thể hình dung dây chuyền đông máu như một đội cứu hoả: người vẫn đủ, xe vẫn đủ, nhưng không ai có chìa khoá mở vòi. Vết xước ngoài da thì cơ thể vẫn bịt được bằng tiểu cầu, nên phần lớn trẻ thiếu vitamin K trông hoàn toàn bình thường. Nguy hiểm nằm ở chỗ không nhìn thấy: một mạch máu nhỏ trong não rỉ ra mà không có gì chặn lại.\n\nĐó là lý do mũi tiêm 1 mg vào bắp đùi được làm ngay trong giờ đầu sau sinh, ở gần như mọi bệnh viện trên thế giới. Nó nâng nồng độ vitamin K lên và giữ đủ lâu để ruột kịp có vi khuẩn riêng. Không tiêm thì tỉ lệ chảy máu muộn — thường là chảy máu não, xảy ra trong tuần thứ hai tới tháng thứ ba — vào khoảng 1 trên 15.000 trẻ, và khoảng một phần năm số ca đó tử vong. Có tiêm thì gần như không còn ca nào.",
+    "tags": [
+      "vitamin-k",
+      "tre-so-sinh",
+      "dong-mau"
+    ],
+    "src": "CDC, Vitamin K Deficiency Bleeding — fact sheet cho nhân viên y tế; Araki & Shirahata, Nutrients 12(3):780 (2020)"
+  },
+  {
+    "id": "ct-225",
+    "cat": "co-the",
+    "sub": "mien-dich-vi-sinh",
+    "q": "Vì sao người càng lớn tuổi thì tiêm vaccine càng kém hiệu quả?",
+    "t": "Tuyến ức bắt đầu teo từ tuổi dậy thì, và tới tuổi 55 nó chỉ còn xuất xưởng khoảng 5% lượng tế bào T mới so với thời trẻ con",
+    "s": "Tuyến ức là nơi tế bào T được huấn luyện và sàng lọc trước khi ra máu — con nào phản ứng với chính cơ thể thì bị loại tại đó. Từ tuổi dậy thì, mô tuyến ức mất khoảng 3% mỗi năm và bị mỡ thay chỗ dần. Lượng tế bào T mới rời tuyến ức rơi xuống còn khoảng 20% mức trước dậy thì vào tuổi 25 và khoảng 5% vào tuổi 55. Đây là một lý do người cao tuổi đáp ứng vaccine yếu hơn: hệ miễn dịch còn nhiều lính cũ nhưng ít lính mới để học mặt mầm bệnh lạ.",
+    "d": "Tế bào T là lực lượng nhận diện của hệ miễn dịch. Chúng không được sinh ra đã biết mặt mầm bệnh; mỗi con mang một thụ thể sinh ra ngẫu nhiên, và chỉ những con vừa không tấn công chính cơ thể vừa có khả năng bắt được thứ gì đó lạ mới được cho ra máu. Nơi làm việc sàng lọc đó là tuyến ức, một cơ quan nhỏ nằm sau xương ức.\n\nTuyến ức là cơ quan hiếm hoi bắt đầu teo đi ngay từ khi cơ thể còn đang lớn. Từ tuổi dậy thì, mỗi năm nó mất khoảng 3% khối mô hoạt động, và chỗ trống được mỡ lấp vào. Đến tuổi 25, lượng tế bào T mới rời tuyến ức chỉ còn khoảng một phần năm mức trước dậy thì; đến tuổi 55 còn khoảng 5%. Ở người rất cao tuổi, chụp lên chỉ còn thấy một mảng mỡ.\n\nCó thể hình dung như một trường đào tạo: khoá cũ vẫn đang làm việc ngoài thực địa và làm rất tốt với những kẻ địch họ đã gặp, nhưng trường thì gần như đóng cửa nên không còn ai được huấn luyện để nhận mặt kẻ địch mới. Vaccine chính là việc đưa một khuôn mặt mới ra cho hệ miễn dịch học — và nó cần lính mới.\n\nVì vậy vaccine cúm cho người trên 65 tuổi thường được làm ở liều cao hơn hoặc có thêm chất bổ trợ để kích hoạt mạnh hơn. Vì vậy một mầm bệnh hoàn toàn mới nguy hiểm với người già hơn nhiều so với một mầm bệnh quen. Và vì vậy tuyến ức là một trong những mục tiêu được ngành lão khoa quan tâm nhất: nếu có cách làm nó hoạt động trở lại, rất nhiều thứ khác sẽ theo sau.",
+    "tags": [
+      "tuyen-uc",
+      "te-bao-t",
+      "lao-hoa"
+    ],
+    "src": "Palmer, Frontiers in Immunology 4:316 (2013); Thomas và cộng sự, Ageing Research Reviews 65:101231 (2020)"
+  },
+  {
+    "id": "ct-226",
+    "cat": "co-the",
+    "sub": "mien-dich-vi-sinh",
+    "q": "Vì sao một gen gây bệnh nặng lại phổ biến đúng ở những vùng có sốt rét?",
+    "t": "Một bản sao gen hồng cầu hình liềm bảo vệ khỏi sốt rét nặng, hai bản thì gây bệnh — nên gen này phổ biến đúng ở vùng có sốt rét",
+    "s": "Đột biến đổi một axit amin trong chuỗi beta của hemoglobin. Người mang hai bản sao bị thiếu máu hồng cầu hình liềm, một bệnh nặng và trước đây thường chết sớm. Người mang một bản sao gần như khoẻ mạnh, và nguy cơ mắc sốt rét ác tính của họ thấp hơn khoảng mười lần: khi ký sinh trùng vào hồng cầu, tế bào biến dạng sớm và bị lách loại bỏ cùng ký sinh trùng bên trong. Vì lợi thế đó, tần suất gen lên tới 10–25% ở nhiều vùng châu Phi có sốt rét lưu hành, và gần bằng không ở nơi không có.",
+    "d": "Hemoglobin là protein chở oxy trong hồng cầu. Một đột biến đổi đúng một axit amin trong chuỗi beta của nó khiến các phân tử hemoglobin dính vào nhau thành sợi dài khi thiếu oxy, và sợi đó kéo hồng cầu từ hình đĩa tròn thành hình lưỡi liềm. Hồng cầu hình liềm cứng, dễ vỡ, và mắc kẹt trong mao mạch nhỏ.\n\nMỗi người có hai bản sao của gen này. Ai mang hai bản sao đột biến thì mắc bệnh thiếu máu hồng cầu hình liềm: đau đớn từng đợt, thiếu máu mạn, tổn thương cơ quan, và trước khi có y học hiện đại thì thường chết trước tuổi trưởng thành. Theo lẽ thường, một gen như vậy phải bị chọn lọc tự nhiên loại bỏ dần.\n\nNhưng ai mang một bản sao đột biến và một bản sao bình thường thì gần như khoẻ mạnh — và họ có một lợi thế. Ký sinh trùng sốt rét sống bên trong hồng cầu và tiêu thụ oxy ở đó; khi nó vào một hồng cầu mang hemoglobin đột biến, tế bào biến dạng sớm hơn bình thường và bị lách nhặt ra khỏi dòng máu cùng với vị khách bên trong. Nguy cơ mắc sốt rét ác tính của người mang một bản sao thấp hơn khoảng mười lần.\n\nỞ nơi sốt rét giết nhiều trẻ em, phép tính của chọn lọc tự nhiên đổi chiều: gen này lấy đi một số người mang hai bản sao nhưng cứu nhiều hơn số người mang một bản sao. Kết quả đo được trên bản đồ: tần suất gen lên tới 10–25% ở nhiều vùng châu Phi cận Sahara, ở bán đảo Ả Rập và một dải Ấn Độ — đúng những nơi từng có sốt rét lưu hành nặng — và gần bằng không ở nơi không có. Người gốc Phi ở châu Mỹ hôm nay vẫn mang gen ấy dù đã cách vùng sốt rét hàng trăm năm.",
+    "tags": [
+      "sot-ret",
+      "di-truyen",
+      "chon-loc"
+    ],
+    "src": "A. C. Allison, British Medical Journal 1:290–294 (1954); Taylor, Parobek & Fairhurst, Lancet Infectious Diseases 12:457–468 (2012)"
+  },
+  {
+    "id": "ct-227",
+    "cat": "co-the",
+    "sub": "mien-dich-vi-sinh",
+    "q": "Vì sao người bị cắt lách phải tiêm phòng và mang kháng sinh theo suốt đời?",
+    "t": "Người bị cắt lách phải tiêm phòng ba loại vi khuẩn có vỏ suốt đời, vì lách là nơi duy nhất bắt được chúng hiệu quả",
+    "s": "Vi khuẩn phế cầu, não mô cầu và Haemophilus influenzae type b khoác một lớp vỏ đường bên ngoài làm tế bào miễn dịch khó bám vào. Cách xử lý chúng là kháng thể phủ lên vỏ trước, rồi đại thực bào trong lách vớt chúng ra khỏi dòng máu chảy chậm qua đó. Mất lách thì bước vớt biến mất, và một ổ nhiễm phế cầu có thể chuyển thành nhiễm khuẩn huyết tối cấp trong vòng vài giờ. Vì vậy sau cắt lách, người bệnh được tiêm phòng cả ba và mang theo kháng sinh dự phòng.",
+    "d": "Một số vi khuẩn khoác bên ngoài mình một lớp vỏ bằng đường. Lớp vỏ đó trơn và không mang những dấu hiệu mà tế bào miễn dịch quen nhận diện, nên đại thực bào rất khó bám vào để nuốt. Phế cầu, não mô cầu và Haemophilus influenzae type b đều thuộc nhóm này, và cả ba đều là nguyên nhân hàng đầu của viêm màng não và nhiễm khuẩn huyết.\n\nCách cơ thể xử lý chúng gồm hai bước. Bước một, kháng thể phủ lên lớp vỏ như dán nhãn. Bước hai, vi khuẩn đã dán nhãn phải đi qua một chỗ mà máu chảy thật chậm và có sẵn đại thực bào đứng chờ để nhặt ra. Chỗ đó chính là lách. Máu len qua các xoang hẹp trong lách với tốc độ rất thấp, và lách cũng là nơi sản xuất phần lớn kháng thể đặc hiệu với các lớp vỏ đường ấy.\n\nNghĩ tới một trạm kiểm soát duy nhất trên một tuyến đường. Còn trạm thì xe khả nghi bị chặn lại; bỏ trạm đi thì đường vẫn thông nhưng không còn ai kiểm. Gan có thể làm thay một phần, nhưng máu chảy qua gan nhanh hơn nhiều và gan không có kho kháng thể tại chỗ.\n\nHậu quả rất nhanh và rất nặng. Một ổ nhiễm phế cầu ở người không còn lách có thể chuyển thành nhiễm khuẩn huyết tối cấp trong vòng vài giờ, với tỉ lệ tử vong cao ngay cả khi được điều trị. Vì vậy sau khi cắt lách — do vỡ lách vì tai nạn, do bệnh máu, hoặc do lách to phải bỏ — người bệnh được tiêm phòng cả ba loại vi khuẩn có vỏ, tiêm nhắc theo lịch, và thường được kê sẵn một liều kháng sinh mang theo người để uống ngay khi bắt đầu sốt, trước cả khi kịp tới bệnh viện.",
+    "tags": [
+      "lach",
+      "vi-khuan-co-vo",
+      "vaccine"
+    ],
+    "src": "Di Sabatino, Carsetti & Corazza, The Lancet 378:86–97 (2011)"
+  },
+  {
+    "id": "ct-228",
+    "cat": "co-the",
+    "sub": "mien-dich-vi-sinh",
+    "q": "Vì sao lịch tiêm chủng của trẻ lại bắt đầu vào tháng thứ hai chứ không phải ngay khi sinh?",
+    "t": "Kháng thể mẹ truyền qua nhau thai hết dần trong khoảng sáu tháng, và chính khoảng trống đó quyết định lịch tiêm chủng",
+    "s": "Trong ba tháng cuối thai kỳ, nhau thai bơm chủ động kháng thể loại IgG từ máu mẹ sang con, nên trẻ đủ tháng chào đời với nồng độ IgG còn cao hơn cả mẹ. Số kháng thể đó không được bổ sung thêm và có thời gian bán rã khoảng ba đến bốn tuần, nên nó rơi dần và gần hết vào tháng thứ sáu. Lịch tiêm chủng được xếp vào đúng khoảng đó: sớm quá thì kháng thể của mẹ trung hoà mất vaccine, muộn quá thì trẻ trần trụi. Trẻ sinh non nhận được ít hơn vì phần lớn IgG chuyển sang trong những tuần cuối.",
+    "d": "Trong ba tháng cuối thai kỳ, nhau thai làm một việc rất đặc biệt: nó không chỉ để kháng thể của mẹ thấm qua mà bơm chúng sang một cách chủ động, bằng những thụ thể chuyên chở riêng. Loại kháng thể được chuyển là IgG, thứ mang toàn bộ ký ức miễn dịch mà người mẹ đã tích luỹ cả đời. Trẻ đủ tháng chào đời với nồng độ IgG trong máu còn cao hơn cả mẹ nó.\n\nNhưng đó là một kho hàng chứ không phải một nhà máy. Trẻ chưa tự làm ra được lượng kháng thể đáng kể, còn số kháng thể nhận được thì phân huỷ dần với thời gian bán rã khoảng ba đến bốn tuần. Sau ba tháng còn một phần, sau sáu tháng thì gần hết. Trong khi đó hệ miễn dịch của chính đứa trẻ mới chỉ đang khởi động.\n\nGiống như được cho mượn một bình ắc quy đã sạc đầy để chạy tạm trong lúc tự lắp máy phát. Bình đầy thì máy phát chưa cần chạy — và chính chỗ đó sinh ra vấn đề cho vaccine. Kháng thể của mẹ không phân biệt được mầm bệnh thật với mảnh mầm bệnh trong vaccine; tiêm quá sớm thì chúng trung hoà mất kháng nguyên trước khi cơ thể trẻ kịp nhìn thấy và ghi nhớ.\n\nLịch tiêm chủng được xếp vào đúng khoảng giao thoa đó. Mũi đầu của bạch hầu, ho gà, uốn ván và bại liệt rơi vào tháng thứ hai, khi kháng thể mẹ đã xuống đủ để không cản trở. Vaccine sởi phải đợi tới tháng thứ chín hoặc mười hai, vì kháng thể sởi của mẹ bền hơn. Trẻ sinh non thì nhận được ít IgG hơn hẳn — phần lớn được chuyển trong những tuần cuối mà em bé không kịp ở lại — nên nhóm này cần bảo vệ sớm hơn, chứ không phải muộn hơn.",
+    "tags": [
+      "khang-the",
+      "nhau-thai",
+      "tiem-chung"
+    ],
+    "src": "Palmeira và cộng sự, Clinical and Developmental Immunology 2012:985646; WHO, Immunological basis for immunization series"
+  },
+  {
+    "id": "ls-272",
+    "cat": "lich-su",
+    "sub": "trung-dai",
+    "t": "Sách thiên văn được dạy nhiều nhất ở đại học châu Âu trung cổ mở đầu bằng phần chứng minh Trái Đất hình cầu",
+    "s": "Cuốn De sphaera mundi của Johannes de Sacrobosco, soạn khoảng năm 1230, là giáo trình bắt buộc ở Paris, Oxford, Bologna và hàng loạt nơi khác suốt bốn thế kỷ. Chương một đưa ba lập luận cho hình cầu: con tàu ra khơi khuất cột buồm sau cùng, sao Bắc Cực lên cao dần khi đi lên phía bắc, và bóng Trái Đất in trên Mặt Trăng lúc nguyệt thực luôn tròn. Sách được chép tay rồi in lại hàng trăm lần, và cả người đọc lẫn người dạy đều coi hình cầu là chuyện đã xong.",
+    "tags": [
+      "thien-van",
+      "dai-hoc",
+      "sacrobosco"
+    ],
+    "src": "Johannes de Sacrobosco, Tractatus de sphaera (khoảng 1230); Lynn Thorndike, The Sphere of Sacrobosco and Its Commentators (University of Chicago Press, 1949)"
+  },
+  {
+    "id": "ls-273",
+    "cat": "lich-su",
+    "sub": "trung-dai",
+    "t": "Nước Anh năm 1086 có 5.624 cối xay nước cho khoảng 3.000 khu dân cư — trung bình gần hai cối mỗi làng",
+    "s": "Con số đến từ Sách Domesday, cuộc kiểm kê tài sản mà Vua William cho làm để biết mình vừa chiếm được những gì. Cối xay nước là máy móc đắt tiền, cần đập nước, bánh xe và bộ truyền động; mật độ đó nghĩa là phần lớn dân Anh thời ấy sống trong tầm đi bộ tới một cỗ máy chạy bằng sức nước. Nó xay bột, và trong các thế kỷ sau còn được chuyển sang đập vải, cưa gỗ, thổi lò rèn và nghiền quặng.",
+    "tags": [
+      "coi-xay",
+      "domesday",
+      "co-khi"
+    ],
+    "src": "Domesday Book (1086); H. C. Darby, Domesday England (Cambridge University Press, 1977)"
+  },
+  {
+    "id": "ls-274",
+    "cat": "lich-su",
+    "sub": "trung-dai",
+    "t": "Kính đeo mắt ra đời ở miền bắc nước Ý khoảng năm 1286, và người đầu tiên nhắc tới nó nói thẳng rằng mình không chịu tiết lộ tên người phát minh",
+    "s": "Trong một bài giảng ở Florence năm 1306, tu sĩ Giordano da Pisa nói rằng cái nghề làm kính đeo mắt mới có chưa đầy hai mươi năm, rằng ông đã gặp và nói chuyện với người nghĩ ra nó — nhưng không nêu tên. Kính đầu tiên là hai thấu kính lồi ghép bằng khung gỗ hoặc xương, chỉ chữa được viễn thị và lão thị, tức kéo dài tuổi làm việc của thợ chép sách, thợ kim hoàn và thợ dệt thêm hàng chục năm. Kính cận phải đợi thêm khoảng một thế kỷ rưỡi.",
+    "tags": [
+      "kinh-mat",
+      "phat-minh",
+      "y"
+    ],
+    "src": "Edward Rosen, 'The Invention of Eyeglasses', Journal of the History of Medicine 11:13–46 và 183–218 (1956); bài giảng của Giordano da Pisa, Florence, 23/2/1306"
+  },
+  {
+    "id": "ls-275",
+    "cat": "lich-su",
+    "sub": "trung-dai",
+    "t": "Thành phố châu Âu trung cổ bỏ tiền xây đường ống dẫn nước sạch cho dân uống, và London làm việc đó từ năm 1247",
+    "s": "Great Conduit của London dẫn nước từ suối Tyburn về một bể công cộng ở Cheapside bằng ống chì, khởi công năm 1247 và hoạt động hàng trăm năm; Bristol, Exeter, Siena và nhiều thành phố khác có công trình tương tự. Chính quyền còn ra lệnh cấm đổ chất thải xuống đoạn sông phía trên cửa lấy nước. Người trung cổ uống nước lã hằng ngày và biết phân biệt nguồn nước tốt với nguồn nước xấu bằng mắt, mùi và vị — bia loãng là thức uống hằng ngày vì nó có calo và giữ được lâu, không phải vì nước không uống được.",
+    "tags": [
+      "cap-nuoc",
+      "do-thi",
+      "london"
+    ],
+    "src": "Roberta Magnusson, Water Technology in the Middle Ages (Johns Hopkins University Press, 2001); biên niên sử thành phố London về Great Conduit (1247)"
+  },
+  {
+    "id": "ls-276",
+    "cat": "lich-su",
+    "sub": "trung-dai",
+    "t": "Florence cấm dùng chữ số Ả Rập trong sổ sách năm 1299, vì số 0 và số 1 quá dễ sửa thành số khác",
+    "s": "Điều lệ của phường đổi tiền Florence năm đó buộc mọi khoản trong sổ phải ghi bằng chữ viết ra hoặc bằng số La Mã. Lý do rất thực dụng: một chữ số 0 thêm vào cuối làm khoản tiền gấp mười lần, còn số 1 chữa thành 4 hay 7 chỉ mất một nét bút, trong khi thêm một chữ 'X' vào giữa một dãy số La Mã thì lộ ngay. Chữ số Ả Rập vẫn thắng, nhưng phải mất khoảng ba thế kỷ nữa mới thành chuẩn trong sổ sách kế toán châu Âu.",
+    "tags": [
+      "chu-so",
+      "ke-toan",
+      "florence"
+    ],
+    "src": "Điều lệ Arte del Cambio, Florence (1299); Alexander Murray, Reason and Society in the Middle Ages (Oxford University Press, 1978)"
+  },
+  {
+    "id": "nn-203",
+    "cat": "ngon-ngu",
+    "sub": "ngon-ngu-ky-hieu",
+    "t": "Nét mặt trong ngôn ngữ ký hiệu là ngữ pháp chứ không phải cảm xúc: nhướn mày biến một câu kể thành câu hỏi",
+    "s": "Cùng một chuỗi tay, nếu người ký hiệu nhướn mày và hơi nghiêng đầu tới trước thì đó là câu hỏi có–không; nếu cau mày lại thì đó là câu hỏi có từ để hỏi; nếu lắc đầu suốt cụm thì đó là phủ định. Các dấu hiệu này bắt buộc phải xuất hiện đúng lúc và đúng phạm vi của mệnh đề, giống như thanh điệu hay trợ từ trong tiếng nói — ký hiệu đúng tay mà sai mặt thì câu sai ngữ pháp, không phải sai cảm xúc.",
+    "tags": [
+      "ngu-phap",
+      "phi-ngon-ngu",
+      "asl"
+    ],
+    "src": "Charlotte Baker-Shenk, A Microanalysis of the Nonmanual Components of Questions in American Sign Language, luận án tiến sĩ, UC Berkeley (1983)"
+  },
+  {
+    "id": "nn-204",
+    "cat": "ngon-ngu",
+    "sub": "ngon-ngu-ky-hieu",
+    "t": "Trẻ điếc bập bẹ bằng tay vào đúng độ tuổi trẻ nghe bập bẹ bằng miệng",
+    "s": "Từ khoảng 7 đến 10 tháng, trẻ nghe bắt đầu lặp đi lặp lại các âm tiết vô nghĩa kiểu ba-ba-ba. Trẻ điếc lớn lên trong gia đình dùng ngôn ngữ ký hiệu làm đúng như vậy bằng tay: những chuyển động lặp lại, có nhịp, dùng các thế tay thuộc hệ thống của ngôn ngữ đó nhưng chưa mang nghĩa gì — khác hẳn các cử chỉ quơ tay ngẫu nhiên mà mọi em bé đều có. Điều này cho thấy cái đang chín trong não là năng lực ngôn ngữ, không phải bộ máy phát âm.",
+    "tags": [
+      "bap-be",
+      "phat-trien-ngon-ngu",
+      "tre-em"
+    ],
+    "src": "Petitto & Marentette, 'Babbling in the manual mode: evidence for the ontogeny of language', Science 251:1493–1496 (1991)"
+  },
+  {
+    "id": "nn-205",
+    "cat": "ngon-ngu",
+    "sub": "ngon-ngu-ky-hieu",
+    "t": "Người chưa học ngôn ngữ ký hiệu đoán đúng nghĩa của ký hiệu dưới 10% số lần",
+    "s": "Cho người nghe chưa từng học xem lần lượt các ký hiệu rồi bảo họ đoán nghĩa, tỉ lệ đoán trúng nằm dưới 10% — kể cả với những ký hiệu mà người trong nghề thấy là rất gợi hình. Chiều ngược lại thì dễ: cho biết trước nghĩa rồi hỏi ký hiệu nào hợp, họ chọn đúng khá cao. Nghĩa là tính gợi hình có thật nhưng chỉ nhìn thấy được sau khi đã biết đáp án — đúng như từ tượng thanh trong tiếng nói.",
+    "tags": [
+      "goi-hinh",
+      "asl",
+      "nhan-thuc"
+    ],
+    "src": "Edward Klima & Ursula Bellugi, The Signs of Language (Harvard University Press, 1979), chương 1"
+  },
+  {
+    "id": "nn-206",
+    "cat": "ngon-ngu",
+    "sub": "ngon-ngu-ky-hieu",
+    "t": "Không có ngôn ngữ ký hiệu quốc tế đúng nghĩa — thứ dùng ở hội nghị là một hệ tiếp xúc có vốn từ rất mỏng",
+    "s": "International Sign, thứ được dùng tại đại hội của Liên đoàn Người Điếc Thế giới và các sự kiện đa quốc gia, không có ngữ pháp cố định và không có ai lớn lên với nó làm tiếng mẹ đẻ. Người ký hiệu tạo nó tại chỗ: chọn những từ dễ đoán nhất từ vốn của mình, dựa nặng vào cử chỉ mô phỏng và vào việc chỉ trỏ trong không gian, rồi thương lượng nghĩa ngay trong lúc nói. Vốn từ ổn định chỉ vài trăm đơn vị, đủ cho một bài phát biểu có chủ đề rõ, không đủ cho một cuộc trò chuyện bất kỳ.",
+    "tags": [
+      "international-sign",
+      "da-dang-ngon-ngu",
+      "tiep-xuc-ngon-ngu"
+    ],
+    "src": "Rachel Rosenstock & Jemina Napier (chủ biên), International Sign: Linguistic, Usage, and Status Issues (Gallaudet University Press, 2015); Ethnologue, danh mục ngôn ngữ ký hiệu"
+  },
+  {
+    "id": "nn-207",
+    "cat": "ngon-ngu",
+    "sub": "ngon-ngu-ky-hieu",
+    "t": "Thơ ký hiệu có vần, và vần được tạo bằng cách lặp lại thế tay chứ không bằng âm",
+    "s": "Trong thơ bằng ngôn ngữ ký hiệu, chỗ tương ứng với vần là sự lặp lại của một thành tố hình thức: cùng một thế bàn tay, cùng một vị trí trên cơ thể, hoặc cùng một hướng chuyển động, quay lại ở cuối mỗi dòng. Nhà thơ còn dùng thủ pháp không có trong thơ tiếng nói — ký hiệu bằng hai tay hai nội dung song song, hoặc để một ký hiệu biến hình dần thành ký hiệu tiếp theo mà không dứt. Đây là bằng chứng thẳng nhất rằng ký hiệu có tầng hình thức tách khỏi tầng nghĩa, đúng như âm vị trong tiếng nói.",
+    "tags": [
+      "tho",
+      "am-vi",
+      "asl"
+    ],
+    "src": "Klima & Bellugi, The Signs of Language (Harvard University Press, 1979), chương về nghệ thuật ký hiệu; Rachel Sutton-Spence, Analysing Sign Language Poetry (Palgrave Macmillan, 2005)"
+  },
+  {
+    "id": "vt-250",
+    "cat": "vu-tru",
+    "sub": "thang-thoi-gian",
+    "q": "Một 'năm' của Mặt Trời quanh thiên hà dài bao lâu?",
+    "t": "Mặt Trời quay một vòng quanh tâm Ngân Hà mất khoảng 230 triệu năm, nên từ khi khủng long xuất hiện tới nay nó chưa đi hết một vòng",
+    "s": "Hệ Mặt Trời nằm cách tâm thiên hà khoảng 26.000 năm ánh sáng và chạy quanh đó với tốc độ chừng 230 km mỗi giây. Một vòng như vậy — gọi là một năm thiên hà — mất khoảng 230 triệu năm. Khủng long xuất hiện cách đây chừng 230 triệu năm, tức Mặt Trời vừa mới trở lại đúng chỗ nó đứng hồi đó. Toàn bộ lịch sử loài người chưa bằng một phần nghìn của một vòng.",
+    "d": "Trái Đất quay quanh Mặt Trời, chuyện đó ai cũng biết. Ít người để ý rằng cả hệ Mặt Trời cũng đang quay quanh một thứ khác: khối lượng khổng lồ tập trung ở tâm Ngân Hà, trong đó có một lỗ đen nặng khoảng bốn triệu lần Mặt Trời. Chúng ta nằm cách tâm đó khoảng 26.000 năm ánh sáng, ở lưng chừng một nhánh xoắn, và chạy quanh nó với tốc độ chừng 230 km mỗi giây.\n\nCon số 230 km mỗi giây nghe rất lớn — nhanh hơn đạn bắn hàng trăm lần — nhưng quãng đường thì lớn hơn nhiều. Một vòng quanh tâm thiên hà dài khoảng 160.000 năm ánh sáng, và đi hết vòng đó mất khoảng 230 triệu năm. Các nhà thiên văn gọi đó là một năm thiên hà.\n\nĐem con số ấy đặt cạnh lịch sử Trái Đất thì nó đổi cách nhìn. Khủng long xuất hiện cách đây chừng 230 triệu năm, tức Mặt Trời vừa mới trở lại đúng vị trí nó đứng khi con khủng long đầu tiên đi qua. Trái Đất 4,54 tỉ năm tuổi, tức nó mới đi được khoảng 20 vòng. Còn toàn bộ lịch sử loài người, tính từ khi tổ tiên tách khỏi tinh tinh, chưa bằng một phần ba mươi của một vòng.\n\nChuyến đi đó không phải một đường tròn phẳng lặng. Hệ Mặt Trời còn nhấp nhô lên xuống qua mặt phẳng thiên hà vài chục triệu năm một lần, và mỗi lần băng qua một nhánh xoắn thì mật độ khí bụi và số ngôi sao gần lại tăng lên. Có giả thuyết cho rằng nhịp đó để lại dấu trong tần suất các đợt tuyệt chủng hàng loạt, nhưng bằng chứng còn yếu và chưa ai chốt được.",
+    "tags": [
+      "ngan-ha",
+      "thang-thoi-gian",
+      "quy-dao"
+    ],
+    "src": "Cộng tác Gravity, Astronomy & Astrophysics 625:L10 (2019) — đo khoảng cách tới tâm Ngân Hà; Reid & Brunthaler, ApJ 892:39 (2020)"
+  },
+  {
+    "id": "vt-251",
+    "cat": "vu-tru",
+    "sub": "thang-thoi-gian",
+    "q": "Trong 4,5 tỉ năm của Trái Đất, sự sống mà mắt thường nhìn thấy được chiếm bao nhiêu?",
+    "t": "Sự sống đơn bào chiếm hơn ba tỉ năm đầu của Trái Đất; động vật nhiều tế bào chỉ có mặt ở khoảng một phần tám cuối",
+    "s": "Dấu vết sự sống lâu đời nhất được chấp nhận rộng rãi nằm ở đá khoảng 3,5 tỉ năm tuổi, còn Trái Đất thì 4,54 tỉ năm tuổi. Trong suốt hơn ba tỉ năm sau đó, sự sống chỉ là vi khuẩn và vi sinh vật đơn bào. Các cơ thể nhiều tế bào lớn đủ để nhìn thấy bằng mắt thường chỉ xuất hiện vào khoảng 570 triệu năm trước — tức khoảng 13% cuối cùng của lịch sử hành tinh. Nếu đặt 4,54 tỉ năm đó lên một ngày 24 giờ, động vật xuất hiện sau 20 giờ 55 phút.",
+    "d": "Trái Đất hình thành cách đây 4,54 tỉ năm, con số đo được bằng cách so tỉ lệ urani và chì trong thiên thạch cùng lứa với hành tinh. Dấu vết sự sống lâu đời nhất được chấp nhận rộng rãi nằm trong đá khoảng 3,5 tỉ năm tuổi: những lớp thảm vi khuẩn hoá đá gọi là stromatolite, và các dấu hiệu hoá học cho thấy carbon đã đi qua tay một cơ thể sống.\n\nRồi gần như không có gì xảy ra trong một khoảng thời gian dài đến mức khó hình dung. Suốt hơn ba tỉ năm, toàn bộ sinh quyển là vi khuẩn và vi sinh vật đơn bào. Chúng làm được những việc lớn — nhóm vi khuẩn lam bơm oxy vào khí quyển và đổi hẳn thành phần không khí — nhưng nếu có ai đứng trên bờ biển thời đó thì họ sẽ không nhìn thấy một sinh vật nào bằng mắt thường.\n\nCơ thể nhiều tế bào đủ lớn để nhìn thấy chỉ xuất hiện vào khoảng 570 triệu năm trước, và bùng nổ về hình dạng trong kỷ Cambri khoảng 540 triệu năm trước. Tức toàn bộ phần lịch sử sự sống mà một người có thể nhìn ngắm được chiếm khoảng 13% cuối cùng của tuổi hành tinh.\n\nNén 4,54 tỉ năm đó vào một ngày 24 giờ thì thang thời gian mới đọc được. Sự sống xuất hiện lúc khoảng 5 giờ sáng. Suốt cả ngày cho tới gần 21 giờ, không có gì ngoài vi sinh vật. Động vật xuất hiện lúc 20 giờ 55. Khủng long chiếm khoảng từ 22 giờ 50 tới 23 giờ 39. Loài người hiện đại bước vào lúc 23 giờ 59 phút 56 giây — bốn giây trước nửa đêm.",
+    "tags": [
+      "tien-hoa",
+      "thang-thoi-gian",
+      "trai-dat"
+    ],
+    "src": "Dodd và cộng sự, Nature 543:60–64 (2017) — vi hoá thạch trong đá Nuvvuagittuq; Patterson, Geochimica et Cosmochimica Acta 10:230–237 (1956) — tuổi Trái Đất"
+  },
+  {
+    "id": "vt-252",
+    "cat": "vu-tru",
+    "sub": "thang-thoi-gian",
+    "q": "Vì sao thỉnh thoảng thế giới lại phải chèn thêm một giây vào đồng hồ?",
+    "t": "Ngày trên Trái Đất dài thêm khoảng 1,8 phần nghìn giây mỗi thế kỷ, và đó là lý do lịch phải chèn giây nhuận",
+    "s": "Thuỷ triều do Mặt Trăng gây ra kéo lê một khối nước khổng lồ quanh hành tinh; ma sát của khối nước đó với đáy biển hãm vòng quay của Trái Đất lại, đồng thời đẩy Mặt Trăng ra xa thêm khoảng 3,8 cm mỗi năm. Đối chiếu ghi chép nhật thực của người Babylon, người Trung Hoa và người Ả Rập suốt 2.700 năm qua với vị trí tính lại bằng cơ học thiên thể, độ dài ngày trung bình tăng khoảng 1,8 mili giây mỗi thế kỷ. Đồng hồ nguyên tử không chậm theo, nên thỉnh thoảng người ta phải chèn một giây nhuận để hai thứ khớp lại.",
+    "d": "Mặt Trăng kéo nước biển về phía nó, tạo ra một khối nước phồng lên chạy vòng quanh hành tinh mỗi ngày. Khối nước đó cọ vào đáy biển nông và vào các bờ lục địa, và ma sát ấy hãm vòng quay của Trái Đất lại. Theo định luật bảo toàn, phần chuyển động quay bị mất không biến mất mà chuyển sang Mặt Trăng, đẩy nó ra xa thêm khoảng 3,8 cm mỗi năm — con số đo trực tiếp được bằng cách bắn laser lên các gương mà phi hành gia Apollo đặt trên đó.\n\nMức hãm rất nhỏ: ngày dài thêm khoảng 1,8 phần nghìn giây mỗi thế kỷ. Không ai cảm nhận được, nhưng nó cộng dồn. Cách đo là đối chiếu ghi chép nhật thực của người Babylon, người Trung Hoa và người Ả Rập suốt 2.700 năm qua với vị trí tính lại bằng cơ học thiên thể: nếu Trái Đất quay đều thì bóng nhật thực năm 136 trước Công nguyên phải quét qua một chỗ khác hẳn nơi các nhà chép sử Babylon đứng xem.\n\nHình dung một cái đĩa quay đang chậm dần trong khi bên cạnh có một đồng hồ bấm giây chạy hoàn toàn đều. Ban đầu hai thứ khớp nhau; qua nhiều năm, đĩa tụt lại. Đồng hồ nguyên tử chính là cái đồng hồ bấm giây đó — nó đếm dao động của nguyên tử caesium và không quan tâm Trái Đất quay nhanh hay chậm.\n\nVì hai thang thời gian trôi khỏi nhau, người ta thỉnh thoảng chèn một giây nhuận vào cuối tháng 6 hoặc cuối tháng 12 để kéo đồng hồ nguyên tử khớp lại với vị trí thật của Mặt Trời. Từ 1972 tới nay đã chèn 27 giây như vậy. Chuyện này gây phiền cho hệ thống máy tính đến mức năm 2022 các cơ quan đo lường quốc tế đã bỏ phiếu ngừng dùng giây nhuận từ năm 2035, và chấp nhận để hai thang lệch nhau dần.",
+    "tags": [
+      "thuy-trieu",
+      "giay-nhuan",
+      "tu-quay"
+    ],
+    "src": "Stephenson, Morrison & Hohenkerk, Proceedings of the Royal Society A 472:20160404 (2016)"
+  },
+  {
+    "id": "vt-253",
+    "cat": "vu-tru",
+    "sub": "thang-thoi-gian",
+    "q": "Vì sao định tuổi bằng carbon phóng xạ chỉ dùng được cho khoảng 50.000 năm gần đây?",
+    "t": "Định tuổi bằng carbon-14 chỉ dùng được tới khoảng 50.000 năm, vì sau chừng đó thời gian gần như không còn nguyên tử nào để đếm",
+    "s": "Carbon-14 hình thành liên tục trên tầng cao khí quyển và đi vào mọi sinh vật đang sống. Khi sinh vật chết, nguồn bổ sung ngừng và lượng carbon-14 giảm một nửa sau mỗi 5.730 năm. Sau 50.000 năm — chừng chín lần bán rã — chỉ còn khoảng hai phần nghìn lượng ban đầu, ít tới mức lẫn vào nhiễu nền của máy đo. Muốn đo xa hơn thì phải đổi sang đồng hồ khác: kali–argon hay urani–chì, vốn bán rã hàng trăm triệu tới hàng tỉ năm.",
+    "d": "Tia vũ trụ đập vào tầng cao khí quyển và biến một phần nitơ ở đó thành carbon-14, một dạng carbon phóng xạ. Nó trộn vào khí CO₂, cây hút vào, động vật ăn cây, nên mọi sinh vật đang sống đều mang carbon-14 với tỉ lệ xấp xỉ bằng tỉ lệ trong không khí. Chừng nào còn sống và còn ăn thì kho carbon-14 trong cơ thể còn được bù liên tục.\n\nChết là lúc nguồn bù ngừng lại, và cái đồng hồ bắt đầu chạy. Carbon-14 phân rã với chu kỳ bán rã 5.730 năm: sau ngần ấy năm còn một nửa, sau hai lần còn một phần tư, cứ thế. Đo tỉ lệ carbon-14 còn lại so với carbon thường trong mẫu là suy ra được thời gian đã trôi qua kể từ khi sinh vật đó chết.\n\nĐây là chỗ mà chính cái làm nên sức mạnh của phương pháp lại đặt ra giới hạn cho nó. Cứ mỗi lần bán rã, tín hiệu yếu đi một nửa. Sau 50.000 năm — chừng chín lần bán rã — chỉ còn khoảng hai phần nghìn lượng ban đầu. Giống như nghe một tiếng thì thầm nhỏ dần trong một căn phòng vốn đã có tiếng ồn nền: tới một lúc, thứ máy đo được không còn phân biệt nổi với nhiễu, với một chút carbon hiện đại lẫn vào mẫu, hay với bụi trong phòng thí nghiệm.\n\nMuốn đi xa hơn thì phải đổi đồng hồ. Kali–argon có chu kỳ bán rã 1,25 tỉ năm và dùng để định tuổi tro núi lửa quanh hoá thạch người cổ ở Đông Phi; urani–chì với 4,5 tỉ năm là thứ đã cho ra tuổi 4,54 tỉ năm của Trái Đất. Mỗi đồng hồ có một khoảng làm việc riêng, và chọn sai đồng hồ thì kết quả vô nghĩa — giống như dùng thước kẹp để đo quãng đường từ Hà Nội vào Huế.",
+    "tags": [
+      "carbon-14",
+      "dinh-tuoi",
+      "phong-xa"
+    ],
+    "src": "Willard F. Libby, Radiocarbon Dating (University of Chicago Press, 1952); Reimer và cộng sự, đường chuẩn IntCal20, Radiocarbon 62:725–757 (2020)"
+  },
+  {
+    "id": "vt-254",
+    "cat": "vu-tru",
+    "sub": "thang-thoi-gian",
+    "q": "Vì sao một thiên hà cách ta 33 tỉ năm ánh sáng mà ánh sáng của nó chỉ đi 13,4 tỉ năm là tới?",
+    "t": "Thiên hà xa nhất từng quan sát được có ánh sáng đi 13,4 tỉ năm mới tới, nhưng hiện nó cách chúng ta khoảng 33 tỉ năm ánh sáng",
+    "s": "Hai con số đó không mâu thuẫn, vì trong lúc ánh sáng đang trên đường thì bản thân không gian giữa hai điểm giãn ra. Ánh sáng rời thiên hà đó khi vũ trụ mới khoảng 300 triệu năm tuổi và nó đi mất 13,4 tỉ năm; nhưng chỗ nó xuất phát đã bị kéo đi xa hơn nhiều so với quãng đường ánh sáng đã đi. Đó cũng là lý do vũ trụ quan sát được có bán kính khoảng 46 tỉ năm ánh sáng dù mới chỉ 13,8 tỉ năm tuổi.",
+    "d": "Trong đời thường, khoảng cách và thời gian ánh sáng đi là một: sao cách 4 năm ánh sáng thì ánh sáng của nó mất 4 năm để tới. Điều đó đúng vì khoảng không giữa ta và ngôi sao đó không đổi trong lúc ánh sáng đang đi. Ở quy mô vũ trụ thì giả định ấy hỏng, bởi bản thân không gian đang giãn ra.\n\nÁnh sáng của thiên hà xa nhất từng được xác nhận rời khỏi nó khi vũ trụ mới khoảng 300 triệu năm tuổi, và nó bơi trong không gian suốt 13,4 tỉ năm mới tới kính viễn vọng James Webb. Nhưng suốt 13,4 tỉ năm đó, mọi khoảng cách trong vũ trụ đều nở ra. Chỗ mà thiên hà ấy đang đứng bây giờ đã bị đẩy đi xa hơn rất nhiều so với quãng đường ánh sáng đã vượt qua — khoảng 33 tỉ năm ánh sáng.\n\nCách hình dung dễ nhất là một con kiến bò trên một sợi dây cao su đang bị kéo dài. Con kiến bò đều với tốc độ của nó, nhưng đoạn dây phía sau lưng nó cũng dài ra, và điểm xuất phát lùi xa hơn nhiều so với quãng đường chân nó đã đi. Ánh sáng cũng vậy: tốc độ của nó trong không gian luôn là 300.000 km mỗi giây, còn không gian thì không bị luật đó ràng buộc.\n\nĐó là lý do vũ trụ quan sát được có bán kính khoảng 46 tỉ năm ánh sáng dù mới 13,8 tỉ năm tuổi, và cũng là lý do ánh sáng từ những thiên hà xa nhất bị kéo dãn bước sóng tới mức chuyển hẳn sang vùng hồng ngoại. Muốn nhìn xa vào quá khứ thì phải chế một kính viễn vọng nhìn được bằng nhiệt, đặt nó ở nơi lạnh và tối — đó chính là mô tả của James Webb.",
+    "tags": [
+      "gian-no",
+      "khoang-cach-vu-tru",
+      "james-webb"
+    ],
+    "src": "Curtis-Lake và cộng sự, Nature Astronomy 7:622–632 (2023) — xác nhận quang phổ JADES-GS-z13-0"
+  }
+]
