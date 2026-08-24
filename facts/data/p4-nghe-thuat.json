@@ -26,19 +26,6 @@
     "src": "Burns, The Psychology of Music (1999)"
   },
   {
-    "id": "na-203",
-    "cat": "nghe-thuat",
-    "sub": "am-thanh-va-nhac-cu",
-    "t": "Piano hiện đại được lên dây hơi sai so với toán học, và đó là lựa chọn có chủ đích",
-    "s": "Hệ bình quân chia quãng tám thành 12 phần bằng nhau, làm mọi quãng năm hơi hẹp hơn tỉ số 3/2 lý tưởng khoảng 2 phần trăm cung. Đổi lại, nhạc chuyển giọng được sang bất kỳ điệu thức nào mà vẫn nghe chấp nhận được.",
-    "tags": [
-      "binh-quan",
-      "len-day",
-      "piano"
-    ],
-    "src": "Barbour, Tuning and Temperament (1951)"
-  },
-  {
     "id": "na-204",
     "cat": "nghe-thuat",
     "sub": "am-thanh-va-nhac-cu",
@@ -55,17 +42,14 @@
     "id": "na-205",
     "cat": "nghe-thuat",
     "sub": "am-thanh-va-nhac-cu",
-    "t": "Cùng một nốt trên violin và trên sáo nghe khác nhau vì tỉ lệ các hoạ âm khác nhau",
-    "s": "Cao độ do tần số cơ bản quyết định, còn âm sắc do phổ hoạ âm. Đây là lý do bạn nhận ra giọng người quen chỉ sau một từ.",
+    "t": "Cùng một nốt trên violin và trên sáo nghe khác nhau vì ngoài tần số chính, mỗi nhạc cụ còn phát kèm những âm cao hơn ở tần số gấp 2, gấp 3 lần tần số đó, với độ mạnh khác nhau.",
+    "s": "Tần số chính quyết định đó là nốt nào; các âm phụ gấp đôi, gấp ba tần số đó quyết định nó nghe ra tiếng violin hay tiếng sáo. Đây cũng là lý do một giọng người quen nhận ra được chỉ sau một từ.",
     "tags": [
       "am-sac",
       "hoa-am",
       "nhac-cu"
     ],
-    "src": "Helmholtz, On the Sensations of Tone (1863)",
-    "xem_ok": [
-      "thieu-mo-neo"
-    ]
+    "src": "Helmholtz, On the Sensations of Tone (1863)"
   },
   {
     "id": "na-206",
@@ -172,10 +156,7 @@
       "hoi-dieu",
       "ky-am"
     ],
-    "src": "Trần Văn Khê, Âm nhạc truyền thống Việt Nam; UNESCO Ca trù",
-    "khac_voi": [
-      "na-318"
-    ]
+    "src": "Trần Văn Khê, Âm nhạc truyền thống Việt Nam; UNESCO Ca trù"
   },
   {
     "id": "na-214",
@@ -194,8 +175,8 @@
     "id": "na-215",
     "cat": "nghe-thuat",
     "sub": "ly-thuyet-nhac",
-    "t": "Bốn hợp âm I–V–vi–IV xuất hiện trong hàng trăm bài hát nổi tiếng thuộc nhiều thể loại khác nhau",
-    "s": "Vòng hợp âm này cho một chuyển động hoà thanh vừa quen vừa không kết thúc dứt khoát, nên dễ lặp lại. Nhóm hài Axis of Awesome đã ghép hàng chục bài hit vào cùng một vòng để minh hoạ.",
+    "t": "Bốn hợp âm dựng trên bậc 1, bậc 5, bậc 6 và bậc 4 của cùng một giọng — ở giọng Đô trưởng là Đô, Sol, La thứ, Fa — xuất hiện trong hàng trăm bài hát nổi tiếng thuộc nhiều thể loại.",
+    "s": "Bậc ở đây là đếm từ nốt gốc của giọng: bậc 1 là hợp âm dựng trên nốt đầu, bậc 5 là hợp âm dựng trên nốt thứ năm, và cứ thế. Vòng bốn hợp âm này quay về chỗ cũ mà không đóng lại dứt khoát nên nó lặp được vô hạn — nhóm hài Axis of Awesome đã ghép hàng chục bài hit vào đúng vòng đó.",
     "tags": [
       "vong-hop-am",
       "hoa-thanh",
@@ -207,8 +188,8 @@
     "id": "na-216",
     "cat": "nghe-thuat",
     "sub": "ly-thuyet-nhac",
-    "t": "Tai nghe ra 'nốt bị lạc' khi tần số lệch khoảng 5 xu, tức khoảng 0,3% tần số",
-    "s": "Một xu là một phần trăm nửa cung. Người có tai nhạc tốt phân biệt được chênh lệch 5–10 xu, còn người bình thường thường cần khoảng 20 xu.",
+    "t": "Người bình thường chỉ nghe ra một nốt bị lạc khi cao độ lệch khoảng 20 xu, còn người có tai nhạc tốt phát hiện được từ 5–10 xu.",
+    "s": "Một xu là một phần trăm nửa cung, nên 5 xu chỉ là khoảng 0,3% tần số. Ngưỡng 20 xu của người bình thường rộng gấp bốn lần ngưỡng của người có tai nhạc tốt — đó là khoảng cách quyết định ai nghe ra một cây đàn lên dây chưa tới.",
     "tags": [
       "cao-do",
       "do-nhay",
@@ -220,8 +201,8 @@
     "id": "na-217",
     "cat": "nghe-thuat",
     "sub": "ly-thuyet-nhac",
-    "t": "Cảm âm tuyệt đối rất hiếm ở phương Tây nhưng phổ biến hơn nhiều ở người nói ngôn ngữ thanh điệu",
-    "s": "Tỉ lệ ở nhạc sinh nói tiếng Trung cao gấp nhiều lần so với nhạc sinh nói tiếng Anh trong cùng trường nhạc. Giả thuyết là việc phải phân biệt cao độ để hiểu nghĩa từ nhỏ có vai trò.",
+    "t": "Khả năng gọi đúng tên một nốt khi nghe nó đơn lẻ, không cần nốt nào để so, gặp nhiều hơn ở nhạc sinh nói tiếng Trung so với nhạc sinh nói tiếng Anh trong cùng một trường nhạc.",
+    "s": "Người có khả năng này nghe một tiếng đàn là biết ngay đó là nốt La hay nốt Đô, còn phần lớn người khác chỉ so được nốt này cao hơn nốt kia bao nhiêu. Giả thuyết là việc phải phân biệt cao độ để hiểu nghĩa từ nhỏ có vai trò: trong tiếng thanh điệu, đổi cao độ là đổi nghĩa từ.",
     "tags": [
       "cam-am-tuyet-doi",
       "thanh-dieu",
@@ -457,8 +438,8 @@
     "id": "na-236",
     "cat": "nghe-thuat",
     "sub": "hoi-hoa",
-    "t": "Bức 'Đêm đầy sao' được Van Gogh vẽ từ cửa sổ một bệnh viện tâm thần, và bố cục xoáy khớp với mô hình dòng rối",
-    "s": "Phân tích thống kê độ sáng trong tranh cho phân bố gần với mô hình rối Kolmogorov. Kết quả này thú vị nhưng không chứng minh được hoạ sĩ 'nhìn thấy' dòng rối.",
+    "t": "Phân bố độ sáng trong bức 'Đêm đầy sao' khớp với công thức toán mô tả dòng chảy rối — cùng loại rối thấy ở khói và nước xoáy.",
+    "s": "Phân tích thống kê độ sáng của các điểm trong tranh cho ra phân bố gần với mô hình Kolmogorov — công thức mô tả cách xoáy lớn vỡ dần thành xoáy nhỏ trong một dòng chảy rối. Kết quả này không chứng minh hoạ sĩ 'nhìn thấy' dòng rối; nó chỉ nói nét vẽ xoáy của ông rơi vào cùng một thống kê.",
     "tags": [
       "van-gogh",
       "dong-roi",
@@ -883,8 +864,8 @@
     "id": "na-269",
     "cat": "nghe-thuat",
     "sub": "chu-va-thiet-ke",
-    "t": "Tỉ lệ tương phản tối thiểu cho chữ nhỏ theo chuẩn tiếp cận web là 4,5 trên 1",
-    "s": "Chữ lớn được nới xuống 3 trên 1. Đây là ngưỡng định lượng chứ không phải cảm nhận, và nó tính được từ độ chói tương đối của hai màu.",
+    "t": "Chuẩn tiếp cận web bắt chữ nhỏ phải chênh sáng-tối với nền ít nhất 4,5 lần, còn chữ lớn thì 3 lần.",
+    "s": "Con số đó là tỉ số độ sáng giữa màu chữ và màu nền: 1 nghĩa là hai màu sáng y như nhau nên chữ tàng hình, số càng lớn thì chữ càng nổi khỏi nền. Vì tính được từ độ sáng của hai màu nên đây là một ngưỡng đo được, không phải chuyện cảm nhận — hai người kiểm tra cùng một trang sẽ ra cùng một kết quả.",
     "tags": [
       "tuong-phan",
       "tiep-can",
@@ -909,8 +890,8 @@
     "id": "na-271",
     "cat": "nghe-thuat",
     "sub": "bao-ton-nghe-thuat",
-    "t": "Phục chế nhà nguyện Sistine trong thập niên 1980 làm lộ màu sáng rực và gây tranh cãi suốt nhiều năm",
-    "s": "Nhiều nhà phê bình cho rằng lớp bồ hóng đã bị coi nhầm là lớp sơn bóng do Michelangelo cố ý phủ. Đây là ví dụ điển hình về việc phục chế luôn là một quyết định diễn giải, không chỉ là kỹ thuật.",
+    "t": "Lớp bồ hóng nến tích trên bích hoạ nhà nguyện Sistine đã làm màu gốc tối đi, và lần phục chế thập niên 1980 gỡ nó ra để lộ màu sáng rực hơn hẳn.",
+    "s": "Bích hoạ nằm trong một không gian đốt nến hàng trăm năm, nên thứ phủ trên bề mặt là muội đen chứ không phải lớp sơn bóng do hoạ sĩ cố ý phủ. Tranh cãi kéo dài vì phân biệt hai thứ đó là một quyết định diễn giải, không chỉ là phép đo.",
     "tags": [
       "phuc-che",
       "sistine",
@@ -969,19 +950,6 @@
       "lich-su"
     ],
     "src": "Thư viện Quốc hội Mỹ, The Survival of American Silent Feature Films (2013)"
-  },
-  {
-    "id": "na-276",
-    "cat": "nghe-thuat",
-    "sub": "bao-ton-nghe-thuat",
-    "t": "Tác phẩm nghệ thuật số khó bảo tồn hơn tranh sơn dầu vì định dạng và phần cứng biến mất nhanh hơn vật liệu",
-    "s": "Một tệp video nghệ thuật năm 1995 có thể cần trình phát và hệ điều hành không còn tồn tại. Bảo tàng phải mô phỏng lại môi trường máy tính cũ để trưng bày.",
-    "tags": [
-      "nghe-thuat-so",
-      "bao-ton",
-      "dinh-dang"
-    ],
-    "src": "Tate; Rinehart & Ippolito, Re-collection (2014)"
   },
   {
     "id": "na-277",
@@ -1120,8 +1088,8 @@
     "id": "na-287",
     "cat": "nghe-thuat",
     "sub": "hoi-hoa",
-    "t": "Tranh chép và tranh gốc phân biệt được bằng thống kê nét vẽ, và máy học đạt độ chính xác khá cao trên một số bộ dữ liệu",
-    "s": "Phân tích wavelet trên nét bút cho thấy hoạ sĩ có 'chữ ký' hình học ổn định. Phương pháp này bổ trợ chứ chưa thay thế được giám định vật liệu.",
+    "t": "Máy tính phân biệt được tranh gốc với tranh chép bằng cách đo hình dạng và độ đậm của từng nét bút, vì mỗi hoạ sĩ có một mẫu nét ổn định.",
+    "s": "Chương trình chia ảnh chụp bức tranh thành nhiều mức chi tiết rồi thống kê độ cong, độ dài và độ đậm của các nét ở từng mức; mẫu số đó lặp lại đủ ổn định để nhận ra một bàn tay. Cách này bổ trợ cho giám định vật liệu chứ chưa thay được nó.",
     "tags": [
       "giam-dinh",
       "may-hoc",
@@ -1383,24 +1351,11 @@
     "src": "Hole và cộng sự, The Lancet (2015)"
   },
   {
-    "id": "na-318",
-    "cat": "nghe-thuat",
-    "sub": "ly-thuyet-nhac",
-    "t": "Ký âm phương Tây không ghi được nhiều thứ quan trọng trong nhạc truyền thống Việt Nam",
-    "s": "Cách nhấn, rung, luyến và vuốt dây tạo nên phần lớn bản sắc nhưng không có ký hiệu tương ứng. Đây là lý do học nhạc dân tộc vẫn phải truyền khẩu chứ không học qua bản nhạc.",
-    "tags": [
-      "ky-am",
-      "nhac-viet",
-      "truyen-khau"
-    ],
-    "src": "Trần Văn Khê; UNESCO, hồ sơ Nhã nhạc cung đình Huế"
-  },
-  {
     "id": "na-319",
     "cat": "nghe-thuat",
     "sub": "ly-thuyet-nhac",
-    "t": "Nhã nhạc cung đình Huế được UNESCO công nhận năm 2003, là di sản phi vật thể đầu tiên của Việt Nam được ghi danh",
-    "s": "Sau đó Việt Nam có thêm hơn mười di sản phi vật thể được ghi danh. Nhã nhạc dùng dàn nhạc lễ với cấu trúc bài bản cố định có từ thời Nguyễn.",
+    "t": "Nhã nhạc cung đình Huế dùng dàn nhạc lễ có biên chế và hệ bài bản cố định từ thời Nguyễn, nên cùng một bài được chơi gần như không đổi qua nhiều thế hệ.",
+    "s": "Bài bản cố định nghĩa là thứ tự các câu nhạc, nhạc cụ tham gia và chỗ vào của từng nhạc cụ đều được quy định trước, không có chỗ cho ứng tác. Đó là lý do một dàn nhạc cung đình phục dựng lại được từ tư liệu, khác với nhạc dân gian sống bằng truyền khẩu.",
     "tags": [
       "nha-nhac",
       "unesco",
@@ -1412,8 +1367,8 @@
     "id": "na-320",
     "cat": "nghe-thuat",
     "sub": "ly-thuyet-nhac",
-    "t": "Ca trù dùng một hệ thống phách và khổ đàn rất chặt, và nó được UNESCO xếp vào nhóm cần bảo vệ khẩn cấp",
-    "s": "Việc ghi danh năm 2009 thuộc danh sách khẩn cấp chứ không phải danh sách đại diện. Số nghệ nhân biết đủ các thể cách đã giảm xuống rất thấp.",
+    "t": "Số nghệ nhân ca trù biết đủ các thể cách đã giảm xuống mức UNESCO phải xếp loại hình này vào danh sách cần bảo vệ khẩn cấp năm 2009, không phải danh sách đại diện.",
+    "s": "Danh sách khẩn cấp dành cho di sản đang có nguy cơ mất hẳn trong một thế hệ, khác danh sách đại diện vốn vinh danh cái đang sống tốt. Ca trù vào nhóm đầu vì số người hát được trọn vẹn các thể cách — tức các khuôn bài bản cố định — đã xuống rất thấp.",
     "tags": [
       "ca-tru",
       "unesco",
@@ -1432,7 +1387,10 @@
       "perkin",
       "lich-su"
     ],
-    "src": "Perkin (1856); Garfield, Mauve (2000)"
+    "src": "Perkin (1856); Garfield, Mauve (2000)",
+    "khac_voi": [
+      "na-224"
+    ]
   },
   {
     "id": "na-322",
@@ -1646,8 +1604,8 @@
     "id": "na-338",
     "cat": "nghe-thuat",
     "sub": "nhiep-anh-dien-anh",
-    "t": "Phim ảnh dùng khoảng 24 hình mỗi giây, nhưng cảm giác chuyển động không đến từ 'lưu ảnh trên võng mạc'",
-    "s": "Giải thích lưu ảnh võng mạc đã bị bác bỏ; cơ chế đúng gồm chuyển động biểu kiến và hiệu ứng phi. Đây là một trong các sai lầm dai dẳng nhất trong sách về điện ảnh.",
+    "t": "Cảm giác chuyển động trong phim do não dựng ra từ những ảnh tĩnh chiếu liên tiếp, không do ảnh còn lưu lại trên võng mạc.",
+    "s": "Phim chiếu khoảng 24 ảnh tĩnh mỗi giây, mỗi ảnh khác ảnh trước một chút. Khi hai ảnh gần giống nhau xuất hiện sát nhau trong khoảng thời gian đó, não ghép chúng thành một vật đang di chuyển — hiện tượng gọi là chuyển động biểu kiến, và nó xảy ra trong não chứ không ở mắt.",
     "tags": [
       "chuyen-dong-bieu-kien",
       "dien-anh",
@@ -1857,8 +1815,8 @@
     "id": "na-355",
     "cat": "nghe-thuat",
     "sub": "chu-va-thiet-ke",
-    "t": "Logo đơn giản dễ nhớ hơn logo phức tạp, và các thương hiệu lớn đều đã đơn giản hoá logo theo thời gian",
-    "s": "Xu hướng này tăng tốc từ khi màn hình nhỏ trở thành nơi hiển thị chính. Logo phải nhận ra được ở kích thước 16 điểm ảnh của biểu tượng ứng dụng.",
+    "t": "Logo của các thương hiệu lớn bị đơn giản hoá dần từ khi màn hình nhỏ thành nơi hiển thị chính, vì logo phải nhận ra được ở cỡ 16 điểm ảnh của một biểu tượng ứng dụng.",
+    "s": "16 điểm ảnh là cỡ của một ô biểu tượng trên thanh tab hoặc trên màn hình điện thoại; ở cỡ đó, chi tiết nhỏ và chữ mảnh nhoè thành một vệt xám. Ràng buộc kỹ thuật này — không phải thị hiếu — là thứ kéo hàng loạt logo về dạng phẳng, ít chi tiết.",
     "tags": [
       "logo",
       "don-gian-hoa",

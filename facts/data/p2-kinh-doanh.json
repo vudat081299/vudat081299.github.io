@@ -126,24 +126,11 @@
     ]
   },
   {
-    "id": "kd-136",
-    "cat": "kinh-doanh",
-    "sub": "du-an",
-    "t": "Giới hạn số việc đang làm cùng lúc rút ngắn thời gian hoàn thành từng việc",
-    "s": "Theo định luật Little, thời gian chờ tỉ lệ thuận với số việc đang chạy. Đội làm 3 việc một lúc xong cả 3 nhanh hơn đội mở 10 việc song song — dù cảm giác thì ngược lại, vì mở nhiều việc trông giống làm được nhiều hơn.",
-    "tags": [
-      "van-hanh",
-      "wip",
-      "toc-do"
-    ],
-    "src": "Định luật Little (1961); thực hành WIP limit trong Kanban (David Anderson, 2010)"
-  },
-  {
     "id": "kd-141",
     "cat": "kinh-doanh",
     "sub": "to-chuc",
-    "t": "Hiệu ứng chi phí chìm mạnh nhất ở cấp tổ chức, không ở cấp cá nhân",
-    "s": "Cá nhân còn có thể bỏ cuộc lặng lẽ; tổ chức thì có người đã bảo vệ dự án trước hội đồng, có ngân sách đã được duyệt, có người sẽ mất mặt. Vì vậy các cơ chế dừng phải được thiết kế trước: điểm kiểm tra định sẵn, tiêu chí dừng viết ra từ đầu, và người quyết định dừng khác người khởi xướng.",
+    "t": "Tổ chức khó dừng một dự án đã tiêu tiền hơn cá nhân, vì việc dừng buộc một người cụ thể phải nhận là mình đã sai trước cả hội đồng.",
+    "s": "Càng đổ tiền vào một việc thì càng khó bỏ nó, kể cả khi số tiền đã tiêu không lấy lại được — kinh tế học gọi đó là bẫy chi phí chìm. Ở cá nhân, bỏ cuộc là chuyện riêng; ở tổ chức thì đã có người đứng ra bảo vệ dự án trước hội đồng và có ngân sách được duyệt, nên áp lực giữ dự án sống có thêm một lớp mà cá nhân không có.",
     "tags": [
       "du-an",
       "chi-phi-chim",

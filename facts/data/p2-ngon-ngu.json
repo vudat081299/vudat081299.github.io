@@ -21,27 +21,14 @@
     "id": "nn-102",
     "cat": "ngon-ngu",
     "sub": "ngon-ngu-va-tu-duy",
-    "t": "Người Eskimo không có hàng trăm từ chỉ tuyết — nhưng câu chuyện này vẫn sống dai",
-    "s": "Con số bị thổi phồng qua mỗi lần kể lại, từ khoảng bốn gốc từ trong bài viết gốc lên hàng trăm. Các ngôn ngữ Inuit là ngôn ngữ chắp dính nên ghép được vô số từ phức — theo logic đó, tiếng Anh cũng có vô hạn từ chỉ tuyết.",
+    "t": "Các ngôn ngữ Inuit chỉ có khoảng bốn gốc từ chỉ tuyết, nhưng vì là ngôn ngữ chắp dính nên chúng ghép được vô số từ phức từ bốn gốc đó.",
+    "s": "Chắp dính nghĩa là từ mới được tạo bằng cách dán thêm hậu tố vào một gốc, nên số 'từ chỉ tuyết' đếm được là vô hạn ở mọi ngôn ngữ loại này. Theo đúng cách đếm đó thì tiếng Anh cũng có vô hạn từ chỉ tuyết; con số 'hàng trăm' bị thổi lên qua mỗi lần kể lại từ khoảng bốn gốc từ trong bài viết gốc.",
     "tags": [
       "huyen-thoai",
       "tu-vung",
       "bao-chi"
     ],
     "src": "Laura Martin, American Anthropologist (1986); Geoffrey Pullum, The Great Eskimo Vocabulary Hoax (1991)"
-  },
-  {
-    "id": "nn-103",
-    "cat": "ngon-ngu",
-    "sub": "ngon-ngu-va-tu-duy",
-    "t": "Ngôn ngữ ảnh hưởng tới tư duy, nhưng không quyết định giới hạn của tư duy",
-    "s": "Phiên bản mạnh — ngôn ngữ quyết định giới hạn tư duy — đã bị bác bỏ. Phiên bản nhẹ có bằng chứng: ngôn ngữ ảnh hưởng tới tốc độ phân loại, tới cách ghi nhớ hướng, và tới điều bạn buộc phải chú ý vì ngữ pháp bắt bạn phải nói ra.",
-    "tags": [
-      "tu-duy",
-      "sapir-whorf",
-      "bang-chung"
-    ],
-    "src": "Boroditsky, Trends in Cognitive Sciences (2001); phê bình trong McWhorter, The Language Hoax (2014)"
   },
   {
     "id": "nn-104",
@@ -68,22 +55,6 @@
       "amazon"
     ],
     "src": "Gordon, Science (2004); Frank và cộng sự, Cognition (2008)"
-  },
-  {
-    "id": "nn-106",
-    "cat": "ngon-ngu",
-    "sub": "ngon-ngu-va-tu-duy",
-    "t": "Thì tương lai trong ngôn ngữ có thể liên quan tới hành vi tiết kiệm — nhưng kết quả đang bị tranh cãi",
-    "s": "Một nghiên cứu kinh tế nổi tiếng cho rằng người nói ngôn ngữ không bắt buộc đánh dấu thì tương lai tiết kiệm nhiều hơn. Các phân tích lại chỉ ra rằng khi tính tới quan hệ họ hàng giữa các ngôn ngữ, hiệu ứng yếu đi đáng kể. Đây là ví dụ tốt cho việc tương quan văn hoá dễ đánh lừa thế nào.",
-    "tags": [
-      "kinh-te",
-      "tranh-cai",
-      "phuong-phap"
-    ],
-    "src": "Chen, American Economic Review (2013); phản biện của Roberts, Winters & Chen, PLOS ONE (2015)",
-    "xem_ok": [
-      "do-lon-bang-chu"
-    ]
   },
   {
     "id": "nn-107",
@@ -147,8 +118,8 @@
     "id": "nn-112",
     "cat": "ngon-ngu",
     "sub": "hoc-ngoai-ngu",
-    "t": "Chuyển qua lại giữa hai ngôn ngữ trong cùng một câu tuân theo quy tắc chặt, và chỉ người thạo cả hai mới làm đúng",
-    "s": "Việc chuyển qua lại giữa hai ngôn ngữ trong cùng một câu tuân theo các quy tắc cú pháp chặt chẽ, và chỉ người thạo cả hai mới làm đúng được. Nó bị coi là dấu hiệu 'không thạo tiếng nào' chủ yếu vì định kiến xã hội, không vì bằng chứng ngôn ngữ học.",
+    "t": "Người song ngữ chỉ chuyển ngôn ngữ giữa câu ở những điểm mà trật tự từ của hai ngôn ngữ khớp nhau, và không chuyển ở giữa một từ.",
+    "s": "Vì thế trộn hai tiếng trong một câu đòi hỏi thạo cả hai: người nói phải biết chỗ nào hai bộ ngữ pháp trùng khớp mới cắt được. Shana Poplack mô tả ràng buộc này từ năm 1980, và nó đi ngược lại cách hiểu phổ biến rằng trộn tiếng là dấu hiệu 'không thạo tiếng nào'.",
     "tags": [
       "song-ngu",
       "dinh-kien",
@@ -323,7 +294,7 @@
     "cat": "ngon-ngu",
     "sub": "chu-viet",
     "t": "Bảng chữ cái ra đời một lần duy nhất, và mọi bảng chữ cái đều là hậu duệ của nó",
-    "s": "Từ chữ Phoenicia, nó phân nhánh thành Hy Lạp, Latinh, Kirin, Ả Rập, Hebrew, và các hệ chữ Ấn Độ. Nghĩa là chữ cái bạn đang đọc, chữ Ả Rập và chữ Thái đều là họ hàng xa của cùng một phát minh của thương nhân vùng Levant.",
+    "s": "Dòng chảy là Phoenicia → Hy Lạp → Etruscan → Latinh, và mọi bảng chữ cái đang dùng hôm nay đều nằm trên cây đó. Chữ A ban đầu là hình đầu bò lộn ngược ('aleph' nghĩa là con bò), chữ B từ hình ngôi nhà ('beth') — hệ chữ cái lan rộng vì nó dễ học, thứ mà giới thương nhân cần, khác chữ tượng hình vốn là đặc quyền của giới thầy tu và thư lại.",
     "tags": [
       "bang-chu-cai",
       "nguon-goc",
@@ -377,8 +348,8 @@
     "id": "nn-130",
     "cat": "ngon-ngu",
     "sub": "ngu-phap-tu-vung",
-    "t": "Ngôn ngữ thay đổi liên tục và không có ngôn ngữ nào 'đang xuống cấp'",
-    "s": "Mọi thế hệ đều than phiền rằng lớp trẻ làm hỏng tiếng mẹ đẻ, và điều đó đã được ghi lại từ thời La Mã. Cái được gọi là suy thoái thường là sự thay đổi bình thường — và nhiều 'lỗi' bị chê hôm nay là chuẩn mực của ngày mai.",
+    "t": "Ngôn ngữ nào cũng đổi liên tục, và những dạng bị thế hệ trước gọi là 'sai' thường thành chuẩn mực của thế hệ sau.",
+    "s": "Lời than 'lớp trẻ làm hỏng tiếng mẹ đẻ' đã được ghi lại liên tục từ thời La Mã, tức khoảng 2.000 năm — nó là hằng số ở mọi thế hệ chứ không đánh dấu một giai đoạn đi xuống nào. Cái bị gọi là suy thoái là thay đổi thông thường: dạng bị chê là lỗi ở một thế hệ thường là chuẩn mực của thế hệ sau.",
     "tags": [
       "thay-doi",
       "chuan-muc",
@@ -400,24 +371,11 @@
     "src": "Robert Lowth, A Short Introduction to English Grammar (1762); phê bình trong ngôn ngữ học mô tả hiện đại"
   },
   {
-    "id": "nn-133",
-    "cat": "ngon-ngu",
-    "sub": "hoc-ngoai-ngu",
-    "t": "Giọng địa phương ảnh hưởng tới việc bạn được đánh giá thế nào trong tuyển dụng và toà án",
-    "s": "Các nghiên cứu thực nghiệm cho thấy cùng một nội dung được chấm khác nhau tuỳ giọng người nói, và điều này ảnh hưởng tới quyết định thuê người lẫn độ tin cậy của lời khai. Đây là một dạng định kiến ít bị gọi tên hơn nhiều so với các dạng khác.",
-    "tags": [
-      "giong",
-      "dinh-kien",
-      "cong-viec"
-    ],
-    "src": "Lippi-Green, English with an Accent (1997); Rakić, Steffens & Mummendey, JPSP (2011)"
-  },
-  {
     "id": "nn-134",
     "cat": "ngon-ngu",
     "sub": "hoc-ngoai-ngu",
     "t": "Người nói với giọng nước ngoài bị đánh giá là ít đáng tin hơn, kể cả khi nội dung giống hệt",
-    "s": "Thí nghiệm cho thấy cùng một câu phát biểu bị chấm ít chân thực hơn khi đọc bằng giọng có dấu vết ngoại ngữ. Nguyên nhân là độ khó xử lý: câu khó nghe hơn một chút được não diễn giải thành 'kém đáng tin hơn'.",
+    "s": "Cùng một nội dung, cùng một mức chính xác, chỉ khác giọng người đọc — người nghe chấm câu nói có giọng nước ngoài là ít đáng tin hơn. Cùng cơ chế đo được ở hai chỗ hậu quả nặng: hồ sơ tuyển dụng và lời khai trước toà.",
     "tags": [
       "giong",
       "tin-cay",

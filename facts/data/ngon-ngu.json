@@ -155,27 +155,14 @@
     "id": "nn-015",
     "cat": "ngon-ngu",
     "sub": "ngu-phap-tu-vung",
-    "t": "Người trưởng thành bản ngữ biết khoảng 15.000–20.000 nhóm từ, nhưng 2.000–3.000 từ hay gặp nhất đã bao phủ hơn 90% văn bản",
-    "s": "Nhưng chỉ khoảng 2.000–3.000 từ phổ biến nhất đã bao phủ trên 90% văn bản đời thường. Đó là lý do chiến lược học ngoại ngữ hiệu quả nhất cho người bận rộn là nắm chắc lõi tần suất cao trước, thay vì học từ vựng theo chủ đề rời rạc.",
+    "t": "Người trưởng thành bản ngữ biết khoảng 15.000–20.000 nhóm từ, nhưng 2.000–3.000 từ hay gặp nhất đã bao phủ hơn 90% văn bản đời thường.",
+    "s": "Nhóm từ là một từ cùng các dạng phái sinh của nó, nên con số 15.000–20.000 nhỏ hơn số mục trong từ điển. Khoảng cách giữa 3.000 và 20.000 cho thấy phần lớn vốn từ của một người nằm ở vùng rất ít gặp: mỗi từ thêm vào sau phần lõi chỉ mua được một phần rất nhỏ độ phủ.",
     "tags": [
       "tu-vung",
       "hoc-ngoai-ngu",
       "tan-suat"
     ],
     "src": "Nation, Learning Vocabulary in Another Language (2001); Goulden, Nation & Read, Applied Linguistics (1990)"
-  },
-  {
-    "id": "nn-016",
-    "cat": "ngon-ngu",
-    "sub": "chu-viet",
-    "t": "Bảng chữ cái Latinh mà bạn đang đọc bắt nguồn từ chữ Phoenicia của thương nhân",
-    "s": "Dòng chảy là Phoenicia → Hy Lạp → Etruscan → Latinh. Chữ A ban đầu là hình đầu bò lộn ngược ('aleph' nghĩa là con bò), chữ B từ hình ngôi nhà ('beth'). Hệ chữ cái lan rộng vì nó dễ học — thứ mà giới thương nhân cần, khác với chữ tượng hình vốn là đặc quyền của giới thầy tu và thư lại.",
-    "tags": [
-      "chu-viet",
-      "lich-su",
-      "bang-chu-cai"
-    ],
-    "src": "Bảo tàng Anh, bộ sưu tập chữ viết cổ; Robinson, The Story of Writing (1995)"
   },
   {
     "id": "nn-017",

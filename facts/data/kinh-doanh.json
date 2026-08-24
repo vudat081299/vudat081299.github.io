@@ -46,8 +46,8 @@
     "id": "kd-008",
     "cat": "kinh-doanh",
     "sub": "to-chuc",
-    "t": "Khoảng 70% chênh lệch về mức gắn kết giữa các nhóm gắn với người quản lý trực tiếp",
-    "s": "Phân tích của Gallup trên hàng nghìn đơn vị kinh doanh cho thấy khoảng 70% chênh lệch về gắn kết giữa các nhóm gắn với người quản lý trực tiếp. Đây là con số về gắn kết, không phải về lý do nghỉ việc — nhưng nó đủ để giải thích vì sao đổi sếp thường thay đổi trải nghiệm làm việc nhiều hơn đổi công ty.",
+    "t": "Khi so các nhóm trong cùng một công ty, khoảng 70% khoảng cách về mức gắn kết của nhân viên đi cùng với người quản lý trực tiếp.",
+    "s": "'Gắn kết' ở đây là điểm của một bộ câu hỏi khảo sát nhân viên, và '70% chênh lệch' nghĩa là: lấy khoảng cách giữa nhóm điểm cao và nhóm điểm thấp trong hàng nghìn đơn vị kinh doanh thì khoảng bảy phần mười khoảng cách đó đi cùng với ai đang làm sếp trực tiếp, phần còn lại đi cùng mọi thứ khác. Đây là con số về gắn kết, không phải về lý do nghỉ việc.",
     "tags": [
       "quan-ly",
       "nhan-su",
@@ -86,8 +86,8 @@
     "id": "kd-012",
     "cat": "kinh-doanh",
     "sub": "to-chuc",
-    "t": "Con số '150 quan hệ xã hội ổn định' là ước lượng thô, và làm lại thì dải rộng từ 4 tới hơn 500 người",
-    "s": "Robin Dunbar suy ra giới hạn khoảng 150 quan hệ xã hội ổn định từ mối liên hệ giữa kích thước vỏ não và quy mô bầy đàn ở linh trưởng. Một phân tích năm 2021 làm lại bằng phương pháp thống kê hiện đại cho dải ước lượng rộng từ khoảng 4 tới hơn 500 người — rộng tới mức không dùng được. Con số 150 vẫn được nhắc như một hằng số, nhưng nó không phải.",
+    "t": "Ước lượng số quan hệ xã hội ổn định mà một người duy trì được trải từ khoảng 4 tới hơn 500 người, nên không có con số chuẩn nào cho giới hạn này.",
+    "s": "Robin Dunbar suy ra con số 150 năm 1992 từ tương quan giữa kích thước vỏ não và quy mô bầy đàn ở linh trưởng. Làm lại phép suy đó bằng thống kê hiện đại năm 2021 cho dải từ khoảng 4 tới hơn 500 người — rộng tới mức không dùng được để thiết kế tổ chức, dù khả năng duy trì quan hệ thật của một người vẫn hữu hạn và nhỏ hơn danh bạ điện thoại rất nhiều.",
     "d": "Chỗ dải ước lượng rộng ra là ở bước ngoại suy: quan hệ giữa kích thước vỏ não và quy mô bầy đàn ở linh trưởng có độ tán xạ lớn, và con số 150 là một điểm trên đường hồi quy chứ không phải một giới hạn đo trực tiếp ở người. Các phép đo trực tiếp trên người — số thẻ chúc mừng gửi đi, số liên hệ trong sổ điện thoại — cho những con số khác nhau tuỳ cách định nghĩa \"quan hệ ổn định\".",
     "tags": [
       "to-chuc",
