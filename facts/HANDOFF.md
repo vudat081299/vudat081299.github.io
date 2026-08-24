@@ -87,6 +87,44 @@ cuối lặp lại ý câu đầu của chính nó và mở bằng "Ví dụ rõ
 QUÁT về chẩn đoán quá mức, không phải của fact này. `tl-118` có hai câu liền nhau nói cùng
 một điều ("chính đồng tác giả sau đó công khai không còn tin"). Không cổng nào bắt được.
 
+### 4b. Ba cổng cài thêm SAU khi mục 5 dưới đây được viết
+
+Mục 5 nói "chưa cài cổng vì một phiên khác đang sửa `factlint.py`". Phiên đó đã nhả file,
+nên ba việc sau đã làm nốt — giữ nguyên mục 5 để thấy quyết định đã đổi vì lý do gì.
+
+**a) Lỗ nghiêm trọng nhất cả đợt: hook nuốt mã thoát của `check`** (commit `c7266cf`).
+CLAUDE.md §3 nói cặp ≥ 0,62 và cặp trùng tiêu đề "**chặn commit**". Hook thì không:
+
+```sh
+CHECK=$(python3 tools/factlint.py check 2>&1) || true      # <- vứt mã thoát
+case "$CHECK" in *'— LỖI ('*) ... FAIL=1 ;; esac           # <- chỉ dò lỗi CẤU TRÚC
+```
+
+Cặp ≥ 0,62 làm `cmd_check` trả 1 nhưng in dòng `!!`/`TT`, **không** in `— LỖI (`. Nên nó
+lọt. Đây không phải lý thuyết: ngày 24/08 hai commit đã đi qua trong lúc thư viện đang có
+một cặp 0,66. Chứng minh hai chiều trên CÙNG một trạng thái (hai fact trùng tiêu đề từng
+chữ, `check` in `TT 1.00` và trả 1): **hook cũ → exit 0 "cổng facts qua" · hook mới →
+exit 1**. Luật này từ 12/08 tới nay chưa từng được thi hành.
+
+**b) Cổng "câu đầu của `s` chép lại tiêu đề", ngưỡng 0,90** (commit `4143b1b`) — theo đúng
+số đo ở mục 3. Đã sửa cả 5 ca; tiêm lại bản cũ để bắt buộc cổng đỏ (1,000 · 0,978 · 0,959
+· 0,957 · 0,929 đều bắt), 5 bản mới qua hết, 43 fact dải 0,60–0,90 không bị chạm.
+
+**c) `TITLE_SUBSET_MIN = 3` — vá lỗ lưới tiêu đề, và số liệu bác hai mức lỏng hơn**
+(commit `3aee443`). Chỉ tính cặp mà token tiêu đề này là TẬP CON của tiêu đề kia:
+
+```
+>= 1 token chung → 9 cặp mới, 1 thật  ( 11%)   nhiễu kiểu "men răng" ghép "rượu vang lên MEN"
+>= 2 token chung → 3 cặp mới, 1 thật  ( 33%)
+>= 3 token chung → 1 cặp mới, 1 thật  (100%)   <- chọn
+>= 4 token chung → 0 cặp mới                   (trùng luật cũ)
+```
+
+Cổng đỏ ngay bằng **ca thật** `vt-145`/`vl-254` (TT 0,77), không cần tiêm. Đã gộp theo §3
+"trùng thẳng": giữ `vl-254`, mang sang câu hay nhất của `vt-145`, gộp `src`, xoá `vt-145`.
+Trung thực về mức bằng chứng: "100%" đo trên đúng **một** ca dương tính — luật hẹp có cơ
+sở, không phải luật đã kiểm rộng. Cái chắc chắn là hai mức lỏng hơn đã bị số liệu bác.
+
 ### 5. Cố ý KHÔNG làm, và vì sao
 
 - **Không gộp 85 cặp trùng.** §3 cho ba cách xử khác nhau (bỏ một · nhập vào `s`/`d` · gắn
@@ -100,8 +138,11 @@ một điều ("chính đồng tác giả sau đó công khai không còn tin").
 
 ### 6. Còn nợ sau đợt này
 
-1. **Gộp 85 cặp trùng** theo danh sách đã đo. 23 cặp nằm trong 356 cặp cổng đã báo; 62 cặp
-   cổng không thấy nên phải đi từ danh sách này chứ không từ đầu ra của `check`.
+1. **Gộp 84 cặp trùng** còn lại theo danh sách đã đo (`vt-145`/`vl-254` đã gộp ở `3aee443`;
+   `dl-259`/`dl-325`, `dl-232`/`dl-317`, `tp-231`/`tp-318`, `tp-226`/`tp-311`,
+   `sv-101`/`sv-104` do phiên song song gộp — gạch khi xác nhận). 23 cặp nằm trong 356
+   cặp cổng đã báo; 62 cặp cổng không thấy, nên phải đi từ danh sách này chứ không từ
+   đầu ra của `check`.
    Rõ nhất, nên làm trước: `gt-003`/`gt-101` · `tl-141`/`tl-298` · `dl-259`/`dl-325` ·
    `dl-232`/`dl-317` · `hh-296`/`hh-313` · `tl-103`/`tl-335` · `tl-110`/`tl-328` ·
    `xh-007`/`xh-103` · `xh-019`/`xh-147` · `th-228`/`th-314` · `th-216`/`th-287` ·
@@ -109,10 +150,9 @@ một điều ("chính đồng tác giả sau đó công khai không còn tin").
 2. **`xh-010` / `xh-143` mâu thuẫn NGÀY với nhau**, không chỉ trùng: một fact ghi Việt Nam
    công nhận án lệ **từ 2015**, fact kia ghi **từ 2016**, cả hai trích cùng Nghị quyết
    03/2015. Phải chốt một mốc.
-3. **Sửa 5 ca chép tiêu đề + cân nhắc cổng >= 0,90** (mục 3 — đã có số, chỉ chờ
-   `factlint.py` rảnh tay).
-4. **`TITLE_MIN_SHARE`**: cân nhắc miễn điều kiện >= 4 token khi một tiêu đề là chuỗi con
-   của tiêu đề kia. Phải ĐO trước — chưa biết luật đó nổ vào bao nhiêu ca đúng.
+3. ~~Sửa 5 ca chép tiêu đề + cổng >= 0,90~~ → **XONG**, commit `4143b1b` (mục 4b-b).
+4. ~~`TITLE_MIN_SHARE`~~ → **XONG**, commit `3aee443` (mục 4b-c). Đã đo: nới xuống 1 token
+   chỉ đạt 11% chính xác nên bị bác; chốt ở `TITLE_SUBSET_MIN = 3`.
 5. **Đối chiếu `src`** — vẫn chưa ai làm. Đọc toàn văn để lại **hai ca cần truy nguồn**:
    `sv-295` ghi hoá thạch rừng Nam Cực cách cực Nam ~500 km trong khi Klages, Nature (2020)
    báo ~900 km; `vl-203` ghi tán xạ Rayleigh "gấp khoảng 16 lần" trong khi 1/λ⁴ cho 16 chỉ
@@ -123,10 +163,15 @@ một điều ("chính đồng tác giả sau đó công khai không còn tin").
 ### Số đo cuối đợt
 
 ```
-check : 1944 fact · 46 file · 20 chủ đề · 0 cặp >= 0,62 · 0 cặp trùng tiêu đề
-verify: 0 LOẠI · 0 XEM · 140 xem_ok
-đã đọc: 20/20 chủ đề · 161/161 cụm · 1.944/1.944 fact (t + s + d)
+đã đọc : 20/20 chủ đề · 161/161 cụm · 1.944/1.944 fact (t + s + d)
+cổng   : 3 cổng mới trong đợt này — xem_ok chết (378b3e6) · chép tiêu đề (4143b1b) ·
+         chuỗi con tiêu đề (3aee443) — cộng một lỗ hook đã bịt (c7266cf)
 ```
+
+**Lưu ý về con số fact:** đợt này chạy song song với một phiên khác cũng đang rà `facts/`,
+nên tổng fact giảm liên tục trong lúc làm (1.945 → 1.930 và còn giảm khi gộp trùng). Mọi
+con số "trên 1.944 fact" trong entry này là ảnh chụp lúc ĐỌC, không phải trạng thái cuối.
+Tỉ lệ thì vẫn đúng; số tuyệt đối phải chạy lại `check` để lấy.
 
 ---
 
