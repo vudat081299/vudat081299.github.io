@@ -198,19 +198,6 @@
     "src": "Sổ tay CRC Handbook; IPCC AR6"
   },
   {
-    "id": "vl-216",
-    "cat": "vat-ly",
-    "sub": "nhiet-va-nang-luong",
-    "t": "Nước nóng có thể đóng băng nhanh hơn nước lạnh trong một số điều kiện, và cơ chế vẫn chưa được chốt",
-    "s": "Hiện tượng Mpemba đã được mô tả từ Aristotle và đo lại nhiều lần, nhưng các lần thử lặp lại có kiểm soát chặt cho kết quả trái ngược nhau. Các giả thuyết gồm bốc hơi, đối lưu, khí hoà tan và siêu lạnh — chưa cái nào được chấp nhận rộng rãi.",
-    "tags": [
-      "mpemba",
-      "dong-bang",
-      "tranh-cai"
-    ],
-    "src": "Burridge & Linden, Scientific Reports (2016)"
-  },
-  {
     "id": "vl-217",
     "cat": "vat-ly",
     "sub": "nhiet-va-nang-luong",
@@ -347,8 +334,8 @@
     "id": "vl-227",
     "cat": "vat-ly",
     "sub": "luc-va-chuyen-dong",
-    "t": "Máy bay bay được không phải vì đường đi trên cánh dài hơn nên không khí phải chạy nhanh hơn",
-    "s": "Giải thích 'thời gian bằng nhau' đó sai và cho ra lực nâng quá nhỏ; cánh phẳng và cánh lộn ngược vẫn bay được. Lực nâng đến từ việc cánh bẻ dòng khí xuống dưới, và phản lực đẩy cánh lên theo định luật ba Newton.",
+    "t": "Cánh máy bay tạo lực nâng bằng cách bẻ dòng khí xuống dưới, và phản lực của khối khí bị bẻ đó đẩy cánh lên.",
+    "s": "Đây là định luật ba Newton: cánh đẩy khí xuống thì khí đẩy cánh lên đúng bằng lực đó. Cách giải thích quen thuộc rằng không khí phải chạy nhanh hơn ở mặt trên vì đường đi dài hơn cho ra lực nâng quá nhỏ, và nó không giải thích được vì sao cánh phẳng hay cánh lộn ngược vẫn bay được.",
     "tags": [
       "hang-khong",
       "luc-nang",
@@ -529,8 +516,8 @@
     "id": "vl-241",
     "cat": "vat-ly",
     "sub": "hat-va-luong-tu",
-    "t": "Nguyên tử gần như toàn bộ là khoảng trống: hạt nhân chỉ chiếm khoảng một phần nghìn tỉ thể tích",
-    "s": "Hạt nhân chỉ chiếm khoảng một phần nghìn tỉ thể tích nguyên tử. Nếu nguyên tử to bằng một sân vận động thì hạt nhân là hạt đậu ở giữa sân, và toàn bộ khối lượng gần như nằm hết ở hạt đậu đó.",
+    "t": "Nguyên tử gần như toàn bộ là khoảng trống: hạt nhân chỉ chiếm khoảng một phần nghìn tỉ thể tích của nó.",
+    "s": "Nếu nguyên tử to bằng một sân vận động thì hạt nhân là hạt đậu ở giữa sân, và gần như toàn bộ khối lượng nằm hết ở hạt đậu đó. Rutherford đo ra tỉ lệ này năm 1911.",
     "tags": [
       "nguyen-tu",
       "hat-nhan",
@@ -662,8 +649,8 @@
     "id": "vl-253",
     "cat": "vat-ly",
     "sub": "tuong-doi",
-    "t": "Khối lượng và năng lượng là hai mặt của cùng một thứ, và 1 gam vật chất tương đương khoảng 21 kiloton TNT",
-    "s": "Hệ thức E = mc² cho 9×10¹³ jun mỗi kilogam. Trong bom hạt nhân, chỉ khoảng 0,1% khối lượng nhiên liệu thật sự chuyển thành năng lượng; phản ứng tổng hợp trong Mặt Trời chuyển được khoảng 0,7%.",
+    "t": "Khối lượng và năng lượng là hai mặt của cùng một thứ: 1 gam vật chất chuyển hết thành năng lượng cho khoảng 21 kiloton TNT.",
+    "s": "Hệ thức E = mc² cho khoảng 9×10¹³ jun cho mỗi gam, tức 9×10¹⁶ jun mỗi kilogam. Không phản ứng nào chuyển hết: bom hạt nhân chỉ chuyển khoảng 0,1% khối lượng nhiên liệu, còn phản ứng tổng hợp trong Mặt Trời chuyển được khoảng 0,7%.",
     "tags": [
       "nang-luong",
       "khoi-luong",
@@ -834,8 +821,8 @@
     "id": "vl-267",
     "cat": "vat-ly",
     "sub": "do-luong-don-vi",
-    "t": "Ở 35 °C với độ ẩm rất cao, mồ hôi không bay hơi được nữa nên cơ thể không hạ nhiệt được dù ngồi trong bóng râm",
-    "s": "Trên ngưỡng đó, mồ hôi không bay hơi được nữa nên cơ thể không thể hạ nhiệt dù ngồi trong bóng râm và uống đủ nước. Vài nơi ở vùng Vịnh và Nam Á đã chạm ngưỡng này trong thời gian ngắn.",
+    "t": "Khi nhiệt độ bầu ướt — nhiệt độ đo bằng nhiệt kế bọc khăn ẩm có gió thổi qua — đạt 35 °C thì mồ hôi không bay hơi được nữa và cơ thể người không còn đường nào thải nhiệt.",
+    "s": "Nhiệt độ bầu ướt 35 °C không phải 35 °C trên nhiệt kế thường: nó đòi hỏi trời 35 °C với độ ẩm gần 100%, hoặc nóng hơn nữa nếu độ ẩm thấp hơn. Da chỉ hạ nhiệt được bằng cách cho mồ hôi bay hơi, nên ở mức đó ngồi trong bóng râm và uống đủ nước cũng không cứu được. Vài nơi ở vùng Vịnh và Nam Á đã chạm ngưỡng này trong thời gian ngắn.",
     "tags": [
       "nhiet-bau-uot",
       "khi-hau",
@@ -1198,7 +1185,10 @@
       "nau-an",
       "vat-lieu"
     ],
-    "src": "Sổ tay CRC Handbook"
+    "src": "Sổ tay CRC Handbook",
+    "khac_voi": [
+      "vl-215"
+    ]
   },
   {
     "id": "vl-307",
@@ -1272,14 +1262,17 @@
     "id": "vl-313",
     "cat": "vat-ly",
     "sub": "luc-va-chuyen-dong",
-    "t": "Vệ tinh không rơi vì nó đang rơi mãi mà luôn trượt qua Trái Đất",
-    "s": "Ở độ cao 400 km, tốc độ ngang cần thiết là khoảng 7,7 km/s. Newton đã mô tả ý tưởng này bằng thí nghiệm tưởng tượng bắn đại bác từ đỉnh núi rất cao.",
+    "t": "Ở độ cao 400 km, một vệ tinh phải bay ngang khoảng 7,7 km/s để cú rơi của nó luôn trượt qua Trái Đất",
+    "s": "Newton mô tả ý tưởng này bằng thí nghiệm tưởng tượng bắn đại bác từ đỉnh một núi rất cao: bắn yếu thì đạn rơi xuống đất, bắn đủ mạnh thì mặt đất cong đi nhanh bằng đúng tốc độ đạn rơi, và đạn không bao giờ tới đất nữa.",
     "tags": [
       "quy-dao",
       "newton",
       "ve-tinh"
     ],
-    "src": "Newton, Principia (1687); NASA"
+    "src": "Newton, Principia (1687); NASA",
+    "khac_voi": [
+      "vl-222"
+    ]
   },
   {
     "id": "vl-314",
@@ -1519,19 +1512,6 @@
     "src": "Sổ tay CRC Handbook"
   },
   {
-    "id": "vl-333",
-    "cat": "vat-ly",
-    "sub": "do-luong-don-vi",
-    "t": "Mọi phép đo đều có sai số, và một con số không kèm sai số thì chưa phải một kết quả đo",
-    "s": "Chuẩn quốc tế yêu cầu công bố độ không đảm bảo đo cùng với giá trị. Đây là khác biệt căn bản giữa số liệu khoa học và số liệu quảng cáo.",
-    "tags": [
-      "sai-so",
-      "do-luong",
-      "chuan"
-    ],
-    "src": "JCGM 100:2008 (GUM); BIPM"
-  },
-  {
     "id": "vl-334",
     "cat": "vat-ly",
     "sub": "do-luong-don-vi",
@@ -1561,8 +1541,8 @@
     "id": "vl-337",
     "cat": "vat-ly",
     "sub": "do-luong-don-vi",
-    "t": "Chỉ số AQI không phải nồng độ bụi — nó là một thang quy đổi khác nhau giữa các nước",
-    "s": "Cùng một nồng độ PM2.5 cho ra chỉ số AQI khác nhau ở Mỹ, châu Âu và Việt Nam vì công thức và ngưỡng khác nhau. So sánh AQI giữa hai ứng dụng thường là so hai thang khác nhau.",
+    "t": "AQI là số quy đổi từ nồng độ chất ô nhiễm theo các mốc do từng nước tự đặt, nên cùng một nồng độ bụi PM2.5 cho ra hai con số AQI khác nhau ở Mỹ và ở Việt Nam.",
+    "s": "Mỗi nước chia trục nồng độ thành các khoảng rồi gán cho mỗi khoảng một dải điểm, và các mốc chia đó không giống nhau. Vì vậy hai ứng dụng thời tiết báo hai số AQI khác nhau cho cùng một không khí mà không ứng dụng nào sai.",
     "tags": [
       "aqi",
       "o-nhiem",
@@ -1574,8 +1554,8 @@
     "id": "vl-338",
     "cat": "vat-ly",
     "sub": "do-luong-don-vi",
-    "t": "Cùng nhiệt độ 35 độ, độ ẩm 40% và 80% cho cảm nhận chênh nhau hơn 10 độ",
-    "s": "Chỉ số nhiệt kết hợp nhiệt độ với độ ẩm; chỉ số gió lạnh kết hợp nhiệt độ với tốc độ gió. Cùng 35 độ, độ ẩm 40% và 80% cho cảm nhận chênh nhau hơn 10 độ.",
+    "t": "Ở 35 °C, không khí ẩm 80% cho cảm giác nóng hơn không khí ẩm 40% tới hơn 10 độ.",
+    "s": "Cơ thể hạ nhiệt bằng cách cho mồ hôi bay hơi, và không khí càng ẩm thì mồ hôi bay hơi càng chậm, nên cùng một số trên nhiệt kế lại cho hai mức chịu đựng khác nhau. Chỉ số nhiệt của cơ quan khí tượng Mỹ là cách gộp hai đại lượng đó thành một con số \"nhiệt độ cảm nhận\".",
     "tags": [
       "chi-so-nhiet",
       "do-am",

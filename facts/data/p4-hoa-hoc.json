@@ -55,8 +55,8 @@
     "id": "hh-205",
     "cat": "hoa-hoc",
     "sub": "nguyen-to",
-    "t": "Vàng trên Trái Đất đều đến từ vũ trụ, và toàn bộ vàng từng khai thác chỉ đủ đổ đầy khoảng 4 bể bơi Olympic",
-    "s": "Ước tính khoảng 210.000 tấn vàng đã được khai thác trong lịch sử; với khối lượng riêng 19,3 tấn mỗi mét khối, chỗ đó là một khối lập phương cạnh khoảng 22 mét.",
+    "t": "Toàn bộ vàng con người từng khai thác chỉ khoảng 210.000 tấn, gom lại là một khối lập phương cạnh khoảng 22 mét.",
+    "s": "Vàng nặng 19,3 tấn mỗi mét khối, nên 210.000 tấn — nghe như một con số khổng lồ — chỉ chiếm chỗ bằng khoảng bốn bể bơi Olympic. Toàn bộ lịch sử đào vàng của loài người gom lại vừa trong một căn phòng.",
     "tags": [
       "vang",
       "kim-loai",
@@ -81,8 +81,8 @@
     "id": "hh-207",
     "cat": "hoa-hoc",
     "sub": "nguyen-to",
-    "t": "Thuỷ ngân là kim loại duy nhất ở thể lỏng tại nhiệt độ phòng, và nó nóng chảy ở −38,8 °C",
-    "s": "Electron lớp trong của thuỷ ngân chuyển động đủ nhanh để hiệu ứng tương đối làm co quỹ đạo, khiến các nguyên tử liên kết yếu với nhau. Điểm nóng chảy của nó là −38,8 °C.",
+    "t": "Thuỷ ngân là kim loại duy nhất ở thể lỏng tại nhiệt độ phòng: nó nóng chảy ở −38,8 °C.",
+    "s": "Electron của thuỷ ngân chuyển động nhanh tới mức phải tính đến hiệu ứng tương đối — quỹ đạo bị co lại và electron ngoài cùng bị giữ chặt vào nguyên tử của nó. Các nguyên tử thuỷ ngân vì vậy liên kết với nhau rất yếu, và liên kết yếu nghĩa là chỉ cần rất ít nhiệt để phá vỡ khối rắn.",
     "tags": [
       "thuy-ngan",
       "tuong-doi",
@@ -224,8 +224,8 @@
     "id": "hh-218",
     "cat": "hoa-hoc",
     "sub": "phan-ung",
-    "t": "Phản ứng toả nhiệt và thu nhiệt khác nhau ở dấu, và túi chườm lạnh tức thì dùng đúng loại thu nhiệt",
-    "s": "Amoni nitrat hoà tan trong nước hấp thụ nhiệt mạnh, hạ nhiệt độ túi xuống khoảng 0–5 °C trong vài phút. Không có điện, không có tủ lạnh — chỉ có entanpi hoà tan âm.",
+    "t": "Túi chườm lạnh tức thì lạnh đi vì amoni nitrat hoà tan trong nước hút nhiệt, hạ nhiệt độ túi xuống khoảng 0–5 °C trong vài phút.",
+    "s": "Tách các ion ra khỏi tinh thể muối tốn nhiều năng lượng hơn phần năng lượng thu lại khi nước bám quanh chúng, nên phần chênh bị lấy từ chính nước trong túi và nước lạnh đi. Không cần điện, không cần tủ lạnh.",
     "tags": [
       "nhiet-phan-ung",
       "tui-chuom",
@@ -409,17 +409,14 @@
     "id": "hh-232",
     "cat": "hoa-hoc",
     "sub": "vat-lieu",
-    "t": "Thuỷ tinh không phải chất lỏng chảy chậm, và cửa sổ nhà thờ dày ở đáy không phải vì lý do đó",
-    "s": "Thuỷ tinh là chất rắn vô định hình; tốc độ chảy ở nhiệt độ phòng nhỏ tới mức cần thời gian dài hơn tuổi vũ trụ mới thấy được. Kính trung cổ dày không đều vì kỹ thuật thổi thời đó, và thợ thường lắp phần dày xuống dưới.",
+    "t": "Thuỷ tinh là chất rắn vô định hình, và ở nhiệt độ phòng nó cần thời gian dài hơn tuổi vũ trụ mới chảy được một lượng nhìn thấy được.",
+    "s": "Vô định hình nghĩa là các nguyên tử không xếp thành mạng đều như trong muối hay kim loại, nhưng chúng vẫn bị khoá tại chỗ. Kính cửa sổ nhà thờ trung cổ dày không đều vì kỹ thuật thổi thời đó, và thợ thường lắp phần dày xuống dưới.",
     "tags": [
       "thuy-tinh",
       "vo-dinh-hinh",
       "huyen-thoai"
     ],
-    "src": "Zanotto, American Journal of Physics (1998)",
-    "xem_ok": [
-      "do-lon-bang-chu"
-    ]
+    "src": "Zanotto, American Journal of Physics (1998)"
   },
   {
     "id": "hh-233",
@@ -779,8 +776,8 @@
     "id": "hh-263",
     "cat": "hoa-hoc",
     "sub": "kim-loai",
-    "t": "Titan bền hơn thép theo khối lượng nhưng khó gia công, vì bột và phoi titan cháy được trong không khí",
-    "s": "Bột titan và phoi titan bốc cháy trong không khí và không dập được bằng nước. Nó cũng phản ứng mạnh với oxy khi nóng nên phải hàn trong môi trường khí trơ.",
+    "t": "Bột và phoi titan bốc cháy trong không khí và không dập được bằng nước, nên titan nóng phải được hàn trong môi trường khí trơ.",
+    "s": "Ở dạng vụn nhỏ, diện tích bề mặt lớn làm phản ứng giữa titan và oxy chạy nhanh đủ để thành đám cháy, và nước không dập được. Cũng vì titan nóng ngấu oxy nên mối hàn titan phải được che bằng khí trơ.",
     "tags": [
       "titan",
       "hop-kim",
@@ -819,7 +816,7 @@
     "cat": "hoa-hoc",
     "sub": "kim-loai",
     "t": "Nhôm tái chế chỉ tốn khoảng 5% năng lượng so với sản xuất nhôm từ quặng",
-    "s": "Điện phân bauxite cần khoảng 14 kWh cho mỗi kilogam nhôm; nấu lại nhôm phế chỉ cần khoảng 0,7 kWh. Khoảng 75% lượng nhôm từng được sản xuất vẫn đang lưu hành.",
+    "s": "Điện phân bauxite cần khoảng 14 kWh cho mỗi kilogam nhôm; nấu lại nhôm phế chỉ cần khoảng 0,7 kWh. Khoảng 75% lượng nhôm từng được sản xuất vẫn đang lưu hành, và một lon nhôm bỏ vào thùng tái chế quay lại kệ hàng sau khoảng 60 ngày.",
     "tags": [
       "nhom",
       "tai-che",
@@ -944,8 +941,8 @@
     "id": "hh-275",
     "cat": "hoa-hoc",
     "sub": "hoa-hoc-doi-song",
-    "t": "Hầu hết mùi bạn ngửi được là các phân tử hữu cơ nhẹ, và ngưỡng phát hiện chênh nhau tới hàng tỉ lần giữa các chất",
-    "s": "Mũi người nhận ra thiol trong khí gas ở mức vài phần tỉ, trong khi cần nồng độ cao hơn hàng nghìn lần mới ngửi thấy ethanol. Khí gas tự nhiên vốn không mùi; người ta cố tình pha mercaptan vào để rò rỉ được phát hiện.",
+    "t": "Mũi người phát hiện được thiol pha trong khí gas ở nồng độ vài phần tỉ, thấp hơn hàng nghìn lần ngưỡng để ngửi thấy cồn.",
+    "s": "Khí gas tự nhiên vốn không mùi; người ta cố tình pha mercaptan (một loại thiol) vào để một vết rò rất nhỏ cũng bị phát hiện bằng mũi. Vì ngưỡng ngửi của các chất chênh nhau hàng nghìn lần, mùi nặng không đồng nghĩa với nồng độ cao.",
     "tags": [
       "mui",
       "thiol",
@@ -1217,7 +1214,7 @@
     "cat": "hoa-hoc",
     "sub": "vat-lieu",
     "t": "Bọt biển và mút xốp cách nhiệt tốt không phải vì vật liệu mà vì lượng khí bị nhốt bên trong",
-    "s": "Không khí tĩnh dẫn nhiệt rất kém, khoảng 0,026 W/m·K. Mọi vật liệu cách nhiệt tốt — len khoáng, xốp EPS, lông vũ — đều làm cùng một việc: giữ khí không cho đối lưu.",
+    "s": "Không khí tĩnh dẫn nhiệt rất kém, khoảng 0,026 W/m·K, còn bản thân thuỷ tinh dẫn nhiệt gấp khoảng 40 lần mức đó. Nên mọi vật liệu cách nhiệt tốt — len khoáng, xốp EPS, sợi thuỷ tinh, lông vũ — đều làm cùng một việc: chia nhỏ không khí thành các túi để nó không đối lưu được.",
     "tags": [
       "cach-nhiet",
       "xop",
@@ -1281,8 +1278,8 @@
     "id": "hh-301",
     "cat": "hoa-hoc",
     "sub": "nguyen-to",
-    "t": "Nguyên tố duy nhất được đặt tên theo một người còn sống lúc đặt tên là seaborgium",
-    "s": "Glenn Seaborg còn sống năm 1997 khi nguyên tố 106 được đặt tên, và quyết định này gây tranh cãi. Ông cũng là người duy nhất từng nhận thư gửi tới một địa chỉ có tên nguyên tố mang tên mình.",
+    "t": "Seaborgium, nguyên tố số 106, là nguyên tố đầu tiên được đặt tên theo một người còn sống — Glenn Seaborg, năm 1997.",
+    "s": "IUPAC, tổ chức chốt tên các nguyên tố, thông qua tên seaborgium năm 1997 khi Glenn Seaborg còn sống, và quyết định đó gây tranh cãi. Về sau nguyên tố 118 cũng được đặt tên oganesson theo Yuri Oganessian lúc ông còn sống, nên seaborgium là ca đầu tiên chứ không phải ca duy nhất.",
     "tags": [
       "seaborgi",
       "ten-nguyen-to",
@@ -1320,8 +1317,8 @@
     "id": "hh-304",
     "cat": "hoa-hoc",
     "sub": "nguyen-to",
-    "t": "Hydro có ba đồng vị và một trong số đó nặng gấp ba lần đồng vị thường",
-    "s": "Nước nặng chứa deuteri có điểm sôi cao hơn nước thường khoảng 1,4 độ và độc với sinh vật nếu thay thế phần lớn nước cơ thể. Tách nước nặng khỏi nước thường là một trong các quy trình công nghiệp tốn kém nhất.",
+    "t": "Nước nặng — nước làm từ deuteri, đồng vị hydro nặng gấp đôi hydro thường — sôi ở nhiệt độ cao hơn nước thường khoảng 1,4 độ.",
+    "s": "Hydro có ba đồng vị: hydro thường, deuteri nặng gấp đôi và triti nặng gấp ba. Nước nặng độc với sinh vật nếu nó thay phần lớn nước trong cơ thể, và tách nó khỏi nước thường là một trong các quy trình công nghiệp tốn kém nhất vì hai loại nước gần như giống nhau về mọi mặt hoá học.",
     "tags": [
       "deuteri",
       "nuoc-nang",
@@ -1359,8 +1356,8 @@
     "id": "hh-307",
     "cat": "hoa-hoc",
     "sub": "phan-ung",
-    "t": "Phản ứng đồng hồ đổi màu đột ngột sau một khoảng thời gian định trước, và thời điểm đó tính được",
-    "s": "Phản ứng Briggs-Rauscher và phản ứng iod đồng hồ dao động giữa các màu theo chu kỳ đều đặn. Chúng chứng minh phản ứng hoá học không nhất thiết đi một chiều tới cân bằng một cách đơn điệu.",
+    "t": "Một số phản ứng hoá học đổi màu qua lại theo chu kỳ đều đặn trước khi tới cân bằng, thay vì đi một chiều.",
+    "s": "Phản ứng Belousov–Zhabotinsky, tìm ra năm 1951 và mô tả kỹ năm 1964, chuyển màu qua lại nhiều lần chứ không đổi màu một lần rồi dừng. Nó cho thấy một hệ hoá học đang đi về cân bằng không nhất thiết đi theo một chiều đơn điệu.",
     "tags": [
       "phan-ung-dao-dong",
       "hoa-hoc",
@@ -1432,19 +1429,6 @@
       "an-toan"
     ],
     "src": "ANSI/SAE Z26.1; UL 752"
-  },
-  {
-    "id": "hh-313",
-    "cat": "hoa-hoc",
-    "sub": "vat-lieu",
-    "t": "Sợi thuỷ tinh cách nhiệt tốt không phải nhờ thuỷ tinh mà nhờ không khí bị giữ giữa các sợi",
-    "s": "Bản thân thuỷ tinh dẫn nhiệt gấp khoảng 40 lần không khí tĩnh. Mọi vật liệu cách nhiệt tốt đều làm cùng một việc: chia nhỏ không khí thành các túi để chặn đối lưu.",
-    "tags": [
-      "cach-nhiet",
-      "soi-thuy-tinh",
-      "khong-khi"
-    ],
-    "src": "ASHRAE Handbook of Fundamentals"
   },
   {
     "id": "hh-314",
@@ -1590,19 +1574,6 @@
     "src": "Sổ tay CRC Handbook; Le Coustumer và cộng sự, Journal of Materials Science (2000)"
   },
   {
-    "id": "hh-325",
-    "cat": "hoa-hoc",
-    "sub": "kim-loai",
-    "t": "Tái chế một lon nhôm tiết kiệm đủ điện để chạy tivi khoảng ba giờ",
-    "s": "Nhôm là vật liệu tái chế có tỉ lệ tiết kiệm năng lượng cao nhất, khoảng 95%. Một lon nhôm có thể quay lại kệ hàng chỉ sau khoảng 60 ngày.",
-    "tags": [
-      "nhom",
-      "tai-che",
-      "nang-luong"
-    ],
-    "src": "Aluminum Association; US EPA"
-  },
-  {
     "id": "hh-326",
     "cat": "hoa-hoc",
     "sub": "hoa-hoc-doi-song",
@@ -1697,8 +1668,8 @@
     "id": "hh-333",
     "cat": "hoa-hoc",
     "sub": "hoa-hoc-doi-song",
-    "t": "Dầu ăn cũ bốc khói ở nhiệt độ thấp hơn dầu mới vì nó đã bị phân giải một phần",
-    "s": "Mỗi lần chiên, một phần chất béo bị thuỷ phân thành axit béo tự do có điểm bốc khói thấp hơn. Dầu chiên lại nhiều lần cũng tích tụ các hợp chất phân cực bị nhiều nước giới hạn bằng quy định.",
+    "t": "Dầu ăn đã chiên nhiều lần bốc khói ở nhiệt độ thấp hơn dầu mới vì một phần chất béo đã bị cắt thành axit béo tự do.",
+    "s": "Mỗi lần chiên, nước trong thực phẩm cắt phân tử chất béo thành các axit béo tự do, và những phân tử nhỏ này bốc khói ở nhiệt độ thấp hơn phân tử gốc. Dầu chiên lại nhiều lần còn tích tụ các hợp chất phân cực, và nhiều nước đặt mức trần cho hàm lượng này trong dầu của hàng ăn.",
     "tags": [
       "dau-chien",
       "diem-boc-khoi",
@@ -1804,8 +1775,8 @@
     "id": "hh-342",
     "cat": "hoa-hoc",
     "sub": "kim-loai",
-    "t": "Vàng có thể dát mỏng tới khoảng 0,1 micromet, mỏng tới mức ánh sáng xanh xuyên qua được",
-    "s": "Một gam vàng dát được ra khoảng một mét vuông, và ở diện tích đó lá vàng chỉ dày khoảng 0,05 micromet. Vàng lá thương mại thường dày cỡ 0,1 micromet, tức một gam phủ được khoảng nửa mét vuông. Ở độ mỏng đó ánh sáng xanh xuyên qua được, nên vàng lá soi lên đèn có màu lục — và đó là lý do một lượng vàng rất nhỏ phủ kín được cả một bức tranh tôn giáo.",
+    "t": "Một gam vàng dát được thành lá rộng khoảng một mét vuông, khi đó chỉ dày 0,05 micromet",
+    "s": "Vàng lá thương mại thường dày cỡ 0,1 micromet, tức một gam phủ được khoảng nửa mét vuông. Ở độ mỏng đó ánh sáng xanh xuyên qua được nên lá vàng soi lên đèn có màu lục — và đó là lý do một lượng vàng rất nhỏ phủ kín được cả một bức tranh tôn giáo.",
     "tags": [
       "vang",
       "dat-mong",
@@ -1843,8 +1814,8 @@
     "id": "hh-345",
     "cat": "hoa-hoc",
     "sub": "hoa-hoc-doi-song",
-    "t": "Chất chống oxy hoá trong thực phẩm không tương đương với chất chống oxy hoá có ích trong cơ thể",
-    "s": "Chỉ số ORAC từng được dùng để quảng cáo đã bị Bộ Nông nghiệp Mỹ gỡ khỏi cơ sở dữ liệu năm 2012 vì nó không phản ánh tác dụng sinh học. Nhiều thử nghiệm bổ sung liều cao cho kết quả trung tính hoặc có hại.",
+    "t": "Khả năng chống oxy hoá đo được của một món ăn trong ống nghiệm không dự đoán được tác dụng của nó trong cơ thể, và các thử nghiệm cho người uống liều cao cho kết quả trung tính hoặc xấu hơn.",
+    "s": "ORAC là điểm số đo trong ống nghiệm xem một chất dập được bao nhiêu gốc tự do; nó không nói gì về việc chất đó có tới được nơi cần trong cơ thể hay không. Bộ Nông nghiệp Mỹ gỡ bảng ORAC khỏi cơ sở dữ liệu năm 2012 đúng vì lý do đó, và các thử nghiệm cho người uống bổ sung liều cao cho kết quả trung tính hoặc có hại.",
     "tags": [
       "chong-oxy-hoa",
       "orac",
