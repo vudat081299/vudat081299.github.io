@@ -4,8 +4,8 @@
     "cat": "co-the",
     "sub": "thi-giac",
     "viz": "checker-shadow",
-    "t": "Hai ô cờ này cùng một màu xám, dù mắt bạn thề là không",
-    "s": "Ảo giác bóng đổ bàn cờ của Edward Adelson cho thấy hệ thị giác không đo độ sáng tuyệt đối mà suy ra màu bề mặt sau khi trừ đi ánh sáng. Đây không phải lỗi của mắt — đó là chức năng, và nó là lý do bạn nhận ra tờ giấy vẫn trắng dù đang ở trong bóng râm.",
+    "t": "Hai ô in cùng một mức xám trông khác màu hẳn nhau khi một ô nằm trong bóng đổ",
+    "s": "Trong hình bàn cờ của Edward Adelson, một ô nằm trong bóng đổ và một ô nằm ngoài sáng in ra đúng cùng một mức xám, nhưng mắt ta thấy ô trong bóng sáng hơn hẳn. Mắt không đo độ sáng thật: nó trừ đi phần ánh sáng đang chiếu rồi đoán màu của bề mặt. Đó cũng chính là lý do tờ giấy trong bóng râm vẫn trông trắng.",
     "tags": [
       "thi-giac",
       "ao-giac",

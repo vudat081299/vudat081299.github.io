@@ -730,8 +730,8 @@
     "id": "na-258",
     "cat": "nghe-thuat",
     "sub": "kien-truc",
-    "t": "Cầu Tacoma Narrows sập năm 1940 vì mất ổn định khí động, không vì cộng hưởng như sách giáo khoa hay viết",
-    "s": "Cơ chế đúng là rung lắc tự kích thích do dòng khí, gọi là flutter. Nhiều sách vật lý phổ thông vẫn dùng nó làm ví dụ cộng hưởng, và đó là một sai sót được các kỹ sư kết cấu chỉ ra từ lâu.",
+    "t": "Cầu treo có thể tự lắc mạnh dần lên tới mức sập chỉ vì gió thổi đều một chiều, không cần lực nào rung đúng nhịp của nó",
+    "s": "Gió thổi ngang một mặt cầu dẹt sinh ra các xoáy, và các xoáy đó lại bị chính cái lắc của cầu điều khiển, nên mỗi vòng lắc lại được gió đẩy thêm một ít — cầu tự bơm năng lượng cho cái lắc của mình cho tới khi vỡ. Khác với cộng hưởng, ở đây không có lực nào rung đúng nhịp cầu từ bên ngoài: chỉ cần gió thổi đều một chiều là đủ. Vì thế cầu treo ngày nay được thử trong hầm gió và làm khe hở để phá xoáy.",
     "tags": [
       "tacoma",
       "khi-dong",
@@ -1128,13 +1128,16 @@
     "cat": "nghe-thuat",
     "sub": "am-thanh-va-nhac-cu",
     "t": "Dây đàn ngắn đi một nửa thì cao độ lên đúng một quãng tám",
-    "s": "Quan hệ này được trường phái Pythagoras phát hiện khoảng 2.500 năm trước bằng dây đàn một dây. Đây là mối liên hệ đầu tiên giữa số học và cảm nhận giác quan được ghi lại.",
+    "s": "Bấm đúng giữa dây thì phần dây rung chỉ còn một nửa và nó rung nhanh gấp đôi. Chia dây theo các tỉ số đơn giản khác cho các nốt hoà hợp khác — hai phần ba dây, ba phần tư dây — và đó là lý do các nốt trong một hợp âm nghe 'khớp' nhau: số lần rung của chúng ăn khớp theo tỉ số nguyên nhỏ.",
     "tags": [
       "pythagoras",
       "day-dan",
       "quang-tam"
     ],
-    "src": "Pythagoras (khoảng 500 TCN); Barbour, Tuning and Temperament"
+    "src": "Pythagoras (khoảng 500 TCN); Barbour, Tuning and Temperament",
+    "khac_voi": [
+      "na-202"
+    ]
   },
   {
     "id": "na-302",
@@ -1179,8 +1182,8 @@
     "id": "na-305",
     "cat": "nghe-thuat",
     "sub": "am-thanh-va-nhac-cu",
-    "t": "Tiếng đàn piano tắt dần chứ không giữ đều, và pedal chỉ nhấc dampers chứ không kéo dài âm",
-    "s": "Năng lượng dây truyền vào mặt đàn và tiêu tán ra không khí. Pedal cho các dây khác cộng hưởng theo, làm âm dày hơn chứ không làm nó to lâu hơn.",
+    "t": "Tiếng đàn piano tắt dần chứ không giữ đều, và pedal chỉ nhấc các miếng nỉ tắt tiếng lên chứ không bơm thêm năng lượng vào dây.",
+    "s": "Tiếng piano tắt dần vì năng lượng của dây truyền vào mặt đàn rồi tán ra không khí; sau khi búa đã gõ thì không có gì bơm thêm năng lượng vào dây nữa. Bình thường mỗi dây có một miếng nỉ đè lên để tắt tiếng khi bạn nhả phím; pedal chỉ nhấc các miếng nỉ đó lên, nên các dây khác được tự do ngân theo và tiếng dày hơn — pedal không làm tiếng to lâu hơn.",
     "tags": [
       "piano",
       "pedal",
@@ -1829,7 +1832,7 @@
     "cat": "nghe-thuat",
     "sub": "chu-va-thiet-ke",
     "t": "Chữ Braille có 6 chấm cho 64 tổ hợp, không đủ cho mọi ký tự nên nó dùng ký hiệu chuyển ngữ cảnh",
-    "s": "Louis Braille phát triển nó năm 1824 khi 15 tuổi, dựa trên một hệ mã quân sự cho phép đọc trong bóng tối. Nó chỉ được chấp nhận rộng rãi sau khi ông qua đời.",
+    "s": "Sáu chấm chỉ cho 64 tổ hợp, không đủ cho chữ thường, chữ hoa, chữ số và dấu câu. Cách giải: một số ô chấm không phải chữ nào cả mà là ký hiệu báo trước — ô này nghĩa là 'ô kế tiếp đọc thành số', ô kia nghĩa là 'ô kế tiếp là chữ hoa'. Nhờ đó cùng một tổ hợp chấm đọc thành 'a' hay thành '1' tuỳ vào ô đứng trước nó.",
     "tags": [
       "braille",
       "chu-viet",

@@ -137,7 +137,7 @@
     "cat": "toan-hoc",
     "sub": "vo-han-va-tap-hop",
     "t": "Có những mệnh đề toán học đúng nhưng không thể chứng minh trong hệ tiên đề đang dùng",
-    "s": "Định lý bất toàn của Gödel năm 1931 chấm dứt hy vọng xây một hệ tiên đề vừa đầy đủ vừa nhất quán cho toàn bộ số học. Nó cũng cho thấy một hệ đủ mạnh không thể tự chứng minh tính nhất quán của chính nó.",
+    "s": "Toán học bắt đầu từ một nhúm quy tắc gốc mà ta đồng ý coi là đúng, rồi mọi thứ khác phải suy ra được từ đó. Năm 1931 Gödel chứng minh: với bất kỳ nhúm quy tắc gốc nào đủ mạnh để nói về các số, luôn còn những phát biểu về số vốn đúng mà không thể suy ra từ nhúm quy tắc đó — và thêm quy tắc mới thì lại sinh ra phát biểu mới ngoài tầm. Ông cũng cho thấy một hệ như vậy không thể tự chứng minh rằng chính nó không tự mâu thuẫn.",
     "tags": [
       "godel",
       "bat-toan",
@@ -332,7 +332,7 @@
     "cat": "toan-hoc",
     "sub": "day-so-va-ti-le",
     "t": "Đẳng thức Euler nối năm hằng số quan trọng nhất của toán học trong một dòng",
-    "s": "e mũ i-pi cộng 1 bằng 0 gộp e, i, pi, 1 và 0 với ba phép toán cơ bản. Nó không phải trò chơi chữ số mà là hệ quả trực tiếp của việc hàm mũ phức mô tả chuyển động tròn.",
+    "s": "Có một số gọi là i, đặt ra để bình phương lên thì bằng −1; cộng nó vào các số thường thì ta được một mặt phẳng số thay vì một trục số. Trên mặt phẳng đó, nhân với hàm mũ chính là phép quay, và đi đúng nửa vòng tròn thì bạn đáp xuống −1 — đó là tất cả những gì 'e mũ i-pi bằng −1', tức 'e mũ i-pi cộng 1 bằng 0', nói. Vì vậy nó không phải trò chơi chữ số: nó là câu 'quay nửa vòng thì sang phía đối diện' viết bằng ký hiệu.",
     "tags": [
       "euler",
       "hang-so",
@@ -475,7 +475,7 @@
     "cat": "toan-hoc",
     "sub": "toi-uu-va-thuat-toan",
     "t": "Không có thuật toán sắp xếp so sánh nào nhanh hơn n nhân logarit n, và đó là chặn dưới đã chứng minh",
-    "s": "Cây quyết định cho n phần tử có ít nhất n giai thừa lá, nên chiều cao tối thiểu là bậc n log n. Muốn nhanh hơn thì phải bỏ mô hình so sánh, như sắp xếp theo cơ số.",
+    "s": "Nếu cách duy nhất được dùng là so hai món với nhau xem cái nào đứng trước, thì có một mức nhanh nhất không ai vượt được: số phép so bắt buộc tăng theo số món nhân với logarit của số món. Muốn nhanh hơn thì phải bỏ lối so từng cặp và dùng chính giá trị của món để xếp trực tiếp vào chỗ — như xếp thư theo từng chữ số của mã bưu chính.",
     "tags": [
       "sap-xep",
       "chan-duoi",
@@ -923,7 +923,7 @@
     "cat": "toan-hoc",
     "sub": "so-nguyen-to",
     "t": "Giả thuyết Riemann vẫn chưa được chứng minh sau hơn 160 năm và nó chi phối cách phân bố số nguyên tố",
-    "s": "Đây là một trong bảy Bài toán Thiên niên kỷ, treo giải một triệu đô. Hơn 10 nghìn tỉ nghiệm đầu tiên đã được kiểm và đều nằm đúng chỗ giả thuyết dự đoán.",
+    "s": "Số nguyên tố thưa dần khi số càng lớn, nhưng không thưa đều: chỗ dày chỗ mỏng. Giả thuyết Riemann nói rằng độ lệch so với mức thưa trung bình bị chặn rất chặt — tức số nguyên tố rải ra đều nhất có thể. Hơn 10 nghìn tỉ trường hợp đầu tiên đã được máy kiểm và đều khớp, nhưng sau hơn 160 năm chưa ai chứng minh được nó đúng với mọi trường hợp; nó là một trong bảy Bài toán Thiên niên kỷ treo giải một triệu đô.",
     "tags": [
       "riemann",
       "so-nguyen-to",
@@ -1160,7 +1160,7 @@
     "cat": "toan-hoc",
     "sub": "mat-ma",
     "t": "Mã Caesar dịch chữ cái đi vài vị trí và phá được trong vài giây bằng phân tích tần suất",
-    "s": "Al-Kindi mô tả kỹ thuật phân tích tần suất vào thế kỷ 9, nhiều thế kỷ trước khi châu Âu biết tới nó. Từ đó, mọi hệ mật mã thay thế đơn giản đều coi như đã bị phá.",
+    "s": "Mã Caesar dịch mọi chữ cái đi cùng một số vị trí, nên chữ hay gặp nhất trong bản gốc vẫn là chữ hay gặp nhất trong bản mã. Chỉ cần đếm tần suất từng chữ trong bản mã, gán chữ nhiều nhất cho chữ phổ biến nhất của thứ tiếng đó, là ra khoảng dịch và cả bản văn mở ra. Al-Kindi mô tả kỹ thuật này từ thế kỷ 9, và từ đó mọi mã thay thế từng chữ một coi như đã bị phá.",
     "tags": [
       "caesar",
       "tan-suat",
@@ -1199,7 +1199,7 @@
     "cat": "toan-hoc",
     "sub": "mat-ma",
     "t": "Có thể chứng minh mình biết một bí mật mà không tiết lộ bất kỳ phần nào của bí mật đó",
-    "s": "Chứng minh không tiết lộ tri thức được đề xuất năm 1985 và hiện là nền của nhiều hệ thống xác thực và blockchain riêng tư. Ý tưởng nghe như nghịch lý nhưng đã được hình thức hoá chặt chẽ.",
+    "s": "Cách làm là để người kiểm tra ra một câu đố mà chỉ ai biết bí mật mới trả lời được, rồi ra lại nhiều lần với đề khác: đoán bừa thì thắng một lần còn dễ, thắng liên tiếp hàng chục lần thì gần như không thể, nên người kiểm tra tin là bạn biết — mà vẫn không nghe được một phần nào của bí mật. Nhờ vậy có thể chứng minh 'tôi đủ 18 tuổi' hay 'tôi có đủ tiền' mà không phải đưa ngày sinh hay số dư.",
     "tags": [
       "zero-knowledge",
       "mat-ma",
@@ -1211,8 +1211,8 @@
     "id": "th-320",
     "cat": "toan-hoc",
     "sub": "do-thi-mang-luoi",
-    "t": "Trong mọi đồ thị, tổng bậc của tất cả đỉnh luôn là số chẵn",
-    "s": "Mỗi cạnh đóng góp đúng 2 vào tổng bậc. Hệ quả: số đỉnh có bậc lẻ luôn là số chẵn, và đó là công cụ chứng minh đơn giản nhất trong lý thuyết đồ thị.",
+    "t": "Trong bất kỳ buổi gặp nào, số người đã bắt tay một số lẻ lần luôn là số chẵn.",
+    "s": "Vẽ một mớ điểm rồi nối chúng bằng các đoạn; 'bậc' của một điểm là số đoạn chạm vào nó. Mỗi đoạn chạm đúng hai điểm, nên cộng bậc của mọi điểm lại luôn được số chẵn. Bản đời thường: trong bất kỳ buổi gặp nào, số người đã bắt tay một số lẻ lần luôn là số chẵn — không cần biết ai bắt tay ai.",
     "tags": [
       "do-thi",
       "bo-de-bat-tay",
@@ -1251,13 +1251,16 @@
     "cat": "toan-hoc",
     "sub": "toi-uu-va-thuat-toan",
     "t": "Không có thuật toán nén nào nén được mọi tệp, và điều đó chứng minh được bằng đếm",
-    "s": "Có nhiều tệp n bit hơn tệp ngắn hơn n bit, nên không thể ánh xạ một–một mà tệp nào cũng ngắn lại. Mọi phần mềm quảng cáo nén được mọi thứ đều sai về mặt toán học.",
+    "s": "Số tệp dài đúng n bit nhiều hơn tổng số tệp ngắn hơn n bit. Nên nếu một phần mềm nén làm MỌI tệp ngắn lại, chắc chắn có hai tệp khác nhau cho ra cùng một kết quả nén — và khi giải nén thì không cách nào biết ban đầu là tệp nào. Vì vậy mọi phần mềm quảng cáo nén được mọi thứ đều sai, không phải vì viết dở mà vì việc đó không tồn tại.",
     "tags": [
       "nen-du-lieu",
       "ngan-keo",
       "chung-minh"
     ],
-    "src": "Định lý đếm; Cover & Thomas, Elements of Information Theory"
+    "src": "Định lý đếm; Cover & Thomas, Elements of Information Theory",
+    "khac_voi": [
+      "th-260"
+    ]
   },
   {
     "id": "th-324",
@@ -1290,7 +1293,7 @@
     "cat": "toan-hoc",
     "sub": "toi-uu-va-thuat-toan",
     "t": "Bài toán tìm đường ngắn nhất giải được nhanh, nhưng tìm đường dài nhất lại là bài toán NP-khó",
-    "s": "Hai bài toán nghe đối xứng nhưng độ khó chênh nhau một trời một vực. Đây là ví dụ chuẩn cho thấy trực giác về độ khó tính toán rất hay sai.",
+    "s": "Tìm đường ngắn nhất có cách làm nhanh vì đường ngắn nhất không bao giờ đi qua cùng một chỗ hai lần, nên có thể mở rộng dần từ điểm đầu mà không phải quay lại. Tìm đường dài nhất thì mất đúng tính chất đó: muốn dài thì phải đi lòng vòng mà không được lặp chỗ, và chưa ai biết cách nào nhanh hơn thử gần như mọi khả năng.",
     "tags": [
       "duong-di",
       "do-phuc-tap",
@@ -1331,8 +1334,8 @@
     "id": "th-331",
     "cat": "toan-hoc",
     "sub": "nghich-ly-toan",
-    "t": "Nghịch lý bỏ phiếu: đa số thích A hơn B, thích B hơn C, nhưng lại thích C hơn A",
-    "s": "Condorcet mô tả hiện tượng này năm 1785. Nó cho thấy 'ý chí của đa số' có thể không tồn tại như một thứ tự nhất quán, và đây là tiền thân của định lý Arrow.",
+    "t": "Nghịch lý bỏ phiếu: với ba cử tri, 2 trên 3 thích A hơn B, 2 trên 3 thích B hơn C, mà 2 trên 3 lại thích C hơn A",
+    "s": "Ba người xếp hạng theo ba thứ tự A>B>C, B>C>A và C>A>B. Đếm từng cặp thì mỗi cặp đều có 2 phiếu trên 3 nghiêng về một bên, nhưng ba kết quả đó quay thành vòng tròn. Nghĩa là 'lựa chọn của đa số' có thể không tồn tại như một thứ tự nhất quán, dù mỗi cử tri đều có thứ tự riêng rõ ràng.",
     "tags": [
       "condorcet",
       "bau-cu",
@@ -1520,7 +1523,7 @@
     "cat": "toan-hoc",
     "sub": "day-so-va-ti-le",
     "t": "Số nghịch đảo của 7 có chu kỳ thập phân 6 chữ số lặp lại, và các hoán vị vòng của nó cho ra bội số của chính nó",
-    "s": "1/7 bằng 0,142857 lặp lại, và 142857 nhân 2 bằng 285714. Các số như vậy gọi là số tuần hoàn và chúng gắn với lý thuyết số nguyên tố.",
+    "s": "Mọi phân số viết ra số thập phân thì hoặc dừng, hoặc lặp lại mãi một khối chữ số, và khối lặp của 1 chia n không thể dài hơn n−1 chữ số. 1/7 đạt đúng mức dài nhất đó: 0,142857 lặp lại. Vì cả sáu số 1/7, 2/7 … 6/7 dùng chung một khối lặp và chỉ khác chỗ bắt đầu, nhân 142857 với 2, 3, 4, 5 hay 6 chỉ cho ra chính sáu chữ số ấy xoay vòng — 142857 nhân 2 bằng 285714.",
     "tags": [
       "so-tuan-hoan",
       "thap-phan",

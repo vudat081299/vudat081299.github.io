@@ -1056,7 +1056,7 @@
     "cat": "vat-ly",
     "sub": "dien-tu",
     "t": "Đèn LED phát ánh sáng bằng chuyển mức năng lượng của electron, nên màu do vật liệu quyết định chứ không do lớp phủ",
-    "s": "Đèn LED xanh lam mãi tới đầu thập niên 1990 mới làm được và mở đường cho đèn LED trắng — công trình đoạt giải Nobel Vật lý 2014. Không có LED xanh lam thì không có màn hình và đèn chiếu sáng LED như hiện nay.",
+    "s": "Trong đèn LED, electron nhảy một bậc năng lượng rồi nhả ra một hạt sáng có màu ứng với độ cao bậc nhảy đó, và độ cao bậc nhảy do chất bán dẫn quyết định — nên muốn màu khác thì phải đổi vật liệu chứ không phải sơn phủ. Chất cho màu xanh lam khó làm nhất và chỉ có được từ đầu thập niên 1990, đó là lý do đèn LED trắng và màn hình LED xuất hiện muộn.",
     "tags": [
       "led",
       "ban-dan",

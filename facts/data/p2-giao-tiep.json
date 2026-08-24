@@ -136,17 +136,14 @@
     "id": "gt-118",
     "cat": "giao-tiep",
     "sub": "nhom-va-hop",
-    "t": "Người vừa được đặt vào cảm giác có quyền vẽ chữ E theo hướng chỉ mình đọc được, nhiều gấp gần 3 lần",
-    "s": "Người được đặt vào cảm giác có quyền rồi yêu cầu vẽ chữ E lên trán mình có xu hướng vẽ theo hướng đọc được với chính họ chứ không phải với người đối diện, cao gấp gần ba lần nhóm còn lại. Cùng nhóm này cũng kém hơn trong việc đoán cảm xúc qua ảnh chỉ có đôi mắt.",
+    "t": "Người vừa được đặt vào cảm giác có quyền kém hẳn trong việc hình dung người đối diện đang thấy gì.",
+    "s": "Người được nhắc cho cảm giác mình có quyền, khi vẽ chữ E lên trán, vẽ theo hướng chính họ đọc được — nhiều gấp gần ba lần nhóm còn lại. Cùng nhóm đó cũng đoán cảm xúc qua ảnh chỉ có đôi mắt kém hơn. Nghĩa là quyền lực làm người ta khó hình dung người khác đang thấy gì, chứ không chỉ làm họ tự tin hơn.",
     "tags": [
       "quyen-luc",
       "dong-cam",
       "lanh-dao"
     ],
-    "src": "Galinsky và cộng sự, Psychological Science (2006)",
-    "xem_ok": [
-      "xu-huong-mo-ho"
-    ]
+    "src": "Galinsky và cộng sự, Psychological Science (2006)"
   },
   {
     "id": "gt-119",

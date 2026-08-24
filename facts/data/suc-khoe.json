@@ -16,14 +16,14 @@
     "id": "sk-002",
     "cat": "suc-khoe",
     "sub": "giac-ngu",
-    "t": "Ngủ bù cuối tuần không trả hết nợ ngủ trong tuần",
-    "s": "Nghiên cứu trong phòng thí nghiệm cho nhóm thiếu ngủ được ngủ thoải mái cuối tuần rồi quay lại lịch thiếu ngủ: khả năng cơ thể đưa đường từ máu vào tế bào không phục hồi, và nhóm ngủ bù còn ăn vặt đêm nhiều hơn. Ngủ đủ đều đặn tốt hơn ngủ ít rồi ngủ bù, dù tổng số giờ bằng nhau.",
+    "t": "Ngủ bù cuối tuần không trả hết nợ ngủ nếu tuần sau lại thiếu ngủ tiếp",
+    "s": "Chỉ vài đêm liên tiếp ngủ 4 tiếng đã làm khả năng đưa đường từ máu vào tế bào của người trẻ khoẻ mạnh giảm rõ. Cho ngủ thoải mái cuối tuần thì mức đó hồi lại — nhưng khi quay về lịch thiếu ngủ, nó tụt trở lại và nhóm ngủ bù còn ăn vặt đêm nhiều hơn. Tức phục hồi đòi ngủ đủ liên tục, không phải ngủ dồn hai ngày.",
     "tags": [
       "giac-ngu",
       "trao-doi-chat",
       "thoi-quen"
     ],
-    "src": "Depner et al., Current Biology (2019)",
+    "src": "Depner và cộng sự, Current Biology (2019); Spiegel, Leproult & Van Cauter, The Lancet (1999)",
     "khac_voi": [
       "sk-205"
     ]
@@ -232,7 +232,7 @@
     "cat": "suc-khoe",
     "sub": "giac-ngu",
     "t": "Giấc ngủ là lúc não củng cố trí nhớ, không phải lúc não nghỉ",
-    "s": "Trong giấc ngủ, các mẫu hoạt động thần kinh của ngày hôm đó được phát lại và chuyển dần từ hải mã sang vỏ não. Học rồi ngủ cho kết quả nhớ tốt hơn học rồi thức cùng khoảng thời gian — nên thức trắng đêm ôn thi là đánh đổi tệ.",
+    "s": "Trong giấc ngủ, các mẫu hoạt động thần kinh của ngày hôm đó được phát lại và chuyển dần từ hải mã sang vỏ não. Giấc ngủ đứng hai đầu của việc học: ngủ TRƯỚC giúp tiếp nhận thông tin mới, ngủ SAU giúp giữ lại thứ vừa học — nên thức đêm ôn bài đánh vào cả hai đầu, học kém hơn lúc thức và giữ được ít hơn sau đó.",
     "tags": [
       "giac-ngu",
       "tri-nho",

@@ -4,13 +4,14 @@
     "cat": "suc-khoe",
     "sub": "giac-ngu",
     "t": "Giờ đi ngủ đều đặn dự báo sức khoẻ tốt hơn tổng số giờ ngủ",
-    "s": "Trong các nghiên cứu theo dõi bằng thiết bị đo, độ biến động của giờ đi ngủ và giờ thức tương quan với nguy cơ tim mạch và chuyển hoá độc lập với tổng thời lượng ngủ. Nghĩa là ngủ 6 tiếng đều đặn có thể tốt hơn ngủ 8 tiếng thất thường.",
+    "s": "Trong các nghiên cứu theo dõi bằng thiết bị đo, độ biến động của giờ đi ngủ và giờ thức tương quan với nguy cơ tim mạch, với chỉ số khối cơ thể và với mức triglyceride — độc lập với tổng thời lượng ngủ. Nghĩa là ngủ 6 tiếng đều đặn có thể tốt hơn ngủ 8 tiếng thất thường, và 'ngủ nướng bù cuối tuần' không trung tính về mặt chuyển hoá.",
     "tags": [
       "deu-dan",
       "nhip-sinh-hoc"
     ],
     "src": "Huang & Redline, Diabetes Care (2019); Lunsford-Avery và cộng sự, Scientific Reports (2018)",
     "khac_voi": [
+      "sk-002",
       "sk-205"
     ]
   },
@@ -63,8 +64,7 @@
     "src": "Harvey & Tang, Psychological Bulletin (2012)",
     "khac_voi": [
       "sk-221",
-      "sk-212",
-      "sk-211"
+      "sk-212"
     ]
   },
   {
@@ -104,30 +104,6 @@
     "src": "Spiegel, Tasali, Penev & Van Cauter, Annals of Internal Medicine (2004); St-Onge và cộng sự, AJCN (2011)"
   },
   {
-    "id": "sk-210",
-    "cat": "suc-khoe",
-    "sub": "giac-ngu",
-    "t": "Chỉ vài đêm ngủ 4 tiếng đã làm cơ thể người khoẻ mạnh xử lý đường kém đi",
-    "s": "Trong các thí nghiệm ngắn hạn, chỉ cần vài đêm liên tiếp ngủ 4 tiếng là khả năng đưa đường từ máu vào tế bào của người trẻ khoẻ mạnh giảm xuống rõ rệt. Hiệu ứng hồi phục sau khi ngủ bù đủ, nhưng nó cho thấy giấc ngủ ảnh hưởng tới chuyển hoá đường chứ không chỉ tới chuyện tỉnh táo.",
-    "tags": [
-      "insulin",
-      "chuyen-hoa"
-    ],
-    "src": "Donga và cộng sự, Journal of Clinical Endocrinology and Metabolism (2010)"
-  },
-  {
-    "id": "sk-211",
-    "cat": "suc-khoe",
-    "sub": "giac-ngu",
-    "t": "Ngủ trước khi học và ngủ sau khi học có hai tác dụng khác nhau",
-    "s": "Giấc ngủ trước giúp khả năng tiếp nhận thông tin mới, giấc ngủ sau giúp củng cố thứ vừa học. Vì vậy thức đêm ôn bài đánh vào cả hai đầu: bạn học kém hơn lúc thức và giữ được ít hơn sau đó.",
-    "tags": [
-      "hoc",
-      "cung-co"
-    ],
-    "src": "Walker & Stickgold, Annual Review of Psychology (2006); Yoo và cộng sự, Nature Neuroscience (2007)"
-  },
-  {
     "id": "sk-212",
     "cat": "suc-khoe",
     "sub": "giac-ngu",
@@ -162,18 +138,6 @@
       "di-truyen"
     ],
     "src": "Jones và cộng sự, Nature Communications (2019)"
-  },
-  {
-    "id": "sk-215",
-    "cat": "suc-khoe",
-    "sub": "giac-ngu",
-    "t": "Chênh lệch giờ ngủ giữa ngày làm và ngày nghỉ đi cùng chỉ số khối cơ thể cao hơn, độc lập với tổng thời lượng ngủ",
-    "s": "Chênh lệch giữa giờ ngủ ngày làm và ngày nghỉ tương quan với chỉ số khối cơ thể, mức triglyceride và nguy cơ chuyển hoá, độc lập với tổng thời lượng ngủ. Nghĩa là 'ngủ nướng bù' không trung tính về mặt sinh học.",
-    "tags": [
-      "lech-nhip",
-      "cuoi-tuan"
-    ],
-    "src": "Wong và cộng sự, Journal of Clinical Endocrinology and Metabolism (2015); Roenneberg về social jetlag"
   },
   {
     "id": "sk-218",

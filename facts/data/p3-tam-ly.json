@@ -919,7 +919,7 @@
     "cat": "tam-ly",
     "sub": "ban-than",
     "t": "Niềm tin vào một thế giới công bằng làm giảm lo lắng nhưng đi kèm mức trách nạn nhân cao hơn",
-    "s": "Niềm tin vào một thế giới công bằng giúp giảm lo lắng nhưng có giá: nó làm người ta trách nạn nhân và giảm động lực thay đổi điều kiện. Nhận ra cơ chế này giúp phân biệt giữa chấp nhận để sống được và chấp nhận vì đã ngừng nhìn thấy vấn đề. Thang đo niềm tin thế giới công bằng của Rubin và Peplau (1975) tương quan dương với việc quy lỗi cho nạn nhân trong cả 2 loại tình huống được thử.",
+    "s": "Tin rằng ai gặp chuyện xấu thì hẳn có phần đáng bị làm người ta bớt lo cho chính mình: thế giới nghe có luật lệ hơn. Cái giá đo được trong thí nghiệm: cùng một vụ việc, nhóm có điểm 'thế giới công bằng' cao hơn gán nhiều lỗi hơn cho người bị hại ('tại nó bất cẩn', 'tại nó tham') và ít ủng hộ việc thay đổi hoàn cảnh đã gây ra vụ đó.",
     "tags": [
       "the-gioi-cong-bang",
       "bien-minh"
@@ -1077,7 +1077,7 @@
     "id": "tl-328",
     "cat": "tam-ly",
     "sub": "nhin-nguoi-khac",
-    "t": "Bạn nhớ mặt người cùng nhóm mình chính xác hơn mặt người khác nhóm",
+    "t": "Người ta nhớ mặt người cùng nhóm chính xác hơn mặt người khác nhóm, và mức chênh phụ thuộc mức tiếp xúc chứ không phụ thuộc định kiến",
     "s": "Hiệu ứng nhận diện cùng chủng tộc là một trong các kết quả nhân bản tốt nhất trong tâm lý nhận thức, và nó không phụ thuộc định kiến mà phụ thuộc mức độ tiếp xúc. Hệ quả pháp lý rất lớn: lời khai nhận dạng qua nhóm khác có độ tin cậy thấp hơn đáng kể.",
     "tags": [
       "nhan-dien",
@@ -1086,6 +1086,9 @@
     "src": "Meissner & Brigham, Psychology, Public Policy and Law (2001)",
     "xem_ok": [
       "do-lon-bang-chu"
+    ],
+    "khac_voi": [
+      "tl-110"
     ]
   },
   {

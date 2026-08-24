@@ -261,8 +261,8 @@
     "id": "kt-021",
     "cat": "kinh-te",
     "sub": "dong-co-kinh-te",
-    "t": "Trong giải đấu lặp lại, chiến lược thắng là ăn miếng trả miếng nhưng biết tha thứ",
-    "s": "Robert Axelrod tổ chức giải đấu máy tính cho thế lưỡng nan lặp lại; chương trình thắng cuộc, Tit for Tat, chỉ dài bốn dòng: bắt đầu bằng hợp tác, sau đó lặp lại nước đi trước của đối thủ. Đặc điểm chung của các chiến lược mạnh: tử tế trước, phản ứng rõ ràng khi bị chơi xấu, và không thù dai.",
+    "t": "Khi hai bên còn phải gặp lại nhau nhiều lần, chiến lược thắng là hợp tác trước, trả đòn ngay khi bị chơi xấu, rồi tha thứ.",
+    "s": "Trong trò chơi mà hai bên còn phải gặp lại nhau nhiều lượt, mỗi lượt được chọn hợp tác hoặc chơi xấu: chơi xấu lời hơn ngay lượt đó nhưng làm đối phương trả đòn ở lượt sau. Robert Axelrod cho các chương trình máy tính đấu với nhau; bản thắng chỉ dài bốn dòng — lượt đầu hợp tác, các lượt sau lặp lại đúng nước đi trước của đối thủ. Nghĩa là tử tế trước, trả đòn ngay khi bị chơi xấu, rồi quay lại hợp tác chứ không thù dai.",
     "tags": [
       "ly-thuyet-tro-choi",
       "hop-tac",
@@ -274,8 +274,8 @@
     "id": "kt-022",
     "cat": "kinh-te",
     "sub": "thue-chinh-sach",
-    "t": "Không thể vừa cố định tỉ giá, vừa tự do dòng vốn, vừa độc lập chính sách tiền tệ",
-    "s": "Đây là 'bộ ba bất khả thi' trong kinh tế vĩ mô: mỗi quốc gia chỉ chọn được hai trong ba. Nó giải thích vì sao ngân hàng trung ương ở các nền kinh tế mở phải đánh đổi giữa giữ tỉ giá và hạ lãi suất, thay vì làm cả hai như báo chí thường đòi hỏi.",
+    "t": "Một nước không thể cùng lúc giữ tỉ giá cố định, cho vốn tự do ra vào và tự quyết lãi suất — nó chỉ chọn được hai trong ba thứ đó.",
+    "s": "Ba thứ một nước có thể muốn: giữ tỉ giá đồng nội tệ cố định; để tiền được tự do chảy vào và ra khỏi nước; và tự quyết lãi suất theo nhu cầu trong nước. Chỉ chọn được hai: nếu tiền tự do ra vào mà vẫn muốn giữ tỉ giá, thì lãi suất phải chạy theo bên ngoài chứ không theo ý mình.",
     "tags": [
       "vi-mo",
       "ty-gia",

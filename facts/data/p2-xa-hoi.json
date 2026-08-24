@@ -516,6 +516,9 @@
       "lich-su",
       "hieu-lam"
     ],
-    "src": "Dữ liệu nhân khẩu học lịch sử; Our World in Data, 'Life Expectancy'"
+    "src": "Dữ liệu nhân khẩu học lịch sử; Our World in Data, 'Life Expectancy'",
+    "khac_voi": [
+      "xh-019"
+    ]
   }
 ]

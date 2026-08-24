@@ -56,7 +56,7 @@
     "cat": "dia-ly",
     "sub": "luc-dia-kien-tao",
     "t": "Trái Đất có 5 lớp chính, và phần cứng bạn đang đứng trên chỉ dày trung bình khoảng 35 km dưới lục địa",
-    "s": "Dưới đại dương vỏ chỉ dày khoảng 7 km. Tỉ lệ giữa vỏ và bán kính Trái Đất mỏng hơn tỉ lệ vỏ táo so với quả táo.",
+    "s": "Từ trên xuống, Trái Đất xếp thành các lớp: vỏ, manti trên, manti dưới, lõi ngoài lỏng và lõi trong rắn. Phần cứng bạn đang đứng trên là vỏ, dày trung bình khoảng 35 km dưới lục địa và chỉ khoảng 7 km dưới đại dương — so với bán kính Trái Đất thì nó còn mỏng hơn cả tỉ lệ vỏ táo so với quả táo.",
     "tags": [
       "vo-trai-dat",
       "cau-truc",
@@ -1452,7 +1452,10 @@
       "phu-sa",
       "viet-nam"
     ],
-    "src": "Bộ Tài nguyên và Môi trường; Anthony và cộng sự, Scientific Reports (2015)"
+    "src": "Bộ Tài nguyên và Môi trường; Anthony và cộng sự, Scientific Reports (2015)",
+    "khac_voi": [
+      "dl-270"
+    ]
   },
   {
     "id": "dl-320",

@@ -196,8 +196,8 @@
     "id": "sh-015",
     "cat": "so-hoc",
     "sub": "xac-suat-co-dieu-kien",
-    "t": "Nguỵ biện công tố: xác suất bằng chứng khi vô tội không phải xác suất vô tội khi có bằng chứng",
-    "s": "Trong vụ Sally Clark ở Anh, toà nghe con số '1 trên 73 triệu' cho khả năng hai đứa con cùng chết vì đột tử — con số vừa được tính sai (nhân xác suất như thể độc lập) vừa bị hiểu sai (nhầm với xác suất bà vô tội). Bà bị kết án oan và được huỷ án năm 2003.",
+    "t": "Một con số 'khả năng trùng hợp thấp' không phải là khả năng bị cáo vô tội, và toà án Anh đã kết án oan một người mẹ vì lẫn hai con số đó.",
+    "s": "Toà nghe con số '1 trên 73 triệu' cho khả năng hai đứa con cùng chết vì đột tử, rồi hiểu nó thành 'khả năng bà vô tội là 1 trên 73 triệu'. Đó là hai chuyện khác nhau: chuyện một người mẹ giết hai con cũng cực kỳ hiếm, nên phải đem hai cái hiếm đó ra so với nhau mới nói được điều gì. Con số còn bị tính sai vì nhân hai xác suất như thể hai ca chết không liên quan gì nhau; Sally Clark bị kết án oan và được huỷ án năm 2003.",
     "d": "Đây là bài học sống còn về xác suất có điều kiện: P(bằng chứng | vô tội) và P(vô tội | bằng chứng) là hai đại lượng hoàn toàn khác nhau, và muốn chuyển từ cái này sang cái kia thì bắt buộc phải biết tỉ lệ nền. Hội Thống kê Hoàng gia Anh đã ra thông cáo phản đối cách dùng con số trong phiên toà này.",
     "tags": [
       "bayes",

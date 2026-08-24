@@ -4,7 +4,7 @@
     "cat": "tu-duy",
     "sub": "nhan-qua",
     "t": "Hai chuỗi số cùng có xu hướng tăng thì đi cùng nhau tới hơn 0,9 dù chẳng liên quan gì nhau",
-    "s": "Tiêu thụ pho mát và số người chết vì rối vào ga trải giường, số vụ chết đuối và số phim của một diễn viên — các cặp này khớp nhau gần như hoàn hảo chỉ vì cả hai đều tăng dần theo năm. Đây là lý do phải loại bỏ phần xu hướng chung trước khi kết luận hai chuỗi thời gian có liên hệ.",
+    "s": "Có một con số dùng để đo hai dãy số đi cùng nhau tới đâu: 1 là khớp hoàn hảo, 0 là chẳng liên quan gì. Hai dãy không dính dáng nhau — lượng pho mát tiêu thụ và số người chết vì rối vào ga trải giường — vẫn cho hơn 0,9, chỉ vì cả hai đều tăng dần theo năm. Vì vậy trước khi nói hai chuyện có liên hệ, phải bỏ phần 'cùng tăng theo thời gian' ra khỏi cả hai dãy đã.",
     "tags": [
       "tuong-quan",
       "chuoi-thoi-gian"

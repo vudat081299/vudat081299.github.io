@@ -18,7 +18,7 @@
     "cat": "xa-hoi",
     "sub": "bau-cu-chinh-tri",
     "t": "Khi có từ 3 lựa chọn trở lên, không hệ thống bầu cử nào thoả mãn cùng lúc mọi tiêu chí công bằng hợp lý",
-    "s": "Kenneth Arrow chứng minh điều này năm 1951 và được giải Nobel kinh tế. Nghĩa là mọi cách kiểm phiếu đều phải hy sinh một tiêu chí nào đó — tranh luận về luật bầu cử là tranh luận hy sinh cái nào, không phải tìm cách hoàn hảo.",
+    "s": "Với từ ba lựa chọn trở lên, mọi cách kiểm phiếu đều phải bỏ ít nhất một điều nghe rất hiển nhiên — ví dụ điều này: thêm một ứng viên chắc chắn thua vào danh sách thì không được làm đổi ngôi giữa hai ứng viên còn lại. Mọi hệ thống thật đều vi phạm một điều kiểu vậy, nên tranh luận về luật bầu cử là tranh luận chọn bỏ điều nào, không phải tìm cách hoàn hảo.",
     "tags": [
       "bau-cu",
       "lua-chon-tap-the",
@@ -47,7 +47,7 @@
     "cat": "xa-hoi",
     "sub": "do-thi-giao-thong",
     "t": "Mở thêm một tuyến đường có thể làm thời gian đi lại của tất cả mọi người tăng lên",
-    "s": "Nghịch lý Braess: trong mạng lưới mà mỗi người tự chọn tuyến nhanh nhất cho riêng mình, tuyến mới hút xe khỏi các tuyến cũ theo cách làm cả hệ chậm đi. Chiều ngược lại cũng đã được ghi nhận: đóng một số trục đường ở Seoul và New York làm giao thông tốt lên.",
+    "s": "Mỗi người tự chọn tuyến nhanh nhất cho riêng mình, nên khi có một đường tắt mới thì ai cũng dồn vào đó và nó tắc, trong khi các tuyến cũ vốn chia đều tải lại bị bỏ trống. Kết quả là tất cả đi lâu hơn cả lúc chưa có đường tắt — và chiều ngược lại cũng đã xảy ra: đóng một số trục đường ở Seoul và New York làm giao thông tốt lên.",
     "tags": [
       "giao-thong",
       "he-thong",
