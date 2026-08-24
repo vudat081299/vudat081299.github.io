@@ -29,17 +29,14 @@
     "id": "sv-203",
     "cat": "sinh-vat",
     "sub": "co-the-dong-vat",
-    "t": "Tim tôm hùm nằm ở lưng và máu của nó không màu cho tới khi tiếp xúc oxy thì chuyển xanh nhạt",
-    "s": "Chúng dùng hemocyanin chứa đồng thay vì hemoglobin chứa sắt. Tôm hùm cũng nhai bằng dạ dày chứ không bằng miệng.",
+    "t": "Máu tôm hùm gần như không màu khi thiếu oxy và chuyển xanh nhạt khi gắn oxy, vì nó dùng hemocyanin chứa đồng thay cho hemoglobin chứa sắt",
+    "s": "Sắt trong hemoglobin làm máu người đỏ; đồng trong hemocyanin làm máu tôm hùm xanh nhạt, và chỉ xanh sau khi đã gắn oxy — trước đó nó gần như trong suốt.",
     "tags": [
       "tom-hum",
       "hemocyanin",
       "giai-phau"
     ],
-    "src": "Bảo tàng Lịch sử Tự nhiên Hoa Kỳ; Factor, Biology of the Lobster",
-    "xem_ok": [
-      "thieu-mo-neo"
-    ]
+    "src": "Bảo tàng Lịch sử Tự nhiên Hoa Kỳ; Factor, Biology of the Lobster"
   },
   {
     "id": "sv-204",
@@ -350,14 +347,17 @@
     "id": "sv-238",
     "cat": "sinh-vat",
     "sub": "tien-hoa",
-    "t": "Người và chuối chia sẻ khoảng 60% số gen, và con số này nghe sốc chỉ vì nó bị hiểu sai",
-    "s": "Nó nói về tỉ lệ gen có họ hàng chứ không phải tỉ lệ ADN giống nhau. Các chức năng cơ bản của tế bào — hô hấp, nhân đôi ADN — giống nhau ở mọi sinh vật nhân thực.",
+    "t": "Khoảng 60% gen của người có gen họ hàng tương ứng ở cây chuối, vì mọi sinh vật nhân thực dùng chung bộ máy tế bào cơ bản",
+    "s": "Con số 60% đếm số gen tìm được họ hàng tương ứng, không phải tỉ lệ ADN giống nhau — hai bộ ADN khác nhau rất xa. Những gen chung là gen làm việc nền của mọi tế bào nhân thực: hô hấp của tế bào và nhân đôi ADN, thứ mà cả người lẫn chuối đều phải làm.",
     "tags": [
       "gen",
       "chuoi",
       "so-sanh"
     ],
-    "src": "Viện Nghiên cứu Bộ gen Người Quốc gia Mỹ (NHGRI)"
+    "src": "Viện Nghiên cứu Bộ gen Người Quốc gia Mỹ (NHGRI)",
+    "khac_voi": [
+      "ct-013"
+    ]
   },
   {
     "id": "sv-239",
@@ -545,8 +545,8 @@
     "id": "sv-268",
     "cat": "sinh-vat",
     "sub": "chim-va-bay",
-    "t": "Chim ruồi vỗ cánh tới 80 lần mỗi giây và là loài chim duy nhất bay lùi được",
-    "s": "Nhịp tim của chúng đạt hơn 1.200 nhịp mỗi phút khi bay. Ban đêm chúng vào trạng thái ngủ đông ngắn, hạ thân nhiệt và nhịp tim để không chết đói.",
+    "t": "Chim ruồi vỗ cánh tới 80 lần mỗi giây và tim đập hơn 1.200 nhịp mỗi phút khi bay",
+    "s": "Cái giá của nhịp đó là chim ruồi luôn ở sát mức cạn năng lượng: ban đêm chúng hạ thân nhiệt và nhịp tim xuống một trạng thái ngủ đông ngắn để không chết đói trước sáng.",
     "tags": [
       "chim-ruoi",
       "bay",

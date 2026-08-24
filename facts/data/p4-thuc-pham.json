@@ -280,7 +280,7 @@
     "cat": "thuc-pham",
     "sub": "len-men",
     "t": "Bánh mì bột chua nổi bằng vi sinh vật hoang dã, và mỗi bột cái có hệ vi sinh riêng",
-    "s": "Nghiên cứu 500 mẫu bột cái từ nhiều nước cho thấy thành phần vi sinh khác nhau rõ rệt giữa các mẫu, nhưng vị trí địa lý không dự báo được thành phần đó. Bột cái lâu năm nhất còn hoạt động được ghi nhận trên 100 năm tuổi.",
+    "s": "Nấm men hoang dã tạo CO₂ làm bánh nở, vi khuẩn lactic tạo axit làm bột chua và ức chế vi sinh vật lạ; tỉ lệ giữa hai nhóm quyết định độ chua và tốc độ nở. Nghiên cứu 500 mẫu bột cái từ nhiều nước cho thấy thành phần vi sinh khác nhau rõ rệt giữa các mẫu, nhưng vị trí địa lý không dự báo được thành phần đó — mẫu lâu năm nhất còn hoạt động đã trên 100 năm tuổi.",
     "tags": [
       "bot-chua",
       "vi-sinh",
@@ -811,8 +811,8 @@
     "id": "tp-272",
     "cat": "thuc-pham",
     "sub": "nong-nghiep-thuc-pham",
-    "t": "Việt Nam là một trong ba nước xuất khẩu gạo lớn nhất thế giới, và cũng nằm trong nhóm dùng nhiều nước nhất cho mỗi kg gạo",
-    "s": "Trồng lúa nước ngập liên tục phát thải metan đáng kể; kỹ thuật rút nước giữa vụ giảm phát thải 30–70% mà không giảm năng suất. Đây là một trong ít biện pháp giảm phát thải nông nghiệp đã được kiểm chứng ở quy mô lớn.",
+    "t": "Ruộng lúa ngập nước liên tục phát thải metan, và rút nước giữa vụ cắt 30–70% lượng phát thải đó mà năng suất không giảm",
+    "s": "Đây là một trong ít biện pháp giảm phát thải nông nghiệp đã kiểm chứng ở quy mô lớn: chỉ đổi cách quản lý nước trong ruộng, không đổi giống, không giảm sản lượng. Việt Nam là một trong ba nước xuất khẩu gạo lớn nhất thế giới, nên diện tích chịu ảnh hưởng của cách làm này rất lớn.",
     "tags": [
       "lua",
       "metan",
@@ -850,8 +850,8 @@
     "id": "tp-275",
     "cat": "thuc-pham",
     "sub": "nong-nghiep-thuc-pham",
-    "t": "Cây biến đổi gen đã được trồng thương mại hơn 25 năm và các cơ quan khoa học lớn đều kết luận thực phẩm từ chúng an toàn như thực phẩm thường",
-    "s": "Viện Hàn lâm Khoa học Quốc gia Mỹ rà soát hơn 900 nghiên cứu năm 2016. Tranh luận thực chất còn lại nằm ở quyền sở hữu giống, độc quyền và tác động môi trường, không ở an toàn thực phẩm.",
+    "t": "Thực phẩm từ cây biến đổi gen không khác thực phẩm cùng loại về an toàn, sau hơn 25 năm trồng thương mại và hơn 900 nghiên cứu được rà soát năm 2016",
+    "s": "Chỗ tranh chấp thật nằm ở nơi khác: ai sở hữu giống, mức độ độc quyền hạt giống của vài công ty, và tác động lên môi trường đồng ruộng. Phần 'ăn vào có hại hay không' là phần đã bị soi nhiều nhất và không tìm ra khác biệt.",
     "tags": [
       "gmo",
       "an-toan",
@@ -1295,27 +1295,11 @@
     "src": "USDA Table of Nutrient Retention Factors"
   },
   {
-    "id": "tp-311",
-    "cat": "thuc-pham",
-    "sub": "len-men",
-    "t": "Bột chua nổi nhờ nấm men hoang dã và vi khuẩn lactic hoạt động cùng nhau",
-    "s": "Vi khuẩn tạo axit làm bột chua và ức chế vi sinh vật lạ; nấm men tạo CO₂ làm bánh nở. Tỉ lệ giữa hai nhóm quyết định độ chua và tốc độ nở.",
-    "tags": [
-      "bot-chua",
-      "vi-sinh",
-      "banh-mi"
-    ],
-    "src": "Gänzle, Current Opinion in Food Science (2014)",
-    "xem_ok": [
-      "thieu-mo-neo"
-    ]
-  },
-  {
     "id": "tp-312",
     "cat": "thuc-pham",
     "sub": "len-men",
-    "t": "Bánh mì bột chua có chỉ số đường huyết thấp hơn bánh mì men công nghiệp cùng loại bột",
-    "s": "Axit lactic làm chậm quá trình tiêu hoá tinh bột. Hiệu ứng đã được đo trong nhiều thử nghiệm nhưng độ lớn thay đổi tuỳ công thức và thời gian ủ.",
+    "t": "Bánh mì bột chua làm đường trong máu tăng chậm hơn bánh mì men công nghiệp làm từ cùng loại bột",
+    "s": "'Chỉ số đường huyết' là mức đường trong máu dâng nhanh cỡ nào sau khi ăn một món; bánh bột chua nằm thấp hơn bánh men công nghiệp cùng loại bột. Thứ làm chậm là axit do vi khuẩn lactic sinh ra trong lúc ủ, nó khiến men tiêu hoá tinh bột làm việc chậm hơn.",
     "tags": [
       "bot-chua",
       "duong-huyet",
@@ -1376,19 +1360,6 @@
     "src": "US TTB; Jayabalan và cộng sự, Comprehensive Reviews in Food Science (2014)"
   },
   {
-    "id": "tp-318",
-    "cat": "thuc-pham",
-    "sub": "bao-quan",
-    "t": "Mật ong có nước nhưng không hỏng, vì lượng nước đó bị giữ chặt tới mức vi sinh vật không dùng được",
-    "s": "Mật ong có nước nhưng hoạt độ nước dưới 0,6 nên vi sinh vật không dùng được. Đây là chỉ số mà công nghiệp thực phẩm dùng thay cho 'khô' hay 'ướt'.",
-    "tags": [
-      "hoat-do-nuoc",
-      "bao-quan",
-      "vi-sinh"
-    ],
-    "src": "Codex Alimentarius; Jay, Modern Food Microbiology"
-  },
-  {
     "id": "tp-320",
     "cat": "thuc-pham",
     "sub": "bao-quan",
@@ -1405,8 +1376,8 @@
     "id": "tp-321",
     "cat": "thuc-pham",
     "sub": "gia-vi-huong-lieu",
-    "t": "Nghệ có curcumin, nhưng cơ thể hấp thu nó rất kém nếu không có chất hỗ trợ",
-    "s": "Sinh khả dụng đường uống rất thấp; piperine trong hạt tiêu đen làm tăng hấp thu đáng kể trong các thử nghiệm. Đây là cơ sở hoá học của việc nhiều món cà ri kết hợp nghệ với tiêu.",
+    "t": "Curcumin trong nghệ vào máu được rất ít khi ăn một mình, và piperine trong hạt tiêu đen làm phần vào máu tăng lên nhiều lần",
+    "s": "'Sinh khả dụng' là phần một chất thật sự vào được máu sau khi ăn; với curcumin phần đó rất nhỏ, phần còn lại bị thải ra trước khi tới máu. Piperine trong hạt tiêu đen làm phần vào máu tăng lên nhiều lần, và đó là cơ sở hoá học của việc nhiều món cà ri trộn nghệ với tiêu.",
     "tags": [
       "nghe",
       "curcumin",
@@ -1848,8 +1819,8 @@
     "id": "tp-358",
     "cat": "thuc-pham",
     "sub": "an-toan-thuc-pham",
-    "t": "Nấm dại độc và nấm ăn được có thể giống hệt nhau, và mọi cách phân biệt truyền miệng đều đã bị bác bỏ",
-    "s": "Nấm tán bay Amanita phalloides gây khoảng 50% số ca tử vong do nấm trên thế giới và trông rất giống vài loài ăn được. Nấu chín không phá được độc tố amatoxin, và triệu chứng chỉ xuất hiện sau 6–12 giờ.",
+    "t": "Nấm tán bay Amanita phalloides trông rất giống vài loài nấm ăn được và gây khoảng 50% số ca tử vong do nấm trên thế giới",
+    "s": "Nấu chín không phá được amatoxin — độc tố của nó — và triệu chứng chỉ xuất hiện sau 6–12 giờ, nên người ăn nhầm thường chỉ biết mình ăn sai rất lâu sau bữa ăn.",
     "tags": [
       "nam-doc",
       "amanita",

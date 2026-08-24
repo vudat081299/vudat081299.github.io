@@ -4,7 +4,7 @@
     "cat": "sinh-vat",
     "sub": "thuc-vat-nam",
     "t": "Chuối bạn ăn là một dòng vô tính, và giống trước nó đã bị xoá sổ",
-    "s": "Gần như toàn bộ chuối xuất khẩu là giống Cavendish, nhân giống vô tính nên mọi cây giống hệt nhau về gen. Giống trước đó, Gros Michel, gần như biến mất khỏi thương mại vì nấm Panama trong thập niên 1950 — và một chủng nấm mới đang lặp lại kịch bản đó với Cavendish.",
+    "s": "Gần như toàn bộ chuối xuất khẩu là giống Cavendish, nhân giống vô tính nên mọi cây giống hệt nhau về gen — cam và nho không hạt cũng vậy, vì không hạt thì không sinh sản hữu tính được. Giống chuối trước đó, Gros Michel, gần như biến mất khỏi thương mại vì nấm Panama trong thập niên 1950, và một chủng nấm mới đang lặp lại kịch bản đó với Cavendish: cả vườn cùng một bộ gen thì một dịch bệnh phù hợp quét sạch cùng lúc.",
     "tags": [
       "nong-nghiep",
       "da-dang-sinh-hoc",
@@ -40,19 +40,6 @@
       "hieu-lam"
     ],
     "src": "Doebley, Gaut & Smith, Cell (2006); tranh và tài liệu lịch sử về giống cây trồng cổ"
-  },
-  {
-    "id": "sv-104",
-    "cat": "sinh-vat",
-    "sub": "thuc-vat-nam",
-    "t": "Chuối, cam và nho không hạt được nhân giống vô tính, nên cả một vườn là bản sao di truyền của một cây gốc",
-    "s": "Không hạt nghĩa là không sinh sản hữu tính, nên mỗi cây phải tạo ra bằng giâm cành hoặc ghép. Điều đó cho sản phẩm đồng đều, nhưng xoá bỏ đa dạng di truyền — mà đa dạng di truyền chính là hệ miễn dịch của một loài cây trồng, nên một dịch bệnh phù hợp có thể quét sạch toàn bộ giống cùng lúc.",
-    "tags": [
-      "nong-nghiep",
-      "sinh-san",
-      "rui-ro"
-    ],
-    "src": "Nguyên lý nhân giống vô tính trong cây ăn quả; tài liệu FAO về nguồn gen cây trồng"
   },
   {
     "id": "sv-105",
@@ -438,8 +425,8 @@
     "id": "sv-134",
     "cat": "sinh-vat",
     "sub": "con-trung",
-    "t": "Bọ ngựa cái ăn con đực sau khi giao phối, nhưng ít hơn nhiều so với danh tiếng",
-    "s": "Hành vi này xảy ra ở một số loài và một số điều kiện, đặc biệt khi con cái đói hoặc khi bị quan sát trong không gian hẹp của phòng thí nghiệm. Trong tự nhiên, tỉ lệ thấp hơn nhiều — đây là ví dụ về việc điều kiện quan sát tạo ra 'sự thật'.",
+    "t": "Bọ ngựa cái ăn con đực sau khi giao phối chỉ ở một số loài, và chủ yếu khi con cái đang đói hoặc bị nhốt trong không gian hẹp",
+    "s": "Hành vi này xuất hiện nhiều trong phòng thí nghiệm, nơi con cái bị giữ trong hộp chật và thường bị bỏ đói trước khi ghép đôi; trong tự nhiên nó hiếm hơn nhiều. Tức là chính điều kiện quan sát đã đẩy hành vi lên cao hơn thực tế.",
     "tags": [
       "con-trung",
       "hieu-lam",
@@ -532,8 +519,8 @@
     "id": "sv-142",
     "cat": "sinh-vat",
     "sub": "co-the-dong-vat",
-    "t": "Sao biển không có não và có thể mọc lại toàn bộ cơ thể từ một cánh",
-    "s": "Ở một số loài, một cánh còn dính phần đĩa trung tâm có thể tái tạo thành cá thể hoàn chỉnh. Điều này từng gây thảm hoạ khi ngư dân chặt sao biển ăn hàu thành nhiều mảnh rồi ném lại xuống biển — làm số lượng tăng lên thay vì giảm.",
+    "t": "Sao biển mọc lại được cả cơ thể từ một cánh, miễn cánh đó còn dính một phần đĩa trung tâm",
+    "s": "Ở một số loài, một cánh còn mang phần đĩa trung tâm tái tạo thành cá thể hoàn chỉnh. Ngư dân từng chặt sao biển ăn hàu thành nhiều mảnh rồi ném lại xuống biển — số lượng tăng lên thay vì giảm.",
     "tags": [
       "bien",
       "tai-tao",
@@ -562,7 +549,7 @@
     "cat": "sinh-vat",
     "sub": "co-the-dong-vat",
     "t": "Phần lớn động vật có vú có khoảng 1 tỉ nhịp tim trong đời, từ chuột nhắt tới voi; người có khoảng 3 tỉ",
-    "s": "Phần lớn động vật có vú có khoảng một tỷ nhịp tim trong đời, từ chuột nhắt tới voi. Con người là ngoại lệ rõ rệt với khoảng ba tỷ nhịp — chủ yếu nhờ y học và điều kiện sống, không nhờ sinh học đặc biệt.",
+    "s": "Con vật càng nhỏ thì tim đập càng nhanh và đời càng ngắn, con càng lớn thì ngược lại — nhân hai thứ đó với nhau thì những loài chênh nhau hàng nghìn lần về khối lượng lại ra cùng một bậc, khoảng một tỉ nhịp. Người vượt lên khoảng ba tỉ chủ yếu nhờ y học và điều kiện sống, không nhờ quả tim khác thường.",
     "tags": [
       "tuoi-tho",
       "quy-luat",

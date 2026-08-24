@@ -524,7 +524,7 @@
     "cat": "kinh-te",
     "sub": "lai-va-no",
     "t": "Chia 114 cho lãi suất ra số năm tiền gấp ba, chia 144 ra số năm gấp bốn",
-    "s": "Chia 114 cho lãi suất ra số năm để tiền gấp ba; chia 144 ra số năm để gấp bốn. Ở mức 9%/năm: gấp đôi sau 8 năm, gấp ba sau khoảng 13 năm, gấp bốn sau 16 năm. Bộ ba quy tắc này đủ để bạn kiểm tra nhanh mọi lời hứa lợi nhuận mà không cần máy tính.",
+    "s": "Ở mức 9%/năm: gấp đôi sau 8 năm theo quy tắc 72, gấp ba sau khoảng 13 năm, gấp bốn sau 16 năm. Cả ba con số 72, 114 và 144 đều là xấp xỉ của cùng một phép tính logarit, và chúng đủ để kiểm tra nhanh mọi lời hứa lợi nhuận mà không cần máy tính.",
     "tags": [
       "lai-kep",
       "quy-tac",

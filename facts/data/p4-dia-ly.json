@@ -1793,7 +1793,10 @@
       "dia-ly",
       "cuc"
     ],
-    "src": "Tổng cục Thống kê; Cục Đo đạc, Bản đồ và Thông tin địa lý Việt Nam"
+    "src": "Tổng cục Thống kê; Cục Đo đạc, Bản đồ và Thông tin địa lý Việt Nam",
+    "khac_voi": [
+      "dl-247"
+    ]
   },
   {
     "id": "dl-346",
