@@ -129,7 +129,7 @@
     "cat": "xa-hoi",
     "sub": "luat-phap",
     "t": "Việt Nam theo hệ dân luật, không theo hệ án lệ như phim Mỹ",
-    "s": "Trong hệ dân luật, nguồn luật chính là văn bản quy phạm pháp luật do cơ quan lập pháp ban hành; thẩm phán áp dụng luật chứ không tạo ra luật. Việt Nam có công nhận án lệ từ 2015 nhưng ở vai trò bổ trợ, khác hẳn vai trò trung tâm của tiền lệ trong hệ thống Anh – Mỹ.",
+    "s": "Trong hệ dân luật, nguồn luật chính là văn bản quy phạm do cơ quan lập pháp ban hành; thẩm phán áp dụng luật chứ không tạo ra luật. Cơ chế án lệ được lập bằng Nghị quyết 03/2015 và án lệ đầu tiên được công bố năm 2016: Hội đồng Thẩm phán Toà án nhân dân tối cao chọn và công bố, toà các cấp phải nghiên cứu và áp dụng cho vụ việc tương tự — nhưng án lệ ở vai trò bổ trợ, không thay văn bản luật.",
     "tags": [
       "viet-nam",
       "phap-luat",
@@ -154,8 +154,8 @@
     "id": "xh-012",
     "cat": "xa-hoi",
     "sub": "the-che-hop-tac",
-    "t": "Chỉ số cảm nhận tham nhũng đo cảm nhận, không đo tham nhũng",
-    "s": "CPI của Tổ chức Minh bạch Quốc tế tổng hợp đánh giá của chuyên gia và doanh nhân về mức độ tham nhũng khu vực công. Chính tổ chức này nhấn mạnh nó không đo lượng tham nhũng thực tế — thứ về bản chất là ẩn. Đọc mọi bảng xếp hạng quốc gia với câu hỏi: chỉ số này thật sự đo cái gì?",
+    "t": "Xếp hạng tham nhũng theo cảm nhận của chuyên gia và xếp hạng theo tỉ lệ người dân thật sự phải trả hối lộ cho ra hai thứ tự khác nhau",
+    "s": "CPI của Tổ chức Minh bạch Quốc tế gộp đánh giá của chuyên gia và doanh nhân về khu vực công. Các khảo sát hộ gia đình thì hỏi thẳng người dân đã phải trả hối lộ hay chưa — cùng một hiện tượng, hai cách đo, và hai bảng thứ hạng không khớp nhau.",
     "tags": [
       "do-luong",
       "the-che",
@@ -220,17 +220,14 @@
     "cat": "xa-hoi",
     "sub": "the-che-hop-tac",
     "t": "Chuẩn mực xã hội thay đổi hành vi mạnh hơn thông tin và lời kêu gọi đạo đức",
-    "s": "Trong thí nghiệm tiết kiệm điện ở California, các thông điệp về bảo vệ môi trường, tiết kiệm tiền hay trách nhiệm xã hội đều gần như không có tác dụng. Thông điệp duy nhất làm giảm tiêu thụ đáng kể là cho biết hàng xóm dùng bao nhiêu điện.",
+    "s": "Trong thí nghiệm tiết kiệm điện ở California, các thông điệp về bảo vệ môi trường, tiết kiệm tiền hay trách nhiệm xã hội đều gần như không có tác dụng; thông điệp duy nhất làm giảm tiêu thụ là thông điệp cho biết hàng xóm dùng bao nhiêu. Trên hàng trăm nghìn hộ, cách đó cắt khoảng 2% điện — nhỏ nhưng rẻ và bền — và chỉ chạy được khi kèm tín hiệu tán thành, vì hộ đang dùng ít hơn trung bình sẽ tăng lên cho bằng nếu không có nó.",
     "d": "Điều đáng chú ý hơn: khi được hỏi cái gì ảnh hưởng tới mình, người tham gia xếp \"hàng xóm làm gì\" ở vị trí cuối trong danh sách bốn thông điệp — đúng thông điệp duy nhất đo được tác dụng. Nghĩa là câu trả lời của người ta về động cơ của chính mình và hành vi đo được của họ là hai bộ dữ liệu khác nhau, và chúng xếp hạng ngược nhau ở đây.",
     "tags": [
       "hanh-vi",
       "chuan-muc",
       "chinh-sach"
     ],
-    "src": "Nolan, Schultz, Cialdini, Goldstein & Griskevicius, Personality and Social Psychology Bulletin (2008)",
-    "xem_ok": [
-      "do-lon-bang-chu"
-    ]
+    "src": "Nolan, Schultz, Cialdini, Goldstein & Griskevicius, Personality and Social Psychology Bulletin (2008)"
   },
   {
     "id": "xh-021",

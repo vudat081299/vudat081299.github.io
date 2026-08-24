@@ -3,8 +3,8 @@
     "id": "xh-101",
     "cat": "xa-hoi",
     "sub": "dan-so",
-    "t": "Hầu hết người trên thế giới sống ở châu Á, và trực giác của ta về phân bố dân số rất lệch",
-    "s": "Trong 8 tỷ người, khoảng 4,8 tỷ ở châu Á, 1,5 tỷ ở châu Phi, 750 triệu ở châu Âu, hơn 650 triệu ở châu Mỹ và khoảng 45 triệu ở châu Đại Dương. Nghĩa là cứ 10 người trên hành tinh thì 6 người là người châu Á.",
+    "t": "Trong 8 tỷ người trên Trái Đất, khoảng 4,8 tỷ sống ở châu Á",
+    "s": "Phần còn lại: 1,5 tỷ ở châu Phi, 750 triệu ở châu Âu, hơn 650 triệu ở châu Mỹ và khoảng 45 triệu ở châu Đại Dương. Nghĩa là cứ 10 người trên hành tinh thì 6 người là người châu Á.",
     "tags": [
       "dan-so",
       "the-gioi",
@@ -42,14 +42,18 @@
     "id": "xh-104",
     "cat": "xa-hoi",
     "sub": "dan-so",
-    "t": "Việt Nam có tỉ suất sinh dưới mức thay thế và đã bước vào giai đoạn già hoá",
+    "t": "Tỉ suất sinh của Việt Nam đã xuống dưới mức thay thế 2,1 con trên một phụ nữ và vẫn đang giảm",
     "s": "Tỉ suất sinh cả nước đã xuống dưới 2,1 con trên một phụ nữ và giảm tiếp trong những năm gần đây, thấp nhất ở khu vực Đông Nam Bộ. Kết hợp với tuổi thọ tăng, cấu trúc dân số đang chuyển nhanh — và đây là biến số nền cho gần như mọi tính toán dài hạn về nhà ở, lương hưu và lao động.",
     "tags": [
       "viet-nam",
       "dan-so",
       "gia-hoa"
     ],
-    "src": "Tổng cục Thống kê Việt Nam, số liệu dân số hằng năm; Quyết định về Chiến lược Dân số Việt Nam đến 2030"
+    "src": "Tổng cục Thống kê Việt Nam, số liệu dân số hằng năm; Quyết định về Chiến lược Dân số Việt Nam đến 2030",
+    "khac_voi": [
+      "xh-008",
+      "xh-103"
+    ]
   },
   {
     "id": "xh-105",
@@ -131,19 +135,6 @@
     "xem_ok": [
       "do-lon-bang-chu"
     ]
-  },
-  {
-    "id": "xh-112",
-    "cat": "xa-hoi",
-    "sub": "the-che-hop-tac",
-    "t": "Nói cho người ta biết hàng xóm dùng bao nhiêu điện làm họ dùng ít đi",
-    "s": "Trong thử nghiệm với hàng trăm nghìn hộ gia đình Mỹ, việc thêm thông tin so sánh với hàng xóm vào hoá đơn làm giảm tiêu thụ khoảng 2% — nhỏ nhưng rẻ và bền. Điều quan trọng: phải kèm tín hiệu tán thành cho hộ dùng ít, nếu không hộ tiết kiệm sẽ tăng dùng lên cho bằng mức trung bình.",
-    "tags": [
-      "chuan-muc",
-      "moi-truong",
-      "chinh-sach"
-    ],
-    "src": "Schultz và cộng sự, Psychological Science (2007); Allcott, Journal of Public Economics (2011)"
   },
   {
     "id": "xh-113",
@@ -246,8 +237,8 @@
     "id": "xh-122",
     "cat": "xa-hoi",
     "sub": "bat-binh-dang",
-    "t": "Bạn học được nhiều thứ từ hàng xóm hơn từ trường học, và địa lý ảnh hưởng tới thu nhập cả đời",
-    "s": "Nghiên cứu theo dõi hàng triệu gia đình Mỹ chuyển nhà cho thấy trẻ chuyển tới khu tốt hơn khi còn nhỏ có thu nhập trưởng thành cao hơn rõ rệt, và hiệu ứng tỉ lệ thuận với số năm sống ở đó. Nơi lớn lên là một biến nhân quả, không chỉ là dấu hiệu của hoàn cảnh gia đình.",
+    "t": "Trẻ chuyển tới khu dân cư tốt hơn càng sớm thì thu nhập lúc trưởng thành càng cao, và mức lợi tăng theo số năm sống ở đó",
+    "s": "Theo dõi hàng triệu gia đình Mỹ chuyển nhà cho thấy mỗi năm sống thêm ở khu tốt hơn cộng thêm vào thu nhập trưởng thành. Nghĩa là nơi lớn lên là một nguyên nhân, không chỉ là dấu hiệu của hoàn cảnh gia đình.",
     "tags": [
       "co-hoi",
       "dia-ly",
@@ -272,8 +263,8 @@
     "id": "xh-124",
     "cat": "xa-hoi",
     "sub": "bat-binh-dang",
-    "t": "Theo dõi họ hàng qua nhiều thế kỷ cho thấy địa vị xã hội truyền lại bền hơn nhiều so với đo bằng thu nhập cha–con",
-    "s": "Bằng cách lần theo những họ hiếm gặp qua hàng trăm năm ở nhiều nước, mức giống nhau về địa vị giữa các thế hệ cao hơn hẳn con số ước lượng từ dữ liệu thu nhập của một đời. Ước lượng này gây tranh cãi về phương pháp, nhưng nó cảnh báo rằng đo dịch chuyển xã hội trong một thế hệ có thể cho kết quả quá lạc quan.",
+    "t": "Lần theo những họ hiếm qua hàng trăm năm, lợi thế địa vị của một dòng họ mờ đi chậm hơn mức đo được từ thu nhập cha–con trong một thế hệ",
+    "s": "Cách đo thông thường so thu nhập của cha với thu nhập của con, tức chỉ nhìn được một bước. Gregory Clark lần theo các dòng họ có họ hiếm qua nhiều thế kỷ ở nhiều nước và thấy địa vị dính lại lâu hơn hẳn — nghĩa là đo dịch chuyển xã hội trong một thế hệ cho kết quả quá lạc quan. Cách đo bằng họ hiếm đang bị tranh cãi về phương pháp, nên con số cụ thể chưa chốt.",
     "tags": [
       "dich-chuyen",
       "bat-binh-dang",
@@ -285,8 +276,8 @@
     "id": "xh-126",
     "cat": "xa-hoi",
     "sub": "the-che-hop-tac",
-    "t": "Hai nửa của cùng một thành phố bị chia bởi một đường biên giới có mức sống chênh nhau nhiều lần",
-    "s": "Cùng khí hậu, cùng dân tộc, cùng lịch sử tới một thời điểm, mà một bên giàu hơn bên kia nhiều lần. Điều khác nhau là luật chơi: ai được sở hữu tài sản, ai được vào thị trường, và quyền lực bị giới hạn tới đâu. Đây là bằng chứng chính cho lập luận rằng thể chế giải thích chênh lệch giàu nghèo giữa các nước tốt hơn địa lý.",
+    "t": "Nogales bị đường biên Mỹ – Mexico cắt làm hai nửa, và thu nhập hộ gia đình hai bên chênh nhau nhiều lần",
+    "s": "Hai nửa thành phố chung khí hậu, chung gốc dân và chung lịch sử cho tới lúc đường biên được vạch; thứ khác nhau là luật chơi — ai được sở hữu tài sản, ai được vào thị trường, quyền lực bị giới hạn tới đâu. Đây là ca mẫu cho lập luận rằng thể chế giải thích chênh lệch giàu nghèo tốt hơn địa lý.",
     "tags": [
       "the-che",
       "phat-trien",
@@ -350,8 +341,8 @@
     "id": "xh-134",
     "cat": "xa-hoi",
     "sub": "do-thi-giao-thong",
-    "t": "Việt Nam thuộc nhóm quốc gia đô thị hoá nhanh, nhưng vẫn thấp hơn mức trung bình thế giới",
-    "s": "Tỉ lệ dân số sống ở đô thị của Việt Nam vẫn dưới mức trung bình toàn cầu và thấp hơn nhiều nước trong khu vực, dù tốc độ tăng thuộc nhóm nhanh. Điều này đồng nghĩa quá trình dịch chuyển dân cư, nhu cầu nhà ở và hạ tầng còn kéo dài nhiều thập kỷ nữa.",
+    "t": "Hơn 60% dân số Việt Nam vẫn sống ở nông thôn, trong khi hơn một nửa dân số thế giới đã sống ở đô thị",
+    "s": "Tốc độ đô thị hoá của Việt Nam thuộc nhóm nhanh nhưng tỉ lệ vẫn dưới mức trung bình toàn cầu và dưới nhiều nước Đông Nam Á. Nghĩa là dòng người rời quê ra thành phố — cùng áp lực nhà ở và hạ tầng đi kèm — còn kéo dài nhiều thập kỷ nữa.",
     "tags": [
       "viet-nam",
       "do-thi",
@@ -476,19 +467,6 @@
     "src": "Fehr & Gächter, American Economic Review (2000)"
   },
   {
-    "id": "xh-143",
-    "cat": "xa-hoi",
-    "sub": "luat-phap",
-    "t": "Việt Nam theo hệ dân luật nhưng đã chính thức thừa nhận án lệ từ 2016",
-    "s": "Hội đồng Thẩm phán Toà án nhân dân tối cao lựa chọn và công bố các án lệ, và toà án các cấp phải nghiên cứu, áp dụng trong xét xử vụ việc tương tự. Đây là một thay đổi lớn về kỹ thuật pháp lý mà ít người ngoài ngành biết.",
-    "tags": [
-      "viet-nam",
-      "phap-luat",
-      "an-le"
-    ],
-    "src": "Nghị quyết 03/2015/NQ-HĐTP và Nghị quyết 04/2019/NQ-HĐTP của Hội đồng Thẩm phán TAND tối cao"
-  },
-  {
     "id": "xh-144",
     "cat": "xa-hoi",
     "sub": "luat-phap",
@@ -518,8 +496,8 @@
     "id": "xh-146",
     "cat": "xa-hoi",
     "sub": "bat-binh-dang",
-    "t": "GDP đầu người tăng mà thu nhập của người ở giữa đứng yên là chuyện xảy ra được",
-    "s": "Nếu tăng trưởng tập trung ở nhóm trên, GDP đầu người tăng trong khi thu nhập của người ở giữa đứng yên. Đây là lý do một quốc gia có thể vừa có số liệu vĩ mô đẹp vừa có cảm nhận phổ biến rằng cuộc sống không khá lên.",
+    "t": "Có những giai đoạn GDP đầu người của một nước tăng liên tục trong khi thu nhập của hộ ở giữa gần như đứng yên",
+    "s": "Khi phần tăng thêm dồn vào nhóm trên, số bình quân đi lên mà số ở giữa không đổi — nên một nước có thể vừa có thống kê vĩ mô đẹp vừa có cảm nhận phổ biến rằng đời sống không khá lên. Đó là lý do các báo cáo đo tiến bộ đòi đọc thu nhập trung vị bên cạnh GDP đầu người.",
     "tags": [
       "gdp",
       "bat-binh-dang",

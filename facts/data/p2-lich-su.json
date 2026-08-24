@@ -81,8 +81,8 @@
     "id": "ls-110",
     "cat": "lich-su",
     "sub": "viet-nam",
-    "t": "Người Việt đã ăn nước mắm ít nhất từ thời có ghi chép của người La Mã về garum",
-    "s": "Nước mắm lên men từ cá là kỹ thuật độc lập xuất hiện ở nhiều nền văn hoá ven biển; garum của La Mã và nước mắm Đông Nam Á có nguyên lý gần giống nhau. Ở châu Âu, kỹ thuật này biến mất sau khi đế chế sụp đổ và chỉ còn lại ở dạng vết tích.",
+    "t": "Nước mắm lên men từ cá xuất hiện độc lập ở nhiều nền văn hoá ven biển, và garum của La Mã dùng gần đúng nguyên lý của nước mắm Đông Nam Á",
+    "s": "Cá ướp muối để lâu tự phân giải thành nước cốt mặn — La Mã gọi là garum, Đông Nam Á gọi là nước mắm. Ở châu Âu kỹ thuật này mất theo đế chế và chỉ còn lại vết tích, ở Đông Nam Á thì không.",
     "tags": [
       "am-thuc",
       "lich-su",
@@ -162,8 +162,8 @@
     "id": "ls-118",
     "cat": "lich-su",
     "sub": "chien-tranh",
-    "t": "Hiệp ước cấm vũ khí hoá học ra đời sau khi chính người phát minh phân bón nitơ tạo ra khí độc",
-    "s": "Fritz Haber phát triển quy trình tổng hợp amoniac giúp nuôi sống hàng tỷ người, và cũng chỉ đạo việc dùng khí clo trong Thế chiến thứ nhất. Ông nhận Nobel Hoá học năm 1918 — một trong những cặp di sản mâu thuẫn nhất trong lịch sử khoa học.",
+    "t": "Fritz Haber nhận Nobel Hoá học năm 1918 cho quy trình tổng hợp amoniac, và cũng chính ông chỉ đạo việc dùng khí clo làm vũ khí trong Thế chiến thứ nhất",
+    "s": "Quy trình của ông lấy nitơ từ không khí để làm phân bón và giúp nuôi sống hàng tỷ người. Cùng người đó đưa khí clo ra chiến trường — hai di sản nằm trong cùng một sự nghiệp, và giải Nobel được trao ngay năm cuối cuộc chiến.",
     "tags": [
       "khoa-hoc",
       "dao-duc",

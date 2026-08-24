@@ -59,13 +59,16 @@
     "cat": "cong-nghe",
     "sub": "rieng-tu-quang-cao",
     "t": "Bốn điểm dữ liệu vị trí đủ để nhận ra bạn trong số một triệu người",
-    "s": "Phân tích dữ liệu di động cho thấy chỉ cần bốn cặp thời gian–địa điểm là đủ để xác định duy nhất 95% cá nhân trong tập dữ liệu 'đã ẩn danh'. Việc gỡ tên khỏi dữ liệu vị trí gần như không tạo ra sự ẩn danh nào.",
+    "s": "Phân tích dữ liệu di động cho thấy chỉ cần bốn cặp thời gian–địa điểm là đủ để xác định duy nhất 95% cá nhân trong một tập dữ liệu đã bỏ hết tên. Lý do là lịch di chuyển của mỗi người gần như độc nhất: chỗ ngủ và chỗ làm đã lọc ra rất ít người, thêm hai điểm nữa là gần như chỉ còn một.",
     "tags": [
       "rieng-tu",
       "an-danh",
       "vi-tri"
     ],
-    "src": "de Montjoye và cộng sự, Scientific Reports (2013)"
+    "src": "de Montjoye và cộng sự, Scientific Reports (2013)",
+    "khac_voi": [
+      "cn-108"
+    ]
   },
   {
     "id": "cn-108",
@@ -139,8 +142,8 @@
     "id": "cn-113",
     "cat": "cong-nghe",
     "sub": "ai-thuat-toan",
-    "t": "Người dùng mạng xã hội gặp quan điểm đối lập nhiều hơn dự đoán, và sự đồng nhất đến từ chính lựa chọn theo dõi của họ",
-    "s": "Các nghiên cứu đo thực tế cho thấy người dùng mạng xã hội tiếp xúc với quan điểm đối lập nhiều hơn dự đoán về bong bóng thuật toán. Cái tạo ra sự đồng nhất chủ yếu là lựa chọn của chính người dùng về việc theo dõi ai và bỏ theo dõi ai.",
+    "t": "Mức đồng nhất quan điểm trên mạng xã hội đến chủ yếu từ việc người dùng chọn theo dõi ai, không từ thuật toán xếp nội dung",
+    "s": "Đo trên người dùng thật, họ vẫn gặp bài của phía đối lập trong dòng nội dung của mình; phần lọc lớn nhất xảy ra ở bước kết bạn và bỏ theo dõi. Nghĩa là bong bóng phần lớn do chính người dùng dựng, thuật toán chỉ làm nó dày thêm.",
     "tags": [
       "bong-bong-loc",
       "mang-xa-hoi",

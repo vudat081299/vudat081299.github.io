@@ -3,8 +3,8 @@
     "id": "gt-206",
     "cat": "giao-tiep",
     "sub": "lang-nghe",
-    "t": "Người nghe hiểu sai khoảng một phần năm nội dung mà cả hai đều tưởng đã rõ",
-    "s": "Trong các nghiên cứu về giao tiếp trong nhóm làm việc, tỉ lệ hiểu lệch về yêu cầu và thời hạn cao hơn nhiều so với mức hai bên tự đánh giá. Vì vậy bước nhắc lại yêu cầu bằng lời của mình không phải thủ tục lịch sự mà là một phép kiểm.",
+    "t": "Người nói và người nghe đều đánh giá quá cao mức hai bên đã hiểu nhau, nên yêu cầu và thời hạn bị ghi nhận sai mà không bên nào biết",
+    "s": "Chỗ trực giác hỏng: cả hai rời cuộc nói chuyện với cảm giác đã rõ, nên không ai đi kiểm lại. Sai lệch chỉ hiện ra khi bên nghe nhắc lại yêu cầu bằng lời của chính họ — và đó là lý do bước nhắc lại không phải thủ tục lịch sự mà là một phép kiểm.",
     "tags": [
       "hieu-sai",
       "kiem-tra"
@@ -181,8 +181,8 @@
     "id": "gt-328",
     "cat": "giao-tiep",
     "sub": "viet-va-noi",
-    "t": "Người nghe theo dõi được khoảng ba ý trong một bài nói, không phải bảy",
-    "s": "Con số 7±2 vốn nói về trí nhớ ngắn hạn với các đơn vị đơn giản, và với nội dung có nghĩa thì dung lượng thực tế gần bốn hơn. Trong thực hành thuyết trình, ba điểm là mức được nhiều sổ tay khuyên vì nó khớp với giới hạn này.",
+    "t": "Trí nhớ làm việc giữ được khoảng bốn ý có nghĩa cùng lúc, không phải bảy",
+    "s": "Con số 7±2 nổi tiếng được đo trên các đơn vị rời rạc và đơn giản như dãy số; khi mỗi đơn vị là một ý có nghĩa thì dung lượng đo được chỉ khoảng bốn. Vì vậy một bài nói dựng quanh ba điểm nằm gọn trong giới hạn đó, còn bảy điểm thì không.",
     "tags": [
       "thuyet-trinh",
       "gioi-han"

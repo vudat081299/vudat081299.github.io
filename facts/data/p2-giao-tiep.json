@@ -219,14 +219,17 @@
     "id": "gt-133",
     "cat": "giao-tiep",
     "sub": "viet-va-noi",
-    "t": "Bạn nghĩ mình rõ ràng vì bạn nghe được cả ngữ điệu trong đầu mình",
-    "s": "Trong thí nghiệm, người gõ nhịp một bài hát quen ước lượng khoảng 50% người nghe sẽ đoán ra; thực tế chỉ 2,5% đoán được. Người gõ nghe cả giai điệu trong đầu, người nghe chỉ có tiếng gõ. Mọi email cụt lủn của bạn đều đang mắc đúng lỗi này. Hiện tượng này có tên: lời nguyền tri thức.",
+    "t": "Người gõ nhịp một bài hát quen ước lượng khoảng 50% người nghe sẽ đoán ra, thực tế chỉ 2,5% đoán được",
+    "s": "Người gõ nghe cả giai điệu trong đầu mình, người nghe chỉ có tiếng gõ trơ. Khoảng cách giữa 50% và 2,5% là khoảng cách giữa hai thứ đó, và nó là lý do một câu nhắn cụt lủn nghe rõ với người viết mà tối nghĩa với người đọc.",
     "tags": [
       "loi-nguyen-tri-thuc",
       "email",
       "ro-rang"
     ],
-    "src": "Elizabeth Newton, luận án Stanford (1990); mô tả trong Chip & Dan Heath, Made to Stick (2007)"
+    "src": "Elizabeth Newton, luận án Stanford (1990); mô tả trong Chip & Dan Heath, Made to Stick (2007)",
+    "khac_voi": [
+      "gt-006"
+    ]
   },
   {
     "id": "gt-134",
@@ -313,14 +316,17 @@
     "id": "gt-145",
     "cat": "giao-tiep",
     "sub": "viet-va-noi",
-    "t": "Nhắc lại một thông tin sai để bác bỏ nó có thể làm nó dễ nhớ hơn",
-    "s": "Với thời gian, người ta nhớ nội dung nhưng quên ngữ cảnh 'đây là điều sai'. Vì vậy hướng dẫn về chống tin giả khuyên: dẫn với sự thật, nhắc thông tin sai một lần duy nhất và gắn cảnh báo rõ, rồi giải thích cơ chế vì sao nó sai. Cấu trúc bác bỏ hiệu quả: nêu sự thật trước, cảnh báo sắp nhắc tin sai, nhắc đúng một lần, rồi giải thích vì sao nó sai và nó phục vụ cho ai.",
+    "t": "Một lời bác bỏ nhắc lại tin sai trước khi nêu sự thật thì giúp tin sai lan xa hơn là dập nó",
+    "s": "Sau một thời gian, người ta còn nhớ câu chuyện mà quên rằng nó từng được gắn cảnh báo. Vì vậy một lần bác bỏ hiệu quả đi theo thứ tự: nêu sự thật trước, báo trước là sắp nhắc tin sai, nhắc đúng một lần, rồi giải thích vì sao nó sai và nó phục vụ cho ai.",
     "tags": [
       "tin-gia",
       "tri-nho",
       "truyen-thong"
     ],
-    "src": "Lewandowsky và cộng sự, The Debunking Handbook (2020); Schwarz và cộng sự (2007)"
+    "src": "Lewandowsky và cộng sự, The Debunking Handbook (2020); Schwarz và cộng sự (2007)",
+    "khac_voi": [
+      "tl-290"
+    ]
   },
   {
     "id": "gt-146",

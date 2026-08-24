@@ -42,8 +42,8 @@
     "id": "ls-253",
     "cat": "lich-su",
     "sub": "y-te-lich-su",
-    "t": "Nước sạch và hệ thống thoát nước cứu nhiều người hơn mọi loại thuốc cộng lại",
-    "s": "Một cuộc bình chọn của tạp chí BMJ năm 2007 xếp công trình vệ sinh là tiến bộ y học quan trọng nhất từ năm 1840. Tại nhiều thành phố, tuổi thọ tăng mạnh trước khi có kháng sinh.",
+    "t": "Ở các thành phố Mỹ đầu thế kỷ 20, nước máy được lọc và khử trùng làm giảm tử vong nhiều hơn bất kỳ loại thuốc nào có lúc đó",
+    "s": "Tuổi thọ ở nhiều thành phố tăng mạnh hàng chục năm trước khi có viên kháng sinh đầu tiên; thứ thay đổi trong khoảng đó là đường ống nước sạch và hệ thống thoát nước. Chỗ trực giác hỏng: tiến bộ y tế lớn nhất không nằm trong tủ thuốc mà nằm dưới lòng đường.",
     "tags": [
       "ve-sinh",
       "nuoc-sach",
@@ -81,8 +81,8 @@
     "id": "ls-259",
     "cat": "lich-su",
     "sub": "chien-tranh",
-    "t": "Súng máy và dây thép gai làm chiến tranh chiến hào thành thế bế tắc, và xe tăng ra đời để phá bế tắc đó",
-    "s": "Chiếc xe tăng đầu tiên xuất hiện trên chiến trường năm 1916 tại Somme. Tên 'tank' là mật danh, vì các thùng vỏ được ghi là chở thùng nước cho Nga.",
+    "t": "Súng máy và dây thép gai biến chiến tranh chiến hào thành thế bế tắc, và xe tăng được chế ra để phá thế bế tắc đó",
+    "s": "Chiếc xe tăng đầu tiên ra chiến trường năm 1916 ở Somme. Chữ 'tank' là mật danh thời chế tạo: vỏ xe được vận chuyển với nhãn ghi là thùng chứa nước gửi cho Nga.",
     "tags": [
       "xe-tang",
       "the-chien-1",
@@ -94,8 +94,8 @@
     "id": "ls-260",
     "cat": "lich-su",
     "sub": "chien-tranh",
-    "t": "Đại bác và tường thành đá đã kết thúc thời đại lâu đài kiểu trung cổ trong khoảng một thế kỷ",
-    "s": "Tường cao và mỏng chống được máy bắn đá nhưng vỡ trước đạn pháo. Kiến trúc quân sự chuyển sang thành thấp, dày, hình sao để chống pháo từ thế kỷ 16.",
+    "t": "Đại bác kết thúc thời đại lâu đài tường cao trong khoảng một thế kỷ, vì tường cao và mỏng vỡ trước đạn pháo",
+    "s": "Tường cao và mỏng chặn được máy bắn đá thời trung cổ nhưng không chịu được đạn pháo. Từ thế kỷ 16, kiến trúc quân sự chuyển sang thành thấp, dày, hình sao để chống pháo.",
     "tags": [
       "dai-bac",
       "lau-dai",
@@ -120,8 +120,8 @@
     "id": "ls-262",
     "cat": "lich-su",
     "sub": "chien-tranh",
-    "t": "Trong Thế chiến thứ nhất, bệnh tật từng giết nhiều lính hơn đạn ở nhiều chiến trường",
-    "s": "Sốt phát ban, kiết lỵ và cúm gây tổn thất khổng lồ. Đây cũng là cuộc chiến lớn đầu tiên mà nhiều quân đội có tỉ lệ chết vì thương tích cao hơn chết vì bệnh, nhờ tiến bộ y tế quân sự.",
+    "t": "Thế chiến thứ nhất là cuộc chiến lớn đầu tiên mà phần lớn quân đội chết vì thương tích nhiều hơn chết vì bệnh",
+    "s": "Ở mọi cuộc chiến lớn trước đó, bệnh trong trại lính giết nhiều lính hơn đạn. Nhờ tiến bộ y tế quân sự, cân này lần đầu đảo lại trong Thế chiến thứ nhất — dù sốt phát ban, kiết lỵ và cúm vẫn gây tổn thất khổng lồ.",
     "tags": [
       "chien-tranh",
       "benh-tat",
