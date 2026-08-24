@@ -738,6 +738,30 @@ def verify_fact(f):
                 if rid not in mien:
                     return ('XEM', rid, note)
 
+    # Trường `d` chưa từng qua cổng nào cho tới 24/08/2026, và nó là chỗ dễ trôi nhất:
+    # `d` chỉ hiện trong modal nên không ai đọc lại, còn luật `loi-khuyen` thì chỉ soi `t`.
+    # Đọc tay cả 41 fact có `d`: 26 phần hỏng — phần lớn là hướng dẫn cho người đọc
+    # ("Ứng dụng ngay:", "Việc cần làm là…", "Cách dùng của người trưởng thành:").
+    #
+    # Số đo ngày 24/08/2026, sau khi sửa 26 ca: ba luật dưới bắt 8/26 bản CŨ và 0/40 bản
+    # mới. Ghi cả hai con số vì chúng nói hai điều khác nhau: 0 bắt oan (cổng dùng được),
+    # nhưng chỉ 8/26 (cổng KHÔNG phủ hết lớp lỗi — 18 ca kia phải đọc bằng mắt). Đừng
+    # tưởng `d` đã sạch chỉ vì cổng im.
+    d_field = f.get('d') or ''
+    if d_field:
+        for rid, note, _f, pats in RULES_REJECT:
+            if rid != 'loi-khuyen':
+                continue
+            for pat in pats:
+                if pat.search(d_field):
+                    return ('LOẠI', rid, note + ' — trong phần dài `d`')
+        for rid, note, _f, pats in RULES_WARN:
+            if rid not in ('ngoi-thu-hai', 'huong-dan-doc') or rid in mien:
+                continue
+            for pat in pats:
+                if pat.search(d_field):
+                    return ('XEM', rid, note + ' — trong phần dài `d`')
+
     for rid, note, field, pats in RULES_WARN:
         if rid in mien:
             continue

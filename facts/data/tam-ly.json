@@ -5,7 +5,7 @@
     "sub": "thien-kien",
     "t": "Mất 100 nghìn đau hơn được 100 nghìn vui, khoảng gấp đôi",
     "s": "Đây là né tránh mất mát (loss aversion) — nền tảng của thuyết triển vọng, công trình đưa Kahneman tới giải Nobel Kinh tế 2002. Nó giải thích vì sao người ta ôm cổ phiếu lỗ quá lâu, sợ đổi việc dù việc hiện tại tệ, và vì sao 'dùng thử miễn phí rồi tự động gia hạn' hiệu quả đến vậy.",
-    "d": "Hệ số 'gấp đôi' là ước lượng trung bình chứ không phải hằng số; mức độ khác nhau theo bối cảnh và có nghiên cứu cho thấy nó yếu đi khi giá trị nhỏ. Nhưng chiều của hiệu ứng thì rất vững: khi đóng khung một đề nghị, nói về cái người ta sẽ mất nếu không làm thường mạnh hơn nói về cái họ sẽ được nếu làm.",
+    "d": "Hệ số \"gấp đôi\" là ước lượng trung bình chứ không phải hằng số; mức độ khác nhau theo bối cảnh và có nghiên cứu cho thấy nó yếu đi khi giá trị nhỏ. Chiều của hiệu ứng thì vững: cùng một khoản tiền được mô tả là mất đi thì làm người ta đổi hành vi mạnh hơn khi nó được mô tả là được thêm.",
     "tags": [
       "thien-kien",
       "kinh-te-hanh-vi",
@@ -19,7 +19,7 @@
     "sub": "thien-kien",
     "t": "Con số đầu tiên được nêu ra sẽ neo mọi con số sau đó — kể cả khi nó vô nghĩa",
     "s": "Trong thí nghiệm gốc, người tham gia quay một vòng quay số ngẫu nhiên rồi được hỏi ước lượng tỉ lệ các nước châu Phi trong Liên Hợp Quốc. Nhóm quay ra số lớn ước lượng cao hơn hẳn nhóm quay ra số nhỏ. Cái neo hoạt động ngay cả khi ai cũng biết nó ngẫu nhiên.",
-    "d": "Ứng dụng: trong đàm phán lương hay báo giá, người nêu số trước thường có lợi, miễn là con số nằm trong vùng còn đáng tin. Cách phòng thủ khi bị neo: đừng phản ứng quanh con số của họ, hãy nêu lại cơ sở của bạn (dữ liệu thị trường, khối lượng công việc) rồi mới nói số của mình.",
+    "d": "Hiệu ứng neo đo được cả ở người có nghề: thẩm phán đọc một bản đề nghị mức án ngẫu nhiên vẫn tuyên án lệch về phía con số đó, và chuyên gia bất động sản định giá cùng một căn nhà khác nhau khi được cho biết giá chào khác nhau. Cái neo mất tác dụng khi người bị neo phải nêu cơ sở định giá của mình trước khi nhìn con số của phía kia.",
     "tags": [
       "thien-kien",
       "dam-phan",
@@ -150,7 +150,7 @@
     "sub": "tri-nho",
     "t": "Trí nhớ không phải bản ghi, nó là bản dựng lại — và có thể bị cấy",
     "s": "Elizabeth Loftus cho thấy chỉ cần đổi một động từ trong câu hỏi ('đâm sầm' thay vì 'chạm vào') là nhân chứng nhớ tốc độ xe cao hơn và thậm chí nhớ thấy kính vỡ dù không có. Hệ quả nghiêm túc: sự tự tin của một người về ký ức không phải là bằng chứng cho độ chính xác của ký ức đó.",
-    "d": "Trong đời sống công sở, điều này nghĩa là biên bản họp viết ngay sau cuộc họp có giá trị hơn ba người cùng nhớ lại sau một tháng. Trong quan hệ, nó nghĩa là hai người thật lòng nhớ khác nhau về cùng một cuộc cãi vã — và không ai đang nói dối.",
+    "d": "Ký ức nhoè theo thời gian và mỗi lần được kể lại thì bị dựng lại một lần nữa, nên hai người thật lòng nhớ khác nhau về cùng một cuộc cãi vã mà không ai đang nói dối. Cùng cơ chế đó làm biên bản ghi tại chỗ và bản nhớ lại sau một tháng lệch nhau ở những chi tiết mà cả hai bên đều tin là mình nhớ chắc.",
     "tags": [
       "tri-nho",
       "phap-ly",
@@ -190,7 +190,7 @@
     "sub": "nhin-nguoi-khac",
     "t": "Ấn tượng đầu tiên hình thành trong khoảng một phần mười giây",
     "s": "Khi cho xem ảnh khuôn mặt chỉ 100 mili giây, người xem đã đưa ra phán đoán về độ đáng tin, năng lực và mức hấp dẫn gần như trùng khớp với phán đoán khi được nhìn thoải mái. Thời gian dài hơn chủ yếu làm tăng sự tự tin chứ không đổi nội dung phán đoán. Những phán đoán này dự báo hành vi thật khá kém, nhưng lại dự báo kết quả bầu cử khá tốt.",
-    "d": "Điều này không có nghĩa ấn tượng đầu chính xác — nó chỉ nhanh. Trong tuyển dụng, đó chính là lý do phỏng vấn tự do dễ biến thành nghi thức hợp thức hoá cảm giác 10 giây đầu, và vì sao bài kiểm tra thực hành lại dự báo hiệu suất tốt hơn nhiều.",
+    "d": "Điều này không có nghĩa ấn tượng đầu chính xác — nó chỉ nhanh. Cùng nhóm nghiên cứu cho thấy thời gian xem lâu hơn chủ yếu làm tăng độ tự tin của người phán đoán chứ không đổi nội dung phán đoán. Đó là lý do phỏng vấn tự do dễ thành nghi thức xác nhận phán đoán đã hình thành từ trước khi câu hỏi đầu tiên được đặt, còn bài kiểm tra thực hành thì dự báo hiệu suất tốt hơn hẳn.",
     "tags": [
       "an-tuong",
       "tuyen-dung",

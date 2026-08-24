@@ -5,7 +5,7 @@
     "sub": "lai-va-no",
     "t": "Lãi tính trên dư nợ gốc đắt gần gấp đôi lãi tính trên dư nợ giảm dần",
     "s": "Vay 100 triệu, 12 tháng, 'lãi suất 1%/tháng'. Nếu tính trên dư nợ gốc, mỗi tháng bạn trả 1 triệu tiền lãi suốt 12 tháng dù nợ đã giảm dần — lãi suất thực tế khoảng 21,5%/năm chứ không phải 12%. Đây là chỗ mà cùng một con số quảng cáo giấu hai sản phẩm rất khác nhau.",
-    "d": "Cách kiểm tra trong 10 giây: nếu tiền lãi mỗi kỳ bằng nhau suốt kỳ vay, đó là lãi trên dư nợ gốc. Nếu tiền lãi giảm dần theo tháng, đó là lãi trên dư nợ giảm dần.\n\nQuy tắc nhẩm: lãi suất thực của hình thức tính trên dư nợ gốc xấp xỉ gấp 1,8 tới 1,9 lần con số được công bố với khoản vay trả đều trong 12 tháng.",
+    "d": "Hai cách tính khác nhau ở chỗ mẫu số của tiền lãi là dư nợ ban đầu hay dư nợ còn lại. Với khoản vay trả đều trong 12 tháng, dư nợ trung bình chỉ khoảng một nửa dư nợ ban đầu, nên lãi tính trên dư nợ gốc cho lãi suất thực xấp xỉ 1,8 lần con số công bố — 1%/tháng thành khoảng 21,5%/năm. Dấu hiệu phân biệt nằm trong bảng trả nợ: tiền lãi mỗi kỳ bằng nhau là tính trên dư nợ gốc, tiền lãi giảm dần là tính trên dư nợ giảm dần.",
     "tags": [
       "vay-no",
       "lai-suat",

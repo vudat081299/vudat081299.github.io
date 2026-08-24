@@ -18,7 +18,7 @@
     "sub": "du-doan",
     "t": "Người ta ước lượng thời gian làm việc của chính mình lạc quan hơn thực tế, kể cả sau nhiều lần trễ hạn",
     "s": "Chuyện này xảy ra ngay cả với đúng loại việc mà người đó đã từng trễ nhiều lần. Cách chữa có bằng chứng nhất không phải cố gắng hơn, mà là bỏ hẳn việc tự đoán: đi hỏi những dự án tương tự trước đây mất bao lâu, rồi dùng chính con số đó.",
-    "d": "Nhóm của Bent Flyvbjerg áp dụng phương pháp này cho các dự án hạ tầng lớn và cho thấy dự báo dựa trên dữ liệu quá khứ của cùng loại dự án chính xác hơn hẳn dự báo dựa trên phân tích chi tiết của chính dự án đó. Với công việc cá nhân, quy tắc thô: lấy ước lượng đầu tiên nhân đôi, và nếu công việc phụ thuộc người khác thì nhân ba.",
+    "d": "Nhóm của Bent Flyvbjerg áp dụng phương pháp này cho các dự án hạ tầng lớn: dự báo dựa trên dữ liệu quá khứ của cùng loại dự án chính xác hơn dự báo dựa trên phân tích chi tiết của chính dự án đó. Cách gọi trong ngành là lấy góc nhìn từ ngoài — thay câu hỏi \"việc này mất bao lâu\" bằng câu hỏi \"những việc giống thế này đã mất bao lâu\".",
     "tags": [
       "du-an",
       "uoc-luong",
@@ -33,7 +33,7 @@
     "viz": "simpson",
     "t": "Nghịch lý Simpson: cùng một dữ liệu có thể đảo ngược kết luận khi gộp nhóm",
     "s": "Năm 1973, dữ liệu tuyển sinh sau đại học của UC Berkeley cho thấy nam được nhận nhiều hơn nữ rõ rệt. Nhưng khi tách theo từng khoa, phần lớn khoa lại nhận nữ với tỉ lệ ngang hoặc cao hơn. Lý do: nữ nộp nhiều hơn vào các khoa vốn có tỉ lệ chọi khắt khe.",
-    "d": "Bài học không phải 'thống kê nói dối' mà là: một con số tổng hợp luôn che giấu cấu trúc bên dưới. Trước khi kết luận từ một tỉ lệ gộp, hãy hỏi 'nếu tách theo nhóm thì sao?' — nhóm ở đây có thể là chi nhánh, kênh bán, phân khúc khách, hay nhóm tuổi.",
+    "d": "Một con số tổng hợp luôn che cấu trúc bên dưới nó: cùng một tỉ lệ gộp có thể ứng với hai bức tranh trái ngược nhau khi tách theo nhóm. Điều kiện để đảo chiều là các nhóm có kích cỡ rất khác nhau — như ở Berkeley, nơi nữ nộp nhiều vào các khoa có tỉ lệ chọi khắt khe hơn.",
     "tags": [
       "thong-ke",
       "du-lieu",

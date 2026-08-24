@@ -122,7 +122,7 @@
     "sub": "ai-thuat-toan",
     "t": "Mô hình ngôn ngữ lớn sinh chữ theo xác suất, nên nó có thể bịa rất trơn tru",
     "s": "Nó dự đoán mảnh chữ tiếp theo dựa trên phân bố học được, không tra cứu một cơ sở dữ liệu sự thật — đây là khác biệt cốt lõi so với công cụ tìm kiếm. Một câu trả lời trôi chảy và một câu trả lời đúng được tạo ra bằng cùng một cơ chế, nên độ trôi chảy không phải tín hiệu về độ chính xác, và những thứ dễ bịa nhất lại đúng là thứ nghe thuyết phục nhất.",
-    "d": "Cách dùng của người trưởng thành: dùng nó để soạn, tóm tắt, đặt câu hỏi ngược, tìm góc nhìn — rồi tự kiểm chứng mọi con số, tên riêng và điều khoản pháp lý ở nguồn gốc. Chi phí kiểm tra một dữ kiện luôn thấp hơn chi phí trích dẫn nhầm một dữ kiện.",
+    "d": "Vì cùng một cơ chế sinh ra câu đúng và câu bịa, tỉ lệ bịa cao nhất đúng ở những chỗ mô hình gặp ít dữ liệu nhất: số hiệu văn bản, trích dẫn có số trang, tên người ít nổi tiếng. Đó cũng là lý do câu bịa thường có đúng hình dạng của câu thật — mô hình học được dạng của một trích dẫn hợp lệ tách rời khỏi nội dung của trích dẫn đó.",
     "tags": [
       "ai",
       "llm",
