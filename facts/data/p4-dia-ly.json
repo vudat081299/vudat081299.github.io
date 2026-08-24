@@ -146,8 +146,8 @@
     "id": "dl-214",
     "cat": "dia-ly",
     "sub": "dai-duong",
-    "t": "Đại dương đã axit hoá khoảng 30% so với thời tiền công nghiệp tính theo nồng độ ion hydro",
-    "s": "pH mặt biển giảm từ khoảng 8,2 xuống 8,1, và vì thang pH là lô-ga-rít nên mức giảm 0,1 tương đương tăng 26% nồng độ ion hydro. Điều này làm sinh vật có vỏ canxi khó tạo vỏ hơn.",
+    "t": "pH nước biển mặt đã giảm từ khoảng 8,2 xuống 8,1 kể từ thời tiền công nghiệp, tức nồng độ ion hydro tăng khoảng 26%",
+    "s": "Thang pH là thang lô-ga-rít: chênh 0,1 nghe nhỏ nhưng là 26% ion hydro nhiều hơn, và chính lượng ion đó làm nước chua. Nước chua hơn khiến sinh vật có vỏ canxi khó tạo vỏ.",
     "tags": [
       "axit-hoa",
       "ph",
@@ -160,7 +160,7 @@
     "cat": "dia-ly",
     "sub": "dai-duong",
     "t": "Dòng hải lưu vận chuyển nhiệt bằng khoảng 25% tổng lượng nhiệt mà khí quyển vận chuyển từ xích đạo lên cực",
-    "s": "Dòng Gulf Stream chở khoảng 1,3 petawatt, gấp hàng chục nghìn lần công suất phát điện toàn cầu. Nếu nó yếu đi đáng kể, Tây Bắc Âu sẽ lạnh hơn hẳn dù toàn cầu vẫn nóng lên.",
+    "s": "Riêng dòng Gulf Stream chở khoảng 1,3 petawatt — một petawatt là một triệu tỉ watt, cỡ hàng trăm lần công suất phát điện của cả thế giới. Nếu nó yếu đi, Tây Bắc Âu sẽ lạnh hơn hẳn dù toàn cầu vẫn nóng lên.",
     "tags": [
       "hai-luu",
       "gulf-stream",
@@ -381,7 +381,7 @@
     "cat": "dia-ly",
     "sub": "song-nui-sa-mac",
     "t": "Sa mạc lớn nhất thế giới là Nam Cực, không phải Sahara",
-    "s": "Định nghĩa sa mạc dựa trên lượng mưa dưới 250 mm mỗi năm, không dựa vào nhiệt độ hay cát. Nam Cực rộng khoảng 14 triệu km², gấp rưỡi Sahara.",
+    "s": "Định nghĩa sa mạc dựa trên lượng mưa dưới 250 mm mỗi năm, không dựa vào nhiệt độ hay cát. Nam Cực rộng khoảng 14 triệu km², gấp rưỡi Sahara — và sa mạc Gobi có mùa đông xuống dưới −40 độ.",
     "tags": [
       "sa-mac",
       "nam-cuc",
@@ -695,19 +695,6 @@
     "src": "NOAA National Geodetic Survey"
   },
   {
-    "id": "dl-259",
-    "cat": "dia-ly",
-    "sub": "ban-do-toa-do",
-    "t": "Bản đồ dùng lưới hình vuông trên mặt cầu luôn có chỗ nối bị hở hoặc chồng, và Google Maps chọn giải bằng phép chiếu Mercator hình vuông",
-    "s": "Vì vậy ứng dụng bản đồ trực tuyến không hiển thị được vùng gần hai cực: vĩ độ bị chặn ở khoảng 85 độ. Đó là lý do bạn không zoom được tới Cực Bắc trên phần lớn bản đồ web.",
-    "tags": [
-      "web-mercator",
-      "ban-do",
-      "gioi-han"
-    ],
-    "src": "EPSG:3857 Web Mercator; tài liệu Google Maps Platform"
-  },
-  {
     "id": "dl-260",
     "cat": "dia-ly",
     "sub": "ban-do-toa-do",
@@ -919,8 +906,8 @@
     "id": "dl-276",
     "cat": "dia-ly",
     "sub": "thien-tai",
-    "t": "Nước rút bất thường ngoài bờ biển là dấu hiệu sóng thần đang tới, và khoảng cách thời gian có thể chỉ vài phút",
-    "s": "Năm 2004, một học sinh 10 tuổi ở Phuket nhận ra dấu hiệu này từ bài học địa lý và giúp sơ tán một bãi biển. Ở nhiều nơi khác, người ta lại đi ra xem cá mắc cạn.",
+    "t": "Nước biển rút bất thường ra xa bờ là dấu hiệu sóng thần đang tới, và khoảng cách thời gian tính bằng phút",
+    "s": "Sóng thần là một sóng rất dài; khi phần lõm của nó tới bờ trước thì mặt nước tụt ra xa lộ cả đáy, rồi phần đỉnh ập vào sau đó ít phút. Trong thảm hoạ Ấn Độ Dương 2004, nhiều người đã đi ra chỗ nước vừa rút để xem cá mắc cạn thay vì chạy lên cao.",
     "tags": [
       "song-than",
       "canh-bao",
@@ -1244,8 +1231,8 @@
     "id": "dl-302",
     "cat": "dia-ly",
     "sub": "luc-dia-kien-tao",
-    "t": "Bằng chứng đầu tiên cho trôi dạt lục địa bị bác bỏ suốt 50 năm vì không ai giải thích được cơ chế",
-    "s": "Alfred Wegener nêu giả thuyết năm 1912 dựa trên hình dạng bờ biển và hoá thạch trùng khớp. Nó chỉ được chấp nhận sau khi phát hiện các vạch từ tính đối xứng ở đáy biển vào thập niên 1960.",
+    "t": "Bờ biển và hoá thạch hai bên Đại Tây Dương khớp nhau, và đáy biển có các vạch từ tính đối xứng — dấu vết của việc các lục địa từng gắn liền rồi tách ra",
+    "s": "Alfred Wegener chỉ ra chỗ khớp của bờ biển và hoá thạch từ năm 1912, nhưng suốt 50 năm không ai nói được lực nào đủ đẩy cả một lục địa. Thập niên 1960, các vạch từ tính đối xứng hai bên sống núi giữa đại dương cho thấy đáy biển thật sự đang tách ra hai phía, mang lục địa đi theo.",
     "tags": [
       "wegener",
       "kien-tao",
@@ -1406,8 +1393,8 @@
     "id": "dl-314",
     "cat": "dia-ly",
     "sub": "khi-hau-thoi-tiet",
-    "t": "Xác suất mưa 30% không có nghĩa trời mưa ở 30% diện tích, và cũng không phải mưa 30% thời gian",
-    "s": "Nó là xác suất có mưa đo được tại một điểm bất kỳ trong vùng dự báo. Cách hiểu sai này phổ biến tới mức các cơ quan khí tượng phải giải thích lại liên tục.",
+    "t": "Xác suất mưa 30% nghĩa là tại một điểm bất kỳ trong vùng dự báo, khả năng hứng mưa đo được là 30%",
+    "s": "Con số đó không nói mưa phủ 30% diện tích, cũng không nói mưa suốt 30% thời gian. Nó nói: đứng ở một chỗ bất kỳ trong vùng dự báo, cứ 10 lần gặp bản tin như thế thì khoảng 3 lần bạn thật sự hứng mưa.",
     "tags": [
       "du-bao",
       "xac-suat",
@@ -1440,19 +1427,6 @@
       "thang-bac"
     ],
     "src": "Tierney và cộng sự, Nature (2020); IPCC AR6"
-  },
-  {
-    "id": "dl-317",
-    "cat": "dia-ly",
-    "sub": "song-nui-sa-mac",
-    "t": "Sa mạc không nhất thiết nóng — tiêu chí duy nhất là lượng mưa dưới khoảng 250 mm mỗi năm",
-    "s": "Sa mạc Gobi có mùa đông xuống dưới −40 độ. Cách phân loại theo mưa chứ không theo nhiệt là lý do Nam Cực đứng đầu danh sách sa mạc lớn nhất.",
-    "tags": [
-      "sa-mac",
-      "dinh-nghia",
-      "mua"
-    ],
-    "src": "WMO; Cục Khảo sát Nam Cực Anh"
   },
   {
     "id": "dl-318",
@@ -1565,8 +1539,8 @@
     "id": "dl-326",
     "cat": "dia-ly",
     "sub": "ban-do-toa-do",
-    "t": "Bốn quốc gia trên thế giới không dùng hệ mét làm hệ chính thức trong đời sống",
-    "s": "Mỹ, Liberia và Myanmar là ba cái tên thường được nêu, và ngay cả Mỹ cũng dùng hệ mét trong khoa học, quân sự và y tế. Anh dùng hệ hỗn hợp với dặm cho đường bộ và mét cho phần còn lại.",
+    "t": "Mỹ, Liberia và Myanmar là ba nước không lấy hệ mét làm hệ đo lường chính thức trong đời sống",
+    "s": "Ngay cả Mỹ vẫn dùng hệ mét trong khoa học, quân sự và y tế, nên chỗ khác biệt chỉ nằm ở đời sống thường ngày. Anh không thuộc nhóm ba nước này: nước này dùng hệ hỗn hợp — dặm cho đường bộ, mét cho phần còn lại.",
     "tags": [
       "he-met",
       "do-luong",
@@ -1669,8 +1643,8 @@
     "id": "dl-334",
     "cat": "dia-ly",
     "sub": "thien-tai",
-    "t": "Nhà xây đúng chuẩn kháng chấn giảm tử vong động đất tới hàng chục lần so với nhà không chuẩn",
-    "s": "So sánh hai trận động đất cùng cường độ ở Chile và Haiti năm 2010 cho thấy chênh lệch tử vong hàng trăm lần. Trận ở Chile mạnh hơn khoảng 500 lần về năng lượng.",
+    "t": "Trận động đất Chile 2010 mạnh gấp khoảng 500 lần trận Haiti cùng năm nhưng chết ít hơn hàng trăm lần",
+    "s": "Chênh lệch tử vong đi ngược hẳn chênh lệch năng lượng: trận mạnh hơn rất nhiều lại chết ít hơn hàng trăm lần. Khác biệt nằm ở chuẩn kháng chấn của nhà ở, không nằm ở độ mạnh của trận.",
     "tags": [
       "dong-dat",
       "xay-dung",
@@ -1774,7 +1748,7 @@
     "cat": "dia-ly",
     "sub": "dai-duong",
     "t": "Khoảng 35% sản lượng đánh bắt biển toàn cầu đến từ ngư trường đang bị khai thác quá mức",
-    "s": "Tỉ lệ này đã tăng liên tục từ khoảng 10% vào thập niên 1970. Các ngư trường được quản lý bằng hạn ngạch cá thể chuyển nhượng có tỉ lệ phục hồi cao hơn rõ rệt.",
+    "s": "Tỉ lệ này tăng liên tục từ khoảng 10% vào thập niên 1970. Các ngư trường phục hồi tốt hơn là nơi mỗi tàu được chia sẵn một hạn ngạch cố định và được phép bán lại phần của mình, nên không ai phải đua nhau bắt trước.",
     "tags": [
       "danh-bat",
       "qua-muc",
@@ -1812,8 +1786,8 @@
     "id": "dl-345",
     "cat": "dia-ly",
     "sub": "ban-do-toa-do",
-    "t": "Điểm cực bắc, nam, đông và tây của Việt Nam nằm ở bốn tỉnh khác nhau, và điểm cực đông không phải Khánh Hoà theo mọi cách tính",
-    "s": "Cực bắc ở Hà Giang, cực nam ở Cà Mau, cực tây ở Điện Biên. Cực đông trên đất liền ở Khánh Hoà, nhưng nếu tính cả quần đảo thì nó nằm xa hơn nhiều về phía đông.",
+    "t": "Bốn điểm cực trên đất liền của Việt Nam nằm ở bốn tỉnh: cực bắc Hà Giang, cực nam Cà Mau, cực tây Điện Biên, cực đông Khánh Hoà",
+    "s": "Đó là bốn điểm cực tính trên đất liền. Nếu tính cả quần đảo thì điểm cực đông nằm xa hơn nhiều về phía đông, nên 'cực đông của Việt Nam' là hai chỗ khác nhau tuỳ vào có tính đảo hay không.",
     "tags": [
       "viet-nam",
       "dia-ly",
@@ -1838,8 +1812,8 @@
     "id": "dl-347",
     "cat": "dia-ly",
     "sub": "dai-duong",
-    "t": "Biển Đông có độ sâu lớn nhất khoảng 5.500 mét và chứa một trong các hệ rạn san hô đa dạng nhất thế giới",
-    "s": "Nó nằm trong Tam giác San hô mở rộng, khu vực có số loài san hô cao nhất hành tinh. Hoạt động nạo vét và bồi đắp đã phá huỷ hàng nghìn hecta rạn trong thập kỷ qua.",
+    "t": "Biển Đông nằm trong Tam giác San hô mở rộng, vùng biển có số loài san hô cao nhất hành tinh",
+    "s": "Chỗ sâu nhất của Biển Đông khoảng 5.500 mét, nhưng phần đa dạng nhất là các rạn nông quanh các đảo và bãi cạn. Nạo vét và bồi đắp đã phá huỷ hàng nghìn hecta rạn ở đó trong thập kỷ qua.",
     "tags": [
       "bien-dong",
       "san-ho",

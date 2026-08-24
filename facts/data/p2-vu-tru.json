@@ -174,8 +174,8 @@
     "id": "vt-116",
     "cat": "vu-tru",
     "sub": "trai-dat",
-    "t": "Mùa không do khoảng cách tới Mặt Trời — Trái Đất gần Mặt Trời nhất vào tháng Giêng",
-    "s": "Mùa sinh ra từ độ nghiêng trục 23,4 độ, quyết định góc chiếu và độ dài ngày. Đây là một trong những hiểu lầm khoa học phổ biến nhất, kể cả ở người tốt nghiệp đại học — được ghi lại trong một phim tài liệu nổi tiếng quay tại lễ tốt nghiệp Harvard.",
+    "t": "Mùa sinh ra từ trục Trái Đất nghiêng 23,4 độ, nên hai nửa cầu có mùa trái ngược nhau cùng một lúc",
+    "s": "Trục nghiêng quyết định nắng chiếu chếch hay chiếu thẳng xuống một nửa cầu, và ngày ở đó dài hay ngắn. Khoảng cách tới Mặt Trời không phải nguyên nhân: Trái Đất ở gần Mặt Trời nhất vào tháng Giêng, giữa mùa đông của Bắc bán cầu.",
     "tags": [
       "mua",
       "hieu-lam",
@@ -213,8 +213,8 @@
     "id": "vt-121",
     "cat": "vu-tru",
     "sub": "he-mat-troi",
-    "t": "Sao Mộc không quay quanh Mặt Trời — cả hai quay quanh một điểm nằm ngoài bề mặt Mặt Trời",
-    "s": "Về mặt kỹ thuật, Sao Mộc không quay quanh Mặt Trời mà cả hai quay quanh một điểm chung nằm hơi phía trên bề mặt Mặt Trời. Đây cũng là nguyên lý mà các nhà thiên văn dùng để phát hiện hành tinh quanh các sao khác.",
+    "t": "Mặt Trời và Sao Mộc cùng quay quanh một điểm chung nằm ngay phía trên bề mặt Mặt Trời",
+    "s": "Sao Mộc nặng đủ để kéo điểm cân bằng của cặp này ra khỏi lòng Mặt Trời, nên chính Mặt Trời cũng lắc quanh điểm đó thay vì đứng yên. Đo đúng cái lắc ấy ở các ngôi sao khác — qua độ dịch của vạch phổ — là cách các nhà thiên văn tìm ra hành tinh ngoài hệ Mặt Trời.",
     "tags": [
       "sao-moc",
       "co-hoc",
@@ -434,8 +434,8 @@
     "id": "vt-141",
     "cat": "vu-tru",
     "sub": "he-mat-troi",
-    "t": "Nước trên Trái Đất có thể già hơn cả Mặt Trời",
-    "s": "Tỉ lệ deuteri trong nước đại dương gợi ý một phần đáng kể được thừa hưởng từ đám mây phân tử lạnh trước khi hệ Mặt Trời hình thành. Nghĩa là các phân tử nước trong ly của bạn có thể đã tồn tại hơn 4,6 tỷ năm.",
+    "t": "Một phần nước trên Trái Đất hình thành trong đám mây khí lạnh có trước Mặt Trời",
+    "s": "Trong nước biển có lẫn một ít hydro nặng — loại hydro có thêm một hạt neutron, gọi là deuteri. Nước tạo ra trong khí cực lạnh giữ nhiều deuteri hơn nước tạo ra gần một ngôi sao, và nước đại dương đang giữ tỉ lệ kiểu lạnh đó, nên phần nước ấy có lẽ đã tồn tại hơn 4,6 tỷ năm — lâu hơn cả Mặt Trời.",
     "tags": [
       "nuoc",
       "nguon-goc",
