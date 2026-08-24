@@ -77,7 +77,13 @@
         </div>
 
         <!-- Hàng thao tác của trang: sắp xếp + xáo trộn. -->
-        <div class="wb-cluster wb-cluster--end fx-actions">
+        <div class="wb-cluster wb-cluster--between fx-actions">
+          <div class="wb-tabs wb-tabs--pill fx-kinds" data-kinds role="tablist" aria-label="Loại nội dung">
+            <button class="wb-tab is-active" data-kind="all" role="tab" aria-selected="true">Tất cả</button>
+            <button class="wb-tab" data-kind="fact" role="tab" aria-selected="false">Fact</button>
+            <button class="wb-tab" data-kind="chuyen" role="tab" aria-selected="false">Chuyện</button>
+          </div>
+          <span class="wb-cluster wb-cluster--tight">
           <span class="wb-select-wrap fx-sort">
             <select class="wb-select" data-sort aria-label="Sắp xếp">
               <option value="new">Mới thêm trước</option>
@@ -91,6 +97,7 @@
             <span class="wb-ico wb-ico--sm">casino</span> Fact ngẫu nhiên
             <kbd class="wb-kbd">R</kbd>
           </button>
+          </span>
         </div>
 
         <!-- 1 · BỘ LỌC — tìm kiếm + token gỡ được. Token ở đây là phân loại
@@ -130,7 +137,7 @@
         <div class="wb-footer__inner">
           <div class="wb-footer__bottom">
             <span class="wb-footer__copy">
-              Fact · <span data-total>0</span> fact đã kiểm chứng · cập nhật <span data-updated>—</span>
+              Fact · <span data-total>0</span> mục đã kiểm chứng · cập nhật <span data-updated>—</span>
             </span>
             <span class="wb-footer__copy"><a href="../index.html">← Collection</a></span>
           </div>
@@ -156,6 +163,10 @@
     <div class="wb-modal__body fx-modal__body wb-scroll-y">
       <div class="fx-viz" data-d-viz hidden></div>
       <div class="fx-prose" data-d-body></div>
+      <div class="fx-mang" data-d-mang hidden>
+        <p class="fx-mang__label">Mang về</p>
+        <p class="fx-mang__text" data-d-mang-text></p>
+      </div>
       <div class="wb-tags fx-drawer-tags" data-d-tags></div>
       <hr class="wb-divider wb-divider--dashed" />
       <p class="wb-help" data-d-src></p>

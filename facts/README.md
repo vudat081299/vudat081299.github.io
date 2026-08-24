@@ -3,7 +3,8 @@
 Trang tĩnh, không build, không phụ thuộc. Dựng bằng [web-builder](../web-builder/) v0.6
 (`../web-builder/web-builder.css`) + `facts.css` (chrome riêng, prefix `fx-*`) + `app.js`.
 
-**1.884 fact** trên 20 chủ đề, chia thành 161 cụm nhỏ, trong đó 13 fact có minh hoạ tương tác.
+**1.884 fact + 8 truyện** trên 20 chủ đề, chia thành 162 cụm nhỏ; 13 fact có minh hoạ tương
+tác và 13 fact đã có lớp "vì sao" (câu hỏi mở đầu + phần giải thích đầy đủ).
 
 > Sửa hoặc thêm fact thì đọc [CLAUDE.md](CLAUDE.md) trước — ở đó có pipeline thêm fact và
 > cơ chế chống trùng. File này chỉ nói về kiến trúc.
@@ -20,6 +21,7 @@ facts/
     install-hooks.sh  cài bộ điều phối hook git cho cả repo
   data/
     manifest.json   chủ đề + cụm (clusters) + danh sách file fact (thứ tự file = thứ tự thêm)
+    chuyen/         truyện — loại nội dung thứ hai, khai ở manifest.files_chuyen
     <chu-de>.json   đợt fact đầu
     p2-<chu-de>.json đợt fact thứ hai
     p3-/p4-<chu-de>.json  các đợt sau

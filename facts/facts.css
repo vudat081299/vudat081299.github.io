@@ -287,3 +287,40 @@
   .fx-bs { --fx-bs-gap: 180px; }
   .fx-stroop__word { font-size: 34px; min-height: 74px; }
 }
+
+/* --------------------------------------------------------------------------
+   TRUYỆN (§7) — loại nội dung thứ hai. Cùng lưới card, cùng modal; khác nhau ở
+   một nhãn trên card và ở khối "Mang về" cuối modal.
+   -------------------------------------------------------------------------- */
+
+/* Bộ chuyển Fact / Chuyện đứng đầu hàng thao tác, đối diện nhóm sắp xếp. */
+.fx-kinds { flex: none; }
+
+/* Nhãn "Chuyện" + thời gian đọc trên card. */
+.fx-card__kind {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--wb-text-caption);
+  color: var(--wb-fg-subtle);
+}
+
+/* Khối kết của một truyện: điều người đọc cầm về được kể cả khi quên hết chi tiết.
+   Dùng thang xám chứ không dùng --wb-chart-*: đây là cấu trúc, không phải dữ liệu. */
+.fx-mang {
+  margin-top: 20px;
+  padding: 14px 16px;
+  background: var(--wb-surface-2);
+  border-left: 3px solid var(--wb-fg);
+  border-radius: var(--wb-radius-sm);
+  max-width: var(--wb-measure);
+}
+.fx-mang__label {
+  margin: 0 0 4px;
+  font-size: var(--wb-text-caption);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--wb-fg-subtle);
+}
+.fx-mang__text { margin: 0; font-size: var(--wb-text-body); color: var(--wb-fg); }

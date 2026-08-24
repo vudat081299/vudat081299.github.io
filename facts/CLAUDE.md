@@ -493,6 +493,81 @@ trên điện thoại.
 
 ---
 
+## 7. Truyện — loại nội dung thứ hai
+
+> Thêm ngày 24/08/2026, theo yêu cầu của chủ trang: thư viện là **nguồn học tập** kiểu
+> *10 vạn câu hỏi vì sao*, và không phải điều gì đáng biết cũng nén được vào một câu khẳng
+> định. Có những thứ chỉ mở ra khi được kể.
+
+Fact nói thẳng thế giới là thế nào. **Truyện đi đường vòng: nó kể một chuyện có thật, rồi để
+lại một điều về thế giới.** Hai loại dùng chung `cat`/`sub`, chung ô tìm kiếm, chung lưới
+card; trang có bộ chuyển **Tất cả / Fact / Chuyện**.
+
+```json
+{
+  "id": "ch-001",                    // tiền tố ch-, không được đụng id của fact nào
+  "cat": "lich-su",
+  "sub": "phat-minh",                // dùng lại đúng cụm của fact — xem §3
+  "t": "Chiếc hộp sắt của một tài xế xe tải",
+  "s": "1–2 câu dẫn, hiện trên card.",
+  "body": "Thân truyện. Ngăn đoạn bằng \n\n. 1.200–8.000 ký tự, tối thiểu 4 đoạn.",
+  "mang_di": "Điều người đọc cầm về được — xem dưới. Tối thiểu 60 ký tự.",
+  "tags": ["van-tai", "tieu-chuan"],
+  "src": "Marc Levinson, The Box (Princeton University Press, 2006)"
+}
+```
+
+### 7.1 `mang_di` — cổng chống "kể xong rồi sao?"
+
+§1.1 mục 1 loại fact tường thuật vì *"kể xong rồi sao? Người đọc không cầm được gì về"*.
+Truyện được phép tường thuật, nên nó phải trả lời đúng câu hỏi đó bằng một trường riêng.
+
+**`mang_di` là một câu về THẾ GIỚI mà người đọc vẫn cầm được kể cả khi quên sạch mọi chi tiết
+của câu chuyện.** Phép thử: xoá hết phần thân đi, câu đó còn đứng vững một mình không?
+
+| Đạt | Trượt |
+|---|---|
+| *"Chọn lọc tự nhiên đo được trong một mùa: sau hạn hán 1977, mỏ chim sẻ trên Daphne Major dày thêm rõ rệt chỉ sau một thế hệ."* | *"Câu chuyện cho thấy thiên nhiên rất kỳ diệu."* — không nói gì về thế giới |
+| *"Một chất trơ về hoá học không có nghĩa là vô hại: chính vì CFC không phản ứng với gì mà nó sống đủ lâu để trôi lên tầng bình lưu."* | *"Nên cẩn thận với công nghệ mới."* — lời khuyên |
+
+`mang_di` chịu **đúng các luật mức `LOẠI` của cổng fact** (§1.1), trừ luật `tuong-thuat`. Nói
+cách khác: phần thân là truyện, còn `mang_di` phải là một fact.
+
+### 7.2 Không lên giọng dạy đời
+
+Người đọc tự rút ra được, và `mang_di` đã là chỗ chứa phần kết luận. Cổng `day-doi` chặn ở
+mức `LOẠI` những cụm mở đầu một bài giảng trong phần thân: *"bài học ở đây là…"*, *"điều này
+dạy chúng ta…"*, *"chúng ta học được rằng…"*, *"suy cho cùng thì…"*.
+
+Lời khuyên cũng bị chặn như với fact — nhưng **lời thoại trong ngoặc kép được miễn**, vì câu
+nhân vật nói là dữ liệu của truyện chứ không phải giọng người kể.
+
+### 7.3 Những thứ giữ nguyên như fact
+
+- **Nguồn (§4) không nới một ly.** `src` bắt buộc, phải là nguồn gốc chứ không phải bài kể
+  lại, và con số nào cũng phải tính lại được. Truyện hay mà không truy được nguồn thì bỏ.
+- **Nói ra chỗ tranh cãi.** `ch-005` nêu thẳng rằng số ca tả đã giảm từ trước khi tay cầm
+  cái vòi bị tháo — chính Snow ghi điều đó trong báo cáo. Bỏ chi tiết ấy đi thì câu chuyện
+  gọn hơn và sai hơn.
+- **Chống trùng.** Truyện quét gần trùng **với truyện**, không quét chéo với fact: một truyện
+  kể sâu về cùng chủ đề với một fact là đúng thiết kế, không phải trùng.
+- **Tự chứa (§1.5).** Người 15 tuổi chưa học ngành đó đọc xong phải nắm được.
+
+### 7.4 Thêm một truyện
+
+Cùng pipeline §2, khác ở bước 2 và bước 5:
+
+1. Tìm — nguồn dạng truyện tốt: hồ sơ điều tra tai nạn, hồi ký kỹ thuật, sách sử chuyên khảo,
+   báo cáo nguyên thuỷ của chính người trong cuộc.
+2. **Viết `mang_di` TRƯỚC.** Không nghĩ ra được câu đó thì đừng viết truyện — nghĩa là chưa
+   có gì để mang về.
+3. Tra trùng bằng `factlint near` trong cùng cụm.
+4. Verify nguồn theo §4.
+5. Thêm vào `data/chuyen/<đợt>.json`, khai tên file vào `manifest.files_chuyen`.
+6. `factlint check && factlint verify` — cả hai lệnh soi cả fact lẫn truyện, không cần cờ gì thêm.
+
+---
+
 ## 6. Trước khi commit
 
 ```bash

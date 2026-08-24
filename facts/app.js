@@ -21,6 +21,7 @@
     cats: [],        /* [{id,label,icon,desc}] */
     catMap: {},
     cat: 'all',
+    kind: 'all',     /* 'all' | 'fact' | 'chuyen' — bộ chuyển loại nội dung */
     tag: '',
     q: '',
     sort: 'new',
@@ -47,6 +48,9 @@
     dCat:     $('[data-d-cat]'),
     dTitle:   $('[data-d-title]'),
     dQ:       $('[data-d-q]'),
+    dMang:    $('[data-d-mang]'),
+    dMangTxt: $('[data-d-mang-text]'),
+    kinds:    $('[data-kinds]'),
     dViz:     $('[data-d-viz]'),
     dBody:    $('[data-d-body]'),
     dTags:    $('[data-d-tags]'),
@@ -121,10 +125,17 @@
         state.cats = m.categories || [];
         state.cats.forEach(function (c) { state.catMap[c.id] = c; });
         if (el.updated) el.updated.textContent = m.updated || '—';
-        return Promise.all((m.files || []).map(function (f) {
-          return fetch('data/' + f, { cache: 'no-cache' }).then(function (r) {
-            if (!r.ok) throw new Error('Không nạp được data/' + f);
+        /* Fact và truyện vào chung một mảng và chung một lưới: cùng chủ đề, cùng ô tìm
+           kiếm, cùng modal. Khác nhau ở `_kind`, và bộ chuyển Fact/Chuyện lọc theo nó. */
+        var files = (m.files || []).map(function (f) { return { f: f, k: 'fact' }; })
+          .concat((m.files_chuyen || []).map(function (f) { return { f: f, k: 'chuyen' }; }));
+        return Promise.all(files.map(function (it) {
+          return fetch('data/' + it.f, { cache: 'no-cache' }).then(function (r) {
+            if (!r.ok) throw new Error('Không nạp được data/' + it.f);
             return r.json();
+          }).then(function (list) {
+            list.forEach(function (x) { x._kind = it.k; });
+            return list;
           });
         }));
       })
@@ -134,10 +145,14 @@
         });
         state.facts.forEach(function (f, i) {
           f._n = i + 1;
-          var text = [f.q || '', f.t, f.s, f.d || '', (f.tags || []).join(' '), f.src || '',
+          var text = [f.q || '', f.t, f.s, f.d || '', f.body || '', f.mang_di || '',
+                      (f.tags || []).join(' '), f.src || '',
                       (state.catMap[f.cat] || {}).label || ''].join(' ');
           f._blob = norm(text);              /* gõ không dấu */
           f._blobT = text.toLowerCase();     /* gõ có dấu */
+          f._long = (f.d || '').length + (f.body || '').length + (f.s || '').length;
+          /* Thời gian đọc, làm tròn lên phút — 180 chữ mỗi phút cho tiếng Việt. */
+          f._phut = f.body ? Math.max(1, Math.round(f.body.split(/\s+/).length / 180)) : 0;
         });
       });
   }
@@ -150,7 +165,7 @@
 
   function renderRail() {
     var html = '<div class="wb-sidenav__section">Thư viện</div>' +
-      link('all', 'inventory_2', 'Tất cả fact', state.facts.length) +
+      link('all', 'inventory_2', 'Tất cả', state.facts.length) +
       '<div class="wb-sidenav__section">Chủ đề</div>';
     state.cats.forEach(function (c) {
       html += link(c.id, c.icon || 'label', c.label, countIn(c.id));
@@ -170,6 +185,7 @@
     var tone = hasTone(raw);
     var q = tone ? raw.toLowerCase() : norm(raw);
     state.view = state.facts.filter(function (f) {
+      if (state.kind !== 'all' && (f._kind || 'fact') !== state.kind) return false;
       if (state.cat !== 'all' && f.cat !== state.cat) return false;
       if (state.tag && (f.tags || []).indexOf(state.tag) === -1) return false;
       if (q && (tone ? f._blobT : f._blob).indexOf(q) === -1) return false;
@@ -181,9 +197,7 @@
     } else if (state.sort === 'az') {
       state.view.sort(function (a, b) { return a.t.localeCompare(b.t, 'vi'); });
     } else if (state.sort === 'long') {
-      state.view.sort(function (a, b) {
-        return ((b.d || '').length + b.s.length) - ((a.d || '').length + a.s.length);
-      });
+      state.view.sort(function (a, b) { return b._long - a._long; });
     } else if (state.sort === 'rand') {
       for (var i = state.view.length - 1; i > 0; i--) {
         var j = Math.floor(Math.random() * (i + 1));
@@ -208,7 +222,7 @@
     el.moreWrap.hidden = state.shown >= state.view.length;
     if (!el.moreWrap.hidden) {
       el.more.textContent = 'Xem thêm ' +
-        Math.min(PAGE, state.view.length - state.shown) + ' fact nữa';
+        Math.min(PAGE, state.view.length - state.shown) + ' mục nữa';
     }
   }
 
@@ -222,7 +236,10 @@
       '<div class="wb-card__body">' +
         '<div class="wb-cluster wb-cluster--between wb-cluster--tight">' +
           '<span class="wb-cap wb-cap--sm">' + esc(cat.label) + '</span>' +
-          (f.viz
+          (f._kind === 'chuyen'
+            ? '<span class="fx-card__kind"><span class="wb-ico wb-ico--xs">auto_stories</span> ' +
+              f._phut + ' phút đọc</span>'
+            : f.viz
             ? '<span class="wb-cap wb-cap--sm fx-card__viz"><span class="wb-ico wb-ico--xs">touch_app</span> Tương tác</span>'
             : '<span class="fx-card__no">#' + f._n + '</span>') +
         '</div>' +
@@ -238,7 +255,8 @@
       '<div class="wb-card__foot">' +
         '<span class="fx-card__src">' + esc(f.src || '') + '</span>' +
         '<span class="fx-card__more">' +
-          (f.viz ? 'Thử ngay' : (f.q ? 'Lời giải' : (f.d ? 'Đọc tiếp' : 'Chi tiết'))) +
+          (f._kind === 'chuyen' ? 'Đọc truyện'
+            : f.viz ? 'Thử ngay' : (f.q ? 'Lời giải' : (f.d ? 'Đọc tiếp' : 'Chi tiết'))) +
           '<span class="wb-ico wb-ico--xs">chevron_right</span></span>' +
       '</div>';
     return node;
@@ -246,11 +264,21 @@
 
   function renderChrome() {
     var cat = state.cat === 'all' ? null : state.catMap[state.cat];
-    el.title.textContent = cat ? cat.label : 'Tất cả fact';
+    el.title.textContent = cat ? cat.label
+      : state.kind === 'chuyen' ? 'Chuyện'
+      : state.kind === 'fact' ? 'Tất cả fact' : 'Tất cả';
     el.desc.textContent = cat && cat.desc ? cat.desc
+      : state.kind === 'chuyen'
+      ? 'Chuyện có thật, kể đủ dài để hiểu, và kết bằng một điều về thế giới mang đi được ' +
+        'kể cả khi quên hết chi tiết. Cùng chủ đề với fact, khác ở đường đi.'
       : 'Fact cho người trưởng thành: vũ trụ, sinh vật, cơ thể, tâm lý, tư duy, kinh tế, ' +
-        'kinh doanh, giao tiếp. Mỗi fact đều ghi nguồn — đọc để sắc hơn khi nghĩ, khi nói và khi làm ăn.';
-    el.count.textContent = state.view.length + ' / ' + state.facts.length + ' fact';
+        'kinh doanh, giao tiếp. Mỗi mục đều ghi nguồn — đọc để sắc hơn khi nghĩ, khi nói và khi làm ăn.';
+    var tong = state.kind === 'all' ? state.facts.length
+      : state.facts.reduce(function (n, f) {
+          return n + ((f._kind || 'fact') === state.kind ? 1 : 0);
+        }, 0);
+    el.count.textContent = state.view.length + ' / ' + tong + ' ' +
+      (state.kind === 'chuyen' ? 'truyện' : 'mục');
     if (el.total) el.total.textContent = state.facts.length;
 
     var html = '';
@@ -302,10 +330,15 @@
     renderViz(f);
 
     var body = '<p class="fx-prose__lead">' + esc(f.s) + '</p>';
-    if (f.d) {
-      body += f.d.split('\n\n').map(function (p) { return '<p>' + esc(p) + '</p>'; }).join('');
+    var dai = f._kind === 'chuyen' ? f.body : f.d;
+    if (dai) {
+      body += dai.split('\n\n').map(function (p) { return '<p>' + esc(p) + '</p>'; }).join('');
     }
     el.dBody.innerHTML = body;
+
+    /* "Mang về" — điều người đọc cầm được kể cả khi quên hết chi tiết câu chuyện. */
+    el.dMang.hidden = !f.mang_di;
+    if (f.mang_di) el.dMangTxt.textContent = f.mang_di;
 
     el.dTags.innerHTML = (f.tags || []).map(function (t) {
       return '<button class="wb-tag" data-tag="' + esc(t) + '">' + esc(t) + '</button>';
@@ -391,6 +424,19 @@
 
     el.sort.addEventListener('change', function () {
       state.sort = el.sort.value;
+      applyFilter();
+    });
+
+    /* bộ chuyển Fact / Chuyện */
+    el.kinds.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-kind]');
+      if (!b) return;
+      state.kind = b.getAttribute('data-kind');
+      $$('[data-kind]', el.kinds).forEach(function (x) {
+        var on = x === b;
+        x.classList.toggle('is-active', on);
+        x.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
       applyFilter();
     });
 

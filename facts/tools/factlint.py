@@ -156,6 +156,46 @@ def load():
     return man, facts
 
 
+# ---------------------------------------------------------------- truyện (§7)
+#
+# Loại nội dung thứ hai, thêm ngày 24/08/2026. Fact trả lời "thế giới là thế nào" trong một
+# câu; truyện đi đường vòng — nó kể một chuyện có thật rồi để lại một điều về thế giới.
+#
+# Cổng của truyện KHÁC cổng của fact ở đúng một chỗ: §1.1 mục 1 cấm tường thuật, còn ở đây
+# tường thuật chính là hình thức. Mọi thứ khác giữ nguyên, và có thêm một cổng riêng:
+# trường `mang_di` — một câu về THẾ GIỚI mà người đọc cầm được kể cả khi quên sạch mọi chi
+# tiết của câu chuyện. Không có nó thì truyện chỉ là giai thoại, và câu hỏi "kể xong rồi
+# sao?" không có câu trả lời.
+BODY_MIN, BODY_MAX = 1200, 8000
+BODY_MIN_PARAS = 4
+MANG_DI_MIN = 60
+
+# Giọng dạy đời — thứ giết một câu chuyện nhanh nhất. Người đọc tự rút ra được; viết hộ họ
+# là vừa thừa vừa trịch thượng. `mang_di` tồn tại đúng để chứa phần kết luận, nên phần thân
+# không cần và không được lên giọng.
+DAY_DOI = [
+    re.compile(r'bài học (ở đây|rút ra|của (câu chuyện|chuyện) này)', re.I),
+    re.compile(r'(điều|chuyện) (này|đó) (dạy|nhắc) (chúng ta|ta|người)', re.I),
+    re.compile(r'chúng ta (học được|nên nhớ|cần nhớ)', re.I),
+    re.compile(r'(hãy|đừng) (nhớ|quên) rằng', re.I),
+    re.compile(r'suy cho cùng thì', re.I),
+]
+
+
+def load_chuyen(man):
+    """Nạp truyện từ manifest.files_chuyen. Không có khoá đó thì trả về danh sách rỗng."""
+    out = []
+    for name in man.get('files_chuyen') or []:
+        with open(os.path.join(DATA, name), encoding='utf-8') as fh:
+            arr = json.load(fh)
+        if not isinstance(arr, list):
+            raise SystemExit('%s: phải là một mảng' % name)
+        for it in arr:
+            it['_file'] = name
+            out.append(it)
+    return out
+
+
 def viz_keys():
     """Đọc registry ở cuối viz.js để biết khoá viz nào thật sự tồn tại."""
     if not os.path.exists(VIZ_JS):
@@ -316,6 +356,100 @@ def check_shape(man, facts, vk):
     return errs, warns
 
 
+REQUIRED_CHUYEN = ('id', 'cat', 'sub', 't', 's', 'body', 'mang_di', 'src')
+
+
+def check_shape_chuyen(man, stories, fact_ids):
+    """Kiểm cấu trúc truyện. `fact_ids` để id truyện không đụng id fact."""
+    errs, warns = [], []
+    cats = {c['id'] for c in man['categories']}
+    clusters = man.get('clusters', {})
+    seen = {}
+
+    for st in stories:
+        where = '%s / %s' % (st.get('_file'), st.get('id', '???'))
+        for k in REQUIRED_CHUYEN:
+            if not st.get(k) or not str(st[k]).strip():
+                errs.append('%s: thiếu "%s"' % (where, k))
+        sid = st.get('id')
+        if sid in seen:
+            errs.append('%s: id trùng với %s' % (where, seen[sid]))
+        elif sid in fact_ids:
+            errs.append('%s: id đụng id của một fact' % where)
+        elif sid:
+            seen[sid] = where
+        if st.get('cat') not in cats:
+            errs.append('%s: cat "%s" không có trong manifest' % (where, st.get('cat')))
+        elif st.get('sub') not in clusters.get(st['cat'], []):
+            errs.append('%s: sub "%s" không thuộc cat %s' % (where, st.get('sub'), st['cat']))
+
+        body = (st.get('body') or '').strip()
+        if body:
+            doan = [x for x in body.split('\n\n') if x.strip()]
+            if len(doan) < BODY_MIN_PARAS:
+                errs.append('%s: thân truyện có %d đoạn, tối thiểu %d'
+                            % (where, len(doan), BODY_MIN_PARAS))
+            if not (BODY_MIN <= len(body) <= BODY_MAX):
+                errs.append('%s: thân truyện dài %d ký tự, phải trong khoảng %d-%d'
+                            % (where, len(body), BODY_MIN, BODY_MAX))
+        md = (st.get('mang_di') or '').strip()
+        if md and len(md) < MANG_DI_MIN:
+            errs.append('%s: "mang_di" chỉ %d ký tự, tối thiểu %d — nó phải là một câu đủ '
+                        'nghĩa về thế giới, không phải một nhãn dán'
+                        % (where, len(md), MANG_DI_MIN))
+        if not st.get('tags'):
+            warns.append('%s: không có tags' % where)
+    return errs, warns
+
+
+def verify_chuyen(st):
+    """
+    Cổng cho truyện. Trả về (severity, rule_id, note) hoặc None.
+
+    Khác cổng fact ở đúng một chỗ: tường thuật được phép, vì đó là hình thức. Bù lại,
+    `mang_di` phải tự nó đứng vững như một fact — nó chịu các luật LOẠI của cổng fact.
+    """
+    body = st.get('body') or ''
+    md = st.get('mang_di') or ''
+
+    for pat in DAY_DOI:
+        if pat.search(body):
+            return ('LOẠI', 'day-doi',
+                    'lên giọng dạy đời trong thân truyện — phần rút ra thuộc về `mang_di`, '
+                    'và người đọc tự rút được')
+
+    sach = TRONG_NGOAC.sub(' ', body)      # lời thoại trong ngoặc kép là dữ liệu, không phải giọng kể
+    for rid, note, _f, pats in RULES_REJECT:
+        if rid != 'loi-khuyen':
+            continue
+        for pat in pats:
+            if pat is RE_NEN:
+                continue                    # 41% báo oan trong văn xuôi dài — xem §1.7
+            if pat.search(sach):
+                return ('LOẠI', rid, note + ' — trong thân truyện')
+
+    # `mang_di` là phần fact của một truyện, nên nó chịu đúng các luật LOẠI của cổng fact.
+    gia = {'t': md, 's': '', 'd': ''}
+    for rid, note, field, pats in RULES_REJECT:
+        hay = TRONG_NGOAC.sub(' ', md) if rid == 'loi-khuyen' else md
+        if rid == 'tuong-thuat':
+            continue                        # truyện được phép tường thuật, kể cả trong mang_di
+        for pat in pats:
+            if pat.search(hay):
+                return ('LOẠI', rid, note + ' — trong "mang_di"')
+    if _s_khong_ve_the_gioi(md):
+        return ('LOẠI', 's-khong-ve-the-gioi',
+                '"mang_di" chỉ nói về lịch sử một niềm tin, không nói về thế giới')
+
+    # Soi trên `sach` chứ không trên `body`: lời thoại và câu hỏi được trích trong ngoặc kép
+    # là dữ liệu của câu chuyện, không phải giọng của người kể — cùng lý do với loi-khuyen ở trên.
+    if 'nen-lam-gi' not in (st.get('xem_ok') or []) and RE_NEN.search(sach):
+        return ('XEM', 'nen-lam-gi',
+                'có "nên + động từ" trong thân truyện — đọc xem đó là lời khuyên hay chỉ là '
+                'liên từ "cho nên"')
+    return None
+
+
 # ---------------------------------------------------------------- tương đồng
 
 def build_index(facts):
@@ -473,13 +607,31 @@ def scan_dupes(facts, limit=None):
 
 def cmd_check(argv):
     man, facts = load()
+    stories = load_chuyen(man)
     vk = viz_keys()
     errs, warns = check_shape(man, facts, vk)
+    e2, w2 = check_shape_chuyen(man, stories, {f.get('id') for f in facts})
+    errs += e2
+    warns += w2
 
-    print('%d fact · %d file · %d chủ đề' % (len(facts), len(man['files']), len(man['categories'])))
+    print('%d fact · %d truyện · %d file · %d chủ đề'
+          % (len(facts), len(stories), len(man['files']) + len(man.get('files_chuyen') or []),
+             len(man['categories'])))
     if vk is not None:
         print('%d minh hoạ trong viz.js · %d fact có viz'
               % (len(vk), sum(1 for f in facts if f.get('viz'))))
+
+    # Truyện quét trùng RIÊNG với truyện. Một truyện kể sâu về cùng chủ đề với một fact là
+    # đúng thiết kế chứ không phải trùng (§7), nên không bắt cặp chéo hai loại.
+    if stories:
+        sdupes = [d for d in scan_dupes(stories) if d[3] == 'TT' or d[0] >= NEAR_HARD]
+        if sdupes:
+            print('\n— Truyện gần trùng nhau (%d cặp) —' % len(sdupes))
+            for s, i, j, kind in sdupes:
+                print('%s %.2f  %s  %s' % ('TT' if kind == 'TT' else '!!', s,
+                                           stories[i]['id'], stories[i]['t']))
+                print('        %s  %s' % (stories[j]['id'], stories[j]['t']))
+            errs.append('%d cặp truyện gần trùng — gộp lại hoặc khai khac_voi' % len(sdupes))
 
     dupes = scan_dupes(facts)
     titles = [d for d in dupes if d[3] == 'TT']
@@ -598,15 +750,23 @@ TRONG_NGOAC = re.compile(r"['\"«][^'\"»]{0,140}['\"»]")
 NEN_VERB = ('mua|bán|chọn|làm|dùng|nói|hỏi|viết|đọc|ăn|uống|ngủ|tập|chạy|đi|đến|gọi|nhắn'
             '|đầu tư|tiết kiệm|tính|đặt|để|tránh|bắt đầu|dừng|giữ|gửi|trả|xin|đợi|chờ'
             '|kiểm tra|đo|ghi|học|nghỉ|thử|xem|chia|gộp|tắt|bật')
-RE_NEN = re.compile(r'\b(nên|không nên) (%s)\b' % NEN_VERB)
+RE_NEN = re.compile(r'\b(nên|không nên) (%s)\b' % NEN_VERB, re.I)
 
 RULES_REJECT = [
+    # Mọi mẫu ở đây đều bật re.I. Bản cũ không bật, nên một câu MỞ ĐẦU bằng "Hãy…",
+    # "Đừng…", "Mẹo…" lọt sạch — chữ hoa không khớp mẫu chữ thường. Trên tiêu đề lỗ này
+    # gần như vô hại vì tiêu đề hiếm khi mở bằng động từ mệnh lệnh, nhưng §1.7 và §7 vừa
+    # biến `d` và `body` thành văn xuôi nhiều câu, mà trong văn xuôi thì câu nào cũng viết
+    # hoa chữ đầu. Đo trước khi sửa: bật re.I cho cả năm mẫu, quét t+s+d+body+mang_di của
+    # 1.884 fact và 8 truyện — 27 chỗ khớp trước, 27 chỗ khớp sau, thêm 0. Tức là nó không
+    # đổi gì hôm nay và chỉ bịt lỗ cho mai sau; rủi ro báo oan bằng không, vì "Hãy" viết
+    # hoa không có nghĩa nào khác "hãy" viết thường.
     ('loi-khuyen', 'lời khuyên / câu mệnh lệnh', 't', [
         RE_NEN,
-        re.compile(r'\b(hãy|đừng|chớ)\b'),
-        re.compile(r'(cái|việc|điều|những gì) nên làm'),
-        re.compile(r'cách (tốt|nhanh|hiệu quả|dễ|an toàn|chắc) nhất'),
-        re.compile(r'\bmẹo\b'),
+        re.compile(r'\b(hãy|đừng|chớ)\b', re.I),
+        re.compile(r'(cái|việc|điều|những gì) nên làm', re.I),
+        re.compile(r'cách (tốt|nhanh|hiệu quả|dễ|an toàn|chắc) nhất', re.I),
+        re.compile(r'\bmẹo\b', re.I),
     ]),
     ('tuong-thuat', 'tường thuật một vụ việc / thí nghiệm', 't', [
         re.compile(r'^(Vụ|Câu chuyện|Chuyện|Thí nghiệm|Bài báo|Trường hợp|Sự kiện) '),
@@ -976,6 +1136,7 @@ def rule_still_hits(f, rid):
 
 def cmd_verify(argv):
     man, facts = load()
+    stories = load_chuyen(man)
     only_cat = only_file = None
     show_warn = '-v' in argv or '--all' in argv
     if '--cat' in argv:
@@ -999,10 +1160,22 @@ def cmd_verify(argv):
             continue
         (rej if v[0] == 'LOẠI' else warn).append((f, v))
 
+    srej, swarn = [], []
+    for st in stories:
+        if not in_scope(st):
+            continue
+        v = verify_chuyen(st)
+        if not v:
+            continue
+        (srej if v[0] == 'LOẠI' else swarn).append((st, v))
+    rej += srej
+    warn += swarn
+
     scanned = sum(1 for f in facts if in_scope(f))
+    sscan = sum(1 for st in stories if in_scope(st))
     mien = sum(1 for f in facts if in_scope(f) and f.get('xem_ok'))
-    print('%d fact được soi · %d LOẠI · %d XEM · %d đã soi và cố ý giữ (xem_ok)'
-          % (scanned, len(rej), len(warn), mien))
+    print('%d fact + %d truyện được soi · %d LOẠI · %d XEM · %d đã soi và cố ý giữ (xem_ok)'
+          % (scanned, sscan, len(rej), len(warn), mien))
 
     if rej:
         by_rule = defaultdict(list)
@@ -1038,17 +1211,21 @@ def cmd_verify(argv):
 
 def cmd_stats(argv):
     man, facts = load()
+    stories = load_chuyen(man)
     by_cat = Counter(f.get('cat') for f in facts)
     by_sub = Counter((f.get('cat'), f.get('sub')) for f in facts)
     q_sub = Counter((f.get('cat'), f.get('sub')) for f in facts if (f.get('q') or '').strip())
     clusters = man.get('clusters', {})
     day_du = set(man.get('day_du') or [])
 
-    print('%d fact\n' % len(facts))
+    print('%d fact · %d truyện\n' % (len(facts), len(stories)))
     fat = []
+    ch_cat = Counter(st.get('cat') for st in stories)
     for c in man['categories']:
         cid = c['id']
-        print('%-11s %4d  %s' % (cid, by_cat.get(cid, 0), c['label']))
+        nch = ch_cat.get(cid, 0)
+        print('%-11s %4d  %s%s' % (cid, by_cat.get(cid, 0), c['label'],
+                                   '   + %d truyện' % nch if nch else ''))
         for sub in clusters.get(cid, []):
             k = by_sub.get((cid, sub), 0)
             warn = '  ← tách cụm' if k > CLUSTER_MAX else ''
