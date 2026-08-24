@@ -505,6 +505,13 @@ def cmd_near(argv):
 
 HAS_DIGIT = re.compile(r'\d')
 
+# Chữ trong ngoặc kép là DỮ LIỆU được trích, không phải giọng của fact. tl-299 nói về hiệu
+# ứng của cách gọi tên và phải trích cả hai bản — "một người đi bầu" so với "hãy đi bầu" —
+# nên chữ "hãy" ở đó là đối tượng nghiên cứu, không phải lời khuyên. Đo ngày 24/08/2026:
+# 1 fact có chữ mệnh lệnh chỉ nằm trong ngoặc kép, 0 fact có nó nằm ngoài, nên bỏ phần
+# trong ngoặc trước khi soi luật `loi-khuyen` không làm mất ca nào.
+TRONG_NGOAC = re.compile(r"['\"«][^'\"»]{0,140}['\"»]")
+
 # "nên" nghĩa "should" chứ không phải liên từ "cho nên". Chỉ tính khi ngay sau nó là một
 # động từ hành động — cách này bỏ sót vài trường hợp nhưng gần như không báo nhầm.
 NEN_VERB = ('mua|bán|chọn|làm|dùng|nói|hỏi|viết|đọc|ăn|uống|ngủ|tập|chạy|đi|đến|gọi|nhắn'
@@ -535,7 +542,12 @@ RULES_REJECT = [
                    re.I),
     ]),
     ('meta-nghien-cuu', 'nói về số phận một nghiên cứu, không nói về thế giới', 't', [
-        re.compile(r'không nhân bản|không lặp lại được|bị rút lại'),
+        # 'bị rút lại' một mình bắt oan tiếng Việt thường: một QUYỀN CHỌN, một đề nghị, một
+        # giấy phép đều 'bị rút lại'. Đo ngày 24/08/2026: cụm trần khớp đúng 1 fact và đó là
+        # ca oan (tl-223, quyền chọn bị rút lại). Bản thắt đòi một từ chỉ nghiên cứu đứng
+        # trong 40 ký tự trước đó — hôm nay bắt 0 fact mà vẫn bịt được lớp lỗi thật.
+        re.compile(r'không nhân bản|không lặp lại được'),
+        re.compile(r'(bài báo|nghiên cứu|kết quả|tạp chí|công bố)[^.]{0,40}bị rút lại'),
         re.compile(r'(bài báo|nghiên cứu|kết quả) gốc'),
         re.compile(r'hiểu sai một nghiên cứu'),
         re.compile(r'không phải bằng chứng'),
@@ -713,6 +725,8 @@ def verify_fact(f):
 
     for rid, note, field, pats in RULES_REJECT:
         hay = t if field == 't' else ts
+        if rid == 'loi-khuyen':
+            hay = TRONG_NGOAC.sub(' ', hay)
         for p in pats:
             if p.search(hay):
                 return ('LOẠI', rid, note)

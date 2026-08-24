@@ -97,7 +97,7 @@
     "cat": "tam-ly",
     "sub": "tri-nho",
     "t": "Ta nhớ một trải nghiệm bằng đỉnh điểm và đoạn kết, không bằng tổng thể",
-    "s": "Trong thí nghiệm nội soi, nhóm bệnh nhân có thêm vài phút cuối bớt đau (tức tổng lượng đau NHIỀU hơn) lại nhớ toàn bộ ca ít đau hơn và sẵn sàng quay lại khám hơn. Quy tắc đỉnh–kết giải thích vì sao kết thúc một cuộc họp, một chuyến đi hay một mối quan hệ tử tế lại quan trọng đến thế.",
+    "s": "Trong thí nghiệm nội soi, nhóm bệnh nhân có thêm vài phút cuối bớt đau — tức tổng lượng đau NHIỀU hơn — lại nhớ toàn bộ ca ít đau hơn và sẵn sàng quay lại khám hơn. Nghĩa là ký ức về một trải nghiệm và bản thân trải nghiệm là hai thứ khác nhau, và đó là lý do kết thúc một cuộc họp, một chuyến đi hay một mối quan hệ tử tế lại quan trọng đến thế.",
     "tags": [
       "tri-nho",
       "trai-nghiem",
@@ -109,27 +109,14 @@
     "id": "tl-009",
     "cat": "tam-ly",
     "sub": "thien-kien",
-    "t": "Sở hữu một thứ trong 5 phút đã đủ làm bạn định giá nó cao hơn",
-    "s": "Hiệu ứng sở hữu: người được phát một chiếc cốc đòi giá bán cao hơn khoảng gấp đôi mức người khác sẵn sàng trả cho đúng chiếc cốc đó. Đây là lý do 'dùng thử 30 ngày' bán hàng tốt, và là lý do bạn khó thanh lý đồ cũ đúng giá thị trường. Trong thí nghiệm chiếc cốc, người sở hữu đòi giá bán cao gấp khoảng hai lần mức người khác sẵn sàng trả.",
+    "t": "Người vừa được phát một chiếc cốc đòi bán nó với giá cao gấp khoảng hai lần mức người khác chịu trả cho đúng chiếc cốc đó.",
+    "s": "Cốc được phát ngẫu nhiên, nên hai nhóm không khác gì nhau ngoài chuyện ai đang giữ cốc. Chỗ trực giác hỏng: giá của một vật lẽ ra không phụ thuộc việc nó đang nằm trong tay ai, nhưng chỉ vài phút sở hữu là mức định giá đã tách làm hai — và đó cũng là lý do 'dùng thử 30 ngày' bán được hàng.",
     "tags": [
       "thien-kien",
       "kinh-te-hanh-vi",
       "mua-ban"
     ],
     "src": "Kahneman, Knetsch & Thaler, Journal of Political Economy (1990)"
-  },
-  {
-    "id": "tl-010",
-    "cat": "tam-ly",
-    "sub": "thien-kien",
-    "t": "Cùng một sự thật, đổi cách đóng khung là đổi quyết định",
-    "s": "Bác sĩ được cho biết ca mổ có '90% sống sót' chọn mổ nhiều hơn hẳn khi được cho biết ca đó có '10% tử vong' — dù hai câu là một. Đóng khung không phải mánh khoé xấu; nó là điều không thể tránh. Người trưởng thành nên tập thói quen tự dịch mọi con số sang khung ngược lại trước khi quyết.",
-    "tags": [
-      "thien-kien",
-      "truyen-dat",
-      "quyet-dinh"
-    ],
-    "src": "Tversky & Kahneman, Science 211 (1981); McNeil et al., NEJM (1982)"
   },
   {
     "id": "tl-011",
@@ -175,8 +162,8 @@
     "id": "tl-017",
     "cat": "tam-ly",
     "sub": "ban-than",
-    "t": "Cái tên của bạn xuyên qua được tiếng ồn",
-    "s": "Trong môi trường nhiều người nói cùng lúc, người ta lọc gần hết nội dung xung quanh nhưng vẫn phát hiện tên riêng của mình ở kênh không được chú ý — khoảng một phần ba số người trong các thí nghiệm nghe bóng. Não duy trì một bộ lọc ưu tiên cho thông tin liên quan tới bản thân.",
+    "t": "Khi hai giọng nói được phát vào hai tai và người ta chỉ được yêu cầu nhắc lại giọng ở một tai, khoảng một phần ba vẫn nghe thấy tên riêng của mình đọc ở tai kia.",
+    "s": "Đó là phép đo trực tiếp cho việc não giữ một bộ lọc riêng cho thông tin về bản thân: gần hết nội dung ở tai không được chú ý bị bỏ, nhưng cái tên thì lọt qua. Cùng cơ chế đó làm bạn nghe được tên mình trong một phòng ồn mà không nghe được phần còn lại của câu.",
     "tags": [
       "chu-y",
       "giao-tiep",

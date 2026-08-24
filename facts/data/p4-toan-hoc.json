@@ -279,7 +279,7 @@
     "id": "th-222",
     "cat": "toan-hoc",
     "sub": "day-so-va-ti-le",
-    "t": "Các tỉ lệ được cho là tỉ lệ vàng ở kim tự tháp Giza, đền Parthenon và tranh Leonardo lệch 5–10% so với 1,618 và chỉ khớp khi người đo tự chọn điểm đo",
+    "t": "Các tỉ lệ vàng thường được chỉ ra ở kim tự tháp Giza, đền Parthenon và tranh Leonardo lệch 5–10% so với 1,618 và chỉ khớp khi người đo tự chọn điểm đo",
     "s": "Tỉ lệ vàng là con số 1,618: cắt một đoạn thẳng thành hai phần sao cho phần dài chia phần ngắn đúng bằng cả đoạn chia phần dài. Khi Markowsky rà lại từng ví dụ nổi tiếng năm 1992, các phép đo khớp được là do người đo chọn điểm bắt đầu và điểm kết thúc cho vừa, còn sai số vẫn ở mức 5–10%.",
     "tags": [
       "ti-le-vang",
@@ -501,7 +501,7 @@
     "cat": "toan-hoc",
     "sub": "toi-uu-va-thuat-toan",
     "t": "Chưa ai biết những bài toán mà máy tính kiểm tra được lời giải rất nhanh có phải cũng là những bài toán máy tính tự tìm ra lời giải nhanh hay không",
-    "s": "Nhóm 'tự tìm được nhanh' gọi là P, nhóm 'kiểm được nhanh' gọi là NP, và câu hỏi hai nhóm đó có trùng nhau không là một trong bảy Bài toán Thiên niên kỷ của Viện Clay, treo giải một triệu đô. Nếu chúng trùng nhau thì phần lớn hệ mật mã hiện nay mất giá trị, còn rất nhiều bài toán xếp lịch và tối ưu đang phải giải gần đúng sẽ giải được chính xác và nhanh.",
+    "s": "Nhóm 'tự tìm được nhanh' gọi là P, nhóm 'kiểm được nhanh' gọi là NP, và câu hỏi hai nhóm đó có trùng nhau không là 1 trong 7 Bài toán Thiên niên kỷ của Viện Clay, treo giải 1 triệu đô. Nếu chúng trùng nhau thì phần lớn hệ mật mã hiện nay mất giá trị, còn rất nhiều bài toán xếp lịch và tối ưu đang phải giải gần đúng sẽ giải được chính xác và nhanh.",
     "tags": [
       "p-vs-np",
       "do-phuc-tap",

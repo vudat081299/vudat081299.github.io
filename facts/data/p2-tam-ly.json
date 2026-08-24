@@ -46,8 +46,8 @@
     "id": "tl-104",
     "cat": "tam-ly",
     "sub": "huyen-thoai-tam-ly",
-    "t": "Quét não hơn 1.000 người không tìm thấy kiểu người 'thiên não trái' hay 'thiên não phải' nào",
-    "s": "Hai bán cầu có phân công một số chức năng, rõ nhất là ngôn ngữ nghiêng trái ở đa số người. Nhưng không ai có một bán cầu trội chi phối tính cách, và sáng tạo dùng mạng lưới trải khắp cả hai bên.",
+    "t": "Quét não hơn 1.000 người không tìm thấy ai 'thiên não trái' hay 'thiên não phải': mọi người đều dùng cả hai bán cầu.",
+    "s": "Có phân công thật giữa hai bán cầu — rõ nhất là ngôn ngữ nghiêng về bên trái ở đa số người — nhưng không có kiểu người nào dùng hẳn một bên. Sáng tạo chạy trên mạng lưới trải khắp cả hai bên, nên 'người não phải' không phải một loại người tồn tại.",
     "tags": [
       "huyen-thoai",
       "nao-bo",
@@ -149,26 +149,14 @@
     "id": "tl-118",
     "cat": "tam-ly",
     "sub": "huyen-thoai-tam-ly",
-    "t": "Tư thế quyền lực làm bạn thấy tự tin hơn, nhưng không đổi hormone",
-    "s": "Nghiên cứu gốc nói đứng dạng tay hai phút làm tăng testosterone, giảm cortisol và tăng chấp nhận rủi ro. Các nghiên cứu lặp lại quy mô lớn tìm thấy tác động lên cảm giác chủ quan nhưng không tìm thấy thay đổi hormone hay hành vi. Chính đồng tác giả bài gốc sau đó công khai không còn tin vào kết quả đó. Chính đồng tác giả thứ nhất của nghiên cứu gốc sau đó công khai nói không còn tin vào hiệu ứng này.",
+    "t": "Đứng ở tư thế mở rộng hai phút làm người ta tự thấy mình quyền lực hơn, nhưng không làm đổi nồng độ testosterone hay cortisol trong máu.",
+    "s": "Đo cùng lúc ba thứ sau hai phút giữ tư thế: cảm giác tự đánh giá, hormone trong máu và mức chấp nhận rủi ro. Khi làm lại với số người lớn hơn, chỉ phần cảm giác còn lại; hormone và hành vi không nhích. Chỗ trực giác hỏng: cảm giác mạnh lên bị đọc thành 'cơ thể đã đổi', trong khi máu không đổi gì.",
     "tags": [
       "lap-lai",
       "tu-tin",
       "hieu-lam"
     ],
     "src": "Carney, Cuddy & Yap (2010); Ranehill và cộng sự, Psychological Science (2015); Carney (2016)"
-  },
-  {
-    "id": "tl-119",
-    "cat": "tam-ly",
-    "sub": "cam-xuc",
-    "t": "Ta quay lại mức hạnh phúc cũ rất nhanh sau cả tin vui lẫn tin dữ",
-    "s": "Người trúng số và người bị liệt sau tai nạn, sau một thời gian, quay về gần mức hài lòng nền của mình. Không phải mọi thứ đều thích nghi được — mất việc dài hạn, đau mạn tính và mất người thân để lại dấu vết lâu — nhưng phần lớn thứ ta tưởng sẽ thay đổi đời mình thì không.",
-    "tags": [
-      "hanh-phuc",
-      "thich-nghi"
-    ],
-    "src": "Brickman, Coates & Janoff-Bulman, JPSP (1978); Lucas và cộng sự (2004)"
   },
   {
     "id": "tl-120",
@@ -454,19 +442,6 @@
       "quan-he"
     ],
     "src": "Eisenberger, Lieberman & Williams, Science (2003)"
-  },
-  {
-    "id": "tl-141",
-    "cat": "tam-ly",
-    "sub": "ban-than",
-    "t": "Bất hoà nhận thức: làm việc trái với niềm tin thì niềm tin sẽ đổi, không phải hành vi",
-    "s": "Người được trả 1 đô để nói dối rằng một việc chán là thú vị sau đó thật sự tin nó thú vị hơn — trong khi người được trả 20 đô thì không, vì họ đã có lý do bên ngoài để giải thích cho hành vi của mình. Phần thưởng nhỏ đổi niềm tin mạnh hơn phần thưởng lớn.",
-    "tags": [
-      "niem-tin",
-      "hanh-vi",
-      "thuyet-phuc"
-    ],
-    "src": "Festinger & Carlsmith, Journal of Abnormal and Social Psychology (1959)"
   },
   {
     "id": "tl-142",
