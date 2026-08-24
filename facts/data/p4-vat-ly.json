@@ -676,13 +676,13 @@
     "cat": "vat-ly",
     "sub": "tuong-doi",
     "t": "Không có 'lúc này' chung cho cả vũ trụ: hai sự kiện đồng thời với người này có thể không đồng thời với người khác",
-    "s": "Tính đồng thời phụ thuộc hệ quy chiếu, và điều đó suy trực tiếp từ việc tốc độ ánh sáng như nhau với mọi người quan sát. Hiệu ứng chỉ đáng kể ở vận tốc gần tốc độ ánh sáng hoặc ở khoảng cách rất lớn.",
+    "s": "Tính đồng thời phụ thuộc hệ quy chiếu, và điều đó suy trực tiếp từ việc tốc độ ánh sáng như nhau với mọi người quan sát. Câu hỏi 'ngay bây giờ trên Sao Hoả đang xảy ra chuyện gì' vì vậy không có một câu trả lời duy nhất đúng. Hiệu ứng chỉ đáng kể ở vận tốc gần tốc độ ánh sáng hoặc ở khoảng cách rất lớn.",
     "tags": [
       "dong-thoi",
       "tuong-doi",
       "khong-thoi-gian"
     ],
-    "src": "Einstein (1905); Taylor & Wheeler, Spacetime Physics",
+    "src": "Einstein, Zur Elektrodynamik bewegter Körper (1905); Taylor & Wheeler, Spacetime Physics",
     "xem_ok": [
       "do-lon-bang-chu"
     ]

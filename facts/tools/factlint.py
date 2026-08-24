@@ -48,6 +48,21 @@ NEAR_CROSS = 0.52
 # phổ thông cho điểm rất cao mà chẳng liên quan.
 NEAR_TITLE = 0.70
 TITLE_MIN_SHARE = 4
+# Lỗ của TITLE_MIN_SHARE, đo ngày 24/08/2026: điều kiện ">= 4 token chung" tồn tại để lọc
+# nhiễu tiêu đề ngắn, nhưng nó miễn trừ đúng nhóm dễ trùng nhất. Ca thật: tiêu đề vt-145
+# ("Không có 'lúc này' chung cho cả vũ trụ") là CHUỖI CON NGUYÊN VĂN của vl-254, cùng nguồn
+# Einstein (1905) — điểm tiêu đề 0,775 VƯỢT ngưỡng 0,70 nhưng chỉ chung 3 token nên bị loại.
+#
+# Nới thẳng xuống 1 token thì hỏng: đo cho 9 cặp mới, chỉ 1 cặp thật — 8 cặp là nhiễu thuần
+# ("men răng" ghép "rượu vang lên MEN", "trẻ điếc" ghép "người mất NGỦ"). Độ chính xác 11%.
+# Đo từng mức, chỉ tính cặp mà tập token của tiêu đề này là TẬP CON của tiêu đề kia:
+#     >= 1 token chung → 9 cặp mới, 1 thật   (11%)
+#     >= 2 token chung → 3 cặp mới, 1 thật   (33%)
+#     >= 3 token chung → 1 cặp mới, 1 thật  (100%)   ← chọn mức này
+#     >= 4 token chung → 0 cặp mới           (trùng với luật cũ)
+# Cảnh báo trung thực: "100%" đo trên đúng MỘT ca dương tính, nên đây là luật hẹp có cơ sở
+# chứ không phải luật đã được kiểm rộng. Điều chắc chắn là hai mức lỏng hơn đã bị số liệu bác.
+TITLE_SUBSET_MIN = 3
 
 # Cụm quá to thì việc "chỉ so trong cụm" mất tác dụng — tách cụm khi vượt mốc này.
 CLUSTER_MAX = 90
@@ -317,7 +332,10 @@ def title_pairs(facts):
     out = {}
     for i in range(len(facts)):
         for j in range(i + 1, len(facts)):
-            if len(vt[i][0] & vt[j][0]) < TITLE_MIN_SHARE:
+            si, sj = vt[i][0], vt[j][0]
+            shared = len(si & sj)
+            if shared < TITLE_MIN_SHARE and not (
+                    shared >= TITLE_SUBSET_MIN and (si <= sj or sj <= si)):
                 continue
             s = cosine(vt[i][1], vt[j][1])
             if s >= NEAR_TITLE:
