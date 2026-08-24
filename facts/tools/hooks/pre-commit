@@ -22,12 +22,23 @@ echo "pre-commit: chạy cổng $DIR…"
 cd "$ROOT/$DIR"
 
 FAIL=0
-CHECK=$(python3 tools/factlint.py check 2>&1) || true
-case "$CHECK" in
-  *'— LỖI ('*)
-    printf '%s\n' "$CHECK" | sed -n '/— LỖI (/,$p' >&2
-    FAIL=1 ;;
-esac
+
+# `check` trả mã 1 cho HAI thứ, và hook từng chỉ bắt một:
+#   · lỗi cấu trúc                              → in ra khối "— LỖI ("
+#   · cặp gần trùng >= 0,62 hoặc trùng tiêu đề  → in dòng "!!"/"TT", KHÔNG in "— LỖI ("
+# Bản cũ viết `|| true` rồi chỉ dò chuỗi "— LỖI (", nên luật CLAUDE.md §3 ("0,62 …
+# CHẶN commit") chưa bao giờ được thi hành. Ngày 24/08/2026 hai commit đã lọt qua
+# trong lúc thư viện đang có một cặp 0,66 — lỗ này không phải lý thuyết.
+# Sửa: tôn trọng đúng mã thoát của `check`.
+if ! CHECK=$(python3 tools/factlint.py check 2>&1); then
+  case "$CHECK" in
+    *'— LỖI ('*) printf '%s\n' "$CHECK" | sed -n '/— LỖI (/,$p' >&2 ;;
+    *)           printf '%s\n' "$CHECK" | grep -E '^(!!|TT)' >&2
+                 echo "  ^ cặp gần trùng >= 0,62 hoặc trùng tiêu đề — xem CLAUDE.md §3." >&2
+                 echo "    Đã đọc và kết luận là HAI CLAIM KHÁC NHAU thì khai \"khac_voi\"." >&2 ;;
+  esac
+  FAIL=1
+fi
 
 if ! VERIFY=$(python3 tools/factlint.py verify 2>&1); then
   printf '%s\n' "$VERIFY" >&2
