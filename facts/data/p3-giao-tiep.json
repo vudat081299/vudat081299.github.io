@@ -99,16 +99,13 @@
     "id": "gt-277",
     "cat": "giao-tiep",
     "sub": "phi-ngon-ngu",
-    "t": "Nhịp cử động, nhịp thở và nhịp tim của 2 người đang trò chuyện khớp dần, và mức đồng bộ tương quan với cảm giác hợp nhau",
-    "s": "Nhịp cử động, nhịp thở và cả nhịp tim của hai người trong hội thoại có xu hướng khớp dần, và mức đồng bộ tương quan với cảm giác hợp nhau được báo cáo sau đó. Đồng bộ là kết quả của sự chú ý, không phải nguyên nhân — nên bắt chước có chủ ý không tạo được nó.",
+    "t": "Nhịp thở của hai người đang trò chuyện khớp dần vì cả hai đều phải hít vào trước mỗi lượt nói",
+    "s": "Người nói phải hít vào trước khi bắt đầu một lượt, nên khi hai người luân phiên đều thì hai nhịp thở khoá vào nhau. Nhịp tim tăng lúc hít vào và giảm lúc thở ra, nên nó đi theo nhịp thở mà không cần thêm cơ chế nào. Mức đồng bộ đo được đi cùng cảm giác 'hợp nhau' mà hai người tự báo sau đó, và nó là kết quả của việc cùng chú ý vào một mạch chuyện, không phải nguyên nhân của thiện cảm.",
     "tags": [
       "dong-bo",
       "hop-nhau"
     ],
     "src": "Ramseyer & Tschacher, Journal of Consulting and Clinical Psychology (2011)",
-    "xem_ok": [
-      "xu-huong-mo-ho"
-    ],
     "khac_voi": [
       "na-316",
       "na-315"
@@ -160,10 +157,7 @@
       "an-tuong-dau",
       "phong-van"
     ],
-    "src": "Barrick, Swider & Stewart, Journal of Applied Psychology (2010)",
-    "xem_ok": [
-      "do-lon-bang-chu"
-    ]
+    "src": "Barrick, Swider & Stewart, Journal of Applied Psychology (2010)"
   },
   {
     "id": "gt-315",

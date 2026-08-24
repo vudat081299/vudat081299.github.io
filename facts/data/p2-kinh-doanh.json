@@ -32,24 +32,21 @@
     "id": "kd-108",
     "cat": "kinh-doanh",
     "sub": "khoi-nghiep",
-    "t": "Đa số công ty chết vì mở rộng quá sớm, không vì cạnh tranh",
-    "s": "Phân tích các startup thất bại cho thấy mở rộng sớm — tuyển nhiều, tiêu nhiều, mở nhiều thị trường trước khi có bằng chứng lặp lại về nhu cầu — là mẫu hình phổ biến nhất. Đối thủ thường chỉ là câu chuyện được kể lại sau khi đã hết tiền.",
+    "t": "Startup tăng trưởng nhanh thất bại thường theo cùng một mẫu: tuyển và tiêu tăng trước khi có bằng chứng nhu cầu lặp lại",
+    "s": "Báo cáo Startup Genome phân loại startup đã đóng cửa theo dấu hiệu đo được — số nhân sự, mức chi và số thị trường mở ra so với số khách trả tiền lặp lại — và mẫu 'mở rộng trước khi có nhu cầu' là mẫu gặp nhiều nhất trong cách phân loại đó. Đối thủ cạnh tranh thường chỉ là câu chuyện được kể lại sau khi đã hết tiền.",
     "tags": [
       "khoi-nghiep",
       "tang-truong",
       "that-bai"
     ],
-    "src": "Startup Genome Report Extra on Premature Scaling (2011); phân tích khám nghiệm startup của CB Insights",
-    "xem_ok": [
-      "do-lon-bang-chu"
-    ]
+    "src": "Startup Genome Report Extra on Premature Scaling (2011); phân tích khám nghiệm startup của CB Insights"
   },
   {
     "id": "kd-109",
     "cat": "kinh-doanh",
     "sub": "khoi-nghiep",
     "t": "Sản phẩm chết vì không ai cần, không vì làm dở",
-    "s": "Trong các bản tự mổ xẻ của startup đã đóng cửa, lý do được nêu nhiều nhất là không có nhu cầu thị trường. Đây là lý do việc nói chuyện với khách hàng trước khi xây có tỉ suất hoàn vốn cao bất thường — và cũng là việc bị bỏ qua nhiều nhất vì nó không cho cảm giác đang làm việc.",
+    "s": "Trong các bản tự mổ xẻ của startup đã đóng cửa, lý do được nêu nhiều nhất là không có nhu cầu thị trường. Con số này không chọi với mẫu 'mở rộng quá sớm' dù cả hai nghe như 'nguyên nhân số một': một bên đếm lý do người sáng lập tự nêu, một bên phân loại mẫu vận hành đo được — và cả hai trỏ về cùng một việc, xây trước khi kiểm nhu cầu.",
     "tags": [
       "khoi-nghiep",
       "san-pham",

@@ -782,18 +782,14 @@
     "id": "na-262",
     "cat": "nghe-thuat",
     "sub": "chu-va-thiet-ke",
-    "t": "Chân chữ serif không được chứng minh là giúp đọc nhanh hơn trên giấy",
-    "s": "Các nghiên cứu so sánh cho khác biệt rất nhỏ và không nhất quán. Yếu tố ảnh hưởng lớn hơn nhiều là cỡ chữ, độ dài dòng và khoảng cách dòng.",
+    "t": "Độ dài dòng và cỡ chữ đổi tốc độ đọc đo được, còn chữ có chân hay không thì không",
+    "s": "Các nghiên cứu so chữ có chân với chữ không chân trên giấy cho khác biệt nằm trong sai số và không nhất quán giữa các lần đo. Cùng lúc đó, dòng quá dài buộc mắt phải dò lại đầu dòng sau mỗi lần xuống hàng, nên quy ước nghề đặt khổ chữ quanh 60–70 ký tự mỗi dòng. Nghĩa là chọn phông là quyết định thẩm mỹ, còn chọn khổ chữ là quyết định kỹ thuật.",
     "tags": [
       "serif",
       "kha-doc",
       "thiet-ke"
     ],
-    "src": "Lund, luận án Đại học Reading (1999); Poole (2008)",
-    "xem_ok": [
-      "do-lon-bang-chu",
-      "thieu-mo-neo"
-    ]
+    "src": "Lund, luận án Đại học Reading (1999); Poole (2008)"
   },
   {
     "id": "na-263",

@@ -194,16 +194,13 @@
     "id": "nn-020",
     "cat": "ngon-ngu",
     "sub": "ngu-phap-tu-vung",
-    "t": "Chuẩn chính tả là quy ước xã hội, không phải chân lý ngôn ngữ học",
-    "s": "Ngôn ngữ học mô tả cách người ta thật sự nói và viết; chuẩn mực là lựa chọn của các thiết chế trong từng giai đoạn. Điều đó không có nghĩa viết sao cũng được — quy ước có giá trị thực dụng rất lớn trong văn bản chính thức — mà có nghĩa 'sai' ở đây là sai với quy ước, không phải sai về bản chất.",
+    "t": "Chuẩn chính tả tiếng Anh được cố định bởi máy in và từ điển, không bởi một quy luật của ngôn ngữ",
+    "s": "Trước khi có máy in, cùng một từ tiếng Anh được viết theo nhiều cách trong cùng một trang sách. Từ điển của Samuel Johnson năm 1755 rồi của Noah Webster năm 1828 chốt lại cách viết, và hai bản chốt không giống nhau — đó là lý do đến nay tiếng Anh Mỹ viết 'color' còn tiếng Anh Anh viết 'colour'. Chuẩn có giá trị thực dụng lớn, nhưng nó là một quy ước được ai đó quyết, không phải một chân lý của ngôn ngữ.",
     "tags": [
       "chinh-ta",
       "chuan-muc",
       "ngon-ngu-hoc"
     ],
-    "src": "Nguyên lý ngôn ngữ học mô tả; xem Crystal, The Cambridge Encyclopedia of Language",
-    "xem_ok": [
-      "do-lon-bang-chu"
-    ]
+    "src": "Nguyên lý ngôn ngữ học mô tả; xem Crystal, The Cambridge Encyclopedia of Language"
   }
 ]
