@@ -279,7 +279,7 @@
     "cat": "cong-nghe",
     "sub": "du-lieu-luu-tru",
     "t": "Mọi thứ bạn xoá trên mạng có thể vẫn tồn tại ở nơi khác",
-    "s": "Bản lưu của công cụ tìm kiếm, ảnh chụp màn hình, kho lưu trữ web và bản sao trên máy chủ khác đều nằm ngoài tầm kiểm soát của nút xoá. Nguyên tắc thực tế: đừng đăng thứ mà bạn cần đảm bảo sẽ biến mất được.",
+    "s": "Bản lưu của công cụ tìm kiếm, ảnh chụp màn hình, kho lưu trữ web và bản sao trên máy chủ khác đều nằm ngoài tầm kiểm soát của nút xoá. Nút xoá chỉ tác động lên bản gốc nằm trên máy chủ của chính dịch vụ đó, không tác động lên bất kỳ bản sao nào đã rời khỏi nó.",
     "tags": [
       "rieng-tu",
       "internet",

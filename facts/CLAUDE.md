@@ -67,6 +67,11 @@ tự bắt bằng mắt.
 2. **Lời khuyên.** Câu có mệnh lệnh, hoặc so sánh hai *cách làm* để người đọc chọn.
    Dấu hiệu: *nên*, *hãy*, *đừng*, *cách tốt nhất*, *X hiệu quả hơn Y*, *giúp bạn…*
    ❌ *"Nói 'kể tiếp đi' hiệu quả hơn đặt một câu hỏi mới"*.
+   Cổng này soi cả **phần tóm tắt**, không chỉ tiêu đề — lỗ đó tồn tại tới 24/08/2026 và
+   5 fact đã sống sót nhờ nó bằng cách gắn lời khuyên vào đuôi `s`: *"…hãy đi tìm con số
+   thật."*, *"Nguyên tắc thực tế: đừng đăng thứ mà bạn cần đảm bảo sẽ biến mất được."*
+   Chỉ nhóm mệnh lệnh (*hãy/đừng/chớ*) được soi trên `s`; *mẹo* thì không, vì trên `s` nó
+   khớp 5 chỗ mà 4 chỗ đang **nói về** mẹo để bác nó (*"chứ không phải mẹo dân gian"*).
 
 3. **Meta về nghiên cứu.** Nội dung là số phận của một bài báo, không phải thế giới.
    ❌ *"Thí nghiệm nhà tù Stanford không phải bằng chứng như nó được kể"*.

@@ -82,7 +82,7 @@
     "cat": "cong-nghe",
     "sub": "du-lieu-luu-tru",
     "t": "Mã QR vẫn đọc được khi bị hỏng tới 30% diện tích",
-    "s": "Nhờ mã sửa lỗi Reed–Solomon với bốn mức, mức cao nhất phục hồi được khoảng 30% dữ liệu bị mất. Đó là lý do nhiều mã QR để logo ở giữa mà vẫn quét được — và cũng là lý do đừng quét bừa mã dán đè trên bảng thanh toán ngoài đời.",
+    "s": "Nhờ mã sửa lỗi Reed–Solomon với bốn mức, mức cao nhất phục hồi được khoảng 30% dữ liệu bị mất. Đó là lý do nhiều mã QR để logo ở giữa mà vẫn quét được — và cũng là lý do một mã bị bẩn, bị rách hay bị dán đè một phần vẫn quét ra đúng địa chỉ cũ mà không báo lỗi gì.",
     "tags": [
       "qr",
       "ma-hoa",

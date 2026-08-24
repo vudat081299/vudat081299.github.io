@@ -768,6 +768,19 @@ RULES_REJECT = [
         re.compile(r'cách (tốt|nhanh|hiệu quả|dễ|an toàn|chắc) nhất', re.I),
         re.compile(r'\bmẹo\b', re.I),
     ]),
+    # Lỗ đo được ngày 24/08/2026: `loi-khuyen` chỉ soi TIÊU ĐỀ, nên một lời khuyên gắn vào
+    # đuôi phần tóm tắt thì không cổng nào nhìn tới. Quét `hãy|đừng|chớ` (đã bỏ phần trong
+    # ngoặc kép) trên `s` của 1.884 fact: 5 fact khớp, đọc tay cả 5 thì **cả 5 đều là lời
+    # khuyên thật** — độ chính xác 100%:
+    #     tl-003 "…hãy đi tìm con số thật."
+    #     cn-126 "Nguyên tắc thực tế: đừng đăng thứ mà bạn cần đảm bảo sẽ biến mất được."
+    #     td-249 "…hãy tưởng tượng cảm giác sau mười năm…"
+    # Chỉ lấy nhóm mệnh lệnh, KHÔNG lấy `\bmẹo\b`: mẫu đó trên `s` khớp 5 chỗ mà chỉ 1 chỗ
+    # là lời khuyên (20%) — bốn chỗ kia đang NÓI VỀ mẹo để bác nó ("chứ không phải mẹo dân
+    # gian"). Cũng không lấy RE_NEN, vì lý do ở §1.7.
+    ('menh-lenh', 'câu mệnh lệnh trong phần tóm tắt', 'ts', [
+        re.compile(r'\b(hãy|đừng|chớ)\b', re.I),
+    ]),
     ('tuong-thuat', 'tường thuật một vụ việc / thí nghiệm', 't', [
         re.compile(r'^(Vụ|Câu chuyện|Chuyện|Thí nghiệm|Bài báo|Trường hợp|Sự kiện) '),
         re.compile(r'(thí nghiệm|nghiên cứu) (nhà tù|của [A-ZÀ-ỸĐ])'),
@@ -984,7 +997,7 @@ def verify_fact(f):
 
     for rid, note, field, pats in RULES_REJECT:
         hay = t if field == 't' else ts
-        if rid == 'loi-khuyen':
+        if rid in ('loi-khuyen', 'menh-lenh'):
             hay = TRONG_NGOAC.sub(' ', hay)
         for p in pats:
             if p.search(hay):
