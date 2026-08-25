@@ -552,14 +552,42 @@ trên điện thoại.
 > định. Có những thứ chỉ mở ra khi được kể.
 
 Fact nói thẳng thế giới là thế nào. **Truyện đi đường vòng: nó kể một chuyện có thật, rồi để
-lại một điều về thế giới.** Hai loại dùng chung `cat`/`sub`, chung ô tìm kiếm, chung lưới
-card; trang có bộ chuyển **Tất cả / Fact / Chuyện**.
+lại một điều về thế giới.** Hai loại dùng chung ô tìm kiếm, chung lưới card, chung modal —
+nhưng **phân loại bằng hai trục khác hẳn nhau** (§7.0). Thanh bên chia ba nhóm: *Thư viện*
+(Tất cả · Fact), *Truyện* (Tất cả truyện + từng kiểu), *Chủ đề fact* (20 chủ đề).
+
+### 7.0 Truyện có trục phân loại riêng
+
+> Đổi ngày 25/08/2026, theo yêu cầu của chủ trang. Trước đó truyện mượn `cat`/`sub` của fact
+> nên nó nằm lẫn trong 20 chủ đề fact và không có chỗ đứng riêng trên thanh chủ đề.
+
+Truyện **không có `cat`, không có `sub`**. Nó có **`kieu`** — một giá trị trong
+`manifest.kieu_chuyen`. Trục này phân theo **hình dạng câu chuyện**, không phải theo đề tài:
+cùng một đề tài có thể ra một truyện *Thảm hoạ & điều tra* và một truyện *Đo tận nơi*.
+
+| `kieu` | Nhãn | Là gì |
+|---|---|---|
+| `tham-hoa` | Thảm hoạ & điều tra | Một thứ hỏng, và phần đi tìm vì sao |
+| `giai-ma` | Giải mã & chứng minh | Thứ không ai đọc được / chứng minh được, rồi có người làm được |
+| `ca-benh` | Ca bệnh & tự thí nghiệm | Kiến thức lấy ra từ một cơ thể |
+| `do-tan-noi` | Đo tận nơi | Không tin lý thuyết trên giấy nên đi đếm từng cái một |
+| `mot-y-tuong` | Một ý tưởng đúng lúc | Một người nhìn ra thứ người khác không thấy, còn kịp |
+| `ky-quac` | Kỳ quặc & buồn cười | Chuyện thật mà buồn cười hoặc kỳ quặc đến khó tin |
+
+`ky-quac` hiện chưa có truyện nào — đó là một ô đã khai sẵn, không phải một kiểu bị quên.
+Thanh bên bỏ qua kiểu rỗng để không có mục nào bấm vào ra lưới trắng.
+
+**Nguồn không nới cho `ky-quac`.** Cái buồn cười phải nằm ở chính sự việc có thật — giải
+Ig Nobel, thí nghiệm lố bịch có báo cáo, sự cố ngớ ngẩn có hồ sơ điều tra — chứ không phải
+ở cách kể. Truyện hư cấu không thuộc thư viện này.
+
+Cổng chặn ba thứ: `kieu` không có trong manifest, thiếu `kieu`, và **`cat`/`sub` sót lại**
+từ bản cũ (một hàng chép lại mà còn `cat` thì không lọc được bằng gì cả).
 
 ```json
 {
   "id": "ch-001",                    // tiền tố ch-, không được đụng id của fact nào
-  "cat": "lich-su",
-  "sub": "phat-minh",                // dùng lại đúng cụm của fact — xem §3
+  "kieu": "mot-y-tuong",             // một giá trị của manifest.kieu_chuyen — xem §7.0
   "t": "Chiếc hộp sắt của một tài xế xe tải",
   "s": "1–2 câu dẫn, hiện trên card.",
   "body": "Thân truyện. Ngăn đoạn bằng \n\n. 1.200–8.000 ký tự, tối thiểu 4 đoạn.",
@@ -602,21 +630,27 @@ nhân vật nói là dữ liệu của truyện chứ không phải giọng ngư
   cái vòi bị tháo — chính Snow ghi điều đó trong báo cáo. Bỏ chi tiết ấy đi thì câu chuyện
   gọn hơn và sai hơn.
 - **Chống trùng.** Truyện quét gần trùng **với truyện**, không quét chéo với fact: một truyện
-  kể sâu về cùng chủ đề với một fact là đúng thiết kế, không phải trùng.
+  kể sâu về cùng chủ đề với một fact là đúng thiết kế, không phải trùng. Tra bằng
+  `factlint near "…" --chuyen` (thêm `--kieu K` để khoanh trong một kiểu).
 - **Tự chứa (§1.5).** Người 15 tuổi chưa học ngành đó đọc xong phải nắm được.
 
 ### 7.4 Thêm một truyện
 
-Cùng pipeline §2, khác ở bước 2 và bước 5:
+Cùng pipeline §2, khác ở bước 2 (`mang_di` viết trước), bước 3 (tra trong bể truyện) và
+bước 5 (chọn `kieu` chứ không chọn cụm fact):
 
 1. Tìm — nguồn dạng truyện tốt: hồ sơ điều tra tai nạn, hồi ký kỹ thuật, sách sử chuyên khảo,
    báo cáo nguyên thuỷ của chính người trong cuộc.
 2. **Viết `mang_di` TRƯỚC.** Không nghĩ ra được câu đó thì đừng viết truyện — nghĩa là chưa
    có gì để mang về.
-3. Tra trùng bằng `factlint near` trong cùng cụm.
+3. Tra trùng bằng `factlint near "<tiêu đề + tóm tắt>" --chuyen` — bể truyện, không phải
+   bể fact.
 4. Verify nguồn theo §4.
-5. Thêm vào `data/chuyen/<đợt>.json`, khai tên file vào `manifest.files_chuyen`.
-6. `factlint check && factlint verify` — cả hai lệnh soi cả fact lẫn truyện, không cần cờ gì thêm.
+5. Chọn `kieu` theo §7.0 — hỏi "câu chuyện này có *hình dạng* nào", đừng hỏi "nó nói về đề
+   tài gì". Không kiểu nào vừa thì thêm kiểu mới vào `manifest.kieu_chuyen` chứ đừng nhét
+   bừa; cổng sẽ chặn `kieu` chưa khai.
+6. Thêm vào `data/chuyen/<đợt>.json`, khai tên file vào `manifest.files_chuyen`.
+7. `factlint check && factlint verify` — cả hai lệnh soi cả fact lẫn truyện, không cần cờ gì thêm.
 
 ---
 

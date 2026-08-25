@@ -3,8 +3,9 @@
 Trang tĩnh, không build, không phụ thuộc. Dựng bằng [web-builder](../web-builder/) v0.6
 (`../web-builder/web-builder.css`) + `facts.css` (chrome riêng, prefix `fx-*`) + `app.js`.
 
-**1.909 fact + 22 truyện** trên 20 chủ đề, chia thành 162 cụm nhỏ; 13 fact có minh hoạ tương
-tác và 13 fact đã có lớp "vì sao" (câu hỏi mở đầu + phần giải thích đầy đủ).
+**1.909 fact** trên 20 chủ đề, chia thành 162 cụm nhỏ; 13 fact có minh hoạ tương tác và
+13 fact đã có lớp "vì sao" (câu hỏi mở đầu + phần giải thích đầy đủ). Cạnh đó là
+**22 truyện** trên 6 kiểu chuyện — loại nội dung thứ hai, có trục phân loại riêng.
 
 > Sửa hoặc thêm fact thì đọc [CLAUDE.md](CLAUDE.md) trước — ở đó có pipeline thêm fact và
 > cơ chế chống trùng. File này chỉ nói về kiến trúc.
@@ -20,8 +21,10 @@ facts/
     hooks/          post-edit.sh (PostToolUse) và pre-commit — chạy cổng tự động
     install-hooks.sh  cài bộ điều phối hook git cho cả repo
   data/
-    manifest.json   chủ đề + cụm (clusters) + danh sách file fact (thứ tự file = thứ tự thêm)
-    chuyen/         truyện — loại nội dung thứ hai, khai ở manifest.files_chuyen
+    manifest.json   chủ đề fact + cụm (clusters) + kiểu truyện (kieu_chuyen)
+                    + danh sách file (thứ tự file = thứ tự thêm)
+    chuyen/         truyện — loại nội dung thứ hai, khai ở manifest.files_chuyen;
+                    phân loại bằng `kieu`, KHÔNG dùng chủ đề của fact (CLAUDE.md §7.0)
     <chu-de>.json   đợt fact đầu
     p2-<chu-de>.json đợt fact thứ hai
     p3-/p4-<chu-de>.json  các đợt sau
