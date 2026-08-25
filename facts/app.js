@@ -22,6 +22,8 @@
     catMap: {},
     kieus: [],       /* kiểu của TRUYỆN — vốn từ tách hẳn, xem §7.0 */
     kieuMap: {},
+    atuMap: {},     /* mã ATU → nhãn, trục thứ hai của truyện cổ (§7.0-b) */
+    atu: '',        /* mã ATU đang lọc, rỗng = không lọc */
     /* Một biến duy nhất cho cả thanh bên lẫn bộ chuyển ở đầu lưới. Nhận:
          'all' · 'fact' · 'chuyen' · <id chủ đề fact> · <id kiểu truyện>
        Hai vốn từ id không giao nhau nên tra một phát là biết đang ở nhánh nào. */
@@ -55,6 +57,7 @@
     dQ:       $('[data-d-q]'),
     dMang:    $('[data-d-mang]'),
     dMangTxt: $('[data-d-mang-text]'),
+    dMangLbl: $('[data-d-mang-label]'),
     kinds:    $('[data-kinds]'),
     dViz:     $('[data-d-viz]'),
     dBody:    $('[data-d-body]'),
@@ -131,6 +134,7 @@
         state.cats.forEach(function (c) { state.catMap[c.id] = c; });
         state.kieus = m.kieu_chuyen || [];
         state.kieus.forEach(function (k) { state.kieuMap[k.id] = k; });
+        (m.atu || []).forEach(function (a) { state.atuMap[a.ma] = a.ten; });
         if (el.updated) el.updated.textContent = m.updated || '—';
         /* Fact và truyện vào chung một mảng và chung một lưới: cùng ô tìm kiếm, cùng modal,
            cùng phím tắt. Khác nhau ở `_kind` và ở trục phân loại — fact có `cat`, truyện có
@@ -154,7 +158,8 @@
         state.facts.forEach(function (f, i) {
           f._n = i + 1;
           var text = [f.q || '', f.t, f.s, f.d || '', f.body || '', f.mang_di || '',
-                      (f.tags || []).join(' '), f.src || '', nhan(f).label].join(' ');
+                      (f.tags || []).join(' '), f.src || '', nhan(f).label,
+                      f.lai_lich || '', f.xuat_xu || '', atuNhan(f)].join(' ');
           f._blob = norm(text);              /* gõ không dấu */
           f._blobT = text.toLowerCase();     /* gõ có dấu */
           f._long = (f.d || '').length + (f.body || '').length + (f.s || '').length;
@@ -175,6 +180,13 @@
   function nhan(f) {
     return (laChuyen(f) ? state.kieuMap[f.kieu] : state.catMap[f.cat]) ||
            { label: f.kieu || f.cat || '—' };
+  }
+
+  /* Nhãn kiểu truyện ATU — trục thứ hai, chỉ truyện cổ mới có (§7.0-b). Rỗng với mọi mục
+     khác, nên gọi thoải mái ở chỗ dùng chung. */
+  function atuNhan(f) {
+    if (!f.atu) return '';
+    return 'ATU ' + f.atu + (state.atuMap[f.atu] ? ' · ' + state.atuMap[f.atu] : '');
   }
 
   /* Một mục có lọt vào lựa chọn `sel` trên thanh bên không. */
@@ -225,6 +237,7 @@
     state.view = state.facts.filter(function (f) {
       if (!hop(f, state.cat)) return false;
       if (state.tag && (f.tags || []).indexOf(state.tag) === -1) return false;
+      if (state.atu && f.atu !== state.atu) return false;
       if (q && (tone ? f._blobT : f._blob).indexOf(q) === -1) return false;
       return true;
     });
@@ -330,6 +343,13 @@
       html += token(state.kieuMap[sel] ? 'Kiểu truyện' : state.catMap[sel] ? 'Chủ đề' : 'Loại',
                     muc ? muc.label : (sel === 'chuyen' ? 'Truyện' : 'Fact'), 'cat');
     }
+    /* Khoá của token này phải khác khoá của `kieu` ở trên: hai trục khác nhau cùng đứng
+       trên một hàng, trùng tên thì người đọc tưởng mình lọc hai lần một thứ. */
+    if (state.atu) {
+      html += token('Kiểu ATU',
+                    state.atu + (state.atuMap[state.atu] ? ' · ' + state.atuMap[state.atu] : ''),
+                    'atu');
+    }
     if (state.tag)      html += token('Nhãn', state.tag, 'tag');
     if (state.q.trim()) html += token('Từ khoá', state.q.trim(), 'q');
     el.tokens.innerHTML = html;
@@ -390,13 +410,22 @@
     }
     el.dBody.innerHTML = body;
 
-    /* "Mang về" — điều người đọc cầm được kể cả khi quên hết chi tiết câu chuyện. */
-    el.dMang.hidden = !f.mang_di;
-    if (f.mang_di) el.dMangTxt.textContent = f.mang_di;
+    /* Phần cầm về. Truyện có thật để lại một điều về thế giới (`mang_di`); truyện cổ để lại
+       lai lịch của chính nó (`lai_lich`) — §7.0-b. Một mục chỉ có đúng một trong hai. */
+    var cam = f.lai_lich || f.mang_di || '';
+    el.dMang.hidden = !cam;
+    if (cam) {
+      el.dMangTxt.textContent = cam;
+      if (el.dMangLbl) el.dMangLbl.textContent = f.lai_lich ? 'Lai lịch' : 'Mang về';
+    }
 
-    el.dTags.innerHTML = (f.tags || []).map(function (t) {
-      return '<button class="wb-tag" data-tag="' + esc(t) + '">' + esc(t) + '</button>';
-    }).join('');
+    /* Mã ATU đứng cùng hàng nhãn và bấm lọc được như nhãn — đó là trục thứ hai của truyện cổ. */
+    el.dTags.innerHTML =
+      (f.atu ? '<button class="wb-tag" data-atu="' + esc(f.atu) + '">' + esc(atuNhan(f)) +
+               '</button>' : '') +
+      (f.tags || []).map(function (t) {
+        return '<button class="wb-tag" data-tag="' + esc(t) + '">' + esc(t) + '</button>';
+      }).join('');
 
     el.dSrc.textContent = 'Nguồn: ' + (f.src || 'chưa ghi nguồn');
 
@@ -502,12 +531,14 @@
       var kind = b.getAttribute('data-drop');
       if (kind === 'cat') { location.hash = '#/all'; return; }
       if (kind === 'tag') state.tag = '';
+      if (kind === 'atu') state.atu = '';
       if (kind === 'q')   { state.q = ''; el.search.value = ''; }
       applyFilter();
     });
 
     $('[data-clear]').addEventListener('click', function () {
       state.tag = '';
+      state.atu = '';
       state.q = '';
       el.search.value = '';
       if (state.cat !== 'all') { location.hash = '#/all'; } else { applyFilter(); }
@@ -516,8 +547,10 @@
     /* lọc theo nhãn từ trong drawer */
     el.dTags.addEventListener('click', function (e) {
       var t = e.target.closest('[data-tag]');
-      if (!t) return;
-      state.tag = t.getAttribute('data-tag');
+      var a = e.target.closest('[data-atu]');
+      if (!t && !a) return;
+      if (t) state.tag = t.getAttribute('data-tag');
+      if (a) state.atu = a.getAttribute('data-atu');
       closeFact();
       applyFilter();
     });
