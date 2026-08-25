@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-24",
+  "updated": "2026-08-25",
   "note": "Thêm fact hàng tuần: tạo data/weekly/<năm>-w<tuần>.json rồi thêm tên file vào cuối mảng files. File đứng sau = fact mới hơn.",
   "categories": [
     {
@@ -327,6 +327,44 @@
       "bao-ton-nghe-thuat"
     ]
   },
+  "kieu_chuyen": [
+    {
+      "id": "tham-hoa",
+      "icon": "warning",
+      "label": "Thảm hoạ & điều tra",
+      "desc": "Một thứ hỏng — cây cầu, con tàu, một dòng sông, một hang động — và phần đi tìm vì sao. Thường thì không bộ phận nào hỏng cả."
+    },
+    {
+      "id": "giai-ma",
+      "icon": "key",
+      "label": "Giải mã & chứng minh",
+      "desc": "Thứ không ai đọc được, không ai chứng minh được, rồi có người làm được — và cách họ làm quan trọng hơn kết quả."
+    },
+    {
+      "id": "ca-benh",
+      "icon": "biotech",
+      "label": "Ca bệnh & tự thí nghiệm",
+      "desc": "Kiến thức lấy ra từ một cơ thể: của người bệnh, của người mang mầm bệnh, hoặc của chính nhà nghiên cứu tự uống vào."
+    },
+    {
+      "id": "do-tan-noi",
+      "icon": "straighten",
+      "label": "Đo tận nơi",
+      "desc": "Không tin lý thuyết trên giấy nên đi đếm từng cái một: từng cái chết trên bản đồ, từng con chim, từng năm giá kim loại."
+    },
+    {
+      "id": "mot-y-tuong",
+      "icon": "emoji_objects",
+      "label": "Một ý tưởng đúng lúc",
+      "desc": "Một người nhìn ra thứ những người quanh họ không thấy, đúng lúc còn kịp — và mọi thứ sau đó khác hẳn."
+    },
+    {
+      "id": "ky-quac",
+      "icon": "sentiment_very_satisfied",
+      "label": "Kỳ quặc & buồn cười",
+      "desc": "Chuyện có thật mà buồn cười hoặc kỳ quặc đến khó tin: giải Ig Nobel, thí nghiệm lố bịch, sự cố ngớ ngẩn có hồ sơ hẳn hoi. Nguồn không nới một ly so với các kiểu khác."
+    }
+  ],
   "day_du": [
     "co-the/co-xuong",
     "co-the/da-toc-mong",

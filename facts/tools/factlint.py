@@ -11,8 +11,9 @@ Bốn việc:
                    Mức LOẠI là chặn commit; mức XEM là phải đọc bằng mắt.
   near "<văn bản>" tra một fact SẮP thêm: in ra các fact có sẵn giống nó nhất,
                    để quyết định thêm mới / gộp vào cái cũ. Đây là bước 3 của pipeline
-                   trong CLAUDE.md.
+                   trong CLAUDE.md. Thêm --chuyen để tra trong bể TRUYỆN thay vì bể fact.
   stats            đếm fact theo chủ đề và theo cụm; cảnh báo cụm phình quá to.
+                   Truyện đếm riêng theo `kieu` — vốn từ của nó tách hẳn khỏi fact (§7.0).
 
 Cách tránh trùng khi thư viện lớn (n rất lớn thì so từng cặp là bất khả thi):
   1. Mỗi fact có (cat, sub) — sub là cụm nhỏ trong chủ đề, khai báo ở manifest.clusters.
@@ -356,14 +357,18 @@ def check_shape(man, facts, vk):
     return errs, warns
 
 
-REQUIRED_CHUYEN = ('id', 'cat', 'sub', 't', 's', 'body', 'mang_di', 'src')
+REQUIRED_CHUYEN = ('id', 'kieu', 't', 's', 'body', 'mang_di', 'src')
+
+
+def kieu_ids(man):
+    """Vốn từ chủ đề của TRUYỆN — tách hẳn khỏi `categories` của fact (§7.0)."""
+    return [k['id'] for k in man.get('kieu_chuyen') or []]
 
 
 def check_shape_chuyen(man, stories, fact_ids):
     """Kiểm cấu trúc truyện. `fact_ids` để id truyện không đụng id fact."""
     errs, warns = [], []
-    cats = {c['id'] for c in man['categories']}
-    clusters = man.get('clusters', {})
+    kieus = set(kieu_ids(man))
     seen = {}
 
     for st in stories:
@@ -378,10 +383,15 @@ def check_shape_chuyen(man, stories, fact_ids):
             errs.append('%s: id đụng id của một fact' % where)
         elif sid:
             seen[sid] = where
-        if st.get('cat') not in cats:
-            errs.append('%s: cat "%s" không có trong manifest' % (where, st.get('cat')))
-        elif st.get('sub') not in clusters.get(st['cat'], []):
-            errs.append('%s: sub "%s" không thuộc cat %s' % (where, st.get('sub'), st['cat']))
+        if st.get('kieu') and st['kieu'] not in kieus:
+            errs.append('%s: kieu "%s" không có trong manifest.kieu_chuyen (%s)'
+                        % (where, st['kieu'], ', '.join(sorted(kieus)) or 'rỗng'))
+        # Truyện dùng vốn từ riêng, không mượn cat/sub của fact nữa. Bắt ở đây để một hàng
+        # chép từ bản cũ không lặng lẽ mang theo chủ đề fact mà chẳng ai lọc được bằng nó.
+        for cu in ('cat', 'sub'):
+            if cu in st:
+                errs.append('%s: còn trường "%s" của fact — truyện phân loại bằng "kieu" (§7.0)'
+                            % (where, cu))
 
         body = (st.get('body') or '').strip()
         if body:
@@ -614,9 +624,9 @@ def cmd_check(argv):
     errs += e2
     warns += w2
 
-    print('%d fact · %d truyện · %d file · %d chủ đề'
+    print('%d fact · %d truyện · %d file · %d chủ đề fact · %d kiểu truyện'
           % (len(facts), len(stories), len(man['files']) + len(man.get('files_chuyen') or []),
-             len(man['categories'])))
+             len(man['categories']), len(kieu_ids(man))))
     if vk is not None:
         print('%d minh hoạ trong viz.js · %d fact có viz'
               % (len(vk), sum(1 for f in facts if f.get('viz'))))
@@ -668,10 +678,12 @@ def cmd_check(argv):
 
 def cmd_near(argv):
     if not argv:
-        print('Dùng: factlint.py near "tiêu đề + tóm tắt fact sắp thêm" [--cat X] [--sub Y] [-n 8]')
+        print('Dùng: factlint.py near "tiêu đề + tóm tắt sắp thêm" [--cat X] [--sub Y] [-n 8]\n'
+              '      factlint.py near "…" --chuyen [--kieu K] [-n 8]   ← tra trùng cho TRUYỆN')
         return 2
     text = argv[0]
-    cat = sub = None
+    cat = sub = kieu = None
+    la_chuyen = '--chuyen' in argv
     n = 8
     i = 1
     while i < len(argv):
@@ -679,40 +691,50 @@ def cmd_near(argv):
             cat = argv[i + 1]; i += 2
         elif argv[i] == '--sub':
             sub = argv[i + 1]; i += 2
+        elif argv[i] == '--kieu':
+            kieu = argv[i + 1]; la_chuyen = True; i += 2
         elif argv[i] == '-n':
             n = int(argv[i + 1]); i += 2
         else:
             i += 1
 
-    _, facts = load()
+    # Truyện quét trùng riêng với truyện (§7.3): một truyện kể sâu về cùng chuyện với một
+    # fact là đúng thiết kế, không phải trùng. Nên hai bể không bao giờ trộn vào nhau.
+    man, facts = load()
+    pool_src = load_chuyen(man) if la_chuyen else facts
+    loai = 'truyện' if la_chuyen else 'fact'
     probe = {'t': text, 's': ''}
-    pool = facts + [probe]
-    vecs, _, _ = build_index(pool)
+    vecs, _, _ = build_index(pool_src + [probe])
     pv = vecs[-1]
 
     scored = []
-    for k, f in enumerate(facts):
-        if cat and f.get('cat') != cat:
-            continue
-        if sub and f.get('sub') != sub:
-            continue
+    for k, f in enumerate(pool_src):
+        if la_chuyen:
+            if kieu and f.get('kieu') != kieu:
+                continue
+        else:
+            if cat and f.get('cat') != cat:
+                continue
+            if sub and f.get('sub') != sub:
+                continue
         scored.append((cosine(pv, vecs[k]), k))
     scored.sort(reverse=True)
 
     if not scored:
-        print('Không có fact nào trong phạm vi đó — thêm mới thoải mái.')
+        print('Không có %s nào trong phạm vi đó — thêm mới thoải mái.' % loai)
         return 0
-    print('Giống nhất (%s):' % (('cat=%s' % cat if cat else 'toàn thư viện')
-                                + (' sub=%s' % sub if sub else '')))
+    pham_vi = ('kieu=%s' % kieu if kieu else 'toàn bộ truyện') if la_chuyen else \
+              (('cat=%s' % cat if cat else 'toàn thư viện') + (' sub=%s' % sub if sub else ''))
+    print('Giống nhất (%s):' % pham_vi)
     for s, k in scored[:n]:
-        f = facts[k]
+        f = pool_src[k]
         flag = 'TRÙNG' if s >= NEAR_HARD else ('XEM ' if s >= NEAR_SOFT else '    ')
-        print('%s %.2f  %s [%s/%s]  %s' % (flag, s, f['id'], f.get('cat'),
-                                           f.get('sub', '-'), f['t']))
+        nhan = f.get('kieu') if la_chuyen else '%s/%s' % (f.get('cat'), f.get('sub', '-'))
+        print('%s %.2f  %s [%s]  %s' % (flag, s, f['id'], nhan, f['t']))
     top = scored[0][0]
-    print('\n=> %s' % ('gần chắc đã có, GỘP vào fact trên chứ đừng thêm.' if top >= NEAR_HARD
-                       else 'đọc lại 2–3 fact đầu rồi tự quyết.' if top >= NEAR_SOFT
-                       else 'chưa có fact nào tương tự, thêm được.'))
+    print('\n=> %s' % (('gần chắc đã có, GỘP vào %s trên chứ đừng thêm.' % loai) if top >= NEAR_HARD
+                       else ('đọc lại 2–3 %s đầu rồi tự quyết.' % loai) if top >= NEAR_SOFT
+                       else ('chưa có %s nào tương tự, thêm được.' % loai)))
     return 0
 
 
@@ -1168,15 +1190,22 @@ def rule_still_hits(f, rid):
 def cmd_verify(argv):
     man, facts = load()
     stories = load_chuyen(man)
-    only_cat = only_file = None
+    only_cat = only_kieu = only_file = None
     show_warn = '-v' in argv or '--all' in argv
     if '--cat' in argv:
         only_cat = argv[argv.index('--cat') + 1]
+    if '--kieu' in argv:
+        only_kieu = argv[argv.index('--kieu') + 1]
     if '--file' in argv:
         only_file = os.path.basename(argv[argv.index('--file') + 1])
 
+    # Hai vốn từ tách hẳn nhau (§7.0): `--cat` chỉ khoanh fact, `--kieu` chỉ khoanh truyện.
+    # Nêu một cái là loại hẳn loại nội dung kia — im lặng trả về rỗng thì dễ tưởng là sạch.
     def in_scope(f):
-        if only_cat and f.get('cat') != only_cat:
+        la_chuyen = 'kieu' in f
+        if only_cat and (la_chuyen or f.get('cat') != only_cat):
+            return False
+        if only_kieu and (not la_chuyen or f.get('kieu') != only_kieu):
             return False
         if only_file and os.path.basename(f.get('_file', '')) != only_file:
             return False
@@ -1217,7 +1246,8 @@ def cmd_verify(argv):
             items = by_rule[rid]
             print('\n  [%s] %s — %d fact' % (rid, items[0][1][2], len(items)))
             for f, _ in items:
-                print('    %-8s %s  %s' % (f['id'], '[%s]' % f.get('cat'), f['t']))
+                print('    %-8s %s  %s' % (f['id'], '[%s]' % (f.get('cat') or f.get('kieu')),
+                                           f['t']))
 
     if warn:
         if show_warn:
@@ -1229,7 +1259,8 @@ def cmd_verify(argv):
                 items = by_rule[rid]
                 print('\n  [%s] %s — %d fact' % (rid, items[0][1][2], len(items)))
                 for f, _ in items:
-                    print('    %-8s %s  %s' % (f['id'], '[%s]' % f.get('cat'), f['t']))
+                    print('    %-8s %s  %s' % (f['id'], '[%s]' % (f.get('cat') or f.get('kieu')),
+                                           f['t']))
         else:
             print('\n%d fact mức XEM (thêm -v để xem).' % len(warn))
 
@@ -1251,12 +1282,9 @@ def cmd_stats(argv):
 
     print('%d fact · %d truyện\n' % (len(facts), len(stories)))
     fat = []
-    ch_cat = Counter(st.get('cat') for st in stories)
     for c in man['categories']:
         cid = c['id']
-        nch = ch_cat.get(cid, 0)
-        print('%-11s %4d  %s%s' % (cid, by_cat.get(cid, 0), c['label'],
-                                   '   + %d truyện' % nch if nch else ''))
+        print('%-11s %4d  %s' % (cid, by_cat.get(cid, 0), c['label']))
         for sub in clusters.get(cid, []):
             k = by_sub.get((cid, sub), 0)
             warn = '  ← tách cụm' if k > CLUSTER_MAX else ''
@@ -1274,6 +1302,19 @@ def cmd_stats(argv):
         unknown = [s for (c2, s) in by_sub if c2 == cid and s not in clusters.get(cid, [])]
         for s in sorted(set(unknown)):
             print('   · %-26s %4d  ← sub lạ' % (str(s), by_sub[(cid, s)]))
+    # Truyện đếm riêng, theo vốn từ riêng của nó (§7.0). Kiểu chưa có truyện nào vẫn in ra:
+    # nó là một ô trống đã khai báo, không phải một kiểu bị quên.
+    by_kieu = Counter(st.get('kieu') for st in stories)
+    if man.get('kieu_chuyen'):
+        print('\n— Truyện, theo kiểu —')
+        for k in man['kieu_chuyen']:
+            n = by_kieu.get(k['id'], 0)
+            print('%-13s %4d  %s%s' % (k['id'], n, k['label'], '  ← chưa có truyện nào' if not n else ''))
+        la = sorted({st.get('kieu') for st in stories} - {k['id'] for k in man['kieu_chuyen']})
+        for k in la:
+            print('%-13s %4d  ← kiểu lạ' % (str(k), by_kieu[k]))
+        print()
+
     nq = sum(1 for f in facts if (f.get('q') or '').strip())
     nd = sum(1 for f in facts if (f.get('d') or '').strip())
     print('\nviz: %d fact có minh hoạ' % sum(1 for f in facts if f.get('viz')))
