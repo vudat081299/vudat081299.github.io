@@ -680,7 +680,7 @@ mình:
 
 ```json
 {
-  "id": "sh-002",                    // tiền tố sh-, riêng cho canon Holmes
+  "id": "hl-002",                    // tiền tố hl-, riêng cho canon Holmes ("sh-" đã là fact)
   "kieu": "trinh-tham-holmes",
   "xuat_xu": "SH REDH",              // mã bốn chữ của Jay Finley Christ (1947)
   "t": "Hội Tóc Đỏ",
