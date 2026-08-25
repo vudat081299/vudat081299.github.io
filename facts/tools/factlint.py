@@ -366,16 +366,32 @@ def kieu_ids(man):
     return [k['id'] for k in man.get('kieu_chuyen') or []]
 
 
-def kieu_co_tich(man):
-    """Những kiểu là TRUYỆN CỔ — chúng chạy bộ luật khác, xem §7.0-b."""
-    return {k['id'] for k in man.get('kieu_chuyen') or [] if k.get('co_tich')}
+def kieu_kinh_dien(man):
+    """Những kiểu là TRUYỆN KINH ĐIỂN — chúng chạy bộ luật khác, xem §7.0-b.
+
+    Kinh điển = có sẵn trước phiên làm việc này, nằm trong một tuyển tập đã khai. Truyện cổ
+    Grimm và canon Sherlock Holmes cùng ở nhóm này dù một bên là truyện dân gian sưu tầm,
+    một bên là tác phẩm có tác giả: điểm chung là KHÔNG ai ở đây bịa ra chúng (§7.0-a).
+    """
+    return {k['id'] for k in man.get('kieu_chuyen') or [] if k.get('kinh_dien')}
+
+
+def kieu_can_atu(man):
+    """Kiểu nào bắt buộc phải có mã ATU.
+
+    ATU là chỉ mục kiểu truyện DÂN GIAN, nên nó chỉ áp cho tuyển tập truyện dân gian. Một
+    truyện Sherlock Holmes không có mã ATU và cũng không nên có — bắt nó khai là ép một
+    hệ phân loại lên thứ nó không mô tả.
+    """
+    return {k['id'] for k in man.get('kieu_chuyen') or [] if k.get('atu_bat_buoc')}
 
 
 def check_shape_chuyen(man, stories, fact_ids):
     """Kiểm cấu trúc truyện. `fact_ids` để id truyện không đụng id fact."""
     errs, warns = [], []
     kieus = set(kieu_ids(man))
-    co_tich = kieu_co_tich(man)
+    kinh_dien = kieu_kinh_dien(man)
+    can_atu = kieu_can_atu(man)
     tuyen_tap = {t['ma'] for t in man.get('tuyen_tap') or []}
     atu_ma = {a['ma'] for a in man.get('atu') or []}
     seen = {}
@@ -414,18 +430,22 @@ def check_shape_chuyen(man, stories, fact_ids):
         # Hai bộ luật, chọn theo kiểu (§7.0-b). Truyện cổ cầm về `lai_lich` — lai lịch của
         # chính câu chuyện; truyện có thật cầm về `mang_di` — một điều về thế giới. Trường
         # của bộ này nằm trong bộ kia là lỗi, vì cổng nội dung áp lên hai trường khác nhau.
-        if st.get('kieu') in co_tich:
-            for k in ('atu', 'xuat_xu', 'lai_lich'):
+        if st.get('kieu') in kinh_dien:
+            can = ['xuat_xu', 'lai_lich'] + (['atu'] if st.get('kieu') in can_atu else [])
+            for k in can:
                 if not (st.get(k) or '').strip():
-                    errs.append('%s: truyện cổ thiếu "%s" (§7.0-b)' % (where, k))
+                    errs.append('%s: truyện kinh điển thiếu "%s" (§7.0-b)' % (where, k))
             if st.get('mang_di'):
-                errs.append('%s: truyện cổ không dùng "mang_di" — phần cầm về là "lai_lich"'
-                            % where)
+                errs.append('%s: truyện kinh điển không dùng "mang_di" — phần cầm về là '
+                            '"lai_lich"' % where)
+            if st.get('atu') and st.get('kieu') not in can_atu:
+                errs.append('%s: kiểu "%s" không xếp theo ATU, bỏ trường "atu" đi (§7.0-b)'
+                            % (where, st['kieu']))
             ll = (st.get('lai_lich') or '').strip()
             if ll and len(ll) < LAI_LICH_MIN:
                 errs.append('%s: "lai_lich" chỉ %d ký tự, tối thiểu %d — nó phải nói được '
-                            'tuổi, phạm vi hoặc chỗ khác nhau giữa các bản, không phải một '
-                            'nhãn dán' % (where, len(ll), LAI_LICH_MIN))
+                            'tuổi, nơi công bố, phạm vi hoặc chỗ khác nhau giữa các bản, '
+                            'không phải một nhãn dán' % (where, len(ll), LAI_LICH_MIN))
             ma = (st.get('xuat_xu') or '').split()
             if ma and ma[0] not in tuyen_tap:
                 errs.append('%s: "xuat_xu" mở đầu bằng "%s", không khớp tuyển tập nào đã khai '
@@ -445,8 +465,8 @@ def check_shape_chuyen(man, stories, fact_ids):
                             % (where, len(md), MANG_DI_MIN))
             for k in ('atu', 'xuat_xu', 'lai_lich'):
                 if st.get(k):
-                    errs.append('%s: có "%s" nhưng kiểu "%s" không phải truyện cổ (§7.0-b)'
-                                % (where, k, st.get('kieu')))
+                    errs.append('%s: có "%s" nhưng kiểu "%s" không phải truyện kinh điển '
+                                '(§7.0-b)' % (where, k, st.get('kieu')))
         if not st.get('tags'):
             warns.append('%s: không có tags' % where)
     return errs, warns
@@ -460,7 +480,7 @@ def verify_chuyen(st):
     `mang_di` phải tự nó đứng vững như một fact — nó chịu các luật LOẠI của cổng fact.
     """
     body = st.get('body') or ''
-    # Phần "cầm về" của truyện: `mang_di` với truyện có thật, `lai_lich` với truyện cổ
+    # Phần "cầm về" của truyện: `mang_di` với truyện có thật, `lai_lich` với kinh điển
     # (§7.0-b). Cả hai đều phải tự đứng vững như một fact, nên cùng chịu một bộ luật.
     truong = 'lai_lich' if st.get('lai_lich') else 'mang_di'
     md = st.get(truong) or ''

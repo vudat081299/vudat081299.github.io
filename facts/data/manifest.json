@@ -359,6 +359,18 @@
       "desc": "Một người nhìn ra thứ những người quanh họ không thấy, đúng lúc còn kịp — và mọi thứ sau đó khác hẳn."
     },
     {
+      "id": "doi-nhan-xu-the",
+      "icon": "handshake",
+      "label": "Đối nhân xử thế",
+      "desc": "Một nước đi nhắm vào người khác, dưới áp lực, và còn giấy tờ chứng minh người đó đã chọn gì và bỏ gì: lá thư không gửi, bản ghi cuộc họp, hồi ký của chính người trong cuộc."
+    },
+    {
+      "id": "thi-nghiem-nguoi",
+      "icon": "psychology",
+      "label": "Thí nghiệm trên người",
+      "desc": "Một câu hỏi về con người đem ra thử trên người thật — và phần quan trọng không kém: cái giá phải trả, chỗ về sau hoá ra sai, và ai là người đi lục lại hồ sơ."
+    },
+    {
       "id": "ky-quac",
       "icon": "sentiment_very_satisfied",
       "label": "Kỳ quặc & buồn cười",
@@ -369,7 +381,15 @@
       "icon": "auto_stories",
       "label": "Truyện cổ Grimm",
       "desc": "Truyện trong Kinder- und Hausmärchen của anh em Grimm, kể lại bám cốt bản gốc. Phần cầm về không phải bài học luân lý mà là lai lịch của chính câu chuyện: nó bao nhiêu tuổi, có mặt ở những đâu, và bản nào khác bản nào chỗ nào.",
-      "co_tich": true
+      "kinh_dien": true,
+      "atu_bat_buoc": true
+    },
+    {
+      "id": "trinh-tham-holmes",
+      "icon": "search",
+      "label": "Sherlock Holmes",
+      "desc": "Những mẩu suy luận tự chứa trong 56 truyện ngắn của Conan Doyle, kể lại bám bản đăng trên The Strand. Phần cầm về là lai lịch: truyện ra số nào, Doyle lấy nghề suy luận ấy từ đâu, và chỗ nào chính ông về sau nhận là mình viết sai.",
+      "kinh_dien": true
     }
   ],
   "tuyen_tap": [
@@ -378,6 +398,12 @@
       "ten": "Kinder- und Hausmärchen",
       "nguoi_suu_tam": "Jacob & Wilhelm Grimm",
       "ban": "bản thứ 7, 1857 — 210 truyện được đánh số"
+    },
+    {
+      "ma": "SH",
+      "ten": "The Sherlock Holmes canon",
+      "nguoi_suu_tam": "Arthur Conan Doyle",
+      "ban": "56 truyện ngắn + 4 tiểu thuyết, đăng The Strand Magazine 1891–1927; mã bốn chữ theo Jay Finley Christ (1947)"
     }
   ],
   "atu": [

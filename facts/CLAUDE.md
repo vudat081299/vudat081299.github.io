@@ -578,8 +578,8 @@ Ba điều kiện, cả ba bắt buộc, thay cho điều kiện "có thật" c�
 
 Điều kiện thứ ba là chỗ dễ trôi nhất, nên nó được buộc vào một danh sách trong repo chứ không
 vào cảm nhận của người viết. Một truyện cổ được nhận vào khi nó nằm trong một tuyển tập đã
-khai — Grimm, Andersen, Aesop, Nghìn lẻ một đêm, kho tàng cổ tích Việt Nam — **và** khai được
-số hiệu của nó trong tuyển tập đó. Đó là bằng chứng có kiểm được rằng nhiều người đã đọc và
+khai — Grimm, Andersen, Aesop, Nghìn lẻ một đêm, kho tàng cổ tích Việt Nam, canon Sherlock
+Holmes — **và** khai được số hiệu của nó trong tuyển tập đó. Đó là bằng chứng có kiểm được rằng nhiều người đã đọc và
 người sưu tầm đã chọn, chứ không phải một agent thấy hay.
 
 **Hệ quả cho phần thân truyện.** Truyện cổ đã hết hạn bảo hộ thì kể lại bằng tiếng Việt của
@@ -602,11 +602,25 @@ cùng một đề tài có thể ra một truyện *Thảm hoạ & điều tra* 
 | `ca-benh` | Ca bệnh & tự thí nghiệm | Kiến thức lấy ra từ một cơ thể |
 | `do-tan-noi` | Đo tận nơi | Không tin lý thuyết trên giấy nên đi đếm từng cái một |
 | `mot-y-tuong` | Một ý tưởng đúng lúc | Một người nhìn ra thứ người khác không thấy, còn kịp |
+| `doi-nhan-xu-the` | Đối nhân xử thế | Một nước đi nhắm vào người khác, và giấy tờ cho thấy đã chọn gì / bỏ gì |
+| `thi-nghiem-nguoi` | Thí nghiệm trên người | Một câu hỏi về con người đem thử trên người thật — kèm chỗ về sau phải sửa |
 | `ky-quac` | Kỳ quặc & buồn cười | Chuyện thật mà buồn cười hoặc kỳ quặc đến khó tin |
 | `co-tich-grimm` | Truyện cổ Grimm | Truyện trong *Kinder- und Hausmärchen* — xem §7.0-b |
+| `trinh-tham-holmes` | Sherlock Holmes | Một mẩu suy luận trong canon Conan Doyle — xem §7.0-b |
 
 Kiểu chưa có truyện nào vẫn được khai trong manifest; thanh bên bỏ qua kiểu rỗng để không có
 mục nào bấm vào ra lưới trắng.
+
+**Hai kiểu thêm ngày 25/08 vẫn là hình dạng, không phải đề tài.** Chủ trang xin *"truyện về
+cách ứng xử EQ cao"* và *"truyện giúp hiểu về đối nhân xử thế, tâm lý học"* — nghe như đề tài,
+nhưng cái làm chúng thành một kiểu là hình dạng chung, và hình dạng đó cũng là chỗ đặt cổng:
+
+- `doi-nhan-xu-the` — có **một khoảnh khắc chọn**, và có **hiện vật** chứng minh đã chọn thế:
+  lá thư còn trong hồ sơ, bản ghi âm cuộc họp, hồi ký của chính người trong cuộc. Không có
+  hiện vật thì đó là giai thoại truyền miệng, §4 quy tắc 1 loại.
+- `thi-nghiem-nguoi` — có **một thiết kế thí nghiệm** và có **phần về sau**: ai lục lại hồ sơ,
+  chỗ nào không lặp lại được, con số nào bị kể sai suốt mấy chục năm. Chỉ kể được nửa đầu thì
+  đó là một fact `tam-ly`, không phải một truyện.
 
 **`ky-quac` vẫn là chuyện có thật.** Cái buồn cười phải nằm ở chính sự việc — giải Ig Nobel,
 thí nghiệm lố bịch có báo cáo, sự cố ngớ ngẩn có hồ sơ điều tra — chứ không nằm ở cách kể.
@@ -628,11 +642,23 @@ từ bản cũ (một hàng chép lại mà còn `cat` thì không lọc đượ
 }
 ```
 
-### 7.0-b Truyện cổ — hai trục, và `lai_lich` thay chỗ `mang_di`
+### 7.0-b Truyện kinh điển — `lai_lich` thay chỗ `mang_di`
+
+> Nới ngày 25/08/2026. Mục này ban đầu viết cho riêng truyện cổ. Sherlock Holmes cũng qua
+> được ba cổng của §7.0-a — có sẵn, có bản đăng cụ thể, được công nhận rộng — nhưng nó không
+> phải truyện dân gian nên không có mã ATU. Cờ trong manifest vì thế đổi từ `co_tich` sang
+> **`kinh_dien`**, và trục ATU thành **tuỳ kiểu** (`atu_bat_buoc`).
+
+**Kinh điển = có sẵn trước phiên làm việc này, nằm trong một tuyển tập đã khai.** Grimm là
+truyện dân gian sưu tầm, Holmes là tác phẩm có tác giả — điểm chung duy nhất, và là điểm duy
+nhất cổng quan tâm: không ai ở đây bịa ra chúng.
 
 Truyện cổ xếp theo **hai trục cùng lúc**, vì một trục không đủ: `kieu` cho biết nó đến từ
 tuyển tập nào, `atu` cho biết nó thuộc kiểu truyện nào trong hệ phân loại Aarne–Thompson–Uther.
 Hai trục này độc lập — Lọ Lem của Grimm và Tấm Cám đều là ATU 510A nhưng khác tuyển tập.
+ATU là chỉ mục kiểu truyện **dân gian**, nên nó chỉ áp cho tuyển tập dân gian: kiểu nào xếp
+theo ATU thì khai `atu_bat_buoc: true`, kiểu không khai thì có `atu` là **lỗi** — ép một hệ
+phân loại lên thứ nó không mô tả cũng sai như bỏ trống nó ở chỗ nó mô tả được.
 
 ```json
 {
@@ -649,8 +675,22 @@ Hai trục này độc lập — Lọ Lem của Grimm và Tấm Cám đều là 
 }
 ```
 
-**`lai_lich` là phần người đọc cầm về, và nó phải là một fact.** Truyện cổ không có `mang_di`
-được: bài học luân lý của một truyện cổ đúng là ví dụ **trượt** mà §7.1 lấy ra làm mẫu. Thứ
+Kiểu kinh điển **không** xếp theo ATU thì bỏ hẳn trường đó, `xuat_xu` mang mã của tuyển tập
+mình:
+
+```json
+{
+  "id": "sh-002",                    // tiền tố sh-, riêng cho canon Holmes
+  "kieu": "trinh-tham-holmes",
+  "xuat_xu": "SH REDH",              // mã bốn chữ của Jay Finley Christ (1947)
+  "t": "Hội Tóc Đỏ",
+  "lai_lich": "Truyện ra số nào, Doyle nói gì về nó, chỗ nào ông về sau nhận là viết sai."
+}
+```
+
+**`lai_lich` là phần người đọc cầm về, và nó phải là một fact.** Truyện kinh điển không có
+`mang_di` được: bài học luân lý của một truyện cổ đúng là ví dụ **trượt** mà §7.1 lấy ra làm
+mẫu, và "Holmes dạy ta phải quan sát kỹ" cũng trượt đúng luật ấy. Thứ
 kiểm chứng được ở một truyện cổ không nằm trong cốt truyện mà nằm ở **đường đi của chính câu
 chuyện** — nó bao nhiêu tuổi, có mặt ở đâu, bản nào khác bản nào chỗ nào.
 
@@ -658,14 +698,16 @@ chuyện** — nó bao nhiêu tuổi, có mặt ở đâu, bản nào khác bả
 |---|---|
 | *"Kiểu ATU 510A có trên 500 dị bản ghi chép được; bản chữ viết sớm nhất còn giữ là Diệp Hạn trong Dậu Dương Tạp Trở, thế kỷ 9 — trước Perrault chín trăm năm."* | *"Truyện dạy ta rằng ở hiền gặp lành."* — bài học, không phải fact |
 | *"Bản 1812 để mẹ ruột hành hạ con; từ bản 1819 Grimm đổi thành mẹ kế."* | *"Đây là một trong những truyện nổi tiếng nhất thế giới."* — không có mỏ neo |
+| *"Doyle tự xếp truyện này thứ hai trong mười hai truyện Holmes ông thích nhất, danh sách in trên The Strand tháng 6/1927."* | *"Holmes dạy ta phải quan sát chứ đừng chỉ nhìn."* — bài học |
 
 `lai_lich` chịu **các luật mức `LOẠI` của cổng fact** như `mang_di`, trừ `tuong-thuat`. Và
 cổng `day-doi` vẫn soi thân truyện: kể thì kể, đừng thêm câu răn dạy mà bản gốc không có.
 
-**Hai cổng riêng của truyện cổ**, cả hai đều bắt máy được:
+**Hai cổng riêng của truyện kinh điển**, cả hai đều bắt máy được:
 
-1. `kieu` là kiểu truyện cổ thì **bắt buộc** có `atu` và `xuat_xu`, và **không được** có
-   `mang_di`. Ngược lại, kiểu truyện thật thì bắt buộc `mang_di` và không được có ba trường kia.
+1. `kieu` là kiểu kinh điển thì **bắt buộc** có `xuat_xu` và `lai_lich`, **không được** có
+   `mang_di`, và có `atu` hay không là do `atu_bat_buoc` của chính kiểu đó quyết định. Ngược
+   lại, kiểu truyện thật thì bắt buộc `mang_di` và không được có ba trường kia.
 2. `xuat_xu` phải khớp một tuyển tập đã khai ở `manifest.tuyen_tap` — đó là chỗ điều kiện
    "đã được nhiều người công nhận" của §7.0-a biến thành thứ kiểm được. Muốn thêm Andersen
    hay cổ tích Việt Nam thì khai tuyển tập trước, đừng nhét truyện vào rồi tính sau.
