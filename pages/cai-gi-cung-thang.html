@@ -1,0 +1,1231 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>Cãi gì cũng thắng — diễn giải toàn bộ ngụy biện</title>
+<meta name="description" content="Diễn giải và sắp xếp lại rành mạch toàn bộ ~79 lối ngụy biện trong 'Cãi gì cũng thắng' (Madsen Pirie) — chia theo 5 chỗ một lập luận có thể nứt: cấu trúc, chữ nghĩa, phần bị bỏ, cảm xúc/con người, và giả định lén cài.">
+
+<!-- Web Builder — the minimalist UI kit that styles the rest of the site -->
+<link rel="stylesheet" href="../web-builder/web-builder.css">
+
+<style>
+  /* Page-local layout only — every colour / radius / shadow comes from wb-* tokens. */
+  body { background: var(--wb-canvas); color: var(--wb-fg); margin: 0; font-family: var(--wb-font); -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--wb-fg); color: var(--wb-canvas); }
+
+  /* ---- hero ---- */
+  .hw-hero { padding: 30px 0 20px; }
+  .hw-eyebrow { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 10px; }
+  .hw-title { font-size: clamp(26px, 4.4vw, 38px); font-weight: 720; letter-spacing: -.02em; margin: 0 0 12px; line-height: 1.16; }
+  .hw-sub { color: var(--wb-fg-muted); font-size: 15.5px; max-width: 74ch; line-height: 1.65; margin: 0 0 12px; }
+  .hw-sub b { color: var(--wb-fg); }
+  .hw-meta { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); letter-spacing: .04em; line-height: 1.6; }
+
+  /* ---- two-column reading layout ---- */
+  /* minmax(0,…) is load-bearing: a plain 1fr keeps min-width:auto and a wide table pushes the page sideways. */
+  .hw-layout { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 34px; align-items: start; padding: 26px 0 60px; }
+  @media (max-width: 900px) { .hw-layout { grid-template-columns: minmax(0, 1fr); } .hw-toc { display: none; } }
+  .hw-toc { max-height: calc(100vh - 92px); overflow-y: auto; width: 250px; }
+  .hw-toc .wb-sidenav__link.is-current { background: var(--wb-surface-hover); font-weight: 620; color: var(--wb-fg); }
+
+  /* ---- section rhythm ---- */
+  section[id] { scroll-margin-top: 76px; }
+  .hw-part-head { padding: 4px 0 2px; border-top: var(--wb-bw) solid var(--wb-border); padding-top: 22px; }
+  .hw-part-head .kicker { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 6px; }
+  .hw-part-head h2 { font-size: 21px; font-weight: 720; margin: 0 0 6px; letter-spacing: -.015em; }
+  .hw-part-head p { color: var(--wb-fg-muted); font-size: 14px; line-height: 1.65; margin: 0; max-width: 78ch; }
+
+  .hw-eyebrow-sec { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 6px; }
+  .hw-eyebrow-sec b { color: var(--wb-fg); font-weight: 650; }
+  .hw-sec-title { font-size: 20px; font-weight: 700; letter-spacing: -.01em; margin: 0 0 12px; line-height: 1.3; }
+  h3.hw-h3 { font-size: 15.5px; font-weight: 680; margin: 26px 0 10px; letter-spacing: -.005em; }
+
+  /* ---- prose ---- */
+  .hw-lede { font-size: 16px; line-height: 1.62; color: var(--wb-fg); max-width: 72ch; margin: 0 0 16px; font-weight: 500; }
+  .hw-lede b { font-weight: 700; }
+  .hw-p { font-size: 14.5px; line-height: 1.75; color: var(--wb-fg); max-width: 76ch; margin: 0 0 12px; }
+  .hw-p b { color: var(--wb-fg); font-weight: 650; }
+  .hw-p em { font-style: italic; color: var(--wb-fg-muted); }
+  .hw-ul { font-size: 14.5px; line-height: 1.72; color: var(--wb-fg); max-width: 76ch; margin: 0 0 14px; padding-left: 20px; }
+  .hw-ul li { margin-bottom: 6px; }
+  .hw-ul b { font-weight: 650; }
+
+  /* ---- pull quote ---- */
+  .hw-quote { border-left: 2px solid var(--wb-neutral-strong); padding: 2px 0 2px 14px; margin: 16px 0; color: var(--wb-fg-muted); font-size: 14.5px; line-height: 1.6; max-width: 72ch; }
+  .hw-quote b { color: var(--wb-fg); }
+  .hw-quote cite { display: block; font-style: normal; font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--wb-fg-subtle); margin-top: 6px; }
+
+  /* ---- number anchors ---- */
+  .hw-figs { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin: 14px 0 16px; }
+  .hw-fig { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); padding: 12px 14px; background: var(--wb-surface); }
+  .hw-fig .n { font-size: 19px; font-weight: 720; letter-spacing: -.02em; font-variant-numeric: tabular-nums; display: block; }
+  .hw-fig .l { font-size: 12px; color: var(--wb-fg-muted); line-height: 1.45; margin-top: 3px; display: block; }
+
+  /* ---- tables ---- */
+  .hw-tw { overflow-x: auto; margin: 4px 0 16px; border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); }
+  .hw-tw .wb-table { margin: 0; border: 0; }
+  .hw-tw .wb-table th, .hw-tw .wb-table td { font-size: 13.5px; line-height: 1.55; vertical-align: top; }
+
+  /* ---- part overview tiles ---- */
+  .hw-parts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  @media (max-width: 900px) { .hw-parts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .hw-parts { grid-template-columns: minmax(0, 1fr); } }
+  .hw-parts a { text-decoration: none; color: inherit; }
+
+  /* ---- fallacy blocks : one bordered card per fallacy, full width, full prose ---- */
+  .hw-fal-list { display: flex; flex-direction: column; gap: 12px; margin: 12px 0 6px; }
+  .hw-fal { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); background: var(--wb-surface); padding: 15px 17px; scroll-margin-top: 76px; }
+  .hw-fal__top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 9px; margin-bottom: 8px; }
+  .hw-fal__no { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); font-weight: 600; }
+  .hw-fal__name { font-size: 15.5px; font-weight: 710; letter-spacing: -.01em; margin: 0; }
+  .hw-fal__def { font-size: 14px; line-height: 1.72; color: var(--wb-fg); margin: 0; max-width: 78ch; }
+  .hw-fal__def b { font-weight: 650; }
+  .hw-fal__def em { font-style: italic; color: var(--wb-fg-muted); }
+  .hw-fal__meta { display: grid; grid-template-columns: 66px minmax(0, 1fr); gap: 7px 10px; margin-top: 11px; }
+  .hw-fal__k { font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--wb-fg-subtle); padding-top: 3px; }
+  .hw-fal__v { font-size: 13px; line-height: 1.62; color: var(--wb-fg-muted); margin: 0; }
+  .hw-fal__v b { color: var(--wb-fg); font-weight: 640; }
+  .hw-fal__v em { font-style: italic; }
+
+  /* ---- the quadrant diagram (the core mental model) ---- */
+  .hw-viz { margin: 16px 0 6px; }
+  .hw-viz .wb-chart__svg { max-width: 520px; width: 100%; }
+  .hw-src { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .04em; color: var(--wb-fg-subtle); margin: 10px 0 0; line-height: 1.5; }
+  .hw-vt { fill: var(--wb-fg); font-size: 12px; font-weight: 640; font-family: var(--wb-font); }
+  .hw-vs { fill: var(--wb-fg-muted); font-size: 10.5px; font-family: var(--wb-font); }
+  .hw-vaxis { fill: none; stroke: var(--wb-neutral-strong); stroke-width: 1.25; }
+  .hw-vgrid { fill: none; stroke: var(--wb-neutral); stroke-width: 1; stroke-dasharray: 3 3; }
+  .hw-vcell-bad { fill: var(--wb-danger-soft); }
+  .hw-vcell-good { fill: var(--wb-success-soft); }
+
+  /* ---- back to top ---- */
+  .hw-top { position: fixed; right: 18px; bottom: 18px; z-index: 20; opacity: 0; pointer-events: none; transition: opacity .16s ease; }
+  .hw-top.is-on { opacity: 1; pointer-events: auto; }
+</style>
+</head>
+<!-- wb-app is the kit's baseline: border-box on every wb-* element, the font,
+     canvas/ink colours, line-height, links that inherit instead of going
+     browser-blue. A shell-less page must say it or it falls through to the
+     browser defaults. -->
+<body class="wb-app">
+
+<header class="wb-navbar wb-navbar--sticky wb-navbar--collapse-lg">
+  <button class="wb-navbar__toggle wb-btn wb-btn--ghost wb-btn--icon" data-navbar-toggle
+          aria-label="Mở mục lục"><span class="wb-ico">menu</span></button>
+  <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">⚖</span> Cãi gì cũng thắng</a>
+  <nav class="wb-nav wb-navbar__menu">
+    <a class="wb-nav__link" href="#mo-dau">Mở đầu</a>
+    <a class="wb-nav__link" href="#g1">1 · Cấu trúc</a>
+    <a class="wb-nav__link" href="#g2">2 · Chữ nghĩa</a>
+    <a class="wb-nav__link" href="#g3">3 · Bỏ sót</a>
+    <a class="wb-nav__link" href="#g4">4 · Cảm xúc</a>
+    <a class="wb-nav__link" href="#g5">5 · Giả định</a>
+    <a class="wb-nav__link" href="#ket">Kết</a>
+    <span class="wb-navbar__spacer"></span>
+    <a class="wb-nav__link" href="../index.html"><span class="wb-ico wb-ico--sm">arrow_back</span> Trang chủ</a>
+  </nav>
+  <span class="wb-navbar__spacer"></span>
+  <div class="wb-navbar__actions">
+    <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" id="theme-toggle" aria-label="Sáng / Tối">
+      <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
+      <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
+    </button>
+  </div>
+</header>
+
+<main class="wb-container wb-container--wide">
+
+  <header class="hw-hero">
+    <p class="hw-eyebrow">Diễn giải sách · Madsen Pirie · How to Win Every Argument</p>
+    <h1 class="hw-title"><u>Ngụy biện không phải lời nói dối</u> — nó là mẹo khiến một lập luận <i>nghe có lý</i> mà không thật sự có lý.</h1>
+    <p class="hw-sub">Đây <b>không phải bản tóm tắt rút gọn</b>. Đây là bản <b>diễn giải và sắp xếp lại</b> toàn bộ cuốn <b>“Cãi gì cũng thắng”</b> của Madsen Pirie — giữ đủ ~79 lối ngụy biện trong sách, nhưng đổi cách trình bày: thay vì xếp theo bảng chữ cái như bản gốc, mỗi lối được gom về đúng <b>chỗ mà nó làm lập luận bị nứt</b>, và được giải thích lại bằng lời dễ hiểu — cái bẫy là gì, vì sao nó lừa được ta, một ví dụ cụ thể, và cách gỡ.</p>
+    <p class="hw-sub">Ý tưởng gốc của cả cuốn sách nằm ở một chỗ: <b>“nghe thuyết phục” và “đúng về mặt logic” là hai chuyện tách rời nhau</b>. Ngụy biện sống trong cái khe giữa hai điều đó — những phát biểu <i>xuôi tai</i> nhưng <i>không chứng minh được gì</i>. Hiểu chúng có hai công dụng: <b>để phòng thủ</b> (bắt được khi người khác dùng chiêu với mình) và — như Pirie viết một cách tinh quái — <b>để tấn công</b> (biết cách dựng chúng lên).</p>
+    <p class="hw-meta">DIỄN GIẢI &amp; SẮP XẾP LẠI TOÀN BỘ ~79 LỐI · GIỮ ĐỦ NỘI DUNG, ĐỔI CÁCH TRÌNH BÀY CHO RÀNH MẠCH<br>BẢN TIẾNG VIỆT ALPHA BOOKS · MỤC ĐÍCH HỌC TƯ DUY PHẢN BIỆN</p>
+  </header>
+
+  <div class="hw-figs" style="margin-bottom:20px">
+    <div class="hw-fig"><span class="n">5 nhóm</span><span class="l">tương ứng 5 chỗ một lập luận có thể nứt: cấu trúc · chữ nghĩa · phần bị bỏ · cảm xúc/con người · giả định lén cài</span></div>
+    <div class="hw-fig"><span class="n">~79 lối</span><span class="l">mọi lối ngụy biện trong sách đều được giữ và giải thích đầy đủ, không lược bớt lối nào</span></div>
+    <div class="hw-fig"><span class="n">2 trục tách rời</span><span class="l">“nghe có xuôi tai không” và “có thật sự chứng minh không” là hai câu hỏi khác nhau — ngụy biện sống ở khe giữa</span></div>
+    <div class="hw-fig"><span class="n">1 câu hỏi lọc</span><span class="l">bỏ phần khiến ta xúc động / nể uy tín / theo số đông đi — bằng chứng còn lại có thật sự dẫn tới kết luận không?</span></div>
+  </div>
+
+  <div class="hw-parts">
+    <a class="wb-card wb-card--hover wb-card--pad" href="#g1">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">1</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Cấu trúc suy luận gãy</p>
+          <p class="wb-media__text">Bộ khung logic hỏng — trông y hệt phép suy luận đúng nhưng lệch một mắt xích. Bắt được mà không cần biết chủ đề.</p>
+        </div>
+      </div>
+    </a>
+    <a class="wb-card wb-card--hover wb-card--pad" href="#g2">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">2</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Chữ nghĩa trượt nghĩa</p>
+          <p class="wb-media__text">Một từ mang hai nghĩa và bị tráo giữa chừng, hoặc một câu đọc được theo hai cách. Lỗi nằm trong chính ngôn ngữ.</p>
+        </div>
+      </div>
+    </a>
+    <a class="wb-card wb-card--hover wb-card--pad" href="#g3">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">3</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Bỏ sót &amp; né tránh</p>
+          <p class="wb-media__text">Mệnh đề có thể đúng, nhưng một mảnh quan trọng bị giấu ra ngoài khung hình: sự thật bị bỏ, câu hỏi bị né, gánh nặng bị đẩy đi.</p>
+        </div>
+      </div>
+    </a>
+    <a class="wb-card wb-card--hover wb-card--pad" href="#g4">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">4</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Cảm xúc &amp; con người</p>
+          <p class="wb-media__text">Bằng chứng bị thay bằng cảm xúc, uy tín, đám đông hoặc nhân thân người nói. Đây là nhóm bạn gặp nhiều nhất ngoài đời.</p>
+        </div>
+      </div>
+    </a>
+    <a class="wb-card wb-card--hover wb-card--pad" href="#g5">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">5</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Giả định lén cài</p>
+          <p class="wb-media__text">Một tiền đề chưa chứng minh được lén nhét vào, rồi cả lập luận xây tiếp như thể nó đã đúng: so sánh, nhân quả, nói vòng.</p>
+        </div>
+      </div>
+    </a>
+    <a class="wb-card wb-card--hover wb-card--pad" href="#mo-dau">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--sm">?</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Bắt đầu từ đây</p>
+          <p class="wb-media__text">Ngụy biện là gì, vì sao nó lừa được ta, cái máy dò một câu, và cách phòng thủ — đọc phần Mở đầu trước.</p>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div class="hw-layout">
+    <nav class="wb-sidenav hw-toc wb-sticky wb-scroll-y" style="--wb-sticky-gap:72px" id="toc">
+      <div class="wb-sidenav__section">Mở đầu</div>
+      <a class="wb-sidenav__link" href="#s-la-gi">Ngụy biện là gì</a>
+      <a class="wb-sidenav__link" href="#s-hai-truc">Hai trục &amp; máy dò một câu</a>
+      <a class="wb-sidenav__link" href="#s-phong-thu">Cách phòng thủ &amp; đạo đức của Pirie</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">Nhóm 1 — Cấu trúc suy luận</div>
+      <a class="wb-sidenav__link" href="#g1">11 lối hỏng ở bộ khung logic</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">Nhóm 2 — Chữ nghĩa</div>
+      <a class="wb-sidenav__link" href="#g2">6 lối trượt nghĩa của từ</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">Nhóm 3 — Bỏ sót &amp; né tránh</div>
+      <a class="wb-sidenav__link" href="#g3">21 lối thu hẹp tầm nhìn</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">Nhóm 4 — Cảm xúc &amp; con người</div>
+      <a class="wb-sidenav__link" href="#g4">22 lối thay bằng chứng bằng cảm xúc</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">Nhóm 5 — Giả định lén cài</div>
+      <a class="wb-sidenav__link" href="#g5">19 lối cài tiền đề chưa chứng minh</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">Kết</div>
+      <a class="wb-sidenav__link" href="#ket">Sáu điều mang theo</a>
+    </nav>
+
+    <div class="wb-stack" style="--wb-stack-gap:48px">
+
+      <!-- ══════════════════ MỞ ĐẦU ══════════════════ -->
+      <div class="hw-part-head" id="mo-dau" style="border-top:0;padding-top:0">
+        <p class="kicker">Mở đầu · cách đọc trang này</p>
+        <h2>Trước hết: ngụy biện là gì, và vì sao nó lại lừa được cả người thông minh</h2>
+        <p>Ba mục dưới đây là bộ khung tư duy cho cả trang. Nắm ba điều này rồi thì 79 lối phía sau chỉ còn là các biến thể của cùng một trò.</p>
+      </div>
+
+      <section id="s-la-gi">
+        <p class="hw-eyebrow-sec"><b>Mở đầu</b> — định nghĩa &amp; hiểu nhầm phổ biến</p>
+        <h2 class="hw-sec-title">Ngụy biện là lỗi ở <i>chỗ nối</i> giữa lý lẽ và kết luận — không phải ở chỗ lý lẽ đúng hay sai</h2>
+
+        <p class="hw-p">Rất nhiều người nghĩ “ngụy biện” nghĩa là <b>nói sai sự thật</b>, hoặc là <b>chửi bới, xúc phạm</b>. Nghe thì hợp lý, vì ta hay gặp ngụy biện đi kèm với dối trá và công kích. <b>Nhưng đó là hiểu nhầm</b>, và nếu không gỡ nó ra trước thì cả trang này sẽ bị đọc lệch.</p>
+        <p class="hw-p">Sự thật là: <b>một lập luận có thể dùng toàn những câu đúng mà vẫn là ngụy biện.</b> Lỗi không nằm ở các viên gạch (các mệnh đề), mà nằm ở <b>vữa gắn giữa chúng</b> — ở chỗ người ta tuyên bố rằng “vì thế này nên suy ra thế kia”, trong khi cái “thế này” chẳng thật sự đỡ cho cái “thế kia”. Pirie định nghĩa rất rộng: bất kỳ mánh nào trong lý luận hay ngôn ngữ khiến một phát biểu được chấp nhận như một thứ mà nó không phải, đều là ngụy biện.</p>
+        <div class="hw-quote">
+          Hãy hình dung một lập luận như một cây cầu: hai bờ là <b>lý lẽ</b> và <b>kết luận</b>, nhịp cầu là <b>phép suy luận</b> nối chúng. Ngụy biện là cây cầu <b>trông thì liền lạc</b> nhưng nhịp giữa đã gãy — bạn bước lên vì nó <i>trông</i> chắc, rồi mới rơi.
+          <cite>Chỗ analogy này hỏng: cầu gãy thì ai cũng thấy, còn ngụy biện được thiết kế để <b>không</b> lộ ra chỗ gãy — đó mới là lý do phải học nhận diện.</cite>
+        </div>
+        <p class="hw-p">Vì lỗi nằm ở chỗ nối chứ không ở viên gạch, có hai hệ quả quan trọng: <b>(1)</b> người nói ngụy biện có thể hoàn toàn chân thành và tin điều mình nói; <b>(2)</b> bác được một lối ngụy biện <i>không</i> có nghĩa kết luận của họ sai — chỉ có nghĩa là <b>lý lẽ vừa đưa ra chưa chứng minh được nó</b>. Nhầm hai điều này lại chính là một ngụy biện (xem <i>Bác bỏ ví dụ</i> ở Nhóm 3).</p>
+      </section>
+
+      <section id="s-hai-truc">
+        <p class="hw-eyebrow-sec"><b>Mở đầu</b> — mô hình cốt lõi</p>
+        <h2 class="hw-sec-title">Hai trục tách rời, và cái máy dò chỉ gồm một câu hỏi</h2>
+        <p class="hw-p">Nếu chỉ mang theo một hình ảnh từ cả cuốn sách, hãy mang hình này. Mọi phát biểu nằm ở đâu đó trên một mặt phẳng có <b>hai trục độc lập</b>:</p>
+        <ul class="hw-ul">
+          <li><b>Trục ngang — “nghe có xuôi tai / thuyết phục không?”</b> Đây là chuyện tâm lý: nó có làm ta gật đầu không.</li>
+          <li><b>Trục dọc — “có thật sự chứng minh được kết luận không?”</b> Đây là chuyện logic: lý lẽ có thật sự đỡ cho kết luận không.</li>
+        </ul>
+        <p class="hw-p">Hai trục này <b>không đi cùng nhau</b>. Chính vì thế mới có một ô nguy hiểm: <b>nghe rất xuôi tai nhưng không chứng minh được gì</b>. Toàn bộ 79 lối trong sách đều nằm gọn trong ô đó.</p>
+
+        <div class="hw-viz">
+          <div class="wb-chart">
+            <svg class="wb-chart__svg" viewBox="0 0 520 340" role="img" aria-label="Bản đồ hai trục: nghe thuyết phục (ngang) và có chứng minh được không (dọc); ngụy biện nằm ở ô thuyết phục nhưng không chứng minh được">
+              <!-- cells -->
+              <rect class="hw-vcell-good" x="270" y="40" width="210" height="120" rx="4"></rect>
+              <rect class="hw-vcell-bad"  x="270" y="160" width="210" height="120" rx="4"></rect>
+              <!-- axes cross -->
+              <line class="hw-vaxis" x1="60" y1="40" x2="60" y2="280"></line>
+              <line class="hw-vaxis" x1="60" y1="280" x2="480" y2="280"></line>
+              <line class="hw-vgrid" x1="270" y1="40" x2="270" y2="280"></line>
+              <line class="hw-vgrid" x1="60" y1="160" x2="480" y2="160"></line>
+              <!-- axis labels -->
+              <text class="hw-vs" x="60" y="304">← ít thuyết phục</text>
+              <text class="hw-vs" x="480" y="304" text-anchor="end">rất thuyết phục →</text>
+              <text class="hw-vs" x="270" y="322" text-anchor="middle">TRỤC NGANG · “nghe có xuôi tai không?”</text>
+              <text class="hw-vs" transform="rotate(-90 22 160)" x="22" y="160" text-anchor="middle">TRỤC DỌC · “có thật sự chứng minh không?”</text>
+              <!-- cell labels -->
+              <text class="hw-vs" x="165" y="92" text-anchor="middle">Đúng nhưng vụng</text>
+              <text class="hw-vs" x="165" y="108" text-anchor="middle">(chắc mà trình bày chán,</text>
+              <text class="hw-vs" x="165" y="122" text-anchor="middle">dễ bị phớt lờ)</text>
+              <text class="hw-vt" x="375" y="96" text-anchor="middle">Lập luận tốt</text>
+              <text class="hw-vs" x="375" y="112" text-anchor="middle">vừa chặt vừa thuyết phục</text>
+              <text class="hw-vs" x="165" y="216" text-anchor="middle">Vừa dở vừa sai</text>
+              <text class="hw-vs" x="165" y="232" text-anchor="middle">(không ai bận tâm)</text>
+              <text class="hw-vt" x="375" y="214" text-anchor="middle" style="font-weight:720">NGỤY BIỆN</text>
+              <text class="hw-vs" x="375" y="230" text-anchor="middle">nghe rất xuôi tai</text>
+              <text class="hw-vs" x="375" y="244" text-anchor="middle">nhưng KHÔNG chứng minh gì</text>
+              <text class="hw-vs" x="375" y="266" text-anchor="middle" style="font-style:italic">← cả cuốn sách nằm ở ô này</text>
+            </svg>
+          </div>
+          <p class="hw-src">Mô hình do trang này dựng để diễn giải ý “sức thuyết phục ≠ tính hợp lệ” xuyên suốt cuốn sách. Ô đỏ = nơi mọi ngụy biện trú ngụ.</p>
+        </div>
+
+        <h3 class="hw-h3">Máy dò một câu</h3>
+        <p class="hw-p">Từ mô hình trên rút ra một thao tác dùng được ngay: khi một lập luận khiến bạn muốn gật đầu, hãy <b>tạm gỡ bỏ mọi thứ tác động lên trục ngang</b> — cảm xúc, uy tín người nói, số đông đang tin, những từ ngữ được chọn để gây ấn tượng — rồi hỏi:</p>
+        <p class="hw-p" style="font-weight:600"><b>“Bỏ hết những cái đó đi, phần bằng chứng còn lại có thật sự dẫn tới kết luận này không?”</b></p>
+        <p class="hw-p">Nếu sức thuyết phục <b>bốc hơi</b> ngay khi bạn gỡ bỏ những thứ đó, thì thứ đang thuyết phục bạn không phải là bằng chứng — bạn vừa tìm thấy ngụy biện, và câu hỏi tiếp theo chỉ là “nó thuộc lối nào trong 79 lối dưới đây”.</p>
+      </section>
+
+      <section id="s-phong-thu">
+        <p class="hw-eyebrow-sec"><b>Mở đầu</b> — phòng thủ &amp; đạo đức</p>
+        <h2 class="hw-sec-title">Cách gỡ chung, và vì sao Pirie dạy cả cách tấn công</h2>
+        <p class="hw-p">Trước khi vào từng lối, có vài cách gỡ vạn năng, dùng được cho gần như mọi ngụy biện:</p>
+        <ul class="hw-ul">
+          <li><b>Bắt lập luận đứng yên.</b> Yêu cầu phát biểu lại thật rõ: tiền đề là gì, kết luận là gì. Nhiều ngụy biện chỉ sống được nhờ mập mờ; viết nó ra mạch lạc là nửa cách gỡ.</li>
+          <li><b>Tách người nói khỏi điều được nói.</b> Ai nói, họ giàu hay nghèo, có nhất quán hay không — đều không quyết định điều đó đúng hay sai.</li>
+          <li><b>Tách cảm xúc khỏi bằng chứng.</b> Đổi những từ ngữ nhuốm màu sang từ trung tính, rồi xem lập luận còn đứng vững không.</li>
+          <li><b>Hỏi “còn thiếu gì?”</b> Mặt kia của vấn đề, lựa chọn thứ ba, ngoại lệ, hay tiền đề đang bị giấu.</li>
+          <li><b>Đòi đúng người phải chứng minh.</b> Ai đưa ra tuyên bố mới thì người đó gánh việc chứng minh, không phải người nghi ngờ.</li>
+        </ul>
+        <div class="hw-quote">
+          Pirie viết cuốn này như một chỉ dẫn thực hành để <b>giành chiến thắng</b> trong tranh luận — kể cả cách dựng ngụy biện một cách tinh vi. Ông nói thẳng: rơi vào tay người xấu, đây là vũ khí.
+          <cite>Nhưng lập luận của ông là: chính vì học cách <b>dựng</b> chúng mà bạn mới thật sự biết cách <b>nhận ra và miễn nhiễm</b> khi bị dùng chiêu. Trang này giữ tinh thần đó — hiểu để phòng thủ là mục đích chính.</cite>
+        </div>
+      </section>
+
+      <!-- ══════════════════ NHÓM 1 ══════════════════ -->
+      <div class="hw-part-head" id="g1">
+        <p class="kicker">Nhóm 1 · ngụy biện chính thống</p>
+        <h2>Cấu trúc suy luận gãy — 11 lối hỏng ngay ở bộ khung logic</h2>
+        <p>Đây là nhóm “chính thống” (formal): lỗi nằm hoàn toàn ở <b>hình dạng</b> của phép suy luận. Điểm đặc biệt — bạn <b>không cần biết chủ đề</b> cũng bắt được lỗi, chỉ cần nhìn cái khung. Chúng nguy hiểm vì trông <i>y hệt</i> những phép suy luận đúng, chỉ lệch đúng một mắt xích.</p>
+      </div>
+
+      <section id="g1-body">
+        <p class="hw-p">Phần lớn nhóm này xoay quanh câu điều kiện “Nếu P thì Q” và tam đoạn luận (kiểu “Mọi A là B; mọi B là C; vậy…”). Bảng dưới là chìa khoá cho hai lối hay gặp nhất — hãy để ý cột giữa (đúng) và cột phải (bẫy) khác nhau ở đâu:</p>
+        <div class="hw-tw">
+          <table class="wb-table wb-table--compact">
+            <thead><tr><th>Bạn biết</th><th>Suy luận ĐÚNG</th><th>Bẫy NGỤY BIỆN</th></tr></thead>
+            <tbody>
+              <tr><td>“Nếu P thì Q” &amp; P đúng</td><td>⇒ Q đúng <em>(modus ponens — hợp lệ)</em></td><td>—</td></tr>
+              <tr><td>“Nếu P thì Q” &amp; Q đúng</td><td>không suy ra được gì về P</td><td>⇒ “vậy P đúng” <b>= Khẳng định hậu thức</b></td></tr>
+              <tr><td>“Nếu P thì Q” &amp; P sai</td><td>không suy ra được gì về Q</td><td>⇒ “vậy Q sai” <b>= Phủ định tiền kiện</b></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="hw-fal-list">
+
+          <article class="hw-fal" id="f-khang-dinh-hau-thuc">
+            <div class="hw-fal__top"><span class="hw-fal__no">1.01</span><h3 class="hw-fal__name">Khẳng định hậu thức</h3><span class="wb-tag">affirming the consequent</span></div>
+            <p class="hw-fal__def">Từ chỗ thấy <b>kết quả (Q)</b> đã xảy ra, người ta suy ngược ra <b>nguyên nhân (P)</b> phải đúng. Nghe hợp lý vì đúng là “nếu P thì Q”. Nhưng một kết quả thường có <b>nhiều nguyên nhân</b>, nên thấy Q không đủ để chỉ đích danh P.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Trời mưa thì đường ướt. Đường đang ướt, vậy chắc chắn vừa mưa.”</em> — Đường có thể ướt vì xe tưới nước.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Liệt kê những nguyên nhân khác cũng cho ra Q. Còn ít nhất một cái là kết luận sụp.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-phu-dinh-tien-kien">
+            <div class="hw-fal__top"><span class="hw-fal__no">1.02</span><h3 class="hw-fal__name">Phủ định tiền kiện</h3><span class="wb-tag">denying the antecedent</span></div>
+            <p class="hw-fal__def">Chiều ngược lại: “Nếu P thì Q; <b>P không xảy ra</b>, vậy Q cũng không.” Nhưng bác được nguyên nhân này <b>không</b> bác được kết quả, vì Q vẫn có thể đến từ nguyên nhân khác.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Ăn quá nhiều thì béo. Tôi ăn rất ít, nên tôi không thể béo.”</em> — Vẫn có thể béo vì bệnh lý, gen, thuốc.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Nhớ: “nếu P thì Q” chỉ nói P <b>đủ</b> để có Q, không nói P là con đường <b>duy nhất</b>.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-ket-luan-choi-bo-tien-de">
+            <div class="hw-fal__top"><span class="hw-fal__no">1.03</span><h3 class="hw-fal__name">Kết luận chối bỏ tiền đề</h3><span class="wb-tag">self-refuting</span></div>
+            <p class="hw-fal__def">Kết luận rút ra lại <b>mâu thuẫn với chính tiền đề</b> đã dùng để tới đó. Nếu điểm đến đá lại điểm xuất phát thì ít nhất một trong hai phải sai — lập luận tự cắn đuôi mình.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Không có gì là chắc chắn cả”</em> — được nói ra như một điều chắc chắn.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Đối chiếu thẳng kết luận với tiền đề: chúng có thể cùng đúng không?</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-tien-de-mau-thuan">
+            <div class="hw-fal__top"><span class="hw-fal__no">1.04</span><h3 class="hw-fal__name">Tiền đề mâu thuẫn</h3><span class="wb-tag">contradictory premises</span></div>
+            <p class="hw-fal__def">Lập luận đứng trên các tiền đề <b>không thể cùng đúng</b>. Nghịch lý logic: từ một cặp mâu thuẫn, người ta có thể “chứng minh” <b>bất cứ điều gì</b>. Vì thế “có vẻ chặt chẽ” không đồng nghĩa với “hợp lý” khi nền móng đã tự phủ định.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v">Vừa nhận “sữa màu trắng” vừa nhận “sữa không màu trắng”, rồi “suy ra” mặt trăng làm bằng phô mai.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Trước khi tin kết luận, kiểm tra xem các tiền đề có tự đá nhau không.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-tien-de-loai-tru">
+            <div class="hw-fal__top"><span class="hw-fal__no">1.05</span><h3 class="hw-fal__name">Tiền đề loại trừ</h3><span class="wb-tag">exclusive premises</span></div>
+            <p class="hw-fal__def">Trong tam đoạn luận, nếu <b>cả hai tiền đề đều phủ định</b> (“không… là…”) thì chúng không thiết lập được bất kỳ quan hệ nào để rút ra kết luận. Hai câu “không” không nối được gì với nhau.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Thợ mộc không phải ngư dân; ngư dân không phải ca sĩ”</em> — chẳng suy ra được gì về thợ mộc và ca sĩ.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Thấy cả hai tiền đề đều là phủ định thì biết ngay không có kết luận hợp lệ.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-ket-luan-khang-dinh-tien-de-phu-dinh">
+            <div class="hw-fal__top"><span class="hw-fal__no">1.06</span><h3 class="hw-fal__name">Kết luận khẳng định từ tiền đề phủ định</h3><span class="wb-tag">illicit affirmative</span></div>
+            <p class="hw-fal__def">Quy tắc: nếu một tiền đề mang tính <b>phủ định</b> thì kết luận <b>buộc phải phủ định</b>. Rút ra một kết luận khẳng định từ đó là gãy khung — dễ phát hiện từ xa.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Vài con mèo không ngu; mọi con mèo là động vật ⇒ vài động vật ngu.”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Đếm dấu phủ định trong tiền đề: có một thì kết luận không được phép khẳng định.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-khang-dinh-ton-tai">
+            <div class="hw-fal__top"><span class="hw-fal__no">1.07</span><h3 class="hw-fal__name">Ngụy biện khẳng định sự tồn tại</h3><span class="wb-tag">existential fallacy</span></div>
+            <p class="hw-fal__def">Từ những câu <b>phổ quát</b> (“mọi…”, “không… nào”) — vốn <b>không hứa hẹn có cái gì tồn tại</b> — lại rút ra một kết luận “vài… có thật”. Sự tồn tại bị lén nhét vào mà không có bằng chứng.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Mọi UFO là phi thuyền ngoài hành tinh; mọi phi thuyền ấy là vật có thật ⇒ tồn tại phi thuyền ngoài hành tinh.”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">“Mọi X là Y” chỉ nói <i>nếu</i> có X thì nó là Y — không khẳng định X có thật. Cảnh giác chữ “vài” lẻn vào kết luận.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-hoan-vi-sai">
+            <div class="hw-fal__top"><span class="hw-fal__no">1.08</span><h3 class="hw-fal__name">Hoán vị sai</h3><span class="wb-tag">illicit conversion</span></div>
+            <p class="hw-fal__def">Đảo chỗ chủ ngữ và vị ngữ ở một dạng câu <b>không cho phép</b> đảo. “Tất cả A là B” bị lật thành “Tất cả B là A” — kết luận sai dù tiền đề đúng.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Mọi con mèo là động vật”</em> bị lật thành <em>“mọi động vật là mèo”.</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Chỉ được đảo an toàn “Vài A là B” và “Không A nào là B”. Còn “Tất cả…” và “Vài… không…” thì không.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-suy-luan-sai-cach">
+            <div class="hw-fal__top"><span class="hw-fal__no">1.09</span><h3 class="hw-fal__name">Suy luận sai cách</h3><span class="wb-tag">illicit process</span></div>
+            <p class=”hw-fal__def”>Kết luận nói về <b>cả một nhóm</b>, trong khi tiền đề mới chỉ nói về <b>một phần</b> của nhóm đó. Một khái niệm được “mở rộng” trong kết luận rộng hơn mức nó xuất hiện ở tiền đề. Sách tách thành hai dạng cùng một lỗi — <b>sai cách chủ yếu</b> (lỗi ở đại tiền đề) và <b>sai cách thứ yếu</b> (lỗi ở tiểu tiền đề).</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Người thu thuế là công bộc và hay bắt nạt dân ⇒ mọi công bộc đều hay bắt nạt dân.”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Một khái niệm chỉ được nói về “toàn bộ” trong kết luận nếu đã “toàn bộ” trong tiền đề.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-trung-to-phan-bo-lech">
+            <div class="hw-fal__top"><span class="hw-fal__no">1.10</span><h3 class="hw-fal__name">Trung tố phân bố lệch</h3><span class="wb-tag">undistributed middle</span></div>
+            <p class="hw-fal__def">Từ trung gian nối hai vế (“trung tố”) chưa lần nào <b>bao trọn cả nhóm của nó</b>, nên cây cầu nối không bắc được. Đây là lỗi âm thầm phía sau vô số suy luận “A và B cùng có tính X nên A là B”.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Ngựa có bốn chân; chó có bốn chân ⇒ ngựa là chó.”</em> — “bốn chân” chưa từng gói trọn nhóm.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Bắt “khâu giữa” phải phủ trọn nhóm ít nhất một lần thì mối nối mới hợp lệ.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-bon-dieu-kien">
+            <div class="hw-fal__top"><span class="hw-fal__no">1.11</span><h3 class="hw-fal__name">Ngụy biện bốn điều kiện</h3><span class="wb-tag">quaternio terminorum</span></div>
+            <p class="hw-fal__def">Tam đoạn luận hợp lệ chỉ được dùng <b>đúng ba khái niệm</b>, với một khái niệm trung gian lặp lại giống hệt. Khi một từ âm thầm mang <b>hai nghĩa</b>, ta có bốn khái niệm — cầu nối biến mất. (Thường do vô ý hơn là cố tình.)</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“John ở bên phải Peter; Peter ở bên phải Paul ⇒ John ở bên phải Paul”</em> — “bên phải Peter” không phải “Peter”.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Đếm số khái niệm <i>thật sự</i> tham gia. Quá ba là gãy. (Liên quan chặt với lối “lối nói lập lờ” ở Nhóm 2.)</p>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ══════════════════ NHÓM 2 ══════════════════ -->
+      <div class="hw-part-head" id="g2">
+        <p class="kicker">Nhóm 2 · ngụy biện phi chính thống — ngôn ngữ</p>
+        <h2>Chữ nghĩa trượt nghĩa — 6 lối lỗi nằm trong chính ngôn ngữ</h2>
+        <p>Ở nhóm này bộ khung logic có thể hoàn toàn đúng, nhưng một <b>từ</b> bị trượt nghĩa giữa chừng, hoặc một câu đọc được theo hai cách. Lý luận là việc xử lý quan hệ giữa các khái niệm — nếu bản thân khái niệm đổi nghĩa khi đang chạy, cả lập luận thành vô nghĩa.</p>
+      </div>
+
+      <section id="g2-body">
+        <div class="hw-fal-list">
+
+          <article class="hw-fal" id="f-trong-am">
+            <div class="hw-fal__top"><span class="hw-fal__no">2.01</span><h3 class="hw-fal__name">Ngụy biện trọng âm</h3><span class="wb-tag">accent</span></div>
+            <p class="hw-fal__def">Nhấn giọng vào một từ để <b>nhét thêm hàm ý</b> không hề có trong nghĩa đen của câu. Cùng một câu, đổi chỗ nhấn là đổi ẩn ý.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v">Nhấn <em>“Đừng nói xấu bạn bè <b>hôm nay</b>”</em> ⇒ ngầm cho phép “ngày mai thì được”.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Hàm ý sinh ra từ chỗ nhấn không nằm trong điều mà hai bên đã thống nhất — nó là hàng lậu.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-choi-chu">
+            <div class="hw-fal__top"><span class="hw-fal__no">2.02</span><h3 class="hw-fal__name">Chơi chữ</h3><span class="wb-tag">amphiboly</span></div>
+            <p class="hw-fal__def">Câu <b>mơ hồ về ngữ pháp</b> nên đọc được theo hai cách; người dùng chọn cách hiểu tiện cho mình, hoặc để ngỏ cả hai để “nói sao cũng đúng”.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v">Lời sấm <em>“Ngươi sẽ tiêu diệt một đế chế hùng mạnh”</em> — không nói rõ đế chế của ai.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Viết lại câu sao cho chỉ còn một nghĩa; nếu người nói né việc làm rõ, đó là cố ý.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-loi-noi-lap-lo">
+            <div class="hw-fal__top"><span class="hw-fal__no">2.03</span><h3 class="hw-fal__name">Ngụy biện lối nói lập lờ</h3><span class="wb-tag">equivocation</span></div>
+            <p class="hw-fal__def">Một <b>từ mang hai nghĩa</b>, và bị <b>tráo nghĩa giữa chừng</b> trong khi lập luận đòi nó phải giữ nguyên một nghĩa từ đầu tới cuối.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Cái ‘cuối’ (mục đích) của đời là hạnh phúc; cái ‘cuối’ (chấm hết) của đời là cái chết ⇒ hạnh phúc là chết.”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Soi từ chủ chốt: nó có giữ đúng một nghĩa suốt lập luận không? Cố định nghĩa lại là bẫy tan.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-tong-the">
+            <div class="hw-fal__top"><span class="hw-fal__no">2.04</span><h3 class="hw-fal__name">Ngụy biện tổng thể</h3><span class="wb-tag">composition</span></div>
+            <p class="hw-fal__def">Suy từ <b>từng phần</b> lên <b>cả khối</b>: cái đúng với mỗi thành viên được cho là đương nhiên đúng với tập thể. Nhưng khối có tính chất riêng mà các phần không có.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Mỗi nhạc công đều xuất sắc ⇒ dàn nhạc chắc chắn hay.”</em> — Ăn ý tập thể là chuyện khác.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Bằng chứng về các phần không thay được bằng chứng về tổng thể; hỏi thẳng về tổng thể.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-phan-hoa">
+            <div class="hw-fal__top"><span class="hw-fal__no">2.05</span><h3 class="hw-fal__name">Ngụy biện phân hóa</h3><span class="wb-tag">division</span></div>
+            <p class="hw-fal__def">Chiều ngược của lối trên: gán tính chất của <b>cả khối</b> cho <b>từng phần</b>. Cái đúng cho tập thể chưa chắc chia đều cho mỗi cá nhân.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Người nói tiếng xứ Wales đang biến mất; Dafydd nói tiếng đó ⇒ Dafydd đang biến mất.”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Tính chất tập thể (“đang biến mất”, “giàu nhất nước”) không tự phân bổ cho thành viên.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-do-vat-hoa">
+            <div class="hw-fal__top"><span class="hw-fal__no">2.06</span><h3 class="hw-fal__name">Đồ vật hóa</h3><span class="wb-tag">reification</span></div>
+            <p class="hw-fal__def">Tưởng một <b>danh từ trừu tượng</b> (“cái đẹp”, “vận mệnh”, “thị trường đang sợ hãi”) là một <b>vật có thật</b>, rồi lập luận trên nó như thể nó tồn tại độc lập.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v">Đòi <em>“chiết xuất màu xanh của bầu trời rồi lồng vào thanh xà bông”</em> — “màu xanh” đâu phải một chất.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Thay danh từ trừu tượng bằng mô tả cụ thể (“nhiều người đang bán vì lo sợ”) để lộ có “vật” thật hay không.</p>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ══════════════════ NHÓM 3 ══════════════════ -->
+      <div class="hw-part-head" id="g3">
+        <p class="kicker">Nhóm 3 · phi chính thống — lược bỏ &amp; né tránh</p>
+        <h2>Bỏ sót &amp; né tránh — 21 lối thu hẹp tầm nhìn của bạn</h2>
+        <p>Ở nhóm này các mệnh đề có thể đúng và phép suy luận có thể chuẩn, nhưng <b>một mảnh quan trọng bị đẩy ra ngoài khung hình</b>: một sự thật liên quan bị giấu, một câu hỏi bị né, gánh nặng chứng minh bị đùn sang người khác, hay quan điểm đối phương bị bóp méo. Mẹo chung của cả nhóm là <b>làm bạn nhìn hẹp lại</b> để không thấy thứ đáng lẽ phải thấy.</p>
+      </div>
+
+      <section id="g3-body">
+        <div class="hw-fal-list">
+
+          <article class="hw-fal" id="f-song-de-gia">
+            <div class="hw-fal__top"><span class="hw-fal__no">3.01</span><h3 class="hw-fal__name">Song đề giả</h3><span class="wb-tag">bogus / false dilemma</span></div>
+            <p class="hw-fal__def">Dựng một tình thế “chỉ có thể chọn A hoặc B”, buộc bạn nuốt một trong hai hậu quả — trong khi thực tế còn lối khác, hoặc một trong hai “sừng” không thật.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Không theo chúng ta thì là chống lại chúng ta.”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Ba cách phá: “nắm sừng” (bác một hậu quả), “đi giữa hai sừng” (chỉ ra lựa chọn thứ ba), hoặc dựng song đề ngược lại.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-luan-quan">
+            <div class="hw-fal__top"><span class="hw-fal__no">3.02</span><h3 class="hw-fal__name">Lập luận luẩn quẩn</h3><span class="wb-tag">circulus in probando</span></div>
+            <p class="hw-fal__def">Dùng A để chứng minh B, nhưng B lại được chứng minh bằng chính A — vòng tròn khép kín. Nó nối cái chưa biết với cái chưa biết, không cái nào chạm vào thực tế.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Tin Kinh Thánh vì đó là lời Chúa; biết có Chúa vì Kinh Thánh nói vậy.”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Đòi một điểm tựa <b>nằm ngoài vòng tròn</b> — một bằng chứng độc lập với kết luận.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-luong-hoa-che-day">
+            <div class="hw-fal__top"><span class="hw-fal__no">3.03</span><h3 class="hw-fal__name">Lượng hóa che đậy</h3><span class="wb-tag">concealed quantification</span></div>
+            <p class="hw-fal__def">Nói mập mờ về số lượng, <b>giấu chuyện là “tất cả” hay chỉ “một vài”</b>, khiến người nghe mặc định phạm vi rộng hơn thực tế.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Thợ sửa xe toàn quân lừa đảo”</em> — nghe như tất cả, thực chỉ vài người.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Hỏi thẳng: “tất cả hay chỉ một số?” Làm rõ lượng thì câu thường hụt hơi.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-ly-le-khuat-ban">
+            <div class="hw-fal__top"><span class="hw-fal__no">3.04</span><h3 class="hw-fal__name">Lý lẽ khuất bán</h3><span class="wb-tag">concealed qualification</span></div>
+            <p class="hw-fal__def">Nêu một quy luật <b>vốn có ngoại lệ</b> như thể nó tuyệt đối, bằng cách làm mờ đi chữ hạn định (“thường”, “hầu hết”). Người nghe bỏ qua các trường hợp không đúng.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“<b>Mỗi lần</b> nới cung tiền là giá tăng”</em> — chữ “mỗi lần” giấu đi những ngoại lệ.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Khôi phục điều kiện bị giấu: đây là “luôn luôn” hay chỉ “phần lớn”?</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-che-bai-lua-chon">
+            <div class="hw-fal__top"><span class="hw-fal__no">3.05</span><h3 class="hw-fal__name">Chê bai các lựa chọn khác</h3><span class="wb-tag">damning the alternatives</span></div>
+            <p class="hw-fal__def">Bênh cái của mình bằng cách <b>dìm hết các lựa chọn còn lại</b>, thay vì chứng minh cái của mình tốt. Nhưng đối thủ dở không làm mình hay lên.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Đội tôi mạnh, chẳng qua vì mấy đội kia đều vô dụng.”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Nhắc rằng <b>tất cả</b> lựa chọn đều có thể cùng dở; hạ cái khác không nâng được cái này.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-rut-lui-dinh-nghia">
+            <div class="hw-fal__top"><span class="hw-fal__no">3.06</span><h3 class="hw-fal__name">Ngụy biện rút lui định nghĩa</h3><span class="wb-tag">definitional retreat</span></div>
+            <p class="hw-fal__def">Bị phản bác thì <b>lặng lẽ đổi nghĩa</b> của từ để câu ban đầu vẫn “đúng”, khiến phát biểu cũ âm thầm biến thành phát biểu khác.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Nó chưa từng ra nước ngoài.” — “Nó từng đi Boulogne mà.” — “Ừ nhưng đi Boulogne không tính là ra nước ngoài.”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Chốt nghĩa của từ <b>trước</b> khi tranh, và giữ họ ở nghĩa thông thường đó.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-cat-xen-ngoai-dien">
+            <div class="hw-fal__top"><span class="hw-fal__no">3.07</span><h3 class="hw-fal__name">Cắt xén ngoại diên</h3><span class="wb-tag">extensional pruning</span></div>
+            <p class="hw-fal__def">Dùng một từ theo <b>nghĩa đầy đủ</b> mà cả hai bên vốn cùng hiểu, nhưng khi bị vặn thì <b>rút về nghĩa đen trơ trụi</b>, chối bỏ các sắc thái đã ngầm hứa.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v">Hứa “sẽ có một <b>cuộc điều tra</b>” (ngầm hiểu: độc lập, tử tế), khi bị hỏi thì rút về nghĩa kỹ thuật hẹp nhất.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Giữ đúng nghĩa mà cả hai vốn cùng hiểu; đừng để họ tước bỏ phần “ai cũng ngầm hiểu”.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-rao-truoc">
+            <div class="hw-fal__top"><span class="hw-fal__no">3.08</span><h3 class="hw-fal__name">Rào trước</h3><span class="wb-tag">hedging</span></div>
+            <p class="hw-fal__def">Cố tình nói <b>mơ hồ, nước đôi</b> để sau này muốn hiểu sao cũng được, luôn chừa sẵn đường lui khi bị chỉ ra là sai.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v">Lời tiên tri kiểu Nostradamus mơ hồ đến mức khớp được với gần như mọi sự kiện đã xảy ra.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Đòi một phát biểu <b>kiểm chứng được</b> — có thể chỉ ra rõ nó đúng hay sai trong tình huống nào.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-bat-kha-tri">
+            <div class="hw-fal__top"><span class="hw-fal__no">3.09</span><h3 class="hw-fal__name">Ngụy biện bất khả tri</h3><span class="wb-tag">ad ignorantiam</span></div>
+            <p class="hw-fal__def">Lấy việc <b>chưa ai chứng minh được điều ngược lại</b> làm bằng chứng cho điều mình muốn. Nhưng thiếu bằng chứng bác bỏ không phải là bằng chứng ủng hộ.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Ma có thật, vì bao năm rồi chẳng ai chứng minh được là ma không tồn tại.”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">“Không chứng minh được là sai” ≠ “đúng”. Chỗ trống của tri thức không phải bằng chứng.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-cung-dau">
+            <div class="hw-fal__top"><span class="hw-fal__no">3.10</span><h3 class="hw-fal__name">Ngụy biện cứng đầu</h3><span class="wb-tag">ad lapidem</span></div>
+            <p class="hw-fal__def">Gạt phắt một lập luận mà <b>không hề bàn vào nội dung</b>, chỉ vì nó không hợp ý mình. Đây là né tránh, không phải phản bác.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v">Bác sĩ Johnson đá vào hòn đá để “bác bỏ” quan điểm của Berkeley — mà không đụng tới lập luận.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Từ chối xét bằng chứng không làm bằng chứng đó sai. Kéo họ trở lại nội dung.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-diep-khuc">
+            <div class="hw-fal__top"><span class="hw-fal__no">3.11</span><h3 class="hw-fal__name">Lập luận điệp khúc</h3><span class="wb-tag">ad nauseam</span></div>
+            <p class="hw-fal__def">Lặp đi lặp lại một khẳng định <b>thật nhiều lần</b> cho tới khi nó được chấp nhận — mà không thêm một lý lẽ nào. Sự lặp lại chỉ tác động tâm lý.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v">Khẩu hiệu quảng cáo “trắng hơn cả trắng” nhắc mãi đến khi người ta tin.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Số lần nói không cộng thêm một chút chứng cứ nào; đòi bằng chứng thay vì đếm lần.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-nhin-phien-dien">
+            <div class="hw-fal__top"><span class="hw-fal__no">3.12</span><h3 class="hw-fal__name">Nhìn phiến diện</h3><span class="wb-tag">one-sided assessment</span></div>
+            <p class="hw-fal__def">Chỉ trưng ra <b>một mặt</b> của vấn đề (chỉ toàn cái hại, hoặc chỉ toàn cái lợi) rồi né một phán quyết cân bằng.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Đừng lập gia đình”</em> — chỉ liệt kê tốn kém, trách nhiệm, mất tự do, bỏ qua mọi cái được.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Đòi đặt cả ưu lẫn khuyết lên bàn cân trước khi chốt.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-bac-bo-vi-du">
+            <div class="hw-fal__top"><span class="hw-fal__no">3.13</span><h3 class="hw-fal__name">Bác bỏ ví dụ</h3><span class="wb-tag">refuting the example</span></div>
+            <p class="hw-fal__def">Đánh đổ <b>một ví dụ minh họa</b> cho luận điểm, rồi coi như đã đánh đổ chính luận điểm. Nhưng một ví dụ hỏng không làm luận điểm hỏng — vẫn còn vô số ví dụ khác.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Giới trẻ giờ hư…” — “Sai rồi, Simon đâu còn là thanh niên nữa.”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Phân biệt “bác một ví dụ” với “bác luận điểm”; đòi họ đối mặt với luận điểm chính.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-dich-chuyen-can-cu">
+            <div class="hw-fal__top"><span class="hw-fal__no">3.14</span><h3 class="hw-fal__name">Dịch chuyển căn cứ</h3><span class="wb-tag">shifting ground</span></div>
+            <p class="hw-fal__def">Giữa cuộc tranh luận, người nói <b>lặng lẽ đổi hẳn luận điểm</b> đang bảo vệ nhưng vờ như vẫn nói chuyện cũ, khiến mọi phê phán trước đó thành hụt đích.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Tôi vẫn thích dự án này”</em> rồi ngay sau chuyển giọng thành <em>“nó chưa đủ tốt để đáng làm”.</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Buộc đối phương đứng yên ở <b>một</b> căn cứ; ghi lại luận điểm ban đầu để họ không trượt đi.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-dich-chuyen-ganh-nang">
+            <div class="hw-fal__top"><span class="hw-fal__no">3.15</span><h3 class="hw-fal__name">Dịch chuyển gánh nặng bằng chứng</h3><span class="wb-tag">shifting the burden of proof</span></div>
+            <p class="hw-fal__def">Nêu một tuyên bố <b>không kèm bằng chứng</b>, rồi bắt người nghe phải chứng minh nó <b>sai</b>. Đảo ngược trách nhiệm: đòi người khác bác bỏ điều đáng lẽ mình phải chứng minh.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Có sự sống thông minh trên sao Hoả đấy — cãi được thì cãi đi.”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Ai đưa ra tuyên bố mới, người đó phải chứng minh. Không ai có nghĩa vụ bác bỏ điều vô căn cứ.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-bien-ho-dac-biet">
+            <div class="hw-fal__top"><span class="hw-fal__no">3.16</span><h3 class="hw-fal__name">Biện hộ đặc biệt</h3><span class="wb-tag">special pleading</span></div>
+            <p class="hw-fal__def">Áp <b>tiêu chuẩn kép</b>: coi trường hợp mình ưa là ngoại lệ, xét theo luật khác với mọi trường hợp còn lại — mà không nêu được lý do chính đáng cho sự khác biệt đó.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v">Nhà báo: “Xâm phạm đời tư người khác là sai — nhưng tôi làm thì được, vì phục vụ công chúng.”</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Đòi lý do chính đáng: vì sao ca này được xử khác? Không có lý do là tiêu chuẩn kép.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-nguoi-rom">
+            <div class="hw-fal__top"><span class="hw-fal__no">3.17</span><h3 class="hw-fal__name">Người rơm</h3><span class="wb-tag">straw man</span></div>
+            <p class="hw-fal__def">Dựng lên một <b>phiên bản xuyên tạc, phóng đại</b> quan điểm của đối phương (dễ đổ như bù nhìn rơm), đánh đổ cái đó, rồi vờ như đã bác bỏ đối phương thật.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v">Đề xuất <em>“nới lỏng luật cần sa”</em> bị bóp thành <em>“cho phép ai cũng dùng ma tuý vô tội vạ”</em> rồi công kích cái sau.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Đòi họ phản bác <b>đúng điều bạn thật sự nói</b> — tốt nhất khi bạn có mặt để vạch trần sự bóp méo.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-ngoai-le-chung-minh-quy-luat">
+            <div class="hw-fal__top"><span class="hw-fal__no">3.18</span><h3 class="hw-fal__name">Ngoại lệ chứng minh quy luật</h3><span class="wb-tag">exception proves the rule</span></div>
+            <p class="hw-fal__def">Gạt một <b>phản ví dụ có thật</b> bằng câu cửa miệng “ngoại lệ chứng minh quy luật” — tức chối bỏ một phản bác đúng đắn bằng một câu nghe có vẻ khôn ngoan.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v">Nói “không bài hát nào về thành phố Anh nào ngoài London”; bị nhắc một bài có thật, liền phủi “ngoại lệ chứng minh quy luật”.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Chữ “prove” gốc nghĩa là “<b>thử thách</b>”. Một ngoại lệ thật đem quy luật ra <i>thử</i> — và làm nó <b>sụp</b>, chứ không xác nhận nó.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-phan-bac-vun-vat">
+            <div class="hw-fal__top"><span class="hw-fal__no">3.19</span><h3 class="hw-fal__name">Phản bác vụn vặt</h3><span class="wb-tag">trivial objections</span></div>
+            <p class="hw-fal__def">Bắt bẻ những <b>chi tiết nhỏ nhặt, phụ</b> thay vì trả lời tuyên bố trọng tâm. Các phản bác đó có thể đúng, nhưng quá cỏn con để đánh đổ luận điểm chính.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v">Chống việc xây đường vòng quanh thị trấn chỉ vì “nó sẽ làm mọi tấm bản đồ hiện có bị lỗi thời”.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Kéo đối phương về câu hỏi cốt lõi: chi tiết vụn vặt kia có thật sự lật được luận điểm không?</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-tam-doan-luan-gian-uoc">
+            <div class="hw-fal__top"><span class="hw-fal__no">3.20</span><h3 class="hw-fal__name">Tam đoạn luận giản ước không chấp nhận</h3><span class="wb-tag">unaccepted enthymeme</span></div>
+            <p class="hw-fal__def">Lập luận <b>giấu ngầm một bước tiền đề</b>. Bình thường điều này vô hại (ta luôn tỉnh lược điều hiển nhiên); thành ngụy biện khi bước ngầm đó lại là thứ người nghe <b>không hề chấp nhận</b>.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Bill chắc chắn ngu, vì phải ngu lắm mới thi rớt bằng lái”</em> — ngầm cho rằng Bill đã rớt, điều chưa chắc.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Lôi giả định ẩn ra ánh sáng; nếu nó sai hoặc bạn không đồng ý, cả lập luận sụp.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-hoan-hao-bat-kha-thi">
+            <div class="hw-fal__top"><span class="hw-fal__no">3.21</span><h3 class="hw-fal__name">Sự hoàn hảo bất khả thi</h3><span class="wb-tag">impossible perfection</span></div>
+            <p class="hw-fal__def">Bác một lựa chọn chỉ vì nó <b>không hoàn hảo</b> — trong khi mọi lựa chọn khác, kể cả giữ nguyên hiện trạng, cũng đều không hoàn hảo. Tiêu chuẩn “hoàn hảo” áp cho tất cả nên không phân biệt được gì.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Cấm điện hạt nhân vì nó không bao giờ tuyệt đối an toàn”</em> — nhưng than, dầu, thuỷ điện cũng gây chết người.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Hỏi đúng câu: không phải “có hoàn hảo không?” mà “có <b>tốt hơn</b> các phương án còn lại không?”</p>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ══════════════════ NHÓM 4 ══════════════════ -->
+      <div class="hw-part-head" id="g4">
+        <p class="kicker">Nhóm 4 · phi chính thống — cảm xúc &amp; công kích</p>
+        <h2>Cảm xúc &amp; con người — 22 lối thay bằng chứng bằng thứ khác</h2>
+        <p>Thay vì trả lời câu hỏi “bằng chứng có dẫn tới kết luận không?”, cả nhóm này đánh lạc sang <b>“bạn CẢM THẤY thế nào?”</b> hoặc <b>“AI đang nói?”</b>. Bằng chứng bị thay bằng cảm xúc, uy tín, đám đông, hay nhân thân người nói. Đây là nhóm bạn gặp nhiều nhất trong quảng cáo, chính trị và mạng xã hội — và cũng là nhóm hiệu quả nhất về mặt tâm lý.</p>
+      </div>
+
+      <section id="g4-body">
+        <div class="hw-fal-list">
+
+          <article class="hw-fal" id="f-cong-kich-ca-nhan">
+            <div class="hw-fal__top"><span class="hw-fal__no">4.01</span><h3 class="hw-fal__name">Công kích cá nhân</h3><span class="wb-tag">ad hominem, abusive</span></div>
+            <p class="hw-fal__def">Không bác được lập luận thì quay sang <b>công kích chính người nói</b> để hạ uy tín họ. Nhưng giá trị của con người không phải giá trị của lập luận.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Đừng nghe ông ta bàn về fluor trong nước — ông ta từng nợ nần be bét.”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Người tệ vẫn có thể nói đúng. Tách con người khỏi điều họ nói, xét lập luận theo giá trị của nó.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-hoan-canh">
+            <div class="hw-fal__top"><span class="hw-fal__no">4.02</span><h3 class="hw-fal__name">Ngụy biện hoàn cảnh</h3><span class="wb-tag">ad hominem, circumstantial</span></div>
+            <p class="hw-fal__def">Ép người ta chấp nhận một quan điểm dựa vào <b>hoàn cảnh hay lợi ích riêng</b> của họ, thay vì bằng chứng đúng–sai.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Anh là tín đồ, nên đương nhiên anh phải phản đối việc cho vay lấy lãi.”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Hoàn cảnh của người nghe không quyết định một điều đúng hay sai — nó chỉ thuyết phục được đúng nhóm đó.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-tha-doc-gieng-nuoc">
+            <div class="hw-fal__top"><span class="hw-fal__no">4.03</span><h3 class="hw-fal__name">Thả độc giếng nước</h3><span class="wb-tag">poisoning the well</span></div>
+            <p class="hw-fal__def">Gán sẵn một nhãn nhục cho <b>bất kỳ ai sắp phản đối</b>, khiến họ vừa mở miệng là đã tự bôi nhọ mình. Đây là công kích cá nhân đánh phủ đầu.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Ngoài mấy kẻ ngu dốt ra, ai cũng biết ta không đủ tiền cho chuyện này.”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Lời sỉ nhục cài sẵn không phải lập luận; cứ nêu lý lẽ và buộc xét nó theo giá trị thật.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-anh-cung-the">
+            <div class="hw-fal__top"><span class="hw-fal__no">4.04</span><h3 class="hw-fal__name">Anh cũng thế</h3><span class="wb-tag">tu quoque</span></div>
+            <p class="hw-fal__def">Né một phản bác bằng cách chỉ ra <b>người tố cũng phạm chính điều đó</b>, hoặc từng mâu thuẫn với quan điểm cũ của họ — như thể điều đó gỡ tội.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Anh bảo tôi lạm quyền? Chính anh cũng từng lấy xe công đi việc riêng đấy thôi.”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Lỗi của người tố không xoá lỗi đang bàn. Cả hai có thể cùng sai — vẫn phải xét việc, không xét người.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-loi-dung-quyen-luc">
+            <div class="hw-fal__top"><span class="hw-fal__no">4.05</span><h3 class="hw-fal__name">Lợi dụng quyền lực</h3><span class="wb-tag">ad verecundiam</span></div>
+            <p class="hw-fal__def">Mượn <b>uy tín của một người nổi tiếng / chuyên gia</b> để đỡ cho một luận điểm nằm <b>ngoài lĩnh vực chuyên môn</b> thật sự của họ.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v">Diễn viên đoạt Oscar quảng cáo thức ăn cho chó; ngôi sao thể thao khuyên mua bảo hiểm.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Ý kiến chỉ có sức nặng <b>trong đúng ngành</b>. Ngoài ngành, danh tiếng không thay được bằng chứng.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-keu-goi-cong-luan">
+            <div class="hw-fal__top"><span class="hw-fal__no">4.06</span><h3 class="hw-fal__name">Kêu gọi công luận</h3><span class="wb-tag">ad populum</span></div>
+            <p class="hw-fal__def">Đánh thẳng vào <b>cảm xúc và định kiến của đám đông</b> thay vì đưa bằng chứng. Rất hiệu quả trên bục diễn thuyết, nhưng chẳng chứng minh được gì.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Mọi đồng tiền khôn ngoan đều đặt cửa vào ông ấy — bà con hãy làm theo!”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Hợp lòng đám đông không phải hợp lý. Bóc lớp mị dân ra xem còn lý lẽ nào không.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-so-dong">
+            <div class="hw-fal__top"><span class="hw-fal__no">4.07</span><h3 class="hw-fal__name">Lập luận số đông</h3><span class="wb-tag">ad numeram</span></div>
+            <p class="hw-fal__def">Đánh đồng <b>số lượng người tin</b> với tính đúng đắn: đông người ủng hộ nên nó phải đúng.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“50 triệu người Pháp không thể sai được!”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Mọi sự thật mới lúc đầu đều là thiểu số. Số phiếu không phải bằng chứng khoa học.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-ke-giau">
+            <div class="hw-fal__top"><span class="hw-fal__no">4.08</span><h3 class="hw-fal__name">Ngụy biện kẻ giàu</h3><span class="wb-tag">ad crumenam</span></div>
+            <p class="hw-fal__def">Lấy <b>tiền bạc làm thước đo lẽ phải</b>: ngầm cho rằng người giàu thì nhiều khả năng đúng.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Nếu anh giỏi thế sao anh không giàu?”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Số dư tài khoản không liên quan gì đến đúng–sai của một luận điểm.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-loi-dung-ngheo-kho">
+            <div class="hw-fal__top"><span class="hw-fal__no">4.09</span><h3 class="hw-fal__name">Lợi dụng nghèo khó</h3><span class="wb-tag">ad lazarum</span></div>
+            <p class="hw-fal__def">Chiều ngược của lối trên: cho rằng quan điểm <b>đáng tin / chân thật hơn chỉ vì người nói nghèo</b>, mộc mạc.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v">Tin ngay lời “bác nông dân chân chất, từng trải” bàn về kinh tế vĩ mô chỉ vì bác ấy nghèo.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Cái nghèo cũng chẳng làm lập luận hợp lý hơn; vẫn phải nhìn vào lý lẽ.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-long-trac-an">
+            <div class="hw-fal__top"><span class="hw-fal__no">4.10</span><h3 class="hw-fal__name">Lòng trắc ẩn</h3><span class="wb-tag">ad misericordiam</span></div>
+            <p class="hw-fal__def">Dùng <b>lòng thương hại</b> thay cho lập luận để buộc người ta chấp nhận kết luận.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Đừng kết tội anh ta — hãy nghĩ vợ con anh sẽ khổ sở thế nào.”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Đáng thương không đồng nghĩa vô tội. Hoàn cảnh và sự thật của vụ việc là hai chuyện.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-de-doa">
+            <div class="hw-fal__top"><span class="hw-fal__no">4.11</span><h3 class="hw-fal__name">Ngụy biện đe dọa</h3><span class="wb-tag">ad baculum</span></div>
+            <p class="hw-fal__def">Thay lý lẽ bằng <b>quyền lực hoặc lời hứa về hậu quả khó chịu</b>, ép người nghe làm theo dù chẳng chứng minh điều gì.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Nếu anh không ký, tôi e là mấy tấm ảnh này sẽ đến tay báo chí.”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Cây gậy không làm một tuyên bố trở nên đúng; gọi tên sự đe dọa và tách nó khỏi vấn đề.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-cam-tinh">
+            <div class="hw-fal__top"><span class="hw-fal__no">4.12</span><h3 class="hw-fal__name">Ngụy biện cảm tính</h3><span class="wb-tag">appeal to emotion</span></div>
+            <p class=”hw-fal__def”>Dùng <b>cảm xúc</b> để chi phối phán đoán, thay vì để lý trí xét dữ kiện. Đây là một “họ hàng” lớn: sách liệt kê hàng loạt biến thể theo từng cảm xúc bị khơi — <b>sợ hãi, đố kỵ, ghen ghét, lòng kiêu hãnh, sự mê tín</b>, cả chiêu gợi <b>”sự cân bằng”</b> (ai cũng muốn thấy mình công bằng) và luận điệu <b>”cảm xúc đáng tin hơn lý trí”</b>.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v">Bác đề xuất giải trừ vũ khí bằng cách mô tả rùng rợn một vụ nổ nhiệt hạch để gieo nỗi sợ.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Nhận ra khi ngôn ngữ đang khơi cảm xúc thay cho đưa bằng chứng; gỡ lớp cảm xúc, xét phần còn lại.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-ngon-ngu-xuc-cam">
+            <div class="hw-fal__top"><span class="hw-fal__no">4.13</span><h3 class="hw-fal__name">Ngôn ngữ xúc cảm</h3><span class="wb-tag">emotional language</span></div>
+            <p class="hw-fal__def">Chọn những từ <b>nhuốm màu định kiến</b> để nhuộm cảm xúc lên sự việc, thay vì để dữ kiện tự nói. Cùng một hành động, đổi từ là đổi thái độ người nghe.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Hitler triệu tập các tư lệnh chiến tranh”</em> vs. <em>“Daladier hỏi ý kiến các tướng lĩnh quốc phòng”</em> — cùng một việc.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Đổi sang từ trung tính rồi xem lập luận còn đứng không. Nếu sức nặng biến mất, đó là màu chữ, không phải sự thật.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-ca-trich-do">
+            <div class="hw-fal__top"><span class="hw-fal__no">4.14</span><h3 class="hw-fal__name">Ngụy biện cá trích đỏ</h3><span class="wb-tag">red herring</span></div>
+            <p class="hw-fal__def">Tung ra một chủ đề <b>lạc đề nhưng hấp dẫn</b> để kéo mọi người rời khỏi vấn đề đang bàn sang một kết luận khác. (Tên gọi từ mẹo dùng cá trích nặng mùi để đánh lạc chó săn.)</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v">Bị chất vấn về môi trường, đáp lại bằng <em>“Kinh tế còn khó khăn hơn nhiều đấy!”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Nhận ra hướng bị bẻ lái, rồi kéo cuộc bàn về đúng câu hỏi ban đầu.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-thieu-xac-dang">
+            <div class="hw-fal__top"><span class="hw-fal__no">4.15</span><h3 class="hw-fal__name">Thiếu xác đáng</h3><span class="wb-tag">ignoratio elenchi</span></div>
+            <p class="hw-fal__def">Chứng minh <b>rành mạch một kết luận khác</b> với kết luận đang cần chứng minh, rồi coi như đã giải quyết xong vấn đề. Đúng nhưng lạc đề.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v">Được yêu cầu phản đối việc cho học sinh nghỉ học sớm, người nói lại đi… ca ngợi giá trị của giáo dục.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Hỏi: “điều vừa chứng minh có thật sự trả lời <b>đúng câu hỏi</b> đang đặt ra không?”</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-che-day-khoa-hoc">
+            <div class="hw-fal__top"><span class="hw-fal__no">4.16</span><h3 class="hw-fal__name">Che đậy bằng khoa học</h3><span class="wb-tag">blinding with science</span></div>
+            <p class="hw-fal__def">Khoác lên một tuyên bố lớp <b>biệt ngữ khoa học giả tạo</b> để nó nghe như đã có bằng chứng thí nghiệm, trong khi biệt ngữ không thêm một chút giá trị chân lý nào.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v">Nhồi những thuật ngữ dài dòng, gắn chữ “khoa học” vào mọi thứ để loè người nghe.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Bóc lớp thuật ngữ, đòi dữ liệu và phương pháp thật. Nói khó hiểu không đồng nghĩa với đúng.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-hoc-sinh-nao-cung-biet">
+            <div class="hw-fal__top"><span class="hw-fal__no">4.17</span><h3 class="hw-fal__name">Học sinh nào cũng biết</h3><span class="wb-tag">every schoolboy knows</span></div>
+            <p class="hw-fal__def">Dán nhãn <b>“ai cũng biết”, “hiển nhiên là…”</b> lên một điều đáng ngờ, khiến người nghe không dám chất vấn vì sợ bị coi là dốt hơn cả trẻ con.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v">Mào đầu một tuyên bố mập mờ bằng <em>“hiển nhiên là ai cũng biết…”</em> để chặn mọi câu hỏi.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Cứ hỏi. Sự xấu hổ không phải bằng chứng; giá trị tuyên bố vẫn cần được xét độc lập.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-hai-huoc-thieu-xac-dang">
+            <div class="hw-fal__top"><span class="hw-fal__no">4.18</span><h3 class="hw-fal__name">Hài hước thiếu xác đáng</h3><span class="wb-tag">irrelevant humour</span></div>
+            <p class="hw-fal__def">Chêm một câu đùa <b>duyên nhưng lạc đề</b> để kéo sự chú ý ra khỏi lập luận và giành cảm tình đám đông.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v">Bị hỏi một câu hóc búa, người nói đáp lại bằng một câu bông đùa khiến cả phòng cười ồ.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Tràng cười lấy được cảm tình chứ không chứng minh luận điểm; cười xong vẫn phải quay lại câu hỏi.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-di-truyen">
+            <div class="hw-fal__top"><span class="hw-fal__no">4.19</span><h3 class="hw-fal__name">Ngụy biện di truyền</h3><span class="wb-tag">genetic fallacy</span></div>
+            <p class="hw-fal__def">Chê (hoặc khen) một lập luận dựa trên <b>nguồn gốc / xuất xứ</b> của nó thay vì xét nội dung. Còn gọi là “chê bai xuất xứ”.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v">Gạt bỏ ý “tàu nên chạy đúng giờ” chỉ vì… Mussolini từng cổ vũ điều đó.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Giá trị lập luận độc lập với nguồn gốc: người xấu vẫn có thể nói đúng, bậc thánh vẫn có thể sai.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-tuot-doc">
+            <div class="hw-fal__top"><span class="hw-fal__no">4.20</span><h3 class="hw-fal__name">Lý luận tuột dốc</h3><span class="wb-tag">slippery slope</span></div>
+            <p class="hw-fal__def">Cho rằng chỉ cần <b>một bước đầu tiên</b> là tất yếu kéo theo cả chuỗi hệ quả cực đoan không thể dừng — dù thực tế mỗi bước là một lựa chọn riêng.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Hạ tuổi uống rượu từ 21 xuống 18 thì rồi sẽ xuống 16, 14… cuối cùng trẻ sơ sinh uống rượu thay sữa.”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Bước sau không tự động nối bước trước; con người vẫn dừng và quyết định lại được ở mỗi chặng.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-chuyen-tau-chay-tron">
+            <div class="hw-fal__top"><span class="hw-fal__no">4.21</span><h3 class="hw-fal__name">Chuyến tàu chạy trốn</h3><span class="wb-tag">runaway train</span></div>
+            <p class="hw-fal__def">Một lý lẽ ủng hộ một việc lại ủng hộ nó <b>tới mức cực đoan không dừng được</b>: cùng logic đó vẫn chạy tiếp qua đúng điểm ta muốn dừng. Muốn dừng, phải có một lý lẽ <i>khác</i>.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v">“Giảm tốc độ 110→95 km/h để cứu người” — nhưng chính lý đó đòi giảm tới 80, 65… rốt cuộc là 0 km/h.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Nhận ra lý lẽ không tự biết dừng, và đòi một lập luận riêng biện minh cho điểm dừng cụ thể.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-vong-tuong">
+            <div class="hw-fal__top"><span class="hw-fal__no">4.22</span><h3 class="hw-fal__name">Vọng tưởng</h3><span class="wb-tag">wishful thinking</span></div>
+            <p class="hw-fal__def">Chấp nhận (hoặc chối bỏ) một điều <b>vì mình muốn (hoặc không muốn) nó là thật</b>, chứ không vì bằng chứng. Mong muốn của ta không chi phối được quy luật của thế giới.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Thời tiết xấu thế này thì làm việc chả tốt cho ai cả — thôi hôm nay nghỉ ở nhà.”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Tách “điều tôi mong” khỏi “điều đang có thật”. Muốn một thứ thành công không làm nó thành công.</p>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ══════════════════ NHÓM 5 ══════════════════ -->
+      <div class="hw-part-head" id="g5">
+        <p class="kicker">Nhóm 5 · phi chính thống — giả định lén cài</p>
+        <h2>Giả định lén cài — 19 lối nhét một tiền đề chưa chứng minh</h2>
+        <p>Nhóm này <b>lén đưa vào một tiền đề chưa được chứng minh</b>, rồi xây tiếp cả lập luận như thể nó đã đúng. Giả định ẩn có thể là một phép so sánh, một quan hệ nhân quả tưởng tượng, niềm tin “cũ là tốt” hay “mới là tốt”, một ngoại lệ bị ép vào quy tắc chung, hoặc chính kết luận được nói vòng lại thành lý do.</p>
+      </div>
+
+      <section id="g5-body">
+        <div class="hw-fal-list">
+
+          <article class="hw-fal" id="f-suy-luan-giem-pha">
+            <div class="hw-fal__top"><span class="hw-fal__no">5.01</span><h3 class="hw-fal__name">Suy luận gièm pha</h3><span class="wb-tag">abusive analogy</span></div>
+            <p class="hw-fal__def">Một biến thể tinh vi của công kích cá nhân: thay vì sỉ nhục thẳng, người nói <b>khéo léo so sánh</b> đối thủ với thứ gì đó khiến người nghe tự nảy sinh phản ứng bất lợi.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Anh ta bàn về tàu thuyền thì cũng ngang một anh nhạc trưởng vùng không giáp biển bàn về đi biển.”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Phép so sánh gợi liên tưởng xấu là tư liệu <b>không liên quan</b>; nó tác động cảm xúc chứ không chứng minh gì.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-ngau-nhien">
+            <div class="hw-fal__top"><span class="hw-fal__no">5.02</span><h3 class="hw-fal__name">Ngụy biện ngẫu nhiên</h3><span class="wb-tag">accident</span></div>
+            <p class="hw-fal__def">Lấy một <b>ngoại lệ quái đản</b> để bác cả một quy luật chung vốn vẫn đúng trong đại đa số trường hợp. Đòi quy luật phải bao trùm mọi ca dị thường là sai.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Không nên trả lại đồ đã mượn — lỡ trả một khẩu súng cho người vừa hoá điên thì sao?”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Quy luật chung cho phép có ngoại lệ hiếm; một ca cá biệt không xoá được quy luật.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-loai-suy">
+            <div class="hw-fal__top"><span class="hw-fal__no">5.03</span><h3 class="hw-fal__name">Ngụy biện loại suy</h3><span class="wb-tag">false analogy</span></div>
+            <p class="hw-fal__def">Hai thứ giống nhau ở <b>điểm đã biết</b>, nên được cho là cũng giống nhau ở <b>điểm chưa biết</b>. Loại suy là công cụ để giải thích, không phải nguồn chứng minh.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Nhà nước như cơ thể, cần một cái đầu duy nhất điều khiển ⇒ chế độ độc tài hiệu quả hơn.”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Hỏi hai thứ đó <b>khác nhau ở đâu</b> ngay tại điểm đang bàn; loại suy chỉ gợi ý, không kết luận thay ta.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-loi-mon">
+            <div class="hw-fal__top"><span class="hw-fal__no">5.04</span><h3 class="hw-fal__name">Ngụy biện lối mòn</h3><span class="wb-tag">ad antiquitam</span></div>
+            <p class="hw-fal__def">Cho rằng một thứ <b>đúng / tốt chỉ vì nó lâu đời</b>, đánh đồng “quen thuộc” với “đúng”.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Xưa nay tôi vẫn làm thế này”</em> — dù cách đó chẳng đem lại kết quả tốt.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Số tuổi của một niềm tin không nói nó đúng hay sai; tiến bộ chính là thay cái cũ bằng cái tốt hơn.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-cai-moi">
+            <div class="hw-fal__top"><span class="hw-fal__no">5.05</span><h3 class="hw-fal__name">Lập luận cái mới</h3><span class="wb-tag">ad novitam</span></div>
+            <p class="hw-fal__def">Chiều ngược lại của lối mòn: cho rằng một thứ <b>đúng / tốt chỉ vì nó mới mẻ, hiện đại, hợp thời</b>.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Đây là mẫu mới nhất nên chắc chắn tốt hơn cái cũ.”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Tính mới không quyết định đúng–sai (và nó mâu thuẫn thẳng với ngụy biện lối mòn ở trên).</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-tien-nghiem">
+            <div class="hw-fal__top"><span class="hw-fal__no">5.06</span><h3 class="hw-fal__name">Chủ nghĩa tiên nghiệm</h3><span class="wb-tag">apriorism</span></div>
+            <p class="hw-fal__def">Bám cứng vào những <b>nguyên tắc định sẵn</b> rồi dùng chúng để gạt bỏ mọi dữ kiện quan sát được — thay vì để dữ kiện chỉnh sửa nguyên tắc.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Khỏi cần nhìn qua kính viễn vọng, Galileo ạ — ta đã biết không thể có quá bảy thiên thể.”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Để thực tế được quyền sửa lý thuyết; nguyên tắc gạt phăng chính bằng chứng liên quan thì đó là ngụy biện.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-re-doi">
+            <div class="hw-fal__top"><span class="hw-fal__no">5.07</span><h3 class="hw-fal__name">Ngụy biện rẽ đôi</h3><span class="wb-tag">bifurcation</span></div>
+            <p class="hw-fal__def">Nhìn mọi thứ theo kiểu <b>trắng–đen</b>, chỉ có hai cực, bỏ qua cả một dải trung gian giữa chúng. (Anh em gần với “song đề giả”.)</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Không yêu nước thì là phản bội.”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Hầu hết mọi chuyện nằm trên một dải liên tục; chỉ ra các mức độ ở giữa.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-cau-hoi-phuc">
+            <div class="hw-fal__top"><span class="hw-fal__no">5.08</span><h3 class="hw-fal__name">Ngụy biện câu hỏi phức</h3><span class="wb-tag">plurium interrogationum</span></div>
+            <p class="hw-fal__def">Gộp nhiều câu hỏi vào một, buộc trả lời có/không, khiến người bị hỏi <b>mặc nhiên chấp nhận một giả định chưa được xác lập</b>.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Anh đã ngừng đánh vợ chưa?”</em> — trả lời “rồi” hay “chưa” đều nhận là từng đánh.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Tách thành các câu hỏi nhỏ và bác thẳng giả định ẩn trước khi trả lời.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-diep-nguyen-luan">
+            <div class="hw-fal__top"><span class="hw-fal__no">5.09</span><h3 class="hw-fal__name">Điệp nguyên luận</h3><span class="wb-tag">petitio principii · begging the question</span></div>
+            <p class="hw-fal__def">Lấy <b>chính điều cần chứng minh làm tiền đề</b> — thường bằng cách diễn đạt lại kết luận thành một lý do nghe khác đi. Nói vòng.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Nó đáng tin, bởi vì những gì nó nói đều là thật.”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Soi các từ nối “bởi vì / do đó”: cái “lý do” có phải chỉ là kết luận nói lại lần nữa không?</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-nhan-qua">
+            <div class="hw-fal__top"><span class="hw-fal__no">5.10</span><h3 class="hw-fal__name">Ngụy biện nhân quả</h3><span class="wb-tag">post hoc ergo propter hoc</span></div>
+            <p class="hw-fal__def">Vì B <b>xảy ra sau</b> A nên cho rằng A gây ra B. Nhưng “sau” không phải là “do” — có thể là trùng hợp, hoặc tự khỏi/tự xảy ra.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Uống thuốc lá xong thì hết cảm ⇒ thuốc chữa được cảm”</em> — cảm cúm vốn tự khỏi sau vài ngày.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Thứ tự thời gian chưa đủ; đòi cơ chế và loại trừ trùng hợp / nguyên nhân khác.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-sai-nguyen-nhan">
+            <div class="hw-fal__top"><span class="hw-fal__no">5.11</span><h3 class="hw-fal__name">Ngụy biện sai nguyên nhân</h3><span class="wb-tag">cum hoc ergo propter hoc</span></div>
+            <p class="hw-fal__def">Vì A và B <b>xảy ra cùng lúc / đi kèm nhau</b> nên cho rằng A gây B. Bỏ qua khả năng có một <b>yếu tố thứ ba</b> chi phối cả hai. Tương quan không phải nhân quả.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v">“Trẻ có bàn chân to hơn thì viết chữ đẹp hơn” — thật ra vì trẻ <b>lớn tuổi hơn</b> nên cả hai đều tăng.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Luôn hỏi: có yếu tố thứ ba nào đứng sau, khiến A và B chỉ vô tình đi cùng nhau không?</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-thong-ke-sau-su-viec">
+            <div class="hw-fal__top"><span class="hw-fal__no">5.12</span><h3 class="hw-fal__name">Thống kê sau sự việc</h3><span class="wb-tag">ex post facto</span></div>
+            <p class="hw-fal__def">Lấy <b>xác suất tiên nghiệm rất thấp</b> của một việc <b>đã xảy ra rồi</b> làm “bằng chứng” cho điều siêu nhiên. Nhưng kết quả nào cũng hiếm như nhau, mà một điều nào đó thì tất phải xảy ra.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Tình cờ gặp đúng người bạn cũ ở xứ lạ — xác suất thấp cỡ này thì chắc tôi có giác quan thứ sáu.”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Xác suất thấp của một việc đã rồi chẳng chứng minh gì; luôn có <i>một</i> kết cục hiếm nào đó phải diễn ra.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-ke-co-bac">
+            <div class="hw-fal__top"><span class="hw-fal__no">5.13</span><h3 class="hw-fal__name">Ngụy biện kẻ cờ bạc</h3><span class="wb-tag">gambler's fallacy</span></div>
+            <p class="hw-fal__def">Tin rằng kết quả của một sự kiện <b>ngẫu nhiên độc lập</b> bị chi phối bởi những lần xảy ra trước đó — như thể đồng xu có trí nhớ và đang “nợ” một kết quả.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Tung ra ngửa 4 lần liền rồi, lần này chắc chắn phải ra sấp.”</em> — vẫn cứ 50/50.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Đừng lẫn xác suất của <i>cả chuỗi</i> với xác suất của <i>một lần riêng lẻ</i>; lần này độc lập với quá khứ.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-thu-tieu-ngoai-le">
+            <div class="hw-fal__top"><span class="hw-fal__no">5.14</span><h3 class="hw-fal__name">Thủ tiêu ngoại lệ</h3><span class="wb-tag">dicto simpliciter</span></div>
+            <p class="hw-fal__def">Áp một <b>quy tắc chung</b> lên một ca cụ thể mà đặc điểm riêng của nó khiến nó trở thành <b>ngoại lệ</b>. (Ngược với “ngụy biện ngẫu nhiên”: ở đây là ép quy tắc vào ca không hợp.)</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Tập thể dục tốt cho sức khoẻ ⇒ người vừa mổ tim cũng phải tập nặng.”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Quy tắc chung không phải phổ quát; chừa chỗ cho ngoại lệ có đặc điểm riêng.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-khai-quat-voi-va">
+            <div class="hw-fal__top"><span class="hw-fal__no">5.15</span><h3 class="hw-fal__name">Khái quát hóa vội vã</h3><span class="wb-tag">secundum quid</span></div>
+            <p class="hw-fal__def">Rút ra một <b>quy luật chung</b> từ vài ví dụ ít ỏi và nhiều khả năng không đại diện. (Mặt trái của lối “thủ tiêu ngoại lệ”: đây là vơ đũa cả nắm.)</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Đi mười phút gặp ba người say ⇒ cả vùng này nát rượu triền miên.”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Mẫu quá nhỏ / thiên lệch; đòi một mẫu đủ lớn và đại diện trước khi khái quát.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-tinh-chinh-xac-doi-tra">
+            <div class="hw-fal__top"><span class="hw-fal__no">5.16</span><h3 class="hw-fal__name">Tính chính xác dối trá</h3><span class="wb-tag">false precision</span></div>
+            <p class="hw-fal__def">Gán những <b>con số chính xác</b> cho một khái niệm vốn <b>không đo lường chính xác được</b>, tạo vẻ đáng tin và khoa học giả tạo.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Người vùng X hào phóng hơn người vùng Y đúng 63%.”</em> — hào phóng đo bằng thước nào?</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Hỏi con số đó đo bằng phương pháp gì, đơn vị nào; không đo được thì con số chỉ để trang trí.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-thieu-xet-doan">
+            <div class="hw-fal__top"><span class="hw-fal__no">5.17</span><h3 class="hw-fal__name">Thiếu xét đoán</h3><span class="wb-tag">appeal to inertia</span></div>
+            <p class="hw-fal__def">Bác một ý tưởng mới với lý do <b>“nếu nó hay thì người ta đã nghĩ ra và làm từ lâu rồi”</b>. Giả định ngầm sai: rằng người xưa đã khám phá hết mọi thứ tốt.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Nếu thuốc lá hại thật thì sao trước giờ người ta không cấm?”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Tiến bộ luôn xảy ra; “chưa ai làm” không chứng minh điều gì về giá trị của ý tưởng.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-on-hoa">
+            <div class="hw-fal__top"><span class="hw-fal__no">5.18</span><h3 class="hw-fal__name">Ngụy biện ôn hòa</h3><span class="wb-tag">ad temperantiam · golden mean</span></div>
+            <p class="hw-fal__def">Coi lập trường <b>trung dung, ở giữa hai thái cực</b>, đương nhiên là đúng — bất kể giá trị thực của hai bên. Chẳng có quy luật nào bảo chân lý phải nằm ở điểm giữa.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v"><em>“Công đoàn đòi tăng 6%, chủ chỉ chịu 2% ⇒ 4% là hợp lý.”</em></p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Cảnh giác kẻ cố tình bịa ra một thái cực để kéo “điểm giữa” về phía mình.</p>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="f-do-loi-thatcher">
+            <div class="hw-fal__top"><span class="hw-fal__no">5.19</span><h3 class="hw-fal__name">Đổ lỗi kiểu Thatcher</h3><span class="wb-tag">blame Thatcher</span></div>
+            <p class="hw-fal__def">Quy mọi kết cục về <b>lỗi của một người / chính sách</b>, bất kể thực tế ra sao — vì mọi kịch bản tưởng tượng được đều đã bị dàn sẵn để quy về lỗi của họ.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span><p class="hw-fal__v">Công bố chính sách ở nơi A trước là “lấy dân A làm chuột thí nghiệm”; công bố ở nơi B trước là “bỏ rơi dân A” — kiểu gì cũng là lỗi của bà ấy.</p>
+              <span class="hw-fal__k">Cách gỡ</span><p class="hw-fal__v">Phán quyết đổ lỗi có sẵn <b>trước</b>, độc lập với kết quả — nên nó không đánh giá đúng–sai của hành động, chỉ nhằm hạ nhục.</p>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ══════════════════ KẾT ══════════════════ -->
+      <div class="hw-part-head" id="ket">
+        <p class="kicker">Kết</p>
+        <h2>Sáu điều mang theo sau khi gấp sách</h2>
+        <p>Nếu quên hết 79 cái tên phía trên, sáu điều này vẫn đủ để bạn cầm cự trong gần như mọi cuộc tranh luận.</p>
+      </div>
+      <section id="s-ket">
+        <div class="wb-grid wb-grid--2">
+          <div class="wb-card wb-card--pad">
+            <p class="wb-media__title">1 · Một câu hỏi lọc mọi ngụy biện</p>
+            <p class="wb-media__text"><b>Bỏ phần khiến ta xúc động / nể uy tín / theo số đông đi — bằng chứng còn lại có thật sự dẫn tới kết luận không?</b> Nếu sức thuyết phục bốc hơi ngay khi gỡ những thứ đó, bạn đã tìm thấy ngụy biện.</p>
+          </div>
+          <div class="wb-card wb-card--pad">
+            <p class="wb-media__title">2 · Lỗi ở chỗ nối, không ở viên gạch</p>
+            <p class="wb-media__text">Một lập luận có thể dùng <b>toàn câu đúng</b> mà vẫn là ngụy biện, vì lỗi nằm ở phép suy luận nối chúng. Ngược lại, bác được ngụy biện <b>không</b> chứng minh kết luận của họ sai.</p>
+          </div>
+          <div class="wb-card wb-card--pad">
+            <p class="wb-media__title">3 · Năm chỗ để soi</p>
+            <p class="wb-media__text">Gặp một lập luận đáng ngờ, hỏi vết nứt nằm ở đâu: <b>cấu trúc</b> logic, một <b>từ</b> trượt nghĩa, phần bị <b>bỏ sót</b>, <b>cảm xúc/con người</b> thế chỗ bằng chứng, hay một <b>giả định</b> lén cài?</p>
+          </div>
+          <div class="wb-card wb-card--pad">
+            <p class="wb-media__title">4 · Xét việc, đừng xét người</p>
+            <p class="wb-media__text">Ai nói — giàu hay nghèo, mới hay cũ, đông hay ít người tin, có nhất quán hay không — <b>đều không quyết định</b> điều đó đúng hay sai. Cả một nhóm lớn ngụy biện chỉ là các biến thể của việc đánh tráo “ai nói” vào chỗ “nói đúng không”.</p>
+          </div>
+          <div class="wb-card wb-card--pad">
+            <p class="wb-media__title">5 · Đòi đúng người phải chứng minh</p>
+            <p class="wb-media__text">Người đưa ra tuyên bố mới là người gánh việc chứng minh — không phải người nghi ngờ. “Cãi được thì cãi đi” là một cái bẫy, không phải một lý lẽ.</p>
+          </div>
+          <div class="wb-card wb-card--pad">
+            <p class="wb-media__title">6 · Hiểu để phòng thủ, không phải để bắt nạt</p>
+            <p class="wb-media__text">Pirie dạy cả cách <i>dựng</i> ngụy biện, nhưng đích đến là <b>miễn nhiễm</b>: biết mặt cái bẫy thì không sập bẫy. Dùng bộ này để bảo vệ suy nghĩ của mình cho tỉnh táo, không phải để thắng người khác bằng mẹo.</p>
+          </div>
+        </div>
+        <div class="wb-alert wb-alert--plain" style="margin-top:18px">
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Về bản diễn giải này</p>
+            <p class="wb-alert__msg">Diễn giải và sắp xếp lại từ cuốn <b>“Cãi gì cũng thắng”</b> (nguyên tác <i>How to Win Every Argument</i>) của <b>Madsen Pirie</b>, bản tiếng Việt do Alpha Books thực hiện. Bản gốc xếp các ngụy biện theo bảng chữ cái; trang này giữ đủ toàn bộ nội dung nhưng <b>gom lại theo 5 nhóm</b> đúng như bảng phân loại ở cuối sách, và giải thích lại bằng lời cho dễ nắm.</p>
+            <p class="wb-alert__msg">Các ví dụ được viết lại hoặc rút gọn để minh hoạ cơ chế, <b>không sao chép nguyên văn</b>. Trang phục vụ mục đích học tư duy phản biện; nếu thấy hữu ích, hãy tìm đọc bản sách đầy đủ để ủng hộ tác giả và nhà xuất bản.</p>
+          </div>
+        </div>
+      </section>
+
+    </div><!-- /content column -->
+  </div><!-- /hw-layout -->
+</main>
+
+<footer class="wb-footer wb-footer--slim">
+  <div class="wb-footer__inner">
+    <div class="wb-footer__bottom">
+      <span class="wb-footer__copy">Cãi gì cũng thắng — bản diễn giải · Madsen Pirie · mục đích học tư duy phản biện</span>
+      <a class="wb-footer__link" href="../index.html">← Trang chủ</a>
+    </div>
+  </div>
+</footer>
+
+<button class="wb-btn wb-btn--icon wb-btn--round hw-top" id="toTop" aria-label="Lên đầu trang">
+  <span class="wb-ico">arrow_upward</span>
+</button>
+
+<script>
+(function () {
+  /* ---- theme: default light (house style), remember choice ---- */
+  var root = document.documentElement;
+  var saved = null;
+  try { saved = localStorage.getItem('hub-theme'); } catch (e) {}
+  root.classList.toggle('dark', saved === 'dark');
+  var toggle = document.getElementById('theme-toggle');
+  if (toggle) toggle.addEventListener('click', function () {
+    var dark = !root.classList.contains('dark');
+    root.classList.toggle('dark', dark);
+    try { localStorage.setItem('hub-theme', dark ? 'dark' : 'light'); } catch (e) {}
+  });
+
+  /* ---- navbar menu: open on ☰, close after picking a part ---- */
+  var menu = document.querySelector('.wb-navbar__menu');
+  document.addEventListener('click', function (e) {
+    if (!menu) return;
+    if (e.target.closest('[data-navbar-toggle]')) menu.classList.toggle('is-open');
+    else if (e.target.closest('.wb-navbar__menu .wb-nav__link')) menu.classList.remove('is-open');
+  });
+
+  /* ---- TOC: highlight the section currently in view ---- */
+  var links = [].slice.call(document.querySelectorAll('#toc .wb-sidenav__link'));
+  var byId = {};
+  var targets = [];
+  links.forEach(function (a) {
+    var id = a.getAttribute('href').slice(1);
+    var el = document.getElementById(id);
+    if (el) { byId[id] = a; targets.push(el); }
+  });
+  var current = null;
+  function setCurrent(a) {
+    if (current === a) return;
+    if (current) current.classList.remove('is-current');
+    current = a;
+    if (current) current.classList.add('is-current');
+  }
+  if ('IntersectionObserver' in window && targets.length) {
+    var seen = {};
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { seen[e.target.id] = e.isIntersecting ? e.intersectionRatio : 0; });
+      var bestId = null, best = 0;
+      targets.forEach(function (t) { if ((seen[t.id] || 0) > best) { best = seen[t.id]; bestId = t.id; } });
+      if (bestId) setCurrent(byId[bestId]);
+    }, { rootMargin: '-80px 0px -55% 0px', threshold: [0, .1, .5, 1] });
+    targets.forEach(function (t) { io.observe(t); });
+  }
+
+  /* ---- back to top ---- */
+  var top = document.getElementById('toTop');
+  function onScroll() { top.classList.toggle('is-on', window.scrollY > 600); }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+  top.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+})();
+</script>
+</body>
+</html>
