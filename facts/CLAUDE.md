@@ -551,10 +551,40 @@ trên điện thoại.
 > *10 vạn câu hỏi vì sao*, và không phải điều gì đáng biết cũng nén được vào một câu khẳng
 > định. Có những thứ chỉ mở ra khi được kể.
 
-Fact nói thẳng thế giới là thế nào. **Truyện đi đường vòng: nó kể một chuyện có thật, rồi để
-lại một điều về thế giới.** Hai loại dùng chung ô tìm kiếm, chung lưới card, chung modal —
-nhưng **phân loại bằng hai trục khác hẳn nhau** (§7.0). Thanh bên chia ba nhóm: *Thư viện*
-(Tất cả · Fact), *Truyện* (Tất cả truyện + từng kiểu), *Chủ đề fact* (20 chủ đề).
+Fact nói thẳng thế giới là thế nào. Truyện đi đường vòng. Hai loại dùng chung ô tìm kiếm,
+chung lưới card, chung modal — nhưng **phân loại bằng hai trục khác hẳn nhau** (§7.0). Thanh
+bên chia ba nhóm: *Thư viện* (Tất cả · Fact), *Truyện* (Tất cả truyện + từng kiểu), *Chủ đề
+fact* (20 chủ đề).
+
+### 7.0-a Lằn ranh không phải thật/hư cấu, mà là có sẵn/tự bịa
+
+> Sửa ngày 25/08/2026. Bản trước định nghĩa truyện là *"kể một chuyện có thật, rồi để lại
+> một điều về thế giới"*. Chủ trang bác: **"cái này thì hẹp quá… truyện thì truyện gì cũng
+> được, nhưng không được bịa, phải có nguồn chính thống, và nhiều người đánh giá nó hay chứ
+> không phải tự AI bịa"**. Định nghĩa cũ chặn nhầm: nó loại cả Grimm, thứ rõ ràng không phải
+> do ai ở đây bịa ra.
+
+Lọ Lem không phải truyện bịa. Nó là một hiện vật văn hoá có số hiệu, có bản in, có hàng trăm
+dị bản được ghi chép, và đã được nhiều thế hệ đọc. **Truyện bịa là truyện mà agent tự nghĩ ra
+rồi viết vào đây.** Đó mới là thứ bị cấm, và cấm tuyệt đối.
+
+Ba điều kiện, cả ba bắt buộc, thay cho điều kiện "có thật" cũ:
+
+| Cổng | Câu hỏi | Kiểm bằng gì |
+|---|---|---|
+| **Không tự bịa** | Câu chuyện này đã tồn tại trước phiên làm việc này chưa? | có `src` trỏ tới một bản công bố cụ thể |
+| **Nguồn chính thống** | Nguồn là bản gốc hay bản kể lại? | §4 quy tắc 2 — với truyện cổ là tuyển tập gốc kèm số hiệu |
+| **Đã được nhiều người công nhận** | Ai ngoài agent này đánh giá nó đáng đọc? | thuộc một tuyển tập đã khai ở `manifest.tuyen_tap`, hoặc có mã kiểu truyện ATU |
+
+Điều kiện thứ ba là chỗ dễ trôi nhất, nên nó được buộc vào một danh sách trong repo chứ không
+vào cảm nhận của người viết. Một truyện cổ được nhận vào khi nó nằm trong một tuyển tập đã
+khai — Grimm, Andersen, Aesop, Nghìn lẻ một đêm, kho tàng cổ tích Việt Nam — **và** khai được
+số hiệu của nó trong tuyển tập đó. Đó là bằng chứng có kiểm được rằng nhiều người đã đọc và
+người sưu tầm đã chọn, chứ không phải một agent thấy hay.
+
+**Hệ quả cho phần thân truyện.** Truyện cổ đã hết hạn bảo hộ thì kể lại bằng tiếng Việt của
+chính mình được, nhưng **không chép bản dịch tiếng Việt đang lưu hành** — bản dịch có bản
+quyền riêng. Kể lại bám sát cốt truyện của bản gốc, không thêm nhân vật, không đổi kết.
 
 ### 7.0 Truyện có trục phân loại riêng
 
@@ -573,13 +603,14 @@ cùng một đề tài có thể ra một truyện *Thảm hoạ & điều tra* 
 | `do-tan-noi` | Đo tận nơi | Không tin lý thuyết trên giấy nên đi đếm từng cái một |
 | `mot-y-tuong` | Một ý tưởng đúng lúc | Một người nhìn ra thứ người khác không thấy, còn kịp |
 | `ky-quac` | Kỳ quặc & buồn cười | Chuyện thật mà buồn cười hoặc kỳ quặc đến khó tin |
+| `co-tich-grimm` | Truyện cổ Grimm | Truyện trong *Kinder- und Hausmärchen* — xem §7.0-b |
 
-`ky-quac` hiện chưa có truyện nào — đó là một ô đã khai sẵn, không phải một kiểu bị quên.
-Thanh bên bỏ qua kiểu rỗng để không có mục nào bấm vào ra lưới trắng.
+Kiểu chưa có truyện nào vẫn được khai trong manifest; thanh bên bỏ qua kiểu rỗng để không có
+mục nào bấm vào ra lưới trắng.
 
-**Nguồn không nới cho `ky-quac`.** Cái buồn cười phải nằm ở chính sự việc có thật — giải
-Ig Nobel, thí nghiệm lố bịch có báo cáo, sự cố ngớ ngẩn có hồ sơ điều tra — chứ không phải
-ở cách kể. Truyện hư cấu không thuộc thư viện này.
+**`ky-quac` vẫn là chuyện có thật.** Cái buồn cười phải nằm ở chính sự việc — giải Ig Nobel,
+thí nghiệm lố bịch có báo cáo, sự cố ngớ ngẩn có hồ sơ điều tra — chứ không nằm ở cách kể.
+Đó là ràng buộc của riêng kiểu này, không phải của cả thư viện (§7.0-a).
 
 Cổng chặn ba thứ: `kieu` không có trong manifest, thiếu `kieu`, và **`cat`/`sub` sót lại**
 từ bản cũ (một hàng chép lại mà còn `cat` thì không lọc được bằng gì cả).
@@ -597,7 +628,52 @@ từ bản cũ (một hàng chép lại mà còn `cat` thì không lọc đượ
 }
 ```
 
+### 7.0-b Truyện cổ — hai trục, và `lai_lich` thay chỗ `mang_di`
+
+Truyện cổ xếp theo **hai trục cùng lúc**, vì một trục không đủ: `kieu` cho biết nó đến từ
+tuyển tập nào, `atu` cho biết nó thuộc kiểu truyện nào trong hệ phân loại Aarne–Thompson–Uther.
+Hai trục này độc lập — Lọ Lem của Grimm và Tấm Cám đều là ATU 510A nhưng khác tuyển tập.
+
+```json
+{
+  "id": "tc-001",                    // tiền tố tc-, riêng cho truyện cổ
+  "kieu": "co-tich-grimm",
+  "atu": "510A",                     // mã kiểu truyện ATU, khai ở manifest.atu
+  "xuat_xu": "KHM 21",               // số hiệu trong tuyển tập gốc — bằng chứng "đã được chọn"
+  "t": "Lọ Lem",
+  "s": "1–2 câu dẫn, hiện trên card.",
+  "body": "Kể lại bằng tiếng Việt của mình, bám cốt bản gốc. 1.200–8.000 ký tự, ≥ 4 đoạn.",
+  "lai_lich": "Chỗ `mang_di` để trống — xem dưới. Tối thiểu 120 ký tự.",
+  "tags": ["me-ke", "chiec-giay"],
+  "src": "Jacob & Wilhelm Grimm, Kinder- und Hausmärchen, bản 1857, số 21"
+}
+```
+
+**`lai_lich` là phần người đọc cầm về, và nó phải là một fact.** Truyện cổ không có `mang_di`
+được: bài học luân lý của một truyện cổ đúng là ví dụ **trượt** mà §7.1 lấy ra làm mẫu. Thứ
+kiểm chứng được ở một truyện cổ không nằm trong cốt truyện mà nằm ở **đường đi của chính câu
+chuyện** — nó bao nhiêu tuổi, có mặt ở đâu, bản nào khác bản nào chỗ nào.
+
+| Đạt | Trượt |
+|---|---|
+| *"Kiểu ATU 510A có trên 500 dị bản ghi chép được; bản chữ viết sớm nhất còn giữ là Diệp Hạn trong Dậu Dương Tạp Trở, thế kỷ 9 — trước Perrault chín trăm năm."* | *"Truyện dạy ta rằng ở hiền gặp lành."* — bài học, không phải fact |
+| *"Bản 1812 để mẹ ruột hành hạ con; từ bản 1819 Grimm đổi thành mẹ kế."* | *"Đây là một trong những truyện nổi tiếng nhất thế giới."* — không có mỏ neo |
+
+`lai_lich` chịu **các luật mức `LOẠI` của cổng fact** như `mang_di`, trừ `tuong-thuat`. Và
+cổng `day-doi` vẫn soi thân truyện: kể thì kể, đừng thêm câu răn dạy mà bản gốc không có.
+
+**Hai cổng riêng của truyện cổ**, cả hai đều bắt máy được:
+
+1. `kieu` là kiểu truyện cổ thì **bắt buộc** có `atu` và `xuat_xu`, và **không được** có
+   `mang_di`. Ngược lại, kiểu truyện thật thì bắt buộc `mang_di` và không được có ba trường kia.
+2. `xuat_xu` phải khớp một tuyển tập đã khai ở `manifest.tuyen_tap` — đó là chỗ điều kiện
+   "đã được nhiều người công nhận" của §7.0-a biến thành thứ kiểm được. Muốn thêm Andersen
+   hay cổ tích Việt Nam thì khai tuyển tập trước, đừng nhét truyện vào rồi tính sau.
+
 ### 7.1 `mang_di` — cổng chống "kể xong rồi sao?"
+
+> Mục này áp cho các kiểu truyện **có thật**. Truyện cổ trả lời cùng câu hỏi đó bằng
+> `lai_lich` — xem §7.0-b.
 
 §1.1 mục 1 loại fact tường thuật vì *"kể xong rồi sao? Người đọc không cầm được gì về"*.
 Truyện được phép tường thuật, nên nó phải trả lời đúng câu hỏi đó bằng một trường riêng.

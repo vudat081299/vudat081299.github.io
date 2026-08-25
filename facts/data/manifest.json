@@ -363,6 +363,43 @@
       "icon": "sentiment_very_satisfied",
       "label": "Kỳ quặc & buồn cười",
       "desc": "Chuyện có thật mà buồn cười hoặc kỳ quặc đến khó tin: giải Ig Nobel, thí nghiệm lố bịch, sự cố ngớ ngẩn có hồ sơ hẳn hoi. Nguồn không nới một ly so với các kiểu khác."
+    },
+    {
+      "id": "co-tich-grimm",
+      "icon": "auto_stories",
+      "label": "Truyện cổ Grimm",
+      "desc": "Truyện trong Kinder- und Hausmärchen của anh em Grimm, kể lại bám cốt bản gốc. Phần cầm về không phải bài học luân lý mà là lai lịch của chính câu chuyện: nó bao nhiêu tuổi, có mặt ở những đâu, và bản nào khác bản nào chỗ nào.",
+      "co_tich": true
+    }
+  ],
+  "tuyen_tap": [
+    {
+      "ma": "KHM",
+      "ten": "Kinder- und Hausmärchen",
+      "nguoi_suu_tam": "Jacob & Wilhelm Grimm",
+      "ban": "bản thứ 7, 1857 — 210 truyện được đánh số"
+    }
+  ],
+  "atu": [
+    {
+      "ma": "327A",
+      "ten": "Trẻ con bị bỏ trong rừng"
+    },
+    {
+      "ma": "333",
+      "ten": "Kẻ ăn thịt bị lộ"
+    },
+    {
+      "ma": "510A",
+      "ten": "Cô gái bị hắt hủi (kiểu Lọ Lem)"
+    },
+    {
+      "ma": "709",
+      "ten": "Nàng công chúa và bà mẹ ghen tị"
+    },
+    {
+      "ma": "1640",
+      "ten": "Chàng may mắn khoác lác"
     }
   ],
   "day_du": [
