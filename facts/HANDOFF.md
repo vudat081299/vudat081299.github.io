@@ -6,6 +6,60 @@ công việc đã làm và không tưởng là mọi thứ đã xong.
 
 ---
 
+## Đợt 25/08/2026 — truyện tách khỏi chủ đề fact, và đích mới 3.000 / 500
+
+**Nguyên văn hai câu của chủ trang:** *"Tôi tưởng những truyện ngắn thì sẽ có 1 tab truyện
+ngắn riêng ở thanh chủ đề, không phải à, hiện tại đang là như thế nào, đang lẫn vào các chủ
+đề của fact à hay sao"* — và sau đó: *"fact tôi muốn khoảng 3000 fact, truyện thì 500"*.
+
+### 1. Truyện có trục riêng `kieu` (§7.0)
+
+Chủ trang chọn giữa ba phương án và lấy phương án tách hẳn: bỏ `cat`/`sub` của fact khỏi
+truyện, dựng vốn từ riêng, phân theo **hình dạng câu chuyện** chứ không theo đề tài. Sáu
+kiểu trong `manifest.kieu_chuyen`. Cổng đổi theo, và bắt cả `cat`/`sub` sót lại.
+
+`ky-quac` được khai với 0 truyện — chủ trang hỏi riêng về "truyện hài". Chốt kèm: **nguồn
+không nới cho nó**, cái buồn cười phải nằm ở sự việc có thật.
+
+### 2. Thanh chủ đề ba nhóm, và `state.kind` biến mất
+
+Trước đây có hai biến trạng thái mà chỉ một biến vào hash, nên chọn "Chuyện" xong reload là
+mất. Giờ một biến `cat` duy nhất, mọi thứ đi qua URL. Bộ pill giữ lại vì trên điện thoại
+thanh bên nằm sau nút ☰.
+
+### 3. 22 → 38 truyện, ba đợt
+
+| đợt | file | thêm | ký tự thân |
+|---|---|---|---|
+| 1 | `chuyen/dot-03.json` | 2 (`ky-quac`) | 2.281–2.772 |
+| 2 | `chuyen/dot-04.json` | 7 (4 kiểu) | 1.617–2.018 |
+| 3 | `chuyen/dot-05.json` | 7 (5 kiểu) | 1.397–1.870 |
+
+Phân bố cuối: `tham-hoa` 11 · `do-tan-noi` 7 · `giai-ma` 6 · `ca-benh` 5 · `ky-quac` 5 ·
+`mot-y-tuong` 4.
+
+**Ba con số bị bỏ vì không lần tới được nguồn gốc**, ghi ra đây để phiên sau đừng nhặt lại
+từ các bài kể lại: liều "1/60 grain strychnine" của Thomas Hicks (ch-023), cân nặng
+"2,5 → 8 lb" của con gà Mike (ch-028), và con số tử vong "sáu người chết" của Therac-25 —
+chính văn Leveson & Turner nói sáu **vụ**, không phải sáu người chết (ch-026).
+
+### Còn nợ
+
+- **Đích còn xa.** Fact 1.909/3.000 (+1.091). Truyện 38/500 (+462). Nhịp đo được của repo
+  là ~25 fact hoặc ~14 truyện một commit, nên còn khoảng 70 đợt nữa.
+- **Cụm fact mỏng vì cổng, không vì bị quên.** `kinh-doanh/ban-hang-marketing` **0** fact,
+  `tu-duy/mo-hinh-tu-duy` 1, `kinh-doanh/dam-phan` 1, `kinh-doanh/do-luong` 1. Đó là chỗ
+  §1.1 luật 2 (lời khuyên) và luật 5 (mô hình đặt tên) giết gần hết ứng viên. Kế hoạch
+  "rải đều 6,7 fact/cụm" là kế hoạch sai — cần đo lại cụm nào thật sự nuôi được trước khi
+  hứa số.
+- **Sáu kiểu truyện sẽ không đủ ở mốc 500** (trung bình 83 truyện/kiểu, duyệt không nổi).
+  Nên tách thêm kiểu quanh mốc 150–200 truyện, trước khi việc gán lại thành migrate lớn.
+- **`install-hooks.sh` gãy trong git worktree**: nó hardcode `$ROOT/.git/hooks`, mà trong
+  worktree `.git` là một *file* trỏ đi chỗ khác. Sửa bằng `git rev-parse --git-common-dir`.
+  Repo này dùng worktree thường xuyên, và CLAUDE.md gốc bảo mọi phiên chạy lệnh đó đầu tiên.
+
+---
+
 ## Đợt 24/08/2026 (d) — chủ trang chỉnh lại trọng tâm
 
 **Nguyên văn:** *"Mục đích của tôi không phải là muốn bạn thêm giải thích vì sao, nhưng thôi
