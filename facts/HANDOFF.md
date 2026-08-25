@@ -43,17 +43,44 @@ từ các bài kể lại: liều "1/60 grain strychnine" của Thomas Hicks (ch
 "2,5 → 8 lb" của con gà Mike (ch-028), và con số tử vong "sáu người chết" của Therac-25 —
 chính văn Leveson & Turner nói sáu **vụ**, không phải sáu người chết (ch-026).
 
+### 4. Tiêu chí bị sửa: lằn ranh là có sẵn/tự bịa
+
+Cùng ngày, chủ trang bác chính định nghĩa mà đợt này vừa viết lại: *"cái này thì hẹp quá
+'kể một chuyện có thật, rồi để lại một điều về thế giới', phải sửa tôi tiêu chí, truyện thì
+truyện gì cũng được, nhưng không được bịa, phải có nguồn chính thống, và nhiều người đánh
+giá nó hay chứ không phải tự AI bịa"*.
+
+**Đây là chỗ agent đọc sai bài toán, ghi lại để phiên sau đừng đọc sai lần nữa.** Agent hiểu
+"không được bịa" thành "phải là chuyện có thật", nên đã hỏi chủ trang một câu sai đề —
+*"truyện hài có còn phải là chuyện có thật không"* — và nhận về câu trả lời củng cố đúng
+cách hiểu sai đó. Lằn ranh thật là **có sẵn / tự bịa**: Lọ Lem không phải truyện bịa, một
+truyện agent tự nghĩ ra mới là.
+
+§7.0-a thay một điều kiện bằng ba; §7.0-b dựng khuôn truyện cổ với `lai_lich` thay `mang_di`,
+vì bài học luân lý của truyện cổ đúng là ví dụ TRƯỢT mà §7.1 lấy làm mẫu. Điểm đáng nhớ:
+điều kiện *"nhiều người đánh giá nó hay"* được buộc vào `manifest.tuyen_tap` chứ không để
+trong đầu người viết — muốn thêm Andersen hay cổ tích Việt Nam thì khai tuyển tập trước.
+
+**Cổng bắt được ba chỗ trong chính năm truyện Grimm đầu tiên**: hai câu mệnh lệnh của người
+kể ("dặn đi cho ngoan, đừng rẽ khỏi đường") phải chuyển thành lời thoại trực tiếp, và một
+câu trong `lai_lich` mô tả lời răn của Perrault bằng chính giọng mệnh lệnh ấy.
+
 ### Còn nợ
 
-- **Đích còn xa.** Fact 1.909/3.000 (+1.091). Truyện 38/500 (+462). Nhịp đo được của repo
+- **Đích còn xa.** Fact 1.909/3.000 (+1.091). Truyện 43/500 (+457). Nhịp đo được của repo
   là ~25 fact hoặc ~14 truyện một commit, nên còn khoảng 70 đợt nữa.
 - **Cụm fact mỏng vì cổng, không vì bị quên.** `kinh-doanh/ban-hang-marketing` **0** fact,
   `tu-duy/mo-hinh-tu-duy` 1, `kinh-doanh/dam-phan` 1, `kinh-doanh/do-luong` 1. Đó là chỗ
   §1.1 luật 2 (lời khuyên) và luật 5 (mô hình đặt tên) giết gần hết ứng viên. Kế hoạch
   "rải đều 6,7 fact/cụm" là kế hoạch sai — cần đo lại cụm nào thật sự nuôi được trước khi
   hứa số.
-- **Sáu kiểu truyện sẽ không đủ ở mốc 500** (trung bình 83 truyện/kiểu, duyệt không nổi).
+- **Tuyển tập mới phải khai trước khi thêm truyện của nó.** `manifest.tuyen_tap` hiện mới có
+  KHM (Grimm). Andersen, Aesop, Nghìn lẻ một đêm và kho tàng cổ tích Việt Nam đều chưa khai,
+  và cổng §7.0-a sẽ chặn truyện của chúng cho tới khi khai. `manifest.atu` cũng vậy: mới có
+  5 mã, thêm truyện kiểu khác thì khai mã trước.
+- **Bảy kiểu truyện sẽ không đủ ở mốc 500** (trung bình hơn 70 truyện/kiểu, duyệt không nổi).
   Nên tách thêm kiểu quanh mốc 150–200 truyện, trước khi việc gán lại thành migrate lớn.
+  Riêng nhánh truyện cổ thì trục `atu` đã gánh bớt phần này.
 - **`install-hooks.sh` gãy trong git worktree**: nó hardcode `$ROOT/.git/hooks`, mà trong
   worktree `.git` là một *file* trỏ đi chỗ khác. Sửa bằng `git rev-parse --git-common-dir`.
   Repo này dùng worktree thường xuyên, và CLAUDE.md gốc bảo mọi phiên chạy lệnh đó đầu tiên.
