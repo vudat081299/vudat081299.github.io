@@ -6,6 +6,83 @@ công việc đã làm và không tưởng là mọi thứ đã xong.
 
 ---
 
+## Đợt 25/08/2026 (b) — Holmes, đối nhân xử thế, tâm lý học; 43 → 67 truyện
+
+**Nguyên văn chủ trang:** *"Tôi muốn thêm những mẩu truyện ngắn của sherlock holmes, những
+câu truyện về cách ứng xử EQ cao có thật, những câu truyện giúp tôi hiểu thêm hơn về đối
+nhân xử thế, tâm lý học"*.
+
+### 1. Sherlock Holmes buộc phải nới §7.0-b, không phải nới §7.0-a
+
+Ba cổng của §7.0-a nhận Holmes ngay: có sẵn, có bản đăng cụ thể (The Strand 1891–1927), được
+công nhận rộng. Chỗ vướng nằm ở chỗ khác — §7.0-b bắt **mọi** truyện kinh điển khai `atu`,
+mà ATU là chỉ mục truyện **dân gian**. Bắt Holmes khai ATU là ép một hệ phân loại lên thứ nó
+không mô tả.
+
+Cờ manifest đổi `co_tich` → `kinh_dien`, trục ATU thành tuỳ kiểu qua `atu_bat_buoc`. Kiểu
+không khai `atu_bat_buoc` mà có `atu` giờ **là lỗi**, đối xứng với việc bỏ trống nó ở chỗ nó
+mô tả được.
+
+**Cách tự bắt lỗi trước khi commit, nên làm lại ở các phiên sau:** trước khi thêm dữ liệu,
+gọi thẳng `check_shape_chuyen` trên các bản ghi giả và in kết quả từng nhánh — kinh điển đủ
+trường, thiếu `atu`, thiếu `xuat_xu`, tuyển tập chưa khai, có `mang_di`, kiểu thật có
+`lai_lich`. Mười nhánh, khoảng hai chục dòng script. Chính phép thử này bắt được lỗi
+`trinh-tham-holmes` thiếu cờ `kinh_dien` nên rơi nhầm sang bộ luật truyện thật — cổng vẫn
+xanh, dữ liệu vẫn chưa có, và không có gì báo động cả.
+
+### 2. Ba kiểu mới, và vì sao chúng không vi phạm "hình dạng chứ không đề tài"
+
+Chủ trang xin theo đề tài (EQ, đối nhân xử thế, tâm lý học), còn §7.0 cấm phân theo đề tài.
+Chỗ hoà giải là mỗi kiểu phải khai được một **hình dạng có cổng đi kèm**:
+
+| kiểu | hình dạng | cổng thực tế |
+|---|---|---|
+| `doi-nhan-xu-the` | một khoảnh khắc chọn + hiện vật | không có hiện vật thì là giai thoại, §4 quy tắc 1 loại |
+| `thi-nghiem-nguoi` | thiết kế + phần về sau | chỉ kể được nửa đầu thì đó là fact `tam-ly`, không phải truyện |
+| `trinh-tham-holmes` | một mẩu suy luận tự chứa | `xuat_xu` phải là mã bốn chữ của canon |
+
+Cổng thứ hai là cổng có ích nhất trong ba: bảy trong tám truyện `thi-nghiem-nguoi` của đợt
+này có một phần "về sau" bác lại chính cách kết quả vẫn được kể.
+
+### 3. 24 truyện, ba đợt
+
+| đợt | file | thêm | ký tự thân |
+|---|---|---|---|
+| 1 | `chuyen/holmes-01.json` | 8 (`trinh-tham-holmes`) | 1.298–1.791 |
+| 2 | `chuyen/dot-06.json` | 8 (`doi-nhan-xu-the`) | 1.212–1.640 |
+| 3 | `chuyen/dot-07.json` | 8 (`thi-nghiem-nguoi`) | 1.386–1.565 |
+
+Phân bố cuối: `tham-hoa` 11 · `doi-nhan-xu-the` 8 · `thi-nghiem-nguoi` 8 ·
+`trinh-tham-holmes` 8 · `do-tan-noi` 7 · `giai-ma` 6 · `ca-benh` 5 · `ky-quac` 5 ·
+`co-tich-grimm` 5 · `mot-y-tuong` 4.
+
+### 4. Những chỗ bị cổng chặn hoặc tự rút lại
+
+- Tiền tố `sh-` **đã là tiền tố của fact**. Cổng bắt cả tám id một lượt; đổi sang `hl-`.
+  Ví dụ trong CLAUDE.md §7.0-b đã sửa theo, vì đó là thứ phiên sau chép lại.
+- Một chữ *"đừng"* của người kể ngoài ngoặc kép trong hl-004 bị `loi-khuyen` chặn — đây là
+  lần thứ tư cổng này bắt đúng lỗi ấy trong văn kể lại truyện. Lời thoại trong ngoặc kép
+  được miễn; lời người kể thì không.
+- Bỏ hai con số trong ch-053 (hiệu ứng của một người đồng minh trong thí nghiệm Asch): các
+  nguồn thứ cấp trích khác nhau và không neo được vào bản báo cáo 1956, nên viết định tính.
+  Hai con số giữ lại (37% / một phần tư) thì có trong chính bản 1956.
+- Bỏ claim "Mycroft chỉ có mặt trong hai truyện": ông còn xuất hiện trong The Final Problem
+  với vai người đánh xe cải trang.
+
+### 5. Còn nợ
+
+- **Đích vẫn còn xa:** 1.909 / 3.000 fact và 67 / 500 truyện. Chưa động tới phía fact đợt này.
+- **Tuyển tập mới phải khai trước khi thêm truyện.** `manifest.tuyen_tap` hiện có KHM (Grimm)
+  và SH (canon Holmes). Andersen, Aesop, Nghìn lẻ một đêm, kho tàng cổ tích Việt Nam đều chưa
+  khai, và cổng §7.0-a sẽ chặn truyện của chúng cho tới khi khai.
+- **Canon Holmes còn 48 truyện ngắn chưa dùng.** Danh sách mười hai truyện Doyle tự xếp năm
+  1927 là một bộ lọc sẵn có và tra được — đợt này mới dùng năm trong mười hai.
+- **Chia kiểu khi tới 150–200 truyện.** Mười kiểu không gánh nổi 500 truyện (50 truyện/kiểu).
+- `install-hooks.sh` vẫn hỏng trong git worktree (`.git` là file, không phải thư mục) — đã
+  có chip riêng, chưa sửa.
+
+---
+
 ## Đợt 25/08/2026 — truyện tách khỏi chủ đề fact, và đích mới 3.000 / 500
 
 **Nguyên văn hai câu của chủ trang:** *"Tôi tưởng những truyện ngắn thì sẽ có 1 tab truyện

@@ -1372,10 +1372,10 @@ def cmd_stats(argv):
         print('\n— Truyện, theo kiểu —')
         for k in man['kieu_chuyen']:
             n = by_kieu.get(k['id'], 0)
-            print('%-13s %4d  %s%s' % (k['id'], n, k['label'], '  ← chưa có truyện nào' if not n else ''))
+            print('%-18s %4d  %s%s' % (k['id'], n, k['label'], '  ← chưa có truyện nào' if not n else ''))
         la = sorted({st.get('kieu') for st in stories} - {k['id'] for k in man['kieu_chuyen']})
         for k in la:
-            print('%-13s %4d  ← kiểu lạ' % (str(k), by_kieu[k]))
+            print('%-18s %4d  ← kiểu lạ' % (str(k), by_kieu[k]))
         print()
 
     nq = sum(1 for f in facts if (f.get('q') or '').strip())

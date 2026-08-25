@@ -5,9 +5,10 @@ Trang tĩnh, không build, không phụ thuộc. Dựng bằng [web-builder](../
 
 **1.909 fact** trên 20 chủ đề, chia thành 162 cụm nhỏ; 13 fact có minh hoạ tương tác và
 13 fact đã có lớp "vì sao" (câu hỏi mở đầu + phần giải thích đầy đủ). Cạnh đó là
-**43 truyện** trên 7 kiểu — loại nội dung thứ hai, có trục phân loại riêng. Trong đó 38
-truyện kể chuyện có thật và để lại một điều về thế giới (`mang_di`), còn truyện cổ thì
-để lại lai lịch của chính nó (`lai_lich`) và xếp thêm theo kiểu truyện ATU.
+**67 truyện** trên 10 kiểu — loại nội dung thứ hai, có trục phân loại riêng. 54 truyện kể
+chuyện có thật và để lại một điều về thế giới (`mang_di`); 13 truyện còn lại là **truyện
+kinh điển** — Grimm và canon Sherlock Holmes — kể lại bám bản gốc và để lại lai lịch của
+chính câu chuyện (`lai_lich`) thay vì một bài học.
 
 > Sửa hoặc thêm fact thì đọc [CLAUDE.md](CLAUDE.md) trước — ở đó có pipeline thêm fact và
 > cơ chế chống trùng. File này chỉ nói về kiến trúc.
@@ -24,10 +25,12 @@ facts/
     install-hooks.sh  cài bộ điều phối hook git cho cả repo
   data/
     manifest.json   chủ đề fact + cụm (clusters) + kiểu truyện (kieu_chuyen)
+                    + tuyển tập kinh điển (tuyen_tap) + mã kiểu truyện ATU (atu)
                     + danh sách file (thứ tự file = thứ tự thêm)
     chuyen/         truyện — loại nội dung thứ hai, khai ở manifest.files_chuyen;
                     phân loại bằng `kieu`, KHÔNG dùng chủ đề của fact (CLAUDE.md §7.0).
-                    Truyện cổ có thêm trục `atu` và `xuat_xu` (§7.0-b)
+                    Kiểu kinh điển có thêm `xuat_xu` + `lai_lich`, và `atu` nếu là
+                    truyện dân gian (§7.0-b)
     <chu-de>.json   đợt fact đầu
     p2-<chu-de>.json đợt fact thứ hai
     p3-/p4-<chu-de>.json  các đợt sau
