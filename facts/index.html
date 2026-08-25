@@ -70,7 +70,7 @@
       <main class="wb-container wb-container--wide wb-container--pad">
 
         <div class="wb-page-head">
-          <p class="wb-eyebrow">Thư viện fact</p>
+          <p class="wb-eyebrow" data-page-eyebrow>Thư viện fact</p>
           <h1 data-page-title>Tất cả fact</h1>
           <p data-page-desc>Fact cho người trưởng thành: vũ trụ, sinh vật, cơ thể, tâm lý, tư duy, kinh tế,
             kinh doanh, giao tiếp. Mỗi fact đều ghi nguồn — đọc để sắc hơn khi nghĩ, khi nói và khi làm ăn.</p>
@@ -78,10 +78,13 @@
 
         <!-- Hàng thao tác của trang: sắp xếp + xáo trộn. -->
         <div class="wb-cluster wb-cluster--between fx-actions">
+          <!-- Lối tắt cho ba nhóm lớn của thanh bên. Trên điện thoại thanh bên nằm sau nút
+               ☰, nên bộ chuyển này là chỗ duy nhất đổi loại nội dung mà không phải mở ngăn
+               kéo. Cùng một state với thanh bên — xem renderChrome trong app.js. -->
           <div class="wb-tabs wb-tabs--pill fx-kinds" data-kinds role="tablist" aria-label="Loại nội dung">
-            <button class="wb-tab is-active" data-kind="all" role="tab" aria-selected="true">Tất cả</button>
-            <button class="wb-tab" data-kind="fact" role="tab" aria-selected="false">Fact</button>
-            <button class="wb-tab" data-kind="chuyen" role="tab" aria-selected="false">Chuyện</button>
+            <button class="wb-tab is-active" data-goto="all" role="tab" aria-selected="true">Tất cả</button>
+            <button class="wb-tab" data-goto="fact" role="tab" aria-selected="false">Fact</button>
+            <button class="wb-tab" data-goto="chuyen" role="tab" aria-selected="false">Truyện</button>
           </div>
           <span class="wb-cluster wb-cluster--tight">
           <span class="wb-select-wrap fx-sort">
