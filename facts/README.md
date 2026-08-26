@@ -3,8 +3,9 @@
 Trang tĩnh, không build, không phụ thuộc. Dựng bằng [web-builder](../web-builder/) v0.6
 (`../web-builder/web-builder.css`) + `facts.css` (chrome riêng, prefix `fx-*`) + `app.js`.
 
-**1.909 fact + 22 truyện** trên 20 chủ đề, chia thành 162 cụm nhỏ; 13 fact có minh hoạ tương
-tác và 13 fact đã có lớp "vì sao" (câu hỏi mở đầu + phần giải thích đầy đủ).
+**1.923 fact + 32 truyện** trên 20 chủ đề, chia thành 162 cụm nhỏ; 13 fact có minh hoạ tương
+tác. Fact ưu tiên ngắn gọn: 573 fact có câu hỏi mở đầu `q` và 467 fact có phần giải thích `d`
+tuỳ chọn — `d` viết vừa đủ, không có sàn độ dài (xem CLAUDE.md §1.7).
 
 > Sửa hoặc thêm fact thì đọc [CLAUDE.md](CLAUDE.md) trước — ở đó có pipeline thêm fact và
 > cơ chế chống trùng. File này chỉ nói về kiến trúc.

@@ -66,20 +66,16 @@ TITLE_SUBSET_MIN = 3
 
 # ---------------------------------------------------------------- lớp "vì sao" (§1.7)
 #
-# Vấn đề đo được ngày 24/08/2026: 1.884 fact, trung bình t=83 + s=217 ký tự, và chỉ
-# 40 fact (2,1%) có trường `d`. Tức 98% thư viện dài ~300 ký tự — đủ để THÔNG BÁO một sự
-# thật, không đủ để người đọc HỌC được gì. Đổi nguồn không sửa được chỗ này; phải đổi khuôn.
+# Bản nới ngày 25/08/2026. Khuôn cũ (24/08) ép mọi fact trong cụm `day_du` phải có `q` +
+# một `d` dài tối thiểu 600 ký tự / 3 đoạn. Đo lại thì luật đó phản tác dụng: nó buộc cả
+# những fact mà tiêu đề đã tự hiểu, giải thích một câu là xong, cũng phải bôi ra cho đủ
+# 600 ký tự — thành lòng vòng và khó đọc hơn chính cái nó định làm rõ.
 #
-# Khuôn mới: `q` là câu hỏi mở đầu (cửa vào), `t` giữ nguyên vai trò câu trả lời khẳng định,
-# `d` là phần giải thích bắt buộc theo ba đoạn: cơ chế bằng lời thường → một phép so sánh
-# đời thường → chỗ gặp nó trong đời sống.
-#
-# Cách bật cổng: KHÔNG có ngày giờ G. `manifest.day_du` liệt kê những cụm đã viết xong;
-# fact trong cụm đó BẮT BUỘC có `q` và `d` đạt khuôn. Danh sách chỉ dài thêm, nên cổng
-# siết dần theo tiến độ mà không bao giờ đỏ vì phần chưa làm tới.
+# Nguyên tắc mới: FACT ƯU TIÊN NGẮN GỌN. `q` (câu hỏi mở đầu) và `d` (phần giải thích) đều
+# TUỲ CHỌN và độc lập: tiêu đề nào tự hiểu thì khỏi cần, chỗ nào thật sự khó mới thêm — và
+# khi thêm thì viết vừa đủ, dài ngắn tuỳ nội dung, không có sàn. Cổng chỉ còn kiểm ĐỊNH DẠNG:
+# `q` nếu có phải là một câu hỏi thật; `d` nếu có thì không được rỗng. Không còn ép theo cụm.
 Q_MIN, Q_MAX = 15, 120
-D_MIN_CHARS = 600
-D_MIN_PARAS = 3
 
 # Cụm quá to thì việc "chỉ so trong cụm" mất tác dụng — tách cụm khi vượt mốc này.
 CLUSTER_MAX = 90
@@ -243,17 +239,17 @@ def chep_tieu_de(t, s):
 
 def check_vi_sao(f, where, bat_buoc):
     """
-    Cổng khuôn "vì sao" (CLAUDE.md §1.7). `bat_buoc` bật khi cụm của fact đã được khai
-    trong manifest.day_du — tức cụm đó đã viết xong và không được phép tụt lại.
+    Cổng khuôn "vì sao" (CLAUDE.md §1.7) — bản nới ngày 25/08/2026.
 
-    Ba điều được kiểm, cả ba là LỖI chứ không phải nhắc nhở:
-      - `q` phải là câu hỏi thật: kết thúc bằng dấu hỏi, dài trong khoảng Q_MIN–Q_MAX;
-      - có `q` thì phải có `d` — hỏi mà không trả lời đủ là trêu người đọc;
-      - `d` đi kèm `q` phải đạt D_MIN_PARAS đoạn và D_MIN_CHARS ký tự, vì đó chính là
-        chỗ duy nhất người đọc học được thứ gì hơn một dòng tin.
+    Fact ưu tiên NGẮN GỌN. `q` (câu hỏi mở đầu) và `d` (phần giải thích) đều TUỲ CHỌN và
+    độc lập nhau. Không còn sàn độ dài, không còn ép ba đoạn, không còn ép theo cụm — vì
+    ép độ dài chỉ tạo ra những đoạn bôi cho đủ ký tự, lòng vòng hơn cái nó định giải thích.
 
-    40 fact đời đầu có `d` mà chưa có `q` không bị đụng tới: khuôn chỉ áp khi fact đã
-    bước vào lớp mới, hoặc khi cụm của nó đã khai day_du.
+    Chỉ còn kiểm định dạng:
+      - `q` nếu có phải là câu hỏi thật: kết thúc bằng dấu hỏi, dài trong khoảng Q_MIN–Q_MAX;
+      - `q`/`d` nếu khai thì không được rỗng (rỗng thì bỏ hẳn field đi cho sạch).
+
+    `bat_buoc` giữ lại trong chữ ký cho tương thích chỗ gọi, nhưng không còn ép gì nữa.
     """
     errs = []
     q = (f.get('q') or '').strip()
@@ -261,29 +257,14 @@ def check_vi_sao(f, where, bat_buoc):
 
     if 'q' in f and not q:
         errs.append('%s: "q" rỗng — bỏ hẳn field đi thì hơn' % where)
+    if 'd' in f and not d:
+        errs.append('%s: "d" rỗng — bỏ hẳn field đi thì hơn' % where)
     if q:
         if not q.endswith('?'):
             errs.append('%s: "q" phải là câu hỏi, kết thúc bằng dấu hỏi' % where)
         if not (Q_MIN <= len(q) <= Q_MAX):
             errs.append('%s: "q" dài %d ký tự, phải trong khoảng %d-%d'
                         % (where, len(q), Q_MIN, Q_MAX))
-        if not d:
-            errs.append('%s: có "q" mà không có "d" — câu hỏi nào cũng phải kèm phần trả '
-                        'lời đầy đủ, nếu không thì bỏ "q" đi (CLAUDE.md §1.7)' % where)
-    if bat_buoc:
-        if not q:
-            errs.append('%s: cụm đã khai day_du nên fact phải có "q" (CLAUDE.md §1.7)' % where)
-        if not d:
-            errs.append('%s: cụm đã khai day_du nên fact phải có "d" (CLAUDE.md §1.7)' % where)
-    if d and (q or bat_buoc):
-        doan = [x for x in d.split('\n\n') if x.strip()]
-        if len(doan) < D_MIN_PARAS:
-            errs.append('%s: "d" có %d đoạn, khuôn ba phần đòi tối thiểu %d — cơ chế / '
-                        'so sánh đời thường / chỗ gặp trong đời sống'
-                        % (where, len(doan), D_MIN_PARAS))
-        if len(d) < D_MIN_CHARS:
-            errs.append('%s: "d" dài %d ký tự, tối thiểu %d — dưới mức đó thì người đọc '
-                        'không cầm được gì hơn phần "s"' % (where, len(d), D_MIN_CHARS))
     return errs
 
 
@@ -1263,8 +1244,8 @@ def cmd_stats(argv):
             if k > CLUSTER_MAX:
                 fat.append((cid, sub, k))
             nq = q_sub.get((cid, sub), 0)
-            # Cột "vì sao": ✓ = cụm đã khai day_du (cổng §1.7 đang khoá cụm này lại),
-            # n/k = đang viết dở. Cụm chưa động tới thì để trống cho đỡ rối mắt.
+            # Cột "vì sao" giờ chỉ là DẤU THÔNG TIN, không còn khoá gì: ✓ = cụm có tên trong
+            # day_du, n/k = số fact đã có `q`. `q`/`d` đều tuỳ chọn (§1.7 bản 25/08).
             vs = ''
             if '%s/%s' % (cid, sub) in day_du:
                 vs = '  ✓ vì sao'

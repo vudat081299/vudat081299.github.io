@@ -192,22 +192,24 @@ Cả sáu nghe hợp lý và đều bị số liệu bác. Ghi ra đây để ph
 | Mọi con số trong fact đều đo **lịch sử một niềm tin** | 9 | precision 22%: cửa sổ ±60 ký tự quanh con số quá rộng, bắt oan Gaia, Gutenberg, Jenner. Bản dùng được là `s-khong-ve-the-gioi` — đòi **mọi câu** của `s` nhắc kênh văn bản/giảng dạy, precision 100% |
 
 
-### 1.7 Khuôn "vì sao" — câu hỏi mở đầu và phần giải thích bắt buộc
+### 1.7 Khuôn "vì sao" — câu hỏi mở đầu và phần giải thích, đều **tuỳ chọn**
 
-> Cổng này được thêm ngày 24/08/2026 sau khi chủ trang nói thẳng mục tiêu của thư viện:
-> một nguồn học tập kiểu *10 vạn câu hỏi vì sao*, đọc xong mỗi mục là học thêm được một thứ.
-> Đo lại thư viện hôm đó: **1.884 fact, trung bình `t` 83 ký tự + `s` 217 ký tự, và chỉ 40
-> fact (2,1%) có trường `d`.** Tức 98% thư viện dài khoảng 300 ký tự. Ba trăm ký tự đủ để
-> **thông báo** một sự thật, không đủ để ai **học** được gì. Đây không phải lỗi chọn nguồn —
-> lấy fact từ đâu cũng vậy khi khuôn chỉ có ngần ấy chỗ.
+> Bản 24/08/2026 bắt mọi fact trong cụm `day_du` phải có `q` + một `d` dài tối thiểu 600 ký
+> tự / 3 đoạn. **Ngày 25/08/2026 chủ trang bác hướng đó:** *"facts thì tôi ưu tiên ngắn gọn,
+> diễn giải cũng đơn giản dễ hiểu ngắn gọn… kể cả những thứ giải thích một câu là xong bạn
+> cũng cố bôi ra thành 600 ký tự cho khó hiểu và lòng vòng à"*. Đúng. Sàn 600 ký tự ép cả
+> những fact tiêu đề đã tự hiểu cũng phải đẻ ra một đoạn dài — thành lòng vòng hơn cái nó
+> định làm rõ. Chiều sâu dài hơi là việc của **Truyện** (§7), không phải của fact.
 
-Khuôn đầy đủ có ba phần, mỗi phần một việc:
+**Nguyên tắc: fact ưu tiên ngắn gọn.** `q` (câu hỏi mở đầu) và `d` (phần giải thích) đều
+**tuỳ chọn** và độc lập nhau — thêm khi thật sự giúp người đọc, bỏ khi tiêu đề đã tự hiểu.
+Khi có `d` thì viết **vừa đủ, dễ hiểu**: một câu là xong thì một câu, không có sàn độ dài.
 
 | Trường | Vai | Bắt buộc khi |
 |---|---|---|
-| `q` | **câu hỏi mở đầu** — cửa vào, thứ người đọc gặp trước tiên | cụm đã khai `day_du` |
+| `q` | **câu hỏi mở đầu** — cửa vào, thứ người đọc gặp trước tiên | không bao giờ (tuỳ chọn) |
 | `t` | **câu trả lời** — vẫn là câu khẳng định đủ ba cổng §1 | luôn luôn |
-| `d` | **phần giải thích** — chỗ duy nhất người đọc thật sự học | có `q`, hoặc cụm đã khai `day_du` |
+| `d` | **phần giải thích** — chỗ đào sâu khi tiêu đề chưa đủ | không bao giờ (tuỳ chọn) |
 
 ```json
 {
@@ -224,14 +226,17 @@ là câu hỏi về thế giới, không phải lời khuyên. Cái bị chặn 
 lời khuyên** — trả lời xong người đọc cầm về một việc phải làm chứ không phải một điều có
 thật: *"Làm sao để ngủ ngon?"*, *"Có nên uống cà phê buổi tối không?"*.
 
-**Viết `d` thế nào — ba đoạn, tối thiểu 600 ký tự.**
+**Viết `d` thế nào — dài ngắn tuỳ nội dung, không có sàn.** Một `d` tốt thường chạm được
+một trong ba việc dưới đây; chạm được cả ba thì hay, nhưng **đừng bôi cho đủ cả ba** nếu nội
+dung không cần — thà một câu đúng chỗ còn hơn ba đoạn lấp chỗ trống:
 
 1. **Cơ chế bằng lời thường.** Vì sao nó xảy ra, nói như nói với người 15 tuổi (§1.5).
 2. **Một phép so sánh đời thường.** Quy về thứ người đọc đã cầm nắm được.
 3. **Chỗ gặp nó trong đời sống.** Nó hiện ra ở đâu, khi nào người đọc từng thấy mà không biết.
 
-Ba đoạn là **tối thiểu**, không phải khuôn cứng — thêm đoạn thì tốt. Nhưng dưới ba đoạn hoặc
-dưới 600 ký tự thì `check` báo lỗi, vì đó là lúc `d` chỉ đang nhắc lại `s` bằng từ khác.
+Phép thử trước khi thêm `d`: **tiêu đề + `s` đã đủ hiểu chưa?** Đủ rồi thì bỏ `d` — thêm vào
+chỉ làm loãng. Chưa đủ (một cơ chế phản trực giác, một con số cần diễn giải) thì `d` mới có
+việc để làm. `check` không còn ép độ dài hay số đoạn; nó chỉ bắt `q` sai định dạng và field rỗng.
 
 **Một luật cũ đã phải nới khi `d` thành phần chính.** `loi-khuyen` bắt `nên` + động từ ở mức
 `LOẠI`. Trên **tiêu đề** nó vẫn sạch (0 khớp trên 1.884 tiêu đề) nên giữ nguyên. Nhưng quét cả
@@ -241,12 +246,12 @@ là quá thấp cho một luật chặn commit — chính thư viện này đã 
 do đó. Trong `d` nó hạ xuống mức `XEM`, rule id `nen-lam-gi`. Các mẫu còn lại của
 `loi-khuyen` (*hãy*, *đừng*, *mẹo*, *cách … nhất*) vẫn `LOẠI` trong `d`.
 
-**Cách cổng siết dần — không có ngày giờ G.** `manifest.day_du` liệt kê những cụm đã viết
-xong, dạng `"cat/sub"`. Fact trong cụm đó **bắt buộc** có `q` và `d` đạt khuôn; cụm chưa có
-tên trong danh sách thì không bị đụng tới. Viết xong một cụm thì thêm tên cụm vào danh sách
-**trong cùng commit** — đó là cái chốt giữ cho cụm không tụt lại. Danh sách chỉ dài thêm.
+**`manifest.day_du` giờ chỉ là dấu thông tin, không còn ép gì.** Trước nó khoá cụm vào việc
+"mọi fact phải có q+d"; từ 25/08 cổng không đọc nó để chặn nữa. Để nguyên danh sách cũng
+không sao — nó chỉ còn tô cột `✓ vì sao` trong `stats`. Không cần thêm tên cụm mới vào đó.
 
-`factlint stats` in tiến độ: cột `✓ vì sao` cho cụm đã khoá, `n/k vì sao` cho cụm đang viết dở.
+`factlint stats` in tiến độ: cột `✓ vì sao` cho cụm có tên trong `day_du`, `n/k vì sao` cho
+số fact đã có `q`. Cả hai chỉ để tham khảo — `q`/`d` không phải chỉ tiêu phải lấp đầy.
 
 ### 1.8 Phần tóm tắt kể **thế giới**, không kể **ai tìm ra**
 

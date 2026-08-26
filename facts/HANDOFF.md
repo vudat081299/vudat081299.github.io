@@ -6,6 +6,42 @@ công việc đã làm và không tưởng là mọi thứ đã xong.
 
 ---
 
+## Đợt 25/08/2026 (e) — bác lớp "vì sao": fact ngắn lại, truyện gánh chiều sâu
+
+**Nguyên văn chủ trang:** *"facts thì tôi ưu tiên ngắn gọn, diễn giải cũng đơn giản dễ hiểu
+ngắn gọn, mà bạn lại giới hạn min 600, thế thì kể cả những thứ giải thích một câu là xong bạn
+cũng cố bôi ra thành 600 ký tự cho khó hiểu và lòng vòng à… hỏng hết trang web của tôi rồi."*
+
+Đợt (d) khoá 44 cụm khoa học vào `day_du`, ép mỗi fact một `d` ≥600 ký tự/3 đoạn. Đo lại: 609
+fact có `d`, **560 dồn cục ở 900–1.300 ký tự** — chữ ký của "viết cho đủ vạch". Median 1.132.
+
+### 1. Cổng: gỡ sàn — `q`/`d` thành tuỳ chọn
+`factlint.py`: bỏ `D_MIN_CHARS=600`, `D_MIN_PARAS=3`, và bỏ ép theo `day_du`. `check_vi_sao`
+giờ chỉ kiểm định dạng (`q` là câu hỏi thật; field không rỗng). `day_du` còn lại chỉ là dấu
+thông tin cho `stats`. CLAUDE.md §1.7 viết lại theo "fact ưu tiên ngắn gọn".
+
+### 2. Rà 609 `d` linh hoạt từng fact (7 agent song song, chia theo file)
+Xoá hẳn **142** `d` (tiêu đề+`s` đã tự hiểu), rút gọn **467** về 2–4 câu ý-mới. Kết quả:
+median `d` 1.132 → **545**, không còn `d` nào trên 849, cụm 900–1.300 về **0**. Mạnh tay nhất
+là vật lý (xoá 104/125) vì `s` vốn tự chứa; vũ trụ giữ nhiều `d` hơn (2 xoá/69) vì mỗi `d`
+mang một phép ví von. Hai chỗ số vênh `s`↔`d` cũ được cắt khỏi `d` (dl-288, vt-250).
+
+### 3. Thêm nội dung — 14 fact + 10 truyện
+- `data/p6-fact-moi.json`: 14 fact cụm mỏng, nguồn kinh điển (Brooks, Simpson, Tversky–Kahneman,
+  Freedman–Fraser, Hardin/Ostrom, Eratosthenes lịch 46 TCN, quarantine, IPv4…), tự loại 4 trùng.
+- `data/chuyen/dot-03.json`: 5 truyện **mở rộng thế giới quan** (Eratosthenes, kinh độ Harrison,
+  iridium & khủng long, vật chất tối, Wegener).
+- `data/chuyen/dot-04.json`: 5 truyện **hài vui** (chiến tranh Emu, mèo thị trưởng, gà Mike không
+  đầu, bánh ⅓ pound, marathon 1904) — **vẫn buộc `mang_di` là fact thật**, không nới §7.
+
+**Quyết định giữ lại để phiên sau biết:** truyện hài vẫn phải có `mang_di` thật về thế giới.
+Nếu chủ trang muốn một loại "hài thuần giải trí" không cần bài học thì phải nới §7 — chưa làm.
+
+**Còn nợ:** chưa duyệt tay chất lượng từng `d` sau rút gọn (mới soi mẫu); `kd-402` nói "trung
+bình ~4 năm" trong khi nguồn BLS là **trung vị** — chữ nhỏ, chưa sửa.
+
+---
+
 ## Đợt 24/08/2026 (d) — chủ trang chỉnh lại trọng tâm
 
 **Nguyên văn:** *"Mục đích của tôi không phải là muốn bạn thêm giải thích vì sao, nhưng thôi
