@@ -15,6 +15,17 @@
   body { background: var(--wb-canvas); color: var(--wb-fg); margin: 0; font-family: var(--wb-font); -webkit-font-smoothing: antialiased; }
   ::selection { background: var(--wb-fg); color: var(--wb-canvas); }
 
+  /* ---- navbar brand ----
+     The kit pins .wb-navbar__brand at flex:none, so it never shrinks. This brand is
+     short enough to fit today, but the phone treatment below costs nothing (a short
+     title never hits its cap) and keeps the bar safe from overflow if the title ever
+     grows or the phone is narrower than 360px. Kept identical to the sibling page
+     cai-gi-cung-thang.html, whose longer title actually needs it. */
+  @media (max-width: 480px) {
+    .wb-navbar { gap: 10px; padding-left: 12px; padding-right: 12px; }
+    .hw-brand-text { max-width: calc(100vw - 168px); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  }
+
   /* ---- hero ---- */
   .hw-hero { padding: 30px 0 20px; }
   .hw-eyebrow { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 10px; }
@@ -135,7 +146,7 @@
 <header class="wb-navbar wb-navbar--sticky wb-navbar--collapse-lg">
   <button class="wb-navbar__toggle wb-btn wb-btn--ghost wb-btn--icon" data-navbar-toggle
           aria-label="Mở mục lục"><span class="wb-ico">menu</span></button>
-  <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">₵</span> How Money Works</a>
+  <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">₵</span><span class="hw-brand-text">How Money Works</span></a>
   <!-- The part links live in __menu, the slot that collapses. __actions is icon-only
        by kit contract — a text button there pushes the whole page sideways on a phone.
        Doubles as the mobile table of contents, since .hw-toc is hidden under 900px. -->

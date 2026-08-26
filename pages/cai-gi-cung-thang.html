@@ -15,6 +15,21 @@
   body { background: var(--wb-canvas); color: var(--wb-fg); margin: 0; font-family: var(--wb-font); -webkit-font-smoothing: antialiased; }
   ::selection { background: var(--wb-fg); color: var(--wb-canvas); }
 
+  /* ---- navbar brand ----
+     The kit pins .wb-navbar__brand at flex:none, so it never shrinks. That's fine
+     for a short brand, but this title is long enough to push the icon actions (the
+     theme toggle) off a narrow phone (~22px past a 360px bar, ~62px at 320px). On
+     phones we tighten the bar's spacing and cap the title width so it ellipsizes
+     ONLY when it truly can't fit — the full title still shows down to ~370px, the
+     icon actions stay on-screen, and the page never scrolls sideways. (We cap the
+     title rather than letting it flex-shrink: the kit's margin-left:auto spacer
+     inflates the shrink calculation and clips the title a few px early even when it
+     would fit.) Nothing is lost — the full title also lives in the <h1> and <title>. */
+  @media (max-width: 480px) {
+    .wb-navbar { gap: 10px; padding-left: 12px; padding-right: 12px; }
+    .hw-brand-text { max-width: calc(100vw - 168px); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  }
+
   /* ---- hero ---- */
   .hw-hero { padding: 30px 0 20px; }
   .hw-eyebrow { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 10px; }
@@ -113,7 +128,7 @@
 <header class="wb-navbar wb-navbar--sticky wb-navbar--collapse-lg">
   <button class="wb-navbar__toggle wb-btn wb-btn--ghost wb-btn--icon" data-navbar-toggle
           aria-label="Mở mục lục"><span class="wb-ico">menu</span></button>
-  <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">⚖</span> How to Win Every Argument</a>
+  <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">⚖</span><span class="hw-brand-text">How to Win Every Argument</span></a>
   <nav class="wb-nav wb-navbar__menu">
     <a class="wb-nav__link" href="#mo-dau">Mở đầu</a>
     <a class="wb-nav__link" href="#g1">1 · Cấu trúc</a>
