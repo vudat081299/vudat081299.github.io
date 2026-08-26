@@ -9,6 +9,15 @@
 
 <!-- Web Builder — the minimalist UI kit that styles the rest of the site -->
 <link rel="stylesheet" href="../web-builder/web-builder.css">
+<script>
+  /* Theme trước lần vẽ đầu tiên: lần đầu vào trang thì theo hệ điều hành, và
+     người dùng nền tối không bị chớp trắng. Lựa chọn thủ công (nếu có) ưu tiên. */
+  try {
+    var t = localStorage.getItem('hub-theme');
+    if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches))
+      document.documentElement.classList.add('dark');
+  } catch (e) {}
+</script>
 
 <style>
   /* Page-local layout only — every colour / radius / shadow comes from wb-* tokens. */
@@ -2926,7 +2935,7 @@ var LABELS = {
   function applyTheme(dark) { root.classList.toggle('dark', dark); }
   var saved = null;
   try { saved = localStorage.getItem('hub-theme'); } catch (e) {}
-  applyTheme(saved === 'dark');
+  applyTheme(saved === 'dark' || (!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches));
   var toggle = document.getElementById('theme-toggle');
   if (toggle) toggle.addEventListener('click', function () {
     var dark = !root.classList.contains('dark');
