@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-25",
+  "updated": "2026-08-26",
   "note": "Thêm fact hàng tuần: tạo data/weekly/<năm>-w<tuần>.json rồi thêm tên file vào cuối mảng files. File đứng sau = fact mới hơn.",
   "categories": [
     {
@@ -327,6 +327,107 @@
       "bao-ton-nghe-thuat"
     ]
   },
+  "kieu_chuyen": [
+    {
+      "id": "tham-hoa",
+      "icon": "warning",
+      "label": "Thảm hoạ & điều tra",
+      "desc": "Một thứ hỏng — cây cầu, con tàu, một dòng sông, một hang động — và phần đi tìm vì sao. Thường thì không bộ phận nào hỏng cả."
+    },
+    {
+      "id": "giai-ma",
+      "icon": "key",
+      "label": "Giải mã & chứng minh",
+      "desc": "Thứ không ai đọc được, không ai chứng minh được, rồi có người làm được — và cách họ làm quan trọng hơn kết quả."
+    },
+    {
+      "id": "ca-benh",
+      "icon": "biotech",
+      "label": "Ca bệnh & tự thí nghiệm",
+      "desc": "Kiến thức lấy ra từ một cơ thể: của người bệnh, của người mang mầm bệnh, hoặc của chính nhà nghiên cứu tự uống vào."
+    },
+    {
+      "id": "do-tan-noi",
+      "icon": "straighten",
+      "label": "Đo tận nơi",
+      "desc": "Không tin lý thuyết trên giấy nên đi đếm từng cái một: từng cái chết trên bản đồ, từng con chim, từng năm giá kim loại."
+    },
+    {
+      "id": "mot-y-tuong",
+      "icon": "emoji_objects",
+      "label": "Một ý tưởng đúng lúc",
+      "desc": "Một người nhìn ra thứ những người quanh họ không thấy, đúng lúc còn kịp — và mọi thứ sau đó khác hẳn."
+    },
+    {
+      "id": "doi-nhan-xu-the",
+      "icon": "handshake",
+      "label": "Đối nhân xử thế",
+      "desc": "Một nước đi nhắm vào người khác, dưới áp lực, và còn giấy tờ chứng minh người đó đã chọn gì và bỏ gì: lá thư không gửi, bản ghi cuộc họp, hồi ký của chính người trong cuộc."
+    },
+    {
+      "id": "thi-nghiem-nguoi",
+      "icon": "psychology",
+      "label": "Thí nghiệm trên người",
+      "desc": "Một câu hỏi về con người đem ra thử trên người thật — và phần quan trọng không kém: cái giá phải trả, chỗ về sau hoá ra sai, và ai là người đi lục lại hồ sơ."
+    },
+    {
+      "id": "ky-quac",
+      "icon": "sentiment_very_satisfied",
+      "label": "Kỳ quặc & buồn cười",
+      "desc": "Chuyện có thật mà buồn cười hoặc kỳ quặc đến khó tin: giải Ig Nobel, thí nghiệm lố bịch, sự cố ngớ ngẩn có hồ sơ hẳn hoi. Nguồn không nới một ly so với các kiểu khác."
+    },
+    {
+      "id": "co-tich-grimm",
+      "icon": "auto_stories",
+      "label": "Truyện cổ Grimm",
+      "desc": "Truyện trong Kinder- und Hausmärchen của anh em Grimm, kể lại bám cốt bản gốc. Phần cầm về không phải bài học luân lý mà là lai lịch của chính câu chuyện: nó bao nhiêu tuổi, có mặt ở những đâu, và bản nào khác bản nào chỗ nào.",
+      "kinh_dien": true,
+      "atu_bat_buoc": true
+    },
+    {
+      "id": "trinh-tham-holmes",
+      "icon": "search",
+      "label": "Sherlock Holmes",
+      "desc": "Những mẩu suy luận tự chứa trong 56 truyện ngắn của Conan Doyle, kể lại bám bản đăng trên The Strand. Phần cầm về là lai lịch: truyện ra số nào, Doyle lấy nghề suy luận ấy từ đâu, và chỗ nào chính ông về sau nhận là mình viết sai.",
+      "kinh_dien": true
+    }
+  ],
+  "tuyen_tap": [
+    {
+      "ma": "KHM",
+      "ten": "Kinder- und Hausmärchen",
+      "nguoi_suu_tam": "Jacob & Wilhelm Grimm",
+      "ban": "bản thứ 7, 1857 — 210 truyện được đánh số"
+    },
+    {
+      "ma": "SH",
+      "ten": "The Sherlock Holmes canon",
+      "nguoi_suu_tam": "Arthur Conan Doyle",
+      "ban": "56 truyện ngắn + 4 tiểu thuyết, đăng The Strand Magazine 1891–1927; mã bốn chữ theo Jay Finley Christ (1947)"
+    }
+  ],
+  "atu": [
+    {
+      "ma": "327A",
+      "ten": "Trẻ con bị bỏ trong rừng"
+    },
+    {
+      "ma": "333",
+      "ten": "Kẻ ăn thịt bị lộ"
+    },
+    {
+      "ma": "510A",
+      "ten": "Cô gái bị hắt hủi (kiểu Lọ Lem)"
+    },
+    {
+      "ma": "709",
+      "ten": "Nàng công chúa và bà mẹ ghen tị"
+    },
+    {
+      "ma": "1640",
+      "ten": "Chàng may mắn khoác lác"
+    }
+  ],
   "day_du": [
     "co-the/co-xuong",
     "co-the/da-toc-mong",
@@ -426,7 +527,13 @@
   "files_chuyen": [
     "chuyen/dot-01.json",
     "chuyen/dot-02.json",
-    "chuyen/dot-08.json",
-    "chuyen/dot-09.json"
+    "chuyen/dot-03.json",
+    "chuyen/dot-04.json",
+    "chuyen/dot-05.json",
+    "chuyen/dot-06.json",
+    "chuyen/dot-07.json",
+    "chuyen/co-tich-grimm-01.json",
+    "chuyen/holmes-01.json",
+    "chuyen/dot-08.json"
   ]
 }

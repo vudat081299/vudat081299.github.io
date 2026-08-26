@@ -556,15 +556,88 @@ trên điện thoại.
 > *10 vạn câu hỏi vì sao*, và không phải điều gì đáng biết cũng nén được vào một câu khẳng
 > định. Có những thứ chỉ mở ra khi được kể.
 
-Fact nói thẳng thế giới là thế nào. **Truyện đi đường vòng: nó kể một chuyện có thật, rồi để
-lại một điều về thế giới.** Hai loại dùng chung `cat`/`sub`, chung ô tìm kiếm, chung lưới
-card; trang có bộ chuyển **Tất cả / Fact / Chuyện**.
+Fact nói thẳng thế giới là thế nào. Truyện đi đường vòng. Hai loại dùng chung ô tìm kiếm,
+chung lưới card, chung modal — nhưng **phân loại bằng hai trục khác hẳn nhau** (§7.0). Thanh
+bên chia ba nhóm: *Thư viện* (Tất cả · Fact), *Truyện* (Tất cả truyện + từng kiểu), *Chủ đề
+fact* (20 chủ đề).
+
+### 7.0-a Lằn ranh không phải thật/hư cấu, mà là có sẵn/tự bịa
+
+> Sửa ngày 25/08/2026. Bản trước định nghĩa truyện là *"kể một chuyện có thật, rồi để lại
+> một điều về thế giới"*. Chủ trang bác: **"cái này thì hẹp quá… truyện thì truyện gì cũng
+> được, nhưng không được bịa, phải có nguồn chính thống, và nhiều người đánh giá nó hay chứ
+> không phải tự AI bịa"**. Định nghĩa cũ chặn nhầm: nó loại cả Grimm, thứ rõ ràng không phải
+> do ai ở đây bịa ra.
+
+Lọ Lem không phải truyện bịa. Nó là một hiện vật văn hoá có số hiệu, có bản in, có hàng trăm
+dị bản được ghi chép, và đã được nhiều thế hệ đọc. **Truyện bịa là truyện mà agent tự nghĩ ra
+rồi viết vào đây.** Đó mới là thứ bị cấm, và cấm tuyệt đối.
+
+Ba điều kiện, cả ba bắt buộc, thay cho điều kiện "có thật" cũ:
+
+| Cổng | Câu hỏi | Kiểm bằng gì |
+|---|---|---|
+| **Không tự bịa** | Câu chuyện này đã tồn tại trước phiên làm việc này chưa? | có `src` trỏ tới một bản công bố cụ thể |
+| **Nguồn chính thống** | Nguồn là bản gốc hay bản kể lại? | §4 quy tắc 2 — với truyện cổ là tuyển tập gốc kèm số hiệu |
+| **Đã được nhiều người công nhận** | Ai ngoài agent này đánh giá nó đáng đọc? | thuộc một tuyển tập đã khai ở `manifest.tuyen_tap`, hoặc có mã kiểu truyện ATU |
+
+Điều kiện thứ ba là chỗ dễ trôi nhất, nên nó được buộc vào một danh sách trong repo chứ không
+vào cảm nhận của người viết. Một truyện cổ được nhận vào khi nó nằm trong một tuyển tập đã
+khai — Grimm, Andersen, Aesop, Nghìn lẻ một đêm, kho tàng cổ tích Việt Nam, canon Sherlock
+Holmes — **và** khai được số hiệu của nó trong tuyển tập đó. Đó là bằng chứng có kiểm được rằng nhiều người đã đọc và
+người sưu tầm đã chọn, chứ không phải một agent thấy hay.
+
+**Hệ quả cho phần thân truyện.** Truyện cổ đã hết hạn bảo hộ thì kể lại bằng tiếng Việt của
+chính mình được, nhưng **không chép bản dịch tiếng Việt đang lưu hành** — bản dịch có bản
+quyền riêng. Kể lại bám sát cốt truyện của bản gốc, không thêm nhân vật, không đổi kết.
+
+### 7.0 Truyện có trục phân loại riêng
+
+> Đổi ngày 25/08/2026, theo yêu cầu của chủ trang. Trước đó truyện mượn `cat`/`sub` của fact
+> nên nó nằm lẫn trong 20 chủ đề fact và không có chỗ đứng riêng trên thanh chủ đề.
+
+Truyện **không có `cat`, không có `sub`**. Nó có **`kieu`** — một giá trị trong
+`manifest.kieu_chuyen`. Trục này phân theo **hình dạng câu chuyện**, không phải theo đề tài:
+cùng một đề tài có thể ra một truyện *Thảm hoạ & điều tra* và một truyện *Đo tận nơi*.
+
+| `kieu` | Nhãn | Là gì |
+|---|---|---|
+| `tham-hoa` | Thảm hoạ & điều tra | Một thứ hỏng, và phần đi tìm vì sao |
+| `giai-ma` | Giải mã & chứng minh | Thứ không ai đọc được / chứng minh được, rồi có người làm được |
+| `ca-benh` | Ca bệnh & tự thí nghiệm | Kiến thức lấy ra từ một cơ thể |
+| `do-tan-noi` | Đo tận nơi | Không tin lý thuyết trên giấy nên đi đếm từng cái một |
+| `mot-y-tuong` | Một ý tưởng đúng lúc | Một người nhìn ra thứ người khác không thấy, còn kịp |
+| `doi-nhan-xu-the` | Đối nhân xử thế | Một nước đi nhắm vào người khác, và giấy tờ cho thấy đã chọn gì / bỏ gì |
+| `thi-nghiem-nguoi` | Thí nghiệm trên người | Một câu hỏi về con người đem thử trên người thật — kèm chỗ về sau phải sửa |
+| `ky-quac` | Kỳ quặc & buồn cười | Chuyện thật mà buồn cười hoặc kỳ quặc đến khó tin |
+| `co-tich-grimm` | Truyện cổ Grimm | Truyện trong *Kinder- und Hausmärchen* — xem §7.0-b |
+| `trinh-tham-holmes` | Sherlock Holmes | Một mẩu suy luận trong canon Conan Doyle — xem §7.0-b |
+
+Kiểu chưa có truyện nào vẫn được khai trong manifest; thanh bên bỏ qua kiểu rỗng để không có
+mục nào bấm vào ra lưới trắng.
+
+**Hai kiểu thêm ngày 25/08 vẫn là hình dạng, không phải đề tài.** Chủ trang xin *"truyện về
+cách ứng xử EQ cao"* và *"truyện giúp hiểu về đối nhân xử thế, tâm lý học"* — nghe như đề tài,
+nhưng cái làm chúng thành một kiểu là hình dạng chung, và hình dạng đó cũng là chỗ đặt cổng:
+
+- `doi-nhan-xu-the` — có **một khoảnh khắc chọn**, và có **hiện vật** chứng minh đã chọn thế:
+  lá thư còn trong hồ sơ, bản ghi âm cuộc họp, hồi ký của chính người trong cuộc. Không có
+  hiện vật thì đó là giai thoại truyền miệng, §4 quy tắc 1 loại.
+- `thi-nghiem-nguoi` — có **một thiết kế thí nghiệm** và có **phần về sau**: ai lục lại hồ sơ,
+  chỗ nào không lặp lại được, con số nào bị kể sai suốt mấy chục năm. Chỉ kể được nửa đầu thì
+  đó là một fact `tam-ly`, không phải một truyện.
+
+**`ky-quac` vẫn là chuyện có thật.** Cái buồn cười phải nằm ở chính sự việc — giải Ig Nobel,
+thí nghiệm lố bịch có báo cáo, sự cố ngớ ngẩn có hồ sơ điều tra — chứ không nằm ở cách kể.
+Đó là ràng buộc của riêng kiểu này, không phải của cả thư viện (§7.0-a).
+
+Cổng chặn ba thứ: `kieu` không có trong manifest, thiếu `kieu`, và **`cat`/`sub` sót lại**
+từ bản cũ (một hàng chép lại mà còn `cat` thì không lọc được bằng gì cả).
 
 ```json
 {
   "id": "ch-001",                    // tiền tố ch-, không được đụng id của fact nào
-  "cat": "lich-su",
-  "sub": "phat-minh",                // dùng lại đúng cụm của fact — xem §3
+  "kieu": "mot-y-tuong",             // một giá trị của manifest.kieu_chuyen — xem §7.0
   "t": "Chiếc hộp sắt của một tài xế xe tải",
   "s": "1–2 câu dẫn, hiện trên card.",
   "body": "Thân truyện. Ngăn đoạn bằng \n\n. 1.200–8.000 ký tự, tối thiểu 4 đoạn.",
@@ -574,7 +647,80 @@ card; trang có bộ chuyển **Tất cả / Fact / Chuyện**.
 }
 ```
 
+### 7.0-b Truyện kinh điển — `lai_lich` thay chỗ `mang_di`
+
+> Nới ngày 25/08/2026. Mục này ban đầu viết cho riêng truyện cổ. Sherlock Holmes cũng qua
+> được ba cổng của §7.0-a — có sẵn, có bản đăng cụ thể, được công nhận rộng — nhưng nó không
+> phải truyện dân gian nên không có mã ATU. Cờ trong manifest vì thế đổi từ `co_tich` sang
+> **`kinh_dien`**, và trục ATU thành **tuỳ kiểu** (`atu_bat_buoc`).
+
+**Kinh điển = có sẵn trước phiên làm việc này, nằm trong một tuyển tập đã khai.** Grimm là
+truyện dân gian sưu tầm, Holmes là tác phẩm có tác giả — điểm chung duy nhất, và là điểm duy
+nhất cổng quan tâm: không ai ở đây bịa ra chúng.
+
+Truyện cổ xếp theo **hai trục cùng lúc**, vì một trục không đủ: `kieu` cho biết nó đến từ
+tuyển tập nào, `atu` cho biết nó thuộc kiểu truyện nào trong hệ phân loại Aarne–Thompson–Uther.
+Hai trục này độc lập — Lọ Lem của Grimm và Tấm Cám đều là ATU 510A nhưng khác tuyển tập.
+ATU là chỉ mục kiểu truyện **dân gian**, nên nó chỉ áp cho tuyển tập dân gian: kiểu nào xếp
+theo ATU thì khai `atu_bat_buoc: true`, kiểu không khai thì có `atu` là **lỗi** — ép một hệ
+phân loại lên thứ nó không mô tả cũng sai như bỏ trống nó ở chỗ nó mô tả được.
+
+```json
+{
+  "id": "tc-001",                    // tiền tố tc-, riêng cho truyện cổ
+  "kieu": "co-tich-grimm",
+  "atu": "510A",                     // mã kiểu truyện ATU, khai ở manifest.atu
+  "xuat_xu": "KHM 21",               // số hiệu trong tuyển tập gốc — bằng chứng "đã được chọn"
+  "t": "Lọ Lem",
+  "s": "1–2 câu dẫn, hiện trên card.",
+  "body": "Kể lại bằng tiếng Việt của mình, bám cốt bản gốc. 1.200–8.000 ký tự, ≥ 4 đoạn.",
+  "lai_lich": "Chỗ `mang_di` để trống — xem dưới. Tối thiểu 120 ký tự.",
+  "tags": ["me-ke", "chiec-giay"],
+  "src": "Jacob & Wilhelm Grimm, Kinder- und Hausmärchen, bản 1857, số 21"
+}
+```
+
+Kiểu kinh điển **không** xếp theo ATU thì bỏ hẳn trường đó, `xuat_xu` mang mã của tuyển tập
+mình:
+
+```json
+{
+  "id": "hl-002",                    // tiền tố hl-, riêng cho canon Holmes ("sh-" đã là fact)
+  "kieu": "trinh-tham-holmes",
+  "xuat_xu": "SH REDH",              // mã bốn chữ của Jay Finley Christ (1947)
+  "t": "Hội Tóc Đỏ",
+  "lai_lich": "Truyện ra số nào, Doyle nói gì về nó, chỗ nào ông về sau nhận là viết sai."
+}
+```
+
+**`lai_lich` là phần người đọc cầm về, và nó phải là một fact.** Truyện kinh điển không có
+`mang_di` được: bài học luân lý của một truyện cổ đúng là ví dụ **trượt** mà §7.1 lấy ra làm
+mẫu, và "Holmes dạy ta phải quan sát kỹ" cũng trượt đúng luật ấy. Thứ
+kiểm chứng được ở một truyện cổ không nằm trong cốt truyện mà nằm ở **đường đi của chính câu
+chuyện** — nó bao nhiêu tuổi, có mặt ở đâu, bản nào khác bản nào chỗ nào.
+
+| Đạt | Trượt |
+|---|---|
+| *"Kiểu ATU 510A có trên 500 dị bản ghi chép được; bản chữ viết sớm nhất còn giữ là Diệp Hạn trong Dậu Dương Tạp Trở, thế kỷ 9 — trước Perrault chín trăm năm."* | *"Truyện dạy ta rằng ở hiền gặp lành."* — bài học, không phải fact |
+| *"Bản 1812 để mẹ ruột hành hạ con; từ bản 1819 Grimm đổi thành mẹ kế."* | *"Đây là một trong những truyện nổi tiếng nhất thế giới."* — không có mỏ neo |
+| *"Doyle tự xếp truyện này thứ hai trong mười hai truyện Holmes ông thích nhất, danh sách in trên The Strand tháng 6/1927."* | *"Holmes dạy ta phải quan sát chứ đừng chỉ nhìn."* — bài học |
+
+`lai_lich` chịu **các luật mức `LOẠI` của cổng fact** như `mang_di`, trừ `tuong-thuat`. Và
+cổng `day-doi` vẫn soi thân truyện: kể thì kể, đừng thêm câu răn dạy mà bản gốc không có.
+
+**Hai cổng riêng của truyện kinh điển**, cả hai đều bắt máy được:
+
+1. `kieu` là kiểu kinh điển thì **bắt buộc** có `xuat_xu` và `lai_lich`, **không được** có
+   `mang_di`, và có `atu` hay không là do `atu_bat_buoc` của chính kiểu đó quyết định. Ngược
+   lại, kiểu truyện thật thì bắt buộc `mang_di` và không được có ba trường kia.
+2. `xuat_xu` phải khớp một tuyển tập đã khai ở `manifest.tuyen_tap` — đó là chỗ điều kiện
+   "đã được nhiều người công nhận" của §7.0-a biến thành thứ kiểm được. Muốn thêm Andersen
+   hay cổ tích Việt Nam thì khai tuyển tập trước, đừng nhét truyện vào rồi tính sau.
+
 ### 7.1 `mang_di` — cổng chống "kể xong rồi sao?"
+
+> Mục này áp cho các kiểu truyện **có thật**. Truyện cổ trả lời cùng câu hỏi đó bằng
+> `lai_lich` — xem §7.0-b.
 
 §1.1 mục 1 loại fact tường thuật vì *"kể xong rồi sao? Người đọc không cầm được gì về"*.
 Truyện được phép tường thuật, nên nó phải trả lời đúng câu hỏi đó bằng một trường riêng.
@@ -607,21 +753,27 @@ nhân vật nói là dữ liệu của truyện chứ không phải giọng ngư
   cái vòi bị tháo — chính Snow ghi điều đó trong báo cáo. Bỏ chi tiết ấy đi thì câu chuyện
   gọn hơn và sai hơn.
 - **Chống trùng.** Truyện quét gần trùng **với truyện**, không quét chéo với fact: một truyện
-  kể sâu về cùng chủ đề với một fact là đúng thiết kế, không phải trùng.
+  kể sâu về cùng chủ đề với một fact là đúng thiết kế, không phải trùng. Tra bằng
+  `factlint near "…" --chuyen` (thêm `--kieu K` để khoanh trong một kiểu).
 - **Tự chứa (§1.5).** Người 15 tuổi chưa học ngành đó đọc xong phải nắm được.
 
 ### 7.4 Thêm một truyện
 
-Cùng pipeline §2, khác ở bước 2 và bước 5:
+Cùng pipeline §2, khác ở bước 2 (`mang_di` viết trước), bước 3 (tra trong bể truyện) và
+bước 5 (chọn `kieu` chứ không chọn cụm fact):
 
 1. Tìm — nguồn dạng truyện tốt: hồ sơ điều tra tai nạn, hồi ký kỹ thuật, sách sử chuyên khảo,
    báo cáo nguyên thuỷ của chính người trong cuộc.
 2. **Viết `mang_di` TRƯỚC.** Không nghĩ ra được câu đó thì đừng viết truyện — nghĩa là chưa
    có gì để mang về.
-3. Tra trùng bằng `factlint near` trong cùng cụm.
+3. Tra trùng bằng `factlint near "<tiêu đề + tóm tắt>" --chuyen` — bể truyện, không phải
+   bể fact.
 4. Verify nguồn theo §4.
-5. Thêm vào `data/chuyen/<đợt>.json`, khai tên file vào `manifest.files_chuyen`.
-6. `factlint check && factlint verify` — cả hai lệnh soi cả fact lẫn truyện, không cần cờ gì thêm.
+5. Chọn `kieu` theo §7.0 — hỏi "câu chuyện này có *hình dạng* nào", đừng hỏi "nó nói về đề
+   tài gì". Không kiểu nào vừa thì thêm kiểu mới vào `manifest.kieu_chuyen` chứ đừng nhét
+   bừa; cổng sẽ chặn `kieu` chưa khai.
+6. Thêm vào `data/chuyen/<đợt>.json`, khai tên file vào `manifest.files_chuyen`.
+7. `factlint check && factlint verify` — cả hai lệnh soi cả fact lẫn truyện, không cần cờ gì thêm.
 
 ---
 

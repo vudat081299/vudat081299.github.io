@@ -3,9 +3,13 @@
 Trang tĩnh, không build, không phụ thuộc. Dựng bằng [web-builder](../web-builder/) v0.6
 (`../web-builder/web-builder.css`) + `facts.css` (chrome riêng, prefix `fx-*`) + `app.js`.
 
-**1.923 fact + 32 truyện** trên 20 chủ đề, chia thành 162 cụm nhỏ; 13 fact có minh hoạ tương
-tác. Fact ưu tiên ngắn gọn: 573 fact có câu hỏi mở đầu `q` và 467 fact có phần giải thích `d`
-tuỳ chọn — `d` viết vừa đủ, không có sàn độ dài (xem CLAUDE.md §1.7).
+**1.923 fact** trên 20 chủ đề, chia thành 162 cụm nhỏ; 13 fact có minh hoạ tương tác. Fact
+ưu tiên ngắn gọn: 573 fact có câu hỏi mở đầu `q` và 467 fact có phần giải thích `d` — cả hai
+**tuỳ chọn**, `d` viết vừa đủ, không có sàn độ dài (CLAUDE.md §1.7). Cạnh đó là
+**74 truyện** trên 10 kiểu — loại nội dung thứ hai, có trục phân loại riêng. 61 truyện kể
+chuyện có thật và để lại một điều về thế giới (`mang_di`); 13 truyện còn lại là **truyện
+kinh điển** — Grimm và canon Sherlock Holmes — kể lại bám bản gốc và để lại lai lịch của
+chính câu chuyện (`lai_lich`) thay vì một bài học.
 
 > Sửa hoặc thêm fact thì đọc [CLAUDE.md](CLAUDE.md) trước — ở đó có pipeline thêm fact và
 > cơ chế chống trùng. File này chỉ nói về kiến trúc.
@@ -21,8 +25,13 @@ facts/
     hooks/          post-edit.sh (PostToolUse) và pre-commit — chạy cổng tự động
     install-hooks.sh  cài bộ điều phối hook git cho cả repo
   data/
-    manifest.json   chủ đề + cụm (clusters) + danh sách file fact (thứ tự file = thứ tự thêm)
-    chuyen/         truyện — loại nội dung thứ hai, khai ở manifest.files_chuyen
+    manifest.json   chủ đề fact + cụm (clusters) + kiểu truyện (kieu_chuyen)
+                    + tuyển tập kinh điển (tuyen_tap) + mã kiểu truyện ATU (atu)
+                    + danh sách file (thứ tự file = thứ tự thêm)
+    chuyen/         truyện — loại nội dung thứ hai, khai ở manifest.files_chuyen;
+                    phân loại bằng `kieu`, KHÔNG dùng chủ đề của fact (CLAUDE.md §7.0).
+                    Kiểu kinh điển có thêm `xuat_xu` + `lai_lich`, và `atu` nếu là
+                    truyện dân gian (§7.0-b)
     <chu-de>.json   đợt fact đầu
     p2-<chu-de>.json đợt fact thứ hai
     p3-/p4-<chu-de>.json  các đợt sau
@@ -54,10 +63,10 @@ File đứng sau trong `files` = fact mới hơn, và chế độ sắp xếp m�
   "id": "td-023",                       // duy nhất toàn thư viện, tiền tố theo chủ đề
   "cat": "tu-duy",                      // phải khớp một id trong manifest.categories
   "sub": "mo-hinh-tu-duy",              // cụm nhỏ trong chủ đề — phải khớp manifest.clusters[cat]
-  "q": "Câu hỏi mở đầu — tuỳ chọn, nhưng có nó thì "d" thành bắt buộc (CLAUDE.md §1.7)",
+  "q": "Câu hỏi mở đầu — tuỳ chọn (CLAUDE.md §1.7)",
   "t": "Tiêu đề — một câu khẳng định, và là câu trả lời cho "q"",
   "s": "Tóm tắt hiện trên card, 1–3 câu. Đây là phần bắt buộc.",
-  "d": "Phần giải thích, ba đoạn ≥ 600 ký tự. Ngăn đoạn bằng \n\n. Chỉ hiện trong modal.",
+  "d": "Phần giải thích — tuỳ chọn, viết vừa đủ, không có sàn độ dài. Chỉ hiện trong modal.",
   "viz": "birthday",                    // tuỳ chọn — khoá của một hàm trong viz.js
   "tags": ["nhan-1", "nhan-2"],         // không dấu, gạch nối; card hiện tối đa 3 nhãn
   "src": "Tác giả, Tạp chí (năm)"       // bắt buộc — xem quy tắc kiểm chứng
