@@ -3,9 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="color-scheme" content="dark">
+<meta name="color-scheme" content="dark light">
 <meta name="supported-color-schemes" content="dark light">
 <title>Scooter Maintenance — parts, service intervals, lifespan</title>
+<script>
+  /* Theme trước first paint: theo lựa chọn đã lưu, chưa lưu thì theo hệ điều hành. */
+  try {
+    var t = localStorage.getItem('hub-theme');
+    document.documentElement.setAttribute('data-theme',
+      t || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+  } catch (e) {}
+</script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
@@ -828,9 +836,15 @@ footer{margin-top:var(--sp-12); padding:var(--sp-8) 0 var(--sp-16); border-top:1
   /* ---------- Theme ---------- */
   var root = document.documentElement;
   var themeIc = document.getElementById('theme-ic');
-  function setTheme(t){ root.setAttribute('data-theme', t); themeIc.setAttribute('href', t === 'light' ? '#i-sun' : '#i-moon'); }
+  function setTheme(t, persist){
+    root.setAttribute('data-theme', t);
+    themeIc.setAttribute('href', t === 'light' ? '#i-sun' : '#i-moon');
+    if (persist) { try { localStorage.setItem('hub-theme', t); } catch (e) {} }
+  }
+  /* Khớp icon với data-theme đã đặt trước first paint (đã lưu hoặc theo hệ điều hành). */
+  setTheme(root.getAttribute('data-theme') === 'light' ? 'light' : 'dark', false);
   document.getElementById('theme').addEventListener('click', function(){
-    setTheme(root.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+    setTheme(root.getAttribute('data-theme') === 'light' ? 'dark' : 'light', true);
   });
 
   /* ---------- Sidebar toggle ---------- */
