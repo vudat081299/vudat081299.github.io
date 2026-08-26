@@ -5,7 +5,7 @@
     "sub": "quan-he",
     "t": "Khinh miệt là dự báo mạnh nhất cho một mối quan hệ tan vỡ",
     "s": "Trong bốn kiểu hành vi mà John Gottman gọi là 'tứ kỵ sĩ' — chỉ trích, phòng thủ, khinh miệt, đóng băng — thì khinh miệt (mỉa mai, đảo mắt, hạ thấp) là chỉ báo mạnh nhất cho ly hôn. Nó khác chỉ trích ở chỗ nó nhắm vào giá trị của con người chứ không vào hành vi.",
-    "d": "Gottman cũng quan sát thấy các cặp bền vững duy trì tỉ lệ khoảng 5 tương tác tích cực trên 1 tương tác tiêu cực trong lúc xung đột. Lưu ý: các mô hình dự báo ly hôn của ông đạt độ chính xác rất cao trên chính mẫu đã dùng để xây mô hình, nên con số 'dự đoán 90%' cần đọc thận trọng; nhưng bốn hành vi trên thì được tái xác nhận rộng rãi.",
+    "d": "Các cặp bền vững duy trì khoảng 5 tương tác tích cực trên mỗi 1 tương tác tiêu cực trong lúc xung đột. Con số 'dự đoán ly hôn 90%' cần đọc thận trọng — nó đo trên chính mẫu đã dùng để dựng mô hình — nhưng bốn hành vi trên thì được xác nhận lại rộng rãi.",
     "tags": [
       "hon-nhan",
       "xung-dot",
@@ -32,7 +32,7 @@
     "sub": "quan-he",
     "t": "Nói xấu người khác khiến người nghe gán chính tính xấu đó cho bạn",
     "s": "Hiện tượng 'chuyển giao đặc điểm tự phát': khi bạn mô tả ai đó là keo kiệt hay xảo trá, người nghe vô thức liên kết đặc điểm ấy với chính người kể — và họ không hề ý thức được điều đó. Hiệu ứng vẫn xuất hiện cả khi người nghe biết rõ bạn đang nói về người khác.",
-    "d": "Hiệu ứng này không cần người nghe tin lời bạn: nó xuất hiện cả khi người nghe biết rõ bạn đang nói về người thứ ba, và cả khi họ không nhớ được ai đã nói câu đó. Cùng cơ chế làm quảng cáo so sánh có thể gán tính chất xấu cho chính thương hiệu đi so sánh.",
+    "d": "Cùng cơ chế đó làm quảng cáo so sánh có thể gán chính tính xấu bị nêu ra cho thương hiệu đứng ra chê đối thủ, chứ không phải cho đối thủ. Người nghe gán như vậy cả khi họ không còn nhớ ai là người đã nói câu đó.",
     "tags": [
       "cong-so",
       "danh-tieng",
@@ -72,7 +72,7 @@
     "sub": "thuyet-phuc",
     "t": "Người ta đồng ý giúp nhiều gấp đôi so với mức bạn dự đoán",
     "s": "Khi được yêu cầu ước lượng bao nhiêu người lạ sẽ đồng ý giúp một việc nhỏ (mượn điện thoại, chỉ đường, điền khảo sát), người tham gia đoán thấp hơn thực tế khoảng một nửa. Chúng ta đánh giá quá cao cái giá của lời từ chối và đánh giá quá thấp sự khó xử khi từ chối trực tiếp.",
-    "d": "Khoảng cách giữa dự đoán và thực tế lớn nhất ở những việc đòi người được hỏi phải mất chút công: người dự đoán tính cái giá của việc giúp, còn người được hỏi lại thấy cái giá của việc từ chối trực diện lớn hơn. Cùng lý do đó làm tỉ lệ đồng ý tụt hẳn khi lời đề nghị đi qua email thay vì gặp mặt — qua email, việc từ chối gần như không tốn gì.",
+    "d": "Cùng lý do đó làm tỉ lệ đồng ý tụt hẳn khi lời đề nghị đi qua email thay vì gặp mặt: qua email, việc từ chối gần như không tốn công gì, nên cái giá của lời từ chối mà người được hỏi cảm thấy nhỏ hẳn đi.",
     "tags": [
       "nho-va",
       "su-nghiep",
@@ -99,7 +99,7 @@
     "sub": "lang-nghe",
     "t": "Khoảng lặng giữa hai lượt nói chỉ khoảng 0,2 giây, ở mọi ngôn ngữ đã đo",
     "s": "Khảo sát hội thoại tự nhiên ở mười ngôn ngữ trên năm châu lục cho thấy độ trễ trung bình khi chuyển lượt nói chỉ khoảng 200 mili giây — ngắn hơn thời gian cần để lên kế hoạch một câu nói. Nghĩa là người nghe đã soạn sẵn câu trả lời TRONG LÚC bạn còn đang nói.",
-    "d": "Khoảng lặng 200 mili giây ngắn hơn thời gian cần để soạn một câu, nên nó chỉ khả thi nếu người nghe bắt đầu soạn câu trả lời trước khi người nói kết thúc. Hệ quả đo được: khoảng lặng dài hơn mức thường lệ bị người nghe đọc thành tín hiệu — trong các thứ tiếng đã đo, một quãng nghỉ quá một giây trước câu trả lời làm người hỏi đánh giá câu trả lời đó là ít thành thật hơn.",
+    "d": "Khoảng lặng dài hơn mức thường lệ bị người nghe đọc thành tín hiệu: một quãng nghỉ quá một giây trước câu trả lời làm người hỏi thấy câu trả lời đó kém thành thật hơn.",
     "tags": [
       "hoi-thoai",
       "lang-nghe",
@@ -126,7 +126,7 @@
     "sub": "quan-he",
     "t": "Khoảng hai phần ba thời gian nói chuyện đời thường là nói về người khác",
     "s": "Quan sát hội thoại nơi công cộng cho thấy khoảng hai phần ba thời gian nói chuyện dành cho các chủ đề xã hội: ai làm gì với ai. Robin Dunbar lập luận đây là phiên bản ngôn ngữ của việc chải lông ở linh trưởng — công cụ duy trì mạng lưới và giám sát người không đáng tin.",
-    "d": "Nội dung xã hội chiếm phần lớn thời lượng hội thoại vì nó là thứ duy nhất giải được bài toán theo dõi độ đáng tin trong một nhóm lớn hơn mức mỗi người tự quan sát được. Hệ quả đo được: trong các nhóm được theo dõi, thông tin về việc một người có giữ lời hay không lan nhanh hơn và xa hơn thông tin về năng lực của người đó.",
+    "d": "Hệ quả đo được: trong các nhóm được theo dõi, thông tin về việc một người có giữ lời hay không lan nhanh hơn và xa hơn thông tin về năng lực của người đó.",
     "tags": [
       "danh-tieng",
       "xa-hoi",
@@ -153,7 +153,7 @@
     "sub": "viet-va-noi",
     "t": "Người nghe đánh giá bạn thông minh hơn khi bạn nói, so với khi họ chỉ đọc",
     "s": "Cùng một nội dung tự giới thiệu, khi được nghe bằng giọng nói thay vì đọc bằng chữ, ứng viên được nhà tuyển dụng đánh giá là thông minh hơn, chu đáo hơn và có nhiều khả năng được mời phỏng vấn hơn. Giọng nói mang tín hiệu về tư duy mà văn bản làm mất.",
-    "d": "Chỗ giọng nói thêm vào mà chữ làm mất là các tín hiệu về nhịp suy nghĩ: quãng nghỉ, chỗ nhấn, mức lên xuống của cao độ. Cùng bộ thí nghiệm cho thấy hiệu ứng mất đi khi bản ghi âm được đọc bởi một người khác theo giọng đều — nghĩa là thứ được đọc là cách nói của chính người viết, không phải bản thân kênh âm thanh.",
+    "d": "Cùng bộ thí nghiệm cho thấy hiệu ứng biến mất khi bản ghi âm được một người khác đọc lại theo giọng đều đều. Nghĩa là thứ làm người nghe thấy bạn thông minh hơn là cách nói của chính bạn — quãng nghỉ, chỗ nhấn, lên xuống cao độ — chứ không phải bản thân việc nghe thay vì đọc.",
     "tags": [
       "giong-noi",
       "tuyen-dung",

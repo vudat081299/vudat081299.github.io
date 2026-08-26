@@ -1,0 +1,184 @@
+[
+  {
+    "id": "kd-401",
+    "cat": "kinh-doanh",
+    "sub": "to-chuc",
+    "t": "Thêm người vào một dự án phần mềm đang trễ thường làm nó trễ thêm, không sớm hơn",
+    "s": "Người mới phải mất thời gian mới nắm được việc, và mỗi người thêm vào lại nhân số đường trao đổi lên: n người có n(n-1)/2 cặp phải phối hợp, nên 3 người có 3 kênh còn 10 người đã có 45. Phần thời gian dành cho họp hành và giải thích lại tăng nhanh hơn phần việc làm được thêm.",
+    "tags": [
+      "quan-ly-du-an",
+      "phoi-hop",
+      "phan-mem"
+    ],
+    "src": "Frederick P. Brooks, The Mythical Man-Month (Addison-Wesley, 1975)"
+  },
+  {
+    "id": "kt-401",
+    "cat": "kinh-te",
+    "sub": "thue-chinh-sach",
+    "t": "Thuế lấy đi nhiều hơn số tiền nó thu về, vì nó làm biến mất cả những giao dịch đáng lẽ có lợi cho cả hai bên",
+    "s": "Ngoài khoản chuyển từ người dân sang nhà nước, thuế đẩy giá lên đủ để một số người mua và người bán thôi giao dịch, dù nếu gặp nhau ở mức giá cũ thì cả hai đều có lợi. Giá trị của những cuộc mua bán không còn xảy ra đó không vào túi ai cả — kinh tế học gọi là tổn thất vô ích, và nó lớn dần theo bình phương mức thuế.",
+    "tags": [
+      "thue",
+      "hieu-qua",
+      "ton-that-vo-ich"
+    ],
+    "src": "Jules Dupuit (1844); N. Gregory Mankiw, Principles of Economics — chương thuế và tổn thất vô ích"
+  },
+  {
+    "id": "kt-402",
+    "cat": "kinh-te",
+    "sub": "dong-co-kinh-te",
+    "t": "Một nguồn lực dùng chung mà ai cũng hưởng trọn phần lợi nhưng chia đều phần thiệt sẽ bị khai thác tới cạn",
+    "s": "Người thả thêm một con bò ra bãi cỏ chung được trọn con bò, còn cỏ bị gặm kiệt thì cả làng gánh — nên ai cũng thấy có lợi khi thả thêm, và bãi cỏ chết. Cùng cơ chế với đánh bắt quá mức và ô nhiễm không khí. Nhưng nó không phải định mệnh: nhiều cộng đồng đặt ra luật dùng chung và tự giám sát để giữ nguồn lực sống được.",
+    "tags": [
+      "cai-chung",
+      "dong-co",
+      "moi-truong"
+    ],
+    "src": "Garrett Hardin, Science (1968); phản biện: Elinor Ostrom, Governing the Commons (1990)"
+  },
+  {
+    "id": "sh-401",
+    "cat": "so-hoc",
+    "sub": "tuong-quan",
+    "t": "Một xu hướng đúng trong từng nhóm nhỏ có thể đảo ngược hoàn toàn khi gộp các nhóm lại",
+    "s": "Nếu các nhóm có kích thước lệch nhau và bản thân việc thuộc nhóm nào đã gắn với kết quả, thì tỉ lệ gộp chung bị nhóm đông kéo lệch. Đại học Berkeley năm 1973 nhìn tổng thể thì nhận nam nhiều hơn nữ, nhưng xét từng khoa lại nhận nữ nhỉnh hơn — vì nữ nộp nhiều vào các khoa vốn khó đỗ với mọi người.",
+    "tags": [
+      "nghich-ly-simpson",
+      "gop-nhom",
+      "tuong-quan"
+    ],
+    "src": "E.H. Simpson, JRSS Series B (1951); Bickel, Hammel & O'Connell, Science (1975)"
+  },
+  {
+    "id": "td-401",
+    "cat": "tu-duy",
+    "sub": "lap-luan-sai",
+    "t": "Người ta thường thấy hai điều kiện cùng đúng dễ xảy ra hơn một trong hai điều kiện đó đứng riêng, dù điều đó bất khả về xác suất",
+    "s": "Xác suất hai việc cùng xảy ra không bao giờ lớn hơn xác suất một trong hai — thêm điều kiện chỉ có thể thu hẹp khả năng. Vậy mà khi tả một phụ nữ quan tâm công bằng xã hội, khoảng 85% người được hỏi cho rằng cô ấy 'là nhân viên ngân hàng kiêm nhà hoạt động nữ quyền' dễ đúng hơn chỉ 'là nhân viên ngân hàng'. Một câu chuyện càng chi tiết nghe càng hợp lý, dù mỗi chi tiết thêm vào đều kéo xác suất xuống.",
+    "tags": [
+      "nguy-bien-hop",
+      "xac-suat",
+      "truc-giac"
+    ],
+    "src": "Tversky & Kahneman, Psychological Review (1983) — bài toán Linda"
+  },
+  {
+    "id": "gt-401",
+    "cat": "giao-tiep",
+    "sub": "thuyet-phuc",
+    "t": "Đồng ý với một đề nghị nhỏ trước làm người ta dễ đồng ý với đề nghị lớn hơn sau đó",
+    "s": "Trong thí nghiệm gốc, những người từng nhận lời dán một tấm sticker nhỏ về lái xe an toàn sau đó đồng ý dựng một tấm biển to xấu trước sân với tỉ lệ 76%, trong khi nhóm không được hỏi trước chỉ 17%. Việc nhận lời lần đầu làm người ta thấy mình là người 'kiểu đó', và hành động sau cho khớp với hình ảnh vừa nhận.",
+    "tags": [
+      "chan-trong-cua",
+      "cam-ket",
+      "nhat-quan"
+    ],
+    "src": "Freedman & Fraser, Journal of Personality and Social Psychology (1966)"
+  },
+  {
+    "id": "xh-401",
+    "cat": "xa-hoi",
+    "sub": "luat-phap",
+    "t": "Không ai bị trừng phạt vì một việc mà điều luật cấm nó chỉ được ban hành sau khi việc đã xảy ra",
+    "s": "Nguyên tắc không hồi tố: hành vi chỉ có thể bị coi là tội nếu luật đã cấm nó vào thời điểm nó diễn ra, và hình phạt không được nặng hơn mức luật khi đó quy định. Nếu không, nhà nước có thể đặt ra tội mới rồi truy người trong quá khứ. Nguyên tắc này nằm trong công ước quốc tế mà Việt Nam là thành viên và trong chính Hiến pháp.",
+    "tags": [
+      "khong-hoi-to",
+      "hinh-su",
+      "nguyen-tac-phap-ly"
+    ],
+    "src": "Công ước quốc tế về các quyền dân sự và chính trị (ICCPR) Điều 15; Hiến pháp Việt Nam 2013"
+  },
+  {
+    "id": "cn-401",
+    "cat": "cong-nghe",
+    "sub": "internet-mang",
+    "t": "Giao thức IPv4 chỉ có khoảng 4,3 tỉ địa chỉ, và kho địa chỉ đó đã cạn",
+    "s": "Mỗi địa chỉ IPv4 dài 32 bit nên tổng số chỉ là 2 mũ 32, tức khoảng 4,3 tỉ — ít hơn số người trên Trái Đất, chưa nói tới số thiết bị. Kho địa chỉ trung tâm cấp hết từ năm 2011. Cách chữa là IPv6 với địa chỉ dài 128 bit, cho số địa chỉ nhiều đến mức gần như không thể dùng hết, cùng các thủ thuật để nhiều máy dùng chung một địa chỉ IPv4.",
+    "tags": [
+      "ipv4",
+      "ipv6",
+      "dia-chi-mang"
+    ],
+    "src": "RFC 791 (IPv4); RFC 8200 (IPv6); IANA — kho địa chỉ cạn năm 2011"
+  },
+  {
+    "id": "cn-402",
+    "cat": "cong-nghe",
+    "sub": "internet-mang",
+    "t": "Email có trước World Wide Web khoảng hai mươi năm",
+    "s": "Thư điện tử gửi giữa hai máy qua mạng đã có từ năm 1971, khi dấu @ được chọn để tách tên người dùng khỏi tên máy. Web — các trang liên kết nhau mở bằng trình duyệt — mãi đến 1989–1991 mới ra đời. Nhiều người tưởng email là một dịch vụ chạy trên web, nhưng thực ra nó là một trong những ứng dụng mạng đời đầu, có trước cả trang web đầu tiên.",
+    "tags": [
+      "email",
+      "world-wide-web",
+      "lich-su-internet"
+    ],
+    "src": "Ray Tomlinson (1971); Tim Berners-Lee, CERN (đề xuất 1989, trang web đầu 1991)"
+  },
+  {
+    "id": "ls-402",
+    "cat": "lich-su",
+    "sub": "co-dai",
+    "t": "Năm 46 trước Công nguyên dài tới 445 ngày, để kéo lịch đã lệch khỏi mùa về đúng chỗ",
+    "s": "Lịch La Mã cũ chạy theo trăng và bị các quan chèn thêm tháng tuỳ tiện, nên đến thời Julius Caesar nó đã lệch khỏi mùa gần ba tháng. Trước khi lịch mới tính theo mặt trời bắt đầu chạy đều từ năm 45 trước Công nguyên, người ta phải chèn thêm ngày cho một năm duy nhất dài 445 ngày — về sau gọi là 'năm hỗn loạn'.",
+    "tags": [
+      "lich-julius",
+      "cai-cach-lich",
+      "nam-hon-loan"
+    ],
+    "src": "Censorinus, De Die Natali; Suetonius, Divus Julius — cải cách lịch năm 46 TCN"
+  },
+  {
+    "id": "nn-401",
+    "cat": "ngon-ngu",
+    "sub": "goc-tu-lich-su",
+    "t": "Chữ 'quarantine' (cách ly) bắt nguồn từ 'quaranta giorni' nghĩa là bốn mươi ngày",
+    "s": "Thời dịch hạch thế kỷ 14, các cảng Địa Trung Hải giữ tàu từ vùng có dịch ngoài khơi trước khi cho cập bờ. Ban đầu là 30 ngày, sau kéo lên 40 ngày — quaranta giorni trong tiếng Ý — và chính con số 40 đó dính lại thành cái tên. Ngày nay từ này chỉ mọi kiểu cách ly phòng bệnh, dù thời gian không còn là 40 ngày.",
+    "tags": [
+      "cach-ly",
+      "goc-tu",
+      "dich-benh"
+    ],
+    "src": "Từ nguyên 'quarantine' (OED); kiểm dịch hàng hải Venice và Ragusa thế kỷ 14"
+  },
+  {
+    "id": "kd-402",
+    "cat": "kinh-doanh",
+    "sub": "su-nghiep",
+    "t": "Người đi làm ngày nay gắn với mỗi công việc trung vị khoảng bốn năm rồi chuyển chỗ",
+    "s": "Con số này thấp hơn nhiều so với hình dung 'một đời một công ty' của thế hệ trước, và càng thấp ở người trẻ và ngành công nghệ, nơi thời gian ở mỗi chỗ thường chỉ hai đến ba năm. Một phần vì lương tăng nhanh hơn khi đổi việc so với khi ở lại, nên thị trường lao động thưởng cho sự dịch chuyển.",
+    "tags": [
+      "thoi-gian-lam-viec",
+      "chuyen-viec",
+      "thi-truong-lao-dong"
+    ],
+    "src": "U.S. Bureau of Labor Statistics, Employee Tenure Survey (trung vị ~4 năm)"
+  },
+  {
+    "id": "td-402",
+    "cat": "tu-duy",
+    "sub": "lap-luan-sai",
+    "t": "Một câu được lặp lại nhiều lần bắt đầu nghe như thật hơn, kể cả khi nó sai",
+    "s": "Não xử lý thứ đã gặp trước đó trơn tru hơn, và nó nhầm cái cảm giác 'quen, dễ tiếp nhận' đó với 'đúng'. Vì vậy cùng một khẳng định sai được đọc lại lần hai, lần ba sẽ được người ta chấm là đáng tin hơn lần đầu — ngay cả khi họ thừa biết sự thật ngược lại. Đây là cơ chế khiến tin đồn và quảng cáo lặp đi lặp lại có hiệu lực.",
+    "tags": [
+      "hieu-ung-su-that-ao",
+      "lap-lai",
+      "do-tin"
+    ],
+    "src": "Hasher, Goldstein & Toppino, Journal of Verbal Learning and Verbal Behavior (1977)"
+  },
+  {
+    "id": "sh-403",
+    "cat": "so-hoc",
+    "sub": "ngau-nhien",
+    "t": "Các điểm rơi thật sự ngẫu nhiên trông có cụm, chứ không rải đều",
+    "s": "Ngẫu nhiên không có nghĩa là cách đều nhau — nếu gieo điểm hoàn toàn ngẫu nhiên lên một tấm bản đồ, chúng sẽ tụ thành đám chỗ này và để trống chỗ kia, đúng theo phân bố Poisson. Khi bom bay V-1 rơi xuống Nam London năm 1944, nhiều người tin quân Đức nhắm chính xác vì thấy vài khu trúng dồn — nhưng đếm lại thì kiểu phân bố khớp hoàn toàn với rơi ngẫu nhiên, không có ngắm bắn nào cả.",
+    "tags": [
+      "phan-bo-poisson",
+      "ao-giac-cum",
+      "ngau-nhien"
+    ],
+    "src": "R.D. Clarke, Journal of the Institute of Actuaries (1946) — bom bay V-1 rơi xuống London"
+  }
+]

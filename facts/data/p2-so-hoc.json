@@ -174,7 +174,7 @@
     "sub": "so-lieu-lua",
     "t": "Aspirin phòng ngừa cho người chưa bị bệnh tim: 1.667 người uống suốt một năm mới ngăn được 1 biến cố",
     "s": "Gộp 6 thử nghiệm với 95.456 người chưa từng có bệnh tim mạch, biến cố mạch máu nghiêm trọng xảy ra 0,51% mỗi năm ở nhóm uống aspirin so với 0,57% ở nhóm không uống — công bố dưới dạng 'giảm 12% nguy cơ', nhưng chênh lệch tuyệt đối chỉ 0,06 điểm phần trăm, tức 1.667 người-năm cho mỗi biến cố ngăn được. Cùng dữ liệu đó, chảy máu nặng ngoài sọ tăng từ 0,07% lên 0,10% mỗi năm: thêm 1 ca mỗi 3.333 người-năm, nên cứ 2 biến cố ngăn được thì đổi bằng 1 ca chảy máu. Cán cân sát sao đó là lý do năm 2022 USPSTF ngừng khuyến nghị bắt đầu uống aspirin phòng ngừa cho người từ 60 tuổi.",
-    "d": "Con số 1.667 gọi là số cần điều trị: nghịch đảo của mức giảm rủi ro tuyệt đối. Nó tồn tại vì mức giảm tương đối không cho biết độ lớn — 'giảm 12%' đọc giống nhau dù rủi ro nền là 0,57% một năm hay 57% một năm, còn số cần điều trị thì khác nhau một trăm lần.\n\nSố cần đối chứng là nghịch đảo của mức tăng rủi ro tuyệt đối phía tác dụng phụ — ở đây 3.333. Chỉ khi đặt hai con số cạnh nhau mới thấy aspirin phòng ngừa cấp một đang ở tỉ lệ 2 lợi trên 1 hại, chứ không phải 'có hiệu quả' hay 'không hiệu quả'.",
+    "d": "Con số 1.667 gọi là số cần điều trị: nghịch đảo của mức giảm rủi ro tuyệt đối. Nó cần thiết vì mức giảm tương đối không cho biết độ lớn — 'giảm 12%' đọc giống hệt nhau dù rủi ro nền là 0,57% hay 57% một năm, còn số cần điều trị thì khác nhau tới một trăm lần.",
     "tags": [
       "y-te",
       "doc-so",

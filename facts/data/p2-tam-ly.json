@@ -5,7 +5,7 @@
     "sub": "nhan-cach",
     "t": "Hiệu ứng Barnum: mô tả tính cách chung chung nào cũng thấy đúng với mình",
     "s": "Sinh viên được phát cùng một bản mô tả tính cách y hệt nhau và được bảo đó là kết quả riêng của họ; đa số chấm độ chính xác 4,3 trên 5. Đây là cơ chế của tử vi, sinh trắc vân tay, thần số học và phần lớn bài trắc nghiệm tính cách trên mạng.",
-    "d": "Công thức của một mô tả Barnum tốt: nêu hai đặc điểm trái ngược nhau (\"bạn hướng ngoại nhưng cũng có lúc cần ở một mình\"), thêm một nhu cầu phổ quát (\"bạn muốn được người khác công nhận\"), và một điểm mạnh chưa được khai thác (\"bạn có tiềm năng chưa dùng hết\"). Điểm chung của cả ba: không có ai bị loại trừ, nên không có phát biểu nào có thể sai.",
+    "d": "Công thức của một mô tả Barnum tốt: ghép hai đặc điểm trái ngược ('bạn hướng ngoại nhưng cũng có lúc cần ở một mình'), một nhu cầu ai cũng có ('bạn muốn được người khác công nhận'), và một điểm mạnh chưa dùng hết ('bạn còn tiềm năng chưa khai thác'). Cả ba đều không loại trừ ai, nên không câu nào có thể sai.",
     "tags": [
       "huyen-thoai",
       "tinh-cach",
@@ -216,7 +216,7 @@
     "sub": "cam-xuc",
     "t": "Thu nhập cao hơn vẫn tiếp tục làm đa số người hạnh phúc hơn, nhưng không với nhóm 20% bất hạnh nhất",
     "s": "Một nghiên cứu nổi tiếng năm 2010 nói cảm xúc hằng ngày ngừng cải thiện quanh mức 75.000 đô một năm. Nghiên cứu 2021 đo bằng cách hỏi người ta ngay tại thời điểm sống lại thấy hạnh phúc tiếp tục tăng. Bài chung năm 2023 của cả hai nhóm chốt lại: nó tiếp tục tăng với đa số, nhưng chững lại với khoảng 20% người bất hạnh nhất — với nhóm này tiền không giải quyết được thứ đang làm họ khổ.",
-    "d": "Điểm mấu chốt hay bị bỏ qua: quan hệ là lô-ga-rít. Đi từ 10 lên 20 triệu một tháng tạo mức cải thiện tương đương với đi từ 20 lên 40 triệu, chứ không phải từ 20 lên 30 — nghĩa là mỗi bậc hạnh phúc mua bằng tiền đòi một mức nhân, không phải một mức cộng. Cũng vì thế mà cùng một khoản tăng tuyệt đối đo ra hiệu ứng lớn ở nhóm thu nhập thấp và gần như không đo được ở nhóm thu nhập cao.",
+    "d": "Điểm hay bị bỏ qua: quan hệ giữa tiền và hạnh phúc là theo cấp nhân, không phải cấp cộng. Đi từ 10 lên 20 triệu một tháng cải thiện tương đương đi từ 20 lên 40 triệu, chứ không phải 20 lên 30 — nên cùng một khoản tăng tuyệt đối đo ra hiệu ứng lớn ở người thu nhập thấp và gần như không thấy ở người thu nhập cao.",
     "tags": [
       "tien-bac",
       "hanh-phuc",

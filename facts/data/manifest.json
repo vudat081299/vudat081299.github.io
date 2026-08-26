@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-24",
+  "updated": "2026-08-25",
   "note": "Thêm fact hàng tuần: tạo data/weekly/<năm>-w<tuần>.json rồi thêm tên file vào cuối mảng files. File đứng sau = fact mới hơn.",
   "categories": [
     {
@@ -420,10 +420,13 @@
     "p4-cong-nghe.json",
     "p4-xa-hoi.json",
     "p4-so-hoc.json",
-    "p5-cum-mong.json"
+    "p5-cum-mong.json",
+    "p6-fact-moi.json"
   ],
   "files_chuyen": [
     "chuyen/dot-01.json",
-    "chuyen/dot-02.json"
+    "chuyen/dot-02.json",
+    "chuyen/dot-08.json",
+    "chuyen/dot-09.json"
   ]
 }

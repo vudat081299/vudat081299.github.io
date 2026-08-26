@@ -18,7 +18,7 @@
     "sub": "chi-tieu-tiet-kiem",
     "t": "Gửi đều 5 triệu mỗi tháng trong 30 năm ở mức 8%/năm cho ra khoảng 7,4 tỷ",
     "s": "Tổng số tiền bạn thực sự bỏ ra là 1,8 tỷ. Phần còn lại — hơn 5,6 tỷ — là do lãi kép, và phần lớn của nó sinh ra trong mười năm cuối. Đó là lý do việc bắt đầu sớm quan trọng hơn việc chọn được sản phẩm tối ưu.",
-    "d": "Cùng công thức nhưng bắt đầu muộn 10 năm (chỉ đóng 20 năm) cho ra khoảng 2,9 tỷ — chưa tới một nửa, dù tổng tiền bạn bỏ ra (1,2 tỷ) chỉ ít hơn có một phần ba. Lãi kép không thưởng cho người thông minh nhất mà thưởng cho người ở lại lâu nhất.\n\nLưu ý trung thực: 8%/năm là giả định danh nghĩa dài hạn, chưa trừ lạm phát và thuế phí. Với lạm phát 3,5%, sức mua thật của 7,4 tỷ sau 30 năm chỉ tương đương khoảng 2,6 tỷ tiền hôm nay.",
+    "d": "Cùng công thức nhưng bắt đầu muộn 10 năm (chỉ đóng 20 năm) cho ra khoảng 2,9 tỷ — chưa tới một nửa, dù tổng tiền bỏ ra (1,2 tỷ) chỉ ít hơn một phần ba. Và cần trung thực: 8%/năm là giả định danh nghĩa, chưa trừ lạm phát; với lạm phát 3,5%, sức mua thật của 7,4 tỷ sau 30 năm chỉ tương đương khoảng 2,6 tỷ tiền hôm nay.",
     "tags": [
       "lai-kep",
       "tiet-kiem",
@@ -110,7 +110,7 @@
     "sub": "dong-co-kinh-te",
     "t": "Khi người mua không phân biệt được xe tốt và xe hỏng, người bán xe tốt rút khỏi thị trường",
     "s": "George Akerlof chỉ ra: nếu người mua không phân biệt được xe tốt và xe hỏng, họ chỉ trả giá trung bình; người bán xe tốt rút lui; chất lượng còn lại giảm; giá lại giảm tiếp. Giải pháp trong thực tế là các cơ chế phát tín hiệu: bảo hành, kiểm định bên thứ ba, danh tiếng, hợp đồng ràng buộc.",
-    "d": "Mô hình này áp được cho mọi thị trường có bên biết nhiều hơn bên kia về chất lượng thứ đang bán: bảo hiểm y tế, tuyển dụng, thầu xây dựng. Dấu hiệu nhận ra một thị trường đang sụp theo kiểu này là người bán chất lượng cao rút trước, nên phổ chất lượng còn lại hẹp dần trong khi giá vẫn giảm.",
+    "d": "Mô hình này áp được cho mọi thị trường mà một bên biết nhiều hơn bên kia về chất lượng: bảo hiểm y tế, tuyển dụng, thầu xây dựng. Dấu hiệu một thị trường đang sụp theo kiểu này là bên bán chất lượng cao rút trước, nên phổ chất lượng còn lại cứ hẹp dần trong khi giá vẫn giảm.",
     "tags": [
       "thong-tin",
       "thi-truong",

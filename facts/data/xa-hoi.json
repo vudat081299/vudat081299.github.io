@@ -5,7 +5,7 @@
     "sub": "the-che-hop-tac",
     "t": "Tuỳ chọn mặc định quyết định hành vi của cả một quốc gia",
     "s": "Ở các nước mà hiến tạng là mặc định phải đăng ký (opt-in), tỉ lệ đồng ý thường dưới 30%; ở các nước mặc định là đồng ý trừ khi từ chối (opt-out), tỉ lệ trên 90%. Người dân hai nhóm nước không khác nhau về đạo đức — chỉ khác nhau ở ô tick mặc định trên tờ khai.",
-    "d": "Mặc định mạnh vì nó đổi ai phải hành động, không đổi ai được phép làm gì: ở cả hai chế độ, người dân đều tự do chọn. Cùng cơ chế đo được ở chỗ khác — khi một nước chuyển sang tự động ghi danh vào quỹ hưu trí nghề nghiệp, tỉ lệ tham gia nhảy vọt trong khi quyền rút ra vẫn nguyên. Điều đó cũng có nghĩa mặc định là một quyết định chính sách, kể cả khi không ai coi nó là quyết định.",
+    "d": "Mặc định mạnh vì nó đổi ai phải ra tay hành động, chứ không tước quyền của ai: ở cả hai chế độ, người dân đều được tự do chọn. Cùng cơ chế đo được ở chỗ khác — khi một nước chuyển sang tự động ghi danh vào quỹ hưu trí, tỉ lệ tham gia nhảy vọt dù quyền rút ra vẫn nguyên. Nghĩa là chọn ô mặc định nào cũng là một quyết định chính sách, kể cả khi không ai coi đó là quyết định.",
     "tags": [
       "hanh-vi",
       "chinh-sach",
@@ -103,7 +103,6 @@
     "sub": "dan-so",
     "t": "Việt Nam có khoảng 100 triệu dân và đang già hoá nhanh vào loại nhất thế giới",
     "s": "Tổng cục Thống kê xác nhận dân số vượt 100 triệu vào năm 2023. Việt Nam mất khoảng 20 năm để chuyển từ 'đang già hoá' sang 'già', trong khi Pháp mất hơn 100 năm — nghĩa là ít thời gian chuẩn bị hệ thống an sinh hơn nhiều.",
-    "d": "Tốc độ già hoá quyết định tỉ số phụ thuộc — số người trong tuổi lao động trên mỗi người trên 65 tuổi. Pháp có hơn một trăm năm để nâng dần mức đóng và tuổi nghỉ theo tỉ số đó; Việt Nam có khoảng hai mươi năm cho cùng mức chuyển dịch, nên cùng một cấu trúc quỹ hưu trí sẽ chịu áp lực sớm hơn nhiều so với các nước đã già trước.",
     "tags": [
       "viet-nam",
       "dan-so",
@@ -221,7 +220,7 @@
     "sub": "the-che-hop-tac",
     "t": "Chuẩn mực xã hội thay đổi hành vi mạnh hơn thông tin và lời kêu gọi đạo đức",
     "s": "Trong thí nghiệm tiết kiệm điện ở California, các thông điệp về bảo vệ môi trường, tiết kiệm tiền hay trách nhiệm xã hội đều gần như không có tác dụng; thông điệp duy nhất làm giảm tiêu thụ là thông điệp cho biết hàng xóm dùng bao nhiêu. Trên hàng trăm nghìn hộ, cách đó cắt khoảng 2% điện — nhỏ nhưng rẻ và bền — và chỉ chạy được khi kèm tín hiệu tán thành, vì hộ đang dùng ít hơn trung bình sẽ tăng lên cho bằng nếu không có nó.",
-    "d": "Điều đáng chú ý hơn: khi được hỏi cái gì ảnh hưởng tới mình, người tham gia xếp \"hàng xóm làm gì\" ở vị trí cuối trong danh sách bốn thông điệp — đúng thông điệp duy nhất đo được tác dụng. Nghĩa là câu trả lời của người ta về động cơ của chính mình và hành vi đo được của họ là hai bộ dữ liệu khác nhau, và chúng xếp hạng ngược nhau ở đây.",
+    "d": "Điều đáng chú ý hơn: khi được hỏi cái gì tác động tới mình, người tham gia xếp 'hàng xóm dùng bao nhiêu' ở vị trí cuối trong bốn thông điệp — đúng thông điệp duy nhất đo được tác dụng. Câu trả lời của người ta về động cơ của chính mình và hành vi đo được của họ là hai bộ dữ liệu khác nhau, và ở đây chúng xếp hạng ngược nhau.",
     "tags": [
       "hanh-vi",
       "chuan-muc",

@@ -1,0 +1,77 @@
+[
+  {
+    "id": "ch-101",
+    "cat": "lich-su",
+    "sub": "co-dai",
+    "t": "Người đo được chu vi Trái Đất bằng bóng của một cây gậy",
+    "s": "Khoảng năm 240 trước Công nguyên, một người quản thư ở Ai Cập tính ra Trái Đất to cỡ nào mà chưa từng đi quá vài trăm cây số. Sai số của ông chỉ vài phần trăm.",
+    "body": "Eratosthenes làm quản thư ở Thư viện Alexandria. Ông đọc được rằng ở thành phố Syene — nay là Aswan — vào đúng trưa ngày hạ chí, mặt trời chiếu thẳng xuống tận đáy một cái giếng sâu. Điều đó có nghĩa là ngay lúc ấy mặt trời nằm thẳng trên đỉnh đầu, và một vật dựng thẳng đứng ở Syene không đổ bóng nào cả.\n\nCùng thời khắc đó ở Alexandria, cách Syene một quãng về phía bắc, một cây cọc dựng thẳng vẫn đổ bóng. Eratosthenes đo góc của bóng ấy: khoảng 7,2 độ. Nếu mặt đất phẳng, hai nơi vào cùng một lúc phải cùng không có bóng, hoặc cùng đổ bóng như nhau. Bóng lệch nhau nghĩa là mặt đất cong giữa hai nơi, và mức cong đó đo được bằng chính cái góc kia.\n\n7,2 độ là đúng một phần năm mươi của vòng tròn 360 độ. Vậy khoảng cách từ Alexandria tới Syene phải bằng một phần năm mươi chu vi Trái Đất. Khoảng cách đó, theo số liệu thời ông, là 5.000 stadia. Nhân lên năm mươi lần: chu vi Trái Đất là 250.000 stadia.\n\nRắc rối duy nhất — và là chỗ tranh cãi tới tận nay — là một stadion dài bao nhiêu mét thì không ai còn chắc. Các bản quy đổi khác nhau cho ra chu vi từ khoảng 39.000 tới 46.000 km, trong khi chu vi thật là 40.075 km. Nhưng dù lấy bản nào, con số của một người ngồi trong thư viện, chỉ với một cây cọc và một phép chia, cũng nằm trong vòng vài phần trăm của một đại lượng mà mãi hai nghìn năm sau nhân loại mới đo lại được bằng cách khác.\n\nĐiều làm phép đo này đứng vững là nó không cần đi vòng quanh Trái Đất, không cần rời khỏi mặt đất, không cần dụng cụ nào ngoài việc đo một góc và biết một khoảng cách. Toàn bộ nằm trong một quan sát: vào cùng một khoảnh khắc, mặt trời đổ bóng khác nhau ở hai nơi, và mức chênh lệch của hai cái bóng ấy chính là độ cong của mặt đất nằm giữa chúng.",
+    "mang_di": "Chỉ cần đo bóng của một vật thẳng đứng ở hai nơi vào cùng một thời điểm, cộng với khoảng cách giữa hai nơi, là tính ra chu vi Trái Đất bằng hình học: góc bóng lệch 7,2 độ ứng với một phần năm mươi vòng tròn, nên chu vi bằng năm mươi lần khoảng cách đó — ra khoảng 40.000 km.",
+    "tags": [
+      "eratosthenes",
+      "hinh-hoc",
+      "do-luong"
+    ],
+    "src": "Cleomedes, On the Circular Motions of the Celestial Bodies (nguồn cổ còn ghi lại phép đo của Eratosthenes)"
+  },
+  {
+    "id": "ch-102",
+    "cat": "lich-su",
+    "sub": "phat-minh",
+    "t": "Chiếc đồng hồ giải được bài toán hải hành mà thiên văn học bó tay",
+    "s": "Suốt hàng thế kỷ, tàu biển biết mình ở vĩ độ nào nhưng không biết mình cách điểm xuất phát bao xa về đông hay tây. Lời giải hoá ra không nằm trên bầu trời mà trong một cái hộp gỗ.",
+    "body": "Trên biển, vĩ độ — mình ở cao hay thấp so với đường xích đạo — đo được khá dễ: chỉ cần đo độ cao của mặt trời lúc trưa, hoặc độ cao của sao Bắc Cực. Nhưng kinh độ, tức mình đã đi bao xa về phía đông hay phía tây, thì không có mốc trời nào chỉ ra trực tiếp. Tàu đi nhiều tuần chỉ dựa vào phỏng đoán tốc độ và hướng đi, và sai lệch tích lại đủ để đâm tàu vào đá hoặc bỏ lạc nó giữa đại dương.\n\nNăm 1707, một hạm đội Anh do đô đốc Cloudesley Shovell chỉ huy tính sai vị trí và đâm vào quần đảo Scilly ngay ngoài khơi nước Anh; khoảng hai nghìn thuỷ thủ chết. Bảy năm sau, Nghị viện Anh treo giải qua Đạo luật Kinh độ 1714: tới 20.000 bảng — cả một gia tài thời đó — cho ai tìm được cách xác định kinh độ trên biển với sai số trong vòng nửa độ.\n\nChìa khoá nằm ở thời gian. Trái Đất quay trọn một vòng 360 độ trong 24 giờ, tức 15 độ mỗi giờ. Nếu đứng trên tàu mà biết đồng thời giờ tại chỗ mình đang đứng — đọc được từ mặt trời — và giờ đang là mấy tại cảng gốc, thì hiệu của hai cái giờ ấy nhân với 15 độ cho biết mình đã đi bao xa về đông hay tây. Toàn bộ bài toán gói lại thành một việc: mang theo một chiếc đồng hồ giữ đúng giờ cảng gốc suốt hành trình.\n\nKhông một chiếc đồng hồ nào thời đó làm nổi việc ấy. Đồng hồ quả lắc vô dụng trên con tàu lắc lư; nóng, lạnh và ẩm làm kim loại giãn nở khiến đồng hồ chạy nhanh chậm thất thường. John Harrison, một thợ mộc vùng quê gần như tự học nghề chế đồng hồ, bỏ ra hơn ba mươi năm làm liên tiếp bốn cỗ máy. Cỗ thứ tư, H4 hoàn thành năm 1759, nhỏ gọn chỉ như một chiếc đồng hồ quả quýt lớn.\n\nTrong chuyến thử vượt Đại Tây Dương tới Jamaica các năm 1761 và 1762, H4 giữ giờ chính xác tới mức sai số kinh độ nằm gọn dưới mức nửa độ mà giải thưởng đòi hỏi. Nhưng Harrison không được trả tiền một cách dễ dàng: Ban Kinh độ phần lớn gồm các nhà thiên văn đang theo đuổi một phương pháp đối thủ — đo khoảng cách giữa mặt trăng và các ngôi sao — và họ trì hoãn hết lần này tới lần khác. Ông chỉ nhận đủ phần thưởng khi đã ngoài tám mươi tuổi, sau khi vua George III đích thân can thiệp.\n\nPhương pháp mặt trăng của phe thiên văn cũng chạy được và rẻ hơn vì không cần một cỗ máy đắt tiền, nên trong vài thập kỷ hai cách được dùng song song trên các con tàu. Chỉ khi đồng hồ hàng hải trở nên rẻ và tin cậy thì nó mới thắng hẳn.",
+    "mang_di": "Kinh độ trên biển quy về một hiệu số thời gian: Trái Đất quay 15 độ mỗi giờ, nên biết đồng thời giờ tại chỗ mình và giờ tại cảng gốc là tính ra mình cách cảng bao xa về đông hay tây. Thứ giải được nó không phải thiên văn học mà là một chiếc đồng hồ giữ đúng giờ trên con tàu lắc lư.",
+    "tags": [
+      "kinh-do",
+      "hang-hai",
+      "do-luong-thoi-gian"
+    ],
+    "src": "Đạo luật Kinh độ 1714 và hồ sơ Ban Kinh độ (Board of Longitude, Anh); Dava Sobel, Longitude (1995)"
+  },
+  {
+    "id": "ch-103",
+    "cat": "sinh-vat",
+    "sub": "tien-hoa",
+    "t": "Lớp đất sét mỏng kể lại ngày loài khủng long biến mất",
+    "s": "Một nhà địa chất chỉ muốn biết một lớp đất sét mất bao lâu để lắng xuống. Con số ông đo được không trả lời câu hỏi đó, mà chỉ ra một tiểu hành tinh đã đâm xuống Trái Đất.",
+    "body": "Ở nhiều nơi trên thế giới, tại đúng mốc địa tầng ngăn giữa thời đại của loài khủng long và thời đại sau nó, có một lớp đất sét mỏng. Cuối thập niên 1970, nhà địa chất Walter Alvarez nghiên cứu lớp sét ấy ở Gubbio, nước Ý, và muốn biết nó đã lắng xuống trong bao lâu — vài nghìn năm hay vài triệu năm.\n\nCha ông, Luis Alvarez, là nhà vật lý, gợi ra một cách đo. Bụi từ vũ trụ rơi xuống Trái Đất khá đều đặn theo thời gian, và trong lớp bụi đó có nguyên tố iridium — thứ rất hiếm trong đá của vỏ Trái Đất. Lớp sét lắng càng lâu thì càng hứng được nhiều bụi vũ trụ, vì thế đo lượng iridium trong lớp sét sẽ cho biết nó lắng trong khoảng bao lâu.\n\nKết quả không giống bất cứ điều gì họ chờ đợi: lượng iridium cao gấp khoảng ba mươi lần mức nền. Nó không giống bụi rơi đều trong một quãng thời gian dài; nó giống một cú đổ ập xuống một lần. Iridium hiếm trong vỏ Trái Đất nhưng lại nhiều trong thiên thạch và tiểu hành tinh. Nhóm Alvarez công bố năm 1980 một giả thuyết gây tranh cãi dữ dội: một tiểu hành tinh cỡ mười cây số đã đâm xuống, ném bụi mù lấp kín bầu khí quyển, chặn ánh mặt trời, làm cây cối chết dần và chuỗi thức ăn sụp đổ.\n\nNhiều nhà cổ sinh vật học phản đối, vì họ vốn quen giải thích các đợt tuyệt chủng bằng những thay đổi chậm rãi — khí hậu, mực nước biển. Chỗ yếu của giả thuyết là: nếu có một cú va chạm cỡ đó thì cái hố nằm đâu? Phải tới năm 1991 người ta mới xác định được một miệng hố bị chôn vùi rộng khoảng 180 km nằm dưới bán đảo Yucatán ở Mexico, gọi là Chicxulub, có niên đại khớp với lớp sét — khoảng 66 triệu năm trước.\n\nLớp iridium ấy nằm ở cùng một mốc địa tầng trên khắp các châu lục, nên nó không phải chuyện riêng của một vùng. Một lớp đất mỏng, mỏng tới mức dễ bị bỏ qua, hoá ra ghi lại đồng thời trên toàn cầu dấu vết của một buổi chiều duy nhất cách nay 66 triệu năm.",
+    "mang_di": "Một lớp đất sét mỏng nằm ở cùng một mốc địa tầng trên khắp thế giới và chứa iridium gấp hàng chục lần bình thường là dấu vết của một tiểu hành tinh cỡ 10 km đâm xuống Trái Đất 66 triệu năm trước: iridium hiếm trong vỏ Trái Đất nhưng nhiều trong thiên thạch, nên một nồng độ cao bất thường chỉ về nguồn gốc ngoài Trái Đất.",
+    "tags": [
+      "tuyet-chung",
+      "iridium",
+      "chicxulub"
+    ],
+    "src": "L. W. Alvarez, W. Alvarez, F. Asaro & H. V. Michel, 'Extraterrestrial Cause for the Cretaceous-Tertiary Extinction', Science (1980); Hildebrand và cộng sự, Geology (1991)"
+  },
+  {
+    "id": "ch-104",
+    "cat": "vu-tru",
+    "sub": "vat-ly-vu-tru",
+    "t": "Những ngôi sao quay quá nhanh so với thứ có thể nhìn thấy",
+    "s": "Khi đo tốc độ quay của các ngôi sao ở rìa ngoài một thiên hà, Vera Rubin thấy chúng đi nhanh gần bằng sao ở giữa. Theo mọi tính toán, chúng lẽ ra phải chậm hơn nhiều.",
+    "body": "Trong hệ Mặt Trời, hành tinh càng ở xa Mặt Trời thì quay quanh càng chậm: Sao Hải Vương lê từng bước so với Sao Thuỷ. Đó là hệ quả của lực hấp dẫn — càng xa khối lượng ở trung tâm, lực kéo càng yếu, nên tốc độ trên quỹ đạo giảm dần. Người ta chờ đợi các thiên hà cũng vận hành như thế: những ngôi sao ở rìa ngoài, xa khối sáng dày đặc ở tâm, phải quay chậm lại.\n\nSuốt thập niên 1960 và 1970, nhà thiên văn Vera Rubin đo tốc độ quay của các ngôi sao trong thiên hà Tiên Nữ (Andromeda), rồi trong hàng chục thiên hà khác. Bà không tìm thấy sự chậm lại đó. Sao ở rìa ngoài quay nhanh gần bằng sao phía trong — đường biểu diễn tốc độ theo khoảng cách gần như phẳng ra thay vì đi xuống như dự tính.\n\nChỉ có một cách để những ngôi sao ngoài rìa quay nhanh như vậy mà không văng ra khỏi thiên hà: phải có thêm khối lượng níu chúng lại, và khối lượng đó phải trải rộng ra tận vùng ngoài, xa hơn nhiều so với phần phát sáng. Nhưng ở đó kính thiên văn không thấy gì cả. Khối lượng ấy không phát sáng, cũng không chặn ánh sáng — nó chỉ để lộ mình qua lực hấp dẫn. Tính ra, nó nhiều gấp mấy lần toàn bộ vật chất nhìn thấy được của thiên hà.\n\nÝ tưởng rằng phần lớn vũ trụ là thứ vô hình từng được nhà thiên văn Fritz Zwicky nêu từ năm 1933 khi ông quan sát một đám thiên hà, nhưng lúc đó ít người để tâm. Số đo đường cong tốc độ quay của Rubin, lặp lại ở hết thiên hà này tới thiên hà khác, khiến giới thiên văn khó lòng bỏ qua thêm nữa. Thứ vô hình đó nay được gọi là vật chất tối.\n\nCho tới nay chưa ai biết vật chất tối được làm bằng gì; các thí nghiệm dò tìm hạt của nó vẫn chưa bắt được gì. Cũng có một hướng thiểu số cho rằng không hề có vật chất tối nào, mà chính công thức lực hấp dẫn cần được sửa lại ở quy mô thiên hà. Điều không ai tranh cãi là bản thân số đo: sao ở ngoài rìa quay nhanh hơn nhiều so với mức mà lượng vật chất nhìn thấy được có thể giữ nổi.",
+    "mang_di": "Sao ở rìa ngoài một thiên hà quay quanh tâm nhanh gần bằng sao ở trong, trong khi lẽ ra chúng phải chậm dần giống hành tinh càng xa Mặt Trời càng quay chậm — dấu hiệu rằng phần lớn khối lượng của thiên hà nằm ở thứ không phát sáng, nhiều gấp mấy lần lượng vật chất nhìn thấy được.",
+    "tags": [
+      "vat-chat-toi",
+      "thien-ha",
+      "hap-dan"
+    ],
+    "src": "V. C. Rubin, W. K. Ford Jr. & N. Thonnard, Astrophysical Journal (1980); F. Zwicky (1933)"
+  },
+  {
+    "id": "ch-105",
+    "cat": "dia-ly",
+    "sub": "luc-dia-kien-tao",
+    "t": "Người nói các lục địa biết dịch chuyển và bị chê cười suốt năm mươi năm",
+    "s": "Alfred Wegener nhìn bản đồ và thấy bờ đông Nam Mỹ khớp với bờ tây châu Phi như hai mảnh ghép. Ông đúng, nhưng vì không giải thích được vì sao, gần như cả ngành địa chất bác bỏ ông.",
+    "body": "Nhìn bản đồ thế giới, bờ đông của Nam Mỹ và bờ tây của châu Phi trông như hai mảnh của cùng một khối bị xé ra. Nhiều người từng để ý điều đó, nhưng năm 1912 nhà khí tượng học người Đức Alfred Wegener là người dựng nó thành một giả thuyết đầy đủ: xưa kia mọi lục địa dính vào nhau thành một khối duy nhất, rồi tách ra và trôi dần tới vị trí ngày nay.\n\nÔng không chỉ dựa vào hình dạng bờ biển. Cùng một loài bò sát cổ và cùng một loài dương xỉ cổ để lại hoá thạch ở cả hai bờ Đại Tây Dương, dù chúng không thể nào bơi qua cả một đại dương. Các tầng đá và các dãy núi ở bờ bên này khớp nối với bờ bên kia. Ghép các lục địa lại với nhau thì những mảnh rời rạc đó nối liền thành một bức tranh gọn gàng.\n\nGiới địa chất bác bỏ gần như đồng loạt, và lý do phản đối không phải vô lý: Wegener không giải thích được lực nào đủ mạnh để đẩy cả một lục địa lướt qua đáy biển bằng đá cứng. Ông đưa ra vài cơ chế và tất cả đều sai. Là một nhà khí tượng học lấn sân sang địa chất, ông lại càng dễ bị gạt ra ngoài. Một khẳng định đúng nhưng thiếu cơ chế đã bị coi là chuyện hoang đường.\n\nWegener chết năm 1930 trên chỏm băng Greenland trong một chuyến khảo sát, thọ 50 tuổi, khi giả thuyết của ông vẫn còn bị chế giễu. Phải tới thập niên 1960, khi người ta lập bản đồ đáy đại dương và phát hiện đáy biển đang tách giãn ra từ các sống núi giữa đại dương, cái cơ chế còn thiếu mới lộ ra: lục địa không cày qua đáy biển, mà nằm trên những mảng khổng lồ cùng trôi với chính đáy biển đó.\n\nNgày nay vệ tinh đo trực tiếp được: các lục địa dịch chuyển cỡ vài centimet mỗi năm, xấp xỉ tốc độ móng tay mọc dài ra. Chậm như vậy, nhưng qua hàng trăm triệu năm là đủ để một siêu lục địa vỡ ra và các mảnh trôi đi nửa vòng Trái Đất.",
+    "mang_di": "Các lục địa dịch chuyển cỡ vài centimet mỗi năm, xấp xỉ tốc độ móng tay mọc dài, vì chúng nằm trên những mảng khổng lồ cùng trôi với đáy biển đang tách giãn; bờ biển khớp nhau và hoá thạch giống nhau ở hai bờ Đại Tây Dương là bằng chứng cho điều đó, nhưng một khẳng định đúng mà thiếu cơ chế đã bị bác bỏ suốt nửa thế kỷ.",
+    "tags": [
+      "kien-tao-mang",
+      "luc-dia-troi",
+      "wegener"
+    ],
+    "src": "Alfred Wegener, Die Entstehung der Kontinente und Ozeane (1915); F. J. Vine & D. H. Matthews, Nature (1963)"
+  }
+]

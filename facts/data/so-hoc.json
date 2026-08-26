@@ -6,7 +6,7 @@
     "viz": "birthday",
     "t": "Chỉ cần 23 người trong phòng là xác suất có hai người trùng ngày sinh vượt 50%",
     "s": "Trực giác sai vì ta nghĩ tới 'ai đó trùng với TÔI' (cần 253 người mới tới 50%), trong khi bài toán hỏi 'có bất kỳ cặp nào trùng nhau'. Với 23 người có 253 cặp. Với 70 người, xác suất vượt 99,9%.",
-    "d": "Bài học tổng quát vượt xa ngày sinh: số cặp tăng theo bình phương số phần tử. Đó là lý do trong một tập dữ liệu đủ lớn, các trùng hợp \"không thể ngẫu nhiên\" xuất hiện liên tục — và là lý do dò tìm mô thức trong dữ liệu lớn mà không có giả thuyết trước sẽ luôn tìm ra thứ gì đó.\n\nCùng phép đếm cũng cho biết bài toán sẽ khó hơn bao nhiêu khi đổi câu hỏi: hai người bất kỳ trong nhóm cho 253 phép so ở 23 người, còn \"trùng với một người cố định\" chỉ cho đúng 22 phép so — nên nhóm phải lớn hơn hơn mười lần mới đạt cùng mức xác suất.",
+    "d": "Bài học vượt xa ngày sinh: số cặp tăng theo bình phương số phần tử. Đó là lý do trong một tập dữ liệu đủ lớn, các trùng hợp 'không thể ngẫu nhiên' vẫn xuất hiện liên tục — và là lý do dò tìm mô thức trong dữ liệu lớn mà không có giả thuyết trước thì gần như luôn tìm ra một thứ gì đó.",
     "tags": [
       "xac-suat",
       "truc-giac",
@@ -21,7 +21,7 @@
     "viz": "bayes",
     "t": "Xét nghiệm chính xác 99% cho kết quả dương tính vẫn có thể chỉ đúng 9%",
     "s": "Giả sử bệnh có tỉ lệ 1/1000, xét nghiệm bắt đúng 99% người bệnh và báo sai 1% người khoẻ. Trong 100.000 người: 100 người bệnh cho ~99 dương tính đúng, 99.900 người khoẻ cho ~999 dương tính giả. Xác suất bạn thật sự mắc bệnh khi có kết quả dương tính chỉ khoảng 9%.",
-    "d": "Chỗ hỏng của trực giác nằm ở việc trộn lẫn hai câu hỏi khác nhau: 'trong số người mắc bệnh, xét nghiệm bắt được bao nhiêu phần trăm' và 'trong số người có kết quả dương, bao nhiêu phần trăm thật sự mắc'. Con số 99% trả lời câu đầu; câu bạn quan tâm là câu sau, và nó phụ thuộc hoàn toàn vào việc bệnh đó phổ biến tới đâu.\n\nĐây là lý do tầm soát đại trà cho bệnh hiếm gây hại nhiều hơn lợi nếu không có bước xác nhận. Cùng phép tính này áp dụng cho hệ thống phát hiện gian lận, lọc thư rác, và mọi thuật toán 'phát hiện rủi ro': khi ca thật rất hiếm, đa số cảnh báo là cảnh báo giả.",
+    "d": "Chỗ trực giác hỏng là trộn lẫn hai câu hỏi: 'trong số người mắc bệnh, xét nghiệm bắt được bao nhiêu phần trăm' và 'trong số người có kết quả dương, bao nhiêu phần trăm thật sự mắc'. Con số 99% trả lời câu đầu, còn câu bạn quan tâm là câu sau — và nó phụ thuộc hoàn toàn vào việc bệnh phổ biến tới đâu. Vì thế tầm soát đại trà cho bệnh hiếm mà không có bước xác nhận thì đa số cảnh báo là cảnh báo giả, đúng như với lọc thư rác hay phát hiện gian lận.",
     "tags": [
       "bayes",
       "y-te",
@@ -48,7 +48,7 @@
     "sub": "co-mau-p-value",
     "t": "Con số 'p nhỏ hơn 0,05' không có nghĩa là kết quả có 95% khả năng đúng",
     "s": "Con số đó trả lời một câu hỏi khác hẳn: nếu thật ra chẳng có hiệu ứng nào, thì khả năng thu được dữ liệu lệch nhiều như đã thấy là bao nhiêu. Nó không nói gì về khả năng giả thuyết của bạn đúng — muốn biết điều đó còn phải tính tới hiệu ứng này vốn có bao nhiêu phần khả năng tồn tại. Năm 2016, Hiệp hội Thống kê Mỹ ra tuyên bố chính thức cảnh báo đúng cách hiểu sai này.",
-    "d": "Kèm theo đó là hai bệnh phổ biến: p-hacking (thử nhiều phân tích tới khi ra p đẹp) và HARKing (đặt giả thuyết sau khi đã nhìn kết quả). Cách phòng đã thành chuẩn ở nhiều ngành: đăng ký thiết kế và phân tích trước khi thu dữ liệu.",
+    "d": "Kèm theo là hai kiểu lạm dụng: thử nhiều phân tích tới khi ra được con số đẹp, và đặt giả thuyết sau khi đã nhìn kết quả rồi làm như đoán trước. Cách phòng đã thành chuẩn ở nhiều ngành: đăng ký công khai thiết kế và cách phân tích trước khi thu dữ liệu.",
     "tags": [
       "thong-ke",
       "khoa-hoc",
@@ -198,7 +198,6 @@
     "sub": "xac-suat-co-dieu-kien",
     "t": "Một con số 'khả năng trùng hợp thấp' không phải là khả năng bị cáo vô tội, và toà án Anh đã kết án oan một người mẹ vì lẫn hai con số đó.",
     "s": "Toà nghe con số '1 trên 73 triệu' cho khả năng hai đứa con cùng chết vì đột tử, rồi hiểu nó thành 'khả năng bà vô tội là 1 trên 73 triệu'. Đó là hai chuyện khác nhau: chuyện một người mẹ giết hai con cũng cực kỳ hiếm, nên phải đem hai cái hiếm đó ra so với nhau mới nói được điều gì. Con số còn bị tính sai vì nhân hai xác suất như thể hai ca chết không liên quan gì nhau; Sally Clark bị kết án oan và được huỷ án năm 2003.",
-    "d": "Đây là bài học sống còn về xác suất có điều kiện: P(bằng chứng | vô tội) và P(vô tội | bằng chứng) là hai đại lượng hoàn toàn khác nhau, và muốn chuyển từ cái này sang cái kia thì bắt buộc phải biết tỉ lệ nền. Hội Thống kê Hoàng gia Anh đã ra thông cáo phản đối cách dùng con số trong phiên toà này.",
     "tags": [
       "bayes",
       "phap-ly",
