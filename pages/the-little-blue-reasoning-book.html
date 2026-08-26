@@ -1,0 +1,1103 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>The Little Blue Reasoning Book — hệ thống 50 nguyên tắc tư duy</title>
+<meta name="description" content="Diễn giải và sắp xếp lại rành mạch 50 nguyên tắc tư duy trong 'The Little Blue Reasoning Book' (Brandon Royal) — theo 5 chặng: nhìn cho đúng · mở ý ra · chọn cho tỉnh · mổ xẻ lập luận · chặt chẽ với logic. Mỗi nguyên tắc kèm cơ chế, ví dụ thật và cách áp dụng.">
+
+<!-- Web Builder — the minimalist UI kit that styles the rest of the site -->
+<link rel="stylesheet" href="../web-builder/web-builder.css">
+
+<style>
+  /* Page-local layout only — every colour / radius / shadow comes from wb-* tokens. */
+  body { background: var(--wb-canvas); color: var(--wb-fg); margin: 0; font-family: var(--wb-font); -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--wb-fg); color: var(--wb-canvas); }
+
+  /* ---- hero ---- */
+  .hw-hero { padding: 30px 0 20px; }
+  .hw-eyebrow { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 10px; }
+  .hw-title { font-size: clamp(26px, 4.4vw, 38px); font-weight: 720; letter-spacing: -.02em; margin: 0 0 12px; line-height: 1.16; }
+  .hw-sub { color: var(--wb-fg-muted); font-size: 15.5px; max-width: 74ch; line-height: 1.65; margin: 0 0 12px; }
+  .hw-sub b { color: var(--wb-fg); }
+  .hw-meta { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); letter-spacing: .04em; line-height: 1.6; }
+
+  /* ---- two-column reading layout ---- */
+  .hw-layout { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 34px; align-items: start; padding: 26px 0 60px; }
+  @media (max-width: 900px) { .hw-layout { grid-template-columns: minmax(0, 1fr); } .hw-toc { display: none; } }
+  .hw-toc { max-height: calc(100vh - 92px); overflow-y: auto; width: 250px; }
+  .hw-toc .wb-sidenav__link.is-current { background: var(--wb-surface-hover); font-weight: 620; color: var(--wb-fg); }
+
+  /* ---- section rhythm ---- */
+  section[id] { scroll-margin-top: 76px; }
+  .hw-part-head { padding: 4px 0 2px; border-top: var(--wb-bw) solid var(--wb-border); padding-top: 22px; }
+  .hw-part-head .kicker { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 6px; }
+  .hw-part-head h2 { font-size: 21px; font-weight: 720; margin: 0 0 6px; letter-spacing: -.015em; }
+  .hw-part-head p { color: var(--wb-fg-muted); font-size: 14px; line-height: 1.65; margin: 0; max-width: 78ch; }
+
+  .hw-eyebrow-sec { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 6px; }
+  .hw-eyebrow-sec b { color: var(--wb-fg); font-weight: 650; }
+  .hw-sec-title { font-size: 20px; font-weight: 700; letter-spacing: -.01em; margin: 0 0 12px; line-height: 1.3; }
+  h3.hw-h3 { font-size: 15.5px; font-weight: 680; margin: 26px 0 10px; letter-spacing: -.005em; }
+
+  /* ---- prose ---- */
+  .hw-lede { font-size: 16px; line-height: 1.62; color: var(--wb-fg); max-width: 72ch; margin: 0 0 16px; font-weight: 500; }
+  .hw-lede b { font-weight: 700; }
+  .hw-p { font-size: 14.5px; line-height: 1.75; color: var(--wb-fg); max-width: 76ch; margin: 0 0 12px; }
+  .hw-p b { color: var(--wb-fg); font-weight: 650; }
+  .hw-p em { font-style: italic; color: var(--wb-fg-muted); }
+  .hw-ul { font-size: 14.5px; line-height: 1.72; color: var(--wb-fg); max-width: 76ch; margin: 0 0 14px; padding-left: 20px; }
+  .hw-ul li { margin-bottom: 6px; }
+  .hw-ul b { font-weight: 650; }
+
+  /* ---- pull quote ---- */
+  .hw-quote { border-left: 2px solid var(--wb-neutral-strong); padding: 2px 0 2px 14px; margin: 16px 0; color: var(--wb-fg-muted); font-size: 14.5px; line-height: 1.6; max-width: 72ch; }
+  .hw-quote b { color: var(--wb-fg); }
+  .hw-quote cite { display: block; font-style: normal; font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--wb-fg-subtle); margin-top: 6px; }
+
+  /* ---- number anchors ---- */
+  .hw-figs { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin: 14px 0 16px; }
+  .hw-fig { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); padding: 12px 14px; background: var(--wb-surface); }
+  .hw-fig .n { font-size: 19px; font-weight: 720; letter-spacing: -.02em; font-variant-numeric: tabular-nums; display: block; }
+  .hw-fig .l { font-size: 12px; color: var(--wb-fg-muted); line-height: 1.45; margin-top: 3px; display: block; }
+
+  /* ---- E + A = C equation ---- */
+  .hw-eq { display: flex; flex-wrap: wrap; align-items: stretch; gap: 10px; margin: 14px 0 18px; }
+  .hw-eq__box { flex: 1 1 150px; min-width: 130px; border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); padding: 12px 14px; background: var(--wb-surface); }
+  .hw-eq__box.is-hidden { border-style: dashed; background: transparent; }
+  .hw-eq__box.is-out { background: var(--wb-surface-hover); }
+  .hw-eq__op { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700; color: var(--wb-fg-subtle); padding: 0 2px; }
+  .hw-eq__k { font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--wb-fg-subtle); display: block; margin-bottom: 5px; }
+  .hw-eq__t { font-size: 13.5px; line-height: 1.5; }
+  .hw-eq__t b { font-weight: 650; }
+
+  /* ---- tables ---- */
+  .hw-tw { overflow-x: auto; margin: 4px 0 16px; border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); }
+  .hw-tw .wb-table { margin: 0; border: 0; }
+  .hw-tw .wb-table th, .hw-tw .wb-table td { font-size: 13.5px; line-height: 1.55; vertical-align: top; }
+
+  /* ---- part overview tiles ---- */
+  .hw-parts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  @media (max-width: 900px) { .hw-parts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .hw-parts { grid-template-columns: minmax(0, 1fr); } }
+  .hw-parts a { text-decoration: none; color: inherit; }
+
+  /* ---- principle blocks : one bordered card per tip, full width, full prose ---- */
+  .hw-fal-list { display: flex; flex-direction: column; gap: 14px; margin: 12px 0 6px; }
+  .hw-fal { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); background: var(--wb-surface); padding: 16px 18px; scroll-margin-top: 76px; }
+  .hw-fal__top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 9px; margin-bottom: 8px; }
+  .hw-fal__no { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); font-weight: 600; }
+  .hw-fal__name { font-size: 15.5px; font-weight: 710; letter-spacing: -.01em; margin: 0; }
+  .hw-fal__def { font-size: 14px; line-height: 1.72; color: var(--wb-fg); margin: 0; max-width: 80ch; }
+  .hw-fal__def b { font-weight: 650; }
+  .hw-fal__def em { font-style: italic; color: var(--wb-fg-muted); }
+  .hw-fal__meta { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 8px 12px; margin-top: 13px; padding-top: 12px; border-top: var(--wb-bw) solid var(--wb-border); }
+  .hw-fal__k { font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--wb-fg-subtle); padding-top: 2px; line-height: 1.4; }
+  .hw-fal__v { font-size: 13px; line-height: 1.62; color: var(--wb-fg-muted); margin: 0; }
+  .hw-fal__v b { color: var(--wb-fg); font-weight: 640; }
+  .hw-fal__v em { font-style: italic; }
+  .hw-egs { margin: 0; padding-left: 16px; }
+  .hw-egs li { margin-bottom: 4px; }
+  .hw-egs li:last-child { margin-bottom: 0; }
+  @media (max-width: 560px) { .hw-fal__meta { grid-template-columns: minmax(0, 1fr); gap: 3px 0; } .hw-fal__k { padding-top: 8px; } }
+
+  /* ---- the diverge/converge diagram (the core mental model) ---- */
+  .hw-viz { margin: 16px 0 6px; }
+  .hw-viz .wb-chart__svg { max-width: 560px; width: 100%; }
+  .hw-src { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .04em; color: var(--wb-fg-subtle); margin: 10px 0 0; line-height: 1.5; }
+  .hw-vt { fill: var(--wb-fg); font-size: 12px; font-weight: 640; font-family: var(--wb-font); }
+  .hw-vs { fill: var(--wb-fg-muted); font-size: 10.5px; font-family: var(--wb-font); }
+  .hw-vpanel { fill: var(--wb-surface); stroke: var(--wb-border); stroke-width: 1; }
+
+  /* ---- back to top ---- */
+  .hw-top { position: fixed; right: 18px; bottom: 18px; z-index: 20; opacity: 0; pointer-events: none; transition: opacity .16s ease; }
+  .hw-top.is-on { opacity: 1; pointer-events: auto; }
+</style>
+</head>
+<body class="wb-app">
+
+<header class="wb-navbar wb-navbar--sticky wb-navbar--collapse-lg">
+  <button class="wb-navbar__toggle wb-btn wb-btn--ghost wb-btn--icon" data-navbar-toggle
+          aria-label="Mở mục lục"><span class="wb-ico">menu</span></button>
+  <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">🧭</span> The Little Blue Reasoning Book</a>
+  <nav class="wb-nav wb-navbar__menu">
+    <a class="wb-nav__link" href="#mo-dau">Mở đầu</a>
+    <a class="wb-nav__link" href="#g1">1 · Nhìn</a>
+    <a class="wb-nav__link" href="#g2">2 · Mở ý</a>
+    <a class="wb-nav__link" href="#g3">3 · Quyết định</a>
+    <a class="wb-nav__link" href="#g4">4 · Lập luận</a>
+    <a class="wb-nav__link" href="#g5">5 · Logic</a>
+    <a class="wb-nav__link" href="#ket">Kết</a>
+    <span class="wb-navbar__spacer"></span>
+    <a class="wb-nav__link" href="../index.html"><span class="wb-ico wb-ico--sm">arrow_back</span> Trang chủ</a>
+  </nav>
+  <span class="wb-navbar__spacer"></span>
+  <div class="wb-navbar__actions">
+    <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" id="theme-toggle" aria-label="Sáng / Tối">
+      <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
+      <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
+    </button>
+  </div>
+</header>
+
+<main class="wb-container wb-container--wide">
+
+  <header class="hw-hero">
+    <p class="hw-eyebrow">Diễn giải sách · Brandon Royal · The Little Blue Reasoning Book</p>
+    <h1 class="hw-title">Người nghĩ kém thường không phải vì thiếu thông minh — mà vì <u>nhìn thấy quá ít</u>: chỉ thấy một phía, một lựa chọn, một nguyên nhân.</h1>
+    <p class="hw-sub">Đây là bản <b>diễn giải và sắp xếp lại</b> cuốn <b>“The Little Blue Reasoning Book”</b> của <b>Brandon Royal</b> — 50 nguyên tắc tư duy rõ ràng. Cả cuốn sách chỉ huấn luyện một thứ mà tác giả gọi là <b>“tư duy toàn diện”</b>: cố tình nhìn ra <i>phần còn lại</i> mà bản năng bỏ sót. Trang này giữ đủ 50 nguyên tắc, và với mỗi nguyên tắc giữ đúng ba thứ: <b>cơ chế</b> (nó giúp gì / bẫy ở đâu), <b>ví dụ thật</b>, và <b>cách áp dụng</b>.</p>
+    <p class="hw-sub">Điểm khác bản gốc: thay vì để 50 mẹo rời rạc, trang gom chúng về <b>5 chặng của một dòng suy nghĩ</b> — bạn <b>nhìn</b> thế nào, <b>mở</b> ý ra sao, <b>chọn</b> thế nào, <b>mổ xẻ</b> lập luận của người khác ra sao, và <b>chặt chẽ</b> với logic đến đâu. Nắm cái xương sống ấy rồi thì 50 nguyên tắc chỉ còn là các nước đi cụ thể.</p>
+    <p class="hw-meta">GIỮ ĐỦ 50 NGUYÊN TẮC · MỖI NGUYÊN TẮC: CƠ CHẾ · VÍ DỤ · CÁCH ÁP DỤNG<br>DIỄN GIẢI LẠI ĐỂ HỌC TƯ DUY RÕ RÀNG — SÁNG TẠO VÀ PHÂN TÍCH</p>
+  </header>
+
+  <div class="hw-figs" style="margin-bottom:20px">
+    <div class="hw-fig"><span class="n">50 nguyên tắc</span><span class="l">toàn bộ “reasoning tips” trong sách đều được giữ và giải thích đầy đủ, kèm ví dụ</span></div>
+    <div class="hw-fig"><span class="n">5 chặng</span><span class="l">nhìn cho đúng · mở ý ra · chọn cho tỉnh · mổ xẻ lập luận · chặt chẽ với logic</span></div>
+    <div class="hw-fig"><span class="n">2 chế độ</span><span class="l">mở trí óc (phân kỳ) để bày ra lựa chọn ↔ khép lại (hội tụ) để chốt một quyết định</span></div>
+    <div class="hw-fig"><span class="n">1 công thức</span><span class="l">Bằng chứng + Giả định = Kết luận — cái giả định “ẩn” là chỗ mọi lập luận nứt ra</span></div>
+  </div>
+
+  <div class="hw-parts">
+    <a class="wb-card wb-card--hover wb-card--pad" href="#g1">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">1</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Nhìn cho đúng</p>
+          <p class="wb-media__text">Trước khi nghĩ giỏi phải thấy đúng. Tri giác chọn lọc, ảo giác trùng hợp, và bốn kiểu tư duy khiến ta thấy khác nhau.</p>
+        </div>
+      </div>
+    </a>
+    <a class="wb-card wb-card--hover wb-card--pad" href="#g2">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">2</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Mở ý ra</p>
+          <p class="wb-media__text">Tư duy sáng tạo là “nghĩ cửa sau”: đổi khung bài toán, hoãn phán xét, brainstorming, và tái định nghĩa vấn đề.</p>
+        </div>
+      </div>
+    </a>
+    <a class="wb-card wb-card--hover wb-card--pad" href="#g3">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">3</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Chọn cho tỉnh</p>
+          <p class="wb-media__text">Công cụ để khép lại: lợi–hại, ma trận, cây quyết định, trọng số, chi phí chìm và thế lưỡng nan người tù.</p>
+        </div>
+      </div>
+    </a>
+    <a class="wb-card wb-card--hover wb-card--pad" href="#g4">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">4</span>
+        <div class="wb-media__body">
+          <p class="wb-media__text" style="margin:0"><b class="wb-media__title" style="display:block">Mổ xẻ lập luận</b>Chặng dài nhất. Mọi lập luận = bằng chứng + giả định ẩn. 22 nguyên tắc để tìm và bẻ cái giả định đó.</p>
+        </div>
+      </div>
+    </a>
+    <a class="wb-card wb-card--hover wb-card--pad" href="#g5">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">5</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Chặt chẽ với logic</p>
+          <p class="wb-media__text">Câu “nếu… thì”, “mọi/một số/hầu hết”: những lỗi nhỏ trong logic hình thức mà lời nói hằng ngày hay giấu.</p>
+        </div>
+      </div>
+    </a>
+    <a class="wb-card wb-card--hover wb-card--pad" href="#mo-dau">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--sm">?</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Bắt đầu từ đây</p>
+          <p class="wb-media__text">Kẻ thù chung là “thấy quá ít”, hai chế độ mở–khép, và công thức Bằng chứng + Giả định = Kết luận. Đọc Mở đầu trước.</p>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div class="hw-layout">
+    <nav class="wb-sidenav hw-toc wb-sticky wb-scroll-y" style="--wb-sticky-gap:72px" id="toc">
+      <div class="wb-sidenav__section">Mở đầu</div>
+      <a class="wb-sidenav__link" href="#s-see">Kẻ thù chung: thấy quá ít</a>
+      <a class="wb-sidenav__link" href="#s-modes">Hai chế độ: mở ra rồi khép lại</a>
+      <a class="wb-sidenav__link" href="#s-glue">Công thức của mọi lập luận</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">Chặng 1 — Nhìn cho đúng</div>
+      <a class="wb-sidenav__link" href="#g1">Tri giác, trùng hợp, kiểu tư duy</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">Chặng 2 — Mở ý ra</div>
+      <a class="wb-sidenav__link" href="#g2">8 nguyên tắc tư duy sáng tạo</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">Chặng 3 — Chọn cho tỉnh</div>
+      <a class="wb-sidenav__link" href="#g3">9 công cụ ra quyết định</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">Chặng 4 — Mổ xẻ lập luận</div>
+      <a class="wb-sidenav__link" href="#g4">22 nguyên tắc phân tích</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">Chặng 5 — Chặt chẽ với logic</div>
+      <a class="wb-sidenav__link" href="#g5">9 nguyên tắc logic hình thức</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">Kết</div>
+      <a class="wb-sidenav__link" href="#ket">Năm câu hỏi mang theo</a>
+    </nav>
+
+    <div class="wb-stack" style="--wb-stack-gap:48px">
+
+      <!-- ══════════════════ MỞ ĐẦU ══════════════════ -->
+      <div class="hw-part-head" id="mo-dau" style="border-top:0;padding-top:0">
+        <p class="kicker">Mở đầu · cách đọc trang này</p>
+        <h2>Ba ý này là bộ khung cho cả cuốn sách</h2>
+        <p>Nếu nắm ba điều dưới đây, 50 nguyên tắc phía sau chỉ còn là các biến thể cụ thể của cùng một tinh thần: <b>cố tình nhìn ra phần mình đang bỏ sót</b>.</p>
+      </div>
+
+      <section id="s-see">
+        <p class="hw-eyebrow-sec"><b>Mở đầu</b> — ý xuyên suốt &amp; hiểu nhầm phổ biến</p>
+        <h2 class="hw-sec-title">Vấn đề gốc không phải “nghĩ sai”, mà là <i>thấy quá ít</i></h2>
+
+        <p class="hw-p">Nhiều người nghĩ tư duy tốt nghĩa là <b>thông minh hơn</b> hay <b>biết nhiều hơn</b>. Nghe hợp lý, nhưng đó là hiểu nhầm cần gỡ trước. Cuốn sách này đặt vấn đề ở chỗ khác: <b>trí óc ta liên tục thu hẹp tầm nhìn mà ta không hay biết</b> — nó chỉ giữ lại cái hợp với mục tiêu, kỳ vọng, cảm xúc của ta ngay lúc đó, rồi trình bày phần bị cắt xén ấy như thể là toàn bộ sự thật.</p>
+        <div class="hw-quote">
+          Sách mở đầu bằng lời một người vừa hồi phục thị lực sau 30 năm mù: <b>“Tôi cố nhìn tất cả cùng lúc, nên rốt cuộc gần như chẳng thấy gì.”</b> Người bình thường thì ngược lại — ta lọc bỏ quá nhiều, quen đến mức không nhận ra mình đang lọc.
+          <cite>Chỗ ví von này có giới hạn: người mù kia khổ vì <i>thấy quá nhiều</i>; còn cả cuốn sách nói về cái khổ ngược lại — <i>thấy quá ít</i> mà cứ tưởng đã thấy đủ.</cite>
+        </div>
+        <p class="hw-p">Vì lỗi nằm ở chỗ “thấy thiếu” chứ không ở “nghĩ dở”, cách chữa cũng đơn giản mà khó làm: <b>chủ động đi tìm phía còn lại</b> — góc nhìn khác, lựa chọn khác, nguyên nhân khác, cách đọc khác. Brandon Royal gọi đó là <b>tư duy toàn diện</b> (all-around thinking), và nói thẳng: đây là tài sản lớn nhất mà việc rèn tư duy phản biện mang lại. Toàn bộ trang này là 50 cách rất cụ thể để làm đúng một việc đó.</p>
+      </section>
+
+      <section id="s-modes">
+        <p class="hw-eyebrow-sec"><b>Mở đầu</b> — mô hình cốt lõi</p>
+        <h2 class="hw-sec-title">Hai chế độ đối nghịch: mở trí óc ra, rồi khép lại</h2>
+        <p class="hw-p">Nếu chỉ mang theo một hình ảnh từ cả cuốn sách, hãy mang hình này. Ở bất kỳ khoảnh khắc nào khi đang giải một vấn đề, trí óc bạn chỉ ở một trong <b>hai chế độ</b>:</p>
+        <ul class="hw-ul">
+          <li><b>Phân kỳ (mở ra).</b> Bày thêm bằng chứng, thêm phương án, thêm cách nhìn. Đây là lúc <i>sáng tạo</i> — càng nhiều càng tốt, và <b>cấm phán xét</b>.</li>
+          <li><b>Hội tụ (khép lại).</b> Loại dần phương án yếu, gom về <i>một</i> quyết định. Đây là lúc <i>phân tích</i> và chốt.</li>
+        </ul>
+        <p class="hw-p">Cần cả hai: thiếu phân kỳ thì không nghĩ ra gì mới; thiếu hội tụ thì phân tích mãi không xong. Vấn đề là <b>đa số người bẩm sinh giỏi khép hơn mở</b> — ta khép quá sớm, chốt phương án đầu tiên nghe được. Cả chặng “Mở ý ra” tồn tại để cưỡng lại thói quen đó.</p>
+
+        <div class="hw-viz">
+          <div class="wb-chart">
+            <svg class="wb-chart__svg" viewBox="0 0 560 250" role="img" aria-label="Hai chế độ tư duy: bên trái phân kỳ (một điểm toả ra nhiều lựa chọn), bên phải hội tụ (nhiều lựa chọn gom về một quyết định), và một vòng lặp lại giữa hai chế độ">
+              <rect class="hw-vpanel" x="20" y="34" width="240" height="150" rx="6"></rect>
+              <rect class="hw-vpanel" x="300" y="34" width="240" height="150" rx="6"></rect>
+
+              <!-- diverge: one point fans out -->
+              <circle cx="52" cy="109" r="4.5" style="fill:var(--wb-fg)"></circle>
+              <line x1="52" y1="109" x2="232" y2="52"  style="stroke:var(--wb-neutral-strong);stroke-width:1.4"></line>
+              <line x1="52" y1="109" x2="232" y2="82"  style="stroke:var(--wb-neutral-strong);stroke-width:1.4"></line>
+              <line x1="52" y1="109" x2="232" y2="109" style="stroke:var(--wb-neutral-strong);stroke-width:1.4"></line>
+              <line x1="52" y1="109" x2="232" y2="136" style="stroke:var(--wb-neutral-strong);stroke-width:1.4"></line>
+              <line x1="52" y1="109" x2="232" y2="166" style="stroke:var(--wb-neutral-strong);stroke-width:1.4"></line>
+              <circle cx="232" cy="52"  r="3.5" style="fill:var(--wb-neutral-strong)"></circle>
+              <circle cx="232" cy="82"  r="3.5" style="fill:var(--wb-neutral-strong)"></circle>
+              <circle cx="232" cy="109" r="3.5" style="fill:var(--wb-neutral-strong)"></circle>
+              <circle cx="232" cy="136" r="3.5" style="fill:var(--wb-neutral-strong)"></circle>
+              <circle cx="232" cy="166" r="3.5" style="fill:var(--wb-neutral-strong)"></circle>
+
+              <!-- converge: many points gather to one -->
+              <circle cx="328" cy="52"  r="3.5" style="fill:var(--wb-neutral-strong)"></circle>
+              <circle cx="328" cy="82"  r="3.5" style="fill:var(--wb-neutral-strong)"></circle>
+              <circle cx="328" cy="109" r="3.5" style="fill:var(--wb-neutral-strong)"></circle>
+              <circle cx="328" cy="136" r="3.5" style="fill:var(--wb-neutral-strong)"></circle>
+              <circle cx="328" cy="166" r="3.5" style="fill:var(--wb-neutral-strong)"></circle>
+              <line x1="328" y1="52"  x2="508" y2="109" style="stroke:var(--wb-neutral-strong);stroke-width:1.4"></line>
+              <line x1="328" y1="82"  x2="508" y2="109" style="stroke:var(--wb-neutral-strong);stroke-width:1.4"></line>
+              <line x1="328" y1="109" x2="508" y2="109" style="stroke:var(--wb-neutral-strong);stroke-width:1.4"></line>
+              <line x1="328" y1="136" x2="508" y2="109" style="stroke:var(--wb-neutral-strong);stroke-width:1.4"></line>
+              <line x1="328" y1="166" x2="508" y2="109" style="stroke:var(--wb-neutral-strong);stroke-width:1.4"></line>
+              <circle cx="508" cy="109" r="5" style="fill:var(--wb-fg)"></circle>
+
+              <text class="hw-vt" x="140" y="24" text-anchor="middle">PHÂN KỲ · mở ra</text>
+              <text class="hw-vt" x="420" y="24" text-anchor="middle">HỘI TỤ · khép lại</text>
+              <text class="hw-vs" x="140" y="204" text-anchor="middle">bày ra nhiều: lựa chọn · góc nhìn · nguyên nhân</text>
+              <text class="hw-vs" x="420" y="204" text-anchor="middle">loại dần → chốt về một quyết định</text>
+              <text class="hw-vs" x="280" y="109" text-anchor="middle">→</text>
+              <text class="hw-vs" x="280" y="240" text-anchor="middle" style="font-style:italic">lặp lại chu trình này mỗi khi vấn đề còn ngổn ngang</text>
+            </svg>
+          </div>
+          <p class="hw-src">Mô hình do trang này dựng để diễn giải cặp khái niệm “phân kỳ / hội tụ” (Tip 4) làm xương sống cho cả cuốn. Ví von của tác giả: như ống kính máy ảnh mở rộng khung hình (phân kỳ) rồi zoom hẹp lại (hội tụ).</p>
+        </div>
+      </section>
+
+      <section id="s-glue">
+        <p class="hw-eyebrow-sec"><b>Mở đầu</b> — công cụ dùng được ngay</p>
+        <h2 class="hw-sec-title">Mọi lập luận đều là: Bằng chứng + Giả định = Kết luận</h2>
+        <p class="hw-p">Đây là ý thực dụng nhất của cả cuốn (và là xương sống của chặng 4). Bất kỳ lập luận nào cũng gồm ba mảnh. Hai mảnh <b>hiện</b> ra: <b>bằng chứng</b> và <b>kết luận</b>. Mảnh thứ ba luôn <b>ẩn</b>: <b>giả định</b> — cái keo lặng lẽ gắn bằng chứng vào kết luận.</p>
+
+        <div class="hw-eq">
+          <div class="hw-eq__box"><span class="hw-eq__k">Bằng chứng · hiện</span><span class="hw-eq__t">Dorothy đạt điểm cao kỳ thi đầu vào.</span></div>
+          <div class="hw-eq__op">+</div>
+          <div class="hw-eq__box is-hidden"><span class="hw-eq__k">Giả định · ẩn</span><span class="hw-eq__t">Kỹ năng thi tốt = kỹ năng học đại học tốt.</span></div>
+          <div class="hw-eq__op">=</div>
+          <div class="hw-eq__box is-out"><span class="hw-eq__k">Kết luận · hiện</span><span class="hw-eq__t"><b>Dorothy sẽ thành công ở đại học.</b></span></div>
+        </div>
+
+        <p class="hw-p">Vì giả định không được nói ra, nó là chỗ dễ nứt nhất — và cũng là chỗ ta hay bỏ sót. Muốn tìm nó, lấy <b>Kết luận trừ đi Bằng chứng</b>: phần còn thiếu để hai đầu nối được với nhau chính là giả định. Ở ví dụ trên, giữa “điểm thi cao” và “thành công ở đại học” có một cây cầu ngầm: <i>rằng hai việc đó cần cùng một bộ kỹ năng</i> — mà thực ra học đại học còn cần động lực, sự độc lập, làm việc nhóm.</p>
+        <p class="hw-p" style="font-weight:600"><b>Từ đó có đúng hai cách (và chỉ hai) để công một lập luận: đánh vào bằng chứng, hoặc đánh vào giả định.</b> Gần như toàn bộ chặng 4 chỉ là học cách nhận ra những kiểu giả định ẩn hay gặp nhất.</p>
+        <p class="hw-p"><em>Mẹo nhỏ:</em> có những “từ chỉ đường” luôn báo hiệu. “Vì / bởi / do / xét rằng” đứng trước <b>bằng chứng</b>; “nên / vậy / do đó / rõ ràng” đứng trước <b>kết luận</b>.</p>
+      </section>
+
+      <!-- ══════════════════ CHẶNG 1 ══════════════════ -->
+      <div class="hw-part-head" id="g1">
+        <p class="kicker">Chặng 1 · Perception &amp; Mindset</p>
+        <h2>Nhìn cho đúng — trước khi nghĩ giỏi, phải thấy đúng</h2>
+        <p>Ba nguyên tắc đầu là về <b>cái nhìn</b>: ta bóp méo hiện thực thế nào, khi nào một chuỗi trùng hợp đánh lừa ta, và vì sao hai người thông minh nhìn cùng một việc lại thấy khác hẳn.</p>
+      </div>
+
+      <section id="g1-body">
+        <div class="hw-fal-list">
+
+          <article class="hw-fal" id="t01">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 01</span><h3 class="hw-fal__name">Tri giác chọn lọc</h3><span class="wb-tag">selective perception</span></div>
+            <p class="hw-fal__def">Ta có xu hướng thấy thế giới như mình <b>muốn</b> nó là, chứ không như nó <b>đang</b> là. Cái gì “nổi bật” với ta thường do mục tiêu, kỳ vọng và kinh nghiệm của ta quyết định — <em>“cầm búa trong tay thì thấy gì cũng là đinh.”</em> Ta có thể chọn, xếp, sắp lại bằng chứng để nó đỡ cho quan điểm mình đã có sẵn.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">Hai bản tin về cùng một người, Remus Reid: bên cảnh sát viết “tên trộm ngựa, cướp tàu, bị treo cổ năm 1889”; bên họ hàng viết “doanh nhân lừng lẫy… qua đời trong một buổi lễ vinh danh khi bục sân khấu sập.” Cùng một cuộc đời, hai câu chuyện trái ngược — chỉ khác ở cách chọn lọc.</div>
+              <span class="hw-fal__k">Áp dụng</span>
+              <div class="hw-fal__v">Người nghĩ giỏi <b>tạm hoãn phán xét</b>, chủ động đi tìm góc nhìn khác và bằng chứng phản bác. Ở đây lo “thấy quá ít” chứ đừng lo “thấy quá nhiều”; đừng để định kiến, kinh nghiệm lẻ hay ấn tượng ban đầu dẫn dắt.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t-coincidence">
+            <div class="hw-fal__top"><span class="hw-fal__no">Nền</span><h3 class="hw-fal__name">Ảo giác trùng hợp &amp; hiệu ứng hào quang</h3><span class="wb-tag">coincidence · halo effect</span></div>
+            <p class="hw-fal__def">Hai cái bẫy đi kèm tri giác chọn lọc. <b>Trùng hợp:</b> một chuỗi giống nhau đến mức “kỳ diệu” không chứng minh mối liên hệ nào — cho đủ cơ hội, gần như điều gì cũng xảy ra. <b>Hào quang:</b> đánh giá tổng thể một người/vật chỉ dựa trên một chi tiết đơn lẻ.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v"><ul class="hw-egs">
+                <li>Danh sách trùng hợp Lincoln–Kennedy (bầu Quốc hội cách nhau đúng 100 năm, thư ký mang tên nhau…) nghe rợn người, nhưng số điểm <b>khác</b> nhau giữa hai vụ có lẽ cũng nhiều y như thế. <em>“Cho tỉ con khỉ gõ máy đủ lâu, một con sẽ gõ ra trọn bộ Chiến tranh và Hoà bình.”</em></li>
+                <li>Ứng viên ăn mặc bảnh bao → ta thấy “có năng lực” và bỏ qua việc kiểm tra chuyên môn thật.</li>
+              </ul></div>
+              <span class="hw-fal__k">Áp dụng</span>
+              <div class="hw-fal__v">Đếm cả những điểm <b>khác nhau</b>, đừng chỉ gom điểm giống. Tách một ấn tượng đơn lẻ ra khỏi kết luận tổng thể trước khi tin nó.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t02">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 02</span><h3 class="hw-fal__name">Bốn kiểu tư duy</h3><span class="wb-tag">the four classic mindsets</span></div>
+            <p class="hw-fal__def">Bốn khuynh hướng cơ bản: <b>Realist</b> (cốt “xong việc”), <b>Idealist</b> (tìm câu trả lời “đúng”), <b>Analyst</b> (đòi đánh giá kỹ lưỡng), <b>Synthesist</b> (ghép một cái nhìn tổng hợp). Chia thêm theo hai trục: <em>thực dụng</em> nhiều/ít và <em>cảm xúc</em> nhiều/ít.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">Câu hỏi “trong 5 môn — bóng chày, cricket, bóng đá, golf, khúc côn cầu — môn nào <i>khác</i> 4 môn kia?”. Người phân tích nhìn <b>dụng cụ</b>, người tổng hợp nhìn <b>mùa/nơi chơi</b>, người thiên kết quả nhìn <b>điểm cao/thấp</b>. Mọi đáp án đều vừa đúng vừa sai — vì mỗi kiểu người bám một tiêu chí khác nhau.</div>
+              <span class="hw-fal__k">Áp dụng</span>
+              <div class="hw-fal__v">Biết mình nghiêng kiểu nào để cố mượn điểm mạnh của kiểu khác (khó làm diễn viên, đạo diễn và nhà sản xuất cùng lúc vì ba kiểu tính cách khác nhau). Và đừng để định kiến nghề nghiệp dán nhãn người khác.</div>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ══════════════════ CHẶNG 2 ══════════════════ -->
+      <div class="hw-part-head" id="g2">
+        <p class="kicker">Chặng 2 · Creative Thinking</p>
+        <h2>Mở ý ra — tám cách cưỡng lại thói khép quá sớm</h2>
+        <p>Đây là pha <b>phân kỳ</b>. Tất cả tám nguyên tắc dưới đây đều phục vụ một việc: giữ trí óc mở đủ lâu để ý mới kịp xuất hiện, trước khi cái “tay đánh giá” vội vàng giết chúng.</p>
+      </div>
+
+      <section id="g2-body">
+        <div class="hw-fal-list">
+
+          <article class="hw-fal" id="t03">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 03</span><h3 class="hw-fal__name">Sáng tạo là “nghĩ cửa sau”</h3><span class="wb-tag">lateral thinking</span></div>
+            <p class="hw-fal__def">Tư duy <b>dọc</b> (vertical) đi thẳng, hợp lý, xác suất cao — giải bài toán trong khung có sẵn. Tư duy <b>ngang</b> (lateral) đi vòng, đổi luôn <b>khung</b> của bài toán thay vì chấp nhận nó.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">Cô gái buộc phải rút một trong hai viên sỏi mà kẻ cho vay đã gian lận bỏ vào <b>hai viên đen</b>. Người nghĩ dọc chấp nhận luật: rút trúng đen thì thua. Cô nghĩ ngang: rút một viên rồi <b>cố ý làm rơi</b> cho lẫn vào sỏi đường, rồi đề nghị xem viên còn lại — nếu viên còn lại là đen thì viên cô rút “hẳn là trắng”. Cô đổi khung, và thắng chắc.</div>
+              <span class="hw-fal__k">Áp dụng</span>
+              <div class="hw-fal__v">Khi bí, đừng cố giải bài toán — hỏi <b>có thể đổi luật của bài toán</b> không. <em>Giới hạn của ví von:</em> “cửa sau” chỉ nghĩa là đường vòng bất ngờ, không có nghĩa lén lút hay gian.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t04">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 04</span><h3 class="hw-fal__name">Hội tụ khép, phân kỳ mở</h3><span class="wb-tag">convergent vs divergent</span></div>
+            <p class="hw-fal__def">Phân kỳ <b>mở</b> trí óc: thêm bằng chứng, thêm phương án. Hội tụ <b>khép</b> trí óc: loại phương án yếu, gom về một. Đây chính là cặp chế độ ở phần Mở đầu — và là xương sống của cả cuốn.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">Như ống kính máy ảnh: zoom hẹp đến khi chủ thể chật khung (hội tụ), hoặc mở rộng khung hình bao quát (phân kỳ). Thiếu phân kỳ thì không sáng tạo; thiếu hội tụ thì phân tích mãi không xong.</div>
+              <span class="hw-fal__k">Cảnh báo</span>
+              <div class="hw-fal__v">Đa số người bẩm sinh giỏi hội tụ hơn, nên <b>khép quá sớm</b> — chốt ngay phương án đầu tiên nghe được. Hãy tách bạch hai pha: lúc mở thì tuyệt đối cấm phán xét.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t05">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 05</span><h3 class="hw-fal__name">Luật sư của quỷ</h3><span class="wb-tag">devil’s advocate</span></div>
+            <p class="hw-fal__def">Cố tình bênh vực phía đối lập <b>như thể mình tin nó đúng</b>, để ép bản thân khách quan và buộc trí óc phân kỳ. Nó chữa đúng căn bệnh “chỉ tự xác nhận điều mình đã tin”.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">Nhà phân tích tin chắc “thị trường sản phẩm A đang nhạy giá hơn”. Trước khi đi phỏng vấn, anh ta cố tình hỏi câu <b>bác bỏ</b> chính niềm tin đó: “Có phải thị trường A đang <i>bớt</i> nhạy giá không?” — câu trả lời thu về mới cho bức tranh đầy đủ.</div>
+              <span class="hw-fal__k">Áp dụng</span>
+              <div class="hw-fal__v">Cực hợp cho đàm phán (buộc hiểu phía kia) và cho lúc cả nhóm cùng tin một điều — khi ấy rủi ro lớn nhất là chỉ nghe thấy tiếng vọng của chính mình.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t06">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 06</span><h3 class="hw-fal__name">Ba kẻ giết sáng tạo lớn nhất</h3><span class="wb-tag">creativity inhibitors</span></div>
+            <p class="hw-fal__def">Ba thứ bóp chết ý tưởng nhiều nhất: <b>(1)</b> không dám thách thức điều hiển nhiên, <b>(2)</b> đánh giá ý tưởng quá nhanh, <b>(3)</b> sợ bị coi là ngốc.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v"><ul class="hw-egs">
+                <li>“1 + 1” chắc chắn = 2? Có thể = 11 (đặt cạnh nhau), hoặc = chữ “T” (một gạch đè lên gạch kia). Thách thức cái hiển nhiên mở ra lối khác.</li>
+                <li>Sợ bị chê khiến cả người mới lẫn sếp lâu năm đều <b>không</b> dám nêu ý “điên”. Beatles từng bị hãng đĩa từ chối “nhạc guitar sắp hết thời”; Harry Potter bị hơn chục nhà xuất bản chê.</li>
+              </ul></div>
+              <span class="hw-fal__k">Áp dụng</span>
+              <div class="hw-fal__v">Tách <b>“tay sản xuất ý tưởng”</b> khỏi <b>“tay đánh giá”</b>: sản ra hết đã, đánh giá sau. Nhớ: bỏ lỡ một ý hay (lỗi loại II) là lỗi <em>vô hình</em> nên rẻ về hậu quả — vì thế người ta hay nói “không” cho an toàn, dù đó mới là cái mất lớn.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t07">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 07</span><h3 class="hw-fal__name">Câu giết ý tưởng &amp; câu nuôi ý tưởng</h3><span class="wb-tag">idea killers &amp; growers</span></div>
+            <p class="hw-fal__def">Giữ sẵn trong đầu hai danh sách. Nghe thấy một <b>“câu giết”</b> bật ra là dấu hiệu sáng tạo đang bị bóp; cố thay bằng một <b>“câu nuôi”</b>.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v"><ul class="hw-egs">
+                <li><b>Giết:</b> “Trước thử rồi”, “Làm gì có thời gian”, “Không phải việc của tôi”, “Khách hàng sẽ không chịu đâu”, “Nghe điên rồ”.</li>
+                <li><b>Nuôi:</b> “Nếu… thì sao?”, “Ta còn thiếu gì nhỉ?”, “Ai khác bị ảnh hưởng?”, “Có thông tin mới, tôi đổi ý”, “Còn cách nào cải thiện nữa không?”.</li>
+              </ul></div>
+              <span class="hw-fal__k">Áp dụng</span>
+              <div class="hw-fal__v">Dùng như một cái còi báo động cá nhân trong họp: mỗi lần định thốt ra câu giết, dừng lại một nhịp.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t08">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 08</span><h3 class="hw-fal__name">Luật của brainstorming</h3><span class="wb-tag">brainstorming rules</span></div>
+            <p class="hw-fal__def">Brainstorming có luật rõ: <b>ưu tiên số lượng</b>, ý <b>càng “điên” càng tốt</b>, <b>hoãn đánh giá</b> là bắt buộc, và khuyến khích <b>“đi nhờ xe”</b> (một ý của người này gợi ra ý của người khác).</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">Nhóm 6–15 người, viết mọi ý lên bảng, gom nhóm về sau. Câu hỏi vàng để mở khung: <b>“Ta thực sự đang làm nghề gì?”</b> — Coca-Cola tự định nghĩa là “nước ngọt có ga” (80% thị phần) rồi định nghĩa lại thành “đồ uống sẵn” (thị phần rơi xuống 10% nhưng thị trường rộng ra vô kể).</div>
+              <span class="hw-fal__k">Áp dụng</span>
+              <div class="hw-fal__v">Đặt ra một quy ước sắt: trong lúc bày ý, <b>không ai được phê bình</b>. Đánh giá là một buổi khác.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t09">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 09</span><h3 class="hw-fal__name">Tái định khung vấn đề</h3><span class="wb-tag">reframing problems</span></div>
+            <p class="hw-fal__def">Trước khi bày chiến lược, hỏi: <b>“Vấn đề có thật là vấn đề không? Mục tiêu có thật là mục tiêu không?”</b> Đa số người nghe xong đề bài là lao ngay vào giải, bỏ qua bước định lại mục tiêu.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v"><ul class="hw-egs">
+                <li>Nhà hàng mất khách vì xếp hàng lâu. Ngoài “phục vụ nhanh hơn”, còn hai mục tiêu khác: làm khách <b>bớt bực khi chờ</b> (TV, đồ ăn nhẹ), hoặc <b>dàn khách sang giờ vắng</b> (ưu đãi giờ thấp điểm).</li>
+                <li>Lê bị dập khi vận chuyển. Đổi mục tiêu từ “bọc kỹ hơn” thành “<b>tạo giống lê ít dập</b>” → lai ra quả “lê-táo” cứng như táo.</li>
+              </ul></div>
+              <span class="hw-fal__k">Áp dụng</span>
+              <div class="hw-fal__v">Ép mình nêu tối thiểu <b>2–3 mục tiêu khác nhau</b> cho mỗi vấn đề trước khi nghĩ giải pháp.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t10">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 10</span><h3 class="hw-fal__name">Bán ý tưởng sáng tạo</h3><span class="wb-tag">selling creative ideas</span></div>
+            <p class="hw-fal__def">Một ý tưởng chỉ thành hiện thực nếu được người khác ủng hộ — và người ta bị thuyết phục bởi <b>độ xác tín và cam kết</b> của bạn <b>hơn</b> là bởi một bài trình bày logic chi li.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Áp dụng</span>
+              <div class="hw-fal__v"><ul class="hw-egs">
+                <li>Thử ý với người cấp dưới trước để dò câu hỏi và điểm yếu; coi những người bị ảnh hưởng nhất là <b>đồng minh</b>, mời họ góp ý.</li>
+                <li>Ý hay thường bị đánh bại bởi những phản đối <b>lạc đề</b> — ghi trước và chuẩn bị đỡ.</li>
+                <li>Chấp nhận thoả hiệp là điều tất yếu; và trình bày phải <b>có lửa</b>, không chỉ có lý.</li>
+              </ul></div>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ══════════════════ CHẶNG 3 ══════════════════ -->
+      <div class="hw-part-head" id="g3">
+        <p class="kicker">Chặng 3 · Decision Making</p>
+        <h2>Chọn cho tỉnh — chín công cụ để khép lại</h2>
+        <p>Đây là pha <b>hội tụ</b>. Sau khi đã mở ra nhiều phương án, đây là bộ công cụ để <b>cấu trúc</b> việc chọn. Lưu ý: công cụ không quyết định thay bạn — nó chỉ là bản vẽ, còn người xây nhà vẫn là bạn.</p>
+      </div>
+
+      <section id="g3-body">
+        <div class="hw-fal-list">
+
+          <article class="hw-fal" id="t11">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 11</span><h3 class="hw-fal__name">Lợi–hại bằng “tài khoản chữ T”</h3><span class="wb-tag">pros-and-cons</span></div>
+            <p class="hw-fal__def">Kẻ một chữ T: <b>lợi</b> một bên, <b>hại</b> một bên; ép nêu ít nhất <b>ba điểm mỗi bên</b>, gồm cả định tính lẫn định lượng. Mục đích là “tư duy toàn diện” — thấy cả hai phía.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">Có nên phá toà nhà lịch sử để xây mới? Lợi: doanh thu thuê/thuế cao hơn, đỡ chi phí bảo trì, an toàn hơn. Hại: mất nguồn thu từ du lịch, mất giá trị văn hoá–giáo dục, tốn vốn khởi công lớn.</div>
+              <span class="hw-fal__k">Áp dụng</span>
+              <div class="hw-fal__v">Đa số người giỏi bới lỗi, kém tìm điểm tốt. Chữ T ép cân bằng: buộc phải nghĩ ra cả những điểm <b>ngược</b> với thiên hướng của mình.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t12">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 12</span><h3 class="hw-fal__name">Ma trận 2×2</h3><span class="wb-tag">matrixes</span></div>
+            <p class="hw-fal__def">Bảng hai biến, bốn ô, tóm gọn nhiều thông tin. Chạy đúng khi dữ liệu <b>loại trừ lẫn nhau và bao trùm hết</b> (MECE) — khi đó tổng phải khớp cả hàng ngang lẫn cột dọc, và ta suy ra được ô còn thiếu.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">100 đồ chơi, mỗi cái vừa xanh/lục vừa to/nhỏ: điền số đã biết rồi suy ra ô chưa biết. Ma trận quản lý thời gian nổi tiếng (quan trọng × khẩn) chỉ ra chỗ ta hay bỏ bê: việc <b>“quan trọng nhưng không khẩn”</b>.</div>
+              <span class="hw-fal__k">Phân biệt</span>
+              <div class="hw-fal__v">Mọi ma trận là bảng, nhưng không phải bảng nào cũng là ma trận: bảng chỉ nhóm thông tin, ma trận phải tổng được cả hai chiều. Đừng nhét dữ liệu ngẫu nhiên (danh sách thành phố) vào ô ma trận.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t13">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 13</span><h3 class="hw-fal__name">Cây quyết định–sự kiện</h3><span class="wb-tag">decision-event trees</span></div>
+            <p class="hw-fal__def">Vẽ thành sơ đồ cành để thấy các <b>kết cục</b> rẽ nhánh trong một tình huống — như một lưu đồ. Cây áp đặt trật tự và thứ bậc.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">Mớ thuật ngữ pháp lý rối rắm (dân sự vs hình sự → vi cảnh, khinh tội, trọng tội → giết người, phản quốc…) đọc thành đoạn văn thì khó nuốt, nhưng vẽ thành cây thì quan hệ hiện ra ngay.</div>
+              <span class="hw-fal__k">Áp dụng</span>
+              <div class="hw-fal__v">Khi một mô tả có quá nhiều nhánh “nếu… thì rẽ sang…”, hãy chuyển nó thành cây thay vì cố nhớ bằng lời.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t14">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 14</span><h3 class="hw-fal__name">Cây xác suất phải cộng về 1</h3><span class="wb-tag">probability trees</span></div>
+            <p class="hw-fal__def">Trong cây xác suất, tổng xác suất ở <b>các nhánh cuối phải bằng 1</b> — vì chúng là toàn bộ khả năng có thể xảy ra.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">Tung đồng xu ba lần: cây có 8 nhánh cuối, mỗi nhánh xác suất <b>½ × ½ × ½ = 1/8</b>, và 8 × 1/8 = 1.</div>
+              <span class="hw-fal__k">Áp dụng</span>
+              <div class="hw-fal__v">Dùng phép cộng-về-1 như một cái phanh kiểm tra: nếu tổng ≠ 1, chắc chắn bạn đã <b>sót</b> một khả năng hoặc <b>đếm trùng</b> đâu đó.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t15">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 15</span><h3 class="hw-fal__name">Xếp hạng có trọng số</h3><span class="wb-tag">weighted ranking</span></div>
+            <p class="hw-fal__def">Biến lựa chọn cảm tính thành con số: chấm mỗi phương án theo từng tiêu chí, nhân với <b>trọng số</b> của tiêu chí đó, rồi cộng lại. Tiêu chí càng quan trọng, trọng số càng lớn (thường tổng trọng số = 1).</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">Chọn Quản lý bán hàng từ 10 người, ba tiêu chí: kỹ thuật (0.2), giao tiếp (0.3), thành tích (0.5). Sabrina điểm thô không nổi bật nhất, nhưng vì mạnh ở tiêu chí <b>nặng ký nhất</b> (thành tích) nên tổng có trọng số cao nhất → được chọn.</div>
+              <span class="hw-fal__k">Áp dụng</span>
+              <div class="hw-fal__v">Cực hợp cho tuyển dụng, thăng chức, mua nhà — nơi cảm tính dễ lấn át. Việc phải <b>gán trọng số công khai</b> tự nó ép bạn nói rõ điều gì thực sự quan trọng.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t16">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 16</span><h3 class="hw-fal__name">Phân tích hữu dụng</h3><span class="wb-tag">utility analysis</span></div>
+            <p class="hw-fal__def"><b>Hữu dụng = cái mình <i>muốn</i></b> (độ đáng khao khát), có thể khác hẳn tiền bạc. <b>Xác suất = cái mình <i>nhận được</i></b>. Ghép chúng lại: <b>Giá trị kỳ vọng (EV) = hữu dụng × xác suất</b>.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">Sinh viên chọn nghề: viết du ký là mơ ước (hữu dụng 100) nhưng xác suất thành công chỉ 0.10 → EV = 10. Ngoại giao (70 × 0.40 = 28) lại có EV cao nhất, nên <b>khách quan</b> nên chọn — dù không phải cái “thích nhất”.</div>
+              <span class="hw-fal__k">Áp dụng</span>
+              <div class="hw-fal__v">Gán 100 cho lựa chọn đáng mơ nhất làm mốc, các mức khác là bội của 10 (chính xác hơn nữa là ảo tưởng). Rồi chọn theo <b>EV cao nhất</b>, tức phần thưởng đã được nhân với khả năng thật.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t17">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 17</span><h3 class="hw-fal__name">Chi phí chìm là vô can</h3><span class="wb-tag">sunk costs</span></div>
+            <p class="hw-fal__def">Chi phí đã bỏ ra và không lấy lại được (<b>sunk cost</b>) <b>không</b> nên ảnh hưởng đến quyết định tương lai. Chỉ có chi phí và lợi ích <b>phía trước</b> mới đáng cân.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">Bạn đã mua vé máy bay 500$ không hoàn tiền cho chuyến nghỉ, rồi một cuộc họp quan trọng ập tới. Tiền vé đã mất dù bạn làm gì; nếu lợi ích cuộc họp lớn hơn chuyến nghỉ thì cứ bỏ vé mà đi họp.</div>
+              <span class="hw-fal__k">Bẫy</span>
+              <div class="hw-fal__v">Cảm xúc kêu “đã bỏ ra bao công của rồi” → ta ném tiền tốt theo tiền xấu. Cách gỡ: nhớ rằng cắt lỗ <b>không</b> đồng nghĩa đã sai; hỏi ý một người ngoài; và mọi trải nghiệm cũ đều để lại kỹ năng dùng được về sau.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t18">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 18</span><h3 class="hw-fal__name">Kiểm định giả thuyết cần bảng hai chiều</h3><span class="wb-tag">hypothesis testing</span></div>
+            <p class="hw-fal__def">Muốn suy nhân quả, tối thiểu phải lập một <b>bảng hai chiều</b> (2×2) và so <b>tỉ lệ phần trăm</b> — không so số tuyệt đối khi hai nhóm to nhỏ khác nhau.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">Môi giới đoán đúng 50/200 = <b>25%</b>; người thường 100/800 = <b>12.5%</b>. Nhìn số thô (50 vs 100) tưởng người thường giỏi hơn; nhìn tỉ lệ mới thấy môi giới đúng gấp đôi.</div>
+              <span class="hw-fal__k">Áp dụng</span>
+              <div class="hw-fal__v">Với mỗi giả thuyết, hỏi hai câu về <b>lỗi loại I</b> (bác giả thuyết đúng) và <b>loại II</b> (nhận giả thuyết sai): “nếu nó đúng mà mình bác thì hại gì? nếu sai mà mình nhận thì hại gì?”. Ví dụ “tôi không bị ung thư”: bỏ sót bệnh (II) nguy hơn báo động giả (I).</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t19">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 19</span><h3 class="hw-fal__name">Thế lưỡng nan của người tù</h3><span class="wb-tag">prisoner’s dilemma</span></div>
+            <p class="hw-fal__def">Một trò chơi “động cơ hỗn hợp” cho thấy vì sao <b>hợp tác thắng cạnh tranh</b> xét trên tổng thể — dù cho từng cá nhân, phản bội luôn có vẻ lợi hơn.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">Hai nghi phạm bị giam riêng. Nếu cả hai im lặng: mỗi người 3 năm. Nếu một khai một im: kẻ khai tự do, kẻ im 10 năm. Nếu cả hai cùng khai: mỗi người 7 năm. Xét riêng, khai luôn lợi cho mình — nhưng vì cả hai đều tính thế, cả hai lãnh 7 năm, dù cùng im chỉ 3 năm.</div>
+              <span class="hw-fal__k">Áp dụng</span>
+              <div class="hw-fal__v">Trong quan hệ <b>lặp lại</b> (đối tác, đội nhóm, hôn nhân), hợp tác cho tổng lợi ích lớn hơn hẳn. “Người tốt về chót” chỉ đúng khi trò chơi chỉ chơi một lần.</div>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ══════════════════ CHẶNG 4 ══════════════════ -->
+      <div class="hw-part-head" id="g4">
+        <p class="kicker">Chặng 4 · Analyzing Arguments</p>
+        <h2>Mổ xẻ lập luận — 22 cách tìm và bẻ cái giả định ẩn</h2>
+        <p>Chặng dài nhất, và thực dụng nhất. Nhớ công thức ở Mở đầu: mọi lập luận = <b>bằng chứng + giả định ẩn</b>. Tip 20–21 dựng khung; Tip 22 liệt kê <b>năm loại giả định</b> hay sai nhất; Tip 23–41 đi sâu từng loại kèm bài tập thật.</p>
+      </div>
+
+      <section id="g4-body">
+        <div class="hw-fal-list">
+
+          <article class="hw-fal" id="t20">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 20</span><h3 class="hw-fal__name">Bằng chứng + Giả định = Kết luận</h3><span class="wb-tag">argument structure</span></div>
+            <p class="hw-fal__def">Cấu trúc của mọi lập luận. Bằng chứng và kết luận luôn <b>hiện</b> (được nói ra); giả định luôn <b>ẩn</b> (nằm trong đầu người nói). Giả định là <b>keo</b> gắn bằng chứng vào kết luận. Muốn lôi nó ra: lấy <b>Kết luận − Bằng chứng</b>.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">“Vì Dorothy đạt điểm cao kỳ thi đầu vào, cô ấy chắc chắn sẽ thành công ở đại học.” Bằng chứng: điểm thi cao. Kết luận: thành công ở đại học. Giả định ẩn: <b>kỹ năng thi tốt = kỹ năng học đại học tốt</b>.</div>
+              <span class="hw-fal__k">Mẹo</span>
+              <div class="hw-fal__v">“Từ chỉ đường” giúp định vị: <em>vì / bởi / do / xét rằng</em> đứng trước bằng chứng; <em>nên / vậy / do đó / rõ ràng</em> đứng trước kết luận. (Nhưng không phải lúc nào cũng có.)</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t21">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 21</span><h3 class="hw-fal__name">Chỉ có hai cách để công một lập luận</h3><span class="wb-tag">attack evidence or assumption</span></div>
+            <p class="hw-fal__def">Đã biết ba mảnh, việc đánh giá gọn lại thành hai mũi: <b>đánh vào bằng chứng</b> (nó có thật, đủ, đúng không?) hoặc <b>đánh vào giả định</b> (cái cầu ngầm ấy có vững không?).</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">Vẫn chuyện Dorothy. <b>Đánh bằng chứng:</b> điểm “cao” thật không, cao là bao nhiêu? <b>Đánh giả định:</b> thi tốt có dự báo học tốt không — còn động lực, sự độc lập, khả năng làm nhóm thì sao?</div>
+              <span class="hw-fal__k">Áp dụng</span>
+              <div class="hw-fal__v">Trước một lập luận đáng ngờ, đừng phản đối chung chung. Chỉ đúng hai câu: “bằng chứng có vấn đề gì?” và “giả định ngầm nào đang bị coi là hiển nhiên?”.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t22">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 22</span><h3 class="hw-fal__name">Năm loại giả định hay sai nhất</h3><span class="wb-tag">five reasoning flaws</span></div>
+            <p class="hw-fal__def">Bản đồ cho phần còn lại của chặng. Năm loại giả định sai phổ biến nhất: <b>(1)</b> so táo với cam (so sánh khập khiễng), <b>(2)</b> khái quát vội từ mẫu nhỏ, <b>(3)</b> chọn lọc / bỏ sót bằng chứng, <b>(4)</b> lẫn nhân với quả, <b>(5)</b> không lường “nút thắt cổ chai” khi triển khai.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Áp dụng</span>
+              <div class="hw-fal__v">Khi bắt được một giả định ẩn, thử phân nó vào một trong năm loại này — mỗi loại có sẵn một cách bẻ riêng ở các nguyên tắc dưới đây.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t23">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 23</span><h3 class="hw-fal__name">Cảnh giác “trượt phạm vi”</h3><span class="wb-tag">scope shift</span></div>
+            <p class="hw-fal__def">Một từ bị lặng lẽ thay bằng từ khác trong lúc lập luận trôi đi, khiến kết luận nói về một thứ khác với bằng chứng.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">Bài báo nói “<b>tội phạm được báo cáo</b> giảm 20%” rồi kết “tội phạm đã giảm”. Nhưng <em>tội phạm được báo cáo</em> ≠ <em>tội phạm thực tế</em>: số báo cáo có thể giảm trong khi thực tế y nguyên, thậm chí tăng.</div>
+              <span class="hw-fal__k">Cách bẻ</span>
+              <div class="hw-fal__v">Gạch chân danh từ then chốt ở bằng chứng và ở kết luận — xem chúng có đúng là <b>cùng một thứ</b> không.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t24">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 24</span><h3 class="hw-fal__name">Đổi định nghĩa thì phá so sánh</h3><span class="wb-tag">changed definitions</span></div>
+            <p class="hw-fal__def">Nếu định nghĩa của một khái niệm thay đổi giữa hai mốc, mọi so sánh giữa chúng đều mất hiệu lực.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">“Trẻ nay hiếu động hơn 10 năm trước” sụp nếu ngày nay <b>nhiều loại hành vi hơn</b> bị xếp là “hiếu động”. Tương tự, “ô nhiễm nay tệ gấp 10 lần” đáng ngờ nếu định nghĩa ô nhiễm nay gộp thêm cả tiếng ồn và rác.</div>
+              <span class="hw-fal__k">Cách bẻ</span>
+              <div class="hw-fal__v">Hỏi: hai con số đang so có được đo bằng <b>cùng một định nghĩa và cùng cách thu thập</b> không?</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t25">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 25</span><h3 class="hw-fal__name">Có “khảo sát” thì soi mẫu</h3><span class="wb-tag">representative sample</span></div>
+            <p class="hw-fal__def">Thấy một khảo sát, kiểm mẫu có đại diện <b>cả về lượng lẫn chất</b> không. Đủ lượng: cỡ mẫu đủ lớn. Đủ chất: đa dạng, ngẫu nhiên, không lệch về một nhóm.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">“Khảo sát cho thấy phim về sát nhân đã hết thời” — nhưng chỉ hỏi khán giả <b>suất chiếu chiều Chủ nhật</b>, một nhóm không đại diện cho toàn bộ người xem phim. Hay “ba trên bốn du khách khen Morocco” mà cả mẫu đều là người châu Phi.</div>
+              <span class="hw-fal__k">Cách bẻ</span>
+              <div class="hw-fal__v">Thường vấn đề không phải mẫu nhỏ mà là mẫu <b>lệch</b>: chỉ ra một nhóm quan trọng bị bỏ ra ngoài là đủ lung lay kết luận.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t26">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 26</span><h3 class="hw-fal__name">Giả định đại diện</h3><span class="wb-tag">representativeness</span></div>
+            <p class="hw-fal__def">Coi một “cái nhỏ” là đại diện cho “cái lớn”. Lập luận mạnh lên nếu cái nhỏ <b>thật sự</b> đại diện, yếu đi nếu không.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">“Chỉ số chứng khoán NSE tăng 1.000 điểm → kinh tế Ấn Độ mạnh” chỉ vững <b>nếu</b> NSE là thước đo tốt cho cả nền kinh tế, chứ không phải chỉ một góc thị trường tài chính.</div>
+              <span class="hw-fal__k">Cách bẻ</span>
+              <div class="hw-fal__v">Hỏi thẳng: cái mẫu / chỉ số này có thật sự đại diện cho cái tổng thể mà kết luận đang nói tới không?</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t27">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 27</span><h3 class="hw-fal__name">Suy từ cái riêng ra cái chung</h3><span class="wb-tag">particular → general</span></div>
+            <p class="hw-fal__def">Nói rộng ra: giả định đại diện xuất hiện <b>mỗi khi ta suy từ cái riêng ra cái chung</b>. Phân biệt với loại suy: loại suy là “A ≈ B” (hai vật ngang hàng), còn đại diện là “a ≈ A” (mẫu nhỏ ↔ tổng thể).</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">Quảng cáo gậy golf “Sweet Spot” tăng độ chính xác putt 25% → suy ra “bạn sẽ có điểm golf thấp”. Giả định ẩn: chất lượng cả ván golf <b>chủ yếu</b> do putt quyết định. Bên cạnh đó, Gallup chỉ cần ~1.800 người là đủ chính xác cho cả nước — <b>nếu</b> chia đúng các nhóm nhỏ (tuổi, giới, vùng…).</div>
+              <span class="hw-fal__k">Cách bẻ</span>
+              <div class="hw-fal__v">Với cỡ mẫu, câu hỏi quan trọng hơn “đủ lớn chưa” thường là “<b>đủ đa dạng chưa</b>”.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t28">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 28</span><h3 class="hw-fal__name">Bằng chứng có bị hái chọn?</h3><span class="wb-tag">proof by selected instances</span></div>
+            <p class="hw-fal__def">Kiểm xem bằng chứng có bị <b>chọn lọc có chủ đích</b> để đỡ cho kết luận không — nếu có, ta dính “chứng minh bằng ví dụ hái sẵn”.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">Cuốn <i>Sự suy tàn của tiểu thuyết gia</i> phân tích 200 cuốn để “chứng minh” nhà văn nay kém kỹ thuật hơn xưa. Lỗ hổng: 200 cuốn ấy có thể chính là những cuốn <b>ủng hộ sẵn</b> luận điểm của tác giả.</div>
+              <span class="hw-fal__k">Cách bẻ</span>
+              <div class="hw-fal__v">Hỏi: bằng chứng này được chọn thế nào? Còn những ca <b>ngược lại</b> nào bị bỏ ra ngoài khung hình không?</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t29">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 29</span><h3 class="hw-fal__name">“Bằng chứng bị bỏ sót”</h3><span class="wb-tag">evidence omitted</span></div>
+            <p class="hw-fal__def">Cái <b>không</b> được nêu ra nhiều khi mới là chìa khoá phán xét một lập luận.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">Steve: “Hai bạn tóc đỏ của tôi đều nóng tính → người tóc đỏ nóng tính.” John: “Vô lý, ba bạn tóc đỏ của tôi đều hiền.” Cả hai đều đúng <b>trong mẫu của mình</b> — cái bị bỏ sót là <em>tổng số bạn tóc đỏ mỗi người quen</em>, khiến hai kết luận trái ngược mà không ai sai về dữ kiện.</div>
+              <span class="hw-fal__k">Cách bẻ</span>
+              <div class="hw-fal__v">Trước một lập luận, hỏi thêm: “Còn thiếu dữ kiện nào mà nếu có sẽ đổi kết luận?”</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t30">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 30</span><h3 class="hw-fal__name">Tương quan ≠ nhân quả</h3><span class="wb-tag">correlation ≠ causation</span></div>
+            <p class="hw-fal__def">Hai thứ đi cùng nhau không có nghĩa cái này gây ra cái kia. Đây là gốc của cả cụm nhân–quả (Tip 31–35).</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">Tay đua chuyên nghiệp có 4–11% mỡ cơ thể. Không suy ra được “giảm mỡ xuống mức đó thì ai cũng đua đẳng cấp thế giới” — đây là lấy một đặc điểm <b>đi kèm</b> làm <b>nguyên nhân</b>.</div>
+              <span class="hw-fal__k">Cách bẻ</span>
+              <div class="hw-fal__v">Thấy A và B đi cùng, đừng vội kết A→B. Sáu bậc quan hệ: trùng hợp → tương quan thấp → tương quan cao (vẫn chưa nhân quả) → nhân quả thật → nguyên nhân thay thế → nhân quả đảo.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t31">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 31</span><h3 class="hw-fal__name">Cái trước không hẳn là nguyên nhân</h3><span class="wb-tag">post hoc</span></div>
+            <p class="hw-fal__def">Giả định nhân–quả thường bắt nguồn từ ý ngây thơ: “vì B xảy ra <b>sau</b> A, nên A gây ra B.” Trình tự thời gian không chứng minh nhân quả.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">Điểm SAT trung bình tăng → “sinh viên giỏi hơn”? Tác giả phản bác bằng một <b>giải thích thay thế</b>: điểm tăng vì học sinh <em>giỏi thi hơn</em>, chứ kỹ năng đọc–viết–toán thực chất đang giảm dần.</div>
+              <span class="hw-fal__k">Cách bẻ</span>
+              <div class="hw-fal__v">Nghe “A rồi B nên A gây B”, hỏi ngay: có cách giải thích nào khác cho B không?</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t32">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 32</span><h3 class="hw-fal__name">Nghĩ tới nguyên nhân thay thế</h3><span class="wb-tag">alternative cause (C→B)</span></div>
+            <p class="hw-fal__def">Gặp nhân–quả, việc đầu tiên là hỏi: nếu người ta nói <b>A gây B</b>, liệu có một <b>C</b> khác mới thật sự gây B không?</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">“Từ khi bà Valdez làm chủ tịch, lợi nhuận tăng từ 8% lên 15% → nhờ tài marketing của bà.” Điểm yếu: ngay trước đó, người tiền nhiệm đã <b>thâu tóm một đối thủ</b>, gần như gấp đôi doanh thu. C (vụ thâu tóm) mới là nguyên nhân.</div>
+              <span class="hw-fal__k">Cách bẻ</span>
+              <div class="hw-fal__v">Liệt kê vài nguyên nhân C khả dĩ khác. Chỉ cần một C hợp lý là đủ làm lung lay “A gây B”.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t33">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 33</span><h3 class="hw-fal__name">Một nguyên nhân chung sinh hai kết quả</h3><span class="wb-tag">common cause (C→A &amp; C→B)</span></div>
+            <p class="hw-fal__def">Dạng tinh vi hơn: A và B đi cùng nhau không phải vì cái này gây cái kia, mà vì <b>một C chung gây ra cả hai</b>.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">Tít báo “Béo phì gắn với trầm cảm” ngụ ý béo → trầm cảm. Nhưng <b>lòng tự trọng thấp</b> (C) có thể gây <b>cả</b> béo phì <b>lẫn</b> trầm cảm — hai kết quả của một gốc chung.</div>
+              <span class="hw-fal__k">Cách bẻ</span>
+              <div class="hw-fal__v">Thấy A và B liên hệ, thử hỏi: có yếu tố thứ ba nào đứng sau, gây ra cả hai không?</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t34">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 34</span><h3 class="hw-fal__name">Nhân quả đảo chiều</h3><span class="wb-tag">reverse causation</span></div>
+            <p class="hw-fal__def">Ngỡ A gây B, nhưng thật ra chính B gây A. Chỉ cần nêu khả năng đảo chiều là đủ gieo nghi ngờ nghiêm trọng.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v"><ul class="hw-egs">
+                <li>“Sally chăm nên sếp giao việc khó.” Hay ngược lại: <b>vì bị giao việc khó nên buộc phải chăm</b>?</li>
+                <li>Xem TV bạo lực nhiều → hung hăng hơn? Có thể người <b>sẵn hung hăng</b> mới chọn xem nhiều TV bạo lực.</li>
+                <li>Trẻ con tưởng “lính cứu hoả gây ra cháy” vì đám cháy nào cũng thấy họ ở đó.</li>
+              </ul></div>
+              <span class="hw-fal__k">Cách bẻ</span>
+              <div class="hw-fal__v">Với mỗi “A gây B”, thử phát biểu ngược “B gây A” và xem nó có nghe hợp lý không.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t35">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 35</span><h3 class="hw-fal__name">Thử kịch bản ngược lại</h3><span class="wb-tag">test the opposite</span></div>
+            <p class="hw-fal__def">Nghe “X làm Y tăng”, luôn hỏi: khi <b>không</b> có X thì Y thế nào? Không có nhóm đối chứng thì tuyên bố nhân quả treo lơ lửng.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">“Trăng tròn làm tội phạm tăng” → hỏi tội phạm ra sao khi trăng <b>không</b> tròn. “Đồ lặn ánh kim không bị cá mập cắn” chỉ có nghĩa <b>nếu</b> đồ đen <b>vẫn</b> bị cắn trong cùng thời gian đó.</div>
+              <span class="hw-fal__k">Cách bẻ</span>
+              <div class="hw-fal__v">Đòi cho xem trường hợp đối chứng: cái gì xảy ra ở nhóm <b>không</b> có yếu tố được cho là nguyên nhân.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t36">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 36</span><h3 class="hw-fal__name">Lý thuyết có thể lìa thực hành</h3><span class="wb-tag">plans ≠ action</span></div>
+            <p class="hw-fal__def">Một kế hoạch nghe hoàn hảo không tự nó thành kết quả. Đừng cho rằng kế hoạch tốt tất sẽ chạy trơn tru.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">“Năng lượng mặt trời sạch, không nhập khẩu, không phóng xạ → nên khuyến khích mọi nhà dùng.” Điểm yếu chí mạng: <b>chưa có cách trữ điện mặt trời khả thi</b> cho hộ gia đình. Kế hoạch đẹp trên giấy vẫn kẹt ở khâu thực thi.</div>
+              <span class="hw-fal__k">Cách bẻ</span>
+              <div class="hw-fal__v">Hỏi: giữa “kế hoạch” và “kết quả” có khoảng trống thực thi nào chưa được lấp?</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t37">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 37</span><h3 class="hw-fal__name">“Có thể” ≠ “sẽ”</h3><span class="wb-tag">can ≠ will</span></div>
+            <p class="hw-fal__def">Khả năng làm một việc không suy ra rằng việc đó <b>sẽ</b> được làm — do người ta có thể không chọn, hoặc lơ là.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">“Người biết chữ mà không lười thì <b>đọc được</b> kinh điển; ít người đọc → đa số lười.” Giả định ẩn: hễ ai đọc <b>được</b> thì sẽ <b>chọn</b> đọc — điều không đúng.</div>
+              <span class="hw-fal__k">Cách bẻ</span>
+              <div class="hw-fal__v">Tách rõ “có năng lực” với “sẽ thực hiện năng lực đó”. Chúng là hai chuyện khác nhau.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t38">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 38</span><h3 class="hw-fal__name">Lường trước nút thắt cổ chai</h3><span class="wb-tag">anticipate bottlenecks</span></div>
+            <p class="hw-fal__def">Cách hay nhất để lộ giả định triển khai: hỏi “<b>nếu mọi người cùng làm thì sao?</b>” — hệ thống có chịu nổi không.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">“Mọi người nên bỏ xe riêng, chuyển sang giao thông công cộng.” Giả định ẩn: hệ thống hiện tại <b>chở nổi</b> tất cả người chuyển sang, và tuyến ấy sẵn có, tới được. (Giống việc ai cũng dùng hệ thống email mới cùng lúc → sập.)</div>
+              <span class="hw-fal__k">Cách bẻ</span>
+              <div class="hw-fal__v">Hình dung kế hoạch được nhân lên toàn bộ quy mô, rồi tìm khâu sẽ nghẽn đầu tiên.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t39">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 39</span><h3 class="hw-fal__name">Giả định “đã biết” sẵn</h3><span class="wb-tag">awareness assumption</span></div>
+            <p class="hw-fal__def">Một lập luận có thể ngầm dựa vào việc ai đó <b>đã biết</b> một sự việc có sẵn — nếu họ không biết, lập luận sụp.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">“Tina chẳng quan tâm môi trường vì vẫn dùng bút của Rainbow Corp — hãng vừa bị tố xả thải độc.” Sụp ngay nếu <b>Tina không hề biết</b> tin đó.</div>
+              <span class="hw-fal__k">Cách bẻ</span>
+              <div class="hw-fal__v">Hỏi: kết luận này có ngầm cho rằng nhân vật đã nắm một thông tin mà thực ra họ có thể chưa biết không?</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t40">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 40</span><h3 class="hw-fal__name">Tìm được chưa chắc nhận ra</h3><span class="wb-tag">recognition assumption</span></div>
+            <p class="hw-fal__def">Đi tìm một thứ không đảm bảo ta <b>nhận diện đúng</b> nó khi gặp. Khả năng nhận ra chính xác thường là một giả định ẩn.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">“Phỏng vấn giúp chọn ứng viên có tính cách hợp trường kinh doanh.” Giả định nền: người phỏng vấn <b>nhận diện chính xác</b> được tính cách hợp/không hợp — điều không hiển nhiên.</div>
+              <span class="hw-fal__k">Cách bẻ</span>
+              <div class="hw-fal__v">Tách “đi tìm X” khỏi “nhận ra X”. Công cụ tìm kiếm chỉ có ích nếu ta phân biệt được thứ mình cần khi nó hiện ra.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t41">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 41</span><h3 class="hw-fal__name">Soi các từ mơ hồ</h3><span class="wb-tag">vague terms</span></div>
+            <p class="hw-fal__def">Luôn tìm những từ <b>mơ hồ</b> trong lập luận và đòi làm rõ — mập mờ là nơi nhiều kết luận trốn khỏi việc bị kiểm chứng.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">“Yuppie Café quảng cáo trên Internet và doanh thu tăng 15% → bạn cũng làm được như vậy.” Mơ hồ ở “<b>thành công</b>”, ở giả định nhân quả (Internet mới là nguyên nhân?), và ở việc quán bạn có <b>giống</b> quán này không.</div>
+              <span class="hw-fal__k">Cách bẻ</span>
+              <div class="hw-fal__v">Với mỗi từ mấu chốt, hỏi “ý chính xác là gì?” trước khi đồng ý hay phản đối.</div>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ══════════════════ CHẶNG 5 ══════════════════ -->
+      <div class="hw-part-head" id="g5">
+        <p class="kicker">Chặng 5 · Mastering Logic</p>
+        <h2>Chặt chẽ với logic — chín lỗi nhỏ mà lời nói hằng ngày hay giấu</h2>
+        <p>Chặng cuối là logic hình thức: câu <b>“nếu… thì”</b> và các lượng từ <b>“không / một số / hầu hết / tất cả”</b>. Điểm chung của cả chín nguyên tắc: <b>đừng đọc một chiều thành hai chiều</b>. Vẽ vòng tròn khi lời nói bắt đầu mập mờ.</p>
+      </div>
+
+      <section id="g5-body">
+        <p class="hw-p">Cả nhóm “nếu… thì” xoay quanh một bảng nhỏ đáng thuộc lòng. Từ “Nếu A thì B”, chỉ có <b>một</b> suy luận luôn đúng — cái ở dòng cuối:</p>
+        <div class="hw-tw">
+          <table class="wb-table wb-table--compact">
+            <thead><tr><th>Từ “Nếu A thì B”, suy ra…</th><th>Tên trong logic</th><th>Có hợp lệ không?</th></tr></thead>
+            <tbody>
+              <tr><td>Nếu B thì A</td><td>khẳng định hậu thức</td><td><b>Không</b> — đảo chiều là sai</td></tr>
+              <tr><td>Nếu không A thì không B</td><td>phủ định tiền kiện</td><td><b>Không</b> — sai</td></tr>
+              <tr><td>Nếu <b>không B</b> thì <b>không A</b></td><td>đảo đề (contrapositive)</td><td><b>Có</b> — luôn đúng</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="hw-fal-list">
+
+          <article class="hw-fal" id="t42">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 42</span><h3 class="hw-fal__name">Đừng đảo chiều “nếu… thì”</h3><span class="wb-tag">affirming the consequent</span></div>
+            <p class="hw-fal__def">“Nếu A thì B” <b>không</b> bằng “Nếu B thì A”. Đảo chiều là lỗi <em>khẳng định hậu thức</em>.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">“Nếu là tiền đô Mỹ thì màu xanh.” Thấy một vật màu xanh <b>không</b> suy ra nó là tiền Mỹ — cây thông, bút chì xanh, ếch Kermit cũng xanh.</div>
+              <span class="hw-fal__k">Nhớ</span>
+              <div class="hw-fal__v">Câu điều kiện chỉ đọc được <b>một chiều</b>: từ vòng trong (A) ra vòng ngoài (B), không đọc ngược lại.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t43">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 43</span><h3 class="hw-fal__name">Suy luận hợp lệ duy nhất: đảo đề</h3><span class="wb-tag">contrapositive</span></div>
+            <p class="hw-fal__def">Từ “Nếu A thì B”, thứ <b>duy nhất</b> luôn suy ra được là: “Nếu <b>không B</b> thì <b>không A</b>.”</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">“Nếu là tiền Mỹ thì màu xanh” ⇒ “Nếu <b>không xanh</b> thì <b>không phải</b> tiền Mỹ.” Đúng, vì màu xanh là một điều kiện <em>cần</em> của tiền Mỹ.</div>
+              <span class="hw-fal__k">Nhớ</span>
+              <div class="hw-fal__v">Đây là công cụ mạnh: muốn phủ nhận A, chỉ cần chứng minh B vắng mặt.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t44">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 44</span><h3 class="hw-fal__name">Đừng phủ định tiền kiện</h3><span class="wb-tag">denying the antecedent</span></div>
+            <p class="hw-fal__def">“Nếu A thì B” <b>không</b> bằng “Nếu <b>không A</b> thì <b>không B</b>”. Kết cục B có thể đến từ nhiều nguyên nhân khác ngoài A.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">“Nếu chăm chỉ thì thành công.” Suy “không chăm chỉ → sẽ không thành công” là sai: người ta còn có thể thành công nhờ khéo léo, thông minh, hoặc may mắn.</div>
+              <span class="hw-fal__k">Nhớ</span>
+              <div class="hw-fal__v">Bác một nguyên nhân của B không bác được B — vì B nhiều đường tới.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t45">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 45</span><h3 class="hw-fal__name">Một kết quả, nhiều con đường</h3><span class="wb-tag">multiple sufficient causes</span></div>
+            <p class="hw-fal__def">“A dẫn tới B” không có nghĩa <b>chỉ</b> A mới dẫn tới B — C, D, E cũng có thể cùng dẫn tới B.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">“Làm rơi trứng thì trứng vỡ” — nhưng trứng cũng vỡ vì bị bóp, bị vật khác rơi trúng. Thấy trứng vỡ không suy ra “ắt do làm rơi”.</div>
+              <span class="hw-fal__k">Nhớ</span>
+              <div class="hw-fal__v">Đây là lý do sâu xa khiến khẳng định hậu thức sai: một B có thể có nhiều A.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t46">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 46</span><h3 class="hw-fal__name">Điều kiện cần ≠ điều kiện đủ</h3><span class="wb-tag">necessary vs sufficient</span></div>
+            <p class="hw-fal__def">Điều kiện <b>cần</b> phải có thì sự việc mới xảy ra, nhưng một mình nó chưa chắc làm nó xảy ra. Điều kiện <b>đủ</b> thì một mình nó là chắc chắn đủ.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">“Cần nước để khoẻ” không có nghĩa “chỉ nước là đủ khoẻ”. “Tôi cho hamster uống nước mỗi ngày mà nó vẫn chết” — nước là <b>cần</b> nhưng chưa <b>đủ</b> (còn cần thức ăn).</div>
+              <span class="hw-fal__k">Nhớ</span>
+              <div class="hw-fal__v">Đảo chiều một câu “nếu… thì” chính là lỗi biến điều kiện <em>cần</em> thành <em>đủ</em> một cách lén lút.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t47">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 47</span><h3 class="hw-fal__name">“Nếu A thì B” ≠ “Chỉ A mới là B”</h3><span class="wb-tag">if ≠ only if</span></div>
+            <p class="hw-fal__def">Câu điều kiện không tuyên bố tính độc quyền. “Nếu A thì B” không đồng nghĩa “chỉ A mới là B”.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">“Muốn làm salad ngon thì nên dùng cà chua” <b>không</b> có nghĩa chỉ cà chua mới làm nên salad ngon.</div>
+              <span class="hw-fal__k">Nhớ</span>
+              <div class="hw-fal__v">Chữ “chỉ / duy nhất” là một tuyên bố mạnh hơn hẳn — đừng tự thêm nó vào một câu điều kiện thường.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t48">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 48</span><h3 class="hw-fal__name">“Mọi A là B” ≠ “Chỉ A mới là B”</h3><span class="wb-tag">all ≠ only</span></div>
+            <p class="hw-fal__def">Tương tự cho lượng từ “mọi”. “Mọi A là B” không đồng nghĩa “chỉ A mới là B”.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">“Mọi con mèo đều là thú có vú” <b>không</b> có nghĩa “chỉ mèo mới là thú có vú” — chó, voi, người cũng là thú có vú.</div>
+              <span class="hw-fal__k">Nhớ</span>
+              <div class="hw-fal__v">“Mọi A là B” đặt A <b>nằm gọn trong</b> B; nó không nói gì về việc có những B khác ngoài A hay không.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t49">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 49</span><h3 class="hw-fal__name">Không / một số / tất cả</h3><span class="wb-tag">no-some-all</span></div>
+            <p class="hw-fal__def">Ba lượng từ, ba hình quan hệ: “<b>tất cả</b>” → bao hàm (vòng này nằm trong vòng kia); “<b>không</b>” → loại trừ (hai vòng tách rời); “<b>một số</b>” → giao nhau (hai vòng chồng một phần).</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">“Mọi mèo là thú có vú” = “Nếu là mèo thì là thú có vú” = “Chỉ thú có vú mới là mèo” = “Không con mèo nào không phải thú có vú” — cùng một quan hệ bao hàm, nhiều cách nói.</div>
+              <span class="hw-fal__k">Áp dụng</span>
+              <div class="hw-fal__v">Khi lời nói bắt đầu rối, <b>vẽ vòng tròn</b>: ngôn ngữ đời thường mơ hồ, hình vẽ thì không.</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t50">
+            <div class="hw-fal__top"><span class="hw-fal__no">Tip 50</span><h3 class="hw-fal__name">“Một số” đối xứng, “hầu hết” thì không</h3><span class="wb-tag">reciprocality</span></div>
+            <p class="hw-fal__def">“<b>Một số</b>” có tính đối xứng (đảo lại vẫn đúng); “<b>hầu hết</b>” thì <b>không</b> nhất thiết.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">“Một số bác sĩ là người giàu” ⇒ “một số người giàu là bác sĩ” (đúng). Nhưng “<b>hầu hết</b> bác sĩ giàu” <b>không</b> ⇒ “hầu hết người giàu là bác sĩ” — vì người giàu đông hơn bác sĩ rất nhiều.</div>
+              <span class="hw-fal__k">Nhớ</span>
+              <div class="hw-fal__v">Cũng nhớ: “một số” hàm ý thiểu số (dưới nửa), “hầu hết” hàm ý đa số (trên nửa).</div>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ══════════════════ KẾT ══════════════════ -->
+      <div class="hw-part-head" id="ket">
+        <p class="kicker">Kết</p>
+        <h2>Năm câu hỏi mang theo sau khi gấp sách</h2>
+        <p>Nếu quên hết 50 cái tên phía trên, năm câu hỏi này — mỗi câu ứng một chặng — vẫn đủ để giữ đầu óc bạn tỉnh táo trong gần như mọi tình huống.</p>
+      </div>
+      <section id="s-ket">
+        <div class="wb-grid wb-grid--2">
+          <div class="wb-card wb-card--pad">
+            <p class="wb-media__title">1 · Tôi có đang thấy quá ít không?</p>
+            <p class="wb-media__text">Cái “nổi bật” với tôi lúc này có phải do mục tiêu, cảm xúc, kỳ vọng của tôi tô đậm lên không? <b>Phía còn lại</b> — góc nhìn khác, bằng chứng phản bác — nằm ở đâu?</p>
+          </div>
+          <div class="wb-card wb-card--pad">
+            <p class="wb-media__title">2 · Tôi đã mở đủ trước khi khép chưa?</p>
+            <p class="wb-media__text">Tôi có đang chốt vội phương án đầu tiên nghe được không? Đã bày ra <b>2–3 lựa chọn</b> (và 2–3 <b>mục tiêu</b>) khác nhau, tách pha sáng tạo khỏi pha đánh giá chưa?</p>
+          </div>
+          <div class="wb-card wb-card--pad">
+            <p class="wb-media__title">3 · Chi phí đã bỏ có đang lái tôi không?</p>
+            <p class="wb-media__text">Tôi có đang “ném tiền tốt theo tiền xấu” chỉ vì tiếc công của đã bỏ ra không? Chỉ chi phí và lợi ích <b>phía trước</b> mới được quyền quyết định.</p>
+          </div>
+          <div class="wb-card wb-card--pad">
+            <p class="wb-media__title">4 · Giả định ẩn ở đây là gì?</p>
+            <p class="wb-media__text">Lấy <b>Kết luận − Bằng chứng</b>: cái keo ngầm nối chúng là gì, và nó có vững không? Nhất là coi chừng lẫn <b>nhân với quả</b> và <b>tương quan với nhân quả</b>.</p>
+          </div>
+          <div class="wb-card wb-card--pad">
+            <p class="wb-media__title">5 · Tôi có đang đọc ngược một chiều?</p>
+            <p class="wb-media__text">“Nếu A thì B” không phải “nếu B thì A”; “mọi A là B” không phải “chỉ A là B”. Khi lời nói rối, <b>vẽ vòng tròn</b> ra cho chắc.</p>
+          </div>
+          <div class="wb-card wb-card--pad">
+            <p class="wb-media__title">Sợi chỉ đỏ xuyên suốt</p>
+            <p class="wb-media__text">Cả năm câu chỉ là một việc: <b>cố tình nhìn ra phần mình đang bỏ sót</b>. Tư duy rõ ràng không phải nghĩ nhanh hơn, mà là nghĩ <i>rộng hơn một cách có kỷ luật</i>.</p>
+          </div>
+        </div>
+        <div class="wb-alert wb-alert--plain" style="margin-top:18px">
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Về bản diễn giải này</p>
+            <p class="wb-alert__msg">Diễn giải và sắp xếp lại từ cuốn <b>“The Little Blue Reasoning Book: 50 Powerful Principles for Clear and Effective Thinking”</b> của <b>Brandon Royal</b> (Maven Publishing, 2010). Bản gốc trình bày 50 “reasoning tips” theo năm chương; trang này giữ đủ toàn bộ 50 nguyên tắc — cơ chế, ví dụ và cách áp dụng — nhưng <b>gom lại theo 5 chặng của một dòng suy nghĩ</b> và giải thích lại bằng lời cho dễ nắm.</p>
+            <p class="wb-alert__msg">Các ví dụ được viết lại hoặc rút gọn để minh hoạ cơ chế, <b>không sao chép nguyên văn</b>. Trang phục vụ mục đích học tư duy; nếu thấy hữu ích, hãy tìm đọc bản sách đầy đủ để ủng hộ tác giả và nhà xuất bản.</p>
+          </div>
+        </div>
+      </section>
+
+    </div><!-- /content column -->
+  </div><!-- /hw-layout -->
+</main>
+
+<footer class="wb-footer wb-footer--slim">
+  <div class="wb-footer__inner">
+    <div class="wb-footer__bottom">
+      <span class="wb-footer__copy">The Little Blue Reasoning Book — bản diễn giải · Brandon Royal · mục đích học tư duy</span>
+      <a class="wb-footer__link" href="../index.html">← Trang chủ</a>
+    </div>
+  </div>
+</footer>
+
+<button class="wb-btn wb-btn--icon wb-btn--round hw-top" id="toTop" aria-label="Lên đầu trang">
+  <span class="wb-ico">arrow_upward</span>
+</button>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var saved = null;
+  try { saved = localStorage.getItem('hub-theme'); } catch (e) {}
+  root.classList.toggle('dark', saved === 'dark');
+  var toggle = document.getElementById('theme-toggle');
+  if (toggle) toggle.addEventListener('click', function () {
+    var dark = !root.classList.contains('dark');
+    root.classList.toggle('dark', dark);
+    try { localStorage.setItem('hub-theme', dark ? 'dark' : 'light'); } catch (e) {}
+  });
+
+  var menu = document.querySelector('.wb-navbar__menu');
+  document.addEventListener('click', function (e) {
+    if (!menu) return;
+    if (e.target.closest('[data-navbar-toggle]')) menu.classList.toggle('is-open');
+    else if (e.target.closest('.wb-navbar__menu .wb-nav__link')) menu.classList.remove('is-open');
+  });
+
+  var links = [].slice.call(document.querySelectorAll('#toc .wb-sidenav__link'));
+  var byId = {};
+  var targets = [];
+  links.forEach(function (a) {
+    var id = a.getAttribute('href').slice(1);
+    var el = document.getElementById(id);
+    if (el) { byId[id] = a; targets.push(el); }
+  });
+  var current = null;
+  function setCurrent(a) {
+    if (current === a) return;
+    if (current) current.classList.remove('is-current');
+    current = a;
+    if (current) current.classList.add('is-current');
+  }
+  if ('IntersectionObserver' in window && targets.length) {
+    var seen = {};
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { seen[e.target.id] = e.isIntersecting ? e.intersectionRatio : 0; });
+      var bestId = null, best = 0;
+      targets.forEach(function (t) { if ((seen[t.id] || 0) > best) { best = seen[t.id]; bestId = t.id; } });
+      if (bestId) setCurrent(byId[bestId]);
+    }, { rootMargin: '-80px 0px -55% 0px', threshold: [0, .1, .5, 1] });
+    targets.forEach(function (t) { io.observe(t); });
+  }
+
+  var top = document.getElementById('toTop');
+  function onScroll() { top.classList.toggle('is-on', window.scrollY > 600); }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+  top.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+})();
+</script>
+</body>
+</html>
