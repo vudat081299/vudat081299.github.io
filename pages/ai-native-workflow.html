@@ -175,31 +175,40 @@
     <div class="hw-fig"><span class="n">1 sự thật gốc</span><span class="l">AI mất trí nhớ sau mỗi phiên → mọi thứ quan trọng phải nằm trong file đã commit</span></div>
     <div class="hw-fig"><span class="n">8 khái niệm</span><span class="l">harness · context · skill · plugin · MCP · hook · gate · meta repo (＋ SOT)</span></div>
     <div class="hw-fig"><span class="n">7 bước pipeline</span><span class="l">discovery → spec → bdd → tech-design → plan → exec → ship, mỗi bước đẻ một file</span></div>
-    <div class="hw-fig"><span class="n">3 lớp cổng</span><span class="l">PostToolUse (ngay khi sửa) · pre-commit (lúc commit) · pre-push (trước khi lên public)</span></div>
+    <div class="hw-fig"><span class="n">Cả họ cổng</span><span class="l">3 lớp cục bộ (khi sửa · commit · push) + permission · review · CI · branch protection · eval</span></div>
   </div>
 
   <div class="hw-parts">
     <a class="wb-card wb-card--hover wb-card--pad" href="#vong-lap">
       <div class="wb-media">
-        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">1</span>
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm"><span class="wb-ico wb-ico--sm">sync</span></span>
         <div class="wb-media__body">
           <p class="wb-media__title">Một buổi làm việc với AI</p>
-          <p class="wb-media__text">Harness là gì (thứ bạn nghe loáng thoáng là “hác-nít”), vòng lặp model ↔ công cụ, nhiều agent phối hợp, và phép ví bếp ăn.</p>
+          <p class="wb-media__text">Harness là gì (thứ bạn nghe loáng thoáng là “hác-nít”), vòng lặp model ↔ công cụ, và phép ví bếp ăn.</p>
+        </div>
+      </div>
+    </a>
+    <a class="wb-card wb-card--hover wb-card--pad" href="#multi-agent">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm"><span class="wb-ico wb-ico--sm">stairs</span></span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Các cấp làm việc với AI</p>
+          <p class="wb-media__text">4 cấp: hỏi–đáp → 1 agent → master agent + subagent → workflow. “Master agent” bạn tưởng nằm ở đâu.</p>
         </div>
       </div>
     </a>
     <a class="wb-card wb-card--hover wb-card--pad" href="#skill-plugin">
       <div class="wb-media">
-        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">2</span>
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm"><span class="wb-ico wb-ico--sm">extension</span></span>
         <div class="wb-media__body">
           <p class="wb-media__title">Skill vs Plugin vs Rules</p>
-          <p class="wb-media__text">Plugin là cái HỘP đựng skill, không phải đối thủ. Và vì sao “rules” kiểu Cursor bị bỏ xó.</p>
+          <p class="wb-media__text">Plugin là cái HỘP đựng skill, không phải đối thủ. Cơ chế nạp khác nhau, và vì sao “rules” bị bỏ xó.</p>
         </div>
       </div>
     </a>
     <a class="wb-card wb-card--hover wb-card--pad" href="#pipeline">
       <div class="wb-media">
-        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">3</span>
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm"><span class="wb-ico wb-ico--sm">route</span></span>
         <div class="wb-media__body">
           <p class="wb-media__title">Cách team dùng AI hôm nay</p>
           <p class="wb-media__text">Không phải “chat rồi bảo code” mà là spec-driven: viết rõ CẦN GÌ vào file trước. Vai trò của SOT.</p>
@@ -208,7 +217,7 @@
     </a>
     <a class="wb-card wb-card--hover wb-card--pad" href="#project-a">
       <div class="wb-media">
-        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">4</span>
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm"><span class="wb-ico wb-ico--sm">construction</span></span>
         <div class="wb-media__body">
           <p class="wb-media__title">Đưa project cũ vào guồng</p>
           <p class="wb-media__text">Project có trước AI thì thêm gì, theo thứ tự nào — và khi nào cần plugin thay vì vài skill.</p>
@@ -217,7 +226,7 @@
     </a>
     <a class="wb-card wb-card--hover wb-card--pad" href="#quyet-dinh">
       <div class="wb-media">
-        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">5</span>
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm"><span class="wb-ico wb-ico--sm">history</span></span>
         <div class="wb-media__body">
           <p class="wb-media__title">Lưu quyết định &amp; việc dang dở</p>
           <p class="wb-media__text">100 ticket, mỗi ticket 5 quyết định — lưu cái nào (ADR), bỏ cái nào, và handoff để làm gì.</p>
@@ -226,10 +235,10 @@
     </a>
     <a class="wb-card wb-card--hover wb-card--pad" href="#hook-gate">
       <div class="wb-media">
-        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">6</span>
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm"><span class="wb-ico wb-ico--sm">shield</span></span>
         <div class="wb-media__body">
-          <p class="wb-media__title">Hook, Gate &amp; bộ file đủ</p>
-          <p class="wb-media__text">Hook bấm nút, gate gác cửa — khác vai. 3 lớp cổng, và bảng tra mọi file một project cần.</p>
+          <p class="wb-media__title">Cả họ cổng &amp; bộ file đủ</p>
+          <p class="wb-media__text">Hook bấm nút, gate gác cửa. Cả họ cổng suốt vòng đời, và bảng tra mọi file một project cần.</p>
         </div>
       </div>
     </a>
@@ -387,7 +396,7 @@
           <p class="hw-src">Vòng lặp “agentic”: điều làm AI trở thành một tác nhân (agent) — không chỉ trả lời một câu, mà tự lặp quan sát → hành động cho tới khi hoàn thành mục tiêu.</p>
         </div>
 
-        <p class="hw-p">Cái vòng lặp đó là toàn bộ điều biến AI thành <b>agent</b> (tác nhân): một model chạy trong vòng lặp, có công cụ, đuổi theo một mục tiêu. Khi việc lớn, agent còn <b>đẻ ra “subagent”</b> — một agent con có ngữ cảnh riêng, sạch, để làm một mảnh việc rồi báo cáo kết quả về (ví dụ: một con chỉ đọc-tìm, một con chuyên review). Đây chính là chỗ chữ <b>workflow</b> xuất hiện: một kịch bản điều phối nhiều agent theo trình tự định trước.</p>
+        <p class="hw-p">Cái vòng lặp đó là toàn bộ điều biến AI thành <b>agent</b> (tác nhân): một model chạy trong vòng lặp, có công cụ, đuổi theo một mục tiêu. Nhưng đó mới là <b>một</b> agent. Việc lớn cần <b>nhiều agent phối hợp</b> — và thực ra có cả một thang “cấp” làm việc với AI (<b>subagent · orchestrator · workflow</b> nằm ở đâu) để phần 2 ngay dưới mổ kỹ.</p>
 
         <h3 class="hw-h3">Phép ví bếp ăn — dùng suốt trang này</h3>
         <p class="hw-p">Để đỡ trừu tượng, hình dung một <b>nhà bếp</b>. Nó khớp gần hết các khái niệm bạn sắp gặp:</p>
@@ -435,7 +444,7 @@
               <text class="hw-vs" x="372" y="92" text-anchor="start">kịch bản cố định điều phối nhiều agent</text>
             </svg>
           </div>
-          <p class="hw-src">Bốn cấp làm việc với AI. “Master agent” bạn hình dung = <b>orchestrator</b> (Cấp 2). Còn <b>harness</b> (Claude Code) không phải một cấp — nó là cái CHẠY cả bốn cấp này.</p>
+          <p class="hw-src">Bốn cấp làm việc với AI, càng lên càng nhiều agent phối hợp. “Master agent” bạn hình dung = <b>orchestrator</b>, nằm ở <b>Cấp 2</b> — chỗ trước đó chưa được chỉ rõ.</p>
         </div>
 
         <p class="hw-p">Cấp 0–1 bạn đã gặp ở phần 1. Giờ mổ kỹ <b>Cấp 2 — “master agent” (orchestrator) điều phối subagent</b>, vì đây là chỗ hay mơ hồ nhất. Mô hình gọi là <b>orchestrator–worker</b> (điều phối – thợ): một agent điều phối giữ mục tiêu, đẻ ra subagent, giao việc, rồi đọc kết quả và ghép lại. Ba điểm làm nó chuẩn hơn:</p>
@@ -512,7 +521,7 @@
             </thead>
             <tbody>
               <tr><td><b>Harness</b></td><td>Bộ khung chạy model, cấp công cụ &amp; ngữ cảnh, lặp vòng.</td><td>Cái bếp</td><td>Là chính Claude Code (không phải file trong repo)</td></tr>
-              <tr><td><b>Context</b></td><td>Thứ AI được đọc <i>mọi lúc</i>: quy ước, tổng quan.</td><td>Nội quy trên tường</td><td><code>CLAUDE.md</code>, <code>README.md</code>, memory</td></tr>
+              <tr><td><b>Context</b> (luôn-bật)</td><td>Info AI đọc <i>mọi lúc</i>: quy ước, tổng quan — khác <i>cửa sổ ngữ cảnh</i> (bộ nhớ mỗi lượt, xem mục Skill vs Rules).</td><td>Nội quy trên tường</td><td><code>CLAUDE.md</code>, <code>README.md</code>, memory</td></tr>
               <tr><td><b>Skill</b></td><td>Một quy trình đóng gói, chỉ nạp <i>khi cần</i>.</td><td>Tờ công thức</td><td><code>skills/&lt;tên&gt;/SKILL.md</code></td></tr>
               <tr><td><b>Plugin</b></td><td>Cái hộp gói &amp; phát skill + hook + command + MCP cho cả team.</td><td>Hộp công thức</td><td>Một thư mục có <code>plugin.json</code></td></tr>
               <tr><td><b>MCP</b></td><td>Chuẩn cắm AI vào công cụ/dữ liệu ngoài (Jira, DB, Figma…).</td><td>Cửa giao hàng</td><td><code>.mcp.json</code></td></tr>
@@ -549,7 +558,7 @@
           <div class="wb-chart">
             <svg class="wb-chart__svg" viewBox="0 0 600 178" role="img" aria-label="Sơ đồ lồng nhau: marketplace bao ngoài chứa plugin; bên trong plugin có bốn thành phần skills, hooks, commands và MCP.">
               <rect class="hw-vpanel" x="6" y="6" width="588" height="166" rx="9"></rect>
-              <text class="hw-vk" x="20" y="26" text-anchor="start">MARKETPLACE · kv-claude-plugins — cái kệ (4 plugin)</text>
+              <text class="hw-vk" x="20" y="26" text-anchor="start">MARKETPLACE · kv-claude-plugins — cái kệ (3 plugin)</text>
 
               <rect class="hw-vbox" x="22" y="40" width="556" height="122" rx="8"></rect>
               <text class="hw-vk" x="36" y="60" text-anchor="start">PLUGIN · kv-engineering — một cái hộp</text>
@@ -569,7 +578,7 @@
               <text class="hw-vs" x="507" y="135" text-anchor="middle">cửa ra ngoài</text>
             </svg>
           </div>
-          <p class="hw-src">Setup thật của bạn: <code>marketplace.json</code> liệt kê 4 plugin; plugin <code>kv-engineering</code> gói ~32 skill + hooks + 21 command + 1 MCP (codebase-memory). Command chỉ là “cửa gọi tay” mỏng, mỗi cái uỷ thác cho một skill.</p>
+          <p class="hw-src">Setup thật của bạn: <code>marketplace.json</code> liệt kê <b>3 plugin</b> (thư mục <code>example-plugin</code> có trên đĩa nhưng CHƯA đăng ký trong manifest — đúng một vệt “drift” nho nhỏ). Plugin <code>kv-engineering</code> gói ~32 skill + hooks + 21 command + 1 MCP (codebase-memory); command chỉ là “cửa gọi tay” mỏng, mỗi cái uỷ thác cho một skill.</p>
         </div>
 
         <h3 class="hw-h3">“Cùng là text mà — vậy khác nhau ở cơ chế gì?”</h3>
@@ -696,6 +705,38 @@
         </div>
 
         <p class="hw-lede"><b>SOT (Source of Truth)</b> = <b>một</b> chỗ chính thức duy nhất chứa một thông tin, để không ai phải đoán và không có hai bản “sự thật” cãi nhau. Với AI nó sống còn vì <b>AI chỉ biết những gì file nói</b> — không có SOT thì mỗi phiên AI tự bịa một “sự thật” khác nhau.</p>
+
+        <div class="hw-viz">
+          <div class="wb-chart">
+            <svg class="wb-chart__svg" viewBox="0 0 560 200" role="img" aria-label="Chat để bàn bạc rồi chốt vào SOT là file markdown trong repo — nguồn sự thật duy nhất; Jira và Confluence chỉ soi lại từ SOT.">
+              <rect class="hw-vbox" x="8" y="80" width="118" height="48" rx="7"></rect>
+              <text class="hw-vt" x="67" y="102" text-anchor="middle">Chat</text>
+              <text class="hw-vs" x="67" y="119" text-anchor="middle">nơi bàn bạc</text>
+              <line class="hw-vline" x1="126" y1="104" x2="194" y2="104"></line>
+              <polygon class="hw-varrow" points="196,104 188,100 188,108"></polygon>
+              <text class="hw-vk" x="160" y="96" text-anchor="middle">chốt vào</text>
+
+              <rect class="hw-vpanel" x="200" y="70" width="150" height="72" rx="7"></rect>
+              <text class="hw-vt" x="275" y="98" text-anchor="middle">SOT</text>
+              <text class="hw-vs" x="275" y="116" text-anchor="middle">Markdown trong repo</text>
+              <text class="hw-vk" x="275" y="133" text-anchor="middle">nguồn sự thật DUY NHẤT</text>
+
+              <line class="hw-vline" x1="350" y1="106" x2="390" y2="106"></line>
+              <line class="hw-vline" x1="390" y1="64" x2="390" y2="152"></line>
+              <line class="hw-vline" x1="390" y1="64" x2="424" y2="64"></line>
+              <polygon class="hw-varrow" points="426,64 418,60 418,68"></polygon>
+              <line class="hw-vline" x1="390" y1="152" x2="424" y2="152"></line>
+              <polygon class="hw-varrow" points="426,152 418,148 418,156"></polygon>
+              <text class="hw-vk" x="398" y="112" text-anchor="start">soi lại</text>
+
+              <rect class="hw-vbox" x="430" y="44" width="120" height="40" rx="7"></rect>
+              <text class="hw-vt" x="490" y="68" text-anchor="middle">Jira</text>
+              <rect class="hw-vbox" x="430" y="132" width="120" height="40" rx="7"></rect>
+              <text class="hw-vt" x="490" y="156" text-anchor="middle">Confluence</text>
+            </svg>
+          </div>
+          <p class="hw-src">Một nguồn sự thật (file markdown trong repo); Jira/Confluence chỉ <b>soi lại</b>. Chat để bàn, <b>file để chốt</b>.</p>
+        </div>
 
         <p class="hw-p">Trong meta repo của bạn, nguyên tắc được ghi thẳng: <b>Markdown trong repo là SOT; Jira/Confluence chỉ là bản soi (mirror) trạng thái.</b> Vì sao chọn markdown làm nơi giữ sự thật, chứ không phải Jira hay đầu người?</p>
         <ul class="hw-ul">
@@ -909,19 +950,6 @@
           <p class="hw-src">Ba cổng nối tiếp, mỗi cổng bịt lỗ của cổng trước; ra khỏi cổng 3 mới lên <b>main / public</b>. “Cài gate lúc pre-push” là đúng — nhưng đừng chỉ pre-push.</p>
         </div>
 
-        <div class="hw-tw">
-          <table class="wb-table">
-            <thead>
-              <tr><th>Lớp (hook)</th><th>Chạy khi</th><th>Bắt được gì</th><th>Lỗ của nó</th></tr>
-            </thead>
-            <tbody>
-              <tr><td><b>1 · PostToolUse</b></td><td>Ngay sau mỗi lần AI sửa file</td><td>Phản hồi nhanh nhất khi đang làm</td><td>Có lỗ: thay đổi viết bằng <code>sed</code>/script không đi qua tool nên nó không thấy</td></tr>
-              <tr><td><b>2 · pre-commit</b></td><td>Lúc <code>git commit</code></td><td><b>Mọi</b> thay đổi, kể cả viết bằng script</td><td>Có thể bị bỏ qua bằng <code>--no-verify</code></td></tr>
-              <tr><td><b>3 · pre-push</b></td><td>Lúc <code>git push</code></td><td>Trạng thái cuối trước khi lên public; bịt cả <code>--no-verify</code></td><td>Lớp chốt chặn cuối</td></tr>
-            </tbody>
-          </table>
-        </div>
-
         <p class="hw-p"><b>Vậy “cài gate lúc pre-push” — đúng.</b> Nhưng đừng chỉ pre-push: lớp 1 cho phản hồi tức thì, lớp 2 bắt mọi thay đổi, lớp 3 là lưới chặn cuối. Repo này còn có một <b>bộ điều phối</b> để, khi thêm project con mới, chỉ cần đặt file gate đúng chỗ là nó tự được gọi — không phải sửa tay chỗ khác.</p>
 
         <h3 class="hw-h3">Đặt ở đâu</h3>
@@ -993,7 +1021,7 @@
           <p>Câu hỏi của bạn: “README cho tổng quan, CLAUDE.md là rules, còn file chức năng nào cần nữa?”. Đây là bảng tra gộp tất cả.</p>
         </div>
 
-        <p class="hw-lede">Một project sẵn-sàng-AI có khoảng <b>8 loại file/nơi cất</b>. Đọc bảng theo hai trục đầu trang: cột <b>“Nạp kiểu”</b> = Trục 1 (luôn-bật/khi-cần), cột <b>“Commit?”</b> = Trục 2 (chung/riêng).</p>
+        <p class="hw-lede">Một project sẵn-sàng-AI có khoảng <b>10 loại file/nơi cất</b>. Đọc bảng theo hai trục đầu trang: cột <b>“Nạp kiểu”</b> = Trục 1 (luôn-bật/khi-cần), cột <b>“Commit?”</b> = Trục 2 (chung/riêng).</p>
 
         <div class="hw-tw">
           <table class="wb-table">
