@@ -290,6 +290,31 @@
           <li><b>Trục 1 — Luôn-bật hay chỉ-khi-cần?</b> Có thứ AI cần thấy <i>mọi lúc</i> (quy ước code của repo → <code>CLAUDE.md</code>). Có thứ chỉ cần <i>khi làm đúng việc đó</i> (cách viết test → một <i>skill</i> chỉ nạp lúc viết test). Nhồi tất cả vào “luôn-bật” là sai lầm kinh điển — tốn ngân sách ngữ cảnh và rồi bị phớt lờ.</li>
           <li><b>Trục 2 — Dùng chung (commit) hay của riêng bạn?</b> Thứ ảnh hưởng người khác hoặc ảnh hưởng code thì <i>commit</i> để cả team và mọi phiên AI cùng thấy. Thứ chỉ là gu làm việc của riêng bạn thì để ở <i>bộ nhớ cá nhân</i>, không commit.</li>
         </ul>
+        <div class="hw-viz">
+          <div class="wb-chart">
+            <svg class="wb-chart__svg" viewBox="0 0 560 300" role="img" aria-label="Bảng 2 chiều: cột dùng chung (commit) và cột của riêng (không commit); hàng luôn-bật và hàng khi-cần. CLAUDE.md và README ở luôn-bật + chung; skill, spec, ADR, gate ở khi-cần + chung; memory cá nhân ở luôn-bật + riêng; ghi chú nháp ở khi-cần + riêng.">
+              <text class="hw-vk" x="216" y="24" text-anchor="middle">DÙNG CHUNG · commit</text>
+              <text class="hw-vk" x="446" y="24" text-anchor="middle">CỦA RIÊNG · không commit</text>
+              <text class="hw-vk" x="50" y="112" text-anchor="middle">LUÔN-BẬT</text>
+              <text class="hw-vk" x="50" y="234" text-anchor="middle">KHI-CẦN</text>
+
+              <rect class="hw-vpanel" x="100" y="40" width="232" height="112" rx="7"></rect>
+              <rect class="hw-vbox" x="340" y="40" width="212" height="112" rx="7"></rect>
+              <rect class="hw-vpanel" x="100" y="162" width="232" height="112" rx="7"></rect>
+              <rect class="hw-vbox" x="340" y="162" width="212" height="112" rx="7"></rect>
+
+              <text class="hw-vt" x="216" y="92" text-anchor="middle">CLAUDE.md · README</text>
+              <text class="hw-vs" x="216" y="112" text-anchor="middle">quy ước &amp; tổng quan</text>
+              <text class="hw-vt" x="446" y="92" text-anchor="middle">memory cá nhân</text>
+              <text class="hw-vs" x="446" y="112" text-anchor="middle">gu làm việc của bạn</text>
+              <text class="hw-vt" x="216" y="214" text-anchor="middle">skill · spec · ADR · gate</text>
+              <text class="hw-vs" x="216" y="234" text-anchor="middle">quy trình · quyết định · luật</text>
+              <text class="hw-vt" x="446" y="214" text-anchor="middle">ghi chú nháp</text>
+              <text class="hw-vs" x="446" y="234" text-anchor="middle">khi đang mò một việc</text>
+            </svg>
+          </div>
+          <p class="hw-src">Hai trục quyết định MỌI thứ nằm ở đâu. Đa số tri thức đáng giá rơi vào <b>cột trái</b> (dùng chung → commit). Mỗi khi phân vân “ghi ở đâu, có commit không”, bạn chỉ đang đặt nó vào một trong bốn ô này.</p>
+        </div>
         <p class="hw-p">Giữ hai trục này trong đầu. Mỗi khi phân vân “cái này ghi ở đâu, có commit không”, bạn chỉ đang định vị nó trên hai trục đó.</p>
       </section>
 
@@ -301,9 +326,33 @@
           <p>Trước khi bàn skill hay plugin, phải thấy cỗ máy chạy. Nó đơn giản hơn bạn tưởng.</p>
         </div>
 
-        <p class="hw-lede">Cái chạy AI gọi là <b>harness</b> — không phải “hardness/độ cứng” như dễ nghe nhầm, mà là <b>bộ khung điều khiển</b> bọc quanh model. <b>Claude Code chính là một harness.</b></p>
+        <p class="hw-lede">Cái chạy AI gọi là <b>harness</b> — không phải “hardness/độ cứng” như dễ nghe nhầm, mà là <b>bộ khung điều khiển</b> bọc quanh model. <b>Claude Code chính là một harness.</b> Điểm dễ nhầm nhất: harness <b>không phải một “cấp AI” hay “con agent cấp cao”</b> — nó là <b>chương trình</b>, và nó chạy mọi “cấp” làm việc với AI (các cấp xem phần 2).</p>
 
         <p class="hw-p">Tách cho rõ hai thứ hay bị gộp làm một: <b>model</b> là bộ não biết suy luận và viết chữ, nhưng tự nó không đọc được file, không chạy được lệnh, không nhớ gì sau khi trả lời xong. <b>Harness</b> là chương trình bao quanh làm hết phần còn lại: nạp ngữ cảnh cho model, mở cho nó các <i>công cụ</i> (đọc/sửa file, chạy terminal), đọc “tôi muốn gọi công cụ X” rồi thực thi, đưa kết quả về, và lặp lại tới khi xong. Ví von: <b>model là động cơ, harness là cả chiếc xe</b> quanh động cơ đó — vô-lăng, bảng đồng hồ, bánh xe.</p>
+
+        <div class="hw-viz">
+          <div class="wb-chart">
+            <svg class="wb-chart__svg" viewBox="0 0 560 300" role="img" aria-label="Ai chạy cái gì: bạn đưa yêu cầu vào harness; harness là chương trình bọc quanh model; model chỉ suy nghĩ; harness gọi tools để đọc sửa file và chạy lệnh.">
+              <rect class="hw-vpanel" x="200" y="10" width="160" height="40" rx="7"></rect>
+              <text class="hw-vt" x="280" y="35" text-anchor="middle">BẠN — nói cần gì</text>
+              <line class="hw-vline" x1="280" y1="50" x2="280" y2="70"></line>
+              <polygon class="hw-varrow" points="280,70 276,62 284,62"></polygon>
+
+              <rect class="hw-vbox" x="28" y="72" width="504" height="150" rx="8"></rect>
+              <text class="hw-vk" x="44" y="92" text-anchor="start">HARNESS · Claude Code — chương trình bọc quanh model</text>
+              <rect class="hw-vpanel" x="150" y="104" width="260" height="56" rx="7"></rect>
+              <text class="hw-vt" x="280" y="128" text-anchor="middle">MODEL — bộ não</text>
+              <text class="hw-vs" x="280" y="147" text-anchor="middle">chỉ suy nghĩ &amp; viết chữ</text>
+              <text class="hw-vk" x="280" y="199" text-anchor="middle">vòng lặp: nạp ngữ cảnh · gọi tool · lặp tới khi xong</text>
+
+              <line class="hw-vline" x1="280" y1="222" x2="280" y2="242"></line>
+              <polygon class="hw-varrow" points="280,242 276,234 284,234"></polygon>
+              <rect class="hw-vbox" x="120" y="244" width="320" height="40" rx="7"></rect>
+              <text class="hw-vt" x="280" y="268" text-anchor="middle">TOOLS — đọc/sửa file · chạy lệnh · MCP (ra ngoài)</text>
+            </svg>
+          </div>
+          <p class="hw-src">Harness là lớp BỌC NGOÀI, không phải “một cấp agent”. Model nằm TRONG nó và chỉ biết nghĩ; mọi việc đọc/sửa/chạy là harness làm qua tools. Chuỗi “cấp” làm việc với AI: xem phần 2.</p>
+        </div>
 
         <div class="hw-viz">
           <div class="wb-chart">
@@ -361,11 +410,35 @@
       <section id="multi-agent">
         <div class="hw-part-head">
           <p class="kicker">Bức tranh lớn · phần 2</p>
-          <h2>Nhiều agent phối hợp thế nào</h2>
-          <p>Câu hỏi của bạn: “có phải chỉ một agent điều phối giao việc cho subagent rồi đọc kết quả?”. Đúng về cơ bản — thêm ba điểm cho thật chính xác.</p>
+          <h2>Các cấp làm việc với AI — và “master agent” nằm ở đâu</h2>
+          <p>Đúng như bạn cảm nhận: CÓ nhiều “cấp” làm việc với AI. Đây là cả bức tranh — và chỗ “master agent” bạn hình dung thật ra nằm ở đâu.</p>
         </div>
 
-        <p class="hw-lede">Mô hình bạn hình dung có tên: <b>orchestrator–worker</b> (điều phối – thợ). <b>Một</b> agent điều phối giữ mục tiêu và bức tranh chung; nó <b>đẻ ra các subagent</b>, giao mỗi con một việc, rồi <b>đọc kết quả và ghép lại</b>. Bạn hiểu đúng rồi — ba điểm dưới đây làm nó chuẩn hơn.</p>
+        <p class="hw-lede">Có <b>4 cấp</b>, càng lên càng nhiều agent phối hợp. Cái bạn tưởng là “master agent” chính là <b>orchestrator</b> ở <b>Cấp 2</b>. Còn <b>harness</b> (phần 1) <b>không phải một cấp</b> — nó là cái CHẠY cả bốn cấp.</p>
+
+        <div class="hw-viz">
+          <div class="wb-chart">
+            <svg class="wb-chart__svg" viewBox="0 0 600 300" role="img" aria-label="Bốn cấp làm việc với AI dạng bậc thang đi lên: cấp 0 hỏi đáp một lần; cấp 1 một agent kèm công cụ; cấp 2 master agent điều phối subagent; cấp 3 workflow kịch bản cố định. Harness chạy tất cả các cấp.">
+              <text class="hw-vk" x="14" y="24" text-anchor="start">▲ càng lên: càng nhiều agent phối hợp · càng tự động</text>
+              <rect class="hw-vbox" x="14" y="226" width="232" height="52" rx="7"></rect>
+              <rect class="hw-vbox" x="130" y="168" width="232" height="52" rx="7"></rect>
+              <rect class="hw-vpanel" x="246" y="110" width="242" height="52" rx="7"></rect>
+              <rect class="hw-vbox" x="356" y="52" width="232" height="52" rx="7"></rect>
+
+              <text class="hw-vt" x="30" y="248" text-anchor="start">Cấp 0 · Hỏi – đáp một lần</text>
+              <text class="hw-vs" x="30" y="266" text-anchor="start">chat thường, không dùng công cụ</text>
+              <text class="hw-vt" x="146" y="190" text-anchor="start">Cấp 1 · Một agent + công cụ</text>
+              <text class="hw-vs" x="146" y="208" text-anchor="start">tự lặp: quan sát → hành động</text>
+              <text class="hw-vt" x="262" y="132" text-anchor="start">Cấp 2 · Master agent + subagent</text>
+              <text class="hw-vs" x="262" y="150" text-anchor="start">= orchestrator — “master agent” là ĐÂY</text>
+              <text class="hw-vt" x="372" y="74" text-anchor="start">Cấp 3 · Workflow</text>
+              <text class="hw-vs" x="372" y="92" text-anchor="start">kịch bản cố định điều phối nhiều agent</text>
+            </svg>
+          </div>
+          <p class="hw-src">Bốn cấp làm việc với AI. “Master agent” bạn hình dung = <b>orchestrator</b> (Cấp 2). Còn <b>harness</b> (Claude Code) không phải một cấp — nó là cái CHẠY cả bốn cấp này.</p>
+        </div>
+
+        <p class="hw-p">Cấp 0–1 bạn đã gặp ở phần 1. Giờ mổ kỹ <b>Cấp 2 — “master agent” (orchestrator) điều phối subagent</b>, vì đây là chỗ hay mơ hồ nhất. Mô hình gọi là <b>orchestrator–worker</b> (điều phối – thợ): một agent điều phối giữ mục tiêu, đẻ ra subagent, giao việc, rồi đọc kết quả và ghép lại. Ba điểm làm nó chuẩn hơn:</p>
 
         <ul class="hw-ul">
           <li><b>Mỗi subagent sinh ra với ngữ cảnh SẠCH.</b> Nó không thấy cuộc trò chuyện chính, cũng không thấy việc của subagent khác — chỉ biết đúng đề bài orchestrator giao. Nên orchestrator phải <b>gói đủ thông tin vào đề bài</b> (lại đúng chủ đề “AI không có trí nhớ”: mỗi subagent như một người mới toanh).</li>
@@ -474,33 +547,78 @@
 
         <div class="hw-viz">
           <div class="wb-chart">
-            <svg class="wb-chart__svg" viewBox="0 0 620 250" role="img" aria-label="Sơ đồ lồng nhau: marketplace bao ngoài chứa plugin; bên trong plugin có bốn thành phần skills, hooks, commands và MCP.">
-              <rect class="hw-vpanel" x="8" y="8" width="604" height="234" rx="9"></rect>
-              <text class="hw-vk" x="22" y="28">MARKETPLACE · kv-claude-plugins (cái kệ, 4 plugin)</text>
+            <svg class="wb-chart__svg" viewBox="0 0 600 178" role="img" aria-label="Sơ đồ lồng nhau: marketplace bao ngoài chứa plugin; bên trong plugin có bốn thành phần skills, hooks, commands và MCP.">
+              <rect class="hw-vpanel" x="6" y="6" width="588" height="166" rx="9"></rect>
+              <text class="hw-vk" x="20" y="26" text-anchor="start">MARKETPLACE · kv-claude-plugins — cái kệ (4 plugin)</text>
 
-              <rect class="hw-vbox" x="26" y="40" width="568" height="188" rx="8"></rect>
-              <text class="hw-vk" x="40" y="60">PLUGIN · kv-engineering (một cái hộp)</text>
+              <rect class="hw-vbox" x="22" y="40" width="556" height="122" rx="8"></rect>
+              <text class="hw-vk" x="36" y="60" text-anchor="start">PLUGIN · kv-engineering — một cái hộp</text>
 
-              <rect class="hw-vpanel" x="44" y="76" width="130" height="132" rx="7"></rect>
-              <rect class="hw-vpanel" x="186" y="76" width="130" height="132" rx="7"></rect>
-              <rect class="hw-vpanel" x="328" y="76" width="130" height="132" rx="7"></rect>
-              <rect class="hw-vpanel" x="470" y="76" width="106" height="132" rx="7"></rect>
+              <rect class="hw-vpanel" x="38" y="78" width="126" height="70" rx="7"></rect>
+              <rect class="hw-vpanel" x="176" y="78" width="126" height="70" rx="7"></rect>
+              <rect class="hw-vpanel" x="314" y="78" width="126" height="70" rx="7"></rect>
+              <rect class="hw-vpanel" x="452" y="78" width="110" height="70" rx="7"></rect>
 
-              <text class="hw-vt" x="109" y="130" text-anchor="middle">Skills</text>
-              <text class="hw-vs" x="109" y="150" text-anchor="middle">~32 công thức</text>
-              <text class="hw-vt" x="251" y="130" text-anchor="middle">Hooks</text>
-              <text class="hw-vs" x="251" y="150" text-anchor="middle">cảm biến tự động</text>
-              <text class="hw-vt" x="393" y="130" text-anchor="middle">Commands</text>
-              <text class="hw-vs" x="393" y="150" text-anchor="middle">cửa /gọi tay</text>
-              <text class="hw-vt" x="523" y="130" text-anchor="middle">MCP</text>
-              <text class="hw-vs" x="523" y="150" text-anchor="middle">cửa ra ngoài</text>
+              <text class="hw-vt" x="101" y="116" text-anchor="middle">Skills</text>
+              <text class="hw-vs" x="101" y="135" text-anchor="middle">~32 công thức</text>
+              <text class="hw-vt" x="239" y="116" text-anchor="middle">Hooks</text>
+              <text class="hw-vs" x="239" y="135" text-anchor="middle">cảm biến tự động</text>
+              <text class="hw-vt" x="377" y="116" text-anchor="middle">Commands</text>
+              <text class="hw-vs" x="377" y="135" text-anchor="middle">cửa /gọi tay</text>
+              <text class="hw-vt" x="507" y="116" text-anchor="middle">MCP</text>
+              <text class="hw-vs" x="507" y="135" text-anchor="middle">cửa ra ngoài</text>
             </svg>
           </div>
           <p class="hw-src">Setup thật của bạn: <code>marketplace.json</code> liệt kê 4 plugin; plugin <code>kv-engineering</code> gói ~32 skill + hooks + 21 command + 1 MCP (codebase-memory). Command chỉ là “cửa gọi tay” mỏng, mỗi cái uỷ thác cho một skill.</p>
         </div>
 
-        <h3 class="hw-h3">Vì sao “rules” kiểu Cursor bị bỏ xó sau khi có skill</h3>
-        <p class="hw-p">“Rules” (kiểu <code>.cursorrules</code>) là văn bản <b>luôn được nhét vào</b> mọi lần chat. Nghe tiện, nhưng hỏng ở quy mô: nó chiếm ngân sách ngữ cảnh <i>mọi lúc</i> kể cả khi không liên quan, dài ra thì AI <b>đọc lướt rồi phớt lờ</b>, và nó chỉ là chữ — không kèm được script để <i>làm</i> việc. Skill sửa đúng ba chỗ đó.</p>
+        <h3 class="hw-h3">“Cùng là text mà — vậy khác nhau ở cơ chế gì?”</h3>
+        <p class="hw-p">Câu hỏi rất đúng, và <b>bạn không sai</b>: cả hai đều là chữ, và bạn <i>có thể</i> làm nhoè ranh giới (Cursor về sau cũng thêm kiểu rule nạp theo đường dẫn / theo yêu cầu). Khác biệt thật <b>không nằm ở đoạn chữ</b>, mà ở chỗ <b>AI hay MÁY quyết định nạp, và nạp bằng tín hiệu gì</b>:</p>
+        <ul class="hw-ul">
+          <li><b>Rules — MÁY (harness) quyết định, theo luật tĩnh.</b> Hoặc “always” (nhét vào mọi lượt), hoặc “khớp glob đường dẫn file”. Nó <b>không đọc hiểu việc bạn đang làm</b>, chỉ so khớp máy móc.</li>
+          <li><b>Skill — MODEL (AI) quyết định, theo ngữ nghĩa.</b> Harness chỉ nạp sẵn <i>danh sách tên + mô tả</i> của mọi skill (một “thực đơn” rẻ). AI đọc mô tả, thấy khớp việc thì <b>tự gọi</b> <code>Skill(x)</code> như gọi một công cụ → khi đó mới nạp full nội dung, và <b>chạy được script</b> đóng kèm.</li>
+        </ul>
+
+        <div class="hw-viz">
+          <div class="wb-chart">
+            <svg class="wb-chart__svg" viewBox="0 0 640 268" role="img" aria-label="Hai làn so sánh cơ chế nạp: làn rules do harness nhét vào context theo luật tĩnh nên có mặt mọi lượt; làn skill do model đọc mô tả và tự gọi như một tool nên chỉ nạp khi khớp việc và chạy được script.">
+              <text class="hw-vk" x="8" y="20" text-anchor="start">RULES — MÁY (harness) quyết định · luật tĩnh</text>
+              <rect class="hw-vbox" x="8" y="28" width="176" height="60" rx="7"></rect>
+              <rect class="hw-vbox" x="216" y="28" width="200" height="60" rx="7"></rect>
+              <rect class="hw-vbox" x="448" y="28" width="184" height="60" rx="7"></rect>
+              <line class="hw-vline" x1="184" y1="58" x2="214" y2="58"></line>
+              <polygon class="hw-varrow" points="214,58 206,54 206,62"></polygon>
+              <line class="hw-vline" x1="416" y1="58" x2="446" y2="58"></line>
+              <polygon class="hw-varrow" points="446,58 438,54 438,62"></polygon>
+              <text class="hw-vt" x="96" y="53" text-anchor="middle">file .mdc / rule</text>
+              <text class="hw-vs" x="96" y="71" text-anchor="middle">= đoạn chữ</text>
+              <text class="hw-vt" x="316" y="53" text-anchor="middle">HARNESS nhét vào context</text>
+              <text class="hw-vs" x="316" y="71" text-anchor="middle">always · hoặc khớp glob đường dẫn</text>
+              <text class="hw-vt" x="540" y="53" text-anchor="middle">có mặt MỌI lượt</text>
+              <text class="hw-vs" x="540" y="71" text-anchor="middle">kể cả khi không liên quan</text>
+
+              <text class="hw-vk" x="8" y="128" text-anchor="start">SKILL — MODEL (AI) quyết định · theo ngữ nghĩa</text>
+              <rect class="hw-vbox" x="8" y="136" width="176" height="60" rx="7"></rect>
+              <rect class="hw-vpanel" x="216" y="136" width="200" height="60" rx="7"></rect>
+              <rect class="hw-vpanel" x="448" y="136" width="184" height="60" rx="7"></rect>
+              <line class="hw-vline" x1="184" y1="166" x2="214" y2="166"></line>
+              <polygon class="hw-varrow" points="214,166 206,162 206,170"></polygon>
+              <line class="hw-vline" x1="416" y1="166" x2="446" y2="166"></line>
+              <polygon class="hw-varrow" points="446,166 438,162 438,170"></polygon>
+              <text class="hw-vt" x="96" y="161" text-anchor="middle">folder SKILL.md</text>
+              <text class="hw-vs" x="96" y="179" text-anchor="middle">+ scripts/ + references/</text>
+              <text class="hw-vt" x="316" y="161" text-anchor="middle">MODEL đọc mô tả → tự gọi</text>
+              <text class="hw-vs" x="316" y="179" text-anchor="middle">Skill(x), như gọi một tool</text>
+              <text class="hw-vt" x="540" y="161" text-anchor="middle">nạp full + CHẠY script</text>
+              <text class="hw-vs" x="540" y="179" text-anchor="middle">chỉ khi khớp việc</text>
+
+              <text class="hw-vk" x="320" y="238" text-anchor="middle">khác biệt = AI tự chọn theo ngữ nghĩa + kèm script chạy được + là chuẩn đóng gói portable</text>
+            </svg>
+          </div>
+          <p class="hw-src">Cùng là chữ. Khác ở CƠ CHẾ NẠP: rules do harness nhét theo luật tĩnh; skill do MODEL tự chọn theo mô tả (như gọi một tool) và kèm được script. Bạn CÓ THỂ làm rules bắt chước on-demand — chính vì ai cũng phải bắt chước nên “skill” ra đời làm cái chuẩn gọn cho việc đó.</p>
+        </div>
+
+        <p class="hw-p">Vì sao khác biệt đó quan trọng? Vì <b>cửa sổ ngữ cảnh</b> (context window — “bộ nhớ làm việc” của AI mỗi lượt) <b>có hạn</b>. Rules always-on chiếm chỗ mọi lúc: có 300 luật thì 300 luật cùng chen vào và AI đọc lướt. Skill chỉ tốn một dòng mô tả cho tới khi thật sự cần — nên bạn giữ được <b>hàng trăm skill</b> mà ngữ cảnh vẫn gọn. Ba chỗ khác biệt cốt lõi, gom trong bảng:</p>
 
         <div class="hw-tw">
           <table class="wb-table">
@@ -758,6 +876,39 @@
         <h3 class="hw-h3">Ba lớp cổng — và vì sao cần cả ba (lấy từ chính repo này)</h3>
         <p class="hw-p">Mỗi lớp là một <b>hook</b> bắt một sự kiện khác nhau, cùng chạy các <b>gate</b>. Cần cả ba vì mỗi lớp bịt lỗ của lớp trước:</p>
 
+        <div class="hw-viz">
+          <div class="wb-chart">
+            <svg class="wb-chart__svg" viewBox="0 0 640 148" role="img" aria-label="Ba cổng nối tiếp: sửa code rồi qua cổng 1 PostToolUse (lỗ sed/script lọt), cổng 2 pre-commit (lỗ --no-verify), cổng 3 pre-push (chốt cuối) rồi mới lên public.">
+              <rect class="hw-vpanel" x="8" y="30" width="92" height="88" rx="7"></rect>
+              <rect class="hw-vbox" x="120" y="30" width="150" height="88" rx="7"></rect>
+              <rect class="hw-vbox" x="290" y="30" width="150" height="88" rx="7"></rect>
+              <rect class="hw-vbox" x="460" y="30" width="150" height="88" rx="7"></rect>
+
+              <line class="hw-vline" x1="100" y1="74" x2="118" y2="74"></line>
+              <polygon class="hw-varrow" points="118,74 110,70 110,78"></polygon>
+              <line class="hw-vline" x1="270" y1="74" x2="288" y2="74"></line>
+              <polygon class="hw-varrow" points="288,74 280,70 280,78"></polygon>
+              <line class="hw-vline" x1="440" y1="74" x2="458" y2="74"></line>
+              <polygon class="hw-varrow" points="458,74 450,70 450,78"></polygon>
+
+              <text class="hw-vt" x="54" y="78" text-anchor="middle">Sửa code</text>
+
+              <text class="hw-vt" x="195" y="54" text-anchor="middle">Cổng 1 · PostToolUse</text>
+              <text class="hw-vs" x="195" y="73" text-anchor="middle">ngay khi sửa · nhanh nhất</text>
+              <text class="hw-vk" x="195" y="102" text-anchor="middle">lỗ: sed/script lọt</text>
+
+              <text class="hw-vt" x="365" y="54" text-anchor="middle">Cổng 2 · pre-commit</text>
+              <text class="hw-vs" x="365" y="73" text-anchor="middle">lúc commit · bắt MỌI thay đổi</text>
+              <text class="hw-vk" x="365" y="102" text-anchor="middle">lỗ: --no-verify</text>
+
+              <text class="hw-vt" x="535" y="54" text-anchor="middle">Cổng 3 · pre-push</text>
+              <text class="hw-vs" x="535" y="73" text-anchor="middle">lúc push · bịt cả --no-verify</text>
+              <text class="hw-vk" x="535" y="102" text-anchor="middle">chốt chặn cuối</text>
+            </svg>
+          </div>
+          <p class="hw-src">Ba cổng nối tiếp, mỗi cổng bịt lỗ của cổng trước; ra khỏi cổng 3 mới lên <b>main / public</b>. “Cài gate lúc pre-push” là đúng — nhưng đừng chỉ pre-push.</p>
+        </div>
+
         <div class="hw-tw">
           <table class="wb-table">
             <thead>
@@ -779,6 +930,59 @@
           <li><b>Gate</b>: là một <b>script chạy được</b> đặt trong <code>&lt;project&gt;/tools/</code> (ví dụ repo này có <code>pages/tools/lint-pages.py</code>). Hook chỉ việc gọi nó.</li>
         </ul>
         <p class="hw-p">Trong plugin <code>kv-engineering</code>, hook còn làm nhiều hơn kiểm lint: mỗi lần sửa file nó tự kiểm “spec còn sạch không”, “code có truy vết về BDD không”, và cập-nhật-lại bộ nhớ đồ thị code. Đó vẫn là cùng một ý: <b>tự động, không trông vào việc ai đó nhớ chạy tay</b>.</p>
+
+        <h3 class="hw-h3">Cả “họ cổng” — không chỉ hook cục bộ</h3>
+        <p class="hw-p">Hook cục bộ (3 lớp trên) mới là <b>một</b> loại cổng. Suốt vòng đời một thay đổi còn nhiều cổng khác, mỗi cổng chặn ở một thời điểm — từ lúc AI định hành động cho tới trước khi lên production:</p>
+
+        <div class="hw-viz">
+          <div class="wb-chart">
+            <svg class="wb-chart__svg" viewBox="0 0 680 112" role="img" aria-label="Vòng đời một thay đổi và cổng ở mỗi chặng: khi AI hành động có Permission; commit hoặc push có hook cục bộ; mở MR có CI và review; trước khi merge có branch protection; rồi mới deploy.">
+              <line class="hw-vline" x1="56" y1="52" x2="632" y2="52"></line>
+              <polygon class="hw-varrow" points="640,52 630,47 630,57"></polygon>
+              <circle cx="56" cy="52" r="5" class="hw-varrow"></circle>
+              <circle cx="196" cy="52" r="5" class="hw-varrow"></circle>
+              <circle cx="336" cy="52" r="5" class="hw-varrow"></circle>
+              <circle cx="476" cy="52" r="5" class="hw-varrow"></circle>
+              <circle cx="616" cy="52" r="5" class="hw-varrow"></circle>
+
+              <text class="hw-vs" x="56" y="30" text-anchor="middle">Khi AI hành động</text>
+              <text class="hw-vs" x="196" y="30" text-anchor="middle">Commit / Push</text>
+              <text class="hw-vs" x="336" y="30" text-anchor="middle">Mở MR</text>
+              <text class="hw-vs" x="476" y="30" text-anchor="middle">Trước khi merge</text>
+              <text class="hw-vs" x="616" y="30" text-anchor="middle">Deploy</text>
+
+              <text class="hw-vt" x="56" y="80" text-anchor="middle">Permission</text>
+              <text class="hw-vk" x="56" y="96" text-anchor="middle">chặn việc rủi ro</text>
+              <text class="hw-vt" x="196" y="80" text-anchor="middle">Hook cục bộ</text>
+              <text class="hw-vk" x="196" y="96" text-anchor="middle">lint / test</text>
+              <text class="hw-vt" x="336" y="80" text-anchor="middle">CI + Review</text>
+              <text class="hw-vk" x="336" y="96" text-anchor="middle">test · doer ≠ judge</text>
+              <text class="hw-vt" x="476" y="80" text-anchor="middle">Branch protection</text>
+              <text class="hw-vk" x="476" y="96" text-anchor="middle">CI đỏ / chưa duyệt</text>
+              <text class="hw-vt" x="616" y="80" text-anchor="middle">production</text>
+            </svg>
+          </div>
+          <p class="hw-src">Cổng rải suốt vòng đời, không chỉ ở máy bạn. Ba cái nằm ngoài trục thẳng này — <b>Status gate</b> (trước khi code), <b>verify-done</b> (trước khi nói “xong”), <b>Eval</b> (đo chất lượng bộ skill) — xem bảng dưới.</p>
+        </div>
+
+        <div class="hw-tw">
+          <table class="wb-table">
+            <thead>
+              <tr><th>Cổng</th><th>Chặn khi</th><th>Ở đâu</th><th>Chặn cái gì</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><b>Status gate</b> (draft→ready)</td><td>trước khi code</td><td>file spec (repo)</td><td>bắt tay code khi CẦN GÌ chưa chốt</td></tr>
+              <tr><td><b>Permission</b> / allow-list</td><td>khi AI định chạy tool rủi ro</td><td>harness (máy)</td><td>hành động nguy hiểm: xoá, gửi, cài đặt…</td></tr>
+              <tr><td><b>Hook cục bộ</b> (3 lớp trên)</td><td>khi sửa / commit / push</td><td>máy bạn</td><td>lint/test hỏng lọt lên nhánh</td></tr>
+              <tr><td><b>verify-done</b></td><td>trước khi tuyên bố “xong”</td><td>quy trình (skill)</td><td>nói “đã fix” mà chưa chạy test</td></tr>
+              <tr><td><b>Review</b> (AI/người · doer≠judge)</td><td>trước khi merge</td><td>MR</td><td>bug / logic sai lọt qua</td></tr>
+              <tr><td><b>CI/CD</b></td><td>khi mở MR / trước deploy</td><td>server (forge)</td><td>build/test/lint đỏ vẫn đi tiếp</td></tr>
+              <tr><td><b>Branch protection</b></td><td>lúc bấm merge</td><td>GitLab/GitHub</td><td>merge khi CI đỏ / chưa ai duyệt</td></tr>
+              <tr><td><b>Eval</b></td><td>khi sửa chính skill/plugin</td><td>bộ setup AI</td><td>skill/plugin kém chất lượng lọt ra</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="hw-p">Điểm chung của cả họ: <b>biến “nhớ mà làm” thành “tự động chặn”</b>. Ba lớp hook ở trên là phần bạn tự dựng trong repo; <i>permission</i> do harness lo; <i>CI + branch protection</i> do GitLab/GitHub lo; còn <i>verify-done · review · eval</i> là kỷ luật quy trình. Càng nhiều cổng tự động, càng ít thứ lọt ra public nhờ may rủi.</p>
       </section>
 
       <!-- ══════════════ 11 · BỘ FILE ══════════════ -->
