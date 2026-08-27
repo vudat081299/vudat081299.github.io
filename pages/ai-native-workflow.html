@@ -1,0 +1,954 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>Làm việc với AI trong kỹ thuật phần mềm — hướng dẫn từ đầu</title>
+<meta name="description" content="Một sợi chỉ xuyên suốt để hiểu cách team dev dùng AI hôm nay: harness, skill, plugin, MCP, hook, gate, meta repo, SOT, ADR, handoff — mỗi khái niệm là một chỗ khác nhau để CẤT tri thức, vì AI quên sạch sau mỗi phiên. Diễn giải dễ hiểu, bám vào setup thật kv-engineering + meta repo.">
+
+<!-- Web Builder — the minimalist UI kit that styles the rest of the site -->
+<link rel="stylesheet" href="../web-builder/web-builder.css">
+<script>
+  /* Theme trước first paint: theo lựa chọn đã lưu, chưa lưu thì theo hệ điều hành. */
+  try {
+    var t = localStorage.getItem('hub-theme');
+    if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches))
+      document.documentElement.classList.add('dark');
+  } catch (e) {}
+</script>
+
+<style>
+  /* Page-local layout only — every colour / radius / shadow comes from wb-* tokens. */
+  body { background: var(--wb-canvas); color: var(--wb-fg); margin: 0; font-family: var(--wb-font); -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--wb-fg); color: var(--wb-canvas); }
+  body { --wb-ico-weight: 400; }
+
+  /* long brand text must not overflow on phones */
+  @media (max-width: 480px) { .wb-navbar__brand { max-width: calc(100vw - 132px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } }
+
+  /* ---- hero ---- */
+  .hw-hero { padding: 30px 0 20px; }
+  .hw-eyebrow { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 10px; }
+  .hw-title { font-size: clamp(26px, 4.4vw, 39px); font-weight: 720; letter-spacing: -.02em; margin: 0 0 12px; line-height: 1.16; }
+  .hw-title u { text-decoration-thickness: 2px; text-underline-offset: 3px; }
+  .hw-sub { color: var(--wb-fg-muted); font-size: 15.5px; max-width: 76ch; line-height: 1.65; margin: 0 0 12px; }
+  .hw-sub b { color: var(--wb-fg); }
+  .hw-meta { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); letter-spacing: .04em; line-height: 1.6; }
+
+  /* ---- number anchors ---- */
+  .hw-figs { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin: 14px 0 16px; }
+  .hw-fig { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); padding: 12px 14px; background: var(--wb-surface); }
+  .hw-fig .n { font-size: 18px; font-weight: 720; letter-spacing: -.02em; display: block; }
+  .hw-fig .l { font-size: 12px; color: var(--wb-fg-muted); line-height: 1.45; margin-top: 3px; display: block; }
+
+  /* ---- part overview tiles ---- */
+  .hw-parts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  @media (max-width: 900px) { .hw-parts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .hw-parts { grid-template-columns: minmax(0, 1fr); } }
+  .hw-parts a { text-decoration: none; color: inherit; }
+
+  /* ---- two-column reading layout ---- */
+  .hw-layout { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 34px; align-items: start; padding: 26px 0 60px; }
+  @media (max-width: 900px) { .hw-layout { grid-template-columns: minmax(0, 1fr); } .hw-toc { display: none; } }
+  .hw-toc { max-height: calc(100vh - 92px); overflow-y: auto; width: 236px; }
+  .hw-toc .wb-sidenav__link.is-current { background: var(--wb-surface-hover); font-weight: 620; color: var(--wb-fg); }
+
+  /* ---- section rhythm ---- */
+  section[id] { scroll-margin-top: 76px; }
+  .hw-part-head { padding-top: 22px; border-top: var(--wb-bw) solid var(--wb-border); }
+  .hw-part-head .kicker { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 6px; }
+  .hw-part-head h2 { font-size: 21px; font-weight: 720; margin: 0 0 6px; letter-spacing: -.015em; }
+  .hw-part-head p { color: var(--wb-fg-muted); font-size: 14px; line-height: 1.65; margin: 0; max-width: 80ch; }
+  .hw-eyebrow-sec { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 6px; }
+  .hw-eyebrow-sec b { color: var(--wb-fg); font-weight: 650; }
+  .hw-sec-title { font-size: 20px; font-weight: 700; letter-spacing: -.01em; margin: 0 0 12px; line-height: 1.3; }
+  h3.hw-h3 { font-size: 15.5px; font-weight: 680; margin: 24px 0 9px; letter-spacing: -.005em; }
+
+  /* ---- prose ---- */
+  .hw-lede { font-size: 16px; line-height: 1.62; color: var(--wb-fg); max-width: 74ch; margin: 0 0 16px; font-weight: 500; }
+  .hw-lede b { font-weight: 720; }
+  .hw-p { font-size: 14.5px; line-height: 1.75; color: var(--wb-fg); max-width: 78ch; margin: 0 0 12px; }
+  .hw-p b { color: var(--wb-fg); font-weight: 650; }
+  .hw-p em { font-style: italic; color: var(--wb-fg-muted); }
+  .hw-p code, .hw-li code, .hw-tw code { font-family: var(--wb-font-mono); font-size: .88em; background: var(--wb-surface-2); border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius-sm); padding: .5px 5px; }
+  .hw-ul { font-size: 14.5px; line-height: 1.72; color: var(--wb-fg); max-width: 78ch; margin: 0 0 14px; padding-left: 20px; }
+  .hw-ul li { margin-bottom: 6px; }
+  .hw-ul b { font-weight: 650; }
+
+  /* ---- pull quote ---- */
+  .hw-quote { border-left: 2px solid var(--wb-neutral-strong); padding: 2px 0 2px 14px; margin: 16px 0; color: var(--wb-fg-muted); font-size: 14.5px; line-height: 1.6; max-width: 74ch; }
+  .hw-quote b { color: var(--wb-fg); }
+
+  /* ---- concept cards (glossary deep) ---- */
+  .hw-defs { display: flex; flex-direction: column; gap: 14px; margin: 12px 0 6px; }
+  .hw-def { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); background: var(--wb-surface); padding: 16px 18px; }
+  .hw-def__top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 9px; margin-bottom: 8px; }
+  .hw-def__no { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); font-weight: 600; }
+  .hw-def__name { font-size: 15.5px; font-weight: 710; letter-spacing: -.01em; margin: 0; }
+  .hw-def__def { font-size: 14px; line-height: 1.7; color: var(--wb-fg); margin: 0; max-width: 82ch; }
+  .hw-def__def b { font-weight: 650; }
+  .hw-def__meta { display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: 7px 12px; margin-top: 12px; padding-top: 11px; border-top: var(--wb-bw) solid var(--wb-border); }
+  .hw-def__k { font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--wb-fg-subtle); padding-top: 2px; line-height: 1.4; }
+  .hw-def__v { font-size: 13px; line-height: 1.6; color: var(--wb-fg-muted); margin: 0; }
+  .hw-def__v b { color: var(--wb-fg); font-weight: 640; }
+  @media (max-width: 560px) { .hw-def__meta { grid-template-columns: minmax(0, 1fr); gap: 2px 0; } .hw-def__k { padding-top: 8px; } }
+
+  /* ---- tables ---- */
+  .hw-tw { overflow-x: auto; margin: 4px 0 16px; border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); }
+  .hw-tw .wb-table { margin: 0; border: 0; }
+  .hw-tw .wb-table th, .hw-tw .wb-table td { font-size: 13px; line-height: 1.55; vertical-align: top; }
+  .hw-tw .wb-table th { white-space: nowrap; }
+
+  /* ---- two-column compare ---- */
+  .hw-two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 8px 0 14px; }
+  @media (max-width: 640px) { .hw-two { grid-template-columns: 1fr; } }
+  .hw-col { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); padding: 15px 16px; background: var(--wb-surface); }
+  .hw-col h4 { margin: 0 0 8px; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 7px; }
+  .hw-col ul { margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.62; color: var(--wb-fg-muted); }
+  .hw-col ul li { margin-bottom: 5px; }
+  .hw-col ul b { color: var(--wb-fg); font-weight: 640; }
+
+  /* ---- diagrams ---- */
+  .hw-viz { margin: 16px 0 8px; }
+  .hw-viz .wb-chart__svg { width: 100%; height: auto; }
+  .hw-src { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .04em; color: var(--wb-fg-subtle); margin: 8px 0 0; line-height: 1.5; }
+  .hw-vt { fill: var(--wb-fg); font-size: 12px; font-weight: 640; font-family: var(--wb-font); }
+  .hw-vs { fill: var(--wb-fg-muted); font-size: 10.5px; font-family: var(--wb-font); }
+  .hw-vk { fill: var(--wb-fg-subtle); font-size: 10px; font-family: var(--wb-font-mono); letter-spacing: .04em; }
+  .hw-vpanel { fill: var(--wb-surface); stroke: var(--wb-border); stroke-width: 1; }
+  .hw-vbox { fill: var(--wb-surface-2); stroke: var(--wb-border); stroke-width: 1; }
+  .hw-vline { stroke: var(--wb-neutral-strong); stroke-width: 1.5; fill: none; }
+  .hw-varrow { fill: var(--wb-neutral-strong); }
+
+  /* ---- steps wrapper for horizontal pipeline ---- */
+  .hw-flow { overflow-x: auto; padding: 4px 0 8px; }
+  .hw-flow .wb-steps { min-width: 620px; }
+
+  /* ---- takeaway list ---- */
+  .hw-take { counter-reset: t; list-style: none; padding: 0; margin: 8px 0 6px; display: flex; flex-direction: column; gap: 10px; }
+  .hw-take li { position: relative; padding-left: 40px; font-size: 14.5px; line-height: 1.6; min-height: 28px; }
+  .hw-take li b { font-weight: 680; }
+  .hw-take li::before { counter-increment: t; content: counter(t); position: absolute; left: 0; top: 0; width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; background: var(--wb-fg); color: var(--wb-canvas); font-family: var(--wb-font-mono); font-size: 12px; font-weight: 700; }
+
+  /* ---- back to top ---- */
+  .hw-top { position: fixed; right: 18px; bottom: 18px; z-index: 20; opacity: 0; pointer-events: none; transition: opacity .16s ease; }
+  .hw-top.is-on { opacity: 1; pointer-events: auto; }
+</style>
+</head>
+<body class="wb-app">
+
+<header class="wb-navbar wb-navbar--sticky wb-navbar--collapse-lg">
+  <button class="wb-navbar__toggle wb-btn wb-btn--ghost wb-btn--icon" data-navbar-toggle
+          aria-label="Mở mục lục"><span class="wb-ico">menu</span></button>
+  <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">🤖</span> Làm việc với AI</a>
+  <nav class="wb-nav wb-navbar__menu">
+    <a class="wb-nav__link" href="#vong-lap">Vòng lặp</a>
+    <a class="wb-nav__link" href="#skill-plugin">Skill vs Plugin</a>
+    <a class="wb-nav__link" href="#pipeline">Pipeline</a>
+    <a class="wb-nav__link" href="#project-a">Project cũ</a>
+    <a class="wb-nav__link" href="#hook-gate">Hook vs Gate</a>
+    <a class="wb-nav__link" href="#bo-file">Bộ file</a>
+    <span class="wb-navbar__spacer"></span>
+    <a class="wb-nav__link" href="../index.html"><span class="wb-ico wb-ico--sm">arrow_back</span> Trang chủ</a>
+  </nav>
+  <span class="wb-navbar__spacer"></span>
+  <div class="wb-navbar__actions">
+    <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" id="theme-toggle" aria-label="Sáng / Tối">
+      <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
+      <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
+    </button>
+  </div>
+</header>
+
+<main class="wb-container wb-container--wide">
+
+  <header class="hw-hero">
+    <p class="hw-eyebrow">Hướng dẫn nội bộ · làm việc với AI trong kỹ thuật phần mềm</p>
+    <h1 class="hw-title">AI <u>quên sạch</u> sau mỗi phiên làm việc. Vì thế cả cái nghề “làm việc với AI” rút về đúng một việc: <u>viết ra file, rồi commit</u> — chứ không dặn miệng trong khung chat.</h1>
+    <p class="hw-sub">Bạn đã dùng plugin, skill, workflow hằng ngày và thấy chúng chạy được. Trang này không dạy lại từng nút bấm — nó nối các khái niệm rời rạc thành <b>một sợi chỉ</b>, để bạn hiểu vì sao mọi thứ được đặt ở đó, và tự đánh giá được một cấu trúc là đúng hay sai. Mọi ví dụ đều lấy từ chính setup của bạn: marketplace <b>kv-claude-plugins</b> và meta repo <b>kvfnb-ai-workspace</b>.</p>
+    <p class="hw-sub">Đọc theo thứ tự thì mạch nhất, nhưng mỗi phần <b>tự đứng được</b> — nhảy thẳng tới câu hỏi bạn đang vướng cũng không sao. Viết cho cả người đã quen lẫn người <b>chưa biết code</b> nhưng sắp phải vào một project và làm được việc.</p>
+    <p class="hw-meta">DIỄN GIẢI THEO SKILL EXPLAIN-CLEARLY · DỰNG BẰNG SKILL WEB-BUILDER · BÁM SETUP THẬT CỦA BẠN</p>
+  </header>
+
+  <div class="hw-figs">
+    <div class="hw-fig"><span class="n">1 sự thật gốc</span><span class="l">AI mất trí nhớ sau mỗi phiên → mọi thứ quan trọng phải nằm trong file đã commit</span></div>
+    <div class="hw-fig"><span class="n">8 khái niệm</span><span class="l">harness · context · skill · plugin · MCP · hook · gate · meta repo (＋ SOT)</span></div>
+    <div class="hw-fig"><span class="n">7 bước pipeline</span><span class="l">discovery → spec → bdd → tech-design → plan → exec → ship, mỗi bước đẻ một file</span></div>
+    <div class="hw-fig"><span class="n">3 lớp cổng</span><span class="l">PostToolUse (ngay khi sửa) · pre-commit (lúc commit) · pre-push (trước khi lên public)</span></div>
+  </div>
+
+  <div class="hw-parts">
+    <a class="wb-card wb-card--hover wb-card--pad" href="#vong-lap">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">1</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Một buổi làm việc với AI</p>
+          <p class="wb-media__text">Harness là gì (thứ bạn nghe loáng thoáng là “hác-nít”), vòng lặp model ↔ công cụ, nhiều agent phối hợp, và phép ví bếp ăn.</p>
+        </div>
+      </div>
+    </a>
+    <a class="wb-card wb-card--hover wb-card--pad" href="#skill-plugin">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">2</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Skill vs Plugin vs Rules</p>
+          <p class="wb-media__text">Plugin là cái HỘP đựng skill, không phải đối thủ. Và vì sao “rules” kiểu Cursor bị bỏ xó.</p>
+        </div>
+      </div>
+    </a>
+    <a class="wb-card wb-card--hover wb-card--pad" href="#pipeline">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">3</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Cách team dùng AI hôm nay</p>
+          <p class="wb-media__text">Không phải “chat rồi bảo code” mà là spec-driven: viết rõ CẦN GÌ vào file trước. Vai trò của SOT.</p>
+        </div>
+      </div>
+    </a>
+    <a class="wb-card wb-card--hover wb-card--pad" href="#project-a">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">4</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Đưa project cũ vào guồng</p>
+          <p class="wb-media__text">Project có trước AI thì thêm gì, theo thứ tự nào — và khi nào cần plugin thay vì vài skill.</p>
+        </div>
+      </div>
+    </a>
+    <a class="wb-card wb-card--hover wb-card--pad" href="#quyet-dinh">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">5</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Lưu quyết định &amp; việc dang dở</p>
+          <p class="wb-media__text">100 ticket, mỗi ticket 5 quyết định — lưu cái nào (ADR), bỏ cái nào, và handoff để làm gì.</p>
+        </div>
+      </div>
+    </a>
+    <a class="wb-card wb-card--hover wb-card--pad" href="#hook-gate">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">6</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Hook, Gate &amp; bộ file đủ</p>
+          <p class="wb-media__text">Hook bấm nút, gate gác cửa — khác vai. 3 lớp cổng, và bảng tra mọi file một project cần.</p>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div class="hw-layout">
+    <nav class="wb-sidenav hw-toc wb-sticky wb-scroll-y" style="--wb-sticky-gap:72px" id="toc">
+      <div class="wb-sidenav__section">Mở đầu</div>
+      <a class="wb-sidenav__link" href="#doc-mo-dau">Sợi chỉ &amp; hai câu hỏi</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">Bức tranh lớn</div>
+      <a class="wb-sidenav__link" href="#vong-lap">1 · Một buổi làm việc với AI</a>
+      <a class="wb-sidenav__link" href="#multi-agent">2 · Nhiều agent phối hợp</a>
+      <a class="wb-sidenav__link" href="#tu-dien">3 · Từ điển 8 khái niệm</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">Cách làm chuẩn hôm nay</div>
+      <a class="wb-sidenav__link" href="#skill-plugin">4 · Skill vs Plugin vs Rules</a>
+      <a class="wb-sidenav__link" href="#pipeline">5 · Pipeline spec-driven</a>
+      <a class="wb-sidenav__link" href="#sot">6 · SOT — nguồn sự thật</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">Tổ chức thực tế</div>
+      <a class="wb-sidenav__link" href="#project-a">7 · Đưa project cũ vào guồng</a>
+      <a class="wb-sidenav__link" href="#chung-rieng">8 · Chung vs riêng</a>
+      <a class="wb-sidenav__link" href="#quyet-dinh">9 · Lưu quyết định (ADR)</a>
+      <a class="wb-sidenav__link" href="#handoff">10 · Handoff — việc dang dở</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">Cổng &amp; file</div>
+      <a class="wb-sidenav__link" href="#hook-gate">11 · Hook vs Gate</a>
+      <a class="wb-sidenav__link" href="#bo-file">12 · Bộ file đầy đủ</a>
+      <a class="wb-sidenav__link" href="#tu-cham">13 · Chấm điểm meta repo</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">Kết</div>
+      <a class="wb-sidenav__link" href="#ket">Năm câu mang theo</a>
+    </nav>
+
+    <div class="wb-stack" style="--wb-stack-gap:46px">
+
+      <!-- ══════════════ MỞ ĐẦU ══════════════ -->
+      <section id="doc-mo-dau">
+        <div class="hw-part-head" style="border-top:0;padding-top:0">
+          <p class="kicker">Mở đầu · đọc cái này trước</p>
+          <h2>Một sợi chỉ nối tất cả, và hai câu hỏi phân loại mọi thứ</h2>
+          <p>Nếu nắm ba ý dưới đây, mọi khái niệm còn lại chỉ là biến thể cụ thể của cùng một tinh thần.</p>
+        </div>
+
+        <div class="wb-alert wb-alert--warning" style="margin:16px 0">
+          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">warning</span></span>
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Hiểu nhầm cần gỡ trước tiên: “AI nhớ những gì mình đã trao đổi”</p>
+            <p class="wb-alert__msg">Nghe hợp lý vì trong một phiên chat nó có vẻ “nhớ”. Nhưng đóng phiên (hoặc mở máy khác, hoặc đồng nghiệp mở máy họ) là <b>trắng trí nhớ</b> — mọi thứ chỉ-nói-miệng trong chat biến mất. AI phiên sau chỉ biết những gì <b>đã ghi vào file</b> trong repo. Cả trang này mọc ra từ chỗ đó.</p>
+          </div>
+        </div>
+
+        <p class="hw-lede">Sợi chỉ: <b>vì AI không có trí nhớ lâu dài, mọi tri thức đáng giá phải được viết ra file và commit.</b> Tất cả các từ bạn nghe — harness, skill, plugin, SOT, hook, gate, ADR, handoff — chỉ là <b>các ngăn khác nhau để cất các loại tri thức khác nhau</b>, với cách AI nạp chúng khác nhau.</p>
+
+        <p class="hw-p">Và để biết một thứ nên nằm ở ngăn nào, chỉ cần trả lời <b>hai câu hỏi</b>. Nắm hai trục này rồi thì các mục Tổ chức thực tế và Cổng bên dưới gần như tự suy ra được:</p>
+        <ul class="hw-ul">
+          <li><b>Trục 1 — Luôn-bật hay chỉ-khi-cần?</b> Có thứ AI cần thấy <i>mọi lúc</i> (quy ước code của repo → <code>CLAUDE.md</code>). Có thứ chỉ cần <i>khi làm đúng việc đó</i> (cách viết test → một <i>skill</i> chỉ nạp lúc viết test). Nhồi tất cả vào “luôn-bật” là sai lầm kinh điển — tốn ngân sách ngữ cảnh và rồi bị phớt lờ.</li>
+          <li><b>Trục 2 — Dùng chung (commit) hay của riêng bạn?</b> Thứ ảnh hưởng người khác hoặc ảnh hưởng code thì <i>commit</i> để cả team và mọi phiên AI cùng thấy. Thứ chỉ là gu làm việc của riêng bạn thì để ở <i>bộ nhớ cá nhân</i>, không commit.</li>
+        </ul>
+        <p class="hw-p">Giữ hai trục này trong đầu. Mỗi khi phân vân “cái này ghi ở đâu, có commit không”, bạn chỉ đang định vị nó trên hai trục đó.</p>
+      </section>
+
+      <!-- ══════════════ 1 · VÒNG LẶP ══════════════ -->
+      <section id="vong-lap">
+        <div class="hw-part-head">
+          <p class="kicker">Bức tranh lớn · phần 1</p>
+          <h2>Một buổi làm việc với AI thật ra diễn ra thế nào</h2>
+          <p>Trước khi bàn skill hay plugin, phải thấy cỗ máy chạy. Nó đơn giản hơn bạn tưởng.</p>
+        </div>
+
+        <p class="hw-lede">Cái chạy AI gọi là <b>harness</b> — không phải “hardness/độ cứng” như dễ nghe nhầm, mà là <b>bộ khung điều khiển</b> bọc quanh model. <b>Claude Code chính là một harness.</b></p>
+
+        <p class="hw-p">Tách cho rõ hai thứ hay bị gộp làm một: <b>model</b> là bộ não biết suy luận và viết chữ, nhưng tự nó không đọc được file, không chạy được lệnh, không nhớ gì sau khi trả lời xong. <b>Harness</b> là chương trình bao quanh làm hết phần còn lại: nạp ngữ cảnh cho model, mở cho nó các <i>công cụ</i> (đọc/sửa file, chạy terminal), đọc “tôi muốn gọi công cụ X” rồi thực thi, đưa kết quả về, và lặp lại tới khi xong. Ví von: <b>model là động cơ, harness là cả chiếc xe</b> quanh động cơ đó — vô-lăng, bảng đồng hồ, bánh xe.</p>
+
+        <div class="hw-viz">
+          <div class="wb-chart">
+            <svg class="wb-chart__svg" viewBox="0 0 680 210" role="img" aria-label="Vòng lặp agentic: yêu cầu của bạn đi vào harness, model suy nghĩ, gọi công cụ để đọc hoặc sửa file và chạy lệnh, kết quả quay lại model, lặp lại tới khi xong rồi trả kết quả.">
+              <rect class="hw-vpanel" x="10" y="42" width="128" height="66" rx="7"></rect>
+              <rect class="hw-vbox" x="180" y="42" width="158" height="66" rx="7"></rect>
+              <rect class="hw-vbox" x="380" y="42" width="176" height="66" rx="7"></rect>
+              <rect class="hw-vpanel" x="586" y="42" width="84" height="66" rx="7"></rect>
+
+              <line class="hw-vline" x1="138" y1="75" x2="176" y2="75"></line>
+              <polygon class="hw-varrow" points="176,75 168,71 168,79"></polygon>
+              <line class="hw-vline" x1="338" y1="75" x2="376" y2="75"></line>
+              <polygon class="hw-varrow" points="376,75 368,71 368,79"></polygon>
+              <line class="hw-vline" x1="556" y1="75" x2="582" y2="75"></line>
+              <polygon class="hw-varrow" points="582,75 574,71 574,79"></polygon>
+
+              <!-- loop back: from tool box down and back to model box -->
+              <path class="hw-vline" d="M 468 108 L 468 150 L 259 150 L 259 110"></path>
+              <polygon class="hw-varrow" points="259,110 255,118 263,118"></polygon>
+
+              <text class="hw-vt" x="74"  y="70" text-anchor="middle">Yêu cầu</text>
+              <text class="hw-vs" x="74"  y="88" text-anchor="middle">của bạn</text>
+              <text class="hw-vt" x="259" y="66" text-anchor="middle">Harness nạp ngữ cảnh</text>
+              <text class="hw-vt" x="259" y="84" text-anchor="middle">+ Model suy nghĩ</text>
+              <text class="hw-vt" x="468" y="66" text-anchor="middle">Gọi công cụ</text>
+              <text class="hw-vs" x="468" y="84" text-anchor="middle">đọc/sửa file · chạy lệnh</text>
+              <text class="hw-vt" x="628" y="70" text-anchor="middle">Xong →</text>
+              <text class="hw-vs" x="628" y="88" text-anchor="middle">trả kết quả</text>
+              <text class="hw-vk" x="363" y="167" text-anchor="middle">lặp đến khi giải quyết xong</text>
+            </svg>
+          </div>
+          <p class="hw-src">Vòng lặp “agentic”: điều làm AI trở thành một tác nhân (agent) — không chỉ trả lời một câu, mà tự lặp quan sát → hành động cho tới khi hoàn thành mục tiêu.</p>
+        </div>
+
+        <p class="hw-p">Cái vòng lặp đó là toàn bộ điều biến AI thành <b>agent</b> (tác nhân): một model chạy trong vòng lặp, có công cụ, đuổi theo một mục tiêu. Khi việc lớn, agent còn <b>đẻ ra “subagent”</b> — một agent con có ngữ cảnh riêng, sạch, để làm một mảnh việc rồi báo cáo kết quả về (ví dụ: một con chỉ đọc-tìm, một con chuyên review). Đây chính là chỗ chữ <b>workflow</b> xuất hiện: một kịch bản điều phối nhiều agent theo trình tự định trước.</p>
+
+        <h3 class="hw-h3">Phép ví bếp ăn — dùng suốt trang này</h3>
+        <p class="hw-p">Để đỡ trừu tượng, hình dung một <b>nhà bếp</b>. Nó khớp gần hết các khái niệm bạn sắp gặp:</p>
+        <ul class="hw-ul">
+          <li><b>Harness</b> = cái bếp (bếp lò, dao thớt, quy trình) — nơi việc nấu diễn ra. <b>Model</b> = đầu bếp (bộ não + tay nghề).</li>
+          <li><b>Context / <code>CLAUDE.md</code></b> = nội quy dán trên tường bếp — đầu bếp luôn nhìn thấy.</li>
+          <li><b>Skill</b> = một tờ công thức, chỉ rút ra <i>khi</i> nấu đúng món đó. <b>Plugin</b> = hộp công thức phát cho mọi đầu bếp. <b>MCP</b> = cửa giao hàng nối bếp với nhà cung cấp bên ngoài.</li>
+          <li><b>Hook</b> = cảm biến tự động (“mở tủ lạnh thì đèn bật”). <b>Gate</b> = thanh tra đứng ở cửa chuyền món (“chưa đạt thì không cho ra”).</li>
+        </ul>
+        <div class="wb-alert wb-alert--plain" style="margin-top:14px">
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Phép ví này hỏng ở đâu (quan trọng)</p>
+            <p class="wb-alert__msg">Đầu bếp thật <b>nhớ nghề</b> giữa các ca; AI thì <b>không</b> — mỗi phiên như một đầu bếp mới toanh, mất sạch mọi lời dặn miệng của ca trước. Chính chỗ “hỏng” này lại là bài học chính: thứ gì quan trọng thì phải <b>ghi lên tường / vào sổ</b> (file), đừng dặn miệng.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════ 2 · TỪ ĐIỂN ══════════════ -->
+      <!-- ══════════════ 2 · NHIỀU AGENT ══════════════ -->
+      <section id="multi-agent">
+        <div class="hw-part-head">
+          <p class="kicker">Bức tranh lớn · phần 2</p>
+          <h2>Nhiều agent phối hợp thế nào</h2>
+          <p>Câu hỏi của bạn: “có phải chỉ một agent điều phối giao việc cho subagent rồi đọc kết quả?”. Đúng về cơ bản — thêm ba điểm cho thật chính xác.</p>
+        </div>
+
+        <p class="hw-lede">Mô hình bạn hình dung có tên: <b>orchestrator–worker</b> (điều phối – thợ). <b>Một</b> agent điều phối giữ mục tiêu và bức tranh chung; nó <b>đẻ ra các subagent</b>, giao mỗi con một việc, rồi <b>đọc kết quả và ghép lại</b>. Bạn hiểu đúng rồi — ba điểm dưới đây làm nó chuẩn hơn.</p>
+
+        <ul class="hw-ul">
+          <li><b>Mỗi subagent sinh ra với ngữ cảnh SẠCH.</b> Nó không thấy cuộc trò chuyện chính, cũng không thấy việc của subagent khác — chỉ biết đúng đề bài orchestrator giao. Nên orchestrator phải <b>gói đủ thông tin vào đề bài</b> (lại đúng chủ đề “AI không có trí nhớ”: mỗi subagent như một người mới toanh).</li>
+          <li><b>Trao đổi một chiều, có cấu trúc:</b> orchestrator → đề bài (chữ) → subagent → kết quả (chữ) → orchestrator. Trong mô hình cơ bản <b>không</b> có tán gẫu qua lại giữa chừng, và các subagent <b>không nói chuyện trực tiếp với nhau</b>.</li>
+          <li><b>Vì sao tách ra thay vì một agent khổng lồ?</b> (1) <b>Giữ ngữ cảnh gọn</b> — subagent đọc 50 file nhưng chỉ trả về một kết luận ngắn; orchestrator giữ kết luận, không ôm 50 file. (2) <b>Độc lập</b> — con làm và con soát tách nhau thì bắt lỗi tốt hơn một mình tự chấm.</li>
+        </ul>
+
+        <div class="hw-viz">
+          <div class="wb-chart">
+            <svg class="wb-chart__svg" viewBox="0 0 640 262" role="img" aria-label="Một agent điều phối ở trên giao việc xuống ba subagent (đọc/tìm, sửa code, review độc lập); mỗi subagent có ngữ cảnh sạch riêng và không trao đổi trực tiếp với nhau; kết quả đi ngược về agent điều phối.">
+              <rect class="hw-vpanel" x="200" y="14" width="240" height="56" rx="7"></rect>
+              <text class="hw-vt" x="320" y="39" text-anchor="middle">Agent điều phối</text>
+              <text class="hw-vs" x="320" y="57" text-anchor="middle">giữ mục tiêu + bức tranh chung</text>
+
+              <line class="hw-vline" x1="320" y1="70" x2="320" y2="104"></line>
+              <line class="hw-vline" x1="112" y1="104" x2="528" y2="104"></line>
+              <line class="hw-vline" x1="112" y1="104" x2="112" y2="150"></line>
+              <line class="hw-vline" x1="320" y1="104" x2="320" y2="150"></line>
+              <line class="hw-vline" x1="528" y1="104" x2="528" y2="150"></line>
+              <polygon class="hw-varrow" points="112,150 108,142 116,142"></polygon>
+              <polygon class="hw-varrow" points="320,150 316,142 324,142"></polygon>
+              <polygon class="hw-varrow" points="528,150 524,142 532,142"></polygon>
+
+              <rect class="hw-vbox" x="36" y="150" width="152" height="66" rx="7"></rect>
+              <rect class="hw-vbox" x="244" y="150" width="152" height="66" rx="7"></rect>
+              <rect class="hw-vbox" x="452" y="150" width="152" height="66" rx="7"></rect>
+              <text class="hw-vt" x="112" y="180" text-anchor="middle">Đọc / tìm</text>
+              <text class="hw-vs" x="112" y="199" text-anchor="middle">ngữ cảnh sạch riêng</text>
+              <text class="hw-vt" x="320" y="180" text-anchor="middle">Sửa code</text>
+              <text class="hw-vs" x="320" y="199" text-anchor="middle">ngữ cảnh sạch riêng</text>
+              <text class="hw-vt" x="528" y="180" text-anchor="middle">Review độc lập</text>
+              <text class="hw-vs" x="528" y="199" text-anchor="middle">doer ≠ judge</text>
+
+              <line x1="188" y1="183" x2="244" y2="183" stroke="var(--wb-neutral)" stroke-width="1.2" stroke-dasharray="3 4"></line>
+              <line x1="396" y1="183" x2="452" y2="183" stroke="var(--wb-neutral)" stroke-width="1.2" stroke-dasharray="3 4"></line>
+              <text class="hw-vk" x="320" y="242" text-anchor="middle">giao việc ↓ · kết quả ngược về ↑ · subagent không nói chuyện trực tiếp với nhau</text>
+            </svg>
+          </div>
+          <p class="hw-src">Kiểu điều phối orchestrator–worker: orchestrator là con DUY NHẤT có bức tranh đầy đủ, mỗi subagent chỉ thấy đề bài của nó. Bám cách skill <code>dispatching-agents</code> và <code>exec-plan</code> trong plugin của bạn phân việc.</p>
+        </div>
+
+        <p class="hw-p">Có ba <b>kiểu ghép</b> hay gặp, dùng lẫn thoải mái:</p>
+        <ul class="hw-ul">
+          <li><b>Toả ra song song (fan-out).</b> Nhiều subagent chạy cùng lúc trên các mảnh độc lập (mỗi con dò một hệ con), xong orchestrator gộp. Nhanh nhất, nhưng phải chờ con chậm nhất.</li>
+          <li><b>Dây chuyền (pipeline).</b> Kết quả con này là đầu vào con kia: tìm → kiểm chứng → sửa.</li>
+          <li><b>Đối kháng (doer ≠ judge).</b> Một con làm, một con <i>độc lập</i> soi lại. Đây đúng là nguyên tắc trong skill <code>dispatching-agents</code> của bạn: “người làm ≠ người chấm, chạy độc lập trong ngữ cảnh riêng.”</li>
+        </ul>
+
+        <p class="hw-p">Setup của bạn dùng đúng cách này: <code>exec-plan</code> giao <b>mỗi task một implementer subagent mới</b>, rồi <b>một reviewer</b> soát sau mỗi task, và một lượt review cả nhánh ở cuối. Còn <b>workflow</b> (nhắc ở phần trước) là khi các bước ghép đó được viết thành một <b>kịch bản cố định</b> để chạy lại y hệt, thay vì để orchestrator ứng biến mỗi lần.</p>
+
+        <div class="wb-alert wb-alert--plain">
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Mặt trái phải biết</p>
+            <p class="wb-alert__msg">Vì subagent <b>mù</b> về nhau, nếu orchestrator chia việc lỏng lẻo thì hai con dễ <b>làm trùng</b> hoặc <b>bỏ sót</b> phần giao thoa. Chất lượng cả bầy phụ thuộc vào việc orchestrator <b>chia đề bài rành mạch</b> đến đâu — đó mới là chỗ khó, không phải số lượng agent.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════ 3 · TỪ ĐIỂN ══════════════ -->
+      <section id="tu-dien">
+        <div class="hw-part-head">
+          <p class="kicker">Bức tranh lớn · phần 3</p>
+          <h2>Từ điển 8 khái niệm — mỗi cái: một câu, một ví von, sống ở đâu</h2>
+          <p>Bảng để quét nhanh. Ba khái niệm hay gây lẫn nhất (skill/plugin, SOT, hook/gate) được mổ kỹ ở phần sau.</p>
+        </div>
+
+        <div class="hw-tw">
+          <table class="wb-table">
+            <thead>
+              <tr><th>Khái niệm</th><th>Một câu</th><th>Ví von (bếp)</th><th>Sống ở đâu</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><b>Harness</b></td><td>Bộ khung chạy model, cấp công cụ &amp; ngữ cảnh, lặp vòng.</td><td>Cái bếp</td><td>Là chính Claude Code (không phải file trong repo)</td></tr>
+              <tr><td><b>Context</b></td><td>Thứ AI được đọc <i>mọi lúc</i>: quy ước, tổng quan.</td><td>Nội quy trên tường</td><td><code>CLAUDE.md</code>, <code>README.md</code>, memory</td></tr>
+              <tr><td><b>Skill</b></td><td>Một quy trình đóng gói, chỉ nạp <i>khi cần</i>.</td><td>Tờ công thức</td><td><code>skills/&lt;tên&gt;/SKILL.md</code></td></tr>
+              <tr><td><b>Plugin</b></td><td>Cái hộp gói &amp; phát skill + hook + command + MCP cho cả team.</td><td>Hộp công thức</td><td>Một thư mục có <code>plugin.json</code></td></tr>
+              <tr><td><b>MCP</b></td><td>Chuẩn cắm AI vào công cụ/dữ liệu ngoài (Jira, DB, Figma…).</td><td>Cửa giao hàng</td><td><code>.mcp.json</code></td></tr>
+              <tr><td><b>Hook</b></td><td>“Khi sự kiện X xảy ra thì chạy Y” — cái kích hoạt.</td><td>Cảm biến tự động</td><td><code>settings.json</code>, <code>hooks.json</code>, git hooks</td></tr>
+              <tr><td><b>Gate</b></td><td>Phép kiểm đạt/không-đạt, <i>chặn</i> nếu chưa đạt.</td><td>Thanh tra ở cửa</td><td>Một script trong <code>tools/</code> (do hook gọi)</td></tr>
+              <tr><td><b>Meta repo</b></td><td>Một repo gom nhiều repo con để AI nhìn tất cả một chỗ.</td><td>Thư viện công thức trung tâm</td><td>Repo chứa submodule + <code>docs/</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="hw-p">Còn một khái niệm không nằm trong bảng vì nó là <b>nguyên tắc</b> chứ không phải một món đồ: <b>SOT (Source of Truth — nguồn sự thật)</b> = một chỗ chính thức duy nhất chứa một thông tin. Nó là trái tim của cách làm hiện đại, nên có hẳn một mục riêng cho nó.</p>
+      </section>
+
+      <!-- ══════════════ 3 · SKILL VS PLUGIN ══════════════ -->
+      <section id="skill-plugin">
+        <div class="hw-part-head">
+          <p class="kicker">Cách làm chuẩn hôm nay · phần 4</p>
+          <h2>Skill, Plugin, Rules — thứ khiến nhiều người rối nhất</h2>
+          <p>Câu hỏi của bạn: “plugin khác gì skill?”. Trả lời một câu: chúng không cùng loại để mà so.</p>
+        </div>
+
+        <div class="wb-alert wb-alert--info" style="margin-bottom:16px">
+          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span>
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Hiểu nhầm phổ biến: “skill và plugin là hai lựa chọn thay nhau”</p>
+            <p class="wb-alert__msg">Không. <b>Plugin là cái HỘP; skill là món ĐỒ trong hộp.</b> Hỏi “dùng skill hay plugin” cũng như hỏi “dùng cuốn sách hay cái giá sách” — một cái đựng cái kia.</p>
+          </div>
+        </div>
+
+        <p class="hw-lede"><b>Skill</b> là một quy trình đóng gói mà AI chỉ nạp <b>khi</b> việc trước mắt cần đến. <b>Plugin</b> là cách <b>gói nhiều skill (+ hook + command + MCP) lại và phát cho cả team</b>. <b>Marketplace</b> là cái kệ chứa nhiều hộp.</p>
+
+        <p class="hw-p">Điểm cốt lõi khiến skill mạnh là <b>“nạp khi cần” (progressive disclosure)</b>. AI đọc dòng mô tả ngắn của mọi skill; chỉ khi mô tả khớp việc đang làm, nó mới mở <i>toàn bộ</i> nội dung skill đó ra. Nhờ vậy một skill có thể dày cả nghìn dòng, kèm cả script chạy được, mà <b>không</b> ngốn ngân sách ngữ cảnh lúc chưa dùng tới.</p>
+
+        <div class="hw-viz">
+          <div class="wb-chart">
+            <svg class="wb-chart__svg" viewBox="0 0 620 250" role="img" aria-label="Sơ đồ lồng nhau: marketplace bao ngoài chứa plugin; bên trong plugin có bốn thành phần skills, hooks, commands và MCP.">
+              <rect class="hw-vpanel" x="8" y="8" width="604" height="234" rx="9"></rect>
+              <text class="hw-vk" x="22" y="28">MARKETPLACE · kv-claude-plugins (cái kệ, 4 plugin)</text>
+
+              <rect class="hw-vbox" x="26" y="40" width="568" height="188" rx="8"></rect>
+              <text class="hw-vk" x="40" y="60">PLUGIN · kv-engineering (một cái hộp)</text>
+
+              <rect class="hw-vpanel" x="44" y="76" width="130" height="132" rx="7"></rect>
+              <rect class="hw-vpanel" x="186" y="76" width="130" height="132" rx="7"></rect>
+              <rect class="hw-vpanel" x="328" y="76" width="130" height="132" rx="7"></rect>
+              <rect class="hw-vpanel" x="470" y="76" width="106" height="132" rx="7"></rect>
+
+              <text class="hw-vt" x="109" y="130" text-anchor="middle">Skills</text>
+              <text class="hw-vs" x="109" y="150" text-anchor="middle">~32 công thức</text>
+              <text class="hw-vt" x="251" y="130" text-anchor="middle">Hooks</text>
+              <text class="hw-vs" x="251" y="150" text-anchor="middle">cảm biến tự động</text>
+              <text class="hw-vt" x="393" y="130" text-anchor="middle">Commands</text>
+              <text class="hw-vs" x="393" y="150" text-anchor="middle">cửa /gọi tay</text>
+              <text class="hw-vt" x="523" y="130" text-anchor="middle">MCP</text>
+              <text class="hw-vs" x="523" y="150" text-anchor="middle">cửa ra ngoài</text>
+            </svg>
+          </div>
+          <p class="hw-src">Setup thật của bạn: <code>marketplace.json</code> liệt kê 4 plugin; plugin <code>kv-engineering</code> gói ~32 skill + hooks + 21 command + 1 MCP (codebase-memory). Command chỉ là “cửa gọi tay” mỏng, mỗi cái uỷ thác cho một skill.</p>
+        </div>
+
+        <h3 class="hw-h3">Vì sao “rules” kiểu Cursor bị bỏ xó sau khi có skill</h3>
+        <p class="hw-p">“Rules” (kiểu <code>.cursorrules</code>) là văn bản <b>luôn được nhét vào</b> mọi lần chat. Nghe tiện, nhưng hỏng ở quy mô: nó chiếm ngân sách ngữ cảnh <i>mọi lúc</i> kể cả khi không liên quan, dài ra thì AI <b>đọc lướt rồi phớt lờ</b>, và nó chỉ là chữ — không kèm được script để <i>làm</i> việc. Skill sửa đúng ba chỗ đó.</p>
+
+        <div class="hw-tw">
+          <table class="wb-table">
+            <thead>
+              <tr><th>Tiêu chí</th><th>Rules (kiểu cũ)</th><th>Skill (nay)</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Khi nào nạp</td><td>Luôn-bật, mọi phiên</td><td>Chỉ khi việc khớp mô tả</td></tr>
+              <tr><td>Tốn ngân sách ngữ cảnh</td><td>Luôn tốn, kể cả lúc vô can</td><td>Gần như 0 tới khi được dùng</td></tr>
+              <tr><td>Kèm được script?</td><td>Không — chỉ là chữ</td><td>Có — kèm <code>scripts/</code>, <code>references/</code></td></tr>
+              <tr><td>Gói &amp; phát cho team?</td><td>Rời rạc, chép tay</td><td>Đóng vào plugin, cài một lệnh</td></tr>
+              <tr><td>Kết cục thực tế</td><td>Dài ra → bị lơ</td><td>Dày mà vẫn được dùng đúng lúc</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="hw-p">Nói gọn: <code>CLAUDE.md</code> vẫn giữ vai “nội quy luôn-bật” nhưng phải <b>ngắn</b> (vài quy ước xương sống). Mọi quy trình dài, chuyên biệt thì chuyển thành <b>skill</b> để nạp khi cần. Đó chính là “tư tưởng skill” khiến rules bị teo lại.</p>
+      </section>
+
+      <!-- ══════════════ 4 · PIPELINE ══════════════ -->
+      <section id="pipeline">
+        <div class="hw-part-head">
+          <p class="kicker">Cách làm chuẩn hôm nay · phần 5</p>
+          <h2>Cách một team dev thật sự dùng AI hôm nay</h2>
+          <p>Câu hỏi của bạn: “workflow nào phổ biến, dev ở Claude dùng AI thế nào?”. Đây là câu trả lời.</p>
+        </div>
+
+        <div class="wb-alert wb-alert--info" style="margin-bottom:16px">
+          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span>
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Hiểu nhầm: “dùng AI = chat rồi bảo nó code”</p>
+            <p class="wb-alert__msg">Kiểu đó (gọi vui là <b>vibe-coding</b>) chạy được cho việc nhỏ, dùng một lần. Với sản phẩm thật, nhiều người, nhiều tháng, cách phổ biến và đáng tin nhất là <b>spec-driven</b>: viết rõ CẦN GÌ vào <i>file</i> trước, rồi mới để AI làm — vì file đó đọc lại được, còn cuộc chat thì bay hơi.</p>
+          </div>
+        </div>
+
+        <p class="hw-lede">Cách làm chủ đạo là một <b>pipeline (dây chuyền) các bước</b>, mỗi bước <b>đẻ ra một file</b> làm đầu vào cho bước sau. Đây đúng là pipeline plugin <code>kv-engineering</code> của bạn đang chạy:</p>
+
+        <div class="hw-flow">
+          <ol class="wb-steps wb-steps--horizontal">
+            <li class="wb-steps__item is-done"><span class="wb-steps__marker">1</span><div class="wb-steps__content"><p class="wb-steps__title">discovery</p><p class="wb-steps__desc">hiểu yêu cầu</p></div></li>
+            <li class="wb-steps__item is-done"><span class="wb-steps__marker">2</span><div class="wb-steps__content"><p class="wb-steps__title">spec</p><p class="wb-steps__desc">chốt CẦN GÌ</p></div></li>
+            <li class="wb-steps__item is-done"><span class="wb-steps__marker">3</span><div class="wb-steps__content"><p class="wb-steps__title">bdd</p><p class="wb-steps__desc">kịch bản .feature</p></div></li>
+            <li class="wb-steps__item is-active"><span class="wb-steps__marker">4</span><div class="wb-steps__content"><p class="wb-steps__title">tech-design</p><p class="wb-steps__desc">thiết kế + ADR</p></div></li>
+            <li class="wb-steps__item is-todo"><span class="wb-steps__marker">5</span><div class="wb-steps__content"><p class="wb-steps__title">plan</p><p class="wb-steps__desc">chia task nhỏ</p></div></li>
+            <li class="wb-steps__item is-todo"><span class="wb-steps__marker">6</span><div class="wb-steps__content"><p class="wb-steps__title">exec</p><p class="wb-steps__desc">code theo TDD</p></div></li>
+            <li class="wb-steps__item is-todo"><span class="wb-steps__marker">7</span><div class="wb-steps__content"><p class="wb-steps__title">review → ship</p><p class="wb-steps__desc">soát &amp; tạo MR</p></div></li>
+          </ol>
+        </div>
+
+        <p class="hw-p">Mỗi bước là một <b>skill</b> (gọi tay bằng <code>/discovery</code>, <code>/spec</code>…). Điểm mấu chốt cho người mới: <b>bạn không cần thuộc lòng chúng</b> — AI tự định tuyến vào bước đúng theo việc bạn mô tả. Cái cần nhớ là <i>vì sao</i> có dây chuyền này: mỗi bước biến suy nghĩ thành một <b>file bền</b>, nên phiên sau (hoặc người khác) đọc file là tiếp được, không phải hỏi lại.</p>
+
+        <div class="hw-tw">
+          <table class="wb-table">
+            <thead>
+              <tr><th>Bước</th><th>Đẻ ra file</th><th>Trả lời câu hỏi</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>discovery</td><td>(hiểu biết, chưa commit)</td><td>Ta thật sự cần gì?</td></tr>
+              <tr><td>spec</td><td><code>specs/&lt;doc-id&gt;.md</code></td><td>CẦN GÌ — luật nghiệp vụ, gắn BR-ID</td></tr>
+              <tr><td>bdd</td><td><code>*.feature</code></td><td>Đúng nghĩa là gì — kịch bản kiểm thử</td></tr>
+              <tr><td>tech-design</td><td><code>tech-designs/&lt;doc-id&gt;.md</code></td><td>LÀM THẾ NÀO — kiến trúc, ADR</td></tr>
+              <tr><td>plan</td><td><code>plans/&lt;doc-id&gt;.md</code></td><td>Chia thành các task nhỏ nào</td></tr>
+              <tr><td>exec → review → ship</td><td>code + MR</td><td>Làm, tự soát, rồi tạo Merge Request</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="hw-p">Ba file <code>spec</code> / <code>tech-design</code> / <code>plan</code> của cùng một tính năng dùng chung một <b><code>doc-id</code></b> (dạng <code>yyyy-MM-dd-tên-tính-năng</code>, cố tình <b>không</b> nhét mã Jira) để buộc chúng vào nhau. Mỗi file có <code>status: draft | ready</code> ở đầu; chỉ khi cả ba đều <code>ready</code> thì tính năng mới được coi là sẵn sàng để code. Đó là một <i>gate</i> — ta gặp lại khái niệm này ở mục Hook vs Gate.</p>
+      </section>
+
+      <!-- ══════════════ 5 · SOT ══════════════ -->
+      <section id="sot">
+        <div class="hw-part-head">
+          <p class="kicker">Cách làm chuẩn hôm nay · phần 6</p>
+          <h2>SOT — “nguồn sự thật” là trái tim, không phải chi tiết phụ</h2>
+          <p>Câu hỏi của bạn: “SOT có quan trọng không?”. Cực kỳ — nó là lý do cả pipeline trên tồn tại.</p>
+        </div>
+
+        <p class="hw-lede"><b>SOT (Source of Truth)</b> = <b>một</b> chỗ chính thức duy nhất chứa một thông tin, để không ai phải đoán và không có hai bản “sự thật” cãi nhau. Với AI nó sống còn vì <b>AI chỉ biết những gì file nói</b> — không có SOT thì mỗi phiên AI tự bịa một “sự thật” khác nhau.</p>
+
+        <p class="hw-p">Trong meta repo của bạn, nguyên tắc được ghi thẳng: <b>Markdown trong repo là SOT; Jira/Confluence chỉ là bản soi (mirror) trạng thái.</b> Vì sao chọn markdown làm nơi giữ sự thật, chứ không phải Jira hay đầu người?</p>
+        <ul class="hw-ul">
+          <li><b>Bền &amp; xem được lịch sử.</b> Nằm trong git → mọi thay đổi có dấu vết, ai sửa gì lúc nào đều thấy.</li>
+          <li><b>AI đọc thẳng.</b> Cùng repo với code, không cần đăng nhập công cụ ngoài.</li>
+          <li><b>Đi cùng code.</b> Sửa code và cập nhật sự thật trong <i>cùng một commit</i> — khó lệch pha hơn.</li>
+        </ul>
+
+        <div class="wb-alert wb-alert--plain" style="margin:6px 0 14px">
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Một SOT rất đáng học từ meta repo của bạn: <code>docs/INDEX.md</code></p>
+            <p class="wb-alert__msg">Nó là bản kê “<b>chỉ trỏ, không chứa</b>” — điểm vào duy nhất để tìm tài liệu, thay vì rải link khắp nơi. Đặc biệt phần <i>Contract Registry</i> ghi ranh giới giữa các repo (tên message Kafka, giá trị enum, quy tắc chữ hoa/thường). Lý do: trong hệ nhiều repo, bug hay nằm ở <b>ranh giới GIỮA các repo</b> — nơi không có trình biên dịch nào bắt lỗi hộ, sai tên một chỗ là hỏng âm thầm.</p>
+          </div>
+        </div>
+        <p class="hw-p">Rút ra cho người mới: khi nghe “cập nhật SOT”, hiểu là <b>“sửa cái file chính thức, đừng chỉ nói trong chat hay trong đầu”</b>. Chat là nơi bàn bạc; SOT là nơi chốt.</p>
+      </section>
+
+      <!-- ══════════════ 6 · PROJECT A ══════════════ -->
+      <section id="project-a">
+        <div class="hw-part-head">
+          <p class="kicker">Tổ chức thực tế · phần 7</p>
+          <h2>Đưa một project có-trước-AI vào guồng cho cả team</h2>
+          <p>Câu hỏi của bạn: “project A có từ trước, giờ cả team làm bằng AI thì tổ chức sao — bộ skill chung hay plugin?”.</p>
+        </div>
+
+        <p class="hw-lede"><b>Không cần viết lại code.</b> Việc phải làm là thêm một <b>lớp tài liệu mỏng mà AI đọc được</b>, theo thứ tự từ rẻ-nhất-nhiều-lợi-nhất xuống. Bạn không cần làm hết ngày một; làm bước 1–2 là đã dùng được ngay.</p>
+
+        <ol class="wb-steps">
+          <li class="wb-steps__item">
+            <span class="wb-steps__marker">1</span>
+            <div class="wb-steps__content">
+              <p class="wb-steps__title">README.md — tổng quan cho NGƯỜI</p>
+              <p class="wb-steps__desc">Project này là gì, chạy/cài thế nào, thư mục chính nằm đâu. Vừa cho người mới, vừa là mảnh ngữ cảnh đầu tiên AI đọc.</p>
+            </div>
+          </li>
+          <li class="wb-steps__item">
+            <span class="wb-steps__marker">2</span>
+            <div class="wb-steps__content">
+              <p class="wb-steps__title">CLAUDE.md — quy ước cho AI (ngắn thôi)</p>
+              <p class="wb-steps__desc">Vài luật xương sống: quy ước code, cách chạy test, điều CẤM. Luôn-bật nên phải gọn — quy trình dài để dành cho skill.</p>
+            </div>
+          </li>
+          <li class="wb-steps__item">
+            <span class="wb-steps__marker">3</span>
+            <div class="wb-steps__content">
+              <p class="wb-steps__title">Vài skill dùng chung — cho việc lặp lại</p>
+              <p class="wb-steps__desc">Đóng gói những quy trình cả team làm đi làm lại (cách thêm một API, cách viết test ở repo này) thành skill trong repo. Nạp khi cần.</p>
+            </div>
+          </li>
+          <li class="wb-steps__item">
+            <span class="wb-steps__marker">4</span>
+            <div class="wb-steps__content">
+              <p class="wb-steps__title">Hook + Gate — chốt chất lượng tự động</p>
+              <p class="wb-steps__desc">Cắm một gate ở lúc commit/push để lỗi khách quan (lint, test) không bao giờ lên nhánh chung. Chi tiết ở mục Hook vs Gate.</p>
+            </div>
+          </li>
+          <li class="wb-steps__item wb-steps__item--dashed">
+            <span class="wb-steps__marker">5</span>
+            <div class="wb-steps__content">
+              <p class="wb-steps__title">Đóng thành plugin — KHI đã ổn định &amp; nhiều team cần</p>
+              <p class="wb-steps__desc">Bước tuỳ chọn, làm sau. Gói skill + hook + command + MCP vào một plugin, đẩy lên marketplace để cài một lệnh. Đây chính là <code>kv-engineering</code>.</p>
+            </div>
+          </li>
+        </ol>
+
+        <p class="hw-p"><b>Vậy “bộ skill chung” hay “plugin”?</b> Trả lời theo thời điểm: <b>bắt đầu bằng vài skill nằm ngay trong repo</b> (rẻ, sửa nhanh, chỉ team đó dùng). <b>Khi</b> quy trình đã chín <i>và</i> nhiều team/nhiều repo cùng cần, hãy <b>nâng cấp lên plugin</b> đặt trên marketplace để phát và cập nhật tập trung. Skill là điểm khởi đầu; plugin là đích đến khi cần quy mô. Meta repo <code>kvfnb-ai-workspace</code> chính là bước này ở mức estate: gom ~30 repo con thành một chỗ AI nhìn được, và hút hành vi chung về plugin <code>kv-engineering</code>.</p>
+
+        <p class="hw-p">Với người <b>chưa biết code</b>: khi 4–5 file này đã có, quy trình của bạn gần như là — mô tả việc cần làm bằng tiếng Việt, để AI chạy pipeline, và <b>đọc-duyệt</b> các file spec/plan nó sinh ra (những file này viết bằng ngôn ngữ thường, không phải code). Bạn duyệt <i>ý</i>, AI lo <i>chữ code</i>.</p>
+      </section>
+
+      <!-- ══════════════ 7 · CHUNG VS RIÊNG ══════════════ -->
+      <section id="chung-rieng">
+        <div class="hw-part-head">
+          <p class="kicker">Tổ chức thực tế · phần 8</p>
+          <h2>Chung vs riêng — thói quen mỗi người ghi ở đâu, có commit không</h2>
+          <p>Câu hỏi của bạn: “mọi người dùng chung một bộ skill, nhưng tư duy/quyết định mỗi người mỗi khác — ghi ở đâu?”.</p>
+        </div>
+
+        <p class="hw-lede">Quy tắc vàng, suy thẳng từ Trục 2 ở đầu trang: <b>ảnh hưởng người khác hoặc ảnh hưởng code → commit. Chỉ là gu của riêng bạn → bộ nhớ cá nhân, không commit.</b></p>
+
+        <div class="hw-two">
+          <div class="hw-col">
+            <h4><span class="wb-ico wb-ico--sm">groups</span> Dùng chung — PHẢI commit</h4>
+            <ul>
+              <li><b>Quy ước code</b> của repo (đặt tên, cấu trúc) → <code>CLAUDE.md</code></li>
+              <li><b>Quy trình lặp lại</b> (cách thêm API) → skill</li>
+              <li><b>Điều CẦN GÌ</b> của tính năng → spec (SOT)</li>
+              <li><b>Quyết định kiến trúc</b> có hệ quả lâu dài → ADR</li>
+              <li><b>Luật chất lượng khách quan</b> → gate</li>
+            </ul>
+          </div>
+          <div class="hw-col">
+            <h4><span class="wb-ico wb-ico--sm">person</span> Của riêng — KHÔNG commit</h4>
+            <ul>
+              <li><b>Gu làm việc cá nhân</b> (thích giải thích dài/ngắn) → memory cá nhân (<code>~/.claude</code>)</li>
+              <li><b>Phím tắt, alias</b> của riêng bạn</li>
+              <li><b>Ghi chú nháp</b> khi đang mò một việc</li>
+              <li><b>Việc đang-làm-dở</b> để báo cáo sếp → handoff (mục Handoff)</li>
+            </ul>
+          </div>
+        </div>
+
+        <p class="hw-p">Chỗ tinh tế trong câu hỏi của bạn: <b>“thói quen ra quyết định”</b> rơi vào đâu? Tách hai loại. Nếu đó là <i>cách bạn thích làm việc</i> (“tôi muốn AI hỏi lại trước khi xoá file”) → <b>gu cá nhân</b>, để ở memory riêng. Nếu đó là <i>một lựa chọn đã áp lên code/kiến trúc</i> mà người sau phải theo (“ở repo này ta luôn validate SĐT ở tầng service”) → nó <b>không còn là của riêng bạn nữa</b>, phải thành quy ước chung (CLAUDE.md) hoặc ADR, và <b>phải commit</b>. Phép thử: <i>“nếu tôi nghỉ việc, người sau có cần biết điều này không?”</i> — Có → commit.</p>
+      </section>
+
+      <!-- ══════════════ 8 · ADR ══════════════ -->
+      <section id="quyet-dinh">
+        <div class="hw-part-head">
+          <p class="kicker">Tổ chức thực tế · phần 9</p>
+          <h2>100 ticket, mỗi ticket 5 quyết định — lưu cái nào?</h2>
+          <p>Câu hỏi của bạn, gần như nguyên văn. Trả lời: có lưu, nhưng KHÔNG lưu tất cả.</p>
+        </div>
+
+        <div class="wb-alert wb-alert--warning" style="margin-bottom:16px">
+          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">warning</span></span>
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Đừng lưu mọi quyết định</p>
+            <p class="wb-alert__msg">Lưu tất cả thì đống ghi chú phình to tới mức không ai đọc — thành nhiễu, không thành trí nhớ. Phần lớn quyết định vặt (đặt tên biến, chọn thư viện nhỏ) <b>nên chết theo ticket</b>.</p>
+          </div>
+        </div>
+
+        <p class="hw-lede">Chỉ lưu quyết định mà <b>sáu tháng sau ai đó sẽ hỏi “sao hồi đó lại làm thế?”</b>. Loại đó có tên: <b>ADR — Architecture Decision Record</b> (bản ghi quyết định kiến trúc). Nó nắm ba thứ: <b>bối cảnh</b> (đang vướng gì), <b>quyết định</b> (chọn gì), <b>hệ quả</b> (đánh đổi ra sao).</p>
+
+        <p class="hw-p"><b>Phép thử một câu</b> để biết có nên viết ADR: <i>“Nếu người sau đọc code mà không biết điều này, họ có dễ vô tình phá nó không?”</i> — Có → viết ADR. Ví dụ nên lưu: chọn kiến trúc, đánh đổi hiệu năng, một quy tắc nghiệp vụ trái trực giác, lý do <i>không</i> chọn phương án hiển nhiên. Ví dụ nên bỏ: tên hàm, thụt lề, một sửa lỗi hiển nhiên.</p>
+
+        <div class="hw-def">
+          <div class="hw-def__top"><span class="hw-def__no">ví dụ thật · trong tech-design của bạn</span><h3 class="hw-def__name">ADR-kitchen-slip-readable-004</h3></div>
+          <div class="hw-def__meta" style="border-top:0;margin-top:2px;padding-top:0">
+            <span class="hw-def__k">Bối cảnh</span><p class="hw-def__v">Đổi cách tách phiếu bếp có rủi ro làm sai các phiếu đang chạy ngoài cửa hàng.</p>
+            <span class="hw-def__k">Quyết định</span><p class="hw-def__v">Ship sau một <b>cờ điều khiển từ xa</b> <code>useKitchenNaturalSplit</code>, mặc định <b>TẮT</b>, có nút tắt khẩn.</p>
+            <span class="hw-def__k">Hệ quả</span><p class="hw-def__v">Bật dần từng cửa hàng; có sự cố thì tắt cờ ngay, <b>không phải deploy lại</b>. Đổi lại: code phải mang thêm nhánh cờ một thời gian.</p>
+          </div>
+        </div>
+
+        <p class="hw-p">Về <b>nơi cất</b>: không nhất thiết phải có thư mục <code>adr/</code> riêng. Meta repo của bạn ghi ADR <b>ngay trong file tech-design</b> của tính năng, đánh số <code>ADR-&lt;tên&gt;-NNN</code>. Cách nào cũng được, miễn nó <b>được commit</b> và <b>tìm lại được</b>. Còn “5 câu AI hỏi bạn mỗi ticket”? Đa số là quyết định vặt — trả lời để chạy tiếp, quên đi. Chỉ khi một câu chạm tới đánh đổi lâu dài, hãy bảo AI (hoặc tự tay) chốt nó thành một ADR.</p>
+      </section>
+
+      <!-- ══════════════ 9 · HANDOFF ══════════════ -->
+      <section id="handoff">
+        <div class="hw-part-head">
+          <p class="kicker">Tổ chức thực tế · phần 10</p>
+          <h2>Handoff — việc tạm chưa làm / đang làm dở gửi cho “ca sau”</h2>
+          <p>Câu hỏi của bạn: “việc tạm chưa làm thì tạo file handoff à?”. Đúng vậy — và nó khác ADR/spec.</p>
+        </div>
+
+        <p class="hw-lede"><b>Handoff</b> = tờ giấy ca sáng để lại cho ca tối: <b>đang làm tới đâu, còn gì dang dở, làm tiếp từ đâu</b>. Vì AI mở phiên mới là trắng trí nhớ, không có tờ này thì phiên sau (hoặc đồng nghiệp) phải dò lại từ đầu.</p>
+
+        <p class="hw-p">Một handoff tốt thường có: <b>TL;DR</b> (một đoạn tóm tắt), phạm vi đụng tới đâu, đã làm được gì (kèm commit/MR), và <b>các việc còn mở</b>. Trong meta repo của bạn, nó nằm ở <code>docs/agentic-workflow/handoff/*.md</code>.</p>
+
+        <div class="wb-alert wb-alert--info" style="margin:6px 0 14px">
+          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span>
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Nghịch lý nhỏ: handoff thường KHÔNG commit</p>
+            <p class="wb-alert__msg">Nó là báo cáo trạng thái <b>tạm thời</b> — sau khi tính năng ship xong thì nó <b>lỗi thời</b>. Giữ lại trong repo chỉ tổ gây nhiễu (người sau tưởng là sự thật hiện hành). Nên nó là loại “dùng chung nhưng không commit”: chia sẻ cho teamlead, rồi bỏ.</p>
+          </div>
+        </div>
+
+        <p class="hw-p">Phân biệt ba thứ hay bị gộp — chúng khác nhau ở <b>tuổi thọ</b>:</p>
+        <ul class="hw-ul">
+          <li><b>Spec</b> = CẦN GÌ, <i>bền</i> (còn sống cùng tính năng) → commit.</li>
+          <li><b>ADR</b> = VÌ SAO chọn thế, <i>bền</i> (đúng mãi về mặt lịch sử) → commit.</li>
+          <li><b>Handoff</b> = ĐANG TỚI ĐÂU, <i>tạm</i> (chết sau khi ship) → thường không commit.</li>
+        </ul>
+      </section>
+
+      <!-- ══════════════ 10 · HOOK VS GATE ══════════════ -->
+      <section id="hook-gate">
+        <div class="hw-part-head">
+          <p class="kicker">Cổng &amp; file · phần 11</p>
+          <h2>Hook vs Gate — cái bấm nút, cái gác cửa</h2>
+          <p>Câu hỏi của bạn: “gate đặt ở đâu, hook đặt ở đâu, hook khác gate chỗ nào, có phải cài gate lúc pre-push không?”.</p>
+        </div>
+
+        <p class="hw-lede"><b>Hook</b> là cái CẢM BIẾN — “khi sự kiện X xảy ra thì chạy Y”. <b>Gate</b> là NGƯỜI GÁC CỬA — “chưa đạt thì không cho qua”. Chúng <b>khác vai, không thay nhau</b>: hook thường là cái <b>chạy</b> gate. Nói cách khác — hook trả lời <i>“khi nào chạy”</i>, gate trả lời <i>“đạt hay không”</i>.</p>
+
+        <p class="hw-p">Ví dụ ghép cả hai: một <b>hook</b> bắt sự kiện “sắp commit” (pre-commit) sẽ <b>chạy</b> một <b>gate</b> là lệnh lint/test; nếu gate báo lỗi, commit bị chặn. Đổi cảm biến (pre-commit → pre-push) mà vẫn gate đó — hoặc đổi gate mà vẫn cảm biến đó — đều được. Đó là lý do phải tách khái niệm.</p>
+
+        <h3 class="hw-h3">Ba lớp cổng — và vì sao cần cả ba (lấy từ chính repo này)</h3>
+        <p class="hw-p">Mỗi lớp là một <b>hook</b> bắt một sự kiện khác nhau, cùng chạy các <b>gate</b>. Cần cả ba vì mỗi lớp bịt lỗ của lớp trước:</p>
+
+        <div class="hw-tw">
+          <table class="wb-table">
+            <thead>
+              <tr><th>Lớp (hook)</th><th>Chạy khi</th><th>Bắt được gì</th><th>Lỗ của nó</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><b>1 · PostToolUse</b></td><td>Ngay sau mỗi lần AI sửa file</td><td>Phản hồi nhanh nhất khi đang làm</td><td>Có lỗ: thay đổi viết bằng <code>sed</code>/script không đi qua tool nên nó không thấy</td></tr>
+              <tr><td><b>2 · pre-commit</b></td><td>Lúc <code>git commit</code></td><td><b>Mọi</b> thay đổi, kể cả viết bằng script</td><td>Có thể bị bỏ qua bằng <code>--no-verify</code></td></tr>
+              <tr><td><b>3 · pre-push</b></td><td>Lúc <code>git push</code></td><td>Trạng thái cuối trước khi lên public; bịt cả <code>--no-verify</code></td><td>Lớp chốt chặn cuối</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="hw-p"><b>Vậy “cài gate lúc pre-push” — đúng.</b> Nhưng đừng chỉ pre-push: lớp 1 cho phản hồi tức thì, lớp 2 bắt mọi thay đổi, lớp 3 là lưới chặn cuối. Repo này còn có một <b>bộ điều phối</b> để, khi thêm project con mới, chỉ cần đặt file gate đúng chỗ là nó tự được gọi — không phải sửa tay chỗ khác.</p>
+
+        <h3 class="hw-h3">Đặt ở đâu</h3>
+        <ul class="hw-ul">
+          <li><b>Hook</b>: khai báo trong <code>.claude/settings.json</code> (cho hook của Claude Code, <b>có commit</b>) và trong <code>hooks.json</code> của plugin; còn hook git nằm ở <code>.git/hooks/</code> (cục bộ máy) nên cần một script cài lại chúng cho mọi người.</li>
+          <li><b>Gate</b>: là một <b>script chạy được</b> đặt trong <code>&lt;project&gt;/tools/</code> (ví dụ repo này có <code>pages/tools/lint-pages.py</code>). Hook chỉ việc gọi nó.</li>
+        </ul>
+        <p class="hw-p">Trong plugin <code>kv-engineering</code>, hook còn làm nhiều hơn kiểm lint: mỗi lần sửa file nó tự kiểm “spec còn sạch không”, “code có truy vết về BDD không”, và cập-nhật-lại bộ nhớ đồ thị code. Đó vẫn là cùng một ý: <b>tự động, không trông vào việc ai đó nhớ chạy tay</b>.</p>
+      </section>
+
+      <!-- ══════════════ 11 · BỘ FILE ══════════════ -->
+      <section id="bo-file">
+        <div class="hw-part-head">
+          <p class="kicker">Cổng &amp; file · phần 12</p>
+          <h2>Bộ file đầy đủ — mỗi file để làm gì, ai đọc, có commit không</h2>
+          <p>Câu hỏi của bạn: “README cho tổng quan, CLAUDE.md là rules, còn file chức năng nào cần nữa?”. Đây là bảng tra gộp tất cả.</p>
+        </div>
+
+        <p class="hw-lede">Một project sẵn-sàng-AI có khoảng <b>8 loại file/nơi cất</b>. Đọc bảng theo hai trục đầu trang: cột <b>“Nạp kiểu”</b> = Trục 1 (luôn-bật/khi-cần), cột <b>“Commit?”</b> = Trục 2 (chung/riêng).</p>
+
+        <div class="hw-tw">
+          <table class="wb-table">
+            <thead>
+              <tr><th>File / nơi cất</th><th>Để làm gì</th><th>Ai đọc</th><th>Commit?</th><th>Nạp kiểu</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>README.md</code></td><td>Tổng quan: là gì, chạy sao</td><td>Người ＋ AI</td><td>Có</td><td>Luôn-bật</td></tr>
+              <tr><td><code>CLAUDE.md</code></td><td>Quy ước cho AI (ngắn)</td><td>AI</td><td>Có</td><td>Luôn-bật</td></tr>
+              <tr><td><code>skills/…/SKILL.md</code></td><td>Quy trình lặp lại</td><td>AI</td><td>Có</td><td>Khi cần</td></tr>
+              <tr><td>plugin ＋ <code>plugin.json</code></td><td>Gói &amp; phát skill/hook/MCP</td><td>AI (cả team)</td><td>Có (repo plugin)</td><td>Khi cài</td></tr>
+              <tr><td><code>.mcp.json</code></td><td>Cắm công cụ/dữ liệu ngoài</td><td>Harness</td><td>Có</td><td>Khi cần</td></tr>
+              <tr><td><code>.claude/settings.json</code> ＋ <code>tools/</code></td><td>Khai báo hook ＋ script gate</td><td>Harness ＋ git</td><td>Có</td><td>Theo sự kiện</td></tr>
+              <tr><td><code>specs/…md</code> (SOT)</td><td>CẦN GÌ — luật nghiệp vụ</td><td>Người ＋ AI</td><td>Có</td><td>Khi làm tính năng</td></tr>
+              <tr><td>ADR (trong tech-design)</td><td>VÌ SAO chọn thế</td><td>Người ＋ AI</td><td>Có</td><td>Khi tra cứu</td></tr>
+              <tr><td><code>handoff/…md</code></td><td>ĐANG tới đâu (tạm)</td><td>Người (teamlead)</td><td><b>Không</b></td><td>—</td></tr>
+              <tr><td>memory <code>~/.claude</code></td><td>Gu cá nhân</td><td>AI (của bạn)</td><td><b>Không</b></td><td>Luôn-bật (máy bạn)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="hw-p">Đừng thấy 10 dòng mà ngợp: <b>project nhỏ chỉ cần 2 dòng đầu</b> (README + CLAUDE.md) là đã “có AI”. Các dòng sau thêm dần khi quy mô lớn lên — đúng thứ tự của mục Đưa project cũ vào guồng.</p>
+      </section>
+
+      <!-- ══════════════ 12 · TỰ CHẤM ══════════════ -->
+      <section id="tu-cham">
+        <div class="hw-part-head">
+          <p class="kicker">Cổng &amp; file · phần 13</p>
+          <h2>“Sếp làm meta repo có đúng cấu trúc không?” — bảng để bạn tự chấm</h2>
+          <p>Câu hỏi thật của bạn. Bạn không cần biết hết để đánh giá — chỉ cần một danh sách dấu hiệu.</p>
+        </div>
+
+        <p class="hw-lede">Đừng hỏi “cấu trúc này có <i>hoàn hảo</i> không” (không có cái nào hoàn hảo). Hỏi “nó có <b>các dấu hiệu tốt</b> không, và có <b>mùi hôi</b> nào không”. Dưới đây là hai danh sách để soi.</p>
+
+        <div class="hw-two">
+          <div class="hw-col">
+            <h4><span class="wb-ico wb-ico--sm">check_circle</span> Dấu hiệu tốt</h4>
+            <ul>
+              <li><b>Có một điểm vào rõ ràng</b> (INDEX/README “chỉ trỏ”), không phải mò khắp nơi</li>
+              <li><b>SOT nằm trong repo</b> (markdown), công cụ ngoài chỉ soi lại</li>
+              <li><b>Mỗi repo con có CLAUDE.md riêng</b>, không dồn hết vào một file khổng lồ</li>
+              <li><b>Cổng tự động</b> ở commit/push, không trông vào trí nhớ</li>
+              <li><b>Quyết định (ADR) được ghi lại</b>, không chỉ trong đầu</li>
+              <li><b>Có cách nhân bản</b>: thêm project mới không phải sửa tay mười chỗ</li>
+            </ul>
+          </div>
+          <div class="hw-col">
+            <h4><span class="wb-ico wb-ico--sm">warning</span> Mùi hôi thường gặp</h4>
+            <ul>
+              <li><b>Tài liệu lệch thực tế</b> (docs drift) — README tả một thư mục không còn tồn tại</li>
+              <li><b>Một thông tin ở hai nơi</b> và hai nơi lệch nhau (ví dụ số version)</li>
+              <li><code>CLAUDE.md</code> phình to thành cẩm nang → bị AI đọc lướt</li>
+              <li>Cổng chỉ nằm trong đầu người, không thành script trong repo</li>
+              <li>Quyết định quan trọng chỉ có trong chat, không ai commit</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="wb-alert wb-alert--plain" style="margin-top:6px">
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Áp vào chính setup của bạn — cân bằng, không phải chê</p>
+            <p class="wb-alert__msg">Setup của bạn <b>trúng gần hết cột trái</b>: có <code>docs/INDEX.md</code> chỉ-trỏ, SOT markdown, mỗi submodule một CLAUDE.md, hook 3 lớp, ADR được ghi. Cột phải cũng bắt được <b>hai vệt “drift” thật</b>, và đây là điều đáng học nhất: (1) version trong <code>marketplace.json</code> (3.4.8) <b>trễ hơn</b> version trong <code>plugin.json</code> (3.4.12) — một thông tin ở hai nơi; (2) phần “Structure” trong README còn tả thư mục <code>agent_docs/</code> trong khi tài liệu thật đã dời sang <code>docs/</code>. Cả hai đều thuộc <b>một lớp bệnh duy nhất: docs drift</b> — kẻ thù kinh niên của mọi hệ thống tài liệu. Cách chữa gốc không phải “sửa cho đúng một lần” mà là <b>để một chỗ tự sinh ra chỗ kia</b> (version đọc từ một nguồn), hoặc <b>thêm một gate</b> nhắc khi hai chỗ lệch. Nói cách khác: bắt được drift thì đừng chỉ vá — hãy biến nó thành một cổng, đúng tinh thần mục Hook vs Gate.</p>
+          </div>
+        </div>
+        <p class="hw-p">Kết luận cho câu hỏi gốc: cấu trúc sếp bạn dựng <b>đi đúng hướng chuẩn mực hiện hành</b>. “Sai” hầu như không phải sai thiết kế, mà là <b>drift</b> — thứ mọi repo đều mắc và chữa được bằng cổng, không phải bằng cách trách người.</p>
+      </section>
+
+      <!-- ══════════════ KẾT ══════════════ -->
+      <section id="ket">
+        <div class="hw-part-head">
+          <p class="kicker">Kết</p>
+          <h2>Năm câu mang theo</h2>
+          <p>Nếu quên hết phần còn lại, giữ năm câu này là đủ để định vị mọi thứ.</p>
+        </div>
+
+        <ol class="hw-take">
+          <li><b>AI quên sạch sau mỗi phiên.</b> Vậy nên: viết ra file, rồi commit. Chat để bàn, file để chốt.</li>
+          <li><b>Hai câu hỏi phân loại tất cả:</b> luôn-bật hay khi-cần? dùng chung (commit) hay của riêng?</li>
+          <li><b>Plugin là cái hộp đựng skill</b> — không phải đối thủ của skill. Bắt đầu bằng skill trong repo, lên plugin khi cần quy mô.</li>
+          <li><b>Cách làm chuẩn là spec-driven:</b> viết CẦN GÌ (SOT) trước, rồi để AI làm — mỗi bước đẻ một file bền.</li>
+          <li><b>Hook bấm nút, gate gác cửa.</b> Ba lớp cổng (khi sửa · khi commit · khi push) để lỗi không lọt lên public.</li>
+        </ol>
+
+        <div class="wb-alert wb-alert--plain" style="margin-top:18px">
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Về trang này</p>
+            <p class="wb-alert__msg">Nội dung diễn giải theo skill <b>explain-clearly</b> (kết luận trước, ví von có nêu chỗ hỏng, gỡ hiểu nhầm trước khi xây) và dựng bằng skill <b>web-builder</b> (bộ component <code>wb-*</code>, tông trắng-đen-xám, có chế độ tối). Mọi ví dụ lấy từ setup thật: marketplace <code>kv-claude-plugins</code> và meta repo <code>kvfnb-ai-workspace</code> — nên có thể lệch chút theo thời gian khi các repo đó đổi. Đây là tài liệu học khái niệm, không phải tài liệu tham chiếu API.</p>
+          </div>
+        </div>
+      </section>
+
+    </div><!-- /content column -->
+  </div><!-- /hw-layout -->
+</main>
+
+<footer class="wb-footer wb-footer--slim">
+  <div class="wb-footer__inner">
+    <div class="wb-footer__bottom">
+      <span class="wb-footer__copy">Làm việc với AI trong kỹ thuật phần mềm — hướng dẫn nội bộ · mục đích học</span>
+      <a class="wb-footer__link" href="../index.html">← Trang chủ</a>
+    </div>
+  </div>
+</footer>
+
+<button class="wb-btn wb-btn--icon wb-btn--round hw-top" id="toTop" aria-label="Lên đầu trang">
+  <span class="wb-ico">arrow_upward</span>
+</button>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var saved = null;
+  try { saved = localStorage.getItem('hub-theme'); } catch (e) {}
+  root.classList.toggle('dark', saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches);
+  var toggle = document.getElementById('theme-toggle');
+  if (toggle) toggle.addEventListener('click', function () {
+    var dark = !root.classList.contains('dark');
+    root.classList.toggle('dark', dark);
+    try { localStorage.setItem('hub-theme', dark ? 'dark' : 'light'); } catch (e) {}
+  });
+
+  var menu = document.querySelector('.wb-navbar__menu');
+  document.addEventListener('click', function (e) {
+    if (!menu) return;
+    if (e.target.closest('[data-navbar-toggle]')) menu.classList.toggle('is-open');
+    else if (e.target.closest('.wb-navbar__menu .wb-nav__link')) menu.classList.remove('is-open');
+  });
+
+  var links = [].slice.call(document.querySelectorAll('#toc .wb-sidenav__link'));
+  var byId = {};
+  var targets = [];
+  links.forEach(function (a) {
+    var id = a.getAttribute('href').slice(1);
+    var el = document.getElementById(id);
+    if (el) { byId[id] = a; targets.push(el); }
+  });
+  var current = null;
+  function setCurrent(a) {
+    if (current === a) return;
+    if (current) current.classList.remove('is-current');
+    current = a;
+    if (current) current.classList.add('is-current');
+  }
+  if ('IntersectionObserver' in window && targets.length) {
+    var seen = {};
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { seen[e.target.id] = e.isIntersecting ? e.intersectionRatio : 0; });
+      var bestId = null, best = 0;
+      targets.forEach(function (t) { if ((seen[t.id] || 0) > best) { best = seen[t.id]; bestId = t.id; } });
+      if (bestId) setCurrent(byId[bestId]);
+    }, { rootMargin: '-80px 0px -55% 0px', threshold: [0, .1, .5, 1] });
+    targets.forEach(function (t) { io.observe(t); });
+  }
+
+  var top = document.getElementById('toTop');
+  function onScroll() { top.classList.toggle('is-on', window.scrollY > 600); }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+  top.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+})();
+</script>
+</body>
+</html>
