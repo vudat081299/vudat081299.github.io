@@ -36,6 +36,58 @@ Ba lớp kiểm tự động (`tools/install-hooks.sh` cài cả ba):
 
 ---
 
+## Phiên 2026-09-02 (ac) — kiểm một bản review ngoài về lộ trình · một BỔ SUNG (model card) · chín nhận xét bác bỏ có bằng chứng
+
+Chủ trang đưa một bản review do một AI khác viết, kèm cảnh báo rằng AI đó **không đọc được
+thân bài** (nội dung nằm trong `<template>`, render bằng JS) nên chỉ suy từ `roadmap.html`
+(mục lục) và `index.html`. Việc của phiên này: đọc thân bài thật rồi phân loại 10 nhận xét
+thành có-thật / đã-có / có-một-phần / ngoài-phạm-vi, chỉ sửa chỗ review đúng.
+
+**Đã sửa — đúng MỘT chỗ, và là bổ sung, không phải sửa lỗi:**
+- `th-write`, ngay sau mục Hạn chế (dòng ~9848): thêm một `wb-help` đặt tên **model card**
+  (`MODEL_CARD.md`) cho bó artifact mà bài đã sản ra rải rác (mục đích dùng, datacard,
+  chỉ số, bảng FPR theo nhóm, hạn chế). Lý do: đây là artifact chuẩn ngành, đối xứng với
+  `datacard` đã có, hội đồng/nhà tuyển dụng hỏi đúng cái tên đó, và **không tốn thêm giờ**
+  (chỉ gom cái đã có) nên không phạm luật ngân sách. Là `wb-help` (gợi ý mềm), không thêm
+  vào `ACCEPT`/`WEEKS`, không thêm mục h2/h3 → không đụng `G-FWD`/`G-QUIZ-COV`.
+- Kèm theo: `--stamp` lại `roadmap-summaries.json` sau khi ĐỌC lại tóm tắt `th-write` và xác
+  nhận nó vẫn đúng (model card là ghi chú phụ, fast-track cố ý gọn nên không đưa vào tóm tắt).
+
+**Cố ý KHÔNG sửa — chín nhận xét còn lại, vì bằng chứng trong thân bài bác chúng:**
+- *Giảm chiều (PCA/SVD/t-SNE/UMAP)*: tên CÓ mặt — `x-la-skip` (PCA là hộp đen, `n_components`),
+  `dl-embed` (UMAP/t-SNE vẽ embedding cho luận văn), dataset PaySim (PCA ẩn danh). Cố ý dạng
+  "biết tên là đủ", không cần bước riêng cho một dự án cây/LightGBM.
+- *Toán mỏng*: đúng là mỏng, nhưng cố ý ("toán tối thiểu"), và với chủ trang (vững
+  prob/stats, calculus cơ bản, đang học vi phân đa biến) thì mỏng là ĐÚNG LIỀU, không phải lỗ.
+- *SQL/Data engineering "lỗ đau nhất"*: sai rõ nhất. `t-sql` có hẳn mục lớn Window function
+  (PARTITION/ORDER/LAG/ROWS) + Parquet + DuckDB; Spark/Dask/Kafka/Airflow/dbt được đặt tên
+  và scope-out CÓ NGƯỠNG (`x-notneeded`, `cmp-*`, `r-roadmapsh`). Đúng là lộ trình thứ hai,
+  và trang đã nói thế.
+- *Nhân quả chỉ 1h30*: `q-causal` có đủ confounder, DAG (viz `causaldag`), diff-in-diff,
+  propensity score, biến công cụ (IV), quasi-experimental, power analysis. Review liệt kê
+  đúng những thứ ĐANG CÓ.
+- *Bayes chỉ 1h*: MCMC/PyMC/hierarchical thật sự vắng — nhưng ngoài phạm vi một luận văn ML
+  ứng dụng dùng LightGBM; phần Bayes cần (tỉ lệ nền, báo động giả) thì đã dạy.
+- *Không có fairness/đạo đức*: sai. `pr-eval` mục 7 có bảng FPR theo nhóm + định lý bất khả
+  (các định nghĩa công bằng không cùng thoả), qbank nhóm E (đạo đức/pháp lý, có Nghị định
+  13/2023). Chỉ "model card" là thiếu → đã bổ sung ở trên.
+- *Không có lý thuyết thông tin*: entropy + **information gain** (popup `entropy`) và
+  cross-entropy (popup `logloss`, dùng suốt chặng 5/7) đều có. Chỉ KL divergence vắng, mà
+  PSI ở `pr-monitor` đã phủ nhu cầu đo lệch phân phối.
+- *Không có testing có hệ thống*: sai mạnh — `testsuite` có 27 test pytest + conftest + CI.
+  pandera/Great Expectations vắng nhưng thừa với chủ trang (5 năm phần mềm).
+- *Không có dataviz/dashboard*: Streamlit/Plotly/matplotlib/seaborn/`cmp-figure` đều có;
+  `th-write` đã có kỷ luật "mỗi hình một câu nói người đọc cần thấy gì".
+- *On-device/edge ML*: thật sự vắng, nhưng ngoài phạm vi (sản phẩm là API server-side) VÀ
+  không hợp cấu trúc `q-mini` (tổ chức theo HỌ bài toán, không theo đích triển khai). Đây là
+  lời khuyên cá nhân tốt (tận dụng nền iOS) → thuộc PHẦN B, không nhét vào lộ trình chung.
+
+Một dữ kiện lệch để phiên sau biết: task mô tả "88.5 giờ / 65 bước mạch chính" nhưng trang
+hiện là **106.6 giờ / 84 bài** — nội dung đã lớn lên kể từ lúc con số đó được ghi. Không sửa
+gì vì đây là số của người viết task, không phải số trên trang.
+
+---
+
 ## Phiên 2026-08-21 (ab) — tám hình P1 · sáu lỗi ảnh chụp bắt được mà cổng cho qua · phép kiểm thứ năm cho `viz-check`
 
 Chủ trang: *"vẽ hết trong 1 lượt đi"*. Món cuối trong `## CHƯA LÀM` — mục đó giờ **không còn
