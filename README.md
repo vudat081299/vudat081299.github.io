@@ -11,7 +11,8 @@ Live: <https://vudat081299.github.io>
 | Đường dẫn | Là gì |
 |---|---|
 | `index.html` | **Hub** — trang chủ, liệt kê mọi thứ đáng vào. Có tìm kiếm + phím tắt. Style bằng `web-builder/web-builder.css` |
-| `pages/` | Các trang nội dung dài, một file HTML tự chứa mỗi trang (how-money-works, finance-econ-rulebook, structured-speaking, vietnamese-home-cooking, scooter-maintenance-guide, jazz-piano-theory). Trước 2026-08-02 chúng nằm ở root, nên URL cũ dạng `/<tên>.html` giờ **404** — vào từ hub |
+| `pages/` | Các trang nội dung dài, một file HTML tự chứa mỗi trang (how-money-works, finance-econ-rulebook, structured-speaking, scooter-maintenance-guide, jazz-piano-theory). Trước 2026-08-02 chúng nằm ở root, nên URL cũ dạng `/<tên>.html` giờ **404** — vào từ hub |
+| `cooking/` | Bốn trang bếp tra cứu công thức, mỗi trang một file HTML tự chứa (korean-home-cooking, vietnamese-home-cooking, european-savoury, european-baking). Dùng chung khung filter/modal/hẹn-giờ, style bằng `../web-builder/web-builder.css`. Có cổng kiểm `tools/lint-cooking.py` riêng. Tách khỏi `pages/` 2026-09-02 nên URL cũ `/pages/<tên>.html` giờ **404** — vào từ hub |
 | `cashy/` | App quản lý chi tiêu — **React 19 + TS + Vite**, thứ duy nhất trong repo cần build. Có `CLAUDE.md` + `docs/` riêng, đọc từ đó |
 | `web-builder/` | Design system `wb-*` (CSS thuần, token-based, có dark mode) + trang docs component. **Hub và các trang trong `pages/` đều dùng CSS này** |
 | `facts/` | Thư viện fact có kiểm chứng (HTML + `data/` JSON) |

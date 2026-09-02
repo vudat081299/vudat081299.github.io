@@ -10,11 +10,14 @@ cách chúng chạy tự động**.
 | `masters-degree/data-science-roadmap/` | CLAUDE.md trong thư mục đó | `node tools/gate.mjs` | 1, 2, 3 |
 | `cashy/` | [cashy/CLAUDE.md](cashy/CLAUDE.md) | `node scripts/check-layers.mjs` + `oxlint` | 2 |
 | `pages/` | — | `python3 pages/tools/lint-pages.py` | 2 |
+| `cooking/` | — | `python3 cooking/tools/lint-cooking.py` | 2 |
 | các project khác | xem thư mục | — | — |
 
-`pages/` không có CLAUDE.md riêng: mỗi trang là một tài liệu HTML tự chứa, không có luật
-nội dung chung để viết ra. Cổng của nó chỉ kiểm thứ đúng/sai khách quan — id trùng, anchor
-gãy, asset thiếu, thẻ lệch.
+`pages/` và `cooking/` không có CLAUDE.md riêng: mỗi trang là một tài liệu HTML tự chứa,
+không có luật nội dung chung để viết ra. Cổng của chúng chỉ kiểm thứ đúng/sai khách quan —
+id trùng, anchor gãy, asset thiếu, thẻ lệch. `cooking/` là bốn trang bếp (Việt, Hàn, Âu mặn,
+Bánh Âu) dùng chung một khung filter/modal; tách khỏi `pages/` để gom một chỗ, nên có cổng
+cùng bộ kiểm nhưng riêng thư mục.
 
 Cổng `cashy/` cần Node ≥ 20 (oxlint cần ≥ 22). Node mặc định trên máy có thể là bản cũ do
 fnm/nvm ghim, nên hook tự dò Homebrew thay vì tin vào `PATH` — nếu không nó sẽ "im lặng
