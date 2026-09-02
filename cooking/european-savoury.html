@@ -254,6 +254,10 @@
   /* nav: 4 nút chữ tràn ra ngoài 390px → chỉ giữ icon về trang chủ + đổi nền */
   @media (max-width: 720px) {
     .wb-navbar { padding: 0 14px; gap: 10px; }
+    /* tên trang dài + 2 nút icon có thể vượt màn hình rất hẹp → cho brand co lại và cắt
+       gọn bằng "…", giữ nguyên logo, nút icon vẫn với tới được. */
+    .wb-navbar__brand { flex: 0 1 auto; min-width: 0; }
+    .mc-brand-t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .wb-navbar__actions { min-width: 0; }
     .mc-navhide { display: none; }
   }
@@ -337,12 +341,41 @@
   .ma-done__c b { color: var(--wb-fg); font-weight: 620; }
   @media (max-width: 620px) { .ma-done { grid-template-columns: 1fr auto; gap: 2px 10px; }
     .ma-done__c { grid-column: 1 / -1; } }
+
+  /* Bảng phô mai 6 cột không vừa điện thoại — cuộn ngang chỉ thấy nửa cột. Dưới 720px
+     (đúng ngưỡng mobile của trang) xếp lại: mỗi hàng thành một thẻ, tên phô mai làm tiêu đề,
+     nhãn cột bơm bằng ::before theo vị trí cột nên không phải sửa từng ô trong markup. */
+  @media (max-width: 720px) {
+    .ma-cheese { overflow-x: visible; }
+    .ma-cheese .wb-table,
+    .ma-cheese .wb-table thead,
+    .ma-cheese .wb-table tbody,
+    .ma-cheese .wb-table tr,
+    .ma-cheese .wb-table td { display: block; }
+    .ma-cheese .wb-table thead { position: absolute; width: 1px; height: 1px; padding: 0;
+      margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+    .ma-cheese .wb-table tbody tr { border: var(--wb-bw) solid var(--wb-border);
+      border-radius: var(--wb-radius); background: var(--wb-surface); padding: 12px 14px; margin: 0 0 10px; }
+    .ma-cheese .wb-table--striped tbody tr:nth-child(even) { background: var(--wb-surface); }
+    .ma-cheese .wb-table tbody td { padding: 0; border: 0; }
+    .ma-cheese .wb-table tbody td:first-child { font-size: 15px; font-weight: 680; white-space: normal;
+      margin-bottom: 9px; padding-bottom: 9px; border-bottom: var(--wb-bw) dashed var(--wb-border); }
+    .ma-cheese .wb-table tbody td:not(:first-child) { margin-top: 8px; }
+    .ma-cheese .wb-table tbody td:not(:first-child)::before { display: block; margin-bottom: 2px;
+      font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--wb-fg-subtle); }
+    .ma-cheese .wb-table tbody td:nth-of-type(2)::before { content: "Dùng cho"; }
+    .ma-cheese .wb-table tbody td:nth-of-type(3)::before { content: "Chảy?"; }
+    .ma-cheese .wb-table tbody td:nth-of-type(4)::before { content: "Mặn"; }
+    .ma-cheese .wb-table tbody td:nth-of-type(5)::before { content: "Thay bằng"; }
+    .ma-cheese .wb-table tbody td:nth-of-type(6)::before { content: "Ghi chú mua ở VN"; }
+  }
 </style>
 </head>
 <body>
 
 <div class="wb-navbar wb-navbar--sticky">
-  <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">🍝</span> European Savoury</a>
+  <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">🍝</span> <span class="mc-brand-t">European Savoury</span></a>
   <span class="wb-navbar__spacer"></span>
   <div class="wb-navbar__actions">
     <a class="wb-btn wb-btn--ghost wb-btn--sm mc-navhide" href="#mon-an">Món</a>

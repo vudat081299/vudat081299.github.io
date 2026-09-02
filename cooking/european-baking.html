@@ -255,6 +255,10 @@
   /* nav: 4 nút chữ tràn ra ngoài 390px → chỉ giữ icon về trang chủ + đổi nền */
   @media (max-width: 720px) {
     .wb-navbar { padding: 0 14px; gap: 10px; }
+    /* tên trang dài + 2 nút icon có thể vượt màn hình rất hẹp → cho brand co lại và cắt
+       gọn bằng "…", giữ nguyên logo, nút icon vẫn với tới được. */
+    .wb-navbar__brand { flex: 0 1 auto; min-width: 0; }
+    .mc-brand-t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .wb-navbar__actions { min-width: 0; }
     .mc-navhide { display: none; }
   }
@@ -335,7 +339,7 @@
 <body>
 
 <div class="wb-navbar wb-navbar--sticky">
-  <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">🥐</span> European Baking</a>
+  <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">🥐</span> <span class="mc-brand-t">European Baking</span></a>
   <span class="wb-navbar__spacer"></span>
   <div class="wb-navbar__actions">
     <a class="wb-btn wb-btn--ghost wb-btn--sm mc-navhide" href="#mon-an">Bánh</a>
